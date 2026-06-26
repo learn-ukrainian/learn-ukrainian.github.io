@@ -320,7 +320,9 @@ def test_legacy_synonym_sources_drop_wordnet_and_ukrajinet_noise() -> None:
     assert _sense_correct_synonyms(conn, "мама") == ["мати", "матуся"]
     assert _sense_correct_synonyms(conn, "стілець") == ["крісло"]
     assert _sense_correct_synonyms(conn, "дім") == ["будинок", "хата", "домівка"]
-    assert _sense_correct_synonyms(conn, "чудово") == ["прекрасно", "чудесно"]
+    # "чудесно" was only reachable by reading the СУМ-11 definition above; with the
+    # Soviet dictionary no longer consulted (2026-06-26) it is correctly dropped.
+    assert _sense_correct_synonyms(conn, "чудово") == ["прекрасно"]
 
     all_synonyms = [
         synonym
@@ -1129,7 +1131,9 @@ def test_slovnyk_cache_migrates_v1_none_misses_to_retryable_absences(monkeypatch
     assert persisted["lookups"]["phraseology"]["text"] == "refetched phraseology"
 
 
-def test_sum11_meaning_carries_source_sovietization_risk() -> None:
+def test_sum11_is_never_used_as_meaning_source() -> None:
+    """СУМ-11 (Soviet-era dictionary) must NEVER surface as a meaning, even when it
+    is the only source for a word (decolonization decision 2026-06-26)."""
     conn = _conn()
     conn.execute(
         """
@@ -1148,13 +1152,14 @@ def test_sum11_meaning_carries_source_sovietization_risk() -> None:
 
     meaning = _meaning(conn, "ленінізм")
 
-    assert meaning is not None
-    assert meaning["source"] == "СУМ-11"
-    assert meaning["sovietization_risk"] == 2
-    assert meaning["sovietization_keywords"] == ["ленін", "маркс"]
+    # No Вікісловник/kaikki entry exists, so СУМ-11 used to fill this. It must not now.
+    assert meaning is None
 
 
-def test_definition_cards_emit_separate_visible_sources_with_sum11_risk(monkeypatch) -> None:
+def test_definition_cards_exclude_sum11(monkeypatch) -> None:
+    """Only modern Ukrainian-grounded sources (СУМ-20) emit definition cards;
+    СУМ-11 (Soviet-era dictionary) is never emitted, regardless of risk
+    (decolonization decision 2026-06-26)."""
     conn = _conn()
     conn.execute(
         "INSERT INTO grinchenko (word, definition, source) VALUES (?, ?, ?)",
@@ -1188,12 +1193,43 @@ def test_definition_cards_emit_separate_visible_sources_with_sum11_risk(monkeypa
 
     cards = _definition_cards(conn, "прапор", has_sum11_flags=True)
 
-    assert [card["id"] for card in cards] == ["sum20", "sum11-flagged"]
-    assert cards[0]["source"] == "СУМ-20"
-    assert cards[1]["sovietization_risk"] == 2
-    assert cards[1]["sovietization_keywords"] == ["ленін", "партійн"]
-    assert cards[1]["flag_note"] == "⚠ СУМ-11 — радянське видання; подаємо обережно, перевага СУМ-20/Вікісловнику"
-    assert all(card["source"] != "Грінченко 1907" for card in cards)
+    # СУМ-11 card (even a flagged one) must be absent — only the СУМ-20 card survives.
+    assert [card["id"] for card in cards] == ["sum20"]
+    assert all("СУМ-11" not in (card.get("source") or "") for card in cards)
+    assert all(card["id"] not in ("sum11", "sum11-flagged") for card in cards)
+
+
+def test_vts_fills_definition_when_sum20_missing(monkeypatch) -> None:
+    """When СУМ-20 has no entry, VTS (Великий тлумачний словник — modern, non-Soviet)
+    fills the definition card. This is the clean replacement for the removed СУМ-11
+    fallback (decolonization decision 2026-06-26)."""
+    conn = _conn()
+    # No СУМ-20 coverage for this word.
+    monkeypatch.setattr(
+        enrich_manifest_module, "_sum20_definition_card", lambda lemma, cache=None: None
+    )
+    monkeypatch.setattr(
+        enrich_manifest_module,
+        "_fetch_slovnyk_entry",
+        lambda lemma, lookup_word, slug: (
+            {"word": "вишиванка", "text": "вишива́нка -и, ж. розм. Вишита сорочка.", "source_url": ""}
+            if slug == "vts"
+            else None
+        ),
+    )
+
+    cards = _definition_cards(conn, "вишиванка", has_sum11_flags=False)
+
+    assert [card["id"] for card in cards] == ["vts"]
+    assert cards[0]["source"] == "ВТС"
+    assert "Вишита сорочка" in cards[0]["definitions"][0]
+    # СУМ-20 card present → VTS is NOT fetched (СУМ-20 wins, no redundant lookup).
+    monkeypatch.setattr(
+        enrich_manifest_module,
+        "_sum20_definition_card",
+        lambda lemma, cache=None: {"id": "sum20", "source": "СУМ-20", "definitions": ["x"]},
+    )
+    assert [c["id"] for c in _definition_cards(conn, "вишиванка", has_sum11_flags=False)] == ["sum20"]
 
 
 def test_cefr_lookup_uses_exact_puls_row() -> None:

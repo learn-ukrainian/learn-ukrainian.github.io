@@ -2095,7 +2095,8 @@ def _sense_correct_synonyms(conn: sqlite3.Connection, lemma: str) -> list[str]:
     out: list[str] = []
     seen: set[str] = set()
     _synonyms_from_balla(conn, lemma, out, seen)
-    _synonyms_from_sum11(conn, lemma, out, seen)
+    # СУМ-11 synonym verification removed — decolonization decision 2026-06-26.
+    # We do not read the Soviet-era dictionary for any purpose.
     return out[:6]
 
 
@@ -2127,10 +2128,12 @@ def _meaning(
     has_sum11_flags: bool | None = None,
     kaikki_lookup: dict[str, dict[str, Any]] | None = None,
 ) -> dict | None:
-    """Modern Ukrainian meaning: Вікісловник (clean, + synonyms) → СУМ-11 fallback.
+    """Modern Ukrainian meaning: Вікісловник (clean, + synonyms) → kaikki fallback.
 
-    Грінченко is intentionally NOT used here — its 1907 glosses are Russian
-    and must not surface in rendered Atlas pages.
+    СУМ-11 (the Soviet-era dictionary, 1970-80) is intentionally NEVER used as a
+    source — decolonization decision 2026-06-26. Грінченко is likewise NOT used
+    here — its 1907 glosses are Russian and must not surface in rendered Atlas
+    pages. After Вікісловник, fall through to kaikki only.
     """
     word = lemma.strip()
     row = None
@@ -2149,33 +2152,6 @@ def _meaning(
             if syns:
                 block["synonyms"] = syns
             return block
-    row = None
-    if has_sum11_flags is None:
-        has_sum11_flags = _sum11_has_flag_columns(conn)
-    sum11_fields = "definition, text"
-    if has_sum11_flags:
-        sum11_fields += ", sovietization_risk, sovietization_keywords"
-    for variant in _split_lemma_variants(word):
-        row = conn.execute(
-            f"SELECT {sum11_fields} FROM sum11 WHERE word = ? AND definition != '' LIMIT 1",
-            (variant,),
-        ).fetchone()
-        if row:
-            break
-    if row and row[0]:
-        risk, keywords = _sum11_row_flags(row, has_flag_columns=has_sum11_flags)
-        block = {
-            "definitions": [row[0].strip()[:600]],
-            "source": "СУМ-11",
-            "sovietization_risk": risk,
-            "note": "СУМ-11 — радянське видання; перевіряйте ідеологічно навантажені статті.",
-        }
-        if keywords:
-            block["sovietization_keywords"] = keywords
-        syns = _sense_correct_synonyms(conn, word)
-        if syns:
-            block["synonyms"] = syns
-        return block
     return _kaikki_meaning(kaikki_lookup or {}, lemma)
 
 
@@ -2236,6 +2212,47 @@ def _sum20_definition_card(
     }
 
 
+def _vts_definition_card(
+    lemma: str,
+    cache: dict[str, Any] | None = None,
+) -> dict[str, Any] | None:
+    """Великий тлумачний словник (VTS) — a modern, Ukrainian-only explanatory
+    dictionary on slovnyk.me. Fetched on demand (only when СУМ-20 is missing) so we
+    stay polite to the source. Non-Soviet replacement for the removed СУМ-11 source
+    (decolonization decision 2026-06-26)."""
+    lookup_word = _slovnyk_lookup_word(lemma)
+    if not lookup_word:
+        return None
+    cached_present = isinstance(cache, dict) and "vts" in (cache.get("lookups") or {})
+    row = _cache_lookup(cache, "vts") if cache is not None else None
+    if not row and not cached_present:
+        transient = False
+        try:
+            row = _fetch_slovnyk_entry(lemma, lookup_word, "vts")
+        except _SlovnykTransientError:
+            transient = True
+            row = None
+        if cache is not None and not transient:
+            _cache_store_lookup(lemma, cache, "vts", row)
+    if not row:
+        return None
+    text = _definition_body(
+        row.get("text"),
+        headword=str(row.get("word") or lookup_word),
+        strip_leading_headword=True,
+    )
+    if not text:
+        return None
+    return {
+        "id": "vts",
+        "source": "ВТС",
+        "source_pill": "ВТС",
+        "note": "Великий тлумачний словник сучасної української мови",
+        "definitions": [text],
+        "source_url": str(row.get("source_url") or ""),
+    }
+
+
 def _sum11_definition_card(
     conn: sqlite3.Connection,
     lemma: str,
@@ -2280,10 +2297,13 @@ def _definition_cards(
     has_sum11_flags: bool,
     cache: dict[str, Any] | None = None,
 ) -> list[dict[str, Any]]:
-    cards = [
-        _sum20_definition_card(lemma, cache),
-        _sum11_definition_card(conn, lemma, has_sum11_flags=has_sum11_flags),
-    ]
+    # СУМ-11 (Soviet-era dictionary) is intentionally excluded — decolonization
+    # decision 2026-06-26. Modern Ukrainian-grounded sources only: СУМ-20, then VTS
+    # (Великий тлумачний словник) as a clean fallback for words СУМ-20 doesn't cover.
+    sum20 = _sum20_definition_card(lemma, cache)
+    cards = [sum20]
+    if not sum20:
+        cards.append(_vts_definition_card(lemma, cache))
     return [card for card in cards if card]
 
 
