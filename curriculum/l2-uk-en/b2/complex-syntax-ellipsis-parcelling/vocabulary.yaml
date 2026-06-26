@@ -1,0 +1,180 @@
+- lemma: еліпсис
+  translation: ellipsis
+  pos: noun
+  usage: "Еліпсис працює тоді, коли пропущений член речення легко відновити з контексту."
+- lemma: парцеляція
+  translation: parcelling, sentence segmentation
+  pos: noun
+  usage: "Парцеляція розчленовує речення, щоб виділити деталь або змінити темп читання."
+- lemma: парцелят
+  translation: parcelled segment
+  pos: noun
+  usage: "Парцелят має спиратися на базове речення й виконувати зрозумілу стилістичну функцію."
+- lemma: неповне речення
+  translation: incomplete sentence
+  pos: phrase
+  usage: "Неповне речення може бути нормативним, якщо слухач без труднощів відновлює пропущене."
+- lemma: синтаксична компресія
+  translation: syntactic compression
+  pos: phrase
+  usage: "Синтаксична компресія допомагає уникнути повторів у складному реченні."
+- lemma: пропущений присудок
+  translation: omitted predicate
+  pos: phrase
+  usage: "Тире часто позначає місце, де стояв би пропущений присудок."
+- lemma: дієслово-зв'язка
+  translation: linking verb
+  pos: noun
+  usage: "У реченні Мова - інструмент мислення пропущено дієслово-зв'язку є."
+- lemma: підмет
+  translation: subject
+  pos: noun
+  usage: "Підмет і присудок мають утворювати зрозумілу граматичну основу."
+- lemma: присудок
+  translation: predicate
+  pos: noun
+  usage: "Присудок можна не повторювати, якщо його форма відновлюється з першої частини."
+- lemma: член речення
+  translation: sentence member
+  pos: phrase
+  usage: "Пропущений член речення не повинен руйнувати керування або зміст."
+- lemma: керування
+  translation: government, syntactic valency
+  pos: noun
+  usage: "Після еліпсису керування зберігається: потрібний прийменник не зникає."
+- lemma: прийменник
+  translation: preposition
+  pos: noun
+  usage: "Прийменник у конструкції до бібліотеки не можна опустити тільки заради стислості."
+- lemma: тире
+  translation: dash
+  pos: noun
+  usage: "Тире може підтримувати еліпсис, коли воно показує місце пропущеного слова."
+- lemma: крапка
+  translation: full stop, period
+  pos: noun
+  usage: "Крапка в парцеляції створює сильну інтонаційну межу."
+- lemma: трикрапка
+  translation: ellipsis mark
+  pos: noun
+  usage: "Трикрапка може передати вагання, але її не варто ставити замість ясної структури."
+- lemma: контекстуальний
+  translation: contextual
+  pos: adjective
+  usage: "Контекстуальний еліпсис відновлюється з попереднього або наступного речення."
+- lemma: ситуативний
+  translation: situational
+  pos: adjective
+  usage: "Ситуативний еліпсис спирається на спільну для мовців ситуацію."
+- lemma: діалогічний
+  translation: dialogic
+  pos: adjective
+  usage: "Діалогічний еліпсис робить відповідь природною й не перевантажує розмову."
+- lemma: інтонаційний
+  translation: intonational
+  pos: adjective
+  usage: "Інтонаційний поділ допомагає читачеві відчути паузу після базового речення."
+- lemma: смисловий
+  translation: semantic, meaningful
+  pos: adjective
+  usage: "Парцелят має додавати смисловий акцент, а не просто розбивати фразу."
+- lemma: експресивний
+  translation: expressive
+  pos: adjective
+  usage: "Експресивний ритм доречний у публіцистиці, але не в кожній інструкції."
+- lemma: лаконізм
+  translation: concision
+  pos: noun
+  usage: "Лаконізм виникає не від випадкового скорочення, а від точного добору слів."
+- lemma: динамізм
+  translation: dynamism
+  pos: noun
+  usage: "Динамізм парцеляції залежить від того, як короткі фрагменти розподіляють напругу."
+- lemma: пауза
+  translation: pause
+  pos: noun
+  usage: "Пауза після першого речення може змінити оцінку всього повідомлення."
+- lemma: акцент
+  translation: emphasis
+  pos: noun
+  usage: "Автор створює акцент, коли виносить важливу деталь в окремий парцелят."
+- lemma: ритм
+  translation: rhythm
+  pos: noun
+  usage: "Ритм тексту змінюється, коли довгі пояснення чергуються з короткими фрагментами."
+- lemma: розчленування
+  translation: segmentation
+  pos: noun
+  usage: "Розчленування речення має бути мотивованим стилем і змістом."
+- lemma: відновлюваність
+  translation: recoverability
+  pos: noun
+  usage: "Відновлюваність пропущеного елемента є головною умовою нормативного еліпсису."
+- lemma: однозначність
+  translation: unambiguity
+  pos: noun
+  usage: "Офіційний текст потребує однозначності, тому надмірний еліпсис у ньому небезпечний."
+- lemma: двозначність
+  translation: ambiguity
+  pos: noun
+  usage: "Двозначність виникає, коли читач не знає, яке слово або дію треба відновити."
+- lemma: жанрова доречність
+  translation: genre appropriateness
+  pos: phrase
+  usage: "Жанрова доречність визначає, чи можна залишити парцеляцію в готовому тексті."
+- lemma: офіційно-діловий
+  translation: official-business
+  pos: adjective
+  usage: "Офіційно-діловий стиль зазвичай вимагає повніших і точніших формулювань."
+- lemma: технічний текст
+  translation: technical text
+  pos: phrase
+  usage: "Технічний текст має називати виконавця, дію й умови без зайвої неповноти."
+- lemma: юридичний текст
+  translation: legal text
+  pos: phrase
+  usage: "Юридичний текст не повинен залишати читачеві простір для довільного відновлення змісту."
+- lemma: публіцистика
+  translation: publicistic writing, journalism
+  pos: noun
+  usage: "Публіцистика частіше використовує короткі фрагменти для оцінки й емоційного напруження."
+- lemma: художній текст
+  translation: literary text
+  pos: phrase
+  usage: "Художній текст може передавати психологічний стан через уривчасті речення."
+- lemma: розгорнути
+  translation: to expand, to spell out
+  pos: verb
+  usage: "Перед редагуванням корисно розгорнути неповне речення до повної конструкції."
+- lemma: відновити
+  translation: to recover, to restore
+  pos: verb
+  usage: "Учень має відновити пропущений присудок і пояснити, звідки він узявся."
+- lemma: скоротити
+  translation: to shorten
+  pos: verb
+  usage: "Повтор можна скоротити, якщо скорочення не порушує граматику."
+- lemma: виділити
+  translation: to highlight
+  pos: verb
+  usage: "Парцеляція допомагає виділити деталь, яка змінює тон повідомлення."
+- lemma: зіставити
+  translation: to compare, to juxtapose
+  pos: verb
+  usage: "Щоб оцінити стиль, зістав повний і парцельований варіанти речення."
+- lemma: уточнення
+  translation: clarification
+  pos: noun
+  usage: "Уточнення може бути парцелятом, якщо воно має окремий інтонаційний акцент."
+- lemma: фрагмент
+  translation: fragment
+  pos: noun
+  usage: "Фрагмент без граматичної опори не стає парцеляцією автоматично."
+- lemma: базове речення
+  translation: base sentence
+  pos: phrase
+  usage: "Без базового речення парцелят зависає й не має зрозумілої синтаксичної ролі."
+- lemma: редакторська перевірка
+  translation: editorial check
+  pos: phrase
+  usage: "Редакторська перевірка починається з питання, чи зрозуміло, що саме пропущено."
