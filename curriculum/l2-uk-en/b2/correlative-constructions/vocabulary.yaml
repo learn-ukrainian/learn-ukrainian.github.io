@@ -1,0 +1,140 @@
+- lemma: корелят
+  translation: correlate
+  pos: noun
+  usage: Корелят створює місце для підрядної частини в головному реченні.
+- lemma: співвідносне слово
+  translation: correlative word
+  pos: phrase
+  usage: Співвідносне слово допомагає побачити логічний зв'язок між частинами.
+- lemma: вказівне слово
+  translation: demonstrative word
+  pos: phrase
+  usage: Вказівне слово може бути займенником або прислівником.
+- lemma: підрядна частина
+  translation: subordinate clause
+  pos: phrase
+  usage: Підрядна частина пояснює зміст корелята.
+- lemma: головна частина
+  translation: main clause
+  pos: phrase
+  usage: У головній частині стоїть слово ті.
+- lemma: сполучне слово
+  translation: conjunctive word
+  pos: phrase
+  usage: Сполучне слово є членом підрядної частини.
+- lemma: сполучник
+  translation: conjunction
+  pos: noun
+  usage: Сполучник з'єднує частини, але не є членом речення.
+- lemma: синтаксична роль
+  translation: syntactic role
+  pos: phrase
+  usage: Синтаксична роль корелята визначає пунктуацію.
+- lemma: логічний наголос
+  translation: logical emphasis
+  pos: phrase
+  usage: Корелят додає логічний наголос до підрядної частини.
+- lemma: керування
+  translation: government
+  pos: noun
+  usage: Дієслово пишатися потребує керування в конструкції пишатися тим, що.
+- lemma: факультативний
+  translation: optional
+  pos: adjective
+  usage: Факультативний корелят додає фокус, але не є обов'язковим.
+- lemma: обов'язковий
+  translation: required
+  pos: adjective
+  usage: Обов'язковий корелят не можна вилучити без втрати змісту.
+- lemma: баласт
+  translation: ballast, dead weight
+  pos: noun
+  usage: Зайве те, що перетворюється на стилістичний баласт.
+- lemma: канцеляризм
+  translation: bureaucratic wording
+  pos: noun
+  usage: Канцеляризм ускладнює речення без потреби.
+- lemma: двозначність
+  translation: ambiguity
+  pos: noun
+  usage: Корелят допомагає уникнути двозначності в інструкції.
+- lemma: однозначність
+  translation: unambiguity
+  pos: noun
+  usage: Юридичний текст потребує однозначності.
+- lemma: з'ясувальний
+  translation: content-clause
+  pos: adjective
+  usage: З'ясувальний зв'язок пояснює зміст повідомлення.
+- lemma: означальний
+  translation: attributive
+  pos: adjective
+  usage: Означальний зв'язок уточнює іменник.
+- lemma: обставинний
+  translation: adverbial
+  pos: adjective
+  usage: Обставинний зв'язок називає місце, час, причину або спосіб.
+- lemma: міра
+  translation: degree, measure
+  pos: noun
+  usage: Пара настільки, що передає високу міру ознаки.
+- lemma: наслідок
+  translation: result
+  pos: noun
+  usage: Підрядна частина може називати наслідок міри.
+- lemma: закономірність
+  translation: pattern, regularity
+  pos: noun
+  usage: Пара чим, тим показує закономірність.
+- lemma: інверсія
+  translation: inversion
+  pos: noun
+  usage: Інверсія робить висновок риторично сильнішим.
+- lemma: каркас речення
+  translation: sentence frame
+  pos: phrase
+  usage: Каркас речення допомагає перевірити коми.
+- lemma: пунктуаційна межа
+  translation: punctuation boundary
+  pos: phrase
+  usage: Пунктуаційна межа відокремлює підрядну частину.
+- lemma: риторичний ефект
+  translation: rhetorical effect
+  pos: phrase
+  usage: Інверсія створює риторичний ефект.
+- lemma: регістр
+  translation: register
+  pos: noun
+  usage: Регістр визначає, чи доречна важка конструкція.
+- lemma: редакторська версія
+  translation: edited version
+  pos: phrase
+  usage: Редакторська версія прибирає зайві кореляти.
+- lemma: причиновий зв'язок
+  translation: causal relation
+  pos: phrase
+  usage: Причиновий зв'язок можна передати словом оскільки.
+- lemma: просторовий зв'язок
+  translation: spatial relation
+  pos: phrase
+  usage: Просторовий зв'язок часто має пару там, де.
+- lemma: часовий зв'язок
+  translation: temporal relation
+  pos: phrase
+  usage: Часовий зв'язок може мати пару доти, доки.
+- lemma: співвіднесення
+  translation: correlation
+  pos: noun
+  usage: Співвіднесення корелята й підрядної частини має бути логічним.
+- lemma: опора
+  translation: anchor, support
+  pos: noun
+  usage: Корелят дає підрядній частині синтаксичну опору.
+- lemma: стислість
+  translation: concision
+  pos: noun
+  usage: Стислість не повинна руйнувати точність речення.
+- lemma: розчленування сполучника
+  translation: splitting a conjunction
+  pos: phrase
+  usage: Розчленування сполучника залежить від інтонації та фокусу.
