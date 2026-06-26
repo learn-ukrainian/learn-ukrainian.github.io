@@ -1,0 +1,168 @@
+- lemma: ввічливість
+  translation: politeness
+  pos: noun
+  usage: "Ввічливість у листі починається з доречного звертання."
+- lemma: звертання
+  translation: form of address
+  pos: noun
+  usage: "Звертання в офіційному листі потребує кличного відмінка."
+- lemma: повага
+  translation: respect
+  pos: noun
+  usage: "Повага проявляється у формі Ви та стриманому тоні."
+- lemma: субординація
+  translation: hierarchy, subordination
+  pos: noun
+  usage: "Субординація впливає на вибір регістру в установі."
+- lemma: перефразування
+  translation: rephrasing
+  pos: noun
+  usage: "Перефразування змінює тон, але зберігає зміст."
+- lemma: сленг
+  translation: slang
+  pos: noun
+  usage: "Сленг може бути доречним у командному чаті, але не в заяві."
+- lemma: суто
+  translation: purely, solely
+  pos: adv
+  usage: "Це суто технічне питання."
+- lemma: шановний
+  translation: esteemed, dear
+  pos: adj
+  usage: "Шановний директоре, прошу розглянути заяву."
+- lemma: просторіччя
+  translation: substandard colloquial speech
+  pos: noun
+  usage: "Просторіччя недоречне в офіційному листі."
+- lemma: еліпсис
+  translation: ellipsis
+  pos: noun
+  usage: "Еліпсис часто працює в коротких повідомленнях."
+- lemma: неформальний
+  translation: informal
+  pos: adj
+  usage: "Неформальний тон природний у дружньому чаті."
+- lemma: офіційний
+  translation: formal, official
+  pos: adj
+  usage: "Офіційний лист потребує структури."
+- lemma: етикет
+  translation: etiquette
+  pos: noun
+  usage: "Діловий етикет регулює звертання й прощання."
+- lemma: колега
+  translation: colleague
+  pos: noun
+  usage: "Колего, чи можете Ви переглянути таблицю?"
+- lemma: регістр
+  translation: register
+  pos: noun
+  usage: "Регістр залежить від адресата й ситуації."
+- lemma: соціальна дистанція
+  translation: social distance
+  pos: phrase
+  usage: "Соціальна дистанція впливає на форму звертання."
+- lemma: комунікативна ситуація
+  translation: communicative situation
+  pos: phrase
+  usage: "Комунікативна ситуація визначає тон повідомлення."
+- lemma: кличний відмінок
+  translation: vocative case
+  pos: phrase
+  usage: "Кличний відмінок потрібний у звертаннях."
+- lemma: пошанне Ви
+  translation: polite capitalized you
+  pos: phrase
+  usage: "Пошанне Ви часто пишуть з великої літери."
+- lemma: формула ввічливості
+  translation: politeness formula
+  pos: phrase
+  usage: "Формула ввічливості пом'якшує прохання."
+- lemma: пом'якшення
+  translation: hedging, softening
+  pos: noun
+  usage: "Пом'якшення допомагає просити без тиску."
+- lemma: канцеляризм
+  translation: bureaucratic phrase
+  pos: noun
+  usage: "Канцеляризм може зробити текст важким."
+- lemma: термін виконання
+  translation: deadline, execution term
+  pos: phrase
+  usage: "Термін виконання змінено через додаткове тестування."
+- lemma: службова записка
+  translation: memo
+  pos: phrase
+  usage: "Службова записка описує проблему стримано."
+- lemma: доповідна записка
+  translation: report memo
+  pos: phrase
+  usage: "Доповідна записка подає факти для керівництва."
+- lemma: довести до відома
+  translation: to bring to attention
+  pos: phrase
+  usage: "Доводжу до Вашого відома результати перевірки."
+- lemma: просимо розглянути
+  translation: we ask you to consider
+  pos: phrase
+  usage: "Просимо розглянути можливість перенесення терміну."
+- lemma: підтверджую отримання
+  translation: I confirm receipt
+  pos: phrase
+  usage: "Підтверджую отримання документа."
+- lemma: технічна помилка
+  translation: technical error
+  pos: phrase
+  usage: "У формі виявлено технічну помилку."
+- lemma: баг
+  translation: bug
+  pos: noun
+  usage: "Баг природний у командному чаті, але не в заяві."
+- lemma: глянути
+  translation: to take a look
+  pos: verb
+  usage: "Можеш глянути таблицю після дзвінка?"
+- lemma: переглянути
+  translation: to review
+  pos: verb
+  usage: "Прошу переглянути оновлений документ."
+- lemma: скинути
+  translation: to send, to drop
+  pos: verb
+  usage: "Скинь файл у чат, будь ласка."
+- lemma: надіслати
+  translation: to send
+  pos: verb
+  usage: "Просимо надіслати файл до 17:00."
+- lemma: посунути дедлайн
+  translation: to move a deadline
+  pos: phrase
+  usage: "У чаті можна сказати: посунути дедлайн."
+- lemma: змінити термін
+  translation: to change the deadline
+  pos: phrase
+  usage: "В офіційному листі краще: змінити термін виконання."
+- lemma: адресат
+  translation: addressee
+  pos: noun
+  usage: "Адресат визначає форму звертання."
+- lemma: канал спілкування
+  translation: communication channel
+  pos: phrase
+  usage: "Канал спілкування впливає на довжину повідомлення."
+- lemma: доречність
+  translation: appropriateness
+  pos: noun
+  usage: "Доречність важливіша за механічну офіційність."
+- lemma: фамільярність
+  translation: overfamiliarity
+  pos: noun
+  usage: "Фамільярність із незнайомою людиною може звучати грубо."
+- lemma: нейтральний тон
+  translation: neutral tone
+  pos: phrase
+  usage: "Нейтральний тон допомагає уникнути конфлікту."
+- lemma: робочий чат
+  translation: work chat
+  pos: phrase
+  usage: "Робочий чат допускає коротші повідомлення."
