@@ -1,0 +1,128 @@
+- lemma: когезія
+  translation: cohesion
+  pos: noun
+  usage: "Когезія створює видимі мовні зв'язки між реченнями."
+- lemma: когерентність
+  translation: coherence
+  pos: noun
+  usage: "Когерентність допомагає читачеві зрозуміти логіку тексту."
+- lemma: засіб зв'язку
+  translation: cohesive device
+  pos: phrase
+  usage: "Конектор, повтор і займенник можуть бути засобами зв'язку."
+- lemma: конектор
+  translation: connector
+  pos: noun
+  usage: "Конектор показує, як одна думка переходить до іншої."
+- lemma: протиставлення
+  translation: contrast
+  pos: noun
+  usage: "Протиставлення часто вводять слова однак, проте або водночас."
+- lemma: наслідок
+  translation: consequence
+  pos: noun
+  usage: "Слово тому називає наслідок попередньої причини."
+- lemma: висновок
+  translation: conclusion
+  pos: noun
+  usage: "Отже вводить висновок після доказів."
+- lemma: підстава
+  translation: basis
+  pos: noun
+  usage: "Оскільки називає підставу для наступної дії."
+- lemma: уточнення
+  translation: clarification
+  pos: noun
+  usage: "Зокрема вводить уточнення або приклад."
+- lemma: анафора
+  translation: anaphora
+  pos: noun
+  usage: "Анафора повертає читача до вже названого елемента."
+- lemma: катафора
+  translation: cataphora
+  pos: noun
+  usage: "Катафора спочатку створює очікування, а потім розкриває зміст."
+- lemma: референція
+  translation: reference
+  pos: noun
+  usage: "Точна референція показує, до чого повертається займенник."
+- lemma: попередник
+  translation: antecedent
+  pos: noun
+  usage: "Займенник має мати зрозумілий попередник."
+- lemma: регістр
+  translation: register
+  pos: noun
+  usage: "Регістр визначає, чи доречний офіційний конектор."
+- lemma: канцеляризм
+  translation: bureaucratic phrase
+  pos: noun
+  usage: "Канцеляризм обтяжує просте повідомлення."
+- lemma: службовий лист
+  translation: official letter
+  pos: phrase
+  usage: "У службовому листі конектори мають бути стриманими."
+- lemma: аналітичний абзац
+  translation: analytical paragraph
+  pos: phrase
+  usage: "Аналітичний абзац потребує чіткої послідовності доказів."
+- lemma: смислова цілісність
+  translation: semantic unity
+  pos: phrase
+  usage: "Смислова цілісність важливіша за кількість конекторів."
+- lemma: логічний зв'язок
+  translation: logical relation
+  pos: phrase
+  usage: "Логічний зв'язок треба визначити до вибору конектора."
+- lemma: послідовність
+  translation: sequence
+  pos: noun
+  usage: "Слова далі й після цього показують послідовність дій."
+- lemma: нарощення аргументу
+  translation: argument development
+  pos: phrase
+  usage: "Ба більше може створити нарощення аргументу."
+- lemma: обмеження
+  translation: limitation
+  pos: noun
+  usage: "Утім м'яко вводить обмеження попередньої думки."
+- lemma: альтернатива
+  translation: alternative
+  pos: noun
+  usage: "Натомість часто порівнює дві альтернативи."
+- lemma: приклад
+  translation: example
+  pos: noun
+  usage: "Наприклад вводить конкретний приклад."
+- lemma: переформулювання
+  translation: reformulation
+  pos: noun
+  usage: "Тобто вводить переформулювання попередньої думки."
+- lemma: двозначність
+  translation: ambiguity
+  pos: noun
+  usage: "Нечіткий займенник створює двозначність."
+- lemma: повтор
+  translation: repetition
+  pos: noun
+  usage: "Повтор може підтримувати тему або перевантажувати текст."
+- lemma: синонімічна заміна
+  translation: synonymic substitution
+  pos: phrase
+  usage: "Синонімічна заміна має не спотворювати зміст."
+- lemma: редакторська перевірка
+  translation: editorial check
+  pos: phrase
+  usage: "Редакторська перевірка починається з пошуку нечітких зв'язків."
+- lemma: безсполучниковий зв'язок
+  translation: asyndetic connection
+  pos: phrase
+  usage: "Безсполучниковий зв'язок часто спирається на двокрапку або тире."
+- lemma: двокрапка
+  translation: colon
+  pos: noun
+  usage: "Двокрапка готує пояснення або розкриття змісту."
+- lemma: крапка з комою
+  translation: semicolon
+  pos: phrase
+  usage: "Крапка з комою розділяє великі пов'язані частини."
