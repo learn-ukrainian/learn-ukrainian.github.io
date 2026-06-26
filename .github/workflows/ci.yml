@@ -52,8 +52,12 @@ jobs:
     outputs:
       # code = any high-signal source/config change. Used by the broad secret scan.
       code: ${{ steps.filter.outputs.code }}
-      # python = Python/test paths only. Gates pytest + ruff/radon/root guards.
-      # Deliberately EXCLUDES site/** so content/MDX PRs do NOT run pytest.
+      # python = Python/test paths PLUS the curriculum/site content that tests
+      # read at runtime. Gates pytest + ruff/radon/root guards. curriculum/l2-uk-en/**
+      # and site/src/content/** are INCLUDED because content-reading tests
+      # (citation_resolve, llm_qg_api, reading_coverage, reading_links, parity, ...)
+      # load those files at runtime — excluding them let a content-deletion PR
+      # (#3867) skip pytest entirely and ship a regression to main (root cause: #3873).
       python: ${{ steps.filter.outputs.python }}
       # frontend = generated site inputs/outputs. Gates the build/vitest job plus
       # MDX source/drift checks, so curriculum source edits cannot leave stale
@@ -115,6 +119,12 @@ jobs:
               - 'pyproject.toml'
               - 'scripts/**/*.py'
               - 'tests/**/*.py'
+              # Content that python tests read at runtime — a deletion/edit here
+              # must run pytest, else a content regression reaches main unguarded
+              # (this is the #3873 root cause: #3867 deleted curriculum files,
+              # python filter was false, pytest skipped, 4 tests broke on main).
+              - 'curriculum/l2-uk-en/**'
+              - 'site/src/content/**'
             frontend:
               - '.github/workflows/ci.yml'
               - 'site/**'
