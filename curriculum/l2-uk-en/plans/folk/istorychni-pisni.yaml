@@ -1,13 +1,13 @@
 activity_hints:
-- type: aural-genre-id
-  placement: workbook
-  focus: Aural markers or performance context, when dossier sources support audio
-- type: symbolic-decoding
-  placement: workbook
-  focus: Motif, image, or formula decoding from dossier evidence
 - type: variant-comparison
   placement: workbook
-  focus: Regional, temporal, or performance variants
+  focus: Regional, temporal, or performance variants of historical songs
+- type: motif-formula
+  placement: workbook
+  focus: Identifying and analyzing recurring motif-formulas and symbols (e.g., хміль, плач Морозенка, Вкраїна)
+- type: performance
+  placement: workbook
+  focus: Performing or recording a fragment of a historical song in collective singing context
 cefr_min: C1
 connects_to:
 - bylyny-kyivskoho-tsyklu
@@ -16,23 +16,39 @@ content_outline:
 - section: Постановка проблеми
   words: 600
   points:
-  - 'Stub: dossier will supply the opening problem, corpus anchors, and framing constraints.'
+  - Провокаційне питання: Чому пісня про Байду не є думою, а прозовий переказ про Кармелюка не є історичною піснею?
+  - Корпусні опори жанру: розрізнення вузького робочого ядра історичних пісень від астрофічних дум та усних переказів (fc2291b5_c2976, S4433).
+  - Жанрова межа: історичні пісні є строфічними, куплетною формою, що поєднують лірику й епос, тоді як думи є астрофічними та речитативними (pokhodzhennia-dum:p10-10, S4438).
+  - Статус та автентичність: потреба критичного аналізу перед використанням пісень як фактографічного джерела (9a2443f5_c0184).
 - section: Корпус і контекст
   words: 1200
   points:
-  - 'Stub: dossier will supply verified texts, images, recordings, or material-culture evidence.'
+  - Генезис жанру: формування у XIV-XV століттях на тлі татарських нападів, ясиру та оборони степового порубіжжя (484d0ffb_c0871).
+  - Ранній пласт: пісні про турецьку неволю та перші протистояння (наприклад, «Зажурилась Україна», «В Цариграді на риночку») (fc2291b5_c2976).
+  - Козацька епоха та Хмельниччина: зміна носія та виникнення великих пісенних циклів про Хмельницького, Богуна, Кривоноса, Нечая (fc2291b5_c2976).
+  - Соціальні рухи XVIII-XIX століття: гайдамаччина (Коліївщина, Залізняк, Гонта), опришківство та антикріпацькі протести (Кармелюк) (fc2291b5_c1266).
+  - Байда-Вишневецький: деконструкція зв'язку між легендарним Байдою та реальним князем Дмитром Вишневецьким (5794da94_c0817).
 - section: Поетика, символіка і виконання
   words: 1400
   points:
-  - 'Stub: dossier will specify motifs, formulas, performance sequence, and regional variation.'
+  - Метрика та строфіка: використання куплетів з двох або чотирьох рядків, однакова складова структура та стабільна ритмомелодика (S4432).
+  - Музична перформативність: гуртовий багатоголосний спів у чоловічому козацькому середовищі як розвинений художній акт (484d0ffb_c0871).
+  - Особливості композиції: динамічний зачин (інципіт), діалогізація, часті повтори для підсилення емоційного напруження (S4433).
+  - Лексичний інвентар та історична лексика: функціональне вживання історизмів (ясир, гайдамаччина, опришок, голота) без суржикового нашарування.
+  - Еволюція поетики: бароковий період, зближення усної традиції з писемною пісенною культурою (2971c499_c0657).
 - section: Деколонізаційна рамка
   words: 900
   points:
-  - 'Stub: dossier will identify imperial, Soviet, or romantic-nationalist myths to correct.'
+  - Українське історичне суб'єктство: спростування імперських міфів про «бездержавність» та «етнографічну декоративність» українського народу через аналіз пісенної оцінки подій (S4432).
+  - Протидія імперським термінам: маркування колоніальних назв збірників («малоросійські») як історичних маркерів доби, а не нейтральних термінів (fc2291b5_c2977).
+  - Радянська догматизація та цензура: витіснення пісень із прокляттям Хмельницькому та еміграційного пласту на догоду міфу про «вікове прагнення до возз'єднання» (a5f3ae7f_c0029).
+  - Романтичні фальсифікації: критичне ставлення до романтичних збірників (наприклад, «Запорожская Старина» Срезневського) та виявлення авторських вставок (feaa5fa7_c0417, 7808b51b_c0257).
 - section: Підсумок
   words: 900
   points:
-  - 'Stub: module build will synthesize why this folk form matters now.'
+  - Культурний синтез: роль історичної пісні як живого голосу пам'яті, що переходить у модерну культуру (Шевченко, Карпенко-Карий, Ліна Костенко) (fc2291b5_c2977).
+  - Літературний міст: вплив історичного фольклору на Шевченкову поему «Гайдамаки» та драму Костомарова і Карпенка-Карого «Сава Чалий» (d77902e2_c1253, bf813e34_c0026).
+  - Сучасне переосмислення: чому ці форми залишаються актуальними як моральні документи спротиву та національної самосвідомості в сучасному контексті.
 focus: Historical song as a genre distinct from dumy and prose perekazy
 level: FOLK
 module: folk-014
@@ -47,14 +63,123 @@ persona:
 phase: FOLK.E
 references:
 - title: "Історичні пісні"
-  note: 'Stub — corpus-grounded sources pending the dossier (docs/folk-epic/folk-dossier-schema.md §6 Збирачі та дослідники).'
-  type: pending
+  note: "Вікі-довідник про історичні пісні як жанр"
+  path: wiki/folk/historical/istorychni-pisni.md
+  type: wiki
+- title: "Малоросійські пісні (1827) & Українські народні пісні (1834)"
+  author: "Максимович М."
+  note: "Перші великі систематичні збірки українських народних пісень, що містили історичний пласт"
+  type: scholarly
+- title: "Малоросійські і червоноруські народні думи та пісні"
+  author: "Лукашевич П."
+  note: "Раннє збірницьке видання з історичним репертуаром"
+  type: scholarly
+- title: "Історичні пісні малоруського народу"
+  author: "Антонович В., Драгоманов М."
+  note: "Двотомне наукове видання 1874-1875 рр., що упорядкувало корпус пісенної пам'яті"
+  type: scholarly
+- title: "Студії над українськими народними піснями"
+  author: "Франко І."
+  note: "Критичні дослідження народної пісенної творчості 1907-1913 рр. із застереженням щодо автентичності"
+  type: scholarly
+- title: "Історичне значення південноруської народної пісенної творчості"
+  author: "Костомаров М."
+  note: "Дослідження зв'язку пісенного фольклору з історичним процесом"
+  type: scholarly
+readings:
+- title: "В Цариграді на риночку Та п'є Байда мед-горілочку"
+  title_en: "In Constantinople on the Market Square, Baida Drinks Mead and Vodka"
+  genre: "Історична пісня"
+  role: primary
+  type: primary
+  source: "40beaaff_c0000 | verify_quote(author=\"Народна творчість\", text=\"В Цариграді на риночку Та п'є Байда мед-горілочку\") -> matched: true; best_confidence: 1.0; source chunk_id: 40beaaff_c0000"
+  canon_attestation: "fc2291b5_c2976"
+  license: public_domain
+  hosting: hosted
+  reading_slug: istorychna-pisnia-baida
+- title: "Зажурилась Україна, бо нічим прожити"
+  title_en: "Ukraine Fell Into Sorrow, for There Is Nothing to Live On"
+  genre: "Історична пісня"
+  role: primary
+  type: primary
+  source: "1f7ae6ee_c0000 | verify_quote(author=\"Народна творчість\", text=\"Зажурилась Україна, бо нічим прожити\") -> matched: true; best_confidence: 1.0; source chunk_id: 1f7ae6ee_c0000"
+  canon_attestation: "S4432"
+  license: public_domain
+  hosting: hosted
+  reading_slug: istorychna-pisnia-zazhurylas-ukraina
+- title: "Гей, не дивуйте, добрії люди, Що на Вкраїні повстало"
+  title_en: "Hey, Be Not Surprised, Good People, That a Rebellion Arose in Ukraine"
+  genre: "Історична пісня"
+  role: primary
+  type: primary
+  source: "8028b13a_c0000 | verify_quote(author=\"Народна творчість\", text=\"Гей, не дивуйте, добрії люди, Що на Вкраїні повстало\") -> matched: true; best_confidence: 1.0; source chunk_id: 8028b13a_c0000"
+  canon_attestation: "S4433"
+  license: public_domain
+  hosting: hosted
+  reading_slug: istorychna-pisnia-hei-ne-dyvuite
+- title: "Чи не той то козак Хмельницький, що з Ляхами бється?"
+  title_en: "Is That Not the Cossack Khmelnytsky Who Fights the Poles?"
+  genre: "Історична пісня"
+  role: primary
+  type: primary
+  source: "5794da94_c2949 | verify_quote(author=\"Грушевський М.\", text=\"Чи не той то хміль зелений, що на тичку вється? Чи не той то козак Хмельницький, що з Ляхами бється?\") -> matched: true; best_confidence: 0.99; source chunk_id: 5794da94_c2949"
+  canon_attestation: "fc2291b5_c2976"
+  license: public_domain
+  hosting: hosted
+  provenance_note: "verified via literary context, not a direct field record"
+  reading_slug: istorychna-pisnia-chy-ne-toi-to-khmelnytskyi
+- title: "Ой Морозе та Морозенку, ой ти славний козаче!"
+  title_en: "Oh Moroz, Morozko, Oh You Glorious Cossack!"
+  genre: "Історична пісня"
+  role: primary
+  type: primary
+  source: "69b7d2f1_c0032 | verify_quote(author=\"Грінченко Б.\", text=\"Ой Морозе та Морозенку, ой ти славний козаче! Ой за тобою, та Морозенку, уся Україна плаче.\") -> matched: true; best_confidence: 1.0; source chunk_id: 69b7d2f1_c0032"
+  canon_attestation: "S4432"
+  license: public_domain
+  hosting: hosted
+  provenance_note: "verified via literary context, not a direct field record"
+  reading_slug: istorychna-pisnia-oi-moroze-morozenku
+- title: "Ой, у степу огні горять, Там татари полон ділять"
+  title_en: "Oh, Fires Are Burning in the Steppe, There Tatars Divide the Captives"
+  genre: "Історична пісня"
+  role: primary
+  type: primary
+  source: "9b25b2cc_c0015 | verify_quote(author=\"Нечуй-Левицький І.\", text=\"Ой, у степу огні горять, Там татари полон ділять\") -> matched: true; best_confidence: 1.0; source chunk_id: 9b25b2cc_c0015"
+  canon_attestation: "S4432"
+  license: public_domain
+  hosting: hosted
+  provenance_note: "verified via literary context, not a direct field record"
+  reading_slug: istorychna-pisnia-oi-u-stepu-ohni-horiat
+- title: "Максим козак Залізняк, козак з Запорожжя"
+  title_en: "Maksym, Cossack Zaliznyak, a Cossack from Zaporozhia"
+  genre: "Історична пісня"
+  role: primary
+  type: primary
+  source: "d20168e4_c0008 | verify_quote(author=\"Нечуй-Левицький І.\", text=\"Максим козак Залізняк, козак з Запорожжя; як виїхав на Вкраїну, як повная рожа\") -> matched: true; best_confidence: 1.0; source chunk_id: d20168e4_c0008"
+  canon_attestation: "fc2291b5_c2976"
+  license: public_domain
+  hosting: hosted
+  provenance_note: "verified via literary context, not a direct field record"
+  reading_slug: istorychna-pisnia-maksym-kozak-zalizniak
+do_not_quote:
+- line: "Ой Морозе, Морозенку, ти славний козаче"
+  reason: "verify_quote(author=\"Народна творчість\", text=\"Ой Морозе, Морозенку, ти славний козаче\") -> matched: false; best_confidence: 0.0; source chunk_id: none"
+- line: "За Сибіром сонце сходить Хлопці, не зівайте"
+  reason: "verify_quote(author=\"Народна творчість\", text=\"За Сибіром сонце сходить Хлопці, не зівайте\") -> matched: false; best_confidence: 0.0; source chunk_id: none"
+- line: "Ой на горі та женці жнуть, а попід горою, яром-долиною козаки йдуть"
+  reason: "verify_quote(author=\"Народна творчість\", text=\"Ой на горі та женці жнуть, а попід горою, яром-долиною козаки йдуть\") -> matched: false; best_confidence: 0.0; source chunk_id: none"
+- line: "Чи не той то хміль, що коло тичин в'ється"
+  reason: "verify_quote(author=\"Народна творчість\", text=\"Чи не той то хміль, що коло тичин в'ється\") -> matched: false; best_confidence: 0.0; source chunk_id: none"
+- line: "Та ой як крикнув же козак Сірко, та на своїх козаків"
+  reason: "verify_quote(author=\"Народна творчість\", text=\"Та ой як крикнув же козак Сірко, та на своїх козаків\") -> matched: false; best_confidence: 0.0; source chunk_id: none"
+- line: "Ой був в Січі старий козак на прізвище Чалий"
+  reason: "verify_quote(author=\"Народна творчість\", text=\"Ой був в Січі старий козак на прізвище Чалий\") -> matched: false; best_confidence: 0.0; source chunk_id: none"
 sequence: 14
 slug: istorychni-pisni
-status: stub
+status: reviewed
 subtitle: Historical Songs
 title: Історичні пісні
-version: '0.1'
+version: '0.2'
 vocabulary_hints:
 - word: обряд
   pos: ч.
