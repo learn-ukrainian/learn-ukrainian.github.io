@@ -1,0 +1,82 @@
+{
+  "entries": [
+    {
+      "lemma": "книга",
+      "url_slug": "knyha",
+      "gloss": "book",
+      "pos": "noun",
+      "cefr": "A1",
+      "enrichment": {
+        "morphology": {
+          "paradigm": {
+            "cases": {
+              "nominative": {"singular": "книга", "plural": "книги"},
+              "accusative": {"singular": "книгу", "plural": "книги"},
+              "locative": {"singular": "книзі", "plural": "книгах"}
+            }
+          }
+        }
+      }
+    },
+    {
+      "lemma": "місто",
+      "url_slug": "misto",
+      "gloss": "city",
+      "pos": "noun",
+      "cefr": "A1",
+      "enrichment": {
+        "morphology": {
+          "paradigm": {
+            "cases": {
+              "nominative": {"singular": "місто", "plural": "міста"},
+              "accusative": {"singular": "місто", "plural": "міста"},
+              "locative": {"singular": "місті", "plural": "містах"}
+            }
+          }
+        }
+      }
+    },
+    {
+      "lemma": "робота",
+      "url_slug": "robota",
+      "gloss": "work",
+      "pos": "noun",
+      "cefr": "A1",
+      "enrichment": {
+        "morphology": {
+          "paradigm": {
+            "cases": {
+              "nominative": {"singular": "робота", "plural": "роботи"},
+              "accusative": {"singular": "роботу", "plural": "роботи"},
+              "locative": {"singular": "роботі", "plural": "роботах"}
+            }
+          }
+        }
+      }
+    },
+    {
+      "lemma": "школа",
+      "url_slug": "shkola",
+      "gloss": "school",
+      "pos": "noun",
+      "cefr": "A1",
+      "enrichment": {
+        "morphology": {
+          "paradigm": {
+            "cases": {
+              "nominative": {"singular": "школа", "plural": "школи"},
+              "accusative": {"singular": "школу", "plural": "школи"},
+              "locative": {"singular": "школі", "plural": "школах"}
+            }
+          }
+        }
+      }
+    },
+    {"lemma": "бачити", "url_slug": "bachyty", "gloss": "see", "pos": "verb", "cefr": "A1"},
+    {"lemma": "жити", "url_slug": "zhyty", "gloss": "live", "pos": "verb", "cefr": "A1"},
+    {"lemma": "лежати", "url_slug": "lezhaty", "gloss": "lie", "pos": "verb", "cefr": "A1"},
+    {"lemma": "читати", "url_slug": "chytaty", "gloss": "read", "pos": "verb", "cefr": "A1"},
+    {"lemma": "тепер", "url_slug": "teper", "gloss": "now", "pos": "adv", "cefr": "A1"},
+    {"lemma": "зараз", "url_slug": "zaraz", "gloss": "now", "pos": "adv", "cefr": "A1"}
+  ]
+}

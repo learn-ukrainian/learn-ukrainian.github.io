@@ -1,0 +1,20 @@
+{
+  "книга": [{"lemma": "книга", "pos": "noun", "tags": "noun:inanim:f:v_naz"}],
+  "книгу": [{"lemma": "книга", "pos": "noun", "tags": "noun:inanim:f:v_zna"}],
+  "книзі": [{"lemma": "книга", "pos": "noun", "tags": "noun:inanim:f:v_mis"}],
+  "місто": [{"lemma": "місто", "pos": "noun", "tags": "noun:inanim:n:v_naz"}],
+  "місті": [{"lemma": "місто", "pos": "noun", "tags": "noun:inanim:n:v_mis"}],
+  "робота": [{"lemma": "робота", "pos": "noun", "tags": "noun:inanim:f:v_naz"}],
+  "роботу": [{"lemma": "робота", "pos": "noun", "tags": "noun:inanim:f:v_zna"}],
+  "роботі": [{"lemma": "робота", "pos": "noun", "tags": "noun:inanim:f:v_mis"}],
+  "школі": [
+    {"lemma": "школа", "pos": "noun", "tags": "noun:inanim:f:v_dav"},
+    {"lemma": "школа", "pos": "noun", "tags": "noun:inanim:f:v_mis"}
+  ],
+  "бачу": [{"lemma": "бачити", "pos": "verb", "tags": "verb"}],
+  "живу": [{"lemma": "жити", "pos": "verb", "tags": "verb"}],
+  "лежить": [{"lemma": "лежати", "pos": "verb", "tags": "verb"}],
+  "читаю": [{"lemma": "читати", "pos": "verb", "tags": "verb"}],
+  "тепер": [{"lemma": "тепер", "pos": "adv", "tags": "adv"}],
+  "зараз": [{"lemma": "зараз", "pos": "adv", "tags": "adv"}]
+}
