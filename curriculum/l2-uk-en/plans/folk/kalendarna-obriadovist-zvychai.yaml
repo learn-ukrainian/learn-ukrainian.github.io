@@ -1,0 +1,26 @@
+module: folk-002
+level: FOLK
+sequence: 2
+slug: kalendarna-obriadovist-zvychai
+title: "Календарна обрядовість і звичаї"
+subtitle: "Calendar Rites and Customs — заглушка (перебудовується, #3879)"
+version: 1
+status: stub
+word_target: 4000
+objectives:
+  - 'Заглушка — чисті цілі регенеруються в базовій перебудові (#3879).'
+content_outline:
+  - section: 'Заглушка, частина 1 (#3879)'
+    words: 2000
+    points:
+      - 'Заглушка — план регенерується в базовій перебудові фольклору (#3879)'
+  - section: 'Заглушка, частина 2 (#3879)'
+    words: 2000
+    points:
+      - 'Заглушка — план регенерується в базовій перебудові фольклору (#3879)'
+references:
+  - title: 'Заглушка — джерела регенеруються в базовій перебудові (#3879)'
+note: >-
+  Outline placeholder. Built module + poisoned plan content removed in PR #3867. Full clean
+  base (dossier -> wiki -> plan -> module) regenerated base-first in the folk rebuild (#3879).
+  Not built, not published. All placeholder text carries zero framing/readings/chunk-ids.
