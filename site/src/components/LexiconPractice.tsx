@@ -547,9 +547,9 @@ export default function LexiconPractice({
     setStreak(readStreak());
     setMastered(masteredCount(MASTERED_THRESHOLD));
     if (state.flags.corrupt || state.flags.migrationFailed) {
-      setStorageWarning('Progress is paused until browser storage is readable.');
+      setStorageWarning('Прогрес призупинено, доки сховище браузера не стане доступним.');
     } else if (state.flags.clockJump) {
-      setStorageWarning('Review timing may be off because device clock changed.');
+      setStorageWarning('Час повторення може бути неточним: змінився годинник пристрою.');
     }
   }, []);
 
@@ -634,7 +634,7 @@ export default function LexiconPractice({
       setClozeLoaded(nextClozeLoaded);
       return nextDeck;
     } catch {
-      if (deckRequestId.current === requestId) setError('Practice deck could not be loaded.');
+      if (deckRequestId.current === requestId) setError('Не вдалося завантажити колоду для практики.');
       return null;
     } finally {
       if (deckRequestId.current === requestId) setLoading(false);
@@ -666,7 +666,7 @@ export default function LexiconPractice({
     const state = loadState();
     setMastered(masteredCount(MASTERED_THRESHOLD));
     if (state.flags.corrupt || state.flags.migrationFailed) {
-      setStorageWarning('Progress is paused until browser storage is readable.');
+      setStorageWarning('Прогрес призупинено, доки сховище браузера не стане доступним.');
     }
     setRevision((value) => value + 1);
   }
@@ -685,7 +685,7 @@ export default function LexiconPractice({
       }
       setFeedback(`${current.lemma.lemma}: ${RATING_LABELS[rating]}`);
     } catch {
-      setStorageWarning('Progress is paused until browser storage is readable.');
+      setStorageWarning('Прогрес призупинено, доки сховище браузера не стане доступним.');
     }
   }
 
@@ -722,7 +722,9 @@ export default function LexiconPractice({
     const rating = option.correct ? 'good' : 'again';
     recordReview(selection, rating);
     setAnswerLocked(true);
-    setFeedback(option.correct ? `${selection.lemma.lemma}: Correct` : `${selection.lemma.lemma}: Again`);
+    setFeedback(
+      option.correct ? `${selection.lemma.lemma}: Правильно` : `${selection.lemma.lemma}: Ще раз`,
+    );
     window.setTimeout(() => {
       setAnswerLocked(false);
       completeSelection(selection);
@@ -1033,7 +1035,7 @@ function PracticeItem({
   return (
     <div className="lexicon-choice" data-testid={`practice-${selection.mode}`}>
       <p className="lexicon-choice-prompt mc-q">{prompt}</p>
-      <p className="mc-sub">Оберіть правильну відповідь · клавіші 1-4</p>
+      <p className="mc-sub">Оберіть правильну відповідь</p>
       <ul className="lexicon-option-list mc-options">
         {options.map((option, index) => (
           <li key={option.label}>
