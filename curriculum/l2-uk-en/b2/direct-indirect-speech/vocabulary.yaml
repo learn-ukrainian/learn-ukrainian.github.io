@@ -1,0 +1,184 @@
+- lemma: пряма мова
+  translation: direct speech
+  pos: phrase
+  usage: "Пряма мова дослівно передає чуже висловлення й потребує лапок або діалогічного тире."
+- lemma: непряма мова
+  translation: indirect speech
+  pos: phrase
+  usage: "Непряма мова передає зміст репліки через підрядну частину."
+- lemma: цитата
+  translation: quotation
+  pos: noun
+  usage: "Цитата має зберігати точні слова джерела."
+- lemma: репліка
+  translation: utterance, line
+  pos: noun
+  usage: "Кожна репліка в діалозі може починатися з нового рядка й тире."
+- lemma: діалог
+  translation: dialogue
+  pos: noun
+  usage: "Діалог показує чергування реплік між співрозмовниками."
+- lemma: слова автора
+  translation: reporting clause
+  pos: phrase
+  usage: "Слова автора називають мовця або дію мовлення."
+- lemma: трансформація
+  translation: transformation
+  pos: noun
+  usage: "Трансформація прямої мови в непряму змінює займенники й пунктуацію."
+- lemma: реферування
+  translation: paraphrasing, reporting
+  pos: noun
+  usage: "Реферування стисло передає чужу думку без дослівного цитування."
+- lemma: переказ
+  translation: retelling, paraphrase
+  pos: noun
+  usage: "Переказ має зберігати головну думку джерела."
+- lemma: джерело
+  translation: source
+  pos: noun
+  usage: "Джерело треба назвати, коли передаєш чужу позицію."
+- lemma: контекст
+  translation: context
+  pos: noun
+  usage: "Контекст захищає цитату від спотворення."
+- lemma: контекстуалізація
+  translation: contextualization
+  pos: noun
+  usage: "Контекстуалізація пояснює, у якій ситуації з'явилася цитата."
+- lemma: модальність
+  translation: modality
+  pos: noun
+  usage: "Дієслово попросив передає іншу модальність, ніж наказав."
+- lemma: перцепція
+  translation: perception
+  pos: noun
+  usage: "Невласне пряма мова може передавати перцепцію персонажа."
+- lemma: лапки
+  translation: quotation marks
+  pos: noun
+  usage: "Лапки позначають межі дослівної цитати."
+- lemma: двокрапка
+  translation: colon
+  pos: noun
+  usage: "Перед прямою мовою після слів автора ставимо двокрапку."
+- lemma: тире
+  translation: dash
+  pos: noun
+  usage: "Тире відокремлює слова автора після прямої мови."
+- lemma: знак питання
+  translation: question mark
+  pos: phrase
+  usage: "Знак питання належить питальній репліці."
+- lemma: знак оклику
+  translation: exclamation mark
+  pos: phrase
+  usage: "Знак оклику зберігає емоцію прямої мови."
+- lemma: підрядна частина
+  translation: subordinate clause
+  pos: phrase
+  usage: "У непрямій мові підрядна частина передає зміст репліки."
+- lemma: головна частина
+  translation: main clause
+  pos: phrase
+  usage: "Головна частина містить слова автора."
+- lemma: сполучник
+  translation: conjunction
+  pos: noun
+  usage: "Сполучник що часто вводить непряме розповідне висловлення."
+- lemma: частка
+  translation: particle
+  pos: noun
+  usage: "Частка чи вводить непряме загальне питання."
+- lemma: питальне слово
+  translation: interrogative word
+  pos: phrase
+  usage: "Питальне слово де зберігається в непрямому питанні."
+- lemma: займенник
+  translation: pronoun
+  pos: noun
+  usage: "Під час трансформації займенник я часто змінюється."
+- lemma: наказовий спосіб
+  translation: imperative mood
+  pos: phrase
+  usage: "Наказовий спосіб не переноситься механічно після сполучника що."
+- lemma: прохання
+  translation: request
+  pos: noun
+  usage: "Прохання можна передати конструкцією зі щоб."
+- lemma: наказ
+  translation: command
+  pos: noun
+  usage: "Наказ у непрямій мові потребує відповідного дієслова введення."
+- lemma: дієслово мовлення
+  translation: reporting verb
+  pos: phrase
+  usage: "Дієслово мовлення уточнює, як саме передано думку."
+- lemma: зазначити
+  translation: to note, to state
+  pos: verb
+  usage: "Автор зазначив, що цитату подано в повному контексті."
+- lemma: підкреслити
+  translation: to emphasize
+  pos: verb
+  usage: "Дослідниця підкреслила важливість точного переказу."
+- lemma: заперечити
+  translation: to deny, to object
+  pos: verb
+  usage: "Рецензент заперечив, що висновок випливає з цитати."
+- lemma: припустити
+  translation: to suppose
+  pos: verb
+  usage: "Автор припустив, що джерело потребує додаткової перевірки."
+- lemma: попередити
+  translation: to warn
+  pos: verb
+  usage: "Редактор попередив, що скорочення може змінити зміст."
+- lemma: наголосити
+  translation: to stress, to emphasize
+  pos: verb
+  usage: "Викладачка наголосила, що реферування не скасовує посилання на джерело."
+- lemma: уточнити
+  translation: to clarify
+  pos: verb
+  usage: "Рецензент уточнив, чи збережено контекст цитати."
+- lemma: джерельний
+  translation: source-based
+  pos: adjective
+  usage: "Джерельний контекст допомагає не спотворити цитату."
+- lemma: дослівний
+  translation: verbatim
+  pos: adjective
+  usage: "Дослівний фрагмент треба брати в лапки."
+- lemma: непрямий
+  translation: indirect
+  pos: adjective
+  usage: "Непрямий переказ змінює форму, але зберігає зміст."
+- lemma: внутрішній голос
+  translation: inner voice
+  pos: phrase
+  usage: "Невласне пряма мова передає внутрішній голос персонажа."
+- lemma: невласне пряма мова
+  translation: free indirect speech
+  pos: phrase
+  usage: "Невласне пряма мова поєднує авторську розповідь і голос персонажа."
+- lemma: авторська розповідь
+  translation: authorial narration
+  pos: phrase
+  usage: "Авторська розповідь може наближатися до голосу персонажа."
+- lemma: спотворення
+  translation: distortion
+  pos: noun
+  usage: "Спотворення цитати виникає, коли прибрано важливе застереження."
+- lemma: плагіат
+  translation: plagiarism
+  pos: noun
+  usage: "Плагіат приховує чужу думку або подає її як власну."
+- lemma: відповідальність
+  translation: responsibility
+  pos: noun
+  usage: "Відповідальність за точність переказу лежить на авторі нового тексту."
+- lemma: вирвати з контексту
+  translation: to take out of context
+  pos: phrase
+  usage: "Не можна вирвати цитату з контексту й змінити позицію джерела."
