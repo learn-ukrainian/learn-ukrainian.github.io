@@ -1,0 +1,152 @@
+- lemma: логічний наголос
+  translation: logical stress
+  pos: phrase
+  usage: Логічний наголос виділяє найважливіше слово в реченні.
+- lemma: інверсія
+  translation: inversion
+  pos: noun
+  usage: Інверсія змінює нейтральний порядок слів для смислового ефекту.
+- lemma: актуальне членування
+  translation: information structure
+  pos: phrase
+  usage: Актуальне членування показує співвідношення теми й реми.
+- lemma: тема
+  translation: theme
+  pos: noun
+  usage: Тема спирається на вже відомий контекст.
+- lemma: рема
+  translation: rheme
+  pos: noun
+  usage: Рема несе нову або контрастну інформацію.
+- lemma: нейтральний порядок
+  translation: neutral word order
+  pos: phrase
+  usage: Нейтральний порядок не створює додаткового стилістичного напруження.
+- lemma: прямий порядок
+  translation: direct word order
+  pos: phrase
+  usage: Прямий порядок часто починається з підмета.
+- lemma: кінцева позиція
+  translation: final position
+  pos: phrase
+  usage: Кінцева позиція часто підсилює рему.
+- lemma: комунікативний центр
+  translation: communicative center
+  pos: phrase
+  usage: Комунікативний центр відповідає на приховане питання речення.
+- lemma: смисловий центр
+  translation: semantic center
+  pos: phrase
+  usage: Смисловий центр може стояти наприкінці речення.
+- lemma: емфаза
+  translation: emphasis
+  pos: noun
+  usage: Емфаза потрібна тоді, коли автор свідомо підсилює фокус.
+- lemma: топікалізація
+  translation: topicalization
+  pos: noun
+  usage: Топікалізація виносить відомий об'єкт на початок речення.
+- lemma: частка
+  translation: particle
+  pos: noun
+  usage: Частка може змінити логічний фокус висловлення.
+- lemma: постпозиція
+  translation: postposition
+  pos: noun
+  usage: Постпозиція означення часто звучить художньо.
+- lemma: означення
+  translation: attribute
+  pos: noun
+  usage: Означення називає ознаку предмета.
+- lemma: підмет
+  translation: subject
+  pos: noun
+  usage: Підмет називає виконавця або носія стану.
+- lemma: присудок
+  translation: predicate
+  pos: noun
+  usage: Присудок може стояти перед підметом у сценічному описі.
+- lemma: додаток
+  translation: object
+  pos: noun
+  usage: Додаток можна винести на початок для контрасту.
+- lemma: обставина
+  translation: adverbial modifier
+  pos: noun
+  usage: Обставина на початку речення задає часову або просторову рамку.
+- lemma: дистантне розташування
+  translation: distant placement
+  pos: phrase
+  usage: Дистантне розташування залежних слів може ускладнити читання.
+- lemma: двозначність
+  translation: ambiguity
+  pos: noun
+  usage: Невдала інверсія створює двозначність.
+- lemma: ритмомелодика
+  translation: rhythm and melody
+  pos: noun
+  usage: Ритмомелодика речення залежить від порядку слів.
+- lemma: експресивність
+  translation: expressiveness
+  pos: noun
+  usage: Експресивність доречна в публіцистичному або художньому тексті.
+- lemma: стилістична фігура
+  translation: stylistic figure
+  pos: phrase
+  usage: Інверсія може працювати як стилістична фігура.
+- lemma: регістр
+  translation: register
+  pos: noun
+  usage: Регістр визначає, чи доречна сильна інверсія.
+- lemma: службовий стиль
+  translation: official style
+  pos: phrase
+  usage: Службовий стиль потребує прозорого порядку слів.
+- lemma: публіцистичний стиль
+  translation: journalistic style
+  pos: phrase
+  usage: Публіцистичний стиль часто використовує риторичний наголос.
+- lemma: художній стиль
+  translation: literary style
+  pos: phrase
+  usage: Художній стиль дозволяє ритмічну постпозицію означення.
+- lemma: контраст
+  translation: contrast
+  pos: noun
+  usage: Контраст допомагає пояснити, чому потрібна частка саме.
+- lemma: протиставлення
+  translation: opposition
+  pos: noun
+  usage: Протиставлення можна оформити конструкцією а не.
+- lemma: приховане питання
+  translation: implicit question
+  pos: phrase
+  usage: Приховане питання допомагає знайти рему.
+- lemma: рамка висловлення
+  translation: discourse frame
+  pos: phrase
+  usage: Рамка висловлення готує читача до нової інформації.
+- lemma: калькована конструкція
+  translation: calqued construction
+  pos: phrase
+  usage: Калькована конструкція може звучати неприродно українською.
+- lemma: редагування
+  translation: editing
+  pos: noun
+  usage: Редагування перевіряє, чи інверсія справді допомагає тексту.
+- lemma: доречність
+  translation: appropriateness
+  pos: noun
+  usage: Доречність важливіша за декоративний ефект.
+- lemma: урочистість
+  translation: solemnity
+  pos: noun
+  usage: Надмірна урочистість шкодить службовому тексту.
+- lemma: прозорість
+  translation: clarity
+  pos: noun
+  usage: Прозорість допомагає адресатові швидко зрозуміти інструкцію.
+- lemma: наголошувати
+  translation: to emphasize
+  pos: verb
+  usage: Частка може наголошувати потрібний член речення.
