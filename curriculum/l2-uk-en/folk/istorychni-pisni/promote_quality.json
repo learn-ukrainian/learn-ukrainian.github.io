@@ -3,15 +3,15 @@
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "1da457048e3284962888f9e30369b7436fefa366d18c06e89cc819e18fea934f",
+    "digest": "394ae609756f38d9c2e4e0cbade7bf3cd2282077f7c4ef4ec6e8aec7dd283b42",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/istorychni-pisni.yaml",
-        "sha256": "401ab5ce300df5ba3ca961e2015318d684838efadb21dca2ceab7ab6fd2a6df7"
+        "sha256": "9d70744ae4d151e72ffb72737274b9e77bba0741d4750431d9d32e6e07e44460"
       },
       {
         "path": "curriculum/l2-uk-en/folk/istorychni-pisni/module.md",
-        "sha256": "68e7511099bb56c4e4acc624664a60a9258814403e8c89abf10c9aaeb3d543a4"
+        "sha256": "e136b67350823c71222dbb435c3af5a5eaef7626a36fc6c04071eacc7000beba"
       },
       {
         "path": "curriculum/l2-uk-en/folk/istorychni-pisni/activities.yaml",
@@ -28,9 +28,8 @@
     ]
   },
   "evidence": {
-    "decolonization": "7-step frame: malorosiyskyi-as-edition-marker, Soviet vozzjednannia myth, Zaporozhskaya-Starina falsifications, anti-hagiography of haidamaky",
-    "naturalness": "fluent C1+ register; yasyr/haidamachchyna/opryshok flagged as historicisms; liakh only as historicism",
-    "pedagogical": "4-step seminar method (form->layer->provenance->function); explicit pisnia/duma/perekaz genre boundaries with corpus chunk-ids"
+    "naturalness": "Russianism \u043c\u043e\u0434\u0435\u043b\u0438->\u043c\u043e\u0434\u0435\u043b\u0456 fixed; vesum_verified clean",
+    "readings": "6 readings ALL folk/school canon corpus; \u0417\u0430\u043b\u0456\u0437\u043d\u044f\u043a re-sourced to folk 83f36b8b; \u0425\u043c\u0435\u043b\u044c\u043d\u0438\u0446\u044c\u043a\u0438\u0439/\u044f\u0441\u0456\u0440 literary-witness dropped"
   },
   "floors": {
     "beauty": 8.5,
@@ -48,7 +47,7 @@
     "model": "claude-opus-4-8"
   },
   "schema_version": 1,
-  "scored_at": "2026-06-26T04:53:34Z",
+  "scored_at": "2026-06-26T07:05:29Z",
   "scores": {
     "beauty": 9.0,
     "decolonization": 9.5,
