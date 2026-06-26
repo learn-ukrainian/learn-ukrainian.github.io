@@ -623,7 +623,10 @@ def write_candidates(candidates: list[dict[str, Any]], path: Path) -> None:
     path.write_text(json.dumps(candidates, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
 
-def main(argv: list[str] | None = None) -> int:
+def main(
+    argv: list[str] | None = None,
+    russian_shadow_checker: RussianShadowChecker = check_russian_shadow,
+) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--manifest", type=Path, required=True)
     parser.add_argument("--uk-sentences", type=Path, required=True)
@@ -652,6 +655,7 @@ def main(argv: list[str] | None = None) -> int:
             max_per_lemma_case_rule=args.max_per_lemma_case_rule,
             limit_pairs=args.limit_pairs,
         ),
+        russian_shadow_checker=russian_shadow_checker,
     )
     write_candidates(report.candidates, args.out)
     print(f"wrote {len(report.candidates)} candidates to {args.out}")

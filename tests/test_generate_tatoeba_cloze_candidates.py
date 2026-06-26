@@ -115,7 +115,8 @@ def test_tatoeba_cli_writes_review_candidate_file(tmp_path: Path) -> None:
             str(VESUM),
             "--out",
             str(out),
-        ]
+        ],
+        russian_shadow_checker=lambda _token: False,
     )
 
     rows = json.loads(out.read_text(encoding="utf-8"))
