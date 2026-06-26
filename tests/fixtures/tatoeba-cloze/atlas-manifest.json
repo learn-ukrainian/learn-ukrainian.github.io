@@ -10,9 +10,9 @@
         "morphology": {
           "paradigm": {
             "cases": {
-              "nominative": {"singular": "книга", "plural": "книги"},
-              "accusative": {"singular": "книгу", "plural": "книги"},
-              "locative": {"singular": "книзі", "plural": "книгах"}
+              "називний": {"singular": "книга", "plural": "книги"},
+              "знахідний": {"singular": "книгу", "plural": "книги"},
+              "місцевий": {"singular": "книзі", "plural": "книгах"}
             }
           }
         }
@@ -28,9 +28,9 @@
         "morphology": {
           "paradigm": {
             "cases": {
-              "nominative": {"singular": "місто", "plural": "міста"},
-              "accusative": {"singular": "місто", "plural": "міста"},
-              "locative": {"singular": "місті", "plural": "містах"}
+              "називний": {"singular": "місто", "plural": "міста"},
+              "знахідний": {"singular": "місто", "plural": "міста"},
+              "місцевий": {"singular": "місті", "plural": "містах"}
             }
           }
         }
@@ -46,9 +46,9 @@
         "morphology": {
           "paradigm": {
             "cases": {
-              "nominative": {"singular": "робота", "plural": "роботи"},
-              "accusative": {"singular": "роботу", "plural": "роботи"},
-              "locative": {"singular": "роботі", "plural": "роботах"}
+              "називний": {"singular": "робота", "plural": "роботи"},
+              "знахідний": {"singular": "роботу", "plural": "роботи"},
+              "місцевий": {"singular": "роботі", "plural": "роботах"}
             }
           }
         }
@@ -64,9 +64,9 @@
         "morphology": {
           "paradigm": {
             "cases": {
-              "nominative": {"singular": "школа", "plural": "школи"},
-              "accusative": {"singular": "школу", "plural": "школи"},
-              "locative": {"singular": "школі", "plural": "школах"}
+              "називний": {"singular": "школа", "plural": "школи"},
+              "знахідний": {"singular": "школу", "plural": "школи"},
+              "місцевий": {"singular": "школі", "plural": "школах"}
             }
           }
         }

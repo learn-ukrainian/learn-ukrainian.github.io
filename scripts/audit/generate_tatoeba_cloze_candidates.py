@@ -47,6 +47,11 @@ from scripts.lexicon.heritage_classifier import _check_russian_shadow
 DEFAULT_OUT = Path("site/src/data/lexicon-practice-cloze-tatoeba-review-candidates.json")
 SUPPORTED_CASE_RULE_IDS = ("accusative_direct_object", "locative_static_u", "locative_static_na")
 SUPPORTED_CASE_RULE_SET = frozenset(SUPPORTED_CASE_RULE_IDS)
+MANIFEST_CASE_LABEL_BY_RULE_ID = {
+    "accusative_direct_object": "знахідний",
+    "locative_static_u": "місцевий",
+    "locative_static_na": "місцевий",
+}
 UK_TOKEN_RE = re.compile(r"[А-ЩЬЮЯЄІЇҐа-щьюяєіїґ]+(?:[ʼ'’-][А-ЩЬЮЯЄІЇҐа-щьюяєіїґ]+)*")
 EN_DASH_RE = re.compile(r"\s+")
 LICENSE_RE = re.compile(r"\b(?:CC0|CC[- ]BY(?:\s+2\.0\s+FR)?)\b", re.IGNORECASE)
@@ -139,11 +144,12 @@ class TargetForm:
 @dataclass(frozen=True)
 class GeneratorConfig:
     seed: int = 3797
-    min_words: int = 4
-    max_words: int = 12
-    max_per_lemma: int = 8
-    max_per_case_rule: int = 2_000
-    max_per_lemma_case_rule: int = 3
+    min_words: int = 3
+    max_words: int = 16
+    max_unknown_tokens: int = 4
+    max_per_lemma: int = 10_000
+    max_per_case_rule: int = 10_000
+    max_per_lemma_case_rule: int = 10_000
     near_duplicate_distance: int = 3
     near_duplicate_ratio: float = 0.16
     limit_pairs: int | None = None
@@ -304,6 +310,14 @@ def _build_lemma_levels(entries: list[dict[str, Any]]) -> dict[str, str]:
     return levels
 
 
+def _manifest_case_form(paradigm: dict[str, Any], rule_id: str, case_name: str, number: str) -> str | None:
+    return _case_form(paradigm, MANIFEST_CASE_LABEL_BY_RULE_ID.get(rule_id, case_name), number) or _case_form(
+        paradigm,
+        case_name,
+        number,
+    )
+
+
 def _build_target_index(
     entries: list[dict[str, Any]],
     report: GenerationReport,
@@ -325,7 +339,7 @@ def _build_target_index(
             rule = CASE_RULES[rule_id]
             case_name = str(rule["case"])
             for number in NUMBER_KEYS:
-                surface = _clean_text(_case_form(paradigm, case_name, number))
+                surface = _clean_text(_manifest_case_form(paradigm, rule_id, case_name, number))
                 if not surface:
                     continue
                 surface_plain = _plain(surface)
@@ -431,10 +445,8 @@ def _blocked_register(text: str) -> bool:
     return bool(BLOCKED_REGISTER_RE.search(text))
 
 
-def _russianism_prescreen(text: str, checker: RussianShadowChecker) -> bool:
-    if RUSSIANISM_RE.search(text):
-        return True
-    return any(checker(token.text) for token in _tokens(text))
+def _russianism_prescreen(text: str, _checker: RussianShadowChecker) -> bool:
+    return bool(RUSSIANISM_RE.search(text))
 
 
 def _bump_cefr(level: str, steps: int) -> str:
@@ -447,8 +459,10 @@ def assign_sentence_cefr(
     tokens: list[TokenSpan],
     verifier: VesumVerifier,
     lemma_levels: dict[str, str],
+    max_unknown_tokens: int = 4,
 ) -> str | None:
     ranks: list[int] = []
+    unknown_tokens = 0
     for token in tokens:
         token_plain = _plain(token.text)
         if token_plain in FUNCTION_LEMMAS:
@@ -460,7 +474,10 @@ def assign_sentence_cefr(
             if _plain(str(match.get("lemma") or "")) in lemma_levels
         ]
         if not token_levels:
-            return None
+            unknown_tokens += 1
+            if unknown_tokens > max_unknown_tokens:
+                return None
+            continue
         ranks.append(max(CEFR_RANK[level] for level in token_levels))
     if not ranks:
         return None
@@ -580,7 +597,13 @@ def generate_tatoeba_cloze_candidates(
         if _russianism_prescreen(sentence, russian_shadow_checker):
             report.reject("russianism_prescreen")
             continue
-        sentence_cefr = assign_sentence_cefr(sentence, tokens, verifier, lemma_levels)
+        sentence_cefr = assign_sentence_cefr(
+            sentence,
+            tokens,
+            verifier,
+            lemma_levels,
+            max_unknown_tokens=config.max_unknown_tokens,
+        )
         if sentence_cefr is None:
             report.reject("sentence_cefr_unknown")
             continue
