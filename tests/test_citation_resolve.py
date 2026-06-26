@@ -173,11 +173,23 @@ def test_quoted_title_with_no_plan_match_still_rejected() -> None:
 
 
 def test_koliadky_author_prefixed_plan_references_resolve_by_containment() -> None:
-    plan_path = (
-        linear_pipeline.PROJECT_ROOT
-        / "curriculum/l2-uk-en/plans/folk/koliadky-shchedrivky.yaml"
-    )
-    plan = yaml.safe_load(plan_path.read_text("utf-8"))
+    plan = {
+        "references": [
+            {"title": "Слов'янська міфологія", "author": "Костомаров М."},
+            {"title": "Нарис історії культури України", "author": "Попович М."},
+            {
+                "title": "Історія української літератури",
+                "author": "Чижевський Д.",
+            },
+            {
+                "title": (
+                    "Праці етнографічно-статистичної експедиції "
+                    "в Західно-Руський край"
+                ),
+                "author": "Чубинський П.",
+            },
+        ]
+    }
     resources = [
         {"source_ref": "Костомаров М. «Слов'янська міфологія»"},
         {"source_ref": "Попович М. «Нарис історії культури України»"},

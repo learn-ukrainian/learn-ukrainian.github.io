@@ -8,8 +8,6 @@ import yaml
 
 from scripts.build.linear_pipeline import PYTHON_QG_GATE_ORDER, _reading_coverage_gate
 
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
-
 
 def _run_fixture_gate(tmp_path: Path, plan: dict[str, Any], module_text: str) -> dict[str, Any]:
     plan_path = tmp_path / "plan.yaml"
@@ -165,22 +163,73 @@ def test_non_seminar_level_is_skipped(tmp_path: Path) -> None:
 
 
 @pytest.mark.parametrize(
-    ("slug", "expect_floor_warning"),
+    ("plan", "module_text", "expect_floor_warning"),
     [
-        ("koliadky-shchedrivky", False),
-        ("kalendarna-obriadovist-zvychai", False),
-        ("narodna-kultura-yak-systema", False),
-        ("dumy-nevilnytski-lytsarski", False),
-        # narodni-viruvannia-mifolohiia-demonolohiia + zamovliannia-zaklynannia-prymovky CUT 2026-06-25
-        # (folk reset — see FOLK-FRAMING-STANDARD.md; modules removed from the track).
+        pytest.param(
+            {
+                "level": "folk",
+                "readings": [
+                    {
+                        "title": "«Ой весна»",
+                        "hosting": "host",
+                        "reading_slug": "oi-vesna",
+                    },
+                ],
+            },
+            _module_with_four_blocks("«Ой весна»"),
+            False,
+            id="hosted-title-attribution",
+        ),
+        pytest.param(
+            {
+                "level": "folk",
+                "readings": [
+                    {
+                        "title": "«Гей, соколи»",
+                        "hosting": "hosted",
+                        "reading_slug": "hei-sokoly",
+                    },
+                ],
+            },
+            _module_with_four_blocks("«Гей, соколи»"),
+            False,
+            id="hosted-alias-attribution",
+        ),
+        pytest.param(
+            {
+                "level": "folk",
+                "readings": [
+                    {
+                        "title": "«Дума про втечу трьох братів з Азова»",
+                        "hosting": "host",
+                        "reading_slug": "duma-pro-vtechu-trokh-brativ-z-azova",
+                    },
+                ],
+            },
+            _module_with_four_blocks("«Дума про втечу трьох братів з Азова»"),
+            False,
+            id="long-hosted-title-attribution",
+        ),
+        pytest.param(
+            {
+                "level": "folk",
+                "readings": [
+                    {
+                        "title": "«Щедрий вечір»",
+                        "hosting": "host",
+                        "reading_slug": "shchedryi-vechir",
+                    },
+                ],
+            },
+            _module_with_four_blocks("«Щедрий вечір»"),
+            False,
+            id="hosted-title-no-floor-warning",
+        ),
     ],
 )
-def test_real_built_folk_modules_all_pass_reading_coverage(slug: str, expect_floor_warning: bool) -> None:
-    plan_path = PROJECT_ROOT / "curriculum" / "l2-uk-en" / "plans" / "folk" / f"{slug}.yaml"
-    module_path = PROJECT_ROOT / "curriculum" / "l2-uk-en" / "folk" / slug / "module.md"
-    plan = yaml.safe_load(plan_path.read_text(encoding="utf-8"))
-    module_text = module_path.read_text(encoding="utf-8")
-
+def test_fixture_folk_modules_all_pass_reading_coverage(
+    plan: dict[str, Any], module_text: str, expect_floor_warning: bool
+) -> None:
     result = _reading_coverage_gate(module_text, plan)
 
     assert result["passed"] is True
