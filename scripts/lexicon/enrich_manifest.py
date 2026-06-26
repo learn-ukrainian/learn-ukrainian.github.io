@@ -1089,14 +1089,17 @@ def _vesum_word_poses(word: str) -> set[str]:
 
 def _vesum_base_lemma(word: str) -> str | None:
     """Resolve an inflected surface form to its VESUM base lemma (моєму → мій,
-    п'ємо → пити). Returns None when the word is already its own lemma or VESUM has
-    no analysis, so callers only do the extra base lookup for genuine forms — this
-    is what lets clean dictionaries (СУМ-20/VTS) cover inflected-form entries."""
+    п'ємо → пити) ONLY when that base is unambiguous. If the form maps to several
+    distinct lemmas — a homograph, e.g. «став» → стати (verb) / став (noun) — return
+    None rather than guess, so we never show an unrelated word's definition. Also
+    returns None when the word is already its own lemma or VESUM has no analysis."""
     surface = _lookup_key(word).casefold()
-    for lemma, _pos in _vesum_word_analyses(surface):
-        if lemma and lemma.casefold() != surface:
-            return lemma
-    return None
+    bases = {
+        lemma
+        for lemma, _pos in _vesum_word_analyses(surface)
+        if lemma and lemma.casefold() != surface
+    }
+    return next(iter(bases)) if len(bases) == 1 else None
 
 
 @lru_cache(maxsize=8192)
@@ -2248,9 +2251,10 @@ def _vts_definition_card(
     cache: dict[str, Any] | None = None,
 ) -> dict[str, Any] | None:
     """Великий тлумачний словник (VTS) — a modern, Ukrainian-only explanatory
-    dictionary on slovnyk.me. Fetched on demand (only when СУМ-20 is missing) so we
-    stay polite to the source. Non-Soviet replacement for the removed СУМ-11 source
-    (decolonization decision 2026-06-26)."""
+    dictionary on slovnyk.me, fetched live (cached per lookup word). Shown as the
+    top definition card, with СУМ-20 below. Non-Soviet replacement for the removed
+    СУМ-11 source (decolonization decision 2026-06-26). For inflected-form entries it
+    falls back to the base lemma's entry via _slovnyk_base_row."""
     lookup_word = _slovnyk_lookup_word(lemma)
     if not lookup_word:
         return None
