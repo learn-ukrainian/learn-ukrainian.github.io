@@ -22,16 +22,16 @@ ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_MANIFEST = ROOT / "site" / "src" / "data" / "lexicon-manifest.json"
 
 SCRIPT_DIR = Path(__file__).resolve().parent
-if str(SCRIPT_DIR) in sys.path:
-    sys.path.remove(str(SCRIPT_DIR))
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
+if str(SCRIPT_DIR) not in sys.path:
+    sys.path.insert(0, str(SCRIPT_DIR))
 
-from scripts.audit.audit_atlas_thin_enriched import (
+from audit_atlas_thin_enriched import (
     has_learner_english_anchor,
     old_gate_enriched,
 )
-from scripts.audit.generate_search_index import _search_row
+
 from scripts.lexicon.manifest_io import load_manifest
 
 RICH_SECTION_ORDER = (
@@ -133,9 +133,28 @@ def rendered_sections(entry: dict[str, Any]) -> set[str]:
     return sections
 
 
+def _is_static_search_entry(entry: dict[str, Any]) -> bool:
+    return bool(entry.get("lemma")) and bool(entry.get("url_slug")) and entry.get("pos") != "grammar term"
+
+
+def _static_search_gloss(entry: dict[str, Any]) -> str | None:
+    if _nonempty_string(entry.get("gloss")):
+        return str(entry["gloss"])
+    enrichment = entry.get("enrichment")
+    if not isinstance(enrichment, dict):
+        return None
+    translation = enrichment.get("translation")
+    if not isinstance(translation, dict):
+        return None
+    terms = translation.get("en")
+    if not isinstance(terms, list):
+        return None
+    visible = [str(term).strip() for term in terms if _nonempty_string(term)]
+    return "; ".join(visible[:3]) if visible else None
+
+
 def search_has_visible_gloss(entry: dict[str, Any]) -> bool:
-    row = _search_row(entry)
-    return bool(row and _nonempty_string(row.get("g")))
+    return _is_static_search_entry(entry) and _nonempty_string(_static_search_gloss(entry))
 
 
 def _entry_cefr(entry: dict[str, Any]) -> str | None:
@@ -169,7 +188,7 @@ def audit_manifest(
     sample_limit: int = 25,
 ) -> dict[str, Any]:
     entries = [entry for entry in manifest.get("entries", []) if isinstance(entry, dict)]
-    search_entries = [entry for entry in entries if _search_row(entry)]
+    search_entries = [entry for entry in entries if _is_static_search_entry(entry)]
     old_enriched = [entry for entry in search_entries if old_gate_enriched(entry)]
 
     search_no_gloss: list[dict[str, Any]] = []
@@ -265,6 +284,20 @@ def _print_tsv(summary: dict[str, Any]) -> None:
             )
 
 
+def _max_failures(summary: dict[str, Any], limits: dict[str, int | None]) -> list[str]:
+    failures: list[str] = []
+    for key, limit in limits.items():
+        if limit is None:
+            continue
+        if limit < 0:
+            failures.append(f"{key}: max must be non-negative, got {limit}")
+            continue
+        count = int(summary[key])
+        if count > limit:
+            failures.append(f"{key}: {count} exceeds max {limit}")
+    return failures
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--manifest", type=Path, default=DEFAULT_MANIFEST)
@@ -277,6 +310,9 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--limit", type=int, default=25)
     parser.add_argument("--format", choices=("summary", "json", "tsv"), default="summary")
     parser.add_argument("--fail-if-any", action="store_true")
+    parser.add_argument("--max-search-no-visible-gloss", type=int, default=None)
+    parser.add_argument("--max-old-gate-no-english-anchor", type=int, default=None)
+    parser.add_argument("--max-poc-thin-pages", type=int, default=None)
     args = parser.parse_args(argv)
 
     manifest = _read_local_manifest(args.manifest) if args.local else load_manifest(args.manifest)
@@ -293,12 +329,28 @@ def main(argv: list[str] | None = None) -> int:
     else:
         _print_summary(summary)
 
+    failures = _max_failures(
+        summary,
+        {
+            "search_no_visible_gloss": args.max_search_no_visible_gloss,
+            "old_gate_no_english_anchor": args.max_old_gate_no_english_anchor,
+            "poc_thin_pages": args.max_poc_thin_pages,
+        },
+    )
+
     if args.fail_if_any and (
         summary["search_no_visible_gloss"]
         or summary["old_gate_no_english_anchor"]
         or summary["poc_thin_pages"]
     ):
+        failures.append("--fail-if-any matched at least one non-zero audit bucket")
+
+    if failures:
+        print("Atlas POC richness gate failed:")
+        for failure in failures:
+            print(f"- {failure}")
         return 1
+
     return 0
 
 
