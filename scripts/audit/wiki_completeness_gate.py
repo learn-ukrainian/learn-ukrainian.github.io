@@ -61,12 +61,15 @@ SEMINAR_SECTION_HEADING_RES = {
 }
 
 METHODOLOGY_HEADING_RE = re.compile(r"^##\s+Методичний\s+підхід\b", re.IGNORECASE)
+B2_SCHOOL_METHOD_HEADING_RE = re.compile(r"^##\s+Як\s+це\s+пояснюють\s+у\s+школі\b", re.IGNORECASE)
 DECOLONIZATION_HEADING_RE = re.compile(r"^##\s+Деколонізаційні\s+застереження\b", re.IGNORECASE)
 TEXTBOOK_EXAMPLES_HEADING_RE = re.compile(r"^##\s+Приклади\s+з\s+підручників\b", re.IGNORECASE)
+EXERCISE_RECOMMENDATIONS_HEADING_RE = re.compile(r"^##\s+Рекомендації\s+для\s+вправ\b", re.IGNORECASE)
 ANY_H2_RE = re.compile(r"^##\s+\S")
 SOURCE_REF_RE = re.compile(r"\[S(?P<num>\d+)\]")
 BAD_MARKER_RE = re.compile(r"<!--\s*bad\s*-->(?P<body>.*?)<!--\s*/bad\s*-->", re.IGNORECASE | re.DOTALL)
 GUILLEMET_NEGATED_PAIR_RE = re.compile(r"«[^»\n]{1,120}»\s*\(\s*не\s+«[^»\n]{1,120}»\s*\)", re.IGNORECASE)
+LEGACY_PHASE_RE = re.compile(r"^\s*(?:[-*]\s*)?(?:\*\*)?Фаза\s+\d+\s*[:.]", re.IGNORECASE)
 UKRAINIAN_RE = re.compile(r"[А-Яа-яІіЇїЄєҐґ]")
 
 CHECK_TITLES = {
@@ -80,6 +83,8 @@ CHECK_TITLES = {
     "chunk_citations_spot_check": "chunk_citations_spot_check",
     "seminar_sections": "seminar_sections",
     "distinct_sources": "distinct_sources",
+    "exercise_progression": "Рекомендації для вправ",
+    "decolonization_guidance": "Деколонізаційні застереження",
     "citation_resolution": "citation_resolution",
     "source_ref_resolution": "source_ref_resolution",
     "all_chunk_verify_quote": "all_chunk_verify_quote",
@@ -100,6 +105,16 @@ SEMINAR_CHECK_ORDER = (
     "citation_resolution",
     "source_ref_resolution",
     "all_chunk_verify_quote",
+)
+B2_SOURCE_READINESS_CHECK_ORDER = (
+    "methodology",
+    "exercise_progression",
+    "l2_errors",
+    "decolonization_guidance",
+    "distinct_sources",
+    "citation_resolution",
+    "source_ref_resolution",
+    "chunk_citations_spot_check",
 )
 
 
@@ -125,6 +140,16 @@ def thresholds_for_level(level: str) -> dict[str, Any]:
             "textbook_exercises": 3,
             "distractor_inventory": 6,
             "chunk_citations_spot_check": 3,
+        }
+    if level_key == "b2":
+        return {
+            "exercise_progression": 3,
+            "l2_errors": 3,
+            "decolonization_guidance": 2,
+            "min_distinct_sources": 3,
+            "citations_resolve": 100,
+            "source_refs_resolve": 100,
+            "chunk_citations_spot_check": 5,
         }
     return {
         "sequence_steps": 5,
@@ -171,6 +196,17 @@ def check_wiki_completeness(
             path,
             level=level_key,
             slug=slug_value,
+            thresholds=thresholds,
+            verify_quote_fn=verify_quote_fn,
+        )
+    if level_key == "b2":
+        return _check_b2_source_readiness(
+            text,
+            lines,
+            path,
+            level=level_key,
+            slug=slug_value,
+            manifest=manifest,
             thresholds=thresholds,
             verify_quote_fn=verify_quote_fn,
         )
@@ -274,6 +310,76 @@ def _check_seminar_completeness(
     }
 
     failed = [name for name in SEMINAR_CHECK_ORDER if checks[name]["verdict"] == "FAIL"]
+    return {
+        "verdict": "FAIL" if failed else "PASS",
+        "level": level,
+        "slug": slug,
+        "checks": checks,
+        "diagnostic": _diagnostic(failed[0], checks[failed[0]]) if failed else "Wiki completeness gate passed.",
+    }
+
+
+def _check_b2_source_readiness(
+    wiki_text: str,
+    lines: list[str],
+    wiki_path: Path,
+    *,
+    level: str,
+    slug: str,
+    manifest: Mapping[str, Any],
+    thresholds: Mapping[str, Any],
+    verify_quote_fn: Callable[[str, str, Mapping[str, Any]], Mapping[str, Any] | bool] | None,
+) -> dict[str, Any]:
+    """Validate locked B2 wiki articles against source-readiness, not compile schema."""
+    methodology_text = _section_text(lines, METHODOLOGY_HEADING_RE) or _section_text(
+        lines,
+        B2_SCHOOL_METHOD_HEADING_RE,
+    )
+    decolonization_text = _section_text(lines, DECOLONIZATION_HEADING_RE)
+    citations = _ordered_source_ids(wiki_text)
+    sources = _load_source_registry(wiki_path)
+
+    checks = {
+        "methodology": _section_presence_check(methodology_text, "B2 school-method section non-empty."),
+        "exercise_progression": _minimum_check(
+            _count_b2_exercise_progression(lines, manifest),
+            int(thresholds["exercise_progression"]),
+            "formal sequence step(s) or legacy exercise phase(s) found.",
+        ),
+        "l2_errors": _minimum_check(
+            len(manifest.get("l2_errors", [])),
+            int(thresholds["l2_errors"]),
+            "L2 error table row(s) found.",
+        ),
+        "decolonization_guidance": _minimum_check(
+            len(manifest.get("decolonization_bans", [])) or int(bool(decolonization_text.strip())),
+            int(thresholds["decolonization_guidance"]),
+            "decolonization guidance item(s) found.",
+        ),
+        "distinct_sources": _minimum_check(
+            len(sources),
+            int(thresholds["min_distinct_sources"]),
+            "source registry entry/entries found.",
+        ),
+        "citation_resolution": _citation_resolution_check(
+            citations,
+            sources,
+            int(thresholds["citations_resolve"]),
+        ),
+        "source_ref_resolution": _source_ref_resolution_check(
+            citations,
+            sources,
+            int(thresholds["source_refs_resolve"]),
+        ),
+        "chunk_citations_spot_check": _chunk_citation_check(
+            wiki_text,
+            wiki_path,
+            int(thresholds["chunk_citations_spot_check"]),
+            verify_quote_fn=verify_quote_fn,
+        ),
+    }
+
+    failed = [name for name in B2_SOURCE_READINESS_CHECK_ORDER if checks[name]["verdict"] == "FAIL"]
     return {
         "verdict": "FAIL" if failed else "PASS",
         "level": level,
@@ -476,6 +582,17 @@ def _section_text(lines: list[str], heading_re: re.Pattern[str]) -> str:
             end = index
             break
     return "\n".join(lines[start + 1 : end]).strip()
+
+
+def _count_b2_exercise_progression(lines: list[str], manifest: Mapping[str, Any]) -> int:
+    formal_steps = manifest.get("sequence_steps", [])
+    if isinstance(formal_steps, list) and formal_steps:
+        return len(formal_steps)
+
+    section_text = _section_text(lines, EXERCISE_RECOMMENDATIONS_HEADING_RE)
+    if not section_text:
+        return 0
+    return sum(1 for line in section_text.splitlines() if LEGACY_PHASE_RE.search(line))
 
 
 def _count_decolonization_pairs(section_text: str) -> int:

@@ -1005,10 +1005,83 @@ def plan_path_for(level: str, slug: str) -> Path:
     return PROJECT_ROOT / "curriculum" / "l2-uk-en" / "plans" / level / f"{slug}.yaml"
 
 
+def _legacy_section_points(section: Mapping[str, Any]) -> list[str]:
+    """Return writer points for legacy B2 plan sections without mutating plans."""
+    raw_subsections = section.get("subsections")
+    points: list[str] = []
+    if isinstance(raw_subsections, str):
+        points.extend(
+            part.strip()
+            for part in re.split(r"\s+-\s+|\n+", raw_subsections)
+            if part.strip()
+        )
+    elif isinstance(raw_subsections, list):
+        points.extend(str(part).strip() for part in raw_subsections if str(part).strip())
+
+    raw_concepts = section.get("key_concepts")
+    if isinstance(raw_concepts, list):
+        concepts = [str(concept).strip() for concept in raw_concepts if str(concept).strip()]
+        if concepts:
+            points.append("Ключові поняття: " + ", ".join(concepts))
+
+    return points
+
+
+def _legacy_reference_title(reference: Any) -> str | None:
+    if isinstance(reference, str):
+        return reference.strip() or None
+    if isinstance(reference, Mapping):
+        for key in ("source", "title", "file", "topic"):
+            value = reference.get(key)
+            if isinstance(value, str) and value.strip():
+                return value.strip()
+        if len(reference) == 1:
+            key, value = next(iter(reference.items()))
+            key_text = str(key).strip()
+            value_text = str(value).strip()
+            if key_text and value_text:
+                return f"{key_text}: {value_text}"
+            if key_text:
+                return key_text
+    return None
+
+
+def _normalize_legacy_plan_shape(plan: dict[str, Any]) -> None:
+    """Normalize locked legacy B2 plan fields into the V7 in-memory contract."""
+    if str(plan.get("level") or "").strip().casefold() != "b2":
+        return
+
+    sections = plan.get("content_outline")
+    if isinstance(sections, list):
+        for section in sections:
+            if not isinstance(section, dict):
+                continue
+            points = section.get("points")
+            if isinstance(points, list) and all(isinstance(point, str) for point in points):
+                continue
+            legacy_points = _legacy_section_points(section)
+            if legacy_points:
+                section["points"] = legacy_points
+
+    references = plan.get("references")
+    if isinstance(references, list):
+        for index, reference in enumerate(references):
+            if isinstance(reference, str):
+                title = _legacy_reference_title(reference)
+                if title:
+                    references[index] = {"title": title}
+                continue
+            if isinstance(reference, dict) and not reference.get("title"):
+                title = _legacy_reference_title(reference)
+                if title:
+                    reference["title"] = title
+
+
 def load_plan(plan_path: Path) -> dict[str, Any]:
     data = load_yaml(plan_path)
     if not isinstance(data, dict):
         raise LinearPipelineError(f"Plan must be a mapping: {plan_path}")
+    _normalize_legacy_plan_shape(data)
     return data
 
 
