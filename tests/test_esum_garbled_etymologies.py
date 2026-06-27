@@ -130,3 +130,69 @@ def test_strip_only_curated_entry_drops_garbled_tail(tmp_path) -> None:
     hits = search_esum("бажання", limit=3, db_path=db_path)
     assert hits[0]["etymology_text"] == etymology["text"]
     assert not has_mojibake_marker(hits[0]["etymology_text"])
+
+
+def test_uncurated_garbled_esum_row_falls_back_to_wiktionary(tmp_path) -> None:
+    db_path = tmp_path / "sources.db"
+    conn = sqlite3.connect(db_path)
+    try:
+        conn.executescript(
+            """
+            CREATE TABLE goroh_etymology (
+                requested_lemma TEXT PRIMARY KEY,
+                headword TEXT NOT NULL DEFAULT '',
+                etymology_text TEXT NOT NULL DEFAULT '',
+                source_url TEXT NOT NULL DEFAULT '',
+                retrieved_at TEXT NOT NULL DEFAULT '',
+                content_hash TEXT NOT NULL DEFAULT ''
+            );
+
+            CREATE VIRTUAL TABLE esum_etymology
+            USING fts5(lemma, etymology_text, cognates, vol UNINDEXED, page UNINDEXED);
+
+            CREATE TABLE wiktionary_etymology (
+                requested_lemma TEXT PRIMARY KEY,
+                headword TEXT NOT NULL DEFAULT '',
+                etymology_text TEXT NOT NULL DEFAULT '',
+                source_url TEXT NOT NULL DEFAULT ''
+            );
+            """
+        )
+        conn.execute(
+            """
+            INSERT INTO esum_etymology(rowid, lemma, etymology_text, cognates, vol, page)
+            VALUES (?, ?, ?, ?, ?, ?)
+            """,
+            (
+                1,
+                "аспірант",
+                "аспірант; фр. азрігапі; \\Уа1йе--НоГт. II 575; Веліа[ Е55) tail",
+                "[]",
+                1,
+                92,
+            ),
+        )
+        conn.execute(
+            """
+            INSERT INTO wiktionary_etymology
+            (requested_lemma, headword, etymology_text, source_url)
+            VALUES (?, ?, ?, ?)
+            """,
+            (
+                "аспірант",
+                "аспірант",
+                "Від французького aspirant, далі від латинського aspirans.",
+                "https://example.test/aspirant",
+            ),
+        )
+        conn.commit()
+
+        etymology = _source_etymology(conn, "аспірант", {})
+    finally:
+        conn.close()
+
+    assert not is_garbled_esum_lemma("аспірант")
+    assert etymology is not None
+    assert etymology["source"] == "Вікісловник (uk.wiktionary)"
+    assert etymology["text"] == "Від французького aspirant, далі від латинського aspirans."
+    assert not has_mojibake_marker(etymology["text"])
