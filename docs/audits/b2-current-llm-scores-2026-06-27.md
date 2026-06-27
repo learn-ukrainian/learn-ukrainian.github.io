@@ -41,10 +41,14 @@ B2 M39 `tradytsii-i-zvychai`,9/10,B+,Yes,Strong traditions and customs module 10
 B2 M40 `register-literary-ukrainian`,9/10,B+,Yes,Strong literary-register module 16 workbook activities, 49 vocabulary items, 99% richness, and Agy/Gemini review/style pass. Score held at 9 for dense literary coverage and human-polish reserve.
 B2 M41 `register-public-discourse`,9/10,B+,Yes,Strong public-discourse/media-register module 12 workbook activities, 49 vocabulary items, 99% richness, and Agy/Gemini review/fix verification pass. Score held at 9 for remaining non-blocking UA-GEC advisory notes.
 B2 M42 `checkpoint-register-domain`,9/10,B+,Yes,Strong B2.3 register/domain checkpoint module 14 workbook activities, 50 vocabulary items, 99% richness, and Hermes/DeepSeek review pass. Score held at 9 for checkpoint density and non-blocking extra-section audit warnings.
+B2 M43 `register-practice-cross-register-rewriting`,9/10,B+,Yes,Strong cross-register rewriting practicum module 18 workbook activities, 30 vocabulary items, merged in PR #3919. Score held at 9 dense register-production scope human-polish reserve.
+B2 M44 `politics-government-vocabulary`,9/10,B+,Yes,Strong politics/government vocabulary module 11 workbook activities, 35 vocabulary items, and Agy/Gemini review pass. Score held at 9 conservative post-build polish risk around public-discourse density.
+B2 M45 `law-justice-vocabulary`,9/10,B+,Yes,Strong law/justice vocabulary module 11 workbook activities, 35 vocabulary items, and final Agy/Gemini review pass. Score held at 9 dense legal terminology and non-blocking section-balance warnings.
+B2 M46 `economics-business-vocabulary`,9/10,B+,Yes,Strong economics/business vocabulary module 10 workbook activities, 36 vocabulary items, and Agy/Gemini review pass. Score held at 9 dense financial-register coverage and non-blocking section-balance warnings.
 
 Score,Count,Modules
 10/10,2,"M01, M08"
-9/10,39,"M02-M07, M09-M13, M15-M42"
+9/10,43,"M02-M07, M09-M13, M15-M46"
 8/10,1,M14
 
 Durable Report,Scope
@@ -56,6 +60,7 @@ Durable Report,Scope
 `docs/audits/b2-m32-m36-llm-score-report-2026-06-27.md`,M32-M36
 `docs/audits/b2-m37-m41-llm-score-report-2026-06-27.md`,M37-M41
 `docs/audits/b2-m42-llm-score-report-2026-06-27.md`,M42
+`docs/audits/b2-m43-m46-llm-score-report-2026-06-27.md`,M43-M46
 
 Module,Raw Word Count,Activities,Vocabulary
 M03 `b2-impersonal-passive`,4608,7 workbook / 4 inline,35
@@ -98,6 +103,10 @@ M39 `tradytsii-i-zvychai`,4621,10 workbook / 0 inline,52
 M40 `register-literary-ukrainian`,6162,16 workbook / 0 inline,49
 M41 `register-public-discourse`,4240,12 workbook / 0 inline,49
 M42 `checkpoint-register-domain`,4529,14 workbook / 0 inline,50
+M43 `register-practice-cross-register-rewriting`,4237,18 workbook / 0 inline,30
+M44 `politics-government-vocabulary`,6185,11 workbook / 0 inline,35
+M45 `law-justice-vocabulary`,4090,11 workbook / 0 inline,35
+M46 `economics-business-vocabulary`,4060,10 workbook / 0 inline,36
 
 Score,Pass Count
 10/10,5/5 with no meaningful content polish
@@ -115,3 +124,4 @@ See `docs/audits/b2-m27-m31-llm-score-report-2026-06-26.md`.,M27-M31
 See `docs/audits/b2-m32-m36-llm-score-report-2026-06-27.md`.,M32-M36
 See `docs/audits/b2-m37-m41-llm-score-report-2026-06-27.md`.,M37-M41
 See `docs/audits/b2-m42-llm-score-report-2026-06-27.md`.,M42
+See `docs/audits/b2-m43-m46-llm-score-report-2026-06-27.md`.,M43-M46
