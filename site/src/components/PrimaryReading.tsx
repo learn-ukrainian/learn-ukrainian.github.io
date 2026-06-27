@@ -1,11 +1,14 @@
 import React from 'react';
+import ReadingText from './ReadingText';
 
 interface PrimaryReadingProps {
   children?: React.ReactNode;
   href?: string;
+  mode?: 'verse' | 'prose';
+  text?: string;
 }
 
-export default function PrimaryReading({ children, href }: PrimaryReadingProps) {
+export default function PrimaryReading({ children, href, mode = 'verse', text }: PrimaryReadingProps) {
   return (
     <div className="primary-reading-box">
       <div className="primary-reading-header">
@@ -13,7 +16,7 @@ export default function PrimaryReading({ children, href }: PrimaryReadingProps) 
         Читаємо першоджерело / Read the text
       </div>
       <div className="primary-reading-content">
-        {children}
+        {text ? <ReadingText mode={mode} text={text} /> : children}
       </div>
       {href && (
         <div className="primary-reading-footer">

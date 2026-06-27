@@ -64,9 +64,13 @@ def test_generate_reading_from_primary_block_and_packet_hint(tmp_path: Path) -> 
     assert summary.skipped == ()
     text = generated.read_text(encoding="utf-8")
     assert 'title: "«Ой сивая та і зозулечка» (щедрівка з тріадою світил)"' in text
-    assert 'public_domain: true' in text
-    assert "<PrimaryReading>" in text
-    assert "> Щедрий вечір, добрий вечір, 1" in text
+    assert "public_domain: true" in text
+    assert "published: true" in text
+    assert "canonical: true" in text
+    assert "<PrimaryReading" in text
+    assert "text={`" in text
+    assert "Щедрий вечір, добрий вечір, 1" in text
+    assert "> Щедрий вечір, добрий вечір, 1" not in text
     assert "source_chunk_id: 70435c0b_c0000" in text
 
 

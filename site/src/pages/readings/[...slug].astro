@@ -7,11 +7,12 @@
  */
 import { getCollection, render } from 'astro:content';
 import CourseLayout from '../../layouts/CourseLayout.astro';
+import { isPublishedReading } from '../../lib/readings';
 
 const normalizeDocId = (id: string) => id.replace(/\.mdx?$/, '').replace(/\/index$/, '');
 
 export async function getStaticPaths() {
-  const readings = await getCollection('readings');
+  const readings = (await getCollection('readings')).filter(isPublishedReading);
   const docs = await getCollection('docs');
   return readings.map((entry) => ({
     params: { slug: entry.id },
