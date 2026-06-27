@@ -233,21 +233,20 @@ delegate worker.</p>
 <h2>Silence-timeout vs hard-timeout</h2>
 <p><code>delegate.py dispatch</code> has two watchdogs with different jobs.
 <code>--hard-timeout</code> is the absolute wall-clock fallback for the worker.
-<code>--silence-timeout</code> is narrower: it kills the agent CLI when no stdout
-line arrives within the configured window, then marks the task
+<code>--silence-timeout</code> is narrower: it kills the agent CLI when no watchdog
+activity arrives within the configured window, then marks the task
 <code>status=&quot;timeout&quot;</code>.</p>
-<p>The default silence timeout is 1800 seconds. This is intentionally
-longer than the old 600-second watchdog because substantive Codex
-dispatches can be quiet for more than 10 minutes during thinking
-phases, multi-file refactors, or long test runs. The #1725
-<code>1725-verbatim-quoting</code> dispatch was killed after 12 minutes of stdout
-silence with most work already complete and the last phase still
-salvageable; that is the failure mode this default avoids.</p>
-<p>Use <code>--silence-timeout 600</code> when you want the tighter 10-minute
-operator watchdog. OAuth or CLI hangs should still show up within
-minutes, while the hard timeout remains the final wall-clock cap.
-Use <code>--silence-timeout 0</code> only when stdout silence is expected and the
-hard timeout alone is acceptable.</p>
+<p>Watchdog activity includes stdout/stderr lines, liveness-file mtime
+updates, and process-tree CPU/disk activity. This keeps quiet but active
+build/test/enrich subprocess phases alive while still killing fully idle
+poll-loop hangs before the hard timeout.</p>
+<p>The default silence timeout is 3600 seconds. Do not lower it merely
+because wrapper stdout is expected to be quiet; that recreates the
+stdout-only false-kill shape from #3875. Use a shorter value only for a
+known protocol where all legitimate work emits frequent watchdog
+activity.</p>
+<p>Use <code>--silence-timeout 0</code> only when the hard timeout alone is acceptable
+and you have another way to detect parked sessions.</p>
 <h2>When to use channels vs <code>ask-*</code></h2>
 <p>| Situation | Use |
 | --- | --- |

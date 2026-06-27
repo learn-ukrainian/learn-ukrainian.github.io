@@ -22,16 +22,16 @@ Two compounding causes:
 2. **`--silence-timeout=0` removed the backstop.** The first run (`atlas-finalize-all`) was dispatched with
    `--silence-timeout 0` (the brief said "long + silent by nature"), so the runtime never killed the silent
    poll-loop — it ran ~75 min until the hard timeout. The later two runs used a non-zero
-   `--silence-timeout 2700`, which **caught the stall cleanly** (`status: timeout` after 45 min idle) because
-   codex's wrapper-stdout IS silent during the hang.
+   `--silence-timeout 2700`, which **caught the stall cleanly** (`status: timeout` after 45 min idle).
 
 A secondary failure mode: while working the pre-submit checklist, codex **over-reaches** — `kaikki-ipa-etym-wiring`
 "helpfully" rewrote `sys.executable → .venv/bin/python` in **5 unrelated test files** to satisfy the
 "no `sys.executable`" checklist item, violating "every changed file is directly related to the task."
 
 ## Prevention
-- **Always set a non-zero `--silence-timeout`** on long codex dispatches (e.g. 2700s). Codex's wrapper-stdout
-  is silent during the poll-loop hang, so the silence timeout is the reliable catch. Never `--silence-timeout 0`.
+- **Keep a non-zero `--silence-timeout`** on long codex dispatches. Since #3875 it keys off composite watchdog
+  activity, not stdout alone, so active child subprocesses stay alive while a parked poll-loop still times out.
+  Use `--silence-timeout 0` only when hard-timeout-only behavior is intentional and separately monitored.
 - **Brief instruction:** tell codex to run regenerations as FOREGROUND blocking commands with an explicit
   `timeout`, NOT in a backgrounded interactive shell it polls.
 - **Finalize-the-zombie** (orchestrator playbook when a codex dispatch reads `running` but pid is dead /

@@ -165,13 +165,10 @@ def _inject_gh_token_for_agent(worker_env: dict[str, str], agent: str) -> None:
 
 
 DEFAULT_HARD_TIMEOUT_S = 7200
-# Bumped 1800 -> 3600 on 2026-05-18 after kubedojo-artifacts Codex dispatch
-# timed out at exactly 1800s with worktree_dirty_on_exit=true and
-# response_chars=0 — i.e. the agent was actively making file changes but
-# its stream-json output was block-buffered by libc (non-TTY stdout) and
-# never reached the watchdog. Until #2071 PTY-wrapping lands, the looser
-# silence window is the stopgap. See watchdog.py:323-332 for the historical
-# Gemini block-buffering incident chain (#1184).
+# Silence timeout is a composite hang backstop: stdout/stderr, liveness-file
+# updates, and process-tree CPU/disk activity all keep it alive. Do not lower it
+# for build/test/enrich jobs merely because wrapper stdout is expected to be
+# quiet; that recreates the false-kill shape from #3875.
 DEFAULT_SILENCE_TIMEOUT_S = 3600
 # Fail fast when Codex (or any agent) never produces stdout/stderr/liveness
 # activity at startup — distinct from the long silence window above (#2071).
@@ -2071,8 +2068,8 @@ def build_parser() -> argparse.ArgumentParser:
             "  Persists task state under batch_state/tasks/ and streams worker output to task-owned logs.\n\n"
             "Timeouts:\n"
             "  --hard-timeout is the absolute wall-clock fallback for the worker.\n"
-            "  --silence-timeout kills the agent CLI earlier when no stdout line arrives within the window.\n"
-            "    Default is 1800s to tolerate long Codex thinking/test phases; pass 600 for a tighter watchdog; 0 disables it.\n\n"
+            "  --silence-timeout kills the agent CLI earlier when no watchdog activity arrives within the window.\n"
+            f"    Default is {DEFAULT_SILENCE_TIMEOUT_S}s to tolerate quiet build/test phases; 0 disables it.\n\n"
             "  --max-budget-usd caps Claude Code API spend for this dispatch when set; omitted means no dollar cap.\n\n"
             "Exit codes:\n"
             "  0 on successful command completion; non-zero on CLI misuse or worker/task failures.\n\n"
@@ -2196,11 +2193,11 @@ def build_parser() -> argparse.ArgumentParser:
         metavar="SECS",
         default=DEFAULT_SILENCE_TIMEOUT_S,
         help=(
-            "Seconds without a subprocess stdout line before killing the agent "
+            "Seconds without subprocess watchdog activity before killing the agent "
             "CLI and marking the task status='timeout' "
             f"(default: {DEFAULT_SILENCE_TIMEOUT_S}s; 0 disables). "
-            "The default tolerates long Codex thinking/test phases; pass 600 "
-            "for a tighter watchdog. --hard-timeout still applies as the "
+            "Watchdog activity includes stdout/stderr, liveness-file updates, "
+            "and process-tree CPU/disk activity. --hard-timeout still applies as the "
             "absolute wall-clock fallback."
         ),
     )
@@ -2213,8 +2210,8 @@ def build_parser() -> argparse.ArgumentParser:
             "Startup probe: kill the agent CLI if it produces no "
             "stdout/stderr/liveness activity within this many seconds "
             f"(default: {DEFAULT_INITIAL_RESPONSE_TIMEOUT_S}; 0 disables). "
-            "Distinct from --silence-timeout, which only watches stdout "
-            "lines after startup (#2071)."
+            "Distinct from --silence-timeout, which watches composite "
+            "activity after startup (#2071, #3875)."
         ),
     )
     d.add_argument(

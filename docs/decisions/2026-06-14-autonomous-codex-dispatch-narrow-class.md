@@ -97,7 +97,7 @@ Reasoning:
 
 1. Poller sees label.
 2. Generates brief from issue body using a fixed template (cwd warning, numbered steps, evidence requirements, anti-fabrication preamble per `deterministic-over-hallucination.md`).
-3. Dispatches Codex with `--mode danger --worktree --silence-timeout 1800`.
+3. Dispatches Codex with `--mode danger --worktree --silence-timeout 3600`.
 4. Codex works to completion, pushes branch, opens PR, comments on the issue.
 5. Poller reconciles: if PR has `symphony` label and CI green → auto-merge after 24h (or human-merge if I'm awake).
 6. If CI red or stalls → marks issue with `agent:codex-needs-orchestrator`, removes auto-label, re-queues for human attention.
