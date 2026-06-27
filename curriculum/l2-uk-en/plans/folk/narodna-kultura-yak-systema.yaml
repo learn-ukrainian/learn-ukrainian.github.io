@@ -4,7 +4,7 @@ sequence: 1
 slug: narodna-kultura-yak-systema
 title: "Народна культура як система"
 subtitle: "Oral tradition as the foundation of written Ukrainian literature"
-version: 2
+version: 3
 status: locked
 phase: base-first
 cefr_min: C1
@@ -89,6 +89,7 @@ references:
   - title: "Українська література, 8 клас. Думи й історичні пісні"
     author: "Заболотний О., Заболотний В."
     type: textbook
+    verbatim_required: false
     note: "School-canonical genre boundary for dumas and historical songs."
   - title: "Ой сивая та і зозулечка"
     author: "Народна творчість"
@@ -159,6 +160,9 @@ connects_to:
   - dumy-nevilnytski-lytsarski
   - istorychni-pisni
 changelog:
+  - version: 3
+    date: "2026-06-27"
+    note: "Module build: mark Grade 8 genre-boundary textbook reference topical-only to avoid long learner-facing textbook quotation while keeping public primary readings authoritative."
   - version: 2
     date: "2026-06-27"
     note: "Base-first rebuild: replaced contaminated stub/upstream framing with clean dossier/wiki/plan source contract; no module published."
