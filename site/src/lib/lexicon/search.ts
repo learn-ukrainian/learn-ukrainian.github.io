@@ -19,7 +19,13 @@ const ESCAPE_MAP: Record<string, string> = {
 };
 
 function normalizeText(value: string): string {
-  return value.normalize("NFC").toLocaleLowerCase("uk-UA");
+  // NFC first (composes e.g. Latin "é" → "é"), then strip any *residual*
+  // combining acute (U+0301). Ukrainian stressed Cyrillic vowels have no
+  // precomposed form, so NFC leaves their stress mark standalone and this removes
+  // it (на́голос → наголос) for accent-insensitive search — while precomposed Latin
+  // accents and, crucially, the breve composing й (и+U+0306) and the diaeresis
+  // composing ї (і+U+0308) are left intact.
+  return value.normalize("NFC").replace(/\u0301/g, "").toLocaleLowerCase("uk-UA");
 }
 
 function escapeHtml(value: string): string {
