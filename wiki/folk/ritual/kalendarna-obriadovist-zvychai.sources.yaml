@@ -1,28 +1,42 @@
-# Source registry for wiki/folk/ritual/kalendarna-obriadovist-zvychai.md
+# Source registry wiki/folk/ritual/kalendarna-obriadovist-zvychai.md
 # Referenced inline as [S1], [S2], ...
 sources:
-- id: S1
-  file: wave7-entsyklopediia-ukrainoznavstva_c0614
-  type: literary
-  title: Енциклопедія українознавства
-  author: Колектив
-- id: S2
-  file: wave7-istkult-t2-xiii-xvii_c0262
-  type: literary
-  title: Історія української культури. Т.2. XIII-XVII ст.
-  author: Колектив
-- id: S8
-  file: wave4-hrushevsky-istlit_c0536
-  type: literary
-  title: Грушевський — Історія української літератури
-  author: Грушевський М.
-- id: S9
-  file: wave12-hrushevsky-iu-odnotom_c0541
-  type: literary
-  title: Грушевський — Історія України (однотомник)
-  author: Грушевський М.
-- id: S10
-  file: wave7-istkult-t2-xiii-xvii_c0000
-  type: literary
-  title: Історія української культури. Т.2. XIII-XVII ст.
-  author: Колектив
+  - id: S1
+    file: 6-klas-ukrlit-zabolotnyi-2023
+    type: textbook
+    title: Українська література, 6 клас. Народні календарно-обрядові пісні
+    author: Заболотний О., Заболотний В.
+    grade: 6
+    url: https://pidruchnyk.com.ua/2617-ukralit-6-klas-zabolotnyi.html
+    notes: School-canonical framing for calendar-ritual songs.
+  - id: S2
+    file: 5-klas-ukrlit-zabolotnyi-2022
+    type: textbook
+    title: Українська література, 5 клас. Усна народна творчість
+    author: Заболотний О., Заболотний В.
+    grade: 5
+    url: https://pidruchnyk.com.ua/1684-5_ukrlit_zabolotnyi.html
+    notes: Introductory school frame for oral folk creativity as verbal art.
+  - id: S3
+    file: ukrlib-narod-oi-syvaia-ta-i-zozulechka
+    type: external
+    title: Ой сивая та і зозулечка
+    author: Народна творчість
+    url: https://www.ukrlib.com.ua/narod/printout.php?id=6&bookid=1
+    domain: ukrlib.com.ua
+    notes: Public full text used as winter-cycle reading candidate.
+  - id: S4
+    file: ukrlib-narod-oi-vesna-vesna-ty-krasna
+    type: external
+    title: Ой весна, весна, ти красна
+    author: Народна творчість
+    url: https://www.ukrlib.com.ua/narod/printout.php?id=0&bookid=0
+    domain: ukrlib.com.ua
+    notes: Public full text used as spring-cycle reading candidate.
+  - id: S5
+    file: osvita-model-programs-basic-secondary-ukrainian-literature
+    type: external
+    title: Модельні навчальні програми для 5-9 класів
+    url: https://osvita.ua/legislation/Ser_osv/46719/
+    domain: osvita.ua
+    notes: Public Osvita page for basic secondary school program context.
