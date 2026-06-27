@@ -1,0 +1,25 @@
+- title: Глазова, 11 клас (2019)
+  role: textbook
+  notes: 'Планове посилання: §1-15, функціональні стилі, культура мовлення, стилістичні
+    норми; corpus_missing: true; chunk_id у prompt не надано.'
+- title: Заболотний, 11 клас (2019)
+  role: textbook
+  notes: 'Планове посилання: §47-50, стилістичні норми, функціональні стилі; corpus_missing:
+    true; chunk_id у prompt не надано.'
+- title: Караман, 10 клас (2018)
+  role: textbook
+  notes: 'Планове посилання: Стилістика, стилістична трансформація, функціональні
+    стилі B2-перекодування; corpus_missing: true; chunk_id у prompt не надано.'
+- title: Авраменко, 11 клас (2019)
+  role: textbook
+  notes: 'Планове посилання: Стилістика, культура мовлення, стилістичне перекодування;
+    corpus_missing: true; chunk_id у prompt не надано.'
+- title: Державний стандарт 2024
+  role: textbook
+  notes: 'Планове посилання: SS 4.4, стилістика B2; corpus_missing: true; chunk_id
+    у prompt не надано.'
+- title: Стилістика — українська Вікіпедія
+  role: wiki
+  url: https://uk.wikipedia.org/wiki/%D0%A1%D1%82%D0%B8%D0%BB%D1%96%D1%81%D1%82%D0%B8%D0%BA%D0%B0
+  notes: Переглянь означення стилістики й зістав його з практикою функціональних стилів
+    у модулі.
