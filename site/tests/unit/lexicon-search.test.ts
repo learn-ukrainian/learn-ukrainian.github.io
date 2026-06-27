@@ -15,6 +15,24 @@ describe('lexicon search helpers', () => {
     expect(normalize('e\u0301')).toBe('é');
   });
 
+  test('strips Ukrainian stress accents while preserving й, ї, and Latin accents', () => {
+    // Cyrillic stress marks (U+0301) are stripped so plain typing matches accented lemmas.
+    expect(normalize('на́голос')).toBe('наголос');
+    expect(normalize('авантю́рний')).toBe('авантюрний');
+    // The breve composing й (и+U+0306) and diaeresis composing ї (і+U+0308) survive NFC + strip.
+    expect(normalize('й')).toBe('й');
+    expect(normalize('ї')).toBe('ї');
+    // Precomposed Latin accents are untouched (regression guard for the NFC behavior).
+    expect(normalize('é')).toBe('é');
+  });
+
+  test('finds a stress-accented lemma by a plain (unaccented) query', () => {
+    const accented: SearchRow[] = [
+      { l: 'авантю́рний', s: 'avantiurnyi', g: 'adventurous', r: 'avantiurnyi', k: 'vyv' },
+    ];
+    expect(rankMatches(accented, 'авантюрний').map((row) => row.l)).toEqual(['авантю́рний']);
+  });
+
   test('matches Cyrillic lemma prefixes', () => {
     expect(rankMatches(rows, 'офі', 3).map((row) => row.l)).toEqual(['офіс', 'офісний', 'офіціант']);
   });
