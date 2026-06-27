@@ -1,0 +1,70 @@
+{
+  "assembled_mdx_sha256": "b992c20080e2580ea2210bcc1a7a63c5f8b568f82c217011b0ae2169598d79d2",
+  "content_hash": {
+    "algorithm": "sha256",
+    "basis": "lesson_sources_v2",
+    "digest": "0bd1999066dafeb1a061c0218010801c50fce8eff5ed5493ce176936d2efc975",
+    "files": [
+      {
+        "path": "curriculum/l2-uk-en/plans/folk/kalendarna-obriadovist-zvychai.yaml",
+        "sha256": "1e893df2f70573bfbcee5b297b91617e19189e4bd453f1270f8d04901fba06a1"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/kalendarna-obriadovist-zvychai/module.md",
+        "sha256": "9448e200f9c04b0e84771028f5ccdb125b680e3413d0c467ad5b75404f15dd84"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/kalendarna-obriadovist-zvychai/activities.yaml",
+        "sha256": "370e81c2bf2b48d3ff9daad966aff71309d3055cfc8b54966caca1a17f1e8a2d"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/kalendarna-obriadovist-zvychai/vocabulary.yaml",
+        "sha256": "18d6a660895ea8b9920375ab2e42a4d3803a113e1c07f6f11134a6066c3f9aed"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/kalendarna-obriadovist-zvychai/resources.yaml",
+        "sha256": "2169a011b3a71468703f5b2a05b101d8dd84fef314ebe32b3b4b7be2dac12cfd"
+      }
+    ]
+  },
+  "evidence": {
+    "framing": "Agy/Gemini 3.1 Pro High APPROVE: the module cleanly integrates Christian-heritage framing for winter and Easter-cycle material and rejects decorative or superstition framing.",
+    "pedagogy": "The lesson builds a C1+ seminar method around source, genre, performance, poetics, proof limits, and bridge to written culture; activities reinforce motif, sequencing, comparison, and essay response.",
+    "quote_integrity": "Two hosted public readings are used through public ukrlib.com.ua source URLs, and local scans found no internal corpus or chunk IDs in learner-facing M02 surfaces.",
+    "review": "Independent read-only Agy/Gemini 3.1 Pro High review returned APPROVE with no blockers after reviewing pasted current file contents.",
+    "source_hygiene": "Resources and reading frontmatter use public URLs only; the module keeps source limits visible and does not expose service identifiers."
+  },
+  "floors": {
+    "beauty": 8.5,
+    "decolonization": 9.0,
+    "engagement": 8.5,
+    "naturalness": 8.5,
+    "pedagogical": 8.5,
+    "tone": 8.5
+  },
+  "profile": "folk_promote_v1",
+  "review_artifact": null,
+  "reviewer": {
+    "agent": "agy",
+    "family": "google",
+    "model": "gemini-3.1-pro-high"
+  },
+  "schema_version": 1,
+  "scored_at": "2026-06-27T18:33:14Z",
+  "scores": {
+    "beauty": 10.0,
+    "decolonization": 10.0,
+    "engagement": 9.0,
+    "naturalness": 10.0,
+    "pedagogical": 10.0,
+    "tone": 10.0
+  },
+  "slug": "kalendarna-obriadovist-zvychai",
+  "track": "folk",
+  "verdict": "PASS",
+  "writer": {
+    "agent": "codex",
+    "family": "openai",
+    "model": "gpt-5"
+  }
+}
