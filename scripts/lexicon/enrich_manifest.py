@@ -161,6 +161,9 @@ _SLOVNYK_DICT_LABELS: dict[str, str] = {
 _SLOVNYK_LOOKUP_SLUGS = tuple(_SLOVNYK_DICT_LABELS)
 _SLOVNYK_SYNONYM_SLUGS = ("synonyms_karavansky", "synonyms")
 _SLOVNYK_WARNING_SLUGS = ("davydov", "voloschak", "foreign_shtepa")
+_SLOVNYK_UKRENG_SLUG = "ukreng"
+_SLOVNYK_UKRENG_LABEL = "Українсько-англійський словник"
+_SLOVNYK_UKRENG_SOURCE = f"slovnyk.me: {_SLOVNYK_UKRENG_LABEL}"
 _SLOVNYK_BASE = "https://slovnyk.me"
 _SLOVNYK_CACHE_SCHEMA_VERSION = 2
 _WARNING_CLASSIFICATIONS = {"russianism", "sovietism", "surzhyk"}
@@ -1202,6 +1205,13 @@ def _cache_lookup(cache: dict[str, Any] | None, slug: str) -> dict[str, Any] | N
         return None
     row = lookups.get(slug)
     return row if isinstance(row, dict) and row.get("text") else None
+
+
+def _cache_has_lookup(cache: dict[str, Any] | None, slug: str) -> bool:
+    if not isinstance(cache, dict):
+        return False
+    lookups = cache.get("lookups")
+    return isinstance(lookups, dict) and slug in lookups
 
 
 def _cache_store_lookup(lemma: str, cache: dict[str, Any], slug: str, row: dict[str, Any] | None) -> None:
@@ -3282,6 +3292,134 @@ def _load_dmklinger_index(conn: sqlite3.Connection) -> dict[str, list[tuple[str,
     return index
 
 
+_SLOVNYK_UKRENG_PREFIX_LABELS = {
+    "ав",
+    "анат",
+    "архіт",
+    "астр",
+    "біол",
+    "бот",
+    "військ",
+    "геогр",
+    "геол",
+    "гірн",
+    "грам",
+    "діал",
+    "ек",
+    "ел",
+    "жарт",
+    "зоол",
+    "інформ",
+    "іст",
+    "кул",
+    "лінгв",
+    "мат",
+    "мед",
+    "мет",
+    "мін",
+    "мор",
+    "муз",
+    "перен",
+    "побут",
+    "поет",
+    "політ",
+    "розм",
+    "спорт",
+    "тех",
+    "тж",
+    "фіз",
+    "філол",
+    "філос",
+    "хім",
+    "церк",
+}
+
+
+def _ukreng_prefix_is_label(prefix: str) -> bool:
+    words = re.findall(r"[А-Яа-яЄєІіЇїҐґ]+", prefix.casefold())
+    return all(word in _SLOVNYK_UKRENG_PREFIX_LABELS for word in words)
+
+
+def _clean_ukreng_gloss(candidate: str) -> str | None:
+    cleaned = clean_html_entities(candidate)
+    cleaned = re.sub(r"\b(?:also|fig|figurative|literally|lit)\.?\b", " ", cleaned, flags=re.IGNORECASE)
+    cleaned = re.sub(r"\s+", " ", cleaned).strip(" \t\r\n.,;:!?()[]{}«»\"“”")
+    cleaned = re.sub(r"^(?:to|a|an|the)\s+", "", cleaned, flags=re.IGNORECASE)
+    if not cleaned or not _LATIN_RE.search(cleaned) or re.search(r"[А-Яа-яЄєІіЇїҐґ]", cleaned):
+        return None
+    if len(cleaned.split()) > 5:
+        return None
+    return cleaned
+
+
+def _slovnyk_ukreng_glosses(row: dict[str, Any], lemma: str, *, limit: int = 6) -> list[str]:
+    text = str(row.get("text") or "")
+    if not text:
+        return []
+    body = _SOURCE_TAIL_RE.sub("", _entry_text_without_headword(text, lemma, str(row.get("word") or "")))
+    out: list[str] = []
+    seen: set[str] = set()
+    for chunk in re.split(r";|\n", body):
+        chunk = re.sub(r"^\s*\d+\)?\.?\s*", "", chunk.strip())
+        if not chunk:
+            continue
+        first_latin = _LATIN_RE.search(chunk)
+        if not first_latin or not _ukreng_prefix_is_label(chunk[: first_latin.start()]):
+            continue
+        english_part = chunk[first_latin.start() :]
+        first_cyrillic = re.search(r"[А-Яа-яЄєІіЇїҐґ]", english_part)
+        if first_cyrillic:
+            english_part = english_part[: first_cyrillic.start()]
+        english_part = re.split(r"\s+—", english_part, maxsplit=1)[0]
+        for candidate in re.split(r",|/|\bor\b", english_part, flags=re.IGNORECASE):
+            gloss = _clean_ukreng_gloss(candidate)
+            if not gloss:
+                continue
+            key = gloss.casefold()
+            if key in seen:
+                continue
+            seen.add(key)
+            out.append(gloss)
+            if len(out) >= limit:
+                return out
+    return out
+
+
+def _slovnyk_ukreng_row(lemma: str, cache: dict[str, Any] | None) -> dict[str, Any] | None:
+    if not isinstance(cache, dict):
+        return None
+    if _cache_has_lookup(cache, _SLOVNYK_UKRENG_SLUG):
+        return _cache_lookup(cache, _SLOVNYK_UKRENG_SLUG)
+    lookup_word = _slovnyk_lookup_word(lemma)
+    if not lookup_word:
+        return None
+    try:
+        row = _fetch_slovnyk_entry(lemma, lookup_word, _SLOVNYK_UKRENG_SLUG)
+    except _SlovnykTransientError:
+        return None
+    if isinstance(row, dict):
+        row["dictionary_label"] = _SLOVNYK_UKRENG_LABEL
+    _cache_store_lookup(lemma, cache, _SLOVNYK_UKRENG_SLUG, row)
+    return row
+
+
+def _slovnyk_ukreng_translation(lemma: str, cache: dict[str, Any] | None) -> dict[str, object] | None:
+    row = _slovnyk_ukreng_row(lemma, cache)
+    if not row:
+        return None
+    glosses = _slovnyk_ukreng_glosses(row, lemma)
+    if not glosses:
+        return None
+    block: dict[str, object] = {
+        "en": glosses,
+        "source": _SLOVNYK_UKRENG_SOURCE,
+    }
+    source_url = str(row.get("source_url") or "").strip()
+    if source_url:
+        block["source_url"] = source_url
+    return block
+
+
 def _translation(
     conn: sqlite3.Connection,
     lemma: str,
@@ -3289,6 +3427,7 @@ def _translation(
     *,
     entry_pos: object = None,
     gloss_hints: object = None,
+    slovnyk_cache: dict[str, Any] | None = None,
 ) -> dict[str, object] | None:
     """English translations for a Ukrainian lemma (Переклад, §11).
 
@@ -3332,6 +3471,9 @@ def _translation(
     )
     if balla_translation:
         return balla_translation
+    slovnyk_translation = _slovnyk_ukreng_translation(lemma, slovnyk_cache)
+    if slovnyk_translation:
+        return slovnyk_translation
 
     for variant in _split_lemma_variants(lemma):
         curated = _CURATED_LEARNER_TRANSLATIONS.get(_lookup_key(variant).casefold())
@@ -3657,14 +3799,17 @@ def enrich_entry(entry, conn, kaikki_lookup, *, has_sum11_flags) -> bool:
         kaikki_lookup,
         entry_pos=entry_pos,
         gloss_hints=gloss_hints,
+        slovnyk_cache=slovnyk_cache,
     )
     if not translation and fallback_base:
+        fallback_slovnyk_cache = _slovnyk_cache(fallback_base)
         translation = _translation(
             conn,
             fallback_base,
             kaikki_lookup,
             entry_pos=entry_pos,
             gloss_hints=gloss_hints,
+            slovnyk_cache=fallback_slovnyk_cache,
         )
         if translation:
             translation = _with_base_source_label(translation, fallback_base)

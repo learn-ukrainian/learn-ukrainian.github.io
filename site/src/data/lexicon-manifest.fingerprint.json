@@ -1,5 +1,5 @@
 {
-  "fingerprint": "f025cfc14420caa8a6cfd6acc6d7d4819159f39945d6f77d7df6ddab9c22bdd9",
+  "fingerprint": "55ed8a2cf2321409a9d1cc2e08fa09b2664cab21d755d49b0bc9b0f9987bef13",
   "inputs": {
     "lexicon_code": [
       {
@@ -12,7 +12,7 @@
       },
       {
         "path": "scripts/lexicon/build_data_manifest.py",
-        "sha256": "3c05569227acff3c948b047d158785a0cb0938c93279e81971426e401c664aaa"
+        "sha256": "5e637c6c6d4a109092a0fe1f71cfb6cad5d016ef2a8e61fe1685bf304c47f25e"
       },
       {
         "path": "scripts/lexicon/build_kaikki_lookup.py",
@@ -44,7 +44,7 @@
       },
       {
         "path": "scripts/lexicon/enrich_manifest.py",
-        "sha256": "2fdd10bea8faf8d7d4f8fce29c099e06bb688e41edf2dedc9d7d858482fe6ad7"
+        "sha256": "50bc29950b67731ac2b5ac066dda363a6871b9ed5035f0514a552ee812660bb5"
       },
       {
         "path": "scripts/lexicon/esum_garbled.py",
@@ -100,7 +100,11 @@
       },
       {
         "path": "scripts/lexicon/reenrich_thin_manifest_entries.py",
-        "sha256": "90ebbe4d39e44420a4d8c82f0dc562c6927ad6b4663d434be07511a0e020cfa4"
+        "sha256": "f06d909cb48898186eaa614163f8ce9271b599f2d264f4a492968ac0b715344e"
+      },
+      {
+        "path": "scripts/lexicon/repair_plural_noun_aliases.py",
+        "sha256": "212d5d59061e2b3709e6f62b0861ccf0c98dfa4e1d63922efa8c5fce3d356416"
       },
       {
         "path": "scripts/lexicon/verify_manifest.py",
@@ -111,6 +115,6 @@
   "schema_version": 1,
   "scope": "lexicon code only; excludes module vocabulary and dictionary DB/cache state",
   "stats": {
-    "lexicon_code_files": 26
+    "lexicon_code_files": 27
   }
 }
