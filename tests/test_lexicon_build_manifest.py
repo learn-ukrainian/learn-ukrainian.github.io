@@ -1,12 +1,54 @@
+import unicodedata
+
 import scripts.lexicon.build_data_manifest as build_data_manifest
 from scripts.lexicon.build_data_manifest import (
     HERITAGE_STATUS_SEEDS,
     SURZHYK_TO_AVOID_SEEDS,
     _atlas_record_for_manifest,
     _lemma_key,
+    _merge_lemma_records,
     _slug_for_url,
     build_manifest,
 )
+from scripts.lexicon.lemma_normalization import strip_acute_stress
+
+
+def test_strip_acute_stress_preserves_ukrainian_letters() -> None:
+    assert strip_acute_stress("авантю\u0301рний") == "авантюрний"
+    assert strip_acute_stress("й ї") == "й ї"
+    assert "\u0306" in unicodedata.normalize("NFD", strip_acute_stress("й"))
+    assert "\u0308" in unicodedata.normalize("NFD", strip_acute_stress("ї"))
+
+
+def test_manifest_merge_strips_acute_stress_from_display_lemma() -> None:
+    by_lemma: dict[str, dict] = {}
+    module = {"track": "a1", "module_num": 1, "slug": "stress"}
+    _merge_lemma_records(
+        by_lemma,
+        module,
+        [
+            {
+                "lemma": "авантю\u0301рний",
+                "source": "built_vocabulary",
+                "gloss": "adventurous",
+                "pos": "adj",
+                "ipa": None,
+            },
+            {
+                "lemma": "авантюрний",
+                "source": "built_vocabulary",
+                "gloss": "adventurous",
+                "pos": "adj",
+                "ipa": None,
+            },
+        ],
+    )
+
+    assert list(by_lemma) == [_lemma_key("авантюрний")]
+    entry = by_lemma[_lemma_key("авантюрний")]
+    assert entry["lemma"] == "авантюрний"
+    assert entry["url_slug"] == "авантюрний"
+    assert "\u0301" not in entry["lemma"]
 
 
 def test_vesum_alias_folds_inflection_into_taught_lemma(monkeypatch) -> None:
@@ -191,8 +233,7 @@ def test_manifest_maps_taught_vocatives_to_nominative_lemmas() -> None:
         normalizations = entries[lemma]["atlas_normalizations"]
 
         assert any(
-            normalization["kind"] == "vocative_to_nominative"
-            and normalization["source_lemma"] == source_lemma
+            normalization["kind"] == "vocative_to_nominative" and normalization["source_lemma"] == source_lemma
             for normalization in normalizations
         )
 
@@ -245,9 +286,7 @@ def test_resolve_slug_collisions_folds_comma_variant() -> None:
             "pos": "conj",
             "ipa": None,
             "primary_source": "built_vocabulary",
-            "course_usage": [
-                {"track": "b1", "module_num": 1, "slug": "m1", "context": "built_vocabulary"}
-            ],
+            "course_usage": [{"track": "b1", "module_num": 1, "slug": "m1", "context": "built_vocabulary"}],
         },
         "тому, що": {
             "lemma": "тому, що",
@@ -256,9 +295,7 @@ def test_resolve_slug_collisions_folds_comma_variant() -> None:
             "pos": "conj",
             "ipa": None,
             "primary_source": "built_vocabulary",
-            "course_usage": [
-                {"track": "b1", "module_num": 2, "slug": "m2", "context": "built_vocabulary"}
-            ],
+            "course_usage": [{"track": "b1", "module_num": 2, "slug": "m2", "context": "built_vocabulary"}],
             "atlas_normalizations": [{"kind": "calque_correction", "source_lemma": "x"}],
         },
     }
@@ -274,6 +311,4 @@ def test_resolve_slug_collisions_folds_comma_variant() -> None:
     # course_usage from both folded entries is merged (deduped by module identity).
     assert {u["module_num"] for u in entry["course_usage"]} == {1, 2}
     # normalizations from the folded entry are carried over.
-    assert any(
-        n["kind"] == "calque_correction" for n in entry.get("atlas_normalizations", [])
-    )
+    assert any(n["kind"] == "calque_correction" for n in entry.get("atlas_normalizations", []))

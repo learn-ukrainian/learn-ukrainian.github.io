@@ -52,9 +52,7 @@ def test_split_candidates_gates_dictionary_pos_and_heritage_flags() -> None:
         },
     )
 
-    auto_merge, needs_review = grow.split_candidates(
-        [auto, no_definition, no_pos, heritage_flag]
-    )
+    auto_merge, needs_review = grow.split_candidates([auto, no_definition, no_pos, heritage_flag])
 
     assert auto_merge == [auto]
     assert [item["entry"]["lemma"] for item in needs_review] == [
@@ -69,12 +67,15 @@ def test_split_candidates_gates_dictionary_pos_and_heritage_flags() -> None:
 
 def test_build_skeleton_entry_uses_raw_vesum_pos(monkeypatch) -> None:
     def fake_verify_lemma(lemma: str) -> list[dict[str, str]]:
+        if lemma == "авантюрний":
+            return [{"pos": "adj"}]
         return [{"pos": "noun"}] if lemma == "мама" else []
 
     monkeypatch.setattr(grow.enrich_manifest, "_base_lemma", lambda lemma: lemma)
     monkeypatch.setattr(grow.enrich_manifest, "verify_lemma", fake_verify_lemma)
 
     assert grow.build_skeleton_entry("мама") == {"lemma": "мама", "pos": "noun"}
+    assert grow.build_skeleton_entry("авантю\u0301рний") == {"lemma": "авантюрний", "pos": "adj"}
     assert grow.build_skeleton_entry("не-знайдено") == {"lemma": "не-знайдено"}
 
 

@@ -1,5 +1,5 @@
 {
-  "deckVersion": "atlas-practice-v1-622fc3d93d1ad580",
+  "deckVersion": "atlas-practice-v1-9cf4a4d7319d19ce",
   "level": "B1",
   "lexemes": [
     {
@@ -1313,8 +1313,8 @@
       "glossClean": "letter",
       "heritage": "standard",
       "ipa": null,
-      "lemma": "лі́тера",
-      "lemmaId": "лі-тера",
+      "lemma": "літера",
+      "lemmaId": "літера",
       "lemmaPlain": "літера",
       "meaningMcEligible": true,
       "paradigm": {
@@ -1330,8 +1330,8 @@
       "glossClean": "weed",
       "heritage": "standard",
       "ipa": null,
-      "lemma": "бур'я́н",
-      "lemmaId": "бур-я-н",
+      "lemma": "бур'ян",
+      "lemmaId": "бур-ян",
       "lemmaPlain": "бур'ян",
       "meaningMcEligible": true,
       "paradigm": {
@@ -1347,8 +1347,8 @@
       "glossClean": "spoon",
       "heritage": "standard",
       "ipa": null,
-      "lemma": "ло́жка",
-      "lemmaId": "ло-жка",
+      "lemma": "ложка",
+      "lemmaId": "ложка",
       "lemmaPlain": "ложка",
       "meaningMcEligible": true,
       "paradigm": {
@@ -12330,23 +12330,6 @@
     },
     {
       "cefr": "B1",
-      "gloss": "until, as long as",
-      "glossClean": "until",
-      "heritage": "unknown",
-      "ipa": null,
-      "lemma": "доти...доки",
-      "lemmaId": "доти-доки",
-      "lemmaPlain": "доти...доки",
-      "meaningMcEligible": false,
-      "paradigm": {
-        "cases": {}
-      },
-      "pos": "correlative conjunction",
-      "semanticBucket": null,
-      "severity": null
-    },
-    {
-      "cefr": "B1",
       "gloss": "comma between clauses",
       "glossClean": "comma between clauses",
       "heritage": "unknown",
@@ -20793,15 +20776,32 @@
       "pos": "noun",
       "semanticBucket": null,
       "severity": null
+    },
+    {
+      "cefr": "B1",
+      "gloss": "this year",
+      "glossClean": "this year",
+      "heritage": "unknown",
+      "ipa": null,
+      "lemma": "цього року",
+      "lemmaId": "цього-року",
+      "lemmaPlain": "цього року",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "phrase",
+      "semanticBucket": null,
+      "severity": null
     }
   ],
   "schema": "atlas-practice-lexemes",
   "schemaVersion": 1,
   "sizeBudget": {
-    "gzipBytes": 44971,
+    "gzipBytes": 44931,
     "gzipLimitBytes": 140000,
     "ok": true,
-    "rawBytes": 549943,
+    "rawBytes": 549914,
     "rawLimitBytes": 550000
   },
   "source": "manifest"

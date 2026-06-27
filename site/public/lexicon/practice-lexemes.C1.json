@@ -1,5 +1,5 @@
 {
-  "deckVersion": "atlas-practice-v1-622fc3d93d1ad580",
+  "deckVersion": "atlas-practice-v1-9cf4a4d7319d19ce",
   "level": "C1",
   "lexemes": [
     {
@@ -219,8 +219,8 @@
       "glossClean": "apostrophe",
       "heritage": "standard",
       "ipa": null,
-      "lemma": "апо́строф",
-      "lemmaId": "апо-строф",
+      "lemma": "апостроф",
+      "lemmaId": "апостроф",
       "lemmaPlain": "апостроф",
       "meaningMcEligible": true,
       "paradigm": {
@@ -328,8 +328,8 @@
       "glossClean": "iotated",
       "heritage": "standard",
       "ipa": null,
-      "lemma": "йото́ваний",
-      "lemmaId": "йото-ваний",
+      "lemma": "йотований",
+      "lemmaId": "йотований",
       "lemmaPlain": "йотований",
       "meaningMcEligible": true,
       "paradigm": {
@@ -345,8 +345,8 @@
       "glossClean": "separately",
       "heritage": "standard",
       "ipa": null,
-      "lemma": "розді́льно",
-      "lemmaId": "розді-льно",
+      "lemma": "роздільно",
+      "lemmaId": "роздільно",
       "lemmaPlain": "роздільно",
       "meaningMcEligible": true,
       "paradigm": {
@@ -6750,270 +6750,15 @@
       "pos": "noun",
       "semanticBucket": null,
       "severity": null
-    },
-    {
-      "cefr": "C1",
-      "gloss": "demonology (the system of beliefs about spirits)",
-      "glossClean": "demonology (the system of beliefs about spirits)",
-      "heritage": "standard",
-      "ipa": null,
-      "lemma": "демонологія",
-      "lemmaId": "демонологія",
-      "lemmaPlain": "демонологія",
-      "meaningMcEligible": false,
-      "paradigm": {
-        "cases": {}
-      },
-      "pos": "ж.",
-      "semanticBucket": null,
-      "severity": null
-    },
-    {
-      "cefr": "C1",
-      "gloss": "spirit",
-      "glossClean": "spirit",
-      "heritage": "standard",
-      "ipa": null,
-      "lemma": "дух",
-      "lemmaId": "дух",
-      "lemmaPlain": "дух",
-      "meaningMcEligible": true,
-      "paradigm": {
-        "cases": {}
-      },
-      "pos": "ч.",
-      "semanticBucket": null,
-      "severity": null
-    },
-    {
-      "cefr": "C1",
-      "gloss": "niavka (Hutsul variant of мавка)",
-      "glossClean": "niavka (Hutsul variant of мавка)",
-      "heritage": "authentic-archaism",
-      "ipa": null,
-      "lemma": "нявка",
-      "lemmaId": "нявка",
-      "lemmaPlain": "нявка",
-      "meaningMcEligible": false,
-      "paradigm": {
-        "cases": {}
-      },
-      "pos": "ж.",
-      "semanticBucket": null,
-      "severity": null
-    },
-    {
-      "cefr": "C1",
-      "gloss": "perelesnyk, seductive flying spirit",
-      "glossClean": "perelesnyk",
-      "heritage": "standard",
-      "ipa": null,
-      "lemma": "перелесник",
-      "lemmaId": "перелесник",
-      "lemmaPlain": "перелесник",
-      "meaningMcEligible": false,
-      "paradigm": {
-        "cases": {}
-      },
-      "pos": "ч.",
-      "semanticBucket": null,
-      "severity": null
-    },
-    {
-      "cefr": "C1",
-      "gloss": "field spirit",
-      "glossClean": "field spirit",
-      "heritage": "standard",
-      "ipa": null,
-      "lemma": "польовик",
-      "lemmaId": "польовик",
-      "lemmaPlain": "польовик",
-      "meaningMcEligible": true,
-      "paradigm": {
-        "cases": {}
-      },
-      "pos": "ч.",
-      "semanticBucket": null,
-      "severity": null
-    },
-    {
-      "cefr": "C1",
-      "gloss": "potercha, spirit of a dead unbaptized child",
-      "glossClean": "potercha",
-      "heritage": "standard",
-      "ipa": null,
-      "lemma": "потерча",
-      "lemmaId": "потерча",
-      "lemmaPlain": "потерча",
-      "meaningMcEligible": false,
-      "paradigm": {
-        "cases": {}
-      },
-      "pos": "с.",
-      "semanticBucket": null,
-      "severity": null
-    },
-    {
-      "cefr": "C1",
-      "gloss": "house spirit (synonym of домовик)",
-      "glossClean": "house spirit (synonym of домовик)",
-      "heritage": "authentic-archaism",
-      "ipa": null,
-      "lemma": "хованець",
-      "lemmaId": "хованець",
-      "lemmaPlain": "хованець",
-      "meaningMcEligible": false,
-      "paradigm": {
-        "cases": {}
-      },
-      "pos": "ч.",
-      "semanticBucket": null,
-      "severity": null
-    },
-    {
-      "cefr": "C1",
-      "gloss": "chuhaister, Carpathian forest giant",
-      "glossClean": "chuhaister",
-      "heritage": "standard",
-      "ipa": null,
-      "lemma": "чугайстер",
-      "lemmaId": "чугайстер",
-      "lemmaPlain": "чугайстер",
-      "meaningMcEligible": false,
-      "paradigm": {
-        "cases": {}
-      },
-      "pos": "ч.",
-      "semanticBucket": null,
-      "severity": null
-    },
-    {
-      "cefr": "C1",
-      "gloss": "ritual well-wishing, blessing",
-      "glossClean": "ritual well-wishing",
-      "heritage": "standard",
-      "ipa": null,
-      "lemma": "віншування",
-      "lemmaId": "віншування",
-      "lemmaPlain": "віншування",
-      "meaningMcEligible": true,
-      "paradigm": {
-        "cases": {}
-      },
-      "pos": "с.",
-      "semanticBucket": null,
-      "severity": null
-    },
-    {
-      "cefr": "C1",
-      "gloss": "formulaic saying accompanying a minor action",
-      "glossClean": "formulaic saying accompanying a minor action",
-      "heritage": "standard",
-      "ipa": null,
-      "lemma": "примовка",
-      "lemmaId": "примовка",
-      "lemmaPlain": "примовка",
-      "meaningMcEligible": false,
-      "paradigm": {
-        "cases": {}
-      },
-      "pos": "ж.",
-      "semanticBucket": null,
-      "severity": null
-    },
-    {
-      "cefr": "C1",
-      "gloss": "short charm; regional variant of примовка",
-      "glossClean": "short charm",
-      "heritage": "authentic-archaism",
-      "ipa": null,
-      "lemma": "примівка",
-      "lemmaId": "примівка",
-      "lemmaPlain": "примівка",
-      "meaningMcEligible": true,
-      "paradigm": {
-        "cases": {}
-      },
-      "pos": "ж.",
-      "semanticBucket": null,
-      "severity": null
-    },
-    {
-      "cefr": "C1",
-      "gloss": "curse",
-      "glossClean": "curse",
-      "heritage": "standard",
-      "ipa": null,
-      "lemma": "проклін",
-      "lemmaId": "проклін",
-      "lemmaPlain": "проклін",
-      "meaningMcEligible": true,
-      "paradigm": {
-        "cases": {}
-      },
-      "pos": "ч.",
-      "semanticBucket": null,
-      "severity": null
-    },
-    {
-      "cefr": "C1",
-      "gloss": "whisperer-healer (utters charms in a whisper)",
-      "glossClean": "whisperer-healer (utters charms in a whisper)",
-      "heritage": "standard",
-      "ipa": null,
-      "lemma": "шептуха",
-      "lemmaId": "шептуха",
-      "lemmaPlain": "шептуха",
-      "meaningMcEligible": false,
-      "paradigm": {
-        "cases": {}
-      },
-      "pos": "ж.",
-      "semanticBucket": null,
-      "severity": null
-    },
-    {
-      "cefr": "C1",
-      "gloss": "archaic: word, speech",
-      "glossClean": "archaic: word",
-      "heritage": "authentic-archaism",
-      "ipa": null,
-      "lemma": "глагол",
-      "lemmaId": "глагол",
-      "lemmaPlain": "глагол",
-      "meaningMcEligible": true,
-      "paradigm": {
-        "cases": {}
-      },
-      "pos": "noun",
-      "semanticBucket": null,
-      "severity": null
-    },
-    {
-      "cefr": "C1",
-      "gloss": "regional: woman",
-      "glossClean": "regional: woman",
-      "heritage": "standard",
-      "ipa": null,
-      "lemma": "кобіта",
-      "lemmaId": "кобіта",
-      "lemmaPlain": "кобіта",
-      "meaningMcEligible": true,
-      "paradigm": {
-        "cases": {}
-      },
-      "pos": "noun",
-      "semanticBucket": null,
-      "severity": null
     }
   ],
   "schema": "atlas-practice-lexemes",
   "schemaVersion": 1,
   "sizeBudget": {
-    "gzipBytes": 15065,
+    "gzipBytes": 14360,
     "gzipLimitBytes": 140000,
     "ok": true,
-    "rawBytes": 185807,
+    "rawBytes": 179123,
     "rawLimitBytes": 550000
   },
   "source": "manifest"

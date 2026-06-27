@@ -3,9 +3,9 @@
     "cloze": 0,
     "clozeCoverage": 0.0,
     "clozeEligibleLexemes": 0,
-    "lexemes": 498
+    "lexemes": 469
   },
-  "deckVersion": "atlas-practice-v1-622fc3d93d1ad580",
+  "deckVersion": "atlas-practice-v1-9cf4a4d7319d19ce",
   "items": [
     {
       "cefr": "B2",
@@ -187,8 +187,8 @@
       "cefr": "B2",
       "clozeIds": [],
       "hasCloze": false,
-      "lemma": "абе́тка",
-      "lemmaId": "абе-тка",
+      "lemma": "абетка",
+      "lemmaId": "абетка",
       "modes": [
         "flashcards",
         "matching",
@@ -4853,19 +4853,6 @@
       "cefr": "B2",
       "clozeIds": [],
       "hasCloze": false,
-      "lemma": "масмедіа",
-      "lemmaId": "масмедіа",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 378
-    },
-    {
-      "cefr": "B2",
-      "clozeIds": [],
-      "hasCloze": false,
       "lemma": "ярлик",
       "lemmaId": "ярлик",
       "modes": [
@@ -4873,7 +4860,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 379
+      "newOrder": 378
     },
     {
       "cefr": "B2",
@@ -4886,7 +4873,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 380
+      "newOrder": 379
     },
     {
       "cefr": "B2",
@@ -4899,7 +4886,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 381
+      "newOrder": 380
     },
     {
       "cefr": "B2",
@@ -4910,7 +4897,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 382
+      "newOrder": 381
     },
     {
       "cefr": "B2",
@@ -4923,7 +4910,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 383
+      "newOrder": 382
     },
     {
       "cefr": "B2",
@@ -4934,7 +4921,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 384
+      "newOrder": 383
     },
     {
       "cefr": "B2",
@@ -4947,7 +4934,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 385
+      "newOrder": 384
     },
     {
       "cefr": "B2",
@@ -4960,7 +4947,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 386
+      "newOrder": 385
     },
     {
       "cefr": "B2",
@@ -4973,7 +4960,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 387
+      "newOrder": 386
     },
     {
       "cefr": "B2",
@@ -4986,7 +4973,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 388
+      "newOrder": 387
     },
     {
       "cefr": "B2",
@@ -4999,7 +4986,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 389
+      "newOrder": 388
     },
     {
       "cefr": "B2",
@@ -5012,7 +4999,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 390
+      "newOrder": 389
     },
     {
       "cefr": "B2",
@@ -5025,7 +5012,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 391
+      "newOrder": 390
     },
     {
       "cefr": "B2",
@@ -5038,7 +5025,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 392
+      "newOrder": 391
     },
     {
       "cefr": "B2",
@@ -5051,7 +5038,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 393
+      "newOrder": 392
     },
     {
       "cefr": "B2",
@@ -5064,7 +5051,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 394
+      "newOrder": 393
     },
     {
       "cefr": "B2",
@@ -5077,7 +5064,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 395
+      "newOrder": 394
     },
     {
       "cefr": "B2",
@@ -5090,7 +5077,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 396
+      "newOrder": 395
     },
     {
       "cefr": "B2",
@@ -5103,7 +5090,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 397
+      "newOrder": 396
     },
     {
       "cefr": "B2",
@@ -5116,7 +5103,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 398
+      "newOrder": 397
     },
     {
       "cefr": "B2",
@@ -5129,7 +5116,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 399
+      "newOrder": 398
     },
     {
       "cefr": "B2",
@@ -5142,7 +5129,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 400
+      "newOrder": 399
     },
     {
       "cefr": "B2",
@@ -5155,7 +5142,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 401
+      "newOrder": 400
     },
     {
       "cefr": "B2",
@@ -5168,7 +5155,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 402
+      "newOrder": 401
     },
     {
       "cefr": "B2",
@@ -5181,7 +5168,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 403
+      "newOrder": 402
     },
     {
       "cefr": "B2",
@@ -5194,7 +5181,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 404
+      "newOrder": 403
     },
     {
       "cefr": "B2",
@@ -5207,7 +5194,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 405
+      "newOrder": 404
     },
     {
       "cefr": "B2",
@@ -5220,7 +5207,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 406
+      "newOrder": 405
     },
     {
       "cefr": "B2",
@@ -5233,7 +5220,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 407
+      "newOrder": 406
     },
     {
       "cefr": "B2",
@@ -5246,7 +5233,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 408
+      "newOrder": 407
     },
     {
       "cefr": "B2",
@@ -5259,7 +5246,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 409
+      "newOrder": 408
     },
     {
       "cefr": "B2",
@@ -5270,7 +5257,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 410
+      "newOrder": 409
     },
     {
       "cefr": "B2",
@@ -5281,7 +5268,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 411
+      "newOrder": 410
     },
     {
       "cefr": "B2",
@@ -5294,7 +5281,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 412
+      "newOrder": 411
     },
     {
       "cefr": "B2",
@@ -5307,7 +5294,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 413
+      "newOrder": 412
     },
     {
       "cefr": "B2",
@@ -5320,7 +5307,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 414
+      "newOrder": 413
     },
     {
       "cefr": "B2",
@@ -5333,7 +5320,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 415
+      "newOrder": 414
     },
     {
       "cefr": "B2",
@@ -5346,7 +5333,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 416
+      "newOrder": 415
     },
     {
       "cefr": "B2",
@@ -5359,7 +5346,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 417
+      "newOrder": 416
     },
     {
       "cefr": "B2",
@@ -5372,7 +5359,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 418
+      "newOrder": 417
     },
     {
       "cefr": "B2",
@@ -5385,7 +5372,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 419
+      "newOrder": 418
     },
     {
       "cefr": "B2",
@@ -5398,7 +5385,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 420
+      "newOrder": 419
     },
     {
       "cefr": "B2",
@@ -5411,7 +5398,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 421
+      "newOrder": 420
     },
     {
       "cefr": "B2",
@@ -5424,7 +5411,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 422
+      "newOrder": 421
     },
     {
       "cefr": "B2",
@@ -5437,7 +5424,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 423
+      "newOrder": 422
     },
     {
       "cefr": "B2",
@@ -5450,7 +5437,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 424
+      "newOrder": 423
     },
     {
       "cefr": "B2",
@@ -5463,7 +5450,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 425
+      "newOrder": 424
     },
     {
       "cefr": "B2",
@@ -5476,7 +5463,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 426
+      "newOrder": 425
     },
     {
       "cefr": "B2",
@@ -5489,7 +5476,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 427
+      "newOrder": 426
     },
     {
       "cefr": "B2",
@@ -5502,7 +5489,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 428
+      "newOrder": 427
     },
     {
       "cefr": "B2",
@@ -5515,7 +5502,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 429
+      "newOrder": 428
     },
     {
       "cefr": "B2",
@@ -5528,7 +5515,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 430
+      "newOrder": 429
     },
     {
       "cefr": "B2",
@@ -5541,7 +5528,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 431
+      "newOrder": 430
     },
     {
       "cefr": "B2",
@@ -5554,7 +5541,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 432
+      "newOrder": 431
     },
     {
       "cefr": "B2",
@@ -5567,7 +5554,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 433
+      "newOrder": 432
     },
     {
       "cefr": "B2",
@@ -5580,7 +5567,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 434
+      "newOrder": 433
     },
     {
       "cefr": "B2",
@@ -5593,7 +5580,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 435
+      "newOrder": 434
     },
     {
       "cefr": "B2",
@@ -5604,7 +5591,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 436
+      "newOrder": 435
     },
     {
       "cefr": "B2",
@@ -5617,7 +5604,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 437
+      "newOrder": 436
     },
     {
       "cefr": "B2",
@@ -5630,7 +5617,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 438
+      "newOrder": 437
     },
     {
       "cefr": "B2",
@@ -5641,7 +5628,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 439
+      "newOrder": 438
     },
     {
       "cefr": "B2",
@@ -5652,7 +5639,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 440
+      "newOrder": 439
     },
     {
       "cefr": "B2",
@@ -5665,7 +5652,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 441
+      "newOrder": 440
     },
     {
       "cefr": "B2",
@@ -5678,7 +5665,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 442
+      "newOrder": 441
     },
     {
       "cefr": "B2",
@@ -5691,7 +5678,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 443
+      "newOrder": 442
     },
     {
       "cefr": "B2",
@@ -5704,7 +5691,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 444
+      "newOrder": 443
     },
     {
       "cefr": "B2",
@@ -5717,7 +5704,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 445
+      "newOrder": 444
     },
     {
       "cefr": "B2",
@@ -5730,7 +5717,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 446
+      "newOrder": 445
     },
     {
       "cefr": "B2",
@@ -5743,7 +5730,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 447
+      "newOrder": 446
     },
     {
       "cefr": "B2",
@@ -5756,7 +5743,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 448
+      "newOrder": 447
     },
     {
       "cefr": "B2",
@@ -5767,7 +5754,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 449
+      "newOrder": 448
     },
     {
       "cefr": "B2",
@@ -5778,7 +5765,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 450
+      "newOrder": 449
     },
     {
       "cefr": "B2",
@@ -5789,7 +5776,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 451
+      "newOrder": 450
     },
     {
       "cefr": "B2",
@@ -5800,7 +5787,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 452
+      "newOrder": 451
     },
     {
       "cefr": "B2",
@@ -5813,7 +5800,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 453
+      "newOrder": 452
     },
     {
       "cefr": "B2",
@@ -5824,7 +5811,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 454
+      "newOrder": 453
     },
     {
       "cefr": "B2",
@@ -5837,7 +5824,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 455
+      "newOrder": 454
     },
     {
       "cefr": "B2",
@@ -5848,7 +5835,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 456
+      "newOrder": 455
     },
     {
       "cefr": "B2",
@@ -5861,7 +5848,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 457
+      "newOrder": 456
     },
     {
       "cefr": "B2",
@@ -5874,7 +5861,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 458
+      "newOrder": 457
     },
     {
       "cefr": "B2",
@@ -5887,7 +5874,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 459
+      "newOrder": 458
     },
     {
       "cefr": "B2",
@@ -5900,7 +5887,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 460
+      "newOrder": 459
     },
     {
       "cefr": "B2",
@@ -5913,7 +5900,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 461
+      "newOrder": 460
     },
     {
       "cefr": "B2",
@@ -5926,7 +5913,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 462
+      "newOrder": 461
     },
     {
       "cefr": "B2",
@@ -5939,7 +5926,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 463
+      "newOrder": 462
     },
     {
       "cefr": "B2",
@@ -5952,7 +5939,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 464
+      "newOrder": 463
     },
     {
       "cefr": "B2",
@@ -5965,7 +5952,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 465
+      "newOrder": 464
     },
     {
       "cefr": "B2",
@@ -5976,7 +5963,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 466
+      "newOrder": 465
     },
     {
       "cefr": "B2",
@@ -5989,7 +5976,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 467
+      "newOrder": 466
     },
     {
       "cefr": "B2",
@@ -6000,7 +5987,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 468
+      "newOrder": 467
     },
     {
       "cefr": "B2",
@@ -6013,361 +6000,17 @@
         "matching",
         "choice"
       ],
-      "newOrder": 469
-    },
-    {
-      "cefr": "B2",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "водяник",
-      "lemmaId": "водяник",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 470
-    },
-    {
-      "cefr": "B2",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "ворожіння",
-      "lemmaId": "ворожіння",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 471
-    },
-    {
-      "cefr": "B2",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "домовик",
-      "lemmaId": "домовик",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 472
-    },
-    {
-      "cefr": "B2",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "евфемізм",
-      "lemmaId": "евфемізм",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 473
-    },
-    {
-      "cefr": "B2",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "замовляння",
-      "lemmaId": "замовляння",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 474
-    },
-    {
-      "cefr": "B2",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "знахар",
-      "lemmaId": "знахар",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 475
-    },
-    {
-      "cefr": "B2",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "лісовик",
-      "lemmaId": "лісовик",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 476
-    },
-    {
-      "cefr": "B2",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "мавка",
-      "lemmaId": "мавка",
-      "modes": [
-        "flashcards"
-      ],
-      "newOrder": 477
-    },
-    {
-      "cefr": "B2",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "мрець",
-      "lemmaId": "мрець",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 478
-    },
-    {
-      "cefr": "B2",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "міфологія",
-      "lemmaId": "міфологія",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 479
-    },
-    {
-      "cefr": "B2",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "пантеон",
-      "lemmaId": "пантеон",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 480
-    },
-    {
-      "cefr": "B2",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "перевертень",
-      "lemmaId": "перевертень",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 481
-    },
-    {
-      "cefr": "B2",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "пограниччя",
-      "lemmaId": "пограниччя",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 482
-    },
-    {
-      "cefr": "B2",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "предок",
-      "lemmaId": "предок",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 483
-    },
-    {
-      "cefr": "B2",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "русалка",
-      "lemmaId": "русалка",
-      "modes": [
-        "flashcards"
-      ],
-      "newOrder": 484
-    },
-    {
-      "cefr": "B2",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "упир",
-      "lemmaId": "упир",
-      "modes": [
-        "flashcards"
-      ],
-      "newOrder": 485
-    },
-    {
-      "cefr": "B2",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "градація",
-      "lemmaId": "градація",
-      "modes": [
-        "flashcards"
-      ],
-      "newOrder": 486
-    },
-    {
-      "cefr": "B2",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "дослідник",
-      "lemmaId": "дослідник",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 487
-    },
-    {
-      "cefr": "B2",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "етнонім",
-      "lemmaId": "етнонім",
-      "modes": [
-        "flashcards"
-      ],
-      "newOrder": 488
-    },
-    {
-      "cefr": "B2",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "замовний",
-      "lemmaId": "замовний",
-      "modes": [
-        "flashcards"
-      ],
-      "newOrder": 489
-    },
-    {
-      "cefr": "B2",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "збирач",
-      "lemmaId": "збирач",
-      "modes": [
-        "flashcards"
-      ],
-      "newOrder": 490
-    },
-    {
-      "cefr": "B2",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "магічний",
-      "lemmaId": "магічний",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 491
-    },
-    {
-      "cefr": "B2",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "поетика",
-      "lemmaId": "поетика",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 492
-    },
-    {
-      "cefr": "B2",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "словесний",
-      "lemmaId": "словесний",
-      "modes": [
-        "flashcards"
-      ],
-      "newOrder": 493
-    },
-    {
-      "cefr": "B2",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "тотожність",
-      "lemmaId": "тотожність",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 494
-    },
-    {
-      "cefr": "B2",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "гетьман",
-      "lemmaId": "гетьман",
-      "modes": [
-        "flashcards"
-      ],
-      "newOrder": 495
-    },
-    {
-      "cefr": "B2",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "десятина",
-      "lemmaId": "десятина",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 496
-    },
-    {
-      "cefr": "B2",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "опришок",
-      "lemmaId": "опришок",
-      "modes": [
-        "flashcards"
-      ],
-      "newOrder": 497
+      "newOrder": 468
     }
   ],
   "level": "B2",
   "schema": "atlas-practice-index",
   "schemaVersion": 1,
   "sizeBudget": {
-    "gzipBytes": 7867,
+    "gzipBytes": 7423,
     "gzipLimitBytes": 140000,
     "ok": true,
-    "rawBytes": 127914,
+    "rawBytes": 120828,
     "rawLimitBytes": 550000
   },
   "source": "manifest"

@@ -9,7 +9,7 @@ from scripts.audit import grow_lexicon_from_lemmas as grow
 
 def test_generate_candidates_reads_lemma_file_and_splits_candidates(tmp_path, monkeypatch) -> None:
     lemmas_file = tmp_path / "lemmas.txt"
-    lemmas_file.write_text("\n авто \n\nревю\n", encoding="utf-8")
+    lemmas_file.write_text("\n авто\u0301 \nавто\nревю\n", encoding="utf-8")
     out = tmp_path / "doc-candidates.json"
     seen: list[tuple[str, dict[str, bool], bool]] = []
 
@@ -47,7 +47,7 @@ def test_generate_candidates_reads_lemma_file_and_splits_candidates(tmp_path, mo
 
     monkeypatch.setattr(grow.enrich_manifest, "enrich_entry", fake_enrich_entry)
 
-    payload = grow.generate_candidates(lemmas_file=lemmas_file, limit=2, out=out)
+    payload = grow.generate_candidates(lemmas_file=lemmas_file, limit=3, out=out)
     written = json.loads(out.read_text(encoding="utf-8"))
 
     assert payload == written

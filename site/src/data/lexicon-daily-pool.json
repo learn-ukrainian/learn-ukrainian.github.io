@@ -605,6 +605,15 @@
     "cefr": "A1"
   },
   {
+    "lemma": "дерев'яний",
+    "slug": "дерев-яний",
+    "gloss": "wooden",
+    "k": "vyv",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "A2"
+  },
+  {
     "lemma": "дешевий",
     "slug": "дешевий",
     "gloss": "cheap, masculine",
@@ -623,7 +632,7 @@
     "cefr": "B1"
   },
   {
-    "lemma": "джерело́",
+    "lemma": "джерело",
     "slug": "джерело",
     "gloss": "source / spring",
     "k": "vyv",
@@ -1054,15 +1063,6 @@
     "cefr": "B1"
   },
   {
-    "lemma": "курча",
-    "slug": "курча",
-    "gloss": "chick",
-    "k": "vyv",
-    "weight": 5,
-    "lessonTag": "a2",
-    "cefr": "B1"
-  },
-  {
     "lemma": "кутя",
     "slug": "кутя",
     "gloss": "kutia, Christmas ritual dish",
@@ -1133,6 +1133,15 @@
     "weight": 5,
     "lessonTag": "a2",
     "cefr": "A2"
+  },
+  {
+    "lemma": "ложка",
+    "slug": "ложка",
+    "gloss": "spoon",
+    "k": "vyv",
+    "weight": 5,
+    "lessonTag": "a1",
+    "cefr": "B1"
   },
   {
     "lemma": "люблять",
@@ -1856,15 +1865,6 @@
     "lemma": "професія",
     "slug": "професія",
     "gloss": "profession",
-    "k": "vyv",
-    "weight": 5,
-    "lessonTag": "a1",
-    "cefr": "A1"
-  },
-  {
-    "lemma": "пі́сня",
-    "slug": "пі-сня",
-    "gloss": "song",
     "k": "vyv",
     "weight": 5,
     "lessonTag": "a1",
