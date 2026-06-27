@@ -1,0 +1,208 @@
+- lemma: традиція
+  translation: tradition
+  pos: noun
+  usage: "Традиція залишається живою, коли її осмислюють і передають далі."
+- lemma: звичай
+  translation: custom
+  pos: noun
+  usage: "За родинним звичаєм на Святвечір першою подають кутю."
+- lemma: обряд
+  translation: ritual, ceremony
+  pos: noun
+  usage: "Весільний обряд може поєднувати давні й сучасні елементи."
+- lemma: свято
+  translation: holiday, celebration
+  pos: noun
+  usage: "Свято має і календарне, і родинне значення."
+- lemma: спадщина
+  translation: heritage
+  pos: noun
+  usage: "Нематеріальна спадщина потребує уважного збереження."
+- lemma: обрядовість
+  translation: ritual culture
+  pos: noun
+  usage: "Зимова обрядовість охоплює колядування, щедрування й родинну вечерю."
+- lemma: вишиванка
+  translation: embroidered shirt
+  pos: noun
+  usage: "Для багатьох людей вишиванка є знаком української ідентичності."
+- lemma: колядка
+  translation: Christmas carol
+  pos: noun
+  usage: "Діти вивчили колядку для шкільного різдвяного концерту."
+- lemma: щедрівка
+  translation: New Year carol
+  pos: noun
+  usage: "Щедрівка містить побажання достатку й доброго року."
+- lemma: крашанка
+  translation: dyed Easter egg
+  pos: noun
+  usage: "Крашанки кладуть до великоднього кошика."
+- lemma: писанка
+  translation: decorated Easter egg
+  pos: noun
+  usage: "Писанка має орнамент, колір і символічне значення."
+- lemma: паска
+  translation: Easter bread
+  pos: noun
+  usage: "Паску печуть перед Великоднем і несуть до кошика."
+- lemma: коровай
+  translation: wedding bread
+  pos: noun
+  usage: "Коровай символізує достаток і благословення молодят."
+- lemma: кутя
+  translation: kutia, ritual wheat dish
+  pos: noun
+  usage: "Кутя часто відкриває вечерю на Святвечір."
+- lemma: сватання
+  translation: matchmaking ceremony
+  pos: noun
+  usage: "Сватання у традиційному описі передувало весіллю."
+- lemma: вінчання
+  translation: church wedding
+  pos: noun
+  usage: "Під час вінчання рушник може мати символічну роль."
+- lemma: хрестини
+  translation: baptism celebration
+  pos: noun
+  usage: "На хрестинах збираються родичі й хрещені батьки."
+- lemma: поминки
+  translation: memorial meal
+  pos: noun
+  usage: "На поминках ушановують пам'ять померлої людини."
+- lemma: колядування
+  translation: caroling
+  pos: noun
+  usage: "Під час колядування співають колядки й бажають добра."
+- lemma: щедрування
+  translation: singing New Year carols
+  pos: noun
+  usage: "Щедрування пов'язане з побажанням щедрого року."
+- lemma: посівання
+  translation: ritual sowing
+  pos: noun
+  usage: "Посівання символізує побажання врожаю й достатку."
+- lemma: обжинки
+  translation: harvest celebration
+  pos: noun
+  usage: "Після обжинків дякували за врожай."
+- lemma: Покрова
+  translation: Feast of the Protection
+  pos: propn
+  usage: "Покрова пов'язана з темами захисту, пам'яті й козацької традиції."
+- lemma: ревіталізація
+  translation: revitalization
+  pos: noun
+  usage: "Ревіталізація традицій не означає механічного копіювання минулого."
+- lemma: самобутність
+  translation: distinctiveness
+  pos: noun
+  usage: "Самобутність культури видно в локальних назвах і практиках."
+- lemma: громада
+  translation: community
+  pos: noun
+  usage: "Громада організувала благодійну коляду."
+- lemma: діаспора
+  translation: diaspora
+  pos: noun
+  usage: "У діаспорі традиції часто пояснюють дітям двома мовами."
+- lemma: ідентичність
+  translation: identity
+  pos: noun
+  usage: "Традиції можуть підтримувати українську ідентичність за кордоном."
+- lemma: регіональний
+  translation: regional
+  pos: adj
+  usage: "Регіональний звичай не є відхиленням від норми."
+- lemma: діалектний
+  translation: dialectal
+  pos: adj
+  usage: "Діалектна назва залежить від місцевої мовної практики."
+- lemma: родинний
+  translation: family-related
+  pos: adj
+  usage: "Родинний спогад часто зберігає деталі обряду."
+- lemma: календарний
+  translation: calendar-related
+  pos: adj
+  usage: "Календарний цикл структурує зимові, весняні й осінні свята."
+- lemma: символічний
+  translation: symbolic
+  pos: adj
+  usage: "Рушник може мати символічне значення під час вінчання."
+- lemma: урочистий
+  translation: solemn, festive
+  pos: adj
+  usage: "Урочистий тон доречний у промові до громади."
+- lemma: нематеріальний
+  translation: intangible
+  pos: adj
+  usage: "Нематеріальна спадщина включає пісні, обряди й ремесла."
+- lemma: освячувати
+  translation: to bless, to consecrate
+  pos: verb
+  usage: "У багатьох родинах паску освячують перед великоднім сніданком."
+- lemma: зберігати
+  translation: to preserve
+  pos: verb
+  usage: "Родина зберігає рецепт куті від прабабусі."
+- lemma: відроджувати
+  translation: to revive
+  pos: verb
+  usage: "Шкільний гурток відроджує місцеві щедрівки."
+- lemma: передавати
+  translation: to pass on
+  pos: verb
+  usage: "Традицію передають через мову, пісню й родинну розповідь."
+- lemma: вшановувати
+  translation: to honor
+  pos: verb
+  usage: "У громаді вшановують пам'ять загиблих захисників."
+- lemma: дотримуватися
+  translation: to observe, to follow
+  pos: verb
+  usage: "Дехто дотримується прикмет, а дехто сприймає їх як жарт."
+- lemma: поріг
+  translation: threshold
+  pos: noun
+  usage: "Заборона передавати речі через поріг є відомим забобоном."
+- lemma: забобон
+  translation: superstition
+  pos: noun
+  usage: "Забобон може залишатися культурним жартом без буквальної віри."
+- lemma: прикмета
+  translation: omen, folk sign
+  pos: noun
+  usage: "Народна прикмета пояснює подію через символічний зв'язок."
+- lemma: оберіг
+  translation: protective charm
+  pos: noun
+  usage: "Рушник або вишивка можуть сприйматися як оберіг."
+- lemma: рушник
+  translation: embroidered ritual towel
+  pos: noun
+  usage: "Рушник використовують під час благословення й вінчання."
+- lemma: дідух
+  translation: didukh, ritual sheaf
+  pos: noun
+  usage: "Дідух у різдвяному циклі пов'язують із пам'яттю про предків."
+- lemma: вертеп
+  translation: nativity play
+  pos: noun
+  usage: "Вертеп може поєднувати релігійну сцену й народний гумор."
+- lemma: Маланка
+  translation: Malanka celebration
+  pos: propn
+  usage: "Маланка має локальні форми святкування в різних громадах."
+- lemma: Водохреще
+  translation: Epiphany
+  pos: propn
+  usage: "Водохреще завершує важливу частину зимового циклу."
+- lemma: Зелені свята
+  translation: Green Holidays, Pentecost period
+  pos: phrase
+  usage: "Зелені свята пов'язують із зеленню, пам'яттю й церковним календарем."
+- lemma: День вишиванки
+  translation: Vyshyvanka Day
+  pos: propn
+  usage: "День вишиванки став сучасною громадянською традицією."
