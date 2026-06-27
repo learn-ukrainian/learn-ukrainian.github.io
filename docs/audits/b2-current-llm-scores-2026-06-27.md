@@ -35,10 +35,15 @@ B2 M33 `lexical-stylistic-devices`,9/10,B+,Yes,Strong lexical stylistic devices 
 B2 M34 `syntactic-stylistic-devices`,9/10,B+,Yes,Strong syntactic stylistic devices module with 11 workbook activities, 39 vocabulary items, 99.4% richness, and final Agy/Gemini review pass. Score held at 9 for minor audit UA-GEC/style advisories.
 B2 M35 `mistsia-i-oriientyry`,9/10,B+,Yes,Strong places and landmarks module with 11 workbook activities, 42 vocabulary items, 99.7% richness, and Agy/Claude Opus review pass. Score held at 9 for non-blocking review polish notes.
 B2 M36 `register-formal-informal`,9/10,B+,Yes,Strong formal/informal register module with 11 workbook activities, 42 vocabulary items, 96.3% richness, and Agy/Claude Opus review pass. Score held at 9 for lower cultural-anchor subscore and conservative post-build polish risk.
+B2 M37 `register-business-ukrainian`,9/10,B+,Yes,Strong business Ukrainian register module 10 workbook activities, 45 vocabulary items, 99% richness, and Agy/Gemini review pass. Score held at 9 for conservative post-build polish risk around dense business-register coverage.
+B2 M38 `register-formal-written`,9/10,B+,Yes,Strong formal written register module 10 workbook activities, 49 vocabulary items, 99% richness, and Agy/Gemini review pass. Score held at 9 for compact scope and non-blocking polish risk.
+B2 M39 `tradytsii-i-zvychai`,9/10,B+,Yes,Strong traditions and customs module 10 workbook activities, 52 vocabulary items, 99% richness, and Agy/Gemini review pass. Score held at 9 for cultural-density polish risk suitable for human review.
+B2 M40 `register-literary-ukrainian`,9/10,B+,Yes,Strong literary-register module 16 workbook activities, 49 vocabulary items, 99% richness, and Agy/Gemini review/style pass. Score held at 9 for dense literary coverage and human-polish reserve.
+B2 M41 `register-public-discourse`,9/10,B+,Yes,Strong public-discourse/media-register module 12 workbook activities, 49 vocabulary items, 99% richness, and Agy/Gemini review/fix verification pass. Score held at 9 for remaining non-blocking UA-GEC advisory notes.
 
 Score,Count,Modules
 10/10,2,"M01, M08"
-9/10,33,"M02-M07, M09-M13, M15-M36"
+9/10,38,"M02-M07, M09-M13, M15-M41"
 8/10,1,M14
 
 Durable Report,Scope
@@ -48,6 +53,7 @@ Durable Report,Scope
 `docs/audits/b2-m22-m26-llm-score-report-2026-06-26.md`,M22-M26
 `docs/audits/b2-m27-m31-llm-score-report-2026-06-26.md`,M27-M31
 `docs/audits/b2-m32-m36-llm-score-report-2026-06-27.md`,M32-M36
+`docs/audits/b2-m37-m41-llm-score-report-2026-06-27.md`,M37-M41
 
 Module,Raw Word Count,Activities,Vocabulary
 M03 `b2-impersonal-passive`,4608,7 workbook / 4 inline,35
@@ -84,6 +90,11 @@ M33 `lexical-stylistic-devices`,5421,10 workbook / 0 inline,39
 M34 `syntactic-stylistic-devices`,4904,11 workbook / 0 inline,39
 M35 `mistsia-i-oriientyry`,4798,11 workbook / 0 inline,42
 M36 `register-formal-informal`,4663,11 workbook / 0 inline,42
+M37 `register-business-ukrainian`,5217,10 workbook / 0 inline,45
+M38 `register-formal-written`,4059,10 workbook / 0 inline,49
+M39 `tradytsii-i-zvychai`,4621,10 workbook / 0 inline,52
+M40 `register-literary-ukrainian`,6162,16 workbook / 0 inline,49
+M41 `register-public-discourse`,4240,12 workbook / 0 inline,49
 
 Score,Pass Count
 10/10,5/5 with no meaningful content polish
@@ -99,3 +110,4 @@ See `docs/audits/b2-m16-m21-llm-score-report-2026-06-25.md`.,M16-M21
 See `docs/audits/b2-m22-m26-llm-score-report-2026-06-26.md`.,M22-M26
 See `docs/audits/b2-m27-m31-llm-score-report-2026-06-26.md`.,M27-M31
 See `docs/audits/b2-m32-m36-llm-score-report-2026-06-27.md`.,M32-M36
+See `docs/audits/b2-m37-m41-llm-score-report-2026-06-27.md`.,M37-M41
