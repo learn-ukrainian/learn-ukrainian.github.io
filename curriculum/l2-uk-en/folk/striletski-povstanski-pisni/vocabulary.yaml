@@ -1,0 +1,40 @@
+- lemma: стрілецька пісня
+  translation: Sich Riflemen song; modern resistance-song layer
+  pos: noun phrase
+  usage: Стрілецька пісня може мати автора і водночас жити в гуртовому співі.
+- lemma: повстанська пісня
+  translation: insurgent song; underground resistance song
+  pos: noun phrase
+  usage: Повстанська пісня часто працює з лісом, тюрмою, ніччю і пам'яттю про загиблих.
+- lemma: фольклоризація
+  translation: folklorization; entry of authored text into communal circulation
+  pos: noun
+  usage: Фольклоризація не стирає автора, але пояснює, як текст стає спільною піснею.
+- lemma: співаник
+  translation: songbook
+  pos: noun
+  usage: Співаник переносить репертуар між військом, школою, родиною і сценою.
+- lemma: реквієм
+  translation: requiem; elegiac memorial song
+  pos: noun
+  usage: Реквієм дає спільноті мову втрати, не перетворюючи смерть на прикрасу.
+- lemma: джерельна ситуація
+  translation: source situation; provenance context
+  pos: noun phrase
+  usage: Джерельна ситуація визначає, чи можна говорити про текст, авторство, варіант або тільки про публічну атестацію.
+- lemma: варіант
+  translation: variant
+  pos: noun
+  usage: Варіант показує, що пісня живе в кількох виконаннях і записах.
+- lemma: приспів
+  translation: refrain
+  pos: noun
+  usage: Приспів допомагає гуртовому голосу швидко підхопити пісню.
+- lemma: криміналізувальний ярлик
+  translation: criminalizing label
+  pos: noun phrase
+  usage: Радянський криміналізувальний ярлик треба називати як ворожу рамку, не як нейтральний опис.
+- lemma: меморіальна культура
+  translation: memorial culture
+  pos: noun phrase
+  usage: Меморіальна культура пояснює, чому пісня звучить на вшануванні, у школі або на сцені.

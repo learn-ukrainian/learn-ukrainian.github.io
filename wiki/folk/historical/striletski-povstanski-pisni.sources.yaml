@@ -1,0 +1,44 @@
+# Source registry for wiki/folk/historical/striletski-povstanski-pisni.md
+sources:
+- id: S1
+  type: public-reference
+  title: Стрілецькі пісні
+  url: https://uk.wikipedia.org/wiki/Стрілецькі_пісні
+- id: S2
+  type: public-reference
+  title: Повстанські пісні
+  url: https://uk.wikipedia.org/wiki/Повстанські_пісні
+- id: S3
+  type: primary
+  title: Ой у лузі червона калина похилилася
+  author: Чарнецький Степан
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=16376
+- id: S4
+  type: primary
+  title: Чуєш, брате мій
+  author: Лепкий Богдан
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=8048
+- id: S5
+  type: primary
+  title: Там на горі, на Маківці...
+  author: Невідомий автор
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=27131
+- id: S6
+  type: primary
+  title: Повіяв вітер степовий
+  author: Невідомий автор
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=26755
+- id: S7
+  type: primary
+  title: Нічка була темна
+  author: Невідомий автор
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=26553
+- id: S8
+  type: primary
+  title: Понад Хустом ворон кряче
+  author: Невідомий автор
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=26555
+- id: S9
+  type: public-reference
+  title: Про заходи з відзначення річниці перемоги над нацизмом
+  url: https://osvita.ua/legislation/Ser_osv/46719/
