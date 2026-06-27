@@ -1,0 +1,196 @@
+- lemma: художній стиль
+  translation: literary/artistic style
+  pos: noun phrase
+  usage: "Художній стиль створює образ, настрій і простір для тлумачення."
+- lemma: образ
+  translation: image, artistic image
+  pos: noun
+  usage: "Образ міста допомагає передати самотність героїні."
+- lemma: образність
+  translation: imagery, figurativeness
+  pos: noun
+  usage: "Образність не повинна перетворюватися на набір прикрас."
+- lemma: естетична функція
+  translation: aesthetic function
+  pos: noun phrase
+  usage: "Естетична функція мови особливо помітна в художньому тексті."
+- lemma: підтекст
+  translation: subtext
+  pos: noun
+  usage: "Підтекст сцени можна вивести з жестів і пауз."
+- lemma: символ
+  translation: symbol
+  pos: noun
+  usage: "Поріг у цьому уривку працює як символ межі."
+- lemma: символіка
+  translation: symbolism
+  pos: noun
+  usage: "Символіка води залежить від контексту твору."
+- lemma: троп
+  translation: trope
+  pos: noun
+  usage: "Метафора, метонімія й епітет належать до тропів."
+- lemma: метафора
+  translation: metaphor
+  pos: noun
+  usage: "Метафора перетворює місто на живу істоту."
+- lemma: метонімія
+  translation: metonymy
+  pos: noun
+  usage: "У реченні «зал мовчав» використано метонімію."
+- lemma: синекдоха
+  translation: synecdoche
+  pos: noun
+  usage: "Синекдоха може називати частину замість цілого."
+- lemma: епітет
+  translation: epithet
+  pos: noun
+  usage: "Епітет показує предмет очима оповідача."
+- lemma: уособлення
+  translation: personification
+  pos: noun
+  usage: "Уособлення надає місту людської здатності мовчати."
+- lemma: порівняння
+  translation: simile, comparison
+  pos: noun
+  usage: "Порівняння допомагає зробити образ зрозумілішим."
+- lemma: інверсія
+  translation: inversion
+  pos: noun
+  usage: "Інверсія висуває важливе слово в сильну позицію."
+- lemma: парцеляція
+  translation: parceling, sentence fragmentation
+  pos: noun
+  usage: "Парцеляція створює паузу й напруження."
+- lemma: анафора
+  translation: anaphora
+  pos: noun
+  usage: "Анафора повторює початок кількох конструкцій."
+- lemma: епіфора
+  translation: epistrophe
+  pos: noun
+  usage: "Епіфора повторює кінець речень або фраз."
+- lemma: алітерація
+  translation: alliteration
+  pos: noun
+  usage: "Алітерація може передати шурхіт або різкий звук."
+- lemma: асонанс
+  translation: assonance
+  pos: noun
+  usage: "Асонанс створює повтор голосних у фразі."
+- lemma: ритм
+  translation: rhythm
+  pos: noun
+  usage: "Ритм речень допомагає передати рух спогаду."
+- lemma: авторський голос
+  translation: authorial voice
+  pos: noun phrase
+  usage: "Авторський голос формується через сталі мовні вибори."
+- lemma: оповідач
+  translation: narrator
+  pos: noun
+  usage: "Оповідач бачить сцену через запахи й звуки."
+- lemma: ліричний голос
+  translation: lyric voice
+  pos: noun phrase
+  usage: "Ліричний голос не завжди збігається з біографічним автором."
+- lemma: перспектива
+  translation: perspective
+  pos: noun
+  usage: "Перспектива героя змінює опис того самого пейзажу."
+- lemma: опорна деталь
+  translation: key detail
+  pos: noun phrase
+  usage: "Опорна деталь повторюється й тримає сцену."
+- lemma: підтекстовий
+  translation: subtextual
+  pos: adjective
+  usage: "Підтекстовий зміст виникає з паузи між репліками."
+- lemma: тлумачення
+  translation: interpretation
+  pos: noun
+  usage: "Тлумачення має спиратися на текстові сигнали."
+- lemma: читання між рядками
+  translation: reading between the lines
+  pos: phrase
+  usage: "Читання між рядками потребує уважності до деталей."
+- lemma: стилізація
+  translation: stylization
+  pos: noun
+  usage: "Стилізація діалогу може показати соціальне середовище."
+- lemma: авторський новотвір
+  translation: authorial neologism
+  pos: noun phrase
+  usage: "Авторський новотвір має бути зрозумілим із контексту."
+- lemma: фразеологізм
+  translation: idiom, phraseological unit
+  pos: noun
+  usage: "Фразеологізм потрібно вживати в сталій формі."
+- lemma: історизм
+  translation: historicism
+  pos: noun
+  usage: "Історизм може створювати часову відстань."
+- lemma: архаїзм
+  translation: archaism
+  pos: noun
+  usage: "Архаїзм у сучасному діалозі має бути мотивованим."
+- lemma: діалектизм
+  translation: dialect word
+  pos: noun
+  usage: "Діалектизм може передати локальний голос персонажа."
+- lemma: регістр
+  translation: register
+  pos: noun
+  usage: "У художньому тексті регістр персонажа розкриває його роль."
+- lemma: штамп
+  translation: cliché
+  pos: noun
+  usage: "Стерта метафора швидко стає штампом."
+- lemma: стереотип
+  translation: stereotype
+  pos: noun
+  usage: "Культурний стереотип не замінює конкретної деталі."
+- lemma: калька
+  translation: calque
+  pos: noun
+  usage: "Калька може зруйнувати природний художній голос."
+- lemma: мовна норма
+  translation: language norm
+  pos: noun phrase
+  usage: "Свідоме відхилення від мовної норми має бути стилістично мотивованим."
+- lemma: редагування
+  translation: editing
+  pos: noun
+  usage: "Редагування художнього опису починається із сцени й перспективи."
+- lemma: художній переклад
+  translation: literary translation
+  pos: noun phrase
+  usage: "Художній переклад має зберегти ритм і голос."
+- lemma: культурна деталь
+  translation: cultural detail
+  pos: noun phrase
+  usage: "Культурна деталь не повинна зникати в перекладі."
+- lemma: етична точність
+  translation: ethical precision
+  pos: noun phrase
+  usage: "Етична точність особливо важлива в текстах про втрату й війну."
+- lemma: композиція
+  translation: composition, structure
+  pos: noun
+  usage: "Композиція повертає ключову деталь у фіналі абзацу."
+- lemma: настрій
+  translation: mood, atmosphere
+  pos: noun
+  usage: "Настрій сцени створюють ритм, деталь і лексика."
+- lemma: уява
+  translation: imagination
+  pos: noun
+  usage: "Уява читача працює, коли текст не пояснює все прямо."
+- lemma: натхнення
+  translation: inspiration
+  pos: noun
+  usage: "Натхнення не замінює точного редагування."
+- lemma: світогляд
+  translation: worldview
+  pos: noun
+  usage: "Світогляд персонажа видно в тому, які деталі він помічає."
