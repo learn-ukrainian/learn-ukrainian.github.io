@@ -302,6 +302,67 @@ _CURATED_LEARNER_TRANSLATIONS: dict[str, tuple[str, ...]] = {
     "ого": ("wow", "whoa"),
 }
 
+_BALLA_REVERSE_SOURCE = "Балла EN→UK reverse exact"
+_BALLA_REVERSE_MAX_HEADWORDS = 1
+_BALLA_REVERSE_UKRAINIAN_TOKEN_RE = re.compile(r"[А-Яа-яЄєІіЇїҐґ][А-Яа-яЄєІіЇїҐґ'’ʼ-]*")
+_BALLA_REVERSE_SURFACE_GLOSS_RE = re.compile(r"surface gloss='([^']+)'")
+_BALLA_REVERSE_SOURCE_POS_RE = re.compile(r"pos='([^']+)'")
+_BALLA_REVERSE_HINT_SPLIT_RE = re.compile(r"[,;/]")
+_BALLA_REVERSE_LEADING_LABEL_RE = re.compile(
+    r"^\s*(?:\d+\.?\s*)?(?:(?:n|v|adj|adv|prep|pron|conj|interj|num|part|abbr)\.?\s+)+",
+    flags=re.IGNORECASE,
+)
+_BALLA_REVERSE_HEADWORD_RE = re.compile(r"[a-z][a-z -]{1,39}", flags=re.IGNORECASE)
+_BALLA_REVERSE_STOP_TOKENS = {
+    "а",
+    "або",
+    "без",
+    "біля",
+    "в",
+    "від",
+    "до",
+    "за",
+    "з",
+    "зі",
+    "із",
+    "на",
+    "над",
+    "не",
+    "під",
+    "по",
+    "при",
+    "про",
+    "та",
+    "у",
+    "чи",
+    "як",
+    "амер",
+    "англ",
+    "бот",
+    "буд",
+    "військ",
+    "грам",
+    "див",
+    "зоол",
+    "іст",
+    "книжн",
+    "лінгв",
+    "мед",
+    "мін",
+    "мор",
+    "муз",
+    "перен",
+    "поет",
+    "розм",
+    "спорт",
+    "тех",
+    "тж",
+    "фіз",
+    "хім",
+    "церк",
+    "юр",
+}
+
 _BLOCKED_SYNONYMS = {
     "java",
     "ma",
@@ -2972,6 +3033,158 @@ def _parse_translations(raw: object) -> list[str]:
     return out
 
 
+_BALLA_REVERSE_INDEX: dict[int, dict[str, list[tuple[str, str | None]]]] = {}
+
+
+def _balla_reverse_headword(word: object) -> str | None:
+    headword = re.sub(r"\s+", " ", clean_html_entities(str(word or "")).strip()).casefold()
+    if not headword or "~" in headword:
+        return None
+    if not _BALLA_REVERSE_HEADWORD_RE.fullmatch(headword):
+        return None
+    return headword
+
+
+def _balla_reverse_definition_segments(definition: object) -> list[str]:
+    text = clean_html_entities(str(definition or ""))
+    text = re.sub(r"\([^)]*\)", " ", text)
+    segments: list[str] = []
+    for segment in re.split(r"\[m\d+\]|\d+\)|[;,]", text):
+        cleaned = _BALLA_REVERSE_LEADING_LABEL_RE.sub("", segment).strip()
+        if not cleaned or "—" in cleaned or "~" in cleaned or _LATIN_RE.search(cleaned):
+            continue
+        segments.append(cleaned)
+    return segments
+
+
+def _balla_reverse_candidate_keys(token: str) -> list[tuple[str, str | None]]:
+    key = _lookup_key(token)
+    if len(key) < 3 or key in _BALLA_REVERSE_STOP_TOKENS:
+        return []
+    analyses = _vesum_word_analyses(token)
+    if not analyses:
+        return [(key, None)]
+    out: list[tuple[str, str | None]] = []
+    seen: set[tuple[str, str | None]] = set()
+    for lemma, pos in analyses:
+        lemma_key = _lookup_key(lemma)
+        if len(lemma_key) < 3 or lemma_key in _BALLA_REVERSE_STOP_TOKENS:
+            continue
+        item = (lemma_key, pos or None)
+        if item not in seen:
+            seen.add(item)
+            out.append(item)
+    return out
+
+
+def _load_balla_reverse_index(conn: sqlite3.Connection) -> dict[str, list[tuple[str, str | None]]]:
+    cache_key = id(conn)
+    cached = _BALLA_REVERSE_INDEX.get(cache_key)
+    if cached is not None:
+        return cached
+    index: dict[str, list[tuple[str, str | None]]] = {}
+    seen: set[tuple[str, str, str | None]] = set()
+    try:
+        rows = conn.execute("SELECT word, definition FROM balla_en_uk ORDER BY word").fetchall()
+    except sqlite3.OperationalError as exc:
+        if _missing_table(exc):
+            _BALLA_REVERSE_INDEX[cache_key] = {}
+            return {}
+        raise
+    for word, definition in rows:
+        headword = _balla_reverse_headword(word)
+        if not headword:
+            continue
+        for segment in _balla_reverse_definition_segments(definition):
+            tokens = _BALLA_REVERSE_UKRAINIAN_TOKEN_RE.findall(segment)
+            if len(tokens) != 1:
+                continue
+            for key, pos in _balla_reverse_candidate_keys(tokens[0]):
+                seen_key = (key, headword, pos)
+                if seen_key in seen:
+                    continue
+                seen.add(seen_key)
+                index.setdefault(key, []).append((headword, pos))
+    _BALLA_REVERSE_INDEX[cache_key] = index
+    return index
+
+
+def _balla_reverse_hint_keys(gloss_hints: object) -> set[str]:
+    if not isinstance(gloss_hints, set | list | tuple):
+        return set()
+    out: set[str] = set()
+    for hint in gloss_hints:
+        for part in _BALLA_REVERSE_HINT_SPLIT_RE.split(str(hint or "")):
+            cleaned = clean_html_entities(part).strip().casefold()
+            cleaned = re.sub(r"^(?:to|a|an|the)\s+", "", cleaned)
+            cleaned = re.sub(r"\s+", " ", cleaned)
+            if _BALLA_REVERSE_HEADWORD_RE.fullmatch(cleaned):
+                out.add(cleaned)
+    return out
+
+
+def _surface_gloss_hints(entry: dict[str, Any]) -> set[str]:
+    hints: set[str] = set()
+    if isinstance(entry.get("gloss"), str) and entry["gloss"].strip():
+        hints.add(str(entry["gloss"]))
+    normalizations = entry.get("atlas_normalizations")
+    if not isinstance(normalizations, list):
+        return hints
+    for normalization in normalizations:
+        if not isinstance(normalization, dict):
+            continue
+        reason = str(normalization.get("reason") or "")
+        pos_match = _BALLA_REVERSE_SOURCE_POS_RE.search(reason)
+        source_pos = pos_match.group(1).casefold() if pos_match else ""
+        if source_pos.startswith("noun"):
+            continue
+        hints.update(match.group(1) for match in _BALLA_REVERSE_SURFACE_GLOSS_RE.finditer(reason))
+    return hints
+
+
+def _balla_reverse_translation(
+    conn: sqlite3.Connection,
+    lemma: str,
+    *,
+    entry_pos: object = None,
+    gloss_hints: object = None,
+) -> dict[str, object] | None:
+    allowed_headwords = _balla_reverse_hint_keys(gloss_hints)
+    if not allowed_headwords:
+        return None
+    target_pos = _MANIFEST_POS_TO_VESUM_POS.get(_lookup_key(str(entry_pos or "")))
+    target_keys = {_lookup_key(variant) for variant in _split_lemma_variants(lemma)}
+    target_keys = {key for key in target_keys if key}
+    if not target_keys:
+        return None
+
+    index = _load_balla_reverse_index(conn)
+    english: list[str] = []
+    seen: set[str] = set()
+    for key in sorted(target_keys):
+        for headword, vesum_pos in index.get(key, []):
+            if headword not in allowed_headwords:
+                continue
+            if target_pos and vesum_pos and vesum_pos != target_pos:
+                continue
+            if headword in seen:
+                continue
+            seen.add(headword)
+            english.append(headword)
+            if len(english) > _BALLA_REVERSE_MAX_HEADWORDS:
+                return None
+    if not english:
+        return None
+    return {
+        "en": english,
+        "source": _BALLA_REVERSE_SOURCE,
+        "note": (
+            "Reverse lookup from an exact Ukrainian token in Балла EN→UK, "
+            "validated by the source learner gloss; skipped when ambiguous."
+        ),
+    }
+
+
 _DMKLINGER_INDEX: dict[str, list[tuple[str, str]]] | None = None
 
 
@@ -3010,14 +3223,18 @@ def _translation(
     conn: sqlite3.Connection,
     lemma: str,
     kaikki_lookup: dict[str, dict[str, Any]] | None = None,
+    *,
+    entry_pos: object = None,
+    gloss_hints: object = None,
 ) -> dict[str, object] | None:
     """English translations for a Ukrainian lemma (Переклад, §11).
 
     Primary source is the dmklinger UK→EN dictionary (`dmklinger_uk_en`) — a curated
-    bilingual dictionary, preferred for precision. Балла is EN→UK only — no clean
-    reverse — so it is intentionally NOT used here. When dmklinger has no entry, fall
+    bilingual dictionary, preferred for precision. When dmklinger has no entry, fall
     back to Wiktionary/kaikki translation glosses (form-of/misspelling meta-glosses are
-    stripped at build time). Returns up to six glosses.
+    stripped at build time). Балла is EN→UK only, so reverse lookup is used only when an
+    exact Ukrainian token resolves to one unique English headword that matches an
+    existing learner-gloss hint from the source entry. Returns up to six glosses.
     """
     index = _load_dmklinger_index(conn)
     if index:
@@ -3044,6 +3261,14 @@ def _translation(
     kaikki_translation = _kaikki_translation(kaikki_lookup or {}, lemma)
     if kaikki_translation:
         return kaikki_translation
+    balla_translation = _balla_reverse_translation(
+        conn,
+        lemma,
+        entry_pos=entry_pos,
+        gloss_hints=gloss_hints,
+    )
+    if balla_translation:
+        return balla_translation
 
     for variant in _split_lemma_variants(lemma):
         curated = _CURATED_LEARNER_TRANSLATIONS.get(_lookup_key(variant).casefold())
@@ -3259,6 +3484,7 @@ def enrich_entry(entry, conn, kaikki_lookup, *, has_sum11_flags) -> bool:
     lemma = entry["lemma"]
     base = _base_lemma(lemma)
     entry_pos = entry.get("pos")
+    gloss_hints = _surface_gloss_hints(entry)
     fallback_base = _base_lookup_for_entry(lemma, entry_pos)
     slovnyk_cache = _slovnyk_cache(lemma)
     definition_cards = _definition_cards(
@@ -3365,9 +3591,21 @@ def enrich_entry(entry, conn, kaikki_lookup, *, has_sum11_flags) -> bool:
     literary = _literary_attestation(conn, lemma)
     if literary:
         block["literary_attestation"] = literary
-    translation = _translation(conn, lemma, kaikki_lookup)
+    translation = _translation(
+        conn,
+        lemma,
+        kaikki_lookup,
+        entry_pos=entry_pos,
+        gloss_hints=gloss_hints,
+    )
     if not translation and fallback_base:
-        translation = _translation(conn, fallback_base, kaikki_lookup)
+        translation = _translation(
+            conn,
+            fallback_base,
+            kaikki_lookup,
+            entry_pos=entry_pos,
+            gloss_hints=gloss_hints,
+        )
         if translation:
             translation = _with_base_source_label(translation, fallback_base)
     if translation:
