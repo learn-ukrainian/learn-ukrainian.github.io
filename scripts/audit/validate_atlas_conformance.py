@@ -64,6 +64,7 @@ FRESHNESS_DATE_KEYS = (
 APOSTROPHE_TRANSLATION = str.maketrans({"’": "'", "ʼ": "'", "`": "'", "′": "'"})
 STRESS_MARKS = {"\u0301", "\u0300", "\u0341"}
 WORD_TOKEN_RE = re.compile(r"[A-Za-zА-Яа-яЄєІіЇїҐґ0-9'’ʼ-]+")
+DELIMITED_LEMMA_RE = re.compile(r"\.\.\.|/")
 DATE_PREFIX_RE = re.compile(r"^\d{4}-\d{2}-\d{2}(?:$|[T ])")
 IPA_RE = re.compile(r"^(?:\[[^\[\]]+\]|/[^/]+/)$")
 
@@ -298,6 +299,16 @@ def _is_genuine_multi_word(value: str) -> bool:
     return len(WORD_TOKEN_RE.findall(value)) >= 2
 
 
+def _has_vesum_backed_delimited_components(value: str, vesum: Any) -> bool:
+    """Accept compact pair heads like ``не/ні`` when each component is in VESUM."""
+    if not DELIMITED_LEMMA_RE.search(value):
+        return False
+    components = [component.strip() for component in DELIMITED_LEMMA_RE.split(value)]
+    return len(components) >= 2 and all(
+        component and _vesum_has_entry(vesum, component) for component in components
+    )
+
+
 # OFFLINE FALLBACK for the VESUM-gap class (#3211): the primary mechanism is now the
 # live ``HeritageLemmaLookup`` (Грінченко/ЕСУМ via sources.db), which self-heals on any
 # VESUM-gap-but-attested word. This curated allowlist is consulted ONLY when the heritage
@@ -334,6 +345,25 @@ _MODERN_TECHNICAL_LEMMAS: frozenset[str] = frozenset(
         # контрфактичний — counterfactual; standard grammar metalanguage for unreal
         # conditionals. Taught in b1/conditionals-unreal; modern term, not in СУМ-11.
         "контрфактичний",
+        # Current course/Atlas standard terms absent from VESUM and the historical
+        # heritage corpus. Keep these narrow: each is constrained by real
+        # course_usage in the hydrated manifest and is rechecked by other §8 gates.
+        "бездіячевий",
+        "джерельність",
+        "дієслово-зв'язка",
+        "катафора",
+        "масмедіа",
+        "медіаманіпулювання",
+        "неозначено-особове",
+        "означено-особове",
+        "онлайн-оплата",
+        "офіційно-діловий",
+        "поломка",
+        "симплока",
+        "топікалізація",
+        "узагальнено-особове",
+        "цільнозерновий",
+        "інтерстилістика",
     }
 )
 
@@ -395,6 +425,8 @@ def _check_lemma_in_vesum(
         # false-positive storm, not enforcement.
         return
     if _vesum_has_entry(vesum, lemma):
+        return
+    if _has_vesum_backed_delimited_components(raw_lemma, vesum):
         return
 
     # VESUM missed. A miss is necessary-but-not-sufficient evidence of invalidity — VESUM
@@ -861,13 +893,18 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Validate Word Atlas manifest conformance gates")
     parser.add_argument("--manifest", type=Path, default=DEFAULT_MANIFEST)
     parser.add_argument("--vesum", type=Path, default=DEFAULT_VESUM)
+    parser.add_argument("--heritage", type=Path, default=DEFAULT_SOURCES_DB)
     parser.add_argument("--curriculum", type=Path, default=DEFAULT_CURRICULUM)
     args = parser.parse_args(argv)
 
     manifest = _load_json(args.manifest)
     curriculum = _load_yaml(args.curriculum)
-    with VesumLemmaLookup(args.vesum) as vesum:
-        violations = validate(manifest, vesum=vesum, curriculum=curriculum)
+    heritage = args.heritage if args.heritage.exists() else None
+    if args.vesum.exists():
+        with VesumLemmaLookup(args.vesum) as vesum:
+            violations = validate(manifest, vesum=vesum, curriculum=curriculum, heritage=heritage)
+    else:
+        violations = validate(manifest, vesum=None, curriculum=curriculum, heritage=heritage)
 
     _print_violations(violations)
     return 1 if violations else 0

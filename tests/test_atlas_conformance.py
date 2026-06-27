@@ -57,15 +57,16 @@ def _gates_for(
 def test_real_lexicon_manifest_conforms_to_atlas_gates():
     manifest = load_manifest(MANIFEST_PATH)
     curriculum = yaml.safe_load(CURRICULUM_PATH.read_text(encoding="utf-8"))
+    heritage = SOURCES_PATH if SOURCES_PATH.exists() else None
 
     if VESUM_PATH.exists():
         # Local dev: full enforcement incl. lemma↔VESUM membership.
         with VesumLemmaLookup(VESUM_PATH) as vesum:
-            violations = validate(manifest, vesum=vesum, curriculum=curriculum)
+            violations = validate(manifest, vesum=vesum, curriculum=curriculum, heritage=heritage)
     else:
         # CI lacks the 967MB gitignored data/vesum.db → vesum=None skips ONLY the
         # lemma_in_vesum gate; every other §8 gate still enforces on the real manifest.
-        violations = validate(manifest, vesum=None, curriculum=curriculum)
+        violations = validate(manifest, vesum=None, curriculum=curriculum, heritage=heritage)
 
     assert violations == []
 
@@ -131,10 +132,28 @@ def test_lemma_in_vesum_exempts_modern_technical_term_in_both_modes():
     # from the HISTORICAL heritage corpus. The live heritage lookup cannot self-heal them,
     # so the curated modern-technical allowlist must exempt them in BOTH modes — including
     # the live-heritage mode (heritage present but NOT attesting), which was the failing case.
-    for lemma, pos in (("морфонеміка", "noun"), ("контрфактичний", "adjective")):
+    for lemma, pos in (
+        ("морфонеміка", "noun"),
+        ("контрфактичний", "adjective"),
+        ("топікалізація", "noun"),
+        ("цільнозерновий", "adjective"),
+    ):
         entry = _entry(lemma=lemma, url_slug=lemma, pos=pos)
         assert _gates_for(entry, vesum=set()) == []  # offline mode (no heritage source)
         assert _gates_for(entry, vesum=set(), heritage=set()) == []  # live mode, not attested
+
+
+def test_lemma_in_vesum_exempts_delimited_heads_when_each_component_is_known():
+    entry = _entry(lemma="не/ні", url_slug="не-ні", pos="particle pair")
+    assert _gates_for(entry, vesum={"не", "ні"}, heritage=set()) == []
+
+    entry = _entry(lemma="доти...доки", url_slug="доти-доки", pos="correlative conjunction")
+    assert _gates_for(entry, vesum={"доти", "доки"}, heritage=set()) == []
+
+
+def test_lemma_in_vesum_flags_delimited_heads_with_unknown_component():
+    entry = _entry(lemma="не/зызыжщ", url_slug="не-зызыжщ", pos="particle pair")
+    assert _gates_for(entry, vesum={"не"}, heritage=set()) == ["lemma_in_vesum"]
 
 
 def test_lemma_in_vesum_flags_when_absent_from_both_vesum_and_heritage():
