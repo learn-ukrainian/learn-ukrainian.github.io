@@ -1,0 +1,60 @@
+- lemma: народна культура
+  translation: folk culture; communal system of transmitted practice and memory
+  pos: noun phrase
+  usage: Народна культура поєднує слово, голос, рух, предмет, простір, виконавця й громаду.
+- lemma: усна народна творчість
+  translation: oral folk creativity; oral verbal art
+  pos: noun phrase
+  usage: Усна народна творчість стала одним із джерел писемної української літератури.
+- lemma: фольклор
+  translation: folklore; oral and performance tradition
+  pos: noun
+  usage: Фольклор треба читати як систему жанру, виконання, джерела і пам'яті.
+- lemma: жанр
+  translation: genre
+  pos: noun
+  usage: Жанр визначає не лише тему, а й форму, очікування слухача та спосіб виконання.
+- lemma: формула
+  translation: formula; recurring verbal pattern
+  pos: noun
+  usage: Формула допомагає текстові запам'ятовуватися й переходити між виконаннями.
+- lemma: приспів
+  translation: refrain
+  pos: noun
+  usage: Приспів повертає кожен рядок щедрівки до спільного побажання.
+- lemma: варіантність
+  translation: variation; existence of variants
+  pos: noun
+  usage: Варіантність є нормальним станом усної традиції, а не помилкою.
+- lemma: виконавська ситуація
+  translation: performance situation
+  pos: noun phrase
+  usage: Виконавська ситуація питає, хто говорить, кому, коли, де і навіщо.
+- lemma: речитатив
+  translation: recitative
+  pos: noun
+  usage: Речитатив важливий для розуміння думового способу виконання.
+- lemma: хрестоматійний текст
+  translation: anthology text; school-canonical selected text
+  pos: noun phrase
+  usage: Хрестоматійний текст є зафіксованим варіантом, а не єдиною остаточною формою традиції.
+- lemma: публічне джерело
+  translation: public source
+  pos: noun phrase
+  usage: Публічне джерело можна показати учневі без службових корпусних позначок.
+- lemma: джерельна критика
+  translation: source criticism
+  pos: noun phrase
+  usage: Джерельна критика відрізняє повний текст, уривок, записаний варіант і пізніше переосмислення.
+- lemma: щедрівка
+  translation: Ukrainian New Year well-wishing song
+  pos: noun
+  usage: Щедрівка працює через побажання, приспів, образ дому і гуртовий голос.
+- lemma: веснянка
+  translation: spring song
+  pos: noun
+  usage: Веснянка пов'язує слово з сезонним гуртом і очікуванням весни.
+- lemma: дума
+  translation: duma; Ukrainian sung recitative epic
+  pos: noun
+  usage: Дума розгортає моральну пам'ять через довгу оповідь і повтори звертання.
