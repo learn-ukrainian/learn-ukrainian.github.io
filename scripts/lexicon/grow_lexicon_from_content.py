@@ -26,6 +26,7 @@ from scripts.lexicon.content_lexicon_reconciler import (
     discover_content_mdx_paths,
     reconcile_content,
 )
+from scripts.lexicon.lemma_normalization import strip_acute_stress
 
 DEFAULT_OUT = PROJECT_ROOT / "data" / "lexicon" / "grow_candidates.json"
 GENERATED_FROM = "content_lexicon_reconciler.missing_lemmas"
@@ -40,6 +41,7 @@ _POS_PRIORITY = {
 
 def build_skeleton_entry(lemma: str) -> dict[str, Any]:
     """Build the minimal Atlas entry candidate for a content delta lemma."""
+    lemma = strip_acute_stress(lemma.strip())
     entry: dict[str, Any] = {"lemma": lemma}
     pos = _vesum_pos(lemma)
     if pos:
@@ -154,9 +156,7 @@ def format_report(payload: dict[str, Any]) -> str:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(
-        description="Generate gated Atlas-entry candidates from content delta lemmas."
-    )
+    parser = argparse.ArgumentParser(description="Generate gated Atlas-entry candidates from content delta lemmas.")
     parser.add_argument("--limit", type=int, help="Limit processed delta lemmas")
     parser.add_argument(
         "--out",

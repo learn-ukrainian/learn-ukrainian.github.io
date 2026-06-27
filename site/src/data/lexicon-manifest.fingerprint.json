@@ -1,5 +1,5 @@
 {
-  "fingerprint": "8e409ae0e414ae2b15c8d761d7027a5b37ad3b0d267bb4811ac045c306f9583e",
+  "fingerprint": "6124457f52ca626a5c37fb0cc0b829e74ea0bde33afd8a971f2d4b7ce0227498",
   "inputs": {
     "lexicon_code": [
       {
@@ -12,7 +12,7 @@
       },
       {
         "path": "scripts/lexicon/build_data_manifest.py",
-        "sha256": "a41148b8e9d7305e571c9473744d4b72412f68b3bdb7cb830737e16ff209ffd2"
+        "sha256": "3c05569227acff3c948b047d158785a0cb0938c93279e81971426e401c664aaa"
       },
       {
         "path": "scripts/lexicon/build_kaikki_lookup.py",
@@ -44,7 +44,7 @@
       },
       {
         "path": "scripts/lexicon/enrich_manifest.py",
-        "sha256": "403a2de64076d2517ebd9afa6da6b6105b983c9a3b164dbc114fc4ad1b409e60"
+        "sha256": "f2d5b5072e76b2070a22b2ede619084e286dabd25138d3c50c9f10b819637b64"
       },
       {
         "path": "scripts/lexicon/esum_garbled.py",
@@ -68,11 +68,15 @@
       },
       {
         "path": "scripts/lexicon/grow_lexicon_from_content.py",
-        "sha256": "002587ed98c0feec735e5e1bd6f71c285fa2ecb924834cae857fdc50383df129"
+        "sha256": "3ebbbc8c379784a5c10b261a72a10c895a1f4308027ce3c85e49dabf0de347fb"
       },
       {
         "path": "scripts/lexicon/heritage_classifier.py",
         "sha256": "fde3fb8e0fc380719aa1e11763f584b85e2b0ee0a48f45bc09bca0cdab2392ac"
+      },
+      {
+        "path": "scripts/lexicon/lemma_normalization.py",
+        "sha256": "d99d41aff8ffb52fc40ca9ac55a79a2eee8090dac4a57b32aabdcbdfc1374c7b"
       },
       {
         "path": "scripts/lexicon/manifest_fingerprint.py",
@@ -88,7 +92,7 @@
       },
       {
         "path": "scripts/lexicon/promote_grow_candidates.py",
-        "sha256": "df805e6d299a01c5f842b8bbcb8a56b69f22555040001d3b33c0ae64daaecce2"
+        "sha256": "277cc1e837249b63ceaa4166a72789b6e6ec83fd0ce7fc34bd6ff3678cc75d5a"
       },
       {
         "path": "scripts/lexicon/publish_manifest.py",
@@ -107,6 +111,6 @@
   "schema_version": 1,
   "scope": "lexicon code only; excludes module vocabulary and dictionary DB/cache state",
   "stats": {
-    "lexicon_code_files": 25
+    "lexicon_code_files": 26
   }
 }

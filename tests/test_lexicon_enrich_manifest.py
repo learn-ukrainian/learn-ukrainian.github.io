@@ -33,6 +33,7 @@ from scripts.lexicon.enrich_manifest import (
     _meaning,
     _merge_slovnyk_warning,
     _morphology,
+    _normalize_manifest_entries,
     _parse_translations,
     _prepare_cefr_estimates,
     _proper_noun_wikipedia_meaning,
@@ -139,6 +140,36 @@ def test_base_lemma_splits_pairs_without_lowercasing_non_pairs() -> None:
     assert _base_lemma(non_pair) == non_pair
 
 
+def test_normalize_manifest_entries_strips_acute_and_merges_duplicates() -> None:
+    manifest = {
+        "entries": [
+            {
+                "lemma": "авантю\u0301рний",
+                "url_slug": "авантю-рний",
+                "gloss": "adventurous",
+                "course_usage": [{"track": "a1", "module_num": 1, "slug": "m1", "context": "built_vocabulary"}],
+            },
+            {
+                "lemma": "авантюрний",
+                "url_slug": "авантюрний",
+                "pos": "adj",
+                "course_usage": [{"track": "a1", "module_num": 2, "slug": "m2", "context": "built_vocabulary"}],
+            },
+            {"lemma": "їжак", "url_slug": "їжак"},
+        ]
+    }
+
+    assert _normalize_manifest_entries(manifest) > 0
+
+    entries = {entry["lemma"]: entry for entry in manifest["entries"]}
+    assert set(entries) == {"авантюрний", "їжак"}
+    assert entries["авантюрний"]["url_slug"] == "авантюрний"
+    assert entries["авантюрний"]["pos"] == "adj"
+    assert [usage["slug"] for usage in entries["авантюрний"]["course_usage"]] == ["m1", "m2"]
+    assert "\u0301" not in entries["авантюрний"]["lemma"]
+    assert entries["їжак"]["lemma"] == "їжак"
+
+
 def test_build_noun_paradigm_groups_cases_by_number() -> None:
     forms = [
         {"form": "вікну", "label": "сер., давальний"},
@@ -228,14 +259,8 @@ def test_build_verb_paradigm_collapses_variants() -> None:
     assert paradigm["kind"] == "verb"
     assert paradigm["infinitive"] == "навчатися / навчатись"
     assert "навчаться" not in paradigm["infinitive"]
-    assert (
-        paradigm["tenses"]["майбутній"]["множина"]["1"]
-        == "навчатимемось / навчатимемося / навчатимемся"
-    )
-    assert (
-        paradigm["tenses"]["теперішній"]["множина"]["1"]
-        == "навчаємось / навчаємося / навчаємся"
-    )
+    assert paradigm["tenses"]["майбутній"]["множина"]["1"] == "навчатимемось / навчатимемося / навчатимемся"
+    assert paradigm["tenses"]["теперішній"]["множина"]["1"] == "навчаємось / навчаємося / навчаємся"
     assert paradigm["tenses"]["теперішній"]["однина"]["3"] == "навчається"
     assert paradigm["imperative"]["множина"]["1"] == "навчаймось / навчаймося"
     assert paradigm["imperative"]["однина"]["2"] == "навчайсь / навчайся"
@@ -354,10 +379,7 @@ def test_slovnyk_synonyms_extract_known_garnyi_word(monkeypatch) -> None:
                 "dictionary_label": "Словник синонімів української мови",
                 "source_url": "https://slovnyk.me/dict/synonyms/гарний",
                 "word": "гарний",
-                "text": (
-                    "гарний ГА́РНИЙ (про людину), КРАСИ́ВИЙ, "
-                    "ВРОДЛИ́ВИЙ (УРОДЛИ́ВИЙ), ХОРО́ШИЙ. Джерело: тест"
-                ),
+                "text": ("гарний ГА́РНИЙ (про людину), КРАСИ́ВИЙ, ВРОДЛИ́ВИЙ (УРОДЛИ́ВИЙ), ХОРО́ШИЙ. Джерело: тест"),
             },
             "synonyms_karavansky": {
                 "dictionary_slug": "synonyms_karavansky",
@@ -907,8 +929,7 @@ def test_curated_calque_matches_participle_entry() -> None:
     # sense-split (#3098 review): діючий закон → чинний; діючий вулкан → активний (Avramenko Grade-7)
     assert card["corrections"] == ["чинний", "активний"]
     assert card["note"] == (
-        "sense-split: діючий закон → чинний закон; "
-        "діючий вулкан → активний вулкан (рос. действующий)"
+        "sense-split: діючий закон → чинний закон; діючий вулкан → активний вулкан (рос. действующий)"
     )
     assert "glazova-11" in card["source"]
     assert any("чинний" in item for item in card["evidence"])
@@ -1193,9 +1214,7 @@ def test_definition_cards_exclude_sum11(monkeypatch) -> None:
         },
     )
     # Isolate from the live VTS lookup — this test asserts СУМ-11 exclusion, not coverage.
-    monkeypatch.setattr(
-        enrich_manifest_module, "_vts_definition_card", lambda lemma, cache=None: None
-    )
+    monkeypatch.setattr(enrich_manifest_module, "_vts_definition_card", lambda lemma, cache=None: None)
 
     cards = _definition_cards(conn, "прапор", has_sum11_flags=True)
 
@@ -1211,9 +1230,7 @@ def test_vts_fills_definition_when_sum20_missing(monkeypatch) -> None:
     fallback (decolonization decision 2026-06-26)."""
     conn = _conn()
     # No СУМ-20 coverage for this word.
-    monkeypatch.setattr(
-        enrich_manifest_module, "_sum20_definition_card", lambda lemma, cache=None: None
-    )
+    monkeypatch.setattr(enrich_manifest_module, "_sum20_definition_card", lambda lemma, cache=None: None)
     monkeypatch.setattr(
         enrich_manifest_module,
         "_fetch_slovnyk_entry",
@@ -1243,9 +1260,7 @@ def test_definition_card_resolves_inflected_form_to_base_lemma(monkeypatch) -> N
     dictionary still covers it — closing the apparent coverage gap from removing
     СУМ-11 without ever touching the Soviet source (2026-06-26)."""
     conn = _conn()
-    monkeypatch.setattr(
-        enrich_manifest_module, "_sum20_definition_card", lambda lemma, cache=None: None
-    )
+    monkeypatch.setattr(enrich_manifest_module, "_sum20_definition_card", lambda lemma, cache=None: None)
     monkeypatch.setattr(
         enrich_manifest_module,
         "_vesum_base_lemma",

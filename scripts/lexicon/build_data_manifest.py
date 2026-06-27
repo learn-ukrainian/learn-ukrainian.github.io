@@ -30,6 +30,8 @@ from pathlib import Path
 
 import yaml
 
+from scripts.lexicon.lemma_normalization import strip_acute_stress
+
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 CURRICULUM_ROOT = PROJECT_ROOT / "curriculum" / "l2-uk-en"
 CURRICULUM_MANIFEST = CURRICULUM_ROOT / "curriculum.yaml"
@@ -159,12 +161,9 @@ def _lemma_key(lemma: str) -> str:
 
 
 NON_ATLAS_LEMMA_KEYS = {_lemma_key(lemma) for lemma in _NON_ATLAS_LEMMA_KEYS}
-VOCATIVE_TO_NOMINATIVE_BY_KEY = {
-    _lemma_key(source): target for source, target in VOCATIVE_TO_NOMINATIVE.items()
-}
+VOCATIVE_TO_NOMINATIVE_BY_KEY = {_lemma_key(source): target for source, target in VOCATIVE_TO_NOMINATIVE.items()}
 VESUM_CANONICAL_HEADS_BY_KEY = {
-    _lemma_key(source): (target, reason)
-    for source, (target, reason) in VESUM_CANONICAL_HEADS.items()
+    _lemma_key(source): (target, reason) for source, (target, reason) in VESUM_CANONICAL_HEADS.items()
 }
 
 
@@ -239,7 +238,7 @@ def _entry_lemma(entry: dict) -> str | None:
     for field in LEMMA_FIELDS:
         value = entry.get(field)
         if value is not None and str(value).strip():
-            return str(value).strip()
+            return strip_acute_stress(str(value).strip())
     return None
 
 
@@ -307,7 +306,10 @@ def _append_normalization(entry: dict, normalization: dict[str, str] | None) -> 
 
 def _atlas_record_for_manifest(rec: dict, taught_lemma_keys: set[str]) -> dict | list[dict] | None:
     """Normalize course surfaces to Atlas lemma heads, or omit non-lemmas."""
-    display_lemma = str(rec["lemma"])
+    raw_lemma = str(rec["lemma"])
+    display_lemma = strip_acute_stress(raw_lemma)
+    if display_lemma != raw_lemma:
+        rec = {**rec, "lemma": display_lemma}
     key = _lemma_key(display_lemma)
     if key in NON_ATLAS_LEMMA_KEYS:
         return None
@@ -399,7 +401,7 @@ def _merge_lemma_records(
     slug = str(module["slug"])
 
     for rec in records:
-        display_lemma = rec["lemma"]
+        display_lemma = strip_acute_stress(str(rec["lemma"]))
         key = _lemma_key(display_lemma)
         usage_entry = {
             "track": track,
@@ -424,9 +426,7 @@ def _merge_lemma_records(
             continue
 
         # Upgrade thin plan-hint entries when we later see built data.
-        is_upgrade = _source_priority(rec["source"]) < _source_priority(
-            existing["primary_source"]
-        )
+        is_upgrade = _source_priority(rec["source"]) < _source_priority(existing["primary_source"])
         if is_upgrade:
             existing["lemma"] = display_lemma
             existing["url_slug"] = _slug_for_url(display_lemma)
@@ -446,9 +446,7 @@ def _merge_lemma_records(
         usage_key = (track, module_num, slug)
         for u in existing["course_usage"]:
             if (u["track"], u["module_num"], u["slug"]) == usage_key:
-                if _SOURCE_PRIORITY.get(rec["source"], 99) < _SOURCE_PRIORITY.get(
-                    u["context"], 99
-                ):
+                if _SOURCE_PRIORITY.get(rec["source"], 99) < _SOURCE_PRIORITY.get(u["context"], 99):
                     u["context"] = rec["source"]
                 break
         else:
@@ -457,7 +455,7 @@ def _merge_lemma_records(
 
 def _merge_seed_records(by_lemma: dict[str, dict]) -> None:
     for rec in SURZHYK_TO_AVOID_SEEDS:
-        display_lemma = str(rec["lemma"])
+        display_lemma = strip_acute_stress(str(rec["lemma"]))
         key = _lemma_key(display_lemma)
         if key in by_lemma:
             by_lemma[key]["seed_group"] = "surzhyk-to-avoid"
@@ -476,7 +474,7 @@ def _merge_seed_records(by_lemma: dict[str, dict]) -> None:
 
 def _merge_heritage_seed_records(by_lemma: dict[str, dict]) -> None:
     for rec in HERITAGE_STATUS_SEEDS:
-        display_lemma = str(rec["lemma"])
+        display_lemma = strip_acute_stress(str(rec["lemma"]))
         key = _lemma_key(display_lemma)
         if key in by_lemma:
             by_lemma[key]["seed_group"] = "heritage-status-samples"
@@ -534,10 +532,7 @@ def _resolve_slug_collisions(by_lemma: dict[str, dict]) -> None:
             other = by_lemma.pop(fold_key)
             for u in other.get("course_usage", []):
                 usage_id = (u["track"], u["module_num"], u["slug"])
-                if not any(
-                    (x["track"], x["module_num"], x["slug"]) == usage_id
-                    for x in canonical["course_usage"]
-                ):
+                if not any((x["track"], x["module_num"], x["slug"]) == usage_id for x in canonical["course_usage"]):
                     canonical["course_usage"].append(u)
             for norm in other.get("atlas_normalizations", []):
                 _append_normalization(canonical, norm)
@@ -556,11 +551,7 @@ def build_manifest() -> dict:
     by_lemma: dict[str, dict] = {}
     modules = _vocabulary_modules()
     raw_records_by_module = [(module, _load_built_vocab(module)) for module in modules]
-    taught_lemma_keys = {
-        _lemma_key(rec["lemma"])
-        for _module, records in raw_records_by_module
-        for rec in records
-    }
+    taught_lemma_keys = {_lemma_key(rec["lemma"]) for _module, records in raw_records_by_module for rec in records}
 
     for module, raw_records in raw_records_by_module:
         built_records = []
@@ -584,18 +575,10 @@ def build_manifest() -> dict:
         "stats": {
             "lemmas_total": len(entries),
             "modules_covered": len(modules),
-            "from_built": sum(
-                1 for e in entries if e["primary_source"].startswith("built_vocabulary")
-            ),
-            "from_surzhyk_to_avoid": sum(
-                1 for e in entries if e.get("seed_group") == "surzhyk-to-avoid"
-            ),
-            "from_heritage_status_seed": sum(
-                1 for e in entries if e.get("seed_group") == "heritage-status-samples"
-            ),
-            "form_of_count": sum(
-                1 for e in entries if "form_of" in e
-            ),
+            "from_built": sum(1 for e in entries if e["primary_source"].startswith("built_vocabulary")),
+            "from_surzhyk_to_avoid": sum(1 for e in entries if e.get("seed_group") == "surzhyk-to-avoid"),
+            "from_heritage_status_seed": sum(1 for e in entries if e.get("seed_group") == "heritage-status-samples"),
+            "form_of_count": sum(1 for e in entries if "form_of" in e),
         },
         "modules": modules,
         "seed_groups": [
@@ -610,7 +593,7 @@ def build_manifest() -> dict:
                 "source": "heritage_status_seed",
                 "description": "Source-backed heritage status sample pages for Atlas design conformance QA.",
                 "lemmas": [str(seed["lemma"]) for seed in HERITAGE_STATUS_SEEDS],
-            }
+            },
         ],
         "entries": entries,
     }

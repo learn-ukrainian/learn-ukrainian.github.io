@@ -59,6 +59,7 @@ import requests
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 
+from scripts.lexicon.build_data_manifest import _slug_for_url
 from scripts.lexicon.build_kaikki_lookup import KAIKKI_SOURCE
 from scripts.lexicon.build_kaikki_lookup import _clean_gloss as _clean_translation_gloss
 from scripts.lexicon.build_kaikki_lookup import lookup_key as kaikki_lookup_key
@@ -73,6 +74,7 @@ from scripts.lexicon.esum_garbled import (
     trim_curated_goroh_text,
 )
 from scripts.lexicon.heritage_classifier import classify_lemma, compute_warning_severity
+from scripts.lexicon.lemma_normalization import strip_acute_stress
 from scripts.lexicon.manifest_fingerprint import DEFAULT_FINGERPRINT, write_fingerprint
 from scripts.verification.vesum import verify_lemma, verify_word
 from scripts.wiki.slovnyk_me import primary_synonym_sense_text
@@ -610,9 +612,7 @@ def _parse_noun_label(label: str) -> tuple[str, str] | None:
 
 
 def _build_noun_paradigm(forms: list[dict[str, str]]) -> dict | None:
-    cells: dict[str, dict[str, list[str]]] = {
-        case: {"singular": [], "plural": []} for case in _NOUN_CASE_ORDER
-    }
+    cells: dict[str, dict[str, list[str]]] = {case: {"singular": [], "plural": []} for case in _NOUN_CASE_ORDER}
     for row in forms:
         parsed = _parse_noun_label(row.get("label", ""))
         if not parsed:
@@ -642,12 +642,9 @@ def _parse_person_slot(parts: list[str]) -> tuple[str, str] | None:
 def _build_verb_paradigm(forms: list[dict[str, str]]) -> dict | None:
     infinitive: list[str] = []
     tenses: dict[str, dict[str, dict[str, list[str]]]] = {
-        tense: {number: {person: [] for person in _PERSONS} for number in _NUMBERS}
-        for tense in _VERB_TENSES
+        tense: {number: {person: [] for person in _PERSONS} for number in _NUMBERS} for tense in _VERB_TENSES
     }
-    imperative: dict[str, dict[str, list[str]]] = {
-        number: {person: [] for person in _PERSONS} for number in _NUMBERS
-    }
+    imperative: dict[str, dict[str, list[str]]] = {number: {person: [] for person in _PERSONS} for number in _NUMBERS}
     past: dict[str, list[str]] = {key: [] for key in _PAST_KEYS}
 
     for row in forms:
@@ -685,9 +682,7 @@ def _build_verb_paradigm(forms: list[dict[str, str]]) -> dict | None:
 
     collapsed_tenses: dict[str, dict[str, dict[str, str]]] = {}
     for tense in _VERB_TENSES:
-        has_tense = any(
-            tenses[tense][number][person] for number in _NUMBERS for person in _PERSONS
-        )
+        has_tense = any(tenses[tense][number][person] for number in _NUMBERS for person in _PERSONS)
         if not has_tense:
             continue
         collapsed_tenses[tense] = {"однина": {}, "множина": {}}
@@ -787,6 +782,94 @@ def _clean_html_entities_in_obj(value: object) -> object:
     return value
 
 
+def _manifest_lemma_key(lemma: str) -> str:
+    return _lookup_key(strip_acute_stress(lemma)).casefold()
+
+
+def _merge_unique_dicts(
+    target: dict[str, Any],
+    source: dict[str, Any],
+    field: str,
+    identity_fields: tuple[str, ...],
+) -> None:
+    source_items = source.get(field)
+    if not isinstance(source_items, list):
+        return
+    target_items = target.setdefault(field, [])
+    if not isinstance(target_items, list):
+        target[field] = target_items = []
+    seen = {
+        tuple(str(item.get(key) or "") for key in identity_fields) for item in target_items if isinstance(item, dict)
+    }
+    for item in source_items:
+        if not isinstance(item, dict):
+            continue
+        identity = tuple(str(item.get(key) or "") for key in identity_fields)
+        if identity in seen:
+            continue
+        seen.add(identity)
+        target_items.append(item)
+
+
+def _merge_duplicate_manifest_entry(target: dict[str, Any], source: dict[str, Any]) -> None:
+    _merge_unique_dicts(target, source, "course_usage", ("track", "module_num", "slug"))
+    _merge_unique_dicts(target, source, "atlas_normalizations", ("kind", "source_lemma", "target_lemma"))
+    variants = target.setdefault("slug_variants", [])
+    for variant in source.get("slug_variants", []):
+        if not isinstance(variant, str):
+            continue
+        clean_variant = strip_acute_stress(variant)
+        if clean_variant == target.get("lemma"):
+            continue
+        if isinstance(variants, list) and clean_variant not in variants:
+            variants.append(clean_variant)
+    for field, value in source.items():
+        if field in {"lemma", "url_slug", "course_usage", "atlas_normalizations", "slug_variants"}:
+            continue
+        if field not in target or target[field] in (None, "", [], {}):
+            target[field] = value
+
+
+def _normalize_manifest_entries(manifest: dict[str, Any]) -> int:
+    """Strip acute stress from manifest lemma keys and merge resulting duplicates."""
+    entries = manifest.get("entries")
+    if not isinstance(entries, list):
+        return 0
+    normalized_entries: list[Any] = []
+    by_key: dict[str, dict[str, Any]] = {}
+    changes = 0
+    for entry in entries:
+        if not isinstance(entry, dict):
+            normalized_entries.append(entry)
+            continue
+        raw_lemma = entry.get("lemma")
+        if not isinstance(raw_lemma, str):
+            normalized_entries.append(entry)
+            continue
+        lemma = strip_acute_stress(raw_lemma)
+        if lemma != raw_lemma:
+            entry["lemma"] = lemma
+            changes += 1
+        slug = _slug_for_url(lemma)
+        if entry.get("url_slug") != slug:
+            entry["url_slug"] = slug
+            changes += 1
+        key = _manifest_lemma_key(lemma)
+        existing = by_key.get(key)
+        if existing is not None:
+            _merge_duplicate_manifest_entry(existing, entry)
+            changes += 1
+            continue
+        by_key[key] = entry
+        normalized_entries.append(entry)
+    if changes:
+        manifest["entries"] = sorted(
+            normalized_entries,
+            key=lambda item: str(item.get("lemma") or "") if isinstance(item, dict) else "",
+        )
+    return changes
+
+
 class _SlovnykArticleParser(HTMLParser):
     """Extract only the dictionary article from a slovnyk.me direct-entry page."""
 
@@ -859,12 +942,7 @@ def _get_stressifier() -> Any:
 @lru_cache(maxsize=32768)
 def _stress_word(word: str) -> str:
     clean = _strip_stress(word).strip()
-    if (
-        not clean
-        or _has_whitespace(clean)
-        or not _UKRAINIAN_WORD_RE.fullmatch(clean)
-        or _count_vowels(clean) < 2
-    ):
+    if not clean or _has_whitespace(clean) or not _UKRAINIAN_WORD_RE.fullmatch(clean) or _count_vowels(clean) < 2:
         return ""
     try:
         stressed = str(_get_stressifier()(clean))
@@ -1083,9 +1161,7 @@ def _slovnyk_cache(lemma: str) -> dict[str, Any]:
         if cache.get("schema_version") == 1:
             raw_lookups = cache.get("lookups")
             if isinstance(raw_lookups, dict):
-                cache["lookups"] = {
-                    slug: row for slug, row in raw_lookups.items() if row is not None
-                }
+                cache["lookups"] = {slug: row for slug, row in raw_lookups.items() if row is not None}
             else:
                 cache["lookups"] = {}
             cache["schema_version"] = _SLOVNYK_CACHE_SCHEMA_VERSION
@@ -1145,9 +1221,7 @@ def _vesum_word_analyses(word: str) -> tuple[tuple[str, str], ...]:
     except Exception:
         return ()
     analyses = {
-        (str(row.get("lemma") or ""), str(row.get("pos") or ""))
-        for row in rows
-        if row.get("lemma") and row.get("pos")
+        (str(row.get("lemma") or ""), str(row.get("pos") or "")) for row in rows if row.get("lemma") and row.get("pos")
     }
     return tuple(sorted(analyses))
 
@@ -1163,11 +1237,7 @@ def _vesum_base_lemma(word: str) -> str | None:
     None rather than guess, so we never show an unrelated word's definition. Also
     returns None when the word is already its own lemma or VESUM has no analysis."""
     surface = _lookup_key(word).casefold()
-    bases = {
-        lemma
-        for lemma, _pos in _vesum_word_analyses(surface)
-        if lemma and lemma.casefold() != surface
-    }
+    bases = {lemma for lemma, _pos in _vesum_word_analyses(surface) if lemma and lemma.casefold() != surface}
     return next(iter(bases)) if len(bases) == 1 else None
 
 
@@ -1239,11 +1309,7 @@ def _headword_pos_for_synonyms(lemma: str, entry_pos: str | None = None) -> str 
 
 def _candidate_is_headword_variant(lemma: str, candidate: str, headword_pos: str) -> bool:
     headword = _slovnyk_lookup_word(lemma)
-    headword_lemmas = {
-        analysis_lemma
-        for analysis_lemma, pos in _vesum_word_analyses(headword)
-        if pos == headword_pos
-    }
+    headword_lemmas = {analysis_lemma for analysis_lemma, pos in _vesum_word_analyses(headword) if pos == headword_pos}
     if not headword_lemmas:
         headword_lemmas = {_lookup_key(variant) for variant in _split_lemma_variants(_strip_stress(lemma))}
     return any(
@@ -1331,11 +1397,11 @@ def _is_safe_slovnyk_synonym(
 
 def _extract_qualifier(text: str) -> str | None:
     lower_text = text.lower()
-    if re.search(r'\bдіал\b\.?|\bд\.', lower_text):
+    if re.search(r"\bдіал\b\.?|\bд\.", lower_text):
         return "діал."
-    if re.search(r'\bрозм\b\.?', lower_text):
+    if re.search(r"\bрозм\b\.?", lower_text):
         return "розм."
-    if re.search(r'\bзаст\b\.?|\bз\.', lower_text):
+    if re.search(r"\bзаст\b\.?|\bз\.", lower_text):
         return "заст."
     return None
 
@@ -1960,10 +2026,7 @@ def _entry_scoped_heritage_status(status: dict[str, Any]) -> dict[str, Any]:
 def _vesum_attested_from_morphology(morphology: dict[str, Any] | None) -> bool:
     if not isinstance(morphology, dict):
         return False
-    return (
-        str(morphology.get("source") or "").upper() == "VESUM"
-        and int(morphology.get("form_count") or 0) > 0
-    )
+    return str(morphology.get("source") or "").upper() == "VESUM" and int(morphology.get("form_count") or 0) > 0
 
 
 def _max_definition_sovietization_risk(cards: list[dict[str, Any]]) -> int:
@@ -1978,9 +2041,7 @@ def _finalize_heritage_status(
     definition_cards: list[dict[str, Any]],
 ) -> dict[str, Any]:
     finalized = dict(status)
-    vesum_attested = bool(finalized.get("vesum_attested")) or _vesum_attested_from_morphology(
-        morphology
-    )
+    vesum_attested = bool(finalized.get("vesum_attested")) or _vesum_attested_from_morphology(morphology)
     max_sovietization_risk = _max_definition_sovietization_risk(definition_cards)
     finalized["vesum_attested"] = vesum_attested
     finalized["warning_severity"] = compute_warning_severity(
@@ -2036,9 +2097,7 @@ def _morphology(lemma: str) -> dict | None:
     if paradigm:
         morphology["paradigm"] = paradigm
     stressed_forms = {
-        row["form"]: row["stress"]
-        for row in decoded
-        if row.get("stress") and row.get("form") != row.get("stress")
+        row["form"]: row["stress"] for row in decoded if row.get("stress") and row.get("form") != row.get("stress")
     }
     if paradigm:
         for form in _collect_string_values(paradigm):
@@ -2121,7 +2180,7 @@ def _normalise_synonym(raw: str) -> str:
     text = text.replace("`", "")
     text = re.sub(r"<[^>]+>", " ", text)
     text = re.sub(r"\s+", " ", text).strip()
-    text = text.strip(" \t\r\n.,;:!?()[]{}«»\"“”")
+    text = text.strip(' \t\r\n.,;:!?()[]{}«»"“”')
     return text.casefold()
 
 
@@ -2296,6 +2355,7 @@ def _definition_body(
         body = pattern.sub("", body, count=1)
     body = re.sub(r"\s+", " ", clean_html_entities(body)).strip()
     return _truncate_text(body, limit) if body else ""
+
 
 def _sum20_in_coverage(lemma: str) -> bool:
     lookup = _slovnyk_lookup_word(lemma)
@@ -2578,8 +2638,7 @@ def _esum_etymology(conn: sqlite3.Connection, lemma: str) -> dict | None:
     try:
         for variant in _etymology_lookup_variants(word):
             row = conn.execute(
-                "SELECT etymology_text, vol, page FROM esum_etymology "
-                "WHERE lemma = ? AND etymology_text != '' LIMIT 1",
+                "SELECT etymology_text, vol, page FROM esum_etymology WHERE lemma = ? AND etymology_text != '' LIMIT 1",
                 (variant,),
             ).fetchone()
             if row:
@@ -2816,7 +2875,9 @@ def _with_base_etymology_label(etymology: dict, base_form: str) -> dict:
     return labeled
 
 
-def _etymology(conn: sqlite3.Connection, lemma: str, kaikki_lookup: dict[str, dict[str, Any]] | None = None) -> dict | None:
+def _etymology(
+    conn: sqlite3.Connection, lemma: str, kaikki_lookup: dict[str, dict[str, Any]] | None = None
+) -> dict | None:
     """Cached etymology by direct per-lemma authority order."""
     lookup_word = _lookup_key(_base_lemma(lemma))
     if lookup_word in _COMPOSITIONAL_ETYMOLOGY_EXCLUSIONS:
@@ -2833,8 +2894,7 @@ def _puls_cefr(conn: sqlite3.Connection, lemma: str) -> dict[str, str] | None:
     for variant in _split_lemma_variants(lemma):
         try:
             row = conn.execute(
-                "SELECT level, pos, text FROM puls_cefr "
-                "WHERE word = ? COLLATE NOCASE AND level != '' LIMIT 1",
+                "SELECT level, pos, text FROM puls_cefr WHERE word = ? COLLATE NOCASE AND level != '' LIMIT 1",
                 (variant,),
             ).fetchone()
         except sqlite3.OperationalError as exc:
@@ -3402,6 +3462,7 @@ def query_wikipedia(title: str) -> dict[str, Any] | None:
     """
     try:
         from scripts.rag.source_query import wikipedia_summary
+
         return wikipedia_summary(title)
     except Exception:
         return None
@@ -3467,9 +3528,7 @@ def _is_proper_noun_entry(entry: dict[str, Any]) -> bool:
 
 def _single_word_etymology_coverage(manifest: dict) -> tuple[int, int]:
     entries = [
-        entry
-        for entry in manifest.get("entries", [])
-        if entry.get("lemma") and not _has_whitespace(entry.get("lemma"))
+        entry for entry in manifest.get("entries", []) if entry.get("lemma") and not _has_whitespace(entry.get("lemma"))
     ]
     covered = sum(1 for entry in entries if (entry.get("enrichment") or {}).get("etymology"))
     return covered, len(entries)
@@ -3479,6 +3538,10 @@ def enrich_entry(entry, conn, kaikki_lookup, *, has_sum11_flags) -> bool:
     """Enrich a single manifest entry in place (dictionary-grounded).
     Returns True if any enrichment was attached. Extracted from enrich() so the
     same per-lemma enrichment runs on delta lemmas (#3675 P2)."""
+    normalized_lemma = strip_acute_stress(str(entry["lemma"]))
+    if normalized_lemma != entry["lemma"]:
+        entry["lemma"] = normalized_lemma
+        entry["url_slug"] = _slug_for_url(normalized_lemma)
     if entry.get("gloss"):
         entry["gloss"] = clean_gloss(str(entry["gloss"]))
     lemma = entry["lemma"]
@@ -3494,14 +3557,8 @@ def enrich_entry(entry, conn, kaikki_lookup, *, has_sum11_flags) -> bool:
         cache=slovnyk_cache,
     )
     heritage_status = classify_lemma(lemma)
-    warning = (
-        _warning_slovnyk(lemma, slovnyk_cache)
-        if _is_slovnyk_warning_candidate(entry, heritage_status)
-        else None
-    )
-    entry["heritage_status"] = _entry_scoped_heritage_status(
-        _merge_slovnyk_warning(heritage_status, warning)
-    )
+    warning = _warning_slovnyk(lemma, slovnyk_cache) if _is_slovnyk_warning_candidate(entry, heritage_status) else None
+    entry["heritage_status"] = _entry_scoped_heritage_status(_merge_slovnyk_warning(heritage_status, warning))
     curated_calque = _curated_calque(lemma, base)
     if curated_calque:
         entry["heritage_status"]["curated_calque"] = curated_calque
@@ -3634,6 +3691,7 @@ def enrich_entry(entry, conn, kaikki_lookup, *, has_sum11_flags) -> bool:
 
 def enrich() -> tuple[int, int]:
     manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
+    _normalize_manifest_entries(manifest)
     kaikki_lookup = _load_kaikki_lookup()
     conn = sqlite3.connect(f"file:{SOURCES_DB}?mode=ro", uri=True)
     enriched = 0
@@ -3665,11 +3723,7 @@ def main() -> None:
         for entry in manifest.get("entries", [])
         if isinstance(entry.get("pronunciation"), dict) and entry["pronunciation"].get("ipa")
     )
-    print(
-        "enriched "
-        f"{enriched}/{total} lexicon entries from "
-        "VESUM + СУМ + Горох/ЕСУМ/Вікісловник/kaikki + slovnyk.me"
-    )
+    print(f"enriched {enriched}/{total} lexicon entries from VESUM + СУМ + Горох/ЕСУМ/Вікісловник/kaikki + slovnyk.me")
     print(f"pronunciation {pronunciation_covered}/{total}")
     print(f"single-word etymology {etymology_covered}/{etymology_total}")
 

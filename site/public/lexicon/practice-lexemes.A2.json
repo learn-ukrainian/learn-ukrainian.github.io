@@ -1,5 +1,5 @@
 {
-  "deckVersion": "atlas-practice-v1-622fc3d93d1ad580",
+  "deckVersion": "atlas-practice-v1-9cf4a4d7319d19ce",
   "level": "A2",
   "lexemes": [
     {
@@ -2643,8 +2643,8 @@
       "glossClean": "capital",
       "heritage": "standard",
       "ipa": null,
-      "lemma": "столи́ця",
-      "lemmaId": "столи-ця",
+      "lemma": "столиця",
+      "lemmaId": "столиця",
       "lemmaPlain": "столиця",
       "meaningMcEligible": true,
       "paradigm": {
@@ -2861,8 +2861,8 @@
       "glossClean": "stress",
       "heritage": "standard",
       "ipa": null,
-      "lemma": "на́голос",
-      "lemmaId": "на-голос",
+      "lemma": "наголос",
+      "lemmaId": "наголос",
       "lemmaPlain": "наголос",
       "meaningMcEligible": true,
       "paradigm": {
@@ -2878,8 +2878,8 @@
       "glossClean": "Hi",
       "heritage": "standard",
       "ipa": null,
-      "lemma": "Приві́т",
-      "lemmaId": "приві-т",
+      "lemma": "Привіт",
+      "lemmaId": "привіт",
       "lemmaPlain": "привіт",
       "meaningMcEligible": true,
       "paradigm": {
@@ -2912,8 +2912,8 @@
       "glossClean": "wooden",
       "heritage": "standard",
       "ipa": null,
-      "lemma": "дерев'я́ний",
-      "lemmaId": "дерев-я-ний",
+      "lemma": "дерев'яний",
+      "lemmaId": "дерев-яний",
       "lemmaPlain": "дерев'яний",
       "meaningMcEligible": true,
       "paradigm": {
@@ -2946,8 +2946,8 @@
       "glossClean": "computer",
       "heritage": "standard",
       "ipa": null,
-      "lemma": "комп'ю́тер",
-      "lemmaId": "комп-ю-тер",
+      "lemma": "комп'ютер",
+      "lemmaId": "комп-ютер",
       "lemmaPlain": "комп'ютер",
       "meaningMcEligible": true,
       "paradigm": {
@@ -2963,8 +2963,8 @@
       "glossClean": "soft",
       "heritage": "standard",
       "ipa": null,
-      "lemma": "м'яки́й",
-      "lemmaId": "м-яки-й",
+      "lemma": "м'який",
+      "lemmaId": "м-який",
       "lemmaPlain": "м'який",
       "meaningMcEligible": true,
       "paradigm": {
@@ -2980,8 +2980,8 @@
       "glossClean": "Mariana",
       "heritage": "unknown",
       "ipa": null,
-      "lemma": "Мар'я́на",
-      "lemmaId": "мар-я-на",
+      "lemma": "Мар'яна",
+      "lemmaId": "мар-яна",
       "lemmaPlain": "мар'яна",
       "meaningMcEligible": false,
       "paradigm": {
@@ -2997,8 +2997,8 @@
       "glossClean": "hard",
       "heritage": "standard",
       "ipa": null,
-      "lemma": "тверди́й",
-      "lemmaId": "тверди-й",
+      "lemma": "твердий",
+      "lemmaId": "твердий",
       "lemmaPlain": "твердий",
       "meaningMcEligible": true,
       "paradigm": {
@@ -16745,18 +16745,331 @@
     },
     {
       "cefr": "A2",
-      "gloss": "worldview",
-      "glossClean": "worldview",
+      "gloss": "самохідна машина з двигуном внутрішнього згоряння для перевезення пасажирів і вантажів безрейковими дорогами",
+      "glossClean": "самохідна машина з двигуном внутрішнього згоряння для перевезення пасажирів і вантажів безрейковими дорогами",
       "heritage": "standard",
       "ipa": null,
-      "lemma": "світогляд",
-      "lemmaId": "світогляд",
-      "lemmaPlain": "світогляд",
+      "lemma": "автомобіль",
+      "lemmaId": "автомобіль",
+      "lemmaPlain": "автомобіль",
+      "meaningMcEligible": false,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "той, хто написав будь-яку працю, твір, картину, лист або розробив якийсь проект і ін.; той, хто має право володіти авторством на якусь річ",
+      "glossClean": "той",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "автор",
+      "lemmaId": "автор",
+      "lemmaPlain": "автор",
       "meaningMcEligible": true,
       "paradigm": {
         "cases": {}
       },
-      "pos": "ч.",
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "назва найвищих державних наукових установ, завданням яких є розвиток наук або мистецтв",
+      "glossClean": "назва найвищих державних наукових установ",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "академія",
+      "lemmaId": "академія",
+      "lemmaPlain": "академія",
+      "meaningMcEligible": false,
+      "paradigm": {
+        "cases": {
+          "давальний": {
+            "plural": "академіям",
+            "singular": "академії"
+          },
+          "знахідний": {
+            "plural": "академії",
+            "singular": "академію"
+          },
+          "кличний": {
+            "plural": "академії",
+            "singular": "академіє"
+          },
+          "місцевий": {
+            "plural": "академіях",
+            "singular": "академії"
+          },
+          "називний": {
+            "plural": "академії",
+            "singular": "академія"
+          },
+          "орудний": {
+            "plural": "академіями",
+            "singular": "академією"
+          },
+          "родовий": {
+            "plural": "академій",
+            "singular": "академії"
+          }
+        }
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "Прислівник до активний",
+      "glossClean": "Прислівник до активний",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "активно",
+      "lemmaId": "активно",
+      "lemmaPlain": "активно",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "adv",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "цінний папір, який свідчить про внесення паю в акціонерне товариство і дає право на отримання доходу у вигляді дивіденду",
+      "glossClean": "цінний папір",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "акція",
+      "lemmaId": "акція",
+      "lemmaPlain": "акція",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {
+          "давальний": {
+            "plural": "акціям",
+            "singular": "акції"
+          },
+          "знахідний": {
+            "plural": "акції",
+            "singular": "акцію"
+          },
+          "кличний": {
+            "plural": "акції",
+            "singular": "акціє"
+          },
+          "місцевий": {
+            "plural": "акціях",
+            "singular": "акції"
+          },
+          "називний": {
+            "plural": "акції",
+            "singular": "акція"
+          },
+          "орудний": {
+            "plural": "акціями",
+            "singular": "акцією"
+          },
+          "родовий": {
+            "plural": "акцій",
+            "singular": "акції"
+          }
+        }
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "винний спирт",
+      "glossClean": "винний спирт",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "алкоголь",
+      "lemmaId": "алкоголь",
+      "lemmaPlain": "алкоголь",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "antibiotic",
+      "glossClean": "antibiotic",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "антибіотик",
+      "lemmaId": "антибіотик",
+      "lemmaPlain": "антибіотик",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "однорічна трав'яниста олійна рослина родини Бобових; земляний (китайський) горіх",
+      "glossClean": "однорічна трав'яниста олійна рослина родини Бобових",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "арахіс",
+      "lemmaId": "арахіс",
+      "lemmaPlain": "арахіс",
+      "meaningMcEligible": false,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "Який виділяє аромат (у 1 знач.); запашний",
+      "glossClean": "Який виділяє аромат (у 1 знач.)",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "ароматний",
+      "lemmaId": "ароматний",
+      "lemmaPlain": "ароматний",
+      "meaningMcEligible": false,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "adj",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "Фахівець в галузі архітектури; будівничий",
+      "glossClean": "Фахівець в галузі архітектури",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "архітектор",
+      "lemmaId": "архітектор",
+      "lemmaPlain": "архітектор",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "automated teller machine, ATM, cash machine",
+      "glossClean": "automated teller machine",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "банкомат",
+      "lemmaId": "банкомат",
+      "lemmaPlain": "банкомат",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "невеликий ресторан, в якому напої і закуски споживають біля стойки буфету або за столиками",
+      "glossClean": "невеликий ресторан",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "бар",
+      "lemmaId": "бар",
+      "lemmaPlain": "бар",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "який не потребує коштів, оплати; безплатний",
+      "glossClean": "який не потребує коштів",
+      "heritage": "unknown",
+      "ipa": null,
+      "lemma": "безкоштовний",
+      "lemmaId": "безкоштовний",
+      "lemmaPlain": "безкоштовний",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "adj",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "прислівник до безкоштовний",
+      "glossClean": "прислівник до безкоштовний",
+      "heritage": "unknown",
+      "ipa": null,
+      "lemma": "безкоштовно",
+      "lemmaId": "безкоштовно",
+      "lemmaPlain": "безкоштовно",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "adv",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "який не має в собі небезпеки або захищає кого-, що-небудь від небезпеки",
+      "glossClean": "який не має в собі небезпеки або захищає кого-",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "безпечний",
+      "lemmaId": "безпечний",
+      "lemmaPlain": "безпечний",
+      "meaningMcEligible": false,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "adj",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "стукати, ударяти по чому-небудь, об щось по клавішах і тріпала стиркою по струнах фортеп'яно, витираючи його",
+      "glossClean": "стукати",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "бити",
+      "lemmaId": "бити",
+      "lemmaPlain": "бити",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "verb",
       "semanticBucket": null,
       "severity": null
     },
@@ -16779,6 +17092,2799 @@
     },
     {
       "cefr": "A2",
+      "gloss": "який є або відбувається на невеликій відстані; недалекий; протилежне далекий",
+      "glossClean": "який є або відбувається на невеликій відстані",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "близький",
+      "lemmaId": "близький",
+      "lemmaPlain": "близький",
+      "meaningMcEligible": false,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "adj",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "зиґзаґоподібна електрична іскра — наслідок розряду атмосферної електрики в повітрі, що буває під час грози",
+      "glossClean": "зиґзаґоподібна електрична іскра — наслідок розряду атмосферної електрики в повітрі",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "блискавка",
+      "lemmaId": "блискавка",
+      "lemmaPlain": "блискавка",
+      "meaningMcEligible": false,
+      "paradigm": {
+        "cases": {
+          "давальний": {
+            "plural": "блискавкам",
+            "singular": "блискавці"
+          },
+          "знахідний": {
+            "plural": "блискавки",
+            "singular": "блискавку"
+          },
+          "кличний": {
+            "plural": "блискавки",
+            "singular": "блискавко"
+          },
+          "місцевий": {
+            "plural": "блискавках",
+            "singular": "блискавці"
+          },
+          "називний": {
+            "plural": "блискавки",
+            "singular": "блискавка"
+          },
+          "орудний": {
+            "plural": "блискавками",
+            "singular": "блискавкою"
+          },
+          "родовий": {
+            "plural": "блискавок",
+            "singular": "блискавки"
+          }
+        }
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "blog",
+      "glossClean": "blog",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "блог",
+      "lemmaId": "блог",
+      "lemmaPlain": "блог",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "god",
+      "glossClean": "god",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "бог",
+      "lemmaId": "бог",
+      "lemmaPlain": "бог",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "дугаста смужка волосся над очною ямкою",
+      "glossClean": "дугаста смужка волосся над очною ямкою",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "брова",
+      "lemmaId": "брова",
+      "lemmaPlain": "брова",
+      "meaningMcEligible": false,
+      "paradigm": {
+        "cases": {
+          "давальний": {
+            "plural": "бровам",
+            "singular": "брові"
+          },
+          "знахідний": {
+            "plural": "брови",
+            "singular": "брову"
+          },
+          "кличний": {
+            "plural": "брови",
+            "singular": "брово"
+          },
+          "місцевий": {
+            "plural": "бровах",
+            "singular": "брові"
+          },
+          "називний": {
+            "plural": "брови",
+            "singular": "брова"
+          },
+          "орудний": {
+            "plural": "бровами",
+            "singular": "бровою"
+          },
+          "родовий": {
+            "plural": "брів",
+            "singular": "брови"
+          }
+        }
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "існувати, бути (з відтінком багатократності)",
+      "glossClean": "існувати",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "бувати",
+      "lemmaId": "бувати",
+      "lemmaPlain": "бувати",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "verb",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "чистий відвар з м'яса без овочів і приправ",
+      "glossClean": "чистий відвар з м'яса без овочів і приправ",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "бульйон",
+      "lemmaId": "бульйон",
+      "lemmaPlain": "бульйон",
+      "meaningMcEligible": false,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "комерційна, біржова або підприємницька діяльність",
+      "glossClean": "комерційна",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "бізнес",
+      "lemmaId": "бізнес",
+      "lemmaPlain": "бізнес",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "більша частина, більша кількість кого-, чого-небудь",
+      "glossClean": "більша частина",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "більшість",
+      "lemmaId": "більшість",
+      "lemmaPlain": "більшість",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "сила, з якою тіло притягується до центра Землі на якійсь географічній широті",
+      "glossClean": "сила",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "вага",
+      "lemmaId": "вага",
+      "lemmaPlain": "вага",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {
+          "давальний": {
+            "plural": "вагам",
+            "singular": "вазі"
+          },
+          "знахідний": {
+            "plural": "ваги",
+            "singular": "вагу"
+          },
+          "кличний": {
+            "plural": "ваги",
+            "singular": "ваго"
+          },
+          "місцевий": {
+            "plural": "вагах",
+            "singular": "вазі"
+          },
+          "називний": {
+            "plural": "ваги",
+            "singular": "вага"
+          },
+          "орудний": {
+            "plural": "вагами",
+            "singular": "вагою"
+          },
+          "родовий": {
+            "plural": "ваг",
+            "singular": "ваги"
+          }
+        }
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "який має велику вагу; тяжкий",
+      "glossClean": "який має велику вагу",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "важкий",
+      "lemmaId": "важкий",
+      "lemmaPlain": "важкий",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "adj",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "має значення; істотно, потрібно",
+      "glossClean": "має значення",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "важливо",
+      "lemmaId": "важливо",
+      "lemmaPlain": "важливо",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "adv",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "горщик для квітів",
+      "glossClean": "горщик для квітів",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "вазон",
+      "lemmaId": "вазон",
+      "lemmaPlain": "вазон",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "грошова одиниця, прийнята за основу грошової системи певної країни",
+      "glossClean": "грошова одиниця",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "валюта",
+      "lemmaId": "валюта",
+      "lemmaPlain": "валюта",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {
+          "давальний": {
+            "plural": "валютам",
+            "singular": "валюті"
+          },
+          "знахідний": {
+            "plural": "валюти",
+            "singular": "валюту"
+          },
+          "кличний": {
+            "plural": "валюти",
+            "singular": "валюто"
+          },
+          "місцевий": {
+            "plural": "валютах",
+            "singular": "валюті"
+          },
+          "називний": {
+            "plural": "валюти",
+            "singular": "валюта"
+          },
+          "орудний": {
+            "plural": "валютами",
+            "singular": "валютою"
+          },
+          "родовий": {
+            "plural": "валют",
+            "singular": "валюти"
+          }
+        }
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "кип'ятити у воді або в іншій рідині якісь харчові продукти і т. ін., готуючи страву, напій",
+      "glossClean": "кип'ятити у воді або в іншій рідині якісь харчові продукти і т. ін.",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "варити",
+      "lemmaId": "варити",
+      "lemmaPlain": "варити",
+      "meaningMcEligible": false,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "verb",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "виражена у грошах ціна чого-небудь",
+      "glossClean": "виражена у грошах ціна чого-небудь",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "вартість",
+      "lemmaId": "вартість",
+      "lemmaPlain": "вартість",
+      "meaningMcEligible": false,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "за напрямком від землі у висоту; вниз",
+      "glossClean": "за напрямком від землі у висоту",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "вгору",
+      "lemmaId": "вгору",
+      "lemmaPlain": "вгору",
+      "meaningMcEligible": false,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "adv",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "людина, яка не вживає м'яса і харчується тільки рослинною й молочною їжею; послідовник, прихильник вегетаріанства",
+      "glossClean": "людина",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "вегетаріанець",
+      "lemmaId": "вегетаріанець",
+      "lemmaPlain": "вегетаріанець",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "female equivalent of вегетаріа́нець (vehetariánecʹ): vegetarian",
+      "glossClean": "female equivalent of вегетаріа́нець (vehetariánecʹ): vegetarian",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "вегетаріанка",
+      "lemmaId": "вегетаріанка",
+      "lemmaPlain": "вегетаріанка",
+      "meaningMcEligible": false,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "прикметник до вегетаріанство і вегетаріанець",
+      "glossClean": "прикметник до вегетаріанство і вегетаріанець",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "вегетаріанський",
+      "lemmaId": "вегетаріанський",
+      "lemmaPlain": "вегетаріанський",
+      "meaningMcEligible": false,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "adj",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "великий хижий ссавець з незграбним масивним тілом, укритий густою шерстю",
+      "glossClean": "великий хижий ссавець з незграбним масивним тілом",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "ведмідь",
+      "lemmaId": "ведмідь",
+      "lemmaPlain": "ведмідь",
+      "meaningMcEligible": false,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "spring (attributive), vernal (of or pertaining to springtime)",
+      "glossClean": "spring (attributive)",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "весняний",
+      "lemmaId": "весняний",
+      "lemmaPlain": "весняний",
+      "meaningMcEligible": false,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "adj",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "evening (attributive)",
+      "glossClean": "evening (attributive)",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "вечірній",
+      "lemmaId": "вечірній",
+      "lemmaPlain": "вечірній",
+      "meaningMcEligible": false,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "adj",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "to put on (shoes)",
+      "glossClean": "to put on (shoes)",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "взути",
+      "lemmaId": "взути",
+      "lemmaPlain": "взути",
+      "meaningMcEligible": false,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "verb",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "to excuse, to pardon, to forgive",
+      "glossClean": "to excuse",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "вибачити",
+      "lemmaId": "вибачити",
+      "lemmaPlain": "вибачити",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "verb",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "to choose, to select, to pick, to opt for",
+      "glossClean": "to choose",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "вибирати",
+      "lemmaId": "вибирати",
+      "lemmaPlain": "вибирати",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "verb",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "сукупність зовнішніх ознак, особливостей кого-, чого-небудь, що створює відповідне враження",
+      "glossClean": "сукупність зовнішніх ознак",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "вигляд",
+      "lemmaId": "вигляд",
+      "lemmaPlain": "вигляд",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "to lay out",
+      "glossClean": "to lay out",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "викладати",
+      "lemmaId": "викладати",
+      "lemmaPlain": "викладати",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "verb",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "to execute, to perform, to carry out, to accomplish, to effectuate",
+      "glossClean": "to execute",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "виконати",
+      "lemmaId": "виконати",
+      "lemmaPlain": "виконати",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "verb",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "застосовувати кого-, що-небудь для якої-небудь справи, знаходити застосування кому-, чому-небудь",
+      "glossClean": "застосовувати кого-",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "використовувати",
+      "lemmaId": "використовувати",
+      "lemmaPlain": "використовувати",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "verb",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "to cure, to heal (make better from a disease, wound, etc.; restore to health)",
+      "glossClean": "to cure",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "вилікувати",
+      "lemmaId": "вилікувати",
+      "lemmaPlain": "вилікувати",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "verb",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "to drink, to drink up",
+      "glossClean": "to drink",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "випити",
+      "lemmaId": "випити",
+      "lemmaPlain": "випити",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "verb",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "to grow",
+      "glossClean": "to grow",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "вирости",
+      "lemmaId": "вирости",
+      "lemmaPlain": "вирости",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "verb",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "сполучення слів, що виражає закінчену думку або становить певну єдність; фраза, мовний зворот",
+      "glossClean": "сполучення слів",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "вислів",
+      "lemmaId": "вислів",
+      "lemmaPlain": "вислів",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "to step forth, to step forward, to come forward",
+      "glossClean": "to step forth",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "виступати",
+      "lemmaId": "виступати",
+      "lemmaPlain": "виступати",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "verb",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "to hang, to be suspended",
+      "glossClean": "to hang",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "висіти",
+      "lemmaId": "висіти",
+      "lemmaPlain": "висіти",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "verb",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "син сина або дочки",
+      "glossClean": "син сина або дочки",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "внук",
+      "lemmaId": "внук",
+      "lemmaPlain": "внук",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "wolf",
+      "glossClean": "wolf",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "вовк",
+      "lemmaId": "вовк",
+      "lemmaPlain": "вовк",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "volleyball",
+      "glossClean": "volleyball",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "волейбол",
+      "lemmaId": "волейбол",
+      "lemmaPlain": "волейбол",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "див. весь",
+      "glossClean": "див. весь",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "все",
+      "lemmaId": "все",
+      "lemmaPlain": "все",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "adv",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "all, every",
+      "glossClean": "all",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "всі",
+      "lemmaId": "всі",
+      "lemmaPlain": "всі",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "tired",
+      "glossClean": "tired",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "втомлений",
+      "lemmaId": "втомлений",
+      "lemmaPlain": "втомлений",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "adj",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "який має невелику ширину; протилежне широкий",
+      "glossClean": "який має невелику ширину",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "вузький",
+      "lemmaId": "вузький",
+      "lemmaPlain": "вузький",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "adj",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "to happen, to occur, to take place, to come about, to go on",
+      "glossClean": "to happen",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "відбуватися",
+      "lemmaId": "відбуватися",
+      "lemmaPlain": "відбуватися",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "verb",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "to happen, to occur, to take place, to come about, to be held (for example, an event--a meeting, an inspection, funeral services)",
+      "glossClean": "to happen",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "відбутися",
+      "lemmaId": "відбутися",
+      "lemmaPlain": "відбутися",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "verb",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "to visit",
+      "glossClean": "to visit",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "відвідати",
+      "lemmaId": "відвідати",
+      "lemmaPlain": "відвідати",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "verb",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "to visit",
+      "glossClean": "to visit",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "відвідувати",
+      "lemmaId": "відвідувати",
+      "lemmaPlain": "відвідувати",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "verb",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "to give back, deliver, return, restore, repay",
+      "glossClean": "to give back",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "віддати",
+      "lemmaId": "віддати",
+      "lemmaPlain": "віддати",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "verb",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "to rest, to have a rest, to take a rest, to relax",
+      "glossClean": "to rest",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "відпочити",
+      "lemmaId": "відпочити",
+      "lemmaPlain": "відпочити",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "verb",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "to depart, to set off (to leave)",
+      "glossClean": "to depart",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "відправлятися",
+      "lemmaId": "відправлятися",
+      "lemmaPlain": "відправлятися",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "verb",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "at once, forthwith, immediately, right away, straight away",
+      "glossClean": "at once",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "відразу",
+      "lemmaId": "відразу",
+      "lemmaPlain": "відразу",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "adv",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "організована збройна боротьба між державами, народами або ж збройними угрупованнями всередині країни",
+      "glossClean": "організована збройна боротьба між державами",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "війна",
+      "lemmaId": "війна",
+      "lemmaPlain": "війна",
+      "meaningMcEligible": false,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "to believe",
+      "glossClean": "to believe",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "вірити",
+      "lemmaId": "вірити",
+      "lemmaPlain": "вірити",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "verb",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "vitamin",
+      "glossClean": "vitamin",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "вітамін",
+      "lemmaId": "вітамін",
+      "lemmaPlain": "вітамін",
+      "meaningMcEligible": false,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "windy (accompanied by wind)",
+      "glossClean": "windy (accompanied by wind)",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "вітряний",
+      "lemmaId": "вітряний",
+      "lemmaPlain": "вітряний",
+      "meaningMcEligible": false,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "adj",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "windy (the weather)",
+      "glossClean": "windy (the weather)",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "вітряно",
+      "lemmaId": "вітряно",
+      "lemmaPlain": "вітряно",
+      "meaningMcEligible": false,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "adv",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "to think (about: про (pro) + accusative)",
+      "glossClean": "to think (about: про (pro) + accusative)",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "гадати",
+      "lemmaId": "гадати",
+      "lemmaPlain": "гадати",
+      "meaningMcEligible": false,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "verb",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "purse, wallet",
+      "glossClean": "purse",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "гаманець",
+      "lemmaId": "гаманець",
+      "lemmaPlain": "гаманець",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "happiness, well-being, weal, health, success",
+      "glossClean": "happiness",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "гаразд",
+      "lemmaId": "гаразд",
+      "lemmaPlain": "гаразд",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "adv",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "городня сланка рослина з великими круглими або овальними плодами",
+      "glossClean": "городня сланка рослина з великими круглими або овальними плодами",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "гарбуз",
+      "lemmaId": "гарбуз",
+      "lemmaPlain": "гарбуз",
+      "meaningMcEligible": false,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "helicopter",
+      "glossClean": "helicopter",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "гелікоптер",
+      "lemmaId": "гелікоптер",
+      "lemmaPlain": "гелікоптер",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "coat of arms",
+      "glossClean": "coat of arms",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "герб",
+      "lemmaId": "герб",
+      "lemmaPlain": "герб",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "far away",
+      "glossClean": "far away",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "геть",
+      "lemmaId": "геть",
+      "lemmaPlain": "геть",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "adv",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "depth",
+      "glossClean": "depth",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "глибина",
+      "lemmaId": "глибина",
+      "lemmaPlain": "глибина",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {
+          "давальний": {
+            "plural": "глибинам",
+            "singular": "глибині"
+          },
+          "знахідний": {
+            "plural": "глибини",
+            "singular": "глибину"
+          },
+          "кличний": {
+            "plural": "глибини",
+            "singular": "глибино"
+          },
+          "місцевий": {
+            "plural": "глибинах",
+            "singular": "глибині"
+          },
+          "називний": {
+            "plural": "глибини",
+            "singular": "глибина"
+          },
+          "орудний": {
+            "plural": "глибинами",
+            "singular": "глибиною"
+          },
+          "родовий": {
+            "plural": "глибин",
+            "singular": "глибини"
+          }
+        }
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "deep",
+      "glossClean": "deep",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "глибокий",
+      "lemmaId": "глибокий",
+      "lemmaPlain": "глибокий",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "adj",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "сукупність різних стосовно висоти, сили і тембру звуків, що їх видає людина (або тварина, яка дихає легенями) за допомогою голосового апарата",
+      "glossClean": "сукупність різних стосовно висоти",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "голос",
+      "lemmaId": "голос",
+      "lemmaPlain": "голос",
+      "meaningMcEligible": false,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "loudly, aloud",
+      "glossClean": "loudly",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "голосно",
+      "lemmaId": "голосно",
+      "lemmaPlain": "голосно",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "adv",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "pigeon, dove",
+      "glossClean": "pigeon",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "голуб",
+      "lemmaId": "голуб",
+      "lemmaPlain": "голуб",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "light blue",
+      "glossClean": "light blue",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "голубий",
+      "lemmaId": "голубий",
+      "lemmaPlain": "голубий",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "adj",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "жила Дидона, // А звався Карфаген",
+      "glossClean": "жила Дидона",
+      "heritage": "authentic-archaism",
+      "ipa": null,
+      "lemma": "город",
+      "lemmaId": "город",
+      "lemmaPlain": "город",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "peas",
+      "glossClean": "peas",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "горох",
+      "lemmaId": "горох",
+      "lemmaPlain": "горох",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "pea",
+      "glossClean": "pea",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "гороховий",
+      "lemmaId": "гороховий",
+      "lemmaPlain": "гороховий",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "adj",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "Any distilled alcoholic liquor: vodka, whisky, brandy, etc.",
+      "glossClean": "Any distilled alcoholic liquor: vodka",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "горілка",
+      "lemmaId": "горілка",
+      "lemmaPlain": "горілка",
+      "meaningMcEligible": false,
+      "paradigm": {
+        "cases": {
+          "давальний": {
+            "plural": "горілкам",
+            "singular": "горілці"
+          },
+          "знахідний": {
+            "plural": "горілки",
+            "singular": "горілку"
+          },
+          "кличний": {
+            "plural": "горілки",
+            "singular": "горілко"
+          },
+          "місцевий": {
+            "plural": "горілках",
+            "singular": "горілці"
+          },
+          "називний": {
+            "plural": "горілки",
+            "singular": "горілка"
+          },
+          "орудний": {
+            "plural": "горілками",
+            "singular": "горілкою"
+          },
+          "родовий": {
+            "plural": "горілок",
+            "singular": "горілки"
+          }
+        }
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "buckwheat",
+      "glossClean": "buckwheat",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "гречка",
+      "lemmaId": "гречка",
+      "lemmaPlain": "гречка",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {
+          "давальний": {
+            "plural": "гречкам",
+            "singular": "гречці"
+          },
+          "знахідний": {
+            "plural": "гречки",
+            "singular": "гречку"
+          },
+          "кличний": {
+            "plural": "гречки",
+            "singular": "гречко"
+          },
+          "місцевий": {
+            "plural": "гречках",
+            "singular": "гречці"
+          },
+          "називний": {
+            "plural": "гречки",
+            "singular": "гречка"
+          },
+          "орудний": {
+            "plural": "гречками",
+            "singular": "гречкою"
+          },
+          "родовий": {
+            "plural": "гречок",
+            "singular": "гречки"
+          }
+        }
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "grill (barbecue)",
+      "glossClean": "grill (barbecue)",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "гриль",
+      "lemmaId": "гриль",
+      "lemmaPlain": "гриль",
+      "meaningMcEligible": false,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "thunder, thunderstorm",
+      "glossClean": "thunder",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "гроза",
+      "lemmaId": "гроза",
+      "lemmaPlain": "гроза",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {
+          "давальний": {
+            "plural": "грозам",
+            "singular": "грозі"
+          },
+          "знахідний": {
+            "plural": "грози",
+            "singular": "грозу"
+          },
+          "кличний": {
+            "plural": "грози",
+            "singular": "грозо"
+          },
+          "місцевий": {
+            "plural": "грозах",
+            "singular": "грозі"
+          },
+          "називний": {
+            "plural": "грози",
+            "singular": "гроза"
+          },
+          "орудний": {
+            "plural": "грозами",
+            "singular": "грозою"
+          },
+          "родовий": {
+            "plural": "гроз",
+            "singular": "грози"
+          }
+        }
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "citizenship",
+      "glossClean": "citizenship",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "громадянство",
+      "lemmaId": "громадянство",
+      "lemmaPlain": "громадянство",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "thorax, chest, breast, bosom",
+      "glossClean": "thorax",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "груди",
+      "lemmaId": "груди",
+      "lemmaPlain": "груди",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "плід грушії звичайної (Pyrus communis)",
+      "glossClean": "плід грушії звичайної (Pyrus communis)",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "груша",
+      "lemmaId": "груша",
+      "lemmaPlain": "груша",
+      "meaningMcEligible": false,
+      "paradigm": {
+        "cases": {
+          "давальний": {
+            "plural": "грушам",
+            "singular": "груші"
+          },
+          "знахідний": {
+            "plural": "груші",
+            "singular": "грушу"
+          },
+          "кличний": {
+            "plural": "груші",
+            "singular": "груше"
+          },
+          "місцевий": {
+            "plural": "грушах",
+            "singular": "груші"
+          },
+          "називний": {
+            "plural": "груші",
+            "singular": "груша"
+          },
+          "орудний": {
+            "plural": "грушами",
+            "singular": "грушею"
+          },
+          "родовий": {
+            "plural": "груш",
+            "singular": "груші"
+          }
+        }
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "thunder, thunderbolt",
+      "glossClean": "thunder",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "грім",
+      "lemmaId": "грім",
+      "lemmaPlain": "грім",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "to give off warmth, to give off heat",
+      "glossClean": "to give off warmth",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "гріти",
+      "lemmaId": "гріти",
+      "lemmaPlain": "гріти",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "verb",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "кожна з двох шкірно-м'язових рухомих складок, що утворюють краї рота у людей і тварин",
+      "glossClean": "кожна з двох шкірно-м'язових рухомих складок",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "губа",
+      "lemmaId": "губа",
+      "lemmaPlain": "губа",
+      "meaningMcEligible": false,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "eraser, rubber",
+      "glossClean": "eraser",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "гумка",
+      "lemmaId": "гумка",
+      "lemmaPlain": "гумка",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {
+          "давальний": {
+            "plural": "гумкам",
+            "singular": "гумці"
+          },
+          "знахідний": {
+            "plural": "гумки",
+            "singular": "гумку"
+          },
+          "кличний": {
+            "plural": "гумки",
+            "singular": "гумко"
+          },
+          "місцевий": {
+            "plural": "гумках",
+            "singular": "гумці"
+          },
+          "називний": {
+            "plural": "гумки",
+            "singular": "гумка"
+          },
+          "орудний": {
+            "plural": "гумками",
+            "singular": "гумкою"
+          },
+          "родовий": {
+            "plural": "гумок",
+            "singular": "гумки"
+          }
+        }
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "a group of people",
+      "glossClean": "a group of people",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "гурт",
+      "lemmaId": "гурт",
+      "lemmaPlain": "гурт",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "goose",
+      "glossClean": "goose",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "гуска",
+      "lemmaId": "гуска",
+      "lemmaPlain": "гуска",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "anthem",
+      "glossClean": "anthem",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "гімн",
+      "lemmaId": "гімн",
+      "lemmaPlain": "гімн",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "old, ancient, age-old, distant, bygone",
+      "glossClean": "old",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "давній",
+      "lemmaId": "давній",
+      "lemmaPlain": "давній",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "adj",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "який знаходиться, відбувається на великій відстані",
+      "glossClean": "який знаходиться",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "далекий",
+      "lemmaId": "далекий",
+      "lemmaPlain": "далекий",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "adj",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "further (more, additional)",
+      "glossClean": "further (more",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "дальший",
+      "lemmaId": "дальший",
+      "lemmaPlain": "дальший",
+      "meaningMcEligible": false,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "adj",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "верхня частина будівлі, що служить її покриттям; покрівля",
+      "glossClean": "верхня частина будівлі",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "дах",
+      "lemmaId": "дах",
+      "lemmaPlain": "дах",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "апарат політичної влади у суспільстві",
+      "glossClean": "апарат політичної влади у суспільстві",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "держава",
+      "lemmaId": "держава",
+      "lemmaPlain": "держава",
+      "meaningMcEligible": false,
+      "paradigm": {
+        "cases": {
+          "давальний": {
+            "plural": "державам",
+            "singular": "державі"
+          },
+          "знахідний": {
+            "plural": "держави",
+            "singular": "державу"
+          },
+          "кличний": {
+            "plural": "держави",
+            "singular": "державо"
+          },
+          "місцевий": {
+            "plural": "державах",
+            "singular": "державі"
+          },
+          "називний": {
+            "plural": "держави",
+            "singular": "держава"
+          },
+          "орудний": {
+            "plural": "державами",
+            "singular": "державою"
+          },
+          "родовий": {
+            "plural": "держав",
+            "singular": "держави"
+          }
+        }
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "прикм. до держава",
+      "glossClean": "прикм. до держава",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "державний",
+      "lemmaId": "державний",
+      "lemmaPlain": "державний",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "adj",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "jazz",
+      "glossClean": "jazz",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "джаз",
+      "lemmaId": "джаз",
+      "lemmaPlain": "джаз",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "surprising",
+      "glossClean": "surprising",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "дивний",
+      "lemmaId": "дивний",
+      "lemmaPlain": "дивний",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "adj",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "surprisingly",
+      "glossClean": "surprisingly",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "дивно",
+      "lemmaId": "дивно",
+      "lemmaPlain": "дивно",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "adv",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "фахівець із дизайну; спеціаліст, що займається проектування рекламної продукції так, щоб вона об’єднувала потужну функціональність з високими естетичними стандартами та оригінальними відмінностями",
+      "glossClean": "фахівець із дизайну",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "дизайнер",
+      "lemmaId": "дизайнер",
+      "lemmaPlain": "дизайнер",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "wild, savage",
+      "glossClean": "wild",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "дикий",
+      "lemmaId": "дикий",
+      "lemmaPlain": "дикий",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "adj",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "child (attributive), childhood (attributive), child's, children's (of or pertaining to children)",
+      "glossClean": "child (attributive)",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "дитячий",
+      "lemmaId": "дитячий",
+      "lemmaPlain": "дитячий",
+      "meaningMcEligible": false,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "adj",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "проміжок часу в 24 години — ніч і день",
+      "glossClean": "проміжок часу в 24 години — ніч і день",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "доба",
+      "lemmaId": "доба",
+      "lemmaPlain": "доба",
+      "meaningMcEligible": false,
+      "paradigm": {
+        "cases": {
+          "давальний": {
+            "plural": "добам",
+            "singular": "добі"
+          },
+          "знахідний": {
+            "plural": "доби",
+            "singular": "добу"
+          },
+          "кличний": {
+            "plural": "доби",
+            "singular": "добо"
+          },
+          "місцевий": {
+            "plural": "добах",
+            "singular": "добі"
+          },
+          "називний": {
+            "plural": "доби",
+            "singular": "доба"
+          },
+          "орудний": {
+            "plural": "добами",
+            "singular": "добою"
+          },
+          "родовий": {
+            "plural": "діб",
+            "singular": "доби"
+          }
+        }
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "length",
+      "glossClean": "length",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "довжина",
+      "lemmaId": "довжина",
+      "lemmaPlain": "довжина",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {
+          "давальний": {
+            "plural": "довжинам",
+            "singular": "довжині"
+          },
+          "знахідний": {
+            "plural": "довжини",
+            "singular": "довжину"
+          },
+          "кличний": {
+            "plural": "довжини",
+            "singular": "довжино"
+          },
+          "місцевий": {
+            "plural": "довжинах",
+            "singular": "довжині"
+          },
+          "називний": {
+            "plural": "довжини",
+            "singular": "довжина"
+          },
+          "орудний": {
+            "plural": "довжинами",
+            "singular": "довжиною"
+          },
+          "родовий": {
+            "plural": "довжин",
+            "singular": "довжини"
+          }
+        }
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "grown-up, adult",
+      "glossClean": "grown-up",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "дорослий",
+      "lemmaId": "дорослий",
+      "lemmaPlain": "дорослий",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "adj",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "стільки, скільки треба; багато",
+      "glossClean": "стільки",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "досить",
+      "lemmaId": "досить",
+      "lemmaPlain": "досить",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "adv",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "oven (chamber used for baking or heating)",
+      "glossClean": "oven (chamber used for baking or heating)",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "духовка",
+      "lemmaId": "духовка",
+      "lemmaPlain": "духовка",
+      "meaningMcEligible": false,
+      "paradigm": {
+        "cases": {
+          "давальний": {
+            "plural": "духовкам",
+            "singular": "духовці"
+          },
+          "знахідний": {
+            "plural": "духовки",
+            "singular": "духовку"
+          },
+          "кличний": {
+            "plural": "духовки",
+            "singular": "духовко"
+          },
+          "місцевий": {
+            "plural": "духовках",
+            "singular": "духовці"
+          },
+          "називний": {
+            "plural": "духовки",
+            "singular": "духовка"
+          },
+          "орудний": {
+            "plural": "духовками",
+            "singular": "духовкою"
+          },
+          "родовий": {
+            "plural": "духовок",
+            "singular": "духовки"
+          }
+        }
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "безсмертна нематеріальна основа в людині, що становить суть її життя, є джерелом психічних явищ і відрізняє її від тварини",
+      "glossClean": "безсмертна нематеріальна основа в людині",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "душа",
+      "lemmaId": "душа",
+      "lemmaPlain": "душа",
+      "meaningMcEligible": false,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "exotic",
+      "glossClean": "exotic",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "екзотичний",
+      "lemmaId": "екзотичний",
+      "lemmaPlain": "екзотичний",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "adj",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "сукупність виробничих відносин даного суспільного ладу, відповідних до продуктивних сил суспільства",
+      "glossClean": "сукупність виробничих відносин даного суспільного ладу",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "економіка",
+      "lemmaId": "економіка",
+      "lemmaPlain": "економіка",
+      "meaningMcEligible": false,
+      "paradigm": {
+        "cases": {
+          "давальний": {
+            "plural": "економікам",
+            "singular": "економіці"
+          },
+          "знахідний": {
+            "plural": "економіки",
+            "singular": "економіку"
+          },
+          "кличний": {
+            "plural": "економіки",
+            "singular": "економіко"
+          },
+          "місцевий": {
+            "plural": "економіках",
+            "singular": "економіці"
+          },
+          "називний": {
+            "plural": "економіки",
+            "singular": "економіка"
+          },
+          "орудний": {
+            "plural": "економіками",
+            "singular": "економікою"
+          },
+          "родовий": {
+            "plural": "економік",
+            "singular": "економіки"
+          }
+        }
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "electric, electrical",
+      "glossClean": "electric",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "електричний",
+      "lemmaId": "електричний",
+      "lemmaPlain": "електричний",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "adj",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "energy",
+      "glossClean": "energy",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "енергія",
+      "lemmaId": "енергія",
+      "lemmaPlain": "енергія",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {
+          "давальний": {
+            "plural": "енергіям",
+            "singular": "енергії"
+          },
+          "знахідний": {
+            "plural": "енергії",
+            "singular": "енергію"
+          },
+          "кличний": {
+            "plural": "енергії",
+            "singular": "енергіє"
+          },
+          "місцевий": {
+            "plural": "енергіях",
+            "singular": "енергії"
+          },
+          "називний": {
+            "plural": "енергії",
+            "singular": "енергія"
+          },
+          "орудний": {
+            "plural": "енергіями",
+            "singular": "енергією"
+          },
+          "родовий": {
+            "plural": "енергій",
+            "singular": "енергії"
+          }
+        }
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "frog",
+      "glossClean": "frog",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "жаба",
+      "lemmaId": "жаба",
+      "lemmaPlain": "жаба",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "говорити або робити що-небудь дотепно, веселитися, смішити когось; приваблювати когось, залицятися; бавитися, дітьми",
+      "glossClean": "говорити або робити що-небудь дотепно",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "жартувати",
+      "lemmaId": "жартувати",
+      "lemmaPlain": "жартувати",
+      "meaningMcEligible": false,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "verb",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "satisfied, content, contented, pleased",
+      "glossClean": "satisfied",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "задоволений",
+      "lemmaId": "задоволений",
+      "lemmaPlain": "задоволений",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "adj",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "встановлене найвищим органом державної влади загальнообов'язкове правило, яке має найвищу юридичну силу",
+      "glossClean": "встановлене найвищим органом державної влади загальнообов'язкове правило",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "закон",
+      "lemmaId": "закон",
+      "lemmaPlain": "закон",
+      "meaningMcEligible": false,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "to end, to come to an end, to be over, to conclude, to terminate",
+      "glossClean": "to end",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "закінчитися",
+      "lemmaId": "закінчитися",
+      "lemmaPlain": "закінчитися",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "verb",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "to leave (:somebody/something somewhere)",
+      "glossClean": "to leave (:somebody/something somewhere)",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "залишити",
+      "lemmaId": "залишити",
+      "lemmaPlain": "залишити",
+      "meaningMcEligible": false,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "verb",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "smell, odor, scent (sensation)",
+      "glossClean": "smell",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "запах",
+      "lemmaId": "запах",
+      "lemmaPlain": "запах",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "to ask, to inquire",
+      "glossClean": "to ask",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "запитувати",
+      "lemmaId": "запитувати",
+      "lemmaPlain": "запитувати",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "verb",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "to fill, to fill up (:space)",
+      "glossClean": "to fill",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "заповнити",
+      "lemmaId": "заповнити",
+      "lemmaPlain": "заповнити",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "verb",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "to laugh, to start laughing, to break into laughter",
+      "glossClean": "to laugh",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "засміятися",
+      "lemmaId": "засміятися",
+      "lemmaPlain": "засміятися",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "verb",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "to fall ill, to sicken",
+      "glossClean": "to fall ill",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "захворіти",
+      "lemmaId": "захворіти",
+      "lemmaPlain": "захворіти",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "verb",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "одна з чотирьох сторін світу; напрямок, бік, протилежні сходу",
+      "glossClean": "одна з чотирьох сторін світу",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "захід",
+      "lemmaId": "захід",
+      "lemmaPlain": "захід",
+      "meaningMcEligible": false,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "to wait",
+      "glossClean": "to wait",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "зачекати",
+      "lemmaId": "зачекати",
+      "lemmaPlain": "зачекати",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "verb",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "to close, to shut, to lock (:a door, a window)",
+      "glossClean": "to close",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "зачинити",
+      "lemmaId": "зачинити",
+      "lemmaPlain": "зачинити",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "verb",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "to boil, to cook (by boiling)",
+      "glossClean": "to boil",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "зварити",
+      "lemmaId": "зварити",
+      "lemmaPlain": "зварити",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "verb",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "from here, hence",
+      "glossClean": "from here",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "звідси",
+      "lemmaId": "звідси",
+      "lemmaPlain": "звідси",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "adv",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "winter (attributive), hibernal (pertaining to winter)",
+      "glossClean": "winter (attributive)",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "зимовий",
+      "lemmaId": "зимовий",
+      "lemmaPlain": "зимовий",
+      "meaningMcEligible": false,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "adj",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "сповнений злості, ворожнечі, недоброзичливості",
+      "glossClean": "сповнений злості",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "злий",
+      "lemmaId": "злий",
+      "lemmaPlain": "злий",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "adj",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "from the left",
+      "glossClean": "from the left",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "зліва",
+      "lemmaId": "зліва",
+      "lemmaPlain": "зліва",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "adv",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "to change, to alter, to modify",
+      "glossClean": "to change",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "змінити",
+      "lemmaId": "змінити",
+      "lemmaPlain": "змінити",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "verb",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "to change, to alter, to modify",
+      "glossClean": "to change",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "змінювати",
+      "lemmaId": "змінювати",
+      "lemmaPlain": "змінювати",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "verb",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "шукаючи, виявляти кого-, що-небудь десь; протилежне загублювати ізнайти́",
+      "glossClean": "шукаючи",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "знаходити",
+      "lemmaId": "знаходити",
+      "lemmaPlain": "знаходити",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "verb",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "quite, entirely, totally",
+      "glossClean": "quite",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "зовсім",
+      "lemmaId": "зовсім",
+      "lemmaPlain": "зовсім",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "adv",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "golden, gold",
+      "glossClean": "golden",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "золотий",
+      "lemmaId": "золотий",
+      "lemmaPlain": "золотий",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "adj",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "zoo",
+      "glossClean": "zoo",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "зоопарк",
+      "lemmaId": "зоопарк",
+      "lemmaPlain": "зоопарк",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "пробний виріб; окремий предмет, річ із ряду однакових",
+      "glossClean": "пробний виріб",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "зразок",
+      "lemmaId": "зразок",
+      "lemmaPlain": "зразок",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "comfortable",
+      "glossClean": "comfortable",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "зручний",
+      "lemmaId": "зручний",
+      "lemmaPlain": "зручний",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "adj",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "comfortably",
+      "glossClean": "comfortably",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "зручно",
+      "lemmaId": "зручно",
+      "lemmaPlain": "зручно",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "adv",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "tooth (attributive), dental (pertaining to teeth)",
+      "glossClean": "tooth (attributive)",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "зубний",
+      "lemmaId": "зубний",
+      "lemmaPlain": "зубний",
+      "meaningMcEligible": false,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "adj",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
       "gloss": "healing herbs, potion",
       "glossClean": "healing herbs",
       "heritage": "standard",
@@ -16796,18 +19902,1165 @@
     },
     {
       "cefr": "A2",
-      "gloss": "transfer (of harm to another place)",
-      "glossClean": "transfer (of harm to another place)",
+      "gloss": "самосвітне небесне тіло, що являє собою скупчення розжарених газів",
+      "glossClean": "самосвітне небесне тіло",
       "heritage": "standard",
       "ipa": null,
-      "lemma": "перенесення",
-      "lemmaId": "перенесення",
-      "lemmaPlain": "перенесення",
+      "lemma": "зірка",
+      "lemmaId": "зірка",
+      "lemmaPlain": "зірка",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "yoga",
+      "glossClean": "yoga",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "йога",
+      "lemmaId": "йога",
+      "lemmaPlain": "йога",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {
+          "давальний": {
+            "plural": "йогам",
+            "singular": "йозі"
+          },
+          "знахідний": {
+            "plural": "йоги",
+            "singular": "йогу"
+          },
+          "кличний": {
+            "plural": "йоги",
+            "singular": "його"
+          },
+          "місцевий": {
+            "plural": "йогах",
+            "singular": "йозі"
+          },
+          "називний": {
+            "plural": "йоги",
+            "singular": "йога"
+          },
+          "орудний": {
+            "plural": "йогами",
+            "singular": "йогою"
+          },
+          "родовий": {
+            "plural": "йог",
+            "singular": "йоги"
+          }
+        }
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "баштанна сланка рослина з великими їстівними плодами",
+      "glossClean": "баштанна сланка рослина з великими їстівними плодами",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "кавун",
+      "lemmaId": "кавун",
+      "lemmaPlain": "кавун",
       "meaningMcEligible": false,
       "paradigm": {
         "cases": {}
       },
-      "pos": "с.",
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "розповідний твір про вигаданих осіб і події, переважно за участю фантастичних сил",
+      "glossClean": "розповідний твір про вигаданих осіб і події",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "казка",
+      "lemmaId": "казка",
+      "lemmaPlain": "казка",
+      "meaningMcEligible": false,
+      "paradigm": {
+        "cases": {
+          "давальний": {
+            "plural": "казкам",
+            "singular": "казці"
+          },
+          "знахідний": {
+            "plural": "казки",
+            "singular": "казку"
+          },
+          "кличний": {
+            "plural": "казки",
+            "singular": "казко"
+          },
+          "місцевий": {
+            "plural": "казках",
+            "singular": "казці"
+          },
+          "називний": {
+            "plural": "казки",
+            "singular": "казка"
+          },
+          "орудний": {
+            "plural": "казками",
+            "singular": "казкою"
+          },
+          "родовий": {
+            "plural": "казок",
+            "singular": "казки"
+          }
+        }
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "calendar",
+      "glossClean": "calendar",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "календар",
+      "lemmaId": "календар",
+      "lemmaPlain": "календар",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "stone, pebble (material)",
+      "glossClean": "stone",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "камінь",
+      "lemmaId": "камінь",
+      "lemmaPlain": "камінь",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "A brimmed hat",
+      "glossClean": "A brimmed hat",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "капелюх",
+      "lemmaId": "капелюх",
+      "lemmaPlain": "капелюх",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "slipper",
+      "glossClean": "slipper",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "капець",
+      "lemmaId": "капець",
+      "lemmaPlain": "капець",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "brown, hazel (eyes)",
+      "glossClean": "brown",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "карий",
+      "lemmaId": "карий",
+      "lemmaPlain": "карий",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "adj",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "металевий посуд для варіння страви",
+      "glossClean": "металевий посуд для варіння страви",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "каструля",
+      "lemmaId": "каструля",
+      "lemmaPlain": "каструля",
+      "meaningMcEligible": false,
+      "paradigm": {
+        "cases": {
+          "давальний": {
+            "plural": "каструлям",
+            "singular": "каструлі"
+          },
+          "знахідний": {
+            "plural": "каструлі",
+            "singular": "каструлю"
+          },
+          "кличний": {
+            "plural": "каструлі",
+            "singular": "каструле"
+          },
+          "місцевий": {
+            "plural": "каструлях",
+            "singular": "каструлі"
+          },
+          "називний": {
+            "plural": "каструлі",
+            "singular": "каструля"
+          },
+          "орудний": {
+            "plural": "каструлями",
+            "singular": "каструлею"
+          },
+          "родовий": {
+            "plural": "каструль",
+            "singular": "каструлі"
+          }
+        }
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "duck",
+      "glossClean": "duck",
+      "heritage": "unknown",
+      "ipa": null,
+      "lemma": "качка",
+      "lemmaId": "качка",
+      "lemmaPlain": "качка",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "to cough",
+      "glossClean": "to cough",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "кашляти",
+      "lemmaId": "кашляти",
+      "lemmaPlain": "кашляти",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "verb",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "bean (plant of the genus Phaseolus)",
+      "glossClean": "bean (plant of the genus Phaseolus)",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "квасоля",
+      "lemmaId": "квасоля",
+      "lemmaPlain": "квасоля",
+      "meaningMcEligible": false,
+      "paradigm": {
+        "cases": {
+          "давальний": {
+            "plural": "квасолям",
+            "singular": "квасолі"
+          },
+          "знахідний": {
+            "plural": "квасолі",
+            "singular": "квасолю"
+          },
+          "кличний": {
+            "plural": "квасолі",
+            "singular": "квасоле"
+          },
+          "місцевий": {
+            "plural": "квасолях",
+            "singular": "квасолі"
+          },
+          "називний": {
+            "plural": "квасолі",
+            "singular": "квасоля"
+          },
+          "орудний": {
+            "plural": "квасолями",
+            "singular": "квасолею"
+          },
+          "родовий": {
+            "plural": "квасоль",
+            "singular": "квасолі"
+          }
+        }
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "частина рослини, що виростає на кінці стебла або гілки й складається з маточки, тичинок та пелюсток навколо них; квітуча рослина",
+      "glossClean": "частина рослини",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "квітка",
+      "lemmaId": "квітка",
+      "lemmaPlain": "квітка",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {
+          "давальний": {
+            "plural": "квіткам",
+            "singular": "квітці"
+          },
+          "знахідний": {
+            "plural": "квітки",
+            "singular": "квітку"
+          },
+          "кличний": {
+            "plural": "квітки",
+            "singular": "квітко"
+          },
+          "місцевий": {
+            "plural": "квітках",
+            "singular": "квітці"
+          },
+          "називний": {
+            "plural": "квітки",
+            "singular": "квітка"
+          },
+          "орудний": {
+            "plural": "квітками",
+            "singular": "квіткою"
+          },
+          "родовий": {
+            "plural": "квіток",
+            "singular": "квітки"
+          }
+        }
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "гострий томатний соус",
+      "glossClean": "гострий томатний соус",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "кетчуп",
+      "lemmaId": "кетчуп",
+      "lemmaPlain": "кетчуп",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "частина одягу у формі мішечка для дрібних речей і грошей",
+      "glossClean": "частина одягу у формі мішечка для дрібних речей і грошей",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "кишеня",
+      "lemmaId": "кишеня",
+      "lemmaPlain": "кишеня",
+      "meaningMcEligible": false,
+      "paradigm": {
+        "cases": {
+          "давальний": {
+            "plural": "кишеням",
+            "singular": "кишені"
+          },
+          "знахідний": {
+            "plural": "кишені",
+            "singular": "кишеню"
+          },
+          "кличний": {
+            "plural": "кишені",
+            "singular": "кишене"
+          },
+          "місцевий": {
+            "plural": "кишенях",
+            "singular": "кишені"
+          },
+          "називний": {
+            "plural": "кишені",
+            "singular": "кишеня"
+          },
+          "орудний": {
+            "plural": "кишенями",
+            "singular": "кишенею"
+          },
+          "родовий": {
+            "plural": "кишень",
+            "singular": "кишені"
+          }
+        }
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "стосовно до класицизму",
+      "glossClean": "стосовно до класицизму",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "класичний",
+      "lemmaId": "класичний",
+      "lemmaPlain": "класичний",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "adj",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "поміщати, наносити на горизонтальну поверхню, зазвичай - надаючи лежаче положення",
+      "glossClean": "поміщати",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "класти",
+      "lemmaId": "класти",
+      "lemmaPlain": "класти",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "verb",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "установа лікарняного типу, у якій лікування хворих поєднується з науково-дослідною та педагогічною роботою",
+      "glossClean": "установа лікарняного типу",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "клініка",
+      "lemmaId": "клініка",
+      "lemmaPlain": "клініка",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {
+          "давальний": {
+            "plural": "клінікам",
+            "singular": "клініці"
+          },
+          "знахідний": {
+            "plural": "клініки",
+            "singular": "клініку"
+          },
+          "кличний": {
+            "plural": "клініки",
+            "singular": "клініко"
+          },
+          "місцевий": {
+            "plural": "клініках",
+            "singular": "клініці"
+          },
+          "називний": {
+            "plural": "клініки",
+            "singular": "клініка"
+          },
+          "орудний": {
+            "plural": "клініками",
+            "singular": "клінікою"
+          },
+          "родовий": {
+            "plural": "клінік",
+            "singular": "клініки"
+          }
+        }
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "book (attributive) (of or relating to books)",
+      "glossClean": "book (attributive) (of or relating to books)",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "книжковий",
+      "lemmaId": "книжковий",
+      "lemmaPlain": "книжковий",
+      "meaningMcEligible": false,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "adj",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "невелика рогата жуйна тварина родини порожнисторогих, що дає молоко, м'ясо тощо; самиця козла",
+      "glossClean": "невелика рогата жуйна тварина родини порожнисторогих",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "коза",
+      "lemmaId": "коза",
+      "lemmaPlain": "коза",
+      "meaningMcEligible": false,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "coconut",
+      "glossClean": "coconut",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "кокос",
+      "lemmaId": "кокос",
+      "lemmaPlain": "кокос",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "cocktail",
+      "glossClean": "cocktail",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "коктейль",
+      "lemmaId": "коктейль",
+      "lemmaPlain": "коктейль",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "який був колись давно; минулий",
+      "glossClean": "який був колись давно",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "колишній",
+      "lemmaId": "колишній",
+      "lemmaPlain": "колишній",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "adj",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "With colour, not colourless.",
+      "glossClean": "With colour",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "кольоровий",
+      "lemmaId": "кольоровий",
+      "lemmaPlain": "кольоровий",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "adj",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "суглоб, що з'єднує стегнову і гомілкову кістки; місце згину ноги",
+      "glossClean": "суглоб",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "коліно",
+      "lemmaId": "коліно",
+      "lemmaPlain": "коліно",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "contact",
+      "glossClean": "contact",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "контакт",
+      "lemmaId": "контакт",
+      "lemmaPlain": "контакт",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "один з найбільших масивів суші Землі, більша частина поверхні яких виступає над рівнем моря",
+      "glossClean": "один з найбільших масивів суші Землі",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "континент",
+      "lemmaId": "континент",
+      "lemmaPlain": "континент",
+      "meaningMcEligible": false,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "невелике вмістище різної форми з картону, пластмаси, фанери тощо, звичайно з кришкою",
+      "glossClean": "невелике вмістище різної форми з картону",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "коробка",
+      "lemmaId": "коробка",
+      "lemmaPlain": "коробка",
+      "meaningMcEligible": false,
+      "paradigm": {
+        "cases": {
+          "давальний": {
+            "plural": "коробкам",
+            "singular": "коробці"
+          },
+          "знахідний": {
+            "plural": "коробки",
+            "singular": "коробку"
+          },
+          "кличний": {
+            "plural": "коробки",
+            "singular": "коробко"
+          },
+          "місцевий": {
+            "plural": "коробках",
+            "singular": "коробці"
+          },
+          "називний": {
+            "plural": "коробки",
+            "singular": "коробка"
+          },
+          "орудний": {
+            "plural": "коробками",
+            "singular": "коробкою"
+          },
+          "родовий": {
+            "plural": "коробок",
+            "singular": "коробки"
+          }
+        }
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "cosmetics",
+      "glossClean": "cosmetics",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "косметика",
+      "lemmaId": "косметика",
+      "lemmaPlain": "косметика",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {
+          "давальний": {
+            "plural": "косметикам",
+            "singular": "косметиці"
+          },
+          "знахідний": {
+            "plural": "косметики",
+            "singular": "косметику"
+          },
+          "кличний": {
+            "plural": "косметики",
+            "singular": "косметико"
+          },
+          "місцевий": {
+            "plural": "косметиках",
+            "singular": "косметиці"
+          },
+          "називний": {
+            "plural": "косметики",
+            "singular": "косметика"
+          },
+          "орудний": {
+            "plural": "косметиками",
+            "singular": "косметикою"
+          },
+          "родовий": {
+            "plural": "косметик",
+            "singular": "косметики"
+          }
+        }
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "meat patty, meatball, frikadelle",
+      "glossClean": "meat patty",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "котлета",
+      "lemmaId": "котлета",
+      "lemmaPlain": "котлета",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {
+          "давальний": {
+            "plural": "котлетам",
+            "singular": "котлеті"
+          },
+          "знахідний": {
+            "plural": "котлети",
+            "singular": "котлету"
+          },
+          "кличний": {
+            "plural": "котлети",
+            "singular": "котлето"
+          },
+          "місцевий": {
+            "plural": "котлетах",
+            "singular": "котлеті"
+          },
+          "називний": {
+            "plural": "котлети",
+            "singular": "котлета"
+          },
+          "орудний": {
+            "plural": "котлетами",
+            "singular": "котлетою"
+          },
+          "родовий": {
+            "plural": "котлет",
+            "singular": "котлети"
+          }
+        }
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "caffeine",
+      "glossClean": "caffeine",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "кофеїн",
+      "lemmaId": "кофеїн",
+      "lemmaPlain": "кофеїн",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "почуття глибокої сердечної, романтичної прихильності до іншої людини",
+      "glossClean": "почуття глибокої сердечної",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "кохання",
+      "lemmaId": "кохання",
+      "lemmaPlain": "кохання",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "відчувати, виявляти глибоку сердечну, романтичну прихильність до іншої людини",
+      "glossClean": "відчувати",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "кохати",
+      "lemmaId": "кохати",
+      "lemmaPlain": "кохати",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "verb",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "виріб, різний за формою та розміром, виплетений із лози, стебел рогозу, дранки і т. ін., який використовують у побуті для зберігання або перенесення чого-небудь",
+      "glossClean": "виріб",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "кошик",
+      "lemmaId": "кошик",
+      "lemmaPlain": "кошик",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "зав'язана вузлом під коміром сорочки, блузки смужка тканини, яку носять для прикраси",
+      "glossClean": "зав'язана вузлом під коміром сорочки",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "краватка",
+      "lemmaId": "краватка",
+      "lemmaPlain": "краватка",
+      "meaningMcEligible": false,
+      "paradigm": {
+        "cases": {
+          "давальний": {
+            "plural": "краваткам",
+            "singular": "краватці"
+          },
+          "знахідний": {
+            "plural": "краватки",
+            "singular": "краватку"
+          },
+          "кличний": {
+            "plural": "краватки",
+            "singular": "краватко"
+          },
+          "місцевий": {
+            "plural": "краватках",
+            "singular": "краватці"
+          },
+          "називний": {
+            "plural": "краватки",
+            "singular": "краватка"
+          },
+          "орудний": {
+            "plural": "краватками",
+            "singular": "краваткою"
+          },
+          "родовий": {
+            "plural": "краваток",
+            "singular": "краватки"
+          }
+        }
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "beauty (quality of being beautiful)",
+      "glossClean": "beauty (quality of being beautiful)",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "краса",
+      "lemmaId": "краса",
+      "lemmaPlain": "краса",
+      "meaningMcEligible": false,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "приємний зовнішнім виглядом; який відзначається гармонією барв, ліній і т. ін",
+      "glossClean": "приємний зовнішнім виглядом",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "красивий",
+      "lemmaId": "красивий",
+      "lemmaPlain": "красивий",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "adj",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "густа маса зі збитих вершків, молока, масла, яєць, цукру з додаванням різних спецій, кави, шоколаду, горіхів і т. ін., що вживають у виготовленні тортів, тістечок, а також як десерт",
+      "glossClean": "густа маса зі збитих вершків",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "крем",
+      "lemmaId": "крем",
+      "lemmaPlain": "крем",
+      "meaningMcEligible": false,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "який має форму круга, кулі, циліндра тощо або формою нагадує їх; округлий",
+      "glossClean": "який має форму круга",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "круглий",
+      "lemmaId": "круглий",
+      "lemmaPlain": "круглий",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "adj",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "однорічна, прянно-ароматична рослина",
+      "glossClean": "однорічна",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "кріп",
+      "lemmaId": "кріп",
+      "lemmaPlain": "кріп",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "cultural (pertaining to culture)",
+      "glossClean": "cultural (pertaining to culture)",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "культурний",
+      "lemmaId": "культурний",
+      "lemmaPlain": "культурний",
+      "meaningMcEligible": false,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "adj",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "to bathe, to have/take a bath",
+      "glossClean": "to bathe",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "купатися",
+      "lemmaId": "купатися",
+      "lemmaPlain": "купатися",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "verb",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "smoking",
+      "glossClean": "smoking",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "куріння",
+      "lemmaId": "куріння",
+      "lemmaPlain": "куріння",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "angle, corner, nook",
+      "glossClean": "angle",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "куток",
+      "lemmaId": "куток",
+      "lemmaPlain": "куток",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "нелітаючий безкрилий птах з довгим дзьобом і чотирипалими ногами, що живе на островах Нової Зеландії",
+      "glossClean": "нелітаючий безкрилий птах з довгим дзьобом і чотирипалими ногами",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "ківі",
+      "lemmaId": "ківі",
+      "lemmaPlain": "ківі",
+      "meaningMcEligible": false,
+      "paradigm": {
+        "cases": {
+          "давальний": {
+            "plural": "ківі",
+            "singular": "ківі"
+          },
+          "знахідний": {
+            "plural": "ківі",
+            "singular": "ківі"
+          },
+          "кличний": {
+            "plural": "ківі",
+            "singular": "ківі"
+          },
+          "місцевий": {
+            "plural": "ківі",
+            "singular": "ківі"
+          },
+          "називний": {
+            "plural": "ківі",
+            "singular": "ківі"
+          },
+          "орудний": {
+            "plural": "ківі",
+            "singular": "ківі"
+          },
+          "родовий": {
+            "plural": "ківі",
+            "singular": "ківі"
+          }
+        }
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "народне сказання або оповідання про якісь події чи життя людей, оповите казковістю, фантастикою",
+      "glossClean": "народне сказання або оповідання про якісь події чи життя людей",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "легенда",
+      "lemmaId": "легенда",
+      "lemmaPlain": "легенда",
+      "meaningMcEligible": false,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "noun",
+      "semanticBucket": null,
+      "severity": null
+    },
+    {
+      "cefr": "A2",
+      "gloss": "light, lightweight",
+      "glossClean": "light",
+      "heritage": "standard",
+      "ipa": null,
+      "lemma": "легкий",
+      "lemmaId": "легкий",
+      "lemmaPlain": "легкий",
+      "meaningMcEligible": true,
+      "paradigm": {
+        "cases": {}
+      },
+      "pos": "adj",
       "semanticBucket": null,
       "severity": null
     }
@@ -16815,10 +21068,10 @@
   "schema": "atlas-practice-lexemes",
   "schemaVersion": 1,
   "sizeBudget": {
-    "gzipBytes": 33048,
+    "gzipBytes": 45639,
     "gzipLimitBytes": 140000,
     "ok": true,
-    "rawBytes": 427031,
+    "rawBytes": 549902,
     "rawLimitBytes": 550000
   },
   "source": "manifest"

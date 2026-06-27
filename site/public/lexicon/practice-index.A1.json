@@ -3,9 +3,9 @@
     "cloze": 0,
     "clozeCoverage": 0.0,
     "clozeEligibleLexemes": 0,
-    "lexemes": 1079
+    "lexemes": 1114
   },
-  "deckVersion": "atlas-practice-v1-622fc3d93d1ad580",
+  "deckVersion": "atlas-practice-v1-9cf4a4d7319d19ce",
   "items": [
     {
       "cefr": "A1",
@@ -6930,8 +6930,8 @@
       "cefr": "A1",
       "clozeIds": [],
       "hasCloze": false,
-      "lemma": "люди́на",
-      "lemmaId": "люди-на",
+      "lemma": "людина",
+      "lemmaId": "людина",
       "modes": [
         "flashcards",
         "matching",
@@ -7106,8 +7106,8 @@
       "cefr": "A1",
       "clozeIds": [],
       "hasCloze": false,
-      "lemma": "голосни́й звук",
-      "lemmaId": "голосни-й-звук",
+      "lemma": "голосний звук",
+      "lemmaId": "голосний-звук",
       "modes": [
         "flashcards",
         "matching",
@@ -7119,7 +7119,7 @@
       "cefr": "A1",
       "clozeIds": [],
       "hasCloze": false,
-      "lemma": "джерело́",
+      "lemma": "джерело",
       "lemmaId": "джерело",
       "modes": [
         "flashcards",
@@ -7132,8 +7132,8 @@
       "cefr": "A1",
       "clozeIds": [],
       "hasCloze": false,
-      "lemma": "м'яки́й знак",
-      "lemmaId": "м-яки-й-знак",
+      "lemma": "м'який знак",
+      "lemmaId": "м-який-знак",
       "modes": [
         "flashcards",
         "matching",
@@ -7145,8 +7145,8 @@
       "cefr": "A1",
       "clozeIds": [],
       "hasCloze": false,
-      "lemma": "при́голосний звук",
-      "lemmaId": "при-голосний-звук",
+      "lemma": "приголосний звук",
+      "lemmaId": "приголосний-звук",
       "modes": [
         "flashcards",
         "matching",
@@ -7158,8 +7158,8 @@
       "cefr": "A1",
       "clozeIds": [],
       "hasCloze": false,
-      "lemma": "пі́сня",
-      "lemmaId": "пі-сня",
+      "lemma": "пісня",
+      "lemmaId": "пісня",
       "modes": [
         "flashcards",
         "matching",
@@ -7275,7 +7275,7 @@
       "cefr": "A1",
       "clozeIds": [],
       "hasCloze": false,
-      "lemma": "А тебе́?",
+      "lemma": "А тебе?",
       "lemmaId": "а-тебе",
       "modes": [
         "flashcards"
@@ -7286,7 +7286,7 @@
       "cefr": "A1",
       "clozeIds": [],
       "hasCloze": false,
-      "lemma": "А у тебе́?",
+      "lemma": "А у тебе?",
       "lemmaId": "а-у-тебе",
       "modes": [
         "flashcards"
@@ -7297,8 +7297,8 @@
       "cefr": "A1",
       "clozeIds": [],
       "hasCloze": false,
-      "lemma": "До́бре",
-      "lemmaId": "до-бре",
+      "lemma": "Добре",
+      "lemmaId": "добре",
       "modes": [
         "flashcards",
         "matching",
@@ -7310,8 +7310,8 @@
       "cefr": "A1",
       "clozeIds": [],
       "hasCloze": false,
-      "lemma": "До́брий ве́чір",
-      "lemmaId": "до-брий-ве-чір",
+      "lemma": "Добрий вечір",
+      "lemmaId": "добрий-вечір",
       "modes": [
         "flashcards",
         "matching",
@@ -7323,8 +7323,8 @@
       "cefr": "A1",
       "clozeIds": [],
       "hasCloze": false,
-      "lemma": "До́брого ра́нку",
-      "lemmaId": "до-брого-ра-нку",
+      "lemma": "Доброго ранку",
+      "lemmaId": "доброго-ранку",
       "modes": [
         "flashcards",
         "matching",
@@ -7336,8 +7336,8 @@
       "cefr": "A1",
       "clozeIds": [],
       "hasCloze": false,
-      "lemma": "На все до́бре",
-      "lemmaId": "на-все-до-бре",
+      "lemma": "На все добре",
+      "lemmaId": "на-все-добре",
       "modes": [
         "flashcards",
         "matching",
@@ -7349,8 +7349,8 @@
       "cefr": "A1",
       "clozeIds": [],
       "hasCloze": false,
-      "lemma": "Норма́льно",
-      "lemmaId": "норма-льно",
+      "lemma": "Нормально",
+      "lemmaId": "нормально",
       "modes": [
         "flashcards",
         "matching",
@@ -7362,8 +7362,8 @@
       "cefr": "A1",
       "clozeIds": [],
       "hasCloze": false,
-      "lemma": "Ра́да тебе́ ба́чити",
-      "lemmaId": "ра-да-тебе-ба-чити",
+      "lemma": "Рада тебе бачити",
+      "lemmaId": "рада-тебе-бачити",
       "modes": [
         "flashcards"
       ],
@@ -7373,8 +7373,8 @@
       "cefr": "A1",
       "clozeIds": [],
       "hasCloze": false,
-      "lemma": "Ра́дий тебе́ ба́чити",
-      "lemmaId": "ра-дий-тебе-ба-чити",
+      "lemma": "Радий тебе бачити",
+      "lemmaId": "радий-тебе-бачити",
       "modes": [
         "flashcards"
       ],
@@ -7384,8 +7384,8 @@
       "cefr": "A1",
       "clozeIds": [],
       "hasCloze": false,
-      "lemma": "Чудо́во",
-      "lemmaId": "чудо-во",
+      "lemma": "Чудово",
+      "lemmaId": "чудово",
       "modes": [
         "flashcards",
         "matching",
@@ -7397,8 +7397,8 @@
       "cefr": "A1",
       "clozeIds": [],
       "hasCloze": false,
-      "lemma": "Як спра́ви?",
-      "lemmaId": "як-спра-ви",
+      "lemma": "Як справи?",
+      "lemmaId": "як-справи",
       "modes": [
         "flashcards"
       ],
@@ -7421,8 +7421,8 @@
       "cefr": "A1",
       "clozeIds": [],
       "hasCloze": false,
-      "lemma": "мале́нький",
-      "lemmaId": "мале-нький",
+      "lemma": "маленький",
+      "lemmaId": "маленький",
       "modes": [
         "flashcards",
         "matching",
@@ -11735,19 +11735,6 @@
       "cefr": "A1",
       "clozeIds": [],
       "hasCloze": false,
-      "lemma": "не/ні",
-      "lemmaId": "не-ні",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 920
-    },
-    {
-      "cefr": "A1",
-      "clozeIds": [],
-      "hasCloze": false,
       "lemma": "оцінювання",
       "lemmaId": "оцінювання",
       "modes": [
@@ -11755,7 +11742,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 921
+      "newOrder": 920
     },
     {
       "cefr": "A1",
@@ -11768,7 +11755,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 922
+      "newOrder": 921
     },
     {
       "cefr": "A1",
@@ -11779,7 +11766,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 923
+      "newOrder": 922
     },
     {
       "cefr": "A1",
@@ -11790,7 +11777,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 924
+      "newOrder": 923
     },
     {
       "cefr": "A1",
@@ -11803,7 +11790,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 925
+      "newOrder": 924
     },
     {
       "cefr": "A1",
@@ -11816,7 +11803,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 926
+      "newOrder": 925
     },
     {
       "cefr": "A1",
@@ -11829,7 +11816,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 927
+      "newOrder": 926
     },
     {
       "cefr": "A1",
@@ -11842,7 +11829,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 928
+      "newOrder": 927
     },
     {
       "cefr": "A1",
@@ -11855,7 +11842,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 929
+      "newOrder": 928
     },
     {
       "cefr": "A1",
@@ -11868,7 +11855,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 930
+      "newOrder": 929
     },
     {
       "cefr": "A1",
@@ -11879,7 +11866,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 931
+      "newOrder": 930
     },
     {
       "cefr": "A1",
@@ -11890,7 +11877,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 932
+      "newOrder": 931
     },
     {
       "cefr": "A1",
@@ -11901,7 +11888,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 933
+      "newOrder": 932
     },
     {
       "cefr": "A1",
@@ -11914,7 +11901,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 934
+      "newOrder": 933
     },
     {
       "cefr": "A1",
@@ -11927,7 +11914,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 935
+      "newOrder": 934
     },
     {
       "cefr": "A1",
@@ -11940,7 +11927,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 936
+      "newOrder": 935
     },
     {
       "cefr": "A1",
@@ -11953,7 +11940,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 937
+      "newOrder": 936
     },
     {
       "cefr": "A1",
@@ -11966,7 +11953,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 938
+      "newOrder": 937
     },
     {
       "cefr": "A1",
@@ -11979,7 +11966,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 939
+      "newOrder": 938
     },
     {
       "cefr": "A1",
@@ -11992,7 +11979,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 940
+      "newOrder": 939
     },
     {
       "cefr": "A1",
@@ -12005,7 +11992,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 941
+      "newOrder": 940
     },
     {
       "cefr": "A1",
@@ -12018,7 +12005,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 942
+      "newOrder": 941
     },
     {
       "cefr": "A1",
@@ -12031,7 +12018,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 943
+      "newOrder": 942
     },
     {
       "cefr": "A1",
@@ -12044,7 +12031,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 944
+      "newOrder": 943
     },
     {
       "cefr": "A1",
@@ -12055,7 +12042,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 945
+      "newOrder": 944
     },
     {
       "cefr": "A1",
@@ -12068,7 +12055,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 946
+      "newOrder": 945
     },
     {
       "cefr": "A1",
@@ -12081,7 +12068,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 947
+      "newOrder": 946
     },
     {
       "cefr": "A1",
@@ -12094,7 +12081,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 948
+      "newOrder": 947
     },
     {
       "cefr": "A1",
@@ -12107,7 +12094,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 949
+      "newOrder": 948
     },
     {
       "cefr": "A1",
@@ -12120,7 +12107,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 950
+      "newOrder": 949
     },
     {
       "cefr": "A1",
@@ -12133,7 +12120,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 951
+      "newOrder": 950
     },
     {
       "cefr": "A1",
@@ -12144,7 +12131,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 952
+      "newOrder": 951
     },
     {
       "cefr": "A1",
@@ -12157,7 +12144,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 953
+      "newOrder": 952
     },
     {
       "cefr": "A1",
@@ -12170,7 +12157,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 954
+      "newOrder": 953
     },
     {
       "cefr": "A1",
@@ -12183,7 +12170,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 955
+      "newOrder": 954
     },
     {
       "cefr": "A1",
@@ -12196,7 +12183,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 956
+      "newOrder": 955
     },
     {
       "cefr": "A1",
@@ -12209,7 +12196,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 957
+      "newOrder": 956
     },
     {
       "cefr": "A1",
@@ -12222,7 +12209,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 958
+      "newOrder": 957
     },
     {
       "cefr": "A1",
@@ -12235,7 +12222,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 959
+      "newOrder": 958
     },
     {
       "cefr": "A1",
@@ -12248,7 +12235,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 960
+      "newOrder": 959
     },
     {
       "cefr": "A1",
@@ -12261,7 +12248,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 961
+      "newOrder": 960
     },
     {
       "cefr": "A1",
@@ -12274,7 +12261,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 962
+      "newOrder": 961
     },
     {
       "cefr": "A1",
@@ -12287,7 +12274,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 963
+      "newOrder": 962
     },
     {
       "cefr": "A1",
@@ -12300,7 +12287,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 964
+      "newOrder": 963
     },
     {
       "cefr": "A1",
@@ -12311,7 +12298,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 965
+      "newOrder": 964
     },
     {
       "cefr": "A1",
@@ -12324,7 +12311,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 966
+      "newOrder": 965
     },
     {
       "cefr": "A1",
@@ -12337,7 +12324,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 967
+      "newOrder": 966
     },
     {
       "cefr": "A1",
@@ -12350,7 +12337,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 968
+      "newOrder": 967
     },
     {
       "cefr": "A1",
@@ -12363,7 +12350,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 969
+      "newOrder": 968
     },
     {
       "cefr": "A1",
@@ -12376,7 +12363,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 970
+      "newOrder": 969
     },
     {
       "cefr": "A1",
@@ -12389,7 +12376,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 971
+      "newOrder": 970
     },
     {
       "cefr": "A1",
@@ -12402,7 +12389,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 972
+      "newOrder": 971
     },
     {
       "cefr": "A1",
@@ -12415,7 +12402,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 973
+      "newOrder": 972
     },
     {
       "cefr": "A1",
@@ -12428,7 +12415,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 974
+      "newOrder": 973
     },
     {
       "cefr": "A1",
@@ -12441,7 +12428,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 975
+      "newOrder": 974
     },
     {
       "cefr": "A1",
@@ -12452,7 +12439,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 976
+      "newOrder": 975
     },
     {
       "cefr": "A1",
@@ -12465,7 +12452,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 977
+      "newOrder": 976
     },
     {
       "cefr": "A1",
@@ -12478,7 +12465,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 978
+      "newOrder": 977
     },
     {
       "cefr": "A1",
@@ -12491,7 +12478,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 979
+      "newOrder": 978
     },
     {
       "cefr": "A1",
@@ -12504,7 +12491,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 980
+      "newOrder": 979
     },
     {
       "cefr": "A1",
@@ -12517,7 +12504,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 981
+      "newOrder": 980
     },
     {
       "cefr": "A1",
@@ -12528,7 +12515,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 982
+      "newOrder": 981
     },
     {
       "cefr": "A1",
@@ -12541,7 +12528,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 983
+      "newOrder": 982
     },
     {
       "cefr": "A1",
@@ -12554,7 +12541,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 984
+      "newOrder": 983
     },
     {
       "cefr": "A1",
@@ -12567,7 +12554,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 985
+      "newOrder": 984
     },
     {
       "cefr": "A1",
@@ -12580,7 +12567,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 986
+      "newOrder": 985
     },
     {
       "cefr": "A1",
@@ -12593,7 +12580,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 987
+      "newOrder": 986
     },
     {
       "cefr": "A1",
@@ -12604,7 +12591,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 988
+      "newOrder": 987
     },
     {
       "cefr": "A1",
@@ -12617,7 +12604,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 989
+      "newOrder": 988
     },
     {
       "cefr": "A1",
@@ -12630,7 +12617,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 990
+      "newOrder": 989
     },
     {
       "cefr": "A1",
@@ -12643,7 +12630,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 991
+      "newOrder": 990
     },
     {
       "cefr": "A1",
@@ -12656,7 +12643,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 992
+      "newOrder": 991
     },
     {
       "cefr": "A1",
@@ -12669,7 +12656,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 993
+      "newOrder": 992
     },
     {
       "cefr": "A1",
@@ -12682,7 +12669,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 994
+      "newOrder": 993
     },
     {
       "cefr": "A1",
@@ -12695,7 +12682,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 995
+      "newOrder": 994
     },
     {
       "cefr": "A1",
@@ -12708,7 +12695,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 996
+      "newOrder": 995
     },
     {
       "cefr": "A1",
@@ -12721,7 +12708,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 997
+      "newOrder": 996
     },
     {
       "cefr": "A1",
@@ -12734,7 +12721,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 998
+      "newOrder": 997
     },
     {
       "cefr": "A1",
@@ -12747,7 +12734,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 999
+      "newOrder": 998
     },
     {
       "cefr": "A1",
@@ -12760,7 +12747,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1000
+      "newOrder": 999
     },
     {
       "cefr": "A1",
@@ -12773,7 +12760,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1001
+      "newOrder": 1000
     },
     {
       "cefr": "A1",
@@ -12786,7 +12773,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1002
+      "newOrder": 1001
     },
     {
       "cefr": "A1",
@@ -12799,7 +12786,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1003
+      "newOrder": 1002
     },
     {
       "cefr": "A1",
@@ -12812,7 +12799,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1004
+      "newOrder": 1003
     },
     {
       "cefr": "A1",
@@ -12825,7 +12812,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1005
+      "newOrder": 1004
     },
     {
       "cefr": "A1",
@@ -12838,7 +12825,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1006
+      "newOrder": 1005
     },
     {
       "cefr": "A1",
@@ -12851,7 +12838,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1007
+      "newOrder": 1006
     },
     {
       "cefr": "A1",
@@ -12864,7 +12851,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1008
+      "newOrder": 1007
     },
     {
       "cefr": "A1",
@@ -12877,7 +12864,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1009
+      "newOrder": 1008
     },
     {
       "cefr": "A1",
@@ -12890,7 +12877,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1010
+      "newOrder": 1009
     },
     {
       "cefr": "A1",
@@ -12903,7 +12890,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1011
+      "newOrder": 1010
     },
     {
       "cefr": "A1",
@@ -12916,7 +12903,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1012
+      "newOrder": 1011
     },
     {
       "cefr": "A1",
@@ -12927,7 +12914,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 1013
+      "newOrder": 1012
     },
     {
       "cefr": "A1",
@@ -12940,7 +12927,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1014
+      "newOrder": 1013
     },
     {
       "cefr": "A1",
@@ -12953,7 +12940,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1015
+      "newOrder": 1014
     },
     {
       "cefr": "A1",
@@ -12966,7 +12953,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1016
+      "newOrder": 1015
     },
     {
       "cefr": "A1",
@@ -12977,7 +12964,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 1017
+      "newOrder": 1016
     },
     {
       "cefr": "A1",
@@ -12990,7 +12977,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1018
+      "newOrder": 1017
     },
     {
       "cefr": "A1",
@@ -13001,7 +12988,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 1019
+      "newOrder": 1018
     },
     {
       "cefr": "A1",
@@ -13012,7 +12999,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 1020
+      "newOrder": 1019
     },
     {
       "cefr": "A1",
@@ -13023,7 +13010,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 1021
+      "newOrder": 1020
     },
     {
       "cefr": "A1",
@@ -13036,7 +13023,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1022
+      "newOrder": 1021
     },
     {
       "cefr": "A1",
@@ -13047,7 +13034,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 1023
+      "newOrder": 1022
     },
     {
       "cefr": "A1",
@@ -13058,7 +13045,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 1024
+      "newOrder": 1023
     },
     {
       "cefr": "A1",
@@ -13069,7 +13056,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 1025
+      "newOrder": 1024
     },
     {
       "cefr": "A1",
@@ -13082,7 +13069,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1026
+      "newOrder": 1025
     },
     {
       "cefr": "A1",
@@ -13093,7 +13080,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 1027
+      "newOrder": 1026
     },
     {
       "cefr": "A1",
@@ -13106,7 +13093,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1028
+      "newOrder": 1027
     },
     {
       "cefr": "A1",
@@ -13119,7 +13106,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1029
+      "newOrder": 1028
     },
     {
       "cefr": "A1",
@@ -13132,7 +13119,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1030
+      "newOrder": 1029
     },
     {
       "cefr": "A1",
@@ -13145,7 +13132,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1031
+      "newOrder": 1030
     },
     {
       "cefr": "A1",
@@ -13158,7 +13145,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1032
+      "newOrder": 1031
     },
     {
       "cefr": "A1",
@@ -13171,7 +13158,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1033
+      "newOrder": 1032
     },
     {
       "cefr": "A1",
@@ -13184,7 +13171,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1034
+      "newOrder": 1033
     },
     {
       "cefr": "A1",
@@ -13197,7 +13184,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1035
+      "newOrder": 1034
     },
     {
       "cefr": "A1",
@@ -13210,7 +13197,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1036
+      "newOrder": 1035
     },
     {
       "cefr": "A1",
@@ -13223,7 +13210,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1037
+      "newOrder": 1036
     },
     {
       "cefr": "A1",
@@ -13236,7 +13223,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1038
+      "newOrder": 1037
     },
     {
       "cefr": "A1",
@@ -13249,7 +13236,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1039
+      "newOrder": 1038
     },
     {
       "cefr": "A1",
@@ -13262,7 +13249,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1040
+      "newOrder": 1039
     },
     {
       "cefr": "A1",
@@ -13275,7 +13262,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1041
+      "newOrder": 1040
     },
     {
       "cefr": "A1",
@@ -13288,7 +13275,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1042
+      "newOrder": 1041
     },
     {
       "cefr": "A1",
@@ -13301,7 +13288,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1043
+      "newOrder": 1042
     },
     {
       "cefr": "A1",
@@ -13314,7 +13301,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1044
+      "newOrder": 1043
     },
     {
       "cefr": "A1",
@@ -13327,7 +13314,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1045
+      "newOrder": 1044
     },
     {
       "cefr": "A1",
@@ -13340,7 +13327,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1046
+      "newOrder": 1045
     },
     {
       "cefr": "A1",
@@ -13353,7 +13340,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1047
+      "newOrder": 1046
     },
     {
       "cefr": "A1",
@@ -13366,7 +13353,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1048
+      "newOrder": 1047
     },
     {
       "cefr": "A1",
@@ -13379,7 +13366,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1049
+      "newOrder": 1048
     },
     {
       "cefr": "A1",
@@ -13392,7 +13379,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1050
+      "newOrder": 1049
     },
     {
       "cefr": "A1",
@@ -13405,7 +13392,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1051
+      "newOrder": 1050
     },
     {
       "cefr": "A1",
@@ -13418,7 +13405,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1052
+      "newOrder": 1051
     },
     {
       "cefr": "A1",
@@ -13431,7 +13418,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1053
+      "newOrder": 1052
     },
     {
       "cefr": "A1",
@@ -13444,7 +13431,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1054
+      "newOrder": 1053
     },
     {
       "cefr": "A1",
@@ -13457,7 +13444,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1055
+      "newOrder": 1054
     },
     {
       "cefr": "A1",
@@ -13470,7 +13457,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1056
+      "newOrder": 1055
     },
     {
       "cefr": "A1",
@@ -13483,7 +13470,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1057
+      "newOrder": 1056
     },
     {
       "cefr": "A1",
@@ -13496,7 +13483,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1058
+      "newOrder": 1057
     },
     {
       "cefr": "A1",
@@ -13509,7 +13496,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1059
+      "newOrder": 1058
     },
     {
       "cefr": "A1",
@@ -13522,7 +13509,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1060
+      "newOrder": 1059
     },
     {
       "cefr": "A1",
@@ -13535,7 +13522,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1061
+      "newOrder": 1060
     },
     {
       "cefr": "A1",
@@ -13548,7 +13535,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1062
+      "newOrder": 1061
     },
     {
       "cefr": "A1",
@@ -13561,7 +13548,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1063
+      "newOrder": 1062
     },
     {
       "cefr": "A1",
@@ -13574,7 +13561,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1064
+      "newOrder": 1063
     },
     {
       "cefr": "A1",
@@ -13587,7 +13574,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1065
+      "newOrder": 1064
     },
     {
       "cefr": "A1",
@@ -13600,7 +13587,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1066
+      "newOrder": 1065
     },
     {
       "cefr": "A1",
@@ -13613,7 +13600,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1067
+      "newOrder": 1066
     },
     {
       "cefr": "A1",
@@ -13626,7 +13613,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1068
+      "newOrder": 1067
     },
     {
       "cefr": "A1",
@@ -13639,7 +13626,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1069
+      "newOrder": 1068
     },
     {
       "cefr": "A1",
@@ -13652,7 +13639,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1070
+      "newOrder": 1069
     },
     {
       "cefr": "A1",
@@ -13665,7 +13652,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1071
+      "newOrder": 1070
     },
     {
       "cefr": "A1",
@@ -13676,7 +13663,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 1072
+      "newOrder": 1071
     },
     {
       "cefr": "A1",
@@ -13687,7 +13674,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 1073
+      "newOrder": 1072
     },
     {
       "cefr": "A1",
@@ -13700,7 +13687,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1074
+      "newOrder": 1073
     },
     {
       "cefr": "A1",
@@ -13713,7 +13700,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1075
+      "newOrder": 1074
     },
     {
       "cefr": "A1",
@@ -13726,7 +13713,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1076
+      "newOrder": 1075
     },
     {
       "cefr": "A1",
@@ -13739,7 +13726,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1077
+      "newOrder": 1076
     },
     {
       "cefr": "A1",
@@ -13752,17 +13739,457 @@
         "matching",
         "choice"
       ],
+      "newOrder": 1077
+    },
+    {
+      "cefr": "A1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "активний",
+      "lemmaId": "активний",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
       "newOrder": 1078
+    },
+    {
+      "cefr": "A1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "алфавіт",
+      "lemmaId": "алфавіт",
+      "modes": [
+        "flashcards"
+      ],
+      "newOrder": 1079
+    },
+    {
+      "cefr": "A1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "архітектура",
+      "lemmaId": "архітектура",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 1080
+    },
+    {
+      "cefr": "A1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "багатий",
+      "lemmaId": "багатий",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 1081
+    },
+    {
+      "cefr": "A1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "без",
+      "lemmaId": "без",
+      "modes": [
+        "flashcards"
+      ],
+      "newOrder": 1082
+    },
+    {
+      "cefr": "A1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "більше",
+      "lemmaId": "більше",
+      "modes": [
+        "flashcards"
+      ],
+      "newOrder": 1083
+    },
+    {
+      "cefr": "A1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "ваза",
+      "lemmaId": "ваза",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 1084
+    },
+    {
+      "cefr": "A1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "ванна",
+      "lemmaId": "ванна",
+      "modes": [
+        "flashcards"
+      ],
+      "newOrder": 1085
+    },
+    {
+      "cefr": "A1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "ванний",
+      "lemmaId": "ванний",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 1086
+    },
+    {
+      "cefr": "A1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "весело",
+      "lemmaId": "весело",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 1087
+    },
+    {
+      "cefr": "A1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "взуття",
+      "lemmaId": "взуття",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 1088
+    },
+    {
+      "cefr": "A1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "водій",
+      "lemmaId": "водій",
+      "modes": [
+        "flashcards"
+      ],
+      "newOrder": 1089
+    },
+    {
+      "cefr": "A1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "волосся",
+      "lemmaId": "волосся",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 1090
+    },
+    {
+      "cefr": "A1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "вперед",
+      "lemmaId": "вперед",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 1091
+    },
+    {
+      "cefr": "A1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "встати",
+      "lemmaId": "встати",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 1092
+    },
+    {
+      "cefr": "A1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "відео",
+      "lemmaId": "відео",
+      "modes": [
+        "flashcards"
+      ],
+      "newOrder": 1093
+    },
+    {
+      "cefr": "A1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "вісімнадцятий",
+      "lemmaId": "вісімнадцятий",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 1094
+    },
+    {
+      "cefr": "A1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "вісімсот",
+      "lemmaId": "вісімсот",
+      "modes": [
+        "flashcards"
+      ],
+      "newOrder": 1095
+    },
+    {
+      "cefr": "A1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "газета",
+      "lemmaId": "газета",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 1096
+    },
+    {
+      "cefr": "A1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "гамбургер",
+      "lemmaId": "гамбургер",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 1097
+    },
+    {
+      "cefr": "A1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "горіх",
+      "lemmaId": "горіх",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 1098
+    },
+    {
+      "cefr": "A1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "гостя",
+      "lemmaId": "гостя",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 1099
+    },
+    {
+      "cefr": "A1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "гра",
+      "lemmaId": "гра",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 1100
+    },
+    {
+      "cefr": "A1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "група",
+      "lemmaId": "група",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 1101
+    },
+    {
+      "cefr": "A1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "гітара",
+      "lemmaId": "гітара",
+      "modes": [
+        "flashcards"
+      ],
+      "newOrder": 1102
+    },
+    {
+      "cefr": "A1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "давати",
+      "lemmaId": "давати",
+      "modes": [
+        "flashcards"
+      ],
+      "newOrder": 1103
+    },
+    {
+      "cefr": "A1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "давно",
+      "lemmaId": "давно",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 1104
+    },
+    {
+      "cefr": "A1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "двадцятий",
+      "lemmaId": "двадцятий",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 1105
+    },
+    {
+      "cefr": "A1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "добрий",
+      "lemmaId": "добрий",
+      "modes": [
+        "flashcards"
+      ],
+      "newOrder": 1106
+    },
+    {
+      "cefr": "A1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "довгий",
+      "lemmaId": "довгий",
+      "modes": [
+        "flashcards"
+      ],
+      "newOrder": 1107
+    },
+    {
+      "cefr": "A1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "долар",
+      "lemmaId": "долар",
+      "modes": [
+        "flashcards"
+      ],
+      "newOrder": 1108
+    },
+    {
+      "cefr": "A1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "дошка",
+      "lemmaId": "дошка",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 1109
+    },
+    {
+      "cefr": "A1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "дуже",
+      "lemmaId": "дуже",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 1110
+    },
+    {
+      "cefr": "A1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "душ",
+      "lemmaId": "душ",
+      "modes": [
+        "flashcards"
+      ],
+      "newOrder": 1111
+    },
+    {
+      "cefr": "A1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "дівчина",
+      "lemmaId": "дівчина",
+      "modes": [
+        "flashcards"
+      ],
+      "newOrder": 1112
+    },
+    {
+      "cefr": "A1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "дівчинка",
+      "lemmaId": "дівчинка",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 1113
     }
   ],
   "level": "A1",
   "schema": "atlas-practice-index",
   "schemaVersion": 1,
   "sizeBudget": {
-    "gzipBytes": 16619,
+    "gzipBytes": 17099,
     "gzipLimitBytes": 140000,
     "ok": true,
-    "rawBytes": 272492,
+    "rawBytes": 280888,
     "rawLimitBytes": 550000
   },
   "source": "manifest"

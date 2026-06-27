@@ -29,13 +29,22 @@ from scripts.lexicon.grow_lexicon_from_content import (
     split_candidates,
     write_candidates,
 )
+from scripts.lexicon.lemma_normalization import strip_acute_stress
 
 DEFAULT_OUT = PROJECT_ROOT / "data" / "lexicon" / "grow_candidates_from_lemmas.json"
 
 
 def read_lemmas(path: Path) -> list[str]:
     """Read non-empty stripped lemmas from a newline-delimited file."""
-    return [line.strip() for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
+    lemmas: list[str] = []
+    seen: set[str] = set()
+    for line in path.read_text(encoding="utf-8").splitlines():
+        lemma = strip_acute_stress(line.strip())
+        if not lemma or lemma in seen:
+            continue
+        seen.add(lemma)
+        lemmas.append(lemma)
+    return lemmas
 
 
 def generate_candidates(
@@ -75,9 +84,7 @@ def generate_candidates(
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(
-        description="Generate gated Atlas-entry candidates from newline-delimited lemmas."
-    )
+    parser = argparse.ArgumentParser(description="Generate gated Atlas-entry candidates from newline-delimited lemmas.")
     parser.add_argument("--lemmas-file", type=Path, required=True, help="One lemma per line")
     parser.add_argument("--limit", type=int, help="Limit processed lemmas")
     parser.add_argument(

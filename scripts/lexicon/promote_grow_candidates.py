@@ -28,6 +28,7 @@ from scripts.audit.check_atlas_manifest_enrichment import check_enrichment
 from scripts.lexicon import verify_manifest
 from scripts.lexicon.build_data_manifest import _lemma_key, _slug_for_url
 from scripts.lexicon.fill_from_content import ModuleInfo, _load_manifest, _manifest_entry
+from scripts.lexicon.lemma_normalization import strip_acute_stress
 from scripts.lexicon.manifest_fingerprint import DEFAULT_FINGERPRINT, write_fingerprint
 from scripts.sync.promote_module import _write_atomically
 
@@ -117,7 +118,7 @@ def promote_grow_candidates(
     promoted: list[str] = []
     skipped_existing: list[str] = []
     for candidate in _candidate_entries(candidates.get("auto_merge", [])):
-        lemma = _candidate_lemma(candidate)
+        lemma = strip_acute_stress(_candidate_lemma(candidate))
         key = _lemma_key(lemma)
         if key in existing_keys:
             skipped_existing.append(lemma)
@@ -159,7 +160,7 @@ def promote_grow_candidates(
 
 def manifest_entry_from_candidate(candidate: Mapping[str, Any]) -> dict[str, Any]:
     """Build one live manifest entry from a P2 enriched candidate."""
-    lemma = _candidate_lemma(candidate)
+    lemma = strip_acute_stress(_candidate_lemma(candidate))
     gloss = _candidate_gloss(candidate)
     pos = _clean_optional_str(candidate.get("pos"))
     base_entry = _manifest_entry(

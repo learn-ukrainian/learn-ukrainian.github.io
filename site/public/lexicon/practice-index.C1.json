@@ -3,9 +3,9 @@
     "cloze": 0,
     "clozeCoverage": 0.0,
     "clozeEligibleLexemes": 0,
-    "lexemes": 354
+    "lexemes": 339
   },
-  "deckVersion": "atlas-practice-v1-622fc3d93d1ad580",
+  "deckVersion": "atlas-practice-v1-9cf4a4d7319d19ce",
   "items": [
     {
       "cefr": "C1",
@@ -128,8 +128,8 @@
       "cefr": "C1",
       "clozeIds": [],
       "hasCloze": false,
-      "lemma": "апо́строф",
-      "lemmaId": "апо-строф",
+      "lemma": "апостроф",
+      "lemmaId": "апостроф",
       "modes": [
         "flashcards",
         "matching",
@@ -167,8 +167,8 @@
       "cefr": "C1",
       "clozeIds": [],
       "hasCloze": false,
-      "lemma": "йото́ваний",
-      "lemmaId": "йото-ваний",
+      "lemma": "йотований",
+      "lemmaId": "йотований",
       "modes": [
         "flashcards",
         "matching",
@@ -180,8 +180,8 @@
       "cefr": "C1",
       "clozeIds": [],
       "hasCloze": false,
-      "lemma": "розді́льно",
-      "lemmaId": "розді-льно",
+      "lemma": "роздільно",
+      "lemmaId": "роздільно",
       "modes": [
         "flashcards",
         "matching",
@@ -4353,195 +4353,16 @@
         "choice"
       ],
       "newOrder": 338
-    },
-    {
-      "cefr": "C1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "демонологія",
-      "lemmaId": "демонологія",
-      "modes": [
-        "flashcards"
-      ],
-      "newOrder": 339
-    },
-    {
-      "cefr": "C1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "дух",
-      "lemmaId": "дух",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 340
-    },
-    {
-      "cefr": "C1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "нявка",
-      "lemmaId": "нявка",
-      "modes": [
-        "flashcards"
-      ],
-      "newOrder": 341
-    },
-    {
-      "cefr": "C1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "перелесник",
-      "lemmaId": "перелесник",
-      "modes": [
-        "flashcards"
-      ],
-      "newOrder": 342
-    },
-    {
-      "cefr": "C1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "польовик",
-      "lemmaId": "польовик",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 343
-    },
-    {
-      "cefr": "C1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "потерча",
-      "lemmaId": "потерча",
-      "modes": [
-        "flashcards"
-      ],
-      "newOrder": 344
-    },
-    {
-      "cefr": "C1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "хованець",
-      "lemmaId": "хованець",
-      "modes": [
-        "flashcards"
-      ],
-      "newOrder": 345
-    },
-    {
-      "cefr": "C1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "чугайстер",
-      "lemmaId": "чугайстер",
-      "modes": [
-        "flashcards"
-      ],
-      "newOrder": 346
-    },
-    {
-      "cefr": "C1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "віншування",
-      "lemmaId": "віншування",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 347
-    },
-    {
-      "cefr": "C1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "примовка",
-      "lemmaId": "примовка",
-      "modes": [
-        "flashcards"
-      ],
-      "newOrder": 348
-    },
-    {
-      "cefr": "C1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "примівка",
-      "lemmaId": "примівка",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 349
-    },
-    {
-      "cefr": "C1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "проклін",
-      "lemmaId": "проклін",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 350
-    },
-    {
-      "cefr": "C1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "шептуха",
-      "lemmaId": "шептуха",
-      "modes": [
-        "flashcards"
-      ],
-      "newOrder": 351
-    },
-    {
-      "cefr": "C1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "глагол",
-      "lemmaId": "глагол",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 352
-    },
-    {
-      "cefr": "C1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "кобіта",
-      "lemmaId": "кобіта",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 353
     }
   ],
   "level": "C1",
   "schema": "atlas-practice-index",
   "schemaVersion": 1,
   "sizeBudget": {
-    "gzipBytes": 5919,
+    "gzipBytes": 5673,
     "gzipLimitBytes": 140000,
     "ok": true,
-    "rawBytes": 92348,
+    "rawBytes": 88786,
     "rawLimitBytes": 550000
   },
   "source": "manifest"
