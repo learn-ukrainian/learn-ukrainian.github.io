@@ -2,25 +2,197 @@ module: folk-003
 level: FOLK
 sequence: 3
 slug: koliadky-shchedrivky
-title: "Колядки та щедрівки: різдвяна величальна традиція"
-subtitle: "Carols and Shchedrivky — заглушка (перебудовується, #3879)"
-version: 1
-status: stub
+title: "Колядки та щедрівки"
+subtitle: "Christmas carols, Shchedryi Vechir well-wishing songs, and Ukrainian winter verbal art"
+version: 2
+status: locked
+phase: base-first
+cefr_min: C1
 word_target: 4000
+focus: "Clean source-first M03 base for Ukrainian winter-cycle songs: колядки, щедрівки, public texts, performance, Christian-era calendar context, and poetics."
+persona: "C1+ seminar learner reading Ukrainian winter folk songs through public primary texts, school canon, careful framing, and source discipline."
 objectives:
-  - 'Заглушка — чисті цілі регенеруються в базовій перебудові (#3879).'
+  - "Розрізняти колядки, щедрівки, віншування і посівання за часом, адресатом, текстовою формою і виконавською ситуацією."
+  - "Пояснити колядки як різдвяні величальні пісні, а щедрівки як щедровечірні або новорічні пісні-побажання."
+  - "Читати публічний текст через приспів, повтор, звертання, образ дому, побажання достатку і роль гуртового голосу."
+  - "Працювати тільки з публічними Ukrlib/Pidruchnyk/Osvita-style джерелами у learner-facing матеріалах."
+  - "Утримувати християнсько-історичну рамку зимового циклу без редукції Різдва або Щедрого вечора до зовнішньої назви."
+  - "Готувати міст від народної щедрівки до хорової культури лише на перевірених публічних джерелах."
+pedagogy:
+  approach: "source-first FOLK seminar"
+  notes:
+    - "Open with a public primary text, then map time, performer, addressee, refrain, and wish."
+    - "Keep existing dirty hosted readings unlinked until the module/readings PR cleans metadata and rendering."
+    - "Use FOLK activity families: ritual-sequencing, variant-comparison, motif-formula, performance."
 content_outline:
-  - section: 'Заглушка, частина 1 (#3879)'
-    words: 2000
+  - section: "Розминка через первинний текст"
+    words: 550
     points:
-      - 'Заглушка — план регенерується в базовій перебудові фольклору (#3879)'
-  - section: 'Заглушка, частина 2 (#3879)'
-    words: 2000
+      - "Begin with a verified winter-song excerpt from a public Ukrlib source, preferably an already-clean hosted reading."
+      - "Ask what the text does in the house: greet, praise, bless, wish, invite response."
+      - "Keep quoted primary text inside primary-reading convention; do not quote from memory."
+  - section: "Жанрова карта зимового циклу"
+    words: 700
     points:
-      - 'Заглушка — план регенерується в базовій перебудові фольклору (#3879)'
+      - "Separate колядка, щедрівка, віншування, посівання, Маланка, and вертеп without flattening them."
+      - "Frame колядки as Christmas/Nativity carols and щедрівки as Shchedryi Vechir/New-Year well-wishing songs."
+      - "Use school-canonical signs: Різдво, Щедрий вечір, Маланка, Василь, ластівка, господар, Різдвяна зірка, побажання добробуту."
+  - section: "Поетика приспіву, звертання і побажання"
+    words: 850
+    points:
+      - "Analyze refrain, repeated address, household praise, parallelism, and short formulaic lines."
+      - "Track images of house, garden, light, livestock, grain, gifts, table, stars, and swallow as poetic vocabulary."
+      - "Explain that Christian festive meaning and household well-wishing are both central to the recorded winter-cycle texts."
+  - section: "Виконавська ситуація"
+    words: 650
+    points:
+      - "Show who sings, where the group stands, how the household answers, what gift or response closes the exchange."
+      - "Use ritual-sequencing activity to order arrival, permission/greeting, song, household response, gift, closing wish."
+      - "Keep material culture inside the song/performance context rather than as a separate decorative list."
+  - section: "Публічні читання і source hammer"
+    words: 700
+    points:
+      - "Use cleaned public Ukrlib readings only; never link an existing reading page that still exposes service IDs."
+      - "Prefer at least four distinct public primary texts when Phase B cleans them: one already clean shchedrivka plus additional carol/shchedrivka pages."
+      - "Record quote/source verification in PR handoff, not generated audit artifacts."
+  - section: "Міст до хорової культури"
+    words: 350
+    points:
+      - "Use Щедрик as a careful high-culture bridge only after public date/title/source verification."
+      - "Sequence bridge as public folk text -> close reading -> choral treatment -> international recognition."
+      - "Do not let the composer story replace the folk primary text."
+  - section: "Деколонізаційна рамка і підсумок"
+    words: 200
+    points:
+      - "Reject reduction of Ukrainian winter song to decorative ethnography."
+      - "Show Ukrainian language organizing Christmas-season time, home, reciprocity, and public memory."
+      - "Return to the opening text: what can the source prove, and where must interpretation stop?"
+activity_hints:
+  - type: ritual-sequencing
+    placement: inline
+    focus: "Order the winter visit: arrival, greeting, song, household response, gift, final wish, movement to next house."
+  - type: variant-comparison
+    placement: workbook
+    focus: "Compare a колядка and a щедрівка by time, addressee, refrain, wish, and public source."
+  - type: motif-formula
+    placement: inline
+    focus: "Find repeated formulas: добрий вечір, господар, господиня, ластівка, жито, пшениця, здоров'я."
+  - type: performance
+    placement: workbook
+    focus: "Explain how meaning changes when a household song is read silently on a page."
+vocabulary_hints:
+  - "колядка"
+  - "щедрівка"
+  - "віншування"
+  - "посівання"
+  - "приспів"
+  - "величання"
+  - "Щедрий вечір"
+  - "Маланка"
+  - "Василь"
+  - "виконавська ситуація"
 references:
-  - title: 'Заглушка — джерела регенеруються в базовій перебудові (#3879)'
-note: >-
-  Outline placeholder. Built module + poisoned plan content removed in PR #3867. Full clean
-  base (dossier -> wiki -> plan -> module) regenerated base-first in the folk rebuild (#3879).
-  Not built, not published. All placeholder text carries zero framing/readings/chunk-ids.
+  - title: "Українська література, 6 клас. Пісні зимового циклу"
+    author: "Авраменко О."
+    type: textbook
+    source_url: "https://pidruchnyk.com.ua/2618-ukralit-6-klas-avramenko-2023.html"
+    note: "Primary school-canonical frame for колядки, щедрівки, Різдво, Щедрий вечір, Маланка, Василь."
+  - title: "Українська література, 6 клас. Народні календарно-обрядові пісні"
+    author: "Заболотний О., Заболотний В."
+    type: textbook
+    source_url: "https://pidruchnyk.com.ua/2617-ukralit-6-klas-zabolotnyi.html"
+    note: "School frame calendar-cycle songs as oral folk creativity."
+  - title: "Українська література, 5 клас. Усна народна творчість"
+    author: "Заболотний О., Заболотний В."
+    type: textbook
+    source_url: "https://pidruchnyk.com.ua/1684-5_ukrlit_zabolotnyi.html"
+    note: "General school frame for folklore as oral verbal art and source of written literature."
+readings:
+  - title: "Ой сивая та і зозулечка"
+    title_en: "Oh, grey cuckoo"
+    genre: "Щедрівка"
+    role: primary
+    type: primary
+    source: "Народна творчість. УкрЛіб."
+    source_url: "https://www.ukrlib.com.ua/narod/printout.php?id=6&bookid=1"
+    license: public_domain
+    hosting: hosted
+    reading_slug: "shchedrivka-oi-syvaia-ta-i-zozulechka"
+  - title: "Щедрик, щедрик, щедрівочка"
+    title_en: "Shchedryk, shchedryk, little shchedrivka"
+    genre: "Щедрівка"
+    role: primary
+    type: primary
+    source: "Народна творчість. УкрЛіб."
+    source_url: "https://www.ukrlib.com.ua/narod/printout.php?id=6&bookid=3"
+    license: public_domain
+    hosting: needs-clean-hosted-reading
+    reading_slug: "shchedrivka-shchedryk-lastivochka"
+  - title: "У цьому дворку як у вінку"
+    title_en: "In this yard as in a wreath"
+    genre: "Щедрівка"
+    role: primary
+    type: primary
+    source: "Народна творчість. УкрЛіб."
+    source_url: "https://www.ukrlib.com.ua/narod/printout.php?id=6&bookid=0"
+    license: public_domain
+    hosting: needs-clean-hosted-reading
+    reading_slug: "shchedrivka-u-tsomu-dvorku-yak-u-vinku"
+  - title: "Прилетіла зозуленька"
+    title_en: "The cuckoo flew in"
+    genre: "Щедрівка"
+    role: primary
+    type: primary
+    source: "Народна творчість. УкрЛіб."
+    source_url: "https://www.ukrlib.com.ua/narod/printout.php?id=6&bookid=2"
+    license: public_domain
+    hosting: needs-clean-hosted-reading
+    reading_slug: "shchedrivka-pryletila-zozulenka"
+  - title: "Ой над Дунаєм, над береженьком"
+    title_en: "Oh, by the Danube, by the bank"
+    genre: "Колядка"
+    role: primary
+    type: primary
+    source: "Народна творчість. УкрЛіб."
+    source_url: "https://www.ukrlib.com.ua/narod/printout.php?id=5&bookid=0"
+    license: public_domain
+    hosting: needs-clean-hosted-reading
+    reading_slug: "koliadka-oi-nad-dunaiem-nad-berezhenkom"
+  - title: "Ой рано кури запіли"
+    title_en: "Oh, early the roosters sang"
+    genre: "Колядка"
+    role: primary
+    type: primary
+    source: "Народна творчість. УкрЛіб."
+    source_url: "https://www.ukrlib.com.ua/narod/printout.php?id=5&bookid=1"
+    license: public_domain
+    hosting: needs-clean-hosted-reading
+    reading_slug: "koliadka-oi-rano-kury-zapily"
+  - title: "Як ще не було початку світа"
+    title_en: "When the world had no beginning yet"
+    genre: "Колядка"
+    role: primary
+    type: primary
+    source: "Народна творчість. УкрЛіб."
+    source_url: "https://www.ukrlib.com.ua/narod/printout.php?id=5&bookid=2"
+    license: public_domain
+    hosting: needs-clean-hosted-reading
+    reading_slug: "koliadka-yak-shche-ne-bulo-pochatku-svita"
+do_not_quote:
+  - line: "Any plan, wiki, lesson, or reading page exposes service IDs, service source markers, or internal corpus labels."
+    reason: "Public learner surfaces must cite public URLs and bibliographic sources only."
+  - line: "Christmas meaning is described as a late external cover over another hidden core."
+    reason: "FOLK framing requires Christian-era winter-cycle treatment where the tradition is Christian."
+  - line: "Winter songs are explained as hidden power technique or field-guide belief."
+    reason: "The module teaches oral verbal art and performance, not hostile or sensational framing."
+  - line: "A textbook-only copyrighted passage is hosted as a full reading."
+    reason: "Textbooks may orient the lesson; hosted readings require public-domain/full public text rights."
+connects_to:
+  - narodna-kultura-yak-systema
+  - kalendarna-obriadovist-zvychai
+  - vesnianky-hayivky
+  - rodynna-obriadovist-zvychai
+changelog:
+  - version: 2
+    date: "2026-06-27"
+    note: "Base-first rebuild: replaced clean stub with framing-compliant dossier/wiki/plan; scope remains base-only with no learner module/readings changes."
