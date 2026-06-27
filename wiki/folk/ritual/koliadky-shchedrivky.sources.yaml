@@ -1,56 +1,83 @@
-# Source registry for wiki/folk/ritual/koliadky-shchedrivky.md
-# Referenced inline as [S1], [S2], ...
+# Source registry wiki/folk/ritual/koliadky-shchedrivky.md
+# Referenced inline [S1], [S2], ...
 sources:
-- id: S1
-  file: 2-klas-ukrmova-kravcova-2019-2_s0060
-  type: textbook
-  title: Сторінка 62
-  grade: 2
-  author: kravcova
-- id: S3
-  file: 2-klas-ukrmova-vashulenko-2019-2_s0064
-  type: textbook
-  title: Сторінка 66
-  grade: 2
-  author: vashulenko
-- id: S4
-  file: 2-klas-ukrmova-bolshakova-2019-1_s0096
-  type: textbook
-  title: Сторінка 95
-  grade: 2
-  author: bolshakova
-- id: S6
-  file: ukrainian_wiki/koliadky-shchedrivky_Український-фольклор-Колядки-та-щедрівки-та-міф-про-створення-світу-Короткий-зміст
-  type: ukrainian_wiki
-  title: 'Український фольклор: Колядки та щедрівки та міф про створення світу'
-  section_path: 'Український фольклор: Колядки та щедрівки та міф про створення світу
-    > Короткий зміст'
-- id: S7
-  file: ukrainian_wiki/koliadky-shchedrivky_Український-фольклор-Колядки-та-щедрівки-та-міф-про-створення-світу-Основний-зміст-Дохристиянська-космологія-міф-про-створення-світу-та-солярні-культи
-  type: ukrainian_wiki
-  title: 'Український фольклор: Колядки та щедрівки та міф про створення світу'
-  section_path: 'Український фольклор: Колядки та щедрівки та міф про створення світу
-    > Основний зміст > Дохристиянська космологія, міф про створення світу та солярні
-    культи'
-- id: S8
-  file: ukrainian_wiki/koliadky-shchedrivky_Український-фольклор-Колядки-та-щедрівки-та-міф-про-створення-світу-Основний-зміст-Класифікація-та-жанрова-різноманітність-обрядових-пісень
-  type: ukrainian_wiki
-  title: 'Український фольклор: Колядки та щедрівки та міф про створення світу'
-  section_path: 'Український фольклор: Колядки та щедрівки та міф про створення світу
-    > Основний зміст > Класифікація та жанрова різноманітність обрядових пісень'
-- id: S9
-  file: wave7-entsyklopediia-ukrainoznavstva_c0600
-  type: literary
-  title: Енциклопедія українознавства
-  author: Колектив
-- id: S11
-  file: wikipedia/Колядки
-  type: wikipedia
-  title: Колядки
-  url: https://uk.wikipedia.org/wiki/%D0%9A%D0%BE%D0%BB%D1%8F%D0%B4%D0%BA%D0%B8
-- id: S12
-  file: ukrainian_wiki/koliadky-shchedrivky_Український-фольклор-Колядки-та-щедрівки-та-міф-про-створення-світу-Деколонізаційна-перспектива
-  type: ukrainian_wiki
-  title: 'Український фольклор: Колядки та щедрівки та міф про створення світу'
-  section_path: 'Український фольклор: Колядки та щедрівки та міф про створення світу
-    > Деколонізаційна перспектива'
+  - id: S1
+    file: 6-klas-ukrlit-avramenko-2023
+    type: textbook
+    title: "Українська література, 6 клас. Пісні зимового циклу"
+    author: "Авраменко О."
+    grade: 6
+    url: "https://pidruchnyk.com.ua/2618-ukralit-6-klas-avramenko-2023.html"
+    notes: "School-canonical winter-cycle frame: колядки, щедрівки, Різдво, Щедрий вечір, Маланка, Василь, public classroom questions."
+  - id: S2
+    file: 6-klas-ukrlit-zabolotnyi-2023
+    type: textbook
+    title: "Українська література, 6 клас. Народні календарно-обрядові пісні"
+    author: "Заболотний О., Заболотний В."
+    grade: 6
+    url: "https://pidruchnyk.com.ua/2617-ukralit-6-klas-zabolotnyi.html"
+    notes: "School-canonical frame for calendar-cycle songs as oral folk creativity in the Ukrainian literature course."
+  - id: S3
+    file: 5-klas-ukrlit-zabolotnyi-2022
+    type: textbook
+    title: "Українська література, 5 клас. Усна народна творчість"
+    author: "Заболотний О., Заболотний В."
+    grade: 5
+    url: "https://pidruchnyk.com.ua/1684-5_ukrlit_zabolotnyi.html"
+    notes: "General school frame for folklore as oral verbal art leading into written Ukrainian literature."
+  - id: S4
+    file: ukrlib-narod-oi-syvaia-ta-i-zozulechka
+    type: external
+    title: "Ой сивая та і зозулечка"
+    author: "Народна творчість"
+    url: "https://www.ukrlib.com.ua/narod/printout.php?id=6&bookid=1"
+    domain: ukrlib.com.ua
+    notes: "Public full text; already cleaned as a hosted reading in prior FOLK work."
+  - id: S5
+    file: ukrlib-narod-shchedryk-shchedryk-shchedrivochka
+    type: external
+    title: "Щедрик, щедрик, щедрівочка"
+    author: "Народна творчість"
+    url: "https://www.ukrlib.com.ua/narod/printout.php?id=6&bookid=3"
+    domain: ukrlib.com.ua
+    notes: "Public full text; later module PR must clean any existing hosted page before linking."
+  - id: S6
+    file: ukrlib-narod-u-tsomu-dvorku-u-vinku
+    type: external
+    title: "У цьому дворку як у вінку"
+    author: "Народна творчість"
+    url: "https://www.ukrlib.com.ua/narod/printout.php?id=6&bookid=0"
+    domain: ukrlib.com.ua
+    notes: "Public full text; candidate for household praise and refrain work."
+  - id: S7
+    file: ukrlib-narod-pryletila-zozulenka
+    type: external
+    title: "Прилетіла зозуленька"
+    author: "Народна творчість"
+    url: "https://www.ukrlib.com.ua/narod/printout.php?id=6&bookid=2"
+    domain: ukrlib.com.ua
+    notes: "Public full text; candidate for family-address and variant comparison."
+  - id: S8
+    file: ukrlib-narod-oi-nad-dunaiem-nad-berezhenkom
+    type: external
+    title: "Ой над Дунаєм, над береженьком"
+    author: "Народна творчість"
+    url: "https://www.ukrlib.com.ua/narod/printout.php?id=5&bookid=0"
+    domain: ukrlib.com.ua
+    notes: "Public full text; later module PR must clean any existing hosted page before linking."
+  - id: S9
+    file: ukrlib-narod-oi-rano-kury-zapily
+    type: external
+    title: "Ой рано кури запіли"
+    author: "Народна творчість"
+    url: "https://www.ukrlib.com.ua/narod/printout.php?id=5&bookid=1"
+    domain: ukrlib.com.ua
+    notes: "Public full text; candidate for household and gift imagery."
+  - id: S10
+    file: ukrlib-narod-yak-shche-ne-bulo-pochatku-svita
+    type: external
+    title: "Як ще не було початку світа"
+    author: "Народна творчість"
+    url: "https://www.ukrlib.com.ua/narod/printout.php?id=5&bookid=2"
+    domain: ukrlib.com.ua
+    notes: "Public full text; later module PR must clean old framing and source metadata before linking."
