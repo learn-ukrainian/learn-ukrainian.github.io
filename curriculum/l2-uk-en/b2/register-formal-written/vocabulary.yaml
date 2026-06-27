@@ -1,0 +1,196 @@
+- lemma: дослідження
+  translation: research, study
+  pos: noun
+  usage: "У дослідженні проаналізовано вплив дистанційного навчання."
+- lemma: гіпотеза
+  translation: hypothesis
+  pos: noun
+  usage: "Гіпотезу підтверджено результатами опитування."
+- lemma: методологія
+  translation: methodology
+  pos: noun
+  usage: "Методологія дослідження описана в другому розділі."
+- lemma: законодавство
+  translation: legislation
+  pos: noun
+  usage: "Відповідно до чинного законодавства заяву розглядають протягом місяця."
+- lemma: повноваження
+  translation: authority, mandate
+  pos: noun
+  usage: "Комісія має повноваження розглядати такі скарги."
+- lemma: договір
+  translation: contract, agreement
+  pos: noun
+  usage: "Згідно з умовами договору послугу надають до 10 липня."
+- lemma: зобов'язання
+  translation: obligation
+  pos: noun
+  usage: "Сторони виконують зобов'язання у встановлений строк."
+- lemma: анотація
+  translation: abstract, annotation
+  pos: noun
+  usage: "Анотація стисло описує тему, метод і результат."
+- lemma: актуальність
+  translation: relevance
+  pos: noun
+  usage: "Актуальність теми зумовлена розвитком дистанційної освіти."
+- lemma: чинний
+  translation: valid, current, in force
+  pos: adjective
+  usage: "Чинний закон визначає порядок подання скарги."
+- lemma: постанова
+  translation: resolution, decree
+  pos: noun
+  usage: "Постанова набирає чинності з дня опублікування."
+- lemma: скарга
+  translation: complaint, appeal
+  pos: noun
+  usage: "Скаргу подано у встановлений строк."
+- lemma: доцільно
+  translation: advisable, expedient
+  pos: adverb
+  usage: "Доцільно зазначити підставу рішення."
+- lemma: звітність
+  translation: reporting
+  pos: noun
+  usage: "Фінансова звітність подається щоквартально."
+- lemma: підстава
+  translation: basis, grounds
+  pos: noun
+  usage: "Підставою для претензії є порушення строку доставки."
+- lemma: висновок
+  translation: conclusion
+  pos: noun
+  usage: "Висновок дослідження має спиратися на дані."
+- lemma: реквізит
+  translation: required detail, requisite
+  pos: noun
+  usage: "Офіційний документ має обов'язкові реквізити."
+- lemma: позов
+  translation: lawsuit, claim
+  pos: noun
+  usage: "Позов подано до районного суду."
+- lemma: об'єктивність
+  translation: objectivity
+  pos: noun
+  usage: "Об'єктивність вимагає посилання на факти або дані."
+- lemma: безособовість
+  translation: impersonality
+  pos: noun
+  usage: "Безособовість переносить увагу з автора на результат."
+- lemma: термінологія
+  translation: terminology
+  pos: noun
+  usage: "Термінологія має бути послідовною в усьому тексті."
+- lemma: доказовість
+  translation: evidentiality, proof-based quality
+  pos: noun
+  usage: "Доказовість відрізняє науковий текст від реклами."
+- lemma: посилання
+  translation: reference, citation link
+  pos: noun
+  usage: "Посилання показує джерело використаної інформації."
+- lemma: цитування
+  translation: citation, quoting
+  pos: noun
+  usage: "Цитування має бути точним і доречним."
+- lemma: парафраз
+  translation: paraphrase
+  pos: noun
+  usage: "Парафраз передає думку автора іншими словами."
+- lemma: джерело
+  translation: source
+  pos: noun
+  usage: "Джерело потрібно зазначити після використання даних."
+- lemma: стаття
+  translation: article
+  pos: noun
+  usage: "У статті розглянуто три підходи до оцінювання."
+- lemma: заява
+  translation: application, statement
+  pos: noun
+  usage: "Заява має містити адресата, прохання, дату й підпис."
+- lemma: претензія
+  translation: formal complaint, claim
+  pos: noun
+  usage: "Претензія фіксує порушення договору й вимогу."
+- lemma: наказ
+  translation: order, directive
+  pos: noun
+  usage: "Наказ визначає порядок виконання рішення."
+- lemma: протокол
+  translation: minutes, protocol
+  pos: noun
+  usage: "Протокол фіксує рішення, відповідальних і строки."
+- lemma: рішення
+  translation: decision
+  pos: noun
+  usage: "Рішення ухвалено після розгляду заяви."
+- lemma: ухвала
+  translation: ruling
+  pos: noun
+  usage: "Ухвала суду набирає чинності після оголошення."
+- lemma: норма
+  translation: norm, provision
+  pos: noun
+  usage: "Норма закону визначає права й обов'язки сторін."
+- lemma: положення
+  translation: provision, regulation
+  pos: noun
+  usage: "Положення договору потрібно тлумачити однозначно."
+- lemma: відповідно до
+  translation: according to, in accordance with
+  pos: phrase
+  usage: "Відповідно до чинного законодавства документ розглядають протягом місяця."
+- lemma: згідно з
+  translation: according to, pursuant to
+  pos: phrase
+  usage: "Згідно з договором оплата здійснюється після підписання акта."
+- lemma: на підставі
+  translation: on the basis of
+  pos: phrase
+  usage: "На підставі заяви підготовлено наказ."
+- lemma: встановлено
+  translation: it has been established
+  pos: impersonal verb
+  usage: "Встановлено, що регулярний зворотний зв'язок підвищує мотивацію."
+- lemma: проаналізовано
+  translation: it has been analyzed
+  pos: impersonal verb
+  usage: "У статті проаналізовано мовні засоби офіційного стилю."
+- lemma: підтверджено
+  translation: it has been confirmed
+  pos: impersonal verb
+  usage: "Результати підтверджено повторним вимірюванням."
+- lemma: розглянуто
+  translation: it has been considered
+  pos: impersonal verb
+  usage: "На засіданні розглянуто три заяви."
+- lemma: здійснено
+  translation: it has been carried out
+  pos: impersonal verb
+  usage: "Перевірку здійснено відповідно до затвердженого порядку."
+- lemma: наведено
+  translation: it is presented, provided
+  pos: impersonal verb
+  usage: "У таблиці наведено результати опитування."
+- lemma: отже
+  translation: thus, therefore
+  pos: phrase
+  usage: "Отже, отримані дані підтверджують гіпотезу."
+- lemma: водночас
+  translation: at the same time, however
+  pos: adverb
+  usage: "Водночас ці результати потребують додаткової перевірки."
+- lemma: у встановлений строк
+  translation: within the established deadline
+  pos: phrase
+  usage: "Зобов'язання виконано у встановлений строк."
+- lemma: правовий
+  translation: legal
+  pos: adjective
+  usage: "Правовий текст має уникати двозначності."
+- lemma: адміністративний
+  translation: administrative
+  pos: adjective
+  usage: "Адміністративний документ фіксує порядок дії."
