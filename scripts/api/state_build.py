@@ -6,13 +6,14 @@ aggregation. All functions are sync and designed for asyncio.to_thread().
 
 import json
 from datetime import UTC, datetime
+from pathlib import Path
 
 try:
     from path_safety import safe_join  # scripts/ on sys.path (test sys.path-hack)
 except ImportError:
     from ..path_safety import safe_join  # scripts.api package import (production)
 
-from .config import CURRICULUM_ROOT, LEVELS
+from .config import CURRICULUM_ROOT, LEVELS, PROJECT_ROOT
 from .state_compute import _compute_shippable, _get_review_score
 from .state_helpers import (
     PLANS_ROOT,
@@ -153,6 +154,121 @@ def compute_build_status_all() -> dict:
         }
 
     return {"generated_at": datetime.now(UTC).isoformat(), "tracks": tracks}
+
+
+def _score_docs_text(track_id: str) -> str:
+    """Return concatenated durable score docs text for a track."""
+    docs_dir = safe_join(PROJECT_ROOT, "docs", "audits")
+    if not docs_dir.exists():
+        return ""
+    chunks: list[str] = []
+    track_prefix = track_id.lower()
+    for path in sorted(docs_dir.glob("*llm-score*.md")):
+        if not path.name.lower().startswith(track_prefix):
+            continue
+        chunks.append(path.read_text(encoding="utf-8"))
+    return "\n".join(chunks)
+
+
+def _module_score_persisted(score_text: str, num: int, slug: str) -> bool:
+    """Return whether durable score docs mention this module number and slug."""
+    return f"M{num:02d} `{slug}`" in score_text or f"M{num} `{slug}`" in score_text
+
+
+def _module_range_entry(
+    track_dir: Path,
+    mdx_dir: Path,
+    score_text: str,
+    num: int,
+    slug: str,
+) -> dict:
+    """Return deterministic status for one module in a range."""
+    module_dir = track_dir / slug
+    paths = {
+        "module": module_dir / "module.md",
+        "activities": module_dir / "activities.yaml",
+        "vocabulary": module_dir / "vocabulary.yaml",
+        "mdx": mdx_dir / f"{slug}.mdx",
+    }
+    files = {key: path.exists() for key, path in paths.items()}
+    missing_files = [key for key, exists in files.items() if not exists]
+    content_complete = not missing_files
+    score_persisted = _module_score_persisted(score_text, num, slug)
+    complete = content_complete and score_persisted
+    missing = [*missing_files]
+    if not score_persisted:
+        missing.append("score")
+    if complete:
+        status = "complete"
+    elif any(files.values()) or score_persisted:
+        status = "partial"
+    else:
+        status = "missing"
+    return {
+        "num": num,
+        "slug": slug,
+        "status": status,
+        "complete": complete,
+        "content_complete": content_complete,
+        "score_persisted": score_persisted,
+        "files": files,
+        "missing_files": missing_files,
+        "missing": missing,
+    }
+
+
+def compute_module_range_status(
+    track_id: str,
+    level_cfg: dict,
+    *,
+    start: int,
+    end: int,
+) -> dict:
+    """Compute deterministic committed-file status for a module number range.
+
+    This does not read generated audit/status artifacts because those are local
+    runtime state and must not be committed. It answers orchestration questions
+    like "what is left for B2 M32-M41?" from source files, generated MDX, and
+    durable score docs.
+    """
+    if start <= 0 or end <= 0:
+        raise ValueError("start and end must be positive")
+    if end < start:
+        raise ValueError("end must be greater than or equal to start")
+
+    plan_slugs = get_plan_slugs(track_id)
+    selected = [(num, slug) for num, slug in plan_slugs if start <= num <= end]
+    track_dir = CURRICULUM_ROOT / level_cfg["path"]
+    mdx_dir = safe_join(PROJECT_ROOT, "site", "src", "content", "docs", track_id)
+    score_text = _score_docs_text(track_id)
+
+    modules = [
+        _module_range_entry(track_dir, mdx_dir, score_text, num, slug)
+        for num, slug in selected
+    ]
+
+    total = len(modules)
+    complete_count = sum(1 for module in modules if module["complete"])
+    content_complete_count = sum(1 for module in modules if module["content_complete"])
+    score_persisted_count = sum(1 for module in modules if module["score_persisted"])
+    incomplete = [module for module in modules if not module["complete"]]
+    return {
+        "track": track_id,
+        "range": {"start": start, "end": end},
+        "total": total,
+        "complete": complete_count,
+        "content_complete": content_complete_count,
+        "score_persisted": score_persisted_count,
+        "incomplete": len(incomplete),
+        "remaining": [
+            {"num": module["num"], "slug": module["slug"], "missing": module["missing"]}
+            for module in incomplete
+        ],
+        "modules": modules,
+        "deterministic": True,
+        "source": "fs:plans+content+mdx+score-docs",
+        "generated_at": datetime.now(UTC).isoformat(),
+    }
 
 
 def compute_track_health(track_id: str, level_cfg: dict) -> dict:

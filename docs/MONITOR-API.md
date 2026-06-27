@@ -350,6 +350,54 @@ Returns only tracks that have activity. Use during overnight builds for a single
 
 ---
 
+### `GET /api/state/module-range/{track}`
+
+Deterministic committed-file status for a module number range. Use this for
+questions like "what is left for B2 M32-M41?" without spending model context on
+manual repo scans.
+
+With `MONITOR_API_BASE` set to the monitor host:
+
+```bash
+curl -s "${MONITOR_API_BASE}/api/state/module-range/b2?start=32&end=41" | .venv/bin/python -m json.tool
+```
+
+The endpoint checks committed source files, generated MDX, and durable score
+docs. It intentionally does not depend on `status/*.json`, `audit/*-review.md`,
+or local orchestration artifacts because those are runtime state and are not
+committed.
+
+Returns:
+```json
+{
+  "track": "b2",
+  "range": {"start": 32, "end": 41},
+  "total": 10,
+  "complete": 10,
+  "content_complete": 10,
+  "score_persisted": 10,
+  "incomplete": 0,
+  "remaining": [],
+  "modules": [
+    {
+      "num": 32,
+      "slug": "phonetic-stylistic-devices",
+      "status": "complete",
+      "complete": true,
+      "content_complete": true,
+      "score_persisted": true,
+      "files": {"module": true, "activities": true, "vocabulary": true, "mdx": true},
+      "missing_files": [],
+      "missing": []
+    }
+  ],
+  "deterministic": true,
+  "source": "fs:plans+content+mdx+score-docs"
+}
+```
+
+---
+
 ### `GET /api/state/build-stats/{track}`
 
 V6 build attempt history from `build-stats.jsonl`. Each V6 build appends a line to this file; this endpoint reads and summarizes it.
