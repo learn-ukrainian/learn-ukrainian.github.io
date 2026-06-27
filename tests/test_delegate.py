@@ -167,7 +167,7 @@ def test_dispatch_help_documents_timeout_interaction(capsys):
     assert "--hard-timeout" in captured.out
     assert "--silence-timeout" in captured.out
     assert "3600s" in captured.out
-    assert "pass 600" in captured.out
+    assert "watchdog activity" in captured.out
     assert "fallback" in captured.out
     assert "0 disables" in captured.out
 

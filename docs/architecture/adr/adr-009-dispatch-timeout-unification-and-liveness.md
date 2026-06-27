@@ -84,6 +84,24 @@ scripts/ai_llm/fallback.py                 effective_timeout defaults to _ONE_DA
 - **Monitor**: `/api/delegate/active` already exposes `last_activity` + `started_at` per dispatch. When #1520 Phase 3 lands, this surface extends to probe state.
 - **Revisit trigger**: if a real CLI bug causes a 24h-leak incident, OR if #1520 Phase 2 (watchdog integration) ships, this ADR is candidate for supersede. The next ADR should explain which half of "24h ceiling + composite probe" is authoritative.
 
+## 2026-06-27 amendment (#3875)
+
+User sign-off on 2026-06-27 amends ADR-009 for explicit
+`stdout_silence_timeout` / `--silence-timeout` use. The runtime may kill before
+`hard_timeout` only when the dispatch has no composite watchdog activity within
+the configured silence window.
+
+Composite watchdog activity is ANY of:
+
+- stdout/stderr lines drained by the watchdog;
+- liveness-file mtime changes reported by the adapter;
+- process-tree CPU/disk activity from the agent CLI or descendants.
+
+This is not a return to single-signal stall detection. Stdout silence alone is
+insufficient to kill a dispatch, and merely having a live sleeping process is
+insufficient to keep it alive. The hard timeout remains the wall-clock leak
+guard.
+
 ## History
 
 | Date | Event |
@@ -93,4 +111,5 @@ scripts/ai_llm/fallback.py                 effective_timeout defaults to _ONE_DA
 | 2026-04-24 | `a1/sounds-letters-and-hello` SKELETON fails at 300s; user flags the clock-based design |
 | 2026-04-24 | Architecture discussion on bridge thread `0f94b8c0`; Codex and Gemini converge (after round-2 corrections) on this design |
 | 2026-04-24 | `fa8b4ee0c1` commits the unification; this ADR codifies it |
+| 2026-06-27 | #3875 amends explicit silence timeout to use composite watchdog activity, not stdout alone |
 | TBD | #1520 Phase 2 lands composite probes → this ADR candidate for supersede |

@@ -60,8 +60,9 @@ class AgentTimeoutError(AgentRuntimeError):
 class AgentStalledError(AgentRuntimeError):
     """Agent produced no activity for longer than ``stall_timeout``.
 
-    Distinct from AgentTimeoutError. Raised when the last observed activity
-    (stdout line OR liveness file mtime bump) is older than ``stall_timeout``.
+    Distinct from AgentTimeoutError. Raised when the last observed activity is
+    older than ``stall_timeout``. Activity includes watchdog-observed
+    stdout/stderr, liveness files, and process-tree CPU/disk work.
     The agent might have been alive earlier but is now genuinely stuck —
     waiting for input, deadlocked, or the provider dropped the connection.
 

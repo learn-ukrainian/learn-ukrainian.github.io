@@ -23,6 +23,7 @@ import subprocess
 import sys
 import time
 from pathlib import Path
+from types import SimpleNamespace
 from unittest.mock import patch
 
 import pytest
@@ -120,6 +121,7 @@ from agent_runtime.runner import (
 from agent_runtime.usage import _reset_rate_limit_cache_for_tests
 from agent_runtime.watchdog import (
     WatchdogState,
+    _process_tree_has_activity,
     should_kill,
     start_watchdog,
     stop_watchdog,
@@ -2174,6 +2176,90 @@ def test_should_kill_detects_hard_timeout():
     state = WatchdogState(start_time=now - 4000, last_activity=now)
     # Started 4000s ago, hard_timeout 3600s → hard_timeout
     assert should_kill(state, stall_timeout=180, hard_timeout=3600) == "hard_timeout"
+
+
+def test_should_kill_silence_timeout_accepts_liveness_activity():
+    """Silence timeout is a hang backstop, not a stdout-only heuristic."""
+    now = time.monotonic()
+    state = WatchdogState(
+        start_time=now - 2400,
+        last_activity=now,
+        last_stdout_activity=now - 2400,
+    )
+
+    assert (
+        should_kill(
+            state,
+            stall_timeout=180,
+            hard_timeout=3600,
+            stdout_silence_timeout=1800,
+        )
+        is None
+    )
+
+
+def test_should_kill_silence_timeout_kills_fully_silent_process():
+    now = time.monotonic()
+    state = WatchdogState(
+        start_time=now - 2400,
+        last_activity=now - 2400,
+        last_stdout_activity=now - 2400,
+    )
+
+    assert (
+        should_kill(
+            state,
+            stall_timeout=180,
+            hard_timeout=3600,
+            stdout_silence_timeout=1800,
+        )
+        == "stdout_silence_timeout"
+    )
+
+
+def test_process_tree_has_activity_tracks_descendant_cpu(monkeypatch):
+    """CPU baselines survive fresh psutil.Process wrappers across polls."""
+
+    class FakeProcess:
+        def __init__(self, pid, cpu_seconds, children=()):
+            self.pid = pid
+            self._cpu_seconds = cpu_seconds
+            self._children = list(children)
+
+        def cpu_times(self):
+            return SimpleNamespace(user=self._cpu_seconds, system=0.0)
+
+        def io_counters(self):
+            raise AttributeError("not available on this platform")
+
+        def children(self, recursive=False):
+            assert recursive is True
+            return list(self._children)
+
+    import agent_runtime.watchdog as watchdog_module
+
+    samples = iter([(0.0, 0.0), (0.0, 0.10)])
+
+    def fake_process(_pid):
+        root_cpu, child_cpu = next(samples)
+        child = FakeProcess(pid=456, cpu_seconds=child_cpu)
+        return FakeProcess(pid=123, cpu_seconds=root_cpu, children=[child])
+
+    monkeypatch.setattr(watchdog_module.psutil, "Process", fake_process)
+
+    primed_pids: set[int] = set()
+    cpu_baselines: dict[int, float] = {}
+    io_baselines: dict[int, tuple[int, int, int, int]] = {}
+    proc = SimpleNamespace(pid=123)
+
+    assert (
+        _process_tree_has_activity(proc, primed_pids, cpu_baselines, io_baselines)
+        is False
+    )
+    assert (
+        _process_tree_has_activity(proc, primed_pids, cpu_baselines, io_baselines)
+        is True
+    )
 
 
 def test_tail_liveness_skips_binary_sqlite(tmp_path):

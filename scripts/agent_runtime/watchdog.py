@@ -13,18 +13,19 @@ string of production incidents. The module now does three things:
 
 2. **Liveness-file mtime poller** — updates
    ``WatchdogState.last_activity`` for observability (emitted into
-   usage records) but never drives kill decisions. Stall detection
-   as a kill condition was unreliable because every CLI version
-   bump broke a different mtime signal; see ``should_kill`` for
-   the full story.
+   usage records) and to suppress explicitly requested silence kills.
 
-3. **Hard-timeout kill** — the default kill condition.
+3. **Process-tree activity poller** — updates ``last_activity`` while the
+   agent CLI or descendants are measurably doing CPU/disk work. This prevents
+   stdout-only false kills during quiet build/test/enrich subprocess phases.
+
+4. **Hard-timeout kill** — the default kill condition.
    Triggers ``AgentTimeoutError`` when ``now - start_time >
    hard_timeout``. Default hard_timeout is 1h.
 
-Callers may opt in to a separate stdout-silence timeout for workflows where
-the stdout pipe is the protocol liveness signal. It remains disabled by
-default so normal agent dispatch keeps ADR-009's hard-timeout behavior.
+Callers may opt in to a separate silence timeout. It now keys off composite
+watchdog activity (stdout/stderr, liveness-file mtime, process-tree CPU/disk
+activity), not stdout alone.
 
 Issue: #1184
 """
@@ -41,10 +42,18 @@ from collections.abc import Iterable
 from dataclasses import dataclass, field
 from pathlib import Path
 
+import psutil
+
 # Poll interval for the mtime fallback thread. 5s is a good balance — fast
 # enough to extend the stall clock promptly, slow enough that the overhead
 # is negligible (at most 5 stat calls per 5s = ~1 per second).
 _MTIME_POLL_INTERVAL_S = 5.0
+
+# Optional silence-timeout backstop should not fire while the subprocess tree is
+# demonstrably doing work. Poll slowly; stdout/stderr/liveness file events remain
+# the primary cheap signals.
+_PROCESS_ACTIVITY_POLL_INTERVAL_S = 5.0
+_PROCESS_ACTIVITY_MIN_CPU_SECONDS = 0.05
 
 # Maximum number of liveness paths to poll. Adapters returning more than
 # this many paths will only have the first _MAX_LIVENESS_PATHS polled.
@@ -80,10 +89,11 @@ class WatchdogState:
     Fields:
         start_time: monotonic timestamp when the subprocess was spawned.
         last_activity: monotonic timestamp of the most recent observed
-            activity (stdout line or liveness file mtime bump).
+            activity (stdout/stderr line, liveness file mtime bump, or
+            process-tree CPU/disk activity).
         last_stdout_activity: monotonic timestamp of the most recent stdout
-            line. Unlike ``last_activity``, stderr and liveness files never
-            update this field.
+            line. Unlike ``last_activity``, stderr, liveness files, and
+            process-tree activity never update this field.
         stop: Set to True by the main thread when the watchdog should exit.
         stdout_lines: Accumulated stdout lines captured by the streamer.
             The runner reads this on normal termination to build the final
@@ -281,12 +291,122 @@ def _mtime_poller(paths: Iterable[Path], state: WatchdogState) -> None:
                 baseline_mtimes[p] = current
 
 
+def _process_io_snapshot(process: psutil.Process) -> tuple[int, int, int, int] | None:
+    """Return cheap cumulative I/O counters when the platform exposes them."""
+    try:
+        counters = process.io_counters()
+    except (AttributeError, NotImplementedError, psutil.Error):
+        return None
+    return (
+        int(getattr(counters, "read_count", 0)),
+        int(getattr(counters, "write_count", 0)),
+        int(getattr(counters, "read_bytes", 0)),
+        int(getattr(counters, "write_bytes", 0)),
+    )
+
+
+def _process_cpu_seconds(process: psutil.Process) -> float | None:
+    """Return cumulative user+system CPU seconds for one process."""
+    try:
+        cpu_times = process.cpu_times()
+    except (AttributeError, psutil.Error):
+        return None
+    return float(getattr(cpu_times, "user", 0.0)) + float(
+        getattr(cpu_times, "system", 0.0)
+    )
+
+
+def _process_tree_has_activity(
+    proc: subprocess.Popen,
+    primed_pids: set[int],
+    cpu_baselines: dict[int, float],
+    io_baselines: dict[int, tuple[int, int, int, int]],
+) -> bool:
+    """Return True when proc or descendants are measurably doing CPU/disk work."""
+    try:
+        root = psutil.Process(proc.pid)
+        processes = [root, *root.children(recursive=True)]
+    except psutil.Error:
+        return False
+
+    active = False
+    for process in processes:
+        try:
+            cpu_seconds = _process_cpu_seconds(process)
+            io_snapshot = _process_io_snapshot(process)
+        except psutil.Error:
+            continue
+
+        if process.pid not in primed_pids:
+            primed_pids.add(process.pid)
+            if cpu_seconds is not None:
+                cpu_baselines[process.pid] = cpu_seconds
+            if io_snapshot is not None:
+                io_baselines[process.pid] = io_snapshot
+            continue
+
+        if cpu_seconds is not None:
+            previous_cpu = cpu_baselines.get(process.pid)
+            cpu_baselines[process.pid] = cpu_seconds
+            if (
+                previous_cpu is not None
+                and cpu_seconds - previous_cpu >= _PROCESS_ACTIVITY_MIN_CPU_SECONDS
+            ):
+                active = True
+
+        if io_snapshot is not None:
+            previous = io_baselines.get(process.pid)
+            io_baselines[process.pid] = io_snapshot
+            if previous is not None and io_snapshot != previous:
+                active = True
+
+    live_pids = {process.pid for process in processes}
+    primed_pids.intersection_update(live_pids)
+    for pid in list(cpu_baselines):
+        if pid not in live_pids:
+            cpu_baselines.pop(pid, None)
+    for pid in list(io_baselines):
+        if pid not in live_pids:
+            io_baselines.pop(pid, None)
+
+    return active
+
+
+def _sleep_until_stop(state: WatchdogState, duration_s: float) -> None:
+    deadline = time.monotonic() + duration_s
+    while not state.stop:
+        remaining = deadline - time.monotonic()
+        if remaining <= 0:
+            return
+        time.sleep(min(0.1, remaining))
+
+
+def _process_activity_poller(proc: subprocess.Popen, state: WatchdogState) -> None:
+    """Refresh last_activity while the subprocess tree is doing CPU/disk work."""
+    primed_pids: set[int] = set()
+    cpu_baselines: dict[int, float] = {}
+    io_baselines: dict[int, tuple[int, int, int, int]] = {}
+
+    while not state.stop:
+        if proc.poll() is not None:
+            return
+        if _process_tree_has_activity(
+            proc,
+            primed_pids,
+            cpu_baselines,
+            io_baselines,
+        ):
+            state.last_activity = time.monotonic()
+        _sleep_until_stop(state, _PROCESS_ACTIVITY_POLL_INTERVAL_S)
+
+
 def start_watchdog(
     proc: subprocess.Popen,
     liveness_paths: Iterable[Path] = (),
     *,
     stdout_master_fd: int | None = None,
     stderr_master_fd: int | None = None,
+    track_process_activity: bool = False,
 ) -> tuple[WatchdogState, list[threading.Thread]]:
     """Start the stdout streamer + mtime poller threads for a running subprocess.
 
@@ -301,6 +421,8 @@ def start_watchdog(
             ``_spawn_pty_subprocess`` in runner.py (#2071).
         stderr_master_fd: PTY master fd for the child's stderr. Same
             semantics as ``stdout_master_fd``.
+        track_process_activity: When True, poll process-tree CPU/disk activity
+            and refresh ``last_activity`` while the process tree is doing work.
 
     When the fd kwargs are ``None`` the watchdog falls back to the
     legacy pipe-mode streamers — exercised by the ``DELEGATE_DISABLE_PTY``
@@ -375,6 +497,19 @@ def start_watchdog(
         )
         t_mtime.start()
         threads.append(t_mtime)
+
+    if track_process_activity:
+        # Layer 3: process-tree activity poller. This only keeps an explicit
+        # silence timeout alive while the agent CLI or its children are actually
+        # doing CPU/disk work; mere process existence still times out.
+        t_process = threading.Thread(
+            target=_process_activity_poller,
+            args=(proc, state),
+            name=f"watchdog-process-{proc.pid}",
+            daemon=True,
+        )
+        t_process.start()
+        threads.append(t_process)
 
     return state, threads
 
@@ -466,8 +601,9 @@ def should_kill(
         "initial_response_timeout" if the caller enabled startup probing and
         the subprocess produced no stdout/stderr/liveness activity within that
         window (#2071 startup hangs with response_chars=0).
-        "stdout_silence_timeout" if the caller explicitly enabled stdout
-        silence detection and no stdout line has arrived within that window.
+        "stdout_silence_timeout" if the caller explicitly enabled silence
+        detection and no stdout/stderr/liveness/process-tree activity has
+        arrived within that window.
 
     ``stall_timeout`` is accepted for backward compatibility with callers but
     is NOT used as a kill condition. Deleting stall detection from the kill
@@ -488,11 +624,11 @@ def should_kill(
        place with a different convention, and tracking each one
        individually is whack-a-mole with no ground truth.
 
-    The mtime poller still runs for observability (via the WatchdogState
-    last_activity field, which the runner reads for usage records), but
-    the kill decision now relies solely on hard_timeout as the safety net.
-    A legitimately long-running task will be allowed to complete; a truly
-    runaway process still gets killed by hard_timeout.
+    Mtime and process-tree pollers are allowed to suppress an explicitly
+    requested silence timeout because that timeout is a hang backstop, not a
+    stdout-only productivity heuristic. This preserves ADR-009's "no single
+    fragile signal kills productive work" rule while still catching fully quiet
+    hangs before hard_timeout.
 
     See #1184 for the full incident chain.
     """
@@ -510,7 +646,7 @@ def should_kill(
     if (
         stdout_silence_timeout is not None
         and stdout_silence_timeout > 0
-        and (now - state.last_stdout_activity) > stdout_silence_timeout
+        and (now - state.last_activity) > stdout_silence_timeout
     ):
         return "stdout_silence_timeout"
     return None

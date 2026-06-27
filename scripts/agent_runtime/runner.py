@@ -1005,6 +1005,9 @@ def _execute_invocation_plan(
             list(liveness_paths),
             stdout_master_fd=stdout_master_fd,
             stderr_master_fd=stderr_master_fd,
+            track_process_activity=bool(
+                stdout_silence_timeout is not None and stdout_silence_timeout > 0
+            ),
         )
         mcp_observer = _McpRuntimeObserver.from_tool_config(
             agent_name=agent_name,
@@ -1659,13 +1662,14 @@ def invoke(
             successful long-running calls were killed as false-positive
             stalls. See watchdog.py::should_kill() docstring for the
             full incident chain. hard_timeout is the only safety net now.
-        stdout_silence_timeout: Optional per-call stdout silence watchdog in
-            seconds. Disabled by default. Use only for protocols where stdout
-            bytes are the authoritative liveness signal.
+        stdout_silence_timeout: Optional per-call composite silence watchdog in
+            seconds. Disabled by default. Uses stdout/stderr, liveness-file
+            updates, and process-tree CPU/disk activity.
         initial_response_timeout: Optional startup probe in seconds. When set,
             the runtime kills the subprocess if it produces no stdout/stderr
             or liveness-file activity within this window (#2071). Distinct
-            from ``stdout_silence_timeout``, which only watches stdout lines.
+            from ``stdout_silence_timeout``, which watches composite activity
+            after startup.
         event_sink: Optional ``event_sink(event_name, **fields)`` callback for
             dispatch JSONL observability events.
         effort: Cross-agent reasoning/effort level. First-class peer of
