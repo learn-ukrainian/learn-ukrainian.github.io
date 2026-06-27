@@ -3,24 +3,131 @@ level: FOLK
 sequence: 2
 slug: kalendarna-obriadovist-zvychai
 title: "Календарна обрядовість і звичаї"
-subtitle: "Calendar Rites and Customs — заглушка (перебудовується, #3879)"
-version: 1
-status: stub
+subtitle: "Calendar rites as oral tradition, Christian heritage, and literary source"
+version: 2
+status: locked
+phase: base-first
+cefr_min: C1
 word_target: 4000
+focus: "A clean source-first map of the Ukrainian ritual year: winter, spring, summer, and harvest cycles as verbal art and performance."
+persona: "C1+ seminar learner reading calendar folklore through public primary texts, school canon, and careful framing."
 objectives:
-  - 'Заглушка — чисті цілі регенеруються в базовій перебудові (#3879).'
+  - "Пояснити календарну обрядовість як річну систему пісні, звичаю, часу, предмета, виконавця і громади."
+  - "Розрізняти зимовий, весняний, літній і жниварський цикли без змішування їхніх жанрів і функцій."
+  - "Читати календарну пісню через виконавську ситуацію: хто співає, коли, для кого, поруч із якою дією."
+  - "Використовувати лише публічні джерела для learner-facing цитування й не переносити службові корпусні позначки в урок."
+  - "Утримувати християнсько-історичну рамку української культури без зниження Різдва, Великодня або вертепу до зовнішнього шару."
+pedagogy:
+  approach: "source-first seminar map"
+  notes:
+    - "Start from two clean public readings, then build the yearly map."
+    - "M02 is an overview; detailed genre work belongs in later block B modules."
+    - "Use FOLK framing standard as a hard gate before module/readings build."
 content_outline:
-  - section: 'Заглушка, частина 1 (#3879)'
-    words: 2000
+  - section: "Постановка проблеми"
+    words: 550
     points:
-      - 'Заглушка — план регенерується в базовій перебудові фольклору (#3879)'
-  - section: 'Заглушка, частина 2 (#3879)'
-    words: 2000
+      - "Why calendar folklore is not a holiday list: text, time, action, object, performer, community."
+      - "Source discipline: public reading URL first; school-canonical framing second; no internal source labels in learner-facing materials."
+  - section: "Карта річного кола"
+    words: 950
     points:
-      - 'Заглушка — план регенерується в базовій перебудові фольклору (#3879)'
+      - "Winter cycle: Christmas, Щедрий вечір, Маланка, Василь, обхідний гурт, колядка, щедрівка, вертеп."
+      - "Spring cycle: веснянки, гаївки, ягілки, великодній час, group movement, question-answer forms."
+      - "Summer cycle: Купало, Зелені свята, rusalia-linked songs as seasonal poetic material to be handled carefully in later modules."
+      - "Harvest cycle: зажинки, жнива, обжинки, last sheaf/wreath, procession, shared labor memory."
+  - section: "Первинні читання"
+    words: 850
+    points:
+      - "Read 'Ой сивая та і зозулечка' as winter well-wishing song: refrain, addressee, house, garden, prosperity image."
+      - "Read 'Ой весна, весна, ти красна' as spring song: dialogue, season, grain, flowers, communal voice."
+      - "Name but do not duplicate later readings for koliadky, kupalski/rusalni, zhnyvarski/obzhynkovi until public full texts are cleaned."
+  - section: "Виконавська ситуація і поетика"
+    words: 850
+    points:
+      - "Track who performs: family, children, youth group, carol group, harvest workers."
+      - "Analyze repetition, refrain, address, parallelism, short stanza, movement, and call-response."
+      - "Connect object and space: table, door, yard, churchyard, field, wreath, sheaf, road."
+  - section: "Деколонізаційна рамка"
+    words: 550
+    points:
+      - "Reject reduction of Ukrainian calendar tradition to decorative ethnography."
+      - "Show Ukrainian as a language for ordering time, work, blessing, home, and public memory."
+      - "Keep source limits visible: one public text is one recorded variant, not the whole living tradition."
+  - section: "Міст до писемної культури"
+    words: 250
+    points:
+      - "Recorded calendar songs become school readings, choral transformations, drama, and literary memory."
+      - "Set up later modules in block B without repeating their full analysis."
+activity_hints:
+  - type: cycle-map
+    placement: inline
+    focus: "Classify a text by time, performer, addressee, action, object, and public source."
+  - type: source-check
+    placement: workbook
+    focus: "Given a citation, decide whether it is learner-facing public source or internal-only research note."
+  - type: comparative-reading
+    placement: workbook
+    focus: "Compare winter щедрівка and spring веснянка by refrain, address, season, and community role."
+vocabulary_hints:
+  - "календарна обрядовість"
+  - "колядка"
+  - "щедрівка"
+  - "веснянка"
+  - "гаївка"
+  - "купальська пісня"
+  - "жниварська пісня"
+  - "обжинки"
+  - "виконавська ситуація"
+  - "приспів"
+  - "повтор"
+  - "публічне джерело"
 references:
-  - title: 'Заглушка — джерела регенеруються в базовій перебудові (#3879)'
-note: >-
-  Outline placeholder. Built module + poisoned plan content removed in PR #3867. Full clean
-  base (dossier -> wiki -> plan -> module) regenerated base-first in the folk rebuild (#3879).
-  Not built, not published. All placeholder text carries zero framing/readings/chunk-ids.
+  - title: "Українська література, 6 клас. Народні календарно-обрядові пісні"
+    author: "Заболотний О., Заболотний В."
+    type: textbook
+    url: "https://pidruchnyk.com.ua/2617-ukralit-6-klas-zabolotnyi.html"
+    note: "School-canonical frame for calendar-ritual songs."
+  - title: "Українська література, 5 клас. Усна народна творчість"
+    author: "Заболотний О., Заболотний В."
+    type: textbook
+    url: "https://pidruchnyk.com.ua/1684-5_ukrlit_zabolotnyi.html"
+    note: "Introductory frame for oral folk creativity as verbal art."
+readings:
+  - title: "Ой сивая та і зозулечка"
+    title_en: "Oh, grey cuckoo"
+    genre: "Щедрівка"
+    role: primary
+    type: primary
+    source: "Народна творчість. УкрЛіб."
+    source_url: "https://www.ukrlib.com.ua/narod/printout.php?id=6&bookid=1"
+    license: public_domain
+    hosting: hosted
+    reading_slug: "shchedrivka-oi-syvaia-ta-i-zozulechka"
+  - title: "Ой весна, весна, ти красна"
+    title_en: "Oh spring, spring, you beautiful one"
+    genre: "Веснянка"
+    role: primary
+    type: primary
+    source: "Народна творчість. УкрЛіб."
+    source_url: "https://www.ukrlib.com.ua/narod/printout.php?id=0&bookid=0"
+    license: public_domain
+    hosting: hosted
+    reading_slug: "vesnianka-oi-vesna-vesna-ty-krasna"
+do_not_quote:
+  - line: "Any plan, wiki, lesson, or reading citation exposes an internal corpus/service ID."
+    reason: "Public learners must see public Ukrlib/Osvita/bibliographic sources only."
+  - line: "Christmas, Easter, or vertep are explained as a late outer layer over another hidden core."
+    reason: "FOLK framing standard requires Christian-heritage-first treatment where tradition is Christian."
+  - line: "M02 duplicates full analysis of koliadky, vesnianky, kupalski, or zhnyvarski modules."
+    reason: "M02 is the block overview; later modules handle detailed genre readings."
+connects_to:
+  - narodna-kultura-yak-systema
+  - koliadky-shchedrivky
+  - vesnianky-hayivky
+  - kupalski-rusalni-pisni
+  - zhnyvarski-obzhynkovi-pisni
+changelog:
+  - version: 2
+    date: "2026-06-27"
+    note: "Base-first rebuild: replaced clean stub with framing-compliant dossier/wiki/plan; scope remains base-only with no new module/readings pages."
