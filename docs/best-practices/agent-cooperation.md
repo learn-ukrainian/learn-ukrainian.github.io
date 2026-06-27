@@ -306,7 +306,7 @@ Most `ab discuss` runs converge with `[AGREE]` — orchestrator just executes th
 
 When all participating agents share the same underlying bias on a topic (e.g., Russian-imperial framing on Ukrainian topics, Western centrism on decolonization), an `[AGREE]` consensus is NOT a green light. It is exactly when the Decision Card mechanism is most needed and most likely to be bypassed.
 
-For high-risk tracks — **HIST, BIO, ISTORIO, LIT, OES, RUTH** (all decolonization-sensitive seminar tracks where Russian/Soviet-imperial framings are most ingrained in training data) — the orchestrator MUST apply at least one of the following failsafe mechanisms:
+For high-risk tracks — **FOLK, HIST, BIO, ISTORIO, LIT, OES, RUTH** (all decolonization-sensitive seminar tracks where Russian/Soviet-imperial framings are most ingrained in training data) — the orchestrator MUST apply at least one of the following failsafe mechanisms:
 
 - **Mechanism A (Force-emit Decision Card on `[AGREE]`):** If `ab discuss` runs on a topic touching any high-risk track and converges with `[AGREE]`, the orchestrator emits a Decision Card anyway. The question is framed as "agents converged on X — but consensus on this track is suspect; user should sanity-check." The user can quickly approve or override.
 - **Mechanism B (Inject domain-specific bias checklist):** For high-risk tracks, the `ab discuss` prompt is augmented with a short bias checklist explicitly provoking adversarial review on known bias vectors.

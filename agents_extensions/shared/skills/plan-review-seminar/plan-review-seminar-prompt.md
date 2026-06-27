@@ -1,6 +1,6 @@
 # Plan Review Prompt — Seminar Tracks
 
-You are reviewing a Ukrainian language course plan YAML file for seminar tracks (HIST, BIO, ISTORIO, LIT and subtracks, OES, RUTH). Your job is to find errors, weaknesses, and gaps BEFORE content is built from this plan.
+You are reviewing a Ukrainian language course plan YAML file for seminar tracks (FOLK, HIST, BIO, ISTORIO, LIT and subtracks, OES, RUTH). Your job is to find errors, weaknesses, and gaps BEFORE content is built from this plan.
 
 **Key difference from core reviews:** Seminar tracks have NO State Standard mapping. Authority comes from external knowledge sources (Wikipedia, Literary RAG) and domain expertise, not government curriculum documents.
 
@@ -33,6 +33,7 @@ Read the plan YAML file, then systematically check every item below.
 
 | Track | target_words |
 |-------|-------------|
+| FOLK | 4000 |
 | HIST | 5000 |
 | ISTORIO | 5000 |
 | BIO | 5000 |
@@ -139,6 +140,16 @@ For every word in `vocabulary_hints.required` and `vocabulary_hints.recommended`
 
 ---
 
+#### FOLK (Folklore / Folk Culture)
+
+- [ ] Apply `docs/folk-epic/FOLK-FRAMING-STANDARD.md` as a hard gate.
+- [ ] No pagan-core / Christian-shell framing. Christian heritage is not a veneer over a hidden pagan essence.
+- [ ] No occult, demonology-as-belief, or magic-as-core explanatory frame in teacher prose.
+- [ ] Cosmogonic, demonological, or magic vocabulary appears only with source discipline and framing caveats, never as the module thesis.
+- [ ] No Soviet/Russian demonizing lens: Ukrainian folk culture is not primitive, backward, superstition, banditry, or "Little Russian" material.
+- [ ] Public learner sources use public URLs; internal corpus chunk IDs must not appear in public-facing or plan-facing learner surfaces.
+- [ ] Primary readings are school-canonical/public-source grounded where applicable, and hosted texts use the full public text rather than snippets.
+
 ## Output Format
 
 ```markdown
@@ -150,8 +161,8 @@ For every word in `vocabulary_hints.required` and `vocabulary_hints.recommended`
 ## Rule Compliance
 | Check | Status | Details |
 |-------|--------|---------|
-| word_target | PASS/FAIL | Plan: X, Config: 5000 |
-| section_budgets | PASS/FAIL | Sum = X vs target 5000 (+/-Z%) |
+| word_target | PASS/FAIL | Plan: X, Config: track target |
+| section_budgets | PASS/FAIL | Sum = X vs track target (+/-Z%) |
 | required_fields | PASS/FAIL | Missing: ... |
 | version_string | PASS/FAIL | ... |
 

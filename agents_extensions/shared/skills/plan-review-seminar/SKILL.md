@@ -1,13 +1,13 @@
 ---
 name: plan-review-seminar
-description: Review SEMINAR track plans (HIST, BIO, ISTORIO, LIT, OES, RUTH) using Wikipedia + Literary RAG + VESUM. Finds factual errors, ghost sources, decolonization issues.
+description: Review SEMINAR track plans (FOLK, HIST, BIO, ISTORIO, LIT, OES, RUTH) using Wikipedia + Literary RAG + VESUM. Finds factual errors, ghost sources, decolonization issues.
 argument-hint: "<track> [modules: all | 1 | 5-10 | slug-name]"
 effort: xhigh
 ---
 
 # Plan Review (Seminar): $ARGUMENTS
 
-**Scope: HIST, BIO, ISTORIO, LIT (all subtracks), OES, RUTH only.** For core levels (A1-C2, PRO), use `/plan-review`.
+**Scope: FOLK, HIST, BIO, ISTORIO, LIT (all subtracks), OES, RUTH only.** For core levels (A1-C2, PRO), use `/plan-review`.
 
 ## Parse Arguments
 
@@ -25,7 +25,7 @@ Parse the arguments:
 
 **Plans directory**: `curriculum/l2-uk-en/plans/{track}/*.yaml`
 
-**Valid tracks**: hist, bio, istorio, lit, lit-drama, lit-essay, lit-doc, lit-crimea, lit-fantastika, lit-hist-fic, lit-humor, lit-war, lit-youth, oes, ruth
+**Valid tracks**: folk, hist, bio, istorio, lit, lit-drama, lit-essay, lit-doc, lit-crimea, lit-fantastika, lit-hist-fic, lit-humor, lit-war, lit-youth, oes, ruth
 
 ## Module Selection
 

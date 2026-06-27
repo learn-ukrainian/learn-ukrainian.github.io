@@ -172,7 +172,7 @@ Read → Fix A → Audit → Read → Fix B → Audit → Read → Fix C → Aud
 
 Activities practice Ukrainian language skills, not subject knowledge.
 
-### 9a. Content-heavy modules (HIST, BIO, ISTORIO, LIT, RUTH, OES)
+### 9a. Content-heavy modules (FOLK, HIST, BIO, ISTORIO, LIT, RUTH, OES)
 
 **Golden Rule:** Can the learner answer without reading the Ukrainian text? If YES → rewrite it.
 
