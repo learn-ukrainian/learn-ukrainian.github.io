@@ -1923,6 +1923,28 @@ def test_translation_returns_none_when_lemma_absent(monkeypatch) -> None:
     assert _translation(conn, "неіснуючеслово") is None
 
 
+def test_translation_uses_curated_learner_gloss_after_source_misses(monkeypatch) -> None:
+    conn = sqlite3.connect(":memory:")
+    conn.execute("CREATE TABLE dmklinger_uk_en (word TEXT, pos TEXT, translations TEXT)")
+    monkeypatch.setattr(enrich_manifest_module, "_DMKLINGER_INDEX", None)
+
+    assert _translation(conn, "ого", {}) == {
+        "en": ["wow", "whoa"],
+        "source": "curated learner gloss",
+    }
+
+
+def test_translation_prefers_kaikki_over_curated_learner_gloss(monkeypatch) -> None:
+    conn = sqlite3.connect(":memory:")
+    conn.execute("CREATE TABLE dmklinger_uk_en (word TEXT, pos TEXT, translations TEXT)")
+    monkeypatch.setattr(enrich_manifest_module, "_DMKLINGER_INDEX", None)
+
+    assert _translation(conn, "ого", {"ого": {"glosses": ["oh wow"]}}) == {
+        "en": ["oh wow"],
+        "source": KAIKKI_SOURCE,
+    }
+
+
 def test_wiki_reference_success(monkeypatch, tmp_path) -> None:
     fake_wiki_data = {
         "title": "Україна",

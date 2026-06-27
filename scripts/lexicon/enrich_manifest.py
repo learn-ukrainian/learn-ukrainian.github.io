@@ -294,6 +294,14 @@ _BALLA_LOOKUPS: dict[str, tuple[str, ...]] = {
     "чудово": ("wonderful", "great", "fine"),
 }
 
+# Transparent learner-facing glosses for common particles/interjections where
+# the Ukrainian dictionaries have exact definition cards but the local bilingual
+# and Kaikki/Wiktionary sources have no English row. Keep this small and
+# high-confidence; never pretend these are dictionary imports.
+_CURATED_LEARNER_TRANSLATIONS: dict[str, tuple[str, ...]] = {
+    "ого": ("wow", "whoa"),
+}
+
 _BLOCKED_SYNONYMS = {
     "java",
     "ma",
@@ -3033,7 +3041,18 @@ def _translation(
                 if pos:
                     block["pos"] = pos
                 return block
-    return _kaikki_translation(kaikki_lookup or {}, lemma)
+    kaikki_translation = _kaikki_translation(kaikki_lookup or {}, lemma)
+    if kaikki_translation:
+        return kaikki_translation
+
+    for variant in _split_lemma_variants(lemma):
+        curated = _CURATED_LEARNER_TRANSLATIONS.get(_lookup_key(variant).casefold())
+        if curated:
+            return {
+                "en": list(curated),
+                "source": "curated learner gloss",
+            }
+    return None
 
 
 def _fts_phrase(term: str) -> str:
