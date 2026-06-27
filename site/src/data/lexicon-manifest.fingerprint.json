@@ -1,5 +1,5 @@
 {
-  "fingerprint": "55ed8a2cf2321409a9d1cc2e08fa09b2664cab21d755d49b0bc9b0f9987bef13",
+  "fingerprint": "59ab270398e4722123112e2a5b08763cac46a519334acc040de0facd92a28885",
   "inputs": {
     "lexicon_code": [
       {
@@ -44,7 +44,7 @@
       },
       {
         "path": "scripts/lexicon/enrich_manifest.py",
-        "sha256": "50bc29950b67731ac2b5ac066dda363a6871b9ed5035f0514a552ee812660bb5"
+        "sha256": "8822ed30fc2079358826311e3ec4feecd82d427705a6c2a2c3fae9019c3a9f1c"
       },
       {
         "path": "scripts/lexicon/esum_garbled.py",
@@ -100,7 +100,7 @@
       },
       {
         "path": "scripts/lexicon/reenrich_thin_manifest_entries.py",
-        "sha256": "f06d909cb48898186eaa614163f8ce9271b599f2d264f4a492968ac0b715344e"
+        "sha256": "28c72082c388ae5b301acc006eeed4e585c9fbbda48b805d1ff543d31862745d"
       },
       {
         "path": "scripts/lexicon/repair_plural_noun_aliases.py",

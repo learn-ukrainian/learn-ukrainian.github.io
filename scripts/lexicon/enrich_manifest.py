@@ -3317,6 +3317,7 @@ _SLOVNYK_UKRENG_PREFIX_LABELS = {
     "мед",
     "мет",
     "мін",
+    "мн",
     "мор",
     "муз",
     "перен",
@@ -3343,6 +3344,7 @@ def _ukreng_prefix_is_label(prefix: str) -> bool:
 def _clean_ukreng_gloss(candidate: str) -> str | None:
     cleaned = clean_html_entities(candidate)
     cleaned = re.sub(r"\b(?:also|fig|figurative|literally|lit)\.?\b", " ", cleaned, flags=re.IGNORECASE)
+    cleaned = re.sub(r"\(\s*(?:pl|sg|plural|singular)\.?\s*\)", " ", cleaned, flags=re.IGNORECASE)
     cleaned = re.sub(r"\s+", " ", cleaned).strip(" \t\r\n.,;:!?()[]{}«»\"“”")
     cleaned = re.sub(r"^(?:to|a|an|the)\s+", "", cleaned, flags=re.IGNORECASE)
     if not cleaned or not _LATIN_RE.search(cleaned) or re.search(r"[А-Яа-яЄєІіЇїҐґ]", cleaned):

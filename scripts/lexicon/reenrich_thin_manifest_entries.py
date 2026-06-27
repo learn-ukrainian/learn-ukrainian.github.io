@@ -98,30 +98,44 @@ def _translation_for_entry(
     conn: sqlite3.Connection,
     entry: dict[str, Any],
     kaikki_lookup: dict[str, dict[str, Any]],
+    *,
+    cached_slovnyk_only: bool = False,
 ) -> dict[str, object] | None:
     lemma = str(entry.get("lemma") or "")
     entry_pos = entry.get("pos")
     gloss_hints = enrich_manifest._surface_gloss_hints(entry)
+    slovnyk_cache = enrich_manifest._slovnyk_cache(lemma)
+    if cached_slovnyk_only and not enrich_manifest._cache_has_lookup(
+        slovnyk_cache,
+        enrich_manifest._SLOVNYK_UKRENG_SLUG,
+    ):
+        slovnyk_cache = None
     translation = enrich_manifest._translation(
         conn,
         lemma,
         kaikki_lookup,
         entry_pos=entry_pos,
         gloss_hints=gloss_hints,
-        slovnyk_cache=enrich_manifest._slovnyk_cache(lemma),
+        slovnyk_cache=slovnyk_cache,
     )
     if translation:
         return translation
     fallback_base = enrich_manifest._base_lookup_for_entry(lemma, entry_pos)
     if not fallback_base:
         return None
+    fallback_cache = enrich_manifest._slovnyk_cache(fallback_base)
+    if cached_slovnyk_only and not enrich_manifest._cache_has_lookup(
+        fallback_cache,
+        enrich_manifest._SLOVNYK_UKRENG_SLUG,
+    ):
+        fallback_cache = None
     translation = enrich_manifest._translation(
         conn,
         fallback_base,
         kaikki_lookup,
         entry_pos=entry_pos,
         gloss_hints=gloss_hints,
-        slovnyk_cache=enrich_manifest._slovnyk_cache(fallback_base),
+        slovnyk_cache=fallback_cache,
     )
     if not translation:
         return None
@@ -132,8 +146,15 @@ def _reenrich_translation_only(
     conn: sqlite3.Connection,
     entry: dict[str, Any],
     kaikki_lookup: dict[str, dict[str, Any]],
+    *,
+    cached_slovnyk_only: bool = False,
 ) -> None:
-    translation = _translation_for_entry(conn, entry, kaikki_lookup)
+    translation = _translation_for_entry(
+        conn,
+        entry,
+        kaikki_lookup,
+        cached_slovnyk_only=cached_slovnyk_only,
+    )
     if not translation:
         return
     enrichment = entry.setdefault("enrichment", {})
@@ -159,6 +180,24 @@ def _reenrich_full_entry(
     )
 
 
+def _has_translation(entry: dict[str, Any]) -> bool:
+    enrichment = entry.get("enrichment")
+    if not isinstance(enrichment, dict):
+        return False
+    translation = enrichment.get("translation")
+    if not isinstance(translation, dict):
+        return False
+    terms = translation.get("en")
+    return isinstance(terms, list) and any(str(term).strip() for term in terms)
+
+
+def missing_translation_entries(manifest: dict[str, Any]) -> list[dict[str, Any]]:
+    entries = manifest.get("entries")
+    if not isinstance(entries, list):
+        return []
+    return [entry for entry in entries if isinstance(entry, dict) and not _has_translation(entry)]
+
+
 def reenrich_thin_entries(
     manifest: dict[str, Any],
     *,
@@ -167,8 +206,15 @@ def reenrich_thin_entries(
     limit: int | None = None,
     full_entry: bool = False,
     refresh_wiki: bool = False,
+    target: str = "missing-anchor",
+    cached_slovnyk_only: bool = False,
 ) -> dict[str, Any]:
-    targets = thin_old_gate_entries(manifest)
+    if target == "missing-translation":
+        targets = missing_translation_entries(manifest)
+    elif target == "missing-anchor":
+        targets = thin_old_gate_entries(manifest)
+    else:
+        raise ValueError(f"unsupported re-enrichment target: {target}")
     if limit is not None:
         targets = targets[:limit]
 
@@ -179,12 +225,14 @@ def reenrich_thin_entries(
 
     changed = 0
     gained_anchor = 0
+    filled_translation = 0
     try:
         for entry in targets:
             enrichment = entry.get("enrichment") if isinstance(entry.get("enrichment"), dict) else {}
             existing_cefr = enrichment.get("cefr") if isinstance(enrichment, dict) else None
             existing_wiki_reference = entry.get("wiki_reference")
             had_anchor = has_learner_english_anchor(entry)
+            had_translation = _has_translation(entry)
             before = json.dumps(entry, ensure_ascii=False, sort_keys=True)
             if full_entry:
                 _reenrich_full_entry(
@@ -194,7 +242,12 @@ def reenrich_thin_entries(
                     has_sum11_flags=has_sum11_flags,
                 )
             else:
-                _reenrich_translation_only(conn, entry, kaikki_lookup)
+                _reenrich_translation_only(
+                    conn,
+                    entry,
+                    kaikki_lookup,
+                    cached_slovnyk_only=cached_slovnyk_only,
+                )
             _preserve_existing_metadata(
                 entry,
                 existing_cefr=existing_cefr if isinstance(existing_cefr, dict) else None,
@@ -207,13 +260,17 @@ def reenrich_thin_entries(
                 changed += 1
             if not had_anchor and has_learner_english_anchor(entry):
                 gained_anchor += 1
+            if not had_translation and _has_translation(entry):
+                filled_translation += 1
     finally:
         enrich_manifest._wiki_reference = original_wiki_reference
 
     remaining = thin_old_gate_entries(manifest)
     return {
+        "target": target,
         "targets": len(targets),
         "changed": changed,
+        "filled_translation": filled_translation,
         "gained_english_anchor": gained_anchor,
         "remaining_old_gate_no_english_anchor": len(remaining),
     }
@@ -237,6 +294,20 @@ def main() -> int:
         action="store_true",
         help="Run full enrich_entry for each target. Default only recomputes translation anchors.",
     )
+    parser.add_argument(
+        "--target",
+        choices=("missing-anchor", "missing-translation"),
+        default="missing-anchor",
+        help=(
+            "Select entries to re-enrich. Default keeps the old gate repair behavior; "
+            "missing-translation fills sourced translation cards where deterministic sources exist."
+        ),
+    )
+    parser.add_argument(
+        "--cached-slovnyk-only",
+        action="store_true",
+        help="Use existing Slovnyk.me Ukrainian-English cache rows only; do not live-fetch missing Slovnyk entries.",
+    )
     parser.add_argument("--refresh-wiki", action="store_true")
     parser.add_argument("--write", action="store_true")
     args = parser.parse_args()
@@ -255,6 +326,8 @@ def main() -> int:
             limit=args.limit,
             full_entry=args.full_entry,
             refresh_wiki=args.refresh_wiki,
+            target=args.target,
+            cached_slovnyk_only=args.cached_slovnyk_only,
         )
 
     print(json.dumps(summary, ensure_ascii=False, indent=2))
