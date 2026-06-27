@@ -1,0 +1,164 @@
+- lemma: родовий
+  translation: genitive case
+  pos: noun
+  usage: Родовий відмінок має багато семантичних функцій.
+- lemma: частковий родовий
+  translation: partitive genitive
+  pos: phrase
+  usage: Частковий родовий позначає невизначену кількість речовини.
+- lemma: партитивний
+  translation: partitive
+  pos: adj
+  usage: Партитивний відтінок видно у фразі випити чаю.
+- lemma: суб'єктний родовий
+  translation: subjective genitive
+  pos: phrase
+  usage: У словосполученні приїзд делегації родовий є суб'єктним.
+- lemma: об'єктний родовий
+  translation: objective genitive
+  pos: phrase
+  usage: У фразі захист прав родовий називає об'єкт дії.
+- lemma: належність
+  translation: possession, belonging
+  pos: noun
+  usage: Родовий належності показує зв'язок між власником і предметом.
+- lemma: означальний
+  translation: descriptive, attributive
+  pos: adj
+  usage: Означальний родовий описує рису, а не власника.
+- lemma: прийменник
+  translation: preposition
+  pos: noun
+  usage: Прийменник внаслідок керує родовим відмінком.
+- lemma: керування
+  translation: government, syntactic governance
+  pos: noun
+  usage: Керування прийменника треба перевіряти окремо.
+- lemma: замість
+  translation: instead of
+  pos: prep
+  usage: Замість відповіді він поставив нове запитання.
+- lemma: крім
+  translation: except, besides
+  pos: prep
+  usage: Крім одного пункту, документ погодили повністю.
+- lemma: окрім
+  translation: apart from, except
+  pos: prep
+  usage: Окрім технічних правок, зміст не змінили.
+- lemma: навколо
+  translation: around
+  pos: prep
+  usage: Навколо нового офісу посадили дерева.
+- lemma: поблизу
+  translation: near, close to
+  pos: prep
+  usage: Поблизу вокзалу відкрили інформаційний пункт.
+- lemma: попри
+  translation: despite
+  pos: prep
+  usage: Попри застереження експертів, проєкт підтримали.
+- lemma: поза
+  translation: outside, beyond
+  pos: prep
+  usage: Поза межами міста дорога стала вужчою.
+- lemma: задля
+  translation: for the sake of
+  pos: prep
+  usage: Задля безпеки зустріч перенесли.
+- lemma: внаслідок
+  translation: as a result of
+  pos: prep
+  usage: Внаслідок аварії рух тимчасово обмежили.
+- lemma: унаслідок
+  translation: as a result of
+  pos: prep
+  usage: Унаслідок затримки команда змінила графік.
+- lemma: протягом
+  translation: during, throughout
+  pos: prep
+  usage: Протягом тижня учасники подавали заявки.
+- lemma: упродовж
+  translation: during, throughout
+  pos: prep
+  usage: Упродовж семестру студенти аналізували тексти.
+- lemma: уздовж
+  translation: along
+  pos: prep
+  usage: Уздовж річки проклали нову стежку.
+- lemma: посеред
+  translation: in the middle of
+  pos: prep
+  usage: Посеред площі встановили тимчасову сцену.
+- lemma: з-посеред
+  translation: from among
+  pos: prep
+  usage: З-посеред усіх пропозицій обрали найреалістичнішу.
+- lemma: залежно від
+  translation: depending on
+  pos: phrase
+  usage: Залежно від результатів опитування план змінять.
+- lemma: у разі
+  translation: in case of
+  pos: phrase
+  usage: У разі відсутності кворуму засідання перенесуть.
+- lemma: під час
+  translation: during
+  pos: phrase
+  usage: Під час обговорення виникло кілька питань.
+- lemma: за винятком
+  translation: with the exception of
+  pos: phrase
+  usage: За винятком двох пунктів, угоду схвалили.
+- lemma: на відміну від
+  translation: unlike, in contrast to
+  pos: phrase
+  usage: На відміну від попереднього звіту, новий текст містить джерела.
+- lemma: абстрактний
+  translation: abstract
+  pos: adj
+  usage: Абстрактний іменник часто має закінчення -у або -ю.
+- lemma: конкретний
+  translation: concrete, specific
+  pos: adj
+  usage: Конкретний предмет частіше має закінчення -а або -я.
+- lemma: закінчення
+  translation: ending
+  pos: noun
+  usage: Закінчення залежить від значення слова.
+- lemma: чергування
+  translation: alternation
+  pos: noun
+  usage: У формі Києва видно чергування в основі.
+- lemma: побіжний голосний
+  translation: fleeting vowel
+  pos: phrase
+  usage: У слові винятку випадає побіжний голосний.
+- lemma: заперечення
+  translation: negation
+  pos: noun
+  usage: Заперечення часто посилює родовий відмінок.
+- lemma: нестача
+  translation: shortage, lack
+  pos: noun
+  usage: Нестача коштів змінила план роботи.
+- lemma: кількісний
+  translation: quantitative
+  pos: adj
+  usage: Кількісний родовий з'являється після слів багато й мало.
+- lemma: жодний
+  translation: no, not a single
+  pos: pron
+  usage: Без жодного доказу теза лишається припущенням.
+- lemma: ланцюжок
+  translation: chain
+  pos: noun
+  usage: Родовий ланцюжок може перевантажити речення.
+- lemma: канцелярський
+  translation: bureaucratic, officialese
+  pos: adj
+  usage: Надмір родових конструкцій робить стиль канцелярським.
+- lemma: словосполучення
+  translation: phrase, word combination
+  pos: noun
+  usage: Словосполучення аналіз даних має об'єктний родовий.
