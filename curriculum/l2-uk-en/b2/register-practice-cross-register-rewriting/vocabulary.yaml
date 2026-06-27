@@ -1,0 +1,120 @@
+- lemma: трансформа́ція
+  translation: transformation
+  pos: noun
+  usage: Стилісти́чна трансформа́ція змі́нює фо́рму те́ксту.
+- lemma: перекодува́ння
+  translation: recoding, register rewriting
+  pos: noun
+  usage: Перекодува́ння зберіга́є зміст і змі́нює регі́стр.
+- lemma: конте́кст
+  translation: context
+  pos: noun
+  usage: Конте́кст визнача́є доре́чність сло́ва.
+- lemma: адреса́т
+  translation: addressee
+  pos: noun
+  usage: Адреса́т вплива́є на ви́бір регі́стру.
+- lemma: доре́чність
+  translation: appropriateness
+  pos: noun
+  usage: Доре́чність важли́ві́ша за механі́чну кни́жність.
+- lemma: еквівале́нт
+  translation: equivalent
+  pos: noun
+  usage: Нейтра́льний еквівале́нт допомага́є перефразува́ти текст.
+- lemma: синоні́міка
+  translation: synonymy as a system
+  pos: noun
+  usage: Синоні́міка пока́зує рі́зні регі́стри.
+- lemma: регі́стр
+  translation: register
+  pos: noun
+  usage: Регі́стр зале́жить від адреса́та й мети́.
+- lemma: нейтра́льний
+  translation: neutral
+  pos: adjective
+  usage: Нейтра́льний тон доре́чний у робо́чому повідо́мленні.
+- lemma: перефразува́ти
+  translation: to paraphrase
+  pos: verb
+  usage: Спро́буй перефразува́ти службо́ве речення.
+- lemma: лаконі́чність
+  translation: conciseness
+  pos: noun
+  usage: Лаконі́чність не пови́нна зни́щувати зміст.
+- lemma: надмі́рність
+  translation: excessiveness
+  pos: noun
+  usage: Надмі́рність ство́рює мо́вне захара́щення.
+- lemma: адапта́ція
+  translation: adaptation
+  pos: noun
+  usage: Адапта́ція змі́нює фо́рму для ново́го адреса́та.
+- lemma: відпові́дність
+  translation: correspondence, fit
+  pos: noun
+  usage: Відпові́дність жа́нру є крите́рієм я́кості.
+- lemma: гну́чкість
+  translation: flexibility
+  pos: noun
+  usage: Стилісти́чна гну́чкість потрі́бна в робо́чому спілкува́нні.
+- lemma: дисона́нс
+  translation: dissonance
+  pos: noun
+  usage: Дисона́нс виникає че́рез змі́шування регі́стрів.
+- lemma: паради́гма
+  translation: paradigm
+  pos: noun
+  usage: Стилісти́чна паради́гма спира́ється на ряд замі́н.
+- lemma: прагма́тика
+  translation: pragmatics
+  pos: noun
+  usage: Прагма́тика пока́зує, наві́що ска́зано фра́зу.
+- lemma: номіналізація
+  translation: nominalization
+  pos: noun
+  usage: Номіналізація перено́сить ді́ю в іме́нник.
+- lemma: персоналіза́ція
+  translation: personalization
+  pos: noun
+  usage: Персоналіза́ція поверта́є в текст суб'є́кта ді́ї.
+- lemma: діалогіза́ція
+  translation: dialogization
+  pos: noun
+  usage: Діалогіза́ція ро́бить текст бли́жчим до живо́го мо́влення.
+- lemma: мода́льність
+  translation: modality
+  pos: noun
+  usage: Мода́льність визнача́є тон проха́ння або́ ви́сновку.
+- lemma: канцеляри́зм
+  translation: bureaucratic expression
+  pos: noun
+  usage: Канцеляри́зм доре́чний не в ко́жному жа́нрі.
+- lemma: сленг
+  translation: slang
+  pos: noun
+  usage: Сленг потребу́є то́чного адреса́та.
+- lemma: просторі́ччя
+  translation: colloquial low-register speech
+  pos: noun
+  usage: Просторі́ччя недоре́чне в офіці́йному листі.
+- lemma: коректу́ра
+  translation: proofreading, correction pass
+  pos: noun
+  usage: Коректу́ра перевіря́є ці́лісність регі́стру.
+- lemma: вира́зність
+  translation: expressiveness
+  pos: noun
+  usage: Вира́зність ма́є відповіда́ти жа́нру.
+- lemma: впра́вність
+  translation: skillfulness
+  pos: noun
+  usage: Мо́вна впра́вність проявля́ється в то́чному перемика́нні.
+- lemma: фамілья́рність
+  translation: over-familiarity
+  pos: noun
+  usage: Фамілья́рність руйну́є офіці́йний тон.
+- lemma: субордина́ція
+  translation: subordination, hierarchy of address
+  pos: noun
+  usage: Субордина́ція вплива́є на фо́рмулу зверта́ння.
