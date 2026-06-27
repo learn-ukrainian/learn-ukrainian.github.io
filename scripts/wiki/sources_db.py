@@ -28,6 +28,7 @@ import yaml
 
 from scripts.lexicon.esum_garbled import (
     garbled_esum_entry,
+    has_mojibake_marker,
     strip_garbled_tail,
     trim_curated_goroh_text,
 )
@@ -1470,6 +1471,8 @@ def _clean_garbled_esum_results(conn: sqlite3.Connection, rows: list[dict]) -> l
     for row in rows:
         lemma = str(row.get("lemma") or "")
         if not garbled_esum_entry(lemma):
+            if has_mojibake_marker(str(row.get("etymology_text") or "")):
+                continue
             cleaned.append(row)
             continue
         item = dict(row)
@@ -1478,6 +1481,8 @@ def _clean_garbled_esum_results(conn: sqlite3.Connection, rows: list[dict]) -> l
             item.update(override)
         else:
             item["etymology_text"] = strip_garbled_tail(str(item.get("etymology_text") or ""), lemma)
+            if has_mojibake_marker(str(item.get("etymology_text") or "")):
+                continue
             item["source"] = f"{item.get('source') or 'ЕСУМ'} (garbled tail stripped)"
         cleaned.append(item)
     return cleaned
