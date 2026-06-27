@@ -1,0 +1,144 @@
+- lemma: прибуток
+  translation: profit
+  pos: noun
+  usage: Компанія отримала прибуток після скорочення витрат.
+- lemma: збитки
+  translation: losses
+  pos: noun
+  usage: Підприємство зазнало збитків через падіння попиту.
+- lemma: податки
+  translation: taxes
+  pos: noun
+  usage: Податки впливають на фінансовий результат бізнесу.
+- lemma: інвестиції
+  translation: investments
+  pos: noun
+  usage: Стартап залучив інвестиції для масштабування продукту.
+- lemma: ринок
+  translation: market
+  pos: noun
+  usage: Компанія вийшла на новий ринок після дослідження попиту.
+- lemma: дохід
+  translation: income, revenue
+  pos: noun
+  usage: Дохід зріс, але прибуток зменшився через витрати.
+- lemma: бюджет
+  translation: budget
+  pos: noun
+  usage: Державний бюджет має доходи, видатки й дефіцит.
+- lemma: підприємець
+  translation: entrepreneur
+  pos: noun
+  usage: Підприємець розрахував собівартість перед запуском продажу.
+- lemma: рентабельність
+  translation: profitability
+  pos: noun
+  usage: Рентабельність проєкту залежить від ціни та собівартості.
+- lemma: акції
+  translation: shares, stocks
+  pos: noun
+  usage: Інвестор купив акції після аналізу фінансової звітності.
+- lemma: попит
+  translation: demand
+  pos: noun
+  usage: Попит на послугу зріс після запуску реклами.
+- lemma: пропозиція
+  translation: supply, offer
+  pos: noun
+  usage: Пропозиція праці залежить від кваліфікації кандидатів.
+- lemma: конкурентоспроможність
+  translation: competitiveness
+  pos: noun
+  usage: Конкурентоспроможність залежить від якості, ціни й довіри.
+- lemma: інфляція
+  translation: inflation
+  pos: noun
+  usage: Інфляція знижує купівельну спроможність.
+- lemma: капіталізація
+  translation: capitalization
+  pos: noun
+  usage: Капіталізація компанії змінилася після новини про інвестиції.
+- lemma: аудит
+  translation: audit
+  pos: noun
+  usage: Аудит підтвердив достовірність фінансової звітності.
+- lemma: видатки
+  translation: public expenditures
+  pos: noun
+  usage: Видатки бюджету спрямували на оборону й соціальний захист.
+- lemma: витрати
+  translation: expenses, costs
+  pos: noun
+  usage: Витрати компанії перевищили запланований бюджет.
+- lemma: облікова ставка
+  translation: key policy rate
+  pos: phrase
+  usage: Національний банк зберіг облікову ставку.
+- lemma: дефіцит бюджету
+  translation: budget deficit
+  pos: phrase
+  usage: Дефіцит бюджету пояснили зростанням видатків.
+- lemma: ліквідність
+  translation: liquidity
+  pos: noun
+  usage: Компанія підтримує ліквідність для своєчасних платежів.
+- lemma: депозит
+  translation: deposit
+  pos: noun
+  usage: Клієнт відкрив депозит у банку.
+- lemma: кредит
+  translation: loan, credit
+  pos: noun
+  usage: Банк оцінює заставу перед наданням кредиту.
+- lemma: застава
+  translation: collateral
+  pos: noun
+  usage: Застава зменшує ризик кредитора.
+- lemma: дивіденди
+  translation: dividends
+  pos: noun
+  usage: Дивіденди виплачують після рішення власників.
+- lemma: портфель
+  translation: portfolio
+  pos: noun
+  usage: Інвестор диверсифікує портфель між різними активами.
+- lemma: облігації
+  translation: bonds
+  pos: noun
+  usage: Компанія випустила облігації для залучення коштів.
+- lemma: фінтех
+  translation: fintech
+  pos: noun
+  usage: Фінтех змінює спосіб оплати й управління рахунками.
+- lemma: бізнес-модель
+  translation: business model
+  pos: phrase
+  usage: Бізнес-модель пояснює, як компанія заробляє гроші.
+- lemma: собівартість
+  translation: production cost
+  pos: noun
+  usage: Собівартість впливає на ціну й прибуток.
+- lemma: стартап
+  translation: startup
+  pos: noun
+  usage: Стартап перевірив гіпотезу на першій групі клієнтів.
+- lemma: брендинг
+  translation: branding
+  pos: noun
+  usage: Брендинг формує впізнаваність і довіру до компанії.
+- lemma: зайнятість
+  translation: employment
+  pos: noun
+  usage: Зайнятість залежить від попиту на працю.
+- lemma: кваліфікація
+  translation: qualification
+  pos: noun
+  usage: Працівник підвищує кваліфікацію протягом життя.
+- lemma: рекрутинг
+  translation: recruiting
+  pos: noun
+  usage: Рекрутингова команда шукає кандидатів із потрібними компетенціями.
+- lemma: аутсорсинг
+  translation: outsourcing
+  pos: noun
+  usage: Компанія передала бухгалтерський облік на аутсорсинг.
