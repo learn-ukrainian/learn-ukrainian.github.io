@@ -1,5 +1,5 @@
 {
-  "fingerprint": "755a63dca45dba1a7537b6257791e6be35520345e6e03432a79152683b351f0a",
+  "fingerprint": "8e409ae0e414ae2b15c8d761d7027a5b37ad3b0d267bb4811ac045c306f9583e",
   "inputs": {
     "lexicon_code": [
       {
@@ -44,7 +44,7 @@
       },
       {
         "path": "scripts/lexicon/enrich_manifest.py",
-        "sha256": "bb42e88f1734f30d2ca41b00efed841029634baa97a2fb44e5878f9dbadc595f"
+        "sha256": "403a2de64076d2517ebd9afa6da6b6105b983c9a3b164dbc114fc4ad1b409e60"
       },
       {
         "path": "scripts/lexicon/esum_garbled.py",
@@ -95,6 +95,10 @@
         "sha256": "3aac9e0942366c3a6d50ed2590a6b92c600f7064d458f2fe92bae1f3d42814f7"
       },
       {
+        "path": "scripts/lexicon/reenrich_thin_manifest_entries.py",
+        "sha256": "90ebbe4d39e44420a4d8c82f0dc562c6927ad6b4663d434be07511a0e020cfa4"
+      },
+      {
         "path": "scripts/lexicon/verify_manifest.py",
         "sha256": "e128d60f2c72ca44fdc550fb99436adc27481d59b9877f22480f67a988ae3059"
       }
@@ -103,6 +107,6 @@
   "schema_version": 1,
   "scope": "lexicon code only; excludes module vocabulary and dictionary DB/cache state",
   "stats": {
-    "lexicon_code_files": 24
+    "lexicon_code_files": 25
   }
 }

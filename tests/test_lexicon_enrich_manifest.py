@@ -7,6 +7,7 @@ import pytest
 
 from scripts.lexicon import enrich_manifest as enrich_manifest_module
 from scripts.lexicon.enrich_manifest import (
+    _BALLA_REVERSE_SOURCE,
     _DROP_ANTONYM_LEMMAS,
     _WRONG_ANTONYMS,
     _WRONG_SENSE_SYNONYMS,
@@ -38,6 +39,7 @@ from scripts.lexicon.enrich_manifest import (
     _sense_correct_synonyms,
     _slovnyk_cache,
     _SlovnykTransientError,
+    _surface_gloss_hints,
     _synonyms_slovnyk,
     _translation,
     _warning_slovnyk,
@@ -1317,7 +1319,7 @@ def test_enrich_entry_uses_pos_matched_base_translation_fallback(monkeypatch) ->
     monkeypatch.setattr(enrich_manifest_module, "_wiki_reference", none)
     monkeypatch.setattr(enrich_manifest_module, "_base_lookup_for_entry", lambda lemma, pos: "бачити")
 
-    def fake_translation(conn, lemma: str, kaikki_lookup):
+    def fake_translation(conn, lemma: str, kaikki_lookup, **kwargs):
         if lemma == "бачити":
             return {"en": ["to see"], "source": "fixture"}
         return None
@@ -1919,14 +1921,132 @@ def test_translation_returns_none_when_lemma_absent(monkeypatch) -> None:
     conn = sqlite3.connect(":memory:")
     conn.execute("CREATE TABLE dmklinger_uk_en (word TEXT, pos TEXT, translations TEXT)")
     monkeypatch.setattr(enrich_manifest_module, "_DMKLINGER_INDEX", None)
+    monkeypatch.setattr(enrich_manifest_module, "_BALLA_REVERSE_INDEX", {})
 
     assert _translation(conn, "неіснуючеслово") is None
+
+
+def test_translation_uses_unambiguous_reverse_balla_after_source_misses(monkeypatch) -> None:
+    conn = sqlite3.connect(":memory:")
+    conn.execute("CREATE TABLE dmklinger_uk_en (word TEXT, pos TEXT, translations TEXT)")
+    conn.execute("CREATE TABLE balla_en_uk (word TEXT, definition TEXT, text TEXT)")
+    conn.execute(
+        "INSERT INTO balla_en_uk (word, definition, text) VALUES (?, ?, ?)",
+        ("stir", "v 1) мішати, помішувати, розмішувати; збовтувати", ""),
+    )
+    monkeypatch.setattr(enrich_manifest_module, "_DMKLINGER_INDEX", None)
+    monkeypatch.setattr(enrich_manifest_module, "_BALLA_REVERSE_INDEX", {})
+    _patch_vesum_analyses(monkeypatch, {"помішувати": "verb"})
+
+    assert _translation(conn, "помішувати", {}, entry_pos="verb") is None
+    assert _translation(conn, "помішувати", {}, entry_pos="verb", gloss_hints={"stir"}) == {
+        "en": ["stir"],
+        "source": _BALLA_REVERSE_SOURCE,
+        "note": (
+            "Reverse lookup from an exact Ukrainian token in Балла EN→UK, "
+            "validated by the source learner gloss; skipped when ambiguous."
+        ),
+    }
+
+
+def test_translation_skips_ambiguous_reverse_balla(monkeypatch) -> None:
+    conn = sqlite3.connect(":memory:")
+    conn.execute("CREATE TABLE dmklinger_uk_en (word TEXT, pos TEXT, translations TEXT)")
+    conn.execute("CREATE TABLE balla_en_uk (word TEXT, definition TEXT, text TEXT)")
+    conn.executemany(
+        "INSERT INTO balla_en_uk (word, definition, text) VALUES (?, ?, ?)",
+        [
+            ("mix", "v змішувати, помішувати", ""),
+            ("stir", "v мішати, помішувати", ""),
+        ],
+    )
+    monkeypatch.setattr(enrich_manifest_module, "_DMKLINGER_INDEX", None)
+    monkeypatch.setattr(enrich_manifest_module, "_BALLA_REVERSE_INDEX", {})
+    _patch_vesum_analyses(monkeypatch, {"помішувати": "verb"})
+
+    assert (
+        _translation(conn, "помішувати", {}, entry_pos="verb", gloss_hints={"mix", "stir"})
+        is None
+    )
+
+
+def test_translation_prefers_kaikki_over_reverse_balla(monkeypatch) -> None:
+    conn = sqlite3.connect(":memory:")
+    conn.execute("CREATE TABLE dmklinger_uk_en (word TEXT, pos TEXT, translations TEXT)")
+    conn.execute("CREATE TABLE balla_en_uk (word TEXT, definition TEXT, text TEXT)")
+    conn.execute(
+        "INSERT INTO balla_en_uk (word, definition, text) VALUES (?, ?, ?)",
+        ("stir", "v помішувати", ""),
+    )
+    monkeypatch.setattr(enrich_manifest_module, "_DMKLINGER_INDEX", None)
+    monkeypatch.setattr(enrich_manifest_module, "_BALLA_REVERSE_INDEX", {})
+    _patch_vesum_analyses(monkeypatch, {"помішувати": "verb"})
+
+    assert _translation(conn, "помішувати", {"помішувати": {"glosses": ["to stir"]}}) == {
+        "en": ["to stir"],
+        "source": KAIKKI_SOURCE,
+    }
+
+
+def test_translation_reverse_balla_ignores_example_sentences(monkeypatch) -> None:
+    conn = sqlite3.connect(":memory:")
+    conn.execute("CREATE TABLE dmklinger_uk_en (word TEXT, pos TEXT, translations TEXT)")
+    conn.execute("CREATE TABLE balla_en_uk (word TEXT, definition TEXT, text TEXT)")
+    conn.execute(
+        "INSERT INTO balla_en_uk (word, definition, text) VALUES (?, ?, ?)",
+        ("dash", "v he ~ed the book on the floor — він шпурнув книгу додолу", ""),
+    )
+    monkeypatch.setattr(enrich_manifest_module, "_DMKLINGER_INDEX", None)
+    monkeypatch.setattr(enrich_manifest_module, "_BALLA_REVERSE_INDEX", {})
+    _patch_vesum_analyses(monkeypatch, {"книга": "noun"})
+
+    assert _translation(conn, "книга", {}, entry_pos="noun", gloss_hints={"dash"}) is None
+
+
+def test_translation_reverse_balla_requires_single_token_segment(monkeypatch) -> None:
+    conn = sqlite3.connect(":memory:")
+    conn.execute("CREATE TABLE dmklinger_uk_en (word TEXT, pos TEXT, translations TEXT)")
+    conn.execute("CREATE TABLE balla_en_uk (word TEXT, definition TEXT, text TEXT)")
+    conn.execute(
+        "INSERT INTO balla_en_uk (word, definition, text) VALUES (?, ?, ?)",
+        ("home", "n 1) дім 2) порт базування", ""),
+    )
+    monkeypatch.setattr(enrich_manifest_module, "_DMKLINGER_INDEX", None)
+    monkeypatch.setattr(enrich_manifest_module, "_BALLA_REVERSE_INDEX", {})
+    _patch_vesum_analyses(monkeypatch, {"базування": "noun", "дім": "noun"})
+
+    assert _translation(conn, "базування", {}, entry_pos="noun", gloss_hints={"home"}) is None
+    assert _translation(conn, "дім", {}, entry_pos="noun", gloss_hints={"home"}) == {
+        "en": ["home"],
+        "source": _BALLA_REVERSE_SOURCE,
+        "note": (
+            "Reverse lookup from an exact Ukrainian token in Балла EN→UK, "
+            "validated by the source learner gloss; skipped when ambiguous."
+        ),
+    }
+
+
+def test_surface_gloss_hints_skip_noun_normalization() -> None:
+    entry = {
+        "lemma": "вершок",
+        "atlas_normalizations": [
+            {
+                "reason": (
+                    "VESUM: inflected surface «вершки» (surface gloss='cream', "
+                    "pos='noun:pl') folded into a NEWLY-CREATED lemma page «вершок»."
+                )
+            }
+        ],
+    }
+
+    assert _surface_gloss_hints(entry) == set()
 
 
 def test_translation_uses_curated_learner_gloss_after_source_misses(monkeypatch) -> None:
     conn = sqlite3.connect(":memory:")
     conn.execute("CREATE TABLE dmklinger_uk_en (word TEXT, pos TEXT, translations TEXT)")
     monkeypatch.setattr(enrich_manifest_module, "_DMKLINGER_INDEX", None)
+    monkeypatch.setattr(enrich_manifest_module, "_BALLA_REVERSE_INDEX", {})
 
     assert _translation(conn, "ого", {}) == {
         "en": ["wow", "whoa"],
@@ -1938,6 +2058,7 @@ def test_translation_prefers_kaikki_over_curated_learner_gloss(monkeypatch) -> N
     conn = sqlite3.connect(":memory:")
     conn.execute("CREATE TABLE dmklinger_uk_en (word TEXT, pos TEXT, translations TEXT)")
     monkeypatch.setattr(enrich_manifest_module, "_DMKLINGER_INDEX", None)
+    monkeypatch.setattr(enrich_manifest_module, "_BALLA_REVERSE_INDEX", {})
 
     assert _translation(conn, "ого", {"ого": {"glosses": ["oh wow"]}}) == {
         "en": ["oh wow"],
