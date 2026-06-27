@@ -1,0 +1,70 @@
+{
+  "assembled_mdx_sha256": "4db503f75419368fd69a45ab41f8631fcd01c5b30fa52fa7d49adf36722afe38",
+  "content_hash": {
+    "algorithm": "sha256",
+    "basis": "lesson_sources_v2",
+    "digest": "c5bd33a7f5470046bb99c3ec7be103cc71898a1411c8963831dc052aa2b630e0",
+    "files": [
+      {
+        "path": "curriculum/l2-uk-en/plans/folk/koliadky-shchedrivky.yaml",
+        "sha256": "f1b023d8978ca190868ad9f0cf8cac46162f1fe84eb0cd70c855c108359f7ee5"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/koliadky-shchedrivky/module.md",
+        "sha256": "af7c71c509fbd7c8c815dd4e1c5c319adc2aca03249f477079f5282338b3101d"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/koliadky-shchedrivky/activities.yaml",
+        "sha256": "b30d2d9f5cf6e89cfc4cfe45ded709f498076b9fa4a8b1d7aed0b6f1a7c6a525"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/koliadky-shchedrivky/vocabulary.yaml",
+        "sha256": "78995051e45a4db3eadf1781766cfc4964a3fbccc3730deb5e0dc2d32d19597f"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/koliadky-shchedrivky/resources.yaml",
+        "sha256": "92c5f4b3cd8e2573a0593b3739bb2f39fbb486db17cfc7598494843348600d84"
+      }
+    ]
+  },
+  "evidence": {
+    "framing": "Agy/Gemini 3.1 Pro High APPROVE: module frames колядки/щедрівки as Ukrainian winter calendar-cycle, Christian-era, household/community, poetic and performative tradition; no old hidden-core or sensational framing blockers.",
+    "pedagogy": "The lesson uses exact plan sections and builds a C1+ seminar method around genre distinction, performance sequence, formula/motif reading, public source discipline, and evidence-bounded interpretation.",
+    "quote_integrity": "Local source hammer found every hosted reading PrimaryReading text exactly matches its live public Ukrlib article body; all four current lesson excerpts are contained in hosted reading pages.",
+    "review": "Independent read-only Agy/Gemini 3.1 Pro High final review returned APPROVE with no blockers; duplicate compatibility route for 'Як ще не було...' noted as non-blocking.",
+    "source_hygiene": "Hosted readings and resources use public Ukrlib/Pidruchnyk/Osvita URLs only; scans found no internal corpus/chunk IDs in learner-facing M03 lesson/readings."
+  },
+  "floors": {
+    "beauty": 8.5,
+    "decolonization": 9.0,
+    "engagement": 8.5,
+    "naturalness": 8.5,
+    "pedagogical": 8.5,
+    "tone": 8.5
+  },
+  "profile": "folk_promote_v1",
+  "review_artifact": null,
+  "reviewer": {
+    "agent": "agy",
+    "family": "google",
+    "model": "gemini-3.1-pro-high"
+  },
+  "schema_version": 1,
+  "scored_at": "2026-06-27T21:35:06Z",
+  "scores": {
+    "beauty": 9.5,
+    "decolonization": 9.8,
+    "engagement": 9.2,
+    "naturalness": 9.5,
+    "pedagogical": 9.6,
+    "tone": 9.5
+  },
+  "slug": "koliadky-shchedrivky",
+  "track": "folk",
+  "verdict": "PASS",
+  "writer": {
+    "agent": "codex",
+    "family": "openai",
+    "model": "gpt-5"
+  }
+}
