@@ -304,6 +304,19 @@ def _append_normalization(entry: dict, normalization: dict[str, str] | None) -> 
         normalizations.append(normalization)
 
 
+_PLURAL_NOUN_SURFACE_HEAD_KEYS = {
+    _lemma_key("бризки"),
+    _lemma_key("вершки"),
+}
+
+
+def _is_plural_noun_surface_head(rec: dict) -> bool:
+    pos = str(rec.get("pos") or "").strip().casefold()
+    return pos in {"noun:pl", "noun plural", "plural noun"} and _lemma_key(str(rec.get("lemma") or "")) in (
+        _PLURAL_NOUN_SURFACE_HEAD_KEYS
+    )
+
+
 def _atlas_record_for_manifest(rec: dict, taught_lemma_keys: set[str]) -> dict | list[dict] | None:
     """Normalize course surfaces to Atlas lemma heads, or omit non-lemmas."""
     raw_lemma = str(rec["lemma"])
@@ -345,6 +358,8 @@ def _atlas_record_for_manifest(rec: dict, taught_lemma_keys: set[str]) -> dict |
     # Auto-generated VESUM aliasing: fold an inflected form into its lemma.
     alias_target = VESUM_INFLECTION_ALIASES_BY_KEY.get(key)
     if alias_target:
+        if _lemma_key(alias_target) not in taught_lemma_keys and _is_plural_noun_surface_head(rec):
+            return dict(rec)
         aliased = dict(rec)
         aliased["lemma"] = alias_target
         aliased["source"] = "built_vocabulary_normalized"

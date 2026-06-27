@@ -25,12 +25,14 @@ def test_reenrich_translation_only_preserves_existing_enrichment(monkeypatch) ->
         ],
     }
 
-    def fake_translation(conn, lemma, kaikki_lookup, *, entry_pos=None, gloss_hints=None):
+    def fake_translation(conn, lemma, kaikki_lookup, *, entry_pos=None, gloss_hints=None, slovnyk_cache=None):
         assert gloss_hints == {"stir"}
+        assert slovnyk_cache is not None
         return {"en": ["stir"], "source": "fixture source"}
 
     monkeypatch.setattr(enrich_manifest, "_translation", fake_translation)
     monkeypatch.setattr(enrich_manifest, "_base_lookup_for_entry", lambda *args, **kwargs: None)
+    monkeypatch.setattr(enrich_manifest, "_slovnyk_cache", lambda lemma: {})
 
     with sqlite3.connect(":memory:") as conn:
         _reenrich_translation_only(conn, entry, {})

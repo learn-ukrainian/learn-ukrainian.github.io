@@ -9,6 +9,7 @@ from scripts.lexicon import enrich_manifest as enrich_manifest_module
 from scripts.lexicon.enrich_manifest import (
     _BALLA_REVERSE_SOURCE,
     _DROP_ANTONYM_LEMMAS,
+    _SLOVNYK_UKRENG_SOURCE,
     _WRONG_ANTONYMS,
     _WRONG_SENSE_SYNONYMS,
     KAIKKI_SOURCE,
@@ -2066,6 +2067,34 @@ def test_translation_uses_curated_learner_gloss_after_source_misses(monkeypatch)
     assert _translation(conn, "ого", {}) == {
         "en": ["wow", "whoa"],
         "source": "curated learner gloss",
+    }
+
+
+def test_translation_uses_slovnyk_ukreng_after_source_misses(monkeypatch) -> None:
+    conn = sqlite3.connect(":memory:")
+    conn.execute("CREATE TABLE dmklinger_uk_en (word TEXT, pos TEXT, translations TEXT)")
+    monkeypatch.setattr(enrich_manifest_module, "_DMKLINGER_INDEX", None)
+    monkeypatch.setattr(enrich_manifest_module, "_BALLA_REVERSE_INDEX", {})
+    cache = {
+        "lookups": {
+            "ukreng": {
+                "dictionary_slug": "ukreng",
+                "dictionary_label": "Українсько-англійський словник",
+                "word": "наголос",
+                "source_url": "https://slovnyk.me/dict/ukreng/наголос",
+                "text": (
+                    "наголос 1) лінгв. accent, stress; (перен. тж.) emphasis "
+                    "наголос падає на другий склад — stress on the second syllable. "
+                    "Джерело: Українсько-англійський словник на Slovnyk.me"
+                ),
+            }
+        }
+    }
+
+    assert _translation(conn, "наголос", {}, slovnyk_cache=cache) == {
+        "en": ["accent", "stress", "emphasis"],
+        "source": _SLOVNYK_UKRENG_SOURCE,
+        "source_url": "https://slovnyk.me/dict/ukreng/наголос",
     }
 
 

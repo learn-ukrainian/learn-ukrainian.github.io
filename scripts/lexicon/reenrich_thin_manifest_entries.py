@@ -108,6 +108,7 @@ def _translation_for_entry(
         kaikki_lookup,
         entry_pos=entry_pos,
         gloss_hints=gloss_hints,
+        slovnyk_cache=enrich_manifest._slovnyk_cache(lemma),
     )
     if translation:
         return translation
@@ -120,6 +121,7 @@ def _translation_for_entry(
         kaikki_lookup,
         entry_pos=entry_pos,
         gloss_hints=gloss_hints,
+        slovnyk_cache=enrich_manifest._slovnyk_cache(fallback_base),
     )
     if not translation:
         return None

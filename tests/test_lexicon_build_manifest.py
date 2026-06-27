@@ -108,6 +108,43 @@ def test_vesum_alias_folds_create_case_even_when_target_not_taught(monkeypatch) 
     }
 
 
+def test_vesum_alias_keeps_explicit_plural_noun_when_target_not_taught(monkeypatch) -> None:
+    monkeypatch.setattr(
+        build_data_manifest,
+        "VESUM_INFLECTION_ALIASES_BY_KEY",
+        {_lemma_key("вершки"): "вершок"},
+    )
+    rec = {"lemma": "вершки", "source": "built_vocabulary", "gloss": "cream", "pos": "noun:pl"}
+
+    out = _atlas_record_for_manifest(rec, set())
+
+    assert isinstance(out, dict)
+    assert out["lemma"] == "вершки"
+    assert out["gloss"] == "cream"
+    assert out["pos"] == "noun:pl"
+    assert "form_of" not in out
+    assert "atlas_normalization" not in out
+
+
+def test_vesum_alias_still_folds_regular_plural_noun_when_target_not_taught(monkeypatch) -> None:
+    monkeypatch.setattr(
+        build_data_manifest,
+        "VESUM_INFLECTION_ALIASES_BY_KEY",
+        {_lemma_key("вареники"): "вареник"},
+    )
+    rec = {"lemma": "вареники", "source": "built_vocabulary", "gloss": "varenyky", "pos": "noun:pl"}
+
+    out = _atlas_record_for_manifest(rec, set())
+
+    assert isinstance(out, list)
+    aliased, form_rec = out
+    assert aliased["lemma"] == "вареник"
+    assert form_rec["form_of"] == {
+        "lemma": "вареник",
+        "url_slug": _slug_for_url("вареник"),
+    }
+
+
 def test_vesum_alias_leaves_unmapped_form_untouched(monkeypatch) -> None:
     # a form NOT in the map (e.g. a homograph deferred to the curated pass) is unchanged
     monkeypatch.setattr(build_data_manifest, "VESUM_INFLECTION_ALIASES_BY_KEY", {})
