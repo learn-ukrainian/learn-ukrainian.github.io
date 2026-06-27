@@ -113,6 +113,25 @@ def classification_code(entry: Mapping[str, Any]) -> str | None:
     return None
 
 
+def _translation_gloss(entry: Mapping[str, Any]) -> str | None:
+    enrichment = entry.get("enrichment")
+    if not isinstance(enrichment, Mapping):
+        return None
+    translation = enrichment.get("translation")
+    if not isinstance(translation, Mapping):
+        return None
+    terms = translation.get("en")
+    if not isinstance(terms, list):
+        return None
+    cleaned = [_clean_text(term) for term in terms]
+    visible = [term for term in cleaned if term]
+    return "; ".join(visible[:3]) if visible else None
+
+
+def _search_gloss(entry: Mapping[str, Any]) -> str | None:
+    return _clean_text(entry.get("gloss")) or _translation_gloss(entry)
+
+
 def _search_row(entry: dict[str, Any]) -> dict[str, Any] | None:
     # Grammar metaterms (pos == "grammar term") are not lemmas; keep them out.
     # is_lexeme_entry already guarantees non-empty lemma + url_slug.
@@ -121,11 +140,11 @@ def _search_row(entry: dict[str, Any]) -> dict[str, Any] | None:
 
     lemma = entry.get("lemma")
     slug = entry.get("url_slug")
-    gloss = entry.get("gloss")
+    gloss = _search_gloss(entry)
     row = {
         "l": lemma,
         "s": slug,
-        "g": gloss if isinstance(gloss, str) else None,
+        "g": gloss,
         "r": transliterate(lemma),
         "k": kind_for_source(entry.get("primary_source")),
     }

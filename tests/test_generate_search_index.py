@@ -66,6 +66,33 @@ def test_build_index_schema_sorting_filters_and_kind_buckets() -> None:
         {"l": "кава", "s": "кава", "g": "coffee", "r": "kava", "k": "rek", "c": "B1"},
         {"l": "офіс", "s": "офіс", "g": "office", "r": "ofis", "k": "vyv"},
     ]
+def test_build_index_uses_translation_when_gloss_missing() -> None:
+    rows = build_index(
+        [
+            {
+                "lemma": "помішувати",
+                "url_slug": "помішувати",
+                "gloss": None,
+                "primary_source": "built_vocabulary_normalized",
+                "enrichment": {
+                    "translation": {
+                        "en": ["stir", "mix lightly"],
+                        "source": "test",
+                    }
+                },
+            }
+        ]
+    )
+
+    assert rows == [
+        {
+            "l": "помішувати",
+            "s": "помішувати",
+            "g": "stir; mix lightly",
+            "r": "pomishuvaty",
+            "k": "vyv",
+        }
+    ]
 
 
 def test_classification_code_precedence_and_standard_omit() -> None:
