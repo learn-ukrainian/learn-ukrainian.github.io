@@ -1,0 +1,40 @@
+- title: Ой сивая та і зозулечка
+  role: reading
+  url: https://www.ukrlib.com.ua/narod/printout.php?id=6&bookid=1
+  notes: Публічний текст щедрівки для аналізу приспіву, адресата, саду і родинного образу світил.
+- title: Щедрик щедрик щедрівочка
+  role: reading
+  url: https://www.ukrlib.com.ua/narod/printout.php?id=6&bookid=3
+  notes: Публічний текст щедрівки з ластівкою, господарем, кошарою і побажанням достатку.
+- title: Щедрівка про двір як вінок
+  role: reading
+  url: https://www.ukrlib.com.ua/narod/printout.php?id=6&bookid=0
+  notes: Публічний текст щедрівки для аналізу двору, родинного портрета і величальних порівнянь.
+- title: Прилетіла зозуленька
+  role: reading
+  url: https://www.ukrlib.com.ua/narod/printout.php?id=6&bookid=2
+  notes: Публічний текст щедрівки з жіночим адресатом і коротким діалогом.
+- title: Ой над Дунаєм, над береженьком
+  role: reading
+  url: https://www.ukrlib.com.ua/narod/printout.php?id=5&bookid=0
+  notes: Публічний текст колядки-величання господині через світлицю, ремісників і дари.
+- title: Колядка про ранній ранок
+  role: reading
+  url: https://www.ukrlib.com.ua/narod/printout.php?id=5&bookid=1
+  notes: Публічна сторінка колядки; модуль використовує її як приклад джерельної обережності, бо сторінка завершується коротким незакритим рядком.
+- title: Як ще не було початку світа
+  role: reading
+  url: https://www.ukrlib.com.ua/narod/printout.php?id=5&bookid=2
+  notes: Публічний текст колядки з мотивом початку світу; модуль читає його як поетичний мотив із чіткою межею висновку.
+- title: Українська література, 6 клас. Пісні зимового циклу
+  role: school-canon
+  url: https://pidruchnyk.com.ua/2618-ukralit-6-klas-avramenko-2023.html
+  notes: Публічна сторінка підручника для шкільної рамки колядок, щедрівок, Різдва, Щедрого вечора, Маланки і Василя.
+- title: Українська література, 6 клас. Народні календарно-обрядові пісні
+  role: school-canon
+  url: https://pidruchnyk.com.ua/2617-ukralit-6-klas-zabolotnyi.html
+  notes: Публічна сторінка підручника для загальної рамки календарно-обрядових пісень в усній народній творчості.
+- title: Модельні навчальні програми для 5-9 класів
+  role: curriculum-context
+  url: https://osvita.ua/legislation/Ser_osv/46719/
+  notes: Публічна Osvita-сторінка для загального шкільного контексту української літератури.

@@ -1,0 +1,80 @@
+- lemma: колядка
+  translation: Christmas carol; koliadka
+  pos: noun
+  usage: Колядка належить до різдвяного кола і часто величає дім або родину.
+- lemma: щедрівка
+  translation: shchedrivka; New Year well-wishing song
+  pos: noun
+  usage: Щедрівка пов'язана зі Щедрим вечором або новорічним часом і побажанням добробуту.
+- lemma: віншування
+  translation: ceremonial greeting; well-wishing
+  pos: noun
+  usage: Віншування завершує святковий обхід побажанням здоров'я і щасливого року.
+- lemma: посівання
+  translation: New Year grain-sowing greeting
+  pos: noun
+  usage: Посівання використовує зерно і коротку формулу новорічного побажання.
+- lemma: приспів
+  translation: refrain
+  pos: noun
+  usage: Приспів повертає щедрівку до спільного голосу і святкового часу.
+- lemma: величання
+  translation: praise; ceremonial elevation
+  pos: noun
+  usage: Величання підносить господаря, господиню або дітей у святковому портреті дому.
+- lemma: Щедрий вечір
+  translation: Shchedryi Vechir; Generous Evening
+  pos: proper noun
+  usage: Щедрий вечір є календарною рамкою багатьох щедрівок.
+- lemma: Маланка
+  translation: Malanka
+  pos: proper noun
+  usage: Маланка входить до щедровечірнього й новорічного зимового комплексу.
+- lemma: Василь
+  translation: St. Basil's Day
+  pos: proper noun
+  usage: Василь у шкільній рамці пов'язаний із новорічними формулами побажання.
+- lemma: виконавська ситуація
+  translation: performance situation
+  pos: noun phrase
+  usage: Виконавська ситуація пояснює, хто співає, де, коли, кому і з якою відповіддю дому.
+- lemma: гуртовий голос
+  translation: collective voice
+  pos: noun phrase
+  usage: Гуртовий голос робить зимову пісню частиною громадської святкової дії.
+- lemma: адресат
+  translation: addressee
+  pos: noun
+  usage: "Адресат змінює поетику тексту: господар, господиня, дівчина або вся родина."
+- lemma: господар
+  translation: master of the household; host
+  pos: noun
+  usage: Господар у щедрівці може бути покликаний подивитися на кошару.
+- lemma: господиня
+  translation: mistress of the household; hostess
+  pos: noun
+  usage: Господиня в колядці може постати через світлицю, ремісників і дари.
+- lemma: кошара
+  translation: sheepfold
+  pos: noun
+  usage: Кошара у "Щедрику" показує господарський простір і приплід.
+- lemma: світлиця
+  translation: best room; bright room
+  pos: noun
+  usage: Світлиця в колядці є місцем, де ремісники ладять дар для господині.
+- lemma: дар
+  translation: gift
+  pos: noun
+  usage: Дар є частиною взаємності між гуртом і домом у зимовому обході.
+- lemma: публічне джерело
+  translation: public source
+  pos: noun phrase
+  usage: Публічне джерело дозволяє перевірити рядки без службових позначок.
+- lemma: мотив
+  translation: motif
+  pos: noun
+  usage: Мотив початку світу в одному тексті треба читати як поетичний матеріал із чіткою межею доказу.
+- lemma: межа доказу
+  translation: limit of evidence
+  pos: noun phrase
+  usage: Межа доказу не дозволяє робити висновок про всі колядки на основі одного варіанта.
