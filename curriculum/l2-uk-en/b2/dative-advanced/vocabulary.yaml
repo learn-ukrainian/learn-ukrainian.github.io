@@ -1,0 +1,173 @@
+- lemma: давальний
+  translation: dative case
+  pos: noun
+  usage: Давальний відмінок відповідає на питання кому? чому?
+- lemma: адресат
+  translation: addressee
+  pos: noun
+  usage: Адресат листа отримує повідомлення або документ.
+- lemma: переживач
+  translation: experiencer
+  pos: noun
+  usage: У реченні мені холодно слово мені називає переживача.
+- lemma: призначення
+  translation: purpose, designation
+  pos: noun
+  usage: Давальний призначення видно у фразі пам'ятка студентам.
+- lemma: вигода
+  translation: benefit
+  pos: noun
+  usage: Рішення може бути на вигоду громаді.
+- lemma: шкода
+  translation: harm, damage
+  pos: noun
+  usage: Надмір роботи може шкодити здоров'ю.
+- lemma: етичний давальний
+  translation: ethical dative
+  pos: phrase
+  usage: Етичний давальний додає емоційної причетності.
+- lemma: безособовий
+  translation: impersonal
+  pos: adj
+  usage: Безособова конструкція мені потрібно дуже частотна.
+- lemma: модальність
+  translation: modality
+  pos: noun
+  usage: Модальність потреби передає конструкція мені треба.
+- lemma: інфінітив
+  translation: infinitive
+  pos: noun
+  usage: У реченні студентові варто повторити правило є інфінітив.
+- lemma: завдяки
+  translation: thanks to
+  pos: prep
+  usage: Завдяки підтримці друзів команда завершила роботу.
+- lemma: всупереч
+  translation: contrary to, despite
+  pos: prep
+  usage: Всупереч прогнозам, зустріч відбулася.
+- lemma: наперекір
+  translation: in defiance of
+  pos: prep
+  usage: Наперекір труднощам команда продовжила роботу.
+- lemma: навстріч
+  translation: toward
+  pos: prep
+  usage: Дитина побігла навстріч друзям.
+- lemma: назустріч
+  translation: toward, to meet
+  pos: prep
+  usage: Адміністрація пішла назустріч мешканцям.
+- lemma: допомагати
+  translation: to help
+  pos: verb
+  aspect: imperfective
+  usage: Волонтери допомагають родинам.
+- lemma: подякувати
+  translation: to thank
+  pos: verb
+  aspect: perfective
+  usage: Студент подякував викладачеві.
+- lemma: радити
+  translation: to advise
+  pos: verb
+  aspect: imperfective
+  usage: Лікар радить пацієнтові відпочити.
+- lemma: пояснювати
+  translation: to explain
+  pos: verb
+  aspect: imperfective
+  usage: Учитель пояснює учням нову тему.
+- lemma: довіряти
+  translation: to trust
+  pos: verb
+  aspect: imperfective
+  usage: Команда довіряє координаторові.
+- lemma: заважати
+  translation: to hinder, disturb
+  pos: verb
+  aspect: imperfective
+  usage: Шум заважає роботі.
+- lemma: шкодити
+  translation: to harm
+  pos: verb
+  aspect: imperfective
+  usage: Недосипання шкодить здоров'ю.
+- lemma: належати
+  translation: to belong
+  pos: verb
+  aspect: imperfective
+  usage: Ця роль належить модераторові.
+- lemma: бракувати
+  translation: to lack
+  pos: verb
+  aspect: imperfective
+  usage: Проєктові бракує фінансування.
+- lemma: потрібен
+  translation: needed
+  pos: adj
+  usage: Заявникові потрібен електронний підпис.
+- lemma: варто
+  translation: it is worth, should
+  pos: adv
+  usage: Студентові варто повторити форми давального.
+- lemma: слід
+  translation: should, ought to
+  pos: adv
+  usage: Учасникам слід прийти заздалегідь.
+- lemma: необхідно
+  translation: it is necessary
+  pos: adv
+  usage: Працівникам необхідно пройти інструктаж.
+- lemma: по-моєму
+  translation: in my opinion
+  pos: adv
+  usage: По-моєму, це рішення передчасне.
+- lemma: по-вашому
+  translation: in your opinion, your way
+  pos: adv
+  usage: По-вашому, заявникові потрібна консультація?
+- lemma: учителеві
+  translation: to the teacher
+  pos: noun
+  usage: Учителеві подякували за пояснення.
+- lemma: директорові
+  translation: to the director
+  pos: noun
+  usage: Директорові надіслали копію листа.
+- lemma: лікареві
+  translation: to the doctor
+  pos: noun
+  usage: Пацієнт подякував лікареві.
+- lemma: подрузі
+  translation: to a female friend
+  pos: noun
+  usage: Подрузі порадили звернутися до лікаря.
+- lemma: громаді
+  translation: to the community
+  pos: noun
+  usage: Громаді потрібна довгострокова підтримка.
+- lemma: учасникам
+  translation: to participants
+  pos: noun
+  usage: Учасникам надіслали підтвердження.
+- lemma: заявникові
+  translation: to the applicant
+  pos: noun
+  usage: Заявникові потрібно додати копію документа.
+- lemma: пацієнтові
+  translation: to the patient
+  pos: noun
+  usage: Пацієнтові слід мати направлення.
+- lemma: підтримка
+  translation: support
+  pos: noun
+  usage: Завдяки підтримці друзів він не здався.
+- lemma: порада
+  translation: advice
+  pos: noun
+  usage: Добра порада студентові допомагає уникнути помилки.
+- lemma: рекомендація
+  translation: recommendation
+  pos: noun
+  usage: Рекомендація пацієнтові має бути конкретною.
