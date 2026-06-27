@@ -1269,6 +1269,76 @@ def test_definition_card_resolves_inflected_form_to_base_lemma(monkeypatch) -> N
     enrich_manifest_module._slovnyk_base_row.cache_clear()
 
 
+def test_pos_matched_base_lookup_rejects_wrong_pos_homograph(monkeypatch) -> None:
+    def fake_analyses(word: str) -> tuple[tuple[str, str], ...]:
+        if word == "бачу":
+            return (("бачити", "verb"),)
+        if word == "добре":
+            return (("добрий", "adj"),)
+        return ()
+
+    monkeypatch.setattr(enrich_manifest_module, "_vesum_word_analyses", fake_analyses)
+
+    assert enrich_manifest_module._base_lookup_for_entry("бачу", "verb") == "бачити"
+    assert enrich_manifest_module._base_lookup_for_entry("добре", "adverb") is None
+
+
+def test_enrich_entry_uses_pos_matched_base_translation_fallback(monkeypatch) -> None:
+    def none(*args, **kwargs):
+        return None
+
+    monkeypatch.setattr(enrich_manifest_module, "_slovnyk_cache", lambda lemma: {})
+    monkeypatch.setattr(enrich_manifest_module, "_definition_cards", lambda *args, **kwargs: [])
+    monkeypatch.setattr(
+        enrich_manifest_module,
+        "classify_lemma",
+        lambda lemma: {
+            "classification": "standard",
+            "is_russianism": False,
+            "russian_shadow": False,
+            "calque_warning": None,
+            "attestations": [],
+        },
+    )
+    monkeypatch.setattr(enrich_manifest_module, "_warning_slovnyk", none)
+    monkeypatch.setattr(enrich_manifest_module, "_curated_calque", none)
+    monkeypatch.setattr(enrich_manifest_module, "_reverse_calques", none)
+    monkeypatch.setattr(enrich_manifest_module, "_kaikki_pronunciation", none)
+    monkeypatch.setattr(enrich_manifest_module, "_synonyms_slovnyk", none)
+    monkeypatch.setattr(enrich_manifest_module, "_antonyms_wiktionary", none)
+    monkeypatch.setattr(enrich_manifest_module, "_idioms", none)
+    monkeypatch.setattr(enrich_manifest_module, "_stress_display_form", lambda *args, **kwargs: "")
+    monkeypatch.setattr(enrich_manifest_module, "_kaikki_stress", none)
+    monkeypatch.setattr(enrich_manifest_module, "_cefr", none)
+    monkeypatch.setattr(enrich_manifest_module, "_morphology", none)
+    monkeypatch.setattr(enrich_manifest_module, "_meaning", none)
+    monkeypatch.setattr(enrich_manifest_module, "_etymology", none)
+    monkeypatch.setattr(enrich_manifest_module, "_literary_attestation", none)
+    monkeypatch.setattr(enrich_manifest_module, "_wiki_reference", none)
+    monkeypatch.setattr(enrich_manifest_module, "_base_lookup_for_entry", lambda lemma, pos: "бачити")
+
+    def fake_translation(conn, lemma: str, kaikki_lookup):
+        if lemma == "бачити":
+            return {"en": ["to see"], "source": "fixture"}
+        return None
+
+    monkeypatch.setattr(enrich_manifest_module, "_translation", fake_translation)
+
+    entry = {"lemma": "бачу", "pos": "verb"}
+    attached = enrich_manifest_module.enrich_entry(
+        entry,
+        sqlite3.connect(":memory:"),
+        {},
+        has_sum11_flags=False,
+    )
+
+    assert attached is True
+    assert entry["enrichment"]["translation"] == {
+        "en": ["to see"],
+        "source": "fixture (base form бачити)",
+    }
+
+
 def test_cefr_lookup_uses_exact_puls_row() -> None:
     conn = _conn()
     conn.execute(

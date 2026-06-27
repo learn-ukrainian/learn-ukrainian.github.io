@@ -1102,6 +1102,37 @@ def _vesum_base_lemma(word: str) -> str | None:
     return next(iter(bases)) if len(bases) == 1 else None
 
 
+def _vesum_base_lemma_for_entry_pos(word: str, entry_pos: object) -> str | None:
+    """Resolve an inflected form to a VESUM base matching the entry POS."""
+    target_pos = _MANIFEST_POS_TO_VESUM_POS.get(_lookup_key(str(entry_pos or "")))
+    if not target_pos:
+        return None
+    surface = _lookup_key(word).casefold()
+    bases = {
+        lemma
+        for lemma, pos in _vesum_word_analyses(surface)
+        if lemma and lemma.casefold() != surface and pos == target_pos
+    }
+    return next(iter(bases)) if len(bases) == 1 else None
+
+
+def _base_lookup_for_entry(lemma: str, entry_pos: object) -> str | None:
+    base = _vesum_base_lemma_for_entry_pos(lemma, entry_pos)
+    if not base or _has_whitespace(base):
+        return None
+    direct = _lookup_key(_base_lemma(lemma)).casefold()
+    base_key = _lookup_key(base).casefold()
+    return base if base_key and base_key != direct else None
+
+
+def _with_base_source_label(block: dict[str, Any], base_form: str) -> dict[str, Any]:
+    labeled = dict(block)
+    source = str(labeled.get("source") or "").strip()
+    label = f"base form {base_form}"
+    labeled["source"] = f"{source} ({label})" if source else label
+    return labeled
+
+
 @lru_cache(maxsize=8192)
 def _slovnyk_base_row(base_lemma: str, slug: str) -> dict[str, Any] | None:
     """Fetch a slovnyk.me row for a resolved base lemma, deduped within a run so a
@@ -3208,6 +3239,8 @@ def enrich_entry(entry, conn, kaikki_lookup, *, has_sum11_flags) -> bool:
         entry["gloss"] = clean_gloss(str(entry["gloss"]))
     lemma = entry["lemma"]
     base = _base_lemma(lemma)
+    entry_pos = entry.get("pos")
+    fallback_base = _base_lookup_for_entry(lemma, entry_pos)
     slovnyk_cache = _slovnyk_cache(lemma)
     definition_cards = _definition_cards(
         conn,
@@ -3247,10 +3280,18 @@ def enrich_entry(entry, conn, kaikki_lookup, *, has_sum11_flags) -> bool:
     else:
         entry.pop("pronunciation", None)
     sections: dict[str, object] = {}
-    synonyms = _synonyms_slovnyk(base, slovnyk_cache, entry_pos=entry.get("pos"))
+    synonyms = _synonyms_slovnyk(base, slovnyk_cache, entry_pos=entry_pos)
+    if not synonyms and fallback_base:
+        synonyms = _synonyms_slovnyk(fallback_base, entry_pos=entry_pos)
+        if synonyms:
+            synonyms = _with_base_source_label(synonyms, fallback_base)
     if synonyms:
         sections["synonyms"] = synonyms
-    antonyms = _antonyms_wiktionary(conn, base, entry_pos=entry.get("pos"))
+    antonyms = _antonyms_wiktionary(conn, base, entry_pos=entry_pos)
+    if not antonyms and fallback_base:
+        antonyms = _antonyms_wiktionary(conn, fallback_base, entry_pos=entry_pos)
+        if antonyms:
+            antonyms = _with_base_source_label(antonyms, fallback_base)
     if antonyms:
         sections["antonyms"] = antonyms
     idioms = _idioms(conn, lemma, slovnyk_cache)
@@ -3280,6 +3321,15 @@ def enrich_entry(entry, conn, kaikki_lookup, *, has_sum11_flags) -> bool:
         definition_cards=definition_cards,
     )
     meaning = _meaning(conn, lemma, has_sum11_flags=has_sum11_flags, kaikki_lookup=kaikki_lookup)
+    if not meaning and fallback_base:
+        meaning = _meaning(
+            conn,
+            fallback_base,
+            has_sum11_flags=has_sum11_flags,
+            kaikki_lookup=kaikki_lookup,
+        )
+        if meaning:
+            meaning = _with_base_source_label(meaning, fallback_base)
     if _is_proper_noun_entry(entry):
         meaning = _proper_noun_wikipedia_meaning(lemma) or meaning
     if meaning:
@@ -3287,12 +3337,20 @@ def enrich_entry(entry, conn, kaikki_lookup, *, has_sum11_flags) -> bool:
     if definition_cards:
         block["definition_cards"] = definition_cards
     etym = _etymology(conn, base, kaikki_lookup)
+    if not etym and fallback_base:
+        etym = _etymology(conn, fallback_base, kaikki_lookup)
+        if etym:
+            etym = _with_base_etymology_label(etym, fallback_base)
     if etym:
         block["etymology"] = etym
     literary = _literary_attestation(conn, lemma)
     if literary:
         block["literary_attestation"] = literary
     translation = _translation(conn, lemma, kaikki_lookup)
+    if not translation and fallback_base:
+        translation = _translation(conn, fallback_base, kaikki_lookup)
+        if translation:
+            translation = _with_base_source_label(translation, fallback_base)
     if translation:
         block["translation"] = translation
     if block:
