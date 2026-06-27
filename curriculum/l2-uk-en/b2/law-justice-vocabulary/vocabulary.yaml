@@ -1,0 +1,140 @@
+- lemma: суддя
+  translation: judge
+  pos: noun
+  usage: Суддя розглядає справу й ухвалює рішення в межах процедури.
+- lemma: вирок
+  translation: verdict, criminal judgment
+  pos: noun
+  usage: Вирок суду не можна замінювати журналістською оцінкою.
+- lemma: обвинувачення
+  translation: prosecution, accusation
+  pos: noun
+  usage: Обвинувачення має довести свою позицію доказами.
+- lemma: підозрюваний
+  translation: suspect
+  pos: noun
+  usage: Підозрюваний має право на захист.
+- lemma: адвокат
+  translation: lawyer, attorney
+  pos: noun
+  usage: Адвокат заявив клопотання про зміну запобіжного заходу.
+- lemma: правопорушення
+  translation: offense
+  pos: noun
+  usage: Правопорушення треба описувати через правову кваліфікацію.
+- lemma: докази
+  translation: evidence
+  pos: noun
+  usage: Докази досліджують у судовому засіданні.
+- lemma: презумпція невинуватості
+  translation: presumption of innocence
+  pos: phrase
+  usage: Презумпція невинуватості забороняє оголошувати людину винною до вироку.
+- lemma: позовна заява
+  translation: statement of claim
+  pos: phrase
+  usage: Позовна заява має містити вимогу й обґрунтування.
+- lemma: оскарження
+  translation: appeal, challenge
+  pos: noun
+  usage: Оскарження рішення відбувається у визначений строк.
+- lemma: недоторканність
+  translation: immunity, inviolability
+  pos: noun
+  usage: Недоторканність має правові межі й процедуру.
+- lemma: відповідальність
+  translation: liability, responsibility
+  pos: noun
+  usage: Відповідальність залежить від виду правопорушення.
+- lemma: вердикт
+  translation: verdict
+  pos: noun
+  usage: Вердикт не варто вживати як синонім будь-якої думки.
+- lemma: процесуальний
+  translation: procedural
+  pos: adj
+  usage: Процесуальний статус особи треба називати точно.
+- lemma: клопотання
+  translation: motion, petition
+  pos: noun
+  usage: Сторона захисту подала клопотання про долучення доказів.
+- lemma: санкція
+  translation: sanction, penalty clause
+  pos: noun
+  usage: Санкція статті визначає можливі наслідки порушення.
+- lemma: правосуддя
+  translation: justice, administration of justice
+  pos: noun
+  usage: Правосуддя потребує незалежного суду й дотримання процедури.
+- lemma: судочинство
+  translation: judicial proceedings
+  pos: noun
+  usage: Судочинство має етапи, правила й учасників.
+- lemma: прокурор
+  translation: prosecutor
+  pos: noun
+  usage: Прокурор підтримує обвинувачення в суді.
+- lemma: свідок
+  translation: witness
+  pos: noun
+  usage: Свідок дає показання про відомі йому обставини.
+- lemma: потерпілий
+  translation: injured party, victim
+  pos: noun
+  usage: Потерпілий може вимагати відшкодування шкоди.
+- lemma: запобіжний захід
+  translation: preventive measure
+  pos: phrase
+  usage: Запобіжний захід не є покаранням.
+- lemma: затримання
+  translation: detention
+  pos: noun
+  usage: Затримання має правові підстави й часові межі.
+- lemma: обшук
+  translation: search
+  pos: noun
+  usage: Обшук проводять у межах процесуальної процедури.
+- lemma: допит
+  translation: interrogation, questioning
+  pos: noun
+  usage: Допит свідка фіксують у процесуальних документах.
+- lemma: експертиза
+  translation: expert examination
+  pos: noun
+  usage: Експертиза допомагає встановити спеціальні обставини.
+- lemma: позивач
+  translation: claimant, plaintiff
+  pos: noun
+  usage: Позивач звертається до суду з вимогою.
+- lemma: відповідач
+  translation: defendant, respondent
+  pos: noun
+  usage: Відповідач може заперечити позовні вимоги.
+- lemma: відшкодування
+  translation: compensation
+  pos: noun
+  usage: Відшкодування шкоди може бути предметом позову.
+- lemma: зобов'язання
+  translation: obligation
+  pos: noun
+  usage: Договірне зобов'язання треба виконати у встановлений строк.
+- lemma: апеляція
+  translation: appeal
+  pos: noun
+  usage: Апеляція дає змогу переглянути рішення за процедурою.
+- lemma: касація
+  translation: cassation appeal
+  pos: noun
+  usage: Касація зосереджується на застосуванні права.
+- lemma: юрисдикція
+  translation: jurisdiction
+  pos: noun
+  usage: Юрисдикція визначає, який суд або орган може розглядати справу.
+- lemma: омбудсмен
+  translation: ombudsman
+  pos: noun
+  usage: Омбудсмен розглядає звернення щодо захисту прав.
+- lemma: правозахисник
+  translation: human rights defender
+  pos: noun
+  usage: Правозахисник повідомляє про ризик порушення прав.
