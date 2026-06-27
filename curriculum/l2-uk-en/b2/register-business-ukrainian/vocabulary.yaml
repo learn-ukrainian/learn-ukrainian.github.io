@@ -1,0 +1,180 @@
+- lemma: співпраця
+  translation: cooperation
+  pos: noun
+  usage: "Співпраця з партнером починається з чітких умов."
+- lemma: пропозиція
+  translation: proposal
+  pos: noun
+  usage: "Комерційна пропозиція має пояснювати потребу клієнта."
+- lemma: комерційна пропозиція
+  translation: commercial proposal
+  pos: phrase
+  usage: "Комерційна пропозиція містить рішення, строки й умови."
+- lemma: переговори
+  translation: negotiations
+  pos: noun
+  usage: "Під час переговорів важливо назвати межі й альтернативи."
+- lemma: партнерство
+  translation: partnership
+  pos: noun
+  usage: "Партнерство потребує довіри й регулярної комунікації."
+- lemma: відповідальність
+  translation: responsibility
+  pos: noun
+  usage: "Відповідальність у діловому тексті означає точні дії й строки."
+- lemma: договір
+  translation: contract
+  pos: noun
+  usage: "Проєкт договору потрібно погодити до п'ятниці."
+- lemma: термін
+  translation: term, period
+  pos: noun
+  usage: "Термін дії договору завершується наприкінці року."
+- lemma: строк
+  translation: deadline, time limit
+  pos: noun
+  usage: "Крайній строк оплати - 15 липня."
+- lemma: запит
+  translation: request, inquiry
+  pos: noun
+  usage: "У відповідь на Ваш запит надсилаємо уточнену інформацію."
+- lemma: реквізити
+  translation: company details, bank details
+  pos: noun
+  usage: "Просимо надіслати реквізити компанії для договору."
+- lemma: рахунок
+  translation: invoice, bill
+  pos: noun
+  usage: "Рахунок буде надіслано після погодження умов."
+- lemma: вартість
+  translation: cost, price
+  pos: noun
+  usage: "Вартість першого етапу зазначено в додатку."
+- lemma: витрати
+  translation: expenses, costs
+  pos: noun
+  usage: "Витрати на підтримку зросли після запуску сервісу."
+- lemma: дохід
+  translation: revenue, income
+  pos: noun
+  usage: "Дохід проєкту не дорівнює прибутку."
+- lemma: прибуток
+  translation: profit
+  pos: noun
+  usage: "Прибуток обчислюють після врахування витрат."
+- lemma: рентабельність
+  translation: profitability
+  pos: noun
+  usage: "Рентабельність залежить від доходів і витрат."
+- lemma: ефективність
+  translation: efficiency, effectiveness
+  pos: noun
+  usage: "Ефективність рішення треба підтвердити даними."
+- lemma: порядок денний
+  translation: agenda
+  pos: phrase
+  usage: "Порядок денний наради містить три питання."
+- lemma: протокол
+  translation: minutes, protocol
+  pos: noun
+  usage: "Протокол фіксує рішення, відповідальних і строки."
+- lemma: звіт
+  translation: report
+  pos: noun
+  usage: "У звіті подано виконані завдання й ризики."
+- lemma: службова записка
+  translation: internal memo
+  pos: phrase
+  usage: "Службова записка пояснює проблему для керівництва."
+- lemma: доповідна записка
+  translation: report memo
+  pos: phrase
+  usage: "Доповідна записка містить факти й пропозицію рішення."
+- lemma: резюме
+  translation: CV, resume
+  pos: noun
+  usage: "Резюме має показувати релевантний досвід."
+- lemma: мотиваційний лист
+  translation: cover letter
+  pos: phrase
+  usage: "Мотиваційний лист пояснює інтерес до посади."
+- lemma: технічне завдання
+  translation: technical specification
+  pos: phrase
+  usage: "Технічне завдання визначає вимоги до сервісу."
+- lemma: відповідальна особа
+  translation: responsible person
+  pos: phrase
+  usage: "У протоколі треба назвати відповідальну особу."
+- lemma: погодити
+  translation: to approve, to agree
+  pos: verb
+  usage: "Просимо погодити нову дату зустрічі."
+- lemma: підтвердити
+  translation: to confirm
+  pos: verb
+  usage: "Будемо вдячні, якщо Ви підтвердите участь до середи."
+- lemma: надати
+  translation: to provide
+  pos: verb
+  usage: "Просимо надати оновлений прайс-лист."
+- lemma: надіслати
+  translation: to send
+  pos: verb
+  usage: "Надішліть, будь ласка, проєкт договору."
+- lemma: перенести
+  translation: to reschedule, to move
+  pos: verb
+  usage: "У зв'язку зі зміною графіка просимо перенести зустріч."
+- lemma: уточнити
+  translation: to clarify
+  pos: verb
+  usage: "Дозвольте уточнити фінансові умови."
+- lemma: розглянути
+  translation: to consider
+  pos: verb
+  usage: "Просимо розглянути можливість поетапної оплати."
+- lemma: відмова
+  translation: refusal
+  pos: noun
+  usage: "Відмова має бути чесною й коректною."
+- lemma: альтернатива
+  translation: alternative
+  pos: noun
+  usage: "Як альтернативу пропонуємо другий етап у вересні."
+- lemma: компроміс
+  translation: compromise
+  pos: noun
+  usage: "Компроміс можливий, якщо сторони назвали свої межі."
+- lemma: конфіденційність
+  translation: confidentiality
+  pos: noun
+  usage: "Конфіденційність важлива під час роботи з персональними даними."
+- lemma: зворотний зв'язок
+  translation: feedback
+  pos: phrase
+  usage: "Зворотний зв'язок має містити конкретні приклади."
+- lemma: кліше
+  translation: formulaic phrase, cliche
+  pos: noun
+  usage: "Ділові кліше корисні, якщо вони не приховують зміст."
+- lemma: з повагою
+  translation: sincerely, respectfully
+  pos: phrase
+  usage: "З повагою - нейтральна формула завершення листа."
+- lemma: у відповідь на
+  translation: in response to
+  pos: phrase
+  usage: "У відповідь на Ваш запит надсилаємо пропозицію."
+- lemma: будемо вдячні
+  translation: we would appreciate
+  pos: phrase
+  usage: "Будемо вдячні за відповідь до кінця дня."
+- lemma: на жаль
+  translation: unfortunately
+  pos: phrase
+  usage: "На жаль, не можемо погодити запропонований строк."
+- lemma: з огляду на
+  translation: in view of, considering
+  pos: phrase
+  usage: "З огляду на строк пропонуємо скоротити перший етап."
