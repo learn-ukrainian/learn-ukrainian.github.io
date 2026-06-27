@@ -2659,7 +2659,7 @@ def _esum_etymology(conn: sqlite3.Connection, lemma: str) -> dict | None:
     if garbled_esum_entry(word):
         text = clean_html_entities(strip_garbled_tail(text, word))
         cite += " (garbled tail stripped)"
-    elif has_mojibake_marker(text):
+    if has_mojibake_marker(text):
         return None
     if not text:
         return None

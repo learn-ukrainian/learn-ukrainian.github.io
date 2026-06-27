@@ -102,6 +102,21 @@ def test_curated_goroh_override_cleans_manifest_etymology(tmp_path) -> None:
     assert not has_mojibake_marker(etymology["text"])
 
 
+def test_curated_entry_with_unstripped_marker_is_dropped_from_manifest(tmp_path) -> None:
+    db_path = tmp_path / "sources.db"
+    _build_sources_db(db_path)
+    conn = sqlite3.connect(db_path)
+    try:
+        conn.execute("DELETE FROM goroh_etymology WHERE requested_lemma = ?", ("варіант",))
+        conn.commit()
+        etymology = _source_etymology(conn, "варіант", {})
+    finally:
+        conn.close()
+
+    assert is_garbled_esum_lemma("варіант")
+    assert etymology is None
+
+
 def test_curated_goroh_override_cleans_search_esum(tmp_path) -> None:
     db_path = tmp_path / "sources.db"
     _build_sources_db(db_path)
