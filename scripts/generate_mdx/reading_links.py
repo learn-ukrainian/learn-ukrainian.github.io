@@ -71,6 +71,10 @@ def _candidate_titles(frontmatter: dict[str, Any], slug: str) -> set[str]:
     return values
 
 
+def _is_public_reading(frontmatter: dict[str, Any]) -> bool:
+    return frontmatter.get("published", True) is not False and frontmatter.get("canonical", True) is not False
+
+
 @lru_cache(maxsize=4)
 def _load_index(readings_dir: str) -> dict[str, str]:
     """Build ``{normalized_title_or_slug: slug}`` from existing reading files."""
@@ -84,6 +88,8 @@ def _load_index(readings_dir: str) -> dict[str, str]:
         try:
             frontmatter = _frontmatter_for(path)
         except OSError:
+            continue
+        if not _is_public_reading(frontmatter):
             continue
         for candidate in _candidate_titles(frontmatter, slug):
             key = normalize_work_title(candidate)
