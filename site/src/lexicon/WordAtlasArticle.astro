@@ -190,6 +190,7 @@ const phraseHasGloss = Boolean(entry.gloss && definitionCards.length === 0 && !e
 const shouldShowEditorialWarning = Boolean(heritageBoxes.red);
 const shouldShowHeritageDefense = Boolean(heritageBoxes.green);
 const styleNotes = buildStyleNotes();
+const articleOverview = buildArticleOverview();
 
 const CASE_ROWS = [
   { key: "називний", label: "Називний" },
@@ -354,6 +355,78 @@ function buildStyleNotes() {
   return notes;
 }
 
+function buildArticleOverview() {
+  const synonymCount = (sections?.synonyms?.items.length ?? 0) + (sections?.antonyms?.items.length ?? 0);
+  const idiomCount = sections?.idioms?.items.length ?? 0;
+  const externalCount = externalGroups.reduce((total, group) => total + group.materials.length, 0);
+  const definitionCount = definitionCards.length + (enrichment?.meaning ? 1 : 0) + (phraseHasGloss ? 1 : 0);
+  return [
+    {
+      label: "Значення",
+      ready: definitionCount > 0,
+      detail: definitionCount > 0 ? `${definitionCount} картк.` : "очікує джерело",
+    },
+    {
+      label: "Походження",
+      ready: Boolean(enrichment?.etymology),
+      detail: enrichment?.etymology?.source ?? "очікує джерело",
+    },
+    {
+      label: "Морфологія",
+      ready: Boolean(enrichment?.morphology),
+      detail: enrichment?.morphology ? `${enrichment.morphology.form_count} форм` : "очікує VESUM",
+    },
+    {
+      label: "Стилістика",
+      ready: styleNotes.length > 0 || Boolean(heritageBoxes.red || heritageBoxes.yellow || heritageBoxes.blue || heritageBoxes.green),
+      detail: styleNotes.length > 0 ? `${styleNotes.length} нотатк.` : heritageBoxes.green ? "захист питомості" : "без нотаток",
+    },
+    {
+      label: "Синонімія",
+      ready: synonymCount > 0,
+      detail: synonymCount > 0 ? `${synonymCount} позицій` : "очікує джерело",
+    },
+    {
+      label: "Фразеологія",
+      ready: idiomCount > 0,
+      detail: idiomCount > 0 ? `${idiomCount} виразів` : "очікує джерело",
+    },
+    {
+      label: "Засвідчення",
+      ready: Boolean(enrichment?.literary_attestation),
+      detail: enrichment?.literary_attestation ? "літературний корпус" : "очікує корпус",
+    },
+    {
+      label: "Курс",
+      ready: courseUsage.length > 0,
+      detail: courseUsage.length > 0 ? `${courseUsage.length} мод.` : "поза курсом",
+    },
+    {
+      label: "Переклад",
+      ready: (enrichment?.translation?.en.length ?? 0) > 0,
+      detail: (enrichment?.translation?.en.length ?? 0) > 0 ? `${enrichment?.translation?.en.length} англ.` : "очікує джерело",
+    },
+    {
+      label: "Wikimedia",
+      ready: Boolean(entry.wiki_reference),
+      detail: entry.wiki_reference?.wikipedia ? "Wikipedia" : entry.wiki_reference ? "Wiktionary" : "очікує джерело",
+    },
+    {
+      label: "Зовнішні",
+      ready: externalCount > 0,
+      detail: externalCount > 0 ? `${externalCount} матеріалів` : "очікує добірку",
+    },
+  ];
+}
+
+function sourceHost(url: string) {
+  try {
+    return new URL(url).hostname.replace(/^www\./, "");
+  } catch {
+    return "джерело";
+  }
+}
+
 function buildComponentLinks(current: LexiconEntry, entries: LexiconEntry[]) {
   if (current.pos !== "phrase") return [];
   const normalize = (value: string) =>
@@ -513,13 +586,32 @@ function groupExternalMaterials(items: NonNullable<Enrichment["external_material
         </section>
       )}
 
+      <section class="atlas-section atlas-overview-section" aria-label="Склад сторінки Атласу">
+        <h2>Дані Атласу</h2>
+        <div class="atlas-overview-grid">
+          {articleOverview.map((item) => (
+            <div class={`atlas-overview-card ${item.ready ? "ready" : "pending"}`}>
+              <span class="overview-state" aria-hidden="true">{item.ready ? "✓" : "·"}</span>
+              <span class="overview-label">{item.label}</span>
+              <span class="overview-detail">{item.detail}</span>
+            </div>
+          ))}
+        </div>
+      </section>
+
       {(definitionCards.length > 0 || enrichment?.meaning || phraseHasGloss) && (
         <section class="atlas-section">
           <h2>Значення</h2>
           {definitionCards.map((card) => (
             <div class={`def-card ${sourceClass(card)}`}>
               <div class="def-source">
-                <span class="src-pill">{card.source_pill ?? card.source}</span>
+                {card.source_url ? (
+                  <a class="src-pill" href={card.source_url} target="_blank" rel="noopener noreferrer">
+                    {card.source_pill ?? card.source}
+                  </a>
+                ) : (
+                  <span class="src-pill">{card.source_pill ?? card.source}</span>
+                )}
                 {card.note && <span>{card.note}</span>}
               </div>
               <div class="def-text">
@@ -664,7 +756,29 @@ function groupExternalMaterials(items: NonNullable<Enrichment["external_material
               </div>
             </div>
           )}
-          <div class="data-caveat">Дані синонімів та антонімів показано з джерел маніфесту; звіряйте з контекстом перед уживанням.</div>
+          <div class="data-caveat">
+            Дані синонімів та антонімів показано з джерел маніфесту; звіряйте з контекстом перед уживанням.
+            {sections?.synonyms?.source_urls?.length ? (
+              <>
+                {" "}Джерела синонімів: {sections.synonyms.source_urls.map((url, index) => (
+                  <>
+                    {index > 0 && " · "}
+                    <a href={url} target="_blank" rel="noopener noreferrer">{sourceHost(url)}</a>
+                  </>
+                ))}
+              </>
+            ) : null}
+            {sections?.antonyms?.source_urls?.length ? (
+              <>
+                {" "}Джерела антонімів: {sections.antonyms.source_urls.map((url, index) => (
+                  <>
+                    {index > 0 && " · "}
+                    <a href={url} target="_blank" rel="noopener noreferrer">{sourceHost(url)}</a>
+                  </>
+                ))}
+              </>
+            ) : null}
+          </div>
         </section>
       )}
 
@@ -689,7 +803,15 @@ function groupExternalMaterials(items: NonNullable<Enrichment["external_material
         <section class="atlas-section">
           <h2>Літературні засвідчення</h2>
           <div class="source-box">
-            <div class="source-box-header">{enrichment.literary_attestation.source_label ?? "Літературний корпус"}</div>
+            <div class="source-box-header">
+              {enrichment.literary_attestation.source_url ? (
+                <a href={enrichment.literary_attestation.source_url} target="_blank" rel="noopener noreferrer">
+                  {enrichment.literary_attestation.source_label ?? "Літературний корпус"}
+                </a>
+              ) : (
+                enrichment.literary_attestation.source_label ?? "Літературний корпус"
+              )}
+            </div>
             <blockquote>{enrichment.literary_attestation.text}</blockquote>
             <div class="source-cite">
               {enrichment.literary_attestation.source}
