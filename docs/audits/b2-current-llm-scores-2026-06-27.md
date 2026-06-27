@@ -40,10 +40,11 @@ B2 M38 `register-formal-written`,9/10,B+,Yes,Strong formal written register modu
 B2 M39 `tradytsii-i-zvychai`,9/10,B+,Yes,Strong traditions and customs module 10 workbook activities, 52 vocabulary items, 99% richness, and Agy/Gemini review pass. Score held at 9 for cultural-density polish risk suitable for human review.
 B2 M40 `register-literary-ukrainian`,9/10,B+,Yes,Strong literary-register module 16 workbook activities, 49 vocabulary items, 99% richness, and Agy/Gemini review/style pass. Score held at 9 for dense literary coverage and human-polish reserve.
 B2 M41 `register-public-discourse`,9/10,B+,Yes,Strong public-discourse/media-register module 12 workbook activities, 49 vocabulary items, 99% richness, and Agy/Gemini review/fix verification pass. Score held at 9 for remaining non-blocking UA-GEC advisory notes.
+B2 M42 `checkpoint-register-domain`,9/10,B+,Yes,Strong B2.3 register/domain checkpoint module 14 workbook activities, 50 vocabulary items, 99% richness, and Hermes/DeepSeek review pass. Score held at 9 for checkpoint density and non-blocking extra-section audit warnings.
 
 Score,Count,Modules
 10/10,2,"M01, M08"
-9/10,38,"M02-M07, M09-M13, M15-M41"
+9/10,39,"M02-M07, M09-M13, M15-M42"
 8/10,1,M14
 
 Durable Report,Scope
@@ -54,6 +55,7 @@ Durable Report,Scope
 `docs/audits/b2-m27-m31-llm-score-report-2026-06-26.md`,M27-M31
 `docs/audits/b2-m32-m36-llm-score-report-2026-06-27.md`,M32-M36
 `docs/audits/b2-m37-m41-llm-score-report-2026-06-27.md`,M37-M41
+`docs/audits/b2-m42-llm-score-report-2026-06-27.md`,M42
 
 Module,Raw Word Count,Activities,Vocabulary
 M03 `b2-impersonal-passive`,4608,7 workbook / 4 inline,35
@@ -95,6 +97,7 @@ M38 `register-formal-written`,4059,10 workbook / 0 inline,49
 M39 `tradytsii-i-zvychai`,4621,10 workbook / 0 inline,52
 M40 `register-literary-ukrainian`,6162,16 workbook / 0 inline,49
 M41 `register-public-discourse`,4240,12 workbook / 0 inline,49
+M42 `checkpoint-register-domain`,4529,14 workbook / 0 inline,50
 
 Score,Pass Count
 10/10,5/5 with no meaningful content polish
@@ -111,3 +114,4 @@ See `docs/audits/b2-m22-m26-llm-score-report-2026-06-26.md`.,M22-M26
 See `docs/audits/b2-m27-m31-llm-score-report-2026-06-26.md`.,M27-M31
 See `docs/audits/b2-m32-m36-llm-score-report-2026-06-27.md`.,M32-M36
 See `docs/audits/b2-m37-m41-llm-score-report-2026-06-27.md`.,M37-M41
+See `docs/audits/b2-m42-llm-score-report-2026-06-27.md`.,M42
