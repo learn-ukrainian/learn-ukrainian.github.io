@@ -2098,6 +2098,35 @@ def test_translation_uses_slovnyk_ukreng_after_source_misses(monkeypatch) -> Non
     }
 
 
+def test_translation_parses_slovnyk_ukreng_plural_label(monkeypatch) -> None:
+    conn = sqlite3.connect(":memory:")
+    conn.execute("CREATE TABLE dmklinger_uk_en (word TEXT, pos TEXT, translations TEXT)")
+    monkeypatch.setattr(enrich_manifest_module, "_DMKLINGER_INDEX", None)
+    monkeypatch.setattr(enrich_manifest_module, "_BALLA_REVERSE_INDEX", {})
+    cache = {
+        "lookups": {
+            "ukreng": {
+                "dictionary_slug": "ukreng",
+                "dictionary_label": "Українсько-англійський словник",
+                "word": "бризки",
+                "source_url": "https://slovnyk.me/dict/ukreng/бризки",
+                "text": (
+                    "бризки мн. splashes ( pl. ), spray ( sg. ); "
+                    "( розплавленого металу ) sparks ( pl. ); "
+                    "( дощу ) fine drops of rain "
+                    "Джерело: Українсько-англійський словник на Slovnyk.me"
+                ),
+            }
+        }
+    }
+
+    assert _translation(conn, "бризки", {}, slovnyk_cache=cache) == {
+        "en": ["splashes", "spray"],
+        "source": _SLOVNYK_UKRENG_SOURCE,
+        "source_url": "https://slovnyk.me/dict/ukreng/бризки",
+    }
+
+
 def test_translation_prefers_kaikki_over_curated_learner_gloss(monkeypatch) -> None:
     conn = sqlite3.connect(":memory:")
     conn.execute("CREATE TABLE dmklinger_uk_en (word TEXT, pos TEXT, translations TEXT)")
