@@ -16,6 +16,8 @@ GARBLED_BAZHANNIA = (
     "[бажання, «потреба; лит. разахотіти», нужда, злидні», "
     "іє. \"пац-, Зпоц-, \"пй- «стомлювати(ся)». -- Эндзелин РФВ 68"
 )
+GARBLED_ASPIRANT = "аспірант; фр. азрігапі; \\Уа1йе--НоГт. II 575; Веліа[ Е55) tail"
+CLEAN_ESUM = "чистий ЕСУМ ряд без OCR-гарблення."
 
 
 def _build_sources_db(path) -> None:
@@ -112,6 +114,67 @@ def test_curated_goroh_override_cleans_search_esum(tmp_path) -> None:
     assert not has_mojibake_marker(hits[0]["etymology_text"])
 
 
+def test_uncurated_garbled_esum_row_is_filtered_from_search(tmp_path) -> None:
+    db_path = tmp_path / "sources.db"
+    _build_sources_db(db_path)
+    conn = sqlite3.connect(db_path)
+    try:
+        conn.execute(
+            """
+            INSERT INTO esum_etymology_meta
+            (id, lemma, vol, page, etymology_text)
+            VALUES (?, ?, ?, ?, ?)
+            """,
+            (3, "аспірант", 1, 92, GARBLED_ASPIRANT),
+        )
+        conn.execute(
+            """
+            INSERT INTO esum_etymology(rowid, lemma, etymology_text, cognates, vol, page)
+            VALUES (?, ?, ?, ?, ?, ?)
+            """,
+            (3, "аспірант", GARBLED_ASPIRANT, "[]", 1, 92),
+        )
+        conn.commit()
+    finally:
+        conn.close()
+
+    assert not is_garbled_esum_lemma("аспірант")
+    assert search_esum("аспірант", limit=3, db_path=db_path) == []
+
+
+def test_uncurated_clean_esum_row_still_surfaces(tmp_path) -> None:
+    db_path = tmp_path / "sources.db"
+    _build_sources_db(db_path)
+    conn = sqlite3.connect(db_path)
+    try:
+        conn.execute(
+            """
+            INSERT INTO esum_etymology_meta
+            (id, lemma, vol, page, etymology_text)
+            VALUES (?, ?, ?, ?, ?)
+            """,
+            (3, "весна", 1, 92, CLEAN_ESUM),
+        )
+        conn.execute(
+            """
+            INSERT INTO esum_etymology(rowid, lemma, etymology_text, cognates, vol, page)
+            VALUES (?, ?, ?, ?, ?, ?)
+            """,
+            (3, "весна", CLEAN_ESUM, "[]", 1, 92),
+        )
+        conn.commit()
+
+        etymology = _source_etymology(conn, "весна", {})
+    finally:
+        conn.close()
+
+    assert not is_garbled_esum_lemma("весна")
+    assert etymology == {"text": CLEAN_ESUM, "source": "ЕСУМ, т. 1, с. 92"}
+    hits = search_esum("весна", limit=3, db_path=db_path)
+    assert [hit["lemma"] for hit in hits] == ["весна"]
+    assert hits[0]["etymology_text"] == CLEAN_ESUM
+
+
 def test_strip_only_curated_entry_drops_garbled_tail(tmp_path) -> None:
     db_path = tmp_path / "sources.db"
     _build_sources_db(db_path)
@@ -166,7 +229,7 @@ def test_uncurated_garbled_esum_row_falls_back_to_wiktionary(tmp_path) -> None:
             (
                 1,
                 "аспірант",
-                "аспірант; фр. азрігапі; \\Уа1йе--НоГт. II 575; Веліа[ Е55) tail",
+                GARBLED_ASPIRANT,
                 "[]",
                 1,
                 92,
