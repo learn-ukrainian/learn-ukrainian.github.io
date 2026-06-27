@@ -3,24 +3,162 @@ level: FOLK
 sequence: 1
 slug: narodna-kultura-yak-systema
 title: "Народна культура як система"
-subtitle: "Folk Culture as a System — заглушка (перебудовується, #3879)"
-version: 1
-status: stub
-word_target: 4000
+subtitle: "Oral tradition as the foundation of written Ukrainian literature"
+version: 2
+status: locked
+phase: base-first
+cefr_min: C1
+word_target: 4200
+focus: "A clean system map for the FOLK seminar: genre, performance, source, public text, and oral-to-written literary continuity."
+persona: "C1+ seminar learner reading Ukrainian folk texts as evidence, not as decorative ethnography."
 objectives:
-  - 'Заглушка — чисті цілі регенеруються в базовій перебудові (#3879).'
+  - "Пояснити народну культуру як систему слова, звуку, руху, предмета, простору, виконавця й громади."
+  - "Відрізняти жанр, виконавську ситуацію, записаний текст і пізніше авторське переосмислення."
+  - "Працювати з публічним джерелом: шкільна канонічна рамка, УкрЛіб-повний текст, без внутрішніх корпусних ідентифікаторів."
+  - "Розпізнавати імперське зниження фольклору до декоративної етнографії та відповідати джерельно точно."
+pedagogy:
+  approach: "source-first seminar"
+  notes:
+    - "Begin from a short primary text excerpt, then move to genre/system map."
+    - "Keep Christian-heritage-first framing where the tradition is historically Christian; seasonal imagery is read as poetics in genre context."
+    - "Do not publish module until hosted readings are cleaned or created with public source_url frontmatter."
 content_outline:
-  - section: 'Заглушка, частина 1 (#3879)'
-    words: 2000
+  - section: "Постановка проблеми"
+    words: 550
     points:
-      - 'Заглушка — план регенерується в базовій перебудові фольклору (#3879)'
-  - section: 'Заглушка, частина 2 (#3879)'
-    words: 2000
+      - "Opening question: how can one system contain a щедрівка, веснянка, дума, історична пісня, прислів'я, казка, рушник, бандура and a later literary echo?"
+      - "School-canonical anchor: Grade 5 literature frames oral folk creativity as the beginning of verbal art."
+      - "Course contract: folklore is read as oral foundation for written Ukrainian literature, not as a catalogue of exotic practices."
+  - section: "Системна карта"
+    words: 950
     points:
-      - 'Заглушка — план регенерується в базовій перебудові фольклору (#3879)'
+      - "Six layers: verbal, musical, performative, material, spatial, written-transmission."
+      - "Genre zones: small forms, tales/legends, calendar songs, family-cycle forms, epic/historical memory, material/performance signs."
+      - "Method: genre -> performance situation -> formula/stanza -> source limit -> literary bridge."
+  - section: "Первинні тексти"
+    words: 1000
+    points:
+      - "Use four public-source examples: щедрівка, веснянка, дума, історична пісня."
+      - "Quote only fragments verified against full public texts; module build must run formal quote verification before shipping."
+      - "Do not link learner pages to any hosted reading that still exposes internal corpus IDs."
+  - section: "Деколонізаційна рамка"
+    words: 850
+    points:
+      - "Reject imperial reduction of Ukrainian folk culture to decorative ethnography."
+      - "Avoid romantic overclaiming; name source limits and variant boundaries."
+      - "Treat Ukrainian regional variation as evidence, not as a problem to flatten."
+  - section: "Міст до писемної культури"
+    words: 650
+    points:
+      - "Trace oral formula -> recorded text -> school reading -> author/composer/theatre transformation."
+      - "Use Шевченко's думова intonation, Леонтович's choral transformation of Щедрик, and literary fairy-tale continuity only where source support is supplied."
+  - section: "Підсумок"
+    words: 200
+    points:
+      - "Return to the reading discipline learners will reuse across the whole FOLK track."
+activity_hints:
+  - type: motif-formula
+    placement: inline
+    focus: "Identify formula, refrain, parallelism, and address across four public-source examples."
+  - type: variant-comparison
+    placement: workbook
+    focus: "Separate full public text, recorded variant, and later author/composer transformation."
+  - type: performance
+    placement: workbook
+    focus: "Describe who performs, where, for whom, and what changes when the text is only read silently."
+vocabulary_hints:
+  - "усна народна творчість"
+  - "фольклор"
+  - "жанр"
+  - "формула"
+  - "приспів"
+  - "варіантність"
+  - "виконавська ситуація"
+  - "речитатив"
+  - "хрестоматійний текст"
+  - "публічне джерело"
 references:
-  - title: 'Заглушка — джерела регенеруються в базовій перебудові (#3879)'
-note: >-
-  Outline placeholder. Built module + poisoned plan content removed in PR #3867. Full clean
-  base (dossier -> wiki -> plan -> module) regenerated base-first in the folk rebuild (#3879).
-  Not built, not published. All placeholder text carries zero framing/readings/chunk-ids.
+  - title: "Українська література, 5 клас. Невичерпні джерела мудрості"
+    author: "Заболотний О., Заболотний В."
+    type: textbook
+    note: "Primary school-canonical frame: oral folk creativity as the start of verbal art."
+  - title: "Українська література, 5 клас. Мистецький спадок нащадкам"
+    author: "Авраменко О."
+    type: textbook
+    note: "School-canonical material on imagery, legends, riddles, proverbs and short forms."
+  - title: "Українська література, 8 клас. Думи й історичні пісні"
+    author: "Заболотний О., Заболотний В."
+    type: textbook
+    note: "School-canonical genre boundary for dumas and historical songs."
+  - title: "Ой сивая та і зозулечка"
+    author: "Народна творчість"
+    type: primary
+    source_url: "https://www.ukrlib.com.ua/narod/printout.php?id=6&bookid=1"
+  - title: "Ой весна, весна, ти красна"
+    author: "Народна творчість"
+    type: primary
+    source_url: "https://www.ukrlib.com.ua/narod/printout.php?id=0&bookid=0"
+  - title: "Втеча трьох братів з города Азова, з турецької неволі"
+    author: "Народна творчість"
+    type: primary
+    source_url: "https://www.ukrlib.com.ua/narod/printout.php?id=11&bookid=1"
+  - title: "Пісня про Байду"
+    author: "Народна творчість"
+    type: primary
+    source_url: "https://www.ukrlib.com.ua/narod/printout.php?id=3&bookid=5"
+readings:
+  - title: "Ой сивая та і зозулечка"
+    title_en: "Oh, Grey Cuckoo"
+    genre: "Щедрівка"
+    role: primary
+    type: primary
+    source: "Народна творчість. УкрЛіб."
+    source_url: "https://www.ukrlib.com.ua/narod/printout.php?id=6&bookid=1"
+    license: public_domain
+    hosting: needs-clean-hosted-reading
+    reading_slug: "shchedrivka-oi-syvaia-ta-i-zozulechka"
+  - title: "Ой весна, весна, ти красна"
+    title_en: "Oh Spring, Beautiful Spring"
+    genre: "Веснянка"
+    role: primary
+    type: primary
+    source: "Народна творчість. УкрЛіб."
+    source_url: "https://www.ukrlib.com.ua/narod/printout.php?id=0&bookid=0"
+    license: public_domain
+    hosting: needs-clean-hosted-reading
+    reading_slug: "vesnianka-oi-vesna-vesna-ty-krasna"
+  - title: "Втеча трьох братів з города Азова, з турецької неволі"
+    title_en: "The Escape of Three Brothers from Azov"
+    genre: "Дума"
+    role: primary
+    type: primary
+    source: "Народна творчість. УкрЛіб."
+    source_url: "https://www.ukrlib.com.ua/narod/printout.php?id=11&bookid=1"
+    license: public_domain
+    hosting: needs-clean-hosted-reading
+    reading_slug: "duma-vtecha-trokh-brativ-z-azova"
+  - title: "Пісня про Байду"
+    title_en: "The Song about Baida"
+    genre: "Історична пісня"
+    role: primary
+    type: primary
+    source: "Народна творчість. УкрЛіб."
+    source_url: "https://www.ukrlib.com.ua/narod/printout.php?id=3&bookid=5"
+    license: public_domain
+    hosting: hosted
+    reading_slug: "istorychna-pisnia-baida"
+do_not_quote:
+  - line: "Any reading page or plan citation that exposes an internal corpus chunk ID."
+    reason: "Public learners must see public Ukrlib/Osvita/bibliographic sources only."
+  - line: "Any standalone reconstruction of folk belief as the organizing thesis of this overview."
+    reason: "M01 teaches oral tradition as the foundation of written literature; source-grounded genre and poetics lead."
+connects_to:
+  - kalendarna-obriadovist-zvychai
+  - koliadky-shchedrivky
+  - vesnianky-hayivky
+  - dumy-nevilnytski-lytsarski
+  - istorychni-pisni
+changelog:
+  - version: 2
+    date: "2026-06-27"
+    note: "Base-first rebuild: replaced contaminated stub/upstream framing with clean dossier/wiki/plan source contract; no module published."
