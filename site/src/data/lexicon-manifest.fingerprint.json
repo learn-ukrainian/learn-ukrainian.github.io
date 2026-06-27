@@ -1,5 +1,5 @@
 {
-  "fingerprint": "0329a0f2aa98944f6014dc397fa36a2415ec19768316adcfa6340cb331c05552",
+  "fingerprint": "0b96e64555f5fcee3491b408c85de324ae601b13d0852002ea98a102473a5fba",
   "inputs": {
     "lexicon_code": [
       {
@@ -44,7 +44,7 @@
       },
       {
         "path": "scripts/lexicon/enrich_manifest.py",
-        "sha256": "7892e51f3f0cd0c78c108af6cb982e1fc967c020c224814b9620d5fa1436ecde"
+        "sha256": "eb0cd72cc301b21b95f19a58569dd48be804323c741f3776838af7899757abe8"
       },
       {
         "path": "scripts/lexicon/esum_garbled.py",
@@ -68,7 +68,7 @@
       },
       {
         "path": "scripts/lexicon/grow_lexicon_from_content.py",
-        "sha256": "287ef63711eb8012137a9e55a1faa36869ba1388f587e5399f57d425b36f6705"
+        "sha256": "002587ed98c0feec735e5e1bd6f71c285fa2ecb924834cae857fdc50383df129"
       },
       {
         "path": "scripts/lexicon/heritage_classifier.py",

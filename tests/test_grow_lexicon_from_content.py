@@ -78,6 +78,20 @@ def test_build_skeleton_entry_uses_raw_vesum_pos(monkeypatch) -> None:
     assert grow.build_skeleton_entry("не-знайдено") == {"lemma": "не-знайдено"}
 
 
+def test_build_skeleton_entry_prefers_non_archaic_exact_pos(monkeypatch) -> None:
+    def fake_verify_lemma(lemma: str) -> list[dict[str, str]]:
+        assert lemma == "наголос"
+        return [
+            {"word_form": "наголос", "pos": "adv", "tags": "adv:arch"},
+            {"word_form": "наголос", "pos": "noun", "tags": "noun:inanim:m:v_naz"},
+        ]
+
+    monkeypatch.setattr(grow.enrich_manifest, "_base_lemma", lambda lemma: lemma)
+    monkeypatch.setattr(grow.enrich_manifest, "verify_lemma", fake_verify_lemma)
+
+    assert grow.build_skeleton_entry("наголос") == {"lemma": "наголос", "pos": "noun"}
+
+
 def test_enrich_entry_attaches_heritage_status_with_fixture_classifier(monkeypatch) -> None:
     _patch_enrich_entry_heavy_helpers(monkeypatch)
     monkeypatch.setattr(

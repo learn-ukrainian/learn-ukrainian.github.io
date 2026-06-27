@@ -30,6 +30,12 @@ from scripts.lexicon.content_lexicon_reconciler import (
 DEFAULT_OUT = PROJECT_ROOT / "data" / "lexicon" / "grow_candidates.json"
 GENERATED_FROM = "content_lexicon_reconciler.missing_lemmas"
 _WARNING_CLASSIFICATIONS = {"russianism", "sovietism", "surzhyk"}
+_POS_PRIORITY = {
+    "noun": 0,
+    "verb": 1,
+    "adj": 2,
+    "adv": 3,
+}
 
 
 def build_skeleton_entry(lemma: str) -> dict[str, Any]:
@@ -199,11 +205,24 @@ def _vesum_pos(lemma: str) -> str | None:
         forms = enrich_manifest.verify_lemma(base)
     except Exception:
         return None
+    base_key = enrich_manifest._lookup_key(base).casefold()
+    candidates: list[tuple[bool, bool, int, str]] = []
     for row in forms:
         pos = str(row.get("pos") or "").strip()
         if pos:
-            return pos
-    return None
+            word_form = enrich_manifest._lookup_key(str(row.get("word_form") or "")).casefold()
+            tags = str(row.get("tags") or "")
+            candidates.append(
+                (
+                    word_form != base_key,
+                    ":arch" in tags or tags == "arch",
+                    _POS_PRIORITY.get(pos, 99),
+                    pos,
+                )
+            )
+    if not candidates:
+        return None
+    return min(candidates)[3]
 
 
 @contextmanager
