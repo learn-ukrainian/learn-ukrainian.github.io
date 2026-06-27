@@ -9,6 +9,7 @@ Endpoints:
   GET /api/state/weak-points          Modules with quality issues
   GET /api/state/build-status/{track}  Compact live build progress (one call)
   GET /api/state/build-status          All-tracks build progress summary
+  GET /api/state/module-range/{track}  Deterministic committed-file status for a module range
   GET /api/state/module/{track}/{num}  Single module deep-dive with comms
   GET /api/state/final-reviews/{track} Phase F results aggregated per track
   GET /api/state/failing              Modules with audit/phase failures
@@ -49,6 +50,7 @@ from .state_build import (
     compute_build_status_all,
     compute_build_status_track,
     compute_enrichment_status,
+    compute_module_range_status,
     compute_track_health,
 )
 from .state_compute import (
@@ -944,6 +946,36 @@ async def build_status_all():
         return cached
     result = await asyncio.to_thread(compute_build_status_all)
     cache_set("build_status_all", result)
+    return result
+
+
+@router.get("/module-range/{track_id}")
+async def module_range_status(
+    track_id: str,
+    start: int = Query(..., ge=1),
+    end: int = Query(..., ge=1),
+):
+    """Deterministic committed-file status for a module number range."""
+    level_cfg = next((l for l in LEVELS if l["id"] == track_id), None)
+    if not level_cfg:
+        return JSONResponse(status_code=404, content={"error": f"Track '{track_id}' not found"})
+    if end < start:
+        return JSONResponse(
+            status_code=422,
+            content={"error": "end must be greater than or equal to start"},
+        )
+    cache_key = f"module_range_{track_id}_{start}_{end}"
+    cached = cache_get(cache_key, ttl=30.0)
+    if cached is not None:
+        return cached
+    result = await asyncio.to_thread(
+        compute_module_range_status,
+        track_id,
+        level_cfg,
+        start=start,
+        end=end,
+    )
+    cache_set(cache_key, result)
     return result
 
 
