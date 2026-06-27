@@ -26,7 +26,7 @@ Select the appropriate review tier based on level:
 |-------|------|-----------|
 | A1, A2 | Tier 1 (Beginner) | See `../plan-review/review-tiers/tier-1-beginner.md` |
 | B1, B2 | Tier 2 (Core) | See `../plan-review/review-tiers/tier-2-core.md` |
-| HIST, BIO, ISTORIO, LIT, OES, RUTH | Tier 3 (Seminar) | See `../plan-review/review-tiers/tier-3-seminar.md` |
+| FOLK, HIST, BIO, ISTORIO, LIT, OES, RUTH | Tier 3 (Seminar) | See `../plan-review/review-tiers/tier-3-seminar.md` |
 | C1, C2 | Tier 4 (Advanced) | See `../plan-review/review-tiers/tier-4-advanced.md` |
 
 Read the tier file and apply its rubrics alongside the checks below.
@@ -112,6 +112,14 @@ Read the activities YAML and check:
 - [ ] **Primary source accuracy** -- Verify text dating, genre, linguistic features using `mcp__sources__search_literary` with period filter.
 - [ ] **Not anachronistic** -- No modern features projected onto historical texts.
 
+### FOLK MODE
+
+- [ ] **FOLK framing hard gate** -- Apply `docs/folk-epic/FOLK-FRAMING-STANDARD.md`; any pagan-core / Christian-shell, occult-as-belief, magic-as-core, or demonology-as-belief framing is a blocker.
+- [ ] **No Soviet/Russian demonizing lens** -- Do not describe Ukrainian folk culture as primitive, backward, superstition, banditry, "Little Russian," or common-Russian inheritance except as explicitly marked hostile/historical framing.
+- [ ] **Source hygiene** -- Public learner pages cite public URLs only. Internal chunk IDs/source IDs must not appear in public-facing content.
+- [ ] **Primary readings** -- Hosted readings are full public texts where applicable, formatted as readings rather than blockquote noise, and lesson excerpts are source-faithful.
+- [ ] **Decolonization stance** -- Ukrainian cultural agency remains central without hagiography or romantic overclaiming.
+
 ---
 
 ## Output Format
@@ -120,7 +128,7 @@ Read the activities YAML and check:
 # Content Review: {slug}
 
 **Track:** {track} | **Sequence:** {sequence}
-**Mode:** core / history / biography / literary / oes-ruth
+**Mode:** core / folk / history / biography / literary / oes-ruth
 **Tier:** 1-beginner / 2-core / 3-seminar / 4-advanced
 **Pipeline:** PASS (words: X, target: Y)
 **Verdict:** A / B / C / F

@@ -1,6 +1,6 @@
-# Tier 3: Seminar Modules (HIST, ISTORIO, BIO, LIT)
+# Tier 3: Seminar Modules (FOLK, HIST, ISTORIO, BIO, LIT, OES, RUTH)
 
-> **Target:** HIST (History), ISTORIO (History), BIO (Biography), LIT (Literature) tracks
+> **Target:** FOLK (Folk Culture), HIST (History), ISTORIO (History), BIO (Biography), LIT (Literature), OES, and RUTH tracks
 > **Pedagogy:** CBI (Content-Based Instruction)
 > **Immersion:** 98-100% Ukrainian
 > **Experience Goal:** A+ seminar lecture — memorable, engaging, transformative

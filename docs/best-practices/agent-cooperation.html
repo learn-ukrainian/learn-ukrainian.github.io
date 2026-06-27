@@ -93,11 +93,11 @@
 
   h2 { font-size: 22px; margin-top: 48px; border-bottom: 1px solid var(--rule); padding-bottom: 8px; }
   h3 { font-size: 18px; margin-top: 32px; }
-  
+
   table { width: 100%; border-collapse: collapse; margin: 24px 0; font-family: var(--sans); font-size: 14px; }
   th { text-align: left; background: var(--surface-2); padding: 10px 12px; border: 1px solid var(--rule); }
   td { padding: 10px 12px; border: 1px solid var(--rule); vertical-align: top; }
-  
+
   .callout {
     padding: 16px;
     border-radius: 4px;
@@ -291,7 +291,7 @@ invoked through <code>scripts/agent_runtime/runner.invoke()</code>. This applies
 </code></pre>
 <h3>High-risk-track override (false-consensus failsafe)</h3>
 <p>When all participating agents share the same underlying bias on a topic (e.g., Russian-imperial framing on Ukrainian topics, Western centrism on decolonization), an <code>[AGREE]</code> consensus is NOT a green light. It is exactly when the Decision Card mechanism is most needed and most likely to be bypassed.</p>
-<p>For high-risk tracks — <strong>HIST, BIO, ISTORIO, LIT, OES, RUTH</strong> (all decolonization-sensitive seminar tracks where Russian/Soviet-imperial framings are most ingrained in training data) — the orchestrator MUST apply at least one of the following failsafe mechanisms:</p>
+<p>For high-risk tracks — <strong>FOLK, HIST, BIO, ISTORIO, LIT, OES, RUTH</strong> (all decolonization-sensitive seminar tracks where Russian/Soviet-imperial framings are most ingrained in training data) — the orchestrator MUST apply at least one of the following failsafe mechanisms:</p>
 <ul>
 <li><strong>Mechanism A (Force-emit Decision Card on <code>[AGREE]</code>):</strong> If <code>ab discuss</code> runs on a topic touching any high-risk track and converges with <code>[AGREE]</code>, the orchestrator emits a Decision Card anyway. The question is framed as &quot;agents converged on X — but consensus on this track is suspect; user should sanity-check.&quot; The user can quickly approve or override.</li>
 <li><strong>Mechanism B (Inject domain-specific bias checklist):</strong> For high-risk tracks, the <code>ab discuss</code> prompt is augmented with a short bias checklist explicitly provoking adversarial review on known bias vectors.

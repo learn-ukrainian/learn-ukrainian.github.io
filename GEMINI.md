@@ -169,7 +169,7 @@ You will sometimes be invoked via `ab discuss` for design / framing / pedagogy /
 
 **When the orchestrator (Claude) emits a `## DECISION REQUIRED — ...` block, that's a Decision Card** routed to inline chat / `docs/decisions/pending/` / GH issue. Don't try to resolve it on Gemini's side.
 
-**High-risk-track override:** On sensitive tracks (HIST, BIO, ISTORIO, LIT, OES, RUTH), an `[AGREE]` consensus is suspect due to shared training-data biases. The orchestrator will override consensus by either force-emitting a Decision Card or injecting domain-specific bias checklists to provoke adversarial review.
+**High-risk-track override:** On sensitive tracks (FOLK, HIST, BIO, ISTORIO, LIT, OES, RUTH), an `[AGREE]` consensus is suspect due to shared training-data biases. The orchestrator will override consensus by either force-emitting a Decision Card or injecting domain-specific bias checklists to provoke adversarial review.
 
 **Pending decisions (`docs/decisions/pending/*.md`) are BLOCKING only for the scope declared in their `Scope` field.** Surface them before any new work that could invalidate them, and check the field before assuming a decision blocks your work.
 
