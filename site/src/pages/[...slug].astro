@@ -4,6 +4,7 @@ import CourseLayout from '../layouts/CourseLayout.astro';
 import LevelLanding from '../components/LevelLanding';
 import ChromeText from '../components/chrome/ChromeText.astro';
 import { CHROME_STRINGS } from '../lib/i18n/chrome';
+import { isPublishedReading } from '../lib/readings';
 import curriculumStats from '../data/curriculum-stats.json';
 import lexiconManifest from '../data/lexicon-manifest.json';
 
@@ -291,7 +292,7 @@ const searchTrackIds = trackIds.filter((id) => !HIDDEN_LINK_TRACKS.has(id));
 
 const allDocs = await getCollection('docs');
 // Хрестоматія readings — surfaced in site-wide search like Word Atlas entries.
-const allReadings = await getCollection('readings');
+const allReadings = (await getCollection('readings')).filter(isPublishedReading);
 const visibleDocs = allDocs.filter((entry) => {
   const id = normalizeId(entry.id);
   const track = id.split('/')[0];

@@ -136,3 +136,31 @@
   margin: 0 0 1.25rem;
   padding: 0.75rem 1rem;
 }
+
+.reading-text {
+  color: var(--lu-text);
+  font-size: 1.05rem;
+  line-height: 1.75;
+}
+
+.reading-text__stanza,
+.reading-text__paragraph {
+  margin: 0 0 1.15rem;
+}
+
+.reading-text__stanza:last-child,
+.reading-text__paragraph:last-child {
+  margin-bottom: 0;
+}
+
+.reading-text__line {
+  display: block;
+}
+
+.reading-text--prose {
+  max-width: 72ch;
+}
+
+.primary-reading-content .reading-text {
+  margin: 0.25rem 0;
+}

@@ -52,7 +52,9 @@ for the folk activity families.
 | `:::note` / `:::caution` / `:::info` | Starlight-native admonitions | Asides, honest cautions, external-resource panels | as needed |
 
 `:::myth-box` and `:::high-culture-bridge` take a YAML payload (claim/truth/claim_source/truth_source;
-nodes/note). `:::primary-reading` wraps a Markdown blockquote + an `— attribution` line.
+nodes/note). `:::primary-reading` is the in-lesson evidence convention. Hosted Хрестоматія
+pages under `site/src/content/readings/` must pass the full text to
+``<PrimaryReading text={`...`} />`` so it renders through `ReadingText`, not Markdown blockquotes on every line.
 Converter: `scripts/generate_mdx/converters.py::convert_folk_content_blocks`.
 
 Activities (`activities.yaml`): prefer the folk families `ritual-sequencing` (#42),
@@ -117,6 +119,10 @@ it is attributed to.** Concretely:
   floor; a specific `uk.wikisource.org` / `litopys.org.ua` / `ukrlib.com.ua` work page when one resolves.
 - On-site primary text is surfaced via `:::primary-reading`, NOT via an internal `wiki/...` path
   (those are AI-facing and are rejected).
+- New hosted reading MDX requires a public `source_url` when a public source page
+  exists, plus explicit `published:` and `canonical:` frontmatter. Use
+  `published: false` and/or `canonical: false` to keep a retained source file
+  out of route generation, the readings index, and site search.
 - All resource titles/notes must be VESUM-clean (the `vesum_verified` gate scans them too — brand names
   like «Вікіджерела» and hyphenated tokens can fail; prefer plain attested words).
 

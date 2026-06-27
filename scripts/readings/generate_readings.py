@@ -571,7 +571,7 @@ def render_reading(resolved: ResolvedReading) -> str:
     tracks = sorted(resolved.tracks)
     study_links = resolved.study_links or _study_links(resolved.module_dirs)
     body_text = _display_text(corpus.text, candidate.title)
-    quote = _blockquote(body_text)
+    reading_text = _reading_text_template(body_text)
     intro_template = metadata.pop("intro", None)
     if intro_template:
         intro = intro_template.format(links=study_links)
@@ -589,11 +589,11 @@ def render_reading(resolved: ResolvedReading) -> str:
         "",
         _wrap_intro(intro),
         "",
-        "<PrimaryReading>",
-        "",
-        quote,
-        "",
-        "</PrimaryReading>",
+        "<PrimaryReading",
+        "  text={`",
+        reading_text,
+        "`}",
+        "/>",
         "",
         f"**Джерело:** {metadata['source']}",
         "",
@@ -919,9 +919,13 @@ def _metadata_for(resolved: ResolvedReading) -> dict[str, Any]:
             "подано дослівно за корпусним записом."
         ),
         "public_domain": True,
+        "published": True,
+        "canonical": True,
         "order": curated.get("order") or _default_order(slug),
         **({"intro": curated["intro"]} if curated.get("intro") else {}),
     }
+    if corpus.source_url:
+        metadata["source_url"] = corpus.source_url
     if resolved.taught_in:
         metadata["taught_in"] = list(resolved.taught_in)
     if resolved.source_chunk_ids:
@@ -943,7 +947,10 @@ def _frontmatter(metadata: dict[str, Any], tracks: Sequence[str]) -> list[str]:
         "source_chunk_ids",
         "excerpt",
         "source",
+        "source_url",
         "public_domain",
+        "published",
+        "canonical",
         "order",
     ]
     lines = ["---"]
@@ -956,6 +963,8 @@ def _frontmatter(metadata: dict[str, Any], tracks: Sequence[str]) -> list[str]:
         value = metadata[key]
         if key == "public_domain":
             lines.append("public_domain: true")
+        elif isinstance(value, bool):
+            lines.append(f"{key}: {'true' if value else 'false'}")
         elif isinstance(value, (list, tuple)):
             lines.append(f"{key}: [{', '.join(_yaml_quote(str(item)) for item in value)}]")
         elif isinstance(value, int):
@@ -989,8 +998,8 @@ def _looks_like_title_line(line: str, candidate_title: str) -> bool:
     return has_letters and stripped.upper() == stripped
 
 
-def _blockquote(text: str) -> str:
-    return "\n".join(f"> {line}" if line else ">" for line in text.splitlines())
+def _reading_text_template(text: str) -> str:
+    return text.replace("\\", "\\\\").replace("`", "\\`").replace("${", "\\${").strip()
 
 
 def _study_links(module_dirs: Sequence[Path]) -> str:

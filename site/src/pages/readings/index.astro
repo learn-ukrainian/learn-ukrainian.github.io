@@ -7,8 +7,9 @@ import { getCollection } from 'astro:content';
 import CourseLayout from '../../layouts/CourseLayout.astro';
 import ChromeText from '../../components/chrome/ChromeText.astro';
 import { CHROME_STRINGS } from '../../lib/i18n/chrome';
+import { isPublishedReading } from '../../lib/readings';
 
-const readings = await getCollection('readings');
+const readings = (await getCollection('readings')).filter(isPublishedReading);
 const sorted = [...readings].sort(
   (a, b) => (a.data.order ?? 999) - (b.data.order ?? 999) || a.data.title.localeCompare(b.data.title, 'uk'),
 );

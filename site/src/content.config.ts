@@ -44,7 +44,10 @@ export const collections = {
 			taught_in: z.array(z.string()).default([]),
 			excerpt: z.string(),
 			source: z.string(),
+			source_url: z.string().url().optional(),
 			public_domain: z.literal(true),  // require explicit rights assertion; missing => fail validation
+			published: z.boolean().default(true),
+			canonical: z.boolean().default(true),
 			order: z.number().optional(),
 		}).passthrough(),
 	}),

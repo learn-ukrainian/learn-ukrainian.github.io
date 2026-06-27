@@ -56,7 +56,9 @@ def test_generate_from_demand_writes_hostable_public_domain_reading(tmp_path: Pa
     assert 'tracks: ["lit"]' in content
     assert 'taught_in: ["zapovit-module"]' in content
     assert 'source_chunk_ids: ["1"]' in content
-    assert "> Як умру, то поховайте" in content
+    assert "<PrimaryReading" in content
+    assert "text={`" in content
+    assert "Як умру, то поховайте" in content
     assert "**Джерело:** Шевченко Т.; корпус ukrlib-shevchenko." in content
     assert "**Де вивчають:** [LIT · «Модуль про Заповіт»](/lit/zapovit-module/)" in content
     assert GENERATED_MARKER in content
