@@ -830,6 +830,11 @@ body {
   gap: 24px;
 }
 
+.lesson-shell > * {
+  min-width: 0;
+  max-width: 100%;
+}
+
 .track-status-panel {
   display: flex;
   align-items: center;

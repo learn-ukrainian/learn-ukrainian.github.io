@@ -1,68 +1,149 @@
 activity_hints:
-- type: aural-genre-id
-  placement: workbook
-  focus: Aural markers or performance context, when dossier sources support audio
-- type: symbolic-decoding
-  placement: workbook
-  focus: Motif, image, or formula decoding from dossier evidence
 - type: variant-comparison
   placement: workbook
-  focus: Regional, temporal, or performance variants
+  focus: Compare authored, anonymous, and variant circulation in resistance songs.
+- type: motif-formula
+  placement: workbook
+  focus: Track recurring images of kalyna, road, grave, forest, and communal voice.
+- type: performance
+  placement: workbook
+  focus: Read or sing a verified fragment while naming the source situation.
 cefr_min: C1
 connects_to:
 - istorychni-pisni
-- rodynno-pobutovi-pisni
+- pisni-literaturnoho-pokhodzhennia
+- suspilno-pobutovi-pisni
 content_outline:
 - section: Постановка проблеми
-  words: 600
+  words: 720
   points:
-  - 'Stub: dossier will supply the opening problem, corpus anchors, and framing constraints.'
+  - 'Start from the genre problem: twentieth-century resistance songs are neither ancient anonymous lyric nor dumy, but songs that entered oral and public memory through authors, printed songbooks, school canon, family transmission, and public performance.'
+  - 'Establish the evidence tiers: school-canonical framing, public Ukrlib full texts, and corpus-attested literary witnesses that show circulation without becoming field recordings.'
 - section: Корпус і контекст
-  words: 1200
+  words: 980
   points:
-  - 'Stub: dossier will supply verified texts, images, recordings, or material-culture evidence.'
+  - Separate the Sich Riflemen / Ukrainian Sich Riflemen layer of 1914-1920 from the insurgent / UPA and underground layer of the 1940s-1950s.
+  - Use public readings from Ukrlib and canonical school/Osvita/Wikipedia pages; learner citations must stay on public URLs.
+  - Explain authorship and anonymity without either erasing known authors or denying folklorization.
 - section: Поетика, символіка і виконання
-  words: 1400
+  words: 1050
   points:
-  - 'Stub: dossier will specify motifs, formulas, performance sequence, and regional variation.'
+  - Analyze stanza, refrain, march pulse, elegiac repetition, communal pickup, and variant circulation.
+  - Compare kalyna, Makivka, the fallen rifleman, the prison/forest underground, and the grave marked by national memory.
+  - Include primary-reading blocks for every hosted reading.
 - section: Деколонізаційна рамка
-  words: 900
+  words: 700
   points:
-  - 'Stub: dossier will identify imperial, Soviet, or romantic-nationalist myths to correct.'
+  - Reject Soviet criminalizing vocabulary and Russian-imperial erasure of Ukrainian agency while avoiding uncritical hagiography.
+  - Keep UPA and USS historically distinct; name public memory, state recognition, school canon, and source limits.
 - section: Підсумок
-  words: 900
+  words: 550
   points:
-  - 'Stub: module build will synthesize why this folk form matters now.'
-focus: Twentieth-century resistance song tradition and cultural survival under occupation
+  - 'Return to the central skill: classify the source situation before interpreting the song.'
+  - Give learners a seminar answer pattern that cites public source, genre layer, poetic evidence, and limits of inference.
+focus: Twentieth-century Ukrainian resistance songs as folklorized public memory.
 level: FOLK
 module: folk-015
 objectives:
-- Пояснювати жанр або культурну практику як частину ширшої системи народної культури.
-- Аналізувати корпусні приклади, символи, формули або перформативні послідовності на основі досьє.
-- Розпізнавати імперські, радянські або романтизовані міфи в описі теми й формулювати коректну рамку.
+- Розрізняти стрілецький і повстанський шари української пісенної пам'яті без змішування УСС, УГА, ОУН, УПА та повоєнного підпілля.
+- Пояснювати, як авторська або анонімна пісня входить у фольклорний обіг через співаник, школу, родинну пам'ять і публічне виконання.
+- Аналізувати строфу, приспів, маршовий імпульс, реквіємну повторність і мотиви калини, дороги, могили, лісу та гуртового голосу.
+- Відкидати радянські криміналізувальні ярлики й водночас називати межі джерела, авторства, варіанта і сучасної пам'яті.
 pedagogy: CBI
 persona:
-  role: Модератор фольклористичного семінару з увагою до корпусу, виконання і матеріальної культури
+  role: Модератор фольклористичного семінару з увагою до джерела, виконання і пам'яті
   voice: Folklore-seminar facilitator
 phase: FOLK.E
+readings:
+- title: Чуєш, брате мій
+  title_en: Hear Me, My Brother
+  genre: Стрілецька пісня / реквієм літературного походження
+  source: УкрЛіб
+  source_url: https://www.ukrlib.com.ua/books/printit.php?tid=8048
+  license: public-domain
+  hosting: hosted
+  reading_slug: striletska-pisnia-chuiesh-brate-mii
+- title: Ой у лузі червона калина похилилася
+  title_en: Oh, in the Meadow the Red Kalyna Bent Down
+  genre: Стрілецька пісня
+  source: УкрЛіб
+  source_url: https://www.ukrlib.com.ua/books/printit.php?tid=16376
+  license: public-domain
+  hosting: hosted
+  reading_slug: striletska-pisnia-oi-u-luzi-chervona-kalyna
+- title: Там на горі, на Маківці...
+  title_en: There on the Hill, on Makivka
+  genre: Стрілецька пісня
+  source: УкрЛіб
+  source_url: https://www.ukrlib.com.ua/books/printit.php?tid=27131
+  license: public-domain
+  hosting: hosted
+  reading_slug: striletska-pisnia-tam-na-hori-na-makivtsi
+- title: Повіяв вітер степовий
+  title_en: The Steppe Wind Began to Blow
+  genre: Стрілецька пісня
+  source: УкрЛіб
+  source_url: https://www.ukrlib.com.ua/books/printit.php?tid=26755
+  license: public-domain
+  hosting: hosted
+  reading_slug: striletska-pisnia-poviiav-viter-stepovyi
+- title: Нічка була темна
+  title_en: The Night Was Dark
+  genre: Повстанська пісня
+  source: УкрЛіб
+  source_url: https://www.ukrlib.com.ua/books/printit.php?tid=26553
+  license: public-domain
+  hosting: hosted
+  reading_slug: povstanska-pisnia-nichka-bula-temna
+- title: Понад Хустом ворон кряче
+  title_en: Over Khust a Raven Caws
+  genre: Повстанська пісня
+  source: УкрЛіб
+  source_url: https://www.ukrlib.com.ua/books/printit.php?tid=26555
+  license: public-domain
+  hosting: hosted
+  reading_slug: povstanska-pisnia-ponad-khustom-voron-kriache
 references:
-- title: "Стрілецькі та повстанські пісні"
-  note: 'Stub — corpus-grounded sources pending the dossier (docs/folk-epic/folk-dossier-schema.md §6 Збирачі та дослідники).'
-  type: pending
+- title: Стрілецькі пісні
+  type: public-reference
+  url: https://uk.wikipedia.org/wiki/Стрілецькі_пісні
+  note: Public overview for the USS song layer and common repertoire names.
+- title: Повстанські пісні
+  type: public-reference
+  url: https://uk.wikipedia.org/wiki/Повстанські_пісні
+  note: Public overview for the insurgent-song layer and "пісні з лісу" label.
+- title: Ой у лузі червона калина похилилася
+  type: primary
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=16376
+  note: Hosted public-domain reading and high-culture/public-memory bridge.
+- title: Чуєш, брате мій
+  type: primary
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=8048
+  note: Hosted public-domain reading for the riflemen requiem layer.
+- title: Про заходи з відзначення річниці перемоги над нацизмом
+  type: public-reference
+  url: https://osvita.ua/legislation/Ser_osv/46719/
+  note: Osvita public list that names insurgent songs as school-safe context; used as canon/safety gate, not as hosted text source.
 sequence: 15
 slug: striletski-povstanski-pisni
-status: stub
+status: locked
 subtitle: Sich Riflemen and Insurgent Songs
 title: Стрілецькі та повстанські пісні
-version: '0.1'
+version: 0.2
 vocabulary_hints:
-- word: обряд
+- word: стрілецька пісня
+  pos: ж.
+  definition: пісня, пов'язана з колом Українських січових стрільців, Визвольних Змагань і ширшим стрілецьким пісенним репертуаром
+- word: повстанська пісня
+  pos: ж.
+  definition: пісня визвольного підпілля, УПА або ширшої пам'яті збройного спротиву XX століття
+- word: фольклоризація
+  pos: ж.
+  definition: перехід авторського або друкованого тексту в усний, варіантний і спільнотний обіг
+- word: співаник
   pos: ч.
-  definition: усталена символічна дія або послідовність дій у традиційній культурі
-- word: мотив
+  definition: друкована або рукописна збірка пісень, через яку репертуар переходить між школою, військом, родиною і сценою
+- word: реквієм
   pos: ч.
-  definition: повторюваний образ, сюжетний елемент або символічна формула
-- word: варіант
-  pos: ч.
-  definition: регіональна, часова або виконавська форма того самого тексту чи практики
-word_target: 5000
+  definition: жалобний твір або виконання, що надає спільноті мову втрати й пам'яті
+word_target: 4000

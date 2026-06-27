@@ -1,0 +1,69 @@
+{
+  "assembled_mdx_sha256": "1faee4098ec2897461964831f9c987facdc56e4181bfc4b61b793e825aea569f",
+  "content_hash": {
+    "algorithm": "sha256",
+    "basis": "lesson_sources_v2",
+    "digest": "823a6a7462c4644759ae4fdbb98fe9c11f09ee22ce9d935c828cf23c3bbd8b58",
+    "files": [
+      {
+        "path": "curriculum/l2-uk-en/plans/folk/striletski-povstanski-pisni.yaml",
+        "sha256": "d03bc509d3fdf4ddfef32edd345577f32924ef04a1016c7f60fbb6ef5bc882c6"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/striletski-povstanski-pisni/module.md",
+        "sha256": "6b91217c2a71f81c0b36ca8070b1c765d821119861935fb35f99e38628d3c988"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/striletski-povstanski-pisni/activities.yaml",
+        "sha256": "61a9932628ae85ef563be0ce012e522b37eee6dddb5da67f920a7255677c10a2"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/striletski-povstanski-pisni/vocabulary.yaml",
+        "sha256": "96bf1ceb0c5b906e10abdabf20cf90926b912e469be0ee563e3ce3eafba6dbc5"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/striletski-povstanski-pisni/resources.yaml",
+        "sha256": "93cfd444ebd360bcafee652df1a90bc35e8f64b9265d26734cd5b0991c45e032"
+      }
+    ]
+  },
+  "evidence": {
+    "framing": "Agy/Gemini 3.1 Pro High PASS: twentieth-century resistance songs are framed through a decolonial lens; Soviet criminalization and Russian-imperial erasure rejected; USS and UPA layers kept distinct; no uncritical hagiography.",
+    "note": "Agy/Gemini 3.1 Pro High: academic, respectful folklore-seminar tone; natural prose without repetition; elegant analysis of poetic devices, elegiac repetition, and variant circulation.",
+    "pedagogy": "Agy/Gemini 3.1 Pro High: strong CBI alignment; source -> genre layer -> poetic evidence -> limits of inference pattern; activities teach variant comparison, motif analysis, disciplined performance, and research ethics.",
+    "quote_integrity": "Agy/Gemini 3.1 Pro High: hosted readings and references map cleanly to public-domain Ukrlib and public reference pages without internal corpus IDs; textual citations are clean and accurate."
+  },
+  "floors": {
+    "beauty": 8.5,
+    "decolonization": 9.0,
+    "engagement": 8.5,
+    "naturalness": 8.5,
+    "pedagogical": 8.5,
+    "tone": 8.5
+  },
+  "profile": "folk_promote_v1",
+  "review_artifact": null,
+  "reviewer": {
+    "agent": "agy",
+    "family": "google",
+    "model": "gemini-3.1-pro-high"
+  },
+  "schema_version": 1,
+  "scored_at": "2026-06-26T23:31:45Z",
+  "scores": {
+    "beauty": 9.2,
+    "decolonization": 9.5,
+    "engagement": 9.0,
+    "naturalness": 9.3,
+    "pedagogical": 9.4,
+    "tone": 9.3
+  },
+  "slug": "striletski-povstanski-pisni",
+  "track": "folk",
+  "verdict": "PASS",
+  "writer": {
+    "agent": "codex",
+    "family": "openai",
+    "model": "gpt-5"
+  }
+}
