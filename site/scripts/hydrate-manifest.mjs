@@ -2,7 +2,7 @@ import { existsSync } from "node:fs";
 import { readFile, rename, unlink, writeFile } from "node:fs/promises";
 import { createHash } from "node:crypto";
 import { dirname, resolve } from "node:path";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import { gunzipSync } from "node:zlib";
 
 const RECOVERY_COMMAND =
@@ -27,6 +27,7 @@ const fingerprintPath = resolve(repoRoot, "site/src/data/lexicon-manifest.finger
 const manifestPath = resolve(repoRoot, "site/src/data/lexicon-manifest.json");
 const tempPath = `${manifestPath}.tmp`;
 const allowStalePointer = process.env.ATLAS_MANIFEST_ALLOW_STALE_POINTER === "1";
+const DOWNLOAD_ATTEMPTS = 3;
 
 function sha256(data) {
   return createHash("sha256").update(data).digest("hex");
@@ -100,6 +101,58 @@ function parseManifest(jsonBytes, pointer, sourceLabel) {
   return manifest;
 }
 
+function downloadUrl(pointer, attempt) {
+  if (attempt === 0) return pointer.asset_url;
+
+  const url = new URL(pointer.asset_url);
+  url.searchParams.set("atlas_manifest_sha256", pointer.gz_sha256);
+  url.searchParams.set("atlas_manifest_attempt", String(attempt));
+  return url.toString();
+}
+
+async function downloadGzip(pointer) {
+  let gzBytes = null;
+  let actualGzSha = "";
+  let lastError = null;
+  let lastFailure = "";
+
+  for (let attempt = 0; attempt < DOWNLOAD_ATTEMPTS; attempt += 1) {
+    try {
+      const response = await fetch(downloadUrl(pointer, attempt), {
+        cache: "no-store",
+        headers: {
+          Accept: "application/gzip, application/octet-stream;q=0.9, */*;q=0.1",
+          "Cache-Control": "no-cache",
+          Pragma: "no-cache",
+          "User-Agent": "learn-ukrainian-atlas-manifest-hydrate/1.0",
+        },
+      });
+      if (!response.ok) {
+        throw new Error(`fetch failed: ${response.status} ${response.statusText}`);
+      }
+
+      gzBytes = Buffer.from(await response.arrayBuffer());
+      actualGzSha = sha256(gzBytes);
+      if (actualGzSha === pointer.gz_sha256) return gzBytes;
+      lastFailure = "mismatch";
+    } catch (error) {
+      lastError = error;
+      lastFailure = "error";
+    }
+  }
+
+  if (lastError !== null && lastFailure === "error") {
+    const message = lastError instanceof Error ? lastError.message : String(lastError);
+    throw new Error(
+      `failed to download Atlas manifest release asset after ${DOWNLOAD_ATTEMPTS} attempts: ${message}\n${recoveryMessage()}`,
+    );
+  }
+
+  throw new Error(
+    `gz sha mismatch: expected ${pointer.gz_sha256}, got ${actualGzSha} after ${DOWNLOAD_ATTEMPTS} download attempts`,
+  );
+}
+
 async function alreadyHydrated(pointer) {
   if (!existsSync(manifestPath)) return false;
 
@@ -119,16 +172,7 @@ async function hydrate() {
     return;
   }
 
-  const response = await fetch(pointer.asset_url);
-  if (!response.ok) {
-    throw new Error(`fetch failed: ${response.status} ${response.statusText}\n${recoveryMessage()}`);
-  }
-
-  const gzBytes = Buffer.from(await response.arrayBuffer());
-  const actualGzSha = sha256(gzBytes);
-  if (actualGzSha !== pointer.gz_sha256) {
-    throw new Error(`gz sha mismatch: expected ${pointer.gz_sha256}, got ${actualGzSha}`);
-  }
+  const gzBytes = await downloadGzip(pointer);
   if (gzBytes.length !== pointer.gz_bytes) {
     throw new Error(`gz size mismatch: expected ${pointer.gz_bytes}, got ${gzBytes.length}`);
   }
@@ -148,8 +192,12 @@ async function hydrate() {
   console.log(`✓ hydrated manifest ${mb(jsonBytes.length)} from ${mb(gzBytes.length)} release asset`);
 }
 
-hydrate().catch(async (error) => {
-  await unlink(tempPath).catch(() => {});
-  console.error(`Failed to hydrate lexicon manifest: ${error.message}`);
-  process.exit(1);
-});
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  hydrate().catch(async (error) => {
+    await unlink(tempPath).catch(() => {});
+    console.error(`Failed to hydrate lexicon manifest: ${error.message}`);
+    process.exit(1);
+  });
+}
+
+export { downloadGzip, downloadUrl };

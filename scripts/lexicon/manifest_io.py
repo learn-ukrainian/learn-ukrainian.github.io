@@ -4,8 +4,11 @@ from __future__ import annotations
 
 import gzip
 import hashlib
+import http.client
 import json
 import os
+import urllib.error
+import urllib.parse
 import urllib.request
 from contextlib import suppress
 from pathlib import Path
@@ -26,6 +29,7 @@ REQUIRED_POINTER_KEYS = (
     "gz_bytes",
     "json_bytes",
 )
+DOWNLOAD_ATTEMPTS = 3
 
 
 def _sha256(data: bytes) -> str:
@@ -75,21 +79,67 @@ def _write_atomic(path: Path, data: bytes) -> None:
             tmp_path.unlink()
 
 
-def _download(pointer: dict[str, Any]) -> bytes:
-    with urllib.request.urlopen(pointer["asset_url"], timeout=60) as response:
+def _download_url(pointer: dict[str, Any], attempt: int) -> str:
+    asset_url = pointer["asset_url"]
+    if attempt == 0:
+        return asset_url
+
+    split = urllib.parse.urlsplit(asset_url)
+    query = urllib.parse.parse_qsl(split.query, keep_blank_values=True)
+    query.extend(
+        [
+            ("atlas_manifest_sha256", pointer["gz_sha256"]),
+            ("atlas_manifest_attempt", str(attempt)),
+        ]
+    )
+    return urllib.parse.urlunsplit(split._replace(query=urllib.parse.urlencode(query)))
+
+
+def _download(pointer: dict[str, Any], *, attempt: int = 0) -> bytes:
+    request = urllib.request.Request(
+        _download_url(pointer, attempt),
+        headers={
+            "Accept": "application/gzip, application/octet-stream;q=0.9, */*;q=0.1",
+            "Cache-Control": "no-cache",
+            "Pragma": "no-cache",
+            "User-Agent": "learn-ukrainian-atlas-manifest-hydrate/1.0",
+        },
+    )
+    with urllib.request.urlopen(request, timeout=60) as response:
         return response.read()
 
 
 def _hydrate(path: Path, pointer: dict[str, Any]) -> dict[str, Any]:
-    gz_bytes = _download(pointer)
-    gz_sha = _sha256(gz_bytes)
-    if gz_sha != pointer["gz_sha256"]:
+    gz_bytes: bytes | None = None
+    gz_sha = ""
+    last_error: BaseException | None = None
+    last_failure = ""
+    for attempt in range(DOWNLOAD_ATTEMPTS):
+        try:
+            gz_bytes = _download(pointer, attempt=attempt)
+        except (OSError, urllib.error.URLError, http.client.HTTPException) as exc:
+            last_error = exc
+            last_failure = "error"
+            continue
+        gz_sha = _sha256(gz_bytes)
+        if gz_sha == pointer["gz_sha256"]:
+            break
+        last_failure = "mismatch"
+    else:
+        if last_error is not None and last_failure == "error":
+            raise ValueError(
+                "failed to download Atlas manifest release asset "
+                f"after {DOWNLOAD_ATTEMPTS} attempts: {last_error}. "
+                f"Manual recovery command: {RECOVERY_COMMAND}"
+            ) from last_error
         raise ValueError(
             "gz sha256 mismatch: "
-            f"expected {pointer['gz_sha256']}, got {gz_sha}. "
+            f"expected {pointer['gz_sha256']}, got {gz_sha} "
+            f"after {DOWNLOAD_ATTEMPTS} download attempts. "
             f"Manual recovery command: {RECOVERY_COMMAND}"
         )
 
+    assert gz_bytes is not None
     json_bytes = gzip.decompress(gz_bytes)
     json_sha = _sha256(json_bytes)
     if json_sha != pointer["json_sha256"]:
