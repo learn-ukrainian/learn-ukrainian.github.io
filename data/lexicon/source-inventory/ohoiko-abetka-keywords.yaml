@@ -1,0 +1,25 @@
+---
+version: 1
+kind: atlas_source_inventory
+sources:
+  - id: ohoiko-abetka-2-keywords
+    source_family: ohoiko
+    extraction_mode: curated_key_word
+    title: Anna Ohoiko - Ukrainian Lessons alphabet pronunciation playlist
+    url: https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV
+    path: curriculum/l2-uk-direct/a1/abetka-2.yaml
+    locator: playlist_credit plus letters key_word/pronunciation_video entries
+    notes: Seed uses only tracked abetka key_word rows; no ULP premium vocabulary lists inferred.
+    headwords:
+      - lemma: кіт
+        pos: noun
+        locator: letters[К].key_word
+        context: К key_word with pronunciation video https://www.youtube.com/watch?v=J7sGEI4-xJo
+      - lemma: риба
+        pos: noun
+        locator: letters[И].key_word
+        context: И key_word with pronunciation video https://www.youtube.com/watch?v=W-1rCu0indE
+      - lemma: ракета
+        pos: noun
+        locator: letters[Р].key_word
+        context: Р key_word with pronunciation video https://www.youtube.com/watch?v=fMGsQ5KPQgg

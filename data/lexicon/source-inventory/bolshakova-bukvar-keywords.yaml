@@ -1,0 +1,24 @@
+---
+version: 1
+kind: atlas_source_inventory
+sources:
+  - id: bolshakova-bukvar-2025-part1-keywords
+    source_family: textbook
+    extraction_mode: curated_headword
+    title: Болшакова І.О. Буквар. 1 клас. Частина 1. Ранок, 2025
+    path: docs/l2-uk-direct/textbook-reading-notes/bolshakova-bukvar-mapping.md
+    locator: letter sequence table key words for Я, Є, Ц
+    notes: Seed uses tracked reading notes mapped to the local source PDF; the PDF is not committed.
+    headwords:
+      - lemma: яблуко
+        pos: noun
+        locator: letter table row Я я; content page 103 / PDF page 108
+        context: Row lists Я я with key word яблуко.
+      - lemma: єнот
+        pos: noun
+        locator: letter table row Є є; content page 111 / PDF page 116
+        context: Row lists Є є with key word єнот.
+      - lemma: цирк
+        pos: noun
+        locator: letter table row Ц ц; content page 120 / PDF page 125
+        context: Row lists Ц ц with key words цирк / цікавий.

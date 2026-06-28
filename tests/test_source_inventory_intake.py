@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+from pathlib import Path
+
 import pytest
 
 from scripts.audit.source_inventory_intake import (
@@ -7,6 +9,8 @@ from scripts.audit.source_inventory_intake import (
     read_source_inventory,
     source_inventory_candidates,
 )
+
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
 
 def test_structured_inventory_preserves_source_provenance(tmp_path) -> None:
@@ -138,3 +142,31 @@ def test_inventory_rejects_conflicting_pos_after_canonicalization(tmp_path) -> N
     records = read_source_inventory(inventory, project_root=tmp_path)
     with pytest.raises(SourceInventoryError, match="conflicting pos"):
         source_inventory_candidates(records)
+
+
+def test_committed_source_inventory_files_are_valid() -> None:
+    inventory_dir = PROJECT_ROOT / "data" / "lexicon" / "source-inventory"
+    supported_suffixes = {".csv", ".tsv", ".jsonl", ".json", ".yaml", ".yml"}
+    inventory_paths = sorted(
+        path
+        for path in inventory_dir.iterdir()
+        if path.suffix.lower() in supported_suffixes
+    )
+
+    assert inventory_paths
+
+    records = []
+    for inventory_path in inventory_paths:
+        records.extend(read_source_inventory(inventory_path, project_root=PROJECT_ROOT))
+
+    candidates = source_inventory_candidates(records)
+    assert candidates
+
+    for candidate in candidates:
+        assert candidate.source_provenance
+        for provenance in candidate.source_provenance:
+            assert provenance["inventory_path"].startswith(
+                "data/lexicon/source-inventory/"
+            )
+            assert provenance.get("source_id")
+            assert provenance.get("source_title")
