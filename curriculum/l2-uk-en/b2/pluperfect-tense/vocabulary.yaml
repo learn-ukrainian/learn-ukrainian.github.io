@@ -1,0 +1,197 @@
+- lemma: давньоминулий час
+  translation: pluperfect tense
+  pos: noun
+  gender: m
+  usage: Давньоминулий час показує дію, давнішу за іншу минулу дію.
+- lemma: давноминулий час
+  translation: pluperfect tense, alternate term
+  pos: noun
+  gender: m
+  usage: Давноминулий час також називають давньоминулим.
+- lemma: ретроспекція
+  translation: retrospection
+  pos: noun
+  gender: f
+  usage: Ретроспекція повертає читача до давнішого шару подій.
+- lemma: передування
+  translation: precedence, prior occurrence
+  pos: noun
+  gender: n
+  usage: Передування однієї дії іншій часто позначають давньоминулим часом.
+- lemma: передминулість
+  translation: before-past relation
+  pos: noun
+  gender: f
+  usage: Передминулість важлива для складної оповіді.
+- lemma: допоміжне дієслово
+  translation: auxiliary verb
+  pos: noun
+  gender: n
+  usage: Допоміжне дієслово бути має форму був, була, було або були.
+- lemma: часовий пласт
+  translation: time layer
+  pos: noun
+  gender: m
+  usage: Оповідач відкриває давніший часовий пласт.
+- lemma: архаїка
+  translation: archaism
+  pos: noun
+  gender: f
+  usage: Архаїка може створювати стилізований тон.
+- lemma: реліквія
+  translation: relic
+  pos: noun
+  gender: f
+  usage: Форма не є мертвою реліквією, але має вузьке вживання.
+- lemma: оповідь
+  translation: narrative
+  pos: noun
+  gender: f
+  usage: В оповіді давньоминулий час показує давніший епізод.
+- lemma: траплятися
+  translation: to occur
+  pos: verb
+  aspect: imperfective
+  usage: Давньоминулий час трапляється в художніх текстах.
+- lemma: згадувати
+  translation: to remember, mention
+  pos: verb
+  aspect: imperfective
+  usage: Оповідач згадував був стару вулицю.
+- lemma: передувати
+  translation: to precede
+  pos: verb
+  aspect: imperfective
+  usage: Одна минула дія може передувати іншій.
+- lemma: відбуватися
+  translation: to happen
+  pos: verb
+  aspect: imperfective
+  usage: Подія відбувалася раніше за основну сцену.
+- lemma: закарбовуватися
+  translation: to become engraved, be fixed in memory
+  pos: verb
+  aspect: imperfective
+  usage: Давній досвід закарбовувався в пам'яті громади.
+- lemma: сповіщати
+  translation: to notify
+  pos: verb
+  aspect: imperfective
+  usage: Форма сповіщає про давніший шар розповіді.
+- lemma: заставати
+  translation: to find, catch someone in a state
+  pos: verb
+  aspect: imperfective
+  usage: Пізніша подія заставала героя посеред наміру.
+- lemma: належати
+  translation: to belong
+  pos: verb
+  aspect: imperfective
+  usage: Форма належить до оповідного стилю.
+- lemma: узгодження
+  translation: agreement
+  pos: noun
+  gender: n
+  usage: Узгодження потрібне в обох частинах форми.
+- lemma: підмет
+  translation: subject
+  pos: noun
+  gender: m
+  usage: Допоміжне дієслово узгоджується з підметом.
+- lemma: чоловічий рід
+  translation: masculine gender
+  pos: noun
+  gender: m
+  usage: У чоловічому роді кажемо ходив був.
+- lemma: жіночий рід
+  translation: feminine gender
+  pos: noun
+  gender: m
+  usage: У жіночому роді кажемо ходила була.
+- lemma: середній рід
+  translation: neuter gender
+  pos: noun
+  gender: m
+  usage: У середньому роді кажемо лежало було.
+- lemma: множина
+  translation: plural
+  pos: noun
+  gender: f
+  usage: У множині допоміжна форма буде були.
+- lemma: перервана дія
+  translation: interrupted action
+  pos: noun
+  gender: f
+  usage: Перервана дія часто передається формою хотів був.
+- lemma: скасований результат
+  translation: canceled result
+  pos: noun
+  gender: m
+  usage: Написала була, але стерла показує скасований результат.
+- lemma: нереалізований намір
+  translation: unrealized intention
+  pos: noun
+  gender: m
+  usage: Хотіла була сказати передає нереалізований намір.
+- lemma: хронологія
+  translation: chronology
+  pos: noun
+  gender: f
+  usage: Хронологія подій має бути зрозумілою.
+- lemma: часова ієрархія
+  translation: temporal hierarchy
+  pos: noun
+  gender: f
+  usage: Часова ієрархія показує, яка дія була давнішою.
+- lemma: логіка викладу
+  translation: logic of exposition
+  pos: noun
+  gender: f
+  usage: Логіка викладу допомагає не змішувати форми.
+- lemma: синтаксичний зв'язок
+  translation: syntactic connection
+  pos: noun
+  gender: m
+  usage: Синтаксичний зв'язок між частинами речення показує порядок подій.
+- lemma: оповідна структура
+  translation: narrative structure
+  pos: noun
+  gender: f
+  usage: Оповідна структура має кілька часових пластів.
+- lemma: сполучник
+  translation: conjunction
+  pos: noun
+  gender: m
+  usage: Сполучник до того як часто вказує на передування.
+- lemma: до того як
+  translation: before
+  pos: conjunction
+  usage: До того як зустріч почалася, ми підготували були запитання.
+- lemma: перед тим як
+  translation: before
+  pos: conjunction
+  usage: Перед тим як зал погас, технік перевірив був звук.
+- lemma: поки
+  translation: while, until
+  pos: conjunction
+  usage: Поки ми йшли, план уже змінився був.
+- lemma: стилізація
+  translation: stylization
+  pos: noun
+  gender: f
+  usage: Стилізація може пояснити вживання рідкісної форми.
+- lemma: публіцистичний стиль
+  translation: journalistic style
+  pos: noun
+  gender: m
+  usage: У публіцистичному стилі форма потребує обережності.
+- lemma: художній текст
+  translation: literary text
+  pos: noun
+  gender: m
+  usage: Художній текст часто використовує ретроспекцію.
+- lemma: родинний спогад
+  translation: family memory
+  pos: noun
+  gender: m
+  usage: Родинний спогад може мати кілька часових шарів.
