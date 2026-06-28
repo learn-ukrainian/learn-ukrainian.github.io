@@ -1,0 +1,128 @@
+- lemma: складний числівник
+  translation: complex numeral written as one word
+  pos: phrase
+  usage: Складний числівник п'ятдесят змінює другу частину.
+- lemma: складений числівник
+  translation: compound numeral written as several words
+  pos: phrase
+  usage: Складений числівник має кілька компонентів.
+- lemma: кількісний числівник
+  translation: cardinal numeral
+  pos: phrase
+  usage: Кількісний числівник відповідає на питання скільки.
+- lemma: порядковий числівник
+  translation: ordinal numeral
+  pos: phrase
+  usage: Порядковий числівник змінюється як прикметник.
+- lemma: збірний числівник
+  translation: collective numeral
+  pos: phrase
+  usage: Збірний числівник двоє поєднується з іменником хлопців.
+- lemma: дробовий числівник
+  translation: fractional numeral
+  pos: phrase
+  usage: Дробовий числівник керує родовим відмінком однини.
+- lemma: орудний відмінок
+  translation: instrumental case
+  pos: phrase
+  usage: Орудний відмінок має форму п'ятьмастами.
+- lemma: родовий відмінок
+  translation: genitive case
+  pos: phrase
+  usage: Після близько потрібен родовий відмінок.
+- lemma: місцевий відмінок
+  translation: locative case
+  pos: phrase
+  usage: У місцевому відмінку пишемо на двохстах.
+- lemma: узгодження
+  translation: agreement
+  pos: noun
+  usage: Узгодження числівника з іменником залежить від відмінка.
+- lemma: керування
+  translation: government
+  pos: noun
+  usage: Керування мільйона вимагає родового відмінка.
+- lemma: флексія
+  translation: inflectional ending
+  pos: noun
+  usage: Флексія показує відмінок числівника.
+- lemma: компонент
+  translation: component
+  pos: noun
+  usage: Кожен компонент складеного числівника відмінюється.
+- lemma: парадигма
+  translation: paradigm
+  pos: noun
+  usage: Парадигма числівника двісті має форму двомастами.
+- lemma: бюджет
+  translation: budget
+  pos: noun
+  usage: Бюджет перевищує три мільйони гривень.
+- lemma: показник
+  translation: indicator; metric
+  pos: noun
+  usage: Показник зріс на півтора відсотка.
+- lemma: сума
+  translation: sum; amount
+  pos: noun
+  usage: Сума становить двісті тисяч гривень.
+- lemma: кількість
+  translation: quantity
+  pos: noun
+  usage: Кількість учасників перевищила триста осіб.
+- lemma: налічувати
+  translation: to number; to count
+  pos: verb
+  usage: Група налічує двісті учасників.
+- lemma: становити
+  translation: to amount to; to constitute
+  pos: verb
+  usage: Вага вантажу становить близько двохсот кілограмів.
+- lemma: перевищувати
+  translation: to exceed
+  pos: verb
+  usage: Бюджет перевищує п'ять мільйонів гривень.
+- lemma: розподіляти
+  translation: to distribute
+  pos: verb
+  usage: Комісія розподіляє суму між трьома проєктами.
+- lemma: інвестувати
+  translation: to invest
+  pos: verb
+  usage: Громада інвестує два мільйони гривень.
+- lemma: обчислювати
+  translation: to calculate
+  pos: verb
+  usage: Аналітик обчислює показник за трьома формулами.
+- lemma: звітувати
+  translation: to report
+  pos: verb
+  usage: Підрядник звітує перед трьомастами учасниками.
+- lemma: порівнювати
+  translation: to compare
+  pos: verb
+  usage: Порівнюй форму числівника з формою іменника.
+- lemma: тисяча
+  translation: thousand
+  pos: noun
+  usage: Тисяча керує родовим відмінком іменника.
+- lemma: мільйон
+  translation: million
+  pos: noun
+  usage: Мільйон гривень стоїть у фінансовому звіті.
+- lemma: мільярд
+  translation: billion
+  pos: noun
+  usage: Мільярд має іменникову парадигму.
+- lemma: півтора
+  translation: one and a half with masculine or neuter nouns
+  pos: numeral
+  usage: Показник зріс на півтора відсотка.
+- lemma: півтори
+  translation: one and a half with feminine nouns
+  pos: numeral
+  usage: Доповідь тривала півтори години.
+- lemma: чверть
+  translation: quarter
+  pos: noun
+  usage: Чверть суми вже розподілено.
