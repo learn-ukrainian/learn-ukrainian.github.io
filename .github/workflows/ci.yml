@@ -160,9 +160,15 @@ jobs:
             atlas:
               - '.github/workflows/ci.yml'
               - 'scripts/lexicon/*.py'
+              - 'scripts/audit/check_static_practice_assets.py'
+              - 'scripts/audit/generate_daily_pool.py'
+              - 'scripts/audit/generate_practice_deck.py'
               - 'curriculum/l2-uk-en/**/vocabulary.yaml'
+              - 'site/public/lexicon/practice-*.json'
+              - 'site/src/data/lexicon-daily-pool.json'
               - 'site/src/data/lexicon-manifest.json'
               - 'site/src/data/lexicon-manifest.fingerprint.json'
+              - 'site/src/data/lexicon-practice-reviewed-sources.json'
             postmortems:
               - '.github/workflows/ci.yml'
               - 'docs/bug-autopsies/**'
@@ -201,6 +207,9 @@ jobs:
       # an empty Atlas while the fingerprint/freshness gate above stays green. Blocks it.
       - name: Block thin/un-enriched Atlas manifest (#3658)
         run: python scripts/audit/check_atlas_manifest_enrichment.py
+
+      - name: Check static Word Day / practice assets (#3935)
+        run: python scripts/audit/check_static_practice_assets.py
 
       # Diff-scoped + advisory (#3150): only flags modules whose vocabulary.yaml changed
       # in THIS PR (no cross-PR coupling on the merge-train), and never blocks merge — a
