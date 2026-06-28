@@ -97,17 +97,20 @@ def _parse_naturalness_json(raw_output: str) -> dict | None:
     return parsed if "score" in parsed else None
 
 
-def call_gemini(prompt: str, task_id: str) -> tuple[str, dict]:
-    """Call Gemini and return raw response + parsed JSON."""
+def call_agy(prompt: str, task_id: str) -> tuple[str, dict]:
+    """Call AGY and return raw response + parsed JSON."""
     try:
         result = subprocess.run(
             [
                 str(VENV_PYTHON),
                 str(PROJECT_ROOT / "scripts" / "ai_agent_bridge" / "__main__.py"),
-                "ask-gemini",
+                "ask-agy",
                 "-",  # read prompt from stdin
                 "--task-id", task_id,
-                "--from-model", "claude-opus-4-5-20251101"  # Track sender model
+                "--from", "claude",
+                "--from-model", "claude-opus-4-5-20251101",  # Track sender model
+                "--to-model", "gemini-3.1-pro-high",
+                "--stdout-only",
             ],
             capture_output=True,
             text=True,
@@ -329,9 +332,9 @@ def check_naturalness(
     timestamp = datetime.now(UTC).isoformat()
     task_id = f"naturalness-{md_path.stem}-{int(datetime.now().timestamp())}"
 
-    # Call Gemini
-    print("  📤 Sending to Gemini...")
-    gemini_raw, gemini_parsed = call_gemini(prompt, task_id)
+    # Call AGY
+    print("  📤 Sending to AGY...")
+    gemini_raw, gemini_parsed = call_agy(prompt, task_id)
     print(f"  📥 Gemini: {gemini_parsed.get('score', '?')}/10 - {gemini_parsed.get('status', '?')}")
 
     # Call Claude (headless)

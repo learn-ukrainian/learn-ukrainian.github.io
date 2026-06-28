@@ -107,7 +107,7 @@ plans/{level}/{slug}.yaml    →  Source of truth (reviewed before lock)
 
 | Tool | Command | Purpose |
 |------|---------|---------|
-| **One-shot** | `ask-gemini "msg" --task-id issue-N` | Reviews, simple requests |
+| **One-shot** | `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy "msg" --task-id issue-N` | Gemini-family reviews, simple requests |
 | **Multi-turn** | `converse "msg" --task-id "topic"` | Co-design, planning, iteration |
 | **Builder Notes** | `===BUILDER_NOTES_START===` | Structured handoff after builds |
 

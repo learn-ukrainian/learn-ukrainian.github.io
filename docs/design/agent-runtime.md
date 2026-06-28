@@ -29,7 +29,7 @@ The Codex integration for issue #1177 already surfaced this pain: Gemini's adver
 4. **Shared stall detection** — streaming stdout watchdog + liveness-file fallback, lifted from `_gemini.py` prior art.
 5. **Unified subprocess logic**: timeouts, stdout capture, stderr capture, `-o` output files, worktree cwd, JSON event parsing.
 6. **Pluggable agent registry** that captures capabilities, cost tier, default model, invocation flags.
-7. **Backward compatible** — existing `ask-gemini`, `ask-claude`, `ask-codex`, and `dispatch.py` callers keep working without changes during migration.
+7. **Backward compatible** — existing `ask-gemini` callers route through the retired compatibility shim to AGY; `ask-claude`, `ask-codex`, and `dispatch.py` callers keep working during migration.
 8. **Session resume policy is data-driven and enforced at the caller level**, not the runtime level (see §6.3).
 
 ## 3. Non-goals
@@ -197,7 +197,7 @@ AGENTS: dict[str, dict] = {
     },
     "gemini": {
         "adapter": "scripts.agent_runtime.adapters.gemini:GeminiAdapter",
-        "default_model": "gemini-3.1-pro-preview",
+        "default_model": "gemini-3.1-pro-high",
         "cost_tier": "low",
         "capabilities": {"content_writing", "content_review", "adversarial_review"},
         "cli_available": True,

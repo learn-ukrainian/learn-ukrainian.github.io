@@ -30,8 +30,8 @@ from scripts.audit.checks.russicism_detection import check_russicisms
 PYTHON, BRIDGE = Path(".venv/bin/python"), Path("scripts/ai_agent_bridge/__main__.py")
 DEFAULT_MODELS = (
     "claude-opus-4-7,claude-sonnet-4-5,claude-haiku-4-5,"
-    "gpt-5.5,gpt-5.5-mini,gemini-3.1-pro-preview,"
-    "gemini-3-pro-preview,gemini-3.0-flash-preview"
+    "gpt-5.5,gpt-5.5-mini,gemini-3.1-pro-high,"
+    "gemini-3.5-flash-high"
 )
 FROM_AGENT = "russianism-eval"
 _FOUND_COUNT_RE, _WORD_RE = re.compile(r"Found\s+(\d+)\s+Russicism", re.IGNORECASE), re.compile(r"[\w'’-]+", re.UNICODE)
@@ -152,7 +152,7 @@ class BridgeCaller:
         if family == "codex":
             argv = [*base, "ask-codex", "-", "--task-id", task_id, "--from", FROM_AGENT, "--to-model", model, "--new-session"]
             return BridgeCall(prompt.id, model, family, task_id, argv, prompt.prompt_text)
-        argv = [*base, "ask-gemini", "-", "--task-id", task_id, "--from", FROM_AGENT, "--model", model, "--stdout-only", "--skip-model-check", "--no-github"]
+        argv = [*base, "ask-agy", "-", "--task-id", task_id, "--from", FROM_AGENT, "--to-model", model, "--stdout-only"]
         return BridgeCall(prompt.id, model, family, task_id, argv, prompt.prompt_text)
 
     def __call__(self, prompt: PromptCase, model: str) -> tuple[BridgeCall, str]:

@@ -71,6 +71,8 @@ def ask_agy(
     to_model: str | None = None,
     no_timeout: bool = False,
     review: bool = False,
+    stdout_only: bool = False,
+    output_path: str | None = None,
 ):
     """Send message to Agy AND invoke Agy to process it (one-shot)."""
     msg_id = send_message(
@@ -83,8 +85,18 @@ def ask_agy(
         from_model=from_model,
         to_model=to_model,
     )
-    print(f"\n🚀 Invoking Agy to process message #{msg_id}...")
-    process_for_agy(msg_id, new_session, no_timeout, review=review)
+    if not stdout_only:
+        print(f"\n🚀 Invoking Agy to process message #{msg_id}...")
+    response = process_for_agy(
+        msg_id,
+        new_session,
+        no_timeout,
+        review=review,
+        stdout_only=stdout_only,
+        output_path=output_path,
+    )
+    if stdout_only and response:
+        print(response)
     return msg_id
 
 
@@ -93,7 +105,9 @@ def process_for_agy(
     new_session: bool = False,
     no_timeout: bool = False,
     review: bool = False,
-):
+    stdout_only: bool = False,
+    output_path: str | None = None,
+) -> str | None:
     """Read message addressed to Agy, invoke via agent_runtime, send response.
 
     ``new_session`` is accepted for API parity with the codex bridge but
@@ -112,15 +126,16 @@ def process_for_agy(
 
     prompt = build_agy_prompt(msg, review)
 
-    print(f"📨 Message #{msg['id']}")
-    print(f"   From: {msg['from']} → To: {msg['to']}")
-    print(f"   Type: {msg['type']}")
-    print(f"   Task: {msg['task_id'] or 'N/A'}")
-    print(f"   Model: {model}")
-    if timeout_val == _NO_TIMEOUT_AGY_BRIDGE_TIMEOUT_SECONDS:
-        print("   Hard timeout: no-timeout requested (24h ceiling)")
-    else:
-        print(f"   Hard timeout: {timeout_val}s")
+    if not stdout_only:
+        print(f"📨 Message #{msg['id']}")
+        print(f"   From: {msg['from']} → To: {msg['to']}")
+        print(f"   Type: {msg['type']}")
+        print(f"   Task: {msg['task_id'] or 'N/A'}")
+        print(f"   Model: {model}")
+        if timeout_val == _NO_TIMEOUT_AGY_BRIDGE_TIMEOUT_SECONDS:
+            print("   Hard timeout: no-timeout requested (24h ceiling)")
+        else:
+            print(f"   Hard timeout: {timeout_val}s")
 
     try:
         result = agent_runner.invoke(
@@ -138,16 +153,16 @@ def process_for_agy(
         )
     except RateLimitedError as exc:
         _handle_agy_error(msg, message_id, f"Agy rate limited: {exc}")
-        return
+        return None
     except AgentStalledError as exc:
         _handle_agy_error(msg, message_id, f"Agy stalled: {exc}")
-        return
+        return None
     except AgentTimeoutError as exc:
         _handle_agy_error(msg, message_id, f"Agy hard timeout: {exc}")
-        return
+        return None
     except AgentUnavailableError as exc:
         _handle_agy_error(msg, message_id, f"Agy unavailable: {exc}")
-        return
+        return None
 
     if not result.ok:
         _handle_agy_error(
@@ -155,7 +170,7 @@ def process_for_agy(
             message_id,
             result.stderr_excerpt or "Agy returned no final message",
         )
-        return
+        return None
 
     if result.session_id and msg["task_id"]:
         set_session(msg["task_id"], "agy", result.session_id)
@@ -163,9 +178,17 @@ def process_for_agy(
     response = result.response
     if not response:
         _handle_agy_error(msg, message_id, "Agy returned no final message")
-        return
+        return None
 
-    print(f"\n✅ Agy finished ({len(response)} chars)")
+    if output_path:
+        from pathlib import Path
+
+        out_path = Path(output_path)
+        out_path.parent.mkdir(parents=True, exist_ok=True)
+        out_path.write_text(response, encoding="utf-8")
+
+    if not stdout_only:
+        print(f"\n✅ Agy finished ({len(response)} chars)")
     reply_id = send_message(
         content=response,
         task_id=msg["task_id"],
@@ -175,6 +198,7 @@ def process_for_agy(
     )
     acknowledge(message_id)
     acknowledge(reply_id)
+    return response
 
 
 def _fetch_agy_message(message_id: int) -> dict | None:

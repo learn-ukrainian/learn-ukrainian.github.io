@@ -65,24 +65,12 @@ V7 is single-module per invocation (no `--range`). To run a batch, use standard 
   --writer gemini-tools --reviewer gemini-tools
 ```
 
-### Gemini Auth Mode
+### AGY Route
 
-```bash
-# Auto (default): preserve current environment behavior
-.venv/bin/python scripts/build/v7_build.py a1 m01-alphabet --worktree --writer gemini-tools
-
-# Subscription / OAuth: strip GEMINI_API_KEY and GOOGLE_API_KEY for this run
-GEMINI_AUTH_MODE=subscription \
-  .venv/bin/python scripts/build/v7_build.py a1 m01-alphabet --worktree --writer gemini-tools
-
-# API key: preserve key env vars explicitly
-GEMINI_AUTH_MODE=api \
-  GEMINI_API_KEY=... \
-  .venv/bin/python scripts/build/v7_build.py a1 m01-alphabet --worktree --writer gemini-tools
-```
-
-`GEMINI_AUTH_MODE=subscription|api|auto` only affects Gemini CLI launches.
-Claude and Codex paths ignore it.
+Gemini CLI auth modes are legacy-only and are not supported for current
+project work. Route Gemini-family review or Q&A through AGY via
+`ai_agent_bridge`. Use `scripts/delegate.py dispatch --agent agy` for
+dispatched execution.
 
 ### Resume (continue from where it stopped)
 

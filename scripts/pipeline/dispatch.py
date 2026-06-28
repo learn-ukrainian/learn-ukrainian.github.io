@@ -86,10 +86,10 @@ def run_with_heartbeat(
 
 
 # ---------------------------------------------------------------------------
-# Gemini dispatch
+# AGY dispatch
 # ---------------------------------------------------------------------------
 
-# Rate limit / auth failure signatures in Gemini CLI output
+# Rate limit / auth failure signatures in AGY/Gemini-family output
 _RATE_LIMIT_PATTERNS = [
     "Error authenticating",
     "FatalAuthenti",
@@ -111,6 +111,17 @@ _TRANSIENT_PATTERNS = [
     "epipe",
     "connection reset",
 ]
+
+_LEGACY_GEMINI_TO_AGY_MODEL = {
+    "gemini-3.1-pro-preview": "gemini-3.1-pro-high",
+    "gemini-3.0-flash-preview": "gemini-3.5-flash-high",
+}
+
+
+def _agy_model(model: str | None) -> str:
+    if not model:
+        return "gemini-3.1-pro-high"
+    return _LEGACY_GEMINI_TO_AGY_MODEL.get(model, model)
 
 
 def _is_rate_limited(output: str) -> bool:
@@ -138,26 +149,25 @@ def dispatch_gemini_raw(
 
     Returns (success, raw_output_text).
     """
-    if model is None:
-        model = _pro_model()
+    model = _agy_model(model or _pro_model())
     args = [
-        str(_SCRIPTS_DIR / "ai_agent_bridge/__main__.py"), "ask-gemini",
+        str(_SCRIPTS_DIR / "ai_agent_bridge/__main__.py"), "ask-agy",
         "-",  # read prompt from stdin
         "--task-id", task_id,
-        "--model", model,
+        "--to-model", model,
     ]
     if stdout_only:
         args.append("--stdout-only")
     if allow_write:
-        args.append("--allow-write")
+        _log(" [dispatch] AGY bridge ignores allow_write; bridge Q&A is read-only")
 
-    _log(f"  [dispatch] Gemini {task_id}: prompt={len(prompt)} chars, model={model}")
+    _log(f"  [dispatch] AGY {task_id}: prompt={len(prompt)} chars, model={model}")
     last_output = ""
     for attempt in range(1, max_retries + 1):
         try:
             result = run_with_heartbeat(
                 [_venv_python(), *args],
-                label=f"Gemini {task_id}",
+                label=f"AGY {task_id}",
                 timeout=timeout,
                 cwd=str(_PROJECT_ROOT), capture_output=True, text=True,
                 input=prompt,
@@ -183,7 +193,7 @@ def dispatch_gemini_raw(
                 output_file.write_text(output_text, encoding="utf-8")
             return False, output_text
         except subprocess.TimeoutExpired:
-            _log(f"  TIMEOUT: Gemini dispatch {task_id} exceeded {timeout}s "
+            _log(f"  TIMEOUT: AGY dispatch {task_id} exceeded {timeout}s "
                  f"(model={model}, prompt={len(prompt)} chars)")
             return False, ""
 
