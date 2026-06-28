@@ -45,10 +45,18 @@ export const collections = {
 			excerpt: z.string(),
 			source: z.string(),
 			source_url: z.string().url().optional(),
-			public_domain: z.literal(true),  // require explicit rights assertion; missing => fail validation
+			public_domain: z.literal(true).optional(),
 			published: z.boolean().default(true),
 			canonical: z.boolean().default(true),
 			order: z.number().optional(),
-		}).passthrough(),
+		}).passthrough().superRefine((reading, ctx) => {
+			if (reading.published !== false && reading.public_domain !== true) {
+				ctx.addIssue({
+					code: z.ZodIssueCode.custom,
+					path: ['public_domain'],
+					message: 'Published readings require public_domain: true.',
+				});
+			}
+		}),
 	}),
 };
