@@ -1,5 +1,7 @@
 # CLAUDE.md - Project Instructions
 
+> **Provider boundary:** Shared repository invariants live in `AGENTS.md`. Claude agents should read `AGENTS.md` plus this Claude-specific file; Codex prompts should not read this file as runtime instructions. Defer shared rules here instead of duplicating stale copies.
+
 > **Mission**: We are building something that doesn't exist — a full Ukrainian language curriculum with decolonized pedagogy, real textbook grounding, RAG-verified vocabulary, and adversarial review. This is a one-of-a-kind project for a great hero nation. Every shortcut degrades what makes it special. Quality is non-negotiable.
 
 > **ALWAYS aim for and research best-practice solutions and practices.** Before implementing or deciding, actively seek the established best practice — web-research current standards, read `docs/best-practices/`, check prior art and idiomatic patterns, consult authoritative sources. Never settle for the first thing that works; choose the well-supported, proven, state-of-the-art approach. This applies to code, pedagogy, linguistics, architecture, and process alike.
@@ -68,7 +70,7 @@ Detailed standards in `docs/best-practices/`. Read the relevant doc before worki
 
 ## Inter-Agent Communication
 
-**Codex and Claude are the top-priority agents; agy, DeepSeek, cursor, grok-build, and grok-4.\* are support/specialist lanes.** Claude = architect/reviewer, Codex = novel-impl + adversarial review, agy (Gemini-family, metered) = content/scripts, DeepSeek = off-seat review, grok-build = native-CLI writer/fixer. Full protocol: [`agent-cooperation.md`](docs/best-practices/agent-cooperation.md)
+For shared delegation, artifact hygiene, Python invocation, worktree layout, commit trailers, and independent review routing, defer to `AGENTS.md`. Independent review must not be self-review, and internal GPT helper swarms do not satisfy the external gate. Current external lanes: Hermes -> DeepSeek 4 Pro; Agy -> Gemini models and Claude Opus 4.6 when available; Cursor -> non-Codex models including Composer 2.5. If Claude main provider is unavailable before Monday, June 29, 2026 09:00 Budapest local time, do not block on Claude; use another independent non-Codex route. Full protocol: [`agent-cooperation.md`](docs/best-practices/agent-cooperation.md)
 
 > **Fleet roster + when-to-use + no-idle routing (READ to keep lanes busy):** [`docs/best-practices/agent-activity-matrix.md`](docs/best-practices/agent-activity-matrix.md) — §2 roster (current lanes/cost/models) + §2b capacity routing (free lane → next work). Canonical per-task routing rule: `agents_extensions/shared/rules/model-assignment.md` (served at `/api/rules`).
 
@@ -124,6 +126,6 @@ Monitor(
 `v7_build.py` emits JSONL events from the wrapper and `linear_pipeline.py`: single-module lifecycle notifications such as `phase_done`, `review_score`, and `module_done`; writer/reviewer telemetry such as `writer_cot_emit`, `writer_tool_call`, `writer_end_gate`, `writer_tool_theatre`, `phase_writer_summary`, `mcp_config_resolved`, `reviewer_dim_evidence`, `reviewer_audit_call`, and `phase_review_summary`; and correction diagnostics `writer_correction_unparseable`, `reviewer_fixes_unparseable`, `reviewer_fixes_anchor_unmatched`. Each line becomes a notification — zero polling overhead.
 
 For state queries without running builds, use the Monitor API (`docs/MONITOR-API.md`):
-- Track health: `curl -s http://localhost:8765/api/state/track-health/a1`
-- Failing modules: `curl -s http://localhost:8765/api/state/failing?track=a2`
-- Build status: `curl -s http://localhost:8765/api/state/build-status/a1`
+- Track health: `/api/state/track-health/a1`
+- Failing modules: `/api/state/failing?track=a2`
+- Build status: `/api/state/build-status/a1`

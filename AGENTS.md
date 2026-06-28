@@ -1,8 +1,8 @@
 # AGENTS.md - Rules for AI Coding Agents
 
-> This file is read by Jules, Gemini, and other AI agents working on this repository.
-> For Claude-specific instructions, see `CLAUDE.md`.
-> For Gemini-specific instructions, see `GEMINI.md`.
+> Shared source of truth for non-provider-specific repository rules.
+> Codex prompts read this file only as runtime instructions; do not load `CLAUDE.md` or `GEMINI.md` for normal Codex startup.
+> `CLAUDE.md` and `GEMINI.md` contain provider-specific context and may defer here for shared rules.
 
 ---
 
@@ -16,6 +16,7 @@
 - [ ] No `status/*.json` files in the diff
 - [ ] No `audit/*-review.md` files in the diff
 - [ ] No `review/*-review.md` files in the diff
+- [ ] No `data/telemetry/**` files in the diff
 - [ ] No `sys.executable` anywhere in code (use `.venv/bin/python`)
 - [ ] No `@pytest.mark.skip` with empty `pass` bodies
 - [ ] No assertions weakened (e.g., `is True` → `isinstance(..., bool)`)
@@ -74,6 +75,7 @@ These files are auto-generated and MUST NOT appear in PRs that change code/scrip
 - `curriculum/l2-uk-en/**/audit/*-review.md` — auto-generated reviews
 - `curriculum/l2-uk-en/**/review/*-review.md` — review files
 - `docs/*-STATUS.md` — level status reports
+- `data/telemetry/**` — local runtime telemetry state
 
 **Why this is critical:**
 - Creates massive diffs (one PR had 296 artifact files out of 301 total)
@@ -253,7 +255,7 @@ Cost controls:
 - Do not spawn a subagent for work the main agent can finish faster than delegation overhead.
 - Keep routine delegation to one to three subagents at a time unless the user explicitly asks for a larger sweep.
 - Do not let subagents read secrets, source `.envrc`, call `gh`, request reviews, or merge PRs.
-- Do not delegate the independent-family review requirement. Before merge, request a read-only Claude Opus 4.8 review and treat unresolved findings as blockers. If Claude Opus 4.8 is unavailable, use Agy with Gemini 3.1 Pro High (`ab ask-agy --to-model gemini-3.1-pro-high`) as the fallback independent-family review.
+- Do not delegate independent review requirement. Internal GPT helper swarms and Codex self-review do not satisfy the external gate. Request one read-only review through an independent non-Codex route and treat unresolved blockers as blockers. Current lanes: Hermes -> DeepSeek 4 Pro; Agy -> Gemini models and Claude Opus 4.6 when available; Cursor -> non-Codex models including Composer 2.5. If Claude main provider is unavailable before Monday, June 29, 2026 09:00 Budapest local time, do not block on Claude; use another independent non-Codex route.
 
 Module-build PRs must persist token telemetry through
 `POST /api/telemetry/module-builds` and include the same summary in the PR body

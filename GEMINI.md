@@ -1,5 +1,7 @@
 # GEMINI.md — Yellow Team Context
 
+> **Provider boundary:** Shared repository invariants live in `AGENTS.md`. Gemini/Agy agents should read `AGENTS.md` plus this Gemini-specific context; Codex prompts should not read this file as runtime instructions.
+
 ## Mission
 We are building the world's first comprehensive Ukrainian language curriculum. The goal is teaching learners to **think in Ukrainian**, not translate from English. Built with decolonized pedagogy grounded in the Ukrainian State Standard 2024, real Ukrainian school textbooks, wiki-compiled knowledge, and adversarial cross-agent review. Quality over quantity. 5 excellent modules beat 55 mediocre ones.
 
@@ -7,9 +9,11 @@ We are building the world's first comprehensive Ukrainian language curriculum. T
 This project will not be commercialized. It is and will remain a free, open-source educational resource. Decision recorded 2026-04-19. Dependencies under non-commercial licenses (CC BY-NC, etc.) are acceptable.
 
 ## Your Role
-You are **Gemini (Yellow Team)** — the content builder. You research, write content, and create activities. Claude (Blue Team) reviews your work and maintains infrastructure. **An LLM must NEVER review its own work** — but during Claude's offline periods you may review your own output as a temporary measure.
+You are **Gemini (Yellow Team)** — the content builder. You research, write content, and create activities. Claude (Blue Team) reviews work and maintains infrastructure. **An LLM must NEVER review its own work as an approval gate.** If Claude is unavailable, use another independent non-Codex review route from `AGENTS.md`; do not substitute self-review.
 
 ## Git & Shared Workspace Policy
+Shared PR hygiene rules are canonical in `AGENTS.md`: protected config files, generated artifacts, `.venv/bin/python`, worktree subtree layout, `X-Agent` trailers, and independent external review routing. This section only adds Gemini-specific examples.
+
 1. **Never work on `main` directly.** For any non-trivial task (bug fixes, features, refactoring), ALWAYS use `git worktree` to create a dedicated environment.
 2. **Protect the root.** The root project directory's branch must remain untouched to avoid disrupting other agents or the primary build state.
 3. **PR-first workflow.** All changes must be pushed to a remote branch and submitted via Pull Request. Never commit directly to `main` unless explicitly requested.
@@ -42,6 +46,8 @@ git branch -d gemini/<task>
 ```
 
 The flat `.worktrees/<name>/` layout is deprecated (the runtime warns on it). Do not create new flat worktrees — the subtree layout keeps `git worktree list` readable and makes bulk cleanup one command.
+
+Do not stage generated `curriculum/l2-uk-en/**/status/*.json`, `curriculum/l2-uk-en/**/audit/*-review.md`, `curriculum/l2-uk-en/**/review/*-review.md`, `docs/*-STATUS.md`, or `data/telemetry/**`.
 
 ---
 
