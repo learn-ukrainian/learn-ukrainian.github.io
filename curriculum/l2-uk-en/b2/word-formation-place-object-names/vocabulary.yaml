@@ -1,0 +1,180 @@
+- lemma: приміщення
+  translation: room; premises
+  pos: noun
+  usage: Приміщення читальні потребує доброго освітлення.
+- lemma: сховище
+  translation: storage; shelter; repository
+  pos: noun
+  usage: Архівне сховище зберігає рідкісні документи.
+- lemma: установа
+  translation: institution
+  pos: noun
+  usage: Культурна установа організувала виставку.
+- lemma: знаряддя
+  translation: tool; implement
+  pos: noun
+  usage: Майстер обирає знаряддя відповідно до матеріалу.
+- lemma: пристрій
+  translation: device
+  pos: noun
+  usage: Цей пристрій вимірює температуру в приміщенні.
+- lemma: місткість
+  translation: container; capacity
+  pos: noun
+  usage: Місткість має відповідати кількості продукту.
+- lemma: виробництво
+  translation: production; manufacturing
+  pos: noun
+  usage: Виробництво потребує безпечного обладнання.
+- lemma: майстерня
+  translation: workshop; studio
+  pos: noun
+  usage: У майстерні зберігають знаряддя і матеріали.
+- lemma: майданчик
+  translation: site; playground; platform
+  pos: noun
+  usage: Біля школи облаштували спортивний майданчик.
+- lemma: копальня
+  translation: mine
+  pos: noun
+  usage: Стара копальня стала частиною промислового маршруту.
+- lemma: орієнтир
+  translation: landmark; point of reference
+  pos: noun
+  usage: Дзвіниця була головним орієнтиром у місті.
+- lemma: показник
+  translation: indicator; metric
+  pos: noun
+  usage: Показник вологості видно на лічильнику.
+- lemma: вказівник
+  translation: signpost; pointer
+  pos: noun
+  usage: Дорожній вказівник допоміг знайти музей.
+- lemma: засіб
+  translation: means; tool; medium
+  pos: noun
+  usage: Цей засіб захисту потрібен у майстерні.
+- lemma: споруда
+  translation: structure; building
+  pos: noun
+  usage: Каплиця є невеликою сакральною спорудою.
+- lemma: обладнання
+  translation: equipment
+  pos: noun
+  usage: Обладнання майстерні перевірили перед роботою.
+- lemma: їдальня
+  translation: dining hall; cafeteria
+  pos: noun
+  usage: Їдальня розташована на першому поверсі.
+- lemma: читальня
+  translation: reading room
+  pos: noun
+  usage: У читальні працюють з архівними матеріалами.
+- lemma: пекарня
+  translation: bakery
+  pos: noun
+  usage: Пекарня продає хліб власного виробництва.
+- lemma: друкарня
+  translation: printing house
+  pos: noun
+  usage: У старій друкарні відкрили музей книги.
+- lemma: лікарня
+  translation: hospital
+  pos: noun
+  usage: Лікарня є важливою медичною установою.
+- lemma: книгарня
+  translation: bookstore
+  pos: noun
+  usage: Книгарня стала місцем літературних зустрічей.
+- lemma: світлиця
+  translation: traditional bright room; parlor
+  pos: noun
+  usage: Світлиця в садибі була найурочистішою кімнатою.
+- lemma: каплиця
+  translation: chapel
+  pos: noun
+  usage: Каплиця стоїть біля старого кладовища.
+- lemma: вогнище
+  translation: hearth; campfire; center
+  pos: noun
+  usage: Бібліотека стала вогнищем культурного життя.
+- lemma: згарище
+  translation: burned site
+  pos: noun
+  usage: На згарищі будинку почалося відновлення.
+- lemma: городище
+  translation: ancient settlement site
+  pos: noun
+  usage: Городище приваблює археологів і туристів.
+- lemma: пасовище
+  translation: pasture
+  pos: noun
+  usage: Гірське пасовище використовують улітку.
+- lemma: болотище
+  translation: huge swamp; swampy mess
+  pos: noun
+  usage: Слово болотище має збільшувальний відтінок.
+- lemma: вимикач
+  translation: switch
+  pos: noun
+  usage: Вимикач розташований біля дверей.
+- lemma: перемикач
+  translation: selector switch
+  pos: noun
+  usage: Перемикач режимів треба повернути праворуч.
+- lemma: навантажувач
+  translation: loader
+  pos: noun
+  usage: Навантажувач працює на складі.
+- lemma: обігрівач
+  translation: heater
+  pos: noun
+  usage: Обігрівач підтримує тепло в майстерні.
+- lemma: лічильник
+  translation: meter; counter
+  pos: noun
+  usage: Лічильник показує споживання електроенергії.
+- lemma: записник
+  translation: notebook
+  pos: noun
+  usage: Записник лежав поруч із кресленням.
+- lemma: сівалка
+  translation: seeder
+  pos: noun
+  usage: Сівалка рівномірно розподіляє насіння.
+- lemma: пралка
+  translation: washing machine (colloquial)
+  pos: noun
+  usage: У розмові пралкою часто називають пральну машину.
+- lemma: цукорниця
+  translation: sugar bowl
+  pos: noun
+  usage: Цукорниця стоїть біля чайника.
+- lemma: сільниця
+  translation: salt shaker; salt cellar
+  pos: noun
+  usage: Сільниця має бути сухою.
+- lemma: соусник
+  translation: sauce boat
+  pos: noun
+  usage: Соусник подали окремо.
+- lemma: чайник
+  translation: kettle; teapot
+  pos: noun
+  usage: Чайник швидко закипів.
+- lemma: ключик
+  translation: little key
+  pos: noun
+  usage: Ключик від шухляди загубився.
+- lemma: столик
+  translation: small table
+  pos: noun
+  usage: Журнальний столик стоїть біля дивана.
+- lemma: підставка
+  translation: stand; support
+  pos: noun
+  usage: Підставка тримає гарячий чайник.
+- lemma: посудина
+  translation: vessel; container
+  pos: noun
+  usage: Посудина має щільну кришку.
