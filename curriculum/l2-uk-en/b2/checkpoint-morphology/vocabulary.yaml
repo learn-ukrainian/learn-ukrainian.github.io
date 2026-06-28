@@ -1,0 +1,212 @@
+- lemma: морфологія
+  translation: morphology
+  pos: noun
+  usage: Морфологія вивчає форму слова та його граматичні категорії.
+- lemma: морфологічна норма
+  translation: morphological norm
+  pos: phrase
+  usage: Морфологічна норма визначає, яка форма є правильною в літературній мові.
+- lemma: норма
+  translation: norm
+  pos: noun
+  usage: Норма допомагає відрізнити літературну форму від помилки або кальки.
+- lemma: варіантність
+  translation: variation
+  pos: noun
+  usage: Варіантність дозволяє кілька форм, якщо вони доречні в контексті.
+- lemma: виняток
+  translation: exception
+  pos: noun
+  usage: Виняток треба перевіряти за словником або таблицею відмінювання.
+- lemma: парадигма
+  translation: paradigm
+  pos: noun
+  usage: Парадигма показує всі форми слова в різних відмінках або особах.
+- lemma: узгодження
+  translation: agreement
+  pos: noun
+  usage: Узгодження пов'язує прикметник, займенник або числівник з іменником.
+- lemma: керування
+  translation: government
+  pos: noun
+  usage: Керування визначає, якого відмінка вимагає прийменник або дієслово.
+- lemma: частина мови
+  translation: part of speech
+  pos: phrase
+  usage: Частина мови має власні граматичні категорії та синтаксичні ролі.
+- lemma: іменник
+  translation: noun
+  pos: noun
+  usage: Іменник називає предмет, особу, явище або поняття.
+- lemma: прикметник
+  translation: adjective
+  pos: noun
+  usage: Прикметник узгоджується з іменником у роді, числі та відмінку.
+- lemma: числівник
+  translation: numeral
+  pos: noun
+  usage: Числівник часто потребує уважного відмінювання в непрямих відмінках.
+- lemma: займенник
+  translation: pronoun
+  pos: noun
+  usage: Займенник може замінювати іменник або уточнювати його форму.
+- lemma: власна назва
+  translation: proper name
+  pos: phrase
+  usage: Власна назва особи в українській часто відмінюється.
+- lemma: складений числівник
+  translation: compound numeral
+  pos: phrase
+  usage: Складений числівник може мати кілька відмінюваних компонентів.
+- lemma: дробовий числівник
+  translation: fractional numeral
+  pos: phrase
+  usage: Дробовий числівник потребує точного узгодження в офіційному тексті.
+- lemma: родовий відмінок
+  translation: genitive case
+  pos: phrase
+  usage: Після до або серед часто потрібен родовий відмінок.
+- lemma: давальний відмінок
+  translation: dative case
+  pos: phrase
+  usage: Завдяки керує давальним відмінком.
+- lemma: знахідний відмінок
+  translation: accusative case
+  pos: phrase
+  usage: Через у причинному значенні керує знахідним відмінком.
+- lemma: орудний відмінок
+  translation: instrumental case
+  pos: phrase
+  usage: Згідно з вимагає орудного відмінка.
+- lemma: місцевий відмінок
+  translation: locative case
+  pos: phrase
+  usage: У школі має місцевий відмінок для місця перебування.
+- lemma: аспект
+  translation: aspect
+  pos: noun
+  usage: Аспект показує процес або завершений результат дії.
+- lemma: доконаний аспект
+  translation: perfective aspect
+  pos: phrase
+  usage: Доконаний аспект називає завершену дію.
+- lemma: недоконаний аспект
+  translation: imperfective aspect
+  pos: phrase
+  usage: Недоконаний аспект описує процес або повторювану дію.
+- lemma: спосіб дієслова
+  translation: verbal mood
+  pos: phrase
+  usage: Спосіб дієслова показує факт, умову або наказ.
+- lemma: умовний спосіб
+  translation: conditional mood
+  pos: phrase
+  usage: Умовний спосіб часто має частку б або би.
+- lemma: наказовий спосіб
+  translation: imperative mood
+  pos: phrase
+  usage: Наказовий спосіб дає інструкцію або прохання.
+- lemma: дієприкметник
+  translation: participle
+  pos: noun
+  usage: Дієприкметник називає ознаку за дією.
+- lemma: пасивний дієприкметник
+  translation: passive participle
+  pos: phrase
+  usage: Пасивний дієприкметник природний у формах підготовлений, ухвалений.
+- lemma: активний дієприкметник
+  translation: active participle
+  pos: phrase
+  usage: Активний дієприкметник на -юч- часто краще замінити підрядною частиною.
+- lemma: дієприслівник
+  translation: adverbial participle
+  pos: noun
+  usage: Дієприслівник називає додаткову дію того самого виконавця.
+- lemma: дієприслівниковий зворот
+  translation: adverbial participial phrase
+  pos: phrase
+  usage: Дієприслівниковий зворот потребує того самого виконавця.
+- lemma: безособова форма
+  translation: impersonal form
+  pos: phrase
+  usage: Безособова форма на -но, -то фокусує результат дії.
+- lemma: форма на -но
+  translation: -no impersonal form
+  pos: phrase
+  usage: Опрацьовано є формою на -но.
+- lemma: форма на -то
+  translation: -to impersonal form
+  pos: phrase
+  usage: Ухвалено і закрито показують безособовий результат.
+- lemma: службове слово
+  translation: function word
+  pos: phrase
+  usage: Службове слово формує зв'язок між повнозначними словами.
+- lemma: прийменник
+  translation: preposition
+  pos: noun
+  usage: Прийменник керує відмінком і значенням конструкції.
+- lemma: сполучник
+  translation: conjunction
+  pos: noun
+  usage: Сполучник поєднує частини речення або однорідні члени.
+- lemma: частка
+  translation: particle
+  pos: noun
+  usage: Частка додає заперечення, модальність або формотворчу функцію.
+- lemma: прийменниково-іменникова конструкція
+  translation: prepositional-nominal construction
+  pos: phrase
+  usage: Прийменниково-іменникова конструкція має перевірятися разом із відмінком.
+- lemma: згідно з
+  translation: according to
+  pos: prep
+  usage: Згідно з керує орудним відмінком.
+- lemma: протягом
+  translation: during; throughout
+  pos: prep
+  usage: Протягом називає тривалість часу.
+- lemma: через
+  translation: because of; through
+  pos: prep
+  usage: Через помилку називає причину.
+- lemma: завдяки
+  translation: thanks to
+  pos: prep
+  usage: Завдяки підтримці називає сприятливу причину.
+- lemma: саморедагування
+  translation: self-editing
+  pos: noun
+  usage: Саморедагування починається з пошуку керівного слова і відмінка.
+- lemma: систематизація
+  translation: systematization
+  pos: noun
+  usage: Систематизація допомагає зібрати окремі правила в одну перевірку.
+- lemma: закономірність
+  translation: pattern; regularity
+  pos: noun
+  usage: Закономірність полегшує відмінювання нових форм.
+- lemma: трансформація
+  translation: transformation
+  pos: noun
+  usage: Трансформація допомагає перейти від важкої форми до природної редакції.
+- lemma: редагування
+  translation: editing
+  pos: noun
+  usage: Редагування виправляє форму, логіку і реєстр.
+- lemma: коректність
+  translation: correctness
+  pos: noun
+  usage: Коректність форми особливо важлива в офіційному документі.
+- lemma: відповідність
+  translation: correspondence; compliance
+  pos: noun
+  usage: Відповідність реєстру визначає, чи форма пасує до жанру.
+- lemma: коректура
+  translation: proofreading; correction
+  pos: noun
+  usage: Коректура шукає помилки у формах, закінченнях і узгодженні.
+- lemma: мовна вправність
+  translation: linguistic proficiency
+  pos: phrase
+  usage: Мовна вправність означає здатність пояснити і виправити форму.
