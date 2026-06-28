@@ -1,24 +1,51 @@
-# Source registry for wiki/folk/ritual/vesnianky-hayivky.md
-# Referenced inline as [S1], [S2], ...
+# Source registry wiki/folk/ritual/vesnianky-hayivky.md
+# Referenced inline [S1], [S2], ...
 sources:
-- id: S1
-  file: 6-klas-ukrlit-avramenko-2023_s2707
-  type: textbook
-  title: ПІСЕННІ СКАРБИ РІДНОГО КРАЮ (p. 6)
-  page: 6
-  grade: 6
-- id: S2
-  file: wave8-ukr-lit-entsyklopediia_c1008
-  type: literary
-  title: Українська літературна енциклопедія (1988-1995)
-  author: Колектив
-- id: S3
-  file: wave7-entsyklopediia-ukrainoznavstva_c0603
-  type: literary
-  title: Енциклопедія українознавства
-  author: Колектив
-- id: S4
-  file: wave7-istkult-t2-xiii-xvii_c0856
-  type: literary
-  title: Історія української культури. Т.2. XIII-XVII ст.
-  author: Колектив
+  - id: S1
+    file: 6-klas-ukrlit-avramenko-2023
+    type: textbook
+    title: "Українська література, 6 клас. Пісенні скарби рідного краю"
+    author: "Авраменко О."
+    grade: 6
+    url: "https://pidruchnyk.com.ua/2618-ukralit-6-klas-avramenko-2023.html"
+    notes: "School-canonical frame: веснянки / гаївки as spring-cycle calendar songs."
+  - id: S2
+    file: 6-klas-ukrlit-zabolotnyi-2023
+    type: textbook
+    title: "Українська література, 6 клас. Народні календарно-обрядові пісні"
+    author: "Заболотний О., Заболотний В."
+    grade: 6
+    url: "https://pidruchnyk.com.ua/2617-ukralit-6-klas-zabolotnyi.html"
+    notes: "School-canonical frame: calendar-cycle songs and гаївки as Easter-season spring songs."
+  - id: S3
+    file: 5-klas-ukrlit-zabolotnyi-2022
+    type: textbook
+    title: "Українська література, 5 клас. Усна народна творчість"
+    author: "Заболотний О., Заболотний В."
+    grade: 5
+    url: "https://pidruchnyk.com.ua/1684-5_ukrlit_zabolotnyi.html"
+    notes: "General school frame: oral folk creativity as verbal art."
+  - id: S4
+    file: ukrlib-narod-vesnianky-oi-vesna-vesna-ty-krasna
+    type: external
+    title: "Ой весна, весна, ти красна"
+    author: "Народна творчість"
+    url: "https://www.ukrlib.com.ua/narod/printout.php?id=0&bookid=0"
+    domain: "ukrlib.com.ua"
+    notes: "Public full text; existing hosted reading must be rechecked in Phase B."
+  - id: S5
+    file: ukrlib-narod-vesnianky-oi-vyoriu-nyvku-shyroku
+    type: external
+    title: "Ой виорю я нивку широкую"
+    author: "Народна творчість"
+    url: "https://www.ukrlib.com.ua/narod/printout.php?id=0&bookid=2"
+    domain: "ukrlib.com.ua"
+    notes: "Public full text; candidate for clean hosted reading in Phase B."
+  - id: S6
+    file: ukrlib-narod-vesnianky-collection
+    type: external
+    title: "Веснянки"
+    author: "Народна творчість"
+    url: "https://www.ukrlib.com.ua/narod/printout.php?id=0&bookid=1"
+    domain: "ukrlib.com.ua"
+    notes: "Public collection page; Phase B must decide whether and how to host without overcounting."
