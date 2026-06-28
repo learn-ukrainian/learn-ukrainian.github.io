@@ -1,687 +1,122 @@
-# Веснянки / гаївки / ягілки / гагілки
+# Веснянки, гаївки, ягілки, гагілки
 
 - **Slug:** `vesnianky-hayivky`
 - **Track:** FOLK · B · Calendar
 - **Register:** C1+
-- **Scope:** весняний календарний цикл: закликання весни, великодні гаївки /
-  гагілки / ягілки, хороводи, ігри, кривий танець, аграрно-весняна логіка,
-  регіональні назви й містки до Лесі Українки, хорової музики та сценічної
-  культури.
-- **Quote-integrity rule:** усі фольклорні рядки в §4 наведено тільки після
-  `verify_quote`. Популярні шкільні рядки, що не дали корпусного збігу, подано
-  лише в do-not-quote нотатці, не як текст для майбутнього модуля.
+- **Base-first note:** this dossier is the upstream knowledge layer for the M04 base-only rebuild. It does not publish a lesson, activity set, vocabulary file, or hosted reading.
+- **Source rule:** learner-facing pages must cite public Ukrlib/Pidruchnyk/Osvita-style URLs or bibliographic sources only. Do not carry build-only research markers into the wiki, plan, module, or reading pages.
 
 ## 1. Визначення та класифікація
 
-Веснянки / гаївки — це не просто "пісні про весну". У повній традиційній формі
-це **слово + мелодія + хоровий рух + гра + сезонний час + громада**. Вони
-належать до весняного календарно-обрядового циклу й виконують дію переходу:
-прикликати весну, вивести тіло громади на відкритий простір, розбудити природу,
-перевести молодь у новий сезон праці, залицяння, ігор і шлюбних очікувань.
+Веснянки, гаївки, ягілки й гагілки are Ukrainian spring-cycle songs and song-games. In the school literature frame they belong to усна народна творчість: recorded verbal art that later becomes a foundation for written literature, music, theatre, and public cultural memory. A spring song is therefore not only a short lyric about weather. In its full traditional form it joins word, melody, movement, game, season, place, performer, and community response.
 
-Регіональна назва є несучою ознакою теми, а не декоративною деталлю:
+The core classroom distinction is practical. **Веснянки** are the broad spring-cycle label, especially familiar in central and eastern school descriptions. **Гаївки** are commonly taught as Easter-season spring songs and games, especially in western Ukrainian usage. **Гагілки** and **ягілки** name regional variants in the same spring/Easter performance field. A clean module should not flatten all names into one synonym. It should ask where the form is performed, who leads the circle or line, whether the text is a call to spring, a game, a dialogue, a plant-growth image, or an Easter churchyard song.
 
-- **веснянки** — ширша назва для Волині, Поділля, Наддніпрянщини і багатьох
-  шкільних / літературних контекстів;
-- **гаївки** — західноукраїнська назва, особливо пов'язана з Великоднем,
-  церковним подвір'ям, цвинтарем, вулицею або вигоном;
-- **гагілки** — локальна / західна назва для весняних і великодніх ігор та
-  танцювально-ігрових обрядових пісень;
-- **ягілки** — словниково засвідчений варіантний ряд поруч із `гаївка`,
-  `гагілка`, `ягівка`, `агівка`; значення треба подавати через
-  heritage/ЕСУМ evidence, бо live СУМ-20 fetch для `ягілка` повертає лише
-  словникове гасло без розгорнутого визначення.
-
-Корпусна класифікація: `search_literary`, chunk `484d0ffb_c0856`, описує
-веснянки / гаївки як цикл хороводів, танків та ігор, що на Наддніпрянщині,
-Поділлі й Волині має назву **веснянки**, а в Галичині — **гаївки** чи
-**гагілки**. Там само зафіксовано функціональне розрізнення: гаївки співають
-переважно у великодній час, а веснянки можуть тривати від ранньої весни до
-Зелених свят.
-
-`wave7-entsyklopediia-ukrainoznavstva`, chunk `feaa5fa7_c0603`, додає назву
-**ягілки** до західноукраїнського ряду й наголошує, що найстаріші веснянки є
-піснями-іграми, де спів, рух, танок, мімічно-імітаційна гра й словесний текст
-ще не роз'єднані. Це означає: майбутній модуль не має перетворювати тему на
-читання текстів без руху.
-
-СУМ-20 / slovnyk.me evidence:
-
-- `query_sum20("веснянка")` → СУМ-20: хорова народнообрядова пісня про
-  пробудження природи, кохання, надії на врожай; URL
-  `https://slovnyk.me/dict/newsum/веснянка`.
-- `query_sum20("гаївка")` → СУМ-20: українська народна обрядова пісня;
-  веснянка; URL `https://slovnyk.me/dict/newsum/гаївка`.
-- `query_sum20("гагілки")` → СУМ-20: старовинні українські весняні обряди,
-  ігрища і святкування; також танцювально-ігрові обрядові пісні; URL
-  `https://slovnyk.me/dict/newsum/гагілки`.
-- `query_sum20("ягілка")` → СУМ-20 live page exists, but returned only
-  `ЯГІЛКА.`; semantic support comes from `search_heritage("ягілка")` /
-  ЕСУМ, not from an over-read dictionary gloss.
-
-Граничні випадки: `риндзівки` / `рогульки` на Великдень, `волочіння`,
-`водити тополю`, `Кострубонько`, `Вербовая дощечка`, `Сіяти просо`, `При
-долині мак` і `Мости` не треба зливати в одну "весняну пісню". Це різні
-ритуально-ігрові вузли, частина яких переходить до весільної, купальської або
-жнивної логіки.
+This topic remains valid for the FOLK seminar because grade 6 Ukrainian literature textbooks explicitly teach веснянки and гаївки inside the calendar-ritual song unit, and public Ukrlib pages provide full spring-song texts for close reading.
 
 ## 2. Походження та історичний контекст
 
-Веснянки / гаївки походять із весняної обрядовості, але їхнє походження треба
-описувати як **нашарування**, а не як реконструйовану схему "давній культ X".
-Корпус дає весняний ритуал закликання, птахів, Великдень, Благовіщення,
-поминки, аграрну імітацію, парування молоді й християнське переосмислення; він
-не дає права будувати tidy pagan pantheon.
+The safe historical frame is evidence-first. Spring songs preserve older agrarian and seasonal motifs, but a learner-facing module must not turn those motifs into a reconstructed belief system. The course teaches recorded Ukrainian verbal art, not a manual of hidden rites. When the text mentions spring, birds, a field, a wreath, a churchyard, a circle, or a game, the module should first describe what the source can prove: the words, performance setting, school-canonical genre boundary, and public reading page.
 
-`feaa5fa7_c0519` описує початок весняного періоду через появу птахів, пісні
-про гоголя, ремеза, жайворонка, випікання пташків на 40 мучеників і ранкове
-закликання весни дівчатами з вищого місця. Благовіщення там подано як перше
-весняне свято землі, коли дівчата виводять коло церкви перший хоровод,
-`кривий танець`, а співи веснянок тривають принаймні до св. Юрія.
+Christian-era village culture is not a late decorative coating. Many гаївки belong to Easter time, near the church or churchyard, and often place seasonal renewal next to the public joy of Воскресіння. The module should give that Christian historical context parity or primacy where the tradition itself carries it. Older seasonal imagery may be described as poetic and calendar material, but not as a competing doctrine hidden under a Christian surface.
 
-Грушевський (`da46aa92_c0286`, `5e7696fa_c0281`) підкреслює, що багато
-весняних елементів зібралося довкола рухомого Великодня. Він говорить про
-передхристиянські фрагменти й сильний тиск церковного календаря, але сам тон
-його викладу обережний: перед нами велика маса фрагментів, які можна зводити
-лише порівняльним методом. Тому в dossier слід казати: **можливо давній /
-архаїчний шар**, **синкретичне пристосування до Великодня**, **непряма
-реконструкція**, а не "так точно робили давні українці на честь божества".
-
-`484d0ffb_c0856` корисний для історичного розрізнення двох пластів: старіші
-хороводи з пантомімою, іграми й танками та новіші ліричні / жартівливі пісні,
-співані на вечірніх сходинах або як супровід до кривого танцю. Це пояснює,
-чому веснянки можуть бути одночасно обрядовими, ігровими, любовними,
-жартівливими й майже "звичайними" ліричними піснями.
-
-Східноукраїнський і західноукраїнський часові профілі відрізняються. На Заході
-гаївки значною мірою прив'язані до Великодніх свят; в інших регіонах веснянки
-можуть зберігати ширший сезонний характер від ранньої весни до Зелених свят.
-Це не "варіант назви одного й того самого шкільного тексту", а різна календарна
-організація практики.
-
-Етимологічний ряд теж не треба згладжувати. `search_esum("гаївка")` повернув
-варіанти `агівка`, `гагівка`, `гагілка`, `гагулка`, `гаїлка`, `галагівка`,
-`егулка`, `огулка`, `явілка`, `ягівка`, `ягілка` й прямо позначив етимологію як
-неясну. Окремий `search_esum("ягілка")` підтримує значення "весняна гра і пісня
-дівчат у Великодні дні" і пов'язує частину пояснень із `ягли` / просом, але це
-теж подано як етимологічну гіпотезу, не як доведений народний переказ.
+The nineteenth-century collectors and writers matter as reception history. Maksymovych, Kostomarov, Hrushevsky, Chyzhevsky, and later encyclopedic compilers helped make spring songs visible to educated readers. Their categories can preserve evidence and also over-systematize it. Phase B should treat their claims as interpretation, not as the voice of the community itself.
 
 ## 3. Поетика / форма / техніка
 
-Поетика веснянок / гаївок є синкретичною. Фраза не просто описує дію: вона
-керує рухом, розподіляє гурт, задає крок, підказує жест, викликає відповідь
-другого хору. У найстарішій зоні це не "лірика про природу", а ритуальна
-партитура.
-
-Формальні ознаки:
-
-- **хоровість:** виконує гурт, часто дівочий або молодіжний; можливі два хори;
-- **діалог:** один хор кличе, другий відповідає або імітує птахів / весну /
-  іншу дійову силу;
-- **провідниця / хорег:** окрема дівчина веде ряд, ключ або коло, керує рухами;
-- **ворота:** двоє піднімають руки, крізь них проходить ключ учасниць;
-- **кривий танець:** лінія рухається лукуватими закрутами, підковою або
-  навколо трьох дівчат / каменів;
-- **завивання / плетіння:** рух у танці відповідає завиванню рослин, горошку,
-  огірків, вінка;
-- **аграрна імітація:** сіяти мак, просо, орати поле, вести рослину в ріст;
-- **пташиний виклик:** гоголь, жайворонок, ремез, ластівка як носії тепла,
-  літа, жита, квітів.
-
-Грушевський (`da46aa92_c0178`, `da46aa92_c0179`) пояснює, що весняні,
-хороводні й забавні пісні переважно побудовані у співових, музикальних,
-рівноскладових строфах: музичні фрази відповідають синтаксичним і ритмічним
-групам. Через цю точну будову тексти краще консервувалися, ніж імпровізаційні
-речитативні жанри. Там само через Колессу зафіксовано, що гаївкові й
-веснянкові мелодії часто мають об'єм кварти або квінти.
-
-`feaa5fa7_c0605` дає метричний інвентар: дво- й триколінні рядки, поєднані
-парами у строфах, з розмірами `4 + 3`, `4 + 4`, `4 + 5`, `5 + 5`, `4 + 3 + 3`,
-`5 + 3 + 3`, `6 + 3 + 3`, `4 + 4 + 3`, `4 + 4 + 4`, `4 + 4 + 5`, `4 + 4 + 6`.
-Для C1+ модуля це не треба перетворювати на сухий метричний список; важливіше
-показати, як короткий рядок тримає крок, поворот, ворота, плетіння або
-повтор.
-
-Мотиви:
-
-- `весна воскресла` — накладання християнської лексики воскресіння на сезонний
-  перехід;
-- `птахи з вирію` — весна приходить не абстрактно, а на крилах / голосах;
-- `мак / просо / горошок / огірочки` — рослинний ріст, посів, завивання;
-- `віночок / плетіння` — рослина, танець і дівочий статус;
-- `шлюбонько / пара / вечірні сходини` — весна як відкриття шлюбного сезону;
-- `цвинтар / церква / поминки` — весняний Великдень як зустріч живих, померлих
-  і ненароджених у родовому горизонті, але без прямого "культу предків" як
-  простого пояснення кожної гаївки.
-
-## 4. Класичні зразки + ВЕРБАТИМ примірники
-
-Нижче наведено тільки фрагменти, які пройшли `verify_quote`. Довші пісні,
-шкільні тексти або популярні варіанти не дописуються й не нормалізуються.
-
-**1. Весна як воскресання сезонного світу.**
-
-> Вже весна воскресла,
-> Що ж сь нам принесла?
-
-RAW `verify_quote(author="Грушевський М.")`: `matched=true`;
-`best_confidence=1.0`; `matched_lines[0].work="wave12-hrushevsky-iu-odnotom"`;
-`year=1920`; `context_chunk_id="da46aa92_c0178"`; additional match
-`work="wave4-hrushevsky-istlit"`, `year=1923`, `context_chunk_id="5e7696fa_c0173"`.
-Педагогічна роль: показати, як великодня лексика воскресіння стає мовою
-пробудження весни.
-
-**2. Птах як носій літа.**
-
-> Ой вилинь, вилинь, гоголю,
-> Винеси літо з собою,
-
-RAW `verify_quote(author="Грушевський М.")`: `matched=true`;
-`best_confidence=1.0`; `matched_lines[0].work="wave12-hrushevsky-iu-odnotom"`;
-`year=1920`; `context_chunk_id="da46aa92_c0284"`; additional match
-`work="wave4-hrushevsky-istlit"`, `year=1923`, `context_chunk_id="5e7696fa_c0279"`.
-Педагогічна роль: птах не просто "символ весни", а ритуальний носій тепла,
-жита, квітів і літа. Грушевський позначає фрагмент як записаний у формі
-замовляння; це треба зберегти як джерельну обережність.
-
-**3. Жайворонок і подолання решток зими.**
-
-> Чом ти, жаворонку, рано з вирья вилетів:
-
-RAW `verify_quote(author="Грушевський М.")`: `matched=true`;
-`best_confidence=0.9889`; `matched_lines[0].work="wave12-hrushevsky-iu-odnotom"`;
-`year=1920`; `context_chunk_id="da46aa92_c0284"`; additional match
-`work="wave4-hrushevsky-istlit"`, `year=1923`, `context_chunk_id="5e7696fa_c0279"`.
-Педагогічна роль: рядок відкриває діалог із птахом; решту мотиву про сніг і лід
-можна переказувати, але не розширювати цитату без окремого вербатимного збігу.
-
-**4. Назва `гагілка` як внутрішня формула.**
-
-> Гагілка гагілкою,
-
-RAW `verify_quote(author="Грушевський М.")`: `matched=true`;
-`best_confidence=1.0`; `matched_lines[0].work="wave12-hrushevsky-iu-odnotom"`;
-`year=1920`; `context_chunk_id="da46aa92_c0178"`; additional match
-`work="wave4-hrushevsky-istlit"`, `year=1923`, `context_chunk_id="5e7696fa_c0173"`.
-Педагогічна роль: слово `гагілка` не є помилкою або суржиком; воно живе в
-корпусному рядку й підтверджується ЕСУМ / СУМ-20.
-
-**5. Аграрна дія: поле й просо.**
-
-> А ми поле виорем, виорем,
-> Ой дід-ладо, виорем, виорем!
-
-RAW `verify_quote(author="Грушевський М.")`: `matched=true`;
-`best_confidence=1.0`; `matched_lines[0].work="wave12-hrushevsky-iu-odnotom"`;
-`year=1920`; `context_chunk_id="da46aa92_c0179"`; additional match
-`work="wave4-hrushevsky-istlit"`, `year=1923`, `context_chunk_id="5e7696fa_c0174"`.
-Педагогічна роль: весняна гра імітує роботу поля; слово, повтор і рух
-працюють як один алгоритм.
-
-**6. Мак як рослинно-ігровий образ.**
-
-> При долині мак, при широкій мак!
-> Ой, як чистий, головастий і корінням коренистий!
-
-RAW `verify_quote(author="Колектив")`: `matched=true`; `best_confidence=1.0`;
-`matched_lines[0].work="wave7-entsyklopediia-ukrainoznavstva"`; `year=1955`;
-`context_chunk_id="feaa5fa7_c0604"`. Педагогічна роль: цей фрагмент дає
-видиму рослину, ріст, корінь і хор; він має йти з руховою інструкцією, не як
-самостійний "вірш".
-
-**7. Завивання / плетіння рослин.**
-
-> Вийся, горошку, в три струмочка, а роди, Боже, в штири, в штири,
-> щоб тебе черви не точили
-
-RAW `verify_quote(author="Колектив")`: `matched=true`; `best_confidence=1.0`;
-`matched_lines[0].work="wave7-entsyklopediia-ukrainoznavstva"`; `year=1955`;
-`context_chunk_id="feaa5fa7_c0605"`. Педагогічна роль: християнська формула
-`Боже` входить у аграрний текст; це синкретизм, а не проста заміна давнього
-змісту церковним.
-
-**8. Кривий танець як текст руху.**
-
-> Кривого танця йдемо, кінця му не знайдемо,
-> то вгору, то в долину, то в ружу, то в калину.
-
-RAW `verify_quote(author="Колектив")`: `matched=true`; `best_confidence=1.0`;
-`matched_lines[0].work="wave7-entsyklopediia-ukrainoznavstva"`; `year=1955`;
-`context_chunk_id="feaa5fa7_c0605"`. Педагогічна роль: цей фрагмент прямо
-показує, що текст є маршрутною картою: вгору, в долину, в рослинний простір.
-
-**9. Межовий мотив `Кострубонька` як смерть-повернення.**
-
-> Ожив, ожив наш Кострубонько,
-> ожив, ожив наш голубонько!
-
-RAW `verify_quote(author="Колектив")`: `matched=true`; `best_confidence=1.0`;
-`matched_lines[0].work="wave7-entsyklopediia-ukrainoznavstva"`; `year=1955`;
-`context_chunk_id="feaa5fa7_c0611"`. Педагогічна роль: `Кострубонько` має
-мотив смерті, оплакування і повернення; його треба подавати як межовий
-рослинно-ритуальний сюжет, що міг ходити між весняною, літньою та жнивною
-логікою.
-
-**Do-not-quote / paraphrase-only notes.**
-
-- `verify_quote(author="Колектив", text="Ой весна, весна – днем красна...")`
-  → RAW `matched=false`; `best_confidence=0.0`; `matched_lines=[]`. Цей
-  шкільно відомий текст можна називати як заголовок / підручниковий приклад
-  (`6-klas-ukrlit-zabolotnyi-2023_s0010`), але не як §4 корпусно підтверджений
-  фольклорний цитатний фрагмент.
-- `verify_quote(author="Колектив", text="Благослови, мати, Весну закликати...")`
-  → RAW `matched=false`; `best_confidence=0.5797`; best line only
-  `484d0ffb_c0298` about "гукати / закликати весну", not the quoted text.
-  Отже, не відтворювати як вербатимний фрагмент.
-
-## 5. Побутування / виконавство / функція
-
-Виконавський центр веснянок / гаївок — дівочий або молодіжний гурт. `feaa5fa7_c0603`
-називає ці пісні майже виключно дівочими; `484d0ffb_c0856` додає простір
-побутування: вулиця, цвинтар, вигін за селом. Підручниковий корпус
-(`6-klas-ukrlit-avramenko-2023_s0006`, `6-klas-ukrlit-zabolotnyi-2023_s0009`)
-підтверджує шкільну рамку "весняний цикл", але dossier тримається ширшої
-етнографічної картини: пісня має тіло, маршрут і соціальний простір.
-
-Типова послідовність:
-
-1. Поява перших весняних знаків: птахи з вирію, танення снігу, теплі горбки,
-   Благовіщення або великодній час.
-2. Дівчата / молодь збираються на відкритому місці: біля церкви, на цвинтарі,
-   на вигоні, на вулиці, біля горба.
-3. Провідниця формує коло, ключ, ворота або кривий танець.
-4. Гурт починає формулу викликання: весна, птах, рослина, поле, мак, просо,
-   горошок.
-5. Рух відтворює зміст: оранка, сіяння, ріст маку, завивання рослин, плетіння
-   вінка, проходження крізь ворота.
-6. Діалог або два хори створюють гру: одні кличуть, інші відповідають або
-   виконують роль птахів / рослин / дівчини / Коструба.
-7. Весняна дія завершується грою, жартом, паруванням, великоднім обходом або
-   переходом до вечірніх сходин.
-
-На Західній Україні гаївки особливо прив'язані до Великодня. `feaa5fa7_c0523`
-описує, що на Великдень дівчата виводять коло церкви гаївки / гагілки; серед
-характерних назв подано `Кривий танець`, `Кострубонько`, `Воротар`,
-`Вербовая дощечка`, `Король`, `Сіяти просо`, `При долині мак`, `Мости`,
-`Чорнушко-душко`. Там само важливою є межова зона `волочіння`,
-великодніх обходів, крашанок, калачів і передвесільних оглядин.
-
-На Наддніпрянщині, Поділлі й Волині слово **веснянки** працює ширше й може
-позначати ранньовесняний спів від появи птахів до Зелених свят. Це не робить
-гаївки "неправильною" назвою і не робить веснянки "центральним стандартом".
-Майбутній модуль повинен давати карту варіантності: назва, регіон, час,
-простір, рух, функція.
-
-Функції:
-
-- **сезонна:** прикликати весну, провести зиму, позначити початок польової
-  роботи;
-- **аграрна:** зімітувати оранку, сівбу, ріст рослини, родючість;
-- **молодіжна:** дати дівчатам і хлопцям простір видимості, гри, парування;
-- **пам'ятальна:** у гаївках біля церкви / цвинтаря зберігається зв'язок із
-  великодньою пам'яттю померлих;
-- **естетична й педагогічна:** навчити рядка, кроку, голосу, відповідальності
-  за гурт.
-
-## 6. Збирачі та дослідники
-
-**Михайло Грушевський** — головна корпусна опора для §4 цього dossier. Chunks
-`da46aa92_c0178`, `da46aa92_c0179`, `da46aa92_c0284`, `da46aa92_c0286`,
-`da46aa92_c0304` дають і вербатимні фрагменти, і теорію весняного циклу,
-ритму, птахів, Великодня та реконструкційної обережності.
-
-**Філарет Колесса** — музично-ритмічний і хореографічний орієнтир. `feaa5fa7_c0603`
-згадує його опис кривого танцю; `da46aa92_c0179` передає його спостереження про
-квартовий / квінтовий обсяг гаївкових і веснянкових мелодій; `feaa5fa7_c0722`
-називає `Колесса Ф. Мелодії гаївок. МУЕ XII. Л. 1909`.
-
-**Володимир Гнатюк** — виданнєва опора для гаївок. `fc2291b5_c4889` підтверджує,
-що в серії `Матеріали до українсько-руської етнології` був окремий випуск
-`Гаївки`, т. 12, 1909. `fc2291b5_c1008` подає літературу: `Гнатюк В. М.
-Гаївки` у вибраних статтях про народну творчість.
-
-**Павло Чубинський, Яків Головацький, Борис Грінченко, Іван Манжура, Михайло
-Стельмах** — названі в `fc2291b5_c1008` як публікатори українських веснянок.
-Для Чубинського важлива деколонізаційна примітка: корпус також фіксує імперську
-видавничу рамку `Труды этнографическо-статистической экспедиции в
-Западно-русский край` (`cf05bddd_c0123`). Цей адміністративний титул не є
-культурною класифікацією українського матеріалу.
-
-**Борис Грінченко** — словниковий контроль. `search_grinchenko_1907("веснянка")`
-підтвердив "весняна пісня" і ранньовесняну молодіжну практику; `search_grinchenko_1907("гаївка")`
-підтвердив "весняна хороводна гра, весняна пісня в цій грі". Грінченко не дає
-`ягілка` / `гагілка`, тому ці форми треба підтримувати ЕСУМ / СУМ-20, а не
-вигадувати дорадянське словникове підтвердження.
-
-**Олександр Кошиць** — музично-виконавський місток. `fc2291b5_c3869` описує
-його як диригента, композитора, збирача пісенного фольклору й фіксує окрему
-збірку `Веснянки` (1921, з передмовою автора).
-
-**Корнило Ластівка** — буковинський локальний дослідницький вузол.
-`fc2291b5_c4216` називає його розвідку `Північнобуковинські гаївки` (`Наша
-культура`, 1937, кн. 7) і етнографічний нарис `Як обходять український
-Великдень на Буковині` (1930). Це корисна опора проти регіонального
-вирівнювання Буковини.
-
-## 7. Культуроносна / антиколоніальна роль
-
-Культуроносна роль веснянок / гаївок полягає не в декларації "фольклор зберіг
-народ", а в щорічному тілесному відтворенні мови, місця й руху. Дівчина, яка
-стає в коло, вчить не лише рядок; вона вчить, що таке `ключ`, `ворота`,
-`кривий танець`, `гаївка`, `гагілка`, `ягілка`, `мак`, `просо`, `віночок`,
-`вирій`, `горбок`, `вигін`, `цвинтар`, `церква`, `Великдень`.
-
-Антиколоніальна роль має кілька конкретних площин.
-
-**1. Опір імперському безіменню.** Якщо назвати традицію узагальнено
-"весняними піснями східних слов'ян", українська карта зникає. Якщо ж назвати
-Наддніпрянщину, Поділля, Волинь, Галичину, Буковину; `веснянки`, `гаївки`,
-`гагілки`, `ягілки`; Гнатюка, Колессу, Грушевського, Кошиця; кривий танець і
-великодній цвинтар, то матеріал уже не можна легко розчинити в імперському
-"общерусском" або "західноруському" полі.
-
-**2. Корекція імперського джерельного титулу.** Чубинський важливий як
-публікатор, але назва видання з `Западно-русский край` є рамкою Російської
-імперії, не самоописом української культури. Dossier може користуватися
-матеріалом, але не має переносити колоніальну адміністративну назву на жанр.
-
-**3. Тиск на великодній / церковний простір.** У прозі Ігоря Калинця
-(`9f0c9b95_c0066`) є модерна пам'ять про те, як міська рада розганяла гаївки
-на церковному подвір'ї, учителів залучали впізнавати учнів, священик мав
-зачиняти браму після свячення пасок, а пізніше традицію відновлювали у Львові
-в Шевченківському гаю через Товариство Лева. Це не фольклорний текст для §4,
-але це конкретний літературно-документальний слід радянського тиску й
-пострадянського відновлення.
-
-**4. Музичні інституції як культурна оборона.** `feaa5fa7_c2249` описує
-державні хори 1917-1920 років, Республіканську капелу Кошиця, капелу `Думка`,
-Інститут ім. Лисенка, а також розгром національних творчих сил після
-більшовицької окупації: фізичне знищення Леонтовича, смерть Стеценка й
-Степового від переслідувань, еміграцію Кошиця. Веснянки як жанр тут не самі
-політичні, але їхня хорово-обрядова обробка входить у ширший український
-музичний фронт.
-
-**5. Жіноча й дівоча передача культури.** Оскільки корпус підкреслює дівочий
-характер багатьох веснянок / гаївок, деколонізаційний аналіз має помітити не лише
-"народ" як абстрактний суб'єкт, а конкретних носійок: дівчат, провідниць,
-жінок, які пам'ятають рух, рядок і місце виконання.
-
-## 8. Місток до високої культури
-
-Перший місток — **фольклорна веснянка → Леся Українка → модерна лірика
-весни**. `fc2291b5_c1008` прямо зазначає, що образи й мотиви веснянок
-використовували Іван Франко, Павло Грабовський, Леся Українка, Максим Рильський,
-Андрій Малишко. У Лесі Українки є поезія `Веснянка` (1890), де народний жанровий
-сигнал переходить у інтимне сестринське звернення. Перевірена літературна
-опора:
-
-> Весняного ранку
-> Співай, моя люба, веснянку!
-
-RAW `verify_quote(author="Українка Л.")`: `matched=true`; `best_confidence=1.0`;
-`matched_lines[0].work="ukrlib-lesya"`; `context_chunk_id="c3662d2b_c0000"`;
-additional match `context_chunk_id="cf5806c0_c0027"`. Це не фольклорний доказ,
-а рецепція у високій культурі: Леся бере жанрову назву й інтонацію весняного
-співу для приватної поезії.
-
-Другий місток — **веснянки / гаївки → професійна хорова й музична обробка**.
-`fc2291b5_c1008` називає музичні обробки Миколи Лисенка, Миколи Леонтовича,
-Станіслава Людкевича, Василя Верховинця, Левка Ревуцького, Михайла Вериківського,
-Пилипа Козицького. `feaa5fa7_c0722` дає бібліографічну опору для Лисенка
-(`Укр. обрядові пісні у 5 збірках`, 1896-1903) і Колесси (`Мелодії гаївок`,
-1909). `fc2291b5_c4634` окремо називає обробку Людкевича `Гагілка`.
-
-Третій місток — **народна рухова форма → сценічна хореографія / театр**.
-Гаївка не є "сценка після пісні": її рухова логіка вже театральна. `484d0ffb_c0856`
-називає весняні хороводи й ігри окремим типом народно-драматичної творчості.
-Отже, сценічне відтворення має поважати структуру: хор, провідниця, ключ,
-ворота, коло, зворотний рух, імітація сівби або плетіння.
-
-Четвертий місток — **візуальна культура**. `6-klas-ukrlit-zabolotnyi-2023_s0009`
-містить шкільний візуальний орієнтир: Іван Гончар, `Гаївки біля церкви`
-(1970-ті), фонди Музею Івана Гончара. SigLIP у цьому запуску недоступний, тому
-image `chunk_id` не подається; але для майбутнього досвідного модуля це
-найкращий названий візуальний орієнтир, бо він показує не абстрактну "весну",
-а реальний простір гаївки біля церкви.
-
-Важливо: висока культура тут не "підносить" фольклор із нижчого стану. Вона
-перекладає вже складну систему слова, мелодії, руху й місця в інший медіум:
-лірику, хор, сцену, музейну картину, шкільний образ.
-
-## 9. Деколонізація / NPOV + джерельні розбіжності
-
-**Без русоцентричної рамки.** Веснянки / гаївки не подаються як провінційний
-додаток до "загальноросійської" чи "східнослов'янської" культури. Порівняльний
-слов'янський контекст можливий, але українські назви, регіони, збирачі, мелодії
-й ритуальні простори мають бути названі першими.
-
-**Без романтично-націоналістичного перебільшення.** У джерелах трапляються
-твердження про давніх богів, сонце, Ладу, "Царівну Ладу" або первісні свята.
-Досьє не перетворює це на готову пантеонну таблицю. Немає підстав пояснювати
-веснянки через Перуна, Велеса, Мокошу, Берегиню або іншу акуратну
-реконструкцію. Там, де корпус дає "Боже", "воскресла", Великдень, цвинтар або
-церковне подвір'я, треба бачити синкретичний історичний шар, а не затирати його
-в "чисту язичницькість".
-
-**Регіональна варіантність, не вирівнювання.** `веснянка`, `гаївка`, `гагілка`,
-`ягілка` не є помилки одна одної. `search_heritage("гаївка")` і
-`search_esum("гаївка")` дають великий варіантний ряд; `query_sum20("гагілки")`
-називає `гаївки`, `ягілки`, `маївки` як інакші назви, але `query_sum20("маївки")`
-окремої статті не знайшов. Тому `маївки` можна згадувати лише як СУМ-20
-варіант у дужках, не як самостійно підтверджене словникове гасло.
-
-**Russian-shadow false positives.** `check_russian_shadow("ягілка")` і
-`check_russian_shadow("гагілка")` повернули `matches_russian=true`,
-`confidence=0.9887005649717514`; `check_russian_shadow("Кострубонько")`
-повернув `matches_russian=true`, `confidence=0.9142857142857144`. Це не доказ
-суржику. Для `ягілка` / `гагілка` heritage evidence від ЕСУМ і СУМ-20 переважає
-морфологічний shadow heuristic; для `Кострубонько` `search_heritage` дав СУМ-20
-attestation. У модулі ці слова треба подавати з приміткою "підтверджено
-спадщинними джерелами попри Russian-shadow false positive".
-
-**Джерельна розбіжність / обережність.**
-
-- Грушевський реконструює давній весняний шар, але сам показує фрагментарність
-  матеріалу й тиск Великодня / церкви на давніші практики. Не подавати його
-  припущення як повну історичну певність.
-- `fc2291b5_c1008` говорить, що веснянки є видом календарно-обрядової поезії у
-  "сх. слов'ян"; dossier приймає порівняльний рівень, але не робить його
-  головною рамкою.
-- Шкільні chunks друкують популярні тексти, але `verify_quote` не підтвердив
-  `Ой весна, весна – днем красна...` і `Благослови, мати...`; тому вони
-  do-not-quote.
-- СУМ-20 `ягілка` існує як словникове гасло, але в цьому live-запиті не має
-  придатного визначення; значення треба підтримувати через ЕСУМ /
-  `search_heritage`.
-
-**Правило заземлення.** Якщо шкільний або Wikipedia-only матеріал суперечить
-`verify_quote`, Грінченку, ЕСУМ, СУМ-20, Грушевському, Колессі або named
-ethnographic edition, перевагу має корпус / видання. Для майбутнього модуля
-краще чесно сказати "цей рядок не підтвердився", ніж поставити красивий, але
-неперевірений текст.
-
-## Multimodal-hook capture
-
-**Image `chunk_id`s from SigLIP `search_images`:**
-
-- Raw tool result for `search_images("гаївки біля церкви хоровод Великдень")`:
-  `Image search deferred — will be available for l2-uk-direct track.`
-- Raw tool result for `search_images("веснянки кривий танець дівчата хоровод")`:
-  `Image search deferred — will be available for l2-uk-direct track.`
-- Raw tool result for `search_images("писанки гаївки Великдень українська традиція")`:
-  `Image search deferred — will be available for l2-uk-direct track.`
-- Raw tool result for `search_images("жайворонки з тіста закликання весни")`:
-  `Image search deferred — will be available for l2-uk-direct track.`
-- Raw tool result for `search_images("Іван Гончар Гаївки біля церкви 1970-ті")`:
-  `Image search deferred — will be available for l2-uk-direct track.`
-
-`image_chunk_ids`: **not available from the current SigLIP run**. Do not
-fabricate IDs. Rerun image search when the l2-uk-direct index is available and
-prefer actual practice images over generic spring imagery: girls' circle dance,
-churchyard gaivky, crooked-dance line, Easter eggs in performance context,
-dough birds / larks, Ivan Honchar Museum material where rights metadata is
-clear.
-
-**Visual proxy text chunks until SigLIP is available:**
-
-- `feaa5fa7_c0603` — girls, two choruses, gates, key, crooked dance;
-- `feaa5fa7_c0523` — gaivky around church at Easter, named games and dances;
-- `feaa5fa7_c0604` — bird-calling and `При долині мак`;
-- `feaa5fa7_c0605` — winding/plaiting, crooked dance, cemetery/church context;
-- `6-klas-ukrlit-zabolotnyi-2023_s0009` — Ivan Honchar `Гаївки біля церкви`
-  as named image target;
-- `2-klas-ukrmova-kravcova-2019-2_s0084` — children/youth gaivky near churches
-  and Easter context, useful as a primary-school reception proxy, not as a
-  scholarly anchor.
-
-**Named recording / song / edition references for future audio block:**
-
-- `Колесса Ф. Мелодії гаївок. МУЕ XII. Л. 1909` — named melody edition for
-  gaivky; use as primary musicological target.
-- `Гнатюк В. М. Гаївки` / `Матеріали до українсько-руської етнології`, т. 12,
-  1909 — named ethnographic edition target.
-- `Олександр Кошиць. Веснянки` (1921, with author's preface) — named choral /
-  arrangement edition target from `fc2291b5_c3869`.
-- `Микола Лисенко. Укр. обрядові пісні у 5 збірках` (1896-1903) — arrangement
-  corpus target from `feaa5fa7_c0722`.
-- `Станіслав Людкевич. Гагілка` — named folk-song arrangement from
-  `fc2291b5_c4634`.
-- For actual audio, select recordings with locality, ensemble, year and rights
-  metadata. **No YouTube resources** in the dossier; YouTube-like external
-  links are not part of the knowledge layer.
-
-**Performance / ritual sequences for Ritual-Sequencing activity:**
-
-1. `Раннє закликання весни`: птахи з вирію → дівчата на горбку / вищому місці
-   → формула до гоголя / жайворонка → імітація приходу тепла → перехід до
-   вуличних веснянок.
-2. `Великодня гаївка`: після великоднього богослужіння / у святкові дні →
-   збір біля церкви або на цвинтарі → провідниця формує коло → спів →
-   рухова гра → можливий обмін крашанками / гостювання / передвесільна
-   соціальна видимість.
-3. `Кривий танець`: учасниці беруться за руки → провідниця веде ключ
-   закрутами → рух то вгору, то в долину → коло не замикається просто, а
-   "плететься" як віночок → кінець відкладається або символічно не
-   знаходиться.
-4. `Мак / просо`: хор питає або наказує → гурт показує сіяння, ріст,
-   збирання, їжу / достигання → рослина стає моделлю бажаного росту поля і
-   молоді.
-5. `Кострубонько`: гурт питає про Коструба → повідомляє про поле / весілля /
-   смерть → оплакування → поява рядженого / повернення → радісний приспів про
-   оживання. Подавати як межовий vegetation/death-return motif, не як єдину
-   модель усіх гаївок.
-
-**Motif / formula inventory for Symbolic-Decode + Motif/Formula activities:**
-
-- `весна воскресла` — seasonal resurrection, Easter overlay;
-- `гоголь / жайворонок / ремез / вирій` — birds as carriers of spring;
-- `літо / житечко / барвіночок / васильочок` — warmth, grain, flowers, scent;
-- `мак / просо / горошок / огірочки` — agrarian imitation and plant growth;
-- `сіяти / виорати / родити / завиватися` — action verbs that map to movement;
-- `кривий танець / ключ / ворота / коло` — spatial grammar of the rite;
-- `віночок / плетіння / завивання` — plant, girlhood, motion, fertility;
-- `церква / цвинтар / Великдень` — Christian calendar and memory space;
-- `Кострубонько` — death, lament, return, boundary with other seasonal rites;
-- `гаївка / гагілка / ягілка` — regional naming itself as a motif of
-  decolonized vocabulary.
+The poetics of веснянки and гаївки is syncretic in the artistic sense: text, tune, gesture, and game work together. A repeated line can keep the rhythm of a circle. A call to spring can organize a choral response. A plant image can guide a gesture of sowing, winding, opening, or weaving. A dialogue can split the performers into two groups.
+
+Key formal features:
+
+- **address:** direct speech to spring, birds, girls, boys, a host, or an imagined figure;
+- **repetition:** the main memory device and the way a group keeps time;
+- **parallelism:** repeated syntactic frames that let a song expand by variation;
+- **movement grammar:** circle, line, gate, key, turn, bending path, or paired game;
+- **seasonal vocabulary:** spring, summer, grain, field, wreath, flowers, birds, willow, water;
+- **Easter setting:** гаївки at Easter time, often tied to public celebration near church space.
+
+The module should teach grammar through the source when useful: vocative forms, imperatives of invitation, repeated diminutives, and parallel clauses. These are language features in action, not evidence for sensational claims.
+
+## 4. Класичні зразки та public reading candidates
+
+Base-only PR does not host new readings. It records a Phase B reading pool that must be cleaned with `PrimaryReading text={...}` before linking.
+
+1. **"Ой весна, весна, ти красна"** — public Ukrlib spring song. Opening verified against the source corpus under `Народна творчість`, confidence `1.0`. Pedagogical role: dialogue with spring, gifts of summer, grain, flowers, and community voice. Existing hosted reading is clean enough to reuse only after Phase B rechecks current page metadata.
+
+2. **"Ой виорю я нивку широкую"** — public Ukrlib spring song. Opening verified against the source corpus under `Народна творчість`, confidence `1.0`. Pedagogical role: field, sowing, kinship contrast, and social reading of abundance without turning the song into a diagram.
+
+3. **Ukrlib "Веснянки" collection page** — public page with spring-song context and texts. Phase B should decide whether to host it as one reading, split only if copyright/source policy allows, or keep it as a linked resource. It must not be counted as several readings unless the source and generator support separate reading pages.
+
+4. **Additional public spring-song pages in the same Ukrlib collection** — `Ой з-за гори високої`, `Розлилися води на чотири броди`, and `Що ж ти нам, весна, принесла` have public URLs in the collection but need quote and metadata verification before lesson excerpts. They are candidates, not pre-cleared citations.
+
+Do-not-quote note: fragments from scholarly prose or encyclopedia examples may guide interpretation, but they are not clean hosted readings unless Phase B confirms a standalone public primary-text source.
+
+## 5. Побутування / виконавство / роль у громаді
+
+Веснянки and гаївки are not private silent poems. Their social body is the group: girls, youth, children, singers, leader, circle, gate, line, watching community, and sometimes household or churchyard setting. A good lesson should make the learner name the performer and setting before interpreting symbol or motif.
+
+A simple performance sequence for Phase B:
+
+1. the community enters spring or Easter time;
+2. singers gather in an open place, street, yard, field edge, or churchyard;
+3. a leader starts the line, circle, gate, or question;
+4. the group repeats, answers, turns, opens, closes, or passes through;
+5. the text names spring, summer, birds, grain, flowers, kinship, or play;
+6. the performance leaves a public memory of the season and group.
+
+This sequence supports ritual-sequencing, motif-formula, performance, and variant-comparison activities without adding speculative content.
+
+## 6. Жива традиція і сучасне побутування
+
+Today веснянки and гаївки appear in school lessons, Easter community events, folklore ensembles, choir arrangements, local festivals, and online archives. The modern question is not whether staged performance is "authentic" or "fake." The better question is what changes when a song moves from outdoor game to page, classroom, stage, recording, or diaspora community.
+
+Phase B should keep this concrete. A learner can compare a public full text with a short performance description: what disappears when the circle is removed; what becomes clearer when the text is printed; what a choir arrangement preserves; what a classroom analysis must avoid overclaiming.
+
+## 7. Міст до писемної / високої культури
+
+The bridge to written and high culture should start from the folk text. Spring songs help learners understand how oral formula, repetition, seasonal image, and community voice prepare later Ukrainian literary and musical forms. A concise bridge may point to Lesia Ukrainka's sensitivity to seasonal and folk performance worlds, choral arrangement practice, or stage adaptations of calendar tradition. The bridge must not replace the primary text with author biography or composer trivia.
+
+The strongest classroom sequence is:
+
+public spring song -> close reading of address/repetition/movement -> performance context -> later literary or musical echo -> source limits.
+
+## 8. Pedagogical affordances
+
+M04 should teach:
+
+- how to identify a spring-cycle song by time, performer, addressee, and action;
+- how to read direct address and repetition without reducing them to empty formula;
+- how Easter гаївки differ from a generic "spring lyric";
+- how to separate public primary text, school textbook explanation, scholarly interpretation, and modern performance;
+- how source discipline protects Ukrainian material from imperial flattening and sensational stereotypes.
+
+Good activity families:
+
+- **cycle-map:** classify winter/spring/summer/harvest examples by season and action;
+- **performance reconstruction:** infer movement from textual clues;
+- **motif-formula:** track spring, birds, field, wreath, flowers, and repetition;
+- **variant-comparison:** compare two public spring-song texts without declaring one "original";
+- **source-check:** decide whether a citation is public, scholarly, or build-only.
+
+## 9. Decolonization / NPOV + source disagreement
+
+The decolonization task is two-sided. First, reject imperial reduction of Ukrainian spring songs to a vague "common folk" decoration without language, region, performer, or school-canonical Ukrainian context. Second, avoid romantic overclaiming that treats every image as a key to a single ancient system. Both moves erase the actual source.
+
+Name Russian-imperial publication frames only when necessary and as external administrative language, never as cultural self-description. Keep Ukrainian terms primary: веснянка, гаївка, гагілка, ягілка, хоровод, заклична пісня, Великдень, Воскресіння, громада. When sources disagree about origin, say "the sources disagree" and move back to the public text.
 
 ## 10. Acceptance self-check
 
-- [x] **Schema completeness:** 10 required sections are present; `Multimodal-hook
-  capture` is present and populated.
-- [x] **Quote integrity:** every displayed folk fragment in §4 has inline raw
-  `verify_quote` evidence with `matched`, `best_confidence`, source/work,
-  year and `context_chunk_id`.
-- [x] **Do-not-quote compliance:** popular textbook lines that failed
-  verification are marked do-not-quote / paraphrase-only.
-- [x] **Регіональна варіантність:** `веснянка`, `гаївка`, `гагілка`, `ягілка`
-  подані з СУМ-20 / Грінченко / ЕСУМ / heritage evidence і чесними прогалинами.
-- [x] **Деколонізація:** немає русоцентричної рамки; імперський титул джерела
-  названий як рамка, не прийнятий як самоопис; радянське придушення /
-  відновлення підтверджене конкретно; немає tidy pagan pantheon.
-- [x] **No invented image IDs:** `search_images` returned deferred status; image
-  chunk IDs are explicitly unavailable.
+- Public source URLs recorded: Pidruchnyk grade 6 literature sources and Ukrlib spring-song pages.
+- At least two public Ukrlib openings verified by quote tool without carrying build-only markers into this dossier.
+- No learner-facing internal identifiers included.
+- No hidden-core, occult, or sensational frame used.
+- Christian/Easter context receives proper weight where гаївки are taught as Easter-season songs.
+- Phase B explicitly must rerun quote verification, clean/host readings, and use `ReadingText` / `PrimaryReading text={...}` before linking.
 
-**Raw `verify_quote` evidence recorded before final validation:**
+## Multimodal / experiential hook for Phase B
 
-- `Грушевський М.`, `Вже весна воскресла...` → `matched=true`,
-  `best_confidence=1.0`, chunks `da46aa92_c0178` (`1920`),
-  `5e7696fa_c0173` (`1923`).
-- `Грушевський М.`, `Ой вилинь, вилинь, гоголю...` → `matched=true`,
-  `best_confidence=1.0`, chunks `da46aa92_c0284` (`1920`),
-  `5e7696fa_c0279` (`1923`).
-- `Грушевський М.`, `Чом ти, жаворонку...` → `matched=true`,
-  `best_confidence=0.9889`, chunks `da46aa92_c0284` (`1920`),
-  `5e7696fa_c0279` (`1923`).
-- `Грушевський М.`, `Гагілка гагілкою` → `matched=true`,
-  `best_confidence=1.0`, chunks `da46aa92_c0178` (`1920`),
-  `5e7696fa_c0173` (`1923`).
-- `Грушевський М.`, `А ми поле виорем...` → `matched=true`,
-  `best_confidence=1.0`, chunks `da46aa92_c0179` (`1920`),
-  `5e7696fa_c0174` (`1923`).
-- `Колектив`, `При долині мак...` → `matched=true`,
-  `best_confidence=1.0`, chunk `feaa5fa7_c0604` (`1955`).
-- `Колектив`, `Вийся, горошку...` → `matched=true`,
-  `best_confidence=1.0`, chunk `feaa5fa7_c0605` (`1955`).
-- `Колектив`, `Кривого танця йдемо...` → `matched=true`,
-  `best_confidence=1.0`, chunk `feaa5fa7_c0605` (`1955`).
-- `Колектив`, `Ожив, ожив наш Кострубонько...` → `matched=true`,
-  `best_confidence=1.0`, chunk `feaa5fa7_c0611` (`1955`).
-- `Колектив`, `Ой весна, весна - днем красна...` → `matched=false`,
-  `best_confidence=0.0`, `matched_lines=[]`; therefore do-not-quote.
-- `Колектив`, `Благослови, мати...` → `matched=false`,
-  `best_confidence=0.5797`; therefore do-not-quote.
-
-**Raw dictionary / heritage evidence:**
-
-- `query_sum20("веснянка")` → СУМ-20 URL, definition as хорова
-  народнообрядова пісня.
-- `query_sum20("гаївка")` → СУМ-20 URL, definition as українська народна
-  обрядова пісня; веснянка.
-- `query_sum20("гагілки")` → СУМ-20 URL, old Ukrainian spring rites and
-  dance-game ritual songs; variants include `гаївки`, `ягілки`, `маївки`.
-- `query_sum20("ягілка")` → СУМ-20 URL exists, but bare `ЯГІЛКА.` only.
-- `search_grinchenko_1907("веснянка")` → one result, "весняная песня",
-  early-spring youth practice.
-- `search_grinchenko_1907("гаївка")` → one result, "весняная хороводная
-  игра, весенняя песня в этой игре".
-- `search_grinchenko_1907("ягілка")` / `("гагілка")` → no results; use ЕСУМ /
-  СУМ-20, not fabricated Грінченко support.
-- `search_esum("гаївка")` → варіантний ряд із `гагівка`, `гагілка`,
-  `гагулка`, `галагівка`, `ягівка`, `ягілка`; етимологія неясна.
-- `search_esum("ягілка")` → "весняна гра і пісня дівчат у Великодні дні";
-  includes `гагілка` and `гаївка` relation; etymology uncertain.
-
-**Raw `check_russian_shadow` evidence:**
-
-- `веснянка` → `matches_russian=false`, `confidence=0.0`.
-- `гаївка` → `matches_russian=false`, `confidence=0.0`.
-- `ягілка` → `matches_russian=true`, `confidence=0.9887005649717514`;
-  heritage override.
-- `гагілка` → `matches_russian=true`, `confidence=0.9887005649717514`;
-  heritage override.
-- `хоровод` → `matches_russian=false`, `confidence=0.0`.
-- `Кострубонько` → `matches_russian=true`, `confidence=0.9142857142857144`;
-  СУМ-20 / heritage override.
-
-**Raw `query_cefr_level` evidence:**
-
-- `традиція` → PULS `A1`, іменник.
-- `весна` → PULS `A1`, іменник.
-- `пісня` → PULS `A1`, іменник.
-- `культура` → PULS `A1`, іменник.
-- `символ` → PULS `A1`, іменник.
-- `аналіз` → PULS `B1`, іменник.
-- `обряд`, `синкретизм`, `деколонізація`, `хоровод` → no PULS result. This is
-  compatible with C1+ analytical register; PULS is a learner-vocabulary index,
-  not a full discourse classifier.
-
-**Raw `search_idioms` evidence:**
-
-- `search_idioms("весна")` → `No results in Фразеологічний`; no idiomatic
-  ornament added without corpus support.
-
-**Raw `search_images` evidence:**
-
-- All five image queries returned `Image search deferred — will be available for
-  l2-uk-direct track.` No image chunk IDs invented.
+- **Image/use-rights path:** use generated or rights-checked public visuals only; do not copy internal image identifiers into learner text.
+- **Named listening path:** if a performance example is included, cite public metadata and make it optional context, not a substitute for the text.
+- **Performance sequence:** gathering -> leader starts -> circle/line/gate forms -> repeated song text -> movement/game -> seasonal close.
+- **Motif/formula inventory:** весна, літо, жито, квіти, віночок, гоголь, жайворонок, поле, нива, верба, дівчата, хлопці, коло, ворота, Великдень, Воскресіння.
+- **Activities prefer:** cycle-map, performance reconstruction, motif-formula, variant-comparison, source-check.
