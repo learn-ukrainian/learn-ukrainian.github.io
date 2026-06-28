@@ -11,6 +11,8 @@ Last reviewed: 2026-06-21
 - Hosted readings currently live in `site/src/content/readings/` and require `public_domain: true`. Non-hostable texts need `role: reading` external links and clear copyright notes.
 - FOLK uses `verify_shippable` and `assemble_mdx`, not the core `generate_mdx.py` path.
 
+- Keep build/source-verification language out of learner pages. Public FOLK pages may show public source names/URLs, but must describe reading habits in Ukrainian student terms (`першоджерело`, `уривок`, `джерельна сторінка`, `зіставлення джерел`) and never teach the validation workflow (`source hammer`, `source-first`, `chunk_id`, corpus/service IDs, `verify_quote`, `learner-facing`, `hosted reading`, etc.).
+
 ## Goal
 
 Build the selected FOLK module batch in small sequential steps. For each module, use plans, dossiers/wiki, source registries, readings, and corpus checks to write source files, readings, generated site MDX, and validation notes. Record telemetry and require independent review before merge.

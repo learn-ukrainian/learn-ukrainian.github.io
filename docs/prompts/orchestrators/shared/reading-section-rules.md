@@ -85,6 +85,8 @@ The body should render the text with `PrimaryReading` and include source/copyrig
 - The generator links `PrimaryReading` boxes to `/readings/<slug>/` only when the reading file exists; missing files must not create broken links.
 - For link-only or excerpt-only readings, add a student-facing `role: reading` resource and mention the reading task in the lesson without pretending the full text is hosted.
 
+- Hosted reading pages are public learner pages when `published` and `canonical` are not false. They may name the public source and show the public URL, but must not expose the build workflow: no `chunk_id`, `source_chunk`, corpus/service IDs, `source hammer`, `hosted reading`, `public reading`, `learner-facing`, or validation-tool language. Unpublished or noncanonical retained readings may carry maintenance notes only while they remain unroutable.
+
 ## Validation
 
 For FOLK hosted readings, run:

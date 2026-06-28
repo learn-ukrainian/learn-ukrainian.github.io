@@ -138,15 +138,18 @@ repos:
         stages: [pre-commit]
 
       - id: check-no-internal-ids
-        name: check no internal IDs in published seminar MDX
+        name: check no internal IDs/register in learner surfaces
         entry: bash scripts/pre_commit/project_python.sh scripts/audit/check_no_internal_ids.py --files
         language: system
         files: >-
-          (?x)^site/src/content/
+          (?x)^(
+            site/src/content/
           (
             docs/(folk|hist|istorio|bio|lit|lit-essay|lit-hist-fic|lit-fantastika|
             lit-war|lit-humor|lit-youth|lit-doc|lit-drama|lit-crimea|oes|ruth)/.*\.mdx|
             readings/.*\.mdx
+          )|
+            curriculum/l2-uk-en/folk/[^/]+/(module\.md|activities\.ya?ml|vocabulary\.ya?ml|resources\.ya?ml)
           )$
         stages: [pre-commit]
       - id: check-locked-module-not-published
