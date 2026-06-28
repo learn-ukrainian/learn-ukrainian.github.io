@@ -1,0 +1,244 @@
+- lemma: регістр
+  translation: register
+  pos: noun
+  usage: Регістр допомагає зрозуміти, де слово звучить природно.
+- lemma: стилістичний регістр
+  translation: stylistic register
+  pos: phrase
+  usage: Стилістичний регістр пов'язує слово з жанром, адресатом і метою.
+- lemma: стиль
+  translation: style
+  pos: noun
+  usage: Офіційний стиль вимагає точності й передбачуваних формул.
+- lemma: забарвлення
+  translation: coloring; connotation
+  pos: noun
+  usage: Слово має розмовне забарвлення, тому не пасує до протоколу.
+- lemma: стилістичне забарвлення
+  translation: stylistic coloring
+  pos: phrase
+  usage: Стилістичне забарвлення показує, чи слово нейтральне, книжне або знижене.
+- lemma: канцеляризм
+  translation: bureaucratic phrase
+  pos: noun
+  usage: Канцеляризм може бути доречним у документі, але важким у блозі.
+- lemma: мовне кліше
+  translation: language cliché; formula
+  pos: phrase
+  usage: Мовне кліше у заяві допомагає читачеві швидко впізнати жанр.
+- lemma: офіційний
+  translation: official; formal
+  pos: adj
+  usage: Офіційний лист потребує стриманого тону.
+- lemma: офіційно-діловий
+  translation: official-business
+  pos: adj
+  usage: Офіційно-діловий регістр повторює терміни для точності.
+- lemma: розмовний
+  translation: conversational; colloquial
+  pos: adj
+  usage: Розмовний варіант може бути природним у чаті з другом.
+- lemma: нейтральний
+  translation: neutral
+  pos: adj
+  usage: Нейтральний синонім безпечний, коли автор не хоче додати емоцію.
+- lemma: книжний
+  translation: bookish; literary
+  pos: adj
+  usage: Книжний вислів доречний у статті, але може звучати дивно в побутовій розмові.
+- lemma: знижений
+  translation: lowered; low-register
+  pos: adj
+  usage: Знижене слово може образити людину в офіційному описі.
+- lemma: фамільярний
+  translation: overly familiar
+  pos: adj
+  usage: Фамільярний тон не підходить для листа незнайомому викладачеві.
+- lemma: доречність
+  translation: appropriateness
+  pos: noun
+  usage: Доречність залежить від жанру, адресата і мети.
+- lemma: контекст
+  translation: context
+  pos: noun
+  usage: Контекст вирішує, чи синонім справді підходить до речення.
+- lemma: адресат
+  translation: addressee; audience
+  pos: noun
+  usage: Адресат впливає на рівень офіційності тексту.
+- lemma: ситуація
+  translation: situation
+  pos: noun
+  usage: У новій ситуації той самий синонім може змінити тон.
+- lemma: перефразування
+  translation: paraphrasing
+  pos: noun
+  usage: Перефразування допомагає адаптувати текст до іншої аудиторії.
+- lemma: перекодування
+  translation: recoding; register transformation
+  pos: noun
+  usage: Перекодування змінює лексику й синтаксис під новий жанр.
+- lemma: еквівалент
+  translation: equivalent
+  pos: noun
+  usage: Український еквівалент треба перевіряти в реченні, а не тільки в словнику.
+- lemma: термін
+  translation: term
+  pos: noun
+  usage: Термін у науковому тексті краще повторити, ніж довільно замінити.
+- lemma: термінологічний
+  translation: terminological
+  pos: adj
+  usage: Термінологічний вибір має бути сталим у межах одного документа.
+- lemma: моносемія
+  translation: monosemy
+  pos: noun
+  usage: Моносемія бажана в термінах, бо зменшує двозначність.
+- lemma: двозначність
+  translation: ambiguity
+  pos: noun
+  usage: Офіційний документ уникає двозначності.
+- lemma: стандартизація
+  translation: standardization
+  pos: noun
+  usage: Стандартизація термінів робить інструкцію зрозумілішою.
+- lemma: уніфікація
+  translation: unification
+  pos: noun
+  usage: Уніфікація понять потрібна для спільного фахового словника.
+- lemma: професіоналізм
+  translation: professional jargon term
+  pos: noun
+  usage: Професіоналізм може бути незрозумілим нефаховій аудиторії.
+- lemma: прес-реліз
+  translation: press release
+  pos: noun
+  usage: Прес-реліз повідомляє факт стримано й офіційно.
+- lemma: публіцистичний
+  translation: journalistic; publicistic
+  pos: adj
+  usage: Публіцистичний текст часто поєднує факт і оцінку.
+- lemma: медійний
+  translation: media-related
+  pos: adj
+  usage: Медійний заголовок може непомітно змінити ставлення читача.
+- lemma: оцінна лексика
+  translation: evaluative vocabulary
+  pos: phrase
+  usage: Оцінна лексика показує позицію автора.
+- lemma: мовна гра
+  translation: wordplay; language play
+  pos: phrase
+  usage: Мовна гра доречна в колонці або художньому уривку.
+- lemma: метафоризація
+  translation: metaphorization
+  pos: noun
+  usage: Метафоризація створює контекстуальний синонім.
+- lemma: алюзія
+  translation: allusion
+  pos: noun
+  usage: Алюзія натякає на інший текст або культурний образ.
+- lemma: маніпулятивний потенціал
+  translation: manipulative potential
+  pos: phrase
+  usage: Маніпулятивний потенціал слова треба враховувати в новині.
+- lemma: рамкування
+  translation: framing
+  pos: noun
+  usage: Рамкування події залежить від вибору синонімів.
+- lemma: нейтралізувати
+  translation: to neutralize
+  pos: verb
+  usage: Редактор нейтралізує зайву емоційність у повідомленні.
+- lemma: пом'якшувати
+  translation: to soften
+  pos: verb
+  usage: Евфемізм може пом'якшувати різке висловлення.
+- lemma: приховувати
+  translation: to conceal
+  pos: verb
+  usage: Надто обережне слово може приховувати відповідальність.
+- lemma: фіксувати
+  translation: to record; to register
+  pos: verb
+  usage: Протокол фіксує рішення без емоційної оцінки.
+- lemma: повідомляти
+  translation: to inform; to report
+  pos: verb
+  usage: Організатори повідомляють учасників про зміну графіка.
+- lemma: зазначати
+  translation: to state; to note
+  pos: verb
+  usage: Автор зазначає, що термін треба вживати послідовно.
+- lemma: інформувати
+  translation: to inform
+  pos: verb
+  usage: Університет інформує студентів про нову процедуру.
+- lemma: обґрунтовувати
+  translation: to justify; to substantiate
+  pos: verb
+  usage: Дослідниця обґрунтовує висновок прикладами.
+- lemma: інтерпретувати
+  translation: to interpret
+  pos: verb
+  usage: Автор інтерпретує результати обережно.
+- lemma: засвідчувати
+  translation: to attest; to indicate
+  pos: verb
+  usage: Дані засвідчують зміну вживання слова.
+- lemma: припускати
+  translation: to suppose; to assume
+  pos: verb
+  usage: Дослідник припускає, що аудиторія впливає на вибір регістру.
+- lemma: балакати
+  translation: to chat; to talk
+  pos: verb
+  usage: Балакати природно в розмовному описі, але не в протоколі.
+- lemma: базікати
+  translation: to babble; to chatter
+  pos: verb
+  usage: Базікати має знижене й оцінне забарвлення.
+- lemma: теревенити
+  translation: to chatter idly
+  pos: verb
+  usage: Теревенити означає говорити довго й не дуже змістовно.
+- lemma: ухвалити рішення
+  translation: to make or adopt a decision
+  pos: phrase
+  usage: Комісія ухвалила рішення після обговорення.
+- lemma: вжити заходів
+  translation: to take measures
+  pos: phrase
+  usage: Адміністрація має вжити заходів для безпеки.
+- lemma: надати інформацію
+  translation: to provide information
+  pos: phrase
+  usage: Секретаріат надасть інформацію учасникам.
+- lemma: провести аналіз
+  translation: to conduct analysis
+  pos: phrase
+  usage: Команда провела аналіз помилок у текстах.
+- lemma: справляти враження
+  translation: to make an impression
+  pos: phrase
+  usage: Постановка справляє сильне враження на глядача.
+- lemma: чіпляти за живе
+  translation: to hit close to home; to move deeply
+  pos: phrase
+  usage: Цей вислів розмовний і емоційний, тому пасує до особистого відгуку.
+- lemma: стилістичний дисонанс
+  translation: stylistic dissonance
+  pos: phrase
+  usage: Стилістичний дисонанс виникає, коли офіційні й жаргонні слова змішано випадково.
+- lemma: стилістична правка
+  translation: stylistic editing
+  pos: phrase
+  usage: Стилістична правка змінює слово відповідно до регістру.
+- lemma: зменшити дистанцію
+  translation: to reduce distance
+  pos: phrase
+  usage: У блозі автор може зменшити дистанцію між собою і читачем.
+- lemma: зберегти точність
+  translation: to preserve precision
+  pos: phrase
+  usage: Під час перефразування треба зберегти точність факту.
