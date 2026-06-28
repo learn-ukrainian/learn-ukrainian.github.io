@@ -95,10 +95,10 @@
   translation: yearly
   pos: adv
   usage: Фестиваль проводять щороку.
-- lemma: щодва тижні
+- lemma: кожні два тижні
   translation: every two weeks
   pos: phrase
-  usage: Команда чергує щодва тижні.
+  usage: Команда чергує кожні два тижні.
 - lemma: раз на тиждень
   translation: once a week
   pos: phrase
