@@ -62,10 +62,15 @@ B2 M60 `word-formation-person-suffixes`,9/10,B+,Yes,Strong person-suffix word-fo
 B2 M61 `word-formation-abstract-nouns`,9/10,B+,Yes,Strong abstract-noun word-formation module 13 workbook activities, 44 vocabulary items, Agy/Gemini 3.1 Pro High review pass. Score held at 9 compact section-balance reserve and dense nominalization scope.
 B2 M62 `word-formation-place-object-names`,9/10,B+,Yes,Strong place/object-name word-formation module 13 workbook activities, 45 vocabulary items, Agy/Gemini 3.1 Pro High blocker follow-up review pass. Score held at 9 after model-answer/task-density fixes and conservative human-polish reserve.
 B2 M63 `word-formation-adjective-adverbs`,9/10,B+,Yes,Strong adjective/adverb word-formation module 13 workbook activities, 47 vocabulary items, Agy/Gemini 3.1 Pro High review pass. Score held at 9 minor non-blocking section-length warnings despite deterministic audit pass.
+B2 M64 `advanced-conjunctions-i`,9/10,B+,Yes,Strong advanced conjunctions module 10 workbook activities, 41 vocabulary items, external review pass. Score held at 9 dense connector semantics conservative human-polish reserve.
+B2 M65 `advanced-conjunctions-ii`,9/10,B+,Yes,Strong advanced conjunctions continuation 10 workbook activities, 49 vocabulary items, Agy/Gemini 3.1 Pro High review pass. Score held at 9 dense concessive/conditional connector coverage.
+B2 M66 `checkpoint-morphology`,9/10,B+,Yes,Strong B2 morphology checkpoint 11 workbook activities, 53 vocabulary items, Agy/Gemini review and false-positive clarification pass. Score held at 9 broad checkpoint density.
+B2 M67 `synonymy-types-and-rows`,9/10,B+,Yes,Strong synonymy rows module 10 workbook activities, 55 vocabulary items, Agy/Gemini 3.1 Pro High review pass. Score held at 9 dense lexical-choice scope conservative polish reserve.
+B2 M68 `synonymy-in-registers`,9/10,B+,Yes,Strong register-sensitive synonymy module 10 workbook activities, 61 vocabulary items, Agy/Gemini blocker fix and PASS re-review. Score held at 9 dense register/collocation coverage.
 
 Score,Count,Modules
 10/10,2,"M01, M08"
-9/10,60,"M02-M07, M09-M13, M15-M63"
+9/10,65,"M02-M07, M09-M13, M15-M68"
 8/10,1,M14
 
 Durable Report,Scope
@@ -82,6 +87,7 @@ Durable Report,Scope
 `docs/audits/b2-m51-m53-llm-score-report-2026-06-28.md`,M51-M53
 `docs/audits/b2-m54-m58-llm-score-report-2026-06-28.md`,M54-M58
 `docs/audits/b2-m59-m63-llm-score-report-2026-06-28.md`,M59-M63
+`docs/audits/b2-m64-m68-llm-score-report-2026-06-28.md`,M64-M68
 
 Module,Raw Word Count,Activities,Vocabulary
 M03 `b2-impersonal-passive`,4608,7 workbook / 4 inline,35
@@ -145,6 +151,11 @@ M60 `word-formation-person-suffixes`,4362,13 workbook / 0 inline,49
 M61 `word-formation-abstract-nouns`,4071,13 workbook / 0 inline,44
 M62 `word-formation-place-object-names`,4264,13 workbook / 0 inline,45
 M63 `word-formation-adjective-adverbs`,4012,13 workbook / 0 inline,47
+M64 `advanced-conjunctions-i`,4709,10 workbook / 0 inline,41
+M65 `advanced-conjunctions-ii`,4605,10 workbook / 0 inline,49
+M66 `checkpoint-morphology`,4272,11 workbook / 0 inline,53
+M67 `synonymy-types-and-rows`,4158,10 workbook / 0 inline,55
+M68 `synonymy-in-registers`,4591,10 workbook / 0 inline,61
 
 Score,Pass Count
 10/10,5/5 with no meaningful content polish
@@ -167,3 +178,4 @@ See `docs/audits/b2-m47-m50-llm-score-report-2026-06-28.md`.,M47-M50
 See `docs/audits/b2-m51-m53-llm-score-report-2026-06-28.md`.,M51-M53
 See `docs/audits/b2-m54-m58-llm-score-report-2026-06-28.md`.,M54-M58
 See `docs/audits/b2-m59-m63-llm-score-report-2026-06-28.md`.,M59-M63
+See `docs/audits/b2-m64-m68-llm-score-report-2026-06-28.md`.,M64-M68
