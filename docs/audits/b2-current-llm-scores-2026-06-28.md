@@ -57,10 +57,15 @@ B2 M55 `aspect-nuances-imperative-infinitive`,9/10,B+,Yes,Strong imperative/infi
 B2 M56 `pluperfect-tense`,9/10,B+,Yes,Strong pluperfect module 11 workbook activities, 40 vocabulary items, external review pass. Score held at 9 dense tense/register coverage and non-blocking deterministic style/UA-GEC advisories.
 B2 M57 `conditional-mood-particles`,9/10,B+,Yes,Strong conditional mood particles module 11 workbook activities, 40 vocabulary items, external review pass. Score held at 9 dense mood/particle coverage and minor deterministic advisories.
 B2 M58 `numeral-declension-time-dates`,9/10,B+,Yes,Strong numeral declension time/dates module 11 workbook activities, 40 vocabulary items, Agy/Gemini 3.1 Pro High re-review pass. Score held at 9 conservative post-fix human-polish reserve.
+B2 M59 `numeral-declension-compound-numbers`,9/10,B+,Yes,Strong compound-number declension module 10 workbook activities, 32 vocabulary items, external review pass. Score held at 9 dense numeral paradigm coverage conservative post-build polish reserve.
+B2 M60 `word-formation-person-suffixes`,9/10,B+,Yes,Strong person-suffix word-formation module 13 workbook activities, 49 vocabulary items, external review pass. Score held at 9 dense suffix/feminitive/register coverage non-blocking deterministic advisories.
+B2 M61 `word-formation-abstract-nouns`,9/10,B+,Yes,Strong abstract-noun word-formation module 13 workbook activities, 44 vocabulary items, Agy/Gemini 3.1 Pro High review pass. Score held at 9 compact section-balance reserve and dense nominalization scope.
+B2 M62 `word-formation-place-object-names`,9/10,B+,Yes,Strong place/object-name word-formation module 13 workbook activities, 45 vocabulary items, Agy/Gemini 3.1 Pro High blocker follow-up review pass. Score held at 9 after model-answer/task-density fixes and conservative human-polish reserve.
+B2 M63 `word-formation-adjective-adverbs`,9/10,B+,Yes,Strong adjective/adverb word-formation module 13 workbook activities, 47 vocabulary items, Agy/Gemini 3.1 Pro High review pass. Score held at 9 minor non-blocking section-length warnings despite deterministic audit pass.
 
 Score,Count,Modules
 10/10,2,"M01, M08"
-9/10,55,"M02-M07, M09-M13, M15-M58"
+9/10,60,"M02-M07, M09-M13, M15-M63"
 8/10,1,M14
 
 Durable Report,Scope
@@ -76,6 +81,7 @@ Durable Report,Scope
 `docs/audits/b2-m47-m50-llm-score-report-2026-06-28.md`,M47-M50
 `docs/audits/b2-m51-m53-llm-score-report-2026-06-28.md`,M51-M53
 `docs/audits/b2-m54-m58-llm-score-report-2026-06-28.md`,M54-M58
+`docs/audits/b2-m59-m63-llm-score-report-2026-06-28.md`,M59-M63
 
 Module,Raw Word Count,Activities,Vocabulary
 M03 `b2-impersonal-passive`,4608,7 workbook / 4 inline,35
@@ -134,6 +140,11 @@ M55 `aspect-nuances-imperative-infinitive`,4317,10 workbook / 0 inline,40
 M56 `pluperfect-tense`,4636,11 workbook / 0 inline,40
 M57 `conditional-mood-particles`,4306,11 workbook / 0 inline,40
 M58 `numeral-declension-time-dates`,4246,11 workbook / 0 inline,40
+M59 `numeral-declension-compound-numbers`,4336,10 workbook / 0 inline,32
+M60 `word-formation-person-suffixes`,4362,13 workbook / 0 inline,49
+M61 `word-formation-abstract-nouns`,4071,13 workbook / 0 inline,44
+M62 `word-formation-place-object-names`,4264,13 workbook / 0 inline,45
+M63 `word-formation-adjective-adverbs`,4012,13 workbook / 0 inline,47
 
 Score,Pass Count
 10/10,5/5 with no meaningful content polish
@@ -155,3 +166,4 @@ See `docs/audits/b2-m43-m46-llm-score-report-2026-06-27.md`.,M43-M46
 See `docs/audits/b2-m47-m50-llm-score-report-2026-06-28.md`.,M47-M50
 See `docs/audits/b2-m51-m53-llm-score-report-2026-06-28.md`.,M51-M53
 See `docs/audits/b2-m54-m58-llm-score-report-2026-06-28.md`.,M54-M58
+See `docs/audits/b2-m59-m63-llm-score-report-2026-06-28.md`.,M59-M63
