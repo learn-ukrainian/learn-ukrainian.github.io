@@ -4,18 +4,18 @@ sequence: 3
 slug: koliadky-shchedrivky
 title: "Колядки та щедрівки"
 subtitle: "Christmas carols, Shchedryi Vechir well-wishing songs, and Ukrainian winter verbal art"
-version: 2
+version: 3
 status: locked
 phase: base-first
 cefr_min: C1
 word_target: 4000
 focus: "Clean source-first M03 base for Ukrainian winter-cycle songs: колядки, щедрівки, public texts, performance, Christian-era calendar context, and poetics."
-persona: "C1+ seminar learner reading Ukrainian winter folk songs through public primary texts, school canon, careful framing, and source discipline."
+persona: "C1+ seminar learner reading Ukrainian winter folk songs through public primary texts, school canon, careful framing, and close attention to genre evidence."
 objectives:
   - "Розрізняти колядки, щедрівки, віншування і посівання за часом, адресатом, текстовою формою і виконавською ситуацією."
   - "Пояснити колядки як різдвяні величальні пісні, а щедрівки як щедровечірні або новорічні пісні-побажання."
   - "Читати публічний текст через приспів, повтор, звертання, образ дому, побажання достатку і роль гуртового голосу."
-  - "Працювати тільки з публічними Ukrlib/Pidruchnyk/Osvita-style джерелами у learner-facing матеріалах."
+  - "Розрізняти публічний первинний текст, підручникову жанрову рамку і межу інтерпретації без технічної мови про інфраструктуру джерел."
   - "Утримувати християнсько-історичну рамку зимового циклу без редукції Різдва або Щедрого вечора до зовнішньої назви."
   - "Готувати міст від народної щедрівки до хорової культури лише на перевірених публічних джерелах."
 pedagogy:
@@ -49,12 +49,12 @@ content_outline:
       - "Show who sings, where the group stands, how the household answers, what gift or response closes the exchange."
       - "Use ritual-sequencing activity to order arrival, permission/greeting, song, household response, gift, closing wish."
       - "Keep material culture inside the song/performance context rather than as a separate decorative list."
-  - section: "Публічні читання і source hammer"
+  - section: "Варіанти зимового величання"
     words: 700
     points:
-      - "Use cleaned public Ukrlib readings only; never link an existing reading page that still exposes service IDs."
-      - "Prefer at least four distinct public primary texts when Phase B cleans them: one already clean shchedrivka plus additional carol/shchedrivka pages."
-      - "Record quote/source verification in PR handoff, not generated audit artifacts."
+      - "Teach public readings through genre roles: household address, girl-addressed scene, mistress/Anna praise, refrain, and gift imagery."
+      - "Use `Ой над Дунаєм, над береженьком` as the main carol variant for господиня/Анна, not the archaic `Як ще не було початку світа` anti-example."
+      - "Keep source verification in PR handoff and validation artifacts, not learner-facing lesson prose."
   - section: "Міст до хорової культури"
     words: 350
     points:
@@ -91,6 +91,20 @@ vocabulary_hints:
   - "Маланка"
   - "Василь"
   - "виконавська ситуація"
+vesum_exemptions:
+  corpus_attested_quotes:
+    - term: "газдиненьці"
+      forms: ["газдиненьці"]
+      source_chunk: "672a677a_c0000"
+      rationale: "Вербатим із колядки «Ой над Дунаєм, над береженьком» у первинному читанні."
+    - term: "сафіян"
+      forms: ["сафіян"]
+      source_chunk: "672a677a_c0000"
+      rationale: "Вербатим із колядки «Ой над Дунаєм, над береженьком» у первинному читанні."
+    - term: "червін-сафіян"
+      forms: ["червін-сафіян"]
+      source_chunk: "672a677a_c0000"
+      rationale: "Вербатим із колядки «Ой над Дунаєм, над береженьком» у первинному читанні."
 references:
   - title: "Українська література, 6 клас. Пісні зимового циклу"
     author: "Авраменко О."
@@ -168,16 +182,6 @@ readings:
     license: public_domain
     hosting: needs-clean-hosted-reading
     reading_slug: "koliadka-oi-rano-kury-zapily"
-  - title: "Як ще не було початку світа"
-    title_en: "When the world had no beginning yet"
-    genre: "Колядка"
-    role: primary
-    type: primary
-    source: "Народна творчість. УкрЛіб."
-    source_url: "https://www.ukrlib.com.ua/narod/printout.php?id=5&bookid=2"
-    license: public_domain
-    hosting: needs-clean-hosted-reading
-    reading_slug: "koliadka-yak-shche-ne-bulo-pochatku-svita"
 do_not_quote:
   - line: "Any plan, wiki, lesson, or reading page exposes service IDs, service source markers, or internal corpus labels."
     reason: "Public learner surfaces must cite public URLs and bibliographic sources only."
@@ -196,3 +200,6 @@ changelog:
   - version: 2
     date: "2026-06-27"
     note: "Base-first rebuild: replaced clean stub with framing-compliant dossier/wiki/plan; scope remains base-only with no learner module/readings changes."
+  - version: 3
+    date: "2026-06-28"
+    note: "Remediation: removed learner-facing source-hammer language and excluded the archaic `Як ще не було початку світа` anti-example from M03 teaching anchors."
