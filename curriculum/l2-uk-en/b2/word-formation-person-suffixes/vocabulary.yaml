@@ -1,0 +1,196 @@
+- lemma: словотвір
+  translation: word formation
+  pos: noun
+  usage: Словотвір пояснює, як від основи твориться назва особи.
+- lemma: суфікс
+  translation: suffix
+  pos: noun
+  usage: Суфікс -ник часто творить назви осіб за діяльністю.
+- lemma: твірна основа
+  translation: derivational stem
+  pos: noun
+  usage: Твірна основа допомагає зрозуміти значення нового слова.
+- lemma: назва особи
+  translation: personal noun
+  pos: noun
+  usage: Назва особи може вказувати на професію, якість або походження.
+- lemma: агенс
+  translation: agent
+  pos: noun
+  usage: Агенс виконує дію, яку називає твірна основа.
+- lemma: продуктивна модель
+  translation: productive pattern
+  pos: noun
+  usage: Продуктивна модель дає багато сучасних слів.
+- lemma: засвідчена форма
+  translation: attested form
+  pos: noun
+  usage: Перед уживанням рідкісного фемінітива перевірте засвідчену форму.
+- lemma: професійна лексика
+  translation: professional vocabulary
+  pos: noun
+  usage: Професійна лексика часто містить запозичені суфікси.
+- lemma: професія
+  translation: profession
+  pos: noun
+  usage: Професія впливає на вибір назви особи.
+- lemma: дія
+  translation: action
+  pos: noun
+  usage: Дія може стати основою для назви діяча.
+- lemma: ознака
+  translation: feature; trait
+  pos: noun
+  usage: Ознака людини іноді переходить у назву особи.
+- lemma: мешканець
+  translation: resident
+  pos: noun
+  usage: Мешканець міста може мати окрему усталену назву.
+- lemma: діяч
+  translation: public figure; actor
+  pos: noun
+  usage: Діяч культури має впізнавану суспільну роль.
+- lemma: діячка
+  translation: female public figure
+  pos: noun
+  usage: Діячка громадського руху виступила на форумі.
+- lemma: фахівець
+  translation: specialist
+  pos: noun
+  usage: Фахівець із комунікацій підготував стратегію.
+- lemma: працівник
+  translation: employee
+  pos: noun
+  usage: Працівник центру відповів на звернення.
+- lemma: працівниця
+  translation: female employee
+  pos: noun
+  usage: Працівниця архіву знайшла потрібну довідку.
+- lemma: дослідник
+  translation: researcher
+  pos: noun
+  usage: Дослідник описав словотвірні моделі в статті.
+- lemma: дослідниця
+  translation: female researcher
+  pos: noun
+  usage: Дослідниця пояснила, чому форма має інший суфікс.
+- lemma: керівник
+  translation: manager; leader
+  pos: noun
+  usage: Керівник проєкту узгодив графік.
+- lemma: керівниця
+  translation: female manager; female leader
+  pos: noun
+  usage: Керівниця відділу представила команду.
+- lemma: засновник
+  translation: founder
+  pos: noun
+  usage: Засновник школи описав її принципи.
+- lemma: засновниця
+  translation: female founder
+  pos: noun
+  usage: Засновниця платформи виступила на конференції.
+- lemma: учитель
+  translation: teacher
+  pos: noun
+  usage: Учитель добирає приклади відповідно до рівня групи.
+- lemma: учителька
+  translation: female teacher
+  pos: noun
+  usage: Учителька пояснила різницю між -к- і -иц-.
+- lemma: редактор
+  translation: editor
+  pos: noun
+  usage: Редактор перевірив стиль оголошення.
+- lemma: редакторка
+  translation: female editor
+  pos: noun
+  usage: Редакторка виправила кальковану назву професії.
+- lemma: програміст
+  translation: programmer
+  pos: noun
+  usage: Програміст підтримує внутрішній сервіс.
+- lemma: юрист
+  translation: lawyer
+  pos: noun
+  usage: Юрист пояснив правовий статус документа.
+- lemma: менеджер
+  translation: manager
+  pos: noun
+  usage: Менеджер із комунікацій координує зустрічі.
+- lemma: консультант
+  translation: consultant
+  pos: noun
+  usage: Консультант відповідає на запити клієнтів.
+- lemma: студент
+  translation: student
+  pos: noun
+  usage: Студент аналізує суфікси в тексті.
+- lemma: студентка
+  translation: female student
+  pos: noun
+  usage: Студентка виписала назви мешканців міст.
+- lemma: фемінітив
+  translation: feminine personal noun
+  pos: noun
+  usage: Фемінітив робить видимою професійну роль жінки.
+- lemma: продавчиня
+  translation: female salesperson
+  pos: noun
+  usage: Продавчиня порадила нове видання словника.
+- lemma: філологиня
+  translation: female philologist
+  pos: noun
+  usage: Філологиня перевірила наголос у професійній назві.
+- lemma: очільниця
+  translation: female head; female leader
+  pos: noun
+  usage: Очільниця департаменту підписала наказ.
+- lemma: однодумець
+  translation: like-minded person
+  pos: noun
+  usage: Однодумець підтримав пропозицію на зборах.
+- lemma: сучасник
+  translation: contemporary
+  pos: noun
+  usage: Сучасник автора інакше сприймав цей текст.
+- lemma: перехожий
+  translation: passer-by
+  pos: noun
+  usage: Перехожий звернув увагу на оголошення.
+- lemma: брехун
+  translation: liar
+  pos: noun
+  usage: Слово брехун має різко негативне забарвлення.
+- lemma: бігун
+  translation: runner
+  pos: noun
+  usage: Бігун готується до благодійного старту.
+- lemma: співак
+  translation: singer
+  pos: noun
+  usage: Співак працює з народними піснями.
+- lemma: чужак
+  translation: outsider
+  pos: noun
+  usage: У повісті герой почувається чужаком у місті.
+- lemma: киянин
+  translation: Kyiv resident
+  pos: noun
+  usage: Киянин розповів про зміни в транспорті.
+- lemma: киянка
+  translation: female Kyiv resident
+  pos: noun
+  usage: Киянка подала електронну петицію.
+- lemma: львів'янин
+  translation: Lviv resident
+  pos: noun
+  usage: Львів'янин пояснив місцеву традицію.
+- lemma: полтавець
+  translation: Poltava resident
+  pos: noun
+  usage: Полтавець запросив гостей на фестиваль.
+- lemma: одеситка
+  translation: female Odesa resident
+  pos: noun
+  usage: Одеситка описала життя біля моря.
