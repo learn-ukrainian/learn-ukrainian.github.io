@@ -1,0 +1,196 @@
+- lemma: підрядність
+  translation: subordination
+  pos: noun
+  usage: Підрядність показує залежність однієї частини речення від іншої.
+- lemma: підрядний сполучник
+  translation: subordinating conjunction
+  pos: phrase
+  usage: Підрядний сполучник вводить залежну частину складного речення.
+- lemma: сполучне слово
+  translation: conjunctive word; relative connector
+  pos: phrase
+  usage: Сполучне слово поєднує частини і водночас є членом підрядного речення.
+- lemma: головна частина
+  translation: main clause
+  pos: phrase
+  usage: Головна частина ставить питання до підрядної.
+- lemma: підрядна частина
+  translation: subordinate clause
+  pos: phrase
+  usage: Підрядна частина пояснює головну або окреме слово в ній.
+- lemma: семантична група
+  translation: semantic group
+  pos: phrase
+  usage: Семантична група допомагає розрізняти причину, умову, мету і допуст.
+- lemma: причина
+  translation: cause; reason
+  pos: noun
+  usage: Причина пояснює, чому сталася дія.
+- lemma: умова
+  translation: condition
+  pos: noun
+  usage: Умова показує, за якої обставини дія можлива.
+- lemma: допуст
+  translation: concession
+  pos: noun
+  usage: Допуст називає перешкоду, попри яку дія відбувається.
+- lemma: наслідок
+  translation: consequence
+  pos: noun
+  usage: Наслідок показує результат попередньої дії або обставини.
+- lemma: мета
+  translation: purpose
+  pos: noun
+  usage: Мета пояснює, для чого виконано дію.
+- lemma: часова підрядність
+  translation: temporal subordination
+  pos: phrase
+  usage: Часова підрядність відповідає на питання коли або доки.
+- lemma: з'ясувальна підрядність
+  translation: content-clause subordination
+  pos: phrase
+  usage: З'ясувальна підрядність розкриває зміст думки, мовлення або знання.
+- lemma: означальна підрядність
+  translation: relative subordination
+  pos: phrase
+  usage: Означальна підрядність уточнює іменник у головній частині.
+- lemma: складений сполучник
+  translation: compound conjunction
+  pos: phrase
+  usage: Складений сполучник складається з кількох слів і вводить підрядну частину.
+- lemma: розчленування
+  translation: splitting; segmentation
+  pos: noun
+  usage: Розчленування складеного сполучника залежить від наголосу і структури.
+- lemma: нерозчленований
+  translation: unsplit; integral
+  pos: adj
+  usage: Нерозчленований сполучник працює як один цілісний засіб зв'язку.
+- lemma: логічний наголос
+  translation: logical stress
+  pos: phrase
+  usage: Логічний наголос може виправдати кому всередині складеної конструкції.
+- lemma: синтаксична омонімія
+  translation: syntactic homonymy
+  pos: phrase
+  usage: Синтаксична омонімія виникає, коли одна форма має різні граматичні ролі.
+- lemma: синонімія
+  translation: synonymy
+  pos: noun
+  usage: Синонімія підрядних засобів не означає повної взаємозамінності.
+- lemma: аргументація
+  translation: argumentation
+  pos: noun
+  usage: Аргументація потребує точних причинних і допустових зв'язків.
+- lemma: вкладеність
+  translation: embedding
+  pos: noun
+  usage: Вкладеність допомагає пояснити пунктуацію при кількох підрядних.
+- lemma: однорідна підрядність
+  translation: homogeneous subordination
+  pos: phrase
+  usage: Однорідна підрядність поєднує підрядні частини з однаковою роллю.
+- lemma: послідовна підрядність
+  translation: sequential subordination
+  pos: phrase
+  usage: Послідовна підрядність виникає, коли одна підрядна вкладена в іншу.
+- lemma: неоднорідна підрядність
+  translation: non-homogeneous subordination
+  pos: phrase
+  usage: Неоднорідна підрядність пояснює різні елементи або різні обставини.
+- lemma: збіг сполучників
+  translation: conjunction cluster
+  pos: phrase
+  usage: Збіг сполучників потребує аналізу вкладеності перед постановкою коми.
+- lemma: тому що
+  translation: because
+  pos: conj
+  usage: Тому що нейтрально вводить причину.
+- lemma: через те що
+  translation: because; due to the fact that
+  pos: conj
+  usage: Через те що підкреслює причинову обставину.
+- lemma: завдяки тому що
+  translation: thanks to the fact that
+  pos: conj
+  usage: Завдяки тому що називає сприятливу причину.
+- lemma: оскільки
+  translation: since; because
+  pos: conj
+  usage: Оскільки часто звучить книжніше за тому що.
+- lemma: якщо
+  translation: if
+  pos: conj
+  usage: Якщо вводить реальну або можливу умову.
+- lemma: якби
+  translation: if; if only
+  pos: conj
+  usage: Якби вводить умовну ситуацію і пишеться разом.
+- lemma: аби
+  translation: so that; if only
+  pos: conj
+  usage: Аби може виражати мету або умову залежно від контексту.
+- lemma: щоб
+  translation: so that; in order to
+  pos: conj
+  usage: Щоб вводить мету або бажаний результат.
+- lemma: що б
+  translation: whatever; what would
+  pos: phrase
+  usage: Що б пишеться окремо, коли що є займенником, а б часткою.
+- lemma: хоч
+  translation: although; even though
+  pos: conj
+  usage: Хоч коротко вводить допустову підрядну частину.
+- lemma: хоча
+  translation: although
+  pos: conj
+  usage: Хоча нейтрально оформлює допуст у письмі.
+- lemma: незважаючи на те що
+  translation: despite the fact that
+  pos: conj
+  usage: Незважаючи на те що формально підкреслює дію попри перешкоду.
+- lemma: дарма що
+  translation: even though
+  pos: conj
+  usage: Дарма що має виразний допустовий відтінок.
+- lemma: для того щоб
+  translation: in order to
+  pos: conj
+  usage: Для того щоб вводить мету і може розчленовуватися після слова того.
+- lemma: у міру того як
+  translation: as; in proportion as
+  pos: conj
+  usage: У міру того як описує поступовий паралельний розвиток двох процесів.
+- lemma: тоді як
+  translation: whereas
+  pos: conj
+  usage: Тоді як часто природно виражає зіставлення.
+- lemma: який
+  translation: which; that
+  pos: pron
+  usage: Який як сполучне слово узгоджується з іменником і має відмінок.
+- lemma: котрий
+  translation: which
+  pos: pron
+  usage: Котрий може бути сполучним словом в означальній підрядній частині.
+- lemma: чий
+  translation: whose
+  pos: pron
+  usage: Чий як сполучне слово показує належність у підрядній частині.
+- lemma: де
+  translation: where
+  pos: adv
+  usage: Де може бути сполучним словом місця.
+- lemma: коли
+  translation: when; if
+  pos: adv
+  usage: Коли може мати часове або умовне значення.
+- lemma: реєстр
+  translation: register
+  pos: noun
+  usage: Реєстр визначає, чи пасує бо, оскільки або незважаючи на те що.
+- lemma: калька
+  translation: calque
+  pos: noun
+  usage: Калька може зробити український підрядний зв'язок неприродним.
