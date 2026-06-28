@@ -159,6 +159,8 @@ jobs:
               - 'scripts/build/generate_lesson_schema.py'
             atlas:
               - '.github/workflows/ci.yml'
+              - 'scripts/audit/audit_atlas_poc_richness.py'
+              - 'scripts/audit/check_atlas_manifest_enrichment.py'
               - 'scripts/lexicon/*.py'
               - 'curriculum/l2-uk-en/**/vocabulary.yaml'
               - 'site/src/data/lexicon-manifest.json'
@@ -191,16 +193,29 @@ jobs:
           key: lexicon-manifest-${{ hashFiles('site/src/data/lexicon-manifest.pointer.json') }}
 
       - name: Install YAML parser
-        run: pip install PyYAML
+        run: |
+          python -m venv .venv
+          .venv/bin/python -m pip install --upgrade pip
+          .venv/bin/python -m pip install PyYAML
 
       - name: Check DB-free Atlas manifest freshness
-        run: python scripts/lexicon/check_manifest_freshness.py
+        run: .venv/bin/python scripts/lexicon/check_manifest_freshness.py
 
       # Root-cause guard for the #3631 empty-atlas regression: a manifest committed
       # without enrichment (enrichment_generated False / ~0 enriched entries) renders
       # an empty Atlas while the fingerprint/freshness gate above stays green. Blocks it.
       - name: Block thin/un-enriched Atlas manifest (#3658)
-        run: python scripts/audit/check_atlas_manifest_enrichment.py
+        run: .venv/bin/python scripts/audit/check_atlas_manifest_enrichment.py
+
+      # Learner-facing static Atlas gate (#3930): no missing English anchors in
+      # search suggestions, and the current thin-page count must not regress
+      # above the release-asset baseline until #3931/#3933/#3934 reduce it.
+      - name: Gate Atlas POC richness and learner anchors (#3930)
+        run: |
+          .venv/bin/python scripts/audit/audit_atlas_poc_richness.py \
+            --max-search-no-visible-gloss 0 \
+            --max-old-gate-no-english-anchor 0 \
+            --max-poc-thin-pages 786
 
       # Diff-scoped + advisory (#3150): only flags modules whose vocabulary.yaml changed
       # in THIS PR (no cross-PR coupling on the merge-train), and never blocks merge — a
@@ -210,7 +225,7 @@ jobs:
         continue-on-error: true
         run: |
           git fetch --no-tags --quiet origin main || true
-          python scripts/lexicon/check_manifest_vocabulary_coverage.py --changed-only --base origin/main
+          .venv/bin/python scripts/lexicon/check_manifest_vocabulary_coverage.py --changed-only --base origin/main
 
   lint:
     name: Lint (ruff)
