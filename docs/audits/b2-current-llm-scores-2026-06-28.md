@@ -56,8 +56,8 @@ B2 M54 `aspect-nuances-secondary-imperfectivization`,9/10,B+,Yes,Strong aspect n
 B2 M55 `aspect-nuances-imperative-infinitive`,9/10,B+,Yes,Strong imperative/infinitive aspect module 10 workbook activities, 40 vocabulary items, external review pass. Score held at 9 conservative post-build polish risk and minor deterministic advisories.
 B2 M56 `pluperfect-tense`,9/10,B+,Yes,Strong pluperfect module 11 workbook activities, 40 vocabulary items, external review pass. Score held at 9 dense tense/register coverage and non-blocking deterministic style/UA-GEC advisories.
 B2 M57 `conditional-mood-particles`,9/10,B+,Yes,Strong conditional mood particles module 11 workbook activities, 40 vocabulary items, external review pass. Score held at 9 dense mood/particle coverage and minor deterministic advisories.
-B2 M58 `numeral-declension-time-dates`,9/10,B+,Yes,Strong numeral declension time/dates module 11 workbook activities, 40 vocabulary items, Agy/Gemini 3.1 Pro High re-review pass. Score held at 9 conservative post-fix human-polish reserve.
-B2 M59 `numeral-declension-compound-numbers`,9/10,B+,Yes,Strong compound-number declension module 10 workbook activities, 32 vocabulary items, external review pass. Score held at 9 dense numeral paradigm coverage conservative post-build polish reserve.
+B2 M58 `numeral-declension-time-dates`,9/10,B+,Yes,Repaired in PR #3988 with table-first numeral scaffolding, 5 inline and 6 workbook activities, 40 vocabulary items, rendered Markdown smoke pass, and Hermes/DeepSeek v4 Pro PASS review. Score remains 9 for dense time/date numeral scope and human-polish reserve.
+B2 M59 `numeral-declension-compound-numbers`,9/10,B+,Yes,Repaired in PR #3988 with table-first compound-number scaffolding, 5 inline and 5 workbook activities, 32 vocabulary items, corrected normative instrumental hundreds treatment, rendered Markdown smoke pass, and Hermes/DeepSeek v4 Pro PASS review. Score remains 9 for dense numeral paradigm scope and human-polish reserve.
 B2 M60 `word-formation-person-suffixes`,9/10,B+,Yes,Strong person-suffix word-formation module 13 workbook activities, 49 vocabulary items, external review pass. Score held at 9 dense suffix/feminitive/register coverage non-blocking deterministic advisories.
 B2 M61 `word-formation-abstract-nouns`,9/10,B+,Yes,Strong abstract-noun word-formation module 13 workbook activities, 44 vocabulary items, Agy/Gemini 3.1 Pro High review pass. Score held at 9 compact section-balance reserve and dense nominalization scope.
 B2 M62 `word-formation-place-object-names`,9/10,B+,Yes,Strong place/object-name word-formation module 13 workbook activities, 45 vocabulary items, Agy/Gemini 3.1 Pro High blocker follow-up review pass. Score held at 9 after model-answer/task-density fixes and conservative human-polish reserve.
@@ -88,6 +88,7 @@ Durable Report,Scope
 `docs/audits/b2-m54-m58-llm-score-report-2026-06-28.md`,M54-M58
 `docs/audits/b2-m59-m63-llm-score-report-2026-06-28.md`,M59-M63
 `docs/audits/b2-m64-m68-llm-score-report-2026-06-28.md`,M64-M68
+`docs/audits/b2-m58-m59-repair-llm-score-update-2026-06-29.md`,M58-M59 repair
 
 Module,Raw Word Count,Activities,Vocabulary
 M03 `b2-impersonal-passive`,4608,7 workbook / 4 inline,35
@@ -145,8 +146,8 @@ M54 `aspect-nuances-secondary-imperfectivization`,4973,10 workbook / 0 inline,40
 M55 `aspect-nuances-imperative-infinitive`,4317,10 workbook / 0 inline,40
 M56 `pluperfect-tense`,4636,11 workbook / 0 inline,40
 M57 `conditional-mood-particles`,4306,11 workbook / 0 inline,40
-M58 `numeral-declension-time-dates`,4246,11 workbook / 0 inline,40
-M59 `numeral-declension-compound-numbers`,4336,10 workbook / 0 inline,32
+M58 `numeral-declension-time-dates`,4718,6 workbook / 5 inline,40
+M59 `numeral-declension-compound-numbers`,4547,5 workbook / 5 inline,32
 M60 `word-formation-person-suffixes`,4362,13 workbook / 0 inline,49
 M61 `word-formation-abstract-nouns`,4071,13 workbook / 0 inline,44
 M62 `word-formation-place-object-names`,4264,13 workbook / 0 inline,45
