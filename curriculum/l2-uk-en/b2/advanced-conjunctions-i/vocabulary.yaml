@@ -1,0 +1,164 @@
+- lemma: сурядність
+  translation: coordination
+  pos: noun
+  usage: Сурядність поєднує рівноправні частини речення.
+- lemma: сурядний сполучник
+  translation: coordinating conjunction
+  pos: phrase
+  usage: Сурядний сполучник показує логіку між рівноправними елементами.
+- lemma: єднальний
+  translation: additive; copulative
+  pos: adj
+  usage: Єднальний сполучник додає другий елемент до першого.
+- lemma: протиставний
+  translation: adversative
+  pos: adj
+  usage: Протиставний зв'язок вводить обмеження або контраргумент.
+- lemma: розділовий
+  translation: disjunctive
+  pos: adj
+  usage: Розділовий сполучник оформлює вибір або чергування.
+- lemma: зіставлення
+  translation: comparison; contrastive juxtaposition
+  pos: noun
+  usage: Зіставлення показує дві ролі без обов'язкового конфлікту.
+- lemma: протиставлення
+  translation: opposition
+  pos: noun
+  usage: Протиставлення змінює напрям аргументу.
+- lemma: альтернатива
+  translation: alternative
+  pos: noun
+  usage: Альтернатива потребує чіткої граматичної рамки.
+- lemma: вибір
+  translation: choice
+  pos: noun
+  usage: Вибір між діями можна передати парою або... або.
+- lemma: чергування
+  translation: alternation
+  pos: noun
+  usage: Чергування подій часто передають розділові сполучники.
+- lemma: градація
+  translation: gradation
+  pos: noun
+  usage: Градація посилює другу частину вислову.
+- lemma: парний сполучник
+  translation: paired conjunction
+  pos: phrase
+  usage: Парний сполучник відкриває і закриває симетричну конструкцію.
+- lemma: повторюваний сполучник
+  translation: repeated conjunction
+  pos: phrase
+  usage: Повторюваний сполучник вимагає коми перед другим компонентом.
+- lemma: симетрія
+  translation: symmetry
+  pos: noun
+  usage: Симетрія робить частини парної конструкції рівноважними.
+- lemma: паралельність
+  translation: parallelism
+  pos: noun
+  usage: Паралельність потрібна в конструкції не тільки... а й.
+- lemma: однорідні члени
+  translation: homogeneous sentence parts
+  pos: phrase
+  usage: Однорідні члени залежать від одного слова і відповідають на подібне питання.
+- lemma: складносурядне речення
+  translation: compound sentence
+  pos: phrase
+  usage: Складносурядне речення має дві або більше рівноправні предикативні частини.
+- lemma: предикативна частина
+  translation: predicative clause
+  pos: phrase
+  usage: Предикативна частина має власну граматичну основу.
+- lemma: граматична основа
+  translation: grammatical base
+  pos: phrase
+  usage: Граматична основа допомагає вирішити, чи потрібна кома перед і.
+- lemma: спільний член речення
+  translation: shared sentence element
+  pos: phrase
+  usage: Спільний член речення може впливати на кому між частинами.
+- lemma: пунктограма
+  translation: punctuation pattern
+  pos: noun
+  usage: Пунктограма пояснює, чому саме тут потрібна кома.
+- lemma: кома
+  translation: comma
+  pos: noun
+  usage: Кома показує межу між частинами або компонентами повтору.
+- lemma: крапка з комою
+  translation: semicolon
+  pos: phrase
+  usage: Крапка з комою розділяє довгі частини з внутрішніми комами.
+- lemma: тире
+  translation: dash
+  pos: noun
+  usage: Тире може підкреслити різкий наслідок у складносурядному реченні.
+- lemma: семантична пауза
+  translation: semantic pause
+  pos: phrase
+  usage: Семантична пауза може бути сильнішою за звичайну кому.
+- lemma: компенсація
+  translation: compensation
+  pos: noun
+  usage: Зате часто вводить компенсацію після мінуса.
+- lemma: контраргумент
+  translation: counterargument
+  pos: noun
+  usage: Проте вводить контраргумент у книжному або аналітичному стилі.
+- lemma: обмеження
+  translation: limitation
+  pos: noun
+  usage: Але може показувати обмеження попередньої думки.
+- lemma: додавання
+  translation: addition
+  pos: noun
+  usage: І часто передає просте додавання.
+- lemma: милозвучність
+  translation: euphony
+  pos: noun
+  usage: Милозвучність впливає на вибір і або й.
+- lemma: полісиндетон
+  translation: polysyndeton
+  pos: noun
+  usage: Полісиндетон навмисно повторює сполучники для ритму.
+- lemma: асиндетон
+  translation: asyndeton
+  pos: noun
+  usage: Асиндетон пришвидшує текст завдяки пропуску сполучників.
+- lemma: риторичний ефект
+  translation: rhetorical effect
+  pos: phrase
+  usage: Повтор і... і може створити риторичний ефект.
+- lemma: редакторська перевірка
+  translation: editorial check
+  pos: phrase
+  usage: Редакторська перевірка починається з пошуку граматичних основ.
+- lemma: логіка аргументу
+  translation: logic of an argument
+  pos: phrase
+  usage: Сурядні сполучники мають підтримувати логіку аргументу.
+- lemma: реєстр
+  translation: register
+  pos: noun
+  usage: Реєстр визначає, чи доречна емоційна повторюваність.
+- lemma: книжний стиль
+  translation: formal written style
+  pos: phrase
+  usage: Проте частіше звучить у книжному стилі.
+- lemma: публіцистичний стиль
+  translation: journalistic style
+  pos: phrase
+  usage: Публіцистичний стиль може активніше використовувати повтори.
+- lemma: калька
+  translation: calque
+  pos: noun
+  usage: Калька з англійської може порушити українську сурядну конструкцію.
+- lemma: взаємовиключний
+  translation: mutually exclusive
+  pos: adj
+  usage: Взаємовиключний вибір часто оформлюють парою або... або.
+- lemma: доречність
+  translation: appropriateness
+  pos: noun
+  usage: Доречність сполучника залежить від змісту й жанру.
