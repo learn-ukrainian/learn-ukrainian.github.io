@@ -30,10 +30,10 @@
   translation: refrain
   pos: noun
   usage: Приспів допомагає гуртовому голосу швидко підхопити пісню.
-- lemma: криміналізувальний ярлик
+- lemma: ворожий ярлик
   translation: criminalizing label
   pos: noun phrase
-  usage: Радянський криміналізувальний ярлик треба називати як ворожу рамку, не як нейтральний опис.
+  usage: Радянський ярлик криміналізації треба називати як ворожу рамку, не як нейтральний опис.
 - lemma: меморіальна культура
   translation: memorial culture
   pos: noun phrase
