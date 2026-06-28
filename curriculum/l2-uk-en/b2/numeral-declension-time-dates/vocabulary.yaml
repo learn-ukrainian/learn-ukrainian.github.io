@@ -1,0 +1,183 @@
+- lemma: числівник
+  translation: numeral
+  pos: noun
+  gender: m
+  usage: Числівник може називати кількість або порядок.
+- lemma: відмінювання
+  translation: declension
+  pos: noun
+  gender: n
+  usage: Відмінювання числівників важливе для дат.
+- lemma: порядковий
+  translation: ordinal
+  pos: adj
+  usage: Порядковий числівник у даті має родовий відмінок.
+- lemma: кількісний
+  translation: cardinal
+  pos: adj
+  usage: Кількісний числівник називає кількість хвилин.
+- lemma: чверть
+  translation: quarter
+  pos: noun
+  gender: f
+  usage: За чверть десята означає 9:45.
+- lemma: половина
+  translation: half
+  pos: noun
+  gender: f
+  usage: Половина години в розмові часто звучить як пів на.
+- lemma: століття
+  translation: century
+  pos: noun
+  gender: n
+  usage: У двадцять першому столітті змінилися комунікаційні звички.
+- lemma: дата
+  translation: date
+  pos: noun
+  gender: f
+  usage: Дата вимагає родового відмінка дня і місяця.
+- lemma: рік
+  translation: year
+  pos: noun
+  gender: m
+  usage: У назві року змінюється останній компонент.
+- lemma: місяць
+  translation: month
+  pos: noun
+  gender: m
+  usage: Назва місяця в даті стоїть у родовому відмінку.
+- lemma: година
+  translation: hour
+  pos: noun
+  gender: f
+  usage: О котрій годині починається лекція?
+- lemma: хвилина
+  translation: minute
+  pos: noun
+  gender: f
+  usage: П'ятнадцять хвилин до десятої означає 9:45.
+- lemma: розклад
+  translation: schedule
+  pos: noun
+  gender: m
+  usage: У розкладі зручно писати офіційний час.
+- lemma: точний
+  translation: exact
+  pos: adj
+  usage: Точний час у квитку читається офіційно.
+- lemma: приблизний
+  translation: approximate
+  pos: adj
+  usage: Приблизний час можна подати словом близько.
+- lemma: періодичність
+  translation: periodicity
+  pos: noun
+  gender: f
+  usage: Періодичність відповідає на питання як часто.
+- lemma: інтервал
+  translation: interval
+  pos: noun
+  gender: m
+  usage: Інтервал позначають конструкцією з... до....
+- lemma: щодня
+  translation: daily
+  pos: adv
+  usage: Я повторюю лексику щодня.
+- lemma: щотижня
+  translation: weekly
+  pos: adv
+  usage: Клуб зустрічається щотижня.
+- lemma: щомісяця
+  translation: monthly
+  pos: adv
+  usage: Звіти подають щомісяця.
+- lemma: щороку
+  translation: yearly
+  pos: adv
+  usage: Фестиваль проводять щороку.
+- lemma: щодва тижні
+  translation: every two weeks
+  pos: phrase
+  usage: Команда чергує щодва тижні.
+- lemma: раз на тиждень
+  translation: once a week
+  pos: phrase
+  usage: Ми зустрічаємося раз на тиждень.
+- lemma: двічі на місяць
+  translation: twice a month
+  pos: phrase
+  usage: Консультації відбуваються двічі на місяць.
+- lemma: з... до...
+  translation: from... to...
+  pos: phrase
+  usage: Лекція триває з дев'ятої до одинадцятої.
+- lemma: від... до...
+  translation: from... to...
+  pos: phrase
+  usage: Реєстрація відкрита від першого до п'ятого червня.
+- lemma: з... по...
+  translation: from... through...
+  pos: phrase
+  usage: Виставка триватиме з першого по п'ятнадцяте липня.
+- lemma: близько
+  translation: around, about
+  pos: prep
+  usage: Зустрінемося близько сьомої.
+- lemma: приблизно
+  translation: approximately
+  pos: adv
+  usage: Подія почнеться приблизно о восьмій.
+- lemma: десь
+  translation: somewhere, around
+  pos: adv
+  usage: Десь о сьомій звучить розмовно.
+- lemma: відбуватися
+  translation: to take place
+  pos: verb
+  aspect: imperfective
+  usage: Зустріч відбуватиметься щоп'ятниці.
+- lemma: тривати
+  translation: to last
+  pos: verb
+  aspect: imperfective
+  usage: Семінар триватиме з десятої до дванадцятої.
+- lemma: призначати
+  translation: to schedule
+  pos: verb
+  aspect: imperfective
+  usage: Комісія призначає засідання на п'яте червня.
+- lemma: святкувати
+  translation: to celebrate
+  pos: verb
+  aspect: imperfective
+  usage: День міста святкують щороку.
+- lemma: планувати
+  translation: to plan
+  pos: verb
+  aspect: imperfective
+  usage: Ми плануємо зустріч на двадцять восьме червня.
+- lemma: уточнювати
+  translation: to clarify
+  pos: verb
+  aspect: imperfective
+  usage: Адміністратор уточнює час прийому.
+- lemma: запізнюватися
+  translation: to be late
+  pos: verb
+  aspect: imperfective
+  usage: Потяг запізнюється на десять хвилин.
+- lemma: встигати
+  translation: to manage in time
+  pos: verb
+  aspect: imperfective
+  usage: Ми встигаємо на зустріч о пів на четверту.
+- lemma: реєстрація
+  translation: registration
+  pos: noun
+  gender: f
+  usage: Реєстрація триватиме з першого до десятого вересня.
+- lemma: оголошення
+  translation: announcement
+  pos: noun
+  gender: n
+  usage: Оголошення має точну дату й час.
