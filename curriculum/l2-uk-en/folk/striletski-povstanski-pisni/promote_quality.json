@@ -1,37 +1,37 @@
 {
-  "assembled_mdx_sha256": "1faee4098ec2897461964831f9c987facdc56e4181bfc4b61b793e825aea569f",
+  "assembled_mdx_sha256": "332c922b6cf060cb5f1c0f73d242f28745559ef1d5b5d24388213da663ae53cc",
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "823a6a7462c4644759ae4fdbb98fe9c11f09ee22ce9d935c828cf23c3bbd8b58",
+    "digest": "afa166acb02d8becfb302c130a0c1e8cc0cbc393588fee311f0804afe3cb9472",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/striletski-povstanski-pisni.yaml",
-        "sha256": "d03bc509d3fdf4ddfef32edd345577f32924ef04a1016c7f60fbb6ef5bc882c6"
+        "sha256": "ee37f146854400a59606e6cf6e66cdbc87e5f15178dd2ffff0e528603a9c6c34"
       },
       {
         "path": "curriculum/l2-uk-en/folk/striletski-povstanski-pisni/module.md",
-        "sha256": "6b91217c2a71f81c0b36ca8070b1c765d821119861935fb35f99e38628d3c988"
+        "sha256": "07210cb5d1da370dad25053d0802a9a36453de1611d8dc29a0407bffdeee17c4"
       },
       {
         "path": "curriculum/l2-uk-en/folk/striletski-povstanski-pisni/activities.yaml",
-        "sha256": "61a9932628ae85ef563be0ce012e522b37eee6dddb5da67f920a7255677c10a2"
+        "sha256": "c78ae290290dea5250f03fd8f77d6ca51c64a50cd887d61f6ca65bc5238e9217"
       },
       {
         "path": "curriculum/l2-uk-en/folk/striletski-povstanski-pisni/vocabulary.yaml",
-        "sha256": "96bf1ceb0c5b906e10abdabf20cf90926b912e469be0ee563e3ce3eafba6dbc5"
+        "sha256": "f270ec30b74a2d1535e3097bdc064afe26d6951d65bfe6e6c161136f80444206"
       },
       {
         "path": "curriculum/l2-uk-en/folk/striletski-povstanski-pisni/resources.yaml",
-        "sha256": "93cfd444ebd360bcafee652df1a90bc35e8f64b9265d26734cd5b0991c45e032"
+        "sha256": "bc365ebbe6469a55e2904d3c566eb29720feaab1aa946e903ec8fb6eaa9662ee"
       }
     ]
   },
   "evidence": {
-    "framing": "Agy/Gemini 3.1 Pro High PASS: twentieth-century resistance songs are framed through a decolonial lens; Soviet criminalization and Russian-imperial erasure rejected; USS and UPA layers kept distinct; no uncritical hagiography.",
-    "note": "Agy/Gemini 3.1 Pro High: academic, respectful folklore-seminar tone; natural prose without repetition; elegant analysis of poetic devices, elegiac repetition, and variant circulation.",
-    "pedagogy": "Agy/Gemini 3.1 Pro High: strong CBI alignment; source -> genre layer -> poetic evidence -> limits of inference pattern; activities teach variant comparison, motif analysis, disciplined performance, and research ethics.",
-    "quote_integrity": "Agy/Gemini 3.1 Pro High: hosted readings and references map cleanly to public-domain Ukrlib and public reference pages without internal corpus IDs; textual citations are clean and accurate."
+    "framing": "Agy/Gemini 3.1 Pro High PASS: twentieth-century resistance songs framed through decolonial lens; Soviet criminalization Russian-imperial erasure rejected; USS UPA layers kept distinct; no uncritical hagiography.",
+    "note": "Agy/Gemini 3.1 Pro High: academic, respectful folklore-seminar tone; natural prose without repetition; elegant analysis poetic devices, elegiac repetition, variant circulation.",
+    "pedagogy": "Agy/Gemini 3.1 Pro High: strong CBI alignment; source -> genre layer -> poetic evidence -> limits inference pattern; activities teach variant comparison, motif analysis, disciplined performance, research ethics.",
+    "quote_integrity": "Agy/Gemini 3.1 Pro High: public song texts and references map cleanly to public-domain Ukrlib and public reference pages; textual citations are clean and accurate."
   },
   "floors": {
     "beauty": 8.5,

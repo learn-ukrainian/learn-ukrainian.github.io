@@ -23,14 +23,14 @@ content_outline:
   words: 980
   points:
   - Separate the Sich Riflemen / Ukrainian Sich Riflemen layer of 1914-1920 from the insurgent / UPA and underground layer of the 1940s-1950s.
-  - Use public readings from Ukrlib and canonical school/Osvita/Wikipedia pages; learner citations must stay on public URLs.
+  - Use public Ukrlib song texts and canonical school/Osvita/Wikipedia context pages; learner citations must stay on public URLs.
   - Explain authorship and anonymity without either erasing known authors or denying folklorization.
 - section: Поетика, символіка і виконання
   words: 1050
   points:
   - Analyze stanza, refrain, march pulse, elegiac repetition, communal pickup, and variant circulation.
   - Compare kalyna, Makivka, the fallen rifleman, the prison/forest underground, and the grave marked by national memory.
-  - Include primary-reading blocks for every hosted reading.
+  - Include primary-reading blocks for every taught song text.
 - section: Деколонізаційна рамка
   words: 700
   points:
@@ -40,7 +40,7 @@ content_outline:
   words: 550
   points:
   - 'Return to the central skill: classify the source situation before interpreting the song.'
-  - Give learners a seminar answer pattern that cites public source, genre layer, poetic evidence, and limits of inference.
+  - Give learners a seminar answer pattern that cites a public URL, genre layer, poetic evidence, and limits of inference.
 focus: Twentieth-century Ukrainian resistance songs as folklorized public memory.
 level: FOLK
 module: folk-015
@@ -48,7 +48,7 @@ objectives:
 - Розрізняти стрілецький і повстанський шари української пісенної пам'яті без змішування УСС, УГА, ОУН, УПА та повоєнного підпілля.
 - Пояснювати, як авторська або анонімна пісня входить у фольклорний обіг через співаник, школу, родинну пам'ять і публічне виконання.
 - Аналізувати строфу, приспів, маршовий імпульс, реквіємну повторність і мотиви калини, дороги, могили, лісу та гуртового голосу.
-- Відкидати радянські криміналізувальні ярлики й водночас називати межі джерела, авторства, варіанта і сучасної пам'яті.
+- Відкидати радянські ворожі ярлики криміналізації й водночас називати межі джерела, авторства, варіанта і сучасної пам'яті.
 pedagogy: CBI
 persona:
   role: Модератор фольклористичного семінару з увагою до джерела, виконання і пам'яті
@@ -129,7 +129,7 @@ slug: striletski-povstanski-pisni
 status: locked
 subtitle: Sich Riflemen and Insurgent Songs
 title: Стрілецькі та повстанські пісні
-version: 0.2
+version: 0.3
 vocabulary_hints:
 - word: стрілецька пісня
   pos: ж.
