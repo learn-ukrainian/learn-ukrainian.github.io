@@ -49,10 +49,13 @@ B2 M47 `genitive-advanced`,9/10,B+,Yes,Strong advanced genitive module 12 workbo
 B2 M48 `dative-advanced`,9/10,B+,Yes,Strong advanced dative module 12 workbook activities, 41 vocabulary items, independent review pass. Score held at 9 dense dative semantics and register coverage human-polish reserve.
 B2 M49 `instrumental-advanced`,9/10,B+,Yes,Strong advanced instrumental module 10 workbook activities, 31 vocabulary items, final Agy/Claude Opus 4.6 review pass. Score held at 9 dense instrumental semantics non-blocking polish risk.
 B2 M50 `questions-deliberative-rhetorical`,9/10,B+,Yes,Strong deliberative rhetorical embedded-questions module 11 workbook activities, 31 vocabulary items, final Agy/Claude Opus 4.6 review pass. Score held at 9 dense punctuation/register coverage non-blocking polish risk.
+B2 M51 `advanced-case-semantics`,9/10,B+,Yes,Strong advanced case-semantics module 10 workbook activities, 49 vocabulary items, final Agy/Claude Opus 4.6 review pass. Score held at 9 dense cross-case semantics non-blocking section-balance warnings.
+B2 M52 `pronoun-system-advanced`,9/10,B+,Yes,Strong advanced pronoun-system module 11 workbook activities, 31 vocabulary items, final Agy/Claude Opus 4.6 blocker fix and PASS re-review. Score held at 9 dense pronoun paradigms non-blocking target-form UA-GEC advisories.
+B2 M53 `checkpoint-cases-morphology`,9/10,B+,Yes,Strong B2.4 cases/morphology checkpoint 5 workbook and 5 inline activities, 30 vocabulary items, final Agy/Claude Opus 4.6 blocker fixes and PASS re-review. Score held at 9 compact synthesis non-blocking section-balance/UA-GEC advisories.
 
 Score,Count,Modules
 10/10,2,"M01, M08"
-9/10,47,"M02-M07, M09-M13, M15-M50"
+9/10,50,"M02-M07, M09-M13, M15-M53"
 8/10,1,M14
 
 Durable Report,Scope
@@ -66,6 +69,7 @@ Durable Report,Scope
 `docs/audits/b2-m42-llm-score-report-2026-06-27.md`,M42
 `docs/audits/b2-m43-m46-llm-score-report-2026-06-27.md`,M43-M46
 `docs/audits/b2-m47-m50-llm-score-report-2026-06-28.md`,M47-M50
+`docs/audits/b2-m51-m53-llm-score-report-2026-06-28.md`,M51-M53
 
 Module,Raw Word Count,Activities,Vocabulary
 M03 `b2-impersonal-passive`,4608,7 workbook / 4 inline,35
@@ -116,6 +120,9 @@ M47 `genitive-advanced`,4537,12 workbook / 0 inline,41
 M48 `dative-advanced`,4418,12 workbook / 0 inline,41
 M49 `instrumental-advanced`,4293,10 workbook / 0 inline,31
 M50 `questions-deliberative-rhetorical`,4246,11 workbook / 0 inline,31
+M51 `advanced-case-semantics`,5124,10 workbook / 0 inline,49
+M52 `pronoun-system-advanced`,4403,11 workbook / 0 inline,31
+M53 `checkpoint-cases-morphology`,4957,5 workbook / 5 inline,30
 
 Score,Pass Count
 10/10,5/5 with no meaningful content polish
@@ -135,3 +142,4 @@ See `docs/audits/b2-m37-m41-llm-score-report-2026-06-27.md`.,M37-M41
 See `docs/audits/b2-m42-llm-score-report-2026-06-27.md`.,M42
 See `docs/audits/b2-m43-m46-llm-score-report-2026-06-27.md`.,M43-M46
 See `docs/audits/b2-m47-m50-llm-score-report-2026-06-28.md`.,M47-M50
+See `docs/audits/b2-m51-m53-llm-score-report-2026-06-28.md`.,M51-M53
