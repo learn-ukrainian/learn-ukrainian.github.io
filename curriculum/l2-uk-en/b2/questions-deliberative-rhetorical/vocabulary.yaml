@@ -1,0 +1,127 @@
+- lemma: питальний
+  translation: interrogative
+  pos: adj
+  usage: Питальне речення може просити інформацію або виконувати стилістичну функцію.
+- lemma: запитання
+  translation: question
+  pos: noun
+  usage: Українською запитання ставлять.
+- lemma: деліберативний
+  translation: deliberative
+  pos: adj
+  usage: Деліберативне запитання виражає роздум або сумнів.
+- lemma: роздумливий
+  translation: reflective
+  pos: adj
+  usage: Роздумливе запитання допомагає зважити варіанти дії.
+- lemma: риторичний
+  translation: rhetorical
+  pos: adj
+  usage: Риторичне запитання підсилює тезу.
+- lemma: вкладений
+  translation: embedded
+  pos: adj
+  usage: Вкладене запитання входить у складне речення.
+- lemma: непрямий
+  translation: indirect
+  pos: adj
+  usage: Непряме запитання може завершуватися крапкою.
+- lemma: підрядний
+  translation: subordinate
+  pos: adj
+  usage: Підрядна частина залежить від головної.
+- lemma: з'ясувальний
+  translation: content, explanatory
+  pos: adj
+  usage: Підрядне з'ясувальне пояснює зміст запитання.
+- lemma: сумнів
+  translation: doubt
+  pos: noun
+  usage: Деліберативне запитання може виражати сумнів.
+- lemma: переконання
+  translation: persuasion, conviction
+  pos: noun
+  usage: Риторичне запитання є засобом переконання.
+- lemma: інтонація
+  translation: intonation
+  pos: noun
+  usage: Інтонація допомагає розрізняти типи запитань в усному мовленні.
+- lemma: хіба
+  translation: surely, is it possible that
+  pos: particle
+  usage: Хіба це не очевидно?
+- lemma: невже
+  translation: really, can it be
+  pos: particle
+  usage: Невже ми знову повторимо цю помилку?
+- lemma: трансформація
+  translation: transformation
+  pos: noun
+  usage: Трансформація прямого запитання у непряме змінює пунктуацію.
+- lemma: формулювання
+  translation: wording, formulation
+  pos: noun
+  usage: Точне формулювання запитання важливе в інтерв'ю.
+- lemma: аргументація
+  translation: argumentation
+  pos: noun
+  usage: Риторичні запитання мають підтримувати аргументацію.
+- lemma: ораторство
+  translation: oratory
+  pos: noun
+  usage: Ораторство використовує запитання для впливу на аудиторію.
+- lemma: іронія
+  translation: irony
+  pos: noun
+  usage: Риторичне запитання може виражати іронію.
+- lemma: стратегія
+  translation: strategy
+  pos: noun
+  usage: Стратегія запитування залежить від жанру.
+- lemma: провокативний
+  translation: provocative
+  pos: adj
+  usage: Провокативне запитання може змусити співрозмовника пояснити позицію.
+- lemma: уточнювати
+  translation: to clarify
+  pos: verb
+  aspect: imperfective
+  usage: Модератор уточнює, чи правильно зрозумів запитання.
+- lemma: з'ясовувати
+  translation: to find out
+  pos: verb
+  aspect: imperfective
+  usage: Комісія з'ясовує, як ухвалили рішення.
+- lemma: цікавити
+  translation: to interest
+  pos: verb
+  aspect: imperfective
+  usage: Мене цікавить, чи готова команда.
+- lemma: ставити запитання
+  translation: to ask a question
+  pos: phrase
+  usage: Учасники ставлять запитання після доповіді.
+- lemma: риторика
+  translation: rhetoric
+  pos: noun
+  usage: Риторика має служити аргументації.
+- lemma: аудиторія
+  translation: audience
+  pos: noun
+  usage: Деліберативне запитання може залучати аудиторію до роздуму.
+- lemma: метакомунікація
+  translation: metacommunication
+  pos: noun
+  usage: Фраза ви ставите слушне запитання є метакомунікацією.
+- lemma: сполучник
+  translation: conjunction
+  pos: noun
+  usage: У вкладеному yes/no запитанні вживаємо сполучник чи.
+- lemma: пунктуація
+  translation: punctuation
+  pos: noun
+  usage: Пунктуація залежить від мети всього речення.
+- lemma: співрозмовник
+  translation: interlocutor
+  pos: noun
+  usage: Ввічливе запитання поважає співрозмовника.
