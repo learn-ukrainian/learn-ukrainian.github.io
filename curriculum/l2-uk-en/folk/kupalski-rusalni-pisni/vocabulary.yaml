@@ -1,7 +1,7 @@
 - lemma: купальська пісня
   translation: Kupala song
   pos: noun phrase
-  usage: Купальська пісня належить до літнього календарного циклу і читається через public text, повтор, адресу й виконавську ситуацію.
+  usage: Купальська пісня належить до літнього календарного циклу і читається через публічний текст, повтор, адресу й виконавську ситуацію.
 - lemma: русальна пісня
   translation: rusalni song
   pos: noun phrase
@@ -65,8 +65,8 @@
 - lemma: межа доказу
   translation: limit of evidence
   pos: noun phrase
-  usage: Межа доказу не дозволяє робити висновок про весь жанр на основі одного public reading.
-- lemma: public reading
-  translation: public reading
+  usage: Межа доказу не дозволяє робити висновок про весь жанр на основі одного публічного тексту.
+- lemma: публічний текст
+  translation: public text
   pos: noun phrase
-  usage: Public reading дає учневі повний текст і відкритий URL для перевірки уривка.
+  usage: Публічний текст дає учневі повний текст і відкрите посилання для перевірки уривка.

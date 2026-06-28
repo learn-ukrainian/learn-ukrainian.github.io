@@ -3,24 +3,24 @@ level: FOLK
 sequence: 5
 slug: kupalski-rusalni-pisni
 title: "Купальські та русальні пісні"
-subtitle: "Summer calendar songs, Green holidays, Ivan Kupala, public source discipline"
-version: 6
+subtitle: "Summer calendar songs, Green holidays, Ivan Kupala, careful source reading"
+version: 7
 status: locked
 phase: base-first
 cefr_min: C1
 word_target: 4200
-focus: "Clean source-first M05 base Ukrainian summer-cycle songs: купальські пісні, русальні пісні, Зелені свята, Трійця, Івана Купала, performance, poetics, public-source readings."
-persona: "C1+ seminar learner reading Ukrainian summer folk songs through public primary texts, school canon, careful framing, source discipline, and respect for Christian-era calendar terms."
+focus: "Clean M05 base Ukrainian summer-cycle songs: купальські пісні, русальні пісні, Зелені свята, Трійця, Івана Купала, performance, poetics, public-text readings."
+persona: "advanced seminar student reading Ukrainian summer folk songs through public primary texts, school canon, careful framing, careful source reading, and respect for Christian-era calendar terms."
 objectives:
   - "Розрізняти купальські й русальні пісні за календарним часом, виконавською ситуацією, пісенними образами, дією і текстовою формою."
   - "Пояснити русальні пісні через Зелені свята, Трійцю, поле, воду, березу, вінок і провід, не перетворюючи русалку на окремий belief entry."
   - "Пояснити купальські пісні через Івана Купала, Купайло, гуртовий спів, воду, вогонь, вінки, хоровод і повтор."
   - "Читати публічний текст через звертання, рефрен, анафору, діалог, рух, реквізит і source limits."
-  - "Працювати тільки з публічними Ukrlib/Osvita/Pidruchnyk-style джерелами у learner-facing матеріалах."
+  - "Працювати тільки з публічними Ukrlib/Osvita/Pidruchnyk-style джерелами у student-facing матеріалах."
 pedagogy:
-  approach: "source-first seminar"
+  approach: "text-before-conclusion seminar"
   notes:
-    - "Begin with a short verified folk-text excerpt or candidate title, then ask what public source can prove."
+    - "Begin with a short verified folk-text excerpt or candidate title, then ask what the public source supports."
     - "Keep Christian-era calendar names visible: Трійця, Зелені свята, Івана Купала."
     - "Treat older seasonal material as poetic motif and performance vocabulary only when a public source supports it."
     - "Do not link dirty legacy readings; Phase B must clean and host public texts in #3903 format before lesson use."
@@ -30,22 +30,22 @@ content_outline:
     points:
       - "Open with classification: русальні пісні and купальські пісні are neighboring summer calendar-song blocks, not one generic summer lyric."
       - "Set FOLK identity: oral verbal art feeding Ukrainian written literature and public cultural memory."
-      - "State source rule: public URL or bibliographic source in learner-facing page; internal research markers stay out."
-      - "Ask source-first questions: who speaks, when, to whom, with what repeated form and object?"
+      - "State source rule: public URL or bibliographic source in student-facing page; non-public research markers stay out."
+      - "Ask text-before-conclusion questions: who speaks, when, to whom, with what repeated form and object?"
   - section: "Русальні пісні: Зелені свята, голос і провід"
     words: 750
     points:
       - "Place rusalky songs near Зелені свята and Трійця where school/curriculum sources support the frame."
       - "Handle русалка as a song figure and voice: location, request, address, field/water/tree vocabulary, closing action."
       - "Use candidate 'Сиділа русалка на білій березі' only after Phase B full public-text fetch and quote verification."
-      - "Teach the difference between folk-song image, textbook explanation, curriculum locator, and hosted primary reading."
+      - "Teach the difference between folk-song image, textbook explanation, curriculum locator, and page with a public primary text."
   - section: "Купальські пісні: Купайло, вінки, вода, вогонь, гурт"
     words: 850
     points:
       - "Place kupalski songs under Івана Купала and public summer youth/community performance."
       - "Use Купало / Купайло as song and performance names, not as doctrine."
       - "Teach action sequence: gathering, repeated line, circle or procession, object action, release or close."
-      - "Use candidate texts 'Купайло, Купайло, де ти зимувало?' and 'А де наше Купайло стояло' only after Phase B public-source verification."
+      - "Use candidate texts 'Купайло, Купайло, де ти зимувало?' and 'А де наше Купайло стояло' only after Phase B public-text verification."
       - "Frame water, fire and wreaths through performance and poetic action, not as instructions."
   - section: "Поетика дії: повтор, діалог, реквізит"
     words: 750
@@ -54,10 +54,10 @@ content_outline:
       - "Show how object words carry action: вінок, берізка, сорочка, вода, вогонь, поле, дорога."
       - "Replace single-symbol decoding with action questions: what happens to the object, who carries it, where does it move?"
       - "Mark variants carefully: one public text is a recorded variant, not the whole tradition."
-  - section: "Читання і source hammer"
+  - section: "Читання і перевірка джерела"
     words: 600
     points:
-      - "Phase B must fetch full public primary texts from Ukrlib/Wikisource/public archive or verified corpus-backed metadata before hosted readings."
+      - "Phase B must fetch full public primary texts from Ukrlib/Wikisource/public archive or public bibliographic evidence before public text pages."
       - "Every `:::primary-reading` excerpt and every `PrimaryReading text={...}` page must be quote-verified before shipping."
       - "Osvita and Pidruchnyk may orient classification; do not host textbook or curriculum prose as reading text."
       - "Keep PR notes with verification details; do not expose internal source markers to learners."
@@ -72,7 +72,7 @@ content_outline:
     points:
       - "Keep Ukrainian terms, calendar names, local performance and public source provenance visible."
       - "Reject imperial flattening into a vague all-Slavic zone."
-      - "Also avoid romantic overclaiming: source first, interpretation second, limits explicit."
+      - "Also avoid romantic overclaiming: text first, interpretation second, limits explicit."
 activity_hints:
   - type: ritual-sequencing
     placement: inline
@@ -128,7 +128,7 @@ references:
     author: "Чемерис В."
     type: reception
     source_url: "https://osvita.ua/school/literature/ch/77913/list-8.html"
-    note: "Public literary reception page with 'Ой на Івана, ой на Купала'; not a hosted-reading source until primary provenance is verified."
+    note: "Public literary reception page with 'Ой на Івана, ой на Купала'; not a public-text source until primary provenance is verified."
 readings:
   - title: "Купайло, Купайло! Де ти зимувало?"
     title_en: "Kupaylo, Kupaylo, where did you winter?"
@@ -171,10 +171,10 @@ readings:
     hosting: linked-only
     reading_slug: "kupalska-pisnia-oi-na-ivana-oi-na-kupala"
 do_not_quote:
-  - line: "Any build-only corpus marker, research locator, or non-public source marker appears in learner-facing text."
-    reason: "Public learner pages must cite public URLs or bibliographic sources only."
-  - line: "A textbook or curriculum explanation is hosted as a full primary reading."
-    reason: "Textbooks and curriculum may orient the lesson; hosted readings need public primary text verification."
+  - line: "Any non-public research marker, research locator, or non-public research marker appears in student-facing text."
+    reason: "Public student pages must cite public URLs or bibliographic sources only."
+  - line: "A textbook or curriculum explanation is treated as a full primary text."
+    reason: "Textbooks and curriculum may orient the lesson; public text pages need public primary text verification."
   - line: "Gogol or later authored reception is treated as evidence for community practice."
     reason: "Reception sources can illustrate transformation only after the folk text leads."
   - line: "Christian calendar names are described as a cover over a hidden system."
@@ -186,6 +186,9 @@ connects_to:
   - zhnyvarski-obzhynkovi-pisni
   - rodynna-obriadovist-zvychai
 changelog:
+  - version: 7
+    date: "2026-06-28"
+    note: "Register cleanup: replaced learner-visible source/process labels in M05 plan metadata and lesson surfaces with careful source-reading language."
   - version: 6
     date: "2026-06-28"
     note: "Phase B module build: hosted three public Ukrlib primary readings and kept Osvita literary occurrence linked-only until primary provenance is verified."

@@ -5,7 +5,7 @@
 - lemma: гаївка
   translation: Easter-season spring song-game
   pos: noun
-  usage: Гаївка часто пов'язана з великоднім гуртом, колом, грою і громадним простором.
+  usage: Гаївка часто пов'язана з великоднім гуртом, колом, грою і простором громади.
 - lemma: гагілка
   translation: regional name for hayivka
   pos: noun
@@ -25,7 +25,7 @@
 - lemma: хоровод
   translation: round dance
   pos: noun
-  usage: Хоровод у гаївковій рамці показує, що текст може працювати разом із рухом.
+  usage: Хоровод у рамці гаївок показує, що текст може працювати разом із рухом.
 - lemma: виконавська ситуація
   translation: performance situation
   pos: noun phrase
@@ -37,7 +37,7 @@
 - lemma: Воскресіння
   translation: Resurrection
   pos: noun
-  usage: Воскресіння треба називати там, де великодня традиція підтримує гаївковий контекст.
+  usage: Воскресіння треба називати там, де великодня традиція підтримує контекст гаївок.
 - lemma: повтор
   translation: repetition
   pos: noun
@@ -53,7 +53,7 @@
 - lemma: публічне джерело
   translation: public source
   pos: noun phrase
-  usage: Публічне джерело дозволяє учневі перевірити текст за відкритим URL.
+  usage: Публічне джерело дозволяє учневі перевірити текст за відкритим посиланням.
 - lemma: межа доказу
   translation: limit of evidence
   pos: noun phrase
