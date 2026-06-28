@@ -1,0 +1,176 @@
+- lemma: абстрактний
+  translation: abstract
+  pos: adjective
+  usage: Абстрактний іменник називає поняття, а не предмет.
+- lemma: якість
+  translation: quality
+  pos: noun
+  usage: Якість може стати темою аналізу.
+- lemma: поняття
+  translation: concept
+  pos: noun
+  usage: Поняття потребує точного визначення.
+- lemma: цінність
+  translation: value
+  pos: noun
+  usage: Цінність свободи часто обговорюють у публіцистиці.
+- lemma: процес
+  translation: process
+  pos: noun
+  usage: Процес дослідження триває кілька місяців.
+- lemma: свідомість
+  translation: consciousness
+  pos: noun
+  usage: Свідомість суспільства змінюється через освіту.
+- lemma: ідеологія
+  translation: ideology
+  pos: noun
+  usage: Ідеологія потребує критичного аналізу.
+- lemma: творчість
+  translation: creativity; creative work
+  pos: noun
+  usage: Творчість не існує без майстерності.
+- lemma: гідність
+  translation: dignity
+  pos: noun
+  usage: Гідність людини є базовою цінністю.
+- lemma: незалежність
+  translation: independence
+  pos: noun
+  usage: Незалежність потребує відповідальності.
+- lemma: суспільство
+  translation: society
+  pos: noun
+  usage: Суспільство обговорює значення мови.
+- lemma: дослідження
+  translation: research; study
+  pos: noun
+  usage: Дослідження показало зміну цінностей.
+- lemma: прагнення
+  translation: aspiration
+  pos: noun
+  usage: Прагнення до свободи стало темою есе.
+- lemma: зобов'язання
+  translation: obligation
+  pos: noun
+  usage: Зобов'язання сторін записані в угоді.
+- lemma: визначення
+  translation: definition; determining
+  pos: noun
+  usage: Визначення поняття має бути точним.
+- lemma: вдосконалення
+  translation: improvement
+  pos: noun
+  usage: Вдосконалення навичок потребує часу.
+- lemma: відповідальність
+  translation: responsibility
+  pos: noun
+  usage: Відповідальність команди зросла.
+- lemma: точність
+  translation: accuracy
+  pos: noun
+  usage: Точність формулювання важлива для науки.
+- lemma: важливість
+  translation: importance
+  pos: noun
+  usage: Важливість теми видно з контексту.
+- lemma: щирість
+  translation: sincerity
+  pos: noun
+  usage: Щирість не завжди гарантує точність.
+- lemma: майстерність
+  translation: mastery; skill
+  pos: noun
+  usage: Майстерність ремісника підтримує творчість.
+- lemma: досконалість
+  translation: perfection
+  pos: noun
+  usage: Досконалість форми не завжди означає мистецтво.
+- lemma: мистецтво
+  translation: art
+  pos: noun
+  usage: Мистецтво відкриває простір інтерпретації.
+- lemma: ремісництво
+  translation: craft
+  pos: noun
+  usage: Ремісництво спирається на вправність і технологію.
+- lemma: будівництво
+  translation: construction
+  pos: noun
+  usage: Будівництво школи триватиме до осені.
+- lemma: людство
+  translation: humanity
+  pos: noun
+  usage: Людство шукає способи зберегти пам'ять.
+- lemma: товариство
+  translation: association; society
+  pos: noun
+  usage: Товариство підтримує освітні ініціативи.
+- lemma: козацтво
+  translation: Cossackdom
+  pos: noun
+  usage: Козацтво має історичну й культурну вагу.
+- lemma: громадянство
+  translation: citizenship
+  pos: noun
+  usage: Громадянство є юридичним статусом.
+- lemma: партнерство
+  translation: partnership
+  pos: noun
+  usage: Партнерство між організаціями потребує довіри.
+- lemma: читання
+  translation: reading
+  pos: noun
+  usage: Читання складного тексту вимагає уваги.
+- lemma: навчання
+  translation: learning; study
+  pos: noun
+  usage: Навчання триває протягом усього життя.
+- lemma: життя
+  translation: life
+  pos: noun
+  usage: Життя громади змінилося після реформи.
+- lemma: забуття
+  translation: forgetting; oblivion
+  pos: noun
+  usage: Забуття досвіду може бути небезпечним.
+- lemma: відкриття
+  translation: discovery; opening
+  pos: noun
+  usage: Відкриття архіву змінило дослідження.
+- lemma: номіналізація
+  translation: nominalization
+  pos: noun
+  usage: Номіналізація перетворює дію на іменник.
+- lemma: гуманізм
+  translation: humanism
+  pos: noun
+  usage: Гуманізм став темою лекції.
+- lemma: реалізм
+  translation: realism
+  pos: noun
+  usage: Реалізм у літературі має історичні межі.
+- lemma: модернізм
+  translation: modernism
+  pos: noun
+  usage: Модернізм змінив художню мову.
+- lemma: патріотизм
+  translation: patriotism
+  pos: noun
+  usage: Патріотизм потребує відповідальності.
+- lemma: історизм
+  translation: historicism; obsolete word
+  pos: noun
+  usage: Історизм може бути мовним або культурним терміном.
+- lemma: розгляд
+  translation: review; consideration
+  pos: noun
+  usage: Розгляд пропозиції тривав тиждень.
+- lemma: запис
+  translation: recording; note
+  pos: noun
+  usage: Запис зустрічі збережено в архіві.
+- lemma: виклик
+  translation: challenge; call
+  pos: noun
+  usage: Виклик часу вимагає нової свідомості.
