@@ -175,14 +175,15 @@ def test_run_gemini_sync_passes_auth_mode_to_runtime(
     assert mock_invoke.call_args.kwargs["tool_config"] == {"auth_mode": "subscription"}
 
 
-def test_handle_ask_gemini_passes_auth_mode(monkeypatch):
+def test_handle_ask_gemini_routes_to_agy(monkeypatch):
     captured: dict[str, object] = {}
 
-    def _fake_ask_gemini(*args):
+    def _fake_ask_agy(*args, **kwargs):
         captured["args"] = args
+        captured["kwargs"] = kwargs
         return 123
 
-    monkeypatch.setattr("ai_agent_bridge._cli.ask_gemini", _fake_ask_gemini)
+    monkeypatch.setattr("ai_agent_bridge._cli.ask_agy", _fake_ask_agy)
 
     class _Args:
         content = "hello"
@@ -203,4 +204,7 @@ def test_handle_ask_gemini_passes_auth_mode(monkeypatch):
         auth = "api-key"
 
     _handle_ask_gemini(_Args())
-    assert captured["args"][-1] == "api-key"
+    assert captured["args"] == ("hello", "task-1", "query", None)
+    assert captured["kwargs"]["to_model"] == "gemini-3.1-pro-high"
+    assert captured["kwargs"]["stdout_only"] is False
+    assert captured["kwargs"]["output_path"] is None
