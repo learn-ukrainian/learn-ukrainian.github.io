@@ -90,12 +90,12 @@ Communication protocol:
 - **Tests:** `.venv/bin/pytest` — colocated in `tests/`
 - **Lint:** `.venv/bin/ruff check` — pre-commit hook enforced
 - **Bridge CLI:** `scripts/ai_agent_bridge/__main__.py` — for agent delegations
-- **Channel bridge (#1190):** `ab channel`, `ab p`, `ab post`, `ab discuss`
+- **Channel bridge (#1190):** `.venv/bin/python scripts/ai_agent_bridge/__main__.py channel`, `p`, `post`, `discuss`
 - **GH issues as memory:** reference issue numbers in commits, close when all ACs met
 
 ## Multi-agent deliberation protocol (2026-05-02 onward)
 
-`ab discuss` is the tool for design / framing / architecture / pedagogy decisions where any single agent reasoning alone has a known failure mode. **It is NOT a quorum** — Claude/Gemini/Codex have correlated training-data priors (e.g., Russian-imperial framings show up in all three). What it gives us: more angles per decision, adversarial pressure, and a written deliberation record.
+`.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss` is the tool for design / framing / architecture / pedagogy decisions where any single agent reasoning alone has a known failure mode. **It is NOT a quorum** — Claude/AGY/Codex have correlated training-data priors (e.g., Russian-imperial framings show up in all three). What it gives us: more angles per decision, adversarial pressure, and a written deliberation record.
 
 **When you (any agent) participate in a discussion:**
 

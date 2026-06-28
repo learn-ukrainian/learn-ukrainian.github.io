@@ -16,7 +16,7 @@
 
 > **Status**: `curriculum/l2-uk-en/{level}/status/{slug}.json` | Update: `.venv/bin/python scripts/audit_module.py {path}`
 
-> **Cross-session Memory**: Built-in auto-memory at `~/.claude/projects/.../memory/MEMORY.md`. Inter-agent comms via `scripts/ai_agent_bridge/__main__.py`; Headroom is also available as the `headroom` MCP server for compressed handoffs, retrieval, stats, and shared proxy memory.
+> **Cross-session Memory**: Built-in auto-memory at `~/.claude/projects/.../memory/MEMORY.md`. Inter-agent comms via `.venv/bin/python scripts/ai_agent_bridge/__main__.py`; Headroom is also available as the `headroom` MCP server for compressed handoffs, retrieval, stats, and shared proxy memory. Gemini-family work routes through AGY, not Gemini CLI or Gemini Code Assist; see `docs/guardrails/agent-fleet-tooling.md`.
 
 > **Default subagent**: Always use `subagent_type: "curriculum-orchestrator"` when spawning agents for curriculum orchestration work.
 

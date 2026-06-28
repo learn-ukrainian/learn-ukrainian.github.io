@@ -29,7 +29,7 @@ The Codex integration for issue #1177 already surfaced this pain: Gemini's adver
 4. **Shared stall detection** — streaming stdout watchdog + liveness-file fallback, lifted from `_gemini.py` prior art.
 5. **Unified subprocess logic**: timeouts, stdout capture, stderr capture, `-o` output files, worktree cwd, JSON event parsing.
 6. **Pluggable agent registry** that captures capabilities, cost tier, default model, invocation flags.
-7. **Backward compatible** — existing `ask-gemini`, `ask-claude`, `ask-codex`, and `dispatch.py` callers keep working without changes during migration.
+7. **Backward compatible** — existing `ask-gemini` callers route through the retired compatibility shim to AGY; `ask-claude`, `ask-codex`, and `dispatch.py` callers keep working during migration.
 8. **Session resume policy is data-driven and enforced at the caller level**, not the runtime level (see §6.3).
 
 ## 3. Non-goals
@@ -197,7 +197,7 @@ AGENTS: dict[str, dict] = {
     },
     "gemini": {
         "adapter": "scripts.agent_runtime.adapters.gemini:GeminiAdapter",
-        "default_model": "gemini-3.1-pro-preview",
+        "default_model": "gemini-3.1-pro-high",
         "cost_tier": "low",
         "capabilities": {"content_writing", "content_review", "adversarial_review"},
         "cli_available": True,
@@ -317,7 +317,7 @@ Two complementary signals feed one `last_activity` clock:
 **Discovered session file paths per agent:**
 
 | Agent | Path pattern | Update cadence |
-|---|---|---|
+| --- | --- | --- |
 | Gemini | `~/.gemini/tmp/learn-ukrainian/chats/session-<ts>-<hash>.json` | mtime bumps per message + tool call |
 | Codex | `~/.codex/logs_1.sqlite` and the `-o <file>` passed on the command line | continuous during `codex exec` |
 | Claude | `~/.claude/projects/-Users-krisztiankoos-projects-learn-ukrainian/<session>.jsonl` | one line appended per tool call / message |
@@ -388,9 +388,11 @@ Revised order based on Codex and Gemini reviews (both correct in different ways 
 ## 6. Design decisions
 
 ### 6.1 Protocol vs ABC
+
 Use `typing.Protocol` (structural). Lighter than ABC, no runtime overhead, supports `mypy --strict`. Both reviewers agreed.
 
 ### 6.2 Mode vocabulary — `{"read-only", "workspace-write", "danger"}`
+
 Keep these names. They already match the shape the code uses (`_codex.py:16`, `dispatch.py:46`). Gemini said "excellent," Codex agreed with the caveat that `supported_modes` must be real and the runner must reject unsupported modes explicitly. Runner raises `ValueError` if `mode not in adapter.supported_modes`.
 
 ### 6.3 Session resume policy — data-driven
@@ -403,7 +405,7 @@ Keep these names. They already match the shape the code uses (`_codex.py:16`, `d
 **The runtime's impact on cache economics** (Session B in §6.3.1) is different for each provider:
 
 | Provider | Resume saves cost? | Resume causes harm? |
-|---|---|---|
+| --- | --- | --- |
 | Anthropic (Claude) | **YES** — warm prompt cache reused across bridge calls on same task_id | No — Claude `-p --resume <uuid>` is well-scoped to a session |
 | Google (Gemini) | Likely yes (caching mechanics unclear but similar model) | No — multi-turn bridge coherence |
 | OpenAI (Codex) | **NO** — Codex quota is per-message, not per-token; resume doesn't save slots | **YES** — resume + `-C` flag limitation = cross-worktree contamination (see Codex's consultation, footgun #5) |
@@ -426,18 +428,21 @@ Layer 2 — caller enforcement:
 **Session B** = bridge subprocess `claude -p --resume <uuid>` invocations. **This is what the resume policy above applies to.** Each Session B invocation is a short-lived subprocess that runs for seconds; the UUID lets Anthropic's prompt cache hit across multiple bridge calls on the same `task_id`.
 
 ### 6.4 Headroom check semantics
+
 `runner.invoke()` refuses to call an agent that's rate-limited (raises `RateLimitedError` pre-call). Strict refuse is safer; callers that want the retry behavior can catch and handle.
 
 ### 6.5 Parallel consultation support
+
 The runner is **synchronous** per invocation. `consult.py` (future) will sequence calls or use `concurrent.futures.ThreadPoolExecutor` around `runner.invoke()`. No `asyncio` in the runtime itself — Gemini's residual risk warning. Keeps the code simple.
 
 ### 6.6 Grok stub behavior
+
 Load loudly — `GrokAdapter.build_invocation()` raises `NotImplementedError` with a clear message. The registry flag `cli_available: False` prevents the runner from ever calling it; `runner.invoke("grok", ...)` raises `AgentUnavailableError` immediately. Silent skip would hide configuration errors.
 
 ## 7. Vulnerabilities and mitigations
 
 | Vulnerability | Mitigation in v1 |
-|---|---|
+| --- | --- |
 | Env var leakage between adapters | `InvocationPlan.env_overrides` merged fresh per subprocess; no `os.environ.update()` ever. `env_unsets` deferred to v2 if needed. |
 | Concurrent usage log corruption | `os.open(O_APPEND\|O_CREAT\|O_WRONLY) + os.write()` — POSIX atomicity guarantee for sub-PIPE_BUF writes. No filelock. |
 | Stall detection missing (kills healthy slow calls) | Streaming stdout watchdog (primary) + `liveness_signal_paths()` mtime polling (fallback). New `"stalled"` outcome distinguishes from hard timeout. |
@@ -524,7 +529,7 @@ This is AC #11 on #1184. The guide is shipped in the same PR as the runtime code
 **Changes landed in v1:**
 
 | # | Source | Change |
-|---|---|---|
+| --- | --- | --- |
 | 1 | Codex #5 + Gemini #1 (HIGH) | Added `tool_config: dict \| None` to `build_invocation()` and `runner.invoke()` — would have silently broken dispatch.py MCP tool restrictions |
 | 2 | Gemini #3 (HIGH) + cost data | Added `session_id: str \| None` to `build_invocation()` and `runner.invoke()` with per-adapter `resume_policy` + caller-level enforcement |
 | 3 | Gemini #2/#5 + user | NEW §4.6 stall detection: streaming stdout watchdog + liveness mtime polling + new `"stalled"` outcome |

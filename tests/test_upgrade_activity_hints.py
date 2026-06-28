@@ -13,10 +13,10 @@ if scripts_dir not in sys.path:
     sys.path.insert(0, scripts_dir)
 
 from tools.upgrade_activity_hints import (
-    build_gemini_prompt,
+    build_agy_prompt,
     count_vague_hints,
     is_hint_vague,
-    parse_gemini_response,
+    parse_agy_response,
 )
 
 # --- is_hint_vague ---
@@ -178,10 +178,10 @@ class TestCountVagueHints:
         assert total == 2
 
 
-# --- parse_gemini_response ---
+# --- parse_agy_response ---
 
 
-class TestParseGeminiResponse:
+class TestParseAgyResponse:
     def test_plain_yaml(self):
         response = """\
 - type: quiz
@@ -192,7 +192,7 @@ class TestParseGeminiResponse:
   pairs:
   - "привіт ↔ hello"
 """
-        result = parse_gemini_response(response)
+        result = parse_agy_response(response)
         assert result is not None
         assert len(result) == 2
         assert result[0]["type"] == "quiz"
@@ -206,25 +206,25 @@ class TestParseGeminiResponse:
   items: 4
 ```
 """
-        result = parse_gemini_response(response)
+        result = parse_agy_response(response)
         assert result is not None
         assert len(result) == 1
         assert result[0]["type"] == "fill-in"
 
     def test_invalid_yaml(self):
         response = "This is not YAML at all: {broken"
-        result = parse_gemini_response(response)
+        result = parse_agy_response(response)
         # Could be None or could parse as string — either way, not a list
         assert result is None or isinstance(result, list)
 
     def test_not_a_list(self):
         response = "type: quiz\nfocus: test\n"
-        result = parse_gemini_response(response)
+        result = parse_agy_response(response)
         assert result is None
 
     def test_missing_required_fields(self):
         response = "- items: 6\n  something: else\n"
-        result = parse_gemini_response(response)
+        result = parse_agy_response(response)
         assert result is None
 
     def test_fenced_with_backticks(self):
@@ -235,15 +235,15 @@ class TestParseGeminiResponse:
   items: 4
 ```
 """
-        result = parse_gemini_response(response)
+        result = parse_agy_response(response)
         assert result is not None
         assert len(result) == 1
 
 
-# --- build_gemini_prompt ---
+# --- build_agy_prompt ---
 
 
-class TestBuildGeminiPrompt:
+class TestBuildAgyPrompt:
     def test_prompt_contains_plan(self):
         plan = {
             "slug": "test-module",
@@ -253,7 +253,7 @@ class TestBuildGeminiPrompt:
             ],
         }
         plan_text = yaml.dump(plan, allow_unicode=True)
-        prompt = build_gemini_prompt(plan, plan_text)
+        prompt = build_agy_prompt(plan, plan_text)
         assert "слово" in prompt
         assert "Test vocabulary" in prompt
         assert "ONLY vocabulary from this plan" in prompt
@@ -265,6 +265,6 @@ class TestBuildGeminiPrompt:
             ],
         }
         plan_text = yaml.dump(plan, allow_unicode=True)
-        prompt = build_gemini_prompt(plan, plan_text)
+        prompt = build_agy_prompt(plan, plan_text)
         assert "YAML array" in prompt
         assert "exactly 1 elements" in prompt

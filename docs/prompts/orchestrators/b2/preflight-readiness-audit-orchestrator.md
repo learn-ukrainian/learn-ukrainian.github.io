@@ -116,7 +116,7 @@ Do not run builds. Do not modify B2 plans, wiki files, discovery files, or modul
 
 ## Independent-Family Review Gate
 
-Before merge, request a read-only independent-family review of the preflight audit-report PR. Prefer Claude Opus 4.8. If Claude Opus 4.8 is unavailable, use Agy with Gemini 3.1 Pro High, for example `agy --model gemini-3.1-pro-high --print-timeout 10m -p "<review prompt>"`.
+Before merge, request a read-only independent-family review of the preflight audit-report PR. Prefer Claude Opus 4.8. If Claude Opus 4.8 is unavailable, use Agy with Gemini 3.1 Pro High, for example `agy --model "Gemini 3.1 Pro (High)" --print-timeout 10m -p "<review prompt>"`.
 
 The review prompt must include the PR diff, preflight scope, validation summary, artifact-clean statement, helper/swarm note, and an explicit request for blocker-only findings. Record reviewer identity, review model, review scope, unresolved findings, and final disposition in the durable audit report or PR body. The merge rule is explicit: unresolved findings are blockers.
 

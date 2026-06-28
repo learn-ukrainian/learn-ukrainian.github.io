@@ -90,7 +90,7 @@ low-noise surfaces:
 2. **GitHub PRs carry deliverables.** Track orchestrators open PRs with clear
    scope, validation, active dispatch ids, and blockers. The main orchestrator
    reads the PR instead of scraping private chat context.
-3. **Bridge messages are pings, not payloads.** Use `ab p` / channel posts only
+3. **Bridge messages are pings, not payloads.** Use `.venv/bin/python scripts/ai_agent_bridge/__main__.py p` / channel posts only
    to point to the PR, issue, or handoff section that changed.
 4. **Main only interrupts for repo-wide risk.** Examples: generated artifacts in
    diff, `.python-version`/linter config changes, merge conflicts, failing
@@ -151,7 +151,7 @@ change.
 As of #1184 (April 2026), all three agents (Claude, Gemini, Codex) are
 invoked through `scripts/agent_runtime/runner.invoke()`. This applies to:
 
-- `scripts/ai_agent_bridge/` — bridge messaging (`ask-gemini`, `ask-codex`, `process-claude`, etc.)
+- `scripts/ai_agent_bridge/` — bridge messaging (`ask-agy`, `ask-codex`, `process-claude`, etc.)
 - `scripts/build/dispatch.py` — pipeline phase dispatch (`skeleton`, `write`, `review`, etc.)
 - `scripts/delegate.py` (future) — ad-hoc coding task delegation
 - `scripts/consult.py` (future) — multi-agent consultation
@@ -166,10 +166,10 @@ Full guide: [`docs/agent-runtime-guide.md`](../agent-runtime-guide.md).
 - **CC 2.1.119+: `--agent <name>` honors agent definition's `permissionMode` for built-in agents.** We pass `--mode danger` explicitly on every dispatch, so this is a no-op for us. Don't remove the explicit `--mode danger` and expect the agent definition to carry it — not every dispatch target is a built-in agent.
 - **CC 2.1.119+: `Agent` tool with `isolation: "worktree"` no longer reuses stale worktrees from prior sessions.** Until this fix we avoided the built-in Agent-tool isolation and hand-rolled `git worktree add` (see `.claude/rules/delegate-must-use-worktree.md`). The hand-rolled pattern is still correct — it survives across sessions, shows up in `git worktree list`, and matches our dispatch conventions — but the Agent-tool built-in is now a safe alternative for short-lived, same-session isolation.
 
-### Direct dispatch (ask-gemini / ask-codex)
+### Direct dispatch (ask-agy / ask-codex)
 For requests needing immediate response:
 ```bash
-.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-gemini \
+.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy \
   "Review posted on #559. Please read and respond." \
   --task-id issue-559
 
@@ -191,50 +191,42 @@ For iterative co-design, planning, or prompt optimization:
   "Good points. What about the dialogue examples?" \
   --task-id "a1-1-planning"
 ```
-Each turn includes full conversation history. Oldest messages truncated first if history exceeds 30K chars. Use `--model gemini-3.1-pro-preview` for design conversations.
+Each turn includes full conversation history. Oldest messages truncated first if history exceeds 30K chars. Use AGY via `ask-agy` for current Gemini-family design questions.
 
 ### How the bridge works (architecture)
 The bridge is **not** an MCP tool. MCP is one-directional (client→server). The bridge uses a different architecture:
 
 1. **SQLite broker DB** (`data/broker.db`) — shared message queue
-2. **CLI wrapper** spawns the target agent CLI (`gemini`, `claude`, or `codex`) as a subprocess with the message as prompt
+2. **CLI wrapper** spawns the target agent CLI (`agy`, `claude`, or `codex`) as a subprocess with the message as prompt
 3. The target agent runs, output is captured and stored back in the broker DB
 4. Reviews auto-posted to GitHub issues (when task_id matches `issue-NNN`)
 
-This means the broker can route among Claude, Gemini, and Codex. In practice, GitHub remains the source of truth and broker messages should stay short.
+This means the broker can route among Claude, AGY, and Codex. In practice, GitHub remains the source of truth and broker messages should stay short.
 
-### Automatic Review Persistence
+### Review Persistence
 
-Reviews dispatched via `ask-gemini` are automatically posted to GitHub:
-
-| task_id pattern | Behavior |
-|-----------------|----------|
-| `issue-NNN` / `gh-NNN` | Posted as comment on issue #NNN |
-| Any other value | New issue created with `review-result` label |
-| None | New issue created titled `Review: {timestamp}` |
-
-Reviews >65K chars are split into multiple comments. To skip: `--no-github`.
-
-Only applies to **standard mode** (not `--stdout-only` or `--output-path`).
+Gemini CLI review auto-posting is legacy behavior and is not a current route.
+For current Gemini-family review, use AGY via the bridge and record the review
+result in the PR body or GitHub issue explicitly.
 
 ### Passive notification (MCP send_message)
-For non-blocking FYI messages Gemini sees at next session start:
+For non-blocking FYI messages AGY sees at next session start:
 ```python
 mcp__message-broker__send_message(
-    to="gemini", content="FYI: bio Phase A complete. See #560.",
+    to="agy", content="FYI: bio Phase A complete. See #560.",
     from_llm="claude", message_type="context"
 )
 ```
 
 ---
 
-## Multi-Agent Deliberation (`ab discuss`)
+## Multi-Agent Deliberation (`.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss`)
 
-**This section was added 2026-05-02 after recognizing systematic underutilization** of `ab discuss` for design/framing/architecture decisions. We were defaulting to single-shot Gemini reviews and Claude-alone-reasoning where distributed deliberation would have caught more.
+**This section was added 2026-05-02 after recognizing systematic underutilization** of `.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss` for design/framing/architecture decisions. We were defaulting to single-shot AGY reviews and Claude-alone-reasoning where distributed deliberation would have caught more.
 
-### What `ab discuss` is — and isn't
+### What `.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss` is — and isn't
 
-`ab discuss` runs bounded rounds (default 2, max 4) of parallel agent responses on a topic, short-circuiting when all agents end with `[AGREE]`. Transcript lands in the named channel with `parent_id` threading.
+`.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss` runs bounded rounds (default 2, max 4) of parallel agent responses on a topic, short-circuiting when all agents end with `[AGREE]`. Transcript lands in the named channel with `parent_id` threading.
 
 **It is NOT a quorum mechanism.** Three agents don't form an independent jury — Claude/Gemini/Codex all trained on overlapping internet corpora and have **correlated blind spots** (e.g., Russian-imperial framings show up in all three model families' priors). Math-voting on agent agreement isn't trustworthy.
 
@@ -245,7 +237,7 @@ mcp__message-broker__send_message(
 
 ### When to use which tool
 
-| Use `ab discuss` | Use `ask-gemini` (single-shot) | Don't use either |
+| Use `.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss` | Use bridge `ask-agy` (single-shot) | Don't use either |
 |---|---|---|
 | Architectural trade-offs (e.g., module_type categories, retrieval strategy) | Mechanical PR review with green CI | Trivial fixes (delete leftover file) |
 | Pedagogy/framing decisions (POC scope, anchor choice, decolonization audits) | Adversarial review of a single PR | Implementation tasks (Codex codes alone) |
@@ -255,22 +247,22 @@ mcp__message-broker__send_message(
 
 ### Budget angle
 
-- `ab discuss --with gemini,codex` (Claude excluded) is FREE for orchestrator — Gemini subscription unmetered, Codex on OpenAI subscription. Use aggressively when Anthropic budget is tight.
-- `ab discuss --with claude,gemini,codex` burns Anthropic per round per Claude turn. Reserve for foundational decisions where Claude's voice as architect/reviewer matters (architecture, pedagogy framing, decision arbitration).
+- `.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss ... --with agy,codex` (Claude excluded) avoids Anthropic spend; AGY itself is metered. Use when AGY/Codex perspectives are enough.
+- `.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss ... --with claude,agy,codex` burns Anthropic per round per Claude turn. Reserve for foundational decisions where Claude's voice as architect/reviewer matters (architecture, pedagogy framing, decision arbitration).
 
 ### Concrete example — what we missed today (2026-05-02)
 
 When proposing the POC anchor module, Claude reasoned alone and offered A1/M10 colors as a "neutral steady-state baseline." User had to catch the Russian-imperial-propaganda angle on colors that invalidated "neutral." If we had run:
 
 ```bash
-ab discuss content "POC anchor module choice — M10 colors vs M20 my-morning, considering decolonization sensitivity in A1" --with claude,gemini,codex --max-rounds 2
+.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss content "POC anchor module choice — M10 colors vs M20 my-morning, considering decolonization sensitivity in A1" --with claude,agy,codex --max-rounds 2
 ```
 
 …Gemini or Codex might have surfaced the colors angle independently. The deliberation transcript would also exist as a referenceable record on the `content` channel, not buried in a Claude session that compaction would eventually destroy. **Pattern: when picking among options that touch decolonization, framing, or pedagogy — discuss, don't decide alone.**
 
-### Decision Card pattern (when `ab discuss` surfaces a CHOICE)
+### Decision Card pattern (when `.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss` surfaces a CHOICE)
 
-Most `ab discuss` runs converge with `[AGREE]` — orchestrator just executes the consensus. But when discussion surfaces **disagreement OR multi-option output**, the orchestrator MUST emit a structured Decision Card so the user can override or approve. Don't bury decisions in transcript noise.
+Most `.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss` runs converge with `[AGREE]` — orchestrator just executes the consensus. But when discussion surfaces **disagreement OR multi-option output**, the orchestrator MUST emit a structured Decision Card so the user can override or approve. Don't bury decisions in transcript noise.
 
 **Template:**
 
@@ -308,11 +300,11 @@ When all participating agents share the same underlying bias on a topic (e.g., R
 
 For high-risk tracks — **FOLK, HIST, BIO, ISTORIO, LIT, OES, RUTH** (all decolonization-sensitive seminar tracks where Russian/Soviet-imperial framings are most ingrained in training data) — the orchestrator MUST apply at least one of the following failsafe mechanisms:
 
-- **Mechanism A (Force-emit Decision Card on `[AGREE]`):** If `ab discuss` runs on a topic touching any high-risk track and converges with `[AGREE]`, the orchestrator emits a Decision Card anyway. The question is framed as "agents converged on X — but consensus on this track is suspect; user should sanity-check." The user can quickly approve or override.
-- **Mechanism B (Inject domain-specific bias checklist):** For high-risk tracks, the `ab discuss` prompt is augmented with a short bias checklist explicitly provoking adversarial review on known bias vectors.
+- **Mechanism A (Force-emit Decision Card on `[AGREE]`):** If `.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss` runs on a topic touching any high-risk track and converges with `[AGREE]`, the orchestrator emits a Decision Card anyway. The question is framed as "agents converged on X — but consensus on this track is suspect; user should sanity-check." The user can quickly approve or override.
+- **Mechanism B (Inject domain-specific bias checklist):** For high-risk tracks, the `.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss` prompt is augmented with a short bias checklist explicitly provoking adversarial review on known bias vectors.
   - *Example for HIST:* "Did you check the proposed framing against canonical decolonized sources? Bulgakov-as-Ukrainian, Gogol-as-Ukrainian, Akhmatova-as-Ukrainian, etc., are the 'Kyiv-born equals Ukrainian writer' trap — flag if you see it. Did you check whether the historical actor is being framed in Russian-imperial categories versus Ukrainian native categories?"
 
-**Recommendation:** Prefer **Mechanism B** (proactive — catches bias during discussion) for any new `ab discuss` on high-risk tracks. Fall back to **Mechanism A** (reactive — emit card on consensus) when no domain-specific checklist exists yet for that track.
+**Recommendation:** Prefer **Mechanism B** (proactive — catches bias during discussion) for any new `.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss` on high-risk tracks. Fall back to **Mechanism A** (reactive — emit card on consensus) when no domain-specific checklist exists yet for that track.
 
 **Pattern:** Consensus on high-risk tracks is a SIGNAL TO CHECK, not a signal to proceed.
 
@@ -345,7 +337,7 @@ The bridge runs a citation-provenance check on every channel post and reply befo
 
 **Annotate-mode, not block-mode.** The check never refuses a post — it surfaces the doubt. This keeps the cost of a false-positive low (the channel still flows; reviewers see the marker and can dismiss it) and the cost of a true-positive a clear breadcrumb for downstream consumers (reviewer prompts, content modules, students never inherit a forged citation).
 
-**Why this exists.** On 2026-05-05, two `ab discuss` runs hours apart on собака gender produced the same fabricated Антоненко-Давидович citation ("Антоненко-Давидович categorizes feminine собака as a calque/Russianism") in Gemini's reply. АД has no entry on собака per `mcp__sources__search_style_guide`; the model's prior was the bug, not the source. The deliberation-protocol fix (commit `872d8376b0`) blocked round-1 short-circuit so a single round of cross-agent comparison happens — but if a fabrication had survived two rounds of `[AGREE]`, it would have shipped to curriculum. This check closes that gap.
+**Why this exists.** On 2026-05-05, two `.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss` runs hours apart on собака gender produced the same fabricated Антоненко-Давидович citation ("Антоненко-Давидович categorizes feminine собака as a calque/Russianism") in Gemini's reply. АД has no entry on собака per `mcp__sources__search_style_guide`; the model's prior was the bug, not the source. The deliberation-protocol fix (commit `872d8376b0`) blocked round-1 short-circuit so a single round of cross-agent comparison happens — but if a fabrication had survived two rounds of `[AGREE]`, it would have shipped to curriculum. This check closes that gap.
 
 **Detection scope (v1):** verbatim source-name match (with permissive inflection across Cyrillic case endings) + headword extraction from the local window (italicized, code-fenced, quoted, or "іменник X" / "слово X" patterns). Multi-pattern same-source mentions within ~200 chars are de-duplicated to one citation. Out of scope (deferred): fuzzy-match of quoted text against source body content; LLM-based attribution detection; block-mode rejection. The v1 catches outright fabrication where the headword does not exist anywhere in the source corpus.
 
@@ -486,11 +478,11 @@ Use Gemini's skill files instead of verbose prompts. Each skill encodes the full
 
 ```bash
 # Seminar track rebuild
-.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-gemini "/full-rebuild-bio 5" \
+.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy "/full-rebuild-bio 5" \
   --task-id rebuild-bio-5
 
 # Core track rebuild
-.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-gemini "/full-rebuild-core-a a1 3" \
+.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy "/full-rebuild-core-a a1 3" \
   --task-id rebuild-a1-3
 ```
 
@@ -523,28 +515,17 @@ research = _extract_delimiter(output, "===RESEARCH_START===", "===RESEARCH_END==
 
 Never parse Gemini's prose output for structured data.
 
-### Gemini CLI Auth and Prompt Passing
+### AGY Model Names
 
-As of 2026-05-05 (#1709/#1710), the runtime invokes Gemini CLI with `-p`
-instead of piping prompts on stdin. Gemini CLI v0.40.1 treats non-TTY stdin as
-REPL input and can ignore or hang on piped prompts. Small prompts are passed
-inline with `-p PROMPT`; prompts over 100K chars use the verified file-reference
-form `-p @PATH`.
+Gemini CLI and Gemini Code Assist are unsupported for current project work.
+For Gemini-family review or support, use AGY through
+`.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy ...` or
+`scripts/delegate.py dispatch --agent agy ...`.
 
-For write-mode runtime calls, keep `--approval-mode=yolo` and include
-`--skip-trust`; Gemini CLI v0.40.1 otherwise downgrades approval mode in
-untrusted output directories such as `/tmp` and exits before writing.
-
-Gemini auth precedence is API first, then subscription/OAuth fallback:
-
-- `GEMINI_AUTH_MODE=api` forces API mode and fails fast if no Gemini API key is
-  configured.
-- `GEMINI_AUTH_MODE=subscription` or `oauth` forces subscription/OAuth mode and
-  strips Gemini API env vars from the subprocess.
-- With no override, `GEMINI_API_KEY` or `GOOGLE_API_KEY` selects API mode.
-- With no override and no API key, subscription/OAuth remains the default.
-- The fallback ladder starts on API rungs when API keys are available, then
-  transitions to subscription/OAuth rungs on rate limit or capacity failures.
+Direct `agy --model` calls use display labels from `agy models`, such as
+`Gemini 3.1 Pro (High)` and `Gemini 3.5 Flash (High)`. The bridge and runtime
+may accept slugs such as `gemini-3.1-pro-high` and map them to AGY display
+labels before invoking AGY.
 
 ---
 

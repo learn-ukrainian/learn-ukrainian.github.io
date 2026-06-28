@@ -206,7 +206,7 @@ def test_bridge_caller_builds_family_specific_commands() -> None:
 
     claude = caller.plan(prompt, "claude-opus-4-7")
     codex = caller.plan(prompt, "gpt-5.5")
-    gemini = caller.plan(prompt, "gemini-3.1-pro-preview")
+    gemini = caller.plan(prompt, "gemini-3.1-pro-high")
 
     assert claude.argv[2] == "ask-claude"
     assert "--to-model" in claude.argv
@@ -214,9 +214,9 @@ def test_bridge_caller_builds_family_specific_commands() -> None:
     assert codex.argv[2] == "ask-codex"
     assert codex.stdin == "Translate."
     assert "--to-model" in codex.argv
-    assert gemini.argv[2] == "ask-gemini"
+    assert gemini.argv[2] == "ask-agy"
     assert "--stdout-only" in gemini.argv
-    assert gemini.argv[gemini.argv.index("--model") + 1] == "gemini-3.1-pro-preview"
+    assert gemini.argv[gemini.argv.index("--to-model") + 1] == "gemini-3.1-pro-high"
 
 
 def test_claude_bridge_extracts_target_model_metadata() -> None:

@@ -173,7 +173,7 @@ We have already been doing harness engineering for ~6 months. The OpenAI posts g
 | Per-worktree isolated runs | `delegate.py dispatch --worktree` (mandatory per #M0 dispatch routing) |
 | Bug autopsies / continuous GC | `docs/bug-autopsies/INDEX.md`, MEMORY trim cadence, ADR hygiene flags |
 | Repo as only state | Decisions, comms, channel history all in-repo or DB-served |
-| Multi-agent feedback loops | `ab discuss` channels, dispatch with cross-agent code review |
+| Multi-agent feedback loops | `.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss` channels, dispatch with cross-agent code review |
 | Two-tier handoffs | brief.md + .html (epic #1865 item #1, shipped 2026-05-11) |
 | Objectives over rigid state transitions | `/goal` rule (#1884, shipped 2026-05-12) |
 
@@ -223,5 +223,5 @@ Our project is **education** where:
 - [OpenAI: "An open-source spec for Codex orchestration: Symphony"](https://openai.com/index/open-source-codex-orchestration-symphony/) — the orchestration follow-up.
 - [openai/symphony on GitHub](https://github.com/openai/symphony) — `SPEC.md` (~2,200 lines, RFC-2119) + Elixir reference implementation.
 - This project: `claude_extensions/rules/goal-driven-runs.md` — our `/goal` rule, independently convergent on Symphony's "objectives over transitions" lesson.
-- This project: `docs/best-practices/agent-cooperation.md` — multi-agent deliberation protocol (`ab discuss`, Decision Card pattern).
+- This project: `docs/best-practices/agent-cooperation.md` — multi-agent deliberation protocol (bridge `discuss`, Decision Card pattern).
 - This project: `docs/best-practices/context-engineering.md` — the layer below harness engineering.

@@ -1,7 +1,7 @@
-"""Upgrade vague A1 activity_hints to exact exercise templates using Gemini.
+"""Upgrade vague A1 activity_hints to exact exercise templates using AGY.
 
 Reads plan YAML files, identifies vague activity_hints (no Ukrainian text,
-no exercise markers like ↔/→/___/{}), sends them to Gemini with the full
+no exercise markers like ↔/→/___/{}), sends them to AGY with the full
 plan context, and writes back upgraded hints with a version bump.
 
 Usage:
@@ -15,7 +15,6 @@ from __future__ import annotations
 import argparse
 import logging
 import re
-import shutil
 import subprocess
 import sys
 from datetime import UTC, datetime
@@ -43,8 +42,10 @@ _CYRILLIC_RE = re.compile(r"[\u0400-\u04FF]{2,}")
 
 # Minimum number of Cyrillic words to consider a hint "specific"
 _MIN_CYRILLIC_WORDS = 2
-
-GEMINI_CLI = shutil.which("gemini") or "gemini"
+BRIDGE_CLI = [
+    str(REPO_ROOT / ".venv/bin/python"),
+    str(SCRIPTS_DIR / "ai_agent_bridge/__main__.py"),
+]
 
 # Snapshot environment (same as bridge uses)
 import os
@@ -99,8 +100,8 @@ def count_vague_hints(plan: dict) -> tuple[int, int]:
     return vague, len(hints)
 
 
-def build_gemini_prompt(plan: dict, plan_text: str) -> str:
-    """Build the prompt for Gemini to upgrade vague activity_hints."""
+def build_agy_prompt(plan: dict, plan_text: str) -> str:
+    """Build the prompt for AGY to upgrade vague activity_hints."""
     # Identify which hints are vague
     hints = plan.get("activity_hints", [])
     vague_indices = [
@@ -156,12 +157,22 @@ Example output format:
 """
 
 
-def call_gemini(prompt: str, model: str = "gemini-3.1-pro-preview",
-                timeout: int = 120) -> str | None:
-    """Call Gemini CLI with a prompt and return stdout."""
+def call_agy(prompt: str, model: str = "gemini-3.1-pro-high", timeout: int = 120) -> str | None:
+    """Call AGY through ai_agent_bridge and return stdout."""
     try:
         result = subprocess.run(
-            [GEMINI_CLI, "-m", model, "-y"],
+            [
+                *BRIDGE_CLI,
+                "ask-agy",
+                "-",
+                "--task-id",
+                f"upgrade-activity-hints-{datetime.now(UTC).strftime('%Y%m%d%H%M%S')}",
+                "--to-model",
+                model,
+                "--stdout-only",
+                "--from",
+                "claude",
+            ],
             input=prompt,
             capture_output=True,
             text=True,
@@ -170,19 +181,19 @@ def call_gemini(prompt: str, model: str = "gemini-3.1-pro-preview",
             env=_PARENT_ENV,
         )
         if result.returncode != 0:
-            logger.error("Gemini CLI failed (exit %d): %s", result.returncode, result.stderr[:500])
+            logger.error("AGY bridge failed (exit %d): %s", result.returncode, result.stderr[:500])
             return None
         return result.stdout.strip()
     except subprocess.TimeoutExpired:
-        logger.error("Gemini CLI timed out after %ds", timeout)
+        logger.error("AGY bridge timed out after %ds", timeout)
         return None
     except FileNotFoundError:
-        logger.error("Gemini CLI not found at: %s", GEMINI_CLI)
+        logger.error("Bridge python not found at: %s", BRIDGE_CLI[0])
         return None
 
 
-def parse_gemini_response(response: str) -> list[dict] | None:
-    """Parse Gemini's YAML response into a list of activity_hints."""
+def parse_agy_response(response: str) -> list[dict] | None:
+    """Parse AGY YAML response into a list of activity_hints."""
     # Strip markdown fences if present
     cleaned = response.strip()
     if cleaned.startswith("```"):
@@ -199,11 +210,11 @@ def parse_gemini_response(response: str) -> list[dict] | None:
     try:
         parsed = yaml.safe_load(cleaned)
     except yaml.YAMLError as e:
-        logger.error("Failed to parse Gemini YAML response: %s", e)
+        logger.error("Failed to parse AGY YAML response: %s", e)
         return None
 
     if not isinstance(parsed, list):
-        logger.error("Gemini response is not a YAML list: %s", type(parsed))
+        logger.error("AGY response is not a YAML list: %s", type(parsed))
         return None
 
     # Validate each hint has required fields
@@ -222,7 +233,7 @@ def upgrade_plan(
     plan_path: Path,
     *,
     dry_run: bool = False,
-    model: str = "gemini-3.1-pro-preview",
+    model: str = "gemini-3.1-pro-high",
 ) -> tuple[int, list[str]]:
     """Upgrade vague activity_hints in a plan file.
 
@@ -259,23 +270,23 @@ def upgrade_plan(
             print(f"    [{idx}] {h.get('type', '?')}: {h.get('focus', '?')[:80]}")
         return len(vague_indices), [f"[dry-run] {len(vague_indices)} vague hints in {slug}"]
 
-    # Build prompt and call Gemini
-    prompt = build_gemini_prompt(plan, raw)
-    print(f"  Calling Gemini ({model})...")
-    response = call_gemini(prompt, model=model)
+    # Build prompt and call AGY
+    prompt = build_agy_prompt(plan, raw)
+    print(f"  Calling AGY ({model})...")
+    response = call_agy(prompt, model=model)
     if not response:
-        logger.error("No response from Gemini for %s", slug)
+        logger.error("No response from AGY for %s", slug)
         return 0, changelog
 
     # Parse response
-    upgraded = parse_gemini_response(response)
+    upgraded = parse_agy_response(response)
     if not upgraded:
-        logger.error("Failed to parse Gemini response for %s", slug)
+        logger.error("Failed to parse AGY response for %s", slug)
         return 0, changelog
 
     if len(upgraded) != len(vague_indices):
         logger.error(
-            "Gemini returned %d hints but expected %d for %s",
+            "AGY returned %d hints but expected %d for %s",
             len(upgraded), len(vague_indices), slug,
         )
         return 0, changelog
@@ -296,7 +307,7 @@ def upgrade_plan(
         "version": new_version,
         "date": datetime.now(UTC).strftime("%Y-%m-%d"),
         "changes": [
-            f"Upgraded {len(vague_indices)} vague activity_hints to exact exercise templates (Gemini)"
+            f"Upgraded {len(vague_indices)} vague activity_hints to exact exercise templates (AGY)"
         ],
     }
     if "plan_fixes" not in plan:
@@ -325,13 +336,13 @@ def get_all_plan_paths(level: str) -> list[Path]:
 
 def main():
     parser = argparse.ArgumentParser(
-        description="Upgrade vague activity_hints to exact exercise templates using Gemini"
+        description="Upgrade vague activity_hints to exact exercise templates using AGY"
     )
     parser.add_argument("level", help="Level (e.g., a1)")
     parser.add_argument("slug", nargs="?", help="Module slug (or --all for all plans)")
     parser.add_argument("--all", action="store_true", help="Process all plans with vague hints")
     parser.add_argument("--dry-run", action="store_true", help="Show what would change without modifying")
-    parser.add_argument("--model", default="gemini-3.1-pro-preview", help="Gemini model to use")
+    parser.add_argument("--model", default="gemini-3.1-pro-high", help="AGY model to use")
     args = parser.parse_args()
 
     logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")

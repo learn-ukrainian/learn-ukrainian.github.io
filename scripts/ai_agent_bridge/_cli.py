@@ -54,6 +54,17 @@ _CALLER_IDENTITY_ENV_HINTS = (
     "GEMINI_SESSION",
 )
 
+_LEGACY_GEMINI_TO_AGY_MODEL = {
+    "gemini-3.1-pro-preview": "gemini-3.1-pro-high",
+    "gemini-3.0-flash-preview": "gemini-3.5-flash-high",
+}
+
+
+def _map_legacy_gemini_model_to_agy(model: str | None) -> str | None:
+    if not model:
+        return None
+    return _LEGACY_GEMINI_TO_AGY_MODEL.get(model, model)
+
 
 def _detect_caller_identity_from_env() -> str | None:
     """Infer the sending agent for legacy ask-* commands from wrapper env."""
@@ -518,23 +529,27 @@ def _build_parser() -> argparse.ArgumentParser:
     ask_codex_parser.add_argument("--review", action="store_true",
                                   help="Prepend docs/review-protocol.md")
 
-    # ask-gemini
-    ask_gemini_parser = subparsers.add_parser("ask-gemini", help="Send message AND invoke Gemini (one-step)")
+    # ask-gemini legacy compatibility shim
+    ask_gemini_parser = subparsers.add_parser(
+        "ask-gemini",
+        help="Retired compatibility alias; routes through ask-agy",
+    )
     ask_gemini_parser.add_argument("content", help="Message content (use '-' to read from stdin)")
     ask_gemini_parser.add_argument("--task-id", required=True, help="Task ID (required for session tracking)")
     ask_gemini_parser.add_argument("--type", default="query", help="Message type (default: query)")
     ask_gemini_parser.add_argument("--data", help="Path to data file to attach")
     ask_gemini_parser.add_argument(
-        "--model", default=GEMINI_DEFAULT_MODEL, help="Gemini model to use"
+        "--model", default=GEMINI_DEFAULT_MODEL,
+        help="Legacy Gemini model slug; mapped to AGY where needed"
     )
     ask_gemini_parser.add_argument("--from-model", dest="from_model",
                                    help="Exact sender model ID")
     ask_gemini_parser.add_argument("--from", dest="from_llm",
                                    help="Sender agent family. Default: inferred from environment")
     ask_gemini_parser.add_argument("--async", dest="async_mode", action="store_true",
-                                   help="Queue only, don't invoke Gemini CLI")
+                                   help="Queue only; legacy no-op for AGY shim")
     ask_gemini_parser.add_argument("--stdout-only", dest="stdout_only", action="store_true",
-                                   help="Print Gemini's response body to stdout for the "
+                                   help="Print AGY response body to stdout for the "
                                         "caller to parse; a thin summary still goes to the "
                                         "broker so the thread stays consistent. Suppresses "
                                         "all bridge progress logging on stdout.")
@@ -578,6 +593,10 @@ def _build_parser() -> argparse.ArgumentParser:
                                 help="Exact sender model ID")
     ask_agy_parser.add_argument("--to-model", dest="to_model",
                                 help="Target Agy model ID (default: gemini-3.5-flash-high)")
+    ask_agy_parser.add_argument("--stdout-only", dest="stdout_only", action="store_true",
+                                help="Print Agy response body to stdout for caller parsing")
+    ask_agy_parser.add_argument("--output-path", dest="output_path",
+                                help="Write Agy response body to a file")
     ask_agy_parser.add_argument("--no-timeout", dest="no_timeout", action="store_true",
                                 help="Run sync without timeout")
     ask_agy_parser.add_argument("--review", action="store_true",
@@ -1101,7 +1120,10 @@ def _handle_ask_agy(args):
     from_llm = _resolve_from_llm(args)
     ask_agy(content, args.task_id, args.type, data,
             args.new_session, from_llm, args.from_model,
-            args.to_model, args.no_timeout, **kwargs)
+            args.to_model, args.no_timeout,
+            stdout_only=getattr(args, "stdout_only", False),
+            output_path=getattr(args, "output_path", None),
+            **kwargs)
 
 
 def _handle_ask_hermes(args):
@@ -1178,26 +1200,29 @@ def _handle_ask_grok_build(args):
 
 
 def _handle_ask_gemini(args):
-    """Handle ask-gemini subcommand."""
+    """Compatibility shim: ask-gemini is retired and delegates to ask-agy."""
     data = None
     if args.data:
         data = Path(args.data).read_text()
     content = sys.stdin.read() if args.content == "-" else args.content
     kwargs = {"review": True} if getattr(args, "review", False) else {}
     from_llm = _resolve_from_llm(args)
-    ask_gemini(content, args.task_id, args.type, data, args.model,
-               from_llm,
-               getattr(args, 'from_model', None),
-               getattr(args, 'async_mode', False),
-               getattr(args, 'stdout_only', False),
-               getattr(args, 'output_path', None),
-               getattr(args, 'extract', None),
-               getattr(args, 'skip_model_check', False),
-               getattr(args, 'allow_write', False),
-               getattr(args, 'delimiters', None),
-               getattr(args, 'no_github', False),
-               getattr(args, 'auth', None),
-               **kwargs)
+    if not getattr(args, "stdout_only", False):
+        print("⚠️ ask-gemini is retired; routing through ask-agy.", file=sys.stderr)
+    ask_agy(
+        content,
+        args.task_id,
+        args.type,
+        data,
+        new_session=False,
+        from_llm=from_llm,
+        from_model=getattr(args, "from_model", None),
+        to_model=_map_legacy_gemini_model_to_agy(getattr(args, "model", None)) or "gemini-3.5-flash-high",
+        no_timeout=False,
+        stdout_only=getattr(args, "stdout_only", False),
+        output_path=getattr(args, "output_path", None),
+        **kwargs,
+    )
 
 
 def main():

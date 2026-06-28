@@ -229,7 +229,7 @@ Total config: **514 lines, 31 top-level keys.** We've meaningfully configured ~3
 | `hermes -z "$(cat brief.md)" -m claude-opus-4-7` | One-shot with Claude (broken — #2036) | SOUL.md slot #1 ✅ |
 | `--writer grok-tools` in V7 (our adapter calls `hermes -z`) | V7 module writer phase | SOUL.md slot #1 ✅ |
 | `--reviewer grok-tools` in V7 | V7 reviewer phase | SOUL.md slot #1 ✅ |
-| `ab ask-grok` (not yet implemented) | Q&A via hermes | SOUL.md slot #1 ✅ when added |
+| `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-grok` | Q&A via hermes | SOUL.md slot #1 ✅ when added |
 | `hermes chat` (interactive) | Manual TUI session | SOUL.md slot #1 + `/personality` overlay |
 | `--ignore-rules` flag | Skip SOUL.md + AGENTS.md + memory | ❌ NO persona |
 | `hermes cron …` | Scheduled hermes runs | SOUL.md slot #1 ✅ |

@@ -1,6 +1,8 @@
 # GEMINI.md — Yellow Team Context
 
-> **Provider boundary:** Shared repository invariants live in `AGENTS.md`. Gemini/Agy agents should read `AGENTS.md` plus this Gemini-specific context; Codex prompts should not read this file as runtime instructions.
+> **Provider boundary:** Shared repository invariants live in `AGENTS.md`. Gemini/Agy agents should read `AGENTS.md` plus Gemini-specific context; Codex prompts should not read this file for runtime instructions.
+
+> **Current tooling note:** Gemini CLI and Gemini Code Assist are unsupported for this project. Gemini-family work now routes through AGY via `.venv/bin/python scripts/ai_agent_bridge/__main__.py ...` or `scripts/delegate.py dispatch --agent agy ...`. See `docs/guardrails/agent-fleet-tooling.md`.
 
 ## Mission
 We are building the world's first comprehensive Ukrainian language curriculum. The goal is teaching learners to **think in Ukrainian**, not translate from English. Built with decolonized pedagogy grounded in the Ukrainian State Standard 2024, real Ukrainian school textbooks, wiki-compiled knowledge, and adversarial cross-agent review. Quality over quantity. 5 excellent modules beat 55 mediocre ones.
@@ -164,9 +166,9 @@ data/
 
 ## Multi-Agent Deliberation Protocol (added 2026-05-02 — issue #1639)
 
-You will sometimes be invoked via `ab discuss` for design / framing / pedagogy / architecture decisions. **This is NOT a quorum** — Claude/Gemini/Codex have correlated training-data priors. What we DO get from deliberation: more angles, adversarial pressure, written record.
+You will sometimes be invoked via `.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss` for design / framing / pedagogy / architecture decisions. **This is NOT a quorum** — Claude/AGY/Codex have correlated training-data priors. What we DO get from deliberation: more angles, adversarial pressure, written record.
 
-**When you participate in `ab discuss`:**
+**When you participate in `.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss`:**
 
 1. **End with `[AGREE]`** if you genuinely agree with the prior round's converging position. This short-circuits the discussion.
 2. **Surface options with explicit labels** — Option A / Option B / Option C. Don't bury alternatives in prose.

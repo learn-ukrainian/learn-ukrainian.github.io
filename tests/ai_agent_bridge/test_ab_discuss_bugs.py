@@ -154,3 +154,75 @@ def test_ask_codex_infers_from_claude_agent_name(
 
     assert _cli._dispatch_command(args) is True
     assert captured["from_llm"] == "claude"
+
+
+def test_legacy_gemini_model_slugs_map_to_agy_slugs() -> None:
+    assert (
+        _cli._map_legacy_gemini_model_to_agy("gemini-3.1-pro-preview")
+        == "gemini-3.1-pro-high"
+    )
+    assert (
+        _cli._map_legacy_gemini_model_to_agy("gemini-3.0-flash-preview")
+        == "gemini-3.5-flash-high"
+    )
+    assert (
+        _cli._map_legacy_gemini_model_to_agy("Gemini 3.1 Pro (High)")
+        == "Gemini 3.1 Pro (High)"
+    )
+
+
+def test_ask_gemini_shim_routes_to_agy_with_mapped_model(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    captured: dict[str, object] = {}
+
+    def fake_ask_agy(
+        content,
+        task_id,
+        msg_type,
+        data,
+        new_session,
+        from_llm,
+        from_model,
+        to_model,
+        no_timeout,
+        **kwargs,
+    ):
+        captured.update(
+            content=content,
+            task_id=task_id,
+            msg_type=msg_type,
+            data=data,
+            new_session=new_session,
+            from_llm=from_llm,
+            from_model=from_model,
+            to_model=to_model,
+            no_timeout=no_timeout,
+            kwargs=kwargs,
+        )
+        return 123
+
+    monkeypatch.setattr(_cli, "ask_agy", fake_ask_agy)
+    parser = _cli._build_parser()
+    args = parser.parse_args(
+        [
+            "ask-gemini",
+            "hello",
+            "--task-id",
+            "task-1",
+            "--model",
+            "gemini-3.1-pro-preview",
+            "--stdout-only",
+            "--from",
+            "codex",
+        ]
+    )
+
+    assert _cli._dispatch_command(args) is True
+    assert captured["content"] == "hello"
+    assert captured["task_id"] == "task-1"
+    assert captured["from_llm"] == "codex"
+    assert captured["to_model"] == "gemini-3.1-pro-high"
+    assert captured["new_session"] is False
+    assert captured["no_timeout"] is False
+    assert captured["kwargs"] == {"stdout_only": True, "output_path": None}

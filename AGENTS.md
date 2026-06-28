@@ -223,6 +223,28 @@ This project runs **locally with pyenv**, NOT in Docker. Do not use:
 - `/app/curriculum/...` — use relative paths or real local paths
 - `localhost:8765` — use relative URLs (`/api/...`)
 
+### 13. Use Current Agent Tooling
+
+Gemini CLI and Gemini Code Assist are not supported or restorable routes for
+this project. For Gemini-family work, use AGY through the project bridge or
+dispatch runtime.
+
+Do not tell agents to run bare `ab ...` commands. On the user's machine `ab`
+resolves to ApacheBench (`/usr/sbin/ab`), so bare `ab ask-*`, `ab post`, and
+`ab discuss` instructions are brittle. Use explicit project entry points:
+
+```bash
+.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy - \
+  --task-id review-123 \
+  --to-model gemini-3.1-pro-high
+
+scripts/delegate.py dispatch --agent agy --brief docs/dispatch-briefs/task.md --worktree
+```
+
+Direct `agy --model` calls use display labels from `agy models`, such as
+`Gemini 3.1 Pro (High)` and `Gemini 3.5 Flash (High)`. The bridge/runtime may
+map slugs such as `gemini-3.1-pro-high` to those labels.
+
 ---
 
 ## Economical Multi-Agent Delegation
@@ -255,7 +277,7 @@ Cost controls:
 - Do not spawn a subagent for work the main agent can finish faster than delegation overhead.
 - Keep routine delegation to one to three subagents at a time unless the user explicitly asks for a larger sweep.
 - Do not let subagents read secrets, source `.envrc`, call `gh`, request reviews, or merge PRs.
-- Do not delegate independent review requirement. Internal GPT helper swarms and Codex self-review do not satisfy the external gate. Request one read-only review through an independent non-Codex route and treat unresolved blockers as blockers. Current lanes: Hermes -> DeepSeek 4 Pro; Agy -> Gemini models and Claude Opus 4.6 when available; Cursor -> non-Codex models including Composer 2.5. If Claude main provider is unavailable before Monday, June 29, 2026 09:00 Budapest local time, do not block on Claude; use another independent non-Codex route.
+- Do not delegate independent review requirement. Internal GPT helper swarms Codex self-review do not satisfy external gate. Request one read-only review through an independent non-Codex route and treat unresolved findings as blockers. Current lanes: Hermes -> DeepSeek 4 Pro; Agy -> Gemini models with Claude Opus 4.6 available; Cursor -> non-Codex models including Composer 2.5. If Claude main provider is unavailable before Monday, June 29, 2026 09:00 Budapest local time, do not block on Claude; use another independent non-Codex route. If AGY is used as that route, call it through the explicit bridge, example `printf '%s\n' "<review prompt>" | .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy - --task-id review-<id> --to-model gemini-3.1-pro-high --review`.
 
 Module-build PRs must persist token telemetry through
 `POST /api/telemetry/module-builds` and include the same summary in the PR body
@@ -333,9 +355,9 @@ curriculum/l2-uk-en/
 
 ## Multi-Agent Deliberation Protocol (added 2026-05-02 — issue #1639)
 
-You will sometimes be invoked via `ab discuss` for design / framing / pedagogy / architecture decisions. **This is NOT a quorum** — Claude/Gemini/Codex have correlated training-data priors. What we DO get from deliberation: more angles, adversarial pressure, written record.
+You will sometimes be invoked via `.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss` for design / framing / pedagogy / architecture decisions. **This is NOT a quorum** — Claude/AGY/Codex have correlated training-data priors. What we DO get from deliberation: more angles, adversarial pressure, written record.
 
-**When you participate in `ab discuss`:**
+**When you participate in multi-agent discussion through `.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss`:**
 
 1. **End with `[AGREE]`** if you genuinely agree with the prior round's converging position. This short-circuits the discussion.
 2. **Surface options with explicit labels** — Option A / Option B / Option C. Don't bury alternatives in prose.

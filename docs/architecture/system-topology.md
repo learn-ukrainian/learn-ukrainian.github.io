@@ -8,7 +8,7 @@ How the learn-ukrainian subsystems fit together. Reference diagram for new engin
 graph TB
     subgraph Agents["Agent Layer"]
         Claude[Claude Code / API]
-        Gemini[Gemini CLI]
+        Gemini[AGY]
         Codex[Codex CLI]
     end
 
@@ -19,7 +19,7 @@ graph TB
     end
 
     subgraph Bridge["scripts/ai_agent_bridge/"]
-        BridgeCLI[ask-claude<br/>ask-gemini<br/>ask-codex<br/>codex-usage]
+        BridgeCLI[ask-claude<br/>ask-agy<br/>ask-codex<br/>codex-usage]
         MsgBroker[(message_broker.db<br/>SQLite)]
     end
 
@@ -179,7 +179,7 @@ user → compile.py --track hist --slug kyivan-rus
 ## Key files
 
 | Path | Purpose |
-|------|---------|
+| --- | --- |
 | `scripts/build/v7_build.py` | The one pipeline entry point |
 | `scripts/agent_runtime/runner.py` | The one LLM dispatch function |
 | `scripts/api/main.py` | The one API server |

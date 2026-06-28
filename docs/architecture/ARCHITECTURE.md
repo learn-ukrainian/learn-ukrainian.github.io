@@ -44,7 +44,7 @@ Learn Ukrainian is an AI-powered content factory that generates Ukrainian langua
 ## Pipeline Phases (v5)
 
 | # | Phase | Agent | Purpose | Pre-conditions |
-|---|-------|-------|---------|----------------|
+| --- | --- | --- | --- | --- |
 | 1 | **research** | Gemini | Web research, textbook search, meta outline | Plan exists |
 | 2 | **discover** | Gemini | YouTube discovery (non-blocking) | — |
 | 3 | **content** | Gemini | Lesson prose + vocabulary | Preflight passes, learner state injected |
@@ -58,7 +58,7 @@ Learn Ukrainian is an AI-powered content factory that generates Ukrainian langua
 ### Pre-Content Gates (run before content phase)
 
 | Gate | Script | What it checks |
-|------|--------|----------------|
+| --- | --- | --- |
 | **Preflight** | `pipeline/prompt_preflight.py` | Gemini reviews its own prompt for contradictions. Auto-fixes HIGH issues. |
 | **Semantic Russianisms** | `pipeline/semantic_russianisms.py` | Catches words in plan with Russian meanings (e.g., лук=onion → цибуля) |
 | **Learner State** | `pipeline/learner_state.py` | Injects cumulative vocabulary + grammar from all previous modules |
@@ -66,7 +66,7 @@ Learn Ukrainian is an AI-powered content factory that generates Ukrainian langua
 ### Content Phase Enhancements
 
 | Feature | What it does |
-|---------|-------------|
+| --- | --- |
 | **Builder Notes** | Gemini outputs structured YAML (deviations, frictions, unverified terms) |
 | **Prompt restructuring** | Goal → Context → Outline → Guidelines → Constraints (not constraints-first) |
 | **Split mode** | Content and activities are separate phases (default), not one pass |
@@ -80,7 +80,7 @@ plans/{level}/{slug}.yaml    →  Source of truth (reviewed before lock)
 ```
 
 | Layer | Location | Owner | Lifecycle |
-|-------|----------|-------|-----------|
+| --- | --- | --- | --- |
 | **Plans** | `curriculum/l2-uk-en/plans/` | Human + LLM (reviewed) | DRAFT → REVIEWED → LOCKED |
 | **Build** | `curriculum/l2-uk-en/{level}/` | Gemini | Rebuilt by pipeline |
 | **Status** | `curriculum/l2-uk-en/{level}/status/` | Audit system | Auto-generated |
@@ -106,8 +106,8 @@ plans/{level}/{slug}.yaml    →  Source of truth (reviewed before lock)
 ### Cooperation Tooling
 
 | Tool | Command | Purpose |
-|------|---------|---------|
-| **One-shot** | `ask-gemini "msg" --task-id issue-N` | Reviews, simple requests |
+| --- | --- | --- |
+| **One-shot** | `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy "msg" --task-id issue-N` | Gemini-family reviews, simple requests |
 | **Multi-turn** | `converse "msg" --task-id "topic"` | Co-design, planning, iteration |
 | **Builder Notes** | `===BUILDER_NOTES_START===` | Structured handoff after builds |
 
@@ -116,6 +116,7 @@ The bridge is NOT an MCP tool. It uses SQLite broker DB + subprocess spawning. C
 ## Subsystems
 
 ### 1. Pipeline (`scripts/build/pipeline_v5.py` + `scripts/pipeline/`)
+
 **~11K LOC** | Entry: `scripts/build_module_v5.py`
 
 Supporting modules:
@@ -130,13 +131,15 @@ Supporting modules:
 - `pipeline_lib.py` — Shared utilities
 
 ### 2. Audit System (`scripts/audit/`)
+
 **~23K LOC** | Entry: `scripts/audit_module.py` | 34 check modules
 
 ### 3. RAG System (`scripts/rag/` + `.mcp/servers/sources/`)
+
 **~8K LOC** | MCP server at port 8766
 
 | Source | MCP Tool |
-|--------|----------|
+| --- | --- |
 | Textbooks (1.2K chunks) | `search_text` |
 | Literary sources | `search_literary` |
 | VESUM (415K lemmas) | `verify_word`, `verify_lemma` |
@@ -147,12 +150,15 @@ Supporting modules:
 | ULIF paradigms | `query_ulif` |
 
 ### 4. API Server (`scripts/api/`)
+
 **~6K LOC** | FastAPI + WebSocket | Port 8765
 
 ### 5. Agent Bridge (`scripts/ai_agent_bridge/`)
+
 **~2K LOC** | Claude↔Gemini communication via subprocess + SQLite broker
 
 ### 6. Prompt Templates (`claude_extensions/phases/gemini/`)
+
 **~54 files** | Phase-specific prompts injected during pipeline execution
 
 Key templates:
@@ -162,23 +168,27 @@ Key templates:
 - `review-repair.md` — Claude D.2 fix
 
 ### 7. Batch Operations, Scoring, Code Generation, Playgrounds
+
 See `docs/SCRIPTS.md` for full reference.
 
 ## Curriculum Tracks
 
 ### Core Language: `l2-uk-en` (A1→C2)
+
 Ukrainian for English-speaking teens and adults.
 
 ### Seminar Tracks (B2–C1)
+
 HIST, BIO, ISTORIO, LIT, OES, RUTH — history, literature, biography.
 
 ### Secondary: `l2-uk-direct` (A1→B2)
+
 L1-agnostic Ukrainian. Separate schemas, no English.
 
 ## Quality Systems
 
 | System | Type | Entry Point |
-|--------|------|-------------|
+| --- | --- | --- |
 | Audit (34 gates) | Deterministic | `scripts/audit_module.py` |
 | VESUM morphology | Dictionary | `audit/checks/morphological_validator.py` |
 | Russicism detection | Rule-based | Part of validate phase |
@@ -203,7 +213,7 @@ L1-agnostic Ukrainian. Separate schemas, no English.
 ## Related Documentation
 
 | Topic | Location |
-|-------|----------|
+| --- | --- |
 | Pipeline commands | `docs/SCRIPTS.md` |
 | Agent cooperation | `docs/best-practices/agent-cooperation.md` |
 | Cooperation protocol | `docs/CLAUDE-GEMINI-COOPERATION.md` |
