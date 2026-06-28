@@ -1,0 +1,188 @@
+- lemma: прикметник
+  translation: adjective
+  pos: noun
+  usage: Прикметник уточнює ознаку предмета.
+- lemma: прислівник
+  translation: adverb
+  pos: noun
+  usage: Прислівник уточнює спосіб, час або місце дії.
+- lemma: суфікс
+  translation: suffix
+  pos: noun
+  usage: Суфікс допомагає творити нові слова.
+- lemma: основа
+  translation: stem; base
+  pos: noun
+  usage: Твірна основа поєднується із суфіксом.
+- lemma: твірний
+  translation: derivational
+  pos: adjective
+  usage: Твірне слово пояснює походження прикметника.
+- lemma: відіменниковий
+  translation: derived from a noun
+  pos: adjective
+  usage: Відіменниковий прикметник називає зв'язок з іменником.
+- lemma: подвоєння
+  translation: doubling
+  pos: noun
+  usage: У слові денний є подвоєння приголосного.
+- lemma: відносний
+  translation: relative; relational
+  pos: adjective
+  usage: Відносний прикметник називає зв'язок із предметом або сферою.
+- lemma: якісний
+  translation: qualitative
+  pos: adjective
+  usage: Якісний прикметник може мати ступені порівняння.
+- lemma: присвійний
+  translation: possessive
+  pos: adjective
+  usage: Присвійний прикметник указує на належність.
+- lemma: географічний
+  translation: geographic
+  pos: adjective
+  usage: Географічний прикметник утворюється від назви місця.
+- lemma: чергування
+  translation: alternation
+  pos: noun
+  usage: Чергування змінює приголосний перед суфіксом.
+- lemma: празький
+  translation: Prague; Prague-related
+  pos: adjective
+  usage: Празький досвід зацікавив українських дослідників.
+- lemma: козацький
+  translation: Cossack
+  pos: adjective
+  usage: Козацький літопис описує історичні події.
+- lemma: кременчуцький
+  translation: Kremenchuk-related
+  pos: adjective
+  usage: Кременчуцький міст має важливе транспортне значення.
+- lemma: баскський
+  translation: Basque
+  pos: adjective
+  usage: Баскський приклад показує виняток у творенні прикметників.
+- lemma: казахський
+  translation: Kazakh
+  pos: adjective
+  usage: Казахський правопис має власні традиції передачі назв.
+- lemma: нью-йоркський
+  translation: New York-related
+  pos: adjective
+  usage: Нью-йоркський університет оголосив конкурс.
+- lemma: громадський
+  translation: public; civic; community
+  pos: adjective
+  usage: Громадський простір відкритий для мешканців.
+- lemma: громадянський
+  translation: civic; citizen-related
+  pos: adjective
+  usage: Громадянська позиція пов'язана з правами й обов'язками.
+- lemma: правопис
+  translation: spelling; orthography
+  pos: noun
+  usage: Правопис прислівників потребує уважності.
+- lemma: дефіс
+  translation: hyphen
+  pos: noun
+  usage: Дефіс ставимо у слові по-братерськи.
+- lemma: разом
+  translation: together
+  pos: adverb
+  usage: Деякі прислівники пишуться разом.
+- lemma: окремо
+  translation: separately
+  pos: adverb
+  usage: Прийменник з іменником часто пишемо окремо.
+- lemma: напам'ять
+  translation: by heart
+  pos: adverb
+  usage: Учень вивчив правило напам'ять.
+- lemma: назустріч
+  translation: toward; to meet
+  pos: adverb
+  usage: Волонтери вийшли назустріч гостям.
+- lemma: заздалегідь
+  translation: in advance
+  pos: adverb
+  usage: Команда заздалегідь підготувала матеріали.
+- lemma: навмисно
+  translation: deliberately
+  pos: adverb
+  usage: Автор навмисно повторив приклад.
+- lemma: щоденно
+  translation: daily
+  pos: adverb
+  usage: Студенти щоденно тренують правопис.
+- lemma: по-братерськи
+  translation: in a brotherly way
+  pos: adverb
+  usage: Друзі підтримали його по-братерськи.
+- lemma: по-особливому
+  translation: in a special way
+  pos: adverb
+  usage: Вона пояснила правило по-особливому.
+- lemma: мальовничий
+  translation: picturesque
+  pos: adjective
+  usage: Мальовничий краєвид допомагає опису.
+- lemma: дбайливий
+  translation: caring; attentive
+  pos: adjective
+  usage: Дбайливий редактор перевіряє кожну форму.
+- lemma: барвистий
+  translation: colorful
+  pos: adjective
+  usage: Барвистий опис робить текст виразним.
+- lemma: вусатий
+  translation: mustachioed
+  pos: adjective
+  usage: Вусатий козак з'являється в описі картини.
+- lemma: вишуканий
+  translation: refined; exquisite
+  pos: adjective
+  usage: Вишуканий стиль потребує точних прикметників.
+- lemma: ефективний
+  translation: effective
+  pos: adjective
+  usage: Ефективний метод дає результат.
+- lemma: ефектний
+  translation: striking; impressive
+  pos: adjective
+  usage: Ефектний жест привернув увагу.
+- lemma: впевнено
+  translation: confidently
+  pos: adverb
+  usage: Студент упевнено пояснив чергування.
+- lemma: обережно
+  translation: carefully
+  pos: adverb
+  usage: Архівні документи перенесли обережно.
+- lemma: гаряче
+  translation: warmly; hotly
+  pos: adverb
+  usage: Учасники гаряче підтримали пропозицію.
+- lemma: добре
+  translation: well
+  pos: adverb
+  usage: Добре пояснення має приклади.
+- lemma: додому
+  translation: homeward; home
+  pos: adverb
+  usage: Після зустрічі всі повернулися додому.
+- lemma: влітку
+  translation: in summer
+  pos: adverb
+  usage: Влітку майстерня працює щоденно.
+- lemma: вдвічі
+  translation: twice; twofold
+  pos: adverb
+  usage: Охоплення проєкту збільшилося вдвічі.
+- lemma: обставина
+  translation: adverbial modifier
+  pos: noun
+  usage: У реченні прислівник часто є обставиною.
+- lemma: когезія
+  translation: cohesion
+  pos: noun
+  usage: Когезія робить абзаци зв'язними.
