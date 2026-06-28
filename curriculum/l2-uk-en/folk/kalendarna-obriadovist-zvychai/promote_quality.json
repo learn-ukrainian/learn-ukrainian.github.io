@@ -1,9 +1,9 @@
 {
-  "assembled_mdx_sha256": "f518e2f816d8d60755f195179df8df0d432c480820eb6dd89679919ed9950217",
+  "assembled_mdx_sha256": "de17163dc8dfb2c0afceeb35f8501c43fc478a86b79920a3628651a1cb55492d",
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "0bd1999066dafeb1a061c0218010801c50fce8eff5ed5493ce176936d2efc975",
+    "digest": "4edaf2d019945a2a6809a1f4f98e049b2ecf275f5985e680bf1dff506837d07f",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/kalendarna-obriadovist-zvychai.yaml",
@@ -11,7 +11,7 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/kalendarna-obriadovist-zvychai/module.md",
-        "sha256": "9448e200f9c04b0e84771028f5ccdb125b680e3413d0c467ad5b75404f15dd84"
+        "sha256": "5a2959a3a830522ac1bd390688a478220d3368768719c9e1767a690c783ca3bc"
       },
       {
         "path": "curriculum/l2-uk-en/folk/kalendarna-obriadovist-zvychai/activities.yaml",
@@ -28,11 +28,11 @@
     ]
   },
   "evidence": {
-    "framing": "Agy/Gemini 3.1 Pro High APPROVE: the module cleanly integrates Christian-heritage framing for winter and Easter-cycle material and rejects decorative or superstition framing.",
-    "pedagogy": "The lesson builds a C1+ seminar method around source, genre, performance, poetics, proof limits, and bridge to written culture; activities reinforce motif, sequencing, comparison, and essay response.",
-    "quote_integrity": "Two hosted public readings are used through public ukrlib.com.ua source URLs, and local scans found no internal corpus or chunk IDs in learner-facing M02 surfaces.",
-    "review": "Independent read-only Agy/Gemini 3.1 Pro High review returned APPROVE with no blockers after reviewing pasted current file contents.",
-    "source_hygiene": "Resources and reading frontmatter use public URLs only; the module keeps source limits visible and does not expose service identifiers."
+    "framing": "Agy/Gemini 3.1 Pro High APPROVE: the module keeps Christian-heritage framing and source-grounded calendar-tradition analysis.",
+    "pedagogy": "The lesson builds C1+ seminar method around source, genre, performance, poetics, proof limits, and bridge to written culture.",
+    "quote_integrity": "Two public texts use public ukrlib.com.ua source URLs; local scans found no internal IDs in student-facing M02 surfaces.",
+    "review": "Final follow-up Agy/Gemini 3.1 Pro High review returned APPROVE after checking current snippets and scan output.",
+    "source_hygiene": "Resources and reading frontmatter use public URLs only; the module keeps source limits visible without service identifiers."
   },
   "floors": {
     "beauty": 8.5,
@@ -50,7 +50,7 @@
     "model": "gemini-3.1-pro-high"
   },
   "schema_version": 1,
-  "scored_at": "2026-06-27T18:33:14Z",
+  "scored_at": "2026-06-28T17:09:48Z",
   "scores": {
     "beauty": 10.0,
     "decolonization": 10.0,
