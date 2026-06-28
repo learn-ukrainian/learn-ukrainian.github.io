@@ -1,0 +1,229 @@
+- lemma: семантика
+  translation: semantics
+  pos: noun
+  gender: f
+  usage: Семантика відмінка пояснює, яку роль має форма в реченні.
+- lemma: відмінок
+  translation: grammatical case
+  pos: noun
+  gender: m
+  usage: Відмінок показує зв'язок слова з іншими словами.
+- lemma: приналежність
+  translation: belonging, possession
+  pos: noun
+  gender: f
+  usage: Родовий може передавати приналежність або зв'язок.
+- lemma: партитивність
+  translation: partitivity
+  pos: noun
+  gender: f
+  usage: Партитивність видно в прикладі випити чаю.
+- lemma: керування
+  translation: government, syntactic governance
+  pos: noun
+  gender: n
+  usage: Керування прийменника визначає потрібний відмінок.
+- lemma: обставина
+  translation: adverbial modifier, circumstance
+  pos: noun
+  gender: f
+  usage: Обставина може передавати час, місце, причину або спосіб.
+- lemma: варіативність
+  translation: variation
+  pos: noun
+  gender: f
+  usage: Варіативність закінчень залежить від значення і стилю.
+- lemma: конструкція
+  translation: construction
+  pos: noun
+  gender: f
+  usage: Прийменникова конструкція може змінити логіку речення.
+- lemma: гроші
+  translation: money
+  pos: noun
+  gender: pl
+  usage: У слові гроші немає звичайної однини.
+- lemma: ножиці
+  translation: scissors
+  pos: noun
+  gender: pl
+  usage: Ножицями ріжуть папір; це орудний множини.
+- lemma: штани
+  translation: trousers, pants
+  pos: noun
+  gender: pl
+  usage: Нові штани мають множинну парадигму.
+- lemma: окуляри
+  translation: glasses
+  pos: noun
+  gender: pl
+  usage: Без окулярів їй важко читати дрібний текст.
+- lemma: двері
+  translation: doors
+  pos: noun
+  gender: pl
+  usage: На дверях висить оголошення для учасників.
+- lemma: парадигма
+  translation: paradigm
+  pos: noun
+  gender: f
+  usage: Парадигма слова гроші містить тільки множинні форми.
+- lemma: притаманний
+  translation: inherent, characteristic
+  pos: adj
+  usage: Давальний переживача притаманний багатьом безособовим реченням.
+- lemma: властивий
+  translation: typical of, inherent
+  pos: adj
+  usage: Такий відтінок властивий офіційному стилю.
+- lemma: завдяки
+  translation: thanks to
+  pos: prep
+  usage: Завдяки підтримці громади проєкт завершили вчасно.
+- lemma: внаслідок
+  translation: as a result of
+  pos: prep
+  usage: Внаслідок затримки засідання перенесли.
+- lemma: опанувати
+  translation: to master
+  pos: verb
+  aspect: perfective
+  usage: Учні мають опанувати складні випадки керування.
+- lemma: запобігати
+  translation: to prevent
+  pos: verb
+  aspect: imperfective
+  usage: Точне керування допомагає запобігати калькам.
+- lemma: переживач
+  translation: experiencer
+  pos: noun
+  gender: m
+  usage: Приклад мені сумно показує давальний переживача.
+- lemma: адресат
+  translation: addressee, recipient
+  pos: noun
+  gender: m
+  usage: У конструкції лист директорові форма директорові є адресатом.
+- lemma: знаряддя
+  translation: instrument, tool
+  pos: noun
+  gender: n
+  usage: Ручка є знаряддям у реченні писати ручкою.
+- lemma: засіб
+  translation: means, method
+  pos: noun
+  gender: m
+  usage: Електронна пошта може бути засобом передавання.
+- lemma: супровід
+  translation: accompaniment
+  pos: noun
+  gender: m
+  usage: Прийти з другом - це орудний супроводу.
+- lemma: кличний
+  translation: vocative case
+  pos: noun
+  gender: m
+  usage: Кличний потрібний у звертанні пане Михайле.
+- lemma: місцевий
+  translation: locative case
+  pos: noun
+  gender: m
+  usage: Місцевий часто залежить від прийменника у або на.
+- lemma: орудний
+  translation: instrumental case
+  pos: noun
+  gender: m
+  usage: Орудний може називати засіб, роль або шлях.
+- lemma: давальний
+  translation: dative case
+  pos: noun
+  gender: m
+  usage: Давальний називає адресата або переживача.
+- lemma: родовий
+  translation: genitive case
+  pos: noun
+  gender: m
+  usage: Родовий може передавати частину, відсутність або причину.
+- lemma: прийменниковий
+  translation: prepositional
+  pos: adj
+  usage: Прийменниковий зв'язок визначає потрібний відмінок.
+- lemma: закінчення
+  translation: ending
+  pos: noun
+  gender: n
+  usage: Закінчення -а або -у залежить від значення слова.
+- lemma: абстрактний
+  translation: abstract
+  pos: adj
+  usage: Абстрактний іменник часто має форму родового на -у.
+- lemma: конкретний
+  translation: concrete, specific
+  pos: adj
+  usage: Конкретний предмет часто має форму родового на -а.
+- lemma: термін
+  translation: term, time limit
+  pos: noun
+  gender: m
+  usage: Значення терміна і продовження терміну мають різні форми.
+- lemma: акт
+  translation: act, document
+  pos: noun
+  gender: m
+  usage: Текст акта відрізняється від наслідків акту.
+- lemma: листопад
+  translation: November, leaf fall
+  pos: noun
+  gender: m
+  usage: До першого листопада, але поетика осіннього листопаду.
+- lemma: калька
+  translation: calque
+  pos: noun
+  gender: f
+  usage: Конструкція по адресі є небажаною калькою.
+- lemma: відповідно до
+  translation: according to, in accordance with
+  pos: phrase
+  usage: Відповідно до рішення комісії графік змінили.
+- lemma: згідно з
+  translation: according to
+  pos: phrase
+  usage: Згідно з наказом заяву треба подати до п'ятниці.
+- lemma: всупереч
+  translation: contrary to
+  pos: prep
+  usage: Всупереч прогнозам зустріч відбулася.
+- lemma: наперекір
+  translation: in defiance of
+  pos: prep
+  usage: Наперекір труднощам команда завершила роботу.
+- lemma: назустріч
+  translation: toward, to meet halfway
+  pos: prep
+  usage: Адміністрація пішла назустріч студентам.
+- lemma: попри
+  translation: despite
+  pos: prep
+  usage: Попри ризики проєкт продовжили.
+- lemma: через
+  translation: because of, through
+  pos: prep
+  usage: Через хворобу зустріч перенесли.
+- lemma: за адресою
+  translation: at the address
+  pos: phrase
+  usage: Вона мешкає за адресою, зазначеною в заяві.
+- lemma: pluralia tantum
+  translation: plural-only nouns
+  pos: phrase
+  usage: Гроші, двері й ножиці належать до pluralia tantum.
+- lemma: фемінітив
+  translation: feminine professional or role noun
+  pos: noun
+  gender: m
+  usage: Фемінітив редакторка природний у реченні вона стала редакторкою.
+- lemma: регістр
+  translation: register
+  pos: noun
+  gender: m
+  usage: Регістр визначає, чи доречна складна іменникова конструкція.
