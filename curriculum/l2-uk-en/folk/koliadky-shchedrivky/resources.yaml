@@ -22,10 +22,6 @@
   role: reading
   url: https://www.ukrlib.com.ua/narod/printout.php?id=5&bookid=1
   notes: Публічна сторінка колядки; модуль використовує її як приклад джерельної обережності, бо сторінка завершується коротким незакритим рядком.
-- title: Як ще не було початку світа
-  role: reading
-  url: https://www.ukrlib.com.ua/narod/printout.php?id=5&bookid=2
-  notes: Публічний текст колядки з мотивом початку світу; модуль читає його як поетичний мотив із чіткою межею висновку.
 - title: Українська література, 6 клас. Пісні зимового циклу
   role: school-canon
   url: https://pidruchnyk.com.ua/2618-ukralit-6-klas-avramenko-2023.html

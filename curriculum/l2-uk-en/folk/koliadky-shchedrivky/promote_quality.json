@@ -1,17 +1,17 @@
 {
-  "assembled_mdx_sha256": "4db503f75419368fd69a45ab41f8631fcd01c5b30fa52fa7d49adf36722afe38",
+  "assembled_mdx_sha256": "bfbd58d90628ad88872c633cddf09ba985c616e001c98ad08697ec8db5390b36",
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "c5bd33a7f5470046bb99c3ec7be103cc71898a1411c8963831dc052aa2b630e0",
+    "digest": "dc12417be53564d321196ff3cc806caa35e3ac68d8c1d111c82a5952caaf5cda",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/koliadky-shchedrivky.yaml",
-        "sha256": "f1b023d8978ca190868ad9f0cf8cac46162f1fe84eb0cd70c855c108359f7ee5"
+        "sha256": "5bcd96a9ec7084a972b11a6c2361854e7b74187b7cc01c416ef314a316b1bfe3"
       },
       {
         "path": "curriculum/l2-uk-en/folk/koliadky-shchedrivky/module.md",
-        "sha256": "af7c71c509fbd7c8c815dd4e1c5c319adc2aca03249f477079f5282338b3101d"
+        "sha256": "3b058467084e8a61b544a5241e0202c6d547ba92df9257757078672ac91ad319"
       },
       {
         "path": "curriculum/l2-uk-en/folk/koliadky-shchedrivky/activities.yaml",
@@ -19,20 +19,20 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/koliadky-shchedrivky/vocabulary.yaml",
-        "sha256": "78995051e45a4db3eadf1781766cfc4964a3fbccc3730deb5e0dc2d32d19597f"
+        "sha256": "1bd6ece4725d0bc0a352af2fee2b213e5c3993dc2c6757fe5b9714e2b8cbc6ce"
       },
       {
         "path": "curriculum/l2-uk-en/folk/koliadky-shchedrivky/resources.yaml",
-        "sha256": "92c5f4b3cd8e2573a0593b3739bb2f39fbb486db17cfc7598494843348600d84"
+        "sha256": "fb9afc5e6f44c84ffb7b78b8d16cbf992cc4ddcd873b3b9dd5451a23f53535b1"
       }
     ]
   },
   "evidence": {
-    "framing": "Agy/Gemini 3.1 Pro High APPROVE: module frames колядки/щедрівки as Ukrainian winter calendar-cycle, Christian-era, household/community, poetic and performative tradition; no old hidden-core or sensational framing blockers.",
-    "pedagogy": "The lesson uses exact plan sections and builds a C1+ seminar method around genre distinction, performance sequence, formula/motif reading, public source discipline, and evidence-bounded interpretation.",
-    "quote_integrity": "Local source hammer found every hosted reading PrimaryReading text exactly matches its live public Ukrlib article body; all four current lesson excerpts are contained in hosted reading pages.",
-    "review": "Independent read-only Agy/Gemini 3.1 Pro High final review returned APPROVE with no blockers; duplicate compatibility route for 'Як ще не було...' noted as non-blocking.",
-    "source_hygiene": "Hosted readings and resources use public Ukrlib/Pidruchnyk/Osvita URLs only; scans found no internal corpus/chunk IDs in learner-facing M03 lesson/readings."
+    "framing": "Agy/Gemini 3.1 Pro High APPROVE: remedial diff removes learner-facing build/source-verification prose and removes the archaic cosmogony reading from the M03 teaching path; no FOLK framing blockers.",
+    "pedagogy": "The replacement section teaches winter praise variants through addressee, household space, gift imagery, and evidence limits, with the Anna/Danube carol as the gospodynia variant.",
+    "quote_integrity": "mcp__sources.verify_quote matched the four embedded M03 lesson excerpts: Oi syvaia 1.0, Shchedryk 0.9929, Pryletila zozulenka 1.0, Oi nad Dunaiem/Anna 1.0; hosted reading pages contain the excerpts.",
+    "review": "Independent read-only Agy/Gemini 3.1 Pro High returned APPROVE, no blockers; scores beauty 9.5, decolonization 9.5, engagement 9.0, naturalness 9.5, pedagogical 9.5, tone 9.5.",
+    "source_hygiene": "Reading citations use public Ukrlib URLs only; removed Yak shche ne bulo routes are taught_in empty, published false, canonical false, and absent from built dist routes."
   },
   "floors": {
     "beauty": 8.5,
@@ -50,13 +50,13 @@
     "model": "gemini-3.1-pro-high"
   },
   "schema_version": 1,
-  "scored_at": "2026-06-27T21:35:06Z",
+  "scored_at": "2026-06-28T11:34:08Z",
   "scores": {
     "beauty": 9.5,
-    "decolonization": 9.8,
-    "engagement": 9.2,
+    "decolonization": 9.5,
+    "engagement": 9.0,
     "naturalness": 9.5,
-    "pedagogical": 9.6,
+    "pedagogical": 9.5,
     "tone": 9.5
   },
   "slug": "koliadky-shchedrivky",
