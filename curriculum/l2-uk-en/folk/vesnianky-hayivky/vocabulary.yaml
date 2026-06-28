@@ -1,0 +1,60 @@
+- lemma: веснянка
+  translation: spring-cycle folk song
+  pos: noun
+  usage: Веснянка звертається до весни або показує весняну дію через повтор, діалог, гру чи гуртовий голос.
+- lemma: гаївка
+  translation: Easter-season spring song-game
+  pos: noun
+  usage: Гаївка часто пов'язана з великоднім гуртом, колом, грою і громадним простором.
+- lemma: гагілка
+  translation: regional name for hayivka
+  pos: noun
+  usage: Гагілка є регіональною назвою у весняно-великодньому полі, яку не треба виправляти на загальну форму.
+- lemma: ягілка
+  translation: regional name for hayivka
+  pos: noun
+  usage: Ягілка допомагає побачити локальну карту жанру поруч із назвами веснянка й гаївка.
+- lemma: заклична пісня
+  translation: calling song
+  pos: noun phrase
+  usage: Заклична пісня звертається до весни, птаха або іншого адресата, щоб увести сезон у спільний голос.
+- lemma: календарно-обрядова пісня
+  translation: calendar-ritual song
+  pos: noun phrase
+  usage: Календарно-обрядова пісня має час виконання, виконавців, адресу і публічне джерело.
+- lemma: хоровод
+  translation: round dance
+  pos: noun
+  usage: Хоровод у гаївковій рамці показує, що текст може працювати разом із рухом.
+- lemma: виконавська ситуація
+  translation: performance situation
+  pos: noun phrase
+  usage: Виконавська ситуація відповідає на питання хто, де, коли, для кого і з яким рухом співає.
+- lemma: Великдень
+  translation: Easter
+  pos: proper noun
+  usage: Великдень є важливою історичною рамкою багатьох гаївок.
+- lemma: Воскресіння
+  translation: Resurrection
+  pos: noun
+  usage: Воскресіння треба називати там, де великодня традиція підтримує гаївковий контекст.
+- lemma: повтор
+  translation: repetition
+  pos: noun
+  usage: Повтор тримає ритм, пам'ять і гуртовий голос у короткому фольклорному тексті.
+- lemma: паралелізм
+  translation: parallelism
+  pos: noun
+  usage: Паралелізм допомагає веснянці розгортати образи через подібні синтаксичні рухи.
+- lemma: рефрен
+  translation: refrain
+  pos: noun
+  usage: Рефрен у "Розлилися води" повертає гурт до весни після кожного броду.
+- lemma: публічне джерело
+  translation: public source
+  pos: noun phrase
+  usage: Публічне джерело дозволяє учневі перевірити текст за відкритим URL.
+- lemma: межа доказу
+  translation: limit of evidence
+  pos: noun phrase
+  usage: Межа доказу не дозволяє робити висновок про всю традицію з одного запису.

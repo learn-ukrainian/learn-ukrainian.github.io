@@ -4,7 +4,7 @@ sequence: 4
 slug: vesnianky-hayivky
 title: "Веснянки та гаївки"
 subtitle: "Spring songs, Easter hayivky, movement, public source discipline"
-version: 5
+version: 6
 status: locked
 phase: base-first
 cefr_min: C1
@@ -151,18 +151,18 @@ readings:
     source: "Народна творчість. УкрЛіб."
     source_url: "https://www.ukrlib.com.ua/narod/printout.php?id=0&bookid=2"
     license: public_domain
-    hosting: needs-clean-hosted-reading
+    hosting: hosted
     reading_slug: "vesnianka-oi-vyoriu-nyvku-shyroku"
-  - title: "Веснянки"
-    title_en: "Spring songs"
-    genre: "Веснянки"
+  - title: "Розлилися води на чотири броди"
+    title_en: "Waters spilled into four fords"
+    genre: "Веснянка"
     role: primary
     type: primary
     source: "Народна творчість. УкрЛіб."
-    source_url: "https://www.ukrlib.com.ua/narod/printout.php?id=0&bookid=1"
+    source_url: "https://www.ukrlib.com.ua/narod/printout.php?id=0&bookid=4"
     license: public_domain
-    hosting: needs-clean-hosted-reading
-    reading_slug: "vesnianky-collection"
+    hosting: hosted
+    reading_slug: "vesnianka-rozlylysia-vody-na-chotyry-brody"
 do_not_quote:
   - line: "Any plan, wiki, lesson, reading citation exposes a build-only source identifier."
     reason: "Learners must see public URLs or bibliographic sources only."
@@ -177,6 +177,9 @@ connects_to:
   - kupalski-rusalni-pisni
   - zhnyvarski-obzhynkovi-pisni
 changelog:
+  - version: 6
+    date: "2026-06-28"
+    note: "Phase B module build: replaced collection placeholder with the third hosted public spring-song reading and marked clean hosted M04 reading pages."
   - version: 5
     date: "2026-06-28"
     note: "Base-first rebuild: replaced contaminated M04 dossier/wiki/plan with clean public-source contract; scope remains base-only with no learner module/readings changes."
