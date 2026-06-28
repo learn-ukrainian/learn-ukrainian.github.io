@@ -162,9 +162,15 @@ jobs:
               - 'scripts/audit/audit_atlas_poc_richness.py'
               - 'scripts/audit/check_atlas_manifest_enrichment.py'
               - 'scripts/lexicon/*.py'
+              - 'scripts/audit/check_static_practice_assets.py'
+              - 'scripts/audit/generate_daily_pool.py'
+              - 'scripts/audit/generate_practice_deck.py'
               - 'curriculum/l2-uk-en/**/vocabulary.yaml'
+              - 'site/public/lexicon/practice-*.json'
+              - 'site/src/data/lexicon-daily-pool.json'
               - 'site/src/data/lexicon-manifest.json'
               - 'site/src/data/lexicon-manifest.fingerprint.json'
+              - 'site/src/data/lexicon-practice-reviewed-sources.json'
             postmortems:
               - '.github/workflows/ci.yml'
               - 'docs/bug-autopsies/**'
@@ -216,6 +222,9 @@ jobs:
             --max-search-no-visible-gloss 0 \
             --max-old-gate-no-english-anchor 0 \
             --max-poc-thin-pages 786
+
+      - name: Check static Word Day / practice assets (#3935)
+        run: python scripts/audit/check_static_practice_assets.py
 
       # Diff-scoped + advisory (#3150): only flags modules whose vocabulary.yaml changed
       # in THIS PR (no cross-PR coupling on the merge-train), and never blocks merge — a
