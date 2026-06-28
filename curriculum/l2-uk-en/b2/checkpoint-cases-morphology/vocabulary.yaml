@@ -1,0 +1,120 @@
+- lemma: відмінкова функція
+  translation: "case function"
+  pos: phrase
+  usage: "На контрольній треба пояснити не лише форму, а й відмінкову функцію."
+- lemma: систематизація
+  translation: "systematization"
+  pos: noun
+  usage: "Систематизація допомагає побачити зв'язок між родовим, давальним і орудним."
+- lemma: керування
+  translation: "government, syntactic control"
+  pos: noun
+  usage: "Прийменникове керування визначає форму залежного слова."
+- lemma: партитивний
+  translation: "partitive"
+  pos: adj
+  usage: "Партитивний родовий видно у фразі додати води."
+- lemma: нестача
+  translation: "lack, shortage"
+  pos: noun
+  usage: "Родовий нестачі з'являється у фразі бракує доказів."
+- lemma: належність
+  translation: "belonging, possession"
+  pos: noun
+  usage: "Родовий належності може показувати зв'язок між предметом і власником."
+- lemma: адресат
+  translation: "addressee, recipient"
+  pos: noun
+  usage: "Давальний часто називає адресата листа або поради."
+- lemma: переживач
+  translation: "experiencer"
+  pos: noun
+  usage: "У реченні мені холодно форма мені називає переживача."
+- lemma: етичний давальний
+  translation: "ethical dative"
+  pos: phrase
+  usage: "Етичний давальний показує емоційну залученість мовця."
+- lemma: знаряддя
+  translation: "instrument, tool"
+  pos: noun
+  usage: "Орудний знаряддя відповідає на питання чим виконано дію."
+- lemma: засіб
+  translation: "means, medium"
+  pos: noun
+  usage: "Захищеним каналом називає засіб передавання даних."
+- lemma: супровід
+  translation: "accompaniment"
+  pos: noun
+  usage: "У фразі з колегою орудний передає супровід або спільну участь."
+- lemma: присудкова роль
+  translation: "predicative role"
+  pos: phrase
+  usage: "У реченні вона стала координаторкою орудний має присудкову роль."
+- lemma: узгодження
+  translation: "agreement"
+  pos: noun
+  usage: "Узгодження прикметника з іменником треба перевіряти в усій групі."
+- lemma: варіантність
+  translation: "variation"
+  pos: noun
+  usage: "Варіантність родового -а/-у залежить від значення й слова."
+- lemma: чергування
+  translation: "alternation"
+  pos: noun
+  usage: "Чергування може з'являтися під час творення непрямих форм."
+- lemma: парадигма
+  translation: "paradigm"
+  pos: noun
+  usage: "Парадигма слова охоплює всі його граматичні форми."
+- lemma: прийменникова група
+  translation: "prepositional phrase"
+  pos: phrase
+  usage: "У прийменниковій групі треба відмінити всі залежні слова."
+- lemma: деліберативне запитання
+  translation: "deliberative question"
+  pos: phrase
+  usage: "Деліберативне запитання допомагає зважити варіанти дії."
+- lemma: риторичне запитання
+  translation: "rhetorical question"
+  pos: phrase
+  usage: "Риторичне запитання підсилює тезу, а не завжди просить інформацію."
+- lemma: вкладене запитання
+  translation: "embedded question"
+  pos: phrase
+  usage: "Вкладене запитання входить у складне речення після дієслова знати."
+- lemma: пунктуація
+  translation: "punctuation"
+  pos: noun
+  usage: "Пунктуація допомагає відрізнити пряме запитання від вкладеного."
+- lemma: трансформація
+  translation: "transformation"
+  pos: noun
+  usage: "Трансформація речення показує, як змінюється фокус."
+- lemma: діагностика
+  translation: "diagnostics"
+  pos: noun
+  usage: "Діагностика помилок починається з прийменників і дієслів керування."
+- lemma: морфологічна точність
+  translation: "morphological accuracy"
+  pos: phrase
+  usage: "Морфологічна точність вимагає правильних закінчень і узгодження."
+- lemma: зворотний займенник
+  translation: "reflexive pronoun"
+  pos: phrase
+  usage: "Зворотний займенник себе не має називної форми."
+- lemma: взаємна конструкція
+  translation: "reciprocal construction"
+  pos: phrase
+  usage: "Взаємна конструкція один одного змінює другу частину."
+- lemma: означальний займенник
+  translation: "determinative pronoun"
+  pos: phrase
+  usage: "Означальний займенник сам відрізняється від той самий."
+- lemma: pluralia tantum
+  translation: "plural-only nouns"
+  pos: noun
+  usage: "Pluralia tantum на зразок гроші й двері мають тільки множинну парадигму."
+- lemma: самоперевірка
+  translation: "self-check"
+  pos: noun
+  usage: "Самоперевірка допомагає пояснити форму перед фінальним письмом."
