@@ -160,9 +160,10 @@ When handing off to another agent:
 # Post content on the issue
 gh issue comment {N} --body "[full review/spec/request]"
 
-# Ping Gemini
-.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-gemini \
-  "New task posted on #N. Please read and start." --task-id issue-N
+# Ping AGY
+.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy \
+  "New task posted on #N. Please read and start." \
+  --task-id issue-N --to-model gemini-3.5-flash-high
 
 # Ping Codex
 .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-codex \

@@ -148,12 +148,12 @@ The most common failure mode at scale is **wiki-plan drift**: wiki says one thin
 
 ---
 
-## AC-4 — Adversarial review (Gemini) before PR
+## AC-4 — Adversarial review (AGY) before PR
 
-Spawn Gemini via the bridge:
+Spawn AGY via the bridge:
 
 ```bash
-.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-gemini \
+.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy \
   "Adversarial review of #<N> review-and-lock for <slug> wiki + plan. \
    Read the diff. Look for: \
    (1) wiki fixes that introduce NEW gaps while closing documented ones, \
@@ -161,7 +161,7 @@ Spawn Gemini via the bridge:
    (3) plan-review checklist missing categories that the latest systemic audit would have caught, \
    (4) this rubric doc drifting from what was actually applied (worked example must match rubric step-for-step), \
    (5) hallucinated vocab not verifiable in VESUM." \
-  --task-id <N>-review --model gemini-3.1-pro-preview
+  --task-id <N>-review --to-model gemini-3.1-pro-high
 ```
 
 Address findings. If non-trivial, a second round is expected — don't short-circuit.

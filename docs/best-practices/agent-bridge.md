@@ -1,17 +1,17 @@
 # Agent Bridge — Channel Communication
 
-The agent bridge is how Claude, Gemini, and Codex (and you, the
+The agent bridge is how Claude, AGY, and Codex (and you, the
 human) communicate across invocations. The new **channel bridge**
 (added in #1190) replaces the old 1:1 `ask-*` pattern with topic-
 scoped channels, pinned context, and character-budget history
 truncation — the token waste from re-explaining project setup on
 every delegation drops from ~15KB to ~6KB per post.
 
-> **Note on the legacy `ask-*` commands.** They still work and are
-> the simplest way to fire a one-shot delegation with no history
-> tracking. They're **not deprecated** and won't be. Channels are
-> the right primitive for sustained, topic-scoped conversations;
-> `ask-*` is the right primitive for one-off questions. Use both.
+> **Current tooling note.** Use `.venv/bin/python
+> scripts/ai_agent_bridge/__main__.py ...` for bridge commands. Do not use
+> bare `ab ...` examples; `ab` resolves to ApacheBench on the user's machine.
+> Gemini CLI and Gemini Code Assist are unsupported. Use AGY for
+> Gemini-family work.
 
 ## Mental model
 
@@ -43,29 +43,33 @@ the thread_id and get `round_index = parent.round_index + 1`.
 
 ## Discussion vs execution
 
-`ab discuss` is deliberation, not implementation. The bridge invokes
+`.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss` is
+deliberation, not implementation. The bridge invokes
 participants in read-only mode, passes the `AB_DISCUSS_READONLY=1`
 contract through the adapter layer, and fails the round if the git
 working tree changes while participants are running. A failed round
 posts a loud system warning into the thread before returning non-zero,
 including `READ_ONLY_VIOLATION: <agent>` for the agent family that must
 be treated as the write source. Filesystem writes during discussion are
-a hard stop; dispatch the work as a separate `delegate.py dispatch`
+a hard stop; dispatch the work as a separate `scripts/delegate.py dispatch`
 brief.
 
-`ab post` creates channel messages and delivery rows. Its default
+`.venv/bin/python scripts/ai_agent_bridge/__main__.py post` creates channel
+messages and delivery rows. Its default
 delivery mode is read-only, and the inbox worker applies the same
 discussion read-only adapter contract to those default deliveries. Use
 write-capable modes only when the post is explicitly an execution
 request. Implementation work that needs file edits, commits, pushes, or
-a PR should normally go through `delegate.py dispatch` or
-`ab dispatch-fix`, not through discussion.
+a PR should normally go through `scripts/delegate.py dispatch` or
+`.venv/bin/python scripts/ai_agent_bridge/__main__.py dispatch-fix`, not
+through discussion.
 
 Current adapter policy for discussion calls:
 
 - Codex: `read-only` maps to `codex exec -s read-only`.
-- Gemini: discussion calls add `--approval-mode plan`; plain read-only
-  CLI defaults were not enough in trusted workspaces.
+- AGY: discussion calls route through the AGY adapter. Direct `agy --model`
+  uses display labels such as `Gemini 3.1 Pro (High)`; bridge/runtime calls
+  may pass slugs such as `gemini-3.1-pro-high` for adapter mapping.
 - Claude: discussion calls restrict built-in tools to read/list/search
   tools. They do not use Claude plan mode because discussion replies are
   comments, not implementation plans; the restricted tool list plus the
@@ -78,20 +82,20 @@ Current adapter policy for discussion calls:
 
 ```bash
 # Channel management
-ab channel new pipeline --include shared --agents claude,gemini,codex
-ab channel list
-ab channel info pipeline
-ab channel context pipeline --edit     # opens $EDITOR on context.md
-ab channel tail pipeline -n 20         # last 20 messages
-ab channel tail pipeline --thread ABC  # full thread
+.venv/bin/python scripts/ai_agent_bridge/__main__.py channel new pipeline --include shared --agents claude,agy,codex
+.venv/bin/python scripts/ai_agent_bridge/__main__.py channel list
+.venv/bin/python scripts/ai_agent_bridge/__main__.py channel info pipeline
+.venv/bin/python scripts/ai_agent_bridge/__main__.py channel context pipeline --edit
+.venv/bin/python scripts/ai_agent_bridge/__main__.py channel tail pipeline -n 20
+.venv/bin/python scripts/ai_agent_bridge/__main__.py channel tail pipeline --thread ABC
 
 # Posting (short + long form)
-ab p pipeline gemini "quick question about X"
-ab post pipeline "full form with --to options" --to gemini,codex
-ab post pipeline "reply" --parent MESSAGE_ID
+.venv/bin/python scripts/ai_agent_bridge/__main__.py p pipeline agy "quick question about X"
+.venv/bin/python scripts/ai_agent_bridge/__main__.py post pipeline "full form with --to options" --to agy,codex
+.venv/bin/python scripts/ai_agent_bridge/__main__.py post pipeline "reply" --parent MESSAGE_ID
 
 # Multi-agent discussion (B.4)
-ab discuss architecture "should we refactor X?" --with claude,gemini,codex --max-rounds 2
+.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss architecture "should we refactor X?" --with claude,agy,codex --max-rounds 2
 ```
 
 ## Desktop Participation
@@ -106,38 +110,38 @@ the Desktop session.
 Orchestrator dispatch to Codex Desktop:
 
 ```bash
-ab post desktop-tasks "<brief>" --to codex-desktop --from-agent claude
+.venv/bin/python scripts/ai_agent_bridge/__main__.py post desktop-tasks "<brief>" --to codex-desktop --from-agent claude
 ```
 
 Codex Desktop watches the task channel from its own session:
 
 ```bash
-ab channel tail desktop-tasks --follow
+.venv/bin/python scripts/ai_agent_bridge/__main__.py channel tail desktop-tasks --follow
 ```
 
 Codex Desktop can also pull its pending inbox:
 
 ```bash
-ab inbox show codex-desktop
+.venv/bin/python scripts/ai_agent_bridge/__main__.py inbox show codex-desktop
 ```
 
-### Explicit ack: `ab inbox ack <delivery_id>`
+### Explicit ack: `.venv/bin/python scripts/ai_agent_bridge/__main__.py inbox ack <delivery_id>`
 
 When an external worker processes a delivery without going through
-`ab inbox run`, ack it explicitly:
+`.venv/bin/python scripts/ai_agent_bridge/__main__.py inbox run`, ack it explicitly:
 
 ```bash
-ab inbox ack <delivery_id> [--error "processed by <thing>"]
+.venv/bin/python scripts/ai_agent_bridge/__main__.py inbox ack <delivery_id> [--error "processed by <thing>"]
 ```
 
 Without an explicit ack, deliveries stay `pending` forever and the inbox
-warning recurs. `ab discuss` acks its own deliveries on round convergence
+warning recurs. Bridge discussion acks its own deliveries on round convergence
 automatically, so no manual intervention is needed for that path.
 
 Codex Desktop posts replies with its own sender identity:
 
 ```bash
-ab post desktop-tasks "<status>" --from-agent codex-desktop
+.venv/bin/python scripts/ai_agent_bridge/__main__.py post desktop-tasks "<status>" --from-agent codex-desktop
 ```
 
 Limitation: this MVP stores a flat sender/recipient string. The pending
@@ -150,15 +154,15 @@ SSE replay, and attachments.
 Use these wrappers when the task needs the project-standard model/mode
 assignment enforced by tooling instead of memory.
 
-`ab dispatch-fix <issue-or-task-id> [--brief-file PATH]` dispatches a
+`.venv/bin/python scripts/ai_agent_bridge/__main__.py dispatch-fix <issue-or-task-id> [--brief-file PATH]` dispatches a
 Codex worktree implementation run for "fix this and ship a PR" tasks.
-It hardcodes `delegate.py dispatch --agent codex --mode danger
+It hardcodes `scripts/delegate.py dispatch --agent codex --mode danger
 --worktree --base origin/main --effort high`, and every generated
 brief includes the commit, push, and PR checklist. If `--brief-file`
 is omitted, the wrapper builds `/tmp/dispatch-fix-<task-id>.md` from
 `gh issue view <issue> --json title,body`.
 
-`ab review-deep <PR-or-path> [--effort xhigh]` dispatches an
+`.venv/bin/python scripts/ai_agent_bridge/__main__.py review-deep <PR-or-path> [--effort xhigh]` dispatches an
 adversarial Claude review run. It hardcodes `--agent claude --mode
 read-only --model claude-opus-4-7 --effort xhigh` unless an explicit
 effort override is passed, then builds a review prompt from either
@@ -172,7 +176,7 @@ delegate worker.
 
 ## Silence-timeout vs hard-timeout
 
-`delegate.py dispatch` has two watchdogs with different jobs.
+`scripts/delegate.py dispatch` has two watchdogs with different jobs.
 `--hard-timeout` is the absolute wall-clock fallback for the worker.
 `--silence-timeout` is narrower: it kills the agent CLI when no watchdog
 activity arrives within the configured window, then marks the task
@@ -196,11 +200,11 @@ and you have another way to detect parked sessions.
 
 | Situation | Use |
 | --- | --- |
-| One-off question, no history needed | `ask-claude/gemini/codex` |
-| Sustained discussion on a topic | `ab post` to a channel |
-| Need a 2-3 agent debate on a design | `ab discuss` |
+| One-off question, no history needed | `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy ...` / `ask-claude` / `ask-codex` |
+| Sustained discussion on a topic | `.venv/bin/python scripts/ai_agent_bridge/__main__.py post` to a channel |
+| Need a 2-3 agent debate on a design | `.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss` |
 | Sharing context across many delegations | Pin it in `docs/agent-channels/{topic}/context.md` |
-| Code review with adversarial feedback | `ab post reviews ...` |
+| Code review with adversarial feedback | `.venv/bin/python scripts/ai_agent_bridge/__main__.py post reviews ...` |
 | Want the post visible in the dashboard | Channels only (the legacy `messages` table has its own UI) |
 
 ## The hygiene rule
@@ -210,10 +214,10 @@ agent.** Per channel conventions:
 
 1. Write code → stage with `git add`
 2. `git diff --cached > /tmp/diff.txt`
-3. `ab post reviews "Review request for #NNN" --to gemini` (or ask-gemini with the diff attached)
+3. `.venv/bin/python scripts/ai_agent_bridge/__main__.py post reviews "Review request for #NNN" --to agy`
 4. Apply feedback or argue back in writing
 5. Commit only after the review is CLEAN or BLOCKING is resolved
-6. Commit message includes `Reviewed-By: gemini-3.1-pro-preview (task-id)` trailer
+6. Commit message includes `Reviewed-By: AGY Gemini 3.1 Pro (High) (task-id)` trailer
 
 This rule is non-negotiable. Bypassing it was the #1 reason review
 quality degraded on earlier commits.
@@ -310,7 +314,7 @@ of repeated context avoided** on this one issue alone — and the
 savings grow roughly linearly with round count.
 
 **Compound wins on multi-round debates:** the same trick applies to
-`ab discuss` round 2+. When an agent is handed their own prior
+`.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss` round 2+. When an agent is handed their own prior
 response via `_channels.build_agent_prompt` it doesn't need to be
 re-typed. The B.2 prompt assembler caps history at 5KB (configurable
 via `DEFAULT_MAX_HISTORY_CHARS`), so even a 4-round, 4-agent
@@ -392,7 +396,7 @@ If `context.md` for a channel goes stale (the rules no longer match
 reality), fix it immediately:
 
 ```bash
-ab channel context pipeline --edit
+.venv/bin/python scripts/ai_agent_bridge/__main__.py channel context pipeline --edit
 ```
 
 This bumps the sha256, and the next post will record the new rev.
@@ -415,12 +419,12 @@ Who writes:
 Who reads:
 
 - Any external watcher you configure locally
-- `ab sync` if you prefer manual draining instead of OS integration
+- `.venv/bin/python scripts/ai_agent_bridge/__main__.py sync` if you prefer manual draining instead of OS integration
 
 Recommended mental model:
 
 - The SQLite `deliveries` table is the source of truth
-- Wake files are only a nudge to run `ab inbox run <agent>`
+- Wake files are only a nudge to run `.venv/bin/python scripts/ai_agent_bridge/__main__.py inbox run <agent>`
 - Missing a wake is safe because the work is still pending in SQLite
 
 Example launchd `.plist` (`docs/examples/learn-ukrainian.codex-inbox.plist`):
@@ -465,8 +469,8 @@ ExecStart=%h/projects/learn-ukrainian/.venv/bin/python scripts/ai_agent_bridge/_
 If you do not want OS-level watchers, use the manual fallback:
 
 ```bash
-ab sync claude
-ab sync --all
+.venv/bin/python scripts/ai_agent_bridge/__main__.py sync claude
+.venv/bin/python scripts/ai_agent_bridge/__main__.py sync --all
 ```
 
 That path reads the same `deliveries` queue and drains it on demand.

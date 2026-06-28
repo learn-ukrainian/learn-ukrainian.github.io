@@ -40,23 +40,23 @@ export AB_WAKE_DIR="${AB_REPO_ROOT}/.agent/wake"
 Create your base channels. It is recommended to create a `shared` channel for global context, and include it in topic-specific channels.
 ```bash
 # Create the global shared channel
-ab channel new shared
+.venv/bin/python scripts/ai_agent_bridge/__main__.py channel new shared
 
 # Create a topic channel and include shared context
-ab channel new ops --include shared
+.venv/bin/python scripts/ai_agent_bridge/__main__.py channel new ops --include shared
 ```
 
 ### Step 3.4: Test the Setup
 Verify the bridge is functioning correctly:
 ```bash
 # List available channels
-ab channel list
+.venv/bin/python scripts/ai_agent_bridge/__main__.py channel list
 
 # Post a test message
-ab post ops "Initialization test" --to claude
+.venv/bin/python scripts/ai_agent_bridge/__main__.py post ops "Initialization test" --to claude
 
 # Check the inbox queue
-ab inbox show
+.venv/bin/python scripts/ai_agent_bridge/__main__.py inbox show claude
 ```
 
 ## 4. Environment Variable Reference
@@ -71,22 +71,23 @@ The bridge is fully configurable via `AB_*` environment variables to support por
 | `AB_CONTEXT_DIR` | `{AB_REPO_ROOT}/docs/agent-channels` | Directory containing channel `context.md` files. |
 | `AB_WAKE_DIR` | `{AB_REPO_ROOT}/.agent/wake` | Directory for OS-level wake files for the inbox worker. |
 | `AB_MONITOR_URL` | `http://localhost:8765/api/state/summary` | URL for the Monitor API. Set to `""` to disable snapshot injection. |
-| `AB_GEMINI_MODEL` | `batch_gemini_config.FLASH_MODEL` / `gemini-2.0-flash` | Default Gemini model to invoke. |
+| `AB_GEMINI_MODEL` | Legacy only | Gemini CLI is unsupported for current project work; use AGY through bridge/runtime instead. |
 | `AB_PIPELINE_ENV_KEY` | `LEARN_UKRAINIAN_PIPELINE` | Env var key to suppress inbox hooks during pipeline runs. |
 
 ## 5. CLI Quick Reference
 
-The bridge is managed via the `ab` command line interface (typically aliased to `python -m ai_agent_bridge`).
+Bridge commands should use the explicit project entry point. Avoid bare `ab ...`
+examples because `ab` resolves to ApacheBench on the user's machine.
 
-- **`ab channel ...`**: Manage channels.
-  - `ab channel new <name> [--include <other>]`: Create a new channel.
-  - `ab channel list`: List all channels.
-  - `ab channel context <name> --edit`: Edit the pinned context for a channel.
-- **`ab post <channel> "<message>"`**: Send a message to a channel. Use `--to <agent1,agent2>` to specify recipients, or `--parent <id>` to reply to a thread.
-- **`ab discuss <channel> "<topic>"`**: Start a bounded multi-agent debate. Use `--with <agents>` and `--max-rounds <N>`.
-- **`ab inbox show`**: View pending messages waiting for agents.
-- **`ab inbox run <agent> [--until-idle]`**: Run the inbox worker to process messages for a specific agent.
-- **`ab sync <agent>`**: Manually drain the queue and sync messages for an agent (alternative to `inbox run`).
+- **`.venv/bin/python scripts/ai_agent_bridge/__main__.py channel ...`**: Manage channels.
+  - `.venv/bin/python scripts/ai_agent_bridge/__main__.py channel new <name> [--include <other>]`: Create a new channel.
+  - `.venv/bin/python scripts/ai_agent_bridge/__main__.py channel list`: List all channels.
+  - `.venv/bin/python scripts/ai_agent_bridge/__main__.py channel context <name> --edit`: Edit the pinned context for a channel.
+- **`.venv/bin/python scripts/ai_agent_bridge/__main__.py post <channel> "<message>"`**: Send a message to a channel. Use `--to <agent1,agent2>` to specify recipients, or `--parent <id>` to reply to a thread.
+- **`.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss <channel> "<topic>"`**: Start a bounded multi-agent debate. Use `--with <agents>` and `--max-rounds <N>`.
+- **`.venv/bin/python scripts/ai_agent_bridge/__main__.py inbox show <agent>`**: View pending messages waiting for agents.
+- **`.venv/bin/python scripts/ai_agent_bridge/__main__.py inbox run <agent> [--until-idle]`**: Run the inbox worker to process messages for a specific agent.
+- **`.venv/bin/python scripts/ai_agent_bridge/__main__.py sync <agent>`**: Manually drain the queue and sync messages for an agent (alternative to `inbox run`).
 
 ## 6. Architecture Diagram
 
@@ -94,12 +95,12 @@ The flow of a message through the Agent Bridge:
 
 ```mermaid
 graph TD
-    A[Human/Agent Post] -->|ab post| B(Channel)
+    A[Human/Agent Post] -->|bridge post| B(Channel)
     B -->|Context + Snapshot + History| C[(SQLite DB: channel_messages)]
     C -->|Generate Routes| D[(SQLite DB: deliveries)]
     D -->|Wake Hint| E[Wake File (.agent/wake/)]
-    E -.->|File Event| F[Inbox Worker (ab inbox run)]
+    E -.->|File Event| F[Inbox Worker]
     D -->|Poll / Lease| F
-    F -->|Assemble Prompt| G[Agent Invoke (Claude/Gemini)]
+    F -->|Assemble Prompt| G[Agent Invoke]
     G -->|Reply| B
 ```

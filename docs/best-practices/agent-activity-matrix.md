@@ -28,10 +28,10 @@ Each cell carries:
 |---|---|---|---|---|
 | **Claude** ⭐ | Opus 4.8 (orchestrator inline + headless dispatch + Q&A); Sonnet 4.x (mid-tier headless); Haiku (cheap Explore subagent grep/read) | Anthropic API (interactive weekly cap, doubled until ~mid-July 2026 promo) + `delegate.py --agent claude` headless | Metered; interactive cap shared with user sessions | **TOP-PRIORITY lane.** Dispatch lane **AVAILABLE** (the planned post-2026-06-15 sunset was CANCELLED). Architecture, V7 writer (claude-tools), hard-bug reasoning, adversarial review (**inline only — never `claude -p`/`--agent claude` subagent for the Claude review seat**). Cap 2 in-flight. |
 | **Codex** ⭐ | gpt-5.5 (default) | OpenAI via Codex CLI | $1000/wk bucket (metered) | **TOP-PRIORITY lane.** Novel impl, cross-file patterns, hard debug, primary V7 reviewer + novel-architecture code review. Cap 2 in-flight. |
-| **agy** | Gemini-family (Antigravity CLI; **replaced gemini-cli 2026-06-08**) | `delegate.py --agent agy` / `ab ask-agy` | **METERED** (corrected 2026-06-19 — NOT unmetered; route by fit/cost, not as a free default) | Support lane: existing scripts, ingestion, fixtures/migrations, docs-near-code, wiki writing; §7/factual cleared 2026-06-13. Cap 2 in-flight. |
+| **agy** | Gemini-family (Antigravity CLI; **replaced gemini-cli 2026-06-08**) | `scripts/delegate.py dispatch --agent agy` / `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy` | **METERED** (corrected 2026-06-19 — NOT unmetered; route by fit/cost, not as a free default) | Support lane: existing scripts, ingestion, fixtures/migrations, docs-near-code, wiki writing; §7/factual cleared 2026-06-13. Cap 2 in-flight. |
 | **DeepSeek** | deepseek-v4-pro (content review + VESUM via `sources` MCP); deepseek-v4-flash (cheap PR code review) | `delegate.py --agent deepseek` (Hermes adapter) | Cheap | **Off-seat REVIEW lane — use it, don't review inline.** Primary PR-diff + content review. |
-| **Grok** | **grok-build** via native grok CLI (`delegate.py --agent grok-build`, **file-editing dispatch**, validated 2026-06-14 — prefer over grok-4.3); **grok-4.\*** via Hermes (`ab ask-grok`, one-shot/discuss) | native grok CLI / Hermes (xai-oauth) | Cheap | **Active — use both.** grok-build is a real writer/fixer dispatch lane (V7 grok-tools writer); grok-4.\* for one-shot Q&A/discuss. |
-| **cursor** | cursor-agent | `delegate.py --agent cursor` / `ab ask-cursor` | Metered | Valid writer/fixer dispatch lane (integrated 2026-05-24). |
+| **Grok** | **grok-build** via native grok CLI (`scripts/delegate.py dispatch --agent grok-build`, **file-editing dispatch**, validated 2026-06-14 — prefer over grok-4.3); **grok-4.\*** via Hermes (`.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-grok`, one-shot/discuss) | native grok CLI / Hermes (xai-oauth) | Cheap | **Active — use both.** grok-build is a real writer/fixer dispatch lane (V7 grok-tools writer); grok-4.\* for one-shot Q&A/discuss. |
+| **cursor** | cursor-agent | `scripts/delegate.py dispatch --agent cursor` / `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-cursor` | Metered | Valid writer/fixer dispatch lane (integrated 2026-05-24). |
 | **Qwen** | — | — | — | ❌ **EXCLUDED** — too expensive (user 2026-05-29). Adapter exists but **do not route to it.** |
 
 **Sub-agents (children of the orchestrator session, not separate dispatches):**
@@ -50,7 +50,7 @@ The rest of this doc is *task → agent*. This section is the **inverse — *fre
   - **Codex / Claude (top-priority):** the hardest open work first — novel impl, cross-file refactors, architecture, V7 module building/review, hard debugging. Don't burn these on mechanical work a cheaper lane can do.
   - **agy / cursor / grok-build:** mechanical-with-judgment — running scripts, fixtures/migrations, docs-near-code, wiki/content writing, schema edits, bounded refactors.
   - **DeepSeek:** any open PR diff or content+VESUM review — route reviews here off-seat; don't review inline.
-  - **grok-4.\* / hermes / opencode (`ab ask-*`):** one-shot Q&A, second opinions, quick research with no commit.
+  - **grok-4.\* / hermes / opencode (explicit `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-*`):** one-shot Q&A, second opinions, quick research with no commit.
   - **Explore (Haiku subagent):** search/grep fan-out.
 - **Where "next work" comes from:** the active track handoff's NEXT-ACTIONS, open GH issues, and the build/review queue. If nothing genuinely fits a free lane, log it and leave it idle — do **not** manufacture busywork (quality > utilization).
 - **Quality gate, not just utilization:** gates passing ≠ shippable (#M-11). Anything a support lane produces gets a strong-model (Codex/Claude) or cross-model (DeepSeek) review before it ships. "Keep the lane busy" never lowers the bar.
@@ -118,7 +118,7 @@ New evidence from judge-calibration bakeoffs (per `audit/INDEX-bakeoff-evidence.
 | Slot | Agent | F1 / accuracy | Last verified | Evidence |
 |---|---|---|---|---|
 | **Primary** | Claude Opus 4.7 | **F1=86%, 100% case accuracy** on 12-case Russianism set | 2026-05-15 | `audit/2026-05-15-russianism-judge-calibration/REPORT.md` |
-| Runner-up 1 | Gemini-3.1-pro-preview | F1=84% (greeting-FP issue) | 2026-05-15 | same; H2 won at 2026-05-17 — `audit/2026-05-17-judge-calibration-h2/COMPARISON.md` |
+| Runner-up 1 | AGY Gemini 3.1 Pro (High) | F1=84% (greeting-FP issue) | 2026-05-15 | same; H2 won at 2026-05-17 — `audit/2026-05-17-judge-calibration-h2/COMPARISON.md` |
 | Runner-up 2 | GPT-5.5 (Codex) | high precision, lower recall (conservative) | 2026-05-15 | same |
 | Runner-up 3 | Grok-4.3 | F1=77% (middle of pack) | 2026-05-15 | `audit/2026-05-15-grok-4.3-judge-calibration/REPORT.md` |
 
@@ -159,7 +159,7 @@ New evidence from judge-calibration bakeoffs (per `audit/INDEX-bakeoff-evidence.
 
 | Slot | Agent | Score | Last verified | Evidence | Notes |
 |---|---|---|---|---|---|
-| **Primary** | Gemini (gemini-3.0-flash-preview) | unmetered; routine pattern-application across multiple files | 2026-05-13 | MEMORY #M-0 reframe | "default for routine: running existing scripts, ingestion runs, tests/migrations/fixtures, docs-near-code" |
+| **Primary** | AGY Gemini 3.5 Flash (High) | metered; routine pattern-application across multiple files | 2026-05-13 | MEMORY #M-0 reframe | "default for routine: running existing scripts, ingestion runs, tests/migrations/fixtures, docs-near-code" |
 | Runner-up | Codex | tighter on edge-cases; better for high-uncertainty refactors | 2026-05-12 | various recent merges (#2121, #2123) | Costs Codex quota; reserve for cases where Gemini's pattern-match might miss. |
 
 **Known weakness (Gemini for mechanical):** ambiguous cross-file architectural rewrites; security/concurrency bugs; GH/rebase/auth-heavy work; mass mechanical pattern-application that requires nuanced judgment. For those → Codex.
@@ -203,9 +203,9 @@ New evidence from judge-calibration bakeoffs (per `audit/INDEX-bakeoff-evidence.
 
 | Slot | Agent | Score | Last verified | Evidence | Notes |
 |---|---|---|---|---|---|
-| **Primary (routine)** | Gemini-3.0-flash via `ab ask-gemini` | unmetered; fast | ongoing | `scripts/ai_agent_bridge/__main__.py` | Default for low-stakes one-shot. |
-| **Primary (deep)** | Gemini-3.1-pro via `ab ask-gemini --model gemini-3.1-pro-preview` | qualitative | ongoing | same | When deep reasoning needed and Codex/Claude not on the question. |
-| Runner-up 1 | Codex via `ab ask-codex` | high-judgment one-shot | ongoing | same | For implementation-y questions. |
+| **Primary (routine)** | AGY Gemini 3.5 Flash (High) via `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy --to-model gemini-3.5-flash-high` | metered; fast | ongoing | `scripts/ai_agent_bridge/__main__.py` | Default for low-stakes one-shot. |
+| **Primary (deep)** | AGY Gemini 3.1 Pro (High) via `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy --to-model gemini-3.1-pro-high` | qualitative | ongoing | same | When deep reasoning needed and Codex/Claude not on the question. |
+| Runner-up 1 | Codex via `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-codex` | high-judgment one-shot | ongoing | same | For implementation-y questions. |
 | Runner-up 2 | Claude inline | when orchestrator IS Claude | ongoing | same | The Q&A is me; no round-trip. |
 
 ---
@@ -235,15 +235,15 @@ New evidence from judge-calibration bakeoffs (per `audit/INDEX-bakeoff-evidence.
 |---|---|
 | V7 module writing | `.venv/bin/python scripts/build/v7_build.py {level} {slug} --worktree --writer claude-tools` (default writer omitted) |
 | Wiki article writing | `.venv/bin/python scripts/wiki/compile.py --writer gemini` (default) |
-| Code dispatch (mechanical) | `.venv/bin/python scripts/delegate.py dispatch --agent gemini --task-id X --mode danger --worktree --prompt-file BRIEF` |
+| Code dispatch (mechanical) | `.venv/bin/python scripts/delegate.py dispatch --agent agy --task-id X --mode danger --worktree --prompt-file BRIEF` |
 | Code dispatch (novel) | `.venv/bin/python scripts/delegate.py dispatch --agent codex --model gpt-5.5 --effort xhigh --mode danger --worktree --silence-timeout 3600 --task-id X --prompt-file BRIEF` |
 | Adversarial review (pre-June-15) | `.venv/bin/python scripts/delegate.py dispatch --agent claude --mode read-only --model claude-opus-4-7 --effort xhigh --task-id X --prompt-file BRIEF` |
 | Adversarial review (post-June-15) | `.venv/bin/python scripts/delegate.py dispatch --agent codex --effort xhigh --mode read-only ...` per substitutions YAML |
 | Code review (PR diff) | `.venv/bin/python scripts/delegate.py dispatch --agent deepseek --model deepseek-v4-flash --task-id review-{PR} --prompt-file ...` |
 | Content review (load-bearing, VESUM) | `.venv/bin/python scripts/delegate.py dispatch --agent deepseek --model deepseek-v4-pro --task-id review-content-X --prompt-file ...` |
-| Q&A (routine) | `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-gemini "PROMPT"` |
-| Q&A (deep) | `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-gemini --model gemini-3.1-pro-preview "PROMPT"` |
-| Discuss (multi-agent) | `.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss CHANNEL "TOPIC" --with codex,claude,gemini` |
+| Q&A (routine) | `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy "PROMPT" --task-id agy-question --to-model gemini-3.5-flash-high` |
+| Q&A (deep) | `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy "PROMPT" --task-id agy-deep-question --to-model gemini-3.1-pro-high` |
+| Discuss (multi-agent) | `.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss CHANNEL "TOPIC" --with codex,claude,agy` |
 | Search / locate | `Agent(subagent_type="Explore", model="haiku", description="...", prompt="...")` |
 | Status check (state) | `curl -s http://localhost:8765/api/state/...` |
 
@@ -254,7 +254,7 @@ New evidence from judge-calibration bakeoffs (per `audit/INDEX-bakeoff-evidence.
 The matrix updates when bakeoff signal flips a champion. The protocol:
 
 1. **Operator initiates** a challenge on one task-type cell. Says: *"Cell 4.X primary is currently $AGENT. We want to test whether $CHALLENGER can do better with $PROPOSED_CHANGES (prompt / context / harness)."*
-2. **Challenger receives a structured request** via `ab discuss`:
+2. **Challenger receives a structured request** via `.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss`:
    ```
    You are the candidate. The current primary on task type X is $PRIMARY with score $S, last verified $D. We are open to promoting you IF you can show > $S on the same eval set. You may propose ONE OF: (a) prompt change, (b) added context, (c) harness change. State your proposal in 5 lines max + the smallest viable bakeoff that would prove it. If you are not confident, respond DECLINE.
    ```
@@ -313,7 +313,7 @@ Listed by priority for next-session fill:
 | Rank | Model | F1 | Precision | Recall | Case acc | Cost | Notes |
 |---|---|---:|---:|---:|---:|---|---|
 | 1 ✅ | Claude Opus 4.7 | **86%** | 79% | 94% | 100% | $$$ | Primary. Highest recall in the field. |
-| 2 ✅ | Gemini-3.1-pro-preview | **84%** | 81% | 87% | 92% | 0$ | Greeting-FP issue. |
+| 2 ✅ | AGY Gemini 3.1 Pro (High) | **84%** | 81% | 87% | 92% | 0$ | Greeting-FP issue. |
 | 3 ✅ | GPT-5.5 (Codex) | **78%** | 90% | 69% | 83% | $$ | Conservative, high precision. |
 | 4 ✅ | Grok-4.3 | **77%** | — | — | — | $ | Middle of pack (2026-05-15 calibration). |
 | 5 ✅ | Qwen-3.6-plus | **69%** | 90% | 56% | 92% | $ | **NEW 2026-05-19 (`audit/2026-05-19-qwen-3.6-judge-calibration/`).** Most conservative judge in the field — ties Codex on precision but lowest recall (misses ~half of sev≥2 issues). 1 spurious flag on `cal_clean_with_lure`. NOT primary; viable as cheap second-opinion screen where precision matters more than recall. |
@@ -371,9 +371,9 @@ Listed by priority for next-session fill:
 
 | Rank routine | Model | Cost |
 |---|---|---|
-| 1 ✅ | Gemini-3.0-flash (`ab ask-gemini`) | 0$ |
-| 1 deep ✅ | Gemini-3.1-pro-preview | 0$ |
-| 2 ✅ | Codex GPT-5.5 (`ab ask-codex`) | $$ |
+| 1 ✅ | AGY Gemini 3.5 Flash (High) | metered |
+| 1 deep ✅ | AGY Gemini 3.1 Pro (High) | metered |
+| 2 ✅ | Codex GPT-5.5 (`.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-codex`) | $$ |
 | ❓ | Qwen-3.6-plus | $ |
 
 ### 8.10 The Chinese-model question (user-asked)

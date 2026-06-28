@@ -206,7 +206,7 @@ All phases plug into EPIC #1814 (HTML artifact serving + nav UI). The `/dashboar
 3. **Cache-friendly.** Existing endpoints use TTL caching (per-section). New endpoints follow same pattern.
 4. **Kubedojo aesthetic** for HTML — already adopted, consistent.
 5. **Agents read first, humans read second.** When designing a new endpoint, write the JSON shape FIRST (because agent routing depends on it), then derive the HTML view.
-6. **No interactive forms in v1.** Read-only views only. Bakeoff firings, promote-protocol acceptances, etc. happen via CLI (`delegate.py`, `ab discuss`) — the dashboard *shows* state but doesn't *change* it.
+6. **No interactive forms in v1.** Read-only views only. Bakeoff firings, promote-protocol acceptances, etc. happen via CLI (`scripts/delegate.py dispatch`, `.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss`) — the dashboard *shows* state but doesn't *change* it.
 
 ---
 
