@@ -1,0 +1,191 @@
+- lemma: умовний спосіб
+  translation: conditional mood
+  pos: noun
+  gender: m
+  usage: Умовний спосіб твориться з минулої форми та частки би або б.
+- lemma: частка
+  translation: particle
+  pos: noun
+  gender: f
+  usage: Частка би пишеться окремо.
+- lemma: би
+  translation: conditional particle bi
+  pos: particle
+  usage: Після приголосного часто вживаємо би.
+- lemma: б
+  translation: conditional particle b
+  pos: particle
+  usage: Після голосного часто вживаємо б.
+- lemma: припущення
+  translation: assumption
+  pos: noun
+  gender: n
+  usage: Припущення можна подати через умовний спосіб.
+- lemma: гіпотеза
+  translation: hypothesis
+  pos: noun
+  gender: f
+  usage: Гіпотеза потребує чіткої умови.
+- lemma: ввічливість
+  translation: politeness
+  pos: noun
+  gender: f
+  usage: Умовний спосіб часто виражає ввічливість.
+- lemma: наслідок
+  translation: consequence
+  pos: noun
+  gender: m
+  usage: У якби-реченні друга частина називає наслідок.
+- lemma: ірреальність
+  translation: irreality
+  pos: noun
+  gender: f
+  usage: Ірреальність відрізняє умовний спосіб від факту.
+- lemma: милозвучність
+  translation: euphony
+  pos: noun
+  gender: f
+  usage: Милозвучність допомагає вибрати би або б.
+- lemma: постпозиція
+  translation: postposition
+  pos: noun
+  gender: f
+  usage: Постпозиція частки можлива після дієслова.
+- lemma: препозиція
+  translation: preposition, placement before
+  pos: noun
+  gender: f
+  usage: Препозиція частки змінює фокус речення.
+- lemma: підрядне речення умови
+  translation: conditional subordinate clause
+  pos: noun
+  gender: n
+  usage: Підрядне речення умови часто починається з якби.
+- lemma: сполучник
+  translation: conjunction
+  pos: noun
+  gender: m
+  usage: Якби є сполучником умови.
+- lemma: якби
+  translation: if, if only
+  pos: conjunction
+  usage: Якби я знав, допоміг би.
+- lemma: як би
+  translation: how would
+  pos: phrase
+  usage: Як би ви пояснили це правило?
+- lemma: коли б
+  translation: if, were it that
+  pos: conjunction
+  usage: Коли б ви мали час, ми поговорили б завтра.
+- lemma: аби
+  translation: if only, provided that
+  pos: conjunction
+  usage: Аби була підтримка, ми завершили б проєкт.
+- lemma: бодай би
+  translation: may it be, if only
+  pos: phrase
+  usage: Бодай би ця розмова допомогла.
+- lemma: хоч би що
+  translation: whatever happens
+  pos: phrase
+  usage: Хоч би що сталося, не панікуймо.
+- lemma: що б там не було
+  translation: whatever happens
+  pos: phrase
+  usage: Що б там не було, перевірмо факти.
+- lemma: прагнути
+  translation: to strive
+  pos: verb
+  aspect: imperfective
+  usage: Ми прагнули б точнішого формулювання.
+- lemma: мріяти
+  translation: to dream
+  pos: verb
+  aspect: imperfective
+  usage: Я мріяв би про довгу подорож.
+- lemma: радити
+  translation: to advise
+  pos: verb
+  aspect: imperfective
+  usage: Я б радив перевірити джерело.
+- lemma: сумніватися
+  translation: to doubt
+  pos: verb
+  aspect: imperfective
+  usage: Я сумнівався б у такому висновку.
+- lemma: припускати
+  translation: to assume
+  pos: verb
+  aspect: imperfective
+  usage: Дослідники припустили б інший результат.
+- lemma: сподіватися
+  translation: to hope
+  pos: verb
+  aspect: imperfective
+  usage: Ми сподівалися б на відповідь.
+- lemma: вагатися
+  translation: to hesitate
+  pos: verb
+  aspect: imperfective
+  usage: Я вагався б перед таким рішенням.
+- lemma: вчинити
+  translation: to act, to do
+  pos: verb
+  aspect: perfective
+  usage: Як би ви вчинили на моєму місці?
+- lemma: модальність
+  translation: modality
+  pos: noun
+  gender: f
+  usage: Модальність змінює сприйняття прохання.
+- lemma: гіпотетичність
+  translation: hypotheticality
+  pos: noun
+  gender: f
+  usage: Гіпотетичність віддаляє дію від факту.
+- lemma: оптативність
+  translation: optative meaning
+  pos: noun
+  gender: f
+  usage: Оптативність видно у вислові бодай би.
+- lemma: пом'якшення
+  translation: softening
+  pos: noun
+  gender: n
+  usage: Пом'якшення робить прохання ввічливішим.
+- lemma: порада
+  translation: advice
+  pos: noun
+  gender: f
+  usage: Порада часто починається з я б на вашому місці.
+- lemma: побажання
+  translation: wish
+  pos: noun
+  gender: n
+  usage: Побажання може мати форму бодай би.
+- lemma: сталий вираз
+  translation: fixed expression
+  pos: noun
+  gender: m
+  usage: Сталий вираз не завжди розкладається механічно.
+- lemma: риторична фігура
+  translation: rhetorical figure
+  pos: noun
+  gender: f
+  usage: Повтор я б може створювати риторичну фігуру.
+- lemma: міжмовна інтерференція
+  translation: cross-linguistic interference
+  pos: noun
+  gender: f
+  usage: Міжмовна інтерференція спричиняє буквальні переклади.
+- lemma: умовний сполучник
+  translation: conditional conjunction
+  pos: noun
+  gender: m
+  usage: Умовний сполучник відкриває підрядну частину.
+- lemma: нереальна умова
+  translation: unreal condition
+  pos: noun
+  gender: f
+  usage: Нереальна умова показує сценарій, який не став фактом.
