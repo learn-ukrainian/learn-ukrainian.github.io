@@ -1,0 +1,193 @@
+- lemma: наказовий спосіб
+  translation: imperative mood
+  pos: noun
+  gender: m
+  usage: Наказовий спосіб передає наказ, прохання або заклик.
+- lemma: імператив
+  translation: imperative
+  pos: noun
+  gender: m
+  usage: Імператив може звучати м'яко або категорично.
+- lemma: спонукання
+  translation: inducement, prompting
+  pos: noun
+  gender: n
+  usage: Спонукання до спільної дії має форму ходімо.
+- lemma: прохання
+  translation: request
+  pos: noun
+  gender: n
+  usage: Ввічливе прохання часто використовує недоконаний вид.
+- lemma: наказ
+  translation: order
+  pos: noun
+  gender: m
+  usage: Короткий наказ може вимагати доконаного результату.
+- lemma: заборона
+  translation: prohibition
+  pos: noun
+  gender: f
+  usage: Заборона дії часто має недоконаний вид.
+- lemma: застереження
+  translation: warning
+  pos: noun
+  gender: n
+  usage: Застереження від результату часто має доконаний вид.
+- lemma: запрошення
+  translation: invitation
+  pos: noun
+  gender: n
+  usage: Запрошення заходьте звучить м'яко.
+- lemma: ввічливість
+  translation: politeness
+  pos: noun
+  gender: f
+  usage: Ввічливість залежить від виду, інтонації й контексту.
+- lemma: категоричність
+  translation: categorical force
+  pos: noun
+  gender: f
+  usage: Інфінітивний наказ має високу категоричність.
+- lemma: інфінітив
+  translation: infinitive
+  pos: noun
+  gender: m
+  usage: Інфінітив може виконувати функцію офіційного припису.
+- lemma: фазовий
+  translation: phase-related
+  pos: adj
+  usage: Фазове дієслово відкриває процес.
+- lemma: модальний
+  translation: modal
+  pos: adj
+  usage: Модальне слово може керувати різними видами інфінітива.
+- lemma: доконаний
+  translation: perfective
+  pos: adj
+  usage: Доконаний вид просить завершений результат.
+- lemma: недоконаний
+  translation: imperfective
+  pos: adj
+  usage: Недоконаний вид відкриває процес або правило.
+- lemma: результат
+  translation: result
+  pos: noun
+  gender: m
+  usage: Результат можна перевірити після виконання дії.
+- lemma: процес
+  translation: process
+  pos: noun
+  gender: m
+  usage: Процес триває і не обов'язково вже завершений.
+- lemma: правило
+  translation: rule
+  pos: noun
+  gender: n
+  usage: Правило часто потребує недоконаного виду.
+- lemma: припис
+  translation: directive
+  pos: noun
+  gender: m
+  usage: Припис Документи подавати звучить офіційно.
+- lemma: інструкція
+  translation: instruction
+  pos: noun
+  gender: f
+  usage: Інструкція має точно розрізняти наказ і заборону.
+- lemma: прочитати
+  translation: to read through, perfective
+  pos: verb
+  aspect: perfective
+  usage: Прочитайте текст до кінця.
+- lemma: читати
+  translation: to read, imperfective
+  pos: verb
+  aspect: imperfective
+  usage: Читайте тексти уважно.
+- lemma: підписати
+  translation: to sign, perfective
+  pos: verb
+  aspect: perfective
+  usage: Підпишіть заяву.
+- lemma: підписувати
+  translation: to sign, imperfective
+  pos: verb
+  aspect: imperfective
+  usage: Підписуйте заяви після перевірки.
+- lemma: зайти
+  translation: to come in, perfective
+  pos: verb
+  aspect: perfective
+  usage: Зайдіть після дзвінка.
+- lemma: заходити
+  translation: to come in, imperfective
+  pos: verb
+  aspect: imperfective
+  usage: Заходьте, будь ласка.
+- lemma: сісти
+  translation: to sit down, perfective
+  pos: verb
+  aspect: perfective
+  usage: Сядьте рівно під час огляду.
+- lemma: сідати
+  translation: to sit down, imperfective
+  pos: verb
+  aspect: imperfective
+  usage: Сідайте ближче до проходу.
+- lemma: відкрити
+  translation: to open, perfective
+  pos: verb
+  aspect: perfective
+  usage: Не відкрийте не той файл.
+- lemma: відкривати
+  translation: to open, imperfective
+  pos: verb
+  aspect: imperfective
+  usage: Не відкривайте підозрілі посилання.
+- lemma: забути
+  translation: to forget, perfective
+  pos: verb
+  aspect: perfective
+  usage: Не забудьте перепустку.
+- lemma: забувати
+  translation: to forget, imperfective
+  pos: verb
+  aspect: imperfective
+  usage: Не забувайте правила безпеки.
+- lemma: ходімо
+  translation: let us go
+  pos: verb
+  usage: Ходімо до наступного прикладу.
+- lemma: поговорімо
+  translation: let us talk
+  pos: verb
+  usage: Поговорімо про ввічливість.
+- lemma: працюймо
+  translation: let us work
+  pos: verb
+  usage: Працюймо з прикладами уважно.
+- lemma: перевірити
+  translation: to check, perfective
+  pos: verb
+  aspect: perfective
+  usage: Перевірте адресу зараз.
+- lemma: перевіряти
+  translation: to check, imperfective
+  pos: verb
+  aspect: imperfective
+  usage: Перевіряйте адресу перед надсиланням.
+- lemma: подати
+  translation: to submit, perfective
+  pos: verb
+  aspect: perfective
+  usage: Подайте документи сьогодні.
+- lemma: подавати
+  translation: to submit, imperfective
+  pos: verb
+  aspect: imperfective
+  usage: Документи подавати до канцелярії.
+- lemma: звертатися
+  translation: to contact, apply
+  pos: verb
+  aspect: imperfective
+  usage: Звертайтеся до координатора.
