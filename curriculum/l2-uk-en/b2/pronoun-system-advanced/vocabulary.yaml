@@ -1,0 +1,124 @@
+- lemma: займенник
+  translation: pronoun
+  pos: noun
+  usage: Займенник указує на особу, предмет, ознаку або кількість, не називаючи їх прямо.
+- lemma: зворотний
+  translation: reflexive
+  pos: adj
+  usage: Зворотний займенник себе повертає дію до того самого учасника.
+- lemma: себе
+  translation: oneself, myself, yourself
+  pos: pron
+  usage: Вона побачила себе в дзеркалі.
+- lemma: собі
+  translation: to oneself, in oneself
+  pos: pron
+  usage: Я поставив собі реалістичну мету.
+- lemma: собою
+  translation: by oneself, with oneself
+  pos: pron
+  usage: Після складної роботи вони пишалися собою.
+- lemma: постфікс
+  translation: postfix
+  pos: noun
+  usage: Постфікс -ся є частиною дієслівної форми.
+- lemma: взаємний
+  translation: mutual, reciprocal
+  pos: adj
+  usage: Взаємна дія спрямована від кожного учасника до іншого.
+- lemma: один одного
+  translation: one another, each other
+  pos: pron
+  usage: Колеги поважають один одного.
+- lemma: один одному
+  translation: to one another
+  pos: pron
+  usage: Друзі допомагають один одному.
+- lemma: один з одним
+  translation: with one another
+  pos: pron
+  usage: Учасники говорили один з одним після засідання.
+- lemma: одна одну
+  translation: one another (feminine accusative)
+  pos: pron
+  usage: Сестри підтримують одна одну.
+- lemma: означальний
+  translation: determinative, attributive
+  pos: adj
+  usage: Означальні займенники уточнюють повноту, тотожність або індивідуальність.
+- lemma: сам
+  translation: self, alone, by oneself
+  pos: pron
+  usage: Я сам перевірю цей абзац.
+- lemma: сама
+  translation: herself, by herself
+  pos: pron
+  usage: Вона сама написала заяву.
+- lemma: саме
+  translation: exactly, precisely
+  pos: part
+  usage: Саме цей приклад показує різницю.
+- lemma: самий
+  translation: same in fixed forms; not superlative
+  pos: pron
+  usage: У конструкції той самий займенник самий передає тотожність.
+- lemma: той самий
+  translation: the same
+  pos: phrase
+  usage: Ми повернулися до того самого питання.
+- lemma: весь
+  translation: all, whole
+  pos: pron
+  usage: Увесь день група працювала над текстом.
+- lemma: усі
+  translation: everyone, all
+  pos: pron
+  usage: Усі учасники погодили план.
+- lemma: кожний
+  translation: each, every
+  pos: pron
+  usage: Кожний учасник відповідає за свою частину.
+- lemma: кожен
+  translation: everyone, each
+  pos: pron
+  usage: Кожен має право висловитися.
+- lemma: всякий
+  translation: every kind of, any sort of
+  pos: pron
+  usage: Всякий аргумент треба перевірити перед публікацією.
+- lemma: будь-який
+  translation: any, whichever
+  pos: pron
+  usage: Можна обрати будь-який зручний день.
+- lemma: інший
+  translation: other, another, different
+  pos: pron
+  usage: Після обговорення група обрала інший час зустрічі.
+- lemma: другий
+  translation: second
+  pos: num
+  usage: Другий день семінару починається о десятій.
+- lemma: решта
+  translation: the rest, remainder
+  pos: noun
+  usage: Двоє підготували презентацію, а решта зібрала джерела.
+- lemma: тотожність
+  translation: identity, sameness
+  pos: noun
+  usage: Той самий показує тотожність предмета або теми.
+- lemma: відмінність
+  translation: difference, distinction
+  pos: noun
+  usage: Інший підкреслює відмінність від попереднього варіанта.
+- lemma: відповідальність
+  translation: responsibility
+  pos: noun
+  usage: Команда взяла відповідальність на себе.
+- lemma: самостійно
+  translation: independently
+  pos: adv
+  usage: Вона самостійно перевірила весь документ.
+- lemma: взаєморозуміння
+  translation: mutual understanding
+  pos: noun
+  usage: Взаєморозуміння зростає, коли учасники слухають один одного.
