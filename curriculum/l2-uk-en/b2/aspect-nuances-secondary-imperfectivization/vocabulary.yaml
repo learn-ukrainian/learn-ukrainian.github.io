@@ -1,0 +1,196 @@
+- lemma: імперфективація
+  translation: imperfectivization
+  pos: noun
+  gender: f
+  usage: Імперфективація повертає дію в недоконаний вид.
+- lemma: вторинний
+  translation: secondary
+  pos: adj
+  usage: Вторинна форма зберігає префіксальний зміст.
+- lemma: недоконаний
+  translation: imperfective
+  pos: adj
+  usage: Недоконаний вид описує процес або повторення.
+- lemma: доконаний
+  translation: perfective
+  pos: adj
+  usage: Доконаний вид називає завершений результат.
+- lemma: вид
+  translation: aspect
+  pos: noun
+  gender: m
+  usage: Вид дієслова змінює перспективу речення.
+- lemma: видова пара
+  translation: aspectual pair
+  pos: noun
+  gender: f
+  usage: Видова пара показує зв'язок між процесом і результатом.
+- lemma: префікс
+  translation: prefix
+  pos: noun
+  gender: m
+  usage: Префікс може створити нове результативне значення.
+- lemma: суфікс
+  translation: suffix
+  pos: noun
+  gender: m
+  usage: Суфікс допомагає творити недоконану форму.
+- lemma: основа
+  translation: stem
+  pos: noun
+  gender: f
+  usage: Основа дієслова може змінюватися під час творення форми.
+- lemma: чергування
+  translation: alternation
+  pos: noun
+  gender: n
+  usage: Чергування голосного видно в парі витерти - витирати.
+- lemma: наголос
+  translation: stress
+  pos: noun
+  gender: m
+  usage: Наголос іноді розрізняє видові форми.
+- lemma: повторюваність
+  translation: repetition
+  pos: noun
+  gender: f
+  usage: Повторюваність часто потребує недоконаного виду.
+- lemma: тривалість
+  translation: duration
+  pos: noun
+  gender: f
+  usage: Тривалість дії відкриває процесуальну перспективу.
+- lemma: результативність
+  translation: result orientation
+  pos: noun
+  gender: f
+  usage: Результативність доконаного виду закриває дію.
+- lemma: процес
+  translation: process
+  pos: noun
+  gender: m
+  usage: Процес може тривати без негайного результату.
+- lemma: процедура
+  translation: procedure
+  pos: noun
+  gender: f
+  usage: Регулярна процедура потребує недоконаних форм.
+- lemma: опрацювати
+  translation: to process, perfective
+  pos: verb
+  aspect: perfective
+  usage: Команда опрацювала звіт до п'ятниці.
+- lemma: опрацьовувати
+  translation: to process, imperfective
+  pos: verb
+  aspect: imperfective
+  usage: Команда опрацьовувала звіт увесь тиждень.
+- lemma: переписати
+  translation: to rewrite, perfective
+  pos: verb
+  aspect: perfective
+  usage: Редактор переписав вступ після обговорення.
+- lemma: переписувати
+  translation: to rewrite, imperfective
+  pos: verb
+  aspect: imperfective
+  usage: Редактор переписував вступ протягом години.
+- lemma: виписати
+  translation: to issue or write out, perfective
+  pos: verb
+  aspect: perfective
+  usage: Лікар виписав рецепт.
+- lemma: виписувати
+  translation: to issue or write out, imperfective
+  pos: verb
+  aspect: imperfective
+  usage: Лікар виписує рецепти щопонеділка.
+- lemma: налагодити
+  translation: to set up, perfective
+  pos: verb
+  aspect: perfective
+  usage: Технік налагодив систему до зустрічі.
+- lemma: налагоджувати
+  translation: to set up, imperfective
+  pos: verb
+  aspect: imperfective
+  usage: Технік налагоджував систему дві години.
+- lemma: виправити
+  translation: to correct, perfective
+  pos: verb
+  aspect: perfective
+  usage: Вона виправила одну помилку.
+- lemma: виправляти
+  translation: to correct, imperfective
+  pos: verb
+  aspect: imperfective
+  usage: Вона виправляла помилки після кожного читання.
+- lemma: обробити
+  translation: to process, perfective
+  pos: verb
+  aspect: perfective
+  usage: Програма обробила файл.
+- lemma: обробляти
+  translation: to process, imperfective
+  pos: verb
+  aspect: imperfective
+  usage: Програма обробляє файли за чергою.
+- lemma: забрати
+  translation: to take away, perfective
+  pos: verb
+  aspect: perfective
+  usage: Охоронець забрав перепустку.
+- lemma: забирати
+  translation: to take away, imperfective
+  pos: verb
+  aspect: imperfective
+  usage: Охоронець щодня забирав перепустки.
+- lemma: витерти
+  translation: to wipe, perfective
+  pos: verb
+  aspect: perfective
+  usage: Вона витерла дошку після уроку.
+- lemma: витирати
+  translation: to wipe, imperfective
+  pos: verb
+  aspect: imperfective
+  usage: Вона витирала дошку після кожного уроку.
+- lemma: сплести
+  translation: to weave, perfective
+  pos: verb
+  aspect: perfective
+  usage: Майстриня сплела вінок.
+- lemma: сплітати
+  translation: to weave, imperfective
+  pos: verb
+  aspect: imperfective
+  usage: Майстриня сплітала вінки щовечора.
+- lemma: подавати
+  translation: to submit, imperfective
+  pos: verb
+  aspect: imperfective
+  usage: Студенти подавали заявки щомісяця.
+- lemma: обґрунтовувати
+  translation: to justify, imperfective
+  pos: verb
+  aspect: imperfective
+  usage: Доповідач обґрунтовував позицію прикладами.
+- lemma: перетворювати
+  translation: to transform, imperfective
+  pos: verb
+  aspect: imperfective
+  usage: Суфікс перетворює результативне значення на процес.
+- lemma: оновлювати
+  translation: to update, imperfective
+  pos: verb
+  aspect: imperfective
+  usage: Редакція оновлюватиме інструкцію щотижня.
+- lemma: фазовий
+  translation: phase-related
+  pos: adj
+  usage: Фазове дієслово відкриває або закриває процес.
+- lemma: інфінітив
+  translation: infinitive
+  pos: noun
+  gender: m
+  usage: Після почали потрібен недоконаний інфінітив.
