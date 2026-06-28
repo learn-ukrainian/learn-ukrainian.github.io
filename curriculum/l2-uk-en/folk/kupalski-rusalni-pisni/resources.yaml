@@ -1,0 +1,24 @@
+- title: Купайло, Купайло! Де ти зимувало?
+  role: primary
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=20460
+  notes: Публічний текст купальської пісні для аналізу звертання, питання, повтору і сезонного руху.
+- title: А де наше Купайло стояло
+  role: primary
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=20461
+  notes: Публічний текст купальської пісні з адаптованою та неадаптованою версією для аналізу місця, світла, Миколи, воріт і варіантності.
+- title: Сиділа русалка на білій березі
+  role: primary
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=20462
+  notes: Публічний текст русальної пісні для аналізу берези, прохання, намітки, сорочки і паралельної будови.
+- title: Українська література, 6 клас. Календарно-обрядові пісні
+  role: reference
+  url: https://pidruchnyk.com.ua/2618-ukralit-6-klas-avramenko-2023.html
+  notes: Шкільна рамка для календарних пісень і жанрового пояснення без hosting primary text.
+- title: Модельна навчальна програма. Українська література. 5-6 класи
+  role: reference
+  url: https://osvita.ua/doc/files/news/830/83023/Ukr_lit_5-6-kl_Yatsenko_ta_in_14_07.pdf
+  notes: Публічна curriculum рамка, яка орієнтує добір тем і назв.
+- title: Місяць сюрчання коників
+  role: locator
+  url: https://osvita.ua/school/literature/ch/77913/list-8.html
+  notes: Публічна літературна сторінка з occurrence "Ой на Івана, ой на Купала"; не використовується як hosted primary reading.

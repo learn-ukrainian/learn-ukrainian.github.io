@@ -1,0 +1,72 @@
+- lemma: купальська пісня
+  translation: Kupala song
+  pos: noun phrase
+  usage: Купальська пісня належить до літнього календарного циклу і читається через public text, повтор, адресу й виконавську ситуацію.
+- lemma: русальна пісня
+  translation: rusalni song
+  pos: noun phrase
+  usage: Русальна пісня у цьому модулі читається через Зелені свята, березу, голос прохання, адресата й предметні слова.
+- lemma: Зелені свята
+  translation: Green holidays
+  pos: noun phrase
+  usage: Зелені свята допомагають розмістити русальні пісні в літньому календарному полі, якщо це підтримує джерело.
+- lemma: Трійця
+  translation: Trinity
+  pos: noun
+  usage: Трійця є календарною назвою, поруч із якою шкільні джерела розміщують русальний матеріал.
+- lemma: Івана Купала
+  translation: Ivan Kupala
+  pos: proper noun
+  usage: Івана Купала називає літню святкову рамку для купальських пісень, гуртового співу і молодіжного простору.
+- lemma: Купайло
+  translation: Kupaylo
+  pos: proper noun
+  usage: Купайло в пісні може бути адресатом запитання або спільним знаком гурту.
+- lemma: вінок
+  translation: wreath
+  pos: noun
+  usage: Вінок належить до предметного словника купальського циклу, але його треба називати тільки там, де джерело або рамка підтримує висновок.
+- lemma: хоровод
+  translation: round dance
+  pos: noun
+  usage: Хоровод допомагає говорити про гуртовий рух, коли текст або шкільна рамка дозволяє таку виконавську інтерпретацію.
+- lemma: намітка
+  translation: head covering
+  pos: noun
+  usage: Намітка в русальній пісні є конкретним предметом прохання до жіночок.
+- lemma: сорочка
+  translation: shirt
+  pos: noun
+  usage: Сорочка в другій половині русальної пісні повторює схему прохання з новим предметом.
+- lemma: стріха
+  translation: thatch edge of roof
+  pos: noun
+  usage: Стріха в "Купайло, Купайло!" є місцем ночування у відповіді на питання.
+- lemma: зіллячко
+  translation: green herbs
+  pos: noun
+  usage: Зіллячко завершує рух короткої купальської пісні від зимування до літньої зелені.
+- lemma: рефрен
+  translation: refrain
+  pos: noun
+  usage: Рефрен або повтор підтримує пам'ять, ритм і гуртовий голос у календарній пісні.
+- lemma: анафора
+  translation: anaphora
+  pos: noun
+  usage: Анафора повторює початок рядка й допомагає бачити будову усного тексту.
+- lemma: паралелізм
+  translation: parallelism
+  pos: noun
+  usage: Паралелізм у русальній пісні повторює схему прохання, але змінює адресата й предмет.
+- lemma: виконавська ситуація
+  translation: performance situation
+  pos: noun phrase
+  usage: Виконавська ситуація описує, хто може співати, до кого звернений текст, де звучить голос і що робить повтор.
+- lemma: межа доказу
+  translation: limit of evidence
+  pos: noun phrase
+  usage: Межа доказу не дозволяє робити висновок про весь жанр на основі одного public reading.
+- lemma: public reading
+  translation: public reading
+  pos: noun phrase
+  usage: Public reading дає учневі повний текст і відкритий URL для перевірки уривка.
