@@ -1,9 +1,9 @@
 {
-  "assembled_mdx_sha256": "7731f46ca7fa00513be03f0454c6155facfdd21a2b781ea057498fba1c8ed866",
+  "assembled_mdx_sha256": "379d61fdab9093ea0a9f6e34d4278f355c226e8ed11486f1edcf6c78b962a2dd",
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "9563f3c0185da42c063fd178021d4b2698355f56983bcfeacc3c99bb0ef0f011",
+    "digest": "61190fac7dc1dc33a577a729325d6c72b8ce04a0b04cd7f8d1e888b93aeef9fa",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/narodna-kultura-yak-systema.yaml",
@@ -11,15 +11,15 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/narodna-kultura-yak-systema/module.md",
-        "sha256": "a95b7ab7179994d6227a66f3465b0cf6321f0a97b5a54c888fb50c27b8811503"
+        "sha256": "cb1e9e0e92ec025b81d822be4ef1acb74dbcf0c4b505cd691b0ef3ed6b1662eb"
       },
       {
         "path": "curriculum/l2-uk-en/folk/narodna-kultura-yak-systema/activities.yaml",
-        "sha256": "11901d716fff1957e9f2170ef3eae7733a8b190b31e75d4348912e99cf19d685"
+        "sha256": "f4902af50f70b163dabe85a3a908791da830e7374df976805544820793066d3d"
       },
       {
         "path": "curriculum/l2-uk-en/folk/narodna-kultura-yak-systema/vocabulary.yaml",
-        "sha256": "5da63d488034e34975e7bef9a7f982a0963ee25e29924454c46a8827b59f0881"
+        "sha256": "3241317a0b90a7705eb753f710cd1db67f262377879440f92e7504c95b15aca1"
       },
       {
         "path": "curriculum/l2-uk-en/folk/narodna-kultura-yak-systema/resources.yaml",
@@ -28,11 +28,11 @@
     ]
   },
   "evidence": {
-    "framing": "Agy/Gemini 3.1 Pro High APPROVE: decolonization framing rejects decorative-ethnography reduction and establishes a rigorous six-layer method for the rest of the FOLK track.",
-    "pedagogy": "C1+ academic framework teaches six-layer reading method plus seven-step seminar answer guide grounded in public source evidence.",
-    "quote_integrity": "Codex public-source hammer found all four hosted readings match public Ukrlib article text; mcp__sources.verify_quote matched lesson excerpts against \u041d\u0430\u0440\u043e\u0434\u043d\u0430 \u0442\u0432\u043e\u0440\u0447\u0456\u0441\u0442\u044c.",
-    "review": "Final independent read-only Agy/Gemini 3.1 Pro High packet review returned APPROVE with no blockers and ready-to-merge note.",
-    "source_hygiene": "Reviewer found learner-facing content clean of internal IDs and correctly transitioned citations to public ukrlib.com.ua source URLs."
+    "framing": "Agy/Gemini 3.1 Pro High APPROVE: decolonization framing remains source-grounded and rejects decorative-ethnography reduction.",
+    "pedagogy": "C1+ academic framework teaches six-layer reading method plus seminar answer structure grounded in public source evidence.",
+    "quote_integrity": "Public source pages cite public Ukrlib article text; shortened lesson excerpts keep source-safe ellipses and avoid unsupported forms.",
+    "review": "Final follow-up Agy/Gemini 3.1 Pro High review returned APPROVE after checking current snippets and scan output.",
+    "source_hygiene": "Student-facing content is clean of internal IDs and uses public ukrlib.com.ua source URLs and \u0434\u0436\u0435\u0440\u0435\u043b\u044c\u043d\u0430 \u0441\u0442\u043e\u0440\u0456\u043d\u043a\u0430 language."
   },
   "floors": {
     "beauty": 8.5,
@@ -50,7 +50,7 @@
     "model": "gemini-3.1-pro-high"
   },
   "schema_version": 1,
-  "scored_at": "2026-06-27T13:58:15Z",
+  "scored_at": "2026-06-28T17:09:47Z",
   "scores": {
     "beauty": 9.0,
     "decolonization": 10.0,
