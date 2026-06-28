@@ -30,6 +30,30 @@
   translation: professional vocabulary
   pos: noun
   usage: Професійна лексика часто містить запозичені суфікси.
+- lemma: професія
+  translation: profession
+  pos: noun
+  usage: Професія впливає на вибір назви особи.
+- lemma: дія
+  translation: action
+  pos: noun
+  usage: Дія може стати основою для назви діяча.
+- lemma: ознака
+  translation: feature; trait
+  pos: noun
+  usage: Ознака людини іноді переходить у назву особи.
+- lemma: мешканець
+  translation: resident
+  pos: noun
+  usage: Мешканець міста може мати окрему усталену назву.
+- lemma: діяч
+  translation: public figure; actor
+  pos: noun
+  usage: Діяч культури має впізнавану суспільну роль.
+- lemma: діячка
+  translation: female public figure
+  pos: noun
+  usage: Діячка громадського руху виступила на форумі.
 - lemma: фахівець
   translation: specialist
   pos: noun
