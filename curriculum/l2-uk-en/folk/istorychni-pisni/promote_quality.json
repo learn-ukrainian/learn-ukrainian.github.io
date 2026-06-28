@@ -1,9 +1,9 @@
 {
-  "assembled_mdx_sha256": "7799c9b6162e5fca9c275fd2479465e95d8943f5363029e3bcf08ab7c448fbce",
+  "assembled_mdx_sha256": "910ed5f9d56172ead8c085f31ac26718e37e6b2266095b453e4669f9df5cab9c",
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "90949ab39b60759eb75a540cd0b0247aa1d0c08c6e5cea8503c29423046953aa",
+    "digest": "7f4c79c14f2b1f5b5f808b2315dadbf2b7c04bded1fc9d0e1f8078f9a744ea2e",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/istorychni-pisni.yaml",
@@ -11,7 +11,7 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/istorychni-pisni/module.md",
-        "sha256": "9b2f88332cdf1765210cab09ae7530ba00577cfb5cb36c4d087c815c750fcc9a"
+        "sha256": "64b6923f63d3b04b4c387b779f9db62e4c2db87fe424ce3a697cf9ecdd76abed"
       },
       {
         "path": "curriculum/l2-uk-en/folk/istorychni-pisni/activities.yaml",
@@ -28,10 +28,10 @@
     ]
   },
   "evidence": {
-    "framing": "Claude Opus 4.8 PASS: all FOLK framing pillars met; secular-historical genre, school-canon sourcing, no occult or pagan-core framing.",
-    "note": "Claude Opus 4.8 calibrated PASS/no blockers; resources stabilized after scoring by replacing flaky duplicate Wikipedia entries with locked ukrlib public reading URLs.",
-    "pedagogy": "C1 seminar spine remains clear: genre boundary, provenance method, decolonization frame, myth boxes, high-culture bridge, workbook practice.",
-    "quote_integrity": "Six lesson primary-reading excerpts rechecked with mcp__sources.verify_quote at 1.0; six hosted readings match data/sources.db text/source_url."
+    "framing": "Agy/Gemini 3.1 Pro High APPROVE: no FOLK framing regression; secular-historical genre and Ukrainian agency remain intact.",
+    "note": "Tiny M14 learner-register cleanup replaced the English build term with student-facing \"\u0444\u0440\u0430\u0433\u043c\u0435\u043d\u0442 \u0434\u043e\u0441\u044c\u0454\"; independent review found no blockers.",
+    "pedagogy": "C1 seminar spine remains clear: genre boundary, \u0434\u0436\u0435\u0440\u0435\u043b\u044c\u043d\u0430 \u043a\u0440\u0438\u0442\u0438\u043a\u0430, decolonization frame, myth boxes, high-culture bridge, workbook practice.",
+    "quote_integrity": "Six M14 reading pages still cite public Ukrlib source URLs; lesson reading surfaces were not substantively changed."
   },
   "floors": {
     "beauty": 8.5,
@@ -44,12 +44,12 @@
   "profile": "folk_promote_v1",
   "review_artifact": null,
   "reviewer": {
-    "agent": "claude",
-    "family": "anthropic",
-    "model": "claude-opus-4-8"
+    "agent": "agy",
+    "family": "google",
+    "model": "gemini-3.1-pro-high"
   },
   "schema_version": 1,
-  "scored_at": "2026-06-26T21:58:11Z",
+  "scored_at": "2026-06-28T20:45:33Z",
   "scores": {
     "beauty": 9.0,
     "decolonization": 9.7,
