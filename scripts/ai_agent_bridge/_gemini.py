@@ -54,6 +54,29 @@ from ._messaging import (
 from ._model import _detect_model_error
 from ._prompts import build_gemini_prompt
 
+AGY_GEMINI_DEFAULT_MODEL = "gemini-3.1-pro-high"
+_AGY_GEMINI_MODEL_ALIASES = {
+    "auto": AGY_GEMINI_DEFAULT_MODEL,
+    "gemini-3.1-pro-preview": "gemini-3.1-pro-high",
+    "gemini-3-pro-preview": "gemini-3.1-pro-high",
+    "gemini-3.0-pro-preview": "gemini-3.1-pro-high",
+    "gemini-3-flash-preview": "gemini-3.5-flash-high",
+    "gemini-3.0-flash-preview": "gemini-3.5-flash-high",
+    "gemini-3.1-flash-lite-preview": "gemini-3.5-flash-high",
+}
+
+
+def agy_model_for_gemini(model: str | None) -> str:
+    """Map legacy Gemini CLI model slugs onto Agy runtime slugs.
+
+    The Agy runtime adapter translates these slugs to the display labels printed
+    by ``agy models`` immediately before invoking ``agy --model``.
+    """
+    if not model:
+        return AGY_GEMINI_DEFAULT_MODEL
+    normalized = model.strip()
+    return _AGY_GEMINI_MODEL_ALIASES.get(normalized, normalized)
+
 
 def converse_gemini(content: str, task_id: str, model: str = "gemini-3.1-pro-preview",
                     skip_github: bool = False, auth_mode: str | None = None):

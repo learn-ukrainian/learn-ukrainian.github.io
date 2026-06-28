@@ -28,7 +28,12 @@ from ._dispatch_wrappers import (
     handle_dispatch_fix,
     handle_review_deep,
 )
-from ._gemini import ask_gemini, converse_gemini, process_and_respond
+from ._gemini import (
+    AGY_GEMINI_DEFAULT_MODEL,
+    agy_model_for_gemini,
+    converse_gemini,
+    process_and_respond,
+)
 from ._grok_build import (
     GROK_BUILD_DEFAULT_MODEL,
     ask_grok_build,
@@ -519,20 +524,32 @@ def _build_parser() -> argparse.ArgumentParser:
                                   help="Prepend docs/review-protocol.md")
 
     # ask-gemini
-    ask_gemini_parser = subparsers.add_parser("ask-gemini", help="Send message AND invoke Gemini (one-step)")
+    ask_gemini_parser = subparsers.add_parser(
+        "ask-gemini",
+        help="Send message AND invoke Agy with a Gemini-family model (one-step)",
+    )
     ask_gemini_parser.add_argument("content", help="Message content (use '-' to read from stdin)")
     ask_gemini_parser.add_argument("--task-id", required=True, help="Task ID (required for session tracking)")
     ask_gemini_parser.add_argument("--type", default="query", help="Message type (default: query)")
     ask_gemini_parser.add_argument("--data", help="Path to data file to attach")
     ask_gemini_parser.add_argument(
-        "--model", default=GEMINI_DEFAULT_MODEL, help="Gemini model to use"
+        "--model",
+        default=AGY_GEMINI_DEFAULT_MODEL,
+        help=(
+            "Gemini/Agy model to use; legacy Gemini CLI slugs are mapped to "
+            "Agy runtime slugs, then the runtime passes the matching `agy models` label"
+        ),
     )
     ask_gemini_parser.add_argument("--from-model", dest="from_model",
                                    help="Exact sender model ID")
     ask_gemini_parser.add_argument("--from", dest="from_llm",
                                    help="Sender agent family. Default: inferred from environment")
-    ask_gemini_parser.add_argument("--async", dest="async_mode", action="store_true",
-                                   help="Queue only, don't invoke Gemini CLI")
+    ask_gemini_parser.add_argument(
+        "--async",
+        dest="async_mode",
+        action="store_true",
+        help="Compatibility flag; ask-gemini now runs through synchronous Agy",
+    )
     ask_gemini_parser.add_argument("--stdout-only", dest="stdout_only", action="store_true",
                                    help="Print Gemini's response body to stdout for the "
                                         "caller to parse; a thin summary still goes to the "
@@ -577,7 +594,10 @@ def _build_parser() -> argparse.ArgumentParser:
     ask_agy_parser.add_argument("--from-model", dest="from_model",
                                 help="Exact sender model ID")
     ask_agy_parser.add_argument("--to-model", dest="to_model",
-                                help="Target Agy model ID (default: gemini-3.5-flash-high)")
+                                help=(
+                                    "Target Agy model slug or `agy models` display label "
+                                    "(default: gemini-3.5-flash-high)"
+                                ))
     ask_agy_parser.add_argument("--no-timeout", dest="no_timeout", action="store_true",
                                 help="Run sync without timeout")
     ask_agy_parser.add_argument("--review", action="store_true",
@@ -1185,19 +1205,40 @@ def _handle_ask_gemini(args):
     content = sys.stdin.read() if args.content == "-" else args.content
     kwargs = {"review": True} if getattr(args, "review", False) else {}
     from_llm = _resolve_from_llm(args)
-    ask_gemini(content, args.task_id, args.type, data, args.model,
-               from_llm,
-               getattr(args, 'from_model', None),
-               getattr(args, 'async_mode', False),
-               getattr(args, 'stdout_only', False),
-               getattr(args, 'output_path', None),
-               getattr(args, 'extract', None),
-               getattr(args, 'skip_model_check', False),
-               getattr(args, 'allow_write', False),
-               getattr(args, 'delimiters', None),
-               getattr(args, 'no_github', False),
-               getattr(args, 'auth', None),
-               **kwargs)
+    target_model = agy_model_for_gemini(args.model)
+    ignored_flags = [
+        name
+        for name, enabled in (
+            ("--async", getattr(args, "async_mode", False)),
+            ("--stdout-only", getattr(args, "stdout_only", False)),
+            ("--output-path", bool(getattr(args, "output_path", None))),
+            ("--extract", bool(getattr(args, "extract", None))),
+            ("--skip-model-check", getattr(args, "skip_model_check", False)),
+            ("--allow-write", getattr(args, "allow_write", False)),
+            ("--delimiters", bool(getattr(args, "delimiters", None))),
+            ("--no-github", getattr(args, "no_github", False)),
+            ("--auth", bool(getattr(args, "auth", None))),
+        )
+        if enabled
+    ]
+    if ignored_flags:
+        print(
+            "ℹ️ ask-gemini now routes through Agy; ignored Gemini CLI flags: "
+            + ", ".join(ignored_flags)
+        )
+    print(f"ℹ️ ask-gemini routes through Agy with model {target_model}")
+    ask_agy(
+        content,
+        args.task_id,
+        args.type,
+        data,
+        False,
+        from_llm,
+        getattr(args, "from_model", None),
+        target_model,
+        False,
+        **kwargs,
+    )
 
 
 def main():

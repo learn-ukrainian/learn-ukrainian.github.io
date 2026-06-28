@@ -8,11 +8,12 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
+from agent_runtime.adapters.agy import AgyAdapter
 from agent_runtime.errors import RateLimitedError
 from agent_runtime.result import Result
 from ai_agent_bridge._cli import _handle_ask_gemini
 from ai_agent_bridge._db import get_db, init_db
-from ai_agent_bridge._gemini import _run_gemini_sync
+from ai_agent_bridge._gemini import _run_gemini_sync, agy_model_for_gemini
 from ai_agent_bridge._messaging import send_message
 from batch_gemini_config import FALLBACK_MODEL, PRO_MODEL
 
@@ -175,14 +176,15 @@ def test_run_gemini_sync_passes_auth_mode_to_runtime(
     assert mock_invoke.call_args.kwargs["tool_config"] == {"auth_mode": "subscription"}
 
 
-def test_handle_ask_gemini_passes_auth_mode(monkeypatch):
+def test_handle_ask_gemini_routes_through_agy_with_model_mapping(monkeypatch):
     captured: dict[str, object] = {}
 
-    def _fake_ask_gemini(*args):
+    def _fake_ask_agy(*args, **kwargs):
         captured["args"] = args
+        captured["kwargs"] = kwargs
         return 123
 
-    monkeypatch.setattr("ai_agent_bridge._cli.ask_gemini", _fake_ask_gemini)
+    monkeypatch.setattr("ai_agent_bridge._cli.ask_agy", _fake_ask_agy)
 
     class _Args:
         content = "hello"
@@ -199,8 +201,59 @@ def test_handle_ask_gemini_passes_auth_mode(monkeypatch):
         skip_model_check = False
         allow_write = False
         delimiters = None
-        no_github = True
-        auth = "api-key"
+        no_github = False
+        auth = None
+        review = True
 
     _handle_ask_gemini(_Args())
-    assert captured["args"][-1] == "api-key"
+    assert captured["args"] == (
+        "hello",
+        "task-1",
+        "query",
+        None,
+        False,
+        "claude",
+        None,
+        "gemini-3.1-pro-high",
+        False,
+    )
+    assert captured["kwargs"] == {"review": True}
+
+
+def test_legacy_gemini_model_resolves_to_agy_display_label():
+    target_model = agy_model_for_gemini(PRO_MODEL)
+
+    assert target_model == "gemini-3.1-pro-high"
+    assert AgyAdapter()._resolve_model_flag(target_model) == "Gemini 3.1 Pro (High)"
+
+
+def test_handle_ask_gemini_accepts_agy_model_name(monkeypatch):
+    captured: dict[str, object] = {}
+
+    def _fake_ask_agy(*args, **_kwargs):
+        captured["args"] = args
+        return 123
+
+    monkeypatch.setattr("ai_agent_bridge._cli.ask_agy", _fake_ask_agy)
+
+    class _Args:
+        content = "hello"
+        task_id = "task-1"
+        type = "query"
+        data = None
+        model = "gemini-3.5-flash-high"
+        from_llm = "claude"
+        from_model = None
+        async_mode = False
+        stdout_only = False
+        output_path = None
+        extract = None
+        skip_model_check = False
+        allow_write = False
+        delimiters = None
+        no_github = False
+        auth = None
+        review = False
+
+    _handle_ask_gemini(_Args())
+    assert captured["args"][7] == "gemini-3.5-flash-high"
