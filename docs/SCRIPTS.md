@@ -47,7 +47,7 @@ Session hooks live in `claude_extensions/hooks/` and deploy to `.claude/hooks/`.
 Runs on every session start, new or resumed.
 
 | # | Check | Severity | Details |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | 1 | Python venv | ISSUE | `.venv/bin/python` exists and is 3.12.x |
 | 2 | Env vars | ISSUE | `CLAUDE_CODE_FILE_READ_MAX_OUTPUT_TOKENS` is set |
 | 3 | Message broker | INFO | SQLite DB for agent communication exists |
@@ -280,7 +280,7 @@ PID/lock/port bookkeeping — **always use it instead of ad-hoc `npm run dev`,
 servers.
 
 | Service | Port | What it is |
-|---|---|---|
+| --- | --- | --- |
 | `sources` | 8766 | MCP Sources Server (SQLite FTS5 — textbooks, dicts, literary, Wikipedia). Legacy alias: `rag`. |
 | `api` | 8765 | API / Monitor dashboard (FastAPI) — the `/api/orient` etc. cold-start endpoints. |
 | `astro` | **4321** | **Astro Course UI dev server** — the local site. Alias: `starlight`. |
@@ -311,7 +311,7 @@ of a second server:
 ### Key Files
 
 | File | Purpose |
-|---|---|
+| --- | --- |
 | `scripts/wiki/compile.py` | Wiki compiler CLI |
 | `scripts/wiki/compiler.py` | Compilation logic |
 | `scripts/wiki/enrichment.py` | Source enrichment pipeline |
@@ -330,7 +330,7 @@ of a second server:
 ## Related Documentation
 
 | Document | Purpose |
-|---|---|
+| --- | --- |
 | `.claude/rules/workflow.md` | Core workflow rules for agent sessions |
 | `.claude/rules/pipeline.md` | Build and validation workflow guidance |
 | `.claude/rules/rag-and-dictionaries.md` | MCP sources and dictionary lookup rules |
@@ -396,7 +396,7 @@ For write-capable delegation, prefer `--worktree`. `delegate.py` creates the wor
 Use two entry points depending on the job:
 
 | Need | Entry point |
-|---|---|
+| --- | --- |
 | Full module build | `.venv/bin/python scripts/build/v7_build.py {level} {slug} --worktree` |
 | Validate existing content | `npm run audit`, `npm run pipeline`, `npm run generate:json` |
 
@@ -511,7 +511,7 @@ Use this before content generation to verify plan files still match `scripts/aud
 ## Scripts Quick Reference
 
 | Script | Purpose | Command |
-|---|---|---|
+| --- | --- | --- |
 | `scripts/build/v7_build.py` | End-to-end module build | `.venv/bin/python scripts/build/v7_build.py a1 m01-alphabet --worktree` |
 | `scripts/audit_level.py` | Audit a level, module, or range | `npm run audit -- b1 1-10` |
 | `scripts/audit_module.py` | Audit a single module file | `.venv/bin/python scripts/audit_module.py <file>` |
@@ -792,7 +792,7 @@ The consultation loop proposes prompt or template changes for human review.
 Queue locations:
 
 | Path | Purpose |
-|---|---|
+| --- | --- |
 | `claude_extensions/consultation-queue/*.yaml` | Pending proposals |
 | `claude_extensions/consultation-queue/applied/` | Approved proposals |
 | `claude_extensions/consultation-queue/rejected/` | Rejected proposals |
@@ -858,7 +858,7 @@ The Monitor API exposes the same read-only JSON at `/api/decisions/lineage`.
 ## Dashboards
 
 | Entry | Purpose |
-|---|---|
+| --- | --- |
 | `scripts/generate_dashboard_data.py` | Aggregate audit cache into dashboard data |
 | `scripts/build_dashboards.py` | Build HTML dashboards with embedded data |
 | `npm run dashboards:data` | Regenerate `dashboards/data/status.json` |
@@ -879,7 +879,7 @@ Claude, Gemini, and Codex coordinate through three distinct primitives. Pick the
 ### When to use which tool
 
 | Need | Tool | Write access? |
-|---|---|---|
+| --- | --- | --- |
 | Sustained topic-scoped discussion, multi-turn, pinned context | **`ai_agent_bridge post` / `ai_agent_bridge discuss`** (channel bridge) | No (Q&A only) |
 | One-off drive-by question to another agent | **`ask-claude` / `ask-agy` / `ask-codex`** | No by default; opt-in via `--allow-write` |
 | Fire-and-forget execution — run code, commit, push | **`scripts/delegate.py dispatch`** | Yes |
@@ -939,7 +939,7 @@ Web dashboard at `http://localhost:8765/channels.html` (localhost-only, read + p
 Fire a single query at one agent. Each recipient has its own model flag and defaults — do not assume they are interchangeable.
 
 | Recipient | Flag | Recommended value |
-|---|---|---|
+| --- | --- | --- |
 | AGY | `--to-model` | `gemini-3.1-pro-high` or display label from `agy models`, e.g. `Gemini 3.1 Pro (High)` |
 | Codex | `--model` | omit unless overriding (defaults to `gpt-5.5` via runtime config) |
 | Claude | `--to-model` | omit (auto-selects per active session); override only when routing to a specific Opus/Sonnet tier |
@@ -1060,7 +1060,7 @@ The original 1:1 broker (separate from channels) is still available for low-leve
 ```
 
 | Message type | Purpose |
-|---|---|
+| --- | --- |
 | `query` | Ask another agent a question |
 | `response` | Return an answer |
 | `request` | Request work |
@@ -1080,12 +1080,12 @@ The original 1:1 broker (separate from channels) is still available for low-leve
 ## Common Workflows
 
 | Workflow | Command |
-|---|---|
+| --- | --- |
 | Build one module | `/module {level} {num}` |
 | Full seminar rebuild | `/full-rebuild {track} {slug}` |
 | Full core rebuild | `/full-rebuild-core {level} {num}` |
 | Full v7 build via script | `.venv/bin/python scripts/build/v7_build.py {level} {slug} --worktree` |
-| Audit a module or range | `npm run audit -- {level} {num|range}` |
+| Audit a module or range | `npm run audit -- {level} {num\|range}` |
 | Run technical validation | `npm run pipeline l2-uk-en {level} {num}` |
 | Generate app JSON | `npm run generate:json l2-uk-en {level} {num}` |
 | Sync landing pages | `npm run sync:landing` |

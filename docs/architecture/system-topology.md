@@ -179,7 +179,7 @@ user → compile.py --track hist --slug kyivan-rus
 ## Key files
 
 | Path | Purpose |
-|------|---------|
+| --- | --- |
 | `scripts/build/v7_build.py` | The one pipeline entry point |
 | `scripts/agent_runtime/runner.py` | The one LLM dispatch function |
 | `scripts/api/main.py` | The one API server |

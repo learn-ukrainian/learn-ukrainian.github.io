@@ -97,7 +97,7 @@ dispatched execution.
 ## Important Flags
 
 | Flag | What it does |
-|------|-------------|
+| --- | --- |
 | `--resume` | Skip completed phases (reads state.json) |
 | `--step publish --resume` | Audit → heal → publish only (cheapest resume) |
 | `--step review --resume` | Re-review only |
@@ -138,7 +138,7 @@ done
 ## Module Counts (from curriculum.yaml)
 
 | Level | Modules | Plans | Wikis |
-|-------|---------|-------|-------|
+| --- | --- | --- | --- |
 | A1 | 55 | 55 | 55 ✅ |
 | A2 | 69 | 69 | 69 ✅ |
 | B1 | 94 | 100 | 100 ✅ |
