@@ -1,151 +1,191 @@
-activity_hints:
-- after_section: Конфліктна карта
-  focus: Перевірка розуміння дебатів — чия це позиція?
-  items: 5
-  placement: inline
-  type: quiz
-- after_section: Читання
-  focus: Розуміння первинного фольклорного тексту
-  placement: inline
-  type: reading
-- focus: Аналіз первинного джерела (запис етнографа, текст пісні)
-  placement: workbook
-  type: source-evaluation
-- focus: 'Порівняння з паралельними традиціями інших народів (глобальна синхронність) (Купальські пісні:
-    Магія літнього сонцестояння)'
-  placement: workbook
-  type: comparative-study
-- focus: Критичний аналіз наукової інтерпретації жанру
-  placement: workbook
-  type: critical-analysis
-- focus: 'Есе на тему сучасного значення традиції (Купальські пісні: Магія літнього сонцестояння)'
-  placement: workbook
-  type: essay-response
-cefr_min: C1
-connects_to:
-- zhnyvarski-obzhynkovi-pisni
-content_outline:
-- points:
-  - Цитата зі скарги церковного діяча XVIII ст. на «бісовські пісні та плясанія» — чому Церква століттями
-    боролася проти Купала?
-  - 'Питання: Що таке небезпечне в стрибках через багаття та пусканні вінків на воду, що це треба заборонити?'
-  section: Розминка
-  words: 400
-- points:
-  - 'Дебат 1: Костомаров — Купало як давній солярний обряд, де вогонь і вода символізують шлюб космічних
-    стихій. Марена = водне жіноче божество'
-  - 'Дебат 2: Попович — елементи оргіастичності та, можливо, людської жертви (потоплення дівчини). Не
-    «красиве свято», а потужний ритуал з темним боком'
-  - '[!epistemic-humility] «Ми реконструюємо Купало з пізніх записів XIX ст. Наскільки вони відображають
-    реальний давній обряд — а не романтичну стилізацію?»'
-  - 'Глобальна синхронність: Midsommar (Швеція), Noc Świętojańska (Польща), Litha (кельти), Tirgan (Іран)
-    — літнє сонцестояння як універсальне свято'
-  section: 'Конфліктна карта: Язичницький обряд чи народна розвага?'
-  words: 1100
-- points:
-  - Купальське вогнище — очищення, ініціація (перехід у доросле життя), ворожіння для пар
-  - 'Вінки на воді — рослинна магія: м''ята, барвінок, чорнобильник. Кожна рослина має функцію (Костомаров)'
-  - 'Опудало Марени — виготовлення, вшанування, знищення (спалення або потоплення). Костомаров: поєднання
-    вогню і води = акт космічної гармонії'
-  - 'Первинне джерело: фрагмент купальської пісні про вінок та долю — «Ой на Купала вогонь горить...»'
-  section: 'Читання: Вогонь, вода та Марена'
-  words: 1400
-- points:
-  - 'Міф про цвіт папороті — квест за прихованим скарбом та провидінням. Чому знання небезпечне? Народна
-    мораль: хто отримав надприродне — того чекає погибель (Костомаров)'
-  - Еротична символіка купальських пісень — діалоги, залицяння, ворожіння на шлюб. Головний мотив — дівоча
-    доля (Авраменко)
-  - '[!decolonization] Купало — УКРАЇНСЬКЕ свято з глибокою місцевою специфікою. Російський «Иван Купала»
-    — пізня запозичена назва. Український обрядовий комплекс не має аналога в російській традиції'
-  - '[!myth-buster] «Ніч на Івана Купала» Гоголя — геніальна література, але НЕ етнографія. Гоголь створив
-    літературний міф, який тепер плутають із реальним обрядом'
-  section: 'Аналіз: Цвіт папороті та заборонене знання'
-  words: 1200
-- points:
-  - 'Повернення до розминки: тепер студент може відповісти — Церква боролася не з «розвагою», а з альтернативною
-    сакральною системою'
-  - Сучасне відродження Купала — автентичний обряд чи фестиваль для Instagram? Де межа?
-  - '[!anti-hagiography] Не романтизувати: Попович згадує потоплення дівчини як можливий елемент давнього
-    обряду. Як працювати з темним спадком?'
-  section: 'Дискусія: Купало сьогодні'
-  words: 700
-- points:
-  - Студент формулює відповідь з позиції обох дебатів
-  - 'Ключова теза: Купало — точка перетину язичницького і християнського, еротичного і сакрального, народного
-    і літературного'
-  section: Підсумок
-  words: 400
-focus: Summer ritual songs across Kupala and Rusalka traditions, water and vegetation symbolism, fire
-  purification, and seasonal danger
-level: FOLK
 module: folk-005
-objectives:
-- Критично аналізувати Купало як складний обрядовий комплекс з язичницькими та християнськими елементами
-- Читати купальські пісні з увагою до еротичної символіки та ритуальної функції
-- Розрізняти фольклорний обряд та його літературну інтерпретацію (Гоголь)
-- Формулювати аргументовану позицію щодо сучасного відродження купальських обрядів
-pedagogy: CBI
-persona:
-  role: Модератор семінару — показує темний бік обряду, не дозволяючи зводити Купало до «красивого свята»
-  voice: Ritual-Studies-Skeptic
-phase: FOLK.1
-references:
-- title: Kupalski Pisni
-  note: Compiled from Костомаров, Чижевський, Попович — вогонь і вода, Марена, цвіт папороті
-  path: wiki/folk/ritual/kupalski-rusalni-pisni.md
-  type: wiki
-- title: Слов'янська міфологія
-  author: Костомаров М.
-  note: Купальський обряд як шлюб вогню і води, Марена як водне божество, рослинна магія
-  type: primary
-  work: Слов'янська міфологія
-- title: Нарис історії культури України
-  author: Попович М.
-  note: Оргіастичні елементи, можлива людська жертва, карнавальні «похорони Мари»
-  type: primary
-  work: Нарис історії культури України
-- title: Історія української літератури
-  author: Чижевський Д.
-  note: Перші згадки про «купалії» в XIII ст., фольклор як стилістична епоха
-  type: primary
-  work: Історія української літератури
+level: FOLK
 sequence: 5
 slug: kupalski-rusalni-pisni
-subtitle: 'Kupala and Rusalni Songs: The Summer Ritual Cycle'
-title: 'Купальські та русальні пісні: Літній обрядовий цикл'
-version: '4.0'
+title: "Купальські та русальні пісні"
+subtitle: "Summer calendar songs, Green holidays, Ivan Kupala, public source discipline"
+version: 5
+status: locked
+phase: base-first
+cefr_min: C1
+word_target: 4200
+focus: "Clean source-first M05 base Ukrainian summer-cycle songs: купальські пісні, русальні пісні, Зелені свята, Трійця, Івана Купала, performance, poetics, public-source readings."
+persona: "C1+ seminar learner reading Ukrainian summer folk songs through public primary texts, school canon, careful framing, source discipline, and respect for Christian-era calendar terms."
+objectives:
+  - "Розрізняти купальські й русальні пісні за календарним часом, виконавською ситуацією, пісенними образами, дією і текстовою формою."
+  - "Пояснити русальні пісні через Зелені свята, Трійцю, поле, воду, березу, вінок і провід, не перетворюючи русалку на окремий belief entry."
+  - "Пояснити купальські пісні через Івана Купала, Купайло, гуртовий спів, воду, вогонь, вінки, хоровод і повтор."
+  - "Читати публічний текст через звертання, рефрен, анафору, діалог, рух, реквізит і source limits."
+  - "Працювати тільки з публічними Ukrlib/Osvita/Pidruchnyk-style джерелами у learner-facing матеріалах."
+pedagogy:
+  approach: "source-first seminar"
+  notes:
+    - "Begin with a short verified folk-text excerpt or candidate title, then ask what public source can prove."
+    - "Keep Christian-era calendar names visible: Трійця, Зелені свята, Івана Купала."
+    - "Treat older seasonal material as poetic motif and performance vocabulary only when a public source supports it."
+    - "Do not link dirty legacy readings; Phase B must clean and host public texts in #3903 format before lesson use."
+content_outline:
+  - section: "Вхід: літній цикл без сенсації"
+    words: 550
+    points:
+      - "Open with classification: русальні пісні and купальські пісні are neighboring summer calendar-song blocks, not one generic summer lyric."
+      - "Set FOLK identity: oral verbal art feeding Ukrainian written literature and public cultural memory."
+      - "State source rule: public URL or bibliographic source in learner-facing page; internal research markers stay out."
+      - "Ask source-first questions: who speaks, when, to whom, with what repeated form and object?"
+  - section: "Русальні пісні: Зелені свята, голос і провід"
+    words: 750
+    points:
+      - "Place rusalky songs near Зелені свята and Трійця where school/curriculum sources support the frame."
+      - "Handle русалка as a song figure and voice: location, request, address, field/water/tree vocabulary, closing action."
+      - "Use candidate 'Сиділа русалка на білій березі' only after Phase B full public-text fetch and quote verification."
+      - "Teach the difference between folk-song image, textbook explanation, curriculum locator, and hosted primary reading."
+  - section: "Купальські пісні: Купайло, вінки, вода, вогонь, гурт"
+    words: 850
+    points:
+      - "Place kupalski songs under Івана Купала and public summer youth/community performance."
+      - "Use Купало / Купайло as song and performance names, not as doctrine."
+      - "Teach action sequence: gathering, repeated line, circle or procession, object action, release or close."
+      - "Use candidate texts 'Купайло, Купайло, де ти зимувало?' and 'А де наше Купайло стояло' only after Phase B public-source verification."
+      - "Frame water, fire and wreaths through performance and poetic action, not as instructions."
+  - section: "Поетика дії: повтор, діалог, реквізит"
+    words: 750
+    points:
+      - "Teach рефрен, анафора, звертання and question-answer form as group-performance tools."
+      - "Show how object words carry action: вінок, берізка, сорочка, вода, вогонь, поле, дорога."
+      - "Replace single-symbol decoding with action questions: what happens to the object, who carries it, where does it move?"
+      - "Mark variants carefully: one public text is a recorded variant, not the whole tradition."
+  - section: "Читання і source hammer"
+    words: 600
+    points:
+      - "Phase B must fetch full public primary texts from Ukrlib/Wikisource/public archive or verified corpus-backed metadata before hosted readings."
+      - "Every `:::primary-reading` excerpt and every `PrimaryReading text={...}` page must be quote-verified before shipping."
+      - "Osvita and Pidruchnyk may orient classification; do not host textbook or curriculum prose as reading text."
+      - "Keep PR notes with verification details; do not expose internal source markers to learners."
+  - section: "Міст до писемної, музичної і сценічної культури"
+    words: 450
+    points:
+      - "Move from verified folk text to reception: literature, music, theatre, painting, school memory."
+      - "Label Gogol, Lysenko or later stage material as reception only after public-source check."
+      - "Do not let an authored work replace the folk primary text."
+  - section: "Деколонізаційна рамка і підсумок"
+    words: 300
+    points:
+      - "Keep Ukrainian terms, calendar names, local performance and public source provenance visible."
+      - "Reject imperial flattening into a vague all-Slavic zone."
+      - "Also avoid romantic overclaiming: source first, interpretation second, limits explicit."
+activity_hints:
+  - type: ritual-sequencing
+    placement: inline
+    focus: "Order a clean performance sequence from public text evidence: calendar moment, group, repeated line, object action, closing."
+  - type: source-check
+    placement: inline
+    focus: "Classify a citation as public primary text, textbook frame, curriculum locator, or reception source."
+  - type: motif-formula
+    placement: workbook
+    focus: "Identify refrain, address, object words and movement words without inventing one hidden code."
+  - type: variant-comparison
+    placement: workbook
+    focus: "Compare two verified public variants only after Phase B hosting; note what differs without declaring one original."
+  - type: reception-comparison
+    placement: workbook
+    focus: "Compare a verified folk line with an authored literary or musical reception source."
 vocabulary_hints:
-- definition: астрономічне явище, коли тривалість дня є максимальною або мінімальною в році
-  pos: с.
-  word: сонцестояння
-- definition: давнє українське свято літнього сонцестояння, що поєднало язичницькі обряди з днем Іоанна
-    Хрестителя
-  pos: ч.
-  word: Купала
-- definition: ритуальне опудало, що символізує жіноче водне божество — його знищення є кульмінацією купальського
-    обряду
-  pos: ж.
-  word: Марена
-- definition: магічна практика передбачення майбутнього — на вінках, на вогні, на травах
-  pos: с.
-  word: ворожіння
-- definition: ритуальна дія звільнення від хвороб, зла та скверни через контакт із сакральною стихією
-    (вогнем або водою)
-  pos: с.
-  word: очищення
-- definition: обряд переходу в новий соціальний статус — зокрема з юнацтва в доросле життя
-  pos: ж.
-  word: ініціація
-- definition: поєднання елементів різних релігій чи культурних систем в одному обряді
-  pos: ч.
-  word: синкретизм
-- definition: пов'язаний з ритуальним зняттям соціальних норм та обмежень
-  pos: прикм.
-  word: оргіастичний
-- definition: пов'язаний із сонцем, сонячним культом
-  pos: прикм.
-  word: солярний
-- definition: рослина (Artemisia), з якої робили обереги на Купала
-  pos: ч.
-  word: чорнобильник
-word_target: 5000
+  - "купальська пісня"
+  - "русальна пісня"
+  - "Зелені свята"
+  - "Трійця"
+  - "Івана Купала"
+  - "Купало"
+  - "Купайло"
+  - "вінок"
+  - "хоровод"
+  - "рефрен"
+  - "анафора"
+  - "обрядова дія"
+  - "виконавська ситуація"
+  - "провід русалок"
+references:
+  - title: "Купальські й русальні пісні: літній календарний цикл"
+    path: "wiki/folk/ritual/kupalski-rusalni-pisni.md"
+    type: wiki
+    note: "Clean compiled base wiki for M05."
+  - title: "Українська література, 6 клас. Календарно-обрядові пісні"
+    author: "Авраменко О."
+    type: textbook
+    source_url: "https://pidruchnyk.com.ua/2618-ukralit-6-klas-avramenko-2023.html"
+    note: "School-canonical frame for calendar-cycle songs and summer-cycle categories."
+  - title: "Українська література, 6 клас. Народні календарно-обрядові пісні"
+    author: "Заболотний О., Заболотний В."
+    type: textbook
+    source_url: "https://pidruchnyk.com.ua/2617-ukralit-6-klas-zabolotnyi.html"
+    note: "School-canonical calendar-song and performance-context frame."
+  - title: "Модельна навчальна програма. Українська література. 5-6 класи"
+    author: "Яценко Т. О. та ін."
+    type: curriculum
+    source_url: "https://osvita.ua/doc/files/news/830/83023/Ukr_lit_5-6-kl_Yatsenko_ta_in_14_07.pdf"
+    note: "Public curriculum source naming купальські song candidates and rusalky reading candidate."
+  - title: "Місяць сюрчання коників"
+    author: "Чемерис В."
+    type: reception
+    source_url: "https://osvita.ua/school/literature/ch/77913/list-8.html"
+    note: "Public literary reception page with 'Ой на Івана, ой на Купала'; not a hosted-reading source until primary provenance is verified."
+readings:
+  - title: "Купайло, Купайло, де ти зимувало?"
+    title_en: "Kupaylo, Kupaylo, where did you winter?"
+    genre: "Купальська пісня"
+    role: candidate
+    type: primary
+    source: "Named in public Osvita curriculum; full public primary text must be fetched before hosting."
+    source_url: "https://osvita.ua/doc/files/news/830/83023/Ukr_lit_5-6-kl_Yatsenko_ta_in_14_07.pdf"
+    license: pending_public_domain_text_verification
+    hosting: needs-clean-hosted-reading
+    reading_slug: "kupalska-pisnia-kupailo-de-ty-zymuvalo"
+  - title: "А де наше Купайло стояло"
+    title_en: "Where did our Kupaylo stand?"
+    genre: "Купальська пісня"
+    role: candidate
+    type: primary
+    source: "Named in public Osvita curriculum; full public primary text must be fetched before hosting."
+    source_url: "https://osvita.ua/doc/files/news/830/83023/Ukr_lit_5-6-kl_Yatsenko_ta_in_14_07.pdf"
+    license: pending_public_domain_text_verification
+    hosting: needs-clean-hosted-reading
+    reading_slug: "kupalska-pisnia-a-de-nashe-kupailo-stoialo"
+  - title: "Сиділа русалка на білій березі"
+    title_en: "A rusalka sat on a white birch"
+    genre: "Русальна пісня"
+    role: candidate
+    type: primary
+    source: "Named in public Osvita curriculum; full public primary text must be fetched before hosting."
+    source_url: "https://osvita.ua/doc/files/news/830/83023/Ukr_lit_5-6-kl_Yatsenko_ta_in_14_07.pdf"
+    license: pending_public_domain_text_verification
+    hosting: needs-clean-hosted-reading
+    reading_slug: "rusalna-pisnia-sydila-rusalka-na-bilii-berezi"
+  - title: "Ой на Івана, ой на Купала"
+    title_en: "Oh, on Ivan, oh, on Kupala"
+    genre: "Купальська пісня"
+    role: locator
+    type: reception
+    source: "Public Osvita literary page contains the song occurrence; primary provenance must be verified before hosting."
+    source_url: "https://osvita.ua/school/literature/ch/77913/list-8.html"
+    license: linked_public_occurrence_not_hosting_source
+    hosting: needs-clean-hosted-reading
+    reading_slug: "kupalska-pisnia-oi-na-ivana-oi-na-kupala"
+do_not_quote:
+  - line: "Any build-only corpus marker, research locator, or non-public source marker appears in learner-facing text."
+    reason: "Public learner pages must cite public URLs or bibliographic sources only."
+  - line: "A textbook or curriculum explanation is hosted as a full primary reading."
+    reason: "Textbooks and curriculum may orient the lesson; hosted readings need public primary text verification."
+  - line: "Gogol or later authored reception is treated as evidence for community practice."
+    reason: "Reception sources can illustrate transformation only after the folk text leads."
+  - line: "Christian calendar names are described as a cover over a hidden system."
+    reason: "FOLK framing requires Christian-era calendar context proper weight where sources use it."
+connects_to:
+  - narodna-kultura-yak-systema
+  - kalendarna-obriadovist-zvychai
+  - vesnianky-hayivky
+  - zhnyvarski-obzhynkovi-pisni
+  - rodynna-obriadovist-zvychai
+changelog:
+  - version: 5
+    date: "2026-06-28"
+    note: "Base-first rebuild: replaced contaminated M05 dossier/wiki/source registry/plan with clean public-source contract; scope remains base-only with no learner module/readings changes."
