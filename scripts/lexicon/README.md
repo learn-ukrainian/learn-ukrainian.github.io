@@ -29,3 +29,39 @@ For module promotions, `scripts/sync/promote_module.py --refresh-atlas ...` can 
 `make atlas` after `vocabulary.yaml` is promoted and include the manifest outputs in the
 promotion commit. Use it only on machines with the local dictionary data and caches needed
 by Atlas enrichment.
+
+## Source Inventory Candidate Intake
+
+Curated ULP/Ohoiko/textbook/headword lists feed Atlas growth candidates with
+explicit provenance through:
+
+```bash
+.venv/bin/python -m scripts.audit.grow_lexicon_from_sources \
+  --inventory data/lexicon/source-inventory/ulp.yaml \
+  --out data/lexicon/grow_candidates.json \
+  --report
+```
+
+The source inventory parser accepts CSV, TSV, JSONL, JSON, or YAML. YAML/JSON
+structured inventories use this minimal v1 shape:
+
+```yaml
+version: 1
+kind: atlas_source_inventory
+sources:
+  - id: ulp-001
+    source_family: ulp
+    extraction_mode: curated_headword
+    title: Ukrainian Lessons Podcast 1
+    url: https://example.test/ulp-001
+    headwords:
+      - lemma: авто
+        context: lesson headword list
+```
+
+Flat CSV/TSV/JSONL rows require `lemma`, `source_family`, and
+`extraction_mode`; optional provenance fields are `source_id`, `source_title`,
+`source_url`, `source_path`, `source_locator`, `context`, `pos`, and `notes`.
+Malformed rows fail before candidate output is written. Source-fed candidates
+use the same `auto_merge` / `needs_review` payload as content-grown candidates
+and carry `source_provenance` through promotion.
