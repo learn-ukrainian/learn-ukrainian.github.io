@@ -1,0 +1,70 @@
+{
+  "assembled_mdx_sha256": "1b33f3d3f67a900d73a209c8e181b75d5daf5135830bc37a1f09f0f36c8d48f1",
+  "content_hash": {
+    "algorithm": "sha256",
+    "basis": "lesson_sources_v2",
+    "digest": "06182740a49b4df59d352bf7d87920bfd4f61776575f5c517168f5050aae4012",
+    "files": [
+      {
+        "path": "curriculum/l2-uk-en/plans/folk/kupalski-rusalni-pisni.yaml",
+        "sha256": "c57bb3cd30dae1db3f19bdbc21de54b6c293dd05a9540503bf3ec5dc4f9ae388"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/kupalski-rusalni-pisni/module.md",
+        "sha256": "fc96e752c5ec5df07f84e92dc3df0e006817ca1b8357f39820f387582b1e7e73"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/kupalski-rusalni-pisni/activities.yaml",
+        "sha256": "0bbce6ff2ee6fdf119063acf85c5d1227cc087c593b6592d5a0c99bc794c4784"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/kupalski-rusalni-pisni/vocabulary.yaml",
+        "sha256": "86f8965e07c560789be1af0ab098784fdc1b6314585f71b8a48b611cdfdba8b8"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/kupalski-rusalni-pisni/resources.yaml",
+        "sha256": "f5dd656c4c02cd8d7805eb3bfa14a24968d964379694d91f01a04041d2ee78fe"
+      }
+    ]
+  },
+  "evidence": {
+    "framing": "Agy/Gemini 3.1 Pro High APPROVE: module keeps source-first summer-cycle framing, handles Christian-era calendar terms respectfully, and avoids sensational hidden-core explanations.",
+    "pedagogy": "C1 seminar lesson builds a clear method around address, repetition, parallelism, object words, source limits, and careful comparison of hosted public readings.",
+    "quote_integrity": "Local source hammer found all three hosted PrimaryReading texts match live public Ukrlib article bodies; all lesson excerpts are contained in hosted reading pages.",
+    "review": "Independent read-only Agy/Gemini 3.1 Pro High review returned APPROVE with no blockers; scores beauty 10, decolonization 10, engagement 9, naturalness 10, pedagogical 10, tone 10.",
+    "source_hygiene": "Hosted readings and resources use public Ukrlib, Pidruchnyk, and Osvita URLs only; learner-facing scans found no internal source IDs."
+  },
+  "floors": {
+    "beauty": 8.5,
+    "decolonization": 9.0,
+    "engagement": 8.5,
+    "naturalness": 8.5,
+    "pedagogical": 8.5,
+    "tone": 8.5
+  },
+  "profile": "folk_promote_v1",
+  "review_artifact": null,
+  "reviewer": {
+    "agent": "agy",
+    "family": "google",
+    "model": "gemini-3.1-pro-high"
+  },
+  "schema_version": 1,
+  "scored_at": "2026-06-28T11:10:00Z",
+  "scores": {
+    "beauty": 10,
+    "decolonization": 10,
+    "engagement": 9,
+    "naturalness": 10,
+    "pedagogical": 10,
+    "tone": 10
+  },
+  "slug": "kupalski-rusalni-pisni",
+  "track": "folk",
+  "verdict": "PASS",
+  "writer": {
+    "agent": "codex",
+    "family": "openai",
+    "model": "gpt-5"
+  }
+}

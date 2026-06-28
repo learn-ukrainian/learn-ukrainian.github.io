@@ -4,7 +4,7 @@ sequence: 5
 slug: kupalski-rusalni-pisni
 title: "Купальські та русальні пісні"
 subtitle: "Summer calendar songs, Green holidays, Ivan Kupala, public source discipline"
-version: 5
+version: 6
 status: locked
 phase: base-first
 cefr_min: C1
@@ -130,35 +130,35 @@ references:
     source_url: "https://osvita.ua/school/literature/ch/77913/list-8.html"
     note: "Public literary reception page with 'Ой на Івана, ой на Купала'; not a hosted-reading source until primary provenance is verified."
 readings:
-  - title: "Купайло, Купайло, де ти зимувало?"
+  - title: "Купайло, Купайло! Де ти зимувало?"
     title_en: "Kupaylo, Kupaylo, where did you winter?"
     genre: "Купальська пісня"
-    role: candidate
+    role: primary
     type: primary
-    source: "Named in public Osvita curriculum; full public primary text must be fetched before hosting."
-    source_url: "https://osvita.ua/doc/files/news/830/83023/Ukr_lit_5-6-kl_Yatsenko_ta_in_14_07.pdf"
-    license: pending_public_domain_text_verification
-    hosting: needs-clean-hosted-reading
+    source: "Народна творчість. УкрЛіб."
+    source_url: "https://www.ukrlib.com.ua/books/printit.php?tid=20460"
+    license: public_domain
+    hosting: hosted
     reading_slug: "kupalska-pisnia-kupailo-de-ty-zymuvalo"
   - title: "А де наше Купайло стояло"
     title_en: "Where did our Kupaylo stand?"
     genre: "Купальська пісня"
-    role: candidate
+    role: primary
     type: primary
-    source: "Named in public Osvita curriculum; full public primary text must be fetched before hosting."
-    source_url: "https://osvita.ua/doc/files/news/830/83023/Ukr_lit_5-6-kl_Yatsenko_ta_in_14_07.pdf"
-    license: pending_public_domain_text_verification
-    hosting: needs-clean-hosted-reading
+    source: "Народна творчість. УкрЛіб."
+    source_url: "https://www.ukrlib.com.ua/books/printit.php?tid=20461"
+    license: public_domain
+    hosting: hosted
     reading_slug: "kupalska-pisnia-a-de-nashe-kupailo-stoialo"
   - title: "Сиділа русалка на білій березі"
     title_en: "A rusalka sat on a white birch"
     genre: "Русальна пісня"
-    role: candidate
+    role: primary
     type: primary
-    source: "Named in public Osvita curriculum; full public primary text must be fetched before hosting."
-    source_url: "https://osvita.ua/doc/files/news/830/83023/Ukr_lit_5-6-kl_Yatsenko_ta_in_14_07.pdf"
-    license: pending_public_domain_text_verification
-    hosting: needs-clean-hosted-reading
+    source: "Народна творчість. УкрЛіб."
+    source_url: "https://www.ukrlib.com.ua/books/printit.php?tid=20462"
+    license: public_domain
+    hosting: hosted
     reading_slug: "rusalna-pisnia-sydila-rusalka-na-bilii-berezi"
   - title: "Ой на Івана, ой на Купала"
     title_en: "Oh, on Ivan, oh, on Kupala"
@@ -168,7 +168,7 @@ readings:
     source: "Public Osvita literary page contains the song occurrence; primary provenance must be verified before hosting."
     source_url: "https://osvita.ua/school/literature/ch/77913/list-8.html"
     license: linked_public_occurrence_not_hosting_source
-    hosting: needs-clean-hosted-reading
+    hosting: linked-only
     reading_slug: "kupalska-pisnia-oi-na-ivana-oi-na-kupala"
 do_not_quote:
   - line: "Any build-only corpus marker, research locator, or non-public source marker appears in learner-facing text."
@@ -186,6 +186,9 @@ connects_to:
   - zhnyvarski-obzhynkovi-pisni
   - rodynna-obriadovist-zvychai
 changelog:
+  - version: 6
+    date: "2026-06-28"
+    note: "Phase B module build: hosted three public Ukrlib primary readings and kept Osvita literary occurrence linked-only until primary provenance is verified."
   - version: 5
     date: "2026-06-28"
     note: "Base-first rebuild: replaced contaminated M05 dossier/wiki/source registry/plan with clean public-source contract; scope remains base-only with no learner module/readings changes."
