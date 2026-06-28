@@ -1,0 +1,220 @@
+- lemma: синонім
+  translation: synonym
+  pos: noun
+  usage: Синонім має близьке значення, але не завжди повністю замінює інше слово.
+- lemma: синонімія
+  translation: synonymy
+  pos: noun
+  usage: Синонімія допомагає точніше вибирати слова для тексту.
+- lemma: синоніміка
+  translation: synonymics; synonymy system
+  pos: noun
+  usage: Синоніміка вивчає близькі за значенням слова та їхні відтінки.
+- lemma: синонімічний ряд
+  translation: synonym row; synonym set
+  pos: phrase
+  usage: Синонімічний ряд будуємо навколо домінанти.
+- lemma: домінанта
+  translation: dominant word
+  pos: noun
+  usage: Домінанта є нейтральним центром синонімічного ряду.
+- lemma: периферія ряду
+  translation: periphery of a synonym row
+  pos: phrase
+  usage: Периферія ряду містить слова з додатковим стилістичним або смисловим відтінком.
+- lemma: лексична парадигма
+  translation: lexical paradigm
+  pos: phrase
+  usage: Лексична парадигма показує зв'язки між словами однієї семантичної зони.
+- lemma: семантична близькість
+  translation: semantic closeness
+  pos: phrase
+  usage: Семантична близькість ще не гарантує повної взаємозамінності.
+- lemma: поняттєвий синонім
+  translation: ideographic synonym
+  pos: phrase
+  usage: Поняттєвий синонім уточнює інтенсивність, масштаб або якість.
+- lemma: ідеографічний синонім
+  translation: ideographic synonym
+  pos: phrase
+  usage: Ідеографічний синонім відрізняється смисловим відтінком.
+- lemma: стилістичний синонім
+  translation: stylistic synonym
+  pos: phrase
+  usage: Стилістичний синонім змінює регістр або емоційний тон.
+- lemma: контекстуальний синонім
+  translation: contextual synonym
+  pos: phrase
+  usage: Контекстуальний синонім працює лише в межах конкретного тексту.
+- lemma: абсолютний синонім
+  translation: absolute synonym
+  pos: phrase
+  usage: Абсолютний синонім майже не має відмінностей у значенні та вживанні.
+- lemma: відносний синонім
+  translation: relative synonym
+  pos: phrase
+  usage: Відносний синонім має спільне ядро, але відрізняється відтінком.
+- lemma: відтінок значення
+  translation: shade of meaning
+  pos: phrase
+  usage: Відтінок значення пояснює, чому слова не завжди взаємозамінні.
+- lemma: стилістичне забарвлення
+  translation: stylistic coloring
+  pos: phrase
+  usage: Стилістичне забарвлення показує, чи слово нейтральне, книжне або розмовне.
+- lemma: експресивність
+  translation: expressiveness
+  pos: noun
+  usage: Експресивність може посилити образ, але в офіційному тексті часто зайва.
+- lemma: контекстуалізація
+  translation: contextualization
+  pos: noun
+  usage: Контекстуалізація пояснює, чому в одному уривку слова зближуються.
+- lemma: сполучуваність
+  translation: collocability
+  pos: noun
+  usage: Сполучуваність перевіряє, з якими словами природно поєднується синонім.
+- lemma: точність
+  translation: precision
+  pos: noun
+  usage: Точність важливіша за декоративну заміну слова.
+- lemma: виразність
+  translation: expressiveness
+  pos: noun
+  usage: Виразність допомагає тексту звучати живо й переконливо.
+- lemma: доречність
+  translation: appropriateness
+  pos: noun
+  usage: Доречність залежить від адресата, жанру і мети тексту.
+- lemma: диференціація
+  translation: differentiation
+  pos: noun
+  usage: Диференціація синонімів вимагає пояснити різницю між близькими словами.
+- lemma: семантичне нюансування
+  translation: semantic nuance
+  pos: phrase
+  usage: Семантичне нюансування допомагає вибрати найточніше слово.
+- lemma: тавтологія
+  translation: tautology
+  pos: noun
+  usage: Тавтологія створює небажаний повтор однакового або спільнокореневого слова.
+- lemma: плеоназм
+  translation: pleonasm
+  pos: noun
+  usage: Плеоназм додає зайве слово, яке не розширює зміст.
+- lemma: перифраза
+  translation: periphrasis
+  pos: noun
+  usage: Перифраза називає предмет описово або образно.
+- lemma: евфемізм
+  translation: euphemism
+  pos: noun
+  usage: Евфемізм пом'якшує різке або болісне висловлення.
+- lemma: регістр
+  translation: register
+  pos: noun
+  usage: Регістр визначає, чи слово доречне в офіційному, нейтральному або розмовному стилі.
+- lemma: нейтральний
+  translation: neutral
+  pos: adjective
+  usage: Нейтральний варіант зазвичай стоїть ближче до домінанти.
+- lemma: книжний
+  translation: literary; bookish
+  pos: adjective
+  usage: Книжний синонім може бути доречним у статті, але важким у розмові.
+- lemma: розмовний
+  translation: colloquial
+  pos: adjective
+  usage: Розмовний синонім передає живий тон, але не завжди пасує до документа.
+- lemma: знижений
+  translation: lowered; low-register
+  pos: adjective
+  usage: Знижений варіант може звучати грубо або образливо.
+- lemma: урочистий
+  translation: solemn
+  pos: adjective
+  usage: Урочистий синонім підходить для промови або поетичного тексту.
+- lemma: багатий
+  translation: rich
+  pos: adjective
+  usage: Багатий словник дає авторові більше контрольованих варіантів.
+- lemma: різноманітний
+  translation: varied
+  pos: adjective
+  usage: Різноманітний ряд не має бути хаотичним.
+- lemma: піднесений
+  translation: elevated
+  pos: adjective
+  usage: Піднесений тон може бути доречний у промові.
+- lemma: приглушений
+  translation: muted
+  pos: adjective
+  usage: Приглушений звук або світло має нижчу інтенсивність.
+- lemma: безмовний
+  translation: silent
+  pos: adjective
+  usage: Безмовна аудиторія не просто тиха, а повністю мовчить.
+- lemma: прямувати
+  translation: to head toward
+  pos: verb
+  usage: Делегація прямувала до зали засідань.
+- lemma: простувати
+  translation: to make one's way
+  pos: verb
+  usage: Мандрівники простували степом.
+- lemma: крокувати
+  translation: to march; to stride
+  pos: verb
+  usage: Курсанти крокували майданом.
+- lemma: плентатися
+  translation: to trudge
+  pos: verb
+  usage: Втомлені туристи пленталися до трамвая.
+- lemma: шкандибати
+  translation: to hobble
+  pos: verb
+  usage: Старий пес шкандибав уздовж паркану.
+- lemma: зазначати
+  translation: to note; to state
+  pos: verb
+  usage: Доповідач зазначив, що терміни змінено.
+- lemma: наголошувати
+  translation: to emphasize
+  pos: verb
+  usage: Автор наголошує на точності слова.
+- lemma: стверджувати
+  translation: to assert
+  pos: verb
+  usage: Дослідниця стверджує, що контекст змінює відтінок.
+- lemma: шепотіти
+  translation: to whisper
+  pos: verb
+  usage: У художньому описі персонаж може шепотіти, а не просто казати.
+- lemma: бурмотіти
+  translation: to mutter
+  pos: verb
+  usage: Бурмотіти означає говорити нечітко й тихо.
+- lemma: вигукувати
+  translation: to exclaim
+  pos: verb
+  usage: Вигукувати доречно, коли треба передати сильну емоцію.
+- lemma: причина
+  translation: cause
+  pos: noun
+  usage: Аварія має причину, а не мотив.
+- lemma: підстава
+  translation: grounds; basis
+  pos: noun
+  usage: Підстава для рішення часто має офіційний відтінок.
+- lemma: мотив
+  translation: motive
+  pos: noun
+  usage: Мотив пояснює внутрішнє спонукання людини.
+- lemma: аргумент
+  translation: argument
+  pos: noun
+  usage: Аргумент підтримує позицію в дискусії.
+- lemma: хибний друг перекладача
+  translation: false friend
+  pos: phrase
+  usage: Accurate як точний, а не акуратний, є типовим хибним другом.
