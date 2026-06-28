@@ -52,10 +52,15 @@ B2 M50 `questions-deliberative-rhetorical`,9/10,B+,Yes,Strong deliberative rheto
 B2 M51 `advanced-case-semantics`,9/10,B+,Yes,Strong advanced case-semantics module 10 workbook activities, 49 vocabulary items, final Agy/Claude Opus 4.6 review pass. Score held at 9 dense cross-case semantics non-blocking section-balance warnings.
 B2 M52 `pronoun-system-advanced`,9/10,B+,Yes,Strong advanced pronoun-system module 11 workbook activities, 31 vocabulary items, final Agy/Claude Opus 4.6 blocker fix and PASS re-review. Score held at 9 dense pronoun paradigms non-blocking target-form UA-GEC advisories.
 B2 M53 `checkpoint-cases-morphology`,9/10,B+,Yes,Strong B2.4 cases/morphology checkpoint 5 workbook and 5 inline activities, 30 vocabulary items, final Agy/Claude Opus 4.6 blocker fixes and PASS re-review. Score held at 9 compact synthesis non-blocking section-balance/UA-GEC advisories.
+B2 M54 `aspect-nuances-secondary-imperfectivization`,9/10,B+,Yes,Strong aspect nuance module 10 workbook activities, 40 vocabulary items, external review pass. Score held at 9 dense aspect semantics non-blocking redundancy/formulaic-style audit notes.
+B2 M55 `aspect-nuances-imperative-infinitive`,9/10,B+,Yes,Strong imperative/infinitive aspect module 10 workbook activities, 40 vocabulary items, external review pass. Score held at 9 conservative post-build polish risk and minor deterministic advisories.
+B2 M56 `pluperfect-tense`,9/10,B+,Yes,Strong pluperfect module 11 workbook activities, 40 vocabulary items, external review pass. Score held at 9 dense tense/register coverage and non-blocking deterministic style/UA-GEC advisories.
+B2 M57 `conditional-mood-particles`,9/10,B+,Yes,Strong conditional mood particles module 11 workbook activities, 40 vocabulary items, external review pass. Score held at 9 dense mood/particle coverage and minor deterministic advisories.
+B2 M58 `numeral-declension-time-dates`,9/10,B+,Yes,Strong numeral declension time/dates module 11 workbook activities, 40 vocabulary items, Agy/Gemini 3.1 Pro High re-review pass. Score held at 9 conservative post-fix human-polish reserve.
 
 Score,Count,Modules
 10/10,2,"M01, M08"
-9/10,50,"M02-M07, M09-M13, M15-M53"
+9/10,55,"M02-M07, M09-M13, M15-M58"
 8/10,1,M14
 
 Durable Report,Scope
@@ -70,6 +75,7 @@ Durable Report,Scope
 `docs/audits/b2-m43-m46-llm-score-report-2026-06-27.md`,M43-M46
 `docs/audits/b2-m47-m50-llm-score-report-2026-06-28.md`,M47-M50
 `docs/audits/b2-m51-m53-llm-score-report-2026-06-28.md`,M51-M53
+`docs/audits/b2-m54-m58-llm-score-report-2026-06-28.md`,M54-M58
 
 Module,Raw Word Count,Activities,Vocabulary
 M03 `b2-impersonal-passive`,4608,7 workbook / 4 inline,35
@@ -123,6 +129,11 @@ M50 `questions-deliberative-rhetorical`,4246,11 workbook / 0 inline,31
 M51 `advanced-case-semantics`,5124,10 workbook / 0 inline,49
 M52 `pronoun-system-advanced`,4403,11 workbook / 0 inline,31
 M53 `checkpoint-cases-morphology`,4957,5 workbook / 5 inline,30
+M54 `aspect-nuances-secondary-imperfectivization`,4973,10 workbook / 0 inline,40
+M55 `aspect-nuances-imperative-infinitive`,4317,10 workbook / 0 inline,40
+M56 `pluperfect-tense`,4636,11 workbook / 0 inline,40
+M57 `conditional-mood-particles`,4306,11 workbook / 0 inline,40
+M58 `numeral-declension-time-dates`,4246,11 workbook / 0 inline,40
 
 Score,Pass Count
 10/10,5/5 with no meaningful content polish
@@ -143,3 +154,4 @@ See `docs/audits/b2-m42-llm-score-report-2026-06-27.md`.,M42
 See `docs/audits/b2-m43-m46-llm-score-report-2026-06-27.md`.,M43-M46
 See `docs/audits/b2-m47-m50-llm-score-report-2026-06-28.md`.,M47-M50
 See `docs/audits/b2-m51-m53-llm-score-report-2026-06-28.md`.,M51-M53
+See `docs/audits/b2-m54-m58-llm-score-report-2026-06-28.md`.,M54-M58
