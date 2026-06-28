@@ -29,6 +29,13 @@ Use these rules for seminar tracks such as FOLK, HIST, BIO, LIT, active LIT subt
 - Teacher prose around a quote must use modern, VESUM-clean Ukrainian unless the term is explicitly verified as heritage/regional vocabulary.
 - Extraordinary claims need explicit source support. Wikipedia-only claims can provide orientation but must not override corpus, dossier, named edition, or source registry evidence.
 
+## Public Learner Register
+
+- Source verification is build and PR discipline. Do not teach or narrate the validation workflow in public learner pages.
+- Public pages may show public source names and URLs. They must not show internal source workflow terms such as `source hammer`, `source-first`, `learner-facing`, `chunk_id`, `source_chunk`, `corpus ID`, `service ID`, `verify_quote`, or internal corpus identifiers.
+- Describe academic reading habits in Ukrainian student-facing terms: `публічний текст`, `першоджерело`, `уривок`, `джерельна сторінка`, `уважне читання`, `зіставлення джерел`. Do not use build labels as section titles or task names.
+- Plans, dossiers, source registries, audit notes, PR bodies, and `promote_quality` sidecars may record validation work. Rendered lessons, readings, activities, vocabulary, and resources may not.
+
 ## Decolonization And Bias Checks
 
 - Check for Russocentric framing, imperial inheritance, appropriation laundering, Soviet distortions, and romantic-nationalist overclaiming.

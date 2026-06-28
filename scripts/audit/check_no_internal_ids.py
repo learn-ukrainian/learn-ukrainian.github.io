@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Block internal corpus/source IDs from published seminar MDX."""
+"""Block internal source IDs and build-process register from learner surfaces."""
 
 from __future__ import annotations
 
@@ -32,10 +32,59 @@ SEMINAR_DOC_TRACKS = {
     "ruth",
 }
 
+FOLK_LEARNER_SOURCE_FILES = {
+    "module.md",
+    "activities.yaml",
+    "activities.yml",
+    "vocabulary.yaml",
+    "vocabulary.yml",
+    "resources.yaml",
+    "resources.yml",
+}
+
+
+@dataclass(frozen=True)
+class PatternSpec:
+    kind: str
+    pattern: re.Pattern[str]
+
+
 INTERNAL_ID_PATTERNS = (
-    ("corpus chunk id", re.compile(r"\b[0-9a-f]{8}_c[0-9]{4}\b")),
-    ("source section id", re.compile(r"\bS[0-9]{3,4}\b")),
+    PatternSpec("corpus chunk id", re.compile(r"\b[0-9a-f]{8}_c[0-9]{4}\b")),
+    PatternSpec("source section id", re.compile(r"\bS[0-9]{3,4}\b")),
 )
+
+INTERNAL_REGISTER_PATTERNS = (
+    PatternSpec("build/process term", re.compile(r"\bsource[ -]hammer\b", re.IGNORECASE)),
+    PatternSpec("build/process term", re.compile(r"\bsource[ -]first\b", re.IGNORECASE)),
+    PatternSpec("build/process term", re.compile(r"\bpublic[ -]readings?\b", re.IGNORECASE)),
+    PatternSpec("build/process term", re.compile(r"\bhosted[ -]readings?\b", re.IGNORECASE)),
+    PatternSpec("build/process term", re.compile(r"\blearner[ -]facing\b", re.IGNORECASE)),
+    PatternSpec("build/process term", re.compile(r"\bC1\+\s+learner\b", re.IGNORECASE)),
+    PatternSpec("build/process term", re.compile(r"\blesson[ -]body\b", re.IGNORECASE)),
+    PatternSpec("build/process term", re.compile(r"\bUkrlib[ -]URL\b", re.IGNORECASE)),
+    PatternSpec(
+        "build/process term",
+        re.compile(r"\b(?:chunk(?:_ids?)?s?|source_chunk(?:_ids?)?)\b", re.IGNORECASE),
+    ),
+    PatternSpec("build/process term", re.compile(r"\bcorpus[ -]ids?\b", re.IGNORECASE)),
+    PatternSpec("build/process term", re.compile(r"\binternal[ -]corpus\b", re.IGNORECASE)),
+    PatternSpec("build/process term", re.compile(r"\bservice[ -]ids?\b", re.IGNORECASE)),
+    PatternSpec("build/process term", re.compile(r"\bverify_quote\b", re.IGNORECASE)),
+    PatternSpec("build/process term", re.compile(r"\bsource[ -]verification\b", re.IGNORECASE)),
+    PatternSpec("build/process term", re.compile(r"\bvalidation[ -]workflow\b", re.IGNORECASE)),
+    PatternSpec("build/process term", re.compile(r"службов\w*\s+позначк\w*", re.IGNORECASE)),
+    PatternSpec(
+        "build/process term",
+        re.compile(r"(?:внутрішн\w*\s+)?корпусн\w*\s+ідентифікатор\w*", re.IGNORECASE),
+    ),
+    PatternSpec(
+        "build/process term",
+        re.compile(r"технічн\w*\s+інфраструктур\w*\s+джерел\w*", re.IGNORECASE),
+    ),
+)
+
+LEARNER_SURFACE_PATTERNS = (*INTERNAL_ID_PATTERNS, *INTERNAL_REGISTER_PATTERNS)
 
 
 @dataclass(frozen=True, order=True)
@@ -47,10 +96,7 @@ class Finding:
     value: str
 
     def format(self) -> str:
-        return (
-            f"{display_path(self.path)}:{self.line_no}:{self.column_no}: "
-            f"internal {self.kind} leaked: {self.value}"
-        )
+        return f"{display_path(self.path)}:{self.line_no}:{self.column_no}: internal {self.kind} leaked: {self.value}"
 
 
 def display_path(path: Path) -> str:
@@ -73,22 +119,6 @@ def _repo_relative(path: Path) -> Path | None:
         return None
 
 
-def is_published_seminar_mdx(path: Path, *, allow_external: bool = False) -> bool:
-    if path.suffix.lower() != ".mdx":
-        return False
-
-    rel_path = _repo_relative(path)
-    if rel_path is None:
-        return allow_external
-
-    parts = rel_path.parts
-    if len(parts) >= 5 and parts[:4] == ("site", "src", "content", "readings"):
-        return True
-    if len(parts) >= 6 and parts[:4] == ("site", "src", "content", "docs"):
-        return parts[4] in SEMINAR_DOC_TRACKS
-    return False
-
-
 def _dedupe(paths: list[Path]) -> list[Path]:
     seen: set[Path] = set()
     unique_paths: list[Path] = []
@@ -99,6 +129,51 @@ def _dedupe(paths: list[Path]) -> list[Path]:
         seen.add(normalized)
         unique_paths.append(path)
     return unique_paths
+
+
+def _frontmatter(path: Path) -> str:
+    lines = path.read_text(encoding="utf-8").splitlines()
+    if not lines or lines[0].strip() != "---":
+        return ""
+    for index, line in enumerate(lines[1:], start=1):
+        if line.strip() == "---":
+            return "\n".join(lines[1:index])
+    return ""
+
+
+def _frontmatter_bool_false(frontmatter: str, key: str) -> bool:
+    return (
+        re.search(
+            rf"^\s*{re.escape(key)}\s*:\s*false\s*(?:#.*)?$",
+            frontmatter,
+            flags=re.IGNORECASE | re.MULTILINE,
+        )
+        is not None
+    )
+
+
+def _is_routable_reading(path: Path) -> bool:
+    frontmatter = _frontmatter(path)
+    return not (_frontmatter_bool_false(frontmatter, "published") or _frontmatter_bool_false(frontmatter, "canonical"))
+
+
+def is_published_seminar_mdx(path: Path, *, allow_external: bool = False) -> bool:
+    suffix = path.suffix.lower()
+    if suffix not in {".md", ".mdx", ".yaml", ".yml"}:
+        return False
+
+    rel_path = _repo_relative(path)
+    if rel_path is None:
+        return allow_external and suffix == ".mdx"
+
+    parts = rel_path.parts
+    if len(parts) >= 5 and parts[:4] == ("site", "src", "content", "readings"):
+        return suffix == ".mdx" and _is_routable_reading(path)
+
+    if len(parts) >= 6 and parts[:4] == ("site", "src", "content", "docs"):
+        return suffix == ".mdx" and parts[4] in SEMINAR_DOC_TRACKS
+
+    return len(parts) == 5 and parts[:3] == ("curriculum", "l2-uk-en", "folk") and parts[4] in FOLK_LEARNER_SOURCE_FILES
 
 
 def scan_candidates(paths: list[Path], *, allow_external: bool = False) -> list[Path]:
@@ -116,14 +191,14 @@ def scan_file(path: Path) -> list[Finding]:
     findings: list[Finding] = []
     text = path.read_text(encoding="utf-8")
     for line_no, line in enumerate(text.splitlines(), start=1):
-        for kind, pattern in INTERNAL_ID_PATTERNS:
-            for match in pattern.finditer(line):
+        for spec in LEARNER_SURFACE_PATTERNS:
+            for match in spec.pattern.finditer(line):
                 findings.append(
                     Finding(
                         path=path,
                         line_no=line_no,
                         column_no=match.start() + 1,
-                        kind=kind,
+                        kind=spec.kind,
                         value=match.group(0),
                     )
                 )
@@ -156,16 +231,17 @@ def get_local_changed_files(*, cached: bool = False) -> list[Path]:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="Check published seminar/readings MDX for internal source IDs.")
+    parser = argparse.ArgumentParser(
+        description="Check learner surfaces for internal source IDs and build-process register."
+    )
     group = parser.add_mutually_exclusive_group(required=True)
-    group.add_argument("--changed-vs-base", metavar="BASE", help="Compare against base branch, e.g. origin/main")
+    group.add_argument("--changed-vs-base", metavar="BASE", help="Compare base branch, e.g. origin/main")
     group.add_argument("--files", nargs="+", type=Path, help="Scan explicit files, e.g. from pre-commit")
     return parser
 
 
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
-
     if args.changed_vs_base:
         raw_paths = [
             *get_changed_files(args.changed_vs_base),
@@ -177,12 +253,15 @@ def main(argv: list[str] | None = None) -> int:
         candidates = scan_candidates(args.files, allow_external=True)
 
     if not candidates:
-        print("0 findings: no published seminar/readings MDX files to scan.")
+        print("0 findings: no learner surface files to scan.")
         return 0
 
     findings = scan_files(candidates)
     if not findings:
-        print(f"0 findings: no internal IDs in {len(candidates)} published seminar/readings MDX file(s).")
+        print(
+            f"0 findings: no internal source IDs or build-process register in "
+            f"{len(candidates)} learner surface file(s)."
+        )
         return 0
 
     for finding in findings:

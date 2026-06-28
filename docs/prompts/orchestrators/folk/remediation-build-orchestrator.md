@@ -10,6 +10,8 @@ Last reviewed: 2026-06-21
 - FOLK remediation fixes source-grounding, readings, quote integrity, copyright, rendered links, and seminar pedagogy in small PR-sized batches.
 - Do not turn FOLK into a generic core-language lesson. Preserve seminar source work and the folk text layer.
 
+- Treat source verification as build/PR discipline, not student content. Public FOLK learner pages may show public source names/URLs and Ukrainian academic reading habits, but must not expose the validation workflow or process labels (`source hammer`, `source-first`, `learner-facing`, `chunk_id`, `source_chunk`, corpus/service IDs, `verify_quote`, `hosted reading`, `public reading`).
+
 ## Goal
 
 Fix all selected FOLK audit findings without changing unrelated modules. Include reading/copyright fixes, `resources.yaml` `role: reading` repair, hosted reading updates when permitted, source module fixes, generated MDX updates, validation, telemetry, and independent review.

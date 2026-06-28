@@ -40,7 +40,8 @@ The reviewer MUST hammer the corpus — judging on metrics/structure alone is ho
 4. **Citation / source resolution** — every scholarly attribution (Лановик, Колесса, Грушевський,
    Грінченко…) resolves to a real corpus chunk or a real named edition; no ghost sources, no invented
    collector names.
-5. **Schema completeness** — all 10 sections of `folk-dossier-schema.md` present AND the multimodal-
+5. **Public learner register** — rendered lessons, readings, activities, vocabulary, and resources may show public source names/URLs, but must not expose build labels or validation workflow (`source hammer`, `source-first`, `learner-facing`, `chunk_id`, `source_chunk`, corpus/service IDs, `verify_quote`). Student-facing source work is phrased in Ukrainian academic terms such as `першоджерело`, `уривок`, and `джерельна сторінка`.
+6. **Schema completeness** — all 10 sections of `folk-dossier-schema.md` present AND the multimodal-
    hook block populated (image `chunk_id`s, named recordings, ritual sequence, motif inventory). An
    empty multimodal block = FIX (it starves GPT's experiential module — the m20 "empty Activities
    tab" failure mode).
