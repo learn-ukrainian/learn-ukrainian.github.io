@@ -3,22 +3,22 @@ level: FOLK
 sequence: 4
 slug: vesnianky-hayivky
 title: "Веснянки та гаївки"
-subtitle: "Spring songs, Easter hayivky, movement, public source discipline"
-version: 6
+subtitle: "Spring songs, Easter hayivky, movement, careful source reading"
+version: 7
 status: locked
 phase: base-first
 cefr_min: C1
 word_target: 4700
-focus: "Clean source-first M04 base for Ukrainian spring-cycle songs: веснянки, гаївки, public Ukrlib texts, Easter context, performance, movement, poetics."
-persona: "C1+ seminar learner reading Ukrainian spring folk songs through public primary texts, school canon, and careful framing."
+focus: "Clean M04 base for Ukrainian весняні календарні пісні: веснянки, гаївки, public Ukrlib texts, Easter context, performance, movement, poetics."
+persona: "advanced seminar student reading Ukrainian spring folk songs through public primary texts, school canon, and careful framing."
 objectives:
   - "Розрізняти веснянки, гаївки, гагілки й ягілки за назвою, регіоном, часом, виконавською ситуацією і текстовою формою."
-  - "Пояснити веснянки як spring-cycle calendar songs, а гаївки як Easter-season song-games where the source supports that frame."
+  - "Пояснити веснянки як весняні календарні пісні, а гаївки як великодні пісні-ігри where the source supports that frame."
   - "Читати публічний текст через звертання, повтор, рух, образ весни, поля, квітів, птахів і громадного голосу."
-  - "Працювати тільки з public Ukrlib/Pidruchnyk/Osvita-style sources in learner-facing materials."
+  - "Працювати тільки з public Ukrlib/Pidruchnyk/Osvita-style sources in student-facing materials."
   - "Утримувати Christian-historical Easter context where гаївки are taught as Easter songs, without hidden-core or sensational framing."
 pedagogy:
-  approach: "source-first seminar"
+  approach: "text-before-conclusion seminar"
   notes:
     - "Begin with a short public spring-song excerpt, then ask whether it is poem, song, game, movement, or all together."
     - "Keep movement and performer visible; do not reduce the genre to silent lyric."
@@ -36,7 +36,7 @@ content_outline:
       - "Use grade 6 Ukrainian literature sources to place веснянки and гаївки inside calendar-cycle folk songs."
       - "Separate веснянка, гаївка, гагілка, ягілка as names tied to region and performance setting."
       - "Avoid claiming one master origin; show what the source can prove: title, text, genre, performer, season."
-  - section: "Primary readings and source hammer"
+  - section: "Публічні тексти і перевірка джерела"
     words: 850
     points:
       - "Use existing hosted 'Ой весна, весна, ти красна' only after Phase B metadata and quote recheck."
@@ -50,17 +50,17 @@ content_outline:
       - "Show repetition as a memory, rhythm, and group-performance device."
       - "Teach movement grammar: circle, line, gate, winding path, sowing gesture, paired game."
       - "Keep archaic or variant forms inside verified primary reading text; use modern explanatory prose elsewhere."
-  - section: "Гаївка, Великдень і громадний простір"
+  - section: "Гаївка, Великдень і простір громади"
     words: 650
     points:
-      - "When sources support it, explain гаївки as Easter-season song-games in public festive space."
+      - "When sources support it, explain гаївки as великодні пісні-ігри in public festive space."
       - "Give Christian/Easter context proper weight: Великдень, Воскресіння, churchyard space, community joy."
       - "Do not describe Christian tradition as an outer layer over a hidden system."
-  - section: "Деколонізаційна рамка і source limits"
+  - section: "Деколонізаційна рамка і межі джерела"
     words: 650
     points:
       - "Reject flattening Ukrainian веснянки into unnamed imperial or generic material."
-      - "Also avoid romantic overclaiming: public source, textbook, scholarly interpretation, and modern performance are different evidence types."
+      - "Also avoid romantic overclaiming: публічне джерело, textbook, scholarly interpretation, and modern performance are different evidence types."
       - "Name Ukrainian terms and regional variation as evidence, not as a problem to erase."
   - section: "Міст до писемної та високої культури"
     words: 500
@@ -71,7 +71,7 @@ content_outline:
 activity_hints:
   - type: cycle-map
     placement: inline
-    focus: "Classify examples by season, performer, place, addressee, action, and public source."
+    focus: "Classify examples by season, performer, place, addressee, action, and публічне джерело."
   - type: performance
     placement: inline
     focus: "Infer movement from a spring-song text: circle, line, gate, sowing, winding, or dialogue."
@@ -83,7 +83,7 @@ activity_hints:
     focus: "Compare two public spring-song pages without declaring one original."
   - type: source-check
     placement: workbook
-    focus: "Separate public primary text, textbook explanation, scholarly note, and build-only research."
+    focus: "Separate public primary text, textbook explanation, scholarly note, and non-public research note."
 vocabulary_hints:
   - "веснянка"
   - "гаївка"
@@ -121,12 +121,12 @@ references:
     author: "Народна творчість"
     type: primary
     source_url: "https://www.ukrlib.com.ua/narod/printout.php?id=0&bookid=0"
-    note: "Public Ukrlib full text; existing hosted reading to recheck in Phase B."
+    note: "Public Ukrlib full text; existing public text page to recheck in Phase B."
   - title: "Ой виорю я нивку широкую"
     author: "Народна творчість"
     type: primary
     source_url: "https://www.ukrlib.com.ua/narod/printout.php?id=0&bookid=2"
-    note: "Public Ukrlib full text; candidate for clean hosted reading in Phase B."
+    note: "Public Ukrlib full text; candidate for clean public text page in Phase B."
   - title: "Веснянки"
     author: "Народна творчість"
     type: primary
@@ -165,7 +165,7 @@ readings:
     reading_slug: "vesnianka-rozlylysia-vody-na-chotyry-brody"
 do_not_quote:
   - line: "Any plan, wiki, lesson, reading citation exposes a build-only source identifier."
-    reason: "Learners must see public URLs or bibliographic sources only."
+    reason: "Learners must see відкрите посиланняs or bibliographic sources only."
   - line: "Gaivky are explained as a Christian cover over a hidden system."
     reason: "FOLK framing requires Christian/Easter context proper weight where tradition is Easter-season."
   - line: "A scholarly example embedded in analysis is hosted as a standalone public reading without source check."
@@ -177,9 +177,12 @@ connects_to:
   - kupalski-rusalni-pisni
   - zhnyvarski-obzhynkovi-pisni
 changelog:
+  - version: 7
+    date: "2026-06-28"
+    note: "Register cleanup: replaced learner-visible source/process labels in M04 plan metadata and lesson surfaces with careful source-reading language."
   - version: 6
     date: "2026-06-28"
-    note: "Phase B module build: replaced collection placeholder with the third hosted public spring-song reading and marked clean hosted M04 reading pages."
+    note: "Phase B module build: replaced collection placeholder with the third hosted public spring-song reading and marked clean M04 public text pages."
   - version: 5
     date: "2026-06-28"
     note: "Base-first rebuild: replaced contaminated M04 dossier/wiki/plan with clean public-source contract; scope remains base-only with no learner module/readings changes."
