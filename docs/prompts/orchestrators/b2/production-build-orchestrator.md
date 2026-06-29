@@ -1,169 +1,218 @@
-# B2 Production Build Orchestrator
+# B2 Rebuild Production Prompt Contract
 
-> **SUSPENDED 2026-06-29:** Do not use this prompt for new B2 production.
-> Current B2 M01-M68 is archived as a superseded preview generation by
+> **REBUILD-SAFE CONTRACT 2026-06-29:** Do not use this prompt to continue
+> old B2 production or build M69+. Current B2 M01-M68 is archived superseded
+> preview generation by
 > `docs/decisions/2026-06-29-b2-preview-archive-and-rebuild.md`.
-> Resume B2 production only after the rebuild prompt/gate hardening, source
-> readiness audit, and golden pilot rebuild stages are complete.
+> Use this contract only after PR 3 source readiness passes and PR 4 golden
+> pilot acceptance explicitly authorizes rebuild-era production.
 
-Prompt version: 0.5
-Last reviewed: 2026-06-22
+Prompt version: 1.0
+Last reviewed: 2026-06-29
 
-## Source Assumptions
+## Current Production Freeze
 
-- Use this prompt only after `docs/audits/b2-preflight-readiness-*.md` says production may proceed.
-- B2 modules require advanced Ukrainian immersion, register control, argumentation, professional/academic readiness, and richer syntax.
-- B2 production should run in small sequential batches with module-tailored prompts, not generic batch instructions.
-- Plans are source of truth. Do not edit plans unless a preflight remediation PR explicitly scopes that work.
-- Some legacy B2 plans contain English planning scaffolding such as `Підсумок — Summary`, `Self-check`, English objectives, or English grammar labels. Treat that material as internal planning metadata only; do not copy it into B2 modules.
-- Some B2 discovery YAML files are auto-generated keyword stubs with empty `rag_chunks` and `rag_literary`. Treat them as query-keyword scaffolding unless they contain source chunks.
+- B2 M01-M68 remain in the repo for provenance, source mining, comparison, and
+  route stability only.
+- Existing B2 LLM scores are content-validity provenance. They are not
+  teaching-quality approval and must not be cited as proof that learner-facing
+  B2 lessons are ready.
+- Do not continue B2 production at M69.
+- Do not hand-patch archived preview modules as if they were release candidates.
+- Rebuilt B2 modules require fresh rebuild-era validation, route checks, and
+  independent pedagogy review.
 
-## Goal
+## Stage Gate
 
-Build the selected B2 module batch from local plans, discovery files, and wiki/source coverage. Create source modules, activities, vocabulary, resources where needed, generate site MDX, validate, record telemetry, and require independent review before merge.
+Run B2 rebuild work only in this order:
 
-## WORKTREE_ROOT Setup
+1. Prompt and deterministic gate hardening.
+2. B2 source, plan, wiki, and research readiness audit.
+3. One golden pilot rebuild accepted against this contract.
+4. Small rebuild waves after the pilot is accepted.
+
+If the current PR is stage 1 or stage 2, do not build modules.
+
+## Startup Rules
+
+- Read `AGENTS.md` for shared Codex runtime rules.
+- Do not read `CLAUDE.md` or `GEMINI.md` as normal Codex startup context.
+- Use Claude, Agy, Hermes, or other collaborators only through project bridge
+  routes, not by importing provider-specific startup instructions.
+- Use subtree worktrees:
 
 ```bash
-REPO_ROOT="${REPO_ROOT:-$(git rev-parse --show-toplevel)}"
-cd "$REPO_ROOT"
-git fetch origin main
-git worktree add -b codex/b2-production-<batch> .worktrees/dispatch/codex/b2-production-<batch> origin/main
-cd .worktrees/dispatch/codex/b2-production-<batch>
+git worktree add -b codex/b2-rebuild-<scope> .worktrees/dispatch/codex/b2-rebuild-<scope> origin/main
+cd .worktrees/dispatch/codex/b2-rebuild-<scope>
 test -e .venv || ln -s "$REPO_ROOT/.venv" .venv
-export WORKTREE_ROOT="$(pwd)"
-pwd
-git status --short --branch
-git rev-parse --show-toplevel
 ```
 
-## Read First
+- Every commit must include `X-Agent: codex/<task>`.
 
-- `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`
-- `docs/prompts/orchestrators/shared/repo-rules.md`
-- `docs/prompts/orchestrators/shared/validation-checklist.md`
-- `docs/prompts/orchestrators/shared/telemetry-and-pr.md`
-- passing or conditionally passing `docs/audits/b2-preflight-readiness-*.md`
-- `curriculum/l2-uk-en/curriculum.yaml`, target B2 modules
-- `docs/l2-uk-en/MODULE-RICHNESS-GUIDELINES-v2.md`
-- `scripts/config.py`, especially B2/default immersion policy
-- `scripts/audit/config.py`, especially B2 thresholds and activity types
-- for each target slug:
-  - `curriculum/l2-uk-en/plans/b2/<slug>.yaml`
-  - `curriculum/l2-uk-en/b2/discovery/<slug>.yaml`
-  - `wiki/grammar/b2/<slug>.md`
-  - `wiki/grammar/b2/<slug>.sources.yaml`
-  - existing `curriculum/l2-uk-en/b2/<slug>/` source directory if present
-  - existing `site/src/content/docs/b2/<slug>.mdx` if present
+## Lesson Contract
 
-## Allowed Writes
+A rebuilt B2 module is a taught lesson, not a reference article.
 
-- For scoped target slugs only:
-  - `curriculum/l2-uk-en/b2/<slug>/module.md`
-  - `curriculum/l2-uk-en/b2/<slug>/activities.yaml`
-  - `curriculum/l2-uk-en/b2/<slug>/vocabulary.yaml`
-  - `curriculum/l2-uk-en/b2/<slug>/resources.yaml`
-  - `site/src/content/docs/b2/<slug>.mdx`
-  - `site/src/content/docs/b2/index.mdx` only if current repo generation or navigation requires it
-- PR body or final orchestration note text
+Reference-article behavior:
 
-## Forbidden Writes
+- opens with long abstract explanation before the learner does anything;
+- piles up correct facts but does not model a decision;
+- explains grammar or lexical contrasts only in prose;
+- pushes practice into workbook-only activities;
+- leaves the lesson tab without rendered activity markers.
 
-- B2 plans, discovery, or wiki files unless explicitly authorized by a preflight remediation scope
-- modules outside the selected batch
-- `.python-version`, `.yamllint`, `.markdownlint.json`
-- `data/telemetry/**`
-- generated `status/`, curriculum `audit/`, or curriculum `review/` artifacts
+Taught-lesson behavior:
 
-## Production Rules
+- examples appear before compact rules;
+- concepts are split into short chunks;
+- normal modules contain 4-6 inline lesson activities;
+- each inline activity is placed by `<!-- INJECT_ACTIVITY: <id> -->`;
+- workbook activities consolidate after lesson practice;
+- dense grammar and vocabulary contrasts use tables, grids, or decision rules;
+- every major concept includes at least one learner decision, transformation,
+  correction, or comparison moment.
 
-- Work in small sequential batches. Finish and validate each module before moving to the next.
-- Write a module-tailored mini-prompt for each slug using that module's plan, discovery, wiki, and source YAML.
-- In each module-tailored mini-prompt, include a `Plan Scaffolding Filter` note:
-  - Ignore any plan section titled `Підсумок — Summary` or containing English `Self-check` prose as copy source.
-  - Convert any legacy English planning notes into Ukrainian intent before writing.
-  - Do not quote English plan prose in the module body.
-  - English is allowed only in vocabulary translation/gloss contexts already permitted by live B2 config.
-- In each module-tailored mini-prompt, include a `Discovery Authority Check` note:
-  - If discovery YAML has empty `rag_chunks` and `rag_literary`, use only `query_keywords` as hints.
-  - The authoritative teaching brief is `wiki/grammar/b2/<slug>.md` plus `<slug>.sources.yaml`.
-  - Stop only when the target wiki article or source registry is missing, has no sources, or contains unresolved verification markers.
-- B2 content should be advanced but teachable: richer syntax, register and style awareness, argumentation, professional or academic tasks, and precise vocabulary.
-- Avoid generic filler, decorative complexity, and content trivia. Activities must practice Ukrainian language skills through the module topic.
-- Maintain B2 immersion according to current config; English should be limited to vocabulary glosses or current repo-permitted contexts.
-- If preflight blockers reappear, stop and record them rather than building around missing sources.
+## Source Rules
+
+- Plans remain source of truth. Do not edit plans inside a build PR unless a
+  preflight remediation PR explicitly scopes that change.
+- Treat archived B2 module text as reference-mining material only. Do not copy
+  its structure forward.
+- Treat old B2 scores as provenance only. Rebuilt modules need fresh
+  rebuild-era scoring.
+- If source, wiki, or research readiness is missing, stop and record the
+  blocker. Do not build around missing evidence.
+
+## Activity Contract
+
+Normal B2 `activities.yaml` uses V2 buckets:
+
+```yaml
+version: '1.0'
+module: <slug>
+level: b2
+inline:
+  - id: act-1
+    type: quiz
+    ...
+workbook:
+  - id: workbook-1
+    type: reading
+    ...
+```
+
+Rules:
+
+- `inline` contains the lesson-tab activities.
+- `workbook` contains consolidation practice after the taught lesson.
+- Do not wrap activities in an `activities:` key.
+- Do not reference workbook-only ids from `INJECT_ACTIVITY` markers.
+- Normal modules should have 4-6 inline activities. Fewer than 4 is a hard
+  failure; more than 6 needs a clear reason.
+
+Explicit exemption shape:
+
+```yaml
+b2_rebuild_contract_exemption:
+  reason: "checkpoint module uses workbook-only synthesis"
+```
+
+Exemptions must be rare, metadata-scoped, and reasoned. The deterministic gate
+reports them as informational findings so reviewers can see them.
+
+## Deterministic Gate Contract
+
+Normal B2 modules must fail deterministic audit when any of these are true:
+
+- `activities.yaml` has no `inline` bucket.
+- `inline: []` or fewer than 4 inline activities appears without exemption.
+- `module.md` has no `INJECT_ACTIVITY` markers.
+- a marker references an activity outside `inline`, including workbook-only ids;
+- an inline activity is not injected into the lesson;
+- a concept H2 section has more than 900 words before lesson practice;
+- a B2 grammar or lexical contrast module has no table, contrast grid, or
+  decision-rule block;
+- raw callouts such as `[!note]` appear outside accepted blockquote syntax.
+
+The 900-word concept-section threshold is calibrated above the B1 p95
+pre-practice span. Do not replace it with a whole-module "words before first
+marker" threshold; that false-fails B1-shaped lessons.
+
+## Required Build Rhythm
+
+For each major concept:
+
+1. Give a short Ukrainian example first.
+2. Ask the learner to decide, compare, transform, or correct.
+3. State the rule compactly.
+4. Show a table, grid, or decision rule when forms contrast.
+5. Place an inline activity marker before moving into the next dense concept.
+
+Workbook practice may be longer, but it does not substitute for lesson-tab
+practice.
 
 ## Helper Swarm Policy
 
-Default to a solo run for one-module patches unless a helper will materially reduce risk or wall-clock time. When helpers are useful, keep routine delegation to one to three helpers total.
+Default to solo work for prompt/gate PRs and one-module pilot rebuilds unless a
+helper materially reduces risk or wall-clock time.
 
-- Use `gpt-5.4-mini` explorer helpers for bounded source lookup, plan/wiki/source coverage summaries, prompt consistency checks, and simple validation summaries.
-- Use `gpt-5.3-codex-spark` worker helpers only for narrow mechanical edits with a clearly owned file set.
-- The main orchestrator owns planning, integration, final review, PR creation, independent-family review routing, merge decisions, and git hygiene.
-- Do not let helpers read secrets, source `.envrc`, call `gh`, request reviews, open PRs, merge PRs, or revert unrelated changes.
-- Assign clear file ownership to every worker and tell helpers they are not alone in the codebase.
-- Record helper roles in telemetry `participants`; set `swarm_used: true` when any helper or reviewer thread did bounded module-build work. Solo runs still require `swarm_used: false`, `swarm_label: none`, and `swarm_note`.
-- Use Headroom compression for helper output or logs over 200 lines or 20 KB; pass the hash plus a short summary.
+- Use `gpt-5.4-mini` explorer helpers for bounded source lookup, prompt
+  consistency checks, docs/index checks, and simple validation summaries.
+- Use `gpt-5.3-codex-spark` worker helpers only for narrow mechanical edits
+  with a clearly owned file set.
+- The main orchestrator owns planning, integration, final review, PR creation,
+  independent-family review routing, merge decisions, and git hygiene.
+- Do not let helpers read secrets, source `.envrc`, call `gh`, request reviews,
+  open PRs, merge PRs, or revert unrelated changes.
+- Record helper roles in PR text; set `swarm_used: true` when any helper or
+  reviewer thread did bounded build work. Solo runs still require
+  `swarm_used: false`, `swarm_label: none`, and `swarm_note`.
+- Use Headroom compression for helper output or logs over 200 lines or 20 KB;
+  pass the hash plus a short summary.
 
-## Validation Commands
+## Validation
 
-Adapt module numbers from `curriculum.yaml`:
+Adapt module numbers to `curriculum/l2-uk-en/curriculum.yaml`:
 
 ```bash
 .venv/bin/python scripts/validate_activities.py l2-uk-en b2 <module_num>
 .venv/bin/python scripts/validate_vocab_yaml.py curriculum/l2-uk-en/b2/<slug>/vocabulary.yaml
 .venv/bin/python scripts/generate_mdx.py l2-uk-en b2 <module_num> --validate
 .venv/bin/python scripts/audit_module.py --skip-review curriculum/l2-uk-en/b2/<slug>/module.md
-rm -f .cache/lemma-frequency-b2-<module_num>.json
-rm -rf curriculum/l2-uk-en/b2/<slug>/audit curriculum/l2-uk-en/b2/<slug>/status
 git diff --check
-CHANGED_FILES="$( { git diff --name-only; git diff --cached --name-only; git ls-files --others --exclude-standard; } | sort -u )"
-if [ -n "$CHANGED_FILES" ] && printf '%s\n' "$CHANGED_FILES" | rg '(^|/)status/.*\.json$|(^|/)audit/.*-review\.md$|(^|/)review/.*-review\.md$|^data/telemetry/'; then
-  echo "Forbidden generated artifact in diff" >&2
-  exit 1
-fi
+.venv/bin/python scripts/audit/lint_agent_trailer.py
 ```
 
-Run `scripts/audit/check_mdx_generation_drift.py` only when a drift-only check is needed after generation. The `audit_module.py --skip-review` command intentionally validates deterministic module gates while leaving the review gate to the independent-review requirement below. It still writes local generated cache/status/audit outputs, so remove those known outputs before the diff gate; do not commit curriculum `review/`, `audit/`, or `status/` artifacts to satisfy the review gate.
+Remove generated local cache/status/audit outputs before staging. Do not commit
+`curriculum/l2-uk-en/**/status/*.json`, curriculum `audit/*-review.md`,
+curriculum `review/*-review.md`, or `data/telemetry/**`.
 
 ## Telemetry Workflow
 
-For every module-build PR, persist a record through `POST /api/telemetry/module-builds` and include the same summary in the PR body. Use `docs/runbooks/module-build-token-telemetry.md` and `docs/prompts/orchestrators/shared/telemetry-and-pr.md`.
-
-Required PR/telemetry fields: `run_id`, `level`, `slug`, `branch`, `commit_sha`, `pr_number`, `pr_url`, `status`, `swarm_used`, `swarm_label`, `swarm_note`, `participants`, and each participant `token_source`. Use `token_source: unavailable` rather than inventing counts when provider usage is unavailable. Do not commit `data/telemetry/**`.
+For module-build PRs, persist telemetry through `POST /api/telemetry/module-builds`
+and include the same summary in PR text. Required fields include `pr_number`,
+`pr_url`, `swarm_used`, `swarm_label`, and `swarm_note`. If no module is built,
+state that telemetry is not applicable for the prompt/gate PR.
 
 ## Independent-Family Review Gate
 
-Before merge, request a read-only independent-family review. Prefer Claude Opus 4.8. If Claude Opus 4.8 is unavailable, use Agy with Gemini 3.1 Pro High, for example `agy --model "Gemini 3.1 Pro (High)" --print-timeout 10m -p "<review prompt>"` when that is the available local route.
-
-The review prompt must include the PR diff, validation summary, telemetry summary, artifact-clean statement, and explicit request for blocker-only findings. Record reviewer identity, review model, review scope, unresolved findings, and final disposition in the PR body or final orchestration note. The merge rule is explicit: unresolved findings are blockers.
+Before merge, request read-only independent-family review. Prefer Claude Opus 4.8
+through the project bridge when available; otherwise use an approved
+non-Codex route such as Gemini 3.1 Pro High through Agy. Include PR diff,
+validation summary, artifact-clean statement, and blocker-only instructions.
+Record reviewer identity, review model, review scope, unresolved findings, and
+final disposition in PR text. Merge rule: unresolved findings are blockers.
 
 ## PR Body Requirements
 
-PR body must include: changed modules, source/preflight report used, validation commands and outcomes, telemetry `run_id`, `swarm_used`, `swarm_label`, `swarm_note`, reviewer identity, review scope, final disposition, unresolved findings count, and a statement that no generated `status/`, curriculum `audit/`, curriculum `review/`, or telemetry DB artifacts are included.
+For rebuild PRs, include:
 
-## PR, Commit, And Telemetry Requirements
-
-- Branch: `codex/b2-production-<batch>`
-- Commit trailer: `X-Agent: codex/b2-production-<batch>`
-- Run `.venv/bin/python scripts/audit/lint_agent_trailer.py` before pushing.
-- Persist module-build telemetry using `docs/prompts/orchestrators/shared/telemetry-and-pr.md`.
-- Include `swarm_used`, `swarm_label`, and `swarm_note` in telemetry and PR text.
-- Require independent-family review before merge; unresolved findings are blockers.
-
-## Expected Final Response
-
-```text
-B2 preflight report used: <path>
-Modules built: <slugs>
-Files changed: <paths>
-Validation run: <commands and outcomes>
-Telemetry: <run_id, POST status, unavailable reason if any>
-PR: <url, ready/merged/blocked>
-Independent review: <reviewer identity, model, scope, final disposition>
-Unresolved review findings: <n>
-Forbidden artifacts included: no
-swarm_used: true/false
-swarm_label: <none | solo | helper | swarm>
-swarm_note: <helpers used, or solo run; no swarm used>
-```
+- stage and scope;
+- modules rebuilt or statement that no modules were built;
+- files changed;
+- validation commands and outcomes;
+- telemetry summary when module build telemetry applies;
+- `swarm_used`, `swarm_label`, and `swarm_note`;
+- independent review identity, model, scope, and final disposition;
+- unresolved review findings count;
+- forbidden artifacts included: no.
