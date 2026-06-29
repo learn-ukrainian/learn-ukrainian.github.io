@@ -1,3 +1,8 @@
+> **Superseded framing note (2026-06-29):** this raw AGY review is retained as
+> a review record only. Its security-service-centered language is not current guidance.
+> Current Bilash guidance centers Ukrainian song canon and modern Ukrainian
+> reception; the Pavlychko anecdote is optional reception context only.
+
 FINDING:
 FILE:LINE: curriculum/l2-uk-en/plans/bio/oleksandr-bilash.yaml:24
 CURRENT CODE (verbatim from branch):
