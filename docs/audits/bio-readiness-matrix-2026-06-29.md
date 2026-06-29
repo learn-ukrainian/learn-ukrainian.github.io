@@ -88,7 +88,7 @@ Legend: `Y` = present, `-` = absent. Wiki column omitted from rows (`wiki/bio/` 
 | # | slug | plan | dossier | site-doc | wiki | notes |
 | --- | --- | --- | --- | --- | --- | --- |
 | 345 | `kyrylo-stetsenko` | - | - | - | absent | - |
-| 346 | `oleksandr-bilash` | - | - | - | absent | PILOT #4004; SOV: not a Soviet-success-story frame |
+| 346 | `oleksandr-bilash` | - | - | - | absent | PILOT #4004; Ukrainian song-canon / modern-reception frame |
 | 347 | `andrii-malyshko` | - | - | - | absent | SOV: Soviet-era compromise framing |
 | 348 | `platon-maiboroda` | - | - | - | absent | - |
 | 349 | `levko-revutskyi` | - | - | - | absent | SOV: co-optation framing |
@@ -145,7 +145,7 @@ Legend: `Y` = present, `-` = absent. Wiki column omitted from rows (`wiki/bio/` 
 
 Recommended first 10 dossiers for Claude to prepare. Selection rule: **de-risk the opening batch** - take only figures whose significance is settled (deceased, canonical, encyclopedia-grounded), that were already externally sanity-checked in the 2026-06-29 memo's ESU/IEU pass, that have high PD/CC portrait availability, and that need *no* high-content-warning scaffolding. The batch spans 4 of the 6 groups and is anchored by the gated pilot.
 
-- `oleksandr-bilash` (Олександр Білаш) - **Anchor / pilot (#4004).** Already the gated pilot; song-canon ("Два кольори"), settled legacy (d. 2003). Carries SOV framing flag - validates the co-optation-framing workflow on the cleanest possible case.
+- `oleksandr-bilash` (Олександр Білаш) - **Anchor / pilot (#4004).** Already the gated pilot; song-canon ("Два кольори"), settled legacy (d. 2003). Validates the Ukrainian song-canon / modern-reception workflow while keeping Soviet-era institutional context secondary.
 - `pavlo-chubynskyi` (Павло Чубинський) - Author of the anthem text; EIU ground-truth figure; foundational, uncontested, T1-rich. Highest pedagogical leverage.
 - `markiian-shashkevych` (Маркіян Шашкевич) - Ruthenian Triad / vernacular literary revival; sanity-checked; PD imagery (pre-1850); no living-person or CW complications.
 - `oleksandr-konyskyi` (Олександр Кониський) - NTSh initiator, "Молитва за Україну" text; sanity-checked; settled 19th-c. legacy.
@@ -156,7 +156,7 @@ Recommended first 10 dossiers for Claude to prepare. Selection rule: **de-risk t
 - `heorhii-narbut` (Георгій Нарбут) - UNR visual statehood (currency, seals, alphabet); sanity-checked; deceased 1920; **High** PD imagery (Block-I/visual).
 - `oleksandr-murashko` (Олександр Мурашко) - Ukrainian State Academy of Arts cofounder; sanity-checked; deceased 1919; European-level painter with PD portrait holdings.
 
-**Deliberately excluded from the first batch:** the Koliivshchyna/Uman pair (`maksym-zalizniak`, `ivan-gonta`) and `nestor-makhno` (high content-warning, need HIST-alignment + anti-hagiography scaffolding first); `ulas-samchuk` (WWII occupation-era editorship warning); all LIVING figures (canonicity guardrail / non-predictive-biography constraint); and Soviet-era co-optation cases beyond the single Bilash pilot.
+**Deliberately excluded from the first batch:** the Koliivshchyna/Uman pair (`maksym-zalizniak`, `ivan-gonta`) and `nestor-makhno` (high content-warning, need HIST-alignment + anti-hagiography scaffolding first); `ulas-samchuk` (WWII occupation-era editorship warning); all LIVING figures (canonicity guardrail / non-predictive-biography constraint); and Soviet-era complexity cases beyond the single Bilash pilot.
 
 ## Canonicity-Over-Currency Watchlist Policy
 
@@ -172,7 +172,7 @@ From the 2026-06-29 research memo (Claude + AGY/Gemini convergence): **keep livi
 The original BIO epic tickets (#2330-#2337 Phase 4/5 work, plus #2451) were scoped against the **original** 130/180-figure roster in `docs/audits/bio-track-gap-audit-2026-05-26.md`. They predate the 2026-06-29 +77 expansion and do not reference the six new SSOT groups. Recommended remap **after** this matrix lands:
 
 - **Refresh bodies** of #2330-#2337 (and #2451) to either (a) explicitly scope-exclude the +77 and stay on the original roster, or (b) extend their acceptance criteria to cover the six new groups. Leaving them ambiguous risks an agent treating a +77 slug as in-scope for a phase whose framing/source-tier expectations were written for the original set.
-- **Supersede vs. extend:** Phase-1 research tickets (dossier-writing) for the +77 should be **new** sub-issues under #2535, not retrofits of the original Phase-1 tickets - the +77 carry expansion-specific framing (Uman CW, Makhno statehood complexity, Soviet co-optation, living-figure canonicity) absent from the original ticket bodies.
+- **Supersede vs. extend:** Phase-1 research tickets (dossier-writing) for the +77 should be **new** sub-issues under #2535, not retrofits of the original Phase-1 tickets - the +77 carry expansion-specific framing (Uman CW, Makhno statehood complexity, Soviet-era complexity, living-figure canonicity) absent from the original ticket bodies.
 - **#2535** remains the active Claude-owned umbrella for the +77; **#2309** stays the high-level epic; **#4004** stays the gated `oleksandr-bilash` pilot and should be cross-linked from the first-batch row above.
 - Re-run this matrix after any remap so issue scope and surface-readiness stay reconciled.
 
