@@ -29,7 +29,11 @@ from scripts.lexicon import verify_manifest
 from scripts.lexicon.build_data_manifest import _lemma_key, _slug_for_url
 from scripts.lexicon.fill_from_content import ModuleInfo, _load_manifest, _manifest_entry
 from scripts.lexicon.lemma_normalization import strip_acute_stress
-from scripts.lexicon.manifest_fingerprint import DEFAULT_FINGERPRINT, write_fingerprint
+from scripts.lexicon.manifest_fingerprint import (
+    DEFAULT_FINGERPRINT,
+    build_fingerprint,
+    write_fingerprint,
+)
 from scripts.sync.promote_module import _write_atomically
 
 DEFAULT_CANDIDATES = PROJECT_ROOT / "data" / "lexicon" / "grow_candidates.json"
@@ -42,6 +46,11 @@ _OPTIONAL_CANDIDATE_FIELDS = (
     "pronunciation",
     "sections",
     "wiki_reference",
+    # Granular source-inventory provenance (source_id/title/locator/context) is
+    # emitted by grow_lexicon_from_sources.py and must survive promotion so the
+    # manifest entry keeps a traceable origin. The Atlas conformance/enrichment
+    # gates impose no closed key set, so it is retained verbatim at top level.
+    "source_provenance",
 )
 _ENRICHED_STAT_KEYS = ("enriched", "enriched_total", "enriched_count")
 _DUMMY_MODULE = ModuleInfo(track="", slug="", module_num=0, vocab_path=Path())
@@ -403,6 +412,23 @@ def _refresh_manifest_metadata(manifest: dict[str, Any]) -> None:
         if key in stats:
             stats[key] = enriched_count
     manifest["enrichment_generated"] = True
+    _embed_manifest_fingerprint(manifest)
+
+
+def _embed_manifest_fingerprint(manifest: dict[str, Any]) -> None:
+    """Re-stamp the manifest's embedded fingerprint to match the sidecar.
+
+    ``publish_manifest.py`` rejects a manifest whose embedded
+    ``manifest_fingerprint`` does not match the committed
+    ``lexicon-manifest.fingerprint.json`` sidecar. Promotion mutates lexicon
+    code state, so keep the embedded value aligned with the freshly built
+    sidecar (mirrors ``repair_plural_noun_aliases.py``).
+    """
+    fingerprint_payload = build_fingerprint(PROJECT_ROOT)
+    manifest["manifest_fingerprint"] = {
+        "schema_version": fingerprint_payload["schema_version"],
+        "fingerprint": fingerprint_payload["fingerprint"],
+    }
 
 
 def _validate_before_write(manifest: dict[str, Any], manifest_path: Path, self_check: SelfCheck) -> None:

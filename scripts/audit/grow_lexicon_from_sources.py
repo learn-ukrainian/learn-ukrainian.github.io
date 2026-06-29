@@ -62,6 +62,8 @@ def generate_candidates(
             entry = build_skeleton_entry(item.lemma)
             if item.pos and not entry.get("pos"):
                 entry["pos"] = item.pos
+            if item.gloss:
+                entry["gloss"] = item.gloss
             entry["primary_source"] = PRIMARY_SOURCE
             entry["source_provenance"] = list(item.source_provenance)
             enrich_manifest.enrich_entry(

@@ -165,6 +165,7 @@ sources:
     headwords:
       - lemma: ой
         pos: interjection
+        gloss: oh; ouch
         locator: vocabulary[0].items[0].word
         context: 'word: "ой"; sentence: "Ой, як гарно тут!"'
       - lemma: ура
