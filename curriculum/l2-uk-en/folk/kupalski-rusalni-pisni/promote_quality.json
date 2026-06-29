@@ -1,9 +1,9 @@
 {
-  "assembled_mdx_sha256": "2fc46839684947a6956821f71664a5cd8ec0ab58c1d06f127f0decc6a5487b7f",
+  "assembled_mdx_sha256": "af12adf9ac5a6d6795eb74e3a4e8c803aa42d242d11faada5db02d2c81e9b000",
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "1fb7e9f64475d68070bd4f702e56b9f7a0d1a33307207313e98b7ad90360e4c7",
+    "digest": "3a86981d43799b004da0110e26fae4be68bcede745d9085c94958e0383f507a8",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/kupalski-rusalni-pisni.yaml",
@@ -11,7 +11,7 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/kupalski-rusalni-pisni/module.md",
-        "sha256": "c18eb3ec2ab4ba75336d760ffcd9bf338f2dee3c08f7444a4693b57f950ae620"
+        "sha256": "04cabfb411e58a466638646b6d3102c5b6969dc03f4b7fce770ee41e8cff3f13"
       },
       {
         "path": "curriculum/l2-uk-en/folk/kupalski-rusalni-pisni/activities.yaml",
@@ -28,11 +28,11 @@
     ]
   },
   "evidence": {
-    "framing": "Framing gates pass for FOLK M05; summer-cycle source reading stays evidence-limited and avoids sensational hidden-core claims.",
-    "pedagogy": "Seminar method now uses student-facing Ukrainian terms around first sources, public text, careful reading, source comparison, and bounded conclusions.",
-    "quote_integrity": "Public Ukrlib/Osvita/Pidruchnyk URLs remain visible where citations belong; generated MDX parity and render gates pass.",
-    "review": "Claude Opus 4.8 unavailable because Claude CLI is not installed; Agy/Gemini 3.1 Pro High review found blockers, fixes were applied, and follow-up review returned APPROVE.",
-    "source_hygiene": "check_no_internal_ids reports 0 findings on changed learner surfaces; focused bad-term scan is clean for M04/M05 source and generated MDX."
+    "framing": "New decolonization paragraph strengthens anti-poison framing; no paganism/magic/cosmology as core and no sensational demonizing Ukrainian culture.",
+    "m06": "Claude says M06 can resume after cleanup merge.",
+    "prose": "M05 prose reads as coherent Ukrainian seminar text; no splicing or word-salad; Latin-i typo fixed and MDX regenerated.",
+    "review": "Claude Opus 4.8 final confirmation APPROVE, no P0/P1; re-read current M05 source and generated page after final word-count paragraph.",
+    "source_hygiene": "Reading lists Ukrainian-only with no title_en glosses; check_no_internal_ids reports 0 findings on FOLK learner surfaces."
   },
   "floors": {
     "beauty": 8.5,
@@ -45,18 +45,18 @@
   "profile": "folk_promote_v1",
   "review_artifact": null,
   "reviewer": {
-    "agent": "agy",
-    "family": "google",
-    "model": "gemini-3.1-pro-high"
+    "agent": "claude",
+    "family": "anthropic",
+    "model": "claude-opus-4-8"
   },
   "schema_version": 1,
-  "scored_at": "2026-06-28T14:19:02Z",
+  "scored_at": "2026-06-29T21:48:10Z",
   "scores": {
     "beauty": 9.0,
-    "decolonization": 10.0,
-    "engagement": 9.0,
+    "decolonization": 9.0,
+    "engagement": 8.5,
     "naturalness": 9.0,
-    "pedagogical": 10.0,
+    "pedagogical": 9.0,
     "tone": 9.0
   },
   "slug": "kupalski-rusalni-pisni",

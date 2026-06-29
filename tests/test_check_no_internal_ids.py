@@ -49,6 +49,17 @@ def test_learner_page_process_register_terms_fail(term: str, tmp_path: Path) -> 
     assert [(finding.kind, finding.value) for finding in findings] == [("build/process term", term)]
 
 
+def test_learner_page_english_reading_heading_fails(tmp_path: Path) -> None:
+    bad = tmp_path / "bad.mdx"
+    bad.write_text("**Texts you'll read**\n", encoding="utf-8")
+
+    findings = check_no_internal_ids.scan_files([bad])
+
+    assert [(finding.kind, finding.value) for finding in findings] == [
+        ("English UI label", "Texts you'll read")
+    ]
+
+
 @pytest.mark.parametrize(
     ("term", "expected"),
     [

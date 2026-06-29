@@ -48,6 +48,8 @@ The reviewer MUST hammer the corpus — judging on metrics/structure alone is ho
 6. **Grounding > breadth** — where a Wikipedia-only chunk conflicts with a corpus primary/named
    edition, the corpus wins; Wikipedia-only extraordinary claims flagged, not asserted.
 
+6a. **Learner-page fluency / English leakage** rendered FOLK module pages must read as natural Ukrainian seminar prose. Block English UI labels (`Texts you'll read`), rendered `title_en` glosses in reading lists, English CEFR/register labels (`C1+ learner`), broken syntax, sentence splicing, word salad, and repetitive source/proof boilerplate. Reviewer must read the rendered page like a student, not approve only because source-hygiene gates pass.
+
 ## Quality gates (cross-family review — must pass)
 7. **Decolonized NPOV (folk-specific)** — honest in every direction:
    - **No Russocentric framing / no appropriation laundering** — esp. bylyny: name the contested

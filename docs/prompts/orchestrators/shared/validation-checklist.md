@@ -74,6 +74,8 @@ For folder-layout modules, the source files are normally:
 
 Use `scripts/audit/check_mdx_generation_drift.py` when you need a drift-only check after generation, not as a default duplicate regeneration after `generate_mdx.py --validate`.
 
+For FOLK built-module PRs, render the module page and read it as a student top-to-bottom before opening the PR. Quote the exact route checked in the PR body, and do not rely only on source-hygiene gates.
+
 ## Deterministic Audit Validation
 
 For built module sources, run the deterministic audit without `--fix` before relying on subjective review:
