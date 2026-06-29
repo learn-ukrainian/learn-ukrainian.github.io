@@ -89,6 +89,9 @@ def test_review_candidates_use_committed_inventories_and_keep_provenance(
         "candidate_output": str(out.resolve()),
         "production_outputs_updated": [],
     }
+    assert payload["review_triage"]["workflow"] == review.TRIAGE_WORKFLOW_ID
+    assert payload["review_triage"]["counts"]["total_candidates"] == len(expected_candidates)
+    assert payload["review_triage"]["counts"]["grow_auto_merge"] == len(expected_candidates)
     assert not Path(payload["review_only"]["candidate_output"]).is_relative_to(
         review.LIVE_ATLAS_OUTPUT_DIR
     )
@@ -131,6 +134,85 @@ def test_review_workflow_validates_source_provenance_in_needs_review() -> None:
     }
 
     review.validate_source_provenance(payload)
+
+
+def test_review_triage_is_stricter_than_grow_auto_merge() -> None:
+    payload = {
+        "auto_merge": [
+            {
+                "lemma": "кіт",
+                "pos": "noun",
+                "gloss": "cat",
+                "source_provenance": [{"source_family": "fixture"}],
+            },
+            {
+                "lemma": "жабка",
+                "pos": "noun",
+                "source_provenance": [{"source_family": "fixture"}],
+            },
+            {
+                "lemma": "безпос",
+                "gloss": "has gloss",
+                "source_provenance": [{"source_family": "fixture"}],
+            },
+        ],
+        "needs_review": [
+            {
+                "entry": {
+                    "lemma": "сумнів",
+                    "pos": "noun",
+                    "gloss": "doubt",
+                    "source_provenance": [{"source_family": "fixture"}],
+                },
+                "reason": "missing dictionary definition",
+            }
+        ],
+    }
+
+    triage = review.build_review_triage(payload)
+
+    assert triage["counts"] == {
+        "total_candidates": 4,
+        "grow_auto_merge": 3,
+        "grow_needs_review": 1,
+        "publish_ready": 1,
+        "needs_publish_review": 3,
+    }
+    assert triage["needs_publish_review_reasons"] == {
+        "grow_needs_review:missing dictionary definition": 1,
+        "missing_english_anchor": 1,
+        "missing_pos": 1,
+    }
+    assert triage["by_source_family"] == {"fixture": 4}
+    assert triage["by_pos"] == {"noun": 3, "unknown": 1}
+    assert triage["publish_ready_sample"][0]["lemma"] == "кіт"
+    assert triage["needs_publish_review_sample"][0]["reasons"] == ["missing_pos"]
+
+
+def test_review_triage_accepts_enrichment_translation_anchor() -> None:
+    entry = {
+        "lemma": "переклад",
+        "pos": "noun",
+        "source_provenance": [{"source_family": "fixture"}],
+        "enrichment": {"translation": {"en": ["translation"]}},
+    }
+
+    assert review.publish_review_reasons(entry) == []
+
+
+def test_review_triage_report_includes_publish_counts() -> None:
+    payload = {
+        "review_triage": {
+            "counts": {"publish_ready": 2, "needs_publish_review": 1},
+            "needs_publish_review_reasons": {"missing_english_anchor": 1},
+        }
+    }
+
+    report = review.format_triage_report(payload)
+
+    assert "publish_ready: 2" in report
+    assert "needs_publish_review: 1" in report
+    assert "- missing_english_anchor: 1" in report
 
 
 def test_review_workflow_rejects_missing_source_provenance_before_final_write(

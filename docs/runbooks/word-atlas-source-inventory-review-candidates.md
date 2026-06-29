@@ -24,6 +24,12 @@ The candidate JSON follows the existing grow-candidate shape: `counts`,
 `auto_merge`, and `needs_review`. The wrapper also adds `review_only` metadata
 with the workflow id, inventory paths, review output path, and
 `production_outputs_updated: []`.
+It also adds `review_triage`, a review-only publish-readiness summary. The
+grow `auto_merge` bucket means the candidate passed low-level dictionary/POS
+gates; it is not approval to publish. `review_triage.counts.publish_ready`
+requires grow `auto_merge` plus source provenance, POS, and a visible English
+anchor. `review_triage.counts.needs_publish_review` lists candidates that need
+human review before any live Atlas publish batch.
 
 Every generated candidate must retain non-empty `source_provenance`. The
 representative smoke run currently processes 20 source inventory headwords:
