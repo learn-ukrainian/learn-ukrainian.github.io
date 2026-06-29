@@ -92,6 +92,7 @@ def test_review_candidates_use_committed_inventories_and_keep_provenance(
     assert payload["review_triage"]["workflow"] == review.TRIAGE_WORKFLOW_ID
     assert payload["review_triage"]["counts"]["total_candidates"] == len(expected_candidates)
     assert payload["review_triage"]["counts"]["grow_auto_merge"] == len(expected_candidates)
+    assert "publish_review_queue" not in payload
     assert not Path(payload["review_only"]["candidate_output"]).is_relative_to(
         review.LIVE_ATLAS_OUTPUT_DIR
     )
@@ -213,6 +214,214 @@ def test_review_triage_report_includes_publish_counts() -> None:
     assert "publish_ready: 2" in report
     assert "needs_publish_review: 1" in report
     assert "- missing_english_anchor: 1" in report
+
+
+def test_publish_review_queue_includes_auto_merge_and_grow_review_rows() -> None:
+    payload = {
+        "auto_merge": [
+            {
+                "lemma": "кіт",
+                "pos": "noun",
+                "gloss": "cat",
+                "source_provenance": [
+                    {
+                        "source_family": "fixture",
+                        "source_id": "source-a",
+                        "source_locator": "row 1",
+                    }
+                ],
+            },
+            {
+                "lemma": "жабка",
+                "pos": "noun",
+                "source_provenance": [
+                    {
+                        "source_family": "fixture",
+                        "source_id": "source-a",
+                        "source_locator": "row 2",
+                    }
+                ],
+            },
+        ],
+        "needs_review": [
+            {
+                "entry": {
+                    "lemma": "сумнів",
+                    "pos": "noun",
+                    "gloss": "doubt",
+                    "source_provenance": [
+                        {
+                            "source_family": "textbook",
+                            "source_id": "source-b",
+                            "source_locator": "map 3",
+                        }
+                    ],
+                },
+                "reason": "missing dictionary definition",
+            }
+        ],
+    }
+
+    queue = review.build_publish_review_queue(payload)
+
+    assert queue["workflow"] == review.PUBLISH_REVIEW_QUEUE_WORKFLOW_ID
+    assert queue["counts"]["needs_publish_review"] == 2
+    assert queue["needs_publish_review_reasons"] == {
+        "grow_needs_review:missing dictionary definition": 1,
+        "missing_english_anchor": 1,
+    }
+    assert [row["queue_id"] for row in queue["queue"]] == [
+        "source-inventory-publish-review-0001",
+        "source-inventory-publish-review-0002",
+    ]
+    rows_by_lemma = {row["lemma"]: row for row in queue["queue"]}
+    assert "кіт" not in rows_by_lemma
+    assert rows_by_lemma["жабка"]["bucket"] == "auto_merge"
+    assert rows_by_lemma["жабка"]["reasons"] == ["missing_english_anchor"]
+    assert rows_by_lemma["жабка"]["source_references"] == [
+        "fixture / source-a / row 2"
+    ]
+    assert rows_by_lemma["сумнів"]["bucket"] == "needs_review"
+    assert rows_by_lemma["сумнів"]["reasons"] == [
+        "grow_needs_review:missing dictionary definition"
+    ]
+
+
+def test_publish_review_queue_ids_are_stable_for_duplicate_headwords() -> None:
+    payload = {
+        "auto_merge": [
+            {
+                "lemma": "жабка",
+                "pos": "noun",
+                "source_provenance": [
+                    {
+                        "source_family": "fixture",
+                        "source_id": "source-z",
+                        "source_locator": "row 2",
+                    }
+                ],
+            },
+            {
+                "lemma": "жабка",
+                "pos": "noun",
+                "source_provenance": [
+                    {
+                        "source_family": "fixture",
+                        "source_id": "source-a",
+                        "source_locator": "row 1",
+                    }
+                ],
+            },
+        ],
+        "needs_review": [],
+    }
+
+    queue = review.build_publish_review_queue(payload)
+
+    assert [
+        (row["queue_id"], row["source_references"])
+        for row in queue["queue"]
+    ] == [
+        (
+            "source-inventory-publish-review-0001",
+            ["fixture / source-a / row 1"],
+        ),
+        (
+            "source-inventory-publish-review-0002",
+            ["fixture / source-z / row 2"],
+        ),
+    ]
+
+
+def test_publish_review_queue_report_renders_markdown_rows() -> None:
+    payload = {
+        "auto_merge": [
+            {
+                "lemma": "жабка",
+                "pos": "noun",
+                "source_provenance": [
+                    {
+                        "source_family": "fixture",
+                        "source_id": "source-a",
+                        "source_locator": "row 2",
+                    }
+                ],
+            }
+        ],
+        "needs_review": [],
+    }
+
+    report = review.format_publish_review_queue_report(payload)
+
+    assert "# Source Inventory Publish Review Queue" in report
+    assert "- needs_publish_review: 1" in report
+    assert "`missing_english_anchor`: 1" in report
+    assert (
+        "| source-inventory-publish-review-0001 | жабка | noun | "
+        "auto_merge | no | missing_english_anchor | "
+        "fixture / source-a / row 2 |  |  |"
+    ) in report
+
+
+def test_publish_review_queue_report_handles_empty_queue() -> None:
+    payload = {
+        "auto_merge": [
+            {
+                "lemma": "кіт",
+                "pos": "noun",
+                "gloss": "cat",
+                "source_provenance": [{"source_family": "fixture"}],
+            }
+        ],
+        "needs_review": [],
+    }
+
+    report = review.format_publish_review_queue_report(payload)
+    summary = review.format_publish_review_queue_summary(payload)
+
+    assert "- needs_publish_review: 0" in report
+    assert "- no rows" in report
+    assert "publish_review_queue_rows: 0" in summary
+
+
+def test_publish_review_queue_report_writes_only_ephemeral_paths(
+    tmp_path: Path,
+) -> None:
+    payload = {
+        "auto_merge": [
+            {
+                "lemma": "жабка",
+                "pos": "noun",
+                "source_provenance": [{"source_family": "fixture"}],
+            }
+        ],
+        "needs_review": [],
+    }
+    out = tmp_path / "queue.md"
+
+    output_path = review.write_publish_review_queue_report(payload, out)
+
+    assert output_path == out.resolve()
+    assert "# Source Inventory Publish Review Queue" in out.read_text(encoding="utf-8")
+
+
+def test_publish_review_queue_report_rejects_repository_paths() -> None:
+    with pytest.raises(SourceInventoryError, match="outside the repository"):
+        review.resolve_ephemeral_review_output_path(
+            PROJECT_ROOT / "docs/reports/source-inventory-review-queue.md"
+        )
+
+
+def test_publish_review_queue_report_rejects_traversal_into_repository() -> None:
+    traversal_path = (
+        PROJECT_ROOT
+        / ".."
+        / PROJECT_ROOT.name
+        / "docs/reports/source-inventory-review-queue.md"
+    )
+
+    with pytest.raises(SourceInventoryError, match="outside the repository"):
+        review.resolve_ephemeral_review_output_path(traversal_path)
 
 
 def test_review_workflow_rejects_missing_source_provenance_before_final_write(
