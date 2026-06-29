@@ -1,8 +1,11 @@
 from __future__ import annotations
 
+import re
+from collections import Counter
 from pathlib import Path
 
 import pytest
+import yaml
 
 from scripts.audit.source_inventory_intake import (
     SourceInventoryError,
@@ -11,6 +14,22 @@ from scripts.audit.source_inventory_intake import (
 )
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
+POS_BALANCED_SAMPLE = (
+    PROJECT_ROOT / "data/lexicon/source-inventory/pos-balanced-grammar-sample.yaml"
+)
+VOCABULARY_WORD_LOCATOR_RE = re.compile(r"^vocabulary\[(\d+)\]\.items\[(\d+)\]\.word$")
+REQUIRED_POS_BUCKETS = {
+    "noun",
+    "adjective",
+    "numeral",
+    "pronoun",
+    "verb",
+    "adverb",
+    "preposition",
+    "conjunction",
+    "particle",
+    "interjection",
+}
 
 
 def test_structured_inventory_preserves_source_provenance(tmp_path) -> None:
@@ -170,3 +189,48 @@ def test_committed_source_inventory_files_are_valid() -> None:
             )
             assert provenance.get("source_id")
             assert provenance.get("source_title")
+
+
+def test_pos_balanced_sample_has_required_pos_buckets_and_source_fields() -> None:
+    records = read_source_inventory(POS_BALANCED_SAMPLE, project_root=PROJECT_ROOT)
+
+    assert records
+    counts = Counter(record.pos for record in records)
+    assert set(counts) == REQUIRED_POS_BUCKETS
+    assert all(2 <= count <= 4 for count in counts.values())
+
+    source_payloads = {}
+    for record in records:
+        assert record.pos
+        source_path = record.source_path
+        assert source_path
+        source_file = PROJECT_ROOT / source_path
+        assert source_file.exists()
+        assert record.source_locator
+        assert record.context
+
+        if source_path not in source_payloads:
+            source_payloads[source_path] = yaml.safe_load(
+                source_file.read_text(encoding="utf-8")
+            )
+        locator_match = VOCABULARY_WORD_LOCATOR_RE.fullmatch(record.source_locator)
+        assert locator_match
+        category_index, item_index = (int(part) for part in locator_match.groups())
+        source_word = source_payloads[source_path]["vocabulary"][category_index][
+            "items"
+        ][item_index]["word"]
+        assert f'word: "{source_word}"' in record.context
+
+        provenance = record.provenance_payload()
+        assert (
+            provenance["inventory_path"]
+            == "data/lexicon/source-inventory/pos-balanced-grammar-sample.yaml"
+        )
+        assert provenance["source_path"]
+        assert provenance["source_locator"]
+        assert provenance["context"]
+
+    candidates = source_inventory_candidates(records)
+    assert len(candidates) == len(records)
+    assert all(candidate.pos for candidate in candidates)
+    assert all(candidate.source_provenance for candidate in candidates)
