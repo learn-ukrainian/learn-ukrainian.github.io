@@ -55,6 +55,30 @@ def test_manifest_entry_retains_source_inventory_provenance() -> None:
     assert entry["course_usage"] == []
 
 
+def test_manifest_entry_preserves_source_inventory_primary_source() -> None:
+    entry = promote.manifest_entry_from_candidate(
+        _candidate(lemma="ананас", primary_source="source_inventory_grow")
+    )
+
+    assert entry["primary_source"] == "source_inventory_grow"
+
+
+def test_manifest_entry_prefers_curated_candidate_gloss_over_meaning() -> None:
+    entry = promote.manifest_entry_from_candidate(
+        _candidate(
+            lemma="ананас",
+            gloss="pineapple",
+            enrichment={
+                "meaning": {
+                    "definitions": [{"text": "dictionary definition should not win"}]
+                }
+            },
+        )
+    )
+
+    assert entry["gloss"] == "pineapple"
+
+
 def test_manifest_entry_omits_provenance_when_candidate_has_none() -> None:
     entry = promote.manifest_entry_from_candidate(_candidate(lemma="кіт"))
 
@@ -79,6 +103,8 @@ def test_write_promotes_candidate_in_sorted_order_and_updates_stats(tmp_path: Pa
 
     manifest = _read_json(manifest_path)
     assert [entry["lemma"] for entry in manifest["entries"]] == ["авто", "мама", "якір"]
+    assert manifest["generated_at"] != "2026-06-22T00:00:00+00:00"
+    assert str(manifest["generated_at"]).endswith("+00:00")
     assert manifest["stats"]["lemmas_total"] == 3
     assert manifest["stats"]["enriched_count"] == 3
     assert manifest["enrichment_generated"] is True
