@@ -3,13 +3,13 @@
   pos: phrase
   usage: "Безособова форма на -но, -то не має підмета й повідомляє результат."
 - lemma: форма на -но, -то
-  translation: "form in -no, -to"
+  translation: "form ending in -no, -to"
   pos: phrase
   usage: "Форма на -но, -то фокусує завершену дію без названого діяча."
 - lemma: результативність
   translation: "result focus, resultiveness"
   pos: noun
-  usage: "Результативність конструкції видно в реченні заяву подано."
+  usage: "Результативність конструкції видно в реченні заявку подано."
 - lemma: прямий додаток
   translation: "direct object"
   pos: phrase
@@ -17,7 +17,7 @@
 - lemma: знахідний відмінок
   translation: "accusative case"
   pos: phrase
-  usage: "Знахідний відмінок зберігається у фразі статтю оприлюднено."
+  usage: "Знахідний відмінок зберігається у фразі скаргу розглянуто."
 - lemma: орудний відмінок
   translation: "instrumental case"
   pos: phrase
@@ -29,112 +29,104 @@
 - lemma: виконавець
   translation: "performer"
   pos: noun
-  usage: "Виконавець може бути невідомий, очевидний або другорядний."
+  usage: "Виконавець дії не стоїть в орудному після результативної форми."
 - lemma: інструмент
-  translation: "instrument, tool"
+  translation: "instrument"
   pos: noun
-  usage: "Інструмент можна назвати в орудному: документ підписано ключем."
-- lemma: синтаксична калька
-  translation: "syntactic calque"
+  usage: "Електронний ключ у реченні документ підписано ключем є інструментом."
+- lemma: засіб
+  translation: "means, tool"
+  pos: noun
+  usage: "Пароль у реченні файл захищено паролем називає засіб."
+- lemma: матеріал
+  translation: "material"
+  pos: noun
+  usage: "Пісок у реченні дорогу засипано піском називає матеріал."
+- lemma: підстава
+  translation: "basis, grounds"
+  pos: noun
+  usage: "Рішення ухвалено на підставі звіту."
+- lemma: статус
+  translation: "status"
+  pos: noun
+  usage: "Статус заявки можна передати формою заявку подано."
+- lemma: процедура
+  translation: "procedure"
+  pos: noun
+  usage: "В офіційній процедурі форми на -но, -то стисло фіксують результати."
+- lemma: відповідальність
+  translation: "responsibility"
+  pos: noun
+  usage: "Активне речення краще показує відповідальність діяча."
+- lemma: приховувати
+  translation: "to hide"
+  pos: verb
+  usage: "Пасивна форма може приховувати відповідальність, якщо діяч важливий."
+- lemma: переписати
+  translation: "to rewrite"
+  pos: verb
+  usage: "Речення з орудним діяча треба переписати активом."
+- lemma: подано
+  translation: "has been submitted"
+  pos: other
+  usage: "Заявку подано до реєстру."
+- lemma: підписано
+  translation: "has been signed"
+  pos: other
+  usage: "Документ підписано електронним ключем."
+- lemma: ухвалено
+  translation: "has been adopted, approved"
+  pos: other
+  usage: "Рішення ухвалено після обговорення."
+- lemma: відкрито
+  translation: "has been opened"
+  pos: other
+  usage: "Доступ відкрито о дев'ятій."
+- lemma: збито
+  translation: "has been knocked down"
+  pos: other
+  usage: "Старий паркан збито буревієм."
+- lemma: вилучено
+  translation: "has been removed, seized"
+  pos: other
+  usage: "Помилковий пункт вилучено з документа."
+- lemma: розглянуто
+  translation: "has been considered"
+  pos: other
+  usage: "Скаргу розглянуто на засіданні."
+- lemma: схвалено
+  translation: "has been approved"
+  pos: other
+  usage: "Оновлену програму схвалено без зауважень."
+- lemma: оприлюднено
+  translation: "has been published, made public"
+  pos: other
+  usage: "Результати оприлюднено на сайті."
+- lemma: перевірено
+  translation: "has been checked"
+  pos: other
+  usage: "Дані перевірено автоматично."
+- lemma: виправлено
+  translation: "has been corrected"
+  pos: other
+  usage: "Помилки виправлено перед друком."
+- lemma: зачинено
+  translation: "has been closed, shut"
+  pos: other
+  usage: "Двері було зачинено о восьмій."
+- lemma: буде розглянуто
+  translation: "will be considered"
   pos: phrase
-  usage: "Звіт підготовлено аналітиками є синтаксичною калькою."
-- lemma: нормативний
-  translation: "standard, normative"
-  pos: adj
-  usage: "Нормативний варіант залежить від того, чи названо діяча."
-- lemma: ненормативний
-  translation: "non-standard"
-  pos: adj
-  usage: "Ненормативний орудний діяча треба прибрати або перебудувати."
+  usage: "Скаргу буде розглянуто завтра."
+- lemma: було подано
+  translation: "was submitted"
+  pos: phrase
+  usage: "Заявку було подано вчора."
 - lemma: офіційно-діловий стиль
   translation: "official business style"
   pos: phrase
-  usage: "В офіційно-діловому стилі часто пишуть заяву зареєстровано."
+  usage: "Офіційно-діловий стиль часто використовує форми на -но, -то."
 - lemma: публіцистичний стиль
   translation: "journalistic style"
   pos: phrase
-  usage: "Публіцистичний стиль може поєднувати безособовий результат і активну відповідальність."
-- lemma: протокол
-  translation: "minutes, protocol"
-  pos: noun
-  usage: "У протоколі доречно: питання розглянуто, рішення ухвалено."
-- lemma: акт
-  translation: "official act, record"
-  pos: noun
-  usage: "В акті зазначено, що ключі передано орендареві."
-- lemma: брифінг
-  translation: "briefing"
-  pos: noun
-  usage: "На брифінгу повідомлено, які заходи було вчинено."
-- lemma: репортаж
-  translation: "reportage"
-  pos: noun
-  usage: "Репортаж поєднує факти, результативні форми й живі активні речення."
-- lemma: благодійний марафон
-  translation: "charity marathon"
-  pos: phrase
-  usage: "Після благодійного марафону зібрані кошти передано фонду."
-- lemma: збудовано
-  translation: "has been built"
-  pos: verb
-  usage: "Новий перехід збудовано біля вокзалу."
-- lemma: продано
-  translation: "has been sold"
-  pos: verb
-  usage: "Квитки на благодійний захід продано за два дні."
-- lemma: прийнято
-  translation: "has been adopted, accepted"
-  pos: verb
-  usage: "Рішення прийнято після тривалого обговорення."
-- lemma: вилучено
-  translation: "has been seized, removed"
-  pos: verb
-  usage: "Підроблені документи вилучено під час перевірки."
-- lemma: затримано
-  translation: "has been detained"
-  pos: verb
-  usage: "Після операції затримано двох підозрюваних."
-- lemma: вчинено
-  translation: "has been committed, carried out"
-  pos: verb
-  usage: "У повідомленні зазначено, які дії було вчинено."
-- lemma: оприлюднено
-  translation: "has been published, made public"
-  pos: verb
-  usage: "Результати опитування оприлюднено на сайті."
-- lemma: розглянуто
-  translation: "has been considered"
-  pos: verb
-  usage: "Скаргу розглянуто на засіданні комісії."
-- lemma: схвалено
-  translation: "has been approved"
-  pos: verb
-  usage: "Оновлену програму схвалено без зауважень."
-- lemma: попереджено
-  translation: "has been prevented, warned"
-  pos: verb
-  usage: "Небезпечну ситуацію попереджено завдяки швидкій реакції."
-- lemma: встановлено
-  translation: "has been installed, established"
-  pos: verb
-  usage: "У залі встановлено нову систему озвучення."
-- lemma: підготовлено
-  translation: "has been prepared"
-  pos: verb
-  usage: "Пакет документів підготовлено до подання."
-- lemma: зареєстровано
-  translation: "has been registered"
-  pos: verb
-  usage: "Звернення зареєстровано в електронній системі."
-- lemma: передано
-  translation: "has been handed over, transferred"
-  pos: verb
-  usage: "Матеріали передано до архіву."
-- lemma: обладнано
-  translation: "has been equipped"
-  pos: verb
-  usage: "Пункти допомоги обладнано перед початком марафону."
-- lemma: зафіксовано
-  translation: "has been recorded"
-  pos: verb
-  usage: "Порушення зафіксовано під час планової перевірки."
+  usage: "У публіцистичному стилі треба стежити, чи пасив не приховує відповідальність."
