@@ -103,10 +103,13 @@ function parseManifest(jsonBytes, pointer, sourceLabel) {
 
 // The manifest pointer is a trusted, fingerprint-gated, committed artifact, but
 // the download target it carries still flows from file data into an outbound
-// request. Allowlist the host so a tampered/misgenerated pointer cannot redirect
-// the fetch to an arbitrary origin (supply-chain defense; CodeQL #251). GitHub
-// release-asset URLs start at github.com and 302 to *.githubusercontent.com.
-const ALLOWED_DOWNLOAD_HOSTS = new Set(["github.com"]);
+// request. Allowlist the origin so a tampered/misgenerated pointer cannot
+// redirect the fetch to an arbitrary host — or to an attacker-controlled GitHub
+// release — before the bytes are sha256-verified (supply-chain defense; CodeQL
+// #251). The pointer always names this repo's release asset on github.com; the
+// fetch then transparently 302s to GitHub's opaque *.githubusercontent.com CDN.
+const ALLOWED_RELEASE_PATH_PREFIX =
+  "/learn-ukrainian/learn-ukrainian.github.io/releases/download/";
 
 function assertAllowedDownloadUrl(rawUrl) {
   let parsed;
@@ -119,9 +122,15 @@ function assertAllowedDownloadUrl(rawUrl) {
     throw new Error(`Atlas manifest asset_url must use https, got ${parsed.protocol} (${rawUrl})`);
   }
   const host = parsed.hostname.toLowerCase();
-  if (!ALLOWED_DOWNLOAD_HOSTS.has(host) && !host.endsWith(".githubusercontent.com")) {
+  // github.com targets must point at THIS repo's releases (not just any GitHub
+  // account); *.githubusercontent.com are GitHub-controlled redirect/CDN hosts
+  // with opaque paths, so they are validated by host only.
+  const fromRepoRelease = host === "github.com" && parsed.pathname.startsWith(ALLOWED_RELEASE_PATH_PREFIX);
+  const fromGithubCdn = host.endsWith(".githubusercontent.com");
+  if (!fromRepoRelease && !fromGithubCdn) {
     throw new Error(
-      `Atlas manifest asset_url host is not allowlisted: ${host}. Expected github.com or *.githubusercontent.com.`,
+      `Atlas manifest asset_url is not an allowlisted GitHub release URL: ${rawUrl}. ` +
+        `Expected https://github.com${ALLOWED_RELEASE_PATH_PREFIX}* or https://*.githubusercontent.com/*.`,
     );
   }
   return parsed.toString();

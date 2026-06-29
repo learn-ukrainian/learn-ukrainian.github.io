@@ -114,21 +114,28 @@ describe('asset_url host allowlist', () => {
   });
 
   test.each([
-    ['http://github.com/owner/repo/releases/download/tag/file.gz', 'non-https scheme'],
+    [`http://github.com/learn-ukrainian/learn-ukrainian.github.io/releases/download/t/f.gz`, 'non-https scheme'],
     ['https://evil.test/lexicon-manifest.json.gz', 'off-allowlist host'],
     ['https://github.com.evil.test/file.gz', 'look-alike host'],
+    ['https://github.com@evil.test/learn-ukrainian/learn-ukrainian.github.io/releases/download/t/f.gz', 'userinfo spoof'],
+    ['https://fake-githubusercontent.com/x.gz', 'hyphen-spoof CDN host'],
+    ['https://github.com/attacker/repo/releases/download/t/evil.gz', 'github.com but wrong repo'],
+    ['https://github.com./learn-ukrainian/learn-ukrainian.github.io/releases/download/t/f.gz', 'trailing-dot host'],
     ['not a url', 'malformed url'],
   ])('rejects %s (%s)', (badUrl) => {
     expect(() => assertAllowedDownloadUrl(badUrl)).toThrow();
   });
 
-  test('downloadGzip refuses to fetch an off-allowlist asset_url', async () => {
+  test('downloadGzip refuses to fetch a non-allowlisted asset_url', async () => {
     const gzBytes = gzipSync(Buffer.from('{"entries":[]}'));
-    const pointer = { asset_url: 'https://evil.test/manifest.gz', gz_sha256: sha256(gzBytes) };
+    const pointer = {
+      asset_url: 'https://github.com/attacker/repo/releases/download/t/manifest.gz',
+      gz_sha256: sha256(gzBytes),
+    };
     const fetchMock = vi.fn();
     vi.stubGlobal('fetch', fetchMock);
 
-    await expect(downloadGzip(pointer)).rejects.toThrow('not allowlisted');
+    await expect(downloadGzip(pointer)).rejects.toThrow('allowlisted');
     expect(fetchMock).not.toHaveBeenCalled();
   });
 });
