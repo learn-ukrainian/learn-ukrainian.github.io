@@ -88,6 +88,7 @@ Durable Report,Scope
 `docs/audits/b2-m54-m58-llm-score-report-2026-06-28.md`,M54-M58
 `docs/audits/b2-m59-m63-llm-score-report-2026-06-28.md`,M59-M63
 `docs/audits/b2-m64-m68-llm-score-report-2026-06-28.md`,M64-M68
+`docs/audits/b2-preview-archive-status-2026-06-29.md`,M01-M68 superseded preview archive
 `docs/audits/b2-m58-m59-repair-llm-score-update-2026-06-29.md`,M58-M59 repair
 
 Module,Raw Word Count,Activities,Vocabulary
@@ -180,3 +181,6 @@ See `docs/audits/b2-m51-m53-llm-score-report-2026-06-28.md`.,M51-M53
 See `docs/audits/b2-m54-m58-llm-score-report-2026-06-28.md`.,M54-M58
 See `docs/audits/b2-m59-m63-llm-score-report-2026-06-28.md`.,M59-M63
 See `docs/audits/b2-m64-m68-llm-score-report-2026-06-28.md`.,M64-M68
+
+Archive Status,Scope,Disposition
+Superseded preview,M01-M68,"Current scores are retained for content-validity provenance only. They do not certify B2 learner-facing lesson quality. See `docs/decisions/2026-06-29-b2-preview-archive-and-rebuild.md` and `docs/audits/b2-preview-archive-status-2026-06-29.md`."
