@@ -1,0 +1,41 @@
+# Source registry for wiki/figures/oleksandr-bilash.md
+# Referenced inline as [S1], [S2], ...
+# Base-prep packet (#4005): hand-authored, not pipeline-compiled.
+# Entries are real external sources (no fabricated sources.db corpus chunk IDs).
+sources:
+- id: S1
+  file: https://esu.com.ua/article-39952
+  type: external
+  title: Білаш Олександр Іванович — Енциклопедія Сучасної України (ЕСУ)
+  url: https://esu.com.ua/article-39952
+  tier: T1
+- id: S2
+  file: https://vue.gov.ua/Білаш,_Олександр_Іванович
+  type: external
+  title: Білаш, Олександр Іванович — Велика українська енциклопедія (ВУЕ)
+  url: https://vue.gov.ua/Білаш,_Олександр_Іванович
+  tier: T1
+- id: S3
+  file: https://uk.wikipedia.org/wiki/Білаш_Олександр_Іванович
+  type: external
+  title: Білаш Олександр Іванович — Українська Вікіпедія
+  url: https://uk.wikipedia.org/wiki/Білаш_Олександр_Іванович
+  tier: T3
+- id: S4
+  file: https://uk.wikipedia.org/wiki/Два_кольори
+  type: external
+  title: Два кольори — Українська Вікіпедія
+  url: https://uk.wikipedia.org/wiki/Два_кольори
+  tier: T3
+- id: S5
+  file: https://csamm.archives.gov.ua/2021/03/06/oleksandr-ivanovych-bilash-1931-2003/
+  type: external
+  title: Олександр Іванович Білаш (1931–2003) — ЦДАМЛМ України
+  url: https://csamm.archives.gov.ua/2021/03/06/oleksandr-ivanovych-bilash-1931-2003/
+  tier: T2
+- id: S6
+  file: https://umoloda.kyiv.ua/number/3701/164/154954/
+  type: external
+  title: 'Казали, що немає слуху: неймовірна історія композитора Олександра Білаша — Україна молода'
+  url: https://umoloda.kyiv.ua/number/3701/164/154954/
+  tier: T5
