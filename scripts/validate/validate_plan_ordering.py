@@ -181,6 +181,20 @@ LEGACY_MISSING_PLAN_FILES = {
     ("c2", "pobut-i-shchodenne-zhyttia.yaml", "68"),
 }
 
+BIO_EXPANSION_PENDING_PLAN_RANGE = range(311, 388)
+BIO_EXPANSION_READY_PLAN_SLUGS = {"oleksandr-bilash"}
+
+
+def _is_intentionally_missing_plan(level: str, slug: str, seq: int) -> bool:
+    """Return true for planned-but-not-yet-built curriculum entries."""
+    if (level, f"{slug}.yaml", str(seq)) in LEGACY_MISSING_PLAN_FILES:
+        return True
+    return (
+        level == "bio"
+        and seq in BIO_EXPANSION_PENDING_PLAN_RANGE
+        and slug not in BIO_EXPANSION_READY_PLAN_SLUGS
+    )
+
 
 def _is_legacy_field_mismatch(
     level: str,
@@ -514,7 +528,7 @@ def validate_track(level: str, slugs: list[str], fix: bool = False) -> tuple[lis
     # Check for missing plan files
     for slug, seq in slug_to_seq.items():
         if slug not in found_slugs:
-            if (level, f"{slug}.yaml", str(seq)) in LEGACY_MISSING_PLAN_FILES:
+            if _is_intentionally_missing_plan(level, slug, seq):
                 continue
             errors.append(
                 f"[{level}] MISSING: {slug}.yaml (seq {seq}) has no plan file"

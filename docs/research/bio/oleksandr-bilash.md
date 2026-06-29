@@ -82,6 +82,19 @@ This source is pedagogically important because it shows Bilash being publicly
 commemorated in wartime Ukraine through Ukrainian music, not through a Soviet
 or security-service frame.
 
+**Module-writing implication:** open the eventual lesson with a song-memory
+question, not an institutional biography. Let students first hear or read why
+«Два кольори» and «Ясени» feel legible as Ukrainian lyric memory: colour,
+mother, road, ash tree, voice, refrain, and collaboration between composer and
+poet. Then move outward to the composer, his education, his large-form work, and
+only after that to the Soviet-era institutional context. This order matters
+because it makes the Ukrainian cultural object visible before the state system
+appears. It also keeps the module aligned with the user's selection criterion:
+figures who matter for Ukrainian nation-building, language, and culture. The
+hard question for discussion should be "How can a song written inside Soviet
+institutions still carry Ukrainian cultural continuity?" rather than "What was
+the security-service story?"
+
 ## 5. Pavlychko Anecdote Scope Guardrail
 
 There is a documented source trace for the story that Soviet officials read
