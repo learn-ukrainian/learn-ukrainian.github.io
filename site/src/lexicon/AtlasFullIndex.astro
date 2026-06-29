@@ -20,7 +20,16 @@ const clsLabels = {
 const chipCounts = (browseMeta.chipCounts ?? {}) as Record<string, number>;
 const chips = Object.entries(clsLabels).filter(([code]) => (chipCounts[code] ?? 0) > 0);
 const letterCounts = (browseMeta.letterCounts ?? {}) as Record<string, number>;
-const totalLabel = `${browseMeta.total ?? 0} слів · ${UKRAINIAN_ALPHABET.length} літери`;
+const atlasEntryNoun = (count: number): string => {
+  const mod100 = Math.abs(count) % 100;
+  if (mod100 >= 11 && mod100 <= 14) return "записів";
+  const mod10 = Math.abs(count) % 10;
+  if (mod10 === 1) return "запис";
+  if (mod10 >= 2 && mod10 <= 4) return "записи";
+  return "записів";
+};
+const totalCount = browseMeta.total ?? 0;
+const totalLabel = `${totalCount} ${atlasEntryNoun(totalCount)} Атласу · ${UKRAINIAN_ALPHABET.length} літери`;
 ---
 
 <section
@@ -134,9 +143,18 @@ type BrowseRow = {
     borr: "запозичення",
   };
 
-const CHUNK_SIZE = 150;
-const GLOBAL_SEARCH_LIMIT = 200;
+  const CHUNK_SIZE = 150;
+  const GLOBAL_SEARCH_LIMIT = 200;
   const alphabet = new Set<string>(UKRAINIAN_ALPHABET);
+  const atlasEntryNoun = (count: number): string => {
+    const mod100 = Math.abs(count) % 100;
+    if (mod100 >= 11 && mod100 <= 14) return "записів";
+    const mod10 = Math.abs(count) % 10;
+    if (mod10 === 1) return "запис";
+    if (mod10 >= 2 && mod10 <= 4) return "записи";
+    return "записів";
+  };
+  const atlasEntryCountLabel = (count: number): string => `${count} ${atlasEntryNoun(count)}`;
   const root = document.querySelector<HTMLElement>("[data-atlas-index]");
   const normalize = (value: string): string => value.normalize("NFC").toLocaleLowerCase("uk-UA");
   const escapeHtml = (value: string): string =>
@@ -154,7 +172,9 @@ const GLOBAL_SEARCH_LIMIT = 200;
   if (root) {
   const meta = JSON.parse(root.dataset.browseMeta ?? "{}") as BrowseMeta;
   const flaggedRows = JSON.parse(root.dataset.flaggedRows ?? "[]") as BrowseRow[];
-  const totalLabel = root.dataset.totalLabel ?? `${meta.total ?? 0} слів · ${UKRAINIAN_ALPHABET.length} літери`;
+  const totalCount = meta.total ?? 0;
+  const totalLabel = root.dataset.totalLabel
+    ?? `${atlasEntryCountLabel(totalCount)} Атласу · ${UKRAINIAN_ALPHABET.length} літери`;
     const searchInput = root.querySelector<HTMLInputElement>("[data-index-search]");
     const status = root.querySelector<HTMLElement>("[data-index-status]");
     const section = root.querySelector<HTMLElement>("[data-letter-section]");
@@ -277,7 +297,7 @@ const GLOBAL_SEARCH_LIMIT = 200;
         return;
       }
       if (state.cls) {
-        status.textContent = `${CLS_LABELS[state.cls] ?? state.cls}: ${filteredCount} слів`;
+        status.textContent = `${CLS_LABELS[state.cls] ?? state.cls}: ${atlasEntryCountLabel(filteredCount)}`;
         return;
       }
       status.textContent = totalLabel;
@@ -291,7 +311,7 @@ const GLOBAL_SEARCH_LIMIT = 200;
         status.textContent = state.error;
         return;
       }
-      status.textContent = `${state.letter}: ${filteredCount} слів`;
+      status.textContent = `${state.letter}: ${atlasEntryCountLabel(filteredCount)}`;
     };
 
     const updateControls = (): void => {
