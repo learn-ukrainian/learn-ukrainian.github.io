@@ -278,7 +278,7 @@ def _format_plan_readings_for_mdx(readings: object) -> str:
     if not isinstance(readings, list):
         return ""
 
-    lines = ["**Texts you'll read**", ""]
+    lines = ["**Тексти для читання**", ""]
     for item in readings:
         if not isinstance(item, dict):
             continue
@@ -290,8 +290,7 @@ def _format_plan_readings_for_mdx(readings: object) -> str:
         if not href:
             continue
         genre = str(item.get("genre") or "").strip()
-        title_en = str(item.get("title_en") or "").strip()
-        detail = " · ".join(value for value in (genre, title_en) if value)
+        detail = genre
         suffix = f" — {detail}" if detail else ""
         lines.append(f"- [{title}]({href}){suffix}")
 

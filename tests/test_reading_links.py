@@ -182,6 +182,8 @@ def test_plan_readings_block_is_integrity_gated(monkeypatch):
         ]
     )
 
-    assert "**Texts you'll read**" in out
+    assert "**Тексти для читання**" in out
     assert "/readings/koliadka-yak-shche-ne-bulo/" in out
+    assert "Колядка" in out
+    assert "When world had no beginning" not in out
     assert "Broken" not in out

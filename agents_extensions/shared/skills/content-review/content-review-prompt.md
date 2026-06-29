@@ -114,6 +114,8 @@ Read the activities YAML and check:
 
 ### FOLK MODE
 
+- [ ] **Learner-page register and fluency** -- Search for English UI/register leaks (`Texts you'll read`, rendered `title_en`, `C1+ learner`) and read the rendered module page as a Ukrainian student. Flag broken syntax, sentence splicing, word salad, or source/proof boilerplate even when deterministic source gates pass.
+
 - [ ] **FOLK framing hard gate** -- Apply `docs/folk-epic/FOLK-FRAMING-STANDARD.md`; any pagan-core / Christian-shell, occult-as-belief, magic-as-core, or demonology-as-belief framing is a blocker.
 - [ ] **No Soviet/Russian demonizing lens** -- Do not describe Ukrainian folk culture as primitive, backward, superstition, banditry, "Little Russian," or common-Russian inheritance except as explicitly marked hostile/historical framing.
 - [ ] **Source hygiene** -- Public learner pages cite public URLs only. Internal chunk IDs/source IDs must not appear in public-facing content.
