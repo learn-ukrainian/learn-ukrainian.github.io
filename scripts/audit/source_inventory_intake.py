@@ -34,7 +34,7 @@ _SOURCE_FIELDS = {
     "notes",
     "headwords",
 }
-_HEADWORD_FIELDS = {"lemma", "headword", "word", "pos", "locator", "context", "notes"}
+_HEADWORD_FIELDS = {"lemma", "headword", "word", "pos", "gloss", "locator", "context", "notes"}
 _FLAT_FIELDS = {
     "lemma",
     "source_family",
@@ -46,6 +46,7 @@ _FLAT_FIELDS = {
     "source_locator",
     "context",
     "pos",
+    "gloss",
     "notes",
 }
 _FLAT_ALIASES = {
@@ -63,6 +64,7 @@ _FLAT_ALIASES = {
     "snippet": "context",
     "example": "context",
     "part_of_speech": "pos",
+    "translation": "gloss",
 }
 
 
@@ -86,6 +88,7 @@ class SourceInventoryRecord:
     source_locator: str | None = None
     context: str | None = None
     pos: str | None = None
+    gloss: str | None = None
     notes: str | None = None
 
     def provenance_payload(self) -> dict[str, Any]:
@@ -115,6 +118,7 @@ class SourceInventoryCandidate:
 
     lemma: str
     pos: str | None
+    gloss: str | None
     source_provenance: tuple[dict[str, Any], ...]
 
 
@@ -171,7 +175,12 @@ def source_inventory_candidates(
         key = _lemma_key(record.lemma)
         group = grouped.setdefault(
             key,
-            {"lemma": record.lemma, "pos": record.pos, "source_provenance": []},
+            {
+                "lemma": record.lemma,
+                "pos": record.pos,
+                "gloss": record.gloss,
+                "source_provenance": [],
+            },
         )
         existing_pos = group["pos"]
         if record.pos and existing_pos and record.pos != existing_pos:
@@ -180,14 +189,22 @@ def source_inventory_candidates(
             )
         if record.pos and not existing_pos:
             group["pos"] = record.pos
+        existing_gloss = group["gloss"]
+        if record.gloss and existing_gloss and record.gloss != existing_gloss:
+            raise SourceInventoryError(
+                f"conflicting gloss for {record.lemma!r}: {existing_gloss!r} vs {record.gloss!r}"
+            )
+        if record.gloss and not existing_gloss:
+            group["gloss"] = record.gloss
         group["source_provenance"].append(record.provenance_payload())
 
     candidates = [
-        SourceInventoryCandidate(
-            lemma=str(group["lemma"]),
-            pos=group["pos"],
-            source_provenance=tuple(group["source_provenance"]),
-        )
+            SourceInventoryCandidate(
+                lemma=str(group["lemma"]),
+                pos=group["pos"],
+                gloss=group["gloss"],
+                source_provenance=tuple(group["source_provenance"]),
+            )
         for group in grouped.values()
     ]
     return sorted(candidates, key=lambda item: _lemma_key(item.lemma))
@@ -315,6 +332,7 @@ def _record_from_structured_headword(
         source_locator=_optional_text(_first_present(row, ("locator",))) or _optional_text(source.get("locator")),
         context=_optional_text(row.get("context")),
         pos=_optional_slug(row.get("pos"), "pos", inventory_path, inventory_locator),
+        gloss=_optional_text(row.get("gloss")),
         notes=_optional_text(row.get("notes")) or _optional_text(source.get("notes")),
     )
 
@@ -341,6 +359,7 @@ def _record_from_flat_row(
         source_locator=_optional_text(normalized.get("source_locator")),
         context=_optional_text(normalized.get("context")),
         pos=_optional_slug(normalized.get("pos"), "pos", inventory_path, locator),
+        gloss=_optional_text(normalized.get("gloss")),
         notes=_optional_text(normalized.get("notes")),
     )
 

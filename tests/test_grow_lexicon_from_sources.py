@@ -24,6 +24,7 @@ sources:
     url: https://example.test/ulp-001
     headwords:
       - lemma: авто
+        gloss: car
         context: lesson headword
       - lemma: ревю
         context: lesson headword
@@ -83,6 +84,7 @@ sources:
     auto_entry = written["auto_merge"][0]
     held_entry = written["needs_review"][0]["entry"]
     assert auto_entry["primary_source"] == grow.PRIMARY_SOURCE
+    assert auto_entry["gloss"] == "car"
     assert auto_entry["source_provenance"][0]["source_family"] == "ulp"
     assert auto_entry["source_provenance"][0]["source_id"] == "ulp-001"
     assert auto_entry["source_provenance"][0]["context"] == "lesson headword"

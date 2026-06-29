@@ -49,6 +49,7 @@ sources:
     headwords:
       - lemma: авто́
         pos: noun
+        gloss: car
         locator: 00:10
         context: lesson headword list
       - ревю
@@ -62,6 +63,7 @@ sources:
     assert records[0].source_family == "ulp"
     assert records[0].extraction_mode == "curated_headword"
     assert records[0].pos == "noun"
+    assert records[0].gloss == "car"
     assert records[0].provenance_payload() == {
         "source_family": "ulp",
         "extraction_mode": "curated_headword",
@@ -82,9 +84,9 @@ def test_flat_inventory_dedupes_stressed_variants_and_merges_provenance(tmp_path
     inventory.write_text(
         "\n".join(
             [
-                "lemma,source_family,source_id,source_title,extraction_mode,source_path,context,pos",
-                "авто́,textbook,tb-1,Textbook 1,headword_inventory,data/textbook.txt,row one,noun",
-                "авто,textbook,tb-2,Textbook 2,headword_inventory,data/textbook-2.txt,row two,noun",
+                "lemma,source_family,source_id,source_title,extraction_mode,source_path,context,pos,gloss",
+                "авто́,textbook,tb-1,Textbook 1,headword_inventory,data/textbook.txt,row one,noun,car",
+                "авто,textbook,tb-2,Textbook 2,headword_inventory,data/textbook-2.txt,row two,noun,car",
             ]
         )
         + "\n",
@@ -97,6 +99,7 @@ def test_flat_inventory_dedupes_stressed_variants_and_merges_provenance(tmp_path
     assert len(candidates) == 1
     assert candidates[0].lemma == "авто"
     assert candidates[0].pos == "noun"
+    assert candidates[0].gloss == "car"
     assert [item["source_id"] for item in candidates[0].source_provenance] == ["tb-1", "tb-2"]
     assert [item["inventory_locator"] for item in candidates[0].source_provenance] == [
         "row 2",
@@ -160,6 +163,23 @@ def test_inventory_rejects_conflicting_pos_after_canonicalization(tmp_path) -> N
 
     records = read_source_inventory(inventory, project_root=tmp_path)
     with pytest.raises(SourceInventoryError, match="conflicting pos"):
+        source_inventory_candidates(records)
+
+
+def test_inventory_rejects_conflicting_gloss_after_canonicalization(tmp_path) -> None:
+    inventory = tmp_path / "bad.jsonl"
+    inventory.write_text(
+        "\n".join(
+            [
+                '{"lemma":"авто́","source_family":"ulp","extraction_mode":"curated_headword","gloss":"car"}',
+                '{"lemma":"авто","source_family":"ohoiko","extraction_mode":"headword_inventory","gloss":"auto"}',
+            ]
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+    records = read_source_inventory(inventory, project_root=tmp_path)
+    with pytest.raises(SourceInventoryError, match="conflicting gloss"):
         source_inventory_candidates(records)
 
 

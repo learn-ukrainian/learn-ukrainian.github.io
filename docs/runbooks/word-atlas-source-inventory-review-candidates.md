@@ -29,6 +29,8 @@ Every generated candidate must retain non-empty `source_provenance`. The
 representative smoke run currently processes 20 source inventory headwords:
 two rows each for noun, adjective, numeral, pronoun, verb, adverb,
 preposition, conjunction, particle, and interjection.
+Optional per-headword `gloss` is for curated learner-facing English anchors
+when dictionary enrichment lacks a visible English translation.
 
 When a candidate is later promoted into a manifest entry,
 `promote_grow_candidates.manifest_entry_from_candidate()` copies
