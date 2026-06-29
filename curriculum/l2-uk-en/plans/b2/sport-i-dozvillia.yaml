@@ -2,7 +2,7 @@ module: b2-017
 level: B2
 sequence: 17
 slug: sport-i-dozvillia
-version: 1.0.3
+version: 1.0.4
 lifecycle: locked
 reviewed_at: '2026-06-15T10:09:39Z'
 reviewed_by: codex/b2-wiki-readiness-batch-6
@@ -210,7 +210,7 @@ activity_hints:
   focus: Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему
     види спорту та фізична активність.
 references:
-- source: Заболотний, 7 клас (2015)
+- source: Заболотний, 7 клас (2024)
   pages: Лексика — спорт
   topic: Спортивна лексика
 - source: Авраменко, 11 клас (2019)

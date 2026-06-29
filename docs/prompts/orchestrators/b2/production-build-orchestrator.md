@@ -76,10 +76,18 @@ Taught-lesson behavior:
 
 - Plans remain source of truth. Do not edit plans inside a build PR unless a
   preflight remediation PR explicitly scopes that change.
+- For B2 rebuild readiness, missing plan-level `phase` and `vocabulary_hints`
+  are legacy metadata gaps, not hard blockers by themselves. If either field is
+  present, deterministic checks may still validate its contents.
 - Treat archived B2 module text as reference-mining material only. Do not copy
   its structure forward.
 - Treat old B2 scores as provenance only. Rebuilt modules need fresh
   rebuild-era scoring.
+- Treat `curriculum/l2-uk-en/b2/discovery/*.yaml` as query-keyword scaffolding
+  unless a later remediation PR explicitly backfills evidence. Empty
+  `rag_chunks` or `rag_literary` does not block PR 4 when the locked wiki
+  article and `.sources.yaml` registry are authoritative and pass their gates.
+  Do not cite discovery YAML as evidence in rebuild PRs.
 - If source, wiki, or research readiness is missing, stop and record the
   blocker. Do not build around missing evidence.
 
