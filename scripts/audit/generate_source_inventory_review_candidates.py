@@ -23,8 +23,10 @@ COMMITTED_SOURCE_INVENTORIES: tuple[Path, ...] = (
 )
 
 DEFAULT_OUT = Path("/tmp/atlas-source-inventory-review-candidates.json")
+DEFAULT_QUEUE_REPORT_OUT = Path("/tmp/atlas-source-inventory-publish-review-queue.md")
 WORKFLOW_ID = "source_inventory_review_candidates.v1"
 TRIAGE_WORKFLOW_ID = "source_inventory_review_triage.v1"
+PUBLISH_REVIEW_QUEUE_WORKFLOW_ID = "source_inventory_publish_review_queue.v1"
 TRIAGE_SAMPLE_LIMIT = 20
 
 LIVE_ATLAS_OUTPUTS: tuple[Path, ...] = (
@@ -38,19 +40,16 @@ LIVE_ATLAS_OUTPUTS: tuple[Path, ...] = (
     PROJECT_ROOT / "site/src/data/lexicon-manifest.fingerprint.json",
 )
 LIVE_ATLAS_OUTPUT_DIR = PROJECT_ROOT / "site/src/data"
-LIVE_STATIC_LEXICON_OUTPUT_DIR = PROJECT_ROOT / "site/public/lexicon"
 LIVE_REVIEW_FORBIDDEN_OUTPUT_DIRS: tuple[Path, ...] = (
     LIVE_ATLAS_OUTPUT_DIR,
-    LIVE_STATIC_LEXICON_OUTPUT_DIR,
+    PROJECT_ROOT / "site/public/lexicon",
 )
 
 
 def generate_review_candidates(
-    *,
-    limit: int | None = None,
-    out: Path = DEFAULT_OUT,
+    *, limit: int | None = None, out: Path = DEFAULT_OUT
 ) -> dict[str, Any]:
-    """Generate candidates without writing live Atlas/static-practice outputs."""
+    """Generate candidates without live Atlas/static-practice outputs."""
     output_path = resolve_review_output_path(out)
     temp_out = output_path.with_name(f".{output_path.name}.{uuid.uuid4().hex}.tmp")
     try:
@@ -85,16 +84,13 @@ def validate_source_provenance(payload: dict[str, Any]) -> None:
     ]
     if missing:
         raise SourceInventoryError(
-            "source inventory review candidates missing source_provenance: "
-            + ", ".join(missing)
+            f"missing source_provenance: {', '.join(sorted(missing))}"
         )
 
 
 def iter_candidate_entries(payload: dict[str, Any]) -> list[dict[str, Any]]:
     """Return auto-merge and review-wrapped candidate entries."""
-    entries = [
-        entry for entry in payload.get("auto_merge", []) if isinstance(entry, dict)
-    ]
+    entries = [entry for entry in payload.get("auto_merge", []) if isinstance(entry, dict)]
     entries.extend(
         item["entry"]
         for item in payload.get("needs_review", [])
@@ -103,7 +99,7 @@ def iter_candidate_entries(payload: dict[str, Any]) -> list[dict[str, Any]]:
     return entries
 
 
-def build_review_triage(payload: dict[str, Any]) -> dict[str, Any]:
+def build_review_triage(payload: Mapping[str, Any]) -> dict[str, Any]:
     """Return conservative review metadata before any live publish decision."""
     publish_ready: list[dict[str, Any]] = []
     needs_publish_review: list[dict[str, Any]] = []
@@ -111,34 +107,15 @@ def build_review_triage(payload: dict[str, Any]) -> dict[str, Any]:
     source_family_counts: Counter[str] = Counter()
     pos_counts: Counter[str] = Counter()
 
-    auto_merge_entries = [
-        entry for entry in payload.get("auto_merge", []) if isinstance(entry, dict)
-    ]
-    needs_review_items = [
-        item
-        for item in payload.get("needs_review", [])
-        if isinstance(item, dict) and isinstance(item.get("entry"), dict)
-    ]
-
-    for entry in auto_merge_entries:
+    for entry, bucket, reasons in _publish_triage_items(payload):
         _count_entry(entry, source_family_counts=source_family_counts, pos_counts=pos_counts)
-        reasons = publish_review_reasons(entry)
         if reasons:
-            for reason in reasons:
-                reason_counts[reason] += 1
-            needs_publish_review.append(_triage_row(entry, bucket="auto_merge", reasons=reasons))
+            reason_counts.update(reasons)
+            needs_publish_review.append(
+                _triage_row(entry, bucket=bucket, reasons=reasons)
+            )
             continue
-        publish_ready.append(_triage_row(entry, bucket="auto_merge", reasons=[]))
-
-    for item in needs_review_items:
-        entry = item["entry"]
-        _count_entry(entry, source_family_counts=source_family_counts, pos_counts=pos_counts)
-        grow_reason = str(item.get("reason") or "unspecified").strip()
-        reasons = [f"grow_needs_review:{grow_reason}"]
-        reasons.extend(publish_review_reasons(entry))
-        for reason in reasons:
-            reason_counts[reason] += 1
-        needs_publish_review.append(_triage_row(entry, bucket="needs_review", reasons=reasons))
+        publish_ready.append(_triage_row(entry, bucket=bucket, reasons=[]))
 
     publish_ready.sort(key=_triage_sort_key)
     needs_publish_review.sort(key=_triage_sort_key)
@@ -151,9 +128,9 @@ def build_review_triage(payload: dict[str, Any]) -> dict[str, Any]:
             "and a visible English anchor."
         ),
         "counts": {
-            "total_candidates": len(auto_merge_entries) + len(needs_review_items),
-            "grow_auto_merge": len(auto_merge_entries),
-            "grow_needs_review": len(needs_review_items),
+            "total_candidates": len(publish_ready) + len(needs_publish_review),
+            "grow_auto_merge": _candidate_bucket_count(payload, "auto_merge"),
+            "grow_needs_review": _candidate_bucket_count(payload, "needs_review"),
             "publish_ready": len(publish_ready),
             "needs_publish_review": len(needs_publish_review),
         },
@@ -162,6 +139,51 @@ def build_review_triage(payload: dict[str, Any]) -> dict[str, Any]:
         "by_pos": dict(sorted(pos_counts.items())),
         "publish_ready_sample": publish_ready[:TRIAGE_SAMPLE_LIMIT],
         "needs_publish_review_sample": needs_publish_review[:TRIAGE_SAMPLE_LIMIT],
+    }
+
+
+def build_publish_review_queue(payload: Mapping[str, Any]) -> dict[str, Any]:
+    """Return the full review-only queue for candidates blocked from publishing."""
+    needs_review_items = [
+        (entry, bucket, reasons)
+        for entry, bucket, reasons in _publish_triage_items(payload)
+        if reasons
+    ]
+    needs_review_items.sort(key=_triage_item_sort_key)
+    queue = [
+        _publish_review_queue_row(
+            index=index,
+            entry=entry,
+            bucket=bucket,
+            reasons=reasons,
+        )
+        for index, (entry, bucket, reasons) in enumerate(needs_review_items, start=1)
+    ]
+    reason_counts: Counter[str] = Counter()
+    source_family_counts: Counter[str] = Counter()
+    pos_counts: Counter[str] = Counter()
+    for row in queue:
+        reason_counts.update(row["reasons"])
+        for family in row["source_families"] or ["unknown"]:
+            source_family_counts[family] += 1
+        pos_counts[_clean_text(row.get("pos")) or "unknown"] += 1
+
+    return {
+        "workflow": PUBLISH_REVIEW_QUEUE_WORKFLOW_ID,
+        "policy": (
+            "Review-only human queue. Rows require an explicit reviewer decision "
+            "before any live Atlas publish batch."
+        ),
+        "counts": {
+            "needs_publish_review": len(queue),
+            "reason_count": len(reason_counts),
+            "source_family_count": len(source_family_counts),
+            "pos_count": len(pos_counts),
+        },
+        "needs_publish_review_reasons": dict(sorted(reason_counts.items())),
+        "by_source_family": dict(sorted(source_family_counts.items())),
+        "by_pos": dict(sorted(pos_counts.items())),
+        "queue": queue,
     }
 
 
@@ -193,6 +215,38 @@ def has_visible_english_anchor(entry: Mapping[str, Any]) -> bool:
     return any(_clean_text(term) for term in terms)
 
 
+def _candidate_bucket_count(payload: Mapping[str, Any], bucket: str) -> int:
+    if bucket == "auto_merge":
+        return len([entry for entry in payload.get("auto_merge", []) if isinstance(entry, dict)])
+    if bucket == "needs_review":
+        return len(
+            [
+                item
+                for item in payload.get("needs_review", [])
+                if isinstance(item, dict) and isinstance(item.get("entry"), dict)
+            ]
+        )
+    return 0
+
+
+def _publish_triage_items(
+    payload: Mapping[str, Any],
+) -> list[tuple[Mapping[str, Any], str, list[str]]]:
+    items: list[tuple[Mapping[str, Any], str, list[str]]] = []
+    for entry in payload.get("auto_merge", []):
+        if isinstance(entry, Mapping):
+            items.append((entry, "auto_merge", publish_review_reasons(entry)))
+    for item in payload.get("needs_review", []):
+        if not isinstance(item, Mapping) or not isinstance(item.get("entry"), Mapping):
+            continue
+        entry = item["entry"]
+        grow_reason = str(item.get("reason") or "unspecified").strip() or "unspecified"
+        reasons = [f"grow_needs_review:{grow_reason}"]
+        reasons.extend(publish_review_reasons(entry))
+        items.append((entry, "needs_review", reasons))
+    return items
+
+
 def _count_entry(
     entry: Mapping[str, Any],
     *,
@@ -221,6 +275,19 @@ def _triage_row(
     }
 
 
+def _publish_review_queue_row(
+    *,
+    index: int,
+    entry: Mapping[str, Any],
+    bucket: str,
+    reasons: Sequence[str],
+) -> dict[str, Any]:
+    row = _triage_row(entry, bucket=bucket, reasons=reasons)
+    row["queue_id"] = f"source-inventory-publish-review-{index:04d}"
+    row["source_references"] = _source_reference_labels(entry)
+    return row
+
+
 def _source_families(entry: Mapping[str, Any]) -> list[str]:
     provenance = entry.get("source_provenance")
     if not isinstance(provenance, list):
@@ -235,10 +302,40 @@ def _source_families(entry: Mapping[str, Any]) -> list[str]:
     return sorted(families)
 
 
+def _source_reference_labels(entry: Mapping[str, Any]) -> list[str]:
+    provenance = entry.get("source_provenance")
+    if not isinstance(provenance, list):
+        return []
+    labels: list[str] = []
+    for item in provenance:
+        if not isinstance(item, Mapping):
+            continue
+        parts = [
+            _clean_text(item.get("source_family")),
+            _clean_text(item.get("source_id")),
+            _clean_text(item.get("source_locator")),
+        ]
+        labels.append(" / ".join(part for part in parts if part))
+    return sorted(label for label in labels if label)
+
+
 def _triage_sort_key(row: Mapping[str, Any]) -> tuple[str, str]:
     return (
         str(row.get("lemma") or "").casefold(),
         str(row.get("pos") or "").casefold(),
+    )
+
+
+def _triage_item_sort_key(
+    item: tuple[Mapping[str, Any], str, Sequence[str]],
+) -> tuple[str, str, str, tuple[str, ...], tuple[str, ...]]:
+    entry, bucket, reasons = item
+    return (
+        str(entry.get("lemma") or "").casefold(),
+        str(entry.get("pos") or "").casefold(),
+        bucket,
+        tuple(sorted(reasons)),
+        tuple(_source_reference_labels(entry)),
     )
 
 
@@ -263,6 +360,96 @@ def format_triage_report(payload: Mapping[str, Any]) -> str:
         lines.append("needs_publish_review_reasons:")
         lines.extend(f"- {reason}: {count}" for reason, count in sorted(reasons.items()))
     return "\n".join(lines)
+
+
+def format_publish_review_queue_summary(payload: Mapping[str, Any]) -> str:
+    queue = build_publish_review_queue(payload)
+    counts = queue["counts"]
+    return "\n".join(
+        [
+            f"publish_review_queue_rows: {counts['needs_publish_review']}",
+            f"publish_review_queue_workflow: {queue['workflow']}",
+        ]
+    )
+
+
+def format_publish_review_queue_report(payload: Mapping[str, Any]) -> str:
+    queue = build_publish_review_queue(payload)
+    lines = [
+        "# Source Inventory Publish Review Queue",
+        "",
+        f"- workflow: `{queue['workflow']}`",
+        f"- needs_publish_review: {queue['counts']['needs_publish_review']}",
+        "- production_outputs_updated: []",
+        "",
+        queue["policy"],
+        "",
+        "## Reason Summary",
+        "",
+    ]
+    reasons = queue["needs_publish_review_reasons"]
+    if reasons:
+        lines.extend(f"- `{reason}`: {count}" for reason, count in reasons.items())
+    else:
+        lines.append("- no rows")
+    lines.extend(
+        [
+            "",
+            "## Queue",
+            "",
+            "| ID | Lemma | POS | Bucket | English Anchor | Reasons | Sources | Decision | Notes |",
+            "| --- | --- | --- | --- | --- | --- | --- | --- | --- |",
+        ]
+    )
+    if not queue["queue"]:
+        lines.append("| - | - | - | - | - | - | - | - | - |")
+        return "\n".join(lines)
+
+    for row in queue["queue"]:
+        lines.append(
+            "| "
+            + " | ".join(
+                [
+                    _markdown_cell(row["queue_id"]),
+                    _markdown_cell(row["lemma"]),
+                    _markdown_cell(row.get("pos") or ""),
+                    _markdown_cell(row["bucket"]),
+                    _markdown_cell("yes" if row["has_english_anchor"] else "no"),
+                    _markdown_cell("; ".join(row["reasons"])),
+                    _markdown_cell("; ".join(row["source_references"])),
+                    "",
+                    "",
+                ]
+            )
+            + " |"
+        )
+    return "\n".join(lines)
+
+
+def _markdown_cell(value: object) -> str:
+    text = "" if value is None else str(value)
+    return text.replace("\n", " ").replace("|", r"\|")
+
+
+def write_publish_review_queue_report(payload: Mapping[str, Any], out: Path) -> Path:
+    """Write a review-only Markdown queue outside the repository."""
+    output_path = resolve_ephemeral_review_output_path(out)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    output_path.write_text(
+        format_publish_review_queue_report(payload) + "\n",
+        encoding="utf-8",
+    )
+    return output_path
+
+
+def resolve_ephemeral_review_output_path(out: Path) -> Path:
+    """Resolve queue reports and reject tracked/generated repository paths."""
+    resolved = resolve_review_output_path(out).resolve()
+    if resolved.is_relative_to(PROJECT_ROOT.resolve()):
+        raise SourceInventoryError(
+            "review queue reports must be written outside the repository"
+        )
+    return resolved
 
 
 def resolve_review_output_path(out: Path) -> Path:
@@ -296,6 +483,19 @@ def build_parser() -> argparse.ArgumentParser:
         default=DEFAULT_OUT,
         help=f"Review-only JSON output path (default: {DEFAULT_OUT})",
     )
+    parser.add_argument(
+        "--queue-report",
+        action="store_true",
+        help="Print the full publish-review queue as Markdown",
+    )
+    parser.add_argument(
+        "--queue-report-out",
+        type=Path,
+        help=(
+            "Optional review-only Markdown queue path outside the repository "
+            f"(example: {DEFAULT_QUEUE_REPORT_OUT})"
+        ),
+    )
     parser.add_argument("--report", action="store_true", help="Print candidate bucket counts")
     return parser
 
@@ -307,7 +507,14 @@ def main(argv: Sequence[str] | None = None) -> int:
         parser.error("--limit must be non-negative")
 
     try:
+        queue_report_output = (
+            resolve_ephemeral_review_output_path(args.queue_report_out)
+            if args.queue_report_out
+            else None
+        )
         payload = generate_review_candidates(limit=args.limit, out=args.out)
+        if queue_report_output:
+            write_publish_review_queue_report(payload, queue_report_output)
     except (FileNotFoundError, SourceInventoryError) as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 2
@@ -315,7 +522,12 @@ def main(argv: Sequence[str] | None = None) -> int:
     if args.report:
         print(grow.format_report(payload))
         print(format_triage_report(payload))
+        print(format_publish_review_queue_summary(payload))
+        if queue_report_output:
+            print(f"review_queue_report_output: {queue_report_output}")
         print(f"review_output: {payload['review_only']['candidate_output']}")
+    if args.queue_report:
+        print(format_publish_review_queue_report(payload))
     return 0
 
 

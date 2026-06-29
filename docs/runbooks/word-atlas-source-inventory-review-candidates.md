@@ -31,6 +31,23 @@ requires grow `auto_merge` plus source provenance, POS, and a visible English
 anchor. `review_triage.counts.needs_publish_review` lists candidates that need
 human review before any live Atlas publish batch.
 
+To render the full human review queue for those held rows, write a Markdown
+report outside the repository:
+
+```bash
+.venv/bin/python -m scripts.audit.generate_source_inventory_review_candidates \
+  --report \
+  --queue-report-out /tmp/atlas-source-inventory-publish-review-queue.md
+```
+
+The queue report is intentionally ephemeral. The script rejects
+`--queue-report-out` paths inside the repository so generated review material
+does not land in `docs/reports/`, `curriculum/**/review/`, `status/`,
+`audit/`, or live Atlas output paths by accident. Use `--queue-report` only
+when you want the full Markdown queue on stdout. Queue rows include stable
+queue ids, lemma, POS, grow bucket, English-anchor state, review reasons, and
+source references.
+
 Every generated candidate must retain non-empty `source_provenance`. The
 representative smoke run currently processes 20 source inventory headwords:
 two rows each for noun, adjective, numeral, pronoun, verb, adverb,
