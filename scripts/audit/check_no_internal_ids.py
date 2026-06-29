@@ -63,6 +63,7 @@ INTERNAL_REGISTER_PATTERNS = (
     PatternSpec("build/process term", re.compile(r"\bC1\+\s+learner\b", re.IGNORECASE)),
     PatternSpec("build/process term", re.compile(r"\blesson[ -]body\b", re.IGNORECASE)),
     PatternSpec("build/process term", re.compile(r"\bUkrlib[ -]URL\b", re.IGNORECASE)),
+    PatternSpec("English UI label", re.compile(r"\bTexts you'll read\b", re.IGNORECASE)),
     PatternSpec(
         "build/process term",
         re.compile(r"\b(?:chunk(?:_ids?)?s?|source_chunk(?:_ids?)?)\b", re.IGNORECASE),

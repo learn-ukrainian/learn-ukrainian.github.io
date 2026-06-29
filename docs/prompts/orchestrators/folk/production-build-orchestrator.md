@@ -134,6 +134,8 @@ If `--astro-build` cannot run locally because site dependencies are unavailable,
 - Include `swarm_used`, `swarm_label`, `swarm_note`, reading coverage, and copyright decisions in telemetry and PR text.
 - Require independent-family review before merge. Treat unresolved reading, quote, source, or decolonization findings as blockers.
 
+Independent FOLK review prompt must ask the reviewer to read rendered/generated pages as a Ukrainian student and check English UI leaks, internal workflow leaks, and M05-style word-salad/spliced Ukrainian prose. Do not approve based only on source-hygiene gates; unresolved learner-register or fluency findings are blockers.
+
 ## Expected Final Response
 
 ```text
