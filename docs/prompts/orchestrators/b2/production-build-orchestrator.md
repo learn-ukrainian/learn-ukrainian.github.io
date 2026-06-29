@@ -1,5 +1,11 @@
 # B2 Production Build Orchestrator
 
+> **SUSPENDED 2026-06-29:** Do not use this prompt for new B2 production.
+> Current B2 M01-M68 is archived as a superseded preview generation by
+> `docs/decisions/2026-06-29-b2-preview-archive-and-rebuild.md`.
+> Resume B2 production only after the rebuild prompt/gate hardening, source
+> readiness audit, and golden pilot rebuild stages are complete.
+
 Prompt version: 0.5
 Last reviewed: 2026-06-22
 
