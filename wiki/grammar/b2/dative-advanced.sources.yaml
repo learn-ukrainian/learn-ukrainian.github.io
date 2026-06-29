@@ -38,22 +38,22 @@ sources:
   page: 20
   grade: 10
 - id: S8
-  file: ukrainian_wiki/dative-nouns_Граматика-A2-Студентові-сестрі-дитині-Повна-парадигма
+  file: dative-nouns:p6-6
   type: ukrainian_wiki
   title: 'Граматика A2: Студентові, сестрі, дитині'
   section_path: 'Граматика A2: Студентові, сестрі, дитині > Повна парадигма'
 - id: S9
-  file: ukrainian_wiki/dative-verbs_Граматика-A2-Допомагати-дякувати-дзвонити-Повна-парадигма
+  file: dative-verbs:p6-6
   type: ukrainian_wiki
   title: 'Граматика A2: Допомагати, дякувати, дзвонити'
   section_path: 'Граматика A2: Допомагати, дякувати, дзвонити > Повна парадигма'
 - id: S10
-  file: ukrainian_wiki/dative-nuances_Граматика-B1-Давальний-відмінок-деталі-Повна-парадигма
+  file: dative-nuances:p5-5
   type: ukrainian_wiki
   title: 'Граматика B1: Давальний відмінок (деталі)'
   section_path: 'Граматика B1: Давальний відмінок (деталі) > Повна парадигма'
 - id: S11
-  file: ukrainian_wiki/plural-other-cases_Граматика-A2-Множина-в-інших-відмінках-Повна-парадигма
+  file: plural-other-cases:p7-7
   type: ukrainian_wiki
   title: 'Граматика A2: З друзями, для дітей'
   section_path: 'Граматика A2: З друзями, для дітей > Повна парадигма'

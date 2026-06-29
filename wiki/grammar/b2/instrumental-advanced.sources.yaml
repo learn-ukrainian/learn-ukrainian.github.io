@@ -45,17 +45,17 @@ sources:
   page: 197
   grade: 10
 - id: S8
-  file: ukrainian_wiki/instrumental-adjectives-pronouns_adjectives-paradigm
+  file: instrumental-adjectives-pronouns:p5-5
   type: ukrainian_wiki
   title: 'Граматика A2: З моїм найкращим другом'
   section_path: 'Граматика A2: З моїм найкращим другом > Повна парадигма > 1. Прикметники'
 - id: S9
-  file: ukrainian_wiki/instrumental-means_Граматика-A2-Ручкою-автобусом-Повна-парадигма
+  file: instrumental-means:p4-4
   type: ukrainian_wiki
   title: 'Граматика A2: Ручкою, автобусом'
   section_path: 'Граматика A2: Ручкою, автобусом > Повна парадигма'
 - id: S10
-  file: ukrainian_wiki/instrumental-profession_Граматика-A2-Я-буду-вчителькою-Повна-парадигма
+  file: instrumental-profession:p7-7
   type: ukrainian_wiki
   title: 'Граматика A2: Я буду вчителькою'
   section_path: 'Граматика A2: Я буду вчителькою > Повна парадигма'
