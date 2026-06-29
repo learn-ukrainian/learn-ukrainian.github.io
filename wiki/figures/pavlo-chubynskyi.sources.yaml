@@ -1,0 +1,24 @@
+---
+# Source registry wiki/figures/pavlo-chubynskyi.md
+# Referenced inline [S1], [S2], ...
+# Base-prep packet (#4005): hand-authored, not pipeline-compiled.
+# Entries are real external sources; no fabricated sources.db corpus chunk IDs.
+sources:
+  - id: S1
+    file: http://www.history.org.ua/
+    tier: T1
+    title: Чубинський Павло Платонович — Енциклопедія історії України (ЕІУ)
+    type: external
+    url: http://www.history.org.ua/
+  - id: S2
+    file: https://uk.wikipedia.org/wiki/Чубинський_Павло_Платонович
+    tier: T3
+    title: Чубинський Павло Платонович — Українська Вікіпедія
+    type: external
+    url: https://uk.wikipedia.org/wiki/Чубинський_Павло_Платонович
+  - id: S3
+    file: https://uk.wikipedia.org/wiki/Ще_не_вмерла_Україна
+    tier: T3
+    title: Ще не вмерла Україна — Українська Вікіпедія
+    type: external
+    url: https://uk.wikipedia.org/wiki/Ще_не_вмерла_Україна

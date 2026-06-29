@@ -1,0 +1,22 @@
+---
+# Source registry wiki/figures/markiian-shashkevych.md
+# Referenced inline [S1], [S2], ...
+# Base-prep packet (#4005): hand-authored, not pipeline-compiled.
+# Entries are real external sources; no fabricated sources.db corpus chunk IDs.
+sources:
+  - id: S1
+    file: https://uk.wikipedia.org/wiki/Шашкевич_Маркіян_Семенович
+    tier: T3
+    title: Шашкевич Маркіян Семенович — Українська Вікіпедія
+    type: external
+    url: https://uk.wikipedia.org/wiki/Шашкевич_Маркіян_Семенович
+  - id: S2
+    file: local:sources.db/textbooks/9-klas-ukrajinska-literatura-mishhenko-2017
+    note: >-
+      Grade 9 Ukrainian-literature textbook (Міщенко, 2017), local sources.db
+      textbooks corpus; «Веснівка» and «Руська трійця» treatment (chunks
+      9-klas-ukrajinska-literatura-mishhenko-2017_s0282 .. _s0285).
+    tier: T2
+    title: Українська література, 9 клас (Міщенко, 2017) — local textbook corpus
+    type: textbook
+    url: local:sources.db/textbooks/9-klas-ukrajinska-literatura-mishhenko-2017

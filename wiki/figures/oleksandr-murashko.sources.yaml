@@ -1,0 +1,19 @@
+---
+# Source registry wiki/figures/oleksandr-murashko.md
+# Referenced inline [S1], [S2], ...
+# Base-prep packet (#4005): hand-authored, not pipeline-compiled.
+# Entries are real external sources; no fabricated sources.db corpus chunk IDs.
+sources:
+  - id: S1
+    file: http://www.history.org.ua/
+    note: ЕІУ т.7 (2010), с.134 — confirm the exact online article ID before module use.
+    tier: T1
+    title: Мурашко Олександр Олександрович — Енциклопедія історії України (ЕІУ)
+    type: external
+    url: http://www.history.org.ua/
+  - id: S2
+    file: https://uk.wikipedia.org/wiki/Мурашко_Олександр_Олександрович
+    tier: T3
+    title: Мурашко Олександр Олександрович — Українська Вікіпедія
+    type: external
+    url: https://uk.wikipedia.org/wiki/Мурашко_Олександр_Олександрович

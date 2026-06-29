@@ -1,0 +1,18 @@
+---
+# Source registry wiki/figures/volodymyr-hnatiuk.md
+# Referenced inline [S1], [S2], ...
+# Base-prep packet (#4005): hand-authored, not pipeline-compiled.
+# Entries are real external sources; no fabricated sources.db corpus chunk IDs.
+sources:
+  - id: S1
+    file: http://www.history.org.ua/
+    tier: T1
+    title: Гнатюк Володимир Михайлович — Енциклопедія історії України (ЕІУ)
+    type: external
+    url: http://www.history.org.ua/
+  - id: S2
+    file: https://uk.wikipedia.org/wiki/Гнатюк_Володимир_Михайлович
+    tier: T3
+    title: Гнатюк Володимир Михайлович — Українська Вікіпедія
+    type: external
+    url: https://uk.wikipedia.org/wiki/Гнатюк_Володимир_Михайлович
