@@ -84,6 +84,19 @@ INTERNAL_REGISTER_PATTERNS = (
     ),
 )
 
+FOLK_INTERNAL_REGISTER_PATTERNS = (
+    PatternSpec("build/process term", re.compile(r"\bdossiers?\b", re.IGNORECASE)),
+    PatternSpec("build/process term", re.compile(r"\bдосьє\b", re.IGNORECASE)),
+    PatternSpec("build/process term", re.compile(r"\blocked[ -]plan\b", re.IGNORECASE)),
+    PatternSpec("build/process term", re.compile(r"\blocked[ -]reading[ -]layer\b", re.IGNORECASE)),
+    PatternSpec("build/process term", re.compile(r"\bdo[ -]not[ -]quote\b", re.IGNORECASE)),
+    PatternSpec("build/process term", re.compile(r"\bgate[ -]safe\b", re.IGNORECASE)),
+    PatternSpec("build/process term", re.compile(r"(?<!:)\bprimary[ -]reading\b", re.IGNORECASE)),
+    PatternSpec("build/process term", re.compile(r"\bprovenance\b", re.IGNORECASE)),
+    PatternSpec("build/process term", re.compile(r"\bsource[ -]disagreement\b", re.IGNORECASE)),
+    PatternSpec("build/process term", re.compile(r"\bquote[ -]gated\b", re.IGNORECASE)),
+)
+
 LEARNER_SURFACE_PATTERNS = (*INTERNAL_ID_PATTERNS, *INTERNAL_REGISTER_PATTERNS)
 
 
@@ -157,6 +170,33 @@ def _is_routable_reading(path: Path) -> bool:
     return not (_frontmatter_bool_false(frontmatter, "published") or _frontmatter_bool_false(frontmatter, "canonical"))
 
 
+def _frontmatter_tracks_folk(frontmatter: str) -> bool:
+    return bool(
+        re.search(r"^\s*tracks\s*:\s*folk\s*$", frontmatter, flags=re.IGNORECASE | re.MULTILINE)
+        or re.search(r"^\s*tracks\s*:\s*\[[^\]]*\bfolk\b[^\]]*\]\s*$", frontmatter, flags=re.IGNORECASE | re.MULTILINE)
+        or re.search(r"^\s*-\s*folk\s*$", frontmatter, flags=re.IGNORECASE | re.MULTILINE)
+    )
+
+
+def _is_folk_learner_surface(path: Path) -> bool:
+    rel_path = _repo_relative(path)
+    if rel_path is None:
+        return False
+
+    parts = rel_path.parts
+    if len(parts) >= 5 and parts[:4] == ("site", "src", "content", "docs") and parts[4] == "folk":
+        return True
+    if len(parts) >= 4 and parts[:4] == ("site", "src", "content", "readings"):
+        return _frontmatter_tracks_folk(_frontmatter(path))
+    return len(parts) == 5 and parts[:3] == ("curriculum", "l2-uk-en", "folk") and parts[4] in FOLK_LEARNER_SOURCE_FILES
+
+
+def _learner_surface_patterns(path: Path) -> tuple[PatternSpec, ...]:
+    if _is_folk_learner_surface(path):
+        return (*LEARNER_SURFACE_PATTERNS, *FOLK_INTERNAL_REGISTER_PATTERNS)
+    return LEARNER_SURFACE_PATTERNS
+
+
 def is_published_seminar_mdx(path: Path, *, allow_external: bool = False) -> bool:
     suffix = path.suffix.lower()
     if suffix not in {".md", ".mdx", ".yaml", ".yml"}:
@@ -191,7 +231,7 @@ def scan_file(path: Path) -> list[Finding]:
     findings: list[Finding] = []
     text = path.read_text(encoding="utf-8")
     for line_no, line in enumerate(text.splitlines(), start=1):
-        for spec in LEARNER_SURFACE_PATTERNS:
+        for spec in _learner_surface_patterns(path):
             for match in spec.pattern.finditer(line):
                 findings.append(
                     Finding(

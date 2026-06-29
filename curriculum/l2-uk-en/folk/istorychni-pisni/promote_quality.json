@@ -1,25 +1,25 @@
 {
-  "assembled_mdx_sha256": "910ed5f9d56172ead8c085f31ac26718e37e6b2266095b453e4669f9df5cab9c",
+  "assembled_mdx_sha256": "a997d28c2e9211ae6e1a56050832267704d51ea42fea6692a9ac6a5f7a00b330",
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "7f4c79c14f2b1f5b5f808b2315dadbf2b7c04bded1fc9d0e1f8078f9a744ea2e",
+    "digest": "656933d61b6043e465eb9803a63a8966ecd0802d36c703556a6a04d6c21d58fc",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/istorychni-pisni.yaml",
-        "sha256": "1ccac85d07f93cd6c2561c46c00f0f0a58dea5801efde78149907ded5ff6c614"
+        "sha256": "b5a66db6aac0287b5c1b7d1ba1f40545150deef73d679a628d75a215b94c97d0"
       },
       {
         "path": "curriculum/l2-uk-en/folk/istorychni-pisni/module.md",
-        "sha256": "64b6923f63d3b04b4c387b779f9db62e4c2db87fe424ce3a697cf9ecdd76abed"
+        "sha256": "8e5644184a3248505bdb6d1a28e3a0b1601374946cf7bb30129f6f973458713a"
       },
       {
         "path": "curriculum/l2-uk-en/folk/istorychni-pisni/activities.yaml",
-        "sha256": "6b7a9c52cb41c8a1cee2cac8802e92d313dee7aa0a60a9fe3275252b3afa7757"
+        "sha256": "e52b28a59f0a743bc77ba894dbaa198d19c6f54953ef6faaa94064d78102faab"
       },
       {
         "path": "curriculum/l2-uk-en/folk/istorychni-pisni/vocabulary.yaml",
-        "sha256": "91b200af0925e5eeccc174dce75a5cec22feb742481d40be8d080c8e0145e405"
+        "sha256": "a071fb724e66d5a287d200e66893456bc98a2e684228833813b7151aaf8398c2"
       },
       {
         "path": "curriculum/l2-uk-en/folk/istorychni-pisni/resources.yaml",
@@ -29,7 +29,7 @@
   },
   "evidence": {
     "framing": "Agy/Gemini 3.1 Pro High APPROVE: no FOLK framing regression; secular-historical genre and Ukrainian agency remain intact.",
-    "note": "Tiny M14 learner-register cleanup replaced the English build term with student-facing \"\u0444\u0440\u0430\u0433\u043c\u0435\u043d\u0442 \u0434\u043e\u0441\u044c\u0454\"; independent review found no blockers.",
+    "note": "Deterministic FOLK learner-register and VESUM cleanup replaced process vocabulary with student-facing source wording, used VESUM-clean prose equivalents, and documented quoted Baida diminutives as corpus-attested; reading evidence and interpretation scope unchanged.",
     "pedagogy": "C1 seminar spine remains clear: genre boundary, \u0434\u0436\u0435\u0440\u0435\u043b\u044c\u043d\u0430 \u043a\u0440\u0438\u0442\u0438\u043a\u0430, decolonization frame, myth boxes, high-culture bridge, workbook practice.",
     "quote_integrity": "Six M14 reading pages still cite public Ukrlib source URLs; lesson reading surfaces were not substantively changed."
   },
