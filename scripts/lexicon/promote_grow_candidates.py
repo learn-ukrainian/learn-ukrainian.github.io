@@ -17,6 +17,7 @@ import sys
 import tempfile
 from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -179,7 +180,7 @@ def manifest_entry_from_candidate(candidate: Mapping[str, Any]) -> dict[str, Any
         {"pos": pos},
     )
     base_entry["url_slug"] = _slug_for_url(lemma)
-    base_entry["primary_source"] = PRIMARY_SOURCE
+    base_entry["primary_source"] = _clean_optional_str(candidate.get("primary_source")) or PRIMARY_SOURCE
     base_entry["course_usage"] = _course_usage(candidate)
 
     for field in _OPTIONAL_CANDIDATE_FIELDS:
@@ -308,13 +309,16 @@ def _manifest_lemma_keys(entries: Sequence[Any]) -> set[str]:
 
 
 def _candidate_gloss(candidate: Mapping[str, Any]) -> str | None:
+    explicit = _clean_optional_str(candidate.get("gloss"))
+    if explicit:
+        return explicit
     enrichment = candidate.get("enrichment")
     if isinstance(enrichment, Mapping):
         meaning = enrichment.get("meaning")
         gloss = _meaning_text(meaning)
         if gloss:
             return gloss
-    return _clean_optional_str(candidate.get("gloss"))
+    return None
 
 
 def _meaning_text(meaning: object) -> str | None:
@@ -412,6 +416,7 @@ def _refresh_manifest_metadata(manifest: dict[str, Any]) -> None:
         if key in stats:
             stats[key] = enriched_count
     manifest["enrichment_generated"] = True
+    manifest["generated_at"] = datetime.now(UTC).isoformat(timespec="seconds")
     _embed_manifest_fingerprint(manifest)
 
 
