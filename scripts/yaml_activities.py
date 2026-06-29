@@ -1932,7 +1932,6 @@ class ActivityParser:
             part
             for part in (
                 activity.instruction,
-                activity.source_reading,
                 activity.prompt,
                 activity.notes,
             )

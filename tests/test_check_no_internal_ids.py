@@ -97,6 +97,24 @@ def test_folk_primary_reading_directive_is_allowed(tmp_path: Path, monkeypatch: 
     assert check_no_internal_ids.scan_files([module]) == []
 
 
+def test_folk_generated_prompt_bare_reading_slug_fails(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setattr(check_no_internal_ids, "PROJECT_ROOT", tmp_path)
+    doc = tmp_path / "site/src/content/docs/folk/topic.mdx"
+    doc.parent.mkdir(parents=True)
+    doc.write_text(
+        '<EssayResponse prompt={"Напишіть.\\n\\nobzhynkova-pisnia-kotyvsia-vinochok-po-poliu\\n"} />\n',
+        encoding="utf-8",
+    )
+
+    findings = check_no_internal_ids.scan_files([doc])
+
+    assert [(finding.kind, "obzhynkova-pisnia" in finding.value) for finding in findings] == [
+        ("bare reading slug in prompt", True)
+    ]
+
+
 def test_folk_specific_register_terms_do_not_apply_to_other_tracks(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

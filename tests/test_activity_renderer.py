@@ -347,6 +347,21 @@ class TestEssayResponse:
         assert "<EssayResponse" in jsx
         assert "Порівняйте" in jsx
 
+    def test_source_reading_slug_not_rendered_in_prompt(self):
+        act = {
+            "type": "essay-response",
+            "instruction": "Напишіть відповідь.",
+            "source_reading": "obzhynkova-pisnia-kotyvsia-vinochok-po-poliu",
+            "prompt": "Назвіть рядок і зробіть висновок.",
+            "model_answer": "Приклад.",
+            "rubric": ["Є рядок"],
+        }
+
+        jsx = render_activity_to_jsx(act)
+
+        assert "obzhynkova-pisnia-kotyvsia-vinochok-po-poliu" not in jsx
+        assert "Назвіть рядок" in jsx
+
 
 class TestSourceEvaluation:
     def test_with_metadata(self):

@@ -96,6 +96,10 @@ FOLK_INTERNAL_REGISTER_PATTERNS = (
     PatternSpec("build/process term", re.compile(r"\bprovenance\b", re.IGNORECASE)),
     PatternSpec("build/process term", re.compile(r"\bsource[ -]disagreement\b", re.IGNORECASE)),
     PatternSpec("build/process term", re.compile(r"\bquote[ -]gated\b", re.IGNORECASE)),
+    PatternSpec(
+        "bare reading slug in prompt",
+        re.compile(r"prompt=\{[^}]*\b[a-z][a-z0-9]+(?:-[a-z0-9]+){2,}\b[^}]*\}", re.IGNORECASE),
+    ),
 )
 
 LEARNER_SURFACE_PATTERNS = (*INTERNAL_ID_PATTERNS, *INTERNAL_REGISTER_PATTERNS)
