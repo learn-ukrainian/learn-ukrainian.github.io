@@ -1,0 +1,315 @@
+---
+version: 1
+kind: atlas_source_inventory_review_decisions
+batch_id: source-inventory-first-approved-publish-batch-2026-06-29
+batch_label: first-approved-publish-batch
+reviewer: content-review
+reviewed_at: '2026-06-29'
+source_queue:
+  workflow: source_inventory_publish_review_queue.v1
+  generated_from_pr: 4021
+  total_queue_rows: 83
+  approved_in_queue: 83
+  first_promotion_batch_size: 20
+production_outputs_updated: []
+decisions:
+- lemma: автобус
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: bus
+  sense_note: Bolshakova + dictionary
+  source_inventory:
+    key: 76553a9a3c3f6c61
+    path: data/lexicon/source-inventory/bolshakova-bukvar-keywords.yaml
+    locator: correct key words block; letter А
+    source_id: bolshakova-bukvar-2025-part1-keywords
+    source_family: textbook
+  evidence_refs:
+  - Bolshakova + dictionary
+  review_queue_reasons:
+  - grow_needs_review:heritage_status flags russian_shadow
+- lemma: ананас
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: pineapple
+  sense_note: Ohoiko + dictionary
+  source_inventory:
+    key: b122da27e9a38818
+    path: data/lexicon/source-inventory/ohoiko-abetka-keywords.yaml
+    locator: letters[А].key_word
+    source_id: ohoiko-abetka-1-keywords
+    source_family: ohoiko
+  evidence_refs:
+  - Ohoiko + dictionary
+  review_queue_reasons:
+  - grow_needs_review:heritage_status flags russian_shadow
+- lemma: банан
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: banana
+  sense_note: Ohoiko + dictionary
+  source_inventory:
+    key: 648c9d9b40ab0769
+    path: data/lexicon/source-inventory/ohoiko-abetka-keywords.yaml
+    locator: letters[Б].key_word
+    source_id: ohoiko-abetka-2-keywords
+    source_family: ohoiko
+  evidence_refs:
+  - Ohoiko + dictionary
+  review_queue_reasons:
+  - grow_needs_review:heritage_status flags russian_shadow
+- lemma: великий
+  decision: approve_for_publish
+  approved_pos: adjective
+  approved_gloss: big; large
+  sense_note: curriculum A1
+  source_inventory:
+    key: a7edd0c505227031
+    path: data/lexicon/source-inventory/pos-balanced-grammar-sample.yaml
+    locator: vocabulary[0].items[0].word
+    source_id: l2-direct-a1-yakyi-vocabulary
+    source_family: curriculum
+  evidence_refs:
+  - curriculum A1
+  review_queue_reasons:
+  - grow_needs_review:heritage_status flags russian_shadow
+- lemma: гора
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: mountain
+  sense_note: Ohoiko + dictionary
+  source_inventory:
+    key: b7a03b3347c454e0
+    path: data/lexicon/source-inventory/ohoiko-abetka-keywords.yaml
+    locator: letters[Г].key_word
+    source_id: ohoiko-abetka-3-keywords
+    source_family: ohoiko
+  evidence_refs:
+  - Ohoiko + dictionary
+  review_queue_reasons:
+  - grow_needs_review:heritage_status flags russian_shadow
+- lemma: два
+  decision: approve_for_publish
+  approved_pos: numeral
+  approved_gloss: two
+  sense_note: curriculum A1
+  source_inventory:
+    key: e0fd4b34ad5f1d06
+    path: data/lexicon/source-inventory/pos-balanced-grammar-sample.yaml
+    locator: vocabulary[0].items[1].word
+    source_id: l2-direct-a1-chysla-vocabulary
+    source_family: curriculum
+  evidence_refs:
+  - curriculum A1
+  review_queue_reasons:
+  - grow_needs_review:heritage_status flags russian_shadow
+- lemma: дуб
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: oak tree
+  sense_note: Bolshakova + dictionary
+  source_inventory:
+    key: 6d54eb7091d03a41
+    path: data/lexicon/source-inventory/bolshakova-bukvar-keywords.yaml
+    locator: complete letter mapping row Д д
+    source_id: bolshakova-bukvar-2025-part1-keywords
+    source_family: textbook
+  evidence_refs:
+  - Bolshakova + dictionary
+  review_queue_reasons:
+  - grow_needs_review:heritage_status flags russian_shadow
+- lemma: дім
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: home; house
+  sense_note: Ohoiko/Bolshakova
+  source_inventory:
+    key: f5a679b717d5cb27
+    path: data/lexicon/source-inventory/ohoiko-abetka-keywords.yaml
+    locator: letters[Д].key_word
+    source_id: ohoiko-abetka-2-keywords
+    source_family: ohoiko
+  evidence_refs:
+  - Ohoiko/Bolshakova
+  review_queue_reasons:
+  - grow_needs_review:heritage_status flags russian_shadow
+- lemma: жук
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: beetle
+  sense_note: Ohoiko + dictionary
+  source_inventory:
+    key: b1ad9747ebb30401
+    path: data/lexicon/source-inventory/ohoiko-abetka-keywords.yaml
+    locator: letters[Ж].key_word
+    source_id: ohoiko-abetka-3-keywords
+    source_family: ohoiko
+  evidence_refs:
+  - Ohoiko + dictionary
+  review_queue_reasons:
+  - grow_needs_review:heritage_status flags russian_shadow
+- lemma: зебра
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: zebra
+  sense_note: Ohoiko + dictionary
+  source_inventory:
+    key: 2c589c491dee35cd
+    path: data/lexicon/source-inventory/ohoiko-abetka-keywords.yaml
+    locator: letters[З].key_word
+    source_id: ohoiko-abetka-3-keywords
+    source_family: ohoiko
+  evidence_refs:
+  - Ohoiko + dictionary
+  review_queue_reasons:
+  - grow_needs_review:heritage_status flags russian_shadow
+- lemma: крейда
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: chalk
+  sense_note: Vashulenko school vocab
+  source_inventory:
+    key: 39d2d772ec67a27a
+    path: data/lexicon/source-inventory/vashulenko-grade3-headwords.yaml
+    locator: topic_index.vocabulary_school.words[0]
+    source_id: vashulenko-grade3-2020-school-vocabulary
+    source_family: textbook
+  evidence_refs:
+  - Vashulenko school vocab
+  review_queue_reasons:
+  - grow_needs_review:heritage_status flags russian_shadow
+- lemma: кіт
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: cat
+  sense_note: Ohoiko + dictionary
+  source_inventory:
+    key: c4a889419752979e
+    path: data/lexicon/source-inventory/ohoiko-abetka-keywords.yaml
+    locator: letters[К].key_word
+    source_id: ohoiko-abetka-2-keywords
+    source_family: ohoiko
+  evidence_refs:
+  - Ohoiko + dictionary
+  review_queue_reasons:
+  - grow_needs_review:heritage_status flags russian_shadow
+- lemma: лис
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: fox
+  sense_note: Bolshakova + dictionary
+  source_inventory:
+    key: e3612cc17cc5f8e8
+    path: data/lexicon/source-inventory/bolshakova-bukvar-keywords.yaml
+    locator: complete letter mapping row Л л
+    source_id: bolshakova-bukvar-2025-part1-keywords
+    source_family: textbook
+  evidence_refs:
+  - Bolshakova + dictionary
+  review_queue_reasons:
+  - grow_needs_review:heritage_status flags russian_shadow
+- lemma: ліс
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: forest; woods
+  sense_note: Bolshakova + dictionary
+  source_inventory:
+    key: 698e8a22c5d7974f
+    path: data/lexicon/source-inventory/bolshakova-bukvar-keywords.yaml
+    locator: complete letter mapping row Л л
+    source_id: bolshakova-bukvar-2025-part1-keywords
+    source_family: textbook
+  evidence_refs:
+  - Bolshakova + dictionary
+  review_queue_reasons:
+  - grow_needs_review:heritage_status flags russian_shadow
+- lemma: мама
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: mom; mother
+  sense_note: Bolshakova + dictionary
+  source_inventory:
+    key: a50121a4ffabb13e
+    path: data/lexicon/source-inventory/bolshakova-bukvar-keywords.yaml
+    locator: correct key words block; letter М
+    source_id: bolshakova-bukvar-2025-part1-keywords
+    source_family: textbook
+  evidence_refs:
+  - Bolshakova + dictionary
+  review_queue_reasons:
+  - grow_needs_review:heritage_status flags russian_shadow
+- lemma: один
+  decision: approve_for_publish
+  approved_pos: numeral
+  approved_gloss: one
+  sense_note: curriculum A1
+  source_inventory:
+    key: 9d52a8860d52edab
+    path: data/lexicon/source-inventory/pos-balanced-grammar-sample.yaml
+    locator: vocabulary[0].items[0].word
+    source_id: l2-direct-a1-chysla-vocabulary
+    source_family: curriculum
+  evidence_refs:
+  - curriculum A1
+  review_queue_reasons:
+  - grow_needs_review:heritage_status flags russian_shadow
+- lemma: око
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: eye
+  sense_note: Ohoiko + dictionary
+  source_inventory:
+    key: ba94d236ce30e9b3
+    path: data/lexicon/source-inventory/ohoiko-abetka-keywords.yaml
+    locator: letters[О].key_word
+    source_id: ohoiko-abetka-1-keywords
+    source_family: ohoiko
+  evidence_refs:
+  - Ohoiko + dictionary
+  review_queue_reasons:
+  - grow_needs_review:heritage_status flags russian_shadow
+- lemma: тигр
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: tiger
+  sense_note: Ohoiko + dictionary
+  source_inventory:
+    key: a4b1a422693e080a
+    path: data/lexicon/source-inventory/ohoiko-abetka-keywords.yaml
+    locator: letters[Т].key_word
+    source_id: ohoiko-abetka-3-keywords
+    source_family: ohoiko
+  evidence_refs:
+  - Ohoiko + dictionary
+  review_queue_reasons:
+  - grow_needs_review:heritage_status flags russian_shadow
+- lemma: черепаха
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: turtle; tortoise
+  sense_note: Ohoiko + dictionary
+  source_inventory:
+    key: 59e79f22405d341c
+    path: data/lexicon/source-inventory/ohoiko-abetka-keywords.yaml
+    locator: letters[Ч].key_word
+    source_id: ohoiko-abetka-4-keywords
+    source_family: ohoiko
+  evidence_refs:
+  - Ohoiko + dictionary
+  review_queue_reasons:
+  - grow_needs_review:heritage_status flags russian_shadow
+- lemma: читати
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to read
+  sense_note: curriculum verb row
+  source_inventory:
+    key: e1dea8d49585ce8d
+    path: data/lexicon/source-inventory/pos-balanced-grammar-sample.yaml
+    locator: vocabulary[1].items[4].word
+    source_id: l2-direct-b2-diieslovo-povtorennia-vocabulary
+    source_family: curriculum
+  evidence_refs:
+  - curriculum verb row
+  review_queue_reasons:
+  - grow_needs_review:heritage_status flags russian_shadow
