@@ -1,14 +1,17 @@
 - lemma: синонім
   translation: synonym
   pos: noun
+  gender: m
   usage: Синонім має близьке значення, але не завжди повністю замінює інше слово.
 - lemma: синонімія
   translation: synonymy
   pos: noun
-  usage: Синонімія допомагає точніше вибирати слова для тексту.
+  gender: f
+  usage: Синонімія допомагає точніше вибирати слова для конкретного тексту.
 - lemma: синоніміка
-  translation: synonymics; synonymy system
+  translation: synonymics; system of synonyms
   pos: noun
+  gender: f
   usage: Синоніміка вивчає близькі за значенням слова та їхні відтінки.
 - lemma: синонімічний ряд
   translation: synonym row; synonym set
@@ -17,204 +20,294 @@
 - lemma: домінанта
   translation: dominant word
   pos: noun
+  gender: f
   usage: Домінанта є нейтральним центром синонімічного ряду.
-- lemma: периферія ряду
-  translation: periphery of a synonym row
+- lemma: опорне слово
+  translation: anchor word; base word
   pos: phrase
-  usage: Периферія ряду містить слова з додатковим стилістичним або смисловим відтінком.
+  usage: Опорне слово допомагає виміряти відтінки інших варіантів.
+- lemma: стрижневе слово
+  translation: core word
+  pos: phrase
+  usage: Стрижневе слово зазвичай має найширше й найменш забарвлене значення.
+- lemma: ядро значення
+  translation: semantic core
+  pos: phrase
+  usage: Ядро значення має зберігатися під час синонімічної заміни.
+- lemma: семантична близькість
+  translation: semantic closeness
+  pos: phrase
+  usage: Семантична близькість не означає повної взаємозамінності.
+- lemma: відтінок
+  translation: nuance; shade of meaning
+  pos: noun
+  gender: m
+  usage: Кожен синонім може мати власний смисловий або стилістичний відтінок.
+- lemma: стилістичне забарвлення
+  translation: stylistic coloring
+  pos: phrase
+  usage: Стилістичне забарвлення показує, чи слово нейтральне, книжне або знижене.
+- lemma: регістр
+  translation: register
+  pos: noun
+  gender: m
+  usage: Регістр залежить від жанру, адресата й соціальної ситуації.
+- lemma: сполучуваність
+  translation: collocability
+  pos: noun
+  gender: f
+  usage: Сполучуваність показує, з якими словами природно стоїть синонім.
+- lemma: доречність
+  translation: appropriateness
+  pos: noun
+  gender: f
+  usage: Доречність важливіша за механічну заміну повтору.
+- lemma: точність
+  translation: precision
+  pos: noun
+  gender: f
+  usage: Точність допомагає не спотворити зміст речення.
+- lemma: виразність
+  translation: expressiveness
+  pos: noun
+  gender: f
+  usage: Виразність додає тексту образності, але не повинна руйнувати точність.
+- lemma: поняттєвий синонім
+  translation: conceptual synonym
+  pos: phrase
+  usage: Поняттєвий синонім відрізняється інтенсивністю, способом дії або точністю.
+- lemma: ідеографічний синонім
+  translation: ideographic synonym
+  pos: phrase
+  usage: Ідеографічний синонім уточнює поняття без головної зміни регістру.
+- lemma: стилістичний синонім
+  translation: stylistic synonym
+  pos: phrase
+  usage: Стилістичний синонім змінює тон, регістр або емоційну оцінку.
+- lemma: контекстуальний синонім
+  translation: contextual synonym
+  pos: phrase
+  usage: Контекстуальний синонім працює в конкретному уривку або образі.
+- lemma: абсолютний синонім
+  translation: absolute synonym
+  pos: phrase
+  usage: Абсолютний синонім майже повністю збігається за значенням з іншим словом.
 - lemma: лексична парадигма
   translation: lexical paradigm
   pos: phrase
   usage: Лексична парадигма показує зв'язки між словами однієї семантичної зони.
-- lemma: семантична близькість
-  translation: semantic closeness
+- lemma: тематичне поле
+  translation: thematic field
   pos: phrase
-  usage: Семантична близькість ще не гарантує повної взаємозамінності.
-- lemma: поняттєвий синонім
-  translation: ideographic synonym
+  usage: Тематичне поле ширше за синонімічний ряд і може містити різні частини мови.
+- lemma: периферія ряду
+  translation: periphery of a synonym row
   pos: phrase
-  usage: Поняттєвий синонім уточнює інтенсивність, масштаб або якість.
-- lemma: ідеографічний синонім
-  translation: ideographic synonym
-  pos: phrase
-  usage: Ідеографічний синонім відрізняється смисловим відтінком.
-- lemma: стилістичний синонім
-  translation: stylistic synonym
-  pos: phrase
-  usage: Стилістичний синонім змінює регістр або емоційний тон.
-- lemma: контекстуальний синонім
-  translation: contextual synonym
-  pos: phrase
-  usage: Контекстуальний синонім працює лише в межах конкретного тексту.
-- lemma: абсолютний синонім
-  translation: absolute synonym
-  pos: phrase
-  usage: Абсолютний синонім майже не має відмінностей у значенні та вживанні.
-- lemma: відносний синонім
-  translation: relative synonym
-  pos: phrase
-  usage: Відносний синонім має спільне ядро, але відрізняється відтінком.
-- lemma: відтінок значення
-  translation: shade of meaning
-  pos: phrase
-  usage: Відтінок значення пояснює, чому слова не завжди взаємозамінні.
-- lemma: стилістичне забарвлення
-  translation: stylistic coloring
-  pos: phrase
-  usage: Стилістичне забарвлення показує, чи слово нейтральне, книжне або розмовне.
-- lemma: експресивність
-  translation: expressiveness
-  pos: noun
-  usage: Експресивність може посилити образ, але в офіційному тексті часто зайва.
-- lemma: контекстуалізація
-  translation: contextualization
-  pos: noun
-  usage: Контекстуалізація пояснює, чому в одному уривку слова зближуються.
-- lemma: сполучуваність
-  translation: collocability
-  pos: noun
-  usage: Сполучуваність перевіряє, з якими словами природно поєднується синонім.
-- lemma: точність
-  translation: precision
-  pos: noun
-  usage: Точність важливіша за декоративну заміну слова.
-- lemma: виразність
-  translation: expressiveness
-  pos: noun
-  usage: Виразність допомагає тексту звучати живо й переконливо.
-- lemma: доречність
-  translation: appropriateness
-  pos: noun
-  usage: Доречність залежить від адресата, жанру і мети тексту.
-- lemma: диференціація
-  translation: differentiation
-  pos: noun
-  usage: Диференціація синонімів вимагає пояснити різницю між близькими словами.
-- lemma: семантичне нюансування
-  translation: semantic nuance
-  pos: phrase
-  usage: Семантичне нюансування допомагає вибрати найточніше слово.
+  usage: Периферія ряду містить слова з додатковим відтінком або обмеженим уживанням.
 - lemma: тавтологія
   translation: tautology
   pos: noun
+  gender: f
   usage: Тавтологія створює небажаний повтор однакового або спільнокореневого слова.
 - lemma: плеоназм
   translation: pleonasm
   pos: noun
+  gender: m
   usage: Плеоназм додає зайве слово, яке не розширює зміст.
-- lemma: перифраза
-  translation: periphrasis
-  pos: noun
-  usage: Перифраза називає предмет описово або образно.
 - lemma: евфемізм
   translation: euphemism
   pos: noun
-  usage: Евфемізм пом'якшує різке або болісне висловлення.
-- lemma: регістр
-  translation: register
+  gender: m
+  usage: Евфемізм пом'якшує різке висловлення, але не має приховувати факт.
+- lemma: перифраза
+  translation: periphrasis
   pos: noun
-  usage: Регістр визначає, чи слово доречне в офіційному, нейтральному або розмовному стилі.
-- lemma: нейтральний
-  translation: neutral
-  pos: adjective
-  usage: Нейтральний варіант зазвичай стоїть ближче до домінанти.
-- lemma: книжний
-  translation: literary; bookish
-  pos: adjective
-  usage: Книжний синонім може бути доречним у статті, але важким у розмові.
-- lemma: розмовний
-  translation: colloquial
-  pos: adjective
-  usage: Розмовний синонім передає живий тон, але не завжди пасує до документа.
-- lemma: знижений
-  translation: lowered; low-register
-  pos: adjective
-  usage: Знижений варіант може звучати грубо або образливо.
-- lemma: урочистий
-  translation: solemn
-  pos: adjective
-  usage: Урочистий синонім підходить для промови або поетичного тексту.
-- lemma: багатий
-  translation: rich
-  pos: adjective
-  usage: Багатий словник дає авторові більше контрольованих варіантів.
-- lemma: різноманітний
-  translation: varied
-  pos: adjective
-  usage: Різноманітний ряд не має бути хаотичним.
-- lemma: піднесений
-  translation: elevated
-  pos: adjective
-  usage: Піднесений тон може бути доречний у промові.
-- lemma: приглушений
-  translation: muted
-  pos: adjective
-  usage: Приглушений звук або світло має нижчу інтенсивність.
-- lemma: безмовний
-  translation: silent
-  pos: adjective
-  usage: Безмовна аудиторія не просто тиха, а повністю мовчить.
-- lemma: прямувати
-  translation: to head toward
+  gender: f
+  usage: Перифраза називає предмет описово або образно.
+- lemma: калька
+  translation: calque
+  pos: noun
+  gender: f
+  usage: Калька механічно переносить іншомовну модель і може порушити українську норму.
+- lemma: хибний друг перекладача
+  translation: false friend in translation
+  pos: phrase
+  usage: Хибний друг перекладача здається очевидним відповідником, але має інше значення.
+- lemma: мовознавство
+  translation: linguistics
+  pos: noun
+  gender: n
+  usage: Мовознавство є нейтральною українською назвою науки про мову.
+- lemma: лінгвістика
+  translation: linguistics
+  pos: noun
+  gender: f
+  usage: Лінгвістика часто звучить термінологічніше або міжнародніше.
+- lemma: горизонт
+  translation: horizon
+  pos: noun
+  gender: m
+  usage: Горизонт доречний у нейтральному або технічному описі простору.
+- lemma: обрій
+  translation: horizon; skyline
+  pos: noun
+  gender: m
+  usage: Обрій часто звучить образніше в пейзажному описі.
+- lemma: небосхил
+  translation: firmament; skyline
+  pos: noun
+  gender: m
+  usage: Небосхил має книжний або урочистий відтінок.
+- lemma: виднокруг
+  translation: visible horizon
+  pos: noun
+  gender: m
+  usage: Виднокруг може входити до ряду слів про межу видимого простору.
+- lemma: казати
+  translation: to say
   pos: verb
-  usage: Делегація прямувала до зали засідань.
-- lemma: простувати
-  translation: to make one's way
+  usage: Казати може бути домінантою для ряду дієслів мовлення.
+- lemma: говорити
+  translation: to speak; to talk
   pos: verb
-  usage: Мандрівники простували степом.
-- lemma: крокувати
-  translation: to march; to stride
+  usage: Говорити є широким нейтральним дієсловом мовлення.
+- lemma: мовити
+  translation: to utter; to say
   pos: verb
-  usage: Курсанти крокували майданом.
-- lemma: плентатися
-  translation: to trudge
-  pos: verb
-  usage: Втомлені туристи пленталися до трамвая.
-- lemma: шкандибати
-  translation: to hobble
-  pos: verb
-  usage: Старий пес шкандибав уздовж паркану.
+  usage: Мовити звучить книжніше або урочистіше за казати.
 - lemma: зазначати
   translation: to note; to state
   pos: verb
-  usage: Доповідач зазначив, що терміни змінено.
-- lemma: наголошувати
-  translation: to emphasize
-  pos: verb
-  usage: Автор наголошує на точності слова.
+  usage: Зазначати доречне в офіційному або аналітичному тексті.
 - lemma: стверджувати
-  translation: to assert
+  translation: to assert; to claim
   pos: verb
-  usage: Дослідниця стверджує, що контекст змінює відтінок.
+  usage: Стверджувати додає впевненість і позицію мовця.
 - lemma: шепотіти
   translation: to whisper
   pos: verb
-  usage: У художньому описі персонаж може шепотіти, а не просто казати.
+  usage: Шепотіти називає тихий спосіб мовлення.
 - lemma: бурмотіти
   translation: to mutter
   pos: verb
-  usage: Бурмотіти означає говорити нечітко й тихо.
+  usage: Бурмотіти означає говорити нечітко й часто додає оцінку.
 - lemma: вигукувати
   translation: to exclaim
   pos: verb
-  usage: Вигукувати доречно, коли треба передати сильну емоцію.
+  usage: Вигукувати доречно, коли треба передати сильну емоцію або гучність.
+- lemma: іти
+  translation: to go; to walk
+  pos: verb
+  usage: Іти може бути домінантою для ряду дієслів руху.
+- lemma: прямувати
+  translation: to head toward
+  pos: verb
+  usage: Прямувати додає напрям і мету руху.
+- lemma: простувати
+  translation: to proceed; to make one's way
+  pos: verb
+  usage: Простувати передає рух у певному напрямку і часто звучить оповідно.
+- lemma: крокувати
+  translation: to stride; to march
+  pos: verb
+  usage: Крокувати підкреслює ритм кроків.
+- lemma: плентатися
+  translation: to trudge; to trail along
+  pos: verb
+  usage: Плентатися означає йти повільно, втомлено або без енергії.
+- lemma: шкандибати
+  translation: to hobble
+  pos: verb
+  usage: Шкандибати натякає на нерівну або важку ходу.
 - lemma: причина
-  translation: cause
+  translation: cause; reason
   pos: noun
-  usage: Аварія має причину, а не мотив.
+  gender: f
+  usage: Аварія має причину, якщо йдеться про те, чому подія сталася.
 - lemma: підстава
   translation: grounds; basis
   pos: noun
-  usage: Підстава для рішення часто має офіційний відтінок.
+  gender: f
+  usage: Підстава підтримує рішення, вимогу або офіційну дію.
 - lemma: мотив
   translation: motive
   pos: noun
-  usage: Мотив пояснює внутрішнє спонукання людини.
+  gender: m
+  usage: Мотив пояснює внутрішнє спонукання людини або персонажа.
 - lemma: аргумент
   translation: argument
   pos: noun
-  usage: Аргумент підтримує позицію в дискусії.
-- lemma: хибний друг перекладача
-  translation: false friend
-  pos: phrase
-  usage: Accurate як точний, а не акуратний, є типовим хибним другом.
+  gender: m
+  usage: Аргумент доводить позицію в дискусії.
+- lemma: обличчя
+  translation: face
+  pos: noun
+  gender: n
+  usage: Обличчя є нейтральною назвою фронтальної частини голови людини.
+- lemma: лице
+  translation: face
+  pos: noun
+  gender: n
+  usage: Лице може бути нейтральним або трохи книжнішим залежно від контексту.
+- lemma: фізіономія
+  translation: face; physiognomy
+  pos: noun
+  gender: f
+  usage: Фізіономія має розмовний або оцінний відтінок.
+- lemma: пика
+  translation: mug; snout
+  pos: noun
+  gender: f
+  usage: Пика є зниженим і грубим словом щодо людини.
+- lemma: лик
+  translation: visage; countenance
+  pos: noun
+  gender: m
+  usage: Лик звучить піднесено або архаїзовано.
+- lemma: вада
+  translation: flaw
+  pos: noun
+  gender: f
+  usage: Вада природна для опису характеру або недоліку.
+- lemma: дефект
+  translation: defect
+  pos: noun
+  gender: m
+  usage: Дефект частіше стосується предмета, механізму або виробу.
+- lemma: акуратний
+  translation: neat; careful
+  pos: adj
+  usage: Акуратний означає охайний або ретельно виконаний, а не завжди accurate.
+- lemma: точний
+  translation: accurate; precise
+  pos: adj
+  usage: Точний потрібен у словосполученнях точна відповідь і точні дані.
+- lemma: витончений
+  translation: refined; elegant
+  pos: adj
+  usage: Витончене рішення може передавати elegant solution в окремому контексті.
+- lemma: вдалий
+  translation: successful; apt
+  pos: adj
+  usage: Вдалий часто передає практичну доречність рішення.
+- lemma: канцеляризм
+  translation: bureaucratic expression
+  pos: noun
+  gender: m
+  usage: Канцеляризм може бути зайвим у блозі, але потрібним у процедурному документі.
+- lemma: нейтральний
+  translation: neutral
+  pos: adj
+  usage: Нейтральний варіант не додає зайвої емоції або соціальної оцінки.
+- lemma: книжний
+  translation: literary; bookish
+  pos: adj
+  usage: Книжний відтінок пасує не кожному розмовному або діловому тексту.
+- lemma: знижений
+  translation: low-register; colloquially lowered
+  pos: adj
+  usage: Знижений синонім може бути образливим у нейтральному описі людини.
+- lemma: піднесений
+  translation: elevated; lofty
+  pos: adj
+  usage: Піднесений стиль доречний в урочистому або художньому контексті.
