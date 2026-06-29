@@ -1,0 +1,173 @@
+---
+version: 1
+kind: atlas_source_inventory
+sources:
+  - id: l2-direct-b1-imennyky-vidminy-vocabulary
+    source_family: curriculum
+    extraction_mode: grammar_vocabulary_item
+    title: "L2 Ukrainian Direct B1 — Іменники: чотири відміни"
+    path: curriculum/l2-uk-direct/b1/imennyky-vidminy.yaml
+    locator: vocabulary
+    notes: Representative noun rows from the noun-declension grammar module.
+    headwords:
+      - lemma: школа
+        pos: noun
+        locator: vocabulary[0].items[0].word
+        context: 'word: "школа"; sentence: "Школа стоїть на горі."'
+      - lemma: море
+        pos: noun
+        locator: vocabulary[1].items[4].word
+        context: 'word: "море"; sentence: "Море блищить на сонці."'
+
+  - id: l2-direct-a1-yakyi-vocabulary
+    source_family: curriculum
+    extraction_mode: grammar_vocabulary_item
+    title: "L2 Ukrainian Direct A1 — Який? Яка? Яке?"
+    path: curriculum/l2-uk-direct/a1/yakyi.yaml
+    locator: vocabulary
+    notes: Representative adjective rows from adjective-noun pair examples.
+    headwords:
+      - lemma: великий
+        pos: adjective
+        locator: vocabulary[0].items[0].word
+        context: 'word: "великий стіл"; sentence: "Це великий стіл."'
+      - lemma: гарний
+        pos: adjective
+        locator: vocabulary[0].items[2].word
+        context: 'word: "гарний птах"; sentence: "Це гарний птах."'
+
+  - id: l2-direct-a1-chysla-vocabulary
+    source_family: curriculum
+    extraction_mode: grammar_vocabulary_item
+    title: "L2 Ukrainian Direct A1 — Числа"
+    path: curriculum/l2-uk-direct/a1/chysla.yaml
+    locator: vocabulary
+    notes: Representative numeral rows from the numbers vocabulary module.
+    headwords:
+      - lemma: один
+        pos: numeral
+        locator: vocabulary[0].items[0].word
+        context: 'word: "один / одна / одне"; sentence: "Один стіл. Одна книга. Одне вікно."'
+      - lemma: два
+        pos: numeral
+        locator: vocabulary[0].items[1].word
+        context: 'word: "два / дві"; sentence: "Два коти. Дві книги."'
+
+  - id: l2-direct-b1-zaimennyk-morfolohiia-vocabulary
+    source_family: curriculum
+    extraction_mode: grammar_vocabulary_item
+    title: "L2 Ukrainian Direct B1 — Займенники: повна морфологія"
+    path: curriculum/l2-uk-direct/b1/zaimennyk-morfolohiia.yaml
+    locator: vocabulary
+    notes: Representative pronoun rows from pronoun-type vocabulary sections.
+    headwords:
+      - lemma: ніхто
+        pos: pronoun
+        locator: vocabulary[1].items[0].word
+        context: 'word: "ніхто"; sentence: "Ніхто не прийшов на зустріч."'
+      - lemma: себе
+        pos: pronoun
+        locator: vocabulary[2].items[0].word
+        context: 'word: "себе"; sentence: "Подивися на себе в дзеркало."'
+
+  - id: l2-direct-b2-diieslovo-povtorennia-vocabulary
+    source_family: curriculum
+    extraction_mode: grammar_vocabulary_item
+    title: "L2 Ukrainian Direct B2 — Дієслово: повторення"
+    path: curriculum/l2-uk-direct/b2/diieslovo-povtorennia.yaml
+    locator: vocabulary
+    notes: Representative infinitive verb rows from the verb-review module.
+    headwords:
+      - lemma: робити
+        pos: verb
+        locator: vocabulary[1].items[2].word
+        context: 'word: "робити"; sentence: "Що ти робиш?"'
+      - lemma: читати
+        pos: verb
+        locator: vocabulary[1].items[4].word
+        context: 'word: "читати"; sentence: "Він читає газету щоранку."'
+
+  - id: l2-direct-b1-pryslivnyky-vocabulary
+    source_family: curriculum
+    extraction_mode: grammar_vocabulary_item
+    title: "L2 Ukrainian Direct B1 — Прислівники: повний огляд"
+    path: curriculum/l2-uk-direct/b1/pryslivnyky.yaml
+    locator: vocabulary
+    notes: Representative adverb rows from adverb-type vocabulary sections.
+    headwords:
+      - lemma: швидко
+        pos: adverb
+        locator: vocabulary[2].items[0].word
+        context: 'word: "швидко"; sentence: "Він біжить дуже швидко."'
+      - lemma: добре
+        pos: adverb
+        locator: vocabulary[2].items[2].word
+        context: 'word: "добре"; sentence: "Вона добре грає на фортепіано."'
+
+  - id: l2-direct-b2-pryimennyky-pohlybleno-vocabulary
+    source_family: curriculum
+    extraction_mode: grammar_vocabulary_item
+    title: "L2 Ukrainian Direct B2 — Прийменники: поглиблення"
+    path: curriculum/l2-uk-direct/b2/pryimennyky-pohlybleno.yaml
+    locator: vocabulary
+    notes: Representative preposition rows from the preposition grammar module.
+    headwords:
+      - lemma: щодо
+        pos: preposition
+        locator: vocabulary[0].items[3].word
+        context: 'word: "щодо"; sentence: "Щодо вашого запитання — відповімо завтра."'
+      - lemma: через
+        pos: preposition
+        locator: vocabulary[1].items[0].word
+        context: 'word: "через"; sentence: "Він запізнився через затори."'
+
+  - id: l2-direct-a1-spoluchnyky-vocabulary
+    source_family: curriculum
+    extraction_mode: grammar_vocabulary_item
+    title: "L2 Ukrainian Direct A1 — Сполучники"
+    path: curriculum/l2-uk-direct/a1/spoluchnyky.yaml
+    locator: vocabulary
+    notes: Representative conjunction rows from the conjunction grammar module.
+    headwords:
+      - lemma: і
+        pos: conjunction
+        locator: vocabulary[0].items[0].word
+        context: 'word: "і"; sentence: "Мама і тато вдома."'
+      - lemma: але
+        pos: conjunction
+        locator: vocabulary[1].items[1].word
+        context: 'word: "але"; sentence: "Вона хоче спати, але не може."'
+
+  - id: l2-direct-b2-chastky-vocabulary
+    source_family: curriculum
+    extraction_mode: grammar_vocabulary_item
+    title: "L2 Ukrainian Direct B2 — Частки"
+    path: curriculum/l2-uk-direct/b2/chastky.yaml
+    locator: vocabulary
+    notes: Representative particle rows from the particle grammar module.
+    headwords:
+      - lemma: не
+        pos: particle
+        locator: vocabulary[1].items[0].word
+        context: 'word: "не"; sentence: "Він не знає відповіді."'
+      - lemma: хіба
+        pos: particle
+        locator: vocabulary[2].items[0].word
+        context: 'word: "хіба"; sentence: "Хіба ти цього не знав?"'
+
+  - id: l2-direct-b2-vyhuky-ta-zvukonasl-vocabulary
+    source_family: curriculum
+    extraction_mode: grammar_vocabulary_item
+    title: "L2 Ukrainian Direct B2 — Вигуки та звуконаслідування"
+    path: curriculum/l2-uk-direct/b2/vyhuki-ta-zvukonasl.yaml
+    locator: vocabulary
+    notes: Representative interjection rows from the interjection grammar module.
+    headwords:
+      - lemma: ой
+        pos: interjection
+        locator: vocabulary[0].items[0].word
+        context: 'word: "ой"; sentence: "Ой, як гарно тут!"'
+      - lemma: ура
+        pos: interjection
+        locator: vocabulary[0].items[1].word
+        context: 'word: "ура"; sentence: "Ура! Ми перемогли!"'

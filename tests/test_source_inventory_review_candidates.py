@@ -11,7 +11,40 @@ from scripts.audit import generate_source_inventory_review_candidates as review
 from scripts.audit.source_inventory_intake import SourceInventoryError
 from scripts.lexicon.content_lexicon_reconciler import PROJECT_ROOT
 
-SEED_LEMMAS = {"кіт", "риба", "ракета", "яблуко", "єнот", "цирк"}
+POS_BALANCED_LEMMAS = {
+    "школа",
+    "море",
+    "великий",
+    "гарний",
+    "один",
+    "два",
+    "ніхто",
+    "себе",
+    "робити",
+    "читати",
+    "швидко",
+    "добре",
+    "щодо",
+    "через",
+    "і",
+    "але",
+    "не",
+    "хіба",
+    "ой",
+    "ура",
+}
+POS_BALANCED_POS = {
+    "noun",
+    "adjective",
+    "numeral",
+    "pronoun",
+    "verb",
+    "adverb",
+    "preposition",
+    "conjunction",
+    "particle",
+    "interjection",
+}
 
 
 def test_review_candidates_use_committed_inventories_and_keep_provenance(
@@ -27,7 +60,7 @@ def test_review_candidates_use_committed_inventories_and_keep_provenance(
     monkeypatch.setattr(
         review.grow,
         "build_skeleton_entry",
-        lambda lemma: {"lemma": lemma, "pos": "noun"},
+        lambda lemma: {"lemma": lemma},
     )
 
     def fake_enrich_entry(
@@ -52,23 +85,26 @@ def test_review_candidates_use_committed_inventories_and_keep_provenance(
     payload = review.generate_review_candidates(out=out)
 
     assert payload["counts"] == {
-        "total_delta": 6,
-        "processed": 6,
-        "auto_merge": 6,
+        "total_delta": len(POS_BALANCED_LEMMAS),
+        "processed": len(POS_BALANCED_LEMMAS),
+        "auto_merge": len(POS_BALANCED_LEMMAS),
         "needs_review": 0,
     }
     assert payload["review_only"] == {
         "workflow": review.WORKFLOW_ID,
         "source_inventory_paths": [
-            "data/lexicon/source-inventory/ohoiko-abetka-keywords.yaml",
-            "data/lexicon/source-inventory/bolshakova-bukvar-keywords.yaml",
+            "data/lexicon/source-inventory/pos-balanced-grammar-sample.yaml",
         ],
         "candidate_output": str(out.resolve()),
         "production_outputs_updated": [],
     }
+    assert not Path(payload["review_only"]["candidate_output"]).is_relative_to(
+        review.LIVE_ATLAS_OUTPUT_DIR
+    )
 
     entries = payload["auto_merge"]
-    assert {entry["lemma"] for entry in entries} == SEED_LEMMAS
+    assert {entry["lemma"] for entry in entries} == POS_BALANCED_LEMMAS
+    assert {entry["pos"] for entry in entries} == POS_BALANCED_POS
     for entry in entries:
         assert entry["source_provenance"]
         for provenance in entry["source_provenance"]:

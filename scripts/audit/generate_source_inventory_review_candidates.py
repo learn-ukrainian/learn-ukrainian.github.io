@@ -15,8 +15,7 @@ from scripts.audit.source_inventory_intake import SourceInventoryError
 from scripts.lexicon.content_lexicon_reconciler import PROJECT_ROOT
 
 COMMITTED_SOURCE_INVENTORIES: tuple[Path, ...] = (
-    PROJECT_ROOT / "data/lexicon/source-inventory/ohoiko-abetka-keywords.yaml",
-    PROJECT_ROOT / "data/lexicon/source-inventory/bolshakova-bukvar-keywords.yaml",
+    PROJECT_ROOT / "data/lexicon/source-inventory/pos-balanced-grammar-sample.yaml",
 )
 
 DEFAULT_OUT = Path("/tmp/atlas-source-inventory-review-candidates.json")
