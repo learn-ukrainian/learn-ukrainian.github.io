@@ -101,6 +101,41 @@ function parseManifest(jsonBytes, pointer, sourceLabel) {
   return manifest;
 }
 
+// The manifest pointer is a trusted, fingerprint-gated, committed artifact, but
+// the download target it carries still flows from file data into an outbound
+// request. Allowlist the origin so a tampered/misgenerated pointer cannot
+// redirect the fetch to an arbitrary host — or to an attacker-controlled GitHub
+// release — before the bytes are sha256-verified (supply-chain defense; CodeQL
+// #251). The pointer always names this repo's release asset on github.com; the
+// fetch then transparently 302s to GitHub's opaque *.githubusercontent.com CDN.
+const ALLOWED_RELEASE_PATH_PREFIX =
+  "/learn-ukrainian/learn-ukrainian.github.io/releases/download/";
+
+function assertAllowedDownloadUrl(rawUrl) {
+  let parsed;
+  try {
+    parsed = new URL(rawUrl);
+  } catch {
+    throw new Error(`Atlas manifest asset_url is not a valid URL: ${rawUrl}`);
+  }
+  if (parsed.protocol !== "https:") {
+    throw new Error(`Atlas manifest asset_url must use https, got ${parsed.protocol} (${rawUrl})`);
+  }
+  const host = parsed.hostname.toLowerCase();
+  // github.com targets must point at THIS repo's releases (not just any GitHub
+  // account); *.githubusercontent.com are GitHub-controlled redirect/CDN hosts
+  // with opaque paths, so they are validated by host only.
+  const fromRepoRelease = host === "github.com" && parsed.pathname.startsWith(ALLOWED_RELEASE_PATH_PREFIX);
+  const fromGithubCdn = host.endsWith(".githubusercontent.com");
+  if (!fromRepoRelease && !fromGithubCdn) {
+    throw new Error(
+      `Atlas manifest asset_url is not an allowlisted GitHub release URL: ${rawUrl}. ` +
+        `Expected https://github.com${ALLOWED_RELEASE_PATH_PREFIX}* or https://*.githubusercontent.com/*.`,
+    );
+  }
+  return parsed.toString();
+}
+
 function downloadUrl(pointer, attempt) {
   if (attempt === 0) return pointer.asset_url;
 
@@ -118,7 +153,8 @@ async function downloadGzip(pointer) {
 
   for (let attempt = 0; attempt < DOWNLOAD_ATTEMPTS; attempt += 1) {
     try {
-      const response = await fetch(downloadUrl(pointer, attempt), {
+      const requestUrl = assertAllowedDownloadUrl(downloadUrl(pointer, attempt));
+      const response = await fetch(requestUrl, {
         cache: "no-store",
         headers: {
           Accept: "application/gzip, application/octet-stream;q=0.9, */*;q=0.1",
@@ -200,4 +236,4 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
   });
 }
 
-export { downloadGzip, downloadUrl };
+export { assertAllowedDownloadUrl, downloadGzip, downloadUrl };
