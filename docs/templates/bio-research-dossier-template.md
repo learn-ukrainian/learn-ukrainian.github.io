@@ -1,10 +1,15 @@
 # Bio Research Dossier — Template
 
-**Use this template for every figure researched in Phase 1** (R1a-R5, issues #2317-#2322 under epic #2309).
+**Use this template for every figure researched in BIO Phase 1** — both the original roster (R1a-R5, issues #2317-#2322 under epic #2309) and the 2026-06-29 **+77 expansion** roster (umbrella #2535; first dossiers tracked as new sub-issues, NOT retrofits of #2317-#2322).
 
 **Target length:** ~1500 words (range: 1200–2000 acceptable).
 **File location:** `docs/research/bio/{slug}.md`
-**Slug source:** the 130-figure appendix in `docs/audits/bio-track-gap-audit-2026-05-26.md` (per #2313).
+**SSOT for module ordering / slugs:** `curriculum/l2-uk-en/curriculum.yaml` (`levels.bio.modules`, 387 slugs total).
+**Slug source (by roster):**
+- Original roster: the 130-figure appendix in `docs/audits/bio-track-gap-audit-2026-05-26.md` (per #2313).
+- +77 expansion roster (`modules[310:387]`): `docs/audits/bio-ukrainian-expansion-research-2026-06-29.md` and the readiness inventory `docs/audits/bio-readiness-matrix-2026-06-29.md`. Do NOT look for an expansion slug in the 130-figure appendix — it is not there.
+
+> **No-module-writing gate (#2535 / #4006 prompt gate before #4005).** A dossier is the FIRST base-prep artifact. Writing a dossier is permitted only after the slug is promoted out of the readiness gate; do NOT write the plan YAML, site doc, or wiki packet from the same pass. Promotion order is fixed: dossier → `plans/bio/{slug}.yaml` → site/wiki. For the +77, honor the canonicity-over-currency and HIST-alignment constraints recorded in the expansion memo (see §6 and §7 below).
 
 **Acceptance criteria for closing the research ticket on a figure**:
 - [ ] All 10 sections completed (skip a section only if NA — document why)
@@ -15,6 +20,8 @@
 - [ ] Naming-canonical applied (slug + aliases listed per #2313)
 - [ ] Image candidate(s) identified per #2316 image-rights policy
 - [ ] Decolonization checklist (#2310) self-applied during writing
+- [ ] **Canonicity-over-currency (+77 roster):** for a LIVING figure, build only on completed, settled contributions — NO predictive "future national leader" framing. Do NOT open a dossier for a current-wartime watchlist figure (Берлінська, Вишебаба, Чорногуз, Чмут, Федоров, Буданов, Стерненко, Христов) or for held cases (Залужний); these are excluded from new BIO additions per `docs/audits/bio-ukrainian-expansion-research-2026-06-29.md`.
+- [ ] **HIST-alignment (+77 roster):** for state-building, UNR/ZUNR, dissident, independence, and wartime figures, align the historical frame with HIST rather than inventing one (memo Sequencing Decision). Record the HIST-alignment check in §6/§7.
 
 ---
 
@@ -24,7 +31,7 @@
 # {Full canonical UA name} — Research Dossier
 
 **Slug:** `{slug}`
-**Block:** {A | B | C.1 | C.2 | C.3 | C.4 | C.5 | D | E.1 | E.2 | F | G | H | I | J | K}
+**Block:** {original roster: A | B | C.1 | C.2 | C.3 | C.4 | C.5 | D | E.1 | E.2 | F | G | H | I | J | K — OR +77 expansion-group name from the 2026-06-29 memo, e.g. "Social resistance", "State-building", "Language/ethnography", "Music", "Theatre/visual culture", "Literary/civic"}
 **Tier:** {1a | 1b | 2 | 3 | 4 | 5}
 **Issue:** #{R-ticket number}
 **Researcher:** {agent name + model}

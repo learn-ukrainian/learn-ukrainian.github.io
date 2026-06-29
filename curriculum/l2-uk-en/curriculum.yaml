@@ -888,6 +888,24 @@ levels:
       - label: War, occupation, churches, and Crimea
         start: vasyl-slipak
         end: nariman-dzhelial
+      - label: Ukrainian social resistance and contested memory additions
+        start: ustym-karmaliuk
+        end: nestor-makhno
+      - label: Ukrainian state-building, education, and civic institutions additions
+        start: yevhen-petrushevych
+        end: oleksandr-barvinskyi
+      - label: Ukrainian language, ethnography, translation, and scholarship additions
+        start: pavlo-chubynskyi
+        end: volodymyr-yermolenko
+      - label: Ukrainian music and song-canon additions
+        start: kyrylo-stetsenko
+        end: raisa-kyrychenko
+      - label: Ukrainian theater and visual culture additions
+        start: mykola-sadovskyi
+        end: sofiia-yablonska
+      - label: Ukrainian literary and civic culture additions
+        start: bohdan-lepkyi
+        end: artem-chekh
     modules:
       - knyahynia-olha
       - kniaz-sviatoslav
@@ -1199,6 +1217,83 @@ levels:
       - petro-verhun
       - mustafa-dzhemiliev
       - nariman-dzhelial
+      - ustym-karmaliuk
+      - oleksa-dovbush
+      - lukian-kobylytsia
+      - maksym-zalizniak
+      - ivan-gonta
+      - nestor-makhno
+      - yevhen-petrushevych
+      - marko-bezruchko
+      - dmytro-vitovskyi
+      - oleksandr-lototskyi
+      - borys-martos
+      - volodymyr-chekhivskyi
+      - sofiia-rusova
+      - khrystyna-alchevska
+      - mykhailo-tuhan-baranovskyi
+      - serhii-yefremov
+      - ivan-steshenko
+      - nadiia-surovtsova
+      - dmytro-doroshenko
+      - mykola-arkas
+      - oleksandr-barvinskyi
+      - pavlo-chubynskyi
+      - markiian-shashkevych
+      - oleksandr-konyskyi
+      - fedir-vovk
+      - volodymyr-hnatiuk
+      - filaret-kolessa
+      - klyment-kvitka
+      - mykola-lukash
+      - hryhorii-kochur
+      - larysa-masenko
+      - ivan-lysiak-rudnytskyi
+      - yurii-lutskyi
+      - volodymyr-yermolenko
+      - kyrylo-stetsenko
+      - oleksandr-bilash
+      - andrii-malyshko
+      - platon-maiboroda
+      - levko-revutskyi
+      - stanislav-liudkevych
+      - myroslav-skoryk
+      - ivan-karabyts
+      - yevhen-stankovych
+      - anatolii-kos-anatolskyi
+      - dmytro-hnatiuk
+      - anatolii-solovianenko
+      - raisa-kyrychenko
+      - mykola-sadovskyi
+      - panas-saksahanskyi
+      - heorhii-narbut
+      - oleksandr-murashko
+      - fedir-krychevskyi
+      - olena-kulchytska
+      - oleksa-novakivskyi
+      - ivan-trush
+      - mykhailo-zhuk
+      - sofiia-yablonska
+      - bohdan-lepkyi
+      - ulas-samchuk
+      - andrian-kashchenko
+      - roman-ivanychuk
+      - pavlo-zahrebelnyi
+      - valerii-shevchuk
+      - vsevolod-nestaiko
+      - volodymyr-rutkivskyi
+      - ivan-malkovych
+      - oles-berdnyk
+      - natalena-koroleva
+      - mykhailo-stelmakh
+      - yurii-shcherbak
+      - vira-aheieva
+      - tamara-hundorova
+      - oksana-kis
+      - mykola-riabchuk
+      - iryna-tsilyk
+      - nataliia-vorozhbyt
+      - artem-chekh
   lit:
     type: track
     groups:
