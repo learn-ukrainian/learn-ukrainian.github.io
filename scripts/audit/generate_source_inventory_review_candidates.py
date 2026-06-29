@@ -15,7 +15,10 @@ from scripts.audit.source_inventory_intake import SourceInventoryError
 from scripts.lexicon.content_lexicon_reconciler import PROJECT_ROOT
 
 COMMITTED_SOURCE_INVENTORIES: tuple[Path, ...] = (
+    PROJECT_ROOT / "data/lexicon/source-inventory/bolshakova-bukvar-keywords.yaml",
+    PROJECT_ROOT / "data/lexicon/source-inventory/ohoiko-abetka-keywords.yaml",
     PROJECT_ROOT / "data/lexicon/source-inventory/pos-balanced-grammar-sample.yaml",
+    PROJECT_ROOT / "data/lexicon/source-inventory/vashulenko-grade3-headwords.yaml",
 )
 
 DEFAULT_OUT = Path("/tmp/atlas-source-inventory-review-candidates.json")
@@ -32,6 +35,11 @@ LIVE_ATLAS_OUTPUTS: tuple[Path, ...] = (
     PROJECT_ROOT / "site/src/data/lexicon-manifest.fingerprint.json",
 )
 LIVE_ATLAS_OUTPUT_DIR = PROJECT_ROOT / "site/src/data"
+LIVE_STATIC_LEXICON_OUTPUT_DIR = PROJECT_ROOT / "site/public/lexicon"
+LIVE_REVIEW_FORBIDDEN_OUTPUT_DIRS: tuple[Path, ...] = (
+    LIVE_ATLAS_OUTPUT_DIR,
+    LIVE_STATIC_LEXICON_OUTPUT_DIR,
+)
 
 
 def generate_review_candidates(
@@ -99,9 +107,12 @@ def resolve_review_output_path(out: Path) -> Path:
         raise SourceInventoryError(
             f"review-only source candidates must not overwrite {resolved.relative_to(PROJECT_ROOT)}"
         )
-    if resolved.is_relative_to(LIVE_ATLAS_OUTPUT_DIR.resolve()):
+    for output_dir in LIVE_REVIEW_FORBIDDEN_OUTPUT_DIRS:
+        if not resolved.is_relative_to(output_dir.resolve()):
+            continue
         raise SourceInventoryError(
-            "review-only source candidates must not write under site/src/data"
+            "review-only source candidates must not write under "
+            f"{output_dir.relative_to(PROJECT_ROOT)}"
         )
     return resolved
 

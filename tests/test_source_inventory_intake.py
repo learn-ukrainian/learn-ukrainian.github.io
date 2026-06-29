@@ -200,6 +200,11 @@ def test_committed_source_inventory_files_are_valid() -> None:
 
     candidates = source_inventory_candidates(records)
     assert candidates
+    assert len(records) >= 100
+    assert len(candidates) >= 100
+    assert {"curriculum", "ohoiko", "textbook"} <= {
+        record.source_family for record in records
+    }
 
     for candidate in candidates:
         assert candidate.source_provenance
