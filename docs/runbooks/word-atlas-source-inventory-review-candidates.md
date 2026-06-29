@@ -30,6 +30,13 @@ representative smoke run currently processes 20 source inventory headwords:
 two rows each for noun, adjective, numeral, pronoun, verb, adverb,
 preposition, conjunction, particle, and interjection.
 
+When a candidate is later promoted into a manifest entry,
+`promote_grow_candidates.manifest_entry_from_candidate()` copies
+`source_provenance` through verbatim at the top level, so the granular
+source-id/title/locator/context origin is not dropped on promotion. This is
+separate from `course_usage`, which is derived only from
+`source_context`/`source_contexts` and stays empty for source-inventory rows.
+
 This workflow does not update the live Atlas manifest, search index, browse
 files, Words Day pool, daily practice sources, cloze outputs, manifest pointer,
 or manifest fingerprint. In this repository those live outputs are under

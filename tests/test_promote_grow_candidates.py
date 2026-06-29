@@ -36,6 +36,31 @@ def test_manifest_entry_from_candidate_is_schema_conformant() -> None:
     assert entry["enrichment"] == candidate["enrichment"]
 
 
+def test_manifest_entry_retains_source_inventory_provenance() -> None:
+    provenance = [
+        {
+            "source_id": "ulp-001",
+            "source_title": "ULP Lesson 1",
+            "source_locator": "p.12",
+            "context": "lesson headword",
+        }
+    ]
+    candidate = _candidate(lemma="риба", source_provenance=provenance)
+
+    entry = promote.manifest_entry_from_candidate(candidate)
+
+    assert entry["source_provenance"] == provenance
+    # Provenance is distinct from course_usage; a source-inventory candidate
+    # without source_context/source_contexts still yields empty course usage.
+    assert entry["course_usage"] == []
+
+
+def test_manifest_entry_omits_provenance_when_candidate_has_none() -> None:
+    entry = promote.manifest_entry_from_candidate(_candidate(lemma="кіт"))
+
+    assert "source_provenance" not in entry
+
+
 def test_write_promotes_candidate_in_sorted_order_and_updates_stats(tmp_path: Path) -> None:
     manifest_path = _write_manifest(tmp_path, [_entry("авто"), _entry("якір")])
     candidates_path = _write_candidates(tmp_path, [_candidate("мама")], [])
@@ -63,6 +88,30 @@ def test_write_promotes_candidate_in_sorted_order_and_updates_stats(tmp_path: Pa
     assert result.needs_review_written is True
     assert _read_json(needs_review_path) == []
     assert _read_json(fingerprint_path) == {"fingerprint": "fixture"}
+
+
+def test_promotion_embeds_matching_manifest_fingerprint(tmp_path: Path) -> None:
+    # publish_manifest.py rejects a manifest whose embedded fingerprint does not
+    # match the sidecar; promotion must re-stamp it from the canonical builder.
+    manifest_path = _write_manifest(tmp_path, [_entry("авто")])
+    candidates_path = _write_candidates(tmp_path, [_candidate("мама")], [])
+
+    promote.promote_grow_candidates(
+        candidates_path=candidates_path,
+        manifest_path=manifest_path,
+        needs_review_path=tmp_path / "grow_needs_review.json",
+        fingerprint_path=tmp_path / "lexicon-manifest.fingerprint.json",
+        write=True,
+        self_check=lambda _path: 0,
+        fingerprint_writer=_fingerprint_writer,
+    )
+
+    embedded = _read_json(manifest_path)["manifest_fingerprint"]
+    expected = promote.build_fingerprint(promote.PROJECT_ROOT)
+    assert embedded == {
+        "schema_version": expected["schema_version"],
+        "fingerprint": expected["fingerprint"],
+    }
 
 
 def test_second_run_is_idempotent(tmp_path: Path) -> None:
