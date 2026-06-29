@@ -101,6 +101,32 @@ function parseManifest(jsonBytes, pointer, sourceLabel) {
   return manifest;
 }
 
+// The manifest pointer is a trusted, fingerprint-gated, committed artifact, but
+// the download target it carries still flows from file data into an outbound
+// request. Allowlist the host so a tampered/misgenerated pointer cannot redirect
+// the fetch to an arbitrary origin (supply-chain defense; CodeQL #251). GitHub
+// release-asset URLs start at github.com and 302 to *.githubusercontent.com.
+const ALLOWED_DOWNLOAD_HOSTS = new Set(["github.com"]);
+
+function assertAllowedDownloadUrl(rawUrl) {
+  let parsed;
+  try {
+    parsed = new URL(rawUrl);
+  } catch {
+    throw new Error(`Atlas manifest asset_url is not a valid URL: ${rawUrl}`);
+  }
+  if (parsed.protocol !== "https:") {
+    throw new Error(`Atlas manifest asset_url must use https, got ${parsed.protocol} (${rawUrl})`);
+  }
+  const host = parsed.hostname.toLowerCase();
+  if (!ALLOWED_DOWNLOAD_HOSTS.has(host) && !host.endsWith(".githubusercontent.com")) {
+    throw new Error(
+      `Atlas manifest asset_url host is not allowlisted: ${host}. Expected github.com or *.githubusercontent.com.`,
+    );
+  }
+  return parsed.toString();
+}
+
 function downloadUrl(pointer, attempt) {
   if (attempt === 0) return pointer.asset_url;
 
@@ -118,7 +144,8 @@ async function downloadGzip(pointer) {
 
   for (let attempt = 0; attempt < DOWNLOAD_ATTEMPTS; attempt += 1) {
     try {
-      const response = await fetch(downloadUrl(pointer, attempt), {
+      const requestUrl = assertAllowedDownloadUrl(downloadUrl(pointer, attempt));
+      const response = await fetch(requestUrl, {
         cache: "no-store",
         headers: {
           Accept: "application/gzip, application/octet-stream;q=0.9, */*;q=0.1",
@@ -200,4 +227,4 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
   });
 }
 
-export { downloadGzip, downloadUrl };
+export { assertAllowedDownloadUrl, downloadGzip, downloadUrl };
