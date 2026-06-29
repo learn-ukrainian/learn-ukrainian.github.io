@@ -8,6 +8,12 @@ activity_hints:
 - type: performance
   placement: workbook
   focus: Performing or recording a fragment of a historical song in collective singing context
+vesum_exemptions:
+  corpus_attested_quotes:
+  - term: "царівночка"
+    forms: ["царівночка", "царівночку"]
+    source_chunk: "public-reading:istorychna-pisnia-baida"
+    rationale: "Вербатим із публічного читання «Пісня про Байду» у первинному блоці модуля."
 cefr_min: C1
 connects_to:
 - bylyny-kyivskoho-tsyklu
@@ -172,7 +178,7 @@ slug: istorychni-pisni
 status: locked
 subtitle: Historical Songs
 title: Історичні пісні
-version: '0.6'
+version: '0.7'
 vocabulary_hints:
 - word: обряд
   pos: ч.

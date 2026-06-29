@@ -19,7 +19,7 @@
   pos: noun
   usage: Реквієм дає спільноті мову втрати, не перетворюючи смерть на прикрасу.
 - lemma: джерельна ситуація
-  translation: source situation; provenance context
+  translation: source situation; source-origin context
   pos: noun phrase
   usage: Джерельна ситуація визначає, чи можна говорити про текст, авторство, варіант або тільки про публічну атестацію.
 - lemma: варіант

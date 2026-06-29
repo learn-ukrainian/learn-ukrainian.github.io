@@ -49,6 +49,54 @@ def test_learner_page_process_register_terms_fail(term: str, tmp_path: Path) -> 
     assert [(finding.kind, finding.value) for finding in findings] == [("build/process term", term)]
 
 
+@pytest.mark.parametrize(
+    ("term", "expected"),
+    [
+        ("dossier", "dossier"),
+        ("Досьє", "Досьє"),
+        ("locked plan", "locked plan"),
+        ("locked reading layer", "locked reading layer"),
+        ("do-not-quote", "do-not-quote"),
+        ("gate-safe", "gate-safe"),
+        ("primary-reading block", "primary-reading"),
+        ("provenance", "provenance"),
+        ("source-disagreement", "source-disagreement"),
+        ("quote-gated", "quote-gated"),
+    ],
+)
+def test_folk_learner_page_process_register_terms_fail(
+    term: str, expected: str, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setattr(check_no_internal_ids, "PROJECT_ROOT", tmp_path)
+    bad = tmp_path / "site/src/content/docs/folk/topic.mdx"
+    bad.parent.mkdir(parents=True)
+    bad.write_text(f"Visible FOLK learner text mentions {term}.\n", encoding="utf-8")
+
+    findings = check_no_internal_ids.scan_files([bad])
+
+    assert [(finding.kind, finding.value) for finding in findings] == [("build/process term", expected)]
+
+
+def test_folk_primary_reading_directive_is_allowed(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(check_no_internal_ids, "PROJECT_ROOT", tmp_path)
+    module = tmp_path / "curriculum/l2-uk-en/folk/topic/module.md"
+    module.parent.mkdir(parents=True)
+    module.write_text(':::primary-reading{reading="demo"}\nТекст фрагмента.\n:::\n', encoding="utf-8")
+
+    assert check_no_internal_ids.scan_files([module]) == []
+
+
+def test_folk_specific_register_terms_do_not_apply_to_other_tracks(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setattr(check_no_internal_ids, "PROJECT_ROOT", tmp_path)
+    bio = tmp_path / "site/src/content/docs/bio/topic.mdx"
+    bio.parent.mkdir(parents=True)
+    bio.write_text("This biography task may use a dossier as a student artifact.\n", encoding="utf-8")
+
+    assert check_no_internal_ids.scan_files([bio]) == []
+
+
 def test_normal_ukrainian_source_wording_passes(tmp_path: Path) -> None:
     clean = tmp_path / "clean.mdx"
     clean.write_text(
