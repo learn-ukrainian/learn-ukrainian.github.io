@@ -48,6 +48,18 @@ when you want the full Markdown queue on stdout. Queue rows include stable
 queue ids, lemma, POS, grow bucket, English-anchor state, review reasons, and
 source references.
 
+Human review decisions that should survive beyond the ephemeral queue live in
+tracked ledger files under `data/lexicon/source-inventory-review-decisions/`.
+Those files are still review records, not live Atlas output. Validate them with:
+
+```bash
+.venv/bin/python -m scripts.audit.source_inventory_review_decisions
+```
+
+Decision rows use stable source-inventory keys derived from lemma, inventory
+path, and source locator. Do not use queue row numbers as publish keys; queue
+ids can change when row ordering changes.
+
 Every generated candidate must retain non-empty `source_provenance`. The
 representative smoke run currently processes 20 source inventory headwords:
 two rows each for noun, adjective, numeral, pronoun, verb, adverb,
