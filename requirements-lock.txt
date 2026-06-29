@@ -166,7 +166,7 @@ rich==14.3.3
 rpds-py==0.30.0
 rsa==4.9.1
 ruamel.yaml==0.19.1
-ruff==0.15.16
+ruff==0.15.18
 safetensors==0.7.0
 scikit-learn==1.8.0
 scipy==1.17.0
