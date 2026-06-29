@@ -297,7 +297,10 @@ def check_required_fields(plan: dict) -> list[PlanIssue]:
     """Check that all required fields are present."""
     issues = []
     required = ["module", "slug", "version", "level", "sequence", "title",
-                 "word_target", "content_outline", "vocabulary_hints", "phase"]
+                "word_target", "content_outline", "vocabulary_hints", "phase"]
+    if str(plan.get("level", "")).upper() == "B2":
+        # B2 rebuild readiness treats these as legacy source-plan metadata.
+        required = [field for field in required if field not in {"vocabulary_hints", "phase"}]
     for field in required:
         if field not in plan:
             issues.append(PlanIssue("FIELD", "ERROR", f"Missing required field: {field}"))
@@ -355,7 +358,7 @@ def check_russicisms(plan: dict) -> list[PlanIssue]:
     # Standalone "самий" is valid Ukrainian (той самий = the same one).
     # Only "самий кращий/великий/etc." is a Russicism (→ найкращий/найбільший).
     # Skip negative examples: *самий, 'самий, "самий (quoted citations of errors)
-    if re.search(r"(?<![*'\"])\bсамий\s+[а-яґєіїА-ЯҐЄІЇ]+(?:ий|ій|а|е)\b", text):
+    if re.search(r"(?<![*'\"])(?<!той\s)\bсамий\s+[а-яґєіїА-ЯҐЄІЇ]+(?:ий|ій|а|е)\b", text):
         issues.append(PlanIssue("RUSSICISM", "ERROR",
                                 "Possible Russicism: 'самий + adjective' for superlative",
                                 "Use най- prefix: найкращий, найбільший"))

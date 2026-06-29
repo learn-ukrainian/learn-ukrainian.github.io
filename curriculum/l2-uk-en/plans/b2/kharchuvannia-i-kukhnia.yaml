@@ -2,7 +2,7 @@ module: b2-024
 level: B2
 sequence: 24
 slug: kharchuvannia-i-kukhnia
-version: 1.0.3
+version: 1.0.4
 lifecycle: locked
 reviewed_at: '2026-06-15T09:56:14Z'
 reviewed_by: codex/b2-wiki-readiness-batch-5
@@ -208,7 +208,7 @@ activity_hints:
   focus: Знайдіть і виправте граматичні та лексичні помилки в реченнях на тему
     продукти та інгредієнти.
 references:
-- source: Заболотний, 7 клас (2015)
+- source: Заболотний, 7 клас (2024)
   pages: Лексика — харчування
   topic: Лексика, пов'язана з харчуванням
 - source: Авраменко, 11 клас (2019)
