@@ -2,6 +2,44 @@
 version: 1
 kind: atlas_source_inventory
 sources:
+  - id: ohoiko-abetka-1-keywords
+    source_family: ohoiko
+    extraction_mode: curated_key_word
+    title: Anna Ohoiko - Ukrainian Lessons alphabet pronunciation playlist
+    url: https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV
+    path: curriculum/l2-uk-direct/a1/abetka-1.yaml
+    locator: playlist_credit plus letters key_word/pronunciation_video entries
+    notes: Seed uses only tracked abetka key_word rows; no ULP premium vocabulary lists inferred.
+    headwords:
+      - lemma: ананас
+        pos: noun
+        locator: letters[А].key_word
+        context: "А key_word pronunciation video https://www.youtube.com/watch?v=hvB3VpcR3ZE"
+      - lemma: око
+        pos: noun
+        locator: letters[О].key_word
+        context: "О key_word; pronunciation_video is null in the tracked module"
+      - lemma: морква
+        pos: noun
+        locator: letters[М].key_word
+        context: "М key_word pronunciation video https://www.youtube.com/watch?v=Ez95H4ibuJo"
+      - lemma: літак
+        pos: noun
+        locator: letters[Л].key_word
+        context: "Л key_word pronunciation video https://www.youtube.com/watch?v=v6-3Xg52Buk"
+      - lemma: Україна
+        pos: noun
+        gloss: Ukraine
+        locator: letters[У].key_word
+        context: "У key_word pronunciation video https://www.youtube.com/watch?v=VB1O6PmtYRU"
+      - lemma: ножиці
+        pos: noun
+        locator: letters[Н].key_word
+        context: "Н key_word pronunciation video https://www.youtube.com/watch?v=vNUfiKHPYaU"
+      - lemma: сумка
+        pos: noun
+        locator: letters[С].key_word
+        context: "С key_word pronunciation video https://www.youtube.com/watch?v=7UsFBgSL91E"
   - id: ohoiko-abetka-2-keywords
     source_family: ohoiko
     extraction_mode: curated_key_word
@@ -14,12 +52,122 @@ sources:
       - lemma: кіт
         pos: noun
         locator: letters[К].key_word
-        context: К key_word with pronunciation video https://www.youtube.com/watch?v=J7sGEI4-xJo
+        context: "К key_word pronunciation video https://www.youtube.com/watch?v=J7sGEI4-xJo"
       - lemma: риба
         pos: noun
         locator: letters[И].key_word
-        context: И key_word with pronunciation video https://www.youtube.com/watch?v=W-1rCu0indE
+        context: "И key_word pronunciation video https://www.youtube.com/watch?v=W-1rCu0indE"
       - lemma: ракета
         pos: noun
         locator: letters[Р].key_word
-        context: Р key_word with pronunciation video https://www.youtube.com/watch?v=fMGsQ5KPQgg
+        context: "Р key_word pronunciation video https://www.youtube.com/watch?v=fMGsQ5KPQgg"
+      - lemma: банан
+        pos: noun
+        locator: letters[Б].key_word
+        context: "Б key_word pronunciation video https://www.youtube.com/watch?v=V1hxBE_JbGg"
+      - lemma: вовк
+        pos: noun
+        locator: letters[В].key_word
+        context: "В key_word pronunciation video https://www.youtube.com/watch?v=aFcvYfvQ2X4"
+      - lemma: дім
+        pos: noun
+        locator: letters[Д].key_word
+        context: "Д key_word pronunciation video https://www.youtube.com/watch?v=g4Bh-lqzd48"
+      - lemma: індик
+        pos: noun
+        locator: letters[І].key_word
+        context: "І key_word pronunciation video https://www.youtube.com/watch?v=Z9TH0H4ShGo"
+  - id: ohoiko-abetka-3-keywords
+    source_family: ohoiko
+    extraction_mode: curated_key_word
+    title: Anna Ohoiko - Ukrainian Lessons alphabet pronunciation playlist
+    url: https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV
+    path: curriculum/l2-uk-direct/a1/abetka-3.yaml
+    locator: playlist_credit plus letters key_word/pronunciation_video entries
+    notes: Seed uses only tracked abetka key_word rows; no ULP premium vocabulary lists inferred.
+    headwords:
+      - lemma: павук
+        pos: noun
+        locator: letters[П].key_word
+        context: "П key_word pronunciation video https://www.youtube.com/watch?v=JksSjjxyW5Y"
+      - lemma: тигр
+        pos: noun
+        locator: letters[Т].key_word
+        context: "Т key_word pronunciation video https://www.youtube.com/watch?v=m-jcLR_gK0k"
+      - lemma: гора
+        pos: noun
+        locator: letters[Г].key_word
+        context: "Г key_word pronunciation video https://www.youtube.com/watch?v=gVnclpSI0DU"
+      - lemma: ґанок
+        pos: noun
+        locator: letters[Ґ].key_word
+        context: "Ґ key_word pronunciation video https://www.youtube.com/watch?v=gNjHqjTW9WQ"
+      - lemma: екран
+        pos: noun
+        locator: letters[Е].key_word
+        context: "Е key_word pronunciation video https://www.youtube.com/watch?v=KFlsroBW0dk"
+      - lemma: зебра
+        pos: noun
+        locator: letters[З].key_word
+        context: "З key_word pronunciation video https://www.youtube.com/watch?v=BhASNxitC1A"
+      - lemma: жук
+        pos: noun
+        locator: letters[Ж].key_word
+        context: "Ж key_word pronunciation video https://www.youtube.com/watch?v=dIrGVcqPwqM"
+      - lemma: шапка
+        pos: noun
+        locator: letters[Ш].key_word
+        context: "Ш key_word pronunciation video https://www.youtube.com/watch?v=1D-6MIw3OXY"
+      - lemma: хліб
+        pos: noun
+        locator: letters[Х].key_word
+        context: "Х key_word pronunciation video https://www.youtube.com/watch?v=vpr58zJSJKc"
+  - id: ohoiko-abetka-4-keywords
+    source_family: ohoiko
+    extraction_mode: curated_key_word
+    title: Anna Ohoiko - Ukrainian Lessons alphabet pronunciation playlist
+    url: https://www.youtube.com/playlist?list=PLpkSIXDyaJi3mlJlKXWKhdiJZj67fPXQV
+    path: curriculum/l2-uk-direct/a1/abetka-4.yaml
+    locator: playlist_credit plus letters key_word/pronunciation_video entries
+    notes: Seed uses only tracked abetka key_word rows; no ULP premium vocabulary lists inferred.
+    headwords:
+      - lemma: йогурт
+        pos: noun
+        locator: letters[Й].key_word
+        context: "Й key_word pronunciation video https://www.youtube.com/watch?v=aq0cjB90s3w"
+      - lemma: черепаха
+        pos: noun
+        locator: letters[Ч].key_word
+        context: "Ч key_word pronunciation video https://www.youtube.com/watch?v=UsJkbdsY2RA"
+      - lemma: щітка
+        pos: noun
+        locator: letters[Щ].key_word
+        context: "Щ key_word pronunciation video https://www.youtube.com/watch?v=QmBLieIuf6Q"
+      - lemma: яблуко
+        pos: noun
+        locator: letters[Я].key_word
+        context: "Я key_word pronunciation video https://www.youtube.com/watch?v=yhSAf41LX8I"
+      - lemma: юнак
+        pos: noun
+        locator: letters[Ю].key_word
+        context: "Ю key_word pronunciation video https://www.youtube.com/watch?v=9JdIBYCTWGw"
+      - lemma: єнот
+        pos: noun
+        locator: letters[Є].key_word
+        context: "Є key_word pronunciation video https://www.youtube.com/watch?v=O0bwRyyBQSc"
+      - lemma: сіль
+        pos: noun
+        locator: letters[Ь].key_word
+        context: "Ь key_word pronunciation video https://www.youtube.com/watch?v=cJlal8XKBxo"
+      - lemma: їжак
+        pos: noun
+        locator: letters[Ї].key_word
+        context: "Ї key_word pronunciation video https://www.youtube.com/watch?v=UcjdjQXhAY8"
+      - lemma: цибуля
+        pos: noun
+        locator: letters[Ц].key_word
+        context: "Ц key_word pronunciation video https://www.youtube.com/watch?v=u44eCjR2Oz8"
+      - lemma: фламінго
+        pos: noun
+        locator: letters[Ф].key_word
+        context: "Ф key_word pronunciation video https://www.youtube.com/watch?v=haHRsFFZRQI"

@@ -1,0 +1,196 @@
+---
+version: 1
+kind: atlas_source_inventory
+sources:
+  - id: vashulenko-grade3-2020-school-vocabulary
+    source_family: textbook
+    extraction_mode: headword_inventory
+    title: Вашуленко М.С. Українська мова та читання. 3 клас. Частина 1, 2020
+    path: docs/l2-uk-direct/textbook-map.yaml
+    locator: topic_index.vocabulary_school
+    notes: Seed uses only tracked textbook-map word lists; source PDF is not committed.
+    headwords:
+      - lemma: крейда
+        pos: noun
+        locator: topic_index.vocabulary_school.words[0]
+        context: "Grade 3 p63 school vocabulary word list includes крейда."
+      - lemma: урок
+        pos: noun
+        locator: topic_index.vocabulary_school.words[1]
+        context: "Grade 3 p63 school vocabulary word list includes урок."
+      - lemma: парта
+        pos: noun
+        locator: topic_index.vocabulary_school.words[2]
+        context: "Grade 3 p63 school vocabulary word list includes парта."
+      - lemma: ручка
+        pos: noun
+        locator: topic_index.vocabulary_school.words[3]
+        context: "Grade 3 p63 school vocabulary word list includes ручка."
+      - lemma: дошка
+        pos: noun
+        locator: topic_index.vocabulary_school.words[4]
+        context: "Grade 3 p63 school vocabulary word list includes дошка."
+      - lemma: зошит
+        pos: noun
+        locator: topic_index.vocabulary_school.words[5]
+        context: "Grade 3 p63 school vocabulary word list includes зошит."
+      - lemma: клас
+        pos: noun
+        locator: topic_index.vocabulary_school.words[6]
+        context: "Grade 3 p63 school vocabulary word list includes клас."
+  - id: vashulenko-grade3-2020-interior-vocabulary
+    source_family: textbook
+    extraction_mode: headword_inventory
+    title: Вашуленко М.С. Українська мова та читання. 3 клас. Частина 1, 2020
+    path: docs/l2-uk-direct/textbook-map.yaml
+    locator: topic_index.vocabulary_interior
+    notes: Seed uses only tracked textbook-map word lists; source PDF is not committed.
+    headwords:
+      - lemma: стіл
+        pos: noun
+        locator: topic_index.vocabulary_interior.words[0]
+        context: "Grade 3 pp130-131 interior vocabulary word list includes стіл."
+      - lemma: шафа
+        pos: noun
+        locator: topic_index.vocabulary_interior.words[1]
+        context: "Grade 3 pp130-131 interior vocabulary word list includes шафа."
+      - lemma: ліжко
+        pos: noun
+        locator: topic_index.vocabulary_interior.words[2]
+        context: "Grade 3 pp130-131 interior vocabulary word list includes ліжко."
+      - lemma: диван
+        pos: noun
+        locator: topic_index.vocabulary_interior.words[3]
+        context: "Grade 3 pp130-131 interior vocabulary word list includes диван."
+      - lemma: крісло
+        pos: noun
+        locator: topic_index.vocabulary_interior.words[4]
+        context: "Grade 3 pp130-131 interior vocabulary word list includes крісло."
+      - lemma: скатертина
+        pos: noun
+        locator: topic_index.vocabulary_interior.words[5]
+        context: "Grade 3 pp130-131 interior vocabulary word list includes скатертина."
+      - lemma: тумбочка
+        pos: noun
+        locator: topic_index.vocabulary_interior.words[6]
+        context: "Grade 3 pp130-131 interior vocabulary word list includes тумбочка."
+      - lemma: стілець
+        pos: noun
+        locator: topic_index.vocabulary_interior.words[7]
+        context: "Grade 3 pp130-131 interior vocabulary word list includes стілець."
+      - lemma: підлога
+        pos: noun
+        locator: topic_index.vocabulary_interior.words[8]
+        context: "Grade 3 pp130-131 interior vocabulary word list includes підлога."
+      - lemma: стеля
+        pos: noun
+        locator: topic_index.vocabulary_interior.words[9]
+        context: "Grade 3 pp130-131 interior vocabulary word list includes стеля."
+      - lemma: коридор
+        pos: noun
+        locator: topic_index.vocabulary_interior.words[10]
+        context: "Grade 3 pp130-131 interior vocabulary word list includes коридор."
+      - lemma: балкон
+        pos: noun
+        locator: topic_index.vocabulary_interior.words[11]
+        context: "Grade 3 pp130-131 interior vocabulary word list includes балкон."
+      - lemma: дерев'яний
+        pos: adjective
+        locator: topic_index.vocabulary_interior.adjectives[0]
+        context: "Grade 3 pp130-131 interior vocabulary adjective list includes дерев'яний."
+      - lemma: синій
+        pos: adjective
+        locator: topic_index.vocabulary_interior.adjectives[1]
+        context: "Grade 3 pp130-131 interior vocabulary adjective list includes синій."
+      - lemma: зручний
+        pos: adjective
+        locator: topic_index.vocabulary_interior.adjectives[2]
+        context: "Grade 3 pp130-131 interior vocabulary adjective list includes зручний."
+      - lemma: просторий
+        pos: adjective
+        locator: topic_index.vocabulary_interior.adjectives[3]
+        context: "Grade 3 pp130-131 interior vocabulary adjective list includes просторий."
+      - lemma: затишний
+        pos: adjective
+        locator: topic_index.vocabulary_interior.adjectives[4]
+        context: "Grade 3 pp130-131 interior vocabulary adjective list includes затишний."
+  - id: vashulenko-grade3-2020-marine-vocabulary
+    source_family: textbook
+    extraction_mode: headword_inventory
+    title: Вашуленко М.С. Українська мова та читання. 3 клас. Частина 1, 2020
+    path: docs/l2-uk-direct/textbook-map.yaml
+    locator: topic_index.vocabulary_marine
+    notes: Seed uses only tracked textbook-map word lists; source PDF is not committed.
+    headwords:
+      - lemma: медуза
+        pos: noun
+        locator: topic_index.vocabulary_marine.words[0]
+        context: "Grade 3 pp119-121 marine vocabulary word list includes медуза."
+      - lemma: дельфін
+        pos: noun
+        locator: topic_index.vocabulary_marine.words[1]
+        context: "Grade 3 pp119-121 marine vocabulary word list includes дельфін."
+      - lemma: кит
+        pos: noun
+        locator: topic_index.vocabulary_marine.words[2]
+        context: "Grade 3 pp119-121 marine vocabulary word list includes кит."
+      - lemma: косатка
+        pos: noun
+        locator: topic_index.vocabulary_marine.words[3]
+        context: "Grade 3 pp119-121 marine vocabulary word list includes косатка."
+      - lemma: риба
+        pos: noun
+        locator: topic_index.vocabulary_marine.words[4]
+        context: "Grade 3 pp119-121 marine vocabulary word list includes риба."
+      - lemma: плавні
+        pos: noun
+        locator: topic_index.vocabulary_marine.words[5]
+        context: "Grade 3 pp119-121 marine vocabulary word list includes плавні."
+  - id: vashulenko-grade3-2020-birds-vocabulary
+    source_family: textbook
+    extraction_mode: headword_inventory
+    title: Вашуленко М.С. Українська мова та читання. 3 клас. Частина 1, 2020
+    path: docs/l2-uk-direct/textbook-map.yaml
+    locator: topic_index.vocabulary_birds_extended
+    notes: Seed uses only tracked textbook-map word lists; source PDF is not committed.
+    headwords:
+      - lemma: снігур
+        pos: noun
+        locator: topic_index.vocabulary_birds_extended.words[0]
+        context: "Grade 3 pp102,135 bird vocabulary word list includes снігур."
+      - lemma: синиця
+        pos: noun
+        locator: topic_index.vocabulary_birds_extended.words[1]
+        context: "Grade 3 pp102,135 bird vocabulary word list includes синиця."
+      - lemma: лелека
+        pos: noun
+        locator: topic_index.vocabulary_birds_extended.words[2]
+        context: "Grade 3 pp102,135 bird vocabulary word list includes лелека."
+      - lemma: чапля
+        pos: noun
+        locator: topic_index.vocabulary_birds_extended.words[3]
+        context: "Grade 3 pp102,135 bird vocabulary word list includes чапля."
+      - lemma: колібрі
+        pos: noun
+        locator: topic_index.vocabulary_birds_extended.words[4]
+        context: "Grade 3 pp102,135 bird vocabulary word list includes колібрі."
+      - lemma: дятел
+        pos: noun
+        locator: topic_index.vocabulary_birds_extended.words[5]
+        context: "Grade 3 pp102,135 bird vocabulary word list includes дятел."
+      - lemma: рябчик
+        pos: noun
+        locator: topic_index.vocabulary_birds_extended.words[7]
+        context: "Grade 3 pp102,135 bird vocabulary word list includes рябчик."
+      - lemma: горобець
+        pos: noun
+        locator: topic_index.vocabulary_birds_extended.words[8]
+        context: "Grade 3 pp102,135 bird vocabulary word list includes горобець."
+      - lemma: галка
+        pos: noun
+        locator: topic_index.vocabulary_birds_extended.words[9]
+        context: "Grade 3 pp102,135 bird vocabulary word list includes галка."
+      - lemma: ластівка
+        pos: noun
+        locator: topic_index.vocabulary_birds_extended.words[10]
+        context: "Grade 3 pp102,135 bird vocabulary word list includes ластівка."

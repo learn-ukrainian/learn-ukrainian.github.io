@@ -7,18 +7,167 @@ sources:
     extraction_mode: curated_headword
     title: Болшакова І.О. Буквар. 1 клас. Частина 1. Ранок, 2025
     path: docs/l2-uk-direct/textbook-reading-notes/bolshakova-bukvar-mapping.md
-    locator: letter sequence table key words for Я, Є, Ц
-    notes: Seed uses tracked reading notes mapped to the local source PDF; the PDF is not committed.
+    locator: Complete Letter Mapping plus Correct key words block
+    notes: Seed uses tracked reading notes mapped to the source PDF; PDF is not committed.
     headwords:
+      - lemma: автобус
+        pos: noun
+        locator: correct key words block; letter А
+        context: "Correct key words Bolshakova Буквар 2025 lists А: автобус."
+      - lemma: окуляри
+        pos: noun
+        locator: correct key words block; letter О
+        context: "Correct key words Bolshakova Буквар 2025 lists О: окуляри."
+      - lemma: Україна
+        pos: noun
+        gloss: Ukraine
+        locator: correct key words block; letter У
+        context: "Correct key words Bolshakova Буквар 2025 lists У: Україна."
+      - lemma: мама
+        pos: noun
+        locator: correct key words block; letter М
+        context: "Correct key words Bolshakova Буквар 2025 lists М: мама."
+      - lemma: сумка
+        pos: noun
+        locator: complete letter mapping row С с
+        context: "Letter table row С с lists key words сумка / сітка."
+      - lemma: сітка
+        pos: noun
+        locator: complete letter mapping row С с
+        context: "Letter table row С с lists key words сумка / сітка."
+      - lemma: намет
+        pos: noun
+        locator: complete letter mapping row Н н
+        context: "Letter table row Н н lists key words намет / нірка."
+      - lemma: нірка
+        pos: noun
+        locator: complete letter mapping row Н н
+        context: "Letter table row Н н lists key words намет / нірка."
+      - lemma: лис
+        pos: noun
+        locator: complete letter mapping row Л л
+        context: "Letter table row Л л lists key words лис / ліс."
+      - lemma: ліс
+        pos: noun
+        locator: complete letter mapping row Л л
+        context: "Letter table row Л л lists key words лис / ліс."
+      - lemma: капелюх
+        pos: noun
+        locator: complete letter mapping row К к
+        context: "Letter table row К к lists key word капелюх."
+      - lemma: ріка
+        pos: noun
+        locator: complete letter mapping row Р р
+        context: "Letter table row Р р lists key words ріка / робот."
+      - lemma: робот
+        pos: noun
+        locator: complete letter mapping row Р р
+        context: "Letter table row Р р lists key words ріка / робот."
+      - lemma: вареники
+        pos: noun
+        locator: complete letter mapping row В в
+        context: "Letter table row В в lists key word вареники."
+      - lemma: барабан
+        pos: noun
+        locator: complete letter mapping row Б б
+        context: "Letter table row Б б lists key word барабан."
+      - lemma: ібіс
+        pos: noun
+        locator: complete letter mapping row І і
+        context: "Letter table row І і lists key word ібіс."
+      - lemma: лелека
+        pos: noun
+        locator: complete letter mapping row Е е
+        context: "Letter table row Е е lists key word лелека."
+      - lemma: парк
+        pos: noun
+        locator: complete letter mapping row П п
+        context: "Letter table row П п lists key word парк."
+      - lemma: дуб
+        pos: noun
+        locator: complete letter mapping row Д д
+        context: "Letter table row Д д lists key words дуб / дім."
+      - lemma: дім
+        pos: noun
+        locator: complete letter mapping row Д д
+        context: "Letter table row Д д lists key words дуб / дім."
+      - lemma: торт
+        pos: noun
+        locator: complete letter mapping row Т т
+        context: "Letter table row Т т lists key words торт / тісто."
+      - lemma: тісто
+        pos: noun
+        locator: complete letter mapping row Т т
+        context: "Letter table row Т т lists key words торт / тісто."
+      - lemma: город
+        pos: noun
+        locator: complete letter mapping row Г г
+        context: "Letter table row Г г lists key word город."
+      - lemma: ґава
+        pos: noun
+        locator: complete letter mapping row Ґ ґ
+        context: "Letter table row Ґ ґ lists key word ґава."
+      - lemma: йогурт
+        pos: noun
+        locator: complete letter mapping row Й й
+        context: "Letter table row Й й lists key word йогурт."
+      - lemma: зірка
+        pos: noun
+        locator: complete letter mapping row З з
+        context: "Letter table row З з lists key word зірка."
+      - lemma: жабка
+        pos: noun
+        locator: complete letter mapping row Ж ж
+        context: "Letter table row Ж ж lists key word жабка."
+      - lemma: шафа
+        pos: noun
+        locator: complete letter mapping row Ш ш
+        context: "Letter table row Ш ш lists key word шафа."
+      - lemma: ховрах
+        pos: noun
+        locator: thematic categories; тварини
+        context: "Thematic categories list Х examples ховрах, муха, хом'як."
+      - lemma: муха
+        pos: noun
+        locator: thematic categories; тварини
+        context: "Thematic categories list Х examples ховрах, муха, хом'як."
+      - lemma: хом'як
+        pos: noun
+        locator: thematic categories; тварини
+        context: "Thematic categories list Х examples ховрах, муха, хом'як."
+      - lemma: чайник
+        pos: noun
+        locator: complete letter mapping row Ч ч
+        context: "Letter table row Ч ч lists key word чайник."
       - lemma: яблуко
         pos: noun
-        locator: letter table row Я я; content page 103 / PDF page 108
-        context: Row lists Я я with key word яблуко.
+        locator: complete letter mapping row Я я
+        context: "Letter table row Я я lists key word яблуко."
+      - lemma: юшка
+        pos: noun
+        locator: complete letter mapping row Ю ю
+        context: "Letter table row Ю ю lists key word юшка."
       - lemma: єнот
         pos: noun
-        locator: letter table row Є є; content page 111 / PDF page 116
-        context: Row lists Є є with key word єнот.
+        locator: complete letter mapping row Є є
+        context: "Letter table row Є є lists key word єнот."
+      - lemma: їжак
+        pos: noun
+        locator: complete letter mapping row Ї ї
+        context: "Letter table row Ї ї lists key word їжак."
+      - lemma: щука
+        pos: noun
+        locator: complete letter mapping row Щ щ
+        context: "Letter table row Щ щ lists key word щука."
       - lemma: цирк
         pos: noun
-        locator: letter table row Ц ц; content page 120 / PDF page 125
-        context: Row lists Ц ц with key words цирк / цікавий.
+        locator: complete letter mapping row Ц ц
+        context: "Letter table row Ц ц lists key words цирк / цікавий."
+      - lemma: цікавий
+        pos: adjective
+        locator: complete letter mapping row Ц ц
+        context: "Letter table row Ц ц lists key words цирк / цікавий."
+      - lemma: фокус
+        pos: noun
+        locator: complete letter mapping row Ф ф
+        context: "Letter table row Ф ф lists key word фокус."

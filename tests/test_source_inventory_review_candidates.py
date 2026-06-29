@@ -8,31 +8,13 @@ from typing import Any
 import pytest
 
 from scripts.audit import generate_source_inventory_review_candidates as review
-from scripts.audit.source_inventory_intake import SourceInventoryError
+from scripts.audit.source_inventory_intake import (
+    SourceInventoryError,
+    read_source_inventories,
+    source_inventory_candidates,
+)
 from scripts.lexicon.content_lexicon_reconciler import PROJECT_ROOT
 
-POS_BALANCED_LEMMAS = {
-    "школа",
-    "море",
-    "великий",
-    "гарний",
-    "один",
-    "два",
-    "ніхто",
-    "себе",
-    "робити",
-    "читати",
-    "швидко",
-    "добре",
-    "щодо",
-    "через",
-    "і",
-    "але",
-    "не",
-    "хіба",
-    "ой",
-    "ура",
-}
 POS_BALANCED_POS = {
     "noun",
     "adjective",
@@ -45,6 +27,7 @@ POS_BALANCED_POS = {
     "particle",
     "interjection",
 }
+REQUIRED_REVIEW_SOURCE_FAMILIES = {"curriculum", "ohoiko", "textbook"}
 
 
 def test_review_candidates_use_committed_inventories_and_keep_provenance(
@@ -52,6 +35,16 @@ def test_review_candidates_use_committed_inventories_and_keep_provenance(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     out = tmp_path / "atlas-source-inventory-review-candidates.json"
+    records = read_source_inventories(
+        review.COMMITTED_SOURCE_INVENTORIES,
+        project_root=PROJECT_ROOT,
+    )
+    expected_candidates = source_inventory_candidates(records)
+    expected_inventory_paths = [
+        str(path.relative_to(PROJECT_ROOT)) for path in review.COMMITTED_SOURCE_INVENTORIES
+    ]
+    expected_lemmas = {candidate.lemma for candidate in expected_candidates}
+    expected_pos = {candidate.pos for candidate in expected_candidates if candidate.pos}
 
     monkeypatch.setattr(review.grow, "_source_connection", lambda path: nullcontext(object()))
     monkeypatch.setattr(review.grow, "_preserve_wiki_reference_cache", lambda: nullcontext())
@@ -85,16 +78,14 @@ def test_review_candidates_use_committed_inventories_and_keep_provenance(
     payload = review.generate_review_candidates(out=out)
 
     assert payload["counts"] == {
-        "total_delta": len(POS_BALANCED_LEMMAS),
-        "processed": len(POS_BALANCED_LEMMAS),
-        "auto_merge": len(POS_BALANCED_LEMMAS),
+        "total_delta": len(expected_candidates),
+        "processed": len(expected_candidates),
+        "auto_merge": len(expected_candidates),
         "needs_review": 0,
     }
     assert payload["review_only"] == {
         "workflow": review.WORKFLOW_ID,
-        "source_inventory_paths": [
-            "data/lexicon/source-inventory/pos-balanced-grammar-sample.yaml",
-        ],
+        "source_inventory_paths": expected_inventory_paths,
         "candidate_output": str(out.resolve()),
         "production_outputs_updated": [],
     }
@@ -103,8 +94,14 @@ def test_review_candidates_use_committed_inventories_and_keep_provenance(
     )
 
     entries = payload["auto_merge"]
-    assert {entry["lemma"] for entry in entries} == POS_BALANCED_LEMMAS
-    assert {entry["pos"] for entry in entries} == POS_BALANCED_POS
+    assert {entry["lemma"] for entry in entries} == expected_lemmas
+    assert {entry["pos"] for entry in entries} == expected_pos
+    assert expected_pos >= POS_BALANCED_POS
+    entries_by_lemma = {entry["lemma"]: entry for entry in entries}
+    assert entries_by_lemma["Україна"]["gloss"] == "Ukraine"
+
+    provenance_families = set()
+    provenance_inventory_paths = set()
     for entry in entries:
         assert entry["source_provenance"]
         for provenance in entry["source_provenance"]:
@@ -113,6 +110,10 @@ def test_review_candidates_use_committed_inventories_and_keep_provenance(
             )
             assert provenance["source_id"]
             assert provenance["source_title"]
+            provenance_families.add(provenance["source_family"])
+            provenance_inventory_paths.add(provenance["inventory_path"])
+    assert provenance_families >= REQUIRED_REVIEW_SOURCE_FAMILIES
+    assert provenance_inventory_paths >= set(expected_inventory_paths)
 
 
 def test_review_workflow_validates_source_provenance_in_needs_review() -> None:
@@ -174,6 +175,11 @@ def test_review_workflow_defaults_outside_repo() -> None:
     assert resolved == review.DEFAULT_OUT.resolve()
     assert not resolved.is_relative_to(PROJECT_ROOT)
     assert all(path.exists() for path in review.COMMITTED_SOURCE_INVENTORIES)
+    records = read_source_inventories(
+        review.COMMITTED_SOURCE_INVENTORIES,
+        project_root=PROJECT_ROOT,
+    )
+    assert source_inventory_candidates(records)
 
 
 @pytest.mark.parametrize("production_output", review.LIVE_ATLAS_OUTPUTS)
@@ -187,3 +193,17 @@ def test_review_workflow_rejects_live_atlas_output_directory() -> None:
         review.resolve_review_output_path(
             PROJECT_ROOT / "site/src/data/source-inventory-review-candidates.json"
         )
+
+
+@pytest.mark.parametrize(
+    "static_output",
+    [
+        PROJECT_ROOT / "site/public/lexicon/browse/а.json",
+        PROJECT_ROOT / "site/public/lexicon/daily-pool.json",
+        PROJECT_ROOT / "site/public/lexicon/practice-lexemes.A1.json",
+        PROJECT_ROOT / "site/public/lexicon/cloze-lexemes.A1.json",
+    ],
+)
+def test_review_workflow_rejects_static_lexicon_outputs(static_output: Path) -> None:
+    with pytest.raises(SourceInventoryError, match="site/public/lexicon"):
+        review.resolve_review_output_path(static_output)
