@@ -20,7 +20,7 @@ const clsLabels = {
 const chipCounts = (browseMeta.chipCounts ?? {}) as Record<string, number>;
 const chips = Object.entries(clsLabels).filter(([code]) => (chipCounts[code] ?? 0) > 0);
 const letterCounts = (browseMeta.letterCounts ?? {}) as Record<string, number>;
-const totalLabel = `${browseMeta.total ?? 0} слів · ${UKRAINIAN_ALPHABET.length} літери`;
+const totalLabel = `${browseMeta.total ?? 0} записів Атласу · ${UKRAINIAN_ALPHABET.length} літери`;
 ---
 
 <section
@@ -154,7 +154,7 @@ const GLOBAL_SEARCH_LIMIT = 200;
   if (root) {
   const meta = JSON.parse(root.dataset.browseMeta ?? "{}") as BrowseMeta;
   const flaggedRows = JSON.parse(root.dataset.flaggedRows ?? "[]") as BrowseRow[];
-  const totalLabel = root.dataset.totalLabel ?? `${meta.total ?? 0} слів · ${UKRAINIAN_ALPHABET.length} літери`;
+  const totalLabel = root.dataset.totalLabel ?? `${meta.total ?? 0} записів Атласу · ${UKRAINIAN_ALPHABET.length} літери`;
     const searchInput = root.querySelector<HTMLInputElement>("[data-index-search]");
     const status = root.querySelector<HTMLElement>("[data-index-status]");
     const section = root.querySelector<HTMLElement>("[data-letter-section]");
@@ -277,7 +277,7 @@ const GLOBAL_SEARCH_LIMIT = 200;
         return;
       }
       if (state.cls) {
-        status.textContent = `${CLS_LABELS[state.cls] ?? state.cls}: ${filteredCount} слів`;
+        status.textContent = `${CLS_LABELS[state.cls] ?? state.cls}: ${filteredCount} записів`;
         return;
       }
       status.textContent = totalLabel;
@@ -291,7 +291,7 @@ const GLOBAL_SEARCH_LIMIT = 200;
         status.textContent = state.error;
         return;
       }
-      status.textContent = `${state.letter}: ${filteredCount} слів`;
+      status.textContent = `${state.letter}: ${filteredCount} записів`;
     };
 
     const updateControls = (): void => {

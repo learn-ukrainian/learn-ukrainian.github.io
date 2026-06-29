@@ -4,11 +4,17 @@ import json
 from pathlib import Path
 
 from scripts.audit.generate_search_index import (
+    DEFAULT_BROWSE_DIR,
+    DEFAULT_BROWSE_META_OUT,
+    DEFAULT_SEARCH_OUT,
+    UKRAINIAN_ALPHABET,
     build_browse_outputs,
     build_index,
     classification_code,
     main,
 )
+
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
 
 def entry(
@@ -266,3 +272,21 @@ def test_main_writes_search_meta_and_per_letter_shards(tmp_path: Path) -> None:
             "cls": "avoid",
         }
     ]
+
+
+def test_committed_browse_counts_match_search_index() -> None:
+    search_rows = json.loads((PROJECT_ROOT / DEFAULT_SEARCH_OUT).read_text(encoding="utf-8"))
+    meta = json.loads((PROJECT_ROOT / DEFAULT_BROWSE_META_OUT).read_text(encoding="utf-8"))
+    letter_counts = meta["letterCounts"]
+
+    assert set(letter_counts) == set(UKRAINIAN_ALPHABET)
+    assert meta["total"] == len(search_rows)
+
+    shard_total = 0
+    for letter in UKRAINIAN_ALPHABET:
+        shard_path = PROJECT_ROOT / DEFAULT_BROWSE_DIR / f"{letter}.json"
+        rows = json.loads(shard_path.read_text(encoding="utf-8")) if shard_path.exists() else []
+        assert len(rows) == letter_counts[letter]
+        shard_total += len(rows)
+
+    assert shard_total == len(search_rows)
