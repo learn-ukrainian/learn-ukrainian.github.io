@@ -21,6 +21,7 @@ if str(SCRIPT_DIR) not in sys.path:
 from slug_utils import to_bare_slug
 from yaml_activities import ActivityParser
 
+from .checks.b2_rebuild_contract import check_b2_rebuild_contract
 from .checks.outline_compliance import (
     check_outline_compliance,
     print_section_summary,
@@ -444,6 +445,36 @@ def _evaluate_vocab_progression(ctx: AuditContext, state: AuditState) -> None:
         print(f"  ℹ️  Vocab progression unavailable: {exc}")
 
 
+def _run_b2_rebuild_contract_checks(ctx: AuditContext, state: AuditState) -> None:
+    """Fail B2 rebuild-era modules that look like reference articles."""
+    if ctx.skip_activities:
+        return
+
+    findings = check_b2_rebuild_contract(
+        ctx.content,
+        ctx.yaml_file,
+        meta_data=ctx.meta_data,
+        plan_data=ctx.plan_data,
+        module_focus=ctx.module_focus,
+    )
+    if not findings:
+        return
+
+    blocking = 0
+    for finding in findings:
+        severity = str(finding.get("severity") or "error")
+        icon = "❌" if finding.get("blocking") else "ℹ️" if severity == "info" else "⚠️"
+        print(f" {icon} [{finding['type']}] {finding['issue']}")
+        if finding.get("fix"):
+            print(f"    Fix: {finding['fix']}")
+        state.pedagogical_violations.append(finding)
+        if finding.get("blocking"):
+            blocking += 1
+
+    if blocking:
+        state.fail(f"{blocking} B2 rebuild contract violation(s)")
+
+
 def audit_module(file_path: str, skip_activities: bool = False,
                  skip_review: bool = False) -> bool:
     """
@@ -464,6 +495,7 @@ def audit_module(file_path: str, skip_activities: bool = False,
      invalid_type_violations, _forbidden_type_violations) = validate_yaml_activities(ctx, state)
 
     validate_activity_answers(ctx, state)
+    _run_b2_rebuild_contract_checks(ctx, state)
 
     process_activity_sections(ctx, state)
 
