@@ -2,7 +2,7 @@
 """Check static Word of the Day and practice assets.
 
 The public practice page must work without backend/API/DB services. This audit
-validates the committed static files that page fetches: the daily pool and the
+validates the hydrated static files that page fetches: the daily pool and the
 per-level practice index, lexeme, and cloze shards.
 """
 
@@ -10,9 +10,16 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 from collections import Counter
 from pathlib import Path
 from typing import Any
+
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+from scripts.practice_deck.io import ensure_practice_deck_hydrated
 
 DEFAULT_DAILY_POOL = Path("site/src/data/lexicon-daily-pool.json")
 DEFAULT_PRACTICE_DIR = Path("site/public/lexicon")
@@ -343,6 +350,9 @@ def check_assets(
     min_daily_pool_size: int = 250,
     min_practice_lexemes_per_level: int = 25,
 ) -> dict[str, Any]:
+    if practice_dir == DEFAULT_PRACTICE_DIR:
+        ensure_practice_deck_hydrated(practice_dir)
+
     errors: list[str] = []
     daily = _check_daily_pool(daily_pool, min_daily_pool_size, errors)
     reviewed = _reviewed_source_keys(reviewed_sources, errors)

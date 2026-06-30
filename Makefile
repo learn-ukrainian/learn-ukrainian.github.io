@@ -1,6 +1,6 @@
 PYTHON ?= .venv/bin/python
 
-.PHONY: atlas atlas-publish
+.PHONY: atlas atlas-publish practice-deck practice-deck-publish
 atlas:
 	$(PYTHON) -m scripts.lexicon.build_data_manifest
 	$(PYTHON) scripts/lexicon/enrich_manifest.py
@@ -11,3 +11,9 @@ atlas:
 
 atlas-publish: atlas
 	$(PYTHON) scripts/lexicon/publish_manifest.py
+
+practice-deck:
+	$(PYTHON) scripts/audit/generate_practice_deck.py
+
+practice-deck-publish: practice-deck
+	$(PYTHON) scripts/practice_deck/publish.py

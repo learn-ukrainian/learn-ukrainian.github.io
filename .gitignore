@@ -224,6 +224,10 @@ site/node_modules
 site/.astro
 site/src/data/lexicon-manifest.json
 site/src/data/lexicon-manifest.json.gz
+site/src/data/lexicon-practice-deck.json.gz
+site/public/lexicon/practice-index.*.json
+site/public/lexicon/practice-lexemes.*.json
+site/public/lexicon/practice-cloze.*.json
 /testbed/*
 !/testbed/reference/
 data/sum11/
