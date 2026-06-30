@@ -3,15 +3,17 @@
   "type": "module",
   "version": "0.0.1",
   "scripts": {
-    "dev": "node ./scripts/hydrate-manifest.mjs && astro dev",
+    "hydrate": "node ./scripts/hydrate-manifest.mjs && node ./scripts/hydrate-practice-deck.mjs",
+    "hydrate:practice": "node ./scripts/hydrate-practice-deck.mjs",
+    "dev": "npm run hydrate && astro dev",
     "start": "npm run dev",
-    "build": "node ./scripts/hydrate-manifest.mjs && astro build",
-    "build:full": "node ./scripts/hydrate-manifest.mjs && BUILD_ETYMOLOGY_ROUTES=1 astro build",
+    "build": "npm run hydrate && astro build",
+    "build:full": "npm run hydrate && BUILD_ETYMOLOGY_ROUTES=1 astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "test": "vitest run",
-    "test:watch": "vitest --watch",
-    "test:coverage": "vitest run --coverage"
+    "test": "npm run hydrate:practice && vitest run",
+    "test:watch": "npm run hydrate:practice && vitest --watch",
+    "test:coverage": "npm run hydrate:practice && vitest run --coverage"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.9",

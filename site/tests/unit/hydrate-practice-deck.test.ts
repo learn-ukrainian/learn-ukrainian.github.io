@@ -1,0 +1,109 @@
+import { createHash } from 'node:crypto';
+import { gzipSync } from 'node:zlib';
+import { afterEach, describe, expect, test, vi } from 'vitest';
+import {
+  assertAllowedDownloadUrl,
+  downloadGzip,
+  downloadUrl,
+  parsePackage,
+} from '../../scripts/hydrate-practice-deck.mjs';
+
+const ASSET_URL =
+  'https://github.com/learn-ukrainian/learn-ukrainian.github.io/releases/download/atlas-practice-deck/lexicon-practice-deck.json.gz';
+
+function sha256(data: Buffer): string {
+  return createHash('sha256').update(data).digest('hex');
+}
+
+function packageFixture() {
+  const content = '{"schema":"atlas-practice-index","schemaVersion":1,"deckVersion":"deck","level":"A1"}\n';
+  const fileBytes = Buffer.from(content, 'utf8');
+  const packageBytes = Buffer.from(
+    JSON.stringify({
+      schema: 'atlas-practice-deck-package',
+      schemaVersion: 1,
+      deckVersion: 'deck',
+      files: [{ path: 'practice-index.A1.json', content }],
+    }),
+    'utf8',
+  );
+  const gzBytes = gzipSync(packageBytes);
+  const pointer = {
+    asset_url: ASSET_URL,
+    deck_version: 'deck',
+    package_schema_version: 1,
+    gz_sha256: sha256(gzBytes),
+    package_sha256: sha256(packageBytes),
+    gz_bytes: gzBytes.length,
+    package_bytes: packageBytes.length,
+    file_count: 1,
+    files: [
+      {
+        path: 'practice-index.A1.json',
+        level: 'A1',
+        kind: 'index',
+        bytes: fileBytes.length,
+        sha256: sha256(fileBytes),
+      },
+    ],
+  };
+  return { gzBytes, packageBytes, pointer };
+}
+
+function okResponse(gzBytes: Buffer) {
+  return {
+    ok: true,
+    arrayBuffer: async () =>
+      gzBytes.buffer.slice(gzBytes.byteOffset, gzBytes.byteOffset + gzBytes.byteLength),
+  };
+}
+
+describe('hydrate practice deck release download', () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  test('adds deterministic cache-busting query parameters after first attempt', () => {
+    const { pointer } = packageFixture();
+
+    expect(downloadUrl(pointer, 0)).toBe(ASSET_URL);
+    expect(downloadUrl(pointer, 1)).toBe(
+      `${ASSET_URL}?atlas_practice_deck_sha256=${pointer.gz_sha256}&atlas_practice_deck_attempt=1`,
+    );
+  });
+
+  test('retries stale gzip responses with cache-busting URL', async () => {
+    const { gzBytes, pointer } = packageFixture();
+    const staleGzBytes = gzipSync(Buffer.from('{"old":true}'));
+    const fetchMock = vi.fn().mockResolvedValueOnce(okResponse(staleGzBytes)).mockResolvedValueOnce(okResponse(gzBytes));
+    vi.stubGlobal('fetch', fetchMock);
+
+    await expect(downloadGzip(pointer)).resolves.toEqual(gzBytes);
+    expect(fetchMock).toHaveBeenCalledTimes(2);
+    expect(fetchMock).toHaveBeenNthCalledWith(
+      2,
+      expect.stringContaining('atlas_practice_deck_attempt=1'),
+      expect.objectContaining({ cache: 'no-store' }),
+    );
+  });
+
+  test('verifies package and shard hashes before writing', () => {
+    const { packageBytes, pointer } = packageFixture();
+
+    const files = parsePackage(packageBytes, pointer);
+
+    expect(files).toHaveLength(1);
+    expect(files[0][0]).toBe('practice-index.A1.json');
+    expect(files[0][1].toString('utf8')).toContain('"atlas-practice-index"');
+  });
+
+  test.each([
+    ['http://github.com/learn-ukrainian/learn-ukrainian.github.io/releases/download/t/f.gz', 'non-https scheme'],
+    ['https://evil.test/lexicon-practice-deck.json.gz', 'off-allowlist host'],
+    ['https://github.com.evil.test/file.gz', 'look-alike host'],
+    ['https://fake-githubusercontent.com/x.gz', 'hyphen-spoof CDN host'],
+    ['https://github.com/attacker/repo/releases/download/t/evil.gz', 'github.com different repo'],
+  ])('rejects non-allowlisted asset URL: %s (%s)', (url) => {
+    expect(() => assertAllowedDownloadUrl(url)).toThrow(/allowlisted|https/);
+  });
+});
