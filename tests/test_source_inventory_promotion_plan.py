@@ -161,3 +161,44 @@ def test_write_plan_and_report_stay_ephemeral(tmp_path: Path) -> None:
 
     assert json.loads(plan_path.read_text(encoding="utf-8"))["production_outputs_updated"] == []
     assert "Source Inventory Approved Promotion Plan" in report_path.read_text(encoding="utf-8")
+
+
+
+def test_plan_carries_surface_admission_to_manifest_entry(tmp_path: Path) -> None:
+    payload = yaml.safe_load(FIRST_BATCH.read_text(encoding="utf-8"))
+    decision = payload["decisions"][0]
+    payload["decisions"] = [decision]
+    decision["surface_admission"] = {"daily": False, "practice": True, "cloze": False}
+    decision_path = tmp_path / "decision.yaml"
+    decision_path.write_text(yaml.safe_dump(payload, allow_unicode=True, sort_keys=False), encoding="utf-8")
+    candidates = tmp_path / "candidates.json"
+    _write_json(candidates, _candidate_payload_for(decision))
+
+    plan = planner.build_promotion_plan(candidates_path=candidates, decision_files=[decision_path])
+    addition = plan["proposed_manifest_additions"][0]
+
+    assert addition["surface_admission"] == {"daily": False, "practice": True, "cloze": False}
+    assert addition["manifest_entry"]["surface_admission"] == {
+        "daily": False,
+        "practice": True,
+        "cloze": False,
+    }
+
+
+
+def test_plan_drops_candidate_surface_admission_without_decision_opt_in(tmp_path: Path) -> None:
+    decision = _first_decision()
+    candidates_payload = _candidate_payload_for(decision)
+    candidates_payload["needs_review"][0]["entry"]["surface_admission"] = {
+        "daily": True,
+        "practice": True,
+        "cloze": True,
+    }
+    candidates = tmp_path / "candidates.json"
+    _write_json(candidates, candidates_payload)
+
+    plan = planner.build_promotion_plan(candidates_path=candidates, decision_files=[FIRST_BATCH])
+    addition = plan["proposed_manifest_additions"][0]
+
+    assert addition["surface_admission"] == {}
+    assert "surface_admission" not in addition["manifest_entry"]

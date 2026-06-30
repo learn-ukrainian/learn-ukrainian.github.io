@@ -63,8 +63,10 @@ DECISION_FIELDS = {
     "evidence_refs",
     "review_queue_reasons",
     "original_flags",
+    "surface_admission",
     "supersedes",
 }
+SURFACE_ADMISSION_FIELDS = {"daily", "practice", "cloze"}
 SOURCE_INVENTORY_FIELDS = {
     "key",
     "path",
@@ -185,6 +187,12 @@ def _validate_decision_row(
         )
     if "original_flags" in row:
         _validate_text_list(path, row.get("original_flags"), f"decisions[{idx}].original_flags")
+    if "surface_admission" in row:
+        _validate_surface_admission(
+            path,
+            row.get("surface_admission"),
+            f"decisions[{idx}].surface_admission",
+        )
 
     source_inventory = row.get("source_inventory")
     if not isinstance(source_inventory, Mapping):
@@ -272,6 +280,17 @@ def _require_positive_int(path: Path, value: object, field: str) -> int:
     if not isinstance(value, int) or value <= 0:
         raise SourceInventoryError(f"{path}: {field} must be a positive integer")
     return value
+
+
+def _validate_surface_admission(path: Path, value: object, field: str) -> None:
+    if not isinstance(value, Mapping):
+        raise SourceInventoryError(f"{path}: {field} must be a mapping")
+    unknown = sorted(set(value) - SURFACE_ADMISSION_FIELDS)
+    if unknown:
+        raise SourceInventoryError(f"{path}: {field} unknown keys {', '.join(unknown)}")
+    for key, admitted in value.items():
+        if not isinstance(admitted, bool):
+            raise SourceInventoryError(f"{path}: {field}.{key} must be boolean")
 
 
 def _validate_text_list(path: Path, value: object, field: str) -> None:

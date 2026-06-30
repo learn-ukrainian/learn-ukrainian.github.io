@@ -43,9 +43,35 @@ DERIVED_FORM_SOURCES = frozenset(
 # Surzhyk forms curated for the Atlas "avoid" tier — shown with a warning, never drilled.
 SURZHYK_SOURCE = "surzhyk_to_avoid"
 
+# Source-inventory growth is reviewed enough for Atlas search/browse, but each
+# learner-facing surface needs a separate curriculum decision.
+SOURCE_INVENTORY_SOURCE = "source_inventory_grow"
+SURFACE_ADMISSION_FIELD = "surface_admission"
+SURFACE_DAILY = "daily"
+SURFACE_PRACTICE = "practice"
+SURFACE_CLOZE = "cloze"
+
 
 def _has_text(value: Any) -> bool:
     return isinstance(value, str) and bool(value.strip())
+
+
+def is_surface_admitted(entry: dict[str, Any], surface: str) -> bool:
+    """True when *entry* may appear on a learner-facing surface.
+
+    Non-source-inventory entries keep their existing behavior. Reviewed
+    source-inventory rows default to Atlas search/browse only unless a later
+    curriculum decision opts them into the requested surface.
+    """
+    if entry.get("primary_source") != SOURCE_INVENTORY_SOURCE:
+        return True
+
+    admission = entry.get(SURFACE_ADMISSION_FIELD)
+    if isinstance(admission, dict):
+        return admission.get(surface) is True
+    if isinstance(admission, (list, tuple, set)):
+        return surface in admission
+    return False
 
 
 def is_lexeme_entry(entry: dict[str, Any]) -> bool:
@@ -96,5 +122,7 @@ def is_practice_eligible(entry: dict[str, Any]) -> bool:
     if entry.get("primary_source") in DERIVED_FORM_SOURCES:
         return False
     if entry.get("primary_source") == SURZHYK_SOURCE:
+        return False
+    if not is_surface_admitted(entry, SURFACE_PRACTICE):
         return False
     return _has_course_usage(entry) or _has_cefr_level(entry)

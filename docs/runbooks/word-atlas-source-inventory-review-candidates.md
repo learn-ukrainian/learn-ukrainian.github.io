@@ -92,6 +92,14 @@ source-id/title/locator/context origin is not dropped on promotion. Separate
 `course_usage`, derived only from `source_context`/`source_contexts`, stays empty
 for source-inventory rows.
 
+Source-inventory manifest promotion is browse/search by default. Do not use
+manifest promotion as implicit permission for Words of the Day, practice, or
+cloze. If a reviewed row should enter a learner-facing surface later, add a
+`surface_admission` mapping to the decision row with explicit boolean keys:
+`daily`, `practice`, and `cloze`. Missing `surface_admission` means
+`daily: false`, `practice: false`, `cloze: false` for `source_inventory_grow`
+entries.
+
 This workflow does not update live Atlas manifest, search index, browse files,
 Words of the Day pool, daily practice sources, cloze outputs, manifest pointer,
 or manifest fingerprint. In-repository live outputs under `site/src/data/`

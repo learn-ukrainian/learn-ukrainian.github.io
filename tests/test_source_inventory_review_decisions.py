@@ -167,3 +167,25 @@ def test_decision_validator_rejects_production_outputs(tmp_path: Path) -> None:
 
     with pytest.raises(SourceInventoryError, match=r"production_outputs_updated must be \[\]"):
         decisions.validate_committed_decision_files([path])
+
+
+
+def test_decision_accepts_surface_admission_mapping(tmp_path: Path) -> None:
+    payload = _minimal_payload()
+    payload["decisions"][0]["surface_admission"] = {"daily": False, "practice": True, "cloze": False}
+    path = tmp_path / "surface.yaml"
+    _write_decision_file(path, payload)
+
+    summary = decisions.validate_committed_decision_files([path])
+
+    assert summary["rows"] == 1
+
+
+def test_decision_rejects_invalid_surface_admission(tmp_path: Path) -> None:
+    payload = _minimal_payload()
+    payload["decisions"][0]["surface_admission"] = {"practice": "yes"}
+    path = tmp_path / "bad-surface.yaml"
+    _write_decision_file(path, payload)
+
+    with pytest.raises(SourceInventoryError, match=r"surface_admission\.practice must be boolean"):
+        decisions.validate_committed_decision_files([path])

@@ -292,3 +292,56 @@ def test_unverified_paradigm_is_blanked_not_dropped() -> None:
     lexeme = _build_lexeme(entry, verifier)
     assert lexeme is not None  # word kept
     assert lexeme["paradigm"] == {"cases": {}}  # unverified paradigm blanked
+
+
+
+def test_source_inventory_rows_stay_out_of_practice_by_default() -> None:
+    entries = read_manifest(MANIFEST)
+    source_entry = json.loads(json.dumps(entries[0]))
+    source_entry["primary_source"] = "source_inventory_grow"
+    source_entry["course_usage"] = []
+    source_entry.pop("surface_admission", None)
+
+    shards = build_practice_shards(
+        [source_entry],
+        ReviewedSourceAllowlist.from_payload([]),
+        JsonVesumVerifier.from_path(VESUM),
+        [],
+        BuildConfig(),
+    )
+
+    assert shards == {}
+
+
+def test_source_inventory_cloze_requires_explicit_cloze_admission() -> None:
+    entries = read_manifest(MANIFEST)
+    for entry in entries:
+        if entry["lemma"] == "книга":
+            entry["primary_source"] = "source_inventory_grow"
+            entry["course_usage"] = []
+            entry["surface_admission"] = {"practice": True}
+            break
+
+    allowlist = ReviewedSourceAllowlist.from_path(ALLOWLIST)
+    verifier = JsonVesumVerifier.from_path(VESUM)
+    cloze_sources = read_cloze_sources(CLOZE_SOURCES)
+    shards = build_practice_shards(entries, allowlist, verifier, cloze_sources, BuildConfig())
+    cloze_ids = {
+        item["lemmaId"]
+        for level in shards.values()
+        for item in level["cloze"]["cloze"]
+    }
+    assert "knyha" not in cloze_ids
+
+    for entry in entries:
+        if entry["lemma"] == "книга":
+            entry["surface_admission"]["cloze"] = True
+            break
+
+    shards = build_practice_shards(entries, allowlist, verifier, cloze_sources, BuildConfig())
+    cloze_ids = {
+        item["lemmaId"]
+        for level in shards.values()
+        for item in level["cloze"]["cloze"]
+    }
+    assert "knyha" in cloze_ids

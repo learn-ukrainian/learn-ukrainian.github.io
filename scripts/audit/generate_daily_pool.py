@@ -10,8 +10,10 @@ from typing import Any
 
 from scripts.audit.lexeme_filter import (
     DERIVED_FORM_SOURCES,
+    SURFACE_DAILY,
     SURZHYK_SOURCE,
     is_lexeme_entry,
+    is_surface_admitted,
 )
 
 DEFAULT_MANIFEST = Path("site/src/data/lexicon-manifest.json")
@@ -83,6 +85,7 @@ def _is_eligible(entry: dict[str, Any]) -> bool:
         is_lexeme_entry(entry)
         and _has_text(entry.get("gloss"))
         and entry.get("primary_source") not in _DERIVED_FORM_SOURCES
+        and is_surface_admitted(entry, SURFACE_DAILY)
     )
 
 

@@ -36,6 +36,7 @@ class ApprovedDecision:
     source_inventory: Mapping[str, Any]
     evidence_refs: tuple[str, ...]
     review_queue_reasons: tuple[str, ...]
+    surface_admission: Mapping[str, bool]
     batch_id: str
     batch_label: str
     decision_file: str
@@ -198,11 +199,14 @@ def _planned_addition(decision: ApprovedDecision, match: CandidateMatch) -> dict
     candidate = copy.deepcopy(dict(match.entry))
     candidate["pos"] = decision.approved_pos
     candidate["gloss"] = decision.approved_gloss
+    candidate.pop("surface_admission", None)
     manifest_entry = promote.manifest_entry_from_candidate(candidate)
     manifest_entry["gloss"] = decision.approved_gloss
     manifest_entry["pos"] = decision.approved_pos
     if candidate.get("primary_source"):
         manifest_entry["primary_source"] = candidate["primary_source"]
+    if decision.surface_admission:
+        manifest_entry["surface_admission"] = dict(decision.surface_admission)
     return {
         "lemma": decision.lemma,
         "approved_pos": decision.approved_pos,
@@ -212,6 +216,7 @@ def _planned_addition(decision: ApprovedDecision, match: CandidateMatch) -> dict
         "source_inventory": dict(decision.source_inventory),
         "evidence_refs": list(decision.evidence_refs),
         "review_queue_reasons": list(decision.review_queue_reasons),
+        "surface_admission": dict(decision.surface_admission),
         "candidate_bucket": match.bucket,
         "candidate_reasons": list(match.reasons),
         "batch_id": decision.batch_id,
@@ -306,6 +311,7 @@ def _approved_decisions(paths: Sequence[Path]) -> list[ApprovedDecision]:
                     review_queue_reasons=tuple(
                         str(item) for item in row.get("review_queue_reasons", [])
                     ),
+                    surface_admission=dict(row.get("surface_admission") or {}),
                     batch_id=str(payload["batch_id"]),
                     batch_label=str(payload["batch_label"]),
                     decision_file=str(path),

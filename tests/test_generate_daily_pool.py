@@ -146,3 +146,28 @@ def test_main_writes_deterministic_json_bytes(tmp_path) -> None:
 
     assert out_one.read_bytes() == out_two.read_bytes()
     assert out_one.read_text(encoding="utf-8").endswith("\n")
+
+
+
+def test_build_pool_keeps_source_inventory_browse_only_by_default() -> None:
+    entries = [
+        {
+            "lemma": "барабан",
+            "url_slug": "baraban",
+            "gloss": "drum",
+            "primary_source": "source_inventory_grow",
+            "course_usage": [],
+            "enrichment": {"cefr": {"level": "A1", "source": "fixture", "text": "A1"}},
+        },
+        {
+            "lemma": "кіт",
+            "url_slug": "kit",
+            "gloss": "cat",
+            "primary_source": "source_inventory_grow",
+            "course_usage": [],
+            "enrichment": {"cefr": {"level": "A1", "source": "fixture", "text": "A1"}},
+            "surface_admission": {"daily": True},
+        },
+    ]
+
+    assert [item["lemma"] for item in build_pool(entries, size=10)] == ["кіт"]
