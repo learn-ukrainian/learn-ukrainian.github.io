@@ -3,6 +3,7 @@
  * Атлас слів (Лексикон) landing page.
  */
 import CourseLayout from "../../layouts/CourseLayout.astro";
+import AtlasRuntimeStatus from "../../lexicon/AtlasRuntimeStatus.astro";
 import AtlasTypeahead from "../../lexicon/AtlasTypeahead.astro";
 
 const frontmatter = {
@@ -35,6 +36,8 @@ const frontmatter = {
       />
       <a class="lexicon-browse-link" href="/lexicon/browse/">Перегляд А–Я →</a>
     </section>
+
+    <AtlasRuntimeStatus />
   </div>
 </CourseLayout>
 
