@@ -215,19 +215,19 @@ workbook:
       - statement: "Після 11-14 потрібен родовий множини: одинадцять гостей."
         answer: true
         explanation: Це спеціальна зона, яка поводиться як 5+.
-      - statement: "Двадцять два номерів is the target A2 form."
+      - statement: "Форма 'двадцять два номерів' правильна для A2."
         answer: false
         explanation: Потрібно двадцять два номери.
-      - statement: "Дванадцять кімнат uses genitive plural."
+      - statement: "У фразі 'Дванадцять кімнат' слово 'кімнат' стоїть у родовому множини."
         answer: true
         explanation: Дванадцять належить до 11-14.
-      - statement: "Двадцять п'ять гостей follows the 5+ pattern."
+      - statement: "Двадцять п'ять гостей відповідає моделі 5+."
         answer: true
         explanation: Остання частина п'ять вимагає родового множини.
       - statement: "У даті місяць стоїть у родовому: перше січня."
         answer: true
         explanation: Січня - форма для дати.
-      - statement: "Перше січень is the target date form."
+      - statement: "Форма 'перше січень' правильна для дати."
         answer: false
         explanation: Потрібно перше січня.
   - type: error-correction

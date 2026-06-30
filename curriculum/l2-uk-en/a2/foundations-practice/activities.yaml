@@ -194,22 +194,22 @@ workbook:
     title: Контекст вирішує
     instruction: Визначте, чи правильно пояснено речення.
     items:
-      - statement: "Я куплю серветки describes a future completed step, not a past result."
+      - statement: "Я куплю серветки описує майбутній завершений крок, а не минулий результат."
         answer: true
         explanation: Минуле було б я купив / я купила.
-      - statement: "Я вже купила овочі means the buying is already done."
+      - statement: "Я вже купила овочі означає, що купівля вже відбулася."
         answer: true
         explanation: Уже + минулий доконаний вид показує результат.
-      - statement: "Буду готувати салат and приготую салат always mean exactly the same thing."
+      - statement: "Буду готувати салат і приготую салат завжди означають точно те саме."
         answer: false
         explanation: Перше показує процес/роль, друге - завершений крок.
-      - statement: "Учора я читав can be valid if we mean process."
+      - statement: "Учора я читав може бути правильним, якщо йдеться про процес."
         answer: true
         explanation: Учора не забороняє недоконаний вид.
-      - statement: "Нарешті я написав список focuses on result."
+      - statement: "Нарешті я написав список підкреслює результат."
         answer: true
         explanation: Нарешті підкреслює завершення.
-      - statement: "Динь немає uses genitive plural."
+      - statement: "У фразі 'Динь немає' слово 'динь' стоїть у родовому множини."
         answer: true
         explanation: Динь - родовий множини.
   - type: error-correction
