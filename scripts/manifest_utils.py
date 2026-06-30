@@ -39,7 +39,22 @@ CURRICULUM_PATH = PROJECT_ROOT / "curriculum" / "l2-uk-en"
 # Keep in sync with: assess_research.py (TRACKS), api/config.py (LEVELS), batch_dispatcher_config.py (TRACKS)
 CORE_LEVELS = ['a1', 'a2', 'b1', 'b2', 'c1', 'c2']
 LEVELS = CORE_LEVELS  # Backward compatibility
-TRACKS = ['hist', 'istorio', 'bio', 'lit', 'oes', 'ruth']
+TRACKS = [
+    'hist',
+    'bio',
+    'lit',
+    'istorio',
+    'oes',
+    'ruth',
+    'lit-essay',
+    'lit-hist-fic',
+    'lit-fantastika',
+    'lit-war',
+    'lit-humor',
+    'lit-youth',
+    'lit-drama',
+    'folk',
+]
 
 
 @dataclass
