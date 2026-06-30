@@ -3,24 +3,171 @@ level: FOLK
 sequence: 10
 slug: dumy-nevilnytski-lytsarski
 title: "Невільницькі та лицарські думи: Плач і героїка"
-subtitle: "Captivity and Knightly Dumas — заглушка (перебудовується, #3879)"
-version: 1
-status: stub
+subtitle: "Captivity and Knightly Dumas: Lament, Performance, and Heroic Memory"
+version: 2
+status: built
+cefr_min: C1
 word_target: 4000
+connects_to:
+  - holosinnya
+  - dumy-sotsialno-pobutovi
+  - kobzarstvo-lirnytstvo
 objectives:
-  - 'Заглушка — чисті цілі регенеруються в базовій перебудові (#3879).'
+  - Distinguish dumy as Ukrainian lyric-epic performance, not a long historical song or generic epic.
+  - Explain how captivity laments connect pain, prayer, calendar memory, and the desire to return to one's own world.
+  - Analyze knightly duma episodes through disciplined action, honor, brotherhood, and the moral cost of freedom.
+  - Separate primary duma text, performance record, literary reception, and modern historical inference.
+  - Center Ukrainian kobzar tradition without romanticizing or flattening the evidence.
 content_outline:
-  - section: 'Заглушка, частина 1 (#3879)'
-    words: 2000
+  - section: "Розминка: дума не є просто довгою піснею"
+    words: 250
     points:
-      - 'Заглушка — план регенерується в базовій перебудові фольклору (#3879)'
-  - section: 'Заглушка, частина 2 (#3879)'
-    words: 2000
+      - "Frame duma as plot motifs understood through recitative, formula, and moral tension."
+      - "Contrast the duma's unfolding time with the compressed stanzaic logic of historical song."
+  - section: "Жанрова карта: неволя, пам'ять, дія"
+    words: 350
     points:
-      - 'Заглушка — план регенерується в базовій перебудові фольклору (#3879)'
+      - "Define the duma as a large lyric-epic verse work performed by recitative with kobza, bandura, or lira."
+      - "Map captivity, memory, prayer, command, and action as one genre system rather than disconnected motifs."
+  - section: "Невільницький плач: біль, який не скасовує волі"
+    words: 420
+    points:
+      - "Read Marusia and the captivity lament as attacks on time, body, calendar, and belonging."
+      - "Treat Easter, prayer, тихі води, ясні зорі, and мир хрещений as visible textual meaning."
+  - section: "Лицарський поворот: тиша, дисципліна, честь"
+    words: 360
+    points:
+      - "Shift from lament to heroic action in \"Самійло Кішка\", \"Втеча трьох братів з Азова\", and \"Козак Голота\"."
+      - "Emphasize discipline, brotherhood, and honor while keeping evidence limits around named heroes and variants."
+  - section: "Джерело, варіант і межа висновку"
+    words: 300
+    points:
+      - "Separate school definition, public reading page, collected text, scholarship, and literary adaptation."
+      - "Use Marusia Bohuslavka reception as a bridge while warning that authored works are not primary duma evidence."
+  - section: "Виконавець: кобзар не є декорацією"
+    words: 310
+    points:
+      - "Explain how kobzar, bandurist, or lirnyk performance shapes line, pause, formula, and audience memory."
+      - "Present instrument and performer as part of the genre, not an illustration after the text."
+  - section: "Повільне читання: що саме бачити в рядку"
+    words: 310
+    points:
+      - "Give learners a practical toolkit: address, formula, space, object, repetition, and verb chain."
+      - "Connect each device to moral meaning instead of treating poetics as ornament."
+  - section: "Дві лінії одного епосу"
+    words: 330
+    points:
+      - "Compare captivity lament and knightly duma without reducing one to victimhood or the other to triumph."
+      - "Show freedom as desired but morally costly, and heroism as accountable to truth."
+  - section: "Міст до високої культури"
+    words: 260
+    points:
+      - "Connect dumy to nineteenth-century collecting, listening, and literary reception."
+      - "Keep the bridge source-disciplined: later works converse with the tradition but do not replace primary text."
+  - section: "Деколонізаційна рамка"
+    words: 300
+    points:
+      - "Reject frames that erase Ukrainian language, performers, and Cossack-Black Sea space."
+      - "Avoid replacing imperial distortion with romantic overclaim."
+  - section: "Як писати семінарну відповідь"
+    words: 330
+    points:
+      - "Structure a C1 answer around genre, source, poetics, moral problem, and evidence limit."
+      - "Model wording that names a duma as text/performance tradition rather than merely retelling the plot."
+  - section: "Словничок для підсумкового читання"
+    words: 230
+    points:
+      - "Consolidate key terms such as дума, невільник, речитатив, кобзар, галера, ясир, варіант, and формула."
+      - "Tie vocabulary to interpretive use in a seminar answer."
+  - section: "Питання для самоперевірки"
+    words: 190
+    points:
+      - "Check genre form, source limits, captivity imagery, performance context, and decolonial framing."
+  - section: "Підсумок: пам'ять, яка звучить"
+    words: 160
+    points:
+      - "Close on dumy as a sounding memory of captivity, prayer, road, brotherhood, and honor."
+activity_hints:
+  - type: variant-comparison
+    placement: inline
+    after_section: "Розминка: дума не є просто довгою піснею"
+    focus: Distinguish duma from neighboring song genres by form and performance.
+  - type: motif-formula
+    placement: inline
+    after_section: "Невільницький плач: біль, який не скасовує волі"
+    focus: Interpret "тихі води" and "ясні зорі" as a poetic map of return.
+  - type: comparative-study
+    placement: workbook
+    focus: Compare a primary duma line with an overextended historical claim.
+  - type: source-evaluation
+    placement: workbook
+    focus: Separate public reading text, collected version, school definition, and literary reception.
+  - type: performance
+    placement: workbook
+    focus: Mark pauses and formulaic turns for a recitative performance explanation.
+  - type: essay-response
+    placement: workbook
+    focus: Write a C1 seminar paragraph about captivity lament and knightly heroism.
+vocabulary_hints:
+  - word: дума
+    pos: ж.
+    definition: великий український ліро-епічний твір, що виконується речитативом
+  - word: невільник
+    pos: ч.
+    definition: бранець або поневолений полонений у думовому сюжеті
+  - word: речитатив
+    pos: ч.
+    definition: спосіб виконання між співом і проказуванням, характерний для дум
+  - word: кобзар
+    pos: ч.
+    definition: професійний український співець дум і пісень із кобзою або бандурою
+  - word: галера
+    pos: ж.
+    definition: судно-простір тяжкої неволі в думах про полон і визволення
+  - word: ясир
+    pos: ч.
+    definition: полон у контексті татаро-турецьких нападів і невільницьких дум
+  - word: формула
+    pos: ж.
+    definition: сталий поетичний вислів або повторюваний зворот у думі
+  - word: варіант
+    pos: ч.
+    definition: засвідчена версія усного тексту, що може відрізнятися деталями
+readings:
+  - title: "Маруся Богуславка"
+    role: primary
+    source: ukrlib.com.ua
+    reading_slug: duma-marusia-bohuslavka
+    url: https://www.ukrlib.com.ua/narod/printout.php?bookid=1&id=14
+  - title: "Плач невольників"
+    role: primary
+    source: ukrlib.com.ua
+    reading_slug: duma-plach-nevolnyka
+    url: https://www.ukrlib.com.ua/books/printit.php?tid=27843
+  - title: "Дума про Самійла Кішку"
+    role: primary
+    source: ukrlib.com.ua
+    reading_slug: duma-pro-samiila-kishku
+    url: https://www.ukrlib.com.ua/narod/printout.php?bookid=2&id=14
+  - title: "Втеча трьох братів з Азова, з турецької неволі"
+    role: primary
+    source: ukrlib.com.ua
+    reading_slug: duma-vtecha-trokh-brativ-z-azova
+    url: https://www.ukrlib.com.ua/narod/printout.php?id=11&bookid=1
 references:
-  - title: 'Заглушка — джерела регенеруються в базовій перебудові (#3879)'
-note: >-
-  Outline placeholder. Built module + poisoned plan content removed in PR #3867. Full clean
-  base (dossier -> wiki -> plan -> module) regenerated base-first in the folk rebuild (#3879).
-  Not built, not published. All placeholder text carries zero framing/readings/chunk-ids.
+  - title: "Думи невільницькі та лицарські"
+    type: research_dossier
+    path: docs/research/folk/dumy-nevilnytski-lytsarski.md
+    note: "Verified dossier for genre scope, quote discipline, source limits, and FOLK framing."
+  - title: "Невільницькі думи: плач бранців і кобзарська пам'ять волі"
+    type: wiki_context
+    path: wiki/folk/genres/dumy-nevilnytski-lytsarski.md
+    note: "Compiled source-context article for captivity duma poetics, performance, readings, and decolonial framing."
+  - title: "Дума"
+    type: reference
+    url: https://uk.wikipedia.org/wiki/Дума
+    note: "Genre overview only; learner analysis must return to primary duma texts."
+  - title: "Народний епос: думи"
+    type: public_reading_collection
+    url: https://www.ukrlib.com.ua/narod/book.php?id=11
+    note: "Public collection for comparing captivity, knightly, and social-domestic duma cycles."

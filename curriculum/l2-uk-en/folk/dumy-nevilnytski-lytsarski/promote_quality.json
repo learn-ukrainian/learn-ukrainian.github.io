@@ -1,0 +1,70 @@
+{
+  "assembled_mdx_sha256": "da35f6f1d9ee9bac6f2b577c6d63040aaf557f9ee874988bd3a13cc5d24e7646",
+  "content_hash": {
+    "algorithm": "sha256",
+    "basis": "lesson_sources_v2",
+    "digest": "7d3ed81e7734bd17a451f3f69001970a8ba72414d9f3f251cd1d77d04bbcc4d9",
+    "files": [
+      {
+        "path": "curriculum/l2-uk-en/plans/folk/dumy-nevilnytski-lytsarski.yaml",
+        "sha256": "86e887e7a8fd714ad2dd5a600fc9c7bd9930044bdaf45cf76453f762e251c094"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/dumy-nevilnytski-lytsarski/module.md",
+        "sha256": "e4c4b3296e9f387a842931d502c3acbbe62666cdd139b30feb664f1f3c663b8c"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/dumy-nevilnytski-lytsarski/activities.yaml",
+        "sha256": "40fc4bbb454203b1af3b0f59622925728ec4b8d727dd9c6df0e54b52ea9e947e"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/dumy-nevilnytski-lytsarski/vocabulary.yaml",
+        "sha256": "411de623eb24a6caefe452cf91565f1f19febde7b8473cb57cdcf926a61ebe72"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/dumy-nevilnytski-lytsarski/resources.yaml",
+        "sha256": "9149820d7088579e60fceb58b9514ed3abfe373c6484203547fcbcf512dc7f8a"
+      }
+    ]
+  },
+  "evidence": {
+    "decolonization": "Centers Ukrainian kobzar epic and rejects Russian-imperial flattening without romantic overclaim.",
+    "engagement": "Varied inline and workbook tasks cover formula, source evaluation, performance, comparison, and seminar writing.",
+    "naturalness": "C1 Ukrainian seminar prose is learner-facing, source-bound, and clean after surface cleanup.",
+    "pedagogical": "Plan and module teach genre, performance, text record, literary reception, and evidence limits distinctly.",
+    "review": "Claude Opus 4.8 APPROVE reconfirmed after learner-surface cleanup; no blockers remain."
+  },
+  "floors": {
+    "beauty": 8.5,
+    "decolonization": 9.0,
+    "engagement": 8.5,
+    "naturalness": 8.5,
+    "pedagogical": 8.5,
+    "tone": 8.5
+  },
+  "profile": "folk_promote_v1",
+  "review_artifact": null,
+  "reviewer": {
+    "agent": "claude",
+    "family": "anthropic",
+    "model": "claude-opus-4-8"
+  },
+  "schema_version": 1,
+  "scored_at": "2026-06-30T14:20:45Z",
+  "scores": {
+    "beauty": 8.9,
+    "decolonization": 9.2,
+    "engagement": 8.9,
+    "naturalness": 9.0,
+    "pedagogical": 9.1,
+    "tone": 9.0
+  },
+  "slug": "dumy-nevilnytski-lytsarski",
+  "track": "folk",
+  "verdict": "PASS",
+  "writer": {
+    "agent": "codex",
+    "family": "openai",
+    "model": "gpt-5"
+  }
+}
