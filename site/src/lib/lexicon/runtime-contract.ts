@@ -189,9 +189,9 @@ export function buildLexiconRuntimeStatus(input: BuildRuntimeStatusInput): Lexic
       searchIndex: "/api/lexicon/search-index.json",
       dailyPool: "/api/lexicon/daily-pool.json",
       browseShardTemplate: "/lexicon/browse/{letter}.json",
-      practiceIndexTemplate: "/lexicon/practice-index.{level}.json",
-      practiceLexemesTemplate: "/lexicon/practice-lexemes.{level}.json",
-      practiceClozeTemplate: "/lexicon/practice-cloze.{level}.json",
+      practiceIndexTemplate: "/api/lexicon/practice-index.{level}.json",
+      practiceLexemesTemplate: "/api/lexicon/practice-lexemes.{level}.json",
+      practiceClozeTemplate: "/api/lexicon/practice-cloze.{level}.json",
     },
     manifest: {
       hydrated: entries !== null,
