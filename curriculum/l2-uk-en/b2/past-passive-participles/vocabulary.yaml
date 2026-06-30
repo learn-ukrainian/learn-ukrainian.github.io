@@ -29,51 +29,19 @@
 - lemma: узгодження
   translation: "agreement"
   pos: noun
-  usage: "Узгодження з іменником визначає закінчення дієприкметника."
-- lemma: відмінювання
-  translation: "declension"
-  pos: noun
-  usage: "Відмінювання пасивних дієприкметників подібне до відмінювання прикметників."
+  usage: "Узгодження дієприкметника залежить від роду, числа й відмінка іменника."
 - lemma: означення
-  translation: "attribute, modifier"
+  translation: "modifier, attribute"
   pos: noun
-  usage: "У реченні підписаний договір слово підписаний є означенням."
-- lemma: іменна частина присудка
-  translation: "nominal part of the predicate"
-  pos: phrase
-  usage: "У реченні двері були зачинені дієприкметник є іменною частиною присудка."
+  usage: "Підписаний у фразі підписаний договір є означенням."
 - lemma: дієприкметниковий зворот
   translation: "participial phrase"
   pos: phrase
-  usage: "Дієприкметниковий зворот після іменника зазвичай відокремлюється комами."
-- lemma: відокремлення
-  translation: "separation by punctuation"
-  pos: noun
-  usage: "Відокремлення звороту допомагає читачеві побачити межу уточнення."
-- lemma: результативність
-  translation: "resultativity"
-  pos: noun
-  usage: "Результативність часто виражає форма на -но, -то."
-- lemma: форма на -но, -то
-  translation: "form in -no, -to"
-  pos: phrase
-  usage: "Форма на -но, -то повідомляє результат без названого діяча."
-- lemma: діяч
-  translation: "agent, doer"
-  pos: noun
-  usage: "Якщо діяч важливий, його краще зробити підметом активного речення."
-- lemma: виконавець
-  translation: "performer"
-  pos: noun
-  usage: "Виконавець дії не має бути схований в орудному відмінку."
-- lemma: орудний відмінок
-  translation: "instrumental case"
-  pos: phrase
-  usage: "Орудний відмінок може називати інструмент, але не повинен ховати важливого діяча."
-- lemma: калька
-  translation: "calque"
-  pos: noun
-  usage: "Форми на -вш- часто є калькою, яку треба перебудувати."
+  usage: "Дієприкметниковий зворот після іменника часто відокремлюється комами."
+- lemma: відокремлювати
+  translation: "to set off with punctuation"
+  pos: verb
+  usage: "Зворот після означуваного слова часто треба відокремлювати комами."
 - lemma: нормативний
   translation: "standard, normative"
   pos: adj
@@ -86,18 +54,66 @@
   translation: "conciseness"
   pos: noun
   usage: "Дієприкметник додає текстові лаконічності, якщо не ховає відповідальність."
-- lemma: офіційно-діловий стиль
-  translation: "official business style"
-  pos: phrase
-  usage: "В офіційно-діловому стилі часто трапляються підписані договори й затверджені порядки."
-- lemma: художнє означення
-  translation: "literary modifier"
-  pos: phrase
-  usage: "Забутий сад працює як художнє означення."
 - lemma: епітет
   translation: "epithet"
   pos: noun
   usage: "У художньому описі пасивний дієприкметник може бути епітетом."
+- lemma: художнє означення
+  translation: "literary modifier"
+  pos: phrase
+  usage: "Забутий сад працює як художнє означення."
+- lemma: підрядне речення
+  translation: "subordinate clause"
+  pos: phrase
+  usage: "Замість форми прочитавший потрібне підрядне речення який прочитав."
+- lemma: словниковий контроль
+  translation: "dictionary check"
+  pos: phrase
+  usage: "Словниковий контроль допомагає не вигадувати рідкісні форми."
+- lemma: прочитаний
+  translation: "read, having been read"
+  pos: adj
+  usage: "Прочитаний розділ обговорили на семінарі."
+- lemma: написаний
+  translation: "written"
+  pos: adj
+  usage: "Написаний від руки лист важко читався."
+- lemma: підписаний
+  translation: "signed"
+  pos: adj
+  usage: "Підписаний договір зберігається в архіві."
+- lemma: зібраний
+  translation: "collected"
+  pos: adj
+  usage: "Зібрані матеріали передали до музею."
+- lemma: зроблений
+  translation: "made, done"
+  pos: adj
+  usage: "Зроблене завдання треба перевірити."
+- lemma: поставлений
+  translation: "posed, placed"
+  pos: adj
+  usage: "До поставленого питання повернулися наприкінці зустрічі."
+- lemma: відновлений
+  translation: "restored"
+  pos: adj
+  usage: "Відновлена брама стала символом району."
+- lemma: озброєний
+  translation: "armed"
+  pos: adj
+  usage: "Озброєний загін охороняв міст."
+- lemma: відкритий
+  translation: "opened, open"
+  pos: adj
+  usage: "Відкрита виставка працюватиме до кінця місяця."
+- lemma: забутий
+  translation: "forgotten"
+  pos: adj
+  usage: "Забутий сад стояв за старим муром."
+- lemma: стертий
+  translation: "erased, worn away"
+  pos: adj
+  usage: "Стертий напис уже важко прочитати."
 - lemma: перебудувати
   translation: "to restructure"
   pos: verb
@@ -106,55 +122,11 @@
   translation: "to edit"
   pos: verb
   usage: "На рівні B2 студент має відредагувати неприродний пасив."
-- lemma: прочитаний
-  translation: "read"
-  pos: adj
-  usage: "Прочитаний текст можна обговорювати на семінарі."
-- lemma: написаний
-  translation: "written"
-  pos: adj
-  usage: "Написана від руки заява потребує реєстрації."
-- lemma: зроблений
-  translation: "done, made"
-  pos: adj
-  usage: "Зроблений висновок треба підтвердити прикладами."
-- lemma: відновлений
-  translation: "restored"
-  pos: adj
-  usage: "Відновлений парк відкрили для мешканців."
-- lemma: спечений
-  translation: "baked"
-  pos: adj
-  usage: "Спечений хліб залишили на дерев'яній дошці."
-- lemma: відкритий
-  translation: "opened, open"
-  pos: adj
-  usage: "Відкрита виставка привернула увагу журналістів."
-- lemma: закритий
-  translation: "closed"
-  pos: adj
-  usage: "Закриті двері не завжди означають завершену роботу."
-- lemma: забутий
-  translation: "forgotten"
-  pos: adj
-  usage: "Забутий сад став головним образом уривка."
-- lemma: зім'ятий
-  translation: "crumpled"
-  pos: adj
-  usage: "Зім'ятий аркуш лежав біля порога."
-- lemma: стертий
-  translation: "erased, worn away"
-  pos: adj
-  usage: "Стертий напис ледве читався на старій табличці."
-- lemma: підписаний
-  translation: "signed"
-  pos: adj
-  usage: "Підписаний договір передано до архіву."
-- lemma: погоджений
-  translation: "approved, agreed"
-  pos: adj
-  usage: "Погоджений графік надіслали учасникам зустрічі."
-- lemma: затверджений
-  translation: "approved, confirmed"
-  pos: adj
-  usage: "Затверджений порядок набуде чинності наступного місяця."
+- lemma: офіційно-діловий стиль
+  translation: "official business style"
+  pos: phrase
+  usage: "В офіційно-діловому стилі часто трапляються підписані договори й затверджені порядки."
+- lemma: науковий стиль
+  translation: "academic style"
+  pos: phrase
+  usage: "Науковий стиль використовує форми на кшталт отримані результати."
