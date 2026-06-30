@@ -222,5 +222,133 @@
       "path": "curriculum/l2-uk-en/a1/checkpoint-my-world/vocabulary.yaml",
       "cardId": "a1-checkpoint-my-world-lampa-accusative-1"
     }
+  },
+  {
+    "lemma": "риба",
+    "lemmaId": "риба",
+    "sentence": "Я купую ___.",
+    "blankCase": "accusative",
+    "form": "рибу",
+    "number": "singular",
+    "caseRule": "accusative_direct_object",
+    "clozeEn": "I buy fish.",
+    "cefr": "A1",
+    "provenance": {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/food-and-drink/vocabulary.yaml",
+      "cardId": "a1-food-and-drink-ryba-accusative-1"
+    }
+  },
+  {
+    "lemma": "картопля",
+    "lemmaId": "картопля",
+    "sentence": "Я купую ___.",
+    "blankCase": "accusative",
+    "form": "картоплю",
+    "number": "singular",
+    "caseRule": "accusative_direct_object",
+    "clozeEn": "I buy potatoes.",
+    "cefr": "A1",
+    "provenance": {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/food-and-drink/vocabulary.yaml",
+      "cardId": "a1-food-and-drink-kartoplia-accusative-1"
+    }
+  },
+  {
+    "lemma": "морква",
+    "lemmaId": "морква",
+    "sentence": "Я купую ___.",
+    "blankCase": "accusative",
+    "form": "моркву",
+    "number": "singular",
+    "caseRule": "accusative_direct_object",
+    "clozeEn": "I buy carrots.",
+    "cefr": "A1",
+    "provenance": {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/food-and-drink/vocabulary.yaml",
+      "cardId": "a1-food-and-drink-morkva-accusative-1"
+    }
+  },
+  {
+    "lemma": "капуста",
+    "lemmaId": "капуста",
+    "sentence": "Я купую ___.",
+    "blankCase": "accusative",
+    "form": "капусту",
+    "number": "singular",
+    "caseRule": "accusative_direct_object",
+    "clozeEn": "I buy cabbage.",
+    "cefr": "A1",
+    "provenance": {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/food-and-drink/vocabulary.yaml",
+      "cardId": "a1-food-and-drink-kapusta-accusative-1"
+    }
+  },
+  {
+    "lemma": "цибуля",
+    "lemmaId": "цибуля",
+    "sentence": "Я купую ___.",
+    "blankCase": "accusative",
+    "form": "цибулю",
+    "number": "singular",
+    "caseRule": "accusative_direct_object",
+    "clozeEn": "I buy onions.",
+    "cefr": "A1",
+    "provenance": {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/food-and-drink/vocabulary.yaml",
+      "cardId": "a1-food-and-drink-tsybulia-accusative-1"
+    }
+  },
+  {
+    "lemma": "сметана",
+    "lemmaId": "сметана",
+    "sentence": "Я купую ___.",
+    "blankCase": "accusative",
+    "form": "сметану",
+    "number": "singular",
+    "caseRule": "accusative_direct_object",
+    "clozeEn": "I buy sour cream.",
+    "cefr": "A1",
+    "provenance": {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/food-and-drink/vocabulary.yaml",
+      "cardId": "a1-food-and-drink-smetana-accusative-1"
+    }
+  },
+  {
+    "lemma": "склянка",
+    "lemmaId": "склянка",
+    "sentence": "Я беру ___.",
+    "blankCase": "accusative",
+    "form": "склянку",
+    "number": "singular",
+    "caseRule": "accusative_direct_object",
+    "clozeEn": "I take a glass.",
+    "cefr": "A1",
+    "provenance": {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/food-and-drink/vocabulary.yaml",
+      "cardId": "a1-food-and-drink-sklianka-accusative-1"
+    }
+  },
+  {
+    "lemma": "зупинка",
+    "lemmaId": "зупинка",
+    "sentence": "Я бачу ___.",
+    "blankCase": "accusative",
+    "form": "зупинку",
+    "number": "singular",
+    "caseRule": "accusative_direct_object",
+    "clozeEn": "I see the stop.",
+    "cefr": "A1",
+    "provenance": {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/my-city/vocabulary.yaml",
+      "cardId": "a1-my-city-zupynka-accusative-1"
+    }
   }
 ]

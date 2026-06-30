@@ -1,12 +1,12 @@
 {
   "asset_url": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/releases/download/atlas-practice-deck/lexicon-practice-deck.json.gz",
   "release_tag": "atlas-practice-deck",
-  "deck_version": "atlas-practice-v1-c5a52e54cdf8d828",
+  "deck_version": "atlas-practice-v1-b8ba9674db7b1767",
   "package_schema_version": 1,
-  "gz_sha256": "1827aaaf5747263420ca6da6d3480038691ac533eaf6c93bf765f12d0ffc1b12",
-  "package_sha256": "7b5df929fdd38bb7985306cead6182e99ec6a9d0bb854ae9cbddea0f656ac294",
-  "gz_bytes": 260600,
-  "package_bytes": 3947748,
+  "gz_sha256": "8e3e5e5a80852813b508f91f9ff38cd99c7095aebfe34a566dc499e210b04f1c",
+  "package_sha256": "73a5daf2b6e194b7260f986e7e804987963c16f7012c24d6d31075665e078d38",
+  "gz_bytes": 261775,
+  "package_bytes": 3966728,
   "file_count": 15,
   "files": [
     {
@@ -14,13 +14,13 @@
       "kind": "index",
       "level": "A1",
       "schema": "atlas-practice-index",
-      "bytes": 285173,
-      "sha256": "9939aae7b33b8c415853df49821e01737d4c161147c29575ca116017ca843ace",
+      "bytes": 285613,
+      "sha256": "0d9482962c2794467265803a88c664dc5272b9edddea73945c598c1a1857b0e3",
       "counts": {
         "lexemes": 1125,
-        "cloze": 14,
-        "clozeEligibleLexemes": 14,
-        "clozeCoverage": 0.0124
+        "cloze": 22,
+        "clozeEligibleLexemes": 22,
+        "clozeCoverage": 0.0196
       }
     },
     {
@@ -29,15 +29,15 @@
       "level": "A1",
       "schema": "atlas-practice-lexemes",
       "bytes": 549734,
-      "sha256": "48f4b6a4d4151d2988a15f199e16c9d1864427838162a79827bcb8eae774acf7"
+      "sha256": "08bd1a5e095683aa4988d73a3beae8f160a20ee07be70b3bcf47f29cf5062de7"
     },
     {
       "path": "practice-cloze.A1.json",
       "kind": "cloze",
       "level": "A1",
       "schema": "atlas-practice-cloze",
-      "bytes": 28477,
-      "sha256": "2efeac62ad3bd524ec6fa20e31eb84cf2a033acf02ce55e49e56d1db43143c50"
+      "bytes": 44881,
+      "sha256": "2cee3d04080e6013401c976a14e989d13c2bc5dd17b9793bf379731fe2a3ca2a"
     },
     {
       "path": "practice-index.A2.json",
@@ -45,7 +45,7 @@
       "level": "A2",
       "schema": "atlas-practice-index",
       "bytes": 248843,
-      "sha256": "6fc260ead270fc50230b6dcb2e075178a1ce3f6cdc009955b84f5b9ca31fdd66",
+      "sha256": "e01c059f6bb90c12b0606da13812e64c76bddfb5fa8e971ad8aeede55023deb6",
       "counts": {
         "lexemes": 962,
         "cloze": 0,
@@ -59,7 +59,7 @@
       "level": "A2",
       "schema": "atlas-practice-lexemes",
       "bytes": 471398,
-      "sha256": "56468c6ae21ad666df9f447392519f84af164dd4f9505b3b1674844f103a0a10"
+      "sha256": "e29159058fd75c082cd51fe0db7740e0aefc453e702ce7649da2989e7cef7c3d"
     },
     {
       "path": "practice-cloze.A2.json",
@@ -67,7 +67,7 @@
       "level": "A2",
       "schema": "atlas-practice-cloze",
       "bytes": 312,
-      "sha256": "2b05cf885f171ae14805cbf287011d616368d68f05759d7ea39cb5b173a99e7f"
+      "sha256": "ee1258d6733d2b02a3f977175e885acc70698bea9312a950a55170944c3ca874"
     },
     {
       "path": "practice-index.B1.json",
@@ -75,7 +75,7 @@
       "level": "B1",
       "schema": "atlas-practice-index",
       "bytes": 300715,
-      "sha256": "140a15fad9387b182b516a901b719d5e46589d35364758c00d514886e9aec7ff",
+      "sha256": "9e1463b212ae1583c05bb74cb1d98ec3146468d926de69370585e86c10785db2",
       "counts": {
         "lexemes": 1122,
         "cloze": 0,
@@ -89,7 +89,7 @@
       "level": "B1",
       "schema": "atlas-practice-lexemes",
       "bytes": 549743,
-      "sha256": "4354a0a4fec29e91a23c096495c9fff7a5727a2df5c54048cc89b22f7e0112c1"
+      "sha256": "7a0fb53df8fbce5bd4286d159fe0a5dec2ec37cad6ebf9725e90705abc6e498d"
     },
     {
       "path": "practice-cloze.B1.json",
@@ -97,7 +97,7 @@
       "level": "B1",
       "schema": "atlas-practice-cloze",
       "bytes": 312,
-      "sha256": "eb0f571560e416132610e1a6cb46c3a1291836daaee11d8d4d81aa29023624d5"
+      "sha256": "62c187d40ae0c371b09bc9a98635215f7e9d36e2bcfcea438a20e3010db9aa94"
     },
     {
       "path": "practice-index.B2.json",
@@ -105,7 +105,7 @@
       "level": "B2",
       "schema": "atlas-practice-index",
       "bytes": 231193,
-      "sha256": "1f43854483da1366358f420897ee8b9725e7eef75e64b77bc59cd3a3cdd9cd57",
+      "sha256": "6630b69c7bf404140d84da525da2dc17e9078d0bab0f3a424d3f841b6ee81264",
       "counts": {
         "lexemes": 854,
         "cloze": 0,
@@ -119,7 +119,7 @@
       "level": "B2",
       "schema": "atlas-practice-lexemes",
       "bytes": 444472,
-      "sha256": "ebbe24595501154453323945a8d45d240f9d30f42f4abd7e1f842e83e18a24a0"
+      "sha256": "f9af86553ea717dc7b240d2d75076f6bdbcc52f4e67eae36fe77972f2b7fcb92"
     },
     {
       "path": "practice-cloze.B2.json",
@@ -127,7 +127,7 @@
       "level": "B2",
       "schema": "atlas-practice-cloze",
       "bytes": 312,
-      "sha256": "f027569a8591f1d82be40d780be9bbf94af89b7e7e2b1919fb02d2e28d0b41b3"
+      "sha256": "573b3136420cf3316154eca9c0e3d912f9cee99f9a2d1c08ab7cd118b49e18af"
     },
     {
       "path": "practice-index.C1.json",
@@ -135,7 +135,7 @@
       "level": "C1",
       "schema": "atlas-practice-index",
       "bytes": 111524,
-      "sha256": "d6c713f797ad13ab03bab6ffdb873d1482af1ed2f950b858d7ae08c6ae3da271",
+      "sha256": "0eb016c57523938ba4be144e6e40966afe96c32869f44f3269a4ae428baea6ff",
       "counts": {
         "lexemes": 421,
         "cloze": 0,
@@ -149,7 +149,7 @@
       "level": "C1",
       "schema": "atlas-practice-lexemes",
       "bytes": 238187,
-      "sha256": "ee64f6e596cc0b152d596a7d282c16bed44c19a80cf829ba41ccbeafc0d49dcf"
+      "sha256": "a855f47e441f62a46d34262e84db20f45dccac490e0ed57a46149608ded958b7"
     },
     {
       "path": "practice-cloze.C1.json",
@@ -157,7 +157,7 @@
       "level": "C1",
       "schema": "atlas-practice-cloze",
       "bytes": 312,
-      "sha256": "0629e6f65db96bfe7ec58aef99015ada31547563a612117b20efdcec3d788eb9"
+      "sha256": "0eabdce06d4e632d191ff2d9924d5ed95e691b251eca2a697422f9241bd1e64f"
     }
   ],
   "note": "Pins GitHub Release asset practice deck for #3796; hydrate it build/test time instead of committing shards."
