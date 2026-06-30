@@ -111,8 +111,8 @@ describe("lexicon static API routes", () => {
     expect(index.deckVersion).toBe(lexemes.deckVersion);
     expect(index.deckVersion).toBe(cloze.deckVersion);
     expect(index.counts.lexemes).toBe(lexemes.lexemes.length);
-    expect(index.counts.cloze).toBe(cloze.cloze.length);
-    expect(index.counts.lexemes).toBeGreaterThan(1000);
-    expect(index.counts.cloze).toBe(6);
-  });
+  expect(index.counts.cloze).toBe(cloze.cloze.length);
+  expect(index.counts.lexemes).toBeGreaterThan(1000);
+  expect(index.counts.cloze).toBe(14);
+});
 });
