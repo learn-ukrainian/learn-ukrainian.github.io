@@ -1,0 +1,101 @@
+---
+- lemma: пісенний канон
+  translation: song canon
+  pos: noun phrase
+  usage: Пісенний канон складається з творів, які багато разів повертаються до слухача.
+- lemma: культурна пам'ять
+  translation: cultural memory
+  pos: noun phrase
+  usage: Культурна пам'ять пояснює, чому пісня живе після своєї епохи.
+- lemma: народнопісенна традиція
+  translation: folk-song tradition
+  pos: noun phrase
+  usage: Народнопісенна традиція дала Білашеві інтонаційний грунт.
+- lemma: співаність
+  translation: singability
+  pos: noun
+  usage: Співаність означає, що українське слово природно входить у мелодію.
+- lemma: інтонація
+  translation: intonation
+  pos: noun
+  usage: Інтонація допомагає почути, як слово стає музикою.
+- lemma: партитура
+  translation: musical score
+  pos: noun
+  usage: Партитура переводить музичну ідею у письмову форму.
+- lemma: композиторська школа
+  translation: compositional training
+  pos: noun phrase
+  usage: Композиторська школа дала Білашеві техніку великої форми.
+- lemma: співавторство
+  translation: co-authorship
+  pos: noun
+  usage: Співавторство поета і композитора створює пісню як цілісний твір.
+- lemma: лірична сцена
+  translation: lyrical scene
+  pos: noun phrase
+  usage: Лірична сцена в пісні може тримати родинний образ і дорогу.
+- lemma: велика форма
+  translation: large-scale form
+  pos: noun phrase
+  usage: Велика форма показує Білаша як автора опери і кіномузики.
+- lemma: рецепція
+  translation: reception
+  pos: noun
+  usage: Сучасна рецепція показує, як слухачі переосмислюють старі твори.
+- lemma: ювілейний концерт
+  translation: anniversary concert
+  pos: noun phrase
+  usage: Ювілейний концерт може бути доказом живої культурної пам'яті.
+- lemma: офіційне визнання
+  translation: official recognition
+  pos: noun phrase
+  usage: Офіційне визнання не пояснює автоматично культурне значення пісні.
+- lemma: інституційний контекст
+  translation: institutional context
+  pos: noun phrase
+  usage: Інституційний контекст радянської сцени був можливістю і обмеженням.
+- lemma: ярлик
+  translation: label
+  pos: noun
+  usage: Ярлик спрощує біографію і приховує складні факти.
+- lemma: деколонізаційне читання
+  translation: decolonial reading
+  pos: noun phrase
+  usage: Деколонізаційне читання тримає українську форму імені й українську рецепцію.
+- lemma: транслітерація
+  translation: transliteration
+  pos: noun
+  usage: Російськомовна транслітерація може стирати українську форму імені.
+- lemma: лояльність
+  translation: loyalty
+  pos: noun
+  usage: Лояльність не можна доводити одним званням або посадою.
+- lemma: дисидент
+  translation: dissident
+  pos: noun
+  usage: Білаш не був дисидентом, тому модуль не вигадує таку біографію.
+- lemma: переосмислення
+  translation: reinterpretation
+  pos: noun
+  usage: Переосмислення дозволяє сучасній Україні слухати складну спадщину уважно.
+- lemma: тяглість
+  translation: continuity
+  pos: noun
+  usage: Тяглість української пісні видима тоді, коли твір переживає політичну систему.
+- lemma: родинна пам'ять
+  translation: family memory
+  pos: noun phrase
+  usage: Родинна пам'ять робить ліричну пісню близькою багатьом слухачам.
+- lemma: публічне виконання
+  translation: public performance
+  pos: noun phrase
+  usage: Публічне виконання переносить пісню з приватного слуху на сцену.
+- lemma: сентиментальність
+  translation: sentimentality
+  pos: noun
+  usage: Сентиментальність з'являється тоді, коли емоція замінює форму.
+- lemma: гідність
+  translation: dignity
+  pos: noun
+  usage: Українська лірична гідність може бути способом культурного спротиву.

@@ -516,6 +516,12 @@ jobs:
         with:
           python-version: '3.12'
 
+      - name: Cache Atlas lexicon manifest
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        with:
+          path: site/src/data/lexicon-manifest.json
+          key: lexicon-manifest-${{ hashFiles('site/src/data/lexicon-manifest.pointer.json') }}
+
       - name: Install dependencies
         run: |
           python -m venv .venv
@@ -554,6 +560,12 @@ jobs:
       - uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
         with:
           python-version: '3.12'
+
+      - name: Cache Atlas lexicon manifest
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        with:
+          path: site/src/data/lexicon-manifest.json
+          key: lexicon-manifest-${{ hashFiles('site/src/data/lexicon-manifest.pointer.json') }}
 
       - name: Install generator dependencies
         run: |
@@ -630,6 +642,13 @@ jobs:
           cache-dependency-path: |
             requirements-lock.txt
             pyproject.toml
+
+      - name: Cache Atlas lexicon manifest
+        if: needs.changes.outputs.python == 'true'
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        with:
+          path: site/src/data/lexicon-manifest.json
+          key: lexicon-manifest-${{ hashFiles('site/src/data/lexicon-manifest.pointer.json') }}
 
       - name: Install dependencies
         if: needs.changes.outputs.python == 'true'

@@ -44,7 +44,7 @@ SOURCE_FILENAMES = {
     "vocabulary.yaml",
     "vocabulary.yml",
 }
-NAV_FRONTMATTER_RE = re.compile(r"^(prev|next):(?:\s|$)")
+IGNORED_FRONTMATTER_RE = re.compile(r"^(prev|next|pipeline|build_status):(?:\s|$)")
 
 
 @dataclass(frozen=True, order=True)
@@ -130,7 +130,9 @@ def normalize_mdx_for_parity(text: str) -> str:
             if lines[closing_index].strip() != "---":
                 continue
             frontmatter = [
-                line for line in lines[1:closing_index] if not NAV_FRONTMATTER_RE.match(line)
+                line
+                for line in lines[1:closing_index]
+                if not IGNORED_FRONTMATTER_RE.match(line)
             ]
             lines = ["---", *frontmatter, *lines[closing_index:]]
             break
