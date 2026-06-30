@@ -631,6 +631,13 @@ jobs:
             requirements-lock.txt
             pyproject.toml
 
+      - name: Cache Atlas lexicon manifest
+        if: needs.changes.outputs.python == 'true'
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        with:
+          path: site/src/data/lexicon-manifest.json
+          key: lexicon-manifest-${{ hashFiles('site/src/data/lexicon-manifest.pointer.json') }}
+
       - name: Install dependencies
         if: needs.changes.outputs.python == 'true'
         run: |
