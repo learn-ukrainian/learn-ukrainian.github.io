@@ -4,7 +4,7 @@ sequence: 6
 slug: zhnyvarski-obzhynkovi-pisni
 title: "Жниварські та обжинкові пісні"
 subtitle: "Harvest labor, obzhynky, wreath, sheaf, community voice"
-version: 5
+version: 6
 status: locked
 phase: base-first
 cefr_min: C1
@@ -108,6 +108,16 @@ activity_hints:
   - type: social-address
     placement: workbook
     focus: "Пояснити, як похвала, прохання, очікування винагороди і жарт співіснують в обжинковому тексті."
+vesum_exemptions:
+  corpus_attested_quotes:
+    - term: "сонінько"
+      forms: ["сонінько"]
+      source_chunk: "public-reading:zhnyvarska-pisnia-nute-nute-do-mezhi"
+      rationale: "Вербатим із публічного читання «Нуте, нуте, до межі» у первинному блоці модуля."
+    - term: "насвітився"
+      forms: ["насвітився"]
+      source_chunk: "public-reading:obzhynkova-pisnia-kotyvsia-vinochok-po-poliu"
+      rationale: "Вербатим із публічного читання «Котився віночок по полю» у первинному блоці модуля."
 vocabulary_hints:
   - "жнива"
   - "жниварська пісня"
@@ -197,8 +207,13 @@ connects_to:
   - kupalski-rusalni-pisni
   - rodynna-obriadovist-zvychai
 changelog:
-  - version: 5
-    date: "2026-06-29"
-    note: >-
+- version: 6
+  date: "2026-06-30"
+  note: >-
+    Module/readings build: added narrow VESUM exemptions for corpus-attested
+    quoted forms from public M06 reading pages.
+- version: 5
+date: "2026-06-29"
+note: >-
       Base-first rebuild: replaced contaminated M06 dossier/wiki/plan with
       clean harvest-labor and public-source contract; scope remains base-only.
