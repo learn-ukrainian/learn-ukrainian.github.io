@@ -1,128 +1,135 @@
 - lemma: односкладне речення
   translation: one-member sentence
+  ipa: "[odnoskladne rechennia]"
   pos: phrase
   usage: Односкладне речення має один головний член і завершений зміст.
 - lemma: двоскладне речення
   translation: two-member sentence
+  ipa: "[dvoskladne rechennia]"
   pos: phrase
   usage: У двоскладному реченні є підмет і присудок.
 - lemma: головний член
   translation: main member
+  ipa: "[holovnyi chlen]"
   pos: phrase
-  usage: Головний член односкладного речення тримає центр думки.
+  usage: Головний член односкладного речення тримає граматичний центр.
 - lemma: означено-особове
   translation: definite-personal
+  ipa: "[oznacheno osobove]"
   pos: adjective
-  usage: Означено-особове речення вказує особу через форму дієслова.
+  usage: Означено-особове речення показує особу через форму дієслова.
 - lemma: неозначено-особове
   translation: indefinite-personal
+  ipa: "[neoznacheno osobove]"
   pos: adjective
-  usage: Неозначено-особове речення зосереджує увагу на події.
+  usage: Неозначено-особове речення повідомляє дію без названого виконавця.
 - lemma: узагальнено-особове
   translation: generalized-personal
+  ipa: "[uzahalneno osobove]"
   pos: adjective
-  usage: Узагальнено-особове речення часто звучить як правило.
+  usage: Узагальнено-особове речення формулює досвід як правило.
 - lemma: безособове
   translation: impersonal
+  ipa: "[bezosobove]"
   pos: adjective
-  usage: Безособове речення передає стан без активного діяча.
-- lemma: називне речення
-  translation: nominative sentence
-  pos: phrase
-  usage: Називне речення створює короткий кадр або експозицію.
+  usage: Безособове речення передає стан або потребу без активного підмета.
+- lemma: називне
+  translation: nominative
+  ipa: "[nazyvne]"
+  pos: adjective
+  usage: Називне речення створює кадр за допомогою іменника в називному відмінку.
 - lemma: категорія стану
   translation: category of state
+  ipa: "[katehoriia stanu]"
   pos: phrase
-  usage: Категорія стану допомагає описати самопочуття без підмета.
-- lemma: форма на -но, -то
-  translation: -no/-to impersonal form
-  pos: phrase
-  usage: Форму на -но, -то використовують для підкреслення результату.
-- lemma: виконавець
-  translation: doer, performer
-  pos: noun
-  usage: У неозначено-особовому реченні виконавця не названо.
-- lemma: діяч
-  translation: agent
-  pos: noun
-  usage: Безособове речення може не мати діяча.
-- lemma: підмет
-  translation: subject
-  pos: noun
-  usage: Односкладне речення не завжди потребує підмета.
-- lemma: присудок
-  translation: predicate
-  pos: noun
-  usage: У двоскладному реченні присудок поєднується з підметом.
-- lemma: давальний відмінок
-  translation: dative case
-  pos: phrase
-  usage: Давальний відмінок часто називає носія стану.
+  usage: "Категорія стану допомагає передати самопочуття: мені холодно."
 - lemma: носій стану
   translation: experiencer of a state
+  ipa: "[nosii stanu]"
   pos: phrase
-  usage: У реченні «Мені холодно» носій стану виражений давальним.
-- lemma: синтаксична незалежність
-  translation: syntactic independence
-  pos: phrase
-  usage: Синтаксична незалежність означає, що речення самодостатнє.
+  usage: У реченні Мені тривожно носій стану виражений давальним відмінком.
 - lemma: лаконічність
   translation: concision
+  ipa: "[lakonichnist]"
   pos: noun
-  usage: Лаконічність односкладних речень корисна в репортажі.
+  usage: Лаконічність односкладних речень корисна в оголошеннях і нотатках.
 - lemma: динамізм
   translation: dynamism
+  ipa: "[dynamizm]"
   pos: noun
-  usage: Короткі односкладні речення додають тексту динамізму.
+  usage: Короткі односкладні речення додають розповіді динамізму.
 - lemma: афористичність
   translation: aphoristic quality
+  ipa: "[aforystychnist]"
   pos: noun
-  usage: Узагальнено-особові речення мають афористичність.
-- lemma: експресивність
-  translation: expressiveness
+  usage: Узагальнено-особові речення часто мають афористичність.
+- lemma: суб'єктність
+  translation: agency
+  ipa: "[subiektnist]"
   pos: noun
-  usage: Називні речення підсилюють експресивність опису.
-- lemma: експозиція
-  translation: exposition
-  pos: noun
-  usage: Називні речення часто відкривають експозицію оповідання.
+  usage: Двоскладне речення може повернути суб'єктність і відповідальність виконавця.
 - lemma: пейзаж
   translation: landscape
+  ipa: "[peizazh]"
   pos: noun
-  usage: У пейзажі природно звучать безособові й називні речення.
+  usage: У пейзажі природно поєднуються називні й безособові речення.
 - lemma: трансформація
   translation: transformation
+  ipa: "[transformatsiia]"
   pos: noun
-  usage: Трансформація змінює фокус речення.
+  usage: Трансформація двоскладного речення змінює фокус повідомлення.
 - lemma: стилістичний вибір
   translation: stylistic choice
+  ipa: "[stylistychnyi vybir]"
   pos: phrase
-  usage: Стилістичний вибір визначає, чи називати виконавця.
-- lemma: відсторонення
-  translation: distancing
-  pos: noun
-  usage: Безособова форма може створювати відсторонення.
+  usage: Стилістичний вибір визначає, чи називати виконавця дії.
 - lemma: відповідальність
   translation: responsibility
+  ipa: "[vidpovidalnist]"
   pos: noun
-  usage: Іноді треба назвати відповідальність прямо.
-- lemma: неминучість
-  translation: inevitability
+  usage: Якщо відповідальність важлива, виконавця краще назвати прямо.
+- lemma: виконавець
+  translation: performer, agent
+  ipa: "[vykonavets]"
   pos: noun
-  usage: Безособові речення можуть передавати неминучість.
-- lemma: самодостатній
-  translation: self-sufficient
-  pos: adjective
-  usage: Односкладне речення є самодостатнім у своєму контексті.
-- lemma: узагальнення
-  translation: generalization
+  usage: У неозначено-особовому реченні виконавець мислиться, але не називається.
+- lemma: предикативне слово
+  translation: predicative word
+  ipa: "[predykatyvne slovo]"
+  pos: phrase
+  usage: У реченні Треба йти предикативне слово треба є головним центром.
+- lemma: форма на -но/-то
+  translation: -no/-to form
+  ipa: "[forma na no to]"
+  pos: phrase
+  usage: "Форма на -но/-то підкреслює результат: рішення ухвалено."
+- lemma: давальний відмінок
+  translation: dative case
+  ipa: "[davalnyi vidminok]"
+  pos: phrase
+  usage: Давальний відмінок часто називає носія стану в безособових реченнях.
+- lemma: експозиція
+  translation: exposition
+  ipa: "[ekspozytsiia]"
   pos: noun
-  usage: Узагальнення робить пораду правилом для багатьох.
+  usage: Називні речення можуть відкривати експозицію оповідання.
 - lemma: кадр
   translation: frame, shot
+  ipa: "[kadr]"
   pos: noun
-  usage: Називне речення може працювати як окремий кадр.
-- lemma: синтаксична синонімія
-  translation: syntactic synonymy
+  usage: Називне речення працює як короткий кадр у тексті.
+- lemma: синтаксична незалежність
+  translation: syntactic independence
+  ipa: "[syntaksychna nezalezhnist]"
   pos: phrase
-  usage: Синтаксична синонімія дає кілька способів подати той самий зміст.
+  usage: Синтаксична незалежність відрізняє односкладне речення від неповної репліки.
+- lemma: неповне речення
+  translation: incomplete sentence
+  ipa: "[nepovne rechennia]"
+  pos: phrase
+  usage: Неповне речення відновлює пропущений зміст із контексту.
+- lemma: смисловий зсув
+  translation: shift in meaning
+  ipa: "[smyslovyi zsuv]"
+  pos: phrase
+  usage: Смисловий зсув після трансформації треба пояснювати окремо.

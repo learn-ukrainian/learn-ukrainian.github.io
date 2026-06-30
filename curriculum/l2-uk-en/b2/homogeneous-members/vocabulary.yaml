@@ -1,128 +1,125 @@
 - lemma: однорідні члени речення
   translation: homogeneous sentence members
-  pos: phrase
-  usage: Однорідні члени речення виконують однакову синтаксичну роль.
+  ipa: "[od.no.rid.ni tʃle.nɪ re.tʃen.nʲa]"
+  pos: noun phrase
+  usage: "Однорідні члени речення виконують однакову синтаксичну роль і залежать від одного керівного слова."
 - lemma: однорідний ряд
   translation: homogeneous series
-  pos: phrase
-  usage: Однорідний ряд має спільну логіку й спільний синтаксичний центр.
-- lemma: узагальнююче слово
+  ipa: "[od.no.rid.nɪj rʲad]"
+  pos: noun phrase
+  usage: "Однорідний ряд має спільне питання, спільну роль і логічно сумісні елементи."
+- lemma: узагальнювальне слово
   translation: generalizing word
-  pos: phrase
-  usage: Узагальнююче слово відкриває або підсумовує перелік.
+  ipa: "[u.za.halʲ.nʲu.ju.tʃe slo.wo]"
+  pos: noun phrase
+  usage: "Узагальнювальне слово може стояти перед переліком або після нього."
 - lemma: сполучниковий зв'язок
   translation: conjunctional connection
-  pos: phrase
-  usage: Сполучниковий зв'язок показує відношення між елементами ряду.
+  ipa: "[spo.lu.tʃnɪ.ko.wɪj zʲvja.zok]"
+  pos: noun phrase
+  usage: "Сполучниковий зв'язок виражають і, або, але та інші сполучники."
 - lemma: безсполучниковий зв'язок
   translation: asyndetic connection
-  pos: phrase
-  usage: Безсполучниковий зв'язок спирається на перелічувальну інтонацію.
+  ipa: "[bez.spo.lu.tʃnɪ.ko.wɪj zʲvja.zok]"
+  pos: noun phrase
+  usage: "Безсполучниковий зв'язок спирається на перелічувальну інтонацію і коми."
 - lemma: перелічувальна інтонація
   translation: enumerative intonation
-  pos: phrase
-  usage: Перелічувальна інтонація допомагає почути межі однорідного ряду.
+  ipa: "[pe.re.lʲi.tʃu.walʲ.na in.to.na.t͡sʲi.ja]"
+  pos: noun phrase
+  usage: "Перелічувальна інтонація допомагає почути межі однорідного ряду."
 - lemma: двокрапка
   translation: colon
+  ipa: "[dwo.krap.ka]"
   pos: noun
-  usage: Двокрапка стоїть після узагальнюючого слова перед переліком.
+  usage: "Двокрапка ставиться після узагальнювального слова перед переліком."
 - lemma: тире
   translation: dash
+  ipa: "[tɪ.re]"
   pos: noun
-  usage: Тире може підсумовувати однорідний ряд перед узагальнюючим словом.
+  usage: "Тире може підсумовувати однорідний ряд перед узагальнювальним словом."
 - lemma: градація
   translation: gradation
+  ipa: "[ɦra.da.t͡sʲi.ja]"
   pos: noun
-  usage: Градація розташовує елементи за наростанням або спаданням сили.
+  usage: "Градація розташовує однорідні елементи за наростанням або спаданням сили."
 - lemma: антитеза
   translation: antithesis
+  ipa: "[an.tɪ.te.za]"
   pos: noun
-  usage: Антитеза протиставляє однорідні або паралельні елементи.
+  usage: "Антитеза зіставляє протилежні поняття в однаковій синтаксичній позиції."
 - lemma: систематизація
   translation: systematization
+  ipa: "[sɪs.te.ma.tɪ.za.t͡sʲi.ja]"
   pos: noun
-  usage: Систематизація матеріалу часто спирається на чіткий перелік.
+  usage: "Систематизація правил допомагає швидко вибрати кому, двокрапку або тире."
 - lemma: пунктограма
   translation: punctuation pattern
+  ipa: "[punk.to.hra.ma]"
   pos: noun
-  usage: Пунктограма допомагає пояснити вибір коми, двокрапки або тире.
+  usage: "Пунктограма з узагальнювальним словом має схеми з двокрапкою і тире."
 - lemma: сурядність
   translation: coordination
+  ipa: "[su.rʲad.nʲistʲ]"
   pos: noun
-  usage: Сурядність означає рівноправний зв'язок елементів.
-- lemma: супідрядність
-  translation: co-subordination
-  pos: noun
-  usage: Супідрядність показує, що елементи однаково залежать від спільного слова.
-- lemma: семантична однорідність
-  translation: semantic homogeneity
-  pos: phrase
-  usage: Семантична однорідність вимагає понять одного логічного поля.
+  usage: "Сурядність означає рівноправний зв'язок між елементами однорідного ряду."
 - lemma: контекст
   translation: context
+  ipa: "[kon.tekst]"
   pos: noun
-  usage: Контекст вирішує, чи означення звучать однорідно.
-- lemma: єднальний сполучник
-  translation: additive conjunction
-  pos: phrase
-  usage: Єднальний сполучник додає елемент до елемента.
-- lemma: протиставний сполучник
-  translation: adversative conjunction
-  pos: phrase
-  usage: Перед протиставним сполучником у ряду ставимо кому.
-- lemma: розділовий сполучник
-  translation: disjunctive conjunction
-  pos: phrase
-  usage: Розділовий сполучник передає вибір або чергування.
-- lemma: повторюваний сполучник
-  translation: repeated conjunction
-  pos: phrase
-  usage: Повторюваний сполучник виділяє кожен елемент ряду.
-- lemma: парний сполучник
-  translation: correlative conjunction
-  pos: phrase
-  usage: Парний сполучник потребує симетричної будови.
+  usage: "Контекст може змінити тлумачення означень як однорідних або неоднорідних."
+- lemma: синтаксична роль
+  translation: syntactic role
+  ipa: "[sɪn.tak.sɪ.tʃna rolʲ]"
+  pos: noun phrase
+  usage: "Синтаксична роль кожного елемента має збігатися з роллю інших елементів ряду."
+- lemma: керівне слово
+  translation: governing word
+  ipa: "[ke.rʲiw.ne slo.wo]"
+  pos: noun phrase
+  usage: "Керівне слово допомагає визначити, від чого залежать однорідні члени."
 - lemma: логічна сумісність
   translation: logical compatibility
-  pos: phrase
-  usage: Логічна сумісність захищає перелік від випадкових елементів.
-- lemma: неоднорідні означення
-  translation: non-homogeneous attributes
-  pos: phrase
-  usage: Неоднорідні означення описують предмет з різних боків.
+  ipa: "[lo.hʲi.tʃna su.mʲis.nʲistʲ]"
+  pos: noun phrase
+  usage: "Логічна сумісність захищає ряд від випадкового змішування понять."
 - lemma: однорідні означення
   translation: homogeneous attributes
-  pos: phrase
-  usage: Однорідні означення рівноправно характеризують предмет.
-- lemma: перелік
-  translation: list, enumeration
-  pos: noun
-  usage: Перелік має бути граматично й логічно впорядкованим.
-- lemma: ритм речення
-  translation: sentence rhythm
-  pos: phrase
-  usage: Ритм речення змінюється від довжини однорідного ряду.
+  ipa: "[od.no.rid.ni o.zna.tʃen.nʲa]"
+  pos: noun phrase
+  usage: "Однорідні означення рівноправно характеризують предмет з одного боку."
+- lemma: неоднорідні означення
+  translation: non-homogeneous attributes
+  ipa: "[ne.od.no.rid.ni o.zna.tʃen.nʲa]"
+  pos: noun phrase
+  usage: "Неоднорідні означення описують предмет з різних боків і не відділяються комою."
+- lemma: спільний залежний елемент
+  translation: shared dependent element
+  ipa: "[spʲilʲ.nɪj za.leʒ.nɪj e.le.ment]"
+  pos: noun phrase
+  usage: "Спільний залежний елемент має підходити до кожного однорідного присудка."
+- lemma: парний сполучник
+  translation: correlative conjunction
+  ipa: "[par.nɪj spo.lu.tʃnɪk]"
+  pos: noun phrase
+  usage: "Парний сполучник вимагає симетрії: не тільки факти, а й способи подання."
+- lemma: протиставний сполучник
+  translation: adversative conjunction
+  ipa: "[pro.tɪ.staw.nɪj spo.lu.tʃnɪk]"
+  pos: noun phrase
+  usage: "Перед протиставним сполучником але або а між однорідними членами ставимо кому."
+- lemma: розділовий сполучник
+  translation: disjunctive conjunction
+  ipa: "[roz.dʲi.lo.wɪj spo.lu.tʃnɪk]"
+  pos: noun phrase
+  usage: "Розділовий сполучник або показує вибір між однорідними елементами."
 - lemma: накопичення
   translation: accumulation
+  ipa: "[na.ko.pɪ.tʃen.nʲa]"
   pos: noun
-  usage: Накопичення деталей може створити відчуття достатку або хаосу.
-- lemma: симетрія
-  translation: symmetry
-  pos: noun
-  usage: Симетрія важлива для парних сполучників.
-- lemma: смислове поле
-  translation: semantic field
-  pos: phrase
-  usage: Елементи однорідного ряду мають належати до спільного смислового поля.
-- lemma: риторичний ефект
-  translation: rhetorical effect
-  pos: phrase
-  usage: Риторичний ефект однорідності залежить від порядку елементів.
-- lemma: службовий текст
-  translation: administrative text
-  pos: phrase
-  usage: У службовому тексті довгі переліки часто краще подавати списком.
-- lemma: пунктуаційна норма
-  translation: punctuation norm
-  pos: phrase
-  usage: Пунктуаційна норма має спиратися на синтаксичну логіку.
+  usage: "Накопичення деталей у ряду може створювати відчуття достатку або хаосу."
+- lemma: ритм речення
+  translation: sentence rhythm
+  ipa: "[rɪtm re.tʃen.nʲa]"
+  pos: noun phrase
+  usage: "Ритм речення змінюється, коли автор обирає безсполучниковий або повторюваний зв'язок."

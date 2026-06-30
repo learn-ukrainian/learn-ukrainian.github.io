@@ -1,128 +1,145 @@
 - lemma: відокремлений
-  translation: detached, separated
+  translation: detached; separated
+  ipa: "[ʋidɔˈkrɛmlɛnɪj]"
   pos: adjective
-  usage: Відокремлений член речення виділяється інтонаційно й пунктуаційно.
+  usage: "Відокремлений член речення має власну інтонаційну паузу."
 - lemma: відокремлення
-  translation: detachment
+  translation: detachment; separation
+  ipa: "[ʋidɔˈkrɛmlɛnʲːɐ]"
   pos: noun
-  usage: Відокремлення допомагає виділити додаткову деталь.
+  usage: "Відокремлення допомагає авторові керувати увагою читача."
 - lemma: дієприкметниковий зворот
   translation: participial phrase
+  ipa: "[dʲijeprɪkmɛtˈnɪkɔʋɪj ˈzʋɔrɔt]"
   pos: phrase
-  usage: Дієприкметниковий зворот після означуваного слова часто відокремлюється.
+  usage: "Дієприкметниковий зворот після означуваного слова часто виділяється комами."
 - lemma: дієприслівниковий зворот
   translation: adverbial participial phrase
+  ipa: "[dʲijeprɪsʲlʲiʋnɪˈkɔʋɪj ˈzʋɔrɔt]"
   pos: phrase
-  usage: Дієприслівниковий зворот має стосуватися того самого виконавця.
+  usage: "Дієприслівниковий зворот потребує спільного виконавця з присудком."
 - lemma: прикладка
   translation: apposition
+  ipa: "[prɪˈklɑdkɐ]"
   pos: noun
-  usage: Прикладка по-іншому називає предмет або особу.
+  usage: "Прикладка дає предмету або особі другу назву."
 - lemma: уточнювальний
-  translation: clarifying
+  translation: clarifying; specifying
+  ipa: "[utɔt͡ʃnʲuˈʋɑlʲnɪj]"
   pos: adjective
-  usage: Уточнювальний член звужує попереднє значення.
+  usage: "Уточнювальний член звужує попередню ширшу назву."
 - lemma: обставина
-  translation: adverbial modifier
+  translation: adverbial modifier; circumstance
+  ipa: "[ɔpˈstɑʋɪnɐ]"
   pos: noun
-  usage: Відокремлена обставина може передавати причину або допуст.
+  usage: "Обставина пояснює час, місце, спосіб, причину або умову дії."
 - lemma: додаток
-  translation: object
+  translation: object; complement
+  ipa: "[dɔˈdɑtɔk]"
   pos: noun
-  usage: Відокремлений додаток часто вводять слова крім або окрім.
+  usage: "Відокремлений додаток часто вводить виняток або зіставлення."
 - lemma: деталізація
-  translation: detailing
+  translation: detailing; specification
+  ipa: "[dɛtɐlʲiˈzɑt͡sʲijɐ]"
   pos: noun
-  usage: Деталізація робить опис точнішим.
+  usage: "Деталізація робить опис точнішим, але може перевантажити речення."
 - lemma: акцентування
-  translation: emphasis
+  translation: emphasis; accentuation
+  ipa: "[ɑkt͡sɛnˈtuʋɐnʲːɐ]"
   pos: noun
-  usage: Акцентування допомагає керувати увагою читача.
+  usage: "Акцентування через коми змінює інформаційний фокус."
 - lemma: синтаксична норма
   translation: syntactic norm
+  ipa: "[sɪntɐkˈsɪt͡ʃnɐ ˈnɔrmɐ]"
   pos: phrase
-  usage: Синтаксична норма визначає природну будову речення.
+  usage: "Синтаксична норма вимагає спільного виконавця в дієприслівниковому звороті."
 - lemma: інтонаційна пауза
   translation: intonational pause
+  ipa: "[intonɐˈt͡sʲijnɐ ˈpɑuzɐ]"
   pos: phrase
-  usage: Інтонаційна пауза часто відповідає письмовій комі.
+  usage: "Інтонаційна пауза на письмі часто позначається комами."
 - lemma: уточнення
-  translation: clarification
+  translation: clarification; specification
+  ipa: "[utɔt͡ʃˈnɛnʲːɐ]"
   pos: noun
-  usage: Уточнення звужує попереднє значення.
-- lemma: постпозиція
-  translation: postposition
+  usage: "Уточнення рухається від ширшої назви до вужчої."
+- lemma: означення
+  translation: attribute; modifier
+  ipa: "[ɔznɐˈt͡ʃɛnʲːɐ]"
   pos: noun
-  usage: Постпозиція означення часто створює умову для відокремлення.
-- lemma: препозиція
-  translation: preposition
-  pos: noun
-  usage: Препозиція означення частіше не потребує коми.
+  usage: "Означення характеризує предмет і відповідає на питання який."
 - lemma: означуване слово
   translation: modified word
+  ipa: "[ɔznɐt͡ʃuˈʋɑnɛ ˈslɔʋɔ]"
   pos: phrase
-  usage: Означуване слово стоїть перед або після означення.
+  usage: "Позиція щодо означуваного слова впливає на пунктуацію."
 - lemma: поширене означення
   translation: expanded attribute
+  ipa: "[pɔˈʃɪrɛnɛ ɔznɐˈt͡ʃɛnʲːɐ]"
   pos: phrase
-  usage: Поширене означення має залежні слова.
-- lemma: одиничне означення
-  translation: single attribute
-  pos: phrase
-  usage: Одиничне означення може виділятися для описового ефекту.
-- lemma: допуст
-  translation: concession
+  usage: "Поширене означення має залежні слова."
+- lemma: постпозиція
+  translation: postposition
+  ipa: "[pɔstpɔˈzɪt͡sʲijɐ]"
   pos: noun
-  usage: Обставина допусту показує дію всупереч перешкоді.
+  usage: "Постпозиція поширеного означення часто створює умову для відокремлення."
+- lemma: препозиція
+  translation: preposition; position before
+  ipa: "[prɛpɔˈzɪt͡sʲijɐ]"
+  pos: noun
+  usage: "Препозиція означення зазвичай робить його частиною іменникової групи."
+- lemma: спільний виконавець
+  translation: shared subject; common performer
+  ipa: "[ˈspilʲnɪj ʋɪkɔˈnɑʋɛt͡sʲ]"
+  pos: phrase
+  usage: "Спільний виконавець потрібен для нормативного дієприслівникового звороту."
 - lemma: фразеологізм
   translation: idiom
+  ipa: "[frɐzɛɔlɔˈɦizm]"
   pos: noun
-  usage: Фразеологізм не покладаючи рук часто не відокремлюється.
+  usage: "Фразеологізм не покладаючи рук часто не відокремлюється."
+- lemma: допуст
+  translation: concession
+  ipa: "[ˈdɔpust]"
+  pos: noun
+  usage: "Попри втому виражає обставину допусту."
+- lemma: виняток
+  translation: exception
+  ipa: "[ˈʋɪnʲɑtɔk]"
+  pos: noun
+  usage: "Виняток із крім зазвичай виділяється комами."
+- lemma: зіставлення
+  translation: comparison; contrast
+  ipa: "[zʲistɐu̯ˈlɛnʲːɐ]"
+  pos: noun
+  usage: "На відміну від створює зіставлення між двома фактами."
 - lemma: керування
-  translation: government
+  translation: government; case government
+  ipa: "[kɛruˈʋɑnʲːɐ]"
   pos: noun
-  usage: Після окрім треба перевірити керування родовим відмінком.
+  usage: "Керування після крім вимагає родового відмінка."
 - lemma: родовий відмінок
   translation: genitive case
+  ipa: "[rɔdɔˈʋɪj ˈʋidmʲinɔk]"
   pos: phrase
-  usage: Відокремлені додатки з крім часто потребують родового відмінка.
-- lemma: обмеження
-  translation: limitation
-  pos: noun
-  usage: Відокремлений додаток може вводити обмеження.
-- lemma: зіставлення
-  translation: comparison
-  pos: noun
-  usage: На відміну від вводить зіставлення.
-- lemma: смислова пауза
-  translation: semantic pause
+  usage: "У вислові крім Марини потрібен родовий відмінок."
+- lemma: інформаційна структура
+  translation: information structure
+  ipa: "[informɐˈt͡sʲijnɐ strukˈturɐ]"
   pos: phrase
-  usage: Смислова пауза показує додатковість конструкції.
-- lemma: додатковість
-  translation: additivity
-  pos: noun
-  usage: Додатковість пояснює, чому зворот можна вилучити без руйнування основи.
-- lemma: перевантаження
-  translation: overload
-  pos: noun
-  usage: Надмір відокремлених конструкцій створює перевантаження речення.
-- lemma: уточнювати
-  translation: to clarify
-  pos: verb
-  usage: Уточнювати місце можна через відокремлену обставину.
-- lemma: виділяти
-  translation: to set off
-  pos: verb
-  usage: Коми виділяють відокремлений член речення.
-- lemma: перебудувати
-  translation: to restructure
-  pos: verb
-  usage: Речення з неправильним дієприслівниковим зворотом треба перебудувати.
-- lemma: нормативний
-  translation: standard
-  pos: adjective
-  usage: Нормативний варіант відповідає граматичній і стилістичній нормі.
-- lemma: ритм речення
-  translation: sentence rhythm
+  usage: "Інформаційна структура показує, що є фокусом речення."
+- lemma: комунікативний фокус
+  translation: communicative focus
+  ipa: "[komunʲikɐˈtɪu̯nɪj ˈfɔkus]"
   pos: phrase
-  usage: Ритм речення змінюється від кількості відокремлених конструкцій.
+  usage: "Комунікативний фокус змінюється, коли означення переносимо після іменника."
+- lemma: авторська позиція
+  translation: authorial stance
+  ipa: "[ˈɑu̯tɔrsʲkɐ pɔˈzɪt͡sʲijɐ]"
+  pos: phrase
+  usage: "Відокремлена конструкція може передавати авторську позицію або оцінку."
+- lemma: пунктуаційний висновок
+  translation: punctuation conclusion
+  ipa: "[punktuɐˈt͡sʲijnɪj ˈʋɪsnɔʋɔk]"
+  pos: phrase
+  usage: "Пунктуаційний висновок треба робити після синтаксичної діагностики."

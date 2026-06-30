@@ -1,128 +1,140 @@
 - lemma: фізична активність
   translation: physical activity
+  ipa: "[ˈfizɪt͡ʃnɑ ɑktɪu̯ˈnʲistʲ]"
   pos: phrase
-  usage: Регулярна фізична активність підтримує витривалість.
+  usage: "Регулярна фізична активність підтримує витривалість."
 - lemma: тренування
   translation: training session
+  ipa: "[trenuˈʋɑnʲːɑ]"
   pos: noun
-  usage: Перед змаганням команда провела відкрите тренування.
+  usage: "Після тренування варто зробити розтяжку."
 - lemma: змагання
   translation: competition
+  ipa: "[zmɑˈɦɑnʲːɑ]"
   pos: noun
-  usage: Змагання тривало два дні й зібрало молодих спортсменів.
-- lemma: команда
-  translation: team
+  usage: "Команда готується до міського змагання."
+- lemma: перемога
+  translation: victory
+  ipa: "[pereˈmɔɦɑ]"
   pos: noun
-  usage: Команда грала дисципліновано й підтримувала темп.
-- lemma: суперник
-  translation: opponent
+  usage: "Перемога стала приводом для спокійного аналізу гри."
+- lemma: матч
+  translation: match
+  ipa: "[mɑt͡ʃ]"
   pos: noun
-  usage: Суперник швидко перейшов у контратаку.
+  usage: "Матч закінчився з рахунком два-один."
 - lemma: рахунок
   translation: score
+  ipa: "[rɑˈxunɔk]"
   pos: noun
-  usage: Рахунок змінився після кутового.
-- lemma: вболівальник
-  translation: supporter, fan
+  usage: "Уболівальники стежили за рахунком до фінального свистка."
+- lemma: тренер
+  translation: coach
+  ipa: "[ˈtrɛnɛr]"
   pos: noun
-  usage: Вболівальники підтримували команду до фінального свистка.
+  usage: "Тренер змінив тактику після перерви."
+- lemma: суперник
+  translation: opponent
+  ipa: "[suˈpɛrnɪk]"
+  pos: noun
+  usage: "Суперник швидко переходив у контратаку."
 - lemma: розминка
   translation: warm-up
+  ipa: "[rɔzˈmɪnkɑ]"
   pos: noun
-  usage: Розминка допомагає підготувати м'язи до навантаження.
+  usage: "Розминка готує м'язи до навантаження."
 - lemma: навантаження
-  translation: load, training intensity
+  translation: load
+  ipa: "[nɑʋɑnˈtɑʒɛnʲːɑ]"
   pos: noun
-  usage: Тренер поступово збільшив навантаження.
+  usage: "Тренер поступово збільшив навантаження."
 - lemma: витривалість
   translation: endurance
+  ipa: "[ʋɪtrɪˈʋɑlʲistʲ]"
   pos: noun
-  usage: Біг на довгу дистанцію розвиває витривалість.
+  usage: "Біг на довгу дистанцію розвиває витривалість."
 - lemma: відновлення
   translation: recovery
+  ipa: "[ʋidnɔu̯ˈlɛnʲːɑ]"
   pos: noun
-  usage: Після травми спортсменка зосередилася на відновленні.
+  usage: "Після травми спортсмен зосередився на відновленні."
 - lemma: реабілітація
   translation: rehabilitation
+  ipa: "[reɑbilʲiˈtɑt͡sʲijɑ]"
   pos: noun
-  usage: Спорт може стати частиною реабілітації ветеранів.
+  usage: "Спорт може бути частиною реабілітації ветеранів."
 - lemma: фехтування
   translation: fencing
+  ipa: "[fextuˈʋɑnʲːɑ]"
   pos: noun
-  usage: Фехтування вимагає реакції, дистанції й точності.
+  usage: "Фехтування вимагає реакції, дистанції й точності."
 - lemma: плавання
   translation: swimming
+  ipa: "[ˈplɑʋɑnʲːɑ]"
   pos: noun
-  usage: Плавання корисне для спини й дихання.
-- lemma: біг
-  translation: running
+  usage: "Плавання допомагає підтримувати спину."
+- lemma: стадіон
+  translation: stadium
+  ipa: "[stɑdʲiˈɔn]"
   pos: noun
-  usage: Біг уздовж набережної став моєю ранковою звичкою.
-- lemma: спортзал
-  translation: gym
-  pos: noun
-  usage: У спортзалі я працюю над силою й рівновагою.
-- lemma: похід
-  translation: hike
-  pos: noun
-  usage: Похід у гори потребує води, карти й зручного взуття.
-- lemma: дозвілля
-  translation: leisure
-  pos: noun
-  usage: Дозвілля має допомагати відновлювати сили.
-- lemma: хобі
-  translation: hobby
-  pos: noun
-  usage: Моє хобі поєднує творчість і спокій.
+  usage: "Біля стадіону друзі зустрілися за годину до матчу."
+- lemma: уболівати за команду
+  translation: to support a team
+  ipa: "[ubɔlʲiˈʋɑtɪ zɑ kɔˈmɑndu]"
+  pos: phrase
+  usage: "Ми уболівали за команду до фінального свистка."
 - lemma: активний відпочинок
   translation: active recreation
+  ipa: "[ɑkˈtɪu̯nɪj ʋidˈpɔt͡ʃɪnɔk]"
   pos: phrase
-  usage: Активний відпочинок може бути без змагання й рахунку.
-- lemma: культурне дозвілля
-  translation: cultural leisure
-  pos: phrase
-  usage: Культурне дозвілля охоплює театр, кіно, музеї та виставки.
-- lemma: цифрове дозвілля
-  translation: digital leisure
-  pos: phrase
-  usage: Цифрове дозвілля потребує здорових меж.
+  usage: "Активний відпочинок поєднує рух і відновлення."
+- lemma: дозвілля
+  translation: leisure
+  ipa: "[dɔzˈʋilʲːɑ]"
+  pos: noun
+  usage: "Дозвілля має відновлювати сили, а не виснажувати."
+- lemma: хобі
+  translation: hobby
+  ipa: "[ˈxɔbʲi]"
+  pos: noun
+  usage: "Хобі допомагає зберігати власний ритм."
+- lemma: похід
+  translation: hike
+  ipa: "[pɔˈxid]"
+  pos: noun
+  usage: "Похід у гори потребує плану й зручного взуття."
 - lemma: рукоділля
   translation: handicraft
+  ipa: "[rukɔˈdʲilʲːɑ]"
   pos: noun
-  usage: Рукоділля допомагає зосередитися після роботи.
+  usage: "Рукоділля допомагає зосередитися після роботи."
+- lemma: культурне дозвілля
+  translation: cultural leisure
+  ipa: "[kulʲˈturne dɔzˈʋilʲːɑ]"
+  pos: phrase
+  usage: "Культурне дозвілля охоплює театр, музеї й книжкові клуби."
+- lemma: цифрове дозвілля
+  translation: digital leisure
+  ipa: "[t͡sɪfˈrɔʋe dɔzˈʋilʲːɑ]"
+  pos: phrase
+  usage: "Цифрове дозвілля потребує здорових меж."
 - lemma: запрошення
   translation: invitation
+  ipa: "[zɑprɔˈʃɛnʲːɑ]"
   pos: noun
-  usage: Запрошення має звучати доброзичливо, а не як наказ.
-- lemma: планування
-  translation: planning
-  pos: noun
-  usage: Планування вихідних вимагає компромісу.
+  usage: "Запрошення має звучати доброзичливо, а не як наказ."
 - lemma: домовленість
-  translation: arrangement
+  translation: agreement
+  ipa: "[dɔmɔu̯ˈlɛnʲistʲ]"
   pos: noun
-  usage: Домовленість про час зустрічі краще підтвердити письмово.
+  usage: "Домовленість про час зустрічі краще підтвердити письмово."
 - lemma: враження
   translation: impression
+  ipa: "[ʋrɑˈʒɛnʲːɑ]"
   pos: noun
-  usage: Після виставки я поділився враженнями з друзями.
-- lemma: однорідні члени
-  translation: homogeneous sentence members
-  pos: phrase
-  usage: Однорідні члени допомагають рівно перелічити дії й предмети.
-- lemma: дієприслівник
-  translation: adverbial participle
+  usage: "Після вистави ми поділилися враженнями."
+- lemma: рекорд
+  translation: record
+  ipa: "[reˈkɔrd]"
   pos: noun
-  usage: Дієприслівник стискає додаткову дію того самого виконавця.
-- lemma: керування
-  translation: government
-  pos: noun
-  usage: Керування дієслова визначає прийменник і відмінок.
-- lemma: обставина мети
-  translation: adverbial of purpose
-  pos: phrase
-  usage: Обставина мети пояснює, навіщо відбувається дія.
-- lemma: обставина допусту
-  translation: adverbial of concession
-  pos: phrase
-  usage: Обставина допусту показує перешкоду, попри яку дія триває.
+  usage: "Рекорд показує стабільність техніки й концентрації."
