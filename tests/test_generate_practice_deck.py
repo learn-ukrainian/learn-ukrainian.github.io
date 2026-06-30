@@ -7,6 +7,7 @@ from pathlib import Path
 import pytest
 
 from scripts.audit.generate_practice_deck import (
+    DEFAULT_TARGET,
     BuildConfig,
     JsonVesumVerifier,
     ReviewedSourceAllowlist,
@@ -26,6 +27,11 @@ MANIFEST = FIXTURES / "lexicon-practice-manifest.json"
 ALLOWLIST = FIXTURES / "lexicon-practice-reviewed-allowlist.json"
 VESUM = FIXTURES / "lexicon-practice-vesum.json"
 CLOZE_SOURCES = FIXTURES / "lexicon-practice-cloze-sources.json"
+
+
+def test_default_target_preserves_committed_practice_surface() -> None:
+    assert DEFAULT_TARGET >= 6000
+    assert BuildConfig().target == DEFAULT_TARGET
 
 
 def _build(config: BuildConfig | None = None, cloze_sources_path: Path | None = CLOZE_SOURCES):

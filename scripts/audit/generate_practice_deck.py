@@ -35,7 +35,9 @@ DEFAULT_MANIFEST = Path("site/src/data/lexicon-manifest.json")
 DEFAULT_OUT_DIR = Path("site/public/lexicon")
 DEFAULT_ALLOWLIST = Path("site/src/data/lexicon-practice-reviewed-sources.json")
 DEFAULT_CLOZE_SOURCES = Path("site/src/data/lexicon-practice-cloze-sources.json")
-DEFAULT_TARGET = 3000
+# Keep the default above the current all-eligible deck size. A lower default
+# silently contracts the committed practice surface during routine cloze regen.
+DEFAULT_TARGET = 6000
 DEFAULT_RAW_LIMIT = 550_000
 DEFAULT_GZIP_LIMIT = 140_000
 SCHEMA_VERSION = 1
