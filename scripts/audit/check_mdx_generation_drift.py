@@ -15,7 +15,13 @@ MDX_ROOT = PROJECT_ROOT / "site" / "src" / "content" / "docs"
 VENV_PYTHON = PROJECT_ROOT / ".venv" / "bin" / "python"
 
 sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
 from manifest_utils import get_modules_for_level
+
+from scripts.build import linear_pipeline
+
+SEMINAR_LEVELS = linear_pipeline.SEMINAR_LEVELS
 
 
 @dataclass(frozen=True, order=True)
@@ -130,6 +136,13 @@ def _read_optional(path: Path) -> bytes | None:
 
 
 def _run_generator(target: ModuleTarget) -> None:
+    if target.level in SEMINAR_LEVELS:
+        module_dir = CURRICULUM_ROOT / target.level / target.slug
+        plan_path = CURRICULUM_ROOT / "plans" / target.level / f"{target.slug}.yaml"
+        content = linear_pipeline.assemble_mdx(module_dir, target.mdx_path, plan_path)
+        target.mdx_path.write_text(content, encoding="utf-8")
+        return
+
     if not VENV_PYTHON.exists():
         raise FileNotFoundError(
             f"Expected project venv at {VENV_PYTHON}. "
