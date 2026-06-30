@@ -94,5 +94,133 @@
       "path": "curriculum/l2-uk-en/a1/food-and-drink/vocabulary.yaml",
       "cardId": "a1-food-and-drink-voda-accusative-1"
     }
+  },
+  {
+    "lemma": "школа",
+    "lemmaId": "школа",
+    "sentence": "Я бачу ___.",
+    "blankCase": "accusative",
+    "form": "школу",
+    "number": "singular",
+    "caseRule": "accusative_direct_object",
+    "clozeEn": "I see the school.",
+    "cefr": "A1",
+    "provenance": {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/my-city/vocabulary.yaml",
+      "cardId": "a1-my-city-shkola-accusative-1"
+    }
+  },
+  {
+    "lemma": "аптека",
+    "lemmaId": "аптека",
+    "sentence": "Я бачу ___.",
+    "blankCase": "accusative",
+    "form": "аптеку",
+    "number": "singular",
+    "caseRule": "accusative_direct_object",
+    "clozeEn": "I see the pharmacy.",
+    "cefr": "A1",
+    "provenance": {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/health/vocabulary.yaml",
+      "cardId": "a1-health-apteka-accusative-1"
+    }
+  },
+  {
+    "lemma": "лікарня",
+    "lemmaId": "лікарня",
+    "sentence": "Я бачу ___.",
+    "blankCase": "accusative",
+    "form": "лікарню",
+    "number": "singular",
+    "caseRule": "accusative_direct_object",
+    "clozeEn": "I see the hospital.",
+    "cefr": "A1",
+    "provenance": {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/health/vocabulary.yaml",
+      "cardId": "a1-health-likarnia-accusative-1"
+    }
+  },
+  {
+    "lemma": "кімната",
+    "lemmaId": "кімната",
+    "sentence": "Я маю ___.",
+    "blankCase": "accusative",
+    "form": "кімнату",
+    "number": "singular",
+    "caseRule": "accusative_direct_object",
+    "clozeEn": "I have a room.",
+    "cefr": "A1",
+    "provenance": {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/checkpoint-my-world/vocabulary.yaml",
+      "cardId": "a1-checkpoint-my-world-kimnata-accusative-1"
+    }
+  },
+  {
+    "lemma": "ручка",
+    "lemmaId": "ручка",
+    "sentence": "Я беру ___.",
+    "blankCase": "accusative",
+    "form": "ручку",
+    "number": "singular",
+    "caseRule": "accusative_direct_object",
+    "clozeEn": "I take a pen.",
+    "cefr": "A1",
+    "provenance": {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/checkpoint-my-world/vocabulary.yaml",
+      "cardId": "a1-checkpoint-my-world-ruchka-accusative-1"
+    }
+  },
+  {
+    "lemma": "сумка",
+    "lemmaId": "сумка",
+    "sentence": "Я беру ___.",
+    "blankCase": "accusative",
+    "form": "сумку",
+    "number": "singular",
+    "caseRule": "accusative_direct_object",
+    "clozeEn": "I take a bag.",
+    "cefr": "A1",
+    "provenance": {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/checkpoint-my-world/vocabulary.yaml",
+      "cardId": "a1-checkpoint-my-world-sumka-accusative-1"
+    }
+  },
+  {
+    "lemma": "карта",
+    "lemmaId": "карта",
+    "sentence": "Я беру ___.",
+    "blankCase": "accusative",
+    "form": "карту",
+    "number": "singular",
+    "caseRule": "accusative_direct_object",
+    "clozeEn": "I take a map.",
+    "cefr": "A1",
+    "provenance": {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/a1-finale/vocabulary.yaml",
+      "cardId": "a1-finale-karta-accusative-1"
+    }
+  },
+  {
+    "lemma": "лампа",
+    "lemmaId": "лампа",
+    "sentence": "Я бачу ___.",
+    "blankCase": "accusative",
+    "form": "лампу",
+    "number": "singular",
+    "caseRule": "accusative_direct_object",
+    "clozeEn": "I see the lamp.",
+    "cefr": "A1",
+    "provenance": {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/checkpoint-my-world/vocabulary.yaml",
+      "cardId": "a1-checkpoint-my-world-lampa-accusative-1"
+    }
   }
 ]

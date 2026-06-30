@@ -1,8 +1,8 @@
 {
   "counts": {
-    "cloze": 6,
-    "clozeCoverage": 0.0053,
-    "clozeEligibleLexemes": 6,
+    "cloze": 14,
+    "clozeCoverage": 0.0124,
+    "clozeEligibleLexemes": 14,
     "lexemes": 1125
   },
   "deckVersion": "atlas-practice-v1-c5a52e54cdf8d828",
@@ -70,14 +70,17 @@
     },
     {
       "cefr": "A1",
-      "clozeIds": [],
-      "hasCloze": false,
+      "clozeIds": [
+        "карта:cloze:1"
+      ],
+      "hasCloze": true,
       "lemma": "карта",
       "lemmaId": "карта",
       "modes": [
         "flashcards",
         "matching",
-        "choice"
+        "choice",
+        "cloze"
       ],
       "newOrder": 5
     },
@@ -198,14 +201,17 @@
     },
     {
       "cefr": "A1",
-      "clozeIds": [],
-      "hasCloze": false,
+      "clozeIds": [
+        "аптека:cloze:1"
+      ],
+      "hasCloze": true,
       "lemma": "аптека",
       "lemmaId": "аптека",
       "modes": [
         "flashcards",
         "matching",
-        "choice"
+        "choice",
+        "cloze"
       ],
       "newOrder": 15
     },
@@ -332,14 +338,17 @@
     },
     {
       "cefr": "A1",
-      "clozeIds": [],
-      "hasCloze": false,
+      "clozeIds": [
+        "лікарня:cloze:1"
+      ],
+      "hasCloze": true,
       "lemma": "лікарня",
       "lemmaId": "лікарня",
       "modes": [
         "flashcards",
         "matching",
-        "choice"
+        "choice",
+        "cloze"
       ],
       "newOrder": 25
     },
@@ -599,14 +608,17 @@
     },
     {
       "cefr": "A1",
-      "clozeIds": [],
-      "hasCloze": false,
+      "clozeIds": [
+        "школа:cloze:1"
+      ],
+      "hasCloze": true,
       "lemma": "школа",
       "lemmaId": "школа",
       "modes": [
         "flashcards",
         "matching",
-        "choice"
+        "choice",
+        "cloze"
       ],
       "newOrder": 46
     },
@@ -2420,27 +2432,33 @@
     },
     {
       "cefr": "A1",
-      "clozeIds": [],
-      "hasCloze": false,
+      "clozeIds": [
+        "кімната:cloze:1"
+      ],
+      "hasCloze": true,
       "lemma": "кімната",
       "lemmaId": "кімната",
       "modes": [
         "flashcards",
         "matching",
-        "choice"
+        "choice",
+        "cloze"
       ],
       "newOrder": 189
     },
     {
       "cefr": "A1",
-      "clozeIds": [],
-      "hasCloze": false,
+      "clozeIds": [
+        "лампа:cloze:1"
+      ],
+      "hasCloze": true,
       "lemma": "лампа",
       "lemmaId": "лампа",
       "modes": [
         "flashcards",
         "matching",
-        "choice"
+        "choice",
+        "cloze"
       ],
       "newOrder": 190
     },
@@ -2459,14 +2477,17 @@
     },
     {
       "cefr": "A1",
-      "clozeIds": [],
-      "hasCloze": false,
+      "clozeIds": [
+        "ручка:cloze:1"
+      ],
+      "hasCloze": true,
       "lemma": "ручка",
       "lemmaId": "ручка",
       "modes": [
         "flashcards",
         "matching",
-        "choice"
+        "choice",
+        "cloze"
       ],
       "newOrder": 192
     },
@@ -2537,14 +2558,17 @@
     },
     {
       "cefr": "A1",
-      "clozeIds": [],
-      "hasCloze": false,
+      "clozeIds": [
+        "сумка:cloze:1"
+      ],
+      "hasCloze": true,
       "lemma": "сумка",
       "lemmaId": "сумка",
       "modes": [
         "flashcards",
         "matching",
-        "choice"
+        "choice",
+        "cloze"
       ],
       "newOrder": 198
     },
@@ -14369,10 +14393,10 @@
   "schema": "atlas-practice-index",
   "schemaVersion": 1,
   "sizeBudget": {
-    "gzipBytes": 17400,
+    "gzipBytes": 17483,
     "gzipLimitBytes": 140000,
     "ok": true,
-    "rawBytes": 284745,
+    "rawBytes": 285173,
     "rawLimitBytes": 550000
   },
   "source": "manifest"
