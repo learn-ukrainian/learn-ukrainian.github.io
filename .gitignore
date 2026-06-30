@@ -383,3 +383,8 @@ docs/outreach/
 # stops ANY docs/<track>-epic/ handoff from ever being re-tracked by accident (generic,
 # so future tracks are covered, not just folk/bio).
 /docs/*-epic/CLAUDE-DRIVER-HANDOFF.md
+
+# Word Atlas open dataset export — generated from the release-backed manifest and
+# published as the `atlas-open-dataset` Release asset (#3449).
+/data/lexicon-dataset/
+/data/lexicon-open-dataset.json.gz

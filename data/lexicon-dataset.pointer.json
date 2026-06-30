@@ -1,0 +1,208 @@
+{
+  "asset_url": "https://github.com/learn-ukrainian/learn-ukrainian.github.io/releases/download/atlas-open-dataset/lexicon-open-dataset.json.gz",
+  "release_tag": "atlas-open-dataset",
+  "package_schema_version": 1,
+  "generated_at": "2026-06-30T20:43:45+00:00",
+  "manifest_version": "0.1",
+  "manifest_stats": {
+    "lemmas_total": 5280,
+    "modules_covered": 262,
+    "from_built": 5249,
+    "from_surzhyk_to_avoid": 7,
+    "from_heritage_status_seed": 6,
+    "form_of_count": 336
+  },
+  "gz_sha256": "c92be6d9c6f55e808f65d27466e4fe3aea06e4f274508d882fbb8b61aaa7a2d4",
+  "package_sha256": "da2a1a9a43d8f003fcb6a0e4107e5ed952b28e8acfd35d4c6accd34e478fe8b0",
+  "gz_bytes": 5830521,
+  "package_bytes": 35793225,
+  "file_count": 37,
+  "files": [
+    {
+      "path": "ATTRIBUTION.md",
+      "bytes": 1136,
+      "sha256": "6eae638d1de7870581cb2bd204fa0beb2b204ebe5bb80749aadd30cbe20ecb7e"
+    },
+    {
+      "path": "NOTICE.md",
+      "bytes": 702,
+      "sha256": "e90ea2097b5ee4e0d5dfb88a1ae7e803ca8bb087ee89a1af9704b70c09d56598"
+    },
+    {
+      "path": "README.md",
+      "bytes": 1051,
+      "sha256": "e24fe3849ac7b44530a202d07238a88eefd26ea1829b16d0779f95dfd7b4f5c4"
+    },
+    {
+      "path": "dataset/P.jsonl",
+      "bytes": 1174,
+      "sha256": "d0655653e6ca439eb458c455e31d88eaaa6978d97838517d7741ca4d16654437"
+    },
+    {
+      "path": "dataset/S.jsonl",
+      "bytes": 477,
+      "sha256": "30d7573c84b7a5ed4759a65ce37bec0aedb182bc82329ed76bdd226e9fc97112"
+    },
+    {
+      "path": "dataset/_metadata.json",
+      "bytes": 25840,
+      "sha256": "7b6c6d04e9ddc4d89f7be21251fdcb7bd352e5d4956a9ef4041cfcab62fa3f83"
+    },
+    {
+      "path": "dataset/Є.jsonl",
+      "bytes": 38994,
+      "sha256": "a32308d349cd9109296549d07be102c35b1d7b87ccb4c5950b92a3a5147293bd"
+    },
+    {
+      "path": "dataset/І.jsonl",
+      "bytes": 364523,
+      "sha256": "5569fd288ea3d4f7fd2c9387ca0524be4a2e54b599991c6fdb1768bd5c5f8a1d"
+    },
+    {
+      "path": "dataset/Ї.jsonl",
+      "bytes": 144003,
+      "sha256": "190b89367467697f45818c24233d7f1346567573b98cc2499c3b95a4b4e5db9b"
+    },
+    {
+      "path": "dataset/А.jsonl",
+      "bytes": 622618,
+      "sha256": "86cf14963a85bbd26ff879c964b95e6a05ea9a3f5e454f9f4b44335894f22dba"
+    },
+    {
+      "path": "dataset/Б.jsonl",
+      "bytes": 1268370,
+      "sha256": "eba42c75fcbfc6d95830e30b9bcb9ff6f80e38901df8247e91c452f5ffc72738"
+    },
+    {
+      "path": "dataset/В.jsonl",
+      "bytes": 3256367,
+      "sha256": "ed7fdf72dd6fa7c2d3275511c2fa34bbdf403f384928fa771371c824059994e7"
+    },
+    {
+      "path": "dataset/Г.jsonl",
+      "bytes": 1122056,
+      "sha256": "92044bccb7901d946c78ee9f9351755cf1acf1242469c51a8a64a5d8358b50f5"
+    },
+    {
+      "path": "dataset/Д.jsonl",
+      "bytes": 1744094,
+      "sha256": "9f5c92b5517e40dd676ff49e9b696b890f8f7788166a13931dd61efec9a3a4aa"
+    },
+    {
+      "path": "dataset/Е.jsonl",
+      "bytes": 198204,
+      "sha256": "008f3b41f6e5dd7147a6caa80aa6e66d8b411814ec6c4c9231b1434d68721563"
+    },
+    {
+      "path": "dataset/Ж.jsonl",
+      "bytes": 207914,
+      "sha256": "81a19dea7c3c6c51c3bdcefed5dc3bff4ac773d80cb26b00c7f0e1ab7840b95d"
+    },
+    {
+      "path": "dataset/З.jsonl",
+      "bytes": 2415318,
+      "sha256": "df628a2c047536d371f5f3248e84302b71dfac0de4444c05863d9654ae9ee3ce"
+    },
+    {
+      "path": "dataset/Й.jsonl",
+      "bytes": 49881,
+      "sha256": "defffe7d61daecf3f4bc7051355c06c835db07c903be4702e0ff22362bb5caf1"
+    },
+    {
+      "path": "dataset/К.jsonl",
+      "bytes": 2303022,
+      "sha256": "931c79812f85a745b78b2e34839b2bc299860badd1e1a4aa273d6c0a9da59be1"
+    },
+    {
+      "path": "dataset/Л.jsonl",
+      "bytes": 830947,
+      "sha256": "d51a82cbdfdc2a0b55140185e0820d29e60bb37119efe391cc1b6d0e4b9e2eba"
+    },
+    {
+      "path": "dataset/М.jsonl",
+      "bytes": 1469354,
+      "sha256": "81ac59b40dff5a8b67777f4c65fc9e97ccd82360864b4b3227911f86d00a5045"
+    },
+    {
+      "path": "dataset/Н.jsonl",
+      "bytes": 1768590,
+      "sha256": "99c5dba3189d56156a2138ff141c2bdce0d6d52f47d6932ddb42b50ca2aeec69"
+    },
+    {
+      "path": "dataset/О.jsonl",
+      "bytes": 1491493,
+      "sha256": "6bee25317589837d6876c2a12ddc87fb3ed11c4f76b63f4fadcb0797cf828dc6"
+    },
+    {
+      "path": "dataset/П.jsonl",
+      "bytes": 6089257,
+      "sha256": "3540019f1ad9209c36c796070e6dab429a0cb32d6d7a365361f53510aa521c75"
+    },
+    {
+      "path": "dataset/Р.jsonl",
+      "bytes": 1617045,
+      "sha256": "4565861b774ffc8b5847a00df87dfacd921172e815fae60f0688615d9222d0a8"
+    },
+    {
+      "path": "dataset/С.jsonl",
+      "bytes": 2741314,
+      "sha256": "ca9c610cb0a8837b14882d12fb342e6111f51ced8038121734dc9a9065c1524a"
+    },
+    {
+      "path": "dataset/Т.jsonl",
+      "bytes": 979247,
+      "sha256": "6865f0925212e934b578f7d27364ae67425ac5e08ae630f1d58658cef4adba40"
+    },
+    {
+      "path": "dataset/У.jsonl",
+      "bytes": 423965,
+      "sha256": "934ab85e2220152e6ffb34f2ea7106a2c5945f6edc618423abdedad0d3cbef1d"
+    },
+    {
+      "path": "dataset/Ф.jsonl",
+      "bytes": 368466,
+      "sha256": "15028be0f9ff29852fc6aed74f3ae03d88d98e2814c720e85928a8911b142290"
+    },
+    {
+      "path": "dataset/Х.jsonl",
+      "bytes": 436788,
+      "sha256": "ca7d27a74319aea03354844fc5e1cd85b460073cf73681d38f7312b92d2e982c"
+    },
+    {
+      "path": "dataset/Ц.jsonl",
+      "bytes": 216720,
+      "sha256": "57132210bee58e0425b56a71e0821d2277b5c59755d6c2136cfeebdc88b7c2cd"
+    },
+    {
+      "path": "dataset/Ч.jsonl",
+      "bytes": 619987,
+      "sha256": "7192f6fdad89b2a4783ba7ecbcc25232f1a38eabc98b6c9f27f7d862533aaf7e"
+    },
+    {
+      "path": "dataset/Ш.jsonl",
+      "bytes": 252163,
+      "sha256": "6a951096b8cc4f2ea2e448cec824eca1bde933f9c95d001879c466da9ec38243"
+    },
+    {
+      "path": "dataset/Щ.jsonl",
+      "bytes": 170930,
+      "sha256": "e1206498e03b77e0c5a70c86d228d95b4c03c76de4dfa54291fa4802f8d79d27"
+    },
+    {
+      "path": "dataset/Ю.jsonl",
+      "bytes": 15270,
+      "sha256": "b6ad19fbc3a0aa7dbea02cd2c35809105245f5d98bd67257ae29eb413ee7c5a3"
+    },
+    {
+      "path": "dataset/Я.jsonl",
+      "bytes": 225350,
+      "sha256": "7da76bd148e1d04853a270e4988aa2515c9598abc91b51c60fcd3b9b55365c5b"
+    },
+    {
+      "path": "dataset/Ґ.jsonl",
+      "bytes": 2171,
+      "sha256": "d451caad5f0a419581c443a32584373292be611f3b40598fd05a8a8179431520"
+    }
+  ],
+  "note": "Pins the open Word Atlas dataset for #3449; hydrate it from the Release asset instead of committing shards."
+}
