@@ -407,3 +407,85 @@ def test_cloze_decoys_do_not_exceed_answer_cefr() -> None:
     assert _eligible_decoys(answer, lexemes, "accusative", "singular") == [
         (lexemes[1], "школу")
     ]
+
+
+def _tatoeba_cloze_source() -> dict[str, object]:
+    return {
+        "lemma": "книга",
+        "lemmaId": "knyha",
+        "sentence": "Я читаю ___.",
+        "blankCase": "accusative",
+        "form": "книгу",
+        "number": "singular",
+        "caseRuleId": "accusative_direct_object",
+        "clozeEn": "I am reading a book.",
+        "cefr": "A1",
+        "provenance": {
+            "status": "tatoeba",
+            "path": "tatoeba:101",
+            "license": "CC-BY 2.0 FR",
+            "author": "uk-author",
+            "sentenceId": 101,
+            "enSentenceId": 202,
+            "enAuthor": "en-author",
+            "enLicense": "CC-BY 2.0 FR",
+        },
+    }
+
+
+def test_tatoeba_cloze_preserves_attribution_metadata() -> None:
+    shards = build_practice_shards(
+        read_manifest(MANIFEST),
+        ReviewedSourceAllowlist.from_payload([{"status": "tatoeba", "path": "tatoeba:101"}]),
+        JsonVesumVerifier.from_path(VESUM),
+        [_tatoeba_cloze_source()],
+        BuildConfig(),
+    )
+
+    cloze = shards["A1"]["cloze"]["cloze"][0]
+
+    assert cloze["provenance"]["license"] == "CC-BY 2.0 FR"
+    assert cloze["provenance"]["author"] == "uk-author"
+    assert cloze["provenance"]["sentenceId"] == 101
+    assert cloze["provenance"]["enSentenceId"] == 202
+    assert cloze["provenance"]["enAuthor"] == "en-author"
+    assert cloze["provenance"]["enLicense"] == "CC-BY 2.0 FR"
+    assert cloze["attribution"] == {
+        "source": "Tatoeba",
+        "sourceUrl": "https://tatoeba.org/en/sentences/show/101",
+        "uk": {"sentenceId": 101, "author": "uk-author", "license": "CC-BY 2.0 FR"},
+        "en": {"sentenceId": 202, "author": "en-author", "license": "CC-BY 2.0 FR"},
+    }
+
+
+def test_tatoeba_cloze_uses_path_sentence_id_when_field_missing() -> None:
+    source = _tatoeba_cloze_source()
+    assert isinstance(source["provenance"], dict)
+    source["provenance"].pop("sentenceId")
+
+    shards = build_practice_shards(
+        read_manifest(MANIFEST),
+        ReviewedSourceAllowlist.from_payload([{"status": "tatoeba", "path": "tatoeba:101"}]),
+        JsonVesumVerifier.from_path(VESUM),
+        [source],
+        BuildConfig(),
+    )
+
+    cloze = shards["A1"]["cloze"]["cloze"][0]
+    assert cloze["provenance"]["sentenceId"] == 101
+    assert cloze["attribution"]["uk"]["sentenceId"] == 101
+
+
+def test_tatoeba_cloze_without_attribution_metadata_fails_closed() -> None:
+    source = _tatoeba_cloze_source()
+    source["provenance"] = {"status": "tatoeba", "path": "tatoeba:101"}
+
+    shards = build_practice_shards(
+        read_manifest(MANIFEST),
+        ReviewedSourceAllowlist.from_payload([{"status": "tatoeba", "path": "tatoeba:101"}]),
+        JsonVesumVerifier.from_path(VESUM),
+        [source],
+        BuildConfig(),
+    )
+
+    assert shards["A1"]["cloze"]["cloze"] == []

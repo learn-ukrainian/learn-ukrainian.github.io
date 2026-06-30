@@ -152,6 +152,80 @@ class ReviewedSourceAllowlist:
         return (status, path) in self.reviewed
 
 
+def _is_tatoeba_provenance(provenance: Any) -> bool:
+    if not isinstance(provenance, dict):
+        return False
+    status = _clean_text(provenance.get("status"))
+    path = _clean_text(provenance.get("path"))
+    return status == "tatoeba" or path.startswith("tatoeba:")
+
+
+def _string_or_int(value: Any) -> str | int | None:
+    if isinstance(value, int):
+        return value
+    text = _clean_text(value)
+    if not text:
+        return None
+    try:
+        return int(text)
+    except ValueError:
+        return text
+
+
+def _build_tatoeba_attribution(provenance: Any) -> dict[str, Any] | None:
+    if not _is_tatoeba_provenance(provenance):
+        return None
+    assert isinstance(provenance, dict)
+    path = _clean_text(provenance.get("path"))
+    path_sentence_id = path.removeprefix("tatoeba:") if path.startswith("tatoeba:") else ""
+    uk_sentence_id = _string_or_int(provenance.get("sentenceId")) or _string_or_int(path_sentence_id)
+    en_sentence_id = _string_or_int(provenance.get("enSentenceId"))
+    uk_author = _clean_text(provenance.get("author"))
+    en_author = _clean_text(provenance.get("enAuthor"))
+    uk_license = _clean_text(provenance.get("license"))
+    en_license = _clean_text(provenance.get("enLicense"))
+    if not all((uk_sentence_id, en_sentence_id, uk_author, en_author, uk_license, en_license)):
+        return None
+    return {
+        "source": "Tatoeba",
+        "sourceUrl": f"https://tatoeba.org/en/sentences/show/{uk_sentence_id}",
+        "uk": {
+            "sentenceId": uk_sentence_id,
+            "author": uk_author,
+            "license": uk_license,
+        },
+        "en": {
+            "sentenceId": en_sentence_id,
+            "author": en_author,
+            "license": en_license,
+        },
+    }
+
+
+def _build_cloze_provenance(provenance: dict[str, Any]) -> dict[str, Any]:
+    payload: dict[str, Any] = {
+        "status": provenance["status"],
+        "path": provenance["path"],
+    }
+    path = _clean_text(provenance.get("path"))
+    path_sentence_id = path.removeprefix("tatoeba:") if path.startswith("tatoeba:") else ""
+    if provenance.get("sentenceId") is None and path_sentence_id:
+        sentence_id = _string_or_int(path_sentence_id)
+        if sentence_id is not None:
+            payload["sentenceId"] = sentence_id
+    for key in ("cardId", "license", "author", "sentenceId", "enSentenceId", "enAuthor", "enLicense"):
+        if key in payload:
+            continue
+        value = provenance.get(key)
+        if isinstance(value, int):
+            payload[key] = value
+            continue
+        text = _clean_text(value)
+        if text:
+            payload[key] = text
+    return payload
+
+
 class RealVesumVerifier:
     """Runtime adapter for the production VESUM helper."""
 
@@ -992,27 +1066,28 @@ def _build_cloze_items(
         case_rule = _case_rule_payload(rule_id, lexeme["lemma"], form)
         if not case_rule:
             continue
-        items.append(
-            {
-                "clozeId": cloze_id,
-                "lemmaId": lexeme["lemmaId"],
-                "sentenceFrameId": sentence_frame_id,
-                "sentence": sentence,
-                "blankCase": case_name,
-                "form": form,
-                "number": number,
-                "lemma": lexeme["lemma"],
-                "caseRule": case_rule,
-                "clozeEn": cloze_en,
-                "cefr": _clean_text(candidate.get("cefr")) or lexeme["cefr"],
-                "acceptedAlt": _accepted_alts(candidate),
-                "provenance": {
-                    "status": provenance["status"],
-                    "path": provenance["path"],
-                    "cardId": _clean_text(provenance.get("cardId")),
-                },
-            }
-        )
+        assert isinstance(provenance, dict)
+        attribution = _build_tatoeba_attribution(provenance)
+        if _is_tatoeba_provenance(provenance) and attribution is None:
+            continue
+        item = {
+            "clozeId": cloze_id,
+            "lemmaId": lexeme["lemmaId"],
+            "sentenceFrameId": sentence_frame_id,
+            "sentence": sentence,
+            "blankCase": case_name,
+            "form": form,
+            "number": number,
+            "lemma": lexeme["lemma"],
+            "caseRule": case_rule,
+            "clozeEn": cloze_en,
+            "cefr": _clean_text(candidate.get("cefr")) or lexeme["cefr"],
+            "acceptedAlt": _accepted_alts(candidate),
+            "provenance": _build_cloze_provenance(provenance),
+        }
+        if attribution is not None:
+            item["attribution"] = attribution
+        items.append(item)
     return items
 
 

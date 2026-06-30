@@ -81,6 +81,19 @@ export interface PracticeCaseRule {
   feedback: string;
 }
 
+export interface PracticeClozeAttributionSentence {
+  sentenceId: string | number;
+  author: string;
+  license: string;
+}
+
+export interface PracticeClozeAttribution {
+  source: string;
+  sourceUrl?: string;
+  uk: PracticeClozeAttributionSentence;
+  en: PracticeClozeAttributionSentence;
+}
+
 export interface PracticeClozeItem {
   clozeId: string;
   lemmaId: string;
@@ -93,6 +106,7 @@ export interface PracticeClozeItem {
   caseRule: PracticeCaseRule;
   clozeEn: string;
   options: PracticeClozeOption[];
+  attribution?: PracticeClozeAttribution;
 }
 
 export interface PracticeShardMeta {
