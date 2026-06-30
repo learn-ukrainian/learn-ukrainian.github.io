@@ -1,9 +1,9 @@
 {
-  "assembled_mdx_sha256": "991fa77a5b039f7b9704995277ad1f3da11bd58d8f511ebfb1861840b7362924",
+  "assembled_mdx_sha256": "bf7f2a82c9dabcdb36c8f284c64b5b7afb7c8af4d73ab83e0d8cc6be94a897c2",
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "b6974bffcb550eb1048c20e59e6fe7dcf2aff6f30c714f45b89ef1931b6c407f",
+    "digest": "e2bfa7f8abba93f288a5fe48c2f6c35188c12e1cd078604351a1f6b543479db7",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/vesilni-pisni.yaml",
@@ -11,7 +11,7 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/vesilni-pisni/module.md",
-        "sha256": "e76e94f2d68d906dcd17d27c27375cf21d3ea7ece559d2ff35105077e123484f"
+        "sha256": "cfd33ce3c887e03689c211f0771b84ad12fb0c309023350c65d7db542c3f1f5a"
       },
       {
         "path": "curriculum/l2-uk-en/folk/vesilni-pisni/activities.yaml",
@@ -28,12 +28,11 @@
     ]
   },
   "evidence": {
-    "decolonization": "Ukrainian wedding terms, community roles, agency, and Christian/community framing are foregrounded without Russian-imperial or hidden-core framing.",
-    "engagement": "Six varied activities cover quiz, reading, motif/formula, comparison, critical analysis, and essay response.",
-    "naturalness": "Ukrainian prose uses a serious seminar register with explicit source limits and without learner-facing internal IDs.",
-    "orchestrator_review": "Orchestrator-side Claude Opus 4.6 priority review returned no merge blockers; requested plan-wording removal and analysis-heading alignment were fixed before commit.",
-    "pedagogical": "C1 seminar lesson teaches repeatable source-bound method: voice, object, space, status change, and evidence limit.",
-    "review": "Claude Opus re-review verdict APPROVE; prior blockers resolved: learner-facing M07/M08/M09 IDs removed and MDX completeness verified with all six activities plus closed tabs."
+    "decolonization": "FOLK framing and Ukrainian agency remain intact; no Russian-imperial or ethnographic-reduction framing introduced.",
+    "engagement": "Short-fragment reading posture is explicit, and the formerly empty ReadingActivity now includes public wedding-song text plus learner tasks.",
+    "naturalness": "Learner-facing AI/build/source-process leakage was removed or avoided; prose now reads as seminar content rather than orchestration metadata.",
+    "pedagogical": "Cleanup preserves the original module learning spine while clarifying whether the reading surface is short embedded fragments or a hosted reading widget.",
+    "review": "Claude Opus 4.8 PASS for folk learner reading surface cleanup; non-blocking ReadingActivity text prop note verified in site/src/components/ReadingActivity.tsx."
   },
   "floors": {
     "beauty": 8.5,
@@ -51,7 +50,7 @@
     "model": "claude-opus-4-8"
   },
   "schema_version": 1,
-  "scored_at": "2026-06-30T11:26:53Z",
+  "scored_at": "2026-06-30T14:27:30Z",
   "scores": {
     "beauty": 9.0,
     "decolonization": 9.1,

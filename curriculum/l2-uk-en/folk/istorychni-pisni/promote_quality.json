@@ -1,9 +1,9 @@
 {
-  "assembled_mdx_sha256": "a997d28c2e9211ae6e1a56050832267704d51ea42fea6692a9ac6a5f7a00b330",
+  "assembled_mdx_sha256": "c72ca575dd5cd226293eb87d94ba3f34d5112f2a3e65e68995fc5d35fb4cee04",
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "656933d61b6043e465eb9803a63a8966ecd0802d36c703556a6a04d6c21d58fc",
+    "digest": "8386f151dad805c11ea74049f01747421425eb2bcd09514b8b559ac58c7e9cb1",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/istorychni-pisni.yaml",
@@ -11,7 +11,7 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/istorychni-pisni/module.md",
-        "sha256": "8e5644184a3248505bdb6d1a28e3a0b1601374946cf7bb30129f6f973458713a"
+        "sha256": "24ceecd2fbf1fdeea00212655115a53c29d2d2a5ef1468ca69391015251a5c32"
       },
       {
         "path": "curriculum/l2-uk-en/folk/istorychni-pisni/activities.yaml",
@@ -28,10 +28,11 @@
     ]
   },
   "evidence": {
-    "framing": "Agy/Gemini 3.1 Pro High APPROVE: no FOLK framing regression; secular-historical genre and Ukrainian agency remain intact.",
-    "note": "Deterministic FOLK learner-register and VESUM cleanup replaced process vocabulary with student-facing source wording, used VESUM-clean prose equivalents, and documented quoted Baida diminutives as corpus-attested; reading evidence and interpretation scope unchanged.",
-    "pedagogy": "C1 seminar spine remains clear: genre boundary, \u0434\u0436\u0435\u0440\u0435\u043b\u044c\u043d\u0430 \u043a\u0440\u0438\u0442\u0438\u043a\u0430, decolonization frame, myth boxes, high-culture bridge, workbook practice.",
-    "quote_integrity": "Six M14 reading pages still cite public Ukrlib source URLs; lesson reading surfaces were not substantively changed."
+    "decolonization": "FOLK framing and Ukrainian agency remain intact; no Russian-imperial or ethnographic-reduction framing introduced.",
+    "engagement": "Hosted reading surface remains intact; cleanup removes broken guide/conclusion language without weakening source-bound tasks.",
+    "naturalness": "Learner-facing AI/build/source-process leakage was removed or avoided; prose now reads as seminar content rather than orchestration metadata.",
+    "pedagogical": "Cleanup preserves the original module learning spine while clarifying whether the reading surface is short embedded fragments or a hosted reading widget.",
+    "review": "Claude Opus 4.8 PASS for folk learner reading surface cleanup; non-blocking ReadingActivity text prop note verified in site/src/components/ReadingActivity.tsx."
   },
   "floors": {
     "beauty": 8.5,
@@ -44,12 +45,12 @@
   "profile": "folk_promote_v1",
   "review_artifact": null,
   "reviewer": {
-    "agent": "agy",
-    "family": "google",
-    "model": "gemini-3.1-pro-high"
+    "agent": "claude",
+    "family": "anthropic",
+    "model": "claude-opus-4-8"
   },
   "schema_version": 1,
-  "scored_at": "2026-06-28T20:45:33Z",
+  "scored_at": "2026-06-30T14:27:30Z",
   "scores": {
     "beauty": 9.0,
     "decolonization": 9.7,

@@ -1,9 +1,9 @@
 {
-  "assembled_mdx_sha256": "61d40f4d352fb8cead9e02433ba177245a819612ea5778a1b7d10f52ecfb949f",
+  "assembled_mdx_sha256": "9876e74778ee5248d2aa3268d44ca89f6cf6be38da2c6f233c116783da549673",
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "ffe1b03bb2abb2f98473bb50f6aafc42d924e3f8ae41d2d9902adeb98f210c34",
+    "digest": "737a5a599de964ebcb03d0b40643b4b98039ed1f817dacc05aaeab21808f169b",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/striletski-povstanski-pisni.yaml",
@@ -11,7 +11,7 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/striletski-povstanski-pisni/module.md",
-        "sha256": "07210cb5d1da370dad25053d0802a9a36453de1611d8dc29a0407bffdeee17c4"
+        "sha256": "9c838efa62c999161da01d46d4c35f9156593b258cba2f31fa5b67342dbe2829"
       },
       {
         "path": "curriculum/l2-uk-en/folk/striletski-povstanski-pisni/activities.yaml",
@@ -28,10 +28,11 @@
     ]
   },
   "evidence": {
-    "framing": "Agy/Gemini 3.1 Pro High PASS: twentieth-century resistance songs framed through decolonial lens; Soviet criminalization Russian-imperial erasure rejected; USS UPA layers kept distinct; no uncritical hagiography.",
-    "note": "Deterministic scanner follow-up replaced learner-facing English source-origin wording; vocabulary concept and pedagogy unchanged.",
-    "pedagogy": "Agy/Gemini 3.1 Pro High: strong CBI alignment; source -> genre layer -> poetic evidence -> limits inference pattern; activities teach variant comparison, motif analysis, disciplined performance, research ethics.",
-    "quote_integrity": "Agy/Gemini 3.1 Pro High: public song texts and references map cleanly to public-domain Ukrlib and public reference pages; textual citations are clean and accurate."
+    "decolonization": "FOLK framing and Ukrainian agency remain intact; no Russian-imperial or ethnographic-reduction framing introduced.",
+    "engagement": "Hosted reading surface remains intact; cleanup removes malformed learner-facing review/process language while preserving resistance-song analysis.",
+    "naturalness": "Learner-facing AI/build/source-process leakage was removed or avoided; prose now reads as seminar content rather than orchestration metadata.",
+    "pedagogical": "Cleanup preserves the original module learning spine while clarifying whether the reading surface is short embedded fragments or a hosted reading widget.",
+    "review": "Claude Opus 4.8 PASS for folk learner reading surface cleanup; non-blocking ReadingActivity text prop note verified in site/src/components/ReadingActivity.tsx."
   },
   "floors": {
     "beauty": 8.5,
@@ -44,12 +45,12 @@
   "profile": "folk_promote_v1",
   "review_artifact": null,
   "reviewer": {
-    "agent": "agy",
-    "family": "google",
-    "model": "gemini-3.1-pro-high"
+    "agent": "claude",
+    "family": "anthropic",
+    "model": "claude-opus-4-8"
   },
   "schema_version": 1,
-  "scored_at": "2026-06-26T23:31:45Z",
+  "scored_at": "2026-06-30T14:27:30Z",
   "scores": {
     "beauty": 9.2,
     "decolonization": 9.5,

@@ -1,9 +1,9 @@
 {
-  "assembled_mdx_sha256": "8f72f2be3c3b25d96e698c7b35c5ddeff022fce5099b6bce3aa0ad1c5b2f7b16",
+  "assembled_mdx_sha256": "a89122f656a3e041ac2e6e72ef1c43d6958a7235cb4aa07cfdeadcade60582bb",
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "59326264826ea6bfe43b287869be5fa1362141c6987d9ffe160607200a8d03d6",
+    "digest": "95eeefce906505e99dcc73524ce2e13ca8c7e69d01a9b74d230c0e87a90a06a6",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/holosinnya.yaml",
@@ -11,7 +11,7 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/holosinnya/module.md",
-        "sha256": "01976701bac51a8d471aa7ef08eaccee1266ec60f199758c1eda575bd875ff64"
+        "sha256": "f404aea9a49a08eba4f7a77eb75d96b75b9a0932ce01a69af6b3be74bb297967"
       },
       {
         "path": "curriculum/l2-uk-en/folk/holosinnya/activities.yaml",
@@ -28,11 +28,11 @@
     ]
   },
   "evidence": {
-    "decolonization": "Distinguishes ritual lament, literary topos, and scholarship without imperial framing.",
-    "engagement": "Six varied activities cover source evaluation, comparison, critique, and essay response.",
-    "naturalness": "Ukrainian C1 seminar voice is source-bound, learner-facing, and free of hidden-core framing.",
-    "pedagogical": "Teaches source discipline: genre, moment, performer, address, formula, and evidence limits.",
-    "review": "Claude Opus 4.8 PASS after ReadingActivity alias fix; no new blockers; MDX parity OK."
+    "decolonization": "FOLK framing and Ukrainian agency remain intact; no Russian-imperial or ethnographic-reduction framing introduced.",
+    "engagement": "Lesson now tells learners that reading happens through short embedded lament fragments, matching the module's intentional format.",
+    "naturalness": "Learner-facing AI/build/source-process leakage was removed or avoided; prose now reads as seminar content rather than orchestration metadata.",
+    "pedagogical": "Cleanup preserves the original module learning spine while clarifying whether the reading surface is short embedded fragments or a hosted reading widget.",
+    "review": "Claude Opus 4.8 PASS for folk learner reading surface cleanup; non-blocking ReadingActivity text prop note verified in site/src/components/ReadingActivity.tsx."
   },
   "floors": {
     "beauty": 8.5,
@@ -50,7 +50,7 @@
     "model": "claude-opus-4-8"
   },
   "schema_version": 1,
-  "scored_at": "2026-06-30T12:12:10Z",
+  "scored_at": "2026-06-30T14:27:30Z",
   "scores": {
     "beauty": 8.8,
     "decolonization": 9.1,
