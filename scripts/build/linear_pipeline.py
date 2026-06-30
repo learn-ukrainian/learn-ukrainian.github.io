@@ -4309,6 +4309,22 @@ def write_writer_artifacts(module_dir: Path, artifacts: Mapping[str, str]) -> No
 
     for name in ("activities.yaml", "vocabulary.yaml", "resources.yaml"):
         parsed = yaml.safe_load(str(artifacts[name]))
+        if name == "activities.yaml" and isinstance(parsed, dict) and (
+            "inline" in parsed or "workbook" in parsed
+        ):
+            activity_items: list[Any] = []
+            for section_name in ("inline", "workbook"):
+                section = parsed.get(section_name, [])
+                if section is None:
+                    continue
+                if not isinstance(section, list):
+                    raise LinearPipelineError(
+                        f"{name} {section_name} section must be a YAML list"
+                    )
+                activity_items.extend(section)
+            if not all(isinstance(item, dict) for item in activity_items):
+                raise LinearPipelineError(f"{name} entries must be mappings")
+            continue
         if not isinstance(parsed, list):
             raise LinearPipelineError(f"{name} must be a bare YAML list")
         if not all(isinstance(item, dict) for item in parsed):
@@ -8585,7 +8601,7 @@ def run_python_qg(
     )
     record("component_density", _component_density_gate(module_text, plan))
     record("archetype_fit", _archetype_fit_gate(module_text, plan, activities))
-    record("inject_activity_ids", _inject_activity_gate(module_text, activities, plan))
+    record("inject_activity_ids", _inject_activity_gate(module_text, activities, plan, module_dir))
     record(
         "activity_types",
         _activity_type_gate(
@@ -14827,12 +14843,30 @@ def _inject_activity_gate(
     text: str,
     activities: list[dict[str, Any]],
     plan: Mapping[str, Any] | None = None,
+    module_dir: Path | None = None,
 ) -> dict[str, Any]:
     ids = {str(activity.get("id")) for activity in activities if activity.get("id")}
     injected = _INJECT_RE.findall(text)
     missing = [activity_id for activity_id in injected if activity_id not in ids]
-    unused = sorted(ids - set(injected))
-    workbook_only: list[str] = []
+    injected_ids = set(injected)
+    workbook_ids: set[str] = set()
+    if module_dir is not None:
+        activities_path = module_dir / "activities.yaml"
+        if activities_path.exists():
+            try:
+                raw_activities = load_yaml(activities_path)
+            except Exception:
+                raw_activities = None
+            if isinstance(raw_activities, dict):
+                workbook_section = raw_activities.get("workbook", [])
+                if isinstance(workbook_section, list):
+                    workbook_ids = {
+                        str(activity.get("id"))
+                        for activity in workbook_section
+                        if isinstance(activity, dict) and activity.get("id")
+                    }
+    unused = sorted((ids - injected_ids) - workbook_ids)
+    workbook_only = sorted((ids - injected_ids) & workbook_ids)
     if plan is not None:
         archetype = resolve_module_archetype(str(plan.get("level") or ""), int(plan.get("sequence") or 0))
         if archetype.get("id") in {
@@ -14840,7 +14874,7 @@ def _inject_activity_gate(
             "a1-script-building",
             "a1-first-contact-survival",
         }:
-            workbook_only = unused
+            workbook_only = sorted(set(workbook_only) | set(unused))
             unused = []
     reasons = []
     if missing:
