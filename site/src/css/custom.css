@@ -454,9 +454,9 @@ a {
 }
 
 .admonition-note {
-  --admonition-accent: var(--co-gray-600);
-  --admonition-bg: rgba(95, 99, 104, 0.08);
-  --admonition-border: rgba(95, 99, 104, 0.24);
+  --admonition-accent: var(--co-blue-deep);
+  --admonition-bg: rgba(0, 87, 183, 0.08);
+  --admonition-border: rgba(0, 87, 183, 0.24);
 }
 
 .admonition-danger {
@@ -480,9 +480,9 @@ a {
 }
 
 [data-theme='dark'] .admonition-note {
-  --admonition-accent: var(--co-gray-300);
-  --admonition-bg: rgba(255, 255, 255, 0.06);
-  --admonition-border: rgba(255, 255, 255, 0.16);
+  --admonition-accent: var(--co-blue-light);
+  --admonition-bg: rgba(77, 163, 255, 0.12);
+  --admonition-border: rgba(77, 163, 255, 0.28);
 }
 
 .alert {

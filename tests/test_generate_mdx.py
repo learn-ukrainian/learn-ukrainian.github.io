@@ -150,6 +150,21 @@ class TestParseFrontmatter:
         assert body.strip() == "Body"
 
 
+def test_seminar_description_falls_back_to_ukrainian_title_for_latin_subtitle():
+    mdx = generate_mdx(
+        "# Олександр Білаш: Українська пісня і пам'ять\n\nТекст уроку.",
+        346,
+        meta_data={
+            "title": "Олександр Білаш: Українська пісня і пам'ять",
+            "subtitle": "Oleksandr Bilash: Ukrainian Song and Cultural Memory",
+        },
+        level="bio",
+    )
+
+    assert "description: \"Олександр Білаш: Українська пісня і пам'ять\"" in mdx
+    assert "Oleksandr Bilash: Ukrainian Song and Cultural Memory" not in mdx
+
+
 def test_v7_tab3_cross_refs_inline_activities_and_keeps_workbook_only(tmp_path):
     activities_yaml = tmp_path / "activities.yaml"
     activities_yaml.write_text(

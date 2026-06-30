@@ -411,12 +411,17 @@ def generate_mdx(
     except Exception:
         pass
 
+    title = str(fm.get('title', 'Untitled'))
+    description = str(fm.get('subtitle', ''))
+    if level.lower() in SEMINAR_LEVELS and re.search(r"[A-Za-z]", description):
+        description = title
+
     frontmatter = f'''---
-title: "{escape_jsx(fm.get('title', 'Untitled'))}"
-description: "{escape_jsx(fm.get('subtitle', ''))}"
+title: "{escape_jsx(title)}"
+description: "{escape_jsx(description)}"
 sidebar:
   order: {module_num}
-  label: "{str(module_num).zfill(2)}. {escape_jsx(fm.get('title', 'Untitled'))}"{extra_fm_lines}
+  label: "{str(module_num).zfill(2)}. {escape_jsx(title)}"{extra_fm_lines}
 ---
 '''
 

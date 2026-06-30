@@ -10,11 +10,15 @@
 - lemma: народнопісенна традиція
   translation: folk-song tradition
   pos: noun phrase
-  usage: Народнопісенна традиція дала Білашеві інтонаційний грунт.
+  usage: Народнопісенна традиція дала Білашеві інтонаційний ґрунт.
+- lemma: пісенність
+  translation: songfulness
+  pos: noun
+  usage: Пісенність означає природну здатність слова входити в мелодію.
 - lemma: співаність
   translation: singability
   pos: noun
-  usage: Співаність означає, що українське слово природно входить у мелодію.
+  usage: Співаність робить пісню близькою для голосу, а не лише для нотного тексту.
 - lemma: інтонація
   translation: intonation
   pos: noun
@@ -30,15 +34,11 @@
 - lemma: співавторство
   translation: co-authorship
   pos: noun
-  usage: Співавторство поета і композитора створює пісню як цілісний твір.
-- lemma: лірична сцена
-  translation: lyrical scene
-  pos: noun phrase
-  usage: Лірична сцена в пісні може тримати родинний образ і дорогу.
+  usage: Співавторство поета і композитора створює пісню як спільний твір.
 - lemma: велика форма
-  translation: large-scale form
+  translation: large form
   pos: noun phrase
-  usage: Велика форма показує Білаша як автора опери і кіномузики.
+  usage: Велика форма показує Білаша як автора опери, ораторії і кіномузики.
 - lemma: рецепція
   translation: reception
   pos: noun
@@ -74,7 +74,7 @@
 - lemma: дисидент
   translation: dissident
   pos: noun
-  usage: Білаш не був дисидентом, тому модуль не вигадує таку біографію.
+  usage: Білаш не був дисидентом, тому біографія не вигадує такого сюжету.
 - lemma: переосмислення
   translation: reinterpretation
   pos: noun
