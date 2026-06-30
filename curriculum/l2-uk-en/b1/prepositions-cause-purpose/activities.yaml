@@ -688,7 +688,7 @@ workbook:
             correct: false
           - text: "Він пропустив заняття для хвороби."
             correct: false
-        explanation: "Illness is a negative cause: через хворобу."
+        explanation: "Хвороба - негативна причина: через хворобу."
       - source: "We finished thanks to your help."
         options:
           - text: "Ми завершили завдяки вашій допомозі."
@@ -697,7 +697,7 @@ workbook:
             correct: false
           - text: "Ми завершили для вашої допомоги."
             correct: false
-        explanation: "Help is a positive cause: завдяки + давальний."
+        explanation: "Допомога - позитивна причина: завдяки + давальний."
       - source: "She trembled from cold."
         options:
           - text: "Вона тремтіла від холоду."
@@ -706,7 +706,7 @@ workbook:
             correct: false
           - text: "Вона тремтіла для холоду."
             correct: false
-        explanation: "Physical reaction: від + родовий."
+        explanation: "Фізична реакція: від + родовий."
       - source: "I opened it out of curiosity."
         options:
           - text: "Я відкрив це з цікавості."
@@ -715,7 +715,7 @@ workbook:
             correct: false
           - text: "Я відкрив це завдяки цікавості."
             correct: false
-        explanation: "Internal motivation: з цікавості."
+        explanation: "Внутрішня мотивація: з цікавості."
       - source: "The meeting was moved due to repairs."
         options:
           - text: "Зустріч перенесли у зв'язку з ремонтом."
@@ -724,7 +724,7 @@ workbook:
             correct: false
           - text: "Зустріч перенесли заради ремонтом."
             correct: false
-        explanation: "Formal cause: у зв'язку з + орудний."
+        explanation: "Офіційна причина: у зв'язку з + орудний."
       - source: "This form is needed for registration."
         options:
           - text: "Ця форма потрібна для реєстрації."
@@ -733,7 +733,7 @@ workbook:
             correct: false
           - text: "Ця форма потрібна від реєстрації."
             correct: false
-        explanation: "Purpose: для + родовий."
+        explanation: "Мета: для + родовий."
       - source: "They worked for the sake of justice."
         options:
           - text: "Вони працювали заради справедливості."
@@ -742,7 +742,7 @@ workbook:
             correct: false
           - text: "Вони працювали від справедливості."
             correct: false
-        explanation: "Value-based purpose: заради + родовий."
+        explanation: "Мета, пов'язана з цінністю: заради + родовий."
       - source: "I came to help."
         options:
           - text: "Я прийшов, щоб допомогти."
@@ -751,7 +751,7 @@ workbook:
             correct: false
           - text: "Я прийшов через допомогти."
             correct: false
-        explanation: "Purpose-action: щоб + інфінітив."
+        explanation: "Дія-мета: щоб + інфінітив."
       - source: "She went to get water."
         options:
           - text: "Вона пішла по воду."
@@ -760,7 +760,7 @@ workbook:
             correct: false
           - text: "Вона пішла завдяки воді."
             correct: false
-        explanation: "Purpose of motion to get something: по + знахідний."
+        explanation: "Рух із метою щось узяти: по + знахідний."
       - source: "Because the system failed, registration closed."
         options:
           - text: "Через те, що система зламалася, реєстрацію закрили."
@@ -769,7 +769,7 @@ workbook:
             correct: false
           - text: "Для того, що система зламалася, реєстрацію закрили."
             correct: false
-        explanation: "System failure is a negative cause."
+        explanation: "Збій системи - негативна причина."
       - source: "In order to pass the exam, you need to review."
         options:
           - text: "Для того щоб скласти іспит, треба повторити матеріал."
@@ -778,7 +778,7 @@ workbook:
             correct: false
           - text: "Завдяки тому щоб скласти іспит, треба повторити матеріал."
             correct: false
-        explanation: "Для того щоб introduces a purpose clause."
+        explanation: "Для того щоб вводить підрядну частину мети."
       - source: "Because of my fault, the letter was late."
         options:
           - text: "З моєї вини лист надіслали пізно."

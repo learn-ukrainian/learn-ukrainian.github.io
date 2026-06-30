@@ -377,7 +377,7 @@ workbook:
     - Я не буду говорити українською.
     correct: 0
     explanation: Скарга може бути наполегливою, але починатися ввічливо.
-  - question: Яке слово означає customer service?
+  - question: Яке слово означає обслуговування клієнтів?
     options:
     - обслуговування
     - обмін валют
@@ -682,7 +682,7 @@ workbook:
       correct: true
     - text: Дайте, будь ласка, курс.
       correct: false
-    explanation: Чек - receipt.
+    explanation: Чек - документ, що підтверджує оплату.
   - source: This product is defective.
     options:
     - text: Цей товар бракований.

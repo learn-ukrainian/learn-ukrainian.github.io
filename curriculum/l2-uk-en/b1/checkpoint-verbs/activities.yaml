@@ -707,14 +707,14 @@ workbook:
           - "Перечитайте абзац."
           - "Дочитайте абзац ще раз."
           - "Перевантажте абзац."
-        explanation: "Перечитати = read again."
+        explanation: "Перечитати = прочитати ще раз."
       - source: "Do not overload the schedule."
         answer: "Не перевантажуйте графік."
         alternatives:
           - "Не перевантажуйте графік."
           - "Не перечитайте графік."
           - "Не знебарвіть графік."
-        explanation: "Перевантажити = overload."
+        explanation: "Перевантажити = надто завантажити."
       - source: "Distribute the announcement in the chat."
         answer: "Розповсюдьте оголошення в чаті."
         alternatives:

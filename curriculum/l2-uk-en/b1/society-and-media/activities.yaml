@@ -425,7 +425,7 @@ workbook:
             correct: true
           - text: Я хочу чекати це твердження.
             correct: false
-        explanation: Перевірити означає verify, а не wait.
+        explanation: Перевірити означає установити правдивість, а не чекати.
       - source: According to the coordinator, the classes are free.
         options:
           - text: За словами координаторки, заняття безкоштовні.
@@ -460,7 +460,7 @@ workbook:
             correct: true
           - text: Нам варто зрівняти дві новини.
             correct: false
-        explanation: Для analysis потрібно порівняти.
+        explanation: Для аналізу потрібно порівняти.
       - source: The journalist confirmed the information.
         options:
           - text: Журналістка підтвердила інформацію.

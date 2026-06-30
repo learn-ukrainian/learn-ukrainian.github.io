@@ -350,7 +350,7 @@ workbook:
             correct: true
           - text: "Він запитав, якщо я маю час."
             correct: false
-        explanation: У непрямому питанні if відповідає українському чи.
+        explanation: У непрямому питанні вживаємо українське чи.
       - source: "The teacher told us to open the books."
         options:
           - text: "Учитель сказав, щоб ми відкрили підручники."

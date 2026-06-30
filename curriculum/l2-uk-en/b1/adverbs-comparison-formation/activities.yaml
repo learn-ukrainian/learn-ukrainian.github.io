@@ -365,9 +365,9 @@ workbook:
         explanation: Легко - легше.
       - question: "Що означає найменш переконливо?"
         options:
-          - "least persuasively"
-          - "more persuasively"
-          - "the best argument"
+          - "найменш переконливо"
+          - "більш переконливо"
+          - "найкращий аргумент"
         correct: 0
         explanation: Найменш + прислівник означає найнижчу міру ознаки.
       - question: "Правильна підсилена форма:"

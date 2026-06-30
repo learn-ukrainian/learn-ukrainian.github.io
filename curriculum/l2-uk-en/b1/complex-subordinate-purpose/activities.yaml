@@ -611,6 +611,6 @@ workbook:
       - criteria: "Форма після щоб"
         points: 2
         description: "Правильно розрізнено інфінітив і особову форму."
-      - criteria: "Мета vs причина"
+      - criteria: "Мета і причина"
         points: 3
         description: "Є чітка пара, де причина не змішана з метою."

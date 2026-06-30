@@ -477,7 +477,7 @@ workbook:
             correct: false
           - text: "Ми прийшли рано, або зала ще була зачинена."
             correct: false
-        explanation: "But відповідає протиставному але."
+        explanation: "Сполучник але передає протиставлення."
       - source: "Either we submit today, or the deadline will pass."
         options:
           - text: "Або ми подамо сьогодні, або дедлайн мине."

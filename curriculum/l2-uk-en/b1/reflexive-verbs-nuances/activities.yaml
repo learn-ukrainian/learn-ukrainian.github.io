@@ -510,32 +510,32 @@ workbook:
   - id: wb-4
     type: match-up
     title: Керування і переклад
-    instruction: Поєднайте українську модель з англійським змістом.
+    instruction: Поєднайте українську модель зі значенням.
     pairs:
       - left: "боятися темряви"
-        right: "to be afraid of the dark"
+        right: "відчувати страх перед темрявою"
       - left: "соромитися помилки"
-        right: "to be ashamed of a mistake"
+        right: "відчувати сором через помилку"
       - left: "сердитися на друга"
-        right: "to be angry with a friend"
+        right: "відчувати гнів на друга"
       - left: "сподіватися на відповідь"
-        right: "to hope for an answer"
+        right: "мати надію на відповідь"
       - left: "знайомитися з колегою"
-        right: "to get acquainted with a colleague"
+        right: "починати знайомство з колегою"
       - left: "листуватися з родичами"
-        right: "to correspond with relatives"
+        right: "обмінюватися листами з родичами"
       - left: "користуватися телефоном"
-        right: "to use a phone"
+        right: "використовувати телефон"
       - left: "повертатися додому"
-        right: "to return home"
+        right: "рухатися назад додому"
       - left: "мені здається"
-        right: "it seems to me"
+        right: "передавати особисте враження"
       - left: "нам хочеться кави"
-        right: "we feel like coffee"
+        right: "мати бажання випити кави"
       - left: "файл не відкривається"
-        right: "the file does not open"
+        right: "файл неможливо відкрити"
       - left: "книга читається легко"
-        right: "the book is easy to read"
+        right: "книгу легко читати"
   - id: wb-5
     type: cloze
     title: Ранок у гуртожитку

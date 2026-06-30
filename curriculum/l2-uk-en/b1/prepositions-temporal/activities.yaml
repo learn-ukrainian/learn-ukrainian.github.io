@@ -13,7 +13,7 @@ inline:
           - "за"
           - "до"
         correct: 0
-        explanation: "Форма через двадцять хвилин після початку означає twenty minutes after the start."
+        explanation: "Форма через двадцять хвилин після початку означає час після початку."
       - question: "Ми підготували зал ____ двадцять хвилин."
         options:
           - "за"
@@ -27,7 +27,7 @@ inline:
           - "за"
           - "на"
         correct: 0
-        explanation: "Через тиждень після відкриття означає one week after the opening."
+        explanation: "Через тиждень після відкриття означає один тиждень після відкриття."
       - question: "На питання Скільки часу знадобилося? відповідаємо: дизайнер зробив афішу ____ тиждень."
         options:
           - "за"
@@ -102,7 +102,7 @@ inline:
           - "через"
           - "за"
           - "перед"
-        explanation: "Через п'ять хвилин після реєстрації означає five minutes after registration."
+        explanation: "Через п'ять хвилин після реєстрації означає п'ять хвилин після реєстрації."
       - sentence: "Ми переклали оголошення ____ п'ять хвилин."
         answer: "за"
         options:
@@ -326,7 +326,7 @@ workbook:
           - "після двох годин"
         correct: 0
         explanation: "Строк бронювання - на + знахідний."
-      - question: "Який варіант означає deadline?"
+      - question: "Який варіант означає кінцевий строк?"
         options:
           - "до понеділка"
           - "після понеділка"
@@ -347,7 +347,7 @@ workbook:
           - "після зустріч"
         correct: 0
         explanation: "Після керує родовим."
-      - question: "Який варіант означає inside the event?"
+      - question: "Який варіант означає перебіг події?"
         options:
           - "під час зустрічі"
           - "перед зустріччю"
@@ -558,7 +558,7 @@ workbook:
           - "п'ять після шостої"
   - id: wb-4
     type: translate
-    title: "Переклад: time prepositions"
+    title: "Переклад: часові прийменники"
     instruction: "Оберіть природний український переклад."
     items:
       - source: "The break comes ten minutes after the start."
@@ -567,84 +567,84 @@ workbook:
             correct: true
           - text: "Перерва буде за десять хвилин після початку."
             correct: false
-        explanation: "Ten minutes after the start is через десять хвилин після початку."
+        explanation: "Десять хвилин після початку - через десять хвилин після початку."
       - source: "I can finish it in ten minutes."
         options:
           - text: "Я можу закінчити це за десять хвилин."
             correct: true
           - text: "Я можу закінчити це через десять хвилин."
             correct: false
-        explanation: "Time needed for completion is за."
+        explanation: "Час, потрібний для завершення, передаємо через за."
       - source: "Send the form by Friday."
         options:
           - text: "Надішліть форму до п'ятниці."
             correct: true
           - text: "Надішліть форму після п'ятниці."
             correct: false
-        explanation: "By Friday as deadline is до п'ятниці."
+        explanation: "Кінцевий строк - до п'ятниці."
       - source: "Before the lecture, check the microphone."
         options:
           - text: "Перед лекцією перевірте мікрофон."
             correct: true
           - text: "Перед лекції перевірте мікрофон."
             correct: false
-        explanation: "Перед requires instrumental."
+        explanation: "Перед потребує орудного відмінка."
       - source: "After the lecture, we will have coffee."
         options:
           - text: "Після лекції буде кава."
             correct: true
           - text: "Після лекцією буде кава."
             correct: false
-        explanation: "Після requires genitive."
+        explanation: "Після потребує родового відмінка."
       - source: "During the lecture, do not use your phone."
         options:
           - text: "Під час лекції не користуйтеся телефоном."
             correct: true
           - text: "За лекцію не користуйтеся телефоном."
             correct: false
-        explanation: "Inside the event is під час."
+        explanation: "Перебіг події передає під час."
       - source: "Throughout the week, volunteers collected applications."
         options:
           - text: "Упродовж тижня волонтери збирали заявки."
             correct: true
           - text: "На протязі тижня волонтери збирали заявки."
             correct: false
-        explanation: "Temporal duration uses упродовж/протягом."
+        explanation: "Тривалість у часі передаємо через упродовж/протягом."
       - source: "We rented the hall for a week."
         options:
           - text: "Ми орендували зал на тиждень."
             correct: true
           - text: "Ми орендували зал через тиждень."
             correct: false
-        explanation: "Planned rental period is на тиждень."
+        explanation: "Запланований період оренди - на тиждень."
       - source: "After lunch, we will meet the guide."
         options:
           - text: "По обіді ми зустрінемося з гідом."
             correct: true
           - text: "За обідом ми зустрінемося з гідом."
             correct: false
-        explanation: "По обіді is correct literary after lunch."
+        explanation: "По обіді - літературний варіант для часу після обіду."
       - source: "The club meets every Monday."
         options:
           - text: "Клуб збирається щопонеділка."
             correct: true
           - text: "Клуб збирається по понеділкам."
             correct: false
-        explanation: "Regularity is щопонеділка."
+        explanation: "Регулярність передає щопонеділка."
       - source: "The event is at three o'clock."
         options:
           - text: "Подія о третій годині."
             correct: true
           - text: "Подія до третьої годині."
             correct: false
-        explanation: "Clock time uses о."
+        explanation: "Точний час передаємо прийменником о."
       - source: "It is ten minutes to six."
         options:
           - text: "За десять хвилин шоста."
             correct: true
           - text: "Без десяти шість."
             correct: false
-        explanation: "Avoid the калька with без."
+        explanation: "Уникайте кальки з без."
   - id: wb-5
     type: error-correction
     title: Редагуємо розклад

@@ -608,7 +608,7 @@ workbook:
           - несе
   - id: wb-6
     type: translate
-    title: Переклад без одного go
+    title: Переклад без єдиного дієслова руху
     instruction: Оберіть природний український варіант.
     items:
       - source: I am going to the pharmacy on foot now.
@@ -617,84 +617,84 @@ workbook:
             correct: true
           - text: Я зараз ходжу до аптеки пішки.
             correct: false
-        explanation: Now and on foot in one direction - іду.
+        explanation: Зараз, пішки й в одному напрямку - іду.
       - source: I go to the pharmacy every week.
         options:
           - text: Я ходжу до аптеки щотижня.
             correct: true
           - text: Я іду до аптеки щотижня.
             correct: false
-        explanation: Every week shows a habit.
+        explanation: Щотижня показує звичну дію.
       - source: We are going to Lviv by train.
         options:
           - text: Ми їдемо до Львова потягом.
             correct: true
           - text: Ми ідемо до Львова потягом.
             correct: false
-        explanation: By train requires a transport verb.
+        explanation: Потяг потребує дієслова транспортного руху.
       - source: She goes to work by bus every day.
         options:
           - text: Вона щодня їздить на роботу автобусом.
             correct: true
           - text: Вона щодня їде на роботу автобусом.
             correct: false
-        explanation: Every day makes the action habitual.
+        explanation: Щодня робить дію звичною.
       - source: The child is running to the door.
         options:
           - text: Дитина біжить до дверей.
             correct: true
           - text: Дитина бігає до дверей.
             correct: false
-        explanation: One run toward a target - біжить.
+        explanation: Один рух бігом до цілі - біжить.
       - source: The children run in the yard every evening.
         options:
           - text: Діти бігають у дворі щовечора.
             correct: true
           - text: Діти біжать у дворі щовечора.
             correct: false
-        explanation: Every evening and in the yard indicate repeated movement.
+        explanation: Щовечора й у дворі показують повторюваний рух.
       - source: The courier is carrying the package to the office.
         options:
           - text: Кур'єр несе пакет до офісу.
             correct: true
           - text: Кур'єр носить пакет до офісу зараз.
             correct: false
-        explanation: One current carrying route - несе.
+        explanation: Один поточний маршрут із предметами - несе.
       - source: The courier carries documents between offices every day.
         options:
           - text: Кур'єр щодня носить документи між офісами.
             correct: true
           - text: Кур'єр щодня несе документи між офісами.
             correct: false
-        explanation: Щодня and between offices make it repeated.
+        explanation: Щодня й маршрут між офісами показують повторюваність.
       - source: The guide is leading the group to the cathedral.
         options:
           - text: Гід веде групу до собору.
             correct: true
           - text: Гід водить групу до собору зараз.
             correct: false
-        explanation: One current route - веде.
+        explanation: Один поточний маршрут - веде.
       - source: The guide leads groups around the city on Saturdays.
         options:
           - text: Гід водить групи по місту щосуботи.
             correct: true
           - text: Гід веде групи по місту щосуботи.
             correct: false
-        explanation: Щосуботи and around the city indicate habitual guided routes.
+        explanation: Щосуботи й маршрут по місту показують звичне водіння груп.
       - source: The taxi is taking us to the airport.
         options:
           - text: Таксі везе нас до аеропорту.
             correct: true
           - text: Таксі несе нас до аеропорту.
             correct: false
-        explanation: A vehicle transports passengers, so везе.
+        explanation: Транспортний засіб везе пасажирів.
       - source: This van delivers food around the city.
         options:
           - text: Цей фургон возить їжу по місту.
             correct: true
           - text: Цей фургон везе їжу по місту щодня.
             correct: false
-        explanation: Around the city as a regular function calls for возить.
+        explanation: Регулярний маршрут по місту потребує возить.
   - id: wb-7
     type: error-correction
     title: Маршрут без кальок

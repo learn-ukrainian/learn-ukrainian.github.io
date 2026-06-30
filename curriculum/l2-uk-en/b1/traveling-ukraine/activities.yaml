@@ -380,7 +380,7 @@ workbook:
           - перон
   - id: wb-2
     type: translate
-    title: Travel phrases
+    title: Фрази для подорожі
     instruction: Оберіть природний український переклад.
     items:
       - source: "We traveled across Ukraine by train."

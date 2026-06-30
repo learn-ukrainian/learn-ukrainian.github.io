@@ -358,7 +358,7 @@ workbook:
     title: Оберіть найприродніший варіант
     instruction: Виберіть українське речення, яке найкраще відповідає контексту.
     items:
-      - question: "Виконавиця важлива: Olena wrote the report."
+      - question: "Виконавиця важлива: хто написав звіт?"
         options:
           - "Олена написала звіт."
           - "Звіт було написано Оленою."
@@ -372,7 +372,7 @@ workbook:
           - "Користувач зберіг файл."
         correct: 0
         explanation: "Після дії система фіксує результат."
-      - question: "Правило налаштувань: файл saved automatically."
+      - question: "Правило налаштувань: файл зберігається автоматично."
         options:
           - "Файл зберігається автоматично."
           - "Файл збережено автоматично."
@@ -734,14 +734,14 @@ workbook:
             correct: true
           - text: "Заявку розглянуто."
             correct: false
-        explanation: "Being reviewed - процес."
+        explanation: "Розглядається - процес."
       - source: "The application has been reviewed."
         options:
           - text: "Заявку розглянуто."
             correct: true
           - text: "Заявка розглядається."
             correct: false
-        explanation: "Has been reviewed - результат."
+        explanation: "Розглянуто - результат."
       - source: "The doors are closed automatically at eight."
         options:
           - text: "Двері зачиняються автоматично о восьмій."

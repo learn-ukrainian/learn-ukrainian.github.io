@@ -13,7 +13,7 @@ inline:
           - "півострів"
           - "височина"
         correct: 0
-        explanation: "Передмістя - suburban area near a city."
+        explanation: "Передмістя - територія біля великого міста або навколо нього."
       - question: "Що таке набережна?"
         options:
           - "вулиця або простір уздовж річки чи моря"
@@ -21,7 +21,7 @@ inline:
           - "адміністративний район"
         correct: 0
         explanation: "Набережна пов'язана з водою та міським простором."
-      - question: "Яке слово називає land surrounded by water?"
+      - question: "Яке слово називає ділянку суші, оточену водою?"
         options:
           - "острів"
           - "яр"
@@ -34,7 +34,7 @@ inline:
           - "документ для туриста"
           - "тип міського транспорту"
         correct: 0
-        explanation: "Краєвид - view or landscape."
+        explanation: "Краєвид - вид на місцевість або пейзаж."
       - question: "Яка пара належить до рельєфу?"
         options:
           - "рівнина, височина"
@@ -56,7 +56,7 @@ inline:
           - "малий провулок"
         correct: 0
         explanation: "Заповідник охороняє природну територію."
-      - question: "Яке слово найкраще підходить для edge of a settlement?"
+      - question: "Яке слово найкраще підходить для краю населеного пункту?"
         options:
           - "околиця"
           - "узбережжя"
@@ -65,18 +65,18 @@ inline:
         explanation: "Околиця - край міста або територія біля нього."
       - question: "Що таке провулок?"
         options:
-          - "невелика вулиця або lane"
+          - "невелика вулиця або проїзд"
           - "широке узбережжя"
           - "природний заповідник"
         correct: 0
-        explanation: "Провулок - small street or lane."
-      - question: "Яке слово називає land along the sea?"
+        explanation: "Провулок - невелика вулиця або проїзд."
+      - question: "Яке слово називає територію вздовж моря?"
         options:
           - "узбережжя"
           - "площа"
           - "височина"
         correct: 0
-        explanation: "Узбережжя - shoreline or coast."
+        explanation: "Узбережжя - територія вздовж моря або іншої великої водойми."
       - question: "Яке слово може бути орієнтиром у місті?"
         options:
           - "театр"
@@ -84,7 +84,7 @@ inline:
           - "низовина"
         correct: 0
         explanation: "Орієнтиром може бути помітний об'єкт, наприклад театр."
-      - question: "Яка фраза природна для city center?"
+      - question: "Яка фраза природна для центральної частини міста?"
         options:
           - "центр міста"
           - "центр місто"
@@ -305,84 +305,84 @@ workbook:
     title: Лексика місця
     instruction: "Оберіть слово, яке найкраще відповідає опису."
     items:
-      - question: "Protected natural area"
+      - question: "Природоохоронна територія"
         options:
           - "заповідник"
           - "провулок"
           - "площа"
         correct: 0
         explanation: "Заповідник - природоохоронна територія."
-      - question: "View or landscape"
+      - question: "Вид на місцевість або пейзаж"
         options:
           - "краєвид"
           - "район"
           - "берег"
         correct: 0
         explanation: "Краєвид - те, що відкривається погляду."
-      - question: "Street along a river or sea"
+      - question: "Вулиця або простір уздовж річки чи моря"
         options:
           - "набережна"
           - "низовина"
           - "яр"
         correct: 0
         explanation: "Набережна пов'язана з водою."
-      - question: "Small street or lane"
+      - question: "Невелика вулиця або проїзд"
         options:
           - "провулок"
           - "рівнина"
           - "узбережжя"
         correct: 0
         explanation: "Провулок - маленька вулиця."
-      - question: "Outskirts"
+      - question: "Край міста або місцевість біля нього"
         options:
           - "околиця"
           - "острів"
           - "пам'ятка"
         correct: 0
         explanation: "Околиця - край міста або місцевість біля нього."
-      - question: "Coast"
+      - question: "Територія вздовж моря"
         options:
           - "узбережжя"
           - "височина"
           - "передмістя"
         correct: 0
         explanation: "Узбережжя - територія вздовж моря."
-      - question: "Plain"
+      - question: "Пласка місцевість"
         options:
           - "рівнина"
           - "гора"
           - "півострів"
         correct: 0
         explanation: "Рівнина - переважно пласка місцевість."
-      - question: "Upland"
+      - question: "Підвищена місцевість"
         options:
           - "височина"
           - "площа"
           - "набережна"
         correct: 0
         explanation: "Височина - підвищена місцевість."
-      - question: "Valley"
+      - question: "Низьке місце між підвищеннями або вздовж річки"
         options:
           - "долина"
           - "проспект"
           - "район"
         correct: 0
         explanation: "Долина - низьке місце між підвищеннями або вздовж річки."
-      - question: "Landmark or notable site"
+      - question: "Визначна пам'ятка"
         options:
           - "пам'ятка"
           - "низовина"
           - "відмінок"
         correct: 0
         explanation: "Пам'ятка може бути історичною, архітектурною або природною."
-      - question: "Reference point for navigation"
+      - question: "Орієнтир для навігації"
         options:
           - "орієнтир"
           - "родовий"
           - "берег"
         correct: 0
         explanation: "Орієнтир допомагає знайти дорогу."
-      - question: "District"
+      - question: "Частина міста або адміністративна територія"
         options:
           - "район"
           - "яр"
@@ -566,7 +566,7 @@ workbook:
         error: "у березі"
         correction: "на березі"
         error_type: word
-        explanation: "На березі - природна модель для edge of water."
+        explanation: "На березі - природна модель для краю водойми."
       - sentence: "Я повернувся з Закарпаття вчора."
         error: "з Закарпаття"
         correction: "із Закарпаття"
@@ -700,7 +700,7 @@ workbook:
             correct: false
           - text: "Театр - добра низовина."
             correct: false
-        explanation: "Орієнтир helps navigation."
+        explanation: "Орієнтир допомагає знайти дорогу."
       - source: "There is a reserve near the village."
         options:
           - text: "Біля села є заповідник."

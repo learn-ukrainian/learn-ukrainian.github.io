@@ -51,7 +51,7 @@
 
 <!-- INJECT_ACTIVITY: act-2 -->
 
-## Сполучник vs сполучне слово
+## Сполучник і сполучне слово
 
 <!-- VERIFY: source="docs/references/textbooks-txt/9-klas-ukrajinska-mova-voron-2017.txt" -->
 

@@ -594,7 +594,7 @@ workbook:
           - пішов
   - id: wb-6
     type: translate
-    title: "Переклад: leave, go, move away"
+    title: "Переклад: відхід і віддалення"
     instruction: Оберіть природний український переклад із дієсловом руху на пі-/по- або від-.
     items:
       - source: I will leave home on foot at seven.
@@ -603,84 +603,84 @@ workbook:
             correct: true
           - text: Я поїду з дому пішки о сьомій.
             correct: false
-        explanation: On foot потребує піти.
+        explanation: Пішки потребує піти.
       - source: We left for Chernivtsi by train.
         options:
           - text: Ми поїхали до Чернівців потягом.
             correct: true
           - text: Ми пішли до Чернівців потягом.
             correct: false
-        explanation: By train потребує поїхати.
+        explanation: Потяг потребує поїхати.
       - source: Step away from the door, please.
         options:
           - text: Відійдіть від дверей, будь ласка.
             correct: true
           - text: Підіть з дверей, будь ласка.
             correct: false
-        explanation: Move away from a point is відійти від.
+        explanation: Рух від точки - відійти від.
       - source: The bus drove away from the stop.
         options:
           - text: Автобус від'їхав від зупинки.
             correct: true
           - text: Автобус поїхав від зупинки.
             correct: false
-        explanation: From the stop makes від'їхав precise.
+        explanation: Від зупинки уточнює форму від'їхав.
       - source: The child ran away from the road.
         options:
           - text: Дитина відбігла від дороги.
             correct: true
           - text: Дитина побігла з дороги.
             correct: false
-        explanation: Away from the road is відбігла від дороги.
+        explanation: Рух від дороги - відбігла від дороги.
       - source: The driver took the guests away from the station.
         options:
           - text: Водій відвіз гостей від вокзалу.
             correct: true
           - text: Водій відніс гостей від вокзалу.
             correct: false
-        explanation: People by vehicle are відвезли, not віднесли.
+        explanation: Людей транспортом відвезли, а не віднесли.
       - source: The mother led the child away from the crowd.
         options:
           - text: Мати відвела дитину від натовпу.
             correct: true
           - text: Мати відвезла дитину від натовпу пішки.
             correct: false
-        explanation: Leading someone on foot is відвести.
+        explanation: Коли когось ведуть пішки, потрібне відвести.
       - source: The train departs from platform three at six.
         options:
           - text: Потяг відходить від третьої платформи о шостій.
             correct: true
           - text: Потяг відправляється від третьої платформи о шостій.
             correct: false
-        explanation: For scheduled transport, use відходить or відбуває rather than the russism відправляється.
+        explanation: Для руху за розкладом уживаємо відходить або відбуває, а не русизм відправляється.
       - source: The boat sailed away from the shore.
         options:
           - text: Човен відплив від берега.
             correct: true
           - text: Човен відлетів від берега.
             correct: false
-        explanation: Boat movement is water movement.
+        explanation: Рух човна відбувається водою.
       - source: The plane flew off from the terminal.
         options:
           - text: Літак відлетів від термінала.
             correct: true
           - text: Літак відплив від термінала.
             correct: false
-        explanation: Plane movement is air movement.
+        explanation: Рух літака відбувається повітрям.
       - source: He carried the backpack away from the entrance.
         options:
           - text: Він відніс рюкзак від входу.
             correct: true
           - text: Він відвіз рюкзак у руках від входу.
             correct: false
-        explanation: In hands means відніс.
+        explanation: У руках означає відніс.
       - source: We set off for the museum after lunch.
         options:
           - text: Після обіду ми пішли до музею.
             correct: true
           - text: Після обіду ми відійшли до музею.
             correct: false
-        explanation: Setting off toward a destination is пішли до музею.
+        explanation: Початок руху до мети - пішли до музею.
   - id: wb-7
     type: error-correction
     title: Редагування від'їзду
