@@ -1,0 +1,275 @@
+---
+version: 1
+kind: atlas_source_inventory_review_decisions
+batch_id: source-inventory-third-approved-textbook-ledger-batch-2026-06-30
+batch_label: third-approved-textbook-ledger-batch
+reviewer: content-review
+reviewed_at: '2026-06-30'
+source_queue:
+  workflow: source_inventory_publish_review_queue.v1
+  generated_from_pr: 4021
+  total_queue_rows: 120
+  approved_in_queue: 120
+  promotion_batch_size: 20
+production_outputs_updated: []
+decisions:
+  - lemma: горобець
+    decision: approve_for_publish
+    approved_pos: noun
+    approved_gloss: sparrow
+    sense_note: Vashulenko bird vocabulary
+    source_inventory:
+      key: e890f9d6ba1b84f3
+      path: data/lexicon/source-inventory/vashulenko-grade3-headwords.yaml
+      locator: topic_index.vocabulary_birds_extended.words[8]
+      source_id: vashulenko-grade3-2020-birds-vocabulary
+      source_family: textbook
+    evidence_refs:
+      - Vashulenko bird vocabulary
+  - lemma: город
+    decision: approve_for_publish
+    approved_pos: noun
+    approved_gloss: vegetable garden
+    sense_note: Bolshakova letter mapping
+    source_inventory:
+      key: 032dc51a42522da5
+      path: data/lexicon/source-inventory/bolshakova-bukvar-keywords.yaml
+      locator: complete letter mapping row Г г
+      source_id: bolshakova-bukvar-2025-part1-keywords
+      source_family: textbook
+    evidence_refs:
+      - Bolshakova letter mapping
+  - lemma: дельфін
+    decision: approve_for_publish
+    approved_pos: noun
+    approved_gloss: dolphin
+    sense_note: Vashulenko marine vocabulary
+    source_inventory:
+      key: 27d86fa14453d3d8
+      path: data/lexicon/source-inventory/vashulenko-grade3-headwords.yaml
+      locator: topic_index.vocabulary_marine.words[1]
+      source_id: vashulenko-grade3-2020-marine-vocabulary
+      source_family: textbook
+    evidence_refs:
+      - Vashulenko marine vocabulary
+  - lemma: дерев'яний
+    decision: approve_for_publish
+    approved_pos: adjective
+    approved_gloss: wooden
+    sense_note: Vashulenko interior adjective
+    source_inventory:
+      key: 5777a816903a0e82
+      path: data/lexicon/source-inventory/vashulenko-grade3-headwords.yaml
+      locator: topic_index.vocabulary_interior.adjectives[0]
+      source_id: vashulenko-grade3-2020-interior-vocabulary
+      source_family: textbook
+    evidence_refs:
+      - Vashulenko interior adjective
+  - lemma: дім
+    decision: approve_for_publish
+    approved_pos: noun
+    approved_gloss: house; home
+    sense_note: Bolshakova letter mapping
+    source_inventory:
+      key: bf0b65fee0d78205
+      path: data/lexicon/source-inventory/bolshakova-bukvar-keywords.yaml
+      locator: complete letter mapping row Д д
+      source_id: bolshakova-bukvar-2025-part1-keywords
+      source_family: textbook
+    evidence_refs:
+      - Bolshakova letter mapping
+  - lemma: затишний
+    decision: approve_for_publish
+    approved_pos: adjective
+    approved_gloss: cozy
+    sense_note: Vashulenko interior adjective
+    source_inventory:
+      key: 2b46db149e13c857
+      path: data/lexicon/source-inventory/vashulenko-grade3-headwords.yaml
+      locator: topic_index.vocabulary_interior.adjectives[4]
+      source_id: vashulenko-grade3-2020-interior-vocabulary
+      source_family: textbook
+    evidence_refs:
+      - Vashulenko interior adjective
+  - lemma: зошит
+    decision: approve_for_publish
+    approved_pos: noun
+    approved_gloss: notebook
+    sense_note: Vashulenko school vocabulary
+    source_inventory:
+      key: 1ef9eab22d958329
+      path: data/lexicon/source-inventory/vashulenko-grade3-headwords.yaml
+      locator: topic_index.vocabulary_school.words[5]
+      source_id: vashulenko-grade3-2020-school-vocabulary
+      source_family: textbook
+    evidence_refs:
+      - Vashulenko school vocabulary
+  - lemma: зірка
+    decision: approve_for_publish
+    approved_pos: noun
+    approved_gloss: star
+    sense_note: Bolshakova letter mapping
+    source_inventory:
+      key: 038630bcd08fed35
+      path: data/lexicon/source-inventory/bolshakova-bukvar-keywords.yaml
+      locator: complete letter mapping row З з
+      source_id: bolshakova-bukvar-2025-part1-keywords
+      source_family: textbook
+    evidence_refs:
+      - Bolshakova letter mapping
+  - lemma: клас
+    decision: approve_for_publish
+    approved_pos: noun
+    approved_gloss: class; classroom
+    sense_note: Vashulenko school vocabulary
+    source_inventory:
+      key: ed9152597c6cb1bd
+      path: data/lexicon/source-inventory/vashulenko-grade3-headwords.yaml
+      locator: topic_index.vocabulary_school.words[6]
+      source_id: vashulenko-grade3-2020-school-vocabulary
+      source_family: textbook
+    evidence_refs:
+      - Vashulenko school vocabulary
+  - lemma: крісло
+    decision: approve_for_publish
+    approved_pos: noun
+    approved_gloss: armchair
+    sense_note: Vashulenko interior vocabulary
+    source_inventory:
+      key: b179018fe9f8641f
+      path: data/lexicon/source-inventory/vashulenko-grade3-headwords.yaml
+      locator: topic_index.vocabulary_interior.words[4]
+      source_id: vashulenko-grade3-2020-interior-vocabulary
+      source_family: textbook
+    evidence_refs:
+      - Vashulenko interior vocabulary
+  - lemma: ліжко
+    decision: approve_for_publish
+    approved_pos: noun
+    approved_gloss: bed
+    sense_note: Vashulenko interior vocabulary
+    source_inventory:
+      key: 74e4f416a28ef1f9
+      path: data/lexicon/source-inventory/vashulenko-grade3-headwords.yaml
+      locator: topic_index.vocabulary_interior.words[2]
+      source_id: vashulenko-grade3-2020-interior-vocabulary
+      source_family: textbook
+    evidence_refs:
+      - Vashulenko interior vocabulary
+  - lemma: окуляри
+    decision: approve_for_publish
+    approved_pos: noun
+    approved_gloss: glasses
+    sense_note: Bolshakova key words
+    source_inventory:
+      key: 52405502f2181483
+      path: data/lexicon/source-inventory/bolshakova-bukvar-keywords.yaml
+      locator: correct key words block; letter О
+      source_id: bolshakova-bukvar-2025-part1-keywords
+      source_family: textbook
+    evidence_refs:
+      - Bolshakova key words
+  - lemma: парк
+    decision: approve_for_publish
+    approved_pos: noun
+    approved_gloss: park
+    sense_note: Bolshakova letter mapping
+    source_inventory:
+      key: 94d081b1c49f787f
+      path: data/lexicon/source-inventory/bolshakova-bukvar-keywords.yaml
+      locator: complete letter mapping row П п
+      source_id: bolshakova-bukvar-2025-part1-keywords
+      source_family: textbook
+    evidence_refs:
+      - Bolshakova letter mapping
+  - lemma: парта
+    decision: approve_for_publish
+    approved_pos: noun
+    approved_gloss: school desk
+    sense_note: Vashulenko school vocabulary
+    source_inventory:
+      key: f52b3cbc9ba9285d
+      path: data/lexicon/source-inventory/vashulenko-grade3-headwords.yaml
+      locator: topic_index.vocabulary_school.words[2]
+      source_id: vashulenko-grade3-2020-school-vocabulary
+      source_family: textbook
+    evidence_refs:
+      - Vashulenko school vocabulary
+  - lemma: підлога
+    decision: approve_for_publish
+    approved_pos: noun
+    approved_gloss: floor
+    sense_note: Vashulenko interior vocabulary
+    source_inventory:
+      key: b0f18f9b476c047d
+      path: data/lexicon/source-inventory/vashulenko-grade3-headwords.yaml
+      locator: topic_index.vocabulary_interior.words[8]
+      source_id: vashulenko-grade3-2020-interior-vocabulary
+      source_family: textbook
+    evidence_refs:
+      - Vashulenko interior vocabulary
+  - lemma: риба
+    decision: approve_for_publish
+    approved_pos: noun
+    approved_gloss: fish
+    sense_note: Vashulenko marine vocabulary
+    source_inventory:
+      key: 7d26fb7ca7f3d047
+      path: data/lexicon/source-inventory/vashulenko-grade3-headwords.yaml
+      locator: topic_index.vocabulary_marine.words[4]
+      source_id: vashulenko-grade3-2020-marine-vocabulary
+      source_family: textbook
+    evidence_refs:
+      - Vashulenko marine vocabulary
+  - lemma: ручка
+    decision: approve_for_publish
+    approved_pos: noun
+    approved_gloss: pen
+    sense_note: Vashulenko school vocabulary
+    source_inventory:
+      key: 10c6f5d3cfbc74b9
+      path: data/lexicon/source-inventory/vashulenko-grade3-headwords.yaml
+      locator: topic_index.vocabulary_school.words[3]
+      source_id: vashulenko-grade3-2020-school-vocabulary
+      source_family: textbook
+    evidence_refs:
+      - Vashulenko school vocabulary
+  - lemma: синій
+    decision: approve_for_publish
+    approved_pos: adjective
+    approved_gloss: blue
+    sense_note: Vashulenko interior adjective
+    source_inventory:
+      key: d6d57d2bea3c17e1
+      path: data/lexicon/source-inventory/vashulenko-grade3-headwords.yaml
+      locator: topic_index.vocabulary_interior.adjectives[1]
+      source_id: vashulenko-grade3-2020-interior-vocabulary
+      source_family: textbook
+    evidence_refs:
+      - Vashulenko interior adjective
+  - lemma: стіл
+    decision: approve_for_publish
+    approved_pos: noun
+    approved_gloss: table
+    sense_note: Vashulenko interior vocabulary
+    source_inventory:
+      key: 8a005aafcafec372
+      path: data/lexicon/source-inventory/vashulenko-grade3-headwords.yaml
+      locator: topic_index.vocabulary_interior.words[0]
+      source_id: vashulenko-grade3-2020-interior-vocabulary
+      source_family: textbook
+    evidence_refs:
+      - Vashulenko interior vocabulary
+  - lemma: стілець
+    decision: approve_for_publish
+    approved_pos: noun
+    approved_gloss: chair
+    sense_note: Vashulenko interior vocabulary
+    source_inventory:
+      key: ec630376294cb0d5
+      path: data/lexicon/source-inventory/vashulenko-grade3-headwords.yaml
+      locator: topic_index.vocabulary_interior.words[7]
+      source_id: vashulenko-grade3-2020-interior-vocabulary
+      source_family: textbook
+    evidence_refs:
+      - Vashulenko interior vocabulary
