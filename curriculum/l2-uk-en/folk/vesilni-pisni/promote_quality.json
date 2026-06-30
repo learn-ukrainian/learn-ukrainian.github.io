@@ -1,0 +1,71 @@
+{
+  "assembled_mdx_sha256": "991fa77a5b039f7b9704995277ad1f3da11bd58d8f511ebfb1861840b7362924",
+  "content_hash": {
+    "algorithm": "sha256",
+    "basis": "lesson_sources_v2",
+    "digest": "b6974bffcb550eb1048c20e59e6fe7dcf2aff6f30c714f45b89ef1931b6c407f",
+    "files": [
+      {
+        "path": "curriculum/l2-uk-en/plans/folk/vesilni-pisni.yaml",
+        "sha256": "2f551b864a46a136da22f41ad5f7273c83ab3b838049c2bacc674923d0ad936f"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/vesilni-pisni/module.md",
+        "sha256": "e76e94f2d68d906dcd17d27c27375cf21d3ea7ece559d2ff35105077e123484f"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/vesilni-pisni/activities.yaml",
+        "sha256": "e3117d9c17d2e0d3e67c2664751c44aded8b47932640615bff2cb70152fd382f"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/vesilni-pisni/vocabulary.yaml",
+        "sha256": "c1e5f831a10b5ea491b3f30b1f63e28486b40e5475f48a6b704ecb052fd229de"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/vesilni-pisni/resources.yaml",
+        "sha256": "a13e27d62f3b6c8b84d14905a095666afc00e56e86c6aaa68563e09d05cc983d"
+      }
+    ]
+  },
+  "evidence": {
+    "decolonization": "Ukrainian wedding terms, community roles, agency, and Christian/community framing are foregrounded without Russian-imperial or hidden-core framing.",
+    "engagement": "Six varied activities cover quiz, reading, motif/formula, comparison, critical analysis, and essay response.",
+    "naturalness": "Ukrainian prose uses a serious seminar register with explicit source limits and without learner-facing internal IDs.",
+    "orchestrator_review": "Orchestrator-side Claude Opus 4.6 priority review returned no merge blockers; requested plan-wording removal and analysis-heading alignment were fixed before commit.",
+    "pedagogical": "C1 seminar lesson teaches repeatable source-bound method: voice, object, space, status change, and evidence limit.",
+    "review": "Claude Opus re-review verdict APPROVE; prior blockers resolved: learner-facing M07/M08/M09 IDs removed and MDX completeness verified with all six activities plus closed tabs."
+  },
+  "floors": {
+    "beauty": 8.5,
+    "decolonization": 9.0,
+    "engagement": 8.5,
+    "naturalness": 8.5,
+    "pedagogical": 8.5,
+    "tone": 8.5
+  },
+  "profile": "folk_promote_v1",
+  "review_artifact": null,
+  "reviewer": {
+    "agent": "claude",
+    "family": "anthropic",
+    "model": "claude-opus-4-8"
+  },
+  "schema_version": 1,
+  "scored_at": "2026-06-30T11:26:53Z",
+  "scores": {
+    "beauty": 9.0,
+    "decolonization": 9.1,
+    "engagement": 8.7,
+    "naturalness": 9.0,
+    "pedagogical": 9.0,
+    "tone": 9.0
+  },
+  "slug": "vesilni-pisni",
+  "track": "folk",
+  "verdict": "PASS",
+  "writer": {
+    "agent": "codex",
+    "family": "openai",
+    "model": "gpt-5"
+  }
+}
