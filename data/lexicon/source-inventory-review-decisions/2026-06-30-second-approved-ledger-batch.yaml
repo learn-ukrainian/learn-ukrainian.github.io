@@ -1,0 +1,316 @@
+---
+version: 1
+kind: atlas_source_inventory_review_decisions
+batch_id: source-inventory-second-approved-ledger-batch-2026-06-30
+batch_label: second-approved-ledger-batch
+reviewer: content-review
+reviewed_at: '2026-06-30'
+source_queue:
+  workflow: source_inventory_publish_review_queue.v1
+  generated_from_pr: 4021
+  total_queue_rows: 83
+  approved_in_queue: 83
+  promotion_batch_size: 20
+production_outputs_updated: []
+decisions:
+- lemma: але
+  decision: approve_for_publish
+  approved_pos: conjunction
+  approved_gloss: but; however
+  sense_note: curriculum A1 conjunction
+  source_inventory:
+    key: c488438ed1ad929f
+    path: data/lexicon/source-inventory/pos-balanced-grammar-sample.yaml
+    locator: vocabulary[1].items[1].word
+    source_id: l2-direct-a1-spoluchnyky-vocabulary
+    source_family: curriculum
+  evidence_refs:
+  - curriculum A1
+  review_queue_reasons:
+  - grow_needs_review:heritage_status flags russian_shadow
+- lemma: балкон
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: balcony
+  sense_note: Vashulenko interior vocabulary
+  source_inventory:
+    key: 7c31663c58e44234
+    path: data/lexicon/source-inventory/vashulenko-grade3-headwords.yaml
+    locator: topic_index.vocabulary_interior.words[11]
+    source_id: vashulenko-grade3-2020-interior-vocabulary
+    source_family: textbook
+  evidence_refs:
+  - Vashulenko interior vocabulary
+  review_queue_reasons:
+  - grow_needs_review:heritage_status flags russian_shadow
+- lemma: барабан
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: drum
+  sense_note: Bolshakova + dictionary
+  source_inventory:
+    key: 52c09f107b3c30fd
+    path: data/lexicon/source-inventory/bolshakova-bukvar-keywords.yaml
+    locator: complete letter mapping row Б б
+    source_id: bolshakova-bukvar-2025-part1-keywords
+    source_family: textbook
+  evidence_refs:
+  - Bolshakova + dictionary
+  review_queue_reasons:
+  - grow_needs_review:heritage_status flags russian_shadow
+- lemma: вареники
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: varenyky; filled dumplings
+  sense_note: Bolshakova cultural food word
+  source_inventory:
+    key: ee6cdd12dbfccca4
+    path: data/lexicon/source-inventory/bolshakova-bukvar-keywords.yaml
+    locator: complete letter mapping row В в
+    source_id: bolshakova-bukvar-2025-part1-keywords
+    source_family: textbook
+  evidence_refs:
+  - Bolshakova + dictionary
+  review_queue_reasons:
+  - grow_needs_review:heritage_status flags calque_warning; heritage_status flags
+    russian_shadow
+- lemma: галка
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: jackdaw
+  sense_note: Vashulenko bird vocabulary
+  source_inventory:
+    key: cec8d22a492ffbf4
+    path: data/lexicon/source-inventory/vashulenko-grade3-headwords.yaml
+    locator: topic_index.vocabulary_birds_extended.words[9]
+    source_id: vashulenko-grade3-2020-birds-vocabulary
+    source_family: textbook
+  evidence_refs:
+  - Vashulenko bird vocabulary
+  review_queue_reasons:
+  - grow_needs_review:heritage_status flags russian_shadow
+- lemma: диван
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: sofa
+  sense_note: Vashulenko interior vocabulary
+  source_inventory:
+    key: a3499bff22b6f90b
+    path: data/lexicon/source-inventory/vashulenko-grade3-headwords.yaml
+    locator: topic_index.vocabulary_interior.words[3]
+    source_id: vashulenko-grade3-2020-interior-vocabulary
+    source_family: textbook
+  evidence_refs:
+  - Vashulenko interior vocabulary
+  review_queue_reasons:
+  - grow_needs_review:heritage_status flags russian_shadow
+- lemma: добре
+  decision: approve_for_publish
+  approved_pos: adverb
+  approved_gloss: well; okay
+  sense_note: curriculum B1 adverb
+  source_inventory:
+    key: dd34659f8dc2e2a3
+    path: data/lexicon/source-inventory/pos-balanced-grammar-sample.yaml
+    locator: vocabulary[2].items[2].word
+    source_id: l2-direct-b1-pryslivnyky-vocabulary
+    source_family: curriculum
+  evidence_refs:
+  - curriculum B1
+  review_queue_reasons:
+  - grow_needs_review:heritage_status flags russian_shadow
+- lemma: дошка
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: blackboard; board
+  sense_note: Vashulenko school vocabulary
+  source_inventory:
+    key: ceaf5659f95ab4be
+    path: data/lexicon/source-inventory/vashulenko-grade3-headwords.yaml
+    locator: topic_index.vocabulary_school.words[4]
+    source_id: vashulenko-grade3-2020-school-vocabulary
+    source_family: textbook
+  evidence_refs:
+  - Vashulenko school vocabulary
+  review_queue_reasons:
+  - grow_needs_review:heritage_status flags russian_shadow
+- lemma: дятел
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: woodpecker
+  sense_note: Vashulenko bird vocabulary
+  source_inventory:
+    key: 16ffb905bfcc145f
+    path: data/lexicon/source-inventory/vashulenko-grade3-headwords.yaml
+    locator: topic_index.vocabulary_birds_extended.words[5]
+    source_id: vashulenko-grade3-2020-birds-vocabulary
+    source_family: textbook
+  evidence_refs:
+  - Vashulenko bird vocabulary
+  review_queue_reasons:
+  - grow_needs_review:heritage_status flags russian_shadow
+- lemma: зручний
+  decision: approve_for_publish
+  approved_pos: adjective
+  approved_gloss: comfortable; convenient
+  sense_note: Vashulenko interior adjective
+  source_inventory:
+    key: affa9dc2bfb27610
+    path: data/lexicon/source-inventory/vashulenko-grade3-headwords.yaml
+    locator: topic_index.vocabulary_interior.adjectives[2]
+    source_id: vashulenko-grade3-2020-interior-vocabulary
+    source_family: textbook
+  evidence_refs:
+  - Vashulenko interior vocabulary
+  review_queue_reasons:
+  - grow_needs_review:heritage_status flags russian_shadow
+- lemma: йогурт
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: yogurt
+  sense_note: Ohoiko/Bolshakova + dictionary
+  source_inventory:
+    key: beeb0ec471408dc6
+    path: data/lexicon/source-inventory/bolshakova-bukvar-keywords.yaml
+    locator: complete letter mapping row Й й
+    source_id: bolshakova-bukvar-2025-part1-keywords
+    source_family: textbook
+  evidence_refs:
+  - Ohoiko/Bolshakova + dictionary
+  review_queue_reasons:
+  - grow_needs_review:heritage_status flags russian_shadow
+- lemma: капелюх
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: hat
+  sense_note: Bolshakova + dictionary
+  source_inventory:
+    key: fc1f428f7130d8a1
+    path: data/lexicon/source-inventory/bolshakova-bukvar-keywords.yaml
+    locator: complete letter mapping row К к
+    source_id: bolshakova-bukvar-2025-part1-keywords
+    source_family: textbook
+  evidence_refs:
+  - Bolshakova + dictionary
+  review_queue_reasons:
+  - grow_needs_review:heritage_status flags russian_shadow
+- lemma: кит
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: whale
+  sense_note: Vashulenko marine vocabulary
+  source_inventory:
+    key: c85e50888d7408e5
+    path: data/lexicon/source-inventory/vashulenko-grade3-headwords.yaml
+    locator: topic_index.vocabulary_marine.words[2]
+    source_id: vashulenko-grade3-2020-marine-vocabulary
+    source_family: textbook
+  evidence_refs:
+  - Vashulenko marine vocabulary
+  review_queue_reasons:
+  - grow_needs_review:heritage_status flags russian_shadow
+- lemma: колібрі
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: hummingbird
+  sense_note: Vashulenko bird vocabulary
+  source_inventory:
+    key: c5a55fdde6834f51
+    path: data/lexicon/source-inventory/vashulenko-grade3-headwords.yaml
+    locator: topic_index.vocabulary_birds_extended.words[4]
+    source_id: vashulenko-grade3-2020-birds-vocabulary
+    source_family: textbook
+  evidence_refs:
+  - Vashulenko bird vocabulary
+  review_queue_reasons:
+  - grow_needs_review:heritage_status flags russian_shadow
+- lemma: коридор
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: corridor; hallway
+  sense_note: Vashulenko interior vocabulary
+  source_inventory:
+    key: b48312b0cdf213bb
+    path: data/lexicon/source-inventory/vashulenko-grade3-headwords.yaml
+    locator: topic_index.vocabulary_interior.words[10]
+    source_id: vashulenko-grade3-2020-interior-vocabulary
+    source_family: textbook
+  evidence_refs:
+  - Vashulenko interior vocabulary
+  review_queue_reasons:
+  - grow_needs_review:heritage_status flags russian_shadow
+- lemma: ластівка
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: swallow
+  sense_note: Vashulenko bird vocabulary
+  source_inventory:
+    key: 938efc31aa30e722
+    path: data/lexicon/source-inventory/vashulenko-grade3-headwords.yaml
+    locator: topic_index.vocabulary_birds_extended.words[10]
+    source_id: vashulenko-grade3-2020-birds-vocabulary
+    source_family: textbook
+  evidence_refs:
+  - Vashulenko bird vocabulary
+  review_queue_reasons:
+  - grow_needs_review:heritage_status flags russian_shadow
+- lemma: медуза
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: jellyfish
+  sense_note: Vashulenko marine vocabulary
+  source_inventory:
+    key: 7ef718b379daa44a
+    path: data/lexicon/source-inventory/vashulenko-grade3-headwords.yaml
+    locator: topic_index.vocabulary_marine.words[0]
+    source_id: vashulenko-grade3-2020-marine-vocabulary
+    source_family: textbook
+  evidence_refs:
+  - Vashulenko marine vocabulary
+  review_queue_reasons:
+  - grow_needs_review:heritage_status flags russian_shadow
+- lemma: море
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: sea
+  sense_note: curriculum B1 noun
+  source_inventory:
+    key: 39e1e7824983668b
+    path: data/lexicon/source-inventory/pos-balanced-grammar-sample.yaml
+    locator: vocabulary[1].items[4].word
+    source_id: l2-direct-b1-imennyky-vidminy-vocabulary
+    source_family: curriculum
+  evidence_refs:
+  - curriculum B1
+  review_queue_reasons:
+  - grow_needs_review:heritage_status flags russian_shadow
+- lemma: муха
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: fly
+  sense_note: Bolshakova animal vocabulary
+  source_inventory:
+    key: 21bb246a8349c7d0
+    path: data/lexicon/source-inventory/bolshakova-bukvar-keywords.yaml
+    locator: thematic categories; тварини
+    source_id: bolshakova-bukvar-2025-part1-keywords
+    source_family: textbook
+  evidence_refs:
+  - Bolshakova + dictionary
+  review_queue_reasons:
+  - grow_needs_review:heritage_status flags russian_shadow
+- lemma: намет
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: tent
+  sense_note: Bolshakova context; tent sense
+  source_inventory:
+    key: 31d47d5e77a5d487
+    path: data/lexicon/source-inventory/bolshakova-bukvar-keywords.yaml
+    locator: complete letter mapping row Н н
+    source_id: bolshakova-bukvar-2025-part1-keywords
+    source_family: textbook
+  evidence_refs:
+  - Bolshakova + dictionary
+  review_queue_reasons:
+  - grow_needs_review:heritage_status flags russian_shadow

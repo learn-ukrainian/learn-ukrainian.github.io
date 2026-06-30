@@ -114,6 +114,41 @@ def test_decision_validator_allows_clean_rows_without_flags(tmp_path: Path) -> N
     assert summary["rows"] == 1
 
 
+def test_decision_validator_allows_general_promotion_batch_size(tmp_path: Path) -> None:
+    payload = _minimal_payload()
+    source_queue = payload["source_queue"]  # type: ignore[index]
+    source_queue.pop("first_promotion_batch_size")  # type: ignore[attr-defined]
+    source_queue["promotion_batch_size"] = 1  # type: ignore[index]
+    path = tmp_path / "ok.yaml"
+    _write_decision_file(path, payload)
+
+    summary = decisions.validate_committed_decision_files([path])
+
+    assert summary["rows"] == 1
+
+
+def test_decision_validator_rejects_missing_promotion_batch_size(tmp_path: Path) -> None:
+    payload = _minimal_payload()
+    source_queue = payload["source_queue"]  # type: ignore[index]
+    source_queue.pop("first_promotion_batch_size")  # type: ignore[attr-defined]
+    path = tmp_path / "bad.yaml"
+    _write_decision_file(path, payload)
+
+    with pytest.raises(SourceInventoryError, match="promotion batch size"):
+        decisions.validate_committed_decision_files([path])
+
+
+def test_decision_validator_rejects_duplicate_promotion_batch_size(tmp_path: Path) -> None:
+    payload = _minimal_payload()
+    source_queue = payload["source_queue"]  # type: ignore[index]
+    source_queue["promotion_batch_size"] = 1  # type: ignore[index]
+    path = tmp_path / "bad.yaml"
+    _write_decision_file(path, payload)
+
+    with pytest.raises(SourceInventoryError, match="promotion batch size"):
+        decisions.validate_committed_decision_files([path])
+
+
 def test_decision_validator_rejects_duplicate_source_key(tmp_path: Path) -> None:
     payload = _minimal_payload()
     payload["decisions"].append(dict(payload["decisions"][0]))  # type: ignore[index, union-attr]

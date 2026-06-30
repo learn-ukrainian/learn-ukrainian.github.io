@@ -1,158 +1,64 @@
-# Source registry for wiki/folk/ritual/zhnyvarski-obzhynkovi-pisni.md
+# Source registry wiki/folk/ritual/zhnyvarski-obzhynkovi-pisni.md
 # Referenced inline as [S1], [S2], ...
 sources:
-- id: S2
-  file: wave7-entsyklopediia-ukrainoznavstva_c0595
-  type: literary
-  title: Енциклопедія українознавства
-  author: Колектив
-- id: S3
-  file: wave7-entsyklopediia-ukrainoznavstva_c0532
-  type: literary
-  title: Енциклопедія українознавства
-  author: Колектив
-- id: S4
-  file: wave12-hrushevsky-iu-odnotom_c0317
-  type: literary
-  title: Грушевський — Історія України (однотомник)
-  author: Грушевський М.
-- id: S5
-  file: wave4-hrushevsky-istlit_c0312
-  type: literary
-  title: Грушевський — Історія української літератури
-  author: Грушевський М.
-- id: S6
-  file: wave7-entsyklopediia-ukrainoznavstva_c0533
-  type: literary
-  title: Енциклопедія українознавства
-  author: Колектив
-- id: S7
-  file: wave12-hrushevsky-iu-odnotom_c0318
-  type: literary
-  title: Грушевський — Історія України (однотомник)
-  author: Грушевський М.
-- id: S8
-  file: wave4-hrushevsky-istlit_c0313
-  type: literary
-  title: Грушевський — Історія української літератури
-  author: Грушевський М.
-- id: S9
-  file: wave12-hrushevsky-iu-odnotom_c0263
-  type: literary
-  title: Грушевський — Історія України (однотомник)
-  author: Грушевський М.
-- id: S10
-  file: wave4-hrushevsky-istlit_c0258
-  type: literary
-  title: Грушевський — Історія української літератури
-  author: Грушевський М.
-- id: S11
-  file: wave8-ukr-lit-entsyklopediia_c0949
-  type: literary
-  title: Українська літературна енциклопедія (1988-1995)
-  author: Колектив
-- id: S12
-  file: wave12-hrushevsky-iu-odnotom_c0321
-  type: literary
-  title: Грушевський — Історія України (однотомник)
-  author: Грушевський М.
-- id: S13
-  file: wave12-hrushevsky-iu-odnotom_c0305
-  type: literary
-  title: Грушевський — Історія України (однотомник)
-  author: Грушевський М.
-- id: S14
-  file: wave4-hrushevsky-istlit_c0300
-  type: literary
-  title: Грушевський — Історія української літератури
-  author: Грушевський М.
-- id: S15
-  file: wave4-hrushevsky-istlit_c0316
-  type: literary
-  title: Грушевський — Історія української літератури
-  author: Грушевський М.
-- id: S16
-  file: wave12-hrushevsky-iu-odnotom_c0319
-  type: literary
-  title: Грушевський — Історія України (однотомник)
-  author: Грушевський М.
-- id: S17
-  file: wave4-hrushevsky-istlit_c0314
-  type: literary
-  title: Грушевський — Історія української літератури
-  author: Грушевський М.
-- id: S18
-  file: wave8-ukr-lit-entsyklopediia_c3585
-  type: literary
-  title: Українська літературна енциклопедія (1988-1995)
-  author: Колектив
-- id: S20
-  file: wave8-ukr-lit-entsyklopediia_c3275
-  type: literary
-  title: Українська літературна енциклопедія (1988-1995)
-  author: Колектив
-- id: S21
-  file: wave7-istkult-t2-xiii-xvii_c0857
-  type: literary
-  title: Історія української культури. Т.2. XIII-XVII ст.
-  author: Колектив
-- id: S22
-  file: wave4-ohloblyn-mazepa_c0309
-  type: literary
-  title: Оглоблін — Гетьман Мазепа та його доба
-  author: Оглоблін О.
-- id: S23
-  file: wave7-shcherbak-kozatstvo_c0057
-  type: literary
-  title: 'Щербак — Українське козацтво: формування соціального стану'
-  author: Щербак В.
-- id: S24
-  file: wave4-hrushevsky-iur-t2-3_c2773
-  type: literary
-  title: Грушевський — Історія України-Руси, т.2-3
-  author: Грушевський М.
-- id: S25
-  file: wave8-ukr-lit-entsyklopediia_c3071
-  type: literary
-  title: Українська літературна енциклопедія (1988-1995)
-  author: Колектив
-- id: S26
-  file: wave7-entsyklopediia-ukrainoznavstva_c2287
-  type: literary
-  title: Енциклопедія українознавства
-  author: Колектив
-- id: S27
-  file: ukrlib-shevchenko_c0000
-  type: literary
-  title: Тарас Шевченко. Заповіт
-  author: Шевченко Т.
-- id: S28
-  file: wave10-shevchenko-tvory-t1_c0538
-  type: literary
-  title: Шевченко — Повне зібрання творів, т.1
-  author: Шевченко Т.
-- id: S29
-  file: wave7-entsyklopediia-ukrainoznavstva_c1998
-  type: literary
-  title: Енциклопедія українознавства
-  author: Колектив
-- id: S30
-  file: wave7-krypyakevych-istkult_c0608
-  type: literary
-  title: Крип'якевич — Історія української культури (1937)
-  author: Крип'якевич І.
-- id: S31
-  file: wave7-krypyakevych-istkult_c0818
-  type: literary
-  title: Крип'якевич — Історія української культури (1937)
-  author: Крип'якевич І.
-- id: S32
-  file: ukrlib-honchar_c0118
-  type: literary
-  title: Олесь Гончар. Берег любові
-  author: Гончар О.
-- id: S33
-  file: ukrlib-honchar_c0244
-  type: literary
-  title: Олесь Гончар. Берег любові
-  author: Гончар О.
+  - id: S1
+    file: 6-klas-ukrlit-zabolotnyi-2023
+    type: textbook
+    title: "Українська література, 6 клас. Народні календарно-обрядові пісні"
+    author: "Заболотний О., Заболотний В."
+    grade: 6
+    url: "https://pidruchnyk.com.ua/2617-ukralit-6-klas-zabolotnyi.html"
+    notes: "Шкільно-канонічна рамка: календарно-обрядові пісні та жниварські пісні."
+  - id: S2
+    file: osvita-modelna-prohrama-ukrlit-5-6-yatsenko-2021
+    type: curriculum
+    title: "Модельна навчальна програма. Українська література. 5-6 класи"
+    author: "Яценко Т. О. та ін."
+    url: "https://osvita.ua/doc/files/news/830/83023/Ukr_lit_5-6-kl_Yatsenko_ta_in_14_07.pdf"
+    notes: "Публічна навчальна рамка для читання календарно-обрядових пісень у шкільній літературній послідовності."
+  - id: S3
+    file: hrushevsky-istoriia-ukrainskoi-literatury
+    type: scholarship
+    title: "Історія української літератури"
+    author: "Грушевський М."
+    url: "http://izbornyk.org.ua/hrushukr/hrushe.htm"
+    notes: >-
+      Публічний науковий контекст для прикладів жниварських пісень і
+      тлумачення обжинок; використовувати обережно після точної текстової
+      перевірки.
+  - id: S4
+    file: ukrlib-narod-zhnyvarska-zhali-zhenchyky-zhaly
+    type: public_text
+    title: "Жали женчики, жали"
+    author: "Народна творчість"
+    source: "УкрЛіб"
+    source_url: "https://www.ukrlib.com.ua/narod/printout.php?id=2&bookid=0"
+    license: public_domain
+    notes: "Коротка жниварська пісня про працю і серпи."
+  - id: S5
+    file: ukrlib-narod-obzhynkova-kotyvsia-vinochok-po-poliu
+    type: public_text
+    title: "Котився віночок по полю"
+    author: "Народна творчість"
+    source: "УкрЛіб"
+    source_url: "https://www.ukrlib.com.ua/narod/printout.php?id=2&bookid=1"
+    license: public_domain
+    notes: "Обжинковий текст про вінок, поле, стодолу, спочинок і повернення."
+  - id: S6
+    file: ukrlib-narod-zhnyvarska-nute-nute-do-mezhi
+    type: public_text
+    title: "Нуте, нуте, до межі"
+    author: "Народна творчість"
+    source: "УкрЛіб"
+    source_url: "https://www.ukrlib.com.ua/narod/printout.php?id=2&bookid=2"
+    license: public_domain
+    notes: "Жнивна пісня з наказовим ритмом і рухом до межі."
+  - id: S7
+    file: ukrlib-narod-obzhynkova-sydyt-vedmid-na-kopi
+    type: public_text
+    title: "Сидить ведмідь на копі"
+    author: "Народна творчість"
+    source: "УкрЛіб"
+    source_url: "https://www.ukrlib.com.ua/narod/printout.php?id=2&bookid=3"
+    license: public_domain
+    notes: "Жартівлива обжинкова пісня про копу і 'бороду'."

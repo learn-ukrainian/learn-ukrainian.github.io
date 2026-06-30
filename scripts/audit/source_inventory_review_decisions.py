@@ -51,6 +51,7 @@ SOURCE_QUEUE_FIELDS = {
     "total_queue_rows",
     "approved_in_queue",
     "first_promotion_batch_size",
+    "promotion_batch_size",
 }
 DECISION_FIELDS = {
     "lemma",
@@ -120,6 +121,20 @@ def validate_decision_file(
         raise SourceInventoryError(f"{path}: source_queue must be a mapping")
     _reject_unknown_fields(path, source_queue, allowed=SOURCE_QUEUE_FIELDS, scope="source_queue")
     _require_equal(path, source_queue.get("workflow"), QUEUE_WORKFLOW, "source_queue.workflow")
+    batch_size_fields = [
+        field
+        for field in ("first_promotion_batch_size", "promotion_batch_size")
+        if field in source_queue
+    ]
+    if len(batch_size_fields) != 1:
+        raise SourceInventoryError(
+            f"{path}: source_queue must define exactly one promotion batch size field"
+        )
+    _require_positive_int(
+        path,
+        source_queue[batch_size_fields[0]],
+        f"source_queue.{batch_size_fields[0]}",
+    )
 
     decisions = payload.get("decisions")
     if not isinstance(decisions, list) or not decisions:
@@ -251,6 +266,12 @@ def _require_text(path: Path, value: object, field: str) -> str:
 def _require_equal(path: Path, actual: object, expected: object, field: str) -> None:
     if actual != expected:
         raise SourceInventoryError(f"{path}: {field} must be {expected!r}")
+
+
+def _require_positive_int(path: Path, value: object, field: str) -> int:
+    if not isinstance(value, int) or value <= 0:
+        raise SourceInventoryError(f"{path}: {field} must be a positive integer")
+    return value
 
 
 def _validate_text_list(path: Path, value: object, field: str) -> None:
