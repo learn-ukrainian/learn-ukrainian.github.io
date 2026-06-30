@@ -45,11 +45,12 @@ describe("lexicon static API routes", () => {
       publicAtlas: { searchEntries: number; browseEntries: number };
       daily: { poolEntries: number };
       practice: { totalLexemes: number };
-      checks: { searchMatchesBrowse: boolean; singlePracticeDeckVersion: boolean };
-      endpoints: {
-        searchIndex: string;
-        dailyPool: string;
-        practiceIndexTemplate: string;
+    checks: { searchMatchesBrowse: boolean; singlePracticeDeckVersion: boolean };
+    endpoints: {
+      searchIndex: string;
+      searchShards: string;
+      dailyPool: string;
+      practiceIndexTemplate: string;
         practiceLexemesTemplate: string;
         practiceClozeTemplate: string;
       };
@@ -61,10 +62,11 @@ describe("lexicon static API routes", () => {
     expect(status.publicAtlas.searchEntries).toBe(status.publicAtlas.browseEntries);
     expect(status.daily.poolEntries).toBe(daily.length);
     expect(status.practice.totalLexemes).toBeGreaterThan(0);
-    expect(status.checks.searchMatchesBrowse).toBe(true);
-    expect(status.checks.singlePracticeDeckVersion).toBe(true);
-    expect(status.endpoints.searchIndex).toBe("/api/lexicon/search-index.json");
-    expect(status.endpoints.dailyPool).toBe("/api/lexicon/daily-pool.json");
+  expect(status.checks.searchMatchesBrowse).toBe(true);
+  expect(status.checks.singlePracticeDeckVersion).toBe(true);
+  expect(status.endpoints.searchIndex).toBe("/api/lexicon/search-index.json");
+  expect(status.endpoints.searchShards).toBe("/lexicon/search-shards.json");
+  expect(status.endpoints.dailyPool).toBe("/api/lexicon/daily-pool.json");
     expect(status.endpoints.practiceIndexTemplate).toBe(
       "/api/lexicon/practice-index.{level}.json",
     );

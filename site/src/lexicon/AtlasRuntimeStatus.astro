@@ -70,7 +70,7 @@ const statusUrl = "/api/lexicon/status.json";
     setRuntimeDetail(
       root,
       "publicAtlas",
-      `${formatCount(status.publicAtlas.browseEntries)} перегляд · ${status.publicAtlas.browseShards} шардів`,
+      `${formatCount(status.publicAtlas.browseEntries)} перегляд · ${status.publicAtlas.searchShards} пошук-шардів`,
     );
 
     setRuntimeText(root, "manifest", formatCount(status.manifest.entries));

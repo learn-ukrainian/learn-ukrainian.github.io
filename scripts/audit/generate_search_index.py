@@ -3,18 +3,27 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
+import importlib.util
 import json
+import re
+import sys
+import unicodedata
 from collections import defaultdict
 from collections.abc import Mapping
 from pathlib import Path
 from typing import Any
 
-from scripts.audit.generate_daily_pool import kind_for_source
-from scripts.audit.lexeme_filter import is_lexeme_entry
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
 from scripts.etymology.transliterate import transliterate
 
 DEFAULT_MANIFEST = Path("site/src/data/lexicon-manifest.json")
 DEFAULT_SEARCH_OUT = Path("site/src/data/lexicon-search-index.json")
+DEFAULT_SEARCH_SHARDS_OUT = Path("site/src/data/lexicon-search-shards.json")
+DEFAULT_SEARCH_SHARD_DIR: Path | None = None
 DEFAULT_BROWSE_META_OUT = Path("site/src/data/lexicon-browse-meta.json")
 DEFAULT_BROWSE_FLAGGED_OUT = Path("site/src/data/lexicon-browse-flagged.json")
 DEFAULT_BROWSE_DIR = Path("site/public/lexicon/browse")
@@ -28,8 +37,37 @@ AUTHENTIC_RUSSIANISM_EXEMPTIONS = {
     "dialect",
     "historism",
 }
-
 _UK_SORT_ORDER = {letter: index for index, letter in enumerate(UKRAINIAN_ALPHABET)}
+_TOKEN_RE = re.compile(r"[\w\u0400-\u04ff]+", re.UNICODE)
+
+
+def _load_helper_module(name: str, path: Path) -> Any:
+    spec = importlib.util.spec_from_file_location(name, path)
+    if spec is None or spec.loader is None:
+        raise ImportError(f"cannot load helper module {name} from {path}")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+_LEXEME_FILTER = _load_helper_module(
+    "_atlas_lexeme_filter",
+    PROJECT_ROOT / "scripts" / "audit" / "lexeme_filter.py",
+)
+is_lexeme_entry = _LEXEME_FILTER.is_lexeme_entry
+_SURZHYK_SOURCE = _LEXEME_FILTER.SURZHYK_SOURCE
+
+
+def kind_for_source(source: Any) -> str:
+    if isinstance(source, str) and source.startswith("built_vocabulary"):
+        return "vyv"
+    if source == "plan_required":
+        return "obov"
+    if source == "plan_recommended":
+        return "rek"
+    if source == _SURZHYK_SOURCE:
+        return "avoid"
+    return "other"
 
 
 def _clean_text(value: object) -> str | None:
@@ -39,32 +77,82 @@ def _clean_text(value: object) -> str | None:
     return normalized or None
 
 
+def _json_bytes(payload: object) -> bytes:
+    return (json.dumps(payload, ensure_ascii=False, separators=(",", ":")) + "\n").encode("utf-8")
+
+
+def _sha256(data: bytes) -> str:
+    return hashlib.sha256(data).hexdigest()
+
+
+def _normalized_search_text(value: object) -> str:
+    if not isinstance(value, str):
+        return ""
+    return unicodedata.normalize("NFC", value).replace("\u0301", "").lower()
+
+
+def _shard_key_for_char(char: str) -> str:
+    if len(char) != 1:
+        raise ValueError(f"search shard char must be exactly one character, got {char!r}")
+    if "a" <= char <= "z":
+        return f"latin-{char}"
+    if "0" <= char <= "9":
+        return f"digit-{char}"
+    return f"u{ord(char):04x}"
+
+
+def _first_token_chars(value: object) -> set[str]:
+    normalized = _normalized_search_text(value)
+    chars: set[str] = set()
+    for token in _TOKEN_RE.findall(normalized):
+        if token:
+            chars.add(token[0])
+    return chars
+
+
+def _search_shard_chars(row: Mapping[str, Any]) -> set[str]:
+    chars = set()
+    chars.update(_first_token_chars(row.get("l")))
+    chars.update(_first_token_chars(row.get("r")))
+    chars.update(_first_token_chars(row.get("g")))
+    return chars
+
+
 def _heritage_status(entry: Mapping[str, Any]) -> Mapping[str, Any]:
     enrichment = entry.get("enrichment")
     if isinstance(enrichment, Mapping):
         heritage = enrichment.get("heritage")
         if isinstance(heritage, Mapping):
             return heritage
-    status = entry.get("heritage_status")
-    if isinstance(status, Mapping):
-        return status
+    heritage_status = entry.get("heritage_status")
+    if isinstance(heritage_status, Mapping):
+        return heritage_status
     return {}
 
 
 def _cefr_level(entry: Mapping[str, Any]) -> str | None:
     enrichment = entry.get("enrichment")
-    cefr = enrichment.get("cefr") if isinstance(enrichment, Mapping) else None
-    level = cefr.get("level") if isinstance(cefr, Mapping) else cefr
-    if not isinstance(level, str):
-        root_cefr = entry.get("cefr")
-        level = root_cefr.get("level") if isinstance(root_cefr, Mapping) else root_cefr
-    if not isinstance(level, str):
+    if isinstance(enrichment, Mapping):
+        cefr = enrichment.get("cefr")
+        if isinstance(cefr, Mapping):
+            level = _clean_text(cefr.get("level"))
+            if level and level.strip().upper() in CEFR_LEVELS:
+                return level.strip().upper()
+    root_cefr = entry.get("cefr")
+    if isinstance(root_cefr, Mapping):
+        level = _clean_text(root_cefr.get("level"))
+        if level and level.strip().upper() in CEFR_LEVELS:
+            return level.strip().upper()
+    else:
+        level = _clean_text(root_cefr)
+        if level and level.strip().upper() in CEFR_LEVELS:
+            return level.strip().upper()
+    return None
+
+
+def _initial_letter(value: object) -> str | None:
+    if not isinstance(value, str):
         return None
-    normalized = level.strip().upper()
-    return normalized if normalized in CEFR_LEVELS else None
-
-
-def _first_ukrainian_letter(value: str) -> str | None:
     for char in value.strip().upper():
         if char in UKRAINIAN_LETTER_SET:
             return char
@@ -82,7 +170,7 @@ def _uk_sort_key(value: object) -> tuple[tuple[int, str], ...]:
 
 
 def classification_code(entry: Mapping[str, Any]) -> str | None:
-    """Return the compact Atlas browse classification code, if any."""
+    """Return compact Atlas browse classification code, if any."""
 
     kind = kind_for_source(entry.get("primary_source"))
     if kind == "avoid":
@@ -93,9 +181,6 @@ def classification_code(entry: Mapping[str, Any]) -> str | None:
     warning_severity = _clean_text(status.get("warning_severity"))
     is_russianism = status.get("is_russianism") is True
 
-    # An authentic treasured class (archaism/dialect/historism) must NEVER be tagged
-    # русизм, even when a stale/hand-edited row also carries warning_severity=russianism_red.
-    # Mirrors compute_warning_severity, which gates russianism_red on the same exemption.
     if classification not in AUTHENTIC_RUSSIANISM_EXEMPTIONS and (
         warning_severity == "russianism_red" or is_russianism
     ):
@@ -133,8 +218,6 @@ def _search_gloss(entry: Mapping[str, Any]) -> str | None:
 
 
 def _search_row(entry: dict[str, Any]) -> dict[str, Any] | None:
-    # Grammar metaterms (pos == "grammar term") are not lemmas; keep them out.
-    # is_lexeme_entry already guarantees non-empty lemma + url_slug.
     if not is_lexeme_entry(entry):
         return None
 
@@ -181,26 +264,68 @@ def _flagged_browse_row(row: Mapping[str, Any], letter: str) -> dict[str, Any]:
         "s": row["s"],
         "g": row.get("g"),
         "c": row.get("c"),
-        "cls": row["cls"],
+        "cls": row.get("cls"),
         "letter": letter,
     }
 
 
 def build_index(entries: list[dict[str, Any]]) -> list[dict[str, Any]]:
-    rows = [row for entry in entries if (row := _search_row(entry))]
-    return sorted(rows, key=lambda row: _uk_sort_key(row["l"]))
+    rows = [_search_row(entry) for entry in entries]
+    visible = [row for row in rows if row is not None]
+    return sorted(visible, key=lambda row: _uk_sort_key(row["l"]))
+
+
+def build_search_shards(rows: list[dict[str, Any]]) -> tuple[dict[str, Any], dict[str, list[dict[str, Any]]]]:
+    shard_rows: dict[str, dict[str, dict[str, Any]]] = defaultdict(dict)
+    prefix_map: dict[str, str] = {}
+    for row in rows:
+        for char in _search_shard_chars(row):
+            key = _shard_key_for_char(char)
+            prefix_map[char] = key
+            shard_rows[key][str(row["s"])] = row
+
+    shards = {
+        key: sorted(slug_rows.values(), key=lambda row: _uk_sort_key(row["l"]))
+        for key, slug_rows in sorted(shard_rows.items())
+    }
+    shard_meta: dict[str, dict[str, Any]] = {}
+    for key, shard in shards.items():
+        data = _json_bytes(shard)
+        shard_meta[key] = {
+            "path": f"/lexicon/search/{key}.json",
+            "count": len(shard),
+            "bytes": len(data),
+            "sha256": _sha256(data),
+        }
+
+    full_index = _json_bytes(rows)
+    return {
+        "schema": "atlas-search-shards",
+        "schemaVersion": 1,
+        "strategy": "first-normalized-token-character",
+        "total": len(rows),
+        "fullIndex": {
+            "path": "/lexicon/search-index.json",
+            "count": len(rows),
+            "bytes": len(full_index),
+            "sha256": _sha256(full_index),
+        },
+        "shardCount": len(shards),
+        "prefixMap": dict(sorted(prefix_map.items(), key=lambda item: item[0])),
+        "shards": shard_meta,
+    }, shards
 
 
 def build_browse_outputs(
     rows: list[dict[str, Any]],
 ) -> tuple[dict[str, Any], dict[str, list[dict[str, Any]]], list[dict[str, Any]]]:
     letter_rows: dict[str, list[dict[str, Any]]] = defaultdict(list)
-    letter_chip: dict[str, dict[str, int]] = defaultdict(lambda: defaultdict(int))
-    chip_counts: dict[str, int] = defaultdict(int)
+    chip_counts: defaultdict[str, int] = defaultdict(int)
+    letter_chip: dict[str, defaultdict[str, int]] = defaultdict(lambda: defaultdict(int))
     flagged_rows: list[dict[str, Any]] = []
 
     for row in rows:
-        letter = _first_ukrainian_letter(str(row["l"]))
+        letter = _initial_letter(row.get("l"))
         if not letter:
             continue
         browse_row = _browse_row(row)
@@ -215,7 +340,19 @@ def build_browse_outputs(
         letter: sorted(items, key=lambda item: _uk_sort_key(item["l"]))
         for letter, items in sorted(letter_rows.items(), key=lambda item: _uk_sort_key(item[0]))
     }
+    browse_shards: dict[str, dict[str, Any]] = {}
+    for letter, items in shards.items():
+        data = _json_bytes(items)
+        browse_shards[letter] = {
+            "path": f"/lexicon/browse/{letter}.json",
+            "count": len(items),
+            "bytes": len(data),
+            "sha256": _sha256(data),
+        }
+
     meta = {
+        "schema": "atlas-browse-meta",
+        "schemaVersion": 1,
         "total": sum(len(items) for items in shards.values()),
         "letterCounts": {
             letter: len(shards.get(letter, [])) for letter in UKRAINIAN_ALPHABET
@@ -232,6 +369,8 @@ def build_browse_outputs(
             }
             for letter in UKRAINIAN_ALPHABET
         },
+        "browseShardCount": len(browse_shards),
+        "browseShards": browse_shards,
     }
     flagged_rows = sorted(flagged_rows, key=lambda item: _uk_sort_key(item["l"]))
     return meta, shards, flagged_rows
@@ -239,10 +378,25 @@ def build_browse_outputs(
 
 def write_index(rows: list[dict[str, Any]], out_path: Path) -> None:
     out_path.parent.mkdir(parents=True, exist_ok=True)
-    out_path.write_text(
-        json.dumps(rows, ensure_ascii=False, separators=(",", ":")) + "\n",
-        encoding="utf-8",
-    )
+    out_path.write_bytes(_json_bytes(rows))
+
+
+def write_search_shards(
+    payload: Mapping[str, Any],
+    shards: Mapping[str, list[dict[str, Any]]],
+    out_path: Path,
+    shard_dir: Path | None,
+) -> None:
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    out_path.write_bytes(_json_bytes(payload))
+    if shard_dir is None:
+        return
+
+    shard_dir.mkdir(parents=True, exist_ok=True)
+    for old_shard in shard_dir.glob("*.json"):
+        old_shard.unlink()
+    for key, rows in shards.items():
+        (shard_dir / f"{key}.json").write_bytes(_json_bytes(rows))
 
 
 def write_browse_outputs(
@@ -254,29 +408,23 @@ def write_browse_outputs(
     browse_dir: Path,
 ) -> None:
     meta_out.parent.mkdir(parents=True, exist_ok=True)
-    meta_out.write_text(
-        json.dumps(meta, ensure_ascii=False, separators=(",", ":")) + "\n",
-        encoding="utf-8",
-    )
+    meta_out.write_bytes(_json_bytes(meta))
     flagged_out.parent.mkdir(parents=True, exist_ok=True)
-    flagged_out.write_text(
-        json.dumps(flagged_rows, ensure_ascii=False, separators=(",", ":")) + "\n",
-        encoding="utf-8",
-    )
+    flagged_out.write_bytes(_json_bytes(flagged_rows))
+
     browse_dir.mkdir(parents=True, exist_ok=True)
     for old_shard in browse_dir.glob("*.json"):
         old_shard.unlink()
     for letter, rows in shards.items():
-        (browse_dir / f"{letter}.json").write_text(
-            json.dumps(rows, ensure_ascii=False, separators=(",", ":")) + "\n",
-            encoding="utf-8",
-        )
+        (browse_dir / f"{letter}.json").write_bytes(_json_bytes(rows))
 
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--manifest", type=Path, default=DEFAULT_MANIFEST)
     parser.add_argument("--out", type=Path, default=DEFAULT_SEARCH_OUT)
+    parser.add_argument("--search-shards-out", type=Path, default=DEFAULT_SEARCH_SHARDS_OUT)
+    parser.add_argument("--search-shard-dir", type=Path, default=DEFAULT_SEARCH_SHARD_DIR)
     parser.add_argument("--browse-meta-out", type=Path, default=DEFAULT_BROWSE_META_OUT)
     parser.add_argument("--browse-flagged-out", type=Path, default=DEFAULT_BROWSE_FLAGGED_OUT)
     parser.add_argument("--browse-dir", type=Path, default=DEFAULT_BROWSE_DIR)
@@ -285,11 +433,13 @@ def main(argv: list[str] | None = None) -> int:
     manifest = json.loads(args.manifest.read_text(encoding="utf-8"))
     entries = manifest.get("entries", [])
     if not isinstance(entries, list):
-        raise ValueError("manifest entries must be a list")
+        raise ValueError("manifest entries must be list")
 
     rows = build_index(entries)
+    search_shards, search_shard_rows = build_search_shards(rows)
     meta, shards, flagged_rows = build_browse_outputs(rows)
     write_index(rows, args.out)
+    write_search_shards(search_shards, search_shard_rows, args.search_shards_out, args.search_shard_dir)
     write_browse_outputs(
         meta,
         shards,

@@ -1,5 +1,14 @@
 import { describe, expect, test } from 'vitest';
-import { highlight, normalize, rankMatches, type SearchRow } from '@site/src/lib/lexicon/search';
+import {
+  highlight,
+  normalize,
+  rankMatches,
+  searchShardForQuery,
+  searchShardKeysForRow,
+  searchShardPrefix,
+  type SearchRow,
+  type SearchShardManifest,
+} from '@site/src/lib/lexicon/search';
 
 const rows: SearchRow[] = [
   { l: 'заофісний', s: 'zaofisnyi', g: 'back room', r: 'zaofisnyi', k: 'other' },
@@ -59,5 +68,49 @@ describe('lexicon search helpers', () => {
 
   test('returns no matches for an empty query', () => {
     expect(rankMatches(rows, '   ')).toEqual([]);
+  });
+
+  test('selects shard prefixes from normalized query text', () => {
+    expect(searchShardPrefix('  ОФІС  ')).toBe('о');
+    expect(searchShardPrefix('ofis')).toBe('o');
+    expect(searchShardPrefix('авантю́ра')).toBe('а');
+    expect(searchShardPrefix('   ')).toBeNull();
+  });
+
+  test('resolves query shard metadata through manifest prefix map', () => {
+    const manifest: SearchShardManifest = {
+      schema: 'atlas-search-shards',
+      schemaVersion: 1,
+      total: 2,
+      fullIndex: { path: '/lexicon/search-index.json', count: 2, bytes: 100, sha256: 'full' },
+      shardCount: 2,
+      prefixMap: { о: 'u043e', o: 'latin-o' },
+      shards: {
+        u043e: { path: '/lexicon/search/u043e.json', count: 1, bytes: 10, sha256: 'uk' },
+        'latin-o': { path: '/lexicon/search/latin-o.json', count: 1, bytes: 10, sha256: 'latin' },
+      },
+    };
+
+    expect(searchShardForQuery(manifest, 'офіс')?.path).toBe('/lexicon/search/u043e.json');
+    expect(searchShardForQuery(manifest, 'ofis')?.path).toBe('/lexicon/search/latin-o.json');
+    expect(searchShardForQuery(manifest, 'x')).toBeNull();
+  });
+
+  test('assigns rows to every searchable prefix shard', () => {
+    const manifest: SearchShardManifest = {
+      schema: 'atlas-search-shards',
+      schemaVersion: 1,
+      total: 1,
+      fullIndex: { path: '/lexicon/search-index.json', count: 1, bytes: 100, sha256: 'full' },
+      shardCount: 3,
+      prefixMap: { о: 'u043e', o: 'latin-o', w: 'latin-w' },
+      shards: {
+        u043e: { path: '/lexicon/search/u043e.json', count: 1, bytes: 10, sha256: 'uk' },
+        'latin-o': { path: '/lexicon/search/latin-o.json', count: 1, bytes: 10, sha256: 'latin' },
+        'latin-w': { path: '/lexicon/search/latin-w.json', count: 1, bytes: 10, sha256: 'gloss' },
+      },
+    };
+
+    expect(searchShardKeysForRow(manifest, rows[1])).toEqual(['latin-o', 'latin-w', 'u043e']);
   });
 });
