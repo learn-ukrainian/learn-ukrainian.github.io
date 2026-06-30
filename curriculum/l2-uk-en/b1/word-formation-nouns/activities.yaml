@@ -666,7 +666,7 @@ workbook:
             correct: false
           - text: "Читальня повернула книжку."
             correct: false
-        explanation: "Reader as a person = читач."
+        explanation: "Особа, яка читає, = читач."
       - source: "The female reader asked for a dictionary."
         options:
           - text: "Читачка попросила словник."
@@ -684,7 +684,7 @@ workbook:
             correct: false
           - text: "Печальня відкривається о сьомій."
             correct: false
-        explanation: "Bakery = пекарня."
+        explanation: "Місце, де печуть або продають випічку, = пекарня."
       - source: "The baker works in a small bakery."
         options:
           - text: "Пекар працює в маленькій пекарні."
@@ -693,7 +693,7 @@ workbook:
             correct: false
           - text: "Підпис працює в маленькій пекарні."
             correct: false
-        explanation: "Baker = пекар; bakery = пекарня."
+        explanation: "Особа = пекар; місце = пекарня."
       - source: "The reading room is quiet."
         options:
           - text: "У читальні тихо."
@@ -702,7 +702,7 @@ workbook:
             correct: false
           - text: "У читанні тихо."
             correct: false
-        explanation: "Reading room = читальня."
+        explanation: "Приміщення для читання = читальня."
       - source: "Reading helps me remember new words."
         options:
           - text: "Читання допомагає мені запам'ятовувати нові слова."
@@ -711,7 +711,7 @@ workbook:
             correct: false
           - text: "Читальня допомагає мені запам'ятовувати нові слова."
             correct: false
-        explanation: "Reading as a process = читання."
+        explanation: "Процес читання = читання."
       - source: "The opening of the center will be tomorrow."
         options:
           - text: "Відкриття центру буде завтра."
@@ -720,7 +720,7 @@ workbook:
             correct: false
           - text: "Відкривальня центру буде завтра."
             correct: false
-        explanation: "Opening as an event = відкриття."
+        explanation: "Подія відкриття = відкриття."
       - source: "The signature must be clear."
         options:
           - text: "Підпис має бути чітким."
@@ -729,7 +729,7 @@ workbook:
             correct: false
           - text: "Підписник має бути чітким."
             correct: false
-        explanation: "Signature as a visible sign = підпис."
+        explanation: "Видимий знак = підпис."
       - source: "The signing of the agreement will take place today."
         options:
           - text: "Підписання угоди відбудеться сьогодні."
@@ -738,7 +738,7 @@ workbook:
             correct: false
           - text: "Підписник угоди відбудеться сьогодні."
             correct: false
-        explanation: "Signing as a process or event = підписання."
+        explanation: "Процес або подія = підписання."
       - source: "The university staff helped the visitors."
         options:
           - text: "Працівники університету допомогли відвідувачам."
@@ -747,7 +747,7 @@ workbook:
             correct: false
           - text: "Працівніця університету допомогла відвідуванням."
             correct: false
-        explanation: "Працівники and відвідувачі name people."
+        explanation: "Працівники й відвідувачі називають людей."
       - source: "The students' community supported the project."
         options:
           - text: "Студентство підтримало проєкт."
@@ -756,7 +756,7 @@ workbook:
             correct: false
           - text: "Студент підтримало проєкт."
             correct: false
-        explanation: "Студентство can name the student community as a whole."
+        explanation: "Студентство може називати студентську спільноту як ціле."
       - source: "Kindness is more important than a perfect form."
         options:
           - text: "Доброта важливіша за ідеальну форму."
@@ -765,7 +765,7 @@ workbook:
             correct: false
           - text: "Добриня важливіша за ідеальну форму."
             correct: false
-        explanation: "Kindness = доброта."
+        explanation: "Якість бути добрим = доброта."
   - id: wb-7
     type: essay-response
     title: Мініаналіз словотвірної мережі

@@ -378,7 +378,7 @@ workbook:
           - "На що виходять вікна?"
         correct: 0
         explanation: "Термін - це період оренди."
-      - question: "Яке формулювання найточніше для pets allowed?"
+      - question: "Яке формулювання найточніше передає дозвіл на тварин?"
         options:
           - "Чи можна з тваринами?"
           - "Чи тварини можуть?"
@@ -663,7 +663,7 @@ workbook:
             correct: true
           - text: "Комунальні окремі."
             correct: false
-        explanation: "В оголошенні окремо означає paid separately."
+        explanation: "В оголошенні окремо означає оплачуються окремо."
       - source: "Is it possible with pets?"
         options:
           - text: "Чи можна з тваринами?"

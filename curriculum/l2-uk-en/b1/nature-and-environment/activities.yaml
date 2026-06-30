@@ -329,7 +329,7 @@ inline:
         explanation: Землі приписано дію живої істоти.
       - question: "Краєвид означає:"
         options:
-          - "вид на місцевість, landscape"
+          - "вид на місцевість або пейзаж"
           - "дрібний дощ"
           - "період збирання зерна"
         correct: 0
@@ -709,7 +709,7 @@ workbook:
             correct: true
           - text: "Сьогодні хмарний, можливий маленький дощний."
             correct: false
-        explanation: Хмарно й мряка природно передають weather register.
+        explanation: Хмарно й мряка природно передають погідний опис.
       - source: "A downpour began after lunch."
         options:
           - text: "Після обіду почалася злива."

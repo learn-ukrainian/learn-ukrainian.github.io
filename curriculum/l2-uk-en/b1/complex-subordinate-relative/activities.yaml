@@ -509,7 +509,7 @@ workbook:
             correct: false
           - text: "Дослідниця, яку статтю ми читали, виступить завтра."
             correct: false
-        explanation: "Whose article - чию статтю."
+        explanation: "Чию статтю - присвійний займенник у непрямому відмінку."
       - source: "The people I work with are attentive."
         options:
           - text: "Люди, з якими я працюю, уважні."

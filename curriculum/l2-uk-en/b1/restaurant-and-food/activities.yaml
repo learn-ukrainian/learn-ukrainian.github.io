@@ -302,7 +302,7 @@ inline:
         error: чайовий
         correction: чайові
         error_type: word
-        explanation: У значенні tip вживаємо множинний іменник чайові.
+        explanation: У значенні чайових вживаємо множинний іменник чайові.
 workbook:
   - id: wb-1
     type: quiz
@@ -360,11 +360,11 @@ workbook:
         explanation: Чайові - множинний іменник.
       - question: Який варіант точніше передає культурну довідку?
         options:
-          - Ukrainian borshch cooking culture is on the UNESCO Urgent Safeguarding List.
-          - Every recipe for borshch is protected by UNESCO.
-          - UNESCO lists all Ukrainian dishes as one element.
+          - Українська культура приготування борщу внесена до Списку ЮНЕСКО, що потребує термінової охорони.
+          - Кожен рецепт борщу окремо захищений ЮНЕСКО.
+          - ЮНЕСКО внесла всі українські страви як один елемент.
         correct: 0
-        explanation: Точно говоримо про Ukrainian borshch cooking culture, а не про кожну страву окремо.
+        explanation: Точно говоримо про українську культуру приготування борщу, а не про кожну страву окремо.
       - question: Яка форма правильна після слова "без"?
         options:
           - без сметани
@@ -386,7 +386,7 @@ workbook:
           - Ви вже куштувалися банушем?
         correct: 0
         explanation: Куштувати означає пробувати їжу на смак або мати такий досвід.
-      - question: Яке слово правильно означає tip у ресторані?
+      - question: Яке слово правильно означає додаткову винагороду в ресторані?
         options:
           - чайові
           - чайовий
@@ -584,7 +584,7 @@ workbook:
         error: чайовий
         correction: чайові
         error_type: word
-        explanation: У значенні tip вживаємо множинний іменник чайові.
+        explanation: У значенні чайових вживаємо множинний іменник чайові.
       - sentence: "Що ви порадите на другий?"
         error: на другий
         correction: на друге
@@ -812,7 +812,7 @@ workbook:
             correct: true
           - text: Залиште чайовий готівкою.
             correct: false
-        explanation: У значенні tip вживаємо множинний іменник чайові.
+        explanation: У значенні чайових вживаємо множинний іменник чайові.
   - id: wb-9
     type: match-up
     title: Визначте відмінок

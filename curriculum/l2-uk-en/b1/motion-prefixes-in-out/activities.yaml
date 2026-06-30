@@ -600,7 +600,7 @@ workbook:
           - вийшла
   - id: wb-6
     type: translate
-    title: "Переклад: enter, drop by, exit"
+    title: "Переклад: вхід, короткий візит і вихід"
     instruction: Оберіть природний український переклад.
     items:
       - source: Come into the office, please.
@@ -609,84 +609,84 @@ workbook:
             correct: true
           - text: Вийдіть в офіс, будь ласка.
             correct: false
-        explanation: Enter into a space is зайти в/у.
+        explanation: Вхід у простір - зайти в/у.
       - source: I will drop by the pharmacy after work.
         options:
           - text: Я зайду до аптеки після роботи.
             correct: true
           - text: Я вийду до аптеки після роботи.
             correct: false
-        explanation: Short visit to an institution is зайти до.
+        explanation: Короткий візит до установи - зайти до.
       - source: She left the store with purchases.
         options:
           - text: Вона вийшла з магазину з покупками.
             correct: true
           - text: Вона вийшла від магазину з покупками.
             correct: false
-        explanation: Exit from inside the store is з магазину.
+        explanation: Вихід ізсередини магазину - з магазину.
       - source: The car drove into the yard.
         options:
           - text: Машина заїхала у двір.
             correct: true
           - text: Машина зайшла у двір.
             correct: false
-        explanation: Vehicle movement into a yard is заїхала.
+        explanation: Рух транспорту у двір - заїхала.
       - source: The car drove out of the garage.
         options:
           - text: Машина виїхала з гаража.
             correct: true
           - text: Машина вийшла з гаража.
             correct: false
-        explanation: Vehicle movement out is виїхала.
+        explanation: Рух транспорту назовні - виїхала.
       - source: Run into the post office for a minute.
         options:
           - text: Забіжи до пошти на хвилину.
             correct: true
           - text: Вибіжи до пошти на хвилину.
             correct: false
-        explanation: Short movement into the post office is забіжи.
+        explanation: Короткий рух до пошти - забіжи.
       - source: The children ran out of the classroom.
         options:
           - text: Діти вибігли з класу.
             correct: true
           - text: Діти забігли з класу.
             correct: false
-        explanation: Out of the classroom is вибігли з класу.
+        explanation: Рух із класу назовні - вибігли з класу.
       - source: Carry the umbrella into the house.
         options:
           - text: Занеси парасолю в дім.
             correct: true
           - text: Винеси парасолю в дім.
             correct: false
-        explanation: Carrying into a house is занести.
+        explanation: Перенесення в дім - занести.
       - source: Take the trash out of the kitchen.
         options:
           - text: Винеси сміття з кухні.
             correct: true
           - text: Занеси сміття з кухні.
             correct: false
-        explanation: Carrying out from the kitchen is винести.
+        explanation: Винесення з кухні - винести.
       - source: Lead the guest into the room.
         options:
           - text: Заведи гостя до кімнати.
             correct: true
           - text: Занеси гостя до кімнати.
             correct: false
-        explanation: A guest is led, not carried.
+        explanation: Гостя ведуть, а не несуть.
       - source: Lead the group out of the museum.
         options:
           - text: Виведи групу з музею.
             correct: true
           - text: Винеси групу з музею.
             correct: false
-        explanation: A group is led out.
+        explanation: Групу виводять.
       - source: The boat sailed out of the bay.
         options:
           - text: Човен виплив із затоки.
             correct: true
           - text: Човен заплив із затоки.
             correct: false
-        explanation: Out of the bay is виплив із затоки.
+        explanation: Рух із затоки назовні - виплив із затоки.
   - id: wb-7
     type: error-correction
     title: Виправлення маршруту в будівлі

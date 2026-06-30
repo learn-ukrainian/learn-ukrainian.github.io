@@ -63,7 +63,7 @@ inline:
           - "тире"
         correct: 0
         explanation: "Головна частина розповідна: повідомляє про незнання."
-      - question: "Яке речення правильно передає I asked if she had time?"
+      - question: "Яке речення правильно передає непряме питання про те, чи вона має час?"
         options:
           - "Я запитав, чи вона має час."
           - "Я запитав, якщо вона має час."
@@ -482,7 +482,7 @@ workbook:
             correct: false
           - text: "Вона запитала я маю час."
             correct: false
-        explanation: "Whether/if у непрямому питанні - чи."
+        explanation: "У непрямому питанні вживаємо чи."
       - source: "I want you to rest."
         options:
           - text: "Я хочу, щоб ти відпочив."
@@ -590,4 +590,4 @@ workbook:
       - criteria: Пояснення
         description: Одну кому пояснено через головну і підрядну частини.
       - criteria: Природність
-        description: Текст не калькує англійські конструкції з that, if або want you to.
+        description: Текст не калькує англійські підрядні моделі.

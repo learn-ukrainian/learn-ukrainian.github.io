@@ -93,7 +93,7 @@
 - lemma: рахунок
   translation: bill, account
   pos: noun:m
-  usage: "У банку рахунок означає account, а в кафе - bill."
+  usage: "У банку рахунок - це банківський обліковий запис, а в кафе - сума до сплати."
 - lemma: переказ
   translation: money transfer
   pos: noun:m

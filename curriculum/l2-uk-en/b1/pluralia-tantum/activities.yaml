@@ -35,7 +35,7 @@ inline:
           - Нова двері відчинилася.
         correct: 0
         explanation: '"Двері" вимагає множинного прикметника і дієслова.'
-      - question: Чому "гроші" у значенні money поводяться як pluralia tantum?
+      - question: Чому слово "гроші" поводиться як pluralia tantum?
         options:
           - У звичайному значенні вони мають тільки множинну граматичну форму.
           - Бо це завжди рівно дві монети.
@@ -566,7 +566,7 @@ workbook:
       - statement: "Родовий відмінок слова ворота - воріт."
         correct: true
         explanation: Це нульове закінчення з чергуванням о - і.
-      - statement: "Гроші у значенні money нормально рахувати як один гроші."
+      - statement: "Слово гроші нормально рахувати як один гроші."
         correct: false
         explanation: Називаємо суму, купюри або монети; форма "один гроші" ненормативна.
       - statement: "Меблі можна замінити конкретними словами: стіл, шафа, крісло."
@@ -587,7 +587,7 @@ workbook:
       - statement: "Після канікул - правильна форма."
         correct: true
         explanation: Родовий відмінок слова "канікули" - "канікул".
-      - statement: "Окуляр - звичайна однина до окуляри у значенні glasses."
+      - statement: "Окуляр - звичайна однина до окуляри у значенні оптичного приладу."
         correct: false
         explanation: '"Окуляр" має інше спеціальне значення.'
   - id: wb-6
@@ -916,29 +916,29 @@ workbook:
     title: Як рахувати без помилки
     instruction: Поєднайте ситуацію з природною українською фразою.
     pairs:
-      - left: one pair of glasses
+      - left: одна пара окулярів
         right: одні окуляри
-      - left: two pairs of glasses
+      - left: дві пари окулярів
         right: дві пари окулярів
-      - left: one set of furniture
+      - left: один комплект меблів
         right: один комплект меблів
-      - left: two packages of medicine
+      - left: дві упаковки ліків
         right: дві упаковки ліків
-      - left: one pair of scissors
+      - left: одна пара ножиць
         right: одні ножиці
-      - left: three pairs of scissors
+      - left: три пари ножиць
         right: три пари ножиць
-      - left: one gate
+      - left: одні ворота
         right: одні ворота
-      - left: two door units
+      - left: двоє дверей
         right: двоє дверей
-      - left: one pair of trousers
+      - left: одна пара штанів
         right: одні штани
-      - left: two sleds
+      - left: двоє саней
         right: двоє саней
-      - left: one package of yeast
+      - left: одна упаковка дріжджів
         right: одна упаковка дріжджів
-      - left: three pieces of furniture
+      - left: три предмети меблів
         right: три предмети меблів
   - id: wb-11
     type: error-correction

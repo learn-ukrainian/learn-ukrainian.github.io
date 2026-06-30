@@ -65,9 +65,9 @@ inline:
         explanation: Близький має чергування й форму ближчий.
       - question: "Що означає менш складний?"
         options:
-          - "has a lower degree of difficulty"
-          - "has a higher degree of difficulty"
-          - "has no adjective agreement"
+          - "має нижчу міру складності"
+          - "має вищу міру складності"
+          - "не має прикметникового узгодження"
         correct: 0
         explanation: Менш виражає нижчу міру ознаки.
       - question: "Правильне речення:"

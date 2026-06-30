@@ -382,13 +382,13 @@ workbook:
           - "всього студенти прийшли"
         correct: 0
         explanation: "Для множини людей потрібне усі/всі."
-      - question: "Який варіант означає the same?"
+      - question: "Який варіант передає значення «те саме»?"
         options:
           - "той самий документ"
           - "самий документ"
           - "сам документів"
         correct: 0
-        explanation: "The same - той самий, та сама, те саме, ті самі."
+        explanation: "Те саме - той самий, та сама, те саме, ті самі."
   - id: wb-2
     type: fill-in
     title: Форми в контексті
@@ -787,7 +787,7 @@ workbook:
             correct: false
           - text: "Весь студент перевірив той документ."
             correct: false
-        explanation: "The same - той самий; every student - кожен студент."
+        explanation: "Те саме - той самий; кожен студент - кожен студент."
   - id: wb-8
     type: essay-response
     title: Короткий звіт із займенниками

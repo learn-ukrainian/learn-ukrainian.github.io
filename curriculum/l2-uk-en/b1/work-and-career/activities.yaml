@@ -562,7 +562,7 @@ workbook:
         options:
           - text: Додаю резюме.
             correct: true
-          - text: Прикріпляю моє CV-шечко.
+          - text: Прикріпляю моє резюмечко.
             correct: false
         explanation: Додаю резюме - коротко й професійно.
   - id: wb-8

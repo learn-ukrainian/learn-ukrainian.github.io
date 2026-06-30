@@ -600,7 +600,7 @@ workbook:
           - виплив
   - id: wb-6
     type: translate
-    title: "Переклад: cross, pass, go through"
+    title: "Переклад: перетин, рух повз і рух через"
     instruction: Оберіть природний український переклад.
     items:
       - source: Cross the street at the pedestrian crossing.
@@ -609,84 +609,84 @@ workbook:
             correct: true
           - text: Пройдіть повз дорогу на пішохідному переході.
             correct: false
-        explanation: Cross the street is перейти дорогу.
+        explanation: Перетин дороги - перейти дорогу.
       - source: Walk past the museum and turn left.
         options:
           - text: Пройдіть повз музей і поверніть ліворуч.
             correct: true
           - text: Перейдіть музей і поверніть ліворуч.
             correct: false
-        explanation: Past the museum is повз музей with пройти.
+        explanation: Рух повз музей потребує пройти повз.
       - source: Drive across the bridge to the other bank.
         options:
           - text: Переїдьте міст на інший берег.
             correct: true
           - text: Проїдьте повз міст на інший берег.
             correct: false
-        explanation: To the other bank fixes the crossing meaning.
+        explanation: Інший берег уточнює значення перетину.
       - source: Drive through the center without stopping.
         options:
           - text: Проїдьте через центр без зупинки.
             correct: true
           - text: Переїдьте центр без зупинки.
             correct: false
-        explanation: Through the center as transit is проїхати через центр.
+        explanation: Транзит через центр - проїхати через центр.
       - source: I missed my stop.
         options:
           - text: Я проїхав свою зупинку.
             correct: true
           - text: Я переїхав свою зупинку.
             correct: false
-        explanation: A missed stop is проїхати зупинку.
+        explanation: Пропущена зупинка - проїхати зупинку.
       - source: The child ran across the road.
         options:
           - text: Дитина перебігла дорогу.
             correct: true
           - text: Дитина пробігла повз дорогу.
             correct: false
-        explanation: Across the road is перебігти дорогу.
+        explanation: Рух через дорогу - перебігти дорогу.
       - source: The runner ran past the stand.
         options:
           - text: Бігун пробіг повз трибуну.
             correct: true
           - text: Бігун перебіг повз трибуну.
             correct: false
-        explanation: Past the stand is пробіг повз.
+        explanation: Рух повз трибуну - пробіг повз.
       - source: Carry the box across the corridor.
         options:
           - text: Перенесіть коробку через коридор.
             correct: true
           - text: Проведіть коробку через коридор.
             correct: false
-        explanation: A box is carried, not led.
+        explanation: Коробку несуть, а не ведуть.
       - source: Carry the suitcase through security.
         options:
           - text: Пронесіть валізу через контроль.
             correct: true
           - text: Переведіть валізу через контроль.
             correct: false
-        explanation: A suitcase is carried through a checkpoint.
+        explanation: Валізу проносять через контроль.
       - source: Lead the children across the road.
         options:
           - text: Переведіть дітей через дорогу.
             correct: true
           - text: Проведіть дітей по дорозі.
             correct: false
-        explanation: Across the road with children is перевести.
+        explanation: Дітей через дорогу переводять.
       - source: Guide the guests through the museum.
         options:
           - text: Проведіть гостей по музею.
             correct: true
           - text: Переведіть гостей по музею.
             correct: false
-        explanation: A museum route is провести по музею.
+        explanation: Маршрут по музею - провести по музею.
       - source: The boat sailed past the shore.
         options:
           - text: Човен проплив повз берег.
             correct: true
           - text: Човен переплив повз берег.
             correct: false
-        explanation: Past the shore is проплив повз берег.
+        explanation: Рух повз берег - проплив повз берег.
   - id: wb-7
     type: error-correction
     title: Виправлення маршрутних інструкцій
