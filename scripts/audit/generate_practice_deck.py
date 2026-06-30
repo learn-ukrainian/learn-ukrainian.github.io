@@ -25,7 +25,7 @@ if str(PROJECT_ROOT) not in sys.path:
 if str(AUDIT_DIR) not in sys.path:
     sys.path.insert(0, str(AUDIT_DIR))
 
-from lexeme_filter import is_practice_eligible
+from lexeme_filter import SURFACE_CLOZE, is_practice_eligible, is_surface_admitted
 
 DEFAULT_MANIFEST = Path("site/src/data/lexicon-manifest.json")
 # Deck shards are served as literal static files from public/ (not via dynamic .json.ts
@@ -1078,10 +1078,13 @@ def build_practice_shards(
     cloze_by_level: dict[str, list[dict[str, Any]]] = {level: [] for level in CEFR_ORDER}
     cloze_ids_by_lemma: dict[str, list[str]] = {}
     for _entry, lexeme in lexemes_by_entry:
-        source_rows = [
-            *cloze_by_lemma_id.get(lexeme["lemmaId"], []),
-            *cloze_by_lemma.get(lexeme["lemmaPlain"], []),
-        ]
+        if is_surface_admitted(_entry, SURFACE_CLOZE):
+            source_rows = [
+                *cloze_by_lemma_id.get(lexeme["lemmaId"], []),
+                *cloze_by_lemma.get(lexeme["lemmaPlain"], []),
+            ]
+        else:
+            source_rows = []
         items = _build_cloze_items(lexeme, source_rows, allowlist, verifier, deck_version)
         for item in items:
             item["options"] = _make_options(item, lexeme, all_lexemes, rng)

@@ -8,9 +8,13 @@ from __future__ import annotations
 from scripts.audit.lexeme_filter import (
     DERIVED_FORM_SOURCES,
     GRAMMAR_TERM_POS,
+    SURFACE_CLOZE,
+    SURFACE_DAILY,
+    SURFACE_PRACTICE,
     SURZHYK_SOURCE,
     is_lexeme_entry,
     is_practice_eligible,
+    is_surface_admitted,
 )
 
 
@@ -91,3 +95,25 @@ def test_practice_rejects_no_curriculum_anchor():
     # No course_usage and no CEFR level -> not curriculum-anchored.
     entry = _noun(course_usage=[], enrichment={})
     assert is_practice_eligible(entry) is False
+
+
+def test_source_inventory_lexeme_defaults_to_browse_only() -> None:
+    entry = _noun(primary_source="source_inventory_grow", course_usage=[])
+
+    assert is_lexeme_entry(entry) is True
+    assert is_surface_admitted(entry, SURFACE_DAILY) is False
+    assert is_surface_admitted(entry, SURFACE_PRACTICE) is False
+    assert is_surface_admitted(entry, SURFACE_CLOZE) is False
+    assert is_practice_eligible(entry) is False
+
+
+def test_source_inventory_practice_requires_explicit_surface_admission() -> None:
+    entry = _noun(
+        primary_source="source_inventory_grow",
+        course_usage=[],
+        enrichment={"cefr": {"level": "A1", "source": "fixture", "text": "A1"}},
+        surface_admission={SURFACE_PRACTICE: True},
+    )
+
+    assert is_surface_admitted(entry, SURFACE_PRACTICE) is True
+    assert is_practice_eligible(entry) is True
