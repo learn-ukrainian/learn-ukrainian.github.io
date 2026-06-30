@@ -104,7 +104,7 @@ describe("lexicon static API routes", () => {
     expect(contract.surfaces.dailyWord.endpoint).toBe(contract.endpoints.dailyPool);
     expect(contract.surfaces.practice.totalLexemes).toBeGreaterThan(1000);
     expect(contract.surfaces.practice.levels).toEqual([...PRACTICE_LEVELS]);
-    expect(contract.surfaces.cloze.totalItems).toBe(14);
+    expect(contract.surfaces.cloze.totalItems).toBe(22);
     expect(contract.surfaces.cloze.reviewedSourceRows).toBeGreaterThan(0);
     expect(contract.endpoints.practiceIndexTemplate).toBe(
       "/api/lexicon/practice-index.{level}.json",
@@ -148,6 +148,6 @@ describe("lexicon static API routes", () => {
     expect(index.counts.lexemes).toBe(lexemes.lexemes.length);
   expect(index.counts.cloze).toBe(cloze.cloze.length);
   expect(index.counts.lexemes).toBeGreaterThan(1000);
-  expect(index.counts.cloze).toBe(14);
+    expect(index.counts.cloze).toBe(22);
 });
 });
