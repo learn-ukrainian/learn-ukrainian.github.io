@@ -1,9 +1,9 @@
 {
-  "assembled_mdx_sha256": "4db365a0e0059b7961a33c5b2a779d88f0b0d1e69556a2b1ecce504498838f92",
+  "assembled_mdx_sha256": "8f72f2be3c3b25d96e698c7b35c5ddeff022fce5099b6bce3aa0ad1c5b2f7b16",
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "8e85781db1111d6421499fea70b1087f524790c2bf0136dbc428d7fc96784528",
+    "digest": "59326264826ea6bfe43b287869be5fa1362141c6987d9ffe160607200a8d03d6",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/holosinnya.yaml",
@@ -23,16 +23,16 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/holosinnya/resources.yaml",
-        "sha256": "32cec77911410a1b8bb894d85ead8457e0c01ff6ddd0175e7f02fdbf3130e270"
+        "sha256": "977e25b0a253528613c69794391ff8cc38bd2946d1c7c5e659abc6a4c8d8cf24"
       }
     ]
   },
   "evidence": {
-    "decolonization": "Distinguishes ritual lament, literary topos, and scholarship; Kyiv/Rus material handled without Russian-imperial or exceptionalist framing.",
-    "engagement": "Six activities cover quiz, reading, source evaluation, comparative study, critical analysis, and essay response; central reading renders correctly.",
-    "naturalness": "Ukrainian C1 seminar voice is source-bound and learner-facing; no internal IDs, source slugs, hidden-core framing, or decorative ethnography.",
-    "pedagogical": "Teaches repeatable source discipline: genre, moment, performer, address, formula, evidence limit, and terminology.",
-    "review": "Claude Opus 4.8 review PASS after blocker fix: ReadingActivity now renders non-empty text and tasks; no new blockers; MDX parity OK."
+    "decolonization": "Distinguishes ritual lament, literary topos, and scholarship without imperial framing.",
+    "engagement": "Six varied activities cover source evaluation, comparison, critique, and essay response.",
+    "naturalness": "Ukrainian C1 seminar voice is source-bound, learner-facing, and free of hidden-core framing.",
+    "pedagogical": "Teaches source discipline: genre, moment, performer, address, formula, and evidence limits.",
+    "review": "Claude Opus 4.8 PASS after ReadingActivity alias fix; no new blockers; MDX parity OK."
   },
   "floors": {
     "beauty": 8.5,
