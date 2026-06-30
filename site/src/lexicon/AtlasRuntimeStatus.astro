@@ -1,0 +1,232 @@
+---
+const statusUrl = "/api/lexicon/status.json";
+---
+
+<section
+  class="atlas-runtime-panel"
+  aria-labelledby="atlas-runtime-title"
+  data-atlas-runtime
+  data-status-url={statusUrl}
+>
+  <div class="atlas-runtime-heading">
+    <span class="atlas-runtime-badge">Дані</span>
+    <h2 id="atlas-runtime-title">Покриття Атласу</h2>
+    <p data-runtime-status>Завантажуємо поточний стан...</p>
+  </div>
+
+  <dl class="atlas-runtime-grid" aria-live="polite">
+    <div class="atlas-runtime-card">
+      <dt>Публічний Атлас</dt>
+      <dd data-runtime-value="publicAtlas">-</dd>
+      <p data-runtime-detail="publicAtlas">Пошук і перегляд</p>
+    </div>
+    <div class="atlas-runtime-card">
+      <dt>Маніфест</dt>
+      <dd data-runtime-value="manifest">-</dd>
+      <p data-runtime-detail="manifest">Маніфест релізу</p>
+    </div>
+    <div class="atlas-runtime-card">
+      <dt>Слова дня</dt>
+      <dd data-runtime-value="daily">-</dd>
+      <p data-runtime-detail="daily">Рівні A1-B1</p>
+    </div>
+    <div class="atlas-runtime-card">
+      <dt>Практика</dt>
+      <dd data-runtime-value="practice">-</dd>
+      <p data-runtime-detail="practice">Лексеми в деці</p>
+    </div>
+    <div class="atlas-runtime-card">
+      <dt>Пропуски</dt>
+      <dd data-runtime-value="cloze">-</dd>
+      <p data-runtime-detail="cloze">Перевірені речення</p>
+    </div>
+    <div class="atlas-runtime-card">
+      <dt>Джерела</dt>
+      <dd data-runtime-value="sourceInventory">-</dd>
+      <p data-runtime-detail="sourceInventory">Слова дня / практика / пропуски</p>
+    </div>
+  </dl>
+</section>
+
+<script>
+  const numberFormatter = new Intl.NumberFormat("uk-UA");
+  const formatCount = (value) =>
+    typeof value === "number" ? numberFormatter.format(value) : "-";
+  const formatBytes = (value) =>
+    typeof value === "number" ? `${(value / (1024 * 1024)).toFixed(1)} MB` : "-";
+
+  function setRuntimeText(root, key, value) {
+    const node = root.querySelector(`[data-runtime-value="${key}"]`);
+    if (node) node.textContent = value;
+  }
+
+  function setRuntimeDetail(root, key, value) {
+    const node = root.querySelector(`[data-runtime-detail="${key}"]`);
+    if (node) node.textContent = value;
+  }
+
+  function renderRuntimeStatus(root, status) {
+    setRuntimeText(root, "publicAtlas", formatCount(status.publicAtlas.searchEntries));
+    setRuntimeDetail(
+      root,
+      "publicAtlas",
+      `${formatCount(status.publicAtlas.browseEntries)} перегляд · ${status.publicAtlas.browseShards} шардів`,
+    );
+
+    setRuntimeText(root, "manifest", formatCount(status.manifest.entries));
+    setRuntimeDetail(
+      root,
+      "manifest",
+      status.manifest.hydrated
+        ? `${formatCount(status.manifest.publicLexemes)} публічних · ${formatCount(
+            status.manifest.grammarTermRows,
+          )} внутрішніх`
+        : `${formatBytes(status.manifest.jsonBytes)} pinned`,
+    );
+
+    setRuntimeText(root, "daily", formatCount(status.daily.poolEntries));
+    setRuntimeDetail(root, "daily", "Навчальна добірка");
+
+    setRuntimeText(root, "practice", formatCount(status.practice.totalLexemes));
+    setRuntimeDetail(
+      root,
+      "practice",
+      status.practice.deckVersions.length
+        ? status.practice.deckVersions.join(", ")
+        : "Без версії",
+    );
+
+    setRuntimeText(root, "cloze", formatCount(status.cloze.totalItems));
+    setRuntimeDetail(
+      root,
+      "cloze",
+      `${formatCount(status.cloze.sourceRows)} джерел · ${formatCount(
+        status.cloze.reviewedSourceRows,
+      )} дозволено`,
+    );
+
+    setRuntimeText(root, "sourceInventory", formatCount(status.sourceInventory.atlasRows));
+    setRuntimeDetail(
+      root,
+      "sourceInventory",
+      `${formatCount(status.sourceInventory.dailyAdmitted)} / ${formatCount(
+        status.sourceInventory.practiceAdmitted,
+      )} / ${formatCount(status.sourceInventory.clozeAdmitted)}`,
+    );
+
+    const statusNode = root.querySelector("[data-runtime-status]");
+    if (statusNode) {
+      statusNode.textContent =
+        status.status === "ok"
+          ? "Дані узгоджені: пошук, перегляд, Слова дня і практика синхронізовані."
+          : "Дані потребують перевірки: одна з поверхонь Атласу не збігається.";
+    }
+    root.dataset.runtimeLoaded = "true";
+  }
+
+  for (const root of document.querySelectorAll("[data-atlas-runtime]")) {
+    const endpoint = root.dataset.statusUrl || "/api/lexicon/status.json";
+    fetch(endpoint)
+      .then((response) => {
+        if (!response.ok) throw new Error(`Atlas status failed: ${response.status}`);
+        return response.json();
+      })
+      .then((status) => renderRuntimeStatus(root, status))
+      .catch(() => {
+        const statusNode = root.querySelector("[data-runtime-status]");
+        if (statusNode) statusNode.textContent = "Стан Атласу зараз недоступний.";
+        root.dataset.runtimeLoaded = "false";
+      });
+  }
+</script>
+
+<style>
+  .atlas-runtime-panel {
+    width: min(960px, calc(100% - 2rem));
+    margin: 0 auto 4rem;
+    padding: 1.25rem 0 0;
+    border-top: 1px solid var(--lu-border);
+  }
+
+  .atlas-runtime-heading {
+    text-align: left;
+  }
+
+  .atlas-runtime-badge {
+    display: inline-flex;
+    align-items: center;
+    min-height: 1.65rem;
+    padding: 0 0.55rem;
+    border-radius: 4px;
+    background: var(--lu-state-active);
+    color: var(--lu-primary);
+    font-size: 0.72rem;
+    font-weight: 900;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .atlas-runtime-heading h2 {
+    margin: 0.65rem 0 0;
+    color: var(--lu-text);
+    font-size: 1.45rem;
+    line-height: 1.2;
+  }
+
+  .atlas-runtime-heading p {
+    margin: 0.45rem 0 0;
+    color: var(--lu-text-muted);
+    font-size: 0.95rem;
+    line-height: 1.55;
+  }
+
+  .atlas-runtime-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.8rem;
+    margin: 1rem 0 0;
+  }
+
+  .atlas-runtime-card {
+    min-width: 0;
+    padding: 0.95rem;
+    border: 1px solid var(--lu-border);
+    border-radius: 8px;
+    background: var(--lu-surface);
+  }
+
+  .atlas-runtime-card dt {
+    color: var(--lu-text-muted);
+    font-size: 0.75rem;
+    font-weight: 900;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .atlas-runtime-card dd {
+    margin: 0.35rem 0 0;
+    color: var(--lu-text);
+    font-size: 1.55rem;
+    font-weight: 900;
+    line-height: 1;
+  }
+
+  .atlas-runtime-card p {
+    margin: 0.45rem 0 0;
+    color: var(--lu-text-muted);
+    font-size: 0.82rem;
+    line-height: 1.35;
+  }
+
+  @media (max-width: 760px) {
+    .atlas-runtime-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 520px) {
+    .atlas-runtime-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
