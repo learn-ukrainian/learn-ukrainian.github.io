@@ -1,0 +1,140 @@
+- lemma: родинна обрядовість
+  translation: family ritual tradition
+  pos: noun phrase
+  usage: Родинна обрядовість охоплює переходи народження, шлюбу, смерті й пам'яті.
+- lemma: родини
+  translation: birth-related family rites
+  pos: plural noun
+  usage: Родини пов'язані з входженням дитини до дому.
+- lemma: хрестини
+  translation: christening
+  pos: plural noun
+  usage: Хрестини вводять дитину в християнське і громадське визнання.
+- lemma: пострижини
+  translation: first hair-cutting rite
+  pos: plural noun
+  usage: Пострижини позначають річний родинний рубіж.
+- lemma: повитуха
+  translation: midwife
+  pos: noun
+  usage: Повитуха стоїть біля родильного переходу.
+- lemma: куми
+  translation: godparents
+  pos: plural noun
+  usage: Куми беруть участь у хрестинах і ширшій родинній відповідальності.
+- lemma: сватання
+  translation: matchmaking
+  pos: noun
+  usage: Сватання відкриває весільну домовленість між родами.
+- lemma: заручини
+  translation: betrothal
+  pos: plural noun
+  usage: Заручини закріплюють весільну згоду.
+- lemma: вінчання
+  translation: church wedding rite
+  pos: noun
+  usage: Вінчання вводить християнську рамку шлюбу.
+- lemma: гільце
+  translation: decorated wedding branch
+  pos: noun
+  usage: Гільце робить весільну сцену видимою через предмет.
+- lemma: вильце
+  translation: ritual wedding branch
+  pos: noun
+  usage: Вильце є варіантною назвою весільного обрядового деревця.
+- lemma: вінок
+  translation: wreath
+  pos: noun
+  usage: Вінок позначає стан молодої у весільному переході.
+- lemma: коровай
+  translation: ritual wedding bread
+  pos: noun
+  usage: Коровай у весільній формулі пов'язаний з родовим достатком.
+- lemma: коровайниці
+  translation: women who bake the wedding bread
+  pos: plural noun
+  usage: Коровайниці діють у весільній підготовці.
+- lemma: піч
+  translation: stove; oven
+  pos: noun
+  usage: Піч називає домашній центр родильного простору.
+- lemma: сволок
+  translation: main ceiling beam
+  pos: noun
+  usage: Сволок допомагає бачити хату як обрядовий простір.
+- lemma: припічок
+  translation: space by the stove
+  pos: noun
+  usage: Припічок указує на місце біля печі.
+- lemma: покуть
+  translation: honored corner of the house
+  pos: noun
+  usage: Покуть має почесний статус у хаті.
+- lemma: рід
+  translation: kin; lineage
+  pos: noun
+  usage: Весілля збирає рід і змінює родову належність.
+- lemma: родова належність
+  translation: kinship belonging
+  pos: noun phrase
+  usage: Весільний перехід змінює родову належність молодої.
+- lemma: похорон
+  translation: funeral
+  pos: noun
+  usage: Похорон переводить людину з щоденного життя в родинну пам'ять.
+- lemma: поминання
+  translation: commemoration of the dead
+  pos: noun
+  usage: Поминання підтримує пам'ять роду після похорону.
+- lemma: голосіння
+  translation: ritual lament
+  pos: noun
+  usage: Голосіння належить до похоронної ситуації.
+- lemma: речитатив
+  translation: recitative
+  pos: noun
+  usage: Речитатив поєднує мовлення, плач і спів.
+- lemma: формула
+  translation: formula
+  pos: noun
+  usage: Формула стискає досвід переходу в короткий рядок.
+- lemma: варіант
+  translation: variant
+  pos: noun
+  usage: Локальний варіант не можна подавати як загальну норму.
+- lemma: обряд переходу
+  translation: rite of passage
+  pos: noun phrase
+  usage: Обряд переходу змінює статус людини.
+- lemma: джерельна критика
+  translation: source criticism
+  pos: noun phrase
+  usage: Джерельна критика тримає межу доказу.
+- lemma: першоджерело
+  translation: primary source
+  pos: noun
+  usage: Першоджерело дає слово без пізнішого переказу.
+- lemma: публічне джерело
+  translation: public source
+  pos: noun phrase
+  usage: Публічне джерело дозволяє читачеві повернутися до тексту.
+- lemma: межа доказу
+  translation: limit of evidence
+  pos: noun phrase
+  usage: Межа доказу не дозволяє вигадувати повний сценарій.
+- lemma: виконавська ситуація
+  translation: performance situation
+  pos: noun phrase
+  usage: Виконавська ситуація пояснює, хто говорить і коли.
+- lemma: звертання
+  translation: address
+  pos: noun
+  usage: Звертання у голосінні тримає останню форму стосунку.
+- lemma: епітет
+  translation: epithet
+  pos: noun
+  usage: Епітет додає родинну близькість у похоронному слові.
+- lemma: порівняння
+  translation: comparison
+  pos: noun
+  usage: Порівняння допомагає назвати втрату.

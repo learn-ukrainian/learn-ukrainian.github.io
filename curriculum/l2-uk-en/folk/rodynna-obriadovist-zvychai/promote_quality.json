@@ -1,0 +1,73 @@
+{
+  "assembled_mdx_sha256": "094861a4dd34266a72809172c8176d68de859a27b9127a211bb6e4f8abb66690",
+  "content_hash": {
+    "algorithm": "sha256",
+    "basis": "lesson_sources_v2",
+    "digest": "a0e363bd28aec0f3c919b3d802ccd1325257ccfd24a716bd5883990577f229bc",
+    "files": [
+      {
+        "path": "curriculum/l2-uk-en/plans/folk/rodynna-obriadovist-zvychai.yaml",
+        "sha256": "942c71460c44828ddf68f72cd98fd974bc4737d0ac27d831aa23232cc08aedd7"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/rodynna-obriadovist-zvychai/module.md",
+        "sha256": "b9b8d4706bd4284e7baa8272e84516b15e9360ec87a555cdfb86cbfa4540a631"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/rodynna-obriadovist-zvychai/activities.yaml",
+        "sha256": "e50a089859c2791959e659da5b0fcf95e37d7697ce9c67a5d31f8adc390e46f8"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/rodynna-obriadovist-zvychai/vocabulary.yaml",
+        "sha256": "84f2fe9638c8b5040ec02db3f08053177652d6fe1c9f57fdce5d9d76b3ec0388"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/rodynna-obriadovist-zvychai/resources.yaml",
+        "sha256": "6795dd99127912d80a2d097cc804d9b2cc8f81e5c4c6579a04a20506ad39544b"
+      }
+    ]
+  },
+  "evidence": {
+    "beauty": "Fluent C1 Ukrainian seminar lesson links birth, christening, wedding, funeral, lament, and kinship voice through recurring transition images.",
+    "decolonization": "The module rejects decorative ethnography and hidden older-core claims, keeping Ukrainian family rites source-bound, Christian-community-aware, and agency-centered.",
+    "engagement": "Short verified fragments, careful-reading practice, inline checks, and focused workbook tasks give learners repeated evidence-based entry points.",
+    "naturalness": "Teaching prose keeps an academic Ukrainian register while preserving archaic quoted forms only as bounded source fragments.",
+    "pedagogical": "Repeatable method asks learners to track action, performer, object, addressee, voice, formula, and proof limits across family rites.",
+    "review": "Claude Opus 4.8 read-only follow-up review found no merge blockers for PR #4041; AGY attempts were unusable/stalled; DeepSeek was not used.",
+    "source_hygiene": "Resources use public Wikisource/Wikipedia references, and the lesson marks short-fragment-only versus public-excerpt-candidate posture.",
+    "tone": "Serious seminar voice holds tenderness, hierarchy, grief, memory, and community pressure without nostalgia or spectacle."
+  },
+  "floors": {
+    "beauty": 8.5,
+    "decolonization": 9.0,
+    "engagement": 8.5,
+    "naturalness": 8.5,
+    "pedagogical": 8.5,
+    "tone": 8.5
+  },
+  "profile": "folk_promote_v1",
+  "review_artifact": null,
+  "reviewer": {
+    "agent": "claude",
+    "family": "anthropic",
+    "model": "claude-opus-4-8"
+  },
+  "schema_version": 1,
+  "scored_at": "2026-06-30T10:27:51Z",
+  "scores": {
+    "beauty": 9.0,
+    "decolonization": 9.0,
+    "engagement": 8.6,
+    "naturalness": 9.0,
+    "pedagogical": 9.0,
+    "tone": 9.0
+  },
+  "slug": "rodynna-obriadovist-zvychai",
+  "track": "folk",
+  "verdict": "PASS",
+  "writer": {
+    "agent": "codex",
+    "family": "openai",
+    "model": "gpt-5"
+  }
+}
