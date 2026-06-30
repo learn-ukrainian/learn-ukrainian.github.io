@@ -1,3 +1,7 @@
+- lemma: синтаксичний розбір
+  translation: syntactic analysis
+  pos: phrase
+  usage: Синтаксичний розбір починається з граматичної основи.
 - lemma: словосполучення
   translation: word combination
   pos: noun
@@ -5,7 +9,7 @@
 - lemma: граматична основа
   translation: grammatical base
   pos: phrase
-  usage: Граматична основа складається з підмета й присудка або одного головного члена.
+  usage: Граматична основа може складатися з підмета й присудка або з одного головного члена.
 - lemma: предикативний зв'язок
   translation: predicative relation
   pos: phrase
@@ -13,68 +17,100 @@
 - lemma: узгодження
   translation: agreement
   pos: noun
-  usage: Узгодження змінює залежне слово за родом, числом і відмінком.
+  usage: Узгодження вимагає повторення роду, числа й відмінка.
 - lemma: керування
   translation: government
   pos: noun
-  usage: Керування вимагає певного відмінка залежного слова.
+  usage: Керування залежить від вимоги головного слова.
 - lemma: прилягання
   translation: adjunction
   pos: noun
   usage: Прилягання спирається на незмінну залежну форму.
-- lemma: простий присудок
-  translation: simple predicate
+- lemma: простий дієслівний присудок
+  translation: simple verbal predicate
   pos: phrase
-  usage: Простий присудок виражений однією дієслівною формою.
-- lemma: складений присудок
-  translation: compound predicate
+  usage: Простий дієслівний присудок може бути виражений однією формою або аналітичним майбутнім часом.
+- lemma: складений дієслівний присудок
+  translation: compound verbal predicate
   pos: phrase
-  usage: Складений присудок має допоміжну та основну частини.
+  usage: Складений дієслівний присудок часто має модальне або фазове слово й інфінітив.
+- lemma: складений іменний присудок
+  translation: compound nominal predicate
+  pos: phrase
+  usage: Складений іменний присудок поєднує зв'язку з іменною частиною.
+- lemma: другорядний член речення
+  translation: secondary sentence member
+  pos: phrase
+  usage: Другорядний член речення пояснює основу або інший член речення.
+- lemma: означення
+  translation: attribute
+  pos: noun
+  usage: Означення називає ознаку предмета.
+- lemma: додаток
+  translation: object
+  pos: noun
+  usage: Додаток називає предмет дії або адресата дії.
+- lemma: обставина
+  translation: adverbial modifier
+  pos: noun
+  usage: Обставина уточнює місце, час, причину, умову або спосіб дії.
 - lemma: односкладне речення
   translation: one-member sentence
   pos: phrase
-  usage: Односкладне речення має один головний член.
+  usage: Односкладне речення має один головний член, але залишається змістовно повним.
 - lemma: двоскладне речення
   translation: two-member sentence
   pos: phrase
   usage: Двоскладне речення має підмет і присудок.
-- lemma: однорідні члени
-  translation: homogeneous members
+- lemma: неозначено-особове речення
+  translation: indefinite-personal sentence
   pos: phrase
-  usage: Однорідні члени виконують однакову синтаксичну роль.
+  usage: Неозначено-особове речення не називає діяча прямо.
+- lemma: безособове речення
+  translation: impersonal sentence
+  pos: phrase
+  usage: Безособове речення часто передає стан природи або людини.
+- lemma: називне речення
+  translation: nominative sentence
+  pos: phrase
+  usage: Називне речення називає предмет або ситуацію без присудка.
+- lemma: однорідний член
+  translation: homogeneous member
+  pos: phrase
+  usage: Однорідні члени мають спільну синтаксичну роль.
 - lemma: узагальнювальне слово
   translation: generalizing word
   pos: phrase
-  usage: Узагальнювальне слово охоплює весь однорідний ряд.
-- lemma: відокремлений член
-  translation: detached member
+  usage: Узагальнювальне слово може вимагати двокрапки або тире біля однорідного ряду.
+- lemma: відокремлене означення
+  translation: detached attribute
   pos: phrase
-  usage: Відокремлений член виділяється інтонаційно й пунктуаційно.
+  usage: Відокремлене означення після іменника зазвичай виділяється комами.
+- lemma: відокремлена обставина
+  translation: detached adverbial modifier
+  pos: phrase
+  usage: Відокремлена обставина додає тло або причину дії.
 - lemma: уточнювальний член
-  translation: clarifying member
+  translation: specifying member
   pos: phrase
-  usage: Уточнювальний член звужує попереднє значення.
+  usage: Уточнювальний член звужує значення місця, часу або іншої ознаки.
 - lemma: вставне слово
   translation: parenthetical word
   pos: phrase
-  usage: Вставне слово показує ставлення мовця до повідомлення.
-- lemma: синтаксичний розбір
-  translation: syntactic analysis
+  usage: Вставне слово передає ставлення мовця й не є членом речення.
+- lemma: дієприкметниковий зворот
+  translation: participial phrase
   pos: phrase
-  usage: Синтаксичний розбір починається з граматичної основи.
+  usage: Дієприкметниковий зворот після означуваного слова часто відокремлюється.
+- lemma: підрядне означальне речення
+  translation: relative clause
+  pos: phrase
+  usage: Підрядне означальне речення може замінити ненормативний дієприкметниковий зворот.
 - lemma: пунктуаційна норма
   translation: punctuation norm
   pos: phrase
-  usage: Пунктуаційна норма має спиратися на синтаксичну будову.
-- lemma: редагування
-  translation: editing
-  pos: noun
-  usage: Редагування речення починається з діагностики структури.
-- lemma: цілісність
-  translation: coherence
-  pos: noun
-  usage: Цілісність тексту залежить від ясних синтаксичних зв'язків.
-- lemma: синтаксична модель
-  translation: syntactic model
+  usage: Пунктуаційна норма спирається на синтаксичну будову речення.
+- lemma: редакторська правка
+  translation: editorial correction
   pos: phrase
-  usage: Синтаксична модель допомагає уникати кальок.
+  usage: Редакторська правка має пояснювати, яка синтаксична помилка виправлена.
