@@ -1,19 +1,19 @@
 - lemma: побут
   translation: "daily life, household life"
   pos: noun
-  usage: "Побут складається з дрібних рішень, які впливають на спокій удома."
+  usage: "Побут складається з дрібних справ і домовленостей."
 - lemma: домогосподарство
-  translation: "household, domestic economy"
+  translation: "household"
   pos: noun
-  usage: "Ведення домогосподарства потребує часу, грошей і чітких домовленостей."
+  usage: "Ведення домогосподарства потребує часу й планування."
 - lemma: розпорядок
-  translation: "routine, schedule"
+  translation: "schedule, routine"
   pos: noun
-  usage: "Розпорядок змінюється, якщо графік відключень переносить прання на вечір."
+  usage: "Розпорядок змінюється, якщо графік відключень переносить прання."
 - lemma: рутина
   translation: "routine"
   pos: noun
-  usage: "Добре організована рутина зменшує кількість дрібних ранкових рішень."
+  usage: "Стабільна рутина зменшує кількість дрібних рішень."
 - lemma: звичка
   translation: "habit"
   pos: noun
@@ -21,200 +21,200 @@
 - lemma: щоранку
   translation: "every morning"
   pos: adv
-  usage: "Щоранку ми провітрюємо кімнату й перевіряємо повідомлення будинку."
+  usage: "Щоранку ми провітрюємо кімнату."
+- lemma: щовечора
+  translation: "every evening"
+  pos: adv
+  usage: "Щовечора перевіряємо, чи заряджені павербанки."
 - lemma: зрідка
   translation: "rarely, seldom"
   pos: adv
-  usage: "Зрідка ми замовляємо клінінг після ремонту."
+  usage: "Зрідка ми замовляємо доставку."
 - lemma: прибирання
   translation: "cleaning"
   pos: noun
-  usage: "Прибирання спільної кухні краще розподілити за графіком."
+  usage: "Генеральне прибирання робимо раз на місяць."
 - lemma: прання
   translation: "laundry, washing"
   pos: noun
-  usage: "Прання перенесли на вечір, бо вдень не було електрики."
+  usage: "Прання перенесли на вечір через відключення."
 - lemma: прасування
   translation: "ironing"
   pos: noun
-  usage: "Прасування сорочок на тиждень економить час уранці."
+  usage: "Прасування сорочок краще планувати заздалегідь."
 - lemma: прасувати
   translation: "to iron"
   pos: verb
-  usage: "Я не прасую речі вранці, якщо знаю, що світло вимкнуть о восьмій."
+  usage: "Коли я прасував сорочки, світло вимкнулося."
+- lemma: готування
+  translation: "cooking"
+  pos: noun
+  usage: "Готування вечері теж є частиною побутового навантаження."
 - lemma: пилосос
   translation: "vacuum cleaner"
   pos: noun
-  usage: "Пилосос не варто вмикати рано, якщо сусід після нічної зміни спить."
+  usage: "Пилосос треба очистити після ремонту."
 - lemma: посудомийка
   translation: "dishwasher"
   pos: noun
-  usage: "Посудомийка зупинилася на середині програми, тому ми написали майстру."
+  usage: "Посудомийка зупиняється на середині програми."
 - lemma: побутова техніка
   translation: "household appliances"
   pos: phrase
-  usage: "Побутова техніка полегшує життя, але потребує догляду й ремонту."
+  usage: "Побутова техніка потребує регулярного догляду."
 - lemma: фільтр
   translation: "filter"
   pos: noun
-  usage: "Перед викликом майстра ми почистили фільтр посудомийки."
-- lemma: гарантія
-  translation: "warranty"
-  pos: noun
-  usage: "Перевіривши гарантію, ми подали заявку до сервісного центру."
+  usage: "Фільтр очищено перед зверненням до сервісу."
+- lemma: сервісний центр
+  translation: "service center"
+  pos: phrase
+  usage: "Сервісний центр підтвердив візит майстра."
 - lemma: заявка
   translation: "service request, application"
   pos: noun
   usage: "Номер заявки треба зберегти до завершення ремонту."
 - lemma: майстер
-  translation: "repair technician, tradesperson"
+  translation: "repair technician"
   pos: noun
-  usage: "Майстер попросив фото поломки й точну модель техніки."
-- lemma: сервісний центр
-  translation: "service center"
-  pos: phrase
-  usage: "Сервісний центр підтвердив візит майстра повідомленням."
+  usage: "Майстер попросив фото поломки."
+- lemma: гарантія
+  translation: "warranty"
+  pos: noun
+  usage: "Перевірмо гарантію перед оплатою ремонту."
+- lemma: симптом
+  translation: "symptom"
+  pos: noun
+  usage: "У повідомленні треба назвати симптом проблеми."
+- lemma: наслідок
+  translation: "consequence"
+  pos: noun
+  usage: "У скарзі важливо пояснити наслідок проблеми."
 - lemma: коректна скарга
   translation: "proper complaint"
   pos: phrase
   usage: "Коректна скарга називає факт, наслідок, прохання і термін."
-- lemma: наслідок
-  translation: "consequence"
-  pos: noun
-  usage: "У скарзі важливо пояснити наслідок проблеми, а не лише емоцію."
 - lemma: домовленість
   translation: "agreement, arrangement"
   pos: noun
-  usage: "Домовленість про чергування зменшує побутові конфлікти."
+  usage: "Домовленість про чергування зменшує конфлікти."
 - lemma: чергування
   translation: "rotation, taking turns"
   pos: noun
-  usage: "Чергування на кухні переглядають після тижня спроби."
+  usage: "Чергування на кухні переглядають щотижня."
 - lemma: розподіл обов'язків
   translation: "division of responsibilities"
   pos: phrase
-  usage: "Розподіл обов'язків має враховувати і видиму, і невидиму працю."
+  usage: "Розподіл обов'язків має враховувати реальне навантаження."
 - lemma: невидима праця
   translation: "invisible labor"
   pos: phrase
-  usage: "Невидима праця охоплює планування покупок, контроль запасів і комунікацію."
-- lemma: співмешканець
-  translation: "housemate"
-  pos: noun
-  usage: "Співмешканець попередив, що повернеться після опівночі."
-- lemma: спільний простір
-  translation: "shared space"
-  pos: phrase
-  usage: "Спільний простір потребує правил, інакше дрібниці швидко стають конфліктами."
-- lemma: особисті межі
-  translation: "personal boundaries"
-  pos: phrase
-  usage: "Гостинність не скасовує особисті межі гостей і співмешканців."
-- lemma: ввічливе прохання
-  translation: "polite request"
-  pos: phrase
-  usage: "Ввічливе прохання називає дію, час і причину."
-- lemma: побутовий конфлікт
-  translation: "household conflict"
-  pos: phrase
-  usage: "Побутовий конфлікт легше розв'язати, якщо говорити про факти."
-- lemma: мати рацію
-  translation: "to be right, to have a point"
-  pos: phrase
-  usage: "Маєш рацію, доставку треба додати до спільних витрат."
-- lemma: будь-який
-  translation: "any"
-  pos: pron
-  usage: "Будь-який графік треба переглянути, якщо він не працює."
-- lemma: довкілля
-  translation: "environment"
-  pos: noun
-  usage: "Довкілля починається з побутових звичок: сортування, економії води, повторного використання."
-- lemma: сортування
-  translation: "sorting, recycling separation"
-  pos: noun
-  usage: "Сортування сміття має бути зручним, інакше домовленість швидко зникає."
-- lemma: відключення
-  translation: "power outage, cutoff"
-  pos: noun
-  usage: "Відключення змінило ранковий розпорядок усієї квартири."
-- lemma: графік відключень
-  translation: "power outage schedule"
-  pos: phrase
-  usage: "Графік відключень перевіряють заздалегідь, але він може змінитися."
-- lemma: павербанк
-  translation: "power bank"
-  pos: noun
-  usage: "Павербанк зарядили ще вдень, бо ввечері очікували відключення."
-- lemma: генератор
-  translation: "generator"
-  pos: noun
-  usage: "Генератор допомагає під час відключення, але створює шум і питання безпеки."
-- lemma: запас
-  translation: "supply, reserve"
-  pos: noun
-  usage: "Запас води не означає паніку, якщо це частина спокійного планування."
-- lemma: взаємодопомога
-  translation: "mutual aid"
-  pos: noun
-  usage: "Сусідська взаємодопомога часто складається з малих повторюваних дій."
-- lemma: доставка
-  translation: "delivery"
-  pos: noun
-  usage: "Доставку внесли в таблицю витрат лише ввечері."
-- lemma: онлайн-оплата
-  translation: "online payment"
-  pos: noun
-  usage: "Онлайн-оплата зручна, якщо інтернет працює стабільно."
-- lemma: рахунок
-  translation: "bill, invoice"
-  pos: noun
-  usage: "Рахунок за воду сплачено, але суму треба перевірити."
-- lemma: витрати
-  translation: "expenses"
-  pos: noun
-  usage: "Спільні витрати записують одразу, щоб не сперечатися наприкінці місяця."
-- lemma: заощаджувати
-  translation: "to save, economize"
-  pos: verb
-  usage: "Планування закупівель допомагає заощаджувати без постійних заборон."
-- lemma: планування
-  translation: "planning"
-  pos: noun
-  usage: "Планування побуту включає графік, запаси, платежі й час на відпочинок."
-- lemma: нагадування
-  translation: "reminder"
-  pos: noun
-  usage: "Нагадування в телефоні рятує графік чергування від забування."
-- lemma: гостинність
-  translation: "hospitality"
-  pos: noun
-  usage: "Сучасна гостинність поєднує щедрість і повагу до меж."
-- lemma: ґендерна роль
-  translation: "gender role"
-  pos: phrase
-  usage: "Ґендерна роль не повинна автоматично визначати, хто пере й готує."
-- lemma: стереотип
-  translation: "stereotype"
-  pos: noun
-  usage: "Стереотипи в побуті часто приховуються за словами 'так завжди було'."
+  usage: "Планування покупок теж є невидимою працею."
 - lemma: навантаження
   translation: "workload, burden"
   pos: noun
-  usage: "Побутове навантаження треба зробити видимим перед розподілом справ."
-- lemma: домовмося
-  translation: "let us agree, let's agree"
+  usage: "Побутове навантаження треба зробити видимим."
+- lemma: співмешканець
+  translation: "roommate, co-resident"
+  pos: noun
+  usage: "Співмешканець відповідає за кухню цього тижня."
+- lemma: спільний простір
+  translation: "shared space"
   pos: phrase
+  usage: "Коридор і кухня є спільним простором."
+- lemma: особисті межі
+  translation: "personal boundaries"
+  pos: phrase
+  usage: "Особисті межі треба обговорити до конфлікту."
+- lemma: спільний бюджет
+  translation: "shared budget"
+  pos: phrase
+  usage: "Витрати за доставку записують у спільний бюджет."
+- lemma: витрати
+  translation: "expenses"
+  pos: noun
+  usage: "Витрати за доставку внесено до таблиці."
+- lemma: доставка
+  translation: "delivery"
+  pos: noun
+  usage: "Доставку продуктів замовили після роботи."
+- lemma: запас
+  translation: "supply, reserve"
+  pos: noun
+  usage: "Запас води не означає паніку, якщо це частина планування."
+- lemma: графік відключень
+  translation: "power outage schedule"
+  pos: phrase
+  usage: "Графік відключень перевіряють заздалегідь."
+- lemma: відключення
+  translation: "power outage, cutoff"
+  pos: noun
+  usage: "Відключення змінило ранковий розпорядок."
+- lemma: павербанк
+  translation: "power bank"
+  pos: noun
+  usage: "Павербанк зарядили ще вдень."
+- lemma: генератор
+  translation: "generator"
+  pos: noun
+  usage: "Генератор допомагає під час відключення, але створює шум."
+- lemma: шум
+  translation: "noise"
+  pos: noun
+  usage: "Шум після десятої заважає сусідам."
+- lemma: чат будинку
+  translation: "building chat"
+  pos: phrase
+  usage: "У чаті будинку попередили про ремонт."
+- lemma: під'їзд
+  translation: "apartment building entrance"
+  pos: noun
+  usage: "У під'їзді перевірять аварійне освітлення."
+- lemma: сусід
+  translation: "neighbor"
+  pos: noun
+  usage: "Сусід попросив не вмикати музику після десятої."
+- lemma: взаємодопомога
+  translation: "mutual aid"
+  pos: noun
+  usage: "Сусідська взаємодопомога стала нормою під час війни."
+- lemma: довкілля
+  translation: "environment"
+  pos: noun
+  usage: "Довкілля починається з побутових звичок."
+- lemma: сортування
+  translation: "sorting, recycling separation"
+  pos: noun
+  usage: "Сортування сміття має бути зручним."
+- lemma: повторне використання
+  translation: "reuse"
+  pos: phrase
+  usage: "Повторне використання речей зменшує кількість сміття."
+- lemma: домовмося
+  translation: "let us agree"
+  pos: other
   usage: "Домовмося перевіряти витрати щонеділі."
 - lemma: приберімо
-  translation: "let us clean, let's clean"
-  pos: phrase
-  usage: "Приберімо кухню після вечері, щоб зранку не починати день із безладу."
+  translation: "let us clean"
+  pos: other
+  usage: "Приберімо кухню після вечері."
 - lemma: перевірмо
-  translation: "let us check, let's check"
-  pos: phrase
-  usage: "Перевірмо гарантію, перш ніж оплачувати ремонт."
+  translation: "let us check"
+  pos: other
+  usage: "Перевірмо таблицю витрат разом."
 - lemma: будьмо уважні
-  translation: "let us be attentive"
+  translation: "let us be considerate"
   pos: phrase
-  usage: "Будьмо уважні до сусідів, у яких малі діти або нічні зміни."
+  usage: "Будьмо уважні до сусідів після десятої."
+- lemma: факт
+  translation: "fact"
+  pos: noun
+  usage: "Добре повідомлення починається з факту."
+- lemma: прохання
+  translation: "request"
+  pos: noun
+  usage: "Прохання має бути конкретним і ввічливим."
+- lemma: часовий маркер
+  translation: "time marker"
+  pos: phrase
+  usage: "Часовий маркер показує, чи дія є звичкою або винятком."

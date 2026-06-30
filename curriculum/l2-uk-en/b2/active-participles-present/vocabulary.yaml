@@ -1,23 +1,23 @@
 - lemma: активний дієприкметник
   translation: "active participle"
   pos: phrase
-  usage: "Активний дієприкметник теперішнього часу в українській мові потребує дуже обережного редагування."
+  usage: "Активний дієприкметник теперішнього часу потребує обережного редагування."
 - lemma: теперішній час
   translation: "present tense"
   pos: phrase
-  usage: "Форма теперішнього часу допомагає зрозуміти, звідки береться суфікс."
+  usage: "Форма теперішнього часу допомагає впізнати суфікс."
 - lemma: суфікс
   translation: "suffix"
   pos: noun
-  usage: "Суфікс може підказати походження форми, але не гарантує її нормативності."
+  usage: "Суфікс підказує форму, але не гарантує нормативності."
 - lemma: лексикалізований
   translation: "lexicalized"
   pos: adj
-  usage: "Лексикалізований прикметник називає сталу властивість, а не дію в момент мовлення."
+  usage: "Лексикалізований прикметник називає сталу властивість."
 - lemma: стала ознака
   translation: "stable feature"
   pos: phrase
-  usage: "Форма родючий передає сталу ознаку ґрунту."
+  usage: "Родючий передає сталу ознаку ґрунту."
 - lemma: тимчасова дія
   translation: "temporary action"
   pos: phrase
@@ -25,59 +25,55 @@
 - lemma: підрядне означальне речення
   translation: "relative clause"
   pos: phrase
-  usage: "Підрядне означальне речення природно замінює кальковану форму працюючий."
-- lemma: віддієслівний прикметник
-  translation: "deverbal adjective"
-  pos: phrase
-  usage: "Віддієслівний прикметник зволожувальний називає призначення крему."
-- lemma: іменник діяча
-  translation: "agent noun"
-  pos: phrase
-  usage: "Іменник діяча користувач звучить природніше, ніж користуючийся."
-- lemma: зворотне дієслово
-  translation: "reflexive verb"
-  pos: phrase
-  usage: "Від зворотного дієслова на -ся не творять активних дієприкметників."
+  usage: "Підрядне означальне речення природно замінює калькований дієприкметник."
+- lemma: калька
+  translation: "calque"
+  pos: noun
+  usage: "Бажаючі в оголошенні часто звучить як калька."
 - lemma: калькування
   translation: "calquing"
   pos: noun
-  usage: "Калькування часто приносить у текст форми на -учий, не властиві українській нормі."
-- lemma: інтерференція
-  translation: "interference"
-  pos: noun
-  usage: "Міжмовна інтерференція посилює спокусу писати діючий закон."
+  usage: "Калькування переносить чужу граматичну модель у текст."
 - lemma: відповідник
   translation: "equivalent"
   pos: noun
-  usage: "У природоохоронному тексті слово довкілля часто точніше за кальковану назву середовища."
+  usage: "Охочі є природним відповідником для бажаючі."
+- lemma: інтерференція
+  translation: "interference"
+  pos: noun
+  usage: "Мовна інтерференція часто породжує діючий закон."
 - lemma: доречність
   translation: "appropriateness"
   pos: noun
-  usage: "Доречність форми залежить від значення, стилю і контексту."
+  usage: "Доречність форми залежить від жанру й значення."
 - lemma: мовна стійкість
-  translation: "language resilience"
+  translation: "linguistic resilience"
   pos: phrase
   usage: "Мовна стійкість починається з уважного редагування кальок."
 - lemma: мовний слух
   translation: "linguistic intuition"
   pos: phrase
-  usage: "Мовний слух допомагає відчути, що працюючий студент звучить неприродно."
+  usage: "Мовний слух допомагає відчути неприродність форми."
 - lemma: канцелярщина
   translation: "bureaucratic jargon"
   pos: noun
-  usage: "Канцелярщина часто маскує просту думку під важкою калькованою формою."
+  usage: "Канцелярщина часто маскує просту думку під калькованою формою."
 - lemma: редагування
   translation: "editing"
   pos: noun
-  usage: "Редагування активних дієприкметників вимагає вибору між кількома стратегіями."
+  usage: "Редагування активних дієприкметників вимагає кількох стратегій."
 - lemma: охочі
   translation: "willing participants, volunteers"
   pos: noun
-  usage: "Усі охочі можуть долучитися до обговорення."
+  usage: "Усі охочі можуть долучитися до толоки."
 - lemma: довкілля
   translation: "environment"
   pos: noun
-  usage: "Захист довкілля потребує точних слів і відповідальної політики."
+  usage: "Захист довкілля потребує точних слів."
+- lemma: навколишній
+  translation: "surrounding, nearby"
+  pos: adj
+  usage: "Навколишній простір має бути безпечним."
 - lemma: прилеглий
   translation: "adjacent"
   pos: adj
@@ -85,71 +81,75 @@
 - lemma: зворушливий
   translation: "moving, touching"
   pos: adj
-  usage: "Зворушливий виступ волонтерки запам'ятався всій аудиторії."
+  usage: "Зворушливий виступ запам'ятався аудиторії."
 - lemma: панівний
   translation: "dominant, prevailing"
   pos: adj
-  usage: "Панівний підхід до редагування змінився після мовної дискусії."
+  usage: "Панівний підхід до редагування змінився."
 - lemma: чинний
   translation: "valid, in force"
   pos: adj
-  usage: "Чинний закон визначає процедуру подання заяви."
-- lemma: навколишній
-  translation: "surrounding"
-  pos: adj
-  usage: "Навколишні громади підтримали екологічну ініціативу."
+  usage: "Чинний договір доступний у кабінеті."
 - lemma: наступний
   translation: "next"
   pos: adj
-  usage: "У наступному розділі автор пояснює винятки."
-- lemma: прийдешній
-  translation: "upcoming, forthcoming"
+  usage: "Наступний розділ пояснює стратегії заміни."
+- lemma: наявний
+  translation: "available, existing"
   pos: adj
-  usage: "Прийдешні свята планують відзначити в громаді."
+  usage: "Наявні дані треба перевірити перед публікацією."
+- lemma: усталений
+  translation: "established"
+  pos: adj
+  usage: "Усталені правила не завжди збігаються з калькованим перекладом."
 - lemma: мийний
-  translation: "cleaning, washing"
+  translation: "washing, cleaning"
   pos: adj
-  usage: "Мийні засоби зберігають окремо від харчових продуктів."
+  usage: "Мийний засіб стоїть під раковиною."
 - lemma: зволожувальний
   translation: "moisturizing"
   pos: adj
-  usage: "Зволожувальний крем не варто називати зволожуючим."
+  usage: "Зволожувальний крем має інше значення, ніж зволожуючий як механічна форма."
 - lemma: знеболювальний
   translation: "pain-relieving"
   pos: adj
-  usage: "Лікар порадив знеболювальні ліки після процедури."
-- lemma: завідувач
-  translation: "head, manager"
-  pos: noun
-  usage: "Завідувач кафедри підписав оновлений графік."
+  usage: "Лікар порадив знеболювальні ліки."
 - lemma: користувач
   translation: "user"
   pos: noun
-  usage: "Користувач сервісу отримує повідомлення про зміни."
+  usage: "Користувач застосунку має оновити пароль."
+- lemma: працівник
+  translation: "employee, worker"
+  pos: noun
+  usage: "Працівники офісу підписали новий графік."
 - lemma: протестувальник
   translation: "protester"
   pos: noun
-  usage: "Протестувальники вимагали прозорого рішення."
-- lemma: початківець
-  translation: "beginner"
+  usage: "Протестувальники зібралися біля будівлі ради."
+- lemma: автор-початківець
+  translation: "beginner author"
   pos: noun
   usage: "Автор-початківець часто копіює чужі граматичні моделі."
 - lemma: родючий
   translation: "fertile"
   pos: adj
-  usage: "Родючий ґрунт є прикладом лексикалізованого прикметника."
+  usage: "Родючий ґрунт є лексикалізованим прикметником."
 - lemma: співучий
   translation: "melodious, songful"
   pos: adj
-  usage: "Співучий голос описує сталу якість, а не дію співу в цю мить."
+  usage: "Співучий голос описує сталу якість."
 - lemma: цілющий
   translation: "healing"
   pos: adj
-  usage: "Цілюща вода вживається як прикметникова сполука."
+  usage: "Цілюща вода має усталене прикметникове значення."
 - lemma: терплячий
   translation: "patient"
   pos: adj
   usage: "Терпляча людина має сталу рису характеру."
+- lemma: лежачий
+  translation: "lying, bedridden"
+  pos: adj
+  usage: "Лежачий хворий може бути усталеним медичним описом."
 - lemma: квітучий
   translation: "flourishing, blooming"
   pos: adj
@@ -157,4 +157,24 @@
 - lemma: робоча група
   translation: "working group"
   pos: phrase
-  usage: "Робоча група звучить природніше, ніж працююча група."
+  usage: "Робоча група природніше за працююча група."
+- lemma: місця для сидіння
+  translation: "seating places"
+  pos: phrase
+  usage: "Місця для сидіння замінюють кальковане сидячі місця."
+- lemma: засіб для чищення
+  translation: "cleaning product"
+  pos: phrase
+  usage: "Засіб для чищення є природною іменниковою сполукою."
+- lemma: підрядне речення
+  translation: "subordinate clause"
+  pos: phrase
+  usage: "Підрядне речення часто рятує від калькованого дієприкметника."
+- lemma: призначення
+  translation: "purpose, function"
+  pos: noun
+  usage: "Призначення предмета передають прикметником або сполукою з для."
+- lemma: точний прикметник
+  translation: "precise adjective"
+  pos: phrase
+  usage: "Точний прикметник замінює механічну форму на -учий."
