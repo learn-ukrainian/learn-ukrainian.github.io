@@ -1,7 +1,7 @@
 - lemma: трансформація
   translation: transformation
   pos: noun
-  usage: Трансформація зберігає зміст лише тоді, коли не змінює час і вид.
+  usage: Трансформація має зберігати час, вид і фокус.
 - lemma: еквівалентність
   translation: equivalence
   pos: noun
@@ -9,39 +9,39 @@
 - lemma: відокремлене означення
   translation: detached attribute
   pos: phrase
-  usage: Відокремлене означення після іменника виділяється комами.
+  usage: Відокремлене означення потребує пунктуаційної уваги.
 - lemma: підрядний зв'язок
-  translation: subordinate connection
+  translation: subordination
   pos: phrase
-  usage: Підрядний зв'язок показує залежність однієї частини від іншої.
+  usage: Підрядний зв'язок розгортає дію через особову форму дієслова.
 - lemma: сполучне слово
   translation: relative connector
   pos: phrase
-  usage: Сполучне слово має синтаксичну роль у підрядній частині.
+  usage: Сполучне слово виконує роль у підрядній частині.
 - lemma: стилістичне забарвлення
   translation: stylistic coloring
   pos: phrase
-  usage: Стилістичне забарвлення змінюється після трансформації.
+  usage: Стилістичне забарвлення змінюється після заміни конструкції.
 - lemma: синтаксична конструкція
   translation: syntactic construction
   pos: phrase
-  usage: Синтаксична конструкція впливає на темп речення.
+  usage: Синтаксична конструкція має власну вагу в абзаці.
 - lemma: лаконічність
   translation: conciseness
   pos: noun
-  usage: Лаконічність корисна в офіційному документі.
+  usage: Лаконічність не повинна приховувати виконавця.
 - lemma: чергування
   translation: alternation
   pos: noun
-  usage: Чергування конструкцій зменшує монотонність.
+  usage: Чергування моделей допомагає уникнути монотонності.
 - lemma: монотонність
   translation: monotony
   pos: noun
-  usage: Монотонність виникає від надміру однакових конструкцій.
+  usage: Монотонність виникає через надмірне повторення який.
 - lemma: ритмомелодика
-  translation: rhythmic and melodic pattern
+  translation: rhythm and melody
   pos: noun
-  usage: Ритмомелодика фрази залежить від пауз і ком.
+  usage: Ритмомелодика абзацу змінюється після редагування.
 - lemma: когнітивний
   translation: cognitive
   pos: adj
@@ -49,15 +49,11 @@
 - lemma: сприйняття
   translation: perception
   pos: noun
-  usage: Сприйняття тексту погіршується через нанизування підрядних частин.
+  usage: Сприйняття тексту залежить від довжини звороту.
 - lemma: номіналізація
   translation: nominalization
   pos: noun
-  usage: Номіналізація часто потрібна в науковому стилі.
-- lemma: ритміка
-  translation: rhythm
-  pos: noun
-  usage: Ритміка абзацу змінюється після заміни конструкції.
+  usage: Номіналізація може замінити неприродний дієприкметник.
 - lemma: функціональний стиль
   translation: functional style
   pos: phrase
@@ -65,11 +61,11 @@
 - lemma: модальність
   translation: modality
   pos: noun
-  usage: Модальність може зникнути після механічного скорочення.
+  usage: Модальність зникає після механічного стискання.
 - lemma: семантична втрата
   translation: semantic loss
   pos: phrase
-  usage: Семантична втрата виникає, коли дія стає нечіткою.
+  usage: Семантична втрата виникає, коли дію перетворюють на нечітку ознаку.
 - lemma: редакторська правка
   translation: editorial revision
   pos: phrase
@@ -77,59 +73,31 @@
 - lemma: логіка викладу
   translation: logic of presentation
   pos: phrase
-  usage: Логіка викладу важливіша за механічну стислість.
-- lemma: нанизування
-  translation: stringing together
+  usage: Логіка викладу важливіша за механічне скорочення.
+- lemma: пунктуація
+  translation: punctuation
   pos: noun
-  usage: Нанизування підрядних частин робить речення важким.
+  usage: Пунктуація показує межі звороту або підрядної частини.
+- lemma: кома
+  translation: comma
+  pos: noun
+  usage: Кома відокремлює підрядне означальне речення.
+- lemma: діяч
+  translation: agent, doer
+  pos: noun
+  usage: Якщо діяч важливий, підрядне речення часто ясніше.
+- lemma: додаток
+  translation: object
+  pos: noun
+  usage: Додаток ускладнює механічне стискання.
 - lemma: означуване слово
   translation: modified word
   pos: phrase
-  usage: Означуване слово керує змістом усього звороту.
-- lemma: особова форма
-  translation: finite personal form
-  pos: phrase
-  usage: Особова форма дієслова з'являється в підрядній частині.
-- lemma: підрядна частина
-  translation: subordinate clause
-  pos: phrase
-  usage: Підрядна частина має власний присудок.
-- lemma: головна частина
-  translation: main clause
-  pos: phrase
-  usage: Головна частина містить означуване слово.
-- lemma: синтаксична роль
-  translation: syntactic role
-  pos: phrase
-  usage: Синтаксична роль визначає відмінок сполучного слова.
-- lemma: семантика
-  translation: semantics
-  pos: noun
-  usage: Семантика речення не завжди зберігається після скорочення.
-- lemma: морфологічний
-  translation: morphological
-  pos: adj
-  usage: Морфологічний спосіб вираження відрізняє зворот від підрядної частини.
-- lemma: вираження
-  translation: expression
-  pos: noun
-  usage: Вираження ознаки може бути стислим або розгорнутим.
-- lemma: дієслово
-  translation: verb
-  pos: noun
-  usage: Дієслово в підрядній частині показує дію прямо.
-- lemma: іменник
-  translation: noun
-  pos: noun
-  usage: Іменник може бути означуваним словом.
+  usage: Означуване слово треба знайти перед трансформацією.
 - lemma: прикметник
   translation: adjective
   pos: noun
-  usage: Прикметник іноді замінює неприродний дієприкметник.
-- lemma: займенник
-  translation: pronoun
-  pos: noun
-  usage: Займенник не дублює сполучне слово.
+  usage: Прикметник іноді є кращою лексичною заміною.
 - lemma: підмет
   translation: subject
   pos: noun
@@ -137,44 +105,16 @@
 - lemma: присудок
   translation: predicate
   pos: noun
-  usage: Підрядна частина має присудок.
-- lemma: пунктуація
-  translation: punctuation
-  pos: noun
-  usage: Пунктуація показує межі відокремленого означення.
-- lemma: кома
-  translation: comma
-  pos: noun
-  usage: Кома відокремлює підрядну означальну частину.
-- lemma: пауза
-  translation: pause
-  pos: noun
-  usage: Пауза допомагає почути межі конструкції.
-- lemma: оптимізація
-  translation: optimization
-  pos: noun
-  usage: Оптимізація тексту не зводиться до скорочення.
+  usage: Підрядна частина має власний присудок.
 - lemma: однозначність
   translation: unambiguity
   pos: noun
-  usage: Однозначність особливо важлива в договорі.
-- lemma: договір
-  translation: contract
-  pos: noun
-  usage: Договір часто використовує лаконічні звороти.
-- lemma: послуга
-  translation: service
-  pos: noun
-  usage: Послуги, зазначені в договорі, мають чіткий строк.
-- lemma: обставина
-  translation: circumstance
-  pos: noun
-  usage: Викладені обставини належать до офіційного стилю.
-- lemma: термін
-  translation: term; deadline
-  pos: noun
-  usage: Зазначені терміни мають бути однозначними.
-- lemma: сторона
-  translation: party; side
-  pos: noun
-  usage: Сторона, що підписала договір, бере відповідальність.
+  usage: Однозначність важливіша за короткість.
+- lemma: чинний
+  translation: valid, in force
+  pos: adj
+  usage: Чинні правила є лексичною заміною для кальки діючі правила.
+- lemma: охочий
+  translation: willing
+  pos: adj
+  usage: Охочі долучитися можуть подати заявку.

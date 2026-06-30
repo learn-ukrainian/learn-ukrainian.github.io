@@ -1,123 +1,71 @@
-- lemma: здоров'я
-  translation: health
-  pos: noun
-  usage: Здоров'я потребує щоденної уваги.
-- lemma: лікар
-  translation: doctor
-  pos: noun
-  usage: Сімейний лікар дав направлення.
 - lemma: симптом
   translation: symptom
   pos: noun
-  usage: Перший симптом з'явився вранці.
-- lemma: діагноз
-  translation: diagnosis
-  pos: noun
-  usage: Лікар поставив діагноз після обстеження.
-- lemma: рецепт
-  translation: prescription
-  pos: noun
-  usage: Ліки продаються лише за рецептом.
-- lemma: щеплення
-  translation: vaccination
-  pos: noun
-  usage: Щеплення від грипу роблять восени.
-- lemma: профілактика
-  translation: prevention
-  pos: noun
-  usage: Профілактика зменшує ризик хвороби.
-- lemma: медицина
-  translation: medicine
-  pos: noun
-  usage: Доказова медицина спирається на дані.
+  usage: Симптом треба описати з часом і силою.
 - lemma: скарга
   translation: complaint
   pos: noun
-  usage: Основна скарга пацієнта — біль у спині.
-- lemma: обстеження
-  translation: examination, checkup
+  usage: Основна скарга пацієнта - біль у спині.
+- lemma: діагноз
+  translation: diagnosis
   pos: noun
-  usage: Обстеження призначено на завтра.
-- lemma: дозування
-  translation: dosage
+  usage: Діагноз ставить лікар після обстеження.
+- lemma: рецепт
+  translation: prescription
   pos: noun
-  usage: Дозування залежить від стану пацієнта.
-- lemma: побічний
-  translation: side, adverse
-  pos: adj
-  usage: Побічний ефект треба повідомити лікареві.
-- lemma: поліклініка
-  translation: outpatient clinic
-  pos: noun
-  usage: Я записався до поліклініки на завтра.
-- lemma: страхування
-  translation: insurance
-  pos: noun
-  usage: Медичне страхування покриває консультацію.
-- lemma: запаморочення
-  translation: dizziness
-  pos: noun
-  usage: Після травми було запаморочення.
-- lemma: виснаження
-  translation: exhaustion, burnout
-  pos: noun
-  usage: Емоційне виснаження впливає на здоров'я.
+  usage: Препарат відпускають за рецептом.
 - lemma: направлення
   translation: referral
   pos: noun
-  usage: Для кардіолога потрібне направлення.
-- lemma: декларація
-  translation: declaration with a family doctor
+  usage: Направлення потрібне для консультації спеціаліста.
+- lemma: виписка
+  translation: discharge summary
   pos: noun
-  usage: Декларацію з лікарем можна підписати онлайн.
-- lemma: огляд
-  translation: examination
+  usage: Виписку треба принести на повторний огляд.
+- lemma: обстеження
+  translation: examination, checkup
   pos: noun
-  usage: Профілактичний огляд триває недовго.
-- lemma: діагностика
-  translation: diagnostics
+  usage: Лікар призначив обстеження.
+- lemma: аналіз крові
+  translation: blood test
+  pos: phrase
+  usage: Аналіз крові можна здати вранці.
+- lemma: дозування
+  translation: dosage
   pos: noun
-  usage: Діагностика починається з опису симптомів.
-- lemma: лікування
-  translation: treatment
-  pos: noun
-  usage: Призначене лікування треба завершити.
-- lemma: аналіз
-  translation: test, analysis
-  pos: noun
-  usage: Лікар призначив аналіз крові.
-- lemma: кров
-  translation: blood
-  pos: noun
-  usage: Аналіз крові здали вранці.
-- lemma: рентген
-  translation: X-ray
-  pos: noun
-  usage: Рентген призначили після травми.
-- lemma: УЗД
-  translation: ultrasound
-  pos: noun
-  usage: УЗД допомогло уточнити діагноз.
-- lemma: кардіограма
-  translation: cardiogram
-  pos: noun
-  usage: Кардіограма була в нормі.
-- lemma: показання
-  translation: indication
-  pos: noun
-  usage: Показання описані в інструкції.
+  usage: Дозування зазначено в інструкції.
+- lemma: побічний ефект
+  translation: side effect
+  pos: phrase
+  usage: Побічний ефект треба повідомити лікареві.
 - lemma: протипоказання
   translation: contraindication
   pos: noun
-  usage: Протипоказання треба перевірити до лікування.
-- lemma: терапевт
-  translation: general practitioner, therapist
+  usage: Протипоказання описані в інструкції.
+- lemma: показання
+  translation: indication
   pos: noun
-  usage: Терапевт оглянув пацієнта.
+  usage: Показання пояснюють, коли препарат може бути призначено.
+- lemma: препарат
+  translation: medication
+  pos: noun
+  usage: Препарат треба приймати за призначенням лікаря.
+- lemma: ліки
+  translation: medicine, medication
+  pos: noun
+  usage: Ліки не слід поєднувати без консультації фахівця.
+- lemma: інструкція
+  translation: instruction leaflet
+  pos: noun
+  usage: Інструкція містить дозування й застереження.
+- lemma: терапевт
+  translation: general practitioner
+  pos: noun
+  usage: Пацієнт записався до терапевта.
 - lemma: кардіолог
   translation: cardiologist
   pos: noun
-  usage: Кардіолог пояснив результати.
+  usage: Кардіолог пояснив результати кардіограми.
 - lemma: хірург
   translation: surgeon
   pos: noun
@@ -126,35 +74,47 @@
   translation: patient
   pos: noun
   usage: Пацієнт описав симптоми точно.
-- lemma: препарат
-  translation: medication, drug
+- lemma: поліклініка
+  translation: outpatient clinic
   pos: noun
-  usage: Препарат треба приймати за інструкцією.
-- lemma: ліки
-  translation: medicine, medication
+  usage: Поліклініка відкривається о восьмій.
+- lemma: страхування
+  translation: insurance
   pos: noun
-  usage: Ліки не слід поєднувати без консультації.
-- lemma: інструкція
-  translation: instruction leaflet
+  usage: Страхування може покривати консультацію.
+- lemma: щеплення
+  translation: vaccination
   pos: noun
-  usage: Інструкція містить дозування і протипоказання.
-- lemma: ефект
-  translation: effect
+  usage: Щеплення проводять за графіком.
+- lemma: профілактика
+  translation: prevention
   pos: noun
-  usage: Побічний ефект з'явився після першої дози.
-- lemma: послуга
-  translation: service
+  usage: Профілактика допомагає зменшити ризики.
+- lemma: доказова медицина
+  translation: evidence-based medicine
+  pos: phrase
+  usage: Доказова медицина спирається на перевірені дані.
+- lemma: запаморочення
+  translation: dizziness
   pos: noun
-  usage: Страхування покриває основні послуги.
-- lemma: психолог
-  translation: psychologist
+  usage: Після препарату з'явилося запаморочення.
+- lemma: виснаження
+  translation: exhaustion, burnout
   pos: noun
-  usage: Психолог допомагає працювати зі стресом.
-- lemma: температура
-  translation: temperature, fever
-  pos: noun
-  usage: Температура тримається другий день.
-- lemma: кашель
-  translation: cough
-  pos: noun
-  usage: Кашель посилився ввечері.
+  usage: Виснаження варто описувати нейтрально.
+- lemma: повторний огляд
+  translation: follow-up visit
+  pos: phrase
+  usage: Пацієнт запитав, коли прийти на повторний огляд.
+- lemma: активна речовина
+  translation: active substance
+  pos: phrase
+  usage: Активна речовина зазначена в інструкції.
+- lemma: чинні правила
+  translation: rules in force
+  pos: phrase
+  usage: Чинні правила клініки опубліковано на сайті.
+- lemma: психічне здоров'я
+  translation: mental health
+  pos: phrase
+  usage: Про психічне здоров'я треба говорити без стигматизації.
