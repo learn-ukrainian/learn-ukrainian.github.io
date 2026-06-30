@@ -1,168 +1,160 @@
 - lemma: словосполучення
-  translation: word phrase
+  translation: word combination; phrase
   pos: noun
-  usage: Словосполучення має головне слово.
+  usage: "Словосполучення має головне і залежне слово."
 - lemma: головне слово
   translation: head word
   pos: phrase
-  usage: Головне слово відкриває питання.
+  usage: "Головне слово ставить питання до залежного."
 - lemma: залежне слово
   translation: dependent word
   pos: phrase
-  usage: Залежне слово відповідає на питання.
+  usage: "Залежне слово уточнює головне."
 - lemma: підрядний зв'язок
-  translation: subordinate connection
+  translation: subordinate syntactic link
   pos: phrase
-  usage: Підрядний зв'язок поєднує головне і залежне слово.
+  usage: "Підрядний зв'язок відрізняється від сурядності."
+- lemma: сурядний зв'язок
+  translation: coordinate link
+  pos: phrase
+  usage: "Редактор і автор мають сурядний зв'язок."
+- lemma: граматична основа
+  translation: grammatical base
+  pos: phrase
+  usage: "Підмет і присудок утворюють граматичну основу."
 - lemma: узгодження
   translation: agreement
   pos: noun
-  usage: Узгодження змінює залежне слово разом із головним.
+  usage: "Узгодження змінює залежне слово разом із головним."
 - lemma: керування
   translation: government
   pos: noun
-  usage: Керування вимагає певного відмінка.
+  usage: "Керування вимагає певного відмінка."
 - lemma: прилягання
   translation: adjunction
   pos: noun
-  usage: Прилягання тримається на змісті.
+  usage: "Прилягання поєднує незмінне слово з головним."
 - lemma: сполучуваність
   translation: collocability
   pos: noun
-  usage: Сполучуваність робить мовлення точним.
-- lemma: граматична форма
-  translation: grammatical form
-  pos: phrase
-  usage: Граматична форма залежного слова важлива.
-- lemma: валентність
-  translation: valency
-  pos: noun
-  usage: Валентність дієслова визначає залежну форму.
-- lemma: прийменник
-  translation: preposition
-  pos: noun
-  usage: Прийменник входить у конструкцію.
-- lemma: відмінок
-  translation: case
-  pos: noun
-  usage: Керування вимагає певного відмінка.
-- lemma: ідіома
-  translation: idiom
-  pos: noun
-  usage: Ідіома має твердішу форму.
-- lemma: конструкція
-  translation: construction
-  pos: noun
-  usage: Конструкція має власну логіку.
-- lemma: синтаксична одиниця
-  translation: syntactic unit
-  pos: phrase
-  usage: Словосполучення є синтаксичною одиницею.
-- lemma: синтаксичний центр
-  translation: syntactic center
-  pos: phrase
-  usage: Головне слово є синтаксичним центром.
-- lemma: залежність
-  translation: dependency
-  pos: noun
-  usage: Питання показує залежність.
-- lemma: номінативна функція
-  translation: nominative function
-  pos: phrase
-  usage: Словосполучення має номінативну функцію.
-- lemma: іменник
-  translation: noun
-  pos: noun
-  usage: Іменник часто є головним словом.
-- lemma: прикметник
-  translation: adjective
-  pos: noun
-  usage: Прикметник часто є залежним словом.
-- lemma: числівник
-  translation: numeral
-  pos: noun
-  usage: Числівник може входити в узгодження.
-- lemma: займенник
-  translation: pronoun
-  pos: noun
-  usage: Займенник може узгоджуватися з іменником.
-- lemma: дієслово
-  translation: verb
-  pos: noun
-  usage: Дієслово часто керує залежним словом.
-- lemma: прислівник
-  translation: adverb
-  pos: noun
-  usage: Прислівник часто прилягає до дієслова.
-- lemma: інфінітив
-  translation: infinitive
-  pos: noun
-  usage: Інфінітив може бути залежним словом.
-- lemma: дієприслівник
-  translation: adverbial participle
-  pos: noun
-  usage: Дієприслівник додає обставинне значення.
-- lemma: морфологічне уподібнення
-  translation: morphological assimilation
-  pos: phrase
-  usage: Узгодження має морфологічне уподібнення.
-- lemma: атрибутивний зв'язок
-  translation: attributive connection
-  pos: phrase
-  usage: Атрибутивний зв'язок часто має узгодження.
-- lemma: об'єктний зв'язок
-  translation: object connection
-  pos: phrase
-  usage: Керування часто показує об'єктний зв'язок.
-- lemma: безприйменникове керування
-  translation: prepositionless government
-  pos: phrase
-  usage: Безприйменникове керування не має прийменника.
-- lemma: прийменникове керування
-  translation: prepositional government
-  pos: phrase
-  usage: Прийменникове керування має прийменник.
-- lemma: сильне керування
-  translation: strong government
-  pos: phrase
-  usage: Сильне керування вимагає певної форми.
-- lemma: незмінність
-  translation: invariability
-  pos: noun
-  usage: Незмінність залежного слова показує прилягання.
-- lemma: семантичний зв'язок
-  translation: semantic connection
-  pos: phrase
-  usage: Прилягання має семантичний зв'язок.
-- lemma: обставинне значення
-  translation: adverbial meaning
-  pos: phrase
-  usage: Прислівник додає обставинне значення.
+  usage: "Сполучуваність допомагає вибрати природну конструкцію."
 - lemma: колокація
   translation: collocation
   pos: noun
-  usage: Колокація є природною сполукою слів.
-- lemma: плеоназм
-  translation: pleonasm
+  usage: "Ухвалити рішення - стала колокація."
+- lemma: фразеологізм
+  translation: idiom
   pos: noun
-  usage: Плеоназм може створювати зайву надмірність.
-- lemma: мовна норма
-  translation: language norm
+  usage: "Фразеологізм часто працює як неподільна одиниця."
+- lemma: стійкий вислів
+  translation: fixed expression
   pos: phrase
-  usage: Мовна норма підтримує точність.
-- lemma: давальний відмінок
-  translation: dative case
+  usage: "Стійкий вислів не варто розкладати буквально."
+- lemma: граматична форма
+  translation: grammatical form
   pos: phrase
-  usage: Дякувати керує давальним відмінком.
+  usage: "Граматична форма залежного слова залежить від типу зв'язку."
+- lemma: відмінкова форма
+  translation: case form
+  pos: phrase
+  usage: "Керування відкриває потрібну відмінкову форму."
 - lemma: родовий відмінок
   translation: genitive case
   pos: phrase
-  usage: Потребувати керує родовим відмінком.
+  usage: "Потребувати підтримки вимагає родового відмінка."
+- lemma: давальний відмінок
+  translation: dative case
+  pos: phrase
+  usage: "Дякувати колезі має давальний відмінок."
 - lemma: орудний відмінок
   translation: instrumental case
   pos: phrase
-  usage: Одружитися з нею має орудний відмінок.
-- lemma: знахідний відмінок
-  translation: accusative case
+  usage: "Цікавитися історією має орудний відмінок."
+- lemma: прийменникова конструкція
+  translation: prepositional construction
   pos: phrase
-  usage: Знахідний відмінок часто показує прямий додаток.
+  usage: "Говорити про бюджет має прийменникову конструкцію."
+- lemma: безприйменникове керування
+  translation: prepositionless government
+  pos: phrase
+  usage: "Обговорити бюджет показує безприйменникове керування."
+- lemma: прийменникове керування
+  translation: prepositional government
+  pos: phrase
+  usage: "Говорити про бюджет показує прийменникове керування."
+- lemma: валентність
+  translation: valency
+  pos: noun
+  usage: "Валентність дієслова визначає залежну форму."
+- lemma: синтаксичний центр
+  translation: syntactic center
+  pos: phrase
+  usage: "Синтаксичний центр не завжди стоїть першим."
+- lemma: іменниковий ланцюг
+  translation: noun chain
+  pos: phrase
+  usage: "Іменниковий ланцюг може зробити речення важким."
+- lemma: означення
+  translation: attribute
+  pos: noun
+  usage: "Узгоджене словосполучення часто працює як означення."
+- lemma: додаток
+  translation: object
+  pos: noun
+  usage: "Керування дієслова часто дає додаток."
+- lemma: обставина
+  translation: adverbial modifier
+  pos: noun
+  usage: "Прислівникове прилягання часто працює як обставина."
+- lemma: узгоджене означення
+  translation: agreeing attribute
+  pos: phrase
+  usage: "Узгоджене означення змінюється разом з іменником."
+- lemma: неузгоджене означення
+  translation: non-agreeing attribute
+  pos: phrase
+  usage: "План відновлення містить неузгоджене означення."
+- lemma: калька
+  translation: calque
+  pos: noun
+  usage: "Зробити рішення - небажана калька."
+- lemma: нормативний
+  translation: normative
+  pos: adj
+  usage: "Нормативний варіант - ухвалити рішення."
+- lemma: редагувати
+  translation: to edit
+  pos: verb
+  usage: "Редагувати словосполучення означає перевіряти форму й стиль."
+- lemma: ухвалити рішення
+  translation: to adopt a decision
+  pos: phrase
+  usage: "Комісія ухвалила рішення після обговорення."
+- lemma: вжити заходів
+  translation: to take measures
+  pos: phrase
+  usage: "Організація вжила заходів для захисту даних."
+- lemma: завдати шкоди
+  translation: to cause harm
+  pos: phrase
+  usage: "Помилка може завдати шкоди репутації."
+- lemma: потребувати підтримки
+  translation: to need support
+  pos: phrase
+  usage: "Проєкт потребує підтримки громади."
+- lemma: дякувати колезі
+  translation: to thank a colleague
+  pos: phrase
+  usage: "Ми дякуємо колезі за допомогу."
+- lemma: цікавитися історією
+  translation: to be interested in history
+  pos: phrase
+  usage: "Студенти цікавляться історією міста."
+- lemma: пояснити коротко
+  translation: to explain briefly
+  pos: phrase
+  usage: "Пояснити коротко - приклад прилягання."
+- lemma: докладний звіт
+  translation: detailed report
+  pos: phrase
+  usage: "Докладний звіт показує узгодження."

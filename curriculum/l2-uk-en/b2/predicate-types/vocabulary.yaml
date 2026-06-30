@@ -1,129 +1,160 @@
-- lemma: простий присудок
-  translation: simple predicate
-  pos: phrase
-  usage: Простий присудок виражений особовою формою дієслова.
-- lemma: складений дієслівний присудок
-  translation: compound verbal predicate
-  pos: phrase
-  usage: Складений дієслівний присудок має допоміжне слово й інфінітив.
-- lemma: складений іменний присудок
-  translation: compound nominal predicate
-  pos: phrase
-  usage: Складений іменний присудок називає стан або якість підмета.
-- lemma: дієслово-зв'язка
-  translation: linking verb
-  pos: noun
-  usage: У реченні Олег став переможцем слово став є дієсловом-зв'язкою.
-  notes: Plan-whitelisted grammatical term.
-- lemma: інфінітив
-  translation: infinitive
-  pos: noun
-  usage: Після допоміжного слова основна дія стоїть в інфінітиві.
-- lemma: допоміжне дієслово
-  translation: auxiliary verb
-  pos: phrase
-  usage: Допоміжне дієслово додає фазу або модальність.
-- lemma: узгодження
-  translation: agreement
-  pos: noun
-  usage: Узгодження присудка залежить від центру підмета.
-- lemma: модальність
-  translation: modality
-  pos: noun
-  usage: Модальність показує можливість, потребу або бажання.
-- lemma: фазовість
-  translation: phasal meaning
-  pos: noun
-  usage: Фазовість показує початок, продовження або кінець дії.
-- lemma: предикативність
-  translation: predicativity
-  pos: noun
-  usage: Предикативність виникає, коли ознака стає повідомленням про підмет.
-- lemma: прикладка
-  translation: apposition
-  pos: noun
-  usage: Прикладка не керує родом присудка, якщо головне слово інше.
-- lemma: абревіатура
-  translation: abbreviation
-  pos: noun
-  usage: Абревіатура потребує перевірки за повною назвою.
-- lemma: контекст
-  translation: context
-  pos: noun
-  usage: Контекст допомагає вибрати тип присудка.
-- lemma: особова форма
-  translation: finite personal form
-  pos: phrase
-  usage: Особова форма дієслова може сама бути присудком.
-- lemma: фразеологічний присудок
-  translation: phraseological predicate
-  pos: phrase
-  usage: Правлять теревені — фразеологічний присудок.
-- lemma: іменна частина
-  translation: nominal part
-  pos: phrase
-  usage: Іменна частина називає роль або якість підмета.
-- lemma: нульова зв'язка
-  translation: zero copula
-  pos: phrase
-  usage: У реченні Я студент є нульова зв'язка.
-- lemma: кількісне сполучення
-  translation: quantitative phrase
-  pos: phrase
-  usage: Кількісне сполучення може вимагати форми однини.
-- lemma: синтаксична норма
-  translation: syntactic norm
-  pos: phrase
-  usage: Синтаксична норма визначає узгодження з головним словом.
-- lemma: граматична основа
-  translation: grammatical base
-  pos: phrase
-  usage: Підмет і присудок утворюють граматичну основу.
-- lemma: підмет
-  translation: subject
-  pos: noun
-  usage: Підмет називає предмет, про який ідеться в реченні.
 - lemma: присудок
   translation: predicate
   pos: noun
-  usage: Присудок показує дію, стан або ознаку підмета.
-- lemma: орудний відмінок
-  translation: instrumental case
-  pos: phrase
-  usage: Після стати іменна частина часто має орудний відмінок.
-- lemma: називний відмінок
-  translation: nominative case
-  pos: phrase
-  usage: Називний відмінок може називати підмет.
-- lemma: родовий відмінок
-  translation: genitive case
-  pos: phrase
-  usage: Кількісне сполучення часто містить іменник у родовому відмінку.
-- lemma: множина
-  translation: plural
-  pos: noun
-  usage: Множина може акцентувати дію окремих виконавців.
-- lemma: однина
-  translation: singular
-  pos: noun
-  usage: Однина може акцентувати кількість як ціле.
+  usage: "Присудок називає дію, стан або ознаку підмета."
 - lemma: предикативний центр
   translation: predicative center
   pos: phrase
-  usage: Предикативний центр речення тримається на присудку.
+  usage: "Предикативний центр допомагає знайти тип присудка."
+- lemma: простий дієслівний присудок
+  translation: simple verbal predicate
+  pos: phrase
+  usage: "Буду писати може бути простим дієслівним присудком."
+- lemma: складений дієслівний присудок
+  translation: compound verbal predicate
+  pos: phrase
+  usage: "Складений дієслівний присудок має допоміжну частину й інфінітив."
+- lemma: складений іменний присудок
+  translation: compound nominal predicate
+  pos: phrase
+  usage: "Звіт готовий має складений іменний присудок."
+- lemma: особова форма
+  translation: finite form
+  pos: phrase
+  usage: "Особова форма дієслова може сама називати дію."
+- lemma: аналітичний майбутній час
+  translation: analytic future tense
+  pos: phrase
+  usage: "Буду перевіряти - аналітичний майбутній час."
+- lemma: фразеологічний присудок
+  translation: phraseological predicate
+  pos: phrase
+  usage: "Правити теревені може бути фразеологічним присудком."
+- lemma: допоміжне слово
+  translation: auxiliary element
+  pos: phrase
+  usage: "Допоміжне слово додає фазу або модальність."
+- lemma: допоміжне дієслово
+  translation: auxiliary verb
+  pos: phrase
+  usage: "Почати може бути допоміжним дієсловом у присудку."
+- lemma: інфінітив
+  translation: infinitive
+  pos: noun
+  usage: "Інфінітив називає основну дію в складеному дієслівному присудку."
+- lemma: фазовість
+  translation: phasal meaning
+  pos: noun
+  usage: "Фазовість показує початок, тривання або завершення дії."
+- lemma: модальність
+  translation: modality
+  pos: noun
+  usage: "Модальність виражає можливість, обов'язок або бажання."
+- lemma: можливість
+  translation: possibility
+  pos: noun
+  usage: "Може пояснити виражає можливість дії."
+- lemma: обов'язок
+  translation: obligation
+  pos: noun
+  usage: "Має подати виражає обов'язок."
+- lemma: потреба
+  translation: necessity
+  pos: noun
+  usage: "Треба завершити виражає потребу."
+- lemma: намір
+  translation: intention
+  pos: noun
+  usage: "Має намір подати заявку виражає план."
+- lemma: дієслово-зв'язка
+  translation: linking verb
+  pos: noun
+  usage: "Стати є дієсловом-зв'язкою в реченні Олег став переможцем."
+- lemma: зв'язка
+  translation: copula; link
+  pos: noun
+  usage: "У теперішньому часі зв'язка часто нульова."
+- lemma: нульова зв'язка
+  translation: zero copula
+  pos: phrase
+  usage: "Звіт готовий має нульову зв'язку."
+- lemma: іменна частина
+  translation: nominal part
+  pos: phrase
+  usage: "У реченні Ніч була ясна слово ясна є іменною частиною."
+- lemma: орудний відмінок
+  translation: instrumental case
+  pos: phrase
+  usage: "Після стати іменна частина часто має орудний відмінок."
+- lemma: називний відмінок
+  translation: nominative case
+  pos: phrase
+  usage: "За нульової зв'язки іменна частина часто має називний відмінок."
+- lemma: підмет
+  translation: subject
+  pos: noun
+  usage: "Підмет визначає узгодження присудка."
+- lemma: центр підмета
+  translation: subject head
+  pos: phrase
+  usage: "У група студентів центр підмета - група."
+- lemma: узгодження присудка
+  translation: predicate agreement
+  pos: phrase
+  usage: "Узгодження присудка залежить від центру підмета."
+- lemma: кількісна група
+  translation: quantitative group
+  pos: phrase
+  usage: "Кількісна група може впливати на форму присудка."
+- lemma: прикладка
+  translation: apposition
+  pos: noun
+  usage: "Прикладка може ускладнювати узгодження присудка."
+- lemma: фемінітив
+  translation: feminine professional noun
+  pos: noun
+  usage: "Фемінітив директорка робить узгодження прозорішим."
+- lemma: безособова модель
+  translation: impersonal pattern
+  pos: phrase
+  usage: "Нам треба завершити - безособова модальна модель."
+- lemma: межовий випадок
+  translation: borderline case
+  pos: phrase
+  usage: "Готовий відповідати є межовим випадком для аналізу."
+- lemma: залежний інфінітив
+  translation: dependent infinitive
+  pos: phrase
+  usage: "Попросив пояснити має залежний інфінітив."
+- lemma: стан
+  translation: state
+  pos: noun
+  usage: "Складений іменний присудок часто називає стан."
+- lemma: ознака
+  translation: quality; feature
+  pos: noun
+  usage: "Іменна частина може називати ознаку підмета."
+- lemma: роль
+  translation: role
+  pos: noun
+  usage: "Став переможцем називає нову роль."
+- lemma: результат
+  translation: result
+  pos: noun
+  usage: "Оновлена платформа показує результат."
 - lemma: номіналізація
   translation: nominalization
   pos: noun
-  usage: Номіналізація переводить дію в іменну форму.
+  usage: "Номіналізація переносить фокус із дії на явище."
 - lemma: стилістична трансформація
   translation: stylistic transformation
   pos: phrase
-  usage: Стилістична трансформація змінює фокус речення.
-- lemma: акцентування
-  translation: emphasis
+  usage: "Стилістична трансформація змінює тип присудка."
+- lemma: відповідальність
+  translation: responsibility
   pos: noun
-  usage: Акцентування залежить від вибору присудка.
-- lemma: допоміжне слово
-  translation: auxiliary word
-  pos: phrase
-  usage: Допоміжне слово разом з інфінітивом творить присудок.
+  usage: "Простий дієслівний присудок часто чітко називає відповідальність."
+- lemma: дія
+  translation: action
+  pos: noun
+  usage: "Простий дієслівний присудок тримає дію в центрі."
