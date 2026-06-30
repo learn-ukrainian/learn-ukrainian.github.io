@@ -1,14 +1,79 @@
 {
-  "cloze": [],
-  "deckVersion": "atlas-practice-v1-9cf4a4d7319d19ce",
+  "cloze": [
+    {
+      "acceptedAlt": [],
+      "blankCase": "accusative",
+      "caseRule": {
+        "case": "accusative",
+        "caseLabel": "знахідний",
+        "feedback": "бачити/мати/читати + знахідний (валіза -> валізу)",
+        "ruleId": "accusative_direct_object",
+        "trigger": "direct-object",
+        "triggerLabel": "прямий додаток"
+      },
+      "cefr": "A1",
+      "clozeEn": "I take my suitcase.",
+      "clozeId": "валіза:cloze:1",
+      "form": "валізу",
+      "lemma": "валіза",
+      "lemmaId": "валіза",
+      "number": "singular",
+      "options": [
+        {
+          "case": "accusative",
+          "kind": "answer",
+          "label": "валізу",
+          "lemmaId": "валіза",
+          "optionId": "валіза:cloze:1:answer",
+          "pos": "noun",
+          "strategy": "no-pair"
+        },
+        {
+          "case": "accusative",
+          "kind": "decoy-oblique",
+          "label": "вулицю",
+          "lemmaId": "вулиця",
+          "optionId": "валіза:cloze:1:decoy-1",
+          "pos": "noun",
+          "strategy": "no-pair"
+        },
+        {
+          "case": "accusative",
+          "kind": "decoy-oblique",
+          "label": "бібліотеку",
+          "lemmaId": "бібліотека",
+          "optionId": "валіза:cloze:1:decoy-2",
+          "pos": "noun",
+          "strategy": "no-pair"
+        },
+        {
+          "case": "nominative",
+          "kind": "decoy-lemma",
+          "label": "пісня",
+          "lemmaId": "пісня",
+          "optionId": "валіза:cloze:1:decoy-3",
+          "pos": "noun",
+          "strategy": "no-pair"
+        }
+      ],
+      "provenance": {
+        "cardId": "a2-all-cases-practice-valiza-accusative-1",
+        "path": "curriculum/l2-uk-en/a2/all-cases-practice/vocabulary.yaml",
+        "status": "reviewed"
+      },
+      "sentence": "Я беру ___.",
+      "sentenceFrameId": "sf_ee601d3f2e32"
+    }
+  ],
+  "deckVersion": "atlas-practice-v1-c5a52e54cdf8d828",
   "level": "A1",
   "schema": "atlas-practice-cloze",
   "schemaVersion": 1,
   "sizeBudget": {
-    "gzipBytes": 199,
+    "gzipBytes": 769,
     "gzipLimitBytes": 140000,
     "ok": true,
-    "rawBytes": 312,
+    "rawBytes": 2351,
     "rawLimitBytes": 550000
   },
   "source": "manifest"

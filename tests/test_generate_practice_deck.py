@@ -11,6 +11,7 @@ from scripts.audit.generate_practice_deck import (
     JsonVesumVerifier,
     ReviewedSourceAllowlist,
     _build_lexeme,
+    _eligible_decoys,
     _option_strategy_for_level,
     apply_size_budgets,
     build_practice_shards,
@@ -345,3 +346,58 @@ def test_source_inventory_cloze_requires_explicit_cloze_admission() -> None:
         for item in level["cloze"]["cloze"]
     }
     assert "knyha" in cloze_ids
+
+
+def test_cloze_output_preserves_sentence_cefr() -> None:
+    cloze = _build()["A1"]["cloze"]["cloze"][0]
+
+    assert cloze["cefr"] == "A1"
+
+
+def test_cloze_decoys_support_ukrainian_case_keys() -> None:
+    entries = read_manifest(MANIFEST)
+    for entry in entries:
+        morphology = entry.get("enrichment", {}).get("morphology", {})
+        paradigm = morphology.get("paradigm", {})
+        cases = paradigm.get("cases", {})
+        if isinstance(cases, dict) and "accusative" in cases:
+            cases["знахідний"] = cases.pop("accusative")
+        if isinstance(cases, dict) and "locative" in cases:
+            cases["місцевий"] = cases.pop("locative")
+
+    shards = build_practice_shards(
+        entries,
+        ReviewedSourceAllowlist.from_path(ALLOWLIST),
+        JsonVesumVerifier.from_path(VESUM),
+        read_cloze_sources(CLOZE_SOURCES),
+        BuildConfig(),
+    )
+
+    assert shards["A1"]["cloze"]["cloze"]
+
+
+def test_cloze_decoys_do_not_exceed_answer_cefr() -> None:
+    answer = {"lemmaId": "валіза", "gloss": "suitcase", "pos": "noun", "cefr": "A1"}
+    lexemes = [
+        answer,
+        {
+            "lemmaId": "школа",
+            "lemma": "школа",
+            "gloss": "school",
+            "pos": "noun",
+            "cefr": "A1",
+            "paradigm": {"cases": {"accusative": {"singular": "школу"}}},
+        },
+        {
+            "lemmaId": "термінологія",
+            "lemma": "термінологія",
+            "gloss": "terminology",
+            "pos": "noun",
+            "cefr": "B2",
+            "paradigm": {"cases": {"accusative": {"singular": "термінологію"}}},
+        },
+    ]
+
+    assert _eligible_decoys(answer, lexemes, "accusative", "singular") == [
+        (lexemes[1], "школу")
+    ]

@@ -1,0 +1,18 @@
+[
+  {
+    "lemma": "валіза",
+    "lemmaId": "валіза",
+    "sentence": "Я беру ___.",
+    "blankCase": "accusative",
+    "form": "валізу",
+    "number": "singular",
+    "caseRule": "accusative_direct_object",
+    "clozeEn": "I take my suitcase.",
+    "cefr": "A1",
+    "provenance": {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a2/all-cases-practice/vocabulary.yaml",
+      "cardId": "a2-all-cases-practice-valiza-accusative-1"
+    }
+  }
+]

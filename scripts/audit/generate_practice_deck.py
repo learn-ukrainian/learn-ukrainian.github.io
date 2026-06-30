@@ -564,6 +564,8 @@ def _case_form(
         return None
     forms = cases.get(case_name)
     if not isinstance(forms, dict):
+        forms = cases.get(CASE_LABELS_UA.get(case_name, ""))
+    if not isinstance(forms, dict):
         return None
     return _clean_text(forms.get(number))
 
@@ -603,6 +605,8 @@ def _eligible_decoys(
         if lexeme["lemmaId"] == answer["lemmaId"]:
             continue
         if lexeme.get("pos") != answer.get("pos"):
+            continue
+        if CEFR_RANK[lexeme["cefr"]] > CEFR_RANK[answer["cefr"]]:
             continue
         if _headword(lexeme["gloss"]) == answer_head:
             continue
@@ -998,6 +1002,7 @@ def _build_cloze_items(
                 "lemma": lexeme["lemma"],
                 "caseRule": case_rule,
                 "clozeEn": cloze_en,
+                "cefr": _clean_text(candidate.get("cefr")) or lexeme["cefr"],
                 "acceptedAlt": _accepted_alts(candidate),
                 "provenance": {
                     "status": provenance["status"],

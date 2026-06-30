@@ -3,9 +3,9 @@
     "cloze": 0,
     "clozeCoverage": 0.0,
     "clozeEligibleLexemes": 0,
-    "lexemes": 1119
+    "lexemes": 1122
   },
-  "deckVersion": "atlas-practice-v1-9cf4a4d7319d19ce",
+  "deckVersion": "atlas-practice-v1-c5a52e54cdf8d828",
   "items": [
     {
       "cefr": "B1",
@@ -35,19 +35,6 @@
       "cefr": "B1",
       "clozeIds": [],
       "hasCloze": false,
-      "lemma": "гостре",
-      "lemmaId": "гостре",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 2
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
       "lemma": "кав'ярня",
       "lemmaId": "кав-ярня",
       "modes": [
@@ -55,7 +42,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 3
+      "newOrder": 2
     },
     {
       "cefr": "B1",
@@ -68,7 +55,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 4
+      "newOrder": 3
     },
     {
       "cefr": "B1",
@@ -81,7 +68,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 5
+      "newOrder": 4
     },
     {
       "cefr": "B1",
@@ -94,7 +81,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 6
+      "newOrder": 5
     },
     {
       "cefr": "B1",
@@ -107,7 +94,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 7
+      "newOrder": 6
     },
     {
       "cefr": "B1",
@@ -120,7 +107,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 8
+      "newOrder": 7
     },
     {
       "cefr": "B1",
@@ -131,7 +118,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 9
+      "newOrder": 8
     },
     {
       "cefr": "B1",
@@ -142,7 +129,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 10
+      "newOrder": 9
     },
     {
       "cefr": "B1",
@@ -155,7 +142,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 11
+      "newOrder": 10
     },
     {
       "cefr": "B1",
@@ -168,7 +155,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 12
+      "newOrder": 11
     },
     {
       "cefr": "B1",
@@ -181,7 +168,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 13
+      "newOrder": 12
     },
     {
       "cefr": "B1",
@@ -194,7 +181,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 14
+      "newOrder": 13
     },
     {
       "cefr": "B1",
@@ -207,7 +194,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 15
+      "newOrder": 14
     },
     {
       "cefr": "B1",
@@ -220,7 +207,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 16
+      "newOrder": 15
     },
     {
       "cefr": "B1",
@@ -233,20 +220,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 17
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "підсумок",
-      "lemmaId": "підсумок",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 18
+      "newOrder": 16
     },
     {
       "cefr": "B1",
@@ -257,7 +231,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 19
+      "newOrder": 17
     },
     {
       "cefr": "B1",
@@ -268,7 +242,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 20
+      "newOrder": 18
     },
     {
       "cefr": "B1",
@@ -279,20 +253,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 21
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "п'ятниця",
-      "lemmaId": "п-ятниця",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 22
+      "newOrder": 19
     },
     {
       "cefr": "B1",
@@ -305,7 +266,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 23
+      "newOrder": 20
     },
     {
       "cefr": "B1",
@@ -316,7 +277,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 24
+      "newOrder": 21
     },
     {
       "cefr": "B1",
@@ -329,7 +290,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 25
+      "newOrder": 22
     },
     {
       "cefr": "B1",
@@ -342,7 +303,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 26
+      "newOrder": 23
     },
     {
       "cefr": "B1",
@@ -353,7 +314,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 27
+      "newOrder": 24
     },
     {
       "cefr": "B1",
@@ -366,7 +327,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 28
+      "newOrder": 25
     },
     {
       "cefr": "B1",
@@ -379,7 +340,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 29
+      "newOrder": 26
     },
     {
       "cefr": "B1",
@@ -392,7 +353,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 30
+      "newOrder": 27
     },
     {
       "cefr": "B1",
@@ -405,7 +366,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 31
+      "newOrder": 28
     },
     {
       "cefr": "B1",
@@ -418,20 +379,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 32
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "дев'яносто",
-      "lemmaId": "дев-яносто",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 33
+      "newOrder": 29
     },
     {
       "cefr": "B1",
@@ -444,18 +392,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 34
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "маслом",
-      "lemmaId": "маслом",
-      "modes": [
-        "flashcards"
-      ],
-      "newOrder": 35
+      "newOrder": 30
     },
     {
       "cefr": "B1",
@@ -468,7 +405,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 36
+      "newOrder": 31
     },
     {
       "cefr": "B1",
@@ -481,7 +418,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 37
+      "newOrder": 32
     },
     {
       "cefr": "B1",
@@ -492,7 +429,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 38
+      "newOrder": 33
     },
     {
       "cefr": "B1",
@@ -505,7 +442,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 39
+      "newOrder": 34
     },
     {
       "cefr": "B1",
@@ -516,7 +453,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 40
+      "newOrder": 35
     },
     {
       "cefr": "B1",
@@ -529,7 +466,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 41
+      "newOrder": 36
     },
     {
       "cefr": "B1",
@@ -540,7 +477,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 42
+      "newOrder": 37
     },
     {
       "cefr": "B1",
@@ -553,7 +490,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 43
+      "newOrder": 38
     },
     {
       "cefr": "B1",
@@ -566,7 +503,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 44
+      "newOrder": 39
     },
     {
       "cefr": "B1",
@@ -579,7 +516,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 45
+      "newOrder": 40
     },
     {
       "cefr": "B1",
@@ -592,7 +529,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 46
+      "newOrder": 41
     },
     {
       "cefr": "B1",
@@ -605,7 +542,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 47
+      "newOrder": 42
     },
     {
       "cefr": "B1",
@@ -616,7 +553,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 48
+      "newOrder": 43
     },
     {
       "cefr": "B1",
@@ -629,7 +566,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 49
+      "newOrder": 44
     },
     {
       "cefr": "B1",
@@ -642,7 +579,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 50
+      "newOrder": 45
     },
     {
       "cefr": "B1",
@@ -655,7 +592,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 51
+      "newOrder": 46
     },
     {
       "cefr": "B1",
@@ -668,7 +605,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 52
+      "newOrder": 47
     },
     {
       "cefr": "B1",
@@ -681,7 +618,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 53
+      "newOrder": 48
     },
     {
       "cefr": "B1",
@@ -694,7 +631,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 54
+      "newOrder": 49
     },
     {
       "cefr": "B1",
@@ -707,7 +644,20 @@
         "matching",
         "choice"
       ],
-      "newOrder": 55
+      "newOrder": 50
+    },
+    {
+      "cefr": "B1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "джерело",
+      "lemmaId": "джерело",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 51
     },
     {
       "cefr": "B1",
@@ -720,7 +670,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 56
+      "newOrder": 52
     },
     {
       "cefr": "B1",
@@ -733,20 +683,20 @@
         "matching",
         "choice"
       ],
-      "newOrder": 57
+      "newOrder": 53
     },
     {
       "cefr": "B1",
       "clozeIds": [],
       "hasCloze": false,
-      "lemma": "літера",
-      "lemmaId": "літера",
+      "lemma": "наголос",
+      "lemmaId": "наголос",
       "modes": [
         "flashcards",
         "matching",
         "choice"
       ],
-      "newOrder": 58
+      "newOrder": 54
     },
     {
       "cefr": "B1",
@@ -759,20 +709,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 59
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "ложка",
-      "lemmaId": "ложка",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 60
+      "newOrder": 55
     },
     {
       "cefr": "B1",
@@ -785,7 +722,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 61
+      "newOrder": 56
     },
     {
       "cefr": "B1",
@@ -798,7 +735,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 62
+      "newOrder": 57
     },
     {
       "cefr": "B1",
@@ -811,7 +748,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 63
+      "newOrder": 58
     },
     {
       "cefr": "B1",
@@ -824,7 +761,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 64
+      "newOrder": 59
     },
     {
       "cefr": "B1",
@@ -837,20 +774,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 65
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "вчать",
-      "lemmaId": "вчать",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 66
+      "newOrder": 60
     },
     {
       "cefr": "B1",
@@ -863,7 +787,20 @@
         "matching",
         "choice"
       ],
-      "newOrder": 67
+      "newOrder": 61
+    },
+    {
+      "cefr": "B1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "ходите",
+      "lemmaId": "ходите",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 62
     },
     {
       "cefr": "B1",
@@ -876,7 +813,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 68
+      "newOrder": 63
     },
     {
       "cefr": "B1",
@@ -889,7 +826,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 69
+      "newOrder": 64
     },
     {
       "cefr": "B1",
@@ -902,7 +839,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 70
+      "newOrder": 65
     },
     {
       "cefr": "B1",
@@ -915,7 +852,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 71
+      "newOrder": 66
     },
     {
       "cefr": "B1",
@@ -928,7 +865,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 72
+      "newOrder": 67
     },
     {
       "cefr": "B1",
@@ -941,7 +878,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 73
+      "newOrder": 68
     },
     {
       "cefr": "B1",
@@ -954,7 +891,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 74
+      "newOrder": 69
     },
     {
       "cefr": "B1",
@@ -967,7 +904,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 75
+      "newOrder": 70
     },
     {
       "cefr": "B1",
@@ -980,7 +917,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 76
+      "newOrder": 71
     },
     {
       "cefr": "B1",
@@ -993,7 +930,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 77
+      "newOrder": 72
     },
     {
       "cefr": "B1",
@@ -1006,7 +943,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 78
+      "newOrder": 73
     },
     {
       "cefr": "B1",
@@ -1019,20 +956,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 79
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "киянин",
-      "lemmaId": "киянин",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 80
+      "newOrder": 74
     },
     {
       "cefr": "B1",
@@ -1045,7 +969,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 81
+      "newOrder": 75
     },
     {
       "cefr": "B1",
@@ -1058,7 +982,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 82
+      "newOrder": 76
     },
     {
       "cefr": "B1",
@@ -1071,7 +995,20 @@
         "matching",
         "choice"
       ],
-      "newOrder": 83
+      "newOrder": 77
+    },
+    {
+      "cefr": "B1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "одесит",
+      "lemmaId": "одесит",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 78
     },
     {
       "cefr": "B1",
@@ -1084,7 +1021,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 84
+      "newOrder": 79
     },
     {
       "cefr": "B1",
@@ -1097,7 +1034,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 85
+      "newOrder": 80
     },
     {
       "cefr": "B1",
@@ -1108,7 +1045,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 86
+      "newOrder": 81
     },
     {
       "cefr": "B1",
@@ -1121,7 +1058,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 87
+      "newOrder": 82
     },
     {
       "cefr": "B1",
@@ -1134,7 +1071,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 88
+      "newOrder": 83
     },
     {
       "cefr": "B1",
@@ -1147,7 +1084,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 89
+      "newOrder": 84
     },
     {
       "cefr": "B1",
@@ -1160,7 +1097,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 90
+      "newOrder": 85
     },
     {
       "cefr": "B1",
@@ -1173,18 +1110,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 91
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "вітаємо",
-      "lemmaId": "вітаємо",
-      "modes": [
-        "flashcards"
-      ],
-      "newOrder": 92
+      "newOrder": 86
     },
     {
       "cefr": "B1",
@@ -1197,7 +1123,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 93
+      "newOrder": 87
     },
     {
       "cefr": "B1",
@@ -1210,7 +1136,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 94
+      "newOrder": 88
     },
     {
       "cefr": "B1",
@@ -1223,7 +1149,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 95
+      "newOrder": 89
     },
     {
       "cefr": "B1",
@@ -1236,7 +1162,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 96
+      "newOrder": 90
     },
     {
       "cefr": "B1",
@@ -1249,7 +1175,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 97
+      "newOrder": 91
     },
     {
       "cefr": "B1",
@@ -1262,7 +1188,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 98
+      "newOrder": 92
     },
     {
       "cefr": "B1",
@@ -1275,7 +1201,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 99
+      "newOrder": 93
     },
     {
       "cefr": "B1",
@@ -1288,7 +1214,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 100
+      "newOrder": 94
     },
     {
       "cefr": "B1",
@@ -1301,7 +1227,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 101
+      "newOrder": 95
     },
     {
       "cefr": "B1",
@@ -1314,7 +1240,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 102
+      "newOrder": 96
     },
     {
       "cefr": "B1",
@@ -1327,7 +1253,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 103
+      "newOrder": 97
     },
     {
       "cefr": "B1",
@@ -1340,20 +1266,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 104
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "базовий",
-      "lemmaId": "базовий",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 105
+      "newOrder": 98
     },
     {
       "cefr": "B1",
@@ -1366,7 +1279,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 106
+      "newOrder": 99
     },
     {
       "cefr": "B1",
@@ -1379,7 +1292,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 107
+      "newOrder": 100
     },
     {
       "cefr": "B1",
@@ -1392,7 +1305,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 108
+      "newOrder": 101
     },
     {
       "cefr": "B1",
@@ -1405,7 +1318,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 109
+      "newOrder": 102
     },
     {
       "cefr": "B1",
@@ -1418,7 +1331,20 @@
         "matching",
         "choice"
       ],
-      "newOrder": 110
+      "newOrder": 103
+    },
+    {
+      "cefr": "B1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "контрольна",
+      "lemmaId": "контрольна",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 104
     },
     {
       "cefr": "B1",
@@ -1431,7 +1357,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 111
+      "newOrder": 105
     },
     {
       "cefr": "B1",
@@ -1444,7 +1370,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 112
+      "newOrder": 106
     },
     {
       "cefr": "B1",
@@ -1457,7 +1383,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 113
+      "newOrder": 107
     },
     {
       "cefr": "B1",
@@ -1470,7 +1396,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 114
+      "newOrder": 108
     },
     {
       "cefr": "B1",
@@ -1483,7 +1409,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 115
+      "newOrder": 109
     },
     {
       "cefr": "B1",
@@ -1496,7 +1422,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 116
+      "newOrder": 110
     },
     {
       "cefr": "B1",
@@ -1509,20 +1435,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 117
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "впізнати",
-      "lemmaId": "впізнати",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 118
+      "newOrder": 111
     },
     {
       "cefr": "B1",
@@ -1535,7 +1448,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 119
+      "newOrder": 112
     },
     {
       "cefr": "B1",
@@ -1548,7 +1461,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 120
+      "newOrder": 113
     },
     {
       "cefr": "B1",
@@ -1561,7 +1474,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 121
+      "newOrder": 114
     },
     {
       "cefr": "B1",
@@ -1574,7 +1487,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 122
+      "newOrder": 115
     },
     {
       "cefr": "B1",
@@ -1587,7 +1500,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 123
+      "newOrder": 116
     },
     {
       "cefr": "B1",
@@ -1600,20 +1513,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 124
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "означення",
-      "lemmaId": "означення",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 125
+      "newOrder": 117
     },
     {
       "cefr": "B1",
@@ -1626,7 +1526,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 126
+      "newOrder": 118
     },
     {
       "cefr": "B1",
@@ -1639,7 +1539,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 127
+      "newOrder": 119
     },
     {
       "cefr": "B1",
@@ -1652,7 +1552,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 128
+      "newOrder": 120
     },
     {
       "cefr": "B1",
@@ -1665,7 +1565,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 129
+      "newOrder": 121
     },
     {
       "cefr": "B1",
@@ -1678,7 +1578,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 130
+      "newOrder": 122
     },
     {
       "cefr": "B1",
@@ -1691,7 +1591,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 131
+      "newOrder": 123
     },
     {
       "cefr": "B1",
@@ -1704,7 +1604,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 132
+      "newOrder": 124
     },
     {
       "cefr": "B1",
@@ -1717,7 +1617,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 133
+      "newOrder": 125
     },
     {
       "cefr": "B1",
@@ -1730,7 +1630,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 134
+      "newOrder": 126
     },
     {
       "cefr": "B1",
@@ -1743,7 +1643,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 135
+      "newOrder": 127
     },
     {
       "cefr": "B1",
@@ -1756,7 +1656,20 @@
         "matching",
         "choice"
       ],
-      "newOrder": 136
+      "newOrder": 128
+    },
+    {
+      "cefr": "B1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "заздрити",
+      "lemmaId": "заздрити",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 129
     },
     {
       "cefr": "B1",
@@ -1769,7 +1682,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 137
+      "newOrder": 130
     },
     {
       "cefr": "B1",
@@ -1782,7 +1695,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 138
+      "newOrder": 131
     },
     {
       "cefr": "B1",
@@ -1795,7 +1708,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 139
+      "newOrder": 132
     },
     {
       "cefr": "B1",
@@ -1808,7 +1721,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 140
+      "newOrder": 133
     },
     {
       "cefr": "B1",
@@ -1821,7 +1734,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 141
+      "newOrder": 134
     },
     {
       "cefr": "B1",
@@ -1834,7 +1747,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 142
+      "newOrder": 135
     },
     {
       "cefr": "B1",
@@ -1847,7 +1760,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 143
+      "newOrder": 136
     },
     {
       "cefr": "B1",
@@ -1860,7 +1773,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 144
+      "newOrder": 137
     },
     {
       "cefr": "B1",
@@ -1873,7 +1786,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 145
+      "newOrder": 138
     },
     {
       "cefr": "B1",
@@ -1886,7 +1799,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 146
+      "newOrder": 139
     },
     {
       "cefr": "B1",
@@ -1899,7 +1812,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 147
+      "newOrder": 140
     },
     {
       "cefr": "B1",
@@ -1912,7 +1825,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 148
+      "newOrder": 141
     },
     {
       "cefr": "B1",
@@ -1925,7 +1838,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 149
+      "newOrder": 142
     },
     {
       "cefr": "B1",
@@ -1938,7 +1851,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 150
+      "newOrder": 143
     },
     {
       "cefr": "B1",
@@ -1951,7 +1864,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 151
+      "newOrder": 144
     },
     {
       "cefr": "B1",
@@ -1964,7 +1877,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 152
+      "newOrder": 145
     },
     {
       "cefr": "B1",
@@ -1977,7 +1890,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 153
+      "newOrder": 146
     },
     {
       "cefr": "B1",
@@ -1990,20 +1903,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 154
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "пауза",
-      "lemmaId": "пауза",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 155
+      "newOrder": 147
     },
     {
       "cefr": "B1",
@@ -2016,7 +1916,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 156
+      "newOrder": 148
     },
     {
       "cefr": "B1",
@@ -2029,7 +1929,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 157
+      "newOrder": 149
     },
     {
       "cefr": "B1",
@@ -2042,7 +1942,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 158
+      "newOrder": 150
     },
     {
       "cefr": "B1",
@@ -2055,7 +1955,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 159
+      "newOrder": 151
     },
     {
       "cefr": "B1",
@@ -2068,7 +1968,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 160
+      "newOrder": 152
     },
     {
       "cefr": "B1",
@@ -2081,7 +1981,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 161
+      "newOrder": 153
     },
     {
       "cefr": "B1",
@@ -2094,7 +1994,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 162
+      "newOrder": 154
     },
     {
       "cefr": "B1",
@@ -2107,7 +2007,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 163
+      "newOrder": 155
     },
     {
       "cefr": "B1",
@@ -2120,7 +2020,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 164
+      "newOrder": 156
     },
     {
       "cefr": "B1",
@@ -2133,7 +2033,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 165
+      "newOrder": 157
     },
     {
       "cefr": "B1",
@@ -2146,7 +2046,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 166
+      "newOrder": 158
     },
     {
       "cefr": "B1",
@@ -2159,7 +2059,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 167
+      "newOrder": 159
     },
     {
       "cefr": "B1",
@@ -2172,7 +2072,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 168
+      "newOrder": 160
     },
     {
       "cefr": "B1",
@@ -2185,7 +2085,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 169
+      "newOrder": 161
     },
     {
       "cefr": "B1",
@@ -2198,7 +2098,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 170
+      "newOrder": 162
     },
     {
       "cefr": "B1",
@@ -2211,7 +2111,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 171
+      "newOrder": 163
     },
     {
       "cefr": "B1",
@@ -2224,7 +2124,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 172
+      "newOrder": 164
     },
     {
       "cefr": "B1",
@@ -2237,7 +2137,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 173
+      "newOrder": 165
     },
     {
       "cefr": "B1",
@@ -2248,7 +2148,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 174
+      "newOrder": 166
     },
     {
       "cefr": "B1",
@@ -2261,7 +2161,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 175
+      "newOrder": 167
     },
     {
       "cefr": "B1",
@@ -2274,7 +2174,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 176
+      "newOrder": 168
     },
     {
       "cefr": "B1",
@@ -2287,7 +2187,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 177
+      "newOrder": 169
     },
     {
       "cefr": "B1",
@@ -2298,7 +2198,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 178
+      "newOrder": 170
     },
     {
       "cefr": "B1",
@@ -2309,7 +2209,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 179
+      "newOrder": 171
     },
     {
       "cefr": "B1",
@@ -2320,18 +2220,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 180
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "ніякий",
-      "lemmaId": "ніякий",
-      "modes": [
-        "flashcards"
-      ],
-      "newOrder": 181
+      "newOrder": 172
     },
     {
       "cefr": "B1",
@@ -2342,7 +2231,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 182
+      "newOrder": 173
     },
     {
       "cefr": "B1",
@@ -2353,7 +2242,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 183
+      "newOrder": 174
     },
     {
       "cefr": "B1",
@@ -2364,7 +2253,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 184
+      "newOrder": 175
     },
     {
       "cefr": "B1",
@@ -2377,7 +2266,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 185
+      "newOrder": 176
     },
     {
       "cefr": "B1",
@@ -2390,7 +2279,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 186
+      "newOrder": 177
     },
     {
       "cefr": "B1",
@@ -2401,7 +2290,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 187
+      "newOrder": 178
     },
     {
       "cefr": "B1",
@@ -2414,7 +2303,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 188
+      "newOrder": 179
     },
     {
       "cefr": "B1",
@@ -2427,7 +2316,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 189
+      "newOrder": 180
     },
     {
       "cefr": "B1",
@@ -2440,7 +2329,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 190
+      "newOrder": 181
     },
     {
       "cefr": "B1",
@@ -2453,7 +2342,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 191
+      "newOrder": 182
     },
     {
       "cefr": "B1",
@@ -2466,7 +2355,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 192
+      "newOrder": 183
     },
     {
       "cefr": "B1",
@@ -2479,7 +2368,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 193
+      "newOrder": 184
     },
     {
       "cefr": "B1",
@@ -2492,7 +2381,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 194
+      "newOrder": 185
     },
     {
       "cefr": "B1",
@@ -2505,7 +2394,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 195
+      "newOrder": 186
     },
     {
       "cefr": "B1",
@@ -2518,7 +2407,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 196
+      "newOrder": 187
     },
     {
       "cefr": "B1",
@@ -2531,7 +2420,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 197
+      "newOrder": 188
     },
     {
       "cefr": "B1",
@@ -2544,7 +2433,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 198
+      "newOrder": 189
     },
     {
       "cefr": "B1",
@@ -2557,7 +2446,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 199
+      "newOrder": 190
     },
     {
       "cefr": "B1",
@@ -2570,7 +2459,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 200
+      "newOrder": 191
     },
     {
       "cefr": "B1",
@@ -2583,7 +2472,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 201
+      "newOrder": 192
     },
     {
       "cefr": "B1",
@@ -2596,7 +2485,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 202
+      "newOrder": 193
     },
     {
       "cefr": "B1",
@@ -2609,7 +2498,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 203
+      "newOrder": 194
     },
     {
       "cefr": "B1",
@@ -2622,7 +2511,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 204
+      "newOrder": 195
     },
     {
       "cefr": "B1",
@@ -2635,7 +2524,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 205
+      "newOrder": 196
     },
     {
       "cefr": "B1",
@@ -2648,7 +2537,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 206
+      "newOrder": 197
     },
     {
       "cefr": "B1",
@@ -2661,7 +2550,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 207
+      "newOrder": 198
     },
     {
       "cefr": "B1",
@@ -2674,7 +2563,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 208
+      "newOrder": 199
     },
     {
       "cefr": "B1",
@@ -2687,7 +2576,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 209
+      "newOrder": 200
     },
     {
       "cefr": "B1",
@@ -2700,7 +2589,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 210
+      "newOrder": 201
     },
     {
       "cefr": "B1",
@@ -2713,7 +2602,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 211
+      "newOrder": 202
     },
     {
       "cefr": "B1",
@@ -2726,7 +2615,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 212
+      "newOrder": 203
     },
     {
       "cefr": "B1",
@@ -2739,7 +2628,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 213
+      "newOrder": 204
     },
     {
       "cefr": "B1",
@@ -2752,7 +2641,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 214
+      "newOrder": 205
     },
     {
       "cefr": "B1",
@@ -2765,7 +2654,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 215
+      "newOrder": 206
     },
     {
       "cefr": "B1",
@@ -2776,7 +2665,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 216
+      "newOrder": 207
     },
     {
       "cefr": "B1",
@@ -2789,7 +2678,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 217
+      "newOrder": 208
     },
     {
       "cefr": "B1",
@@ -2802,7 +2691,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 218
+      "newOrder": 209
     },
     {
       "cefr": "B1",
@@ -2815,7 +2704,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 219
+      "newOrder": 210
     },
     {
       "cefr": "B1",
@@ -2828,7 +2717,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 220
+      "newOrder": 211
     },
     {
       "cefr": "B1",
@@ -2841,7 +2730,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 221
+      "newOrder": 212
     },
     {
       "cefr": "B1",
@@ -2852,7 +2741,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 222
+      "newOrder": 213
     },
     {
       "cefr": "B1",
@@ -2863,7 +2752,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 223
+      "newOrder": 214
     },
     {
       "cefr": "B1",
@@ -2876,7 +2765,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 224
+      "newOrder": 215
     },
     {
       "cefr": "B1",
@@ -2889,7 +2778,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 225
+      "newOrder": 216
     },
     {
       "cefr": "B1",
@@ -2902,7 +2791,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 226
+      "newOrder": 217
     },
     {
       "cefr": "B1",
@@ -2915,7 +2804,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 227
+      "newOrder": 218
     },
     {
       "cefr": "B1",
@@ -2928,7 +2817,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 228
+      "newOrder": 219
     },
     {
       "cefr": "B1",
@@ -2941,7 +2830,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 229
+      "newOrder": 220
     },
     {
       "cefr": "B1",
@@ -2954,7 +2843,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 230
+      "newOrder": 221
     },
     {
       "cefr": "B1",
@@ -2967,7 +2856,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 231
+      "newOrder": 222
     },
     {
       "cefr": "B1",
@@ -2980,7 +2869,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 232
+      "newOrder": 223
     },
     {
       "cefr": "B1",
@@ -2993,7 +2882,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 233
+      "newOrder": 224
     },
     {
       "cefr": "B1",
@@ -3006,7 +2895,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 234
+      "newOrder": 225
     },
     {
       "cefr": "B1",
@@ -3019,7 +2908,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 235
+      "newOrder": 226
     },
     {
       "cefr": "B1",
@@ -3032,7 +2921,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 236
+      "newOrder": 227
     },
     {
       "cefr": "B1",
@@ -3045,7 +2934,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 237
+      "newOrder": 228
     },
     {
       "cefr": "B1",
@@ -3058,7 +2947,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 238
+      "newOrder": 229
     },
     {
       "cefr": "B1",
@@ -3069,20 +2958,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 239
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "знаходитися",
-      "lemmaId": "знаходитися",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 240
+      "newOrder": 230
     },
     {
       "cefr": "B1",
@@ -3095,7 +2971,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 241
+      "newOrder": 231
     },
     {
       "cefr": "B1",
@@ -3108,7 +2984,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 242
+      "newOrder": 232
     },
     {
       "cefr": "B1",
@@ -3121,7 +2997,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 243
+      "newOrder": 233
     },
     {
       "cefr": "B1",
@@ -3134,20 +3010,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 244
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "апетит",
-      "lemmaId": "апетит",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 245
+      "newOrder": 234
     },
     {
       "cefr": "B1",
@@ -3160,7 +3023,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 246
+      "newOrder": 235
     },
     {
       "cefr": "B1",
@@ -3173,7 +3036,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 247
+      "newOrder": 236
     },
     {
       "cefr": "B1",
@@ -3186,7 +3049,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 248
+      "newOrder": 237
     },
     {
       "cefr": "B1",
@@ -3199,7 +3062,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 249
+      "newOrder": 238
     },
     {
       "cefr": "B1",
@@ -3212,7 +3075,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 250
+      "newOrder": 239
     },
     {
       "cefr": "B1",
@@ -3223,7 +3086,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 251
+      "newOrder": 240
     },
     {
       "cefr": "B1",
@@ -3234,7 +3097,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 252
+      "newOrder": 241
     },
     {
       "cefr": "B1",
@@ -3247,7 +3110,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 253
+      "newOrder": 242
     },
     {
       "cefr": "B1",
@@ -3260,7 +3123,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 254
+      "newOrder": 243
     },
     {
       "cefr": "B1",
@@ -3273,7 +3136,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 255
+      "newOrder": 244
     },
     {
       "cefr": "B1",
@@ -3286,7 +3149,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 256
+      "newOrder": 245
     },
     {
       "cefr": "B1",
@@ -3299,20 +3162,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 257
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "гучний",
-      "lemmaId": "гучний",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 258
+      "newOrder": 246
     },
     {
       "cefr": "B1",
@@ -3325,7 +3175,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 259
+      "newOrder": 247
     },
     {
       "cefr": "B1",
@@ -3338,7 +3188,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 260
+      "newOrder": 248
     },
     {
       "cefr": "B1",
@@ -3351,7 +3201,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 261
+      "newOrder": 249
     },
     {
       "cefr": "B1",
@@ -3364,7 +3214,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 262
+      "newOrder": 250
     },
     {
       "cefr": "B1",
@@ -3377,7 +3227,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 263
+      "newOrder": 251
     },
     {
       "cefr": "B1",
@@ -3390,7 +3240,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 264
+      "newOrder": 252
     },
     {
       "cefr": "B1",
@@ -3403,7 +3253,20 @@
         "matching",
         "choice"
       ],
-      "newOrder": 265
+      "newOrder": 253
+    },
+    {
+      "cefr": "B1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "прудко",
+      "lemmaId": "прудко",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 254
     },
     {
       "cefr": "B1",
@@ -3416,7 +3279,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 266
+      "newOrder": 255
     },
     {
       "cefr": "B1",
@@ -3429,7 +3292,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 267
+      "newOrder": 256
     },
     {
       "cefr": "B1",
@@ -3442,7 +3305,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 268
+      "newOrder": 257
     },
     {
       "cefr": "B1",
@@ -3455,7 +3318,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 269
+      "newOrder": 258
     },
     {
       "cefr": "B1",
@@ -3468,7 +3331,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 270
+      "newOrder": 259
     },
     {
       "cefr": "B1",
@@ -3481,7 +3344,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 271
+      "newOrder": 260
     },
     {
       "cefr": "B1",
@@ -3494,7 +3357,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 272
+      "newOrder": 261
     },
     {
       "cefr": "B1",
@@ -3507,7 +3370,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 273
+      "newOrder": 262
     },
     {
       "cefr": "B1",
@@ -3520,7 +3383,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 274
+      "newOrder": 263
     },
     {
       "cefr": "B1",
@@ -3533,7 +3396,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 275
+      "newOrder": 264
     },
     {
       "cefr": "B1",
@@ -3546,7 +3409,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 276
+      "newOrder": 265
     },
     {
       "cefr": "B1",
@@ -3559,7 +3422,20 @@
         "matching",
         "choice"
       ],
-      "newOrder": 277
+      "newOrder": 266
+    },
+    {
+      "cefr": "B1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "компас",
+      "lemmaId": "компас",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 267
     },
     {
       "cefr": "B1",
@@ -3572,7 +3448,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 278
+      "newOrder": 268
     },
     {
       "cefr": "B1",
@@ -3585,7 +3461,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 279
+      "newOrder": 269
     },
     {
       "cefr": "B1",
@@ -3598,7 +3474,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 280
+      "newOrder": 270
     },
     {
       "cefr": "B1",
@@ -3611,7 +3487,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 281
+      "newOrder": 271
     },
     {
       "cefr": "B1",
@@ -3624,7 +3500,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 282
+      "newOrder": 272
     },
     {
       "cefr": "B1",
@@ -3637,7 +3513,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 283
+      "newOrder": 273
     },
     {
       "cefr": "B1",
@@ -3650,7 +3526,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 284
+      "newOrder": 274
     },
     {
       "cefr": "B1",
@@ -3663,7 +3539,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 285
+      "newOrder": 275
     },
     {
       "cefr": "B1",
@@ -3676,7 +3552,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 286
+      "newOrder": 276
     },
     {
       "cefr": "B1",
@@ -3689,7 +3565,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 287
+      "newOrder": 277
     },
     {
       "cefr": "B1",
@@ -3702,7 +3578,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 288
+      "newOrder": 278
     },
     {
       "cefr": "B1",
@@ -3715,7 +3591,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 289
+      "newOrder": 279
     },
     {
       "cefr": "B1",
@@ -3728,7 +3604,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 290
+      "newOrder": 280
     },
     {
       "cefr": "B1",
@@ -3741,7 +3617,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 291
+      "newOrder": 281
     },
     {
       "cefr": "B1",
@@ -3752,7 +3628,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 292
+      "newOrder": 282
     },
     {
       "cefr": "B1",
@@ -3765,7 +3641,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 293
+      "newOrder": 283
     },
     {
       "cefr": "B1",
@@ -3778,7 +3654,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 294
+      "newOrder": 284
     },
     {
       "cefr": "B1",
@@ -3791,7 +3667,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 295
+      "newOrder": 285
     },
     {
       "cefr": "B1",
@@ -3804,7 +3680,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 296
+      "newOrder": 286
     },
     {
       "cefr": "B1",
@@ -3817,7 +3693,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 297
+      "newOrder": 287
     },
     {
       "cefr": "B1",
@@ -3830,7 +3706,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 298
+      "newOrder": 288
     },
     {
       "cefr": "B1",
@@ -3843,7 +3719,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 299
+      "newOrder": 289
     },
     {
       "cefr": "B1",
@@ -3856,7 +3732,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 300
+      "newOrder": 290
     },
     {
       "cefr": "B1",
@@ -3869,7 +3745,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 301
+      "newOrder": 291
     },
     {
       "cefr": "B1",
@@ -3882,7 +3758,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 302
+      "newOrder": 292
     },
     {
       "cefr": "B1",
@@ -3895,7 +3771,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 303
+      "newOrder": 293
     },
     {
       "cefr": "B1",
@@ -3908,7 +3784,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 304
+      "newOrder": 294
     },
     {
       "cefr": "B1",
@@ -3921,7 +3797,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 305
+      "newOrder": 295
     },
     {
       "cefr": "B1",
@@ -3934,7 +3810,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 306
+      "newOrder": 296
     },
     {
       "cefr": "B1",
@@ -3947,7 +3823,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 307
+      "newOrder": 297
     },
     {
       "cefr": "B1",
@@ -3960,7 +3836,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 308
+      "newOrder": 298
     },
     {
       "cefr": "B1",
@@ -3973,7 +3849,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 309
+      "newOrder": 299
     },
     {
       "cefr": "B1",
@@ -3986,7 +3862,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 310
+      "newOrder": 300
     },
     {
       "cefr": "B1",
@@ -3999,7 +3875,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 311
+      "newOrder": 301
     },
     {
       "cefr": "B1",
@@ -4012,7 +3888,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 312
+      "newOrder": 302
     },
     {
       "cefr": "B1",
@@ -4025,7 +3901,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 313
+      "newOrder": 303
     },
     {
       "cefr": "B1",
@@ -4038,7 +3914,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 314
+      "newOrder": 304
     },
     {
       "cefr": "B1",
@@ -4051,7 +3927,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 315
+      "newOrder": 305
     },
     {
       "cefr": "B1",
@@ -4064,7 +3940,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 316
+      "newOrder": 306
     },
     {
       "cefr": "B1",
@@ -4077,7 +3953,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 317
+      "newOrder": 307
     },
     {
       "cefr": "B1",
@@ -4090,7 +3966,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 318
+      "newOrder": 308
     },
     {
       "cefr": "B1",
@@ -4103,7 +3979,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 319
+      "newOrder": 309
     },
     {
       "cefr": "B1",
@@ -4116,7 +3992,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 320
+      "newOrder": 310
     },
     {
       "cefr": "B1",
@@ -4129,7 +4005,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 321
+      "newOrder": 311
     },
     {
       "cefr": "B1",
@@ -4142,7 +4018,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 322
+      "newOrder": 312
     },
     {
       "cefr": "B1",
@@ -4155,7 +4031,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 323
+      "newOrder": 313
     },
     {
       "cefr": "B1",
@@ -4168,7 +4044,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 324
+      "newOrder": 314
     },
     {
       "cefr": "B1",
@@ -4181,7 +4057,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 325
+      "newOrder": 315
     },
     {
       "cefr": "B1",
@@ -4194,7 +4070,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 326
+      "newOrder": 316
     },
     {
       "cefr": "B1",
@@ -4207,7 +4083,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 327
+      "newOrder": 317
     },
     {
       "cefr": "B1",
@@ -4220,7 +4096,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 328
+      "newOrder": 318
     },
     {
       "cefr": "B1",
@@ -4233,7 +4109,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 329
+      "newOrder": 319
     },
     {
       "cefr": "B1",
@@ -4246,7 +4122,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 330
+      "newOrder": 320
     },
     {
       "cefr": "B1",
@@ -4259,7 +4135,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 331
+      "newOrder": 321
     },
     {
       "cefr": "B1",
@@ -4272,7 +4148,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 332
+      "newOrder": 322
     },
     {
       "cefr": "B1",
@@ -4285,7 +4161,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 333
+      "newOrder": 323
     },
     {
       "cefr": "B1",
@@ -4298,7 +4174,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 334
+      "newOrder": 324
     },
     {
       "cefr": "B1",
@@ -4311,7 +4187,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 335
+      "newOrder": 325
     },
     {
       "cefr": "B1",
@@ -4324,7 +4200,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 336
+      "newOrder": 326
     },
     {
       "cefr": "B1",
@@ -4337,7 +4213,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 337
+      "newOrder": 327
     },
     {
       "cefr": "B1",
@@ -4350,7 +4226,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 338
+      "newOrder": 328
     },
     {
       "cefr": "B1",
@@ -4363,7 +4239,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 339
+      "newOrder": 329
     },
     {
       "cefr": "B1",
@@ -4376,7 +4252,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 340
+      "newOrder": 330
     },
     {
       "cefr": "B1",
@@ -4389,7 +4265,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 341
+      "newOrder": 331
     },
     {
       "cefr": "B1",
@@ -4402,7 +4278,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 342
+      "newOrder": 332
     },
     {
       "cefr": "B1",
@@ -4415,7 +4291,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 343
+      "newOrder": 333
     },
     {
       "cefr": "B1",
@@ -4428,7 +4304,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 344
+      "newOrder": 334
     },
     {
       "cefr": "B1",
@@ -4441,7 +4317,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 345
+      "newOrder": 335
     },
     {
       "cefr": "B1",
@@ -4454,7 +4330,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 346
+      "newOrder": 336
     },
     {
       "cefr": "B1",
@@ -4467,7 +4343,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 347
+      "newOrder": 337
     },
     {
       "cefr": "B1",
@@ -4480,7 +4356,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 348
+      "newOrder": 338
     },
     {
       "cefr": "B1",
@@ -4491,7 +4367,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 349
+      "newOrder": 339
     },
     {
       "cefr": "B1",
@@ -4504,7 +4380,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 350
+      "newOrder": 340
     },
     {
       "cefr": "B1",
@@ -4517,7 +4393,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 351
+      "newOrder": 341
     },
     {
       "cefr": "B1",
@@ -4530,7 +4406,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 352
+      "newOrder": 342
     },
     {
       "cefr": "B1",
@@ -4543,7 +4419,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 353
+      "newOrder": 343
     },
     {
       "cefr": "B1",
@@ -4556,7 +4432,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 354
+      "newOrder": 344
     },
     {
       "cefr": "B1",
@@ -4569,7 +4445,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 355
+      "newOrder": 345
     },
     {
       "cefr": "B1",
@@ -4582,7 +4458,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 356
+      "newOrder": 346
     },
     {
       "cefr": "B1",
@@ -4595,7 +4471,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 357
+      "newOrder": 347
     },
     {
       "cefr": "B1",
@@ -4608,7 +4484,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 358
+      "newOrder": 348
     },
     {
       "cefr": "B1",
@@ -4621,7 +4497,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 359
+      "newOrder": 349
     },
     {
       "cefr": "B1",
@@ -4634,7 +4510,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 360
+      "newOrder": 350
     },
     {
       "cefr": "B1",
@@ -4647,7 +4523,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 361
+      "newOrder": 351
     },
     {
       "cefr": "B1",
@@ -4660,7 +4536,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 362
+      "newOrder": 352
     },
     {
       "cefr": "B1",
@@ -4671,7 +4547,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 363
+      "newOrder": 353
     },
     {
       "cefr": "B1",
@@ -4684,7 +4560,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 364
+      "newOrder": 354
     },
     {
       "cefr": "B1",
@@ -4697,7 +4573,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 365
+      "newOrder": 355
     },
     {
       "cefr": "B1",
@@ -4710,7 +4586,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 366
+      "newOrder": 356
     },
     {
       "cefr": "B1",
@@ -4723,7 +4599,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 367
+      "newOrder": 357
     },
     {
       "cefr": "B1",
@@ -4736,7 +4612,20 @@
         "matching",
         "choice"
       ],
-      "newOrder": 368
+      "newOrder": 358
+    },
+    {
+      "cefr": "B1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "контрольований",
+      "lemmaId": "контрольований",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 359
     },
     {
       "cefr": "B1",
@@ -4749,7 +4638,20 @@
         "matching",
         "choice"
       ],
-      "newOrder": 369
+      "newOrder": 360
+    },
+    {
+      "cefr": "B1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "прагматичний",
+      "lemmaId": "прагматичний",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 361
     },
     {
       "cefr": "B1",
@@ -4762,7 +4664,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 370
+      "newOrder": 362
     },
     {
       "cefr": "B1",
@@ -4775,7 +4677,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 371
+      "newOrder": 363
     },
     {
       "cefr": "B1",
@@ -4788,7 +4690,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 372
+      "newOrder": 364
     },
     {
       "cefr": "B1",
@@ -4801,7 +4703,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 373
+      "newOrder": 365
     },
     {
       "cefr": "B1",
@@ -4814,7 +4716,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 374
+      "newOrder": 366
     },
     {
       "cefr": "B1",
@@ -4827,7 +4729,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 375
+      "newOrder": 367
     },
     {
       "cefr": "B1",
@@ -4840,7 +4742,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 376
+      "newOrder": 368
     },
     {
       "cefr": "B1",
@@ -4853,7 +4755,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 377
+      "newOrder": 369
     },
     {
       "cefr": "B1",
@@ -4866,7 +4768,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 378
+      "newOrder": 370
     },
     {
       "cefr": "B1",
@@ -4879,7 +4781,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 379
+      "newOrder": 371
     },
     {
       "cefr": "B1",
@@ -4892,7 +4794,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 380
+      "newOrder": 372
     },
     {
       "cefr": "B1",
@@ -4905,7 +4807,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 381
+      "newOrder": 373
     },
     {
       "cefr": "B1",
@@ -4918,7 +4820,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 382
+      "newOrder": 374
     },
     {
       "cefr": "B1",
@@ -4931,7 +4833,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 383
+      "newOrder": 375
     },
     {
       "cefr": "B1",
@@ -4944,7 +4846,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 384
+      "newOrder": 376
     },
     {
       "cefr": "B1",
@@ -4957,7 +4859,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 385
+      "newOrder": 377
     },
     {
       "cefr": "B1",
@@ -4970,7 +4872,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 386
+      "newOrder": 378
     },
     {
       "cefr": "B1",
@@ -4983,7 +4885,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 387
+      "newOrder": 379
     },
     {
       "cefr": "B1",
@@ -4996,7 +4898,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 388
+      "newOrder": 380
     },
     {
       "cefr": "B1",
@@ -5009,7 +4911,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 389
+      "newOrder": 381
     },
     {
       "cefr": "B1",
@@ -5022,7 +4924,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 390
+      "newOrder": 382
     },
     {
       "cefr": "B1",
@@ -5035,7 +4937,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 391
+      "newOrder": 383
     },
     {
       "cefr": "B1",
@@ -5048,7 +4950,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 392
+      "newOrder": 384
     },
     {
       "cefr": "B1",
@@ -5061,7 +4963,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 393
+      "newOrder": 385
     },
     {
       "cefr": "B1",
@@ -5074,7 +4976,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 394
+      "newOrder": 386
     },
     {
       "cefr": "B1",
@@ -5087,7 +4989,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 395
+      "newOrder": 387
     },
     {
       "cefr": "B1",
@@ -5100,7 +5002,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 396
+      "newOrder": 388
     },
     {
       "cefr": "B1",
@@ -5113,7 +5015,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 397
+      "newOrder": 389
     },
     {
       "cefr": "B1",
@@ -5126,7 +5028,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 398
+      "newOrder": 390
     },
     {
       "cefr": "B1",
@@ -5139,7 +5041,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 399
+      "newOrder": 391
     },
     {
       "cefr": "B1",
@@ -5152,7 +5054,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 400
+      "newOrder": 392
     },
     {
       "cefr": "B1",
@@ -5165,7 +5067,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 401
+      "newOrder": 393
     },
     {
       "cefr": "B1",
@@ -5178,7 +5080,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 402
+      "newOrder": 394
     },
     {
       "cefr": "B1",
@@ -5191,7 +5093,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 403
+      "newOrder": 395
     },
     {
       "cefr": "B1",
@@ -5204,7 +5106,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 404
+      "newOrder": 396
     },
     {
       "cefr": "B1",
@@ -5217,7 +5119,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 405
+      "newOrder": 397
     },
     {
       "cefr": "B1",
@@ -5230,7 +5132,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 406
+      "newOrder": 398
     },
     {
       "cefr": "B1",
@@ -5243,7 +5145,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 407
+      "newOrder": 399
     },
     {
       "cefr": "B1",
@@ -5256,7 +5158,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 408
+      "newOrder": 400
     },
     {
       "cefr": "B1",
@@ -5269,7 +5171,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 409
+      "newOrder": 401
     },
     {
       "cefr": "B1",
@@ -5282,7 +5184,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 410
+      "newOrder": 402
     },
     {
       "cefr": "B1",
@@ -5295,7 +5197,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 411
+      "newOrder": 403
     },
     {
       "cefr": "B1",
@@ -5308,7 +5210,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 412
+      "newOrder": 404
     },
     {
       "cefr": "B1",
@@ -5319,7 +5221,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 413
+      "newOrder": 405
     },
     {
       "cefr": "B1",
@@ -5332,7 +5234,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 414
+      "newOrder": 406
     },
     {
       "cefr": "B1",
@@ -5345,7 +5247,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 415
+      "newOrder": 407
     },
     {
       "cefr": "B1",
@@ -5358,7 +5260,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 416
+      "newOrder": 408
     },
     {
       "cefr": "B1",
@@ -5371,7 +5273,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 417
+      "newOrder": 409
     },
     {
       "cefr": "B1",
@@ -5384,7 +5286,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 418
+      "newOrder": 410
     },
     {
       "cefr": "B1",
@@ -5397,7 +5299,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 419
+      "newOrder": 411
     },
     {
       "cefr": "B1",
@@ -5410,7 +5312,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 420
+      "newOrder": 412
     },
     {
       "cefr": "B1",
@@ -5423,7 +5325,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 421
+      "newOrder": 413
     },
     {
       "cefr": "B1",
@@ -5436,7 +5338,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 422
+      "newOrder": 414
     },
     {
       "cefr": "B1",
@@ -5449,7 +5351,20 @@
         "matching",
         "choice"
       ],
-      "newOrder": 423
+      "newOrder": 415
+    },
+    {
+      "cefr": "B1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "утретє",
+      "lemmaId": "утретє",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 416
     },
     {
       "cefr": "B1",
@@ -5462,7 +5377,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 424
+      "newOrder": 417
     },
     {
       "cefr": "B1",
@@ -5475,7 +5390,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 425
+      "newOrder": 418
     },
     {
       "cefr": "B1",
@@ -5488,7 +5403,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 426
+      "newOrder": 419
     },
     {
       "cefr": "B1",
@@ -5501,7 +5416,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 427
+      "newOrder": 420
     },
     {
       "cefr": "B1",
@@ -5514,7 +5429,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 428
+      "newOrder": 421
     },
     {
       "cefr": "B1",
@@ -5527,7 +5442,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 429
+      "newOrder": 422
     },
     {
       "cefr": "B1",
@@ -5540,7 +5455,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 430
+      "newOrder": 423
     },
     {
       "cefr": "B1",
@@ -5553,7 +5468,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 431
+      "newOrder": 424
     },
     {
       "cefr": "B1",
@@ -5564,7 +5479,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 432
+      "newOrder": 425
     },
     {
       "cefr": "B1",
@@ -5577,7 +5492,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 433
+      "newOrder": 426
     },
     {
       "cefr": "B1",
@@ -5590,7 +5505,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 434
+      "newOrder": 427
     },
     {
       "cefr": "B1",
@@ -5603,7 +5518,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 435
+      "newOrder": 428
     },
     {
       "cefr": "B1",
@@ -5616,7 +5531,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 436
+      "newOrder": 429
     },
     {
       "cefr": "B1",
@@ -5629,7 +5544,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 437
+      "newOrder": 430
     },
     {
       "cefr": "B1",
@@ -5642,7 +5557,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 438
+      "newOrder": 431
     },
     {
       "cefr": "B1",
@@ -5655,7 +5570,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 439
+      "newOrder": 432
     },
     {
       "cefr": "B1",
@@ -5668,7 +5583,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 440
+      "newOrder": 433
     },
     {
       "cefr": "B1",
@@ -5681,7 +5596,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 441
+      "newOrder": 434
     },
     {
       "cefr": "B1",
@@ -5694,7 +5609,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 442
+      "newOrder": 435
     },
     {
       "cefr": "B1",
@@ -5707,7 +5622,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 443
+      "newOrder": 436
     },
     {
       "cefr": "B1",
@@ -5720,7 +5635,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 444
+      "newOrder": 437
     },
     {
       "cefr": "B1",
@@ -5733,7 +5648,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 445
+      "newOrder": 438
     },
     {
       "cefr": "B1",
@@ -5746,7 +5661,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 446
+      "newOrder": 439
     },
     {
       "cefr": "B1",
@@ -5759,7 +5674,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 447
+      "newOrder": 440
     },
     {
       "cefr": "B1",
@@ -5772,7 +5687,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 448
+      "newOrder": 441
     },
     {
       "cefr": "B1",
@@ -5785,7 +5700,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 449
+      "newOrder": 442
     },
     {
       "cefr": "B1",
@@ -5798,7 +5713,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 450
+      "newOrder": 443
     },
     {
       "cefr": "B1",
@@ -5811,7 +5726,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 451
+      "newOrder": 444
     },
     {
       "cefr": "B1",
@@ -5824,7 +5739,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 452
+      "newOrder": 445
     },
     {
       "cefr": "B1",
@@ -5837,7 +5752,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 453
+      "newOrder": 446
     },
     {
       "cefr": "B1",
@@ -5850,7 +5765,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 454
+      "newOrder": 447
     },
     {
       "cefr": "B1",
@@ -5863,7 +5778,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 455
+      "newOrder": 448
     },
     {
       "cefr": "B1",
@@ -5876,7 +5791,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 456
+      "newOrder": 449
     },
     {
       "cefr": "B1",
@@ -5889,7 +5804,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 457
+      "newOrder": 450
     },
     {
       "cefr": "B1",
@@ -5902,7 +5817,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 458
+      "newOrder": 451
     },
     {
       "cefr": "B1",
@@ -5915,7 +5830,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 459
+      "newOrder": 452
     },
     {
       "cefr": "B1",
@@ -5928,7 +5843,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 460
+      "newOrder": 453
     },
     {
       "cefr": "B1",
@@ -5941,7 +5856,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 461
+      "newOrder": 454
     },
     {
       "cefr": "B1",
@@ -5954,7 +5869,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 462
+      "newOrder": 455
     },
     {
       "cefr": "B1",
@@ -5967,7 +5882,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 463
+      "newOrder": 456
     },
     {
       "cefr": "B1",
@@ -5980,7 +5895,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 464
+      "newOrder": 457
     },
     {
       "cefr": "B1",
@@ -5993,7 +5908,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 465
+      "newOrder": 458
     },
     {
       "cefr": "B1",
@@ -6006,7 +5921,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 466
+      "newOrder": 459
     },
     {
       "cefr": "B1",
@@ -6019,7 +5934,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 467
+      "newOrder": 460
     },
     {
       "cefr": "B1",
@@ -6032,7 +5947,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 468
+      "newOrder": 461
     },
     {
       "cefr": "B1",
@@ -6045,7 +5960,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 469
+      "newOrder": 462
     },
     {
       "cefr": "B1",
@@ -6058,7 +5973,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 470
+      "newOrder": 463
     },
     {
       "cefr": "B1",
@@ -6071,7 +5986,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 471
+      "newOrder": 464
     },
     {
       "cefr": "B1",
@@ -6084,7 +5999,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 472
+      "newOrder": 465
     },
     {
       "cefr": "B1",
@@ -6097,7 +6012,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 473
+      "newOrder": 466
     },
     {
       "cefr": "B1",
@@ -6110,7 +6025,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 474
+      "newOrder": 467
     },
     {
       "cefr": "B1",
@@ -6123,7 +6038,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 475
+      "newOrder": 468
     },
     {
       "cefr": "B1",
@@ -6136,7 +6051,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 476
+      "newOrder": 469
     },
     {
       "cefr": "B1",
@@ -6149,7 +6064,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 477
+      "newOrder": 470
     },
     {
       "cefr": "B1",
@@ -6162,7 +6077,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 478
+      "newOrder": 471
     },
     {
       "cefr": "B1",
@@ -6175,7 +6090,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 479
+      "newOrder": 472
     },
     {
       "cefr": "B1",
@@ -6188,7 +6103,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 480
+      "newOrder": 473
     },
     {
       "cefr": "B1",
@@ -6201,7 +6116,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 481
+      "newOrder": 474
     },
     {
       "cefr": "B1",
@@ -6214,7 +6129,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 482
+      "newOrder": 475
     },
     {
       "cefr": "B1",
@@ -6227,7 +6142,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 483
+      "newOrder": 476
     },
     {
       "cefr": "B1",
@@ -6240,7 +6155,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 484
+      "newOrder": 477
     },
     {
       "cefr": "B1",
@@ -6253,7 +6168,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 485
+      "newOrder": 478
     },
     {
       "cefr": "B1",
@@ -6266,7 +6181,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 486
+      "newOrder": 479
     },
     {
       "cefr": "B1",
@@ -6279,7 +6194,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 487
+      "newOrder": 480
     },
     {
       "cefr": "B1",
@@ -6292,7 +6207,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 488
+      "newOrder": 481
     },
     {
       "cefr": "B1",
@@ -6305,7 +6220,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 489
+      "newOrder": 482
     },
     {
       "cefr": "B1",
@@ -6318,7 +6233,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 490
+      "newOrder": 483
     },
     {
       "cefr": "B1",
@@ -6331,7 +6246,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 491
+      "newOrder": 484
     },
     {
       "cefr": "B1",
@@ -6344,7 +6259,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 492
+      "newOrder": 485
     },
     {
       "cefr": "B1",
@@ -6357,7 +6272,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 493
+      "newOrder": 486
     },
     {
       "cefr": "B1",
@@ -6370,7 +6285,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 494
+      "newOrder": 487
     },
     {
       "cefr": "B1",
@@ -6383,7 +6298,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 495
+      "newOrder": 488
     },
     {
       "cefr": "B1",
@@ -6396,7 +6311,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 496
+      "newOrder": 489
     },
     {
       "cefr": "B1",
@@ -6409,7 +6324,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 497
+      "newOrder": 490
     },
     {
       "cefr": "B1",
@@ -6422,7 +6337,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 498
+      "newOrder": 491
     },
     {
       "cefr": "B1",
@@ -6435,7 +6350,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 499
+      "newOrder": 492
     },
     {
       "cefr": "B1",
@@ -6448,7 +6363,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 500
+      "newOrder": 493
     },
     {
       "cefr": "B1",
@@ -6461,7 +6376,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 501
+      "newOrder": 494
     },
     {
       "cefr": "B1",
@@ -6474,7 +6389,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 502
+      "newOrder": 495
     },
     {
       "cefr": "B1",
@@ -6487,7 +6402,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 503
+      "newOrder": 496
     },
     {
       "cefr": "B1",
@@ -6500,7 +6415,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 504
+      "newOrder": 497
     },
     {
       "cefr": "B1",
@@ -6513,7 +6428,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 505
+      "newOrder": 498
     },
     {
       "cefr": "B1",
@@ -6526,7 +6441,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 506
+      "newOrder": 499
     },
     {
       "cefr": "B1",
@@ -6539,7 +6454,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 507
+      "newOrder": 500
     },
     {
       "cefr": "B1",
@@ -6552,7 +6467,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 508
+      "newOrder": 501
     },
     {
       "cefr": "B1",
@@ -6565,7 +6480,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 509
+      "newOrder": 502
     },
     {
       "cefr": "B1",
@@ -6578,7 +6493,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 510
+      "newOrder": 503
     },
     {
       "cefr": "B1",
@@ -6591,7 +6506,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 511
+      "newOrder": 504
     },
     {
       "cefr": "B1",
@@ -6604,7 +6519,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 512
+      "newOrder": 505
     },
     {
       "cefr": "B1",
@@ -6617,7 +6532,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 513
+      "newOrder": 506
     },
     {
       "cefr": "B1",
@@ -6630,7 +6545,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 514
+      "newOrder": 507
     },
     {
       "cefr": "B1",
@@ -6643,7 +6558,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 515
+      "newOrder": 508
     },
     {
       "cefr": "B1",
@@ -6656,7 +6571,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 516
+      "newOrder": 509
     },
     {
       "cefr": "B1",
@@ -6669,7 +6584,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 517
+      "newOrder": 510
     },
     {
       "cefr": "B1",
@@ -6682,7 +6597,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 518
+      "newOrder": 511
     },
     {
       "cefr": "B1",
@@ -6695,7 +6610,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 519
+      "newOrder": 512
     },
     {
       "cefr": "B1",
@@ -6708,7 +6623,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 520
+      "newOrder": 513
     },
     {
       "cefr": "B1",
@@ -6721,7 +6636,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 521
+      "newOrder": 514
     },
     {
       "cefr": "B1",
@@ -6734,7 +6649,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 522
+      "newOrder": 515
     },
     {
       "cefr": "B1",
@@ -6747,7 +6662,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 523
+      "newOrder": 516
     },
     {
       "cefr": "B1",
@@ -6760,7 +6675,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 524
+      "newOrder": 517
     },
     {
       "cefr": "B1",
@@ -6773,7 +6688,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 525
+      "newOrder": 518
     },
     {
       "cefr": "B1",
@@ -6786,7 +6701,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 526
+      "newOrder": 519
     },
     {
       "cefr": "B1",
@@ -6799,7 +6714,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 527
+      "newOrder": 520
     },
     {
       "cefr": "B1",
@@ -6812,7 +6727,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 528
+      "newOrder": 521
     },
     {
       "cefr": "B1",
@@ -6825,7 +6740,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 529
+      "newOrder": 522
     },
     {
       "cefr": "B1",
@@ -6836,7 +6751,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 530
+      "newOrder": 523
     },
     {
       "cefr": "B1",
@@ -6849,7 +6764,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 531
+      "newOrder": 524
     },
     {
       "cefr": "B1",
@@ -6862,7 +6777,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 532
+      "newOrder": 525
     },
     {
       "cefr": "B1",
@@ -6875,7 +6790,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 533
+      "newOrder": 526
     },
     {
       "cefr": "B1",
@@ -6886,7 +6801,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 534
+      "newOrder": 527
     },
     {
       "cefr": "B1",
@@ -6899,7 +6814,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 535
+      "newOrder": 528
     },
     {
       "cefr": "B1",
@@ -6912,7 +6827,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 536
+      "newOrder": 529
     },
     {
       "cefr": "B1",
@@ -6925,7 +6840,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 537
+      "newOrder": 530
     },
     {
       "cefr": "B1",
@@ -6938,7 +6853,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 538
+      "newOrder": 531
     },
     {
       "cefr": "B1",
@@ -6951,7 +6866,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 539
+      "newOrder": 532
     },
     {
       "cefr": "B1",
@@ -6964,7 +6879,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 540
+      "newOrder": 533
     },
     {
       "cefr": "B1",
@@ -6977,7 +6892,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 541
+      "newOrder": 534
     },
     {
       "cefr": "B1",
@@ -6990,7 +6905,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 542
+      "newOrder": 535
     },
     {
       "cefr": "B1",
@@ -7003,7 +6918,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 543
+      "newOrder": 536
     },
     {
       "cefr": "B1",
@@ -7016,7 +6931,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 544
+      "newOrder": 537
     },
     {
       "cefr": "B1",
@@ -7029,7 +6944,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 545
+      "newOrder": 538
     },
     {
       "cefr": "B1",
@@ -7042,7 +6957,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 546
+      "newOrder": 539
     },
     {
       "cefr": "B1",
@@ -7055,7 +6970,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 547
+      "newOrder": 540
     },
     {
       "cefr": "B1",
@@ -7068,7 +6983,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 548
+      "newOrder": 541
     },
     {
       "cefr": "B1",
@@ -7081,7 +6996,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 549
+      "newOrder": 542
     },
     {
       "cefr": "B1",
@@ -7094,7 +7009,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 550
+      "newOrder": 543
     },
     {
       "cefr": "B1",
@@ -7107,7 +7022,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 551
+      "newOrder": 544
     },
     {
       "cefr": "B1",
@@ -7118,7 +7033,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 552
+      "newOrder": 545
     },
     {
       "cefr": "B1",
@@ -7131,7 +7046,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 553
+      "newOrder": 546
     },
     {
       "cefr": "B1",
@@ -7144,7 +7059,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 554
+      "newOrder": 547
     },
     {
       "cefr": "B1",
@@ -7157,7 +7072,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 555
+      "newOrder": 548
     },
     {
       "cefr": "B1",
@@ -7170,7 +7085,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 556
+      "newOrder": 549
     },
     {
       "cefr": "B1",
@@ -7183,7 +7098,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 557
+      "newOrder": 550
     },
     {
       "cefr": "B1",
@@ -7196,7 +7111,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 558
+      "newOrder": 551
     },
     {
       "cefr": "B1",
@@ -7209,7 +7124,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 559
+      "newOrder": 552
     },
     {
       "cefr": "B1",
@@ -7222,7 +7137,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 560
+      "newOrder": 553
     },
     {
       "cefr": "B1",
@@ -7235,7 +7150,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 561
+      "newOrder": 554
     },
     {
       "cefr": "B1",
@@ -7248,7 +7163,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 562
+      "newOrder": 555
     },
     {
       "cefr": "B1",
@@ -7261,7 +7176,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 563
+      "newOrder": 556
     },
     {
       "cefr": "B1",
@@ -7274,7 +7189,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 564
+      "newOrder": 557
     },
     {
       "cefr": "B1",
@@ -7287,7 +7202,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 565
+      "newOrder": 558
     },
     {
       "cefr": "B1",
@@ -7300,7 +7215,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 566
+      "newOrder": 559
     },
     {
       "cefr": "B1",
@@ -7313,7 +7228,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 567
+      "newOrder": 560
     },
     {
       "cefr": "B1",
@@ -7326,7 +7241,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 568
+      "newOrder": 561
     },
     {
       "cefr": "B1",
@@ -7339,7 +7254,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 569
+      "newOrder": 562
     },
     {
       "cefr": "B1",
@@ -7352,7 +7267,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 570
+      "newOrder": 563
     },
     {
       "cefr": "B1",
@@ -7365,7 +7280,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 571
+      "newOrder": 564
     },
     {
       "cefr": "B1",
@@ -7378,7 +7293,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 572
+      "newOrder": 565
     },
     {
       "cefr": "B1",
@@ -7391,7 +7306,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 573
+      "newOrder": 566
     },
     {
       "cefr": "B1",
@@ -7404,7 +7319,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 574
+      "newOrder": 567
     },
     {
       "cefr": "B1",
@@ -7417,7 +7332,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 575
+      "newOrder": 568
     },
     {
       "cefr": "B1",
@@ -7430,7 +7345,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 576
+      "newOrder": 569
     },
     {
       "cefr": "B1",
@@ -7443,7 +7358,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 577
+      "newOrder": 570
     },
     {
       "cefr": "B1",
@@ -7456,7 +7371,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 578
+      "newOrder": 571
     },
     {
       "cefr": "B1",
@@ -7469,7 +7384,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 579
+      "newOrder": 572
     },
     {
       "cefr": "B1",
@@ -7482,7 +7397,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 580
+      "newOrder": 573
     },
     {
       "cefr": "B1",
@@ -7495,7 +7410,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 581
+      "newOrder": 574
     },
     {
       "cefr": "B1",
@@ -7508,7 +7423,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 582
+      "newOrder": 575
     },
     {
       "cefr": "B1",
@@ -7521,7 +7436,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 583
+      "newOrder": 576
     },
     {
       "cefr": "B1",
@@ -7534,7 +7449,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 584
+      "newOrder": 577
     },
     {
       "cefr": "B1",
@@ -7547,7 +7462,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 585
+      "newOrder": 578
     },
     {
       "cefr": "B1",
@@ -7558,7 +7473,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 586
+      "newOrder": 579
     },
     {
       "cefr": "B1",
@@ -7571,7 +7486,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 587
+      "newOrder": 580
     },
     {
       "cefr": "B1",
@@ -7582,7 +7497,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 588
+      "newOrder": 581
     },
     {
       "cefr": "B1",
@@ -7593,7 +7508,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 589
+      "newOrder": 582
     },
     {
       "cefr": "B1",
@@ -7606,7 +7521,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 590
+      "newOrder": 583
     },
     {
       "cefr": "B1",
@@ -7619,7 +7534,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 591
+      "newOrder": 584
     },
     {
       "cefr": "B1",
@@ -7630,7 +7545,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 592
+      "newOrder": 585
     },
     {
       "cefr": "B1",
@@ -7643,7 +7558,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 593
+      "newOrder": 586
     },
     {
       "cefr": "B1",
@@ -7654,7 +7569,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 594
+      "newOrder": 587
     },
     {
       "cefr": "B1",
@@ -7665,7 +7580,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 595
+      "newOrder": 588
     },
     {
       "cefr": "B1",
@@ -7678,7 +7593,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 596
+      "newOrder": 589
     },
     {
       "cefr": "B1",
@@ -7689,7 +7604,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 597
+      "newOrder": 590
     },
     {
       "cefr": "B1",
@@ -7700,7 +7615,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 598
+      "newOrder": 591
     },
     {
       "cefr": "B1",
@@ -7713,7 +7628,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 599
+      "newOrder": 592
     },
     {
       "cefr": "B1",
@@ -7726,7 +7641,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 600
+      "newOrder": 593
     },
     {
       "cefr": "B1",
@@ -7739,7 +7654,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 601
+      "newOrder": 594
     },
     {
       "cefr": "B1",
@@ -7752,7 +7667,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 602
+      "newOrder": 595
     },
     {
       "cefr": "B1",
@@ -7765,7 +7680,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 603
+      "newOrder": 596
     },
     {
       "cefr": "B1",
@@ -7776,7 +7691,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 604
+      "newOrder": 597
     },
     {
       "cefr": "B1",
@@ -7789,7 +7704,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 605
+      "newOrder": 598
     },
     {
       "cefr": "B1",
@@ -7802,7 +7717,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 606
+      "newOrder": 599
     },
     {
       "cefr": "B1",
@@ -7815,7 +7730,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 607
+      "newOrder": 600
     },
     {
       "cefr": "B1",
@@ -7828,7 +7743,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 608
+      "newOrder": 601
     },
     {
       "cefr": "B1",
@@ -7841,7 +7756,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 609
+      "newOrder": 602
     },
     {
       "cefr": "B1",
@@ -7854,7 +7769,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 610
+      "newOrder": 603
     },
     {
       "cefr": "B1",
@@ -7865,7 +7780,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 611
+      "newOrder": 604
     },
     {
       "cefr": "B1",
@@ -7878,7 +7793,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 612
+      "newOrder": 605
     },
     {
       "cefr": "B1",
@@ -7891,7 +7806,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 613
+      "newOrder": 606
     },
     {
       "cefr": "B1",
@@ -7904,7 +7819,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 614
+      "newOrder": 607
     },
     {
       "cefr": "B1",
@@ -7917,7 +7832,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 615
+      "newOrder": 608
     },
     {
       "cefr": "B1",
@@ -7930,7 +7845,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 616
+      "newOrder": 609
     },
     {
       "cefr": "B1",
@@ -7943,7 +7858,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 617
+      "newOrder": 610
     },
     {
       "cefr": "B1",
@@ -7954,7 +7869,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 618
+      "newOrder": 611
     },
     {
       "cefr": "B1",
@@ -7967,7 +7882,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 619
+      "newOrder": 612
     },
     {
       "cefr": "B1",
@@ -7980,7 +7895,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 620
+      "newOrder": 613
     },
     {
       "cefr": "B1",
@@ -7993,7 +7908,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 621
+      "newOrder": 614
     },
     {
       "cefr": "B1",
@@ -8006,7 +7921,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 622
+      "newOrder": 615
     },
     {
       "cefr": "B1",
@@ -8019,7 +7934,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 623
+      "newOrder": 616
     },
     {
       "cefr": "B1",
@@ -8032,7 +7947,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 624
+      "newOrder": 617
     },
     {
       "cefr": "B1",
@@ -8045,7 +7960,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 625
+      "newOrder": 618
     },
     {
       "cefr": "B1",
@@ -8058,7 +7973,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 626
+      "newOrder": 619
     },
     {
       "cefr": "B1",
@@ -8071,7 +7986,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 627
+      "newOrder": 620
     },
     {
       "cefr": "B1",
@@ -8082,7 +7997,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 628
+      "newOrder": 621
     },
     {
       "cefr": "B1",
@@ -8095,7 +8010,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 629
+      "newOrder": 622
     },
     {
       "cefr": "B1",
@@ -8108,7 +8023,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 630
+      "newOrder": 623
     },
     {
       "cefr": "B1",
@@ -8121,7 +8036,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 631
+      "newOrder": 624
     },
     {
       "cefr": "B1",
@@ -8134,7 +8049,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 632
+      "newOrder": 625
     },
     {
       "cefr": "B1",
@@ -8147,7 +8062,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 633
+      "newOrder": 626
     },
     {
       "cefr": "B1",
@@ -8160,7 +8075,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 634
+      "newOrder": 627
     },
     {
       "cefr": "B1",
@@ -8171,7 +8086,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 635
+      "newOrder": 628
     },
     {
       "cefr": "B1",
@@ -8184,7 +8099,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 636
+      "newOrder": 629
     },
     {
       "cefr": "B1",
@@ -8197,7 +8112,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 637
+      "newOrder": 630
     },
     {
       "cefr": "B1",
@@ -8210,7 +8125,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 638
+      "newOrder": 631
     },
     {
       "cefr": "B1",
@@ -8223,7 +8138,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 639
+      "newOrder": 632
     },
     {
       "cefr": "B1",
@@ -8234,7 +8149,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 640
+      "newOrder": 633
     },
     {
       "cefr": "B1",
@@ -8247,7 +8162,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 641
+      "newOrder": 634
     },
     {
       "cefr": "B1",
@@ -8258,7 +8173,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 642
+      "newOrder": 635
     },
     {
       "cefr": "B1",
@@ -8269,7 +8184,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 643
+      "newOrder": 636
     },
     {
       "cefr": "B1",
@@ -8282,7 +8197,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 644
+      "newOrder": 637
     },
     {
       "cefr": "B1",
@@ -8295,7 +8210,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 645
+      "newOrder": 638
     },
     {
       "cefr": "B1",
@@ -8308,7 +8223,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 646
+      "newOrder": 639
     },
     {
       "cefr": "B1",
@@ -8319,7 +8234,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 647
+      "newOrder": 640
     },
     {
       "cefr": "B1",
@@ -8332,7 +8247,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 648
+      "newOrder": 641
     },
     {
       "cefr": "B1",
@@ -8345,7 +8260,18 @@
         "matching",
         "choice"
       ],
-      "newOrder": 649
+      "newOrder": 642
+    },
+    {
+      "cefr": "B1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "доти...доки",
+      "lemmaId": "доти-доки",
+      "modes": [
+        "flashcards"
+      ],
+      "newOrder": 643
     },
     {
       "cefr": "B1",
@@ -8358,7 +8284,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 650
+      "newOrder": 644
     },
     {
       "cefr": "B1",
@@ -8371,7 +8297,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 651
+      "newOrder": 645
     },
     {
       "cefr": "B1",
@@ -8384,7 +8310,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 652
+      "newOrder": 646
     },
     {
       "cefr": "B1",
@@ -8397,7 +8323,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 653
+      "newOrder": 647
     },
     {
       "cefr": "B1",
@@ -8408,7 +8334,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 654
+      "newOrder": 648
     },
     {
       "cefr": "B1",
@@ -8419,7 +8345,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 655
+      "newOrder": 649
     },
     {
       "cefr": "B1",
@@ -8432,7 +8358,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 656
+      "newOrder": 650
     },
     {
       "cefr": "B1",
@@ -8445,20 +8371,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 657
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "діапазон",
-      "lemmaId": "діапазон",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 658
+      "newOrder": 651
     },
     {
       "cefr": "B1",
@@ -8471,7 +8384,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 659
+      "newOrder": 652
     },
     {
       "cefr": "B1",
@@ -8484,7 +8397,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 660
+      "newOrder": 653
     },
     {
       "cefr": "B1",
@@ -8497,7 +8410,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 661
+      "newOrder": 654
     },
     {
       "cefr": "B1",
@@ -8510,7 +8423,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 662
+      "newOrder": 655
     },
     {
       "cefr": "B1",
@@ -8523,7 +8436,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 663
+      "newOrder": 656
     },
     {
       "cefr": "B1",
@@ -8536,7 +8449,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 664
+      "newOrder": 657
     },
     {
       "cefr": "B1",
@@ -8549,7 +8462,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 665
+      "newOrder": 658
     },
     {
       "cefr": "B1",
@@ -8562,7 +8475,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 666
+      "newOrder": 659
     },
     {
       "cefr": "B1",
@@ -8575,7 +8488,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 667
+      "newOrder": 660
     },
     {
       "cefr": "B1",
@@ -8588,7 +8501,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 668
+      "newOrder": 661
     },
     {
       "cefr": "B1",
@@ -8601,7 +8514,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 669
+      "newOrder": 662
     },
     {
       "cefr": "B1",
@@ -8612,7 +8525,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 670
+      "newOrder": 663
     },
     {
       "cefr": "B1",
@@ -8623,7 +8536,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 671
+      "newOrder": 664
     },
     {
       "cefr": "B1",
@@ -8636,7 +8549,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 672
+      "newOrder": 665
     },
     {
       "cefr": "B1",
@@ -8649,7 +8562,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 673
+      "newOrder": 666
     },
     {
       "cefr": "B1",
@@ -8662,7 +8575,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 674
+      "newOrder": 667
     },
     {
       "cefr": "B1",
@@ -8675,7 +8588,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 675
+      "newOrder": 668
     },
     {
       "cefr": "B1",
@@ -8688,7 +8601,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 676
+      "newOrder": 669
     },
     {
       "cefr": "B1",
@@ -8701,7 +8614,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 677
+      "newOrder": 670
     },
     {
       "cefr": "B1",
@@ -8714,7 +8627,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 678
+      "newOrder": 671
     },
     {
       "cefr": "B1",
@@ -8727,7 +8640,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 679
+      "newOrder": 672
     },
     {
       "cefr": "B1",
@@ -8740,7 +8653,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 680
+      "newOrder": 673
     },
     {
       "cefr": "B1",
@@ -8753,7 +8666,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 681
+      "newOrder": 674
     },
     {
       "cefr": "B1",
@@ -8766,7 +8679,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 682
+      "newOrder": 675
     },
     {
       "cefr": "B1",
@@ -8779,7 +8692,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 683
+      "newOrder": 676
     },
     {
       "cefr": "B1",
@@ -8792,7 +8705,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 684
+      "newOrder": 677
     },
     {
       "cefr": "B1",
@@ -8805,7 +8718,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 685
+      "newOrder": 678
     },
     {
       "cefr": "B1",
@@ -8816,7 +8729,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 686
+      "newOrder": 679
     },
     {
       "cefr": "B1",
@@ -8829,7 +8742,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 687
+      "newOrder": 680
     },
     {
       "cefr": "B1",
@@ -8840,7 +8753,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 688
+      "newOrder": 681
     },
     {
       "cefr": "B1",
@@ -8853,7 +8766,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 689
+      "newOrder": 682
     },
     {
       "cefr": "B1",
@@ -8866,7 +8779,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 690
+      "newOrder": 683
     },
     {
       "cefr": "B1",
@@ -8879,7 +8792,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 691
+      "newOrder": 684
     },
     {
       "cefr": "B1",
@@ -8892,7 +8805,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 692
+      "newOrder": 685
     },
     {
       "cefr": "B1",
@@ -8905,7 +8818,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 693
+      "newOrder": 686
     },
     {
       "cefr": "B1",
@@ -8918,7 +8831,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 694
+      "newOrder": 687
     },
     {
       "cefr": "B1",
@@ -8931,7 +8844,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 695
+      "newOrder": 688
     },
     {
       "cefr": "B1",
@@ -8944,7 +8857,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 696
+      "newOrder": 689
     },
     {
       "cefr": "B1",
@@ -8957,7 +8870,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 697
+      "newOrder": 690
     },
     {
       "cefr": "B1",
@@ -8970,7 +8883,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 698
+      "newOrder": 691
     },
     {
       "cefr": "B1",
@@ -8983,7 +8896,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 699
+      "newOrder": 692
     },
     {
       "cefr": "B1",
@@ -8996,7 +8909,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 700
+      "newOrder": 693
     },
     {
       "cefr": "B1",
@@ -9009,7 +8922,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 701
+      "newOrder": 694
     },
     {
       "cefr": "B1",
@@ -9022,7 +8935,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 702
+      "newOrder": 695
     },
     {
       "cefr": "B1",
@@ -9035,7 +8948,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 703
+      "newOrder": 696
     },
     {
       "cefr": "B1",
@@ -9048,7 +8961,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 704
+      "newOrder": 697
     },
     {
       "cefr": "B1",
@@ -9061,7 +8974,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 705
+      "newOrder": 698
     },
     {
       "cefr": "B1",
@@ -9074,7 +8987,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 706
+      "newOrder": 699
     },
     {
       "cefr": "B1",
@@ -9087,7 +9000,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 707
+      "newOrder": 700
     },
     {
       "cefr": "B1",
@@ -9100,7 +9013,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 708
+      "newOrder": 701
     },
     {
       "cefr": "B1",
@@ -9113,7 +9026,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 709
+      "newOrder": 702
     },
     {
       "cefr": "B1",
@@ -9126,7 +9039,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 710
+      "newOrder": 703
     },
     {
       "cefr": "B1",
@@ -9139,7 +9052,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 711
+      "newOrder": 704
     },
     {
       "cefr": "B1",
@@ -9152,7 +9065,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 712
+      "newOrder": 705
     },
     {
       "cefr": "B1",
@@ -9165,7 +9078,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 713
+      "newOrder": 706
     },
     {
       "cefr": "B1",
@@ -9178,7 +9091,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 714
+      "newOrder": 707
     },
     {
       "cefr": "B1",
@@ -9191,7 +9104,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 715
+      "newOrder": 708
     },
     {
       "cefr": "B1",
@@ -9204,7 +9117,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 716
+      "newOrder": 709
     },
     {
       "cefr": "B1",
@@ -9217,7 +9130,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 717
+      "newOrder": 710
     },
     {
       "cefr": "B1",
@@ -9230,7 +9143,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 718
+      "newOrder": 711
     },
     {
       "cefr": "B1",
@@ -9243,7 +9156,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 719
+      "newOrder": 712
     },
     {
       "cefr": "B1",
@@ -9256,7 +9169,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 720
+      "newOrder": 713
     },
     {
       "cefr": "B1",
@@ -9269,7 +9182,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 721
+      "newOrder": 714
     },
     {
       "cefr": "B1",
@@ -9282,7 +9195,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 722
+      "newOrder": 715
     },
     {
       "cefr": "B1",
@@ -9295,7 +9208,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 723
+      "newOrder": 716
     },
     {
       "cefr": "B1",
@@ -9308,7 +9221,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 724
+      "newOrder": 717
     },
     {
       "cefr": "B1",
@@ -9321,7 +9234,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 725
+      "newOrder": 718
     },
     {
       "cefr": "B1",
@@ -9334,7 +9247,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 726
+      "newOrder": 719
     },
     {
       "cefr": "B1",
@@ -9347,7 +9260,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 727
+      "newOrder": 720
     },
     {
       "cefr": "B1",
@@ -9360,7 +9273,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 728
+      "newOrder": 721
     },
     {
       "cefr": "B1",
@@ -9373,7 +9286,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 729
+      "newOrder": 722
     },
     {
       "cefr": "B1",
@@ -9386,7 +9299,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 730
+      "newOrder": 723
     },
     {
       "cefr": "B1",
@@ -9399,7 +9312,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 731
+      "newOrder": 724
     },
     {
       "cefr": "B1",
@@ -9412,7 +9325,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 732
+      "newOrder": 725
     },
     {
       "cefr": "B1",
@@ -9425,7 +9338,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 733
+      "newOrder": 726
     },
     {
       "cefr": "B1",
@@ -9438,7 +9351,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 734
+      "newOrder": 727
     },
     {
       "cefr": "B1",
@@ -9451,7 +9364,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 735
+      "newOrder": 728
     },
     {
       "cefr": "B1",
@@ -9464,7 +9377,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 736
+      "newOrder": 729
     },
     {
       "cefr": "B1",
@@ -9477,7 +9390,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 737
+      "newOrder": 730
     },
     {
       "cefr": "B1",
@@ -9490,7 +9403,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 738
+      "newOrder": 731
     },
     {
       "cefr": "B1",
@@ -9503,7 +9416,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 739
+      "newOrder": 732
     },
     {
       "cefr": "B1",
@@ -9514,7 +9427,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 740
+      "newOrder": 733
     },
     {
       "cefr": "B1",
@@ -9527,7 +9440,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 741
+      "newOrder": 734
     },
     {
       "cefr": "B1",
@@ -9540,7 +9453,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 742
+      "newOrder": 735
     },
     {
       "cefr": "B1",
@@ -9553,7 +9466,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 743
+      "newOrder": 736
     },
     {
       "cefr": "B1",
@@ -9566,7 +9479,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 744
+      "newOrder": 737
     },
     {
       "cefr": "B1",
@@ -9579,7 +9492,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 745
+      "newOrder": 738
     },
     {
       "cefr": "B1",
@@ -9592,7 +9505,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 746
+      "newOrder": 739
     },
     {
       "cefr": "B1",
@@ -9605,7 +9518,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 747
+      "newOrder": 740
     },
     {
       "cefr": "B1",
@@ -9616,7 +9529,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 748
+      "newOrder": 741
     },
     {
       "cefr": "B1",
@@ -9629,7 +9542,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 749
+      "newOrder": 742
     },
     {
       "cefr": "B1",
@@ -9642,7 +9555,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 750
+      "newOrder": 743
     },
     {
       "cefr": "B1",
@@ -9655,7 +9568,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 751
+      "newOrder": 744
     },
     {
       "cefr": "B1",
@@ -9668,7 +9581,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 752
+      "newOrder": 745
     },
     {
       "cefr": "B1",
@@ -9681,7 +9594,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 753
+      "newOrder": 746
     },
     {
       "cefr": "B1",
@@ -9694,7 +9607,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 754
+      "newOrder": 747
     },
     {
       "cefr": "B1",
@@ -9705,7 +9618,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 755
+      "newOrder": 748
     },
     {
       "cefr": "B1",
@@ -9716,7 +9629,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 756
+      "newOrder": 749
     },
     {
       "cefr": "B1",
@@ -9727,7 +9640,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 757
+      "newOrder": 750
     },
     {
       "cefr": "B1",
@@ -9740,20 +9653,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 758
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "речовина",
-      "lemmaId": "речовина",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 759
+      "newOrder": 751
     },
     {
       "cefr": "B1",
@@ -9766,7 +9666,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 760
+      "newOrder": 752
     },
     {
       "cefr": "B1",
@@ -9777,7 +9677,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 761
+      "newOrder": 753
     },
     {
       "cefr": "B1",
@@ -9790,7 +9690,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 762
+      "newOrder": 754
     },
     {
       "cefr": "B1",
@@ -9803,7 +9703,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 763
+      "newOrder": 755
     },
     {
       "cefr": "B1",
@@ -9816,7 +9716,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 764
+      "newOrder": 756
     },
     {
       "cefr": "B1",
@@ -9829,7 +9729,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 765
+      "newOrder": 757
     },
     {
       "cefr": "B1",
@@ -9842,7 +9742,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 766
+      "newOrder": 758
     },
     {
       "cefr": "B1",
@@ -9855,7 +9755,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 767
+      "newOrder": 759
     },
     {
       "cefr": "B1",
@@ -9868,7 +9768,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 768
+      "newOrder": 760
     },
     {
       "cefr": "B1",
@@ -9881,7 +9781,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 769
+      "newOrder": 761
     },
     {
       "cefr": "B1",
@@ -9894,7 +9794,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 770
+      "newOrder": 762
     },
     {
       "cefr": "B1",
@@ -9905,7 +9805,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 771
+      "newOrder": 763
     },
     {
       "cefr": "B1",
@@ -9918,7 +9818,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 772
+      "newOrder": 764
     },
     {
       "cefr": "B1",
@@ -9931,7 +9831,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 773
+      "newOrder": 765
     },
     {
       "cefr": "B1",
@@ -9944,7 +9844,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 774
+      "newOrder": 766
     },
     {
       "cefr": "B1",
@@ -9957,7 +9857,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 775
+      "newOrder": 767
     },
     {
       "cefr": "B1",
@@ -9970,7 +9870,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 776
+      "newOrder": 768
     },
     {
       "cefr": "B1",
@@ -9983,7 +9883,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 777
+      "newOrder": 769
     },
     {
       "cefr": "B1",
@@ -9996,7 +9896,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 778
+      "newOrder": 770
     },
     {
       "cefr": "B1",
@@ -10009,7 +9909,18 @@
         "matching",
         "choice"
       ],
-      "newOrder": 779
+      "newOrder": 771
+    },
+    {
+      "cefr": "B1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "навчаючись",
+      "lemmaId": "навчаючись",
+      "modes": [
+        "flashcards"
+      ],
+      "newOrder": 772
     },
     {
       "cefr": "B1",
@@ -10022,7 +9933,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 780
+      "newOrder": 773
     },
     {
       "cefr": "B1",
@@ -10033,31 +9944,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 781
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "усміхаючись",
-      "lemmaId": "усміхаючись",
-      "modes": [
-        "flashcards"
-      ],
-      "newOrder": 782
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "дізнавшись",
-      "lemmaId": "дізнавшись",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 783
+      "newOrder": 774
     },
     {
       "cefr": "B1",
@@ -10070,7 +9957,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 784
+      "newOrder": 775
     },
     {
       "cefr": "B1",
@@ -10083,7 +9970,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 785
+      "newOrder": 776
     },
     {
       "cefr": "B1",
@@ -10096,7 +9983,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 786
+      "newOrder": 777
     },
     {
       "cefr": "B1",
@@ -10109,7 +9996,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 787
+      "newOrder": 778
     },
     {
       "cefr": "B1",
@@ -10122,7 +10009,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 788
+      "newOrder": 779
     },
     {
       "cefr": "B1",
@@ -10135,7 +10022,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 789
+      "newOrder": 780
     },
     {
       "cefr": "B1",
@@ -10148,7 +10035,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 790
+      "newOrder": 781
     },
     {
       "cefr": "B1",
@@ -10161,7 +10048,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 791
+      "newOrder": 782
     },
     {
       "cefr": "B1",
@@ -10174,7 +10061,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 792
+      "newOrder": 783
     },
     {
       "cefr": "B1",
@@ -10187,7 +10074,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 793
+      "newOrder": 784
     },
     {
       "cefr": "B1",
@@ -10200,7 +10087,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 794
+      "newOrder": 785
     },
     {
       "cefr": "B1",
@@ -10213,7 +10100,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 795
+      "newOrder": 786
     },
     {
       "cefr": "B1",
@@ -10226,7 +10113,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 796
+      "newOrder": 787
     },
     {
       "cefr": "B1",
@@ -10239,7 +10126,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 797
+      "newOrder": 788
     },
     {
       "cefr": "B1",
@@ -10252,7 +10139,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 798
+      "newOrder": 789
     },
     {
       "cefr": "B1",
@@ -10265,7 +10152,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 799
+      "newOrder": 790
     },
     {
       "cefr": "B1",
@@ -10278,7 +10165,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 800
+      "newOrder": 791
     },
     {
       "cefr": "B1",
@@ -10291,7 +10178,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 801
+      "newOrder": 792
     },
     {
       "cefr": "B1",
@@ -10304,7 +10191,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 802
+      "newOrder": 793
     },
     {
       "cefr": "B1",
@@ -10317,7 +10204,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 803
+      "newOrder": 794
     },
     {
       "cefr": "B1",
@@ -10330,7 +10217,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 804
+      "newOrder": 795
     },
     {
       "cefr": "B1",
@@ -10343,7 +10230,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 805
+      "newOrder": 796
     },
     {
       "cefr": "B1",
@@ -10356,7 +10243,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 806
+      "newOrder": 797
     },
     {
       "cefr": "B1",
@@ -10369,7 +10256,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 807
+      "newOrder": 798
     },
     {
       "cefr": "B1",
@@ -10382,7 +10269,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 808
+      "newOrder": 799
     },
     {
       "cefr": "B1",
@@ -10395,7 +10282,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 809
+      "newOrder": 800
     },
     {
       "cefr": "B1",
@@ -10408,7 +10295,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 810
+      "newOrder": 801
     },
     {
       "cefr": "B1",
@@ -10421,7 +10308,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 811
+      "newOrder": 802
     },
     {
       "cefr": "B1",
@@ -10434,7 +10321,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 812
+      "newOrder": 803
     },
     {
       "cefr": "B1",
@@ -10447,7 +10334,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 813
+      "newOrder": 804
     },
     {
       "cefr": "B1",
@@ -10460,7 +10347,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 814
+      "newOrder": 805
     },
     {
       "cefr": "B1",
@@ -10473,7 +10360,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 815
+      "newOrder": 806
     },
     {
       "cefr": "B1",
@@ -10486,7 +10373,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 816
+      "newOrder": 807
     },
     {
       "cefr": "B1",
@@ -10499,7 +10386,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 817
+      "newOrder": 808
     },
     {
       "cefr": "B1",
@@ -10512,7 +10399,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 818
+      "newOrder": 809
     },
     {
       "cefr": "B1",
@@ -10525,7 +10412,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 819
+      "newOrder": 810
     },
     {
       "cefr": "B1",
@@ -10538,7 +10425,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 820
+      "newOrder": 811
     },
     {
       "cefr": "B1",
@@ -10551,7 +10438,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 821
+      "newOrder": 812
     },
     {
       "cefr": "B1",
@@ -10564,7 +10451,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 822
+      "newOrder": 813
     },
     {
       "cefr": "B1",
@@ -10577,7 +10464,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 823
+      "newOrder": 814
     },
     {
       "cefr": "B1",
@@ -10590,7 +10477,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 824
+      "newOrder": 815
     },
     {
       "cefr": "B1",
@@ -10603,7 +10490,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 825
+      "newOrder": 816
     },
     {
       "cefr": "B1",
@@ -10616,7 +10503,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 826
+      "newOrder": 817
     },
     {
       "cefr": "B1",
@@ -10629,7 +10516,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 827
+      "newOrder": 818
     },
     {
       "cefr": "B1",
@@ -10642,7 +10529,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 828
+      "newOrder": 819
     },
     {
       "cefr": "B1",
@@ -10655,7 +10542,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 829
+      "newOrder": 820
     },
     {
       "cefr": "B1",
@@ -10668,7 +10555,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 830
+      "newOrder": 821
     },
     {
       "cefr": "B1",
@@ -10681,7 +10568,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 831
+      "newOrder": 822
     },
     {
       "cefr": "B1",
@@ -10694,7 +10581,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 832
+      "newOrder": 823
     },
     {
       "cefr": "B1",
@@ -10707,7 +10594,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 833
+      "newOrder": 824
     },
     {
       "cefr": "B1",
@@ -10720,7 +10607,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 834
+      "newOrder": 825
     },
     {
       "cefr": "B1",
@@ -10733,7 +10620,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 835
+      "newOrder": 826
     },
     {
       "cefr": "B1",
@@ -10746,7 +10633,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 836
+      "newOrder": 827
     },
     {
       "cefr": "B1",
@@ -10759,7 +10646,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 837
+      "newOrder": 828
     },
     {
       "cefr": "B1",
@@ -10770,7 +10657,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 838
+      "newOrder": 829
     },
     {
       "cefr": "B1",
@@ -10783,7 +10670,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 839
+      "newOrder": 830
     },
     {
       "cefr": "B1",
@@ -10794,7 +10681,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 840
+      "newOrder": 831
     },
     {
       "cefr": "B1",
@@ -10807,7 +10694,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 841
+      "newOrder": 832
     },
     {
       "cefr": "B1",
@@ -10820,7 +10707,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 842
+      "newOrder": 833
     },
     {
       "cefr": "B1",
@@ -10833,7 +10720,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 843
+      "newOrder": 834
     },
     {
       "cefr": "B1",
@@ -10846,7 +10733,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 844
+      "newOrder": 835
     },
     {
       "cefr": "B1",
@@ -10859,7 +10746,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 845
+      "newOrder": 836
     },
     {
       "cefr": "B1",
@@ -10872,7 +10759,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 846
+      "newOrder": 837
     },
     {
       "cefr": "B1",
@@ -10885,7 +10772,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 847
+      "newOrder": 838
     },
     {
       "cefr": "B1",
@@ -10898,7 +10785,20 @@
         "matching",
         "choice"
       ],
-      "newOrder": 848
+      "newOrder": 839
+    },
+    {
+      "cefr": "B1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "спонукання",
+      "lemmaId": "спонукання",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 840
     },
     {
       "cefr": "B1",
@@ -10911,7 +10811,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 849
+      "newOrder": 841
     },
     {
       "cefr": "B1",
@@ -10924,7 +10824,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 850
+      "newOrder": 842
     },
     {
       "cefr": "B1",
@@ -10937,7 +10837,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 851
+      "newOrder": 843
     },
     {
       "cefr": "B1",
@@ -10950,7 +10850,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 852
+      "newOrder": 844
     },
     {
       "cefr": "B1",
@@ -10963,7 +10863,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 853
+      "newOrder": 845
     },
     {
       "cefr": "B1",
@@ -10974,7 +10874,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 854
+      "newOrder": 846
     },
     {
       "cefr": "B1",
@@ -10987,7 +10887,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 855
+      "newOrder": 847
     },
     {
       "cefr": "B1",
@@ -10998,7 +10898,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 856
+      "newOrder": 848
     },
     {
       "cefr": "B1",
@@ -11011,7 +10911,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 857
+      "newOrder": 849
     },
     {
       "cefr": "B1",
@@ -11024,7 +10924,20 @@
         "matching",
         "choice"
       ],
-      "newOrder": 858
+      "newOrder": 850
+    },
+    {
+      "cefr": "B1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "сумісність",
+      "lemmaId": "сумісність",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 851
     },
     {
       "cefr": "B1",
@@ -11035,7 +10948,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 859
+      "newOrder": 852
     },
     {
       "cefr": "B1",
@@ -11048,7 +10961,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 860
+      "newOrder": 853
     },
     {
       "cefr": "B1",
@@ -11061,7 +10974,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 861
+      "newOrder": 854
     },
     {
       "cefr": "B1",
@@ -11074,7 +10987,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 862
+      "newOrder": 855
     },
     {
       "cefr": "B1",
@@ -11087,7 +11000,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 863
+      "newOrder": 856
     },
     {
       "cefr": "B1",
@@ -11100,7 +11013,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 864
+      "newOrder": 857
     },
     {
       "cefr": "B1",
@@ -11113,7 +11026,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 865
+      "newOrder": 858
     },
     {
       "cefr": "B1",
@@ -11126,7 +11039,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 866
+      "newOrder": 859
     },
     {
       "cefr": "B1",
@@ -11139,7 +11052,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 867
+      "newOrder": 860
     },
     {
       "cefr": "B1",
@@ -11152,7 +11065,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 868
+      "newOrder": 861
     },
     {
       "cefr": "B1",
@@ -11165,7 +11078,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 869
+      "newOrder": 862
     },
     {
       "cefr": "B1",
@@ -11178,7 +11091,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 870
+      "newOrder": 863
     },
     {
       "cefr": "B1",
@@ -11189,7 +11102,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 871
+      "newOrder": 864
     },
     {
       "cefr": "B1",
@@ -11202,7 +11115,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 872
+      "newOrder": 865
     },
     {
       "cefr": "B1",
@@ -11215,20 +11128,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 873
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "обряд",
-      "lemmaId": "обряд",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 874
+      "newOrder": 866
     },
     {
       "cefr": "B1",
@@ -11241,7 +11141,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 875
+      "newOrder": 867
     },
     {
       "cefr": "B1",
@@ -11254,7 +11154,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 876
+      "newOrder": 868
     },
     {
       "cefr": "B1",
@@ -11267,7 +11167,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 877
+      "newOrder": 869
     },
     {
       "cefr": "B1",
@@ -11280,7 +11180,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 878
+      "newOrder": 870
     },
     {
       "cefr": "B1",
@@ -11293,7 +11193,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 879
+      "newOrder": 871
     },
     {
       "cefr": "B1",
@@ -11304,7 +11204,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 880
+      "newOrder": 872
     },
     {
       "cefr": "B1",
@@ -11315,7 +11215,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 881
+      "newOrder": 873
     },
     {
       "cefr": "B1",
@@ -11328,7 +11228,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 882
+      "newOrder": 874
     },
     {
       "cefr": "B1",
@@ -11341,7 +11241,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 883
+      "newOrder": 875
     },
     {
       "cefr": "B1",
@@ -11354,7 +11254,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 884
+      "newOrder": 876
     },
     {
       "cefr": "B1",
@@ -11367,7 +11267,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 885
+      "newOrder": 877
     },
     {
       "cefr": "B1",
@@ -11380,7 +11280,20 @@
         "matching",
         "choice"
       ],
-      "newOrder": 886
+      "newOrder": 878
+    },
+    {
+      "cefr": "B1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "лечу",
+      "lemmaId": "лечу",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 879
     },
     {
       "cefr": "B1",
@@ -11393,7 +11306,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 887
+      "newOrder": 880
     },
     {
       "cefr": "B1",
@@ -11406,7 +11319,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 888
+      "newOrder": 881
     },
     {
       "cefr": "B1",
@@ -11417,7 +11330,20 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 889
+      "newOrder": 882
+    },
+    {
+      "cefr": "B1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "пором",
+      "lemmaId": "пором",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 883
     },
     {
       "cefr": "B1",
@@ -11428,7 +11354,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 890
+      "newOrder": 884
     },
     {
       "cefr": "B1",
@@ -11441,7 +11367,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 891
+      "newOrder": 885
     },
     {
       "cefr": "B1",
@@ -11454,7 +11380,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 892
+      "newOrder": 886
     },
     {
       "cefr": "B1",
@@ -11467,7 +11393,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 893
+      "newOrder": 887
     },
     {
       "cefr": "B1",
@@ -11480,7 +11406,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 894
+      "newOrder": 888
     },
     {
       "cefr": "B1",
@@ -11491,7 +11417,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 895
+      "newOrder": 889
     },
     {
       "cefr": "B1",
@@ -11504,7 +11430,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 896
+      "newOrder": 890
     },
     {
       "cefr": "B1",
@@ -11517,7 +11443,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 897
+      "newOrder": 891
     },
     {
       "cefr": "B1",
@@ -11530,7 +11456,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 898
+      "newOrder": 892
     },
     {
       "cefr": "B1",
@@ -11541,7 +11467,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 899
+      "newOrder": 893
     },
     {
       "cefr": "B1",
@@ -11554,7 +11480,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 900
+      "newOrder": 894
     },
     {
       "cefr": "B1",
@@ -11567,20 +11493,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 901
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "кур'єр",
-      "lemmaId": "кур-єр",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 902
+      "newOrder": 895
     },
     {
       "cefr": "B1",
@@ -11593,7 +11506,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 903
+      "newOrder": 896
     },
     {
       "cefr": "B1",
@@ -11606,7 +11519,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 904
+      "newOrder": 897
     },
     {
       "cefr": "B1",
@@ -11619,7 +11532,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 905
+      "newOrder": 898
     },
     {
       "cefr": "B1",
@@ -11630,7 +11543,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 906
+      "newOrder": 899
     },
     {
       "cefr": "B1",
@@ -11641,7 +11554,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 907
+      "newOrder": 900
     },
     {
       "cefr": "B1",
@@ -11652,7 +11565,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 908
+      "newOrder": 901
     },
     {
       "cefr": "B1",
@@ -11663,7 +11576,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 909
+      "newOrder": 902
     },
     {
       "cefr": "B1",
@@ -11676,7 +11589,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 910
+      "newOrder": 903
     },
     {
       "cefr": "B1",
@@ -11689,7 +11602,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 911
+      "newOrder": 904
     },
     {
       "cefr": "B1",
@@ -11702,7 +11615,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 912
+      "newOrder": 905
     },
     {
       "cefr": "B1",
@@ -11715,7 +11628,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 913
+      "newOrder": 906
     },
     {
       "cefr": "B1",
@@ -11728,7 +11641,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 914
+      "newOrder": 907
     },
     {
       "cefr": "B1",
@@ -11741,7 +11654,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 915
+      "newOrder": 908
     },
     {
       "cefr": "B1",
@@ -11754,7 +11667,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 916
+      "newOrder": 909
     },
     {
       "cefr": "B1",
@@ -11767,7 +11680,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 917
+      "newOrder": 910
     },
     {
       "cefr": "B1",
@@ -11780,7 +11693,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 918
+      "newOrder": 911
     },
     {
       "cefr": "B1",
@@ -11793,7 +11706,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 919
+      "newOrder": 912
     },
     {
       "cefr": "B1",
@@ -11806,7 +11719,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 920
+      "newOrder": 913
     },
     {
       "cefr": "B1",
@@ -11819,7 +11732,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 921
+      "newOrder": 914
     },
     {
       "cefr": "B1",
@@ -11832,7 +11745,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 922
+      "newOrder": 915
     },
     {
       "cefr": "B1",
@@ -11843,7 +11756,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 923
+      "newOrder": 916
     },
     {
       "cefr": "B1",
@@ -11856,7 +11769,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 924
+      "newOrder": 917
     },
     {
       "cefr": "B1",
@@ -11869,7 +11782,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 925
+      "newOrder": 918
     },
     {
       "cefr": "B1",
@@ -11882,7 +11795,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 926
+      "newOrder": 919
     },
     {
       "cefr": "B1",
@@ -11895,7 +11808,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 927
+      "newOrder": 920
     },
     {
       "cefr": "B1",
@@ -11908,7 +11821,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 928
+      "newOrder": 921
     },
     {
       "cefr": "B1",
@@ -11921,7 +11834,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 929
+      "newOrder": 922
     },
     {
       "cefr": "B1",
@@ -11932,7 +11845,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 930
+      "newOrder": 923
     },
     {
       "cefr": "B1",
@@ -11945,7 +11858,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 931
+      "newOrder": 924
     },
     {
       "cefr": "B1",
@@ -11958,7 +11871,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 932
+      "newOrder": 925
     },
     {
       "cefr": "B1",
@@ -11971,7 +11884,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 933
+      "newOrder": 926
     },
     {
       "cefr": "B1",
@@ -11982,7 +11895,18 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 934
+      "newOrder": 927
+    },
+    {
+      "cefr": "B1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "пробігти",
+      "lemmaId": "пробігти",
+      "modes": [
+        "flashcards"
+      ],
+      "newOrder": 928
     },
     {
       "cefr": "B1",
@@ -11995,7 +11919,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 935
+      "newOrder": 929
     },
     {
       "cefr": "B1",
@@ -12008,7 +11932,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 936
+      "newOrder": 930
     },
     {
       "cefr": "B1",
@@ -12021,7 +11945,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 937
+      "newOrder": 931
     },
     {
       "cefr": "B1",
@@ -12034,7 +11958,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 938
+      "newOrder": 932
     },
     {
       "cefr": "B1",
@@ -12047,7 +11971,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 939
+      "newOrder": 933
     },
     {
       "cefr": "B1",
@@ -12060,7 +11984,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 940
+      "newOrder": 934
     },
     {
       "cefr": "B1",
@@ -12073,7 +11997,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 941
+      "newOrder": 935
     },
     {
       "cefr": "B1",
@@ -12086,7 +12010,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 942
+      "newOrder": 936
     },
     {
       "cefr": "B1",
@@ -12099,7 +12023,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 943
+      "newOrder": 937
     },
     {
       "cefr": "B1",
@@ -12112,20 +12036,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 944
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "заповідник",
-      "lemmaId": "заповідник",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 945
+      "newOrder": 938
     },
     {
       "cefr": "B1",
@@ -12138,7 +12049,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 946
+      "newOrder": 939
     },
     {
       "cefr": "B1",
@@ -12151,7 +12062,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 947
+      "newOrder": 940
     },
     {
       "cefr": "B1",
@@ -12164,7 +12075,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 948
+      "newOrder": 941
     },
     {
       "cefr": "B1",
@@ -12177,7 +12088,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 949
+      "newOrder": 942
     },
     {
       "cefr": "B1",
@@ -12190,7 +12101,20 @@
         "matching",
         "choice"
       ],
-      "newOrder": 950
+      "newOrder": 943
+    },
+    {
+      "cefr": "B1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "сортувати",
+      "lemmaId": "сортувати",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 944
     },
     {
       "cefr": "B1",
@@ -12203,7 +12127,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 951
+      "newOrder": 945
     },
     {
       "cefr": "B1",
@@ -12216,7 +12140,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 952
+      "newOrder": 946
     },
     {
       "cefr": "B1",
@@ -12229,7 +12153,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 953
+      "newOrder": 947
     },
     {
       "cefr": "B1",
@@ -12242,7 +12166,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 954
+      "newOrder": 948
     },
     {
       "cefr": "B1",
@@ -12255,7 +12179,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 955
+      "newOrder": 949
     },
     {
       "cefr": "B1",
@@ -12268,7 +12192,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 956
+      "newOrder": 950
     },
     {
       "cefr": "B1",
@@ -12281,20 +12205,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 957
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "доповідач",
-      "lemmaId": "доповідач",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 958
+      "newOrder": 951
     },
     {
       "cefr": "B1",
@@ -12307,20 +12218,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 959
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "монтаж",
-      "lemmaId": "монтаж",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 960
+      "newOrder": 952
     },
     {
       "cefr": "B1",
@@ -12333,7 +12231,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 961
+      "newOrder": 953
     },
     {
       "cefr": "B1",
@@ -12346,7 +12244,20 @@
         "matching",
         "choice"
       ],
-      "newOrder": 962
+      "newOrder": 954
+    },
+    {
+      "cefr": "B1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "слухач",
+      "lemmaId": "слухач",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 955
     },
     {
       "cefr": "B1",
@@ -12359,7 +12270,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 963
+      "newOrder": 956
     },
     {
       "cefr": "B1",
@@ -12372,7 +12283,20 @@
         "matching",
         "choice"
       ],
-      "newOrder": 964
+      "newOrder": 957
+    },
+    {
+      "cefr": "B1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "грузин",
+      "lemmaId": "грузин",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 958
     },
     {
       "cefr": "B1",
@@ -12385,7 +12309,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 965
+      "newOrder": 959
     },
     {
       "cefr": "B1",
@@ -12398,7 +12322,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 966
+      "newOrder": 960
     },
     {
       "cefr": "B1",
@@ -12411,7 +12335,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 967
+      "newOrder": 961
     },
     {
       "cefr": "B1",
@@ -12424,7 +12348,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 968
+      "newOrder": 962
     },
     {
       "cefr": "B1",
@@ -12437,7 +12361,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 969
+      "newOrder": 963
     },
     {
       "cefr": "B1",
@@ -12450,7 +12374,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 970
+      "newOrder": 964
     },
     {
       "cefr": "B1",
@@ -12463,7 +12387,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 971
+      "newOrder": 965
     },
     {
       "cefr": "B1",
@@ -12476,7 +12400,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 972
+      "newOrder": 966
     },
     {
       "cefr": "B1",
@@ -12489,7 +12413,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 973
+      "newOrder": 967
     },
     {
       "cefr": "B1",
@@ -12502,7 +12426,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 974
+      "newOrder": 968
     },
     {
       "cefr": "B1",
@@ -12515,7 +12439,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 975
+      "newOrder": 969
     },
     {
       "cefr": "B1",
@@ -12528,7 +12452,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 976
+      "newOrder": 970
     },
     {
       "cefr": "B1",
@@ -12541,7 +12465,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 977
+      "newOrder": 971
     },
     {
       "cefr": "B1",
@@ -12554,7 +12478,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 978
+      "newOrder": 972
     },
     {
       "cefr": "B1",
@@ -12567,7 +12491,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 979
+      "newOrder": 973
     },
     {
       "cefr": "B1",
@@ -12580,7 +12504,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 980
+      "newOrder": 974
     },
     {
       "cefr": "B1",
@@ -12591,7 +12515,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 981
+      "newOrder": 975
     },
     {
       "cefr": "B1",
@@ -12604,7 +12528,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 982
+      "newOrder": 976
     },
     {
       "cefr": "B1",
@@ -12617,7 +12541,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 983
+      "newOrder": 977
     },
     {
       "cefr": "B1",
@@ -12630,7 +12554,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 984
+      "newOrder": 978
     },
     {
       "cefr": "B1",
@@ -12641,7 +12565,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 985
+      "newOrder": 979
     },
     {
       "cefr": "B1",
@@ -12654,7 +12578,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 986
+      "newOrder": 980
     },
     {
       "cefr": "B1",
@@ -12667,7 +12591,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 987
+      "newOrder": 981
     },
     {
       "cefr": "B1",
@@ -12680,7 +12604,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 988
+      "newOrder": 982
     },
     {
       "cefr": "B1",
@@ -12693,7 +12617,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 989
+      "newOrder": 983
     },
     {
       "cefr": "B1",
@@ -12706,7 +12630,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 990
+      "newOrder": 984
     },
     {
       "cefr": "B1",
@@ -12719,7 +12643,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 991
+      "newOrder": 985
     },
     {
       "cefr": "B1",
@@ -12730,7 +12654,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 992
+      "newOrder": 986
     },
     {
       "cefr": "B1",
@@ -12743,7 +12667,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 993
+      "newOrder": 987
     },
     {
       "cefr": "B1",
@@ -12756,7 +12680,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 994
+      "newOrder": 988
     },
     {
       "cefr": "B1",
@@ -12769,7 +12693,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 995
+      "newOrder": 989
     },
     {
       "cefr": "B1",
@@ -12782,7 +12706,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 996
+      "newOrder": 990
     },
     {
       "cefr": "B1",
@@ -12795,7 +12719,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 997
+      "newOrder": 991
     },
     {
       "cefr": "B1",
@@ -12808,7 +12732,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 998
+      "newOrder": 992
     },
     {
       "cefr": "B1",
@@ -12821,7 +12745,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 999
+      "newOrder": 993
     },
     {
       "cefr": "B1",
@@ -12834,7 +12758,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1000
+      "newOrder": 994
     },
     {
       "cefr": "B1",
@@ -12847,7 +12771,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1001
+      "newOrder": 995
     },
     {
       "cefr": "B1",
@@ -12860,7 +12784,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1002
+      "newOrder": 996
     },
     {
       "cefr": "B1",
@@ -12873,7 +12797,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1003
+      "newOrder": 997
     },
     {
       "cefr": "B1",
@@ -12886,7 +12810,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1004
+      "newOrder": 998
     },
     {
       "cefr": "B1",
@@ -12899,7 +12823,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1005
+      "newOrder": 999
     },
     {
       "cefr": "B1",
@@ -12912,7 +12836,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1006
+      "newOrder": 1000
     },
     {
       "cefr": "B1",
@@ -12925,7 +12849,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1007
+      "newOrder": 1001
     },
     {
       "cefr": "B1",
@@ -12938,7 +12862,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1008
+      "newOrder": 1002
     },
     {
       "cefr": "B1",
@@ -12951,7 +12875,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1009
+      "newOrder": 1003
     },
     {
       "cefr": "B1",
@@ -12964,7 +12888,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1010
+      "newOrder": 1004
     },
     {
       "cefr": "B1",
@@ -12977,7 +12901,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1011
+      "newOrder": 1005
     },
     {
       "cefr": "B1",
@@ -12990,7 +12914,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1012
+      "newOrder": 1006
     },
     {
       "cefr": "B1",
@@ -13003,7 +12927,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1013
+      "newOrder": 1007
     },
     {
       "cefr": "B1",
@@ -13016,7 +12940,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1014
+      "newOrder": 1008
     },
     {
       "cefr": "B1",
@@ -13029,7 +12953,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1015
+      "newOrder": 1009
     },
     {
       "cefr": "B1",
@@ -13042,7 +12966,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1016
+      "newOrder": 1010
     },
     {
       "cefr": "B1",
@@ -13055,7 +12979,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1017
+      "newOrder": 1011
     },
     {
       "cefr": "B1",
@@ -13068,7 +12992,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1018
+      "newOrder": 1012
     },
     {
       "cefr": "B1",
@@ -13081,20 +13005,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1019
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "блідий",
-      "lemmaId": "блідий",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1020
+      "newOrder": 1013
     },
     {
       "cefr": "B1",
@@ -13107,7 +13018,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1021
+      "newOrder": 1014
     },
     {
       "cefr": "B1",
@@ -13120,7 +13031,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1022
+      "newOrder": 1015
     },
     {
       "cefr": "B1",
@@ -13133,7 +13044,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1023
+      "newOrder": 1016
     },
     {
       "cefr": "B1",
@@ -13146,7 +13057,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1024
+      "newOrder": 1017
     },
     {
       "cefr": "B1",
@@ -13159,7 +13070,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1025
+      "newOrder": 1018
     },
     {
       "cefr": "B1",
@@ -13172,7 +13083,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1026
+      "newOrder": 1019
     },
     {
       "cefr": "B1",
@@ -13185,7 +13096,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1027
+      "newOrder": 1020
     },
     {
       "cefr": "B1",
@@ -13198,7 +13109,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1028
+      "newOrder": 1021
     },
     {
       "cefr": "B1",
@@ -13211,7 +13122,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1029
+      "newOrder": 1022
     },
     {
       "cefr": "B1",
@@ -13224,7 +13135,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1030
+      "newOrder": 1023
     },
     {
       "cefr": "B1",
@@ -13237,7 +13148,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1031
+      "newOrder": 1024
     },
     {
       "cefr": "B1",
@@ -13250,7 +13161,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1032
+      "newOrder": 1025
     },
     {
       "cefr": "B1",
@@ -13263,7 +13174,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1033
+      "newOrder": 1026
     },
     {
       "cefr": "B1",
@@ -13276,7 +13187,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1034
+      "newOrder": 1027
     },
     {
       "cefr": "B1",
@@ -13289,7 +13200,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1035
+      "newOrder": 1028
     },
     {
       "cefr": "B1",
@@ -13302,7 +13213,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1036
+      "newOrder": 1029
     },
     {
       "cefr": "B1",
@@ -13315,7 +13226,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1037
+      "newOrder": 1030
     },
     {
       "cefr": "B1",
@@ -13328,7 +13239,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1038
+      "newOrder": 1031
     },
     {
       "cefr": "B1",
@@ -13341,7 +13252,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1039
+      "newOrder": 1032
     },
     {
       "cefr": "B1",
@@ -13354,7 +13265,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1040
+      "newOrder": 1033
     },
     {
       "cefr": "B1",
@@ -13367,7 +13278,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1041
+      "newOrder": 1034
     },
     {
       "cefr": "B1",
@@ -13380,7 +13291,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1042
+      "newOrder": 1035
     },
     {
       "cefr": "B1",
@@ -13393,7 +13304,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1043
+      "newOrder": 1036
     },
     {
       "cefr": "B1",
@@ -13406,7 +13317,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1044
+      "newOrder": 1037
     },
     {
       "cefr": "B1",
@@ -13419,7 +13330,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1045
+      "newOrder": 1038
     },
     {
       "cefr": "B1",
@@ -13432,7 +13343,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1046
+      "newOrder": 1039
     },
     {
       "cefr": "B1",
@@ -13445,7 +13356,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1047
+      "newOrder": 1040
     },
     {
       "cefr": "B1",
@@ -13458,7 +13369,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1048
+      "newOrder": 1041
     },
     {
       "cefr": "B1",
@@ -13471,7 +13382,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1049
+      "newOrder": 1042
     },
     {
       "cefr": "B1",
@@ -13484,20 +13395,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1050
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "пам'ятка",
-      "lemmaId": "пам-ятка",
-      "modes": [
-        "flashcards",
-        "matching",
-        "choice"
-      ],
-      "newOrder": 1051
+      "newOrder": 1043
     },
     {
       "cefr": "B1",
@@ -13510,7 +13408,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1052
+      "newOrder": 1044
     },
     {
       "cefr": "B1",
@@ -13523,7 +13421,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1053
+      "newOrder": 1045
     },
     {
       "cefr": "B1",
@@ -13536,7 +13434,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1054
+      "newOrder": 1046
     },
     {
       "cefr": "B1",
@@ -13549,7 +13447,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1055
+      "newOrder": 1047
     },
     {
       "cefr": "B1",
@@ -13562,7 +13460,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1056
+      "newOrder": 1048
     },
     {
       "cefr": "B1",
@@ -13575,7 +13473,20 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1057
+      "newOrder": 1049
+    },
+    {
+      "cefr": "B1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "вершки",
+      "lemmaId": "вершки",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 1050
     },
     {
       "cefr": "B1",
@@ -13588,7 +13499,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1058
+      "newOrder": 1051
     },
     {
       "cefr": "B1",
@@ -13601,7 +13512,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1059
+      "newOrder": 1052
     },
     {
       "cefr": "B1",
@@ -13614,7 +13525,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1060
+      "newOrder": 1053
     },
     {
       "cefr": "B1",
@@ -13627,7 +13538,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1061
+      "newOrder": 1054
     },
     {
       "cefr": "B1",
@@ -13640,7 +13551,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1062
+      "newOrder": 1055
     },
     {
       "cefr": "B1",
@@ -13653,7 +13564,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1063
+      "newOrder": 1056
     },
     {
       "cefr": "B1",
@@ -13666,7 +13577,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1064
+      "newOrder": 1057
     },
     {
       "cefr": "B1",
@@ -13679,7 +13590,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1065
+      "newOrder": 1058
     },
     {
       "cefr": "B1",
@@ -13692,7 +13603,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1066
+      "newOrder": 1059
     },
     {
       "cefr": "B1",
@@ -13705,7 +13616,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1067
+      "newOrder": 1060
     },
     {
       "cefr": "B1",
@@ -13718,7 +13629,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1068
+      "newOrder": 1061
     },
     {
       "cefr": "B1",
@@ -13731,7 +13642,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1069
+      "newOrder": 1062
     },
     {
       "cefr": "B1",
@@ -13744,7 +13655,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1070
+      "newOrder": 1063
     },
     {
       "cefr": "B1",
@@ -13757,7 +13668,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1071
+      "newOrder": 1064
     },
     {
       "cefr": "B1",
@@ -13770,7 +13681,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1072
+      "newOrder": 1065
     },
     {
       "cefr": "B1",
@@ -13783,7 +13694,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1073
+      "newOrder": 1066
     },
     {
       "cefr": "B1",
@@ -13796,7 +13707,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1074
+      "newOrder": 1067
     },
     {
       "cefr": "B1",
@@ -13809,7 +13720,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1075
+      "newOrder": 1068
     },
     {
       "cefr": "B1",
@@ -13822,7 +13733,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1076
+      "newOrder": 1069
     },
     {
       "cefr": "B1",
@@ -13835,7 +13746,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1077
+      "newOrder": 1070
     },
     {
       "cefr": "B1",
@@ -13848,7 +13759,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1078
+      "newOrder": 1071
     },
     {
       "cefr": "B1",
@@ -13861,7 +13772,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1079
+      "newOrder": 1072
     },
     {
       "cefr": "B1",
@@ -13874,7 +13785,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1080
+      "newOrder": 1073
     },
     {
       "cefr": "B1",
@@ -13887,7 +13798,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1081
+      "newOrder": 1074
     },
     {
       "cefr": "B1",
@@ -13900,7 +13811,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1082
+      "newOrder": 1075
     },
     {
       "cefr": "B1",
@@ -13913,7 +13824,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1083
+      "newOrder": 1076
     },
     {
       "cefr": "B1",
@@ -13926,7 +13837,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1084
+      "newOrder": 1077
     },
     {
       "cefr": "B1",
@@ -13939,7 +13850,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1085
+      "newOrder": 1078
     },
     {
       "cefr": "B1",
@@ -13952,7 +13863,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1086
+      "newOrder": 1079
     },
     {
       "cefr": "B1",
@@ -13965,7 +13876,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1087
+      "newOrder": 1080
     },
     {
       "cefr": "B1",
@@ -13978,7 +13889,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1088
+      "newOrder": 1081
     },
     {
       "cefr": "B1",
@@ -13989,7 +13900,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 1089
+      "newOrder": 1082
     },
     {
       "cefr": "B1",
@@ -14002,7 +13913,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1090
+      "newOrder": 1083
     },
     {
       "cefr": "B1",
@@ -14015,7 +13926,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1091
+      "newOrder": 1084
     },
     {
       "cefr": "B1",
@@ -14028,7 +13939,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1092
+      "newOrder": 1085
     },
     {
       "cefr": "B1",
@@ -14041,7 +13952,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1093
+      "newOrder": 1086
     },
     {
       "cefr": "B1",
@@ -14054,7 +13965,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1094
+      "newOrder": 1087
     },
     {
       "cefr": "B1",
@@ -14067,7 +13978,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1095
+      "newOrder": 1088
     },
     {
       "cefr": "B1",
@@ -14080,7 +13991,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1096
+      "newOrder": 1089
     },
     {
       "cefr": "B1",
@@ -14093,7 +14004,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1097
+      "newOrder": 1090
     },
     {
       "cefr": "B1",
@@ -14104,7 +14015,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 1098
+      "newOrder": 1091
     },
     {
       "cefr": "B1",
@@ -14117,18 +14028,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1099
-    },
-    {
-      "cefr": "B1",
-      "clozeIds": [],
-      "hasCloze": false,
-      "lemma": "обабіч",
-      "lemmaId": "обабіч",
-      "modes": [
-        "flashcards"
-      ],
-      "newOrder": 1100
+      "newOrder": 1092
     },
     {
       "cefr": "B1",
@@ -14141,7 +14041,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1101
+      "newOrder": 1093
     },
     {
       "cefr": "B1",
@@ -14154,7 +14054,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1102
+      "newOrder": 1094
     },
     {
       "cefr": "B1",
@@ -14165,7 +14065,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 1103
+      "newOrder": 1095
     },
     {
       "cefr": "B1",
@@ -14178,7 +14078,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1104
+      "newOrder": 1096
     },
     {
       "cefr": "B1",
@@ -14191,7 +14091,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1105
+      "newOrder": 1097
     },
     {
       "cefr": "B1",
@@ -14204,7 +14104,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1106
+      "newOrder": 1098
     },
     {
       "cefr": "B1",
@@ -14217,7 +14117,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1107
+      "newOrder": 1099
     },
     {
       "cefr": "B1",
@@ -14228,7 +14128,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 1108
+      "newOrder": 1100
     },
     {
       "cefr": "B1",
@@ -14241,7 +14141,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1109
+      "newOrder": 1101
     },
     {
       "cefr": "B1",
@@ -14254,7 +14154,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1110
+      "newOrder": 1102
     },
     {
       "cefr": "B1",
@@ -14267,7 +14167,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1111
+      "newOrder": 1103
     },
     {
       "cefr": "B1",
@@ -14280,7 +14180,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1112
+      "newOrder": 1104
     },
     {
       "cefr": "B1",
@@ -14293,7 +14193,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1113
+      "newOrder": 1105
     },
     {
       "cefr": "B1",
@@ -14306,7 +14206,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1114
+      "newOrder": 1106
     },
     {
       "cefr": "B1",
@@ -14317,7 +14217,7 @@
       "modes": [
         "flashcards"
       ],
-      "newOrder": 1115
+      "newOrder": 1107
     },
     {
       "cefr": "B1",
@@ -14330,7 +14230,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1116
+      "newOrder": 1108
     },
     {
       "cefr": "B1",
@@ -14343,7 +14243,7 @@
         "matching",
         "choice"
       ],
-      "newOrder": 1117
+      "newOrder": 1109
     },
     {
       "cefr": "B1",
@@ -14356,17 +14256,160 @@
         "matching",
         "choice"
       ],
+      "newOrder": 1110
+    },
+    {
+      "cefr": "B1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "часовий",
+      "lemmaId": "часовий",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 1111
+    },
+    {
+      "cefr": "B1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "щопонеділка",
+      "lemmaId": "щопонеділка",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 1112
+    },
+    {
+      "cefr": "B1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "щосереди",
+      "lemmaId": "щосереди",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 1113
+    },
+    {
+      "cefr": "B1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "ліричний герой",
+      "lemmaId": "ліричний-герой",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 1114
+    },
+    {
+      "cefr": "B1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "надихнути",
+      "lemmaId": "надихнути",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 1115
+    },
+    {
+      "cefr": "B1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "персонаж",
+      "lemmaId": "персонаж",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 1116
+    },
+    {
+      "cefr": "B1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "проза",
+      "lemmaId": "проза",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 1117
+    },
+    {
+      "cefr": "B1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "бачитися",
+      "lemmaId": "бачитися",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
       "newOrder": 1118
+    },
+    {
+      "cefr": "B1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "взаємний",
+      "lemmaId": "взаємний",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 1119
+    },
+    {
+      "cefr": "B1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "власне зворотний",
+      "lemmaId": "власне-зворотний",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 1120
+    },
+    {
+      "cefr": "B1",
+      "clozeIds": [],
+      "hasCloze": false,
+      "lemma": "відкриватися",
+      "lemmaId": "відкриватися",
+      "modes": [
+        "flashcards",
+        "matching",
+        "choice"
+      ],
+      "newOrder": 1121
     }
   ],
   "level": "B1",
   "schema": "atlas-practice-index",
   "schemaVersion": 1,
   "sizeBudget": {
-    "gzipBytes": 19972,
+    "gzipBytes": 20005,
     "gzipLimitBytes": 140000,
     "ok": true,
-    "rawBytes": 299715,
+    "rawBytes": 300715,
     "rawLimitBytes": 550000
   },
   "source": "manifest"
