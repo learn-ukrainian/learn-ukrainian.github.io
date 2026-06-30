@@ -2,7 +2,7 @@
   translation: "housing, dwelling"
   pos: noun
   gender: n
-  usage: "Доступне житло стало однією з головних тем у великих містах."
+  usage: "Доступне житло стало важливою темою у великих містах."
 - lemma: помешкання
   translation: "dwelling, residence"
   pos: noun
@@ -32,57 +32,27 @@
   pos: noun
   gender: m
   usage: "Орендар зберігає квитанції про сплату комунальних послуг."
-- lemma: винаймач
-  translation: "tenant, renter"
-  pos: noun
-  gender: m
-  usage: "Винаймач попросив додати до договору опис меблів."
 - lemma: винаймати
   translation: "to rent, to lease"
   pos: verb
-  usage: "Студенти часто винаймають квартиру разом, щоб зменшити витрати."
-- lemma: орендувати
-  translation: "to rent, to lease"
-  pos: verb
-  usage: "Сім'я планує орендувати житло щонайменше на рік."
-- lemma: здавати в оренду
-  translation: "to rent out"
-  pos: phrase
-  usage: "Власниця здає в оренду квартиру біля метро."
+  usage: "Молода сім'я планує винаймати квартиру на рік."
 - lemma: договір оренди
-  translation: "lease agreement"
+  translation: "rental agreement"
   pos: phrase
-  usage: "Договір оренди має містити строк, суму й порядок оплати."
-- lemma: акт приймання-передачі
-  translation: "handover act"
-  pos: phrase
-  usage: "В акт приймання-передачі внесено показники лічильників."
+  usage: "Договір оренди підписують після огляду квартири."
 - lemma: застава
-  translation: "security deposit"
+  translation: "deposit"
   pos: noun
   gender: f
-  usage: "Застава повертається після виїзду, якщо майно не пошкоджено."
+  usage: "Заставу сплачено перед передачею ключів."
 - lemma: завдаток
   translation: "advance deposit"
   pos: noun
   gender: m
-  usage: "Завдаток сплачено після письмового підтвердження умов."
-- lemma: умова
-  translation: "condition, term"
-  pos: noun
-  gender: f
-  usage: "Усі важливі умови треба зафіксувати до заселення."
-- lemma: строк оренди
-  translation: "lease term"
+  usage: "Завдаток треба фіксувати письмово."
+- lemma: комунальні платежі
+  translation: "utility payments"
   pos: phrase
-  usage: "Строк оренди можна продовжити за згодою сторін."
-- lemma: комунальні послуги
-  translation: "utilities"
-  pos: phrase
-  usage: "Комунальні послуги оплачуються окремо від орендної плати."
-- lemma: комунальний
-  translation: "utility, communal"
-  pos: adj
   usage: "Комунальні платежі взимку можуть бути значно вищими."
 - lemma: квитанція
   translation: "receipt, utility bill"
@@ -104,21 +74,16 @@
   pos: noun
   gender: n
   usage: "Якщо опалення не працює, треба одразу повідомити власника."
-- lemma: електрика
-  translation: "electricity"
-  pos: noun
-  gender: f
-  usage: "Електрику тимчасово вимкнули через аварійні роботи."
 - lemma: водопостачання
   translation: "water supply"
   pos: noun
   gender: n
   usage: "Водопостачання відновлено після ремонту мережі."
-- lemma: інтернет
-  translation: "internet"
+- lemma: бойлер
+  translation: "water heater, boiler"
   pos: noun
   gender: m
-  usage: "У квартирі підключено швидкісний інтернет."
+  usage: "Бойлер перевірено перед заселенням."
 - lemma: ремонт
   translation: "repair, renovation"
   pos: noun
@@ -127,75 +92,48 @@
 - lemma: косметичний ремонт
   translation: "cosmetic renovation"
   pos: phrase
-  usage: "Косметичний ремонт не завжди означає заміну труб або проводки."
+  usage: "Косметичний ремонт не завжди означає нові труби або електрику."
 - lemma: капітальний ремонт
   translation: "major renovation"
   pos: phrase
-  usage: "Капітальний ремонт під'їзду потребує рішення мешканців."
+  usage: "Капітальний ремонт передбачає глибші роботи."
+- lemma: аварійний ремонт
+  translation: "emergency repair"
+  pos: phrase
+  usage: "Аварійний ремонт потрібен, коли прорвало трубу."
 - lemma: протікання
   translation: "leak"
   pos: noun
   gender: n
-  usage: "Протікання під раковиною треба усунути сьогодні."
-- lemma: поломка
-  translation: "breakdown"
+  usage: "Протікання у ванній усунено."
+- lemma: змішувач
+  translation: "faucet, mixer tap"
+  pos: noun
+  gender: m
+  usage: "Змішувач замінено після огляду майстра."
+- lemma: розетка
+  translation: "electrical outlet"
   pos: noun
   gender: f
-  usage: "Поломку пральної машини зафіксовано на фото."
-- lemma: несправність
-  translation: "malfunction, fault"
-  pos: noun
-  gender: f
-  usage: "Про несправність домофона повідомили керуючу компанію."
-- lemma: майстер
-  translation: "repair worker, technician"
+  usage: "Розетку перевірено перед заселенням."
+- lemma: передпокій
+  translation: "entry hall"
   pos: noun
   gender: m
-  usage: "Майстер перевірив трубу й замінив пошкоджене з'єднання."
-- lemma: сантехнік
-  translation: "plumber"
+  usage: "У передпокої стоїть шафа для взуття."
+- lemma: меблі
+  translation: "furniture"
   pos: noun
-  gender: m
-  usage: "Сантехнік приїде після обіду й огляне ванну кімнату."
-- lemma: електрик
-  translation: "electrician"
-  pos: noun
-  gender: m
-  usage: "Електрик перевірив розетки після короткого замикання."
-- lemma: заявка
-  translation: "service request, application"
-  pos: noun
-  gender: f
-  usage: "Заявку до керуючої компанії подано вранці."
-- lemma: диспетчер
-  translation: "dispatcher"
-  pos: noun
-  gender: m
-  usage: "Диспетчер повідомив номер заявки."
-- lemma: керуюча компанія
-  translation: "property management company"
+  gender: pl
+  usage: "Меблі включено у вартість оренди."
+- lemma: кухонний гарнітур
+  translation: "kitchen unit"
   pos: phrase
-  usage: "Керуюча компанія відповідає за прибирання під'їзду."
-- lemma: ОСББ
-  translation: "condominium association"
-  pos: noun
-  gender: n
-  usage: "ОСББ затвердило кошторис ремонту даху."
-- lemma: кошторис
-  translation: "cost estimate, budget"
-  pos: noun
-  gender: m
-  usage: "Кошторис ремонту обговорили на зборах мешканців."
-- lemma: підрядник
-  translation: "contractor"
-  pos: noun
-  gender: m
-  usage: "Підрядник має завершити фарбування до п'ятниці."
-- lemma: забудовник
-  translation: "developer, builder"
-  pos: noun
-  gender: m
-  usage: "Забудовник обіцяє здати будинок до кінця року."
+  usage: "Кухонний гарнітур залишають у квартирі."
+- lemma: побутова техніка
+  translation: "household appliances"
+  pos: phrase
+  usage: "Побутову техніку перевірено перед підписанням акта."
 - lemma: новобудова
   translation: "newly built residential building"
   pos: noun
@@ -206,230 +144,48 @@
   pos: noun
   gender: m
   usage: "Гуртожиток дешевший, але спільний простір потребує правил."
-- lemma: квартира
-  translation: "apartment"
-  pos: noun
-  gender: f
-  usage: "Квартира розташована на четвертому поверсі."
-- lemma: кімната
-  translation: "room"
-  pos: noun
-  gender: f
-  usage: "Кімната світла, але вікна виходять на шумну вулицю."
-- lemma: передпокій
-  translation: "entry hall"
-  pos: noun
-  gender: m
-  usage: "У передпокої встановлено велику шафу."
-- lemma: під'їзд
-  translation: "building entrance, stairwell"
-  pos: noun
-  gender: m
-  usage: "У під'їзді замінено лампи й пофарбовано стіни."
-- lemma: поверх
-  translation: "floor, story"
-  pos: noun
-  gender: m
-  usage: "Квартира на восьмому поверсі має гарний вид."
-- lemma: площа
-  translation: "area, floor space"
-  pos: noun
-  gender: f
-  usage: "Площа квартири становить сорок два квадратні метри."
-- lemma: квадратний метр
-  translation: "square meter"
-  pos: phrase
-  usage: "Ціна за квадратний метр у центрі міста висока."
 - lemma: транспортна розв'язка
   translation: "transport connection"
   pos: phrase
-  usage: "Добра транспортна розв'язка компенсує відстань до центру."
+  usage: "Добра транспортна розв'язка може бути важливішою за краєвид."
 - lemma: інфраструктура
   translation: "infrastructure"
   pos: noun
   gender: f
-  usage: "У районі розвинена інфраструктура: магазини, аптеки й парк."
-- lemma: укриття
-  translation: "shelter"
+  usage: "У цьому районі розвинена інфраструктура."
+- lemma: під'їзд
+  translation: "stairwell, building entrance"
+  pos: noun
+  gender: m
+  usage: "У під'їзді встановлять додаткове освітлення."
+- lemma: ОСББ
+  translation: "homeowners association"
   pos: noun
   gender: n
-  usage: "Перед орендою варто дізнатися, де найближче укриття."
-- lemma: двір
-  translation: "courtyard"
-  pos: noun
-  gender: m
-  usage: "У дворі облаштовано місце для велосипедів."
-- lemma: паркомісце
-  translation: "parking space"
-  pos: noun
-  gender: n
-  usage: "Паркомісце не входить в орендну плату."
-- lemma: ліфт
-  translation: "elevator"
-  pos: noun
-  gender: m
-  usage: "Ліфт тимчасово не працює через ремонт."
-- lemma: домофон
-  translation: "intercom"
-  pos: noun
-  gender: m
-  usage: "Домофон відремонтовано після заявки мешканців."
-- lemma: двері
-  translation: "door, doors"
-  pos: noun
-  gender: pl
-  usage: "Вхідні двері зачинені, але замок треба замінити."
-- lemma: сходи
-  translation: "stairs"
-  pos: noun
-  gender: pl
-  usage: "Сходи прибирають двічі на тиждень."
-- lemma: ворота
-  translation: "gate"
-  pos: noun
-  gender: pl
-  usage: "Перед воротами не можна залишати велосипеди."
-- lemma: меблі
-  translation: "furniture"
-  pos: noun
-  gender: pl
-  usage: "Квартира здається з меблями й побутовою технікою."
-- lemma: побутова техніка
-  translation: "household appliances"
+  usage: "ОСББ погодило кошторис ремонту."
+- lemma: збори мешканців
+  translation: "residents' meeting"
   pos: phrase
-  usage: "Побутову техніку внесено до акта приймання-передачі."
-- lemma: шафа
-  translation: "wardrobe, cabinet"
-  pos: noun
-  gender: f
-  usage: "Шафу звільнено через протікання під мийкою."
-- lemma: ліжко
-  translation: "bed"
-  pos: noun
-  gender: n
-  usage: "У кімнаті є ліжко, робочий стіл і книжкова полиця."
-- lemma: кухонний гарнітур
-  translation: "kitchen unit"
-  pos: phrase
-  usage: "Кухонний гарнітур старий, але придатний до користування."
-- lemma: бойлер
-  translation: "water heater"
+  usage: "На збори мешканців винесуть питання ремонту під'їзду."
+- lemma: кошторис
+  translation: "cost estimate, budget"
   pos: noun
   gender: m
-  usage: "Бойлер встановлено у ванній кімнаті."
-- lemma: пральна машина
-  translation: "washing machine"
-  pos: phrase
-  usage: "Пральну машину підключено перед заселенням."
-- lemma: холодильник
-  translation: "refrigerator"
+  usage: "Кошторис ремонту обговорили на зборах."
+- lemma: підрядник
+  translation: "contractor"
   pos: noun
   gender: m
-  usage: "Холодильник працює тихо й не потребує ремонту."
-- lemma: кондиціонер
-  translation: "air conditioner"
-  pos: noun
-  gender: m
-  usage: "Кондиціонер включено в перелік техніки."
-- lemma: умебльований
-  translation: "furnished"
-  pos: adj
-  usage: "Умебльована квартира дорожча, але зручніша для швидкого переїзду."
-- lemma: облаштування
-  translation: "arrangement, furnishing"
-  pos: noun
-  gender: n
-  usage: "Облаштування квартири потребує часу й узгодження з власником."
-- lemma: сусід
-  translation: "neighbor"
-  pos: noun
-  gender: m
-  usage: "Сусід попередив про ремонт у суботу."
-- lemma: сусідство
-  translation: "neighborhood relations"
-  pos: noun
-  gender: n
-  usage: "Добре сусідство залежить від правил і взаємної поваги."
-- lemma: мешканець
-  translation: "resident"
-  pos: noun
-  gender: m
-  usage: "Мешканці проголосували за ремонт під'їзду."
-- lemma: співмешканець
-  translation: "flatmate, co-resident"
-  pos: noun
-  gender: m
-  usage: "Зі співмешканцем треба заздалегідь узгодити правила тиші."
-- lemma: спільний простір
-  translation: "shared space"
-  pos: phrase
-  usage: "Спільний простір потребує чітких правил користування."
-- lemma: правило тиші
-  translation: "quiet-hours rule"
-  pos: phrase
-  usage: "Правило тиші допомагає уникати сусідських конфліктів."
-- lemma: скарга
-  translation: "complaint"
-  pos: noun
-  gender: f
-  usage: "Скаргу краще формулювати через факти, а не через образи."
-- lemma: домовий чат
-  translation: "building chat"
-  pos: phrase
-  usage: "У домовий чат надіслано номер заявки."
-- lemma: скинутися
-  translation: "to chip in"
-  pos: verb
-  usage: "Мешканці вирішили скинутися на новий замок."
-- lemma: узгодити
-  translation: "to agree, to coordinate"
-  pos: verb
-  usage: "Оплату ремонту треба узгодити до виклику майстра."
-- lemma: зафіксувати
-  translation: "to record, to document"
-  pos: verb
-  usage: "Стан квартири треба зафіксувати в акті."
-- lemma: погодити
-  translation: "to approve, to agree"
-  pos: verb
-  usage: "Власник погодив виклик сантехніка."
-- lemma: повідомити
-  translation: "to inform, to notify"
-  pos: verb
-  usage: "Орендар має повідомити про аварію одразу."
-- lemma: відшкодувати
-  translation: "to compensate, reimburse"
-  pos: verb
-  usage: "Вартість дрібного ремонту можуть відшкодувати після квитанції."
-- lemma: компенсувати
-  translation: "to compensate"
-  pos: verb
-  usage: "Сторони обговорили, як компенсувати період без опалення."
-- lemma: пошкодити
-  translation: "to damage"
-  pos: verb
-  usage: "Плитку біля входу пошкодили під час переїзду."
-- lemma: замінити
-  translation: "to replace"
-  pos: verb
-  usage: "У ванній треба замінити старий змішувач."
-- lemma: встановити
-  translation: "to install"
-  pos: verb
-  usage: "У квартирі встановили нові вікна."
-- lemma: підключити
-  translation: "to connect"
-  pos: verb
-  usage: "Інтернет підключили перед заселенням."
-- lemma: пофарбувати
-  translation: "to paint"
-  pos: verb
-  usage: "Стіни в під'їзді пофарбували навесні."
-- lemma: відремонтувати
-  translation: "to repair, renovate"
-  pos: verb
-  usage: "Під'їзд відремонтували за кошти мешканців."
-- lemma: оплатити
-  translation: "to pay"
-  pos: verb
-  usage: "Комунальні за травень оплачено повністю."
+  usage: "Підрядник має завершити фарбування до п'ятниці."
+- lemma: зафіксовано
+  translation: "has been recorded"
+  pos: other
+  usage: "Стан квартири зафіксовано в акті."
+- lemma: передано
+  translation: "has been handed over"
+  pos: other
+  usage: "Ключі передано орендареві."
+- lemma: підключено
+  translation: "has been connected"
+  pos: other
+  usage: "У квартирі підключено швидкісний інтернет."

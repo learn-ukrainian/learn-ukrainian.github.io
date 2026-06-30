@@ -1,172 +1,159 @@
 - lemma: неозначено-особове речення
   translation: "indefinite-personal sentence"
   pos: phrase
-  usage: "Неозначено-особове речення має присудок у формі множини й не називає діяча."
+  usage: "Неозначено-особове речення повідомляє дію без названого виконавця."
 - lemma: односкладне речення
   translation: "one-member sentence"
   pos: phrase
-  usage: "Односкладне речення має один головний член."
+  usage: "Неозначено-особові речення належать до односкладних."
 - lemma: підмет
   translation: "subject"
   pos: noun
-  usage: "У цій конструкції підмет формально відсутній."
+  gender: m
+  usage: "У неозначено-особовому реченні підмета немає."
 - lemma: присудок
   translation: "predicate"
   pos: noun
-  usage: "Присудок у неозначено-особовому реченні має форму множини."
-- lemma: діяч
-  translation: "agent, doer"
-  pos: noun
-  usage: "Якщо діяч важливий, його треба зробити підметом."
-- lemma: виконавець
-  translation: "performer"
-  pos: noun
-  usage: "Виконавець дії може бути невідомим або неважливим."
+  gender: m
+  usage: "Присудок стоїть у формі множини."
 - lemma: третя особа множини
   translation: "third person plural"
   pos: phrase
-  usage: "Третя особа множини передає невизначеного виконавця."
-- lemma: форма множини
-  translation: "plural form"
+  usage: "У теперішньому часі вживається третя особа множини."
+- lemma: множина минулого часу
+  translation: "past plural"
   pos: phrase
-  usage: "Форма множини потрібна в теперішньому, майбутньому й минулому часі."
-- lemma: дійсний спосіб
-  translation: "indicative mood"
-  pos: phrase
-  usage: "Дійсний спосіб описує реальну або повідомлену дію."
+  usage: "У минулому часі потрібна множина минулого часу."
 - lemma: умовний спосіб
   translation: "conditional mood"
   pos: phrase
-  usage: "Умовний спосіб у цій моделі також має множину."
-- lemma: синтаксичний фокус
-  translation: "syntactic focus"
-  pos: phrase
-  usage: "Синтаксичний фокус визначає, чи потрібен актив, результат або неозначена дія."
-- lemma: стилістична синонімія
-  translation: "stylistic synonymy"
-  pos: phrase
-  usage: "Стилістична синонімія допомагає вибрати між активом, формою на -но, -то і множиною."
-- lemma: пасивна конструкція
-  translation: "passive construction"
-  pos: phrase
-  usage: "Пасивна конструкція часто потребує редакторської перебудови."
-- lemma: форма на -но, -то
-  translation: "form in -no, -to"
-  pos: phrase
-  usage: "Форма на -но, -то повідомляє результат без названого діяча."
-- lemma: зворотне дієслово
-  translation: "reflexive verb"
-  pos: phrase
-  usage: "Зворотне дієслово на -ся не слід автоматично вживати як пасив."
-- lemma: орудний відмінок
-  translation: "instrumental case"
-  pos: phrase
-  usage: "Орудний відмінок не повинен ховати особового діяча."
-- lemma: калька
-  translation: "calque"
+  usage: "В умовному способі також уживають форму множини."
+- lemma: діяч
+  translation: "agent, doer"
   pos: noun
-  usage: "Калька з чужого пасиву робить українське речення важким."
-- lemma: канцеляризм
-  translation: "bureaucratic expression"
+  gender: m
+  usage: "Діяч не названий, бо текст фокусує подію."
+- lemma: виконавець
+  translation: "performer, executor"
   pos: noun
-  usage: "Зайвий пасив часто перетворює речення на канцеляризм."
-- lemma: референт
-  translation: "referent"
+  gender: m
+  usage: "Якщо виконавець важливий, потрібен актив."
+- lemma: відповідальний
+  translation: "responsible"
+  pos: adj
+  usage: "Відповідальний діяч має бути названий прямо."
+- lemma: подія
+  translation: "event"
   pos: noun
-  usage: "Займенник вони потрібен лише тоді, коли має реальний референт."
+  gender: f
+  usage: "Новина часто ставить у центр подію, а не виконавця."
+- lemma: джерело
+  translation: "source"
+  pos: noun
+  gender: n
+  usage: "У чутках джерело часто не назване."
 - lemma: чутка
   translation: "rumor"
   pos: noun
-  usage: "Слово кажуть часто вводить чутку без названого джерела."
-- lemma: джерело інформації
-  translation: "source of information"
+  gender: f
+  usage: "Кажуть, ціни зростуть може звучати як чутка."
+- lemma: новинне повідомлення
+  translation: "news report"
   pos: phrase
-  usage: "Джерело інформації може бути невідомим або навмисно не названим."
-- lemma: громадське обговорення
-  translation: "public consultation"
+  usage: "Новинне повідомлення може використовувати неозначено-особову модель."
+- lemma: інструкція
+  translation: "instruction"
+  pos: noun
+  gender: f
+  usage: "В інструкціях часто пишуть: заяви подають онлайн."
+- lemma: звіт
+  translation: "report"
+  pos: noun
+  gender: m
+  usage: "У звіті порівняли кілька груп даних."
+- lemma: об'єкт дії
+  translation: "object of action"
   pos: phrase
-  usage: "Після громадського обговорення законопроєкт доопрацювали."
-- lemma: законопроєкт
-  translation: "draft law, bill"
-  pos: noun
-  usage: "Законопроєкт обговорюють у комітеті."
-- lemma: поправка
-  translation: "amendment"
-  pos: noun
-  usage: "Після слухань внесли кілька поправок."
-- lemma: пропозиція
-  translation: "proposal"
-  pos: noun
-  usage: "Пропозицію підтримали під час зустрічі."
-- lemma: звернення
-  translation: "appeal, request"
-  pos: noun
-  usage: "Звернення розглянули повторно після скарги."
-- lemma: повідомлення
-  translation: "announcement, notice"
-  pos: noun
-  usage: "У повідомленні зазначають час зустрічі."
-- lemma: процедура
-  translation: "procedure"
-  pos: noun
-  usage: "Типову процедуру часто описують формою третьої особи множини."
-- lemma: регістр
-  translation: "register"
-  pos: noun
-  usage: "Регістр тексту впливає на вибір конструкції."
-- lemma: публіцистичний стиль
-  translation: "journalistic style"
+  usage: "Об'єкт дії може стояти на початку речення."
+- lemma: знахідний відмінок
+  translation: "accusative case"
   pos: phrase
-  usage: "Публіцистичний стиль часто використовує динамічні неозначено-особові речення."
-- lemma: офіційно-діловий стиль
-  translation: "official business style"
+  usage: "У реченні дорогу ремонтують слово дорогу стоїть у знахідному відмінку."
+- lemma: порядок слів
+  translation: "word order"
   pos: phrase
-  usage: "В офіційно-діловому стилі треба розрізняти результат і відповідальність."
-- lemma: редагувати
-  translation: "to edit"
+  usage: "Порядок слів може винести об'єкт на початок речення."
+- lemma: референт
+  translation: "referent"
+  pos: noun
+  gender: m
+  usage: "Займенник вони потребує зрозумілого референта."
+- lemma: зайве вони
+  translation: "unnecessary they"
+  pos: phrase
+  usage: "Зайве вони треба прибрати або замінити назвою групи."
+- lemma: кажуть
+  translation: "they say, people say"
   pos: verb
-  usage: "На рівні B2 студент має редагувати пасивні конструкції."
-- lemma: перебудувати
-  translation: "to restructure"
+  usage: "Кажуть, завтра буде дощ."
+- lemma: пишуть
+  translation: "they write, people write"
   pos: verb
-  usage: "Кальковане речення треба перебудувати на природну українську модель."
-- lemma: доопрацювати
-  translation: "to revise, refine"
+  usage: "Пишуть, що маршрут змінять."
+- lemma: повідомили
+  translation: "reported, announced"
   pos: verb
-  usage: "Після консультацій законопроєкт доопрацювали."
-- lemma: оприлюднити
-  translation: "to publish, make public"
+  usage: "У міській раді повідомили, що слухання перенесуть."
+- lemma: зазначили
+  translation: "noted, stated"
   pos: verb
-  usage: "Результати оприлюднять на сайті установи."
-- lemma: зазначати
-  translation: "to state, note"
+  usage: "У повідомленні зазначили новий термін."
+- lemma: оприлюднили
+  translation: "published, made public"
   pos: verb
-  usage: "У повідомленні зазначають новий термін подання заяв."
-- lemma: ухвалити
-  translation: "to adopt, approve"
-  pos: verb
-  usage: "Комісія ухвалила рішення після обговорення."
-- lemma: розглядати
-  translation: "to consider, review"
-  pos: verb
-  usage: "Заяви розглядають протягом десяти робочих днів."
-- lemma: перевіряти
-  translation: "to check, verify"
+  usage: "Результати оприлюднили на сайті громади."
+- lemma: перевіряють
+  translation: "they check, people check"
   pos: verb
   usage: "Документи перевіряють перед реєстрацією."
-- lemma: динамічний
-  translation: "dynamic"
-  pos: adj
-  usage: "Динамічний присудок робить новину живішою."
-- lemma: результативний
-  translation: "resultative"
-  pos: adj
-  usage: "Результативний фокус часто передає форма на -но, -то."
-- lemma: нормативний
-  translation: "standard, normative"
-  pos: adj
-  usage: "Нормативний варіант залежить від фокусу й жанру."
-- lemma: ненормативний
-  translation: "non-standard"
-  pos: adj
-  usage: "Орудний діяча в таких конструкціях часто є ненормативним."
+- lemma: розглянуть
+  translation: "they will review"
+  pos: verb
+  usage: "Заявки розглянуть до кінця тижня."
+- lemma: розглядатимуть
+  translation: "they will be reviewing"
+  pos: verb
+  usage: "Заявки розглядатимуть протягом місяця."
+- lemma: внесли
+  translation: "they made, inserted"
+  pos: verb
+  usage: "Після слухань внесли кілька правок."
+- lemma: ухвалили
+  translation: "they adopted, approved"
+  pos: verb
+  usage: "Рішення ухвалили після обговорення."
+- lemma: змінять
+  translation: "they will change"
+  pos: verb
+  usage: "Маршрут змінять після ремонту дороги."
+- lemma: активна модель
+  translation: "active model"
+  pos: phrase
+  usage: "Активна модель називає відповідального діяча."
+- lemma: результативна форма
+  translation: "resultative form"
+  pos: phrase
+  usage: "Результативна форма на -но, -то фіксує статус."
+- lemma: пасивна синонімія
+  translation: "passive synonymy"
+  pos: phrase
+  usage: "Пасивна синонімія вимагає вибору між кількома моделями."
+- lemma: калькований пасив
+  translation: "calqued passive"
+  pos: phrase
+  usage: "Калькований пасив часто ховає названого діяча."
+- lemma: перебудова
+  translation: "restructuring"
+  pos: noun
+  gender: f
+  usage: "Перебудова речення повертає природний фокус."

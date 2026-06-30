@@ -1,136 +1,143 @@
-- lemma: "зворотне дієслово"
+- lemma: зворотне дієслово
   translation: "reflexive verb"
-  pos: "phrase"
+  pos: phrase
   usage: "Зворотне дієслово на -ся не завжди має пасивне значення."
-- lemma: "пасивне значення"
+- lemma: постфікс -ся
+  translation: "postfix -sia"
+  pos: phrase
+  usage: "Постфікс -ся може виражати різні граматичні значення."
+- lemma: пасивне значення
   translation: "passive meaning"
-  pos: "phrase"
-  usage: "Пасивне значення виникає тоді, коли предмет дії стає підметом."
-- lemma: "власне-зворотне значення"
+  pos: phrase
+  usage: "Пасивне значення виникає, коли предмет проходить крізь дію."
+- lemma: власне-зворотне значення
   translation: "proper reflexive meaning"
-  pos: "phrase"
-  usage: "У реченні дитина вмивається дієслово має власне-зворотне значення."
-- lemma: "взаємно-зворотне значення"
-  translation: "reciprocal reflexive meaning"
-  pos: "phrase"
-  usage: "Дієслово вітатися часто передає взаємно-зворотне значення."
-- lemma: "автономна зміна"
+  pos: phrase
+  usage: "У реченні дитина вмивається форма має власне-зворотне значення."
+- lemma: взаємно-зворотне значення
+  translation: "reciprocal meaning"
+  pos: phrase
+  usage: "Колеги вітаються - це взаємно-зворотне значення."
+- lemma: автономна зміна
   translation: "autonomous change"
-  pos: "phrase"
-  usage: "Автономна зміна описує процес без видимого зовнішнього виконавця."
-- lemma: "діяч"
-  translation: "agent, doer"
-  pos: "noun"
-  usage: "Якщо діяч названий, його найчастіше треба зробити підметом."
-- lemma: "виконавець"
-  translation: "performer"
-  pos: "noun"
-  usage: "Названий виконавець в орудному відмінку робить пасив на -ся неприродним."
-- lemma: "орудний відмінок"
-  translation: "instrumental case"
-  pos: "phrase"
-  usage: "Орудний відмінок може називати засіб, але не повинен називати діяча при пасивному -ся."
-- lemma: "активна конструкція"
-  translation: "active construction"
-  pos: "phrase"
-  usage: "Активна конструкція прямо називає відповідального виконавця."
-- lemma: "бездіячевий"
-  translation: "agentless"
-  pos: "adj"
-  usage: "Бездіячевий опис процедури доречний у регламенті."
-- lemma: "перебудувати"
-  translation: "to restructure"
-  pos: "verb"
-  usage: "Ненормативне речення треба перебудувати на активну конструкцію."
-- lemma: "редагувати"
-  translation: "to edit"
-  pos: "verb"
-  usage: "На B2 важливо редагувати пасивні конструкції, а не лише впізнавати їх."
-- lemma: "форма на -но, -то"
-  translation: "form in -no, -to"
-  pos: "phrase"
-  usage: "Форма на -но, -то стисло повідомляє завершений результат."
-- lemma: "неозначено-особове речення"
-  translation: "indefinite-personal sentence"
-  pos: "phrase"
-  usage: "Неозначено-особове речення дає змогу не називати конкретного виконавця."
-- lemma: "процедура"
+  pos: phrase
+  usage: "Кава охолоджується описує автономну зміну стану."
+- lemma: процедура
   translation: "procedure"
-  pos: "noun"
-  usage: "Процедура обробки запитів описується послідовно й без зайвих виконавців."
-- lemma: "регламент"
-  translation: "regulation, procedure manual"
-  pos: "noun"
-  usage: "Регламент визначає, коли запит реєструється і куди передається."
-- lemma: "сировина"
+  pos: noun
+  gender: f
+  usage: "Форма на -ся часто описує службову процедуру."
+- lemma: регламент
+  translation: "regulation, standard procedure"
+  pos: noun
+  gender: m
+  usage: "Регламент пояснює, як обробляються заявки."
+- lemma: технологічний цикл
+  translation: "technological cycle"
+  pos: phrase
+  usage: "У технологічному циклі сировина готується заздалегідь."
+- lemma: сировина
   translation: "raw material"
-  pos: "noun"
-  usage: "Сировина готується до ферментації перед змішуванням."
-- lemma: "бюджет"
-  translation: "budget"
-  pos: "noun"
-  usage: "Проєкт бюджету обговорюється на кількох етапах."
-- lemma: "готується"
+  pos: noun
+  gender: f
+  usage: "Сировина готується перед змішуванням."
+- lemma: готується
   translation: "is being prepared"
-  pos: "verb"
-  usage: "Сировина готується перед початком технологічного циклу."
-- lemma: "розробляється"
+  pos: verb
+  usage: "Відповідь готується після перевірки даних."
+- lemma: розробляється
   translation: "is being developed"
-  pos: "verb"
-  usage: "Регламент розробляється протягом місяця."
-- lemma: "обробляється"
+  pos: verb
+  usage: "Нова процедура розробляється для електронного сервісу."
+- lemma: обробляється
   translation: "is being processed"
-  pos: "verb"
-  usage: "Запит обробляється у порядку надходження."
-- lemma: "надсилається"
+  pos: verb
+  usage: "Заявка обробляється в порядку надходження."
+- lemma: надсилається
   translation: "is being sent"
-  pos: "verb"
-  usage: "Повідомлення надсилається після перевірки даних."
-- lemma: "виконується"
-  translation: "is being performed"
-  pos: "verb"
-  usage: "Завдання виконується без названого виконавця лише в процедурному описі."
-- lemma: "контролюється"
+  pos: verb
+  usage: "Повідомлення надсилається клієнтові автоматично."
+- lemma: виконується
+  translation: "is being carried out"
+  pos: verb
+  usage: "Завдання виконується за чітким регламентом."
+- lemma: контролюється
   translation: "is being monitored"
-  pos: "verb"
-  usage: "Температура процесу контролюється щодня."
-- lemma: "обговорюється"
+  pos: verb
+  usage: "Температура контролюється щогодини."
+- lemma: обговорюється
   translation: "is being discussed"
-  pos: "verb"
-  usage: "Пропозиція обговорюється на відкритому засіданні."
-- lemma: "реєструється"
+  pos: verb
+  usage: "Питання обговорюється на кількох засіданнях."
+- lemma: реєструється
   translation: "is being registered"
-  pos: "verb"
+  pos: verb
   usage: "Звернення реєструється в електронній системі."
-- lemma: "перевіряється"
+- lemma: перевіряється
   translation: "is being checked"
-  pos: "verb"
-  usage: "Інформація перевіряється перед підготовкою відповіді."
-- lemma: "передається"
-  translation: "is being transferred"
-  pos: "verb"
-  usage: "Складний запит передається відповідальному підрозділу."
-- lemma: "додається"
-  translation: "is being added"
-  pos: "verb"
-  usage: "До суміші додається структурний компонент."
-- lemma: "перемішується"
-  translation: "is being mixed"
-  pos: "verb"
-  usage: "Суміш перемішується до рівномірної консистенції."
-- lemma: "ухвалювати"
-  translation: "to adopt, approve"
-  pos: "verb"
-  usage: "Якщо парламент є діячем, треба сказати парламент ухвалює рішення."
-- lemma: "транслюватися"
-  translation: "to be transmitted"
-  pos: "verb"
-  usage: "Цінності можуть транслюватися через освітні й медійні канали."
-- lemma: "офіційно-діловий стиль"
-  translation: "official-business style"
-  pos: "phrase"
-  usage: "Офіційно-діловий стиль часто описує порядок дій без названого виконавця."
-- lemma: "науковий стиль"
-  translation: "academic style"
-  pos: "phrase"
-  usage: "Науковий стиль може описувати процеси через пасивне значення на -ся."
+  pos: verb
+  usage: "Документ перевіряється перед підписанням."
+- lemma: фасується
+  translation: "is being packaged"
+  pos: verb
+  usage: "Продукт фасується після охолодження."
+- lemma: персональний діяч
+  translation: "personal agent"
+  pos: phrase
+  usage: "Персональний діяч не має ховатися в орудному після пасивного -ся."
+- lemma: інституційний діяч
+  translation: "institutional agent"
+  pos: phrase
+  usage: "Комісія або уряд можуть бути інституційним діячем."
+- lemma: орудний відмінок
+  translation: "instrumental case"
+  pos: phrase
+  usage: "Орудний відмінок може називати інструмент або діяча."
+- lemma: інструмент
+  translation: "instrument, tool"
+  pos: noun
+  gender: m
+  usage: "У реченні двері відчиняються карткою картка є інструментом."
+- lemma: засіб
+  translation: "means, medium"
+  pos: noun
+  gender: m
+  usage: "Захищений канал є засобом передавання даних."
+- lemma: спосіб
+  translation: "method, manner"
+  pos: noun
+  gender: m
+  usage: "Слово автоматично називає спосіб дії."
+- lemma: калька
+  translation: "calque, loan translation"
+  pos: noun
+  gender: f
+  usage: "Звіт готується аналітиками звучить як калька."
+- lemma: перебудувати
+  translation: "to restructure"
+  pos: verb
+  usage: "Кальковане речення треба перебудувати на актив."
+- lemma: активна конструкція
+  translation: "active construction"
+  pos: phrase
+  usage: "Активна конструкція називає відповідального діяча."
+- lemma: неозначено-особове речення
+  translation: "indefinite-personal sentence"
+  pos: phrase
+  usage: "Неозначено-особове речення може замінити важкий пасив."
+- lemma: форма на -но, -то
+  translation: "form ending in -no, -to"
+  pos: phrase
+  usage: "Форма на -но, -то фіксує завершений результат."
+- lemma: завершений результат
+  translation: "completed result"
+  pos: phrase
+  usage: "Заявку розглянуто повідомляє завершений результат."
+- lemma: службовий стиль
+  translation: "administrative style"
+  pos: phrase
+  usage: "У службовому стилі важливо не накопичувати кальковані пасиви."
+- lemma: нормативний
+  translation: "normative, standard"
+  pos: adj
+  usage: "Нормативний текст не ховає названого діяча в орудному."
