@@ -1,33 +1,51 @@
 # Source registry for wiki/folk/ritual/rodynna-obriadovist-zvychai.md
-# Referenced inline as [S1], [S2], ...
+
 sources:
-- id: S2
-  file: wave7-istkult-t2-xiii-xvii_c0262
-  type: literary
-  title: Історія української культури. Т.2. XIII-XVII ст.
-  author: Колектив
-- id: S3
-  file: wave7-entsyklopediia-ukrainoznavstva_c0614
-  type: literary
-  title: Енциклопедія українознавства
-  author: Колектив
-- id: S4
-  file: wave4-hrushevsky-istlit_c0289
-  type: literary
-  title: Грушевський — Історія української літератури
-  author: Грушевський М.
-- id: S5
-  file: wave12-hrushevsky-iu-odnotom_c0294
-  type: literary
-  title: Грушевський — Історія України (однотомник)
-  author: Грушевський М.
-- id: S7
-  file: wikipedia/Фольклор
-  type: wikipedia
-  title: Фольклор
-  url: https://uk.wikipedia.org/wiki/%D0%A4%D0%BE%D0%BB%D1%8C%D0%BA%D0%BB%D0%BE%D1%80
-- id: S8
-  file: wikipedia/Фольклористичні терміни
-  type: wikipedia
-  title: Фольклористичні терміни
-  url: https://uk.wikipedia.org/wiki/%D0%A4%D0%BE%D0%BB%D1%8C%D0%BA%D0%BB%D0%BE%D1%80%D0%B8%D1%81%D1%82%D0%B8%D1%87%D0%BD%D1%96%20%D1%82%D0%B5%D1%80%D0%BC%D1%96%D0%BD%D0%B8
+  - id: S1
+    file: gisem-history-grade-9-page-277
+    type: textbook
+    title: Історія України, 9 клас
+    author: Гісем О.
+    note: Шкільна рамка родин, хрестин, пострижин, весілля і похорону.
+  - id: S2
+    file: istoriia-ukrainskoi-kultury-t2-family-rites
+    type: literary
+    title: Історія української культури. Т.2. XIII-XVII ст.
+    author: Колектив
+    note: Джерельна обережність щодо сімейних обрядів XVI-XVIII і XIX-XX ст.
+  - id: S3
+    file: entsyklopediia-ukrainoznavstva-rodyny-khrestyny
+    type: literary
+    title: Енциклопедія українознавства
+    author: Колектив
+    note: Родини, хрестини, повитуха, піч, сволок, покуть.
+  - id: S4
+    file: entsyklopediia-ukrainoznavstva-vesillia-hiltse-korovai
+    type: literary
+    title: Енциклопедія українознавства
+    author: Колектив
+    note: Весільна підготовка, гільце, вінок, коровай.
+  - id: S5
+    file: entsyklopediia-ukrainoznavstva-vesillia-rid-formuly
+    type: literary
+    title: Енциклопедія українознавства
+    author: Колектив
+    note: Весільні формули роду, короваю, вівса і печі.
+  - id: S6
+    file: entsyklopediia-ukrainoznavstva-holosinnia-form
+    type: literary
+    title: Енциклопедія українознавства
+    author: Колектив
+    note: Голосіння як словесно-поетичний жанр похорону й поминання.
+  - id: S7
+    file: entsyklopediia-ukrainoznavstva-holosinnia-rite
+    type: literary
+    title: Енциклопедія українознавства
+    author: Колектив
+    note: Частини голосіння і похорон-весілля.
+  - id: S8
+    file: hrushevsky-holosinnia-fragments
+    type: literary
+    title: Грушевський. Історія української літератури
+    author: Грушевський М.
+    note: Вербатимні фрагменти голосіння; public source URL in plan references.

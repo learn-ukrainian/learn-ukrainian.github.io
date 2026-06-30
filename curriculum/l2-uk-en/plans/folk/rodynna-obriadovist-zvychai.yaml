@@ -1,68 +1,226 @@
-activity_hints:
-- type: aural-genre-id
-  placement: workbook
-  focus: Aural markers or performance context, when dossier sources support audio
-- type: symbolic-decoding
-  placement: workbook
-  focus: Motif, image, or formula decoding from dossier evidence
-- type: variant-comparison
-  placement: workbook
-  focus: Regional, temporal, or performance variants
-cefr_min: C1
-connects_to:
-- zhnyvarski-obzhynkovi-pisni
-- vesilni-pisni
-content_outline:
-- section: Постановка проблеми
-  words: 600
-  points:
-  - 'Stub: dossier will supply the opening problem, corpus anchors, and framing constraints.'
-- section: Корпус і контекст
-  words: 1200
-  points:
-  - 'Stub: dossier will supply verified texts, images, recordings, or material-culture evidence.'
-- section: Поетика, символіка і виконання
-  words: 1400
-  points:
-  - 'Stub: dossier will specify motifs, formulas, performance sequence, and regional variation.'
-- section: Деколонізаційна рамка
-  words: 900
-  points:
-  - 'Stub: dossier will identify imperial, Soviet, or romantic-nationalist myths to correct.'
-- section: Підсумок
-  words: 900
-  points:
-  - 'Stub: module build will synthesize why this folk form matters now.'
-focus: Birth, wedding, funeral, housewarming, and family-cycle ritual systems
-level: FOLK
 module: folk-007
-objectives:
-- Пояснювати жанр або культурну практику як частину ширшої системи народної культури.
-- Аналізувати корпусні приклади, символи, формули або перформативні послідовності на основі досьє.
-- Розпізнавати імперські, радянські або романтизовані міфи в описі теми й формулювати коректну рамку.
-pedagogy: CBI
-persona:
-  role: Модератор фольклористичного семінару з увагою до корпусу, виконання і матеріальної культури
-  voice: Folklore-seminar facilitator
-phase: FOLK.C
-references:
-- title: "Родинна обрядовість і звичаї"
-  note: 'Stub — corpus-grounded sources pending the dossier (docs/folk-epic/folk-dossier-schema.md §6 Збирачі та дослідники).'
-  type: pending
+level: FOLK
 sequence: 7
 slug: rodynna-obriadovist-zvychai
-status: stub
-subtitle: Family Rites and Customs
-title: Родинна обрядовість і звичаї
-version: '0.1'
-vocabulary_hints:
-- word: обряд
-  pos: ч.
-  definition: усталена символічна дія або послідовність дій у традиційній культурі
-- word: мотив
-  pos: ч.
-  definition: повторюваний образ, сюжетний елемент або символічна формула
-- word: варіант
-  pos: ч.
-  definition: регіональна, часова або виконавська форма того самого тексту чи практики
+title: "Родинна обрядовість і звичаї"
+subtitle: "Birth, christening, wedding, funeral, kinship voice"
+version: 3
+status: locked
+phase: base-first
+cefr_min: C1
 word_target: 5000
+focus: >-
+  Clean M07 base: rodyny, khrestyny, wedding, funeral, holosinnia, kinship
+  transition, Christian-community framing, verified short fragments, public
+  Hrushevsky lament candidates, and honest reading coverage.
+persona: >-
+  C1+ seminar learner reading Ukrainian family rites as oral pre-literary
+  culture: source-bound, Christian-heritage-aware, and careful about regional
+  variants.
+objectives:
+  - "Пояснити родинну обрядовість як систему життєвих переходів: народження, хрестини, весілля, похорон, поминання."
+  - "Розрізняти родини, хрестини, пострижини, весільну драму та голосіння за дією, виконавцями, предметами і голосом."
+  - "Аналізувати короткі корпусно перевірені фрагменти без осучаснення, вигадування або перенесення службових позначок в учнівський текст."
+  - "Утримувати християнсько-історичну рамку там, де джерела говорять про хрещення, вінчання, похорон і поминання."
+  - "Не романтизувати родовий контроль, майнові домовленості або гендерну асиметрію; пояснювати їх як історичні форми."
+pedagogy:
+  approach: "джерельно уважний FOLK-семінар"
+  notes:
+    - "Begin with a transition question: how does a family rite move a person across status?"
+    - "Use six verified excerpts as close-reading anchors, but do not promise four separate full reading pages for M07."
+    - "Keep M07 as a map; detailed wedding songs belong to M08 and detailed holosinnia to M09."
+    - "Lesson citations must use public source names only; do not expose internal IDs or workspace labels."
+content_outline:
+  - section: "Розминка: перехід, дім, рід"
+    words: 650
+    points:
+      - "Open with the central question: what changes when a child, bride, groom, or deceased person crosses a family boundary?"
+      - "Name the main cycle: родини, хрестини, пострижини, весілля, похорон, поминання."
+      - "Set the method: action, performer, object, spoken formula, and source limit."
+  - section: "Корпус і джерельна обережність"
+    words: 850
+    points:
+      - "Use the school textbook anchor for родини, хрестини, весілля, похорон."
+      - "Explain that XVI-XVIII evidence is fragmentary and nineteenth/twentieth-century ethnographic records cannot be flattened into one national script."
+      - "State reading coverage honestly: M07 has short verified fragments, public Hrushevsky lament candidates, and public reference links, not four full primary texts ready as separate reading pages."
+  - section: "Народження і хрестини"
+    words: 700
+    points:
+      - "Use the verified fragment 'щоб було таке тверде' as a local formula, not universal rule."
+      - "Explain повитуха, куми, хрещення, пострижини, піч, сволок, припічок, покуть through source-bound action."
+      - "Keep Christian hrestyny framing primary where the source speaks about baptism and church recognition."
+  - section: "Весілля як родова драма"
+    words: 1000
+    points:
+      - "Use three verified fragments about родину зібрати, коровай and овес / рід."
+      - "Explain сватання, заручини, гільце, вінок, коровай, вінчання, весільний поїзд, приймання молодої."
+      - "Show that wedding song and action stage two роди, not only two individuals."
+      - "Flag historical pressure and asymmetry without turning the rite into either nostalgia or denunciation."
+  - section: "Похорон, голосіння, пам'ять"
+    words: 900
+    points:
+      - "Use two verified Hrushevsky fragments: відламаність and смутне-невеселе весілля."
+      - "Explain formula, repetition, address, epithet and recitative as poetic technique."
+      - "Show how wedding and funeral codes can mirror each other when a life transition is interrupted."
+  - section: "Деколонізаційна рамка"
+    words: 650
+    points:
+      - "Reject reduction to decorative ethnography, patronizing backwardness, or exotic spectacle."
+      - "Reject the hidden-older-core framing; older motifs are source-bound historical notes, not the module thesis."
+      - "Keep Ukrainian agency: family rites preserve language, home, memory, public voice and Christian-community recognition."
+  - section: "Підсумок: як читати родинний обряд"
+    words: 250
+    points:
+      - "Return to the repeatable method: status boundary, performer, object, formula, source limit."
+      - "Prepare learners for M08 vesilni-pisni and M09 holosinnya without duplicating those modules."
+activity_hints:
+  - type: ritual-sequencing
+    placement: inline
+    focus: "Order родини / хрестини / пострижини, wedding stages, and funeral-pomynalnyi sequence from source cues."
+  - type: motif-formula
+    placement: inline
+    focus: "Identify рід, піч, коровай, овес, відламаність, смутне весілля as formula/object anchors."
+  - type: variant-comparison
+    placement: workbook
+    focus: "Compare a local birth formula, wedding kinship formula and holosinnia image without flattening regional scope."
+  - type: comparative-study
+    placement: workbook
+    focus: "Explain what M07 maps generally and what M08/M09 must treat in detail."
+vocabulary_hints:
+  - "родинна обрядовість"
+  - "родини"
+  - "хрестини"
+  - "пострижини"
+  - "повитуха"
+  - "куми"
+  - "сватання"
+  - "заручини"
+  - "вінчання"
+  - "гільце"
+  - "вильце"
+  - "вінок"
+  - "коровай"
+  - "коровайниці"
+  - "піч"
+  - "сволок"
+  - "припічок"
+  - "покуть"
+  - "рід"
+  - "родова належність"
+  - "похорон"
+  - "поминання"
+  - "голосіння"
+  - "речитатив"
+  - "формула"
+  - "варіант"
+  - "обряд переходу"
+vesum_exemptions:
+  corpus_attested_quotes:
+    - term: "убогую"
+      forms: ["убогую"]
+      source_chunk: "source:m07-wedding-kinship-fragment"
+      rationale: "Вербатим із перевіреного весільного фрагмента «родину зібрати...»."
+    - term: "близькую"
+      forms: ["близькую"]
+      source_chunk: "source:m07-wedding-kinship-fragment"
+      rationale: "Вербатим із перевіреного весільного фрагмента «родину зібрати...»."
+    - term: "рясненький"
+      forms: ["рясненький"]
+      source_chunk: "source:m07-wedding-corovai-fragment"
+      rationale: "Вербатим із перевіреного фрагмента про коровай."
+    - term: "одщіпнулася"
+      forms: ["одщіпнулася"]
+      source_chunk: "source:m07-hrushevsky-lament-fragment"
+      rationale: "Вербатим із перевіреного фрагмента голосіння у Грушевського."
+    - term: "одкотилося"
+      forms: ["одкотилося"]
+      source_chunk: "source:m07-hrushevsky-lament-fragment"
+      rationale: "Вербатим із перевіреного фрагмента голосіння у Грушевського."
+references:
+  - title: "Родинна обрядовість і звичаї"
+    path: "wiki/folk/ritual/rodynna-obriadovist-zvychai.md"
+    type: wiki
+    note: "Clean compiled M07 base wiki; short-fragment reading posture."
+  - title: "Історія України, 9 клас"
+    author: "Гісем О."
+    type: textbook
+    note: "School anchor for родини, хрестини, пострижини, весілля, похорон."
+  - title: "Історія української культури. Т.2. XIII-XVII ст."
+    author: "Колектив"
+    type: scholarly
+    note: "Source-limit frame: family rites known from fragmentary early notices and later ethnographic descriptions."
+  - title: "Енциклопедія українознавства"
+    author: "Колектив"
+    type: scholarly
+    note: "Rodyny, wedding material culture, kinship formulas and holosinnia genre evidence."
+  - title: "Грушевський. Історія української літератури"
+    author: "Грушевський М."
+    type: scholarly
+    source_url: "https://uk.wikisource.org/wiki/Історія_української_літератури_(Грушевський)/2"
+    note: "Verified holosinnia fragments for formula, loss imagery and funeral-wedding overlap."
+  - title: "Хрестини"
+    role: public_reference
+    type: public_reference
+    source_url: "https://uk.wikipedia.org/wiki/Хрестини"
+    note: "Public background link; not framing authority where it conflicts with FOLK standard."
+  - title: "Традиційне українське весілля"
+    role: public_reference
+    type: public_reference
+    source_url: "https://uk.wikipedia.org/wiki/Традиційне_українське_весілля"
+    note: "Public background link; use cautiously and source-limit claims."
+  - title: "Голосіння"
+    role: public_reference
+    type: public_reference
+    source_url: "https://uk.wikipedia.org/wiki/Голосіння"
+    note: "Public background link; do not inherit unsafe hidden-core wording as lesson thesis."
+reading_coverage:
+  status: mixed-short-fragments-and-public-candidates
+  separate_reading_pages_ready: 0
+  note: >-
+    M07 has six verified short excerpts. Hrushevsky holosinnia excerpts have a
+    public Wikisource volume page and can become separate excerpt reading pages
+    after exact line-break QA, but M07 still lacks four standalone full public
+    primary texts for a complete reading-page layer. Build the module with
+    excerpt boxes and public-reference resources, or defer full separate reading
+    pages to M08/M09.
+  verified_excerpts:
+    - title: "Родильна формула тілесної міцності"
+      author: "Колектив"
+      source_chunk: "source:m07-birth-strength-fragment"
+      reading_posture: short-fragment-only
+    - title: "Весільне скликання роду"
+      author: "Колектив"
+      source_chunk: "source:m07-wedding-kinship-fragment"
+      reading_posture: short-fragment-only
+    - title: "Коровай як родова формула"
+      author: "Колектив"
+      source_chunk: "source:m07-wedding-corovai-fragment"
+      reading_posture: short-fragment-only
+    - title: "Овес і рід у весільному обсипанні"
+      author: "Колектив"
+      source_chunk: "source:m07-wedding-oats-fragment"
+      reading_posture: short-fragment-only
+    - title: "Голосіння як відламаність"
+      author: "Грушевський М."
+      source_chunk: "source:m07-hrushevsky-lament-fragment"
+      source_url: "https://uk.wikisource.org/wiki/Історія_української_літератури_(Грушевський)/2"
+      reading_posture: public-excerpt-candidate
+    - title: "Похорон як смутне весілля"
+      author: "Грушевський М."
+      source_chunk: "source:m07-hrushevsky-lament-fragment"
+      source_url: "https://uk.wikisource.org/wiki/Історія_української_літератури_(Грушевський)/2"
+      reading_posture: public-excerpt-candidate
+do_not_quote:
+  - line: "Благослови, Боже, і отець, і мати, будемо вінок зачинати"
+    reason: "Not verified in the checked corpus; do not use as verbatim."
+connects_to:
+  - zhnyvarski-obzhynkovi-pisni
+  - vesilni-pisni
+  - holosinnya
+changelog:
+  - version: 3
+    date: "2026-06-30"
+    note: "Moved citation hygiene guidance from do_not_quote into pedagogy notes."
+  - version: 2
+    date: "2026-06-30"
+    note: "Base-first rebuild: replaced corrupted research/wiki/stub plan with clean source-bound M07 base and honest short-fragment reading coverage."
