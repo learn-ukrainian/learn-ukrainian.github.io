@@ -2,6 +2,18 @@
   "reviewed": [
     {
       "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/food-and-drink/vocabulary.yaml"
+    },
+    {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/my-city/vocabulary.yaml"
+    },
+    {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/transport/vocabulary.yaml"
+    },
+    {
+      "status": "reviewed",
       "path": "curriculum/l2-uk-en/a2/all-cases-practice/vocabulary.yaml"
     }
   ]

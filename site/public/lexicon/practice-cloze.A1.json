@@ -6,6 +6,326 @@
       "caseRule": {
         "case": "accusative",
         "caseLabel": "знахідний",
+        "feedback": "бачити/мати/читати + знахідний (бібліотека -> бібліотеку)",
+        "ruleId": "accusative_direct_object",
+        "trigger": "direct-object",
+        "triggerLabel": "прямий додаток"
+      },
+      "cefr": "A1",
+      "clozeEn": "I see the library.",
+      "clozeId": "бібліотека:cloze:1",
+      "form": "бібліотеку",
+      "lemma": "бібліотека",
+      "lemmaId": "бібліотека",
+      "number": "singular",
+      "options": [
+        {
+          "case": "accusative",
+          "kind": "answer",
+          "label": "бібліотеку",
+          "lemmaId": "бібліотека",
+          "optionId": "бібліотека:cloze:1:answer",
+          "pos": "noun",
+          "strategy": "no-pair"
+        },
+        {
+          "case": "accusative",
+          "kind": "decoy-oblique",
+          "label": "зупинку",
+          "lemmaId": "зупинка",
+          "optionId": "бібліотека:cloze:1:decoy-1",
+          "pos": "noun",
+          "strategy": "no-pair"
+        },
+        {
+          "case": "accusative",
+          "kind": "decoy-oblique",
+          "label": "вулицю",
+          "lemmaId": "вулиця",
+          "optionId": "бібліотека:cloze:1:decoy-2",
+          "pos": "noun",
+          "strategy": "no-pair"
+        },
+        {
+          "case": "nominative",
+          "kind": "decoy-lemma",
+          "label": "столиця",
+          "lemmaId": "столиця",
+          "optionId": "бібліотека:cloze:1:decoy-3",
+          "pos": "noun",
+          "strategy": "no-pair"
+        }
+      ],
+      "provenance": {
+        "cardId": "a1-my-city-biblioteka-accusative-1",
+        "path": "curriculum/l2-uk-en/a1/my-city/vocabulary.yaml",
+        "status": "reviewed"
+      },
+      "sentence": "Я бачу ___.",
+      "sentenceFrameId": "sf_c19022120eec"
+    },
+    {
+      "acceptedAlt": [],
+      "blankCase": "accusative",
+      "caseRule": {
+        "case": "accusative",
+        "caseLabel": "знахідний",
+        "feedback": "бачити/мати/читати + знахідний (вулиця -> вулицю)",
+        "ruleId": "accusative_direct_object",
+        "trigger": "direct-object",
+        "triggerLabel": "прямий додаток"
+      },
+      "cefr": "A1",
+      "clozeEn": "I see the street.",
+      "clozeId": "вулиця:cloze:1",
+      "form": "вулицю",
+      "lemma": "вулиця",
+      "lemmaId": "вулиця",
+      "number": "singular",
+      "options": [
+        {
+          "case": "nominative",
+          "kind": "decoy-lemma",
+          "label": "лампа",
+          "lemmaId": "лампа",
+          "optionId": "вулиця:cloze:1:decoy-3",
+          "pos": "noun",
+          "strategy": "no-pair"
+        },
+        {
+          "case": "accusative",
+          "kind": "answer",
+          "label": "вулицю",
+          "lemmaId": "вулиця",
+          "optionId": "вулиця:cloze:1:answer",
+          "pos": "noun",
+          "strategy": "no-pair"
+        },
+        {
+          "case": "accusative",
+          "kind": "decoy-oblique",
+          "label": "середу",
+          "lemmaId": "середа",
+          "optionId": "вулиця:cloze:1:decoy-1",
+          "pos": "noun",
+          "strategy": "no-pair"
+        },
+        {
+          "case": "accusative",
+          "kind": "decoy-oblique",
+          "label": "годину",
+          "lemmaId": "година",
+          "optionId": "вулиця:cloze:1:decoy-2",
+          "pos": "noun",
+          "strategy": "no-pair"
+        }
+      ],
+      "provenance": {
+        "cardId": "a1-my-city-vulytsia-accusative-1",
+        "path": "curriculum/l2-uk-en/a1/my-city/vocabulary.yaml",
+        "status": "reviewed"
+      },
+      "sentence": "Я бачу ___.",
+      "sentenceFrameId": "sf_73b53becd433"
+    },
+    {
+      "acceptedAlt": [],
+      "blankCase": "accusative",
+      "caseRule": {
+        "case": "accusative",
+        "caseLabel": "знахідний",
+        "feedback": "бачити/мати/читати + знахідний (вода -> воду)",
+        "ruleId": "accusative_direct_object",
+        "trigger": "direct-object",
+        "triggerLabel": "прямий додаток"
+      },
+      "cefr": "A1",
+      "clozeEn": "I drink water.",
+      "clozeId": "вода:cloze:1",
+      "form": "воду",
+      "lemma": "вода",
+      "lemmaId": "вода",
+      "number": "singular",
+      "options": [
+        {
+          "case": "accusative",
+          "kind": "decoy-oblique",
+          "label": "пошту",
+          "lemmaId": "пошта",
+          "optionId": "вода:cloze:1:decoy-1",
+          "pos": "noun",
+          "strategy": "no-pair"
+        },
+        {
+          "case": "nominative",
+          "kind": "decoy-lemma",
+          "label": "дата",
+          "lemmaId": "дата",
+          "optionId": "вода:cloze:1:decoy-3",
+          "pos": "noun",
+          "strategy": "no-pair"
+        },
+        {
+          "case": "accusative",
+          "kind": "decoy-oblique",
+          "label": "валізу",
+          "lemmaId": "валіза",
+          "optionId": "вода:cloze:1:decoy-2",
+          "pos": "noun",
+          "strategy": "no-pair"
+        },
+        {
+          "case": "accusative",
+          "kind": "answer",
+          "label": "воду",
+          "lemmaId": "вода",
+          "optionId": "вода:cloze:1:answer",
+          "pos": "noun",
+          "strategy": "no-pair"
+        }
+      ],
+      "provenance": {
+        "cardId": "a1-food-and-drink-voda-accusative-1",
+        "path": "curriculum/l2-uk-en/a1/food-and-drink/vocabulary.yaml",
+        "status": "reviewed"
+      },
+      "sentence": "Я п'ю ___.",
+      "sentenceFrameId": "sf_0b2f65c4ffa8"
+    },
+    {
+      "acceptedAlt": [],
+      "blankCase": "accusative",
+      "caseRule": {
+        "case": "accusative",
+        "caseLabel": "знахідний",
+        "feedback": "бачити/мати/читати + знахідний (кава -> каву)",
+        "ruleId": "accusative_direct_object",
+        "trigger": "direct-object",
+        "triggerLabel": "прямий додаток"
+      },
+      "cefr": "A1",
+      "clozeEn": "I drink coffee.",
+      "clozeId": "кава:cloze:1",
+      "form": "каву",
+      "lemma": "кава",
+      "lemmaId": "кава",
+      "number": "singular",
+      "options": [
+        {
+          "case": "accusative",
+          "kind": "decoy-oblique",
+          "label": "страву",
+          "lemmaId": "страва",
+          "optionId": "кава:cloze:1:decoy-2",
+          "pos": "noun",
+          "strategy": "no-pair"
+        },
+        {
+          "case": "accusative",
+          "kind": "decoy-oblique",
+          "label": "частину",
+          "lemmaId": "частина",
+          "optionId": "кава:cloze:1:decoy-1",
+          "pos": "noun",
+          "strategy": "no-pair"
+        },
+        {
+          "case": "nominative",
+          "kind": "decoy-lemma",
+          "label": "адреса",
+          "lemmaId": "адреса",
+          "optionId": "кава:cloze:1:decoy-3",
+          "pos": "noun",
+          "strategy": "no-pair"
+        },
+        {
+          "case": "accusative",
+          "kind": "answer",
+          "label": "каву",
+          "lemmaId": "кава",
+          "optionId": "кава:cloze:1:answer",
+          "pos": "noun",
+          "strategy": "no-pair"
+        }
+      ],
+      "provenance": {
+        "cardId": "a1-food-and-drink-kava-accusative-1",
+        "path": "curriculum/l2-uk-en/a1/food-and-drink/vocabulary.yaml",
+        "status": "reviewed"
+      },
+      "sentence": "Я п'ю ___.",
+      "sentenceFrameId": "sf_b5d89c597aad"
+    },
+    {
+      "acceptedAlt": [],
+      "blankCase": "accusative",
+      "caseRule": {
+        "case": "accusative",
+        "caseLabel": "знахідний",
+        "feedback": "бачити/мати/читати + знахідний (машина -> машину)",
+        "ruleId": "accusative_direct_object",
+        "trigger": "direct-object",
+        "triggerLabel": "прямий додаток"
+      },
+      "cefr": "A1",
+      "clozeEn": "I see the car.",
+      "clozeId": "машина:cloze:1",
+      "form": "машину",
+      "lemma": "машина",
+      "lemmaId": "машина",
+      "number": "singular",
+      "options": [
+        {
+          "case": "accusative",
+          "kind": "decoy-oblique",
+          "label": "ціну",
+          "lemmaId": "ціна",
+          "optionId": "машина:cloze:1:decoy-1",
+          "pos": "noun",
+          "strategy": "no-pair"
+        },
+        {
+          "case": "accusative",
+          "kind": "decoy-oblique",
+          "label": "допомогу",
+          "lemmaId": "допомога",
+          "optionId": "машина:cloze:1:decoy-2",
+          "pos": "noun",
+          "strategy": "no-pair"
+        },
+        {
+          "case": "accusative",
+          "kind": "answer",
+          "label": "машину",
+          "lemmaId": "машина",
+          "optionId": "машина:cloze:1:answer",
+          "pos": "noun",
+          "strategy": "no-pair"
+        },
+        {
+          "case": "nominative",
+          "kind": "decoy-lemma",
+          "label": "бібліотека",
+          "lemmaId": "бібліотека",
+          "optionId": "машина:cloze:1:decoy-3",
+          "pos": "noun",
+          "strategy": "no-pair"
+        }
+      ],
+      "provenance": {
+        "cardId": "a1-transport-mashyna-accusative-1",
+        "path": "curriculum/l2-uk-en/a1/transport/vocabulary.yaml",
+        "status": "reviewed"
+      },
+      "sentence": "Я бачу ___.",
+      "sentenceFrameId": "sf_356278937794"
+    },
+    {
+      "acceptedAlt": [],
+      "blankCase": "accusative",
+      "caseRule": {
+        "case": "accusative",
+        "caseLabel": "знахідний",
         "feedback": "бачити/мати/читати + знахідний (валіза -> валізу)",
         "ruleId": "accusative_direct_object",
         "trigger": "direct-object",
@@ -29,10 +349,19 @@
           "strategy": "no-pair"
         },
         {
+          "case": "nominative",
+          "kind": "decoy-lemma",
+          "label": "громада",
+          "lemmaId": "громада",
+          "optionId": "валіза:cloze:1:decoy-3",
+          "pos": "noun",
+          "strategy": "no-pair"
+        },
+        {
           "case": "accusative",
           "kind": "decoy-oblique",
-          "label": "вулицю",
-          "lemmaId": "вулиця",
+          "label": "годину",
+          "lemmaId": "година",
           "optionId": "валіза:cloze:1:decoy-1",
           "pos": "noun",
           "strategy": "no-pair"
@@ -40,18 +369,9 @@
         {
           "case": "accusative",
           "kind": "decoy-oblique",
-          "label": "бібліотеку",
-          "lemmaId": "бібліотека",
+          "label": "каву",
+          "lemmaId": "кава",
           "optionId": "валіза:cloze:1:decoy-2",
-          "pos": "noun",
-          "strategy": "no-pair"
-        },
-        {
-          "case": "nominative",
-          "kind": "decoy-lemma",
-          "label": "пісня",
-          "lemmaId": "пісня",
-          "optionId": "валіза:cloze:1:decoy-3",
           "pos": "noun",
           "strategy": "no-pair"
         }
@@ -70,10 +390,10 @@
   "schema": "atlas-practice-cloze",
   "schemaVersion": 1,
   "sizeBudget": {
-    "gzipBytes": 769,
+    "gzipBytes": 1453,
     "gzipLimitBytes": 140000,
     "ok": true,
-    "rawBytes": 2351,
+    "rawBytes": 12371,
     "rawLimitBytes": 550000
   },
   "source": "manifest"

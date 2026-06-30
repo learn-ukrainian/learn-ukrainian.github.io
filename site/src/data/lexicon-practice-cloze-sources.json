@@ -14,5 +14,85 @@
       "path": "curriculum/l2-uk-en/a2/all-cases-practice/vocabulary.yaml",
       "cardId": "a2-all-cases-practice-valiza-accusative-1"
     }
+  },
+  {
+    "lemma": "вулиця",
+    "lemmaId": "вулиця",
+    "sentence": "Я бачу ___.",
+    "blankCase": "accusative",
+    "form": "вулицю",
+    "number": "singular",
+    "caseRule": "accusative_direct_object",
+    "clozeEn": "I see the street.",
+    "cefr": "A1",
+    "provenance": {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/my-city/vocabulary.yaml",
+      "cardId": "a1-my-city-vulytsia-accusative-1"
+    }
+  },
+  {
+    "lemma": "бібліотека",
+    "lemmaId": "бібліотека",
+    "sentence": "Я бачу ___.",
+    "blankCase": "accusative",
+    "form": "бібліотеку",
+    "number": "singular",
+    "caseRule": "accusative_direct_object",
+    "clozeEn": "I see the library.",
+    "cefr": "A1",
+    "provenance": {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/my-city/vocabulary.yaml",
+      "cardId": "a1-my-city-biblioteka-accusative-1"
+    }
+  },
+  {
+    "lemma": "машина",
+    "lemmaId": "машина",
+    "sentence": "Я бачу ___.",
+    "blankCase": "accusative",
+    "form": "машину",
+    "number": "singular",
+    "caseRule": "accusative_direct_object",
+    "clozeEn": "I see the car.",
+    "cefr": "A1",
+    "provenance": {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/transport/vocabulary.yaml",
+      "cardId": "a1-transport-mashyna-accusative-1"
+    }
+  },
+  {
+    "lemma": "кава",
+    "lemmaId": "кава",
+    "sentence": "Я п'ю ___.",
+    "blankCase": "accusative",
+    "form": "каву",
+    "number": "singular",
+    "caseRule": "accusative_direct_object",
+    "clozeEn": "I drink coffee.",
+    "cefr": "A1",
+    "provenance": {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/food-and-drink/vocabulary.yaml",
+      "cardId": "a1-food-and-drink-kava-accusative-1"
+    }
+  },
+  {
+    "lemma": "вода",
+    "lemmaId": "вода",
+    "sentence": "Я п'ю ___.",
+    "blankCase": "accusative",
+    "form": "воду",
+    "number": "singular",
+    "caseRule": "accusative_direct_object",
+    "clozeEn": "I drink water.",
+    "cefr": "A1",
+    "provenance": {
+      "status": "reviewed",
+      "path": "curriculum/l2-uk-en/a1/food-and-drink/vocabulary.yaml",
+      "cardId": "a1-food-and-drink-voda-accusative-1"
+    }
   }
 ]

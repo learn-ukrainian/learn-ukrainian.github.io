@@ -1,8 +1,8 @@
 {
   "counts": {
-    "cloze": 1,
-    "clozeCoverage": 0.0009,
-    "clozeEligibleLexemes": 1,
+    "cloze": 6,
+    "clozeCoverage": 0.0053,
+    "clozeEligibleLexemes": 6,
     "lexemes": 1125
   },
   "deckVersion": "atlas-practice-v1-c5a52e54cdf8d828",
@@ -222,14 +222,17 @@
     },
     {
       "cefr": "A1",
-      "clozeIds": [],
-      "hasCloze": false,
+      "clozeIds": [
+        "бібліотека:cloze:1"
+      ],
+      "hasCloze": true,
       "lemma": "бібліотека",
       "lemmaId": "бібліотека",
       "modes": [
         "flashcards",
         "matching",
-        "choice"
+        "choice",
+        "cloze"
       ],
       "newOrder": 17
     },
@@ -248,14 +251,17 @@
     },
     {
       "cefr": "A1",
-      "clozeIds": [],
-      "hasCloze": false,
+      "clozeIds": [
+        "вулиця:cloze:1"
+      ],
+      "hasCloze": true,
       "lemma": "вулиця",
       "lemmaId": "вулиця",
       "modes": [
         "flashcards",
         "matching",
-        "choice"
+        "choice",
+        "cloze"
       ],
       "newOrder": 19
     },
@@ -1662,14 +1668,17 @@
     },
     {
       "cefr": "A1",
-      "clozeIds": [],
-      "hasCloze": false,
+      "clozeIds": [
+        "вода:cloze:1"
+      ],
+      "hasCloze": true,
       "lemma": "вода",
       "lemmaId": "вода",
       "modes": [
         "flashcards",
         "matching",
-        "choice"
+        "choice",
+        "cloze"
       ],
       "newOrder": 131
     },
@@ -1714,14 +1723,17 @@
     },
     {
       "cefr": "A1",
-      "clozeIds": [],
-      "hasCloze": false,
+      "clozeIds": [
+        "кава:cloze:1"
+      ],
+      "hasCloze": true,
       "lemma": "кава",
       "lemmaId": "кава",
       "modes": [
         "flashcards",
         "matching",
-        "choice"
+        "choice",
+        "cloze"
       ],
       "newOrder": 135
     },
@@ -7882,14 +7894,17 @@
     },
     {
       "cefr": "A1",
-      "clozeIds": [],
-      "hasCloze": false,
+      "clozeIds": [
+        "машина:cloze:1"
+      ],
+      "hasCloze": true,
       "lemma": "машина",
       "lemmaId": "машина",
       "modes": [
         "flashcards",
         "matching",
-        "choice"
+        "choice",
+        "cloze"
       ],
       "newOrder": 621
     },
@@ -14354,10 +14369,10 @@
   "schema": "atlas-practice-index",
   "schemaVersion": 1,
   "sizeBudget": {
-    "gzipBytes": 17333,
+    "gzipBytes": 17400,
     "gzipLimitBytes": 140000,
     "ok": true,
-    "rawBytes": 284475,
+    "rawBytes": 284745,
     "rawLimitBytes": 550000
   },
   "source": "manifest"
