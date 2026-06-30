@@ -1,17 +1,18 @@
 # LIT-FANTASTIKA Orchestrator Suite
 
-Prompt version: 0.1
-Last reviewed: 2026-06-22
+Prompt version: 0.2
+Last reviewed: 2026-06-30
 
 ## Source Assumptions
 
-- `lit-fantastika` is an active speculative fiction track covering Gothic, fantasy, science fiction, magical realism, cyberpunk, and mythic fiction.
-- Current planning docs include `docs/l2-uk-en/LIT-FANTASTIKA-PLAN-GENERATED.md` and active plans under `curriculum/l2-uk-en/plans/lit-fantastika/`.
-- Many texts are modern and copyrighted; default to linked-only or excerpt-only unless public-domain/hostable status is verified.
+- `lit-fantastika` is an active LIT specialization track for speculative, fantastic, science-fiction, and fantasy writing.
+- Treat stories, novel excerpts, author essays, genre manifestos, reviews, and interviews as reading candidates where rights allow.
+- Modern genre texts are often copyrighted; default to linked-only or excerpt-only unless hostable rights are explicit.
+- This suite covers preflight, production, quality audit, and remediation. Use only the stage that matches the task.
 
 ## Goal
 
-Run preflight, production, audit, or remediation for scoped `lit-fantastika` modules, with primary readings and genre analysis that frames Ukrainian speculative fiction as its own tradition.
+Run preflight, production, quality audit, and remediation scoped to `lit-fantastika` modules without touching B2 or inactive LIT remnants.
 
 ## WORKTREE_ROOT Setup
 
@@ -37,57 +38,80 @@ git rev-parse --show-toplevel
 - `docs/prompts/orchestrators/shared/review-output-schema.md`
 - `docs/prompts/orchestrators/shared/seminar-source-rules.md`
 - `docs/prompts/orchestrators/shared/reading-section-rules.md`
-- `docs/l2-uk-en/LIT-FANTASTIKA-PLAN-GENERATED.md`
 - `docs/l2-uk-en/templates/lit-module-template.md`
-- target `curriculum/l2-uk-en/plans/lit-fantastika/<slug>.yaml`
+- Target plan: `curriculum/l2-uk-en/plans/lit-fantastika/<slug>.yaml`
+- Existing target source, sidecars, readings, and `site/src/content/docs/lit-fantastika/<slug>.mdx` when present.
 
 ## Allowed Writes
 
-- `docs/audits/lit-fantastika-<scope>-<date>.md`
-- scoped files under `curriculum/l2-uk-en/lit-fantastika/`
-- `site/src/content/docs/lit-fantastika/<slug>.mdx`
-- hostable readings under `site/src/content/readings/`
-- PR body or final orchestration note text
+- Preflight / quality audit reports under `docs/audits/lit-fantastika-<scope>-<date>.md` when explicitly scoped.
+- Scoped current-layout module files under `curriculum/l2-uk-en/lit-fantastika/`.
+- Scoped sidecars under `curriculum/l2-uk-en/lit-fantastika/{meta,activities,vocabulary}/` when that layout is used.
+- Generated learner page `site/src/content/docs/lit-fantastika/<slug>.mdx` for scoped built modules.
+- Permitted public-domain or otherwise hostable reading pages under `site/src/content/readings/`.
+- PR body and final orchestration note text.
 
 ## Forbidden Writes
 
-- `docs/prompts/orchestrators/b2/**`
-- inactive LIT remnants
-- non-hostable copyrighted contemporary fiction
-- `.python-version`, `.yamllint`, `.markdownlint.json`
-- generated `status/`, curriculum `audit/`, curriculum `review/`, and `data/telemetry/**` artifacts
+- `docs/prompts/orchestrators/b2/**` and unrelated track prompt suites.
+- Unrelated plans, modules, dossiers, wiki/source registries, image assets, or reading pages.
+- Non-hostable copyrighted full texts or media under `site/src/content/readings/`.
+- `.python-version`, `.yamllint`, `.markdownlint.json`, package files, or linter configs.
+- Generated `status/`, curriculum `audit/`, curriculum `review/`, `docs/*-STATUS.md`, or `data/telemetry/**` artifacts.
 
 ## Lifecycle Rules
 
-- Preflight: verify text availability, rights, genre context, and whether the work is public-domain, linked-only, or excerpt-only.
-- Production: analyze genre devices, Ukrainian mythic/cultural context, and anti-imperial stakes without reducing the work to plot summary.
-- Quality audit: check genre claims, source identity, rights, and avoidance of "derivative of Russian sci-fi" framing.
-- Remediation: repair source, reading, and copyright findings first.
+- Preflight: inventory source/readings availability, rights status, plan/source contradictions, and track-specific framing risks before production.
+- Production: build from verified source material first, then shape lesson prose, activities, vocabulary, resources, generated MDX, and readings around that evidence.
+- Quality audit: inspect source files and rendered learner pages for factual grounding, reading behavior, decolonization, English/internal leakage, activity placement, and LLM fingerprint.
+- Remediation: fix source authority, rights, factuality, framing, render, and activity-split blockers before style polish.
 
 ## Track-Specific Checks
 
-- Berdnyk/dissident or Soviet-era texts need political context and source verification.
-- Contemporary genre fiction must be handled with careful copyright limits.
+- Analyze genre devices, worldbuilding, allegory, colonial/postcolonial framing, and Ukrainian genre history.
+- Do not import Russian/Soviet genre taxonomies as neutral defaults.
+- Keep plot summary subordinate to close reading and cultural context.
+
+## Learner-Facing Quality And Activity Placement
+
+- Keep build/source-verification language out of learner pages: no `prompt`, `audit`, `review`, `telemetry`, `source-tier`, `gate`, `chunk_id`, `source_chunk`, corpus/service IDs, `learner-facing`, `hosted reading`, or validation-tool language in public prose.
+- Student-visible body prose should be Ukrainian unless the current track/page component explicitly permits English UI labels or vocabulary glosses.
+- Teach through the subject matter: source passages, biography, historical context, literary form, performance, register, and interpretation. Do not narrate how the lesson is being built.
+- For any production/remediation module that uses inline practice, use Activity YAML V2 with `inline:` and `workbook:` lists. Never wrap the root in an `activities:` key.
+- Each `inline:` activity must have exactly one matching `<!-- INJECT_ACTIVITY: <id> -->` marker in `module.md`. Workbook activities must not have prose markers.
+- The Lesson tab must not absorb the entire practice set, and the Workbook/Activities tab must not be empty.
+- PR/final notes for built-module work must report `inline=<n>`, `workbook=<n>`, rendered Lesson tab status, rendered Workbook/Activities tab status, English leakage status, internal-leakage status, and an LLM-fingerprint score.
 
 ## Helpers And Headroom
 
-Use helpers for rights and text-location checks. Compress long source surveys with Headroom.
+Use one to three read-only helpers for source discovery, rights classification, rendered-page checks, leakage scoring, and track-specific framing review when useful. Compress long helper outputs with Headroom. The main orchestrator owns edits, review routing, PR creation, and merge decisions.
+
+Independent review must be read-only and must inspect learner-facing output, source grounding, track framing, English/internal leakage, activity placement, and unresolved risks. Treat unresolved findings as blockers.
 
 ## Validation Commands
+
+Always run for any PR:
+
+```bash
+git status --short --branch
+git diff --check
+.venv/bin/python scripts/audit/lint_agent_trailer.py
+```
+
+Parse current plans before production/remediation decisions:
 
 ```bash
 .venv/bin/python - <<'PY'
 from pathlib import Path
 import yaml
+
 for path in sorted(Path("curriculum/l2-uk-en/plans/lit-fantastika").glob("*.yaml")):
     yaml.safe_load(path.read_text(encoding="utf-8"))
 print("lit-fantastika plans parse")
 PY
-git diff --check
-.venv/bin/python scripts/audit/lint_agent_trailer.py
 ```
 
-Add content-generation validation for production/remediation.
+Built modules also need the applicable activity, vocabulary, MDX, reading, route, site, and deterministic checks from `docs/prompts/orchestrators/shared/validation-checklist.md`. Use `.venv/bin/python`, not bare Python or `sys.executable`.
 
 ## Expected Final Response
 
@@ -95,6 +119,8 @@ Add content-generation validation for production/remediation.
 LIT-FANTASTIKA stage: <preflight | production | quality-audit | remediation>
 Scope: <slugs or audit report>
 Reading coverage: <hosted/link-only/excerpt-only/omit/needed counts>
+Activity split: <inline=n, workbook=n, rendered lesson/workbook status or not applicable>
+Quality score: <LLM fingerprint, English leakage, internal leakage, unresolved blockers>
 Files changed: <paths>
 Validation run: <commands and outcomes>
 Telemetry: <posted | not module-build | unavailable with reason>

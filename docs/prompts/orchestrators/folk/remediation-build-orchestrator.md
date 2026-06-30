@@ -1,20 +1,18 @@
 # FOLK Remediation Build Orchestrator
 
-Prompt version: 0.2
-Last reviewed: 2026-06-21
+Prompt version: 0.3
+Last reviewed: 2026-06-30
 
 ## Source Assumptions
 
-- ⛔ **Framing is governed by `docs/folk-epic/FOLK-FRAMING-STANDARD.md`.** Framing fixes (Christian-heritage-first, pre-literature identity, removing «магія»/occult/pagan-as-belief framing, school-form sourcing) are **first-class remediations** — never leave a framing-standard violation unfixed in a "clean" module.
-- This prompt consumes a durable FOLK audit report under `docs/audits/`.
-- FOLK remediation fixes source-grounding, readings, quote integrity, copyright, rendered links, and seminar pedagogy in small PR-sized batches.
+- Framing is governed by `docs/folk-epic/FOLK-FRAMING-STANDARD.md`; framing fixes are first-class remediations.
+- This prompt consumes durable FOLK audit findings and fixes source grounding, readings, quote integrity, copyright, rendered links, and seminar pedagogy in small PR-sized batches.
 - Do not turn FOLK into a generic core-language lesson. Preserve seminar source work and the folk text layer.
-
-- Treat source verification as build/PR discipline, not student content. Public FOLK learner pages may show public source names/URLs and Ukrainian academic reading habits, but must not expose the validation workflow or process labels (`source hammer`, `source-first`, `learner-facing`, `chunk_id`, `source_chunk`, corpus/service IDs, `verify_quote`, `hosted reading`, `public reading`).
+- Public learner pages may show public source names/URLs and Ukrainian academic reading habits, but not validation workflow labels.
 
 ## Goal
 
-Fix all selected FOLK audit findings without changing unrelated modules. Include reading/copyright fixes, `resources.yaml` `role: reading` repair, hosted reading updates when permitted, source module fixes, generated MDX updates, validation, telemetry, and independent review.
+Fix selected FOLK audit findings without changing unrelated modules. Include reading/copyright fixes, `resources.yaml` `role: reading` repair, hosted reading updates when permitted, source module fixes, generated MDX updates, validation, telemetry, and independent review.
 
 ## WORKTREE_ROOT Setup
 
@@ -37,52 +35,69 @@ git rev-parse --show-toplevel
 - `docs/prompts/orchestrators/shared/repo-rules.md`
 - `docs/prompts/orchestrators/shared/validation-checklist.md`
 - `docs/prompts/orchestrators/shared/telemetry-and-pr.md`
+- `docs/prompts/orchestrators/shared/review-output-schema.md`
 - `docs/prompts/orchestrators/shared/seminar-source-rules.md`
 - `docs/prompts/orchestrators/shared/reading-section-rules.md`
-- selected FOLK audit report under `docs/audits/`
-- **`docs/folk-epic/FOLK-FRAMING-STANDARD.md` (READ FIRST — the non-negotiable framing standard)**
+- **`docs/folk-epic/FOLK-FRAMING-STANDARD.md` (read first; non-negotiable framing standard)**
 - `docs/folk-epic/EXEMPLAR-STANDARD.md`
 - `docs/folk-epic/folk-review-rubric.md`
-- affected FOLK plans, source modules, resources, activities, vocabulary, generated MDX, and reading files
+- `docs/folk-epic/folk-text-layer-spec.md`
+- `scripts/build/phases/linear-write-seminar-folk-rules.md`
+- `site/src/content.config.ts`
+- `scripts/readings/generate_readings.py`
+- Selected FOLK audit report under `docs/audits/`
+- Affected FOLK plans, modules, resources, activities, vocabulary, generated MDX, and reading files
 
 ## Allowed Writes
 
-- For scoped target slugs and readings only:
-  - `curriculum/l2-uk-en/folk/<slug>/module.md`
-  - `curriculum/l2-uk-en/folk/<slug>/activities.yaml`
-  - `curriculum/l2-uk-en/folk/<slug>/vocabulary.yaml`
-  - `curriculum/l2-uk-en/folk/<slug>/resources.yaml`
-  - `site/src/content/docs/folk/<slug>.mdx`
-  - `site/src/content/readings/<reading-slug>.mdx` when hosting is legally permitted
-- PR body or final orchestration note text
+- Scoped `curriculum/l2-uk-en/folk/<slug>/module.md`
+- Scoped `curriculum/l2-uk-en/folk/<slug>/activities.yaml`
+- Scoped `curriculum/l2-uk-en/folk/<slug>/vocabulary.yaml`
+- Scoped `curriculum/l2-uk-en/folk/<slug>/resources.yaml`
+- Generated `site/src/content/docs/folk/<slug>.mdx`
+- Permitted public-domain or otherwise hostable reading pages under `site/src/content/readings/`
+- PR body and final orchestration note text
 
 ## Forbidden Writes
 
-- unrelated FOLK modules
-- non-hostable copyrighted full text under `site/src/content/readings/`
-- FOLK plans, wiki, dossier, or source registries unless explicitly scoped by the audit batch
-- `.python-version`, `.yamllint`, `.markdownlint.json`
-- `data/telemetry/**`
-- generated `status/`, curriculum `audit/`, or curriculum `review/` artifacts
+- `docs/prompts/orchestrators/b2/**` and unrelated track prompt suites
+- Unrelated FOLK modules, plans, wiki, dossier, source registries, image assets, or reading pages unless explicitly scoped by the audit batch
+- Non-hostable copyrighted full text under `site/src/content/readings/`
+- `.python-version`, `.yamllint`, `.markdownlint.json`, package files, or linter configs
+- Generated `status/`, curriculum `audit/`, curriculum `review/`, `docs/*-STATUS.md`, or `data/telemetry/**` artifacts
 
-## Remediation Rules
+## Lifecycle Rules
 
-- **Framing-standard findings are first-class (`FOLK-FRAMING-STANDARD.md`):** rewrite any «прикладна магія» / "magic" / pagan-core-veneer / pagan-cosmogony-as-creation / demonology-or-occult-as-belief framing to the standard — Christian meaning at parity/primacy, pre-literature identity, pre-Christian motifs only as minor scholarly-noted layers. Replace archaic-dialect readings with the standard school form and tag source provenance (textbook=primary, ukrlib/wikisource=secondary). Re-run a framing read after editing; a module is not "clean" while any framing violation remains.
-- Every audit finding selected for the batch must be fixed or explicitly deferred with reason.
-- Reading findings are first-class: fix missing `role: reading`, broken `/readings/` links, missing hosted files, bad copyright decisions, and missing learner tasks before declaring the module clean.
-- **Reading-deficit findings are first-class too:** when the gate-safe corpus holds ≥4 distinct verified primary texts but the module surfaces fewer (FOLK floor, `EXEMPLAR-STANDARD.md` §3), add the missing texts from the corpus — never backfill with from-memory, paraphrased, or scholarly-quoted content. Re-tag any `type: primary` reference that is actually a secondary/scholarly work as `type: scholarly`; it does not count toward the floor.
-- For unavailable texts, record the search and leave a visible reading-needed blocker instead of hiding the gap.
-- If hosting is not permitted, use link-only or excerpt-only treatment; do not paste full copyrighted text.
-- Regenerate readings and module MDX through current repo tooling; do not hand-edit generated output except with a documented reason. Assemble committed site MDX through `scripts.build.linear_pipeline.assemble_mdx`.
+- Fix FOLK framing-standard violations before prose polish.
+- Fix reading deficits and `resources.yaml role: reading` issues before activity polish.
+- Re-tag secondary/scholarly works correctly; never count them toward the primary reading floor.
+- Assemble committed site MDX through `scripts.build.linear_pipeline.assemble_mdx`; do not hand-edit generated MDX except for a documented emergency.
 - Re-run source/quote/decolonization checks after edits.
+
+## Track-Specific Checks
+
+- Treat reading/copyright findings as first-class remediation, not optional cleanup.
+- Preserve verified archaic/dialectal forms inside quoted primary text; verify exposition forms with current source tools.
+- Do not expose build workflow language in public prose.
+- Independent review must read the rendered/generated learner page, not only source files.
+
+## Learner-Facing Quality And Activity Placement
+
+- Keep build/source-verification language out of learner pages: no `prompt`, `audit`, `review`, `telemetry`, `source-tier`, `gate`, `chunk_id`, `source_chunk`, corpus/service IDs, `learner-facing`, `hosted reading`, or validation-tool language in public prose.
+- Student-visible body prose should be Ukrainian unless the current page component explicitly permits English UI labels or vocabulary glosses.
+- Teach through the folk material: source text, performance context, formula, variant, ritual or social function, later literary bridge, and interpretation. Do not narrate how the lesson is being built.
+- If a module uses inline practice, use Activity YAML V2 with `inline:` and `workbook:` lists. Never wrap the root in an `activities:` key.
+- Each `inline:` activity must have exactly one matching `<!-- INJECT_ACTIVITY: <id> -->` marker in `module.md`. Workbook activities must not have prose markers.
+- The Lesson tab must not absorb the entire practice set, and the Workbook/Activities tab must not be empty.
+- PR/final notes for built-module work must report `inline=<n>`, `workbook=<n>`, rendered Lesson tab status, rendered Workbook/Activities tab status, English leakage status, internal-leakage status, and an LLM-fingerprint score.
 
 ## Helpers And Headroom
 
-Use read-only helpers for reading source search, copyright classification, and source/quote verification when useful. Main agent owns edits and integration. Compress long helper output with Headroom.
+Use read-only helpers for reading source search, copyright classification, source/quote verification, rendered-page checks, and activity placement verification when useful. Compress long helper outputs with Headroom. The main agent owns edits and integration.
 
 ## Validation Commands
 
-Adapt slugs:
+Adapt slugs and paths:
 
 ```bash
 .venv/bin/python scripts/readings/generate_readings.py curriculum/l2-uk-en/folk/<slug> --dry-run --json
@@ -101,33 +116,22 @@ PY
 .venv/bin/python -m scripts.build.verify_shippable folk <slug>
 .venv/bin/python -m scripts.build.verify_shippable folk <slug> --astro-build
 git diff --check
-CHANGED_FILES="$( { git diff --name-only; git diff --cached --name-only; git ls-files --others --exclude-standard; } | sort -u )"
-if [ -n "$CHANGED_FILES" ] && printf '%s\n' "$CHANGED_FILES" | rg '(^|/)status/.*\.json$|(^|/)audit/.*-review\.md$|(^|/)review/.*-review\.md$|^data/telemetry/'; then
-  echo "Forbidden generated artifact in diff" >&2
-  exit 1
-fi
 .venv/bin/python scripts/audit/lint_agent_trailer.py
 ```
 
-If `--astro-build` is unavailable locally, record the reason and require CI.
-
-## PR, Commit, And Telemetry Requirements
-
-- Branch: `codex/folk-remediation-<batch>`
-- Commit trailer: `X-Agent: codex/folk-remediation-<batch>`
-- Persist module-build/remediation telemetry using `docs/prompts/orchestrators/shared/telemetry-and-pr.md`.
-- PR body must include audit findings addressed, reading decisions, validation, independent review, and forbidden-artifact confirmation.
-- Require independent-family review before merge.
+If `--astro-build` cannot run locally because site dependencies are unavailable, record the reason and require CI.
 
 ## Expected Final Response
 
 ```text
-FOLK audit report used: <path>
-Findings fixed: <ids/count>
-Reading decisions changed: <summary>
+FOLK stage: <preflight | production | quality-audit | remediation>
+Scope: <slugs or audit report>
+Reading coverage: <hosted/link-only/excerpt-only/omit/needed counts>
+Activity split: <inline=n, workbook=n, rendered lesson/workbook status or not applicable>
+Quality score: <LLM fingerprint, English leakage, internal leakage, unresolved blockers>
 Files changed: <paths>
 Validation run: <commands and outcomes>
-Telemetry: <posted or unavailable with reason>
+Telemetry: <posted | not module-build | unavailable with reason>
 Independent review: <status>
 Forbidden artifacts included: no
 swarm_used: true/false

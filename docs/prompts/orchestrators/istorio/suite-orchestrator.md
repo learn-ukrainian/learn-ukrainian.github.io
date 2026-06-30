@@ -1,27 +1,18 @@
 # ISTORIO Orchestrator Suite
 
-Prompt version: 0.1
-Last reviewed: 2026-06-22
+Prompt version: 0.2
+Last reviewed: 2026-06-30
 
 ## Source Assumptions
 
-- ISTORIO is an advanced historiography seminar track after HIST, not a
-  replacement for HIST modules or C1 core work.
-- Current sources include `curriculum/l2-uk-en/plans/istorio/*.yaml`,
-  `curriculum/l2-uk-en/istorio/`,
-  `site/src/content/docs/istorio/`, `docs/l2-uk-en/C1-HIST-PLAN-GENERATED.md`,
-  and history textbook/source references under `docs/references/`.
-- Every module needs a reading catalog with primary documents, historiographic
-  excerpts, or source-methodology readings. If a text is unavailable or rights
-  are unclear, record `reading-needed`; do not omit the reading layer.
-- This suite covers preflight, production, quality audit, and remediation. Use
-  only the stage that matches the task.
+- ISTORIO is an advanced historiography seminar track after HIST, not a replacement for HIST modules or C1 core work.
+- Current source surfaces include `curriculum/l2-uk-en/plans/istorio/*.yaml`, `curriculum/l2-uk-en/istorio/`, `site/src/content/docs/istorio/`, `docs/l2-uk-en/C1-HIST-PLAN-GENERATED.md`, and history textbook/source references under `docs/references/`.
+- Every module needs a reading catalog of primary documents, historiographic excerpts, and source-methodology readings. If text is unavailable or rights are unclear, record `reading-needed`.
+- This suite covers preflight, production, quality audit, and remediation. Use only the stage that matches the task.
 
 ## Goal
 
-Orchestrate ISTORIO batches without touching B2. Build historiography modules
-around primary sources, competing interpretations, decolonized methodology, and
-explicit source criticism.
+Orchestrate ISTORIO batches without touching B2. Build historiography modules around primary sources, competing interpretations, decolonized methodology, and explicit source criticism.
 
 ## WORKTREE_ROOT Setup
 
@@ -48,81 +39,81 @@ git rev-parse --show-toplevel
 - `docs/prompts/orchestrators/shared/seminar-source-rules.md`
 - `docs/prompts/orchestrators/shared/reading-section-rules.md`
 - `docs/l2-uk-en/C1-HIST-PLAN-GENERATED.md`
-- relevant history references under `docs/references/`
-- target `curriculum/l2-uk-en/plans/istorio/<slug>.yaml`
-- existing target source, sidecars, readings, and
-  `site/src/content/docs/istorio/<slug>.mdx` when present
+- `docs/references/`
+- Target plan: `curriculum/l2-uk-en/plans/istorio/<slug>.yaml`
+- Existing target source, sidecars, readings, and `site/src/content/docs/istorio/<slug>.mdx` when present.
 
 ## Allowed Writes
 
-- Preflight or quality audit: `docs/audits/istorio-<scope>-<date>.md`
-- For scoped ISTORIO target slugs only:
-  - current-layout source files under `curriculum/l2-uk-en/istorio/`
-  - sidecars under `curriculum/l2-uk-en/istorio/{meta,activities,vocabulary}/`
-    when the current layout uses them
-  - `site/src/content/docs/istorio/<slug>.mdx`
-  - hostable readings under `site/src/content/readings/`
-- PR body or final orchestration note text
+- Preflight / quality audit reports under `docs/audits/istorio-<scope>-<date>.md` when explicitly scoped.
+- Scoped current-layout module files under `curriculum/l2-uk-en/istorio/`.
+- Scoped sidecars under `curriculum/l2-uk-en/istorio/{meta,activities,vocabulary}/` when that layout is used.
+- Generated learner page `site/src/content/docs/istorio/<slug>.mdx` for scoped built modules.
+- Permitted public-domain or otherwise hostable reading pages under `site/src/content/readings/`.
+- PR body and final orchestration note text.
 
 ## Forbidden Writes
 
-- `docs/prompts/orchestrators/b2/**`
-- HIST, C1, or C2 modules unless the task explicitly scopes cross-track
-  remediation
-- plans, textbook references, wiki/source registries, or unrelated tracks unless
-  explicitly scoped
-- non-hostable copyrighted full texts under `site/src/content/readings/`
-- `.python-version`, `.yamllint`, `.markdownlint.json`
-- generated `status/`, curriculum `audit/`, curriculum `review/`, and
-  `data/telemetry/**` artifacts
+- `docs/prompts/orchestrators/b2/**` and unrelated track prompt suites.
+- Unrelated plans, modules, dossiers, wiki/source registries, image assets, or reading pages.
+- Non-hostable copyrighted full texts or media under `site/src/content/readings/`.
+- `.python-version`, `.yamllint`, `.markdownlint.json`, package files, or linter configs.
+- Generated `status/`, curriculum `audit/`, curriculum `review/`, `docs/*-STATUS.md`, or `data/telemetry/**` artifacts.
 
 ## Lifecycle Rules
 
-- Preflight: inventory primary documents, historiographic schools, source
-  availability, copyright status, and any plan/source contradictions before
-  production.
-- Production: begin from source work and historiographic method, then build
-  lecture prose, readings, vocabulary, and seminar tasks around a defensible
-  argument.
-- Quality audit: verify factual claims, source provenance, historiographic
-  attribution, decolonization framing, and reading-link behavior.
-- Remediation: fix ghost sources, factuality, and framing blockers before
-  language polish.
+- Preflight: inventory source/readings availability, rights status, plan/source contradictions, and track-specific framing risks before production.
+- Production: build from verified source material first, then shape lesson prose, activities, vocabulary, resources, generated MDX, and readings around that evidence.
+- Quality audit: inspect source files and rendered learner pages for factual grounding, reading behavior, decolonization, English/internal leakage, activity placement, and LLM fingerprint.
+- Remediation: fix source authority, rights, factuality, framing, render, and activity-split blockers before style polish.
 
 ## Track-Specific Checks
 
-- Distinguish primary evidence, historiographic interpretation, and memory
-  politics in every module.
+- Distinguish primary evidence, historiographic interpretation, and memory-politics artifacts in every module.
 - Do not treat Russian imperial or Soviet historiography as neutral authority.
-- When a topic is contested, name the competing interpretations and the source
-  basis for each one.
-- Regional, Crimean Tatar, Jewish, Polish, diaspora, and other perspectives must
-  be source-grounded, not token additions.
+- When a topic is contested, name competing interpretations and the source base for each one.
+- Regional, Crimean Tatar, Jewish, Polish, and diaspora perspectives must be source-grounded, not token additions.
+
+## Learner-Facing Quality And Activity Placement
+
+- Keep build/source-verification language out of learner pages: no `prompt`, `audit`, `review`, `telemetry`, `source-tier`, `gate`, `chunk_id`, `source_chunk`, corpus/service IDs, `learner-facing`, `hosted reading`, or validation-tool language in public prose.
+- Student-visible body prose should be Ukrainian unless the current track/page component explicitly permits English UI labels or vocabulary glosses.
+- Teach through the subject matter: source passages, biography, historical context, literary form, performance, register, and interpretation. Do not narrate how the lesson is being built.
+- For any production/remediation module that uses inline practice, use Activity YAML V2 with `inline:` and `workbook:` lists. Never wrap the root in an `activities:` key.
+- Each `inline:` activity must have exactly one matching `<!-- INJECT_ACTIVITY: <id> -->` marker in `module.md`. Workbook activities must not have prose markers.
+- The Lesson tab must not absorb the entire practice set, and the Workbook/Activities tab must not be empty.
+- PR/final notes for built-module work must report `inline=<n>`, `workbook=<n>`, rendered Lesson tab status, rendered Workbook/Activities tab status, English leakage status, internal-leakage status, and an LLM-fingerprint score.
 
 ## Helpers And Headroom
 
-Use helpers for source inventory, rights classification, and historiographic
-cross-checks. Compress long source surveys with Headroom before passing them
-between agents.
+Use one to three read-only helpers for source discovery, rights classification, rendered-page checks, leakage scoring, and track-specific framing review when useful. Compress long helper outputs with Headroom. The main orchestrator owns edits, review routing, PR creation, and merge decisions.
+
+Independent review must be read-only and must inspect learner-facing output, source grounding, track framing, English/internal leakage, activity placement, and unresolved risks. Treat unresolved findings as blockers.
 
 ## Validation Commands
 
-Adapt to current target layout:
+Always run for any PR:
+
+```bash
+git status --short --branch
+git diff --check
+.venv/bin/python scripts/audit/lint_agent_trailer.py
+```
+
+Parse current plans before production/remediation decisions:
 
 ```bash
 .venv/bin/python - <<'PY'
 from pathlib import Path
 import yaml
+
 for path in sorted(Path("curriculum/l2-uk-en/plans/istorio").glob("*.yaml")):
     yaml.safe_load(path.read_text(encoding="utf-8"))
 print("istorio plans parse")
 PY
-git diff --check
-.venv/bin/python scripts/audit/lint_agent_trailer.py
 ```
 
-For built modules, add the current sidecar, MDX, reading, and site validation
-commands from `shared/validation-checklist.md`.
+Built modules also need the applicable activity, vocabulary, MDX, reading, route, site, and deterministic checks from `docs/prompts/orchestrators/shared/validation-checklist.md`. Use `.venv/bin/python`, not bare Python or `sys.executable`.
 
 ## Expected Final Response
 
@@ -130,6 +121,8 @@ commands from `shared/validation-checklist.md`.
 ISTORIO stage: <preflight | production | quality-audit | remediation>
 Scope: <slugs or audit report>
 Reading coverage: <hosted/link-only/excerpt-only/omit/needed counts>
+Activity split: <inline=n, workbook=n, rendered lesson/workbook status or not applicable>
+Quality score: <LLM fingerprint, English leakage, internal leakage, unresolved blockers>
 Files changed: <paths>
 Validation run: <commands and outcomes>
 Telemetry: <posted | not module-build | unavailable with reason>
