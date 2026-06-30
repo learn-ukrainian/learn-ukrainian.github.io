@@ -1,6 +1,7 @@
 import { describe, expect, test } from "vitest";
 import {
   PRACTICE_LEVELS,
+  buildLexiconApiContract,
   buildLexiconRuntimeStatus,
   type PracticeLevel,
 } from "@site/src/lib/lexicon/runtime-contract";
@@ -75,6 +76,7 @@ describe("buildLexiconRuntimeStatus", () => {
     expect(status.publicAtlas.searchShardPrefixes).toBe(2);
     expect(status.publicAtlas.browseEntries).toBe(3);
     expect(status.publicAtlas.browseShards).toBe(2);
+    expect(status.endpoints.contract).toBe("/api/lexicon/contract.json");
     expect(status.daily.poolEntries).toBe(1);
     expect(status.practice.totalLexemes).toBe(2);
     expect(status.cloze.totalItems).toBe(1);
@@ -85,6 +87,17 @@ describe("buildLexiconRuntimeStatus", () => {
     expect(status.sourceInventory.practiceAdmitted).toBe(0);
     expect(status.checks.searchMatchesBrowse).toBe(true);
     expect(status.checks.manifestCoversPublic).toBe(true);
+
+    const contract = buildLexiconApiContract(status);
+    expect(contract.schema).toBe("atlas-api-contract");
+    expect(contract.staticOnly).toBe(true);
+    expect(contract.surfaces.atlas.entries).toBe(3);
+    expect(contract.surfaces.dailyWord.poolEntries).toBe(1);
+    expect(contract.surfaces.dailyWord.admission).toBe("reviewed-static-pool");
+    expect(contract.surfaces.practice.totalLexemes).toBe(2);
+    expect(contract.surfaces.practice.levels).toEqual([...PRACTICE_LEVELS]);
+    expect(contract.surfaces.cloze.totalItems).toBe(1);
+    expect(contract.endpoints.contract).toBe("/api/lexicon/contract.json");
   });
 
   test("warns when static surfaces drift", () => {

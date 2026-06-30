@@ -1,5 +1,6 @@
 import { describe, expect, test } from "vitest";
 import type { APIRoute, GetStaticPaths } from "astro";
+import { GET as getContract } from "@site/src/pages/api/lexicon/contract.json";
 import { GET as getDailyPool } from "@site/src/pages/api/lexicon/daily-pool.json";
 import {
   GET as getPracticeCloze,
@@ -45,10 +46,11 @@ describe("lexicon static API routes", () => {
       publicAtlas: { searchEntries: number; browseEntries: number };
       daily: { poolEntries: number };
       practice: { totalLexemes: number };
-    checks: { searchMatchesBrowse: boolean; singlePracticeDeckVersion: boolean };
-    endpoints: {
-      searchIndex: string;
-      searchShards: string;
+      checks: { searchMatchesBrowse: boolean; singlePracticeDeckVersion: boolean };
+      endpoints: {
+        contract: string;
+        searchIndex: string;
+        searchShards: string;
       dailyPool: string;
       practiceIndexTemplate: string;
         practiceLexemesTemplate: string;
@@ -62,9 +64,10 @@ describe("lexicon static API routes", () => {
     expect(status.publicAtlas.searchEntries).toBe(status.publicAtlas.browseEntries);
     expect(status.daily.poolEntries).toBe(daily.length);
     expect(status.practice.totalLexemes).toBeGreaterThan(0);
-  expect(status.checks.searchMatchesBrowse).toBe(true);
-  expect(status.checks.singlePracticeDeckVersion).toBe(true);
-  expect(status.endpoints.searchIndex).toBe("/api/lexicon/search-index.json");
+    expect(status.checks.searchMatchesBrowse).toBe(true);
+    expect(status.checks.singlePracticeDeckVersion).toBe(true);
+    expect(status.endpoints.contract).toBe("/api/lexicon/contract.json");
+    expect(status.endpoints.searchIndex).toBe("/api/lexicon/search-index.json");
   expect(status.endpoints.searchShards).toBe("/lexicon/search-shards.json");
   expect(status.endpoints.dailyPool).toBe("/api/lexicon/daily-pool.json");
     expect(status.endpoints.practiceIndexTemplate).toBe(
@@ -75,6 +78,36 @@ describe("lexicon static API routes", () => {
     );
     expect(status.endpoints.practiceClozeTemplate).toBe(
       "/api/lexicon/practice-cloze.{level}.json",
+    );
+  });
+
+  test("publishes one static API contract for Atlas, Daily Word, and practice", async () => {
+    const contract = await routeJson<{
+      schema: string;
+      staticOnly: boolean;
+      surfaces: {
+        atlas: { entries: number; searchShards: number; browseEntries: number };
+        dailyWord: { poolEntries: number; endpoint: string };
+        practice: { totalLexemes: number; levels: string[] };
+        cloze: { totalItems: number; reviewedSourceRows: number };
+      };
+      endpoints: { contract: string; dailyPool: string; practiceIndexTemplate: string };
+    }>(getContract);
+
+    expect(contract.schema).toBe("atlas-api-contract");
+    expect(contract.staticOnly).toBe(true);
+    expect(contract.endpoints.contract).toBe("/api/lexicon/contract.json");
+    expect(contract.surfaces.atlas.entries).toBeGreaterThan(5000);
+    expect(contract.surfaces.atlas.entries).toBe(contract.surfaces.atlas.browseEntries);
+    expect(contract.surfaces.atlas.searchShards).toBeGreaterThan(1);
+    expect(contract.surfaces.dailyWord.poolEntries).toBeGreaterThanOrEqual(250);
+    expect(contract.surfaces.dailyWord.endpoint).toBe(contract.endpoints.dailyPool);
+    expect(contract.surfaces.practice.totalLexemes).toBeGreaterThan(1000);
+    expect(contract.surfaces.practice.levels).toEqual([...PRACTICE_LEVELS]);
+    expect(contract.surfaces.cloze.totalItems).toBe(14);
+    expect(contract.surfaces.cloze.reviewedSourceRows).toBeGreaterThan(0);
+    expect(contract.endpoints.practiceIndexTemplate).toBe(
+      "/api/lexicon/practice-index.{level}.json",
     );
   });
 

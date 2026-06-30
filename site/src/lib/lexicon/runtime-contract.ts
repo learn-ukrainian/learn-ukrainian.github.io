@@ -12,6 +12,7 @@ export interface LexiconRuntimeStatus {
   generatedAt: string;
   status: "ok" | "warning";
   endpoints: {
+    contract: string;
     status: string;
     searchIndex: string;
     searchShards: string;
@@ -64,6 +65,50 @@ export interface LexiconRuntimeStatus {
     manifestCoversPublic: boolean | null;
     singlePracticeDeckVersion: boolean;
   };
+}
+
+export interface LexiconApiContract {
+  schema: "atlas-api-contract";
+  schemaVersion: 1;
+  generatedAt: string;
+  status: LexiconRuntimeStatus["status"];
+  staticOnly: true;
+  endpoints: LexiconRuntimeStatus["endpoints"];
+  surfaces: {
+    atlas: {
+      entries: number;
+      searchShards: number;
+      browseEntries: number;
+      browseShards: number;
+      endpoints: {
+        searchIndex: string;
+        searchShards: string;
+        browseShardTemplate: string;
+      };
+    };
+    dailyWord: {
+      poolEntries: number;
+      endpoint: string;
+      admission: "reviewed-static-pool";
+    };
+    practice: {
+      totalLexemes: number;
+      levels: PracticeLevel[];
+      deckVersions: string[];
+      endpoints: {
+        indexTemplate: string;
+        lexemesTemplate: string;
+        clozeTemplate: string;
+      };
+    };
+    cloze: {
+      totalItems: number;
+      sourceRows: number;
+      reviewedSourceRows: number;
+      endpointTemplate: string;
+    };
+  };
+  checks: LexiconRuntimeStatus["checks"];
 }
 
 export interface PracticeLevelStatus {
@@ -192,10 +237,11 @@ export function buildLexiconRuntimeStatus(input: BuildRuntimeStatusInput): Lexic
     generatedAt: input.generatedAt ?? new Date().toISOString(),
     status,
     endpoints: {
-        status: "/api/lexicon/status.json",
-        searchIndex: "/api/lexicon/search-index.json",
-        searchShards: "/lexicon/search-shards.json",
-        dailyPool: "/api/lexicon/daily-pool.json",
+      contract: "/api/lexicon/contract.json",
+      status: "/api/lexicon/status.json",
+      searchIndex: "/api/lexicon/search-index.json",
+      searchShards: "/lexicon/search-shards.json",
+      dailyPool: "/api/lexicon/daily-pool.json",
       browseShardTemplate: "/lexicon/browse/{letter}.json",
       practiceIndexTemplate: "/api/lexicon/practice-index.{level}.json",
       practiceLexemesTemplate: "/api/lexicon/practice-lexemes.{level}.json",
@@ -245,5 +291,51 @@ export function buildLexiconRuntimeStatus(input: BuildRuntimeStatusInput): Lexic
       manifestCoversPublic,
       singlePracticeDeckVersion,
     },
+  };
+}
+
+export function buildLexiconApiContract(status: LexiconRuntimeStatus): LexiconApiContract {
+  return {
+    schema: "atlas-api-contract",
+    schemaVersion: 1,
+    generatedAt: status.generatedAt,
+    status: status.status,
+    staticOnly: true,
+    endpoints: status.endpoints,
+    surfaces: {
+      atlas: {
+        entries: status.publicAtlas.searchEntries,
+        searchShards: status.publicAtlas.searchShards,
+        browseEntries: status.publicAtlas.browseEntries,
+        browseShards: status.publicAtlas.browseShards,
+        endpoints: {
+          searchIndex: status.endpoints.searchIndex,
+          searchShards: status.endpoints.searchShards,
+          browseShardTemplate: status.endpoints.browseShardTemplate,
+        },
+      },
+      dailyWord: {
+        poolEntries: status.daily.poolEntries,
+        endpoint: status.endpoints.dailyPool,
+        admission: "reviewed-static-pool",
+      },
+      practice: {
+        totalLexemes: status.practice.totalLexemes,
+        levels: [...PRACTICE_LEVELS],
+        deckVersions: status.practice.deckVersions,
+        endpoints: {
+          indexTemplate: status.endpoints.practiceIndexTemplate,
+          lexemesTemplate: status.endpoints.practiceLexemesTemplate,
+          clozeTemplate: status.endpoints.practiceClozeTemplate,
+        },
+      },
+      cloze: {
+        totalItems: status.cloze.totalItems,
+        sourceRows: status.cloze.sourceRows,
+        reviewedSourceRows: status.cloze.reviewedSourceRows,
+        endpointTemplate: status.endpoints.practiceClozeTemplate,
+      },
+    },
+    checks: status.checks,
   };
 }

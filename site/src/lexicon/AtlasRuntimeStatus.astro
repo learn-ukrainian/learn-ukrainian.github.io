@@ -26,6 +26,11 @@ const statusUrl = "/api/lexicon/status.json";
       <p data-runtime-detail="manifest">Маніфест релізу</p>
     </div>
     <div class="atlas-runtime-card">
+      <dt>API</dt>
+      <dd data-runtime-value="api">-</dd>
+      <p data-runtime-detail="api">Контракт даних</p>
+    </div>
+    <div class="atlas-runtime-card">
       <dt>Слова дня</dt>
       <dd data-runtime-value="daily">-</dd>
       <p data-runtime-detail="daily">Рівні A1-B1</p>
@@ -83,6 +88,9 @@ const statusUrl = "/api/lexicon/status.json";
           )} внутрішніх`
         : `${formatBytes(status.manifest.jsonBytes)} pinned`,
     );
+
+    setRuntimeText(root, "api", "4");
+    setRuntimeDetail(root, "api", status.endpoints.contract);
 
     setRuntimeText(root, "daily", formatCount(status.daily.poolEntries));
     setRuntimeDetail(root, "daily", "Навчальна добірка");
