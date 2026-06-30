@@ -1913,7 +1913,11 @@ class ActivityParser:
             )
             for r in rubric_items:
                 if isinstance(r, dict):
-                    rows.append(f"| {r.get('criteria', '')} | {r.get('description', '')} | {r.get('points', '')} |")
+                    if {"criteria", "description", "points"} & set(r):
+                        rows.append(f"| {r.get('criteria', '')} | {r.get('description', '')} | {r.get('points', '')} |")
+                    else:
+                        row_text = "; ".join(f"{key}: {value}" for key, value in r.items())
+                        rows.append(f"| {row_text} | | |")
                 elif isinstance(r, str):
                     rows.append(f"| {r} | | |")
         if is_ukrainian_forced:

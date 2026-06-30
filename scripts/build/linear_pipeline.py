@@ -9484,8 +9484,23 @@ def _load_bare_activity_list(path: Path) -> list[dict[str, Any]]:
     data = load_yaml(path)
     if isinstance(data, dict) and "activities" in data:
         raise LinearPipelineError("activities.yaml must be a bare list, not activities:")
+    if isinstance(data, dict) and ("inline" in data or "workbook" in data):
+        unexpected_keys = sorted(set(data) - {"inline", "workbook"})
+        if unexpected_keys:
+            raise LinearPipelineError(
+                f"activities.yaml inline/workbook object has unexpected keys: {unexpected_keys}"
+            )
+        activities: list[dict[str, Any]] = []
+        for section in ("inline", "workbook"):
+            section_data = data.get(section, [])
+            if section_data is None:
+                continue
+            if not isinstance(section_data, list):
+                raise LinearPipelineError(f"activities.yaml {section}: must be a list")
+            activities.extend(section_data)
+        data = activities
     if not isinstance(data, list):
-        raise LinearPipelineError("activities.yaml must be a bare list at root")
+        raise LinearPipelineError("activities.yaml must be a bare list at root or inline/workbook object")
     if not all(isinstance(item, dict) for item in data):
         raise LinearPipelineError("Every activity must be a mapping")
     return data

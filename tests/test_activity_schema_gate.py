@@ -2,7 +2,12 @@
 
 from __future__ import annotations
 
-from scripts.build.linear_pipeline import PYTHON_QG_GATE_ORDER, _activity_schema_gate
+from scripts.build.linear_pipeline import (
+    PYTHON_QG_GATE_ORDER,
+    LinearPipelineError,
+    _activity_schema_gate,
+    _load_bare_activity_list,
+)
 
 
 def test_canonical_error_correction_passes() -> None:
@@ -23,6 +28,66 @@ def test_canonical_error_correction_passes() -> None:
     result = _activity_schema_gate(activities)
 
     assert result == {"passed": True, "checked": 1, "violations": []}
+
+
+def test_load_activity_list_accepts_inline_workbook_v2(tmp_path) -> None:
+    path = tmp_path / "activities.yaml"
+    path.write_text(
+        """
+inline:
+  - id: act-1
+    type: variant-comparison
+workbook:
+  - type: essay-response
+""".lstrip(),
+        encoding="utf-8",
+    )
+
+    assert _load_bare_activity_list(path) == [
+        {"id": "act-1", "type": "variant-comparison"},
+        {"type": "essay-response"},
+    ]
+
+
+def test_load_activity_list_rejects_unknown_v2_keys(tmp_path) -> None:
+    path = tmp_path / "activities.yaml"
+    path.write_text(
+        """
+inline:
+  - id: act-1
+    type: variant-comparison
+extra:
+  - type: essay-response
+""".lstrip(),
+        encoding="utf-8",
+    )
+
+    try:
+        _load_bare_activity_list(path)
+    except LinearPipelineError as exc:
+        assert "unexpected keys" in str(exc)
+        assert "extra" in str(exc)
+    else:
+        raise AssertionError("unexpected V2 activity keys should be rejected")
+
+
+def test_load_activity_list_rejects_activities_wrapper(tmp_path) -> None:
+    path = tmp_path / "activities.yaml"
+    path.write_text(
+        """
+activities:
+  - id: act-1
+    type: quiz
+""".lstrip(),
+        encoding="utf-8",
+    )
+
+    try:
+        _load_bare_activity_list(path)
+    except LinearPipelineError as exc:
+        assert "not activities:" in str(exc)
+    else:
+        raise AssertionError("activities: wrapper should be rejected")
 
 
 def test_forbidden_alias_incorrect_fails() -> None:

@@ -1,0 +1,71 @@
+{
+  "assembled_mdx_sha256": "e1e0c00ddb5b94126ca39e3a87ad311b88a44208fb82c221bbdbb83ce494d7d1",
+  "content_hash": {
+    "algorithm": "sha256",
+    "basis": "lesson_sources_v2",
+    "digest": "22ab39cda5dc7c38a205d3af476ab79accb9e3aad9e492bfacc7b06f8624d9cb",
+    "files": [
+      {
+        "path": "curriculum/l2-uk-en/plans/folk/dumy-sotsialno-pobutovi.yaml",
+        "sha256": "14c0b841d07c292101ee346400496e98406c5d5ad58a3e1f61809eaa209cf011"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/dumy-sotsialno-pobutovi/module.md",
+        "sha256": "cba6dc41cedd3cf6918da252f938157e9bc9b1197d615e03923988385021886c"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/dumy-sotsialno-pobutovi/activities.yaml",
+        "sha256": "88b44bc45fb88f980e5b6d52acb1467933a7fb57824c3509222d30a2831c6abf"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/dumy-sotsialno-pobutovi/vocabulary.yaml",
+        "sha256": "5b51bee31300eb508851848d4c0a15e0f799e6484bf646eaf9848564d02a882e"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/dumy-sotsialno-pobutovi/resources.yaml",
+        "sha256": "4bc14a09670e47fc22f88b65434a2970413cfbae7ea0518d8d9f54bf6089bc97"
+      }
+    ]
+  },
+  "evidence": {
+    "beauty": "Clean C1 seminar prose, regenerated MDX, and learner-facing source fragments without process leakage.",
+    "decolonization": "Centers Ukrainian kobzar tradition and treats social-moral critique without Russian-imperial flattening.",
+    "engagement": "V2 split keeps two narrative-needed inline tasks and moves comparison, performance, critique, and essay work to the workbook tab.",
+    "naturalness": "Claude-approved Ukrainian learner surface after replacing internal/verifier wording with source-facing language.",
+    "pedagogical": "Teaches genre, evidence limits, repertoires, direct text analysis, and formal poetics as distinct seminar skills.",
+    "review": "Claude Opus 4.8 follow-up review APPROVE; blockers on quote contiguity and colon-rubric rendering fixed."
+  },
+  "floors": {
+    "beauty": 8.5,
+    "decolonization": 9.0,
+    "engagement": 8.5,
+    "naturalness": 8.5,
+    "pedagogical": 8.5,
+    "tone": 8.5
+  },
+  "profile": "folk_promote_v1",
+  "review_artifact": null,
+  "reviewer": {
+    "agent": "claude",
+    "family": "anthropic",
+    "model": "claude-opus-4-8"
+  },
+  "schema_version": 1,
+  "scored_at": "2026-06-30T15:35:40Z",
+  "scores": {
+    "beauty": 8.8,
+    "decolonization": 9.1,
+    "engagement": 8.9,
+    "naturalness": 8.8,
+    "pedagogical": 9.0,
+    "tone": 8.9
+  },
+  "slug": "dumy-sotsialno-pobutovi",
+  "track": "folk",
+  "verdict": "PASS",
+  "writer": {
+    "agent": "codex",
+    "family": "openai",
+    "model": "gpt-5"
+  }
+}

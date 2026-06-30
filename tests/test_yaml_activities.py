@@ -254,6 +254,28 @@ class TestParsing:
         assert "#### Взаємоперевірка" in mdx
         assert "- Позначте результат." in mdx
 
+    def test_parse_essay_response_preserves_colon_rubric_criteria(self, parser, tmp_path):
+        """Colon-bearing rubric criteria survive YAML's implicit one-key mapping."""
+        activity_path = tmp_path / "activities.yaml"
+        activity_path.write_text(
+            """
+- type: essay-response
+  title: Міні-письмо
+  instruction: Напишіть короткий текст.
+  prompt: "Напишіть 5-7 речень."
+  model_answer: "Є теза і доказ."
+  rubric:
+    - Є конкретний доказ: фрагмент, репертуарний факт або класифікація.
+""",
+            encoding="utf-8",
+        )
+
+        activities = parser.parse(activity_path)
+        mdx = parser.to_mdx(activities, is_ukrainian_forced=True)
+
+        assert "| Є конкретний доказ: фрагмент, репертуарний факт або класифікація. | | |" in mdx
+        assert "|  |  |  |" not in mdx
+
     def test_parse_essay_response_string_peer_guidelines_not_char_exploded(self, parser, tmp_path):
         """A bare-string peer_review_guidelines must become a single bullet, not one
         bullet per character (koliadky-shchedrivky exemplar bug, 2026-06-19)."""
