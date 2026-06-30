@@ -317,3 +317,75 @@ def test_cli_reports_missing_static_shard(tmp_path: Path) -> None:
 
     assert result.returncode == 1
     assert "practice-lexemes.A1.json: missing" in result.stdout
+
+
+def _set_tatoeba_cloze_metadata(practice_dir: Path, *, with_attribution: bool) -> None:
+    cloze_path = practice_dir / "practice-cloze.A1.json"
+    payload = json.loads(cloze_path.read_text(encoding="utf-8"))
+    item = payload["cloze"][0]
+    item["provenance"] = {
+        "status": "tatoeba",
+        "path": "tatoeba:101",
+        "license": "CC-BY 2.0 FR",
+        "author": "uk-author",
+        "sentenceId": 101,
+        "enSentenceId": 202,
+        "enAuthor": "en-author",
+        "enLicense": "CC-BY 2.0 FR",
+    }
+    if with_attribution:
+        item["attribution"] = {
+            "source": "Tatoeba",
+            "sourceUrl": "https://tatoeba.org/en/sentences/show/101",
+            "uk": {"sentenceId": 101, "author": "uk-author", "license": "CC-BY 2.0 FR"},
+            "en": {"sentenceId": 202, "author": "en-author", "license": "CC-BY 2.0 FR"},
+        }
+    _write_json(cloze_path, payload)
+
+
+def test_check_assets_requires_tatoeba_attribution(tmp_path: Path) -> None:
+    daily_pool = tmp_path / "lexicon-daily-pool.json"
+    practice_dir = tmp_path / "lexicon"
+    reviewed_sources = tmp_path / "lexicon-practice-reviewed-sources.json"
+    _write_daily_pool(daily_pool)
+    _write_json(reviewed_sources, {"reviewed": [{"status": "tatoeba", "path": "tatoeba:101"}]})
+    _write_level(practice_dir, with_cloze=True)
+    _set_tatoeba_cloze_metadata(practice_dir, with_attribution=False)
+
+    summary = check_assets(
+        daily_pool=daily_pool,
+        practice_dir=practice_dir,
+        reviewed_sources=reviewed_sources,
+        levels=("A1",),
+        min_daily_pool_size=2,
+        min_practice_lexemes_per_level=1,
+    )
+
+    assert summary["ok"] is False
+    assert any("missing Tatoeba attribution" in error for error in summary["errors"])
+
+
+def test_check_assets_accepts_tatoeba_attributed_cloze(tmp_path: Path) -> None:
+    daily_pool = tmp_path / "lexicon-daily-pool.json"
+    practice_dir = tmp_path / "lexicon"
+    reviewed_sources = tmp_path / "lexicon-practice-reviewed-sources.json"
+    _write_daily_pool(daily_pool)
+    _write_json(reviewed_sources, {"reviewed": [{"status": "tatoeba", "path": "tatoeba:101"}]})
+    _write_level(practice_dir, with_cloze=True)
+    _set_tatoeba_cloze_metadata(practice_dir, with_attribution=True)
+    cloze_path = practice_dir / "practice-cloze.A1.json"
+    cloze_payload = json.loads(cloze_path.read_text(encoding="utf-8"))
+    cloze_payload["cloze"][0]["provenance"].pop("sentenceId")
+    _write_json(cloze_path, cloze_payload)
+
+    summary = check_assets(
+        daily_pool=daily_pool,
+        practice_dir=practice_dir,
+        reviewed_sources=reviewed_sources,
+        levels=("A1",),
+        min_daily_pool_size=2,
+        min_practice_lexemes_per_level=1,
+    )
+
+    assert summary["ok"] is True
+    assert summary["total_cloze"] == 1

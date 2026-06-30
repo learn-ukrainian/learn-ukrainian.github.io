@@ -474,4 +474,27 @@ describe('LexiconPractice', () => {
       expect(storedState().reviews).toHaveLength(1);
     });
   });
+
+  test('cloze renders Tatoeba attribution when present', () => {
+    seedRecognitionMastery('knyha');
+    const deck = sampleDeck();
+    deck.cloze[0] = {
+      ...deck.cloze[0],
+      attribution: {
+        source: 'Tatoeba',
+        sourceUrl: 'https://tatoeba.org/en/sentences/show/101',
+        uk: { sentenceId: 101, author: 'uk-author', license: 'CC-BY 2.0 FR' },
+        en: { sentenceId: 202, author: 'en-author', license: 'CC-BY 2.0 FR' },
+      },
+    };
+
+    render(<LexiconPractice initialDeck={deck} autoStart initialMode="cloze" />);
+
+    expect(screen.getByRole('link', { name: 'Tatoeba' })).toHaveAttribute(
+      'href',
+      'https://tatoeba.org/en/sentences/show/101',
+    );
+    expect(screen.getByText(/uk-author/)).toHaveTextContent('en-author');
+    expect(screen.getByText(/CC-BY 2.0 FR/)).toBeInTheDocument();
+  });
 });

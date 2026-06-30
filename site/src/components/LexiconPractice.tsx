@@ -1130,6 +1130,18 @@ function PracticeCloze({
         <span>{after}</span>
       </p>
       <p className="lexicon-cloze-translation cz-translate">{cloze.clozeEn}</p>
+      {cloze.attribution ? (
+        <p className="lexicon-cloze-attribution">
+          Sentences from{' '}
+          {cloze.attribution.sourceUrl ? (
+            <a href={cloze.attribution.sourceUrl}>{cloze.attribution.source}</a>
+          ) : (
+            cloze.attribution.source
+          )}
+          : {cloze.attribution.uk.author} ({cloze.attribution.uk.license}) /{' '}
+          {cloze.attribution.en.author} ({cloze.attribution.en.license})
+        </p>
+      ) : null}
       <form
         className="lexicon-cloze-row cz-input-row"
         onSubmit={(event) => {

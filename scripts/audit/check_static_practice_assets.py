@@ -48,6 +48,52 @@ def _has_text(value: object) -> bool:
     return isinstance(value, str) and bool(value.strip())
 
 
+def _has_scalar(value: object) -> bool:
+    return isinstance(value, int) or _has_text(value)
+
+
+def _is_tatoeba_provenance(provenance: object) -> bool:
+    if not isinstance(provenance, dict):
+        return False
+    status = str(provenance.get("status") or "").strip()
+    source_path = str(provenance.get("path") or "").strip()
+    return status == "tatoeba" or source_path.startswith("tatoeba:")
+
+
+def _check_tatoeba_attribution(
+    prefix: str,
+    item: dict[str, Any],
+    provenance: dict[str, Any],
+    errors: list[str],
+) -> None:
+    if not _is_tatoeba_provenance(provenance):
+        return
+    source_path = str(provenance.get("path") or "").strip()
+    path_sentence_id = source_path.removeprefix("tatoeba:") if source_path.startswith("tatoeba:") else ""
+    for field in ("license", "author", "enSentenceId", "enAuthor", "enLicense"):
+        if not _has_scalar(provenance.get(field)):
+            errors.append(f"{prefix} Tatoeba provenance missing {field}")
+    if not _has_scalar(provenance.get("sentenceId")) and not path_sentence_id:
+        errors.append(f"{prefix} Tatoeba provenance missing sentenceId")
+    attribution = item.get("attribution")
+    if not isinstance(attribution, dict):
+        errors.append(f"{prefix} missing Tatoeba attribution")
+        return
+    if attribution.get("source") != "Tatoeba":
+        errors.append(f"{prefix} Tatoeba attribution source must be Tatoeba")
+    for key, label in (("uk", "Ukrainian"), ("en", "English")):
+        sentence = attribution.get(key)
+        if not isinstance(sentence, dict):
+            errors.append(f"{prefix} missing {label} Tatoeba attribution")
+            continue
+        for field in ("sentenceId", "author", "license"):
+            if not _has_scalar(sentence.get(field)):
+                errors.append(f"{prefix} missing {label} Tatoeba attribution {field}")
+    uk = attribution.get("uk") if isinstance(attribution, dict) else None
+    if path_sentence_id and isinstance(uk, dict) and str(uk.get("sentenceId") or "").strip() != path_sentence_id:
+        errors.append(f"{prefix} Tatoeba attribution sentenceId does not match provenance path")
+
+
 def _reviewed_source_keys(path: Path, errors: list[str]) -> set[tuple[str, str]]:
     payload = _read_json(path, errors)
     rows = payload.get("reviewed") if isinstance(payload, dict) else payload
@@ -212,6 +258,8 @@ def _check_cloze_item(
     key = (str(status or "").strip(), str(source_path or "").strip())
     if key not in reviewed:
         errors.append(f"{prefix} provenance {key!r} is not in reviewed source allowlist")
+    if isinstance(provenance, dict):
+        _check_tatoeba_attribution(prefix, item, provenance, errors)
 
 
 def _check_level(
