@@ -46,7 +46,14 @@ const listId = `${id}-list`;
 </div>
 
 <script>
-  import { normalize, rankMatches, highlight, type SearchRow } from "../lib/lexicon/search";
+  import {
+    normalize,
+    rankMatches,
+    highlight,
+    searchShardForQuery,
+    type SearchRow,
+    type SearchShardManifest,
+  } from "../lib/lexicon/search";
 
   const EMPTY_MESSAGE = "Нічого не знайдено — спробуйте українською, латиницею або англійською";
   const LOADING_MESSAGE = "Завантажуємо…";
@@ -95,11 +102,15 @@ const listId = `${id}-list`;
 
     ta.dataset.atlasTypeaheadReady = "true";
 
-    let taIndex: SearchRow[] | null = null;
-    let taLoading: Promise<SearchRow[]> | null = null;
+    let taManifest: SearchShardManifest | null = null;
+    let taManifestLoading: Promise<SearchShardManifest> | null = null;
+    let taFullIndex: SearchRow[] | null = null;
+    let taFullLoading: Promise<SearchRow[]> | null = null;
+    const taShardCache = new Map<string, Promise<SearchRow[]>>();
     let taItems: SearchRow[] = [];
     let taActive = -1;
     let taState: "loading" | "empty" | null = null;
+    let taRequest = 0;
 
     const taOptionId = (i: number) => `${taList.id || taInput.id}-option-${i}`;
 
@@ -140,29 +151,74 @@ const listId = `${id}-list`;
       if (taActive >= 0) taInput.setAttribute("aria-activedescendant", taOptionId(taActive));
     };
 
-    const taLoad = () => {
-      if (taIndex) return Promise.resolve(taIndex);
-      if (!taLoading) {
-        taState = "loading";
-        taRender();
-        taLoading = fetch("/lexicon/search-index.json")
+    const taLoadManifest = () => {
+      if (taManifest) return Promise.resolve(taManifest);
+      if (!taManifestLoading) {
+        taManifestLoading = fetch("/lexicon/search-shards.json")
+          .then((response) => {
+            if (!response.ok) throw new Error(`search shard manifest fetch failed: ${response.status}`);
+            return response.json();
+          })
+        .then((data) => {
+          taManifest = data as SearchShardManifest;
+          return taManifest;
+        })
+        .catch((error) => {
+          taManifestLoading = null;
+          throw error;
+        });
+    }
+    return taManifestLoading;
+    };
+
+    const taLoadFull = () => {
+      if (taFullIndex) return Promise.resolve(taFullIndex);
+      if (!taFullLoading) {
+        taFullLoading = fetch("/lexicon/search-index.json")
           .then((response) => {
             if (!response.ok) throw new Error(`search index fetch failed: ${response.status}`);
             return response.json();
           })
           .then((data) => {
-            taIndex = Array.isArray(data) ? (data as SearchRow[]) : [];
-            return taIndex;
+            taFullIndex = Array.isArray(data) ? (data as SearchRow[]) : [];
+            return taFullIndex;
           })
           .catch(() => {
-            taIndex = [];
-            return taIndex;
+            taFullIndex = [];
+            return taFullIndex;
           });
       }
-      return taLoading;
+      return taFullLoading;
+    };
+
+    const taLoadShardRows = async (q: string): Promise<{ rows: SearchRow[]; full: boolean }> => {
+      try {
+        const manifest = await taLoadManifest();
+        const shard = searchShardForQuery(manifest, q);
+        if (!shard) return { rows: await taLoadFull(), full: true };
+        if (!taShardCache.has(shard.path)) {
+          taShardCache.set(
+            shard.path,
+          fetch(shard.path)
+            .then((response) => {
+              if (!response.ok) throw new Error(`search shard fetch failed: ${response.status}`);
+              return response.json();
+            })
+            .then((data) => (Array.isArray(data) ? (data as SearchRow[]) : []))
+            .catch((error) => {
+              taShardCache.delete(shard.path);
+              throw error;
+            }),
+        );
+      }
+        return { rows: await taShardCache.get(shard.path)!, full: false };
+      } catch {
+        return { rows: await taLoadFull(), full: true };
+      }
     };
 
     const taSearch = (q: string) => {
+      const request = ++taRequest;
       if (!normalize(q)) {
         taItems = [];
         taState = null;
@@ -170,16 +226,21 @@ const listId = `${id}-list`;
         return;
       }
 
-      if (!taIndex) {
-        taState = "loading";
-        taRender();
-        return;
-      }
-
-      taItems = rankMatches(taIndex, q, 12);
-      taActive = taItems.length ? 0 : -1;
-      taState = taItems.length ? null : "empty";
+      taState = "loading";
       taRender();
+
+      void taLoadShardRows(q).then(async ({ rows, full }) => {
+        if (request !== taRequest) return;
+        let matches = rankMatches(rows, q, 12);
+        if (!matches.length && !full) {
+          matches = rankMatches(await taLoadFull(), q, 12);
+          if (request !== taRequest) return;
+        }
+        taItems = matches;
+        taActive = taItems.length ? 0 : -1;
+        taState = taItems.length ? null : "empty";
+        taRender();
+      });
     };
 
     const taGo = (slug: string | null) => {
@@ -187,7 +248,7 @@ const listId = `${id}-list`;
     };
 
     taInput.addEventListener("focus", () => {
-      void taLoad().then(() => taSearch(taInput.value));
+      void taLoadManifest().catch(() => taLoadFull()).then(() => taSearch(taInput.value));
     });
 
     taInput.addEventListener("input", () => {
@@ -195,7 +256,7 @@ const listId = `${id}-list`;
         taSearch(taInput.value);
         return;
       }
-      void taLoad().then(() => taSearch(taInput.value));
+      taSearch(taInput.value);
     });
 
     taInput.addEventListener("keydown", (ev) => {

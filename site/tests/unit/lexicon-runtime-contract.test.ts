@@ -48,6 +48,13 @@ describe("buildLexiconRuntimeStatus", () => {
         json_sha256: "abc123",
       },
       searchIndex: [{ l: "дім" }, { l: "ананас" }, { l: "тигр" }],
+      searchShards: {
+        prefixMap: { а: "u0430", д: "u0434" },
+        shards: {
+          u0430: { path: "/lexicon/search/u0430.json" },
+          u0434: { path: "/lexicon/search/u0434.json" },
+        },
+      },
       browseMeta: {
         total: 3,
         letterCounts: { А: 2, Д: 1, И: 0 },
@@ -64,6 +71,8 @@ describe("buildLexiconRuntimeStatus", () => {
     expect(status.manifest.publicLexemes).toBe(3);
     expect(status.manifest.grammarTermRows).toBe(1);
     expect(status.publicAtlas.searchEntries).toBe(3);
+    expect(status.publicAtlas.searchShards).toBe(2);
+    expect(status.publicAtlas.searchShardPrefixes).toBe(2);
     expect(status.publicAtlas.browseEntries).toBe(3);
     expect(status.publicAtlas.browseShards).toBe(2);
     expect(status.daily.poolEntries).toBe(1);

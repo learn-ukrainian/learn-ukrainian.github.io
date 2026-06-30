@@ -219,6 +219,8 @@ def test_browse_meta_counts_and_shards() -> None:
 def test_main_writes_search_meta_and_per_letter_shards(tmp_path: Path) -> None:
     manifest = tmp_path / "manifest.json"
     search_out = tmp_path / "search.json"
+    search_shards_out = tmp_path / "search-shards.json"
+    search_shard_dir = tmp_path / "search-shards"
     meta_out = tmp_path / "meta.json"
     flagged_out = tmp_path / "flagged.json"
     browse_dir = tmp_path / "browse"
@@ -242,7 +244,11 @@ def test_main_writes_search_meta_and_per_letter_shards(tmp_path: Path) -> None:
                 str(manifest),
                 "--out",
                 str(search_out),
-            "--browse-meta-out",
+                "--search-shards-out",
+                str(search_shards_out),
+                "--search-shard-dir",
+                str(search_shard_dir),
+                "--browse-meta-out",
             str(meta_out),
             "--browse-flagged-out",
             str(flagged_out),
@@ -254,11 +260,16 @@ def test_main_writes_search_meta_and_per_letter_shards(tmp_path: Path) -> None:
     )
 
     search_rows = json.loads(search_out.read_text(encoding="utf-8"))
+    search_shards = json.loads(search_shards_out.read_text(encoding="utf-8"))
+    search_shard = json.loads((search_shard_dir / "u0432.json").read_text(encoding="utf-8"))
     meta = json.loads(meta_out.read_text(encoding="utf-8"))
     flagged = json.loads(flagged_out.read_text(encoding="utf-8"))
     shard = json.loads((browse_dir / "В.json").read_text(encoding="utf-8"))
 
     assert search_rows[1]["cls"] == "avoid"
+    assert search_shards["total"] == 2
+    assert search_shards["shards"]["u0432"]["count"] == 1
+    assert search_shard == [search_rows[1]]
     assert meta["total"] == 2
     assert meta["chipCounts"] == {"avoid": 1}
     assert flagged == [{"l": "всьо", "s": "всьо", "g": "avoid all", "c": None, "cls": "avoid", "letter": "В"}]

@@ -5,10 +5,29 @@ export interface SearchRow {
   r?: string;
   k?: string;
   c?: string;
+  cls?: string;
+}
+
+export interface SearchShardMeta {
+  path: string;
+  count: number;
+  bytes: number;
+  sha256: string;
+}
+
+export interface SearchShardManifest {
+  schema: "atlas-search-shards";
+  schemaVersion: 1;
+  total: number;
+  fullIndex: SearchShardMeta;
+  shardCount: number;
+  prefixMap: Record<string, string>;
+  shards: Record<string, SearchShardMeta>;
 }
 
 const CYRILLIC_RE = /[\u0400-\u04ff]/;
 const LATIN_RE = /[A-Za-z]/;
+const TOKEN_RE = /[\p{L}\p{N}_]+/gu;
 const ESCAPE_RE = /[&<>"']/g;
 const ESCAPE_MAP: Record<string, string> = {
   "&": "&amp;",
@@ -19,12 +38,6 @@ const ESCAPE_MAP: Record<string, string> = {
 };
 
 function normalizeText(value: string): string {
-  // NFC first (composes e.g. Latin "é" → "é"), then strip any *residual*
-  // combining acute (U+0301). Ukrainian stressed Cyrillic vowels have no
-  // precomposed form, so NFC leaves their stress mark standalone and this removes
-  // it (на́голос → наголос) for accent-insensitive search — while precomposed Latin
-  // accents and, crucially, the breve composing й (и+U+0306) and the diaeresis
-  // composing ї (і+U+0308) are left intact.
   return value.normalize("NFC").replace(/\u0301/g, "").toLocaleLowerCase("uk-UA");
 }
 
@@ -40,8 +53,47 @@ function compareByLemma(a: SearchRow, b: SearchRow): number {
   return a.s < b.s ? -1 : a.s > b.s ? 1 : 0;
 }
 
+function firstTokenChars(value: string | null | undefined): string[] {
+  const chars = new Set<string>();
+  const normalized = normalize(value ?? "");
+  for (const token of normalized.match(TOKEN_RE) ?? []) {
+    const first = Array.from(token)[0];
+    if (first) chars.add(first);
+  }
+  return [...chars];
+}
+
 export function normalize(q: string): string {
   return normalizeText(q).trim();
+}
+
+export function searchShardPrefix(q: string): string | null {
+  const normalized = normalize(q);
+  return Array.from(normalized)[0] ?? null;
+}
+
+export function searchShardForQuery(
+  manifest: SearchShardManifest,
+  q: string,
+): SearchShardMeta | null {
+  const prefix = searchShardPrefix(q);
+  if (!prefix) return null;
+  const key = manifest.prefixMap[prefix];
+  return key ? (manifest.shards[key] ?? null) : null;
+}
+
+export function searchShardKeysForRow(
+  manifest: SearchShardManifest,
+  row: SearchRow,
+): string[] {
+  const keys = new Set<string>();
+  for (const value of [row.l, row.r, row.g]) {
+    for (const char of firstTokenChars(value)) {
+      const key = manifest.prefixMap[char];
+      if (key && manifest.shards[key]) keys.add(key);
+    }
+  }
+  return [...keys].sort();
 }
 
 function matchTier(row: SearchRow, nq: string): number | null {

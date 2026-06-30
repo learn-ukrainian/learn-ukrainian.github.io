@@ -14,6 +14,7 @@ export interface LexiconRuntimeStatus {
   endpoints: {
     status: string;
     searchIndex: string;
+    searchShards: string;
     dailyPool: string;
     browseShardTemplate: string;
     practiceIndexTemplate: string;
@@ -33,6 +34,8 @@ export interface LexiconRuntimeStatus {
   };
   publicAtlas: {
     searchEntries: number;
+    searchShards: number;
+    searchShardPrefixes: number;
     browseEntries: number;
     browseShards: number;
     browseLetters: number;
@@ -75,6 +78,7 @@ interface BuildRuntimeStatusInput {
   manifest?: unknown;
   manifestPointer?: unknown;
   searchIndex?: unknown;
+  searchShards?: unknown;
   browseMeta?: unknown;
   dailyPool?: unknown;
   practiceIndexes?: Partial<Record<PracticeLevel, unknown>>;
@@ -139,6 +143,9 @@ export function buildLexiconRuntimeStatus(input: BuildRuntimeStatusInput): Lexic
   const manifest = asObject(input.manifest);
   const pointer = asObject(input.manifestPointer);
   const searchEntries = asArray(input.searchIndex).length;
+  const searchShards = asObject(input.searchShards);
+  const searchShardMeta = asObject(searchShards.shards);
+  const searchPrefixMap = asObject(searchShards.prefixMap);
   const browseMeta = asObject(input.browseMeta);
   const letterCounts = asObject(browseMeta.letterCounts);
   const browseEntries = asNumber(browseMeta.total);
@@ -185,9 +192,10 @@ export function buildLexiconRuntimeStatus(input: BuildRuntimeStatusInput): Lexic
     generatedAt: input.generatedAt ?? new Date().toISOString(),
     status,
     endpoints: {
-      status: "/api/lexicon/status.json",
-      searchIndex: "/api/lexicon/search-index.json",
-      dailyPool: "/api/lexicon/daily-pool.json",
+        status: "/api/lexicon/status.json",
+        searchIndex: "/api/lexicon/search-index.json",
+        searchShards: "/lexicon/search-shards.json",
+        dailyPool: "/api/lexicon/daily-pool.json",
       browseShardTemplate: "/lexicon/browse/{letter}.json",
       practiceIndexTemplate: "/api/lexicon/practice-index.{level}.json",
       practiceLexemesTemplate: "/api/lexicon/practice-lexemes.{level}.json",
@@ -204,9 +212,11 @@ export function buildLexiconRuntimeStatus(input: BuildRuntimeStatusInput): Lexic
       jsonBytes: asOptionalNumber(pointer.json_bytes),
       jsonSha256: asString(pointer.json_sha256),
     },
-    publicAtlas: {
-      searchEntries,
-      browseEntries,
+      publicAtlas: {
+        searchEntries,
+        searchShards: Object.keys(searchShardMeta).length,
+        searchShardPrefixes: Object.keys(searchPrefixMap).length,
+        browseEntries,
       browseShards,
       browseLetters,
     },
