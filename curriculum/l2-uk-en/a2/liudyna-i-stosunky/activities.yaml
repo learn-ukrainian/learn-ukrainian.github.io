@@ -272,7 +272,7 @@ workbook:
             correct: false
           - text: "Це мій брат. Вона привітна."
             correct: false
-        explanation: Сусід — masculine; він привітний.
+        explanation: Сусід — іменник чоловічого роду; він привітний.
       - source: "My sister has brown eyes."
         options:
           - text: "Моя сестра має карі очі."
@@ -281,7 +281,7 @@ workbook:
             correct: false
           - text: "Моя сестра має темні очі волосся."
             correct: false
-        explanation: Моя сестра and має карі очі are the natural forms.
+        explanation: Моя сестра має карі очі — природна форма речення.
       - source: "She often helps new colleagues."
         options:
           - text: "Вона часто допомагає новим колегам."
@@ -290,7 +290,7 @@ workbook:
             correct: false
           - text: "Він часто допомагає новим колегам."
             correct: false
-        explanation: Often is часто, so допомагає is natural.
+        explanation: Часто підказує повторювану дію, тому допомагає — природна форма.
       - source: "Yesterday he helped me with my bag."
         options:
           - text: "Учора він допоміг мені з сумкою."
@@ -299,7 +299,7 @@ workbook:
             correct: false
           - text: "Часто він допоміг мені з сумкою."
             correct: false
-        explanation: Yesterday points to one completed action.
+        explanation: Учора вказує на одну завершену дію.
       - source: "My colleague is responsible and patient."
         options:
           - text: "Моя колега відповідальна і терпляча."
@@ -308,7 +308,7 @@ workbook:
             correct: false
           - text: "Мій колега відповідальна і терпляча."
             correct: false
-        explanation: Моя колега requires feminine adjective forms.
+        explanation: Моя колега вимагає форм прикметників жіночого роду.
       - source: "We are not close friends, but we often greet each other."
         options:
           - text: "Ми не близькі друзі, але часто вітаємося."
@@ -317,7 +317,7 @@ workbook:
             correct: false
           - text: "Ми не близький друг, але часто вітаємося."
             correct: false
-        explanation: Часто вітаємося describes repeated contact.
+        explanation: Часто вітаємося описує повторюваний контакт.
   - type: order
     title: Порядок робочого опису
     instruction: Поставте частини опису в природний порядок.

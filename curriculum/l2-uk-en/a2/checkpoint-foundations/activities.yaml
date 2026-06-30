@@ -394,19 +394,19 @@ workbook:
     title: Самооцінка перед рухом далі
     instruction: Визначте, чи твердження відповідає основам A2.1.
     items:
-      - statement: "Учора я читав can be correct when the focus is process."
+      - statement: "Учора я читав може бути правильним, якщо увага на процесі."
         answer: true
         explanation: Учора не забороняє недоконаний вид.
-      - statement: "Я куплю серветки is a past completed result."
+      - statement: "Я куплю серветки описує минулий завершений результат."
         answer: false
         explanation: Це майбутній завершений крок.
-      - statement: "Дванадцять студентів follows the 11-14 rule."
+      - statement: "Дванадцять студентів відповідає правилу 11-14."
         answer: true
         explanation: 11-14 вимагає родового множини.
-      - statement: "Двадцять два студенти follows the 2-4 pattern."
+      - statement: "Двадцять два студенти відповідає моделі 2-4."
         answer: true
         explanation: Остання частина два вимагає називного множини.
-      - statement: "Немає квитків uses genitive plural."
+      - statement: "У фразі 'Немає квитків' слово 'квитків' стоїть у родовому множини."
         answer: true
         explanation: Квитків - родовий множини.
       - statement: "У даті треба сказати перше січень."
