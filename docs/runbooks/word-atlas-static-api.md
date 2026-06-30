@@ -1,32 +1,31 @@
 # Word Atlas Static API Contract
 
-The learner site is GitHub Pages/static-first. Atlas runtime data is exposed as
-static JSON, not a live backend service.
+The learner site is GitHub Pages/static-first. Atlas runtime data is exposed
+as static JSON, not as a live backend service.
 
 ## Canonical Endpoints
 
-- `/api/lexicon/status.json` — status and counts across Atlas search/browse,
+- `/api/lexicon/status.json` — status counts across Atlas search/browse,
   manifest hydration, Daily Word, Practice, cloze, and source-inventory
   admission.
 - `/api/lexicon/search-index.json` — compact typeahead/search rows.
 - `/api/lexicon/daily-pool.json` — Daily Word pool.
+- `/api/lexicon/practice-index.{level}.json` — per-level Practice index.
+- `/api/lexicon/practice-lexemes.{level}.json` — per-level Practice lexeme deck.
+- `/api/lexicon/practice-cloze.{level}.json` — per-level reviewed cloze deck.
 
-The status payload also points at the existing static practice and browse
-assets:
+The status payload also points to existing static browse assets:
 
 - `/lexicon/browse/{letter}.json`
-- `/lexicon/practice-index.{level}.json`
-- `/lexicon/practice-lexemes.{level}.json`
-- `/lexicon/practice-cloze.{level}.json`
 
 ## Contract Checks
 
-Consumers should treat `status: "ok"` as the normal state. A warning means at
-least one public surface drifted, such as search and browse counts disagreeing,
-practice deck versions splitting, Daily Word becoming empty, or the hydrated
-manifest no longer matching the public Atlas count.
+Consumers should treat `status: "ok"` as the normal state. `warning` means at
+least one public surface drifted, search/browse counts disagree, practice deck
+versions split, Daily Word became empty, or the hydrated manifest no longer
+matches the public Atlas count.
 
-`sourceInventory` counts only become non-null when the build has hydrated the
+`sourceInventory` counts only become non-null when the build has a hydrated
 release manifest. Missing `surface_admission` remains false; source-inventory
 growth is Atlas browse/search only until a reviewed decision admits Daily Word,
 Practice, or cloze.
