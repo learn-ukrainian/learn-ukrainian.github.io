@@ -23,58 +23,30 @@
   translation: intonation
   pos: noun
   usage: Інтонація допомагає почути, як слово стає музикою.
-- lemma: партитура
-  translation: musical score
-  pos: noun
-  usage: Партитура переводить музичну ідею у письмову форму.
 - lemma: композиторська школа
   translation: compositional training
   pos: noun phrase
-  usage: Композиторська школа дала Білашеві техніку великої форми.
+  usage: Композиторська школа дала Білашеві техніку для роботи з голосом і сценою.
 - lemma: співавторство
   translation: co-authorship
   pos: noun
-  usage: Співавторство поета і композитора створює пісню як спільний твір.
+  usage: Співавторство поета і композитора створює цілісну пісню.
+- lemma: поетична інтонація
+  translation: poetic intonation
+  pos: noun phrase
+  usage: Поетична інтонація визначає, як рядок звучить у мелодії.
 - lemma: велика форма
   translation: large form
   pos: noun phrase
-  usage: Велика форма показує Білаша як автора опери, ораторії і кіномузики.
-- lemma: рецепція
-  translation: reception
-  pos: noun
-  usage: Сучасна рецепція показує, як слухачі переосмислюють старі твори.
-- lemma: ювілейний концерт
-  translation: anniversary concert
+  usage: Велика форма показує Білаша як автора опери й сценічної музики.
+- lemma: радянський контекст
+  translation: Soviet context
   pos: noun phrase
-  usage: Ювілейний концерт може бути доказом живої культурної пам'яті.
-- lemma: офіційне визнання
-  translation: official recognition
+  usage: Радянський контекст треба називати прямо, але не зводити до нього всю творчість.
+- lemma: інституційна кар'єра
+  translation: institutional career
   pos: noun phrase
-  usage: Офіційне визнання не пояснює автоматично культурне значення пісні.
-- lemma: інституційний контекст
-  translation: institutional context
-  pos: noun phrase
-  usage: Інституційний контекст радянської сцени був можливістю і обмеженням.
-- lemma: ярлик
-  translation: label
-  pos: noun
-  usage: Ярлик спрощує біографію і приховує складні факти.
-- lemma: деколонізаційне читання
-  translation: decolonial reading
-  pos: noun phrase
-  usage: Деколонізаційне читання тримає українську форму імені й українську рецепцію.
-- lemma: транслітерація
-  translation: transliteration
-  pos: noun
-  usage: Російськомовна транслітерація може стирати українську форму імені.
-- lemma: лояльність
-  translation: loyalty
-  pos: noun
-  usage: Лояльність не можна доводити одним званням або посадою.
-- lemma: дисидент
-  translation: dissident
-  pos: noun
-  usage: Білаш не був дисидентом, тому біографія не вигадує такого сюжету.
+  usage: Інституційна кар'єра Білаша пояснює умови сцени, але не замінює аналізу пісень.
 - lemma: переосмислення
   translation: reinterpretation
   pos: noun
@@ -98,4 +70,28 @@
 - lemma: гідність
   translation: dignity
   pos: noun
-  usage: Українська лірична гідність може бути способом культурного спротиву.
+  usage: Українська лірична гідність може бути способом культурної тяглості.
+- lemma: аранжування
+  translation: arrangement
+  pos: noun
+  usage: Нове аранжування може відкрити слово, яке раніше губилося в пафосі.
+- lemma: виконавська традиція
+  translation: performance tradition
+  pos: noun phrase
+  usage: Виконавська традиція показує, як пісня змінюється між поколіннями.
+- lemma: ювілейний концерт
+  translation: anniversary concert
+  pos: noun phrase
+  usage: Ювілейний концерт може повернути ім'я композитора до сучасної сцени.
+- lemma: шевченківська тема
+  translation: Shevchenko theme
+  pos: noun phrase
+  usage: Шевченківська тема вимагає від композитора історичної відповідальності.
+- lemma: ліричний образ
+  translation: lyrical image
+  pos: noun phrase
+  usage: Ліричний образ у пісні може перейти з приватної пам'яті в спільну.
+- lemma: слухач
+  translation: listener
+  pos: noun
+  usage: Слухач щоразу вирішує, чи пісня залишається живою.
