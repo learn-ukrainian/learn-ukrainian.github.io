@@ -87,3 +87,37 @@ def test_seminar_targets_use_assemble_mdx(tmp_path: Path, monkeypatch) -> None:
     )
 
     assert mdx_path.read_text(encoding="utf-8") == "assembled mdx\n"
+
+
+def test_base_first_seminar_plan_without_module_is_skipped(
+    tmp_path: Path, monkeypatch
+) -> None:
+    curriculum_root = tmp_path / "curriculum" / "l2-uk-en"
+    plan_path = (
+        curriculum_root
+        / "plans"
+        / "folk"
+        / "rodynna-obriadovist-zvychai.yaml"
+    )
+    plan_path.parent.mkdir(parents=True)
+    plan_path.write_text("phase: base-first\n", encoding="utf-8")
+
+    def fail_assemble(*_args: object, **_kwargs: object) -> str:
+        raise AssertionError("base-first plan without module should not generate MDX")
+
+    monkeypatch.setattr(mdx_drift, "CURRICULUM_ROOT", curriculum_root)
+    monkeypatch.setattr(mdx_drift, "MDX_ROOT", tmp_path / "site")
+    monkeypatch.setattr(mdx_drift.linear_pipeline, "assemble_mdx", fail_assemble)
+
+    assert (
+        mdx_drift.check_targets(
+            [
+                ModuleTarget(
+                    level="folk",
+                    slug="rodynna-obriadovist-zvychai",
+                    local_num=7,
+                )
+            ]
+        )
+        == 0
+    )
