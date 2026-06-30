@@ -1,0 +1,84 @@
+- lemma: жнива
+  translation: harvest; grain-cutting season
+  pos: noun
+  usage: Жнива в пісні постають як праця, ритм і завершення поля.
+- lemma: жниварська пісня
+  translation: harvest song
+  pos: noun phrase
+  usage: Жниварська пісня може тримати темп праці, втому й гуртовий голос.
+- lemma: зажинки
+  translation: beginning of harvest
+  pos: noun
+  usage: Зажинки позначають вхід у жнивний час і початок роботи.
+- lemma: обжинки
+  translation: harvest completion
+  pos: noun
+  usage: Обжинки зосереджуються на завершенні жнив, вінку, снопі, господарі й частуванні.
+- lemma: жниця
+  translation: female harvester
+  pos: noun
+  usage: Жниця працює на ниві й може бути голосом короткої жниварської пісні.
+- lemma: жнець
+  translation: harvester
+  pos: noun
+  usage: Жнець або женчик у пісні названий через працю серпом.
+- lemma: женчик
+  translation: harvester (folk diminutive)
+  pos: noun
+  usage: Женчики в короткій пісні жнуть і ламають серпики.
+- lemma: серп
+  translation: sickle
+  pos: noun
+  usage: Серп називає матеріальний бік жнивної праці.
+- lemma: сніп
+  translation: sheaf
+  pos: noun
+  usage: Сніп може позначати зібране збіжжя і перехід від поля до господарства.
+- lemma: копа
+  translation: stack of sheaves
+  pos: noun
+  usage: Копа в жартівливій обжинковій пісні стає місцем спостереження.
+- lemma: стерня
+  translation: stubble
+  pos: noun
+  usage: Стерня нагадує про поле після зрізаного збіжжя.
+- lemma: межа
+  translation: boundary
+  pos: noun
+  usage: Межа називає край роботи, до якого квапиться гурт.
+- lemma: стодола
+  translation: barn
+  pos: noun
+  usage: Стодола в обжинковій пісні приймає віночок після поля.
+- lemma: обжинковий вінок
+  translation: harvest wreath
+  pos: noun phrase
+  usage: Обжинковий вінок у пісні може говорити, проситися додому і нести пам'ять поля.
+- lemma: борода
+  translation: uncut tuft of grain
+  pos: noun
+  usage: Борода в обжинковому тексті дає змогу побачити жарт і соціальне порівняння.
+- lemma: господар
+  translation: household head; host
+  pos: noun
+  usage: Господар у пісні входить у соціальний обмін із гуртом після праці.
+- lemma: величання
+  translation: praise-song address
+  pos: noun
+  usage: Величання може звучати поруч із проханням, жартом і очікуванням винагороди.
+- lemma: частування
+  translation: food offering; hospitality
+  pos: noun
+  usage: Частування позначає відповідь дому на працю і спів гурту.
+- lemma: втома
+  translation: fatigue
+  pos: noun
+  usage: Втома не знецінює пісню, а робить трудовий досвід видимим.
+- lemma: гуртовий спів
+  translation: communal singing
+  pos: noun phrase
+  usage: Гуртовий спів допомагає короткій пісні тримати ритм і пам'ять праці.
+- lemma: виконавська ситуація
+  translation: performance situation
+  pos: noun phrase
+  usage: Виконавська ситуація пояснює, хто може співати, кому і в який момент жнив.

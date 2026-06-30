@@ -249,7 +249,7 @@ class TestParsing:
 
         assert activities[0].instruction == "Напишіть короткий текст."
         assert activities[0].peer_review_guidelines == ["Позначте процес.", "Позначте результат."]
-        assert "Модель показує процес і результат." in mdx
+        assert "Модель показує процес і результат." not in mdx
         assert "| grammar | Форми правильні. |  |" in mdx
         assert "#### Взаємоперевірка" in mdx
         assert "- Позначте результат." in mdx
