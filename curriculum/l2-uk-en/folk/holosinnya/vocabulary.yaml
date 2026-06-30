@@ -1,0 +1,100 @@
+- lemma: голосіння
+  ipa: /ɦɔlɔˈsʲinʲːɑ/
+  translation: ritual lament
+  pos: noun
+  usage: Голосіння поєднує біль, формулу і похоронну дію.
+- lemma: голосільниця
+  ipa: /ɦɔlɔˈsʲilʲnɪtsʲɑ/
+  translation: female lament performer
+  pos: noun
+  usage: Голосільниця може бути родичкою або вправною чужою жінкою.
+- lemma: плачка
+  ipa: /ˈplɑtʃkɑ/
+  translation: professional mourner
+  pos: noun
+  usage: Плачка виконує похоронний плач у межах обрядової ролі.
+- lemma: заплачки
+  ipa: /zɑˈplɑtʃkɪ/
+  translation: laments
+  pos: plural noun
+  usage: Заплачки є суміжною назвою обрядових плачів.
+- lemma: тужіння
+  ipa: /tuˈʒinʲːɑ/
+  translation: ritual mourning
+  pos: noun
+  usage: Тужіння називає впорядковане висловлення жалю.
+- lemma: похорон
+  ipa: /pɔxɔˈrɔn/
+  translation: funeral
+  pos: noun
+  usage: Похорон переводить втрату в публічну родинну дію.
+- lemma: поминки
+  ipa: /pɔˈmɪnkɪ/
+  translation: commemorative meal
+  pos: plural noun
+  usage: Поминки підтримують пам'ять після похорону.
+- lemma: поминання
+  ipa: /pɔmɪˈnɑnʲːɑ/
+  translation: commemoration of the dead
+  pos: noun
+  usage: Поминання повертає померлого до святкового календаря родини.
+- lemma: речитатив
+  ipa: /rɛtʃɪtɑˈtɪw/
+  translation: recitative
+  pos: noun
+  usage: Речитатив пристосовує мелодію до нерівного рядка.
+- lemma: апострофа
+  ipa: /ɑpɔˈstrɔfɑ/
+  translation: apostrophe; direct address
+  pos: noun
+  usage: Апострофа звертається до померлого як до співрозмовника.
+- lemma: риторичне питання
+  ipa: /rɪtɔˈrɪtʃnɛ pɪˈtɑnʲːɑ/
+  translation: rhetorical question
+  pos: noun phrase
+  usage: Риторичне питання підтримує розмову там, де відповідь неможлива.
+- lemma: синтаксичний паралелізм
+  ipa: /sɪntɑkˈsɪtʃnɪj pɑrɑlɛˈlʲizm/
+  translation: syntactic parallelism
+  pos: noun phrase
+  usage: Синтаксичний паралелізм тримає форму голосіння.
+- lemma: пестлива форма
+  ipa: /pɛstˈlɪwɑ ˈfɔrmɑ/
+  translation: diminutive or affectionate form
+  pos: noun phrase
+  usage: Пестлива форма називає близькість і родинну цінність.
+- lemma: топос
+  ipa: /ˈtɔpɔs/
+  translation: literary topos
+  pos: noun
+  usage: Топос плачу може з'являтися в літописі або поемі.
+- lemma: літературний плач
+  ipa: /lʲitɛrɑˈturnɪj plɑtʃ/
+  translation: literary lament
+  pos: noun phrase
+  usage: Літературний плач не завжди є записом похоронного голосіння.
+- lemma: джерельний режим
+  ipa: /dʒɛˈrɛlʲnɪj rɛˈʒɪm/
+  translation: source mode
+  pos: noun phrase
+  usage: Джерельний режим показує, як саме отримано текст.
+- lemma: межа доказу
+  ipa: /ˈmɛʒɑ dɔˈkɑzu/
+  translation: evidentiary limit
+  pos: noun phrase
+  usage: Межа доказу не дозволяє узагальнювати один фрагмент на всю традицію.
+- lemma: темна хата
+  ipa: /ˈtɛmnɑ ˈxɑtɑ/
+  translation: dark house; grave image
+  pos: noun phrase
+  usage: Темна хата переносить образ могили в домашню просторову мову.
+- lemma: родове місце
+  ipa: /rɔˈdɔwɛ ˈmʲistsɛ/
+  translation: ancestral place
+  pos: noun phrase
+  usage: Родове місце допомагає уявити прийняття померлого предками.
+- lemma: похорон-весілля
+  ipa: /pɔxɔˈrɔn wɛˈsʲilʲːɑ/
+  translation: funeral-wedding ritual code
+  pos: noun phrase
+  usage: Похорон-весілля потребує конкретного джерела і не є буквальним шлюбом.

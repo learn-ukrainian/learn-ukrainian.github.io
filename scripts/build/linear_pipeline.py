@@ -9147,7 +9147,7 @@ _ACTIVITY_AUTHORING_FIELDS: dict[str, frozenset[str]] = {
     # accepts (e.g. `target_text` / `questions` / `model_answers` is
     # canonical for critical-analysis, `context` / `question` /
     # `model_answer` is legacy — both are still read).
-    "reading": _activity("text", "context", "source", "resource", "tasks"),
+    "reading": _activity("text", "passage", "context", "source", "resource", "tasks", "questions"),
     "essay-response": _activity(
         "source_reading", "prompt", "min_words", "model_answer", "rubric", "peer_review_guidelines"
     ),

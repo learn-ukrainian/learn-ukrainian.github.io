@@ -1,0 +1,70 @@
+{
+  "assembled_mdx_sha256": "4db365a0e0059b7961a33c5b2a779d88f0b0d1e69556a2b1ecce504498838f92",
+  "content_hash": {
+    "algorithm": "sha256",
+    "basis": "lesson_sources_v2",
+    "digest": "8e85781db1111d6421499fea70b1087f524790c2bf0136dbc428d7fc96784528",
+    "files": [
+      {
+        "path": "curriculum/l2-uk-en/plans/folk/holosinnya.yaml",
+        "sha256": "345b27b2f1435255d70ad27f77d42db351e0f79f5e6e4b64e13fa9f84c110b2d"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/holosinnya/module.md",
+        "sha256": "01976701bac51a8d471aa7ef08eaccee1266ec60f199758c1eda575bd875ff64"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/holosinnya/activities.yaml",
+        "sha256": "b0d0c5feda1a2074d5ba562f296b48aa4f4ba803e1c2a329c8cc5ab4b7ca8e75"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/holosinnya/vocabulary.yaml",
+        "sha256": "12e8ab2e1f62ccc2e8f046baec4302d767db94a7b6cc827fb1857bd664150c6e"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/holosinnya/resources.yaml",
+        "sha256": "32cec77911410a1b8bb894d85ead8457e0c01ff6ddd0175e7f02fdbf3130e270"
+      }
+    ]
+  },
+  "evidence": {
+    "decolonization": "Distinguishes ritual lament, literary topos, and scholarship; Kyiv/Rus material handled without Russian-imperial or exceptionalist framing.",
+    "engagement": "Six activities cover quiz, reading, source evaluation, comparative study, critical analysis, and essay response; central reading renders correctly.",
+    "naturalness": "Ukrainian C1 seminar voice is source-bound and learner-facing; no internal IDs, source slugs, hidden-core framing, or decorative ethnography.",
+    "pedagogical": "Teaches repeatable source discipline: genre, moment, performer, address, formula, evidence limit, and terminology.",
+    "review": "Claude Opus 4.8 review PASS after blocker fix: ReadingActivity now renders non-empty text and tasks; no new blockers; MDX parity OK."
+  },
+  "floors": {
+    "beauty": 8.5,
+    "decolonization": 9.0,
+    "engagement": 8.5,
+    "naturalness": 8.5,
+    "pedagogical": 8.5,
+    "tone": 8.5
+  },
+  "profile": "folk_promote_v1",
+  "review_artifact": null,
+  "reviewer": {
+    "agent": "claude",
+    "family": "anthropic",
+    "model": "claude-opus-4-8"
+  },
+  "schema_version": 1,
+  "scored_at": "2026-06-30T12:12:10Z",
+  "scores": {
+    "beauty": 8.8,
+    "decolonization": 9.1,
+    "engagement": 8.8,
+    "naturalness": 9.0,
+    "pedagogical": 9.0,
+    "tone": 9.0
+  },
+  "slug": "holosinnya",
+  "track": "folk",
+  "verdict": "PASS",
+  "writer": {
+    "agent": "codex",
+    "family": "openai",
+    "model": "gpt-5"
+  }
+}

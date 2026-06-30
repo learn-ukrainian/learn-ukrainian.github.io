@@ -998,11 +998,11 @@ class ActivityParser:
         return ReadingActivity(
             title=data.get('title', ''),
             id=data.get('id', ''),  # Issue #425: Required for linking
-            text=data.get('text', ''),  # LIT: inline primary source
+            text=data.get('text') or data.get('passage', ''),  # LIT/v2: inline primary source
             source=data.get('source', ''),  # Attribution
             context=data.get('context', ''),
             resource=data.get('resource', {}),
-            tasks=data.get('tasks', [])
+            tasks=data.get('tasks') or data.get('questions', [])
         )
 
     @staticmethod
