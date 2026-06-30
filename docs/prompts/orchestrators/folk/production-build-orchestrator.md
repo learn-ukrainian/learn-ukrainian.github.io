@@ -1,21 +1,18 @@
 # FOLK Production Build Orchestrator
 
-Prompt version: 0.2
-Last reviewed: 2026-06-21
+Prompt version: 0.3
+Last reviewed: 2026-06-30
 
 ## Source Assumptions
 
-- ⛔ **Framing is governed by `docs/folk-epic/FOLK-FRAMING-STANDARD.md` — obey all 4 pillars on every module.** Folk is a **pre-literature course**: усна народна творчість taught as the oral foundation of *written* Ukrainian literature, **Christian-heritage-first**, written-text/school-canonical sourcing, **no occult / pagan-as-held-belief**. Never frame Christian-folk genres (колядки/щедрівки…) as «прикладна магія» or a pagan core under a Christian shell; never present demonology/occult/spell-craft as real practice. A framing violation is a build-blocker.
-- FOLK is the seminar pilot and must model reading-first seminar production.
-- Every module needs a **researched primary-text catalog** — survey the corpus for every distinct verified text on the topic and surface as many as it supports (**FOLK floor: ≥4 distinct primary readings when the gate-safe corpus holds ≥4 verified fragments**, `EXEMPLAR-STANDARD.md` §3; corpus-bound, never backfilled with from-memory or scholarly-quoted text). If a text is not available, record a `reading-needed` blocker; do not build around an empty or padded reading layer.
-- Hosted readings currently live in `site/src/content/readings/` and require `public_domain: true`. Non-hostable texts need `role: reading` external links and clear copyright notes.
-- FOLK uses `verify_shippable` and `assemble_mdx`, not the core `generate_mdx.py` path.
-
-- Keep build/source-verification language out of learner pages. Public FOLK pages may show public source names/URLs, but must describe reading habits in Ukrainian student terms (`першоджерело`, `уривок`, `джерельна сторінка`, `зіставлення джерел`) and never teach the validation workflow (`source hammer`, `source-first`, `chunk_id`, corpus/service IDs, `verify_quote`, `learner-facing`, `hosted reading`, etc.).
+- Framing is governed by `docs/folk-epic/FOLK-FRAMING-STANDARD.md`; framing violations are build blockers.
+- FOLK production is reading-first seminar production built from a researched primary-text catalog.
+- Hosted readings under `site/src/content/readings/` require `public_domain: true`; non-hostable texts need link-only or excerpt-only handling with clear learner tasks.
+- FOLK uses `verify_shippable` and `scripts.build.linear_pipeline.assemble_mdx`, not the core `generate_mdx.py` path.
 
 ## Goal
 
-Build the selected FOLK module batch in small sequential steps. For each module, use plans, dossiers/wiki, source registries, readings, and corpus checks to write source files, readings, generated site MDX, and validation notes. Record telemetry and require independent review before merge.
+Build selected FOLK modules from verified primary readings, source-grounded framing, legal reading surfaces, activities, vocabulary, resources, generated MDX, telemetry, and independent review.
 
 ## WORKTREE_ROOT Setup
 
@@ -38,62 +35,67 @@ git rev-parse --show-toplevel
 - `docs/prompts/orchestrators/shared/repo-rules.md`
 - `docs/prompts/orchestrators/shared/validation-checklist.md`
 - `docs/prompts/orchestrators/shared/telemetry-and-pr.md`
+- `docs/prompts/orchestrators/shared/review-output-schema.md`
 - `docs/prompts/orchestrators/shared/seminar-source-rules.md`
 - `docs/prompts/orchestrators/shared/reading-section-rules.md`
-- **`docs/folk-epic/FOLK-FRAMING-STANDARD.md` (READ FIRST — the non-negotiable framing standard)**
+- **`docs/folk-epic/FOLK-FRAMING-STANDARD.md` (read first; non-negotiable framing standard)**
 - `docs/folk-epic/EXEMPLAR-STANDARD.md`
 - `docs/folk-epic/folk-review-rubric.md`
 - `docs/folk-epic/folk-text-layer-spec.md`
 - `scripts/build/phases/linear-write-seminar-folk-rules.md`
-- `scripts/readings/generate_readings.py`
-- `scripts/generate_mdx/reading_links.py`
 - `site/src/content.config.ts`
-- `curriculum/l2-uk-en/curriculum.yaml`, target FOLK modules
-- for each target slug:
-  - `curriculum/l2-uk-en/plans/folk/<slug>.yaml`
-  - relevant dossier/wiki/source registry files
-  - existing `curriculum/l2-uk-en/folk/<slug>/` files if present
-  - existing `site/src/content/docs/folk/<slug>.mdx` if present
-  - existing `site/src/content/readings/*.mdx` that match target readings
+- `scripts/readings/generate_readings.py`
+- Target plan: `curriculum/l2-uk-en/plans/folk/<slug>.yaml`
+- Relevant dossier/wiki/source registry files
+- Existing `curriculum/l2-uk-en/folk/<slug>/` files if present
+- Existing `site/src/content/docs/folk/<slug>.mdx` and readings when present
 
 ## Allowed Writes
 
-- For scoped target slugs only:
-  - `curriculum/l2-uk-en/folk/<slug>/module.md`
-  - `curriculum/l2-uk-en/folk/<slug>/activities.yaml`
-  - `curriculum/l2-uk-en/folk/<slug>/vocabulary.yaml`
-  - `curriculum/l2-uk-en/folk/<slug>/resources.yaml`
-  - `site/src/content/docs/folk/<slug>.mdx`
-  - `site/src/content/readings/<reading-slug>.mdx` only for hostable/public-domain readings
-- PR body or final orchestration note text
+- Scoped `curriculum/l2-uk-en/folk/<slug>/module.md`
+- Scoped `curriculum/l2-uk-en/folk/<slug>/activities.yaml`
+- Scoped `curriculum/l2-uk-en/folk/<slug>/vocabulary.yaml`
+- Scoped `curriculum/l2-uk-en/folk/<slug>/resources.yaml`
+- Generated `site/src/content/docs/folk/<slug>.mdx`
+- Permitted public-domain or otherwise hostable reading pages under `site/src/content/readings/`
+- PR body and final orchestration note text
 
 ## Forbidden Writes
 
-- FOLK plans, wiki, dossier, or source registry files unless the user explicitly scopes a plan/source fix
-- modules outside the selected batch
-- non-hostable copyrighted full texts under `site/src/content/readings/`
-- `.python-version`, `.yamllint`, `.markdownlint.json`
-- `data/telemetry/**`
-- generated `status/`, curriculum `audit/`, or curriculum `review/` artifacts
+- `docs/prompts/orchestrators/b2/**` and unrelated track prompt suites
+- Unrelated FOLK plans, modules, dossiers, wiki/source registries, image assets, or reading pages
+- Non-hostable copyrighted full texts or media under `site/src/content/readings/`
+- `.python-version`, `.yamllint`, `.markdownlint.json`, package files, or linter configs
+- Generated `status/`, curriculum `audit/`, curriculum `review/`, `docs/*-STATUS.md`, or `data/telemetry/**` artifacts
 
-## Production Rules
+## Lifecycle Rules
 
-- **Apply the framing standard to every module** (`docs/folk-epic/FOLK-FRAMING-STANDARD.md`): Christian-heritage-first, pre-literature identity, no occult/pagan-as-belief, no «магія» framing of Christian-folk genres. If the assigned topic itself fails the school-canon validity test (no real gr 5–8 ukrlit basis — e.g. демонологія, замовляння-as-spells, standalone material-culture), STOP and flag it as a cut/redesign candidate instead of building the contaminated frame.
-- **Sourcing precedence:** the school textbooks in `data/sources.db` (gr 5–8 ukrlit) are the **primary canonical** source — host the **standard school form**; ukrlib/uk.wikisource/litopys are secondary corroboration; `osvita.ua` is authoritative-but-© (verify + link, never host). Do not ship an archaic-dialect reading where a codified school form exists. Tag provenance.
-- Work one module at a time. Finish reading discovery, source writing, reading generation, MDX assembly, and validation before moving to the next slug.
-- Start each module from the primary reading candidates. Build the full corpus-supported catalog (FOLK target ≥4 distinct primary texts; fewer only when the gate-safe corpus genuinely lacks them, recorded as `reading-needed`). Each candidate needs a copyright decision: hosted, linked-only, excerpt-only, or omit with reason.
-- Keep scholarly/secondary works (monographs, surveys, analyses) as `type: scholarly` references — never tag them `type: primary` and never count them toward the reading floor. A primary text reconstructed inside a scholar's prose is not a clean hostable reading; source the standalone text from a primary-text corpus.
-- Search likely teaching/source locations such as Osvita only with exact URL and rights verification; do not invent links or assume teaching-site content is hostable.
+- Start from primary reading candidates and copyright decisions: hosted, linked-only, excerpt-only, omit, or reading-needed.
+- Keep scholarly/secondary works as `type: scholarly`; never count them toward the primary reading floor.
 - Use `:::primary-reading` only for verified verbatim folk-primary fragments.
-- Keep archaic or dialectal forms inside quoted primary text unless VESUM/slovnyk.me/heritage verifies the form for exposition.
-- Include `:::myth-box` and `:::high-culture-bridge` where evidence supports them.
-- Prefer folk activity families `ritual-sequencing`, `variant-comparison`, `motif-formula`, and `performance` where the source supports them.
-- Do not emit deferred audio/image surfaces such as `audio-block`, `symbolic-decode`, or `aural-genre-ID`.
-- Generated site MDX must move with source edits. Assemble committed site MDX through `scripts.build.linear_pipeline.assemble_mdx`; do not hand-edit generated MDX.
+- Include `:::myth-box`, `:::high-culture-bridge`, and folk activity families where evidence supports them.
+- Generated site MDX must move with source edits; assemble committed MDX through `scripts.build.linear_pipeline.assemble_mdx`.
+
+## Track-Specific Checks
+
+- Apply `FOLK-FRAMING-STANDARD.md` before writing: Christian-heritage-first where relevant, pre-literature identity, school-canonical sourcing, and no occult/pagan-as-held-belief framing.
+- Verify at least four distinct primary readings when gate-safe corpus supports four; fewer only with recorded `reading-needed` rationale.
+- Do not emit deferred audio/image surfaces unless the current implementation supports them.
+- Independent review must read the rendered/generated learner page, not only source files.
+
+## Learner-Facing Quality And Activity Placement
+
+- Keep build/source-verification language out of learner pages: no `prompt`, `audit`, `review`, `telemetry`, `source-tier`, `gate`, `chunk_id`, `source_chunk`, corpus/service IDs, `learner-facing`, `hosted reading`, or validation-tool language in public prose.
+- Student-visible body prose should be Ukrainian unless the current page component explicitly permits English UI labels or vocabulary glosses.
+- Teach through the folk material: source text, performance context, formula, variant, ritual or social function, later literary bridge, and interpretation. Do not narrate how the lesson is being built.
+- If a module uses inline practice, use Activity YAML V2 with `inline:` and `workbook:` lists. Never wrap the root in an `activities:` key.
+- Each `inline:` activity must have exactly one matching `<!-- INJECT_ACTIVITY: <id> -->` marker in `module.md`. Workbook activities must not have prose markers.
+- The Lesson tab must not absorb the entire practice set, and the Workbook/Activities tab must not be empty.
+- PR/final notes for built-module work must report `inline=<n>`, `workbook=<n>`, rendered Lesson tab status, rendered Workbook/Activities tab status, English leakage status, internal-leakage status, and an LLM-fingerprint score.
 
 ## Helpers And Headroom
 
-Use read-only explorers for reading/copyright discovery, quote/source verification, and exemplar comparison when useful. The main orchestrator owns edits. Compress long helper outputs with Headroom and include hash plus summary.
+Use read-only helpers for reading/copyright discovery, quote/source verification, rendered-page checking, and exemplar comparison when useful. Compress long helper outputs with Headroom. The main orchestrator owns edits, review routing, PR creation, and merge decisions.
 
 ## Validation Commands
 
@@ -116,34 +118,22 @@ PY
 .venv/bin/python -m scripts.build.verify_shippable folk <slug>
 .venv/bin/python -m scripts.build.verify_shippable folk <slug> --astro-build
 git diff --check
-CHANGED_FILES="$( { git diff --name-only; git diff --cached --name-only; git ls-files --others --exclude-standard; } | sort -u )"
-if [ -n "$CHANGED_FILES" ] && printf '%s\n' "$CHANGED_FILES" | rg '(^|/)status/.*\.json$|(^|/)audit/.*-review\.md$|(^|/)review/.*-review\.md$|^data/telemetry/'; then
-  echo "Forbidden generated artifact in diff" >&2
-  exit 1
-fi
+.venv/bin/python scripts/audit/lint_agent_trailer.py
 ```
 
-If `--astro-build` cannot run locally because site dependencies are unavailable, record that and rely on CI for full Astro render.
-
-## PR, Commit, And Telemetry Requirements
-
-- Branch: `codex/folk-production-<batch>`
-- Commit trailer: `X-Agent: codex/folk-production-<batch>`
-- Run `.venv/bin/python scripts/audit/lint_agent_trailer.py` before pushing.
-- Persist module-build telemetry using `docs/prompts/orchestrators/shared/telemetry-and-pr.md`.
-- Include `swarm_used`, `swarm_label`, `swarm_note`, reading coverage, and copyright decisions in telemetry and PR text.
-- Require independent-family review before merge. Treat unresolved reading, quote, source, or decolonization findings as blockers.
-
-Independent FOLK review prompt must ask the reviewer to read rendered/generated pages as a Ukrainian student and check English UI leaks, internal workflow leaks, and M05-style word-salad/spliced Ukrainian prose. Do not approve based only on source-hygiene gates; unresolved learner-register or fluency findings are blockers.
+If `--astro-build` cannot run locally because site dependencies are unavailable, record the reason and require CI.
 
 ## Expected Final Response
 
 ```text
-FOLK modules built: <slugs>
-Reading decisions: <hosted/link-only/excerpt-only/omit/needed list>
+FOLK stage: <preflight | production | quality-audit | remediation>
+Scope: <slugs or audit report>
+Reading coverage: <hosted/link-only/excerpt-only/omit/needed counts>
+Activity split: <inline=n, workbook=n, rendered lesson/workbook status or not applicable>
+Quality score: <LLM fingerprint, English leakage, internal leakage, unresolved blockers>
 Files changed: <paths>
 Validation run: <commands and outcomes>
-Telemetry: <posted or unavailable with reason>
+Telemetry: <posted | not module-build | unavailable with reason>
 Independent review: <status>
 Forbidden artifacts included: no
 swarm_used: true/false
