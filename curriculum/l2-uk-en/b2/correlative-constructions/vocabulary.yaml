@@ -1,140 +1,158 @@
-- lemma: корелят
-  translation: correlate
+- lemma: "корелят"
+  translation: "correlate"
+  ipa: "[kɔrɛˈlʲɑt]"
   pos: noun
-  usage: Корелят створює місце для підрядної частини в головному реченні.
-- lemma: співвідносне слово
-  translation: correlative word
+  gender: m
+  usage: "Корелят створює в головній частині місце для підрядної частини."
+- lemma: "вказівне слово"
+  translation: "demonstrative word"
+  ipa: "[ʋkɑˈzʲiu̯ne ˈslɔʋɔ]"
   pos: phrase
-  usage: Співвідносне слово допомагає побачити логічний зв'язок між частинами.
-- lemma: вказівне слово
-  translation: demonstrative word
-  pos: phrase
-  usage: Вказівне слово може бути займенником або прислівником.
-- lemma: підрядна частина
-  translation: subordinate clause
-  pos: phrase
-  usage: Підрядна частина пояснює зміст корелята.
-- lemma: головна частина
-  translation: main clause
-  pos: phrase
-  usage: У головній частині стоїть слово ті.
-- lemma: сполучне слово
-  translation: conjunctive word
-  pos: phrase
-  usage: Сполучне слово є членом підрядної частини.
-- lemma: сполучник
-  translation: conjunction
+  usage: "Вказівне слово той може бути корелятом у парі той, хто."
+- lemma: "співвідносність"
+  translation: "correlation"
+  ipa: "[spʲiu̯ʋidˈnɔsnʲistʲ]"
   pos: noun
-  usage: Сполучник з'єднує частини, але не є членом речення.
-- lemma: синтаксична роль
-  translation: syntactic role
+  gender: f
+  usage: "Співвідносність пари допомагає читачеві бачити логічний зв'язок."
+- lemma: "підрядна частина"
+  translation: "subordinate clause"
+  ipa: "[pidˈrʲɑdnɑ t͡ʃɑsˈtɪnɑ]"
   pos: phrase
-  usage: Синтаксична роль корелята визначає пунктуацію.
-- lemma: логічний наголос
-  translation: logical emphasis
+  usage: "Підрядна частина розкриває значення корелята."
+- lemma: "сполучний засіб"
+  translation: "linking device"
+  ipa: "[spɔˈlut͡ʃnɪj ˈzɑsʲib]"
   pos: phrase
-  usage: Корелят додає логічний наголос до підрядної частини.
-- lemma: керування
-  translation: government
+  usage: "Сполучний засіб має відповідати питанню підрядної частини."
+- lemma: "акцентування"
+  translation: "emphasis"
+  ipa: "[ɑkt͡sɛnˈtuʋɑnʲːɑ]"
   pos: noun
-  usage: Дієслово пишатися потребує керування в конструкції пишатися тим, що.
-- lemma: факультативний
-  translation: optional
-  pos: adjective
-  usage: Факультативний корелят додає фокус, але не є обов'язковим.
-- lemma: обов'язковий
-  translation: required
-  pos: adjective
-  usage: Обов'язковий корелят не можна вилучити без втрати змісту.
-- lemma: баласт
-  translation: ballast, dead weight
-  pos: noun
-  usage: Зайве те, що перетворюється на стилістичний баласт.
-- lemma: канцеляризм
-  translation: bureaucratic wording
-  pos: noun
-  usage: Канцеляризм ускладнює речення без потреби.
-- lemma: двозначність
-  translation: ambiguity
-  pos: noun
-  usage: Корелят допомагає уникнути двозначності в інструкції.
-- lemma: однозначність
-  translation: unambiguity
-  pos: noun
-  usage: Юридичний текст потребує однозначності.
-- lemma: з'ясувальний
-  translation: content-clause
-  pos: adjective
-  usage: З'ясувальний зв'язок пояснює зміст повідомлення.
-- lemma: означальний
-  translation: attributive
-  pos: adjective
-  usage: Означальний зв'язок уточнює іменник.
-- lemma: обставинний
-  translation: adverbial
-  pos: adjective
-  usage: Обставинний зв'язок називає місце, час, причину або спосіб.
-- lemma: міра
-  translation: degree, measure
-  pos: noun
-  usage: Пара настільки, що передає високу міру ознаки.
-- lemma: наслідок
-  translation: result
-  pos: noun
-  usage: Підрядна частина може називати наслідок міри.
-- lemma: закономірність
-  translation: pattern, regularity
-  pos: noun
-  usage: Пара чим, тим показує закономірність.
-- lemma: інверсія
-  translation: inversion
-  pos: noun
-  usage: Інверсія робить висновок риторично сильнішим.
-- lemma: каркас речення
-  translation: sentence frame
+  gender: n
+  usage: "Корелят може служити для логічного акцентування підмножини."
+- lemma: "логічна єдність"
+  translation: "logical unity"
+  ipa: "[lɔˈɦit͡ʃnɑ ˈjednʲistʲ]"
   pos: phrase
-  usage: Каркас речення допомагає перевірити коми.
-- lemma: пунктуаційна межа
-  translation: punctuation boundary
+  usage: "Логічна єдність руйнується, коли пара розірвана довгою вставкою."
+- lemma: "корелятивна пара"
+  translation: "correlative pair"
+  ipa: "[kɔrɛlʲɑˈtɪu̯nɑ ˈpɑrɑ]"
   pos: phrase
-  usage: Пунктуаційна межа відокремлює підрядну частину.
-- lemma: риторичний ефект
-  translation: rhetorical effect
+  usage: "Корелятивна пара чим... тим показує пропорційну залежність."
+- lemma: "головна частина"
+  translation: "main clause"
+  ipa: "[ɦɔˈlɔu̯nɑ t͡ʃɑsˈtɪnɑ]"
   pos: phrase
-  usage: Інверсія створює риторичний ефект.
-- lemma: регістр
-  translation: register
+  usage: "У головній частині стоїть корелят, а підрядна частина його розкриває."
+- lemma: "сфера дії"
+  translation: "scope"
+  ipa: "[ˈsfɛrɑ ˈdʲiji]"
+  pos: phrase
+  usage: "Сфера дії корелята показує, яку групу він обмежує."
+- lemma: "підмножина"
+  translation: "subset"
+  ipa: "[pidˈmnɔʒɪnɑ]"
   pos: noun
-  usage: Регістр визначає, чи доречна важка конструкція.
-- lemma: редакторська версія
-  translation: edited version
+  gender: f
+  usage: "Фраза ті заявки виділяє підмножину з усіх заявок."
+- lemma: "семантична відповідність"
+  translation: "semantic correspondence"
+  ipa: "[sɛmɑnˈtɪt͡ʃnɑ ʋidpɔˈʋidnʲistʲ]"
   pos: phrase
-  usage: Редакторська версія прибирає зайві кореляти.
-- lemma: причиновий зв'язок
-  translation: causal relation
+  usage: "Семантична відповідність потрібна між туди й куди."
+- lemma: "синтаксичний баланс"
+  translation: "syntactic balance"
+  ipa: "[sɪntɑkˈsɪt͡ʃnɪj bɑˈlɑns]"
   pos: phrase
-  usage: Причиновий зв'язок можна передати словом оскільки.
-- lemma: просторовий зв'язок
-  translation: spatial relation
-  pos: phrase
-  usage: Просторовий зв'язок часто має пару там, де.
-- lemma: часовий зв'язок
-  translation: temporal relation
-  pos: phrase
-  usage: Часовий зв'язок може мати пару доти, доки.
-- lemma: співвіднесення
-  translation: correlation
+  usage: "Синтаксичний баланс зберігається, коли обидві частини пари паралельні."
+- lemma: "паралельність"
+  translation: "parallelism"
+  ipa: "[pɑrɑˈlɛlʲnʲistʲ]"
   pos: noun
-  usage: Співвіднесення корелята й підрядної частини має бути логічним.
-- lemma: опора
-  translation: anchor, support
-  pos: noun
-  usage: Корелят дає підрядній частині синтаксичну опору.
-- lemma: стислість
-  translation: concision
-  pos: noun
-  usage: Стислість не повинна руйнувати точність речення.
-- lemma: розчленування сполучника
-  translation: splitting a conjunction
+  gender: f
+  usage: "Паралельність особливо важлива в парі не тільки... а й."
+- lemma: "пропорційна залежність"
+  translation: "proportional relation"
+  ipa: "[prɔpɔrˈt͡sʲijnɑ zɑˈlɛʒnʲistʲ]"
   pos: phrase
-  usage: Розчленування сполучника залежить від інтонації та фокусу.
+  usage: "Чим... тим передає пропорційну залежність."
+- lemma: "факультативний"
+  translation: "optional"
+  ipa: "[fɑkulʲtɑˈtɪu̯nɪj]"
+  pos: adj
+  usage: "Факультативний корелят можна залишити для фокусу або прибрати для стислості."
+- lemma: "обов'язковий"
+  translation: "obligatory"
+  ipa: "[ɔbɔjɑzˈkɔʋɪj]"
+  pos: adj
+  usage: "Обов'язковий корелят не можна вилучити без руйнування структури."
+- lemma: "плеоназм"
+  translation: "pleonasm"
+  ipa: "[plɛɔˈnɑzm]"
+  pos: noun
+  gender: m
+  usage: "Плеоназм виникає, коли корелят лише дублює вже виражений зміст."
+- lemma: "стилістичний баласт"
+  translation: "stylistic ballast"
+  ipa: "[stɪlʲisˈtɪt͡ʃnɪj bɑˈlɑst]"
+  pos: phrase
+  usage: "Зайве те, що може стати стилістичним баластом."
+- lemma: "редакторська правка"
+  translation: "editorial revision"
+  ipa: "[rɛdɑkˈtɔrsʲkɑ ˈprɑu̯kɑ]"
+  pos: phrase
+  usage: "Редакторська правка може замінити важку рамку коротким іменником."
+- lemma: "межа підрядної частини"
+  translation: "boundary of a subordinate clause"
+  ipa: "[mɛˈʒɑ pidˈrʲɑdnɔji t͡ʃɑsˈtɪnɪ]"
+  pos: phrase
+  usage: "Кома позначає межу підрядної частини."
+- lemma: "риторичний повтор"
+  translation: "rhetorical repetition"
+  ipa: "[rɪtɔˈrɪt͡ʃnɪj pɔu̯ˈtɔr]"
+  pos: phrase
+  usage: "Риторичний повтор хто... той може бути доречним у виступі."
+- lemma: "канцелярська рамка"
+  translation: "bureaucratic frame"
+  ipa: "[kɑnt͡sɛˈlʲɑrsʲkɑ ˈrɑmkɑ]"
+  pos: phrase
+  usage: "Канцелярська рамка факт того, що часто потребує скорочення."
+- lemma: "займенникова опора"
+  translation: "pronominal anchor"
+  ipa: "[zɑjmɛnˈnɪkɔʋɑ ɔˈpɔrɑ]"
+  pos: phrase
+  usage: "Займенникова опора ті дозволяє вжити хто."
+- lemma: "структурна опора"
+  translation: "structural anchor"
+  ipa: "[strukˈturnɑ ɔˈpɔrɑ]"
+  pos: phrase
+  usage: "Структурна опора потрібна, коли підрядна частина не має іменника."
+- lemma: "однозначність"
+  translation: "unambiguity"
+  ipa: "[ɔdnɔˈznɑt͡ʃnʲistʲ]"
+  pos: noun
+  gender: f
+  usage: "Корелят може підвищувати однозначність складного речення."
+- lemma: "юридична точність"
+  translation: "legal precision"
+  ipa: "[jurɪˈdɪt͡ʃnɑ ˈtɔt͡ʃnʲistʲ]"
+  pos: phrase
+  usage: "Юридична точність іноді вимагає залишити корелят."
+- lemma: "інверсія підрядної частини"
+  translation: "subordinate-clause inversion"
+  ipa: "[inˈʋɛrsʲijɑ pidˈrʲɑdnɔji t͡ʃɑsˈtɪnɪ]"
+  pos: phrase
+  usage: "Інверсія підрядної частини у моделі хто... той підсилює умову."
+- lemma: "змістова рамка"
+  translation: "semantic frame"
+  ipa: "[zmistɔˈʋɑ ˈrɑmkɑ]"
+  pos: phrase
+  usage: "Змістова рамка допомагає відрізнити факт, спосіб і причину."
+- lemma: "узгодження"
+  translation: "agreement"
+  ipa: "[uzɦɔˈdʒɛnʲːɑ]"
+  pos: noun
+  gender: n
+  usage: "Після ті, хто головний присудок зазвичай має форму множини."

@@ -1,128 +1,169 @@
-- lemma: когезія
-  translation: cohesion
+- lemma: "конектор"
+  translation: "connector"
+  ipa: "[kɔnɛkˈtɔr]"
   pos: noun
-  usage: "Когезія створює видимі мовні зв'язки між реченнями."
-- lemma: когерентність
-  translation: coherence
-  pos: noun
-  usage: "Когерентність допомагає читачеві зрозуміти логіку тексту."
-- lemma: засіб зв'язку
-  translation: cohesive device
+  gender: m
+  usage: "Конектор показує логічний зв'язок між реченнями або частинами тексту."
+- lemma: "сполучний засіб"
+  translation: "linking device"
+  ipa: "[spɔˈlut͡ʃnɪj ˈzɑsʲib]"
   pos: phrase
-  usage: "Конектор, повтор і займенник можуть бути засобами зв'язку."
-- lemma: конектор
-  translation: connector
+  usage: "Сполучний засіб має відповідати змістовому відношенню."
+- lemma: "когезія"
+  translation: "cohesion"
+  ipa: "[kɔˈɦɛzʲijɑ]"
   pos: noun
-  usage: "Конектор показує, як одна думка переходить до іншої."
-- lemma: протиставлення
-  translation: contrast
+  gender: f
+  usage: "Когезія робить зв'язки між реченнями видимими."
+- lemma: "когерентність"
+  translation: "coherence"
+  ipa: "[kɔɦɛˈrɛntnʲistʲ]"
   pos: noun
-  usage: "Протиставлення часто вводять слова однак, проте або водночас."
-- lemma: наслідок
-  translation: consequence
+  gender: f
+  usage: "Когерентність означає, що думки утворюють зрозумілу логіку."
+- lemma: "анафора"
+  translation: "anaphora"
+  ipa: "[ɑnɑˈfɔrɑ]"
   pos: noun
-  usage: "Слово тому називає наслідок попередньої причини."
-- lemma: висновок
-  translation: conclusion
+  gender: f
+  usage: "Анафора відсилає до вже названого елемента."
+- lemma: "катафора"
+  translation: "cataphora"
+  ipa: "[kɑtɑˈfɔrɑ]"
   pos: noun
-  usage: "Отже вводить висновок після доказів."
-- lemma: підстава
-  translation: basis
+  gender: f
+  usage: "Катафора створює очікування й розкриває його далі."
+- lemma: "додавання"
+  translation: "addition"
+  ipa: "[dɔdɑˈʋɑnʲːɑ]"
   pos: noun
-  usage: "Оскільки називає підставу для наступної дії."
-- lemma: уточнення
-  translation: clarification
+  gender: n
+  usage: "Додавання вводить ще один факт у тому самому напрямі."
+- lemma: "послідовність"
+  translation: "sequence"
+  ipa: "[pɔslʲiˈdɔu̯nʲistʲ]"
   pos: noun
+  gender: f
+  usage: "Послідовність допомагає показати, що сталося спочатку й далі."
+- lemma: "контраст"
+  translation: "contrast"
+  ipa: "[kɔnˈtrɑst]"
+  pos: noun
+  gender: m
+  usage: "Контраст показує протиставлення або обмеження."
+- lemma: "альтернатива"
+  translation: "alternative"
+  ipa: "[ɑlʲtɛrnɑˈtɪʋɑ]"
+  pos: noun
+  gender: f
+  usage: "Натомість часто вводить альтернативу."
+- lemma: "причина"
+  translation: "cause"
+  ipa: "[prɪˈt͡ʃɪnɑ]"
+  pos: noun
+  gender: f
+  usage: "Причина відповідає на питання чому."
+- lemma: "наслідок"
+  translation: "result"
+  ipa: "[ˈnɑslʲidɔk]"
+  pos: noun
+  gender: m
+  usage: "Наслідок відповідає на питання що з цього випливає."
+- lemma: "поступка"
+  translation: "concession"
+  ipa: "[pɔsˈtupkɑ]"
+  pos: noun
+  gender: f
+  usage: "Поступка показує дію всупереч перешкоді."
+- lemma: "підсумок"
+  translation: "summary"
+  ipa: "[pidˈsumɔk]"
+  pos: noun
+  gender: m
+  usage: "Підсумок збирає попередні підстави у висновок."
+- lemma: "регістр"
+  translation: "register"
+  ipa: "[rɛˈɦʲistr]"
+  pos: noun
+  gender: m
+  usage: "Регістр визначає, чи доречний офіційний або розмовний конектор."
+- lemma: "офіційно-діловий"
+  translation: "official-business"
+  ipa: "[ɔfʲiˈt͡sʲijnɔ dʲiˈlɔʋɪj]"
+  pos: adj
+  usage: "Офіційно-діловий стиль використовує стримані формули зв'язку."
+- lemma: "академічний"
+  translation: "academic"
+  ipa: "[ɑkɑdɛˈmʲit͡ʃnɪj]"
+  pos: adj
+  usage: "Академічний текст потребує висновків після доказів."
+- lemma: "публіцистичний"
+  translation: "journalistic"
+  ipa: "[publʲit͡sɪsˈtɪt͡ʃnɪj]"
+  pos: adj
+  usage: "Публіцистичний стиль може використовувати ритмічні повтори."
+- lemma: "розмовний"
+  translation: "colloquial"
+  ipa: "[rɔzˈmɔu̯nɪj]"
+  pos: adj
+  usage: "Розмовний конектор не завжди пасує до формального листа."
+- lemma: "займенниковий зв'язок"
+  translation: "pronominal link"
+  ipa: "[zɑjmɛnˈnɪkɔʋɪj zʋjɑˈzɔk]"
+  pos: phrase
+  usage: "Займенниковий зв'язок має мати одну очевидну опору."
+- lemma: "опорне слово"
+  translation: "anchor word"
+  ipa: "[ɔˈpɔrne ˈslɔʋɔ]"
+  pos: phrase
+  usage: "Опорне слово показує, до чого відсилає займенник."
+- lemma: "двокрапка"
+  translation: "colon"
+  ipa: "[dʋɔˈkrɑpkɑ]"
+  pos: noun
+  gender: f
+  usage: "Двокрапка може вводити пояснення або катафору."
+- lemma: "крапка з комою"
+  translation: "semicolon"
+  ipa: "[ˈkrɑpkɑ z kɔˈmɔju]"
+  pos: phrase
+  usage: "Крапка з комою поєднує близькі, але самостійні частини."
+- lemma: "механічний конектор"
+  translation: "mechanical connector"
+  ipa: "[mɛxɑˈnʲit͡ʃnɪj kɔnɛkˈtɔr]"
+  pos: phrase
+  usage: "Механічний конектор стоїть за звичкою, а не за логікою."
+- lemma: "надмірність"
+  translation: "excess"
+  ipa: "[nɑdˈmʲirnʲistʲ]"
+  pos: noun
+  gender: f
+  usage: "Надмірність конекторів робить абзац важким."
+- lemma: "зв'язність"
+  translation: "connectedness"
+  ipa: "[zʋjɑzˈnʲistʲ]"
+  pos: noun
+  gender: f
+  usage: "Зв'язність залежить від порядку речень, повторів і точних переходів."
+- lemma: "текстова навігація"
+  translation: "text navigation"
+  ipa: "[ˈtɛkstɔʋɑ nɑʋʲiˈɦɑt͡sʲijɑ]"
+  pos: phrase
+  usage: "Текстова навігація допомагає читачеві рухатися аргументом."
+- lemma: "уточнення"
+  translation: "specification"
+  ipa: "[utɔˈt͡ʃnɛnʲːɑ]"
+  pos: noun
+  gender: n
   usage: "Зокрема вводить уточнення або приклад."
-- lemma: анафора
-  translation: anaphora
+- lemma: "обмеження"
+  translation: "limitation"
+  ipa: "[ɔbmɛˈʒɛnʲːɑ]"
   pos: noun
-  usage: "Анафора повертає читача до вже названого елемента."
-- lemma: катафора
-  translation: cataphora
-  pos: noun
-  usage: "Катафора спочатку створює очікування, а потім розкриває зміст."
-- lemma: референція
-  translation: reference
-  pos: noun
-  usage: "Точна референція показує, до чого повертається займенник."
-- lemma: попередник
-  translation: antecedent
-  pos: noun
-  usage: "Займенник має мати зрозумілий попередник."
-- lemma: регістр
-  translation: register
-  pos: noun
-  usage: "Регістр визначає, чи доречний офіційний конектор."
-- lemma: канцеляризм
-  translation: bureaucratic phrase
-  pos: noun
-  usage: "Канцеляризм обтяжує просте повідомлення."
-- lemma: службовий лист
-  translation: official letter
+  gender: n
+  usage: "Утім може вводити м'яке обмеження."
+- lemma: "логічний перехід"
+  translation: "logical transition"
+  ipa: "[lɔˈɦit͡ʃnɪj pɛrɛˈxid]"
   pos: phrase
-  usage: "У службовому листі конектори мають бути стриманими."
-- lemma: аналітичний абзац
-  translation: analytical paragraph
-  pos: phrase
-  usage: "Аналітичний абзац потребує чіткої послідовності доказів."
-- lemma: смислова цілісність
-  translation: semantic unity
-  pos: phrase
-  usage: "Смислова цілісність важливіша за кількість конекторів."
-- lemma: логічний зв'язок
-  translation: logical relation
-  pos: phrase
-  usage: "Логічний зв'язок треба визначити до вибору конектора."
-- lemma: послідовність
-  translation: sequence
-  pos: noun
-  usage: "Слова далі й після цього показують послідовність дій."
-- lemma: нарощення аргументу
-  translation: argument development
-  pos: phrase
-  usage: "Ба більше може створити нарощення аргументу."
-- lemma: обмеження
-  translation: limitation
-  pos: noun
-  usage: "Утім м'яко вводить обмеження попередньої думки."
-- lemma: альтернатива
-  translation: alternative
-  pos: noun
-  usage: "Натомість часто порівнює дві альтернативи."
-- lemma: приклад
-  translation: example
-  pos: noun
-  usage: "Наприклад вводить конкретний приклад."
-- lemma: переформулювання
-  translation: reformulation
-  pos: noun
-  usage: "Тобто вводить переформулювання попередньої думки."
-- lemma: двозначність
-  translation: ambiguity
-  pos: noun
-  usage: "Нечіткий займенник створює двозначність."
-- lemma: повтор
-  translation: repetition
-  pos: noun
-  usage: "Повтор може підтримувати тему або перевантажувати текст."
-- lemma: синонімічна заміна
-  translation: synonymic substitution
-  pos: phrase
-  usage: "Синонімічна заміна має не спотворювати зміст."
-- lemma: редакторська перевірка
-  translation: editorial check
-  pos: phrase
-  usage: "Редакторська перевірка починається з пошуку нечітких зв'язків."
-- lemma: безсполучниковий зв'язок
-  translation: asyndetic connection
-  pos: phrase
-  usage: "Безсполучниковий зв'язок часто спирається на двокрапку або тире."
-- lemma: двокрапка
-  translation: colon
-  pos: noun
-  usage: "Двокрапка готує пояснення або розкриття змісту."
-- lemma: крапка з комою
-  translation: semicolon
-  pos: phrase
-  usage: "Крапка з комою розділяє великі пов'язані частини."
+  usage: "Логічний перехід має відповідати відношенню між думками."
