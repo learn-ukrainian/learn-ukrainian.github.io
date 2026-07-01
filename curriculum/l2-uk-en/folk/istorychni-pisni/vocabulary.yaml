@@ -1,68 +1,56 @@
 - lemma: історична пісня
-  translation: historical song; sung lyric-epic memory of events and figures
+  translation: historical song
   pos: noun phrase
-  usage: Історична пісня тримає подію в куплетній формі, а не в прозовому переказі.
+  usage: Історична пісня тримає подію у співаній строфічній формі.
 - lemma: дума
-  translation: duma; astrophic recitative epic performed by kobzars or lirnyks
+  translation: duma, recitative epic
   pos: noun
-  usage: Дума про Марусю Богуславку має історичну тему, але її форма не пісенно-строфічна.
+  usage: Дума може мати історичну тему, але не має сталої куплетної строфи.
 - lemma: переказ
   translation: oral prose legend or historical tale
   pos: noun
-  usage: Переказ може говорити про Кармелюка, але без співаної форми він не стає історичною піснею.
-- lemma: ясир
-  translation: captives taken in raids; forced captivity
-  pos: noun
-  usage: Ранній шар історичних пісень пов'язаний із татарськими нападами й загрозою ясиру.
-- lemma: гайдамаччина
-  translation: haidamak movement and its historical-song layer
-  pos: noun
-  usage: Гайдамаччина входить у корпус як пам'ять про соціальний і національний спротив.
-- lemma: опришок
-  translation: opryshok; Carpathian rebel or outlaw figure
-  pos: noun
-  usage: Опришок у пісенному корпусі належить до пізнішого шару народного спротиву.
-- lemma: голота
-  translation: poor common people; dispossessed rank
-  pos: noun
-  usage: Голота в історичній пісні може бути не пасивним тлом, а силою дії.
+  usage: Переказ оповідає прозою, а історична пісня співає подію.
 - lemma: зачин
-  translation: opening line that launches a text or performance
+  translation: opening formula
   pos: noun
-  usage: Зачин швидко вводить героя, простір або емоційний стан пісні.
-- lemma: строфа
-  translation: stanza; repeated verse unit
-  pos: noun
-  usage: Строфа відрізняє історичну пісню від думи без сталої строфи.
+  usage: Зачин одразу вводить героя, простір або стан громади.
 - lemma: куплет
-  translation: verse or couplet-like song unit
+  translation: stanza, verse
   pos: noun
-  usage: Куплет дозволяє гуртові легко підхопити й повторити пісенну оцінку події.
-- lemma: ватажок
-  translation: leader of an armed group or uprising
+  usage: Куплет допомагає гуртовому голосу повторити ключову формулу.
+- lemma: строфа
+  translation: stanza
   pos: noun
-  usage: Ватажок у пісні часто стає моральним знаком спротиву, а не лише біографічною постаттю.
-- lemma: Коліївщина
-  translation: Koliivshchyna; eighteenth-century haidamak uprising
+  usage: Строфа відділяє історичну пісню від прозового переказу.
+- lemma: повтор
+  translation: repetition
   pos: noun
-  usage: Коліївщина дала історичним пісням імена Залізняка й Гонти.
-- lemma: кобзар
-  translation: kobzar; itinerant singer with kobza or bandura
+  usage: Повтор посилює плач, заклик або моральну оцінку.
+- lemma: ясир
+  translation: captives taken in raids
   pos: noun
-  usage: Кобзар міг переносити історичну пам'ять між громадами через спів.
-- lemma: багатоголосний спів
-  translation: polyphonic group singing
+  usage: Загроза ясиру належить до раннього шару історичних пісень.
+- lemma: гайдамаччина
+  translation: haidamak movement
+  pos: noun
+  usage: Гайдамаччина входить до пізнішого шару історично-пісенної пам'яті.
+- lemma: опришок
+  translation: Carpathian rebel figure
+  pos: noun
+  usage: Образ опришка пов'язаний із народним спротивом у Карпатському регіоні.
+- lemma: голота
+  translation: poor common people
+  pos: noun
+  usage: Голота в пісенному корпусі може означати соціально вразливу громаду.
+- lemma: джерельна історія
+  translation: source history
   pos: noun phrase
-  usage: Багатоголосний спів показує історичну пісню як звук спільноти, а не самотню декламацію.
-- lemma: фальсифікат
-  translation: falsified or forged text
-  pos: noun
-  usage: Романтичний фальсифікат не можна зараховувати до корпусу без текстологічної перевірки.
+  usage: Джерельна історія показує, як текст перейшов від виконання до запису.
 - lemma: екзонім
-  translation: outside name applied by another power or language
+  translation: externally imposed name
   pos: noun
-  usage: Імперський екзонім у назві старого видання не є нейтральною назвою української традиції.
-- lemma: джерельна критика
-  translation: source criticism; checking source origin and evidentiary force
+  usage: Старий імперський екзонім у назві видання не є нейтральною назвою української традиції.
+- lemma: деколонізоване читання
+  translation: decolonized reading
   pos: noun phrase
-  usage: Джерельна критика питає, чи фрагмент засвідчено в народному корпусі, у збірнику чи в літературному контексті.
+  usage: Деколонізоване читання повертає українській пісні власну культурну суб'єктність.

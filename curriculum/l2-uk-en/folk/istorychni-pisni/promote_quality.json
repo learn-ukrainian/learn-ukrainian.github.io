@@ -1,9 +1,9 @@
 {
-  "assembled_mdx_sha256": "c72ca575dd5cd226293eb87d94ba3f34d5112f2a3e65e68995fc5d35fb4cee04",
+  "assembled_mdx_sha256": "de1ad776e2dc8c40e16a5c101d46751072f866f8067b307f2341b149bc4dc84d",
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "8386f151dad805c11ea74049f01747421425eb2bcd09514b8b559ac58c7e9cb1",
+    "digest": "0a2af385e39103bea3b0da319bab89f0b26615dd26c8c2f996893e752a18dff1",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/istorychni-pisni.yaml",
@@ -11,28 +11,30 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/istorychni-pisni/module.md",
-        "sha256": "24ceecd2fbf1fdeea00212655115a53c29d2d2a5ef1468ca69391015251a5c32"
+        "sha256": "7f0296d888b3cd5f9bbc005fda199922b9da070d033b7d9d327dd7354e5f14f5"
       },
       {
         "path": "curriculum/l2-uk-en/folk/istorychni-pisni/activities.yaml",
-        "sha256": "e52b28a59f0a743bc77ba894dbaa198d19c6f54953ef6faaa94064d78102faab"
+        "sha256": "f4040f577eec1ed0334437b973b9bf8911892fee4270b4f74f6321c87b8320b1"
       },
       {
         "path": "curriculum/l2-uk-en/folk/istorychni-pisni/vocabulary.yaml",
-        "sha256": "a071fb724e66d5a287d200e66893456bc98a2e684228833813b7151aaf8398c2"
+        "sha256": "69b8925d80e9944844ba9745bb711d8f522e4b3c6a8da2b68bd014c40e906fda"
       },
       {
         "path": "curriculum/l2-uk-en/folk/istorychni-pisni/resources.yaml",
-        "sha256": "8cbd3293457a2a9616f0d35e8f5181c9cb8cb1f45105ad897cce344420fec632"
+        "sha256": "ee1cb07b6a4561f3bb2c746c636ee1390a0126ad260f6a4397cb3e34e3bca95b"
       }
     ]
   },
   "evidence": {
-    "decolonization": "FOLK framing and Ukrainian agency remain intact; no Russian-imperial or ethnographic-reduction framing introduced.",
-    "engagement": "Hosted reading surface remains intact; cleanup removes broken guide/conclusion language without weakening source-bound tasks.",
-    "naturalness": "Learner-facing AI/build/source-process leakage was removed or avoided; prose now reads as seminar content rather than orchestration metadata.",
-    "pedagogical": "Cleanup preserves the original module learning spine while clarifying whether the reading surface is short embedded fragments or a hosted reading widget.",
-    "review": "Claude Opus 4.8 PASS for folk learner reading surface cleanup; non-blocking ReadingActivity text prop note verified in site/src/components/ReadingActivity.tsx."
+    "beauty": "The lesson foregrounds sung memory, symbolic space, emotional registers, and links to written literature.",
+    "decolonization": "Centers Ukrainian cultural agency while marking old ethnonyms, imperial names, and Soviet-style flattening as source-bound frames.",
+    "engagement": "Six readings, myth box, notes, bridge, inline comparison, and motif work support varied close reading.",
+    "naturalness": "Ukrainian seminar prose is learner-facing and cleaned of process/register artifacts; title and description are Ukrainian.",
+    "pedagogical": "Teaches historical-song genre through form, voice, source limits, and six public readings rather than procedural answer-writing.",
+    "review": "Claude Opus 4.8 follow-up PASS plus final-delta APPROVE; primary-reading divergences resolved with source-faithful omissions.",
+    "tone": "C1 seminar tone is analytical, source-disciplined, and respectful without romantic overclaiming."
   },
   "floors": {
     "beauty": 8.5,
@@ -50,11 +52,11 @@
     "model": "claude-opus-4-8"
   },
   "schema_version": 1,
-  "scored_at": "2026-06-30T14:27:30Z",
+  "scored_at": "2026-07-01T20:18:50Z",
   "scores": {
-    "beauty": 9.0,
-    "decolonization": 9.7,
-    "engagement": 8.6,
+    "beauty": 8.8,
+    "decolonization": 9.2,
+    "engagement": 8.8,
     "naturalness": 9.0,
     "pedagogical": 9.0,
     "tone": 9.0
