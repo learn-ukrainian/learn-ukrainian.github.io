@@ -73,7 +73,7 @@ Kashchenko died in 1921, so his own texts are public domain under life+70 regime
 
 ## 6. Contested points
 
-- **Aдpiан / Андріан naming:** ESU and IEU use `Адріан` / `Adriian`; the project queue and existing plan use `Андріан` / `andrian-kashchenko`. Preserve the existing slug; teach the variant forms as catalog / curriculum variation.
+- **Адріан / Андріан naming:** ESU and IEU use `Адріан` / `Adriian`; the project queue and existing plan use `Андріан` / `andrian-kashchenko`. Preserve the existing slug; teach the variant forms as catalog / curriculum variation.
 - **Literary value vs didactic value:** IEU bluntly says the works have limited literary value and historical inaccuracies, but also says they were popular and had an important didactic patriotic role. This is the central anti-hagiography frame: Kashchenko may be more important as public-memory infrastructure than as a stylist.
 - **Historical accuracy:** Existing local plan already frames history vs fiction. Do not build a BIO module that treats `Над Кодацьким порогом` as documentary history. Pair story episodes with the question: what is documented, what is romanticized, and why did the romance work?
 - **Soviet ban / removal wording:** Use ESU and IEU source-specific language: books removed from libraries from 1933; works banned in Soviet Ukraine. Do not invent a trial, arrest, or named censor file.
