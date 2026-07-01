@@ -1,152 +1,60 @@
-- lemma: милозвучність
-  translation: euphony
-  pos: noun
-  usage: "Милозвучність допомагає реченню звучати природно й легко."
-- lemma: евфонія
-  translation: euphony
-  pos: noun
-  usage: "Евфонія пов'язана з чергуванням звуків і ритмом мовлення."
-- lemma: фонетичний засіб
-  translation: phonetic device
-  pos: phrase
-  usage: "Фонетичний засіб підсилює зміст через звучання."
-- lemma: звукопис
-  translation: sound patterning
-  pos: noun
-  usage: "Звукопис створює слуховий образ у художньому тексті."
-- lemma: алітерація
-  translation: alliteration
-  pos: noun
-  usage: "Алітерація повторює приголосні для ритму або настрою."
-- lemma: асонанс
-  translation: assonance
-  pos: noun
-  usage: "Асонанс повторює голосні й робить фразу мелодійнішою."
-- lemma: ономатопея
-  translation: onomatopoeia
-  pos: noun
-  usage: "Ономатопея допомагає передати звук без додаткового пояснення."
-- lemma: звуконаслідування
-  translation: sound imitation
-  pos: noun
-  usage: "Звуконаслідування доречне в художньому описі або рекламі."
-- lemma: орфоепія
-  translation: orthoepy, pronunciation norm
-  pos: noun
-  usage: "Орфоепія визначає нормативну вимову слів."
-- lemma: логічний наголос
-  translation: logical stress
-  pos: phrase
-  usage: "Логічний наголос показує, яка частина речення головна."
-- lemma: інтонація
-  translation: intonation
-  pos: noun
-  usage: "Інтонація може змінити оцінку всього висловлення."
-- lemma: пауза
-  translation: pause
-  pos: noun
-  usage: "Пауза перед уточненням створює очікування."
-- lemma: ритм
-  translation: rhythm
-  pos: noun
-  usage: "Ритм речення залежить від довжини фраз і розміщення наголосу."
-- lemma: збіг приголосних
-  translation: consonant cluster
-  pos: phrase
-  usage: "Зайвий збіг приголосних робить фразу важкою для вимови."
-- lemma: збіг голосних
-  translation: vowel hiatus
-  pos: phrase
-  usage: "Збіг голосних часто пом'якшують чергуванням і та й."
-- lemma: чергування
-  translation: alternation
-  pos: noun
-  usage: "Чергування у та в підтримує природне звучання речення."
-- lemma: приголосний
-  translation: consonant
-  pos: noun
-  usage: "Повтор приголосних може створити ефект шелесту або удару."
-- lemma: голосний
-  translation: vowel
-  pos: noun
-  usage: "Повтор голосних допомагає вибудувати мелодику фрази."
-- lemma: сонорний
-  translation: sonorant
-  pos: adjective
-  usage: "Сонорні звуки часто роблять фразу м'якшою."
-- lemma: шиплячий
-  translation: sibilant, hushing consonant
-  pos: adjective
-  usage: "Шиплячий повтор може передавати шелест або тишу."
-- lemma: дзвінкість
-  translation: voicing
-  pos: noun
-  usage: "Збереження дзвінкості є важливою рисою української вимови."
-- lemma: оглушення
-  translation: devoicing
-  pos: noun
-  usage: "Надмірне оглушення змінює звучання українських слів."
-- lemma: редукція
-  translation: reduction
-  pos: noun
-  usage: "Редукція голосних не є нормальною рисою літературної української вимови."
-- lemma: наголос
-  translation: stress
-  pos: noun
-  usage: "Наголос у слові фено́мен треба перевірити перед виступом."
-- lemma: темп мовлення
-  translation: speech tempo
-  pos: phrase
-  usage: "Темп мовлення впливає на те, як слухач сприймає паузи."
-- lemma: плавність
-  translation: fluency, smoothness
-  pos: noun
-  usage: "Плавність тексту залежить від чергування коротких і довгих фраз."
-- lemma: уривчастий
-  translation: abrupt, staccato
-  pos: adjective
-  usage: "Уривчастий ритм може передати тривогу або терміновість."
-- lemma: напруження
-  translation: tension
-  pos: noun
-  usage: "Повтор твердих приголосних створює відчуття напруження."
-- lemma: слуховий образ
-  translation: auditory image
-  pos: phrase
-  usage: "Слуховий образ допомагає читачеві уявити сцену."
-- lemma: фонетична редактура
-  translation: phonetic editing
-  pos: phrase
+- lemma: "милозвучність"
+  translation: "euphony"
+  pos: "noun"
+  usage: "Милозвучність допомагає зробити службовий текст легшим для читання."
+- lemma: "евфонія"
+  translation: "euphony"
+  pos: "noun"
+  usage: "Евфонія може бути нормою вимови і стилістичним ресурсом."
+- lemma: "какофонія"
+  translation: "cacophony"
+  pos: "noun"
+  usage: "Какофонія в художньому описі може передати шум або напруження."
+- lemma: "алітерація"
+  translation: "alliteration"
+  pos: "noun"
+  usage: "Алітерація повторює приголосні й створює слуховий образ."
+- lemma: "асонанс"
+  translation: "assonance"
+  pos: "noun"
+  usage: "Асонанс повторює голосні та підтримує ритм фрази."
+- lemma: "звуконаслідування"
+  translation: "onomatopoeia"
+  pos: "noun"
+  usage: "Звуконаслідування робить сцену чутною."
+- lemma: "звукопис"
+  translation: "sound patterning"
+  pos: "noun"
+  usage: "Звукопис має підтримувати зміст, а не замінювати його."
+- lemma: "ритмічність"
+  translation: "rhythmicity"
+  pos: "noun"
+  usage: "Ритмічність промови допомагає слухачеві запам'ятати ключову фразу."
+- lemma: "логічний наголос"
+  translation: "logical stress"
+  pos: "noun phrase"
+  usage: "Логічний наголос змінює фокус речення."
+- lemma: "пауза"
+  translation: "pause"
+  pos: "noun"
+  usage: "Пауза може перетворити нейтральну фразу на оцінну."
+- lemma: "збіг приголосних"
+  translation: "consonant cluster"
+  pos: "noun phrase"
+  usage: "Збіг приголосних іноді потребує форми **зі**."
+- lemma: "орфоепія"
+  translation: "orthoepy"
+  pos: "noun"
+  usage: "Орфоепія важлива для публічного виступу."
+- lemma: "фонетична редактура"
+  translation: "phonetic editing"
+  pos: "noun phrase"
   usage: "Фонетична редактура починається з читання тексту вголос."
-- lemma: звуковий повтор
-  translation: sound repetition
-  pos: phrase
-  usage: "Звуковий повтор має підтримувати зміст, а не заважати йому."
-- lemma: звуковий ефект
-  translation: sound effect
-  pos: phrase
-  usage: "Звуковий ефект доречний лише тоді, коли він працює на жанр."
-- lemma: жанровий режим
-  translation: genre mode
-  pos: phrase
-  usage: "Жанровий режим визначає, чи можна використати розмовне звуконаслідування."
-- lemma: публічний виступ
-  translation: public speech
-  pos: phrase
-  usage: "Публічний виступ потребує перевірки інтонації й наголосу."
-- lemma: ораторський
-  translation: oratorical
-  pos: adjective
-  usage: "Ораторський текст спирається на паузи, повтори й логічний наголос."
-- lemma: надмірність
-  translation: excess, redundancy
-  pos: noun
-  usage: "Надмірність звукових повторів робить текст штучним."
-- lemma: доречність
-  translation: appropriateness
-  pos: noun
-  usage: "Доречність фонетичного прийому залежить від жанру й наміру."
-- lemma: вимова
-  translation: pronunciation
-  pos: noun
-  usage: "Нормативна вимова підтримує довіру до мовця."
+- lemma: "жанрова доречність"
+  translation: "genre appropriateness"
+  pos: "noun phrase"
+  usage: "Жанрова доречність визначає, чи залишити звукопис."
+- lemma: "службовий текст"
+  translation: "service text"
+  pos: "noun phrase"
+  usage: "Службовий текст зазвичай потребує нейтрального опису звуку."

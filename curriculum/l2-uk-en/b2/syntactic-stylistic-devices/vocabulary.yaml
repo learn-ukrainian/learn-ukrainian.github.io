@@ -1,156 +1,64 @@
-- lemma: риторична фігура
-  translation: rhetorical figure
-  pos: phrase
-  usage: "Риторична фігура змінює будову вислову, щоб посилити вплив на слухача."
-- lemma: синтаксична фігура
-  translation: syntactic figure
-  pos: phrase
-  usage: "Синтаксична фігура працює через порядок слів, повтор, паузу або пропуск."
-- lemma: анафора
-  translation: anaphora
-  pos: noun
-  usage: "Анафора повторює слово або фразу на початку сусідніх частин."
-- lemma: епіфора
-  translation: epiphora
-  pos: noun
-  usage: "Епіфора повторює важливе слово в кінці кількох фраз."
-- lemma: симплока
-  translation: symploce
-  pos: noun
-  usage: "Симплока поєднує анафору й епіфору в одній композиції."
-- lemma: градація
-  translation: gradation, climax
-  pos: noun
-  usage: "Градація нарощує або послаблює емоційну напругу."
-- lemma: висхідна градація
-  translation: ascending gradation
-  pos: phrase
-  usage: "Висхідна градація веде читача від слабшого до сильнішого."
-- lemma: спадна градація
-  translation: descending gradation
-  pos: phrase
-  usage: "Спадна градація звужує масштаб або знижує напругу."
-- lemma: антитеза
-  translation: antithesis
-  pos: noun
-  usage: "Антитеза протиставляє пов'язані поняття на спільній смисловій осі."
-- lemma: інверсія
-  translation: inversion
-  pos: noun
-  usage: "Інверсія переносить важливий елемент у фокус речення."
-- lemma: паралелізм
-  translation: parallelism
-  pos: noun
-  usage: "Паралелізм тримає однакову будову сусідніх конструкцій."
-- lemma: синтаксичний паралелізм
-  translation: syntactic parallelism
-  pos: phrase
-  usage: "Синтаксичний паралелізм допомагає впорядкувати складну думку."
-- lemma: хіазм
-  translation: chiasmus
-  pos: noun
-  usage: "Хіазм створює дзеркальну структуру типу A-B / B-A."
-- lemma: асиндетон
-  translation: asyndeton
-  pos: noun
-  usage: "Асиндетон прибирає сполучники й пришвидшує ритм."
-- lemma: полісиндетон
-  translation: polysyndeton
-  pos: noun
-  usage: "Полісиндетон повторює сполучники й уповільнює речення."
-- lemma: еліпсис
-  translation: ellipsis
-  pos: noun
-  usage: "Еліпсис пропускає член речення, який легко відновити."
-- lemma: парцеляція
-  translation: parceling, sentence fragmentation
-  pos: noun
-  usage: "Парцеляція робить паузу видимою через окремий фрагмент."
-- lemma: апосіопеза
-  translation: aposiopesis, deliberate break
-  pos: noun
-  usage: "Апосіопеза навмисно перериває фразу й залишає зміст недомовленим."
-- lemma: риторичне запитання
-  translation: rhetorical question
-  pos: phrase
-  usage: "Риторичне запитання має очевидну відповідь і працює як твердження."
-- lemma: риторичне звертання
-  translation: rhetorical address
-  pos: phrase
-  usage: "Риторичне звертання створює контакт із реальною або уявною аудиторією."
-- lemma: риторичний вигук
-  translation: rhetorical exclamation
-  pos: phrase
-  usage: "Риторичний вигук передає оцінку через окличну інтонацію."
-- lemma: кличний відмінок
-  translation: vocative case
-  pos: phrase
-  usage: "Кличний відмінок потрібний у звертаннях на зразок «громадо» або «Україно»."
-- lemma: адресат
-  translation: addressee
-  pos: noun
-  usage: "Адресат промови може бути реальною аудиторією або уявним співрозмовником."
-- lemma: виразність
-  translation: expressiveness
-  pos: noun
-  usage: "Виразність має підтримувати зміст, а не замінювати аргументи."
-- lemma: експресія
-  translation: expression, emotional force
-  pos: noun
-  usage: "Експресія риторичного запитання залежить від інтонації та контексту."
-- lemma: акцентуація
-  translation: emphasis, accentuation
-  pos: noun
-  usage: "Акцентуація допомагає винести ключове слово в центр уваги."
-- lemma: фокус речення
-  translation: sentence focus
-  pos: phrase
-  usage: "Фокус речення показує, яка інформація є найважливішою."
-- lemma: ритм речення
-  translation: sentence rhythm
-  pos: phrase
-  usage: "Ритм речення змінюється через повтор, довжину частин і паузи."
-- lemma: пауза
-  translation: pause
-  pos: noun
-  usage: "Пауза може підсилити смисл або приховати незавершену думку."
-- lemma: темп мовлення
-  translation: speech tempo
-  pos: phrase
-  usage: "Темп мовлення пришвидшується в асиндетоні й уповільнюється в полісиндетоні."
-- lemma: ораторський стиль
-  translation: oratorical style
-  pos: phrase
-  usage: "Ораторський стиль активно використовує повтори, звертання й градацію."
-- lemma: публіцистичний стиль
-  translation: journalistic style
-  pos: phrase
-  usage: "Публіцистичний стиль дає змогу використовувати виразні фігури, якщо вони спираються на факти."
-- lemma: офіційний стиль
-  translation: official style
-  pos: phrase
-  usage: "Офіційний стиль зазвичай обмежує вигуки, парцеляцію й риторичний тиск."
-- lemma: тавтологія
-  translation: tautology
-  pos: noun
-  usage: "Тавтологія може бути помилкою, якщо повтор нічого не додає."
-- lemma: плеоназм
-  translation: pleonasm
-  pos: noun
-  usage: "Плеоназм дублює уже наявний зміст і часто засмічує речення."
-- lemma: жанрова доречність
-  translation: genre appropriateness
-  pos: phrase
-  usage: "Жанрова доречність визначає, чи не надто емоційна фігура для конкретного тексту."
-- lemma: стилістична функція
-  translation: stylistic function
-  pos: phrase
-  usage: "Стилістична функція пояснює, навіщо автор використав саме цю конструкцію."
-- lemma: маніпуляція
-  translation: manipulation
-  pos: noun
-  usage: "Маніпуляція виникає, коли риторичний прийом замінює докази."
-- lemma: доказова межа
-  translation: evidential limit
-  pos: phrase
-  usage: "Доказова межа показує, де виразність має поступитися фактам."
+- lemma: "риторичне запитання"
+  translation: "rhetorical question"
+  pos: "noun phrase"
+  usage: "Риторичне запитання часто має ствердну функцію."
+- lemma: "риторичне звертання"
+  translation: "rhetorical address"
+  pos: "noun phrase"
+  usage: "Риторичне звертання створює контакт з адресатом."
+- lemma: "риторичний вигук"
+  translation: "rhetorical exclamation"
+  pos: "noun phrase"
+  usage: "Риторичний вигук передає емоційну оцінку."
+- lemma: "анафора"
+  translation: "anaphora"
+  pos: "noun"
+  usage: "Анафора повторює початок кількох конструкцій."
+- lemma: "епіфора"
+  translation: "epiphora"
+  pos: "noun"
+  usage: "Епіфора повторює кінець кількох конструкцій."
+- lemma: "паралелізм"
+  translation: "parallelism"
+  pos: "noun"
+  usage: "Паралелізм упорядковує складну думку."
+- lemma: "градація"
+  translation: "gradation"
+  pos: "noun"
+  usage: "Градація розташовує елементи за зростанням або спаданням сили."
+- lemma: "антитеза"
+  translation: "antithesis"
+  pos: "noun"
+  usage: "Антитеза протиставляє явища на спільній смисловій осі."
+- lemma: "інверсія"
+  translation: "inversion"
+  pos: "noun"
+  usage: "Інверсія змінює порядок слів для акценту."
+- lemma: "хіазм"
+  translation: "chiasmus"
+  pos: "noun"
+  usage: "Хіазм перехрещує порядок елементів."
+- lemma: "еліпсис"
+  translation: "ellipsis"
+  pos: "noun"
+  usage: "Еліпсис пропускає відновлюваний член речення."
+- lemma: "парцеляція"
+  translation: "parceling"
+  pos: "noun"
+  usage: "Парцеляція відокремлює фрагмент як окрему паузу."
+- lemma: "асиндетон"
+  translation: "asyndeton"
+  pos: "noun"
+  usage: "Асиндетон прибирає сполучники для швидкого темпу."
+- lemma: "полісиндетон"
+  translation: "polysyndeton"
+  pos: "noun"
+  usage: "Полісиндетон повторює сполучники."
+- lemma: "апосіопеза"
+  translation: "aposiopesis"
+  pos: "noun"
+  usage: "Апосіопеза створює ефект недомовленості."
+- lemma: "регістрова безпека"
+  translation: "register safety"
+  pos: "noun phrase"
+  usage: "Регістрова безпека допомагає не переносити маніфестний тон у сервісний лист."
