@@ -39,7 +39,7 @@ Cultural Foundation; LH = Local History; UA House = Ukrainian House.
   Russia from 1915 to 1921 and left Galicia for Paris in 1927. SYF records
   teacher-seminary, commercial, and drama-school study in Lviv in 1922-1926.
 - **Paris and travel turn:** IEU ties the decision to travel to Stepan
-  Levynsky. IFU says she left for Paris at age 20 with acting/modeling aims,
+  Levynskyi. IFU says she left for Paris at age 20 with acting/modeling aims,
   then a Morocco trip began her photographer-writer career.
 - **Major books:** IEU lists `Char Marokka` / `Чар Марока` (1932), `Z kraïny
   ryzhu ta opiiu` / `З країни рижу та опію` (1936), `Daleki obriï` /
