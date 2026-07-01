@@ -38,8 +38,8 @@ git rev-parse --show-toplevel
 - `docs/prompts/orchestrators/shared/review-output-schema.md`
 - `docs/prompts/orchestrators/shared/seminar-source-rules.md`
 - `docs/prompts/orchestrators/shared/reading-section-rules.md`
+- `docs/prompts/orchestrators/shared/seminar-track-checklists.md`
 - `docs/l2-uk-en/LIT-WAR-PLAN-GENERATED.md`
-- `docs/l2-uk-en/templates/lit-module-template.md`
 - Target plan: `curriculum/l2-uk-en/plans/lit-war/<slug>.yaml`
 - Existing target source, sidecars, readings, and `site/src/content/docs/lit-war/<slug>.mdx` when present.
 

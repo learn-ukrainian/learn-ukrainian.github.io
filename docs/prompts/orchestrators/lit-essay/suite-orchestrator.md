@@ -38,7 +38,7 @@ git rev-parse --show-toplevel
 - `docs/prompts/orchestrators/shared/review-output-schema.md`
 - `docs/prompts/orchestrators/shared/seminar-source-rules.md`
 - `docs/prompts/orchestrators/shared/reading-section-rules.md`
-- `docs/l2-uk-en/templates/lit-module-template.md`
+- `docs/prompts/orchestrators/shared/seminar-track-checklists.md`
 - Target plan: `curriculum/l2-uk-en/plans/lit-essay/<slug>.yaml`
 - Existing target source, sidecars, readings, and `site/src/content/docs/lit-essay/<slug>.mdx` when present.
 
