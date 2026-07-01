@@ -1,197 +1,106 @@
 - lemma: давньоминулий час
-  translation: pluperfect tense
-  pos: noun
-  gender: m
-  usage: Давньоминулий час показує дію, давнішу за іншу минулу дію.
+  ipa: "[dɐu̯nʲomɪˈnulɪj tʃɑs]"
+  translation: "pluperfect tense"
+  pos: phrase
+  usage: "Давньоминулий час показує дію, давнішу за іншу минулу дію."
 - lemma: давноминулий час
-  translation: pluperfect tense, alternate term
-  pos: noun
-  gender: m
-  usage: Давноминулий час також називають давньоминулим.
+  ipa: "[dɐu̯nomɪˈnulɪj tʃɑs]"
+  translation: "pluperfect tense"
+  pos: phrase
+  usage: "Давноминулий час є іншою назвою цієї складеної форми."
 - lemma: ретроспекція
-  translation: retrospection
+  ipa: "[retrɔsˈpɛktsijɐ]"
+  translation: "retrospection"
   pos: noun
   gender: f
-  usage: Ретроспекція повертає читача до давнішого шару подій.
+  usage: "Ретроспекція відсуває подію в давніший шар пам'яті."
 - lemma: передування
-  translation: precedence, prior occurrence
+  ipa: "[pereduˈwɑnʲːɐ]"
+  translation: "anteriority, preceding"
   pos: noun
   gender: n
-  usage: Передування однієї дії іншій часто позначають давньоминулим часом.
-- lemma: передминулість
-  translation: before-past relation
-  pos: noun
-  gender: f
-  usage: Передминулість важлива для складної оповіді.
+  usage: "Передування однієї минулої дії іншій може вимагати давньоминулого часу."
 - lemma: допоміжне дієслово
-  translation: auxiliary verb
-  pos: noun
-  gender: n
-  usage: Допоміжне дієслово бути має форму був, була, було або були.
+  ipa: "[dopomʲiʒˈne dijeˈslɔwo]"
+  translation: "auxiliary verb"
+  pos: phrase
+  usage: "У давньоминулому часі допоміжне дієслово - бути."
 - lemma: часовий пласт
-  translation: time layer
-  pos: noun
-  gender: m
-  usage: Оповідач відкриває давніший часовий пласт.
+  ipa: "[tʃɐsoˈwɪj plɑst]"
+  translation: "time layer"
+  pos: phrase
+  usage: "Форма читав був створює давніший часовий пласт."
 - lemma: архаїка
-  translation: archaism
+  ipa: "[ɐrˈxɑjikɐ]"
+  translation: "archaic coloring"
   pos: noun
   gender: f
-  usage: Архаїка може створювати стилізований тон.
+  usage: "У деяких контекстах давньоминулий час має відтінок архаїки."
 - lemma: реліквія
-  translation: relic
+  ipa: "[reˈlʲikwijɐ]"
+  translation: "relic"
   pos: noun
   gender: f
-  usage: Форма не є мертвою реліквією, але має вузьке вживання.
+  usage: "Граматична реліквія може залишатися продуктивною в окремих стилях."
 - lemma: оповідь
-  translation: narrative
+  ipa: "[ˈɔpowʲidʲ]"
+  translation: "narrative"
   pos: noun
   gender: f
-  usage: В оповіді давньоминулий час показує давніший епізод.
+  usage: "В оповіді давньоминулий час створює часову глибину."
 - lemma: траплятися
-  translation: to occur
+  ipa: "[trɐˈplʲɑtɪsʲɐ]"
+  translation: "to happen, occur"
   pos: verb
-  aspect: imperfective
-  usage: Давньоминулий час трапляється в художніх текстах.
+  usage: "Форма був читав може траплятися в стилізованому тексті."
 - lemma: згадувати
-  translation: to remember, mention
+  ipa: "[zɦɐˈduwɐtɪ]"
+  translation: "to remember, mention"
   pos: verb
-  aspect: imperfective
-  usage: Оповідач згадував був стару вулицю.
+  usage: "Оповідач згадував був цю вулицю іншою."
 - lemma: передувати
-  translation: to precede
+  ipa: "[pereduˈwɑtɪ]"
+  translation: "to precede"
   pos: verb
-  aspect: imperfective
-  usage: Одна минула дія може передувати іншій.
+  usage: "Одна минула дія може передувати іншій."
 - lemma: відбуватися
-  translation: to happen
+  ipa: "[widbuˈwɑtɪsʲɐ]"
+  translation: "to take place"
   pos: verb
-  aspect: imperfective
-  usage: Подія відбувалася раніше за основну сцену.
+  usage: "Давньоминула дія відбувалася або планувалася раніше."
 - lemma: закарбовуватися
-  translation: to become engraved, be fixed in memory
+  ipa: "[zɐkɐrbɔˈwuwɐtɪsʲɐ]"
+  translation: "to become imprinted"
   pos: verb
-  aspect: imperfective
-  usage: Давній досвід закарбовувався в пам'яті громади.
-- lemma: сповіщати
-  translation: to notify
-  pos: verb
-  aspect: imperfective
-  usage: Форма сповіщає про давніший шар розповіді.
+  usage: "У пам'яті закарбовувалися давніші події."
 - lemma: заставати
-  translation: to find, catch someone in a state
+  ipa: "[zɐstɐˈwɑtɪ]"
+  translation: "to find, catch"
   pos: verb
-  aspect: imperfective
-  usage: Пізніша подія заставала героя посеред наміру.
+  usage: "Нова подія заставала героя після давнішого наміру."
 - lemma: належати
-  translation: to belong
+  ipa: "[nɐlɛˈʒɑtɪ]"
+  translation: "to belong"
   pos: verb
-  aspect: imperfective
-  usage: Форма належить до оповідного стилю.
+  usage: "Ця форма належить до складених часових форм."
+- lemma: перервана дія
+  ipa: "[pererˈwɑnɐ ˈdijɐ]"
+  translation: "interrupted action"
+  pos: phrase
+  usage: "Хотів був сказати виражає перервану дію або намір."
+- lemma: скасований результат
+  ipa: "[skɐsoˈwɑnɪj rezulʲˈtɑt]"
+  translation: "cancelled result"
+  pos: phrase
+  usage: "Поклав був документи, але переніс їх - це скасований результат."
 - lemma: узгодження
-  translation: agreement
+  ipa: "[uzɦoˈdʒɛnʲːɐ]"
+  translation: "agreement"
   pos: noun
   gender: n
-  usage: Узгодження потрібне в обох частинах форми.
-- lemma: підмет
-  translation: subject
-  pos: noun
-  gender: m
-  usage: Допоміжне дієслово узгоджується з підметом.
-- lemma: чоловічий рід
-  translation: masculine gender
-  pos: noun
-  gender: m
-  usage: У чоловічому роді кажемо ходив був.
-- lemma: жіночий рід
-  translation: feminine gender
-  pos: noun
-  gender: m
-  usage: У жіночому роді кажемо ходила була.
-- lemma: середній рід
-  translation: neuter gender
-  pos: noun
-  gender: m
-  usage: У середньому роді кажемо лежало було.
-- lemma: множина
-  translation: plural
-  pos: noun
-  gender: f
-  usage: У множині допоміжна форма буде були.
-- lemma: перервана дія
-  translation: interrupted action
-  pos: noun
-  gender: f
-  usage: Перервана дія часто передається формою хотів був.
-- lemma: скасований результат
-  translation: canceled result
-  pos: noun
-  gender: m
-  usage: Написала була, але стерла показує скасований результат.
-- lemma: нереалізований намір
-  translation: unrealized intention
-  pos: noun
-  gender: m
-  usage: Хотіла була сказати передає нереалізований намір.
-- lemma: хронологія
-  translation: chronology
-  pos: noun
-  gender: f
-  usage: Хронологія подій має бути зрозумілою.
-- lemma: часова ієрархія
-  translation: temporal hierarchy
-  pos: noun
-  gender: f
-  usage: Часова ієрархія показує, яка дія була давнішою.
-- lemma: логіка викладу
-  translation: logic of exposition
-  pos: noun
-  gender: f
-  usage: Логіка викладу допомагає не змішувати форми.
-- lemma: синтаксичний зв'язок
-  translation: syntactic connection
-  pos: noun
-  gender: m
-  usage: Синтаксичний зв'язок між частинами речення показує порядок подій.
-- lemma: оповідна структура
-  translation: narrative structure
-  pos: noun
-  gender: f
-  usage: Оповідна структура має кілька часових пластів.
-- lemma: сполучник
-  translation: conjunction
-  pos: noun
-  gender: m
-  usage: Сполучник до того як часто вказує на передування.
-- lemma: до того як
-  translation: before
-  pos: conjunction
-  usage: До того як зустріч почалася, ми підготували були запитання.
-- lemma: перед тим як
-  translation: before
-  pos: conjunction
-  usage: Перед тим як зал погас, технік перевірив був звук.
-- lemma: поки
-  translation: while, until
-  pos: conjunction
-  usage: Поки ми йшли, план уже змінився був.
-- lemma: стилізація
-  translation: stylization
-  pos: noun
-  gender: f
-  usage: Стилізація може пояснити вживання рідкісної форми.
-- lemma: публіцистичний стиль
-  translation: journalistic style
-  pos: noun
-  gender: m
-  usage: У публіцистичному стилі форма потребує обережності.
-- lemma: художній текст
-  translation: literary text
-  pos: noun
-  gender: m
-  usage: Художній текст часто використовує ретроспекцію.
-- lemma: родинний спогад
-  translation: family memory
-  pos: noun
-  gender: m
-  usage: Родинний спогад може мати кілька часових шарів.
+  usage: "Узгодження потрібне в обох компонентах: читала була."
+- lemma: порядок слів
+  ipa: "[pɔˈrʲadok slʲiu̯]"
+  translation: "word order"
+  pos: phrase
+  usage: "Базовий порядок слів для навчання - читав був."
