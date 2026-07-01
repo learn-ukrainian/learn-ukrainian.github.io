@@ -1,229 +1,165 @@
 - lemma: семантика
+  ipa: "[se.man.ty.ka]"
   translation: semantics
   pos: noun
-  gender: f
-  usage: Семантика відмінка пояснює, яку роль має форма в реченні.
+  usage: "Семантика відмінка пояснює, яку роль форма виконує в реченні."
 - lemma: відмінок
-  translation: grammatical case
+  ipa: "[wid.mi.nok]"
+  translation: case
   pos: noun
-  gender: m
-  usage: Відмінок показує зв'язок слова з іншими словами.
-- lemma: приналежність
-  translation: belonging, possession
-  pos: noun
-  gender: f
-  usage: Родовий може передавати приналежність або зв'язок.
+  usage: "Відмінок показує зв'язки між словами."
 - lemma: партитивність
+  ipa: "[par.ty.tyw.nist]"
   translation: partitivity
   pos: noun
-  gender: f
-  usage: Партитивність видно в прикладі випити чаю.
+  usage: "Партитивність видно у фразі додати води."
+- lemma: приналежність
+  ipa: "[pry.na.lezh.nist]"
+  translation: belonging, possession
+  pos: noun
+  usage: "Родовий може позначати приналежність."
 - lemma: керування
-  translation: government, syntactic governance
+  ipa: "[ke.ru.wan.nia]"
+  translation: government
   pos: noun
-  gender: n
-  usage: Керування прийменника визначає потрібний відмінок.
+  usage: "Прийменникове керування визначає потрібний відмінок."
 - lemma: обставина
-  translation: adverbial modifier, circumstance
+  ipa: "[ob.sta.wy.na]"
+  translation: circumstance
   pos: noun
-  gender: f
-  usage: Обставина може передавати час, місце, причину або спосіб.
+  usage: "Обставина може називати час, місце, причину або спосіб."
 - lemma: варіативність
-  translation: variation
+  ipa: "[wa.ri.a.tyw.nist]"
+  translation: variability
   pos: noun
-  gender: f
-  usage: Варіативність закінчень залежить від значення і стилю.
+  usage: "Варіативність родового видно у формах каменя і каменю."
 - lemma: конструкція
+  ipa: "[kon.struk.tsi.ja]"
   translation: construction
   pos: noun
-  gender: f
-  usage: Прийменникова конструкція може змінити логіку речення.
+  usage: "Конструкція унаслідок затримки керує родовим."
+- lemma: pluralia tantum
+  ipa: "[plu.ra.li.a tan.tum]"
+  translation: plural-only nouns
+  pos: phrase
+  usage: "Гроші, двері й ножиці належать до pluralia tantum."
 - lemma: гроші
+  ipa: "[hro.shi]"
   translation: money
   pos: noun
   gender: pl
-  usage: У слові гроші немає звичайної однини.
+  usage: "У бюджеті бракує грошей."
+- lemma: двері
+  ipa: "[dwe.ri]"
+  translation: door, doors
+  pos: noun
+  gender: pl
+  usage: "Перед дверима стояв охоронець."
 - lemma: ножиці
+  ipa: "[no.zhy.tsi]"
   translation: scissors
   pos: noun
   gender: pl
-  usage: Ножицями ріжуть папір; це орудний множини.
+  usage: "Картон вирізали ножицями."
 - lemma: штани
-  translation: trousers, pants
+  ipa: "[shta.ny]"
+  translation: trousers
   pos: noun
   gender: pl
-  usage: Нові штани мають множинну парадигму.
+  usage: "Ремонт штанів перенесли на п'ятницю."
 - lemma: окуляри
+  ipa: "[o.ku.lia.ry]"
   translation: glasses
   pos: noun
   gender: pl
-  usage: Без окулярів їй важко читати дрібний текст.
-- lemma: двері
-  translation: doors
-  pos: noun
-  gender: pl
-  usage: На дверях висить оголошення для учасників.
+  usage: "Без окулярів він не прочитав текст."
 - lemma: парадигма
+  ipa: "[pa.ra.dyh.ma]"
   translation: paradigm
   pos: noun
-  gender: f
-  usage: Парадигма слова гроші містить тільки множинні форми.
-- lemma: притаманний
-  translation: inherent, characteristic
-  pos: adj
-  usage: Давальний переживача притаманний багатьом безособовим реченням.
-- lemma: властивий
-  translation: typical of, inherent
-  pos: adj
-  usage: Такий відтінок властивий офіційному стилю.
-- lemma: завдяки
-  translation: thanks to
-  pos: prep
-  usage: Завдяки підтримці громади проєкт завершили вчасно.
-- lemma: внаслідок
+  usage: "Парадигма слова двері має тільки множинні форми."
+- lemma: родовий відсутності
+  ipa: "[ro.do.vyj wid.sut.nos.ti]"
+  translation: genitive of absence
+  pos: phrase
+  usage: "Родовий відсутності видно у фразі немає доказів."
+- lemma: давальний переживача
+  ipa: "[da.wal.nyj pe.re.zhy.wa.cha]"
+  translation: dative experiencer
+  pos: phrase
+  usage: "У реченні мені сумно слово мені є давальним переживача."
+- lemma: орудний способу
+  ipa: "[o.rud.nyj spo.so.bu]"
+  translation: instrumental of manner
+  pos: phrase
+  usage: "Перевірити методом - приклад орудного способу."
+- lemma: просторове відношення
+  ipa: "[pro.sto.ro.we wid.no.shen.nia]"
+  translation: spatial relation
+  pos: phrase
+  usage: "Просторове відношення може виражатися прийменником між."
+- lemma: часова тривалість
+  ipa: "[cha.so.wa try.wa.list]"
+  translation: temporal duration
+  pos: phrase
+  usage: "Протягом тижня називає часову тривалість."
+- lemma: причинова конструкція
+  ipa: "[pry.chy.no.wa kon.struk.tsi.ja]"
+  translation: causal construction
+  pos: phrase
+  usage: "Унаслідок затримки - причинова конструкція."
+- lemma: унаслідок
+  ipa: "[u.na.slid.ok]"
   translation: as a result of
   pos: prep
-  usage: Внаслідок затримки засідання перенесли.
-- lemma: опанувати
-  translation: to master
-  pos: verb
-  aspect: perfective
-  usage: Учні мають опанувати складні випадки керування.
-- lemma: запобігати
-  translation: to prevent
-  pos: verb
-  aspect: imperfective
-  usage: Точне керування допомагає запобігати калькам.
-- lemma: переживач
-  translation: experiencer
-  pos: noun
-  gender: m
-  usage: Приклад мені сумно показує давальний переживача.
-- lemma: адресат
-  translation: addressee, recipient
-  pos: noun
-  gender: m
-  usage: У конструкції лист директорові форма директорові є адресатом.
-- lemma: знаряддя
-  translation: instrument, tool
-  pos: noun
-  gender: n
-  usage: Ручка є знаряддям у реченні писати ручкою.
-- lemma: засіб
-  translation: means, method
-  pos: noun
-  gender: m
-  usage: Електронна пошта може бути засобом передавання.
-- lemma: супровід
-  translation: accompaniment
-  pos: noun
-  gender: m
-  usage: Прийти з другом - це орудний супроводу.
-- lemma: кличний
-  translation: vocative case
-  pos: noun
-  gender: m
-  usage: Кличний потрібний у звертанні пане Михайле.
-- lemma: місцевий
-  translation: locative case
-  pos: noun
-  gender: m
-  usage: Місцевий часто залежить від прийменника у або на.
-- lemma: орудний
-  translation: instrumental case
-  pos: noun
-  gender: m
-  usage: Орудний може називати засіб, роль або шлях.
-- lemma: давальний
-  translation: dative case
-  pos: noun
-  gender: m
-  usage: Давальний називає адресата або переживача.
-- lemma: родовий
-  translation: genitive case
-  pos: noun
-  gender: m
-  usage: Родовий може передавати частину, відсутність або причину.
-- lemma: прийменниковий
-  translation: prepositional
-  pos: adj
-  usage: Прийменниковий зв'язок визначає потрібний відмінок.
-- lemma: закінчення
-  translation: ending
-  pos: noun
-  gender: n
-  usage: Закінчення -а або -у залежить від значення слова.
-- lemma: абстрактний
-  translation: abstract
-  pos: adj
-  usage: Абстрактний іменник часто має форму родового на -у.
-- lemma: конкретний
-  translation: concrete, specific
-  pos: adj
-  usage: Конкретний предмет часто має форму родового на -а.
-- lemma: термін
-  translation: term, time limit
-  pos: noun
-  gender: m
-  usage: Значення терміна і продовження терміну мають різні форми.
-- lemma: акт
-  translation: act, document
-  pos: noun
-  gender: m
-  usage: Текст акта відрізняється від наслідків акту.
-- lemma: листопад
-  translation: November, leaf fall
-  pos: noun
-  gender: m
-  usage: До першого листопада, але поетика осіннього листопаду.
-- lemma: калька
-  translation: calque
-  pos: noun
-  gender: f
-  usage: Конструкція по адресі є небажаною калькою.
-- lemma: відповідно до
-  translation: according to, in accordance with
-  pos: phrase
-  usage: Відповідно до рішення комісії графік змінили.
-- lemma: згідно з
-  translation: according to
-  pos: phrase
-  usage: Згідно з наказом заяву треба подати до п'ятниці.
+  usage: "Унаслідок затримки графік змінили."
+- lemma: внаслідок
+  ipa: "[wna.slid.ok]"
+  translation: as a result of
+  pos: prep
+  usage: "Внаслідок помилки дані перевірили повторно."
+- lemma: завдяки
+  ipa: "[zaw.dia.ky]"
+  translation: thanks to
+  pos: prep
+  usage: "Завдяки підтримці проєкт завершили."
 - lemma: всупереч
+  ipa: "[wsu.pe.rech]"
   translation: contrary to
   pos: prep
-  usage: Всупереч прогнозам зустріч відбулася.
-- lemma: наперекір
-  translation: in defiance of
-  pos: prep
-  usage: Наперекір труднощам команда завершила роботу.
-- lemma: назустріч
-  translation: toward, to meet halfway
-  pos: prep
-  usage: Адміністрація пішла назустріч студентам.
+  usage: "Всупереч прогнозам команда встигла."
 - lemma: попри
+  ipa: "[po.pry]"
   translation: despite
   pos: prep
-  usage: Попри ризики проєкт продовжили.
-- lemma: через
-  translation: because of, through
+  usage: "Попри дощ учасники прийшли."
+- lemma: відповідно до
+  ipa: "[wid.po.wid.no do]"
+  translation: according to
+  pos: phrase
+  usage: "Відповідно до регламенту рішення оприлюднили."
+- lemma: з метою
+  ipa: "[z me.to.ju]"
+  translation: with the aim of
+  pos: phrase
+  usage: "З метою перевірки команда зібрала дані."
+- lemma: протягом
+  ipa: "[pro.tia.hom]"
+  translation: throughout, during
   pos: prep
-  usage: Через хворобу зустріч перенесли.
-- lemma: за адресою
-  translation: at the address
-  pos: phrase
-  usage: Вона мешкає за адресою, зазначеною в заяві.
-- lemma: pluralia tantum
-  translation: plural-only nouns
-  pos: phrase
-  usage: Гроші, двері й ножиці належать до pluralia tantum.
-- lemma: фемінітив
-  translation: feminine professional or role noun
-  pos: noun
-  gender: m
-  usage: Фемінітив редакторка природний у реченні вона стала редакторкою.
+  usage: "Протягом тижня тривала перевірка."
+- lemma: упродовж
+  ipa: "[u.pro.dowzh]"
+  translation: throughout, during
+  pos: prep
+  usage: "Упродовж місяця команда збирала приклади."
 - lemma: регістр
+  ipa: "[re.histr]"
   translation: register
   pos: noun
-  gender: m
-  usage: Регістр визначає, чи доречна складна іменникова конструкція.
+  usage: "Регістр визначає, чи краще написати через затримку або унаслідок затримки."
+- lemma: прозорість
+  ipa: "[pro.zo.rist]"
+  translation: transparency
+  pos: noun
+  usage: "Прозорість речення зростає, коли причина названа дієсловом."

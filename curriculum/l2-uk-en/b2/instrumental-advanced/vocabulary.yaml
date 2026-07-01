@@ -1,132 +1,175 @@
-- lemma: орудний
+- lemma: орудний відмінок
+  ipa: "[o.rud.nyj wid.mi.nok]"
   translation: instrumental case
   pos: noun
-  usage: Орудний відмінок відповідає на питання ким? чим?
+  usage: "Орудний відмінок може називати знаряддя, засіб, супровід, простір або роль."
 - lemma: знаряддя
+  ipa: "[zna.riad.dia]"
   translation: instrument, tool
   pos: noun
-  usage: У фразі писати ручкою ручка є знаряддям дії.
+  usage: "У реченні писати олівцем слово олівцем називає знаряддя."
 - lemma: засіб
+  ipa: "[za.sib]"
   translation: means, method
   pos: noun
-  usage: Електронна пошта може бути засобом передавання документів.
+  usage: "Електронна пошта може бути засобом передавання документа."
+- lemma: спосіб дії
+  ipa: "[spo.sib di.ji]"
+  translation: manner of action
+  pos: phrase
+  usage: "Фраза з обережністю описує спосіб дії."
 - lemma: порівняння
+  ipa: "[po.riw.nian.nia]"
   translation: comparison
   pos: noun
-  usage: Орудний порівняння видно у вислові летіти стрілою.
+  usage: "Орудний порівняння видно у вислові летіти стрілою."
 - lemma: супровід
+  ipa: "[su.pro.wid]"
   translation: accompaniment
   pos: noun
-  usage: Прийменник з може називати супровід у фразі прийти з другом.
+  usage: "Орудний супроводу з'являється у фразі прийти з другом."
 - lemma: допустовість
+  ipa: "[do.pus.to.wist]"
   translation: concession
   pos: noun
-  usage: Допустовість показує дію всупереч перешкоді.
+  usage: "Допустовість показує дію всупереч перешкоді."
 - lemma: присудок
+  ipa: "[pry.su.dok]"
   translation: predicate
   pos: noun
-  usage: У складеному присудку можна сказати стати лікарем.
-- lemma: покликання
-  translation: vocation, calling
-  pos: noun
-  usage: Для неї медицина стала покликанням.
-- lemma: натхнення
-  translation: inspiration
-  pos: noun
-  usage: Команда працювала з натхненням.
-- lemma: ентузіазм
-  translation: enthusiasm
-  pos: noun
-  usage: Учні взялися за проєкт з ентузіазмом.
-- lemma: обмеження
-  translation: limitation, restriction
-  pos: noun
-  usage: Є обмеження на орудний діяча в конструкціях на -но/-то.
-- lemma: метод
-  translation: method
-  pos: noun
-  usage: Дослідники перевірили матеріал новим методом.
-- lemma: послідовність
-  translation: sequence
-  pos: noun
-  usage: За вступом іде основна частина.
-- lemma: формула
-  translation: formula
-  pos: noun
-  usage: Офіційна формула затверджено наказом належить до ділового стилю.
-- lemma: затвердити
-  translation: approve, ratify
-  pos: verb
-  aspect: perfective
-  usage: Директор затвердив рішення наказом.
-- lemma: прилад
-  translation: device, instrument
-  pos: noun
-  usage: Температуру виміряли новим приладом.
-- lemma: ножиці
-  translation: scissors
-  pos: noun
-  usage: Папір треба різати ножицями.
-- lemma: стіна
-  translation: wall
-  pos: noun
-  usage: У вислові стояти стіною орудний створює образ єдності.
+  usage: "У складеному присудку можна сказати стала лікаркою."
+- lemma: складений присудок
+  ipa: "[skla.de.nyj pry.su.dok]"
+  translation: compound predicate
+  pos: phrase
+  usage: "Складений присудок поєднує дієслово-зв'язку й іменну частину."
 - lemma: діяч
+  ipa: "[di.jach]"
   translation: agent, doer
   pos: noun
-  usage: Діяча в -но/-то конструкції краще зробити підметом.
-- lemma: наказ
-  translation: order, decree
-  pos: noun
-  usage: Рішення затверджено наказом директора.
+  usage: "Якщо діяч важливий, краще використати активне речення."
 - lemma: підстава
+  ipa: "[pid.sta.wa]"
   translation: basis, grounds
   pos: noun
-  usage: Наказом може називати офіційну підставу рішення.
-- lemma: керувати
-  translation: to manage, govern
-  pos: verb
-  aspect: imperfective
-  usage: "Дієслово керувати вимагає орудного: керувати проєктом."
-- lemma: користуватися
-  translation: to use
-  pos: verb
-  aspect: imperfective
-  usage: Студенти користуються словником під час читання.
-- lemma: пишатися
-  translation: to be proud of
-  pos: verb
-  aspect: imperfective
-  usage: Ми пишаємося своєю країною.
-- lemma: цікавитися
-  translation: to be interested in
-  pos: verb
-  aspect: imperfective
-  usage: Вона цікавиться історією української мови.
-- lemma: захоплюватися
-  translation: to admire, be fascinated by
-  pos: verb
-  aspect: imperfective
-  usage: Він захоплюється сучасною архітектурою.
-- lemma: виявитися
-  translation: to turn out to be
+  usage: "Наказ може бути підставою для зміни розкладу."
+- lemma: затвердити
+  ipa: "[za.twer.dy.ty]"
+  translation: to approve, confirm
   pos: verb
   aspect: perfective
-  usage: Просте завдання виявилося складною перевіркою.
+  usage: "Порядок затвердили наказом директора."
+- lemma: виявитися
+  ipa: "[wy.ja.wy.ty.sia]"
+  translation: to turn out
+  pos: verb
+  aspect: perfective
+  usage: "Проста вправа виявилася складним тестом."
 - lemma: лишитися
+  ipa: "[ly.shy.ty.sia]"
   translation: to remain
   pos: verb
   aspect: perfective
-  usage: Після дискусії вона лишилася наставницею групи.
+  usage: "Після проєкту вона лишилася наставницею групи."
+- lemma: здаватися
+  ipa: "[zda.wa.ty.sia]"
+  translation: to seem
+  pos: verb
+  aspect: imperfective
+  usage: "Перед дедлайном текст здавався хаосом."
+- lemma: натхнення
+  ipa: "[nat.khnen.nia]"
+  translation: inspiration
+  pos: noun
+  usage: "Команда працювала з натхненням."
+- lemma: ентузіазм
+  ipa: "[en.tu.zi.azm]"
+  translation: enthusiasm
+  pos: noun
+  usage: "Волонтери взялися за завдання з ентузіазмом."
+- lemma: обережність
+  ipa: "[o.be.rezh.nist]"
+  translation: caution
+  pos: noun
+  usage: "З обережністю формулюйте різкі зауваження."
+- lemma: покликання
+  ipa: "[po.kly.kan.nia]"
+  translation: vocation, calling
+  pos: noun
+  usage: "Для неї медицина стала покликанням."
+- lemma: метод
+  ipa: "[me.tod]"
+  translation: method
+  pos: noun
+  usage: "Дослідники перевірили матеріал новим методом."
+- lemma: канал
+  ipa: "[ka.nal]"
+  translation: channel
+  pos: noun
+  usage: "Електронна пошта є каналом передавання повідомлення."
+- lemma: електронною поштою
+  ipa: "[e.lek.tron.no.ju posh.to.ju]"
+  translation: by email
+  pos: phrase
+  usage: "Заявку надіслали електронною поштою."
+- lemma: карткою
+  ipa: "[kart.ko.ju]"
+  translation: by card
+  pos: noun
+  usage: "Послугу оплатили карткою."
+- lemma: ножицями
+  ipa: "[no.zhy.tsia.my]"
+  translation: with scissors
+  pos: noun
+  gender: pl
+  usage: "Картон краще різати ножицями."
+- lemma: між
+  ipa: "[mizh]"
+  translation: between
+  pos: prep
+  usage: "Між корпусами поставили інформаційний стенд."
+- lemma: над
+  ipa: "[nad]"
+  translation: above, over
+  pos: prep
+  usage: "Команда працює над текстом."
+- lemma: під
+  ipa: "[pid]"
+  translation: under
+  pos: prep
+  usage: "Під мостом відкрили тимчасовий перехід."
 - lemma: перед
+  ipa: "[pe.red]"
   translation: in front of, before
   pos: prep
-  usage: Перед школою зібралися учні.
+  usage: "Перед засіданням перевірте документи."
 - lemma: поза
+  ipa: "[po.za]"
   translation: outside, beyond
   pos: prep
-  usage: Поза законом такі дії неприпустимі.
+  usage: "Поза законом така дія неприпустима."
 - lemma: поряд з
+  ipa: "[po.riad z]"
   translation: next to, alongside
   pos: phrase
-  usage: Книгарня розташована поряд з аптекою.
+  usage: "Книгарня розташована поряд з аптекою."
+- lemma: за столом
+  ipa: "[za sto.lom]"
+  translation: at the table
+  pos: phrase
+  usage: "За столом сиділи учасники обговорення."
+- lemma: між нами кажучи
+  ipa: "[mizh na.my ka.zhu.chy]"
+  translation: between us, frankly
+  pos: phrase
+  usage: "Між нами кажучи, цей текст треба скоротити."
+- lemma: стіною
+  ipa: "[sti.no.ju]"
+  translation: like a wall
+  pos: noun
+  usage: "Захисники стояли стіною перед входом."
+- lemma: стрілою
+  ipa: "[stri.lo.ju]"
+  translation: like an arrow
+  pos: noun
+  usage: "Потяг летів стрілою крізь поле."

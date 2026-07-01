@@ -1,124 +1,165 @@
 - lemma: займенник
+  ipa: "[zaj.men.nyk]"
   translation: pronoun
   pos: noun
-  usage: Займенник указує на особу, предмет, ознаку або кількість, не називаючи їх прямо.
-- lemma: зворотний
-  translation: reflexive
-  pos: adj
-  usage: Зворотний займенник себе повертає дію до того самого учасника.
+  usage: "Займенник може показувати референта, повноту або контраст."
+- lemma: зворотний займенник
+  ipa: "[zwo.rot.nyj zaj.men.nyk]"
+  translation: reflexive pronoun
+  pos: phrase
+  usage: "Себе є зворотним займенником."
 - lemma: себе
-  translation: oneself, myself, yourself
+  ipa: "[se.be]"
+  translation: oneself
   pos: pron
-  usage: Вона побачила себе в дзеркалі.
+  usage: "Вона поважає себе."
 - lemma: собі
+  ipa: "[so.bi]"
   translation: to oneself, in oneself
   pos: pron
-  usage: Я поставив собі реалістичну мету.
+  usage: "Дайте собі час."
 - lemma: собою
+  ipa: "[so.bo.ju]"
   translation: by oneself, with oneself
   pos: pron
-  usage: Після складної роботи вони пишалися собою.
+  usage: "Він пишається собою."
+- lemma: референт
+  ipa: "[re.fe.rent]"
+  translation: referent
+  pos: noun
+  usage: "Референт займенника має бути зрозумілим з контексту."
 - lemma: постфікс
+  ipa: "[post.fiks]"
   translation: postfix
   pos: noun
-  usage: Постфікс -ся є частиною дієслівної форми.
+  usage: "У дієслові вмиватися -ся є постфіксом."
+- lemma: дієслово з -ся
+  ipa: "[di.je.slo.wo z sia]"
+  translation: verb with -ся
+  pos: phrase
+  usage: "Дієслово з -ся не завжди можна замінити на себе."
 - lemma: взаємний
-  translation: mutual, reciprocal
+  ipa: "[wza.jem.nyj]"
+  translation: reciprocal, mutual
   pos: adj
-  usage: Взаємна дія спрямована від кожного учасника до іншого.
+  usage: "Взаємний зв'язок видно у фразі один одного."
 - lemma: один одного
-  translation: one another, each other
-  pos: pron
-  usage: Колеги поважають один одного.
+  ipa: "[o.dyn od.no.ho]"
+  translation: each other
+  pos: phrase
+  usage: "Студенти підтримують один одного."
 - lemma: один одному
-  translation: to one another
-  pos: pron
-  usage: Друзі допомагають один одному.
+  ipa: "[o.dyn od.no.mu]"
+  translation: to each other
+  pos: phrase
+  usage: "Колеги допомагали один одному."
 - lemma: один з одним
-  translation: with one another
-  pos: pron
-  usage: Учасники говорили один з одним після засідання.
+  ipa: "[o.dyn z od.nym]"
+  translation: with each other
+  pos: phrase
+  usage: "Учасники радилися один з одним."
 - lemma: одна одну
-  translation: one another (feminine accusative)
-  pos: pron
-  usage: Сестри підтримують одна одну.
-- lemma: означальний
-  translation: determinative, attributive
-  pos: adj
-  usage: Означальні займенники уточнюють повноту, тотожність або індивідуальність.
+  ipa: "[od.na od.nu]"
+  translation: each other, feminine accusative
+  pos: phrase
+  usage: "Подруги підтримали одна одну."
+- lemma: одна одній
+  ipa: "[od.na od.nij]"
+  translation: to each other, feminine dative
+  pos: phrase
+  usage: "Редакторки допомагали одна одній."
 - lemma: сам
-  translation: self, alone, by oneself
+  ipa: "[sam]"
+  translation: self, personally, by oneself
   pos: pron
-  usage: Я сам перевірю цей абзац.
-- lemma: сама
-  translation: herself, by herself
-  pos: pron
-  usage: Вона сама написала заяву.
-- lemma: саме
-  translation: exactly, precisely
-  pos: part
-  usage: Саме цей приклад показує різницю.
+  usage: "Я сам підготую звіт."
 - lemma: самий
-  translation: same in fixed forms; not superlative
+  ipa: "[sa.myj]"
+  translation: same in set expressions
   pos: pron
-  usage: У конструкції той самий займенник самий передає тотожність.
+  usage: "Самий доречний у моделі той самий, а не в формі самий кращий."
 - lemma: той самий
+  ipa: "[toj sa.myj]"
   translation: the same
   pos: phrase
-  usage: Ми повернулися до того самого питання.
+  usage: "Ми повернулися до того самого питання."
 - lemma: весь
-  translation: all, whole
+  ipa: "[wes]"
+  translation: whole, all
   pos: pron
-  usage: Увесь день група працювала над текстом.
+  usage: "Весь текст треба перечитати."
 - lemma: усі
-  translation: everyone, all
+  ipa: "[u.si]"
+  translation: all
   pos: pron
-  usage: Усі учасники погодили план.
+  usage: "Усі учасники отримали лист."
 - lemma: кожний
+  ipa: "[kozh.nyj]"
   translation: each, every
   pos: pron
-  usage: Кожний учасник відповідає за свою частину.
+  usage: "Кожний учасник має подати заяву."
 - lemma: кожен
-  translation: everyone, each
+  ipa: "[ko.zhen]"
+  translation: each, every
   pos: pron
-  usage: Кожен має право висловитися.
+  usage: "Кожен розділ має приклад."
 - lemma: всякий
-  translation: every kind of, any sort of
+  ipa: "[wsia.kyj]"
+  translation: any, every kind of
   pos: pron
-  usage: Всякий аргумент треба перевірити перед публікацією.
+  usage: "Всякий поспіх шкодить редактурі."
 - lemma: будь-який
-  translation: any, whichever
+  ipa: "[bud ja.kyj]"
+  translation: any
   pos: pron
-  usage: Можна обрати будь-який зручний день.
+  usage: "У формальному стилі будь-який часто нейтральніше за всякий."
 - lemma: інший
-  translation: other, another, different
+  ipa: "[in.shyj]"
+  translation: other, different
   pos: pron
-  usage: Після обговорення група обрала інший час зустрічі.
-- lemma: другий
-  translation: second
-  pos: num
-  usage: Другий день семінару починається о десятій.
-- lemma: решта
-  translation: the rest, remainder
-  pos: noun
-  usage: Двоє підготували презентацію, а решта зібрала джерела.
+  usage: "Інший автор запропонував інший підхід."
 - lemma: тотожність
+  ipa: "[to.tozh.nist]"
   translation: identity, sameness
   pos: noun
-  usage: Той самий показує тотожність предмета або теми.
-- lemma: відмінність
-  translation: difference, distinction
+  usage: "Тотожність передає модель той самий."
+- lemma: повнота
+  ipa: "[pow.no.ta]"
+  translation: completeness
   pos: noun
-  usage: Інший підкреслює відмінність від попереднього варіанта.
+  usage: "Весь називає повноту цілого."
+- lemma: індивідуальний розподіл
+  ipa: "[in.dy.wi.du.al.nyj roz.po.dil]"
+  translation: individual distribution
+  pos: phrase
+  usage: "Кожний створює індивідуальний розподіл обов'язку."
+- lemma: контраст
+  ipa: "[kon.trast]"
+  translation: contrast
+  pos: noun
+  usage: "Інший вводить контраст між варіантами."
+- lemma: самостійність
+  ipa: "[sa.mo.stij.nist]"
+  translation: independence
+  pos: noun
+  usage: "Сам може підкреслювати самостійність дії."
+- lemma: самоконтроль
+  ipa: "[sa.mo.kon.trol]"
+  translation: self-control
+  pos: noun
+  usage: "Тримати себе в руках означає зберігати самоконтроль."
+- lemma: взаємоповага
+  ipa: "[wza.je.mo.po.wa.ha]"
+  translation: mutual respect
+  pos: noun
+  usage: "Правила взаємоповаги лишилися тими самими."
 - lemma: відповідальність
+  ipa: "[wid.po.wi.dal.nist]"
   translation: responsibility
   pos: noun
-  usage: Команда взяла відповідальність на себе.
-- lemma: самостійно
-  translation: independently
-  pos: adv
-  usage: Вона самостійно перевірила весь документ.
-- lemma: взаєморозуміння
-  translation: mutual understanding
-  pos: noun
-  usage: Взаєморозуміння зростає, коли учасники слухають один одного.
+  usage: "Взяти на себе відповідальність означає прийняти обов'язок."
+- lemma: неперевірений
+  ipa: "[ne.pe.re.wi.re.nyj]"
+  translation: unverified
+  pos: adj
+  usage: "Неперевірені припущення краще за розмовне всякі припущення."
