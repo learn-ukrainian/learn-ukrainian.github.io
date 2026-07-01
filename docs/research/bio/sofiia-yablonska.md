@@ -15,11 +15,9 @@ Cultural Foundation; LH = Local History; UA House = Ukrainian House.
 
 - [x] All 10 sections completed
 - [x] At least 3 Tier 1/Tier 2 institutional sources cited
-- [x] Pressure mechanism framed as displacement, statelessness, gendered
-  marginalization, wartime/Soviet border rupture, and archive recovery; no
-  invented NKVD/KGB case
-- [x] Primary-source text, photo, film, and archive anchors identified without
-  overquoting
+- [x] Pressure mechanism framed displacement, statelessness, gendered mobility,
+  wartime/Soviet border rupture, and archive recovery; no invented NKVD/KGB case
+- [x] At least 2 primary-source Ukrainian text anchors supplied
 - [x] Cross-track links verified `test -e` on 2026-07-01 where marked existing
 - [x] Naming-canonical policy applied
 - [x] Image-rights policy applied
@@ -33,173 +31,145 @@ Cultural Foundation; LH = Local History; UA House = Ukrainian House.
 - **Project English canonical:** Sofiia Yablonska.
 - **Name variants / aliases:** Sofia Yablonska; Sophie Jablonska-Oudin;
   Jablonska-Oudin, Sophie; Yablonska, Sofiia; Яблонська-Уден in family /
-  French-marriage contexts. Use `Sofiia Yablonska` for project slugs and
-  English learner surfaces unless a source title requires another spelling.
-- **Born / died:** IEU gives 15 May 1907, Hermaniv, Lviv county, Galicia, and
-  4 February 1971 on Île de Noirmoutier, France. IFU gives 1907-1971 and
-  Hermaniv, now Tarasivka. SYF chronology also gives 15 May 1907 and death in
-  a car accident on 4 February 1971.
-- **Professions:** IEU headline gives writer and architect. IFU describes her
-  as a Franco-Ukrainian artist, writer, journalist, photographer, filmmaker,
-  and architect. SYF foregrounds writer, journalist, cinematographer,
-  photographer, travel author.
-- **Early displacement:** IEU says from 1915 to 1921 she lived with her
-  Russophile parents in Russia, then left Galicia for Paris in 1927. SYF
-  chronology places her family roots around Hermaniv / Yalynkuvate and records
-  Lviv commercial and drama studies in 1922-1926.
-- **Paris and travel turn:** IEU ties the travel decision to Paris and Stepan
-  Levynsky. IFU says she left for Paris at age 20 with acting/modeling aims and
-  then began the Morocco trip that opened her photographer-writer career.
+  French-marriage contexts.
+- **Born / died:** IEU gives 15 May 1907, Hermaniv, Lviv county, Galicia; 4
+  February 1971, Île de Noirmoutier, France. IFU gives 1907-1971. SYF gives
+  15 May 1907 and records Hermaniv, now Tarasivka, near Lviv.
+- **Family / education:** IEU says she lived with her Russophile parents in
+  Russia from 1915 to 1921 and left Galicia for Paris in 1927. SYF records
+  teacher-seminary, commercial, and drama-school study in Lviv in 1922-1926.
+- **Paris and travel turn:** IEU ties the decision to travel to Stepan
+  Levynsky. IFU says she left for Paris at age 20 with acting/modeling aims,
+  then a Morocco trip began her photographer-writer career.
 - **Major books:** IEU lists `Char Marokka` / `Чар Марока` (1932), `Z kraïny
-  ryzhu ta opiiu` / `З країни рижу та опію` (1936), and `Daleki obriï` /
-  `Далекі обрії` (2 vols, 1939), plus posthumous works `Dvi vahy--dvi miry`
-  (1972) and `Knyha pro bat'ka: Z moho dytynstva` (1977). UCF and Rodovid
-  confirm the Teura project includes a photo album and art books of the three
-  travelogues.
-- **Family / late life:** IEU says she returned with her French husband and
-  three sons to France in 1950, lived in Paris and on Noirmoutier, and designed
-  / supervised villas. SYF chronology says the Oudin family returned to Europe,
-  settled in Paris, and later moved to Noirmoutier, where she practiced
-  architecture and organized writing with Marta Kalytovska's help.
-- **Modern archive recovery:** SYF states it preserves and organizes a private
-  archive of photographs, manuscripts, films, and correspondence, with Natalie
-  Yablonska Oudin representing the Oudin family as right holders and
-  descendants. UCF frames the 2018 Teura project as beginning a larger archive
-  and exhibition effort.
+  ryzhu ta opiiu` / `З країни рижу та опію` (1936), `Daleki obriï` /
+  `Далекі обрії` (2 vols, 1939), plus posthumous `Dvi vahy--dvi miry` (1972)
+  and `Knyha pro bat'ka: Z moho dytynstva` (1977).
+- **Late life:** IEU says she returned with her French husband and three sons
+  to France in 1950, lived in Paris and on Noirmoutier, and designed /
+  supervised villas. IFU gives a 1946 return-to-France summary; treat the
+  date difference as source-specific until a specialist biography harmonizes
+  it.
+- **Modern archive recovery:** SYF preserves and organizes photographs,
+  manuscripts, films, and correspondence; it identifies Natalie Yablonska
+  Oudin and the Oudin family as rights holders / descendants. UCF records the
+  2018 Teura project as a publication and archive-recovery step.
 
 ## 2. Oppression / pressure mechanism
 
 - **Load-bearing pressure frame:** Yablonska is not a security-service
-  biography. Do not invent an NKVD, MGB, or KGB case. Her BIO fit is
-  stateless Ukrainian modernity, gendered mobility, exile after border rupture,
-  colonial-world observation from a Ukrainian subject position, and late archive
-  recovery.
-- **War and displacement:** IEU's 1915-1921 Russia note and SYF's childhood /
-  family chronology give a First World War displacement frame. The module should
-  not flatten her father or family politics into a simple betrayal story; use
-  "Russophile" only as source-critical context where needed.
-- **Soviet border rupture:** Culture.pl says she visited Galicia in 1939 and
-  left before the Soviet occupation made return impossible in practice; it also
-  reports her father's suicide after news of the occupation. Treat this as a
-  sensitive secondary-source point, not as melodrama or a secret-police case.
-- **Gendered modern mobility:** Sources repeatedly frame her as a woman who
-  crossed professional and geographic boundaries: acting, film work,
+  biography. Do not invent an NKVD, MGB, or KGB file. Her BIO fit is stateless
+  Ukrainian modernity, gendered mobility, exile after border rupture,
+  colonial-world observation from a Ukrainian subject position, and late
+  archive recovery.
+- **War displacement:** IEU's 1915-1921 Russia note and SYF's childhood
+  chronology support a First World War displacement frame. Use IEU's
+  "Russophile parents" wording only as source-critical context; do not turn
+  family politics into inherited guilt or melodrama.
+- **Soviet border rupture:** Culture.pl reports that she visited Galicia in
+  1939 and left before Soviet occupation made return practically impossible;
+  it also reports her father's suicide after news of the occupation. Treat
+  this as a sensitive secondary-source point, not a secret-police narrative.
+- **Gendered modern mobility:** Sources repeatedly frame a woman crossing
+  professional and geographic boundaries: acting, modeling, film work,
   journalism, photography, travel writing, and architecture. The pressure is
-  also narrative erasure: her books and archive returned to public attention
-  through re-editions, exhibitions, and family/foundation work.
+  also reputational erasure: books and archives become public memory again
+  through re-editions, exhibitions, and family/foundation stewardship.
 - **Colonial-world ethics:** IFU calls her an anti-colonialist; SYF argues her
   Ukrainian stateless/subjugated position made her attentive to national and
-  social inequality. Future lesson should show this through close reading and
-  visual analysis rather than sloganize it.
-- **What survived:** Travelogues, photographs, films, letters, French
-  translations, family/foundation archive, Teura publications, and exhibitions.
-  This survival story is about private archive stewardship becoming public
-  Ukrainian cultural memory.
+  social inequality. Future lessons should prove this through passages and
+  image choices, not slogans.
 
 ## 3. Major works / contributions
 
-- **Ukrainian travel writing:** IEU and UCF identify the three core
-  travelogues: `Чар Марока` (1932), `З країни рижу та опію` (1936), `Далекі
-  обрії` (1939). These make Yablonska a key modern Ukrainian travel-prose and
-  reportage figure, not simply a colorful traveler.
-- **Photo / film documentation:** IFU and SYF foreground camera work. SYF
-  says photographs and film chronicles preserve daily life, architecture,
-  customs, travel scenes, and family material from Asia, Polynesia, China, and
-  Vietnam. Use her camera as method, not decoration.
-- **Galician women's press:** IEU names `Жіноча доля` and `Нова хата`; SYF also
-  notes her relations with editors and Ukrainian women's-movement networks,
-  including Olena Kysilevska. This anchors her in Galician public culture.
-- **Paris / Ukrainian emigration networks:** SYF correspondence section lists
-  contacts including Stepan Levynskyi, Volodymyr and Rozalia Vynnychenko,
-  Mykhailo Rudnytskyi, French artists, and Ukrainian emigration circles. This
-  is strong cross-track material for letters, publishing, and exile.
+- **Ukrainian travel writing:** IEU and UCF identify the three core travelogues
+  as `Чар Марока` (1932), `З країни рижу та опію` (1936), and `Далекі обрії`
+  (1939). This makes Yablonska a major modern Ukrainian travel-prose and
+  reportage figure, not simply a picturesque traveler.
+- **Photo / film documentation:** IFU and SYF foreground camera work. SYF says
+  films and photographs preserve daily life, architecture, customs, travel
+  scenes, and family material from Asia, Polynesia, China, and Vietnam. Use the
+  camera as method, not decoration.
+- **Galician women's press:** IEU names `Жіноча доля` and `Нова хата`; SYF
+  links her publishing path to Olena Kysilevska and Galician women's-movement
+  networks.
+- **Paris / Ukrainian emigration networks:** SYF correspondence records
+  contacts with Stepan Levynskyi, Volodymyr and Rozalia Vynnychenko, Mykhailo
+  Rudnytskyi, French artists, and Ukrainian emigration circles.
 - **Architecture on Noirmoutier:** IEU says she designed and supervised villas;
-  IFU includes architect in the professional list. Treat late-life architecture
-  as part of the same self-making arc: after travel writing and photography,
-  she builds spaces.
-- **Modern recovery / Teura:** Rodovid presents `ТЕУРА. Софія Яблонська` as a
-  project introducing her as photographer, writer, traveler, and
-  documentary-filmmaker. UCF says the project includes a photo album, Oksana
-  Zabuzhko's introductory essay, and three art books of travel novels.
+  IFU includes architecture in her professional range. Treat late-life building
+  work as part of the same self-making arc as writing and photography.
+- **Modern recovery / Teura:** Rodovid and UCF present `ТЕУРА. Софія
+  Яблонська` as photo album plus art-book editions of the travelogues. UCF
+  explains Teura as the Bora Bora name / recognition story.
 
 ## 4. Primary-source quote / visual anchors
 
-For Yablonska, the strongest primary material is a triad: travel prose, camera
-work, and archive/correspondence. Avoid long quotations unless a rights-cleared
-edition and excerpt policy are confirmed.
+Use short excerpts only; full passages require checking a rights-cleared
+edition. Do not route through Russian translations.
 
-- **`Чар Марока` / `The Charm of Morocco`:** Best first text anchor. Culture.pl
-  frames it as her debut travel book and notes modern reception through Polish
-  translation. Use to teach travel description without exoticizing Morocco.
-- **`З країни рижу та опію`:** China / Southeast Asia anchor. Pair with
-  vocabulary for observation, camera, street, custom, encounter, and uncertainty.
-- **`Далекі обрії`:** Around-the-world horizon anchor. Good for map-based
-  sequencing and how title, route, and narrative expectation interact.
-- **Photo with camera:** Ukraine in Color has a `Sofia Yablonska with a camera`
-  asset credited to SYF and explicitly marks original and restoration all rights
-  reserved. Use only as rights-warning reference unless permission exists.
-- **Teura archive photos:** Rodovid / UCF say the Teura photo album uses
-  photographs from the archive of Natalia Oudin-Yablonska. Future module should
-  request/verify permission before reproducing any image.
-- **Letters with Vynnychenko:** Suspilne Culture records that texts of
-  Yablonska's letters are based on scans in the Vynnychenko fund of the
-  D. Antonovych archive-museum of the Ukrainian Free Academy of Sciences in the
-  USA. Use only short, rights-compliant excerpts, preferably through the
-  published Komora edition.
-- **"Teura" / red bird:** Rodovid and UCF explain the Teura name as the Bora
-  Bora name/recognition story. Use as a memory motif, but keep it source-bound
-  and avoid turning Indigenous people into decorative scenery.
-- **Modern exhibition:** UA House and Suspilne Culture describe `Софія
-  Яблонська: велика подорож` as presenting photographs, literary works,
-  personal objects, and travel artefacts in partnership with SYF. Good anchor
-  for archive-to-exhibition memory.
+- **`Чар Марока` (1932), anti-colonial witness:** "Болить мене нужда арабів,
+  їх зламані гордощі..." Source: `Чар Марока`; quoted in UA House and Zbruch
+  excerpts on European exploitation in Morocco. Pedagogical use: close-read the
+  sentence as pity plus political indictment, not decorative "exotic" color.
+- **`З країни рижу та опію` (1936), land / labor observation:** "Брак мені
+  нових прикметників, щоб виразити моє захоплення." Source: Vsesvit excerpt
+  `Китайці та їх земля` from the 1936 book. Pedagogical use: show how visual
+  amazement turns into respect for agricultural knowledge and challenges
+  European superiority claims.
+- **`Далекі обрії` (1939):** Around-the-world route anchor. Best for map-based
+  sequencing: title, itinerary, camera work, and narrative expectation.
+- **Camera / photo archive:** Ukraine in Color has a `Sofia Yablonska camera`
+  asset credited to SYF and marked all rights reserved. Use as a rights-warning
+  reference unless permission exists.
+- **Letters to Vynnychenko:** Suspilne Culture records published extracts from
+  Yablonska's correspondence with Volodymyr and Rozalia Vynnychenko based on
+  scans in the D. Antonovych archive-museum of the Ukrainian Free Academy of
+  Sciences in the USA. Use only short, rights-compliant excerpts, preferably
+  from the published Komora edition.
+- **Modern exhibition:** UA House / Suspilne Culture describe `Софія
+  Яблонська: велика подорож` as photographs, literary works, personal objects,
+  and travel artefacts shown with SYF partnership.
 
 ## 5. Language register
 
 - **Register:** travelogue, reportage, photo/archive, feminist modernity,
   Galician press, emigration correspondence, anti-exoticizing observation,
-  architecture/memory register.
-- **CEFR readiness:** B2 can handle route narration and camera/object
-  vocabulary; C1 can discuss travel writing, colonial gaze, gender and mobility,
-  exile, archive ethics, and modern cultural recovery.
+  architecture / memory.
+- **CEFR readiness:** B2 can handle route narration, camera/object vocabulary,
+  and selected descriptive excerpts. C1 should handle travel writing,
+  colonial gaze, gender mobility, exile, archive ethics, and modern cultural
+  recovery.
 - **Learner lexicon:** `мандрівниця`, `подорожній нарис`, `тревелог`,
   `репортаж`, `фотоапарат`, `кінокамера`, `кінорепортерка`, `світлина`,
   `архів`, `рукопис`, `листування`, `виставка`, `експедиція`, `маршрут`,
   `навколосвітня подорож`, `колоніальний`, `антиколоніальний`, `еміграція`,
   `острів`, `вілла`, `архітекторка`.
-- **Style note:** The module should tell a human tale: a Galician priest's
-  daughter displaced by war, drawn to cinema and Paris, who learns to work with
-  camera and text, travels through Morocco and Asia, writes home in Ukrainian,
-  builds a family and houses in France, and becomes visible again when her
-  archive returns to public Ukrainian culture.
+- **Style note:** Tell the human story: a Galician priest's daughter displaced
+  by war, drawn to cinema in Paris, who learns camera and text, travels through
+  Morocco and Asia, writes in Ukrainian, builds houses in France, and becomes
+  visible again when her private archive returns to public Ukrainian culture.
 
 ## 6. Contested points
 
-- **"First Ukrainian woman/world traveler" framing:** SYF, UA House, and
-  Suspilne use "first Ukrainian woman" / "first Ukrainian travel blogger"
-  reception language. Treat this as modern memory framing unless a specialist
-  travel-history source defines the category precisely. It is safe to say that
-  sources frame her as a pioneering Ukrainian woman travel writer,
-  photographer, and around-the-world traveler.
-- **Profession labels:** IEU headline says writer and architect; IFU / SYF /
-  Rodovid emphasize photographer, filmmaker/cinematographer, journalist, artist.
-  Future learner surface should present a multi-profession biography rather than
-  make one label exclude the others.
-- **Return-to-France chronology:** IEU says in 1950 she returned with husband
-  and three sons to France; Culture.pl says the family returned to Europe in
-  1946 and later moved to Noirmoutier. SYF chronology has its own condensed
-  late-life sequence. Use source-specific wording until a specialist biography
-  harmonizes the route.
-- **"Russophile parents":** IEU's term should stay source-critical. The module
-  should avoid using family politics as inherited guilt or a melodramatic
-  contrast to Yablonska's Ukrainian writing.
-- **Anti-colonial reading:** IFU and SYF support a strong anti-colonial /
-  anti-ethnocentric interpretation. Future lesson should still ground it in
-  actual passages and image choices rather than only modern summary language.
+- **"First Ukrainian woman / travel blogger" framing:** SYF, UA House, and
+  Suspilne use pioneering and "first" reception language. Treat this as modern
+  memory framing unless a specialist travel-history source defines the category
+  precisely. It is safe to say sources frame her as a pioneering Ukrainian
+  woman travel writer, photographer, and around-the-world traveler.
+- **Profession labels:** IEU headlines writer/architect; IFU, SYF, and Rodovid
+  emphasize photographer, filmmaker/cinematographer, journalist, artist. Future
+  learner surface should preserve the multi-profession biography.
+- **Return-to-France chronology:** IEU says 1950; IFU gives 1946; SYF condenses
+  late-life chronology. Keep source-specific wording where the date matters.
+- **"Russophile parents":** IEU's term belongs in source-critical discussion,
+  not as inherited guilt or a moral contrast to her Ukrainian writing.
+- **Anti-colonial reading:** IFU / SYF support a strong anti-colonial reading.
+  Ground it in exact passages, photo choices, and the stateless-Ukrainian
+  viewpoint rather than only in modern summary language.
 - **Image rights:** Yablonska died in 1971. Her photographs, manuscripts, and
-  films are not safely public domain for EU/Ukraine life+70 purposes until
-  2042, and SYF / Ukraine in Color materials indicate right-holder control or
-  all-rights-reserved status. Do not assume Commons-style reuse.
+  films are not public-domain safe under EU/Ukraine life+70 assumptions until
+  2042, and SYF / Ukraine in Color materials indicate rights-holder control.
 
 ## 7. Cross-track links
 
@@ -227,9 +197,9 @@ edition and excerpt policy are confirmed.
 
 - BIO #367 `sofiia-yablonska`
 - BIO #368 `bohdan-lepkyi`
-- Possible future cross-link to Stepan Levynskyi if a BIO/LIT dossier appears.
-- Possible future cross-link to Olena Kysilevska / Galician women's press if
-  the BIO sequence adds a women's-movement organizer.
+- Possible future cross-link Stepan Levynskyi if BIO/LIT dossier appears.
+- Possible future cross-link Olena Kysilevska if a women's-movement BIO is
+  added.
 
 ## 8. Naming-canonical
 
@@ -237,10 +207,10 @@ edition and excerpt policy are confirmed.
 - **EN canonical:** Sofiia Yablonska.
 - **UA canonical:** Софія Яблонська.
 - **French-marriage form:** Sophie Jablonska-Oudin / Яблонська-Уден. Use in
-  source metadata, late-life France, family/archive contexts, not as default
-  learner title.
-- **Avoid:** Russianized or Polish-only spellings as primary learner labels
-  unless quoting source metadata or discussing archival/catalogue history.
+  source metadata, late-life France, and family/archive contexts, not as the
+  default learner title.
+- **Avoid:** Russianized or Polish-only spellings in learner labels unless
+  quoting source metadata about archival/catalogue history.
 - **Titles:** Keep Ukrainian titles with transliteration/English gloss only
   where useful: `Чар Марока` / `The Charm of Morocco`; `З країни рижу та опію`
   / `From the Land of Rice and Opium`; `Далекі обрії` / `Distant Horizons`;
@@ -250,25 +220,22 @@ edition and excerpt policy are confirmed.
 
 - **Status:** Not public-domain safe by life+70 until 2042. Treat photographs,
   manuscripts, films, and family archive materials as rights-controlled.
-- **SYF / family archive:** SYF says Oudin family descendants are the sole right
-  holders for her legacy and that the foundation preserves photographs,
-  manuscripts, films, and correspondence. Use permissioned material only.
-- **Ukraine in Color:** The `Sofia Yablonska with a camera` asset marks original
-  and restoration as all rights reserved. It is a useful rights-warning example,
-  not a free asset.
-- **Rodovid / Teura images:** Rodovid states the album uses photographs from
-  Natalia Oudin-Yablonska's archive. Do not copy images from the book or website
-  into site MDX without explicit permission.
-- **Public-domain trap:** Older publication dates do not automatically clear
-  photo rights; anonymous/archival photograph rules vary. Future module should
-  use text-only anchors, licensed excerpts, or permissioned thumbnails.
-- **Caption policy:** Any image should identify the source holder and avoid
-  exoticizing captions. Captions should name Yablonska as author/observer where
+- **SYF / family archive:** SYF says the foundation preserves photographs,
+  manuscripts, films, and correspondence and that Oudin-family descendants are
+  rights holders. Use permissioned material only.
+- **Ukraine in Color:** `Sofia Yablonska with a camera` is useful as a
+  rights-warning example because the restoration is marked all rights reserved.
+- **Rodovid / Teura images:** Rodovid and UCF state the Teura project uses
+  archive photographs from Natalia Oudin-Yablonska / family holdings. Do not
+  reuse thumbnails in generated MDX without permission.
+- **Fallback strategy:** Prefer text-only quote anchors, maps made from public
+  route data, or licensed contextual images that do not reproduce her photos.
+- **Caption policy:** Captions should name Yablonska as author/observer where
   appropriate and avoid treating photographed people as generic "exotic" scenes.
 
 ## 10. Sources used
 
-**Tier 1 / Tier 2 encyclopedic and institutional sources:**
+**Tier 1 / Tier 2 encyclopedic institutional sources:**
 
 - Internet Encyclopedia of Ukraine. "Yablonska, Sofiia."
   https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CY%5CA%5CYablonskaSofiia.htm.
@@ -280,32 +247,50 @@ edition and excerpt policy are confirmed.
   https://sofiayablonskafound.org/. Accessed 2026-07-01.
 - Український культурний фонд. "ТЕУРА. Софія Яблонська."
   https://ucf.in.ua/archive/5f16bb37a3773a612d7af3e3. Accessed 2026-07-01.
-- Український Дім. "Виставковий цикл `Подорож`."
-  https://www.uadim.in.ua/blank-5/vistavkoviy-tsikl-podorozh-2.
+- Український Дім. "Софія Яблонська: незвичайної вроди зірка фільмова."
+  https://www.uadim.in.ua/post/софія-яблонська-незвичайної-вроди-зірка-фільмова.
   Accessed 2026-07-01.
 
 **Research / reception / archive-context sources:**
 
 - Видавництво Родовід. "ТЕУРА. СОФІЯ ЯБЛОНСЬКА."
   https://rodovid.net/product/237/teura-sofiia-iablonska/. Accessed 2026-07-01.
-- Локальна історія. "Софія Яблонська — тревел-`блогерка` з минулого
-  століття."
+- Local History. "Софія Яблонська. Тревел-блогерка з минулого століття."
   https://localhistory.org.ua/texts/statti/sofiia-iablonska-trevel-blogerka-z-minulogo-stolittia/.
   Accessed 2026-07-01.
-- Суспільне. "У новому сезоні на UA: Радіо Культура — радіофільм про Софію
-  Яблонську." https://corp.suspilne.media/newsdetails/1689/. Accessed
+- Суспільне Культура. "У Києві відкриють виставку `Софія Яблонська: велика
+  подорож`." https://corp.suspilne.media/newsdetails/1689/. Accessed
   2026-07-01.
-- Суспільне Культура. "`Листування Софії Яблонської, Володимира Винниченка та
-  Розалії Винниченко`: передмова."
+- Суспільне Культура. "Передмова до книжки листування Софії Яблонської,
+  Володимира Винниченка та Розалії Винниченко."
   https://suspilne.media/culture/1333976-peredmova-do-knizki-listuvanna-sofii-ablonskoi-volodimira-vinnicenka-ta-rozalii-vinnicenko/.
-  Accessed 2026-07-01.
-- Суспільне Культура. "Софія Яблонська, Володимир Винниченко: що ховається в
-  приватних листах."
-  https://suspilne.media/culture/1331280-ne-lakajtesa-slova-hvoroba-urivki-listuvanna-sofii-ablonskoi-volodimira-ta-rozalii-vinnicenkiv/.
   Accessed 2026-07-01.
 - Culture.pl. "Тревелблоґерка Софія Яблонська та її `Чар Марока`."
   https://culture.pl/ua/stattia/trevelblogerka-sofiya-yablonska-ta-yiyi-char-maroka-mandrivka-yaku-vidkryvaye-polskyy-chytach.
   Accessed 2026-07-01.
-- Ukraine in Color. "Sofia Yablonska with a camera."
-  https://ukraineincolor.com/en/asset/sofia-yablonska-with-a-camera. Accessed
+- Zbruch. "Чар Марока." https://zbruc.eu/node/48925. Accessed 2026-07-01.
+- Журнал "Всесвіт". "Софія ЯБЛОНСЬКА. КИТАЙЦІ ТА ЇХ ЗЕМЛЯ."
+  https://www.vsesvit-journal.com/old/content/view/230/41/. Accessed
   2026-07-01.
+- Ukraine in Color. "Sofia Yablonska with a camera."
+  https://ukraineincolor.com/en/asset/sofia-yablonska-with-a-camera.
+  Accessed 2026-07-01.
+
+**Primary-source documents accessed:** published travelogue excerpts only; no
+NKVD/KGB/court file applies to this biography.
+
+---
+
+## Decolonization self-check
+
+Per `docs/audits/bio-decolonization-checklist.md` (#2310):
+
+- [x] No Russocentric framing
+- [x] No Russian-imperial transliterations in body text except source-critical
+  alias discussion
+- [x] No Russocentric periodization
+- [x] No uncritical Soviet propaganda terms
+- [x] No "lost life" euphemisms for documented executions
+- [x] All place names use modern UA canonical form where applicable
+- [x] Holodomor framing not applicable to this dossier
+- [x] Crimea/2014/2022 framing not applicable to this dossier
