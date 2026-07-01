@@ -1,184 +1,166 @@
-- lemma: купівля
-  translation: purchase, buying
+- lemma: "купівля"
+  translation: "purchase, buying"
+  ipa: "[kuˈpiu̯lʲɑ]"
   pos: noun
-  usage: Купівля потребує уважного порівняння ціни, якості й умов повернення.
-- lemma: послуга
-  translation: service
+  gender: f
+  usage: "Купівля потребує уважного порівняння ціни, якості й умов повернення."
+- lemma: "послуга"
+  translation: "service"
+  ipa: "[pɔsˈluɦɑ]"
   pos: noun
-  usage: Послуга має чітко описувати обсяг роботи, строк і вартість.
-- lemma: товар
-  translation: product, goods
+  gender: f
+  usage: "Послуга має чітко описувати обсяг роботи, строк і вартість."
+- lemma: "споживач"
+  translation: "consumer"
+  ipa: "[spɔʒɪˈʋɑtʃ]"
   pos: noun
-  usage: Перед оплатою варто перевірити товар і комплектацію.
-- lemma: покупець
-  translation: buyer, customer
+  gender: m
+  usage: "Споживач має право отримати зрозумілу інформацію про товар."
+- lemma: "замовлення"
+  translation: "order"
+  ipa: "[zɑmɔu̯ˈlɛnʲːɑ]"
   pos: noun
-  usage: Покупець зберіг чек і звернувся до підтримки.
-- lemma: продавець
-  translation: seller
+  gender: n
+  usage: "Замовлення підтвердили після оплати."
+- lemma: "маркетплейс"
+  translation: "marketplace"
+  ipa: "[mɑrkɛtˈplɛjs]"
   pos: noun
-  usage: Продавець пояснив характеристики товару й умови гарантії.
-- lemma: клієнт
-  translation: client, customer
+  gender: m
+  usage: "Маркетплейс поєднує продавців із різними умовами доставки."
+- lemma: "доставка"
+  translation: "delivery"
+  ipa: "[dɔsˈtɑu̯kɑ]"
   pos: noun
-  usage: Клієнт потребує письмового підтвердження умов ремонту.
-- lemma: споживач
-  translation: consumer
+  gender: f
+  usage: "Доставка була швидкою, але статус оновили запізно."
+- lemma: "комплектація"
+  translation: "package contents"
+  ipa: "[kɔmplɛkˈtɑt͡sʲijɑ]"
   pos: noun
-  usage: Споживач має право отримати зрозумілу інформацію про товар.
-- lemma: замовлення
-  translation: order
+  gender: f
+  usage: "Комплектація має відповідати опису на сайті."
+- lemma: "характеристика"
+  translation: "feature, specification"
+  ipa: "[xɑrɑktɛrɪsˈtɪkɑ]"
   pos: noun
-  usage: Замовлення підтвердили через кілька хвилин після оплати.
-- lemma: доставка
-  translation: delivery
+  gender: f
+  usage: "Характеристика товару допомагає порівняти кілька моделей."
+- lemma: "чек"
+  translation: "receipt"
+  ipa: "[tʃɛk]"
   pos: noun
-  usage: Доставка була швидкою, але повідомлення про час прийшло запізно.
-- lemma: кошик
-  translation: shopping cart
+  gender: m
+  usage: "Чек підтверджує оплату й допомагає оформити повернення."
+- lemma: "гарантія"
+  translation: "warranty, guarantee"
+  ipa: "[ɦɑˈrɑntʲijɑ]"
   pos: noun
-  usage: Покупець додав товар до кошика й обрав спосіб оплати.
-- lemma: оплата
-  translation: payment
+  gender: f
+  usage: "Гарантія має чіткий строк і межі застосування."
+- lemma: "рекламація"
+  translation: "formal complaint, claim"
+  ipa: "[rɛklɑˈmɑt͡sʲijɑ]"
   pos: noun
-  usage: Оплата можлива карткою або готівкою після перевірки товару.
-- lemma: знижка
-  translation: discount
+  gender: f
+  usage: "Рекламацію подають, коли товар має дефект або не відповідає опису."
+- lemma: "відгук"
+  translation: "review, feedback"
+  ipa: "[ˈʋidɦuk]"
   pos: noun
-  usage: Продавець запропонував знижку на додатковий аксесуар.
-- lemma: гарантія
-  translation: warranty, guarantee
+  gender: m
+  usage: "Доказовий відгук називає сценарій використання."
+- lemma: "повернення"
+  translation: "return, refund"
+  ipa: "[pɔˈʋɛrnɛnʲːɑ]"
   pos: noun
-  usage: Гарантія на ремонт діє протягом зазначеного строку.
-- lemma: повернення
-  translation: return
+  gender: n
+  usage: "Повернення товару потребує номера замовлення й чека."
+- lemma: "обмін"
+  translation: "exchange"
+  ipa: "[ɔbˈmin]"
   pos: noun
-  usage: Повернення коштів потребує підтвердження оплати.
-- lemma: обмін
-  translation: exchange
+  gender: m
+  usage: "Обмін доречний, якщо доставлено неправильний розмір."
+- lemma: "дефект"
+  translation: "defect"
+  ipa: "[dɛˈfɛkt]"
   pos: noun
-  usage: Покупець просить обмін бракованого товару.
-- lemma: чек
-  translation: receipt
+  gender: m
+  usage: "Фото дефекту додали до звернення."
+- lemma: "бракований"
+  translation: "defective"
+  ipa: "[brɑkɔˈʋɑnɪj]"
+  pos: adj
+  usage: "Бракований товар потребує перевірки або обміну."
+- lemma: "невідповідність"
+  translation: "mismatch, nonconformity"
+  ipa: "[nɛʋidpɔˈʋidnʲistʲ]"
   pos: noun
-  usage: Чек допомагає підтвердити оплату й дату купівлі.
-- lemma: квитанція
-  translation: receipt, service slip
+  gender: f
+  usage: "Невідповідність між описом і товаром треба описати конкретно."
+- lemma: "ремонт"
+  translation: "repair"
+  ipa: "[rɛˈmɔnt]"
   pos: noun
-  usage: Майстер видав квитанцію після прийняття техніки на ремонт.
-- lemma: відгук
-  translation: review, feedback
+  gender: m
+  usage: "Ремонт має прозору вартість і погоджений строк."
+- lemma: "діагностика"
+  translation: "diagnostics"
+  ipa: "[dʲiɑɦnɔsˈtɪkɑ]"
   pos: noun
-  usage: Відгук має називати факти, а не лише емоції.
-- lemma: рейтинг
-  translation: rating
+  gender: f
+  usage: "Діагностика може оплачуватися окремо від ремонту."
+- lemma: "кошторис"
+  translation: "cost estimate"
+  ipa: "[kɔʃtɔˈrɪs]"
   pos: noun
-  usage: Рейтинг корисний лише разом із докладними відгуками.
-- lemma: якість
-  translation: quality
+  gender: m
+  usage: "Кошторис допомагає погодити вартість робіт."
+- lemma: "квитанція"
+  translation: "receipt, service slip"
+  ipa: "[kʋɪˈtɑnt͡sʲijɑ]"
   pos: noun
-  usage: Якість послуги видно в точності, ввічливості й передбачуваності.
-- lemma: рекламація
-  translation: complaint, claim
-  pos: noun
-  usage: Рекламація містить факт, доказ і очікуване рішення.
-- lemma: дефект
-  translation: defect
-  pos: noun
-  usage: Фото дефекту додали до звернення в сервіс.
-- lemma: бракований
-  translation: defective
-  pos: adjective
-  usage: Бракований товар потребує перевірки або обміну.
-- lemma: ремонт
-  translation: repair
-  pos: noun
-  usage: Ремонт має прозорий кошторис і зрозумілий гарантійний строк.
-- lemma: майстер
-  translation: technician, craftsperson
-  pos: noun
-  usage: Майстер пояснив, які деталі замінено під час ремонту.
-- lemma: сервіс
-  translation: service provider, service
-  pos: noun
-  usage: Сервіс не повинен нехтувати повторними скаргами клієнтів.
-- lemma: обслуговування
-  translation: service, maintenance
-  pos: noun
-  usage: Гарантійне обслуговування має бути зрозуміло описане.
-- lemma: характеристика
-  translation: feature, specification
-  pos: noun
-  usage: Характеристика товару допомагає порівняти кілька моделей.
-- lemma: комплектація
-  translation: package contents
-  pos: noun
-  usage: Комплектація має відповідати опису на сайті.
-- lemma: маркетплейс
-  translation: marketplace
-  pos: noun
-  usage: Маркетплейс поєднує багато продавців і різні умови доставки.
-- lemma: інтернет-магазин
-  translation: online store
-  pos: noun
-  usage: Інтернет-магазин має чітко пояснювати правила повернення.
-- lemma: підтримка
-  translation: support
-  pos: noun
-  usage: Підтримка відповіла ввічливо, але не назвала строк розгляду.
-- lemma: відстеження
-  translation: tracking
-  pos: noun
-  usage: Номер відстеження допомагає перевірити статус доставки.
-- lemma: передплата
-  translation: prepayment
-  pos: noun
-  usage: Передплата без зрозумілих контактів може бути ризикованою.
-- lemma: кошторис
-  translation: estimate, cost breakdown
-  pos: noun
-  usage: Прозорий кошторис пояснює ціну деталей і роботи.
-- lemma: гарантійний випадок
-  translation: warranty case
+  gender: f
+  usage: "Квитанція фіксує, що техніку прийнято в сервіс."
+- lemma: "акт виконаних робіт"
+  translation: "certificate of completed work"
+  ipa: "[ɑkt ʋɪˈkɔnɑnɪx rɔˈbit]"
   pos: phrase
-  usage: Сервіс перевіряє, чи є поломка гарантійним випадком.
-- lemma: свідоме споживання
-  translation: conscious consumption
-  pos: phrase
-  usage: Свідоме споживання враховує довговічність, ремонт і кількість відходів.
-- lemma: вітчизняний
-  translation: domestic, locally produced
-  pos: adjective
-  usage: Вітчизняний товар може підтримати локального виробника.
-- lemma: переробка
-  translation: recycling
+  usage: "Акт виконаних робіт підтверджує обсяг послуги."
+- lemma: "компенсація"
+  translation: "compensation"
+  ipa: "[kɔmpɛnˈsɑt͡sʲijɑ]"
   pos: noun
-  usage: Переробка пакування допомагає зменшити кількість відходів.
-- lemma: торгуватися
-  translation: bargain, haggle
-  pos: verb
-  usage: На ринку можна торгуватися ввічливо й без тиску.
-- lemma: оплатити
-  translation: pay for, settle payment
-  pos: verb
-  usage: Нормативно кажемо оплатити товар, оплатити доставку, оплатити ремонт.
-- lemma: дякувати
-  translation: thank
-  pos: verb
-  usage: Після дієслова дякувати потрібен давальний відмінок.
-- lemma: потребувати
-  translation: need, require
-  pos: verb
-  usage: Товар потребує перевірки, а клієнт потребує допомоги.
-- lemma: завдати збитків
-  translation: cause losses, cause damages
+  gender: f
+  usage: "Компенсація має спиратися на підтверджені витрати."
+- lemma: "згідно з"
+  translation: "according to"
+  ipa: "[ˈzɦidnɔ z]"
   pos: phrase
-  usage: Затримка доставки може завдати матеріальних збитків.
-- lemma: нехтувати
-  translation: neglect, disregard
-  pos: verb
-  usage: Сервіс не повинен нехтувати скаргами клієнтів.
-- lemma: відповідно до
-  translation: according to, in accordance with
+  usage: "Згідно з умовами повернення, товар треба надіслати в пакованні."
+- lemma: "відповідно до"
+  translation: "in accordance with"
+  ipa: "[ʋidpɔˈʋidnɔ dɔ]"
   pos: phrase
-  usage: Магазин діє відповідно до умов договору.
+  usage: "Відповідно до договору, акт підписують після завершення робіт."
+- lemma: "на підставі"
+  translation: "on the basis of"
+  ipa: "[nɑ pidˈstɑʋi]"
+  pos: phrase
+  usage: "На підставі чека прошу оформити повернення."
+- lemma: "у межах"
+  translation: "within"
+  ipa: "[u mɛˈʒɑx]"
+  pos: phrase
+  usage: "Звернення подано в межах гарантійного строку."
+- lemma: "вітчизняний"
+  translation: "domestic"
+  ipa: "[ʋitʃɪzˈnʲɑnɪj]"
+  pos: adj
+  usage: "Вітчизняний виробник має бути прозоро названий."
+- lemma: "вторинна переробка"
+  translation: "recycling"
+  ipa: "[ftɔˈrɪnnɑ pɛrɛˈrɔbkɑ]"
+  pos: phrase
+  usage: "Вторинна переробка потребує доступної інфраструктури."
