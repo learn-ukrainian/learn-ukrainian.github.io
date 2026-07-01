@@ -1,120 +1,180 @@
 - lemma: відмінкова функція
+  ipa: "[widˈmʲinkowa ˈfunktsijɐ]"
   translation: "case function"
   pos: phrase
-  usage: "На контрольній треба пояснити не лише форму, а й відмінкову функцію."
+  usage: "На checkpoint треба пояснити відмінкову функцію, а не лише назвати форму."
 - lemma: систематизація
+  ipa: "[sɪstemɐtɪˈzatsijɐ]"
   translation: "systematization"
   pos: noun
   usage: "Систематизація допомагає побачити зв'язок між родовим, давальним і орудним."
 - lemma: керування
+  ipa: "[keruˈwɑnʲːɐ]"
   translation: "government, syntactic control"
   pos: noun
   usage: "Прийменникове керування визначає форму залежного слова."
-- lemma: партитивний
-  translation: "partitive"
-  pos: adj
+- lemma: родовий відмінок
+  ipa: "[rodoˈwɪj widˈmʲinok]"
+  translation: "genitive case"
+  pos: phrase
+  usage: "Родовий відмінок часто з'являється після без, до, після, щодо."
+- lemma: давальний відмінок
+  ipa: "[dɐˈwɑlʲnɪj widˈmʲinok]"
+  translation: "dative case"
+  pos: phrase
+  usage: "Давальний відмінок потрібен після всупереч і завдяки."
+- lemma: орудний відмінок
+  ipa: "[oˈrudnɪj widˈmʲinok]"
+  translation: "instrumental case"
+  pos: phrase
+  usage: "Орудний відмінок може називати засіб, супровід або роль."
+- lemma: партитивний родовий
+  ipa: "[pɐrtɪˈtɪwnɪj rodoˈwɪj]"
+  translation: "partitive genitive"
+  pos: phrase
   usage: "Партитивний родовий видно у фразі додати води."
-- lemma: нестача
-  translation: "lack, shortage"
-  pos: noun
-  usage: "Родовий нестачі з'являється у фразі бракує доказів."
-- lemma: належність
-  translation: "belonging, possession"
-  pos: noun
-  usage: "Родовий належності може показувати зв'язок між предметом і власником."
-- lemma: адресат
-  translation: "addressee, recipient"
-  pos: noun
-  usage: "Давальний часто називає адресата листа або поради."
-- lemma: переживач
-  translation: "experiencer"
-  pos: noun
-  usage: "У реченні мені холодно форма мені називає переживача."
-- lemma: етичний давальний
-  translation: "ethical dative"
+- lemma: родовий нестачі
+  ipa: "[rodoˈwɪj neˈstɑtʃi]"
+  translation: "genitive of lack"
   pos: phrase
-  usage: "Етичний давальний показує емоційну залученість мовця."
-- lemma: знаряддя
-  translation: "instrument, tool"
-  pos: noun
-  usage: "Орудний знаряддя відповідає на питання чим виконано дію."
-- lemma: засіб
-  translation: "means, medium"
-  pos: noun
-  usage: "Захищеним каналом називає засіб передавання даних."
-- lemma: супровід
-  translation: "accompaniment"
-  pos: noun
-  usage: "У фразі з колегою орудний передає супровід або спільну участь."
-- lemma: присудкова роль
-  translation: "predicative role"
+  usage: "У фразі бракує доказів слово доказів є родовим нестачі."
+- lemma: давальний адресата
+  ipa: "[dɐˈwɑlʲnɪj ɐdreˈsɑtɐ]"
+  translation: "dative of addressee"
   pos: phrase
-  usage: "У реченні вона стала координаторкою орудний має присудкову роль."
-- lemma: узгодження
-  translation: "agreement"
-  pos: noun
-  usage: "Узгодження прикметника з іменником треба перевіряти в усій групі."
-- lemma: варіантність
-  translation: "variation"
-  pos: noun
-  usage: "Варіантність родового -а/-у залежить від значення й слова."
-- lemma: чергування
-  translation: "alternation"
-  pos: noun
-  usage: "Чергування може з'являтися під час творення непрямих форм."
-- lemma: парадигма
-  translation: "paradigm"
-  pos: noun
-  usage: "Парадигма слова охоплює всі його граматичні форми."
+  usage: "У реченні громаді пояснили рішення форма громаді є давальним адресата."
+- lemma: давальний переживача
+  ipa: "[dɐˈwɑlʲnɪj pereʒɪˈwɑtʃɐ]"
+  translation: "dative experiencer"
+  pos: phrase
+  usage: "У реченні підприємцям бракує часу форма підприємцям є давальним переживача."
+- lemma: орудний засобу
+  ipa: "[oˈrudnɪj ˈzɑsobu]"
+  translation: "instrumental of means"
+  pos: phrase
+  usage: "У фразі підписати електронним підписом орудний називає засіб."
+- lemma: орудний ролі
+  ipa: "[oˈrudnɪj ˈrolʲi]"
+  translation: "instrumental of role"
+  pos: phrase
+  usage: "У реченні вона стала консультанткою форма консультанткою є орудним ролі."
 - lemma: прийменникова група
+  ipa: "[prɪjmennɪˈkowa ˈɦrupɐ]"
   translation: "prepositional phrase"
   pos: phrase
   usage: "У прийменниковій групі треба відмінити всі залежні слова."
+- lemma: всупереч
+  ipa: "[wsupeˈretʃ]"
+  translation: "contrary to, despite"
+  pos: prep
+  usage: "Всупереч прогнозам проєкт продовжився."
+- lemma: завдяки
+  ipa: "[zɐu̯dʲɐˈkɪ]"
+  translation: "thanks to"
+  pos: prep
+  usage: "Завдяки своєчасній допомозі команда завершила звіт."
+- lemma: наперекір
+  ipa: "[nɐpereˈkʲir]"
+  translation: "in defiance of"
+  pos: prep
+  usage: "Наперекір труднощам команда зберегла графік."
+- lemma: щодо
+  ipa: "[ʃtʃoˈdo]"
+  translation: "regarding"
+  pos: prep
+  usage: "Рада оприлюднила пояснення щодо закупівлі обладнання."
+- lemma: за винятком
+  ipa: "[zɐ wɪˈnʲɑtkom]"
+  translation: "except for"
+  pos: phrase
+  usage: "За винятком одного пункту, договір залишився без змін."
+- lemma: у разі
+  ipa: "[u ˈrɑzʲi]"
+  translation: "in case of"
+  pos: phrase
+  usage: "У разі відсутності кворуму засідання перенесуть."
 - lemma: деліберативне запитання
+  ipa: "[delʲiberɐˈtɪwne zɐpɪˈtɑnʲːɐ]"
   translation: "deliberative question"
   pos: phrase
-  usage: "Деліберативне запитання допомагає зважити варіанти дії."
+  usage: "Деліберативне запитання що нам робити далі показує зважування дії."
 - lemma: риторичне запитання
+  ipa: "[rɪtoˈrɪtʃne zɐpɪˈtɑnʲːɐ]"
   translation: "rhetorical question"
   pos: phrase
   usage: "Риторичне запитання підсилює тезу, а не завжди просить інформацію."
 - lemma: вкладене запитання
+  ipa: "[u̯klɐˈdene zɐpɪˈtɑnʲːɐ]"
   translation: "embedded question"
   pos: phrase
   usage: "Вкладене запитання входить у складне речення після дієслова знати."
-- lemma: пунктуація
-  translation: "punctuation"
-  pos: noun
-  usage: "Пунктуація допомагає відрізнити пряме запитання від вкладеного."
-- lemma: трансформація
-  translation: "transformation"
-  pos: noun
-  usage: "Трансформація речення показує, як змінюється фокус."
-- lemma: діагностика
-  translation: "diagnostics"
-  pos: noun
-  usage: "Діагностика помилок починається з прийменників і дієслів керування."
-- lemma: морфологічна точність
-  translation: "morphological accuracy"
-  pos: phrase
-  usage: "Морфологічна точність вимагає правильних закінчень і узгодження."
 - lemma: зворотний займенник
+  ipa: "[zwoˈrotnɪj zɐjˈmennɪk]"
   translation: "reflexive pronoun"
   pos: phrase
-  usage: "Зворотний займенник себе не має називної форми."
+  usage: "Себе є зворотним займенником і не має називної форми."
 - lemma: взаємна конструкція
+  ipa: "[wzɐˈjemnɐ konˈstruktsijɐ]"
   translation: "reciprocal construction"
   pos: phrase
-  usage: "Взаємна конструкція один одного змінює другу частину."
-- lemma: означальний займенник
-  translation: "determinative pronoun"
+  usage: "Учасники писали одне одному - це взаємна конструкція."
+- lemma: той самий
+  ipa: "[toj ˈsɑmɪj]"
+  translation: "the same"
   pos: phrase
-  usage: "Означальний займенник сам відрізняється від той самий."
-- lemma: pluralia tantum
-  translation: "plural-only nouns"
+  usage: "Той самий документ означає ідентичний документ, а не просто важливий."
+- lemma: сам
+  ipa: "[sɑm]"
+  translation: "self, itself"
+  pos: pron
+  usage: "Сам документ означає документ без посередника або додаткового джерела."
+- lemma: найважливіший
+  ipa: "[nɐjwɐʒlɪˈwʲiʃɪj]"
+  translation: "most important"
+  pos: adj
+  usage: "У нейтральному регістрі треба найважливіший доказ, а не самий важливий доказ."
+- lemma: домен
+  ipa: "[doˈmɛn]"
+  translation: "domain"
   pos: noun
-  usage: "Pluralia tantum на зразок гроші й двері мають тільки множинну парадигму."
-- lemma: самоперевірка
-  translation: "self-check"
+  usage: "Домен тексту може бути правовим, економічним або громадським."
+- lemma: регістр
+  ipa: "[reˈɦʲistr]"
+  translation: "register"
   pos: noun
-  usage: "Самоперевірка допомагає пояснити форму перед фінальним письмом."
+  usage: "Регістр допомагає вирішити, чи доречна розмовна або офіційна форма."
+- lemma: підзвітність
+  ipa: "[pidˈzwitnʲistʲ]"
+  translation: "accountability"
+  pos: noun
+  usage: "Підзвітність є ключовим словом у громадсько-політичному тексті."
+- lemma: скарга
+  ipa: "[ˈskɑrɦɐ]"
+  translation: "complaint, appeal"
+  pos: noun
+  usage: "Юристка з'ясовує, чи вистачить доказів для скарги."
+- lemma: доказ
+  ipa: "[ˈdokɐz]"
+  translation: "evidence"
+  pos: noun
+  usage: "Без достатніх доказів правовий висновок буде слабким."
+- lemma: аудит
+  ipa: "[ˈaudɪt]"
+  translation: "audit"
+  pos: noun
+  usage: "Через затримку аудиту слухання перенесли."
+- lemma: закупівля
+  ipa: "[zɐkuˈpʲiwlʲɐ]"
+  translation: "procurement, purchase"
+  pos: noun
+  usage: "Пояснення щодо закупівлі обладнання має бути нейтральним."
+- lemma: інвестор
+  ipa: "[inˈwɛstor]"
+  translation: "investor"
+  pos: noun
+  usage: "Рішення ради може стати аргументом для інвесторів."
+- lemma: морфологічний ремонт
+  ipa: "[morfoloˈɦʲitʃnɪj reˈmɔnt]"
+  translation: "morphological repair"
+  pos: phrase
+  usage: "Морфологічний ремонт починається з керівного слова й закінчується узгодженням групи."
