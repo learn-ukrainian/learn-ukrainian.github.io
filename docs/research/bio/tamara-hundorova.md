@@ -7,7 +7,7 @@
 **Researcher:** Codex orchestrator (GPT-5)
 **Completed:** 2026-07-01
 
-**Source acronym legend:** ESU = Encyclopedia Modern Ukraine; NAS = National Academy of Sciences of Ukraine; IL-NAN = Shevchenko Institute of Literature, NAS of Ukraine; HURI = Harvard Ukrainian Research Institute; VUIAS = Virtual Ukraine Institute for Advanced Study; WIKO = Wissenschaftskolleg zu Berlin; PEN = PEN Ukraine; ASP = Academic Studies Press; Ukraїner = Ukraїner interview project; Commons = Wikimedia Commons.
+**Source acronym legend:** ESU = Encyclopedia Modern Ukraine; NAS = National Academy of Sciences of Ukraine; IL-NAN = Shevchenko Institute of Literature, NAS of Ukraine; PRU = President of Ukraine; HURI = Harvard Ukrainian Research Institute; VUIAS = Virtual Ukraine Institute for Advanced Study; WIKO = Wissenschaftskolleg zu Berlin; PEN = PEN Ukraine; ASP = Academic Studies Press; Ukraїner = Ukraїner interview project; Commons = Wikimedia Commons.
 
 **Acceptance self-check:**
 - [x] All 10 sections completed
@@ -39,7 +39,7 @@
 - **Core institutional role:** NAS lists her as corresponding member of NAS Ukraine, doctor of philological sciences, professor, and chief research fellow at the Shevchenko Institute of Literature, NAS of Ukraine. HURI's 2025 fellow page describes her as principal research fellow at the Shevchenko Institute of Literature, HURI associate, and dean of the Ukrainian Free University.
 - **International academic profile:** ESU, HURI, VUIAS, WIKO, and ASP record teaching/research affiliations across Harvard, Princeton, Toronto, Monash, Hokkaido, Ukrainian Free University, Kyiv-Mohyla Academy, Kyiv National University, and other institutions. Use specific dates only from a current source.
 - **Field identity:** literary scholar, critic, culturologist, professor, theorist of Ukrainian modernism/postmodernism, gender studies, Chornobyl studies, kitsch, postcolonial and decolonial Ukrainian studies.
-- **Recognition:** ESU records corresponding member NASU (2003), Honored Worker of Science and Technology of Ukraine (2006), Order of Princess Olga 3rd class (2026), and literary / scholarly prizes including `Світовид`, `Сучасність`, and Ivan Franko Prize.
+- **Recognition:** ESU records corresponding member NASU (2003), Honored Worker of Science and Technology of Ukraine (2006), and literary / scholarly prizes including `Світовид`, `Сучасність`, and Ivan Franko Prize. ESU and PRU decree No. 136/2026 record the Order of Princess Olga 3rd class (2026).
 
 ## 2. Oppression / pressure mechanism
 
@@ -123,6 +123,7 @@ Use short excerpts only. Hundorova is living, and her books/interviews are copyr
 - Енциклопедія Сучасної України. "Гундорова Тамара Іванівна." https://esu.com.ua/article-24725. Accessed 2026-07-01.
 - Національна академія наук України. "Гундорова Тамара Іванівна." https://www.nas.gov.ua/employee/nastamara-gundorova. Accessed 2026-07-01.
 - Інститут літератури ім. Т. Г. Шевченка НАН України. "Гундорова Тамара Іванівна." https://www.ilnan.gov.ua/index.php/pro-instytut/pidrozdily-instytutu/viddil-teorii-literatury/item/85-hundorova-tamara-ivanivna. Accessed 2026-07-01.
+- Президент України. "Указ Президента України No. 136/2026." https://www.president.gov.ua/documents/1362026-58373. Accessed 2026-07-01.
 
 **Tier 2 (scholarly / institutional profile / publisher evidence):**
 
