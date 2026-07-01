@@ -1,200 +1,192 @@
-- lemma: функціональний стиль
-  translation: functional style
-  pos: noun phrase
-  usage: Функціональний стиль визначає добір мовних засобів відповідно до сфери й мети.
-- lemma: стильова домінанта
-  translation: stylistic dominant
-  pos: noun phrase
-  usage: Стильова домінанта показує, який регістр керує текстом загалом.
-- lemma: інтерстилістика
-  translation: interstylistics
-  pos: noun
-  usage: Інтерстилістика описує взаємодію різних стилів в одному тексті.
-- lemma: стилістична норма
-  translation: stylistic norm
-  pos: noun phrase
-  usage: Стилістична норма допомагає оцінити доречність слова в конкретній ситуації.
-- lemma: доречність
-  translation: appropriateness
-  pos: noun
-  usage: Доречність важливіша за бажання використати складніше слово.
-- lemma: нейтральність
-  translation: neutrality
-  pos: noun
-  usage: Нейтральність дає текстові базу, на якій можна будувати інші регістри.
-- lemma: експресивність
-  translation: expressiveness
-  pos: noun
-  usage: Експресивність має підсилювати зміст, а не замінювати доказ.
-- lemma: образність
-  translation: imagery
-  pos: noun
-  usage: Образність доречна тоді, коли вона відкриває додатковий сенс.
-- lemma: троп
-  translation: trope
-  pos: noun
-  usage: Троп переносить значення і створює образний ефект.
-- lemma: конотація
-  translation: connotation
-  pos: noun
-  usage: Конотація додає слову оцінний або емоційний відтінок.
-- lemma: алітерація
-  translation: alliteration
-  pos: noun
-  usage: Алітерація повторює приголосні й може створювати звуковий акцент.
-- lemma: асонанс
-  translation: assonance
-  pos: noun
-  usage: Асонанс повторює голосні й впливає на мелодику фрази.
-- lemma: евфонія
-  translation: euphony
-  pos: noun
-  usage: Евфонія допомагає текстові звучати природно й плавно.
-- lemma: метонімія
-  translation: metonymy
-  pos: noun
-  usage: Метонімія переносить назву за суміжністю.
-- lemma: парцеляція
-  translation: parceling
-  pos: noun
-  usage: Парцеляція відокремлює фрагмент для ритму або акценту.
-- lemma: канцеляризм
-  translation: bureaucratic phrasing
-  pos: noun
-  usage: Канцеляризм може імітувати офіційність і приховувати дію.
-- lemma: стилістичний дисонанс
-  translation: stylistic dissonance
-  pos: noun phrase
-  usage: Стилістичний дисонанс виникає, коли слово не відповідає ситуації.
-- lemma: галузева лексика
-  translation: domain-specific vocabulary
-  pos: noun phrase
-  usage: Галузева лексика потрібна тоді, коли загальне слово неточне.
-- lemma: термінологія
-  translation: terminology
-  pos: noun
-  usage: Термінологія має бути стабільною в межах одного аналітичного тексту.
-- lemma: термінологічна міграція
-  translation: terminological migration
-  pos: noun phrase
-  usage: Термінологічна міграція змінює відтінок слова під час переходу між сферами.
-- lemma: інституція
-  translation: institution
-  pos: noun
-  usage: Інституція має визначені повноваження й відповідальність.
-- lemma: повноваження
-  translation: authority, powers
-  pos: noun
-  usage: Повноваження органу треба називати точно.
-- lemma: мандат
-  translation: mandate
-  pos: noun
-  usage: Мандат визначає, хто має право діяти або говорити від імені групи.
-- lemma: підзвітність
-  translation: accountability
-  pos: noun
-  usage: Підзвітність передбачає пояснення рішень і результатів.
-- lemma: прозорість
-  translation: transparency
-  pos: noun
-  usage: Прозорість фінансування є умовою довіри.
-- lemma: законопроєкт
-  translation: draft law
-  pos: noun
-  usage: Законопроєкт потребує публічного обговорення й правового аналізу.
-- lemma: ухвала
-  translation: ruling, resolution
-  pos: noun
-  usage: Ухвала має процедурний або правовий відтінок.
-- lemma: юрисдикція
-  translation: jurisdiction
-  pos: noun
-  usage: Юрисдикція визначає межу правових повноважень.
-- lemma: судочинство
-  translation: judicial proceedings
-  pos: noun
-  usage: Судочинство потребує точних формулювань і поваги до процедури.
-- lemma: позов
-  translation: lawsuit, claim
-  pos: noun
-  usage: Позов подають до належного суду.
-- lemma: відповідальність
-  translation: responsibility, liability
-  pos: noun
-  usage: Відповідальність у правовому тексті не можна стверджувати без підстав.
-- lemma: презумпція невинуватості
-  translation: presumption of innocence
-  pos: noun phrase
-  usage: Презумпція невинуватості вимагає обережності з твердженням про вину.
-- lemma: корупція
-  translation: corruption
-  pos: noun
-  usage: Корупція є серйозним правовим поняттям, а не просто емоційною оцінкою.
-- lemma: демократія
-  translation: democracy
-  pos: noun
-  usage: Демократія пов'язана з участю, правами, підзвітністю й процедурою.
-- lemma: кошторис
-  translation: cost estimate, budget breakdown
-  pos: noun
-  usage: Кошторис показує деталізований розрахунок витрат.
-- lemma: рентабельність
-  translation: profitability, cost-effectiveness
-  pos: noun
-  usage: Рентабельність можна оцінити лише за даними про витрати й результат.
-- lemma: інвестиція
-  translation: investment
-  pos: noun
-  usage: Інвестиція передбачає вкладення ресурсу з очікуваною майбутньою користю.
-- lemma: витрати
-  translation: expenses
-  pos: noun
-  usage: Витрати треба відрізняти від доходу й прибутку.
-- lemma: дохід
-  translation: revenue, income
-  pos: noun
-  usage: Дохід показує надходження, але не завжди означає прибуток.
-- lemma: прибуток
-  translation: profit
-  pos: noun
-  usage: Прибуток залежить від співвідношення доходів і витрат.
-- lemma: фінансування
-  translation: financing
-  pos: noun
-  usage: Фінансування має прозорі джерела й умови.
-- lemma: джерело фінансування
-  translation: funding source
-  pos: noun phrase
-  usage: Джерело фінансування треба назвати в офіційному запиті.
-- lemma: критерій результативності
-  translation: performance criterion
-  pos: noun phrase
-  usage: Критерій результативності показує, як оцінюватимуть успіх програми.
-- lemma: правова експертиза
-  translation: legal review
-  pos: noun phrase
-  usage: Правова експертиза передує відповідальним висновкам про порушення.
-- lemma: редакторська правка
-  translation: editorial edit
-  pos: noun phrase
-  usage: Редакторська правка має зберігати зміст і змінювати регістр свідомо.
-- lemma: мовна норма
-  translation: language norm
-  pos: noun phrase
-  usage: Мовна норма допомагає відрізнити природну українську форму від кальки.
-- lemma: калька
-  translation: calque
-  pos: noun
-  usage: Калька переносить чужу модель і часто звучить неприродно.
-- lemma: суржик
-  translation: mixed Ukrainian-Russian speech
-  pos: noun
-  usage: Суржик не можна використовувати як нейтральну норму.
-- lemma: аргументація
-  translation: argumentation
-  pos: noun
-  usage: Аргументація поєднує тезу, доказ і пояснення.
-- lemma: оцінна лексика
-  translation: evaluative vocabulary
-  pos: noun phrase
-  usage: Оцінна лексика має спиратися на факт або джерело.
+- lemma: "функціональний стиль"
+  translation: "functional style"
+  pos: "noun phrase"
+  usage: "Функціональний стиль визначає добір мовних засобів відповідно до сфери, мети й адресата."
+- lemma: "стильова домінанта"
+  translation: "stylistic dominant"
+  pos: "noun phrase"
+  usage: "Стильова домінанта показує, який регістр керує текстом загалом."
+- lemma: "регістр"
+  translation: "register"
+  pos: "noun"
+  usage: "Регістр змінюється залежно від адресата й жанру."
+- lemma: "предметна сфера"
+  translation: "domain, subject area"
+  pos: "noun phrase"
+  usage: "Предметна сфера допомагає добрати точну термінологію."
+- lemma: "адресат"
+  translation: "addressee, audience"
+  pos: "noun"
+  usage: "Адресат визначає тон і рівень деталізації повідомлення."
+- lemma: "жанр"
+  translation: "genre"
+  pos: "noun"
+  usage: "Жанр листа потребує інших формул, ніж жанр новини."
+- lemma: "доречність"
+  translation: "appropriateness"
+  pos: "noun"
+  usage: "Доречність слова залежить від ситуації, а не від його складності."
+- lemma: "нейтральність"
+  translation: "neutrality"
+  pos: "noun"
+  usage: "Нейтральність допомагає перейти між регістрами без втрати змісту."
+- lemma: "експресивність"
+  translation: "expressiveness"
+  pos: "noun"
+  usage: "Експресивність має підсилювати зміст, а не замінювати доказ."
+- lemma: "образність"
+  translation: "imagery"
+  pos: "noun"
+  usage: "Образність доречна тоді, коли вона відповідає жанру."
+- lemma: "алітерація"
+  translation: "alliteration"
+  pos: "noun"
+  usage: "Алітерація створює звуковий повтор приголосних."
+- lemma: "асонанс"
+  translation: "assonance"
+  pos: "noun"
+  usage: "Асонанс може уповільнювати або підсилювати інтонацію."
+- lemma: "евфонія"
+  translation: "euphony"
+  pos: "noun"
+  usage: "Евфонія допомагає зробити текст милозвучним."
+- lemma: "конотація"
+  translation: "connotation"
+  pos: "noun"
+  usage: "Конотація слова змінює тон висловлення."
+- lemma: "метафора"
+  translation: "metaphor"
+  pos: "noun"
+  usage: "Метафора має відповідати масштабу факту."
+- lemma: "риторичне питання"
+  translation: "rhetorical question"
+  pos: "noun phrase"
+  usage: "Риторичне питання залучає адресата до позиції автора."
+- lemma: "паралелізм"
+  translation: "parallelism"
+  pos: "noun"
+  usage: "Паралелізм організує повтор як аргумент."
+- lemma: "парцеляція"
+  translation: "parcellation"
+  pos: "noun"
+  usage: "Парцеляція створює паузу й фокус, але не завжди доречна в офіційному тексті."
+- lemma: "інверсія"
+  translation: "inversion"
+  pos: "noun"
+  usage: "Інверсія змінює порядок слів для стилістичного акценту."
+- lemma: "галузева лексика"
+  translation: "domain-specific vocabulary"
+  pos: "noun phrase"
+  usage: "Галузева лексика робить текст точним у конкретній сфері."
+- lemma: "термінологія"
+  translation: "terminology"
+  pos: "noun"
+  usage: "Термінологія правового тексту потребує особливої точності."
+- lemma: "орієнтир"
+  translation: "landmark, reference point"
+  pos: "noun"
+  usage: "Орієнтир допомагає описати маршрут зрозуміло."
+- lemma: "маршрут"
+  translation: "route"
+  pos: "noun"
+  usage: "Маршрут треба описувати точними просторовими діями."
+- lemma: "кошторис"
+  translation: "cost estimate, budget"
+  pos: "noun"
+  usage: "Кошторис пояснює очікувані витрати проєкту."
+- lemma: "дедлайн"
+  translation: "deadline"
+  pos: "noun"
+  usage: "Дедлайн у діловому листі має бути конкретним."
+- lemma: "рентабельність"
+  translation: "profitability"
+  pos: "noun"
+  usage: "Рентабельність проєкту залежить від доходів і витрат."
+- lemma: "інвестиції"
+  translation: "investment"
+  pos: "noun"
+  usage: "Інвестиції потрібно описувати точними фінансовими показниками."
+- lemma: "повноваження"
+  translation: "authority, powers"
+  pos: "noun"
+  usage: "Повноваження органу визначають, які рішення він може ухвалювати."
+- lemma: "підстава"
+  translation: "basis, grounds"
+  pos: "noun"
+  usage: "Офіційна дія має мати правову або процедурну підставу."
+- lemma: "ухвала"
+  translation: "resolution, ruling"
+  pos: "noun"
+  usage: "Ухвала має процедурний або правовий статус."
+- lemma: "реквізит"
+  translation: "required document element"
+  pos: "noun"
+  usage: "Реквізит є обов'язковим елементом офіційного документа."
+- lemma: "підзвітність"
+  translation: "accountability"
+  pos: "noun"
+  usage: "Підзвітність передбачає пояснення рішень і результатів."
+- lemma: "правосуддя"
+  translation: "justice"
+  pos: "noun"
+  usage: "Правосуддя потребує поваги до процедури й доказів."
+- lemma: "звичай"
+  translation: "custom"
+  pos: "noun"
+  usage: "Звичай може мати локальні варіанти."
+- lemma: "обряд"
+  translation: "rite, ritual"
+  pos: "noun"
+  usage: "Обряд треба описувати без надмірного узагальнення."
+- lemma: "символіка"
+  translation: "symbolism"
+  pos: "noun"
+  usage: "Символіка допомагає пояснити значення культурної практики."
+- lemma: "регіональна практика"
+  translation: "regional practice"
+  pos: "noun phrase"
+  usage: "Регіональна практика показує різноманітність традиції."
+- lemma: "перспектива"
+  translation: "perspective"
+  pos: "noun"
+  usage: "Перспектива героя впливає на художній опис."
+- lemma: "голос персонажа"
+  translation: "character voice"
+  pos: "noun phrase"
+  usage: "Голос персонажа не завжди збігається з позицією автора."
+- lemma: "публічний дискурс"
+  translation: "public discourse"
+  pos: "noun phrase"
+  usage: "Публічний дискурс вимагає розрізняти факт, оцінку й цитату."
+- lemma: "джерело"
+  translation: "source"
+  pos: "noun"
+  usage: "Джерело факту треба називати в публічному тексті."
+- lemma: "фреймінг"
+  translation: "framing"
+  pos: "noun"
+  usage: "Фреймінг визначає, у якій рамці подано тему."
+- lemma: "оцінка"
+  translation: "evaluation, opinion"
+  pos: "noun"
+  usage: "Оцінка має бути відділена від факту."
+- lemma: "канцеляризм"
+  translation: "bureaucratism"
+  pos: "noun"
+  usage: "Канцеляризм створює штучну офіційність."
+- lemma: "плеоназм"
+  translation: "pleonasm"
+  pos: "noun"
+  usage: "Плеоназм дублює зміст без нової інформації."
+- lemma: "тавтологія"
+  translation: "tautology"
+  pos: "noun"
+  usage: "Тавтологія може бути помилкою, якщо повтор не має функції."
+- lemma: "трансформація"
+  translation: "transformation"
+  pos: "noun"
+  usage: "Трансформація регістру зберігає зміст і змінює спосіб подання."
+- lemma: "редагування"
+  translation: "editing"
+  pos: "noun"
+  usage: "Редагування має пояснювати причину мовного вибору."
