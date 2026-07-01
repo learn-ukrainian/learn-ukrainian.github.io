@@ -1,128 +1,150 @@
-- lemma: вставне слово
-  translation: parenthetical word
+- lemma: "вставне слово"
+  translation: "parenthetical word"
+  ipa: "[ˈʋstɑu̯ne ˈslɔʋɔ]"
   pos: phrase
-  usage: Вставне слово виражає ставлення мовця до всього повідомлення.
-- lemma: вставна конструкція
-  translation: parenthetical construction
+  usage: "Вставне слово коментує все повідомлення й не є членом речення."
+- lemma: "вставна конструкція"
+  translation: "parenthetical construction"
+  ipa: "[ˈʋstɑu̯nɑ kɔnˈstrukt͡sʲijɑ]"
   pos: phrase
-  usage: Вставна конструкція не є членом речення.
-- lemma: вставлене речення
-  translation: inserted sentence
+  usage: "Вставна конструкція може називати джерело інформації або ступінь упевненості."
+- lemma: "вставлене речення"
+  translation: "inserted sentence"
+  ipa: "[ˈʋstɑu̯lene ˈrɛt͡ʃenʲːɑ]"
   pos: phrase
-  usage: Вставлене речення часто виділяють тире або дужками.
-- lemma: модальність
-  translation: modality
+  usage: "Вставлене речення має власну граматичну основу."
+- lemma: "синтаксична ізольованість"
+  translation: "syntactic isolation"
+  ipa: "[sɪntɑkˈsɪt͡ʃnɑ izɔlʲɔˈʋɑnʲistʲ]"
+  pos: phrase
+  usage: "Синтаксична ізольованість пояснює, чому вставку відокремлюють комами."
+- lemma: "модальність"
+  translation: "modality"
+  ipa: "[mɔˈdɑlʲnʲistʲ]"
   pos: noun
-  usage: Модальність показує ступінь упевненості мовця.
-- lemma: упевненість
-  translation: certainty
-  pos: noun
-  usage: Слово безперечно передає високу упевненість.
-- lemma: невпевненість
-  translation: uncertainty
-  pos: noun
-  usage: Невпевненість можна передати словами мабуть або можливо.
-- lemma: припущення
-  translation: assumption
-  pos: noun
-  usage: Припущення треба відрізняти від перевіреного факту.
-- lemma: джерело інформації
-  translation: source of information
+  usage: "Модальність показує ставлення мовця до факту."
+- lemma: "ступінь упевненості"
+  translation: "degree of certainty"
+  ipa: "[stuˈpinʲ upeu̯ˈnɛnɔstʲi]"
   pos: phrase
-  usage: Конструкція за словами експертів називає джерело інформації.
-- lemma: послідовність
-  translation: sequence
+  usage: "Безперечно й можливо передають різний ступінь упевненості."
+- lemma: "припущення"
+  translation: "assumption"
+  ipa: "[prɪˈpuʃt͡ʃenʲːɑ]"
   pos: noun
-  usage: По-перше і по-друге позначають послідовність аргументів.
-- lemma: емоційна оцінка
-  translation: emotional evaluation
+  usage: "Припущення треба відділяти від перевіреного факту."
+- lemma: "джерело інформації"
+  translation: "source of information"
+  ipa: "[d͡ʒɛˈrɛlɔ informɑˈt͡sʲiji]"
   pos: phrase
-  usage: На жаль передає емоційну оцінку повідомлення.
-- lemma: суб'єктивність
-  translation: subjectivity
+  usage: "Конструкція за словами експертів називає джерело інформації."
+- lemma: "послідовність"
+  translation: "sequence"
+  ipa: "[pɔslʲiˈdɔu̯nʲistʲ]"
   pos: noun
-  usage: Вставні слова часто показують суб'єктивність автора.
-- lemma: аргументація
-  translation: argumentation
+  usage: "По-перше й по-друге позначають послідовність аргументів."
+- lemma: "емоційна оцінка"
+  translation: "emotional evaluation"
+  ipa: "[ɛmɔˈt͡sʲijnɑ ɔˈt͡sʲinkɑ]"
+  pos: phrase
+  usage: "На жаль передає емоційну оцінку мовця."
+- lemma: "застереження"
+  translation: "caveat"
+  ipa: "[zɑstɛrɛˈʒɛnʲːɑ]"
   pos: noun
-  usage: Вставні конструкції допомагають будувати аргументацію.
-- lemma: пунктуаційна норма
-  translation: punctuation norm
-  pos: phrase
-  usage: Пунктуаційна норма вимагає виділяти вставні слова комами.
-- lemma: парантеза
-  translation: parenthesis
-  pos: noun
-  usage: Парантеза додає коментар усередині основного речення.
-- lemma: логічність викладу
-  translation: logical coherence of presentation
-  pos: phrase
-  usage: Отже й зрештою підтримують логічність викладу.
-- lemma: семантична група
-  translation: semantic group
-  pos: phrase
-  usage: Кожна семантична група має свою комунікативну функцію.
-- lemma: омонімічний
-  translation: homonymous
-  pos: adjective
-  usage: Омонімічний варіант може бути членом речення, а не вставкою.
-- lemma: граматична основа
-  translation: grammatical base
-  pos: phrase
-  usage: Граматична основа зберігається після вилучення вставного слова.
-- lemma: синтаксично ізольований
-  translation: syntactically isolated
-  pos: phrase
-  usage: Синтаксично ізольований компонент не залежить від інших членів речення.
-- lemma: відокремлювати
-  translation: to set off
+  usage: "Правда може вводити застереження до попередньої думки."
+- lemma: "відокремлювати"
+  translation: "to set off"
+  ipa: "[ʋidɔˈkrɛmlʲuʋɑtɪ]"
   pos: verb
-  usage: Вставні слова треба відокремлювати комами.
-- lemma: вилучення
-  translation: removal
+  usage: "Вставні слова зазвичай відокремлюють комами."
+- lemma: "відокремлення"
+  translation: "detachment, setting off"
+  ipa: "[ʋidɔkrɛmˈlɛnʲːɑ]"
   pos: noun
-  usage: Тест вилучення допомагає перевірити вставність.
-- lemma: застереження
-  translation: reservation, caveat
+  usage: "Відокремлення допомагає побачити межі авторського коментаря."
+- lemma: "пунктуаційна норма"
+  translation: "punctuation norm"
+  ipa: "[punktuɑˈt͡sʲijnɑ ˈnɔrmɑ]"
+  pos: phrase
+  usage: "Пунктуаційна норма вимагає ком навколо вставки всередині речення."
+- lemma: "тире"
+  translation: "dash"
+  ipa: "[tɪˈrɛ]"
   pos: noun
-  usage: Слово правда може вводити застереження.
-- lemma: регістр
-  translation: register
+  usage: "Тире може виділяти вставлене речення сильніше за коми."
+- lemma: "дужки"
+  translation: "parentheses"
+  ipa: "[ˈduʒkɪ]"
   pos: noun
-  usage: Регістр визначає, чи доречна емоційна вставка.
-- lemma: доречність
-  translation: appropriateness
+  usage: "Дужки роблять вставлену інформацію тихішою."
+- lemma: "омонімічний"
+  translation: "homonymous"
+  ipa: "[ɔmɔnʲiˈmʲit͡ʃnɪj]"
+  pos: adj
+  usage: "Омонімічний випадок треба перевіряти за синтаксичною роллю."
+- lemma: "повнозначний"
+  translation: "full-meaning, lexical"
+  ipa: "[pɔu̯nɔˈznɑt͡ʃnɪj]"
+  pos: adj
+  usage: "Повнозначний член речення не можна вилучити без втрати структури."
+- lemma: "присудок"
+  translation: "predicate"
+  ipa: "[prɪˈsudɔk]"
   pos: noun
-  usage: Доречність вставної конструкції залежить від жанру.
-- lemma: перевантаження
-  translation: overload
+  usage: "У реченні він може прийти слово може є частиною присудка."
+- lemma: "граматична основа"
+  translation: "grammatical base"
+  ipa: "[ɦrɑmɑˈtɪt͡ʃnɑ ɔsˈnɔʋɑ]"
+  pos: phrase
+  usage: "Граматична основа лишається повною після вилучення вставного слова."
+- lemma: "слово-пастка"
+  translation: "trap word"
+  ipa: "[ˈslɔʋɔ ˈpɑstkɑ]"
+  pos: phrase
+  usage: "Навіть і майже є словами-пастками для пунктуації."
+- lemma: "підсилювати"
+  translation: "to intensify"
+  ipa: "[pidsɪˈlʲuʋɑtɪ]"
+  pos: verb
+  usage: "Слово навіть підсилює групу підмета, але не є вставкою."
+- lemma: "джерельна вставка"
+  translation: "source parenthetical"
+  ipa: "[d͡ʒɛˈrɛlʲnɑ ˈʋstɑu̯kɑ]"
+  pos: phrase
+  usage: "Джерельна вставка допомагає не змішувати факт і позицію."
+- lemma: "авторська позиція"
+  translation: "authorial stance"
+  ipa: "[ˈɑu̯tɔrsʲkɑ pɔˈzɪt͡sʲijɑ]"
+  pos: phrase
+  usage: "Авторська позиція має бути видимою, але не нав'язливою."
+- lemma: "регістр"
+  translation: "register"
+  ipa: "[rɛˈɦʲistr]"
   pos: noun
-  usage: Надмір вставних слів створює перевантаження речення.
-- lemma: джерельний
-  translation: source-based
-  pos: adjective
-  usage: Джерельний коментар називає, звідки походить інформація.
-- lemma: авторська позиція
-  translation: authorial position
+  usage: "Регістр визначає, чи доречна емоційна вставка."
+- lemma: "доречність"
+  translation: "appropriateness"
+  ipa: "[dɔˈrɛt͡ʃnʲistʲ]"
+  pos: noun
+  usage: "Доречність вставки залежить від жанру й адресата."
+- lemma: "перевантаження"
+  translation: "overload"
+  ipa: "[pɛrɛʋɑnˈtɑʒɛnʲːɑ]"
+  pos: noun
+  usage: "Надмір вставних слів створює перевантаження речення."
+- lemma: "редакторська правка"
+  translation: "editorial revision"
+  ipa: "[rɛdɑkˈtɔrsʲkɑ ˈprɑu̯kɑ]"
   pos: phrase
-  usage: Авторська позиція має бути відділена від чужого повідомлення.
-- lemma: ступінь упевненості
-  translation: degree of certainty
+  usage: "Редакторська правка може замінити категоричну вставку на обережну."
+- lemma: "логічний перехід"
+  translation: "logical transition"
+  ipa: "[lɔˈɦʲit͡ʃnɪj pɛrɛˈxid]"
   pos: phrase
-  usage: Мабуть і безперечно передають різний ступінь упевненості.
-- lemma: порядок викладу
-  translation: order of exposition
+  usage: "Отже створює логічний перехід до висновку."
+- lemma: "контакт з адресатом"
+  translation: "contact with the addressee"
+  ipa: "[kɔnˈtɑkt z ɑdrɛˈsɑtɔm]"
   pos: phrase
-  usage: Порядок викладу видно через слова по-перше і по-друге.
-- lemma: комунікативна функція
-  translation: communicative function
-  pos: phrase
-  usage: Комунікативна функція вставки важливіша за її позицію.
-- lemma: повнозначний
-  translation: lexical, full-meaning
-  pos: adjective
-  usage: Повнозначний член речення не можна вилучити без втрати граматики.
-- lemma: присудкове слово
-  translation: predicative word
-  pos: phrase
-  usage: У реченні з вікна видно площу слово видно є присудковим.
+  usage: "Бачите й погодьтеся створюють контакт з адресатом."
