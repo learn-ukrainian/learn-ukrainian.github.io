@@ -1,193 +1,108 @@
-- lemma: наказовий спосіб
-  translation: imperative mood
-  pos: noun
-  gender: m
-  usage: Наказовий спосіб передає наказ, прохання або заклик.
-- lemma: імператив
-  translation: imperative
-  pos: noun
-  gender: m
-  usage: Імператив може звучати м'яко або категорично.
 - lemma: спонукання
-  translation: inducement, prompting
+  ipa: "[sponuˈkɑnʲːɐ]"
+  translation: "prompting, inducement"
   pos: noun
   gender: n
-  usage: Спонукання до спільної дії має форму ходімо.
-- lemma: прохання
-  translation: request
-  pos: noun
-  gender: n
-  usage: Ввічливе прохання часто використовує недоконаний вид.
-- lemma: наказ
-  translation: order
-  pos: noun
-  gender: m
-  usage: Короткий наказ може вимагати доконаного результату.
-- lemma: заборона
-  translation: prohibition
-  pos: noun
-  gender: f
-  usage: Заборона дії часто має недоконаний вид.
+  usage: "Спонукання може бути проханням, порадою або наказом."
 - lemma: застереження
-  translation: warning
+  ipa: "[zɐstɛˈrɛʒɛnʲːɐ]"
+  translation: "warning, caution"
   pos: noun
   gender: n
-  usage: Застереження від результату часто має доконаний вид.
+  usage: "Застереження попереджає про небажаний результат."
+- lemma: заборона
+  ipa: "[zɐboˈrɔnɐ]"
+  translation: "prohibition"
+  pos: noun
+  gender: f
+  usage: "Заборона часто має недоконаний вид після не."
 - lemma: запрошення
-  translation: invitation
+  ipa: "[zɐprɔˈʃɛnʲːɐ]"
+  translation: "invitation"
   pos: noun
   gender: n
-  usage: Запрошення заходьте звучить м'яко.
-- lemma: ввічливість
-  translation: politeness
+  usage: "Запрошення Сідайте звучить м'якше за Сядьте."
+- lemma: наказ
+  ipa: "[nɐˈkɑz]"
+  translation: "order, command"
+  pos: noun
+  gender: m
+  usage: "Наказ у технічній інструкції має бути точним."
+- lemma: обов'язковість
+  ipa: "[obowjɐzˈkɔwistʲ]"
+  translation: "obligatoriness"
   pos: noun
   gender: f
-  usage: Ввічливість залежить від виду, інтонації й контексту.
-- lemma: категоричність
-  translation: categorical force
+  usage: "Обов'язковість дії часто передає треба або мусити."
+- lemma: недоцільність
+  ipa: "[nedotsʲilʲˈnistʲ]"
+  translation: "inadvisability"
   pos: noun
   gender: f
-  usage: Інфінітивний наказ має високу категоричність.
-- lemma: інфінітив
-  translation: infinitive
-  pos: noun
-  gender: m
-  usage: Інфінітив може виконувати функцію офіційного припису.
-- lemma: фазовий
-  translation: phase-related
-  pos: adj
-  usage: Фазове дієслово відкриває процес.
-- lemma: модальний
-  translation: modal
-  pos: adj
-  usage: Модальне слово може керувати різними видами інфінітива.
-- lemma: доконаний
-  translation: perfective
-  pos: adj
-  usage: Доконаний вид просить завершений результат.
-- lemma: недоконаний
-  translation: imperfective
-  pos: adj
-  usage: Недоконаний вид відкриває процес або правило.
-- lemma: результат
-  translation: result
-  pos: noun
-  gender: m
-  usage: Результат можна перевірити після виконання дії.
-- lemma: процес
-  translation: process
-  pos: noun
-  gender: m
-  usage: Процес триває і не обов'язково вже завершений.
-- lemma: правило
-  translation: rule
-  pos: noun
-  gender: n
-  usage: Правило часто потребує недоконаного виду.
-- lemma: припис
-  translation: directive
-  pos: noun
-  gender: m
-  usage: Припис Документи подавати звучить офіційно.
-- lemma: інструкція
-  translation: instruction
+  usage: "Недоцільність поведінки можна передати забороною."
+- lemma: фазовість
+  ipa: "[fɐˈzɔwistʲ]"
+  translation: "phase meaning"
   pos: noun
   gender: f
-  usage: Інструкція має точно розрізняти наказ і заборону.
-- lemma: прочитати
-  translation: to read through, perfective
+  usage: "Фазовість вимагає недоконаного інфінітива після почати."
+- lemma: виконувати
+  ipa: "[wɪkɔˈnuwɐtɪ]"
+  translation: "to perform, carry out"
   pos: verb
-  aspect: perfective
-  usage: Прочитайте текст до кінця.
-- lemma: читати
-  translation: to read, imperfective
+  usage: "Почніть виконувати завдання з першого кроку."
+- lemma: дотримуватися
+  ipa: "[dotrɪˈmuwɐtɪsʲɐ]"
+  translation: "to observe, comply with"
   pos: verb
-  aspect: imperfective
-  usage: Читайте тексти уважно.
-- lemma: підписати
-  translation: to sign, perfective
+  usage: "Дотримуйтеся правил безпеки."
+- lemma: уникати
+  ipa: "[unɪˈkɑtɪ]"
+  translation: "to avoid"
   pos: verb
-  aspect: perfective
-  usage: Підпишіть заяву.
-- lemma: підписувати
-  translation: to sign, imperfective
+  usage: "Уникайте різких формулювань у ввічливому листі."
+- lemma: ознайомитися
+  ipa: "[oznɐˈjɔmɪtɪsʲɐ]"
+  translation: "to familiarize oneself"
   pos: verb
-  aspect: imperfective
-  usage: Підписуйте заяви після перевірки.
-- lemma: зайти
-  translation: to come in, perfective
+  usage: "Ознайомтеся з правилами до початку роботи."
+- lemma: впроваджувати
+  ipa: "[u̯prɔˈwɑdʒuwɐtɪ]"
+  translation: "to implement"
   pos: verb
-  aspect: perfective
-  usage: Зайдіть після дзвінка.
-- lemma: заходити
-  translation: to come in, imperfective
+  usage: "Команда впроваджує нову процедуру поступово."
+- lemma: зосереджуватися
+  ipa: "[zosɛˈrɛdʒuwɐtɪsʲɐ]"
+  translation: "to focus"
   pos: verb
-  aspect: imperfective
-  usage: Заходьте, будь ласка.
-- lemma: сісти
-  translation: to sit down, perfective
+  usage: "Зосереджуйтеся на результаті, коли пишете покрокову інструкцію."
+- lemma: попереджати
+  ipa: "[popɛrɛˈdʒɑtɪ]"
+  translation: "to warn"
   pos: verb
-  aspect: perfective
-  usage: Сядьте рівно під час огляду.
-- lemma: сідати
-  translation: to sit down, imperfective
+  usage: "Доконаний вид після не часто попереджає про випадкову помилку."
+- lemma: закликати
+  ipa: "[zɐklɪˈkɑtɪ]"
+  translation: "to call on, urge"
   pos: verb
-  aspect: imperfective
-  usage: Сідайте ближче до проходу.
-- lemma: відкрити
-  translation: to open, perfective
-  pos: verb
-  aspect: perfective
-  usage: Не відкрийте не той файл.
-- lemma: відкривати
-  translation: to open, imperfective
-  pos: verb
-  aspect: imperfective
-  usage: Не відкривайте підозрілі посилання.
-- lemma: забути
-  translation: to forget, perfective
-  pos: verb
-  aspect: perfective
-  usage: Не забудьте перепустку.
-- lemma: забувати
-  translation: to forget, imperfective
-  pos: verb
-  aspect: imperfective
-  usage: Не забувайте правила безпеки.
-- lemma: ходімо
-  translation: let us go
-  pos: verb
-  usage: Ходімо до наступного прикладу.
-- lemma: поговорімо
-  translation: let us talk
-  pos: verb
-  usage: Поговорімо про ввічливість.
-- lemma: працюймо
-  translation: let us work
-  pos: verb
-  usage: Працюймо з прикладами уважно.
-- lemma: перевірити
-  translation: to check, perfective
-  pos: verb
-  aspect: perfective
-  usage: Перевірте адресу зараз.
-- lemma: перевіряти
-  translation: to check, imperfective
-  pos: verb
-  aspect: imperfective
-  usage: Перевіряйте адресу перед надсиланням.
-- lemma: подати
-  translation: to submit, perfective
-  pos: verb
-  aspect: perfective
-  usage: Подайте документи сьогодні.
-- lemma: подавати
-  translation: to submit, imperfective
-  pos: verb
-  aspect: imperfective
-  usage: Документи подавати до канцелярії.
-- lemma: звертатися
-  translation: to contact, apply
-  pos: verb
-  aspect: imperfective
-  usage: Звертайтеся до координатора.
+  usage: "Плакат може закликати дотримуватися правил."
+- lemma: фазове дієслово
+  ipa: "[fɐˈzɔwe dijeˈslɔwo]"
+  translation: "phase verb"
+  pos: phrase
+  usage: "Фазове дієслово почати потребує недоконаного інфінітива."
+- lemma: модальне дієслово
+  ipa: "[moˈdɑlʲne dijeˈslɔwo]"
+  translation: "modal verb"
+  pos: phrase
+  usage: "Після модального дієслова вид залежить від результату або процесу."
+- lemma: безособова інструкція
+  ipa: "[bezɔˈsɔbowɐ inˈstruktsijɐ]"
+  translation: "impersonal instruction"
+  pos: phrase
+  usage: "Безособова інструкція Не входити звучить як табличка."
+- lemma: мовленнєвий етикет
+  ipa: "[mou̯lɛnːʲeˈwɪj etɪˈkɛt]"
+  translation: "speech etiquette"
+  pos: phrase
+  usage: "Мовленнєвий етикет впливає на вибір Сідайте або Сядьте."
