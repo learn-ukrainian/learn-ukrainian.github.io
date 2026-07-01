@@ -1,184 +1,146 @@
-- lemma: пряма мова
-  translation: direct speech
+- lemma: "пряма мова"
+  translation: "direct speech"
+  ipa: "[prʲɑˈmɑ ˈmɔʋɑ]"
   pos: phrase
-  usage: "Пряма мова дослівно передає чуже висловлення й потребує лапок або діалогічного тире."
-- lemma: непряма мова
-  translation: indirect speech
+  usage: "Пряма мова зберігає чужі слова дослівно."
+- lemma: "непряма мова"
+  translation: "indirect speech"
+  ipa: "[nɛprʲɑˈmɑ ˈmɔʋɑ]"
   pos: phrase
-  usage: "Непряма мова передає зміст репліки через підрядну частину."
-- lemma: цитата
-  translation: quotation
+  usage: "Непряма мова передає зміст через підрядну частину."
+- lemma: "невласне пряма мова"
+  translation: "free indirect speech"
+  ipa: "[nɛˈʋlɑsnɛ prʲɑˈmɑ ˈmɔʋɑ]"
+  pos: phrase
+  usage: "Невласне пряма мова передає внутрішній голос без лапок."
+- lemma: "цитата"
+  translation: "quotation"
+  ipa: "[t͡sɪˈtɑtɑ]"
   pos: noun
-  usage: "Цитата має зберігати точні слова джерела."
-- lemma: репліка
-  translation: utterance, line
+  gender: f
+  usage: "Цитата потребує точності й контексту."
+- lemma: "репліка"
+  translation: "utterance, line"
+  ipa: "[rɛˈplʲikɑ]"
   pos: noun
-  usage: "Кожна репліка в діалозі може починатися з нового рядка й тире."
-- lemma: діалог
-  translation: dialogue
+  gender: f
+  usage: "Репліка в діалозі може починатися з тире."
+- lemma: "діалог"
+  translation: "dialogue"
+  ipa: "[dʲiɑˈlɔɦ]"
   pos: noun
-  usage: "Діалог показує чергування реплік між співрозмовниками."
-- lemma: слова автора
-  translation: reporting clause
+  gender: m
+  usage: "Діалог показує чергування реплік."
+- lemma: "слова автора"
+  translation: "authorial reporting words"
+  ipa: "[slɔˈʋɑ ˈɑu̯tɔrɑ]"
   pos: phrase
   usage: "Слова автора називають мовця або дію мовлення."
-- lemma: трансформація
-  translation: transformation
+- lemma: "трансформація"
+  translation: "transformation"
+  ipa: "[trɑnsfɔrˈmɑt͡sʲijɑ]"
   pos: noun
-  usage: "Трансформація прямої мови в непряму змінює займенники й пунктуацію."
-- lemma: реферування
-  translation: paraphrasing, reporting
+  gender: f
+  usage: "Трансформація прямої мови в непряму змінює займенники й дейксис."
+- lemma: "реферування"
+  translation: "summarizing, reporting"
+  ipa: "[rɛfɛruˈʋɑnʲːɑ]"
   pos: noun
-  usage: "Реферування стисло передає чужу думку без дослівного цитування."
-- lemma: переказ
-  translation: retelling, paraphrase
+  gender: n
+  usage: "Реферування стисло передає чужу думку своїми словами."
+- lemma: "парафраза"
+  translation: "paraphrase"
+  ipa: "[pɑrɑˈfrɑzɑ]"
   pos: noun
-  usage: "Переказ має зберігати головну думку джерела."
-- lemma: джерело
-  translation: source
+  gender: f
+  usage: "Парафраза має змінити структуру, але зберегти зміст."
+- lemma: "джерело"
+  translation: "source"
+  ipa: "[d͡ʒɛrɛˈlɔ]"
   pos: noun
-  usage: "Джерело треба назвати, коли передаєш чужу позицію."
-- lemma: контекст
-  translation: context
+  gender: n
+  usage: "Джерело треба назвати перед цитатою або переказом."
+- lemma: "контекст"
+  translation: "context"
+  ipa: "[kɔnˈtɛkst]"
   pos: noun
+  gender: m
   usage: "Контекст захищає цитату від спотворення."
-- lemma: контекстуалізація
-  translation: contextualization
+- lemma: "дейксис"
+  translation: "deixis"
+  ipa: "[ˈdɛjksɪs]"
   pos: noun
-  usage: "Контекстуалізація пояснює, у якій ситуації з'явилася цитата."
-- lemma: модальність
-  translation: modality
+  gender: m
+  usage: "Дейксис залежить від точки мовлення."
+- lemma: "займенник"
+  translation: "pronoun"
+  ipa: "[zɑjˈmɛnːɪk]"
   pos: noun
-  usage: "Дієслово попросив передає іншу модальність, ніж наказав."
-- lemma: перцепція
-  translation: perception
+  gender: m
+  usage: "Займенник я часто змінюється в непрямій мові."
+- lemma: "сполучник"
+  translation: "conjunction"
+  ipa: "[spɔˈlut͡ʃnɪk]"
   pos: noun
-  usage: "Невласне пряма мова може передавати перцепцію персонажа."
-- lemma: лапки
-  translation: quotation marks
-  pos: noun
-  usage: "Лапки позначають межі дослівної цитати."
-- lemma: двокрапка
-  translation: colon
-  pos: noun
-  usage: "Перед прямою мовою після слів автора ставимо двокрапку."
-- lemma: тире
-  translation: dash
-  pos: noun
-  usage: "Тире відокремлює слова автора після прямої мови."
-- lemma: знак питання
-  translation: question mark
+  gender: m
+  usage: "Сполучник що вводить розповідну непряму мову."
+- lemma: "частка чи"
+  translation: "particle whether/if"
+  ipa: "[ˈt͡ʃɑstkɑ t͡ʃɪ]"
   pos: phrase
-  usage: "Знак питання належить питальній репліці."
-- lemma: знак оклику
-  translation: exclamation mark
-  pos: phrase
-  usage: "Знак оклику зберігає емоцію прямої мови."
-- lemma: підрядна частина
-  translation: subordinate clause
-  pos: phrase
-  usage: "У непрямій мові підрядна частина передає зміст репліки."
-- lemma: головна частина
-  translation: main clause
-  pos: phrase
-  usage: "Головна частина містить слова автора."
-- lemma: сполучник
-  translation: conjunction
-  pos: noun
-  usage: "Сполучник що часто вводить непряме розповідне висловлення."
-- lemma: частка
-  translation: particle
-  pos: noun
   usage: "Частка чи вводить непряме загальне питання."
-- lemma: питальне слово
-  translation: interrogative word
-  pos: phrase
-  usage: "Питальне слово де зберігається в непрямому питанні."
-- lemma: займенник
-  translation: pronoun
+- lemma: "модальність"
+  translation: "modality"
+  ipa: "[mɔdɑlʲˈnʲistʲ]"
   pos: noun
-  usage: "Під час трансформації займенник я часто змінюється."
-- lemma: наказовий спосіб
-  translation: imperative mood
-  pos: phrase
-  usage: "Наказовий спосіб не переноситься механічно після сполучника що."
-- lemma: прохання
-  translation: request
+  gender: f
+  usage: "Переказ має зберегти модальність джерела."
+- lemma: "лапки"
+  translation: "quotation marks"
+  ipa: "[ˈlɑpkɪ]"
   pos: noun
-  usage: "Прохання можна передати конструкцією зі щоб."
-- lemma: наказ
-  translation: command
+  gender: pl
+  usage: "Лапки позначають межу прямої цитати."
+- lemma: "двокрапка"
+  translation: "colon"
+  ipa: "[dʋɔˈkrɑpkɑ]"
   pos: noun
-  usage: "Наказ у непрямій мові потребує відповідного дієслова введення."
-- lemma: дієслово мовлення
-  translation: reporting verb
-  pos: phrase
-  usage: "Дієслово мовлення уточнює, як саме передано думку."
-- lemma: зазначити
-  translation: to note, to state
-  pos: verb
-  usage: "Автор зазначив, що цитату подано в повному контексті."
-- lemma: підкреслити
-  translation: to emphasize
-  pos: verb
-  usage: "Дослідниця підкреслила важливість точного переказу."
-- lemma: заперечити
-  translation: to deny, to object
-  pos: verb
-  usage: "Рецензент заперечив, що висновок випливає з цитати."
-- lemma: припустити
-  translation: to suppose
-  pos: verb
-  usage: "Автор припустив, що джерело потребує додаткової перевірки."
-- lemma: попередити
-  translation: to warn
-  pos: verb
-  usage: "Редактор попередив, що скорочення може змінити зміст."
-- lemma: наголосити
-  translation: to stress, to emphasize
-  pos: verb
-  usage: "Викладачка наголосила, що реферування не скасовує посилання на джерело."
-- lemma: уточнити
-  translation: to clarify
-  pos: verb
-  usage: "Рецензент уточнив, чи збережено контекст цитати."
-- lemma: джерельний
-  translation: source-based
-  pos: adjective
-  usage: "Джерельний контекст допомагає не спотворити цитату."
-- lemma: дослівний
-  translation: verbatim
-  pos: adjective
-  usage: "Дослівний фрагмент треба брати в лапки."
-- lemma: непрямий
-  translation: indirect
-  pos: adjective
-  usage: "Непрямий переказ змінює форму, але зберігає зміст."
-- lemma: внутрішній голос
-  translation: inner voice
-  pos: phrase
-  usage: "Невласне пряма мова передає внутрішній голос персонажа."
-- lemma: невласне пряма мова
-  translation: free indirect speech
-  pos: phrase
-  usage: "Невласне пряма мова поєднує авторську розповідь і голос персонажа."
-- lemma: авторська розповідь
-  translation: authorial narration
-  pos: phrase
-  usage: "Авторська розповідь може наближатися до голосу персонажа."
-- lemma: спотворення
-  translation: distortion
+  gender: f
+  usage: "Двокрапка стоїть після слів автора перед прямою мовою."
+- lemma: "тире"
+  translation: "dash"
+  ipa: "[tɪˈrɛ]"
   pos: noun
-  usage: "Спотворення цитати виникає, коли прибрано важливе застереження."
-- lemma: плагіат
-  translation: plagiarism
+  gender: n
+  usage: "Тире відділяє слова автора після репліки."
+- lemma: "трикрапка"
+  translation: "ellipsis mark"
+  ipa: "[trɪˈkrɑpkɑ]"
   pos: noun
-  usage: "Плагіат приховує чужу думку або подає її як власну."
-- lemma: відповідальність
-  translation: responsibility
-  pos: noun
-  usage: "Відповідальність за точність переказу лежить на авторі нового тексту."
-- lemma: вирвати з контексту
-  translation: to take out of context
+  gender: f
+  usage: "Трикрапка може позначати скорочення цитати."
+- lemma: "наголосити"
+  translation: "to emphasize"
+  ipa: "[nɑɦɔlɔˈsɪtɪ]"
+  pos: verb
+  usage: "Викладачка наголосила, що контекст важливий."
+- lemma: "уточнити"
+  translation: "to clarify"
+  ipa: "[utɔt͡ʃˈnɪtɪ]"
+  pos: verb
+  usage: "Рецензент уточнив, чи цитата точна."
+- lemma: "заперечити"
+  translation: "to object, deny"
+  ipa: "[zɑpɛˈrɛt͡ʃɪtɪ]"
+  pos: verb
+  usage: "Автор заперечив, що змінив позицію джерела."
+- lemma: "припустити"
+  translation: "to suppose"
+  ipa: "[prɪpʊsˈtɪtɪ]"
+  pos: verb
+  usage: "Рецензент припустив, що помилка виникла під час скорочення."
+- lemma: "академічна доброчесність"
+  translation: "academic integrity"
+  ipa: "[ɑkɑdɛˈmit͡ʃnɑ dɔbrɔˈt͡ʃɛsnʲistʲ]"
   pos: phrase
-  usage: "Не можна вирвати цитату з контексту й змінити позицію джерела."
+  usage: "Академічна доброчесність вимагає називати джерела."
