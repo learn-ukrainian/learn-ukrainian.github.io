@@ -1,152 +1,164 @@
-- lemma: логічний наголос
-  translation: logical stress
+- lemma: "актуальне членування"
+  translation: "information structure"
+  ipa: "[ɑktuˈɑlʲne t͡ʃlɛnuˈʋɑnʲːɑ]"
   pos: phrase
-  usage: Логічний наголос виділяє найважливіше слово в реченні.
-- lemma: інверсія
-  translation: inversion
+  usage: "Актуальне членування показує, що в реченні є темою, а що ремою."
+- lemma: "тема"
+  translation: "theme, given information"
+  ipa: "[ˈtɛmɑ]"
   pos: noun
-  usage: Інверсія змінює нейтральний порядок слів для смислового ефекту.
-- lemma: актуальне членування
-  translation: information structure
+  gender: f
+  usage: "Тема спирається на вже відому інформацію."
+- lemma: "рема"
+  translation: "rheme, new information"
+  ipa: "[ˈrɛmɑ]"
+  pos: noun
+  gender: f
+  usage: "Рема містить нове або головне повідомлення."
+- lemma: "емфаза"
+  translation: "emphasis"
+  ipa: "[ɛmˈfɑzɑ]"
+  pos: noun
+  gender: f
+  usage: "Емфаза допомагає виділити потрібний елемент речення."
+- lemma: "частка"
+  translation: "particle"
+  ipa: "[ˈt͡ʃɑstkɑ]"
+  pos: noun
+  gender: f
+  usage: "Частка саме має стояти біля слова, яке вона підсилює."
+- lemma: "логічний наголос"
+  translation: "logical stress"
+  ipa: "[lɔˈɦit͡ʃnɪj ˈnɑɦɔlɔs]"
   pos: phrase
-  usage: Актуальне членування показує співвідношення теми й реми.
-- lemma: тема
-  translation: theme
+  usage: "Логічний наголос може падати на виконавця, об'єкт або час."
+- lemma: "інверсія"
+  translation: "inversion"
+  ipa: "[inˈʋɛrsʲijɑ]"
   pos: noun
-  usage: Тема спирається на вже відомий контекст.
-- lemma: рема
-  translation: rheme
-  pos: noun
-  usage: Рема несе нову або контрастну інформацію.
-- lemma: нейтральний порядок
-  translation: neutral word order
+  gender: f
+  usage: "Інверсія змінює звичний порядок слів заради фокусу."
+- lemma: "нейтральний порядок"
+  translation: "neutral word order"
+  ipa: "[nɛjˈtrɑlʲnɪj ˈpɔrʲɑdɔk]"
   pos: phrase
-  usage: Нейтральний порядок не створює додаткового стилістичного напруження.
-- lemma: прямий порядок
-  translation: direct word order
+  usage: "Нейтральний порядок підходить для спокійної службової довідки."
+- lemma: "комунікативний центр"
+  translation: "communicative center"
+  ipa: "[kɔmunʲikɑˈtɪu̯nɪj ˈt͡sɛntr]"
   pos: phrase
-  usage: Прямий порядок часто починається з підмета.
-- lemma: кінцева позиція
-  translation: final position
+  usage: "Комунікативний центр речення часто стоїть ближче до кінця."
+- lemma: "фокус"
+  translation: "focus"
+  ipa: "[ˈfɔkus]"
+  pos: noun
+  gender: m
+  usage: "Фокус показує, яку інформацію автор хоче виділити."
+- lemma: "фокусне слово"
+  translation: "focus word"
+  ipa: "[ˈfɔkusne ˈslɔʋɔ]"
   pos: phrase
-  usage: Кінцева позиція часто підсилює рему.
-- lemma: комунікативний центр
-  translation: communicative center
+  usage: "Фокусне слово може отримати частку саме або лише."
+- lemma: "топікалізація"
+  translation: "topicalization"
+  ipa: "[tɔpʲikɑlʲiˈzɑt͡sʲijɑ]"
+  pos: noun
+  gender: f
+  usage: "Топікалізація додатка виносить відомий об'єкт на початок."
+- lemma: "фінальна позиція"
+  translation: "final position"
+  ipa: "[fʲiˈnɑlʲnɑ pɔˈzɪt͡sʲijɑ]"
   pos: phrase
-  usage: Комунікативний центр відповідає на приховане питання речення.
-- lemma: смисловий центр
-  translation: semantic center
+  usage: "Фінальна позиція часто є сильною для нової інформації."
+- lemma: "рамка місця"
+  translation: "place frame"
+  ipa: "[ˈrɑmkɑ ˈmʲist͡sʲɑ]"
   pos: phrase
-  usage: Смисловий центр може стояти наприкінці речення.
-- lemma: емфаза
-  translation: emphasis
-  pos: noun
-  usage: Емфаза потрібна тоді, коли автор свідомо підсилює фокус.
-- lemma: топікалізація
-  translation: topicalization
-  pos: noun
-  usage: Топікалізація виносить відомий об'єкт на початок речення.
-- lemma: частка
-  translation: particle
-  pos: noun
-  usage: Частка може змінити логічний фокус висловлення.
-- lemma: постпозиція
-  translation: postposition
-  pos: noun
-  usage: Постпозиція означення часто звучить художньо.
-- lemma: означення
-  translation: attribute
-  pos: noun
-  usage: Означення називає ознаку предмета.
-- lemma: підмет
-  translation: subject
-  pos: noun
-  usage: Підмет називає виконавця або носія стану.
-- lemma: присудок
-  translation: predicate
-  pos: noun
-  usage: Присудок може стояти перед підметом у сценічному описі.
-- lemma: додаток
-  translation: object
-  pos: noun
-  usage: Додаток можна винести на початок для контрасту.
-- lemma: обставина
-  translation: adverbial modifier
-  pos: noun
-  usage: Обставина на початку речення задає часову або просторову рамку.
-- lemma: дистантне розташування
-  translation: distant placement
+  usage: "Рамка місця на початку створює сцену для події."
+- lemma: "рамка часу"
+  translation: "time frame"
+  ipa: "[ˈrɑmkɑ ˈt͡ʃɑsu]"
   pos: phrase
-  usage: Дистантне розташування залежних слів може ускладнити читання.
-- lemma: двозначність
-  translation: ambiguity
+  usage: "Рамка часу відповідає на питання, коли відбулася дія."
+- lemma: "обмеження"
+  translation: "restriction"
+  ipa: "[ɔbmɛˈʒɛnʲːɑ]"
   pos: noun
-  usage: Невдала інверсія створює двозначність.
-- lemma: ритмомелодика
-  translation: rhythm and melody
+  gender: n
+  usage: "Частка лише створює обмеження обсягу."
+- lemma: "підсилення"
+  translation: "intensification"
+  ipa: "[pidsɪˈlɛnʲːɑ]"
   pos: noun
-  usage: Ритмомелодика речення залежить від порядку слів.
-- lemma: експресивність
-  translation: expressiveness
+  gender: n
+  usage: "Підсилення має бути мотивоване контекстом."
+- lemma: "інтонація"
+  translation: "intonation"
+  ipa: "[intɔnɑˈt͡sʲijɑ]"
   pos: noun
-  usage: Експресивність доречна в публіцистичному або художньому тексті.
-- lemma: стилістична фігура
-  translation: stylistic figure
+  gender: f
+  usage: "В усному мовленні інтонація може показати фокус."
+- lemma: "ритмомелодика"
+  translation: "rhythm and melody"
+  ipa: "[rɪtmɔmɛˈlɔdɪkɑ]"
+  pos: noun
+  gender: f
+  usage: "Ритмомелодика фрази змінюється, коли рема переходить у кінець."
+- lemma: "сильна позиція"
+  translation: "strong position"
+  ipa: "[ˈsɪlʲnɑ pɔˈzɪt͡sʲijɑ]"
   pos: phrase
-  usage: Інверсія може працювати як стилістична фігура.
-- lemma: регістр
-  translation: register
+  usage: "Початок і кінець речення можуть бути сильними позиціями."
+- lemma: "нейтралізація"
+  translation: "neutralization"
+  ipa: "[nɛjtrɑlʲizɑˈt͡sʲijɑ]"
   pos: noun
-  usage: Регістр визначає, чи доречна сильна інверсія.
-- lemma: службовий стиль
-  translation: official style
+  gender: f
+  usage: "Нейтралізація повертає речення до прозорого порядку."
+- lemma: "двозначність"
+  translation: "ambiguity"
+  ipa: "[dʋɔˈznɑt͡ʃnʲistʲ]"
+  pos: noun
+  gender: f
+  usage: "Невдала інверсія може створити двозначність."
+- lemma: "залежна група"
+  translation: "dependent phrase"
+  ipa: "[zɑˈlɛʒnɑ ˈɦrupɑ]"
   pos: phrase
-  usage: Службовий стиль потребує прозорого порядку слів.
-- lemma: публіцистичний стиль
-  translation: journalistic style
+  usage: "Інверсія не повинна розривати залежну групу."
+- lemma: "жанрова доречність"
+  translation: "genre appropriateness"
+  ipa: "[ˈʒɑnrɔʋɑ dɔˈrɛt͡ʃnʲistʲ]"
   pos: phrase
-  usage: Публіцистичний стиль часто використовує риторичний наголос.
-- lemma: художній стиль
-  translation: literary style
+  usage: "Жанрова доречність визначає, чи потрібна експресивна інверсія."
+- lemma: "службова довідка"
+  translation: "administrative notice"
+  ipa: "[ˈsluʒbɔʋɑ dɔˈʋidkɑ]"
   pos: phrase
-  usage: Художній стиль дозволяє ритмічну постпозицію означення.
-- lemma: контраст
-  translation: contrast
-  pos: noun
-  usage: Контраст допомагає пояснити, чому потрібна частка саме.
-- lemma: протиставлення
-  translation: opposition
-  pos: noun
-  usage: Протиставлення можна оформити конструкцією а не.
-- lemma: приховане питання
-  translation: implicit question
+  usage: "Службова довідка зазвичай потребує нейтрального порядку."
+- lemma: "контрастний додаток"
+  translation: "contrastive object"
+  ipa: "[kɔnˈtrɑstnɪj dɔˈdɑtɔk]"
   pos: phrase
-  usage: Приховане питання допомагає знайти рему.
-- lemma: рамка висловлення
-  translation: discourse frame
+  usage: "Контрастний додаток можна винести на початок речення."
+- lemma: "приховане питання"
+  translation: "implicit question"
+  ipa: "[prɪˈxɔʋɑne pɪˈtɑnʲːɑ]"
   pos: phrase
-  usage: Рамка висловлення готує читача до нової інформації.
-- lemma: калькована конструкція
-  translation: calqued construction
+  usage: "Приховане питання пояснює, чому автор обрав інверсію."
+- lemma: "розмовна частка"
+  translation: "colloquial particle"
+  ipa: "[rɔzˈmɔu̯nɑ ˈt͡ʃɑstkɑ]"
   pos: phrase
-  usage: Калькована конструкція може звучати неприродно українською.
-- lemma: редагування
-  translation: editing
+  usage: "Розмовна частка ж не завжди пасує до формального листа."
+- lemma: "експресивність"
+  translation: "expressiveness"
+  ipa: "[ɛksprɛˈsɪu̯nʲistʲ]"
   pos: noun
-  usage: Редагування перевіряє, чи інверсія справді допомагає тексту.
-- lemma: доречність
-  translation: appropriateness
-  pos: noun
-  usage: Доречність важливіша за декоративний ефект.
-- lemma: урочистість
-  translation: solemnity
-  pos: noun
-  usage: Надмірна урочистість шкодить службовому тексту.
-- lemma: прозорість
-  translation: clarity
-  pos: noun
-  usage: Прозорість допомагає адресатові швидко зрозуміти інструкцію.
-- lemma: наголошувати
-  translation: to emphasize
-  pos: verb
-  usage: Частка може наголошувати потрібний член речення.
+  gender: f
+  usage: "Експресивність має бути підпорядкована змісту."
+- lemma: "стилістична фігура"
+  translation: "stylistic figure"
+  ipa: "[stɪlʲisˈtɪt͡ʃnɑ fʲiˈɦurɑ]"
+  pos: phrase
+  usage: "Інверсія може бути стилістичною фігурою в есе або публіцистиці."
