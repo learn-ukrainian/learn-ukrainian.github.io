@@ -68,7 +68,10 @@ ONNB = Odesa National Scientific Library; PMU = Pedagogical Museum of Ukraine.
   episode, but the dossier should not inflate it into a generic NKVD/KGB
   biography. EIU specifically names an arrest by the State Political Directorate
   of the Ukrainian SSR in February 1931, release after half a year, and
-  reinstatement. Keep the agency and chronology precise.
+  reinstatement. Keep the agency and chronology precise; if later summaries
+  emphasize his avoidance of the Great Terror, treat that as a separate
+  reception point rather than a contradiction unless a specialist source
+  resolves the whole 1930s sequence.
 - **Modernism under Soviet pressure:** ESU and IEU describe early work in
   modernist, symbolist, secession, decorative, and folk-inspired forms. ONNB
   states that in the 1930s he was for a long time effectively erased from the
@@ -102,12 +105,13 @@ ONNB = Odesa National Scientific Library; PMU = Pedagogical Museum of Ukraine.
   Ukrainian Academy of Arts founding group in 1917. Local history textbook
   material also lists him among the Academy's founding artists.
 - **Portrait gallery of Ukrainian culture:** ESU lists portraits of Mykola
-  Biliashivskyi, Bohdan Lepkyi, Mykhailo Kotsiubynsky, Mykola Voronyi, Les
-  Kurbas, Mykola Lysenko, Pavlo Tychyna, Dmytro Zahul, Yurii Mezhenko, Vasyl
-  Chumak, Hryhorii Skovoroda, Lesia Ukrainka, Mykola Khvylovy, Yevhen
-  Yefremov, Volodymyr Sosiura, Mykola Zerov, Ivan Nechui-Levytskyi, Panteleimon
-  Kulish, and others. IEU highlights 1919 portraits of Tychyna and Kurbas and a
-  1925-1926 lithographic portrait series of Ukrainian writers.
+  Biliashivskyi, Bohdan Lepkyi, Mykhailo Kotsiubynsky, M. Voronyi, Les Kurbas,
+  Mykola Lysenko, Pavlo Tychyna, Dmytro Zahul, Yurii Mezhenko, Vasyl Chumak,
+  Hryhorii Skovoroda, Lesia Ukrainka, Mykola Khvylovy, Ye. Yefremov, Volodymyr
+  Sosiura, Mykola Zerov, Ivan Nechui-Levytskyi, Panteleimon Kulish, and others.
+  Keep the ESU initials for Voronyi and Yefremov until future module work
+  verifies exact first names. IEU highlights 1919 portraits of Tychyna and
+  Kurbas and a 1925-1926 lithographic portrait series of Ukrainian writers.
 - **Artist-portrait series:** IEU says he created a 1932 portrait etching
   series of Ukrainian artists including Volodymyr Borovykovsky, Oleksa
   Novakivskyi, Fedir Krychevskyi, Vasyl Krychevskyi, Heorhii Narbut, and
@@ -121,9 +125,10 @@ ONNB = Odesa National Scientific Library; PMU = Pedagogical Museum of Ukraine.
   shift as part of the story of 1930s pressure and partial forgetting.
 - **Literature:** ESU and EIU record early publication in `Літературно-науковий
   вісник`, `Молода Україна`, `Дзвін`, `Шлях`, `Музагет`, and `Шквал`; poetry
-  collection `Співи Землі` (1912); sonnets; plays; art-critical articles;
-  translations of Blok and Wilde; and memoirs about Kotsiubynsky, Franko,
-  Lysenko, Nechui-Levytskyi, and Lesia Ukrainka.
+  collection `Співи Землі` (1912); a `вінок сонетів` / crown of sonnets
+  (1918); plays; art-critical articles; translations of Blok and Wilde; and
+  memoirs about Kotsiubynsky, Franko, Lysenko, Nechui-Levytskyi, and Lesia
+  Ukrainka.
 - **Children's literature / illustration:** ESU lists `Ох`, `Казки`,
   `Дрімайлики`, `Прийшла зима`, and `Годинник`. PMU notes museum-held books
   illustrated by Zhuk, including Ivan Franko material and readers for younger
@@ -151,7 +156,7 @@ than long secondary quotations.
   style creates a cultural canon.
 - **Portrait etchings of Ukrainian artists (1932):** Good cross-module link to
   Narbut, Boichuk, Novakivskyi, and the Krychevsky family.
-- **`Біле і чорне` / `Black and White`:** ONNB and IEU surface this as a
+- **`Біле та чорне` / `Black and White`:** ONNB and IEU surface this as a
   memorable visual anchor for line, contrast, symbolism, and modernist
   decorative thinking.
 - **`Ох` book cover / children's books:** PMU and ONNB give useful education
@@ -193,10 +198,10 @@ than long secondary quotations.
 - **Odesa chronology:** Sources agree on Odesa significance after 1925, but ESU
   wording around "in Odesa: from 1917" should be handled cautiously against IEU
   and EIU, which place the main Odesa teaching period after 1925.
-- **"First Ukrainian sonnets" claim:** EIU says in 1918 Zhuk became author of
-  the first Ukrainian sonnets. This is potentially literary-history specific
-  and should be verified by a specialist source before it becomes a learner
-  claim.
+- **Sonnets claim:** EIU says in 1918 Zhuk became author of "first Ukrainian
+  sonnets," while ESU describes a `вінок сонетів` / crown of sonnets. Future
+  module should avoid a broad "first Ukrainian sonnets" learner claim unless a
+  specialist literary source confirms exactly what was first.
 - **1930s erasure:** ONNB states he was effectively erased from art history in
   the 1930s. Use as reception/memory-pressure frame, not as a fully explained
   causal claim unless future module adds monograph evidence.
@@ -300,8 +305,7 @@ than long secondary quotations.
 - Енциклопедія Сучасної України. "Жук Михайло Іванович."
   https://esu.com.ua/article-18290. Accessed 2026-07-01.
 - Енциклопедія історії України / Інститут історії України НАН України. "Жук
-  Михайло Іванович."
-  https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&I21DBN=EIU&P21DBN=EIU&S21CNR=20&S21COLORTERMS=0&S21FMT=eiu_all&S21P01=0&S21P02=0&S21P03=TRN%3D&S21REF=10&S21STN=1&S21STR=zhuk_mykhajlo_ivanovych&Z21ID=.
+  Михайло Іванович." https://www.history.org.ua/?termin=zhuk_mykhajlo_ivanovych.
   Accessed 2026-07-01.
 - Internet Encyclopedia of Ukraine. "Zhuk, Mykhailo."
   https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CZ%5CH%5CZhukMykhailo.htm.
