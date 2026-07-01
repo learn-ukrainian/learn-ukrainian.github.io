@@ -16,9 +16,9 @@
 - [x] All 10 sections completed
 - [x] At least 3 Tier 1/Tier 2 institutional sources cited
 - [x] Pressure mechanism framed as cultural-institutional, wartime, and
-      memory-site pressure, without inventing an NKVD/KGB case
+  memory-site pressure, without inventing an NKVD/KGB case
 - [x] Primary-source visual anchors identified without overquoting
-- [x] Cross-track links verified `test -e` on 2026-07-01
+- [x] Cross-track links verified `test -e` on 2026-07-01 where marked existing
 - [x] Naming-canonical policy applied
 - [x] Image-rights policy applied
 - [x] Dossier-only scope observed
@@ -30,148 +30,152 @@
 - **Full name (UA, canonical):** Іван Іванович Труш.
 - **Project English canonical:** Ivan Trush.
 - **Name variants / aliases:** Ivan Trush; Trush, Ivan; Ivan Ivanovych Trush;
-  Truš in IEU transliteration; Jan / Iwan Trusz in Polish contexts. Russianized
-  forms are not needed for learner-facing surfaces unless a source file requires
-  source-critical metadata.
-- **Born:** ESU gives 6/18 January 1869, Vysotsko, now Zolochiv raion, Lviv
-  oblast. IEU and EIU use 17 January 1869. Treat birth-date wording as a
-  source discrepancy; use 18 January 1869 as the modern teaching date if a
-  single date is needed, with note.
-- **Died:** ESU gives 21 March 1941, Lviv; IEU and EIU give 22 March 1941.
-  Treat as a date discrepancy; do not silently normalize.
-- **Burial:** EIU states he was buried at Lychakiv Cemetery; a granite grave
-  monument was installed in 1959.
-- **Family / network:** husband of Ariadna Drahomanova-Trush and son-in-law of
-  Mykhailo Drahomanov. ESU identifies Ariadna, Myron, and Roman Trush as his
-  children; treat child-count details as source-sensitive until a future module
-  checks family records. ESU records membership in the Shevchenko Scientific
-  Society from 1901 and in the Union of Soviet Artists of Ukraine in 1940.
-- **Education:** studied at the Cracow School / Academy of Fine Arts,
-  graduating in 1897, and studied in Vienna in 1894 and Munich in 1897. ESU
-  names teachers including Leon Wyczolkowski and Jan Stanislawski.
-- **Lviv base:** after study he lived and worked mainly in Lviv, where he
-  became a central organizer of Ukrainian artistic and literary public life.
-- **Museum home:** the National Museum in Lviv says his villa at 28 Ivan Trush
-  Street became a museum in 1989. Lviv Interactive states the villa was built
-  as both home and creative studio, designed by Oleksandr Lushpynskyi, and that
-  the family estate was transferred to the National Museum in 1989.
+  Truš in IEU transliteration; Jan / Iwan Trusz in Polish contexts.
+  Russianized forms are not needed for learner-facing surfaces unless a source
+  file requires source-critical metadata.
+- **Born / died:** ESU gives 6/18 January 1869, Vysotsko, now Zolochiv raion,
+  Lviv oblast, and 21 March 1941, Lviv. EIU and IEU give 17 January 1869 and
+  22 March 1941. Treat dates as a source discrepancy; do not silently
+  normalize.
+- **Family / networks:** ESU identifies Trush as husband of Ariadna
+  Drahomanova-Trush and father of Ariadna, Myron, and Roman Trush. IEU calls
+  him Mykhailo Drahomanov's son-in-law. Sources also place him in circles
+  around Ivan Franko, Vasyl Stefanyk, Mykhailo Hrushevskyi, and the
+  Shevchenko Scientific Society.
+- **Education:** He studied at the Cracow School / Academy of Fine Arts
+  between 1891 and 1897, with additional study in Vienna in 1894 and Munich in
+  1897. ESU names teachers including Leon Wyczolkowski and Jan Stanislawski.
+- **Lviv base:** After art study he lived mainly in Lviv, where he became a
+  painter, critic, editor, publisher, exhibition organizer, and public-culture
+  figure.
+- **Teaching / public posts:** ESU records teaching at the Kyiv Drawing School
+  and at the Free Academy of Arts in Lviv. ESU also records his role as head of
+  the Museum Commission in 1920 and the Ivan Franko reburial commission in
+  Lviv in 1921.
+- **Museum home:** The National Museum in Lviv says his former villa at
+  28 Ivan Trush Street became the Ivan Trush Art Memorial Museum in 1989.
+  Lviv Interactive records that the villa was built as both home and studio,
+  designed by Oleksandr Lushpynskyi, and later transferred to the National
+  Museum.
 
 ## 2. Oppression / pressure mechanism
 
 - **Load-bearing pressure frame:** Trush is not a security-service biography.
   Do not invent an NKVD, MGB, or KGB case. His BIO fit is cultural
-  institution-building in non-state Ukrainian Galicia, the difficulty of
-  sustaining Ukrainian art criticism and exhibition structures, wartime damage
-  to memory sites, and later Soviet-era repositioning.
+  institution-building in non-state Ukrainian Galicia, difficulty sustaining
+  Ukrainian art criticism and exhibition structures, wartime damage to memory
+  sites, and later Soviet-era institutional repositioning.
 - **Partition / statelessness:** Trush built Ukrainian painting infrastructure
   in Habsburg and then Polish-ruled Galicia rather than in a stable Ukrainian
-  state. EIU records that in 1898 he headed the first Galician artists'
-  association, the Society for the Advancement of Ruthenian Art, and in 1904
-  helped found the Society of Friends of Ukrainian Scholarship, Literature, and
-  Art with Mykhailo Hrushevskyi.
+  state. EIU records that he headed the Society for the Advancement of
+  Ruthenian Art in 1898, helped found the Society of Friends of Ukrainian
+  Scholarship, Literature, and Art in 1904, and helped publish the Ukrainian
+  art periodical `Артистичний вістник` in 1905.
 - **Public-culture friction:** EIU states that after the First World War he
-  gradually withdrew from public and literary-critical activity because of the
-  inertia of part of the Ukrainian intelligentsia and unfavorable creative
-  conditions. That is the cleanest documented pressure point for the lesson.
-- **National-memory work:** he headed the Museum Commission in 1920 and the
-  Ivan Franko reburial commission in Lviv in 1921, according to ESU. These are
-  concrete acts of cultural memory, not abstract "activism."
-- **Soviet endpoint caution:** ESU records membership in the Soviet Artists'
-  Union in 1940 and participation in organizing its Lviv branch. Present this
-  as a late-life institutional fact after the Soviet annexation of western
-  Ukraine, not as proof of inner ideological loyalty or betrayal.
+  gradually withdrew from public and literary-critical activity because of
+  unfavorable creative conditions and the inertia of part of the Ukrainian
+  intelligentsia. This is the cleanest documented pressure point for a lesson.
+- **National-memory work:** Trush's Museum Commission work, Ivan Franko
+  reburial commission role, monument projects, portraits of Ukrainian
+  intellectuals, and art criticism show memory-building as concrete labor, not
+  abstract "activism."
+- **Late Soviet endpoint caution:** ESU and EIU record that in 1940 he joined
+  the Soviet Artists' Union and participated in organizing its Lviv branch.
+  Present this as a late-life institutional fact after Soviet annexation of
+  western Ukraine, not as proof of inner loyalty or betrayal.
 - **Villa damage / preservation:** Lviv Interactive records that during the
   Second World War a German bombing damaged the western wing of Trush's villa,
-  later rebuilt by daughter Ariadna in the 1950s. Use this as material memory
-  pressure: the home-studio survived through family repair and later museum
-  transfer.
-- **What survived:** paintings, portraits of Ukrainian cultural figures,
+  later rebuilt by his daughter Ariadna in the 1950s. This is a material memory
+  pressure point: home-studio, family stewardship, museum transfer.
+- **What survived:** Paintings, portraits of Ukrainian cultural figures,
   essays, exhibition institutions, the villa museum, and a vocabulary of light,
   color, plein-air work, landscape, and Ukrainian cultural networks.
 
 ## 3. Major works / contributions
 
-- **Galician painting revival:** EIU explicitly says Trush began the revival
-  of Galician painting. His importance is not only as "painter of sunlight" but
-  as organizer, critic, publisher, and exhibition builder.
-- **Art criticism and publishing:** IEU says he co-published the first
-  Ukrainian art magazine, `Артистичний вісник`, lectured on art and literature,
-  and contributed to major Ukrainian periodicals. EIU states he wrote more than
-  one hundred articles on literature and history in Galician, Polish, and
-  Viennese periodicals.
+- **Galician painting revival:** EIU explicitly credits Trush with beginning a
+  revival of Galician painting. His importance is not only "painter of
+  sunlight" but also organizer, critic, publisher, and exhibition builder.
+- **Art criticism / publishing:** IEU says he co-published the first Ukrainian
+  art magazine, lectured on art and literature, and contributed to major
+  Ukrainian periodicals. EIU records more than one hundred articles in
+  Galician, Polish, and Viennese periodicals.
 - **Societies and exhibitions:** EIU records his role in the Society for the
   Advancement of Ruthenian Art, the Society of Friends of Ukrainian
   Scholarship, Literature, and Art, and the first all-Ukrainian art exhibition
-  in Lviv in 1905. This makes him a cross-regional exhibition organizer, not
-  only a solitary painter.
+  in Lviv in 1905. This makes him a cross-regional exhibition organizer, not a
+  solitary studio figure.
 - **Portrait gallery:** IEU gives a gallery of about 350 portraits, including
   Ariadna, Sylvester Sembratovych, Andrey Sheptytskyi, Ivan Franko, Vasyl
   Stefanyk, Lesia Ukrainka, Oleksander Konysky, Ivan Nechui-Levytskyi,
   Volodymyr Antonovych, Borys Hrinchenko, Mykhailo Drahomanov, Mykhailo
   Hrushevskyi, and Mykola Lysenko. EIU gives about 360-370 realist portraits.
-- **Landscape / color work:** IEU identifies him as an outstanding Ukrainian
-  impressionist known for original use of color and says much of the legacy of
-  more than 6,000 paintings consists of landscapes. ESU says he was called a
-  poet of color and sun.
+- **Landscape / color work:** IEU identifies Trush as an outstanding Ukrainian
+  impressionist known for original use of color and says a major part of his
+  legacy of more than 6,000 paintings consists of landscapes. ESU says he was
+  called a poet of color and sun.
 - **Travel and plein-air practice:** IEU and ESU record travel through Kyiv,
-  Crimea, Italy, Egypt, Palestine, Hutsulshchyna, and Naddniprianshchyna. The
-  C1 fine-arts plan already names "Іван Труш: мандрівна естетика та поезія
+  Crimea, Italy, Egypt, Palestine, Hutsulshchyna, and Naddniprianshchyna. C1
+  fine-arts planning already names "Іван Труш: мандрівна естетика та поезія
   кольору."
 - **Representative works / cycles:** IEU names `Sunset in the Forest`,
-  `Grain Stacks near the Woods`, `Moonlit Night by the Sea`,
-  `The Solitary Pine`, `The Jewish Cemetery`, `St Michael's Cathedral`,
-  `St Andrew's Church`, `T. Shevchenko's Grave in Kaniv`, `Hahilky`,
-  `Hutsul Woman with Child`, `Trembita Players`, and `Washerwomen`.
-- **Memorial house:** the National Museum in Lviv presents his former villa as
-  a museum with life and work pages, not simply a building marker. The house
-  can anchor the biography in family, studio, garden, and Lviv urban memory.
+  `Grain Stacks near the Woods`, `Moonlit Night by the Sea`, `The Solitary
+  Pine`, `The Jewish Cemetery`, `St Michael's Cathedral`, `St Andrew's Church`,
+  `T. Shevchenko's Grave in Kaniv`, `Hahilky`, `Hutsul Woman with Child`,
+  `Trembita Players`, and `Washerwomen`. ESU adds larger cycles such as
+  `Про самоту`, `В обіймах снігу`, `З життя пнів і дерев`, `Луги і поля`,
+  `Єврейські кладовища`, and `Квіти`.
+- **Memorial house:** The National Museum in Lviv presents the former villa as
+  a museum of his life and work. This house can anchor biography in family,
+  studio, garden, wartime damage, and Lviv urban memory.
 
 ## 4. Primary-source quote / visual anchors
 
 For Trush, strongest primary material should be visual and spatial: paintings,
-portraits, the villa-studio, exhibition traces, and printed art criticism.
+portraits, villa-studio, exhibition traces, printed art criticism, and museum
+labels. Avoid long quotations unless scans are verified.
 
-- **Self-portrait / portrait of Trush:** IEU and Commons have portrait anchors.
-  Use only file-level rights-cleared images and preserve Ukrainian naming in
-  captions.
-- **Portrait of Ivan Franko:** strong cross-track anchor to BIO/LIT. It lets
+- **Self-portrait / portrait of Trush:** IEU and Wikimedia Commons have portrait
+  anchors. Use only file-level rights-cleared images and preserve Ukrainian
+  naming in captions.
+- **Portrait of Ivan Franko:** Strong cross-track anchor to BIO/LIT. It lets
   learners connect friendship, public culture, portrait conventions, and the
   1921 Franko reburial commission.
-- **Portrait of Lesia Ukrainka / Vasyl Stefanyk / Drahomanov / Hrushevskyi:**
-  candidate comparative activity: how portraiture builds a visible network of
-  Ukrainian intellectual life. Verify each image source and date before use.
-- **`Самітна сосна` / `The Solitary Pine`:** recurring visual anchor for
-  loneliness, landscape, symbolic tree, and color. Keep it as a painting cycle
-  and do not overgeneralize from one reproduction.
-- **`Єврейські кладовища` / Jewish Cemetery cycle:** sensitive C1 visual
-  anchor for Galicia's multiethnic memory. Needs careful framing and source
-  images; avoid using it as mere atmospheric "old Galicia."
+- **Portraits of Lesia Ukrainka / Vasyl Stefanyk / Drahomanov / Hrushevskyi:**
+  Candidate comparative activity: how portraiture builds a visible network of
+  Ukrainian intellectual life. Verify each image source date before use.
+- **`Самітна сосна` / `The Solitary Pine`:** Useful visual anchor for
+  loneliness, landscape, symbolic tree, light, and color. Keep it a painting
+  cycle; do not overgeneralize from one reproduction.
+- **`Єврейські кладовища` / Jewish Cemetery cycle:** Sensitive C1 visual anchor
+  for Galicia's multiethnic memory. Use careful contextual framing; do not use
+  the images as decorative "old Galicia" atmosphere.
 - **Travel landscapes:** Crimea, Italy, Egypt, Palestine, Kyiv churches, and
-  Kaniv landscapes are useful for map-based activities on movement, color, and
-  observation.
+  Kaniv landscapes are useful map-based activities about movement, observation,
+  and color.
 - **Villa museum:** National Museum in Lviv and Lviv Interactive provide the
-  best place anchor: the home-studio at 28 Ivan Trush Street, garden, damage,
-  family care, and museum transfer.
-- **Art criticism:** ESU lists essays and speeches including pieces on new
-  directions in painting, photography and painting, Ukrainian theater, art
-  exhibitions, and a speech opening the Ukrainian National Museum named for
-  Shevchenko. Quote only after verifying scans; for dossier, title-level
-  anchors are enough.
+  best place anchor: home-studio at 28 Ivan Trush Street, late-Secession
+  architecture, wartime damage, family care, museum transfer.
+- **Art criticism:** ESU lists essays and speeches on new directions in
+  painting, photography and painting, Ukrainian theater, art exhibitions, and
+  the opening of the Ukrainian National Museum named after Shevchenko. Quote
+  only after scan verification; for dossier purposes, title-level anchors are
+  enough.
 
 ## 5. Language register
 
 - **Register:** museum-label, art-historical, plein-air, portrait-network,
   exhibition-organizer, critic/editor/publisher, Galicia public-culture
   register.
-- **CEFR readiness:** B2 biography and painting-description work; C1
-  discussion of public institutions, art criticism, Ukrainian national culture
-  under partition, landscape as memory, and museum-house preservation.
+- **CEFR readiness:** B2 biography and painting-description work; C1 discussion
+  of public institutions, art criticism, Ukrainian national culture under
+  partition, landscape memory, and museum-house preservation.
 - **Learner lexicon:** `живописець`, `пейзажист`, `портретист`, `пленер`,
   `імпресіонізм`, `колорит`, `світло`, `етюд`, `полотно`, `виставка`,
   `мистецька критика`, `видавець`, `редактор`, `товариство`, `меценат`,
   `меморіальний музей`, `вілла`, `майстерня`, `надгробок`.
-- **Style note:** future lessons should tell a human and public story: a
-  Galician village child enters Cracow art education, returns to Lviv, paints
+- **Style note:** Future lessons should tell the human public story: a child
+  from a Galician village enters Cracow art education, returns to Lviv, paints
   light and travel, but also edits, writes, organizes societies, paints the
   faces of Ukrainian culture, builds museum memory, and leaves a villa-studio
   that survives through war damage and family stewardship.
@@ -183,26 +187,28 @@ portraits, the villa-studio, exhibition traces, and printed art criticism.
   22 March 1941. Use a note rather than false precision.
 - **Realist vs impressionist label:** EIU calls him a founder of the realist
   direction in western Ukrainian painting; IEU calls him an outstanding
-  Ukrainian impressionist; ESU traces evolution from academic classicism to
+  Ukrainian impressionist; ESU traces a development from academic classicism to
   impressionism, Secession/modern, and symbolism. Avoid one-label reduction.
 - **"Poet of color and sun":** ESU supports the phrase, but it can become
   sentimental. Use it after learners have looked at color and light in a
   painting.
-- **Late Soviet membership:** SХУ membership in 1940 is a source fact but not
-  a character verdict. Do not turn it into accusation or apology.
-- **Society founding date:** ESU and EIU use 1904 for the Society of Friends of
-  Ukrainian Scholarship, Literature, and Art; some later summaries use 1905.
-  Keep the date source-specific unless a future module resolves the discrepancy.
-- **Polish / Ukrainian / Austrian contexts:** his training and exhibitions
-  crossed Cracow, Vienna, Lviv, Kyiv, and international shows. Teach
-  transregional Ukrainian cultural work, not an ownership claim by any one
-  imperial or national frame.
-- **Jewish Cemetery cycle:** use with contextual care: Galicia's Jewish memory
-  and cemetery images require respectful framing, not decorative melancholy.
-- **Date of museum opening:** National Museum in Lviv says 1989; Lviv
-  Interactive records a memorial exposition from 1951, opening on 31 March
-  1986, and 1989 transfer of the family estate. Future module should keep the
-  distinction between family memorial exposition, museum opening, and transfer.
+- **Late Soviet membership:** Membership in the Soviet Artists' Union in 1940
+  is a source fact, not a character verdict. Do not turn it into accusation or
+  apology.
+- **Society founding dates:** ESU and EIU use 1904 for the Society of Friends
+  of Ukrainian Scholarship, Literature, and Art; some later summaries use 1905.
+  Keep dates source-specific unless the future module resolves the discrepancy.
+- **Polish / Ukrainian / Austrian contexts:** Training and exhibitions crossed
+  Cracow, Vienna, Lviv, Kyiv, and international venues. Teach transregional
+  Ukrainian cultural work, not an ownership claim by any one imperial or
+  national frame.
+- **Jewish Cemetery cycle:** Use contextual care: Galicia's Jewish cemetery
+  images require respectful framing, not decorative melancholy.
+- **Date of museum opening:** National Museum in Lviv says the museum was
+  created/opened in 1989; Lviv Interactive records a memorial exposition from
+  1951, an opening on 31 March 1986, and 1989 transfer of the family estate.
+  Future module should keep the distinction between family memorial exposition,
+  museum opening, and transfer.
 
 ## 7. Cross-track links
 
@@ -233,46 +239,45 @@ portraits, the villa-studio, exhibition traces, and printed art criticism.
 - `curriculum/l2-uk-en/plans/hist/zunr.yaml`
 - `curriculum/l2-uk-en/plans/istorio/akt-zluki.yaml`
 
-**Candidate future links (not yet existing or not yet built):**
+**Future / planned BIO links (not existing module files yet):**
 
-- `curriculum/l2-uk-en/plans/bio/ivan-trush.yaml`
-- MDX `ivan-trush`
+- BIO #365 `ivan-trush`
 - BIO #366 `mykhailo-zhuk`
-- FOLK / Hutsulshchyna modules if Hutsul travel imagery is used
-- Jewish Galicia / cemetery-memory modules if the `Єврейські кладовища` cycle
-  becomes a source-checked activity
+- FOLK cemetery-memory links only if source-checked for the Jewish Cemetery
+  cycle.
 
 ## 8. Naming-canonical
 
 - **Slug:** `ivan-trush`
 - **EN canonical:** Ivan Trush
 - **UA canonical:** Іван Іванович Труш
-- **Source aliases to track:** Trush, Ivan; Ivan Ivanovych Trush; Truš; Jan
+- **Source aliases track:** Trush, Ivan; Ivan Ivanovych Trush; Truš; Jan
   Trusz; Iwan Trusz.
-- **Forbidden / source-critical forms:** Russianized forms only if needed for
-  archive search or inherited metadata. Do not use Russian forms in
-  learner-facing headings.
-- **Date note in YAML:** future YAML should include a note for `date_birth`
-  and `date_death` discrepancies if the schema supports notes. If schema only
-  allows one date, use source-majority modern date with dossier note in body.
+- **Forbidden / source-critical forms:** Russianized forms should not be used
+  in learner-facing headings. They may appear only if needed in source metadata
+  or authority-control notes.
+- **Date note in YAML:** Future YAML should include a note for `date_birth` /
+  `date_death` discrepancies if schema supports notes. If schema only allows
+  one date, use the source-majority modern date and keep the dossier note in
+  the lesson body.
 
-## 9. Image-rights and media anchors
+## 9. Image-rights media anchors
 
 - **Rights principle:** Trush died in 1941, so many works are life-plus-70
-  public-domain candidates, but each file needs file-level rights verification
+  public-domain candidates, but every file needs file-level rights verification
   before publication.
 - **Commons categories:** `Category:Ivan Trush (painter)` and
-  `Category:Paintings by Ivan Trush` are useful leads. Avoid `Category:Ivan
-  Trush (writer)`, which is a different person.
+  `Category:Paintings by Ivan Trush` are useful leads. Avoid
+  `Category:Ivan Trush (writer)`, which is a different person.
 - **Portrait file caution:** Commons `File:Ivan Trush.jpg` indicates Ukrainian
-  public-domain status and a US public-domain caveat; confirm before use.
-- **Paintings:** Commons has `Ivan Trush - Italian Landscape.jpg`, `Ivan Trush
-  Sea Coast.jpg`, and other paintings; verify source, license, and whether the
-  reproduction is appropriate for educational use.
-- **Grave / villa / museum:** grave images may be CC BY-SA; villa/museum
+  public-domain status with a US public-domain caveat; confirm before use.
+- **Paintings:** Commons files such as `Ivan Trush - Italian Landscape.jpg` and
+  `Ivan Trush Sea Coast.jpg` may be candidates; verify source, license, and
+  whether the reproduction is appropriate for educational use.
+- **Grave / villa / museum:** Grave images may be CC BY-SA; villa and museum
   images should be checked file-by-file. The villa is a strong place anchor
   because it links home, studio, war damage, family, and museum transfer.
-- **Caption caution:** do not copy auction-site captions or Russianized
+- **Caption caution:** Do not copy auction-site captions or Russianized
   category names. Write project captions in Ukrainian canonical form and cite
   source metadata separately.
 
@@ -296,19 +301,15 @@ portraits, the villa-studio, exhibition traces, and printed art criticism.
 
 **Museum / reception / site-context sources:**
 
-- Центр міської історії / Інтерактивний Львів. "Вул. Труша, 28 - музей Івана
-  Труша." https://lia.lvivcenter.org/uk/objects/trusha-28/. Accessed
-  2026-07-01.
-- Гал-Інфо. "Іван Труш - художник, який поширив пленеризм на Галичині."
+- Центр міської історії. "Вул. Труша, 28 — музей Івана Труша."
+  https://lia.lvivcenter.org/uk/objects/trusha-28/. Accessed 2026-07-01.
+- Гал-Інфо. "Іван Труш — художник, який поширив пленеризм на Галичині."
   https://galinfo.com.ua/news/vidomyy_i_nevidomyy_trush_hudozhnyk_yakyy_poshyryv_pleneryzm_na_galychyni_305867.
   Accessed 2026-07-01.
-
-**Image / rights leads:**
-
-- Wikimedia Commons. "Category:Ivan Trush (painter)."
-  https://commons.wikimedia.org/wiki/Category:Ivan_Trush_(painter). Accessed
-  2026-07-01.
-- Wikimedia Commons. "Category:Paintings by Ivan Trush."
+- Wikimedia Commons. `Category:Ivan Trush (painter)`.
+  https://commons.wikimedia.org/wiki/Category:Ivan_Trush_(painter).
+  Accessed 2026-07-01.
+- Wikimedia Commons. `Category:Paintings by Ivan Trush`.
   https://commons.wikimedia.org/wiki/Category:Paintings_by_Ivan_Trush.
   Accessed 2026-07-01.
 - Wikimedia Commons. "File:Ivan Trush.jpg."
@@ -322,13 +323,13 @@ portraits, the villa-studio, exhibition traces, and printed art criticism.
 - [x] No Russocentric learner-facing framing.
 - [x] No invented NKVD/KGB/security-service case.
 - [x] Habsburg, Polish, Soviet, and Ukrainian institutional contexts separated
-      instead of flattened.
+  instead of flattened.
 - [x] Ukrainian public-culture work foregrounded: societies, exhibitions,
-      periodicals, portraits, museum commission, villa museum.
+  periodicals, portraits, museum commission, villa museum.
 - [x] Jewish Cemetery cycle flagged for careful context, not decorative use.
 - [x] Date discrepancies documented instead of silently normalized.
-- [x] Cross-track "Existing" paths verified `test -e`.
+- [x] Cross-track "Existing" paths verified with `test -e`.
 - [x] Naming and image-rights policy checked.
 - [x] Dossier-only slice: no plan YAML, module markdown, activity YAML,
-      vocabulary YAML, generated site MDX, wiki packet, status JSON, or
-      telemetry DB.
+  vocabulary YAML, generated site MDX, wiki packet, status JSON, or telemetry
+  DB.
