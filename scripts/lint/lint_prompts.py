@@ -13,6 +13,7 @@ Exit code 0 = clean, 1 = violations found.
 """
 
 import argparse
+import importlib.util
 import re
 import sys
 from pathlib import Path
@@ -254,6 +255,7 @@ def scan_prompts() -> list[dict]:
             all_violations.extend(check_file_level_rule(filepath))
 
     all_violations.extend(scan_orchestrator_suites())
+    all_violations.extend(scan_seminar_prompt_suite_refs())
     return all_violations
 
 
@@ -279,6 +281,38 @@ def make_violation(
         "message": message,
         "content": content[:120],
     }
+
+
+def scan_seminar_prompt_suite_refs() -> list[dict]:
+    """Run the retired seminar template guard through prompt lint."""
+    validator_path = PROJECT_ROOT / "scripts" / "validate" / "seminar_prompt_suite_refs.py"
+    if not validator_path.is_file():
+        return []
+
+    spec = importlib.util.spec_from_file_location(
+        "_seminar_prompt_suite_refs",
+        validator_path,
+    )
+    if spec is None or spec.loader is None:
+        return [
+            make_violation(
+                "SEMINAR_PROMPT_SUITE_REFS",
+                "Unable to load seminar prompt-suite reference validator",
+                validator_path,
+            )
+        ]
+
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return [
+        make_violation(
+            "SEMINAR_PROMPT_SUITE_REFS",
+            error,
+            validator_path,
+            content=error,
+        )
+        for error in module.validate()
+    ]
 
 
 def line_number_for(text: str, needle: str) -> int:

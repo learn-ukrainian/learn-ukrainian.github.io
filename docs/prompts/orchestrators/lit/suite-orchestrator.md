@@ -6,7 +6,7 @@ Last reviewed: 2026-06-30
 ## Source Assumptions
 
 - LIT is the main Ukrainian literature seminar track. It is distinct from C1/C2 literature modules and from active `lit-*` specialization tracks.
-- Current source surfaces include `curriculum/l2-uk-en/plans/lit/*.yaml`, `curriculum/l2-uk-en/lit/`, `docs/l2-uk-en/LIT-PLAN-GENERATED.md`, `docs/l2-uk-en/templates/lit-module-template.md`, `docs/audits/bio-lit-cross-reference-exclusions.md`, `docs/audits/bio-lit-cross-reference-gaps.md`, and literary textbook references.
+- Current source surfaces include `curriculum/l2-uk-en/plans/lit/*.yaml`, `curriculum/l2-uk-en/lit/`, `docs/l2-uk-en/LIT-PLAN-GENERATED.md`, shared seminar prompt rules, `docs/audits/bio-lit-cross-reference-exclusions.md`, `docs/audits/bio-lit-cross-reference-gaps.md`, and literary textbook references.
 - Every module needs a primary literary reading catalog: works, excerpts, poems, letters, diaries, and authorial texts classified by hosting rights.
 - This suite covers preflight, production, quality audit, and remediation. Use only the stage that matches the task.
 
@@ -38,8 +38,8 @@ git rev-parse --show-toplevel
 - `docs/prompts/orchestrators/shared/review-output-schema.md`
 - `docs/prompts/orchestrators/shared/seminar-source-rules.md`
 - `docs/prompts/orchestrators/shared/reading-section-rules.md`
+- `docs/prompts/orchestrators/shared/seminar-track-checklists.md`
 - `docs/l2-uk-en/LIT-PLAN-GENERATED.md`
-- `docs/l2-uk-en/templates/lit-module-template.md`
 - `docs/audits/bio-lit-cross-reference-exclusions.md`
 - `docs/audits/bio-lit-cross-reference-gaps.md`
 - Target plan: `curriculum/l2-uk-en/plans/lit/<slug>.yaml`

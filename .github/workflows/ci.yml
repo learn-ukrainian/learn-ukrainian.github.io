@@ -150,6 +150,8 @@ jobs:
               - 'agents_extensions/codex/**'
               - 'gemini_extensions/**'
               - 'scripts/build/phases/**/*.md'
+              - 'docs/l2-uk-en/template_mappings.yaml'
+              - 'docs/l2-uk-en/templates/**'
               - 'docs/prompts/orchestrators/**'
             lesson_schema:
               - '.github/workflows/ci.yml'

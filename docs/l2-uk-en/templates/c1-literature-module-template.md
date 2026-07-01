@@ -723,7 +723,7 @@ items:
 
 - **Base template:** `docs/l2-uk-en/templates/c1-module-template.md`
 - **C1 Curriculum Plan:** `docs/l2-uk-en/C1-CURRICULUM-PLAN.md` (M146-160 specifications)
-- **LIT Track Template:** `docs/l2-uk-en/templates/lit-module-template.md`
+- **LIT Track Suite:** `docs/prompts/orchestrators/lit/suite-orchestrator.md`
 - **Activity Reference:** `docs/ACTIVITY-MARKDOWN-REFERENCE.md`
 
 ---

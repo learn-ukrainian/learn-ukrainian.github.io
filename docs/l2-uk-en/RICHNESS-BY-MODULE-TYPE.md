@@ -23,7 +23,7 @@
 | C1 Academic | `c1-academic-module-template.md` | Citations, frameworks, data |
 | C2 Style | `c2-style-module-template.md` | 600-1000 exemplar, model answers, transformation |
 | C2 Professional | `c2-professional-module-template.md` | Domain terminology, documents |
-| LIT | `lit-module-template.md` | Philological analysis, essays, 30-40 vocab |
+| LIT | `docs/prompts/orchestrators/lit/suite-orchestrator.md` | Philological analysis, essays, 30-40 vocab |
 
 ---
 

@@ -202,7 +202,7 @@ This is a large ticket that should be broken into sub-tickets:
 
 **Instructions:**
 - Read `docs/l2-uk-en/LIT-CURRICULUM-PLAN.md`
-- Read `docs/l2-uk-en/templates/lit-module-template.md`
+- Read `docs/prompts/orchestrators/lit/suite-orchestrator.md`
 - Activity count: 16+ per module
 
 ---
