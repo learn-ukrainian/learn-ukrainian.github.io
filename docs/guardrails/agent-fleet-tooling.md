@@ -15,6 +15,49 @@ Use these project entry points for agent fleet work:
 Gemini CLI and Gemini Code Assist are unsupported for this project. Do not
 document them as current fallback, review, dispatch, or restoration paths.
 
+## Stream Orchestration Model
+
+Long-running curriculum streams should have one orchestrator thread per stream
+and worker threads or dispatched worktrees per task. The orchestrator thread is
+the source of queue state and merge decisions; worker threads are disposable,
+scoped, and replaceable.
+
+Minimum stream toolset expected inside Codex UI:
+
+- View stream queue, current slug/module, active worker threads, open PRs, and
+  paused/active monitor state.
+- Spawn worker thread or delegated worktree with a narrow brief, target files,
+  forbidden writes, validation commands, and required `X-Agent` trailer.
+- Read worker result and PR/check status back into the orchestrator thread.
+- Archive completed worker threads and preserve a compact handoff summary.
+- Resume stream orchestration in a new thread from queue state when the old
+  thread becomes unusable.
+
+Until UI-level stream controls exist, encode stream state in heartbeat prompts,
+PR bodies, handoff summaries, and branch/worktree names. Keep worker briefs
+compact and source-heavy; avoid moving long logs or source dumps between
+threads without Headroom compression.
+
+## Fleet Role Routing
+
+- **Codex:** orchestration, integration, deterministic validation, PR/merge
+  control, scoped code/docs edits.
+- **Claude:** independent read-only review for BIO narrative, source framing,
+  leakage, and final merge gates.
+- **AGY (Gemini-family via bridge):** adversarial factual/source checks,
+  alternate-source search, and broad read-only sweeps through the project
+  bridge.
+- **DeepSeek/Hermes-style reviewers:** sensitive decolonization/framing review
+  when available through the bridge.
+- **Grok-build:** build/CI diagnostics and native build-tool checks when
+  available through the bridge.
+- **Cursor:** UI/front-end and larger code navigation/diff work when the route
+  is active; do not block stream progress while the route needs renewal.
+
+Use the full fleet when work is parallelizable or model specialization improves
+quality. Do not fan out for a tiny single-file change when deterministic tools
+and one independent review are cheaper and safer.
+
 ## Command Examples
 
 ```bash

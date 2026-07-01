@@ -26,6 +26,37 @@ Orchestrate BIO work without touching unrelated tracks. Keep the +77 expansion b
 
 **Hard rule for +77:** do not write any BIO module under `curriculum/l2-uk-en/bio/<slug>/...` until that slug's dossier and plan exist and pass. The Bilash pilot (`oleksandr-bilash`, #4004) is an exception because its source artifacts already exist and it is the production/remediation pilot.
 
+## Fleet Operating Model
+
+BIO has hundreds of figures; do not run it as one agent doing every step. Use a
+fleet pipeline, but keep the orchestrator accountable for integration.
+
+- **Codex orchestrator:** owns queue state, worktree creation, branch naming,
+  final diff review, PR creation, independent-review routing, merge decisions,
+  scheduler updates, and artifact hygiene.
+- **Parallel dossier workers:** may draft or repair one dossier file each:
+  `docs/research/bio/<slug>.md`. A dossier worker must not touch plan YAML,
+  modules, activities, vocabulary, MDX, wiki packets, status/audit/review
+  artifacts, telemetry DB files, linter configs, package files, or unrelated
+  files.
+- **Source/cross-track explorers:** use cheap read-only agents for existing
+  curriculum links, source-tier packets, naming variants, image-rights notes,
+  and factual-risk summaries. They report claims and citations, not essays.
+- **Specialist review routing:** Claude is the preferred independent reviewer
+  for BIO content. Use AGY (Gemini-family via bridge) for adversarial source/factual checks,
+  DeepSeek/Hermes-style review for decolonization and sensitive framing when
+  available, Grok-build for build/CI diagnostics, and Cursor for UI/front-end or
+  larger code diffs when the route is active.
+- **Sequential merge queue:** multiple dossiers may be prepared in parallel,
+  but merge in BIO order unless the orchestrator records an explicit reason to
+  skip or hold a slug. CI/CodeQL and unresolved independent-review findings are
+  blockers.
+- **Token economy:** deterministic tools first. Do not ask a model to verify
+  paths, whitespace, YAML parseability, or CI state. Compress large logs/source
+  dumps with Headroom before cross-agent handoff. Keep worker briefs compact and
+  include only slug, scope, target file, source leads, validation commands, and
+  forbidden writes.
+
 ## WORKTREE_ROOT Setup
 
 ```bash
@@ -148,6 +179,22 @@ Treat scores below 8/10 or any leakage fail as blockers unless the PR is explici
 Use read-only helpers for source-tier packets, image-rights checks, politically charged framing review, rendered-page reading, leakage scoring, and activity placement verification. Compress long findings with Headroom. The main orchestrator owns edits, PR creation, independent review routing, and merge decisions.
 
 Independent BIO review must be read-only and must inspect source files and generated learner-facing MDX/page for factual grounding, Ukrainian-centered framing, narrative human tone, English/internal leakage, LLM fingerprint, and Lesson vs Workbook/Activities placement. Treat unresolved findings as blockers.
+
+Use helper agents deliberately and record whether helpers were used. Helpers
+are for bounded work that can run in parallel without lowering quality:
+source-tier packets, image-rights checks, politically charged framing review,
+cross-track path discovery, rendered-page reading, leakage scoring, activity
+placement verification, and CI/build triage. Compress long findings with
+Headroom before passing them between agents.
+
+Do not use the full fleet as theater. For a single narrow dossier, one Codex
+integration pass plus Claude review may be the economical path. For batches,
+prepare several read-only/source or one-file dossier tasks in parallel, then
+merge sequentially.
+
+The main orchestrator owns edits, PR creation, independent review routing, and
+merge decisions. Worker diffs are never trusted until the orchestrator reviews
+changed files and validates scope.
 
 ## Validation Commands
 
