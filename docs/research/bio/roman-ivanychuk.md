@@ -17,7 +17,7 @@ catalog / electronic library; DSP = Diasporiana; Commons = Wikimedia Commons.
 
 - [x] All 10 sections completed
 - [x] At least 3 Tier 1/Tier 2 institutional sources cited
-- [x] Pressure mechanism framed university expulsion, Soviet cultural control,
+- [x] Pressure mechanism framed through university expulsion, Soviet cultural control,
   official criticism, publication blockage, delayed publication, and
   independence-era civic work; no invented security-service case
 - [x] At least 2 primary-source Ukrainian text / publication anchors supplied
@@ -32,7 +32,7 @@ catalog / electronic library; DSP = Diasporiana; Commons = Wikimedia Commons.
 
 - **Full name (UA, canonical):** Роман Іванович Іваничук.
 - **Project English canonical:** Roman Ivanychuk.
-- **Birth / death:** 27 May 1929, Tрач, now Kosiv raion,
+- **Birth / death:** 27 May 1929, Трач, now Kosiv raion,
   Ivano-Frankivsk oblast; 17 September 2016, Lviv. ESU and UINP agree on these
   dates and places; UINP notes burial in Lviv, and Commons has a Lychakiv
   Cemetery grave photograph.
@@ -262,14 +262,14 @@ site media assets.
 - **Canonical slug:** `roman-ivanychuk`.
 - **UA source-canonical display:** Роман Іванович Іваничук.
 - **EN display:** Roman Ivanychuk.
-- **Avoid Russian-derived forms:** Do not use `Roman Ivanychuk` with
-  Russianized patronymic / spelling variants except inside quoted catalog
-  metadata. Avoid making Russian-language Wikipedia or Soviet catalog wording
-  the naming authority.
+- **Avoid Russian-derived forms:** Do not use Russianized form
+  `Роман Иванычук` or Russianized patronymic / spelling variants except inside
+  quoted catalog metadata. Avoid making Russian-language Wikipedia or Soviet
+  catalog wording the naming authority.
 - **Title handling:** Use `Мальви` as learner-facing title; mention
   `Яничари` as alternate title. Use `Журавлиний крик`, `Вода з каменю`,
   `Четвертий вимір`, `Шрами на скалі`, and `Орда` in Ukrainian.
-- **Place handling:** Use modern Ukrainian place frames: Tрач / Kosiv raion,
+- **Place handling:** Use modern Ukrainian place frames: Трач / Kosiv raion,
   Ivano-Frankivsk oblast; Lviv; Lychakiv Cemetery. Historical state labels
   belong in context, not primary identity.
 
@@ -288,7 +288,7 @@ site media assets.
 - **UINP image:** The UINP calendar article credits a photo to Marian
   Striltsiv / ZIK. Treat as rights-controlled unless a separate reusable
   license is confirmed for that photo.
-- **Caption policy:** Captions should teach: Tрач to Lviv, `Мальви` and
+- **Caption policy:** Captions should teach: Трач to Lviv, `Мальви` and
   janissary allegory, `Журавлиний крик` delayed publication, `Просвіта` /
   independence work, and the Lychakiv memory site. Avoid generic "great
   writer" captions.
