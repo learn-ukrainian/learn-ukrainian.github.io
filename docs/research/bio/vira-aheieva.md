@@ -27,6 +27,24 @@ exile, camp term, or dissident sentence
 - [x] Image-rights policy applied
 - [x] Dossier-only scope observed
 
+## Decolonization self-check (run before submitting)
+
+- [x] No Russocentric framing — Soviet / post-Soviet academic constraints and
+Russian imperial cultural hierarchy are named as pressure mechanisms, not used
+as the default viewpoint.
+- [x] No Russian-imperial transliterations in body text — Russophone forms are
+confined to §8, labelled as forbidden, and used only for search-note context.
+- [x] No Russocentric periodization — late-Soviet and post-Soviet framing is
+used; no "Great Patriotic War" or equivalent imperial period labels.
+- [x] No uncritical Soviet / Russian propaganda terms — canon, empire, and
+memory language is analytical and source-attributed.
+- [x] Ukrainian place and person names use Ukrainian forms in learner-facing
+prose, including Bakhmach, NaUKMA, Lesia Ukrainka, and Oksana Zabuzhko.
+- [x] Russian full-scale-war and imperial-culture claims are handled as dated
+public-interview positions, not as timeless unsourced doctrine.
+- [x] No advocacy close — Aheieva is presented as critic and canon-maker with
+anti-hagiography caution, not as an unquestioned authority.
+
 ---
 
 ## 1. Verified facts
