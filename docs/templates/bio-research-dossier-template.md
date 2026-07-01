@@ -11,6 +11,23 @@
 
 > **No-module-writing gate (#2535 / #4006 prompt gate before #4005).** A dossier is the FIRST base-prep artifact. Writing a dossier is permitted only after the slug is promoted out of the readiness gate; do NOT write the plan YAML, site doc, or wiki packet from the same pass. Promotion order is fixed: dossier → `plans/bio/{slug}.yaml` → site/wiki. For the +77, honor the canonicity-over-currency and HIST-alignment constraints recorded in the expansion memo (see §6 and §7 below).
 
+**Fleet/worker rule for dossier batches.** A worker drafting this template owns
+exactly one file: `docs/research/bio/{slug}.md`. The worker may perform
+read-only source discovery and path checks, but must not stage, commit, create
+PRs, request independent review, merge, or edit any other file. The BIO
+orchestrator reviews and integrates worker output, runs deterministic checks,
+routes Claude/AGY (Gemini-family via bridge)/other independent review as
+needed, and merges in BIO order. Use Headroom for long source packets or logs
+instead of pasting them into agent-to-agent prompts.
+
+**Token-economy rule.** Use deterministic commands before model calls: `rg`,
+`test -e`, `npx markdownlint-cli2`,
+`.venv/bin/python scripts/audit/lint_bio_dossier_xref.py`, `git diff --check`,
+and `.venv/bin/python scripts/audit/lint_agent_trailer.py`. Do not ask models
+to re-check facts that local tools can prove. A model review should focus on
+source interpretation, Ukrainian-centered framing, contested points, and
+overclaiming risk.
+
 **Acceptance criteria for closing the research ticket on a figure**:
 - [ ] All 10 sections completed (skip a section only if NA — document why)
 - [ ] ≥3 Tier 1/Tier 2 sources cited (per `bio-research-source-tiers.md`)
