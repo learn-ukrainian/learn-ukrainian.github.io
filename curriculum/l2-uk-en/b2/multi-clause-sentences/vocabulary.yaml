@@ -1,120 +1,150 @@
-- lemma: складне речення
-  translation: complex sentence
+- lemma: "складне речення"
+  translation: "complex or compound sentence"
+  ipa: "[ˈsklɑdne ˈrɛt͡ʃenʲːɑ]"
   pos: phrase
-  usage: Складне речення має дві або більше граматичних основ.
-- lemma: багатокомпонентне речення
-  translation: multi-clause sentence
+  usage: "Складне речення має дві або більше граматичних основ."
+- lemma: "предикативна частина"
+  translation: "predicative clause"
+  ipa: "[prɛdɪkɑˈtɪu̯nɑ t͡ʃɑsˈtɪnɑ]"
   pos: phrase
-  usage: Багатокомпонентне речення поєднує кілька предикативних частин.
-- lemma: сурядність
-  translation: coordination
+  usage: "Предикативна частина має власний підмет і присудок або безособову основу."
+- lemma: "граматична основа"
+  translation: "grammatical base"
+  ipa: "[ɦrɑmɑˈtɪt͡ʃnɑ ɔsˈnɔʋɑ]"
+  pos: phrase
+  usage: "Перед пунктуаційною правкою знайдіть усі граматичні основи."
+- lemma: "сурядність"
+  translation: "coordination"
+  ipa: "[surʲɑdˈnʲistʲ]"
   pos: noun
-  usage: Сурядність поєднує рівноправні частини речення.
-- lemma: підрядність
-  translation: subordination
+  usage: "Сурядність поєднує рівноправні частини."
+- lemma: "підрядність"
+  translation: "subordination"
+  ipa: "[pidrʲɑdˈnʲistʲ]"
   pos: noun
-  usage: Підрядність створює залежність однієї частини від іншої.
-- lemma: безсполучниковий зв'язок
-  translation: asyndetic connection
+  usage: "Підрядність показує залежність однієї частини від іншої."
+- lemma: "безсполучниковий зв'язок"
+  translation: "asyndetic connection"
+  ipa: "[bɛzspɔlut͡ʃnɪˈkɔʋɪj zʋjɑˈzɔk]"
   pos: phrase
-  usage: Безсполучниковий зв'язок спирається на інтонацію і смислову близькість.
-- lemma: збіг сполучників
-  translation: conjunction cluster
+  usage: "Безсполучниковий зв'язок може передавати пояснення або наслідок."
+- lemma: "змішаний зв'язок"
+  translation: "mixed linkage"
+  ipa: "[zmiˈʃɑnɪj zʋjɑˈzɔk]"
   pos: phrase
-  usage: Збіг сполучників виникає у конструкціях типу що коли або і якщо.
-- lemma: предикативна частина
-  translation: predicative clause
+  usage: "Змішаний зв'язок поєднує сурядність, підрядність і безсполучниковість."
+- lemma: "головна частина"
+  translation: "main clause"
+  ipa: "[ɦɔˈlɔu̯nɑ t͡ʃɑsˈtɪnɑ]"
   pos: phrase
-  usage: Кожна предикативна частина має власну граматичну основу.
-- lemma: граматична основа
-  translation: grammatical base
+  usage: "Головна частина тримає основну дію речення."
+- lemma: "підрядна частина"
+  translation: "subordinate clause"
+  ipa: "[pidrʲɑdˈnɑ t͡ʃɑsˈtɪnɑ]"
   pos: phrase
-  usage: Граматична основа допомагає знайти межі частин.
-- lemma: ієрархія
-  translation: hierarchy
+  usage: "Підрядна частина залежить від головної або від слова в ній."
+- lemma: "підрядна означальна"
+  translation: "relative clause"
+  ipa: "[pidrʲɑdˈnɑ ɔznɑˈt͡ʃɑlʲnɑ]"
+  pos: phrase
+  usage: "Підрядна означальна уточнює іменник."
+- lemma: "підрядна часу"
+  translation: "temporal subordinate clause"
+  ipa: "[pidrʲɑdˈnɑ ˈt͡ʃɑsu]"
+  pos: phrase
+  usage: "Підрядна часу відповідає на питання коли."
+- lemma: "підрядна причини"
+  translation: "causal subordinate clause"
+  ipa: "[pidrʲɑdˈnɑ prɪˈt͡ʃɪnɪ]"
+  pos: phrase
+  usage: "Підрядна причини часто вводиться сполучниками бо або оскільки."
+- lemma: "підрядна мети"
+  translation: "purpose clause"
+  ipa: "[pidrʲɑdˈnɑ mɛˈtɪ]"
+  pos: phrase
+  usage: "Підрядна мети пояснює, для чого виконано дію."
+- lemma: "з'ясувальна частина"
+  translation: "content clause"
+  ipa: "[zjɑsuˈʋɑlʲnɑ t͡ʃɑsˈtɪnɑ]"
+  pos: phrase
+  usage: "З'ясувальна частина передає зміст повідомлення або думки."
+- lemma: "непряме питання"
+  translation: "indirect question"
+  ipa: "[nɛˈprʲɑme pɪˈtɑnʲːɑ]"
+  pos: phrase
+  usage: "Непряме питання часто вводить частка чи."
+- lemma: "сполучник"
+  translation: "conjunction"
+  ipa: "[spɔˈlut͡ʃnɪk]"
   pos: noun
-  usage: Ієрархія показує, яка частина головна, а яка залежна.
-- lemma: синтаксична конструкція
-  translation: syntactic construction
+  usage: "Сполучник показує тип зв'язку між частинами."
+- lemma: "сполучне слово"
+  translation: "relative or connective word"
+  ipa: "[spɔˈlut͡ʃne ˈslɔʋɔ]"
   pos: phrase
-  usage: Синтаксична конструкція має відповідати жанру тексту.
-- lemma: пунктуаційна грамотність
-  translation: punctuation literacy
-  pos: phrase
-  usage: Пунктуаційна грамотність починається з розуміння меж речення.
-- lemma: логічна єдність
-  translation: logical unity
-  pos: phrase
-  usage: Логічна єдність тримає довге речення зрозумілим.
-- lemma: трансформація
-  translation: transformation
+  usage: "Сполучне слово який вводить підрядну означальну."
+- lemma: "ієрархія"
+  translation: "hierarchy"
+  ipa: "[ijɛˈrɑrxʲijɑ]"
   pos: noun
-  usage: Трансформація допомагає перетворити довге речення на кілька коротших.
-- lemma: стилістична фігура
-  translation: stylistic device
+  usage: "Ієрархія показує, які частини головні, а які залежні."
+- lemma: "синтаксична схема"
+  translation: "syntactic scheme"
+  ipa: "[sɪntɑkˈsɪt͡ʃnɑ ˈsxɛmɑ]"
   pos: phrase
-  usage: Парцеляція може бути стилістичною фігурою.
-- lemma: сполучник
-  translation: conjunction
-  pos: noun
-  usage: Сполучник прямо називає зв'язок між частинами.
-- lemma: сполучне слово
-  translation: connective word
+  usage: "Синтаксична схема допомагає побачити межі частин."
+- lemma: "межа частини"
+  translation: "clause boundary"
+  ipa: "[mɛˈʒɑ t͡ʃɑsˈtɪnɪ]"
   pos: phrase
-  usage: Сполучне слово водночас приєднує підрядну частину і є її членом.
-- lemma: співвідносне слово
-  translation: correlative word
-  pos: phrase
-  usage: Співвідносне слово то впливає на кому між сусідніми сполучниками.
-- lemma: підрядна частина
-  translation: subordinate clause
-  pos: phrase
-  usage: Підрядна частина пояснює час, причину, умову або мету.
-- lemma: сурядна частина
-  translation: coordinate clause
-  pos: phrase
-  usage: Сурядна частина має рівне право на увагу.
-- lemma: смисловий зв'язок
-  translation: semantic relation
-  pos: phrase
-  usage: Смисловий зв'язок визначає вибір сполучника.
-- lemma: причинно-наслідковий зв'язок
-  translation: cause-and-effect relation
-  pos: phrase
-  usage: Причинно-наслідковий зв'язок часто передають словами бо і тому.
-- lemma: допустовість
-  translation: concessive relation
+  usage: "Межа частини має бути видимою для пунктуації."
+- lemma: "двокрапка"
+  translation: "colon"
+  ipa: "[dʋɔˈkrɑpkɑ]"
   pos: noun
-  usage: Допустовість показує перешкоду, яка не скасовує головної дії.
-- lemma: двокрапка
-  translation: colon
+  usage: "Двокрапка може вводити пояснення в безсполучниковому реченні."
+- lemma: "тире"
+  translation: "dash"
+  ipa: "[tɪˈrɛ]"
   pos: noun
-  usage: Двокрапка вводить пояснення або причину.
-- lemma: тире
-  translation: dash
+  usage: "Тире може передавати наслідок або різкий перехід."
+- lemma: "наслідок"
+  translation: "consequence"
+  ipa: "[ˈnɑslʲidɔk]"
   pos: noun
-  usage: Тире може підкреслювати наслідок або різкий поворот думки.
-- lemma: крапка з комою
-  translation: semicolon
-  pos: phrase
-  usage: Крапка з комою розділяє великі частини з власними комами.
-- lemma: парцеляція
-  translation: parcelling
+  usage: "У складному реченні важливо показати причину й наслідок."
+- lemma: "умова"
+  translation: "condition"
+  ipa: "[uˈmɔʋɑ]"
   pos: noun
-  usage: Парцеляція відокремлює частину висловлення для акценту.
-- lemma: громіздкість
-  translation: unwieldiness
+  usage: "Підрядна умови часто починається зі слова якщо."
+- lemma: "причина"
+  translation: "cause"
+  ipa: "[prɪˈt͡ʃɪnɑ]"
   pos: noun
-  usage: Громіздкість виникає, коли речення приховує головну думку.
-- lemma: двозначність
-  translation: ambiguity
+  usage: "Причина може бути виражена підрядною частиною або безсполучниково."
+- lemma: "мета"
+  translation: "purpose"
+  ipa: "[mɛˈtɑ]"
   pos: noun
-  usage: Двозначність зникає, коли автор називає точний зв'язок.
-- lemma: когезія
-  translation: cohesion
+  usage: "Мета дії часто вводиться сполучником щоб."
+- lemma: "читабельність"
+  translation: "readability"
+  ipa: "[t͡ʃɪtɑˈbɛlʲnʲistʲ]"
   pos: noun
-  usage: Когезія допомагає частинам тексту триматися разом.
-- lemma: регістр
-  translation: register
-  pos: noun
-  usage: Регістр визначає, наскільки складним може бути речення.
+  usage: "Читабельність може вимагати розбити довге речення."
+- lemma: "перевантажений"
+  translation: "overloaded"
+  ipa: "[pɛrɛʋɑnˈtɑʒɛnɪj]"
+  pos: adj
+  usage: "Перевантажений синтаксис ховає головну дію."
+- lemma: "редагувати"
+  translation: "to edit"
+  ipa: "[rɛdɑɦuˈʋɑtɪ]"
+  pos: verb
+  usage: "Редагувати складне речення означає перевіряти структуру, а не лише коми."
+- lemma: "перебудувати"
+  translation: "to restructure"
+  ipa: "[pɛrɛbuduˈʋɑtɪ]"
+  pos: verb
+  usage: "Довгий ланцюг підрядних частин іноді треба перебудувати."
