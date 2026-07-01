@@ -1,196 +1,145 @@
 - lemma: дослідження
   translation: research, study
   pos: noun
-  usage: "У дослідженні проаналізовано вплив дистанційного навчання."
+  ipa: "[dɔsliˈdʒɛnʲːɐ]"
+  usage: "У дослідженні проаналізовано формули сервісного листування."
 - lemma: гіпотеза
   translation: hypothesis
   pos: noun
-  usage: "Гіпотезу підтверджено результатами опитування."
+  ipa: "[ɦipoˈtɛzɐ]"
+  usage: "Гіпотезу треба сформулювати так, щоб її можна було перевірити."
 - lemma: методологія
   translation: methodology
   pos: noun
-  usage: "Методологія дослідження описана в другому розділі."
-- lemma: законодавство
-  translation: legislation
-  pos: noun
-  usage: "Відповідно до чинного законодавства заяву розглядають протягом місяця."
-- lemma: повноваження
-  translation: authority, mandate
-  pos: noun
-  usage: "Комісія має повноваження розглядати такі скарги."
-- lemma: договір
-  translation: contract, agreement
-  pos: noun
-  usage: "Згідно з умовами договору послугу надають до 10 липня."
-- lemma: зобов'язання
-  translation: obligation
-  pos: noun
-  usage: "Сторони виконують зобов'язання у встановлений строк."
+  ipa: "[mɛtɔdɔˈlɔɦijɐ]"
+  usage: "Методологія дослідження описана в першому розділі."
 - lemma: анотація
   translation: abstract, annotation
   pos: noun
-  usage: "Анотація стисло описує тему, метод і результат."
+  ipa: "[ɐnɔˈtatsʲijɐ]"
+  usage: "Анотація стисло подає мету, матеріал і результати."
 - lemma: актуальність
   translation: relevance
   pos: noun
-  usage: "Актуальність теми зумовлена розвитком дистанційної освіти."
-- lemma: чинний
-  translation: valid, current, in force
-  pos: adjective
-  usage: "Чинний закон визначає порядок подання скарги."
-- lemma: постанова
-  translation: resolution, decree
-  pos: noun
-  usage: "Постанова набирає чинності з дня опублікування."
-- lemma: скарга
-  translation: complaint, appeal
-  pos: noun
-  usage: "Скаргу подано у встановлений строк."
-- lemma: доцільно
-  translation: advisable, expedient
-  pos: adverb
-  usage: "Доцільно зазначити підставу рішення."
-- lemma: звітність
-  translation: reporting
-  pos: noun
-  usage: "Фінансова звітність подається щоквартально."
-- lemma: підстава
-  translation: basis, grounds
-  pos: noun
-  usage: "Підставою для претензії є порушення строку доставки."
+  ipa: "[ɐktʊˈalʲnʲistʲ]"
+  usage: "Актуальність теми зумовлена потребою зрозумілої сервісної комунікації."
 - lemma: висновок
   translation: conclusion
   pos: noun
-  usage: "Висновок дослідження має спиратися на дані."
+  ipa: "[ˈʋɪsnɔwɔk]"
+  usage: "Висновок має спиратися на попередній аналіз."
+- lemma: конектор
+  translation: connector, linking expression
+  pos: noun
+  ipa: "[kɔˈnɛktɔr]"
+  usage: "Конектор отже вводить висновок, а не просто нову думку."
+- lemma: підстава
+  translation: basis, grounds
+  pos: noun
+  ipa: "[pidˈstaʋɐ]"
+  usage: "Підставою для відмови є відсутність обов'язкових документів."
+- lemma: законодавство
+  translation: legislation
+  pos: noun
+  ipa: "[zɐkɔnɔˈdawstʋɔ]"
+  usage: "Відповідно до чинного законодавства заяву можна подати онлайн."
+- lemma: чинний
+  translation: valid, current
+  pos: adj
+  ipa: "[ˈtʃɪnnɪj]"
+  usage: "Чинний договір діє до кінця року."
+- lemma: повноваження
+  translation: authority, powers
+  pos: noun
+  ipa: "[pɔwnɔˈwaʒɛnʲːɐ]"
+  usage: "Комісія діє в межах своїх повноважень."
+- lemma: договір
+  translation: contract, agreement
+  pos: noun
+  ipa: "[dɔɦɔˈʋir]"
+  usage: "Згідно з договором товар має бути доставлено до 10 липня."
+- lemma: зобов'язання
+  translation: obligation
+  pos: noun
+  ipa: "[zɔbɔʋjɐˈzanʲːɐ]"
+  usage: "Сторони виконують зобов'язання у визначений строк."
 - lemma: реквізит
-  translation: required detail, requisite
+  translation: required document detail
   pos: noun
-  usage: "Офіційний документ має обов'язкові реквізити."
-- lemma: позов
-  translation: lawsuit, claim
-  pos: noun
-  usage: "Позов подано до районного суду."
-- lemma: об'єктивність
-  translation: objectivity
-  pos: noun
-  usage: "Об'єктивність вимагає посилання на факти або дані."
-- lemma: безособовість
-  translation: impersonality
-  pos: noun
-  usage: "Безособовість переносить увагу з автора на результат."
-- lemma: термінологія
-  translation: terminology
-  pos: noun
-  usage: "Термінологія має бути послідовною в усьому тексті."
-- lemma: доказовість
-  translation: evidentiality, proof-based quality
-  pos: noun
-  usage: "Доказовість відрізняє науковий текст від реклами."
-- lemma: посилання
-  translation: reference, citation link
-  pos: noun
-  usage: "Посилання показує джерело використаної інформації."
-- lemma: цитування
-  translation: citation, quoting
-  pos: noun
-  usage: "Цитування має бути точним і доречним."
-- lemma: парафраз
-  translation: paraphrase
-  pos: noun
-  usage: "Парафраз передає думку автора іншими словами."
-- lemma: джерело
-  translation: source
-  pos: noun
-  usage: "Джерело потрібно зазначити після використання даних."
-- lemma: стаття
-  translation: article
-  pos: noun
-  usage: "У статті розглянуто три підходи до оцінювання."
-- lemma: заява
-  translation: application, statement
-  pos: noun
-  usage: "Заява має містити адресата, прохання, дату й підпис."
+  ipa: "[rɛkʋiˈzɪt]"
+  usage: "Офіційний лист має містити реквізити автора й адресата."
 - lemma: претензія
-  translation: formal complaint, claim
+  translation: claim, formal complaint
   pos: noun
-  usage: "Претензія фіксує порушення договору й вимогу."
-- lemma: наказ
-  translation: order, directive
+  ipa: "[prɛˈtɛnʲzʲijɐ]"
+  usage: "Претензія називає порушення, підставу й вимогу."
+- lemma: скарга
+  translation: complaint
   pos: noun
-  usage: "Наказ визначає порядок виконання рішення."
-- lemma: протокол
-  translation: minutes, protocol
+  ipa: "[ˈskarɦɐ]"
+  usage: "Скаргу розглянуть протягом трьох робочих днів."
+- lemma: позов
+  translation: lawsuit, legal claim
   pos: noun
-  usage: "Протокол фіксує рішення, відповідальних і строки."
-- lemma: рішення
-  translation: decision
+  ipa: "[pɔˈzɔw]"
+  usage: "Позов подано після безрезультатної претензії."
+- lemma: постанова
+  translation: resolution, ruling
   pos: noun
-  usage: "Рішення ухвалено після розгляду заяви."
-- lemma: ухвала
-  translation: ruling
+  ipa: "[pɔsˈtanɔʋɐ]"
+  usage: "Постанова набирає чинності з дня оприлюднення."
+- lemma: безособовий
+  translation: impersonal
+  pos: adj
+  ipa: "[bɛzɔsɔˈbɔʋɪj]"
+  usage: "Безособова конструкція доречна, коли важливий статус дії."
+- lemma: номіналізація
+  translation: nominalization
   pos: noun
-  usage: "Ухвала суду набирає чинності після оголошення."
-- lemma: норма
-  translation: norm, provision
+  ipa: "[nɔminɐlʲiˈzatsʲijɐ]"
+  usage: "Номіналізація корисна для назв процедур, але може перевантажити речення."
+- lemma: здійснення
+  translation: carrying out, implementation
   pos: noun
-  usage: "Норма закону визначає права й обов'язки сторін."
-- lemma: положення
-  translation: provision, regulation
+  ipa: "[zdʲijsˈnɛnʲːɐ]"
+  usage: "Слово здійснення треба вживати лише тоді, коли воно називає реальну процедуру."
+- lemma: погодження
+  translation: approval, coordination
   pos: noun
-  usage: "Положення договору потрібно тлумачити однозначно."
-- lemma: відповідно до
-  translation: according to, in accordance with
-  pos: phrase
-  usage: "Відповідно до чинного законодавства документ розглядають протягом місяця."
+  ipa: "[pɔˈɦɔdʒɛnʲːɐ]"
+  usage: "Погодження бюджету відбудеться після перевірки кошторису."
+- lemma: оприлюднити
+  translation: to publish, make public
+  pos: verb
+  ipa: "[ɔprɪlʲuˈdnɪtɪ]"
+  usage: "Рішення буде оприлюднено на сайті установи."
+- lemma: уточнити
+  translation: to clarify
+  pos: verb
+  ipa: "[utɔtʃˈnɪtɪ]"
+  usage: "Просимо уточнити номер договору й дату поставки."
+- lemma: доцільно
+  translation: advisable, appropriate
+  pos: adv
+  ipa: "[dɔˈtsʲilʲnɔ]"
+  usage: "Доцільно назвати строк відповіді вже в першому абзаці."
 - lemma: згідно з
-  translation: according to, pursuant to
+  translation: according to
   pos: phrase
-  usage: "Згідно з договором оплата здійснюється після підписання акта."
+  ipa: "[ˈzɦidnɔ z]"
+  usage: "Згідно з договором постачальник має замінити товар."
+- lemma: відповідно до
+  translation: in accordance with
+  pos: phrase
+  ipa: "[ʋidpɔˈʋidnɔ dɔ]"
+  usage: "Відповідно до правил заяву треба підписати."
 - lemma: на підставі
   translation: on the basis of
   pos: phrase
-  usage: "На підставі заяви підготовлено наказ."
-- lemma: встановлено
-  translation: it has been established
-  pos: impersonal verb
-  usage: "Встановлено, що регулярний зворотний зв'язок підвищує мотивацію."
-- lemma: проаналізовано
-  translation: it has been analyzed
-  pos: impersonal verb
-  usage: "У статті проаналізовано мовні засоби офіційного стилю."
-- lemma: підтверджено
-  translation: it has been confirmed
-  pos: impersonal verb
-  usage: "Результати підтверджено повторним вимірюванням."
-- lemma: розглянуто
-  translation: it has been considered
-  pos: impersonal verb
-  usage: "На засіданні розглянуто три заяви."
-- lemma: здійснено
-  translation: it has been carried out
-  pos: impersonal verb
-  usage: "Перевірку здійснено відповідно до затвердженого порядку."
-- lemma: наведено
-  translation: it is presented, provided
-  pos: impersonal verb
-  usage: "У таблиці наведено результати опитування."
-- lemma: отже
-  translation: thus, therefore
+  ipa: "[nɐ pidˈstaʋi]"
+  usage: "На підставі рішення комісії строк подання продовжено."
+- lemma: у межах повноважень
+  translation: within the scope of authority
   pos: phrase
-  usage: "Отже, отримані дані підтверджують гіпотезу."
-- lemma: водночас
-  translation: at the same time, however
-  pos: adverb
-  usage: "Водночас ці результати потребують додаткової перевірки."
-- lemma: у встановлений строк
-  translation: within the established deadline
-  pos: phrase
-  usage: "Зобов'язання виконано у встановлений строк."
-- lemma: правовий
-  translation: legal
-  pos: adjective
-  usage: "Правовий текст має уникати двозначності."
-- lemma: адміністративний
-  translation: administrative
-  pos: adjective
-  usage: "Адміністративний документ фіксує порядок дії."
+  ipa: "[u ˈmɛʒɐx pɔwnɔˈwaʒɛnʲ]"
+  usage: "Відділ діє у межах повноважень, визначених положенням."
