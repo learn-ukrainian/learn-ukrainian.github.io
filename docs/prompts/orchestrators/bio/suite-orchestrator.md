@@ -183,6 +183,7 @@ Production/remediation validation:
 ```bash
 .venv/bin/python scripts/validate_activities.py l2-uk-en bio <module_num>
 .venv/bin/python scripts/validate_vocab_yaml.py curriculum/l2-uk-en/bio/<slug>/vocabulary.yaml
+.venv/bin/python scripts/validate/bio_surface_quality.py <slug> --strict
 .venv/bin/python scripts/audit/check_mdx_generation_drift.py --files curriculum/l2-uk-en/bio/<slug>/module.md
 .venv/bin/python scripts/audit/check_mdx_source_parity.py --files curriculum/l2-uk-en/bio/<slug>/module.md
 .venv/bin/python -m scripts.build.verify_shippable bio <slug>

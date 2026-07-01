@@ -84,13 +84,13 @@ mappings:
   - meta_field: focus
     value: history
     level: b2
-    template: history-module-template.md
+    template: b2-history-module-template.md
     description: 'B2 history modules (M71-131 when focus=history)'
 
   # History synthesis modules (specific IDs)
   - pattern: '^b2-(83|107|119|125|131)(-.*)?$'
     level: b2
-    template: history-synthesis-module-template.md
+    template: b2-history-synthesis-module-template.md
     description: 'B2 history synthesis modules'
 
   # Phraseology modules (M41-70) - requires meta.focus: phraseology
@@ -143,16 +143,16 @@ mappings:
   # =============================================================================
 
   - meta_field: focus
-    value: biography
-    level: c1
-    template: biography-module-template.md
-    description: 'C1 biography modules'
-
-  - meta_field: focus
     value: literature
     level: c1
     template: c1-literature-module-template.md
     description: 'C1 literature modules'
+
+  - meta_field: focus
+    value: history
+    level: c1
+    template: c1-history-module-template.md
+    description: 'C1 history modules'
 
   - meta_field: focus
     value: academic
@@ -230,33 +230,6 @@ mappings:
     template: c2-module-template.md
     description: 'C2 default template'
 
-  # =============================================================================
-  # HIST: History Track (relocated from B2 M71-131)
-  # =============================================================================
-  # Synthesis modules (by meta.focus: synthesis)
-  - meta_field: focus
-    value: synthesis
-    level: hist
-    template: history-synthesis-module-template.md
-    description: 'HIST synthesis modules (via focus field)'
-
-  - pattern: '^hist-'
-    level: hist
-    template: history-module-template.md
-    description: 'HIST history track modules'
-
-  # =============================================================================
-  # BIO: Biography Track (relocated from C1 M36-131)
-  # =============================================================================
-  - pattern: '^bio-'
-    level: bio
-    template: biography-module-template.md
-    description: 'BIO biography track modules'
-
-  # =============================================================================
-  # LIT: Single template
-  # =============================================================================
-  - pattern: '^lit-'
-    level: lit
-    template: lit-module-template.md
-    description: 'LIT track modules use specialized literature seminar template'
+# Seminar tracks (HIST, BIO, LIT, ISTORIO, OES, RUTH, FOLK, and lit-*)
+# use the prompt suites in docs/prompts/orchestrators/ rather than legacy
+# structural templates. Template compliance currently applies to A1-C2 only.

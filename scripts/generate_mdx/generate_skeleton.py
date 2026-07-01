@@ -79,6 +79,16 @@ def get_template_path(level: str, module_type: str) -> Path:
     """Get path to appropriate template."""
     base = Path('docs/l2-uk-en/templates')
 
+    retired_seminar_suites = {
+        'history': 'docs/prompts/orchestrators/hist/suite-orchestrator.md',
+        'bio': 'docs/prompts/orchestrators/bio/suite-orchestrator.md',
+    }
+    if module_type in retired_seminar_suites:
+        raise SystemExit(
+            f"{level.upper()} skeleton templates are retired; use "
+            f"{retired_seminar_suites[module_type]} instead."
+        )
+
     # Map module types to template files
     type_to_template = {
         'a1': 'a1-module-template.md',
@@ -91,8 +101,6 @@ def get_template_path(level: str, module_type: str) -> Path:
         'b1-integration': 'b1-integration-module-template.md',
         'b2-grammar': 'b2-grammar-module-template.md',
         'b2-checkpoint': 'b2-checkpoint-module-template.md',
-        'history': 'history-module-template.md',
-        'bio': 'ai/biography-module-template.md',
         'c1': 'c1-module-template.md',
         'c2': 'c2-module-template.md',
     }
