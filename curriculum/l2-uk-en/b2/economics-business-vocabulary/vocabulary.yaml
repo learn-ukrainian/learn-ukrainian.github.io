@@ -1,144 +1,210 @@
-- lemma: прибуток
-  translation: profit
+- lemma: "ВВП"
+  ipa: "[ve ve pe]"
+  translation: "GDP"
   pos: noun
-  usage: Компанія отримала прибуток після скорочення витрат.
-- lemma: збитки
-  translation: losses
+  usage: "ВВП зріс у річному вимірі."
+- lemma: "інфляція"
+  ipa: "[inˈflʲatsʲija]"
+  translation: "inflation"
   pos: noun
-  usage: Підприємство зазнало збитків через падіння попиту.
-- lemma: податки
-  translation: taxes
-  pos: noun
-  usage: Податки впливають на фінансовий результат бізнесу.
-- lemma: інвестиції
-  translation: investments
-  pos: noun
-  usage: Стартап залучив інвестиції для масштабування продукту.
-- lemma: ринок
-  translation: market
-  pos: noun
-  usage: Компанія вийшла на новий ринок після дослідження попиту.
-- lemma: дохід
-  translation: income, revenue
-  pos: noun
-  usage: Дохід зріс, але прибуток зменшився через витрати.
-- lemma: бюджет
-  translation: budget
-  pos: noun
-  usage: Державний бюджет має доходи, видатки й дефіцит.
-- lemma: підприємець
-  translation: entrepreneur
-  pos: noun
-  usage: Підприємець розрахував собівартість перед запуском продажу.
-- lemma: рентабельність
-  translation: profitability
-  pos: noun
-  usage: Рентабельність проєкту залежить від ціни та собівартості.
-- lemma: акції
-  translation: shares, stocks
-  pos: noun
-  usage: Інвестор купив акції після аналізу фінансової звітності.
-- lemma: попит
-  translation: demand
-  pos: noun
-  usage: Попит на послугу зріс після запуску реклами.
-- lemma: пропозиція
-  translation: supply, offer
-  pos: noun
-  usage: Пропозиція праці залежить від кваліфікації кандидатів.
-- lemma: конкурентоспроможність
-  translation: competitiveness
-  pos: noun
-  usage: Конкурентоспроможність залежить від якості, ціни й довіри.
-- lemma: інфляція
-  translation: inflation
-  pos: noun
-  usage: Інфляція знижує купівельну спроможність.
-- lemma: капіталізація
-  translation: capitalization
-  pos: noun
-  usage: Капіталізація компанії змінилася після новини про інвестиції.
-- lemma: аудит
-  translation: audit
-  pos: noun
-  usage: Аудит підтвердив достовірність фінансової звітності.
-- lemma: видатки
-  translation: public expenditures
-  pos: noun
-  usage: Видатки бюджету спрямували на оборону й соціальний захист.
-- lemma: витрати
-  translation: expenses, costs
-  pos: noun
-  usage: Витрати компанії перевищили запланований бюджет.
-- lemma: облікова ставка
-  translation: key policy rate
+  usage: "Інфляція впливає на реальну купівельну спроможність."
+- lemma: "облікова ставка"
+  ipa: "[obˈlʲikova ˈstɑu̯kɑ]"
+  translation: "policy rate, key interest rate"
   pos: phrase
-  usage: Національний банк зберіг облікову ставку.
-- lemma: дефіцит бюджету
-  translation: budget deficit
+  usage: "Національний банк зберіг облікову ставку."
+- lemma: "дефіцит бюджету"
+  ipa: "[defiˈtsɪt bʲuˈdʒetu]"
+  translation: "budget deficit"
   pos: phrase
-  usage: Дефіцит бюджету пояснили зростанням видатків.
-- lemma: ліквідність
-  translation: liquidity
+  usage: "Дефіцит бюджету потребує джерела фінансування."
+- lemma: "видатки"
+  ipa: "[ˈwɪdɑtkɪ]"
+  translation: "public expenditures"
   pos: noun
-  usage: Компанія підтримує ліквідність для своєчасних платежів.
-- lemma: депозит
-  translation: deposit
-  pos: noun
-  usage: Клієнт відкрив депозит у банку.
-- lemma: кредит
-  translation: loan, credit
-  pos: noun
-  usage: Банк оцінює заставу перед наданням кредиту.
-- lemma: застава
-  translation: collateral
-  pos: noun
-  usage: Застава зменшує ризик кредитора.
-- lemma: дивіденди
-  translation: dividends
-  pos: noun
-  usage: Дивіденди виплачують після рішення власників.
-- lemma: портфель
-  translation: portfolio
-  pos: noun
-  usage: Інвестор диверсифікує портфель між різними активами.
-- lemma: облігації
-  translation: bonds
-  pos: noun
-  usage: Компанія випустила облігації для залучення коштів.
-- lemma: фінтех
-  translation: fintech
-  pos: noun
-  usage: Фінтех змінює спосіб оплати й управління рахунками.
-- lemma: бізнес-модель
-  translation: business model
+  usage: "Видатки бюджету зросли через відновлення інфраструктури."
+- lemma: "податкові надходження"
+  ipa: "[poˈdɑtkovi nɑdˈxodʒennʲɑ]"
+  translation: "tax revenues"
   pos: phrase
-  usage: Бізнес-модель пояснює, як компанія заробляє гроші.
-- lemma: собівартість
-  translation: production cost
+  usage: "Податкові надходження збільшилися після відновлення бізнесу."
+- lemma: "субсидія"
+  ipa: "[subˈsɪdʲijɑ]"
+  translation: "subsidy"
   pos: noun
-  usage: Собівартість впливає на ціну й прибуток.
-- lemma: стартап
-  translation: startup
+  usage: "Субсидія підтримує визначену групу домогосподарств."
+- lemma: "акциз"
+  ipa: "[ɑkˈtsɪz]"
+  translation: "excise tax"
   pos: noun
-  usage: Стартап перевірив гіпотезу на першій групі клієнтів.
-- lemma: брендинг
-  translation: branding
+  usage: "Акциз на пальне впливає на ціну доставки."
+- lemma: "фіскальна політика"
+  ipa: "[fisˈkɑlʲnɑ poˈlʲitɪkɑ]"
+  translation: "fiscal policy"
+  pos: phrase
+  usage: "Фіскальна політика охоплює податки й державні видатки."
+- lemma: "монетарна політика"
+  ipa: "[moneˈtɑrnɑ poˈlʲitɪkɑ]"
+  translation: "monetary policy"
+  pos: phrase
+  usage: "Монетарна політика впливає на інфляційні очікування."
+- lemma: "ліквідність"
+  ipa: "[lʲikwidˈnʲistʲ]"
+  translation: "liquidity"
   pos: noun
-  usage: Брендинг формує впізнаваність і довіру до компанії.
-- lemma: зайнятість
-  translation: employment
+  usage: "Компанія підтримує ліквідність через резерв коштів."
+- lemma: "застава"
+  ipa: "[zɑsˈtɑwɑ]"
+  translation: "collateral"
   pos: noun
-  usage: Зайнятість залежить від попиту на працю.
-- lemma: кваліфікація
-  translation: qualification
+  usage: "Банк оцінив заставу перед кредитним рішенням."
+- lemma: "відсоткова ставка"
+  ipa: "[wʲidˈsotkowɑ ˈstɑu̯kɑ]"
+  translation: "interest rate"
+  pos: phrase
+  usage: "Відсоткова ставка визначає вартість кредиту."
+- lemma: "депозит"
+  ipa: "[depoˈzɪt]"
+  translation: "deposit"
   pos: noun
-  usage: Працівник підвищує кваліфікацію протягом життя.
-- lemma: рекрутинг
-  translation: recruiting
+  usage: "Клієнт відкрив депозит у банку."
+- lemma: "кредит"
+  ipa: "[kreˈdɪt]"
+  translation: "loan, credit"
   pos: noun
-  usage: Рекрутингова команда шукає кандидатів із потрібними компетенціями.
-- lemma: аутсорсинг
-  translation: outsourcing
+  usage: "Кредит має графік платежів і відсоткову ставку."
+- lemma: "акція"
+  ipa: "[ˈɑktsʲijɑ]"
+  translation: "share, stock"
   pos: noun
-  usage: Компанія передала бухгалтерський облік на аутсорсинг.
+  usage: "Акція може давати право на дивіденди."
+- lemma: "облігація"
+  ipa: "[oblʲiˈɦɑtsʲijɑ]"
+  translation: "bond"
+  pos: noun
+  usage: "Облігація є борговим цінним папером."
+- lemma: "дивіденди"
+  ipa: "[dɪwiˈdendɪ]"
+  translation: "dividends"
+  pos: noun
+  usage: "Дивіденди залежать від фінансового результату компанії."
+- lemma: "портфель"
+  ipa: "[portˈfelʲ]"
+  translation: "portfolio"
+  pos: noun
+  usage: "Інвестор диверсифікує портфель між акціями й облігаціями."
+- lemma: "дохід"
+  ipa: "[ˈdoxʲid]"
+  translation: "revenue, income"
+  pos: noun
+  usage: "Дохід показує надходження, але не всі витрати."
+- lemma: "прибуток"
+  ipa: "[prɪˈbutok]"
+  translation: "profit"
+  pos: noun
+  usage: "Прибуток залишається після витрат і податків."
+- lemma: "збитки"
+  ipa: "[ˈzbɪtkɪ]"
+  translation: "losses"
+  pos: noun
+  usage: "Компанія зазнала збитків через падіння попиту."
+- lemma: "собівартість"
+  ipa: "[sobʲiˈwɑrtʲistʲ]"
+  translation: "cost of goods, production cost"
+  pos: noun
+  usage: "Собівартість зросла через подорожчання доставки."
+- lemma: "маржа"
+  ipa: "[ˈmɑrʒɑ]"
+  translation: "margin"
+  pos: noun
+  usage: "Маржа знизилася попри зростання продажів."
+- lemma: "рентабельність"
+  ipa: "[rentɑˈbelʲnʲistʲ]"
+  translation: "profitability"
+  pos: noun
+  usage: "Рентабельність проєкту залежить від ціни й собівартості."
+- lemma: "попит"
+  ipa: "[ˈpopɪt]"
+  translation: "demand"
+  pos: noun
+  usage: "Команда перевірила попит через попередні замовлення."
+- lemma: "пропозиція"
+  ipa: "[propoˈzɪtsʲijɑ]"
+  translation: "supply, offer"
+  pos: noun
+  usage: "Пропозиція праці залежить від навичок і умов роботи."
+- lemma: "бізнес-модель"
+  ipa: "[ˈbiznes moˈdelʲ]"
+  translation: "business model"
+  pos: phrase
+  usage: "Бізнес-модель пояснює, як ідея створює дохід."
+- lemma: "ціннісна пропозиція"
+  ipa: "[tsʲinˈnʲisnɑ propoˈzɪtsʲijɑ]"
+  translation: "value proposition"
+  pos: phrase
+  usage: "Ціннісна пропозиція має бути зрозумілою клієнтові."
+- lemma: "масштабування"
+  ipa: "[mɑʃtɑbuˈwɑnnʲɑ]"
+  translation: "scaling"
+  pos: noun
+  usage: "Перед масштабуванням команда перевірила сервісну підтримку."
+- lemma: "аутсорсинг"
+  ipa: "[ɑutˈsorsɪŋɦ]"
+  translation: "outsourcing"
+  pos: noun
+  usage: "Компанія передала бухгалтерію на аутсорсинг."
+- lemma: "логістика"
+  ipa: "[loˈɦʲistɪkɑ]"
+  translation: "logistics"
+  pos: noun
+  usage: "Логістика впливає на собівартість доставки."
+- lemma: "цільова аудиторія"
+  ipa: "[tsʲilʲoˈwɑ ɑudɪˈtorʲijɑ]"
+  translation: "target audience"
+  pos: phrase
+  usage: "Цільова аудиторія реагує на різні канали продажу."
+- lemma: "конверсія"
+  ipa: "[konˈwersʲijɑ]"
+  translation: "conversion"
+  pos: noun
+  usage: "Конверсія зросла після зміни сторінки замовлення."
+- lemma: "канал продажу"
+  ipa: "[kɑˈnɑl proˈdɑʒu]"
+  translation: "sales channel"
+  pos: phrase
+  usage: "Канал продажу впливає на вартість залучення клієнта."
+- lemma: "бренд"
+  ipa: "[brend]"
+  translation: "brand"
+  pos: noun
+  usage: "Бренд має відповідати досвіду клієнта."
+- lemma: "ринок праці"
+  ipa: "[ˈrɪnok ˈprɑtsʲi]"
+  translation: "labor market"
+  pos: phrase
+  usage: "Ринок праці змінюється через міграцію й автоматизацію."
+- lemma: "вакансія"
+  ipa: "[wɑˈkɑnsʲijɑ]"
+  translation: "job opening"
+  pos: noun
+  usage: "Компанія відкрила вакансію для аналітика."
+- lemma: "кваліфікація"
+  ipa: "[kwɑlʲifiˈkɑtsʲijɑ]"
+  translation: "qualification"
+  pos: noun
+  usage: "Працівники підвищують кваліфікацію протягом року."
+- lemma: "соціальний пакет"
+  ipa: "[sotsʲiˈɑlʲnɪj pɑˈket]"
+  translation: "benefits package"
+  pos: phrase
+  usage: "Соціальний пакет включає медичне страхування."
+- lemma: "пітч"
+  ipa: "[pitʃ]"
+  translation: "pitch"
+  pos: noun
+  usage: "Пітч має назвати проблему, ринок і модель доходу."
+- lemma: "звіт"
+  ipa: "[zʲwit]"
+  translation: "report"
+  pos: noun
+  usage: "Звіт має містити показник, ризик і наступний крок."

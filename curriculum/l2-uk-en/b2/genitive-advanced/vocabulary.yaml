@@ -1,164 +1,225 @@
-- lemma: родовий
+- lemma: родовий відмінок
+  ipa: "[ro.do.vyj wid.mi.nok]"
   translation: genitive case
-  pos: noun
-  usage: Родовий відмінок має багато семантичних функцій.
-- lemma: частковий родовий
+  pos: phrase
+  usage: "Родовий відмінок може позначати частину, належність, відсутність або кількість."
+- lemma: партитивний родовий
+  ipa: "[par.ty.tyw.nyj ro.do.vyj]"
   translation: partitive genitive
   pos: phrase
-  usage: Частковий родовий позначає невизначену кількість речовини.
-- lemma: партитивний
-  translation: partitive
-  pos: adj
-  usage: Партитивний відтінок видно у фразі випити чаю.
+  usage: "Партитивний родовий видно у фразі налити чаю."
 - lemma: суб'єктний родовий
+  ipa: "[sub.jekt.nyj ro.do.vyj]"
   translation: subjective genitive
   pos: phrase
-  usage: У словосполученні приїзд делегації родовий є суб'єктним.
+  usage: "У фразі рішення суду слово суду є суб'єктним родовим."
 - lemma: об'єктний родовий
+  ipa: "[ob.jekt.nyj ro.do.vyj]"
   translation: objective genitive
   pos: phrase
-  usage: У фразі захист прав родовий називає об'єкт дії.
+  usage: "У словосполученні захист прав слово прав є об'єктним родовим."
+- lemma: родовий належності
+  ipa: "[ro.do.vyj na.lezh.nos.ti]"
+  translation: possessive genitive
+  pos: phrase
+  usage: "Родовий належності показує зв'язок між власником і предметом."
+- lemma: означальний родовий
+  ipa: "[o.zna.chal.nyj ro.do.vyj]"
+  translation: attributive genitive
+  pos: phrase
+  usage: "Означальний родовий описує рису, як у фразі людина честі."
+- lemma: заперечний родовий
+  ipa: "[za.pe.rech.nyj ro.do.vyj]"
+  translation: negative genitive
+  pos: phrase
+  usage: "Заперечний родовий з'являється у реченні Комісія не знайшла доказів."
+- lemma: кількісний родовий
+  ipa: "[kil.kis.nyj ro.do.vyj]"
+  translation: quantitative genitive
+  pos: phrase
+  usage: "Кількісний родовий потрібен у фразі кілька рішень."
+- lemma: прийменникове керування
+  ipa: "[pryj.men.ny.ko.ve ke.ru.van.nia]"
+  translation: prepositional government
+  pos: phrase
+  usage: "Прийменникове керування треба перевіряти окремо."
+- lemma: номіналізація
+  ipa: "[no.mi.na.li.za.tsi.ja]"
+  translation: nominalization
+  pos: noun
+  usage: "Номіналізація може приховувати виконавця дії."
+- lemma: родовий ланцюжок
+  ipa: "[ro.do.vyj lan.tsiu.zhok]"
+  translation: genitive chain
+  pos: phrase
+  usage: "Довгий родовий ланцюжок іноді треба розгорнути дієсловом."
+- lemma: частина
+  ipa: "[chas.ty.na]"
+  translation: part
+  pos: noun
+  usage: "Частина бюджету залежить від податкових надходжень."
 - lemma: належність
-  translation: possession, belonging
+  ipa: "[na.lezh.nist]"
+  translation: belonging, possession
   pos: noun
-  usage: Родовий належності показує зв'язок між власником і предметом.
-- lemma: означальний
-  translation: descriptive, attributive
-  pos: adj
-  usage: Означальний родовий описує рису, а не власника.
-- lemma: прийменник
-  translation: preposition
+  usage: "Належність у родовому не завжди означає буквальне володіння."
+- lemma: ознака
+  ipa: "[oz.na.ka]"
+  translation: feature
   pos: noun
-  usage: Прийменник внаслідок керує родовим відмінком.
-- lemma: керування
-  translation: government, syntactic governance
-  pos: noun
-  usage: Керування прийменника треба перевіряти окремо.
-- lemma: замість
-  translation: instead of
-  pos: prep
-  usage: Замість відповіді він поставив нове запитання.
-- lemma: крім
-  translation: except, besides
-  pos: prep
-  usage: Крім одного пункту, документ погодили повністю.
-- lemma: окрім
-  translation: apart from, except
-  pos: prep
-  usage: Окрім технічних правок, зміст не змінили.
-- lemma: навколо
-  translation: around
-  pos: prep
-  usage: Навколо нового офісу посадили дерева.
-- lemma: поблизу
-  translation: near, close to
-  pos: prep
-  usage: Поблизу вокзалу відкрили інформаційний пункт.
-- lemma: попри
-  translation: despite
-  pos: prep
-  usage: Попри застереження експертів, проєкт підтримали.
-- lemma: поза
-  translation: outside, beyond
-  pos: prep
-  usage: Поза межами міста дорога стала вужчою.
-- lemma: задля
-  translation: for the sake of
-  pos: prep
-  usage: Задля безпеки зустріч перенесли.
-- lemma: внаслідок
-  translation: as a result of
-  pos: prep
-  usage: Внаслідок аварії рух тимчасово обмежили.
-- lemma: унаслідок
-  translation: as a result of
-  pos: prep
-  usage: Унаслідок затримки команда змінила графік.
-- lemma: протягом
-  translation: during, throughout
-  pos: prep
-  usage: Протягом тижня учасники подавали заявки.
-- lemma: упродовж
-  translation: during, throughout
-  pos: prep
-  usage: Упродовж семестру студенти аналізували тексти.
-- lemma: уздовж
-  translation: along
-  pos: prep
-  usage: Уздовж річки проклали нову стежку.
-- lemma: посеред
-  translation: in the middle of
-  pos: prep
-  usage: Посеред площі встановили тимчасову сцену.
-- lemma: з-посеред
-  translation: from among
-  pos: prep
-  usage: З-посеред усіх пропозицій обрали найреалістичнішу.
-- lemma: залежно від
-  translation: depending on
-  pos: phrase
-  usage: Залежно від результатів опитування план змінять.
-- lemma: у разі
-  translation: in case of
-  pos: phrase
-  usage: У разі відсутності кворуму засідання перенесуть.
-- lemma: під час
-  translation: during
-  pos: phrase
-  usage: Під час обговорення виникло кілька питань.
-- lemma: за винятком
-  translation: with the exception of
-  pos: phrase
-  usage: За винятком двох пунктів, угоду схвалили.
-- lemma: на відміну від
-  translation: unlike, in contrast to
-  pos: phrase
-  usage: На відміну від попереднього звіту, новий текст містить джерела.
-- lemma: абстрактний
-  translation: abstract
-  pos: adj
-  usage: Абстрактний іменник часто має закінчення -у або -ю.
-- lemma: конкретний
-  translation: concrete, specific
-  pos: adj
-  usage: Конкретний предмет частіше має закінчення -а або -я.
+  usage: "Ознака може передаватися означальним родовим."
 - lemma: закінчення
+  ipa: "[za.kin.chen.nia]"
   translation: ending
   pos: noun
-  usage: Закінчення залежить від значення слова.
-- lemma: чергування
-  translation: alternation
-  pos: noun
-  usage: У формі Києва видно чергування в основі.
-- lemma: побіжний голосний
-  translation: fleeting vowel
+  usage: "Закінчення -а або -у залежить від значення слова."
+- lemma: семантичний принцип
+  ipa: "[se.man.tych.nyj pryn.tsyp]"
+  translation: semantic principle
   pos: phrase
-  usage: У слові винятку випадає побіжний голосний.
-- lemma: заперечення
-  translation: negation
-  pos: noun
-  usage: Заперечення часто посилює родовий відмінок.
-- lemma: нестача
-  translation: shortage, lack
-  pos: noun
-  usage: Нестача коштів змінила план роботи.
-- lemma: кількісний
-  translation: quantitative
+  usage: "Семантичний принцип допомагає вибрати форму каменя або каменю."
+- lemma: конкретний
+  ipa: "[kon.kret.nyj]"
+  translation: concrete, specific
   pos: adj
-  usage: Кількісний родовий з'являється після слів багато й мало.
-- lemma: жодний
-  translation: no, not a single
-  pos: pron
-  usage: Без жодного доказу теза лишається припущенням.
-- lemma: ланцюжок
-  translation: chain
-  pos: noun
-  usage: Родовий ланцюжок може перевантажити речення.
-- lemma: канцелярський
-  translation: bureaucratic, officialese
+  usage: "Конкретний предмет частіше має форму на -а або -я."
+- lemma: абстрактний
+  ipa: "[ab.strakt.nyj]"
+  translation: abstract
   pos: adj
-  usage: Надмір родових конструкцій робить стиль канцелярським.
-- lemma: словосполучення
-  translation: phrase, word combination
+  usage: "Абстрактний іменник часто має форму на -у або -ю."
+- lemma: речовина
+  ipa: "[re.cho.vy.na]"
+  translation: substance
   pos: noun
-  usage: Словосполучення аналіз даних має об'єктний родовий.
+  usage: "Речовина у родовому часто має закінчення -у."
+- lemma: простір
+  ipa: "[pro.stir]"
+  translation: space, area
+  pos: noun
+  usage: "Назви простору часто тяжіють до форми на -у."
+- lemma: унаслідок
+  ipa: "[u.na.slid.ok]"
+  translation: as a result of
+  pos: prep
+  usage: "Унаслідок затримки фінансування графік змінили."
+- lemma: внаслідок
+  ipa: "[vna.slid.ok]"
+  translation: as a result of
+  pos: prep
+  usage: "Внаслідок помилки частину даних перевірили повторно."
+- lemma: за винятком
+  ipa: "[za vy.niat.kom]"
+  translation: except for
+  pos: phrase
+  usage: "За винятком двох пунктів, договір залишився без змін."
+- lemma: залежно від
+  ipa: "[za.lezh.no wid]"
+  translation: depending on
+  pos: phrase
+  usage: "Залежно від результатів аудиту план оновлять."
+- lemma: на відміну від
+  ipa: "[na wid.mi.nu wid]"
+  translation: unlike, in contrast to
+  pos: phrase
+  usage: "На відміну від попереднього звіту, новий текст містить джерела."
+- lemma: у разі
+  ipa: "[u ra.zi]"
+  translation: in case of
+  pos: phrase
+  usage: "У разі відсутності кворуму засідання перенесуть."
+- lemma: з метою
+  ipa: "[z me.to.ju]"
+  translation: for the purpose of
+  pos: phrase
+  usage: "З метою перевірки документів комісія зібралася."
+- lemma: задля
+  ipa: "[zad.lia]"
+  translation: for the sake of
+  pos: prep
+  usage: "Задля прозорості команда оприлюднила методику."
+- lemma: заради
+  ipa: "[za.ra.dy]"
+  translation: for the sake of
+  pos: prep
+  usage: "Заради безпеки маршрут змінили."
+- lemma: замість
+  ipa: "[za.mist]"
+  translation: instead of
+  pos: prep
+  usage: "Замість відповіді надійшов короткий коментар."
+- lemma: крім
+  ipa: "[krim]"
+  translation: except, besides
+  pos: prep
+  usage: "Крім одного пункту, усі пропозиції підтримали."
+- lemma: окрім
+  ipa: "[o.krim]"
+  translation: apart from
+  pos: prep
+  usage: "Окрім редакційних правок, текст не змінювали."
+- lemma: навколо
+  ipa: "[nav.ko.lo]"
+  translation: around
+  pos: prep
+  usage: "Навколо офісу встановили тимчасові огорожі."
+- lemma: поблизу
+  ipa: "[po.bly.zu]"
+  translation: near
+  pos: prep
+  usage: "Поблизу входу відкрили консультаційний пункт."
+- lemma: посеред
+  ipa: "[po.se.red]"
+  translation: in the middle of
+  pos: prep
+  usage: "Посеред площі встановили сцену."
+- lemma: уздовж
+  ipa: "[uz.dovzh]"
+  translation: along
+  pos: prep
+  usage: "Уздовж дороги поставили попереджувальні знаки."
+- lemma: поза
+  ipa: "[po.za]"
+  translation: outside of, beyond
+  pos: prep
+  usage: "Поза межами міста відкрили склад."
+- lemma: протягом
+  ipa: "[pro.tia.hom]"
+  translation: during, throughout
+  pos: prep
+  usage: "Протягом тижня команда збирала дані."
+- lemma: упродовж
+  ipa: "[u.pro.dovzh]"
+  translation: during, throughout
+  pos: prep
+  usage: "Упродовж місяця тривали консультації."
+- lemma: під час
+  ipa: "[pid chas]"
+  translation: during
+  pos: phrase
+  usage: "Під час засідання виникло кілька питань."
+- lemma: щодо
+  ipa: "[shcho.do]"
+  translation: regarding
+  pos: prep
+  usage: "Щодо договору команда підготувала окремий коментар."
+- lemma: стосовно
+  ipa: "[sto.sov.no]"
+  translation: concerning
+  pos: prep
+  usage: "Стосовно строку виконання є кілька застережень."
+- lemma: з приводу
+  ipa: "[z pry.vo.du]"
+  translation: regarding, concerning
+  pos: phrase
+  usage: "З приводу змін до договору надіслали лист."
+- lemma: попри
+  ipa: "[po.pry]"
+  translation: despite
+  pos: prep
+  usage: "Попри дощ учасники прийшли вчасно; це не родовий, а знахідний."
+- lemma: завдяки
+  ipa: "[zav.dia.ky]"
+  translation: thanks to
+  pos: prep
+  usage: "Завдяки підтримці проєкт завершили; це давальний, не родовий."
