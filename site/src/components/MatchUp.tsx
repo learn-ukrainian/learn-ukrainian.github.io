@@ -35,6 +35,22 @@ interface MatchUpProps {
   onComplete?: () => void;
 }
 
+const MATCH_PAIR_HUES = [
+  199, 32, 262, 174, 239, 92, 286, 151, 215, 49,
+  271, 188, 230, 108, 300, 164, 206, 67, 253, 181,
+  222, 132, 288, 192, 243, 78, 278, 142, 218, 58,
+] as const;
+const MATCH_PAIR_COLOR_COUNT = MATCH_PAIR_HUES.length;
+
+type MatchPairStyle = React.CSSProperties & {
+  '--match-pair-hue': string;
+};
+
+const getMatchedPairStyle = (index: number, isMatched: boolean): MatchPairStyle | undefined => {
+  if (!isMatched) return undefined;
+  return { '--match-pair-hue': String(MATCH_PAIR_HUES[index % MATCH_PAIR_COLOR_COUNT]) };
+};
+
 export default function MatchUp({ pairs, instruction, isUkrainian, onComplete }: MatchUpProps) {
   const [selectedLeft, setSelectedLeft] = useState<number | null>(null);
   const [matched, setMatched] = useState<Set<number>>(new Set());
@@ -102,7 +118,9 @@ export default function MatchUp({ pairs, instruction, isUkrainian, onComplete }:
                 }`}
               data-activity="match-left-tile"
               data-matched={matched.has(index) ? 'true' : 'false'}
+              data-pair-color={matched.has(index) ? index % MATCH_PAIR_COLOR_COUNT : undefined}
               data-selected={selectedLeft === index ? 'true' : 'false'}
+              style={getMatchedPairStyle(index, matched.has(index))}
               onClick={() => handleLeftClick(index)}
               disabled={matched.has(index)}
             >
@@ -119,6 +137,8 @@ export default function MatchUp({ pairs, instruction, isUkrainian, onComplete }:
               data-activity="match-right-tile"
               data-matched={matched.has(originalIndex) ? 'true' : 'false'}
               data-original-index={originalIndex}
+              data-pair-color={matched.has(originalIndex) ? originalIndex % MATCH_PAIR_COLOR_COUNT : undefined}
+              style={getMatchedPairStyle(originalIndex, matched.has(originalIndex))}
               onClick={() => handleRightClick(originalIndex)}
               disabled={matched.has(originalIndex)}
             >

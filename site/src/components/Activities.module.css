@@ -359,9 +359,26 @@
 }
 
 .matchItem.matched {
-  border-color: var(--lu-state-correct-fg);
-  background: var(--lu-state-correct-bg);
+  --match-pair-hue: 142;
+  --match-pair-bg: hsl(var(--match-pair-hue) 68% 43% / 0.14);
+  --match-pair-border: hsl(var(--match-pair-hue) 72% 35%);
+  --match-pair-fg: var(--lu-text);
+
+  border-color: var(--match-pair-border);
+  background: var(--match-pair-bg);
+  color: var(--match-pair-fg);
   cursor: default;
+  box-shadow: inset 4px 0 0 var(--match-pair-border);
+}
+
+.matchColumn:first-child .matchItem.matched {
+  box-shadow: inset -4px 0 0 var(--match-pair-border);
+}
+
+.matchColumn .matchItem.matched {
+  border-color: var(--match-pair-border);
+  background: var(--match-pair-bg);
+  color: var(--match-pair-fg);
 }
 
 .matchItem.matched::after {
@@ -2648,6 +2665,15 @@
   background: var(--lu-match-right);
 }
 
+[data-theme='dark'] .matchColumn .matchItem.matched {
+  --match-pair-bg: hsl(var(--match-pair-hue) 82% 65% / 0.24);
+  --match-pair-border: hsl(var(--match-pair-hue) 82% 75%);
+
+  border-color: var(--match-pair-border);
+  background: var(--match-pair-bg);
+  color: var(--lu-text);
+}
+
 /* drag pools · prompts → violet */
 [data-theme='dark'] .chipDraggable,
 [data-theme='dark'] .wordPool.dropTarget,
@@ -2656,10 +2682,9 @@
   background: var(--lu-state-drag);
 }
 
-/* correct · matched → green (+ legible text) */
+/* correct → green (+ legible text) */
 [data-theme='dark'] .option.correct,
 [data-theme='dark'] .blank.correct,
-[data-theme='dark'] .matchItem.matched,
 [data-theme='dark'] .trueButton:hover:not(:disabled),
 [data-theme='dark'] .tfButton.correct,
 [data-theme='dark'] .answerZone.correct,
