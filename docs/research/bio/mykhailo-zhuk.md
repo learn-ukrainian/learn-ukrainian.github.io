@@ -156,9 +156,12 @@ than long secondary quotations.
   style creates a cultural canon.
 - **Portrait etchings of Ukrainian artists (1932):** Good cross-module link to
   Narbut, Boichuk, Novakivskyi, and the Krychevsky family.
-- **`Біле та чорне` / `Black and White`:** ONNB and IEU surface this as a
-  memorable visual anchor for line, contrast, symbolism, and modernist
-  decorative thinking.
+- **`Біле та чорне` / `Біле і чорне` / `Black and White`:** The Odesa Museum
+  of Modern Art online collection catalogs the work as `Біле та чорне`; ONNB
+  materials also use `Біле і чорне`, while IEU captions the image in English
+  as `Black and White`. Treat it as a memorable visual anchor for line,
+  contrast, symbolism, and modernist decorative thinking, and preserve
+  source-specific title wording in captions.
 - **`Ох` book cover / children's books:** PMU and ONNB give useful education
   anchors: illustration, children's reading, book as object, artist-teacher.
 - **Ceramic sketches / vessels:** Use after source and rights verification to
@@ -317,6 +320,8 @@ than long secondary quotations.
   (1883-1964): до 140-річчя від дня народження українського художника,
   письменника, педагога." https://odnb.odessa.ua/view_post.php?id=4369.
   Accessed 2026-07-01.
+- Музей сучасного мистецтва Одеси. "Біле та чорне."
+  https://onlinecollection.msio.com.ua/uk/works/1700. Accessed 2026-07-01.
 - Педагогічний музей України. "Михайло Жук (1883-1964): художник, письменник,
   ілюстратор дитячих книг, педагог."
   https://pmu.in.ua/news/myxajlo-zhuk-1883-1964-xudozhnyk-pysmennyk-ilyustrator-dytyachyx-knyh-pedahoh/.
