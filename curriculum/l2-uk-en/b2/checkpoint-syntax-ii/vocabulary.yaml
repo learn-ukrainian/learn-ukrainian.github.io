@@ -1,140 +1,100 @@
-- lemma: складносурядний
-  translation: compound
-  pos: adj
-  usage: "Складносурядний зв'язок поєднує рівноправні предикативні частини."
-- lemma: складнопідрядний
-  translation: complex
-  pos: adj
-  usage: "Складнопідрядний тип має головну й залежну частини."
-- lemma: безсполучниковий
-  translation: asyndetic
-  pos: adj
-  usage: "Безсполучниковий зв'язок спирається на інтонацію та розділовий знак."
-- lemma: сурядність
-  translation: coordination
-  pos: noun
-  usage: "Сурядність означає рівноправність частин складного речення."
-- lemma: підрядність
-  translation: subordination
-  pos: noun
+- lemma: "сурядність"
+  translation: "coordination"
+  pos: "noun"
+  usage: "Сурядність поєднує рівноправні предикативні частини."
+- lemma: "підрядність"
+  translation: "subordination"
+  pos: "noun"
   usage: "Підрядність створює ієрархію між головною та залежною частинами."
-- lemma: конектор
-  translation: connector
-  pos: noun
-  usage: "Конектор показує, як одна думка переходить в іншу."
-- lemma: когезія
-  translation: cohesion
-  pos: noun
-  usage: "Когезія допомагає абзацу не розпадатися на окремі речення."
-- lemma: варіативність
-  translation: variability
-  pos: noun
-  usage: "Синтаксична варіативність дає змогу змінювати регістр тексту."
-- lemma: інверсія
-  translation: inversion
-  pos: noun
-  usage: "Інверсія переносить важливий елемент у помітну позицію."
-- lemma: емфаза
-  translation: emphasis
-  pos: noun
-  usage: "Емфаза підсилює фокус речення без зміни факту."
-- lemma: емфатичний
-  translation: emphatic
-  pos: adj
-  usage: "Емфатична частка має стояти біля слова, яке отримує фокус."
-- lemma: парцеляція
-  translation: parcellation
-  pos: noun
-  usage: "Парцеляція винесла важливу деталь в окрему інтонаційну одиницю."
-- lemma: парцелят
-  translation: parceled fragment
-  pos: noun
-  usage: "Парцелят граматично залежить від попереднього речення."
-- lemma: еліпсис
-  translation: ellipsis
-  pos: noun
-  usage: "Еліпсис пропускає елемент, який легко відновити з контексту."
-- lemma: цитування
-  translation: quotation
-  pos: noun
-  usage: "Цитування потребує точного відтворення чужих слів."
-- lemma: цитата
-  translation: quotation
-  pos: noun
-  usage: "Цитата має бути відокремлена від авторського коментаря."
-- lemma: реферування
-  translation: paraphrasing
-  pos: noun
-  usage: "Реферування передає чужу думку стисло й без лапок."
-- lemma: пряма мова
-  translation: direct speech
-  pos: phrase
-  usage: "Пряма мова зберігає дослівне висловлення мовця."
-- lemma: непряма мова
-  translation: indirect speech
-  pos: phrase
-  usage: "Непряма мова передає зміст репліки через підрядну частину."
-- lemma: невласне пряма мова
-  translation: free indirect discourse
-  pos: phrase
-  usage: "Невласне пряма мова передає внутрішній голос без лапок."
-- lemma: репліка
-  translation: utterance
-  pos: noun
-  usage: "Репліка в діалозі часто починається з абзацного тире."
-- lemma: слова автора
-  translation: reporting clause
-  pos: phrase
-  usage: "Слова автора називають мовця або дію мовлення."
-- lemma: трансформація
-  translation: transformation
-  pos: noun
-  usage: "Трансформація прямої мови в непряму змінює займенники."
-- lemma: пунктуаційна норма
-  translation: punctuation norm
-  pos: phrase
-  usage: "Пунктуаційна норма пояснюється типом зв'язку між частинами."
-- lemma: двокрапка
-  translation: colon
-  pos: noun
-  usage: "Двокрапка може відкривати пояснення або перелік."
-- lemma: крапка з комою
-  translation: semicolon
-  pos: phrase
-  usage: "Крапка з комою розділяє поширені рівноправні частини."
-- lemma: тире
-  translation: dash
-  pos: noun
-  usage: "Тире може позначати різкий перехід або пропуск присудка."
-- lemma: граматична основа
-  translation: grammatical base
-  pos: phrase
-  usage: "Граматична основа допомагає визначити межі частин."
-- lemma: предикативна частина
-  translation: predicative clause
-  pos: phrase
+- lemma: "безсполучниковість"
+  translation: "asyndetic connection"
+  pos: "noun"
+  usage: "Безсполучниковість спирається на інтонацію та розділовий знак."
+- lemma: "предикативна частина"
+  translation: "predicative clause"
+  pos: "noun phrase"
   usage: "Кожна предикативна частина має власну граматичну основу."
-- lemma: сполучне слово
-  translation: connective word
-  pos: phrase
-  usage: "Сполучне слово поєднує частини й виконує роль у підрядній."
-- lemma: парний сполучник
-  translation: paired conjunction
-  pos: phrase
-  usage: "Парний сполучник потребує симетричних частин."
-- lemma: редагування
-  translation: editing
-  pos: noun
-  usage: "Редагування складного речення починається з меж частин."
-- lemma: систематизація
-  translation: systematization
-  pos: noun
-  usage: "Систематизація перетворює окремі правила на робочу карту."
-- lemma: структура
-  translation: structure
-  pos: noun
-  usage: "Структура складного речення визначає рух думки."
-- lemma: саморефлексія
-  translation: self-reflection
-  pos: noun
-  usage: "Саморефлексія допомагає оцінити, які синтаксичні навички вже стабільні."
+- lemma: "граматична основа"
+  translation: "grammatical base"
+  pos: "noun phrase"
+  usage: "Граматична основа допомагає знайти межу частини."
+- lemma: "вставна конструкція"
+  translation: "parenthetical construction"
+  pos: "noun phrase"
+  usage: "Вставна конструкція показує ставлення автора до змісту."
+- lemma: "корелят"
+  translation: "correlative support word"
+  pos: "noun"
+  usage: "Корелят підтримує довгу підрядну частину."
+- lemma: "парний сполучник"
+  translation: "paired conjunction"
+  pos: "noun phrase"
+  usage: "Парний сполучник допомагає втримати баланс частин."
+- lemma: "когезія"
+  translation: "cohesion"
+  pos: "noun"
+  usage: "Когезія показує зв'язок між реченнями в абзаці."
+- lemma: "конектор"
+  translation: "connector"
+  pos: "noun"
+  usage: "Конектор називає причину, наслідок, контраст або додавання."
+- lemma: "стилістична варіативність"
+  translation: "stylistic variability"
+  pos: "noun phrase"
+  usage: "Стилістична варіативність допомагає змінювати регістр тексту."
+- lemma: "інверсія"
+  translation: "inversion"
+  pos: "noun"
+  usage: "Інверсія переносить важливий елемент у сильну позицію."
+- lemma: "емфатична частка"
+  translation: "emphatic particle"
+  pos: "noun phrase"
+  usage: "Емфатична частка саме виділяє фокус речення."
+- lemma: "еліпсис"
+  translation: "ellipsis"
+  pos: "noun"
+  usage: "Еліпсис пропускає елемент, який легко відновити."
+- lemma: "парцеляція"
+  translation: "parcelling"
+  pos: "noun"
+  usage: "Парцеляція створює сильну паузу в публіцистичному тексті."
+- lemma: "пряма мова"
+  translation: "direct speech"
+  pos: "noun phrase"
+  usage: "Пряма мова зберігає форму репліки в лапках."
+- lemma: "непряма мова"
+  translation: "indirect speech"
+  pos: "noun phrase"
+  usage: "Непряма мова передає зміст репліки підрядною частиною."
+- lemma: "слова автора"
+  translation: "reporting clause"
+  pos: "noun phrase"
+  usage: "Слова автора називають мовця або дію мовлення."
+- lemma: "цитата"
+  translation: "quotation"
+  pos: "noun"
+  usage: "Цитата потребує джерела й авторського коментаря."
+- lemma: "реферування"
+  translation: "paraphrased reporting"
+  pos: "noun"
+  usage: "Реферування стисло передає чужу думку без дослівної форми."
+- lemma: "пунктуаційна норма"
+  translation: "punctuation norm"
+  pos: "noun phrase"
+  usage: "Пунктуаційна норма пояснюється типом синтаксичного зв'язку."
+- lemma: "двокрапка"
+  translation: "colon"
+  pos: "noun"
+  usage: "Двокрапка часто відкриває пояснення другої частини."
+- lemma: "крапка з комою"
+  translation: "semicolon"
+  pos: "noun phrase"
+  usage: "Крапка з комою розділяє поширені рівноправні частини."
+- lemma: "тире"
+  translation: "dash"
+  pos: "noun"
+  usage: "Тире може позначати еліпсис або різкий перехід."
+- lemma: "самоперевірка"
+  translation: "self-check"
+  pos: "noun"
+  usage: "Самоперевірка змушує пояснити власну пунктуацію."
