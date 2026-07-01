@@ -130,7 +130,7 @@ def _inline_activity_cross_ref_to_mdx(
     section_title = section_title.strip()
     if section_title:
         if is_ukrainian_forced:
-            reference = f"див. урок, §{escape_jsx(section_title)}"
+            reference = f"див. розділ, §{escape_jsx(section_title)}"
         else:
             reference = f"see lesson, §{escape_jsx(section_title)}"
     elif is_ukrainian_forced:

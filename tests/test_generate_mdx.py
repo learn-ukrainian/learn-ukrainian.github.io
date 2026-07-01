@@ -161,7 +161,7 @@ def test_seminar_description_falls_back_to_ukrainian_title_for_latin_subtitle():
         level="bio",
     )
 
-    assert "description: \"Олександр Білаш: Українська пісня і пам'ять\"" in mdx
+    assert "description: \"Матеріал до теми «Олександр Білаш: Українська пісня і пам'ять»\"" in mdx
     assert "Oleksandr Bilash: Ukrainian Song and Cultural Memory" not in mdx
 
 
@@ -240,6 +240,12 @@ Practice there.
     assert "*(see lesson)*" not in tab3
     assert tab3.count("<Quiz") == 2
 
+    mdx_uk = generate_mdx(md_content, 1, yaml_activities=activities, level="folk")
+    tab3_uk = mdx_uk.split('<TabItem label="Вправи">', 1)[1].split("</TabItem>", 1)[0]
+    assert "### act-1 inline greeting\n\n*(див. розділ, §Section One)*" in tab3_uk
+    assert "### act-2 inline thanks\n\n*(див. розділ, §Section Two)*" in tab3_uk
+    assert "див. урок" not in tab3_uk
+
 
 def test_v7_seminar_tabs_force_ukrainian_labels(tmp_path):
     activities_yaml = tmp_path / "activities.yaml"
@@ -307,7 +313,7 @@ subtitle: Test
     mdx = generate_mdx(md_content, 1, yaml_activities=activities, level="folk")
     tab3 = mdx.split('<TabItem label="Вправи">', 1)[1].split("</TabItem>", 1)[0]
 
-    assert "### Перевірка понять\n\n*(див. урок, §Постановка проблеми)*" in tab3
+    assert "### Перевірка понять\n\n*(див. розділ, §Постановка проблеми)*" in tab3
     assert "### Робоча вправа\n\n<Quiz" in tab3
     assert tab3.count("<Quiz") == 1
 
