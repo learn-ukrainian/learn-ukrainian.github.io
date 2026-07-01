@@ -141,6 +141,9 @@ module without a rights and edition check.
 - **Mazepa restoration vs. new myth:** The `Мазепа` cycle is decolonial because
   it resists imperial demonization, but it can also idealize. Teach it with
   anti-hagiography: what does Lepkyi restore, soften, or dramatize?
+- **`Видиш` / `Чуєш` incipit:** learners may see the original / textual witness
+  `Видиш, брате мій` and the popular song variant `Чуєш, брате мій`. Do not
+  "correct" one away without naming the variant tradition.
 - **Polish context:** Lepkyi lived much of his career in Kraków, wrote across
   Ukrainian-Polish cultural space, and served as a Polish senator representing
   Galician Ukrainians. Do not flatten this into either assimilation or pure
@@ -228,6 +231,8 @@ module without a rights and edition check.
 
 - Освіта.ua. "`Чуєш, брате мій` Богдан Лепкий."
   https://osvita.ua/school/literature/l/70605/. Accessed 2026-07-01.
+- Освіта.ua. "`Видиш, брате мій...` Богдан Лепкий."
+  https://osvita.ua/school/literature/l/70639/. Accessed 2026-07-01.
 - Мислене древо. "Лепкий Б. Мотря - Ніч."
   https://www.myslenedrevo.com.ua/uk/Lit/L/LepkyB/Prose/Mazepa/Motrja/Nich.html.
   Accessed 2026-07-01.
