@@ -116,8 +116,8 @@
   called a poet of color and sun.
 - **Travel and plein-air practice:** IEU and ESU record travel through Kyiv,
   Crimea, Italy, Egypt, Palestine, Hutsulshchyna, and Naddniprianshchyna. C1
-  fine-arts planning already names "Іван Труш: мандрівна естетика та поезія
-  кольору."
+  fine-arts planning already names «Іван Труш: мандрівна естетика та 'поезія
+  кольору'».
 - **Representative works / cycles:** IEU names `Sunset in the Forest`,
   `Grain Stacks near the Woods`, `Moonlit Night by the Sea`, `The Solitary
   Pine`, `The Jewish Cemetery`, `St Michael's Cathedral`, `St Andrew's Church`,
