@@ -107,10 +107,11 @@ catalog / electronic library; DSP = Diasporiana; Commons = Wikimedia Commons.
 - **Lviv / early-modern memory:** `Манускрипт з вулиці Руської` (1979)
   reconstructs medieval / early-modern Lviv and belongs in future cross-track
   work with urban history and cultural multilingualism.
-- **Galician national awakening:** `Вода з каменю` (1982) and `Четвертий
-  вимір` (1984), about Markiian Shashkevych and Petro Hulak-Artemovskyi
-  respectively, received the Shevchenko Prize. Good BIO use: how a late-Soviet
-  writer made nineteenth-century linguistic awakening emotionally visible.
+- **Nineteenth-century awakening and brotherhood memory:** `Вода з каменю`
+  (1982), about Markiian Shashkevych, and `Четвертий вимір` (1984), about
+  Mykola Hulak of the Cyril-Methodius Brotherhood, received the Shevchenko
+  Prize. Good BIO use: how a late-Soviet writer made nineteenth-century
+  linguistic awakening and political brotherhood memory emotionally visible.
 - **Franko and cultural inheritance:** `Шрами на скалі` (1987) is source-
   attested as a novel about Ivan Franko. Keep separate from any curriculum
   shorthand using `Шрам`.
@@ -237,7 +238,8 @@ site media assets.
 - `docs/research/bio/panteleimon-kulish.md` - historical fiction, Cossack
   debate, and anti-hagiographic memory work.
 - `docs/research/bio/mykola-kostomarov.md` - historian / writer background for
-  national historical imagination.
+  national historical imagination and Cyril-Methodius Brotherhood context for
+  `Четвертий вимір`.
 - `docs/research/bio/ivan-franko.md` - `Шрами на скалі` connection and
   cross-century literary memory.
 - `docs/research/bio/taras-shevchenko.md` - memory, language, and civic canon.
@@ -325,6 +327,9 @@ site media assets.
   https://diasporiana.org.ua/proza/ivanychuk-r-malvy/. Accessed 2026-07-01.
 - "Іваничук Р. І. Вода з каменю (1982)." NBU electronic-library record.
   https://search.nbuv.gov.ua/cgi-bin/ua/elib.exe?C21COM=S&I21DBN=UKRLIB&P21DBN=UKRLIB&S21All=%3C.%3EID%3Dukr0000030029%3C.%3E&S21CNR=20&S21FMT=fullwebr&S21REF=2&S21STN=1.
+  Accessed 2026-07-01.
+- "Роман Іваничук. Повне зібрання творів. Том 10. Четвертий вимір." Vivat.
+  https://vivat.com.ua/product/roman-ivanychuk-povne-zibrannia-tvoriv-10/.
   Accessed 2026-07-01.
 - Wikimedia Commons. "Category:Roman Ivanychuk."
   https://commons.wikimedia.org/wiki/Category:Roman_Ivanychuk. Accessed
