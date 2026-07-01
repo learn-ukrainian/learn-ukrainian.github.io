@@ -254,6 +254,8 @@ than long secondary quotations.
 - `curriculum/l2-uk-en/plans/bio/volodymyr-sosiura.yaml`
 - `docs/research/bio/mykola-kulish.md`
 - `curriculum/l2-uk-en/plans/bio/mykola-kulish.yaml`
+- `docs/research/bio/mykola-khvylovyi.md`
+- `curriculum/l2-uk-en/plans/bio/mykola-khvylovyi.yaml`
 
 **Existing C1 / fine-arts links (VERIFIED `test -e` on 2026-07-01):**
 
@@ -265,7 +267,6 @@ than long secondary quotations.
 
 - BIO #366 `mykhailo-zhuk`
 - BIO #367 `sofiia-yablonska`
-- Mykola Khvylovy as portrait subject if / when the BIO slug exists.
 
 ## 8. Naming-canonical
 
