@@ -10,7 +10,8 @@
 **Source acronym legend:** ESU = Encyclopedia of Modern Ukraine /
 `Енциклопедія Сучасної України`; EIU = Encyclopedia of History of Ukraine /
 `Енциклопедія історії України`; IEU = Internet Encyclopedia of Ukraine;
-ONNB = Odesa National Scientific Library; PMU = Pedagogical Museum of Ukraine.
+ONNB = Odesa National Scientific Library; PMU = Pedagogical Museum of Ukraine;
+DPU = State Political Directorate / `Державне політичне управління`.
 
 **Acceptance self-check:**
 
