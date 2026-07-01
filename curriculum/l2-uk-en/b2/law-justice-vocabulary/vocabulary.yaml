@@ -1,140 +1,190 @@
-- lemma: суддя
-  translation: judge
+- lemma: право
+  ipa: '[ˈprɑʋɔ]'
+  translation: right, law
   pos: noun
-  usage: Суддя розглядає справу й ухвалює рішення в межах процедури.
-- lemma: вирок
-  translation: verdict, criminal judgment
-  pos: noun
-  usage: Вирок суду не можна замінювати журналістською оцінкою.
-- lemma: обвинувачення
-  translation: prosecution, accusation
-  pos: noun
-  usage: Обвинувачення має довести свою позицію доказами.
-- lemma: підозрюваний
-  translation: suspect
-  pos: noun
-  usage: Підозрюваний має право на захист.
-- lemma: адвокат
-  translation: lawyer, attorney
-  pos: noun
-  usage: Адвокат заявив клопотання про зміну запобіжного заходу.
-- lemma: правопорушення
-  translation: offense
-  pos: noun
-  usage: Правопорушення треба описувати через правову кваліфікацію.
-- lemma: докази
-  translation: evidence
-  pos: noun
-  usage: Докази досліджують у судовому засіданні.
-- lemma: презумпція невинуватості
-  translation: presumption of innocence
-  pos: phrase
-  usage: Презумпція невинуватості забороняє оголошувати людину винною до вироку.
-- lemma: позовна заява
-  translation: statement of claim
-  pos: phrase
-  usage: Позовна заява має містити вимогу й обґрунтування.
-- lemma: оскарження
-  translation: appeal, challenge
-  pos: noun
-  usage: Оскарження рішення відбувається у визначений строк.
-- lemma: недоторканність
-  translation: immunity, inviolability
-  pos: noun
-  usage: Недоторканність має правові межі й процедуру.
-- lemma: відповідальність
-  translation: liability, responsibility
-  pos: noun
-  usage: Відповідальність залежить від виду правопорушення.
-- lemma: вердикт
-  translation: verdict
-  pos: noun
-  usage: Вердикт не варто вживати як синонім будь-якої думки.
-- lemma: процесуальний
-  translation: procedural
-  pos: adj
-  usage: Процесуальний статус особи треба називати точно.
-- lemma: клопотання
-  translation: motion, petition
-  pos: noun
-  usage: Сторона захисту подала клопотання про долучення доказів.
-- lemma: санкція
-  translation: sanction, penalty clause
-  pos: noun
-  usage: Санкція статті визначає можливі наслідки порушення.
-- lemma: правосуддя
-  translation: justice, administration of justice
-  pos: noun
-  usage: Правосуддя потребує незалежного суду й дотримання процедури.
-- lemma: судочинство
-  translation: judicial proceedings
-  pos: noun
-  usage: Судочинство має етапи, правила й учасників.
-- lemma: прокурор
-  translation: prosecutor
-  pos: noun
-  usage: Прокурор підтримує обвинувачення в суді.
-- lemma: свідок
-  translation: witness
-  pos: noun
-  usage: Свідок дає показання про відомі йому обставини.
-- lemma: потерпілий
-  translation: injured party, victim
-  pos: noun
-  usage: Потерпілий може вимагати відшкодування шкоди.
-- lemma: запобіжний захід
-  translation: preventive measure
-  pos: phrase
-  usage: Запобіжний захід не є покаранням.
-- lemma: затримання
-  translation: detention
-  pos: noun
-  usage: Затримання має правові підстави й часові межі.
-- lemma: обшук
-  translation: search
-  pos: noun
-  usage: Обшук проводять у межах процесуальної процедури.
-- lemma: допит
-  translation: interrogation, questioning
-  pos: noun
-  usage: Допит свідка фіксують у процесуальних документах.
-- lemma: експертиза
-  translation: expert examination
-  pos: noun
-  usage: Експертиза допомагає встановити спеціальні обставини.
-- lemma: позивач
-  translation: claimant, plaintiff
-  pos: noun
-  usage: Позивач звертається до суду з вимогою.
-- lemma: відповідач
-  translation: defendant, respondent
-  pos: noun
-  usage: Відповідач може заперечити позовні вимоги.
-- lemma: відшкодування
-  translation: compensation
-  pos: noun
-  usage: Відшкодування шкоди може бути предметом позову.
-- lemma: зобов'язання
+  usage: "Право на захист не можна ігнорувати."
+- lemma: обов'язок
+  ipa: '[ɔˈbɔu̯jɑzɔk]'
   translation: obligation
   pos: noun
-  usage: Договірне зобов'язання треба виконати у встановлений строк.
+  usage: "Заявник має обов'язок подати копії документів."
+- lemma: відповідальність
+  ipa: '[ʋʲidpɔʋʲiˈdɑlʲnʲisʲtʲ]'
+  translation: liability, responsibility
+  pos: noun
+  usage: "За порушення може наставати відповідальність."
+- lemma: правова допомога
+  ipa: '[prɑʋɔˈʋɑ dɔpɔˈmɔɦɑ]'
+  translation: legal aid, legal assistance
+  pos: phrase
+  usage: "Правова допомога може включати консультацію й представництво."
+- lemma: суддя
+  ipa: '[suˈdʲːɑ]'
+  translation: judge
+  pos: noun
+  usage: "Суддя розглядає клопотання."
+- lemma: прокурор
+  ipa: '[prɔkuˈrɔr]'
+  translation: prosecutor
+  pos: noun
+  usage: "Прокурор підтримує позицію обвинувачення."
+- lemma: адвокат
+  ipa: '[ɑdʋɔˈkɑt]'
+  translation: lawyer, defense attorney
+  pos: noun
+  usage: "Адвокат здійснює захист клієнта."
+- lemma: позивач
+  ipa: '[pɔˈzɪˈʋɑt͡ʃ]'
+  translation: plaintiff
+  pos: noun
+  usage: "Позивач просить відшкодування шкоди."
+- lemma: відповідач
+  ipa: '[ʋʲidpɔʋʲiˈdɑt͡ʃ]'
+  translation: defendant, respondent
+  pos: noun
+  usage: "Відповідач заперечує проти позову."
+- lemma: підозрюваний
+  ipa: '[pʲiˈdɔzʲrʲuʋɑnɪj]'
+  translation: suspect
+  pos: noun
+  usage: "Підозрюваний має право на захист."
+- lemma: обвинувачений
+  ipa: '[ɔbʋɪnuˈʋɑt͡ʃɛnɪj]'
+  translation: accused
+  pos: noun
+  usage: "Обвинувачений не вважається винним до вироку."
+- lemma: потерпілий
+  ipa: '[pɔtɛrˈpʲilɪj]'
+  translation: injured party, victim
+  pos: noun
+  usage: "Потерпілий може заявляти клопотання."
+- lemma: свідок
+  ipa: '[ˈsʲʋʲidɔk]'
+  translation: witness
+  pos: noun
+  usage: "Свідок дає показання про відомі обставини."
+- lemma: правопорушення
+  ipa: '[prɑʋɔpɔˈruʃɛnʲːɑ]'
+  translation: offense
+  pos: noun
+  usage: "Правопорушення треба описувати через правову кваліфікацію."
+- lemma: підозра
+  ipa: '[pʲiˈdɔzrɑ]'
+  translation: suspicion, notice of suspicion
+  pos: noun
+  usage: "Підозра не дорівнює вироку."
+- lemma: обвинувачення
+  ipa: '[ɔbʋɪnuˈʋɑt͡ʃɛnʲːɑ]'
+  translation: accusation, prosecution
+  pos: noun
+  usage: "Обвинувачення має довести свою позицію доказами."
+- lemma: доказ
+  ipa: '[ˈdɔkɑz]'
+  translation: evidence
+  pos: noun
+  usage: "Суд досліджує докази під час розгляду."
+- lemma: клопотання
+  ipa: '[klɔpɔˈtɑnʲːɑ]'
+  translation: motion, petition
+  pos: noun
+  usage: "Адвокат подав клопотання про зміну запобіжного заходу."
+- lemma: запобіжний захід
+  ipa: '[zɑpɔˈbʲiʒnɪj zɑxʲid]'
+  translation: preventive measure
+  pos: phrase
+  usage: "Запобіжний захід не є покаранням."
+- lemma: вирок
+  ipa: '[ʋɪrɔk]'
+  translation: verdict, criminal judgment
+  pos: noun
+  usage: "Вирок може бути оскаржений у визначеному порядку."
 - lemma: апеляція
+  ipa: '[ɑpɛˈlʲɑt͡sʲijɑ]'
   translation: appeal
   pos: noun
-  usage: Апеляція дає змогу переглянути рішення за процедурою.
-- lemma: касація
-  translation: cassation appeal
+  usage: "Апеляція просить переглянути рішення."
+- lemma: оскарження
+  ipa: '[ɔˈskɑrʒɛnʲːɑ]'
+  translation: appeal, challenge
   pos: noun
-  usage: Касація зосереджується на застосуванні права.
-- lemma: юрисдикція
-  translation: jurisdiction
+  usage: "Оскарження запускає процедуру перегляду."
+- lemma: позовна заява
+  ipa: '[pɔˈzɔu̯nɑ zɑˈjɑʋɑ]'
+  translation: statement of claim
+  pos: phrase
+  usage: "Позовна заява формулює вимогу до суду."
+- lemma: договір
+  ipa: '[ˈdɔɦɔˈʋʲir]'
+  translation: contract
   pos: noun
-  usage: Юрисдикція визначає, який суд або орган може розглядати справу.
+  usage: "Договір визначає права й обов'язки сторін."
+- lemma: зобов'язання
+  ipa: '[zɔbɔˈʋjɑzɑnʲːɑ]'
+  translation: obligation, commitment
+  pos: noun
+  usage: "Сторона має виконати договірне зобов'язання."
+- lemma: відшкодування шкоди
+  ipa: '[ʋʲid͡ʒʃkɔduˈʋɑnʲːɑ ˈʃkɔdɪ]'
+  translation: compensation for damage
+  pos: phrase
+  usage: "Позивач просить відшкодування шкоди."
+- lemma: компенсація
+  ipa: '[kɔmpɛnˈsɑt͡sʲijɑ]'
+  translation: compensation
+  pos: noun
+  usage: "Компенсація залежить від доказів і процедури."
+- lemma: скарга
+  ipa: '[ˈskɑrɦɑ]'
+  translation: complaint
+  pos: noun
+  usage: "Скаргу можна подати у визначений строк."
+- lemma: строк
+  ipa: '[strɔk]'
+  translation: deadline, period
+  pos: noun
+  usage: "Строк подання скарги обмежений."
+- lemma: термін
+  ipa: '[ˈtɛrmʲin]'
+  translation: term
+  pos: noun
+  usage: "Термін має бути пояснений у plain-language версії."
+- lemma: презумпція невинуватості
+  ipa: '[prɛˈzumpt͡sʲijɑ nɛʋɪnuˈʋɑtɔsʲtʲi]'
+  translation: presumption of innocence
+  pos: phrase
+  usage: "Презумпція невинуватості захищає людину до вироку."
+- lemma: дискримінація
+  ipa: '[dɪskrɪmʲiˈnɑt͡sʲijɑ]'
+  translation: discrimination
+  pos: noun
+  usage: "Ознаки дискримінації потребують перевірки."
+- lemma: конвенція
+  ipa: '[kɔnˈʋɛnʲt͡sʲijɑ]'
+  translation: convention
+  pos: noun
+  usage: "Конвенція встановлює міжнародні правові зобов'язання."
+- lemma: ратифікація
+  ipa: '[rɑtɪfʲiˈkɑt͡sʲijɑ]'
+  translation: ratification
+  pos: noun
+  usage: "Ратифікація офіційно затверджує міжнародний договір."
+- lemma: екстрадиція
+  ipa: '[ɛkstrɑˈdɪt͡sʲijɑ]'
+  translation: extradition
+  pos: noun
+  usage: "Екстрадиція відбувається за процедурою між державами."
 - lemma: омбудсмен
+  ipa: '[ɔmbuˈd͡zsmɛn]'
   translation: ombudsman
   pos: noun
-  usage: Омбудсмен розглядає звернення щодо захисту прав.
-- lemma: правозахисник
-  translation: human rights defender
-  pos: noun
-  usage: Правозахисник повідомляє про ризик порушення прав.
+  usage: "Омбудсмен діє в межах повноважень щодо захисту прав."
+- lemma: plain-language пояснення
+  ipa: '[plain-languagɛ pɔˈjɑsnɛnʲːɑ]'
+  translation: plain-language explanation
+  pos: phrase
+  usage: "Plain-language пояснення зберігає термін і додає зрозумілу дію."
+- lemma: правове твердження
+  ipa: '[prɑʋɔˈʋɛ ˈtʋɛrd͡ʒɛnʲːɑ]'
+  translation: legal claim
+  pos: phrase
+  usage: "Правове твердження потребує підстави або обережної рамки."

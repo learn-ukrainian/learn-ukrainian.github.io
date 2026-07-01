@@ -1,140 +1,190 @@
-- lemma: полі́тика
+- lemma: політика
+  ipa: '[pɔˈlʲitɪkɑ]'
   translation: politics, policy
   pos: noun
-  usage: Полі́тика потре́бує то́чних по́нять і відповіда́льної аргумента́ції.
-- lemma: держа́ва
+  usage: "Політика може означати і боротьбу за владу, і напрям публічних рішень."
+- lemma: держава
+  ipa: '[ˈdɛrˈʒɑʋɑ]'
   translation: state
   pos: noun
-  usage: Держа́ва ма́є інститу́ції, зако́ни й систе́му управлі́ння.
-- lemma: у́ряд
+  usage: "Держава має інституції, право, територію й громадян."
+- lemma: уряд
+  ipa: '[urʲɑd]'
   translation: government, cabinet
   pos: noun
-  usage: У́ряд готу́є поря́док упрова́дження програ́ми.
-- lemma: парла́мент
+  usage: "Уряд організовує виконання державної політики."
+- lemma: парламент
+  ipa: '[pɑrˈlɑmɛnt]'
   translation: parliament
   pos: noun
-  usage: Парла́мент розгляда́є законопроє́кт у кілько́х чита́ннях.
-- lemma: ви́бори
-  translation: elections
+  usage: "Парламент розглядає законопроєкти й працює через комітети."
+- lemma: Верховна Рада
+  ipa: '[ʋɛrˈxɔu̯nɑ ˈrɑdɑ]'
+  translation: Verkhovna Rada, parliament of Ukraine
+  pos: phrase
+  usage: "Верховна Рада ухвалює закони в межах парламентської процедури."
+- lemma: Кабінет Міністрів
+  ipa: '[kɑbʲiˈnɛt mʲiˈnʲistʲrʲiu̯]'
+  translation: Cabinet of Ministers
+  pos: phrase
+  usage: "Кабінет Міністрів схвалив порядок виконання програми."
+- lemma: повноваження
+  ipa: '[pɔu̯nɔˈʋɑʒɛnʲːɑ]'
+  translation: powers, authority
   pos: noun
-  usage: Ви́бори охо́плюють кампанію, голосува́ння й підра́хунок голосі́в.
-- lemma: па́ртія
-  translation: political party
-  pos: noun
-  usage: Па́ртія оприлю́днила програ́му для публі́чного обгово́рення.
-- lemma: демокра́тія
-  translation: democracy
-  pos: noun
-  usage: Демокра́тія потребу́є конкуре́нції, уча́сті й підзві́тності.
-- lemma: диктату́ра
-  translation: dictatorship
-  pos: noun
-  usage: Сло́во диктату́ра потре́бує чітки́х озна́к і дока́зів.
-- lemma: конститу́ція
-  translation: constitution
-  pos: noun
-  usage: Конститу́ція ви́значає основи́ держа́вного устро́ю.
-- lemma: громадяни́н
-  translation: citizen
-  pos: noun
-  usage: Громадяни́н ма́є права́ й обов'язки у зв'язку з держа́вою.
-- lemma: диплома́тія
-  translation: diplomacy
-  pos: noun
-  usage: Диплома́тія зберіга́є кана́ли перегово́рів між держа́вами.
-- lemma: са́нкції
-  translation: sanctions
-  pos: noun
-  usage: Са́нкції оці́нюють за правови́ми й політи́чними наслі́дками.
-- lemma: кору́пція
-  translation: corruption
-  pos: noun
-  usage: Обвинува́чення в кору́пції потре́бує фактів і процеду́ри.
-- lemma: рефо́рма
-  translation: reform
-  pos: noun
-  usage: Рефо́рма ма́є мету́, механі́зм упрова́дження й критері́ї успі́ху.
-- lemma: повнова́ження
-  translation: authority, powers
-  pos: noun
-  usage: Повнова́ження о́ргану вла́ди тре́ба назива́ти то́чно.
-- lemma: сувереніте́т
-  translation: sovereignty
-  pos: noun
-  usage: Сувереніте́т пов'я́заний із самості́йністю держа́ви.
-- lemma: впрова́дження
-  translation: implementation
-  pos: noun
-  usage: Впрова́дження рі́шення потре́бує гра́фіка й відповіда́льних викона́вців.
-- lemma: взаємоді́я
-  translation: cooperation, interaction
-  pos: noun
-  usage: Взаємоді́я між інститу́ціями має́ бу́ти зро́зумілою для грома́ди.
-- lemma: підзві́тність
+  usage: "Повноваження визначають, який орган може діяти."
+- lemma: підзвітність
+  ipa: '[pʲiˈd͡zʲʋʲitʲnʲisʲtʲ]'
   translation: accountability
   pos: noun
-  usage: Підзві́тність означа́є обов'язок поясню́вати рі́шення й результа́ти.
-- lemma: верхове́нство пра́ва
+  usage: "Підзвітність вимагає пояснення рішень і результатів."
+- lemma: суверенітет
+  ipa: '[suʋɛrɛnʲiˈtɛt]'
+  translation: sovereignty
+  pos: noun
+  usage: "Суверенітет пов'язаний із самостійністю держави."
+- lemma: конституція
+  ipa: '[kɔnstɪˈtut͡sʲijɑ]'
+  translation: constitution
+  pos: noun
+  usage: "Конституція визначає основні права й засади влади."
+- lemma: верховенство права
+  ipa: '[ʋɛrxɔˈʋɛnstʋɔ ˈprɑʋɑ]'
   translation: rule of law
   pos: phrase
-  usage: Верхове́нство пра́ва обме́жує сваві́лля й захища́є процеду́ру.
-- lemma: геополіти́чний
-  translation: geopolitical
-  pos: adj
-  usage: Геополіти́чний інтере́с треба́ поясню́вати че́рез безпе́ку й вплив.
-- lemma: стабі́льність
-  translation: stability
+  usage: "Верховенство права обмежує свавільні рішення."
+- lemma: реформа
+  ipa: '[rɛˈfɔrmɑ]'
+  translation: reform
   pos: noun
-  usage: Політи́чна стабі́льність не скасо́вує потре́би в контро́лі вла́ди.
-- lemma: лобіюва́ння
-  translation: lobbying
+  usage: "Реформа має етапи, ресурси й показники."
+- lemma: децентралізація
+  ipa: '[dɛt͡sɛntrɑlʲiˈzɑt͡sʲijɑ]'
+  translation: decentralization
   pos: noun
-  usage: Лобіюва́ння мо́же бу́ти відкри́тим або непрозо́рим.
-- lemma: легіти́мність
-  translation: legitimacy
+  usage: "Децентралізація передає частину рішень ближче до громад."
+- lemma: громада
+  ipa: '[ɦrɔˈmɑdɑ]'
+  translation: community, municipality
   pos: noun
-  usage: Легіти́мність рі́шення зале́жить від процеду́ри й дові́ри.
-- lemma: інститу́ція
-  translation: institution
-  pos: noun
-  usage: Інститу́ція ма́є ви́значені функції та відповіда́льність.
-- lemma: законопроє́кт
-  translation: draft law
-  pos: noun
-  usage: Законопроє́кт обгово́рюють до остаточного голосува́ння.
-- lemma: виборча кампа́нія
-  translation: election campaign
+  usage: "Громада просить провести консультації щодо маршруту."
+- lemma: місцеве самоврядування
+  ipa: '[mʲiˈst͡sɛʋɛ sɑmɔu̯rʲɑduˈʋɑnʲːɑ]'
+  translation: local self-government
   pos: phrase
-  usage: Виборча кампа́нія має́ програ́му, агіта́цію й фінансува́ння.
-- lemma: агіта́ція
-  translation: campaigning, agitation
+  usage: "Місцеве самоврядування ухвалює рішення для громади."
+- lemma: вибори
+  ipa: '[ˈʋɪbɔrɪ]'
+  translation: elections
   pos: noun
-  usage: Агіта́ція ма́є відбува́тися в ме́жах ви́борчих пра́вил.
-- lemma: спостеріга́ч
+  usage: "Вибори охоплюють кампанію, голосування й підрахунок голосів."
+- lemma: виборець
+  ipa: '[ˈʋɪbɔrɛt͡sʲ]'
+  translation: voter
+  pos: noun
+  usage: "Виборець отримує бюлетень на дільниці."
+- lemma: кандидат
+  ipa: '[kɑndɪˈdɑt]'
+  translation: candidate
+  pos: noun
+  usage: "Кандидат подав документи для реєстрації."
+- lemma: партія
+  ipa: '[ˈpɑrtʲijɑ]'
+  translation: political party
+  pos: noun
+  usage: "Партія оприлюднила виборчу програму."
+- lemma: кампанія
+  ipa: '[kɑmˈpɑnʲijɑ]'
+  translation: campaign
+  pos: noun
+  usage: "Кампанія має фінансування, дебати й агітацію."
+- lemma: агітація
+  ipa: '[ɑɦʲiˈtɑt͡sʲijɑ]'
+  translation: campaigning, canvassing
+  pos: noun
+  usage: "Агітація має переконувати без дезінформації."
+- lemma: бюлетень
+  ipa: '[bʲulɛˈtɛnʲ]'
+  translation: ballot
+  pos: noun
+  usage: "Бюлетень видають виборцю на дільниці."
+- lemma: комісія
+  ipa: '[kɔˈmʲisʲijɑ]'
+  translation: commission
+  pos: noun
+  usage: "Комісія підраховує голоси й оформлює протокол."
+- lemma: спостерігач
+  ipa: '[spɔstɛrʲiˈɦɑt͡ʃ]'
   translation: observer
   pos: noun
-  usage: Спостеріга́чі фіксу́ють процеду́рні заува́ження під час ви́борів.
-- lemma: прозо́рість
-  translation: transparency
+  usage: "Спостерігачі фіксують процедурні зауваження."
+- lemma: легітимність
+  ipa: '[lɛɦʲiˈtɪmnʲisʲtʲ]'
+  translation: legitimacy
   pos: noun
-  usage: Прозо́рість бюдже́ту підсилю́є дові́ру грома́ди.
-- lemma: консульта́ції
-  translation: consultations
-  pos: noun
-  usage: Консульта́ції допомага́ють урахува́ти пози́цію мешка́нців.
-- lemma: громадя́нське суспі́льство
+  usage: "Легітимність залежить від процедури й довіри."
+- lemma: громадянське суспільство
+  ipa: '[ɦrɔmɑˈdʲɑnʲsʲkɛ suˈsʲpʲilʲstʋɔ]'
   translation: civil society
   pos: phrase
-  usage: Громадя́нське суспі́льство вплива́є на які́сть публі́чної полі́тики.
-- lemma: міжнаро́дне пра́во
-  translation: international law
-  pos: phrase
-  usage: Міжнаро́дне пра́во задає́ ра́мку для перегово́рів і уго́д.
-- lemma: резолю́ція
-  translation: resolution
+  usage: "Громадянське суспільство контролює й пропонує зміни."
+- lemma: петиція
+  ipa: '[pɛˈtɪt͡sʲijɑ]'
+  translation: petition
   pos: noun
-  usage: Резолю́ція фіксу́є пози́цію о́ргану або міжнаро́дної організа́ції.
-- lemma: уповнова́жений
-  translation: authorized, commissioner
-  pos: adj
-  usage: Уповнова́жений предста́вник ма́є пра́во говори́ти від і́мені інститу́ції.
+  usage: "Петиція збирає підтримку під публічною вимогою."
+- lemma: консультації
+  ipa: '[kɔnsulʲˈtɑt͡sʲiji]'
+  translation: consultations
+  pos: noun
+  usage: "Публічні консультації відбуваються до ухвалення рішення."
+- lemma: відкриті дані
+  ipa: '[ʋʲiˈdkrɪtʲi ˈdɑnʲi]'
+  translation: open data
+  pos: phrase
+  usage: "Відкриті дані допомагають перевіряти політичні рішення."
+- lemma: прозорість
+  ipa: '[prɔˈzɔrʲisʲtʲ]'
+  translation: transparency
+  pos: noun
+  usage: "Прозорість потребує доступу до документів і критеріїв."
+- lemma: лобіювання
+  ipa: '[lɔbʲijuˈʋɑnʲːɑ]'
+  translation: lobbying
+  pos: noun
+  usage: "Лобіювання може бути легальною адвокацією або непрозорим впливом."
+- lemma: популізм
+  ipa: '[pɔpuˈlʲizm]'
+  translation: populism
+  pos: noun
+  usage: "Популізм спрощує складну проблему до емоційного гасла."
+- lemma: дезінформація
+  ipa: '[dɛzʲinfɔrˈmɑt͡sʲijɑ]'
+  translation: disinformation
+  pos: noun
+  usage: "Дезінформація поширює неправдиві твердження як факти."
+- lemma: дипломатія
+  ipa: '[dɪplɔˈmɑtʲijɑ]'
+  translation: diplomacy
+  pos: noun
+  usage: "Дипломатія використовує стримані й точні формули."
+- lemma: санкції
+  ipa: '[ˈsɑnkt͡sʲiji]'
+  translation: sanctions
+  pos: noun
+  usage: "Санкції є обмежувальними заходами."
+- lemma: ратифікація
+  ipa: '[rɑtɪfʲiˈkɑt͡sʲijɑ]'
+  translation: ratification
+  pos: noun
+  usage: "Ратифікація офіційно затверджує міжнародний договір."
+- lemma: саміт
+  ipa: '[ˈsɑmʲit]'
+  translation: summit
+  pos: noun
+  usage: "Саміт є зустріччю високого рівня."
+- lemma: євроінтеграція
+  ipa: '[jɛu̯rɔintɛˈɦrɑt͡sʲijɑ]'
+  translation: European integration
+  pos: noun
+  usage: "Євроінтеграція потребує виконання критеріїв і реформ."

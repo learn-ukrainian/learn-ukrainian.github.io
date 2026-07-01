@@ -1,120 +1,150 @@
-- lemma: трансформа́ція
+- lemma: трансформація
+  ipa: '[trɑnsfɔrˈmɑt͡sʲijɑ]'
   translation: transformation
   pos: noun
-  usage: Стилісти́чна трансформа́ція змі́нює фо́рму те́ксту.
-- lemma: перекодува́ння
+  usage: "Стилістична трансформація змінює форму тексту без втрати змісту."
+- lemma: перекодування
+  ipa: '[pɛrɛkɔduˈʋɑnʲːɑ]'
   translation: recoding, register rewriting
   pos: noun
-  usage: Перекодува́ння зберіга́є зміст і змі́нює регі́стр.
-- lemma: конте́кст
+  usage: "Перекодування допомагає адаптувати повідомлення до нового адресата."
+- lemma: контекст
+  ipa: '[kɔnˈtɛkst]'
   translation: context
   pos: noun
-  usage: Конте́кст визнача́є доре́чність сло́ва.
-- lemma: адреса́т
-  translation: addressee
+  usage: "Контекст визначає, який регістр буде доречним."
+- lemma: адресат
+  ipa: '[ɑdrɛˈsɑt]'
+  translation: addressee, audience
   pos: noun
-  usage: Адреса́т вплива́є на ви́бір регі́стру.
-- lemma: доре́чність
+  usage: "Адресат впливає на рівень пояснення й тон."
+- lemma: канал
+  ipa: '[kɑˈnɑl]'
+  translation: communication channel
+  pos: noun
+  usage: "Канал повідомлення змінює довжину й структуру тексту."
+- lemma: мета
+  ipa: '[mɛˈtɑ]'
+  translation: purpose, goal
+  pos: noun
+  usage: "Мета тексту може бути інформаційною, переконувальною або пояснювальною."
+- lemma: доречність
+  ipa: '[dɔˈrɛt͡ʃnʲisʲtʲ]'
   translation: appropriateness
   pos: noun
-  usage: Доре́чність важли́ві́ша за механі́чну кни́жність.
-- lemma: еквівале́нт
-  translation: equivalent
+  usage: "Доречність важливіша за механічну книжність."
+- lemma: еквівалентність
+  ipa: '[ɛkʋʲiʋɑˈlɛntʲnʲisʲtʲ]'
+  translation: equivalence
   pos: noun
-  usage: Нейтра́льний еквівале́нт допомага́є перефразува́ти текст.
-- lemma: синоні́міка
-  translation: synonymy as a system
-  pos: noun
-  usage: Синоні́міка пока́зує рі́зні регі́стри.
-- lemma: регі́стр
+  usage: "Еквівалентність означає, що факти в новій версії збережено."
+- lemma: регістр
+  ipa: '[rɛˈɦʲistr]'
   translation: register
   pos: noun
-  usage: Регі́стр зале́жить від адреса́та й мети́.
-- lemma: нейтра́льний
+  usage: "Регістр залежить від адресата, каналу й жанру."
+- lemma: домінанта
+  ipa: '[dɔmʲiˈnɑntɑ]'
+  translation: dominant feature
+  pos: noun
+  usage: "Стильова домінанта керує добором лексики."
+- lemma: нейтральний
+  ipa: '[nɛjˈtrɑlʲnɪj]'
   translation: neutral
-  pos: adjective
-  usage: Нейтра́льний тон доре́чний у робо́чому повідо́мленні.
-- lemma: перефразува́ти
+  pos: adj
+  usage: "Нейтральний тон корисний у новинах і довідках."
+- lemma: офіційний
+  ipa: '[ɔfʲiˈt͡sʲijnɪj]'
+  translation: official, formal
+  pos: adj
+  usage: "Офіційний лист потребує джерела, дії й строку."
+- lemma: розмовний
+  ipa: '[rɔˈzmɔu̯nɪj]'
+  translation: colloquial
+  pos: adj
+  usage: "Розмовний маркер може бути доречним у приватному чаті."
+- lemma: фаховий
+  ipa: '[fɑxɔˈʋɪj]'
+  translation: professional, specialized
+  pos: adj
+  usage: "Фаховий текст потребує точних термінів."
+- lemma: перефразувати
+  ipa: '[pɛrɛfrɑzuˈʋɑtɪ]'
   translation: to paraphrase
   pos: verb
-  usage: Спро́буй перефразува́ти службо́ве речення.
-- lemma: лаконі́чність
-  translation: conciseness
-  pos: noun
-  usage: Лаконі́чність не пови́нна зни́щувати зміст.
-- lemma: надмі́рність
-  translation: excessiveness
-  pos: noun
-  usage: Надмі́рність ство́рює мо́вне захара́щення.
-- lemma: адапта́ція
+  usage: "Треба перефразувати коментар для офіційного оголошення."
+- lemma: стиснути
+  ipa: '[ˈstɪsnutɪ]'
+  translation: to compress
+  pos: verb
+  usage: "Для афіші треба стиснути пояснення до дії й строку."
+- lemma: розгорнути
+  ipa: '[rɔzɦɔrˈnutɪ]'
+  translation: to expand
+  pos: verb
+  usage: "Короткий коментар варто розгорнути для незнайомого читача."
+- lemma: адаптація
+  ipa: '[ɑdɑˈptɑt͡sʲijɑ]'
   translation: adaptation
   pos: noun
-  usage: Адапта́ція змі́нює фо́рму для ново́го адреса́та.
-- lemma: відпові́дність
-  translation: correspondence, fit
+  usage: "Адаптація змінює форму під потреби аудиторії."
+- lemma: лаконічність
+  ipa: '[lɑkɔˈnʲit͡ʃnʲisʲtʲ]'
+  translation: concision
   pos: noun
-  usage: Відпові́дність жа́нру є крите́рієм я́кості.
-- lemma: гну́чкість
-  translation: flexibility
+  usage: "Лаконічність не повинна приховувати причину."
+- lemma: надмірність
+  ipa: '[nɑˈdʲmʲirnʲisʲtʲ]'
+  translation: excess, redundancy
   pos: noun
-  usage: Стилісти́чна гну́чкість потрі́бна в робо́чому спілкува́нні.
-- lemma: дисона́нс
+  usage: "Надмірність робить службовий текст важким."
+- lemma: канцеляризм
+  ipa: '[kɑnt͡sɛlʲɑˈrɪzm]'
+  translation: bureaucratic wording
+  pos: noun
+  usage: "Канцеляризм часто маскує просту дію."
+- lemma: дисонанс
+  ipa: '[dɪsɔˈnɑns]'
   translation: dissonance
   pos: noun
-  usage: Дисона́нс виникає че́рез змі́шування регі́стрів.
-- lemma: паради́гма
-  translation: paradigm
-  pos: noun
-  usage: Стилісти́чна паради́гма спира́ється на ряд замі́н.
-- lemma: прагма́тика
-  translation: pragmatics
-  pos: noun
-  usage: Прагма́тика пока́зує, наві́що ска́зано фра́зу.
-- lemma: номіналізація
-  translation: nominalization
-  pos: noun
-  usage: Номіналізація перено́сить ді́ю в іме́нник.
-- lemma: персоналіза́ція
-  translation: personalization
-  pos: noun
-  usage: Персоналіза́ція поверта́є в текст суб'є́кта ді́ї.
-- lemma: діалогіза́ція
-  translation: dialogization
-  pos: noun
-  usage: Діалогіза́ція ро́бить текст бли́жчим до живо́го мо́влення.
-- lemma: мода́льність
-  translation: modality
-  pos: noun
-  usage: Мода́льність визнача́є тон проха́ння або́ ви́сновку.
-- lemma: канцеляри́зм
-  translation: bureaucratic expression
-  pos: noun
-  usage: Канцеляри́зм доре́чний не в ко́жному жа́нрі.
+  usage: "Дисонанс виникає через випадкове змішання регістрів."
 - lemma: сленг
+  ipa: '[slɛnɦ]'
   translation: slang
   pos: noun
-  usage: Сленг потребу́є то́чного адреса́та.
-- lemma: просторі́ччя
-  translation: colloquial low-register speech
+  usage: "Сленг не пасує до офіційного оголошення."
+- lemma: просторіччя
+  ipa: '[prɔstɔˈrʲit͡ʃʲːɑ]'
+  translation: substandard colloquial speech
   pos: noun
-  usage: Просторі́ччя недоре́чне в офіці́йному листі.
-- lemma: коректу́ра
-  translation: proofreading, correction pass
+  usage: "Просторіччя може знецінити адресата в публічному тексті."
+- lemma: джерело
+  ipa: '[d͡ʒɛrɛˈlɔ]'
+  translation: source
   pos: noun
-  usage: Коректу́ра перевіря́є ці́лісність регі́стру.
-- lemma: вира́зність
-  translation: expressiveness
-  pos: noun
-  usage: Вира́зність ма́є відповіда́ти жа́нру.
-- lemma: впра́вність
-  translation: skillfulness
-  pos: noun
-  usage: Мо́вна впра́вність проявля́ється в то́чному перемика́нні.
-- lemma: фамілья́рність
-  translation: over-familiarity
-  pos: noun
-  usage: Фамілья́рність руйну́є офіці́йний тон.
-- lemma: субордина́ція
-  translation: subordination, hierarchy of address
-  pos: noun
-  usage: Субордина́ція вплива́є на фо́рмулу зверта́ння.
+  usage: "Джерело показує, хто повідомив факт."
+- lemma: межа знання
+  ipa: '[mɛˈʒɑ znɑˈnʲːɑ]'
+  translation: limit of knowledge
+  pos: phrase
+  usage: "Межа знання забороняє перетворювати припущення на факт."
+- lemma: стилістична карта
+  ipa: '[stɪlʲiˈstɪt͡ʃnɑ ˈkɑrtɑ]'
+  translation: stylistic map
+  pos: phrase
+  usage: "Стилістична карта допомагає перевірити адресата, канал і мету."
+- lemma: фактичне ядро
+  ipa: '[fɑˈktɪt͡ʃnɛ jɑˈdrɔ]'
+  translation: factual core
+  pos: phrase
+  usage: "Фактичне ядро треба виписати перед переписуванням."
+- lemma: поважне спрощення
+  ipa: '[pɔˈʋɑʒnɛ ˈsprɔʃt͡ʃɛnʲːɑ]'
+  translation: respectful simplification
+  pos: phrase
+  usage: "Поважне спрощення робить складний текст зрозумілим без зверхності."
+- lemma: редакторська діагностика
+  ipa: '[rɛˈdɑktɔrsʲkɑ dʲiɑˈɦnɔstɪkɑ]'
+  translation: editorial diagnosis
+  pos: phrase
+  usage: "Редакторська діагностика знаходить чужорідні елементи в тексті."
