@@ -1,196 +1,205 @@
-- lemma: публічне мовлення
-  translation: public discourse, public speech
-  pos: noun phrase
-  usage: "Публічне мовлення охоплює новини, коментарі, виступи й громадські дискусії."
-- lemma: публіцистичний стиль
-  translation: publicistic/media style
-  pos: noun phrase
-  usage: "Публіцистичний стиль поєднує інформування та вплив."
-- lemma: розмовний стиль
-  translation: conversational style
-  pos: noun phrase
-  usage: "Розмовний стиль природний у коментарях і приватних реакціях."
-- lemma: регістр
-  translation: register
-  pos: noun
-  usage: "Регістр залежить від адресата, ситуації й мети мовлення."
-- lemma: перемикання регістрів
-  translation: register switching
-  pos: noun phrase
-  usage: "Перемикання регістрів допомагає перейти від розмови до публічного коментаря."
-- lemma: джерело
-  translation: source
-  pos: noun
-  usage: "Перед поширенням новини перевіряйте джерело інформації."
-- lemma: репортаж
-  translation: report, reportage
-  pos: noun
-  usage: "Репортаж показує подію через місце, деталі й голоси учасників."
-- lemma: інтерв'ю
-  translation: interview
-  pos: noun
-  usage: "Інтерв'ю дає можливість уточнити позицію респондента."
-- lemma: замітка
-  translation: short news item
-  pos: noun
-  usage: "Замітка швидко повідомляє, що сталося, де й коли."
-- lemma: коментар
-  translation: comment, opinion piece
-  pos: noun
-  usage: "Коментар пояснює позицію автора й спирається на аргументи."
-- lemma: огляд
-  translation: overview, review
-  pos: noun
-  usage: "Огляд зіставляє кілька джерел або позицій."
-- lemma: висвітлювати
-  translation: to cover (in media)
-  pos: verb
-  usage: "Різні видання по-різному висвітлюють одну подію."
-- lemma: оприлюднити
-  translation: to make public, publish
-  pos: verb
-  usage: "Редакція оприлюднила пояснення після критики."
-- lemma: спростувати
-  translation: to refute, debunk
-  pos: verb
-  usage: "Журналісти спростували фейк посиланням на документ."
-- lemma: громадськість
-  translation: public, community
-  pos: noun
-  usage: "Громадськість вимагає прозорого пояснення рішення."
-- lemma: вплив
-  translation: influence, impact
-  pos: noun
-  usage: "Вплив заголовка залежить від емоційної рамки."
-- lemma: оцінна лексика
-  translation: evaluative vocabulary
-  pos: noun phrase
-  usage: "Оцінна лексика має спиратися на факти."
-- lemma: риторичне запитання
-  translation: rhetorical question
-  pos: noun phrase
-  usage: "Риторичне запитання спрямовує увагу читача."
-- lemma: клікбейт
-  translation: clickbait
-  pos: noun
-  usage: "Клікбейт обіцяє сильнішу новину, ніж дає текст."
-- lemma: фейк
-  translation: fake news, false claim
-  pos: noun
-  usage: "Не поширюйте фейк без перевірки джерела."
-- lemma: маніпуляція
-  translation: manipulation
-  pos: noun
-  usage: "Маніпуляція підмінює доказ емоційним тиском."
-- lemma: фреймінг
-  translation: framing
-  pos: noun
-  usage: "Фреймінг задає рамку, у якій читач бачить подію."
-- lemma: медіаграмотність
-  translation: media literacy
-  pos: noun
-  usage: "Медіаграмотність починається з перевірки джерела."
-- lemma: фактчекінг
-  translation: fact-checking
-  pos: noun
-  usage: "Фактчекінг допомагає відділити факт від припущення."
-- lemma: припущення
-  translation: assumption, supposition
-  pos: noun
-  usage: "Припущення треба формулювати обережно."
-- lemma: джерельність
-  translation: source grounding
-  pos: noun
-  usage: "Джерельність робить публічний текст відповідальним."
-- lemma: суб'єкт дії
-  translation: acting subject, agent
-  pos: noun phrase
-  usage: "У публіцистичному тексті варто називати суб'єкта дії."
-- lemma: дискурсивний маркер
-  translation: discourse marker
-  pos: noun phrase
-  usage: "Ну, типу й короче можуть бути дискурсивними маркерами розмови."
-- lemma: еліпсис
-  translation: ellipsis
-  pos: noun
-  usage: "Еліпсис природний у коротких репліках."
-- lemma: вигук
-  translation: interjection, exclamation
-  pos: noun
-  usage: "Вигук передає швидку емоційну реакцію."
-- lemma: самовиправлення
-  translation: self-correction
-  pos: noun
-  usage: "Самовиправлення показує спонтанність розмови."
-- lemma: невербальні засоби
-  translation: nonverbal means
-  pos: noun phrase
-  usage: "Невербальні засоби включають інтонацію, міміку й жести."
-- lemma: демінутив
-  translation: diminutive
-  pos: noun
-  usage: "Демінутив може створити близькість або іронію."
-- lemma: сленг
-  translation: slang
-  pos: noun
-  usage: "Сленг доречний не в кожному публічному контексті."
-- lemma: класно
-  translation: cool, great
-  pos: adverb
-  usage: "Класно звучить природно в розмовній реакції."
-- lemma: прикольно
-  translation: cool, funny
-  pos: adverb
-  usage: "Прикольно є розмовним словом, не медійним доказом."
-- lemma: капець
-  translation: wow, oh no, disaster (colloquial)
-  pos: interjection
-  usage: "Капець передає емоцію, але не замінює аргумент."
-- lemma: короче
-  translation: basically, in short (colloquial)
-  pos: discourse marker
-  usage: "Короче варто замінити на коротко кажучи в публічному тексті."
-- lemma: та ну
-  translation: no way, come on
-  pos: discourse marker
-  usage: "Та ну виражає сумнів або недовіру в розмові."
-- lemma: ого
-  translation: wow
-  pos: interjection
-  usage: "Ого показує реакцію на несподівану інформацію."
-- lemma: доцільність
-  translation: appropriateness
-  pos: noun
-  usage: "Доцільність регістру залежить від адресата."
-- lemma: стилістичний дисонанс
-  translation: stylistic dissonance
-  pos: noun phrase
-  usage: "Сленг у новині може створити стилістичний дисонанс."
-- lemma: канцелярський суржик
-  translation: bureaucratic mixed-language calque
-  pos: noun phrase
-  usage: "Канцелярський суржик робить публічний текст нечітким."
-- lemma: брати участь
-  translation: to participate
-  pos: verb phrase
-  usage: "Брати участь є нормативною формою для публічного мовлення."
-- lemma: чинний
-  translation: valid, in force
-  pos: adjective
-  usage: "Чинний закон - природна українська форма."
-- lemma: керівний
-  translation: governing, leading
-  pos: adjective
-  usage: "Керівний орган звучить природніше, ніж керуючий орган."
-- lemma: синьо-жовтий
-  translation: blue-and-yellow
-  pos: adjective
-  usage: "Прапор України описують як синьо-жовтий."
-- lemma: Тризуб
-  translation: Tryzub, trident
-  pos: noun
-  usage: "Тризуб - малий Державний Герб України."
-- lemma: українська мова
-  translation: Ukrainian language
-  pos: noun phrase
-  usage: "У публічному мовленні вживайте точний термін українська мова."
+  - lemma: дискурс
+    translation: discourse
+    pos: noun
+    ipa: "[dɪsˈkurs]"
+    usage: "Публічний дискурс поєднує інформацію, вплив і відповідальність."
+  - lemma: повідомлення
+    translation: message, notification
+    pos: noun
+    ipa: "[pɔʋidɔmˈlɛnʲːɐ]"
+    usage: "Публічне повідомлення має називати джерело й дію."
+  - lemma: джерело
+    translation: source
+    pos: noun
+    ipa: "[dʒɛrɛˈlɔ]"
+    usage: "Перевірте джерело перед поширенням новини."
+  - lemma: факт
+    translation: fact
+    pos: noun
+    ipa: "[fakt]"
+    usage: "Факт треба відрізняти від оцінки."
+  - lemma: оцінка
+    translation: evaluation, opinion
+    pos: noun
+    ipa: "[ɔˈtsʲinkɐ]"
+    usage: "Оцінка показує ставлення автора до події."
+  - lemma: фреймінг
+    translation: framing
+    pos: noun
+    ipa: "[ˈfrɛjmɪnɦ]"
+    usage: "Фреймінг подає тему в певній рамці."
+  - lemma: клікбейт
+    translation: clickbait
+    pos: noun
+    ipa: "[klikˈbɛjt]"
+    usage: "Клікбейт перебільшує зміст заради уваги."
+  - lemma: маніпуляція
+    translation: manipulation
+    pos: noun
+    ipa: "[mɐnʲipʊˈlʲatsʲijɐ]"
+    usage: "Маніпуляція тисне на емоції й приховує перевірку."
+  - lemma: риторика
+    translation: rhetoric
+    pos: noun
+    ipa: "[rɪˈtɔrɪkɐ]"
+    usage: "Етична риторика веде до дії, але не блокує мислення."
+  - lemma: аргумент
+    translation: argument
+    pos: noun
+    ipa: "[ɐrɦʊˈmɛnt]"
+    usage: "Аргумент має тезу, підставу й доказ."
+  - lemma: теза
+    translation: thesis, claim
+    pos: noun
+    ipa: "[ˈtɛzɐ]"
+    usage: "Теза має бути зрозумілою для аудиторії."
+  - lemma: підстава
+    translation: grounds, reason
+    pos: noun
+    ipa: "[pidˈstaʋɐ]"
+    usage: "Підстава пояснює, чому дія потрібна."
+  - lemma: доказ
+    translation: evidence, proof
+    pos: noun
+    ipa: "[ˈdɔkɐz]"
+    usage: "Доказ підтримує публічний аргумент."
+  - lemma: контраргумент
+    translation: counterargument
+    pos: noun
+    ipa: "[kɔntrɐrɦʊˈmɛnt]"
+    usage: "Контраргумент допомагає врахувати заперечення аудиторії."
+  - lemma: аудиторія
+    translation: audience
+    pos: noun
+    ipa: "[ɐwdɪˈtɔrʲijɐ]"
+    usage: "Аудиторія визначає тон і рівень пояснення."
+  - lemma: адаптація
+    translation: adaptation
+    pos: noun
+    ipa: "[ɐdɐpˈtatsʲijɐ]"
+    usage: "Аудиторна адаптація змінює подання, але не факти."
+  - lemma: оприлюднити
+    translation: to publish, make public
+    pos: verb
+    ipa: "[ɔprɪlʲuˈdnɪtɪ]"
+    usage: "Карту об'їзду оприлюднять сьогодні о 18:00."
+  - lemma: спростувати
+    translation: to refute, debunk
+    pos: verb
+    ipa: "[sprɔstʊˈʋatɪ]"
+    usage: "Медіа спростували фейкове повідомлення."
+  - lemma: фейк
+    translation: fake, false report
+    pos: noun
+    ipa: "[fɛjk]"
+    usage: "Фейк не можна поширювати як факт."
+  - lemma: заголовок
+    translation: headline
+    pos: noun
+    ipa: "[zɐɦɔˈlɔʋɔk]"
+    usage: "Заголовок має відповідати змісту тексту."
+  - lemma: ярлик
+    translation: label, loaded label
+    pos: noun
+    ipa: "[ˈjarlɪk]"
+    usage: "Емоційний ярлик треба замінити описом позиції."
+  - lemma: дилема
+    translation: dilemma
+    pos: noun
+    ipa: "[dɪˈlɛmɐ]"
+    usage: "Фальшива дилема приховує інші варіанти."
+  - lemma: терміновість
+    translation: urgency
+    pos: noun
+    ipa: "[tɛrmiˈnɔʋistʲ]"
+    usage: "Штучна терміновість часто є маніпулятивною."
+  - lemma: прозорість
+    translation: transparency
+    pos: noun
+    ipa: "[prɔˈzɔrʲistʲ]"
+    usage: "Прозорість джерел підвищує довіру."
+  - lemma: довіра
+    translation: trust
+    pos: noun
+    ipa: "[dɔˈʋirɐ]"
+    usage: "Довіра до повідомлення залежить від точності."
+  - lemma: громадськість
+    translation: public, community
+    pos: noun
+    ipa: "[ɦrɔmɐdˈsʲkistʲ]"
+    usage: "Громадськість потребує ясних публічних пояснень."
+  - lemma: волонтер
+    translation: volunteer
+    pos: noun
+    ipa: "[ʋɔlɔnˈtɛr]"
+    usage: "Волонтер має знати час, місце й роль."
+  - lemma: заклик до дії
+    translation: call to action
+    pos: phrase
+    ipa: "[ˈzaklɪk dɔ ˈdʲiji]"
+    usage: "Заклик до дії має бути конкретним."
+  - lemma: перевірити
+    translation: to verify, check
+    pos: verb
+    ipa: "[pɛrɛˈʋirɪtɪ]"
+    usage: "Перевірте інформацію перед поширенням."
+  - lemma: поширювати
+    translation: to spread, share
+    pos: verb
+    ipa: "[pɔʃɪˈrʲuʋatɪ]"
+    usage: "Неперевірене повідомлення не варто поширювати як факт."
+  - lemma: репортаж
+    translation: report, coverage
+    pos: noun
+    ipa: '[rɛpɔrˈtaʒ]'
+    usage: Репортаж з місця події відділяє факт від коментаря.
+  - lemma: висвітлювати
+    translation: to cover in media
+    pos: verb
+    ipa: '[ʋɪsʲʋʲitˈlʲuʋɐtɪ]'
+    usage: Різні медіа можуть висвітлювати ту саму подію по-різному.
+  - lemma: вплив
+    translation: influence, impact
+    pos: noun
+    ipa: '[u̯plɪw]'
+    usage: Вплив заголовка залежить від фреймінгу й оцінної лексики.
+  - lemma: класно
+    translation: cool, great
+    pos: adverb
+    ipa: '[ˈklasnɔ]'
+    usage: Класно звучить природно в чаті, але не в офіційній замітці.
+  - lemma: привіт
+    translation: hi
+    pos: interjection
+    ipa: '[prɪˈʋit]'
+    usage: Привіт доречне в неформальному повідомленні другу.
+  - lemma: прикольно
+    translation: cool, funny
+    pos: adverb
+    ipa: '[prɪˈkɔlʲnɔ]'
+    usage: Прикольно є розмовним словом і потребує відповідного каналу.
+  - lemma: капець
+    translation: wow, oh no
+    pos: interjection
+    ipa: '[kɐˈpɛtsʲ]'
+    usage: Капець може передати емоцію в чаті, але звучить недоречно в новині.
+  - lemma: короче
+    translation: basically, in short
+    pos: discourse marker
+    ipa: '[kɔˈrɔtʃɛ]'
+    usage: Короче може організовувати розмову, але в публіцистичному тексті його краще замінити.
+  - lemma: демінутив
+    translation: diminutive
+    pos: noun
+    ipa: '[dɛmʲinʊˈtɪw]'
+    usage: Демінутив може створювати близькість або фамільярність.
+  - lemma: еліпсис
+    translation: ellipsis
+    pos: noun
+    ipa: '[ɛˈlʲipsɪs]'
+    usage: Еліпсис робить розмовне речення коротким і неповним.
+  - lemma: суржик
+    translation: surzhyk, mixed Ukrainian-Russian speech
+    pos: noun
+    ipa: '[ˈsurʒɪk]'
+    usage: Суржик треба аналізувати без приниження мовця.
