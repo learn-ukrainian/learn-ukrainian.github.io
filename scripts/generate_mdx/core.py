@@ -414,7 +414,7 @@ def generate_mdx(
     title = str(fm.get('title', 'Untitled'))
     description = str(fm.get('subtitle', ''))
     if level.lower() in SEMINAR_LEVELS and re.search(r"[A-Za-z]", description):
-        description = title
+        description = f"Матеріал до теми «{title}»"
 
     frontmatter = f'''---
 title: "{escape_jsx(title)}"

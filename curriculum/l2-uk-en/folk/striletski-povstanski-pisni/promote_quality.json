@@ -1,9 +1,9 @@
 {
-  "assembled_mdx_sha256": "9876e74778ee5248d2aa3268d44ca89f6cf6be38da2c6f233c116783da549673",
+  "assembled_mdx_sha256": "d2b47ea0f246db7d25603f6381af7ca9f2c285d159b3ca7248beef7f5839728d",
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "737a5a599de964ebcb03d0b40643b4b98039ed1f817dacc05aaeab21808f169b",
+    "digest": "2726103813250f5811f8f813e628683072aeed33b2d342b91ac75d29b66537a6",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/striletski-povstanski-pisni.yaml",
@@ -11,11 +11,11 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/striletski-povstanski-pisni/module.md",
-        "sha256": "9c838efa62c999161da01d46d4c35f9156593b258cba2f31fa5b67342dbe2829"
+        "sha256": "6f07f84dafd51b031bcd5db2729a3c6362751931abd5a375486a50a9e27e0380"
       },
       {
         "path": "curriculum/l2-uk-en/folk/striletski-povstanski-pisni/activities.yaml",
-        "sha256": "c78ae290290dea5250f03fd8f77d6ca51c64a50cd887d61f6ca65bc5238e9217"
+        "sha256": "292ceb90484320b90160d0fee4322cae16ea3c76ed4fd833b4a6d0f962e69fdd"
       },
       {
         "path": "curriculum/l2-uk-en/folk/striletski-povstanski-pisni/vocabulary.yaml",
@@ -23,16 +23,16 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/striletski-povstanski-pisni/resources.yaml",
-        "sha256": "bc365ebbe6469a55e2904d3c566eb29720feaab1aa946e903ec8fb6eaa9662ee"
+        "sha256": "07a6bc4e5351885cacbf629bcfbd4bbd8b58ce839f79dfc1d7e2bcc155fcf592"
       }
     ]
   },
   "evidence": {
     "decolonization": "FOLK framing and Ukrainian agency remain intact; no Russian-imperial or ethnographic-reduction framing introduced.",
     "engagement": "Hosted reading surface remains intact; cleanup removes malformed learner-facing review/process language while preserving resistance-song analysis.",
-    "naturalness": "Learner-facing AI/build/source-process leakage was removed or avoided; prose now reads as seminar content rather than orchestration metadata.",
-    "pedagogical": "Cleanup preserves the original module learning spine while clarifying whether the reading surface is short embedded fragments or a hosted reading widget.",
-    "review": "Claude Opus 4.8 PASS for folk learner reading surface cleanup; non-blocking ReadingActivity text prop note verified in site/src/components/ReadingActivity.tsx."
+    "naturalness": "Learner-facing AI/build/source-process leakage was removed; prose now reads as genre/source analysis rather than orchestration metadata.",
+    "pedagogical": "Cleanup preserves the original module learning spine while removing writer/teacher answer-template prose.",
+    "review": "Claude Opus 4.8 re-review PASS for M15 leakage/register cleanup; prior residual seminar-register blocker fixed."
   },
   "floors": {
     "beauty": 8.5,
@@ -50,7 +50,7 @@
     "model": "claude-opus-4-8"
   },
   "schema_version": 1,
-  "scored_at": "2026-06-30T14:27:30Z",
+  "scored_at": "2026-07-01T21:30:25Z",
   "scores": {
     "beauty": 9.2,
     "decolonization": 9.5,
