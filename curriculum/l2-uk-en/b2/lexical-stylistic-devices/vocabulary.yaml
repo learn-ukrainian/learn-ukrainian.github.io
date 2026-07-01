@@ -1,156 +1,64 @@
-- lemma: троп
-  translation: trope, figurative device
-  pos: noun
-  usage: "Троп переносить значення слова й створює образ або оцінку."
-- lemma: метафора
-  translation: metaphor
-  pos: noun
-  usage: "Метафора «місто прокинулося» переносить людську дію на простір."
-- lemma: епітет
-  translation: epithet, expressive modifier
-  pos: noun
-  usage: "Епітет підкреслює рису предмета або явища."
-- lemma: гіпербола
-  translation: hyperbole
-  pos: noun
-  usage: "Гіпербола навмисно перебільшує масштаб події."
-- lemma: іронія
-  translation: irony
-  pos: noun
-  usage: "Іронія створює розрив між буквальним змістом і справжньою оцінкою."
-- lemma: метонімія
-  translation: metonymy
-  pos: noun
-  usage: "Метонімія «зал аплодував» заміщує людей назвою місця."
-- lemma: порівняння
-  translation: comparison, simile
-  pos: noun
-  usage: "Порівняння зіставляє явища через як, мов, ніби або орудний відмінок."
-- lemma: контекст
-  translation: context
-  pos: noun
-  usage: "Контекст допомагає зрозуміти, чи вислів іронічний."
-- lemma: переносне значення
-  translation: figurative meaning
-  pos: phrase
-  usage: "Переносне значення слова відкривається через зв'язок із буквальним."
-- lemma: конотація
-  translation: connotation
-  pos: noun
-  usage: "Конотація показує додатковий емоційний або оцінний відтінок слова."
-- lemma: алегорія
-  translation: allegory
-  pos: noun
-  usage: "Алегорія втілює абстрактну ідею в системі конкретних образів."
-- lemma: персоніфікація
-  translation: personification
-  pos: noun
-  usage: "Персоніфікація надає неживому предмету людської дії або риси."
-- lemma: літота
-  translation: litotes, understatement
-  pos: noun
-  usage: "Літота навмисно применшує масштаб для стилістичного ефекту."
-- lemma: оксюморон
-  translation: oxymoron
-  pos: noun
-  usage: "Оксюморон поєднує несумісні поняття, щоб створити новий зміст."
-- lemma: синекдоха
-  translation: synecdoche
-  pos: noun
-  usage: "Синекдоха називає ціле через частину або частину через ціле."
-- lemma: евфемізм
-  translation: euphemism
-  pos: noun
-  usage: "Евфемізм пом'якшує вислів, але не має приховувати відповідальність."
-- lemma: перифраз
-  translation: periphrasis
-  pos: noun
-  usage: "Перифраз замінює пряму назву описовим висловом."
-- lemma: сарказм
-  translation: sarcasm
-  pos: noun
-  usage: "Сарказм гостріший за іронію й може звучати як різка насмішка."
-- lemma: антитеза
-  translation: antithesis
-  pos: noun
-  usage: "Антитеза протиставляє явища або оцінки."
-- lemma: парадокс
-  translation: paradox
-  pos: noun
-  usage: "Парадокс змушує читача переосмислити зовнішню суперечність."
-- lemma: паронім
-  translation: paronym
-  pos: noun
-  usage: "Паронім схожий на інше слово за формою, але має інше значення."
-- lemma: омонім
-  translation: homonym
-  pos: noun
-  usage: "Омонім збігається з іншим словом за звучанням або написанням."
-- lemma: багатозначність
-  translation: polysemy
-  pos: noun
-  usage: "Багатозначність слова може створювати мовну гру."
-- lemma: лексичний пласт
-  translation: lexical layer
-  pos: phrase
-  usage: "Лексичний пласт показує час, простір, професію або соціальну групу мовця."
-- lemma: архаїзм
-  translation: archaism
-  pos: noun
-  usage: "Архаїзм може створити історичний або урочистий тон."
-- lemma: неологізм
-  translation: neologism
-  pos: noun
-  usage: "Неологізм називає нове явище або сучасний досвід."
-- lemma: діалектизм
-  translation: dialect word
-  pos: noun
-  usage: "Діалектизм відкриває регіональну перспективу й голос персонажа."
-- lemma: професіоналізм
-  translation: professional term
-  pos: noun
-  usage: "Професіоналізм точний у фаховій спільноті, але може бути незрозумілим широкій аудиторії."
-- lemma: жаргонізм
-  translation: jargon word, slang item
-  pos: noun
-  usage: "Жаргонізм сигналізує групову належність або неформальний тон."
-- lemma: просторіччя
-  translation: colloquial nonstandard speech
-  pos: noun
-  usage: "Просторіччя може знижувати регістр тексту."
-- lemma: вульгаризм
-  translation: vulgarism
-  pos: noun
-  usage: "Вульгаризм доречний лише тоді, коли його виправдовує художній задум."
-- lemma: стилістичне забарвлення
-  translation: stylistic coloring
-  pos: phrase
-  usage: "Стилістичне забарвлення слова показує оцінку або регістр."
-- lemma: соціолект
-  translation: sociolect
-  pos: noun
-  usage: "Соціолект пов'язує лексику з певною соціальною групою."
-- lemma: образність
-  translation: imagery
-  pos: noun
-  usage: "Образність допомагає читачеві побачити абстрактну думку."
-- lemma: експресивність
-  translation: expressiveness
-  pos: noun
-  usage: "Експресивність підсилює емоційний вплив вислову."
-- lemma: мовна гра
-  translation: wordplay
-  pos: phrase
-  usage: "Мовна гра спирається на багатозначність, омонімію або паронімію."
-- lemma: доречність
-  translation: appropriateness
-  pos: noun
-  usage: "Доречність тропу залежить від жанру, аудиторії та мети."
-- lemma: регістр
-  translation: register
-  pos: noun
-  usage: "Регістр визначає, чи слово звучить офіційно, розмовно або художньо."
-- lemma: редактура
-  translation: editing
-  pos: noun
-  usage: "Редактура допомагає прибрати випадкові метафори й посилити точність."
+- lemma: "метафора"
+  translation: "metaphor"
+  pos: "noun"
+  usage: "Метафора переносить значення за подібністю."
+- lemma: "метонімія"
+  translation: "metonymy"
+  pos: "noun"
+  usage: "Метонімія заміщує назву за суміжністю."
+- lemma: "синекдоха"
+  translation: "synecdoche"
+  pos: "noun"
+  usage: "Синекдоха називає частину замість цілого або ціле замість частини."
+- lemma: "епітет"
+  translation: "epithet"
+  pos: "noun"
+  usage: "Епітет додає образну або оцінну ознаку."
+- lemma: "персоніфікація"
+  translation: "personification"
+  pos: "noun"
+  usage: "Персоніфікація надає неживому людських ознак."
+- lemma: "гіпербола"
+  translation: "hyperbole"
+  pos: "noun"
+  usage: "Гіпербола навмисно перебільшує масштаб."
+- lemma: "літота"
+  translation: "litotes"
+  pos: "noun"
+  usage: "Літота применшує ознаку або подію."
+- lemma: "іронія"
+  translation: "irony"
+  pos: "noun"
+  usage: "Іронія створює розрив між буквальним висловом і справжньою оцінкою."
+- lemma: "оксиморон"
+  translation: "oxymoron"
+  pos: "noun"
+  usage: "Оксиморон поєднує логічно несумісні поняття."
+- lemma: "конотація"
+  translation: "connotation"
+  pos: "noun"
+  usage: "Конотація показує додатковий емоційний або оцінний відтінок."
+- lemma: "фразеологізм"
+  translation: "idiom"
+  pos: "noun"
+  usage: "Фразеологізм додає готовий образ і культурну пам'ять."
+- lemma: "евфемізм"
+  translation: "euphemism"
+  pos: "noun"
+  usage: "Евфемізм може пом'якшувати різкий факт."
+- lemma: "паронім"
+  translation: "paronym"
+  pos: "noun"
+  usage: "Паронім легко сплутати з подібним за формою словом."
+- lemma: "оцінна лексика"
+  translation: "evaluative vocabulary"
+  pos: "noun phrase"
+  usage: "Оцінна лексика задає позицію автора."
+- lemma: "жанрова межа"
+  translation: "genre boundary"
+  pos: "noun phrase"
+  usage: "Жанрова межа визначає, чи доречний троп."
+- lemma: "стилістично забарвлена лексика"
+  translation: "stylistically marked vocabulary"
+  pos: "noun phrase"
+  usage: "Стилістично забарвлена лексика показує регістр і ставлення мовця."
