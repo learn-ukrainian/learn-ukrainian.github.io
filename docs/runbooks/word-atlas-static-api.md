@@ -22,11 +22,11 @@ As of 2026-07-02, the static contract should expose this board state:
 - Public search/browse: 5,270 entries, 61 search shards, 31 browse shards.
 - Daily Word: 300 entries.
 - Practice deck: 4,484 lexemes and 22 reviewed A1 cloze items.
-- Source-inventory seeds: 133 rows total: 80 textbook, 33 Ohoiko/ULP, and
-  20 curriculum sample rows.
+- Source-inventory seeds: 173 rows total: 80 textbook, 40 private
+  teacher-lesson, 33 Ohoiko/ULP, and 20 curriculum sample rows.
 
-Open Atlas/Lexicon board items are #3936, private teacher-lesson vocabulary
-intake, #3933, #3934, and #3797. Closed items that should not reappear as
+Open Atlas/Lexicon board items are #3936, #4160, #3933, #3934, and #3797.
+Closed items that should not reappear as
 active backlog are #3932, #3796, #3449, #3450, #3406, and #3675.
 
 The status payload also points to existing static browse assets:

@@ -26,8 +26,8 @@ Current static Atlas counts:
 - Public search/browse: 5,270 entries, 61 search shards, 31 browse shards.
 - Daily Word: 300 entries.
 - Practice deck: 4,484 lexemes and 22 reviewed A1 cloze items.
-- Source-inventory seeds: 133 rows total: 80 textbook, 33 Ohoiko/ULP, and
-  20 curriculum sample rows.
+- Source-inventory seeds: 173 rows total: 80 textbook, 40 private
+  teacher-lesson, 33 Ohoiko/ULP, and 20 curriculum sample rows.
 
 Closed tracker leaves that should not be treated as active backlog:
 
@@ -46,9 +46,8 @@ Merged recent delivery PRs:
 Open board:
 
 - #3936 - tracker/reliability coordination.
-- Private teacher-lesson vocabulary intake - create or update a dedicated
-  issue before publishing rows; use privacy-safe source labels in committed
-  artifacts.
+- #4160 - private teacher-lesson vocabulary intake; use privacy-safe source
+  labels in committed artifacts.
 - #3933 - Ohoiko/ULP source-safe intake.
 - #3934 - textbook/headword intake beyond the current 80-row seed.
 - #3797 - reviewed cloze expansion beyond the current 22 A1 items.
@@ -132,9 +131,8 @@ for source-inventory rows promoted to browse/search.
 ## Current sequencing
 
 1. Keep #3936 accurate as the delivery board; update it when leaves close.
-2. Add a dedicated private teacher-lesson vocabulary source-inventory lane
-   before more broad textbook/Ohoiko growth, using privacy-safe committed
-   labels and tracked source locators.
+2. Continue #4160 before more broad textbook/Ohoiko growth, using
+   privacy-safe committed labels and neutral source locators.
 3. Continue #3933 with source-safe Ohoiko/ULP rows only.
 4. Continue #3934 with reviewed textbook/headword rows beyond the current
    80-row seed.

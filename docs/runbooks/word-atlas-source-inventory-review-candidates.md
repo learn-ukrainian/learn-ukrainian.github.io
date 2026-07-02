@@ -16,6 +16,7 @@ The committed source inventory input is:
 - `data/lexicon/source-inventory/pos-balanced-grammar-sample.yaml`
 - `data/lexicon/source-inventory/ohoiko-abetka-keywords.yaml`
 - `data/lexicon/source-inventory/bolshakova-bukvar-keywords.yaml`
+- `data/lexicon/source-inventory/private-teacher-lesson-vocabulary-seed.yaml`
 - `data/lexicon/source-inventory/vashulenko-grade3-headwords.yaml`
 
 The candidate JSON follows the existing grow-candidate shape: `counts`,
@@ -84,6 +85,11 @@ each for noun, adjective, numeral, pronoun, verb, adverb, preposition,
 conjunction, particle, and interjection. Optional per-headword `gloss` values
 are curated learner-facing English anchors for cases where dictionary
 enrichment lacks a visible English translation.
+
+The private teacher-lesson seed contributes 40 reviewed `teacher_lesson`
+headwords from an explicit local vocabulary table. Its committed rows are
+derived metadata only: no raw private lesson material, private document paths,
+or teacher-identifying labels should appear in the inventory.
 
 When a candidate is later promoted into a manifest entry,
 `promote_grow_candidates.manifest_entry_from_candidate()` copies
