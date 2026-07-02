@@ -1,0 +1,141 @@
+- lemma: синонім
+  translation: synonym
+  pos: noun
+  gender: m
+  usage: Синонім має близьке значення, але не завжди повністю замінює інше слово.
+- lemma: синонімія
+  translation: synonymy
+  pos: noun
+  gender: f
+  usage: Синонімія допомагає точніше добирати слова для конкретного жанру.
+- lemma: синонімічний ряд
+  translation: synonymic series; synonym set
+  pos: phrase
+  usage: Синонімічний ряд будуємо навколо домінанти.
+- lemma: домінанта
+  translation: dominant word
+  pos: noun
+  gender: f
+  usage: Домінанта є нейтральним центром синонімічного ряду.
+- lemma: периферія
+  translation: periphery
+  pos: noun
+  gender: f
+  usage: Периферія ряду містить слова з додатковим відтінком.
+- lemma: стилістичний синонім
+  translation: stylistic synonym
+  pos: phrase
+  usage: Стилістичний синонім змінює тон або регістр.
+- lemma: контекстуальний синонім
+  translation: contextual synonym
+  pos: phrase
+  usage: Контекстуальний синонім працює лише в конкретному уривку.
+- lemma: доречність
+  translation: appropriateness
+  pos: noun
+  gender: f
+  usage: Доречність лексики залежить від жанру, адресата й теми.
+- lemma: влучність
+  translation: aptness; precision
+  pos: noun
+  gender: f
+  usage: Влучність слова визначає силу редакторського рішення.
+- lemma: сполучуваність
+  translation: collocability
+  pos: noun
+  gender: f
+  usage: Лексична сполучуваність показує, які слова природно стоять поруч.
+- lemma: регістр
+  translation: register
+  pos: noun
+  gender: m
+  usage: Регістр має відповідати жанру й стосунку між мовцями.
+- lemma: пареміологія
+  translation: paremiology
+  pos: noun
+  gender: f
+  usage: Пареміологія вивчає прислів'я та приказки.
+- lemma: прислів'я
+  translation: proverb
+  pos: noun
+  gender: n
+  usage: Прислів'я має узагальнений повчальний або оцінний зміст.
+- lemma: приказка
+  translation: saying
+  pos: noun
+  gender: f
+  usage: Приказка часто коротша й не завжди містить повний висновок.
+- lemma: культурний код
+  translation: cultural code
+  pos: phrase
+  usage: Прислів'я може передавати культурний код спільноти.
+- lemma: трансформація
+  translation: transformation
+  pos: noun
+  gender: f
+  usage: Трансформація прислів'я створює іронію або сучасний жарт.
+- lemma: сталий вираз
+  translation: fixed expression
+  pos: phrase
+  usage: Сталий вираз має закріплену форму й типову ситуацію вживання.
+- lemma: фразеологізм
+  translation: phraseological unit; idiom
+  pos: noun
+  gender: m
+  usage: Фразеологізм має цілісне переносне значення.
+- lemma: ідіома
+  translation: idiom
+  pos: noun
+  gender: f
+  usage: Ідіома не перекладається дослівно.
+- lemma: переносне значення
+  translation: figurative meaning
+  pos: phrase
+  usage: Переносне значення фразеологізму не зводиться до значень окремих слів.
+- lemma: фразеологічне зрощення
+  translation: phraseological fusion
+  pos: phrase
+  usage: Фразеологічне зрощення має значення, яке майже не виводиться з компонентів.
+- lemma: фразеологічна єдність
+  translation: phraseological unity
+  pos: phrase
+  usage: Фразеологічна єдність зберігає прозорий образ і цілісне значення.
+- lemma: фразеологічне сполучення
+  translation: phraseological combination
+  pos: phrase
+  usage: Фразеологічне сполучення має стійке партнерство слів.
+- lemma: калька
+  translation: calque
+  pos: noun
+  gender: f
+  usage: Калька копіює чужу форму й може звучати неприродно українською.
+- lemma: спотворення
+  translation: distortion
+  pos: noun
+  gender: n
+  usage: Спотворення фразеологізму змінює його закріплену форму.
+- lemma: евфемізм
+  translation: euphemism
+  pos: noun
+  gender: m
+  usage: Евфемізм може пом'якшувати вислів або приховувати відповідальність.
+- lemma: кліше
+  translation: cliche; formula
+  pos: noun
+  gender: n
+  usage: Кліше корисне в жанровій формулі, але може стати порожнім штампом.
+- lemma: аргумент
+  translation: argument
+  pos: noun
+  gender: m
+  usage: Аргумент підтримує позицію в дискусії.
+- lemma: підстава
+  translation: grounds; basis
+  pos: noun
+  gender: f
+  usage: Підстава дає правову або організаційну опору для рішення.
+- lemma: мотив
+  translation: motive
+  pos: noun
+  gender: m
+  usage: Мотив пояснює внутрішнє спонукання людини.
