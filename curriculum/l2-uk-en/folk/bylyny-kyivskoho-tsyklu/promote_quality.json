@@ -1,0 +1,70 @@
+{
+  "assembled_mdx_sha256": "0fbdd775798ae2660594afa8a8b290c18430c27b55cdd1fed6c8047204f0980e",
+  "content_hash": {
+    "algorithm": "sha256",
+    "basis": "lesson_sources_v2",
+    "digest": "365af52bdaef7d6c4f6a997526115e7f06187d532ed6aa46802cb3b55ce5cb80",
+    "files": [
+      {
+        "path": "curriculum/l2-uk-en/plans/folk/bylyny-kyivskoho-tsyklu.yaml",
+        "sha256": "2429e3d1f26eeb49d1076d1cbe19b8c0c0f26de0a9db022d596fa959d3e4c78f"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/bylyny-kyivskoho-tsyklu/module.md",
+        "sha256": "929b9c771ee7c0ee092caf391b6add01f0f7d6103b944ef048ee904800c2bbfa"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/bylyny-kyivskoho-tsyklu/activities.yaml",
+        "sha256": "bb7f630fc7a4661a962a45fd77f1eff24c72a7bc3ad1773956971addc15d90f0"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/bylyny-kyivskoho-tsyklu/vocabulary.yaml",
+        "sha256": "ef721aa3a1171e8190207433078fa315cba1cb26fb12a02bcd918a76ce742f59"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/bylyny-kyivskoho-tsyklu/resources.yaml",
+        "sha256": "37518f3364951244f64df3c7987513fa951e3177cf769f773a91393ef0234ce7"
+      }
+    ]
+  },
+  "evidence": {
+    "christian_framing": "Sofia/Lavra and Christian memory are handled respectfully without occult or primitive-superstition framing.",
+    "decolonization": "Module centers Kyiv/Rus and Ukrainian cultural agency while explicitly refusing imperial ownership framing and uninterrupted-continuity overclaim.",
+    "provenance": "No hosted reading page is invented; stylized activity formulas are labeled as illustrations, not source excerpts.",
+    "review": "Claude review task review-folk-m13-bylyny-kyivskoho-tsyklu found no remaining blockers after provenance and duplicate-word fixes.",
+    "source_hygiene": "Python QG, activity validation, vocabulary validation, MDX validation, MDX render, and resource liveness pass; only sidecar was pending before recording."
+  },
+  "floors": {
+    "beauty": 8.5,
+    "decolonization": 9.0,
+    "engagement": 8.5,
+    "naturalness": 8.5,
+    "pedagogical": 8.5,
+    "tone": 8.5
+  },
+  "profile": "folk_promote_v1",
+  "review_artifact": null,
+  "reviewer": {
+    "agent": "claude",
+    "family": "anthropic",
+    "model": "claude-opus-4-8"
+  },
+  "schema_version": 1,
+  "scored_at": "2026-07-02T20:42:47Z",
+  "scores": {
+    "beauty": 8.8,
+    "decolonization": 9.4,
+    "engagement": 8.8,
+    "naturalness": 9.0,
+    "pedagogical": 8.8,
+    "tone": 9.1
+  },
+  "slug": "bylyny-kyivskoho-tsyklu",
+  "track": "folk",
+  "verdict": "PASS",
+  "writer": {
+    "agent": "codex",
+    "family": "openai",
+    "model": "gpt-5"
+  }
+}
