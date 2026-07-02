@@ -228,8 +228,7 @@ one JSON block per structured artifact. Do not include trailing commas. Do
 not include comments. Do not mix YAML or prose into JSON blocks. The pipeline
 uses `json.loads` and fails the build on any parse error.
 
-**Wrap the `module.md` artifact in a 4-backtick OUTER fence**: ````markdown
-file=module.md` opens, ```` (four backticks, bare, on its own line) closes.
+**Wrap the `module.md` artifact in a 4-backtick OUTER fence**: the opening line is four backticks followed by `markdown file=module.md`; the closing line is four backticks, bare, on its own line.
 The 4-backtick wrapper lets you include 3-backtick code blocks INSIDE
 module.md for verb conjugation tables, code-style examples, or any prose
 that benefits from a fenced block — those inner 3-backtick fences will be
@@ -351,6 +350,8 @@ Words and grammar listed in **Cumulative vocabulary** / **Grammar already taught
 
 ## Tone and immersion (mandatory)
 
+Write restrained, concrete educational prose from the first draft. Reject decorative pathos, hagiography, elegiac/heroizing framing, symbolic abstractions, and thesis-sounding sentences that feel impressive but vague. Every sentence must do one concrete job: name a source-grounded fact, show a Ukrainian form in use, explain a language pattern, or direct a learner action. If it cannot, replace it with concrete content or cut it; never pad, and never drop below the contract word floor. For BIO and cultural modules, keep biography, reception, and context factual and natural; do not turn the person or topic into a legend or moral emblem, and do not reach for melodramatic Soviet/post-Soviet pathos. State repression, censorship, russification, institutional pressure, and decolonization facts plainly when the plan or sources require them.
+
 The prose of `module.md` is for a learner who is encountering Ukrainian, not
 for a teacher narrating their own lesson plan. Hold to this register:
 
@@ -382,11 +383,11 @@ for a teacher narrating their own lesson plan. Hold to this register:
 **Dialogue format (REQUIRED for gate counting).** All Ukrainian dialogue lines MUST be emitted as one of:
 
 - `<DialogueBox uk="..." en="..." />` JSX component (preferred for V7 rendering), or
-- `> `-prefixed Markdown blockquote (Markdown fallback)
+- `>`-prefixed Markdown blockquote (Markdown fallback)
 
-The `l2_exposure_floor` gate counts only these two forms. **Em-dash dialogue lines (e.g. `— Привіт, Насте!`) under a `## Діалоги` heading WITHOUT `<DialogueBox>` or `> ` wrapping are an anti-pattern** — the gate cannot count them and the module will fail the dialogue-line floor even when the dialogue is pedagogically present.
+The `l2_exposure_floor` gate counts only these two forms. **Em-dash dialogue lines (e.g. `— Привіт, Насте!`) under a `## Діалоги` heading WITHOUT `<DialogueBox>` or `>` wrapping are an anti-pattern** — the gate cannot count them and the module will fail the dialogue-line floor even when the dialogue is pedagogically present.
 
-Default to `<DialogueBox>` for new modules; `> ` blockquote acceptable when a multi-line dialogue is more naturally rendered as quoted prose.
+Default to `<DialogueBox>` for new modules; `>` blockquote acceptable when a multi-line dialogue is more naturally rendered as quoted prose.
 
 **Inline gloss for dialogue lines (REQUIRED to clear `long_uk_ceiling`).** Each Ukrainian dialogue line MUST have an inline English gloss within 8 tokens of proximity. Two valid shapes:
 

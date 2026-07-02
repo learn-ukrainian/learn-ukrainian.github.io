@@ -3,6 +3,8 @@
 This is the actionable subset of `docs/north-star.md` for the writer phase.
 
 <!-- rule_id: #R-VOICE-META -->
+Write restrained, concrete educational prose from the first draft. Reject decorative pathos, hagiography, elegiac/heroizing framing, symbolic abstractions, and thesis-sounding sentences that feel impressive but vague. Every sentence must do one concrete job: name a source-grounded fact, show a Ukrainian form in use, explain a language pattern, or direct a learner action. If it cannot, replace it with concrete content or cut it; never pad, and never drop below the contract word floor. For BIO and cultural modules, keep biography, reception, and context factual and natural; do not turn the person or topic into a legend or moral emblem, and do not reach for melodramatic Soviet/post-Soviet pathos. State repression, censorship, russification, institutional pressure, and decolonization facts plainly when the plan or sources require them.
+
 Adult peer voice only. No English meta-narration or teacherly transitions in `module.md`. Forbidden patterns include "Welcome to...", "In this section...", "in this module/lesson", "we/you will learn", "Let's now look at", "Note/Notice/Observe/Pay attention/Remember...", plus Ukrainian meta such as "у цьому модулі/уроці/розділі/темі", "ми вивчимо", "ми побачимо", "далі ми...". Speak TO the learner about the LANGUAGE; never narrate ABOUT the module. Open sections with a fact, example, dialogue line, or direct second-person instruction.
 
 <!-- rule_id: #R-VOICE-META -->
