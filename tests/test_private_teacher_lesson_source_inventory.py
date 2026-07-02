@@ -12,6 +12,11 @@ PRIVATE_TEACHER_INVENTORY = (
     PROJECT_ROOT
     / "data/lexicon/source-inventory/private-teacher-lesson-vocabulary-seed.yaml"
 )
+PRIVATE_TEACHER_ROWS_39_58_INVENTORY = (
+    PROJECT_ROOT
+    / "data/lexicon/source-inventory/"
+    "private-teacher-lesson-vocabulary-table-1-rows-39-58.yaml"
+)
 PRIVATE_TEACHER_FIRST_LEDGER = (
     PROJECT_ROOT
     / "data/lexicon/source-inventory-review-decisions/"
@@ -52,6 +57,35 @@ def test_private_teacher_inventory_uses_clean_headwords_not_raw_table_cells() ->
     assert all("/" not in record.lemma for record in records)
     assert "тарган" in {record.lemma for record in records}
     assert "вийти з ладу" in {record.lemma for record in records}
+
+
+def test_private_teacher_rows_39_58_inventory_is_pending_review_metadata() -> None:
+    records = read_source_inventory(
+        PRIVATE_TEACHER_ROWS_39_58_INVENTORY,
+        project_root=PROJECT_ROOT,
+    )
+
+    assert len(records) == 23
+    assert {record.source_family for record in records} == {"teacher_lesson"}
+    assert {record.extraction_mode for record in records} == {"curated_headword"}
+    assert {record.source_id for record in records} == {
+        "private-teacher-lesson-vocabulary-table-1-rows-39-58"
+    }
+    assert all(record.source_path is None for record in records)
+    assert all(record.source_url is None for record in records)
+    assert all(record.source_title for record in records)
+    assert all(record.source_locator for record in records)
+    assert all(record.context for record in records)
+    assert all(record.pos for record in records)
+    assert all(record.gloss for record in records)
+    assert "правила дорожнього руху" in {record.lemma for record in records}
+    assert "витримати" in {record.lemma for record in records}
+    assert all("," not in record.lemma for record in records)
+    assert all("/" not in record.lemma for record in records)
+    assert all("(" not in record.lemma and ")" not in record.lemma for record in records)
+
+    inventory_text = PRIVATE_TEACHER_ROWS_39_58_INVENTORY.read_text(encoding="utf-8")
+    assert ".docx" not in inventory_text
 
 
 def test_private_teacher_first_decision_ledger_stays_review_only() -> None:

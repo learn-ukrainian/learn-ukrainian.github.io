@@ -5,15 +5,16 @@ Atlas source-inventory lane without publishing private lesson material.
 
 ## Current Safe Source
 
-The committed inventory seed is:
+The committed inventory seeds are:
 
 - `data/lexicon/source-inventory/private-teacher-lesson-vocabulary-seed.yaml`
+- `data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-39-58.yaml`
 
-Current committed coverage is 40 reviewed headwords from an explicit local
-vocabulary table. The source family is `teacher_lesson`, and the source title,
-source id, locators, and context are intentionally privacy-safe. The inventory
-does not commit raw notes, transcripts, prompts, document paths, or teacher
-identifying names.
+Current committed coverage is 63 reviewed headwords from explicit local
+vocabulary table rows 1-58. The source family is `teacher_lesson`, and the
+source titles, source ids, locators, and context are intentionally privacy-safe.
+The inventories do not commit raw notes, transcripts, prompts, document paths,
+or teacher-identifying names.
 
 ## Source Handling Rule
 
