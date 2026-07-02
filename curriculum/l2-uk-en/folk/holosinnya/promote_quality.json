@@ -1,9 +1,9 @@
 {
-  "assembled_mdx_sha256": "a89122f656a3e041ac2e6e72ef1c43d6958a7235cb4aa07cfdeadcade60582bb",
+  "assembled_mdx_sha256": "1fb6fe6b9e9599bda1832bbb14b87370636b1dbd5b2e46d79e7c0538ca22ab91",
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "95eeefce906505e99dcc73524ce2e13ca8c7e69d01a9b74d230c0e87a90a06a6",
+    "digest": "d3285012e407bfaa9e725faeff2af17ce0d0f7bf483f987ffd5186fafaf7d5b7",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/holosinnya.yaml",
@@ -11,7 +11,7 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/holosinnya/module.md",
-        "sha256": "f404aea9a49a08eba4f7a77eb75d96b75b9a0932ce01a69af6b3be74bb297967"
+        "sha256": "e57013229900484669b7cb2c94a1b3bd9e62b5488db6644f871e0fdee43a28fc"
       },
       {
         "path": "curriculum/l2-uk-en/folk/holosinnya/activities.yaml",
