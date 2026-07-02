@@ -1,0 +1,105 @@
+- lemma: підтекст
+  translation: subtext
+  pos: noun
+  gender: m
+  usage: Підтекст видно в натяках, замовчуваннях і порядку подачі фактів.
+- lemma: інтерпретація
+  translation: interpretation
+  pos: noun
+  gender: f
+  usage: Інтерпретація має спиратися на мовні маркери, а не лише на враження.
+- lemma: конотація
+  translation: connotation
+  pos: noun
+  gender: f
+  usage: Конотація слова може змінити емоційний ефект нейтрального факту.
+- lemma: денотація
+  translation: denotation
+  pos: noun
+  gender: f
+  usage: Денотація називає основне предметне значення слова.
+- lemma: сприйняття
+  translation: perception
+  pos: noun
+  gender: n
+  usage: Довжина речення впливає на сприйняття інформації.
+- lemma: акцентувати
+  translation: to emphasize
+  pos: verb
+  usage: Автор може акцентувати відповідальність через порядок слів.
+- lemma: деконструкція
+  translation: deconstruction
+  pos: noun
+  gender: f
+  usage: Деконструкція речення допомагає побачити приховані зв'язки.
+- lemma: адресат
+  translation: addressee
+  pos: noun
+  gender: m
+  usage: Адресат тексту визначає вибір лексики й рівень пояснення.
+- lemma: цілісність
+  translation: coherence; wholeness
+  pos: noun
+  gender: f
+  usage: Цілісність тексту виникає, коли приклади працюють на одну ідею.
+- lemma: комунікативна інтенція
+  translation: communicative intention
+  pos: phrase
+  usage: Комунікативна інтенція показує, чого автор хоче досягти.
+- lemma: прагматичний ефект
+  translation: pragmatic effect
+  pos: phrase
+  usage: Прагматичний ефект тексту може бути інформуванням, переконанням або закликом.
+- lemma: мовна маніпуляція
+  translation: linguistic manipulation
+  pos: phrase
+  usage: Мовна маніпуляція підмінює доказ емоційним тиском.
+- lemma: стилістичне забарвлення
+  translation: stylistic coloring
+  pos: phrase
+  usage: Стилістичне забарвлення слова допомагає визначити регістр.
+- lemma: лексичний пласт
+  translation: lexical layer
+  pos: phrase
+  usage: Термінологія й жаргон належать до різних лексичних пластів.
+- lemma: експресивність
+  translation: expressiveness
+  pos: noun
+  gender: f
+  usage: Надмірна експресивність може замінити аргумент емоцією.
+- lemma: інверсія
+  translation: inversion
+  pos: noun
+  gender: f
+  usage: Інверсія змінює логічний наголос у реченні.
+- lemma: парцеляція
+  translation: parceling; syntactic segmentation
+  pos: noun
+  gender: f
+  usage: Парцеляція створює паузу й підсилює окрему думку.
+- lemma: синтаксичний паралелізм
+  translation: syntactic parallelism
+  pos: phrase
+  usage: Синтаксичний паралелізм робить публіцистичний текст ритмічним.
+- lemma: багатогранний
+  translation: multifaceted
+  pos: adj
+  usage: Багатогранний аналіз враховує факт, стиль і аудиторію.
+- lemma: завуальований
+  translation: veiled; indirect
+  pos: adj
+  usage: Завуальований натяк треба підтвердити конкретними словами тексту.
+- lemma: промовистий
+  translation: telling; expressive
+  pos: adj
+  usage: Промовистий повтор може показати авторську позицію.
+- lemma: переконливість
+  translation: persuasiveness
+  pos: noun
+  gender: f
+  usage: Переконливість висновку залежить від точності прикладів.
+- lemma: дискурс
+  translation: discourse
+  pos: noun
+  gender: m
+  usage: Дискурс задає правила, у яких текст звучить природно.

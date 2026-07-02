@@ -1,0 +1,125 @@
+-
+  lemma: дискусія
+  translation: discussion
+  pos: noun
+  example: "Дискусія має вести до прояснення позицій, а не до особистої атаки."
+-
+  lemma: дебати
+  translation: debate
+  pos: noun
+  example: "Дебати відбуваються за регламентом і мають чітку тему."
+-
+  lemma: опонент
+  translation: opponent
+  pos: noun
+  example: "Опонент критикує тезу, а не особу мовця."
+-
+  lemma: теза
+  translation: thesis; claim
+  pos: noun
+  example: "Теза має бути конкретною і придатною для перевірки."
+-
+  lemma: обґрунтування
+  translation: justification
+  pos: noun
+  example: "Обґрунтування пояснює, чому теза має сенс."
+-
+  lemma: доказ
+  translation: evidence; proof
+  pos: noun
+  example: "Доказ має бути пов'язаний із тезою, яку він підтримує."
+-
+  lemma: спростування
+  translation: refutation
+  pos: noun
+  example: "Спростування починається з точного розуміння позиції опонента."
+-
+  lemma: контраргумент
+  translation: counterargument
+  pos: noun
+  example: "Контраргумент визнає проблему, але пропонує інший висновок."
+-
+  lemma: переконливість
+  translation: persuasiveness
+  pos: noun
+  example: "Переконливість залежить від логіки, доказів і тону."
+-
+  lemma: компроміс
+  translation: compromise
+  pos: noun
+  example: "Компроміс можливий, коли сторони мають спільну мету."
+-
+  lemma: аргументація
+  translation: argumentation
+  pos: noun
+  example: "Аргументація має показувати шлях від тези до висновку."
+-
+  lemma: регламент
+  translation: time limit; rules of procedure
+  pos: noun
+  example: "Регламент змушує мовця висловлюватися лаконічно."
+-
+  lemma: полеміка
+  translation: polemic
+  pos: noun
+  example: "Полеміка може бути гострою, але не повинна ставати образливою."
+-
+  lemma: опонування
+  translation: opposition; countering
+  pos: noun
+  example: "Опонування має відповідати на конкретний доказ."
+-
+  lemma: критичний розбір
+  translation: critical analysis
+  pos: phrase
+  example: "Критичний розбір перевіряє логіку й приховані припущення."
+-
+  lemma: дискурс
+  translation: discourse
+  pos: noun
+  example: "Публічний дискурс впливає на те, які аргументи вважаються прийнятними."
+-
+  lemma: толерантність
+  translation: tolerance
+  pos: noun
+  example: "Толерантність не забороняє незгоду, а вимагає поваги до людини."
+-
+  lemma: етикет
+  translation: etiquette
+  pos: noun
+  example: "Етикет дискусії допомагає говорити різко, але коректно."
+-
+  lemma: софізм
+  translation: sophism
+  pos: noun
+  example: "Софізм здається логічним, але приховує помилку в міркуванні."
+-
+  lemma: демагогія
+  translation: demagogy
+  pos: noun
+  example: "Демагогія апелює до емоцій замість доказів."
+-
+  lemma: раціональність
+  translation: rationality
+  pos: noun
+  example: "Раціональність дискусії підтримують критерії, факти й ясні визначення."
+-
+  lemma: безапеляційний
+  translation: categorical; peremptory
+  pos: adjective
+  example: "Безапеляційний тон часто заважає почути контраргумент."
+-
+  lemma: суперечливий
+  translation: contradictory; controversial
+  pos: adjective
+  example: "Суперечливий аргумент потребує додаткового пояснення."
+-
+  lemma: конструктивний
+  translation: constructive
+  pos: adjective
+  example: "Конструктивний коментар пропонує кращий механізм, а не лише критику."
+-
+  lemma: неупереджений
+  translation: impartial
+  pos: adjective
+  example: "Неупереджений модератор стежить за регламентом для обох сторін."
