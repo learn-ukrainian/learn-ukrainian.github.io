@@ -1,0 +1,184 @@
+- lemma: словосполучення
+  translation: word combination; phrase
+  pos: noun
+  gender: n
+  usage: Словосполучення може бути вільним або сталим.
+- lemma: стале словосполучення
+  translation: fixed expression
+  pos: phrase
+  usage: Стале словосполучення має обмежену можливість заміни компонентів.
+- lemma: еквівалент
+  translation: equivalent
+  pos: noun
+  gender: m
+  usage: Функціональний еквівалент передає дію вислову в іншій мові.
+- lemma: функціональний еквівалент
+  translation: functional equivalent
+  pos: phrase
+  usage: Функціональний еквівалент важливіший за буквальний переклад.
+- lemma: сполучуваність
+  translation: collocability
+  pos: noun
+  gender: f
+  usage: Сполучуваність обмежує вибір партнера слова.
+- lemma: колокація
+  translation: collocation
+  pos: noun
+  gender: f
+  usage: Колокація міцна кава є прозорою, але сталою.
+- lemma: валентність
+  translation: valency
+  pos: noun
+  gender: f
+  usage: Валентність слова описує його можливі зв'язки з іншими словами.
+- lemma: дистрибуція
+  translation: distribution
+  pos: noun
+  gender: f
+  usage: Дистрибуція показує, у яких контекстах одиниця трапляється.
+- lemma: штамп
+  translation: hackneyed phrase; cliche
+  pos: noun
+  gender: m
+  usage: Штамп звучить готово, але часто не додає змісту.
+- lemma: кліше
+  translation: cliche; formula
+  pos: noun
+  gender: n
+  usage: Кліше може бути корисним у передбачуваному жанрі.
+- lemma: мовне кліше
+  translation: language formula
+  pos: phrase
+  usage: Мовне кліше в заяві допомагає впізнати жанр.
+- lemma: ідіома
+  translation: idiom
+  pos: noun
+  gender: f
+  usage: Ідіома має значення, яке не завжди виводиться з окремих слів.
+- lemma: фразеологізм
+  translation: phraseological unit
+  pos: noun
+  gender: m
+  usage: Фразеологізм може бути образним, розмовним або книжним.
+- lemma: фразеологічна одиниця
+  translation: phraseological unit
+  pos: phrase
+  usage: Фразеологічна одиниця має відносно сталу форму.
+- lemma: фразеологічне зрощення
+  translation: phraseological fusion
+  pos: phrase
+  usage: Фразеологічне зрощення часто семантично непрозоре.
+- lemma: фразеологічна єдність
+  translation: phraseological unity
+  pos: phrase
+  usage: Фразеологічна єдність має образне переносне значення.
+- lemma: фразеологічне сполучення
+  translation: phraseological combination
+  pos: phrase
+  usage: Фразеологічне сполучення має частково обмежений компонент.
+- lemma: ідіоматичність
+  translation: idiomaticity
+  pos: noun
+  gender: f
+  usage: Ідіоматичність означає, що вислів не перекладається буквально.
+- lemma: семантична неподільність
+  translation: semantic indivisibility
+  pos: phrase
+  usage: Семантична неподільність робить вислів цілісною одиницею.
+- lemma: сталість складу
+  translation: fixed composition
+  pos: phrase
+  usage: Сталість складу обмежує довільну заміну слів.
+- lemma: конотація
+  translation: connotation
+  pos: noun
+  gender: f
+  usage: Конотація фразеологізму може бути розмовною або книжною.
+- lemma: калькування
+  translation: calquing; loan translation
+  pos: noun
+  gender: n
+  usage: Калькування ідіоми часто створює неприродний вислів.
+- lemma: калька
+  translation: calque
+  pos: noun
+  gender: f
+  usage: Калька під погодою не передає українською under the weather.
+- lemma: описовий переклад
+  translation: descriptive translation
+  pos: phrase
+  usage: Описовий переклад пояснює ідіому без буквальної форми.
+- lemma: міжмовна асиметрія
+  translation: cross-linguistic asymmetry
+  pos: phrase
+  usage: Міжмовна асиметрія означає, що вислови не збігаються один до одного.
+- lemma: лексема
+  translation: lexeme
+  pos: noun
+  gender: f
+  usage: Лексема входить до словосполучення як окрема словникова одиниця.
+- lemma: прозорість
+  translation: transparency
+  pos: noun
+  gender: f
+  usage: Прозорість значення полегшує розуміння колокації.
+- lemma: семантична прозорість
+  translation: semantic transparency
+  pos: phrase
+  usage: Семантична прозорість висока у словосполученні міцна кава.
+- lemma: влучність
+  translation: aptness; precision
+  pos: noun
+  gender: f
+  usage: Влучність сталого вислову залежить від контексту.
+- lemma: розмитість
+  translation: vagueness
+  pos: noun
+  gender: f
+  usage: Розмитість штампу приховує конкретні дії.
+- lemma: експресема
+  translation: expressive unit
+  pos: noun
+  gender: f
+  usage: Експресема додає емоційне або образне забарвлення.
+- lemma: реєстрова варіативність
+  translation: register variation
+  pos: phrase
+  usage: Реєстрова варіативність пояснює різницю між офіційним і розмовним висловом.
+- lemma: стилістична конотація
+  translation: stylistic connotation
+  pos: phrase
+  usage: Стилістична конотація показує, чи вислів книжний, нейтральний або розмовний.
+- lemma: жаргонізм
+  translation: jargon word
+  pos: noun
+  gender: m
+  usage: Жаргонізм може маркувати групову ідентичність.
+- lemma: просторічний
+  translation: colloquial; substandard
+  pos: adj
+  usage: Просторічний фразеологізм не пасує до офіційного листа.
+- lemma: водити за ніс
+  translation: to deceive; lead on
+  pos: phrase
+  usage: Водити за ніс означає вводити когось в оману.
+- lemma: бити байдики
+  translation: to idle; loaf around
+  pos: phrase
+  usage: Бити байдики є розмовним оцінним фразеологізмом.
+- lemma: тримати язик за зубами
+  translation: to keep quiet
+  pos: phrase
+  usage: Тримати язик за зубами означає мовчати про щось.
+- lemma: ахіллесова п'ята
+  translation: Achilles' heel
+  pos: phrase
+  usage: Ахіллесова п'ята означає слабке місце.
+- lemma: наріжний камінь
+  translation: cornerstone
+  pos: phrase
+  usage: Наріжний камінь є книжним образом основи.
+- lemma: бюрократична тяганина
+  translation: red tape; bureaucratic delay
+  pos: phrase
+  usage: Бюрократична тяганина може бути відповідником англійського red tape.
