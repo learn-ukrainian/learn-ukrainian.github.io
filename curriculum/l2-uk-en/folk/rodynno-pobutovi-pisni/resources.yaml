@@ -1,0 +1,30 @@
+- title: Ой ти, коте, коточок
+  type: primary
+  role: reading
+  url: https://uk.wikisource.org/wiki/Ой_ти,_коте,_коточок
+  notes: Повний публічний текст колискової на публічній сторінці; опора для читання анафори, пестливості і мови побажання.
+- title: Пісні та вірші невідомих авторів
+  type: primary
+  role: linked reading
+  url: http://litopys.org.ua/old18/old18_20.htm
+  notes: Сторінка Ізборника з фрагментом "Сиві голубоньки..." як обережним свідченням мотиву посланництва.
+- title: Коломийки
+  type: primary
+  role: linked reading
+  url: https://www.ukrlib.com.ua/narod/printout.php?bookid=1&id=3
+  notes: Публічна добірка Ukrlib для жанрового орієнтира; у модулі використана як зовнішній міст, не як окреме повне читання.
+- title: М. І. Костомаров - фольклорист і літературознавець
+  type: scholarly
+  role: context
+  url: http://litopys.org.ua/kostomar/kos01.htm
+  notes: Контекст для романтичної оцінки української лірики, жіночого голосу і порівняльної рамки Костомарова.
+- title: Мирослав Попович - Нарис історії культури України
+  type: scholarly
+  role: context
+  url: http://litopys.org.ua/popovych/narys05.htm
+  notes: Контекст для малої форми, сміхової культури і соціальної роботи короткого пісенного вислову.
+- title: Дмитро Чижевський - Історія української літератури
+  type: scholarly
+  role: context
+  url: http://litopys.org.ua/chyzh/chy.htm
+  notes: Історико-літературна рамка для обережного читання народної лірики, форм і жанрових переходів.

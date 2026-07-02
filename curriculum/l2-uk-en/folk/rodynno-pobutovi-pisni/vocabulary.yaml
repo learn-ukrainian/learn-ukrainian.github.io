@@ -1,0 +1,60 @@
+- lemma: родинно-побутова пісня
+  translation: family and everyday song
+  pos: noun phrase
+  usage: Родинно-побутова пісня говорить про близьке життя через співану форму.
+- lemma: колискова
+  translation: lullaby
+  pos: noun
+  usage: Колискова поєднує заспокійливий ритм із побажанням здоров'я і долі.
+- lemma: коломийка
+  translation: kolomyika; short Ukrainian dance-song form
+  pos: noun
+  usage: Коломийка стискає думку до дворядкової танцювальної строфи.
+- lemma: лірика
+  translation: lyric poetry; lyric song
+  pos: noun
+  usage: Лірика передає внутрішній стан через голос, образ і ритм.
+- lemma: строфа
+  translation: stanza
+  pos: noun
+  usage: Строфа коломийки є малою, але дуже вимогливою одиницею форми.
+- lemma: анафора
+  translation: anaphora; repeated opening
+  pos: noun
+  usage: Анафора в колисковій створює передбачуваний слуховий рух.
+- lemma: пестливість
+  translation: diminutive tenderness
+  pos: noun
+  usage: Пестливість наближає світ до дитячого або інтимного голосу.
+- lemma: залицяння
+  translation: courtship
+  pos: noun
+  usage: Залицяння у пісні часто говорить непрямо, через посланців і рослинні образи.
+- lemma: посланництво
+  translation: messenger motif
+  pos: noun
+  usage: Посланництво переносить любовне бажання до птаха, листа або дороги.
+- lemma: рута
+  translation: rue; symbolic plant
+  pos: noun
+  usage: Рута в пісенному контексті може входити до дівочого вінка.
+- lemma: барвінок
+  translation: periwinkle; symbolic plant
+  pos: noun
+  usage: Барвінок часто пов'язують із тривалістю, вірністю і вінковою символікою.
+- lemma: адресація
+  translation: address; directed speech
+  pos: noun
+  usage: Адресація показує, кому саме співає або говорить ліричний голос.
+- lemma: варіантність
+  translation: variation; textual variability
+  pos: noun
+  usage: Варіантність є нормальним станом пісні, але не дозволяє змішувати всі тексти без джерела.
+- lemma: джерельна межа
+  translation: source boundary; evidentiary limit
+  pos: noun phrase
+  usage: Джерельна межа відділяє повний публічний текст від короткого уривка або коментаря.
+- lemma: сміхова культура
+  translation: culture of laughter; comic culture
+  pos: noun phrase
+  usage: Сміхова культура допомагає читати коломийку як форму дотепу і соціальної реакції.
