@@ -1,176 +1,218 @@
 - lemma: абстрактний
   translation: abstract
-  pos: adjective
-  usage: Абстрактний іменник називає поняття, а не предмет.
+  pos: adj
+  usage: Абстрактний іменник називає якість, процес або ідею.
+- lemma: абстрактний іменник
+  translation: abstract noun
+  pos: phrase
+  usage: Абстрактний іменник може зробити текст точним або надто важким.
 - lemma: якість
   translation: quality
   pos: noun
-  usage: Якість може стати темою аналізу.
+  gender: f
+  usage: Суфікс -ість часто називає якість.
 - lemma: поняття
   translation: concept
   pos: noun
-  usage: Поняття потребує точного визначення.
+  gender: n
+  usage: Поняття треба пояснювати прикладом.
 - lemma: цінність
   translation: value
   pos: noun
-  usage: Цінність свободи часто обговорюють у публіцистиці.
+  gender: f
+  usage: Гідність є важливою суспільною цінністю.
 - lemma: процес
   translation: process
   pos: noun
-  usage: Процес дослідження триває кілька місяців.
+  gender: m
+  usage: Віддієслівний іменник може називати процес.
+- lemma: результат
+  translation: result
+  pos: noun
+  gender: m
+  usage: Запис часто називає результат дії.
 - lemma: свідомість
   translation: consciousness
   pos: noun
-  usage: Свідомість суспільства змінюється через освіту.
+  gender: f
+  usage: Суспільна свідомість змінюється повільно.
 - lemma: ідеологія
   translation: ideology
   pos: noun
-  usage: Ідеологія потребує критичного аналізу.
+  gender: f
+  usage: Ідеологія не повинна бути порожнім ярликом.
 - lemma: творчість
   translation: creativity; creative work
   pos: noun
-  usage: Творчість не існує без майстерності.
+  gender: f
+  usage: Творчість може означати процес і результат.
 - lemma: гідність
   translation: dignity
   pos: noun
-  usage: Гідність людини є базовою цінністю.
+  gender: f
+  usage: Гідність людини не залежить від посади.
 - lemma: незалежність
   translation: independence
   pos: noun
-  usage: Незалежність потребує відповідальності.
-- lemma: суспільство
-  translation: society
-  pos: noun
-  usage: Суспільство обговорює значення мови.
-- lemma: дослідження
-  translation: research; study
-  pos: noun
-  usage: Дослідження показало зміну цінностей.
-- lemma: прагнення
-  translation: aspiration
-  pos: noun
-  usage: Прагнення до свободи стало темою есе.
-- lemma: зобов'язання
-  translation: obligation
-  pos: noun
-  usage: Зобов'язання сторін записані в угоді.
-- lemma: визначення
-  translation: definition; determining
-  pos: noun
-  usage: Визначення поняття має бути точним.
-- lemma: вдосконалення
-  translation: improvement
-  pos: noun
-  usage: Вдосконалення навичок потребує часу.
+  gender: f
+  usage: Незалежність держави є політичною цінністю.
 - lemma: відповідальність
   translation: responsibility
   pos: noun
-  usage: Відповідальність команди зросла.
+  gender: f
+  usage: Відповідальність команди видно у звітності.
+- lemma: прозорість
+  translation: transparency
+  pos: noun
+  gender: f
+  usage: Прозорість бюджету означає відкриті дані.
+- lemma: чесність
+  translation: honesty
+  pos: noun
+  gender: f
+  usage: Чесність аргументу важливіша за гучний стиль.
 - lemma: точність
   translation: accuracy
   pos: noun
-  usage: Точність формулювання важлива для науки.
+  gender: f
+  usage: Точність формулювання допомагає читачеві.
 - lemma: важливість
   translation: importance
   pos: noun
-  usage: Важливість теми видно з контексту.
-- lemma: щирість
-  translation: sincerity
+  gender: f
+  usage: Важливість теми треба підтвердити прикладами.
+- lemma: складність
+  translation: complexity; difficulty
   pos: noun
-  usage: Щирість не завжди гарантує точність.
-- lemma: майстерність
-  translation: mastery; skill
+  gender: f
+  usage: Складність завдання не виправдовує нечіткий текст.
+- lemma: суспільство
+  translation: society
   pos: noun
-  usage: Майстерність ремісника підтримує творчість.
-- lemma: досконалість
-  translation: perfection
-  pos: noun
-  usage: Досконалість форми не завжди означає мистецтво.
-- lemma: мистецтво
-  translation: art
-  pos: noun
-  usage: Мистецтво відкриває простір інтерпретації.
-- lemma: ремісництво
-  translation: craft
-  pos: noun
-  usage: Ремісництво спирається на вправність і технологію.
-- lemma: будівництво
-  translation: construction
-  pos: noun
-  usage: Будівництво школи триватиме до осені.
+  gender: n
+  usage: Суспільство реагує на зміни через публічну дискусію.
 - lemma: людство
-  translation: humanity
+  translation: humankind
   pos: noun
-  usage: Людство шукає способи зберегти пам'ять.
-- lemma: товариство
-  translation: association; society
-  pos: noun
-  usage: Товариство підтримує освітні ініціативи.
+  gender: n
+  usage: Людство є збірним абстрактним поняттям.
 - lemma: козацтво
   translation: Cossackdom
   pos: noun
-  usage: Козацтво має історичну й культурну вагу.
-- lemma: громадянство
-  translation: citizenship
+  gender: n
+  usage: Козацтво може називати історичну спільноту й явище.
+- lemma: виробництво
+  translation: production
   pos: noun
-  usage: Громадянство є юридичним статусом.
-- lemma: партнерство
-  translation: partnership
+  gender: n
+  usage: Виробництво змінюється під впливом технологій.
+- lemma: підприємництво
+  translation: entrepreneurship
   pos: noun
-  usage: Партнерство між організаціями потребує довіри.
+  gender: n
+  usage: Підприємництво називає сферу діяльності.
+- lemma: керівництво
+  translation: management; leadership
+  pos: noun
+  gender: n
+  usage: Керівництво може означати групу керівників або сам процес.
+- lemma: дослідження
+  translation: research; study
+  pos: noun
+  gender: n
+  usage: Дослідження тривало рік і завершилося звітом.
+- lemma: прагнення
+  translation: aspiration; striving
+  pos: noun
+  gender: n
+  usage: Прагнення до ясності видно в редагуванні.
+- lemma: зобов'язання
+  translation: obligation
+  pos: noun
+  gender: n
+  usage: Зобов'язання треба формулювати конкретно.
+- lemma: визначення
+  translation: definition
+  pos: noun
+  gender: n
+  usage: Визначення терміна має бути коротким і точним.
+- lemma: вдосконалення
+  translation: improvement
+  pos: noun
+  gender: n
+  usage: Вдосконалення тексту починається з ясного дієслова.
 - lemma: читання
   translation: reading
   pos: noun
-  usage: Читання складного тексту вимагає уваги.
+  gender: n
+  usage: Читання може бути процесом або видом діяльності.
 - lemma: навчання
-  translation: learning; study
+  translation: learning; teaching
   pos: noun
-  usage: Навчання триває протягом усього життя.
-- lemma: життя
-  translation: life
-  pos: noun
-  usage: Життя громади змінилося після реформи.
-- lemma: забуття
-  translation: forgetting; oblivion
-  pos: noun
-  usage: Забуття досвіду може бути небезпечним.
+  gender: n
+  usage: Навчання потребує регулярного зворотного зв'язку.
 - lemma: відкриття
   translation: discovery; opening
   pos: noun
-  usage: Відкриття архіву змінило дослідження.
+  gender: n
+  usage: Відкриття може означати подію або результат.
+- lemma: життя
+  translation: life
+  pos: noun
+  gender: n
+  usage: Життя є віддієслівним іменником з особливою формою.
+- lemma: розгляд
+  translation: consideration; review
+  pos: noun
+  gender: m
+  usage: Розгляд заяви тривав годину.
+- lemma: запис
+  translation: record; recording
+  pos: noun
+  gender: m
+  usage: Запис лекції зберегли в архіві.
+- lemma: оцінювання
+  translation: assessment
+  pos: noun
+  gender: n
+  usage: Оцінювання результатів має прозорі критерії.
+- lemma: оцінка
+  translation: evaluation; grade
+  pos: noun
+  gender: f
+  usage: Оцінка може бути результатом оцінювання.
 - lemma: номіналізація
   translation: nominalization
   pos: noun
-  usage: Номіналізація перетворює дію на іменник.
-- lemma: гуманізм
-  translation: humanism
+  gender: f
+  usage: Надмірна номіналізація робить речення важким.
+- lemma: калька
+  translation: calque
   pos: noun
-  usage: Гуманізм став темою лекції.
+  gender: f
+  usage: Калька переносить чужу конструкцію без перевірки.
 - lemma: реалізм
   translation: realism
   pos: noun
-  usage: Реалізм у літературі має історичні межі.
+  gender: m
+  usage: Реалізм може називати мистецький напрям.
 - lemma: модернізм
   translation: modernism
   pos: noun
-  usage: Модернізм змінив художню мову.
-- lemma: патріотизм
-  translation: patriotism
+  gender: m
+  usage: Модернізм не слід зводити до простої сучасності.
+- lemma: плюралізм
+  translation: pluralism
   pos: noun
-  usage: Патріотизм потребує відповідальності.
-- lemma: історизм
-  translation: historicism; obsolete word
+  gender: m
+  usage: Плюралізм означає множинність позицій.
+- lemma: фемінізм
+  translation: feminism
   pos: noun
-  usage: Історизм може бути мовним або культурним терміном.
-- lemma: розгляд
-  translation: review; consideration
+  gender: m
+  usage: Фемінізм треба пояснювати як явище, а не ярлик.
+- lemma: легітимність
+  translation: legitimacy
   pos: noun
-  usage: Розгляд пропозиції тривав тиждень.
-- lemma: запис
-  translation: recording; note
-  pos: noun
-  usage: Запис зустрічі збережено в архіві.
-- lemma: виклик
-  translation: challenge; call
-  pos: noun
-  usage: Виклик часу вимагає нової свідомості.
+  gender: f
+  usage: Легітимність рішення залежить від процедури й визнання.
