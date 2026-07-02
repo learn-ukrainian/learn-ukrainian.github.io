@@ -1,0 +1,166 @@
+- lemma: ідіоматика
+  translation: idiomatics; idiom system
+  pos: noun
+  gender: f
+  usage: Ідіоматика модуля охоплює соматичні, зооморфні та природничі вислови.
+- lemma: соматизм
+  translation: somatic expression
+  pos: noun
+  gender: m
+  usage: Соматизм переносить образ частини тіла на думку, емоцію або дію.
+- lemma: зооморфізм
+  translation: zoomorphism
+  pos: noun
+  gender: m
+  usage: Зооморфізм використовує образ тварини для оцінки людської поведінки.
+- lemma: природнича ідіома
+  translation: nature-based idiom
+  pos: phrase
+  usage: Природнича ідіома може спиратися на образ вогню, води, землі або неба.
+- lemma: переносне значення
+  translation: figurative meaning
+  pos: phrase
+  usage: Переносне значення ідіоми визначаємо через контекст, а не буквально.
+- lemma: регістр
+  translation: register
+  pos: noun
+  gender: m
+  usage: Регістр показує, чи слово пасує до чату, колонки, звіту або оголошення.
+- lemma: доречність
+  translation: appropriateness
+  pos: noun
+  gender: f
+  usage: Доречність ідіоми залежить від жанру, адресата й етичного тону.
+- lemma: експресія
+  translation: expressiveness
+  pos: noun
+  gender: f
+  usage: Експресія може посилити оцінку, але не замінює доказу.
+- lemma: іронія
+  translation: irony
+  pos: noun
+  gender: f
+  usage: Іронія допомагає авторові дистанціюватися від буквального твердження.
+- lemma: оцінність
+  translation: evaluativeness
+  pos: noun
+  gender: f
+  usage: Оцінність вислову треба враховувати в офіційному тексті.
+- lemma: неологізм
+  translation: neologism
+  pos: noun
+  gender: m
+  usage: Неологізм називає нову реалію або нове значення старого слова.
+- lemma: семантичний неологізм
+  translation: semantic neologism
+  pos: phrase
+  usage: Семантичний неологізм виникає, коли старе слово отримує нове значення.
+- lemma: запозичення
+  translation: borrowing; loanword
+  pos: noun
+  gender: n
+  usage: Запозичення може бути доречним фаховим терміном або зайвим жаргоном.
+- lemma: адаптація
+  translation: adaptation
+  pos: noun
+  gender: f
+  usage: Адаптація показує, як запозичене слово входить у граматику й ужиток.
+- lemma: англіцизм
+  translation: Anglicism
+  pos: noun
+  gender: m
+  usage: Англіцизм оцінюємо через жанр, аудиторію і точність, а не лише походження.
+- lemma: відповідник
+  translation: equivalent
+  pos: noun
+  gender: m
+  usage: Відповідник має бути не просто питомим, а зрозумілим і точним.
+- lemma: пуризм
+  translation: purism
+  pos: noun
+  gender: m
+  usage: Пуризм продуктивний тоді, коли служить ясності тексту.
+- lemma: активний словник
+  translation: active vocabulary
+  pos: phrase
+  usage: Активний словник містить слова, якими мовець реально користується.
+- lemma: пасивний словник
+  translation: passive vocabulary
+  pos: phrase
+  usage: Пасивний словник містить слова, які мовець упізнає, але рідко вживає.
+- lemma: архаїзм
+  translation: archaism
+  pos: noun
+  gender: m
+  usage: Архаїзм вийшов з активного сучасного вжитку, але може мати стилістичну функцію.
+- lemma: історизм
+  translation: historicism
+  pos: noun
+  gender: m
+  usage: Історизм називає предмет або явище, що зникло з життя.
+- lemma: полісемія
+  translation: polysemy
+  pos: noun
+  gender: f
+  usage: Полісемія означає наявність кількох пов'язаних значень однієї форми.
+- lemma: контекстуальна семантика
+  translation: contextual semantics
+  pos: phrase
+  usage: Контекстуальна семантика пояснює, яке значення активне в реченні.
+- lemma: паронімія
+  translation: paronymy
+  pos: noun
+  gender: f
+  usage: Паронімія є джерелом помилок на кшталт ефектний - ефективний.
+- lemma: паронім
+  translation: paronym
+  pos: noun
+  gender: m
+  usage: Паронім схожий за формою на інше слово, але має інше значення.
+- lemma: антонімія
+  translation: antonymy
+  pos: noun
+  gender: f
+  usage: Антонімія показує протиставлення значень у певній сфері.
+- lemma: лексична сполучуваність
+  translation: lexical collocability
+  pos: phrase
+  usage: Лексична сполучуваність визначає, які слова природно поєднуються.
+- lemma: калька
+  translation: calque
+  pos: noun
+  gender: f
+  usage: Калька механічно відтворює чужу модель і може звучати неприродно.
+- lemma: русизм
+  translation: Russism
+  pos: noun
+  gender: m
+  usage: Русизм потребує перевірки, якщо форма копіює російську модель.
+- lemma: редакція
+  translation: revision; edited version
+  pos: noun
+  gender: f
+  usage: Редакція має зберегти факт і поліпшити точність вислову.
+- lemma: влучність
+  translation: aptness; precision
+  pos: noun
+  gender: f
+  usage: Влучність означає відповідність слова меті, факту й ситуації.
+- lemma: розмаїтість
+  translation: diversity
+  pos: noun
+  gender: f
+  usage: Розмаїтість лексики не повинна руйнувати термінологічну сталість.
+- lemma: автентичність
+  translation: authenticity
+  pos: noun
+  gender: f
+  usage: Автентичність мовлення не зводиться до заборони всіх запозичень.
+- lemma: лексичний розбір
+  translation: lexical analysis
+  pos: phrase
+  usage: Лексичний розбір поєднує значення, регістр, сполучуваність і редакторське рішення.
+- lemma: мовна норма
+  translation: language norm
+  pos: phrase
+  usage: Мовна норма допомагає відрізнити усталену форму від випадкової кальки.
