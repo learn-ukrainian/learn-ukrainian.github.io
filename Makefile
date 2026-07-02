@@ -10,7 +10,7 @@ atlas:
 	$(PYTHON) scripts/lexicon/verify_manifest.py
 
 atlas-publish: atlas
-	$(PYTHON) scripts/lexicon/publish_manifest.py
+	$(PYTHON) -m scripts.lexicon.publish_manifest
 
 practice-deck:
 	$(PYTHON) scripts/audit/generate_practice_deck.py
