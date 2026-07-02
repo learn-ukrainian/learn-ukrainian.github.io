@@ -2,12 +2,20 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import yaml
+
+from scripts.audit import source_inventory_review_decisions as decisions
 from scripts.audit.source_inventory_intake import read_source_inventory
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 PRIVATE_TEACHER_INVENTORY = (
     PROJECT_ROOT
     / "data/lexicon/source-inventory/private-teacher-lesson-vocabulary-seed.yaml"
+)
+PRIVATE_TEACHER_FIRST_LEDGER = (
+    PROJECT_ROOT
+    / "data/lexicon/source-inventory-review-decisions/"
+    "2026-07-02-first-approved-teacher-lesson-ledger-batch.yaml"
 )
 
 
@@ -39,3 +47,24 @@ def test_private_teacher_inventory_uses_clean_headwords_not_raw_table_cells() ->
     assert all("/" not in record.lemma for record in records)
     assert "тарган" in {record.lemma for record in records}
     assert "вийти з ладу" in {record.lemma for record in records}
+
+
+def test_private_teacher_first_decision_ledger_stays_review_only() -> None:
+    summary = decisions.validate_committed_decision_files([PRIVATE_TEACHER_FIRST_LEDGER])
+    payload = yaml.safe_load(PRIVATE_TEACHER_FIRST_LEDGER.read_text(encoding="utf-8"))
+
+    assert summary == {
+        "files": 1,
+        "rows": 20,
+        "decision_counts": {"approve_for_publish": 20},
+    }
+    assert payload["source_queue"]["promotion_batch_size"] == 20
+    assert payload["production_outputs_updated"] == []
+    assert all(
+        row["source_inventory"]["source_family"] == "teacher_lesson"
+        for row in payload["decisions"]
+    )
+    assert all("surface_admission" not in row for row in payload["decisions"])
+
+    ledger_text = PRIVATE_TEACHER_FIRST_LEDGER.read_text(encoding="utf-8")
+    assert ".docx" not in ledger_text

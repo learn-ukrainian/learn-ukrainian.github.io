@@ -1,0 +1,297 @@
+---
+version: 1
+kind: atlas_source_inventory_review_decisions
+batch_id: source-inventory-first-approved-teacher-lesson-ledger-batch-2026-07-02
+batch_label: first-approved-teacher-lesson-ledger-batch
+reviewer: content-review
+reviewed_at: '2026-07-02'
+source_queue:
+  workflow: source_inventory_publish_review_queue.v1
+  generated_from_pr: 4162
+  total_queue_rows: 110
+  approved_in_queue: 20
+  promotion_batch_size: 20
+production_outputs_updated: []
+decisions:
+- lemma: справедливий
+  decision: approve_for_publish
+  approved_pos: adjective
+  approved_gloss: fair
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: e6ad793fbaeee5ee
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-seed.yaml
+    locator: explicit vocabulary table row 1
+    source_id: private-teacher-lesson-vocabulary-table-1-seed
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: справедливість
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: justice; fairness
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 305bc00e29fb712a
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-seed.yaml
+    locator: explicit vocabulary table row 2
+    source_id: private-teacher-lesson-vocabulary-table-1-seed
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: справедливо
+  decision: approve_for_publish
+  approved_pos: adverb
+  approved_gloss: fairly; justly
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 3403360d70c9a5ad
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-seed.yaml
+    locator: explicit vocabulary table row 3
+    source_id: private-teacher-lesson-vocabulary-table-1-seed
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+  review_queue_reasons:
+  - grow_needs_review:heritage_status flags russian_shadow
+- lemma: витирати
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to wipe; imperfective
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: d4201c579c1c8640
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-seed.yaml
+    locator: explicit vocabulary table row 4
+    source_id: private-teacher-lesson-vocabulary-table-1-seed
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: витерти
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to wipe; perfective
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 9bcfbd3704903ba3
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-seed.yaml
+    locator: explicit vocabulary table row 5
+    source_id: private-teacher-lesson-vocabulary-table-1-seed
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: випробування
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: challenge; trial
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 388aeec18b66eccf
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-seed.yaml
+    locator: explicit vocabulary table row 6
+    source_id: private-teacher-lesson-vocabulary-table-1-seed
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: знецінення
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: devaluation; undervaluing
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: b4c31dc045a8e57a
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-seed.yaml
+    locator: explicit vocabulary table row 7
+    source_id: private-teacher-lesson-vocabulary-table-1-seed
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+  review_queue_reasons:
+  - grow_needs_review:heritage_status flags russian_shadow
+- lemma: явно
+  decision: approve_for_publish
+  approved_pos: adverb
+  approved_gloss: clearly; explicitly
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 4c35de10df6fba73
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-seed.yaml
+    locator: explicit vocabulary table row 8
+    source_id: private-teacher-lesson-vocabulary-table-1-seed
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+  review_queue_reasons:
+  - grow_needs_review:heritage_status flags russian_shadow
+- lemma: вийти з ладу
+  decision: approve_for_publish
+  approved_pos: phrase
+  approved_gloss: to break down; to go out of order
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 5db7b54cdaa34a63
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-seed.yaml
+    locator: explicit vocabulary table row 9
+    source_id: private-teacher-lesson-vocabulary-table-1-seed
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+  review_queue_reasons:
+  - grow_needs_review:missing dictionary definition
+- lemma: підозрюваний
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: suspect
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 2bb173228e72443b
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-seed.yaml
+    locator: explicit vocabulary table row 10
+    source_id: private-teacher-lesson-vocabulary-table-1-seed
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+  review_queue_reasons:
+  - grow_needs_review:heritage_status flags russian_shadow
+- lemma: наближатися
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to get closer; imperfective
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 3576d5481e124703
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-seed.yaml
+    locator: explicit vocabulary table row 11
+    source_id: private-teacher-lesson-vocabulary-table-1-seed
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+  review_queue_reasons:
+  - grow_needs_review:heritage_status flags russian_shadow
+- lemma: наблизитися
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to get closer; perfective
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: fd3b42c917e58c91
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-seed.yaml
+    locator: explicit vocabulary table row 12
+    source_id: private-teacher-lesson-vocabulary-table-1-seed
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+  review_queue_reasons:
+  - grow_needs_review:heritage_status flags russian_shadow
+- lemma: таємно
+  decision: approve_for_publish
+  approved_pos: adverb
+  approved_gloss: secretly
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 08098e1aaa8737d9
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-seed.yaml
+    locator: explicit vocabulary table row 13
+    source_id: private-teacher-lesson-vocabulary-table-1-seed
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+  review_queue_reasons:
+  - grow_needs_review:heritage_status flags russian_shadow
+- lemma: чверть
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: quarter
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: ea65b432bee773cf
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-seed.yaml
+    locator: explicit vocabulary table row 14
+    source_id: private-teacher-lesson-vocabulary-table-1-seed
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: підприємець
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: entrepreneur
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 3dcbb14ca94d9f39
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-seed.yaml
+    locator: explicit vocabulary table row 15
+    source_id: private-teacher-lesson-vocabulary-table-1-seed
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: не смій
+  decision: approve_for_publish
+  approved_pos: phrase
+  approved_gloss: don't you dare
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: d068b8bbc0e2ca54
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-seed.yaml
+    locator: explicit vocabulary table row 16
+    source_id: private-teacher-lesson-vocabulary-table-1-seed
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+  review_queue_reasons:
+  - grow_needs_review:missing dictionary definition
+- lemma: вибухати
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to explode; imperfective
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 174ab9330b4b6ba9
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-seed.yaml
+    locator: explicit vocabulary table row 17
+    source_id: private-teacher-lesson-vocabulary-table-1-seed
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: вибухнути
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to explode; perfective
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: f49b9bcdf9d25316
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-seed.yaml
+    locator: explicit vocabulary table row 18
+    source_id: private-teacher-lesson-vocabulary-table-1-seed
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: епілептичний напад
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: epileptic seizure
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 2fcaea1f6c579419
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-seed.yaml
+    locator: explicit vocabulary table row 19
+    source_id: private-teacher-lesson-vocabulary-table-1-seed
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+  review_queue_reasons:
+  - grow_needs_review:missing dictionary definition
+- lemma: камера
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: prison cell
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 8fa85a7c5fd2c8a7
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-seed.yaml
+    locator: explicit vocabulary table row 20
+    source_id: private-teacher-lesson-vocabulary-table-1-seed
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+  review_queue_reasons:
+  - grow_needs_review:heritage_status flags russian_shadow
