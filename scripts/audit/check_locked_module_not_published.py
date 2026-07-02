@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Block locked/todo/planned seminar modules from being served as live MDX."""
+"""Block locked/todo/planned landing modules from being served as live MDX."""
 
 from __future__ import annotations
 
@@ -12,7 +12,15 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DOCS_DIR = PROJECT_ROOT / "site" / "src" / "content" / "docs"
 
-SEMINAR_DOC_TRACKS = {
+LANDING_DOC_TRACKS = {
+    "a1",
+    "a2",
+    "b1",
+    "b2",
+    "b2-pro",
+    "c1",
+    "c1-pro",
+    "c2",
     "bio",
     "folk",
     "hist",
@@ -149,7 +157,7 @@ def check_scope(scope: CheckScope, *, docs_dir: Path = DOCS_DIR) -> list[Finding
     modules_by_track = {
         track: parse_landing_modules(docs_dir / track / "index.mdx", track)
         for track in tracks
-        if track in SEMINAR_DOC_TRACKS
+        if track in LANDING_DOC_TRACKS
     }
 
     for track in scope.tracks:
@@ -183,7 +191,7 @@ def affected_scope(paths: list[Path]) -> CheckScope:
             continue
 
         track = parts[4]
-        if track not in SEMINAR_DOC_TRACKS:
+        if track not in LANDING_DOC_TRACKS:
             continue
         if parts[5] == "index.mdx":
             tracks.add(track)
@@ -212,28 +220,40 @@ def get_local_changed_files(*, cached: bool = False) -> list[Path]:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="Check locked/todo/planned seminar modules are not published.")
+    parser = argparse.ArgumentParser(description="Check locked/todo/planned landing modules are not published.")
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument("--changed-vs-base", metavar="BASE", help="Compare against base branch, e.g. origin/main")
     group.add_argument("--files", nargs="+", type=Path, help="Scan explicit files, e.g. from pre-commit")
+    group.add_argument("--all", action="store_true", help="Scan every known landing track.")
     return parser
+
+
+def discover_scope(*, docs_dir: Path = DOCS_DIR) -> CheckScope:
+    tracks = frozenset(
+        path.parent.name
+        for path in docs_dir.glob("*/index.mdx")
+        if path.parent.name in LANDING_DOC_TRACKS
+    )
+    return CheckScope(tracks=tracks, modules=frozenset())
 
 
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
 
-    if args.changed_vs_base:
+    if args.all:
+        scope = discover_scope()
+    elif args.changed_vs_base:
         raw_paths = [
             *get_changed_files(args.changed_vs_base),
             *get_local_changed_files(),
             *get_local_changed_files(cached=True),
         ]
+        scope = affected_scope(raw_paths)
     else:
         raw_paths = args.files
-
-    scope = affected_scope(raw_paths)
+        scope = affected_scope(raw_paths)
     if not scope.tracks and not scope.modules:
-        print("0 findings: no changed seminar docs require locked-module publish check.")
+        print("0 findings: no landing docs require locked-module publish check.")
         return 0
 
     findings = check_scope(scope)
