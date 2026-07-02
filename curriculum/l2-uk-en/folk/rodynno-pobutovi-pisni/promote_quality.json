@@ -1,0 +1,70 @@
+{
+  "assembled_mdx_sha256": "43ca7377ef967c2f3f5ef32eddacb4f9041e8b753983cef54c00e1b3971a3720",
+  "content_hash": {
+    "algorithm": "sha256",
+    "basis": "lesson_sources_v2",
+    "digest": "8a539ba7da9e644f49bc054dab03c5a56409dab385ace4ae6dcc5428868b6ac3",
+    "files": [
+      {
+        "path": "curriculum/l2-uk-en/plans/folk/rodynno-pobutovi-pisni.yaml",
+        "sha256": "bed7fc989edda8a56fbb25cc19acde40813bc12f3e70ea7e14b358d050c01795"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/rodynno-pobutovi-pisni/module.md",
+        "sha256": "91721800612899700c81951f39f027975d5a4abcb4c713413b10ac47d4e83d7f"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/rodynno-pobutovi-pisni/activities.yaml",
+        "sha256": "b086fe3fbeb6cb116be0e290e61437a58960773f8a0d9d607f381271a1d0bbdb"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/rodynno-pobutovi-pisni/vocabulary.yaml",
+        "sha256": "bb7bc05aea64064d18117b53bc747933cf199e37ba13e69b572a712078277df9"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/rodynno-pobutovi-pisni/resources.yaml",
+        "sha256": "8a3cd119c768a506db66ee556f44e2c0667369d829583c3d70d88a6bf21c794d"
+      }
+    ]
+  },
+  "evidence": {
+    "christian_framing": "Family and household lyric are framed as intimate cultural memory without occult, primitive-superstition, or hostile ethnographic register.",
+    "decolonization": "Kostomarov and kolomyika framing are bounded and Ukrainian-centered, avoiding imperial or flattening analogies.",
+    "provenance": "Only the Wikisource public-domain lullaby is hosted as a reading; linked/paraphrased sources are not over-quoted, and activity excerpts are marked as verbatim or paraphrase.",
+    "review": "Claude Opus 4.8 review task review-folk-m16-clearance-current2 cleared content/source blockers; its M15 forward-nav finding was fixed by regenerating striletski-povstanski-pisni.mdx.",
+    "source_hygiene": "Python QG, activity validation, vocabulary validation, MDX validation, MDX generation drift, resource liveness, and Starlight build pass for FOLK M16."
+  },
+  "floors": {
+    "beauty": 8.5,
+    "decolonization": 9.0,
+    "engagement": 8.5,
+    "naturalness": 8.5,
+    "pedagogical": 8.5,
+    "tone": 8.5
+  },
+  "profile": "folk_promote_v1",
+  "review_artifact": null,
+  "reviewer": {
+    "agent": "claude",
+    "family": "anthropic",
+    "model": "claude-opus-4-8"
+  },
+  "schema_version": 1,
+  "scored_at": "2026-07-02T22:01:18Z",
+  "scores": {
+    "beauty": 8.9,
+    "decolonization": 9.2,
+    "engagement": 8.8,
+    "naturalness": 9.0,
+    "pedagogical": 8.9,
+    "tone": 9.1
+  },
+  "slug": "rodynno-pobutovi-pisni",
+  "track": "folk",
+  "verdict": "PASS",
+  "writer": {
+    "agent": "codex",
+    "family": "openai",
+    "model": "gpt-5"
+  }
+}
