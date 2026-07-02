@@ -1,0 +1,320 @@
+---
+version: 1
+kind: atlas_source_inventory_review_decisions
+batch_id: source-inventory-third-approved-teacher-lesson-ledger-batch-2026-07-03
+batch_label: third-approved-teacher-lesson-ledger-batch
+reviewer: content-review
+reviewed_at: '2026-07-03'
+source_queue:
+  workflow: source_inventory_publish_review_queue.v1
+  generated_from_pr: 4172
+  total_queue_rows: 133
+  approved_in_queue: 23
+  promotion_batch_size: 23
+production_outputs_updated: []
+decisions:
+- lemma: правила дорожнього руху
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: traffic rules
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 91005988cced2c30
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-39-58.yaml
+    locator: explicit vocabulary table row 39
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-39-58
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+  review_queue_reasons:
+  - grow_needs_review:missing dictionary definition
+- lemma: гнучкий
+  decision: approve_for_publish
+  approved_pos: adjective
+  approved_gloss: flexible
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 300b29b01fc27db8
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-39-58.yaml
+    locator: explicit vocabulary table row 40
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-39-58
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: притулок
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: shelter
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: b60733f26b6d02ed
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-39-58.yaml
+    locator: explicit vocabulary table row 41
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-39-58
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: потворний
+  decision: approve_for_publish
+  approved_pos: adjective
+  approved_gloss: ugly
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 06e2db3b59cb5594
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-39-58.yaml
+    locator: explicit vocabulary table row 42
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-39-58
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: орендодавець
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: landlord; lessor
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: ab3b472bb24f2784
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-39-58.yaml
+    locator: explicit vocabulary table row 43
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-39-58
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: повідомляти
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to let someone know; imperfective
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: ebfe8456f7a78364
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-39-58.yaml
+    locator: explicit vocabulary table row 44
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-39-58
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: давати знати
+  decision: approve_for_publish
+  approved_pos: phrase
+  approved_gloss: to let someone know; imperfective
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: a736f93f13ea1fee
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-39-58.yaml
+    locator: explicit vocabulary table row 44
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-39-58
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+  review_queue_reasons:
+  - grow_needs_review:missing dictionary definition
+- lemma: повідомити
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to let someone know; perfective
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: a767579a7c9e34ad
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-39-58.yaml
+    locator: explicit vocabulary table row 45
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-39-58
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: дати знати
+  decision: approve_for_publish
+  approved_pos: phrase
+  approved_gloss: to let someone know; perfective
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: ea2f8fbbf32375a2
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-39-58.yaml
+    locator: explicit vocabulary table row 45
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-39-58
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+  review_queue_reasons:
+  - grow_needs_review:missing dictionary definition
+- lemma: кролик
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: rabbit
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: ff830ab8977a624a
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-39-58.yaml
+    locator: explicit vocabulary table row 46
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-39-58
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: гальмувати
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to brake; imperfective
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: aab2b484f7fe8b56
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-39-58.yaml
+    locator: explicit vocabulary table row 47
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-39-58
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: загальмувати
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to brake; perfective
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 6284fa92a38f4cf4
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-39-58.yaml
+    locator: explicit vocabulary table row 48
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-39-58
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: багажник
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: car trunk; boot
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 7930226b7fcadb54
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-39-58.yaml
+    locator: explicit vocabulary table row 49
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-39-58
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: страховка
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: insurance
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 216c7dbbda4e6c04
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-39-58.yaml
+    locator: explicit vocabulary table row 50
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-39-58
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: страхування
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: insurance
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: e88fb27336236004
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-39-58.yaml
+    locator: explicit vocabulary table row 50
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-39-58
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: затримувати
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to delay; imperfective
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 4112f28c96d85a88
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-39-58.yaml
+    locator: explicit vocabulary table row 51
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-39-58
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: затримати
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to delay; perfective
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 774037998ea01029
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-39-58.yaml
+    locator: explicit vocabulary table row 52
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-39-58
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: ділитися
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to share; to divide into; imperfective
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: f98ba1149af64424
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-39-58.yaml
+    locator: explicit vocabulary table row 53
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-39-58
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: поділитися
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to share; to divide into; perfective
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 600f84a822610b46
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-39-58.yaml
+    locator: explicit vocabulary table row 54
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-39-58
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: займати
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to reserve; to occupy; to take time; imperfective
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: b26066211a4a0917
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-39-58.yaml
+    locator: explicit vocabulary table row 55
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-39-58
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: зайняти
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to reserve; to occupy; to take time; perfective
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 1b546ef5de6a0c3f
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-39-58.yaml
+    locator: explicit vocabulary table row 56
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-39-58
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: витримувати
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to endure; to withstand; imperfective
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 7ee07a12f840cd16
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-39-58.yaml
+    locator: explicit vocabulary table row 57
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-39-58
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: витримати
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to endure; to withstand; perfective
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: bb8eef90793d8aee
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-39-58.yaml
+    locator: explicit vocabulary table row 58
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-39-58
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
