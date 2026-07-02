@@ -119,7 +119,7 @@
 - **Common UA search forms:** `Євген Петрушевич`, `Петрушевич Євген Омелянович`, `Є. Петрушевич`, `Євген Омелянович Петрушевич`.
 - **Common EN / transliteration forms:** `Yevhen Petrushevych`, `Evhen Petrushevych`, `Eugene Petrushevych`, `Jewhen Petruszewycz`, `Jevhen Petrushevych`, `Petrushevych Yevhen`.
 - **Polish / German source variants:** `Eugeniusz Petruszewycz`, `Jewhen Petruszewycz`, `Eugen Petruschewitsch`, `Petruszewycz`.
-- **Institutional aliases:** `president of the Ukrainian National Rada`, `head of ZUNR`, `dictator of ZUNR`, `president of the Western Ukrainian National Republic`, `Ukrainian Galician leader`.
+- **Institutional aliases:** `president of the Ukrainian National Rada`, `head of ZUNR`, `dictator of ZUNR`, `president of the Western Ukrainian People's Republic`, `Ukrainian Galician leader`.
 - **Search pairings:** `Євген Петрушевич ЗУНР`, `Петрушевич диктатор ЗУНР`, `Petrushevych ZUNR government`, `Petrushevych Ukrainian National Council`, `Petrushevych Petliura Warsaw alliance`, `Petrushevych League of Nations`, `Петрушевич еміграційний уряд`.
 - **Learner-facing pairing:** `Євген Петрушевич (Yevhen Petrushevych), president of the Ukrainian National Rada and wartime dictator of ZUNR, 1863-1940`.
 
