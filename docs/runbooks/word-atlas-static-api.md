@@ -14,6 +14,21 @@ as static JSON, not as a live backend service.
 - `/api/lexicon/practice-lexemes.{level}.json` — per-level Practice lexeme deck.
 - `/api/lexicon/practice-cloze.{level}.json` — per-level reviewed cloze deck.
 
+## Current Snapshot
+
+As of 2026-07-02, the static contract should expose this board state:
+
+- Atlas manifest: 5,280 entries, including 336 `form_of` records.
+- Public search/browse: 5,270 entries, 61 search shards, 31 browse shards.
+- Daily Word: 300 entries.
+- Practice deck: 4,484 lexemes and 22 reviewed A1 cloze items.
+- Source-inventory seeds: 133 rows total: 80 textbook, 33 Ohoiko/ULP, and
+  20 curriculum sample rows.
+
+Open Atlas/Lexicon board items are #3936, private teacher-lesson vocabulary
+intake, #3933, #3934, #3797, #3406, and #3675. Closed items that should not
+reappear as active backlog are #3932, #3796, #3449, and #3450.
+
 The status payload also points to existing static browse assets:
 
 - `/lexicon/browse/{letter}.json`
