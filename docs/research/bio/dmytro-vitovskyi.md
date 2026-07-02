@@ -41,7 +41,7 @@
 - **Kovel / Volhynia work:** ESU / EIU place him in Kovel in 1916-1917, supporting Ukrainian schooling and USS cultural-political work in Volhynia.
 - **1918 Right-Bank Ukraine:** EIU and UINP connect his 1918 work with Ukrainian affairs in Austrian military structures and USS-linked civic activity in Right-Bank / southern Ukraine contexts. Keep exact staff-title wording source-labeled.
 - **October-November 1918:** ESU says he headed the Ukrainian Military General Committee from 29 October 1918 and prepared the 1 November armed action in Lviv; IEU identifies him as chair of the Ukrainian Military Committee that staged the November Uprising in Lviv.
-- **ZUNR military office:** ESU / IEU identify him as commander of Ukrainian forces in Lviv from 1-5 November 1918, then State Secretary / minister of defense from 9 November 1918. IEU records service until 13 February 1919 and promotion from major to colonel on 1 January 1919.
+- **ZUNR military office:** ESU / IEU identify him as commander of Ukrainian forces in Lviv from 1-5 November 1918, then State Secretary / minister of defense from 9 November 1918. IEU records service until 13 February 1919 and a 1 January 1919 major-to-colonel promotion; treat 12/13 February and colonel chronology as source-sensitive at build time.
 - **Paris Peace Conference:** ESU / EIU / IEU place him in the Western Ukrainian delegation or as a military adviser in spring 1919, arguing against Polish occupation of Western Ukrainian lands.
 - **Death:** ESU / EIU give 4 August 1919 near Ratibor, Germany, now Raciborz, Poland, in an air crash while returning to Ukraine. IEU's older English entry gives 8 July 1919; Hai-Nyzhnyk argues 2 August 1919. Use `1887-1919` in low-context learner copy unless exact date is part of source criticism.
 
@@ -66,7 +66,7 @@
 - **1 November 1918 Lviv action:** IEU's November Uprising entry describes Ukrainian soldiers occupying administrative, public-utility, and military objectives before Polish resistance consolidated. Vitovskyi becomes a practical state-formation figure, not only a symbolic speaker.
 - **1-5 November 1918 Ukrainian command:** ESU / IEU identify him as first commander of Ukrainian forces / Ukrainian Galician Army in the earliest Lviv fighting. His very short command tenure should remain visible.
 - **9 November 1918 military secretary:** State Secretary of Military Affairs made him responsible for army-building and military-administrative structures in ZUNR.
-- **1 January 1919 colonel promotion:** IEU records promotion from major to colonel; use as a rank-vocabulary anchor, but avoid overloading short biography with full UHA rank history.
+- **Rank chronology source note:** IEU records a 1 January 1919 major-to-colonel promotion; later Ukrainian summaries place colonel status by the November 1918 State Secretariat appointment. Use source-labeled rank chronology rather than settled timeline.
 - **Spring 1919 Paris mission:** Delegation work shifts the biography from front-line organizing to diplomacy and international recognition.
 - **August 1919 air crash:** Death near Ratibor / Raciborz while returning to Ukraine makes the biography a case of interrupted state-building leadership. Exact day belongs in a source-comparison note.
 - **2002 Lychakiv reburial:** UINP notes reburial at Lychakiv cemetery. Use this as a memory-history anchor, not evidence for 1918 events.
@@ -94,7 +94,8 @@
 
 ## 6. Risks / open questions
 
-- **Death-date discrepancy:** ESU / EIU give 4 August 1919; Hai-Nyzhnyk argues 2 August 1919 from crash-circumstance reconstruction; IEU's older English entry gives 8 July 1919. Use `1887-1919` unless an exact day is source-labeled.
+- **Death-date discrepancy:** ESU / EIU give 4 August 1919; Hai-Nyzhnyk argues 2 August 1919 and treats 4 August as inaccurate; IEU's older English entry gives 8 July 1919. Use 2 August as scholarly preferred only when source-labeled; use `1887-1919` for low-context copy.
+- **Military office date / rank chronology:** IEU uses 13 February 1919 and a 1 January colonel promotion; later Ukrainian summaries use 12 February and imply colonel status by the 9 November 1918 State Secretariat appointment. Do not combine these into one unlabelled chronology.
 - **First commander wording:** ESU / IEU say first commander of Ukrainian forces / Ukrainian Galician Army, but the Lviv command was brief and changed during November fighting. Do not imply long command over all later UHA campaigns.
 - **November action agency:** Vitovskyi led military preparation, but action depended on Ukrainian National Rada decisions, garrison composition, Sich networks, and Austrian collapse. Avoid a single-person origin story.
 - **Polish-Ukrainian war framing:** Conflict over Lviv / Eastern Galicia involved statehood claims, urban demographics, armed youth formations, military command, and civilian danger. Do not flatten it into ethnic destiny.
