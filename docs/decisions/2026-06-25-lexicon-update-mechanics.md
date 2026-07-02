@@ -124,13 +124,10 @@ for source-inventory rows promoted to browse/search.
 - **#3450** — inflected-form dedupe is closed; manifest entries now include
   canonical `form_of` cards instead of publishing those rows as ordinary
   article pages.
-
-## Open backlog
-
-- **#3406** — ~24 ЕСУМ entries carry OCR mojibake bibliographic text (careful: a prior dirty regen was
-  discarded — fix the data, re-enrich only those entries).
-- **#3675** — auto-grow P1–P3 shipped; Gap 1 above is the remaining "make it actually run" piece, now
-  unblocked by the option-(d) decision (publish the DBs as Release assets → hosted cron hydrates them).
+- **#3406** — targeted ЕСУМ OCR/mojibake cleanup is closed.
+- **#3675** — stateless content/doc-import Atlas growth is closed. The Gap 1
+  release-asset mechanics remain documented here as decision history, not as
+  an active #3675 issue leaf.
 
 ## Current sequencing
 

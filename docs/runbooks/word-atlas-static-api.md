@@ -26,8 +26,8 @@ As of 2026-07-02, the static contract should expose this board state:
   20 curriculum sample rows.
 
 Open Atlas/Lexicon board items are #3936, private teacher-lesson vocabulary
-intake, #3933, #3934, #3797, #3406, and #3675. Closed items that should not
-reappear as active backlog are #3932, #3796, #3449, and #3450.
+intake, #3933, #3934, and #3797. Closed items that should not reappear as
+active backlog are #3932, #3796, #3449, #3450, #3406, and #3675.
 
 The status payload also points to existing static browse assets:
 
