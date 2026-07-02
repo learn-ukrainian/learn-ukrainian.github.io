@@ -1,0 +1,119 @@
+- lemma: листування
+  translation: correspondence
+  pos: noun
+  gender: n
+  usage: Професійне листування потребує чіткої теми й доречного тону.
+- lemma: адресат
+  translation: addressee; recipient
+  pos: noun
+  gender: m
+  usage: Адресат має одразу зрозуміти, яку дію від нього очікують.
+- lemma: адресант
+  translation: sender
+  pos: noun
+  gender: m
+  usage: Адресант відповідає за ясність прохання і коректність тону.
+- lemma: тема листа
+  translation: email subject line
+  pos: phrase
+  usage: Тема листа має називати предмет і дію.
+- lemma: звертання
+  translation: form of address
+  pos: noun
+  gender: n
+  usage: Звертання задає дистанцію між автором і адресатом.
+- lemma: кличний відмінок
+  translation: vocative case
+  pos: phrase
+  usage: У звертанні часто вживаємо кличний відмінок, наприклад пане Андрію.
+- lemma: вкладення
+  translation: attachment
+  pos: noun
+  gender: n
+  usage: Вкладення треба назвати в тексті листа.
+- lemma: копія
+  translation: copy; cc
+  pos: noun
+  gender: f
+  usage: Якщо ставите колегу в копію, поясніть її роль.
+- lemma: прихована копія
+  translation: blind copy; bcc
+  pos: phrase
+  usage: Прихована копія не повинна бути способом тиску.
+- lemma: запит
+  translation: request; inquiry
+  pos: noun
+  gender: m
+  usage: Запит має містити предмет, строк і бажаний формат відповіді.
+- lemma: уточнення
+  translation: clarification
+  pos: noun
+  gender: n
+  usage: Уточнення допомагає зняти двозначність до підписання договору.
+- lemma: підтвердження
+  translation: confirmation
+  pos: noun
+  gender: n
+  usage: Підтвердження отримання фіксує факт і наступний крок.
+- lemma: запрошення
+  translation: invitation
+  pos: noun
+  gender: n
+  usage: Запрошення має назвати подію, час, формат і очікувану дію.
+- lemma: співпраця
+  translation: cooperation
+  pos: noun
+  gender: f
+  usage: У листі-запиті доречно коротко пояснити мету співпраці.
+- lemma: прайс-лист
+  translation: price list
+  pos: noun
+  gender: m
+  usage: Просимо надіслати актуальний прайс-лист до п'ятниці.
+- lemma: комерційна пропозиція
+  translation: commercial proposal
+  pos: phrase
+  usage: Комерційна пропозиція пояснює умови, вартість і вигоду співпраці.
+- lemma: реквізити
+  translation: company or bank details
+  pos: noun
+  gender: pl
+  usage: Реквізити потрібні для підготовки договору й рахунку.
+- lemma: оперативність
+  translation: promptness
+  pos: noun
+  gender: f
+  usage: Дякую за оперативність у підготовці матеріалів.
+- lemma: лаконічність
+  translation: conciseness
+  pos: noun
+  gender: f
+  usage: Лаконічність не скасовує ввічливості.
+- lemma: змістовність
+  translation: substance; informativeness
+  pos: noun
+  gender: f
+  usage: Змістовність теми листа економить час адресата.
+- lemma: коректність
+  translation: correctness; tactfulness
+  pos: noun
+  gender: f
+  usage: Коректність відмови допомагає зберегти професійні стосунки.
+- lemma: нейтральність
+  translation: neutrality
+  pos: noun
+  gender: f
+  usage: Нейтральність тону не означає безособовість у кожному реченні.
+- lemma: канцеляризм
+  translation: bureaucratic cliché
+  pos: noun
+  gender: m
+  usage: Канцеляризм може зробити просту дію туманною.
+- lemma: заклик до дії
+  translation: call to action
+  pos: phrase
+  usage: Заклик до дії називає, що адресат має зробити після прочитання.
+- lemma: взаємовигідний
+  translation: mutually beneficial
+  pos: adj
+  usage: У листі можна згадати взаємовигідний формат співпраці, якщо він конкретний.

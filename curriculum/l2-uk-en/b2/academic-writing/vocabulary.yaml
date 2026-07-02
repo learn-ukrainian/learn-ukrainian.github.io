@@ -1,0 +1,121 @@
+- lemma: дослідження
+  translation: research; study
+  pos: noun
+  gender: n
+  usage: Дослідження має чітко назвати мету, матеріал і метод.
+- lemma: актуальність
+  translation: relevance; topicality
+  pos: noun
+  gender: f
+  usage: Актуальність теми зумовлена новими цифровими практиками письма.
+- lemma: методологія
+  translation: methodology
+  pos: noun
+  gender: f
+  usage: Методологія пояснює, як саме проведено аналіз.
+- lemma: анотація
+  translation: abstract; annotation
+  pos: noun
+  gender: f
+  usage: Анотація стисло подає мету, матеріал, метод і результат.
+- lemma: джерело
+  translation: source
+  pos: noun
+  gender: n
+  usage: Після парафрази потрібно подати посилання на джерело.
+- lemma: гіпотеза
+  translation: hypothesis
+  pos: noun
+  gender: f
+  usage: Гіпотезу частково підтверджено під час аналізу матеріалу.
+- lemma: положення
+  translation: proposition; statement
+  pos: noun
+  gender: n
+  usage: Основне положення статті потребує доказів.
+- lemma: парадигма
+  translation: paradigm
+  pos: noun
+  gender: f
+  usage: Наукова парадигма визначає спосіб опису проблеми.
+- lemma: об'єкт дослідження
+  translation: object of study
+  pos: phrase
+  usage: Об'єкт дослідження називає ширше явище.
+- lemma: предмет дослідження
+  translation: subject of study
+  pos: phrase
+  usage: Предмет дослідження уточнює конкретний аспект об'єкта.
+- lemma: парафраза
+  translation: paraphrase
+  pos: noun
+  gender: f
+  usage: Парафраза передає чужу думку своїми словами, але теж потребує посилання.
+- lemma: першоджерело
+  translation: primary source
+  pos: noun
+  gender: n
+  usage: Першоджерело потрібно перевірити перед цитуванням.
+- lemma: бібліографічний опис
+  translation: bibliographic entry
+  pos: phrase
+  usage: Бібліографічний опис має дати змогу знайти джерело.
+- lemma: академічна доброчесність
+  translation: academic integrity
+  pos: phrase
+  usage: Академічна доброчесність вимагає чесного позначення запозичень.
+- lemma: плагіат
+  translation: plagiarism
+  pos: noun
+  gender: m
+  usage: Плагіат може виникати і в некоректній парафразі.
+- lemma: цитування
+  translation: citation; quoting
+  pos: noun
+  gender: n
+  usage: Цитування показує, звідки взято ідею або факт.
+- lemma: терміносистема
+  translation: terminology system
+  pos: noun
+  gender: f
+  usage: Терміносистема об'єднує ключові поняття галузі.
+- lemma: номіналізація
+  translation: nominalization
+  pos: noun
+  gender: f
+  usage: Надмірна номіналізація робить текст важким.
+- lemma: узагальнення
+  translation: generalization; synthesis
+  pos: noun
+  gender: n
+  usage: У висновках подано узагальнення результатів.
+- lemma: систематизація
+  translation: systematization
+  pos: noun
+  gender: f
+  usage: Систематизація джерел допомагає побачити основні підходи.
+- lemma: верифікація
+  translation: verification
+  pos: noun
+  gender: f
+  usage: Верифікація джерел є частиною академічної доброчесності.
+- lemma: концептуальний
+  translation: conceptual
+  pos: adj
+  usage: Концептуальний апарат дослідження треба пояснити у вступі.
+- lemma: фундаментальний
+  translation: fundamental
+  pos: adj
+  usage: Фундаментальний підхід спирається на базові теоретичні поняття.
+- lemma: емпіричний
+  translation: empirical
+  pos: adj
+  usage: Емпіричний матеріал дослідження складається з реальних текстів.
+- lemma: авторська модальність
+  translation: authorial modality
+  pos: phrase
+  usage: Авторська модальність допомагає не перебільшувати висновки.
+- lemma: дієслово введення чужого мовлення
+  translation: reporting verb
+  pos: phrase
+  usage: Дієслово введення чужого мовлення вводить позицію джерела в академічний текст.
