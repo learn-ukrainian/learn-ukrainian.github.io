@@ -1,0 +1,71 @@
+{
+  "assembled_mdx_sha256": "2a12602a6bb09dcd546430efb410c2c75712649b65db0b61b87b6becc03304c4",
+  "content_hash": {
+    "algorithm": "sha256",
+    "basis": "lesson_sources_v2",
+    "digest": "2f008d6d7f4dc5e4ee1310c51013e49b642d718531027759fe25f326fdb849a8",
+    "files": [
+      {
+        "path": "curriculum/l2-uk-en/plans/folk/kobzarstvo-lirnytstvo.yaml",
+        "sha256": "26711198a023ad34e1069616d74c27fcd2ef8ade6cc349a68c8266384ebf82a3"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/kobzarstvo-lirnytstvo/module.md",
+        "sha256": "36f8b63c94bdad0eea16ab769b4cdb0de4b26947769abf9fbd6433ae6de69e59"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/kobzarstvo-lirnytstvo/activities.yaml",
+        "sha256": "a4c9bcc3203b0a31f2971c6cf9a715274314c80a2fa75cf266970ad200adffac"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/kobzarstvo-lirnytstvo/vocabulary.yaml",
+        "sha256": "5ef4bd8f9d65965924d8e49c110f92746cf14def68604adb9fcf73708f392148"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/kobzarstvo-lirnytstvo/resources.yaml",
+        "sha256": "34c5ad77fc0b55437cb873c3412efffb9c51b4fcc323fbcafc6583a3b50ae01e"
+      }
+    ]
+  },
+  "evidence": {
+    "framing": "Persecution framing stays source-bound and explicitly marks the one-day secret congress story as disputed rather than certain.",
+    "naturalness": "The learner-facing prose stays in Ukrainian seminar register without English or process-language leakage.",
+    "pedagogy": "Activities and prose pair short verified excerpts with analytical follow-up instead of burying lesson structure inside reading boxes.",
+    "quote_integrity": "Both primary-reading boxes now contain short verified excerpts; the Perebendia line typo was corrected and the site build passes.",
+    "review": "Claude review task review-folk-m12-kobzarstvo-lirnytstvo-r3 verified the prior blockers as fixed and cleared the module for merge.",
+    "source_hygiene": "Forward parity, source parity, MDX validation, activity validation, and the local Astro build pass on the current file set."
+  },
+  "floors": {
+    "beauty": 8.5,
+    "decolonization": 9.0,
+    "engagement": 8.5,
+    "naturalness": 8.5,
+    "pedagogical": 8.5,
+    "tone": 8.5
+  },
+  "profile": "folk_promote_v1",
+  "review_artifact": null,
+  "reviewer": {
+    "agent": "claude",
+    "family": "anthropic",
+    "model": "claude-opus-4-8"
+  },
+  "schema_version": 1,
+  "scored_at": "2026-07-02T18:12:26Z",
+  "scores": {
+    "beauty": 9.0,
+    "decolonization": 9.5,
+    "engagement": 9.0,
+    "naturalness": 9.0,
+    "pedagogical": 9.0,
+    "tone": 9.0
+  },
+  "slug": "kobzarstvo-lirnytstvo",
+  "track": "folk",
+  "verdict": "PASS",
+  "writer": {
+    "agent": "codex",
+    "family": "openai",
+    "model": "gpt-5"
+  }
+}
