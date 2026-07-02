@@ -68,4 +68,22 @@ def test_affected_scope_checks_index_tracks_and_module_pages() -> None:
     scope = check_locked_module_not_published.affected_scope(paths)
 
     assert scope.tracks == frozenset({"folk"})
-    assert scope.modules == frozenset({check_locked_module_not_published.ModuleTarget("folk", "locked-module")})
+    assert scope.modules == frozenset({
+        check_locked_module_not_published.ModuleTarget("a1", "core-module"),
+        check_locked_module_not_published.ModuleTarget("folk", "locked-module"),
+    })
+
+
+def test_discover_scope_includes_core_landing_tracks(tmp_path: Path) -> None:
+    docs_dir = tmp_path / "docs"
+    (docs_dir / "b2").mkdir(parents=True)
+    (docs_dir / "b2" / "index.mdx").write_text("", encoding="utf-8")
+    (docs_dir / "folk").mkdir(parents=True)
+    (docs_dir / "folk" / "index.mdx").write_text("", encoding="utf-8")
+    (docs_dir / "not-a-track").mkdir(parents=True)
+    (docs_dir / "not-a-track" / "index.mdx").write_text("", encoding="utf-8")
+
+    scope = check_locked_module_not_published.discover_scope(docs_dir=docs_dir)
+
+    assert scope.tracks == frozenset({"b2", "folk"})
+    assert scope.modules == frozenset()

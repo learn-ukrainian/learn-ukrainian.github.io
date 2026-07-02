@@ -6,6 +6,7 @@ accurate landing pages with correct slugs, titles, and build statuses.
 Usage:
     .venv/bin/python scripts/generate_landing_pages.py [--track a1]
     .venv/bin/python scripts/generate_landing_pages.py --all
+    .venv/bin/python scripts/generate_landing_pages.py --track b2 --check
 """
 
 from __future__ import annotations
@@ -403,6 +404,7 @@ def main():
     parser = argparse.ArgumentParser(description="Generate Site landing pages")
     parser.add_argument("--track", help="Generate for specific track (e.g., a1)")
     parser.add_argument("--all", action="store_true", help="Generate for all tracks")
+    parser.add_argument("--check", action="store_true", help="Fail if generated landing pages differ from disk")
     args = parser.parse_args()
 
     curriculum = yaml.safe_load((CURRICULUM_ROOT / "curriculum.yaml").read_text("utf-8"))
@@ -416,6 +418,7 @@ def main():
     else:
         tracks = [k for k in levels if levels[k].get("modules")]
 
+    stale_paths: list[Path] = []
     for level in tracks:
         if level not in levels:
             print(f"⚠️  Track {level} not in curriculum.yaml, skipping")
@@ -429,9 +432,25 @@ def main():
         out_dir = SITE_DOCS / level
         out_dir.mkdir(parents=True, exist_ok=True)
         out_path = out_dir / "index.mdx"
+        if args.check:
+            if not out_path.exists() or out_path.read_text("utf-8") != mdx:
+                stale_paths.append(out_path)
+                print(f"  STALE {out_path}")
+            else:
+                print(f"  OK {out_path}")
+            continue
+
         out_path.write_text(mdx, "utf-8")
         print(f"  ✅ {out_path}")
 
+    if stale_paths:
+        print("\nLanding page drift detected. Regenerate with:")
+        for path in stale_paths:
+            level = path.parent.name
+            print(f"  .venv/bin/python scripts/generate_landing_pages.py --track {level}")
+        return 1
+    return 0
+
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

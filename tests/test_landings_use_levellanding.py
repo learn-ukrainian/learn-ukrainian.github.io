@@ -2,6 +2,9 @@ import re
 from pathlib import Path
 
 import pytest
+import yaml
+
+from scripts import generate_landing_pages
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DOCS_ROOT = PROJECT_ROOT / "site" / "src" / "content" / "docs"
@@ -86,3 +89,11 @@ def test_content_collection_loads_track_index_mdx_files() -> None:
 
     missing = sorted(track for track in tracks if track not in text)
     assert not missing, f"content loader does not include track indexes: {', '.join(missing)}"
+
+
+def test_b2_landing_matches_generated_curriculum_state() -> None:
+    curriculum = yaml.safe_load((PROJECT_ROOT / "curriculum" / "l2-uk-en" / "curriculum.yaml").read_text("utf-8"))
+    expected = generate_landing_pages.generate_landing_page("b2", curriculum)
+    actual = (DOCS_ROOT / "b2" / "index.mdx").read_text(encoding="utf-8")
+
+    assert actual == expected, "Run `.venv/bin/python scripts/generate_landing_pages.py --track b2`."
