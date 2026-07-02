@@ -1,0 +1,132 @@
+- lemma: соматизм
+  translation: somatic word; body-part expression
+  pos: noun
+  gender: m
+  usage: Соматизм пов'язує значення слова або фразеологізму з частиною тіла.
+- lemma: соматичний фразеологізм
+  translation: somatic idiom
+  pos: phrase
+  usage: Соматичний фразеологізм переносить тілесний досвід на абстрактний стан.
+- lemma: метафоризація
+  translation: metaphorization
+  pos: noun
+  gender: f
+  usage: Метафоризація перетворює фізичну дію на образ думки або емоції.
+- lemma: сприйняття
+  translation: perception
+  pos: noun
+  gender: n
+  usage: Ідіоми про очі й вуха часто описують сприйняття та увагу.
+- lemma: темперамент
+  translation: temperament
+  pos: noun
+  gender: m
+  usage: Вислів "гаряча кров" може натякати на запальний темперамент.
+- lemma: іронія
+  translation: irony
+  pos: noun
+  gender: f
+  usage: Іронія може перетворити похвалу "золоті руки" на критику.
+- lemma: антропоцентризм
+  translation: anthropocentrism
+  pos: noun
+  gender: m
+  usage: Антропоцентризм пояснює, чому тіло стає основою багатьох образів.
+- lemma: щирість
+  translation: sincerity
+  pos: noun
+  gender: f
+  usage: Щирість у привітанні можна передати висловом "від щирого серця".
+- lemma: експресія
+  translation: expressiveness
+  pos: noun
+  gender: f
+  usage: Соматична ідіома додає тексту експресію, але потребує доречного регістру.
+- lemma: кмітливість
+  translation: quick-wittedness
+  pos: noun
+  gender: f
+  usage: Кмітливість може бути передана висловом "мати голову на плечах".
+- lemma: завзяття
+  translation: zeal; persistence
+  pos: noun
+  gender: n
+  usage: Завзяття допомагає не складати руки після першої невдачі.
+- lemma: збентеження
+  translation: confusion; embarrassment
+  pos: noun
+  gender: n
+  usage: Збентеження іноді описують через очі, погляд або рухи тіла.
+- lemma: нехтувати
+  translation: to neglect; to disregard
+  pos: verb
+  usage: '"Пропустити повз вуха" може означати нехтувати важливим попередженням.'
+- lemma: знесилення
+  translation: exhaustion
+  pos: noun
+  gender: n
+  usage: Знесилення передає вислів "ледве ноги волочити".
+- lemma: мати голову на плечах
+  translation: to have common sense
+  pos: phrase
+  usage: Вона має голову на плечах і не ухвалює поспішних рішень.
+- lemma: ламати голову
+  translation: to rack one's brains
+  pos: phrase
+  usage: Студенти ламали голову над тим, як перекласти ідіому без кальки.
+- lemma: дивитися правді у вічі
+  translation: to face the truth
+  pos: phrase
+  usage: Команда мусила дивитися правді у вічі після невдалого запуску.
+- lemma: пустити туман в очі
+  translation: to mislead; to create a false impression
+  pos: phrase
+  usage: Автор звинуватив чиновника в тому, що той пустив туман в очі виборцям.
+- lemma: пропустити повз вуха
+  translation: to ignore; to let pass unheard
+  pos: phrase
+  usage: Вона пропустила повз вуха важливе застереження.
+- lemma: тримати вуха гостро
+  translation: to stay alert
+  pos: phrase
+  usage: Під час переговорів треба тримати вуха гостро.
+- lemma: золоті руки
+  translation: skilled hands; great craftsmanship
+  pos: phrase
+  usage: У реставраторки золоті руки, тому старий стіл знову виглядає міцним.
+- lemma: скласти руки
+  translation: to stop acting; to give up
+  pos: phrase
+  usage: Після відмови команда не склала руки.
+- lemma: руки опускаються
+  translation: one's hands drop; to feel discouraged
+  pos: phrase
+  usage: Після третьої невдачі в нього опустилися руки.
+- lemma: умити руки
+  translation: to wash one's hands of responsibility
+  pos: phrase
+  usage: Керівник не може умити руки після власного рішення.
+- lemma: підставити ногу
+  translation: to trip someone up; to sabotage
+  pos: phrase
+  usage: Конкурент підставив ногу перед важливою презентацією.
+- lemma: стати на ноги
+  translation: to get back on one's feet; to become stable
+  pos: phrase
+  usage: Молодий проєкт поступово став на ноги.
+- lemma: брати близько до серця
+  translation: to take to heart
+  pos: phrase
+  usage: Не варто брати кожен коментар так близько до серця.
+- lemma: від щирого серця
+  translation: from the bottom of one's heart
+  pos: phrase
+  usage: Від щирого серця дякуємо всім учасникам.
+- lemma: кров холоне в жилах
+  translation: one's blood runs cold
+  pos: phrase
+  usage: Від цієї історії кров холоне в жилах.
+- lemma: душа болить
+  translation: one's soul aches; to be deeply troubled
+  pos: phrase
+  usage: У волонтерів душа болить за долю зруйнованої школи.

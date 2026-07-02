@@ -1,0 +1,128 @@
+- lemma: флоронім
+  translation: plant name
+  pos: noun
+  gender: m
+  usage: Флоронім може стати основою ідіоми про коріння або плоди.
+- lemma: космонім
+  translation: celestial name
+  pos: noun
+  gender: m
+  usage: Космонім у фразеології пов'язаний із небом, зорями або космосом.
+- lemma: стихійність
+  translation: elemental quality
+  pos: noun
+  gender: f
+  usage: Стихійність образу вогню посилює відчуття ризику.
+- lemma: ландшафт
+  translation: landscape
+  pos: noun
+  gender: m
+  usage: Ландшафт у фразеології може бути моделлю життєвої ситуації.
+- lemma: орієнтир
+  translation: reference point
+  pos: noun
+  gender: m
+  usage: Зоря або вітер можуть працювати як орієнтир у метафорі.
+- lemma: мінливість
+  translation: changeability
+  pos: noun
+  gender: f
+  usage: Погодні ідіоми часто передають мінливість настрою або ситуації.
+- lemma: очищення
+  translation: purification
+  pos: noun
+  gender: n
+  usage: Вогонь іноді символізує очищення або випробування.
+- lemma: скороминущість
+  translation: transience
+  pos: noun
+  gender: f
+  usage: Дим може передавати скороминущість сумніву або ілюзії.
+- lemma: розбурханий
+  translation: stirred up; turbulent
+  pos: adj
+  usage: Розбурханий стан можна описати через воду або бурю.
+- lemma: непохитний
+  translation: steadfast
+  pos: adj
+  usage: Непохитний характер часто описують через камінь.
+- lemma: безкраїй
+  translation: boundless
+  pos: adj
+  usage: Безкраїй степ у тексті може стати образом свободи.
+- lemma: осяйний
+  translation: radiant
+  pos: adj
+  usage: Осяйний образ неба може підсилити урочистий тон.
+- lemma: буремний
+  translation: stormy
+  pos: adj
+  usage: Буремний період описують через вітер, хмари або грім.
+- lemma: як у воду опущений
+  translation: downcast
+  pos: phrase
+  usage: Після розмови він ходив як у воду опущений.
+- lemma: вийти сухим із води
+  translation: to get away with it
+  pos: phrase
+  usage: Чиновник знову вийшов сухим із води.
+- lemma: набрати в рот води
+  translation: to keep silent
+  pos: phrase
+  usage: Свідок набрав у рот води й не відповів.
+- lemma: мутити воду
+  translation: to muddy the waters
+  pos: phrase
+  usage: Автор мутить воду замість пояснити джерела.
+- lemma: грати з вогнем
+  translation: to play with fire
+  pos: phrase
+  usage: Запуск без тестування означає грати з вогнем.
+- lemma: підливати олії у вогонь
+  translation: to add fuel to the fire
+  pos: phrase
+  usage: Різкий коментар підлив олії у вогонь суперечки.
+- lemma: втратити ґрунт під ногами
+  translation: to lose ground under one's feet
+  pos: phrase
+  usage: Після новини вона втратила ґрунт під ногами.
+- lemma: камінь спотикання
+  translation: stumbling block
+  pos: phrase
+  usage: Фінансування стало каменем спотикання.
+- lemma: камінь на душі
+  translation: a weight on one's soul
+  pos: phrase
+  usage: Після помилки в нього був камінь на душі.
+- lemma: кинути слова на вітер
+  translation: to throw words to the wind
+  pos: phrase
+  usage: Не кидай обіцянок на вітер.
+- lemma: шукати вітра в полі
+  translation: to look for the wind in the field
+  pos: phrase
+  usage: Після втечі партнера шукай вітра в полі.
+- lemma: пустити коріння
+  translation: to put down roots
+  pos: phrase
+  usage: Ініціатива пустила коріння в громаді.
+- lemma: плоди праці
+  translation: fruits of labor
+  pos: phrase
+  usage: Плоди праці стали помітні наприкінці року.
+- lemma: грім серед ясного неба
+  translation: bolt from the blue
+  pos: phrase
+  usage: Звістка була громом серед ясного неба.
+- lemma: хмари згущуються
+  translation: clouds are gathering
+  pos: phrase
+  usage: Над проєктом згущуються хмари через брак коштів.
+- lemma: як сніг на голову
+  translation: out of the blue
+  pos: phrase
+  usage: Перевірка прийшла як сніг на голову.
+- lemma: вітер змін
+  translation: wind of change
+  pos: phrase
+  usage: Після виборів у місті відчули вітер змін.
