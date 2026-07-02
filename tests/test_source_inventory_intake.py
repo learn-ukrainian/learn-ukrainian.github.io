@@ -202,7 +202,7 @@ def test_committed_source_inventory_files_are_valid() -> None:
     assert candidates
     assert len(records) >= 100
     assert len(candidates) >= 100
-    assert {"curriculum", "ohoiko", "textbook"} <= {
+    assert {"curriculum", "ohoiko", "teacher_lesson", "textbook"} <= {
         record.source_family for record in records
     }
 

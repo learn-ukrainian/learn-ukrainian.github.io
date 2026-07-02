@@ -27,7 +27,12 @@ POS_BALANCED_POS = {
     "particle",
     "interjection",
 }
-REQUIRED_REVIEW_SOURCE_FAMILIES = {"curriculum", "ohoiko", "textbook"}
+REQUIRED_REVIEW_SOURCE_FAMILIES = {
+    "curriculum",
+    "ohoiko",
+    "teacher_lesson",
+    "textbook",
+}
 
 
 def test_review_candidates_use_committed_inventories_and_keep_provenance(

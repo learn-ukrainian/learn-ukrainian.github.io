@@ -1,0 +1,57 @@
+# Word Atlas Private Teacher-Lesson Source Scope
+
+This note defines how private teacher-lesson vocabulary can enter the Word
+Atlas source-inventory lane without publishing private lesson material.
+
+## Current Safe Source
+
+The committed inventory seed is:
+
+- `data/lexicon/source-inventory/private-teacher-lesson-vocabulary-seed.yaml`
+
+Current committed coverage is 40 reviewed headwords from an explicit local
+vocabulary table. The source family is `teacher_lesson`, and the source title,
+source id, locators, and context are intentionally privacy-safe. The inventory
+does not commit raw notes, transcripts, prompts, document paths, or teacher
+identifying names.
+
+## Source Handling Rule
+
+Use the ignored local lesson material only as private evidence for deriving
+reviewed headword metadata. Committed rows may contain:
+
+- a normalized Ukrainian headword or phrase
+- a POS tag
+- a short learner-facing English gloss
+- a neutral source id and locator such as `explicit vocabulary table row 12`
+- a generic context sentence that does not quote private lesson prose
+
+Do not commit raw private source files, private file paths, lesson transcripts,
+prompt dumps, screenshots, or teacher-identifying labels.
+
+## Current Boundary
+
+This lane is source-inventory only. It does not update:
+
+- live Atlas manifest, search, or browse output
+- Daily Word
+- Practice decks
+- cloze decks
+- manifest pointer or fingerprint
+
+Daily Word, Practice, and cloze admission must remain separate
+`surface_admission` decisions. Missing `surface_admission` means Atlas
+browse/search only after a later publish PR, and no learner-facing activity
+admission.
+
+## Next Valid #4160 PR Shapes
+
+A safe follow-up PR may do one of these:
+
+- add the next bounded reviewed private teacher-lesson inventory batch
+- add reviewed decision-ledger rows for already committed teacher-lesson
+  candidates
+- publish an already-approved teacher-lesson batch to Atlas browse/search only
+
+Do not mix private-source intake, live Atlas publish, and Daily/Practice/cloze
+admission in one PR.
