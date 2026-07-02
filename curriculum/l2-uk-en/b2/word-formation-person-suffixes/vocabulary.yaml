@@ -1,196 +1,215 @@
 - lemma: словотвір
   translation: word formation
   pos: noun
-  usage: Словотвір пояснює, як від основи твориться назва особи.
+  usage: Словотвір допомагає пояснити, як від основи твориться назва особи.
 - lemma: суфікс
   translation: suffix
   pos: noun
-  usage: Суфікс -ник часто творить назви осіб за діяльністю.
+  usage: Суфікс -ник часто називає людину за діяльністю або роллю.
 - lemma: твірна основа
   translation: derivational stem
+  pos: phrase
+  usage: Твірна основа підказує значення нового слова.
+- lemma: діяч
+  translation: agent; actor
   pos: noun
-  usage: Твірна основа допомагає зрозуміти значення нового слова.
-- lemma: назва особи
-  translation: personal noun
+  gender: m
+  usage: Суфікс може називати діяча за дією.
+- lemma: діячка
+  translation: female public actor
   pos: noun
-  usage: Назва особи може вказувати на професію, якість або походження.
-- lemma: агенс
-  translation: agent
-  pos: noun
-  usage: Агенс виконує дію, яку називає твірна основа.
-- lemma: продуктивна модель
-  translation: productive pattern
-  pos: noun
-  usage: Продуктивна модель дає багато сучасних слів.
-- lemma: засвідчена форма
-  translation: attested form
-  pos: noun
-  usage: Перед уживанням рідкісного фемінітива перевірте засвідчену форму.
-- lemma: професійна лексика
-  translation: professional vocabulary
-  pos: noun
-  usage: Професійна лексика часто містить запозичені суфікси.
+  gender: f
+  usage: У статті згадано культурну діячку й дослідницю.
 - lemma: професія
   translation: profession
   pos: noun
-  usage: Професія впливає на вибір назви особи.
-- lemma: дія
-  translation: action
-  pos: noun
-  usage: Дія може стати основою для назви діяча.
-- lemma: ознака
-  translation: feature; trait
-  pos: noun
-  usage: Ознака людини іноді переходить у назву особи.
-- lemma: мешканець
-  translation: resident
-  pos: noun
-  usage: Мешканець міста може мати окрему усталену назву.
-- lemma: діяч
-  translation: public figure; actor
-  pos: noun
-  usage: Діяч культури має впізнавану суспільну роль.
-- lemma: діячка
-  translation: female public figure
-  pos: noun
-  usage: Діячка громадського руху виступила на форумі.
+  gender: f
+  usage: Назва професії має відповідати стилю тексту.
 - lemma: фахівець
   translation: specialist
   pos: noun
-  usage: Фахівець із комунікацій підготував стратегію.
-- lemma: працівник
-  translation: employee
+  gender: m
+  usage: Фахівець із комунікацій підготував пресреліз.
+- lemma: фахівчиня
+  translation: female specialist
   pos: noun
-  usage: Працівник центру відповів на звернення.
-- lemma: працівниця
-  translation: female employee
-  pos: noun
-  usage: Працівниця архіву знайшла потрібну довідку.
+  gender: f
+  usage: Фахівчиня з архівної роботи описала фонд.
 - lemma: дослідник
   translation: researcher
   pos: noun
-  usage: Дослідник описав словотвірні моделі в статті.
+  gender: m
+  usage: Дослідник перевіряє джерела перед публікацією.
 - lemma: дослідниця
   translation: female researcher
   pos: noun
-  usage: Дослідниця пояснила, чому форма має інший суфікс.
+  gender: f
+  usage: Дослідниця представила результати проєкту.
 - lemma: керівник
-  translation: manager; leader
+  translation: manager; head
   pos: noun
-  usage: Керівник проєкту узгодив графік.
+  gender: m
+  usage: Керівник відділу відповідає за рішення.
 - lemma: керівниця
-  translation: female manager; female leader
+  translation: female manager; head
   pos: noun
-  usage: Керівниця відділу представила команду.
+  gender: f
+  usage: Керівниця напряму узгодила графік.
 - lemma: засновник
   translation: founder
   pos: noun
-  usage: Засновник школи описав її принципи.
+  gender: m
+  usage: Засновник організації пояснив мету проєкту.
 - lemma: засновниця
   translation: female founder
   pos: noun
-  usage: Засновниця платформи виступила на конференції.
-- lemma: учитель
-  translation: teacher
+  gender: f
+  usage: Засновниця ініціативи відкрила зустріч.
+- lemma: працівник
+  translation: employee; worker
   pos: noun
-  usage: Учитель добирає приклади відповідно до рівня групи.
-- lemma: учителька
-  translation: female teacher
+  gender: m
+  usage: Працівник музею провів групу до архіву.
+- lemma: працівниця
+  translation: female employee; worker
   pos: noun
-  usage: Учителька пояснила різницю між -к- і -иц-.
-- lemma: редактор
-  translation: editor
-  pos: noun
-  usage: Редактор перевірив стиль оголошення.
+  gender: f
+  usage: Працівниця музею підготувала опис експонатів.
 - lemma: редакторка
   translation: female editor
   pos: noun
-  usage: Редакторка виправила кальковану назву професії.
-- lemma: програміст
-  translation: programmer
+  gender: f
+  usage: Редакторка замінила оцінні назви нейтральними.
+- lemma: майстриня
+  translation: craftswoman; female master
   pos: noun
-  usage: Програміст підтримує внутрішній сервіс.
-- lemma: юрист
-  translation: lawyer
-  pos: noun
-  usage: Юрист пояснив правовий статус документа.
-- lemma: менеджер
-  translation: manager
-  pos: noun
-  usage: Менеджер із комунікацій координує зустрічі.
-- lemma: консультант
-  translation: consultant
-  pos: noun
-  usage: Консультант відповідає на запити клієнтів.
-- lemma: студент
-  translation: student
-  pos: noun
-  usage: Студент аналізує суфікси в тексті.
-- lemma: студентка
-  translation: female student
-  pos: noun
-  usage: Студентка виписала назви мешканців міст.
-- lemma: фемінітив
-  translation: feminine personal noun
-  pos: noun
-  usage: Фемінітив робить видимою професійну роль жінки.
-- lemma: продавчиня
-  translation: female salesperson
-  pos: noun
-  usage: Продавчиня порадила нове видання словника.
+  gender: f
+  usage: Майстриня відновила старий інструмент.
 - lemma: філологиня
   translation: female philologist
   pos: noun
-  usage: Філологиня перевірила наголос у професійній назві.
-- lemma: очільниця
-  translation: female head; female leader
+  gender: f
+  usage: Філологиня пояснила походження назви.
+- lemma: продавчиня
+  translation: saleswoman
   pos: noun
-  usage: Очільниця департаменту підписала наказ.
+  gender: f
+  usage: Продавчиня допомогла покупцеві вибрати книжку.
+- lemma: фемінітив
+  translation: feminine occupational or role noun
+  pos: noun
+  gender: m
+  usage: Фемінітив має бути природним і узгодженим у реченні.
+- lemma: мешканець
+  translation: resident
+  pos: noun
+  gender: m
+  usage: Мешканець району поставив запитання до плану.
+- lemma: мешканка
+  translation: female resident
+  pos: noun
+  gender: f
+  usage: Мешканка Києва запропонувала інший маршрут.
+- lemma: киянин
+  translation: male resident of Kyiv
+  pos: noun
+  gender: m
+  usage: Киянин допоміг гостям знайти музей.
+- lemma: киянка
+  translation: female resident of Kyiv
+  pos: noun
+  gender: f
+  usage: Киянка підготувала короткий путівник.
+- lemma: львів'янин
+  translation: male resident of Lviv
+  pos: noun
+  gender: m
+  usage: Львів'янин розповів про міську традицію.
+- lemma: львів'янка
+  translation: female resident of Lviv
+  pos: noun
+  gender: f
+  usage: Львів'янка модерувала розмову.
+- lemma: полтавець
+  translation: male resident of Poltava
+  pos: noun
+  gender: m
+  usage: Полтавець долучився до волонтерської групи.
+- lemma: полтавка
+  translation: female resident of Poltava
+  pos: noun
+  gender: f
+  usage: Полтавка запропонувала місцевий приклад.
 - lemma: однодумець
   translation: like-minded person
   pos: noun
-  usage: Однодумець підтримав пропозицію на зборах.
+  gender: m
+  usage: Однодумець підтримав ідею, але запропонував уточнення.
 - lemma: сучасник
   translation: contemporary
   pos: noun
-  usage: Сучасник автора інакше сприймав цей текст.
+  gender: m
+  usage: Сучасник події може мати інший погляд на неї.
 - lemma: перехожий
   translation: passer-by
   pos: noun
-  usage: Перехожий звернув увагу на оголошення.
+  gender: m
+  usage: Перехожий звернув увагу на неточну назву в оголошенні.
+- lemma: волонтер
+  translation: volunteer
+  pos: noun
+  gender: m
+  usage: Волонтер зустрічав гостей на вході.
+- lemma: волонтерка
+  translation: female volunteer
+  pos: noun
+  gender: f
+  usage: Волонтерка допомогла заповнити форму.
+- lemma: консультант
+  translation: consultant
+  pos: noun
+  gender: m
+  usage: Консультант відповів на запитання клієнта.
+- lemma: програміст
+  translation: programmer
+  pos: noun
+  gender: m
+  usage: Програміст пояснив технічне рішення.
+- lemma: читач
+  translation: reader
+  pos: noun
+  gender: m
+  usage: Читач помічає, коли назва особи звучить оцінно.
+- lemma: водій
+  translation: driver
+  pos: noun
+  gender: m
+  usage: Водій привіз учасників на зустріч.
 - lemma: брехун
   translation: liar
   pos: noun
-  usage: Слово брехун має різко негативне забарвлення.
-- lemma: бігун
-  translation: runner
+  gender: m
+  usage: Слово брехун має оцінний і звинувачувальний тон.
+- lemma: крутій
+  translation: trickster; cheat
   pos: noun
-  usage: Бігун готується до благодійного старту.
-- lemma: співак
-  translation: singer
-  pos: noun
-  usage: Співак працює з народними піснями.
+  gender: m
+  usage: Крутій не є нейтральною назвою особи.
 - lemma: чужак
   translation: outsider
   pos: noun
-  usage: У повісті герой почувається чужаком у місті.
-- lemma: киянин
-  translation: Kyiv resident
+  gender: m
+  usage: Чужак підкреслює дистанцію між людиною і групою.
+- lemma: регістр
+  translation: register
   pos: noun
-  usage: Киянин розповів про зміни в транспорті.
-- lemma: киянка
-  translation: female Kyiv resident
-  pos: noun
-  usage: Киянка подала електронну петицію.
-- lemma: львів'янин
-  translation: Lviv resident
-  pos: noun
-  usage: Львів'янин пояснив місцеву традицію.
-- lemma: полтавець
-  translation: Poltava resident
-  pos: noun
-  usage: Полтавець запросив гостей на фестиваль.
-- lemma: одеситка
-  translation: female Odesa resident
-  pos: noun
-  usage: Одеситка описала життя біля моря.
+  gender: m
+  usage: Регістр підказує, чи доречна розмовна або книжна назва.
+- lemma: оцінний
+  translation: evaluative
+  pos: adj
+  usage: Оцінний суфікс може змінити тон повідомлення.
+- lemma: нейтральний
+  translation: neutral
+  pos: adj
+  usage: Нейтральний текст уникає зневажливих ярликів.
