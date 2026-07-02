@@ -1,9 +1,9 @@
 {
-  "assembled_mdx_sha256": "bf7f2a82c9dabcdb36c8f284c64b5b7afb7c8af4d73ab83e0d8cc6be94a897c2",
+  "assembled_mdx_sha256": "c4d45bd35a5627aea362cd993e60944821cad98257634633bcefe2132078dd6b",
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "e2bfa7f8abba93f288a5fe48c2f6c35188c12e1cd078604351a1f6b543479db7",
+    "digest": "d29cab2c9f9f8806eec40b2e6af6baad7a7d4152949decbcd84af7a9844996e2",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/vesilni-pisni.yaml",
@@ -11,7 +11,7 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/vesilni-pisni/module.md",
-        "sha256": "cfd33ce3c887e03689c211f0771b84ad12fb0c309023350c65d7db542c3f1f5a"
+        "sha256": "6b16fc675c6c86c31110925e38c508bf26a2f66f66d03505733196e44d9ae09e"
       },
       {
         "path": "curriculum/l2-uk-en/folk/vesilni-pisni/activities.yaml",

@@ -1,9 +1,9 @@
 {
-  "assembled_mdx_sha256": "094861a4dd34266a72809172c8176d68de859a27b9127a211bb6e4f8abb66690",
+  "assembled_mdx_sha256": "dc405458a0e67dc54adf4e016c3aa3db0cca8b9e4141395e1acb2396a935b505",
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "a0e363bd28aec0f3c919b3d802ccd1325257ccfd24a716bd5883990577f229bc",
+    "digest": "7154fa286a0fed3177063909dcff52277c6a6a4030c3977e184d70d2b4634224",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/rodynna-obriadovist-zvychai.yaml",
@@ -11,7 +11,7 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/rodynna-obriadovist-zvychai/module.md",
-        "sha256": "b9b8d4706bd4284e7baa8272e84516b15e9360ec87a555cdfb86cbfa4540a631"
+        "sha256": "597986cce3d4d6131483675babfe9460d9d651b837f0bd1e6a7ef0c1722d707e"
       },
       {
         "path": "curriculum/l2-uk-en/folk/rodynna-obriadovist-zvychai/activities.yaml",
