@@ -1,0 +1,126 @@
+---
+version: 1
+kind: atlas_source_inventory
+sources:
+  - id: private-teacher-lesson-vocabulary-table-1-rows-39-58
+    source_family: teacher_lesson
+    extraction_mode: curated_headword
+    title: Private teacher lesson vocabulary - explicit table rows 39-58
+    locator: local-only explicit vocabulary table rows 39-58
+    notes: Derived headword metadata only; raw private lesson material is local-only and not committed. Daily Word, Practice, and cloze remain frozen without explicit surface_admission.
+    headwords:
+      - lemma: правила дорожнього руху
+        pos: noun
+        gloss: traffic rules
+        locator: explicit vocabulary table row 39
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: гнучкий
+        pos: adjective
+        gloss: flexible
+        locator: explicit vocabulary table row 40
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: притулок
+        pos: noun
+        gloss: shelter
+        locator: explicit vocabulary table row 41
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: потворний
+        pos: adjective
+        gloss: ugly
+        locator: explicit vocabulary table row 42
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: орендодавець
+        pos: noun
+        gloss: landlord; lessor
+        locator: explicit vocabulary table row 43
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: повідомляти
+        pos: verb
+        gloss: to let someone know; imperfective
+        locator: explicit vocabulary table row 44
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: давати знати
+        pos: phrase
+        gloss: to let someone know; imperfective
+        locator: explicit vocabulary table row 44
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: повідомити
+        pos: verb
+        gloss: to let someone know; perfective
+        locator: explicit vocabulary table row 45
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: дати знати
+        pos: phrase
+        gloss: to let someone know; perfective
+        locator: explicit vocabulary table row 45
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: кролик
+        pos: noun
+        gloss: rabbit
+        locator: explicit vocabulary table row 46
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: гальмувати
+        pos: verb
+        gloss: to brake; imperfective
+        locator: explicit vocabulary table row 47
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: загальмувати
+        pos: verb
+        gloss: to brake; perfective
+        locator: explicit vocabulary table row 48
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: багажник
+        pos: noun
+        gloss: car trunk; boot
+        locator: explicit vocabulary table row 49
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: страховка
+        pos: noun
+        gloss: insurance
+        locator: explicit vocabulary table row 50
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: страхування
+        pos: noun
+        gloss: insurance
+        locator: explicit vocabulary table row 50
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: затримувати
+        pos: verb
+        gloss: to delay; imperfective
+        locator: explicit vocabulary table row 51
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: затримати
+        pos: verb
+        gloss: to delay; perfective
+        locator: explicit vocabulary table row 52
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: ділитися
+        pos: verb
+        gloss: to share; to divide into; imperfective
+        locator: explicit vocabulary table row 53
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: поділитися
+        pos: verb
+        gloss: to share; to divide into; perfective
+        locator: explicit vocabulary table row 54
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: займати
+        pos: verb
+        gloss: to reserve; to occupy; to take time; imperfective
+        locator: explicit vocabulary table row 55
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: зайняти
+        pos: verb
+        gloss: to reserve; to occupy; to take time; perfective
+        locator: explicit vocabulary table row 56
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: витримувати
+        pos: verb
+        gloss: to endure; to withstand; imperfective
+        locator: explicit vocabulary table row 57
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: витримати
+        pos: verb
+        gloss: to endure; to withstand; perfective
+        locator: explicit vocabulary table row 58
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
