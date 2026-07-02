@@ -1,0 +1,184 @@
+- lemma: прислів'я
+  translation: proverb
+  pos: noun
+  gender: n
+  usage: Прислів'я стискає життєвий досвід у коротку формулу.
+- lemma: приказка
+  translation: saying
+  pos: noun
+  gender: f
+  usage: Приказка може бути образним фрагментом без повного висновку.
+- lemma: паремія
+  translation: paremia; proverb-like saying
+  pos: noun
+  gender: f
+  usage: Паремія охоплює прислів'я, приказки й подібні сталі вислови.
+- lemma: пареміологія
+  translation: paremiology
+  pos: noun
+  gender: f
+  usage: Пареміологія досліджує прислів'я та приказки.
+- lemma: афоризм
+  translation: aphorism
+  pos: noun
+  gender: m
+  usage: Афоризм формулює думку стисло й виразно.
+- lemma: ментальність
+  translation: mentality
+  pos: noun
+  gender: f
+  usage: Ментальність не можна зводити до одного прислів'я.
+- lemma: фольклор
+  translation: folklore
+  pos: noun
+  gender: m
+  usage: Фольклор зберігає сталі образи й формули спільноти.
+- lemma: народна мудрість
+  translation: folk wisdom
+  pos: phrase
+  usage: Народна мудрість часто звучить у прислів'ях.
+- lemma: народна етика
+  translation: folk ethics
+  pos: phrase
+  usage: Народна етика оцінює працю, слово й характер.
+- lemma: працьовитість
+  translation: diligence; industriousness
+  pos: noun
+  gender: f
+  usage: Працьовитість є важливою цінністю в багатьох прислів'ях.
+- lemma: працелюбність
+  translation: love of work; diligence
+  pos: noun
+  gender: f
+  usage: Працелюбність протиставляється пасивності й лінощам.
+- lemma: неробство
+  translation: idleness
+  pos: noun
+  gender: n
+  usage: Неробство в пареміях часто засуджується.
+- lemma: гідність
+  translation: dignity
+  pos: noun
+  gender: f
+  usage: Гідність пов'язана з честю й поведінкою людини.
+- lemma: честь
+  translation: honor
+  pos: noun
+  gender: f
+  usage: Честь у прислів'ях відображає репутацію і совість.
+- lemma: совість
+  translation: conscience
+  pos: noun
+  gender: f
+  usage: Совість є внутрішнім моральним мірилом.
+- lemma: характер
+  translation: character
+  pos: noun
+  gender: m
+  usage: Характер проявляється у вчинках, а не тільки в словах.
+- lemma: мораль
+  translation: morality; moral
+  pos: noun
+  gender: f
+  usage: Мораль прислів'я не завжди можна застосувати буквально.
+- lemma: іронія
+  translation: irony
+  pos: noun
+  gender: f
+  usage: Іронія допомагає критикувати поведінку без прямого повчання.
+- lemma: сатира
+  translation: satire
+  pos: noun
+  gender: f
+  usage: Сатира висміює суспільні або людські вади.
+- lemma: дидактизм
+  translation: didacticism
+  pos: noun
+  gender: m
+  usage: Дидактизм робить прислів'я повчальним.
+- lemma: афористичність
+  translation: aphoristic quality
+  pos: noun
+  gender: f
+  usage: Афористичність допомагає вислову запам'ятатися.
+- lemma: життєствердність
+  translation: life-affirming quality
+  pos: noun
+  gender: f
+  usage: Життєствердність може підтримувати оптимістичний тон вислову.
+- lemma: кмітливість
+  translation: quick-wittedness
+  pos: noun
+  gender: f
+  usage: Кмітливість у пареміях часто важливіша за зовнішній блиск.
+- lemma: інтелект
+  translation: intellect
+  pos: noun
+  gender: m
+  usage: Інтелект у прислів'ях пов'язаний із мірою слова.
+- lemma: мовленнєвий етикет
+  translation: speech etiquette
+  pos: phrase
+  usage: Мовленнєвий етикет визначає, як доречно сказати правду.
+- lemma: досвід
+  translation: experience
+  pos: noun
+  gender: m
+  usage: Досвід часто подається як джерело мудрості.
+- lemma: споконвічний
+  translation: age-old
+  pos: adj
+  usage: Споконвічний образ не завжди має прямий сучасний відповідник.
+- lemma: невичерпний
+  translation: inexhaustible
+  pos: adj
+  usage: Паремійний фонд є невичерпним матеріалом для аналізу.
+- lemma: узагальнено-особове речення
+  translation: generalized-personal sentence
+  pos: phrase
+  usage: Узагальнено-особове речення звертається ніби до кожного.
+- lemma: еліпсис
+  translation: ellipsis
+  pos: noun
+  gender: m
+  usage: Еліпсис робить прислів'я коротшим і ритмічнішим.
+- lemma: ритмізація
+  translation: rhythmization
+  pos: noun
+  gender: f
+  usage: Ритмізація допомагає прислів'ю запам'ятатися.
+- lemma: інтертекстуальність
+  translation: intertextuality
+  pos: noun
+  gender: f
+  usage: Інтертекстуальність виникає, коли текст упізнає інший текст.
+- lemma: антиприслів'я
+  translation: anti-proverb
+  pos: noun
+  gender: n
+  usage: Антиприслів'я іронічно змінює традиційну формулу.
+- lemma: трансформація паремії
+  translation: transformation of a proverb
+  pos: phrase
+  usage: Трансформація паремії може створити гумор або рекламу.
+- lemma: соціальна оцінка
+  translation: social evaluation
+  pos: phrase
+  usage: Соціальна оцінка в прислів'ї може бути підтримкою або докором.
+- lemma: ідентичність
+  translation: identity
+  pos: noun
+  gender: f
+  usage: Ідентичність спільноти частково відбивається у сталих висловах.
+- lemma: медом мазати
+  translation: to flatter; literally, to smear with honey
+  pos: phrase
+  usage: Медом мазати означає говорити надто солодко або улесливо.
+- lemma: правду казати
+  translation: to tell the truth
+  pos: phrase
+  usage: Правду казати треба тактовно й відповідально.
+- lemma: добрі діла
+  translation: good deeds
+  pos: phrase
+  usage: Добрі діла в прислів'ях важливіші за зовнішній вигляд.

@@ -1,0 +1,177 @@
+- lemma: передчуття
+  translation: premonition
+  pos: noun
+  gender: n
+  usage: Передчуття може бути темою прислів'їв про небезпеку.
+- lemma: передбачливість
+  translation: foresight
+  pos: noun
+  gender: f
+  usage: Передбачливість допомагає побачити ризик до помилки.
+- lemma: циклічність
+  translation: cyclicality
+  pos: noun
+  gender: f
+  usage: Циклічність сезонів впливає на аграрні образи.
+- lemma: стихія
+  translation: element; force of nature
+  pos: noun
+  gender: f
+  usage: Стихія може бути корисною або небезпечною.
+- lemma: стихійність
+  translation: elemental force; spontaneity
+  pos: noun
+  gender: f
+  usage: Стихійність образу вогню підкреслює неконтрольовану силу.
+- lemma: неминучість
+  translation: inevitability
+  pos: noun
+  gender: f
+  usage: Неминучість змін часто передається через образ часу.
+- lemma: плинність
+  translation: fluidity; passing quality
+  pos: noun
+  gender: f
+  usage: Плинність часу можна передати образом води.
+- lemma: обачність
+  translation: prudence
+  pos: noun
+  gender: f
+  usage: Обачність не є страхом, а є перевіркою ризику.
+- lemma: наперекір
+  translation: in defiance of; despite
+  pos: adv
+  usage: Наперекір обставинам людина може діяти обережно й послідовно.
+- lemma: закономірність
+  translation: regularity; pattern
+  pos: noun
+  gender: f
+  usage: Закономірність зв'язує дію й наслідок.
+- lemma: мінливість
+  translation: changeability
+  pos: noun
+  gender: f
+  usage: Мінливість вітру може символізувати нестійкість обставин.
+- lemma: пересторога
+  translation: warning; caution
+  pos: noun
+  gender: f
+  usage: Пересторога допомагає уникнути поспішної помилки.
+- lemma: доленосний
+  translation: fateful
+  pos: adj
+  usage: Доленосний крок потребує обережної перевірки.
+- lemma: гартування
+  translation: hardening; tempering
+  pos: noun
+  gender: n
+  usage: Гартування може бути образом формування характеру.
+- lemma: природна символіка
+  translation: natural symbolism
+  pos: phrase
+  usage: Природна символіка переносить риси стихій на людський досвід.
+- lemma: метафоризація
+  translation: metaphorization
+  pos: noun
+  gender: f
+  usage: Метафоризація перетворює природний образ на моральну модель.
+- lemma: антропоморфізм
+  translation: anthropomorphism
+  pos: noun
+  gender: m
+  usage: Антропоморфізм наділяє природу людськими рисами.
+- lemma: темпоральність
+  translation: temporality
+  pos: noun
+  gender: f
+  usage: Темпоральність вислову показує, як він мислить час.
+- lemma: динаміка
+  translation: dynamics
+  pos: noun
+  gender: f
+  usage: Динаміка змін у прислів'ї може бути швидкою або повільною.
+- lemma: фаталізм
+  translation: fatalism
+  pos: noun
+  gender: m
+  usage: Фаталізм підкреслює неминучість події.
+- lemma: спадкоємність
+  translation: continuity; succession
+  pos: noun
+  gender: f
+  usage: Спадкоємність поколінь часто описують через часові образи.
+- lemma: життєва стратегія
+  translation: life strategy
+  pos: phrase
+  usage: Обережність може бути життєвою стратегією, а не боягузтвом.
+- lemma: раціоналізм
+  translation: rationalism
+  pos: noun
+  gender: m
+  usage: Раціоналізм у прислів'ях про обережність спирається на наслідки.
+- lemma: прагматика
+  translation: pragmatics
+  pos: noun
+  gender: f
+  usage: Прагматика вислову залежить від того, хто кому говорить.
+- lemma: антитеза
+  translation: antithesis
+  pos: noun
+  gender: f
+  usage: Антитеза протиставляє блиск і справжню цінність.
+- lemma: паралелізм
+  translation: parallelism
+  pos: noun
+  gender: m
+  usage: Паралелізм поєднує дію та наслідок у подібній формі.
+- lemma: звукопис
+  translation: sound patterning
+  pos: noun
+  gender: m
+  usage: Звукопис робить прислів'я ритмічним.
+- lemma: алітерація
+  translation: alliteration
+  pos: noun
+  gender: f
+  usage: Алітерація повторює звуки для виразності.
+- lemma: експресивність
+  translation: expressiveness
+  pos: noun
+  gender: f
+  usage: Експресивність прислів'я залежить від образу й ритму.
+- lemma: зменшувально-пестлива форма
+  translation: diminutive-affectionate form
+  pos: phrase
+  usage: Зменшувально-пестлива форма може надати фольклорного тону.
+- lemma: плин часу
+  translation: passage of time
+  pos: phrase
+  usage: Плин часу часто передають образом води.
+- lemma: слушний момент
+  translation: opportune moment
+  pos: phrase
+  usage: Слушний момент треба використати без зайвого зволікання.
+- lemma: причинно-наслідковий зв'язок
+  translation: cause-and-effect relationship
+  pos: phrase
+  usage: Причинно-наслідковий зв'язок лежить в основі вислову що посієш, те й пожнеш.
+- lemma: поверховий блиск
+  translation: superficial shine
+  pos: phrase
+  usage: Поверховий блиск може приховувати низьку якість.
+- lemma: передбачити наслідки
+  translation: foresee consequences
+  pos: phrase
+  usage: Передбачити наслідки означає діяти обачно.
+- lemma: застерігати
+  translation: to warn
+  pos: verb
+  usage: Прислів'я може застерігати від поспіху.
+- lemma: мобілізувати
+  translation: to mobilize
+  pos: verb
+  usage: Вислів куй залізо, поки гаряче мобілізує до дії.
+- lemma: знецінювати
+  translation: to devalue; dismiss
+  pos: verb
+  usage: Недоречне прислів'я може знецінювати чужий біль.

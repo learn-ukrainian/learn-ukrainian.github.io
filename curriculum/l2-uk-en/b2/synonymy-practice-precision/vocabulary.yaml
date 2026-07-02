@@ -1,0 +1,184 @@
+- lemma: точність
+  translation: precision; accuracy
+  pos: noun
+  gender: f
+  usage: Точність слововживання допомагає не спотворити думку.
+- lemma: сполучуваність
+  translation: combinability; collocability
+  pos: noun
+  gender: f
+  usage: Сполучуваність показує, які слова природно поєднуються.
+- lemma: лексична сполучуваність
+  translation: lexical collocability
+  pos: phrase
+  usage: Лексична сполучуваність обмежує механічну заміну синонімів.
+- lemma: колокація
+  translation: collocation
+  pos: noun
+  gender: f
+  usage: Колокація міцна кава є природною для української мови.
+- lemma: паронім
+  translation: paronym
+  pos: noun
+  gender: m
+  usage: Паронім схожий за звучанням, але має інше значення.
+- lemma: паронімія
+  translation: paronymy
+  pos: noun
+  gender: f
+  usage: Паронімія часто спричиняє помилки в публічному мовленні.
+- lemma: квазісинонім
+  translation: quasi-synonym
+  pos: noun
+  gender: m
+  usage: Квазісинонім здається близьким словом, але змінює фокус думки.
+- lemma: диференційна ознака
+  translation: differentiating feature
+  pos: phrase
+  usage: Диференційна ознака пояснює, що саме додає синонім.
+- lemma: семантичне ядро
+  translation: semantic core
+  pos: phrase
+  usage: Семантичне ядро допомагає повернутися до нейтрального значення.
+- lemma: конотація
+  translation: connotation
+  pos: noun
+  gender: f
+  usage: Конотація слова може бути позитивною, негативною або нейтральною.
+- lemma: неоднозначність
+  translation: ambiguity
+  pos: noun
+  gender: f
+  usage: Неоднозначність виникає, коли синонім зміщує зміст речення.
+- lemma: тавтологія
+  translation: tautology; needless repetition
+  pos: noun
+  gender: f
+  usage: Тавтологія повторює те саме без змістової потреби.
+- lemma: плеоназм
+  translation: pleonasm; redundancy
+  pos: noun
+  gender: m
+  usage: Плеоназм дублює зміст, як у вислові спільна співпраця.
+- lemma: компресія
+  translation: compression
+  pos: noun
+  gender: f
+  usage: Компресія стискає конструкцію без втрати змісту.
+- lemma: синонімічна компресія
+  translation: synonymous compression
+  pos: phrase
+  usage: Синонімічна компресія замінює довгий опис точним словом.
+- lemma: лаконічність
+  translation: concision
+  pos: noun
+  gender: f
+  usage: Лаконічність корисна, якщо вона не знищує важливий регістр.
+- lemma: влучний
+  translation: apt; well-chosen
+  pos: adj
+  usage: Влучний приклад точно відповідає темі.
+- lemma: доречний
+  translation: appropriate
+  pos: adj
+  usage: Доречний синонім пасує до жанру й адресата.
+- lemma: лаконічний
+  translation: concise
+  pos: adj
+  usage: Лаконічний текст короткий, але не збіднений.
+- lemma: виправлений
+  translation: corrected
+  pos: adj
+  usage: Виправлений абзац зберігає зміст і покращує точність.
+- lemma: досконалий
+  translation: flawless; perfect
+  pos: adj
+  usage: Досконалий звучить сильно й потребує переконливого доказу.
+- lemma: оптимальний
+  translation: optimal
+  pos: adj
+  usage: Оптимальний вибір найкраще відповідає обмеженням ситуації.
+- lemma: ефектний
+  translation: showy; impressive
+  pos: adj
+  usage: Ефектний виступ справляє сильне враження.
+- lemma: ефективний
+  translation: effective
+  pos: adj
+  usage: Ефективний метод дає потрібний результат.
+- lemma: абонент
+  translation: subscriber; service user
+  pos: noun
+  gender: m
+  usage: Абонент не відповідає на дзвінок.
+- lemma: абонемент
+  translation: subscription pass
+  pos: noun
+  gender: m
+  usage: Абонемент до спортзалу діє три місяці.
+- lemma: адреса
+  translation: address
+  pos: noun
+  gender: f
+  usage: У формі треба вказати електронну адресу.
+- lemma: адрес
+  translation: ceremonial address
+  pos: noun
+  gender: m
+  usage: Адрес може бути урочистим письмовим привітанням.
+- lemma: кампанія
+  translation: campaign
+  pos: noun
+  gender: f
+  usage: Інформаційна кампанія тривала два тижні.
+- lemma: компанія
+  translation: company; group
+  pos: noun
+  gender: f
+  usage: Компанія відкрила новий офіс.
+- lemma: причина
+  translation: cause; reason
+  pos: noun
+  gender: f
+  usage: Причина затримки поїзда - технічна несправність.
+- lemma: підстава
+  translation: grounds; basis
+  pos: noun
+  gender: f
+  usage: Немає підстав для відмови.
+- lemma: мотив
+  translation: motive
+  pos: noun
+  gender: m
+  usage: Мотив учинку героя стає зрозумілим у фіналі.
+- lemma: привід
+  translation: occasion; pretext
+  pos: noun
+  gender: m
+  usage: Це був привід поговорити про правила.
+- lemma: чинник
+  translation: factor
+  pos: noun
+  gender: m
+  usage: Втома є важливим чинником помилок.
+- lemma: мовна норма
+  translation: language norm
+  pos: phrase
+  usage: Мовна норма підказує природну колокацію.
+- lemma: лексикографія
+  translation: lexicography
+  pos: noun
+  gender: f
+  usage: Лексикографія допомагає описувати значення слів.
+- lemma: корпусна лінгвістика
+  translation: corpus linguistics
+  pos: phrase
+  usage: Корпусна лінгвістика показує реальне вживання слова.
+- lemma: авторський стиль
+  translation: authorial style
+  pos: phrase
+  usage: Авторський стиль може навмисно порушувати очікувану колокацію.
+- lemma: мовна вправність
+  translation: linguistic skill
+  pos: phrase
+  usage: Мовна вправність проявляється в точному доборі слів.
