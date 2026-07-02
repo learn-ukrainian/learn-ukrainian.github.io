@@ -102,7 +102,9 @@
 ## 6. Risks / open questions
 
 - **Birth-date style:** EIU / IEU / UINP use 18 February 1856; UBE gives dual Julian / Gregorian notation. Low-context copy should use 18 February 1856, with dual style only in date-focused lessons.
+- **Calendar-parenthetical drift:** UBE prints `18.02(03.03).1856`, while most learner-safe sources use only 18 February. Recheck and source-label the parenthetical before any Julian / Gregorian conversion exercise surfaces it.
 - **Education year drift:** EIU says Kyiv gymnasium in 1871; UBE / UEEO say 1870. Use `Kyiv gymnasium graduate` or source-label exact year.
+- **Father / grandfather drift:** UINP frames Fedir Lindfors as her father, a retired imperial officer; some biographical summaries frame Fedir Fedorovych Lindfors as her grandfather, a Swedish general. Reconcile before learner-facing family-biography detail goes beyond `Lindfors family with Swedish ancestry`.
 - **Kindergarten year drift:** EIU says she opened the first Kyiv kindergarten soon after graduating; UINP gives 1 September 1871; some secondary sources say 1872. Use `early 1870s` unless citing UINP's exact date.
 - **Department title drift:** EIU says preschool and out-of-school education department, IEU says preschool and adult education, and UINP says preschool education department. For learner text, use `preschool and out-of-school / adult education department` unless the module needs source-level title comparison.
 - **Hetmanate simplification:** IEU's Hetman-government ministry note should not be treated as proof that she fully endorsed Hetmanate politics. It is an administrative context during unstable state-building.
@@ -168,7 +170,9 @@
 - `docs/research/bio/nataliya-kobrynska.md`
 - `docs/research/bio/milena-rudnytska.md`
 - `docs/research/bio/olena-pchilka.md`
+- `docs/research/bio/sofiya-okunevska.md`
 - `docs/research/bio/borys-hrinchenko.md`
+- `docs/research/bio/mariia-voiakovska.md`
 - `curriculum/l2-uk-en/plans/hist/tsentralna-rada.yaml`
 - `curriculum/l2-uk-en/hist/discovery/tsentralna-rada.yaml`
 - `curriculum/l2-uk-en/plans/istorio/zhinky-v-revoiuutsiiakh.yaml`
