@@ -1,0 +1,130 @@
+- lemma: зооморфізм
+  translation: zoomorphism
+  pos: noun
+  gender: m
+  usage: Зооморфізм переносить образ тварини на людську поведінку.
+- lemma: зоонім
+  translation: animal name
+  pos: noun
+  gender: m
+  usage: Зоонім у фразеологізмі працює як культурний знак.
+- lemma: архетип
+  translation: archetype
+  pos: noun
+  gender: m
+  usage: Архетип вовка може означати небезпеку, самотність або відчай залежно від вислову.
+- lemma: конотація
+  translation: connotation
+  pos: noun
+  gender: f
+  usage: Конотація зооморфної ідіоми може бути жартівливою або різко негативною.
+- lemma: стереотип
+  translation: stereotype
+  pos: noun
+  gender: m
+  usage: Стереотип у фразеології не можна переносити на реальних людей без аналізу.
+- lemma: алегорія
+  translation: allegory
+  pos: noun
+  gender: f
+  usage: Алегорія через тварину допомагає показати людську рису.
+- lemma: працелюбність
+  translation: industriousness
+  pos: noun
+  gender: f
+  usage: Працелюбність часто описують через бджолу або мураху.
+- lemma: підступність
+  translation: treachery; slyness
+  pos: noun
+  gender: f
+  usage: Підступність може передаватися образами лисиці або змії.
+- lemma: впертість
+  translation: stubbornness
+  pos: noun
+  gender: f
+  usage: Впертість у розмовній мові іноді порівнюють із бараном.
+- lemma: витривалість
+  translation: endurance
+  pos: noun
+  gender: f
+  usage: Витривалість у важкій праці передає вислів "працювати як віл".
+- lemma: кмітливий
+  translation: quick-witted
+  pos: adj
+  usage: Кмітливий персонаж може бути описаний як лисицею підшитий.
+- lemma: безпорадний
+  translation: helpless
+  pos: adj
+  usage: Безпорадний стан може передавати вислів "хоч вовком вий".
+- lemma: завзятий
+  translation: zealous; persistent
+  pos: adj
+  usage: Завзятий працівник не обов'язково має працювати як віл.
+- lemma: як кіт із собакою
+  translation: like cat and dog
+  pos: phrase
+  usage: Сусіди жили як кіт із собакою через спільний паркан.
+- lemma: як собака на сіні
+  translation: like a dog in the manger
+  pos: phrase
+  usage: Він поводився як собака на сіні, бо не користувався ресурсом і не давав іншим.
+- lemma: працювати як віл
+  translation: to work like an ox
+  pos: phrase
+  usage: Команда працювала як віл, але це не виправдовує погане планування.
+- lemma: як баран на нові ворота
+  translation: staring blankly; like a sheep at a new gate
+  pos: phrase
+  usage: У навчальному відгуку краще не писати, що студент дивиться як баран на нові ворота.
+- lemma: підкласти свиню
+  translation: to do someone a dirty trick
+  pos: phrase
+  usage: Колега підклав свиню, не передавши важливий файл.
+- lemma: хоч вовком вий
+  translation: to be desperate; howl like a wolf
+  pos: phrase
+  usage: Після третьої відмови хоч вовком вий.
+- lemma: лисицею підшитий
+  translation: sly as a fox
+  pos: phrase
+  usage: У художньому діалозі персонажа назвали лисицею підшитим.
+- lemma: ведмежа послуга
+  translation: disservice
+  pos: phrase
+  usage: Непрохана правка стала ведмежою послугою.
+- lemma: біла ворона
+  translation: black sheep; odd one out
+  pos: phrase
+  usage: Вона почувалася білою вороною в новій групі.
+- lemma: стріляний горобець
+  translation: old hand; experienced person
+  pos: phrase
+  usage: Цей перемовник стріляний горобець.
+- lemma: як з гуски вода
+  translation: like water off a duck's back
+  pos: phrase
+  usage: Після критики з нього як з гуски вода.
+- lemma: трудитися як бджілка
+  translation: to work like a busy bee
+  pos: phrase
+  usage: Вона трудилася як бджілка над архівом прикладів.
+- lemma: мурашина праця
+  translation: painstaking ant-like work
+  pos: phrase
+  usage: Укладання словника вимагає мурашиної праці.
+- lemma: робити з мухи слона
+  translation: to make a mountain out of a molehill
+  pos: phrase
+  usage: Не треба робити з мухи слона через одну технічну помилку.
+- lemma: пригріти змію на грудях
+  translation: to nourish a viper in one's bosom
+  pos: phrase
+  usage: Він пригрів змію на грудях, коли довірив доступ недоброчесному партнеру.
+- lemma: жаба давить
+  translation: envy is eating someone
+  pos: phrase
+  usage: Його жаба давить, бо сусід отримав грант.
+- lemma: крокодилячі сльози
+  translation: crocodile tears
+  pos: phrase
+  usage: Політик проливав крокодилячі сльози після власного рішення.

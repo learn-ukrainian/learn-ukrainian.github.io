@@ -1,0 +1,141 @@
+- lemma: неологізм
+  translation: neologism
+  pos: noun
+  gender: m
+  usage: Неологізм називає нову реалію або нове значення.
+- lemma: запозичення
+  translation: borrowing; loanword
+  pos: noun
+  gender: n
+  usage: Запозичення може адаптуватися до української граматики.
+- lemma: пуризм
+  translation: purism
+  pos: noun
+  gender: m
+  usage: Пуризм підтримує питомі відповідники, але може стати надмірним.
+- lemma: адаптація
+  translation: adaptation
+  pos: noun
+  gender: f
+  usage: Адаптація охоплює форму, вимову, граматику і стиль.
+- lemma: відповідник
+  translation: equivalent
+  pos: noun
+  gender: m
+  usage: Для фідбеку можливі відповідники "відгук" або "зворотний зв'язок".
+- lemma: автентичність
+  translation: authenticity
+  pos: noun
+  gender: f
+  usage: Автентичність не означає заборону всіх іншомовних слів.
+- lemma: глобалізація
+  translation: globalization
+  pos: noun
+  gender: f
+  usage: Глобалізація пришвидшує поширення англіцизмів.
+- lemma: стійкість
+  translation: resilience; stability
+  pos: noun
+  gender: f
+  usage: Мовна стійкість спирається на свідомий вибір засобів.
+- lemma: оновлення
+  translation: renewal; update
+  pos: noun
+  gender: n
+  usage: Лексичне оновлення відбувається через нові реалії.
+- lemma: експансія
+  translation: expansion
+  pos: noun
+  gender: f
+  usage: Експансія англіцизмів може звужувати доступність тексту.
+- lemma: калькування
+  translation: calquing
+  pos: noun
+  gender: n
+  usage: Калькування переносить іншомовну модель у власну мову.
+- lemma: питомий
+  translation: native; inherent
+  pos: adj
+  usage: Питомий відповідник може бути прозорішим для широкої аудиторії.
+- lemma: недоречний
+  translation: inappropriate
+  pos: adj
+  usage: Недоречний англіцизм не відповідає жанру або аудиторії.
+- lemma: застосунок
+  translation: application; app
+  pos: noun
+  gender: m
+  usage: Застосунок є поширеним українським відповідником до app.
+- lemma: дрон
+  translation: drone
+  pos: noun
+  gender: m
+  usage: Дрон відмінюється як звичайний іменник чоловічого роду.
+- lemma: лайкати
+  translation: to like on social media
+  pos: verb
+  usage: Лайкати природно в цифровому розмовному середовищі.
+- lemma: репостити
+  translation: to repost
+  pos: verb
+  usage: Репостити допис - розмовна цифрова дія.
+- lemma: загуглити
+  translation: to google
+  pos: verb
+  usage: У службовому листі краще написати "перевірити в офіційному джерелі".
+- lemma: дедлайн
+  translation: deadline
+  pos: noun
+  gender: m
+  usage: Дедлайн природний у командному чаті, але не завжди в договорі.
+- lemma: кінцевий термін
+  translation: final deadline
+  pos: phrase
+  usage: Кінцевий термін прозорий для офіційної інструкції.
+- lemma: фідбек
+  translation: feedback
+  pos: noun
+  gender: m
+  usage: Фідбек у формальному тексті часто замінюють на відгук.
+- lemma: зворотний зв'язок
+  translation: feedback
+  pos: phrase
+  usage: Зворотний зв'язок підкреслює процес відповіді й реакції.
+- lemma: івент
+  translation: event
+  pos: noun
+  gender: m
+  usage: Івент доречний у маркетинговому жаргоні, але захід прозоріший.
+- lemma: ком'юніті
+  translation: community
+  pos: noun
+  gender: n
+  usage: Ком'юніті можна замінити на спільнота для широкої аудиторії.
+- lemma: стартап
+  translation: startup
+  pos: noun
+  gender: m
+  usage: Стартап є фаховим словом інноваційного бізнесу.
+- lemma: пітч
+  translation: pitch
+  pos: noun
+  gender: m
+  usage: Пітч - коротка презентація ідеї для інвесторів або аудиторії.
+- lemma: онбординг
+  translation: onboarding
+  pos: noun
+  gender: m
+  usage: Онбординг потребує пояснення поза HR або IT контекстом.
+- lemma: імплементувати
+  translation: to implement
+  pos: verb
+  usage: У широкому тексті часто краще "впровадити".
+- lemma: впровадити
+  translation: to implement; introduce
+  pos: verb
+  usage: Впровадити рішення - прозорий український відповідник.
+- lemma: прозорість
+  translation: transparency
+  pos: noun
+  gender: f
+  usage: Прозорість слова залежить від аудиторії та пояснення.
