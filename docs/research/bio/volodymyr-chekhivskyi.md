@@ -62,7 +62,7 @@
 
 - **1897-1904 Ukrainian socialist formation:** Ukrainian social-democratic circles, RUP, and USDRP place him in the political generation that linked national rights, social justice, and education.
 - **1906 First State Duma / Vologda exile:** Duma election and punishment give a concrete pre-1917 state-repression anchor.
-- **1907-1917 Odesa Ukrainian civic work:** Teaching, Prosvita, hromada networks, `Українське слово`, and municipal politics show the Black Sea / Odesa dimension of Ukrainian Revolution history.
+- **1908-1917 Odesa Ukrainian civic work:** Teaching, Prosvita, hromada networks, `Українське слово`, and municipal politics show the Black Sea / Odesa dimension of Ukrainian Revolution history.
 - **1917 Central Rada and Kherson / Odesa leadership:** EIU records Central Rada membership, Odesa city-duma deputyship, and Kherson gubernial civic leadership. This links the BIO module to regional revolution infrastructure.
 - **1918 confessions administration:** Ministry-of-Confessions service under UPR / Ukrainian State connects him to church policy before his short premiership.
 - **December 1918 anti-Hetmanate transition:** ESU / EIU identify him among leaders of the anti-Hetmanate uprising and Ukrainian revolutionary committee, then head of government.
@@ -106,7 +106,7 @@
 - **Entente / Bolshevik policy:** His willingness to negotiate with Bolshevik Russia and opposition to Entente alignment should be framed as a contested wartime strategy, not proof that the Soviet charges were legitimate.
 - **Autocephaly overclaim:** He was central to the 1919 law and UAOC ideology, but not the sole founder of Ukrainian autocephaly. Pair him with Vasyl Lypkivskyi, Ivan Ohienko, and Oleksandr Lototskyi.
 - **SVU wording:** Never state "member of SVU" as fact. The safe language is `arrested / tried in the fabricated SVU case` or `defendant in the SVU show trial`.
-- **Ethnicity line in victim lists:** RFE/RL's Sandarmokh list labels him `поляк`. This may reflect Soviet file metadata and should not be turned into learner-facing identity without a dedicated source discussion.
+- **Victim-list metadata:** Nationality / ethnicity fields in repression lists may reflect Soviet file metadata and should not be turned into learner-facing identity without a dedicated source discussion.
 - **Image provenance:** `Volodymyr Chekhivsky.png` is marked PD-Ukraine but needs US public-domain scrutiny because the source is only "scan from book." `Chekhivski.jpg` has a stronger publication note from `Діло`, Lviv, April 1930, but still needs file-level check before production.
 
 ## 7. Cross-track links
