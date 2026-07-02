@@ -7,7 +7,7 @@
 **Researcher:** Codex orchestrator (GPT-5)
 **Completed:** 2026-07-02
 
-**Source acronym legend:** EIU = Encyclopedia History Ukraine / Institute History of Ukraine, NASU; ESU = Encyclopedia Modern Ukraine / NASU; IEU = Internet Encyclopedia Ukraine / Canadian Institute Ukrainian Studies; UINP = Ukrainian Institute National Memory; CDIAK = Central State Historical Archive of Ukraine in Kyiv; NBVU = Vernadsky National Library of Ukraine; Diasporiana = Ukrainian diaspora digital library; BIO / HIST / ISTORIO / wiki = existing learn-ukrainian track materials; Commons = Wikimedia Commons.
+**Source acronym legend:** EIU = Encyclopedia History Ukraine / Institute History of Ukraine, NASU; ESU = Encyclopedia Modern Ukraine / NASU; IEU = Internet Encyclopedia Ukraine / Canadian Institute Ukrainian Studies; UINP = Ukrainian Institute National Memory; CDIAK = Central State Historical Archive of Ukraine in Kyiv; NBUV = Vernadsky National Library of Ukraine; Diasporiana = Ukrainian diaspora digital library; BIO / HIST / ISTORIO / wiki = existing learn-ukrainian track materials; Commons = Wikimedia Commons.
 
 **Acceptance self-check:**
 
@@ -34,7 +34,7 @@
 - **Canonical EN:** `Oleksandr Lototskyi` for project display; source aliases include `Oleksander Lototsky`, `Oleksander Lototskyi`, and older `Lotoc'kyj`.
 - **Core identity:** Ukrainian civic and political figure, writer, publicist, scholar of church history and canon law, diplomat, General Chancellor of the General Secretariat, State Controller of the UPR, Minister of Confessions / Religious Affairs, UPR envoy to Turkey, and later emigration-state official and academic.
 - **Pseudonyms / cryptonyms:** ESU and EIU list many forms, including `Білоусенко О.`, `О. І. Подоляк`, `О. Липовецький`, `Лотоцці`, `Spektator`, `А. Б.`, and `А. Л.`. Use only the best-attested forms in learner-facing materials.
-- **Birth:** ESU and EIU give old/new style 9(21) March 1870, Bronnytsia / Bronnitsia, now Mohyliv-Podilskyi district, Vinnytsia oblast. UINP calendar uses 21 March 1870.
+- **Birth:** ESU and EIU give old/new style 9(21) March 1870, Bronytsia, now Mohyliv-Podilskyi district, Vinnytsia oblast. UINP calendar uses 21 March 1870.
 - **Death and reburial:** ESU / EIU give 22 October 1939, Warsaw; ESU / EIU / UINP note 1971 reburial at St Andrew Cemetery, Bound Brook / South Bound Brook, New Jersey, USA.
 - **Education:** ESU / EIU trace Podillian, Tiflis, and Kyiv seminary education; he earned a candidate of theology degree at Kyiv Theological Academy in 1896. UINP notes guidance by Volodymyr Antonovych and Mykhailo Hrushevskyi and a blocked academy career because of "unreliable Ukrainophile" reputation.
 - **Publishing / civic formation:** ESU / EIU identify him as co-founder of the publishing house `Вік` in 1894 and active in Ukrainian scholarly, periodical, charitable, and St Petersburg civic networks. UINP emphasizes his role in defending Ukrainian-language publication against imperial censorship.
@@ -77,7 +77,7 @@
 - **Autocephaly as law and diplomacy:** Pair 1 January 1919 law with the Constantinople mission to show that church independence needed documents, offices, and international recognition.
 - **Civil servant as activist:** Lototskyi lets learners see how administrative skill, not only battlefield command, built Ukrainian state capacity.
 - **Censorship-resistance anchor:** `Вік`, Ukrainian-language publication, and anti-Valuev/Ems-era memory connect BIO to language-rights history.
-- **Map anchor:** Bronnytsia / Mohyliv-Podilskyi, Kamianets-Podilskyi, Tiflis / Tbilisi, Kyiv, Saint Petersburg / Petrograd, Bukovyna, Pokuttia, Constantinople / Istanbul, Vienna, Prague, Warsaw, Bound Brook / South Bound Brook.
+- **Map anchor:** Bronytsia / Mohyliv-Podilskyi, Kamianets-Podilskyi, Tiflis / Tbilisi, Kyiv, Saint Petersburg / Petrograd, Bukovyna, Pokuttia, Constantinople / Istanbul, Vienna, Prague, Warsaw, Bound Brook / South Bound Brook.
 - **Regime-change anchor:** Central Rada, UPR, Ukrainian State, Directory, and UPR government-in-exile can be taught as institutional layers rather than a confusing list of names.
 - **Scholar-diplomat anchor:** His books on church law and autocephaly explain why a diplomat could also be a historian and canon-law scholar.
 - **Anti-hagiography anchor:** The 1919 mission did not win immediate patriarchal recognition. Failure under pressure can still be historically central.
@@ -88,7 +88,7 @@
 - **Register:** civic-political biography, administrative state-building, church-law vocabulary, diplomacy, emigration scholarship, censorship and publishing history.
 - **CEFR readiness:** B1+/B2 short biography and map; B2/C1 Central Rada / Hetmanate / Directory offices; C1/C2 church autocephaly, canon-law argument, and emigration institutions.
 - **Core vocabulary:** `Олександр Лотоцький`, `Білоусенко`, `Вік`, `Просвіта`, `Українська Центральна Рада`, `Генеральний Секретаріат`, `генеральний писар`, `державний контролер`, `міністр віросповідань`, `автокефалія`, `Вселенський патріархат`, `Царгород`, `Стамбул`, `Український вільний університет`, `Український науковий інститут у Варшаві`, `Державний центр УНР в екзилі`.
-- **Place-name caution:** Use `Saint Petersburg / Petrograd`, `Constantinople / Istanbul`, `Tiflis / Tbilisi`, `Bound Brook / South Bound Brook`, and `Bronnytsia / Bronytsi` with source-sensitive historical names.
+- **Place-name caution:** Use `Saint Petersburg / Petrograd`, `Constantinople / Istanbul`, `Tiflis / Tbilisi`, `Bound Brook / South Bound Brook`, and `Bronytsia / Брониця` with source-sensitive historical names.
 - **Church-language caution:** Distinguish `autocephaly`, `autonomy`, `church sobor`, `Ecumenical Patriarchate`, and `Moscow Patriarchate` claims. Avoid teaching "Tomos" as a generic synonym for every autocephaly effort.
 - **Office-title caution:** `Minister of Confessions`, `Minister of Religious Affairs`, and `міністр віросповідань` refer to overlapping source translations. Use source labels if precise title/dates matter.
 
@@ -142,7 +142,7 @@
 - UINP, "1870 - народився Олександр Лотоцький, письменник і публіцист." https://uinp.gov.ua/istorychnyy-kalendar/berezen/21/1870-narodyvsya-oleksandr-lotockyy-pysmennyk-i-publicyst. Accessed 2026-07-02.
 - UINP UNR figures, "Лотоцький Олександр." https://unr.uinp.gov.ua/figures/lototskiy-oleksandr. Accessed 2026-07-02.
 - CDIAK, "До 150-річчя від дня народження Олександра Гнатовича Лотоцького..." https://cdiak.archives.gov.ua/v_do_150_narodzhennia_Lotockoho.php. Accessed 2026-07-02.
-- NBVU, "Поборник української соборності - Олександр Гнатович Лотоцький." https://www.nbuv.gov.ua/node/5180. Accessed 2026-07-02.
+- NBUV, "Поборник української соборності - Олександр Гнатович Лотоцький." https://www.nbuv.gov.ua/node/5180. Accessed 2026-07-02.
 
 **Tier 2 / 3 (scholarly, primary-text, and source-rich references):**
 
