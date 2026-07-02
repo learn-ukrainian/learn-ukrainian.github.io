@@ -1,180 +1,241 @@
 - lemma: приміщення
   translation: room; premises
   pos: noun
-  usage: Приміщення читальні потребує доброго освітлення.
-- lemma: сховище
-  translation: storage; shelter; repository
-  pos: noun
-  usage: Архівне сховище зберігає рідкісні документи.
+  gender: n
+  usage: Приміщення називають за функцією або установою.
 - lemma: установа
   translation: institution
   pos: noun
-  usage: Культурна установа організувала виставку.
-- lemma: знаряддя
-  translation: tool; implement
-  pos: noun
-  usage: Майстер обирає знаряддя відповідно до матеріалу.
-- lemma: пристрій
-  translation: device
-  pos: noun
-  usage: Цей пристрій вимірює температуру в приміщенні.
-- lemma: місткість
-  translation: container; capacity
-  pos: noun
-  usage: Місткість має відповідати кількості продукту.
-- lemma: виробництво
-  translation: production; manufacturing
-  pos: noun
-  usage: Виробництво потребує безпечного обладнання.
+  gender: f
+  usage: Лікарня є медичною установою.
 - lemma: майстерня
-  translation: workshop; studio
+  translation: workshop
   pos: noun
-  usage: У майстерні зберігають знаряддя і матеріали.
-- lemma: майданчик
-  translation: site; playground; platform
-  pos: noun
-  usage: Біля школи облаштували спортивний майданчик.
-- lemma: копальня
-  translation: mine
-  pos: noun
-  usage: Стара копальня стала частиною промислового маршруту.
-- lemma: орієнтир
-  translation: landmark; point of reference
-  pos: noun
-  usage: Дзвіниця була головним орієнтиром у місті.
-- lemma: показник
-  translation: indicator; metric
-  pos: noun
-  usage: Показник вологості видно на лічильнику.
-- lemma: вказівник
-  translation: signpost; pointer
-  pos: noun
-  usage: Дорожній вказівник допоміг знайти музей.
-- lemma: засіб
-  translation: means; tool; medium
-  pos: noun
-  usage: Цей засіб захисту потрібен у майстерні.
-- lemma: споруда
-  translation: structure; building
-  pos: noun
-  usage: Каплиця є невеликою сакральною спорудою.
-- lemma: обладнання
-  translation: equipment
-  pos: noun
-  usage: Обладнання майстерні перевірили перед роботою.
+  gender: f
+  usage: Майстерня працює як простір для ремесла.
 - lemma: їдальня
   translation: dining hall; cafeteria
   pos: noun
-  usage: Їдальня розташована на першому поверсі.
+  gender: f
+  usage: Шкільна їдальня відкрита після другого уроку.
 - lemma: читальня
   translation: reading room
   pos: noun
-  usage: У читальні працюють з архівними матеріалами.
+  gender: f
+  usage: У бібліотеці є тиха читальня.
 - lemma: пекарня
   translation: bakery
   pos: noun
-  usage: Пекарня продає хліб власного виробництва.
+  gender: f
+  usage: Пекарня продає хліб і випічку.
 - lemma: друкарня
   translation: printing house
   pos: noun
-  usage: У старій друкарні відкрили музей книги.
-- lemma: лікарня
-  translation: hospital
+  gender: f
+  usage: Друкарня підготувала наклад до виставки.
+- lemma: пральня
+  translation: laundry facility
   pos: noun
-  usage: Лікарня є важливою медичною установою.
-- lemma: книгарня
-  translation: bookstore
-  pos: noun
-  usage: Книгарня стала місцем літературних зустрічей.
+  gender: f
+  usage: Пральня є сервісом, а не самим пристроєм.
 - lemma: світлиця
-  translation: traditional bright room; parlor
+  translation: traditional bright room
   pos: noun
-  usage: Світлиця в садибі була найурочистішою кімнатою.
+  gender: f
+  usage: Світлиця доречна в описі старої садиби.
 - lemma: каплиця
   translation: chapel
   pos: noun
-  usage: Каплиця стоїть біля старого кладовища.
+  gender: f
+  usage: Каплиця стоїть біля старого цвинтаря.
+- lemma: сховище
+  translation: storage; shelter
+  pos: noun
+  gender: n
+  usage: Сховище документів розташоване в підвалі.
+- lemma: укриття
+  translation: shelter
+  pos: noun
+  gender: n
+  usage: Укриття має чіткий вказівник біля входу.
 - lemma: вогнище
-  translation: hearth; campfire; center
+  translation: fireplace; hearth; focus
   pos: noun
-  usage: Бібліотека стала вогнищем культурного життя.
+  gender: n
+  usage: Вогнище може називати місце вогню або осередок явища.
 - lemma: згарище
-  translation: burned site
+  translation: burnt site
   pos: noun
-  usage: На згарищі будинку почалося відновлення.
+  gender: n
+  usage: Згарище називає місце після пожежі.
 - lemma: городище
-  translation: ancient settlement site
+  translation: ancient fortified settlement site
   pos: noun
-  usage: Городище приваблює археологів і туристів.
-- lemma: пасовище
+  gender: n
+  usage: Городище досліджують археологи.
+- lemma: пасовисько
   translation: pasture
   pos: noun
-  usage: Гірське пасовище використовують улітку.
+  gender: n
+  usage: Пасовисько розташоване за селом.
 - lemma: болотище
-  translation: huge swamp; swampy mess
+  translation: huge or pejorative swamp
   pos: noun
-  usage: Слово болотище має збільшувальний відтінок.
-- lemma: вимикач
-  translation: switch
+  gender: n
+  usage: Болотище може звучати розмовно або оцінно.
+- lemma: майданчик
+  translation: small ground; platform; site
   pos: noun
-  usage: Вимикач розташований біля дверей.
-- lemma: перемикач
-  translation: selector switch
+  gender: m
+  usage: Будівельний майданчик має окремий вхід.
+- lemma: копальня
+  translation: mine
   pos: noun
-  usage: Перемикач режимів треба повернути праворуч.
-- lemma: навантажувач
-  translation: loader
+  gender: f
+  usage: Копальня називає місце видобутку.
+- lemma: знаряддя
+  translation: tool; implement
   pos: noun
-  usage: Навантажувач працює на складі.
+  gender: n
+  usage: Знаряддя називають за дією або функцією.
+- lemma: пристрій
+  translation: device
+  pos: noun
+  gender: m
+  usage: Пристрій для очищення повітря має фільтр.
+- lemma: засіб
+  translation: means; tool
+  pos: noun
+  gender: m
+  usage: Засіб захисту треба називати точно.
 - lemma: обігрівач
   translation: heater
   pos: noun
-  usage: Обігрівач підтримує тепло в майстерні.
-- lemma: лічильник
-  translation: meter; counter
+  gender: m
+  usage: Обігрівач прозоро називає функцію предмета.
+- lemma: вимикач
+  translation: switch
   pos: noun
-  usage: Лічильник показує споживання електроенергії.
-- lemma: записник
-  translation: notebook
+  gender: m
+  usage: Вимикач розташований біля дверей.
+- lemma: зволожувач
+  translation: humidifier
   pos: noun
-  usage: Записник лежав поруч із кресленням.
-- lemma: сівалка
-  translation: seeder
+  gender: m
+  usage: Зволожувач працює в кімнаті всю ніч.
+- lemma: очищувач
+  translation: purifier; cleaner
   pos: noun
-  usage: Сівалка рівномірно розподіляє насіння.
+  gender: m
+  usage: Очищувач повітря має змінний фільтр.
+- lemma: зарядний пристрій
+  translation: charger
+  pos: phrase
+  usage: Зарядний пристрій - нейтральна офіційна назва.
+- lemma: зарядка
+  translation: charger; charging
+  pos: noun
+  gender: f
+  usage: Зарядка природна в побутовій розмові.
+- lemma: пральна машина
+  translation: washing machine
+  pos: phrase
+  usage: Пральна машина має технічну гарантію.
 - lemma: пралка
-  translation: washing machine (colloquial)
+  translation: washing machine, colloquial
   pos: noun
-  usage: У розмові пралкою часто називають пральну машину.
-- lemma: цукорниця
-  translation: sugar bowl
+  gender: f
+  usage: Пралка звучить розмовно, не інструкційно.
+- lemma: сушарка
+  translation: dryer; drying rack
   pos: noun
-  usage: Цукорниця стоїть біля чайника.
-- lemma: сільниця
-  translation: salt shaker; salt cellar
+  gender: f
+  usage: Сушарка може бути побутовим пристроєм або підставкою.
+- lemma: кавомолка
+  translation: coffee grinder
   pos: noun
-  usage: Сільниця має бути сухою.
-- lemma: соусник
-  translation: sauce boat
-  pos: noun
-  usage: Соусник подали окремо.
+  gender: f
+  usage: Кавомолка меле кавові зерна.
 - lemma: чайник
   translation: kettle; teapot
   pos: noun
-  usage: Чайник швидко закипів.
-- lemma: ключик
-  translation: little key
+  gender: m
+  usage: Чайник має суфікс -ник, але називає предмет.
+- lemma: лічильник
+  translation: meter; counter
   pos: noun
-  usage: Ключик від шухляди загубився.
-- lemma: столик
-  translation: small table
+  gender: m
+  usage: Лічильник показує споживання електроенергії.
+- lemma: показник
+  translation: indicator
   pos: noun
-  usage: Журнальний столик стоїть біля дивана.
-- lemma: підставка
-  translation: stand; support
+  gender: m
+  usage: Показник у таблиці має числове значення.
+- lemma: вказівник
+  translation: signpost; pointer
   pos: noun
-  usage: Підставка тримає гарячий чайник.
-- lemma: посудина
-  translation: vessel; container
+  gender: m
+  usage: Вказівник допомагає знайти укриття.
+- lemma: орієнтир
+  translation: landmark; orientation point
   pos: noun
-  usage: Посудина має щільну кришку.
+  gender: m
+  usage: Орієнтир полегшує навігацію в місті.
+- lemma: місткість
+  translation: container; capacity
+  pos: noun
+  gender: f
+  usage: Місткість може означати предмет або обсяг.
+- lemma: контейнер
+  translation: container
+  pos: noun
+  gender: m
+  usage: Контейнер для батарейок стоїть біля входу.
+- lemma: цукорниця
+  translation: sugar bowl
+  pos: noun
+  gender: f
+  usage: Цукорниця стоїть поруч із чайником.
+- lemma: серветниця
+  translation: napkin holder
+  pos: noun
+  gender: f
+  usage: Серветниця стоїть на столі.
+- lemma: хлібниця
+  translation: bread box
+  pos: noun
+  gender: f
+  usage: Хлібниця зберігає хліб свіжим.
+- lemma: попільниця
+  translation: ashtray
+  pos: noun
+  gender: f
+  usage: Попільниця не те саме, що попелище.
+- lemma: обладнання
+  translation: equipment
+  pos: noun
+  gender: n
+  usage: Обладнання треба називати за функцією й технічним стандартом.
+- lemma: споруда
+  translation: structure; building
+  pos: noun
+  gender: f
+  usage: Споруда може мати кілька приміщень.
+- lemma: виробництво
+  translation: production
+  pos: noun
+  gender: n
+  usage: Виробництво часто має власні назви приміщень.
+- lemma: регістр
+  translation: register
+  pos: noun
+  gender: m
+  usage: Регістр визначає, чи доречна розмовна назва.
+- lemma: прозорий
+  translation: transparent
+  pos: adj
+  usage: Прозорий словотвір допомагає зрозуміти функцію предмета.
+- lemma: штучний
+  translation: artificial
+  pos: adj
+  usage: Штучний новотвір може бути зрозумілим, але неприродним.
