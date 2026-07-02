@@ -93,7 +93,7 @@ TRACK_CONFIG = {
     "folk": {
         "title": "FOLK",
         "uk_title": "FOLK · Фольклор та усна традиція",
-        "uk_sub": "Folklore & Oral Tradition",
+        "uk_sub": "Фольклор та усна традиція",
         "word_target": 5000,
     },
     "lit-essay": {
@@ -150,6 +150,17 @@ def truncate_card_subtitle(text: str, limit: int = 96) -> str:
     if " " in shortened:
         shortened = shortened.rsplit(" ", 1)[0]
     return shortened
+
+
+def ua_plural(count: int, one: str, few: str, many: str) -> str:
+    """Return the Ukrainian form for 1, 2-4, and 5+/teens counts."""
+    count_10 = count % 10
+    count_100 = count % 100
+    if count_10 == 1 and count_100 != 11:
+        return one
+    if count_10 in {2, 3, 4} and count_100 not in {12, 13, 14}:
+        return few
+    return many
 
 
 def get_module_status(level: str, slug: str) -> str:
@@ -310,7 +321,8 @@ def generate_landing_page(level: str, curriculum: dict) -> str:
         elif status == "active":
             active_count += 1
 
-        sub_escaped = escape_js_string(truncate_card_subtitle(subtitle))
+        card_subtitle = title if level == "folk" else subtitle
+        sub_escaped = escape_js_string(truncate_card_subtitle(card_subtitle))
         title_escaped = escape_js_string(title)
 
         phase_items[unit_name].append(
@@ -334,16 +346,32 @@ def generate_landing_page(level: str, curriculum: dict) -> str:
     modules_js = "\n".join(modules_js_lines)
 
     planned_count = len(modules) - done_count - active_count
-    if active_count:
-        page_label = "page" if active_count == 1 else "pages"
-        subtitle = (
-            f"{config.get('uk_sub', '')} — {active_count} learner {page_label} available · {len(modules)} modules"
+    track_subtitle = config.get("uk_sub", "")
+    if level == "folk":
+        if active_count:
+            available_label = ua_plural(active_count, "доступна тема", "доступні теми", "доступних тем")
+            total_label = ua_plural(len(modules), "теми", "тем", "тем")
+            subtitle = f"{track_subtitle} · {active_count} {available_label} із {len(modules)} {total_label}"
+        else:
+            module_label = ua_plural(len(modules), "тема", "теми", "тем")
+            subtitle = f"{track_subtitle} · {len(modules)} {module_label} у курсі"
+        progress_title = "Стан побудови FOLK"
+        progress_description = (
+            f"Доступно: {active_count} · Перевірено: {done_count} · Заплановано: {planned_count}"
         )
+        module_label = ua_plural(len(modules), "тема", "теми", "тем")
+        description = f"{track_subtitle} — {len(modules)} {module_label} у порядку курсу"
     else:
-        subtitle = f"{config.get('uk_sub', '')} — {len(modules)} modules"
-    progress_title = f"{level.upper()} Build Status"
-    progress_description = f"{active_count} available · {done_count} reviewed · {planned_count} planned"
-    description = f"{config.get('uk_sub', '')} — {len(modules)} modules in curriculum order"
+        if active_count:
+            page_label = "page" if active_count == 1 else "pages"
+            subtitle = (
+                f"{track_subtitle} — {active_count} learner {page_label} available · {len(modules)} modules"
+            )
+        else:
+            subtitle = f"{track_subtitle} — {len(modules)} modules"
+        progress_title = f"{level.upper()} Build Status"
+        progress_description = f"{active_count} available · {done_count} reviewed · {planned_count} planned"
+        description = f"{track_subtitle} — {len(modules)} modules in curriculum order"
 
     mdx = f"""---
 title: "{config["title"]}"

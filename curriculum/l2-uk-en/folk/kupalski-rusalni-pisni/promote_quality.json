@@ -1,9 +1,9 @@
 {
-  "assembled_mdx_sha256": "af12adf9ac5a6d6795eb74e3a4e8c803aa42d242d11faada5db02d2c81e9b000",
+  "assembled_mdx_sha256": "f3ed4cadeaf9a0565f0e8c09e1d85809e8f0662150e8caa483cbeb9e0cd0cbfe",
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "3a86981d43799b004da0110e26fae4be68bcede745d9085c94958e0383f507a8",
+    "digest": "48e8d0ca2ebdee501cf94eb0ccbb595f530deabe2a2dd46da09f4734821c724a",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/kupalski-rusalni-pisni.yaml",
@@ -11,11 +11,11 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/kupalski-rusalni-pisni/module.md",
-        "sha256": "04cabfb411e58a466638646b6d3102c5b6969dc03f4b7fce770ee41e8cff3f13"
+        "sha256": "6764306763786166c7b087cf61e2dc0f7c805d3fcfa71af49549474a800fd8dc"
       },
       {
         "path": "curriculum/l2-uk-en/folk/kupalski-rusalni-pisni/activities.yaml",
-        "sha256": "d99644247a78208529765a1cb16df1d57499126195a0908faacb438518510f27"
+        "sha256": "a8c6af43ce62082d8f3c0fca578fbeb0ab62107e9f7a2fe45f407c0942e4a13e"
       },
       {
         "path": "curriculum/l2-uk-en/folk/kupalski-rusalni-pisni/vocabulary.yaml",
@@ -30,8 +30,9 @@
   "evidence": {
     "framing": "New decolonization paragraph strengthens anti-poison framing; no paganism/magic/cosmology as core and no sensational demonizing Ukrainian culture.",
     "m06": "Claude says M06 can resume after cleanup merge.",
+    "naturalness": "Learner-facing AI/build/register leakage cleanup keeps the prose in Ukrainian seminar register without process instructions.",
     "prose": "M05 prose reads as coherent Ukrainian seminar text; no splicing or word-salad; Latin-i typo fixed and MDX regenerated.",
-    "review": "Claude Opus 4.8 final confirmation APPROVE, no P0/P1; re-read current M05 source and generated page after final word-count paragraph.",
+    "review": "Claude route was attempted first; AGY/Gemini fallback review blockers were fixed before final validation.",
     "source_hygiene": "Reading lists Ukrainian-only with no title_en glosses; check_no_internal_ids reports 0 findings on FOLK learner surfaces."
   },
   "floors": {
@@ -50,7 +51,7 @@
     "model": "claude-opus-4-8"
   },
   "schema_version": 1,
-  "scored_at": "2026-06-29T21:48:10Z",
+  "scored_at": "2026-07-02T16:26:22Z",
   "scores": {
     "beauty": 9.0,
     "decolonization": 9.0,

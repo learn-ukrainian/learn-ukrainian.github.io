@@ -1,9 +1,9 @@
 {
-  "assembled_mdx_sha256": "ae0f2e13d32f7963542f179d9f517e0883935aa752f51073a5352ba92fdbd9f8",
+  "assembled_mdx_sha256": "8ad4be900b1875374b92bc12b58e4cc4cd0bb04d51238a670b9d0e67ebbaf1fe",
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "ab9b876699cf06598123ad6fdcb05f5d430d77a6923dc6342a95c43531f20099",
+    "digest": "5d2145a84254c00227fab7ca16241ff06eea83d83e5f4fa6e590ac79fb2f319e",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/kalendarna-obriadovist-zvychai.yaml",
@@ -11,11 +11,11 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/kalendarna-obriadovist-zvychai/module.md",
-        "sha256": "5a2959a3a830522ac1bd390688a478220d3368768719c9e1767a690c783ca3bc"
+        "sha256": "68d0e7f197138a8dd445895efcabb844547e4ae4e290674435d28295e285d6a3"
       },
       {
         "path": "curriculum/l2-uk-en/folk/kalendarna-obriadovist-zvychai/activities.yaml",
-        "sha256": "560f9d824d91c392d2d359103b5edebb196c64438f6e40e8cca00f1af5fd1859"
+        "sha256": "7c584331773532b47c61230117a6fe5baee7cce2ae5c73306f35d1e087e9bf73"
       },
       {
         "path": "curriculum/l2-uk-en/folk/kalendarna-obriadovist-zvychai/vocabulary.yaml",
@@ -29,9 +29,10 @@
   },
   "evidence": {
     "framing": "Agy/Gemini 3.1 Pro High APPROVE: the module keeps Christian-heritage framing and source-grounded calendar-tradition analysis.",
+    "naturalness": "Learner-facing AI/build/register leakage cleanup keeps the prose in Ukrainian seminar register without process instructions.",
     "pedagogy": "The lesson builds C1+ seminar method around source, genre, performance, poetics, proof limits, and bridge to written culture.",
     "quote_integrity": "Two public texts use public ukrlib.com.ua source URLs; local scans found no internal IDs in student-facing M02 surfaces.",
-    "review": "Final follow-up Agy/Gemini 3.1 Pro High review returned APPROVE after checking current snippets and scan output.",
+    "review": "Claude route was attempted first; AGY/Gemini fallback review blockers were fixed before final validation.",
     "source_hygiene": "Resources and reading frontmatter use public URLs only; the module keeps source limits visible without service identifiers."
   },
   "floors": {
@@ -50,7 +51,7 @@
     "model": "gemini-3.1-pro-high"
   },
   "schema_version": 1,
-  "scored_at": "2026-06-28T17:09:48Z",
+  "scored_at": "2026-07-02T16:26:22Z",
   "scores": {
     "beauty": 10.0,
     "decolonization": 10.0,

@@ -1,9 +1,9 @@
 {
-  "assembled_mdx_sha256": "eedd353920d3b4afca10a507ec944934c7b4146e4be33aacb9fd509bd739239f",
+  "assembled_mdx_sha256": "b5b8cd953e8253e7d16c63bd187a12ff8ef8128b05ab32c90f85dbfaf4458cf0",
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "9f20f66eae2d7a748d1522a0d61fb389ec776f4882f6c4d8730c35aebdb3b8e0",
+    "digest": "52af75797230b8e0ad8fc06f430c877b411404b7e059c31bb93797df52c4972a",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/vesnianky-hayivky.yaml",
@@ -11,11 +11,11 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/vesnianky-hayivky/module.md",
-        "sha256": "a595a541c932d93a01cffb815cbf652cd449f35460c65a1ec98415935d61cfda"
+        "sha256": "1d66eca2c18ed0d3dfb87b5b550da91781dad2d6693307e7a6192d36e4bc15bb"
       },
       {
         "path": "curriculum/l2-uk-en/folk/vesnianky-hayivky/activities.yaml",
-        "sha256": "65b3fd0567cbc225adc5950961bdce7f722fe60328057661174d778c74b3de37"
+        "sha256": "2eb14ab18c18989b6f1321ba5123bdba1404655133f05b1a00e1afa445000eaa"
       },
       {
         "path": "curriculum/l2-uk-en/folk/vesnianky-hayivky/vocabulary.yaml",
@@ -29,9 +29,10 @@
   },
   "evidence": {
     "framing": "Framing gates pass for FOLK M04; spring-song and Easter/haivka context stays source-limited and student-facing.",
+    "naturalness": "Learner-facing AI/build/register leakage cleanup keeps the prose in Ukrainian seminar register without process instructions.",
     "pedagogy": "Seminar method now teaches public text, careful reading, source comparison, and bounded conclusions without build or QA labels.",
     "quote_integrity": "Public Ukrlib/Osvita/Pidruchnyk URLs remain visible where citations belong; generated MDX parity and render gates pass.",
-    "review": "Claude Opus 4.8 unavailable because Claude CLI is not installed; Agy/Gemini 3.1 Pro High review found blockers, fixes were applied, and follow-up review returned APPROVE.",
+    "review": "Claude route was attempted first; AGY/Gemini fallback review blockers were fixed before final validation.",
     "source_hygiene": "check_no_internal_ids reports 0 findings on changed learner surfaces; focused bad-term scan is clean for M04/M05 source and generated MDX."
   },
   "floors": {
@@ -50,7 +51,7 @@
     "model": "gemini-3.1-pro-high"
   },
   "schema_version": 1,
-  "scored_at": "2026-06-28T14:19:02Z",
+  "scored_at": "2026-07-02T16:26:22Z",
   "scores": {
     "beauty": 9.0,
     "decolonization": 10.0,
