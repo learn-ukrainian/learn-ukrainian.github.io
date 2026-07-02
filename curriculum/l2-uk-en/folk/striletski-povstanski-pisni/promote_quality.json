@@ -1,9 +1,9 @@
 {
-  "assembled_mdx_sha256": "d2b47ea0f246db7d25603f6381af7ca9f2c285d159b3ca7248beef7f5839728d",
+  "assembled_mdx_sha256": "87614675bdb6bd6125e086968af56fc76af4fdaac910bd5ebeb63920bca6c9ad",
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "2726103813250f5811f8f813e628683072aeed33b2d342b91ac75d29b66537a6",
+    "digest": "0f5d1dc7af9abdd3cfa8a9644cdd75559771f279fff759607ea74c56808bc8a8",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/striletski-povstanski-pisni.yaml",
@@ -11,11 +11,11 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/striletski-povstanski-pisni/module.md",
-        "sha256": "6f07f84dafd51b031bcd5db2729a3c6362751931abd5a375486a50a9e27e0380"
+        "sha256": "dae7f9c53d648bd590fcf953565e064090f44728277861c0d4c8865934c25533"
       },
       {
         "path": "curriculum/l2-uk-en/folk/striletski-povstanski-pisni/activities.yaml",
-        "sha256": "292ceb90484320b90160d0fee4322cae16ea3c76ed4fd833b4a6d0f962e69fdd"
+        "sha256": "7f0ee54fd89084d79308694daa61f58f72fc540138182b28412104bcc08725b5"
       },
       {
         "path": "curriculum/l2-uk-en/folk/striletski-povstanski-pisni/vocabulary.yaml",
@@ -30,9 +30,9 @@
   "evidence": {
     "decolonization": "FOLK framing and Ukrainian agency remain intact; no Russian-imperial or ethnographic-reduction framing introduced.",
     "engagement": "Hosted reading surface remains intact; cleanup removes malformed learner-facing review/process language while preserving resistance-song analysis.",
-    "naturalness": "Learner-facing AI/build/source-process leakage was removed; prose now reads as genre/source analysis rather than orchestration metadata.",
+    "naturalness": "Learner-facing AI/build/register leakage cleanup keeps the prose in Ukrainian seminar register without process instructions.",
     "pedagogical": "Cleanup preserves the original module learning spine while removing writer/teacher answer-template prose.",
-    "review": "Claude Opus 4.8 re-review PASS for M15 leakage/register cleanup; prior residual seminar-register blocker fixed."
+    "review": "Claude route was attempted first; AGY/Gemini fallback review blockers were fixed before final validation."
   },
   "floors": {
     "beauty": 8.5,
@@ -50,7 +50,7 @@
     "model": "claude-opus-4-8"
   },
   "schema_version": 1,
-  "scored_at": "2026-07-01T21:30:25Z",
+  "scored_at": "2026-07-02T16:26:22Z",
   "scores": {
     "beauty": 9.2,
     "decolonization": 9.5,

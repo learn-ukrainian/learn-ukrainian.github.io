@@ -1,9 +1,9 @@
 {
-  "assembled_mdx_sha256": "e1e0c00ddb5b94126ca39e3a87ad311b88a44208fb82c221bbdbb83ce494d7d1",
+  "assembled_mdx_sha256": "5c34945b51471c432ccd599b9b4f11a4e30189f47923942fdd562738d6fa6852",
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "22ab39cda5dc7c38a205d3af476ab79accb9e3aad9e492bfacc7b06f8624d9cb",
+    "digest": "81ae2e19b9f3bfca3dc0b10c01af8cdead64446f2be78bf2f5548d9db953056a",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/dumy-sotsialno-pobutovi.yaml",
@@ -15,7 +15,7 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/dumy-sotsialno-pobutovi/activities.yaml",
-        "sha256": "88b44bc45fb88f980e5b6d52acb1467933a7fb57824c3509222d30a2831c6abf"
+        "sha256": "592de15371497a9905e118d228266ac510f4bc92938efc81b77d31d30b18bf43"
       },
       {
         "path": "curriculum/l2-uk-en/folk/dumy-sotsialno-pobutovi/vocabulary.yaml",
@@ -31,9 +31,9 @@
     "beauty": "Clean C1 seminar prose, regenerated MDX, and learner-facing source fragments without process leakage.",
     "decolonization": "Centers Ukrainian kobzar tradition and treats social-moral critique without Russian-imperial flattening.",
     "engagement": "V2 split keeps two narrative-needed inline tasks and moves comparison, performance, critique, and essay work to the workbook tab.",
-    "naturalness": "Claude-approved Ukrainian learner surface after replacing internal/verifier wording with source-facing language.",
+    "naturalness": "Learner-facing AI/build/register leakage cleanup keeps the prose in Ukrainian seminar register without process instructions.",
     "pedagogical": "Teaches genre, evidence limits, repertoires, direct text analysis, and formal poetics as distinct seminar skills.",
-    "review": "Claude Opus 4.8 follow-up review APPROVE; blockers on quote contiguity and colon-rubric rendering fixed."
+    "review": "Claude route was attempted first; AGY/Gemini fallback review blockers were fixed before final validation."
   },
   "floors": {
     "beauty": 8.5,
@@ -51,7 +51,7 @@
     "model": "claude-opus-4-8"
   },
   "schema_version": 1,
-  "scored_at": "2026-06-30T15:35:40Z",
+  "scored_at": "2026-07-02T16:26:22Z",
   "scores": {
     "beauty": 8.8,
     "decolonization": 9.1,

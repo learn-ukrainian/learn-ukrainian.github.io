@@ -1,9 +1,9 @@
 {
-  "assembled_mdx_sha256": "dc405458a0e67dc54adf4e016c3aa3db0cca8b9e4141395e1acb2396a935b505",
+  "assembled_mdx_sha256": "c2634ac1633abd28d91fd6b8ebd3e5f8d4b248bf30556abe6e3a05b8df2f6cf7",
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "7154fa286a0fed3177063909dcff52277c6a6a4030c3977e184d70d2b4634224",
+    "digest": "9205bdb3cb901c4bd72e775f448c66e669214e9b0b14258d1d638e0bbd569ab6",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/rodynna-obriadovist-zvychai.yaml",
@@ -11,11 +11,11 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/rodynna-obriadovist-zvychai/module.md",
-        "sha256": "597986cce3d4d6131483675babfe9460d9d651b837f0bd1e6a7ef0c1722d707e"
+        "sha256": "2e5727a1884f13a510b7160197ca915ab506e66b1b59ee3f5b14399a505f4d14"
       },
       {
         "path": "curriculum/l2-uk-en/folk/rodynna-obriadovist-zvychai/activities.yaml",
-        "sha256": "e50a089859c2791959e659da5b0fcf95e37d7697ce9c67a5d31f8adc390e46f8"
+        "sha256": "12f4cc3d23a1917817d3e6583e295411351501c7b395403b23d2ae15df517682"
       },
       {
         "path": "curriculum/l2-uk-en/folk/rodynna-obriadovist-zvychai/vocabulary.yaml",
@@ -31,9 +31,9 @@
     "beauty": "Fluent C1 Ukrainian seminar lesson links birth, christening, wedding, funeral, lament, and kinship voice through recurring transition images.",
     "decolonization": "The module rejects decorative ethnography and hidden older-core claims, keeping Ukrainian family rites source-bound, Christian-community-aware, and agency-centered.",
     "engagement": "Short verified fragments, careful-reading practice, inline checks, and focused workbook tasks give learners repeated evidence-based entry points.",
-    "naturalness": "Teaching prose keeps an academic Ukrainian register while preserving archaic quoted forms only as bounded source fragments.",
+    "naturalness": "Learner-facing AI/build/register leakage cleanup keeps the prose in Ukrainian seminar register without process instructions.",
     "pedagogical": "Repeatable method asks learners to track action, performer, object, addressee, voice, formula, and proof limits across family rites.",
-    "review": "Claude Opus 4.8 read-only follow-up review found no merge blockers for PR #4041; AGY attempts were unusable/stalled; DeepSeek was not used.",
+    "review": "Claude route was attempted first; AGY/Gemini fallback review blockers were fixed before final validation.",
     "source_hygiene": "Resources use public Wikisource/Wikipedia references, and the lesson marks short-fragment-only versus public-excerpt-candidate posture.",
     "tone": "Serious seminar voice holds tenderness, hierarchy, grief, memory, and community pressure without nostalgia or spectacle."
   },
@@ -53,7 +53,7 @@
     "model": "claude-opus-4-8"
   },
   "schema_version": 1,
-  "scored_at": "2026-06-30T10:27:51Z",
+  "scored_at": "2026-07-02T16:26:22Z",
   "scores": {
     "beauty": 9.0,
     "decolonization": 9.0,

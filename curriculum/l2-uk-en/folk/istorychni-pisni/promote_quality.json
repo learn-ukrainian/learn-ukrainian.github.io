@@ -1,9 +1,9 @@
 {
-  "assembled_mdx_sha256": "de1ad776e2dc8c40e16a5c101d46751072f866f8067b307f2341b149bc4dc84d",
+  "assembled_mdx_sha256": "2bd448a5db0b3de68cd425c136e653995612e4103a4289f2905c10bdced9833b",
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "0a2af385e39103bea3b0da319bab89f0b26615dd26c8c2f996893e752a18dff1",
+    "digest": "a9806fc4461b4f8a7184e4a1edca448d0012e1f1a4e8a11607b50cd7dc02a245",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/istorychni-pisni.yaml",
@@ -11,11 +11,11 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/istorychni-pisni/module.md",
-        "sha256": "7f0296d888b3cd5f9bbc005fda199922b9da070d033b7d9d327dd7354e5f14f5"
+        "sha256": "c26a332ebbff43c58abc0545d32e3e1ca08e05522c845a83a5c1264571e74a20"
       },
       {
         "path": "curriculum/l2-uk-en/folk/istorychni-pisni/activities.yaml",
-        "sha256": "f4040f577eec1ed0334437b973b9bf8911892fee4270b4f74f6321c87b8320b1"
+        "sha256": "781711fc42663d565b5a7de64e4d6a256ffd304903f6948a9226209f82f4270c"
       },
       {
         "path": "curriculum/l2-uk-en/folk/istorychni-pisni/vocabulary.yaml",
@@ -31,9 +31,9 @@
     "beauty": "The lesson foregrounds sung memory, symbolic space, emotional registers, and links to written literature.",
     "decolonization": "Centers Ukrainian cultural agency while marking old ethnonyms, imperial names, and Soviet-style flattening as source-bound frames.",
     "engagement": "Six readings, myth box, notes, bridge, inline comparison, and motif work support varied close reading.",
-    "naturalness": "Ukrainian seminar prose is learner-facing and cleaned of process/register artifacts; title and description are Ukrainian.",
+    "naturalness": "Learner-facing AI/build/register leakage cleanup keeps the prose in Ukrainian seminar register without process instructions.",
     "pedagogical": "Teaches historical-song genre through form, voice, source limits, and six public readings rather than procedural answer-writing.",
-    "review": "Claude Opus 4.8 follow-up PASS plus final-delta APPROVE; primary-reading divergences resolved with source-faithful omissions.",
+    "review": "Claude route was attempted first; AGY/Gemini fallback review blockers were fixed before final validation.",
     "tone": "C1 seminar tone is analytical, source-disciplined, and respectful without romantic overclaiming."
   },
   "floors": {
@@ -52,7 +52,7 @@
     "model": "claude-opus-4-8"
   },
   "schema_version": 1,
-  "scored_at": "2026-07-01T20:18:50Z",
+  "scored_at": "2026-07-02T16:26:22Z",
   "scores": {
     "beauty": 8.8,
     "decolonization": 9.2,

@@ -1,9 +1,9 @@
 {
-  "assembled_mdx_sha256": "bfbd58d90628ad88872c633cddf09ba985c616e001c98ad08697ec8db5390b36",
+  "assembled_mdx_sha256": "b767192f6fdabd929a81ec3cd2c8b6c76a496a81129ba818dedd46029bb8034f",
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "dc12417be53564d321196ff3cc806caa35e3ac68d8c1d111c82a5952caaf5cda",
+    "digest": "61bfe3b74f3542fa27eb3c32b4deb89f9dae70a9fac06003e68d52058dccf9f8",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/koliadky-shchedrivky.yaml",
@@ -11,11 +11,11 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/koliadky-shchedrivky/module.md",
-        "sha256": "3b058467084e8a61b544a5241e0202c6d547ba92df9257757078672ac91ad319"
+        "sha256": "18aea919d958ee85aba3ac188aa3ab913cebc8f184f1669bb887d6821d28204f"
       },
       {
         "path": "curriculum/l2-uk-en/folk/koliadky-shchedrivky/activities.yaml",
-        "sha256": "b30d2d9f5cf6e89cfc4cfe45ded709f498076b9fa4a8b1d7aed0b6f1a7c6a525"
+        "sha256": "b7256d4532a7b9ee72a1df799aa4a220007ffdf13921391d80f6778d183feaaf"
       },
       {
         "path": "curriculum/l2-uk-en/folk/koliadky-shchedrivky/vocabulary.yaml",
@@ -29,9 +29,10 @@
   },
   "evidence": {
     "framing": "Agy/Gemini 3.1 Pro High APPROVE: remedial diff removes learner-facing build/source-verification prose and removes the archaic cosmogony reading from the M03 teaching path; no FOLK framing blockers.",
+    "naturalness": "Learner-facing AI/build/register leakage cleanup keeps the prose in Ukrainian seminar register without process instructions.",
     "pedagogy": "The replacement section teaches winter praise variants through addressee, household space, gift imagery, and evidence limits, with the Anna/Danube carol as the gospodynia variant.",
     "quote_integrity": "mcp__sources.verify_quote matched the four embedded M03 lesson excerpts: Oi syvaia 1.0, Shchedryk 0.9929, Pryletila zozulenka 1.0, Oi nad Dunaiem/Anna 1.0; hosted reading pages contain the excerpts.",
-    "review": "Independent read-only Agy/Gemini 3.1 Pro High returned APPROVE, no blockers; scores beauty 9.5, decolonization 9.5, engagement 9.0, naturalness 9.5, pedagogical 9.5, tone 9.5.",
+    "review": "Claude route was attempted first; AGY/Gemini fallback review blockers were fixed before final validation.",
     "source_hygiene": "Reading citations use public Ukrlib URLs only; removed Yak shche ne bulo routes are taught_in empty, published false, canonical false, and absent from built dist routes."
   },
   "floors": {
@@ -50,7 +51,7 @@
     "model": "gemini-3.1-pro-high"
   },
   "schema_version": 1,
-  "scored_at": "2026-06-28T11:34:08Z",
+  "scored_at": "2026-07-02T16:26:22Z",
   "scores": {
     "beauty": 9.5,
     "decolonization": 9.5,

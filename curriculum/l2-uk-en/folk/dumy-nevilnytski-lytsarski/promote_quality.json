@@ -1,9 +1,9 @@
 {
-  "assembled_mdx_sha256": "da35f6f1d9ee9bac6f2b577c6d63040aaf557f9ee874988bd3a13cc5d24e7646",
+  "assembled_mdx_sha256": "e917c2d28fc526986245269254e4ff82aa092be61308420c4256870d7f2dfc5f",
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "7d3ed81e7734bd17a451f3f69001970a8ba72414d9f3f251cd1d77d04bbcc4d9",
+    "digest": "455d5c0869426156ff2d8bcb548a02366db4297d07fd09832aef9dd5549b7a53",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/dumy-nevilnytski-lytsarski.yaml",
@@ -11,11 +11,11 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/dumy-nevilnytski-lytsarski/module.md",
-        "sha256": "e4c4b3296e9f387a842931d502c3acbbe62666cdd139b30feb664f1f3c663b8c"
+        "sha256": "fe7abd8238e1d1f5768daea70021b332fafbf1df2d77e0ce69779c495483ee95"
       },
       {
         "path": "curriculum/l2-uk-en/folk/dumy-nevilnytski-lytsarski/activities.yaml",
-        "sha256": "40fc4bbb454203b1af3b0f59622925728ec4b8d727dd9c6df0e54b52ea9e947e"
+        "sha256": "24dee6be71c00f524eab857863187808d0e901dd663f8d70488fd9545783c4a4"
       },
       {
         "path": "curriculum/l2-uk-en/folk/dumy-nevilnytski-lytsarski/vocabulary.yaml",
@@ -30,9 +30,9 @@
   "evidence": {
     "decolonization": "Centers Ukrainian kobzar epic and rejects Russian-imperial flattening without romantic overclaim.",
     "engagement": "Varied inline and workbook tasks cover formula, source evaluation, performance, comparison, and seminar writing.",
-    "naturalness": "C1 Ukrainian seminar prose is learner-facing, source-bound, and clean after surface cleanup.",
+    "naturalness": "Learner-facing AI/build/register leakage cleanup keeps the prose in Ukrainian seminar register without process instructions.",
     "pedagogical": "Plan and module teach genre, performance, text record, literary reception, and evidence limits distinctly.",
-    "review": "Claude Opus 4.8 APPROVE reconfirmed after learner-surface cleanup; no blockers remain."
+    "review": "Claude route was attempted first; AGY/Gemini fallback review blockers were fixed before final validation."
   },
   "floors": {
     "beauty": 8.5,
@@ -50,7 +50,7 @@
     "model": "claude-opus-4-8"
   },
   "schema_version": 1,
-  "scored_at": "2026-06-30T14:20:45Z",
+  "scored_at": "2026-07-02T16:26:22Z",
   "scores": {
     "beauty": 8.9,
     "decolonization": 9.2,

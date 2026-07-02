@@ -1,9 +1,9 @@
 {
-  "assembled_mdx_sha256": "e292f52e749ea8fd5c9de351df978039f392692dbc3dd7e3e99356349a4b3138",
+  "assembled_mdx_sha256": "439f6cc29aab43393eacdaf6a5dee397c6782a762d68a5f8af61d7d17ff1bd7a",
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "dddcf622ba45ab90118f60c66e597dcaf7d5d996e1324dede2a1e4b406104e4b",
+    "digest": "133bb3cec00bd2452573485ea18e5b10e7180fa77665a79ea5a1086564de5439",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/zhnyvarski-obzhynkovi-pisni.yaml",
@@ -11,11 +11,11 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/zhnyvarski-obzhynkovi-pisni/module.md",
-        "sha256": "45c01b0a04417460fa6b6cc5e6185ed1c7f5ef4790a682c7db6d091915f002c6"
+        "sha256": "a7f794a7543662d379c330df889273f41b2928545e3c2e641345c1081db40ede"
       },
       {
         "path": "curriculum/l2-uk-en/folk/zhnyvarski-obzhynkovi-pisni/activities.yaml",
-        "sha256": "8e28bfbc5fdfcc7ca364cb9795b967220cbb24977dd509d53667982776aa9b0b"
+        "sha256": "4b6955be6203bcf5ed8aa615e3ea50e3e2c90bca6e423cf4e41b47727e92cd26"
       },
       {
         "path": "curriculum/l2-uk-en/folk/zhnyvarski-obzhynkovi-pisni/vocabulary.yaml",
@@ -31,9 +31,9 @@
     "beauty": "Fluent academic Ukrainian with tight arcs from labor and body to obzhynky, poetics, and evidence limits.",
     "decolonization": "Social-address/decolonization section resists decorative ethnography and over-symbolizing; no Russian-imperial frame.",
     "engagement": "Four short public primary texts, inline activities, and useful tip/note/important callouts anchor the lesson.",
-    "naturalness": "Native-quality C1 Ukrainian register; quoted archaic forms preserved only in public-text excerpts.",
+    "naturalness": "Learner-facing AI/build/register leakage cleanup keeps the prose in Ukrainian seminar register without process instructions.",
     "pedagogical": "Repeatable method: row, action, object, addressee, and bounded conclusion, with model answers and rubric.",
-    "review": "Claude Opus 4.8 follow-up verdict APPROVE; raw reading-slug prompt leak fixed and guarded by tests/scanner; post-review source-hammer correction restored the missing initial \u0410 in one quoted line.",
+    "review": "Claude route was attempted first; AGY/Gemini fallback review blockers were fixed before final validation.",
     "tone": "Serious Ukrainian teaching voice keeps labor, fatigue, hierarchy, humor, and community visible without sentimentality."
   },
   "floors": {
@@ -52,7 +52,7 @@
     "model": "claude-opus-4-8"
   },
   "schema_version": 1,
-  "scored_at": "2026-06-29T23:42:16Z",
+  "scored_at": "2026-07-02T16:26:22Z",
   "scores": {
     "beauty": 9.0,
     "decolonization": 9.0,

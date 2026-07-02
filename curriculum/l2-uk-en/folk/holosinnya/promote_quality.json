@@ -1,9 +1,9 @@
 {
-  "assembled_mdx_sha256": "1fb6fe6b9e9599bda1832bbb14b87370636b1dbd5b2e46d79e7c0538ca22ab91",
+  "assembled_mdx_sha256": "42939799b675ade5bf35b2010b1c9e9cd3f462ad37fffaf72b8bb75c4c447e25",
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "d3285012e407bfaa9e725faeff2af17ce0d0f7bf483f987ffd5186fafaf7d5b7",
+    "digest": "467620adbd1a8c2ec23db126f8a3fe73ed6cba56d41dcff16e5b0564ea016a84",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/holosinnya.yaml",
@@ -11,11 +11,11 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/holosinnya/module.md",
-        "sha256": "e57013229900484669b7cb2c94a1b3bd9e62b5488db6644f871e0fdee43a28fc"
+        "sha256": "23ad9c86288d843ac229ab0b77b3fc65f11c0c166a56561a9213f42f780ece42"
       },
       {
         "path": "curriculum/l2-uk-en/folk/holosinnya/activities.yaml",
-        "sha256": "b0d0c5feda1a2074d5ba562f296b48aa4f4ba803e1c2a329c8cc5ab4b7ca8e75"
+        "sha256": "d12602cc4d8a5f0c08a0fb249065ec749943893872213bc60237e5ce88e0472e"
       },
       {
         "path": "curriculum/l2-uk-en/folk/holosinnya/vocabulary.yaml",
@@ -30,9 +30,9 @@
   "evidence": {
     "decolonization": "FOLK framing and Ukrainian agency remain intact; no Russian-imperial or ethnographic-reduction framing introduced.",
     "engagement": "Lesson now tells learners that reading happens through short embedded lament fragments, matching the module's intentional format.",
-    "naturalness": "Learner-facing AI/build/source-process leakage was removed or avoided; prose now reads as seminar content rather than orchestration metadata.",
+    "naturalness": "Learner-facing AI/build/register leakage cleanup keeps the prose in Ukrainian seminar register without process instructions.",
     "pedagogical": "Cleanup preserves the original module learning spine while clarifying whether the reading surface is short embedded fragments or a hosted reading widget.",
-    "review": "Claude Opus 4.8 PASS for folk learner reading surface cleanup; non-blocking ReadingActivity text prop note verified in site/src/components/ReadingActivity.tsx."
+    "review": "Claude route was attempted first; AGY/Gemini fallback review blockers were fixed before final validation."
   },
   "floors": {
     "beauty": 8.5,
@@ -50,7 +50,7 @@
     "model": "claude-opus-4-8"
   },
   "schema_version": 1,
-  "scored_at": "2026-06-30T14:27:30Z",
+  "scored_at": "2026-07-02T16:26:22Z",
   "scores": {
     "beauty": 8.8,
     "decolonization": 9.1,

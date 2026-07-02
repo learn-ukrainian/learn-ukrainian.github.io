@@ -2478,31 +2478,31 @@ levels:
   folk:
     type: track
     groups:
-      - label: Блок A · Світогляд і основа · Worldview & Foundation
+      - label: Блок A · Світогляд і основа
         start: narodna-kultura-yak-systema
         end: narodna-kultura-yak-systema
-      - label: Блок B · Календарна обрядовість · Calendar Ritual
+      - label: Блок B · Календарна обрядовість
         start: kalendarna-obriadovist-zvychai
         end: zhnyvarski-obzhynkovi-pisni
-      - label: Блок C · Родинна обрядовість · Family Rites
+      - label: Блок C · Родинна обрядовість
         start: rodynna-obriadovist-zvychai
         end: holosinnya
-      - label: Блок D · Епос і кобзарство · Epic & Kobzar Tradition
+      - label: Блок D · Епос і кобзарська традиція
         start: dumy-nevilnytski-lytsarski
         end: bylyny-kyivskoho-tsyklu
-      - label: Блок E · Пісенні жанри · Song Genres
+      - label: Блок E · Пісенні жанри
         start: istorychni-pisni
         end: pisni-literaturnoho-pokhodzhennia
-      - label: Блок F · Проза, паремії, дитячий фольклор · Prose, Paremia, Children's Lore
+      - label: Блок F · Проза, паремії, дитячий фольклор
         start: charivni-kazky
         end: dytiachyi-folklor-kolyskovi
-      - label: Блок G · Драма, музика, танець · Drama, Music, Dance
+      - label: Блок G · Драма, музика, танець
         start: vertep-narodna-drama
         end: narodni-tantsi
-      - label: Блок H · Матеріальна культура · Material Culture
+      - label: Блок H · Матеріальна культура
         start: pysankarstvo
         end: narodna-kukhnia-obriadova-yizha
-      - label: Блок I · Синтез · Synthesis
+      - label: Блок I · Синтез
         start: rehionalni-etnokulturni-tradytsii
         end: narodna-kultura-ta-vysoka-kultura-mistky
     modules:
