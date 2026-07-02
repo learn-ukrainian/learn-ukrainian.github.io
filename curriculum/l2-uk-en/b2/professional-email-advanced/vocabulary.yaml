@@ -1,0 +1,122 @@
+- lemma: претензія
+  translation: formal claim; complaint
+  pos: noun
+  gender: f
+  usage: Претензія має містити факт, підставу, вимогу і строк.
+- lemma: рекламація
+  translation: claim about defective goods or services
+  pos: noun
+  gender: f
+  usage: Рекламація стосується якості товару або послуги.
+- lemma: доказова база
+  translation: evidentiary basis
+  pos: phrase
+  usage: Доказова база претензії складається з дат, документів і фактів.
+- lemma: порушення
+  translation: violation; breach
+  pos: noun
+  gender: n
+  usage: У листі треба назвати конкретне порушення строку.
+- lemma: врегулювання
+  translation: settlement; resolution
+  pos: noun
+  gender: n
+  usage: Мета претензії - врегулювання ситуації, а не сварка.
+- lemma: деескалація
+  translation: de-escalation
+  pos: noun
+  gender: f
+  usage: Деескалація допомагає повернути конфлікт до робочого рішення.
+- lemma: асертивність
+  translation: assertiveness
+  pos: noun
+  gender: f
+  usage: Асертивність означає тверду позицію без агресії.
+- lemma: аргументація
+  translation: argumentation
+  pos: noun
+  gender: f
+  usage: Аргументація має спиратися на тезу, доказ і висновок.
+- lemma: переконання
+  translation: persuasion
+  pos: noun
+  gender: n
+  usage: Переконання в діловому листі не повинно приховувати умови.
+- lemma: модальність
+  translation: modality
+  pos: noun
+  gender: f
+  usage: Модальність регулює силу вимоги або пропозиції.
+- lemma: наполягати
+  translation: to insist
+  pos: verb
+  usage: Наполягати доречно тоді, коли є підстава і попередні кроки не спрацювали.
+- lemma: обґрунтований
+  translation: justified; well-grounded
+  pos: adj
+  usage: Обґрунтований запит називає причину, а не лише бажання.
+- lemma: виважений
+  translation: balanced; considered
+  pos: adj
+  usage: Виважений тон допомагає не загострювати конфлікт.
+- lemma: невідкладний
+  translation: urgent
+  pos: adj
+  usage: Невідкладний запит потребує пояснення причини терміновості.
+- lemma: компроміс
+  translation: compromise
+  pos: noun
+  gender: m
+  usage: Компроміс має бути конкретним, а не просто доброзичливою фразою.
+- lemma: непорозуміння
+  translation: misunderstanding
+  pos: noun
+  gender: n
+  usage: Не називайте конфлікт непорозумінням, якщо є чітке порушення.
+- lemma: супровідний лист
+  translation: cover letter
+  pos: phrase
+  usage: Супровідний лист пов'язує досвід кандидата з потребою посади.
+- lemma: мотиваційний лист
+  translation: motivation letter
+  pos: phrase
+  usage: Мотиваційний лист має показати релевантну причину зацікавлення.
+- lemma: резюме
+  translation: CV; resume
+  pos: noun
+  gender: n
+  usage: Резюме містить факти, а лист пояснює їхню релевантність.
+- lemma: компетенція
+  translation: competence
+  pos: noun
+  gender: f
+  usage: Компетенцію треба підтвердити прикладом дії.
+- lemma: досягнення
+  translation: achievement
+  pos: noun
+  gender: n
+  usage: Досягнення в листі краще описувати через дію, масштаб і результат.
+- lemma: кризова комунікація
+  translation: crisis communication
+  pos: phrase
+  usage: Кризова комунікація має швидко зменшити невизначеність.
+- lemma: затримка
+  translation: delay
+  pos: noun
+  gender: f
+  usage: Затримку треба назвати разом із впливом і новим строком.
+- lemma: ескалація
+  translation: escalation
+  pos: noun
+  gender: f
+  usage: Ескалація має процесну причину, а не лише емоційний тиск.
+- lemma: follow-up
+  translation: follow-up message
+  pos: noun
+  gender: m
+  usage: Follow-up повертає адресата до попереднього листа і конкретної дії.
+- lemma: репутація
+  translation: reputation
+  pos: noun
+  gender: f
+  usage: Репутація зберігається через прозорість, точність і виконання обіцянок.

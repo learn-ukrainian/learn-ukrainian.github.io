@@ -1,0 +1,121 @@
+- lemma: звітність
+  translation: reporting
+  pos: noun
+  gender: f
+  usage: Звітність допомагає організації ухвалювати рішення на основі даних.
+- lemma: звіт
+  translation: report
+  pos: noun
+  gender: m
+  usage: Звіт має показати факти, аналіз і рекомендації.
+- lemma: показник
+  translation: indicator; metric
+  pos: noun
+  gender: m
+  usage: Ключовий показник ефективності зріс у другому кварталі.
+- lemma: ефективність
+  translation: efficiency; effectiveness
+  pos: noun
+  gender: f
+  usage: Ефективність процесу оцінюють за часом і результатом.
+- lemma: рекомендація
+  translation: recommendation
+  pos: noun
+  gender: f
+  usage: Рекомендація має спиратися на дані.
+- lemma: динаміка
+  translation: dynamics; trend
+  pos: noun
+  gender: f
+  usage: Динаміка продажів показує зміну в часі.
+- lemma: тенденція
+  translation: tendency; trend
+  pos: noun
+  gender: f
+  usage: Тенденція до зростання збереглася впродовж кварталу.
+- lemma: зростання
+  translation: growth; increase
+  pos: noun
+  gender: n
+  usage: Зростання кількості заявок потребує додаткової підтримки.
+- lemma: спад
+  translation: decline
+  pos: noun
+  gender: m
+  usage: Спад скарг свідчить про часткове вирішення проблеми.
+- lemma: стабілізація
+  translation: stabilization
+  pos: noun
+  gender: f
+  usage: Стабілізація показника полегшує планування.
+- lemma: інтерпретація
+  translation: interpretation
+  pos: noun
+  gender: f
+  usage: Інтерпретація пояснює значення даних.
+- lemma: методологія
+  translation: methodology
+  pos: noun
+  gender: f
+  usage: Методологія описує, як зібрано й обчислено показники.
+- lemma: стратегія
+  translation: strategy
+  pos: noun
+  gender: f
+  usage: Стратегія пов'язує дані з майбутніми рішеннями.
+- lemma: моніторинг
+  translation: monitoring
+  pos: noun
+  gender: m
+  usage: Моніторинг ризиків здійснюється щотижня.
+- lemma: рентабельність
+  translation: profitability
+  pos: noun
+  gender: f
+  usage: Рентабельність проєкту знизилася через вищі витрати.
+- lemma: маржа
+  translation: margin
+  pos: noun
+  gender: f
+  usage: Маржа знизилася на три процентні пункти.
+- lemma: конкурентоспроможність
+  translation: competitiveness
+  pos: noun
+  gender: f
+  usage: Конкурентоспроможність залежить від ціни, якості й сервісу.
+- lemma: диверсифікація
+  translation: diversification
+  pos: noun
+  gender: f
+  usage: Диверсифікація джерел доходу зменшує фінансовий ризик.
+- lemma: оптимізація
+  translation: optimization
+  pos: noun
+  gender: f
+  usage: Оптимізація процесу має бути підтверджена даними.
+- lemma: аудит
+  translation: audit
+  pos: noun
+  gender: m
+  usage: Аудит витрат виявив головні джерела перевитрат.
+- lemma: обґрунтування
+  translation: justification
+  pos: noun
+  gender: n
+  usage: Обґрунтування рекомендації містить дані й причину.
+- lemma: резюме для керівника
+  translation: executive summary
+  pos: phrase
+  usage: Резюме для керівника стискає висновок і рішення.
+- lemma: SWOT-аналіз
+  translation: SWOT analysis
+  pos: phrase
+  usage: SWOT-аналіз розрізняє сильні сторони, слабкі сторони, можливості й загрози.
+- lemma: PESTEL-аналіз
+  translation: PESTEL analysis
+  pos: phrase
+  usage: PESTEL-аналіз описує політичні, економічні, соціальні, технологічні, екологічні й правові фактори.
+- lemma: матриця ризиків
+  translation: risk matrix
+  pos: phrase
+  usage: Матриця ризиків оцінює імовірність і вплив.
