@@ -4,10 +4,10 @@
   "manifest_version": "0.1",
   "manifest_fingerprint": "60367f42ef5f2dda11f6e7c52bc55c16353f3ca84a5c516c3972c89e7d992ce1",
   "fingerprint_schema_version": 1,
-  "generated_at": "2026-07-03T03:54:40+00:00",
-  "gz_sha256": "b04c17c4690b2173f18ba36d5e0fa54404798a04ac61c43f406bc1c47b4040d2",
-  "json_sha256": "88f510ccb936bf973691e0b08866079ab75b819f080da254a4addaf4df38ffb0",
-  "gz_bytes": 6352983,
-  "json_bytes": 45602696,
+  "generated_at": "2026-07-03T05:03:21+00:00",
+  "gz_sha256": "c0674fcaf2cd03a6a36e6004c7f45543850c11154ee50756953c8b3aab4c2882",
+  "json_sha256": "8190835d61f310c2f8f9c3cc0b7e8c54981219f763dc370007c66d8067aae0c4",
+  "gz_bytes": 6373408,
+  "json_bytes": 45699253,
   "note": "Pins GitHub Release asset manifest for #3659; hydrate it build time instead committing raw JSON."
 }
