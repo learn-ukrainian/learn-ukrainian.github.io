@@ -1,0 +1,80 @@
+- lemma: суспільно-побутові пісні
+  translation: social and everyday songs
+  pos: noun phrase
+  usage: Суспільно-побутові пісні дають голос людині в соціальній ролі.
+- lemma: соціально-побутові пісні
+  translation: social and everyday songs
+  pos: noun phrase
+  usage: Соціально-побутові пісні охоплюють козацькі, чумацькі, наймитські та інші підцикли.
+- lemma: станові пісні
+  translation: estate or social-status songs
+  pos: noun phrase
+  usage: Назва "станові пісні" підкреслює суспільне становище мовця.
+- lemma: чумак
+  translation: chumak; wagon trader and carrier
+  pos: noun
+  usage: Чумак вирушає в дорогу з волами, возами й товаришами по валці.
+- lemma: валка
+  translation: wagon train
+  pos: noun
+  usage: Валка має власний порядок, отамана і небезпеки дороги.
+- lemma: отаман
+  translation: elected leader
+  pos: noun
+  usage: Отаман у чумацькій валці відповідає за лад дороги.
+- lemma: бурлак
+  translation: homeless hired laborer
+  pos: noun
+  usage: Бурлак у пісні часто стоїть у просторі чужини й бездомності.
+- lemma: наймит
+  translation: hired laborer
+  pos: noun
+  usage: Наймитська пісня говорить про чужий двір і залежність від хазяїна.
+- lemma: кріпак
+  translation: serf
+  pos: noun
+  usage: Кріпак не продає працю вільно, а стоїть у системі примусової залежності.
+- lemma: панщина
+  translation: corvee labor
+  pos: noun
+  usage: Панщина в кріпацьких піснях пов'язана з примусовою працею на панському лані.
+- lemma: рекрут
+  translation: conscript
+  pos: noun
+  usage: Рекрутська пісня часто починається з проводів і материнського плачу.
+- lemma: жовнір
+  translation: soldier; especially in western Ukrainian usage
+  pos: noun
+  usage: Жовнірський горизонт нагадує про західноукраїнський досвід військової служби.
+- lemma: заробітчанин
+  translation: migrant wage worker
+  pos: noun
+  usage: Заробітчанин вирушає з дому через економічну потребу.
+- lemma: еміграційна пісня
+  translation: emigration song
+  pos: noun phrase
+  usage: Еміграційна пісня переносить мотив чужини за межі рідного краю.
+- lemma: чужина
+  translation: foreign or alien place
+  pos: noun
+  usage: Чужина може бути далекою країною, казармою, артіллю або чужим двором.
+- lemma: розлука
+  translation: separation
+  pos: noun
+  usage: Розлука в суспільно-побутовій пісні часто викликана службою, наймитством або дорогою.
+- lemma: примусова служба
+  translation: compulsory military service
+  pos: noun phrase
+  usage: Примусова служба відрізняє рекрутський голос від козацького походу.
+- lemma: промисел
+  translation: trade or seasonal occupation
+  pos: noun
+  usage: Чумацький промисел поєднує заробіток, дорогу і небезпеку.
+- lemma: джерельний режим
+  translation: source mode
+  pos: noun phrase
+  usage: Джерельний режим показує, чи маємо корпусний рядок, наукове свідчення або лише назву.
+- lemma: свідчення лише назви
+  translation: title evidence only
+  pos: noun phrase
+  usage: Свідчення лише назви можна назвати, але не можна цитувати як повний текст.
