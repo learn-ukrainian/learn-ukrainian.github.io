@@ -37,6 +37,11 @@ PRIVATE_TEACHER_THIRD_LEDGER = (
     / "data/lexicon/source-inventory-review-decisions/"
     "2026-07-03-third-approved-teacher-lesson-ledger-batch.yaml"
 )
+PRIVATE_TEACHER_FOURTH_LEDGER = (
+    PROJECT_ROOT
+    / "data/lexicon/source-inventory-review-decisions/"
+    "2026-07-03-fourth-approved-teacher-lesson-ledger-batch.yaml"
+)
 
 
 def test_private_teacher_inventory_is_privacy_safe_review_metadata() -> None:
@@ -200,6 +205,34 @@ def test_private_teacher_third_decision_ledger_stays_review_only() -> None:
     assert ".docx" not in ledger_text
 
 
+def test_private_teacher_fourth_decision_ledger_stays_review_only() -> None:
+    summary = decisions.validate_committed_decision_files([PRIVATE_TEACHER_FOURTH_LEDGER])
+    payload = yaml.safe_load(PRIVATE_TEACHER_FOURTH_LEDGER.read_text(encoding="utf-8"))
+
+    assert summary == {
+        "files": 1,
+        "rows": 21,
+        "decision_counts": {"approve_for_publish": 21},
+    }
+    assert payload["source_queue"]["generated_from_pr"] == 4176
+    assert payload["source_queue"]["promotion_batch_size"] == 21
+    assert payload["production_outputs_updated"] == []
+    assert payload["decisions"][0]["lemma"] == "мікрохвильова піч"
+    assert payload["decisions"][-1]["lemma"] == "німий"
+    assert all(
+        row["source_inventory"]["source_family"] == "teacher_lesson"
+        for row in payload["decisions"]
+    )
+    assert {
+        row["source_inventory"]["source_id"]
+        for row in payload["decisions"]
+    } == {"private-teacher-lesson-vocabulary-table-1-rows-59-78"}
+    assert all("surface_admission" not in row for row in payload["decisions"])
+
+    ledger_text = PRIVATE_TEACHER_FOURTH_LEDGER.read_text(encoding="utf-8")
+    assert ".docx" not in ledger_text
+
+
 def test_private_teacher_decision_ledgers_cover_seed_without_live_surfaces() -> None:
     records = read_source_inventory(PRIVATE_TEACHER_INVENTORY, project_root=PROJECT_ROOT)
     inventory_keys = {
@@ -218,6 +251,32 @@ def test_private_teacher_decision_ledgers_cover_seed_without_live_surfaces() -> 
             row["source_inventory"]["key"]
             for row in payload["decisions"]
         )
+
+    assert ledger_keys == inventory_keys
+
+
+def test_private_teacher_rows_59_78_decision_ledger_covers_pending_seed() -> None:
+    records = read_source_inventory(
+        PRIVATE_TEACHER_ROWS_59_78_INVENTORY,
+        project_root=PROJECT_ROOT,
+    )
+    inventory_keys = {
+        decisions.source_inventory_key(
+            lemma=record.lemma,
+            inventory_path=(
+                "data/lexicon/source-inventory/"
+                "private-teacher-lesson-vocabulary-table-1-rows-59-78.yaml"
+            ),
+            locator=record.source_locator,
+        )
+        for record in records
+    }
+
+    payload = yaml.safe_load(PRIVATE_TEACHER_FOURTH_LEDGER.read_text(encoding="utf-8"))
+    ledger_keys = {
+        row["source_inventory"]["key"]
+        for row in payload["decisions"]
+    }
 
     assert ledger_keys == inventory_keys
 
