@@ -1,0 +1,116 @@
+- lemma: діаспора
+  translation: diaspora
+  pos: noun
+  gender: f
+  usage: Діаспора підтримує мову, пам'ять і зв'язки з Україною.
+- lemma: еміграція
+  translation: emigration
+  pos: noun
+  gender: f
+  usage: Еміграція підкреслює виїзд із країни походження.
+- lemma: імміграція
+  translation: immigration
+  pos: noun
+  gender: f
+  usage: Імміграція описує прибуття до країни проживання.
+- lemma: міграційний статус
+  translation: migration status
+  pos: phrase
+  usage: Міграційний статус впливає на доступ до роботи, освіти і послуг.
+- lemma: тимчасовий захист
+  translation: temporary protection
+  pos: phrase
+  usage: Тимчасовий захист може визначати права людини в країні перебування.
+- lemma: репатріація
+  translation: repatriation
+  pos: noun
+  gender: f
+  usage: Репатріація означає повернення до країни або землі походження.
+- lemma: громада
+  translation: community
+  pos: noun
+  gender: f
+  usage: Громада створює простір довіри, допомоги і спільної дії.
+- lemma: осередок
+  translation: community hub; center
+  pos: noun
+  gender: m
+  usage: Культурний осередок організовує навчання, події і зустрічі.
+- lemma: статут
+  translation: charter; statute
+  pos: noun
+  gender: m
+  usage: Статут визначає правила роботи організації.
+- lemma: самоорганізація
+  translation: self-organization
+  pos: noun
+  gender: f
+  usage: Самоорганізація допомагає громаді швидко реагувати на потреби.
+- lemma: волонтерський рух
+  translation: volunteer movement
+  pos: phrase
+  usage: Волонтерський рух поєднує людей у практичній підтримці України.
+- lemma: ідентичність
+  translation: identity
+  pos: noun
+  gender: f
+  usage: Ідентичність у діаспорі може мати кілька мовних і культурних шарів.
+- lemma: інтеграція
+  translation: integration
+  pos: noun
+  gender: f
+  usage: Інтеграція означає участь у житті нового суспільства.
+- lemma: асиміляція
+  translation: assimilation
+  pos: noun
+  gender: f
+  usage: Асиміляція може призводити до втрати мовної видимості.
+- lemma: двомовність
+  translation: bilingualism
+  pos: noun
+  gender: f
+  usage: Двомовність може бути ресурсом для родини і громади.
+- lemma: мовна стійкість
+  translation: language resilience
+  pos: phrase
+  usage: Мовна стійкість потребує щоденного простору для української.
+- lemma: культурна спадщина
+  translation: cultural heritage
+  pos: phrase
+  usage: Культурна спадщина живе через практику, а не лише через символи.
+- lemma: наступність
+  translation: continuity
+  pos: noun
+  gender: f
+  usage: Наступність допомагає передавати досвід між поколіннями.
+- lemma: адвокація
+  translation: advocacy
+  pos: noun
+  gender: f
+  usage: Адвокація має ціль, адресата, аргумент і наступну дію.
+- lemma: лобіювання
+  translation: lobbying
+  pos: noun
+  gender: n
+  usage: Лобіювання інтересів має бути законним і прозорим.
+- lemma: грошові перекази
+  translation: remittances
+  pos: phrase
+  usage: Грошові перекази підтримують родини і локальні проєкти.
+- lemma: культурна дипломатія
+  translation: cultural diplomacy
+  pos: phrase
+  usage: Культурна дипломатія представляє Україну через події, тексти і контакти.
+- lemma: репутаційний капітал
+  translation: reputational capital
+  pos: phrase
+  usage: Репутаційний капітал допомагає будувати довіру з міжнародними партнерами.
+- lemma: новоприбулий
+  translation: newcomer
+  pos: noun
+  gender: m
+  usage: Новоприбулий часто потребує інформації про документи, школу і послуги.
+- lemma: закордонний
+  translation: foreign; overseas
+  pos: adj
+  usage: Закордонний осередок може залишатися тісно пов'язаним з Україною.
