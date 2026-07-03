@@ -9,7 +9,7 @@
 - lemma: доконаний вид
   translation: "perfective aspect"
   pos: phrase
-  usage: "Доконаний вид у наказі часто просить конкретний результат."
+  usage: "Доконаний вид у наказі часто називає конкретний результат."
 - lemma: недоконаний вид
   translation: "imperfective aspect"
   pos: phrase
@@ -17,11 +17,11 @@
 - lemma: результат
   translation: "result"
   pos: noun:m
-  usage: "Форма напишіть просить готовий результат."
+  usage: "Напишіть означає, що потрібен готовий результат."
 - lemma: процес
   translation: "process"
   pos: noun:m
-  usage: "Форма пишіть може описувати процес роботи."
+  usage: "Пишіть може описувати процес роботи."
 - lemma: заборона
   translation: "prohibition"
   pos: noun:f
@@ -73,11 +73,11 @@
 - lemma: контрольований
   translation: "controlled"
   pos: adj
-  usage: "Контрольована дія в забороні вимагає недоконаного виду."
+  usage: "Для контрольованої дії в забороні потрібен недоконаний вид."
 - lemma: випадковий
   translation: "accidental"
   pos: adj
-  usage: "Не загуби квиток попереджає про випадковий результат."
+  usage: "Не загуби квиток - це застереження про випадковий результат."
 - lemma: конкретний
   translation: "specific, concrete"
   pos: adj
@@ -189,11 +189,11 @@
 - lemma: закрити
   translation: "to close"
   pos: verb:pf
-  usage: "Закрийте вікно після провітрювання."
+  usage: "Закрийте застосунок після роботи."
 - lemma: закривати
   translation: "to close"
   pos: verb:impf
-  usage: "Не закривайте двері на ключ."
+  usage: "Не закривайте вкладку під час завантаження."
 - lemma: зайти
   translation: "to enter, drop in"
   pos: verb:pf
@@ -265,7 +265,7 @@
 - lemma: розбивати
   translation: "to break, smash"
   pos: verb:impf
-  usage: "Не розбивайте групу без потреби."
+  usage: "Не розбивайте скляні речі під час пакування."
 - lemma: обпектися
   translation: "to burn oneself"
   pos: verb:pf
@@ -277,7 +277,7 @@
 - lemma: запізнитися
   translation: "to be late"
   pos: verb:pf
-  usage: "Не запізнися на потяг, це конкретне застереження."
+  usage: "Не запізнися на потяг."
 - lemma: запізнюватися
   translation: "to be late"
   pos: verb:impf

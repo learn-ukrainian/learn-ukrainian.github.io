@@ -1,0 +1,49 @@
+{
+  "content_sha": "39d9fd1ad8c129f37e4fea5ebd68279bd341aa4796dbc19184a865a43b36f1e8",
+  "dimensions": {
+    "decolonization": {
+      "score": 9.5,
+      "verdict": "PASS"
+    },
+    "engagement": {
+      "score": 9.5,
+      "verdict": "PASS"
+    },
+    "naturalness": {
+      "score": 9.8,
+      "verdict": "PASS"
+    },
+    "pedagogical": {
+      "score": 9.5,
+      "verdict": "PASS"
+    },
+    "tone": {
+      "score": 9.5,
+      "verdict": "PASS"
+    }
+  },
+  "findings_summary": {
+    "by_category": {},
+    "by_severity": {},
+    "total": 0
+  },
+  "gate_version": "v7.llm_qg.1",
+  "level": "b1",
+  "min_dim": "pedagogical",
+  "min_score": 9.5,
+  "profile": "b1_plus",
+  "prompt_hash": "2f09dc0ab1f6e1dd59454be01b32a2df3158352de8cea0827eca7703fee9c0dd",
+  "provenance": {
+    "created_at": "2026-07-03T21:31:09.984222Z",
+    "run_id": "llm-qg-0bdbbd7d01de4302a2e12a6606ddd585",
+    "source": "run_llm_qg_parity"
+  },
+  "reviewer": {
+    "family": "agy-tools",
+    "model": "gemini-3.5-flash-high"
+  },
+  "schema_version": "llm_qg_evidence.v1",
+  "slug": "aspect-in-imperatives",
+  "terminal_verdict": "PASS",
+  "verdict": "PASS"
+}

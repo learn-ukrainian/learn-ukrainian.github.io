@@ -35,6 +35,15 @@ MDX Gate (deterministic)
 - **Friction log** → `orchestration/{slug}/friction.yaml` (curated learnings that survive rebuilds)
 - **Global friction** → `docs/rules/global-friction.yaml` (project-wide linguistic constraints)
 - **Dashboard** → `scripts/module_dashboard.py` (aggregated view of all modules)
+- **LLM-QG evidence-of-record** → `curriculum/l2-uk-en/{level}/{slug}/qg_evidence.json`
+  (compact PASS evidence bound to the current module content hash)
+
+Do not commit raw LLM prompts, full model responses, module-local `llm_qg.json`,
+generated `status/*.json`, generated `audit/*-review.md`, generated
+`review/*-review.md`, or local telemetry database files. Git evidence should
+be compact, reproducible, and safe to compare: schema version, gate version,
+content hash, reviewer identity, aggregate scores, count-only findings summary,
+and provenance metadata.
 
 ### Friction logs
 Friction files use YAML with `id`, `status` (active/resolved), `type`, `description`.

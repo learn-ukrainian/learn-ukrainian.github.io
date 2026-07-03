@@ -13,6 +13,12 @@ Review only the assigned dimension. Cite concrete evidence from the generated
 content. Return a machine-readable mapping with `score`, `evidence`, and
 `verdict` for this one dimension.
 
+The Generated Content block below is the only reviewable module text. Do not
+read local files, follow filesystem paths, or use module text obtained from any
+other checkout/session as evidence. Tools may be used for linguistic/source
+verification, but not to replace the generated artifacts embedded in this
+prompt.
+
 Assigned dimension: {DIM}
 
 ## Scope — JUDGMENT ONLY, do NOT re-litigate deterministic gates
@@ -258,8 +264,21 @@ trace to verbatim quotes from the content is invalid by definition.
 
 The JSON response MUST include `evidence_quotes` with 3 verbatim quotes from step 1 and `rubric_mapping` explaining how each quote maps to `{DIM}` before the score. The `evidence` field MUST be one of those verbatim quotes, wrapped in escaped quotes. A summary or paraphrase in any evidence field is a reviewer-protocol failure.
 
+Do not assign a score below 8 unless `rubric_mapping` names at least one
+grounded residual defect and `findings` includes a quote from the Generated
+Content for that defect. If all three evidence quotes are evidence FOR the
+dimension and no concrete residual defect is present, the score must be at
+least 8.
+
 If you find concrete defects, emit structured `findings` entries and canonical
 `issue_ids`. Use these issue IDs when they apply:
+
+The examples in the issue-ID definitions below are canary examples and label
+definitions, not evidence from the module. Do NOT copy them into `evidence`,
+`evidence_quotes`, `quote`, `rubric_mapping`, or `findings` unless the exact
+same string appears in the Generated Content artifacts. A finding whose quote
+comes from this instruction block instead of the generated artifacts is a
+reviewer-protocol failure and will be discarded/retried.
 
 - `AWKWARD_PASSIVE_RESULT_STATE`: calqued/evasive passive or result-state
   wording such as `застосунок має бути відкритий` where a native Ukrainian
