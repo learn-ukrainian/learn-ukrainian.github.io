@@ -1,0 +1,116 @@
+---
+version: 1
+kind: atlas_source_inventory
+sources:
+  - id: private-teacher-lesson-vocabulary-table-1-rows-79-98
+    source_family: teacher_lesson
+    extraction_mode: curated_headword
+    title: Private teacher lesson vocabulary - explicit table rows 79-98
+    locator: local-only explicit vocabulary table rows 79-98
+    notes: Derived headword metadata only; raw private lesson material is local-only and not committed. Daily Word, Practice, and cloze remain frozen without explicit surface_admission.
+    headwords:
+      - lemma: безпорадний
+        pos: adjective
+        gloss: helpless
+        locator: explicit vocabulary table row 79
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: обігрівач
+        pos: noun
+        gloss: heater
+        locator: explicit vocabulary table row 80
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: спішити
+        pos: verb
+        gloss: to hurry; imperfective
+        locator: explicit vocabulary table row 81
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: поспішити
+        pos: verb
+        gloss: to hurry; perfective
+        locator: explicit vocabulary table row 82
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: вірити
+        pos: verb
+        gloss: to believe; imperfective
+        locator: explicit vocabulary table row 83
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: повірити
+        pos: verb
+        gloss: to believe; perfective
+        locator: explicit vocabulary table row 84
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: висувати ультиматум
+        pos: phrase
+        gloss: to give an ultimatum; imperfective
+        locator: explicit vocabulary table row 85
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: висунути ультиматум
+        pos: phrase
+        gloss: to give an ultimatum; perfective
+        locator: explicit vocabulary table row 85
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: нещасний випадок
+        pos: noun
+        gloss: accident
+        locator: explicit vocabulary table row 86
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: виходити на зв'язок
+        pos: phrase
+        gloss: to get in touch; to make contact
+        locator: explicit vocabulary table row 87
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: як нова копійка
+        pos: phrase
+        gloss: neat; well-dressed; clean
+        locator: explicit vocabulary table row 88
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: збій
+        pos: noun
+        gloss: failure; breakdown; malfunction
+        locator: explicit vocabulary table row 89
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: глюк
+        pos: noun
+        gloss: glitch
+        locator: explicit vocabulary table row 90
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: перевищення швидкості
+        pos: noun
+        gloss: speeding
+        locator: explicit vocabulary table row 91
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: поза
+        pos: preposition
+        gloss: outside; beyond
+        locator: explicit vocabulary table row 92
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: виборча дільниця
+        pos: noun
+        gloss: polling station
+        locator: explicit vocabulary table row 93
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: стверджувати
+        pos: verb
+        gloss: to claim; imperfective
+        locator: explicit vocabulary table row 94
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: ствердити
+        pos: verb
+        gloss: to claim; perfective
+        locator: explicit vocabulary table row 95
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: помічник
+        pos: noun
+        gloss: helper
+        locator: explicit vocabulary table row 96
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: бути в розпачі
+        pos: phrase
+        gloss: to be devastated; to be in despair
+        locator: explicit vocabulary table row 97
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: стукати
+        pos: verb
+        gloss: to knock; imperfective
+        locator: explicit vocabulary table row 98
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
