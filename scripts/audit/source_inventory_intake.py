@@ -34,7 +34,18 @@ _SOURCE_FIELDS = {
     "notes",
     "headwords",
 }
-_HEADWORD_FIELDS = {"lemma", "headword", "word", "pos", "gloss", "locator", "context", "notes"}
+_HEADWORD_FIELDS = {
+    "lemma",
+    "headword",
+    "word",
+    "pos",
+    "gloss",
+    "locator",
+    "context",
+    "notes",
+    "count",
+    "frequency",
+}
 _FLAT_FIELDS = {
     "lemma",
     "source_family",
@@ -48,6 +59,8 @@ _FLAT_FIELDS = {
     "pos",
     "gloss",
     "notes",
+    "count",
+    "frequency",
 }
 _FLAT_ALIASES = {
     "headword": "lemma",
@@ -90,6 +103,7 @@ class SourceInventoryRecord:
     pos: str | None = None
     gloss: str | None = None
     notes: str | None = None
+    count: int = 1
 
     def provenance_payload(self) -> dict[str, Any]:
         """Return JSON-ready provenance for a candidate entry."""
@@ -107,6 +121,7 @@ class SourceInventoryRecord:
             "source_locator": self.source_locator,
             "context": self.context,
             "notes": self.notes,
+            "count": self.count if self.count != 1 else None,
         }
         payload.update({key: value for key, value in optional.items() if value})
         return payload
@@ -120,6 +135,8 @@ class SourceInventoryCandidate:
     pos: str | None
     gloss: str | None
     source_provenance: tuple[dict[str, Any], ...]
+    source_count: int = 0
+    frequency: int = 0
 
 
 def read_source_inventories(
@@ -180,6 +197,7 @@ def source_inventory_candidates(
                 "pos": record.pos,
                 "gloss": record.gloss,
                 "source_provenance": [],
+                "frequency": 0,
             },
         )
         existing_pos = group["pos"]
@@ -197,6 +215,7 @@ def source_inventory_candidates(
         if record.gloss and not existing_gloss:
             group["gloss"] = record.gloss
         group["source_provenance"].append(record.provenance_payload())
+        group["frequency"] += record.count
 
     candidates = [
             SourceInventoryCandidate(
@@ -204,6 +223,8 @@ def source_inventory_candidates(
                 pos=group["pos"],
                 gloss=group["gloss"],
                 source_provenance=tuple(group["source_provenance"]),
+                source_count=len(group["source_provenance"]),
+                frequency=int(group["frequency"]),
             )
         for group in grouped.values()
     ]
@@ -334,6 +355,12 @@ def _record_from_structured_headword(
         pos=_optional_slug(row.get("pos"), "pos", inventory_path, inventory_locator),
         gloss=_optional_text(row.get("gloss")),
         notes=_optional_text(row.get("notes")) or _optional_text(source.get("notes")),
+        count=_positive_int(
+            _first_present(row, ("count", "frequency")),
+            "count",
+            inventory_path,
+            inventory_locator,
+        ),
     )
 
 
@@ -361,6 +388,12 @@ def _record_from_flat_row(
         pos=_optional_slug(normalized.get("pos"), "pos", inventory_path, locator),
         gloss=_optional_text(normalized.get("gloss")),
         notes=_optional_text(normalized.get("notes")),
+        count=_positive_int(
+            _first_present(normalized, ("count", "frequency")),
+            "count",
+            inventory_path,
+            locator,
+        ),
     )
 
 
@@ -428,6 +461,22 @@ def _optional_text(value: object) -> str | None:
         return None
     text = str(value).strip()
     return text or None
+
+
+def _positive_int(value: object, field: str, inventory_path: str, locator: str) -> int:
+    if value is None:
+        return 1
+    try:
+        count = int(str(value).strip())
+    except (TypeError, ValueError) as exc:
+        raise SourceInventoryError(
+            f"{inventory_path}: {locator}: {field} must be a positive integer"
+        ) from exc
+    if count < 1:
+        raise SourceInventoryError(
+            f"{inventory_path}: {locator}: {field} must be a positive integer"
+        )
+    return count
 
 
 def _first_present(row: Mapping[str, object], keys: Sequence[str]) -> object | None:
