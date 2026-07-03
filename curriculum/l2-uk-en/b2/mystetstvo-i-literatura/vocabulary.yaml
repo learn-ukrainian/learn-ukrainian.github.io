@@ -1,0 +1,123 @@
+- lemma: мистецтво
+  translation: art
+  pos: noun
+  gender: n
+  usage: Мистецтво допомагає суспільству говорити про пам'ять і досвід.
+- lemma: література
+  translation: literature
+  pos: noun
+  gender: f
+  usage: Література працює з мовою, образом і композицією.
+- lemma: твір
+  translation: work of art; literary work
+  pos: noun
+  gender: m
+  usage: Твір треба аналізувати через форму, зміст і контекст.
+- lemma: митець
+  translation: artist
+  pos: noun
+  gender: m
+  usage: Митець може працювати з пам'яттю, формою і суспільним питанням.
+- lemma: сюжет
+  translation: plot
+  pos: noun
+  gender: m
+  usage: Сюжет описує послідовність подій у творі.
+- lemma: композиція
+  translation: composition; structure
+  pos: noun
+  gender: f
+  usage: Композиція визначає, як частини твору пов'язані між собою.
+- lemma: художній образ
+  translation: artistic image
+  pos: phrase
+  usage: Художній образ узагальнює досвід через деталь або символ.
+- lemma: інтертекстуальність
+  translation: intertextuality
+  pos: noun
+  gender: f
+  usage: Інтертекстуальність створює діалог з іншими текстами.
+- lemma: метафора
+  translation: metaphor
+  pos: noun
+  gender: f
+  usage: Метафора переносить значення і створює новий образ.
+- lemma: символ
+  translation: symbol
+  pos: noun
+  gender: m
+  usage: Символ може поєднувати особистий і суспільний досвід.
+- lemma: авангард
+  translation: avant-garde
+  pos: noun
+  gender: m
+  usage: Авангард експериментує з формою, простором і мовою.
+- lemma: модернізм
+  translation: modernism
+  pos: noun
+  gender: m
+  usage: Модернізм шукає нові художні засоби для нового досвіду.
+- lemma: шістдесятництво
+  translation: Sixtiers movement
+  pos: noun
+  gender: n
+  usage: Шістдесятництво поєднувало культурне оновлення і моральний спротив.
+- lemma: естетика
+  translation: aesthetics
+  pos: noun
+  gender: f
+  usage: Естетика твору охоплює форму, стиль і спосіб впливу.
+- lemma: експозиція
+  translation: exhibition; exposition
+  pos: noun
+  gender: f
+  usage: Експозиція музею формує маршрут читання об'єктів.
+- lemma: реставрація
+  translation: restoration
+  pos: noun
+  gender: f
+  usage: Реставрація має пояснювати, що саме зберігається.
+- lemma: режисура
+  translation: directing
+  pos: noun
+  gender: f
+  usage: Режисура керує сценічним або кінематографічним баченням.
+- lemma: сценарій
+  translation: screenplay; script
+  pos: noun
+  gender: m
+  usage: Сценарій організує події, діалоги й конфлікт фільму.
+- lemma: монтаж
+  translation: editing; montage
+  pos: noun
+  gender: m
+  usage: Монтаж створює ритм і логіку кадрів.
+- lemma: аранжування
+  translation: arrangement
+  pos: noun
+  gender: n
+  usage: Аранжування змінює звучання музичного матеріалу.
+- lemma: ідентичність
+  translation: identity
+  pos: noun
+  gender: f
+  usage: Культурна ідентичність формується через мову, пам'ять і практики.
+- lemma: спротив
+  translation: resistance
+  pos: noun
+  gender: m
+  usage: Спротив у мистецтві може бути прямим або символічним.
+- lemma: деколонізація
+  translation: decolonization
+  pos: noun
+  gender: f
+  usage: Деколонізація змінює рамку пам'яті й видимість імен.
+- lemma: культурна дипломатія
+  translation: cultural diplomacy
+  pos: phrase
+  usage: Культурна дипломатія представляє країну через мистецькі й інтелектуальні проєкти.
+- lemma: артефакт
+  translation: artifact
+  pos: noun
+  gender: m
+  usage: Артефакт потребує контексту, щоб не бути лише декоративним об'єктом.
