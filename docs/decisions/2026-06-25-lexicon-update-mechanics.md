@@ -22,11 +22,11 @@
 
 Current static Atlas counts:
 
-- Atlas manifest: 5,374 entries, including 336 `form_of` records.
-- Public search/browse: 5,364 entries, 61 search shards, 31 browse shards.
+- Atlas manifest: 5,393 entries, including 336 `form_of` records.
+- Public search/browse: 5,383 entries, 61 search shards, 31 browse shards.
 - Daily Word: 300 entries.
 - Practice deck: 4,484 lexemes and 22 reviewed A1 cloze items.
-- Source-inventory seeds: 258 rows total: 80 textbook, 125 private
+- Source-inventory seeds: 280 rows total: 80 textbook, 147 private
   teacher-lesson, 33 Ohoiko/ULP, and 20 curriculum sample rows.
 
 Closed tracker leaves that should not be treated as active backlog:
@@ -63,7 +63,7 @@ because the dictionary DBs (`data/vesum.db` ~967 MB, `data/sources.db`) are giti
 
 | Layer | What | Trigger today | Where |
 | --- | --- | --- | --- |
-| **1. Manifest (SSOT)** | `lexicon-manifest.json` Release asset (5,374 entries in the current pointer) — the Atlas word data | **manual `make atlas`** when content/sources change | local only (needs the DBs) |
+| **1. Manifest (SSOT)** | `lexicon-manifest.json` Release asset (5,393 entries in the current pointer) — the Atlas word data | **manual `make atlas`** when content/sources change | local only (needs the DBs) |
 | **2. Auto-grow** | find NEW lemmas in modules/readings → enrich → gated PR (#3675) | cron **Mon 07:23** + `workflow_dispatch` | `atlas-grow.yml` — **no-op on hosted runners** |
 | **3. Derived artifacts** | search-index, daily-pool, open-dataset | part of `make atlas` | local |
 
