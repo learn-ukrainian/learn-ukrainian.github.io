@@ -62,14 +62,51 @@ Daily Word, Practice, and cloze admission must remain separate
 browse/search only after a later publish PR, and no learner-facing activity
 admission.
 
+## Full-Source Census Lane
+
+Issue #4160 is now normalized under the full-corpus Atlas intake epic. The next
+private teacher-lesson step is a local-only full-source census and candidate
+extraction pass, not another manual 20-row public seed. Run it against local
+private source files and explicitly ignore the out-of-scope third tab/unit:
+
+```bash
+.venv/bin/python -m scripts.audit.private_teacher_lesson_intake \
+  /absolute/path/to/local/private-source.docx \
+  --ignore-tab-index 3 \
+  --format markdown
+```
+
+The census output is safe to summarize publicly because it emits counts,
+neutral source refs, neutral locators, gate totals, and existing-vs-missing
+Atlas counts only. It does not emit lemmas, raw text, filenames, tab names,
+document paths, contexts, glosses, or notes. The ignored tab/unit is excluded
+before text-block candidate extraction, so it contributes no candidate rows or
+gate classifications.
+
+When a local reviewer needs the derived candidate queue, write it outside the
+repository:
+
+```bash
+.venv/bin/python -m scripts.audit.private_teacher_lesson_intake \
+  /absolute/path/to/local/private-source.docx \
+  --ignore-tab-index 3 \
+  --candidates-out /tmp/atlas-private-teacher-lesson-candidates.json \
+  --format markdown
+```
+
+The candidate payload contains derived headword metadata and neutral locators
+for local review only. Do not commit it, copy it into `docs/`, or paste raw rows
+into public issue/PR text. Candidate rows from this lane still need review and a
+separate controlled publish step before any live Atlas browse/search movement.
+
 ## Next Valid #4160 PR Shapes
 
 A safe follow-up PR may do one of these:
 
-- add the next bounded reviewed private teacher-lesson inventory batch
-- add reviewed decision-ledger rows for already committed teacher-lesson
-  candidates
-- publish an already-approved teacher-lesson batch to Atlas browse/search only
+- add or harden the full-source local census/extraction tooling
+- add reviewed decision-ledger rows from a locally reviewed derived candidate
+  queue
+- publish already-approved teacher-lesson rows to Atlas browse/search only
 
 Do not mix private-source intake, live Atlas publish, and Daily/Practice/cloze
 admission in one PR.
