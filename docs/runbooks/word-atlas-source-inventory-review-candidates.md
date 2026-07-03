@@ -94,10 +94,11 @@ enrichment lacks a visible English translation.
 
 The private teacher-lesson seeds contribute 167 reviewed `teacher_lesson`
 headwords from an explicit local vocabulary table, with approval ledgers
-covering rows 1-138. Rows 139-158 are source-inventory only until a later
-decision ledger. Their committed rows are derived metadata only: no raw private
-lesson material, private document paths, or teacher-identifying labels should
-appear in the inventory.
+covering rows 1-158. Rows 139-158 are approved for later publish, but are not
+live Atlas output until a later controlled publish PR updates browse/search.
+Their committed rows are derived metadata only: no raw private lesson material,
+private document paths, or teacher-identifying labels should appear in the
+inventory.
 
 When a candidate is later promoted into a manifest entry,
 `promote_grow_candidates.manifest_entry_from_candidate()` copies
