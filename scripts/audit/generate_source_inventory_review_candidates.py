@@ -23,6 +23,7 @@ COMMITTED_SOURCE_INVENTORIES: tuple[Path, ...] = (
     PROJECT_ROOT / "data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-39-58.yaml",
     PROJECT_ROOT / "data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-59-78.yaml",
     PROJECT_ROOT / "data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-79-98.yaml",
+    PROJECT_ROOT / "data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-99-118.yaml",
     PROJECT_ROOT / "data/lexicon/source-inventory/vashulenko-grade3-headwords.yaml",
 )
 

@@ -20,6 +20,7 @@ The committed source inventory input is:
 - `data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-39-58.yaml`
 - `data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-59-78.yaml`
 - `data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-79-98.yaml`
+- `data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-99-118.yaml`
 - `data/lexicon/source-inventory/vashulenko-grade3-headwords.yaml`
 
 The candidate JSON follows the existing grow-candidate shape: `counts`,
@@ -89,7 +90,7 @@ conjunction, particle, and interjection. Optional per-headword `gloss` values
 are curated learner-facing English anchors for cases where dictionary
 enrichment lacks a visible English translation.
 
-The private teacher-lesson seeds contribute 105 reviewed `teacher_lesson`
+The private teacher-lesson seeds contribute 125 reviewed `teacher_lesson`
 headwords from an explicit local vocabulary table, with approval ledgers now
 covering rows 1-98. Their committed rows are derived metadata only: no raw
 private lesson material, private document paths, or teacher-identifying labels

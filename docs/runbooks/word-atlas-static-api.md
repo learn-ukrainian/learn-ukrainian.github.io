@@ -16,13 +16,13 @@ as static JSON, not as a live backend service.
 
 ## Current Snapshot
 
-As of 2026-07-02, the static contract should expose this board state:
+As of 2026-07-03, the static contract should expose this board state:
 
-- Atlas manifest: 5,280 entries, including 336 `form_of` records.
-- Public search/browse: 5,270 entries, 61 search shards, 31 browse shards.
+- Atlas manifest: 5,374 entries, including 336 `form_of` records.
+- Public search/browse: 5,364 entries, 61 search shards, 31 browse shards.
 - Daily Word: 300 entries.
 - Practice deck: 4,484 lexemes and 22 reviewed A1 cloze items.
-- Source-inventory seeds: 173 rows total: 80 textbook, 40 private
+- Source-inventory seeds: 258 rows total: 80 textbook, 125 private
   teacher-lesson, 33 Ohoiko/ULP, and 20 curriculum sample rows.
 
 Open Atlas/Lexicon board items are #3936, #4160, #3933, #3934, and #3797.
