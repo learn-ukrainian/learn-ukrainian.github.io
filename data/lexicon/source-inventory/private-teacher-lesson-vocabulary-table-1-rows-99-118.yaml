@@ -1,0 +1,114 @@
+---
+version: 1
+kind: atlas_source_inventory
+sources:
+  - id: private-teacher-lesson-vocabulary-table-1-rows-99-118
+    source_family: teacher_lesson
+    extraction_mode: curated_headword
+    title: Private teacher lesson vocabulary - explicit table rows 99-118
+    locator: local-only explicit vocabulary table rows 99-118
+    notes: >-
+      Derived headword metadata only; raw private lesson material is local-only
+      and not committed. Daily Word, Practice, and cloze remain frozen without
+      explicit surface_admission.
+    headwords:
+      - lemma: постукати
+        pos: verb
+        gloss: to knock; perfective
+        locator: explicit vocabulary table row 99
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: стукіт
+        pos: noun
+        gloss: knocking
+        locator: explicit vocabulary table row 100
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: свідок
+        pos: noun
+        gloss: witness
+        locator: explicit vocabulary table row 101
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: ЗМІ
+        pos: abbreviation
+        gloss: media; mass media
+        locator: explicit vocabulary table row 102
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: правдиво
+        pos: adverb
+        gloss: truthfully
+        locator: explicit vocabulary table row 103
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: неприємність
+        pos: noun
+        gloss: trouble; mishap; nuisance
+        locator: explicit vocabulary table row 104
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: вбивство
+        pos: noun
+        gloss: murder
+        locator: explicit vocabulary table row 105
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: розслідування
+        pos: noun
+        gloss: investigation
+        locator: explicit vocabulary table row 106
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: прибулець
+        pos: noun
+        gloss: alien; newcomer
+        locator: explicit vocabulary table row 107
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: відбитки
+        pos: noun
+        gloss: imprints; fingerprints
+        locator: explicit vocabulary table row 108
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: кругом
+        pos: adverb
+        gloss: everywhere; all around
+        locator: explicit vocabulary table row 109
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: загублений
+        pos: adjective
+        gloss: lost
+        locator: explicit vocabulary table row 110
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: штраф
+        pos: noun
+        gloss: fine; penalty
+        locator: explicit vocabulary table row 111
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: негайно
+        pos: adverb
+        gloss: immediately
+        locator: explicit vocabulary table row 112
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: за рогом
+        pos: phrase
+        gloss: around the corner
+        locator: explicit vocabulary table row 113
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: нахабність
+        pos: noun
+        gloss: audacity; insolence
+        locator: explicit vocabulary table row 114
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: остогиднути
+        pos: verb
+        gloss: to become unbearable; to make someone fed up; perfective
+        locator: explicit vocabulary table row 115
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: вони мені остогидли
+        pos: phrase
+        gloss: I am fed up with them; they have become unbearable to me
+        locator: explicit vocabulary table row 116
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: мисливець
+        pos: noun
+        gloss: hunter
+        locator: explicit vocabulary table row 117
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: втручатися
+        pos: verb
+        gloss: to intervene; imperfective
+        locator: explicit vocabulary table row 118
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
