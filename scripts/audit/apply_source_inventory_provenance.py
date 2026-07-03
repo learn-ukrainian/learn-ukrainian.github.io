@@ -73,7 +73,7 @@ def apply_existing_provenance_overlay(
             missing_manifest_entries.append({**base_row, "reason": "approved lemma missing from manifest"})
             continue
 
-        candidate_provenance = _source_provenance(match.entry)
+        candidate_provenance = plan._approved_source_provenance(decision, match.entry)
         if not candidate_provenance:
             missing_candidates.append({**base_row, "reason": "matched candidate lacks source_provenance"})
             continue
@@ -146,13 +146,6 @@ def format_report(result: Mapping[str, Any]) -> str:
             for row in result["missing_manifest_entries"]
         )
     return "\n".join(lines)
-
-
-def _source_provenance(entry: Mapping[str, Any]) -> list[dict[str, Any]]:
-    provenance = entry.get("source_provenance")
-    if not isinstance(provenance, list):
-        return []
-    return [dict(item) for item in provenance if isinstance(item, Mapping)]
 
 
 def _append_missing_provenance(entry: dict[str, Any], provenance: Sequence[Mapping[str, Any]]) -> int:

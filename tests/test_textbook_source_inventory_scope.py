@@ -16,17 +16,25 @@ BOLSHAKOVA_INVENTORY = (
 VASHULENKO_INVENTORY = (
     PROJECT_ROOT / "data/lexicon/source-inventory/vashulenko-grade3-headwords.yaml"
 )
+VASHULENKO_FAMILY_NUMERALS_INVENTORY = (
+    PROJECT_ROOT / "data/lexicon/source-inventory/vashulenko-grade3-family-numerals.yaml"
+)
 VASHULENKO_MAP = PROJECT_ROOT / "docs/l2-uk-direct/textbook-map.yaml"
 BOLSHAKOVA_NOTES = (
     PROJECT_ROOT / "docs/l2-uk-direct/textbook-reading-notes/bolshakova-bukvar-mapping.md"
 )
+TEXTBOOK_INVENTORIES = [
+    BOLSHAKOVA_INVENTORY,
+    VASHULENKO_INVENTORY,
+    VASHULENKO_FAMILY_NUMERALS_INVENTORY,
+]
 
 LOCATOR_PART_RE = re.compile(r"^([A-Za-z0-9_]+)(?:\[(\d+)\])?$")
 
 
 def _records() -> list:
     records = []
-    for path in [BOLSHAKOVA_INVENTORY, VASHULENKO_INVENTORY]:
+    for path in TEXTBOOK_INVENTORIES:
         records.extend(read_source_inventory(path, project_root=PROJECT_ROOT))
     return records
 
@@ -46,13 +54,15 @@ def test_textbook_inventory_counts_and_source_paths_are_stable() -> None:
     records = _records()
     counts = Counter(record.source_id for record in records)
 
-    assert len(records) == 80
+    assert len(records) == 114
     assert counts == {
         "bolshakova-bukvar-2025-part1-keywords": 40,
+        "vashulenko-grade3-2020-family-vocabulary": 9,
         "vashulenko-grade3-2020-school-vocabulary": 7,
         "vashulenko-grade3-2020-interior-vocabulary": 17,
         "vashulenko-grade3-2020-marine-vocabulary": 6,
         "vashulenko-grade3-2020-birds-vocabulary": 10,
+        "vashulenko-grade3-2020-numerals-vocabulary": 25,
     }
     for record in records:
         assert record.source_family == "textbook"
@@ -64,7 +74,9 @@ def test_textbook_inventory_counts_and_source_paths_are_stable() -> None:
 
 def test_vashulenko_inventory_locators_resolve_to_tracked_source_map() -> None:
     textbook_map = yaml.safe_load(VASHULENKO_MAP.read_text(encoding="utf-8"))
-    records = read_source_inventory(VASHULENKO_INVENTORY, project_root=PROJECT_ROOT)
+    records = []
+    for path in [VASHULENKO_INVENTORY, VASHULENKO_FAMILY_NUMERALS_INVENTORY]:
+        records.extend(read_source_inventory(path, project_root=PROJECT_ROOT))
 
     for record in records:
         assert record.source_path == str(VASHULENKO_MAP.relative_to(PROJECT_ROOT))

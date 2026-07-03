@@ -197,6 +197,7 @@ def resolve_ephemeral_plan_output_path(out: Path) -> Path:
 
 def _planned_addition(decision: ApprovedDecision, match: CandidateMatch) -> dict[str, Any]:
     candidate = copy.deepcopy(dict(match.entry))
+    candidate["source_provenance"] = _approved_source_provenance(decision, match.entry)
     candidate["pos"] = decision.approved_pos
     candidate["gloss"] = decision.approved_gloss
     candidate.pop("surface_admission", None)
@@ -224,6 +225,37 @@ def _planned_addition(decision: ApprovedDecision, match: CandidateMatch) -> dict
         "decision_file": decision.decision_file,
         "manifest_entry": manifest_entry,
     }
+
+
+def _approved_source_provenance(
+    decision: ApprovedDecision,
+    entry: Mapping[str, Any],
+) -> list[dict[str, Any]]:
+    """Return only the candidate provenance row approved by ``decision``."""
+    provenance = entry.get("source_provenance")
+    if not isinstance(provenance, list):
+        return []
+    approved: list[dict[str, Any]] = []
+    lemma = strip_acute_stress(_clean_text(entry.get("lemma"))) or decision.lemma
+    for item in provenance:
+        if not isinstance(item, Mapping):
+            continue
+        inventory_path = _clean_text(item.get("inventory_path"))
+        locator = _clean_text(item.get("source_locator"))
+        if not inventory_path or not locator:
+            continue
+        source_key = decisions.source_inventory_key(
+            lemma=lemma,
+            inventory_path=inventory_path,
+            locator=locator,
+        )
+        if source_key == decision.source_key:
+            approved.append(dict(item))
+    if not approved:
+        raise SourceInventoryError(
+            f"{decision.lemma}: approved source key {decision.source_key!r} missing from matched candidate"
+        )
+    return approved
 
 
 def _candidate_index(payload: Mapping[str, Any]) -> dict[str, CandidateMatch]:

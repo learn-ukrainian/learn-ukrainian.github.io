@@ -24,6 +24,7 @@ The committed source inventory input is:
 - `data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-119-138.yaml`
 - `data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-139-158.yaml`
 - `data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-159-178.yaml`
+- `data/lexicon/source-inventory/vashulenko-grade3-family-numerals.yaml`
 - `data/lexicon/source-inventory/vashulenko-grade3-headwords.yaml`
 
 The candidate JSON follows the existing grow-candidate shape: `counts`,
