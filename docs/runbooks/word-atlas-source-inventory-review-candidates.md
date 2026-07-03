@@ -22,6 +22,7 @@ The committed source inventory input is:
 - `data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-79-98.yaml`
 - `data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-99-118.yaml`
 - `data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-119-138.yaml`
+- `data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-139-158.yaml`
 - `data/lexicon/source-inventory/vashulenko-grade3-headwords.yaml`
 
 The candidate JSON follows the existing grow-candidate shape: `counts`,
@@ -91,11 +92,12 @@ conjunction, particle, and interjection. Optional per-headword `gloss` values
 are curated learner-facing English anchors for cases where dictionary
 enrichment lacks a visible English translation.
 
-The private teacher-lesson seeds contribute 147 reviewed `teacher_lesson`
-headwords from an explicit local vocabulary table, with approval ledgers now
-covering rows 1-138. Their committed rows are derived metadata only: no raw
-private lesson material, private document paths, or teacher-identifying labels
-should appear in the inventory.
+The private teacher-lesson seeds contribute 167 reviewed `teacher_lesson`
+headwords from an explicit local vocabulary table, with approval ledgers
+covering rows 1-138. Rows 139-158 are source-inventory only until a later
+decision ledger. Their committed rows are derived metadata only: no raw private
+lesson material, private document paths, or teacher-identifying labels should
+appear in the inventory.
 
 When a candidate is later promoted into a manifest entry,
 `promote_grow_candidates.manifest_entry_from_candidate()` copies
