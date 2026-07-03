@@ -85,6 +85,7 @@ _FENCE_RE = re.compile(r"```.*?```", re.DOTALL)
 _HTML_COMMENT_RE = re.compile(r"<!--.*?-->", re.DOTALL)
 _TAG_RE = re.compile(r"<[^>\n]{2,160}>")
 _FRONTMATTER_RE = re.compile(r"\A---\n.*?\n---\n", re.DOTALL)
+_YAML_KEY_RE = re.compile(r"(?m)^(\s*(?:-\s*)?)[A-Za-z_][A-Za-z0-9_-]*:(?=\s|$)")
 
 AI_LEAK_PATTERNS: tuple[tuple[re.Pattern[str], str], ...] = tuple(
     (re.compile(pattern, re.IGNORECASE), label)
@@ -157,6 +158,18 @@ def _mask_ignored_regions(text: str) -> str:
 
 def _mask_tags(text: str) -> str:
     return _TAG_RE.sub(_mask_match, text)
+
+
+def _mask_yaml_keys(text: str) -> str:
+    """Mask YAML mapping keys while preserving line numbers and scalar values."""
+    return _YAML_KEY_RE.sub(
+        lambda match: match.group(1) + " " * (len(match.group(0)) - len(match.group(1))),
+        text,
+    )
+
+
+def _is_yaml_source(source: str) -> bool:
+    return source.endswith((".yaml", ".yml"))
 
 
 def _is_ignored_line(line: str) -> bool:
@@ -277,11 +290,12 @@ def scan_surface_text(
     """Run level-aware deterministic checks over one learner-facing text blob."""
     policy = policy_for_level(level)
     masked = _mask_ignored_regions(text)
-    language_masked = _mask_tags(masked)
+    prose_masked = _mask_yaml_keys(masked) if _is_yaml_source(source) else masked
+    language_masked = _mask_tags(prose_masked)
     findings: list[dict[str, Any]] = []
     findings.extend(
         _pattern_findings(
-            masked,
+            prose_masked,
             patterns=AI_LEAK_PATTERNS,
             kind="ai_leakage",
             severity=policy.ai_leak_severity,
@@ -290,7 +304,7 @@ def scan_surface_text(
     )
     findings.extend(
         _pattern_findings(
-            masked,
+            prose_masked,
             patterns=PATH_LEAK_PATTERNS,
             kind="path_leakage",
             severity=policy.path_leak_severity,
@@ -304,7 +318,7 @@ def scan_surface_text(
             findings.append(ratio_finding)
     findings.extend(
         _pattern_findings(
-            masked,
+            prose_masked,
             patterns=PATHOS_PATTERNS,
             kind="pathos_or_register",
             severity=policy.pathos_severity,
