@@ -1,0 +1,122 @@
+- lemma: релігія
+  translation: religion
+  pos: noun
+  gender: f
+  usage: Релігія може бути вірою, інституцією і культурною спадщиною.
+- lemma: віра
+  translation: faith
+  pos: noun
+  gender: f
+  usage: Віра для багатьох людей є особистим духовним досвідом.
+- lemma: духовність
+  translation: spirituality
+  pos: noun
+  gender: f
+  usage: Духовність не завжди збігається з формальною конфесійною належністю.
+- lemma: конфесія
+  translation: confession; denomination
+  pos: noun
+  gender: f
+  usage: Конфесія має власну традицію, структуру і богослужбову мову.
+- lemma: церква
+  translation: church
+  pos: noun
+  gender: f
+  usage: Церква може означати храм, інституцію або спільноту вірян.
+- lemma: парафія
+  translation: parish
+  pos: noun
+  gender: f
+  usage: Парафія організовує місцеве богослужбове і громадське життя.
+- lemma: єпархія
+  translation: eparchy; diocese
+  pos: noun
+  gender: f
+  usage: Єпархія об'єднує кілька парафій у церковній структурі.
+- lemma: патріархат
+  translation: patriarchate
+  pos: noun
+  gender: m
+  usage: Патріархат є церковною структурою на чолі з патріархом.
+- lemma: томос
+  translation: tomos
+  pos: noun
+  gender: m
+  usage: Томос може визначати або підтверджувати церковний статус.
+- lemma: літургія
+  translation: liturgy
+  pos: noun
+  gender: f
+  usage: Літургія має усталену богослужбову структуру.
+- lemma: молитва
+  translation: prayer
+  pos: noun
+  gender: f
+  usage: Молитва може бути особистою або спільною.
+- lemma: обряд
+  translation: rite; ritual
+  pos: noun
+  gender: m
+  usage: Обряд поєднує форму, символ і значення для громади.
+- lemma: свято
+  translation: holiday; feast day
+  pos: noun
+  gender: n
+  usage: Релігійне свято може мати богослужбовий, родинний і культурний рівні.
+- lemma: ікона
+  translation: icon
+  pos: noun
+  gender: f
+  usage: Ікона має богословську і молитовну функцію у традиції.
+- lemma: іконостас
+  translation: iconostasis
+  pos: noun
+  gender: m
+  usage: Іконостас організує простір храму і візуальну мову богослужіння.
+- lemma: мечеть
+  translation: mosque
+  pos: noun
+  gender: f
+  usage: Мечеть є простором мусульманської молитви і громади.
+- lemma: синагога
+  translation: synagogue
+  pos: noun
+  gender: f
+  usage: Синагога є простором юдейської молитви, навчання і громади.
+- lemma: паломництво
+  translation: pilgrimage
+  pos: noun
+  gender: n
+  usage: Паломництво пов'язане з духовною дорогою до святого місця.
+- lemma: міжконфесійний
+  translation: interfaith; interconfessional
+  pos: adj
+  usage: Міжконфесійний діалог визнає відмінності і шукає спільну дію.
+- lemma: свобода совісті
+  translation: freedom of conscience
+  pos: phrase
+  usage: Свобода совісті захищає право мати або не мати релігійні переконання.
+- lemma: віросповідання
+  translation: religious profession; creed
+  pos: noun
+  gender: n
+  usage: Право на віросповідання є частиною релігійної свободи.
+- lemma: секуляризм
+  translation: secularism
+  pos: noun
+  gender: m
+  usage: Секуляризм означає нейтральність держави щодо конфесій.
+- lemma: толерантність
+  translation: tolerance
+  pos: noun
+  gender: f
+  usage: Толерантність потребує знання і поваги до різних переконань.
+- lemma: капелан
+  translation: chaplain
+  pos: noun
+  gender: m
+  usage: Капелан надає духовну і моральну підтримку людям у кризових середовищах.
+- lemma: сакральна спадщина
+  translation: sacred heritage
+  pos: phrase
+  usage: Сакральна спадщина включає храми, цвинтарі, ікони, рукописи і пам'ять громад.
