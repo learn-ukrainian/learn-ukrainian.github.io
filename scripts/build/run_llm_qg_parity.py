@@ -2,7 +2,8 @@
 """Standalone LLM-QG parity runner.
 
 Re-runs the V7 per-dimension LLM review on an already-built module and persists
-``llm_qg.json``, with a reviewer override. Replicates ``v7_build._run_llm_qg``
+``llm_qg.json`` plus the SQLite LLM-QG store, with a reviewer override.
+Replicates ``v7_build._run_llm_qg``
 (the handoff-prescribed mechanism) so folk modules that shipped python_qg-green
 *without* an ``llm_qg.json`` can reach e2e-proper parity with kalendarna.
 
@@ -19,8 +20,8 @@ The shared QG runner resumes dimensions whose prompt/raw-response artifacts
 already parse cleanly, and retries a dimension when the backend returns an empty
 or malformed response.
 
-Outputs ``<module_dir>/llm_qg.json`` and prints the aggregate verdict line. Exit
-code 0 on success, 1 on missing plan/module.
+Outputs ``<module_dir>/llm_qg.json``, persists the current DB record, and prints
+the aggregate verdict line. Exit code 0 on success, 1 on missing plan/module.
 """
 
 from __future__ import annotations
@@ -66,6 +67,14 @@ def run_parity(level: str, slug: str, *, writer: str, reviewer: str, out: str | 
         profile=profile,
     )
     linear_pipeline.write_json(module_dir / "llm_qg.json", llm_qg)
+    v7_build._persist_llm_qg_result(
+        level=level,
+        slug=slug,
+        module_dir=module_dir,
+        llm_qg=llm_qg,
+        reviewer=v7_build._reviewer_for_writer(writer, reviewer),
+        source="run_llm_qg_parity",
+    )
     agg = llm_qg["aggregate"]
     print(
         f"[parity] DONE {slug} in {round(time.monotonic() - started)}s :: "
@@ -75,6 +84,7 @@ def run_parity(level: str, slug: str, *, writer: str, reviewer: str, out: str | 
         flush=True,
     )
     print(f"LLM_QG_JSON_WRITTEN {module_dir / 'llm_qg.json'}", flush=True)
+    print("LLM_QG_DB_PERSISTED true", flush=True)
     return 0
 
 

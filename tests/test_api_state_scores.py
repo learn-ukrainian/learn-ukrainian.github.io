@@ -9,6 +9,7 @@ status cache, and must degrade gracefully when a module has not been scored.
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 
 from fastapi.testclient import TestClient
@@ -16,8 +17,13 @@ from fastapi.testclient import TestClient
 import scripts.api.main as api_main
 import scripts.api.state_router as state_router
 from scripts.api.state_router import _read_llm_qg_scores
+from scripts.audit.llm_qg_store import DB_ENV_VAR, record_llm_qg
 
 client = TestClient(api_main.app, raise_server_exceptions=False)
+
+
+def _set_mtime_ns(path: Path, value: int) -> None:
+    os.utime(path, ns=(value, value))
 
 
 def _write_llm_qg(module_dir: Path, *, dims: dict[str, float], aggregate: dict) -> None:
@@ -64,6 +70,74 @@ def test_read_scores_malformed_json_degrades(tmp_path: Path) -> None:
     (tmp_path / "llm_qg.json").write_text("{ not json", encoding="utf-8")
     out = _read_llm_qg_scores(tmp_path)
     assert out == {"aggregate": None, "dimensions": {}}
+
+
+def test_read_scores_ignores_stale_file_fallback(tmp_path: Path) -> None:
+    module_dir = tmp_path / "b1" / "stale-mod"
+    _write_llm_qg(
+        module_dir,
+        dims={"naturalness": 8.0},
+        aggregate={
+            "verdict": "PASS",
+            "terminal_verdict": "PASS",
+            "min_score": 8.0,
+            "min_dim": "naturalness",
+            "failing_dims": [],
+            "warning_dims": [],
+        },
+    )
+    (module_dir / "module.md").write_text("## Changed\n\nНовий текст.\n", encoding="utf-8")
+    _set_mtime_ns(module_dir / "llm_qg.json", 1_000_000_000)
+    _set_mtime_ns(module_dir / "module.md", 2_000_000_000)
+
+    out = _read_llm_qg_scores(module_dir)
+
+    assert out == {"aggregate": None, "dimensions": {}}
+
+
+def test_read_scores_corrupt_db_degrades(tmp_path: Path, monkeypatch) -> None:
+    bad_db = tmp_path / "bad.db"
+    bad_db.write_text("not sqlite", encoding="utf-8")
+    monkeypatch.setenv(DB_ENV_VAR, str(bad_db))
+    module_dir = tmp_path / "b1" / "unscored"
+    module_dir.mkdir(parents=True)
+    (module_dir / "module.md").write_text("## Тест\n\nЧекайте на номер.\n", encoding="utf-8")
+
+    out = _read_llm_qg_scores(module_dir)
+
+    assert out == {"aggregate": None, "dimensions": {}}
+
+
+def test_read_scores_uses_persisted_current_qg_without_file(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    monkeypatch.setenv(DB_ENV_VAR, str(tmp_path / "llm_qg.db"))
+    module_dir = tmp_path / "b1" / "stored-mod"
+    module_dir.mkdir(parents=True)
+    (module_dir / "module.md").write_text("## Тест\n\nЧекайте на номер.\n", encoding="utf-8")
+    record_llm_qg(
+        level="b1",
+        slug="stored-mod",
+        module_dir=module_dir,
+        payload={
+            "dimensions": {"naturalness": {"score": 6.5, "verdict": "REVISE"}},
+            "aggregate": {
+                "verdict": "REVISE",
+                "terminal_verdict": "PASS",
+                "min_score": 6.5,
+                "min_dim": "naturalness",
+                "failing_dims": ["naturalness"],
+                "warning_dims": ["naturalness"],
+            },
+        },
+        gate_version="test.v1",
+    )
+
+    out = _read_llm_qg_scores(module_dir)
+
+    assert out["dimensions"] == {"naturalness": 6.5}
+    assert out["aggregate"]["min_dim"] == "naturalness"
 
 
 # --------------------------------------------------------------------------- #

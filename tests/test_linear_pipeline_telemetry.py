@@ -379,6 +379,36 @@ def test_writer_rule_fired_event_emitted_on_known_failure_class(tmp_path: Path) 
     )
 
 
+def test_python_qg_surface_policy_scans_yaml_sidecars(tmp_path: Path) -> None:
+    module_dir = tmp_path / "module"
+    module_dir.mkdir()
+    (module_dir / "module.md").write_text("## Урок\n\n**Я чекаю на автобус.**\n", encoding="utf-8")
+    (module_dir / "activities.yaml").write_text(
+        "- type: quiz\n"
+        "  prompt: Обери відповідь.\n"
+        "  note: As an AI, I cannot assist with this request.\n",
+        encoding="utf-8",
+    )
+    (module_dir / "vocabulary.yaml").write_text("[]\n", encoding="utf-8")
+    (module_dir / "resources.yaml").write_text("[]\n", encoding="utf-8")
+
+    def verify_words(words: list[str]) -> dict[str, list[dict[str, str]]]:
+        return {word: [{"lemma": word}] for word in words}
+
+    report = linear_pipeline.run_python_qg(
+        module_dir,
+        linear_pipeline.plan_path_for("a1", "my-morning"),
+        verify_words_fn=verify_words,
+    )
+
+    surface_policy = report["gates"]["surface_policy"]
+    assert surface_policy["passed"] is False
+    assert any(
+        finding["type"] == "ai_leakage" and finding["source"] == "activities.yaml"
+        for finding in surface_policy["findings"]
+    )
+
+
 def test_mcp_tools_writer_runtime_gate_still_fires_for_empty_tool_calls() -> None:
     with pytest.raises(
         linear_pipeline.LinearPipelineError,
