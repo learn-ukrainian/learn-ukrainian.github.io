@@ -1,0 +1,120 @@
+- lemma: дослідження
+  translation: research; study
+  pos: noun
+  gender: n
+  usage: Дослідження має чітку мету, матеріал, метод і висновки.
+- lemma: дослідник
+  translation: researcher
+  pos: noun
+  gender: m
+  usage: Дослідник відповідає за чесне подання даних.
+- lemma: методологія
+  translation: methodology
+  pos: noun
+  gender: f
+  usage: Методологія пояснює, як саме отримано результат.
+- lemma: гіпотеза
+  translation: hypothesis
+  pos: noun
+  gender: f
+  usage: Гіпотеза має бути перевірною.
+- lemma: об'єкт дослідження
+  translation: object of research
+  pos: phrase
+  usage: Об'єкт дослідження визначає ширшу сферу аналізу.
+- lemma: предмет дослідження
+  translation: subject of research
+  pos: phrase
+  usage: Предмет дослідження уточнює конкретний аспект об'єкта.
+- lemma: емпіричні дані
+  translation: empirical data
+  pos: phrase
+  usage: Емпіричні дані отримують через спостереження, експеримент або опитування.
+- lemma: експеримент
+  translation: experiment
+  pos: noun
+  gender: m
+  usage: Експеримент дозволяє контролювати умови перевірки.
+- lemma: спостереження
+  translation: observation
+  pos: noun
+  gender: n
+  usage: Спостереження допомагає описати поведінку в реальному контексті.
+- lemma: опитування
+  translation: survey
+  pos: noun
+  gender: n
+  usage: Опитування збирає відповіді багатьох учасників.
+- lemma: валідність
+  translation: validity
+  pos: noun
+  gender: f
+  usage: Валідність показує, чи метод справді вимірює потрібне явище.
+- lemma: кореляція
+  translation: correlation
+  pos: noun
+  gender: f
+  usage: Кореляція не доводить причинності сама по собі.
+- lemma: верифікація
+  translation: verification
+  pos: noun
+  gender: f
+  usage: Верифікація результатів потребує перевірки даних і методу.
+- lemma: анотація
+  translation: abstract
+  pos: noun
+  gender: f
+  usage: Анотація коротко подає тему, мету, метод і результат.
+- lemma: тези
+  translation: conference abstract; theses
+  pos: noun
+  usage: Тези стисло представляють основну ідею доповіді.
+- lemma: стаття
+  translation: article
+  pos: noun
+  gender: f
+  usage: Наукова стаття розгортає аргумент і показує джерела.
+- lemma: рецензування
+  translation: peer review
+  pos: noun
+  gender: n
+  usage: Рецензування допомагає перевірити якість роботи.
+- lemma: бібліографія
+  translation: bibliography
+  pos: noun
+  gender: f
+  usage: Бібліографія містить використані джерела.
+- lemma: цитування
+  translation: citation
+  pos: noun
+  gender: n
+  usage: Коректне цитування показує походження чужої думки.
+- lemma: академічна доброчесність
+  translation: academic integrity
+  pos: phrase
+  usage: Академічна доброчесність захищає довіру до знання.
+- lemma: плагіат
+  translation: plagiarism
+  pos: noun
+  gender: m
+  usage: Плагіат приховує чуже авторство або чужу ідею.
+- lemma: грант
+  translation: grant
+  pos: noun
+  gender: m
+  usage: Грант підтримує дослідницький проєкт із чітким результатом.
+- lemma: фінансування
+  translation: funding
+  pos: noun
+  gender: n
+  usage: Фінансування має відповідати плану роботи й бюджету.
+- lemma: апробація
+  translation: testing; scholarly presentation
+  pos: noun
+  gender: f
+  usage: Апробація дає змогу обговорити результати перед остаточною публікацією.
+- lemma: релевантність
+  translation: relevance
+  pos: noun
+  gender: f
+  usage: Релевантність джерела залежить від теми, дати й методу.

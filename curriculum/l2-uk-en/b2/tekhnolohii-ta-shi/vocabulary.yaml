@@ -1,0 +1,114 @@
+- lemma: алгоритм
+  translation: algorithm
+  pos: noun
+  gender: m
+  usage: Алгоритм пропонує рішення на підставі правил або навчальних даних.
+- lemma: дані
+  translation: data
+  pos: noun
+  usage: Дані треба захищати й пояснювати за походженням.
+- lemma: нейромережа
+  translation: neural network
+  pos: noun
+  gender: f
+  usage: Нейромережа може розпізнавати закономірності в текстах або зображеннях.
+- lemma: модель
+  translation: model
+  pos: noun
+  gender: f
+  usage: Модель дає відповідь, але її результат потребує перевірки.
+- lemma: автоматизація
+  translation: automation
+  pos: noun
+  gender: f
+  usage: Автоматизація змінює набір завдань у команді.
+- lemma: впровадження
+  translation: implementation; deployment
+  pos: noun
+  gender: n
+  usage: Впровадження нової системи потребує навчання користувачів.
+- lemma: кібербезпека
+  translation: cybersecurity
+  pos: noun
+  gender: f
+  usage: Кібербезпека охоплює захист даних, мереж і доступу.
+- lemma: приватність
+  translation: privacy
+  pos: noun
+  gender: f
+  usage: Приватність важлива, коли сервіс збирає персональні дані.
+- lemma: конфіденційність
+  translation: confidentiality
+  pos: noun
+  gender: f
+  usage: Конфіденційність визначає, хто має право бачити інформацію.
+- lemma: діпфейк
+  translation: deepfake
+  pos: noun
+  gender: m
+  usage: Діпфейк треба перевіряти за джерелом і контекстом.
+- lemma: промпт
+  translation: prompt
+  pos: noun
+  gender: m
+  usage: Добрий промпт називає мету, адресата, формат і критерій якості.
+- lemma: запит
+  translation: query; request
+  pos: noun
+  gender: m
+  usage: Запит до моделі має бути конкретним і перевірним.
+- lemma: корпус даних
+  translation: data corpus
+  pos: phrase
+  usage: Корпус даних впливає на якість мовної моделі.
+- lemma: токенізація
+  translation: tokenization
+  pos: noun
+  gender: f
+  usage: Токенізація розбиває текст на одиниці для обробки.
+- lemma: упередженість
+  translation: bias
+  pos: noun
+  gender: f
+  usage: Упередженість моделі може повторювати проблеми навчальних даних.
+- lemma: пояснюваність
+  translation: explainability
+  pos: noun
+  gender: f
+  usage: Пояснюваність потрібна, коли рішення має наслідки для людини.
+- lemma: аудит
+  translation: audit
+  pos: noun
+  gender: m
+  usage: Аудит системи перевіряє якість, ризики й відповідність правилам.
+- lemma: оскарження
+  translation: appeal; contestation
+  pos: noun
+  gender: n
+  usage: Користувач має знати процедуру оскарження автоматизованого рішення.
+- lemma: людський нагляд
+  translation: human oversight
+  pos: phrase
+  usage: Людський нагляд не дозволяє системі бути єдиним джерелом рішення.
+- lemma: інтерфейс
+  translation: interface
+  pos: noun
+  gender: m
+  usage: Зрозумілий інтерфейс зменшує кількість помилок користувача.
+- lemma: хмарні обчислення
+  translation: cloud computing
+  pos: phrase
+  usage: Хмарні обчислення дають доступ до сервісів через мережу.
+- lemma: масштабований
+  translation: scalable
+  pos: adj
+  usage: Масштабований сервіс може працювати з більшою кількістю користувачів.
+- lemma: інтегрований
+  translation: integrated
+  pos: adj
+  usage: Інтегрований інструмент працює разом з іншими системами.
+- lemma: технооптимізм
+  translation: techno-optimism
+  pos: noun
+  gender: m
+  usage: Технооптимізм варто врівноважувати перевіркою ризиків.
