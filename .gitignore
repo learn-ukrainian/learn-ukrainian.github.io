@@ -125,6 +125,13 @@ recovery_*.json
 issue_*.json
 *_report.json
 
+# Local-only private-source review exports. The intake scripts also reject
+# repository output paths; these patterns are a defense-in-depth guard.
+private-source-review/
+**/atlas-private-teacher-lesson-candidates.json
+**/atlas-private-teacher-lesson-bulk-triage.json
+**/atlas-private-teacher-lesson-bulk-triage.md
+
 # Temporary markdown files (root folder)
 temp*.md
 /tmp*.md
