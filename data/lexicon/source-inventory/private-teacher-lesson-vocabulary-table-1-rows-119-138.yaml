@@ -1,0 +1,124 @@
+---
+version: 1
+kind: atlas_source_inventory
+sources:
+  - id: private-teacher-lesson-vocabulary-table-1-rows-119-138
+    source_family: teacher_lesson
+    extraction_mode: curated_headword
+    title: Private teacher lesson vocabulary - explicit table rows 119-138
+    locator: local-only explicit vocabulary table rows 119-138
+    notes: >-
+      Derived headword metadata only; raw private lesson material is local-only
+      and not committed. Daily Word, Practice, and cloze remain frozen without
+      explicit surface_admission.
+    headwords:
+      - lemma: втрутитися
+        pos: verb
+        gloss: to intervene; perfective
+        locator: explicit vocabulary table row 119
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: обдурювати
+        pos: verb
+        gloss: to trick; to deceive; imperfective
+        locator: explicit vocabulary table row 120
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: обдурити
+        pos: verb
+        gloss: to trick; to deceive; perfective
+        locator: explicit vocabulary table row 121
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: обхитрити
+        pos: verb
+        gloss: to outwit; to trick; perfective
+        locator: explicit vocabulary table row 121
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: ніяково
+        pos: adverb
+        gloss: awkwardly
+        locator: explicit vocabulary table row 122
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: крісло колісне
+        pos: noun
+        gloss: wheelchair
+        locator: explicit vocabulary table row 123
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: очне навчання
+        pos: noun
+        gloss: full-time education; in-person study
+        locator: explicit vocabulary table row 124
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: заочне навчання
+        pos: noun
+        gloss: correspondence education; part-time study
+        locator: explicit vocabulary table row 125
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: носій мови
+        pos: noun
+        gloss: native speaker
+        locator: explicit vocabulary table row 126
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: звинувачувати
+        pos: verb
+        gloss: to accuse; imperfective
+        locator: explicit vocabulary table row 127
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: звинуватити
+        pos: verb
+        gloss: to accuse; perfective
+        locator: explicit vocabulary table row 128
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: заплутаний
+        pos: adjective
+        gloss: confusing; tangled
+        locator: explicit vocabulary table row 129
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: вбивця
+        pos: noun
+        gloss: killer; murderer
+        locator: explicit vocabulary table row 130
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: протяг
+        pos: noun
+        gloss: draft; draught
+        locator: explicit vocabulary table row 131
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: ДТП
+        pos: abbreviation
+        gloss: road traffic accident; car accident
+        locator: explicit vocabulary table row 132
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: дорожньо-транспортна пригода
+        pos: noun
+        gloss: road traffic accident; car accident
+        locator: explicit vocabulary table row 132
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: вичитувати
+        pos: verb
+        gloss: to lecture; to scold; imperfective
+        locator: explicit vocabulary table row 133
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: вичитати
+        pos: verb
+        gloss: to lecture; to scold; perfective
+        locator: explicit vocabulary table row 134
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: засуджувати
+        pos: verb
+        gloss: to sentence; to convict; imperfective
+        locator: explicit vocabulary table row 135
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: засудити
+        pos: verb
+        gloss: to sentence; to convict; perfective
+        locator: explicit vocabulary table row 136
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: перепади настрою
+        pos: noun
+        gloss: mood swings
+        locator: explicit vocabulary table row 137
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: підозріло
+        pos: adverb
+        gloss: suspiciously
+        locator: explicit vocabulary table row 138
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
