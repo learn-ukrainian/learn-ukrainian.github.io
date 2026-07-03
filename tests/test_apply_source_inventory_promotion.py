@@ -97,7 +97,7 @@ def test_apply_existing_provenance_overlay_updates_existing_entries() -> None:
         expected_additions=0,
         expected_skipped_existing=1,
     )
-    decision = _approved_decision("чверть", key="key-чверть")
+    decision = _approved_decision("чверть")
     candidate_index = {
         decision.source_key: planner.CandidateMatch(
             entry={"source_provenance": [_provenance(locator="explicit vocabulary table row 14")]},
@@ -254,16 +254,22 @@ def _provenance(*, locator: str = "explicit vocabulary table row 1") -> dict[str
     }
 
 
-def _approved_decision(lemma: str, *, key: str) -> planner.ApprovedDecision:
+def _approved_decision(lemma: str) -> planner.ApprovedDecision:
+    inventory_path = "data/lexicon/source-inventory/private-teacher-lesson-vocabulary-seed.yaml"
+    locator = "explicit vocabulary table row 14"
     return planner.ApprovedDecision(
         lemma=lemma,
         approved_pos="noun",
         approved_gloss=lemma,
         sense_note="fixture",
         source_inventory={
-            "key": key,
-            "path": "data/lexicon/source-inventory/private-teacher-lesson-vocabulary-seed.yaml",
-            "locator": "explicit vocabulary table row 14",
+            "key": planner.decisions.source_inventory_key(
+                lemma=lemma,
+                inventory_path=inventory_path,
+                locator=locator,
+            ),
+            "path": inventory_path,
+            "locator": locator,
             "source_id": "private-teacher-lesson-vocabulary-table-1-seed",
             "source_family": "teacher_lesson",
         },

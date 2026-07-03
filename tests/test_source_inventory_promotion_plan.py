@@ -64,7 +64,17 @@ def _write_json(path: Path, payload: object) -> None:
 def test_plan_maps_approved_decision_to_manifest_addition(tmp_path: Path) -> None:
     decision = _first_decision()
     candidates = tmp_path / "candidates.json"
-    _write_json(candidates, _candidate_payload_for(decision))
+    payload = _candidate_payload_for(decision)
+    payload["needs_review"][0]["entry"]["source_provenance"].append(
+        {
+            "source_family": "textbook",
+            "inventory_path": "data/lexicon/source-inventory/other.yaml",
+            "source_locator": "topic_index.other.words[0]",
+            "source_id": "unapproved-duplicate-source",
+            "context": "fixture duplicate context",
+        }
+    )
+    _write_json(candidates, payload)
 
     plan = planner.build_promotion_plan(
         candidates_path=candidates,
@@ -86,6 +96,7 @@ def test_plan_maps_approved_decision_to_manifest_addition(tmp_path: Path) -> Non
     assert addition["manifest_entry"]["gloss"] == decision["approved_gloss"]
     assert addition["manifest_entry"]["primary_source"] == "source_inventory_grow"
     assert addition["manifest_entry"]["course_usage"] == []
+    assert len(addition["manifest_entry"]["source_provenance"]) == 1
     assert addition["manifest_entry"]["source_provenance"][0]["source_id"] == (
         decision["source_inventory"]["source_id"]
     )

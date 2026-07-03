@@ -1,0 +1,190 @@
+---
+version: 1
+kind: atlas_source_inventory
+sources:
+  - id: vashulenko-grade3-2020-family-vocabulary
+    source_family: textbook
+    extraction_mode: headword_inventory
+    title: Вашуленко М.С. Українська мова та читання. 3 клас. Частина 1, 2020
+    path: docs/l2-uk-direct/textbook-map.yaml
+    locator: topic_index.vocabulary_family
+    notes: Seed uses only tracked textbook-map word lists; source PDF is not committed.
+    headwords:
+      - lemma: мама
+        pos: noun
+        gloss: mother
+        locator: topic_index.vocabulary_family.words[0]
+        context: "Grade 3 family vocabulary word list includes мама."
+      - lemma: тато
+        pos: noun
+        gloss: father; dad
+        locator: topic_index.vocabulary_family.words[1]
+        context: "Grade 3 family vocabulary word list includes тато."
+      - lemma: баба
+        pos: noun
+        gloss: grandmother; older woman
+        locator: topic_index.vocabulary_family.words[2]
+        context: "Grade 3 family vocabulary word list includes баба."
+      - lemma: дід
+        pos: noun
+        gloss: grandfather; old man
+        locator: topic_index.vocabulary_family.words[3]
+        context: "Grade 3 family vocabulary word list includes дід."
+      - lemma: сестра
+        pos: noun
+        gloss: sister
+        locator: topic_index.vocabulary_family.words[4]
+        context: "Grade 3 family vocabulary word list includes сестра."
+      - lemma: брат
+        pos: noun
+        gloss: brother
+        locator: topic_index.vocabulary_family.words[5]
+        context: "Grade 3 family vocabulary word list includes брат."
+      - lemma: дитина
+        pos: noun
+        gloss: child
+        locator: topic_index.vocabulary_family.words[6]
+        context: "Grade 3 family vocabulary word list includes дитина."
+      - lemma: дружина
+        pos: noun
+        gloss: wife
+        locator: topic_index.vocabulary_family.words[7]
+        context: "Grade 3 family vocabulary word list includes дружина."
+      - lemma: чоловік
+        pos: noun
+        gloss: husband; man
+        locator: topic_index.vocabulary_family.words[8]
+        context: "Grade 3 family vocabulary word list includes чоловік."
+  - id: vashulenko-grade3-2020-numerals-vocabulary
+    source_family: textbook
+    extraction_mode: headword_inventory
+    title: Вашуленко М.С. Українська мова та читання. 3 клас. Частина 1, 2020
+    path: docs/l2-uk-direct/textbook-map.yaml
+    locator: topic_index.vocabulary_numerals
+    notes: Seed uses only tracked textbook-map word lists; source PDF is not committed.
+    headwords:
+      - lemma: один
+        pos: numeral
+        gloss: one
+        locator: topic_index.vocabulary_numerals.words_1_20[0]
+        context: "Grade 3 pp138-143 numeral word list includes один."
+      - lemma: два
+        pos: numeral
+        gloss: two
+        locator: topic_index.vocabulary_numerals.words_1_20[1]
+        context: "Grade 3 pp138-143 numeral word list includes два."
+      - lemma: три
+        pos: numeral
+        gloss: three
+        locator: topic_index.vocabulary_numerals.words_1_20[2]
+        context: "Grade 3 pp138-143 numeral word list includes три."
+      - lemma: чотири
+        pos: numeral
+        gloss: four
+        locator: topic_index.vocabulary_numerals.words_1_20[3]
+        context: "Grade 3 pp138-143 numeral word list includes чотири."
+      - lemma: п'ять
+        pos: numeral
+        gloss: five
+        locator: topic_index.vocabulary_numerals.words_1_20[4]
+        context: "Grade 3 pp138-143 numeral word list includes п'ять."
+      - lemma: шість
+        pos: numeral
+        gloss: six
+        locator: topic_index.vocabulary_numerals.words_1_20[5]
+        context: "Grade 3 pp138-143 numeral word list includes шість."
+      - lemma: сім
+        pos: numeral
+        gloss: seven
+        locator: topic_index.vocabulary_numerals.words_1_20[6]
+        context: "Grade 3 pp138-143 numeral word list includes сім."
+      - lemma: вісім
+        pos: numeral
+        gloss: eight
+        locator: topic_index.vocabulary_numerals.words_1_20[7]
+        context: "Grade 3 pp138-143 numeral word list includes вісім."
+      - lemma: дев'ять
+        pos: numeral
+        gloss: nine
+        locator: topic_index.vocabulary_numerals.words_1_20[8]
+        context: "Grade 3 pp138-143 numeral word list includes дев'ять."
+      - lemma: десять
+        pos: numeral
+        gloss: ten
+        locator: topic_index.vocabulary_numerals.words_1_20[9]
+        context: "Grade 3 pp138-143 numeral word list includes десять."
+      - lemma: одинадцять
+        pos: numeral
+        gloss: eleven
+        locator: topic_index.vocabulary_numerals.words_1_20[10]
+        context: "Grade 3 pp138-143 numeral word list includes одинадцять."
+      - lemma: дванадцять
+        pos: numeral
+        gloss: twelve
+        locator: topic_index.vocabulary_numerals.words_1_20[11]
+        context: "Grade 3 pp138-143 numeral word list includes дванадцять."
+      - lemma: тринадцять
+        pos: numeral
+        gloss: thirteen
+        locator: topic_index.vocabulary_numerals.words_1_20[12]
+        context: "Grade 3 pp138-143 numeral word list includes тринадцять."
+      - lemma: чотирнадцять
+        pos: numeral
+        gloss: fourteen
+        locator: topic_index.vocabulary_numerals.words_1_20[13]
+        context: "Grade 3 pp138-143 numeral word list includes чотирнадцять."
+      - lemma: п'ятнадцять
+        pos: numeral
+        gloss: fifteen
+        locator: topic_index.vocabulary_numerals.words_1_20[14]
+        context: "Grade 3 pp138-143 numeral word list includes п'ятнадцять."
+      - lemma: шістнадцять
+        pos: numeral
+        gloss: sixteen
+        locator: topic_index.vocabulary_numerals.words_1_20[15]
+        context: "Grade 3 pp138-143 numeral word list includes шістнадцять."
+      - lemma: сімнадцять
+        pos: numeral
+        gloss: seventeen
+        locator: topic_index.vocabulary_numerals.words_1_20[16]
+        context: "Grade 3 pp138-143 numeral word list includes сімнадцять."
+      - lemma: вісімнадцять
+        pos: numeral
+        gloss: eighteen
+        locator: topic_index.vocabulary_numerals.words_1_20[17]
+        context: "Grade 3 pp138-143 numeral word list includes вісімнадцять."
+      - lemma: дев'ятнадцять
+        pos: numeral
+        gloss: nineteen
+        locator: topic_index.vocabulary_numerals.words_1_20[18]
+        context: "Grade 3 pp138-143 numeral word list includes дев'ятнадцять."
+      - lemma: двадцять
+        pos: numeral
+        gloss: twenty
+        locator: topic_index.vocabulary_numerals.words_1_20[19]
+        context: "Grade 3 pp138-143 numeral word list includes двадцять."
+      - lemma: тридцять
+        pos: numeral
+        gloss: thirty
+        locator: topic_index.vocabulary_numerals.words_tens[0]
+        context: "Grade 3 pp138-143 tens numeral word list includes тридцять."
+      - lemma: п'ятдесят
+        pos: numeral
+        gloss: fifty
+        locator: topic_index.vocabulary_numerals.words_tens[1]
+        context: "Grade 3 pp138-143 tens numeral word list includes п'ятдесят."
+      - lemma: шістдесят
+        pos: numeral
+        gloss: sixty
+        locator: topic_index.vocabulary_numerals.words_tens[2]
+        context: "Grade 3 pp138-143 tens numeral word list includes шістдесят."
+      - lemma: сімдесят
+        pos: numeral
+        gloss: seventy
+        locator: topic_index.vocabulary_numerals.words_tens[3]
+        context: "Grade 3 pp138-143 tens numeral word list includes сімдесят."
+      - lemma: вісімдесят
+        pos: numeral
+        gloss: eighty
+        locator: topic_index.vocabulary_numerals.words_tens[4]
+        context: "Grade 3 pp138-143 tens numeral word list includes вісімдесят."
