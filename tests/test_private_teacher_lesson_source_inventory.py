@@ -37,6 +37,11 @@ PRIVATE_TEACHER_ROWS_119_138_INVENTORY = (
     / "data/lexicon/source-inventory/"
     "private-teacher-lesson-vocabulary-table-1-rows-119-138.yaml"
 )
+PRIVATE_TEACHER_ROWS_139_158_INVENTORY = (
+    PROJECT_ROOT
+    / "data/lexicon/source-inventory/"
+    "private-teacher-lesson-vocabulary-table-1-rows-139-158.yaml"
+)
 PRIVATE_TEACHER_FIRST_LEDGER = (
     PROJECT_ROOT
     / "data/lexicon/source-inventory-review-decisions/"
@@ -258,6 +263,41 @@ def test_private_teacher_rows_119_138_inventory_is_pending_review_metadata() -> 
     assert all("/" not in record.lemma for record in records)
     assert all("(" not in record.lemma and ")" not in record.lemma for record in records)
     assert all("surface_admission" not in record.provenance_payload() for record in records)
+
+
+def test_private_teacher_rows_139_158_inventory_is_pending_review_metadata() -> None:
+    records = read_source_inventory(
+        PRIVATE_TEACHER_ROWS_139_158_INVENTORY,
+        project_root=PROJECT_ROOT,
+    )
+
+    assert len(records) == 20
+    assert {record.source_family for record in records} == {"teacher_lesson"}
+    assert {record.extraction_mode for record in records} == {"curated_headword"}
+    assert {record.source_id for record in records} == {
+        "private-teacher-lesson-vocabulary-table-1-rows-139-158"
+    }
+    assert all(record.source_path is None for record in records)
+    assert all(record.source_url is None for record in records)
+    assert all(record.source_title for record in records)
+    assert all(record.source_locator for record in records)
+    assert all(record.context for record in records)
+    assert all(record.pos for record in records)
+    assert all(record.gloss for record in records)
+    assert "хвалити" in {record.lemma for record in records}
+    assert "облаштуватися" in {record.lemma for record in records}
+    assert "підписатися на" in {record.lemma for record in records}
+    assert "дотримуватися правила" in {record.lemma for record in records}
+    assert "публікувати" in {record.lemma for record in records}
+    assert all("," not in record.lemma for record in records)
+    assert all("/" not in record.lemma for record in records)
+    assert all("(" not in record.lemma and ")" not in record.lemma for record in records)
+    assert all("surface_admission" not in record.provenance_payload() for record in records)
+
+    inventory_text = PRIVATE_TEACHER_ROWS_139_158_INVENTORY.read_text(encoding="utf-8")
+    assert ".docx" not in inventory_text
+    assert "alona" not in inventory_text.lower()
+    assert "native-reviewer-lessons" not in inventory_text
 
 
 def test_private_teacher_first_decision_ledger_stays_review_only() -> None:

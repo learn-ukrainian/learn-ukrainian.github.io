@@ -1,0 +1,114 @@
+---
+version: 1
+kind: atlas_source_inventory
+sources:
+  - id: private-teacher-lesson-vocabulary-table-1-rows-139-158
+    source_family: teacher_lesson
+    extraction_mode: curated_headword
+    title: Private teacher lesson vocabulary - explicit table rows 139-158
+    locator: local-only explicit vocabulary table rows 139-158
+    notes: >-
+      Derived headword metadata only; raw private lesson material is local-only
+      and not committed. Daily Word, Practice, and cloze remain frozen without
+      explicit surface_admission.
+    headwords:
+      - lemma: хвалити
+        pos: verb
+        gloss: to praise; imperfective
+        locator: explicit vocabulary table row 139
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: похвалити
+        pos: verb
+        gloss: to praise; perfective
+        locator: explicit vocabulary table row 140
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: дозвіл
+        pos: noun
+        gloss: permission
+        locator: explicit vocabulary table row 141
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: облаштовуватися
+        pos: verb
+        gloss: to settle in; imperfective
+        locator: explicit vocabulary table row 142
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: облаштуватися
+        pos: verb
+        gloss: to settle in; perfective
+        locator: explicit vocabulary table row 143
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: пекарня
+        pos: noun
+        gloss: bakery
+        locator: explicit vocabulary table row 144
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: гірчиця
+        pos: noun
+        gloss: mustard
+        locator: explicit vocabulary table row 145
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: випічка
+        pos: noun
+        gloss: baked goods; pastry
+        locator: explicit vocabulary table row 146
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: єнот
+        pos: noun
+        gloss: raccoon
+        locator: explicit vocabulary table row 147
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: сказ
+        pos: noun
+        gloss: rabies
+        locator: explicit vocabulary table row 148
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: скажений
+        pos: adjective
+        gloss: rabid; furious; uncontrolled
+        locator: explicit vocabulary table row 149
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: сліпий
+        pos: adjective
+        gloss: blind
+        locator: explicit vocabulary table row 150
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: підписатися на
+        pos: verb
+        gloss: to subscribe to; perfective
+        locator: explicit vocabulary table row 151
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: відписатися від
+        pos: verb
+        gloss: to unsubscribe from; perfective
+        locator: explicit vocabulary table row 152
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: слідкувати
+        pos: verb
+        gloss: to follow; to monitor; imperfective
+        locator: explicit vocabulary table row 153
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: дотримуватися правила
+        pos: verb
+        gloss: to follow a rule; to observe a rule; imperfective
+        locator: explicit vocabulary table row 154
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: помічати
+        pos: verb
+        gloss: to notice; to mark; imperfective
+        locator: explicit vocabulary table row 155
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: помітити
+        pos: verb
+        gloss: to notice; to mark; perfective
+        locator: explicit vocabulary table row 156
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: пішохід
+        pos: noun
+        gloss: pedestrian
+        locator: explicit vocabulary table row 157
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: публікувати
+        pos: verb
+        gloss: to publish; imperfective
+        locator: explicit vocabulary table row 158
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
