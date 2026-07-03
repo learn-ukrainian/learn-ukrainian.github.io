@@ -1,0 +1,116 @@
+---
+version: 1
+kind: atlas_source_inventory
+sources:
+  - id: private-teacher-lesson-vocabulary-table-1-rows-59-78
+    source_family: teacher_lesson
+    extraction_mode: curated_headword
+    title: Private teacher lesson vocabulary - explicit table rows 59-78
+    locator: local-only explicit vocabulary table rows 59-78
+    notes: Derived headword metadata only; raw private lesson material is local-only and not committed. Daily Word, Practice, and cloze remain frozen without explicit surface_admission.
+    headwords:
+      - lemma: мікрохвильова піч
+        pos: noun
+        gloss: microwave oven
+        locator: explicit vocabulary table row 59
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: мікрохвильовка
+        pos: noun
+        gloss: microwave oven
+        locator: explicit vocabulary table row 59
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: виснажений
+        pos: adjective
+        gloss: exhausted
+        locator: explicit vocabulary table row 60
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: палити
+        pos: verb
+        gloss: to burn; imperfective
+        locator: explicit vocabulary table row 61
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: спалити
+        pos: verb
+        gloss: to burn; perfective
+        locator: explicit vocabulary table row 62
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: дотла
+        pos: adverb
+        gloss: to ashes; completely
+        locator: explicit vocabulary table row 63
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: платіж
+        pos: noun
+        gloss: payment
+        locator: explicit vocabulary table row 64
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: відповідач
+        pos: noun
+        gloss: defendant
+        locator: explicit vocabulary table row 65
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: позивач
+        pos: noun
+        gloss: plaintiff
+        locator: explicit vocabulary table row 66
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: суддя
+        pos: noun
+        gloss: judge
+        locator: explicit vocabulary table row 67
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: годинами
+        pos: adverb
+        gloss: for hours
+        locator: explicit vocabulary table row 68
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: мужність
+        pos: noun
+        gloss: courage
+        locator: explicit vocabulary table row 69
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: зв'язок
+        pos: noun
+        gloss: connection
+        locator: explicit vocabulary table row 70
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: новонароджений
+        pos: adjective
+        gloss: newborn
+        locator: explicit vocabulary table row 71
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: заплутатися
+        pos: verb
+        gloss: to get confused; to get lost; to get tangled; perfective
+        locator: explicit vocabulary table row 72
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: густий
+        pos: adjective
+        gloss: thick; dense
+        locator: explicit vocabulary table row 73
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: рідкий
+        pos: adjective
+        gloss: liquid; thin
+        locator: explicit vocabulary table row 74
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: підписаний на
+        pos: phrase
+        gloss: subscribed to
+        locator: explicit vocabulary table row 75
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: сліпий
+        pos: adjective
+        gloss: blind
+        locator: explicit vocabulary table row 76
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: глухий
+        pos: adjective
+        gloss: deaf
+        locator: explicit vocabulary table row 77
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: німий
+        pos: adjective
+        gloss: mute
+        locator: explicit vocabulary table row 78
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.

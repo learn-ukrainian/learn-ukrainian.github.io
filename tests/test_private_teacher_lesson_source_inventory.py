@@ -17,6 +17,11 @@ PRIVATE_TEACHER_ROWS_39_58_INVENTORY = (
     / "data/lexicon/source-inventory/"
     "private-teacher-lesson-vocabulary-table-1-rows-39-58.yaml"
 )
+PRIVATE_TEACHER_ROWS_59_78_INVENTORY = (
+    PROJECT_ROOT
+    / "data/lexicon/source-inventory/"
+    "private-teacher-lesson-vocabulary-table-1-rows-59-78.yaml"
+)
 PRIVATE_TEACHER_FIRST_LEDGER = (
     PROJECT_ROOT
     / "data/lexicon/source-inventory-review-decisions/"
@@ -90,6 +95,36 @@ def test_private_teacher_rows_39_58_inventory_is_pending_review_metadata() -> No
     assert all("(" not in record.lemma and ")" not in record.lemma for record in records)
 
     inventory_text = PRIVATE_TEACHER_ROWS_39_58_INVENTORY.read_text(encoding="utf-8")
+    assert ".docx" not in inventory_text
+
+
+def test_private_teacher_rows_59_78_inventory_is_pending_review_metadata() -> None:
+    records = read_source_inventory(
+        PRIVATE_TEACHER_ROWS_59_78_INVENTORY,
+        project_root=PROJECT_ROOT,
+    )
+
+    assert len(records) == 21
+    assert {record.source_family for record in records} == {"teacher_lesson"}
+    assert {record.extraction_mode for record in records} == {"curated_headword"}
+    assert {record.source_id for record in records} == {
+        "private-teacher-lesson-vocabulary-table-1-rows-59-78"
+    }
+    assert all(record.source_path is None for record in records)
+    assert all(record.source_url is None for record in records)
+    assert all(record.source_title for record in records)
+    assert all(record.source_locator for record in records)
+    assert all(record.context for record in records)
+    assert all(record.pos for record in records)
+    assert all(record.gloss for record in records)
+    assert "мікрохвильова піч" in {record.lemma for record in records}
+    assert "мікрохвильовка" in {record.lemma for record in records}
+    assert "німий" in {record.lemma for record in records}
+    assert all("," not in record.lemma for record in records)
+    assert all("/" not in record.lemma for record in records)
+    assert all("(" not in record.lemma and ")" not in record.lemma for record in records)
+
+    inventory_text = PRIVATE_TEACHER_ROWS_59_78_INVENTORY.read_text(encoding="utf-8")
     assert ".docx" not in inventory_text
 
 
