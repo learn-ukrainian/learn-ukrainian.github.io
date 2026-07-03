@@ -1,0 +1,114 @@
+---
+version: 1
+kind: atlas_source_inventory
+sources:
+  - id: private-teacher-lesson-vocabulary-table-1-rows-159-178
+    source_family: teacher_lesson
+    extraction_mode: curated_headword
+    title: Private teacher lesson vocabulary - explicit table rows 159-178
+    locator: local-only explicit vocabulary table rows 159-178
+    notes: >-
+      Derived headword metadata only; raw private lesson material is local-only
+      and not committed. Daily Word, Practice, and cloze remain frozen without
+      explicit surface_admission.
+    headwords:
+      - lemma: опублікувати
+        pos: verb
+        gloss: to publish; perfective
+        locator: explicit vocabulary table row 159
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: свекруха
+        pos: noun
+        gloss: mother-in-law; husband's mother
+        locator: explicit vocabulary table row 160
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: теща
+        pos: noun
+        gloss: mother-in-law; wife's mother
+        locator: explicit vocabulary table row 161
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: свекор
+        pos: noun
+        gloss: father-in-law; husband's father
+        locator: explicit vocabulary table row 162
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: тесть
+        pos: noun
+        gloss: father-in-law; wife's father
+        locator: explicit vocabulary table row 163
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: знущатися над
+        pos: verb
+        gloss: to bully; to abuse; imperfective; takes над + instrumental
+        locator: explicit vocabulary table row 164
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: швабра
+        pos: noun
+        gloss: mop
+        locator: explicit vocabulary table row 165
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: липкий
+        pos: adjective
+        gloss: sticky
+        locator: explicit vocabulary table row 166
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: слизький
+        pos: adjective
+        gloss: slippery
+        locator: explicit vocabulary table row 167
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: сварка
+        pos: noun
+        gloss: argument; quarrel
+        locator: explicit vocabulary table row 168
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: затримувати
+        pos: verb
+        gloss: to delay; imperfective
+        locator: explicit vocabulary table row 169
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: затримати
+        pos: verb
+        gloss: to delay; perfective
+        locator: explicit vocabulary table row 170
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: штора
+        pos: noun
+        gloss: curtain
+        locator: explicit vocabulary table row 171
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: в'язниця
+        pos: noun
+        gloss: prison
+        locator: explicit vocabulary table row 172
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: шахрайство
+        pos: noun
+        gloss: fraud
+        locator: explicit vocabulary table row 173
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: у шоці з
+        pos: phrase
+        gloss: shocked by; takes genitive
+        locator: explicit vocabulary table row 174
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: похід
+        pos: noun
+        gloss: hike; trip
+        locator: explicit vocabulary table row 175
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: чаклун
+        pos: noun
+        gloss: sorcerer
+        locator: explicit vocabulary table row 176
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: переїзд
+        pos: noun
+        gloss: moving; relocation
+        locator: explicit vocabulary table row 177
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: виставити
+        pos: verb
+        gloss: to make someone look like; perfective; takes instrumental
+        locator: explicit vocabulary table row 178
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
