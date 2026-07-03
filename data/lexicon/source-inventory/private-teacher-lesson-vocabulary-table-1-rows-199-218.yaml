@@ -1,0 +1,114 @@
+---
+version: 1
+kind: atlas_source_inventory
+sources:
+  - id: private-teacher-lesson-vocabulary-table-1-rows-199-218
+    source_family: teacher_lesson
+    extraction_mode: curated_headword
+    title: Private teacher lesson vocabulary - explicit table rows 199-218
+    locator: local-only explicit vocabulary table rows 199-218
+    notes: >-
+      Derived headword metadata only; raw private lesson material is local-only
+      and not committed. Daily Word, Practice, and cloze remain frozen without
+      explicit surface_admission.
+    headwords:
+      - lemma: злива
+        pos: noun
+        gloss: downpour
+        locator: explicit vocabulary table row 199
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: з'ясовувати
+        pos: verb
+        gloss: to figure out; to find out; imperfective
+        locator: explicit vocabulary table row 200
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: з'ясувати
+        pos: verb
+        gloss: to figure out; to find out; perfective
+        locator: explicit vocabulary table row 201
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: лампочка
+        pos: noun
+        gloss: light bulb
+        locator: explicit vocabulary table row 202
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: щасливої дороги
+        pos: phrase
+        gloss: safe travels; have a good trip
+        locator: explicit vocabulary table row 203
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: випускати
+        pos: verb
+        gloss: to release; to let out; imperfective
+        locator: explicit vocabulary table row 204
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: випустити
+        pos: verb
+        gloss: to release; to let out; perfective
+        locator: explicit vocabulary table row 205
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: схил
+        pos: noun
+        gloss: slope
+        locator: explicit vocabulary table row 206
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: зі злості
+        pos: phrase
+        gloss: out of anger
+        locator: explicit vocabulary table row 207
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: приватність
+        pos: noun
+        gloss: privacy
+        locator: explicit vocabulary table row 208
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: квашений
+        pos: adjective
+        gloss: fermented; pickled
+        locator: explicit vocabulary table row 209
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: по імені
+        pos: phrase
+        gloss: by name
+        locator: explicit vocabulary table row 210
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: зраджувати
+        pos: verb
+        gloss: to betray; to cheat on; imperfective
+        locator: explicit vocabulary table row 211
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: зрадити
+        pos: verb
+        gloss: to betray; to cheat on; perfective
+        locator: explicit vocabulary table row 212
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: довіра
+        pos: noun
+        gloss: trust
+        locator: explicit vocabulary table row 213
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: діставатися
+        pos: verb
+        gloss: to get to; to arrive; to make it; imperfective
+        locator: explicit vocabulary table row 214
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: дістатися
+        pos: verb
+        gloss: to get to; to arrive; to make it; perfective
+        locator: explicit vocabulary table row 215
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: пил
+        pos: noun
+        gloss: dust
+        locator: explicit vocabulary table row 216
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: яма
+        pos: noun
+        gloss: pit; hole in the ground
+        locator: explicit vocabulary table row 217
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: чайний сервіз
+        pos: noun
+        gloss: tea set
+        locator: explicit vocabulary table row 218
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
