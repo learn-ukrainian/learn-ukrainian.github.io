@@ -90,9 +90,10 @@ are curated learner-facing English anchors for cases where dictionary
 enrichment lacks a visible English translation.
 
 The private teacher-lesson seeds contribute 105 reviewed `teacher_lesson`
-headwords from an explicit local vocabulary table. Their committed rows are
-derived metadata only: no raw private lesson material, private document paths,
-or teacher-identifying labels should appear in the inventory.
+headwords from an explicit local vocabulary table, with approval ledgers now
+covering rows 1-98. Their committed rows are derived metadata only: no raw
+private lesson material, private document paths, or teacher-identifying labels
+should appear in the inventory.
 
 When a candidate is later promoted into a manifest entry,
 `promote_grow_candidates.manifest_entry_from_candidate()` copies
