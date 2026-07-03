@@ -1,0 +1,297 @@
+---
+version: 1
+kind: atlas_source_inventory_review_decisions
+batch_id: source-inventory-ninth-approved-teacher-lesson-ledger-batch-2026-07-03
+batch_label: ninth-approved-teacher-lesson-ledger-batch
+reviewer: content-review
+reviewed_at: '2026-07-03'
+source_queue:
+  workflow: source_inventory_publish_review_queue.v1
+  generated_from_pr: 4199
+  total_queue_rows: 186
+  approved_in_queue: 20
+  promotion_batch_size: 20
+production_outputs_updated: []
+decisions:
+- lemma: опублікувати
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to publish; perfective
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: a52150b0ef634985
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-159-178.yaml
+    locator: explicit vocabulary table row 159
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-159-178
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: свекруха
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: mother-in-law; husband's mother
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 7ed83f76b63cbb19
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-159-178.yaml
+    locator: explicit vocabulary table row 160
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-159-178
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+  review_queue_reasons:
+  - grow_needs_review:heritage_status flags russian_shadow
+- lemma: теща
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: mother-in-law; wife's mother
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: d1e010400d3bb431
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-159-178.yaml
+    locator: explicit vocabulary table row 161
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-159-178
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+  review_queue_reasons:
+  - grow_needs_review:heritage_status flags russian_shadow
+- lemma: свекор
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: father-in-law; husband's father
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 128365260d26f53c
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-159-178.yaml
+    locator: explicit vocabulary table row 162
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-159-178
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+  review_queue_reasons:
+  - grow_needs_review:heritage_status flags russian_shadow
+- lemma: тесть
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: father-in-law; wife's father
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 263f257dd3f1fe5c
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-159-178.yaml
+    locator: explicit vocabulary table row 163
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-159-178
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+  review_queue_reasons:
+  - grow_needs_review:heritage_status flags russian_shadow
+- lemma: знущатися над
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to bully; to abuse; imperfective; takes над + instrumental
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 4cc676a3d37f5c69
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-159-178.yaml
+    locator: explicit vocabulary table row 164
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-159-178
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+  review_queue_reasons:
+  - grow_needs_review:missing dictionary definition
+- lemma: швабра
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: mop
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 05ab2695510c60f9
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-159-178.yaml
+    locator: explicit vocabulary table row 165
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-159-178
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+  review_queue_reasons:
+  - grow_needs_review:heritage_status flags russian_shadow
+- lemma: липкий
+  decision: approve_for_publish
+  approved_pos: adjective
+  approved_gloss: sticky
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: e1bae6115bc59629
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-159-178.yaml
+    locator: explicit vocabulary table row 166
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-159-178
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+  review_queue_reasons:
+  - grow_needs_review:heritage_status flags russian_shadow
+- lemma: слизький
+  decision: approve_for_publish
+  approved_pos: adjective
+  approved_gloss: slippery
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 63d3c02e5cee9cb5
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-159-178.yaml
+    locator: explicit vocabulary table row 167
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-159-178
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: сварка
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: argument; quarrel
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 426a218bd60c5327
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-159-178.yaml
+    locator: explicit vocabulary table row 168
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-159-178
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+  review_queue_reasons:
+  - grow_needs_review:heritage_status flags russian_shadow
+- lemma: затримувати
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to delay; imperfective
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: f9883b588bf54654
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-159-178.yaml
+    locator: explicit vocabulary table row 169
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-159-178
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: затримати
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to delay; perfective
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: a1322d25fd06d29f
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-159-178.yaml
+    locator: explicit vocabulary table row 170
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-159-178
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: штора
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: curtain
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 4121b2eb84a50c59
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-159-178.yaml
+    locator: explicit vocabulary table row 171
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-159-178
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+  review_queue_reasons:
+  - grow_needs_review:heritage_status flags russian_shadow
+- lemma: в'язниця
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: prison
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: f1b15fd4aaa021ed
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-159-178.yaml
+    locator: explicit vocabulary table row 172
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-159-178
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: шахрайство
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: fraud
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 03308a0a685e1196
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-159-178.yaml
+    locator: explicit vocabulary table row 173
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-159-178
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: у шоці з
+  decision: approve_for_publish
+  approved_pos: phrase
+  approved_gloss: shocked by; takes genitive
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: b756160cb8e3a6a1
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-159-178.yaml
+    locator: explicit vocabulary table row 174
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-159-178
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+  review_queue_reasons:
+  - grow_needs_review:missing dictionary definition
+- lemma: похід
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: hike; trip
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: c11d7070e07fea40
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-159-178.yaml
+    locator: explicit vocabulary table row 175
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-159-178
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: чаклун
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: sorcerer
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: ac0959be9ccc084e
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-159-178.yaml
+    locator: explicit vocabulary table row 176
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-159-178
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: переїзд
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: moving; relocation
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 42b16128869e024a
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-159-178.yaml
+    locator: explicit vocabulary table row 177
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-159-178
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+  review_queue_reasons:
+  - grow_needs_review:heritage_status flags russian_shadow
+- lemma: виставити
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to make someone look like; perfective; takes instrumental
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: d57d661173be7005
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-159-178.yaml
+    locator: explicit vocabulary table row 178
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-159-178
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
