@@ -7,19 +7,46 @@ from xml.sax.saxutils import escape
 
 import pytest
 
+from scripts.audit.check_no_private_source_review_exports import find_private_source_review_exports
 from scripts.audit.private_teacher_lesson_intake import (
     PROJECT_ROOT,
     SourceInventoryError,
+    build_bulk_triage_payload,
     build_private_teacher_lesson_intake,
     candidate_review_payload,
     format_markdown_census,
+    inspect_private_source_shape,
+    public_census_payload,
     resolve_local_review_output_path,
+    write_bulk_triage_payload,
 )
 
 
 def _write_manifest(path: Path, lemmas: list[str]) -> None:
     path.write_text(
         json.dumps({"entries": [{"lemma": lemma} for lemma in lemmas]}, ensure_ascii=False),
+        encoding="utf-8",
+    )
+
+
+def _write_source_inventory(path: Path, lemmas: list[str]) -> None:
+    path.write_text(
+        json.dumps(
+            {
+                "version": 1,
+                "kind": "atlas_source_inventory",
+                "sources": [
+                    {
+                        "id": "committed-private-teacher-fixture",
+                        "source_family": "teacher_lesson",
+                        "extraction_mode": "private_document_token",
+                        "title": "Synthetic committed teacher inventory",
+                        "headwords": lemmas,
+                    }
+                ],
+            },
+            ensure_ascii=False,
+        ),
         encoding="utf-8",
     )
 
@@ -106,10 +133,12 @@ def test_private_teacher_full_intake_ignores_tab_three_and_omits_raw_text_from_c
         ],
     )
     _write_manifest(manifest, ["приватне"])
+    source_shape = inspect_private_source_shape([source])
 
     result = build_private_teacher_lesson_intake(
         [source],
         ignored_tab_indexes=(3,),
+        expected_source_shape_sha256=source_shape["source_shape_sha256"],
         manifest_path=manifest,
     )
     census_text = json.dumps(result.census, ensure_ascii=False)
@@ -120,11 +149,10 @@ def test_private_teacher_full_intake_ignores_tab_three_and_omits_raw_text_from_c
     assert result.census["counts"]["units_included"] == 2
     assert result.census["counts"]["units_ignored"] == 1
     assert result.census["counts"]["token_occurrences"] == 5
-    assert result.census["atlas"] == {
-        "manifest_loaded": True,
-        "existing_candidates": 1,
-        "missing_candidates": 2,
-    }
+    assert result.census["atlas"]["manifest_loaded"] is True
+    assert result.census["atlas"]["manifest_sha256"]
+    assert result.census["atlas"]["existing_candidates"] == 1
+    assert result.census["atlas"]["missing_candidates"] == 2
     assert {"приватне", "слово", "інше"} == candidate_lemmas
     assert "секретний" not in candidate_lemmas
     assert "витік" not in candidate_lemmas
@@ -151,8 +179,13 @@ def test_private_teacher_full_intake_ignores_docx_unit_before_candidate_extracti
             "таємний кандидат",
         ],
     )
+    source_shape = inspect_private_source_shape([source])
 
-    result = build_private_teacher_lesson_intake([source], ignored_unit_indexes=(3,))
+    result = build_private_teacher_lesson_intake(
+        [source],
+        ignored_unit_indexes=(3,),
+        expected_source_shape_sha256=source_shape["source_shape_sha256"],
+    )
     candidate_lemmas = {candidate.lemma for candidate in result.candidates}
     serialized = json.dumps(result.census, ensure_ascii=False)
 
@@ -196,6 +229,97 @@ def test_private_teacher_census_markdown_is_safe_summary(tmp_path: Path) -> None
 def test_private_teacher_candidate_output_rejects_repository_paths() -> None:
     with pytest.raises(SourceInventoryError, match="outside the repository"):
         resolve_local_review_output_path(PROJECT_ROOT / "private-candidates.json")
+
+
+def test_private_teacher_intake_requires_source_shape_when_ignoring_units(tmp_path: Path) -> None:
+    source = tmp_path / "source.xlsx"
+    _write_minimal_xlsx(source, [["відкрите"], ["приховане"]])
+
+    with pytest.raises(SourceInventoryError, match="--expect-source-shape-sha256 is required"):
+        build_private_teacher_lesson_intake([source], ignored_tab_indexes=(2,))
+
+
+def test_private_teacher_intake_aborts_on_source_shape_mismatch(tmp_path: Path) -> None:
+    source = tmp_path / "source.xlsx"
+    _write_minimal_xlsx(source, [["відкрите"], ["приховане"]])
+
+    with pytest.raises(SourceInventoryError, match="source shape changed"):
+        build_private_teacher_lesson_intake(
+            [source],
+            ignored_tab_indexes=(2,),
+            expected_source_shape_sha256="0" * 64,
+        )
+
+
+def test_private_teacher_source_shape_is_safe_summary(tmp_path: Path) -> None:
+    source = tmp_path / "private-name.xlsx"
+    _write_minimal_xlsx(source, [["видиме"], ["секретний витік"]])
+
+    source_shape = inspect_private_source_shape([source])
+    serialized = json.dumps(source_shape, ensure_ascii=False)
+
+    assert source_shape["source_shape_sha256"]
+    assert source_shape["units_seen"] == 2
+    assert "секретний" not in serialized
+    assert "витік" not in serialized
+    assert "Private Sheet" not in serialized
+    assert str(source) not in serialized
+
+
+def test_private_teacher_bulk_triage_buckets_and_public_summary_are_safe(tmp_path: Path) -> None:
+    source = tmp_path / "source.tsv"
+    manifest = tmp_path / "manifest.json"
+    committed = tmp_path / "committed.json"
+    rows = ["наявне", "покрите", "це", "часте часте часте", "звичайне"]
+    rows.extend("" for _ in range(218 - len(rows)))
+    rows.append("пізнє")
+    source.write_text("\n".join(rows) + "\n", encoding="utf-8")
+    _write_manifest(manifest, ["наявне"])
+    _write_source_inventory(committed, ["покрите"])
+
+    result = build_private_teacher_lesson_intake([source], manifest_path=manifest)
+    triage = build_bulk_triage_payload(
+        result,
+        committed_inventory_paths=(committed,),
+        min_frequency=3,
+        post_boundary_row=218,
+    )
+    counts = triage["counts"]
+
+    assert counts["total_candidates"] == 6
+    assert counts["bucket_total"] == counts["total_candidates"]
+    assert counts["atlas_existing"] == 1
+    assert counts["committed_teacher_inventory"] == 1
+    assert counts["low_signal_hold"] == 1
+    assert counts["post_boundary_table_missing"] == 1
+    assert counts["high_frequency_missing"] == 1
+    assert counts["needs_review_bulk"] == 1
+
+    public_text = json.dumps(public_census_payload(result, bulk_triage=triage), ensure_ascii=False)
+    for lemma in ("наявне", "покрите", "часте", "звичайне", "пізнє"):
+        assert lemma not in public_text
+    detailed_text = json.dumps(triage, ensure_ascii=False)
+    assert "пізнє" in detailed_text
+
+
+def test_private_teacher_bulk_triage_output_rejects_repository_paths(tmp_path: Path) -> None:
+    source = tmp_path / "source.txt"
+    source.write_text("приватне слово\n", encoding="utf-8")
+    result = build_private_teacher_lesson_intake([source])
+    triage = build_bulk_triage_payload(result, committed_inventory_paths=())
+
+    with pytest.raises(SourceInventoryError, match="outside the repository"):
+        write_bulk_triage_payload(triage, PROJECT_ROOT / "atlas-private-teacher-lesson-bulk-triage.json")
+
+
+def test_private_source_review_export_guard_blocks_local_payload_marker(tmp_path: Path) -> None:
+    export = tmp_path / "candidate-export.json"
+    export.write_text(
+        json.dumps({"workflow": "private_teacher_lesson_bulk_triage.v1", "buckets": {}}),
+        encoding="utf-8",
+    )
+
+    assert find_private_source_review_exports([export]) == [export]
 
 
 def test_private_teacher_source_id_must_be_neutral_slug(tmp_path: Path) -> None:

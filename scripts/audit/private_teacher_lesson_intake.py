@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import hashlib
 import json
 import re
 import sys
@@ -38,11 +39,14 @@ from scripts.lexicon.build_data_manifest import _lemma_key
 from scripts.lexicon.lemma_normalization import strip_acute_stress
 
 WORKFLOW_ID = "private_teacher_lesson_full_intake.v1"
+BULK_TRIAGE_WORKFLOW_ID = "private_teacher_lesson_bulk_triage.v1"
 SOURCE_FAMILY = "teacher_lesson"
 EXTRACTION_MODE = "private_document_token"
 DEFAULT_SOURCE_ID = "private-teacher-lesson-full-source"
 DEFAULT_SOURCE_TITLE = "Private teacher lesson source"
 DEFAULT_CANDIDATES_OUT = Path("/tmp/atlas-private-teacher-lesson-candidates.json")
+DEFAULT_BULK_TRIAGE_OUT = Path("/tmp/atlas-private-teacher-lesson-bulk-triage.json")
+DEFAULT_BULK_TRIAGE_REPORT_OUT = Path("/tmp/atlas-private-teacher-lesson-bulk-triage.md")
 SUPPORTED_SUFFIXES = {".csv", ".docx", ".md", ".txt", ".tsv", ".xlsx"}
 OMITTED_PUBLIC_FIELDS = (
     "raw_text",
@@ -54,10 +58,60 @@ OMITTED_PUBLIC_FIELDS = (
     "gloss",
     "notes",
 )
+TRIAGE_BUCKETS = (
+    "atlas_existing",
+    "committed_teacher_inventory",
+    "low_signal_hold",
+    "post_boundary_table_missing",
+    "high_frequency_missing",
+    "needs_review_bulk",
+)
+LOW_SIGNAL_LEMMAS = frozenset(
+    {
+        "або",
+        "але",
+        "без",
+        "би",
+        "в",
+        "ви",
+        "він",
+        "вона",
+        "вони",
+        "для",
+        "до",
+        "ж",
+        "же",
+        "з",
+        "за",
+        "й",
+        "його",
+        "її",
+        "і",
+        "на",
+        "над",
+        "не",
+        "ні",
+        "під",
+        "по",
+        "при",
+        "про",
+        "та",
+        "так",
+        "то",
+        "у",
+        "це",
+        "цей",
+        "чи",
+        "що",
+        "як",
+    }
+)
 UKRAINIAN_TOKEN_RE = re.compile(
     r"[А-ЩЬЮЯЄІЇҐа-щьюяєіїґ]+(?:[ʼ'’`-][А-ЩЬЮЯЄІЇҐа-щьюяєіїґ]+)*"
 )
 SOURCE_ID_RE = re.compile(r"^[a-z0-9][a-z0-9_.:-]*$")
+SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
+ROW_LOCATOR_RE = re.compile(r"\brow\s+(\d+)\b")
 
 WORD_NS = "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}"
 SHEET_NS = "{http://schemas.openxmlformats.org/spreadsheetml/2006/main}"
@@ -74,6 +128,7 @@ class PrivateSourceUnit:
     unit_index: int
     unit_kind: str
     ignored: bool
+    shape_signature: str = ""
 
 
 @dataclass(frozen=True)
@@ -106,6 +161,8 @@ class PrivateTeacherIntakeResult:
     candidates: tuple[SourceInventoryCandidate, ...]
     gate_results: tuple[AtlasIntakeGateResult, ...]
     manifest_keys: frozenset[str]
+    manifest_sha256: str | None
+    source_shape: Mapping[str, Any]
 
 
 def build_private_teacher_lesson_intake(
@@ -114,6 +171,8 @@ def build_private_teacher_lesson_intake(
     ignored_tab_indexes: Sequence[int] = (),
     ignored_unit_indexes: Sequence[int] = (),
     source_id: str = DEFAULT_SOURCE_ID,
+    source_shape_id: str = DEFAULT_SOURCE_ID,
+    expected_source_shape_sha256: str | None = None,
     manifest_path: Path | None = None,
 ) -> PrivateTeacherIntakeResult:
     """Extract local private text into safe derived candidate/census metadata."""
@@ -122,7 +181,14 @@ def build_private_teacher_lesson_intake(
     _validate_positive_indexes(ignored_tab_indexes, "--ignore-tab-index")
     _validate_positive_indexes(ignored_unit_indexes, "--ignore-unit-index")
     _validate_source_id(source_id)
+    _validate_source_id(source_shape_id)
     ignored_indexes = tuple(sorted(set(ignored_tab_indexes) | set(ignored_unit_indexes)))
+    source_shape = inspect_private_source_shape(source_paths, source_shape_id=source_shape_id)
+    _validate_source_shape_expectation(
+        source_shape,
+        expected_source_shape_sha256=expected_source_shape_sha256,
+        ignored_indexes=ignored_indexes,
+    )
 
     records: list[SourceInventoryRecord] = []
     units: list[PrivateSourceUnit] = []
@@ -163,16 +229,18 @@ def build_private_teacher_lesson_intake(
 
     candidates = tuple(source_inventory_candidates(records))
     gate_results = tuple(classify_candidates(candidates))
-    manifest_keys = frozenset(_load_manifest_keys(manifest_path))
+    manifest_keys, manifest_sha256 = _load_manifest(manifest_path)
     atlas_state_counts = _atlas_state_counts(candidates, manifest_keys=manifest_keys)
     census = _census_payload(
         source_files=source_files,
+        source_shape=source_shape,
         units=units,
         blocks=blocks,
         records=records,
         candidates=candidates,
         gate_results=gate_results,
         manifest_loaded=manifest_path is not None and bool(manifest_keys),
+        manifest_sha256=manifest_sha256,
         atlas_state_counts=atlas_state_counts,
         token_occurrences=token_occurrences,
         ignored_tab_indexes=ignored_tab_indexes,
@@ -184,7 +252,71 @@ def build_private_teacher_lesson_intake(
         candidates=candidates,
         gate_results=gate_results,
         manifest_keys=manifest_keys,
+        manifest_sha256=manifest_sha256,
+        source_shape=source_shape,
     )
+
+
+def inspect_private_source_shape(
+    source_paths: Sequence[Path],
+    *,
+    source_shape_id: str = DEFAULT_SOURCE_ID,
+) -> dict[str, Any]:
+    """Return a safe structure checksum for private source binding."""
+    if not source_paths:
+        raise SourceInventoryError("at least one private source path is required")
+    _validate_source_id(source_shape_id)
+
+    sources_for_digest: list[dict[str, Any]] = []
+    source_files: list[dict[str, Any]] = []
+    by_kind: Counter[str] = Counter()
+    units_seen = 0
+    for source_number, source_path in enumerate(source_paths, start=1):
+        source_ref = f"private-source-{source_number}"
+        units = _load_private_source_shape(source_path, source_ref=source_ref)
+        units_seen += len(units)
+        by_kind.update(unit.unit_kind for unit in units)
+        source_files.append(
+            {
+                "source_ref": source_ref,
+                "source_suffix": units[0].source_suffix if units else source_path.suffix.lower(),
+                "units_seen": len(units),
+                "unit_kinds": dict(sorted(Counter(unit.unit_kind for unit in units).items())),
+            }
+        )
+        sources_for_digest.append(
+            {
+                "source_ref": source_ref,
+                "units": [
+                    {
+                        "unit_index": unit.unit_index,
+                        "unit_kind": unit.unit_kind,
+                        "source_suffix": unit.source_suffix,
+                        "shape_signature": unit.shape_signature,
+                    }
+                    for unit in units
+                ],
+            }
+        )
+
+    digest_payload = {
+        "source_shape_id": source_shape_id,
+        "sources": sources_for_digest,
+    }
+    source_shape_sha256 = hashlib.sha256(
+        json.dumps(digest_payload, ensure_ascii=False, sort_keys=True).encode("utf-8")
+    ).hexdigest()
+    return {
+        "source_shape_id": source_shape_id,
+        "source_shape_sha256": source_shape_sha256,
+        "source_files": len(source_paths),
+        "units_seen": units_seen,
+        "by_unit_kind": dict(sorted(by_kind.items())),
+        "public_boundary": (
+            "This checksum binds the source unit structure before ignored-unit scans. "
+            "It does not expose source paths, names, tab labels, or source text."
+        ),
+    }
 
 
 def load_private_source(
@@ -194,14 +326,8 @@ def load_private_source(
     ignored_unit_indexes: Sequence[int],
 ) -> LoadedPrivateSource:
     """Load supported private source files without exposing names in payloads."""
-    path = source_path if source_path.is_absolute() else PROJECT_ROOT / source_path
+    path = _resolve_private_source_path(source_path)
     suffix = path.suffix.lower()
-    if suffix not in SUPPORTED_SUFFIXES:
-        raise SourceInventoryError(
-            f"unsupported private source extension {suffix!r}; expected one of {sorted(SUPPORTED_SUFFIXES)}"
-        )
-    if not path.exists():
-        raise SourceInventoryError("private source path not found")
     if suffix == ".docx":
         return _load_docx(path, source_ref=source_ref, ignored_unit_indexes=set(ignored_unit_indexes))
     if suffix == ".xlsx":
@@ -215,6 +341,32 @@ def load_private_source(
             delimiter=delimiter,
         )
     return _load_text(path, source_ref=source_ref, ignored_unit_indexes=set(ignored_unit_indexes))
+
+
+def _load_private_source_shape(source_path: Path, *, source_ref: str) -> tuple[PrivateSourceUnit, ...]:
+    """Load private source unit structure without extracting candidate text."""
+    path = _resolve_private_source_path(source_path)
+    suffix = path.suffix.lower()
+    if suffix == ".docx":
+        return _load_docx_shape(path, source_ref=source_ref)
+    if suffix == ".xlsx":
+        return _load_xlsx_shape(path, source_ref=source_ref)
+    if suffix in {".csv", ".tsv"}:
+        delimiter = "," if suffix == ".csv" else "\t"
+        return _load_delimited_shape(path, source_ref=source_ref, delimiter=delimiter)
+    return _load_text_shape(path, source_ref=source_ref)
+
+
+def _resolve_private_source_path(source_path: Path) -> Path:
+    path = source_path if source_path.is_absolute() else PROJECT_ROOT / source_path
+    suffix = path.suffix.lower()
+    if suffix not in SUPPORTED_SUFFIXES:
+        raise SourceInventoryError(
+            f"unsupported private source extension {suffix!r}; expected one of {sorted(SUPPORTED_SUFFIXES)}"
+        )
+    if not path.exists():
+        raise SourceInventoryError("private source path not found")
+    return path
 
 
 def candidate_review_payload(result: PrivateTeacherIntakeResult) -> dict[str, Any]:
@@ -259,6 +411,101 @@ def write_candidate_review_payload(
     return output_path
 
 
+def build_bulk_triage_payload(
+    result: PrivateTeacherIntakeResult,
+    *,
+    committed_inventory_paths: Sequence[Path] | None = None,
+    min_frequency: int = 3,
+    post_boundary_row: int = 218,
+) -> dict[str, Any]:
+    """Classify the full local candidate queue into disjoint review buckets."""
+    if min_frequency < 1:
+        raise SourceInventoryError("--min-frequency must be positive")
+    if post_boundary_row < 0:
+        raise SourceInventoryError("--post-boundary-row must be non-negative")
+
+    committed_teacher_keys = _committed_teacher_inventory_keys(committed_inventory_paths)
+    buckets: dict[str, list[dict[str, Any]]] = {bucket: [] for bucket in TRIAGE_BUCKETS}
+    for candidate in result.candidates:
+        bucket, reasons = _bulk_triage_bucket(
+            candidate,
+            result=result,
+            committed_teacher_keys=committed_teacher_keys,
+            min_frequency=min_frequency,
+            post_boundary_row=post_boundary_row,
+        )
+        row = _bulk_triage_row(candidate, result=result, bucket=bucket, reasons=reasons)
+        buckets[bucket].append(row)
+
+    for rows in buckets.values():
+        rows.sort(key=_bulk_triage_sort_key)
+    counts = {bucket: len(buckets[bucket]) for bucket in TRIAGE_BUCKETS}
+    total = len(result.candidates)
+    if sum(counts.values()) != total:
+        raise SourceInventoryError("bulk triage buckets must be disjoint and exhaustive")
+
+    return {
+        "workflow": BULK_TRIAGE_WORKFLOW_ID,
+        "policy": (
+            "Local review-only bulk triage. Detailed rows contain derived lemmas and neutral locators, "
+            "so this payload must stay outside the repository. Public updates may share only counts."
+        ),
+        "production_outputs_updated": [],
+        "source_shape": result.source_shape,
+        "atlas": result.census["atlas"],
+        "parameters": {
+            "min_frequency": min_frequency,
+            "post_boundary_row": post_boundary_row,
+        },
+        "counts": {
+            "total_candidates": total,
+            **counts,
+            "bucket_total": sum(counts.values()),
+        },
+        "buckets": buckets,
+    }
+
+
+def bulk_triage_public_summary(triage: Mapping[str, Any]) -> dict[str, Any]:
+    """Return the deny-by-default public portion of a bulk triage payload."""
+    return {
+        "workflow": triage["workflow"],
+        "production_outputs_updated": [],
+        "parameters": dict(triage["parameters"]),
+        "counts": dict(triage["counts"]),
+    }
+
+
+def write_bulk_triage_payload(
+    triage: Mapping[str, Any],
+    out: Path = DEFAULT_BULK_TRIAGE_OUT,
+) -> Path:
+    """Write local bulk triage JSON outside the repository."""
+    output_path = resolve_local_review_output_path(out)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    output_path.write_text(
+        json.dumps(triage, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+    return output_path
+
+
+def write_bulk_triage_report(
+    triage: Mapping[str, Any],
+    out: Path = DEFAULT_BULK_TRIAGE_REPORT_OUT,
+    *,
+    report_limit: int = 200,
+) -> Path:
+    """Write a local Markdown triage report outside the repository."""
+    output_path = resolve_local_review_output_path(out)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    output_path.write_text(
+        format_bulk_triage_report(triage, report_limit=report_limit) + "\n",
+        encoding="utf-8",
+    )
+    return output_path
+
+
 def resolve_local_review_output_path(out: Path) -> Path:
     """Reject repository paths for local private-source candidate output."""
     output_path = out if out.is_absolute() else PROJECT_ROOT / out
@@ -268,7 +515,56 @@ def resolve_local_review_output_path(out: Path) -> Path:
     return resolved
 
 
-def format_markdown_census(census: Mapping[str, Any]) -> str:
+def format_bulk_triage_report(triage: Mapping[str, Any], *, report_limit: int = 200) -> str:
+    """Format detailed local-only triage rows for human review."""
+    if report_limit < 1:
+        raise SourceInventoryError("--report-limit must be positive")
+    counts = triage["counts"]
+    lines = [
+        "# Private Teacher-Lesson Bulk Triage",
+        "",
+        f"- workflow: `{triage['workflow']}`",
+        f"- total_candidates: {counts['total_candidates']}",
+        "- production_outputs_updated: []",
+        "",
+        "## Bucket Counts",
+        "",
+    ]
+    for bucket in TRIAGE_BUCKETS:
+        lines.append(f"- `{bucket}`: {counts[bucket]}")
+    lines.extend(["", "## Bucket Samples", ""])
+    buckets = triage.get("buckets") if isinstance(triage.get("buckets"), Mapping) else {}
+    for bucket in TRIAGE_BUCKETS:
+        rows = buckets.get(bucket) if isinstance(buckets, Mapping) else None
+        rows = rows if isinstance(rows, list) else []
+        lines.extend([f"### {bucket}", ""])
+        if not rows:
+            lines.extend(["- no rows", ""])
+            continue
+        for row in rows[:report_limit]:
+            lines.append(
+                "- "
+                + "; ".join(
+                    [
+                        f"lemma={_markdown_inline(row.get('lemma'))}",
+                        f"frequency={row.get('frequency', 0)}",
+                        f"source_count={row.get('source_count', 0)}",
+                        f"atlas_state={_markdown_inline(row.get('atlas_state'))}",
+                        f"reasons={_markdown_inline(','.join(row.get('reasons', [])))}",
+                    ]
+                )
+            )
+        if len(rows) > report_limit:
+            lines.append(f"- ... {len(rows) - report_limit} additional rows omitted from Markdown report")
+        lines.append("")
+    return "\n".join(lines).rstrip()
+
+
+def format_markdown_census(
+    census: Mapping[str, Any],
+    *,
+    bulk_triage: Mapping[str, Any] | None = None,
+) -> str:
     """Format a safe census summary without lemmas or private source labels."""
     counts = census["counts"]
     atlas = census["atlas"]
@@ -286,8 +582,10 @@ def format_markdown_census(census: Mapping[str, Any]) -> str:
         f"- max_source_row_index: {counts['max_source_row_index']}",
         f"- source_rows_after_218: {counts['source_rows_after_218']}",
         f"- atlas_manifest_loaded: {str(atlas['manifest_loaded']).lower()}",
+        f"- atlas_manifest_sha256: {atlas.get('manifest_sha256') or 'none'}",
         f"- atlas_existing_candidates: {atlas['existing_candidates']}",
         f"- atlas_missing_candidates: {atlas['missing_candidates']}",
+        f"- source_shape_sha256: {census['source_shape']['source_shape_sha256']}",
         "- raw_text_included: false",
         "- source_paths_included: false",
         "- production_outputs_updated: []",
@@ -303,7 +601,127 @@ def format_markdown_census(census: Mapping[str, Any]) -> str:
             f"- `{kind}`: units={row['units']} blocks={row['text_blocks']} "
             f"tokens={row['token_occurrences']}"
         )
+    if bulk_triage:
+        counts = bulk_triage["counts"]
+        lines.extend(["", "## Bulk Triage Counts", ""])
+        lines.append(f"- workflow: `{bulk_triage['workflow']}`")
+        lines.append(f"- total_candidates: {counts['total_candidates']}")
+        for bucket in TRIAGE_BUCKETS:
+            lines.append(f"- `{bucket}`: {counts[bucket]}")
     return "\n".join(lines)
+
+
+def public_census_payload(
+    result: PrivateTeacherIntakeResult,
+    *,
+    bulk_triage: Mapping[str, Any] | None = None,
+) -> dict[str, Any]:
+    """Return public-safe census JSON, optionally with count-only triage data."""
+    payload = dict(result.census)
+    if bulk_triage:
+        payload["bulk_triage"] = bulk_triage_public_summary(bulk_triage)
+    return payload
+
+
+def _bulk_triage_bucket(
+    candidate: SourceInventoryCandidate,
+    *,
+    result: PrivateTeacherIntakeResult,
+    committed_teacher_keys: frozenset[str],
+    min_frequency: int,
+    post_boundary_row: int,
+) -> tuple[str, list[str]]:
+    atlas_state = _atlas_state(candidate.lemma, manifest_keys=result.manifest_keys)
+    if atlas_state == "existing":
+        return "atlas_existing", ["lemma_already_in_atlas_manifest"]
+
+    lemma_key = _lemma_key(candidate.lemma)
+    if lemma_key in committed_teacher_keys:
+        return "committed_teacher_inventory", ["lemma_already_in_committed_teacher_inventory"]
+
+    if _low_signal_candidate(candidate):
+        return "low_signal_hold", ["low_signal_or_function_word"]
+
+    max_row = _candidate_max_source_row(candidate)
+    if max_row is not None and max_row > post_boundary_row:
+        return "post_boundary_table_missing", [f"source_row_after_{post_boundary_row}"]
+
+    if candidate.frequency >= min_frequency:
+        return "high_frequency_missing", [f"frequency_at_least_{min_frequency}"]
+
+    return "needs_review_bulk", ["missing_candidate_requires_review"]
+
+
+def _bulk_triage_row(
+    candidate: SourceInventoryCandidate,
+    *,
+    result: PrivateTeacherIntakeResult,
+    bucket: str,
+    reasons: Sequence[str],
+) -> dict[str, Any]:
+    locators = _candidate_source_locators(candidate)
+    return {
+        "lemma": candidate.lemma,
+        "pos": candidate.pos,
+        "gloss": candidate.gloss,
+        "bucket": bucket,
+        "reasons": list(reasons),
+        "atlas_state": _atlas_state(candidate.lemma, manifest_keys=result.manifest_keys),
+        "frequency": candidate.frequency,
+        "source_count": candidate.source_count,
+        "max_source_row_index": _candidate_max_source_row(candidate),
+        "locators": locators,
+    }
+
+
+def _candidate_source_locators(candidate: SourceInventoryCandidate) -> list[str]:
+    locators: set[str] = set()
+    for provenance in candidate.source_provenance:
+        locator = provenance.get("source_locator") or provenance.get("inventory_locator")
+        if isinstance(locator, str) and locator.strip():
+            locators.add(locator.strip())
+    return sorted(locators)
+
+
+def _candidate_max_source_row(candidate: SourceInventoryCandidate) -> int | None:
+    row_indexes: list[int] = []
+    for locator in _candidate_source_locators(candidate):
+        match = ROW_LOCATOR_RE.search(locator)
+        if match:
+            row_indexes.append(int(match.group(1)))
+    return max(row_indexes) if row_indexes else None
+
+
+def _low_signal_candidate(candidate: SourceInventoryCandidate) -> bool:
+    lemma_key = _lemma_key(candidate.lemma)
+    letters = lemma_key.replace("-", "").replace("'", "")
+    if len(letters) <= 2:
+        return True
+    return candidate.frequency == 1 and lemma_key in LOW_SIGNAL_LEMMAS
+
+
+def _bulk_triage_sort_key(row: Mapping[str, Any]) -> tuple[int, str]:
+    return (-int(row.get("frequency") or 0), str(row.get("lemma") or "").casefold())
+
+
+def _committed_teacher_inventory_keys(paths: Sequence[Path] | None) -> frozenset[str]:
+    if paths is None:
+        from scripts.audit.generate_source_inventory_review_candidates import COMMITTED_SOURCE_INVENTORIES
+
+        paths = COMMITTED_SOURCE_INVENTORIES
+    from scripts.audit.source_inventory_intake import read_source_inventories
+
+    records = read_source_inventories(paths, project_root=PROJECT_ROOT)
+    return frozenset(
+        _lemma_key(record.lemma)
+        for record in records
+        if record.source_family == SOURCE_FAMILY
+    )
+
+
+def _markdown_inline(value: object) -> str:
+    text = "" if value is None else str(value)
+    return text.replace("\n", " ").replace("`", "'")
 
 
 def _records_from_blocks(
@@ -368,6 +786,7 @@ def _load_text(
             unit_index=unit_index,
             unit_kind="text_document",
             ignored=ignored,
+            shape_signature=_text_shape_signature(path),
         )
     )
     if ignored:
@@ -387,6 +806,19 @@ def _load_text(
     return LoadedPrivateSource(units=tuple(units), blocks=tuple(blocks))
 
 
+def _load_text_shape(path: Path, *, source_ref: str) -> tuple[PrivateSourceUnit, ...]:
+    return (
+        PrivateSourceUnit(
+            source_ref=source_ref,
+            source_suffix=path.suffix.lower(),
+            unit_index=1,
+            unit_kind="text_document",
+            ignored=False,
+            shape_signature=_text_shape_signature(path),
+        ),
+    )
+
+
 def _load_delimited(
     path: Path,
     *,
@@ -404,6 +836,7 @@ def _load_delimited(
             unit_index=unit_index,
             unit_kind="delimited_table",
             ignored=ignored,
+            shape_signature=_delimited_shape_signature(path, delimiter=delimiter),
         ),
     )
     if ignored:
@@ -428,6 +861,24 @@ def _load_delimited(
                 )
             )
     return LoadedPrivateSource(units=units, blocks=tuple(blocks))
+
+
+def _load_delimited_shape(
+    path: Path,
+    *,
+    source_ref: str,
+    delimiter: str,
+) -> tuple[PrivateSourceUnit, ...]:
+    return (
+        PrivateSourceUnit(
+            source_ref=source_ref,
+            source_suffix=path.suffix.lower(),
+            unit_index=1,
+            unit_kind="delimited_table",
+            ignored=False,
+            shape_signature=_delimited_shape_signature(path, delimiter=delimiter),
+        ),
+    )
 
 
 def _load_docx(
@@ -460,6 +911,7 @@ def _load_docx(
                     unit_index=unit_index,
                     unit_kind="docx_paragraph",
                     ignored=ignored,
+                    shape_signature=_docx_unit_shape_signature(child),
                 )
             )
             if ignored:
@@ -488,6 +940,7 @@ def _load_docx(
                     unit_index=unit_index,
                     unit_kind="docx_table",
                     ignored=ignored,
+                    shape_signature=_docx_unit_shape_signature(child),
                 )
             )
             if ignored:
@@ -499,6 +952,47 @@ def _load_docx(
                 blocks=blocks,
             )
     return LoadedPrivateSource(units=tuple(units), blocks=tuple(blocks))
+
+
+def _load_docx_shape(path: Path, *, source_ref: str) -> tuple[PrivateSourceUnit, ...]:
+    with zipfile.ZipFile(path) as archive:
+        try:
+            document_xml = archive.read("word/document.xml")
+        except KeyError as exc:
+            raise SourceInventoryError("docx private source is missing word/document.xml") from exc
+    root = ET.fromstring(document_xml)
+    body = root.find(f"{WORD_NS}body")
+    if body is None:
+        return ()
+
+    units: list[PrivateSourceUnit] = []
+    unit_index = 0
+    for child in list(body):
+        if child.tag == f"{WORD_NS}p":
+            unit_index += 1
+            units.append(
+                PrivateSourceUnit(
+                    source_ref=source_ref,
+                    source_suffix=".docx",
+                    unit_index=unit_index,
+                    unit_kind="docx_paragraph",
+                    ignored=False,
+                    shape_signature=_docx_unit_shape_signature(child),
+                )
+            )
+        elif child.tag == f"{WORD_NS}tbl":
+            unit_index += 1
+            units.append(
+                PrivateSourceUnit(
+                    source_ref=source_ref,
+                    source_suffix=".docx",
+                    unit_index=unit_index,
+                    unit_kind="docx_table",
+                    ignored=False,
+                    shape_signature=_docx_unit_shape_signature(child),
+                )
+            )
+    return tuple(units)
 
 
 def _append_docx_table_blocks(
@@ -554,6 +1048,7 @@ def _load_xlsx(
                     unit_index=unit_index,
                     unit_kind="xlsx_sheet",
                     ignored=ignored,
+                    shape_signature=target,
                 )
             )
             if ignored:
@@ -567,6 +1062,22 @@ def _load_xlsx(
                 blocks=blocks,
             )
     return LoadedPrivateSource(units=tuple(units), blocks=tuple(blocks))
+
+
+def _load_xlsx_shape(path: Path, *, source_ref: str) -> tuple[PrivateSourceUnit, ...]:
+    with zipfile.ZipFile(path) as archive:
+        sheets = _xlsx_sheet_targets(archive)
+    return tuple(
+        PrivateSourceUnit(
+            source_ref=source_ref,
+            source_suffix=".xlsx",
+            unit_index=unit_index,
+            unit_kind="xlsx_sheet",
+            ignored=False,
+            shape_signature=target,
+        )
+        for unit_index, target in enumerate(sheets, start=1)
+    )
 
 
 def _xlsx_sheet_targets(archive: zipfile.ZipFile) -> list[str]:
@@ -684,21 +1195,80 @@ def _clean_block_text(text: str) -> str:
     return " ".join(text.split())
 
 
-def _load_manifest_keys(manifest_path: Path | None) -> set[str]:
+def _shape_signature(payload: Mapping[str, Any]) -> str:
+    return hashlib.sha256(
+        json.dumps(payload, ensure_ascii=False, sort_keys=True).encode("utf-8")
+    ).hexdigest()
+
+
+def _text_shape_signature(path: Path) -> str:
+    text = path.read_text(encoding="utf-8")
+    paragraphs = _paragraphs(text)
+    return _shape_signature(
+        {
+            "kind": "text_document",
+            "suffix": path.suffix.lower(),
+            "line_count": len(text.splitlines()),
+            "paragraph_count": len(paragraphs),
+            "char_count": len(text),
+        }
+    )
+
+
+def _delimited_shape_signature(path: Path, *, delimiter: str) -> str:
+    widths: list[int] = []
+    with path.open(newline="", encoding="utf-8-sig") as handle:
+        reader = csv.reader(handle, delimiter=delimiter)
+        for row in reader:
+            widths.append(len(row))
+    return _shape_signature(
+        {
+            "kind": "delimited_table",
+            "suffix": path.suffix.lower(),
+            "row_count": len(widths),
+            "column_widths": widths,
+        }
+    )
+
+
+def _docx_unit_shape_signature(element: ET.Element) -> str:
+    tag = element.tag.removeprefix(WORD_NS)
+    text_nodes = [node.text or "" for node in element.iter(f"{WORD_NS}t")]
+    rows = element.findall(f".//{WORD_NS}tr")
+    return _shape_signature(
+        {
+            "kind": tag,
+            "child_tags": [child.tag.removeprefix(WORD_NS) for child in list(element)],
+            "text_node_count": len(text_nodes),
+            "text_char_count": sum(len(text) for text in text_nodes),
+            "row_count": len(rows),
+            "cells_per_row": [
+                len(row.findall(f"{WORD_NS}tc"))
+                for row in rows
+            ],
+        }
+    )
+
+
+def _load_manifest(manifest_path: Path | None) -> tuple[frozenset[str], str | None]:
     if manifest_path is None:
-        return set()
+        return frozenset(), None
     path = manifest_path if manifest_path.is_absolute() else PROJECT_ROOT / manifest_path
     if not path.exists():
         raise SourceInventoryError("Atlas manifest path not found")
-    payload = json.loads(path.read_text(encoding="utf-8"))
+    manifest_text = path.read_text(encoding="utf-8")
+    payload = json.loads(manifest_text)
     entries = payload.get("entries") if isinstance(payload, Mapping) else None
     if not isinstance(entries, list):
         raise SourceInventoryError("Atlas manifest entries must be a list")
-    return {
-        _lemma_key(str(entry.get("lemma")))
-        for entry in entries
-        if isinstance(entry, Mapping) and entry.get("lemma")
-    }
+    return (
+        frozenset(
+            _lemma_key(str(entry.get("lemma")))
+            for entry in entries
+            if isinstance(entry, Mapping) and entry.get("lemma")
+        ),
+        hashlib.sha256(manifest_text.encode("utf-8")).hexdigest(),
+    )
 
 
 def _atlas_state_counts(
@@ -758,12 +1328,14 @@ def _source_file_payload(
 def _census_payload(
     *,
     source_files: Sequence[Mapping[str, Any]],
+    source_shape: Mapping[str, Any],
     units: Sequence[PrivateSourceUnit],
     blocks: Sequence[PrivateSourceBlock],
     records: Sequence[SourceInventoryRecord],
     candidates: Sequence[SourceInventoryCandidate],
     gate_results: Sequence[AtlasIntakeGateResult],
     manifest_loaded: bool,
+    manifest_sha256: str | None,
     atlas_state_counts: Mapping[str, int],
     token_occurrences: int,
     ignored_tab_indexes: Sequence[int],
@@ -776,6 +1348,7 @@ def _census_payload(
         "source_family": SOURCE_FAMILY,
         "extraction_mode": EXTRACTION_MODE,
         "production_outputs_updated": [],
+        "source_shape": dict(source_shape),
         "counts": {
             "source_files": len(source_files),
             "units_seen": len(units),
@@ -794,6 +1367,7 @@ def _census_payload(
         },
         "atlas": {
             "manifest_loaded": manifest_loaded,
+            "manifest_sha256": manifest_sha256,
             "existing_candidates": atlas_state_counts["existing"],
             "missing_candidates": atlas_state_counts["missing"],
         },
@@ -835,6 +1409,27 @@ def _validate_source_id(source_id: str) -> None:
         raise SourceInventoryError("--source-id must be a lowercase neutral slug")
 
 
+def _validate_source_shape_expectation(
+    source_shape: Mapping[str, Any],
+    *,
+    expected_source_shape_sha256: str | None,
+    ignored_indexes: Sequence[int],
+) -> None:
+    if ignored_indexes and not expected_source_shape_sha256:
+        raise SourceInventoryError(
+            "--expect-source-shape-sha256 is required when ignoring private source units; "
+            "run --print-source-shape first"
+        )
+    if expected_source_shape_sha256 is None:
+        return
+    expected = expected_source_shape_sha256.strip().lower()
+    if not SHA256_RE.fullmatch(expected):
+        raise SourceInventoryError("--expect-source-shape-sha256 must be a lowercase SHA-256 hex digest")
+    actual = str(source_shape.get("source_shape_sha256") or "")
+    if actual != expected:
+        raise SourceInventoryError("private source shape changed; aborting before candidate extraction")
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -863,6 +1458,20 @@ def build_parser() -> argparse.ArgumentParser:
         help="Neutral source id for derived provenance.",
     )
     parser.add_argument(
+        "--source-shape-id",
+        default=DEFAULT_SOURCE_ID,
+        help="Neutral id used when computing the private source-shape checksum.",
+    )
+    parser.add_argument(
+        "--print-source-shape",
+        action="store_true",
+        help="Print safe source-shape checksum JSON and exit without candidate extraction.",
+    )
+    parser.add_argument(
+        "--expect-source-shape-sha256",
+        help="Expected source-shape checksum; required when ignoring private source units.",
+    )
+    parser.add_argument(
         "--manifest",
         type=Path,
         help="Optional hydrated Atlas manifest for existing-vs-missing counts.",
@@ -873,6 +1482,42 @@ def build_parser() -> argparse.ArgumentParser:
         type=Path,
         help=f"Optional local candidate JSON path outside the repository (example: {DEFAULT_CANDIDATES_OUT}).",
     )
+    parser.add_argument(
+        "--bulk-triage",
+        action="store_true",
+        help="Build count-only public bulk triage summary; detailed rows stay local unless output paths are set.",
+    )
+    parser.add_argument(
+        "--triage-out",
+        type=Path,
+        help=f"Optional local bulk triage JSON path outside the repository (example: {DEFAULT_BULK_TRIAGE_OUT}).",
+    )
+    parser.add_argument(
+        "--triage-report-out",
+        type=Path,
+        help=(
+            "Optional local bulk triage Markdown path outside the repository "
+            f"(example: {DEFAULT_BULK_TRIAGE_REPORT_OUT})."
+        ),
+    )
+    parser.add_argument(
+        "--min-frequency",
+        type=int,
+        default=3,
+        help="Frequency threshold for the high-frequency missing bucket.",
+    )
+    parser.add_argument(
+        "--post-boundary-row",
+        type=int,
+        default=218,
+        help="Source row boundary for post-boundary table-like missing candidates.",
+    )
+    parser.add_argument(
+        "--report-limit",
+        type=int,
+        default=200,
+        help="Maximum rows per bucket in the local-only Markdown triage report.",
+    )
     return parser
 
 
@@ -880,22 +1525,47 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
     try:
+        if args.print_source_shape:
+            source_shape = inspect_private_source_shape(
+                args.sources,
+                source_shape_id=args.source_shape_id,
+            )
+            print(json.dumps(source_shape, ensure_ascii=False, indent=2, sort_keys=True))
+            return 0
+
         result = build_private_teacher_lesson_intake(
             args.sources,
             ignored_tab_indexes=tuple(args.ignore_tab_index),
             ignored_unit_indexes=tuple(args.ignore_unit_index),
             source_id=args.source_id,
+            source_shape_id=args.source_shape_id,
+            expected_source_shape_sha256=args.expect_source_shape_sha256,
             manifest_path=args.manifest,
         )
         if args.candidates_out:
             write_candidate_review_payload(result, args.candidates_out)
+        triage: dict[str, Any] | None = None
+        if args.bulk_triage or args.triage_out or args.triage_report_out:
+            triage = build_bulk_triage_payload(
+                result,
+                min_frequency=args.min_frequency,
+                post_boundary_row=args.post_boundary_row,
+            )
+            if args.triage_out:
+                write_bulk_triage_payload(triage, args.triage_out)
+            if args.triage_report_out:
+                write_bulk_triage_report(
+                    triage,
+                    args.triage_report_out,
+                    report_limit=args.report_limit,
+                )
     except (OSError, SourceInventoryError, zipfile.BadZipFile, ET.ParseError, json.JSONDecodeError) as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 2
     if args.format == "markdown":
-        print(format_markdown_census(result.census))
+        print(format_markdown_census(result.census, bulk_triage=bulk_triage_public_summary(triage) if triage else None))
     else:
-        print(json.dumps(result.census, ensure_ascii=False, indent=2, sort_keys=True))
+        print(json.dumps(public_census_payload(result, bulk_triage=triage), ensure_ascii=False, indent=2, sort_keys=True))
     return 0
 
 

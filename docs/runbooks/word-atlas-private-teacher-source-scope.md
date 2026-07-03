@@ -66,13 +66,24 @@ admission.
 
 Issue #4160 is now normalized under the full-corpus Atlas intake epic. The next
 private teacher-lesson step is a local-only full-source census and candidate
-extraction pass, not another manual 20-row public seed. Run it against local
-private source files and explicitly ignore the out-of-scope third tab/unit:
+extraction pass, not a public row-window seed. First bind the local source
+shape before using an ignored tab/unit. This emits a safe checksum only: no
+lemmas, source text, filenames, paths, tab names, or teacher-identifying labels.
+
+```bash
+.venv/bin/python -m scripts.audit.private_teacher_lesson_intake \
+  /absolute/path/to/local/private-source.docx \
+  --print-source-shape
+```
+
+Then run the census with the recorded checksum. If the source unit structure
+changed, the script aborts before candidate extraction:
 
 ```bash
 .venv/bin/python -m scripts.audit.private_teacher_lesson_intake \
   /absolute/path/to/local/private-source.docx \
   --ignore-tab-index 3 \
+  --expect-source-shape-sha256 <sha256-from-preflight> \
   --format markdown
 ```
 
@@ -90,6 +101,7 @@ repository:
 .venv/bin/python -m scripts.audit.private_teacher_lesson_intake \
   /absolute/path/to/local/private-source.docx \
   --ignore-tab-index 3 \
+  --expect-source-shape-sha256 <sha256-from-preflight> \
   --candidates-out /tmp/atlas-private-teacher-lesson-candidates.json \
   --format markdown
 ```
@@ -98,6 +110,37 @@ The candidate payload contains derived headword metadata and neutral locators
 for local review only. Do not commit it, copy it into `docs/`, or paste raw rows
 into public issue/PR text. Candidate rows from this lane still need review and a
 separate controlled publish step before any live Atlas browse/search movement.
+
+## Bulk Triage Lane
+
+For a large private-source queue, use deterministic bulk triage instead of
+manual public row windows. The triage buckets are disjoint and exhaustive:
+
+- `atlas_existing`
+- `committed_teacher_inventory`
+- `low_signal_hold`
+- `post_boundary_table_missing`
+- `high_frequency_missing`
+- `needs_review_bulk`
+
+Only the bucket counts are safe for public issue/PR updates. Detailed JSON or
+Markdown includes derived lemmas and must be written outside the repository:
+
+```bash
+.venv/bin/python -m scripts.audit.private_teacher_lesson_intake \
+  /absolute/path/to/local/private-source.docx \
+  --ignore-tab-index 3 \
+  --expect-source-shape-sha256 <sha256-from-preflight> \
+  --manifest site/src/data/lexicon-manifest.json \
+  --bulk-triage \
+  --triage-out /tmp/atlas-private-teacher-lesson-bulk-triage.json \
+  --triage-report-out /tmp/atlas-private-teacher-lesson-bulk-triage.md \
+  --format markdown
+```
+
+The script rejects repository paths for detailed outputs, `.gitignore` ignores
+the standard local export filenames, and pre-commit blocks staged JSON/Markdown
+that contains the private-source review workflow markers.
 
 ## Next Valid #4160 PR Shapes
 
