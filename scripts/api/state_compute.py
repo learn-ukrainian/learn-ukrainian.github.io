@@ -17,6 +17,11 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from common.thresholds import REVIEW_PASS_FLOOR
 
+from scripts.audit.llm_qg_store import (
+    current_payload_for_module,
+    llm_qg_file_is_current_for_module,
+)
+
 try:
     from path_safety import safe_join  # scripts/ on sys.path (test sys.path-hack)
 except ImportError:
@@ -246,8 +251,14 @@ def _read_json_file(path: Path) -> dict | None:
 def read_llm_qg(track_dir: Path, slug: str) -> dict | None:
     """Read a module's LLM quality-gate artifact if present."""
     try:
-        path = safe_join(track_dir, slug, "llm_qg.json")
+        module_dir = safe_join(track_dir, slug)
+        current = current_payload_for_module(track_dir.name, slug, module_dir)
+        if current is not None:
+            return current
+        path = safe_join(module_dir, "llm_qg.json")
     except ValueError:
+        return None
+    if not llm_qg_file_is_current_for_module(module_dir, path):
         return None
     return _read_json_file(path)
 

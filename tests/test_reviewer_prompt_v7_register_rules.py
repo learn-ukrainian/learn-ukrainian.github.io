@@ -94,3 +94,33 @@ def test_reviewer_prompt_flags_unsupported_grammar_taxonomies() -> None:
     )
     for anchor in anchors:
         assert _normalize(anchor) in normalized
+
+
+def test_reviewer_prompt_has_level_calibration_for_english_scaffolding() -> None:
+    normalized = _normalize(_prompt())
+
+    anchors = (
+        "Level Calibration — do not mis-score intended scaffolding",
+        "A1: English scaffolding is expected and often substantial",
+        "A2: easy Ukrainian should be the default body voice",
+        "B1/B2/C1/C2: learner-facing prose should be Ukrainian-led",
+        "Seminars: use advanced Ukrainian teaching voice",
+    )
+    for anchor in anchors:
+        assert _normalize(anchor) in normalized
+
+
+def test_reviewer_prompt_naturalness_requires_native_style_defects() -> None:
+    normalized = _normalize(_prompt())
+
+    anchors = (
+        "This is a linguistic-quality review, not a vibes review",
+        "calqued or evasive passives where native Ukrainian would use an active, impersonal, or result-state construction",
+        "wrong government/prepositions (for example, prefer `чекати на когось/щось`",
+        "wrong verb choice for ordinary Ukrainian collocations",
+        "`відімкнути/замкнути` for lock/unlock actions",
+        "`форма просить`, `застереження каже`, `правило хоче`",
+        "score naturalness below PASS even when deterministic gates passed",
+    )
+    for anchor in anchors:
+        assert _normalize(anchor) in normalized

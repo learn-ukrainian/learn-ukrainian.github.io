@@ -46,6 +46,7 @@ PRIMARY_TEXT_SOURCES_PATH = PROJECT_ROOT / "data" / "primary_text_sources.yaml"
 CLAUDE_WRITER_AGENT_SOURCE = PROJECT_ROOT / "agents_extensions/shared" / "agents" / "curriculum-writer.md"
 CLAUDE_WRITER_AGENT_TARGET = PROJECT_ROOT / ".claude" / "agents" / "curriculum-writer.md"
 
+from scripts.audit.content_surface_gates import scan_module_surface, scan_surface_text
 from scripts.audit.failure_classes import FailureClass, FailureRecord
 from scripts.audit.wiki_completeness_gate import SEMINAR_LEVELS
 from scripts.build.citation_matcher import (
@@ -193,6 +194,7 @@ PYTHON_QG_GATE_ORDER = (
     "inject_activity_ids",
     "activity_types",
     "ai_slop_clean",
+    "surface_policy",
     "russianisms_strict",
     "register_consistency",
     "engagement_floor",
@@ -5369,6 +5371,12 @@ def parse_review_response(
         raw_flags = [raw_flags]
     if isinstance(raw_flags, list) and raw_flags:
         entry["flags"] = [_clean_telemetry_text(flag, 120) for flag in raw_flags if str(flag).strip()]
+    issue_ids = _llm_qg_issue_ids_from_payload(payload)
+    if issue_ids:
+        entry["issue_ids"] = issue_ids
+    findings = _llm_qg_findings_from_payload(payload)
+    if findings:
+        entry["findings"] = findings
     validate_llm_review_report({**_placeholder_review_report(), dim: entry})
     if verdict not in {"PASS", "REVISE", "REJECT"}:
         raise LinearPipelineError(f"LLM QG response for {dim} has invalid verdict")
@@ -5517,6 +5525,70 @@ def parse_wiki_coverage_review_response(response: str) -> dict[str, Any]:
 
 
 _LLM_QG_QUOTE_MARKERS = ('"', "“", "”", "«", "»")
+_LLM_QG_ISSUE_ID_RE = re.compile(r"[^A-Z0-9_]")
+
+
+def _normalize_llm_qg_issue_id(raw: Any) -> str | None:
+    if not isinstance(raw, str):
+        return None
+    normalized = _LLM_QG_ISSUE_ID_RE.sub("_", raw.strip().upper())
+    normalized = re.sub(r"_+", "_", normalized).strip("_")
+    return normalized or None
+
+
+def _llm_qg_issue_ids_from_payload(payload: Mapping[str, Any]) -> list[str]:
+    ids: set[str] = set()
+
+    def add(value: Any) -> None:
+        if isinstance(value, str):
+            normalized = _normalize_llm_qg_issue_id(value)
+            if normalized:
+                ids.add(normalized)
+        elif isinstance(value, Sequence) and not isinstance(value, (str, bytes, bytearray)):
+            for item in value:
+                add(item)
+
+    add(payload.get("issue_ids"))
+    findings = payload.get("findings")
+    if isinstance(findings, Sequence) and not isinstance(findings, (str, bytes, bytearray)):
+        for finding in findings:
+            if isinstance(finding, Mapping):
+                for key in ("issue_id", "issue_type", "type", "kind", "tag", "error_class", "issue"):
+                    add(finding.get(key))
+            else:
+                add(finding)
+    return sorted(ids)
+
+
+def _llm_qg_findings_from_payload(payload: Mapping[str, Any]) -> list[dict[str, Any]]:
+    raw_findings = payload.get("findings")
+    if not isinstance(raw_findings, Sequence) or isinstance(raw_findings, (str, bytes, bytearray)):
+        return []
+
+    findings: list[dict[str, Any]] = []
+    for raw in raw_findings[:50]:
+        if isinstance(raw, str):
+            issue_id = _normalize_llm_qg_issue_id(raw)
+            if issue_id:
+                findings.append({"issue_id": issue_id})
+            continue
+        if not isinstance(raw, Mapping):
+            continue
+        item: dict[str, Any] = {}
+        issue_id = None
+        for key in ("issue_id", "issue_type", "type", "kind", "tag", "error_class", "issue"):
+            issue_id = _normalize_llm_qg_issue_id(raw.get(key))
+            if issue_id:
+                break
+        if issue_id:
+            item["issue_id"] = issue_id
+        for key in ("severity", "quote", "replacement", "explanation", "dimension"):
+            value = raw.get(key)
+            if isinstance(value, str) and value.strip():
+                item[key] = _clean_telemetry_text(value, 500)
+        if item:
+            findings.append(item)
+    return findings
 
 
 def _evidence_passes_quote_contract(entry: Mapping[str, Any]) -> bool:
@@ -8612,6 +8684,10 @@ def run_python_qg(
         ),
     )
     record("ai_slop_clean", _ai_slop_gate(prose_text))
+    record(
+        "surface_policy",
+        scan_module_surface(module_dir, level=str(plan["level"])),
+    )
     record("russianisms_strict", _russianisms_strict_gate(text_for_quality))
     record("register_consistency", _register_consistency_gate(module_text, plan))
     record("engagement_floor", _engagement_floor_gate(module_text, plan))

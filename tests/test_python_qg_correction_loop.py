@@ -244,6 +244,21 @@ def test_python_qg_frontier_does_not_rank_unmapped_failure_as_pass() -> None:
     assert linear_pipeline._python_qg_frontier_gate(report) == "future_unmapped_gate"
 
 
+def test_surface_policy_is_ranked_in_python_qg_frontier() -> None:
+    report = _qg_report_from_gates(
+        {
+            "ai_slop_clean": {"passed": True, "violations": []},
+            "surface_policy": {"passed": False, "findings": [{"type": "ai_leakage"}]},
+        }
+    )
+
+    assert "surface_policy" in linear_pipeline.PYTHON_QG_GATE_ORDER
+    assert linear_pipeline._python_qg_frontier(report) == linear_pipeline.PYTHON_QG_GATE_ORDER.index(
+        "surface_policy"
+    )
+    assert linear_pipeline._python_qg_frontier_gate(report) == "surface_policy"
+
+
 def test_previous_regression_scans_actual_gate_key_union() -> None:
     before = _qg_report_from_gates(
         {

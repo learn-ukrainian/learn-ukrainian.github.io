@@ -21,6 +21,12 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from scripts.agent_runtime.errors import AgentStalledError
+from scripts.audit.llm_qg_store import (
+    current_payload_for_module,
+    llm_qg_file_is_current_for_module,
+    prompt_hash_for_text,
+    record_llm_qg,
+)
 from scripts.audit.wiki_completeness_gate import SEMINAR_LEVELS
 from scripts.build import linear_pipeline, run_archive
 from scripts.build.phases.implementation_map import (
@@ -1149,6 +1155,44 @@ def _run_llm_qg(
     )
 
 
+def _persist_llm_qg_result(
+    *,
+    level: str,
+    slug: str,
+    module_dir: Path,
+    llm_qg: dict[str, Any],
+    reviewer: str,
+    source: str,
+) -> None:
+    defaults = linear_pipeline.REVIEWER_DEFAULTS.get(reviewer, {})
+    try:
+        record_llm_qg(
+            level=level,
+            slug=slug,
+            module_dir=module_dir,
+            payload=llm_qg,
+            gate_version="v7.llm_qg.1",
+            prompt_hash=_combined_llm_qg_prompt_hash(module_dir),
+            reviewer_model=defaults.get("model"),
+            reviewer_family=reviewer,
+            source=source,
+        )
+    except Exception as exc:
+        raise linear_pipeline.LinearPipelineError(
+            f"LLM QG completed but result persistence failed: {exc}"
+        ) from exc
+
+
+def _combined_llm_qg_prompt_hash(module_dir: Path) -> str | None:
+    prompt_parts: list[str] = []
+    for dim in QG_DIMS:
+        prompt_path = module_dir / f"llm-qg-{dim}-prompt.md"
+        if not prompt_path.exists():
+            return None
+        prompt_parts.append(f"## {dim}\n{prompt_path.read_text(encoding='utf-8')}")
+    return prompt_hash_for_text("\n\n".join(prompt_parts))
+
+
 def _run_wiki_coverage_review(
     *,
     plan: Mapping[str, Any],
@@ -1467,15 +1511,28 @@ def _phase_artifact_passes(module_dir: Path, phase: str) -> bool:
             and str(data.get("overall_verdict", "")).upper() == "PASS"
         )
     if phase == "llm_qg":
-        data = _read_json(module_dir / "llm_qg.json")
-        if not isinstance(data, Mapping):
-            return False
-        aggregate = data.get("aggregate")
-        if not isinstance(aggregate, Mapping):
-            return False
-        terminal_verdict = aggregate.get("terminal_verdict", aggregate.get("verdict", ""))
-        return str(terminal_verdict).upper() == "PASS"
+        return _current_db_llm_qg_passes(module_dir)
     return False
+
+
+def _llm_qg_payload_passes(payload: Mapping[str, Any] | None) -> bool:
+    if not isinstance(payload, Mapping):
+        return False
+    aggregate = payload.get("aggregate")
+    if not isinstance(aggregate, Mapping):
+        return False
+    terminal_verdict = aggregate.get("terminal_verdict", aggregate.get("verdict", ""))
+    return str(terminal_verdict).upper() == "PASS"
+
+
+def _current_db_llm_qg_payload(module_dir: Path) -> dict[str, Any] | None:
+    level = module_dir.parent.name
+    slug = module_dir.name
+    return current_payload_for_module(level, slug, module_dir)
+
+
+def _current_db_llm_qg_passes(module_dir: Path) -> bool:
+    return _llm_qg_payload_passes(_current_db_llm_qg_payload(module_dir))
 
 
 def _run_stress_annotation_for_level(module_dir: Path, level: str) -> dict[str, Any]:
@@ -1962,12 +2019,14 @@ def _run(args: argparse.Namespace) -> int:
         llm_qg_reviewer_samples = linear_pipeline.llm_qg_reviewer_samples_for_level(level)
         timeout_agent = _reviewer_for_writer(writer, llm_qg_reviewer_override)
         started_at = time.monotonic()
+        resumed_llm_qg = _current_db_llm_qg_payload(module_dir)
         if (
             resume_enabled
             and not force_rerun
-            and _phase_artifact_passes(module_dir, "llm_qg")
+            and _llm_qg_payload_passes(resumed_llm_qg)
         ):
-            llm_qg = _read_json(module_dir / "llm_qg.json")
+            llm_qg = resumed_llm_qg
+            llm_qg_source = "v7_build:resumed-db"
             tracker.emit("phase_resumed", phase=phase, level=level, slug=slug)
         else:
             if resume_enabled:
@@ -2008,6 +2067,15 @@ def _run(args: argparse.Namespace) -> int:
                     reviewer_samples=llm_qg_reviewer_samples,
                 )
             linear_pipeline.write_json(module_dir / "llm_qg.json", llm_qg)
+            llm_qg_source = "v7_build"
+        _persist_llm_qg_result(
+            level=level,
+            slug=slug,
+            module_dir=module_dir,
+            llm_qg=llm_qg,
+            reviewer=_reviewer_for_writer(writer, llm_qg_reviewer_override),
+            source=llm_qg_source,
+        )
         aggregate = llm_qg["aggregate"]
         tracker.emit(
             "review_score",

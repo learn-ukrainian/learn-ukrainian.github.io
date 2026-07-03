@@ -26,6 +26,27 @@ schema + types + props, formatting standards, `forbidden_words`
 META_NARRATION zero-tolerance ban).
 
 Your job in this LLM dim is the residual judgment that regex cannot make.
+
+## Level Calibration — do not mis-score intended scaffolding
+
+Apply the level contract before scoring any dimension:
+
+- A1: English scaffolding is expected and often substantial. Do NOT penalize
+  English task support, English grammar terminology, or line-level glosses when
+  they support a Ukrainian-first teaching move. Penalize only English-led
+  lecture prose that replaces the Ukrainian anchor, or internal writer/reviewer
+  scaffolding that leaked into learner-facing content.
+- A2: easy Ukrainian should be the default body voice, with decreasing English
+  support for first-introduction grammar, safety clarifications, and concise
+  glosses. Do not demand B1-style Ukrainian-only prose, but flag English
+  paragraphs that take over the lesson.
+- B1/B2/C1/C2: learner-facing prose should be Ukrainian-led. English support is
+  exceptional, local, and justified; English-led sections are evidence against
+  tone, naturalness, and pedagogy.
+- Seminars: use advanced Ukrainian teaching voice. English leakage, generic
+  inspirational language, or school-textbook simplification is evidence against
+  tone/naturalness unless the plan explicitly requires a bilingual artifact.
+
 For `{DIM}` specifically:
 
 - `engagement`: does the prose actually *hold attention*? The gate already
@@ -82,7 +103,26 @@ For `{DIM}` specifically:
     two-column unless a third column adds essential teaching value (e.g.,
     stress mark, IPA).
 - `naturalness`: does Ukrainian read as native? The gate confirmed VESUM +
-  russianism shadow; you assess flow, register, idiom.
+  russianism shadow; you assess flow, register, idiom, grammar government, and
+  collocation. This is a linguistic-quality review, not a vibes review.
+  Actively search for:
+  - calqued or evasive passives where native Ukrainian would use an active,
+    impersonal, or result-state construction;
+  - wrong government/prepositions (for example, prefer `чекати на когось/щось`
+    where a bare English-style object such as `чекайте номер` sounds calqued);
+  - wrong verb choice for ordinary Ukrainian collocations (`відчинити/зачинити`
+    for doors/windows, `відімкнути/замкнути` for lock/unlock actions,
+    `прийняти препарат/ліки` rather than drinking medicine, etc.);
+  - anthropomorphic or model-translated metalanguage (`форма просить`,
+    `застереження каже`, `правило хоче`) unless quoted as a deliberate learner
+    mnemonic;
+  - unnatural nominalizations, bureaucratic phrasing, literal English/Russian
+    sentence architecture, or register shifts that a Ukrainian editor would
+    rewrite even if every surface form passes VESUM.
+  If you find two or more concrete native-style Ukrainian defects in generated
+  Ukrainian prose, score naturalness below PASS even when deterministic gates
+  passed. Name the defect type in `rubric_mapping` and quote the exact offending
+  phrase.
 - `decolonization`: is the lesson teaching Ukrainian **on its own terms**?
   The gate confirmed forbidden_words.
 
@@ -217,6 +257,27 @@ trace to verbatim quotes from the content is invalid by definition.
    REJECT.
 
 The JSON response MUST include `evidence_quotes` with 3 verbatim quotes from step 1 and `rubric_mapping` explaining how each quote maps to `{DIM}` before the score. The `evidence` field MUST be one of those verbatim quotes, wrapped in escaped quotes. A summary or paraphrase in any evidence field is a reviewer-protocol failure.
+
+If you find concrete defects, emit structured `findings` entries and canonical
+`issue_ids`. Use these issue IDs when they apply:
+
+- `AWKWARD_PASSIVE_RESULT_STATE`: calqued/evasive passive or result-state
+  wording such as `застосунок має бути відкритий` where a native Ukrainian
+  editor would use an active, impersonal, or clearer state construction.
+- `UNNATURAL_ANTHROPOMORPHISM`: model-translated metalanguage such as
+  `форма просить`, `застереження каже`, or `правило хоче`.
+- `ENGLISH_LEAKAGE`: English-led learner-facing prose that violates the level
+  calibration above. Do not use this for allowed A1/A2 glosses or scaffolding.
+- `AI_LEAKAGE`: model persona, scratchpad, refusal, draft, or self-correction
+  text leaked into learner-facing content.
+- `PATH_LEAKAGE` / `INTERNAL_LEAKAGE`: filesystem paths, source paths,
+  internal gate names, or debug artifacts leaked into learner-facing content.
+- `SEMINAR_REGISTER_PATHOS`: seminar prose that drifts into motivational,
+  generic, propagandistic, or wrong-register pathos instead of advanced
+  Ukrainian teaching voice.
+
+For each finding, include at minimum `issue_id`, `quote`, `severity`, and
+`explanation`. Leave `issue_ids` empty when no concrete defect applies.
 
 ## Tier-1 verification audit (do this DURING evidence search — #1661)
 
@@ -377,7 +438,7 @@ broken content (the writer is lying to its own audit).
 Return only JSON:
 
 ```json
-{"score": 0.0, "evidence_quotes": ["verbatim quote 1", "verbatim quote 2", "verbatim quote 3"], "rubric_mapping": "Quote 1: ...; Quote 2: ...; Quote 3: ...", "evidence": "\"verbatim quote from evidence_quotes\"", "flags": ["activity_split_audit_missing", "out_of_level_literary", "..."], "verdict": "REVISE"}
+{"score": 0.0, "evidence_quotes": ["verbatim quote 1", "verbatim quote 2", "verbatim quote 3"], "rubric_mapping": "Quote 1: ...; Quote 2: ...; Quote 3: ...", "evidence": "\"verbatim quote from evidence_quotes\"", "issue_ids": ["AWKWARD_PASSIVE_RESULT_STATE"], "findings": [{"issue_id": "AWKWARD_PASSIVE_RESULT_STATE", "quote": "verbatim offending phrase", "severity": "high", "explanation": "why this fails the assigned dimension"}], "flags": ["activity_split_audit_missing", "out_of_level_literary", "..."], "verdict": "REVISE"}
 ```
 
 The `flags` array MUST contain any FLAG strings raised during audits A-J that
