@@ -97,12 +97,12 @@ are curated learner-facing English anchors for cases where dictionary
 enrichment lacks a visible English translation.
 
 The private teacher-lesson seeds contribute 228 `teacher_lesson` headwords from
-an explicit local vocabulary table. Approval ledgers cover rows 1-198; after PR
+an explicit local vocabulary table. Approval ledgers cover rows 1-218; after PR
 `#4208`, live Atlas provenance also covers rows 1-198. Rows 199-218 are
-committed as review-only source inventory and still need a later approval ledger
-before any controlled browse/search publish. Their committed rows are derived
-metadata only: no raw private lesson material, private document paths, or
-teacher-identifying labels should appear in the inventory or ledger.
+approved for later controlled browse/search publish; they are not live Atlas
+output yet. Their committed rows are derived metadata only: no raw private
+lesson material, private document paths, or teacher-identifying labels should
+appear in the inventory or ledger.
 
 When a candidate is later promoted into a manifest entry,
 `promote_grow_candidates.manifest_entry_from_candidate()` copies
