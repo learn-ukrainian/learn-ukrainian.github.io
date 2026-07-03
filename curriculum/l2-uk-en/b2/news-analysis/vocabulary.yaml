@@ -1,0 +1,115 @@
+- lemma: новина
+  translation: news item
+  pos: noun
+  gender: f
+  usage: Новина має відповідати на базові питання про подію.
+- lemma: джерело
+  translation: source
+  pos: noun
+  gender: n
+  usage: Джерело інформації треба оцінювати за близькістю до події.
+- lemma: лід
+  translation: lead paragraph
+  pos: noun
+  gender: m
+  usage: Лід стисло подає найважливіші факти.
+- lemma: репортаж
+  translation: report; on-site coverage
+  pos: noun
+  gender: m
+  usage: Репортаж додає голоси учасників і деталі місця.
+- lemma: замітка
+  translation: brief news item
+  pos: noun
+  gender: f
+  usage: Замітка швидко повідомляє факт без широкого аналізу.
+- lemma: подія
+  translation: event
+  pos: noun
+  gender: f
+  usage: Подія може отримати різні фрейми в різних медіа.
+- lemma: фреймінг
+  translation: framing
+  pos: noun
+  gender: m
+  usage: Фреймінг визначає, під яким кутом подано подію.
+- lemma: наратив
+  translation: narrative
+  pos: noun
+  gender: m
+  usage: Наратив видно в повторюваних ролях і поясненнях.
+- lemma: оцінна лексика
+  translation: evaluative vocabulary
+  pos: phrase
+  usage: Оцінна лексика потребує фактичної опори.
+- lemma: дезінформація
+  translation: disinformation
+  pos: noun
+  gender: f
+  usage: Дезінформація поширюється свідомо для впливу.
+- lemma: місінформація
+  translation: misinformation
+  pos: noun
+  gender: f
+  usage: Місінформація може поширюватися без злого наміру.
+- lemma: фактчекінг
+  translation: fact-checking
+  pos: noun
+  gender: m
+  usage: Фактчекінг перевіряє конкретні твердження.
+- lemma: верифікація
+  translation: verification
+  pos: noun
+  gender: f
+  usage: Верифікація фото починається з дати й першоджерела.
+- lemma: фейк
+  translation: fake
+  pos: noun
+  gender: m
+  usage: Фейк може швидко поширитися через емоційний заголовок.
+- lemma: спростування
+  translation: refutation; debunking
+  pos: noun
+  gender: n
+  usage: Спростування має пояснити, яке саме твердження хибне.
+- lemma: пропаганда
+  translation: propaganda
+  pos: noun
+  gender: f
+  usage: Пропаганда часто працює через ярлики й повтор.
+- lemma: клікбейт
+  translation: clickbait
+  pos: noun
+  gender: m
+  usage: Клікбейт обіцяє більше, ніж дає текст.
+- lemma: джинса
+  translation: hidden paid placement
+  pos: noun
+  gender: f
+  usage: Джинса маскує рекламу під журналістський матеріал.
+- lemma: висвітлювати
+  translation: to cover; to report on
+  pos: verb
+  usage: Різні медіа можуть висвітлювати одну подію по-різному.
+- lemma: оприлюднити
+  translation: to make public
+  pos: verb
+  usage: Установа оприлюднила звіт на офіційному сайті.
+- lemma: ангажований
+  translation: biased; partial
+  pos: adj
+  usage: Ангажований матеріал приховує власний інтерес.
+- lemma: резонансний
+  translation: high-profile
+  pos: adj
+  usage: Резонансний випадок потребує особливо точної мови.
+- lemma: першоджерело
+  translation: primary source
+  pos: noun
+  gender: n
+  usage: Першоджерело допомагає перевірити цитату.
+- lemma: ехо-камера
+  translation: echo chamber
+  pos: noun
+  gender: f
+  usage: Ехо-камера посилює вже наявні погляди аудиторії.

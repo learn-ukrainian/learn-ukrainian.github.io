@@ -1,0 +1,120 @@
+-
+  lemma: презентація
+  translation: presentation
+  pos: noun
+  example: "Презентація має завершуватися конкретним закликом до дії."
+-
+  lemma: аудиторія
+  translation: audience
+  pos: noun
+  example: "Перед виступом доповідач має зрозуміти очікування аудиторії."
+-
+  lemma: аргумент
+  translation: argument
+  pos: noun
+  example: "Сильний аргумент поєднує тезу, доказ і пояснення."
+-
+  lemma: переконання
+  translation: persuasion
+  pos: noun
+  example: "Переконання не повинно перетворюватися на маніпуляцію."
+-
+  lemma: доповідь
+  translation: talk; report
+  pos: noun
+  example: "Коротка доповідь потребує чіткішої структури, ніж довга лекція."
+-
+  lemma: структура
+  translation: structure
+  pos: noun
+  example: "Структура виступу веде слухача від проблеми до рішення."
+-
+  lemma: гачок
+  translation: hook
+  pos: noun
+  example: "Вдалий гачок пов'язаний із головною тезою презентації."
+-
+  lemma: таймінг
+  translation: timing
+  pos: noun
+  example: "Таймінг допомагає не перевантажити аудиторію деталями."
+-
+  lemma: фраза-перехід
+  translation: transition phrase
+  pos: noun
+  example: "Фраза-перехід пояснює, як наступний слайд пов'язаний із попереднім."
+-
+  lemma: візуалізація
+  translation: visualization
+  pos: noun
+  example: "Візуалізація має підсилювати думку, а не дублювати текст виступу."
+-
+  lemma: сторітеллінг
+  translation: storytelling
+  pos: noun
+  example: "Сторітеллінг робить проблему конкретною для слухача."
+-
+  lemma: харизма
+  translation: charisma
+  pos: noun
+  example: "Харизма не замінює підготовку, але допомагає втримати увагу."
+-
+  lemma: риторика
+  translation: rhetoric
+  pos: noun
+  example: "Риторика вивчає засоби переконливого мовлення."
+-
+  lemma: заклик до дії
+  translation: call to action
+  pos: phrase
+  example: "Заклик до дії має називати конкретний наступний крок."
+-
+  lemma: заперечення
+  translation: objection
+  pos: noun
+  example: "Під час Q&A доповідач працює із запереченнями аудиторії."
+-
+  lemma: компетентність
+  translation: competence
+  pos: noun
+  example: "Компетентність видно в точних відповідях і чесному визнанні меж знання."
+-
+  lemma: імпровізація
+  translation: improvisation
+  pos: noun
+  example: "Імпровізація під час запитань спирається на попередню підготовку."
+-
+  lemma: красномовство
+  translation: eloquence
+  pos: noun
+  example: "Красномовство без доказів не створює довіри."
+-
+  lemma: лаконічний
+  translation: concise
+  pos: adjective
+  example: "Лаконічний слайд має одну головну думку."
+-
+  lemma: переконливий
+  translation: convincing
+  pos: adjective
+  example: "Переконливий виступ показує проблему, рішення і доказ."
+-
+  lemma: наочний
+  translation: visual; illustrative
+  pos: adjective
+  example: "Наочний приклад допомагає пояснити абстрактну ідею."
+-
+  lemma: невербаліка
+  translation: nonverbal communication
+  pos: noun
+  example: "Невербаліка підтримує структуру виступу через погляд, паузу і жест."
+-
+  lemma: метод мосту
+  translation: bridging method
+  pos: phrase
+  example: "Метод мосту допомагає відповісти на ризик і повернутися до головної тези."
+-
+  lemma: зворотний зв'язок
+  translation: feedback
+  pos: phrase
+  example: "Зворотний зв'язок має бути конкретним, а не загальним."
