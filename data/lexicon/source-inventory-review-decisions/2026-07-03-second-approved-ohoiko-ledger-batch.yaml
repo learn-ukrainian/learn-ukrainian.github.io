@@ -1,0 +1,314 @@
+---
+version: 1
+kind: atlas_source_inventory_review_decisions
+batch_id: ohoiko-abetka-second-approved-ledger-batch-2026-07-03
+batch_label: second-approved-ohoiko-ledger-batch
+reviewer: content-review
+reviewed_at: '2026-07-03'
+source_queue:
+  workflow: source_inventory_publish_review_queue.v1
+  generated_from_pr: 4021
+  total_queue_rows: 36
+  approved_in_queue: 23
+  promotion_batch_size: 23
+production_outputs_updated: []
+decisions:
+- lemma: морква
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: carrot
+  sense_note: Ohoiko + dictionary
+  source_inventory:
+    key: 74c55d29f878db79
+    path: data/lexicon/source-inventory/ohoiko-abetka-keywords.yaml
+    locator: letters[М].key_word
+    source_id: ohoiko-abetka-1-keywords
+    source_family: ohoiko
+  evidence_refs:
+  - Ohoiko + dictionary
+- lemma: літак
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: airplane
+  sense_note: Ohoiko + dictionary
+  source_inventory:
+    key: 71ec5d9f5cca994d
+    path: data/lexicon/source-inventory/ohoiko-abetka-keywords.yaml
+    locator: letters[Л].key_word
+    source_id: ohoiko-abetka-1-keywords
+    source_family: ohoiko
+  evidence_refs:
+  - Ohoiko + dictionary
+- lemma: Україна
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: Ukraine
+  sense_note: Ohoiko + dictionary
+  source_inventory:
+    key: f96b805806966f44
+    path: data/lexicon/source-inventory/ohoiko-abetka-keywords.yaml
+    locator: letters[У].key_word
+    source_id: ohoiko-abetka-1-keywords
+    source_family: ohoiko
+  evidence_refs:
+  - Ohoiko + dictionary
+- lemma: ножиці
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: scissors
+  sense_note: Ohoiko + dictionary
+  source_inventory:
+    key: 7da2ef7637019654
+    path: data/lexicon/source-inventory/ohoiko-abetka-keywords.yaml
+    locator: letters[Н].key_word
+    source_id: ohoiko-abetka-1-keywords
+    source_family: ohoiko
+  evidence_refs:
+  - Ohoiko + dictionary
+- lemma: сумка
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: bag; handbag
+  sense_note: Ohoiko + dictionary
+  source_inventory:
+    key: 7c5994117b26596e
+    path: data/lexicon/source-inventory/ohoiko-abetka-keywords.yaml
+    locator: letters[С].key_word
+    source_id: ohoiko-abetka-1-keywords
+    source_family: ohoiko
+  evidence_refs:
+  - Ohoiko + dictionary
+- lemma: риба
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: fish
+  sense_note: Ohoiko + dictionary
+  source_inventory:
+    key: 1e4cc44f00cde009
+    path: data/lexicon/source-inventory/ohoiko-abetka-keywords.yaml
+    locator: letters[И].key_word
+    source_id: ohoiko-abetka-2-keywords
+    source_family: ohoiko
+  evidence_refs:
+  - Ohoiko + dictionary
+- lemma: ракета
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: rocket; missile
+  sense_note: Ohoiko + dictionary
+  source_inventory:
+    key: 9a1ed75431370793
+    path: data/lexicon/source-inventory/ohoiko-abetka-keywords.yaml
+    locator: letters[Р].key_word
+    source_id: ohoiko-abetka-2-keywords
+    source_family: ohoiko
+  evidence_refs:
+  - Ohoiko + dictionary
+- lemma: вовк
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: wolf
+  sense_note: Ohoiko + dictionary
+  source_inventory:
+    key: e11e5d05b0e85fe7
+    path: data/lexicon/source-inventory/ohoiko-abetka-keywords.yaml
+    locator: letters[В].key_word
+    source_id: ohoiko-abetka-2-keywords
+    source_family: ohoiko
+  evidence_refs:
+  - Ohoiko + dictionary
+- lemma: індик
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: turkey
+  sense_note: Ohoiko + dictionary
+  source_inventory:
+    key: 21ea9299ebdeb5f9
+    path: data/lexicon/source-inventory/ohoiko-abetka-keywords.yaml
+    locator: letters[І].key_word
+    source_id: ohoiko-abetka-2-keywords
+    source_family: ohoiko
+  evidence_refs:
+  - Ohoiko + dictionary
+- lemma: павук
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: spider
+  sense_note: Ohoiko + dictionary
+  source_inventory:
+    key: 323dedb3d07bd5b6
+    path: data/lexicon/source-inventory/ohoiko-abetka-keywords.yaml
+    locator: letters[П].key_word
+    source_id: ohoiko-abetka-3-keywords
+    source_family: ohoiko
+  evidence_refs:
+  - Ohoiko + dictionary
+- lemma: ґанок
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: porch
+  sense_note: Ohoiko + dictionary
+  source_inventory:
+    key: 0e104c98fcf04fd8
+    path: data/lexicon/source-inventory/ohoiko-abetka-keywords.yaml
+    locator: letters[Ґ].key_word
+    source_id: ohoiko-abetka-3-keywords
+    source_family: ohoiko
+  evidence_refs:
+  - Ohoiko + dictionary
+- lemma: екран
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: screen
+  sense_note: Ohoiko + dictionary
+  source_inventory:
+    key: 92174367a9319045
+    path: data/lexicon/source-inventory/ohoiko-abetka-keywords.yaml
+    locator: letters[Е].key_word
+    source_id: ohoiko-abetka-3-keywords
+    source_family: ohoiko
+  evidence_refs:
+  - Ohoiko + dictionary
+- lemma: шапка
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: hat; cap
+  sense_note: Ohoiko + dictionary
+  source_inventory:
+    key: f6de7815ae70b6c1
+    path: data/lexicon/source-inventory/ohoiko-abetka-keywords.yaml
+    locator: letters[Ш].key_word
+    source_id: ohoiko-abetka-3-keywords
+    source_family: ohoiko
+  evidence_refs:
+  - Ohoiko + dictionary
+- lemma: хліб
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: bread
+  sense_note: Ohoiko + dictionary
+  source_inventory:
+    key: a0d2d5c19eb2abd7
+    path: data/lexicon/source-inventory/ohoiko-abetka-keywords.yaml
+    locator: letters[Х].key_word
+    source_id: ohoiko-abetka-3-keywords
+    source_family: ohoiko
+  evidence_refs:
+  - Ohoiko + dictionary
+- lemma: йогурт
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: yogurt
+  sense_note: Ohoiko + dictionary
+  source_inventory:
+    key: d8d6d25efd4b2832
+    path: data/lexicon/source-inventory/ohoiko-abetka-keywords.yaml
+    locator: letters[Й].key_word
+    source_id: ohoiko-abetka-4-keywords
+    source_family: ohoiko
+  evidence_refs:
+  - Ohoiko + dictionary
+- lemma: щітка
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: brush
+  sense_note: Ohoiko + dictionary
+  source_inventory:
+    key: 0c5c0f28bd906050
+    path: data/lexicon/source-inventory/ohoiko-abetka-keywords.yaml
+    locator: letters[Щ].key_word
+    source_id: ohoiko-abetka-4-keywords
+    source_family: ohoiko
+  evidence_refs:
+  - Ohoiko + dictionary
+- lemma: яблуко
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: apple
+  sense_note: Ohoiko + dictionary
+  source_inventory:
+    key: dad1f0e64266d4ae
+    path: data/lexicon/source-inventory/ohoiko-abetka-keywords.yaml
+    locator: letters[Я].key_word
+    source_id: ohoiko-abetka-4-keywords
+    source_family: ohoiko
+  evidence_refs:
+  - Ohoiko + dictionary
+- lemma: юнак
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: young man
+  sense_note: Ohoiko + dictionary
+  source_inventory:
+    key: 7b1812e4db44aa34
+    path: data/lexicon/source-inventory/ohoiko-abetka-keywords.yaml
+    locator: letters[Ю].key_word
+    source_id: ohoiko-abetka-4-keywords
+    source_family: ohoiko
+  evidence_refs:
+  - Ohoiko + dictionary
+- lemma: єнот
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: raccoon
+  sense_note: Ohoiko + dictionary
+  source_inventory:
+    key: ee96b22412f6a457
+    path: data/lexicon/source-inventory/ohoiko-abetka-keywords.yaml
+    locator: letters[Є].key_word
+    source_id: ohoiko-abetka-4-keywords
+    source_family: ohoiko
+  evidence_refs:
+  - Ohoiko + dictionary
+- lemma: сіль
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: salt
+  sense_note: Ohoiko + dictionary
+  source_inventory:
+    key: 3f0e6b310a74f67d
+    path: data/lexicon/source-inventory/ohoiko-abetka-keywords.yaml
+    locator: letters[Ь].key_word
+    source_id: ohoiko-abetka-4-keywords
+    source_family: ohoiko
+  evidence_refs:
+  - Ohoiko + dictionary
+- lemma: їжак
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: hedgehog
+  sense_note: Ohoiko + dictionary
+  source_inventory:
+    key: c7fc850fbd90372e
+    path: data/lexicon/source-inventory/ohoiko-abetka-keywords.yaml
+    locator: letters[Ї].key_word
+    source_id: ohoiko-abetka-4-keywords
+    source_family: ohoiko
+  evidence_refs:
+  - Ohoiko + dictionary
+- lemma: цибуля
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: onion
+  sense_note: Ohoiko + dictionary
+  source_inventory:
+    key: 56cf596d2e29b7ec
+    path: data/lexicon/source-inventory/ohoiko-abetka-keywords.yaml
+    locator: letters[Ц].key_word
+    source_id: ohoiko-abetka-4-keywords
+    source_family: ohoiko
+  evidence_refs:
+  - Ohoiko + dictionary
+- lemma: фламінго
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: flamingo
+  sense_note: Ohoiko + dictionary
+  source_inventory:
+    key: 877d270182699d48
+    path: data/lexicon/source-inventory/ohoiko-abetka-keywords.yaml
+    locator: letters[Ф].key_word
+    source_id: ohoiko-abetka-4-keywords
+    source_family: ohoiko
+  evidence_refs:
+  - Ohoiko + dictionary
