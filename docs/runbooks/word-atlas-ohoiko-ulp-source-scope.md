@@ -22,6 +22,10 @@ Those modules contain public YouTube pronunciation-video metadata and explicit
 Current committed coverage is complete for that source: 4 abetka modules, 33
 `key_word` rows, and 33 Ohoiko source-inventory headwords.
 
+Current review-ledger coverage is also complete for that source: 33 of 33
+Ohoiko source-inventory rows have `approve_for_publish` decisions. This does
+not by itself admit rows to Daily Word, Practice, or cloze surfaces.
+
 ## Link-Only Sources
 
 The Ukrainian Lessons resource indexes are useful for curriculum alignment and
@@ -56,8 +60,8 @@ A safe follow-up PR may do one of these:
 
 - add a manually reviewed Ohoiko/ULP headword inventory where every row cites a
   public, non-premium source locator and includes review notes
-- add reviewed decision-ledger rows for already-generated Ohoiko candidates
-- publish an already-approved Ohoiko batch to Atlas browse/search only
+- publish approved Ohoiko rows to Atlas browse/search only
+- add reviewed decision-ledger rows for any newly added Ohoiko/ULP inventory
 
 Daily Word, Practice, and cloze admission must remain separate
 `surface_admission` decisions. Missing `surface_admission` means Atlas
