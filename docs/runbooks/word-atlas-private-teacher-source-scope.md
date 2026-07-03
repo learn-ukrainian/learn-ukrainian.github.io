@@ -15,19 +15,20 @@ The committed inventory seeds are:
 - `data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-119-138.yaml`
 - `data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-139-158.yaml`
 - `data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-159-178.yaml`
+- `data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-179-198.yaml`
 
-Current committed coverage is 187 source-inventory headwords from explicit
-local vocabulary table rows 1-178. The source family is `teacher_lesson`, and the
+Current committed coverage is 208 source-inventory headwords from explicit
+local vocabulary table rows 1-198. The source family is `teacher_lesson`, and the
 source titles, source ids, locators, and context are intentionally privacy-safe.
 The inventories do not commit raw notes, transcripts, prompts, document paths,
 or teacher-identifying names.
 
 Current approval-ledger coverage is 187 reviewed headwords from rows 1-178.
-Live Atlas manifest coverage is 167 neutral `teacher_lesson` provenance refs
-across 166 Atlas entries from rows 1-158; public browse/search is regenerated
-from that manifest. Rows 159-178 are approved for later publish, but remain out
-of live Atlas until a later controlled publish PR updates browse/search.
-Missing `surface_admission` keeps Daily Word, Practice, and cloze frozen.
+Live Atlas manifest coverage is 187 neutral `teacher_lesson` provenance refs
+across 184 Atlas entries from rows 1-178; public browse/search is regenerated
+from that manifest. Rows 179-198 are committed as review-only source inventory;
+they are not approved or live Atlas output yet. Missing `surface_admission`
+keeps Daily Word, Practice, and cloze frozen.
 
 ## Source Handling Rule
 
@@ -45,7 +46,9 @@ prompt dumps, screenshots, or teacher-identifying labels.
 
 ## Current Boundary
 
-This lane is source-inventory only. It does not update:
+New private teacher-lesson inventory and ledger PRs are review-only until a
+separate controlled publish PR updates Atlas browse/search. A review-only seed
+or ledger PR does not update:
 
 - live Atlas manifest, search, or browse output
 - Daily Word

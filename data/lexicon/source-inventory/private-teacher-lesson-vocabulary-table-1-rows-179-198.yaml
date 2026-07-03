@@ -1,0 +1,119 @@
+---
+version: 1
+kind: atlas_source_inventory
+sources:
+  - id: private-teacher-lesson-vocabulary-table-1-rows-179-198
+    source_family: teacher_lesson
+    extraction_mode: curated_headword
+    title: Private teacher lesson vocabulary - explicit table rows 179-198
+    locator: local-only explicit vocabulary table rows 179-198
+    notes: >-
+      Derived headword metadata only; raw private lesson material is local-only
+      and not committed. Daily Word, Practice, and cloze remain frozen without
+      explicit surface_admission.
+    headwords:
+      - lemma: виставляти
+        pos: verb
+        gloss: to make someone look like; imperfective; takes instrumental
+        locator: explicit vocabulary table row 179
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: голосувати
+        pos: verb
+        gloss: to vote; imperfective
+        locator: explicit vocabulary table row 180
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: проголосувати
+        pos: verb
+        gloss: to vote; perfective
+        locator: explicit vocabulary table row 181
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: підкупляти
+        pos: verb
+        gloss: to bribe; imperfective
+        locator: explicit vocabulary table row 182
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: підкупити
+        pos: verb
+        gloss: to bribe; perfective
+        locator: explicit vocabulary table row 183
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: давати на лапу
+        pos: phrase
+        gloss: to bribe; idiom
+        locator: explicit vocabulary table row 184
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: невдалий
+        pos: adjective
+        gloss: unsuccessful; unfortunate
+        locator: explicit vocabulary table row 185
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: стегно
+        pos: noun
+        gloss: thigh
+        locator: explicit vocabulary table row 186
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: набережна
+        pos: noun
+        gloss: waterfront; embankment
+        locator: explicit vocabulary table row 187
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: терпець урвався
+        pos: phrase
+        gloss: patience ran out; takes dative experiencer
+        locator: explicit vocabulary table row 188
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: терпець увірвався
+        pos: phrase
+        gloss: patience ran out; takes dative experiencer
+        locator: explicit vocabulary table row 188
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: гігієна
+        pos: noun
+        gloss: hygiene
+        locator: explicit vocabulary table row 189
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: штрафувати
+        pos: verb
+        gloss: to fine; imperfective
+        locator: explicit vocabulary table row 190
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: оштрафувати
+        pos: verb
+        gloss: to fine; perfective
+        locator: explicit vocabulary table row 191
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: поводитися
+        pos: verb
+        gloss: to behave
+        locator: explicit vocabulary table row 192
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: корм
+        pos: noun
+        gloss: animal feed
+        locator: explicit vocabulary table row 193
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: значний
+        pos: adjective
+        gloss: significant
+        locator: explicit vocabulary table row 194
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: незначний
+        pos: adjective
+        gloss: insignificant
+        locator: explicit vocabulary table row 195
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: мені пощастило
+        pos: phrase
+        gloss: I was lucky; I got lucky
+        locator: explicit vocabulary table row 196
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: щитовидка
+        pos: noun
+        gloss: thyroid gland; colloquial
+        locator: explicit vocabulary table row 197
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: кролик
+        pos: noun
+        gloss: rabbit
+        locator: explicit vocabulary table row 198
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
