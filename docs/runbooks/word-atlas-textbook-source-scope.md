@@ -6,7 +6,9 @@ before broader textbook ingestion can be treated as resolved.
 
 ## Current Textbook Inventories
 
-The committed textbook source-inventory lane currently has 114 rows:
+The committed textbook source-inventory lane currently has 114 rows. All 114
+now have approved source-decision ledger rows; live Atlas provenance is a
+separate publish step.
 
 - `data/lexicon/source-inventory/bolshakova-bukvar-keywords.yaml`
   - 40 headwords
@@ -18,6 +20,8 @@ The committed textbook source-inventory lane currently has 114 rows:
 - `data/lexicon/source-inventory/vashulenko-grade3-family-numerals.yaml`
   - 34 headwords
   - source map: `docs/l2-uk-direct/textbook-map.yaml`
+  - approved by
+    `data/lexicon/source-inventory-review-decisions/2026-07-03-fifth-approved-textbook-ledger-batch.yaml`
 
 These inventory rows cite tracked notes/maps, not untracked source PDFs. The
 source PDFs are not committed, so the reviewable repository evidence is the
@@ -41,12 +45,12 @@ the tracked source map.
 
 ## Not Yet Done
 
-Issue #3934 remains open because the current 114 rows are only a reviewed seed, not a
-complete textbook corpus. The missing work is:
+Issue #3934 remains open because the current 114 approved rows are only a
+reviewed seed, not a complete textbook corpus. The missing work is:
 
 - add more reviewed textbook/headword inventories with tracked source locators
-- review held rows before publishing
-- publish approved browse/search batches separately from source review
+- publish the 34 family/numeral approvals separately from source review
+- review held rows before publishing future batches
 - make separate `surface_admission` decisions for Daily Word, Practice, and
   cloze
 
