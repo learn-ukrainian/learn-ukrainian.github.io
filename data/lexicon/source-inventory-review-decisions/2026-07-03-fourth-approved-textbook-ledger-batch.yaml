@@ -1,0 +1,495 @@
+version: 1
+kind: atlas_source_inventory_review_decisions
+batch_id: textbook-fourth-approved-ledger-batch-2026-07-03
+batch_label: fourth-approved-textbook-ledger-batch
+reviewer: content-review
+reviewed_at: '2026-07-03'
+source_queue:
+  workflow: source_inventory_publish_review_queue.v1
+  generated_from_pr: 4021
+  total_queue_rows: 120
+  approved_in_queue: 120
+  promotion_batch_size: 37
+production_outputs_updated: []
+decisions:
+- lemma: Україна
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: Ukraine
+  sense_note: Bolshakova key-word block
+  source_inventory:
+    key: ae2697cb57c66942
+    path: data/lexicon/source-inventory/bolshakova-bukvar-keywords.yaml
+    locator: correct key words block; letter У
+    source_id: bolshakova-bukvar-2025-part1-keywords
+    source_family: textbook
+  evidence_refs:
+  - Bolshakova key-word block + dictionary
+- lemma: сумка
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: bag
+  sense_note: Bolshakova letter mapping
+  source_inventory:
+    key: d42814494622f9d7
+    path: data/lexicon/source-inventory/bolshakova-bukvar-keywords.yaml
+    locator: complete letter mapping row С с
+    source_id: bolshakova-bukvar-2025-part1-keywords
+    source_family: textbook
+  evidence_refs:
+  - Bolshakova letter mapping + dictionary
+- lemma: сітка
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: net
+  sense_note: Bolshakova letter mapping
+  source_inventory:
+    key: 7860919e6106e695
+    path: data/lexicon/source-inventory/bolshakova-bukvar-keywords.yaml
+    locator: complete letter mapping row С с
+    source_id: bolshakova-bukvar-2025-part1-keywords
+    source_family: textbook
+  evidence_refs:
+  - Bolshakova letter mapping + dictionary
+- lemma: нірка
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: burrow
+  sense_note: Bolshakova letter mapping
+  source_inventory:
+    key: f227342d53097c6e
+    path: data/lexicon/source-inventory/bolshakova-bukvar-keywords.yaml
+    locator: complete letter mapping row Н н
+    source_id: bolshakova-bukvar-2025-part1-keywords
+    source_family: textbook
+  evidence_refs:
+  - Bolshakova letter mapping + dictionary
+- lemma: ріка
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: river
+  sense_note: Bolshakova letter mapping
+  source_inventory:
+    key: b3868790fb9b4b48
+    path: data/lexicon/source-inventory/bolshakova-bukvar-keywords.yaml
+    locator: complete letter mapping row Р р
+    source_id: bolshakova-bukvar-2025-part1-keywords
+    source_family: textbook
+  evidence_refs:
+  - Bolshakova letter mapping + dictionary
+- lemma: робот
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: robot
+  sense_note: Bolshakova letter mapping
+  source_inventory:
+    key: 029214ee8fc397b9
+    path: data/lexicon/source-inventory/bolshakova-bukvar-keywords.yaml
+    locator: complete letter mapping row Р р
+    source_id: bolshakova-bukvar-2025-part1-keywords
+    source_family: textbook
+  evidence_refs:
+  - Bolshakova letter mapping + dictionary
+- lemma: ібіс
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: ibis
+  sense_note: Bolshakova letter mapping
+  source_inventory:
+    key: 314c1ac32162f346
+    path: data/lexicon/source-inventory/bolshakova-bukvar-keywords.yaml
+    locator: complete letter mapping row І і
+    source_id: bolshakova-bukvar-2025-part1-keywords
+    source_family: textbook
+  evidence_refs:
+  - Bolshakova letter mapping + dictionary
+- lemma: лелека
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: stork
+  sense_note: Bolshakova letter mapping
+  source_inventory:
+    key: 9ea99a2959d3d600
+    path: data/lexicon/source-inventory/bolshakova-bukvar-keywords.yaml
+    locator: complete letter mapping row Е е
+    source_id: bolshakova-bukvar-2025-part1-keywords
+    source_family: textbook
+  evidence_refs:
+  - Bolshakova letter mapping + dictionary
+- lemma: торт
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: cake
+  sense_note: Bolshakova letter mapping
+  source_inventory:
+    key: 442ad5206a2d0c55
+    path: data/lexicon/source-inventory/bolshakova-bukvar-keywords.yaml
+    locator: complete letter mapping row Т т
+    source_id: bolshakova-bukvar-2025-part1-keywords
+    source_family: textbook
+  evidence_refs:
+  - Bolshakova letter mapping + dictionary
+- lemma: тісто
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: dough
+  sense_note: Bolshakova letter mapping
+  source_inventory:
+    key: cbbcda48de3b0060
+    path: data/lexicon/source-inventory/bolshakova-bukvar-keywords.yaml
+    locator: complete letter mapping row Т т
+    source_id: bolshakova-bukvar-2025-part1-keywords
+    source_family: textbook
+  evidence_refs:
+  - Bolshakova letter mapping + dictionary
+- lemma: ґава
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: a Ukrainian surname
+  sense_note: Bolshakova letter mapping
+  source_inventory:
+    key: 2212edbf16aad7d8
+    path: data/lexicon/source-inventory/bolshakova-bukvar-keywords.yaml
+    locator: complete letter mapping row Ґ ґ
+    source_id: bolshakova-bukvar-2025-part1-keywords
+    source_family: textbook
+  evidence_refs:
+  - Bolshakova letter mapping + dictionary
+- lemma: жабка
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: frog
+  sense_note: Bolshakova letter mapping
+  source_inventory:
+    key: 9198d154420c6a91
+    path: data/lexicon/source-inventory/bolshakova-bukvar-keywords.yaml
+    locator: complete letter mapping row Ж ж
+    source_id: bolshakova-bukvar-2025-part1-keywords
+    source_family: textbook
+  evidence_refs:
+  - Bolshakova letter mapping + dictionary
+- lemma: шафа
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: closet
+  sense_note: Bolshakova letter mapping
+  source_inventory:
+    key: 51a00c8e53dc46b7
+    path: data/lexicon/source-inventory/bolshakova-bukvar-keywords.yaml
+    locator: complete letter mapping row Ш ш
+    source_id: bolshakova-bukvar-2025-part1-keywords
+    source_family: textbook
+  evidence_refs:
+  - Bolshakova letter mapping + dictionary
+- lemma: ховрах
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: gopher
+  sense_note: Bolshakova thematic category
+  source_inventory:
+    key: f7c64a3404fcbe73
+    path: data/lexicon/source-inventory/bolshakova-bukvar-keywords.yaml
+    locator: thematic categories; тварини
+    source_id: bolshakova-bukvar-2025-part1-keywords
+    source_family: textbook
+  evidence_refs:
+  - Bolshakova thematic category + dictionary
+- lemma: хом'як
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: hamster
+  sense_note: Bolshakova thematic category
+  source_inventory:
+    key: fb4cdf796d9bd964
+    path: data/lexicon/source-inventory/bolshakova-bukvar-keywords.yaml
+    locator: thematic categories; тварини
+    source_id: bolshakova-bukvar-2025-part1-keywords
+    source_family: textbook
+  evidence_refs:
+  - Bolshakova thematic category + dictionary
+- lemma: чайник
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: teapot
+  sense_note: Bolshakova letter mapping
+  source_inventory:
+    key: 6736394633916cb5
+    path: data/lexicon/source-inventory/bolshakova-bukvar-keywords.yaml
+    locator: complete letter mapping row Ч ч
+    source_id: bolshakova-bukvar-2025-part1-keywords
+    source_family: textbook
+  evidence_refs:
+  - Bolshakova letter mapping + dictionary
+- lemma: яблуко
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: apple
+  sense_note: Bolshakova letter mapping
+  source_inventory:
+    key: 265cbc4eebf28897
+    path: data/lexicon/source-inventory/bolshakova-bukvar-keywords.yaml
+    locator: complete letter mapping row Я я
+    source_id: bolshakova-bukvar-2025-part1-keywords
+    source_family: textbook
+  evidence_refs:
+  - Bolshakova letter mapping + dictionary
+- lemma: юшка
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: soup
+  sense_note: Bolshakova letter mapping
+  source_inventory:
+    key: bd224012b1db2d66
+    path: data/lexicon/source-inventory/bolshakova-bukvar-keywords.yaml
+    locator: complete letter mapping row Ю ю
+    source_id: bolshakova-bukvar-2025-part1-keywords
+    source_family: textbook
+  evidence_refs:
+  - Bolshakova letter mapping + dictionary
+- lemma: єнот
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: raccoon
+  sense_note: Bolshakova letter mapping
+  source_inventory:
+    key: 9f2767ff3c2df867
+    path: data/lexicon/source-inventory/bolshakova-bukvar-keywords.yaml
+    locator: complete letter mapping row Є є
+    source_id: bolshakova-bukvar-2025-part1-keywords
+    source_family: textbook
+  evidence_refs:
+  - Bolshakova letter mapping + dictionary
+- lemma: їжак
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: hedgehog
+  sense_note: Bolshakova letter mapping
+  source_inventory:
+    key: b3009869914a5106
+    path: data/lexicon/source-inventory/bolshakova-bukvar-keywords.yaml
+    locator: complete letter mapping row Ї ї
+    source_id: bolshakova-bukvar-2025-part1-keywords
+    source_family: textbook
+  evidence_refs:
+  - Bolshakova letter mapping + dictionary
+- lemma: щука
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: pike
+  sense_note: Bolshakova letter mapping
+  source_inventory:
+    key: 45c881577509153a
+    path: data/lexicon/source-inventory/bolshakova-bukvar-keywords.yaml
+    locator: complete letter mapping row Щ щ
+    source_id: bolshakova-bukvar-2025-part1-keywords
+    source_family: textbook
+  evidence_refs:
+  - Bolshakova letter mapping + dictionary
+- lemma: цирк
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: cirque
+  sense_note: Bolshakova letter mapping
+  source_inventory:
+    key: 4432b75f80e16f70
+    path: data/lexicon/source-inventory/bolshakova-bukvar-keywords.yaml
+    locator: complete letter mapping row Ц ц
+    source_id: bolshakova-bukvar-2025-part1-keywords
+    source_family: textbook
+  evidence_refs:
+  - Bolshakova letter mapping + dictionary
+- lemma: цікавий
+  decision: approve_for_publish
+  approved_pos: adjective
+  approved_gloss: curious
+  sense_note: Bolshakova letter mapping
+  source_inventory:
+    key: 3cf809bb95313f41
+    path: data/lexicon/source-inventory/bolshakova-bukvar-keywords.yaml
+    locator: complete letter mapping row Ц ц
+    source_id: bolshakova-bukvar-2025-part1-keywords
+    source_family: textbook
+  evidence_refs:
+  - Bolshakova letter mapping + dictionary
+- lemma: фокус
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: illusion performed to give the appearance of magic or the supernatural
+  sense_note: Bolshakova letter mapping
+  source_inventory:
+    key: db175a7b59cf4651
+    path: data/lexicon/source-inventory/bolshakova-bukvar-keywords.yaml
+    locator: complete letter mapping row Ф ф
+    source_id: bolshakova-bukvar-2025-part1-keywords
+    source_family: textbook
+  evidence_refs:
+  - Bolshakova letter mapping + dictionary
+- lemma: урок
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: lesson
+  sense_note: Vashulenko school vocabulary
+  source_inventory:
+    key: bf3ec582133a7457
+    path: data/lexicon/source-inventory/vashulenko-grade3-headwords.yaml
+    locator: topic_index.vocabulary_school.words[1]
+    source_id: vashulenko-grade3-2020-school-vocabulary
+    source_family: textbook
+  evidence_refs:
+  - Vashulenko school vocabulary + dictionary
+- lemma: шафа
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: closet
+  sense_note: Vashulenko interior vocabulary
+  source_inventory:
+    key: ffc134edfafbd95c
+    path: data/lexicon/source-inventory/vashulenko-grade3-headwords.yaml
+    locator: topic_index.vocabulary_interior.words[1]
+    source_id: vashulenko-grade3-2020-interior-vocabulary
+    source_family: textbook
+  evidence_refs:
+  - Vashulenko interior vocabulary + dictionary
+- lemma: скатертина
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: tablecloth
+  sense_note: Vashulenko interior vocabulary
+  source_inventory:
+    key: cd347312141d2cb7
+    path: data/lexicon/source-inventory/vashulenko-grade3-headwords.yaml
+    locator: topic_index.vocabulary_interior.words[5]
+    source_id: vashulenko-grade3-2020-interior-vocabulary
+    source_family: textbook
+  evidence_refs:
+  - Vashulenko interior vocabulary + dictionary
+- lemma: тумбочка
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: Night-table
+  sense_note: Vashulenko interior vocabulary
+  source_inventory:
+    key: aae58b6a640d760d
+    path: data/lexicon/source-inventory/vashulenko-grade3-headwords.yaml
+    locator: topic_index.vocabulary_interior.words[6]
+    source_id: vashulenko-grade3-2020-interior-vocabulary
+    source_family: textbook
+  evidence_refs:
+  - Vashulenko interior vocabulary + dictionary
+- lemma: стеля
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: ceiling
+  sense_note: Vashulenko interior vocabulary
+  source_inventory:
+    key: 64857048b2f2abe8
+    path: data/lexicon/source-inventory/vashulenko-grade3-headwords.yaml
+    locator: topic_index.vocabulary_interior.words[9]
+    source_id: vashulenko-grade3-2020-interior-vocabulary
+    source_family: textbook
+  evidence_refs:
+  - Vashulenko interior vocabulary + dictionary
+- lemma: просторий
+  decision: approve_for_publish
+  approved_pos: adjective
+  approved_gloss: wide
+  sense_note: Vashulenko interior vocabulary
+  source_inventory:
+    key: f08a4bca020e9c7c
+    path: data/lexicon/source-inventory/vashulenko-grade3-headwords.yaml
+    locator: topic_index.vocabulary_interior.adjectives[3]
+    source_id: vashulenko-grade3-2020-interior-vocabulary
+    source_family: textbook
+  evidence_refs:
+  - Vashulenko interior vocabulary + dictionary
+- lemma: косатка
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: killer whale
+  sense_note: Vashulenko marine vocabulary
+  source_inventory:
+    key: 894003fdc83c18b8
+    path: data/lexicon/source-inventory/vashulenko-grade3-headwords.yaml
+    locator: topic_index.vocabulary_marine.words[3]
+    source_id: vashulenko-grade3-2020-marine-vocabulary
+    source_family: textbook
+  evidence_refs:
+  - Vashulenko marine vocabulary + dictionary
+- lemma: плавні
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: (plural only) reed beds
+  sense_note: Vashulenko marine vocabulary
+  source_inventory:
+    key: c1b2168fa7713cfe
+    path: data/lexicon/source-inventory/vashulenko-grade3-headwords.yaml
+    locator: topic_index.vocabulary_marine.words[5]
+    source_id: vashulenko-grade3-2020-marine-vocabulary
+    source_family: textbook
+  evidence_refs:
+  - Vashulenko marine vocabulary + dictionary
+- lemma: снігур
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: bullfinch
+  sense_note: Vashulenko bird vocabulary
+  source_inventory:
+    key: 53dbf417f2161b40
+    path: data/lexicon/source-inventory/vashulenko-grade3-headwords.yaml
+    locator: topic_index.vocabulary_birds_extended.words[0]
+    source_id: vashulenko-grade3-2020-birds-vocabulary
+    source_family: textbook
+  evidence_refs:
+  - Vashulenko bird vocabulary + dictionary
+- lemma: синиця
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: chickadee
+  sense_note: Vashulenko bird vocabulary
+  source_inventory:
+    key: '8821841013540167'
+    path: data/lexicon/source-inventory/vashulenko-grade3-headwords.yaml
+    locator: topic_index.vocabulary_birds_extended.words[1]
+    source_id: vashulenko-grade3-2020-birds-vocabulary
+    source_family: textbook
+  evidence_refs:
+  - Vashulenko bird vocabulary + dictionary
+- lemma: лелека
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: stork
+  sense_note: Vashulenko bird vocabulary
+  source_inventory:
+    key: 5ebb7d27f39ef33f
+    path: data/lexicon/source-inventory/vashulenko-grade3-headwords.yaml
+    locator: topic_index.vocabulary_birds_extended.words[2]
+    source_id: vashulenko-grade3-2020-birds-vocabulary
+    source_family: textbook
+  evidence_refs:
+  - Vashulenko bird vocabulary + dictionary
+- lemma: чапля
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: heron
+  sense_note: Vashulenko bird vocabulary
+  source_inventory:
+    key: 29a758e1c171a467
+    path: data/lexicon/source-inventory/vashulenko-grade3-headwords.yaml
+    locator: topic_index.vocabulary_birds_extended.words[3]
+    source_id: vashulenko-grade3-2020-birds-vocabulary
+    source_family: textbook
+  evidence_refs:
+  - Vashulenko bird vocabulary + dictionary
+- lemma: рябчик
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: hazel grouse, hazel hen
+  sense_note: Vashulenko bird vocabulary
+  source_inventory:
+    key: 3027381825f9cfd8
+    path: data/lexicon/source-inventory/vashulenko-grade3-headwords.yaml
+    locator: topic_index.vocabulary_birds_extended.words[7]
+    source_id: vashulenko-grade3-2020-birds-vocabulary
+    source_family: textbook
+  evidence_refs:
+  - Vashulenko bird vocabulary + dictionary
