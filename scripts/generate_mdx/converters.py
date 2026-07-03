@@ -345,7 +345,7 @@ def convert_folk_content_blocks(content: str) -> str:
             "<HighCultureBridge"
             f"{title_prop}\n"
             f"  nodes={{JSON.parse(`{dump_json_for_jsx(clean_nodes)}`)}}{note_prop}\n"
-            "/>"
+            "/>\n\n"
         )
 
     return _FOLK_CONTENT_BLOCK_RE.sub(replace, content)
