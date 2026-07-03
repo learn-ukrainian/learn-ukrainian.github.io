@@ -10,9 +10,10 @@ The committed inventory seeds are:
 - `data/lexicon/source-inventory/private-teacher-lesson-vocabulary-seed.yaml`
 - `data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-39-58.yaml`
 - `data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-59-78.yaml`
+- `data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-79-98.yaml`
 
-Current committed coverage is 84 reviewed headwords from explicit local
-vocabulary table rows 1-78. The source family is `teacher_lesson`, and the
+Current committed coverage is 105 reviewed headwords from explicit local
+vocabulary table rows 1-98. The source family is `teacher_lesson`, and the
 source titles, source ids, locators, and context are intentionally privacy-safe.
 The inventories do not commit raw notes, transcripts, prompts, document paths,
 or teacher-identifying names.
