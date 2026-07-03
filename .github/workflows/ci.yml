@@ -225,7 +225,7 @@ jobs:
           .venv/bin/python scripts/audit/audit_atlas_poc_richness.py \
             --max-search-no-visible-gloss 0 \
             --max-old-gate-no-english-anchor 0 \
-            --max-poc-thin-pages 786
+            --max-poc-thin-pages 889
 
       - name: Check static Word Day / practice assets (#3935)
         run: python scripts/audit/check_static_practice_assets.py

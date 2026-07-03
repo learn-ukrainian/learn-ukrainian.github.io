@@ -1,0 +1,80 @@
+- lemma: коломийка
+  translation: kolomyika; short Ukrainian song-dance stanza
+  pos: noun
+  usage: Коломийка поєднує коротку співану форму з танцювальним відблиском.
+- lemma: коломийковий вірш
+  translation: kolomyika meter
+  pos: noun phrase
+  usage: Коломийковий вірш має чотирнадцять складів і паузу після восьмого.
+- lemma: цезура
+  translation: caesura; rhythmic pause
+  pos: noun
+  usage: Цезура після восьмого складу допомагає почути поворот думки.
+- lemma: дворядкова строфа
+  translation: two-line stanza
+  pos: noun phrase
+  usage: Дворядкова строфа змушує коломийку говорити стисло.
+- lemma: жіноча рима
+  translation: feminine rhyme
+  pos: noun phrase
+  usage: Жіноча рима м'яко, але виразно замикає коломийковий рядок.
+- lemma: приспівка
+  translation: short refrain-like song
+  pos: noun
+  usage: Приспівка до танцю може з часом жити як самостійна строфа.
+- lemma: в'язанка
+  translation: linked cycle; medley
+  pos: noun
+  usage: В'язанка поєднує окремі коломийкові строфи асоціативним рухом.
+- lemma: коломийкар
+  translation: kolomyika maker or performer
+  pos: noun
+  usage: Коломийкар добирає, складає або нанизує строфи під ситуацію.
+- lemma: співанка
+  translation: song; sung piece
+  pos: noun
+  usage: Співанка у прозі Коцюбинського працює як пам'ять голосу.
+- lemma: залицяння
+  translation: courtship
+  pos: noun
+  usage: Залицяння в коломийці часто говорить натяком і дотепом.
+- lemma: вечорниці
+  translation: evening youth gathering
+  pos: noun
+  usage: На вечорницях коломийка може звучати як діалог між голосами.
+- lemma: рекрутчина
+  translation: military conscription burden
+  pos: noun
+  usage: Рекрутчина належить до соціальних тем коломийкового корпусу.
+- lemma: панський гніт
+  translation: oppression by landlords
+  pos: noun phrase
+  usage: Панський гніт може ставати об'єктом короткої сатиричної строфи.
+- lemma: дотеп
+  translation: wit; pointed joke
+  pos: noun
+  usage: Дотеп у коломийці часто має соціальний нерв.
+- lemma: джерельне походження
+  translation: source origin
+  pos: noun phrase
+  usage: Джерельне походження показує, звідки походить текст і як його можна цитувати.
+- lemma: джерельна межа
+  translation: source boundary
+  pos: noun phrase
+  usage: Джерельна межа відрізняє народний запис від літературного свідка.
+- lemma: екзотизація
+  translation: exoticization
+  pos: noun
+  usage: Екзотизація зменшує регіональну форму до барвистої картинки.
+- lemma: стилізація
+  translation: stylization
+  pos: noun
+  usage: Стилізація може наслідувати ритм, але не є народним джерелом.
+- lemma: побутування
+  translation: circulation; lived practice
+  pos: noun
+  usage: Побутування коломийки охоплює танець, спів, сцену і книжний запис.
+- lemma: усна словесність
+  translation: oral verbal art
+  pos: noun phrase
+  usage: Усна словесність живить письмову українську літературу.

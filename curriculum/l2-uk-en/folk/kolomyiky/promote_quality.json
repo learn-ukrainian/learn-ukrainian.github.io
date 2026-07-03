@@ -1,0 +1,70 @@
+{
+  "assembled_mdx_sha256": "35a0f254e64e6a59bb44bb22d7cda416e9670513ba8b686c381d2e61c97c4151",
+  "content_hash": {
+    "algorithm": "sha256",
+    "basis": "lesson_sources_v2",
+    "digest": "a5e87e317658710e4e54d7f2d2f986a649a39efc5d27fed6870e2f1095a3dda9",
+    "files": [
+      {
+        "path": "curriculum/l2-uk-en/plans/folk/kolomyiky.yaml",
+        "sha256": "f24bdd8a9f2a92d92ac7a7cdf62e3c83e63192a2784a9a595541ac5385ab7b80"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/kolomyiky/module.md",
+        "sha256": "4e29236137a5d8944776f74ef700e4928f5ab9e7f7656dfa43e13728017997f7"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/kolomyiky/activities.yaml",
+        "sha256": "49d0a462a7ae45cbccc28a7c5dc162ddeb831ffb7c8fcf10cc50daeedf7abc26"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/kolomyiky/vocabulary.yaml",
+        "sha256": "d23d08172890b9edb45a87dd10e36ccf52ca980ad420e3da420534bbc132a654"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/kolomyiky/resources.yaml",
+        "sha256": "4ea714355c020f3ca1da204c41f5f2eb771a6de4de2cbfdfcd9ec16e8b939806"
+      }
+    ]
+  },
+  "evidence": {
+    "christian_framing": "Kolomyiky are framed as Ukrainian song, dance, short-form lyric, and social wit without occult, primitive-superstition, or hostile ethnographic register.",
+    "decolonization": "The module avoids exoticizing the Carpathian center, separates kolomyika from generic smallness, and treats oral tradition as a source of form rather than a lower cultural layer.",
+    "provenance": "No hosted reading page is fabricated; corpus-verified witness excerpts are bounded as scholarly/literary witnesses, with linked resources kept distinct from primary hosted text.",
+    "review": "Claude Opus 4.8 review cleared substantive FOLK source/form/provenance risks; its HighCultureBridge render-spacing finding was fixed in the generator and regenerated.",
+    "source_hygiene": "Direct quality gate, activity/vocabulary validation, MDX validation, and render-spacing regeneration pass for FOLK M17 before final PR gates."
+  },
+  "floors": {
+    "beauty": 8.5,
+    "decolonization": 9.0,
+    "engagement": 8.5,
+    "naturalness": 8.5,
+    "pedagogical": 8.5,
+    "tone": 8.5
+  },
+  "profile": "folk_promote_v1",
+  "review_artifact": null,
+  "reviewer": {
+    "agent": "claude",
+    "family": "anthropic",
+    "model": "claude-opus-4-8"
+  },
+  "schema_version": 1,
+  "scored_at": "2026-07-03T00:25:09Z",
+  "scores": {
+    "beauty": 8.8,
+    "decolonization": 9.2,
+    "engagement": 8.7,
+    "naturalness": 8.9,
+    "pedagogical": 8.9,
+    "tone": 9.0
+  },
+  "slug": "kolomyiky",
+  "track": "folk",
+  "verdict": "PASS",
+  "writer": {
+    "agent": "codex",
+    "family": "openai",
+    "model": "gpt-5"
+  }
+}
