@@ -8,6 +8,7 @@ from typing import Any
 import yaml
 
 from scripts.audit.source_inventory_intake import read_source_inventory
+from scripts.audit.source_inventory_review_decisions import source_inventory_key
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 BOLSHAKOVA_INVENTORY = (
@@ -20,6 +21,10 @@ VASHULENKO_FAMILY_NUMERALS_INVENTORY = (
     PROJECT_ROOT / "data/lexicon/source-inventory/vashulenko-grade3-family-numerals.yaml"
 )
 VASHULENKO_MAP = PROJECT_ROOT / "docs/l2-uk-direct/textbook-map.yaml"
+VASHULENKO_FAMILY_NUMERALS_LEDGER = (
+    PROJECT_ROOT
+    / "data/lexicon/source-inventory-review-decisions/2026-07-03-fifth-approved-textbook-ledger-batch.yaml"
+)
 BOLSHAKOVA_NOTES = (
     PROJECT_ROOT / "docs/l2-uk-direct/textbook-reading-notes/bolshakova-bukvar-mapping.md"
 )
@@ -81,6 +86,50 @@ def test_vashulenko_inventory_locators_resolve_to_tracked_source_map() -> None:
     for record in records:
         assert record.source_path == str(VASHULENKO_MAP.relative_to(PROJECT_ROOT))
         assert _resolve_locator(textbook_map, record.source_locator) == record.lemma
+
+
+def test_vashulenko_family_numerals_approval_ledger_matches_inventory() -> None:
+    records = {
+        (record.lemma, record.source_locator): record
+        for record in read_source_inventory(
+            VASHULENKO_FAMILY_NUMERALS_INVENTORY,
+            project_root=PROJECT_ROOT,
+        )
+    }
+    ledger = yaml.safe_load(VASHULENKO_FAMILY_NUMERALS_LEDGER.read_text(encoding="utf-8"))
+    rows = ledger["decisions"]
+
+    assert ledger["production_outputs_updated"] == []
+    assert ledger["source_queue"] == {
+        "workflow": "source_inventory_publish_review_queue.v1",
+        "generated_from_pr": 4202,
+        "total_queue_rows": 34,
+        "approved_in_queue": 34,
+        "promotion_batch_size": 34,
+    }
+    assert len(rows) == 34
+    assert Counter(row["source_inventory"]["source_id"] for row in rows) == {
+        "vashulenko-grade3-2020-family-vocabulary": 9,
+        "vashulenko-grade3-2020-numerals-vocabulary": 25,
+    }
+
+    for row in rows:
+        source_inventory = row["source_inventory"]
+        record = records[(row["lemma"], source_inventory["locator"])]
+
+        assert row["decision"] == "approve_for_publish"
+        assert row["approved_pos"] == record.pos
+        assert row["approved_gloss"] == record.gloss
+        assert source_inventory["path"] == str(
+            VASHULENKO_FAMILY_NUMERALS_INVENTORY.relative_to(PROJECT_ROOT)
+        )
+        assert source_inventory["source_family"] == "textbook"
+        assert source_inventory["source_id"] == record.source_id
+        assert source_inventory["key"] == source_inventory_key(
+            lemma=row["lemma"],
+            inventory_path=source_inventory["path"],
+            locator=source_inventory["locator"],
+        )
 
 
 def test_bolshakova_inventory_rows_are_backed_by_tracked_notes() -> None:

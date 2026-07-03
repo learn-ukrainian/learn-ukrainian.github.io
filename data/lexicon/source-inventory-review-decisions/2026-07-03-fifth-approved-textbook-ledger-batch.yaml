@@ -1,0 +1,456 @@
+version: 1
+kind: atlas_source_inventory_review_decisions
+batch_id: textbook-fifth-approved-ledger-batch-2026-07-03
+batch_label: fifth-approved-textbook-ledger-batch
+reviewer: content-review
+reviewed_at: '2026-07-03'
+source_queue:
+  workflow: source_inventory_publish_review_queue.v1
+  generated_from_pr: 4202
+  total_queue_rows: 34
+  approved_in_queue: 34
+  promotion_batch_size: 34
+production_outputs_updated: []
+decisions:
+- lemma: мама
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: mother
+  sense_note: Vashulenko family vocabulary
+  source_inventory:
+    key: 8da9ccd28a2230db
+    path: data/lexicon/source-inventory/vashulenko-grade3-family-numerals.yaml
+    locator: topic_index.vocabulary_family.words[0]
+    source_id: vashulenko-grade3-2020-family-vocabulary
+    source_family: textbook
+  evidence_refs:
+  - Vashulenko family vocabulary + dictionary
+- lemma: тато
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: father; dad
+  sense_note: Vashulenko family vocabulary
+  source_inventory:
+    key: 62a6083102e94078
+    path: data/lexicon/source-inventory/vashulenko-grade3-family-numerals.yaml
+    locator: topic_index.vocabulary_family.words[1]
+    source_id: vashulenko-grade3-2020-family-vocabulary
+    source_family: textbook
+  evidence_refs:
+  - Vashulenko family vocabulary + dictionary
+- lemma: баба
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: grandmother; older woman
+  sense_note: Vashulenko family vocabulary
+  source_inventory:
+    key: 5d295d951a3eca4b
+    path: data/lexicon/source-inventory/vashulenko-grade3-family-numerals.yaml
+    locator: topic_index.vocabulary_family.words[2]
+    source_id: vashulenko-grade3-2020-family-vocabulary
+    source_family: textbook
+  evidence_refs:
+  - Vashulenko family vocabulary + dictionary
+- lemma: дід
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: grandfather; old man
+  sense_note: Vashulenko family vocabulary
+  source_inventory:
+    key: 6550dd19b4130f94
+    path: data/lexicon/source-inventory/vashulenko-grade3-family-numerals.yaml
+    locator: topic_index.vocabulary_family.words[3]
+    source_id: vashulenko-grade3-2020-family-vocabulary
+    source_family: textbook
+  evidence_refs:
+  - Vashulenko family vocabulary + dictionary
+- lemma: сестра
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: sister
+  sense_note: Vashulenko family vocabulary
+  source_inventory:
+    key: 4b6a65f37b268078
+    path: data/lexicon/source-inventory/vashulenko-grade3-family-numerals.yaml
+    locator: topic_index.vocabulary_family.words[4]
+    source_id: vashulenko-grade3-2020-family-vocabulary
+    source_family: textbook
+  evidence_refs:
+  - Vashulenko family vocabulary + dictionary
+- lemma: брат
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: brother
+  sense_note: Vashulenko family vocabulary
+  source_inventory:
+    key: 712855a7b30d6f0c
+    path: data/lexicon/source-inventory/vashulenko-grade3-family-numerals.yaml
+    locator: topic_index.vocabulary_family.words[5]
+    source_id: vashulenko-grade3-2020-family-vocabulary
+    source_family: textbook
+  evidence_refs:
+  - Vashulenko family vocabulary + dictionary
+- lemma: дитина
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: child
+  sense_note: Vashulenko family vocabulary
+  source_inventory:
+    key: 36afd0faeb590f15
+    path: data/lexicon/source-inventory/vashulenko-grade3-family-numerals.yaml
+    locator: topic_index.vocabulary_family.words[6]
+    source_id: vashulenko-grade3-2020-family-vocabulary
+    source_family: textbook
+  evidence_refs:
+  - Vashulenko family vocabulary + dictionary
+- lemma: дружина
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: wife
+  sense_note: Vashulenko family vocabulary
+  source_inventory:
+    key: 9982fc0dc03c277b
+    path: data/lexicon/source-inventory/vashulenko-grade3-family-numerals.yaml
+    locator: topic_index.vocabulary_family.words[7]
+    source_id: vashulenko-grade3-2020-family-vocabulary
+    source_family: textbook
+  evidence_refs:
+  - Vashulenko family vocabulary + dictionary
+- lemma: чоловік
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: husband; man
+  sense_note: Vashulenko family vocabulary
+  source_inventory:
+    key: 9619eaf966da5c2e
+    path: data/lexicon/source-inventory/vashulenko-grade3-family-numerals.yaml
+    locator: topic_index.vocabulary_family.words[8]
+    source_id: vashulenko-grade3-2020-family-vocabulary
+    source_family: textbook
+  evidence_refs:
+  - Vashulenko family vocabulary + dictionary
+- lemma: один
+  decision: approve_for_publish
+  approved_pos: numeral
+  approved_gloss: one
+  sense_note: Vashulenko numeral vocabulary
+  source_inventory:
+    key: 769cf73ae794971f
+    path: data/lexicon/source-inventory/vashulenko-grade3-family-numerals.yaml
+    locator: topic_index.vocabulary_numerals.words_1_20[0]
+    source_id: vashulenko-grade3-2020-numerals-vocabulary
+    source_family: textbook
+  evidence_refs:
+  - Vashulenko numeral vocabulary + dictionary
+- lemma: два
+  decision: approve_for_publish
+  approved_pos: numeral
+  approved_gloss: two
+  sense_note: Vashulenko numeral vocabulary
+  source_inventory:
+    key: 1196cfa63db84394
+    path: data/lexicon/source-inventory/vashulenko-grade3-family-numerals.yaml
+    locator: topic_index.vocabulary_numerals.words_1_20[1]
+    source_id: vashulenko-grade3-2020-numerals-vocabulary
+    source_family: textbook
+  evidence_refs:
+  - Vashulenko numeral vocabulary + dictionary
+- lemma: три
+  decision: approve_for_publish
+  approved_pos: numeral
+  approved_gloss: three
+  sense_note: Vashulenko numeral vocabulary
+  source_inventory:
+    key: c5f069c296d34174
+    path: data/lexicon/source-inventory/vashulenko-grade3-family-numerals.yaml
+    locator: topic_index.vocabulary_numerals.words_1_20[2]
+    source_id: vashulenko-grade3-2020-numerals-vocabulary
+    source_family: textbook
+  evidence_refs:
+  - Vashulenko numeral vocabulary + dictionary
+- lemma: чотири
+  decision: approve_for_publish
+  approved_pos: numeral
+  approved_gloss: four
+  sense_note: Vashulenko numeral vocabulary
+  source_inventory:
+    key: 9ae2eae1a447a213
+    path: data/lexicon/source-inventory/vashulenko-grade3-family-numerals.yaml
+    locator: topic_index.vocabulary_numerals.words_1_20[3]
+    source_id: vashulenko-grade3-2020-numerals-vocabulary
+    source_family: textbook
+  evidence_refs:
+  - Vashulenko numeral vocabulary + dictionary
+- lemma: п'ять
+  decision: approve_for_publish
+  approved_pos: numeral
+  approved_gloss: five
+  sense_note: Vashulenko numeral vocabulary
+  source_inventory:
+    key: 5635bd1edf3591f6
+    path: data/lexicon/source-inventory/vashulenko-grade3-family-numerals.yaml
+    locator: topic_index.vocabulary_numerals.words_1_20[4]
+    source_id: vashulenko-grade3-2020-numerals-vocabulary
+    source_family: textbook
+  evidence_refs:
+  - Vashulenko numeral vocabulary + dictionary
+- lemma: шість
+  decision: approve_for_publish
+  approved_pos: numeral
+  approved_gloss: six
+  sense_note: Vashulenko numeral vocabulary
+  source_inventory:
+    key: b26094e67eeb76fd
+    path: data/lexicon/source-inventory/vashulenko-grade3-family-numerals.yaml
+    locator: topic_index.vocabulary_numerals.words_1_20[5]
+    source_id: vashulenko-grade3-2020-numerals-vocabulary
+    source_family: textbook
+  evidence_refs:
+  - Vashulenko numeral vocabulary + dictionary
+- lemma: сім
+  decision: approve_for_publish
+  approved_pos: numeral
+  approved_gloss: seven
+  sense_note: Vashulenko numeral vocabulary
+  source_inventory:
+    key: 5bf622fcf7b17b07
+    path: data/lexicon/source-inventory/vashulenko-grade3-family-numerals.yaml
+    locator: topic_index.vocabulary_numerals.words_1_20[6]
+    source_id: vashulenko-grade3-2020-numerals-vocabulary
+    source_family: textbook
+  evidence_refs:
+  - Vashulenko numeral vocabulary + dictionary
+- lemma: вісім
+  decision: approve_for_publish
+  approved_pos: numeral
+  approved_gloss: eight
+  sense_note: Vashulenko numeral vocabulary
+  source_inventory:
+    key: 4b835f17902150d8
+    path: data/lexicon/source-inventory/vashulenko-grade3-family-numerals.yaml
+    locator: topic_index.vocabulary_numerals.words_1_20[7]
+    source_id: vashulenko-grade3-2020-numerals-vocabulary
+    source_family: textbook
+  evidence_refs:
+  - Vashulenko numeral vocabulary + dictionary
+- lemma: дев'ять
+  decision: approve_for_publish
+  approved_pos: numeral
+  approved_gloss: nine
+  sense_note: Vashulenko numeral vocabulary
+  source_inventory:
+    key: e3835ff847a7d135
+    path: data/lexicon/source-inventory/vashulenko-grade3-family-numerals.yaml
+    locator: topic_index.vocabulary_numerals.words_1_20[8]
+    source_id: vashulenko-grade3-2020-numerals-vocabulary
+    source_family: textbook
+  evidence_refs:
+  - Vashulenko numeral vocabulary + dictionary
+- lemma: десять
+  decision: approve_for_publish
+  approved_pos: numeral
+  approved_gloss: ten
+  sense_note: Vashulenko numeral vocabulary
+  source_inventory:
+    key: 95a7c6993ec9fd19
+    path: data/lexicon/source-inventory/vashulenko-grade3-family-numerals.yaml
+    locator: topic_index.vocabulary_numerals.words_1_20[9]
+    source_id: vashulenko-grade3-2020-numerals-vocabulary
+    source_family: textbook
+  evidence_refs:
+  - Vashulenko numeral vocabulary + dictionary
+- lemma: одинадцять
+  decision: approve_for_publish
+  approved_pos: numeral
+  approved_gloss: eleven
+  sense_note: Vashulenko numeral vocabulary
+  source_inventory:
+    key: 2166c558e27a7a22
+    path: data/lexicon/source-inventory/vashulenko-grade3-family-numerals.yaml
+    locator: topic_index.vocabulary_numerals.words_1_20[10]
+    source_id: vashulenko-grade3-2020-numerals-vocabulary
+    source_family: textbook
+  evidence_refs:
+  - Vashulenko numeral vocabulary + dictionary
+- lemma: дванадцять
+  decision: approve_for_publish
+  approved_pos: numeral
+  approved_gloss: twelve
+  sense_note: Vashulenko numeral vocabulary
+  source_inventory:
+    key: 80a9b8fe380895e8
+    path: data/lexicon/source-inventory/vashulenko-grade3-family-numerals.yaml
+    locator: topic_index.vocabulary_numerals.words_1_20[11]
+    source_id: vashulenko-grade3-2020-numerals-vocabulary
+    source_family: textbook
+  evidence_refs:
+  - Vashulenko numeral vocabulary + dictionary
+- lemma: тринадцять
+  decision: approve_for_publish
+  approved_pos: numeral
+  approved_gloss: thirteen
+  sense_note: Vashulenko numeral vocabulary
+  source_inventory:
+    key: 916442452bc23c97
+    path: data/lexicon/source-inventory/vashulenko-grade3-family-numerals.yaml
+    locator: topic_index.vocabulary_numerals.words_1_20[12]
+    source_id: vashulenko-grade3-2020-numerals-vocabulary
+    source_family: textbook
+  evidence_refs:
+  - Vashulenko numeral vocabulary + dictionary
+- lemma: чотирнадцять
+  decision: approve_for_publish
+  approved_pos: numeral
+  approved_gloss: fourteen
+  sense_note: Vashulenko numeral vocabulary
+  source_inventory:
+    key: 7329cdce76d2bd2a
+    path: data/lexicon/source-inventory/vashulenko-grade3-family-numerals.yaml
+    locator: topic_index.vocabulary_numerals.words_1_20[13]
+    source_id: vashulenko-grade3-2020-numerals-vocabulary
+    source_family: textbook
+  evidence_refs:
+  - Vashulenko numeral vocabulary + dictionary
+- lemma: п'ятнадцять
+  decision: approve_for_publish
+  approved_pos: numeral
+  approved_gloss: fifteen
+  sense_note: Vashulenko numeral vocabulary
+  source_inventory:
+    key: bbf37922ea8bb5d6
+    path: data/lexicon/source-inventory/vashulenko-grade3-family-numerals.yaml
+    locator: topic_index.vocabulary_numerals.words_1_20[14]
+    source_id: vashulenko-grade3-2020-numerals-vocabulary
+    source_family: textbook
+  evidence_refs:
+  - Vashulenko numeral vocabulary + dictionary
+- lemma: шістнадцять
+  decision: approve_for_publish
+  approved_pos: numeral
+  approved_gloss: sixteen
+  sense_note: Vashulenko numeral vocabulary
+  source_inventory:
+    key: 71cc33f23ca52148
+    path: data/lexicon/source-inventory/vashulenko-grade3-family-numerals.yaml
+    locator: topic_index.vocabulary_numerals.words_1_20[15]
+    source_id: vashulenko-grade3-2020-numerals-vocabulary
+    source_family: textbook
+  evidence_refs:
+  - Vashulenko numeral vocabulary + dictionary
+- lemma: сімнадцять
+  decision: approve_for_publish
+  approved_pos: numeral
+  approved_gloss: seventeen
+  sense_note: Vashulenko numeral vocabulary
+  source_inventory:
+    key: 60b8d1e86075f171
+    path: data/lexicon/source-inventory/vashulenko-grade3-family-numerals.yaml
+    locator: topic_index.vocabulary_numerals.words_1_20[16]
+    source_id: vashulenko-grade3-2020-numerals-vocabulary
+    source_family: textbook
+  evidence_refs:
+  - Vashulenko numeral vocabulary + dictionary
+- lemma: вісімнадцять
+  decision: approve_for_publish
+  approved_pos: numeral
+  approved_gloss: eighteen
+  sense_note: Vashulenko numeral vocabulary
+  source_inventory:
+    key: bfd4650e6269119b
+    path: data/lexicon/source-inventory/vashulenko-grade3-family-numerals.yaml
+    locator: topic_index.vocabulary_numerals.words_1_20[17]
+    source_id: vashulenko-grade3-2020-numerals-vocabulary
+    source_family: textbook
+  evidence_refs:
+  - Vashulenko numeral vocabulary + dictionary
+- lemma: дев'ятнадцять
+  decision: approve_for_publish
+  approved_pos: numeral
+  approved_gloss: nineteen
+  sense_note: Vashulenko numeral vocabulary
+  source_inventory:
+    key: 5d05660de09748ef
+    path: data/lexicon/source-inventory/vashulenko-grade3-family-numerals.yaml
+    locator: topic_index.vocabulary_numerals.words_1_20[18]
+    source_id: vashulenko-grade3-2020-numerals-vocabulary
+    source_family: textbook
+  evidence_refs:
+  - Vashulenko numeral vocabulary + dictionary
+- lemma: двадцять
+  decision: approve_for_publish
+  approved_pos: numeral
+  approved_gloss: twenty
+  sense_note: Vashulenko numeral vocabulary
+  source_inventory:
+    key: e31c7f1e900d1141
+    path: data/lexicon/source-inventory/vashulenko-grade3-family-numerals.yaml
+    locator: topic_index.vocabulary_numerals.words_1_20[19]
+    source_id: vashulenko-grade3-2020-numerals-vocabulary
+    source_family: textbook
+  evidence_refs:
+  - Vashulenko numeral vocabulary + dictionary
+- lemma: тридцять
+  decision: approve_for_publish
+  approved_pos: numeral
+  approved_gloss: thirty
+  sense_note: Vashulenko numeral vocabulary
+  source_inventory:
+    key: af675c82f655447e
+    path: data/lexicon/source-inventory/vashulenko-grade3-family-numerals.yaml
+    locator: topic_index.vocabulary_numerals.words_tens[0]
+    source_id: vashulenko-grade3-2020-numerals-vocabulary
+    source_family: textbook
+  evidence_refs:
+  - Vashulenko numeral vocabulary + dictionary
+- lemma: п'ятдесят
+  decision: approve_for_publish
+  approved_pos: numeral
+  approved_gloss: fifty
+  sense_note: Vashulenko numeral vocabulary
+  source_inventory:
+    key: 85bcb851baedcbc7
+    path: data/lexicon/source-inventory/vashulenko-grade3-family-numerals.yaml
+    locator: topic_index.vocabulary_numerals.words_tens[1]
+    source_id: vashulenko-grade3-2020-numerals-vocabulary
+    source_family: textbook
+  evidence_refs:
+  - Vashulenko numeral vocabulary + dictionary
+- lemma: шістдесят
+  decision: approve_for_publish
+  approved_pos: numeral
+  approved_gloss: sixty
+  sense_note: Vashulenko numeral vocabulary
+  source_inventory:
+    key: 87839b266b4f7026
+    path: data/lexicon/source-inventory/vashulenko-grade3-family-numerals.yaml
+    locator: topic_index.vocabulary_numerals.words_tens[2]
+    source_id: vashulenko-grade3-2020-numerals-vocabulary
+    source_family: textbook
+  evidence_refs:
+  - Vashulenko numeral vocabulary + dictionary
+- lemma: сімдесят
+  decision: approve_for_publish
+  approved_pos: numeral
+  approved_gloss: seventy
+  sense_note: Vashulenko numeral vocabulary
+  source_inventory:
+    key: a658a98e0e4c1908
+    path: data/lexicon/source-inventory/vashulenko-grade3-family-numerals.yaml
+    locator: topic_index.vocabulary_numerals.words_tens[3]
+    source_id: vashulenko-grade3-2020-numerals-vocabulary
+    source_family: textbook
+  evidence_refs:
+  - Vashulenko numeral vocabulary + dictionary
+- lemma: вісімдесят
+  decision: approve_for_publish
+  approved_pos: numeral
+  approved_gloss: eighty
+  sense_note: Vashulenko numeral vocabulary
+  source_inventory:
+    key: 8e48f9a5ffabcc1a
+    path: data/lexicon/source-inventory/vashulenko-grade3-family-numerals.yaml
+    locator: topic_index.vocabulary_numerals.words_tens[4]
+    source_id: vashulenko-grade3-2020-numerals-vocabulary
+    source_family: textbook
+  evidence_refs:
+  - Vashulenko numeral vocabulary + dictionary
