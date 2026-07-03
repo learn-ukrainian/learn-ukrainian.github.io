@@ -122,7 +122,7 @@ Context: the Second Little Russian Collegium entry uses this term while summariz
 - **Academy of Sciences:** Academy presidency shows status and court education networks; it should not distract from BIO's core Hetmanate question.
 - **Catherine II's abolition:** do not present resignation as freely voluntary. Also do not present it as only one woman's whim: the broader imperial centralizing logic and the Second Little Russian Collegium matter.
 - **Terminology:** use `Гетьманщина`, `Військо Запорозьке`, and `Україна` with historical context. Avoid normalizing `Малоросія` except as imperial administrative terminology under discussion.
-- **Later hetmanate revivals:** out of scope. Do not use Kyrylo as a bridge into the 1918 Hetmanate in this BIO Cossack dossier.
+- **Later hetmanate revivals:** out of scope. Do not use Kyrylo as a bridge into unrelated modern-statehood material in this BIO Cossack dossier.
 
 ## 7. Cross-track links
 
@@ -138,7 +138,6 @@ Context: the Second Little Russian Collegium entry uses this term while summariz
   - `curriculum/l2-uk-en/plans/bio/hryhoriy-skovoroda.yaml` — same late-Hetmanate cultural world, but different social/intellectual path.
 - **Existing BIO dossiers (VERIFIED present; not curriculum plan paths):**
   - `docs/research/bio/bohdan-khmelnytskyy.md`, `docs/research/bio/ivan-vyhovskyi.md`, `docs/research/bio/ivan-briukhovetskyi.md`, `docs/research/bio/petro-doroshenko.md`, `docs/research/bio/yakym-somko.md`, `docs/research/bio/yurii-khmelnytskyi.md`, `docs/research/bio/ivan-mazepa.md`, `docs/research/bio/pylyp-orlyk.md`, `docs/research/bio/danylo-apostol.md`, `docs/research/bio/pavlo-polubotok.md`, `docs/research/bio/petro-kalnyshevskyy.md`, `docs/research/bio/hryhoriy-skovoroda.md` — verified related Cossack/Hetmanate dossiers.
-  - No existing Ivan Skoropadskyi BIO dossier or BIO plan was found with `rg --files` on 2026-07-03.
 - **Existing HIST/ISTORIO/RUTH plans (VERIFIED present):**
   - `curriculum/l2-uk-en/plans/hist/danylo-apostol.yaml` — direct HIST module already pairing Apostol and Rozumovskyi as survival strategies.
   - `curriculum/l2-uk-en/plans/hist/kinets-hetmanshchyny.yaml` — abolition of hetmancy, Second Little Russian Collegium, Sich destruction, serfdom, and incorporation.
@@ -165,7 +164,7 @@ Context: the Second Little Russian Collegium entry uses this term while summariz
 - **Aliases (track these for `aliases:` YAML field):** Кирило Розумовський; граф Кирило Розумовський; Kyrylo Rozumovskyi; Kyrylo Rozumovsky; Rozumovs'kyj, Kyrylo; Count Cyril Razoumowsky / Razoumovsky in older French/English art or family bibliography.
 - **Source/title variants to track carefully:** `останній гетьман України`; `останній гетьман Гетьманщини`; `гетьман Війська Запорозького`; `президент Петербурзької академії наук`; `граф Російської імперії`; `сенатор`; `генерал-фельдмаршал`.
 - **Forbidden forms (Russian-imperial / flattening forms to flag in body text):** `Кирилл Разумовский`; `Kirill Razumovsky` as normalized English body text; "Russian statesman" as the lead identity; "Little Russian noble" as normalized identity; "voluntary abdication" without coercion/pretext context; "last ruler" framing that turns BIO into a generic ruler chronology.
-- **Scope warning:** keep this dossier on the eighteenth-century Hetmanate and its abolition. Do not add 1918 Hetmanate material, Polish kings, or all-rulers chronology.
+- **Scope warning:** keep this dossier on the eighteenth-century Hetmanate and its abolition. Do not add later hetmanate revival material, unrelated ruler lists, or all-rulers chronology.
 
 ## 9. Image candidates
 
@@ -228,7 +227,7 @@ Context: the Second Little Russian Collegium entry uses this term while summariz
 - [x] The 1764 resignation/abolition is not called voluntary without coercion/pretext context.
 - [x] No Russian-imperial transliterations in body text except variant/forbidden forms in §8 and source titles.
 - [x] Modern Ukrainian place/institution naming used with historical context: Лемеші, Глухів, Батурин, Київ, Гетьманщина, Військо Запорозьке, Запорозька Січ, Лівобережна Україна.
-- [x] No out-of-scope 1918 Hetmanate material, Polish-king coverage, or all-rulers chronology added.
+- [x] No out-of-scope later hetmanate revival material, unrelated ruler lists, or all-rulers chronology added.
 
 ## Validation checklist
 
