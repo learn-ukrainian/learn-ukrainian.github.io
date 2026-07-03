@@ -93,8 +93,7 @@ enrichment lacks a visible English translation.
 
 The private teacher-lesson seeds contribute 147 reviewed `teacher_lesson`
 headwords from an explicit local vocabulary table, with approval ledgers now
-covering rows 1-118. Rows 119-138 are seeded but not yet approved. Their
-committed rows are derived metadata only: no raw
+covering rows 1-138. Their committed rows are derived metadata only: no raw
 private lesson material, private document paths, or teacher-identifying labels
 should appear in the inventory.
 

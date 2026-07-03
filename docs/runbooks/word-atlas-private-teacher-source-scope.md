@@ -20,10 +20,10 @@ source titles, source ids, locators, and context are intentionally privacy-safe.
 The inventories do not commit raw notes, transcripts, prompts, document paths,
 or teacher-identifying names.
 
-Current approval-ledger coverage is 125 reviewed headwords from rows 1-118.
+Current approval-ledger coverage is 147 reviewed headwords from rows 1-138.
 Live Atlas browse/search coverage is 125 neutral `teacher_lesson` provenance
-entries from rows 1-118. Rows 119-138 are seeded for later review, but remain
-out of approval ledgers and live Atlas until controlled follow-up PRs. Missing
+entries from rows 1-118. Rows 119-138 are approved for later Atlas publish, but
+remain out of live Atlas until a controlled publish PR. Missing
 `surface_admission` keeps Daily Word, Practice, and cloze frozen.
 
 ## Source Handling Rule

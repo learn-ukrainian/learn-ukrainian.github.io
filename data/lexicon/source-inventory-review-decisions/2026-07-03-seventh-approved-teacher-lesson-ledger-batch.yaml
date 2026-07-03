@@ -1,0 +1,301 @@
+---
+version: 1
+kind: atlas_source_inventory_review_decisions
+batch_id: source-inventory-seventh-approved-teacher-lesson-ledger-batch-2026-07-03
+batch_label: seventh-approved-teacher-lesson-ledger-batch
+reviewer: content-review
+reviewed_at: '2026-07-03'
+source_queue:
+  workflow: source_inventory_publish_review_queue.v1
+  generated_from_pr: 4187
+  total_queue_rows: 164
+  approved_in_queue: 22
+  promotion_batch_size: 22
+production_outputs_updated: []
+decisions:
+- lemma: втрутитися
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to intervene; perfective
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: d372ae8ee4f2174b
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-119-138.yaml
+    locator: explicit vocabulary table row 119
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-119-138
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: обдурювати
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to trick; to deceive; imperfective
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: ac56ff930fd9e77a
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-119-138.yaml
+    locator: explicit vocabulary table row 120
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-119-138
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: обдурити
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to trick; to deceive; perfective
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: b9d6d353b1220a40
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-119-138.yaml
+    locator: explicit vocabulary table row 121
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-119-138
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: обхитрити
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to outwit; to trick; perfective
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 834d588f0d88892d
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-119-138.yaml
+    locator: explicit vocabulary table row 121
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-119-138
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: ніяково
+  decision: approve_for_publish
+  approved_pos: adverb
+  approved_gloss: awkwardly
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 73cdacf9e5db10d2
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-119-138.yaml
+    locator: explicit vocabulary table row 122
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-119-138
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: крісло колісне
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: wheelchair
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: eec331c0e843270f
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-119-138.yaml
+    locator: explicit vocabulary table row 123
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-119-138
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: очне навчання
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: full-time education; in-person study
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 94b8a18a9005cc19
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-119-138.yaml
+    locator: explicit vocabulary table row 124
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-119-138
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: заочне навчання
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: correspondence education; part-time study
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 05179216738f68cd
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-119-138.yaml
+    locator: explicit vocabulary table row 125
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-119-138
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: носій мови
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: native speaker
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 66894b8932cd893e
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-119-138.yaml
+    locator: explicit vocabulary table row 126
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-119-138
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: звинувачувати
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to accuse; imperfective
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 8eedd809d8890f59
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-119-138.yaml
+    locator: explicit vocabulary table row 127
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-119-138
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: звинуватити
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to accuse; perfective
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 262fb043a33cad98
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-119-138.yaml
+    locator: explicit vocabulary table row 128
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-119-138
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: заплутаний
+  decision: approve_for_publish
+  approved_pos: adjective
+  approved_gloss: confusing; tangled
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 8fc8f84a277a8e39
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-119-138.yaml
+    locator: explicit vocabulary table row 129
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-119-138
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: вбивця
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: killer; murderer
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 97037cff1c0e8133
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-119-138.yaml
+    locator: explicit vocabulary table row 130
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-119-138
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: протяг
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: draft; draught
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 1f2bcccbe577ec0c
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-119-138.yaml
+    locator: explicit vocabulary table row 131
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-119-138
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: ДТП
+  decision: approve_for_publish
+  approved_pos: abbreviation
+  approved_gloss: road traffic accident; car accident
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 26fd1a86f84beba1
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-119-138.yaml
+    locator: explicit vocabulary table row 132
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-119-138
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: дорожньо-транспортна пригода
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: road traffic accident; car accident
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 292ed9370125aabf
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-119-138.yaml
+    locator: explicit vocabulary table row 132
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-119-138
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: вичитувати
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to lecture; to scold; imperfective
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: bad27d15e16a3929
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-119-138.yaml
+    locator: explicit vocabulary table row 133
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-119-138
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: вичитати
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to lecture; to scold; perfective
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 0c1e7cb51be77e6d
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-119-138.yaml
+    locator: explicit vocabulary table row 134
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-119-138
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: засуджувати
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to sentence; to convict; imperfective
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 3af6a78e861207d3
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-119-138.yaml
+    locator: explicit vocabulary table row 135
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-119-138
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: засудити
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to sentence; to convict; perfective
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 66b992e7d7dfa712
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-119-138.yaml
+    locator: explicit vocabulary table row 136
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-119-138
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: перепади настрою
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: mood swings
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 987e8fec1c10cb9e
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-119-138.yaml
+    locator: explicit vocabulary table row 137
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-119-138
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: підозріло
+  decision: approve_for_publish
+  approved_pos: adverb
+  approved_gloss: suspiciously
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 87e41171cba92fa9
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-119-138.yaml
+    locator: explicit vocabulary table row 138
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-119-138
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
