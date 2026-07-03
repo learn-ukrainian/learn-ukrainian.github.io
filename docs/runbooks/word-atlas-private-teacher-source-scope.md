@@ -14,17 +14,19 @@ The committed inventory seeds are:
 - `data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-99-118.yaml`
 - `data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-119-138.yaml`
 - `data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-139-158.yaml`
+- `data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-159-178.yaml`
 
-Current committed coverage is 167 reviewed headwords from explicit local
-vocabulary table rows 1-158. The source family is `teacher_lesson`, and the
+Current committed coverage is 187 source-inventory headwords from explicit
+local vocabulary table rows 1-178. The source family is `teacher_lesson`, and the
 source titles, source ids, locators, and context are intentionally privacy-safe.
 The inventories do not commit raw notes, transcripts, prompts, document paths,
 or teacher-identifying names.
 
 Current approval-ledger coverage is 167 reviewed headwords from rows 1-158.
-Live Atlas browse/search coverage is 147 neutral `teacher_lesson` provenance
-entries from rows 1-138. Rows 139-158 are approved for later publish, but
-remain out of live Atlas until a later controlled PR updates browse/search.
+Live Atlas manifest coverage is 167 neutral `teacher_lesson` provenance refs
+across 166 Atlas entries from rows 1-158; public browse/search is regenerated
+from that manifest. Rows 159-178 are source-inventory only until a later
+approval ledger and controlled publish PR updates browse/search.
 Missing `surface_admission` keeps Daily Word, Practice, and cloze frozen.
 
 ## Source Handling Rule
