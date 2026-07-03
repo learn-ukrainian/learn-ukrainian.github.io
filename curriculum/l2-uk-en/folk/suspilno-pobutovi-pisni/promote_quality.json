@@ -1,0 +1,69 @@
+{
+  "assembled_mdx_sha256": "55ab556f20d13c4e4c76a21861e02a4d946a3f082649ff28a7c81f5f90346f3e",
+  "content_hash": {
+    "algorithm": "sha256",
+    "basis": "lesson_sources_v2",
+    "digest": "9e5cb7160b15a8877ba8b600d6cfcaf8f1f3f82fcff5016c7c94d0bd202fdfc3",
+    "files": [
+      {
+        "path": "curriculum/l2-uk-en/plans/folk/suspilno-pobutovi-pisni.yaml",
+        "sha256": "cf69b9ad043b23ee50c23e6049ba351c439ebebf992ac8d8622333525b4115d9"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/suspilno-pobutovi-pisni/module.md",
+        "sha256": "8b836f929a724d7e5f65397e666f9e90fc24fc7506fbf74fbca17ae4bb318626"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/suspilno-pobutovi-pisni/activities.yaml",
+        "sha256": "8a1f5adadb25840a9af100747db7e7dcb774226e72f762cf86fb7532ead92f42"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/suspilno-pobutovi-pisni/vocabulary.yaml",
+        "sha256": "6e6407d1511d1bc789d8591ddb00e6c5c96efe49f0bc1a59aa14404d124ae2e2"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/suspilno-pobutovi-pisni/resources.yaml",
+        "sha256": "5923b1dcca3c09f793949927c568c5141339eb6fb05f299519fb7ec8a44312fe"
+      }
+    ]
+  },
+  "evidence": {
+    "decolonization": "Module distinguishes Ukrainian burlak, chumak, recruit, zhovnir, hired-labor, serf, and emigration contexts without Russian-imperial defaults or Soviet teleology.",
+    "learner_surface": "Ukrainian-facing lesson and V2 activities avoid internal module IDs, process register, and English leakage outside vocabulary glosses.",
+    "review": "Claude Opus 4.8 reviewed the FOLK module and cleared source/framing/resource risks after two text findings were fixed and MDX regenerated.",
+    "source_hygiene": "Quoted fragments were verified through repo source tooling; unverified emigration title is kept as title-level context only and not quoted."
+  },
+  "floors": {
+    "beauty": 8.5,
+    "decolonization": 9.0,
+    "engagement": 8.5,
+    "naturalness": 8.5,
+    "pedagogical": 8.5,
+    "tone": 8.5
+  },
+  "profile": "folk_promote_v1",
+  "review_artifact": null,
+  "reviewer": {
+    "agent": "claude",
+    "family": "anthropic",
+    "model": "claude-opus-4-8"
+  },
+  "schema_version": 1,
+  "scored_at": "2026-07-03T09:18:11Z",
+  "scores": {
+    "beauty": 8.8,
+    "decolonization": 9.2,
+    "engagement": 8.7,
+    "naturalness": 8.8,
+    "pedagogical": 9.0,
+    "tone": 9.0
+  },
+  "slug": "suspilno-pobutovi-pisni",
+  "track": "folk",
+  "verdict": "PASS",
+  "writer": {
+    "agent": "codex",
+    "family": "openai",
+    "model": "gpt-5"
+  }
+}
