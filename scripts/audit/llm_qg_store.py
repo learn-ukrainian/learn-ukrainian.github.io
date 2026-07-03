@@ -8,10 +8,13 @@ API and certification code a queryable source of truth.
 
 from __future__ import annotations
 
+import argparse
 import hashlib
 import json
 import os
 import sqlite3
+from collections import Counter
+from collections.abc import Mapping
 from contextlib import closing
 from dataclasses import dataclass
 from datetime import UTC, datetime
@@ -25,6 +28,9 @@ from scripts.api.resilience import connect_sqlite
 DEFAULT_DB_PATH = PROJECT_ROOT / "data" / "telemetry" / "llm_qg.db"
 DB_ENV_VAR = "LEARN_UKRAINIAN_LLM_QG_DB"
 CONTENT_FILES = ("module.md", "activities.yaml", "vocabulary.yaml", "resources.yaml")
+EVIDENCE_SCHEMA_VERSION = "llm_qg_evidence.v1"
+SUPPORTED_EVIDENCE_GATE_VERSIONS = frozenset({"v7.llm_qg.1"})
+DIMENSION_ORDER = ("pedagogical", "naturalness", "decolonization", "engagement", "tone")
 
 
 @dataclass(frozen=True, slots=True)
@@ -389,3 +395,178 @@ def current_payload_for_module(
             "source": record.source,
         },
     }
+
+
+def compact_evidence_for_record(
+    record: StoredQG,
+    *,
+    profile: str | None = None,
+) -> dict[str, Any]:
+    """Return a compact, git-friendly evidence snapshot for one stored run."""
+    aggregate = _aggregate(record.payload)
+    raw_dimensions = record.payload.get("dimensions")
+    dimensions: dict[str, dict[str, Any]] = {}
+    if isinstance(raw_dimensions, dict):
+        ordered_dims = [
+            *[dim for dim in DIMENSION_ORDER if dim in raw_dimensions],
+            *sorted(dim for dim in raw_dimensions if dim not in DIMENSION_ORDER),
+        ]
+        for dim in ordered_dims:
+            entry = raw_dimensions.get(dim)
+            if not isinstance(entry, dict):
+                continue
+            compact_entry: dict[str, Any] = {}
+            if isinstance(entry.get("score"), int | float):
+                compact_entry["score"] = float(entry["score"])
+            if isinstance(entry.get("verdict"), str):
+                compact_entry["verdict"] = entry["verdict"]
+            if compact_entry:
+                dimensions[dim] = compact_entry
+
+    findings_summary = _findings_summary(record.payload)
+    result: dict[str, Any] = {
+        "schema_version": EVIDENCE_SCHEMA_VERSION,
+        "level": record.level,
+        "slug": record.slug,
+        "content_sha": record.content_sha,
+        "gate_version": record.gate_version,
+        "prompt_hash": record.prompt_hash,
+        "provenance": {
+            "created_at": record.created_at,
+            "run_id": record.run_id,
+            "source": record.source,
+        },
+        "reviewer": {
+            "family": record.reviewer_family,
+            "model": record.reviewer_model,
+        },
+        "verdict": aggregate.get("verdict"),
+        "terminal_verdict": aggregate.get("terminal_verdict"),
+        "min_score": aggregate.get("min_score"),
+        "min_dim": aggregate.get("min_dim"),
+        "dimensions": dimensions,
+        "findings_summary": findings_summary,
+    }
+    if profile:
+        result["profile"] = profile
+    return result
+
+
+def _findings_summary(payload: Mapping[str, Any]) -> dict[str, Any]:
+    """Return count-only finding metadata safe to persist in git."""
+    by_category: Counter[str] = Counter()
+    by_severity: Counter[str] = Counter()
+    total = 0
+    raw_dimensions = payload.get("dimensions")
+    if isinstance(raw_dimensions, Mapping):
+        for entry in raw_dimensions.values():
+            if not isinstance(entry, Mapping):
+                continue
+            findings = entry.get("findings")
+            if not isinstance(findings, list):
+                continue
+            for finding in findings:
+                if not isinstance(finding, Mapping):
+                    continue
+                total += 1
+                category = finding.get("category") or finding.get("issue_id") or "uncategorized"
+                severity = finding.get("severity") or "unknown"
+                by_category[str(category)] += 1
+                by_severity[str(severity)] += 1
+    return {
+        "total": total,
+        "by_category": dict(sorted(by_category.items())),
+        "by_severity": dict(sorted(by_severity.items())),
+    }
+
+
+def current_evidence_for_module(
+    level: str,
+    slug: str,
+    module_dir: Path,
+    *,
+    profile: str | None = None,
+    path: Path | None = None,
+) -> dict[str, Any] | None:
+    """Return a compact evidence snapshot for the current module hash."""
+    record = current_llm_qg_for_module(level, slug, module_dir, path=path)
+    if record is None:
+        return None
+    return compact_evidence_for_record(record, profile=profile)
+
+
+def evidence_record_is_current_for_module(
+    evidence: Mapping[str, Any],
+    module_dir: Path,
+) -> bool:
+    """Return True when a compact evidence record matches module content."""
+    return evidence.get("content_sha") == content_sha_for_module(module_dir)
+
+
+def evidence_record_passes_for_module(
+    evidence: Mapping[str, Any],
+    module_dir: Path,
+    *,
+    supported_gate_versions: set[str] | frozenset[str] = SUPPORTED_EVIDENCE_GATE_VERSIONS,
+) -> bool:
+    """Return True when evidence is current and acceptable for promotion."""
+    return (
+        evidence.get("schema_version") == EVIDENCE_SCHEMA_VERSION
+        and str(evidence.get("terminal_verdict", "")).upper() == "PASS"
+        and evidence.get("gate_version") in supported_gate_versions
+        and evidence_record_is_current_for_module(evidence, module_dir)
+    )
+
+
+def _write_json(path: Path, payload: Mapping[str, Any]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+        encoding="utf-8",
+    )
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description="Export/check compact LLM-QG evidence records.")
+    mode = parser.add_mutually_exclusive_group(required=True)
+    mode.add_argument("--emit-record", action="store_true", help="Export current DB evidence as compact JSON.")
+    mode.add_argument("--check-record", action="store_true", help="Check compact JSON content_sha against a module.")
+    parser.add_argument("--level", help="Curriculum level, e.g. b1.")
+    parser.add_argument("--slug", help="Module slug.")
+    parser.add_argument("--module-dir", type=Path, required=True, help="Module artifact directory.")
+    parser.add_argument("--profile", help="Optional curriculum profile label.")
+    parser.add_argument("--db", type=Path, help="Optional LLM-QG SQLite path.")
+    parser.add_argument("--out", type=Path, help="Output JSON path for --emit-record.")
+    parser.add_argument("--record", type=Path, help="Input JSON path for --check-record.")
+    args = parser.parse_args(argv)
+
+    if args.emit_record:
+        if not args.level or not args.slug or not args.out:
+            parser.error("--emit-record requires --level, --slug, and --out")
+        evidence = current_evidence_for_module(
+            args.level,
+            args.slug,
+            args.module_dir,
+            profile=args.profile,
+            path=args.db,
+        )
+        if evidence is None:
+            print("No current LLM-QG DB record for module content")
+            return 1
+        _write_json(args.out, evidence)
+        return 0
+
+    if not args.record:
+        parser.error("--check-record requires --record")
+    evidence = json.loads(args.record.read_text(encoding="utf-8"))
+    if not isinstance(evidence, dict) or not evidence_record_passes_for_module(
+        evidence,
+        args.module_dir,
+    ):
+        print("LLM-QG evidence record is stale or not acceptable for module content")
+        return 1
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

@@ -50,6 +50,54 @@ def test_agy_resolves_requested_global_mcp_server(
     assert diagnostics["missing_server_names"] == []
 
 
+def test_agy_resolves_current_default_config_path(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    config_dir = tmp_path / ".gemini" / "config"
+    config_path = _write_agy_mcp_config(
+        config_dir,
+        {
+            "mcpServers": {
+                "sources": {"url": "http://127.0.0.1:8766/mcp"},
+            }
+        },
+    )
+    monkeypatch.delenv("AGY_APP_DATA_DIR", raising=False)
+    monkeypatch.setenv("HOME", str(tmp_path))
+
+    tool_config, diagnostics = build_mcp_tool_config("agy", mcp_servers=["sources"])
+
+    assert tool_config == {"mcp_server_names": ["sources"]}
+    assert diagnostics["config_path"] == str(config_path.resolve())
+    assert diagnostics["resolution_status"] == "ok"
+    assert diagnostics["resolved_servers"] == ["sources"]
+
+
+def test_agy_falls_back_to_legacy_antigravity_config_path(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    config_dir = tmp_path / ".gemini" / "antigravity-cli"
+    config_path = _write_agy_mcp_config(
+        config_dir,
+        {
+            "mcpServers": {
+                "sources": {"httpUrl": "http://127.0.0.1:8766/mcp"},
+            }
+        },
+    )
+    monkeypatch.delenv("AGY_APP_DATA_DIR", raising=False)
+    monkeypatch.setenv("HOME", str(tmp_path))
+
+    tool_config, diagnostics = build_mcp_tool_config("agy", mcp_servers=["sources"])
+
+    assert tool_config == {"mcp_server_names": ["sources"]}
+    assert diagnostics["config_path"] == str(config_path.resolve())
+    assert diagnostics["resolution_status"] == "ok"
+    assert diagnostics["resolved_servers"] == ["sources"]
+
+
 def test_agy_reports_missing_requested_global_mcp_server(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,

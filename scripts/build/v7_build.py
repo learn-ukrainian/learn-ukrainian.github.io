@@ -979,6 +979,119 @@ def _normalize_writer(writer: str) -> str:
     return WRITER_ALIASES.get(writer, writer)
 
 
+_LLM_QG_GROUNDING_QUOTE_RE = re.compile(
+    r'"([^"\n]{8,500})"|'
+    r"«([^»\n]{8,500})»|"
+    r"“([^”\n]{8,500})”|"
+    r"`([^`\n]{8,500})`"
+)
+
+
+def _normalize_llm_qg_grounding_text(value: str) -> str:
+    text = str(value)
+    for marker in ("**", "__", "`", "*", "_"):
+        text = text.replace(marker, "")
+    return " ".join(text.split())
+
+
+def _strip_llm_qg_quote_markup(value: str) -> str:
+    text = _normalize_llm_qg_grounding_text(value).strip()
+    text = text.strip('"“”«»`')
+    return _normalize_llm_qg_grounding_text(text)
+
+
+def _llm_qg_quotes_from_value(value: Any) -> list[str]:
+    quotes: list[str] = []
+    if isinstance(value, list):
+        for item in value:
+            quotes.extend(_llm_qg_quotes_from_value(item))
+        return quotes
+    if not isinstance(value, str):
+        return quotes
+
+    text = value.strip()
+    if not text:
+        return quotes
+    for match in _LLM_QG_GROUNDING_QUOTE_RE.finditer(text):
+        quote = next((group for group in match.groups() if group), "")
+        quote = _strip_llm_qg_quote_markup(quote)
+        if len(quote) >= 8:
+            quotes.append(quote)
+    if not quotes:
+        quote = _strip_llm_qg_quote_markup(text)
+        if len(quote) >= 8:
+            quotes.append(quote)
+    return quotes
+
+
+def _llm_qg_grounding_quotes(entry: Mapping[str, Any]) -> list[str]:
+    quotes: list[str] = []
+    quotes.extend(_llm_qg_quotes_from_value(entry.get("evidence_quotes")))
+    quotes.extend(_llm_qg_quotes_from_value(entry.get("evidence")))
+    findings = entry.get("findings")
+    if isinstance(findings, list):
+        for finding in findings:
+            if isinstance(finding, Mapping):
+                quotes.extend(_llm_qg_quotes_from_value(finding.get("quote")))
+    return list(dict.fromkeys(quotes))
+
+
+def _validate_llm_qg_dim_grounding(
+    entry: Mapping[str, Any],
+    *,
+    dim: str,
+    generated_content: str,
+    response_path: Path,
+) -> None:
+    content = _normalize_llm_qg_grounding_text(generated_content)
+    ungrounded = [
+        quote
+        for quote in _llm_qg_grounding_quotes(entry)
+        if quote and _normalize_llm_qg_grounding_text(quote) not in content
+    ]
+    if not ungrounded:
+        return
+    sample = ungrounded[0]
+    raise linear_pipeline.LinearPipelineError(
+        f"LLM QG {dim} ungrounded reviewer evidence in {response_path}: "
+        f"{sample!r} is not present in generated module artifacts"
+    )
+
+
+def _llm_qg_balanced_json_objects(text: str) -> list[str]:
+    objects: list[str] = []
+    depth = 0
+    start = -1
+    in_string = False
+    escape = False
+    for idx, ch in enumerate(text):
+        if in_string:
+            if escape:
+                escape = False
+                continue
+            if ch == "\\":
+                escape = True
+                continue
+            if ch == '"':
+                in_string = False
+            continue
+        if ch == '"':
+            in_string = True
+            continue
+        if ch == "{":
+            if depth == 0:
+                start = idx
+            depth += 1
+            continue
+        if ch == "}":
+            if depth == 0:
+                continue
+            depth -= 1
+            if depth == 0 and start >= 0:
+                objects.append(text[start : idx + 1])
+    return objects
+
+
 def _parse_llm_qg_dim_response(response: str, *, dim: str, response_path: Path) -> dict[str, Any]:
     if not response.strip():
         raise linear_pipeline.LinearPipelineError(
@@ -987,6 +1100,11 @@ def _parse_llm_qg_dim_response(response: str, *, dim: str, response_path: Path) 
     try:
         return linear_pipeline.parse_review_response(response, dim)
     except linear_pipeline.LinearPipelineError as exc:
+        for candidate in reversed(_llm_qg_balanced_json_objects(response)):
+            try:
+                return linear_pipeline.parse_review_response(candidate, dim)
+            except linear_pipeline.LinearPipelineError:
+                continue
         raise linear_pipeline.LinearPipelineError(
             f"LLM QG {dim} malformed backend response in {response_path}: {exc}"
         ) from exc
@@ -998,6 +1116,7 @@ def _resume_llm_qg_dim_if_current(
     prompt: str,
     prompt_path: Path,
     response_path: Path,
+    generated_content: str,
 ) -> dict[str, Any] | None:
     if not prompt_path.exists() or not response_path.exists():
         return None
@@ -1006,6 +1125,12 @@ def _resume_llm_qg_dim_if_current(
             return None
         response = response_path.read_text(encoding="utf-8")
         parsed = _parse_llm_qg_dim_response(response, dim=dim, response_path=response_path)
+        _validate_llm_qg_dim_grounding(
+            parsed,
+            dim=dim,
+            generated_content=generated_content,
+            response_path=response_path,
+        )
     except OSError as exc:
         print(
             f"[llm-qg] {dim}: could not read existing artifacts; retrying ({exc})",
@@ -1073,6 +1198,7 @@ def _run_llm_qg(
                 prompt=prompt,
                 prompt_path=prompt_path,
                 response_path=response_path,
+                generated_content=generated_content,
             )
             if resumed is not None:
                 report[dim] = resumed
@@ -1110,13 +1236,18 @@ def _run_llm_qg(
                 # exposed prose-wrapped JSON shape with no saved artifact).
                 sample_response_path.write_text(response, encoding="utf-8")
                 try:
-                    dim_results.append(
-                        _parse_llm_qg_dim_response(
-                            response,
-                            dim=dim,
-                            response_path=sample_response_path,
-                        )
+                    parsed = _parse_llm_qg_dim_response(
+                        response,
+                        dim=dim,
+                        response_path=sample_response_path,
                     )
+                    _validate_llm_qg_dim_grounding(
+                        parsed,
+                        dim=dim,
+                        generated_content=generated_content,
+                        response_path=sample_response_path,
+                    )
+                    dim_results.append(parsed)
                     raw_responses.append(response)
                     break
                 except linear_pipeline.LinearPipelineError as exc:

@@ -288,7 +288,12 @@ def _patch_llm_qg_prompt(monkeypatch: pytest.MonkeyPatch) -> None:
         "render_review_prompt",
         lambda *_args, **_kwargs: f"prompt::{_args[3]}",
     )
-    monkeypatch.setattr(v7_build, "_generated_content", lambda _module_dir: "generated")
+    grounded_quotes = "\n".join(f"{dim} evidence quote" for dim in QG_DIMS)
+    monkeypatch.setattr(
+        v7_build,
+        "_generated_content",
+        lambda _module_dir: f"generated\n{grounded_quotes}",
+    )
 
 
 def test_llm_qg_retries_empty_dimension_response(
@@ -360,6 +365,125 @@ def test_llm_qg_resumes_current_successful_dimension_artifact(
 
     assert resumed_dim not in calls
     assert set(report["dimensions"]) == set(QG_DIMS)
+
+
+def test_llm_qg_retries_ungrounded_reviewer_evidence(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _patch_llm_qg_prompt(monkeypatch)
+    first_dim = QG_DIMS[0]
+    calls: list[str] = []
+
+    def invoke(_agent: str, prompt: str, **_kwargs: object) -> SimpleNamespace:
+        dim = prompt.split("::", 1)[1]
+        calls.append(dim)
+        if dim == first_dim and calls.count(dim) == 1:
+            return SimpleNamespace(
+                response=json.dumps(
+                    {
+                        "score": 5.0,
+                        "evidence": '"застосунок має бути відкритий"',
+                        "verdict": "REJECT",
+                        "findings": [
+                            {
+                                "issue_id": "awkward passive result state",
+                                "quote": "застосунок має бути відкритий",
+                                "severity": "high",
+                            }
+                        ],
+                    }
+                )
+            )
+        return SimpleNamespace(response=_llm_qg_response(dim))
+
+    monkeypatch.setattr("scripts.agent_runtime.runner.invoke", invoke)
+
+    module_dir = tmp_path / "module"
+    module_dir.mkdir()
+    report = v7_build._run_llm_qg(
+        plan={"slug": "test-slug", "level": "a1"},
+        plan_content="plan",
+        module_dir=module_dir,
+        writer="claude-tools",
+        reviewer_override="codex-tools",
+    )
+
+    assert calls.count(first_dim) == 2
+    assert set(report["dimensions"]) == set(QG_DIMS)
+
+
+def test_llm_qg_grounding_accepts_markdown_emphasis_difference(tmp_path: Path) -> None:
+    response_path = tmp_path / "response.raw.md"
+    entry = {
+        "score": 8.5,
+        "evidence": '"Не впади, не загуби ключі, не забудь паспорт - це не заборони, а попередження."',
+        "verdict": "PASS",
+    }
+    generated_content = (
+        "**Не впади**, **не загуби ключі**, **не забудь паспорт** - "
+        "це не заборони, а попередження."
+    )
+
+    v7_build._validate_llm_qg_dim_grounding(
+        entry,
+        dim="pedagogical",
+        generated_content=generated_content,
+        response_path=response_path,
+    )
+
+
+def test_llm_qg_parse_uses_review_json_after_agy_status_wrapper(tmp_path: Path) -> None:
+    response = "\n".join(
+        [
+            '{"status": "waiting"} Received message from task `abc`:',
+            "```",
+            "/tmp/some/path",
+            "```",
+            json.dumps(
+                {
+                    "score": 8.5,
+                    "evidence": '"naturalness evidence quote"',
+                    "verdict": "PASS",
+                }
+            ),
+        ]
+    )
+
+    entry = v7_build._parse_llm_qg_dim_response(
+        response,
+        dim="naturalness",
+        response_path=tmp_path / "response.raw.md",
+    )
+
+    assert entry["score"] == 8.5
+    assert entry["verdict"] == "PASS"
+
+
+def test_llm_qg_parse_uses_later_review_json_after_malformed_object(tmp_path: Path) -> None:
+    response = "\n".join(
+        [
+            "Here is an intermediate object:",
+            '{"status": "waiting", @}',
+            "Final review:",
+            json.dumps(
+                {
+                    "score": 8.7,
+                    "evidence": '"tone evidence quote"',
+                    "verdict": "PASS",
+                }
+            ),
+        ]
+    )
+
+    entry = v7_build._parse_llm_qg_dim_response(
+        response,
+        dim="tone",
+        response_path=tmp_path / "response.raw.md",
+    )
+
+    assert entry["score"] == 8.7
+    assert entry["verdict"] == "PASS"
 
 
 def test_llm_qg_reports_malformed_dimension_response_clearly(
