@@ -1,0 +1,69 @@
+{
+  "assembled_mdx_sha256": "29b863206a31dcd3381890d581c070b03db47a973a72bdf7b415961194826db2",
+  "content_hash": {
+    "algorithm": "sha256",
+    "basis": "lesson_sources_v2",
+    "digest": "752e1869d1a03f1e360f0d60e13956ad9048650f59ca9216ceeee0d9cad259de",
+    "files": [
+      {
+        "path": "curriculum/l2-uk-en/plans/folk/narodni-balady.yaml",
+        "sha256": "89fd7543ad9319d21567642307e67572c0455abeee9af98e2044096fc9cb1ee2"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/narodni-balady/module.md",
+        "sha256": "11aa1d6e9883717a2eb04bcdb044bc96fa517c476cd60eabb85244d70101af6c"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/narodni-balady/activities.yaml",
+        "sha256": "efcd7e9e136940317bbbb761f63b120462f7a524ac3b2d2b7b96786bc393defe"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/narodni-balady/vocabulary.yaml",
+        "sha256": "a763a904f9ffc7b9cfd9a8ec7a30f801771dd730bb5de5e85ba4a5e83b0946e9"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/narodni-balady/resources.yaml",
+        "sha256": "aa5e23d7a06cc1a725f54a257895ffccd1213aac45d4fc80794b0b595685474a"
+      }
+    ]
+  },
+  "evidence": {
+    "decolonization": "Module frames Ukrainian ballad tradition as autonomous and European-connected without flattening it into imperial or generic East Slavic categories.",
+    "learner_surface": "Ukrainian-facing module, activities, generated MDX, and resources avoid internal IDs, process register, English leakage, and writer-facing grading language.",
+    "review": "Claude Opus 4.8 initial review found one learner-facing resource-title blocker and two provenance findings; follow-up approved after Ukrainian source_ref attempt, same-chunk quote confirmation, and Dunai paraphrase.",
+    "source_hygiene": "Both quoted \u041e\u0439 \u043d\u0430 \u0433\u043e\u0440\u0456 \u0432\u043e\u0433\u043e\u043d\u044c \u0433\u043e\u0440\u0438\u0442\u044c fragments were verified with repo source tooling and confirmed by Claude follow-up via chunk context; unsafe or non-corpus items remain context-only or paraphrased, and no fabricated hosted reading page is used."
+  },
+  "floors": {
+    "beauty": 8.5,
+    "decolonization": 9.0,
+    "engagement": 8.5,
+    "naturalness": 8.5,
+    "pedagogical": 8.5,
+    "tone": 8.5
+  },
+  "profile": "folk_promote_v1",
+  "review_artifact": null,
+  "reviewer": {
+    "agent": "claude",
+    "family": "anthropic",
+    "model": "claude-opus-4-8"
+  },
+  "schema_version": 1,
+  "scored_at": "2026-07-03T22:18:30Z",
+  "scores": {
+    "beauty": 8.8,
+    "decolonization": 9.3,
+    "engagement": 8.7,
+    "naturalness": 8.8,
+    "pedagogical": 9.0,
+    "tone": 9.0
+  },
+  "slug": "narodni-balady",
+  "track": "folk",
+  "verdict": "PASS",
+  "writer": {
+    "agent": "codex",
+    "family": "openai",
+    "model": "gpt-5"
+  }
+}

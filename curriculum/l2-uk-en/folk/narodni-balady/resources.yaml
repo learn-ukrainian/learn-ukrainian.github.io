@@ -1,0 +1,29 @@
+- title: Народні балади
+  type: reference
+  role: wiki
+  url: https://uk.wikipedia.org/wiki/Балада
+  notes: Зовнішній жанровий орієнтир; у модулі не замінює перевірені фрагменти й внутрішній дослідницький матеріал.
+- title: Слов'янська міфологія
+  author: Костомаров М.
+  type: scholarly
+  role: article
+  url: http://litopys.org.ua/kostomar/kos.htm
+  notes: Контекст для романтичної й порівняльної рамки читання народної поезії; не використовується як польова фольклорна картка.
+- title: Нарис історії культури України
+  author: Попович М.
+  type: scholarly
+  role: article
+  url: http://litopys.org.ua/popovych/narys.htm
+  notes: Контекст для розмови про раціональність, моральний розрахунок і трагічні наслідки у козацькому та думному світі.
+- title: Історія української літератури
+  author: Чижевський Д.
+  type: scholarly
+  role: article
+  url: http://litopys.org.ua/chyzh/chy.htm
+  notes: Історико-літературна рамка для переходу від народної балади до літературної рецепції.
+- title: Тарас Шевченко. Повне зібрання творів, том 1
+  author: Шевченко Т.
+  type: scholarly
+  role: article
+  url: http://litopys.org.ua/shevchenko/shev1.htm
+  notes: Коментарний міст до "Тополі", метаморфози й народнопісенних мотивів; не замінює фольклорний текст.
