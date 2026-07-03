@@ -18,6 +18,10 @@ source titles, source ids, locators, and context are intentionally privacy-safe.
 The inventories do not commit raw notes, transcripts, prompts, document paths,
 or teacher-identifying names.
 
+Current approval-ledger coverage is 105 reviewed headwords from rows 1-98.
+Live Atlas browse/search coverage still depends on a later controlled publish
+PR. Missing `surface_admission` keeps Daily Word, Practice, and cloze frozen.
+
 ## Source Handling Rule
 
 Use the ignored local lesson material only as private evidence for deriving
