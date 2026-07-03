@@ -1,0 +1,299 @@
+---
+version: 1
+kind: atlas_source_inventory_review_decisions
+batch_id: source-inventory-eighth-approved-teacher-lesson-ledger-batch-2026-07-03
+batch_label: eighth-approved-teacher-lesson-ledger-batch
+reviewer: content-review
+reviewed_at: '2026-07-03'
+source_queue:
+  workflow: source_inventory_publish_review_queue.v1
+  generated_from_pr: 4190
+  total_queue_rows: 175
+  approved_in_queue: 20
+  promotion_batch_size: 20
+production_outputs_updated: []
+decisions:
+- lemma: хвалити
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to praise; imperfective
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 488ede37db8d2eeb
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-139-158.yaml
+    locator: explicit vocabulary table row 139
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-139-158
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+  review_queue_reasons:
+  - grow_needs_review:heritage_status flags russian_shadow
+- lemma: похвалити
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to praise; perfective
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 67038385043918f7
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-139-158.yaml
+    locator: explicit vocabulary table row 140
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-139-158
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+  review_queue_reasons:
+  - grow_needs_review:heritage_status flags russian_shadow
+- lemma: дозвіл
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: permission
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 30aeac68fdda1b60
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-139-158.yaml
+    locator: explicit vocabulary table row 141
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-139-158
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+  review_queue_reasons:
+  - grow_needs_review:heritage_status flags russian_shadow
+- lemma: облаштовуватися
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to settle in; imperfective
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 428f0b886cdb0f41
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-139-158.yaml
+    locator: explicit vocabulary table row 142
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-139-158
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+  review_queue_reasons:
+  - grow_needs_review:heritage_status flags calque_warning; heritage_status flags russian_shadow
+- lemma: облаштуватися
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to settle in; perfective
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: e835170f9fd7d4dd
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-139-158.yaml
+    locator: explicit vocabulary table row 143
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-139-158
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+  review_queue_reasons:
+  - grow_needs_review:heritage_status flags calque_warning; heritage_status flags russian_shadow
+- lemma: пекарня
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: bakery
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 0bb973d1e2234b46
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-139-158.yaml
+    locator: explicit vocabulary table row 144
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-139-158
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+  review_queue_reasons:
+  - grow_needs_review:heritage_status flags calque_warning; heritage_status flags russian_shadow
+- lemma: гірчиця
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: mustard
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 1aaa4544380ab020
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-139-158.yaml
+    locator: explicit vocabulary table row 145
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-139-158
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: випічка
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: baked goods; pastry
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 58d100699fae82df
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-139-158.yaml
+    locator: explicit vocabulary table row 146
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-139-158
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+  review_queue_reasons:
+  - grow_needs_review:heritage_status flags russian_shadow
+- lemma: єнот
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: raccoon
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 9c39f93d140badf0
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-139-158.yaml
+    locator: explicit vocabulary table row 147
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-139-158
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+  review_queue_reasons:
+  - grow_needs_review:heritage_status flags russian_shadow
+- lemma: сказ
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: rabies
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 31cef5d446acf656
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-139-158.yaml
+    locator: explicit vocabulary table row 148
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-139-158
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+  review_queue_reasons:
+  - grow_needs_review:heritage_status flags russian_shadow
+- lemma: скажений
+  decision: approve_for_publish
+  approved_pos: adjective
+  approved_gloss: rabid; furious; uncontrolled
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: b1e3153253876d44
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-139-158.yaml
+    locator: explicit vocabulary table row 149
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-139-158
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: сліпий
+  decision: approve_for_publish
+  approved_pos: adjective
+  approved_gloss: blind
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 45f325df05b9cdb8
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-139-158.yaml
+    locator: explicit vocabulary table row 150
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-139-158
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: підписатися на
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to subscribe to; perfective
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 313fd53bf250e2bf
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-139-158.yaml
+    locator: explicit vocabulary table row 151
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-139-158
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+  review_queue_reasons:
+  - grow_needs_review:missing dictionary definition
+- lemma: відписатися від
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to unsubscribe from; perfective
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 56c49f2d16bc3cdf
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-139-158.yaml
+    locator: explicit vocabulary table row 152
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-139-158
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+  review_queue_reasons:
+  - grow_needs_review:missing dictionary definition
+- lemma: слідкувати
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to follow; to monitor; imperfective
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 9b430c429d2c6c31
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-139-158.yaml
+    locator: explicit vocabulary table row 153
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-139-158
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: дотримуватися правила
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to follow a rule; to observe a rule; imperfective
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: f79a0498023e0af9
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-139-158.yaml
+    locator: explicit vocabulary table row 154
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-139-158
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+  review_queue_reasons:
+  - grow_needs_review:missing dictionary definition
+- lemma: помічати
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to notice; to mark; imperfective
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 3d319e750f2b72a0
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-139-158.yaml
+    locator: explicit vocabulary table row 155
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-139-158
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: помітити
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to notice; to mark; perfective
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: a3f0b04d226c9d66
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-139-158.yaml
+    locator: explicit vocabulary table row 156
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-139-158
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: пішохід
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: pedestrian
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 89e450b7e53f1dcb
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-139-158.yaml
+    locator: explicit vocabulary table row 157
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-139-158
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: публікувати
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to publish; imperfective
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: da3979dc7c4d5f9c
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-139-158.yaml
+    locator: explicit vocabulary table row 158
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-139-158
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
