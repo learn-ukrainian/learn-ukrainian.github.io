@@ -395,6 +395,7 @@ Additional audit guardrails:
 - `scripts/audit/atlas_source_census.py` - aggregate-only Word Atlas source intake census; public reports must not include raw source text, private paths, or candidate lemma lists
 - `scripts/audit/atlas_entry_model_census.py` - aggregate-only Word Atlas entry-model census; separates reviewed article entries by `entry_type` from alias/form records
 - `scripts/audit/atlas_source_entry_count.py` - aggregate-only Word Atlas source-corpus entry-demand census by finalized entry-model bucket; public reports must not include source text, private paths, filenames, or candidate lists
+- `scripts/audit/curriculum_qg_harness.py` - deterministic Ukrainian curriculum QG fixture harness; use it to calibrate B1-27, A1/A2 scaffolding, B1+ leakage, and seminar-register checks before changing QG behavior
 
 ### Build pipeline entry point
 
@@ -564,6 +565,8 @@ Use this before content generation to verify plan files still match `scripts/aud
 | `scripts/audit/atlas_source_census.py` | Build aggregate-safe Word Atlas source planning counts | `.venv/bin/python scripts/audit/atlas_source_census.py --markdown-out docs/runbooks/word-atlas-source-census-planning.md` |
 | `scripts/audit/atlas_entry_model_census.py` | Count reviewed Atlas entries by finalized `entry_type` bucket | `.venv/bin/python scripts/audit/atlas_entry_model_census.py --format markdown` |
 | `scripts/audit/atlas_source_entry_count.py` | Estimate aggregate source-corpus Atlas entry backlog by finalized bucket | `.venv/bin/python scripts/audit/atlas_source_entry_count.py --include-ohoiko-private --markdown-out docs/runbooks/word-atlas-source-entry-count.md` |
+| `scripts/audit/curriculum_qg_harness.py` | Run calibrated Ukrainian QG fixtures or scan one module into compact evidence | `.venv/bin/python scripts/audit/curriculum_qg_harness.py --fixtures tests/fixtures/curriculum_qg/fixtures.yaml` |
+| `scripts/audit/module_quality_audit.py` | Report surface and LLM-QG/compact evidence coverage by level | `.venv/bin/python scripts/audit/module_quality_audit.py --level b1 --format summary` |
 | `scripts/audit/lint_session_state.py` | Check handoff docs for missing env-file references | `.venv/bin/python scripts/audit/lint_session_state.py --all` |
 | `scripts/audit/lint_anti_menu.py` | Detect anti-menu sign-off prompts in markdown | `.venv/bin/python scripts/audit/lint_anti_menu.py --text docs/session-state/current.md` |
 | `scripts/audit/decision_lineage.py` | Scan decision git backlinks | `.venv/bin/python scripts/audit/decision_lineage.py --decision-id ADR-008` |
@@ -614,6 +617,48 @@ It checks:
 - Ukrainian quality
 - activity hints vs actual activities
 - integrated audit checks such as cross-file integrity and outline compliance
+
+### `scripts/audit/curriculum_qg_harness.py`
+
+Deterministic Ukrainian curriculum QG calibration harness for issue #2156.
+Use it before changing QG prompts, evidence persistence, or deterministic
+surface checks. It does not bulk-score the curriculum and does not write raw
+LLM logs.
+
+```bash
+# Run the labeled PR1 fixture suite
+.venv/bin/python scripts/audit/curriculum_qg_harness.py \
+  --fixtures tests/fixtures/curriculum_qg/fixtures.yaml
+
+# Scan one module and print compact evidence
+.venv/bin/python scripts/audit/curriculum_qg_harness.py \
+  --module-dir curriculum/l2-uk-en/b1/aspect-in-imperatives \
+  --level b1 \
+  --slug aspect-in-imperatives \
+  --format json
+```
+
+The fixture suite covers current and restored-bad B1-27 behavior, allowed
+A1/A2 English scaffolding, B1+ English leakage, local English glosses, and
+seminar-register pathos. Single-module scans emit compact evidence shaped like
+`qg_evidence.json`: module id, level policy, checker version/config/hash,
+content hash, dimensional scores/findings, compact spans/excerpts, LLM metadata
+placeholders, and provenance.
+
+### `scripts/audit/module_quality_audit.py`
+
+Coverage report for planned modules, built modules, deterministic surface
+failures, persisted LLM-QG records, and compact file-only `qg_evidence.json`
+records.
+
+```bash
+.venv/bin/python scripts/audit/module_quality_audit.py --level b1 --format summary
+.venv/bin/python scripts/audit/module_quality_audit.py --level b1 --format json
+```
+
+Use this before spending reviewer tokens. A current compact `qg_evidence.json`
+counts as current file-only QG evidence, but modules still remain in the DB
+persistence count until their LLM-QG result is stored in the telemetry DB.
 
 ### `pipeline.py`
 
