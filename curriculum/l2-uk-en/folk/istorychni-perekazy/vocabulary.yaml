@@ -1,0 +1,140 @@
+- lemma: переказ
+  translation: oral tradition or retelling tied to an event, person, or place
+  pos: іменник
+  usage: Переказ претендує на правдивість, але має власний фольклорний режим.
+- lemma: історичний переказ
+  translation: historical oral prose narrative
+  pos: словосполука
+  usage: Історичний переказ зберігає пам'ять про минуле через оповідь і місце.
+- lemma: народна пам'ять
+  translation: folk memory; communal memory
+  pos: словосполука
+  usage: Народна пам'ять відбирає, прикрашає і пояснює минуле.
+- lemma: усна традиція
+  translation: oral tradition
+  pos: словосполука
+  usage: Усна традиція передає не тільки сюжет, а й оцінку події.
+- lemma: внутрішня історія
+  translation: inner history; social and cultural life remembered from within
+  pos: словосполука
+  usage: Внутрішня історія показує побут, звичай, страх і надію громади.
+- lemma: літописна точність
+  translation: chronicle-like factual precision
+  pos: словосполука
+  usage: У переказі не слід шукати повної літописної точності.
+- lemma: історичне ядро
+  translation: historical core
+  pos: словосполука
+  usage: Історичне ядро треба перевіряти окремо від фольклорного оздоблення.
+- lemma: джерельний статус
+  translation: source status
+  pos: словосполука
+  usage: Джерельний статус визначає, як сміливо можна робити висновок.
+- lemma: героїзація
+  translation: heroization; turning someone into a hero
+  pos: іменник
+  usage: Героїзація перетворює реальну конфліктну людину на народний символ.
+- lemma: легендаризація
+  translation: legendary transformation
+  pos: іменник
+  usage: Легендаризація додає героєві невловимість, силу або чудесну зброю.
+- lemma: фольклорне оздоблення
+  translation: folkloric embellishment
+  pos: словосполука
+  usage: Фольклорне оздоблення не треба подавати як архівний факт.
+- lemma: опришок
+  translation: Carpathian outlaw or insurgent associated with social banditry
+  pos: іменник
+  usage: Опришок у переказі може стати месником, хоча історично діяв із зброєю.
+- lemma: опришківство
+  translation: opryshky movement; Carpathian outlaw insurgency
+  pos: іменник
+  usage: Опришківство є соціальним контекстом переказів про Довбуша.
+- lemma: ватажок
+  translation: leader of a band or movement
+  pos: іменник
+  usage: Ватажок у народній пам'яті часто отримує риси надзвичайної сили.
+- lemma: повстанець
+  translation: insurgent; rebel
+  pos: іменник
+  usage: Повстанець може бути злочинцем у законі й героєм у пам'яті громади.
+- lemma: месник
+  translation: avenger
+  pos: іменник
+  usage: Месник у переказі карає несправедливість, але його дії треба аналізувати критично.
+- lemma: розбійництво
+  translation: banditry; robbery
+  pos: іменник
+  usage: Розбійництво не зникає з біографії тільки тому, що переказ героїзує постать.
+- lemma: кріпацтво
+  translation: serfdom
+  pos: іменник
+  usage: Кріпацтво є соціальним тлом багатьох переказів про Кармалюка.
+- lemma: шляхетський гніт
+  translation: oppression by the nobility
+  pos: словосполука
+  usage: Шляхетський гніт пояснює частину народної симпатії до опришків.
+- lemma: рекрутчина
+  translation: compulsory military recruitment
+  pos: іменник
+  usage: Рекрутчина входить у подільський контекст історії Кармалюка.
+- lemma: козацький переказ
+  translation: Cossack historical oral narrative
+  pos: словосполука
+  usage: Козацький переказ часто перетворює втрату Січі на очікування повернення.
+- lemma: Запорозька Січ
+  translation: Zaporizhian Sich
+  pos: власна назва
+  usage: Запорозька Січ у народній пам'яті може ставати утопією свободи.
+- lemma: народна утопія
+  translation: folk utopia; idealized communal vision
+  pos: словосполука
+  usage: Народна утопія не дорівнює точному описові реальної політичної організації.
+- lemma: вольниця
+  translation: free Cossack order; unruly freedom
+  pos: іменник
+  usage: Вольниця в переказах позначає простір поза звичним примусом.
+- lemma: топонім
+  translation: place name
+  pos: іменник
+  usage: Топонім може зберегти короткий слід історичного переказу.
+- lemma: топонімічний переказ
+  translation: place-name legend or oral explanation
+  pos: словосполука
+  usage: Топонімічний переказ пояснює, чому місце має певну назву.
+- lemma: ландшафтна пам'ять
+  translation: landscape memory
+  pos: словосполука
+  usage: Ландшафтна пам'ять тримається на скелі, могилі, вежі або дубі.
+- lemma: видимий знак
+  translation: visible sign used as an anchor of memory
+  pos: словосполука
+  usage: Видимий знак робить переказ переконливим для слухача.
+- lemma: локальна назва
+  translation: local place name
+  pos: словосполука
+  usage: Локальна назва може підтримувати пам'ять без повного джерельного доказу.
+- lemma: могила
+  translation: grave mound or burial place
+  pos: іменник
+  usage: Могила в переказі часто стає знаком давньої боротьби або втрати.
+- lemma: урочище
+  translation: named natural locality or tract
+  pos: іменник
+  usage: Урочище може зберігати пам'ять про подію через свою назву.
+- lemma: скеля
+  translation: rock or cliff
+  pos: іменник
+  usage: Скеля в переказі стає довговічним знаком сили героя.
+- lemma: моральна географія
+  translation: moral geography
+  pos: словосполука
+  usage: Моральна географія показує, які місця громада вважає простором волі або кривди.
+- lemma: ідеалізація
+  translation: idealization
+  pos: іменник
+  usage: Ідеалізація може приховати насильство або незручні подробиці біографії.
+- lemma: критика героїзації
+  translation: anti-hagiographic reading
+  pos: словосполука
+  usage: Критика героїзації не дозволяє робити з народного героя безгрішного святого.
