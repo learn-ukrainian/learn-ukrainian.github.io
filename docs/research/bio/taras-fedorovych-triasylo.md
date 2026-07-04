@@ -139,8 +139,8 @@ coercion; Pereiaslav 1630; revolt memory and later literary afterlife)
 **What happened:** Fedorovych's 1630 uprising grew out of pressure on the
 Cossack register and on the Dnipro frontier after the Kurukove settlement. The
 Commonwealth needed Cossack military service but restricted recognized status,
-privileges, and pay. After the Livonian war, unpaid crown troops were quartered
-in Kyiv voivodeship and the Trans-Dnipro area, where Cossacks and
+privileges, and pay. After the Polish-Swedish War of 1626-1629, unpaid crown
+troops were quartered in Kyiv voivodeship and the Trans-Dnipro area, where Cossacks and
 not-yet-enserfed peasants were numerous. EIU and Shcherbak both connect the
 uprising to this pressure, while Kovalets emphasizes the accumulation of
 multiple causes rather than one simple spark. [T1: ЕІУ uprising; T4: Shcherbak;
