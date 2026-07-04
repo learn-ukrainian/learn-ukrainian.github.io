@@ -9,7 +9,7 @@ source_queue:
   workflow: source_inventory_publish_review_queue.v1
   generated_from_pr: 4205
   total_queue_rows: 198
-  approved_in_queue: 21
+  approved_in_queue: 20
   promotion_batch_size: 21
 production_outputs_updated: []
 decisions:
@@ -281,10 +281,13 @@ decisions:
   review_queue_reasons:
   - grow_needs_review:missing dictionary definition
 - lemma: щитовидка
-  decision: approve_for_publish
-  approved_pos: noun
-  approved_gloss: thyroid gland; colloquial
-  sense_note: private teacher-lesson explicit vocabulary table
+  decision: reject
+  sense_note: >-
+    Corrected approve_for_publish -> reject on re-review (2026-07-05):
+    russian-shadow colloquial. The stem щитовид- mirrors Russian «щитовидная»;
+    standard Ukrainian is щитоподібна залоза. Absent from VESUM, СУМ-11,
+    Грінченко, and ЕСУМ. Batch 10 approved it over its own russian_shadow flag;
+    removed from the live Atlas manifest — not a dictionary-grade headword.
   source_inventory:
     key: 3c0055c9112a172a
     path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-179-198.yaml
