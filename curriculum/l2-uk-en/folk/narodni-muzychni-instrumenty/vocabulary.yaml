@@ -1,0 +1,172 @@
+- lemma: народний інструмент
+  translation: folk musical instrument
+  pos: словосполука
+  usage: Народний інструмент треба аналізувати як річ, техніку, звук і соціальну роль.
+- lemma: інструментарій
+  translation: set of instruments
+  pos: іменник
+  usage: Український народний інструментарій не зводиться до декоративного списку назв.
+- lemma: органологія
+  translation: organology, study of musical instruments
+  pos: іменник
+  usage: Органологія пояснює інструменти через будову, матеріал і спосіб звукоутворення.
+- lemma: звукоутворення
+  translation: sound production
+  pos: іменник
+  usage: Спосіб звукоутворення відрізняє щипковий, смичковий, міховий і ударний інструмент.
+- lemma: струнний інструмент
+  translation: string instrument
+  pos: словосполука
+  usage: Струнний інструмент може звучати від щипка, смичка, колеса або удару палички.
+- lemma: духовий інструмент
+  translation: wind instrument
+  pos: словосполука
+  usage: Духовий інструмент поєднує матеріал трубки, дихання і просторову функцію.
+- lemma: ударний інструмент
+  translation: percussion instrument
+  pos: словосполука
+  usage: Ударний інструмент організовує ритм, рух або шумову межу події.
+- lemma: ідіофон
+  translation: idiophone
+  pos: іменник
+  usage: Деркач можна описати як шумовий ідіофон на межі музики й сигналу.
+- lemma: мембрана
+  translation: membrane
+  pos: іменник
+  usage: У бубні мембрана зі шкіри дає основний ударний звук.
+- lemma: бандура
+  translation: bandura
+  pos: іменник
+  usage: Бандура поєднує баси, приструнки, голос і пізнішу сценічну школу.
+- lemma: кобза
+  translation: kobza
+  pos: іменник
+  usage: Кобзу не можна просто замінити бандурою в історії кобзарської традиції.
+- lemma: ліра
+  translation: hurdy-gurdy, lira
+  pos: іменник
+  usage: Ліра має колесо, клавіші, дрони і власний лірницький контекст.
+- lemma: цимбали
+  translation: hammered dulcimer, tsymbaly
+  pos: іменник
+  usage: Цимбали звучать від удару паличок по струнах.
+- lemma: скрипка
+  translation: fiddle, violin
+  pos: іменник
+  usage: Скрипка часто веде мелодію в троїстих музиках.
+- lemma: басоля
+  translation: bass fiddle, basolia
+  pos: іменник
+  usage: Басоля тримає низ і пульс танцювального ансамблю.
+- lemma: підбасок
+  translation: small folk bass
+  pos: іменник
+  usage: Підбасок може виконувати басово-ритмічну роль у регіональному складі капели.
+- lemma: сопілка
+  translation: sopilka, Ukrainian duct flute
+  pos: іменник
+  usage: Сопілка наближає звук до дихання, пальців і камерної мелодії.
+- lemma: флояра
+  translation: floyara, Carpathian flute
+  pos: іменник
+  usage: Флояра може поєднувати гру з голосовим гудінням.
+- lemma: трембіта
+  translation: trembita, long wooden alpine horn
+  pos: іменник
+  usage: Трембіта подає сигнал у просторі й не зводиться до туристичного символу.
+- lemma: виконавець
+  translation: performer
+  pos: іменник
+  usage: Виконавець на трембіті може мати окрему роль у гуцульському колядницькому таборі.
+- lemma: дуда
+  translation: Ukrainian bagpipe, duda
+  pos: іменник
+  usage: Дуда працює через міх, пищики, мелодичну трубку і басовий гук.
+- lemma: коза
+  translation: koza, bagpipe name
+  pos: іменник
+  usage: Назва коза пов'язана з міхом і тваринним образом інструмента.
+- lemma: ріг
+  translation: horn
+  pos: іменник
+  usage: Ріг може виконувати пастушу, мисливську або сторожову сигнальну функцію.
+- lemma: бубон
+  translation: frame drum, tambourine
+  pos: іменник
+  usage: Бубон підбиває танцювальний пульс і тілесну енергію.
+- lemma: решето
+  translation: sieve used as tambourine
+  pos: іменник
+  usage: Решето показує, як побутова річ може перейти в музичну функцію.
+- lemma: деркач
+  translation: rattle, clapper
+  pos: іменник
+  usage: Деркач створює тріск і шумовий сигнал.
+- lemma: дрон
+  translation: drone
+  pos: іменник
+  usage: Дрон у лірі або дуді тримає стійке звукове тло.
+- lemma: приструнки
+  translation: treble side strings
+  pos: іменник
+  usage: Приструнки бандури створюють мереживо коротших високих струн.
+- lemma: баси
+  translation: bass strings
+  pos: іменник
+  usage: Баси підтримують опору голосу або ансамблю.
+- lemma: паличка
+  translation: small stick, hammer
+  pos: іменник
+  usage: Паличка вдаряє по струнах цимбалів і формує атаку звуку.
+- lemma: троїсті музики
+  translation: traditional folk ensemble
+  pos: словосполука
+  usage: Троїсті музики означають функціональний ансамблевий принцип, а не завжди однаковий склад.
+- lemma: капела
+  translation: ensemble, band
+  pos: іменник
+  usage: Весільна капела має інші вимоги, ніж філармонійна сцена.
+- lemma: мелодійний провід
+  translation: melodic lead
+  pos: словосполука
+  usage: Мелодійний провід у капелі часто бере на себе скрипка.
+- lemma: басова опора
+  translation: bass support
+  pos: словосполука
+  usage: Басова опора дає танцю стійкий ґрунт.
+- lemma: сигнальна функція
+  translation: signaling function
+  pos: словосполука
+  usage: Сигнальна функція трембіти залежить від простору й події.
+- lemma: колядницький табір
+  translation: caroling group
+  pos: словосполука
+  usage: Колядницький табір має ролі, порядок обходу і звукові знаки.
+- lemma: академізація
+  translation: academization
+  pos: іменник
+  usage: Академізація дала інструментам сцену, але переформатувала частину живої практики.
+- lemma: реконструкція
+  translation: reconstruction
+  pos: іменник
+  usage: Реконструкція має називати джерела, конструкцію і межі певності.
+- lemma: стилізація
+  translation: stylization
+  pos: іменник
+  usage: Стилізація може бути художньо цінною, але не дорівнює польовому виконанню.
+- lemma: локальне побутування
+  translation: local living practice
+  pos: словосполука
+  usage: Локальне побутування не можна механічно переносити на всю Україну.
+- lemma: тембр
+  translation: timbre
+  pos: іменник
+  usage: Тембр залежить від матеріалу, техніки й ситуації слухання.
+- lemma: звуковий знак
+  translation: sonic sign
+  pos: словосполука
+  usage: Трембіта може бути звуковим знаком переходу між просторами.
+- lemma: джерельна дисципліна
+  translation: source discipline
+  pos: словосполука
+  usage: Джерельна дисципліна захищає тему від декоративних і романтичних кліше.
