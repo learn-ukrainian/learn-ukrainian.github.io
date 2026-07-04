@@ -45,10 +45,12 @@ from ._messaging import (
 )
 from ._model import check_model
 from ._opencode import (
+    GEMMA_MODEL,
     GLM_MODEL,
     OPENCODE_DEFAULT_MODEL,
     POOL_DEFAULT_VARIANT,
     POOL_MODEL,
+    ask_gemma,
     ask_glm,
     ask_opencode,
     ask_pool,
@@ -679,6 +681,21 @@ def _build_parser() -> argparse.ArgumentParser:
     ask_glm_parser.add_argument("--from-model", dest="from_model", help="Exact sender model")
     ask_glm_parser.add_argument("--no-timeout", dest="no_timeout", action="store_true")
 
+    # ask-gemma (Google Gemma 4 31B-it — FREE Google-family lane; ⚠️ fabricates facts)
+    ask_gemma_parser = subparsers.add_parser(
+        "ask-gemma",
+        help="Send message AND invoke Google Gemma 4 (31B-it, FREE) via opencode. Surface-clean UK writing + code review; ⚠️ fabricates facts — not a fact-checker (use '-' for stdin)",
+    )
+    ask_gemma_parser.add_argument("content", help="Message content (use '-' to read from stdin)")
+    ask_gemma_parser.add_argument("--task-id", required=True, help="Task ID")
+    ask_gemma_parser.add_argument("--type", default="query", help="Message type")
+    ask_gemma_parser.add_argument("--data", help="Path to data file to attach")
+    ask_gemma_parser.add_argument("--model", default=None,
+                                  help=f"Override Gemma model (default {GEMMA_MODEL}; e.g. openrouter/google/gemma-4-26b-a4b-it)")
+    ask_gemma_parser.add_argument("--from", dest="from_llm", help="Sender agent family")
+    ask_gemma_parser.add_argument("--from-model", dest="from_model", help="Exact sender model")
+    ask_gemma_parser.add_argument("--no-timeout", dest="no_timeout", action="store_true")
+
     # ask-cursor
     ask_cursor_parser = subparsers.add_parser(
         "ask-cursor",
@@ -1031,6 +1048,8 @@ def _dispatch_command(args):
         _handle_ask_pool(args)
     elif args.command == "ask-glm":
         _handle_ask_glm(args)
+    elif args.command == "ask-gemma":
+        _handle_ask_gemma(args)
     elif args.command == "ask-cursor":
         _handle_ask_cursor(args)
     elif args.command == "ask-grok-build":
@@ -1225,6 +1244,22 @@ def _handle_ask_glm(args):
     content = sys.stdin.read() if args.content == "-" else args.content
     from_llm = _resolve_from_llm(args)
     ask_glm(
+        content,
+        args.task_id,
+        msg_type=args.type,
+        data=args.data,
+        model=args.model,
+        from_llm=from_llm,
+        from_model=args.from_model,
+        no_timeout=args.no_timeout,
+    )
+
+
+def _handle_ask_gemma(args):
+    """Handle ask-gemma subcommand."""
+    content = sys.stdin.read() if args.content == "-" else args.content
+    from_llm = _resolve_from_llm(args)
+    ask_gemma(
         content,
         args.task_id,
         msg_type=args.type,
