@@ -367,6 +367,7 @@ Additional audit guardrails:
 - `scripts/audit/lint_dispatch_brief.py` - dispatch brief `.venv/bin/python` worktree guardrail
 - `scripts/audit/atlas_source_census.py` - aggregate-only Word Atlas source intake census; public reports must not include raw source text, private paths, or candidate lemma lists
 - `scripts/audit/atlas_entry_model_census.py` - aggregate-only Word Atlas entry-model census; separates reviewed article entries by `entry_type` from alias/form records
+- `scripts/audit/atlas_source_entry_count.py` - aggregate-only Word Atlas source-corpus entry-demand census by finalized entry-model bucket; public reports must not include source text, private paths, filenames, or candidate lists
 
 ### Build pipeline entry point
 
@@ -535,6 +536,7 @@ Use this before content generation to verify plan files still match `scripts/aud
 | `scripts/check_decisions.py` | Audit decision journal expiry | `.venv/bin/python scripts/check_decisions.py` |
 | `scripts/audit/atlas_source_census.py` | Build aggregate-safe Word Atlas source planning counts | `.venv/bin/python scripts/audit/atlas_source_census.py --markdown-out docs/runbooks/word-atlas-source-census-planning.md` |
 | `scripts/audit/atlas_entry_model_census.py` | Count reviewed Atlas entries by finalized `entry_type` bucket | `.venv/bin/python scripts/audit/atlas_entry_model_census.py --format markdown` |
+| `scripts/audit/atlas_source_entry_count.py` | Estimate aggregate source-corpus Atlas entry backlog by finalized bucket | `.venv/bin/python scripts/audit/atlas_source_entry_count.py --include-ohoiko-private --markdown-out docs/runbooks/word-atlas-source-entry-count.md` |
 | `scripts/audit/lint_session_state.py` | Check handoff docs for missing env-file references | `.venv/bin/python scripts/audit/lint_session_state.py --all` |
 | `scripts/audit/lint_anti_menu.py` | Detect anti-menu sign-off prompts in markdown | `.venv/bin/python scripts/audit/lint_anti_menu.py --text docs/session-state/current.md` |
 | `scripts/audit/decision_lineage.py` | Scan decision git backlinks | `.venv/bin/python scripts/audit/decision_lineage.py --decision-id ADR-008` |
