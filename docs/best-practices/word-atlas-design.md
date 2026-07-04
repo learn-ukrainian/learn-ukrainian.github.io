@@ -90,6 +90,20 @@ Provenance discipline: every badge cites the specific tool result that triggered
 
 ## 6. Data model
 
+### Entry Model Revision (2026-07-04)
+
+The original design below is lemma-first. The current architecture decision is
+lemma-first but not lemma-only: Atlas article entries now have a required
+`entry_type` model covering `lemma`, `expression`, `phraseologism`, `proverb`,
+`multiword_term`, and `proper_name`. Generated form aliases and existing
+`form_of` records are search helpers, not reviewed Atlas entries.
+
+The authoritative entry model and drift gates are in
+[`docs/runbooks/word-atlas-entry-model.md`](../runbooks/word-atlas-entry-model.md).
+Implementation work must update the manifest schema, static API counts, search
+aliases, and POC route map against that runbook before adding non-lemma article
+pages.
+
 Per-lemma canonical record. Cached as `data/lexicon/{lemma}.json` for static build (v1+) OR computed on-demand (v0/v3+ long tail):
 
 ```yaml

@@ -258,6 +258,17 @@ Direct `agy --model` calls use display labels from `agy models`, such as
 `Gemini 3.1 Pro (High)` and `Gemini 3.5 Flash (High)`. The bridge/runtime may
 map slugs such as `gemini-3.1-pro-high` to those labels.
 
+### 14. Do Not Leave PRs In Limbo
+
+Do not leave draft PRs or open PRs in limbo after checks are green. Every PR you
+create must end the task in one of these states: merged, closed with a reason,
+or explicitly handed off with the blocker, owner, and next action.
+
+Before the final response, check PR state, checks, mergeability, and whether the
+branch/worktree needs cleanup. If a PR remains open, the final response must say
+exactly why and what action is required. Leaving PRs in review hell wastes CI,
+agent, and human attention.
+
 ---
 
 ## Economical Multi-Agent Delegation
