@@ -1,0 +1,192 @@
+- lemma: народна танцювальна культура
+  translation: folk dance culture
+  pos: словосполука
+  usage: Народна танцювальна культура поєднує рух, спів, музику, простір і соціальні ролі.
+- lemma: танок
+  translation: ritual round dance, horo-vod
+  pos: іменник
+  usage: Танок часто ведуть або водять, бо він тримає гуртову лінію чи коло.
+- lemma: танець
+  translation: dance
+  pos: іменник
+  usage: Танець є ширшим словом і може означати побутову, сценічну або мистецьку форму.
+- lemma: хоровод
+  translation: round dance
+  pos: іменник
+  usage: Хоровод організує гурт у коло або рухову лінію під спів.
+- lemma: гаївка
+  translation: spring ritual song-game
+  pos: іменник
+  usage: Гаївка поєднує весняний спів, гру, рух і календарну дію.
+- lemma: веснянка
+  translation: spring song
+  pos: іменник
+  usage: Веснянка може звучати під час танків, ігор і закликання весни.
+- lemma: кривий танець
+  translation: crooked dance
+  pos: словосполука
+  usage: Кривий танець веде лінію ключем, поворотами й обходами.
+- lemma: ключ
+  translation: winding line, key-shaped path
+  pos: іменник
+  usage: Ключ у танку не є декором, а задає спосіб руху.
+- lemma: змійка
+  translation: serpentine line
+  pos: іменник
+  usage: Змійка допомагає показати плетіння й неперервність гуртового руху.
+- lemma: ворота
+  translation: gate figure
+  pos: іменник
+  usage: Ворота в танку позначають проходження і зміну стану.
+- lemma: плетіння
+  translation: braiding, weaving
+  pos: іменник
+  usage: Плетіння лінії перегукується з вінком, пагоном і весняним ростом.
+- lemma: завивання
+  translation: winding, twining
+  pos: іменник
+  usage: Завивання в гаївці переводить рослинний мотив у рух.
+- lemma: траєкторія
+  translation: trajectory
+  pos: іменник
+  usage: Траєкторія танцю часто несе не менше смислу, ніж слова пісні.
+- lemma: обрядова дія
+  translation: ritual action
+  pos: словосполука
+  usage: Обрядова дія робить календарний перехід видимим через тіло.
+- lemma: побутовий танець
+  translation: social dance
+  pos: словосполука
+  usage: Побутовий танець залежить від музик, нагоди, громади й імпровізації.
+- lemma: вечорниці
+  translation: evening youth gathering
+  pos: іменник
+  usage: Вечорниці були одним із просторів молодіжної танцювальної гри.
+- lemma: вулиця
+  translation: youth street gathering
+  pos: іменник
+  usage: Вулиця означає не просто місце, а публічний простір молоді.
+- lemma: весільна забава
+  translation: wedding festivity
+  pos: словосполука
+  usage: Весільна забава може переводити обрядову серйозність у спільне святкування.
+- lemma: гопак
+  translation: hopak
+  pos: іменник
+  usage: Гопак має віртуозний і козацько-символічний шар, але не зводиться до військової метафори.
+- lemma: козачок
+  translation: kozachok
+  pos: іменник
+  usage: Козачок часто читається як жвава парна гра наближення й відступу.
+- lemma: метелиця
+  translation: metelytsia, whirlwind dance
+  pos: іменник
+  usage: Метелиця пояснюється через кружляння, зміну напрямів і образ заметілі.
+- lemma: коломийка
+  translation: kolomyika
+  pos: іменник
+  usage: Коломийка може бути короткою співаною строфою і танцювальною формою.
+- lemma: аркан
+  translation: arkan
+  pos: іменник
+  usage: Аркан тримає силу гуцульського чоловічого кола.
+- lemma: гречаники
+  translation: hrechanyky dance/song name
+  pos: іменник
+  usage: Гречаники доречно називати як засвідчену танцювально-пісенну назву без непевного цитування.
+- lemma: гонивітер
+  translation: honiviter
+  pos: іменник
+  usage: Гонивітер пов'язаний з образом меткого, непосидючого руху.
+- lemma: троїсті музики
+  translation: traditional folk ensemble
+  pos: словосполука
+  usage: Троїсті музики означають функціональний ансамбль для танцю, а не завжди однакову трійку інструментів.
+- lemma: скрипка
+  translation: fiddle, violin
+  pos: іменник
+  usage: Скрипка часто веде мелодійний провід у танцювальному ансамблі.
+- lemma: цимбали
+  translation: tsymbaly, hammered dulcimer
+  pos: іменник
+  usage: Цимбали додають ударно-струнну фактуру до танцювального пульсу.
+- lemma: бубон
+  translation: frame drum
+  pos: іменник
+  usage: Бубон збирає ритм і тілесну енергію танцю.
+- lemma: басоля
+  translation: folk bass fiddle
+  pos: іменник
+  usage: Басоля підтримує низ і стійкість ансамблю.
+- lemma: підбасок
+  translation: small folk bass
+  pos: іменник
+  usage: Підбасок може тримати басово-ритмічну роль у локальному складі музик.
+- lemma: притуп
+  translation: stamped step
+  pos: іменник
+  usage: Притуп у аркані підкреслює спільний пульс кола.
+- lemma: присядка
+  translation: squat step
+  pos: іменник
+  usage: Присядка є одним із віртуозних елементів шару гопака.
+- lemma: імпровізація
+  translation: improvisation
+  pos: іменник
+  usage: Імпровізація в побутовому танці залежить від музик і реакції громади.
+- lemma: залицяння
+  translation: courtship
+  pos: іменник
+  usage: Залицяння в козачку проявляється через наближення, відступ і відповідь.
+- lemma: стилізація
+  translation: stylization
+  pos: іменник
+  usage: Стилізація може бути мистецьки сильною, але не дорівнює сільському запису.
+- lemma: сценічна хореографія
+  translation: stage choreography
+  pos: словосполука
+  usage: Сценічна хореографія перетворює фольклорний матеріал на композицію для глядача.
+- lemma: академізація
+  translation: academization
+  pos: іменник
+  usage: Академізація дала танцеві професійну школу і водночас змінила частину живої практики.
+- lemma: побутування
+  translation: living practice, circulation
+  pos: іменник
+  usage: Побутування танцю залежить від місця, нагоди, музик і учасників.
+- lemma: джерельна межа
+  translation: source boundary
+  pos: словосполука
+  usage: Джерельна межа не дозволяє домальовувати кроки, яких не підтримує матеріал.
+- lemma: регіональна манера
+  translation: regional manner
+  pos: словосполука
+  usage: Регіональна манера відрізняє подільську, гуцульську або наддніпрянську танцювальну логіку.
+- lemma: Гуцульщина
+  translation: Hutsul region
+  pos: власна назва
+  usage: Гуцульщина важлива для аркана, коломийки, гуцулки і локальних музик.
+- lemma: Наддніпрянщина
+  translation: Dnipro Ukraine region
+  pos: власна назва
+  usage: Наддніпрянщина стала одним із сильних центрів сценічно узагальненого танцювального образу.
+- lemma: Поділля
+  translation: Podilia
+  pos: власна назва
+  usage: Поділля в описах козачка пов'язане з жвавою парною драматургією.
+- lemma: контактна форма
+  translation: contact form
+  pos: словосполука
+  usage: Контактна форма визнає сусідські впливи без заперечення українського побутування.
+- lemma: козацький образ
+  translation: Cossack image
+  pos: словосполука
+  usage: Козацький образ у гопаку є важливим символічним шаром, але не єдиним походженням.
+- lemma: діброва
+  translation: oak grove
+  pos: іменник
+  usage: Діброва в образі Шума підтримує весняну зелену символіку.
+- lemma: весняний мотив
+  translation: spring motif
+  pos: словосполука
+  usage: Весняний мотив поєднує зелень, рух, заклик і сезонне оживлення.

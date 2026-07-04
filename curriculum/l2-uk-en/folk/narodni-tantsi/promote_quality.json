@@ -1,0 +1,69 @@
+{
+  "assembled_mdx_sha256": "81b58c074d0d533752e53d11b9783e5653f7131a3f97900e88e96e7ecd896a1d",
+  "content_hash": {
+    "algorithm": "sha256",
+    "basis": "lesson_sources_v2",
+    "digest": "91c1c224c891605fd09087803eb02eee1e8a8dbf829d6a2b68705a8d6cb35ed3",
+    "files": [
+      {
+        "path": "curriculum/l2-uk-en/plans/folk/narodni-tantsi.yaml",
+        "sha256": "de51e74b1643670d10c69d0cd088d103f8db63825b92632cac2ca534f0af4d3c"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/narodni-tantsi/module.md",
+        "sha256": "50272899ce4c286fd6e8d28370266b4c999f707ecc8fa418698238ae86ac7a1a"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/narodni-tantsi/activities.yaml",
+        "sha256": "87fad19d47cdb340c47683f0b8133855fa07c867b897da3c517e629950d2cc0e"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/narodni-tantsi/vocabulary.yaml",
+        "sha256": "88d0977176671cd2c158c86d4322f36150ae56afa5e299c3fa0c77cb25a5da3e"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/narodni-tantsi/resources.yaml",
+        "sha256": "05f3b05a2803fc2d70b1779a0eb94c70d3c0164ee5bf3f65b650f3ec80837c6b"
+      }
+    ]
+  },
+  "evidence": {
+    "decolonization": "Avoids stage-as-village truth framing, marks Virsky and Soviet ensemble work as academic stylization, distinguishes contact and regional forms, and handles hopak, arkan, metelytsia, kolomyika, and hrechanyky without nationalist or authenticity absolutes.",
+    "pedagogy": "C1+ seminar prose separates tanok, horo-vod and gaivka movement, social dance, music, region, gendered space, and stage transformation; inline and workbook activities ask for source-aware analysis rather than generic answer grading.",
+    "review": "Claude Opus 4.8 independent review found no content or register blockers, requested resource and provenance fixes, and follow-up confirmed no blockers remain after litopys anchor fixes, ukrlib fetch checks, act-2 quote normalization, mak quote verification, activity schema correction, and RitualSequencing shuffle confirmation.",
+    "source_policy": "Dossier-supported claims only; no invented choreography, recordings, captions, performer stories, or image identifiers. Verified fragments are bounded, the hrechanyky refrain is not quoted, and public resource URLs were fetch-checked."
+  },
+  "floors": {
+    "beauty": 8.5,
+    "decolonization": 9.0,
+    "engagement": 8.5,
+    "naturalness": 8.5,
+    "pedagogical": 8.5,
+    "tone": 8.5
+  },
+  "profile": "folk_promote_v1",
+  "review_artifact": null,
+  "reviewer": {
+    "agent": "claude",
+    "family": "anthropic",
+    "model": "claude-opus-4-8"
+  },
+  "schema_version": 1,
+  "scored_at": "2026-07-04T21:47:17Z",
+  "scores": {
+    "beauty": 8.7,
+    "decolonization": 9.2,
+    "engagement": 8.8,
+    "naturalness": 8.8,
+    "pedagogical": 8.9,
+    "tone": 8.8
+  },
+  "slug": "narodni-tantsi",
+  "track": "folk",
+  "verdict": "PASS",
+  "writer": {
+    "agent": "codex",
+    "family": "openai",
+    "model": "gpt-5"
+  }
+}
