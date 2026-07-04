@@ -1,0 +1,70 @@
+{
+  "assembled_mdx_sha256": "33af2d5718d7966ad550caa307304c17e38a23d917c78fbf01251000e78def02",
+  "content_hash": {
+    "algorithm": "sha256",
+    "basis": "lesson_sources_v2",
+    "digest": "ab8269d987b2bdd999cdf14065c8bca25edc7f26ece36b302ed89cff6d006086",
+    "files": [
+      {
+        "path": "curriculum/l2-uk-en/plans/folk/kazky-pro-tvaryn.yaml",
+        "sha256": "fe68f9c5943cfcd4bfe009addd4e1cd771d7e49f9324e77248dc4e6883452840"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/kazky-pro-tvaryn/module.md",
+        "sha256": "dbe7c6121a0e39f29101100adde73d36a0300ad3ee54d79f45efdf2801e0a258"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/kazky-pro-tvaryn/activities.yaml",
+        "sha256": "07fa243e2e5f1e5d87900324f48797c30f58bbacedbe879ef7e24b0a7901ad00"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/kazky-pro-tvaryn/vocabulary.yaml",
+        "sha256": "7b43d585001ee7dd26330b4d3873d5af71d5f39f0e36b04d151d099c54c08a65"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/kazky-pro-tvaryn/resources.yaml",
+        "sha256": "5d4d32dd7191a449da5b43be3545461989bbd07296f9fff20001d3b565f82c67"
+      }
+    ]
+  },
+  "evidence": {
+    "activity_density": "Every activity now carries at least twelve analytical variants, questions, comparison items, or rubric criteria.",
+    "decolonization": "Module frames Ukrainian animal tales as Ukrainian animal epic with world parallels without Russocentric absorption.",
+    "independent_review": "Claude route failed because the native Claude binary is not installed; AGY/Gemini findings were fixed or resolved against active deterministic gates.",
+    "learner_surface": "Ukrainian-facing source and activities avoid internal IDs, English process leakage, and writer-facing grading register.",
+    "source_hygiene": "No hosted animal-tale reading fabricated; only a short Franko literary witness is embedded, with textbook-only and title-only material explicitly bounded."
+  },
+  "floors": {
+    "beauty": 8.5,
+    "decolonization": 9.0,
+    "engagement": 8.5,
+    "naturalness": 8.5,
+    "pedagogical": 8.5,
+    "tone": 8.5
+  },
+  "profile": "folk_promote_v1",
+  "review_artifact": null,
+  "reviewer": {
+    "agent": "agy",
+    "family": "google",
+    "model": "gemini-3.1-pro-high"
+  },
+  "schema_version": 1,
+  "scored_at": "2026-07-04T08:38:20Z",
+  "scores": {
+    "beauty": 8.7,
+    "decolonization": 9.2,
+    "engagement": 8.7,
+    "naturalness": 8.8,
+    "pedagogical": 8.8,
+    "tone": 8.8
+  },
+  "slug": "kazky-pro-tvaryn",
+  "track": "folk",
+  "verdict": "PASS",
+  "writer": {
+    "agent": "codex",
+    "family": "openai",
+    "model": "gpt-5"
+  }
+}

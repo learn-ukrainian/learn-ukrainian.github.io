@@ -1,0 +1,21 @@
+- title: Фарбований лис
+  author: Іван Франко
+  type: literary
+  role: reading
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=25866
+  notes: >-
+    Літературна обробка звіриного епосу; використовувати як авторський текст,
+    не як народний дослівний запис.
+- title: Казка
+  type: reference
+  role: article
+  url: https://uk.wikipedia.org/wiki/Казка
+  notes: >-
+    Зовнішній орієнтир для класифікації казок; не замінює перевірене джерело
+    окремого варіанта.
+- title: Байка
+  type: reference
+  role: article
+  url: https://uk.wikipedia.org/wiki/Байка
+  notes: >-
+    Допоміжний контраст для межі між казкою про тварин і байкою.
