@@ -67,7 +67,7 @@ content_outline:
   words: 700
 focus: The paradox of Bohdan Khmelnytsky as a state-builder who secured alliances that ultimately threatened Ukrainian sovereignty. Analysis of the Cossack Hetmanate's creation, the Pereiaslav Agreement, and the conflicting historical interpretations of Khmelnytsky's legacy.
 level: BIO
-module: bio-021
+module: bio-032
 objectives:
 - Аналізувати стратегію та інституційні основи державотворення Богдана Хмельницького
 - Критично оцінювати дипломатичні маневри Гетьманщини в трикутнику Річ Посполита – Московське царство – Османська імперія
@@ -93,7 +93,7 @@ references:
   note: 'Першоджерела: тексти універсалів, листів та договорів гетьмана.'
   type: primary
   work: LITOPYS (http://izbornyk.org.ua/)
-sequence: 21
+sequence: 32
 slug: bohdan-khmelnytskyy
 subtitle: 'Bohdan Khmelnytsky: The Hetman State-Builder'
 title: 'Богдан Хмельницький: Гетьман-державотворець'

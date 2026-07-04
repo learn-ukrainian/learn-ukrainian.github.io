@@ -69,7 +69,7 @@ content_outline:
   words: 700
 focus: 'The paradox of Panteleimon Kulish: a Europeanizer who preached rural conservatism, an architect of the Ukrainian language who feuded with its greatest figures, and a nation-builder whose legacy is a source of constant debate.'
 level: BIO
-module: bio-040
+module: bio-062
 objectives:
 - Критично оцінювати роль Куліша як "архітектора" сучасної української культури, враховуючи його внесок і суперечливі рішення.
 - Аналізувати філософію "хуторянства" як одночасно консервативну та модернізаторську стратегію для України XIX століття.
@@ -97,7 +97,7 @@ references:
   note: Аналіз постаті Куліша в парадигмі українського модернізму
   type: primary
   work: Від Куліша до Винниченка
-sequence: 40
+sequence: 62
 slug: panteleimon-kulish
 subtitle: 'Panteleimon Kulish: The European on the Farmstead'
 title: 'Пантелеймон Куліш: Європеєць на Хуторі'

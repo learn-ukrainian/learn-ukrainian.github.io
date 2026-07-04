@@ -130,15 +130,25 @@ def validate_plan(plan_path: Path, level: str) -> list:
     return errors
 
 
-def validate_level(level: str) -> dict:
+def validate_level(level: str, plan_pattern: str | None = None) -> dict:
     """Validate all plans for a level."""
     plans_dir = Path(f'curriculum/l2-uk-en/plans/{level}')
 
     if not plans_dir.exists():
         return {'level': level, 'error': f'Directory not found: {plans_dir}', 'plans': []}
 
+    plan_paths = sorted(plans_dir.glob('*.yaml'))
+    if plan_pattern:
+        import fnmatch
+
+        plan_paths = [
+            plan_path
+            for plan_path in plan_paths
+            if fnmatch.fnmatch(plan_path.stem, plan_pattern)
+        ]
+
     results = []
-    for plan_path in sorted(plans_dir.glob('*.yaml')):
+    for plan_path in plan_paths:
         errors = validate_plan(plan_path, level)
         results.append({
             'path': plan_path,
@@ -190,18 +200,14 @@ def main():
     total_plans = 0
 
     for level in levels:
-        result = validate_level(level)
+        result = validate_level(level, plan_pattern=plan_pattern)
 
         if 'error' in result:
             print(f"❌ {level.upper()}: {result['error']}")
             total_invalid += 1
             continue
 
-        # Filter by pattern if specified
         plans = result['plans']
-        if plan_pattern:
-            import fnmatch
-            plans = [p for p in plans if fnmatch.fnmatch(p['slug'], plan_pattern)]
 
         valid_count = sum(1 for p in plans if p['valid'])
         invalid_count = len(plans) - valid_count

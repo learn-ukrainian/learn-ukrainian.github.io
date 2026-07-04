@@ -107,7 +107,7 @@ focus: >-
   Валуєвського циркуляра 1863 року — без задокументованого арешту в наявних
   джерелах.
 level: BIO
-module: bio-198
+module: bio-220
 objectives:
 - >-
   Аналізувати байки та лірику Глібова, зокрема «Журба» (1859) та алегоричні
@@ -155,7 +155,7 @@ references:
   title: Бджола і Мухи
   type: primary
   work: Бджола і Мухи
-sequence: 198
+sequence: 220
 slug: leonid-hlibov
 subtitle: The Fabulist-Editor Who Worked Under Imperial Censorship
 title: 'Леонід Глібов: Байки, газета та Валуєвський циркуляр'

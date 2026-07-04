@@ -103,7 +103,7 @@ focus: >-
   мистецтва та графіки, чиє життя і творчість були знищені радянською
   тоталітарною машиною у 1937 році.
 level: BIO
-module: bio-294
+module: bio-316
 objectives:
 - Розуміти місце Івана Падалки в українському мистецтві як художника, графіка та педагога.
 - Аналізувати особливості методу бойчукістів на прикладі його творчості.
@@ -127,7 +127,7 @@ references:
   path: https://museum.lib.kherson.ua/ukrainskiy-hudozhnik-ivan-padalka.htm
   title: Український художник Іван Падалка (Музей книги, Херсон)
   type: reference
-sequence: 294
+sequence: 316
 slug: ivan-padalka
 subtitle: The Muralist and Printmaker Executed in the Terror
 title: 'Іван Падалка: Лінії та долі розстріляного авангарду'

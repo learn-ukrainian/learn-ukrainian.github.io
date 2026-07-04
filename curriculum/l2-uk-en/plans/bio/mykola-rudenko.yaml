@@ -97,7 +97,7 @@ focus: >-
   самвидаву, філософської економії, судового процесу 1977 року, таборів і заслання з документальними
   деталями досьє.
 level: BIO
-module: bio-234
+module: bio-256
 objectives:
 - >-
   Прослідкувати біографічну дугу Руденка — від сталінської лояльності до правозахисництва — без
@@ -131,7 +131,7 @@ references:
   title: Найбільше диво — життя. Спогади
   type: primary
   work: Найбільше диво — життя
-sequence: 234
+sequence: 256
 slug: mykola-rudenko
 subtitle: From Stalinist Loyalist to Founder of the Ukrainian Helsinki Group
 title: 'Микола Руденко: самвидав, УГГ і ціна правди'

@@ -181,13 +181,39 @@ LEGACY_MISSING_PLAN_FILES = {
     ("c2", "pobut-i-shchodenne-zhyttia.yaml", "68"),
 }
 
-BIO_EXPANSION_PENDING_PLAN_RANGE = range(311, 388)
+BIO_COSSACK_PENDING_PLAN_SLUGS = {
+    "demian-mnohohrishny",
+    "dmytro-hunia",
+    "hryhorii-loboda",
+    "ivan-bohun",
+    "ivan-briukhovetskyi",
+    "ivan-samoilovych",
+    "ivan-skoropadskyi",
+    "ivan-sulyma",
+    "kryshtof-kosynsky",
+    "kyrylo-rozumovskyi",
+    "martyn-pushkar",
+    "mykhailo-doroshenko",
+    "mykhailo-khanenko",
+    "ostap-dashkevych",
+    "pavlo-pavliuk-but",
+    "pavlo-teteria",
+    "petro-doroshenko",
+    "semen-palii",
+    "taras-fedorovych-triasylo",
+    "yakiv-ostrianyn",
+    "yakym-somko",
+    "yurii-khmelnytskyi",
+}
+BIO_EXPANSION_PENDING_PLAN_RANGE = range(333, 410)
 BIO_EXPANSION_READY_PLAN_SLUGS = {"oleksandr-bilash"}
 
 
 def _is_intentionally_missing_plan(level: str, slug: str, seq: int) -> bool:
     """Return true for planned-but-not-yet-built curriculum entries."""
     if (level, f"{slug}.yaml", str(seq)) in LEGACY_MISSING_PLAN_FILES:
+        return True
+    if level == "bio" and slug in BIO_COSSACK_PENDING_PLAN_SLUGS:
         return True
     return (
         level == "bio"

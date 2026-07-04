@@ -86,7 +86,7 @@ focus: >-
   Теодор Ромжа як очільник Мукачівської єпархії в період її примусової ліквідації,
   жертва політичного вбивства радянськими спецслужбами та духовний символ спротиву.
 level: BIO
-module: bio-307
+module: bio-329
 objectives:
 - Розуміти контекст примусової ліквідації греко-католицької церкви на Закарпатті у повоєнні роки.
 - Аналізувати пастирську стратегію єпископа Ромжі в умовах радянського тиску.
@@ -108,7 +108,7 @@ references:
   path: https://synod.ugcc.ua/data/vladyka-teodor-romzha-11713/
   title: Синод УГКЦ
   type: reference
-sequence: 307
+sequence: 329
 slug: teodor-romzha
 subtitle: The Bishop Poisoned for Resisting Soviet Church Liquidation
 title: 'Теодор Ромжа: Пастир Мукачівської єпархії'

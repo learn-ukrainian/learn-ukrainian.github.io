@@ -53,7 +53,7 @@ content_outline:
   words: 1000
 focus: Василь Величковський як єпископ підпільної УГКЦ, його місіонерська діяльність, репресії та депортація з СРСР після двох ув'язнень.
 level: BIO
-module: bio-300
+module: bio-322
 objectives:
 - Аналізувати роль Василя Величковського у збереженні інституційної спадкоємності УГКЦ в умовах підпілля.
 - 'Досліджувати методи роботи радянських каральних органів: від смертних вироків до криміналізації релігійної літератури.'
@@ -81,7 +81,7 @@ references:
   path: https://synod.ugcc.ua/data/1-chervnya-1903-roku-narodyvsya-svyashchmch-vasyliy-velychkovskyy-9231/
   title: 1 червня 1903 року народився...
   type: reference
-sequence: 300
+sequence: 322
 slug: vasyl-velychkovskyi
 subtitle: The Locum Tenens of the Catacomb Church
 title: 'Василь Величковський: Настоятель підпілля'

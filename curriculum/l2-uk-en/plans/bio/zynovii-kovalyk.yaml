@@ -82,7 +82,7 @@ focus: >-
   Зиновій Ковалик (о. Зенон) як репрезентант душпастирського опору радянській
   окупації, місіонер-редемпторист та жертва тюремних розстрілів 1941 року.
 level: BIO
-module: bio-306
+module: bio-328
 objectives:
 - Розуміти історичний контекст радянських репресій проти греко-католицького духовенства у 1939-1941 роках.
 - Аналізувати місійну та душпастирську діяльність о. Зенона Ковалика.
@@ -104,7 +104,7 @@ references:
   path: https://www.vatican.va/news_services/liturgy/saints/20010626_beatif_ucraina_en.html
   title: Ватикан (2001)
   type: reference
-sequence: 306
+sequence: 328
 slug: zynovii-kovalyk
 subtitle: The Redemptorist Missionary Martyred in Lviv
 title: 'Зиновій Ковалик: Місія та тюремне свідчення'

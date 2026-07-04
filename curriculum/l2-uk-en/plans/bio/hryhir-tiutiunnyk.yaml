@@ -97,7 +97,7 @@ focus: >-
   Григір Тютюнник — майстер сільської психологічної новели. Аналіз цензури, ворожої критики
   та непублікації без вигаданого арешту; травма батьківського терору 1937 року.
 level: BIO
-module: bio-236
+module: bio-258
 objectives:
 - >-
   Відокремити біографічні факти Тютюнника (Шилівка, батьківський арешт, бібліографія) від
@@ -128,7 +128,7 @@ references:
   title: Три зозулі з поклоном
   type: primary
   work: Три зозулі з поклоном
-sequence: 236
+sequence: 258
 slug: hryhir-tiutiunnyk
 subtitle: Rural Novellas, Censorship Pressure, and No Fabricated Arrest
 title: 'Григір Тютюнник: новела почуття під тиском цензури'

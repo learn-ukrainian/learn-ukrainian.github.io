@@ -102,7 +102,7 @@ focus: >-
   Василь Барка як свідок Голодомору, остарбайтер і автор *Жовтого князя*: шари радянського
   та нацистського тиску, діаспорне виживання текстів і релігійно-есхатологічна поетика.
 level: BIO
-module: bio-210
+module: bio-232
 objectives:
 - Описувати життєвий шлях Василя Барки від Полтавщини та Кубані до американської діаспори.
 - Аналізувати *Жовтий князь* і поезію *Апостолів* як свідчення Голодомору та вигнання.
@@ -137,7 +137,7 @@ references:
   path: https://diaspora.com.ua/en/vasyl-barka-2/
   title: Vasyl Barka (Музей української діаспори)
   type: reference
-sequence: 210
+sequence: 232
 slug: vasyl-barka
 subtitle: The Holodomor Witness and Author of The Yellow Prince
 title: 'Василь Барка: Жовтий князь і свідчення геноциду'

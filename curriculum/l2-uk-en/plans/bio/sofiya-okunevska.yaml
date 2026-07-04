@@ -23,9 +23,9 @@ activity_hints:
   type: essay-response
 cefr_min: C1
 connects_to:
-- bio-24 (Ivan Vyhovskyi)
-- bio-31 (Pylyp Orlyk)
-- bio-60 (Kyrylo Trylovskyi)
+- bio-35 (Ivan Vyhovskyi)
+- bio-50 (Pylyp Orlyk)
+- bio-82 (Kyrylo Trylovskyi)
 content_outline:
 - points:
   - 'Парадокс: У світі, де жінці було відмовлено в доступі до освіти, як Софії Окуневській вдалося стати однією з перших лікарок в імперії? Чи була це історія тріумфу, чи трагедія боротьби?'
@@ -69,7 +69,7 @@ content_outline:
   words: 700
 focus: Софія Окуневська як перша жінка-лікар в Австро-Угорщині, анти-агіографічний аналіз її кар'єри, конфлікт між професійною медициною та соціальним активізмом, ціна першості для жінок у науці XIX ст.
 level: BIO
-module: bio-064
+module: bio-086
 objectives:
 - Аналізувати життя та діяльність Софії Окуневської через призму анти-агіографії, виявляючи як досягнення, так і ціну успіху
 - Критично оцінювати подвійну роль Окуневської як лікарки та громадської активістки в контексті емансипаційного руху XIX століття
@@ -95,7 +95,7 @@ references:
   note: Матеріали про діяльність жіночих товариств Галичини, листування Окуневської з Наталією Кобринською.
   type: primary
   work: Архів жіночого руху
-sequence: 64
+sequence: 86
 slug: sofiya-okunevska
 subtitle: 'The Price of Being First: Medicine, Feminism, and the Costs of a Trailblazing Career'
 title: 'Софія Окуневська: Перша жінка-лікар'

@@ -96,7 +96,7 @@ focus: >-
   Іван Драч — поет, сценарист і громадський діяч. Аналіз цензури, стоп-кадру «Криниці для спраглих»
   та примусового «каяття» без вигаданого арешту.
 level: BIO
-module: bio-237
+module: bio-259
 objectives:
 - >-
   Відокремити біографічні факти Драча (освіта, бібліографія, дати) від спрощень «соняшник»
@@ -127,7 +127,7 @@ references:
   title: Соняшник
   type: primary
   work: Соняшник
-sequence: 237
+sequence: 259
 slug: ivan-drach
 subtitle: Poetry, Suppressed Cinema, and Coerced Repentance Without Imprisonment
 title: 'Іван Драч: поетичне кіно під цензурою'

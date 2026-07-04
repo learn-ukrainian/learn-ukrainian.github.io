@@ -142,7 +142,7 @@ focus: >-
   каральної психіатрії; читання його творів через ДПУ/НКВС, Голодоморний досвід,
   МУР і небезпеку повторної патологізації.
 level: BIO
-module: bio-202
+module: bio-224
 objectives:
 - >-
   Аналізувати біографію Тодося Осьмачки від Куцівки, КІНО, АСПИС і МАРС до
@@ -185,7 +185,7 @@ references:
   title: Клекіт
   type: primary
   work: Клекіт
-sequence: 202
+sequence: 224
 slug: todos-osmachka
 subtitle: The Poet Who Survived Punitive Psychiatry
 title: 'Тодось Осьмачка: Поезія проти каральної психіатрії'

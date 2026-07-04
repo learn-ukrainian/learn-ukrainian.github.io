@@ -69,7 +69,7 @@ content_outline:
   words: 700
 focus: The life of Mykola Pohribnyi, his role in establishing the standard for Ukrainian broadcast pronunciation, the debate around linguistic purism, and his legacy in post-Soviet Ukraine.
 level: BIO
-module: bio-133
+module: bio-155
 objectives:
 - Аналізувати життя та спадщину Миколи Погрібного, враховуючи конфліктні інтерпретації його ролі.
 - Оцінювати внесок Погрібного у формування еталону українського радіомовлення як інструменту деколонізації.
@@ -100,7 +100,7 @@ references:
   note: Історичний контекст роботи Погрібного, роль радіо в СРСР.
   type: reference
   url: https://uk.wikipedia.org/wiki/Українське_радіо
-sequence: 133
+sequence: 155
 slug: mykola-pohribnyi
 subtitle: 'Mykola Pohribnyi: The Voice of Ukrainian Broadcast'
 title: 'Микола Погрібний: Голос українського ефіру'

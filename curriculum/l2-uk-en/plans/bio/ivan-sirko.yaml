@@ -23,7 +23,7 @@ activity_hints:
   type: essay-response
 cefr_min: C1
 connects_to:
-- bio-26 (Yuriy Nemyrych)
+- bio-36 (Yuriy Nemyrych)
 - b2-hist/ruina
 content_outline:
 - points:
@@ -69,7 +69,7 @@ content_outline:
   words: 700
 focus: The biography of Ivan Sirko, examining the tension between the historical figure and the mythologized "kharakternyk", his military tactics during the Ruin, his complex political maneuvering, and his ambiguous legacy.
 level: BIO
-module: bio-025
+module: bio-041
 objectives:
 - Критично аналізувати різницю між міфологічним образом Івана Сірка (характерник) та історичною постаттю (полководець, політик)
 - Оцінювати військові стратегії Сірка (рейдова війна) в контексті епохи Руїни
@@ -90,7 +90,7 @@ references:
   note: Класичне дослідження, що містить багато першоджерел та фольклорних матеріалів про Сірка.
   type: primary
   work: Історія запорозьких козаків
-sequence: 25
+sequence: 41
 slug: ivan-sirko
 subtitle: 'Ivan Sirko: The Legendary Koshovyi Otaman'
 title: 'Іван Сірко: Легендарний кошовий отаман'

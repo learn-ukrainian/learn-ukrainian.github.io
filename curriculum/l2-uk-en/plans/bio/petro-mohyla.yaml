@@ -23,9 +23,9 @@ activity_hints:
   type: essay-response
 cefr_min: C1
 connects_to:
-- bio-20 (Petro Sahaidachny)
+- bio-23 (Petro Sahaidachny)
 - hist-mohylianska-doba
-- bio-19 (Meletii Smotrytskyi)
+- bio-22 (Meletii Smotrytskyi)
 content_outline:
 - points:
   - 'Парадокс: Як Петро Могила, використовуючи "католицькі" латинські інструменти, зміг не лише захистити, а й модернізувати українське Православ''я?'
@@ -70,7 +70,7 @@ content_outline:
   words: 700
 focus: The life and legacy of Petro Mohyla, focusing on his modernization of the Orthodox Church through Western educational models, the founding of the Kyiv-Mohyla Collegium, and the resulting cultural and theological controversies.
 level: BIO
-module: bio-022
+module: bio-024
 objectives:
 - Критично аналізувати освітню реформу Петра Могили як стратегію модернізації православної церкви
 - Оцінювати аргументи "за" і "проти" латинізації української культури в XVII столітті
@@ -101,7 +101,7 @@ references:
   note: Офіційна історія інституції.
   type: reference
   url: https://ukma.edu.ua/about/history/
-sequence: 22
+sequence: 24
 slug: petro-mohyla
 subtitle: 'Petro Mohyla: Founder of the Academy and Reformer of the Church'
 title: 'Петро Могила: Засновник академії та реформатор церкви'

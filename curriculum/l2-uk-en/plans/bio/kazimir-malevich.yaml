@@ -69,7 +69,7 @@ content_outline:
   words: 700
 focus: 'Казимир Малевич: супрематизм, український авангард, дебати про ідентичність, конфлікт із соцреалізмом. Принцип анти-агіографії.'
 level: BIO
-module: bio-079
+module: bio-101
 objectives:
 - Аналізувати творчий шлях Малевича як серію розривів та криз, а не лінійний розвиток.
 - Критично оцінювати супрематизм як мистецьку утопію, її сильні сторони та внутрішні суперечності.
@@ -99,7 +99,7 @@ references:
   note: Malevich's profile at MoMA for international context.
   type: reference
   url: https://www.moma.org/artists/3710
-sequence: 79
+sequence: 101
 slug: kazimir-malevich
 subtitle: 'Kazimir Malevich: A Revolution in Art'
 title: 'Казимир Малевич: Революція в мистецтві'

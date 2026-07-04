@@ -9,8 +9,6 @@ import sys
 from dataclasses import dataclass
 from pathlib import Path
 
-import yaml
-
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 CURRICULUM_ROOT = PROJECT_ROOT / "curriculum" / "l2-uk-en"
 MDX_ROOT = PROJECT_ROOT / "site" / "src" / "content" / "docs"
@@ -137,29 +135,20 @@ def _read_optional(path: Path) -> bytes | None:
     return path.read_bytes()
 
 
-def _is_base_first_seminar_plan_without_module(target: ModuleTarget) -> bool:
+def _is_seminar_plan_without_module(target: ModuleTarget) -> bool:
     if target.level not in SEMINAR_LEVELS:
         return False
 
     module_dir = CURRICULUM_ROOT / target.level / target.slug
-    if module_dir.exists():
-        return False
-
-    plan_path = CURRICULUM_ROOT / "plans" / target.level / f"{target.slug}.yaml"
-    try:
-        plan = yaml.safe_load(plan_path.read_text(encoding="utf-8")) or {}
-    except OSError:
-        return False
-
-    return plan.get("phase") == "base-first"
+    return not module_dir.exists()
 
 
 def _filter_generatable_targets(targets: list[ModuleTarget]) -> list[ModuleTarget]:
     generatable: list[ModuleTarget] = []
     for target in targets:
-        if _is_base_first_seminar_plan_without_module(target):
+        if _is_seminar_plan_without_module(target):
             print(
-                f"Skipping {target.level}/{target.slug}: base-first seminar plan "
+                f"Skipping {target.level}/{target.slug}: seminar plan "
                 "has no module directory yet."
             )
             continue

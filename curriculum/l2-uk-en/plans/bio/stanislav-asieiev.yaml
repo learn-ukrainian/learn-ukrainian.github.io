@@ -83,7 +83,7 @@ focus: >-
   Аналіз його репортажів, досвіду виживання в "Ізоляції" та перетворення травми на
   документальне звинувачення окупаційного режиму.
 level: BIO
-module: bio-271
+module: bio-293
 objectives:
 - Аналізувати журналістську діяльність Станіслава Асєєва в окупованому Донецьку.
 - Розуміти механізми російського терору на прикладі секретної катівні "Ізоляція".
@@ -114,7 +114,7 @@ references:
   title: В ізоляції
   type: primary
   work: В ізоляції
-sequence: 271
+sequence: 293
 slug: stanislav-asieiev
 subtitle: The Journalist Who Documented the Occupation from Inside
 title: 'Станіслав Асєєв: Світлий шлях та голос з ізоляції'

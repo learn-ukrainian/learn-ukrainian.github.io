@@ -65,7 +65,7 @@ content_outline:
 focus: >-
   Омелян Пріцак — тюрколог та архітектор українських студій у Гарварді. Аналіз витіснення після знищення Кримського, «гарвардського дива» та повернення імені вчителя у 1991 році.
 level: BIO
-module: bio-221
+module: bio-243
 objectives:
 - Аналізувати внесок Пріцака у створення ГАУС та «Гарвардських українознавчих студій».
 - Розуміти зв'язок між знищенням Кримського та побудовою українських студій за кордоном.
@@ -107,7 +107,7 @@ references:
   title: The Origin of Rus'
   type: primary
   work: The Origin of Rus'
-sequence: 221
+sequence: 243
 slug: omelian-pritsak
 subtitle: The Harvard Historian Who Built Ukrainian Studies in America
 title: 'Омелян Пріцак: Гарвардське диво українських студій'

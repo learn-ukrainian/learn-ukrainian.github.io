@@ -69,7 +69,7 @@ content_outline:
   words: 700
 focus: 'The paradox of Ivan Kotliarevskyi: an imperial officer who founded modern Ukrainian literature, the anti-hagiographic view of his legacy, and the revolutionary impact of "Eneida".'
 level: BIO
-module: bio-036
+module: bio-058
 objectives:
 - Аналізувати біографію Івана Котляревського через призму анти-агіографії, розглядаючи його як в контексті служіння імперії, так і в ролі засновника нової української літератури.
 - Критично оцінювати значення «Енеїди», розрізняючи її роль як основи літературної мови та потенційне закріплення стереотипу "малоросійства".
@@ -93,7 +93,7 @@ references:
   note: Compiled research notes on Kotlyarevsky's life, works, and critical interpretations.
   path: wiki/bio/ivan-kotliarevskyi.md
   type: wiki
-sequence: 36
+sequence: 58
 slug: ivan-kotliarevskyi
 subtitle: 'Ivan Kotliarevskyi: Father of Modern Literature'
 title: 'Іван Котляревський: Батько нової літератури'

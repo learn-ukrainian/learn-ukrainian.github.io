@@ -69,7 +69,7 @@ content_outline:
   words: 700
 focus: 'Vira Kholodna: The paradox of a Ukrainian-born star in the imperial cinema, her meteoric rise, artistic innovations in silent film, and the enduring mystery of her death.'
 level: BIO
-module: bio-101
+module: bio-123
 objectives:
 - Критично аналізувати феномен Віри Холодної, розрізняючи історичні факти, культурні міфи та імперські наративи.
 - Пояснювати специфіку акторської майстерності в німому кіно на прикладі творчості Холодної.
@@ -100,7 +100,7 @@ references:
   note: Одна з найбільш детальних біографічних розвідок, аналіз версій смерті.
   type: primary
   work: 'Віра Холодна: узагальнення фактів'
-sequence: 101
+sequence: 123
 slug: vira-kholodna
 subtitle: 'Vira Kholodna: The Queen of Silent Cinema'
 title: 'Віра Холодна: Королева німого кіно'

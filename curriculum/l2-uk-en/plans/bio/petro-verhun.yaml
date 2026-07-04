@@ -88,7 +88,7 @@ focus: >-
   Петро Вергун як провідник українців-католиків у Німеччині, дослідник історії церкви
   та жертва радянської каральної системи, що знищувала діаспорну еліту.
 level: BIO
-module: bio-308
+module: bio-330
 objectives:
 - Аналізувати роль Петра Вергуна в розбудові українського церковного життя в Німеччині.
 - Досліджувати долю української інтелігенції після окупації Берліна радянськими військами.
@@ -114,7 +114,7 @@ references:
   path: https://www.vatican.va/news_services/liturgy/saints/20010626_beatif_ucraina_en.html
   title: Ватикан (2001)
   type: reference
-sequence: 308
+sequence: 330
 slug: petro-verhun
 subtitle: The Apostolic Visitor Kidnapped to the GULAG
 title: 'Петро Вергун: Пастир українців Берліна'

@@ -98,7 +98,7 @@ focus: >-
   подій 1943 року та об'єкт тривалих історичних дискусій. Аналіз його командної ролі,
   відповідальності за насильство проти цивільного населення та загибелі від рук НКВС.
 level: BIO
-module: bio-280
+module: bio-302
 objectives:
 - Аналізувати роль Дмитра Клячківського як командира УПА-Північ у подіях 1943-1945 років.
 - Досліджувати відповідальність командування УПА за масове насильство проти польського цивільного населення на Волині.
@@ -128,7 +128,7 @@ references:
   path: The Causes of Ukrainian-Polish Ethnic Cleansing 1943
   title: Timothy Snyder. "The Causes of Ukrainian-Polish Ethnic Cleansing 1943"
   type: reference
-sequence: 280
+sequence: 302
 slug: dmytro-kliachkivskyi
 subtitle: The UPA-North Commander, Anti-Polish Violence, and the Soviet Counterinsurgency
 title: 'Дмитро Клячківський: Командування УПА-Північ та трагедія Волині'

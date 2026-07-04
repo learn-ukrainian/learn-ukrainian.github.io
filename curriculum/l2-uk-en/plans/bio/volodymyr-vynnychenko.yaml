@@ -131,7 +131,7 @@ focus: >-
   автор державних документів Української революції та емігрант, якого радянська
   система стерла через його політичну й літературну вагу.
 level: BIO
-module: bio-200
+module: bio-222
 objectives:
 - >-
   Аналізувати подвійну роль Винниченка як модерного письменника і державного
@@ -175,7 +175,7 @@ references:
   title: Відродження нації
   type: primary
   work: Відродження нації
-sequence: 200
+sequence: 222
 slug: volodymyr-vynnychenko
 subtitle: The Modernist Statesman Erased by the Soviet Canon
 title: 'Володимир Винниченко: Письменник, прем''єр і вигнанець'

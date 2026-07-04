@@ -69,7 +69,7 @@ content_outline:
   words: 700
 focus: The life of Levko Lukyanenko, focusing on his journey from a political prisoner sentenced to death for advocating peaceful secession to becoming the author of Ukraine's Act of Independence.
 level: BIO
-module: bio-134
+module: bio-156
 objectives:
 - Аналізувати життя та спадщину Левка Лук'яненка в контексті боротьби за незалежність України.
 - Критично оцінювати стратегію мирного, юридичного опору тоталітарному режиму.
@@ -100,7 +100,7 @@ references:
   path: https://uk.wikipedia.org/wiki/Українська_Гельсінська_спілка
   type: reference
   work: Матеріали про Українську Гельсінську групу
-sequence: 134
+sequence: 156
 slug: levko-lukyanenko
 subtitle: From Death Sentence to Father of Independence
 title: 'Левко Лук''яненко: Автор Акту незалежності'

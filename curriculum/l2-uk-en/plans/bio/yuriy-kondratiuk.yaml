@@ -70,7 +70,7 @@ content_outline:
   words: 700
 focus: 'Юрій Кондратюк (Олександр Шаргей): піонер космонавтики, розробник «траси Кондратюка», трагічна доля вченого в тоталітарній системі.'
 level: BIO
-module: bio-109
+module: bio-131
 objectives:
 - Оцінити науковий внесок Юрія Кондратюка в розвиток світової космонавтики
 - Проаналізувати причини та наслідки його життя під чужим ім'ям в умовах тоталітарного режиму
@@ -96,7 +96,7 @@ references:
   note: To verify claims of Kondratiuk's influence on the lunar landing trajectory.
   type: reference
   work: 'The Apollo Program: A Giant Leap for Mankind'
-sequence: 109
+sequence: 131
 slug: yuriy-kondratiuk
 subtitle: Геній, що проміняв ім'я на зірки
 title: 'Юрій Кондратюк: Пророк космічних трас'

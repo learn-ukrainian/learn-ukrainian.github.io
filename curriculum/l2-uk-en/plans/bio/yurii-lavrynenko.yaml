@@ -64,7 +64,7 @@ content_outline:
 focus: >-
   Юрій Лавріненко — жертва репресій і укладач антології «Розстріляне відродження».
 level: BIO
-module: bio-223
+module: bio-245
 objectives:
 - Аналізувати антологію «Розстріляне відродження».
 - Розуміти механізм репресій проти покоління.
@@ -98,7 +98,7 @@ references:
   title: Розстріляне відродження
   type: primary
   work: Розстріляне відродження
-sequence: 223
+sequence: 245
 slug: yurii-lavrynenko
 subtitle: The Editor Who Named the Executed Renaissance
 title: 'Юрій Лавріненко: Антологія Розстріляного відродження'

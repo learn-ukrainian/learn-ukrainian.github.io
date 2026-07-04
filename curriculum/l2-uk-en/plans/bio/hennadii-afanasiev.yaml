@@ -86,7 +86,7 @@ focus: >-
   громадянської мужності у руйнуванні сфабрикованої справи ФСБ, боротьби за політв'язнів
   та військової самопожертви під час повномасштабної війни.
 level: BIO
-module: bio-273
+module: bio-295
 objectives:
 - Аналізувати кримський громадський спротив на початку російської окупації 2014 року.
 - Досліджувати механізми російських політичних репресій та фабрикації кримінальних справ.
@@ -107,7 +107,7 @@ references:
   path: https://www.president.gov.ua/documents/7412025-56717
   title: Указ Президента України №741/2025
   type: reference
-sequence: 273
+sequence: 295
 slug: hennadii-afanasiev
 subtitle: The Prisoner Who Broke the Russian Case and Fell for Ukraine
 title: 'Геннадій Афанасьєв: Від кримського в''язня до Героя України'

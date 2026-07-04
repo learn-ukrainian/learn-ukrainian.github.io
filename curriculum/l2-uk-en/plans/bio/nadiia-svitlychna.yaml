@@ -120,7 +120,7 @@ focus: >-
   Україні»: аналіз інформаційної праці дисидентства, жіночого досвіду ув'язнення та
   збереження української пам'яті між Україною і діаспорою.
 level: BIO
-module: bio-252
+module: bio-274
 objectives:
 - >-
   Аналізувати інформаційну працю дисидентства — самвидав, редагування,
@@ -158,7 +158,7 @@ references:
   path: https://uk.wikipedia.org/wiki/Українська_Гельсінська_група
   title: Українська Гельсінська група (Вікіпедія)
   type: reference
-sequence: 252
+sequence: 274
 slug: nadiia-svitlychna
 subtitle: The Information Labor of Dissidence
 title: 'Надія Світлична: Інформаційна праця як спротив'

@@ -23,9 +23,9 @@ activity_hints:
   type: essay-response
 cefr_min: C1
 connects_to:
-- bio-49 (Ivan Puliui)
-- bio-51 (Mariya Pavlova)
-- bio-52 (Mariya Zankovetska)
+- bio-71 (Ivan Puliui)
+- bio-73 (Mariya Pavlova)
+- bio-74 (Mariya Zankovetska)
 content_outline:
 - points:
   - 'Парадокс: Як один із найталановитіших полководців УНР, герой легендарного Кримського походу, міг бути засуджений до розстрілу власним урядом лише через рік після свого тріумфу?'
@@ -69,7 +69,7 @@ content_outline:
   words: 700
 focus: 'The paradox of Petro Bolbochan: a brilliant military commander who led the legendary 1918 Crimean campaign, only to be executed by his own government. Examines the conflict between military duty and political intrigue during the Ukrainian War of Independence.'
 level: BIO
-module: bio-086
+module: bio-108
 objectives:
 - Аналізувати тріумф і трагедію Петра Болбочана, відділяючи військового генія від політичного діяча
 - Критично оцінювати стратегічне значення Кримського походу 1918 року та його далекосяжні політичні наслідки
@@ -100,7 +100,7 @@ references:
   notes: Публікації та документи, що стосуються справи Болбочана.
   type: reference
   url: https://www.istpravda.com.ua
-sequence: 86
+sequence: 108
 slug: petro-bolbochan
 subtitle: Triumph and Tragedy of the Liberator of Crimea
 title: 'Петро Болбочан: Тріумф і трагедія визволителя Криму'

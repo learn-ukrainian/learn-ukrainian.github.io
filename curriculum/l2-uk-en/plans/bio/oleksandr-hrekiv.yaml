@@ -68,7 +68,7 @@ content_outline:
   words: 700
 focus: 'Oleksandr Hrekiv: a professional tsarist general who became a key architect of the UNR Army. The module explores the paradox of a competent commander presiding over a strategic defeat, analyzing the conflict between professional military doctrine and revolutionary chaos.'
 level: BIO
-module: bio-076
+module: bio-098
 objectives:
 - Критично аналізувати причини поразки Армії УНР, розрізняючи військові, політичні та соціальні фактори
 - Оцінювати роль Олександра Грекова в історії української армії, уникаючи агіографії та надмірної критики
@@ -94,7 +94,7 @@ references:
   source: Інститут історії України НАНУ
   type: reference
   url: https://www.history.org.ua
-sequence: 76
+sequence: 98
 slug: oleksandr-hrekiv
 subtitle: The Commander Who Built an Army and Lost a War
 title: 'Олександр Греків: Полководець УНР'

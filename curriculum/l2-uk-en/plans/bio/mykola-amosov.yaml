@@ -66,7 +66,7 @@ content_outline:
   words: 700
 focus: The dual legacy of Mykola Amosov as a pioneer cardiac surgeon and a public health philosopher, exploring his innovations in medicine, his cybernetic approach to the human body, and his bestselling wellness system.
 level: BIO
-module: bio-127
+module: bio-149
 objectives:
 - Критично аналізувати подвійну спадщину Миколи Амосова як кардіохірурга-новатора та як філософа здорового способу життя
 - Оцінювати внесок Амосова в розвиток медицини в контексті радянської науки та його унікальний "кібернетичний" підхід
@@ -97,7 +97,7 @@ references:
   type: primary
   url: https://www.health.org.ua/Amosov.htm
   work: Роздуми про здоров'я (Текст)
-sequence: 127
+sequence: 149
 slug: mykola-amosov
 subtitle: 'Mykola Amosov: Surgeon and Philosopher of Health'
 title: 'Микола Амосов: Хірург і філософ здоров''я'

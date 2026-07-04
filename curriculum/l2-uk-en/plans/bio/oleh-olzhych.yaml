@@ -69,7 +69,7 @@ content_outline:
   words: 700
 focus: 'The life of Oleh Olzhych: a unique synthesis of a world-class archaeologist, a stoic poet, and a key figure in the Ukrainian nationalist underground, culminating in his martyrdom.'
 level: BIO
-module: bio-179
+module: bio-201
 objectives:
 - Критично аналізувати поєднання наукової, поетичної та політичної діяльності Олега Ольжича, уникаючи агіографічних оцінок.
 - Дослідити археологічні досягнення Ольжича як інструмент культурного опору та доведення тяглості української цивілізації.
@@ -99,7 +99,7 @@ references:
   note: Академічне дослідження постаті Ольжича в контексті його оточення
   type: primary
   work: 'Олег Ольжич і Олена Теліга: Нариси про життя і творчість'
-sequence: 179
+sequence: 201
 slug: oleh-olzhych
 subtitle: 'Oleh Olzhych: A stone from God''s sling'
 title: 'Олег Ольжич: Камінь з Божої пращі'

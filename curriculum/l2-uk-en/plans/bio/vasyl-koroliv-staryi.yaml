@@ -132,7 +132,7 @@ focus: >-
   еміграції, дитячий письменник і мемуарист, чию політичну біографію радянський
   канон стер за зв'язок із Петлюрою та першою хвилею еміграції.
 level: BIO
-module: bio-203
+module: bio-225
 objectives:
 - >-
   Аналізувати Короліва-Старого як письменника, ветеринара, видавця і діяча УНР,
@@ -175,7 +175,7 @@ references:
   title: Згадки про мою смерть
   type: primary
   work: Згадки про мою смерть
-sequence: 203
+sequence: 225
 slug: vasyl-koroliv-staryi
 subtitle: The Fairy-Tale Writer Erased as a Central Rada Founder
 title: 'Василь Королів-Старий: Казка, УНР і празьке вигнання'

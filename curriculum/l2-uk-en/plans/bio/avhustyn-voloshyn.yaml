@@ -102,7 +102,7 @@ content_outline:
 focus: >-
   Августин Волошин як педагог, державотворець та президент Карпатської України. Аналіз його освітньої діяльності, складної геополітики 1939 року та знищення радянськими спецслужбами.
 level: BIO
-module: bio-282
+module: bio-304
 objectives:
 - Аналізувати роль Августина Волошина в розвитку української освіти на Закарпатті.
 - Оцінювати значення проголошення Карпатської України в складних геополітичних умовах 1939 року.
@@ -124,7 +124,7 @@ references:
   path: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CV%5CO%5CVoloshynAvhustyn.htm
   title: Voloshyn, Avhustyn (IEU)
   type: reference
-sequence: 282
+sequence: 304
 slug: avhustyn-voloshyn
 subtitle: The Educator and President of Carpatho-Ukraine Imprisoned by the Soviets
 title: 'Августин Волошин: Педагог, президент, жертва імперії'

@@ -858,8 +858,14 @@ levels:
       - label: Rus founders and dynasties
         start: knyahynia-olha
         end: yuriy-lvovych
-      - label: Borderland power, church reform, and early Cossacks
+      - label: Borderland power, church reform, and early Cossack formation
         start: kostiantyn-ostrozky-elder
+        end: ivan-sulyma
+      - label: Cossack revolution, Ruin, and Hetmanate autonomy
+        start: pavlo-pavliuk-but
+        end: petro-kalnyshevskyy
+      - label: Baroque philosophy and imperial-era cultural transition
+        start: hryhoriy-skovoroda
         end: dmytro-bortnyanskyy
       - label: Cultural nation-builders
         start: ivan-kotliarevskyi
@@ -898,8 +904,8 @@ levels:
         start: pavlo-chubynskyi
         end: volodymyr-yermolenko
       - label: Ukrainian music and song-canon additions
-        start: kyrylo-stetsenko
-        end: raisa-kyrychenko
+        start: stanislav-liudkevych
+        end: ivan-karabyts
       - label: Ukrainian theater and visual culture additions
         start: mykola-sadovskyi
         end: sofiia-yablonska
@@ -921,23 +927,45 @@ levels:
       - yuriy-lvovych
       - kostiantyn-ostrozky-elder
       - roksolana
+      - ostap-dashkevych
       - dmytro-vyshnevetsky
       - kostiantyn-vasyl-ostrozky
+      - kryshtof-kosynsky
       - iov-boretskyi
       - severyn-nalyvaiko
+      - hryhorii-loboda
       - meletii-smotrytskyi
       - petro-sahaidachny
-      - bohdan-khmelnytskyy
       - petro-mohyla
       - sylvestr-kosiv
+      - mykhailo-doroshenko
+      - taras-fedorovych-triasylo
+      - ivan-sulyma
+      - pavlo-pavliuk-but
+      - yakiv-ostrianyn
+      - dmytro-hunia
+      - bohdan-khmelnytskyy
+      - ivan-bohun
+      - martyn-pushkar
       - ivan-vyhovskyi
-      - ivan-sirko
       - yuriy-nemyrych
+      - yakym-somko
+      - yurii-khmelnytskyi
+      - pavlo-teteria
+      - ivan-briukhovetskyi
+      - ivan-sirko
+      - petro-doroshenko
+      - mykhailo-khanenko
+      - demian-mnohohrishny
+      - ivan-samoilovych
+      - semen-palii
       - ivan-mazepa
-      - danylo-apostol
+      - ivan-skoropadskyi
       - kost-hordiyenko
-      - pavlo-polubotok
       - pylyp-orlyk
+      - pavlo-polubotok
+      - danylo-apostol
+      - kyrylo-rozumovskyi
       - petro-kalnyshevskyy
       - hryhoriy-skovoroda
       - maksym-berezovskyy
@@ -1251,19 +1279,19 @@ levels:
       - ivan-lysiak-rudnytskyi
       - yurii-lutskyi
       - volodymyr-yermolenko
+      - stanislav-liudkevych
       - kyrylo-stetsenko
-      - oleksandr-bilash
+      - levko-revutskyi
+      - anatolii-kos-anatolskyi
       - andrii-malyshko
       - platon-maiboroda
-      - levko-revutskyi
-      - stanislav-liudkevych
-      - myroslav-skoryk
-      - ivan-karabyts
-      - yevhen-stankovych
-      - anatolii-kos-anatolskyi
       - dmytro-hnatiuk
+      - oleksandr-bilash
       - anatolii-solovianenko
+      - myroslav-skoryk
+      - yevhen-stankovych
       - raisa-kyrychenko
+      - ivan-karabyts
       - mykola-sadovskyi
       - panas-saksahanskyi
       - heorhii-narbut

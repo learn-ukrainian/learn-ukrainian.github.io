@@ -84,7 +84,7 @@ focus: >-
   Наріман Джелял як обличчя ненасильницького опору російській окупації Криму,
   політичний в'язень та лідер, який представляє інтереси свого народу на міжнародній арені.
 level: BIO
-module: bio-310
+module: bio-332
 objectives:
 - Розуміти роль інституту Меджлісу кримськотатарського народу після російської анексії Криму.
 - Аналізувати використання окупаційних судів як інструменту політичного терору.
@@ -110,7 +110,7 @@ references:
   path: https://cfj.org/wp-content/uploads/2024/05/Nariman-Dzhelyal-Fairness-Report-May-2024.pdf
   title: Clooney Foundation for Justice (2024)
   type: reference
-sequence: 310
+sequence: 332
 slug: nariman-dzhelial
 subtitle: The Mejlis Leader Jailed for Defending Crimea
 title: 'Наріман Джелял: Опір і гідність в окупації'
