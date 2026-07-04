@@ -1,0 +1,69 @@
+{
+  "assembled_mdx_sha256": "e626b3f26832c4a1990f612bae1089e26d691941e5cf9e02820b7ac4a8c7000c",
+  "content_hash": {
+    "algorithm": "sha256",
+    "basis": "lesson_sources_v2",
+    "digest": "d556f198a4e70d399d1bc0bd83d1328836be3413490c350f42e0bb81e1fa3a08",
+    "files": [
+      {
+        "path": "curriculum/l2-uk-en/plans/folk/zahadky.yaml",
+        "sha256": "5a0c710447ed62286588a50e02e21858b8fb183338a01dfd0b7b16e4c3b228a8"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/zahadky/module.md",
+        "sha256": "cc52befa85407d6fc6065d3b3433c79ac11c0296482cfa2cae24288f3e4357cc"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/zahadky/activities.yaml",
+        "sha256": "e34155aba092721a28c95a23c11ef691004a2334da2154852b764e27e26051dd"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/zahadky/vocabulary.yaml",
+        "sha256": "910dc768f53cac96412d238ec681889e221b6feb24e05e90ceaf7418a089d35f"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/zahadky/resources.yaml",
+        "sha256": "12422f78b56c6ca44eccf6eac3867c538b175c6d3f35042904cde517eb307b8a"
+      }
+    ]
+  },
+  "evidence": {
+    "decolonization": "Module centers Ukrainian riddle practice, variant discipline, household/material knowledge, and anti-flattening cautions without Russocentric derivation claims.",
+    "pedagogical": "Lesson teaches hidden naming, metaphor, performance context, source passports, and responsible comparison through V2 inline/workbook activities.",
+    "review": "Claude Opus 4.8 independent reviews messages 2 and 4 returned PASS with no blockers; no DeepSeek used.",
+    "source_policy": "Quoted riddle fragments are limited to source-dossier confidence-1.0 forms; do-not-quote and uncertain variants are paraphrased or omitted."
+  },
+  "floors": {
+    "beauty": 8.5,
+    "decolonization": 9.0,
+    "engagement": 8.5,
+    "naturalness": 8.5,
+    "pedagogical": 8.5,
+    "tone": 8.5
+  },
+  "profile": "folk_promote_v1",
+  "review_artifact": null,
+  "reviewer": {
+    "agent": "claude",
+    "family": "anthropic",
+    "model": "Claude Opus 4.8"
+  },
+  "schema_version": 1,
+  "scored_at": "2026-07-04T16:00:26Z",
+  "scores": {
+    "beauty": 8.8,
+    "decolonization": 9.1,
+    "engagement": 8.8,
+    "naturalness": 8.8,
+    "pedagogical": 9.0,
+    "tone": 8.8
+  },
+  "slug": "zahadky",
+  "track": "folk",
+  "verdict": "PASS",
+  "writer": {
+    "agent": "codex",
+    "family": "openai",
+    "model": "gpt-5"
+  }
+}
