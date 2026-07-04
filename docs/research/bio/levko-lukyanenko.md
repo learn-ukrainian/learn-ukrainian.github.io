@@ -91,7 +91,7 @@ After the first fifteen-year term he did not move into private silence. He signe
 > Every plan path under **Existing** below was verified with `test -e` on 2026-07-04 and resolves under `curriculum/l2-uk-en/plans/`.
 
 - **Existing BIO plan surfaces (VERIFIED present):**
-  - `curriculum/l2-uk-en/plans/bio/levko-lukyanenko.yaml` — existing dedicated BIO plan; note that an older dossier path uses `levko-lukianenko`.
+  - `curriculum/l2-uk-en/plans/bio/levko-lukyanenko.yaml` — existing dedicated BIO plan; older duplicate dossier paths should route here.
 - **Existing HIST plan surfaces (VERIFIED present):**
   - `curriculum/l2-uk-en/plans/hist/ukrainska-helsinska-hrupa.yaml` — UHG context and rights-documentation network.
   - `curriculum/l2-uk-en/plans/hist/nezalezhnist-1991.yaml` — Act of Declaration of Independence and referendum context.
@@ -112,7 +112,7 @@ After the first fifteen-year term he did not move into private silence. He signe
 ## 8. Naming-canonical
 
 - **Slug:** `levko-lukyanenko`
-- **Existing related research slug:** `levko-lukianenko` appears in the earlier Phase 1 dossier and allocation note; do not create a duplicate person from the transliteration difference.
+- **Retired related research slug:** `levko-lukianenko` appeared in an earlier Phase 1 dossier and allocation note; route it to `levko-lukyanenko` and do not create a duplicate person from the transliteration difference.
 - **EN canonical (project display):** Levko Lukyanenko.
 - **EN scholarly / BGN-style search form:** Levko Lukianenko.
 - **UA canonical:** Лук'яненко Левко Григорович.

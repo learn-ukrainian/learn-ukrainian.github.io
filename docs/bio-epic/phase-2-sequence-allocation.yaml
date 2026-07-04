@@ -51,13 +51,13 @@ existing_coverage:
   plan_slug: oles-honchar
   module: bio-130
   sequence: 130
-- research_slug: levko-lukianenko
+- research_slug: levko-lukyanenko
   plan_slug: levko-lukyanenko
   module: bio-134
   sequence: 134
   note: >-
-    Legacy plan filename uses lukyanenko; the Phase-1 dossier uses BGN/PCGN lukianenko. Treat as one
-    figure and do not create a duplicate plan.
+    Earlier drafts used BGN/PCGN lukianenko; the manifest, plan, and research dossier now use
+    lukyanenko. Treat as one figure and do not create a duplicate plan.
 allocations:
 - sequence: 181
   module: bio-181
