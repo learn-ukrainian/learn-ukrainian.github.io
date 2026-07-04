@@ -1,0 +1,120 @@
+- lemma: анекдот
+  translation: anecdote; joke
+  pos: іменник
+  usage: Анекдот тримається на короткій сцені й несподіваному пуанті.
+- lemma: небилиця
+  translation: tall tale; nonsense tale
+  pos: іменник
+  usage: Небилиця подає неможливу подію як правило комічної гри.
+- lemma: сміхова культура
+  translation: laughter culture
+  pos: словосполука
+  usage: Сміхова культура поєднує розвагу, сатиру й перевертання норм.
+- lemma: пуант
+  translation: punchline
+  pos: іменник
+  usage: Пуант змінює значення всієї попередньої сцени.
+- lemma: дотеп
+  translation: witty remark
+  pos: іменник
+  usage: Дотеп може бути коротшим за повний анекдот, але зберігати його силу.
+- lemma: побрехенька
+  translation: humorous fib; anecdotal tale
+  pos: іменник
+  usage: Побрехенька є історичною українською назвою малої комічної оповіді.
+- lemma: інтермедія
+  translation: interlude
+  pos: іменник
+  usage: Інтермедія вводила коротку комічну сцену між серйозними діями.
+- lemma: усмішка
+  translation: humorous sketch
+  pos: іменник
+  usage: Усмішка може використовувати народну техніку розмовного пуанта.
+- lemma: фейлетон
+  translation: feuilleton
+  pos: іменник
+  usage: Фейлетон перетворює сатиричний дотеп на публіцистичну форму.
+- lemma: співомовка
+  translation: comic verse tale
+  pos: іменник
+  usage: Співомовка часто близька до анекдоту за малою сценічною будовою.
+- lemma: карнавал
+  translation: carnival
+  pos: іменник
+  usage: Карнавал дозволяє тимчасове перевертання звичних ролей.
+- lemma: антисвіт
+  translation: anti-world; inverted world
+  pos: іменник
+  usage: Антисвіт показує норму через її комічне перевертання.
+- lemma: інверсія
+  translation: inversion
+  pos: іменник
+  usage: Інверсія робить сильного смішним, а слабкого мовно сильним.
+- lemma: соціальна мішень
+  translation: social target
+  pos: словосполука
+  usage: Соціальна мішень показує, на кого або на що спрямований сміх.
+- lemma: стереотипізація
+  translation: stereotyping
+  pos: іменник
+  usage: Стереотипізація перетворює групу на готову мішень сміху.
+- lemma: ксенофобія
+  translation: xenophobia
+  pos: іменник
+  usage: Ксенофобія в старому гуморі має бути предметом критичного аналізу.
+- lemma: сміх згори вниз
+  translation: punching down
+  pos: словосполука
+  usage: Сміх згори вниз б'є по тому, хто має менше соціального захисту.
+- lemma: сатира
+  translation: satire
+  pos: іменник
+  usage: Сатира спрямована на владу, брехню, жадібність або лицемірство.
+- lemma: висміювання
+  translation: ridicule
+  pos: іменник
+  usage: Висміювання може бути визвольним або принизливим залежно від мішені.
+- lemma: кепкування
+  translation: mockery; teasing
+  pos: іменник
+  usage: Кепкування в анекдоті часто залежить від інтонації й ситуації.
+- lemma: мовна маска
+  translation: speech mask
+  pos: словосполука
+  usage: Мовна маска показує соціальну роль персонажа через його спосіб говорити.
+- lemma: кмітливість
+  translation: quick wit
+  pos: іменник
+  usage: Кмітливість дозволяє персонажеві перемагати не силою, а словом.
+- lemma: канцелярщина
+  translation: bureaucratic language
+  pos: іменник
+  usage: Канцелярщина часто стає мішенню анекдотичного сміху.
+- lemma: мандрівний сюжет
+  translation: migratory plot
+  pos: словосполука
+  usage: Мандрівний сюжет може отримувати українські ролі й місцеву мову.
+- lemma: місцевий колорит
+  translation: local color
+  pos: словосполука
+  usage: Місцевий колорит відрізняє український варіант від міжнародної схеми.
+- lemma: джерельний статус
+  translation: source status
+  pos: словосполука
+  usage: Джерельний статус визначає, чи можна цитувати текст дослівно.
+- lemma: парафраза
+  translation: paraphrase
+  pos: іменник
+  usage: Парафраза потрібна, коли мотив відомий, але точний текст не перевірено.
+- lemma: дослівна перевірка
+  translation: verbatim verification
+  pos: словосполука
+  usage: Дослівна перевірка захищає анекдот від вигадування з пам'яті.
+- lemma: виконання
+  translation: performance
+  pos: іменник
+  usage: Виконання анекдоту включає голос, паузу, темп і реакцію слухачів.
+- lemma: етична межа
+  translation: ethical boundary
+  pos: словосполука
+  usage: Етична межа підказує, коли сюжет треба аналізувати, а не відтворювати.

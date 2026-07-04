@@ -1,0 +1,69 @@
+{
+  "assembled_mdx_sha256": "073532154e626608be1ccd7dd6cfe4e55f4b4d880b3f3ab231ce31c2b0946d02",
+  "content_hash": {
+    "algorithm": "sha256",
+    "basis": "lesson_sources_v2",
+    "digest": "b1b2910db8bc1e4e992b82ce450cc44636fbff6d11871ad29551b25ad02056ae",
+    "files": [
+      {
+        "path": "curriculum/l2-uk-en/plans/folk/narodni-anekdoty.yaml",
+        "sha256": "4f00078d1fb230a115e0f7e8921259dbba7b9767397a669ddf8ef00f18d26bb2"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/narodni-anekdoty/module.md",
+        "sha256": "91586d5e32e26c42fe1941e05bfab39e9887d90900c922f2b2cd8a3df2c449dc"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/narodni-anekdoty/activities.yaml",
+        "sha256": "f91f46351368abc29c71992dc117021a902b5d73a776a730ea3611b6271304d7"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/narodni-anekdoty/vocabulary.yaml",
+        "sha256": "edc2e3689630ae5612a0e4e7d25078bbe4c6d2590eca534d3f172d3150043c4b"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/narodni-anekdoty/resources.yaml",
+        "sha256": "78e5d15232df9ec8994f7f17e17c3abc125af2c81eb601a32dd8ee3bbca1e0bf"
+      }
+    ]
+  },
+  "evidence": {
+    "decolonization": "Module treats folk humor as Ukrainian verbal tradition with anti-imperial framing, critical handling of москаль/Roma/clergy/pan/servant stereotypes, and no punch-down performance prompts.",
+    "pedagogical": "Lesson teaches short comic prose through source discipline, social target analysis, safe performance boundaries, V2 inline/workbook activities, and a 340-460 word exemplar.",
+    "review": "Claude Opus 4.8 independent review follow-up returned PASS with no blocker/major/minor findings; only optional nits. No DeepSeek used.",
+    "source_policy": "Full anecdotes are paraphrase-only; the only embedded verbatim fragment is a short verified formula from the dossier/Chyzhevsky evidence, with broader plots framed analytically."
+  },
+  "floors": {
+    "beauty": 8.5,
+    "decolonization": 9.0,
+    "engagement": 8.5,
+    "naturalness": 8.5,
+    "pedagogical": 8.5,
+    "tone": 8.5
+  },
+  "profile": "folk_promote_v1",
+  "review_artifact": "ai_agent_bridge messages 2 and 4; follow-up PASS at 2026-07-04T16:51:24Z",
+  "reviewer": {
+    "agent": "claude",
+    "family": "anthropic",
+    "model": "Claude Opus 4.8"
+  },
+  "schema_version": 1,
+  "scored_at": "2026-07-04T16:52:00Z",
+  "scores": {
+    "beauty": 8.8,
+    "decolonization": 9.2,
+    "engagement": 8.8,
+    "naturalness": 8.8,
+    "pedagogical": 9.0,
+    "tone": 8.9
+  },
+  "slug": "narodni-anekdoty",
+  "track": "folk",
+  "verdict": "PASS",
+  "writer": {
+    "agent": "codex",
+    "family": "openai",
+    "model": "gpt-5"
+  }
+}
