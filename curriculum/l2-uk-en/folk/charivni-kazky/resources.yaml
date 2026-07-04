@@ -1,0 +1,27 @@
+- title: Казка
+  type: reference
+  role: reading
+  url: https://uk.wikipedia.org/wiki/Казка
+  notes: Прочитати розділи про українські народні казки й відділити жанрові ознаки від довільних пояснень походження.
+- title: Українська народна казка Кирило Кожум'яка
+  type: reference
+  role: reading
+  url: https://uk.wikipedia.org/wiki/Кирило_Кожум'яка
+  notes: Простежити, як київський простір, Дніпро, ремесло й змієборство формують український варіант героїчного сюжету.
+- title: Історія української літератури
+  author: Грушевський М.
+  type: scholarly
+  role: article
+  url: http://litopys.org.ua/hrushukr/hrush.htm
+  notes: Використати як дослідницький контекст для казкових мотивів, а не як підставу для довгого цитування народних текстів.
+- title: Енциклопедія українознавства
+  author: Колектив
+  type: scholarly
+  role: article
+  url: http://litopys.org.ua/encycl/euii.htm
+  notes: Звірити схему відходу, помічників, противника й перетворення героя в описі жанру.
+- title: Чарівні казки
+  type: reference
+  role: article
+  url: https://uk.wikipedia.org/wiki/Українські_народні_казки
+  notes: Загальний зовнішній орієнтир для українського казкового корпусу; не замінює перевірене джерело окремого варіанта.

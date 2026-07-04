@@ -1,0 +1,70 @@
+{
+  "assembled_mdx_sha256": "f607d9d778e5024c8cb2a4402922eba1476ad5ba0ffce2112a9251a6b5563d3f",
+  "content_hash": {
+    "algorithm": "sha256",
+    "basis": "lesson_sources_v2",
+    "digest": "6507ca3be3575bc99ca178c41210dee0fb4ca2209fbef81db99851609b995f45",
+    "files": [
+      {
+        "path": "curriculum/l2-uk-en/plans/folk/charivni-kazky.yaml",
+        "sha256": "4fab66040d8502d756c17849ab717c49ee03d2b92c61dfaf63b171a8a9294846"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/charivni-kazky/module.md",
+        "sha256": "06d73358a31fe99921136b98e8f882af3bdbb6322546c644cbf4dd6eaf9b67ba"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/charivni-kazky/activities.yaml",
+        "sha256": "2deda20b5607b50865505005d56e1af33c1726e1ab4357d4b3a663fab0b28864"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/charivni-kazky/vocabulary.yaml",
+        "sha256": "a8488431c8496c64573eb13e4e5751a6b88d9a1dc2b820b26a04aa5d025fe873"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/charivni-kazky/resources.yaml",
+        "sha256": "53e9655dbdeeb6bbaf96e29342baab91e3358addff69ca82e8257dd4fb60954c"
+      }
+    ]
+  },
+  "evidence": {
+    "decolonization": "Module treats Ukrainian magic tales as Ukrainian oral literary heritage with explicit resistance to imperial dissolving into an undifferentiated common corpus.",
+    "learner_surface": "Ukrainian-facing source and activities avoid internal module IDs, English explanatory leakage, AI/process language, and writer-facing grading register.",
+    "review": "Pending Claude Opus review before PR.",
+    "source_hygiene": "No hosted tale page is fabricated. Full tale texts are not embedded; only short corpus-verified scholarly fragments are quoted, with public external reading resources named separately."
+  },
+  "floors": {
+    "beauty": 8.5,
+    "decolonization": 9.0,
+    "engagement": 8.5,
+    "naturalness": 8.5,
+    "pedagogical": 8.5,
+    "tone": 8.5
+  },
+  "profile": "folk_promote_v1",
+  "review_artifact": null,
+  "reviewer": {
+    "agent": "claude",
+    "family": "anthropic",
+    "model": "claude-opus"
+  },
+  "schema_version": 1,
+  "scored_at": "2026-07-04T07:17:13Z",
+  "scores": {
+    "beauty": 8.8,
+    "decolonization": 9.2,
+    "engagement": 8.7,
+    "naturalness": 8.8,
+    "pedagogical": 8.9,
+    "tone": 8.9
+  },
+  "slug": "charivni-kazky",
+  "track": "folk",
+  "verdict": "PASS",
+  "writer": {
+    "agent": "codex",
+    "family": "openai",
+    "model": "gpt-5"
+  },
+  "word_count": 5008
+}
