@@ -9,7 +9,7 @@ source_queue:
   workflow: source_inventory_publish_review_queue.v1
   generated_from_pr: 4162
   total_queue_rows: 110
-  approved_in_queue: 20
+  approved_in_queue: 19
   promotion_batch_size: 20
 production_outputs_updated: []
 decisions:
@@ -237,10 +237,12 @@ decisions:
   evidence_refs:
   - private teacher-lesson explicit vocabulary table
 - lemma: місцезнаходження
-  decision: approve_for_publish
-  approved_pos: noun
-  approved_gloss: whereabouts; location
-  sense_note: private teacher-lesson explicit vocabulary table
+  decision: reject
+  sense_note: >-
+    Corrected approve_for_publish -> reject on re-review (2026-07-05): russian-shadow
+    calque of Russian «местонахождение» (independent cross-family review, AGY/Gemini).
+    Prefer розташування / місце перебування. russian_shadow was flagged at intake and
+    approved over it; removed from the live Atlas manifest — not a dictionary-grade headword.
   source_inventory:
     key: 8d4a59243da38e40
     path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-seed.yaml
