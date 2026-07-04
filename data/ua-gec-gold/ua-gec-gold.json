@@ -1,0 +1,4194 @@
+{
+  "fixture_id": "ua-gec-gold-small-v1",
+  "schema_version": "ua_gec_gold_fixture.v1",
+  "evidence_schema_version": "ua_contact_quality_evidence.v1",
+  "attribution": {
+    "dataset": "UA-GEC",
+    "source": "grammarly/ua-gec",
+    "repository": "https://github.com/grammarly/ua-gec",
+    "license": "CC BY 4.0",
+    "license_url": "https://creativecommons.org/licenses/by/4.0/",
+    "citation": "Syvokon et al., UNLP 2023",
+    "retrieval_date": "2026-07-05",
+    "source_commit": "4757f72f192c4a41e4c8fb1d9690a948f87cf6d6",
+    "source_version": "2.0"
+  },
+  "curation": {
+    "mode": "curated_not_raw_extract",
+    "target_tags": [
+      "F/Calque",
+      "G/Case",
+      "G/Gender"
+    ],
+    "filter_constants": {
+      "min_context_chars": 40,
+      "min_context_tokens": 6,
+      "max_context_chars": 260,
+      "context_radius_chars": 120,
+      "standalone_unclear_max_chars": 4,
+      "max_rows_per_doc_tag": 3,
+      "tag_limits": {
+        "F/Calque": 32,
+        "G/Case": 12,
+        "G/Gender": 8
+      }
+    },
+    "known_context_stripped_junk": [
+      {
+        "tag": "F/Calque",
+        "error": "вдів",
+        "correction": "одягнув"
+      },
+      {
+        "tag": "F/Calque",
+        "error": "рожі",
+        "correction": "мармизи"
+      }
+    ],
+    "rejection_reasons": {
+      "context_too_short_chars": 707,
+      "context_too_short_tokens": 42,
+      "doc_tag_limit_reached": 15,
+      "duplicate_pair": 40,
+      "empty_correction": 30,
+      "empty_error": 84,
+      "known_context_stripped_junk": 2,
+      "span_mismatch": 4,
+      "tag_limit_reached": 6546,
+      "too_short_single_word_form": 956
+    }
+  },
+  "counts": {
+    "total_candidates": 8478,
+    "kept": 52,
+    "rejected": 8426,
+    "per_tag": {
+      "F/Calque": 2397,
+      "G/Case": 5024,
+      "G/Gender": 1057
+    },
+    "per_source_lang": {
+      "de": 42,
+      "en": 1148,
+      "fr": 11,
+      "pl": 19,
+      "ru": 2939,
+      "unknown": 4319
+    },
+    "kept_by_tag": {
+      "F/Calque": 32,
+      "G/Case": 12,
+      "G/Gender": 8
+    }
+  },
+  "items": [
+    {
+      "id": "ua-gec-gold-001",
+      "ua_gec_error_id": 3091,
+      "tag": "F/Calque",
+      "mapped_tag": {
+        "tag": "F/Calque",
+        "issue_id": "CONTACT_CALQUE_UA_GEC",
+        "issue_class": "calque",
+        "dimension": "contact_calque",
+        "severity": "info",
+        "default_source_lang": "ru",
+        "source_lang": "ru",
+        "contact_source_lang": "ru"
+      },
+      "error": "уверх",
+      "correction": "вгору",
+      "source_lang": "ru",
+      "raw_source_lang": "ru",
+      "doc_id": "0014",
+      "annotator_id": "1",
+      "partition": "gec-fluency/train",
+      "is_native": true,
+      "source_excerpt": "Тут у вуха йому вдарив декілька разів заліхний рублений крик - у когортах, підкинув уверх списи та значки, страшно прокричали солдати:",
+      "corrected_excerpt": "Тут у вуха йому вдарив кілька разів залізний рублений крик — у когортах, підкинув вгору списи та значки, страшно прокричали солдати:",
+      "spans": {
+        "source": {
+          "start": 84,
+          "end": 89
+        },
+        "correction": {
+          "start": 82,
+          "end": 87
+        }
+      },
+      "finding": {
+        "issue_id": "CONTACT_CALQUE_UA_GEC",
+        "issue_class": "calque",
+        "dimension": "contact_calque",
+        "severity": "info",
+        "contact_source_lang": "ru",
+        "source_lang": "ru",
+        "track_l1": "en",
+        "ua_gec_tag": "F/Calque",
+        "confidence": "lookup_heuristic",
+        "disposition": "defect",
+        "file": "ua-gec/gec-fluency/train/annotated/0014.a1.ann",
+        "line": 7,
+        "span": {
+          "start": 84,
+          "end": 89
+        },
+        "excerpt": "уверх",
+        "message": "UA-GEC F/Calque pair: уверх -> вгору.",
+        "suggested_replacement": [
+          "вгору"
+        ],
+        "detector": {
+          "adapter": "ua_gec_gold_ingest",
+          "rule_id": "F/Calque",
+          "pattern_id": "ua-gec-errors:3091"
+        },
+        "attribution": {
+          "corpus": "UA-GEC v2",
+          "license": "CC-BY-4.0",
+          "doc_id": "0014",
+          "pair_id": "ua-gec-errors:3091",
+          "evidence": "Syvokon et al., UNLP 2023"
+        },
+        "metadata": {
+          "ua_gec": {
+            "error": "уверх",
+            "correction": "вгору",
+            "tag": "F/Calque",
+            "frequency": null
+          }
+        },
+        "finding_id": "5ab8fffb9e4a80492b17325c"
+      }
+    },
+    {
+      "id": "ua-gec-gold-002",
+      "ua_gec_error_id": 3092,
+      "tag": "F/Calque",
+      "mapped_tag": {
+        "tag": "F/Calque",
+        "issue_id": "CONTACT_CALQUE_UA_GEC",
+        "issue_class": "calque",
+        "dimension": "contact_calque",
+        "severity": "info",
+        "default_source_lang": "ru",
+        "source_lang": "ru",
+        "contact_source_lang": "ru"
+      },
+      "error": "запрокинув",
+      "correction": "закинув",
+      "source_lang": "ru",
+      "raw_source_lang": "ru",
+      "doc_id": "0014",
+      "annotator_id": "1",
+      "partition": "gec-fluency/train",
+      "is_native": true,
+      "source_excerpt": "Пілат запрокинув голову й уткнув її прямо в сонце.",
+      "corrected_excerpt": "Пілат закинув голову й уткнув її прямо в сонце.",
+      "spans": {
+        "source": {
+          "start": 6,
+          "end": 16
+        },
+        "correction": {
+          "start": 6,
+          "end": 13
+        }
+      },
+      "finding": {
+        "issue_id": "CONTACT_CALQUE_UA_GEC",
+        "issue_class": "calque",
+        "dimension": "contact_calque",
+        "severity": "info",
+        "contact_source_lang": "ru",
+        "source_lang": "ru",
+        "track_l1": "en",
+        "ua_gec_tag": "F/Calque",
+        "confidence": "lookup_heuristic",
+        "disposition": "defect",
+        "file": "ua-gec/gec-fluency/train/annotated/0014.a1.ann",
+        "line": 11,
+        "span": {
+          "start": 6,
+          "end": 16
+        },
+        "excerpt": "запрокинув",
+        "message": "UA-GEC F/Calque pair: запрокинув -> закинув.",
+        "suggested_replacement": [
+          "закинув"
+        ],
+        "detector": {
+          "adapter": "ua_gec_gold_ingest",
+          "rule_id": "F/Calque",
+          "pattern_id": "ua-gec-errors:3092"
+        },
+        "attribution": {
+          "corpus": "UA-GEC v2",
+          "license": "CC-BY-4.0",
+          "doc_id": "0014",
+          "pair_id": "ua-gec-errors:3092",
+          "evidence": "Syvokon et al., UNLP 2023"
+        },
+        "metadata": {
+          "ua_gec": {
+            "error": "запрокинув",
+            "correction": "закинув",
+            "tag": "F/Calque",
+            "frequency": null
+          }
+        },
+        "finding_id": "3c38095c7b8892ec3760a691"
+      }
+    },
+    {
+      "id": "ua-gec-gold-003",
+      "ua_gec_error_id": 3094,
+      "tag": "F/Calque",
+      "mapped_tag": {
+        "tag": "F/Calque",
+        "issue_id": "CONTACT_CALQUE_UA_GEC",
+        "issue_class": "calque",
+        "dimension": "contact_calque",
+        "severity": "info",
+        "default_source_lang": "ru",
+        "source_lang": "ru",
+        "contact_source_lang": "ru"
+      },
+      "error": "приговорені",
+      "correction": "засуджені",
+      "source_lang": "ru",
+      "raw_source_lang": "ru",
+      "doc_id": "0014",
+      "annotator_id": "1",
+      "partition": "gec-fluency/train",
+      "is_native": true,
+      "source_excerpt": "- Чотири злочинці, заарештовані в Ершалаїме за вбивства, підбурювання до заколоту та образу законів та віри, приговорені до позорної страти - вішанню на стовпах!",
+      "corrected_excerpt": "—Чотири злочинці, заарештовані в Ершалаїмі за вбивства, підбурювання до заколоту та образу законів та віри, засуджені до ганебної страти — повішання на стовпах!",
+      "spans": {
+        "source": {
+          "start": 109,
+          "end": 120
+        },
+        "correction": {
+          "start": 108,
+          "end": 117
+        }
+      },
+      "finding": {
+        "issue_id": "CONTACT_CALQUE_UA_GEC",
+        "issue_class": "calque",
+        "dimension": "contact_calque",
+        "severity": "info",
+        "contact_source_lang": "ru",
+        "source_lang": "ru",
+        "track_l1": "en",
+        "ua_gec_tag": "F/Calque",
+        "confidence": "lookup_heuristic",
+        "disposition": "defect",
+        "file": "ua-gec/gec-fluency/train/annotated/0014.a1.ann",
+        "line": 13,
+        "span": {
+          "start": 109,
+          "end": 120
+        },
+        "excerpt": "приговорені",
+        "message": "UA-GEC F/Calque pair: приговорені -> засуджені.",
+        "suggested_replacement": [
+          "засуджені"
+        ],
+        "detector": {
+          "adapter": "ua_gec_gold_ingest",
+          "rule_id": "F/Calque",
+          "pattern_id": "ua-gec-errors:3094"
+        },
+        "attribution": {
+          "corpus": "UA-GEC v2",
+          "license": "CC-BY-4.0",
+          "doc_id": "0014",
+          "pair_id": "ua-gec-errors:3094",
+          "evidence": "Syvokon et al., UNLP 2023"
+        },
+        "metadata": {
+          "ua_gec": {
+            "error": "приговорені",
+            "correction": "засуджені",
+            "tag": "F/Calque",
+            "frequency": null
+          }
+        },
+        "finding_id": "347077999c8f5b580fafd61b"
+      }
+    },
+    {
+      "id": "ua-gec-gold-004",
+      "ua_gec_error_id": 3106,
+      "tag": "F/Calque",
+      "mapped_tag": {
+        "tag": "F/Calque",
+        "issue_id": "CONTACT_CALQUE_UA_GEC",
+        "issue_class": "calque",
+        "dimension": "contact_calque",
+        "severity": "info",
+        "default_source_lang": "ru",
+        "source_lang": "ru",
+        "contact_source_lang": "ru"
+      },
+      "error": "стулі",
+      "correction": "стільці",
+      "source_lang": "ru",
+      "raw_source_lang": "ru",
+      "doc_id": "0023",
+      "annotator_id": "1",
+      "partition": "gec-fluency/train",
+      "is_native": true,
+      "source_excerpt": "Степан намацав на стулі, поруч з ліжком, брюки та сказав:",
+      "corrected_excerpt": "Степан намацав на стільці, поруч із ліжком, брюки та сказав:",
+      "spans": {
+        "source": {
+          "start": 18,
+          "end": 23
+        },
+        "correction": {
+          "start": 18,
+          "end": 25
+        }
+      },
+      "finding": {
+        "issue_id": "CONTACT_CALQUE_UA_GEC",
+        "issue_class": "calque",
+        "dimension": "contact_calque",
+        "severity": "info",
+        "contact_source_lang": "ru",
+        "source_lang": "ru",
+        "track_l1": "en",
+        "ua_gec_tag": "F/Calque",
+        "confidence": "lookup_heuristic",
+        "disposition": "defect",
+        "file": "ua-gec/gec-fluency/train/annotated/0023.a1.ann",
+        "line": 1,
+        "span": {
+          "start": 18,
+          "end": 23
+        },
+        "excerpt": "стулі",
+        "message": "UA-GEC F/Calque pair: стулі -> стільці.",
+        "suggested_replacement": [
+          "стільці"
+        ],
+        "detector": {
+          "adapter": "ua_gec_gold_ingest",
+          "rule_id": "F/Calque",
+          "pattern_id": "ua-gec-errors:3106"
+        },
+        "attribution": {
+          "corpus": "UA-GEC v2",
+          "license": "CC-BY-4.0",
+          "doc_id": "0023",
+          "pair_id": "ua-gec-errors:3106",
+          "evidence": "Syvokon et al., UNLP 2023"
+        },
+        "metadata": {
+          "ua_gec": {
+            "error": "стулі",
+            "correction": "стільці",
+            "tag": "F/Calque",
+            "frequency": null
+          }
+        },
+        "finding_id": "b35198092c396a89f16bd501"
+      }
+    },
+    {
+      "id": "ua-gec-gold-005",
+      "ua_gec_error_id": 3112,
+      "tag": "F/Calque",
+      "mapped_tag": {
+        "tag": "F/Calque",
+        "issue_id": "CONTACT_CALQUE_UA_GEC",
+        "issue_class": "calque",
+        "dimension": "contact_calque",
+        "severity": "info",
+        "default_source_lang": "ru",
+        "source_lang": "ru",
+        "contact_source_lang": "ru"
+      },
+      "error": "гірки",
+      "correction": "чарки",
+      "source_lang": "ru",
+      "raw_source_lang": "ru",
+      "doc_id": "0023",
+      "annotator_id": "1",
+      "partition": "gec-fluency/train",
+      "is_native": true,
+      "source_excerpt": "Єдине, що поверне вас до життя - це дві гірки горілки з гострим та гарячою прикускою.",
+      "corrected_excerpt": "Єдине, що поверне вас до життя — це дві чарки горілки з гострою та гарячою прикускою.",
+      "spans": {
+        "source": {
+          "start": 40,
+          "end": 45
+        },
+        "correction": {
+          "start": 40,
+          "end": 45
+        }
+      },
+      "finding": {
+        "issue_id": "CONTACT_CALQUE_UA_GEC",
+        "issue_class": "calque",
+        "dimension": "contact_calque",
+        "severity": "info",
+        "contact_source_lang": "ru",
+        "source_lang": "ru",
+        "track_l1": "en",
+        "ua_gec_tag": "F/Calque",
+        "confidence": "lookup_heuristic",
+        "disposition": "defect",
+        "file": "ua-gec/gec-fluency/train/annotated/0023.a1.ann",
+        "line": 6,
+        "span": {
+          "start": 40,
+          "end": 45
+        },
+        "excerpt": "гірки",
+        "message": "UA-GEC F/Calque pair: гірки -> чарки.",
+        "suggested_replacement": [
+          "чарки"
+        ],
+        "detector": {
+          "adapter": "ua_gec_gold_ingest",
+          "rule_id": "F/Calque",
+          "pattern_id": "ua-gec-errors:3112"
+        },
+        "attribution": {
+          "corpus": "UA-GEC v2",
+          "license": "CC-BY-4.0",
+          "doc_id": "0023",
+          "pair_id": "ua-gec-errors:3112",
+          "evidence": "Syvokon et al., UNLP 2023"
+        },
+        "metadata": {
+          "ua_gec": {
+            "error": "гірки",
+            "correction": "чарки",
+            "tag": "F/Calque",
+            "frequency": null
+          }
+        },
+        "finding_id": "03800ee298e1e978649ae49b"
+      }
+    },
+    {
+      "id": "ua-gec-gold-006",
+      "ua_gec_error_id": 3114,
+      "tag": "F/Calque",
+      "mapped_tag": {
+        "tag": "F/Calque",
+        "issue_id": "CONTACT_CALQUE_UA_GEC",
+        "issue_class": "calque",
+        "dimension": "contact_calque",
+        "severity": "info",
+        "default_source_lang": "ru",
+        "source_lang": "ru",
+        "contact_source_lang": "ru"
+      },
+      "error": "виді",
+      "correction": "вигляді",
+      "source_lang": "ru",
+      "raw_source_lang": "ru",
+      "doc_id": "0023",
+      "annotator_id": "1",
+      "partition": "gec-fluency/train",
+      "is_native": true,
+      "source_excerpt": "Степан був хитрим чоловіком і, який би не був хворий, помізкував, що якщо вже його застали в такому виді, варто у всьому признатись.",
+      "corrected_excerpt": "Степан був хитрим чоловіком і,хай який був хворий, помізкував, що якщо вже його застали в такому вигляді, варто у всьому зізнатися.",
+      "spans": {
+        "source": {
+          "start": 100,
+          "end": 104
+        },
+        "correction": {
+          "start": 97,
+          "end": 104
+        }
+      },
+      "finding": {
+        "issue_id": "CONTACT_CALQUE_UA_GEC",
+        "issue_class": "calque",
+        "dimension": "contact_calque",
+        "severity": "info",
+        "contact_source_lang": "ru",
+        "source_lang": "ru",
+        "track_l1": "en",
+        "ua_gec_tag": "F/Calque",
+        "confidence": "lookup_heuristic",
+        "disposition": "defect",
+        "file": "ua-gec/gec-fluency/train/annotated/0023.a1.ann",
+        "line": 7,
+        "span": {
+          "start": 100,
+          "end": 104
+        },
+        "excerpt": "виді",
+        "message": "UA-GEC F/Calque pair: виді -> вигляді.",
+        "suggested_replacement": [
+          "вигляді"
+        ],
+        "detector": {
+          "adapter": "ua_gec_gold_ingest",
+          "rule_id": "F/Calque",
+          "pattern_id": "ua-gec-errors:3114"
+        },
+        "attribution": {
+          "corpus": "UA-GEC v2",
+          "license": "CC-BY-4.0",
+          "doc_id": "0023",
+          "pair_id": "ua-gec-errors:3114",
+          "evidence": "Syvokon et al., UNLP 2023"
+        },
+        "metadata": {
+          "ua_gec": {
+            "error": "виді",
+            "correction": "вигляді",
+            "tag": "F/Calque",
+            "frequency": null
+          }
+        },
+        "finding_id": "61a7cabce5d6810b80efc354"
+      }
+    },
+    {
+      "id": "ua-gec-gold-007",
+      "ua_gec_error_id": 3131,
+      "tag": "F/Calque",
+      "mapped_tag": {
+        "tag": "F/Calque",
+        "issue_id": "CONTACT_CALQUE_UA_GEC",
+        "issue_class": "calque",
+        "dimension": "contact_calque",
+        "severity": "info",
+        "default_source_lang": "ru",
+        "source_lang": "ru",
+        "contact_source_lang": "ru"
+      },
+      "error": "розкурчавлену",
+      "correction": "кучеряву",
+      "source_lang": "ru",
+      "raw_source_lang": "ru",
+      "doc_id": "0032",
+      "annotator_id": "1",
+      "partition": "gec-fluency/train",
+      "is_native": false,
+      "source_excerpt": "Тут майстер засміявся і , охопивши  розкурчавлену голову Маргарити , сказав :",
+      "corrected_excerpt": "Тут Майстер засміявся й, обійнявши кучеряву голову Маргарити, сказав:",
+      "spans": {
+        "source": {
+          "start": 36,
+          "end": 49
+        },
+        "correction": {
+          "start": 35,
+          "end": 43
+        }
+      },
+      "finding": {
+        "issue_id": "CONTACT_CALQUE_UA_GEC",
+        "issue_class": "calque",
+        "dimension": "contact_calque",
+        "severity": "info",
+        "contact_source_lang": "ru",
+        "source_lang": "ru",
+        "track_l1": "en",
+        "ua_gec_tag": "F/Calque",
+        "confidence": "lookup_heuristic",
+        "disposition": "defect",
+        "file": "ua-gec/gec-fluency/train/annotated/0032.a1.ann",
+        "line": 5,
+        "span": {
+          "start": 36,
+          "end": 49
+        },
+        "excerpt": "розкурчавлену",
+        "message": "UA-GEC F/Calque pair: розкурчавлену -> кучеряву.",
+        "suggested_replacement": [
+          "кучеряву"
+        ],
+        "detector": {
+          "adapter": "ua_gec_gold_ingest",
+          "rule_id": "F/Calque",
+          "pattern_id": "ua-gec-errors:3131"
+        },
+        "attribution": {
+          "corpus": "UA-GEC v2",
+          "license": "CC-BY-4.0",
+          "doc_id": "0032",
+          "pair_id": "ua-gec-errors:3131",
+          "evidence": "Syvokon et al., UNLP 2023"
+        },
+        "metadata": {
+          "ua_gec": {
+            "error": "розкурчавлену",
+            "correction": "кучеряву",
+            "tag": "F/Calque",
+            "frequency": null
+          }
+        },
+        "finding_id": "8c5c2efad645e99345ed53b8"
+      }
+    },
+    {
+      "id": "ua-gec-gold-008",
+      "ua_gec_error_id": 3161,
+      "tag": "F/Calque",
+      "mapped_tag": {
+        "tag": "F/Calque",
+        "issue_id": "CONTACT_CALQUE_UA_GEC",
+        "issue_class": "calque",
+        "dimension": "contact_calque",
+        "severity": "info",
+        "default_source_lang": "ru",
+        "source_lang": "ru",
+        "contact_source_lang": "ru"
+      },
+      "error": "в см'ятку",
+      "correction": "зварені не круто",
+      "source_lang": "ru",
+      "raw_source_lang": "ru",
+      "doc_id": "0039",
+      "annotator_id": "1",
+      "partition": "gec-fluency/train",
+      "is_native": false,
+      "source_excerpt": "Він був відправлений назад до своєї кімнати, де отримав чашку кави, два яйця в см'ятку і білий хліб з маслом.",
+      "corrected_excerpt": "Він був відправлений назад до своєї кімнати, де отримав чашку кави, два яйця, зварені не круто, і білий хліб з маслом.",
+      "spans": {
+        "source": {
+          "start": 77,
+          "end": 86
+        },
+        "correction": {
+          "start": 78,
+          "end": 94
+        }
+      },
+      "finding": {
+        "issue_id": "CONTACT_CALQUE_UA_GEC",
+        "issue_class": "calque",
+        "dimension": "contact_calque",
+        "severity": "info",
+        "contact_source_lang": "ru",
+        "source_lang": "ru",
+        "track_l1": "en",
+        "ua_gec_tag": "F/Calque",
+        "confidence": "lookup_heuristic",
+        "disposition": "defect",
+        "file": "ua-gec/gec-fluency/train/annotated/0039.a1.ann",
+        "line": 1,
+        "span": {
+          "start": 77,
+          "end": 86
+        },
+        "excerpt": "в см'ятку",
+        "message": "UA-GEC F/Calque pair: в см'ятку -> зварені не круто.",
+        "suggested_replacement": [
+          "зварені не круто"
+        ],
+        "detector": {
+          "adapter": "ua_gec_gold_ingest",
+          "rule_id": "F/Calque",
+          "pattern_id": "ua-gec-errors:3161"
+        },
+        "attribution": {
+          "corpus": "UA-GEC v2",
+          "license": "CC-BY-4.0",
+          "doc_id": "0039",
+          "pair_id": "ua-gec-errors:3161",
+          "evidence": "Syvokon et al., UNLP 2023"
+        },
+        "metadata": {
+          "ua_gec": {
+            "error": "в см'ятку",
+            "correction": "зварені не круто",
+            "tag": "F/Calque",
+            "frequency": null
+          }
+        },
+        "finding_id": "246c3ae9c8707e33e6835767"
+      }
+    },
+    {
+      "id": "ua-gec-gold-009",
+      "ua_gec_error_id": 3162,
+      "tag": "F/Calque",
+      "mapped_tag": {
+        "tag": "F/Calque",
+        "issue_id": "CONTACT_CALQUE_UA_GEC",
+        "issue_class": "calque",
+        "dimension": "contact_calque",
+        "severity": "info",
+        "default_source_lang": "ru",
+        "source_lang": "ru",
+        "contact_source_lang": "ru"
+      },
+      "error": "пронзаючими очами",
+      "correction": "пронизливим поглядом",
+      "source_lang": "ru",
+      "raw_source_lang": "ru",
+      "doc_id": "0039",
+      "annotator_id": "1",
+      "partition": "gec-fluency/train",
+      "is_native": false,
+      "source_excerpt": "Попереду йшов ретельно, по-акторськи виголений чоловік років сорока п'яти, з приємним, але дуже пронзаючими очами і ввічливими манерами.",
+      "corrected_excerpt": "Попереду йшов ретельно, по-акторськи виголений чоловік років сорока п'яти, з приємним, але дуже пронизливим поглядом і ввічливими манерами.",
+      "spans": {
+        "source": {
+          "start": 96,
+          "end": 113
+        },
+        "correction": {
+          "start": 96,
+          "end": 116
+        }
+      },
+      "finding": {
+        "issue_id": "CONTACT_CALQUE_UA_GEC",
+        "issue_class": "calque",
+        "dimension": "contact_calque",
+        "severity": "info",
+        "contact_source_lang": "ru",
+        "source_lang": "ru",
+        "track_l1": "en",
+        "ua_gec_tag": "F/Calque",
+        "confidence": "lookup_heuristic",
+        "disposition": "defect",
+        "file": "ua-gec/gec-fluency/train/annotated/0039.a1.ann",
+        "line": 3,
+        "span": {
+          "start": 96,
+          "end": 113
+        },
+        "excerpt": "пронзаючими очами",
+        "message": "UA-GEC F/Calque pair: пронзаючими очами -> пронизливим поглядом.",
+        "suggested_replacement": [
+          "пронизливим поглядом"
+        ],
+        "detector": {
+          "adapter": "ua_gec_gold_ingest",
+          "rule_id": "F/Calque",
+          "pattern_id": "ua-gec-errors:3162"
+        },
+        "attribution": {
+          "corpus": "UA-GEC v2",
+          "license": "CC-BY-4.0",
+          "doc_id": "0039",
+          "pair_id": "ua-gec-errors:3162",
+          "evidence": "Syvokon et al., UNLP 2023"
+        },
+        "metadata": {
+          "ua_gec": {
+            "error": "пронзаючими очами",
+            "correction": "пронизливим поглядом",
+            "tag": "F/Calque",
+            "frequency": null
+          }
+        },
+        "finding_id": "0ed1ffbb506db581a14b4b1f"
+      }
+    },
+    {
+      "id": "ua-gec-gold-010",
+      "ua_gec_error_id": 3166,
+      "tag": "F/Calque",
+      "mapped_tag": {
+        "tag": "F/Calque",
+        "issue_id": "CONTACT_CALQUE_UA_GEC",
+        "issue_class": "calque",
+        "dimension": "contact_calque",
+        "severity": "info",
+        "default_source_lang": "ru",
+        "source_lang": "ru",
+        "contact_source_lang": "ru"
+      },
+      "error": "волків",
+      "correction": "\"вовків\"",
+      "source_lang": "ru",
+      "raw_source_lang": "ru",
+      "doc_id": "0041",
+      "annotator_id": "1",
+      "partition": "gec-fluency/train",
+      "is_native": false,
+      "source_excerpt": "Кожного дня продаємо десятку для розбійників, волків та любовників.",
+      "corrected_excerpt": "Щодня продаємо десяток для розбійників, \"вовків\" та коханців.",
+      "spans": {
+        "source": {
+          "start": 46,
+          "end": 52
+        },
+        "correction": {
+          "start": 40,
+          "end": 48
+        }
+      },
+      "finding": {
+        "issue_id": "CONTACT_CALQUE_UA_GEC",
+        "issue_class": "calque",
+        "dimension": "contact_calque",
+        "severity": "info",
+        "contact_source_lang": "ru",
+        "source_lang": "ru",
+        "track_l1": "en",
+        "ua_gec_tag": "F/Calque",
+        "confidence": "lookup_heuristic",
+        "disposition": "defect",
+        "file": "ua-gec/gec-fluency/train/annotated/0041.a1.ann",
+        "line": 1,
+        "span": {
+          "start": 46,
+          "end": 52
+        },
+        "excerpt": "волків",
+        "message": "UA-GEC F/Calque pair: волків -> \"вовків\".",
+        "suggested_replacement": [
+          "\"вовків\""
+        ],
+        "detector": {
+          "adapter": "ua_gec_gold_ingest",
+          "rule_id": "F/Calque",
+          "pattern_id": "ua-gec-errors:3166"
+        },
+        "attribution": {
+          "corpus": "UA-GEC v2",
+          "license": "CC-BY-4.0",
+          "doc_id": "0041",
+          "pair_id": "ua-gec-errors:3166",
+          "evidence": "Syvokon et al., UNLP 2023"
+        },
+        "metadata": {
+          "ua_gec": {
+            "error": "волків",
+            "correction": "\"вовків\"",
+            "tag": "F/Calque",
+            "frequency": null
+          }
+        },
+        "finding_id": "cec6c98455011aaafa70ca7f"
+      }
+    },
+    {
+      "id": "ua-gec-gold-011",
+      "ua_gec_error_id": 3167,
+      "tag": "F/Calque",
+      "mapped_tag": {
+        "tag": "F/Calque",
+        "issue_id": "CONTACT_CALQUE_UA_GEC",
+        "issue_class": "calque",
+        "dimension": "contact_calque",
+        "severity": "info",
+        "default_source_lang": "ru",
+        "source_lang": "ru",
+        "contact_source_lang": "ru"
+      },
+      "error": "любовників",
+      "correction": "коханців",
+      "source_lang": "ru",
+      "raw_source_lang": "ru",
+      "doc_id": "0041",
+      "annotator_id": "1",
+      "partition": "gec-fluency/train",
+      "is_native": false,
+      "source_excerpt": "Кожного дня продаємо десятку для розбійників, волків та любовників.",
+      "corrected_excerpt": "Щодня продаємо десяток для розбійників, \"вовків\" та коханців.",
+      "spans": {
+        "source": {
+          "start": 56,
+          "end": 66
+        },
+        "correction": {
+          "start": 52,
+          "end": 60
+        }
+      },
+      "finding": {
+        "issue_id": "CONTACT_CALQUE_UA_GEC",
+        "issue_class": "calque",
+        "dimension": "contact_calque",
+        "severity": "info",
+        "contact_source_lang": "ru",
+        "source_lang": "ru",
+        "track_l1": "en",
+        "ua_gec_tag": "F/Calque",
+        "confidence": "lookup_heuristic",
+        "disposition": "defect",
+        "file": "ua-gec/gec-fluency/train/annotated/0041.a1.ann",
+        "line": 1,
+        "span": {
+          "start": 56,
+          "end": 66
+        },
+        "excerpt": "любовників",
+        "message": "UA-GEC F/Calque pair: любовників -> коханців.",
+        "suggested_replacement": [
+          "коханців"
+        ],
+        "detector": {
+          "adapter": "ua_gec_gold_ingest",
+          "rule_id": "F/Calque",
+          "pattern_id": "ua-gec-errors:3167"
+        },
+        "attribution": {
+          "corpus": "UA-GEC v2",
+          "license": "CC-BY-4.0",
+          "doc_id": "0041",
+          "pair_id": "ua-gec-errors:3167",
+          "evidence": "Syvokon et al., UNLP 2023"
+        },
+        "metadata": {
+          "ua_gec": {
+            "error": "любовників",
+            "correction": "коханців",
+            "tag": "F/Calque",
+            "frequency": null
+          }
+        },
+        "finding_id": "ba6885037045dd49448fb811"
+      }
+    },
+    {
+      "id": "ua-gec-gold-012",
+      "ua_gec_error_id": 3168,
+      "tag": "F/Calque",
+      "mapped_tag": {
+        "tag": "F/Calque",
+        "issue_id": "CONTACT_CALQUE_UA_GEC",
+        "issue_class": "calque",
+        "dimension": "contact_calque",
+        "severity": "info",
+        "default_source_lang": "ru",
+        "source_lang": "ru",
+        "contact_source_lang": "ru"
+      },
+      "error": "любовника",
+      "correction": "коханця",
+      "source_lang": "ru",
+      "raw_source_lang": "ru",
+      "doc_id": "0041",
+      "annotator_id": "1",
+      "partition": "gec-fluency/train",
+      "is_native": false,
+      "source_excerpt": "Дуже вірний та сильний бій, б'є на великій дистанції та вбиває жінку та любовника.",
+      "corrected_excerpt": "Дуже прицільний та сильний постріл, б'є на великій дистанції та вбиває жінку і коханця.",
+      "spans": {
+        "source": {
+          "start": 72,
+          "end": 81
+        },
+        "correction": {
+          "start": 79,
+          "end": 86
+        }
+      },
+      "finding": {
+        "issue_id": "CONTACT_CALQUE_UA_GEC",
+        "issue_class": "calque",
+        "dimension": "contact_calque",
+        "severity": "info",
+        "contact_source_lang": "ru",
+        "source_lang": "ru",
+        "track_l1": "en",
+        "ua_gec_tag": "F/Calque",
+        "confidence": "lookup_heuristic",
+        "disposition": "defect",
+        "file": "ua-gec/gec-fluency/train/annotated/0041.a1.ann",
+        "line": 1,
+        "span": {
+          "start": 72,
+          "end": 81
+        },
+        "excerpt": "любовника",
+        "message": "UA-GEC F/Calque pair: любовника -> коханця.",
+        "suggested_replacement": [
+          "коханця"
+        ],
+        "detector": {
+          "adapter": "ua_gec_gold_ingest",
+          "rule_id": "F/Calque",
+          "pattern_id": "ua-gec-errors:3168"
+        },
+        "attribution": {
+          "corpus": "UA-GEC v2",
+          "license": "CC-BY-4.0",
+          "doc_id": "0041",
+          "pair_id": "ua-gec-errors:3168",
+          "evidence": "Syvokon et al., UNLP 2023"
+        },
+        "metadata": {
+          "ua_gec": {
+            "error": "любовника",
+            "correction": "коханця",
+            "tag": "F/Calque",
+            "frequency": null
+          }
+        },
+        "finding_id": "7b00c9e9e13221e82b1649b7"
+      }
+    },
+    {
+      "id": "ua-gec-gold-013",
+      "ua_gec_error_id": 3178,
+      "tag": "F/Calque",
+      "mapped_tag": {
+        "tag": "F/Calque",
+        "issue_id": "CONTACT_CALQUE_UA_GEC",
+        "issue_class": "calque",
+        "dimension": "contact_calque",
+        "severity": "info",
+        "default_source_lang": "ru",
+        "source_lang": "ru",
+        "contact_source_lang": "ru"
+      },
+      "error": "благонамірений",
+      "correction": "людина добрих намірів",
+      "source_lang": "ru",
+      "raw_source_lang": "ru",
+      "doc_id": "0044",
+      "annotator_id": "1",
+      "partition": "gec-fluency/train",
+      "is_native": true,
+      "source_excerpt": "Це був солідний, доволі вже літній  пан, пристойно вдягнений і, скоріш за все, благонамірений.",
+      "corrected_excerpt": "Це був солідний, доволі літній пан, пристойно вдягнений і, скоріш за все, людина добрих намірів.",
+      "spans": {
+        "source": {
+          "start": 79,
+          "end": 93
+        },
+        "correction": {
+          "start": 74,
+          "end": 95
+        }
+      },
+      "finding": {
+        "issue_id": "CONTACT_CALQUE_UA_GEC",
+        "issue_class": "calque",
+        "dimension": "contact_calque",
+        "severity": "info",
+        "contact_source_lang": "ru",
+        "source_lang": "ru",
+        "track_l1": "en",
+        "ua_gec_tag": "F/Calque",
+        "confidence": "lookup_heuristic",
+        "disposition": "defect",
+        "file": "ua-gec/gec-fluency/train/annotated/0044.a1.ann",
+        "line": 2,
+        "span": {
+          "start": 79,
+          "end": 93
+        },
+        "excerpt": "благонамірений",
+        "message": "UA-GEC F/Calque pair: благонамірений -> людина добрих намірів.",
+        "suggested_replacement": [
+          "людина добрих намірів"
+        ],
+        "detector": {
+          "adapter": "ua_gec_gold_ingest",
+          "rule_id": "F/Calque",
+          "pattern_id": "ua-gec-errors:3178"
+        },
+        "attribution": {
+          "corpus": "UA-GEC v2",
+          "license": "CC-BY-4.0",
+          "doc_id": "0044",
+          "pair_id": "ua-gec-errors:3178",
+          "evidence": "Syvokon et al., UNLP 2023"
+        },
+        "metadata": {
+          "ua_gec": {
+            "error": "благонамірений",
+            "correction": "людина добрих намірів",
+            "tag": "F/Calque",
+            "frequency": null
+          }
+        },
+        "finding_id": "326a0468422be7d86da133b8"
+      }
+    },
+    {
+      "id": "ua-gec-gold-014",
+      "ua_gec_error_id": 3179,
+      "tag": "F/Calque",
+      "mapped_tag": {
+        "tag": "F/Calque",
+        "issue_id": "CONTACT_CALQUE_UA_GEC",
+        "issue_class": "calque",
+        "dimension": "contact_calque",
+        "severity": "info",
+        "default_source_lang": "ru",
+        "source_lang": "ru",
+        "contact_source_lang": "ru"
+      },
+      "error": "вилку",
+      "correction": "виделку",
+      "source_lang": "ru",
+      "raw_source_lang": "ru",
+      "doc_id": "0044",
+      "annotator_id": "1",
+      "partition": "gec-fluency/train",
+      "is_native": true,
+      "source_excerpt": "Під час обіду, він увесь час намагався блиснути перед нами своєю вихованістю: тримав вилку у лівій руці, втирався серветкою і морщився, коли в рюмки потрапляли мухи.",
+      "corrected_excerpt": "Під час обіду він увесь час намагався блиснути перед нами своєю вихованістю: тримав виделку у лівій руці, втирався серветкою і морщився, коли в чарки потрапляли мухи.",
+      "spans": {
+        "source": {
+          "start": 85,
+          "end": 90
+        },
+        "correction": {
+          "start": 84,
+          "end": 91
+        }
+      },
+      "finding": {
+        "issue_id": "CONTACT_CALQUE_UA_GEC",
+        "issue_class": "calque",
+        "dimension": "contact_calque",
+        "severity": "info",
+        "contact_source_lang": "ru",
+        "source_lang": "ru",
+        "track_l1": "en",
+        "ua_gec_tag": "F/Calque",
+        "confidence": "lookup_heuristic",
+        "disposition": "defect",
+        "file": "ua-gec/gec-fluency/train/annotated/0044.a1.ann",
+        "line": 2,
+        "span": {
+          "start": 85,
+          "end": 90
+        },
+        "excerpt": "вилку",
+        "message": "UA-GEC F/Calque pair: вилку -> виделку.",
+        "suggested_replacement": [
+          "виделку"
+        ],
+        "detector": {
+          "adapter": "ua_gec_gold_ingest",
+          "rule_id": "F/Calque",
+          "pattern_id": "ua-gec-errors:3179"
+        },
+        "attribution": {
+          "corpus": "UA-GEC v2",
+          "license": "CC-BY-4.0",
+          "doc_id": "0044",
+          "pair_id": "ua-gec-errors:3179",
+          "evidence": "Syvokon et al., UNLP 2023"
+        },
+        "metadata": {
+          "ua_gec": {
+            "error": "вилку",
+            "correction": "виделку",
+            "tag": "F/Calque",
+            "frequency": null
+          }
+        },
+        "finding_id": "6141ef65a17609b8a8291f0a"
+      }
+    },
+    {
+      "id": "ua-gec-gold-015",
+      "ua_gec_error_id": 3180,
+      "tag": "F/Calque",
+      "mapped_tag": {
+        "tag": "F/Calque",
+        "issue_id": "CONTACT_CALQUE_UA_GEC",
+        "issue_class": "calque",
+        "dimension": "contact_calque",
+        "severity": "info",
+        "default_source_lang": "ru",
+        "source_lang": "ru",
+        "contact_source_lang": "ru"
+      },
+      "error": "рюмки",
+      "correction": "чарки",
+      "source_lang": "ru",
+      "raw_source_lang": "ru",
+      "doc_id": "0044",
+      "annotator_id": "1",
+      "partition": "gec-fluency/train",
+      "is_native": true,
+      "source_excerpt": "Під час обіду, він увесь час намагався блиснути перед нами своєю вихованістю: тримав вилку у лівій руці, втирався серветкою і морщився, коли в рюмки потрапляли мухи.",
+      "corrected_excerpt": "Під час обіду він увесь час намагався блиснути перед нами своєю вихованістю: тримав виделку у лівій руці, втирався серветкою і морщився, коли в чарки потрапляли мухи.",
+      "spans": {
+        "source": {
+          "start": 143,
+          "end": 148
+        },
+        "correction": {
+          "start": 144,
+          "end": 149
+        }
+      },
+      "finding": {
+        "issue_id": "CONTACT_CALQUE_UA_GEC",
+        "issue_class": "calque",
+        "dimension": "contact_calque",
+        "severity": "info",
+        "contact_source_lang": "ru",
+        "source_lang": "ru",
+        "track_l1": "en",
+        "ua_gec_tag": "F/Calque",
+        "confidence": "lookup_heuristic",
+        "disposition": "defect",
+        "file": "ua-gec/gec-fluency/train/annotated/0044.a1.ann",
+        "line": 2,
+        "span": {
+          "start": 143,
+          "end": 148
+        },
+        "excerpt": "рюмки",
+        "message": "UA-GEC F/Calque pair: рюмки -> чарки.",
+        "suggested_replacement": [
+          "чарки"
+        ],
+        "detector": {
+          "adapter": "ua_gec_gold_ingest",
+          "rule_id": "F/Calque",
+          "pattern_id": "ua-gec-errors:3180"
+        },
+        "attribution": {
+          "corpus": "UA-GEC v2",
+          "license": "CC-BY-4.0",
+          "doc_id": "0044",
+          "pair_id": "ua-gec-errors:3180",
+          "evidence": "Syvokon et al., UNLP 2023"
+        },
+        "metadata": {
+          "ua_gec": {
+            "error": "рюмки",
+            "correction": "чарки",
+            "tag": "F/Calque",
+            "frequency": null
+          }
+        },
+        "finding_id": "e5561ee9e43cbe5422eea53b"
+      }
+    },
+    {
+      "id": "ua-gec-gold-016",
+      "ua_gec_error_id": 3191,
+      "tag": "F/Calque",
+      "mapped_tag": {
+        "tag": "F/Calque",
+        "issue_id": "CONTACT_CALQUE_UA_GEC",
+        "issue_class": "calque",
+        "dimension": "contact_calque",
+        "severity": "info",
+        "default_source_lang": "ru",
+        "source_lang": "ru",
+        "contact_source_lang": "ru"
+      },
+      "error": "вішалкою",
+      "correction": "вішаком",
+      "source_lang": "ru",
+      "raw_source_lang": "ru",
+      "doc_id": "0048",
+      "annotator_id": "1",
+      "partition": "gec-fluency/train",
+      "is_native": true,
+      "source_excerpt": "орною від бруду стелею, на стіні висів велосипед без шин, стояла величезна скриня оббита залізом, а на полиці прямо над вішалкою лежала зимова шапка, чиї довгі вуха висіли знизу. За однією з дверей  гучний чоловічій голос, а по радіо хтось сердито",
+      "corrected_excerpt": "рною від бруду стелею, на стіні висів велосипед без шин, стояла величезна скриня, оббита залізом, а на полиці прямо над вішаком лежала зимова шапка, довгі вуха якої звисали внизу. За одними з дверей чувся гучний чоловічий голос, а по радіо хтось с",
+      "spans": {
+        "source": {
+          "start": 120,
+          "end": 128
+        },
+        "correction": {
+          "start": 120,
+          "end": 127
+        }
+      },
+      "finding": {
+        "issue_id": "CONTACT_CALQUE_UA_GEC",
+        "issue_class": "calque",
+        "dimension": "contact_calque",
+        "severity": "info",
+        "contact_source_lang": "ru",
+        "source_lang": "ru",
+        "track_l1": "en",
+        "ua_gec_tag": "F/Calque",
+        "confidence": "lookup_heuristic",
+        "disposition": "defect",
+        "file": "ua-gec/gec-fluency/train/annotated/0048.a1.ann",
+        "line": 3,
+        "span": {
+          "start": 120,
+          "end": 128
+        },
+        "excerpt": "вішалкою",
+        "message": "UA-GEC F/Calque pair: вішалкою -> вішаком.",
+        "suggested_replacement": [
+          "вішаком"
+        ],
+        "detector": {
+          "adapter": "ua_gec_gold_ingest",
+          "rule_id": "F/Calque",
+          "pattern_id": "ua-gec-errors:3191"
+        },
+        "attribution": {
+          "corpus": "UA-GEC v2",
+          "license": "CC-BY-4.0",
+          "doc_id": "0048",
+          "pair_id": "ua-gec-errors:3191",
+          "evidence": "Syvokon et al., UNLP 2023"
+        },
+        "metadata": {
+          "ua_gec": {
+            "error": "вішалкою",
+            "correction": "вішаком",
+            "tag": "F/Calque",
+            "frequency": null
+          }
+        },
+        "finding_id": "b0e474219f0ee187c2d4c528"
+      }
+    },
+    {
+      "id": "ua-gec-gold-017",
+      "ua_gec_error_id": 3195,
+      "tag": "F/Calque",
+      "mapped_tag": {
+        "tag": "F/Calque",
+        "issue_id": "CONTACT_CALQUE_UA_GEC",
+        "issue_class": "calque",
+        "dimension": "contact_calque",
+        "severity": "info",
+        "default_source_lang": "ru",
+        "source_lang": "ru",
+        "contact_source_lang": "ru"
+      },
+      "error": "Шафер",
+      "correction": "Дружба",
+      "source_lang": "ru",
+      "raw_source_lang": "ru",
+      "doc_id": "0049",
+      "annotator_id": "1",
+      "partition": "gec-fluency/train",
+      "is_native": false,
+      "source_excerpt": "Шафер в циліндрі та білих рукавицях, запихавшись, зкидує в холі пальто й з таким виразом, нібито хоче повідомити щось страшне, забігає до зали.",
+      "corrected_excerpt": "Дружба в циліндрі та білих рукавицях, захекавшись, знімає в холі пальто й з таким виразом, нібито хоче повідомити щось страшне, забігає до зали.",
+      "spans": {
+        "source": {
+          "start": 0,
+          "end": 5
+        },
+        "correction": {
+          "start": 0,
+          "end": 6
+        }
+      },
+      "finding": {
+        "issue_id": "CONTACT_CALQUE_UA_GEC",
+        "issue_class": "calque",
+        "dimension": "contact_calque",
+        "severity": "info",
+        "contact_source_lang": "ru",
+        "source_lang": "ru",
+        "track_l1": "en",
+        "ua_gec_tag": "F/Calque",
+        "confidence": "lookup_heuristic",
+        "disposition": "defect",
+        "file": "ua-gec/gec-fluency/train/annotated/0049.a1.ann",
+        "line": 9,
+        "span": {
+          "start": 0,
+          "end": 5
+        },
+        "excerpt": "Шафер",
+        "message": "UA-GEC F/Calque pair: Шафер -> Дружба.",
+        "suggested_replacement": [
+          "Дружба"
+        ],
+        "detector": {
+          "adapter": "ua_gec_gold_ingest",
+          "rule_id": "F/Calque",
+          "pattern_id": "ua-gec-errors:3195"
+        },
+        "attribution": {
+          "corpus": "UA-GEC v2",
+          "license": "CC-BY-4.0",
+          "doc_id": "0049",
+          "pair_id": "ua-gec-errors:3195",
+          "evidence": "Syvokon et al., UNLP 2023"
+        },
+        "metadata": {
+          "ua_gec": {
+            "error": "Шафер",
+            "correction": "Дружба",
+            "tag": "F/Calque",
+            "frequency": null
+          }
+        },
+        "finding_id": "f8cb556b525b008ae6098800"
+      }
+    },
+    {
+      "id": "ua-gec-gold-018",
+      "ua_gec_error_id": 3196,
+      "tag": "F/Calque",
+      "mapped_tag": {
+        "tag": "F/Calque",
+        "issue_id": "CONTACT_CALQUE_UA_GEC",
+        "issue_class": "calque",
+        "dimension": "contact_calque",
+        "severity": "info",
+        "default_source_lang": "ru",
+        "source_lang": "ru",
+        "contact_source_lang": "ru"
+      },
+      "error": "запихавшись",
+      "correction": "захекавшись",
+      "source_lang": "ru",
+      "raw_source_lang": "ru",
+      "doc_id": "0049",
+      "annotator_id": "1",
+      "partition": "gec-fluency/train",
+      "is_native": false,
+      "source_excerpt": "Шафер в циліндрі та білих рукавицях, запихавшись, зкидує в холі пальто й з таким виразом, нібито хоче повідомити щось страшне, забігає до зали.",
+      "corrected_excerpt": "Дружба в циліндрі та білих рукавицях, захекавшись, знімає в холі пальто й з таким виразом, нібито хоче повідомити щось страшне, забігає до зали.",
+      "spans": {
+        "source": {
+          "start": 37,
+          "end": 48
+        },
+        "correction": {
+          "start": 38,
+          "end": 49
+        }
+      },
+      "finding": {
+        "issue_id": "CONTACT_CALQUE_UA_GEC",
+        "issue_class": "calque",
+        "dimension": "contact_calque",
+        "severity": "info",
+        "contact_source_lang": "ru",
+        "source_lang": "ru",
+        "track_l1": "en",
+        "ua_gec_tag": "F/Calque",
+        "confidence": "lookup_heuristic",
+        "disposition": "defect",
+        "file": "ua-gec/gec-fluency/train/annotated/0049.a1.ann",
+        "line": 9,
+        "span": {
+          "start": 37,
+          "end": 48
+        },
+        "excerpt": "запихавшись",
+        "message": "UA-GEC F/Calque pair: запихавшись -> захекавшись.",
+        "suggested_replacement": [
+          "захекавшись"
+        ],
+        "detector": {
+          "adapter": "ua_gec_gold_ingest",
+          "rule_id": "F/Calque",
+          "pattern_id": "ua-gec-errors:3196"
+        },
+        "attribution": {
+          "corpus": "UA-GEC v2",
+          "license": "CC-BY-4.0",
+          "doc_id": "0049",
+          "pair_id": "ua-gec-errors:3196",
+          "evidence": "Syvokon et al., UNLP 2023"
+        },
+        "metadata": {
+          "ua_gec": {
+            "error": "запихавшись",
+            "correction": "захекавшись",
+            "tag": "F/Calque",
+            "frequency": null
+          }
+        },
+        "finding_id": "4dc31a6953f8d1d36561fe2d"
+      }
+    },
+    {
+      "id": "ua-gec-gold-019",
+      "ua_gec_error_id": 3197,
+      "tag": "F/Calque",
+      "mapped_tag": {
+        "tag": "F/Calque",
+        "issue_id": "CONTACT_CALQUE_UA_GEC",
+        "issue_class": "calque",
+        "dimension": "contact_calque",
+        "severity": "info",
+        "default_source_lang": "ru",
+        "source_lang": "ru",
+        "contact_source_lang": "ru"
+      },
+      "error": "зкидує",
+      "correction": "знімає",
+      "source_lang": "ru",
+      "raw_source_lang": "ru",
+      "doc_id": "0049",
+      "annotator_id": "1",
+      "partition": "gec-fluency/train",
+      "is_native": false,
+      "source_excerpt": "Шафер в циліндрі та білих рукавицях, запихавшись, зкидує в холі пальто й з таким виразом, нібито хоче повідомити щось страшне, забігає до зали.",
+      "corrected_excerpt": "Дружба в циліндрі та білих рукавицях, захекавшись, знімає в холі пальто й з таким виразом, нібито хоче повідомити щось страшне, забігає до зали.",
+      "spans": {
+        "source": {
+          "start": 50,
+          "end": 56
+        },
+        "correction": {
+          "start": 51,
+          "end": 57
+        }
+      },
+      "finding": {
+        "issue_id": "CONTACT_CALQUE_UA_GEC",
+        "issue_class": "calque",
+        "dimension": "contact_calque",
+        "severity": "info",
+        "contact_source_lang": "ru",
+        "source_lang": "ru",
+        "track_l1": "en",
+        "ua_gec_tag": "F/Calque",
+        "confidence": "lookup_heuristic",
+        "disposition": "defect",
+        "file": "ua-gec/gec-fluency/train/annotated/0049.a1.ann",
+        "line": 9,
+        "span": {
+          "start": 50,
+          "end": 56
+        },
+        "excerpt": "зкидує",
+        "message": "UA-GEC F/Calque pair: зкидує -> знімає.",
+        "suggested_replacement": [
+          "знімає"
+        ],
+        "detector": {
+          "adapter": "ua_gec_gold_ingest",
+          "rule_id": "F/Calque",
+          "pattern_id": "ua-gec-errors:3197"
+        },
+        "attribution": {
+          "corpus": "UA-GEC v2",
+          "license": "CC-BY-4.0",
+          "doc_id": "0049",
+          "pair_id": "ua-gec-errors:3197",
+          "evidence": "Syvokon et al., UNLP 2023"
+        },
+        "metadata": {
+          "ua_gec": {
+            "error": "зкидує",
+            "correction": "знімає",
+            "tag": "F/Calque",
+            "frequency": null
+          }
+        },
+        "finding_id": "b68248d14d570317a357a654"
+      }
+    },
+    {
+      "id": "ua-gec-gold-020",
+      "ua_gec_error_id": 3226,
+      "tag": "F/Calque",
+      "mapped_tag": {
+        "tag": "F/Calque",
+        "issue_id": "CONTACT_CALQUE_UA_GEC",
+        "issue_class": "calque",
+        "dimension": "contact_calque",
+        "severity": "info",
+        "default_source_lang": "ru",
+        "source_lang": "ru",
+        "contact_source_lang": "ru"
+      },
+      "error": "шафер",
+      "correction": "боярин",
+      "source_lang": "ru",
+      "raw_source_lang": "ru",
+      "doc_id": "0055",
+      "annotator_id": "1",
+      "partition": "gec-fluency/train",
+      "is_native": true,
+      "source_excerpt": "- завив Коровьєв, як шафер на старовинному весіллі.",
+      "corrected_excerpt": "— завив Коров'єв, як боярин на старовинному весіллі.",
+      "spans": {
+        "source": {
+          "start": 21,
+          "end": 26
+        },
+        "correction": {
+          "start": 21,
+          "end": 27
+        }
+      },
+      "finding": {
+        "issue_id": "CONTACT_CALQUE_UA_GEC",
+        "issue_class": "calque",
+        "dimension": "contact_calque",
+        "severity": "info",
+        "contact_source_lang": "ru",
+        "source_lang": "ru",
+        "track_l1": "en",
+        "ua_gec_tag": "F/Calque",
+        "confidence": "lookup_heuristic",
+        "disposition": "defect",
+        "file": "ua-gec/gec-fluency/train/annotated/0055.a1.ann",
+        "line": 4,
+        "span": {
+          "start": 21,
+          "end": 26
+        },
+        "excerpt": "шафер",
+        "message": "UA-GEC F/Calque pair: шафер -> боярин.",
+        "suggested_replacement": [
+          "боярин"
+        ],
+        "detector": {
+          "adapter": "ua_gec_gold_ingest",
+          "rule_id": "F/Calque",
+          "pattern_id": "ua-gec-errors:3226"
+        },
+        "attribution": {
+          "corpus": "UA-GEC v2",
+          "license": "CC-BY-4.0",
+          "doc_id": "0055",
+          "pair_id": "ua-gec-errors:3226",
+          "evidence": "Syvokon et al., UNLP 2023"
+        },
+        "metadata": {
+          "ua_gec": {
+            "error": "шафер",
+            "correction": "боярин",
+            "tag": "F/Calque",
+            "frequency": null
+          }
+        },
+        "finding_id": "7ff20da34767c6368d016b9a"
+      }
+    },
+    {
+      "id": "ua-gec-gold-021",
+      "ua_gec_error_id": 3256,
+      "tag": "F/Calque",
+      "mapped_tag": {
+        "tag": "F/Calque",
+        "issue_id": "CONTACT_CALQUE_UA_GEC",
+        "issue_class": "calque",
+        "dimension": "contact_calque",
+        "severity": "info",
+        "default_source_lang": "ru",
+        "source_lang": "ru",
+        "contact_source_lang": "ru"
+      },
+      "error": "піддтіків",
+      "correction": "підтікань",
+      "source_lang": "ru",
+      "raw_source_lang": "ru",
+      "doc_id": "0072",
+      "annotator_id": "1",
+      "partition": "gec-fluency/train",
+      "is_native": true,
+      "source_excerpt": "Низька, абсолютно квадратна людина, голений до синяви, в круглих окулярах, в новій  шляпі, на зім'ятій і без піддтіків стрічці, в фіолетовому пальто і лайкових рудих рукавицяв стояв у вітрини і щось наказово мичав.",
+      "corrected_excerpt": "Низька, абсолютно квадратна людина, голений до синяви, в круглих окулярах, у новому, на зім'ятій і без підтікань стрічці, у фіолетовому пальто і лайкових рудих рукавицях стояв біля вітрини і щось наказово мукав.",
+      "spans": {
+        "source": {
+          "start": 109,
+          "end": 118
+        },
+        "correction": {
+          "start": 103,
+          "end": 112
+        }
+      },
+      "finding": {
+        "issue_id": "CONTACT_CALQUE_UA_GEC",
+        "issue_class": "calque",
+        "dimension": "contact_calque",
+        "severity": "info",
+        "contact_source_lang": "ru",
+        "source_lang": "ru",
+        "track_l1": "en",
+        "ua_gec_tag": "F/Calque",
+        "confidence": "lookup_heuristic",
+        "disposition": "defect",
+        "file": "ua-gec/gec-fluency/train/annotated/0072.a1.ann",
+        "line": 1,
+        "span": {
+          "start": 109,
+          "end": 118
+        },
+        "excerpt": "піддтіків",
+        "message": "UA-GEC F/Calque pair: піддтіків -> підтікань.",
+        "suggested_replacement": [
+          "підтікань"
+        ],
+        "detector": {
+          "adapter": "ua_gec_gold_ingest",
+          "rule_id": "F/Calque",
+          "pattern_id": "ua-gec-errors:3256"
+        },
+        "attribution": {
+          "corpus": "UA-GEC v2",
+          "license": "CC-BY-4.0",
+          "doc_id": "0072",
+          "pair_id": "ua-gec-errors:3256",
+          "evidence": "Syvokon et al., UNLP 2023"
+        },
+        "metadata": {
+          "ua_gec": {
+            "error": "піддтіків",
+            "correction": "підтікань",
+            "tag": "F/Calque",
+            "frequency": null
+          }
+        },
+        "finding_id": "91906f229f60b7f8028a80b0"
+      }
+    },
+    {
+      "id": "ua-gec-gold-022",
+      "ua_gec_error_id": 3257,
+      "tag": "F/Calque",
+      "mapped_tag": {
+        "tag": "F/Calque",
+        "issue_id": "CONTACT_CALQUE_UA_GEC",
+        "issue_class": "calque",
+        "dimension": "contact_calque",
+        "severity": "info",
+        "default_source_lang": "ru",
+        "source_lang": "ru",
+        "contact_source_lang": "ru"
+      },
+      "error": "мичав",
+      "correction": "мукав",
+      "source_lang": "ru",
+      "raw_source_lang": "ru",
+      "doc_id": "0072",
+      "annotator_id": "1",
+      "partition": "gec-fluency/train",
+      "is_native": true,
+      "source_excerpt": "Низька, абсолютно квадратна людина, голений до синяви, в круглих окулярах, в новій  шляпі, на зім'ятій і без піддтіків стрічці, в фіолетовому пальто і лайкових рудих рукавицяв стояв у вітрини і щось наказово мичав.",
+      "corrected_excerpt": "Низька, абсолютно квадратна людина, голений до синяви, в круглих окулярах, у новому, на зім'ятій і без підтікань стрічці, у фіолетовому пальто і лайкових рудих рукавицях стояв біля вітрини і щось наказово мукав.",
+      "spans": {
+        "source": {
+          "start": 208,
+          "end": 213
+        },
+        "correction": {
+          "start": 205,
+          "end": 210
+        }
+      },
+      "finding": {
+        "issue_id": "CONTACT_CALQUE_UA_GEC",
+        "issue_class": "calque",
+        "dimension": "contact_calque",
+        "severity": "info",
+        "contact_source_lang": "ru",
+        "source_lang": "ru",
+        "track_l1": "en",
+        "ua_gec_tag": "F/Calque",
+        "confidence": "lookup_heuristic",
+        "disposition": "defect",
+        "file": "ua-gec/gec-fluency/train/annotated/0072.a1.ann",
+        "line": 1,
+        "span": {
+          "start": 208,
+          "end": 213
+        },
+        "excerpt": "мичав",
+        "message": "UA-GEC F/Calque pair: мичав -> мукав.",
+        "suggested_replacement": [
+          "мукав"
+        ],
+        "detector": {
+          "adapter": "ua_gec_gold_ingest",
+          "rule_id": "F/Calque",
+          "pattern_id": "ua-gec-errors:3257"
+        },
+        "attribution": {
+          "corpus": "UA-GEC v2",
+          "license": "CC-BY-4.0",
+          "doc_id": "0072",
+          "pair_id": "ua-gec-errors:3257",
+          "evidence": "Syvokon et al., UNLP 2023"
+        },
+        "metadata": {
+          "ua_gec": {
+            "error": "мичав",
+            "correction": "мукав",
+            "tag": "F/Calque",
+            "frequency": null
+          }
+        },
+        "finding_id": "663fea30ca8ff46cc14003f8"
+      }
+    },
+    {
+      "id": "ua-gec-gold-023",
+      "ua_gec_error_id": 3260,
+      "tag": "F/Calque",
+      "mapped_tag": {
+        "tag": "F/Calque",
+        "issue_id": "CONTACT_CALQUE_UA_GEC",
+        "issue_class": "calque",
+        "dimension": "contact_calque",
+        "severity": "info",
+        "default_source_lang": "ru",
+        "source_lang": "ru",
+        "contact_source_lang": "ru"
+      },
+      "error": "срібляним",
+      "correction": "срібним",
+      "source_lang": "ru",
+      "raw_source_lang": "ru",
+      "doc_id": "0072",
+      "annotator_id": "1",
+      "partition": "gec-fluency/train",
+      "is_native": true,
+      "source_excerpt": "Найгострішим ножем, дуже схожим на ніж, вкрадений Левієм Матвієм, він знімав з жирної плачучої рожевої лососини її, схожу на зміїну з срібляним відливом, шкуру.",
+      "corrected_excerpt": "Найгострішим ножем, дуже схожим на ніж, який украв Левій Матвій, він знімав із жирної плачучої рожевої лососини її, схожу на зміїну з срібним відливом, шкуру.",
+      "spans": {
+        "source": {
+          "start": 134,
+          "end": 143
+        },
+        "correction": {
+          "start": 134,
+          "end": 141
+        }
+      },
+      "finding": {
+        "issue_id": "CONTACT_CALQUE_UA_GEC",
+        "issue_class": "calque",
+        "dimension": "contact_calque",
+        "severity": "info",
+        "contact_source_lang": "ru",
+        "source_lang": "ru",
+        "track_l1": "en",
+        "ua_gec_tag": "F/Calque",
+        "confidence": "lookup_heuristic",
+        "disposition": "defect",
+        "file": "ua-gec/gec-fluency/train/annotated/0072.a1.ann",
+        "line": 1,
+        "span": {
+          "start": 134,
+          "end": 143
+        },
+        "excerpt": "срібляним",
+        "message": "UA-GEC F/Calque pair: срібляним -> срібним.",
+        "suggested_replacement": [
+          "срібним"
+        ],
+        "detector": {
+          "adapter": "ua_gec_gold_ingest",
+          "rule_id": "F/Calque",
+          "pattern_id": "ua-gec-errors:3260"
+        },
+        "attribution": {
+          "corpus": "UA-GEC v2",
+          "license": "CC-BY-4.0",
+          "doc_id": "0072",
+          "pair_id": "ua-gec-errors:3260",
+          "evidence": "Syvokon et al., UNLP 2023"
+        },
+        "metadata": {
+          "ua_gec": {
+            "error": "срібляним",
+            "correction": "срібним",
+            "tag": "F/Calque",
+            "frequency": null
+          }
+        },
+        "finding_id": "b235fe19bf2126e812df99d6"
+      }
+    },
+    {
+      "id": "ua-gec-gold-024",
+      "ua_gec_error_id": 3350,
+      "tag": "F/Calque",
+      "mapped_tag": {
+        "tag": "F/Calque",
+        "issue_id": "CONTACT_CALQUE_UA_GEC",
+        "issue_class": "calque",
+        "dimension": "contact_calque",
+        "severity": "info",
+        "default_source_lang": "ru",
+        "source_lang": "ru",
+        "contact_source_lang": "ru"
+      },
+      "error": "стряхнув",
+      "correction": "обтрусив",
+      "source_lang": "ru",
+      "raw_source_lang": "ru",
+      "doc_id": "0106",
+      "annotator_id": "1",
+      "partition": "gec-fluency/train",
+      "is_native": true,
+      "source_excerpt": "Померши, Куролєсов піднявся, стряхнув пилюку з фрачних брюк, вклонився, усміхнувшись фальшивою посмішкою, і удалився при рідких аплодисментах.",
+      "corrected_excerpt": "Після того, як Куролєсов умер, він підвівся, обтрусив пилюку з фракових брюк, вклонився, усміхнувшись фальшивою посмішкою, і пішов  під поодинокі аплодисменти.",
+      "spans": {
+        "source": {
+          "start": 29,
+          "end": 37
+        },
+        "correction": {
+          "start": 45,
+          "end": 53
+        }
+      },
+      "finding": {
+        "issue_id": "CONTACT_CALQUE_UA_GEC",
+        "issue_class": "calque",
+        "dimension": "contact_calque",
+        "severity": "info",
+        "contact_source_lang": "ru",
+        "source_lang": "ru",
+        "track_l1": "en",
+        "ua_gec_tag": "F/Calque",
+        "confidence": "lookup_heuristic",
+        "disposition": "defect",
+        "file": "ua-gec/gec-fluency/train/annotated/0106.a1.ann",
+        "line": 1,
+        "span": {
+          "start": 29,
+          "end": 37
+        },
+        "excerpt": "стряхнув",
+        "message": "UA-GEC F/Calque pair: стряхнув -> обтрусив.",
+        "suggested_replacement": [
+          "обтрусив"
+        ],
+        "detector": {
+          "adapter": "ua_gec_gold_ingest",
+          "rule_id": "F/Calque",
+          "pattern_id": "ua-gec-errors:3350"
+        },
+        "attribution": {
+          "corpus": "UA-GEC v2",
+          "license": "CC-BY-4.0",
+          "doc_id": "0106",
+          "pair_id": "ua-gec-errors:3350",
+          "evidence": "Syvokon et al., UNLP 2023"
+        },
+        "metadata": {
+          "ua_gec": {
+            "error": "стряхнув",
+            "correction": "обтрусив",
+            "tag": "F/Calque",
+            "frequency": null
+          }
+        },
+        "finding_id": "a8422bda655132a7e07402c6"
+      }
+    },
+    {
+      "id": "ua-gec-gold-025",
+      "ua_gec_error_id": 3351,
+      "tag": "F/Calque",
+      "mapped_tag": {
+        "tag": "F/Calque",
+        "issue_id": "CONTACT_CALQUE_UA_GEC",
+        "issue_class": "calque",
+        "dimension": "contact_calque",
+        "severity": "info",
+        "default_source_lang": "ru",
+        "source_lang": "ru",
+        "contact_source_lang": "ru"
+      },
+      "error": "фрачних",
+      "correction": "фракових",
+      "source_lang": "ru",
+      "raw_source_lang": "ru",
+      "doc_id": "0106",
+      "annotator_id": "1",
+      "partition": "gec-fluency/train",
+      "is_native": true,
+      "source_excerpt": "Померши, Куролєсов піднявся, стряхнув пилюку з фрачних брюк, вклонився, усміхнувшись фальшивою посмішкою, і удалився при рідких аплодисментах.",
+      "corrected_excerpt": "Після того, як Куролєсов умер, він підвівся, обтрусив пилюку з фракових брюк, вклонився, усміхнувшись фальшивою посмішкою, і пішов  під поодинокі аплодисменти.",
+      "spans": {
+        "source": {
+          "start": 47,
+          "end": 54
+        },
+        "correction": {
+          "start": 63,
+          "end": 71
+        }
+      },
+      "finding": {
+        "issue_id": "CONTACT_CALQUE_UA_GEC",
+        "issue_class": "calque",
+        "dimension": "contact_calque",
+        "severity": "info",
+        "contact_source_lang": "ru",
+        "source_lang": "ru",
+        "track_l1": "en",
+        "ua_gec_tag": "F/Calque",
+        "confidence": "lookup_heuristic",
+        "disposition": "defect",
+        "file": "ua-gec/gec-fluency/train/annotated/0106.a1.ann",
+        "line": 1,
+        "span": {
+          "start": 47,
+          "end": 54
+        },
+        "excerpt": "фрачних",
+        "message": "UA-GEC F/Calque pair: фрачних -> фракових.",
+        "suggested_replacement": [
+          "фракових"
+        ],
+        "detector": {
+          "adapter": "ua_gec_gold_ingest",
+          "rule_id": "F/Calque",
+          "pattern_id": "ua-gec-errors:3351"
+        },
+        "attribution": {
+          "corpus": "UA-GEC v2",
+          "license": "CC-BY-4.0",
+          "doc_id": "0106",
+          "pair_id": "ua-gec-errors:3351",
+          "evidence": "Syvokon et al., UNLP 2023"
+        },
+        "metadata": {
+          "ua_gec": {
+            "error": "фрачних",
+            "correction": "фракових",
+            "tag": "F/Calque",
+            "frequency": null
+          }
+        },
+        "finding_id": "c2a267a820856db3f46ac78a"
+      }
+    },
+    {
+      "id": "ua-gec-gold-026",
+      "ua_gec_error_id": 3352,
+      "tag": "F/Calque",
+      "mapped_tag": {
+        "tag": "F/Calque",
+        "issue_id": "CONTACT_CALQUE_UA_GEC",
+        "issue_class": "calque",
+        "dimension": "contact_calque",
+        "severity": "info",
+        "default_source_lang": "ru",
+        "source_lang": "ru",
+        "contact_source_lang": "ru"
+      },
+      "error": "удалився",
+      "correction": "пішов",
+      "source_lang": "ru",
+      "raw_source_lang": "ru",
+      "doc_id": "0106",
+      "annotator_id": "1",
+      "partition": "gec-fluency/train",
+      "is_native": true,
+      "source_excerpt": "Померши, Куролєсов піднявся, стряхнув пилюку з фрачних брюк, вклонився, усміхнувшись фальшивою посмішкою, і удалився при рідких аплодисментах.",
+      "corrected_excerpt": "Після того, як Куролєсов умер, він підвівся, обтрусив пилюку з фракових брюк, вклонився, усміхнувшись фальшивою посмішкою, і пішов  під поодинокі аплодисменти.",
+      "spans": {
+        "source": {
+          "start": 108,
+          "end": 116
+        },
+        "correction": {
+          "start": 125,
+          "end": 130
+        }
+      },
+      "finding": {
+        "issue_id": "CONTACT_CALQUE_UA_GEC",
+        "issue_class": "calque",
+        "dimension": "contact_calque",
+        "severity": "info",
+        "contact_source_lang": "ru",
+        "source_lang": "ru",
+        "track_l1": "en",
+        "ua_gec_tag": "F/Calque",
+        "confidence": "lookup_heuristic",
+        "disposition": "defect",
+        "file": "ua-gec/gec-fluency/train/annotated/0106.a1.ann",
+        "line": 1,
+        "span": {
+          "start": 108,
+          "end": 116
+        },
+        "excerpt": "удалився",
+        "message": "UA-GEC F/Calque pair: удалився -> пішов.",
+        "suggested_replacement": [
+          "пішов"
+        ],
+        "detector": {
+          "adapter": "ua_gec_gold_ingest",
+          "rule_id": "F/Calque",
+          "pattern_id": "ua-gec-errors:3352"
+        },
+        "attribution": {
+          "corpus": "UA-GEC v2",
+          "license": "CC-BY-4.0",
+          "doc_id": "0106",
+          "pair_id": "ua-gec-errors:3352",
+          "evidence": "Syvokon et al., UNLP 2023"
+        },
+        "metadata": {
+          "ua_gec": {
+            "error": "удалився",
+            "correction": "пішов",
+            "tag": "F/Calque",
+            "frequency": null
+          }
+        },
+        "finding_id": "23c71730eae52323d525d357"
+      }
+    },
+    {
+      "id": "ua-gec-gold-027",
+      "ua_gec_error_id": 3483,
+      "tag": "F/Calque",
+      "mapped_tag": {
+        "tag": "F/Calque",
+        "issue_id": "CONTACT_CALQUE_UA_GEC",
+        "issue_class": "calque",
+        "dimension": "contact_calque",
+        "severity": "info",
+        "default_source_lang": "ru",
+        "source_lang": "ru",
+        "contact_source_lang": "ru"
+      },
+      "error": "палач",
+      "correction": "кат",
+      "source_lang": "ru",
+      "raw_source_lang": "ru",
+      "doc_id": "0156",
+      "annotator_id": "1",
+      "partition": "gec-fluency/train",
+      "is_native": true,
+      "source_excerpt": "– сказав палач, і просякнута водою губка на кінці списи піднялась до  вуст Ієшуа.",
+      "corrected_excerpt": "– сказав кат, і просякнута водою губка на кінці списа піднялась до вуст Ієшуа.",
+      "spans": {
+        "source": {
+          "start": 9,
+          "end": 14
+        },
+        "correction": {
+          "start": 9,
+          "end": 12
+        }
+      },
+      "finding": {
+        "issue_id": "CONTACT_CALQUE_UA_GEC",
+        "issue_class": "calque",
+        "dimension": "contact_calque",
+        "severity": "info",
+        "contact_source_lang": "ru",
+        "source_lang": "ru",
+        "track_l1": "en",
+        "ua_gec_tag": "F/Calque",
+        "confidence": "lookup_heuristic",
+        "disposition": "defect",
+        "file": "ua-gec/gec-fluency/train/annotated/0156.a1.ann",
+        "line": 9,
+        "span": {
+          "start": 9,
+          "end": 14
+        },
+        "excerpt": "палач",
+        "message": "UA-GEC F/Calque pair: палач -> кат.",
+        "suggested_replacement": [
+          "кат"
+        ],
+        "detector": {
+          "adapter": "ua_gec_gold_ingest",
+          "rule_id": "F/Calque",
+          "pattern_id": "ua-gec-errors:3483"
+        },
+        "attribution": {
+          "corpus": "UA-GEC v2",
+          "license": "CC-BY-4.0",
+          "doc_id": "0156",
+          "pair_id": "ua-gec-errors:3483",
+          "evidence": "Syvokon et al., UNLP 2023"
+        },
+        "metadata": {
+          "ua_gec": {
+            "error": "палач",
+            "correction": "кат",
+            "tag": "F/Calque",
+            "frequency": null
+          }
+        },
+        "finding_id": "8aeaaf585688c3f5fae97a7e"
+      }
+    },
+    {
+      "id": "ua-gec-gold-028",
+      "ua_gec_error_id": 3523,
+      "tag": "F/Calque",
+      "mapped_tag": {
+        "tag": "F/Calque",
+        "issue_id": "CONTACT_CALQUE_UA_GEC",
+        "issue_class": "calque",
+        "dimension": "contact_calque",
+        "severity": "info",
+        "default_source_lang": "ru",
+        "source_lang": "ru",
+        "contact_source_lang": "ru"
+      },
+      "error": "виска",
+      "correction": "скроні",
+      "source_lang": "ru",
+      "raw_source_lang": "ru",
+      "doc_id": "0169",
+      "annotator_id": "1",
+      "partition": "gec-fluency/train",
+      "is_native": true,
+      "source_excerpt": "Він показав різнокольоровій дівчині медичне свідоцтво про те, що завдяки пораненню виска, він є розумово ненормальним, і через це не може одружитись.",
+      "corrected_excerpt": "Він показав різнокольоровій дівчині медичне свідоцтво про те, що завдяки пораненню скроні він є розумово ненормальним, і через це не може одружитись.",
+      "spans": {
+        "source": {
+          "start": 83,
+          "end": 88
+        },
+        "correction": {
+          "start": 83,
+          "end": 89
+        }
+      },
+      "finding": {
+        "issue_id": "CONTACT_CALQUE_UA_GEC",
+        "issue_class": "calque",
+        "dimension": "contact_calque",
+        "severity": "info",
+        "contact_source_lang": "ru",
+        "source_lang": "ru",
+        "track_l1": "en",
+        "ua_gec_tag": "F/Calque",
+        "confidence": "lookup_heuristic",
+        "disposition": "defect",
+        "file": "ua-gec/gec-fluency/train/annotated/0169.a1.ann",
+        "line": 5,
+        "span": {
+          "start": 83,
+          "end": 88
+        },
+        "excerpt": "виска",
+        "message": "UA-GEC F/Calque pair: виска -> скроні.",
+        "suggested_replacement": [
+          "скроні"
+        ],
+        "detector": {
+          "adapter": "ua_gec_gold_ingest",
+          "rule_id": "F/Calque",
+          "pattern_id": "ua-gec-errors:3523"
+        },
+        "attribution": {
+          "corpus": "UA-GEC v2",
+          "license": "CC-BY-4.0",
+          "doc_id": "0169",
+          "pair_id": "ua-gec-errors:3523",
+          "evidence": "Syvokon et al., UNLP 2023"
+        },
+        "metadata": {
+          "ua_gec": {
+            "error": "виска",
+            "correction": "скроні",
+            "tag": "F/Calque",
+            "frequency": null
+          }
+        },
+        "finding_id": "dd6920062efea52a6cc51964"
+      }
+    },
+    {
+      "id": "ua-gec-gold-029",
+      "ua_gec_error_id": 3526,
+      "tag": "F/Calque",
+      "mapped_tag": {
+        "tag": "F/Calque",
+        "issue_id": "CONTACT_CALQUE_UA_GEC",
+        "issue_class": "calque",
+        "dimension": "contact_calque",
+        "severity": "info",
+        "default_source_lang": "ru",
+        "source_lang": "ru",
+        "contact_source_lang": "ru"
+      },
+      "error": "копну",
+      "correction": "копицю",
+      "source_lang": "ru",
+      "raw_source_lang": "ru",
+      "doc_id": "0169",
+      "annotator_id": "1",
+      "partition": "gec-fluency/train",
+      "is_native": true,
+      "source_excerpt": "Після обговорень всіх знайомих дівчат та сотні анекдотів, найтовстіший з мисливців, який в сутінках  схожий на копну сіна і говорив густим штаб-офіцерським басом, голосно позіхнув і сказав:",
+      "corrected_excerpt": "Після обговорень усіх знайомих дівчат та сотні анекдотів, найтовстіший з мисливців, який у сутінках був схожий на копицю сіна і говорив густим штаб-офіцерським басом, голосно позіхнув і сказав:",
+      "spans": {
+        "source": {
+          "start": 111,
+          "end": 116
+        },
+        "correction": {
+          "start": 114,
+          "end": 120
+        }
+      },
+      "finding": {
+        "issue_id": "CONTACT_CALQUE_UA_GEC",
+        "issue_class": "calque",
+        "dimension": "contact_calque",
+        "severity": "info",
+        "contact_source_lang": "ru",
+        "source_lang": "ru",
+        "track_l1": "en",
+        "ua_gec_tag": "F/Calque",
+        "confidence": "lookup_heuristic",
+        "disposition": "defect",
+        "file": "ua-gec/gec-fluency/train/annotated/0169.a1.ann",
+        "line": 9,
+        "span": {
+          "start": 111,
+          "end": 116
+        },
+        "excerpt": "копну",
+        "message": "UA-GEC F/Calque pair: копну -> копицю.",
+        "suggested_replacement": [
+          "копицю"
+        ],
+        "detector": {
+          "adapter": "ua_gec_gold_ingest",
+          "rule_id": "F/Calque",
+          "pattern_id": "ua-gec-errors:3526"
+        },
+        "attribution": {
+          "corpus": "UA-GEC v2",
+          "license": "CC-BY-4.0",
+          "doc_id": "0169",
+          "pair_id": "ua-gec-errors:3526",
+          "evidence": "Syvokon et al., UNLP 2023"
+        },
+        "metadata": {
+          "ua_gec": {
+            "error": "копну",
+            "correction": "копицю",
+            "tag": "F/Calque",
+            "frequency": null
+          }
+        },
+        "finding_id": "212285f254872a7adb9d0afb"
+      }
+    },
+    {
+      "id": "ua-gec-gold-030",
+      "ua_gec_error_id": 3696,
+      "tag": "F/Calque",
+      "mapped_tag": {
+        "tag": "F/Calque",
+        "issue_id": "CONTACT_CALQUE_UA_GEC",
+        "issue_class": "calque",
+        "dimension": "contact_calque",
+        "severity": "info",
+        "default_source_lang": "ru",
+        "source_lang": "ru",
+        "contact_source_lang": "ru"
+      },
+      "error": "контрамарочніков",
+      "correction": "контрамарочників",
+      "source_lang": "ru",
+      "raw_source_lang": "ru",
+      "doc_id": "0200",
+      "annotator_id": "1",
+      "partition": "gec-fluency/train",
+      "is_native": false,
+      "source_excerpt": "нути і не продавати тридцять кращих місць в ложах і партері, вискочивши з каси, тут же на ходу відбився від настирливих контрамарочніков і нирнув у свій кабінетик, щоб захопити кепку. В цей час затріщав телефон.",
+      "corrected_excerpt": "нути і не продавати тридцять кращих місць у ложах і партері, вискочивши з каси, тут же на ходу відбився від настирливих контрамарочників і пірнув у свій кабінетик, щоб захопити кепку. В цей час затріщав телефон.",
+      "spans": {
+        "source": {
+          "start": 120,
+          "end": 136
+        },
+        "correction": {
+          "start": 120,
+          "end": 136
+        }
+      },
+      "finding": {
+        "issue_id": "CONTACT_CALQUE_UA_GEC",
+        "issue_class": "calque",
+        "dimension": "contact_calque",
+        "severity": "info",
+        "contact_source_lang": "ru",
+        "source_lang": "ru",
+        "track_l1": "en",
+        "ua_gec_tag": "F/Calque",
+        "confidence": "lookup_heuristic",
+        "disposition": "defect",
+        "file": "ua-gec/gec-fluency/train/annotated/0200.a1.ann",
+        "line": 8,
+        "span": {
+          "start": 120,
+          "end": 136
+        },
+        "excerpt": "контрамарочніков",
+        "message": "UA-GEC F/Calque pair: контрамарочніков -> контрамарочників.",
+        "suggested_replacement": [
+          "контрамарочників"
+        ],
+        "detector": {
+          "adapter": "ua_gec_gold_ingest",
+          "rule_id": "F/Calque",
+          "pattern_id": "ua-gec-errors:3696"
+        },
+        "attribution": {
+          "corpus": "UA-GEC v2",
+          "license": "CC-BY-4.0",
+          "doc_id": "0200",
+          "pair_id": "ua-gec-errors:3696",
+          "evidence": "Syvokon et al., UNLP 2023"
+        },
+        "metadata": {
+          "ua_gec": {
+            "error": "контрамарочніков",
+            "correction": "контрамарочників",
+            "tag": "F/Calque",
+            "frequency": null
+          }
+        },
+        "finding_id": "405c83997b4c8093934c04d6"
+      }
+    },
+    {
+      "id": "ua-gec-gold-031",
+      "ua_gec_error_id": 3697,
+      "tag": "F/Calque",
+      "mapped_tag": {
+        "tag": "F/Calque",
+        "issue_id": "CONTACT_CALQUE_UA_GEC",
+        "issue_class": "calque",
+        "dimension": "contact_calque",
+        "severity": "info",
+        "default_source_lang": "ru",
+        "source_lang": "ru",
+        "contact_source_lang": "ru"
+      },
+      "error": "нирнув",
+      "correction": "пірнув",
+      "source_lang": "ru",
+      "raw_source_lang": "ru",
+      "doc_id": "0200",
+      "annotator_id": "1",
+      "partition": "gec-fluency/train",
+      "is_native": false,
+      "source_excerpt": "тридцять кращих місць в ложах і партері, вискочивши з каси, тут же на ходу відбився від настирливих контрамарочніков і нирнув у свій кабінетик, щоб захопити кепку. В цей час затріщав телефон.",
+      "corrected_excerpt": "тридцять кращих місць у ложах і партері, вискочивши з каси, тут же на ходу відбився від настирливих контрамарочників і пірнув у свій кабінетик, щоб захопити кепку. В цей час затріщав телефон.",
+      "spans": {
+        "source": {
+          "start": 119,
+          "end": 125
+        },
+        "correction": {
+          "start": 119,
+          "end": 125
+        }
+      },
+      "finding": {
+        "issue_id": "CONTACT_CALQUE_UA_GEC",
+        "issue_class": "calque",
+        "dimension": "contact_calque",
+        "severity": "info",
+        "contact_source_lang": "ru",
+        "source_lang": "ru",
+        "track_l1": "en",
+        "ua_gec_tag": "F/Calque",
+        "confidence": "lookup_heuristic",
+        "disposition": "defect",
+        "file": "ua-gec/gec-fluency/train/annotated/0200.a1.ann",
+        "line": 8,
+        "span": {
+          "start": 119,
+          "end": 125
+        },
+        "excerpt": "нирнув",
+        "message": "UA-GEC F/Calque pair: нирнув -> пірнув.",
+        "suggested_replacement": [
+          "пірнув"
+        ],
+        "detector": {
+          "adapter": "ua_gec_gold_ingest",
+          "rule_id": "F/Calque",
+          "pattern_id": "ua-gec-errors:3697"
+        },
+        "attribution": {
+          "corpus": "UA-GEC v2",
+          "license": "CC-BY-4.0",
+          "doc_id": "0200",
+          "pair_id": "ua-gec-errors:3697",
+          "evidence": "Syvokon et al., UNLP 2023"
+        },
+        "metadata": {
+          "ua_gec": {
+            "error": "нирнув",
+            "correction": "пірнув",
+            "tag": "F/Calque",
+            "frequency": null
+          }
+        },
+        "finding_id": "b2298dba825c3e8419e3702b"
+      }
+    },
+    {
+      "id": "ua-gec-gold-032",
+      "ua_gec_error_id": 3701,
+      "tag": "F/Calque",
+      "mapped_tag": {
+        "tag": "F/Calque",
+        "issue_id": "CONTACT_CALQUE_UA_GEC",
+        "issue_class": "calque",
+        "dimension": "contact_calque",
+        "severity": "info",
+        "default_source_lang": "ru",
+        "source_lang": "ru",
+        "contact_source_lang": "ru"
+      },
+      "error": "виключили",
+      "correction": "відрахували",
+      "source_lang": "ru",
+      "raw_source_lang": "ru",
+      "doc_id": "0204",
+      "annotator_id": "1",
+      "partition": "gec-fluency/train",
+      "is_native": true,
+      "source_excerpt": "-Слухайте, третього дня, здається, я зустрів вас на Садовій, - сказав він - але тоді ви говорили мені, що ви не сільський вчитель, а студент, якого виключили.",
+      "corrected_excerpt": "— Слухайте, третього дня, здається, я зустрів вас на Садовій, — сказав він, —але тоді ви говорили мені, що ви не сільський вчитель, а студент, якого відрахували.",
+      "spans": {
+        "source": {
+          "start": 148,
+          "end": 157
+        },
+        "correction": {
+          "start": 149,
+          "end": 160
+        }
+      },
+      "finding": {
+        "issue_id": "CONTACT_CALQUE_UA_GEC",
+        "issue_class": "calque",
+        "dimension": "contact_calque",
+        "severity": "info",
+        "contact_source_lang": "ru",
+        "source_lang": "ru",
+        "track_l1": "en",
+        "ua_gec_tag": "F/Calque",
+        "confidence": "lookup_heuristic",
+        "disposition": "defect",
+        "file": "ua-gec/gec-fluency/train/annotated/0204.a1.ann",
+        "line": 5,
+        "span": {
+          "start": 148,
+          "end": 157
+        },
+        "excerpt": "виключили",
+        "message": "UA-GEC F/Calque pair: виключили -> відрахували.",
+        "suggested_replacement": [
+          "відрахували"
+        ],
+        "detector": {
+          "adapter": "ua_gec_gold_ingest",
+          "rule_id": "F/Calque",
+          "pattern_id": "ua-gec-errors:3701"
+        },
+        "attribution": {
+          "corpus": "UA-GEC v2",
+          "license": "CC-BY-4.0",
+          "doc_id": "0204",
+          "pair_id": "ua-gec-errors:3701",
+          "evidence": "Syvokon et al., UNLP 2023"
+        },
+        "metadata": {
+          "ua_gec": {
+            "error": "виключили",
+            "correction": "відрахували",
+            "tag": "F/Calque",
+            "frequency": null
+          }
+        },
+        "finding_id": "d949e35895135e352452ef64"
+      }
+    },
+    {
+      "id": "ua-gec-gold-033",
+      "ua_gec_error_id": 12,
+      "tag": "G/Case",
+      "mapped_tag": {
+        "tag": "G/Case",
+        "issue_id": "UKRAINIAN_GRAMMAR_CASE",
+        "issue_class": "grammar",
+        "dimension": "contact_grammar",
+        "severity": "warning",
+        "default_source_lang": "ru",
+        "source_lang": "ru",
+        "contact_source_lang": "ru"
+      },
+      "error": "Матір",
+      "correction": "Матінко",
+      "source_lang": "ru",
+      "raw_source_lang": "ru",
+      "doc_id": "0001",
+      "annotator_id": "1",
+      "partition": "gec-only/train",
+      "is_native": true,
+      "source_excerpt": "Грають та гадають: \"Матір Божа, а нам же ще три години тут на морозі сидіти!",
+      "corrected_excerpt": "Грають та гадають: \"Матінко Божа, а нам же ще три години тут на морозі сидіти!",
+      "spans": {
+        "source": {
+          "start": 20,
+          "end": 25
+        },
+        "correction": {
+          "start": 20,
+          "end": 27
+        }
+      },
+      "finding": {
+        "issue_id": "UKRAINIAN_GRAMMAR_CASE",
+        "issue_class": "grammar",
+        "dimension": "contact_grammar",
+        "severity": "warning",
+        "contact_source_lang": "ru",
+        "source_lang": "ru",
+        "track_l1": "en",
+        "ua_gec_tag": "G/Case",
+        "confidence": "lookup_heuristic",
+        "disposition": "defect",
+        "file": "ua-gec/gec-only/train/annotated/0001.a1.ann",
+        "line": 5,
+        "span": {
+          "start": 20,
+          "end": 25
+        },
+        "excerpt": "Матір",
+        "message": "UA-GEC G/Case pair: Матір -> Матінко.",
+        "suggested_replacement": [
+          "Матінко"
+        ],
+        "detector": {
+          "adapter": "ua_gec_gold_ingest",
+          "rule_id": "G/Case",
+          "pattern_id": "ua-gec-errors:12"
+        },
+        "attribution": {
+          "corpus": "UA-GEC v2",
+          "license": "CC-BY-4.0",
+          "doc_id": "0001",
+          "pair_id": "ua-gec-errors:12",
+          "evidence": "Syvokon et al., UNLP 2023"
+        },
+        "metadata": {
+          "ua_gec": {
+            "error": "Матір",
+            "correction": "Матінко",
+            "tag": "G/Case",
+            "frequency": null
+          }
+        },
+        "finding_id": "d57aa6068db14be8b6ff48d9"
+      }
+    },
+    {
+      "id": "ua-gec-gold-034",
+      "ua_gec_error_id": 31,
+      "tag": "G/Case",
+      "mapped_tag": {
+        "tag": "G/Case",
+        "issue_id": "UKRAINIAN_GRAMMAR_CASE",
+        "issue_class": "grammar",
+        "dimension": "contact_grammar",
+        "severity": "warning",
+        "default_source_lang": "ru",
+        "source_lang": "ru",
+        "contact_source_lang": "ru"
+      },
+      "error": "Ершалаїме",
+      "correction": "Ершалаїмі",
+      "source_lang": "ru",
+      "raw_source_lang": "ru",
+      "doc_id": "0014",
+      "annotator_id": "1",
+      "partition": "gec-only/train",
+      "is_native": true,
+      "source_excerpt": "- Чотири злочинці, заарештовані в Ершалаїме за вбивства, підбурювання до заколоту та образу законів та віри, приговорені до позорної страти - вішанню на стовпах!",
+      "corrected_excerpt": "—Чотири злочинці, заарештовані в Ершалаїмі за вбивства, підбурювання до заколоту та образу законів та віри, приговорені до позорної страти — повішання на стовпах!",
+      "spans": {
+        "source": {
+          "start": 34,
+          "end": 43
+        },
+        "correction": {
+          "start": 33,
+          "end": 42
+        }
+      },
+      "finding": {
+        "issue_id": "UKRAINIAN_GRAMMAR_CASE",
+        "issue_class": "grammar",
+        "dimension": "contact_grammar",
+        "severity": "warning",
+        "contact_source_lang": "ru",
+        "source_lang": "ru",
+        "track_l1": "en",
+        "ua_gec_tag": "G/Case",
+        "confidence": "lookup_heuristic",
+        "disposition": "defect",
+        "file": "ua-gec/gec-only/train/annotated/0014.a1.ann",
+        "line": 13,
+        "span": {
+          "start": 34,
+          "end": 43
+        },
+        "excerpt": "Ершалаїме",
+        "message": "UA-GEC G/Case pair: Ершалаїме -> Ершалаїмі.",
+        "suggested_replacement": [
+          "Ершалаїмі"
+        ],
+        "detector": {
+          "adapter": "ua_gec_gold_ingest",
+          "rule_id": "G/Case",
+          "pattern_id": "ua-gec-errors:31"
+        },
+        "attribution": {
+          "corpus": "UA-GEC v2",
+          "license": "CC-BY-4.0",
+          "doc_id": "0014",
+          "pair_id": "ua-gec-errors:31",
+          "evidence": "Syvokon et al., UNLP 2023"
+        },
+        "metadata": {
+          "ua_gec": {
+            "error": "Ершалаїме",
+            "correction": "Ершалаїмі",
+            "tag": "G/Case",
+            "frequency": null
+          }
+        },
+        "finding_id": "f683f088c472006b5a8c6fdf"
+      }
+    },
+    {
+      "id": "ua-gec-gold-035",
+      "ua_gec_error_id": 36,
+      "tag": "G/Case",
+      "mapped_tag": {
+        "tag": "G/Case",
+        "issue_id": "UKRAINIAN_GRAMMAR_CASE",
+        "issue_class": "grammar",
+        "dimension": "contact_grammar",
+        "severity": "warning",
+        "default_source_lang": "ru",
+        "source_lang": "ru",
+        "contact_source_lang": "ru"
+      },
+      "error": "в цю мить",
+      "correction": "цієї миті",
+      "source_lang": "ru",
+      "raw_source_lang": "ru",
+      "doc_id": "0023",
+      "annotator_id": "1",
+      "partition": "gec-only/train",
+      "is_native": true,
+      "source_excerpt": "- прохрипів Степан, відчуваючи, що похмілля дарує йому новий симптом: йому здалося, що підлога біля ліжка зникла і в цю мить він головою вниз полетить до дідька.",
+      "corrected_excerpt": "— прохрипів Степан, відчуваючи, що похмілля дарує йому новий симптом: йому здалося, що підлога біля ліжка зникла і цієї миті він головою вниз полетить до дідька.",
+      "spans": {
+        "source": {
+          "start": 115,
+          "end": 124
+        },
+        "correction": {
+          "start": 115,
+          "end": 124
+        }
+      },
+      "finding": {
+        "issue_id": "UKRAINIAN_GRAMMAR_CASE",
+        "issue_class": "grammar",
+        "dimension": "contact_grammar",
+        "severity": "warning",
+        "contact_source_lang": "ru",
+        "source_lang": "ru",
+        "track_l1": "en",
+        "ua_gec_tag": "G/Case",
+        "confidence": "lookup_heuristic",
+        "disposition": "defect",
+        "file": "ua-gec/gec-only/train/annotated/0023.a1.ann",
+        "line": 5,
+        "span": {
+          "start": 115,
+          "end": 124
+        },
+        "excerpt": "в цю мить",
+        "message": "UA-GEC G/Case pair: в цю мить -> цієї миті.",
+        "suggested_replacement": [
+          "цієї миті"
+        ],
+        "detector": {
+          "adapter": "ua_gec_gold_ingest",
+          "rule_id": "G/Case",
+          "pattern_id": "ua-gec-errors:36"
+        },
+        "attribution": {
+          "corpus": "UA-GEC v2",
+          "license": "CC-BY-4.0",
+          "doc_id": "0023",
+          "pair_id": "ua-gec-errors:36",
+          "evidence": "Syvokon et al., UNLP 2023"
+        },
+        "metadata": {
+          "ua_gec": {
+            "error": "в цю мить",
+            "correction": "цієї миті",
+            "tag": "G/Case",
+            "frequency": null
+          }
+        },
+        "finding_id": "9a83f38d45821648e4725f88"
+      }
+    },
+    {
+      "id": "ua-gec-gold-036",
+      "ua_gec_error_id": 37,
+      "tag": "G/Case",
+      "mapped_tag": {
+        "tag": "G/Case",
+        "issue_id": "UKRAINIAN_GRAMMAR_CASE",
+        "issue_class": "grammar",
+        "dimension": "contact_grammar",
+        "severity": "warning",
+        "default_source_lang": "ru",
+        "source_lang": "ru",
+        "contact_source_lang": "ru"
+      },
+      "error": "Степан",
+      "correction": "Степане",
+      "source_lang": "ru",
+      "raw_source_lang": "ru",
+      "doc_id": "0023",
+      "annotator_id": "1",
+      "partition": "gec-only/train",
+      "is_native": true,
+      "source_excerpt": "- Шановний Степан Богданович,- заговорив відвідувач, посміхаючись, - ніякий пірамідон вам не допоможе.",
+      "corrected_excerpt": "— Шановний Степане Богдановичу, — заговорив відвідувач, посміхаючись, — ніякий пірамідон вам не допоможе.",
+      "spans": {
+        "source": {
+          "start": 11,
+          "end": 17
+        },
+        "correction": {
+          "start": 11,
+          "end": 18
+        }
+      },
+      "finding": {
+        "issue_id": "UKRAINIAN_GRAMMAR_CASE",
+        "issue_class": "grammar",
+        "dimension": "contact_grammar",
+        "severity": "warning",
+        "contact_source_lang": "ru",
+        "source_lang": "ru",
+        "track_l1": "en",
+        "ua_gec_tag": "G/Case",
+        "confidence": "lookup_heuristic",
+        "disposition": "defect",
+        "file": "ua-gec/gec-only/train/annotated/0023.a1.ann",
+        "line": 6,
+        "span": {
+          "start": 11,
+          "end": 17
+        },
+        "excerpt": "Степан",
+        "message": "UA-GEC G/Case pair: Степан -> Степане.",
+        "suggested_replacement": [
+          "Степане"
+        ],
+        "detector": {
+          "adapter": "ua_gec_gold_ingest",
+          "rule_id": "G/Case",
+          "pattern_id": "ua-gec-errors:37"
+        },
+        "attribution": {
+          "corpus": "UA-GEC v2",
+          "license": "CC-BY-4.0",
+          "doc_id": "0023",
+          "pair_id": "ua-gec-errors:37",
+          "evidence": "Syvokon et al., UNLP 2023"
+        },
+        "metadata": {
+          "ua_gec": {
+            "error": "Степан",
+            "correction": "Степане",
+            "tag": "G/Case",
+            "frequency": null
+          }
+        },
+        "finding_id": "3fca92c55e6a70bffc031c09"
+      }
+    },
+    {
+      "id": "ua-gec-gold-037",
+      "ua_gec_error_id": 38,
+      "tag": "G/Case",
+      "mapped_tag": {
+        "tag": "G/Case",
+        "issue_id": "UKRAINIAN_GRAMMAR_CASE",
+        "issue_class": "grammar",
+        "dimension": "contact_grammar",
+        "severity": "warning",
+        "default_source_lang": "ru",
+        "source_lang": "ru",
+        "contact_source_lang": "ru"
+      },
+      "error": "Богданович",
+      "correction": "Богдановичу",
+      "source_lang": "ru",
+      "raw_source_lang": "ru",
+      "doc_id": "0023",
+      "annotator_id": "1",
+      "partition": "gec-only/train",
+      "is_native": true,
+      "source_excerpt": "- Шановний Степан Богданович,- заговорив відвідувач, посміхаючись, - ніякий пірамідон вам не допоможе.",
+      "corrected_excerpt": "— Шановний Степане Богдановичу, — заговорив відвідувач, посміхаючись, — ніякий пірамідон вам не допоможе.",
+      "spans": {
+        "source": {
+          "start": 18,
+          "end": 28
+        },
+        "correction": {
+          "start": 19,
+          "end": 30
+        }
+      },
+      "finding": {
+        "issue_id": "UKRAINIAN_GRAMMAR_CASE",
+        "issue_class": "grammar",
+        "dimension": "contact_grammar",
+        "severity": "warning",
+        "contact_source_lang": "ru",
+        "source_lang": "ru",
+        "track_l1": "en",
+        "ua_gec_tag": "G/Case",
+        "confidence": "lookup_heuristic",
+        "disposition": "defect",
+        "file": "ua-gec/gec-only/train/annotated/0023.a1.ann",
+        "line": 6,
+        "span": {
+          "start": 18,
+          "end": 28
+        },
+        "excerpt": "Богданович",
+        "message": "UA-GEC G/Case pair: Богданович -> Богдановичу.",
+        "suggested_replacement": [
+          "Богдановичу"
+        ],
+        "detector": {
+          "adapter": "ua_gec_gold_ingest",
+          "rule_id": "G/Case",
+          "pattern_id": "ua-gec-errors:38"
+        },
+        "attribution": {
+          "corpus": "UA-GEC v2",
+          "license": "CC-BY-4.0",
+          "doc_id": "0023",
+          "pair_id": "ua-gec-errors:38",
+          "evidence": "Syvokon et al., UNLP 2023"
+        },
+        "metadata": {
+          "ua_gec": {
+            "error": "Богданович",
+            "correction": "Богдановичу",
+            "tag": "G/Case",
+            "frequency": null
+          }
+        },
+        "finding_id": "b3fae8ebcd1e9c8217ea2222"
+      }
+    },
+    {
+      "id": "ua-gec-gold-038",
+      "ua_gec_error_id": 47,
+      "tag": "G/Case",
+      "mapped_tag": {
+        "tag": "G/Case",
+        "issue_id": "UKRAINIAN_GRAMMAR_CASE",
+        "issue_class": "grammar",
+        "dimension": "contact_grammar",
+        "severity": "warning",
+        "default_source_lang": "ru",
+        "source_lang": "ru",
+        "contact_source_lang": "ru"
+      },
+      "error": "Мессир",
+      "correction": "Мессіре",
+      "source_lang": "ru",
+      "raw_source_lang": "ru",
+      "doc_id": "0032",
+      "annotator_id": "1",
+      "partition": "gec-only/train",
+      "is_native": false,
+      "source_excerpt": "- Ах , не слухайте бідолашну жінку , Мессир .",
+      "corrected_excerpt": "— Ах, не слухайте бідолашну жінку, Мессіре.",
+      "spans": {
+        "source": {
+          "start": 37,
+          "end": 43
+        },
+        "correction": {
+          "start": 35,
+          "end": 42
+        }
+      },
+      "finding": {
+        "issue_id": "UKRAINIAN_GRAMMAR_CASE",
+        "issue_class": "grammar",
+        "dimension": "contact_grammar",
+        "severity": "warning",
+        "contact_source_lang": "ru",
+        "source_lang": "ru",
+        "track_l1": "en",
+        "ua_gec_tag": "G/Case",
+        "confidence": "lookup_heuristic",
+        "disposition": "defect",
+        "file": "ua-gec/gec-only/train/annotated/0032.a1.ann",
+        "line": 6,
+        "span": {
+          "start": 37,
+          "end": 43
+        },
+        "excerpt": "Мессир",
+        "message": "UA-GEC G/Case pair: Мессир -> Мессіре.",
+        "suggested_replacement": [
+          "Мессіре"
+        ],
+        "detector": {
+          "adapter": "ua_gec_gold_ingest",
+          "rule_id": "G/Case",
+          "pattern_id": "ua-gec-errors:47"
+        },
+        "attribution": {
+          "corpus": "UA-GEC v2",
+          "license": "CC-BY-4.0",
+          "doc_id": "0032",
+          "pair_id": "ua-gec-errors:47",
+          "evidence": "Syvokon et al., UNLP 2023"
+        },
+        "metadata": {
+          "ua_gec": {
+            "error": "Мессир",
+            "correction": "Мессіре",
+            "tag": "G/Case",
+            "frequency": null
+          }
+        },
+        "finding_id": "6f777045dbf7c424da808c52"
+      }
+    },
+    {
+      "id": "ua-gec-gold-039",
+      "ua_gec_error_id": 51,
+      "tag": "G/Case",
+      "mapped_tag": {
+        "tag": "G/Case",
+        "issue_id": "UKRAINIAN_GRAMMAR_CASE",
+        "issue_class": "grammar",
+        "dimension": "contact_grammar",
+        "severity": "warning",
+        "default_source_lang": "ru",
+        "source_lang": "ru",
+        "contact_source_lang": "ru"
+      },
+      "error": "коні,",
+      "correction": "коней",
+      "source_lang": "ru",
+      "raw_source_lang": "ru",
+      "doc_id": "0036",
+      "annotator_id": "1",
+      "partition": "gec-only/train",
+      "is_native": true,
+      "source_excerpt": "Було непомітно, як небо змінює свій колір; воно все ще здавалося темним, але вже були видні коні, і візник, і дорога.",
+      "corrected_excerpt": "Було непомітно, як небо змінює свій колір; воно все ще здавалося темним, але вже було видно і коней і візника, і дорогу.",
+      "spans": {
+        "source": {
+          "start": 92,
+          "end": 97
+        },
+        "correction": {
+          "start": 94,
+          "end": 99
+        }
+      },
+      "finding": {
+        "issue_id": "UKRAINIAN_GRAMMAR_CASE",
+        "issue_class": "grammar",
+        "dimension": "contact_grammar",
+        "severity": "warning",
+        "contact_source_lang": "ru",
+        "source_lang": "ru",
+        "track_l1": "en",
+        "ua_gec_tag": "G/Case",
+        "confidence": "lookup_heuristic",
+        "disposition": "defect",
+        "file": "ua-gec/gec-only/train/annotated/0036.a1.ann",
+        "line": 2,
+        "span": {
+          "start": 92,
+          "end": 97
+        },
+        "excerpt": "коні,",
+        "message": "UA-GEC G/Case pair: коні, -> коней.",
+        "suggested_replacement": [
+          "коней"
+        ],
+        "detector": {
+          "adapter": "ua_gec_gold_ingest",
+          "rule_id": "G/Case",
+          "pattern_id": "ua-gec-errors:51"
+        },
+        "attribution": {
+          "corpus": "UA-GEC v2",
+          "license": "CC-BY-4.0",
+          "doc_id": "0036",
+          "pair_id": "ua-gec-errors:51",
+          "evidence": "Syvokon et al., UNLP 2023"
+        },
+        "metadata": {
+          "ua_gec": {
+            "error": "коні,",
+            "correction": "коней",
+            "tag": "G/Case",
+            "frequency": null
+          }
+        },
+        "finding_id": "c175f1f728b838254809dee6"
+      }
+    },
+    {
+      "id": "ua-gec-gold-040",
+      "ua_gec_error_id": 52,
+      "tag": "G/Case",
+      "mapped_tag": {
+        "tag": "G/Case",
+        "issue_id": "UKRAINIAN_GRAMMAR_CASE",
+        "issue_class": "grammar",
+        "dimension": "contact_grammar",
+        "severity": "warning",
+        "default_source_lang": "ru",
+        "source_lang": "ru",
+        "contact_source_lang": "ru"
+      },
+      "error": "візник",
+      "correction": "візника",
+      "source_lang": "ru",
+      "raw_source_lang": "ru",
+      "doc_id": "0036",
+      "annotator_id": "1",
+      "partition": "gec-only/train",
+      "is_native": true,
+      "source_excerpt": "Було непомітно, як небо змінює свій колір; воно все ще здавалося темним, але вже були видні коні, і візник, і дорога.",
+      "corrected_excerpt": "Було непомітно, як небо змінює свій колір; воно все ще здавалося темним, але вже було видно і коней і візника, і дорогу.",
+      "spans": {
+        "source": {
+          "start": 100,
+          "end": 106
+        },
+        "correction": {
+          "start": 102,
+          "end": 109
+        }
+      },
+      "finding": {
+        "issue_id": "UKRAINIAN_GRAMMAR_CASE",
+        "issue_class": "grammar",
+        "dimension": "contact_grammar",
+        "severity": "warning",
+        "contact_source_lang": "ru",
+        "source_lang": "ru",
+        "track_l1": "en",
+        "ua_gec_tag": "G/Case",
+        "confidence": "lookup_heuristic",
+        "disposition": "defect",
+        "file": "ua-gec/gec-only/train/annotated/0036.a1.ann",
+        "line": 2,
+        "span": {
+          "start": 100,
+          "end": 106
+        },
+        "excerpt": "візник",
+        "message": "UA-GEC G/Case pair: візник -> візника.",
+        "suggested_replacement": [
+          "візника"
+        ],
+        "detector": {
+          "adapter": "ua_gec_gold_ingest",
+          "rule_id": "G/Case",
+          "pattern_id": "ua-gec-errors:52"
+        },
+        "attribution": {
+          "corpus": "UA-GEC v2",
+          "license": "CC-BY-4.0",
+          "doc_id": "0036",
+          "pair_id": "ua-gec-errors:52",
+          "evidence": "Syvokon et al., UNLP 2023"
+        },
+        "metadata": {
+          "ua_gec": {
+            "error": "візник",
+            "correction": "візника",
+            "tag": "G/Case",
+            "frequency": null
+          }
+        },
+        "finding_id": "50075e734cdc77616c297c35"
+      }
+    },
+    {
+      "id": "ua-gec-gold-041",
+      "ua_gec_error_id": 53,
+      "tag": "G/Case",
+      "mapped_tag": {
+        "tag": "G/Case",
+        "issue_id": "UKRAINIAN_GRAMMAR_CASE",
+        "issue_class": "grammar",
+        "dimension": "contact_grammar",
+        "severity": "warning",
+        "default_source_lang": "ru",
+        "source_lang": "ru",
+        "contact_source_lang": "ru"
+      },
+      "error": "дорога",
+      "correction": "дорогу",
+      "source_lang": "ru",
+      "raw_source_lang": "ru",
+      "doc_id": "0036",
+      "annotator_id": "1",
+      "partition": "gec-only/train",
+      "is_native": true,
+      "source_excerpt": "Було непомітно, як небо змінює свій колір; воно все ще здавалося темним, але вже були видні коні, і візник, і дорога.",
+      "corrected_excerpt": "Було непомітно, як небо змінює свій колір; воно все ще здавалося темним, але вже було видно і коней і візника, і дорогу.",
+      "spans": {
+        "source": {
+          "start": 110,
+          "end": 116
+        },
+        "correction": {
+          "start": 113,
+          "end": 119
+        }
+      },
+      "finding": {
+        "issue_id": "UKRAINIAN_GRAMMAR_CASE",
+        "issue_class": "grammar",
+        "dimension": "contact_grammar",
+        "severity": "warning",
+        "contact_source_lang": "ru",
+        "source_lang": "ru",
+        "track_l1": "en",
+        "ua_gec_tag": "G/Case",
+        "confidence": "lookup_heuristic",
+        "disposition": "defect",
+        "file": "ua-gec/gec-only/train/annotated/0036.a1.ann",
+        "line": 2,
+        "span": {
+          "start": 110,
+          "end": 116
+        },
+        "excerpt": "дорога",
+        "message": "UA-GEC G/Case pair: дорога -> дорогу.",
+        "suggested_replacement": [
+          "дорогу"
+        ],
+        "detector": {
+          "adapter": "ua_gec_gold_ingest",
+          "rule_id": "G/Case",
+          "pattern_id": "ua-gec-errors:53"
+        },
+        "attribution": {
+          "corpus": "UA-GEC v2",
+          "license": "CC-BY-4.0",
+          "doc_id": "0036",
+          "pair_id": "ua-gec-errors:53",
+          "evidence": "Syvokon et al., UNLP 2023"
+        },
+        "metadata": {
+          "ua_gec": {
+            "error": "дорога",
+            "correction": "дорогу",
+            "tag": "G/Case",
+            "frequency": null
+          }
+        },
+        "finding_id": "f124f98d244bdf4be15d6ef4"
+      }
+    },
+    {
+      "id": "ua-gec-gold-042",
+      "ua_gec_error_id": 60,
+      "tag": "G/Case",
+      "mapped_tag": {
+        "tag": "G/Case",
+        "issue_id": "UKRAINIAN_GRAMMAR_CASE",
+        "issue_class": "grammar",
+        "dimension": "contact_grammar",
+        "severity": "warning",
+        "default_source_lang": "ru",
+        "source_lang": "ru",
+        "contact_source_lang": "ru"
+      },
+      "error": "очами",
+      "correction": "очима",
+      "source_lang": "ru",
+      "raw_source_lang": "ru",
+      "doc_id": "0039",
+      "annotator_id": "1",
+      "partition": "gec-only/train",
+      "is_native": false,
+      "source_excerpt": "Попереду йшов ретельно, по-акторськи виголений чоловік років сорока п'яти, з приємним, але дуже пронзаючими очами і ввічливими манерами.",
+      "corrected_excerpt": "Попереду йшов ретельно, по-акторськи виголений чоловік років сорока п'яти, з приємним, але дуже пронзаючими очима і ввічливими манерами.",
+      "spans": {
+        "source": {
+          "start": 108,
+          "end": 113
+        },
+        "correction": {
+          "start": 108,
+          "end": 113
+        }
+      },
+      "finding": {
+        "issue_id": "UKRAINIAN_GRAMMAR_CASE",
+        "issue_class": "grammar",
+        "dimension": "contact_grammar",
+        "severity": "warning",
+        "contact_source_lang": "ru",
+        "source_lang": "ru",
+        "track_l1": "en",
+        "ua_gec_tag": "G/Case",
+        "confidence": "lookup_heuristic",
+        "disposition": "defect",
+        "file": "ua-gec/gec-only/train/annotated/0039.a1.ann",
+        "line": 3,
+        "span": {
+          "start": 108,
+          "end": 113
+        },
+        "excerpt": "очами",
+        "message": "UA-GEC G/Case pair: очами -> очима.",
+        "suggested_replacement": [
+          "очима"
+        ],
+        "detector": {
+          "adapter": "ua_gec_gold_ingest",
+          "rule_id": "G/Case",
+          "pattern_id": "ua-gec-errors:60"
+        },
+        "attribution": {
+          "corpus": "UA-GEC v2",
+          "license": "CC-BY-4.0",
+          "doc_id": "0039",
+          "pair_id": "ua-gec-errors:60",
+          "evidence": "Syvokon et al., UNLP 2023"
+        },
+        "metadata": {
+          "ua_gec": {
+            "error": "очами",
+            "correction": "очима",
+            "tag": "G/Case",
+            "frequency": null
+          }
+        },
+        "finding_id": "203eb249d359d3e6eb43a5cd"
+      }
+    },
+    {
+      "id": "ua-gec-gold-043",
+      "ua_gec_error_id": 62,
+      "tag": "G/Case",
+      "mapped_tag": {
+        "tag": "G/Case",
+        "issue_id": "UKRAINIAN_GRAMMAR_CASE",
+        "issue_class": "grammar",
+        "dimension": "contact_grammar",
+        "severity": "warning",
+        "default_source_lang": "ru",
+        "source_lang": "ru",
+        "contact_source_lang": "ru"
+      },
+      "error": "чистоту",
+      "correction": "чистоті",
+      "source_lang": "ru",
+      "raw_source_lang": "ru",
+      "doc_id": "0041",
+      "annotator_id": "1",
+      "partition": "gec-only/train",
+      "is_native": false,
+      "source_excerpt": "Акцентую, пане, вашу увагу на чистоту обробки.",
+      "corrected_excerpt": "Акцентую, пане, вашу увагу на чистоті обробки.",
+      "spans": {
+        "source": {
+          "start": 30,
+          "end": 37
+        },
+        "correction": {
+          "start": 30,
+          "end": 37
+        }
+      },
+      "finding": {
+        "issue_id": "UKRAINIAN_GRAMMAR_CASE",
+        "issue_class": "grammar",
+        "dimension": "contact_grammar",
+        "severity": "warning",
+        "contact_source_lang": "ru",
+        "source_lang": "ru",
+        "track_l1": "en",
+        "ua_gec_tag": "G/Case",
+        "confidence": "lookup_heuristic",
+        "disposition": "defect",
+        "file": "ua-gec/gec-only/train/annotated/0041.a1.ann",
+        "line": 1,
+        "span": {
+          "start": 30,
+          "end": 37
+        },
+        "excerpt": "чистоту",
+        "message": "UA-GEC G/Case pair: чистоту -> чистоті.",
+        "suggested_replacement": [
+          "чистоті"
+        ],
+        "detector": {
+          "adapter": "ua_gec_gold_ingest",
+          "rule_id": "G/Case",
+          "pattern_id": "ua-gec-errors:62"
+        },
+        "attribution": {
+          "corpus": "UA-GEC v2",
+          "license": "CC-BY-4.0",
+          "doc_id": "0041",
+          "pair_id": "ua-gec-errors:62",
+          "evidence": "Syvokon et al., UNLP 2023"
+        },
+        "metadata": {
+          "ua_gec": {
+            "error": "чистоту",
+            "correction": "чистоті",
+            "tag": "G/Case",
+            "frequency": null
+          }
+        },
+        "finding_id": "3c3642c847936ba32edeeecc"
+      }
+    },
+    {
+      "id": "ua-gec-gold-044",
+      "ua_gec_error_id": 63,
+      "tag": "G/Case",
+      "mapped_tag": {
+        "tag": "G/Case",
+        "issue_id": "UKRAINIAN_GRAMMAR_CASE",
+        "issue_class": "grammar",
+        "dimension": "contact_grammar",
+        "severity": "warning",
+        "default_source_lang": "ru",
+        "source_lang": "ru",
+        "contact_source_lang": "ru"
+      },
+      "error": "десятку",
+      "correction": "десяток",
+      "source_lang": "ru",
+      "raw_source_lang": "ru",
+      "doc_id": "0041",
+      "annotator_id": "1",
+      "partition": "gec-only/train",
+      "is_native": false,
+      "source_excerpt": "Кожного дня продаємо десятку для розбійників, волків та любовників.",
+      "corrected_excerpt": "Кожного дня продаємо десяток для розбійників, волків та любовників.",
+      "spans": {
+        "source": {
+          "start": 21,
+          "end": 28
+        },
+        "correction": {
+          "start": 21,
+          "end": 28
+        }
+      },
+      "finding": {
+        "issue_id": "UKRAINIAN_GRAMMAR_CASE",
+        "issue_class": "grammar",
+        "dimension": "contact_grammar",
+        "severity": "warning",
+        "contact_source_lang": "ru",
+        "source_lang": "ru",
+        "track_l1": "en",
+        "ua_gec_tag": "G/Case",
+        "confidence": "lookup_heuristic",
+        "disposition": "defect",
+        "file": "ua-gec/gec-only/train/annotated/0041.a1.ann",
+        "line": 1,
+        "span": {
+          "start": 21,
+          "end": 28
+        },
+        "excerpt": "десятку",
+        "message": "UA-GEC G/Case pair: десятку -> десяток.",
+        "suggested_replacement": [
+          "десяток"
+        ],
+        "detector": {
+          "adapter": "ua_gec_gold_ingest",
+          "rule_id": "G/Case",
+          "pattern_id": "ua-gec-errors:63"
+        },
+        "attribution": {
+          "corpus": "UA-GEC v2",
+          "license": "CC-BY-4.0",
+          "doc_id": "0041",
+          "pair_id": "ua-gec-errors:63",
+          "evidence": "Syvokon et al., UNLP 2023"
+        },
+        "metadata": {
+          "ua_gec": {
+            "error": "десятку",
+            "correction": "десяток",
+            "tag": "G/Case",
+            "frequency": null
+          }
+        },
+        "finding_id": "4c217b09e5fb6ba3f5fa09eb"
+      }
+    },
+    {
+      "id": "ua-gec-gold-045",
+      "ua_gec_error_id": 35,
+      "tag": "G/Gender",
+      "mapped_tag": {
+        "tag": "G/Gender",
+        "issue_id": "UKRAINIAN_GRAMMAR_GENDER",
+        "issue_class": "grammar",
+        "dimension": "contact_grammar",
+        "severity": "warning",
+        "default_source_lang": "ru",
+        "source_lang": "ru",
+        "contact_source_lang": "ru"
+      },
+      "error": "нестерпну",
+      "correction": "нестерпний",
+      "source_lang": "ru",
+      "raw_source_lang": "ru",
+      "doc_id": "0023",
+      "annotator_id": "1",
+      "partition": "gec-only/train",
+      "is_native": true,
+      "source_excerpt": "З кожним словом хтось всовував йому в мізки голку, викликаючи нестерпну біль.",
+      "corrected_excerpt": "З кожним словом хтось всовував йому в мізки голку, викликаючи нестерпний біль.",
+      "spans": {
+        "source": {
+          "start": 62,
+          "end": 71
+        },
+        "correction": {
+          "start": 62,
+          "end": 72
+        }
+      },
+      "finding": {
+        "issue_id": "UKRAINIAN_GRAMMAR_GENDER",
+        "issue_class": "grammar",
+        "dimension": "contact_grammar",
+        "severity": "warning",
+        "contact_source_lang": "ru",
+        "source_lang": "ru",
+        "track_l1": "en",
+        "ua_gec_tag": "G/Gender",
+        "confidence": "lookup_heuristic",
+        "disposition": "defect",
+        "file": "ua-gec/gec-only/train/annotated/0023.a1.ann",
+        "line": 3,
+        "span": {
+          "start": 62,
+          "end": 71
+        },
+        "excerpt": "нестерпну",
+        "message": "UA-GEC G/Gender pair: нестерпну -> нестерпний.",
+        "suggested_replacement": [
+          "нестерпний"
+        ],
+        "detector": {
+          "adapter": "ua_gec_gold_ingest",
+          "rule_id": "G/Gender",
+          "pattern_id": "ua-gec-errors:35"
+        },
+        "attribution": {
+          "corpus": "UA-GEC v2",
+          "license": "CC-BY-4.0",
+          "doc_id": "0023",
+          "pair_id": "ua-gec-errors:35",
+          "evidence": "Syvokon et al., UNLP 2023"
+        },
+        "metadata": {
+          "ua_gec": {
+            "error": "нестерпну",
+            "correction": "нестерпний",
+            "tag": "G/Gender",
+            "frequency": null
+          }
+        },
+        "finding_id": "06aec395095e9f659f13a0f7"
+      }
+    },
+    {
+      "id": "ua-gec-gold-046",
+      "ua_gec_error_id": 59,
+      "tag": "G/Gender",
+      "mapped_tag": {
+        "tag": "G/Gender",
+        "issue_id": "UKRAINIAN_GRAMMAR_GENDER",
+        "issue_class": "grammar",
+        "dimension": "contact_grammar",
+        "severity": "warning",
+        "default_source_lang": "ru",
+        "source_lang": "ru",
+        "contact_source_lang": "ru"
+      },
+      "error": "увійшло",
+      "correction": "увійшла",
+      "source_lang": "ru",
+      "raw_source_lang": "ru",
+      "doc_id": "0039",
+      "annotator_id": "1",
+      "partition": "gec-only/train",
+      "is_native": false,
+      "source_excerpt": "Несподівано відчинилися двері в кімнату Івана, і до неї увійшло велика кількість людей у білих халатах.",
+      "corrected_excerpt": "Несподівано відчинилися двері в кімнату Івана, і до неї увійшла велика кількість людей у білих халатах.",
+      "spans": {
+        "source": {
+          "start": 56,
+          "end": 63
+        },
+        "correction": {
+          "start": 56,
+          "end": 63
+        }
+      },
+      "finding": {
+        "issue_id": "UKRAINIAN_GRAMMAR_GENDER",
+        "issue_class": "grammar",
+        "dimension": "contact_grammar",
+        "severity": "warning",
+        "contact_source_lang": "ru",
+        "source_lang": "ru",
+        "track_l1": "en",
+        "ua_gec_tag": "G/Gender",
+        "confidence": "lookup_heuristic",
+        "disposition": "defect",
+        "file": "ua-gec/gec-only/train/annotated/0039.a1.ann",
+        "line": 3,
+        "span": {
+          "start": 56,
+          "end": 63
+        },
+        "excerpt": "увійшло",
+        "message": "UA-GEC G/Gender pair: увійшло -> увійшла.",
+        "suggested_replacement": [
+          "увійшла"
+        ],
+        "detector": {
+          "adapter": "ua_gec_gold_ingest",
+          "rule_id": "G/Gender",
+          "pattern_id": "ua-gec-errors:59"
+        },
+        "attribution": {
+          "corpus": "UA-GEC v2",
+          "license": "CC-BY-4.0",
+          "doc_id": "0039",
+          "pair_id": "ua-gec-errors:59",
+          "evidence": "Syvokon et al., UNLP 2023"
+        },
+        "metadata": {
+          "ua_gec": {
+            "error": "увійшло",
+            "correction": "увійшла",
+            "tag": "G/Gender",
+            "frequency": null
+          }
+        },
+        "finding_id": "09d44164d19df5dd33fb4627"
+      }
+    },
+    {
+      "id": "ua-gec-gold-047",
+      "ua_gec_error_id": 98,
+      "tag": "G/Gender",
+      "mapped_tag": {
+        "tag": "G/Gender",
+        "issue_id": "UKRAINIAN_GRAMMAR_GENDER",
+        "issue_class": "grammar",
+        "dimension": "contact_grammar",
+        "severity": "warning",
+        "default_source_lang": "ru",
+        "source_lang": "ru",
+        "contact_source_lang": "ru"
+      },
+      "error": "новій",
+      "correction": "новому",
+      "source_lang": "ru",
+      "raw_source_lang": "ru",
+      "doc_id": "0072",
+      "annotator_id": "1",
+      "partition": "gec-only/train",
+      "is_native": true,
+      "source_excerpt": "Низька, абсолютно квадратна людина, голений до синяви, в круглих окулярах, в новій  шляпі, на зім'ятій і без піддтіків стрічці, в фіолетовому пальто і лайкових рудих рукавицяв стояв у вітрини і щось наказово мичав.",
+      "corrected_excerpt": "Низька, абсолютно квадратна людина, голений до синяви, в круглих окулярах, у новому  шляпі, на зім'ятій і без піддтіків стрічці, у фіолетовому пальто і лайкових рудих рукавицях стояв біля вітрини і щось наказово мичав.",
+      "spans": {
+        "source": {
+          "start": 77,
+          "end": 82
+        },
+        "correction": {
+          "start": 77,
+          "end": 83
+        }
+      },
+      "finding": {
+        "issue_id": "UKRAINIAN_GRAMMAR_GENDER",
+        "issue_class": "grammar",
+        "dimension": "contact_grammar",
+        "severity": "warning",
+        "contact_source_lang": "ru",
+        "source_lang": "ru",
+        "track_l1": "en",
+        "ua_gec_tag": "G/Gender",
+        "confidence": "lookup_heuristic",
+        "disposition": "defect",
+        "file": "ua-gec/gec-only/train/annotated/0072.a1.ann",
+        "line": 1,
+        "span": {
+          "start": 77,
+          "end": 82
+        },
+        "excerpt": "новій",
+        "message": "UA-GEC G/Gender pair: новій -> новому.",
+        "suggested_replacement": [
+          "новому"
+        ],
+        "detector": {
+          "adapter": "ua_gec_gold_ingest",
+          "rule_id": "G/Gender",
+          "pattern_id": "ua-gec-errors:98"
+        },
+        "attribution": {
+          "corpus": "UA-GEC v2",
+          "license": "CC-BY-4.0",
+          "doc_id": "0072",
+          "pair_id": "ua-gec-errors:98",
+          "evidence": "Syvokon et al., UNLP 2023"
+        },
+        "metadata": {
+          "ua_gec": {
+            "error": "новій",
+            "correction": "новому",
+            "tag": "G/Gender",
+            "frequency": null
+          }
+        },
+        "finding_id": "a12ff20bae856566d49de38f"
+      }
+    },
+    {
+      "id": "ua-gec-gold-048",
+      "ua_gec_error_id": 802,
+      "tag": "G/Gender",
+      "mapped_tag": {
+        "tag": "G/Gender",
+        "issue_id": "UKRAINIAN_GRAMMAR_GENDER",
+        "issue_class": "grammar",
+        "dimension": "contact_grammar",
+        "severity": "warning",
+        "default_source_lang": "ru",
+        "source_lang": "ru",
+        "contact_source_lang": "ru"
+      },
+      "error": "трояндового",
+      "correction": "трояндової",
+      "source_lang": "ru",
+      "raw_source_lang": "ru",
+      "doc_id": "0605",
+      "annotator_id": "1",
+      "partition": "gec-only/train",
+      "is_native": false,
+      "source_excerpt": "Більш за все на світі прокуратор ненавидів запах трояндового масла, і все зараз  предвіщало поганий день, так як запах цей почав переслідувати прокуратора зі світанку.",
+      "corrected_excerpt": "Більш за все на світі прокуратор ненавидів запах трояндової масла, і все зараз  предвіщало поганий день, так як запах цей почав переслідувати прокуратора зі світанку.",
+      "spans": {
+        "source": {
+          "start": 49,
+          "end": 60
+        },
+        "correction": {
+          "start": 49,
+          "end": 59
+        }
+      },
+      "finding": {
+        "issue_id": "UKRAINIAN_GRAMMAR_GENDER",
+        "issue_class": "grammar",
+        "dimension": "contact_grammar",
+        "severity": "warning",
+        "contact_source_lang": "ru",
+        "source_lang": "ru",
+        "track_l1": "en",
+        "ua_gec_tag": "G/Gender",
+        "confidence": "lookup_heuristic",
+        "disposition": "defect",
+        "file": "ua-gec/gec-only/train/annotated/0605.a1.ann",
+        "line": 1,
+        "span": {
+          "start": 49,
+          "end": 60
+        },
+        "excerpt": "трояндового",
+        "message": "UA-GEC G/Gender pair: трояндового -> трояндової.",
+        "suggested_replacement": [
+          "трояндової"
+        ],
+        "detector": {
+          "adapter": "ua_gec_gold_ingest",
+          "rule_id": "G/Gender",
+          "pattern_id": "ua-gec-errors:802"
+        },
+        "attribution": {
+          "corpus": "UA-GEC v2",
+          "license": "CC-BY-4.0",
+          "doc_id": "0605",
+          "pair_id": "ua-gec-errors:802",
+          "evidence": "Syvokon et al., UNLP 2023"
+        },
+        "metadata": {
+          "ua_gec": {
+            "error": "трояндового",
+            "correction": "трояндової",
+            "tag": "G/Gender",
+            "frequency": null
+          }
+        },
+        "finding_id": "2552739650376842801eacb4"
+      }
+    },
+    {
+      "id": "ua-gec-gold-049",
+      "ua_gec_error_id": 1115,
+      "tag": "G/Gender",
+      "mapped_tag": {
+        "tag": "G/Gender",
+        "issue_id": "UKRAINIAN_GRAMMAR_GENDER",
+        "issue_class": "grammar",
+        "dimension": "contact_grammar",
+        "severity": "warning",
+        "default_source_lang": "ru",
+        "source_lang": "ru",
+        "contact_source_lang": "ru"
+      },
+      "error": "сумнівною",
+      "correction": "сумнівним",
+      "source_lang": "ru",
+      "raw_source_lang": "ru",
+      "doc_id": "0894",
+      "annotator_id": "1",
+      "partition": "gec-only/train",
+      "is_native": true,
+      "source_excerpt": "Але сьогоднішній Іван вже значною мірою відрізняється він Івана вчорашнього, і перший шлях здався йому сумнівною: що доброго, вони викарбуються в думках, що він буйний та божевільний.",
+      "corrected_excerpt": "Але сьогоднішній Іван вже значною мірою відрізняється він Івана вчорашнього, і перший шлях здався йому сумнівним: чого доброго, вони викарбуються в думках, що він буйний та божевільний.",
+      "spans": {
+        "source": {
+          "start": 103,
+          "end": 112
+        },
+        "correction": {
+          "start": 103,
+          "end": 112
+        }
+      },
+      "finding": {
+        "issue_id": "UKRAINIAN_GRAMMAR_GENDER",
+        "issue_class": "grammar",
+        "dimension": "contact_grammar",
+        "severity": "warning",
+        "contact_source_lang": "ru",
+        "source_lang": "ru",
+        "track_l1": "en",
+        "ua_gec_tag": "G/Gender",
+        "confidence": "lookup_heuristic",
+        "disposition": "defect",
+        "file": "ua-gec/gec-only/train/annotated/0894.a1.ann",
+        "line": 3,
+        "span": {
+          "start": 103,
+          "end": 112
+        },
+        "excerpt": "сумнівною",
+        "message": "UA-GEC G/Gender pair: сумнівною -> сумнівним.",
+        "suggested_replacement": [
+          "сумнівним"
+        ],
+        "detector": {
+          "adapter": "ua_gec_gold_ingest",
+          "rule_id": "G/Gender",
+          "pattern_id": "ua-gec-errors:1115"
+        },
+        "attribution": {
+          "corpus": "UA-GEC v2",
+          "license": "CC-BY-4.0",
+          "doc_id": "0894",
+          "pair_id": "ua-gec-errors:1115",
+          "evidence": "Syvokon et al., UNLP 2023"
+        },
+        "metadata": {
+          "ua_gec": {
+            "error": "сумнівною",
+            "correction": "сумнівним",
+            "tag": "G/Gender",
+            "frequency": null
+          }
+        },
+        "finding_id": "8adf0dc0deeea6412b43ef4f"
+      }
+    },
+    {
+      "id": "ua-gec-gold-050",
+      "ua_gec_error_id": 1226,
+      "tag": "G/Gender",
+      "mapped_tag": {
+        "tag": "G/Gender",
+        "issue_id": "UKRAINIAN_GRAMMAR_GENDER",
+        "issue_class": "grammar",
+        "dimension": "contact_grammar",
+        "severity": "warning",
+        "default_source_lang": "ru",
+        "source_lang": "ru",
+        "contact_source_lang": "ru"
+      },
+      "error": "якоюсь",
+      "correction": "якимсь",
+      "source_lang": "ru",
+      "raw_source_lang": "ru",
+      "doc_id": "1005",
+      "annotator_id": "1",
+      "partition": "gec-only/train",
+      "is_native": false,
+      "source_excerpt": "Закривши очі вона віддала лице вітру і думала з якоюсь гррустю про покинуий нею невідомий берег річки, яку як вона відчувала більш ніколи не побачить.",
+      "corrected_excerpt": "Закривши очі, вона віддала лице вітру і думала з якимсь смутком про покинутий нею невідомий берег річки, яку, як вона відчувала, більше ніколи не побачить.",
+      "spans": {
+        "source": {
+          "start": 48,
+          "end": 54
+        },
+        "correction": {
+          "start": 49,
+          "end": 55
+        }
+      },
+      "finding": {
+        "issue_id": "UKRAINIAN_GRAMMAR_GENDER",
+        "issue_class": "grammar",
+        "dimension": "contact_grammar",
+        "severity": "warning",
+        "contact_source_lang": "ru",
+        "source_lang": "ru",
+        "track_l1": "en",
+        "ua_gec_tag": "G/Gender",
+        "confidence": "lookup_heuristic",
+        "disposition": "defect",
+        "file": "ua-gec/gec-only/train/annotated/1005.a1.ann",
+        "line": 2,
+        "span": {
+          "start": 48,
+          "end": 54
+        },
+        "excerpt": "якоюсь",
+        "message": "UA-GEC G/Gender pair: якоюсь -> якимсь.",
+        "suggested_replacement": [
+          "якимсь"
+        ],
+        "detector": {
+          "adapter": "ua_gec_gold_ingest",
+          "rule_id": "G/Gender",
+          "pattern_id": "ua-gec-errors:1226"
+        },
+        "attribution": {
+          "corpus": "UA-GEC v2",
+          "license": "CC-BY-4.0",
+          "doc_id": "1005",
+          "pair_id": "ua-gec-errors:1226",
+          "evidence": "Syvokon et al., UNLP 2023"
+        },
+        "metadata": {
+          "ua_gec": {
+            "error": "якоюсь",
+            "correction": "якимсь",
+            "tag": "G/Gender",
+            "frequency": null
+          }
+        },
+        "finding_id": "e68051d30e5cf78217b0006a"
+      }
+    },
+    {
+      "id": "ua-gec-gold-051",
+      "ua_gec_error_id": 1234,
+      "tag": "G/Gender",
+      "mapped_tag": {
+        "tag": "G/Gender",
+        "issue_id": "UKRAINIAN_GRAMMAR_GENDER",
+        "issue_class": "grammar",
+        "dimension": "contact_grammar",
+        "severity": "warning",
+        "default_source_lang": "ru",
+        "source_lang": "ru",
+        "contact_source_lang": "ru"
+      },
+      "error": "першої",
+      "correction": "першого",
+      "source_lang": "ru",
+      "raw_source_lang": "ru",
+      "doc_id": "1012",
+      "annotator_id": "1",
+      "partition": "gec-only/train",
+      "is_native": true,
+      "source_excerpt": "Сторож ненадовго зупиняється, щоб запалити люльку.  Він присідає за спиною перехожого і спалює кілька сірників.  Світло першої сірники, майнув, висвітлює на одну мить шматок алеї праворуч, білий пам'ятник з ангелом і темний хрест;  світло другого",
+      "corrected_excerpt": "Сторож ненадовго зупиняється, щоб запалити люльку.  Він присідає за спиною перехожого і спалює кілька сірників. Світло першого сірника, майнувши, висвітлює на одну мить шматок алеї праворуч, білий пам'ятник з ангелом і темний хрест; світло другог",
+      "spans": {
+        "source": {
+          "start": 120,
+          "end": 126
+        },
+        "correction": {
+          "start": 119,
+          "end": 126
+        }
+      },
+      "finding": {
+        "issue_id": "UKRAINIAN_GRAMMAR_GENDER",
+        "issue_class": "grammar",
+        "dimension": "contact_grammar",
+        "severity": "warning",
+        "contact_source_lang": "ru",
+        "source_lang": "ru",
+        "track_l1": "en",
+        "ua_gec_tag": "G/Gender",
+        "confidence": "lookup_heuristic",
+        "disposition": "defect",
+        "file": "ua-gec/gec-only/train/annotated/1012.a1.ann",
+        "line": 15,
+        "span": {
+          "start": 120,
+          "end": 126
+        },
+        "excerpt": "першої",
+        "message": "UA-GEC G/Gender pair: першої -> першого.",
+        "suggested_replacement": [
+          "першого"
+        ],
+        "detector": {
+          "adapter": "ua_gec_gold_ingest",
+          "rule_id": "G/Gender",
+          "pattern_id": "ua-gec-errors:1234"
+        },
+        "attribution": {
+          "corpus": "UA-GEC v2",
+          "license": "CC-BY-4.0",
+          "doc_id": "1012",
+          "pair_id": "ua-gec-errors:1234",
+          "evidence": "Syvokon et al., UNLP 2023"
+        },
+        "metadata": {
+          "ua_gec": {
+            "error": "першої",
+            "correction": "першого",
+            "tag": "G/Gender",
+            "frequency": null
+          }
+        },
+        "finding_id": "b2a11759742bb3d15184f965"
+      }
+    },
+    {
+      "id": "ua-gec-gold-052",
+      "ua_gec_error_id": 1235,
+      "tag": "G/Gender",
+      "mapped_tag": {
+        "tag": "G/Gender",
+        "issue_id": "UKRAINIAN_GRAMMAR_GENDER",
+        "issue_class": "grammar",
+        "dimension": "contact_grammar",
+        "severity": "warning",
+        "default_source_lang": "ru",
+        "source_lang": "ru",
+        "contact_source_lang": "ru"
+      },
+      "error": "спалахнула",
+      "correction": "спалахнув",
+      "source_lang": "ru",
+      "raw_source_lang": "ru",
+      "doc_id": "1012",
+      "annotator_id": "1",
+      "partition": "gec-only/train",
+      "is_native": true,
+      "source_excerpt": "висвітлює на одну мить шматок алеї праворуч, білий пам'ятник з ангелом і темний хрест;  світло другого сірника, сильно спалахнула і погаслою від вітру, ковзає, як блискавка, по лівій стороні, і з потемок виділяється тільки кутова частина якоїсь реші",
+      "corrected_excerpt": ", висвітлює на одну мить шматок алеї праворуч, білий пам'ятник з ангелом і темний хрест; світло другого сірника, сильно спалахнув і погас від вітру, ковзає, як блискавка, по лівій стороні, і з потемок виділяється тільки кутова частина якоїсь решітки",
+      "spans": {
+        "source": {
+          "start": 119,
+          "end": 129
+        },
+        "correction": {
+          "start": 120,
+          "end": 129
+        }
+      },
+      "finding": {
+        "issue_id": "UKRAINIAN_GRAMMAR_GENDER",
+        "issue_class": "grammar",
+        "dimension": "contact_grammar",
+        "severity": "warning",
+        "contact_source_lang": "ru",
+        "source_lang": "ru",
+        "track_l1": "en",
+        "ua_gec_tag": "G/Gender",
+        "confidence": "lookup_heuristic",
+        "disposition": "defect",
+        "file": "ua-gec/gec-only/train/annotated/1012.a1.ann",
+        "line": 15,
+        "span": {
+          "start": 119,
+          "end": 129
+        },
+        "excerpt": "спалахнула",
+        "message": "UA-GEC G/Gender pair: спалахнула -> спалахнув.",
+        "suggested_replacement": [
+          "спалахнув"
+        ],
+        "detector": {
+          "adapter": "ua_gec_gold_ingest",
+          "rule_id": "G/Gender",
+          "pattern_id": "ua-gec-errors:1235"
+        },
+        "attribution": {
+          "corpus": "UA-GEC v2",
+          "license": "CC-BY-4.0",
+          "doc_id": "1012",
+          "pair_id": "ua-gec-errors:1235",
+          "evidence": "Syvokon et al., UNLP 2023"
+        },
+        "metadata": {
+          "ua_gec": {
+            "error": "спалахнула",
+            "correction": "спалахнув",
+            "tag": "G/Gender",
+            "frequency": null
+          }
+        },
+        "finding_id": "8b950f568a11593331b17a73"
+      }
+    }
+  ]
+}
