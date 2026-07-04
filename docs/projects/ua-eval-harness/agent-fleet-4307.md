@@ -15,7 +15,7 @@ are local operational state, not committed artifacts.
 | Cursor review | `4307-cursor-schema-review` | read-only | `auto` | 66.399s | 2518 | 14849 | Completed. Strongest schema-blocker analysis. |
 | AGY review | `4307-agy-schema-review` | read-only | `Gemini 3.1 Pro (High)` | 95.123s | 2287 | 7644 | Completed. Good linguistic and false-positive blockers. |
 | DeepSeek review | `4307-deepseek-schema-review` | read-only | `deepseek-v4-pro` | 181.517s | 2522 | 0 | Timed out at initial response. |
-| Qwen review | `4307-qwen-schema-review` | read-only | `qwen/qwen3.6-plus` | 180.914s | 2514 | 0 | Timed out at initial response. |
+| Qwen review | `4307-qwen-schema-review` | read-only | `qwen/qwen3.6-plus` | 180.914s | 2514 | 0 | Timed out; not a desired #2156 lane going forward. |
 | Cursor implementation | `4307-cursor-schema-impl` | danger | `auto` | 59.495s | 2802 | 1683 | Produced schema/test patch and auto-finalized PR #4318. |
 
 The dispatch runtime exposes these delegate agents for this repo:
@@ -24,6 +24,12 @@ and `cursor`. It does not expose a literal `glm` delegate target in
 `scripts/delegate.py` or `scripts/agent_runtime/registry.py` as of this run.
 Older bakeoff docs mention GLM as a model-family participant, but there is no
 callable GLM lane to dispatch here yet.
+
+Routing update after this run: do not assign Qwen to #2156 work unless the user
+explicitly re-enables it. DeepSeek is still an expected review lane; its timeout
+in this repo should be treated as a learn-ukrainian runtime/config mismatch to
+debug against the working kubedojo DeepSeek setup, not as evidence that
+DeepSeek itself is unavailable.
 
 ## Findings by Lane
 
@@ -82,11 +88,11 @@ Observed failure:
 
 Observed fit:
 
-DeepSeek remains documented as a cheap review lane in repo guidance, but in
-this run it was not operationally reliable enough to use as a blocker or source
-of design evidence. Before relying on it for #4308 or PR review, rerun a small
-smoke task and check Hermes/OpenRouter credentials and initial-response
-timeout behavior.
+DeepSeek remains the desired cheap review lane for this project. This run shows
+that the learn-ukrainian dispatch path did not respond, while the user's
+kubedojo setup is known to work. Before relying on DeepSeek for #4308 or PR
+review, compare this repo's Hermes/delegate configuration and environment with
+kubedojo and rerun a tiny smoke prompt.
 
 ### Qwen Review
 
@@ -98,8 +104,9 @@ Observed failure:
 
 Observed fit:
 
-Qwen is wired through Hermes, but this run produced no usable output. Treat it
-as unavailable until a smoke task confirms prompt delivery and model response.
+Qwen is not a desired lane for #2156 work. The timeout is recorded for honesty
+because the lane was dispatched, but it should not be part of the follow-up
+reliability target unless the routing policy changes.
 
 ### Cursor Implementation
 
@@ -149,6 +156,8 @@ Tracked in
 
 - Wire or document a real GLM dispatch lane before promising GLM participation
   in future fleet tasks.
-- Smoke-test DeepSeek and Qwen before assigning them blocker status.
+- Restore DeepSeek by checking learn-ukrainian runtime/config parity against
+  kubedojo, where DeepSeek is known to work.
+- Do not use Qwen for #2156 work unless the user explicitly re-enables it.
 - Treat Cursor danger-mode auto-finalization as expected behavior unless
   delegate runtime configuration proves otherwise.
