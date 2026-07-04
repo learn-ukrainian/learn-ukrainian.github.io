@@ -1,7 +1,9 @@
 """Tests for ab ask-gemma bridge subcommand (opencode-routed Google Gemma 4 lane).
 
-gemma = Google Gemma 4 31B-it (Apr 2026, Apache-2.0), FREE via OpenRouter under
-opencode. A surface-clean UK-writing + code-review lane to OFFLOAD from metered
+gemma = Google Gemma 4 31B-it (Apr 2026, Apache-2.0) via OpenRouter under
+opencode. The pinned ``-it`` endpoint is PAID but negligible (~$0.12/$0.35 per M
+tok); a genuinely-$0 ``:free`` endpoint exists but is rate-limited. A cheap
+surface-review + source-constrained wiki-drafting lane to OFFLOAD from metered
 Claude/Codex. Western-hosted + permissively licensed → NO egress guard (unlike
 the China-hosted GLM lane); the guard-difference is the load-bearing test here.
 """
@@ -17,9 +19,12 @@ from scripts.ai_agent_bridge._opencode import (
 # --- constant -------------------------------------------------------------
 
 
-def test_gemma_model_is_free_openrouter_31b():
-    # The pinned default is the FREE OpenRouter 31B-dense path.
+def test_gemma_model_is_paid_stable_31b_not_free_variant():
+    # Default pin = the PAID (but negligible-cost) stable 31B-dense endpoint,
+    # deliberately NOT the rate-limited ``:free`` variant. The ``:free`` endpoint
+    # is reachable via --model for high-volume bursts (see model-assignment.md).
     assert GEMMA_MODEL == "openrouter/google/gemma-4-31b-it"
+    assert not GEMMA_MODEL.endswith(":free")
 
 
 # --- invocation: json format, no variant (not a reasoning-variant model) ---

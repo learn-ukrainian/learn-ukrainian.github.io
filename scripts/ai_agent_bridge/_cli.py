@@ -681,17 +681,17 @@ def _build_parser() -> argparse.ArgumentParser:
     ask_glm_parser.add_argument("--from-model", dest="from_model", help="Exact sender model")
     ask_glm_parser.add_argument("--no-timeout", dest="no_timeout", action="store_true")
 
-    # ask-gemma (Google Gemma 4 31B-it — FREE Google-family lane; ⚠️ fabricates facts)
+    # ask-gemma (Google Gemma 4 31B-it — cheap Google-family lane; ⚠️ not a sole seminar writer / factual reviewer)
     ask_gemma_parser = subparsers.add_parser(
         "ask-gemma",
-        help="Send message AND invoke Google Gemma 4 (31B-it, FREE) via opencode. Surface-clean UK writing + code review; ⚠️ fabricates facts — not a fact-checker (use '-' for stdin)",
+        help="Send message AND invoke Google Gemma 4 (31B-it, cheap ~$0.12/$0.35 per M tok; :free variant via --model) via opencode. Cheap surface review + source-constrained wiki drafting; ⚠️ NOT a sole seminar writer / factual reviewer (use '-' for stdin)",
     )
     ask_gemma_parser.add_argument("content", help="Message content (use '-' to read from stdin)")
     ask_gemma_parser.add_argument("--task-id", required=True, help="Task ID")
     ask_gemma_parser.add_argument("--type", default="query", help="Message type")
     ask_gemma_parser.add_argument("--data", help="Path to data file to attach")
     ask_gemma_parser.add_argument("--model", default=None,
-                                  help=f"Override Gemma model (default {GEMMA_MODEL}; e.g. openrouter/google/gemma-4-26b-a4b-it)")
+                                  help=f"Override Gemma model (default {GEMMA_MODEL}; e.g. openrouter/google/gemma-4-26b-a4b-it, or the $0 openrouter/google/gemma-4-31b-it:free)")
     ask_gemma_parser.add_argument("--from", dest="from_llm", help="Sender agent family")
     ask_gemma_parser.add_argument("--from-model", dest="from_model", help="Exact sender model")
     ask_gemma_parser.add_argument("--no-timeout", dest="no_timeout", action="store_true")
