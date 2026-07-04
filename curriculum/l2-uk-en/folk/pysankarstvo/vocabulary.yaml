@@ -1,0 +1,196 @@
+- lemma: писанкарство
+  translation: pysanka-making, art of decorating pysanky
+  pos: іменник
+  usage: Писанкарство поєднує техніку воскового резерву, орнамент і великодню практику.
+- lemma: писанка
+  translation: wax-resist decorated Easter egg
+  pos: іменник
+  usage: Писанка зберігає попередні кольори під шаром воску.
+- lemma: крашанка
+  translation: dyed Easter egg
+  pos: іменник
+  usage: Крашанка має однотонний колір і не потребує складного воскового письма.
+- lemma: дряпанка
+  translation: scratched decorated egg
+  pos: іменник
+  usage: Дряпанка виникає через вишкрябування візерунка на пофарбованій шкаралупі.
+- lemma: мальованка
+  translation: painted egg
+  pos: іменник
+  usage: Мальованка пов'язана з малюванням фарбою, а не з восковим резервом.
+- lemma: писачок
+  translation: stylus for writing wax
+  pos: іменник
+  usage: Писачок тримає розтоплений віск і веде тонку лінію по шкаралупі.
+- lemma: кістка
+  translation: traditional kistka stylus
+  pos: іменник
+  usage: У традиційних і діаспорних описах інструмент для писанки можуть називати кісткою.
+- lemma: бджолиний віск
+  translation: beeswax
+  pos: словосполука
+  usage: Бджолиний віск закриває частини орнаменту перед наступним фарбуванням.
+- lemma: восковий резерв
+  translation: wax-resist reserve
+  pos: словосполука
+  usage: Восковий резерв зберігає попередній колір під час занурення в нову фарбу.
+- lemma: барвник
+  translation: dye
+  pos: іменник
+  usage: Барвник працює в послідовності від світлого до темного.
+- lemma: шкаралупа
+  translation: eggshell
+  pos: іменник
+  usage: Шкаралупа є крихкою поверхнею, тому тиск руки має значення.
+- lemma: орнамент
+  translation: ornament, pattern
+  pos: іменник
+  usage: Орнамент на писанці організований через поля, пояси і повтори.
+- lemma: мотив
+  translation: motif
+  pos: іменник
+  usage: Мотив треба читати з урахуванням регіону й джерела.
+- lemma: сорок клинців
+  translation: forty wedges motif
+  pos: словосполука
+  usage: Сорок клинців поєднують геометричний мотив і календарно-християнське тлумачення.
+- lemma: клинець
+  translation: wedge, triangular segment
+  pos: іменник
+  usage: Клинець створює трикутниковий ритм на округлій поверхні яйця.
+- lemma: безконечник
+  translation: endless line, meander
+  pos: іменник
+  usage: Безконечник може бути неперервною лінією і знаком господарського побажання.
+- lemma: рожа
+  translation: rosette, star-like sun motif
+  pos: іменник
+  usage: Рожа може працювати як солярний знак і як композиційний центр.
+- lemma: триніг
+  translation: three-legged solar sign, triskelion
+  pos: іменник
+  usage: Триніг належить до давніх солярних мотивів, але потребує джерельного контексту.
+- lemma: солярний знак
+  translation: solar sign
+  pos: словосполука
+  usage: Солярний знак не слід виривати з історичного і сучасного контексту.
+- lemma: церковці
+  translation: small church motifs
+  pos: іменник
+  usage: Церковці в гуцульському матеріалі поєднують геометрію і християнський образ.
+- lemma: дерево життя
+  translation: tree of life
+  pos: словосполука
+  usage: Дерево життя доречно називати як мотивну родину, коли є конкретний зразок.
+- lemma: вазонок
+  translation: vase-like plant motif
+  pos: іменник
+  usage: Вазонок може бути рослинним мотивом у ширшій орнаментальній системі.
+- lemma: пасічник
+  translation: beekeeper
+  pos: іменник
+  usage: Пасічник міг використовувати писанку з безконечником у господарському обряді.
+- lemma: вулик
+  translation: beehive
+  pos: іменник
+  usage: Вулик у пасічницькій дії пов'язує орнамент із майбутнім роїнням.
+- lemma: роїння
+  translation: swarming
+  pos: іменник
+  usage: Роїння бджіл пояснює, чому безконечник стає дією, а не лише знаком.
+- lemma: великодній кошик
+  translation: Easter basket
+  pos: словосполука
+  usage: Великодній кошик показує писанку поруч із паскою, крашанкою та іншими стравами.
+- lemma: освячення
+  translation: blessing, consecration
+  pos: іменник
+  usage: Освячення вводить писанку в християнський великодній шар.
+- lemma: дарування
+  translation: gift-giving
+  pos: іменник
+  usage: Дарування робить писанку знаком приязні, пошани або симпатії.
+- lemma: народне християнство
+  translation: folk Christianity
+  pos: словосполука
+  usage: Народне християнство поєднує церковний календар, родинну пам'ять і локальні вірування.
+- lemma: рахмани
+  translation: rakhmany, mythical righteous beings
+  pos: іменник
+  usage: Рахмани належать до вірувань, які треба пояснювати як локальний міфологічний мотив.
+- lemma: регіональна школа
+  translation: regional school
+  pos: словосполука
+  usage: Регіональна школа має власну техніку, мотиви і джерельну історію.
+- lemma: Гуцульщина
+  translation: Hutsul region
+  pos: власна назва
+  usage: Гуцульщина важлива для дрібного письма, космацької впізнаваності і музейної карти.
+- lemma: Покуття
+  translation: Pokuttia
+  pos: власна назва
+  usage: Покуття пов'язане з Коломиєю, музеєм і гуцульсько-покутською експозицією.
+- lemma: Поділля
+  translation: Podilia
+  pos: власна назва
+  usage: Поділля часто пояснюють через геометричну виразність писанки.
+- lemma: Наддніпрянщина
+  translation: Dnipro Ukraine region
+  pos: власна назва
+  usage: Наддніпрянщина може бути обережним орієнтиром для рослинного орнаменту.
+- lemma: Сокальщина
+  translation: Sokal region
+  pos: власна назва
+  usage: Сокальщина важлива для розмови про авторську школу Ірини Білянської.
+- lemma: Бойківщина
+  translation: Boiko region
+  pos: власна назва
+  usage: Бойківщина входить у наукову карту писанкарських досліджень.
+- lemma: писанкарка
+  translation: female pysanka maker
+  pos: іменник
+  usage: Писанкарка може працювати в родині, музеї, школі або сучасній майстерні.
+- lemma: майстриня
+  translation: craftswoman, master maker
+  pos: іменник
+  usage: Майстриня відповідає за лінію, симетрію, матеріал і пам'ять мотиву.
+- lemma: атрибуція
+  translation: attribution
+  pos: іменник
+  usage: Атрибуція допомагає встановити регіон, час і техніку музейного предмета.
+- lemma: реставрація
+  translation: restoration
+  pos: іменник
+  usage: Реставрація писанки потребує спеціальної роботи з крихкою шкаралупою.
+- lemma: музейний фонд
+  translation: museum collection holdings
+  pos: словосполука
+  usage: Музейний фонд зберігає не тільки предмети, а й історію втрат і повернень.
+- lemma: діаспора
+  translation: diaspora
+  pos: іменник
+  usage: Діаспора передавала писанкарство через мову, майстер-класи і родинну пам'ять.
+- lemma: витіснення
+  translation: suppression, displacement
+  pos: іменник
+  usage: Радянське витіснення звужувало публічний простір писанкарства.
+- lemma: відродження
+  translation: revival
+  pos: іменник
+  usage: Відродження після 1991 року включало музеї, фестивалі, школи і майстер-класи.
+- lemma: нематеріальна спадщина
+  translation: intangible heritage
+  pos: словосполука
+  usage: Нематеріальна спадщина залежить від носіїв, навчання і живого передавання.
+- lemma: джерельна межа
+  translation: source boundary
+  pos: словосполука
+  usage: Джерельна межа не дозволяє перетворити один мотив на універсальний словник.
+- lemma: нашарування
+  translation: layering
+  pos: іменник
+  usage: Нашарування показує, як давній знак, християнський календар і сучасна практика співіснують.
+- lemma: апропріація
+  translation: appropriation
+  pos: іменник
+  usage: Апропріація стирає українські назви, регіони і носіїв традиції.
