@@ -41,7 +41,7 @@ Support after the Ukrainian lines:
 | **Оля: Шкода. А завтра?** | Olia: That's a pity. And tomorrow? |
 | **Денис: Завтра я можу. Хочу гуляти.** | Denys: Tomorrow I can. I want to walk. |
 
-The same tools appear in a café, but service speech needs polite chunks. A
+The same tools appear in a café, but service speech needs polite phrases. A
 direct **Я хочу каву** is understandable with friends. In a café, make the
 request softer.
 
@@ -67,7 +67,7 @@ Support after the Ukrainian lines:
 | **Офіціантка: Борщ дуже смачний.** | Waitress: The borshch is very tasty. |
 | **Клієнт: Тоді ще борщ, будь ласка.** | Customer: Then borshch too, please. |
 
-Keep these three service chunks whole:
+Keep these three service phrases whole:
 
 | Need | Say |
 | --- | --- |
@@ -84,7 +84,7 @@ already gives the missing action.
 ## Дієслово «хотіти»
 
 **Хотіти** means "to want." It is irregular, so learn the present-tense forms
-as ready chunks. Ukrainian grammar still treats **хотіти** as **І дієвідміна**
+as ready phrases. Ukrainian grammar still treats **хотіти** as **І дієвідміна**
 even though the infinitive ends in **-іти**.
 For A1, the important thing is practical: do not guess from the ending
 **-іти**. Learn the six **хоч-** forms as one small pattern.
@@ -119,13 +119,13 @@ Support after the Ukrainian lines:
 | **Ми хочемо піти в парк.** | We want to go to the park. |
 
 You can also want a thing: **Я хочу каву**, **Я хочу воду**, **Я хочу цю
-книгу**. The menu word is **кава**; in these request chunks you see **каву**.
-For A1, keep the chunks whole. You only need the shape: **хочу + action word**
+книгу**. The menu word is **кава**; in these request phrases you see **каву**.
+For A1, keep the phrases whole. You only need the shape: **хочу + action word**
 or **хочу + thing**.
 
 :::tip
 If the forms feel irregular, that is normal. Learn **я хочу**, **ти хочеш**,
-and **ви хочете** as ready chunks first.
+and **ви хочете** as ready phrases first.
 :::
 
 For a normal negative, put **не** before the helper verb: **Я не хочу їсти**,
@@ -141,7 +141,7 @@ but do not mix the shapes.
 
 **Могти** means "can," "be able," or sometimes "may." It can describe real
 ability, a practical possibility, or polite permission. The base moves from
-**могти** to **можу / можеш / може**, so learn the **мож-** forms as chunks.
+**могти** to **можу / можеш / може**, so learn the **мож-** forms as phrases.
 
 | Person | Form | Sentence |
 | --- | --- | --- |
@@ -255,6 +255,6 @@ When unsure, keep the sentence short and choose a complete action word.
 | <!-- bad -->Я хочу читаю.<!-- /bad --> | **Я хочу читати.** | the second action stays in **-ти** |
 | <!-- bad -->Ти хоче гуляти?<!-- /bad --> | **Ти хочеш гуляти?** | **ти** uses **хочеш** |
 | <!-- bad -->Я могу допомогти.<!-- /bad --> | **Я можу допомогти.** | Ukrainian uses **можу** |
-| <!-- bad -->Я мусю працювати.<!-- /bad --> | **Я мушу працювати.** | learn **я мушу** as a ready chunk |
+| <!-- bad -->Я мусю працювати.<!-- /bad --> | **Я мушу працювати.** | learn **я мушу** as a ready phrase |
 | <!-- bad -->Я не можу не.<!-- /bad --> | **Я не можу піти.** | finish the sentence with an action |
-| blunt order every time | **Можна мені, будь ласка, каву?** | service speech needs a polite chunk |
+| blunt order every time | **Можна мені, будь ласка, каву?** | service speech needs a polite phrase |

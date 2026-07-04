@@ -7,7 +7,7 @@ words, weather, a normal day, and free-time plans.
 By the end, you can:
 
 - ask and answer **Котра година?** and **О котрій?**;
-- use calendar chunks such as **у понеділок**, **у січні**, **влітку**;
+- use calendar phrases such as **у понеділок**, **у січні**, **влітку**;
 - describe weather with **тепло**, **холодно**, **сонячно**, **іде дощ**;
 - tell a short day story with **спочатку**, **потім**, **після цього**,
   **нарешті**;
@@ -94,9 +94,9 @@ Answer in short phrases:
 
 Use these six checkpoint checks as a repair map.
 
-### Season chunks for time
+### Season phrases for time
 
-Use the ready season chunks: **взимку**, **навесні**, **влітку**, **восени**.
+Use the ready season phrases: **взимку**, **навесні**, **влітку**, **восени**.
 They answer **коли?** and can stand at the beginning of a short line:
 
 ```text
@@ -117,9 +117,9 @@ Support after the Ukrainian lines:
 | **Влітку я часто гуляю.** | In summer I often walk. |
 | **Восени часто йде дощ.** | In autumn it often rains. |
 
-### Calendar chunks and the action question
+### Calendar phrases and the action question
 
-For days, keep the whole chunk: **у понеділок**, **у середу**, **в суботу**.
+For days, keep the whole phrase: **у понеділок**, **у середу**, **в суботу**.
 For months, use **у/в** plus the month form: **у січні**, **у квітні**,
 **в серпні**, **у жовтні**. The checkpoint question can be full or short:
 **Коли відбудеться дія?** or simply **Коли?**
@@ -160,9 +160,9 @@ Support after the Ukrainian lines:
 | **Фільм о десятій годині.** | The film is at ten o'clock. |
 | **Фільм об одинадцятій.** | The film is at eleven. |
 
-### Minute, quarter, and half-hour chunks
+### Minute, quarter, and half-hour phrases
 
-For recognition, keep a few safe chunks from the time lesson:
+For recognition, keep a few safe phrases from the time lesson:
 **Десята тридцять**, **пів на восьму**, and **п'ять по восьмій**.
 
 ```text

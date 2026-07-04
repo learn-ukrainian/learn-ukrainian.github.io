@@ -11,8 +11,8 @@ By the end, you can:
   **вночі**;
 - connect routine actions with **спочатку**, **потім**, **після цього**, and
   **нарешті**;
-- use time chunks such as **о сьомій**, **о першій**, **пів на восьму**;
-- recognize tomorrow-plan chunks such as **буду працювати** and **буду вивчати
+- use time phrases such as **о сьомій**, **о першій**, **пів на восьму**;
+- recognize tomorrow-plan phrases such as **буду працювати** and **буду вивчати
   українську** without studying future-tense grammar yet;
 - choose everyday Ukrainian routine phrases such as **беру душ**, **п'ю ліки**,
   **Котра година?**, and **Ходімо!**.
@@ -20,7 +20,7 @@ By the end, you can:
 ## Діалоги
 
 The first scene is a short diary conversation after a normal day. The past-time
-forms appear as ready chunks only. You do not need the grammar of the past tense
+forms appear as ready phrases only. You do not need the grammar of the past tense
 yet.
 
 ```text
@@ -43,12 +43,12 @@ Support after the Ukrainian lines:
 | **Друг: А після обіду?** | Friend: And after lunch? |
 | **Автор: Після обіду гуляв. Ввечері дивився фільм і читав книгу.** | Writer: After lunch I walked. In the evening I watched a film and read a book. |
 
-Copy the story shape: time chunk + action. **Вранці я працював** is useful for
+Copy the story shape: time phrase + action. **Вранці я працював** is useful for
 recognition, but your main A1 speaking line can stay in the present:
 **Вранці я працюю. Потім обідаю. Ввечері читаю.**
 
 The second scene plans tomorrow. The future appears as **буду + infinitive**,
-also as a ready chunk.
+also as a ready phrase.
 
 ```text
 Друг: Що ти будеш робити завтра?
@@ -70,12 +70,12 @@ Support after the Ukrainian lines:
 | **Друг: А ввечері?** | Friend: And in the evening? |
 | **Автор: Ходімо в парк! Буде тепло.** | Writer: Let's go to the park! It will be warm. |
 
-Use **Ходімо!** as one whole invitation chunk. Do not build **Давайте
+Use **Ходімо!** as one whole invitation phrase. Do not build **Давайте
 підемо!** at A1. For time questions, keep **Котра година?** and **О котрій
 годині?**. Do not ask **Який час?** for clock time.
 
 Use the same rule for a few daily-routine phrases: learn the natural Ukrainian
-chunk and do not translate word by word from another language.
+phrase and do not translate word by word from another language.
 
 <!-- INJECT_ACTIVITY: act-4 -->
 
@@ -83,14 +83,14 @@ chunk and do not translate word by word from another language.
 
 Start with the time frame. The simplest day words are:
 
-| Noun | Time chunk |
+| Noun | Time phrase |
 | --- | --- |
 | **ранок** | **вранці** |
 | **день** | **вдень** |
 | **вечір** | **ввечері** |
 | **ніч** | **вночі** |
 
-Add **сьогодні** and **завтра** for one specific day, and use weekday chunks
+Add **сьогодні** and **завтра** for one specific day, and use weekday phrases
 from Module 23: **у понеділок**, **у середу**, **в суботу**.
 
 Now add regular routine actions. The grammar label is not your task today, but
@@ -119,7 +119,7 @@ Support after the Ukrainian lines:
 | **Вночі я лягаю спати.** | At night I go to bed. |
 
 Many morning verbs use **-ся**: **прокидатися**, **вмиватися**,
-**одягатися**. Learn the **я** forms as chunks: **я прокидаюся**, **я
+**одягатися**. Learn the **я** forms as phrases: **я прокидаюся**, **я
 вмиваюся**, **я одягаюся**. You are talking about regular routine, so keep the
 action simple: **я снідаю**, **я працюю**, **я обідаю**, **я читаю**. The
 dictionary verbs behind these lines are **вмиватися, працювати, обідати,
@@ -129,7 +129,7 @@ Add the clock only when it helps. **Котра година?** asks "What time i
 **О котрій годині?** asks "At what time?" For full hours, Ukrainian uses the
 hour as an order word: **перша**, **друга**, **сьома**. For action time, use
 **о/об**: **о сьомій годині**, **о дев'ятій**, **об одинадцятій**. For half
-past, keep the chunk **пів на сьому** or **пів на восьму**.
+past, keep the phrase **пів на сьому** or **пів на восьму**.
 
 <!-- INJECT_ACTIVITY: act-1 -->
 
@@ -178,7 +178,7 @@ Support after the Ukrainian lines:
 | **Ввечері вечеряю і дивлюся фільм.** | In the evening I have dinner and watch a film. |
 | **Нарешті о десятій лягаю спати.** | Finally, at ten I go to bed. |
 
-For tomorrow, keep only the ready future chunk from the dialogue:
+For tomorrow, keep only the ready future phrase from the dialogue:
 **буду працювати**, **буду вивчати українську**. The grammar of future tense
 comes later. Today your main job is still the story line: time, sequence, action.
 

@@ -9,7 +9,7 @@ There are two safe preference lanes:
 - **Мені подобається + noun** for things, places, music, books, or films.
 
 You do not need a case table today. Treat **мені подобається** as one ready
-chunk, and treat the **-ти** ending as the sign of an action word.
+phrase, and treat the **-ти** ending as the sign of an action word.
 
 By the end, you can:
 
@@ -221,7 +221,7 @@ Support after the Ukrainian lines:
 | --- | --- | --- |
 | **Я люблю малюю.** | **Я люблю малювати.** | the action after **люблю** stays in **-ти** |
 | **Ти любиш готуєш?** | **Ти любиш готувати?** | **любиш** also takes an infinitive |
-| **Я подобається музика.** | **Мені подобається музика.** | use the fixed chunk **мені подобається** |
+| **Я подобається музика.** | **Мені подобається музика.** | use the fixed phrase **мені подобається** |
 | **Мені подобається дивлюся.** | **Я люблю дивитися.** | use **я люблю + -ти** for actions |
 | **Я люблю не готувати.** | **Я не люблю готувати.** | **не** goes before **люблю** |
 | **Мені подобається не цей фільм.** | **Мені не подобається цей фільм.** | **не** goes before **подобається** |

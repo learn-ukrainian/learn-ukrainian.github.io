@@ -20,14 +20,14 @@ The core planning line is:
 | future form | **буду** | will |
 | infinitive | **готувати** | cook |
 
-You will also reuse two familiar chunks:
+You will also reuse two familiar phrases:
 
 - from M43: **Ходімо в кіно!** - Let's go to the cinema.
 - from M45: **Скажи, коли ти вільний / вільна.** - Tell me when you are free.
 
 :::tip[Plan shape]
 For A1, keep one plan in one line: **day + time + буду + infinitive**. Add an
-invitation only as a fixed chunk: **Ходімо!** or **Давай зустрінемося о
+invitation only as a fixed phrase: **Ходімо!** or **Давай зустрінемося о
 п'ятій!**
 :::
 
@@ -68,7 +68,7 @@ The plan uses the M50 future pattern:
 - **ти будеш вільний** - you will be free.
 
 The invitation **Ходімо в кіно!** is not new grammar here. It is a familiar
-M43 invitation chunk. The planning work is still the compound future plus a
+M43 invitation phrase. The planning work is still the compound future plus a
 day and time.
 
 ### Насичений тиждень
@@ -138,7 +138,7 @@ Support after the Ukrainian lines:
 :::note[A1 boundary]
 For your own answer, keep the easy M50 pattern: **я буду прибирати**, **я
 буду бігати**, **я буду вільний / вільна**. Treat **підемо** and **Ходімо!**
-as invitation chunks you can recognize and reuse.
+as invitation phrases you can recognize and reuse.
 :::
 
 <!-- INJECT_ACTIVITY: act-2 -->
@@ -169,7 +169,7 @@ Use these small planning frames.
 
 ### Invitations and answers
 
-Reuse invitations as chunks:
+Reuse invitations as phrases:
 
 | Invitation | Natural answer |
 | --- | --- |
@@ -179,7 +179,7 @@ Reuse invitations as chunks:
 | **Скажи, коли ти вільна.** | **Я буду вільна ввечері.** |
 | **Ходімо в кафе о шостій!** | **На жаль, не можу.** |
 
-The chunk **зустрінемося** means "let's meet" here. Treat it as a ready-made
+The phrase **зустрінемося** means "let's meet" here. Treat it as a ready-made
 invitation phrase, not as a new verb table.
 
 <!-- INJECT_ACTIVITY: act-3 -->

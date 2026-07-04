@@ -205,7 +205,7 @@ inline:
             correct: false
           - text: No present-tense forms
             correct: false
-        explanation: Хотіти is treated as І дієвідміна but has special chunks.
+        explanation: Хотіти is treated as І дієвідміна but has special phrases.
       - prompt: могти
         options:
           - text: І дієвідміна, особливі форми можу, можеш
@@ -223,7 +223,7 @@ inline:
             correct: false
           - text: It has no ти form
             correct: false
-        explanation: Мусити follows ІІ endings, with я мушу as the key chunk.
+        explanation: Мусити follows ІІ endings, with я мушу as the key phrase.
       - prompt: читати
         options:
           - text: І дієвідміна, regular review verb

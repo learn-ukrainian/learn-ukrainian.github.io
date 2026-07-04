@@ -3,7 +3,7 @@ inline:
   - id: act-1
     type: quiz
     title: Лічи від 0 до 10
-    instruction: Choose the correct Ukrainian number or chunk.
+    instruction: Choose the correct Ukrainian number or phrase.
     items:
       - prompt: '0'
         options:
@@ -49,7 +49,7 @@ inline:
             correct: false
           - text: два олівець
             correct: false
-        explanation: Use два with masculine plural chunks.
+        explanation: Use два with masculine plural phrases.
       - prompt: two pens
         options:
           - text: дві ручки
@@ -58,7 +58,7 @@ inline:
             correct: false
           - text: дві ручка
             correct: false
-        explanation: Use дві with feminine plural chunks.
+        explanation: Use дві with feminine plural phrases.
   - id: act-3
     type: match-up
     title: Ціни
@@ -237,7 +237,7 @@ workbook:
         explanation: Ninety is дев'яносто.
   - type: group-sort
     title: Фрази 1 / 2-4 / 5+
-    instruction: Sort each noun chunk by the number pattern.
+    instruction: Sort each noun phrase by the number pattern.
     groups:
       - label: '1'
         items:
@@ -268,7 +268,7 @@ workbook:
           - п'ять столів / п'ять студентів
           - п'ять столи / п'ять студенти
           - п'ять стола / п'ять студент
-        explanation: With 5+, use the memorized chunk п'ять столів.
+        explanation: With 5+, use the memorized phrase п'ять столів.
       - sentence: сімдесят гривні / сімдесят гривень
         error: сімдесят гривні
         answer: сімдесят гривень
@@ -276,7 +276,7 @@ workbook:
           - сімдесят гривень
           - сімдесят гривні
           - сімдесят гривня
-        explanation: The 5+ price chunk is гривень.
+        explanation: The 5+ price phrase is гривень.
       - sentence: Я маю 20 років / Я є 20 років
         error: Я маю 20 років / Я є 20 років
         answer: Мені 20 років
@@ -284,7 +284,7 @@ workbook:
           - Мені 20 років
           - Я маю 20 років
           - Я є 20 років
-        explanation: Age uses the chunk Мені ... років.
+        explanation: Age uses the phrase Мені ... років.
       - sentence: дві гривень / дві гривні
         error: дві гривень
         answer: дві гривні
@@ -292,7 +292,7 @@ workbook:
           - дві гривні
           - дві гривень
           - два гривні
-        explanation: The 2-4 price chunk is гривні.
+        explanation: The 2-4 price phrase is гривні.
       - sentence: п'ятьдесять / шістьдесять
         error: п'ятьдесять / шістьдесять
         answer: п'ятдесят / шістдесят
@@ -308,7 +308,7 @@ workbook:
           - Скільки вам років?
           - Скільки вам год?
           - Скільки вам рік?
-        explanation: Ask age with the fixed chunk Скільки вам років?
+        explanation: Ask age with the fixed phrase Скільки вам років?
   - type: fill-in
     title: Перевір правопис числівників
     instruction: Choose the standard form.
@@ -361,21 +361,21 @@ workbook:
           - пів на шосту
           - пол-шостого
           - половина шостого
-        explanation: Use the Ukrainian time chunk пів на шосту.
+        explanation: Use the Ukrainian time phrase пів на шосту.
       - sentence: Чай коштує дві ___.
         answer: гривні
         options:
           - гривні
           - гривень
           - гривня
-        explanation: The 2-4 price chunk is гривні.
+        explanation: The 2-4 price phrase is гривні.
       - sentence: Кава коштує сімдесят ___.
         answer: гривень
         options:
           - гривень
           - гривні
           - гривня
-        explanation: The 5+ price chunk is гривень.
+        explanation: The 5+ price phrase is гривень.
   - type: translate
     title: Обери український рядок
     instruction: Choose the Ukrainian sentence that matches the English cue.
@@ -415,7 +415,7 @@ workbook:
             correct: false
           - text: Її вісімнадцять.
             correct: false
-        explanation: Use Їй for the age chunk.
+        explanation: Use Їй for the age phrase.
       - source: My phone number is zero ninety-seven...
         options:
           - text: Мій номер телефону — нуль дев'яносто сім...
@@ -440,7 +440,7 @@ workbook:
     items:
       - statement: П'ять зошитів.
         answer: true
-        explanation: This is the safe 5+ chunk.
+        explanation: This is the safe 5+ phrase.
       - statement: П'ять столи.
         answer: false
         explanation: Say п'ять столів.

@@ -216,7 +216,7 @@ Use the repair ideas only to protect the active A1 pattern:
 | an infinitive after **хай** | recognize the finite repair **Хай він працює** |
 | a copied soft sign in a command | keep the Ukrainian spelling: **постав**, **відкрий** |
 | a mechanical command from **доповісти** | recognize the fixed repair **доповідай** |
-| a mixed inclusive ending | recognize fixed chunks like **Читаймо разом!** later; do not improvise the form |
+| a mixed inclusive ending | recognize fixed phrases like **Читаймо разом!** later; do not improvise the form |
 
 <!-- INJECT_ACTIVITY: act-4 -->
 

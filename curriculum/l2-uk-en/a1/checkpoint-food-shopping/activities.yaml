@@ -162,14 +162,14 @@ inline:
           - 'Мені'
           - 'Я'
           - 'Мною'
-        explanation: 'Мені begins the cafe order chunk.'
+        explanation: 'Мені begins the cafe order phrase.'
       - sentence: '— Рахунок, будь ласка. Можна ___?'
         answer: 'карткою'
         options:
           - 'карткою'
           - 'картка'
           - 'картки'
-        explanation: 'Карткою is the payment chunk.'
+        explanation: 'Карткою is the payment phrase.'
       - sentence: '— О, я бачу ___! Олено, привіт!'
         answer: 'Олену'
         options:
@@ -213,9 +213,9 @@ workbook:
       - statement: 'Борщ is presented as a Ukrainian cultural food form.'
         answer: true
         explanation: 'The checkpoint keeps борщ in Ukrainian cultural context.'
-      - statement: 'Вареники з картоплею is treated as a useful food chunk.'
+      - statement: 'Вареники з картоплею is treated as a useful food phrase.'
         answer: true
-        explanation: 'Use the phrase as a memorized chunk here.'
+        explanation: 'Use the phrase as a memorized expression here.'
       - statement: 'Adding -а to борщ is not the A1.6 target form.'
         answer: true
         explanation: 'Use Я люблю борщ.'
@@ -268,7 +268,7 @@ workbook:
           - 'вареники'
           - 'рахунок'
           - 'картку'
-        explanation: 'Вареники з картоплею is the food chunk.'
+        explanation: 'Вареники з картоплею is the food phrase.'
       - sentence: 'Вона ставить на стіл ___.'
         answer: 'тарілки'
         options:
@@ -352,7 +352,7 @@ workbook:
             correct: false
           - text: 'Я хочу водою.'
             correct: false
-        explanation: 'Use the direct-object form or the memorized service chunk.'
+        explanation: 'Use the direct-object form or the memorized service phrase.'
       - prompt: 'Repair: Я люблю борща.'
         options:
           - text: 'Я люблю борщ.'

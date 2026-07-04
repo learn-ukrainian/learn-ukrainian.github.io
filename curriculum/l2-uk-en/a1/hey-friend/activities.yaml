@@ -51,7 +51,7 @@ inline:
             correct: false
           - text: 'Маму'
             correct: false
-        explanation: 'Use the full address chunk Мамо.'
+        explanation: 'Use the full address phrase Мамо.'
       - prompt: 'Ходи сюди, ___!'
         options:
           - text: 'Іване'
@@ -69,7 +69,7 @@ inline:
             correct: false
           - text: 'синке'
             correct: false
-        explanation: 'Синку is the family address chunk.'
+        explanation: 'Синку is the family address phrase.'
       - prompt: 'Привіт, ___!'
         options:
           - text: 'Андрію'
@@ -96,7 +96,7 @@ inline:
             correct: false
           - text: 'другу'
             correct: false
-        explanation: 'Друже is the friend-address chunk.'
+        explanation: 'Друже is the friend-address phrase.'
   - id: act-3
     type: fill-in
     title: Name to address
@@ -220,7 +220,7 @@ workbook:
           - 'Мамо'
           - 'Мама'
           - 'Маму'
-        explanation: 'Use Мамо as the full Ukrainian address chunk.'
+        explanation: 'Use Мамо as the full Ukrainian address phrase.'
       - sentence: '— На столі, ___.'
         answer: 'синку'
         options:
@@ -255,7 +255,7 @@ workbook:
           - 'Друже'
           - 'Друг'
           - 'Другу'
-        explanation: 'Use the chunk Друже.'
+        explanation: 'Use the phrase Друже.'
   - type: match-up
     title: Repair address mistakes
     instruction: Match each learner mistake with a natural Ukrainian repair.
@@ -287,7 +287,7 @@ workbook:
       - statement: 'Олена is the form for talking about Olena; Олено is for speaking to her.'
         answer: true
         explanation: 'Use Олено in direct address.'
-      - statement: 'Гей, друже! is a useful friend-address chunk.'
+      - statement: 'Гей, друже! is a useful friend-address phrase.'
         answer: true
         explanation: "Друже is the module's anchor calling form."
       - statement: 'At A1, you must explain every vocative ending from a full case table.'
@@ -299,7 +299,7 @@ workbook:
       - statement: 'Пані Оксано uses пані plus the calling form Оксано.'
         answer: true
         explanation: 'Пані stays пані; the name changes.'
-      - statement: 'Мамо is the full Ukrainian address chunk for Mom.'
+      - statement: 'Мамо is the full Ukrainian address phrase for Mom.'
         answer: true
         explanation: 'Use Мамо, not a clipped form.'
       - statement: 'Привіт, Надія! is the target A1 address form.'
@@ -365,7 +365,7 @@ workbook:
       - sentence: 'Привіт, друг!'
         error: 'друг'
         correction: 'друже'
-        explanation: 'Use the friend-address chunk друже.'
+        explanation: 'Use the friend-address phrase друже.'
       - sentence: 'Пане Сергій, добрий день!'
         error: 'Сергій'
         correction: 'Сергію'
@@ -377,7 +377,7 @@ workbook:
       - sentence: 'Мама, де телефон?'
         error: 'Мама'
         correction: 'Мамо'
-        explanation: 'Use Мамо as the full family address chunk.'
+        explanation: 'Use Мамо as the full family address phrase.'
       - sentence: 'Доброго ранку, мій друг!'
         error: 'друг'
         correction: 'друже'

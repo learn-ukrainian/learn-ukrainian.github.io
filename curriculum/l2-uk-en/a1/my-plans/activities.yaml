@@ -68,7 +68,7 @@ inline:
           - text: 'У суботу о третій я готував.'
             correct: false
         explanation: 'The plan uses day + time + буду + infinitive.'
-      - prompt: 'Which invitation reuses the M43 chunk?'
+      - prompt: 'Which invitation reuses the M43 phrase?'
         options:
           - text: 'Ходімо в кіно!'
             correct: true
@@ -76,7 +76,7 @@ inline:
             correct: false
           - text: 'Кіно буде прибирати.'
             correct: false
-        explanation: 'Ходімо is a familiar invitation chunk.'
+        explanation: 'Ходімо is a familiar invitation phrase.'
       - prompt: 'Which answer politely refuses?'
         options:
           - text: 'На жаль, не можу.'

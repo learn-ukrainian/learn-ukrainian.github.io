@@ -13,7 +13,7 @@ The shopping path is short:
 1. greet;
 2. ask **У вас є...?**;
 3. ask **Скільки коштує...?**;
-4. name a ready quantity chunk;
+4. name a ready quantity phrase;
 5. hear **З вас ... гривень**;
 6. pay **карткою** or **готівкою**.
 
@@ -21,7 +21,7 @@ By the end, you can:
 
 - ask **Скільки коштує?** and **Скільки коштують?**;
 - read and say simple prices with **гривня / гривні / гривень**;
-- use shopping quantity chunks such as **один кілограм яблук**,
+- use shopping quantity phrases such as **один кілограм яблук**,
   **два кілограми помідорів**, **літр молока**, and **пляшка води**;
 - ask where a product is in a shop;
 - finish a checkout dialogue with **З вас...**, **Можна карткою?**, and
@@ -30,7 +30,7 @@ By the end, you can:
   grammar table.
 
 :::caution
-Treat the quantity phrases as shopping chunks. **Кілограм яблук**,
+Treat the quantity words as shopping phrases. **Кілограм яблук**,
 **літр молока**, and **пляшка води** are for buying food today, not for a full
 case lesson.
 :::
@@ -149,7 +149,7 @@ You may also hear the shorter question **Скільки це коштує?**. If
 feminine and already named, you can hear **Скільки вона коштує?**. Keep these
 as ready price questions.
 
-For prices, say the currency as a chunk:
+For prices, say the currency as a phrase:
 
 | Price | Say |
 | --- | --- |
@@ -205,7 +205,7 @@ Support after the Ukrainian lines:
 | А є дешевший сир? | Is there a cheaper cheese? |
 | А є дешевша вода? | Is there cheaper water? |
 
-Now add quantity chunks. Memorize the whole phrases:
+Now add quantity phrases. Memorize the whole phrases:
 
 - **один кілограм яблук**
 - **два кілограми помідорів**
@@ -218,7 +218,7 @@ Now add quantity chunks. Memorize the whole phrases:
 
 <!-- INJECT_ACTIVITY: act-4 -->
 
-The payment words are also chunks: **карткою** and **готівкою**. For A1, simply
+The payment words are also phrases: **карткою** and **готівкою**. For A1, simply
 connect them to the cashier's question. A card payment is **карткою**; cash is
 **готівкою**.
 
@@ -271,7 +271,7 @@ Self-check:
 - ask availability with **У вас є...?** or **Чи є у вас...?**;
 - ask price with **Скільки коштує...?** or **Скільки коштують...?**;
 - read **грн** as **гривня / гривні / гривень**;
-- buy with chunks such as **один кілограм яблук**,
+- buy with phrases such as **один кілограм яблук**,
   **два кілограми помідорів**, **літр молока**, and **пляшка води**;
 - react with **Дорого!**, **Дешево!**, or **Добре, беру.**;
 - finish at the checkout with **З вас...**, **Можна карткою?**,

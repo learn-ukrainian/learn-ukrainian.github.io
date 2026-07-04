@@ -9,7 +9,7 @@ By the end, you can:
 
 - ask and answer **Куди ти йдеш?** and **Куди ти їдеш?**;
 - contrast **де?** with **куди?** without mixing endings;
-- use **в/у** and **на** with direction chunks: **у школу**, **на роботу**,
+- use **в/у** and **на** with direction phrases: **у школу**, **на роботу**,
   **в аптеку**, **у банк**;
 - use city names as destinations: **у Львів**, **в Одесу**, **в Київ**;
 - keep Ukrainian place language clean: **Київ / Kyiv**, **Львів / Lviv**,
@@ -41,8 +41,8 @@ Support after the Ukrainian lines:
 | **Степан: Добре. До зустрічі в кафе!** | Stepan: Good. See you at the cafe! |
 
 The same place can have two useful forms. If you are already there, ask
-**де?** and use the locative chunk: **Я в банку. Оксана на пошті. Ми в
-кафе.** If you are moving there, ask **куди?** and use the direction chunk:
+**де?** and use the locative phrase: **Я в банку. Оксана на пошті. Ми в
+кафе.** If you are moving there, ask **куди?** and use the direction phrase:
 **Я йду в банк. Оксана йде на пошту. Ми йдемо в кафе.**
 
 The second dialogue is about travel between cities.
@@ -154,7 +154,7 @@ Here are the common repairs you need now:
 | Я йду в школі. | **Я йду у школу.** | Movement answers **куди?** |
 | Я живу Київ. | **Я живу в Києві.** | Static location needs **в/у** plus locative. |
 | Я йду в бібліотеці. | **Я йду в бібліотеку.** | Movement uses the direction form. |
-| Ми були в концерті. | **Ми були на концерті.** | Events use the familiar **на** chunk. |
+| Ми були в концерті. | **Ми були на концерті.** | Events use the familiar **на** phrase. |
 | Книжка на столу. | **Книжка на столі.** | Static surface location uses **на столі**. |
 | Аптека — в аптекі. | **Аптека — в аптеці.** | Static **де?** form from the previous module. |
 
@@ -164,7 +164,7 @@ Here are the common repairs you need now:
 
 Keep the lesson as a two-question system:
 
-| Need | Question | Chunk |
+| Need | Question | Phrase |
 | --- | --- | --- |
 | say where you are | **де?** | **у школі**, **на роботі**, **у банку** |
 | say where you are going | **куди?** | **у школу**, **на роботу**, **у банк** |

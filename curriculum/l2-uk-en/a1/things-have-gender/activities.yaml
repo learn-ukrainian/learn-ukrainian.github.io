@@ -62,7 +62,7 @@ inline:
   - id: act-2
     type: group-sort
     title: Сортуй предмети за родом
-    instruction: Sort each noun by its safest A1 gender chunk.
+    instruction: Sort each noun by its safest A1 gender phrase.
     groups:
       - label: він / мій
         items:
@@ -376,14 +376,14 @@ workbook:
           - У
           - Це
           - Хто
-        explanation: У мене є... is the I-have chunk.
+        explanation: У мене є... is the I-have phrase.
       - sentence: У мене ___ книга.
         answer: є
         options:
           - є
           - звати
           - моя
-        explanation: У мене є... stays as one chunk.
+        explanation: У мене є... stays as one phrase.
       - sentence: У ___ є телефон?
         answer: тебе
         options:
@@ -485,7 +485,7 @@ workbook:
         options:
           - Мене звати Джон.
           - Моє ім'я є Джон.
-        explanation: Мене звати... is the safe name chunk.
+        explanation: Мене звати... is the safe name phrase.
   - type: quiz
     title: Перевірка роду
     instruction: Choose the Ukrainian gender-test word. These are diagnostic props, not new active vocabulary.

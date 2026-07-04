@@ -23,7 +23,7 @@ inline:
   - id: act-2
     type: quiz
     title: В or на in the city
-    instruction: Choose the correct city chunk.
+    instruction: Choose the correct city phrase.
     items:
       - prompt: 'Where do you buy medicine?'
         options:
@@ -42,7 +42,7 @@ inline:
             correct: false
           - text: 'на пошта'
             correct: false
-        explanation: The common chunk is на пошті.
+        explanation: The common phrase is на пошті.
       - prompt: 'Where is the train station sentence?'
         options:
           - text: 'Вона на вокзалі.'
@@ -78,7 +78,7 @@ inline:
             correct: false
           - text: 'у магазин'
             correct: false
-        explanation: Магазин uses the location chunk у магазині.
+        explanation: Магазин uses the location phrase у магазині.
       - prompt: 'Where does a tourist sleep?'
         options:
           - text: 'у готелі'
@@ -110,10 +110,10 @@ inline:
         explanation: Біля connects two places.
       - sentence: 'Аптека ___ розі.'
         answer: 'на'
-        explanation: The chunk is на розі.
+        explanation: The phrase is на розі.
       - sentence: 'Магазин тут, ___ дому.'
         answer: 'біля'
-        explanation: Біля дому is a fixed A1 chunk.
+        explanation: Біля дому is a fixed A1 phrase.
       - sentence: 'Школа далеко, ___ центрі міста.'
         answer: 'у'
         explanation: Use у центрі міста.
@@ -196,7 +196,7 @@ workbook:
           - 'там'
           - 'далеко'
           - 'близько'
-      - name: 'Near-place chunks'
+      - name: 'Near-place phrases'
         items:
           - 'біля дому'
           - 'біля парку'
@@ -227,10 +227,10 @@ workbook:
       - statement: 'У місті має багато парків is the best A1 model.'
         answer: false
         explanation: Say У місті є багато парків.
-      - statement: 'Біля парку is a useful near-place chunk.'
+      - statement: 'Біля парку is a useful near-place phrase.'
         answer: true
         explanation: Біля takes a changed place form.
-      - statement: 'На вулиці Шевченка is a correct street-location chunk.'
+      - statement: 'На вулиці Шевченка is a correct street-location phrase.'
         answer: true
         explanation: Streets use на вулиці.
   - type: error-correction

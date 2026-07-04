@@ -5,13 +5,13 @@
 <!-- <activity_split_audit>level=A1 inline_n=4 workbook_n=6 inline_range=[4,6] workbook_range=[6,9] split_valid=true</activity_split_audit> -->
 
 **Де? Куди? Звідки? — where? where to? where from?** The third question
-completes your place map. Compare the three safe chunks:
+completes your place map. Compare the three safe phrases:
 
 - **Я в Україні** — I am in Ukraine;
 - **Я їду в Україну** — I am going to Ukraine;
 - **Я з України** — I am from Ukraine.
 
-The same rhythm works with city and daily-life chunks: **я у Києві**, **я йду
+The same rhythm works with city and daily-life phrases: **я у Києві**, **я йду
 у Київ**, **я з Києва**; **Олена на роботі** — Olena is at work, **Олена йде
 на роботу** — Olena is going to work, **Олена йде з роботи** — Olena is coming
 from work.
@@ -20,7 +20,7 @@ from work.
 read:
 
 - ask **Звідки ти?**, **Звідки ви?**, and **З якого міста?**;
-- answer with **з/із/зі + родовий відмінок** as learned chunks;
+- answer with **з/із/зі + родовий відмінок** as learned phrases;
 - contrast **де?**, **куди?**, and **звідки?** without mixing endings;
 - name common countries and Ukrainian cities;
 - connect origin with identity: **я з України**, **я українець/українка**,
@@ -63,7 +63,7 @@ the city only after the country: **Я з України, з Києва. Я з К
 
 Use **З якого міста?** when you already know the country and want the city:
 **З якого міста ти? — Я з Києва.** For now, answer with one memorized city
-chunk: **з Києва**, **зі Львова**, **з Одеси**, **з Харкова**, **із Торонто**.
+phrase: **з Києва**, **зі Львова**, **з Одеси**, **з Харкова**, **із Торонто**.
 
 **Звідки ти йдеш? — Я йду з...** The second dialogue shows movement away from a
 place.
@@ -109,9 +109,9 @@ letter. Specific names are different: **Україна**, **Київ**, **Льв
 are proper names, so they begin with a capital letter.
 
 **Форма після з/із/зі.** For A1, learn **з/із/зі + родовий відмінок** as
-practical chunks. The grammar name is useful, but you do not need a full A2
+practical phrases. The grammar name is useful, but you do not need a full A2
 table yet. Do not try to build every form from a rule today. Copy the safe
-chunks, say them aloud, and reuse them in short answers:
+phrases, say them aloud, and reuse them in short answers:
 
 | Base name | Meaning | After з/із/зі |
 | --- | --- | --- |
@@ -218,7 +218,7 @@ Common repairs:
 | --- | --- | --- |
 | Я з Київ. | **Я з Києва.** | **З** needs the from-place form. |
 | Я є з України. | **Я з України.** | Drop **є** in this present identity line. |
-| Він живе в Київ. | **Він живе в Києві.** | **Де?** needs the locative chunk. |
+| Він живе в Київ. | **Він живе в Києві.** | **Де?** needs the locative phrase. |
 | Вона львів'янин. | **Вона львів'янка.** | Demonyms match gender. |
 | Я з США. | **Я зі США.** | Use **зі** before this cluster. |
 | Я з місто Львів. | **Я зі Львова.** | In speech, use the city name in the from-form. |

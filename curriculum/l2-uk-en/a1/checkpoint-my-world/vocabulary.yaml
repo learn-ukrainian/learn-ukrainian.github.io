@@ -271,7 +271,7 @@
   pos: verb
   usage: Один зошит коштує двадцять гривень.
 - lemma: гривень
-  translation: hryvnias, price chunk
+  translation: hryvnias, price phrase
   pos: noun plural
   usage: Сто гривень.
 - lemma: три

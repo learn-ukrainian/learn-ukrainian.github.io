@@ -1,6 +1,6 @@
 # Sounds, Letters, and Hello
 
-You do not need to read Ukrainian yet. This English-led module uses Ukrainian in small chunks so you can listen, repeat, notice, and use the first phrases safely.
+You do not need to read Ukrainian yet. This English-led module uses Ukrainian in small phrases so you can listen, repeat, notice, and use the first phrases safely.
 
 Use this first pass as orientation: one reliable sound rule, a small set of greetings, and enough alphabet awareness to start the workbook without guessing.
 
@@ -55,7 +55,7 @@ Your first word is:
 
 **Приві́т!** - Hi!
 
-Use **Приві́т!** with classmates, friends, family, or someone your age. Treat it as one whole chunk today.
+Use **Приві́т!** with classmates, friends, family, or someone your age. Treat it as one whole phrase today.
 
 Say it slowly:
 

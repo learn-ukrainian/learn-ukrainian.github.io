@@ -144,7 +144,7 @@ workbook:
             correct: false
           - text: 'Де кафе?'
             correct: false
-        explanation: 'Ходімо... is the A1 invitation chunk.'
+        explanation: 'Ходімо... is the A1 invitation phrase.'
       - prompt: 'How do you say: My head hurts?'
         options:
           - text: 'У мене болить голова.'
@@ -273,7 +273,7 @@ workbook:
       - sentence: "Моє ім'я є Адам."
         error: "Моє ім'я є"
         correction: 'Мене звати'
-        explanation: 'Use the A1 name chunk: Мене звати Адам.'
+        explanation: 'Use the A1 name phrase: Мене звати Адам.'
       - sentence: 'Вчора я снідаю у кафе.'
         error: 'снідаю'
         correction: 'снідав / снідала'

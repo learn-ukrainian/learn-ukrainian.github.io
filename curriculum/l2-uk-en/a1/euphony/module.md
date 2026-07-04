@@ -136,7 +136,7 @@ Support after the Ukrainian lines:
 | **Так, у нас є час.** | Yes, we have time. |
 | **Сьогодні тепло: у парку багато людей.** | It is warm today: there are many people in the park. |
 
-Some common chunks keep the line from becoming physically awkward. Before
+Some common phrases keep the line from becoming physically awkward. Before
 words like **Львів**, prefer **у**, even when a simple pattern might suggest
 **в**:
 

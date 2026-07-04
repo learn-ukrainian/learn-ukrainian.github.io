@@ -59,7 +59,7 @@ Support after the Ukrainian lines:
 | **Іванко: Тому що влітку тепло і сонячно. А тобі?** | Ivanko: Because in summer it is warm and sunny. And you? |
 | **Галя: Мені подобається осінь. Восени красиво.** | Halia: I like autumn. In autumn it is beautiful. |
 
-For likes, keep the same chunk: **Мені подобається...** You can now combine it
+For likes, keep the same phrase: **Мені подобається...** You can now combine it
 with a season: **Мені подобається літо**, **Мені подобається осінь**.
 
 <!-- INJECT_ACTIVITY: act-3 -->
@@ -86,7 +86,7 @@ The first weather words are state words:
 | **хмарно** | cloudy | **Сьогодні хмарно.** |
 | **ясно** | clear | **Сьогодні ясно.** |
 
-These are impersonal weather chunks. They describe the state; they do not need
+These are impersonal weather phrases. They describe the state; they do not need
 a subject. English says "it is cold." Ukrainian can simply say **холодно**. If
 you want a place, add **надворі** or **на вулиці**: **Надворі холодно. На
 вулиці тепло.**
@@ -97,14 +97,14 @@ weather states can be complete Ukrainian sentences.
 
 For rain and snow, learn the whole phrase:
 
-| Weather event | Safe chunk |
+| Weather event | Safe phrase |
 | --- | --- |
 | rain | **іде дощ** |
 | snow | **іде сніг** |
 | wind | **дме вітер** |
 | sun | **світить сонце** |
 
-You can also use the weather chunks with time words:
+You can also use the weather phrases with time words:
 
 ```text
 Сьогодні хмарно.
@@ -134,7 +134,7 @@ Support after the Ukrainian lines:
 | **Мені холодно.** | I am cold. |
 | **Мені ввечері було холодно.** | I was cold in the evening. |
 
-This is a ready chunk. Do not say **Я є холодно** or **Я маю холодно**.
+This is a ready phrase. Do not say **Я є холодно** or **Я маю холодно**.
 
 <!-- INJECT_ACTIVITY: act-1 -->
 
@@ -143,7 +143,7 @@ This is a ready chunk. Do not say **Я є холодно** or **Я маю хол
 Weather becomes useful when you connect it with the calendar from the last
 lesson.
 
-| Season | Weather chunks |
+| Season | Weather phrases |
 | --- | --- |
 | **зима** | **Взимку холодно. Іде сніг.** |
 | **весна** | **Навесні тепло. Світить сонце.** |
@@ -208,7 +208,7 @@ First: ask and answer the weather question.
 Сьогодні прохолодно і хмарно.
 ```
 
-Second: use the rain and snow chunks.
+Second: use the rain and snow phrases.
 
 ```text
 Зараз іде дощ.

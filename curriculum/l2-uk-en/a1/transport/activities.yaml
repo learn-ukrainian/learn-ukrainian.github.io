@@ -193,14 +193,14 @@ inline:
           - 'вокзалу'
           - 'вокзал'
           - 'вокзалі'
-        explanation: 'The route chunk is до вокзалу.'
+        explanation: 'The route phrase is до вокзалу.'
       - sentence: 'Як дістатися до ___?'
         answer: 'центру'
         options:
           - 'центру'
           - 'центр'
           - 'центрі'
-        explanation: 'The route chunk is до центру.'
+        explanation: 'The route phrase is до центру.'
       - sentence: 'Ідіть ___.'
         answer: 'прямо'
         options:
@@ -257,12 +257,12 @@ workbook:
         explanation: 'Use зупинка.'
       - statement: 'Один квиток до Львова, будь ласка is a natural ticket line.'
         answer: true
-        explanation: 'This is the ticket-window chunk from the dialogue.'
+        explanation: 'This is the ticket-window phrase from the dialogue.'
       - statement: 'Я в автобусі answers де?'
         answer: true
         explanation: 'It means I am inside the bus.'
   - type: odd-one-out
-    title: Find the odd transport chunk
+    title: Find the odd transport phrase
     instruction: Choose the phrase that does not fit the pattern.
     items:
       - words:

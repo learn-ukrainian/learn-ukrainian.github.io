@@ -2,7 +2,7 @@ inline:
   - id: act-1
     type: group-sort
     title: Three place questions
-    instruction: Sort each chunk by the question it answers.
+    instruction: Sort each phrase by the question it answers.
     groups:
       - name: 'Де?'
         items:
@@ -84,7 +84,7 @@ inline:
   - id: act-3
     type: fill-in
     title: Student badge origins
-    instruction: Complete each badge line with the safe from-place chunk.
+    instruction: Complete each badge line with the safe from-place phrase.
     items:
       - sentence: 'Звідки ти? — Я ___.'
         answer: 'з України'
@@ -131,7 +131,7 @@ inline:
   - id: act-4
     type: match-up
     title: Base name to from-place form
-    instruction: Match each base place name with the chunk that answers Звідки?
+    instruction: Match each base place name with the phrase that answers Звідки?
     pairs:
       - left: 'Україна'
         right: 'з України'
@@ -271,7 +271,7 @@ workbook:
         explanation: 'In speech, say the city name in the from-place form.'
   - type: fill-in
     title: Country, city, current home
-    instruction: Complete each short introduction with a safe learned chunk.
+    instruction: Complete each short introduction with a safe learned phrase.
     items:
       - sentence: 'Я ___, з Києва.'
         answer: 'з України'

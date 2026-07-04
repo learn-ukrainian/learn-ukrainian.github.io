@@ -5,7 +5,7 @@ And yours?
 
 This lesson stays short and spoken. First you hear a Ukrainian line, then you
 use a small amount of English support to check the meaning. Treat the first
-phrases as whole chunks:
+phrases as whole expressions:
 
 | Українська опора | English support |
 | --- | --- |
@@ -109,7 +109,7 @@ form: **лі́карка**, **вчи́телька**, **інжене́рка**, 
 
 ## Мене́ зва́ти...
 
-**Мене́ зва́ти...** is one chunk. You do not need the grammar of **мене́** or
+**Мене́ зва́ти...** is one phrase. You do not need the grammar of **мене́** or
 **зва́ти** yet. You need the social move: ask, answer, echo.
 
 | Українська | English support |
@@ -246,7 +246,7 @@ The feminine form is the primary form for a woman. **Окса́на — лі́к
 
 ## Зві́дки?
 
-**Зві́дки?** means "from where?" Use the country phrases as memorized chunks:
+**Зві́дки?** means "from where?" Use the country phrases as memorized expressions:
 
 | Питання | Відповідь |
 | --- | --- |
@@ -293,7 +293,7 @@ dad, **дружи́на** for wife, **ви́бачте** or **проба́чте
 
 The Resources tab has three optional Ukrainian Lessons Podcast links: Episode
 3 for introductions, Episode 4 for **Зві́дки?**, and Episode 8 for
-professions. Listen for one short chunk, repeat it once, and come back here.
+professions. Listen for one short phrase, repeat it once, and come back here.
 
 For handwriting recognition, ask a teacher, tutor, or classmate to write these
 original labels in a notebook: **ім'я́** (name), **прі́звище** (surname),

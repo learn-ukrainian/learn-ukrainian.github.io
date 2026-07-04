@@ -24,7 +24,7 @@ inline:
           - 'хвилин'
           - 'район'
           - 'центр'
-        explanation: "П'ять хвилин пішки is a route chunk."
+        explanation: "П'ять хвилин пішки is a route phrase."
       - sentence: 'Потім ідіть ___, школа там.'
         answer: 'направо'
         options:
@@ -167,7 +167,7 @@ inline:
           - 'на'
           - 'до'
           - 'автобусом'
-        explanation: 'The chunk is на розі.'
+        explanation: 'The phrase is на розі.'
       - sentence: 'Ідіть ___, потім наліво.'
         answer: 'прямо'
         options:
@@ -244,7 +244,7 @@ inline:
 workbook:
   - type: group-sort
     title: City route shelves
-    instruction: Sort each chunk by its route function.
+    instruction: Sort each phrase by its route function.
     groups:
       - name: 'Where now'
         items:
@@ -317,10 +317,10 @@ workbook:
         explanation: 'It means go straight.'
       - statement: 'Їдьте на метро tells the transport method.'
         answer: true
-        explanation: 'На метро is a fixed transport chunk.'
-      - statement: 'До міста is the A1 route chunk after до.'
+        explanation: 'На метро is a fixed transport phrase.'
+      - statement: 'До міста is the A1 route phrase after до.'
         answer: true
-        explanation: 'Use the whole route chunk до міста.'
+        explanation: 'Use the whole route phrase до міста.'
       - statement: '<!-- bad -->Остановка<!-- /bad --> is the course word for a transport stop.'
         answer: false
         explanation: 'Use зупинка.'
@@ -383,7 +383,7 @@ workbook:
           - 'Як дістатися до бібліотеки?'
           - 'Як дістатися до бібліотека?'
           - 'Як дістатися в бібліотеці?'
-        explanation: 'Use the whole A1 route chunk до бібліотеки.'
+        explanation: 'Use the whole A1 route phrase до бібліотеки.'
   - type: match-up
     title: Route question pairs
     instruction: Match each short city question with the answer type it needs.

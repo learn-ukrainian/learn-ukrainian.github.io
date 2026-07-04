@@ -11,7 +11,7 @@ By the end, you can:
 - use the easy ending signals: consonant = usually masculine, **-а / -я** =
   usually feminine, **-о / -е** = usually neuter;
 - say simple room and bag lines with **У мене є...**;
-- choose **мій / моя / моє** as a whole chunk with a noun;
+- choose **мій / моя / моє** as a whole phrase with a noun;
 - use **вчителька** and **лікарка** when the person is a woman;
 - repair the most common A1 gender traps without comparing Ukrainian to any
   other language.
@@ -21,7 +21,7 @@ You are learning to store a noun with its gender cue.
 
 :::tip
 Treat gender as part of the noun card. Do not ask, "Who owns it?" Ask, "What
-chunk travels with this noun: **мій**, **моя**, or **моє**?"
+phrase travels with this noun: **мій**, **моя**, or **моє**?"
 :::
 
 <!--
@@ -49,7 +49,7 @@ Start with the noun question.
 
 In family words, gender often feels familiar:
 
-| Ukrainian | Gender test | My chunk |
+| Ukrainian | Gender test | My phrase |
 | --- | --- | --- |
 | **тато** | **він** | **мій тато** |
 | **брат** | **він** | **мій брат** |
@@ -58,7 +58,7 @@ In family words, gender often feels familiar:
 
 But things also have gender:
 
-| Ukrainian | English | Gender test | My chunk |
+| Ukrainian | English | Gender test | My phrase |
 | --- | --- | --- | --- |
 | **стіл** | table | **він** | **мій стіл** |
 | **книга** | book | **вона** | **моя книга** |
@@ -89,22 +89,22 @@ At A1, this covers the clear everyday words you need. Some nouns are not clear
 from the ending. You have already seen one important pattern: **тато** and
 **батько** are masculine because they name a male person. Later you will learn
 more exceptions. Today you only need a safe beginner reaction: if a word does
-not fit the easy pattern, learn it as a chunk.
+not fit the easy pattern, learn it as a phrase.
 
 <!-- INJECT_ACTIVITY: act-5 -->
 
 :::tip
 The ending rule is a first guess, not a debate. If this lesson gives you a safe
-chunk such as **мій тато** or **мій собака**, store the whole chunk.
+phrase such as **мій тато** or **мій собака**, store the whole phrase.
 :::
 
 One high-value exception is **собака**. In Ukrainian, use **він** and
 **мій собака**. For father, keep the course words **тато** and **батько**.
 Do not replace them with **папа** in these A1 lines.
 
-Keep these chunks whole:
+Keep these phrases whole:
 
-| Chunk | Meaning |
+| Phrase | Meaning |
 | --- | --- |
 | **мій стіл** | my table |
 | **моя ручка** | my pen |
@@ -112,7 +112,7 @@ Keep these chunks whole:
 | **велике яблуко** | a big apple |
 | **синє море** | a blue sea |
 
-Those last two chunks preview the next module. Do not turn them into a full
+Those last two phrases preview the next module. Do not turn them into a full
 adjective table yet.
 
 <!-- INJECT_ACTIVITY: act-3 -->
@@ -268,7 +268,7 @@ ending when the word is an exception.
 | **Я є студент.** | **Я студент.** |
 | **Моє ім'я є Джон.** | **Мене звати Джон.** |
 
-For **собака**, just memorize the course chunk **мій собака**. You do not need
+For **собака**, just memorize the course phrase **мій собака**. You do not need
 a long exception list today.
 
 The gender-flip mini-check uses five words that are not your active vocabulary:

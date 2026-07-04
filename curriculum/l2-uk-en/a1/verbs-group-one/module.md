@@ -22,7 +22,7 @@ By the end, you can:
   **гуляти**, and **готувати**;
 - recognize the endings **-ю**, **-єш**, **-є**, **-ємо**, **-єте**, **-ють**;
 - ask **Що ти робиш?** and answer with one Group One verb;
-- keep object words such as **книгу**, **музику**, and **вечерю** as chunks.
+- keep object words such as **книгу**, **музику**, and **вечерю** as phrases.
 
 :::tip
 Today is a real verb table day, but keep the task small. Learn one pattern,
@@ -82,7 +82,7 @@ Support after the Ukrainian lines:
 
 :::note
 **Що ти робиш?** is a ready question today. **Робиш** belongs to another verb
-group, so use the question as a chunk and keep your table work on Group One.
+group, so use the question as a phrase and keep your table work on Group One.
 :::
 
 <!-- INJECT_ACTIVITY: act-2 -->
@@ -173,9 +173,9 @@ Do not add English "am" before the Ukrainian verb. **Я читаю** already mea
 :::
 
 Some object words change shape after the verb. You do not need a full case
-lesson here. Learn these as small chunks:
+lesson here. Learn these as small phrases:
 
-| Base word | Chunk in today's sentences |
+| Base word | Phrase in today's sentences |
 | --- | --- |
 | **книга** | **Я читаю книгу.** |
 | **музика** | **Я слухаю музику.** |

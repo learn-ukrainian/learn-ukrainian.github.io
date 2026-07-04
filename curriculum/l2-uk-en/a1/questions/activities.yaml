@@ -204,7 +204,7 @@ inline:
             correct: false
           - text: Книги не де немає.
             correct: false
-        explanation: Ніде немає is the ready A1 chunk.
+        explanation: Ніде немає is the ready A1 phrase.
       - prompt: No, I do not understand.
         options:
           - text: Ні, я не розумію.

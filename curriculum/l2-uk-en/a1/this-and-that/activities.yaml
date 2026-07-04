@@ -236,7 +236,7 @@ inline:
             correct: false
           - text: Я хочу купити це сумку.
             correct: false
-        explanation: Treat цю сумку as the safe buying chunk.
+        explanation: Treat цю сумку as the safe buying phrase.
       - prompt: 'Fix the sentence: Ця біль у спині сильна.'
         options:
           - text: Цей біль у спині сильний.
@@ -325,7 +325,7 @@ workbook:
         explanation: Телефон is masculine.
   - type: fill-in
     title: Корисні фрази
-    instruction: Choose the safe A1 chunk.
+    instruction: Choose the safe A1 phrase.
     items:
       - sentence: Я хочу ___ книгу.
         answer: цю
@@ -333,14 +333,14 @@ workbook:
           - цю
           - цей
           - це
-        explanation: Treat цю книгу as a buying chunk for now.
+        explanation: Treat цю книгу as a buying phrase for now.
       - sentence: Я хочу ___ сумку.
         answer: цю
         options:
           - цю
           - цей
           - це
-        explanation: Сумка is feminine, so the buying chunk uses цю.
+        explanation: Сумка is feminine, so the buying phrase uses цю.
       - sentence: ___ книга цікава.
         answer: Ця
         options:
@@ -385,7 +385,7 @@ workbook:
         explanation: Plural far things use ті.
   - type: error-correction
     title: Виправ демонстративні пастки
-    instruction: Read the learner trap and choose the repaired Ukrainian chunk.
+    instruction: Read the learner trap and choose the repaired Ukrainian phrase.
     items:
       - sentence: Це є цікава книга
         error: Це є цікава книга
@@ -402,7 +402,7 @@ workbook:
           - Я хочу купити цю сумку
           - Я хочу купити цей сумку
           - Я хочу купити це сумку
-        explanation: Use the safe chunk цю сумку.
+        explanation: Use the safe phrase цю сумку.
       - sentence: Ця біль у спині сильна
         error: Ця біль у спині сильна
         answer: Цей біль у спині сильний

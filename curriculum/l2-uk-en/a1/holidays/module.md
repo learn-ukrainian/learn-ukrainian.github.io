@@ -17,14 +17,14 @@ Active phrases:
 - **Вітаю з...** - I greet/congratulate you on...
 - **Бажаю...** - I wish...
 
-At A1, learn these as ready chunks. Do not stop to build the whole instrumental
+At A1, learn these as ready phrases. Do not stop to build the whole instrumental
 case. First say the greeting naturally.
 
 :::caution[A1 boundary]
 The active skill is short holiday speech: a greeting, one wish, one date, and
 one simple family or state-holiday sentence. Treat **з Новим роком**, **з
 Різдвом**, **з Великоднем**, and **з Днем Незалежності України** as fixed
-chunks. Do not turn this module into a full instrumental-case lesson or a long
+phrases. Do not turn this module into a full instrumental-case lesson or a long
 culture lecture.
 :::
 
@@ -154,7 +154,7 @@ event. The goal is usable Ukrainian, not a speech.
 Holiday greetings often use **з + a fixed holiday form**. Learn the whole
 phrase:
 
-| English idea | Ukrainian chunk |
+| English idea | Ukrainian phrase |
 | --- | --- |
 | Happy New Year | **З Новим роком!** |
 | Merry Christmas | **З Різдвом Христовим!** |

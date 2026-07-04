@@ -79,11 +79,11 @@
   pos: pronoun
   usage: Ручки — вони.
 - lemma: цю книгу
-  translation: this book, object chunk
+  translation: this book, object phrase
   pos: phrase
   usage: Я хочу цю книгу.
 - lemma: цього олівця
-  translation: this pencil, recognition chunk
+  translation: this pencil, recognition phrase
   pos: phrase
   usage: Цього олівця is passive recognition here.
 - lemma: оцей

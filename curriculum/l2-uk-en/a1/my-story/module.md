@@ -62,7 +62,7 @@ The story has three clear pieces:
 - **зараз я живу...** - one present fact;
 - **я буду працювати / буду вчити...** - two future plans.
 
-Notice that the dialogue does not explain new cases. It uses ready A1 chunks:
+Notice that the dialogue does not explain new cases. It uses ready A1 phrases:
 **в Канаді**, **у Торонто**, **в Києві**, **з України**.
 
 ### Історія Марії
@@ -126,7 +126,7 @@ Support after the Ukrainian lines:
 
 The place words are useful, but the grammar stays familiar:
 **в селі**, **у школу**, **у місто**, **в лікарні**, **на дачі**. Learn them as
-whole chunks for this story.
+whole phrases for this story.
 
 <!-- INJECT_ACTIVITY: act-2 -->
 
@@ -243,7 +243,7 @@ Keep the time word and the verb in the same time.
 | <bad>**Моє ім'я є Софія.**</bad> | **Мене звати Софія.** |
 
 The last repair is important. Ukrainian does not need the English-style
-sentence **my name is...**. Use the familiar A1 chunk **Мене звати...**.
+sentence **my name is...**. Use the familiar A1 phrase **Мене звати...**.
 
 ## Підсумок
 

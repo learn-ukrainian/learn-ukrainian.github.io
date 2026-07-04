@@ -10,7 +10,7 @@ adjectives. In singular you matched gender: **великий стіл**, **ве�
 
 By the end, you can:
 
-- form useful nominative plural chunks for classroom things;
+- form useful nominative plural phrases for classroom things;
 - recognize three common plural shapes: **-и**, **-і**, **-а / -я**;
 - use plural adjectives ending in **-і**;
 - describe groups with **ці**, **ті**, **мої**, and **які**.
@@ -181,7 +181,7 @@ is plural too.
 
 Now combine the helpers with plural adjectives:
 
-| Chunk | Meaning |
+| Phrase | Meaning |
 | --- | --- |
 | **ці великі столи** | these big tables |
 | **ті старі стільці** | those old chairs |
@@ -202,7 +202,7 @@ then add one adjective:
 - **лампи -> жовті лампи**
 
 Now add a helper at the front: **ці великі столи**, **ті нові книги**, **мої
-сині ручки**, **які чисті вікна?** If the whole chunk is plural, every visible
+сині ручки**, **які чисті вікна?** If the whole phrase is plural, every visible
 helper and adjective uses the plural shape too.
 
 <!-- INJECT_ACTIVITY: act-4 -->

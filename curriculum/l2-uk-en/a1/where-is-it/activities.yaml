@@ -21,7 +21,7 @@ inline:
             correct: false
           - text: 'до'
             correct: false
-        explanation: The common chunk is на роботі.
+        explanation: The common phrase is на роботі.
       - prompt: 'Максим ___ банку.'
         options:
           - text: 'у'
@@ -66,7 +66,7 @@ inline:
             correct: false
           - text: 'до'
             correct: false
-        explanation: The traditional chunk is на вокзалі.
+        explanation: The traditional phrase is на вокзалі.
       - prompt: 'Марко ___ лікарні.'
         options:
           - text: 'у'
@@ -84,7 +84,7 @@ inline:
             correct: false
           - text: 'до'
             correct: false
-        explanation: Кафе does not change form; use the whole chunk в кафе.
+        explanation: Кафе does not change form; use the whole phrase в кафе.
       - prompt: 'Друг ___ Одесі.'
         options:
           - text: 'в'
@@ -104,7 +104,7 @@ inline:
         explanation: Школа changes to школі after в.
       - sentence: 'Тарас ___ (робота).'
         answer: 'на роботі'
-        explanation: The common chunk is на роботі.
+        explanation: The common phrase is на роботі.
       - sentence: 'Максим ___ (банк).'
         answer: 'у банку'
         explanation: Bank as a contained institution uses у банку.
@@ -166,7 +166,7 @@ inline:
             correct: false
           - text: 'Він в робота.'
             correct: false
-        explanation: На роботі is the static place chunk.
+        explanation: На роботі is the static place phrase.
       - prompt: 'Де Максим?'
         options:
           - text: 'Він у банку.'
@@ -260,7 +260,7 @@ workbook:
       - statement: 'Я живу в Київ is a finished A1 locative sentence.'
         answer: false
         explanation: 'The place form is Києві: Я живу в Києві.'
-      - statement: 'На пошті is a common traditional chunk.'
+      - statement: 'На пошті is a common traditional phrase.'
         answer: true
         explanation: Learn пошта together with на пошті.
   - type: error-correction
@@ -290,7 +290,7 @@ workbook:
           - 'Я на пошті.'
           - 'Я в пошті.'
           - 'Я у пошта.'
-        explanation: The common institution chunk is на пошті.
+        explanation: The common institution phrase is на пошті.
       - sentence: 'Він іде в школі.'
         error: 'в школі'
         correction: 'Він іде в школу.'

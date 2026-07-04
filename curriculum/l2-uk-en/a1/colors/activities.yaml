@@ -13,7 +13,7 @@ inline:
             correct: false
           - text: Якого кольору є олівець?
             correct: false
-        explanation: Learn Якого кольору...? as one question chunk without є.
+        explanation: Learn Якого кольору...? as one question phrase without є.
       - prompt: Якого кольору светр?
         options:
           - text: Синій.
@@ -58,7 +58,7 @@ inline:
             correct: false
           - text: Сіро-жовтий.
             correct: false
-        explanation: The standard chunk is синьо-жовтий прапор.
+        explanation: The standard phrase is синьо-жовтий прапор.
       - prompt: Якого кольору ваза?
         options:
           - text: Синя.
@@ -155,7 +155,7 @@ inline:
   - id: act-3
     type: group-sort
     title: Тверда чи м'яка форма
-    instruction: Sort the color chunks by adjective pattern.
+    instruction: Sort the color phrases by adjective pattern.
     groups:
       - label: Hard pattern -ий/-а/-е
         items:
@@ -174,7 +174,7 @@ inline:
   - id: act-4
     type: quiz
     title: Синій чи блакитний
-    instruction: Choose the better A1 color chunk.
+    instruction: Choose the better A1 color phrase.
     items:
       - prompt: A clear sky
         options:
@@ -220,7 +220,7 @@ inline:
             correct: false
           - text: синя море
             correct: false
-        explanation: Море is neuter; синє море is a stable chunk.
+        explanation: Море is neuter; синє море is a stable phrase.
       - prompt: A notebook that is dark green
         options:
           - text: темно-зелений зошит
@@ -229,11 +229,11 @@ inline:
             correct: false
           - text: зелено-темний зошит
             correct: false
-        explanation: Treat темно-зелений as one compound color chunk.
+        explanation: Treat темно-зелений as one compound color phrase.
 workbook:
   - type: match-up
     title: Опис зовнішності
-    instruction: Match each Ukrainian chunk with its natural context.
+    instruction: Match each Ukrainian phrase with its natural context.
     pairs:
       - left: карі очі
         right: brown eyes
@@ -260,7 +260,7 @@ workbook:
           - Якого кольору светр?
           - Яка кольору светр?
           - Якого кольору є светр?
-        explanation: Keep Якого кольору...? as one chunk without є.
+        explanation: Keep Якого кольору...? as one phrase without є.
       - sentence: Блакитно-жовтий прапор.
         error: Блакитно-жовтий прапор.
         answer: Синьо-жовтий прапор.
@@ -268,7 +268,7 @@ workbook:
           - Синьо-жовтий прапор.
           - Блакитно-жовтий прапор.
           - Жовто-блакитний прапор.
-        explanation: The standard chunk for Ukraine's flag is синьо-жовтий прапор.
+        explanation: The standard phrase for Ukraine's flag is синьо-жовтий прапор.
       - sentence: У мене є синій настрій.
         error: У мене є синій настрій.
         answer: Мені сумно. / У мене поганий настрій.
@@ -284,7 +284,7 @@ workbook:
           - У нього сиве волосся.
           - У нього сіре волосся.
           - Він має сивий волосся.
-        explanation: For grey hair, use the fixed chunk сиве волосся.
+        explanation: For grey hair, use the fixed phrase сиве волосся.
       - sentence: ЧорнИй, білИй (з наголосом на закінченні)
         error: ЧорнИй, білИй (з наголосом на закінченні)
         answer: ЧОрний, бІлий
@@ -331,21 +331,21 @@ workbook:
           - карі
           - коричневі
           - каре
-        explanation: Use the fixed appearance chunk карі очі.
+        explanation: Use the fixed appearance phrase карі очі.
       - sentence: У нього ___ волосся.
         answer: русяве
         options:
           - русяве
           - русявий
           - русий
-        explanation: Волосся is neuter; learn русяве волосся as a chunk.
+        explanation: Волосся is neuter; learn русяве волосся as a phrase.
       - sentence: У бабусі ___ волосся.
         answer: сиве
         options:
           - сиве
           - сива
           - сивий
-        explanation: Learn сиве волосся as a chunk.
+        explanation: Learn сиве волосся as a phrase.
       - sentence: Це ___ небо.
         answer: блакитне
         options:
@@ -392,7 +392,7 @@ workbook:
             correct: false
           - text: У неї коричневе очі.
             correct: false
-        explanation: Use the fixed chunk карі очі.
+        explanation: Use the fixed phrase карі очі.
       - source: He has grey hair.
         options:
           - text: У нього сиве волосся.
@@ -410,14 +410,14 @@ workbook:
             correct: false
           - text: Прапор синій і жовта.
             correct: false
-        explanation: Keep синьо-жовтий as the fixed flag color chunk.
+        explanation: Keep синьо-жовтий as the fixed flag color phrase.
   - type: true-false
     title: Перевірка кольорів
     instruction: Decide if the statement is right.
     items:
       - statement: Якого кольору светр?
         answer: true
-        explanation: This is the standard color question chunk.
+        explanation: This is the standard color question phrase.
       - statement: Якого кольору є светр?
         answer: false
         explanation: Do not insert є into this question.
@@ -435,13 +435,13 @@ workbook:
         explanation: It is passive recognition only here.
       - statement: У неї карі очі.
         answer: true
-        explanation: Карі очі is a natural fixed chunk.
-      - statement: 'The Ukrainian flag chunk is синьо-жовтий прапор.'
+        explanation: Карі очі is a natural fixed phrase.
+      - statement: 'The Ukrainian flag phrase is синьо-жовтий прапор.'
         answer: true
         explanation: Keep this exact phrase.
   - type: match-up
     title: Фрази з кольорами
-    instruction: Match each color chunk with the object or image it best fits.
+    instruction: Match each color phrase with the object or image it best fits.
     pairs:
       - left: червоний олівець
         right: red pencil

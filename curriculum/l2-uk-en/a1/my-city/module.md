@@ -1,6 +1,6 @@
 # Моє місто
 
-This lesson turns the locative chunks from **Де це?** into a small city map.
+This lesson turns the locative phrases from **Де це?** into a small city map.
 You will name common city places, say what happens there, and describe what is
 near your home. The useful sentence is simple: **У моєму місті є...**
 
@@ -37,10 +37,10 @@ Support after the Ukrainian lines:
 | **Ігор: Дякую!** | Ihor: Thank you! |
 | **Аліна: Будь ласка!** | Alina: You are welcome! |
 
-The chunks from the dialogue are ready to reuse: **де тут аптека?**,
+The phrases from the dialogue are ready to reuse: **де тут аптека?**,
 **на вулиці Шевченка**, **в центрі**, **біля парку**. Notice that **біля**
 changes the next word: **парк -> біля парку**. Treat **біля парку** and
-**біля дому** as fixed A1 chunks for now.
+**біля дому** as fixed A1 phrases for now.
 If you are drawing the map, start with only three marks: **дім**, **парк**,
 and **аптека**. Add one sentence under each mark. For example:
 **Мій дім тут. Парк близько. Аптека на розі.** A tiny map is more useful than
@@ -76,14 +76,14 @@ Do not translate "has" word for word.
 For a pen-pal map, keep three extra labels ready:
 **Музей поруч із площею. Зупинка біля церкви. Озеро далеко від дому.**
 Treat **поруч із площею**, **біля церкви**, and **далеко від дому** as whole
-chunks. You do not need a full grammar table to use them on a simple map.
+phrases. You do not need a full grammar table to use them on a simple map.
 
 ## Місця в місті
 
 **Називаємо об'єкти у місті: Називний відмінок.** First name the object before
 you locate it: **Це місто. Це вулиця. Це парк. Це мій будинок.** The core nouns are
 **будинок**, **аптека**, **церква**, **парк**, **музей**, **площа**,
-**зупинка**, and **озеро**. Gender also matters for familiar chunks:
+**зупинка**, and **озеро**. Gender also matters for familiar phrases:
 **мій будинок**, **моя вулиця**, **моє місто**.
 
 Build your city list in two columns:
@@ -165,13 +165,13 @@ in Ukrainian city life.
 
 ## Підсумок
 
-Use city vocabulary as place chunks, not isolated words:
+Use city vocabulary as place phrases, not isolated words:
 
 | Pattern | Examples |
 | --- | --- |
 | **в/у + place** | **в аптеці**, **у бібліотеці**, **в магазині**, **у банку** |
 | **на + place** | **на пошті**, **на вокзалі**, **на стадіоні**, **на площі** |
-| **біля + chunk** | **біля дому**, **біля парку**, **біля університету** |
+| **біля + phrase** | **біля дому**, **біля парку**, **біля університету** |
 | **є + place list** | **У моєму місті є парк і два музеї.** |
 
 Self-check:

@@ -78,8 +78,8 @@ inline:
         explanation: 'На роботі answers де?'
   - id: act-2
     type: fill-in
-    title: Static and direction chunks
-    instruction: Complete each sentence with the correct place chunk.
+    title: Static and direction phrases
+    instruction: Complete each sentence with the correct place phrase.
     items:
       - sentence: 'Я йду ___ банк.'
         answer: 'у'
@@ -87,7 +87,7 @@ inline:
           - 'у'
           - 'на'
           - 'до'
-        explanation: 'The direction chunk is у банк.'
+        explanation: 'The direction phrase is у банк.'
       - sentence: 'Олена йде ___ роботу.'
         answer: 'на'
         options:
@@ -115,7 +115,7 @@ inline:
           - 'на'
           - 'в'
           - 'у'
-        explanation: 'The route chunk is на вокзал.'
+        explanation: 'The route phrase is на вокзал.'
       - sentence: 'Марко йде ___ зупинку.'
         answer: 'на'
         options:
@@ -129,7 +129,7 @@ inline:
           - 'банку'
           - 'банк'
           - 'банком'
-        explanation: 'Де? uses the static chunk у банку.'
+        explanation: 'Де? uses the static phrase у банку.'
       - sentence: 'Оксана на ___.'
         answer: 'пошті'
         options:
@@ -154,7 +154,7 @@ inline:
   - id: act-3
     type: group-sort
     title: Де? or куди? shelves
-    instruction: Sort each chunk into static location or direction.
+    instruction: Sort each phrase into static location or direction.
     groups:
       - name: 'Static де?'
         items:
@@ -331,7 +331,7 @@ workbook:
           - 'Ми були на концерті.'
           - 'Ми були в концерті.'
           - 'Ми були до концерту.'
-        explanation: 'The familiar event chunk is на концерті.'
+        explanation: 'The familiar event phrase is на концерті.'
       - sentence: 'Книжка на столу.'
         error: 'на столу'
         correction: 'Книжка на столі.'

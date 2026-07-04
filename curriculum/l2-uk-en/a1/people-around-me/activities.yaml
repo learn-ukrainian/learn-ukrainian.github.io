@@ -243,9 +243,9 @@ workbook:
       - statement: 'Дерево answers хто? in Ukrainian grammar.'
         answer: false
         explanation: 'Дерево answers що?'
-      - statement: 'Я бачу його is a useful pronoun chunk.'
+      - statement: 'Я бачу його is a useful pronoun phrase.'
         answer: true
-        explanation: 'Його is an object pronoun chunk.'
+        explanation: 'Його is an object pronoun phrase.'
       - statement: 'Я чекаю лікаря uses the object form лікаря.'
         answer: true
         explanation: 'Лікар becomes лікаря.'
@@ -367,7 +367,7 @@ workbook:
           - 'Йому 20 років.'
           - 'Він має 20 років.'
           - 'Його 20 років.'
-        explanation: 'Age uses йому in this chunk.'
+        explanation: 'Age uses йому in this phrase.'
       - sentence: 'Я є студент.'
         error: 'Я є студент.'
         answer: 'Я студент.'

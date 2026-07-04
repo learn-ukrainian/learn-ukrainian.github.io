@@ -9,7 +9,7 @@ By the end, you can:
 
 - choose noun gender with **він / вона / воно** and use **мій / моя / моє / мої**;
 - describe objects with adjectives and colors: **великий стіл**, **нова книга**, **біле вікно**;
-- ask and answer prices with familiar number chunks;
+- ask and answer prices with familiar number phrases;
 - point with **цей / ця / це / ці** and **той / та / те / ті**;
 - form familiar plurals such as **столи**, **книги**, **вікна**, **зошити**;
 - make a 6-10 sentence description of your own small world.
@@ -138,7 +138,7 @@ Plural review stays simple. Familiar nouns change, and the adjective uses
 | **це вікно** | **ці вікна** |
 | **мій зошит синій** | **мої зошити сині** |
 
-Numbers are chunks here, not a new grammar topic.
+Numbers are phrases here, not a new grammar topic.
 
 | Question | Safe answer |
 | --- | --- |
@@ -148,7 +148,7 @@ Numbers are chunks here, not a new grammar topic.
 
 :::warning
 Do not add new case rules today. This checkpoint is about nominative gender,
-agreement, pointing words, familiar plurals, and price chunks.
+agreement, pointing words, familiar plurals, and price phrases.
 :::
 
 <!-- INJECT_ACTIVITY: act-4 -->
@@ -260,7 +260,7 @@ Keep these repairs close:
 | **Великий вікно.** | **Велике вікно.** | **вікно** is neuter |
 | **Ці книга.** | **Ці книги.** | **ці** needs plural |
 | **Ті зошит.** | **Ті зошити.** | **ті** needs plural |
-| **Двадцять гривня.** | **Двадцять гривень.** | price chunk |
+| **Двадцять гривня.** | **Двадцять гривень.** | price phrase |
 
 Next comes A1.3: actions. You will start saying what you do and what you like.
 For now, you can already point to things, describe them, count them, and ask

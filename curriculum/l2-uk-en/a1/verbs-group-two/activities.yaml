@@ -60,7 +60,7 @@ inline:
           - ю
           - иш
           - ять
-        explanation: Я роблю is a ready first-person chunk.
+        explanation: Я роблю is a ready first-person phrase.
       - sentence: Ти бач__ слово?
         answer: иш
         options:
@@ -161,7 +161,7 @@ inline:
             correct: false
           - text: просить
             correct: false
-        explanation: Я прошу is the ready first-person chunk.
+        explanation: Я прошу is the ready first-person phrase.
       - prompt: Вони ___ слово.
         options:
           - text: бачать
@@ -189,7 +189,7 @@ inline:
           - роблю
           - робиш
           - робить
-        explanation: Я роблю is a ready chunk.
+        explanation: Я роблю is a ready phrase.
       - sentence: Ти ___ слово? (бачити)
         answer: бачиш
         options:
@@ -210,7 +210,7 @@ inline:
           - прошу
           - просиш
           - просить
-        explanation: Я прошу is the first-person chunk.
+        explanation: Я прошу is the first-person phrase.
       - sentence: Вони ___ до школи. (ходити)
         answer: ходять
         options:
