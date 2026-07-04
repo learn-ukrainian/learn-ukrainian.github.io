@@ -1,0 +1,140 @@
+- lemma: народне оповідання
+  translation: folk oral story; short oral narrative
+  pos: словосполука
+  usage: Народне оповідання передає подію як значущий випадок, а не як архівний документ.
+- lemma: бувальщина
+  translation: true tale; oral tale told as something that happened
+  pos: іменник
+  usage: Бувальщина подає подію як переконливу або правдоподібну для громади.
+- lemma: билиця
+  translation: tale told as true; non-fairy true tale
+  pos: іменник
+  usage: Билиця протиставляє себе казці, бо наполягає на формулі "це було".
+- lemma: меморат
+  translation: personal experience narrative
+  pos: іменник
+  usage: Меморат ставить особистий досвід мовця в центр оповідної довіри.
+- lemma: неказкова проза
+  translation: non-fairy oral prose
+  pos: словосполука
+  usage: Неказкова проза охоплює перекази, легенди, бувальщини, меморати й близькі форми.
+- lemma: оповідна позиція
+  translation: narrative stance
+  pos: словосполука
+  usage: Оповідна позиція показує, хто говорить і чому слухач має довіряти.
+- lemma: свідок
+  translation: witness
+  pos: іменник
+  usage: Свідок у мемораті є головною опорою довіри.
+- lemma: установка на достовірність
+  translation: truth-claim stance
+  pos: словосполука
+  usage: Установка на достовірність відрізняє бувальщину від казкової умовності.
+- lemma: правдоподібність
+  translation: plausibility
+  pos: іменник
+  usage: Правдоподібність у бувальщині створюють місце, свідок і наслідок.
+- lemma: джерельний статус
+  translation: source status
+  pos: словосполука
+  usage: Джерельний статус визначає, чи маємо запис, словник, енциклопедію або літературну обробку.
+- lemma: мотив
+  translation: recurring motif
+  pos: іменник
+  usage: Мотив домовика або русалки треба відрізняти від фактичного доказу.
+- lemma: поведінкова формула
+  translation: behavioral formula
+  pos: словосполука
+  usage: Поведінкова формула стискає оповідь до правила "не йди" або "не бери".
+- lemma: заборона
+  translation: prohibition
+  pos: іменник
+  usage: Заборона в бувальщині часто пояснює, яку межу не можна порушувати.
+- lemma: межа
+  translation: boundary; threshold
+  pos: іменник
+  usage: Межа може бути просторовою, часовою, моральною або ритуальною.
+- lemma: порушення межі
+  translation: boundary transgression
+  pos: словосполука
+  usage: Порушення межі запускає багато оповідей про небезпеку.
+- lemma: наслідок
+  translation: aftermath; consequence
+  pos: іменник
+  usage: Наслідок робить випадок переконливим і перетворює його на правило.
+- lemma: локальна пам'ять
+  translation: local memory
+  pos: словосполука
+  usage: Локальна пам'ять прив'язує оповідь до криниці, поля, лісу або хати.
+- lemma: регіональний варіант
+  translation: regional variant
+  pos: словосполука
+  usage: Регіональний варіант не є помилкою, а ключем до місця запису.
+- lemma: домовик
+  translation: household spirit in folk belief
+  pos: іменник
+  usage: Домовик у бувальщині часто пов'язаний із порядком дому, худоби й нічного спокою.
+- lemma: хованець
+  translation: hidden household helper or spirit in folk belief
+  pos: іменник
+  usage: Хованець належить до кола хати, роду й нічного неспокою.
+- lemma: русалка
+  translation: rusalka; water or field figure in folk belief
+  pos: іменник
+  usage: Русалка в оповіді може позначати небезпеку води, поля або межового часу.
+- lemma: утопленик
+  translation: drowned person as remembered in folk narrative
+  pos: іменник
+  usage: Утопленик у народній оповіді часто пов'язаний із водою і пам'яттю про смерть.
+- lemma: вовкулака
+  translation: werewolf figure in Ukrainian folk narrative
+  pos: іменник
+  usage: Вовкулака показує страх перетворення, прокляття й виключення зі своїх.
+- lemma: відьма
+  translation: witch figure in folk narrative
+  pos: іменник
+  usage: Відьма в бувальщині є фігурою страху й підозри, а не нормою ставлення до реальних жінок.
+- lemma: чорт
+  translation: devil figure in folk-Christian narrative
+  pos: іменник
+  usage: Чорт у короткій оповіді може бути спокусником, сторожем скарбу або тим, кого самого обманюють.
+- lemma: скарб
+  translation: hidden treasure
+  pos: іменник
+  usage: Скарб у бувальщині часто має моральну ціну, а не лише пригодницьку привабливість.
+- lemma: блуд
+  translation: bewildering force; losing one's way in folk belief
+  pos: іменник
+  usage: Блуд пояснює втрату дороги як небезпечний межовий досвід.
+- lemma: нечиста сила
+  translation: unclean force in folk-Christian vocabulary
+  pos: словосполука
+  usage: Нечиста сила є християнізованою назвою небезпечного невидимого в частині оповідей.
+- lemma: фольклорний запис
+  translation: folklore record
+  pos: словосполука
+  usage: Фольклорний запис треба відрізняти від літературної обробки й словникового прикладу.
+- lemma: збирач
+  translation: collector of oral tradition
+  pos: іменник
+  usage: Збирач фіксує голос оповідача, але також впливає на вигляд друкованого тексту.
+- lemma: редакторська обробка
+  translation: editorial shaping
+  pos: словосполука
+  usage: Редакторська обробка може змінити правопис, рубрику або форму запису.
+- lemma: літературна обробка
+  translation: literary adaptation
+  pos: словосполука
+  usage: Літературна обробка може використовувати народний мотив, але не є фольклорним меморатом.
+- lemma: мала проза
+  translation: short prose
+  pos: словосполука
+  usage: Мала проза розвиває коротку подію, локальний голос і моральну напругу.
+- lemma: новела
+  translation: short story; novella in Ukrainian literary terminology
+  pos: іменник
+  usage: Новела може модернізувати ті прийоми стислості, які видно в народній малій прозі.
+- lemma: локальний голос
+  translation: local voice
+  pos: словосполука
+  usage: Локальний голос зберігає регіональну мову, паузи й спосіб довіри.

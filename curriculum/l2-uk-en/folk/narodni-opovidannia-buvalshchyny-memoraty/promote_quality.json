@@ -1,0 +1,70 @@
+{
+  "assembled_mdx_sha256": "1e8d517d62b46da8a34655496c47f98dde903c1e6685ff06b2606f95f8f3fec2",
+  "content_hash": {
+    "algorithm": "sha256",
+    "basis": "lesson_sources_v2",
+    "digest": "df269969b965b7c11c38b090b2e36593eb88131678f7153912f15f58dbbc9d30",
+    "files": [
+      {
+        "path": "curriculum/l2-uk-en/plans/folk/narodni-opovidannia-buvalshchyny-memoraty.yaml",
+        "sha256": "3ca286fb127fae18acc7d6562158ff8b22a1688c38a9be93f626615546d0d98f"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/narodni-opovidannia-buvalshchyny-memoraty/module.md",
+        "sha256": "53e315c6188fc596fa6881e4e476480855326264124c1fb11cc70690474fe9b2"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/narodni-opovidannia-buvalshchyny-memoraty/activities.yaml",
+        "sha256": "0524ed8ec80e499f216ad158da38c56c6e34f7871b708b1ce3036cec17319960"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/narodni-opovidannia-buvalshchyny-memoraty/vocabulary.yaml",
+        "sha256": "3f636c4f6cbec6719673da1a2b7bd0d4e0838e9a7ef8e6c1245add6d9235b938"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/narodni-opovidannia-buvalshchyny-memoraty/resources.yaml",
+        "sha256": "f733be6c118d23da59159bb2ef98484e92fb3ad766b3186608821fb42ef478a9"
+      }
+    ]
+  },
+  "evidence": {
+    "decolonization": "Distinguishes Ukrainian material from imperial bibliographic framing without romantic-nationalist overclaim.",
+    "engagement": "V2 inline/workbook activities cover genre ID, source passporting, motif analysis, comparison, and seminar writing.",
+    "pedagogical": "Teaches genre boundary, narrator stance, credibility markers, social function, and source caution.",
+    "review": "Claude-first bridge failed because local Claude native binary was not installed; direct AGY/Gemini 3.1 Pro High review found no blockers.",
+    "source_policy": "Quote-sparse build avoids unverified witness excerpts and uses only live allowlisted learner resource."
+  },
+  "floors": {
+    "beauty": 8.5,
+    "decolonization": 9.0,
+    "engagement": 8.5,
+    "naturalness": 8.5,
+    "pedagogical": 8.5,
+    "tone": 8.5
+  },
+  "profile": "folk_promote_v1",
+  "review_artifact": null,
+  "reviewer": {
+    "agent": "agy",
+    "family": "google",
+    "model": "Gemini 3.1 Pro (High)"
+  },
+  "schema_version": 1,
+  "scored_at": "2026-07-04T13:40:58Z",
+  "scores": {
+    "beauty": 8.9,
+    "decolonization": 9.1,
+    "engagement": 8.8,
+    "naturalness": 9.0,
+    "pedagogical": 9.1,
+    "tone": 9.0
+  },
+  "slug": "narodni-opovidannia-buvalshchyny-memoraty",
+  "track": "folk",
+  "verdict": "PASS",
+  "writer": {
+    "agent": "codex",
+    "family": "openai",
+    "model": "gpt-5"
+  }
+}
