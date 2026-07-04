@@ -1,0 +1,46 @@
+version: 1
+
+defaults:
+  required_files:
+    - plan
+    - module_md
+    - activities
+    - vocabulary
+    - site_mdx
+  optional_files:
+    - resources
+    - wiki
+    - wiki_sources
+  checks:
+    activity_yaml: true
+    vocabulary_yaml: true
+    resources_yaml: true
+    surface_gates: true
+    internal_leakage: true
+    mdx_routes: true
+    protected_diff: true
+    mdx_generation_validate: false
+    external_resource_liveness: false
+  severity:
+    missing_required_file: high
+    invalid_yaml: high
+    route_missing: high
+    protected_diff: blocker
+    optional_missing: info
+
+tracks:
+  b2:
+    profile: core
+    required_files:
+      - plan
+      - module_md
+      - activities
+      - vocabulary
+      - site_mdx
+      - wiki
+      - wiki_sources
+    optional_files:
+      - resources
+    notes:
+      - "B2 is the first target for the reusable deterministic track audit."
+      - "Old LLM-QG persistence is excluded pending issue #2156."
