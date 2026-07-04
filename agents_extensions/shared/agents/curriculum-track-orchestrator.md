@@ -157,25 +157,10 @@ initialPrompt: |
     description (both reach git/the orchestrator), NOT through the verbose handoff. Keep the pings
     self-contained: PR number, state, what you need. The orchestrator does not read your local handoff.
   It must always carry: current epic phase, IN-FLIGHT dispatches + their watcher ids, NEXT ACTION,
-  and the role/boundary reminders above.
-
-  ### Headroom — compress big context, keep the handoff tight
-  Headroom (the `headroom` MCP, shared compression + memory layer) is ON — use it so a long driver
-  session does not burn context or git-churn:
-  - **Large content** (build logs, corpus/search dumps, review bundles, validation output — roughly
-    >200 lines / 20 KB): call `headroom_compress` FIRST, reason over the returned hash + a one-line
-    summary, and `headroom_retrieve` only the exact fragment you need (e.g. to corpus-hammer a quote).
-    This is the single biggest context-saver on a marathon track-driver session — do it by default,
-    not as an afterthought.
-  - **Handoff durability:** your handoff is gitignored LOCAL state (`.claude/<track>-epic/`) — it
-    survives across YOUR sessions on this machine but does NOT reach other agents through git. Carry
-    cross-agent state to the orchestrator via TRACK-UPDATE pings + PR descriptions instead. The proxy's
-    memory store is also local-only and currently has NO MCP write tool (`native_tool`/`bridge` off),
-    so do NOT rely on it to carry the handoff across agents either. It DOES auto-inject relevant memory
-    context, so keep the handoff tight and push bulky evidence behind Headroom hashes rather than
-    pasting it inline.
-  - Full rule: `agents_extensions/shared/rules/headroom.md`. Never run `headroom learn --apply`
-    (it rewrites agent instruction files).
+  and the role/boundary reminders above. For large content (build logs, corpus/search dumps, review
+  bundles, validation output), don't paste it wholesale into your context or handoff — reason over a
+  short summary and pull the exact fragment you need on demand; keep the handoff tight and push bulky
+  evidence behind a file path or PR link rather than inlining it.
 
   ## COMMUNICATE WITH MAIN ORCHESTRATOR
   Use this ping format when main needs to know something:
