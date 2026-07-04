@@ -124,6 +124,57 @@ outputs under `/tmp` unless a durable audit report is explicitly in scope.
 
 ---
 
+## UA Evaluation Harness Schema
+
+The source-language-agnostic evidence contract for #2156 / #4307 lives in:
+
+- `docs/projects/ua-eval-harness/schema.md`
+- `scripts/audit/qg_schema.py`
+
+`qg_schema.py` is a library module, not a CLI. Downstream scorer adapters should
+import its builders and validators instead of inventing local finding shapes.
+
+Useful examples:
+
+```python
+from scripts.audit.qg_schema import (
+    build_dimension,
+    build_deterministic_curriculum_finding,
+    build_evidence_record,
+    build_semantic_false_friend_finding,
+    build_ua_gec_finding,
+    validate_record,
+)
+
+finding = build_ua_gec_finding(
+    error="являється",
+    correction="є",
+    tag="F/Calque",
+    file="module.md",
+    line=18,
+    span={"start": 210, "end": 218},
+    doc_id="0301",
+)
+record = build_evidence_record(
+    profile="ua_gec_eval",
+    evidence_kind="fixture",
+    fixture_id="ua-gec-0301",
+    dimensions={
+        "contact_calque": build_dimension(score=9.0, verdict="WARN", findings=[finding]),
+    },
+    verdict="WARN",
+    terminal_verdict="PASS",
+)
+validate_record(record)
+```
+
+The canonical schema version is `ua_contact_quality_evidence.v1`. Existing
+`curriculum_ua_qg_evidence.v1` and `llm_qg_evidence.v1` records remain valid
+projection profiles; do not regenerate module evidence just to adopt the new
+schema.
+
+---
+
 ## Wiki Knowledge Base
 
 The wiki is the research layer: compiled reference articles consumed as inline context during module generation. Source retrieval is pre-baked into SQLite, so module generation does not depend on live external search.
