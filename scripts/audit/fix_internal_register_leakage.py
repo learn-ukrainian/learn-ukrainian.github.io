@@ -20,8 +20,10 @@ Transformations (deterministic, word-boundary anchored):
    (those keep an adjacent word character), so load-bearing corpus-provenance keys
    in ``resources.yaml`` — consumed by ``linear_pipeline._plan_reference_match_gate``
    — are left intact by construction.
-2. ``learner-facing`` (build/QA register) -> removed, next word re-capitalised, so a
-   resource note like ``"Learner-facing support for …"`` becomes ``"Support for …"``.
+2. ``learner-facing`` (build/QA register) -> removed. The following word is
+   re-capitalised only when the phrase was sentence-initial, so ``"Learner-facing
+   support for …"`` becomes ``"Support for …"`` while a mid-sentence ``"Short
+   learner-facing overview"`` becomes ``"Short overview"`` (not ``"Short Overview"``).
 
 Residual prose mentions of ``chunk_id`` / ``source_chunk`` (build-meta written into a
 ``notes`` field, e.g. "no literal chunk_id") are NOT auto-edited — they need human
@@ -49,10 +51,25 @@ _CHUNK_SUBS: tuple[tuple[re.Pattern[str], str], ...] = (
     (re.compile(r"\bchunk\b"), "phrase"),
 )
 _LEARNER_FACING_RE = re.compile(r"\b[Ll]earner[ -]facing\s+(\w)")
+# When "learner-facing" begins a sentence, dropping it must re-capitalise the next
+# word ("Learner-facing overview" -> "Overview"). When it is mid-sentence, the next
+# word keeps its running-text case ("Short learner-facing overview" -> "Short
+# overview", NOT "Short Overview"). A sentence start is start-of-text or a preceding
+# terminator/quote — anything else means a lead-in word precedes the phrase.
+_SENTENCE_START_CHARS = ".!?:;\"'“”«»"
 
 # Reported, not auto-fixed: a prose mention (not a bare `chunk_id:` key line).
 _RESIDUAL_RE = re.compile(r"\b(?:chunk_ids?|source_chunk(?:_ids?)?)\b", re.IGNORECASE)
 _PROVENANCE_KEY_RE = re.compile(r"^\s*(?:-\s*)?(?:packet_)?chunk_id\s*:", re.IGNORECASE)
+
+
+def _learner_facing_repl(match: re.Match[str]) -> str:
+    """Drop the leaked 'learner-facing' register term, capitalising the following
+    word only when the term was sentence-initial (else preserve running-text case)."""
+    next_char = match.group(1)
+    preceding = match.string[: match.start()].rstrip()
+    at_sentence_start = (not preceding) or preceding[-1] in _SENTENCE_START_CHARS
+    return next_char.upper() if at_sentence_start else next_char
 
 
 def transform_text(text: str) -> tuple[str, int]:
@@ -61,7 +78,7 @@ def transform_text(text: str) -> tuple[str, int]:
     for pattern, repl in _CHUNK_SUBS:
         text, n = pattern.subn(repl, text)
         count += n
-    text, n = _LEARNER_FACING_RE.subn(lambda m: m.group(1).upper(), text)
+    text, n = _LEARNER_FACING_RE.subn(_learner_facing_repl, text)
     count += n
     return text, count
 

@@ -37,6 +37,7 @@ def test_violating_fixture_reports_chunk_and_section_ids(tmp_path: Path) -> None
         "source-first",
         "learner-facing",
         "chunk_id",
+        "internal course notes",
         "службова позначка",
     ],
 )

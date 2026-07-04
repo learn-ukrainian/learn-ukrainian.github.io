@@ -25,6 +25,22 @@ def test_learner_facing_prefix_removed_and_recapitalised() -> None:
     assert out == 'notes: "Support for Ukrainian holidays."'
 
 
+def test_learner_facing_midsentence_keeps_lowercase() -> None:
+    """A2 regression: a lead-in word before the phrase means it was NOT sentence-
+    initial, so the following word keeps running-text case ("Short overview", not
+    "Short Overview"). The old unconditional .upper() produced the miscapitalisation."""
+    for lead in ("Short", "Catalogued", "Public", "Optional", "Core", "Additional"):
+        text = f'notes: "{lead} learner-facing practice for aspect."'
+        out, _ = fix.transform_text(text)
+        assert out == f'notes: "{lead} practice for aspect."', out
+
+
+def test_learner_facing_recapitalises_only_at_sentence_start() -> None:
+    text = "Learner-facing overview. Also learner-facing practice here."
+    out, _ = fix.transform_text(text)
+    assert out == "Overview. Also practice here."
+
+
 def test_residual_chunk_id_prose_is_reported_not_provenance_key() -> None:
     text = (
         "  chunk_id: 1-klas_s0023\n"

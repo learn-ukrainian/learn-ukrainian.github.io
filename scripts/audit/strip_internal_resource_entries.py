@@ -42,7 +42,9 @@ _INTERNAL_REF_RE = re.compile(
 _EMPTY_NOTE = "This module introduces no new external resources."
 _ROLE_RE = re.compile(r"^\s+role:\s*(.+?)\s*$")
 _SOURCEREF_RE = re.compile(r"^\s+source_ref:\s*(.+?)\s*$")
+_URL_RE = re.compile(r"^\s+url:\s*(.+?)\s*$")
 _TITLE_RE = re.compile(r'^-\s*title:\s*(.+?)\s*$')
+_EXTERNAL_URL_RE = re.compile(r"^https?://", re.IGNORECASE)
 _EXT_RES_BLOCK_RE = re.compile(
     r"^:::info\[[^\]]*External Resources[^\]]*\]\n.*?^:::\n",
     re.DOTALL | re.MULTILINE,
@@ -53,12 +55,23 @@ def _norm(value: str) -> str:
     return value.strip().strip("\"'")
 
 
-def is_internal_entry(*, role: str, title: str, source_ref: str) -> bool:
+def is_internal_entry(*, role: str, title: str, source_ref: str, url: str = "") -> bool:
     r = _norm(role).lower()
     if r.startswith(INTERNAL_ROLE_PREFIXES) or r in INTERNAL_ROLES:
         return True
     if _INTERNAL_TITLE_RE.match(_norm(title)):
         return True
+    # A `source_ref` pointing back into the repo (docs/, wiki/, curriculum/, "Wiki:
+    # pedagogy", "Synthesis of") normally marks a build-provenance pointer. But genuine
+    # external resources ALSO record where they were catalogued — e.g.
+    # `source_ref: "docs/resources/ulp-articles-index.yaml: /…/"` — while carrying a
+    # real off-site URL. An entry the learner can click through to is never internal
+    # junk, so the (weaker) source_ref signal is suppressed when an external http(s)
+    # URL is present. The role/title signals above stay strict. Without this guard the
+    # tool removes 265/265 legitimate A2 external resources (all url-bearing, flagged
+    # solely by their `docs/resources/` catalog provenance).
+    if _EXTERNAL_URL_RE.match(_norm(url)):
+        return False
     return bool(_INTERNAL_REF_RE.match(_norm(source_ref)))
 
 
@@ -98,6 +111,7 @@ def _block_is_internal(block: list[str]) -> bool:
         role=_block_field(block, _ROLE_RE),
         title=_block_title(block),
         source_ref=_block_field(block, _SOURCEREF_RE),
+        url=_block_field(block, _URL_RE),
     )
 
 

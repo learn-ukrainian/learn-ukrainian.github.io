@@ -36,7 +36,7 @@ SEMINAR_DOC_TRACKS = {
 # only folk + seminar tracks were scanned, which let internal-register jargon (chunk,
 # "Wiki: pedagogy/…") accumulate in core content unchecked. Add a level here ONLY once
 # it is clean, or the gate will block unrelated commits touching that level.
-GUARDED_CORE_LEVELS = {"a1"}
+GUARDED_CORE_LEVELS = {"a1", "a2"}
 
 FOLK_LEARNER_SOURCE_FILES = {
     "module.md",
@@ -82,6 +82,11 @@ INTERNAL_REGISTER_PATTERNS = (
     PatternSpec("internal resource ref", re.compile(r"\bInternal module M\d", re.IGNORECASE)),
     PatternSpec("build/process term", re.compile(r"\bcorpus[ -]ids?\b", re.IGNORECASE)),
     PatternSpec("build/process term", re.compile(r"\binternal[ -]corpus\b", re.IGNORECASE)),
+    # Resource-selection meta-commentary the writer narrated into `notes` fields,
+    # e.g. "...alternations without exposing internal course notes." The keyword
+    # allowlist deliberately has no bare `\binternal\b` (too many legitimate
+    # learner uses), so this specific build-register phrase is anchored explicitly.
+    PatternSpec("build/process term", re.compile(r"\binternal\s+course\s+notes\b", re.IGNORECASE)),
     PatternSpec("build/process term", re.compile(r"\bservice[ -]ids?\b", re.IGNORECASE)),
     PatternSpec("build/process term", re.compile(r"\bverify_quote\b", re.IGNORECASE)),
     PatternSpec("build/process term", re.compile(r"\bsource[ -]verification\b", re.IGNORECASE)),
