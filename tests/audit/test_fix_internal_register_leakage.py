@@ -41,6 +41,22 @@ def test_learner_facing_recapitalises_only_at_sentence_start() -> None:
     assert out == "Overview. Also practice here."
 
 
+def test_learner_facing_recapitalises_after_list_marker_and_bracket() -> None:
+    """Sentence-initial shapes that are not preceded by a terminator: list markers,
+    blockquotes, table cells, and open brackets still re-capitalise."""
+    assert fix.transform_text("- Learner-facing overview.")[0] == "- Overview."
+    assert fix.transform_text("* Learner-facing note")[0] == "* Note"
+    assert fix.transform_text("(Learner-facing overview.)")[0] == "(Overview.)"
+    assert fix.transform_text("> Learner-facing tip")[0] == "> Tip"
+    assert fix.transform_text("| Learner-facing cell |")[0] == "| Cell |"
+
+
+def test_learner_facing_recapitalises_at_line_start() -> None:
+    text = "Intro sentence.\nLearner-facing overview follows."
+    out, _ = fix.transform_text(text)
+    assert out == "Intro sentence.\nOverview follows."
+
+
 def test_residual_chunk_id_prose_is_reported_not_provenance_key() -> None:
     text = (
         "  chunk_id: 1-klas_s0023\n"

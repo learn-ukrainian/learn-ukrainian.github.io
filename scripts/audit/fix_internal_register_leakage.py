@@ -54,9 +54,10 @@ _LEARNER_FACING_RE = re.compile(r"\b[Ll]earner[ -]facing\s+(\w)")
 # When "learner-facing" begins a sentence, dropping it must re-capitalise the next
 # word ("Learner-facing overview" -> "Overview"). When it is mid-sentence, the next
 # word keeps its running-text case ("Short learner-facing overview" -> "Short
-# overview", NOT "Short Overview"). A sentence start is start-of-text or a preceding
-# terminator/quote — anything else means a lead-in word precedes the phrase.
-_SENTENCE_START_CHARS = ".!?:;\"'“”«»"
+# overview", NOT "Short Overview"). A sentence start is: start-of-text, a line start
+# (handled via the preceding newline), a list marker / blockquote / table cell, an
+# open bracket, or a preceding sentence terminator / quote.
+_SENTENCE_START_CHARS = ".!?:;\"'“”«»([{-*>+|"
 
 # Reported, not auto-fixed: a prose mention (not a bare `chunk_id:` key line).
 _RESIDUAL_RE = re.compile(r"\b(?:chunk_ids?|source_chunk(?:_ids?)?)\b", re.IGNORECASE)
@@ -65,10 +66,18 @@ _PROVENANCE_KEY_RE = re.compile(r"^\s*(?:-\s*)?(?:packet_)?chunk_id\s*:", re.IGN
 
 def _learner_facing_repl(match: re.Match[str]) -> str:
     """Drop the leaked 'learner-facing' register term, capitalising the following
-    word only when the term was sentence-initial (else preserve running-text case)."""
+    word only when the term was sentence-initial (else preserve running-text case).
+
+    Trailing spaces/tabs (but NOT newlines) are stripped from the preceding text so a
+    line-initial phrase — e.g. after a ``- `` list marker or at the start of a line —
+    is treated as a sentence start, while a mid-sentence lead-in word is not."""
     next_char = match.group(1)
-    preceding = match.string[: match.start()].rstrip()
-    at_sentence_start = (not preceding) or preceding[-1] in _SENTENCE_START_CHARS
+    preceding = match.string[: match.start()].rstrip(" \t")
+    at_sentence_start = (
+        not preceding
+        or preceding[-1] == "\n"
+        or preceding[-1] in _SENTENCE_START_CHARS
+    )
     return next_char.upper() if at_sentence_start else next_char
 
 
