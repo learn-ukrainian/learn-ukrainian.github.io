@@ -97,6 +97,33 @@ Parses `~/.claude/projects/` JSONL session files and writes `docs/token-usage/to
 
 ---
 
+## Deterministic Track Audit
+
+Run a reusable, non-LLM audit across a built track. The audit checks inventory,
+activity and vocabulary sidecars, resources, generated MDX, learner-facing
+English leakage, internal workflow leakage, and optional route metadata. It
+explicitly excludes old LLM-QG state while issue #2156 is replacing that path.
+
+```bash
+.venv/bin/python scripts/audit/track_deterministic_audit.py --track b2 --format summary
+```
+
+Useful rollout examples:
+
+```bash
+.venv/bin/python scripts/audit/track_deterministic_audit.py --track b2 --format json --output /tmp/b2-deterministic-audit.json --fail-on never
+.venv/bin/python scripts/audit/track_deterministic_audit.py --track b1 --format summary --fail-on never
+.venv/bin/python scripts/audit/track_deterministic_audit.py --track a2 --format summary --fail-on never
+.venv/bin/python scripts/audit/track_deterministic_audit.py --track a1 --format summary --fail-on never
+```
+
+Use `--range N-M` for a smoke pass before running a full track. Advisory
+findings such as missing optional resources appear in the output, but
+`--fail-on never` keeps baseline rollout runs from failing on them. Keep JSON
+outputs under `/tmp` unless a durable audit report is explicitly in scope.
+
+---
+
 ## Wiki Knowledge Base
 
 The wiki is the research layer: compiled reference articles consumed as inline context during module generation. Source retrieval is pre-baked into SQLite, so module generation does not depend on live external search.
