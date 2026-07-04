@@ -21,6 +21,12 @@ activity_hints:
 - focus: 'Есе на тему сучасного значення традиції (Казки про тварин: Від тотемізму до алегорії)'
   placement: workbook
   type: essay-response
+vesum_exemptions:
+  foreign_cultural_terms:
+  - term: "трикстер"
+    forms: ["трікстер"]
+    wikipedia_url: "https://uk.wikipedia.org/wiki/Трикстер"
+    rationale: "Планова назва секції використовує форму «трікстер»; у змісті збережено точний заголовок для відповідності плану."
 cefr_min: C1
 connects_to:
 - charivni-kazky
@@ -111,7 +117,7 @@ sequence: 22
 slug: kazky-pro-tvaryn
 subtitle: 'Animal Tales: From Totemism to Allegory'
 title: 'Казки про тварин: Від тотемізму до алегорії'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: архаїчна система вірувань, за якою рід вважає тварину своїм предком та покровителем
   pos: ч.
