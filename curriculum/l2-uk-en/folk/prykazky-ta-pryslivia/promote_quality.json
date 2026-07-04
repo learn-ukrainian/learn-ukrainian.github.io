@@ -1,0 +1,70 @@
+{
+  "assembled_mdx_sha256": "70b72115191f3572907cf1463014c6cbe7f07f719515489dca0303652dfe702a",
+  "content_hash": {
+    "algorithm": "sha256",
+    "basis": "lesson_sources_v2",
+    "digest": "77286698a1366881cf2f4fc8084b8cdbfa9922c2bbfb9e3a3f1de2d790b4fed6",
+    "files": [
+      {
+        "path": "curriculum/l2-uk-en/plans/folk/prykazky-ta-pryslivia.yaml",
+        "sha256": "31cf96c57d8f029f866ef500f07e16219004234dfdb22c5bfab10d6d55dfbf5b"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/prykazky-ta-pryslivia/module.md",
+        "sha256": "063825e9c18ce635991657e550548182eaf24ff829cae5ae402119a3960eeb24"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/prykazky-ta-pryslivia/activities.yaml",
+        "sha256": "26221ef112001315c53c493f281472d71cbc6e7e6a7e5737b6fa1e906cc0eef6"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/prykazky-ta-pryslivia/vocabulary.yaml",
+        "sha256": "e84403b1f7725e891d51756abc224fed89152c16a535b6b4a6437ef8b2dd450b"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/prykazky-ta-pryslivia/resources.yaml",
+        "sha256": "bfae028a0b28177f93b721e6c76c53cd5458e9603f2a657b8c045a3cd0e4a0ab"
+      }
+    ]
+  },
+  "evidence": {
+    "decolonization": "Ukrainian parеmiology is framed through named Ukrainian collectors, regional variation, and anti-imperial source history without Russocentric derivation claims.",
+    "engagement": "V2 inline/workbook activities cover proverb-function analysis, source evaluation, variant comparison, comparative study, and seminar essay practice.",
+    "pedagogical": "Build teaches proverb/saying boundaries, two-part structure, metaphor, pragmatics, source discipline, contradiction, and ethical limits of modern use.",
+    "review": "Claude Opus review found three blockers in round 1; fixes were applied and regenerated. Round 2 confirmed blockers resolved and no new blockers.",
+    "source_policy": "Verbatim proverb fragments kept short. Manual spot-check confirmed four Galician fragments in Hrushevsky's discussion of Franko's corpus; the Franko page separately confirms the fox-and-hens fragment. Popular unverified forms are treated as paraphrase-only."
+  },
+  "floors": {
+    "beauty": 8.5,
+    "decolonization": 9.0,
+    "engagement": 8.5,
+    "naturalness": 8.5,
+    "pedagogical": 8.5,
+    "tone": 8.5
+  },
+  "profile": "folk_promote_v1",
+  "review_artifact": "ai_agent_bridge messages 2 and 4; task ids review-folk-m27-prykazky-ta-pryslivia and review-folk-m27-prykazky-ta-pryslivia-r2",
+  "reviewer": {
+    "agent": "claude",
+    "family": "anthropic",
+    "model": "Claude Opus 4.8"
+  },
+  "schema_version": 1,
+  "scored_at": "2026-07-04T14:31:58Z",
+  "scores": {
+    "beauty": 8.8,
+    "decolonization": 9.2,
+    "engagement": 8.7,
+    "naturalness": 8.8,
+    "pedagogical": 9.0,
+    "tone": 8.8
+  },
+  "slug": "prykazky-ta-pryslivia",
+  "track": "folk",
+  "verdict": "PASS",
+  "writer": {
+    "agent": "codex",
+    "family": "openai",
+    "model": "gpt-5"
+  }
+}
