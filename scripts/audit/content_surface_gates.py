@@ -128,6 +128,17 @@ PATHOS_PATTERNS: tuple[tuple[re.Pattern[str], str], ...] = tuple(
     )
 )
 
+UKRAINIAN_GRAMMAR_CALQUE_PATTERNS: tuple[tuple[re.Pattern[str], str], ...] = tuple(
+    (re.compile(pattern, re.IGNORECASE), label)
+    for pattern, label in (
+        (
+            r"будь(?:те)?\s+обережн[а-яіїєґ]*,?\s+щоб\s+небажан[а-яіїєґ]*\s+"
+            r"результат[а-яіїєґ]*\s+не\s+став",
+            "calqued Ukrainian grammar warning phrase",
+        ),
+    )
+)
+
 
 def policy_for_level(level: str | None) -> SurfacePolicy:
     """Return deterministic surface policy for a level/track code."""
@@ -322,6 +333,15 @@ def scan_surface_text(
             patterns=PATHOS_PATTERNS,
             kind="pathos_or_register",
             severity=policy.pathos_severity,
+            source=source,
+        )
+    )
+    findings.extend(
+        _pattern_findings(
+            prose_masked,
+            patterns=UKRAINIAN_GRAMMAR_CALQUE_PATTERNS,
+            kind="ukrainian_grammar_calque",
+            severity="critical",
             source=source,
         )
     )

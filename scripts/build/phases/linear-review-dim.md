@@ -264,6 +264,14 @@ trace to verbatim quotes from the content is invalid by definition.
 
 The JSON response MUST include `evidence_quotes` with 3 verbatim quotes from step 1 and `rubric_mapping` explaining how each quote maps to `{DIM}` before the score. The `evidence` field MUST be one of those verbatim quotes, wrapped in escaped quotes. A summary or paraphrase in any evidence field is a reviewer-protocol failure.
 
+Quote-copy discipline: copy/paste exact substrings from Generated Content. Do
+not normalize spelling, repair grammar, add or drop prepositions, change case
+endings, translate, or smooth punctuation inside quoted evidence. If a sentence
+is long, quote the shortest exact offending span instead of reconstructing the
+whole sentence from memory. A finding is invalid if the `quote` string does not
+appear in the generated artifacts exactly or via harmless whitespace
+normalization.
+
 Do not assign a score below 8 unless `rubric_mapping` names at least one
 grounded residual defect and `findings` includes a quote from the Generated
 Content for that defect. If all three evidence quotes are evidence FOR the
@@ -285,6 +293,9 @@ reviewer-protocol failure and will be discarded/retried.
   editor would use an active, impersonal, or clearer state construction.
 - `UNNATURAL_ANTHROPOMORPHISM`: model-translated metalanguage such as
   `форма просить`, `застереження каже`, or `правило хоче`.
+- `UKRAINIAN_GRAMMAR_CALQUE`: Ukrainian grammar/naturalness calque, unnatural
+  explanatory metalanguage, or reviewer-like paraphrase in learner-facing
+  prose, such as `будь обережний, щоб небажаний результат не стався`.
 - `ENGLISH_LEAKAGE`: English-led learner-facing prose that violates the level
   calibration above. Do not use this for allowed A1/A2 glosses or scaffolding.
 - `AI_LEAKAGE`: model persona, scratchpad, refusal, draft, or self-correction

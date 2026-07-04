@@ -1,8 +1,8 @@
 {
-  "content_sha": "39d9fd1ad8c129f37e4fea5ebd68279bd341aa4796dbc19184a865a43b36f1e8",
+  "content_sha": "c553c4952794d13514c32b9933abbc8ca7477edd5562b9c06b96e70340676157",
   "dimensions": {
     "decolonization": {
-      "score": 9.5,
+      "score": 9.8,
       "verdict": "PASS"
     },
     "engagement": {
@@ -10,7 +10,7 @@
       "verdict": "PASS"
     },
     "naturalness": {
-      "score": 9.8,
+      "score": 9.5,
       "verdict": "PASS"
     },
     "pedagogical": {
@@ -31,12 +31,11 @@
   "level": "b1",
   "min_dim": "pedagogical",
   "min_score": 9.5,
-  "profile": "b1_plus",
-  "prompt_hash": "2f09dc0ab1f6e1dd59454be01b32a2df3158352de8cea0827eca7703fee9c0dd",
+  "prompt_hash": "cf5795c67db206f9558e644431483e4f8b5479c5084b5f1bec886eb3f185891a",
   "provenance": {
-    "created_at": "2026-07-03T21:31:09.984222Z",
-    "run_id": "llm-qg-0bdbbd7d01de4302a2e12a6606ddd585",
-    "source": "run_llm_qg_parity"
+    "created_at": "2026-07-04T08:54:20.243820Z",
+    "run_id": "llm-qg-22218e4271434779bface8513cc795e5",
+    "source": "run_llm_qg_with_corrections_manual"
   },
   "reviewer": {
     "family": "agy-tools",

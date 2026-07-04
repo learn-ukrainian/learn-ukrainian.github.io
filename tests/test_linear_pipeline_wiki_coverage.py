@@ -98,7 +98,7 @@ def test_v7_build_orders_wiki_gate_before_aggregate_qg() -> None:
     # run_wiki_coverage_with_corrections wrapper at the v7_build call site.
     # The ordering invariant remains: wiki coverage runs BEFORE review/LLM QG.
     assert run_body.index("run_wiki_coverage_with_corrections(") < run_body.index("_run_wiki_coverage_review(")
-    assert run_body.index("_run_wiki_coverage_review(") < run_body.index("_run_llm_qg(")
+    assert run_body.index("_run_wiki_coverage_review(") < run_body.index("run_llm_qg_with_corrections(")
 
 
 def test_wiki_coverage_correction_attempt_is_written(

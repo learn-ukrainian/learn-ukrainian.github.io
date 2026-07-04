@@ -70,6 +70,26 @@ def test_html_verify_comments_do_not_count_as_path_leaks() -> None:
     assert report["findings"] == []
 
 
+def test_calqued_warning_metaphrase_fails_deterministically() -> None:
+    text = """
+У **застереженні** зміст інший: будь обережний, щоб небажаний результат не стався.
+
+Будь обережний на сходах.
+"""
+    report = scan_surface_text(text, level="b1")
+
+    assert report["passed"] is False
+    assert report["verdict"] == "FAIL"
+    assert any(
+        finding["type"] == "ukrainian_grammar_calque"
+        and finding["text"] == "будь обережний, щоб небажаний результат не став"
+        for finding in report["findings"]
+    )
+    assert len(
+        [finding for finding in report["findings"] if finding["type"] == "ukrainian_grammar_calque"]
+    ) == 1
+
+
 def test_sidecar_scan_catches_ai_leak_without_english_ratio_false_positive(tmp_path) -> None:
     module_dir = tmp_path / "b1" / "sidecar"
     module_dir.mkdir(parents=True)
