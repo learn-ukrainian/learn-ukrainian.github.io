@@ -1,0 +1,69 @@
+{
+  "assembled_mdx_sha256": "0e36b1e08659d780a83dea80f0ede9eba5127280ef747f5fdf2cb9362609c648",
+  "content_hash": {
+    "algorithm": "sha256",
+    "basis": "lesson_sources_v2",
+    "digest": "91af7e7f71897cfbc8f5c169864027cff5479f9ae4a8b60160f52850a0b5c25f",
+    "files": [
+      {
+        "path": "curriculum/l2-uk-en/plans/folk/istorychni-perekazy.yaml",
+        "sha256": "f321d64411e15dc5498d93f64f04d03d3eb87034849faa15a65df2ef964687ff"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/istorychni-perekazy/module.md",
+        "sha256": "22d819b9ae10777e114fd40b29f4df3918f8cac19da790789013ea8306368758"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/istorychni-perekazy/activities.yaml",
+        "sha256": "81b7576fb1d3d69b9cb3e48c06777bad0ee7d82b5257c72a920d6f7a04f5c7b5"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/istorychni-perekazy/vocabulary.yaml",
+        "sha256": "a4e80d9970079d63f735ac582b922c8442f1d49f70e285b4301e342923ccf885"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/istorychni-perekazy/resources.yaml",
+        "sha256": "2efb7fffb8183985325cb9613c8cb5232f97869d5e15fc6979e671175ccecb32"
+      }
+    ]
+  },
+  "evidence": {
+    "gates": "Activity V2 schema, vocabulary CLI, MDX generation drift, source parity, forward parity, word target, VESUM/resource QG, leak/decolonization scans, and git diff hygiene passed after final cleanup.",
+    "historical_register": "Lesson distinguishes history, memory, legend, later retelling, chronicle/archive limits, oral tradition, and local landscape memory without treating tales as archival fact.",
+    "independent_review": "Claude-first route failed because the local Claude native binary was not installed; AGY/Gemini 3.1 Pro High fallback found the M24 metadata blocker and Stepan Razin minor findings, then focused re-review returned NO BLOCKERS.",
+    "provenance": "Public-domain/official source notes only; no hosted readings fabricated; short fragments checked against Wikisource exact pages after local verify_quote lacked corpus coverage; EIU pages used as context references, not primary readings."
+  },
+  "floors": {
+    "beauty": 8.5,
+    "decolonization": 9.0,
+    "engagement": 8.5,
+    "naturalness": 8.5,
+    "pedagogical": 8.5,
+    "tone": 8.5
+  },
+  "profile": "folk_promote_v1",
+  "review_artifact": null,
+  "reviewer": {
+    "agent": "agy",
+    "family": "google",
+    "model": "gemini-3.1-pro-high"
+  },
+  "schema_version": 1,
+  "scored_at": "2026-07-04T12:48:06Z",
+  "scores": {
+    "beauty": 8.7,
+    "decolonization": 9.1,
+    "engagement": 8.7,
+    "naturalness": 8.8,
+    "pedagogical": 8.8,
+    "tone": 8.8
+  },
+  "slug": "istorychni-perekazy",
+  "track": "folk",
+  "verdict": "PASS",
+  "writer": {
+    "agent": "codex",
+    "family": "openai",
+    "model": "gpt-5"
+  }
+}
