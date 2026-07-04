@@ -44,26 +44,40 @@ These are NOT the harness, but they are the scorer-side foundation:
 - **СУМ-11 + Грінченко + ЕСУМ + slovnyk.me** — heritage-defense layer (`mcp__sources__search_heritage`) to avoid false-positives on authentic Ukrainian archaisms/dialectisms.
 - **UA-GEC errors index** — already MCP-exposed via `mcp__sources__search_ua_gec_errors` (filtered to F/Calque, F/Collocation, G/Case, G/Gender). 8,937 rows.
 
+## Current implementation artifacts
+
+- [PR1 curriculum QG plan](pr1-curriculum-qg-plan.md) documents the merged
+  curriculum-facing MVP.
+- [UA contact quality evidence schema](schema.md) documents
+  `ua_contact_quality_evidence.v1` and the helper module
+  `scripts/audit/qg_schema.py`.
+- [Agent fleet evidence for #4307](agent-fleet-4307.md) records the concrete
+  fleet lanes used for the schema slice and the observed strengths/weaknesses.
+
 ## Design TBD (these are the questions next session should answer)
 
 ### Eval shape — calque axis
+
 - Prompt-elicitation: what task family elicits calques best? (Translation EN→UK? Free generation in UK? Continuation from UK seed? Conversation-completion?)
 - Coverage: how many UA-GEC F/Calque examples form the eval set? Hold-out for validation?
 - Scoring: exact-match against gold edit-pairs? F1 over flagged spans? Semantic-equivalence aware?
 - Calibration: how do we compare LLM output to UA-GEC's human-edit format (which is corrective, not generative)?
 
 ### Eval shape — grammar axis
+
 - Which G/* tags do we score? G/Case, G/Gender, G/Number, G/Aspect, G/Verb? All?
 - Same prompt family as calque axis, or separate prompts that elicit grammar mistakes specifically?
 - Joint vs separate leaderboard: one ranking with two columns, or two separate rankings?
 
 ### Models in scope
+
 - Closed-source frontier: Claude, GPT-5.5, Gemini, Grok
 - Open-source frontier: DeepSeek, Qwen, Mistral, Kimi, MiniMax
 - Plus open-weight UA-fine-tuned: Lapa, MamayLM (covered by lang-uk leaderboard)
 - Cost ceiling per full eval pass
 
 ### Repo layout
+
 - Standalone repo or sub-project of `learn-ukrainian`?
 - Naming: `ua-eval-harness`? `uk-russian-shadow-eval`? `ua-gec-llm-eval`?
 - Reproducibility: requirements pinned, results-versioned, model-version-captured
