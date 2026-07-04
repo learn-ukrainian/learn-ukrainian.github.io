@@ -22,13 +22,13 @@ was blocked because the working tree was missing
 day before. The working tree had 489 dirty entries (modified + deleted
 + untracked). A mix of:
 
-- 43 `.worktree-briefs/*.md` — consumed dispatch prompts that had
++ 43 `.worktree-briefs/*.md` — consumed dispatch prompts that had
   already produced merged PRs (pure noise)
-- 99 `curriculum/l2-uk-en/a1/colors/**` — stale output from pre-ADR-007
++ 99 `curriculum/l2-uk-en/a1/colors/**` — stale output from pre-ADR-007
   pilot runs
-- 16 files modified to pre-merge state (pre-#1498, pre-#1513, pre-#1515,
++ 16 files modified to pre-merge state (pre-#1498, pre-#1513, pre-#1515,
   pre-ADR-007) — drift from never-reset local state
-- 3 tests deleted in the working tree that had been ADDED by recent
++ 3 tests deleted in the working tree that had been ADDED by recent
   PRs (never materialized in the checkout)
 
 Every one of these was resolvable in under a minute at the time of the
@@ -51,10 +51,10 @@ a hygiene violation.
 Dirty file classes:
 
 | Marker | Meaning | Default action |
-|---|---|---|
-| ` M` | Modified in working tree | Commit, restore to HEAD, or stash |
-| `MM` / `M ` | Modified + staged (partial) | Finish staging and commit |
-| ` D` | Deleted in working tree | Either commit the deletion or restore |
+| --- | --- | --- |
+| `SP+M` | Modified in working tree | Commit, restore to HEAD, or stash |
+| `MM` / `M+SP` | Modified + staged (partial) | Finish staging and commit |
+| `SP+D` | Deleted in working tree | Either commit the deletion or restore |
 | `??` | Untracked | Either commit, delete, or gitignore |
 
 ## Exemption paths
@@ -63,12 +63,12 @@ These paths are **expected to be dirty** during active work and don't
 count toward the "end session clean" rule. They're either output from
 running builds or local-only state:
 
-- `wiki/**` — wiki builder runs in parallel and emits new/modified
++ `wiki/**` — wiki builder runs in parallel and emits new/modified
   files constantly. Snapshot-commit periodically (`feat(wiki): snapshot
   built wikis — batch YYYY-MM-DD`), don't restore.
-- `data/corpus_audit/draft_tickets/*.md` — local-only audit drafts
++ `data/corpus_audit/draft_tickets/*.md` — local-only audit drafts
   (already unignored/allowed per existing `.gitignore` rule)
-- `.venv/`, `node_modules/`, `starlight/dist/`, etc. — gitignored build
++ `.venv/`, `node_modules/`, `starlight/dist/`, etc. — gitignored build
   artifacts. If any of these show up in `git status`, something is
   miswired.
 
@@ -98,11 +98,11 @@ This is the most dangerous. Files you didn't touch, but that HEAD
 moved ahead on. Working tree "rejects" the new state by holding the
 old one. Spot the pattern:
 
-- Working tree has functions/classes that no longer exist on main
++ Working tree has functions/classes that no longer exist on main
   (tests for KILLed infrastructure, pre-refactor helpers, etc.)
-- Working tree is missing files that main added (new shared modules,
++ Working tree is missing files that main added (new shared modules,
   new tests, new pre-commit hooks)
-- Line counts differ from HEAD despite no intentional edits
++ Line counts differ from HEAD despite no intentional edits
 
 Detection is trivial:
 
@@ -160,6 +160,20 @@ and wants to resume it. The warning makes sure you don't work *past*
 the problem without noticing.
 
 See `scripts/claude/session-start-hygiene.sh --help` for overrides.
+
+## PR Lifecycle Hygiene
+
+Do not leave draft PRs or open PRs in limbo after checks are green. Every PR an
+agent creates must finish the task in one of these states:
+
++ merged
++ closed with the reason recorded
++ explicitly handed off with the blocker, owner, and next action
+
+Before the final response, check PR state, checks, mergeability, and whether the
+branch/worktree needs cleanup. If a PR remains open, the final response must say
+exactly why and what action is required. Leaving PRs in review hell wastes CI,
+agent, and human attention.
 
 ## Monitor API surface
 
