@@ -421,7 +421,7 @@ _SESSION_COLUMNS = {
 # resumable agent whose _SESSION_COLUMNS entry was forgotten — that would otherwise
 # silently never persist).
 _ALWAYS_FRESH_AGENTS = frozenset(
-    {"grok-build", "agy", "cursor", "hermes", "deepseek-v4-pro", "qwen", "opencode"}
+    {"grok-build", "agy", "cursor", "hermes", "deepseek-v4-pro", "qwen", "opencode", "pool", "glm"}
 )
 
 
