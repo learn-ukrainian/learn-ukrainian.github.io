@@ -79,9 +79,9 @@ git rev-parse --show-toplevel
 - Do not contaminate older modules with M93-M94 finale synthesis unless the audit explicitly requests a local cross-reference.
 - Keep activities as language practice and preserve the YAML shape already present.
 
-## Helpers And Headroom
+## Helpers
 
-Helpers are allowed for mechanical validation or bounded source checks with clear file ownership. The main orchestrator owns integration and final pedagogy. Use Headroom compression for helper output or logs over 200 lines or 20 KB.
+Helpers are allowed for mechanical validation or bounded source checks with clear file ownership. The main orchestrator owns integration and final pedagogy. For helper output or logs over 200 lines or 20 KB, summarize and push bulky evidence behind a file path or PR link.
 
 ## Validation Commands
 

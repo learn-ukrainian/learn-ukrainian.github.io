@@ -75,9 +75,9 @@ git rev-parse --show-toplevel
 - Check source/wiki coverage: each module should align with `curriculum/l2-uk-en/plans/a2/<slug>.yaml` and `wiki/grammar/a2/<slug>.md` plus sources.
 - Run deterministic module audits without `--fix` for built modules in scope where feasible, and record any failures alongside subjective findings.
 
-## Helpers And Headroom
+## Helpers
 
-Read-only explorers are allowed for phase summaries, module-shape surveys, or consistency checks. The main auditor owns final issue severity. Use Headroom compression for helper output or long search results over 200 lines or 20 KB.
+Read-only explorers are allowed for phase summaries, module-shape surveys, or consistency checks. The main auditor owns final issue severity. For helper output or long search results over 200 lines or 20 KB, summarize and push bulky evidence behind a file path or PR link.
 
 ## Durable Report Path
 

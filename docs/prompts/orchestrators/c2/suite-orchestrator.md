@@ -77,9 +77,9 @@ git rev-parse --show-toplevel
 - Preserve the C2 shift from understanding Ukrainian to creating, transforming, teaching, translating, and polishing with Ukrainian.
 - Keep learner tasks production-focused: transformations, critiques, portfolios, oral defense, professional documents, translation, and capstone artifacts.
 
-## Helpers And Headroom
+## Helpers
 
-Use helpers for source verification, domain terminology checks, and validation only when they materially reduce risk. Compress long helper output with Headroom.
+Use helpers for source verification, domain terminology checks, and validation only when they materially reduce risk. Summarize long helper output; push bulky evidence behind a file path or PR link.
 
 ## Validation Commands
 

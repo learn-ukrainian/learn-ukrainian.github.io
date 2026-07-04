@@ -59,7 +59,7 @@ SUITE_REQUIRED_MARKERS = [
     "## Read First",
     "## Allowed Writes",
     "## Forbidden Writes",
-    "## Helpers And Headroom",
+    "## Helpers",
     "## Validation Commands",
     "## Expected Final Response",
 ]

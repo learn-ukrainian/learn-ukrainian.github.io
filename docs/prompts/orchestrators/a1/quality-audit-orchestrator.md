@@ -80,9 +80,9 @@ All commands must run from `WORKTREE_ROOT`.
 - Check plan/wiki/source coverage against the A1 plan and `wiki/pedagogy/a1/<slug>.md` plus sources files when present.
 - Run deterministic module audits without `--fix` for built modules in scope where feasible, and record any failures alongside subjective findings.
 
-## Helpers And Headroom
+## Helpers
 
-Read-only helper explorers are allowed for module-shape summaries or consistency checks. Do not delegate final judgments. Use Headroom compression for helper summaries, logs, or search output over 200 lines or 20 KB. Do not use Headroom memory as curriculum authority.
+Read-only helper explorers are allowed for module-shape summaries or consistency checks. Do not delegate final judgments. For helper summaries, logs, or search output over 200 lines or 20 KB, summarize and push bulky evidence behind a file path or PR link.
 
 ## Durable Report Path
 

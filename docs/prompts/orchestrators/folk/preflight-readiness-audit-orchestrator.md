@@ -73,9 +73,9 @@ git rev-parse --show-toplevel
 - Check `:::primary-reading` usage: no from-memory quotes, no unverified song fragments, no literary-authored verse boxed as folk.
 - Check decolonization, Russian-shadow, regional variation, ghost-source, romantic-overclaim, and learner-facing leakage risks.
 
-## Helpers And Headroom
+## Helpers
 
-Use one to three read-only explorers when useful for reading/copyright candidate survey, quote/source verification, or rendered/module-shape comparison. Compress helper output with Headroom when it exceeds roughly 200 lines or 20 KB. The main orchestrator writes the report and owns every conclusion.
+Use one to three read-only explorers when useful for reading/copyright candidate survey, quote/source verification, or rendered/module-shape comparison. Summarize helper output when it exceeds roughly 200 lines or 20 KB; push bulky evidence behind a file path or PR link. The main orchestrator writes the report and owns every conclusion.
 
 ## Validation Commands
 

@@ -36,7 +36,7 @@ Minimum stream toolset expected inside Codex UI:
 Until UI-level stream controls exist, encode stream state in heartbeat prompts,
 PR bodies, handoff summaries, and branch/worktree names. Keep worker briefs
 compact and source-heavy; avoid moving long logs or source dumps between
-threads without Headroom compression.
+threads — summarize them and push bulky evidence behind a file path or PR link.
 
 ## Fleet Role Routing
 

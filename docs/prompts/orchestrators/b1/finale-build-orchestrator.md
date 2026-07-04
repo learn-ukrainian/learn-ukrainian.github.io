@@ -74,9 +74,9 @@ git rev-parse --show-toplevel
 - Finale modules should synthesize B1 skills rather than introduce new grammar.
 - Checkpoint/exam activities should diagnose and practice Ukrainian language skills, not test trivia.
 
-## Helpers And Headroom
+## Helpers
 
-Helpers are allowed for prerequisite inventory, validation, or independent pre-review. The main orchestrator owns final build decisions. Use Headroom compression for helper output or logs over 200 lines or 20 KB.
+Helpers are allowed for prerequisite inventory, validation, or independent pre-review. The main orchestrator owns final build decisions. For helper output or logs over 200 lines or 20 KB, summarize and push bulky evidence behind a file path or PR link.
 
 ## Validation Commands
 

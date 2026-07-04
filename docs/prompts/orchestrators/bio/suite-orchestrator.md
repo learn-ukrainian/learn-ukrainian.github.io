@@ -107,7 +107,7 @@ visible-worker pipeline, but keep the orchestrator accountable for integration.
   review does not satisfy the independent-review gate.
 - **Token economy and speed:** deterministic tools first. Do not ask a model to
   verify paths, whitespace, YAML parseability, CI state, or simple inventory.
-  Compress large logs/source dumps with Headroom before cross-agent handoff.
+  Summarize large logs/source dumps before cross-agent handoff.
   Keep worker briefs compact: slug, stage, owned files, known source leads,
   validation commands, forbidden writes, and stop condition.
 
@@ -249,9 +249,9 @@ Every BIO production/remediation PR must include a compact quality score in the 
 
 Treat scores below 8/10 or any leakage fail as blockers unless the PR is explicitly audit-only.
 
-## Helpers And Headroom
+## Helpers
 
-Use read-only helpers for source-tier packets, image-rights checks, politically charged framing review, rendered-page reading, leakage scoring, and activity placement verification. Compress long findings with Headroom. The main orchestrator owns edits, PR creation, independent review routing, and merge decisions.
+Use read-only helpers for source-tier packets, image-rights checks, politically charged framing review, rendered-page reading, leakage scoring, and activity placement verification. Summarize long findings; push bulky evidence behind a file path or PR link. The main orchestrator owns edits, PR creation, independent review routing, and merge decisions.
 
 Independent BIO review must be read-only and must inspect source files and generated learner-facing MDX/page for factual grounding, Ukrainian-centered framing, narrative human tone, English/internal leakage, LLM fingerprint, and Lesson vs Workbook/Activities placement. Treat unresolved findings as blockers.
 
@@ -259,8 +259,7 @@ Use helper agents deliberately and record whether helpers were used. Helpers
 are for bounded work that can run in parallel without lowering quality:
 source-tier packets, image-rights checks, politically charged framing review,
 cross-track path discovery, rendered-page reading, leakage scoring, activity
-placement verification, and CI/build triage. Compress long findings with
-Headroom before passing them between agents.
+placement verification, and CI/build triage. Summarize long findings before passing them between agents.
 
 Do not use the full fleet as theater. For a single narrow release-blocker fix,
 one worker plus an independent non-Codex review may be the economical path. For
