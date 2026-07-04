@@ -1,0 +1,173 @@
+schema_version: curriculum_ua_qg_fixtures.v1
+fixtures:
+  - id: b1-27-restored-bad
+    level: b1
+    slug: aspect-in-imperatives
+    expected_verdict: FAIL
+    module:
+      module.md: |-
+        # Вид у наказовому способі
+
+        Тут застосунок має бути відкритий. Застереження каже: будь обережний.
+        Він радить не робити певної поведінки.
+        Подумай: дія має дати конкретний результат чи описати процес?
+        Крім того, доконаний вид дає результат із вікном. У кухні стоїть стіл.
+      activities.yaml: |-
+        []
+      vocabulary.yaml: |-
+        []
+      resources.yaml: |-
+        []
+    expected_findings:
+      - issue_id: AWKWARD_PASSIVE_RESULT_STATE
+        excerpt: застосунок має бути відкритий
+        dimension: ukrainian_style
+        severity: critical
+      - issue_id: UNNATURAL_ANTHROPOMORPHISM
+        excerpt: "Застереження каже: будь обережний"
+        dimension: ukrainian_style
+        severity: critical
+      - issue_id: UKRAINIAN_GRAMMAR_CALQUE
+        excerpt: радить не робити певної поведінки
+        dimension: ukrainian_style
+        severity: critical
+      - issue_id: UNNATURAL_META_REGISTER
+        excerpt: дія має дати конкретний результат чи описати процес?
+        dimension: ukrainian_style
+        severity: critical
+      - issue_id: UKRAINIAN_GRAMMAR_CALQUE
+        excerpt: доконаний вид дає результат із вікном
+        dimension: ukrainian_style
+        severity: critical
+      - issue_id: CALQUED_PREPOSITION
+        excerpt: У кухні
+        dimension: ukrainian_style
+        severity: critical
+
+  - id: b1-27-current-production
+    level: b1
+    slug: aspect-in-imperatives
+    expected_verdict: PASS
+    source_module_dir: curriculum/l2-uk-en/b1/aspect-in-imperatives
+
+  - id: a1-english-scaffold-allowed
+    level: a1
+    slug: scaffolded-dialogue
+    expected_verdict: PASS
+    module:
+      module.md: |-
+        # Short Dialogue
+
+        Read the dialogue.
+
+        **Я тут.** - I am here.
+      activities.yaml: |-
+        []
+      vocabulary.yaml: |-
+        []
+      resources.yaml: |-
+        []
+
+  - id: a2-english-support-warning
+    level: a2
+    slug: english-support-warning
+    expected_verdict: WARN
+    module:
+      module.md: |-
+        # Grammar Basics
+
+        This section explains the grammar before Ukrainian examples appear in the lesson body.
+
+        **Ми читаємо.**
+      activities.yaml: |-
+        []
+      vocabulary.yaml: |-
+        []
+      resources.yaml: |-
+        []
+    expected_findings:
+      - issue_id: ENGLISH_LEAKAGE
+        excerpt: This section explains the grammar before Ukrainian examples appear in the lesson body.
+        dimension: level_policy
+        severity: warning
+
+  - id: a1-english-led-rejected
+    level: a1
+    slug: missing-ukrainian-anchor
+    expected_verdict: FAIL
+    module:
+      module.md: |-
+        # Greetings
+
+        This lesson explains how greetings work before any Ukrainian appears. The learner reads the English explanation first and never receives a Ukrainian anchor.
+      activities.yaml: |-
+        []
+      vocabulary.yaml: |-
+        []
+      resources.yaml: |-
+        []
+    expected_findings:
+      - issue_id: ENGLISH_LEAKAGE
+        excerpt: This lesson explains how greetings work before any Ukrainian appears.
+        dimension: level_policy
+        severity: critical
+
+  - id: b1-english-led-rejected
+    level: b1
+    slug: intermediate-verbs
+    expected_verdict: FAIL
+    module:
+      module.md: |-
+        # Intermediate Verbs
+
+        Welcome to B1! In this module, we will explore advanced grammar. You must understand how this works.
+
+        **Читайте уважно.**
+      activities.yaml: |-
+        []
+      vocabulary.yaml: |-
+        []
+      resources.yaml: |-
+        []
+    expected_findings:
+      - issue_id: ENGLISH_LEAKAGE
+        excerpt: Welcome to B1!
+        dimension: level_policy
+        severity: critical
+
+  - id: b1-local-english-gloss-allowed
+    level: b1
+    slug: local-english-gloss
+    expected_verdict: PASS
+    module:
+      module.md: |-
+        # Локальна підказка
+
+        **Застосунок** - app. Далі відкрийте застосунок, увійдіть у профіль і перевірте налаштування безпеки перед роботою.
+      activities.yaml: |-
+        []
+      vocabulary.yaml: |-
+        []
+      resources.yaml: |-
+        []
+
+  - id: seminar-pathos-rejected
+    level: folk
+    slug: motivational-seminar
+    expected_verdict: FAIL
+    module:
+      module.md: |-
+        # Мотиваційний семінар
+
+        Розпочнімо неймовірну подорож, яка пробудить гордість і об'єднає всіх навколо правильної позиції.
+      activities.yaml: |-
+        []
+      vocabulary.yaml: |-
+        []
+      resources.yaml: |-
+        []
+    expected_findings:
+      - issue_id: SEMINAR_REGISTER_PATHOS
+        excerpt: неймовірну подорож
+        dimension: seminar_sensitivity
+        severity: critical
