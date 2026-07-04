@@ -232,8 +232,8 @@ tags:
 
 Після цього повернися до першого речення роботи: воно має відкривати тему, а не демонструвати всі правила одразу. Сильний вступ часто простіший за середину, бо він лише задає маршрут для подальшого складного синтаксису і знімає зайве навантаження з читача.
 
-## Summary
+## Підсумок
 
-This checkpoint reviews complex sentence control rather than introducing new grammar. You should be able to map predicative clauses, distinguish coordination, subordination and asyndetic links, choose punctuation that matches the link, manage cohesion with connectors and correlative pairs, and adjust register with inversion, emphatic particles, ellipsis and parcelling.
+Цей контрольний модуль повторює керування складним реченням, а не вводить нову граматику. Ти маєш уміти знаходити граматичні основи, розрізняти сурядний, підрядний і безсполучниковий зв'язок, добирати розділові знаки відповідно до зв'язку, тримати зв'язність тексту за допомогою конекторів і корелятивних пар, а також змінювати регістр через інверсію, підсилювальні частки, еліпсис і парцеляцію.
 
-Self-check: Write two sentences about the same topic. In the first, use a compound or complex structure with a clear connector. In the second, transform one part into direct or indirect speech. Then explain every comma, dash, colon or semicolon you used.
+Самоперевірка: напиши два речення про ту саму тему. У першому використай складносурядну або складнопідрядну конструкцію з чітким конектором. У другому перетвори одну частину на пряму або непряму мову. Потім поясни кожну кому, тире, двокрапку або крапку з комою, які ти використав.
