@@ -44,7 +44,15 @@ from ._messaging import (
     send_message,
 )
 from ._model import check_model
-from ._opencode import OPENCODE_DEFAULT_MODEL, ask_opencode
+from ._opencode import (
+    GLM_MODEL,
+    OPENCODE_DEFAULT_MODEL,
+    POOL_DEFAULT_VARIANT,
+    POOL_MODEL,
+    ask_glm,
+    ask_opencode,
+    ask_pool,
+)
 
 _CALLER_IDENTITY_ENV_HINTS = (
     "CLAUDE_AGENT_NAME",
@@ -640,6 +648,37 @@ def _build_parser() -> argparse.ArgumentParser:
     ask_opencode_parser.add_argument("--to-model", dest="to_model", help="Target model ID")
     ask_opencode_parser.add_argument("--no-timeout", dest="no_timeout", action="store_true")
 
+    # ask-pool (poolside.ai laguna-m.1 — cross-family CODE + web-verify specialist)
+    ask_pool_parser = subparsers.add_parser(
+        "ask-pool",
+        help="Send message AND invoke poolside.ai (laguna-m.1) via the opencode router (use '-' for stdin)",
+    )
+    ask_pool_parser.add_argument("content", help="Message content (use '-' to read from stdin)")
+    ask_pool_parser.add_argument("--task-id", required=True, help="Task ID")
+    ask_pool_parser.add_argument("--type", default="query", help="Message type")
+    ask_pool_parser.add_argument("--data", help="Path to data file to attach")
+    ask_pool_parser.add_argument("--variant", default=POOL_DEFAULT_VARIANT, choices=["minimal", "high", "max"],
+                                 help=f"Reasoning effort (default {POOL_DEFAULT_VARIANT}; use high/max for harder tasks)")
+    ask_pool_parser.add_argument("--model", default=None, help=f"Override model (default {POOL_MODEL})")
+    ask_pool_parser.add_argument("--from", dest="from_llm", help="Sender agent family")
+    ask_pool_parser.add_argument("--from-model", dest="from_model", help="Exact sender model")
+    ask_pool_parser.add_argument("--no-timeout", dest="no_timeout", action="store_true")
+
+    # ask-glm (Zhipu glm-5.2 — cross-family CODE + review; ⚠️ China-hosted, LOCAL-ONLY)
+    ask_glm_parser = subparsers.add_parser(
+        "ask-glm",
+        help="Send message AND invoke Zhipu GLM (glm-5.2) via opencode. LOCAL-ONLY: data egresses to China, never in CI (use '-' for stdin)",
+    )
+    ask_glm_parser.add_argument("content", help="Message content (use '-' to read from stdin)")
+    ask_glm_parser.add_argument("--task-id", required=True, help="Task ID")
+    ask_glm_parser.add_argument("--type", default="query", help="Message type")
+    ask_glm_parser.add_argument("--data", help="Path to data file to attach")
+    ask_glm_parser.add_argument("--model", default=None,
+                                help=f"Override GLM model (default {GLM_MODEL}; e.g. openrouter/z-ai/glm-5.2)")
+    ask_glm_parser.add_argument("--from", dest="from_llm", help="Sender agent family")
+    ask_glm_parser.add_argument("--from-model", dest="from_model", help="Exact sender model")
+    ask_glm_parser.add_argument("--no-timeout", dest="no_timeout", action="store_true")
+
     # ask-cursor
     ask_cursor_parser = subparsers.add_parser(
         "ask-cursor",
@@ -988,6 +1027,10 @@ def _dispatch_command(args):
         _handle_ask_hermes(args)
     elif args.command == "ask-opencode":
         _handle_ask_opencode(args)
+    elif args.command == "ask-pool":
+        _handle_ask_pool(args)
+    elif args.command == "ask-glm":
+        _handle_ask_glm(args)
     elif args.command == "ask-cursor":
         _handle_ask_cursor(args)
     elif args.command == "ask-grok-build":
@@ -1156,6 +1199,39 @@ def _handle_ask_opencode(args):
         from_llm=from_llm,
         from_model=args.from_model,
         to_model=args.to_model,
+        no_timeout=args.no_timeout,
+    )
+
+
+def _handle_ask_pool(args):
+    """Handle ask-pool subcommand."""
+    content = sys.stdin.read() if args.content == "-" else args.content
+    from_llm = _resolve_from_llm(args)
+    ask_pool(
+        content,
+        args.task_id,
+        msg_type=args.type,
+        data=args.data,
+        variant=args.variant,
+        model=args.model,
+        from_llm=from_llm,
+        from_model=args.from_model,
+        no_timeout=args.no_timeout,
+    )
+
+
+def _handle_ask_glm(args):
+    """Handle ask-glm subcommand."""
+    content = sys.stdin.read() if args.content == "-" else args.content
+    from_llm = _resolve_from_llm(args)
+    ask_glm(
+        content,
+        args.task_id,
+        msg_type=args.type,
+        data=args.data,
+        model=args.model,
+        from_llm=from_llm,
+        from_model=args.from_model,
         no_timeout=args.no_timeout,
     )
 
