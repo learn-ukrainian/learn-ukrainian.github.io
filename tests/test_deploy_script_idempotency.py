@@ -189,6 +189,33 @@ def test_agent_transient_briefs_are_preserved(tmp_path: Path) -> None:
     assert dispatch.exists(), "dispatch-3098-slice3.md was wiped by rsync --delete"
 
 
+def test_claude_epic_dirs_are_preserved(tmp_path: Path) -> None:
+    """Curriculum-track *-epic/ driver-handoff dirs in .claude/ must survive deploy.
+
+    Regression: the ORPHAN_PATHS_CLAUDE allowlist enumerated only ``folk-epic``
+    and ``bio-epic``, so when the atlas track created ``.claude/atlas-epic/`` the
+    preflight guard flagged it as an undeclared orphan and aborted EVERY deploy —
+    blocking all agent-def / rule / skill propagation until manually unbroken.
+    The allowlist is now a ``*-epic`` GLOB, so any current OR FUTURE epic dir is
+    preserved. This test uses a brand-new epic name (``hist-epic``) the allowlist
+    was never explicitly told about, to prove the glob generalizes.
+    """
+    repo = _init_checkout(tmp_path)
+    for epic in ("atlas-epic", "hist-epic"):
+        handoff = repo / ".claude" / epic / "CLAUDE-DRIVER-HANDOFF.md"
+        handoff.parent.mkdir(parents=True, exist_ok=True)
+        handoff.write_text(f"{epic} driver handoff — runtime state\n", encoding="utf-8")
+
+    deploy_result = _run(repo, DEPLOY_SCRIPT)
+    assert deploy_result.returncode == 0, (
+        "deploy aborted with a *-epic driver-handoff dir present:\n"
+        f"stdout: {deploy_result.stdout}\nstderr: {deploy_result.stderr}"
+    )
+    for epic in ("atlas-epic", "hist-epic"):
+        handoff = repo / ".claude" / epic / "CLAUDE-DRIVER-HANDOFF.md"
+        assert handoff.exists(), f".claude/{epic}/ was wiped by rsync --delete"
+
+
 def test_drift_is_caught(tmp_path: Path) -> None:
     """Post-deploy edits to a target tree must be reported as drift."""
     repo = _init_checkout(tmp_path)

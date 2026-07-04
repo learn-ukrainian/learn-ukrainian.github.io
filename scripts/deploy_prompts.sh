@@ -40,11 +40,14 @@ fi
 # scheduled_tasks.lock is a runtime state file managed by Claude
 # Code's task scheduler — it must never be deleted by the deploy
 # script or in-flight scheduled tasks get orphaned.
-# folk-epic/ bio-epic/ — curriculum-track driver handoffs (CLAUDE-DRIVER-HANDOFF.md)
-#          live here as gitignored LOCAL state, NOT a source artifact (user policy
-#          2026-06-23: driver handoffs out of git/PRs, in .claude/). Runtime-only,
-#          machine-specific; declare so rsync --delete preserves them on every deploy.
-ORPHAN_PATHS_CLAUDE="scheduled_tasks.lock worktrees folk-epic bio-epic"
+# *-epic/ — curriculum-track driver handoffs (CLAUDE-DRIVER-HANDOFF.md), e.g.
+#          folk-epic/ bio-epic/ atlas-epic/. Live here as gitignored LOCAL state,
+#          NOT a source artifact (user policy 2026-06-23: driver handoffs out of
+#          git/PRs, in .claude/). Runtime-only, machine-specific. Declared as a
+#          GLOB so rsync --delete preserves them AND future epics don't re-break
+#          deploy (the enumerated form silently orphaned atlas-epic — a new epic
+#          the allowlist hadn't been told about — aborting every deploy).
+ORPHAN_PATHS_CLAUDE="scheduled_tasks.lock worktrees *-epic"
 # wake/  — scheduled-task state written by the Claude Code wake scheduler.
 # cache/ — Monitor API client disk cache (see scripts/ai_agent_bridge/_monitor_cache.py),
 #          stores rules.body/session.body + ETag metadata so cold-start is ~780 B instead of 75 KB.
