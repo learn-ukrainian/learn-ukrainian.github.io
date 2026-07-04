@@ -2,7 +2,7 @@
   role: article
   source_ref: "docs/resources/external_resources.yaml: a2-synthetic-future"
   url: "https://opentext.ku.edu/dobraforma/chapter/27-4/"
-  notes: "Catalogued learner-facing practice for aspect choices in the future tense."
+  notes: "Catalogued practice for aspect choices in the future tense."
 - title: "ULP: Future Tense in Ukrainian"
   role: article
   source_ref: "docs/resources/external_resources.yaml: a2-synthetic-future"
@@ -17,4 +17,4 @@
   role: article
   source_ref: "docs/resources/talkukrainian/talkukrainian_db.json: future-tense"
   url: "https://talkukrainian.com/future-tense/"
-  notes: "Short learner-facing summary of future-tense forms."
+  notes: "Short summary of future-tense forms."

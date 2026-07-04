@@ -7,7 +7,7 @@
   role: article
   source_ref: "docs/resources/talkukrainian/talkukrainian_db.json: tu-030"
   url: "https://talkukrainian.com/verb-aspect/"
-  notes: "Compact learner-facing reminder before scenario role-play."
+  notes: "Compact reminder before scenario role-play."
 - title: "ULP: Nouns After Numbers"
   role: article
   source_ref: "docs/resources/ulp-articles-index.yaml: /nouns-after-numbers/"
