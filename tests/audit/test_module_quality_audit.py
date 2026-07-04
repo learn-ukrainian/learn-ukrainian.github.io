@@ -11,7 +11,7 @@ from scripts.audit.llm_qg_canaries import (
     extract_issue_ids,
     list_canaries,
 )
-from scripts.audit.llm_qg_store import record_llm_qg
+from scripts.audit.llm_qg_store import content_sha_for_module, record_llm_qg
 from scripts.audit.module_quality_audit import audit_modules, main, planned_modules
 
 
@@ -126,6 +126,57 @@ def test_audit_modules_reports_surface_and_llm_qg_coverage(tmp_path: Path) -> No
     assert rows[("b1", "bad-style")]["surface_verdict"] == "FAIL"
     assert rows[("b1", "bad-style")]["second_review_reason"] == "surface_fail"
     assert rows[("b1", "not-built")]["llm_qg_status"] == "not_built"
+
+
+def test_audit_modules_counts_compact_qg_evidence_as_current_file_evidence(tmp_path: Path) -> None:
+    (tmp_path / "plans").mkdir(parents=True)
+    (tmp_path / "curriculum.yaml").write_text(
+        yaml.safe_dump({"levels": {"b1": {"modules": ["27-aspect-in-imperatives"]}}}),
+        encoding="utf-8",
+    )
+    module_dir = _write_module(
+        tmp_path,
+        "b1",
+        "aspect-in-imperatives",
+        "## Урок\n\n**Відкрийте застосунок** і перейдіть далі.\n",
+    )
+    (module_dir / "qg_evidence.json").write_text(
+        json.dumps(
+            {
+                "schema_version": "llm_qg_evidence.v1",
+                "level": "b1",
+                "slug": "aspect-in-imperatives",
+                "content_sha": content_sha_for_module(module_dir),
+                "gate_version": "v7.llm_qg.1",
+                "prompt_hash": "prompt-sha",
+                "provenance": {"run_id": "llm-qg-test", "source": "test"},
+                "reviewer": {"family": "agy-tools", "model": "gemini-test"},
+                "terminal_verdict": "PASS",
+                "verdict": "PASS",
+                "dimensions": {"naturalness": {"score": 9.5, "verdict": "PASS"}},
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    report = audit_modules(
+        curriculum_root=tmp_path,
+        level_ids=["b1"],
+        db_path=tmp_path / "missing.db",
+        include_findings=False,
+    )
+
+    row = report["modules"][0]
+    assert report["summary"]["current_file_only_llm_qg_modules"] == 1
+    assert report["summary"]["missing_llm_qg_modules"] == 0
+    assert report["summary"]["modules_needing_llm_review"] == 0
+    assert report["summary"]["modules_needing_db_persistence"] == 1
+    assert row["llm_qg_status"] == "current_file_only"
+    assert row["llm_qg_source"] == "qg_evidence.json"
+    assert row["llm_qg_run_id"] == "llm-qg-test"
+    assert row["llm_qg_prompt_hash"] == "prompt-sha"
+    assert row["llm_qg_reviewer_family"] == "agy-tools"
+    assert row["second_review_recommended"] is False
 
 
 def test_cli_json_output(tmp_path: Path, capsys) -> None:

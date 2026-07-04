@@ -11,6 +11,7 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+from collections.abc import Mapping
 from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any
@@ -27,7 +28,10 @@ if str(AUDIT_DIR) not in sys.path:
 from content_surface_gates import scan_module_surface
 from llm_qg_canaries import evaluate_canaries
 from llm_qg_store import (
+    EVIDENCE_SCHEMA_VERSION,
+    SUPPORTED_EVIDENCE_GATE_VERSIONS,
     current_llm_qg_for_module,
+    evidence_record_is_current_for_module,
     latest_llm_qg,
     llm_qg_file_is_current_for_module,
 )
@@ -208,15 +212,63 @@ def llm_qg_status_for_module(
         return _record_status("current_db", current)
 
     latest = latest_llm_qg(level, slug, path=db_path)
+    compact = _compact_evidence_file_status(module_dir)
+    if compact is not None and compact["status"] == "current_file_only":
+        return compact
+
     file_path = module_dir / "llm_qg.json"
     file_exists = file_path.exists()
     if file_exists and llm_qg_file_is_current_for_module(module_dir, file_path):
         return _empty_status("current_file_only", source="llm_qg.json")
     if latest is not None:
         return _record_status("stale_db", latest)
+    if compact is not None:
+        return compact
     if file_exists:
         return _empty_status("stale_file", source="llm_qg.json")
     return _empty_status("missing")
+
+
+def _compact_evidence_file_status(module_dir: Path) -> dict[str, Any] | None:
+    """Return status for git-friendly compact QG evidence, if present."""
+    path = module_dir / "qg_evidence.json"
+    if not path.exists():
+        return None
+    try:
+        evidence = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError, ValueError):
+        return _empty_status("stale_file", source="qg_evidence.json")
+    if not isinstance(evidence, dict):
+        return _empty_status("stale_file", source="qg_evidence.json")
+
+    current = (
+        evidence.get("schema_version") == EVIDENCE_SCHEMA_VERSION
+        and evidence.get("gate_version") in SUPPORTED_EVIDENCE_GATE_VERSIONS
+        and evidence_record_is_current_for_module(evidence, module_dir)
+    )
+    return {
+        "status": "current_file_only" if current else "stale_file",
+        "source": "qg_evidence.json",
+        "run_id": _nested_str(evidence, "provenance", "run_id"),
+        "gate_version": _optional_str(evidence.get("gate_version")),
+        "prompt_hash": _optional_str(evidence.get("prompt_hash")),
+        "content_sha": _optional_str(evidence.get("content_sha")),
+        "reviewer_family": _nested_str(evidence, "reviewer", "family"),
+        "reviewer_model": _nested_str(evidence, "reviewer", "model"),
+    }
+
+
+def _optional_str(value: Any) -> str | None:
+    return value if isinstance(value, str) else None
+
+
+def _nested_str(data: Mapping[str, Any], *keys: str) -> str | None:
+    value: Any = data
+    for key in keys:
+        if not isinstance(value, Mapping):
+            return None
+        value = value.get(key)
+    return value if isinstance(value, str) else None
 
 
 def _record_status(status: str, record: Any) -> dict[str, Any]:

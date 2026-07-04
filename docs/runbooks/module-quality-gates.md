@@ -53,12 +53,13 @@ paths unless a task explicitly asks for a report:
 ```
 
 The report counts planned modules, built modules, surface-policy failures,
-current DB-backed LLM-QG records, file-only fallback records, stale records, and
-missing records. It also reports the same coverage by `a1`, `a2`, `b1_plus`,
-and `seminar` reviewer profiles. Each built-module row includes reviewer
-family/model, gate version, prompt hash, content hash, and whether a second
-cross-family review is recommended because the module is seminar, surface-gate
-flagged, or missing/stale LLM-QG.
+current DB-backed LLM-QG records, current compact `qg_evidence.json` file
+records, file-only fallback records, stale records, and missing records. It also
+reports the same coverage by `a1`, `a2`, `b1_plus`, and `seminar` reviewer
+profiles. Each built-module row includes reviewer family/model, gate version,
+prompt hash, content hash, and whether a second cross-family review is
+recommended because the module is seminar, surface-gate flagged, or
+missing/stale LLM-QG.
 
 ## LLM Gates
 
@@ -162,6 +163,23 @@ The canary set includes required-catch cases (`застосунок має бу�
 `Застереження каже: ...`, AI leakage, path/internal leakage, B1/seminar English
 leakage, seminar pathos) and false-positive protection for allowed A1/A2
 English scaffolding.
+
+Run the PR1 curriculum fixture harness before changing deterministic checks or
+reviewer prompts:
+
+```bash
+.venv/bin/python scripts/audit/curriculum_qg_harness.py \
+  --fixtures tests/fixtures/curriculum_qg/fixtures.yaml
+
+.venv/bin/python scripts/audit/curriculum_qg_harness.py \
+  --module-dir curriculum/l2-uk-en/b1/aspect-in-imperatives \
+  --level b1 --slug aspect-in-imperatives
+```
+
+The fixture harness emits compact `curriculum_ua_qg_evidence.v1` records with
+module id, level policy, checker version/config hash, content hash,
+per-dimension scores, exact bounded findings/spans, and deterministic/LLM-source
+metadata. It is a calibration harness, not a bulk LLM runner.
 
 ## Batch Rollout
 
