@@ -1,0 +1,69 @@
+{
+  "assembled_mdx_sha256": "9a83bda02c71051b54268109aa5c6d563aa0742886c56c78ef38836539c9ff2f",
+  "content_hash": {
+    "algorithm": "sha256",
+    "basis": "lesson_sources_v2",
+    "digest": "afee534373528ebf4fd71f95b714b47f68a7f15a9f99acef08ae7b67b75243ab",
+    "files": [
+      {
+        "path": "curriculum/l2-uk-en/plans/folk/sotsialno-pobutovi-kazky.yaml",
+        "sha256": "231479478c0f40ce83f441a831428c4bae6a37b30e73c1a6a544441d6ad67b77"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/sotsialno-pobutovi-kazky/module.md",
+        "sha256": "c08b3addf0f343f8168e077f739a4f7fa60892c800fd5e54455532cf54e1bf88"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/sotsialno-pobutovi-kazky/activities.yaml",
+        "sha256": "b1830257599b75927b2da3dad73a418d2f663393df4208a438d69fc699da76a8"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/sotsialno-pobutovi-kazky/vocabulary.yaml",
+        "sha256": "cad934ffd7bd9bbf551a0c3ce631eff14439a6a81769ad19ad72eb144c92cdcc"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/sotsialno-pobutovi-kazky/resources.yaml",
+        "sha256": "4c9266962c9433e7e32d56cba73b92ed4a2d7540b904ab29ee8ce810174b8dfe"
+      }
+    ]
+  },
+  "evidence": {
+    "gates": "python_qg, MDX render, activity validation, and MDX generation drift green before recording.",
+    "independent_review": "Claude-first route failed because native Claude binary was not installed; AGY/Gemini review found process-register blockers; fixes applied; AGY/Gemini follow-up returned PASS.",
+    "register": "Source scan for lesson/module/course/process labels in M23 source returned no hits after fixes.",
+    "source_hygiene": "Short Wikisource fragments only; no full-text reconstruction; Storozhenko/Kvitka framed as authorial literature, not folk records."
+  },
+  "floors": {
+    "beauty": 8.5,
+    "decolonization": 9.0,
+    "engagement": 8.5,
+    "naturalness": 8.5,
+    "pedagogical": 8.5,
+    "tone": 8.5
+  },
+  "profile": "folk_promote_v1",
+  "review_artifact": null,
+  "reviewer": {
+    "agent": "agy",
+    "family": "google",
+    "model": "gemini-3.5-flash-high"
+  },
+  "schema_version": 1,
+  "scored_at": "2026-07-04T10:12:35Z",
+  "scores": {
+    "beauty": 8.7,
+    "decolonization": 9.2,
+    "engagement": 8.7,
+    "naturalness": 8.7,
+    "pedagogical": 8.8,
+    "tone": 8.7
+  },
+  "slug": "sotsialno-pobutovi-kazky",
+  "track": "folk",
+  "verdict": "PASS",
+  "writer": {
+    "agent": "codex",
+    "family": "openai",
+    "model": "gpt-5"
+  }
+}
