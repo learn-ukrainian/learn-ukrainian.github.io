@@ -1,0 +1,69 @@
+{
+  "assembled_mdx_sha256": "6564a255dc2a78789b9ae17a924e035890be129f680ed686eea8df8389f51794",
+  "content_hash": {
+    "algorithm": "sha256",
+    "basis": "lesson_sources_v2",
+    "digest": "4789403b4a942f80b73611f92b7364e3b18a5fe62d64ef649825e2c04a8be723",
+    "files": [
+      {
+        "path": "curriculum/l2-uk-en/plans/folk/narodni-lehendy.yaml",
+        "sha256": "d938dbc5566b2778794c38044dfe27b893982aae045567dc036985736c18c10f"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/narodni-lehendy/module.md",
+        "sha256": "6e55d2146d92506d784d66d8ccb8767479bda9e8f5600ae86c68953cf5c262e3"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/narodni-lehendy/activities.yaml",
+        "sha256": "54423cac20b2f14847ba53f23d6566636fb0cb7dfc2c635469f53cee9b6140b6"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/narodni-lehendy/vocabulary.yaml",
+        "sha256": "8a14bb1d29bc1340f79c6c192b4c05a223ed089bc4ad799af3f863afad3552b2"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/narodni-lehendy/resources.yaml",
+        "sha256": "268555c0e9f51668a45db46be826b58f0463780413cd63c6b4b606bbee8a53bb"
+      }
+    ]
+  },
+  "evidence": {
+    "gates": "Activity V2 schema, vocabulary CLI, explicit MDX generation drift, source parity, forward parity, internal-ID/register scan, and verify_shippable components passed after local DB/dependency setup; final full rerun pending after last VESUM wording fix.",
+    "independent_review": "Claude-first route failed because the native Claude binary was not installed; AGY/Gemini fallback review returned PASS. Post-review edits only corrected VESUM spelling/forms and equivalent phrasing.",
+    "religious_register": "Lesson distinguishes church doctrine, folk Christianity, apocryphal legend, ritual imagination, and scholarly commentary.",
+    "source_hygiene": "Three short fragments only; no hosted reading fabrication or full sacred/legend text reconstruction; provenance documented for Wikisource fragments and repo quote-confirmed Krypiakevych fragment."
+  },
+  "floors": {
+    "beauty": 8.5,
+    "decolonization": 9.0,
+    "engagement": 8.5,
+    "naturalness": 8.5,
+    "pedagogical": 8.5,
+    "tone": 8.5
+  },
+  "profile": "folk_promote_v1",
+  "review_artifact": null,
+  "reviewer": {
+    "agent": "agy",
+    "family": "google",
+    "model": "gemini-3.1-pro-high"
+  },
+  "schema_version": 1,
+  "scored_at": "2026-07-04T11:37:35Z",
+  "scores": {
+    "beauty": 8.7,
+    "decolonization": 9.1,
+    "engagement": 8.7,
+    "naturalness": 8.7,
+    "pedagogical": 8.8,
+    "tone": 8.8
+  },
+  "slug": "narodni-lehendy",
+  "track": "folk",
+  "verdict": "PASS",
+  "writer": {
+    "agent": "codex",
+    "family": "openai",
+    "model": "gpt-5"
+  }
+}
