@@ -11,7 +11,7 @@ you are from, name a simple role or profession, and add one family line.
 By the end, you can:
 
 - read short Ukrainian words aloud without using Russian as a bridge;
-- choose the safe greeting and farewell chunks: **Добрий день**, **Привіт**,
+- choose the safe greeting and farewell phrases: **Добрий день**, **Привіт**,
   **До побачення**, and **Бувай**;
 - introduce yourself with **Мене звати...**, not a word-for-word English
   sentence;
@@ -47,7 +47,7 @@ You now have six small toolkits.
 | **Моя́ сім'я́** | name close family members and use **У ме́не є...** |
 
 A checkpoint is not a memory trick. It is a task: can you meet one new person
-and keep the exchange moving? Use short sentences. Use the chunks exactly. If
+and keep the exchange moving? Use short sentences. Use the phrases exactly. If
 you hesitate, return to the sentence frame instead of translating from English.
 
 Keep these blocks as whole blocks:
@@ -69,9 +69,9 @@ setting, so the main dialogue stays in **ти**. Do not mix **ти** and **Ви*
 the same first-contact exchange unless the situation changes.
 
 :::tip
-When a line feels hard, reduce it to one chunk: **Мене звати...**, **Я з...**,
+When a line feels hard, reduce it to one phrase: **Мене звати...**, **Я з...**,
 **Я студент / студентка**, or **У мене є...**. The checkpoint rewards reliable
-chunks, not long translated sentences.
+phrases, not long translated sentences.
 :::
 
 <!-- INJECT_ACTIVITY: act-2 -->
@@ -121,7 +121,7 @@ letters. That habit matters more than speed.
 
 :::tip
 Read the text one line at a time. A checkpoint pass is steady pronunciation and
-safe chunks, not a perfect performance at full speed.
+safe phrases, not a perfect performance at full speed.
 :::
 
 <!-- INJECT_ACTIVITY: act-3 -->
@@ -136,9 +136,9 @@ real first meeting.
 | **Це + noun** | **Це Богдан. Це моя́ сестра́.** | Do not overbuild the sentence. |
 | Identity without **є** | **Я студе́нт. Вона́ лі́карка.** | Do not say **Я є студент** in this A1 sentence. |
 | Name | **Мене́ зва́ти Соломі́я.** | Do not build **Моє́ ім'я́ є...** from English. |
-| Origin | **Я з Кана́ди. Я зі Льво́ва.** | Use **з / зі** as the learned chunk. |
+| Origin | **Я з Кана́ди. Я зі Льво́ва.** | Use **з / зі** as the learned phrase. |
 | Age | **Мені́ 20 ро́ків.** | Do not use the English "have years" shape. |
-| Possession | **У ме́не є брат.** | Learn the whole chunk, not a verb for "have." |
+| Possession | **У ме́не є брат.** | Learn the whole phrase, not a verb for "have." |
 
 For family and identity, the owned word chooses the possessive form:
 
@@ -250,7 +250,7 @@ grammar should stay Ukrainian. In a course chat, still say **Мене звати
 ## Слу́хай, зошит, підсумок
 
 For lawful listening, use Ukrainian Lessons Podcast Episode 10 as listen-only
-review support. Listen for short chunks you already know, repeat them, and
+review support. Listen for short phrases you already know, repeat them, and
 return to this page. Do not copy or transcribe paid material.
 
 For handwriting recognition, ask a teacher, tutor, or classmate to write an

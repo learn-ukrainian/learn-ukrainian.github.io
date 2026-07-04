@@ -26,7 +26,7 @@ By the end, you can:
 - recognize the practical calling form, the **кличний відмінок**;
 - call common names and family words: **Олено**, **Тарасе**, **мамо**,
   **бабусю**;
-- use friend and polite address chunks: **друже**, **пане**, **пані**;
+- use friend and polite address phrases: **друже**, **пане**, **пані**;
 - choose the reliable A1 endings **-о**, **-е**, and **-ю**;
 - avoid copied or shortened forms that do not fit standard Ukrainian address.
 
@@ -101,7 +101,7 @@ Support after the Ukrainian lines:
 | **Олена: Бабусю, ми йдемо!** | Olena: Grandma, we are leaving! |
 | **Бабуся: Добре, діти. Будьте обережні!** | Grandma: All right, children. Be careful! |
 
-Family words are especially useful as whole chunks:
+Family words are especially useful as whole phrases:
 
 - **мамо** - Mom!
 - **тату** - Dad!
@@ -111,7 +111,7 @@ Family words are especially useful as whole chunks:
 - **дідусю** - Grandpa!
 
 Do not shorten **мамо** to a clipped form. Use the full Ukrainian address
-chunk: **Мамо, де телефон?**
+phrase: **Мамо, де телефон?**
 
 <!-- INJECT_ACTIVITY: act-2 -->
 
@@ -143,7 +143,7 @@ At A1, use a small set of trusted address patterns.
 | feminine **-ся** | **бабуся** | **бабусю** |
 | masculine hard consonant | **Тарас**, **Іван**, **брат**, **пан** | **Тарасе**, **Іване**, **брате**, **пане** |
 | masculine **-й** or soft sound | **Андрій**, **дідусь**, **вчитель** | **Андрію**, **дідусю**, **вчителю** |
-| friend chunk | **друг** | **друже** |
+| friend phrase | **друг** | **друже** |
 
 You do not need to explain every Ukrainian name. You need to notice the common
 shape and use the common line. If you are speaking to the person, choose the
@@ -210,7 +210,7 @@ Use them in short lines:
 - **Дідусю, ми вдома.**
 - **Вчителю, можна питання?**
 
-Some calling forms are best learned as chunks. **Друг -> друже** has a sound
+Some calling forms are best learned as phrases. **Друг -> друже** has a sound
 change, but at A1 you do not need a sound-change rule. Just keep **друже** as
 the friend-address word: **Привіт, друже!**
 
@@ -273,10 +273,10 @@ Keep this A1 lesson active, not encyclopedic:
   hard-consonant shapes here;
 - use **Андрію**, **Сергію**, **дідусю**, **вчителю** for the soft or **-й**
   shapes here;
-- keep **друг -> друже** as a memorized friend-address chunk.
+- keep **друг -> друже** as a memorized friend-address phrase.
 
 For Ukrainian cultural and decolonized language, use standard Ukrainian names
-and address chunks. Say **Маріє** for **Марія** in a neutral address, and use
+and address phrases. Say **Маріє** for **Марія** in a neutral address, and use
 **Марійко** only when the relationship is close and the diminutive fits. Say
 **Світлано** for **Світлана**. Say **тітко Світлано** or **дядьку Петре** when
 the family role is part of the address. Avoid copied non-Ukrainian name shapes
@@ -316,7 +316,7 @@ Self-check:
   **Олена тут.**
 - Are you speaking **to** the person? Use the calling form:
   **Олено, привіт!**
-- Is the address a chunk you already know? Use it whole:
+- Is the address a phrase you already know? Use it whole:
   **мамо**, **тату**, **друже**, **пане**, **пані**.
 
 Keep the clean Ukrainian etiquette set in the same place as your address

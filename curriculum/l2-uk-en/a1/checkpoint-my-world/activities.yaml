@@ -148,7 +148,7 @@ inline:
           - Двісті
           - Синій
           - Моє
-        explanation: Двісті гривень is the price chunk from the dialogue.
+        explanation: Двісті гривень is the price phrase from the dialogue.
       - sentence: Один зошит коштує ___ гривень.
         answer: двадцять
         options:
@@ -342,7 +342,7 @@ workbook:
           - гривень
           - гривня
           - книги
-        explanation: Двадцять гривень is a price chunk.
+        explanation: Двадцять гривень is a price phrase.
   - type: group-sort
     title: Pointing words
     instruction: Sort the pointing words by number and distance.
@@ -416,4 +416,4 @@ workbook:
             correct: false
           - text: Двадцять книги.
             correct: false
-        explanation: Use the learned price chunk гривень.
+        explanation: Use the learned price phrase гривень.

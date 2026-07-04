@@ -2,7 +2,7 @@
 
 This lesson gives you the Ukrainian you need as a passenger. You will name
 common transport, ask about a stop, buy a ticket, and connect transport with
-the **куди?** direction chunks from the last lesson.
+the **куди?** direction phrases from the last lesson.
 
 By the end, you can:
 
@@ -12,7 +12,7 @@ By the end, you can:
   **на метро**, **на таксі**;
 - ask **Як дістатися до...?**, **Де зупинка?**, and **Скільки коштує квиток?**;
 - use transport with direction: **їду на вокзал**, **їду до Львова**;
-- keep the A1 passenger chunks **квиток**, **зупинка**, **прямо**, **направо**,
+- keep the A1 passenger phrases **квиток**, **зупинка**, **прямо**, **направо**,
   and **наліво** ready for short real exchanges.
 
 ## Діалоги
@@ -69,8 +69,8 @@ Support after the Ukrainian lines:
 | **Касир: О дев'ятій ранку. Колія третя.** | Cashier: At nine in the morning. Track three. |
 
 :::tip
-For A1 travel, memorize whole chunks: **один квиток до...**, **де зупинка?**,
-**мені виходити тут?** Whole chunks are faster than building every case form
+For A1 travel, memorize whole phrases: **один квиток до...**, **де зупинка?**,
+**мені виходити тут?** Whole phrases are faster than building every case form
 from zero.
 :::
 
@@ -95,9 +95,9 @@ add a separate word for "by." Use the transport form itself:
 | тролейбус | **їхати тролейбусом** |
 | літак | **летіти літаком** |
 
-The two early fixed chunks are **на метро** and **на таксі**. These words do not
+The two early fixed phrases are **на метро** and **на таксі**. These words do not
 change: **Я їду на метро. Ми їдемо на таксі.** You can also say **на машині**
-for travel by car. Keep these as whole chunks.
+for travel by car. Keep these as whole phrases.
 You may see **на поїзді** or **на автобусі** in longer real-life texts, but
 this A1 module keeps one reliable standard for the means of travel:
 **потягом**, **автобусом**, **трамваєм**. If your sentence means
@@ -110,7 +110,7 @@ This separation keeps **чим їхати?** different from **де сидіти?
 ## Корисні фрази
 
 **Місцевий відмінок перебування.** When you are inside a vehicle, answer
-**де?** with a location chunk: **Я в автобусі. Вона у трамваї. Ми в потязі.**
+**де?** with a location phrase: **Я в автобусі. Вона у трамваї. Ми в потязі.**
 For the exceptions, keep the unchanged forms: **у метро**, **у таксі**. This
 contrast matters: **їхати автобусом** means the means of travel, but **бути в
 автобусі** means physical location.
@@ -149,13 +149,13 @@ with **Добрий день**, not "Здрастуйте".
 
 ## Підсумок
 
-Transport Ukrainian is a set of practical chunks:
+Transport Ukrainian is a set of practical phrases:
 
 | Function | Examples |
 | --- | --- |
 | vehicle name | **автобус**, **метро**, **таксі**, **потяг**, **трамвай** |
 | means of travel | **автобусом**, **потягом**, **трамваєм**, **літаком** |
-| fixed transport chunks | **на метро**, **на таксі**, **на машині** |
+| fixed transport phrases | **на метро**, **на таксі**, **на машині** |
 | location inside | **в автобусі**, **у трамваї**, **у метро**, **у таксі** |
 | route question | **Як дістатися до...?** |
 | ticket line | **Один квиток до Львова, будь ласка.** |

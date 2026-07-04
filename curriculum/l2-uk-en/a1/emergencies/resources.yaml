@@ -6,11 +6,3 @@
   role: official source
   source_ref: "https://npu.gov.ua/news/vid-pochatku-roku-sluzhba-112-opratsiuvala-ponad-2-miliony-zvernen"
   notes: "Official 2025 police/MVS item checked 2026-06-03; confirms 112 forwards calls to 101, 102, 103, and 104 as needed."
-- title: "Wiki: pedagogy/a1/emergencies"
-  role: internal wiki
-  source_ref: "Wiki: pedagogy/a1/emergencies"
-  notes: "Pedagogical brief for A1 emergency speech, fixed help phrases, and number practice."
-- title: "Internal module M53: health"
-  role: prerequisite pattern
-  source_ref: "curriculum/l2-uk-en/a1/health/module.md"
-  notes: "Reuses health phrases such as Мені погано and Потрібна швидка in emergency-language contexts."

@@ -22,7 +22,7 @@ By the end, you can:
 - use familiar male-person forms such as **брата**, **друга**, **тата**,
   **лікаря**, **вчителя**, **сусіда**;
 - contrast people and things: **Я бачу брата** but **Я бачу хліб**;
-- recognize the pronoun chunks **мене**, **тебе**, **його**, **її**,
+- recognize the pronoun phrases **мене**, **тебе**, **його**, **її**,
   **нас**, **вас**, **їх**.
 
 :::caution
@@ -85,7 +85,7 @@ Support after the Ukrainian lines:
 | Ірина: Він дуже добрий. Я чекаю його зараз. | Iryna: He is very kind. I am waiting for him now. |
 
 Here the people are not only family. You can talk about **вчительку**,
-**Олену Петрівну**, **лікаря**, and **його**. Keep the pronouns as chunks:
+**Олену Петрівну**, **лікаря**, and **його**. Keep the pronouns as phrases:
 **я тебе бачу**, **вона знає мене**, **я чекаю його**.
 
 ### Весільні фото
@@ -212,9 +212,9 @@ thing answers **що?**; a person answers **кого?**.
 For recognition, other male-person words follow the same everyday pattern. You
 only need to produce the table lines above.
 
-Pronoun chunks are useful, but keep them small:
+Pronoun phrases are useful, but keep them small:
 
-| Dictionary pronoun | Object chunk |
+| Dictionary pronoun | Object phrase |
 | --- | --- |
 | **я** | **мене** |
 | **ти** | **тебе** |

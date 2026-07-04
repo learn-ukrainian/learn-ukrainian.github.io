@@ -84,7 +84,7 @@ inline:
             correct: false
           - text: й
             correct: false
-        explanation: У кіно is the safer smooth chunk here.
+        explanation: У кіно is the safer smooth phrase here.
       - prompt: 'Так, ___ нас є час.'
         options:
           - text: у

@@ -33,7 +33,7 @@ inline:
             correct: false
           - text: 'Я живу з Одеси.'
             correct: false
-        explanation: 'Де? with жити uses the static place chunk в Одесі.'
+        explanation: 'Де? with жити uses the static place phrase в Одесі.'
       - prompt: 'Куди ти йдеш?'
         options:
           - text: 'Я йду в музей.'
@@ -42,7 +42,7 @@ inline:
             correct: false
           - text: 'Я йду з музею.'
             correct: false
-        explanation: 'Куди? with йти uses a destination chunk.'
+        explanation: 'Куди? with йти uses a destination phrase.'
       - prompt: 'Звідки ти?'
         options:
           - text: 'Я з України.'
@@ -60,7 +60,7 @@ inline:
             correct: false
           - text: 'З метро.'
             correct: false
-        explanation: 'На метро is the safe transport chunk.'
+        explanation: 'На метро is the safe transport phrase.'
       - prompt: 'Де вокзал?'
         options:
           - text: 'На площі, направо.'
@@ -82,7 +82,7 @@ inline:
   - id: act-3
     type: group-sort
     title: A1.5 city shelves
-    instruction: Sort each chunk by its place function.
+    instruction: Sort each phrase by its place function.
     groups:
       - name: 'Де?'
         items:
@@ -111,7 +111,7 @@ inline:
   - id: act-4
     type: fill-in
     title: Odesa call gaps
-    instruction: Choose the chunk that completes the video call.
+    instruction: Choose the phrase that completes the video call.
     items:
       - sentence: 'Я зараз ___ Одесі.'
         answer: 'в'
@@ -140,14 +140,14 @@ inline:
           - 'у'
           - 'в'
           - 'з'
-        explanation: 'Before a consonant, у порт is a smooth destination chunk.'
+        explanation: 'Before a consonant, у порт is a smooth destination phrase.'
       - sentence: 'Після порту я йду ___ пляж.'
         answer: 'на'
         options:
           - 'на'
           - 'в'
           - 'з'
-        explanation: 'На пляж is the safe destination chunk.'
+        explanation: 'На пляж is the safe destination phrase.'
       - sentence: 'Увечері я їду ___.'
         answer: 'на вокзал'
         options:
@@ -162,7 +162,7 @@ workbook:
     items:
       - statement: 'Музей у центрі.'
         answer: true
-        explanation: 'This answers де? with a static place chunk.'
+        explanation: 'This answers де? with a static place phrase.'
       - statement: 'Я йду в школу.'
         answer: true
         explanation: 'Йду asks куди?, so в школу is correct.'
@@ -171,7 +171,7 @@ workbook:
         explanation: 'Static place needs в школі.'
       - statement: 'Вона працює на пошті.'
         answer: true
-        explanation: 'На пошті is the safe Ukrainian chunk.'
+        explanation: 'На пошті is the safe Ukrainian phrase.'
       - statement: 'Я з Канади.'
         answer: true
         explanation: 'Звідки? uses з/із/зі plus the learned родовий form.'
@@ -252,7 +252,7 @@ workbook:
             correct: false
           - text: 'Я іду зі школи.'
             correct: false
-        explanation: 'Іду asks куди?, so use the destination chunk.'
+        explanation: 'Іду asks куди?, so use the destination phrase.'
       - prompt: 'Repair: Я працюю в пошті.'
         options:
           - text: 'Я працюю на пошті.'
@@ -261,7 +261,7 @@ workbook:
             correct: false
           - text: 'Я працюю до пошти.'
             correct: false
-        explanation: 'The safe Ukrainian chunk is на пошті.'
+        explanation: 'The safe Ukrainian phrase is на пошті.'
       - prompt: 'Repair: Книга є на столі.'
         options:
           - text: 'Книга на столі.'
@@ -333,8 +333,8 @@ workbook:
           - 'школи'
         answer: 'Вона йде зі школи'
   - type: fill-in
-    title: One city story chunks
-    instruction: Complete the checkpoint story with learned place chunks.
+    title: One city story phrases
+    instruction: Complete the checkpoint story with learned place phrases.
     items:
       - sentence: 'Сьогодні Анна ___ Києві.'
         answer: 'в'
@@ -356,7 +356,7 @@ workbook:
           - 'в'
           - 'у'
           - 'з'
-        explanation: 'В музей is a learned destination chunk.'
+        explanation: 'В музей is a learned destination phrase.'
       - sentence: 'Музей ___ площі.'
         answer: 'на'
         options:
@@ -370,7 +370,7 @@ workbook:
           - 'на метро'
           - 'з метро'
           - 'у метрою'
-        explanation: 'На метро is the transport chunk.'
+        explanation: 'На метро is the transport phrase.'
       - sentence: 'Після музею вона їде ___.'
         answer: 'на вокзал'
         options:

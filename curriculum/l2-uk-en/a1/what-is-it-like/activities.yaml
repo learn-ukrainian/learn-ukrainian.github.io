@@ -133,11 +133,11 @@ inline:
           - і
           - а
           - е
-        explanation: Plural A1 chunks use нові.
+        explanation: Plural A1 phrases use нові.
   - id: act-3
     type: group-sort
     title: Сортуй фрази
-    instruction: Sort each adjective-noun chunk by the question it answers.
+    instruction: Sort each adjective-noun phrase by the question it answers.
     groups:
       - label: Який?
         items:
@@ -238,7 +238,7 @@ workbook:
             correct: false
           - text: цікаве речі
             correct: false
-        explanation: Plural chunks use цікаві.
+        explanation: Plural phrases use цікаві.
   - type: fill-in
     title: Опиши кімнату
     instruction: Complete the short room lines.
@@ -452,7 +452,7 @@ workbook:
             correct: false
           - text: Книги цікаве.
             correct: false
-        explanation: Plural chunks use цікаві.
+        explanation: Plural phrases use цікаві.
   - type: true-false
     title: Швидка перевірка
     instruction: Decide if the statement is right.

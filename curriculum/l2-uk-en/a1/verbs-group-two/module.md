@@ -18,7 +18,7 @@ By the end, you can:
   **ходити** in short sentences;
 - compare **І дієвідміна** and **ІІ дієвідміна** by the **ти** and **вони**
   forms;
-- keep first-person chunks such as **роблю**, **ходжу**, and **прошу** ready;
+- keep first-person phrases such as **роблю**, **ходжу**, and **прошу** ready;
 - recognize **дивлюся** and **вчуся** as useful preview forms with **-ся**.
 
 ## Діалоги
@@ -54,7 +54,7 @@ Look at the useful forms:
 verb. You do not need the full reflexive system yet. For now, keep **я вчуся**
 as one ready phrase.
 
-Later, at home, Тарас and Микола use two more Group Two chunks.
+Later, at home, Тарас and Микола use two more Group Two phrases.
 
 ```text
 Микола: Що ти робиш увечері?
@@ -112,7 +112,7 @@ That is already enough for real conversation.
 ### Шість дієслів другої групи
 
 Here are the six active verbs from the plan. The full table is for recognition
-and reuse; your speaking can stay with short chunks.
+and reuse; your speaking can stay with short phrases.
 
 | Infinitive | я | ти | він/вона | ми | ви | вони |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -123,7 +123,7 @@ and reuse; your speaking can stay with short chunks.
 | **просити** | **прошу** | **просиш** | **просить** | **просимо** | **просите** | **просять** |
 | **ходити** | **ходжу** | **ходиш** | **ходить** | **ходимо** | **ходите** | **ходять** |
 
-The **я** column has a few ready chunks:
+The **я** column has a few ready phrases:
 
 - **я роблю** - I do / I make;
 - **я ходжу** - I go regularly / I walk;
@@ -131,7 +131,7 @@ The **я** column has a few ready chunks:
 - **я бачу** - I see;
 - **я вчу** - I learn / I study.
 
-Do not calculate those forms during speech. Learn them as chunks.
+Do not calculate those forms during speech. Learn them as phrases.
 
 ```text
 Я роблю вправу.
@@ -227,7 +227,7 @@ The rest of each verb is more regular:
 ти просиш, він просить, вони просять
 ```
 
-Do not memorize a sound-change rule yet. Memorize the **я** chunk beside the
+Do not memorize a sound-change rule yet. Memorize the **я** phrase beside the
 infinitive.
 
 <!-- INJECT_ACTIVITY: act-3 -->

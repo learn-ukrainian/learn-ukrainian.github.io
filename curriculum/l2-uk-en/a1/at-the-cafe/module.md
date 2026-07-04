@@ -8,7 +8,7 @@ This module turns the food words and direct-object forms from M36-M37 into a
 real cafe visit. You will greet the server, read a small menu, order food or
 drink, answer **Вам тут чи із собою?**, pay, and leave politely.
 
-The cafe patterns are chunks first:
+The cafe patterns are phrases first:
 
 - **Мені каву, будь ласка.**
 - **Дайте, будь ласка, борщ.**
@@ -24,7 +24,7 @@ By the end, you can:
   **принесіть, будь ласка...**;
 - ask practical menu questions: **Що ви рекомендуєте?**, **Це гостре?**,
   **Скільки коштує?**;
-- answer format and size questions with chunks: **із собою**,
+- answer format and size questions with phrases: **із собою**,
   **велику каву**, **маленьку каву**;
 - ask for the bill and pay with **карткою** or **готівкою**;
 - choose the course cafe forms instead of repair forms such as **<!-- bad -->счет<!-- /bad -->**,
@@ -32,7 +32,7 @@ By the end, you can:
   **<!-- bad -->пірожене<!-- /bad -->**.
 
 :::caution
-Treat **велику каву** and **маленьку каву** as whole ordering chunks. This is
+Treat **велику каву** and **маленьку каву** as whole ordering phrases. This is
 not an adjective-declension lesson.
 :::
 
@@ -133,7 +133,7 @@ Support after the Ukrainian lines:
 
 The course form is **кава із собою**, not
 **<!-- bad -->кава на винос<!-- /bad -->**. The question **Вам тут чи із
-собою?** is a modern cafe chunk. Answer with **тут, будь ласка** or
+собою?** is a modern cafe phrase. Answer with **тут, будь ласка** or
 **із собою, будь ласка**.
 
 :::note
@@ -187,7 +187,7 @@ Ask these menu questions as whole lines:
 - **Скільки коштує?**
 - **Є вегетаріанське меню?**
 
-For size, stay with the cafe chunks **велику каву** and **маленьку каву**.
+For size, stay with the cafe phrases **велику каву** and **маленьку каву**.
 Do not stop to explain adjective endings here. The learner needs to hear and
 use the complete order:
 
@@ -261,7 +261,7 @@ Support after the Ukrainian lines:
 | Так, будь ласка. | Yes, please. |
 | Ще одну каву, будь ласка. | One more coffee, please. |
 
-You may hear very fast cafe speech, but your practice form is the full chunk:
+You may hear very fast cafe speech, but your practice form is the full phrase:
 **Вам тут чи із собою?** Answer **із собою, будь ласка** or
 **тут, будь ласка**.
 

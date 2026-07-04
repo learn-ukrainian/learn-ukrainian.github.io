@@ -99,7 +99,7 @@ workbook:
         explanation: 'Буду + infinitive is the A1 future pattern.'
       - statement: 'Мене звати Софія.'
         answer: true
-        explanation: 'This is the normal A1 name chunk.'
+        explanation: 'This is the normal A1 name phrase.'
       - statement: "Моє ім'я є Софія."
         answer: false
         explanation: 'Use Мене звати..., not an English-style my-name-is sentence.'
@@ -125,7 +125,7 @@ workbook:
           - 'народилася'
           - 'народжуся'
           - 'народжуюся'
-        explanation: 'Use the familiar past chunk народилася.'
+        explanation: 'Use the familiar past phrase народилася.'
       - sentence: 'Раніше я ___ в Одесі.'
         answer: 'жила'
         options:
@@ -177,7 +177,7 @@ workbook:
             correct: false
           - text: 'Я звати Данило.'
             correct: false
-        explanation: 'Use the chunk Мене звати...'
+        explanation: 'Use the phrase Мене звати...'
   - type: translate
     title: Say your story
     instruction: Choose the Ukrainian sentence that matches the English prompt.
@@ -232,4 +232,4 @@ workbook:
       - sentence: 'Моє ім''я є Софія.'
         error: 'Моє ім''я є'
         correction: 'Мене звати'
-        explanation: 'Use the familiar A1 name chunk Мене звати.'
+        explanation: 'Use the familiar A1 name phrase Мене звати.'

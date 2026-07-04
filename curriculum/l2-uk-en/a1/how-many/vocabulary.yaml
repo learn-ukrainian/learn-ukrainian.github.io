@@ -167,11 +167,11 @@
   pos: noun
   usage: Одна гривня.
 - lemma: гривні
-  translation: hryvnias, 2-4 chunk
+  translation: hryvnias, 2-4 phrase
   pos: noun
   usage: Дві гривні.
 - lemma: гривень
-  translation: hryvnias, 5+ chunk
+  translation: hryvnias, 5+ phrase
   pos: noun
   usage: П'ять гривень.
 - lemma: копійка
@@ -179,11 +179,11 @@
   pos: noun
   usage: Одна копійка.
 - lemma: копійки
-  translation: kopecks, 2-4 chunk
+  translation: kopecks, 2-4 phrase
   pos: noun
   usage: Дві копійки.
 - lemma: копійок
-  translation: kopecks, 5+ chunk
+  translation: kopecks, 5+ phrase
   pos: noun
   usage: П'ять копійок.
 - lemma: рік
@@ -207,23 +207,23 @@
   pos: noun
   usage: Це телефон.
 - lemma: мені
-  translation: to me, age chunk
+  translation: to me, age phrase
   pos: pronoun
   usage: Мені двадцять років.
 - lemma: тобі
-  translation: to you, age chunk
+  translation: to you, age phrase
   pos: pronoun
   usage: Скільки тобі років?
 - lemma: вам
-  translation: to you, polite age chunk
+  translation: to you, polite age phrase
   pos: pronoun
   usage: Скільки вам років?
 - lemma: їй
-  translation: to her, age chunk
+  translation: to her, age phrase
   pos: pronoun
   usage: Їй вісімнадцять.
 - lemma: пів на шосту
-  translation: half past five, time chunk
+  translation: half past five, time phrase
   pos: phrase
   usage: Зараз пів на шосту.
 - lemma: двоє

@@ -12,7 +12,7 @@
 - вибрати smoother **у/в**, **і/й**, and **з/із/зі** in short place lines;
 - відповісти **де?** with **у центрі**, **на площі**, **в Одесі**;
 - відповісти **куди?** with **у музей**, **на вокзал**, **в Україну**;
-- сказати route and transport chunks: **автобусом**, **на метро**, **прямо**,
+- сказати route and transport phrases: **автобусом**, **на метро**, **прямо**,
   **направо**, **наліво**;
 - відповісти **звідки?** with **з/із/зі + родовий відмінок**:
   **з України**, **зі школи**, **з роботи**;
@@ -31,12 +31,12 @@
 | destination | Куди? | **в/у/на + напрямок** | Я йду в музей. Їду на вокзал. |
 | source or origin | Звідки? | **з/із/зі + родовий** | Я з України. Вона зі школи. |
 | route | Як дістатися? | direction word | Ідіть прямо, потім направо. |
-| transport | Як ти їдеш? | vehicle chunk | Автобусом. На метро. Пішки. |
+| transport | Як ти їдеш? | vehicle phrase | Автобусом. На метро. Пішки. |
 
-**Де? — місце.** Готові chunks: **у школі**, **на роботі**, **у парку**,
+**Де? — місце.** Готові phrases: **у школі**, **на роботі**, **у парку**,
 **в центрі**. Keep the preposition and the place form together. Say **Я в
 школі**, not **я в школа**. Say **Вона живе в Києві**, not **вона живе Київ**.
-Practice the useful chunks in short sentences.
+Practice the useful phrases in short sentences.
 
 **Жити, працювати, вчитися, гуляти.** Якщо дія в одному місці, answer **де?**:
 **я живу в Одесі**, **мама працює на пошті**, **ми гуляємо в парку**.
@@ -44,7 +44,7 @@ Practice the useful chunks in short sentences.
 
 **Куди? — рух.** Пара: **Я в школі** (**де?**) / **Я йду в школу** (**куди?**).
 Same preposition, different question. Keep the question visible before choosing
-the chunk.
+the phrase.
 
 **Звідки? — source or origin.** After **Звідки?**, say the learned **з/із/зі +
 родовий відмінок** forms: **з України**, **з Києва**, **зі Львова**,
@@ -114,7 +114,7 @@ choose one short answer.
 
 ### 1. Де? static place
 
-**Де? — цілий chunk.** Keep the whole chunk together:
+**Де? — one whole phrase.** Keep it together:
 
 ```text
 Я в Україні.
@@ -142,7 +142,7 @@ choose one short answer.
 
 ### 2. State verbs in one place
 
-**Дієслово + де?** The same place chunk can follow state or in-place action
+**Дієслово + де?** The same place phrase can follow state or in-place action
 verbs:
 
 ```text
@@ -161,7 +161,7 @@ verbs:
 | Ми вчимося в школі. | We study at school. |
 | Друзі гуляють у парку. | Friends walk in the park. |
 
-**На пошті, на вокзалі, на роботі.** Ready city chunks: **на пошті**,
+**На пошті, на вокзалі, на роботі.** Ready city phrases: **на пошті**,
 **на вокзалі**, **на роботі**, **на площі**.
 
 **Я вдома.** Start from the smallest line: **Я вдома**. Then add a verb when
@@ -171,7 +171,7 @@ in one place.
 
 ### 3. Куди? destination
 
-**Рух -> куди?** Compare the place chunk with the destination chunk:
+**Рух -> куди?** Compare the place phrase with the destination phrase:
 
 ```text
 Я в школі.
@@ -194,7 +194,7 @@ in one place.
 | Ми їдемо в Україну. | We are going to Ukraine. |
 
 **Іти / їхати -> куди?** **Іти** and **їхати** usually send you toward a
-place. Ask **куди?** before the chunk: **Я йду в школу**, not **я йду в
+place. Ask **куди?** before the phrase: **Я йду в школу**, not **я йду в
 школі**.
 
 ### 4. Звідки? source and origin

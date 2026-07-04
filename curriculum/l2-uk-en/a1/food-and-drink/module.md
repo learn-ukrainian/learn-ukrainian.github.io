@@ -16,7 +16,7 @@ By the end, you can:
 
 - name everyday foods and drinks: **хліб**, **кава**, **чай**, **молоко**,
   **суп**, **риба**, **м'ясо**, **сік**;
-- ask for simple food and drink with chunks: **каву з молоком**,
+- ask for simple food and drink with phrases: **каву з молоком**,
   **чай без цукру**, **хліб з маслом**;
 - talk about meals with natural Ukrainian verbs: **я снідаю**, **я обідаю**,
   **я вечеряю**;
@@ -27,7 +27,7 @@ By the end, you can:
 
 :::tip
 Keep **з молоком**, **з цукром**, **без цукру**, and **без молока** as whole
-food-and-drink chunks. The grammar behind the endings will have its own space
+food-and-drink phrases. The grammar behind the endings will have its own space
 later.
 :::
 
@@ -60,7 +60,7 @@ Support after the Ukrainian lines:
 | Мама: Смачного! | Mom: Enjoy your meal! |
 
 **Що ти хочеш? — Я хочу...** Use the same short line with food and drinks:
-**я хочу каву**, **я хочу чай**, **я хочу хліб**. Keep the breakfast chunks
+**я хочу каву**, **я хочу чай**, **я хочу хліб**. Keep the breakfast phrases
 together: **каву з молоком**, **чай без цукру**, **хліб з маслом**.
 
 **Я снідаю. Я обідаю. Я вечеряю.** These are the compact meal lines. Add a
@@ -201,7 +201,7 @@ Useful drinks divide into a few practical groups:
 | dairy | **молоко**, **кефір** | milk, kefir |
 | recognition only | **пиво**, **вино** | beer, wine |
 
-The most useful drink phrases are chunks:
+The most useful drink phrases are:
 
 - **кава з молоком** - coffee with milk;
 - **чай з цукром** - tea with sugar;
@@ -325,7 +325,7 @@ Support after the Ukrainian lines:
 подобається борщ**, **Я люблю вареники**, **Мені не подобається чай з
 цукром**.
 
-Again, keep the chunks whole. **Без цукру** and **без молока** are service
+Again, keep the phrases whole. **Без цукру** and **без молока** are service
 phrases you can use right away.
 
 <span id="repair-food-and-drink-interference"></span>
@@ -340,7 +340,7 @@ Use this short repair map. Read the right column aloud.
 | <!-- bad -->жарена картопля<!-- /bad --> | **смажена картопля** |
 | я їм сніданок** as the main pattern | **я снідаю |
 | я п'ю борщ | **я їм борщ** |
-| без цукор | **без цукру** as a chunk |
+| без цукор | **без цукру** as a phrase |
 | борщ дуже смачно | **борщ дуже смачний** |
 | приємного апетиту** as the meal formula | **Смачного! |
 
@@ -376,7 +376,7 @@ Final self-check:
 
 1. Name five foods: **хліб**, **каша**, **риба**, **м'ясо**, **сир**.
 2. Name three drinks: **кава**, **чай**, **вода**.
-3. Say two drink chunks: **кава з молоком**, **чай без цукру**.
+3. Say two drink phrases: **кава з молоком**, **чай без цукру**.
 4. Say the three meal verbs: **я снідаю**, **я обідаю**, **я вечеряю**.
 5. Name three Ukrainian cultural foods: **борщ**, **вареники**, **сало**.
 6. Repair two traps: **сир**, not **<!-- bad -->творог<!-- /bad -->**;

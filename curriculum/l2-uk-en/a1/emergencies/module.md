@@ -178,7 +178,7 @@ The police-station frame is also short:
 
 ## Номери і служби
 
-Learn the numbers as chunks. Do not translate every word during a call.
+Learn the numbers as phrases. Do not translate every word during a call.
 
 | Number | Say it | Service word |
 | --- | --- | --- |
@@ -259,7 +259,7 @@ Say numbers slowly. If you need time to repeat, use:
 ### Особиста інформація
 
 The operator or helper may ask for basic personal information. These are A1
-identity chunks.
+identity phrases.
 
 | Question | Answer frame |
 | --- | --- |
@@ -279,7 +279,7 @@ This is not a story. It is a clear information block.
 ## Допомога в лікарні або аптеці
 
 In an emergency, you may need one safe sentence in a hospital or pharmacy. Use
-known M53 health chunks and keep the grammar fixed.
+known M53 health phrases and keep the grammar fixed.
 
 | Place | A1 help phrase |
 | --- | --- |

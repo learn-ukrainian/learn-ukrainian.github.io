@@ -1,9 +1,9 @@
 # Дні та місяці
 
-This lesson gives you the calendar chunks you need for simple plans. Ukrainian
+This lesson gives you the calendar phrases you need for simple plans. Ukrainian
 calendar words are not just labels. They connect time with routine, weather,
 nature, and personal dates. Keep the grammar light: learn the useful forms as
-ready chunks first.
+ready phrases first.
 
 By the end, you can:
 
@@ -43,7 +43,7 @@ Support after the Ukrainian lines:
 Use standard Ukrainian greetings here: **Добрий день** and **До побачення**.
 
 Notice the useful shape: **у понеділок**, **у середу**, **у п'ятницю**,
-**в суботу**, **в неділю**. Treat these as whole calendar chunks. Do not use
+**в суботу**, **в неділю**. Treat these as whole calendar phrases. Do not use
 English **on**. Say **У понеділок я працюю** when you mean "on Monday I work."
 
 The second scene connects months, dates, and seasons.
@@ -70,7 +70,7 @@ Support after the Ukrainian lines:
 
 There are two different jobs here. **У березні** answers "in which month?"
 **П'ятнадцятого березня** answers "on what date?" Ukrainian does not need a
-preposition before this date. Learn a few dates as whole chunks: **першого
+preposition before this date. Learn a few dates as whole phrases: **першого
 січня**, **восьмого березня**, **п'ятнадцятого березня**, **двадцять другого
 серпня**, **першого вересня**.
 
@@ -97,9 +97,9 @@ too closely.
 You can also make tiny time sentences with **сьогодні**, **завтра**, and
 **вчора**: **Сьогодні вівторок. Завтра середа. Вчора була неділя.**
 
-When you say that an action happens on a day, use the planned-day chunk:
+When you say that an action happens on a day, use the planned-day phrase:
 
-| Base word | Planning chunk |
+| Base word | Planning phrase |
 | --- | --- |
 | понеділок | **у понеділок** |
 | вівторок | **у вівторок** |
@@ -109,13 +109,13 @@ When you say that an action happens on a day, use the planned-day chunk:
 | субота | **в суботу** |
 | неділя | **в неділю** |
 
-For now, do not analyze the case ending. Copy the full chunk. Combine it with
+For now, do not analyze the case ending. Copy the full phrase. Combine it with
 time from Module 22: **У середу о другій я маю зустріч. У п'ятницю о шостій я
 вечеряю вдома. В суботу я гуляю. В неділю я відпочиваю.**
-The question is **Коли?** and the answer uses **в/у** plus the weekday chunk:
+The question is **Коли?** and the answer uses **в/у** plus the weekday phrase:
 **У середу я планую урок.**
 The same planning question will later connect to seasons: **влітку** and
-**взимку** are season-time chunks.
+**взимку** are season-time phrases.
 
 The word **тиждень** means "week" in the standard language. In some speech,
 **неділя** can mean a week, but in this course **неділя** is the day Sunday.
@@ -140,8 +140,8 @@ tool. **Березень** can remind you of **береза**. **Квітень*
 
 <!-- INJECT_ACTIVITY: act-2 -->
 
-When you answer "in which month?", use a month chunk:
-These month chunks also use **у/в**:
+When you answer "in which month?", use a month phrase:
+These month phrases also use **у/в**:
 
 | Month | In the month |
 | --- | --- |
@@ -160,14 +160,14 @@ These month chunks also use **у/в**:
 
 For seasons, the most useful A1 words are adverbs:
 **взимку**, **навесні**, **влітку**, **восени**. They are better calendar
-chunks than English-style **в літо** or **в зиму**. Use them with simple
+phrases than English-style **в літо** or **в зиму**. Use them with simple
 calendar lines: **Взимку я вдома. Навесні у мене день народження. Влітку
 канікули. Восени школа.** For a season identity line, say:
 **Це зима. Це весна. Це літо. Це осінь.**
 
 <!-- INJECT_ACTIVITY: act-3 -->
 
-Dates need one more chunk. Ukrainian asks **якого числа?** and answers with a
+Dates need one more phrase. Ukrainian asks **якого числа?** and answers with a
 date form. First separate **скільки?** from **котрий?**: a week has **сім**
 days, but Sunday is the **сьомий** day if you count from Monday. At A1, learn
 only common examples:
@@ -180,7 +180,7 @@ only common examples:
 | September 1 | **першого вересня** |
 
 The first word changes, and the month changes too. You do not need the full
-grammar today; copy the chunks. There is no **в** before these dates. Say
+grammar today; copy the phrases. There is no **в** before these dates. Say
 **Мій день народження першого січня**, not **Мій день народження в перше
 січня**. The question is still **Коли?**
 
@@ -202,7 +202,7 @@ Support after the Ukrainian lines:
 | **Який сьогодні день?** | What day is today? |
 | **Сьогодні четвер.** | Today is Thursday. |
 
-Second: plan with a day chunk and a time chunk.
+Second: plan with a day phrase and a time phrase.
 
 ```text
 У середу о другій я маю зустріч.
@@ -232,7 +232,7 @@ Support after the Ukrainian lines:
 | **Березень — це весна.** | March is spring. |
 | **Влітку тепло.** | In summer it is warm. |
 
-Fourth: give a date as a chunk.
+Fourth: give a date as a phrase.
 
 ```text
 Коли твій день народження?
@@ -248,8 +248,8 @@ Support after the Ukrainian lines:
 
 :::caution
 Keep the calendar simple. Ukrainian writes day and month names with lowercase
-letters in normal sentences. Use the day chunks **у понеділок**, **в суботу**,
-the month chunks **у січні**, **у серпні**, and the season chunks
+letters in normal sentences. Use the day phrases **у понеділок**, **в суботу**,
+the month phrases **у січні**, **у серпні**, and the season phrases
 **взимку**, **навесні**, **влітку**, **восени**.
 :::
 

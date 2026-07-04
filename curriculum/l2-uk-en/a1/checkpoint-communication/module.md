@@ -183,7 +183,7 @@ This dialogue integrates the unit:
 - requests: **постав**, **принеси**, **напиши**;
 - connectors: **і**, **а**, **але**;
 - short detail frames: **де стоїть стіл**, **що писати**;
-- holiday chunks: **З Різдвом Христовим!**, **З Новим роком!**
+- holiday phrases: **З Різдвом Христовим!**, **З Новим роком!**
 
 ### Шкільний ярмарок
 

@@ -165,7 +165,7 @@ The second part gives the missing detail:
 - **де магазин** - where something is;
 - **коли урок** - when something happens.
 
-At A1, use these frames as chunks. You do not need to build a long subordinate
+At A1, use these frames as phrases. You do not need to build a long subordinate
 clause. You only need one short, useful detail.
 
 | Frame | Use | Example |

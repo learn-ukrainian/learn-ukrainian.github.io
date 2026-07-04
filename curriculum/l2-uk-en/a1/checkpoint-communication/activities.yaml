@@ -222,7 +222,7 @@ workbook:
       - statement: 'Я хочу допомогти але я зайнятий needs no comma.'
         answer: false
         explanation: 'Add the comma before але.'
-      - statement: 'З Новим роком is a fixed greeting chunk.'
+      - statement: 'З Новим роком is a fixed greeting phrase.'
         answer: true
         explanation: 'This reviews M46.'
       - statement: 'This checkpoint introduces new grammar.'

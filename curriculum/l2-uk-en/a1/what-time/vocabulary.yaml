@@ -16,99 +16,99 @@
   usage: Зараз п'ята.
 - lemma: перша
   translation: one o'clock; first (feminine)
-  pos: ordinal chunk
+  pos: ordinal phrase
   usage: Зараз перша.
 - lemma: друга
   translation: two o'clock; second (feminine)
-  pos: ordinal chunk
+  pos: ordinal phrase
   usage: Зараз друга.
 - lemma: третя
   translation: three o'clock; third (feminine)
-  pos: ordinal chunk
+  pos: ordinal phrase
   usage: Зараз третя.
 - lemma: четверта
   translation: four o'clock; fourth (feminine)
-  pos: ordinal chunk
+  pos: ordinal phrase
   usage: Зараз четверта.
 - lemma: п'ята
   translation: five o'clock; fifth (feminine)
-  pos: ordinal chunk
+  pos: ordinal phrase
   usage: Зараз п'ята.
 - lemma: шоста
   translation: six o'clock; sixth (feminine)
-  pos: ordinal chunk
+  pos: ordinal phrase
   usage: Зараз шоста.
 - lemma: сьома
   translation: seven o'clock; seventh (feminine)
-  pos: ordinal chunk
+  pos: ordinal phrase
   usage: Зараз сьома.
 - lemma: восьма
   translation: eight o'clock; eighth (feminine)
-  pos: ordinal chunk
+  pos: ordinal phrase
   usage: Зараз восьма.
 - lemma: дев'ята
   translation: nine o'clock; ninth (feminine)
-  pos: ordinal chunk
+  pos: ordinal phrase
   usage: Зараз дев'ята.
 - lemma: десята
   translation: ten o'clock; tenth (feminine)
-  pos: ordinal chunk
+  pos: ordinal phrase
   usage: Зараз десята.
 - lemma: одинадцята
   translation: eleven o'clock; eleventh (feminine)
-  pos: ordinal chunk
+  pos: ordinal phrase
   usage: Зараз одинадцята.
 - lemma: дванадцята
   translation: twelve o'clock; twelfth (feminine)
-  pos: ordinal chunk
+  pos: ordinal phrase
   usage: Зараз дванадцята.
 - lemma: о першій
   translation: at one
-  pos: time chunk
+  pos: time phrase
   usage: Обід о першій.
 - lemma: о другій
   translation: at two
-  pos: time chunk
+  pos: time phrase
   usage: Зустріч о другій.
 - lemma: о третій
   translation: at three
-  pos: time chunk
+  pos: time phrase
   usage: Кава о третій.
 - lemma: о четвертій
   translation: at four
-  pos: time chunk
+  pos: time phrase
   usage: Урок о четвертій.
 - lemma: о п'ятій
   translation: at five
-  pos: time chunk
+  pos: time phrase
   usage: Фільм о п'ятій.
 - lemma: о шостій
   translation: at six
-  pos: time chunk
+  pos: time phrase
   usage: Вечеря о шостій.
 - lemma: о сьомій
   translation: at seven
-  pos: time chunk
+  pos: time phrase
   usage: Я прокидаюся о сьомій.
 - lemma: о восьмій
   translation: at eight
-  pos: time chunk
+  pos: time phrase
   usage: Я снідаю о восьмій.
 - lemma: о дев'ятій
   translation: at nine
-  pos: time chunk
+  pos: time phrase
   usage: Я працюю о дев'ятій.
 - lemma: о десятій
   translation: at ten
-  pos: time chunk
+  pos: time phrase
   usage: Заняття о десятій.
 - lemma: об одинадцятій
   translation: at eleven
-  pos: time chunk
+  pos: time phrase
   usage: Фільм об одинадцятій.
 - lemma: о дванадцятій
   translation: at twelve
-  pos: time chunk
+  pos: time phrase
   usage: Зустріч о дванадцятій.
 - lemma: пів
   translation: half
@@ -116,15 +116,15 @@
   usage: Пів на сьому.
 - lemma: пів на другу
   translation: half past one
-  pos: time chunk
+  pos: time phrase
   usage: Зараз пів на другу.
 - lemma: пів на сьому
   translation: half past six
-  pos: time chunk
+  pos: time phrase
   usage: Зараз пів на сьому.
 - lemma: пів на восьму
   translation: half past seven
-  pos: time chunk
+  pos: time phrase
   usage: Зараз пів на восьму.
 - lemma: чверть
   translation: quarter

@@ -80,11 +80,11 @@
   example: "Можна готівкою?"
 - word: карткою
   translation: by card
-  pos: chunk
+  pos: phrase
   example: "Карткою, будь ласка."
 - word: готівкою
   translation: in cash
-  pos: chunk
+  pos: phrase
   example: "Готівкою, будь ласка."
 - word: купити
   translation: to buy
@@ -120,19 +120,19 @@
   example: "Буханка хліба."
 - word: один кілограм яблук
   translation: one kilogram of apples
-  pos: chunk
+  pos: phrase
   example: "Дайте один кілограм яблук."
 - word: два кілограми помідорів
   translation: two kilograms of tomatoes
-  pos: chunk
+  pos: phrase
   example: "Дайте два кілограми помідорів."
 - word: літр молока
   translation: a liter of milk
-  pos: chunk
+  pos: phrase
   example: "Дайте літр молока."
 - word: пляшка води
   translation: a bottle of water
-  pos: chunk
+  pos: phrase
   example: "Пляшка води коштує десять гривень."
 - word: дорого
   translation: expensive

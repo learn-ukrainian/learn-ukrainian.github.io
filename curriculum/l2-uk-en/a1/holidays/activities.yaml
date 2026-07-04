@@ -23,7 +23,7 @@ inline:
           - 'Новим роком'
           - 'Новий рік'
           - 'Новому році'
-        explanation: 'Learn з Новим роком as one greeting chunk.'
+        explanation: 'Learn з Новим роком as one greeting phrase.'
       - sentence: 'З ___ Христовим!'
         answer: 'Різдвом'
         options:
@@ -151,7 +151,7 @@ workbook:
           - 'Різдвом Христовим'
           - 'щасливого Різдва'
           - 'Різдво Христове'
-        explanation: 'Use the Ukrainian greeting chunk after an everyday polite opening.'
+        explanation: 'Use the Ukrainian greeting phrase after an everyday polite opening.'
       - sentence: "З ___ Христовим! Бажаю здоров'я."
         answer: 'Різдвом'
         options:
@@ -201,7 +201,7 @@ workbook:
     title: Holiday checks
     instruction: Decide whether the statement fits this module.
     items:
-      - statement: 'З Новим роком is a fixed greeting chunk.'
+      - statement: 'З Новим роком is a fixed greeting phrase.'
         answer: true
         explanation: 'At A1, learn the whole phrase.'
       - statement: 'Святкувати Різдво is a good Ukrainian pattern.'
@@ -276,7 +276,7 @@ workbook:
       - sentence: 'Вітаю з Новий рік!'
         error: 'Новий рік'
         correction: 'Новим роком'
-        explanation: 'Use the fixed chunk з Новим роком.'
+        explanation: 'Use the fixed phrase з Новим роком.'
       - sentence: 'Ми святкуємо на Різдво.'
         error: 'святкуємо на Різдво'
         correction: 'святкуємо Різдво'
@@ -296,7 +296,7 @@ workbook:
       - sentence: 'Щасливого Різдва!'
         error: 'Щасливого Різдва'
         correction: 'З Різдвом Христовим'
-        explanation: 'Use the Ukrainian Christmas greeting chunk taught in this module.'
+        explanation: 'Use the Ukrainian Christmas greeting phrase taught in this module.'
       - sentence: 'Ми печемо писанки.'
         error: 'печемо писанки'
         correction: 'фарбуємо яйця / робимо писанки'

@@ -219,5 +219,5 @@ it with rising intonation. If the sentence is negative, find the verb and put
 | **Ти читаєш.** as a question | **Ти читаєш?** with rising intonation | yes/no questions need a question signal |
 
 Keep the active set small. Produce **хто, що, де, куди, коли, чому, як**,
-**не + verb**, and the ready double-negative chunks. Recognize **чи** as an
+**не + verb**, and the ready double-negative phrases. Recognize **чи** as an
 optional written or careful-speech question marker.

@@ -86,39 +86,39 @@ inline:
           - у понеділок
           - понеділок
           - в понеділок
-        explanation: 'Use the weekday chunk у понеділок.'
+        explanation: 'Use the weekday phrase у понеділок.'
       - sentence: 'Мій день народження ___.'
         answer: у березні
         options:
           - у березні
           - березень
           - в березень
-        explanation: 'Use the month chunk у березні.'
+        explanation: 'Use the month phrase у березні.'
       - sentence: 'Ми гуляємо ___.'
         answer: в суботу
         options:
           - в суботу
           - субота
           - у субота
-        explanation: 'Use the weekday chunk в суботу.'
+        explanation: 'Use the weekday phrase в суботу.'
       - sentence: '___ холодно.'
         answer: Взимку
         options:
           - Взимку
           - Зима
           - У зима
-        explanation: 'Use the season chunk взимку.'
+        explanation: 'Use the season phrase взимку.'
       - sentence: 'Я вивчаю українську ___.'
         answer: у вівторок
         options:
           - у вівторок
           - вівторок
           - в вівторок
-        explanation: 'Use the weekday chunk у вівторок.'
+        explanation: 'Use the weekday phrase у вівторок.'
       - sentence: 'Вони відпочивають ___.'
         answer: у серпні
         options:
           - у серпні
           - серпень
           - в серпень
-        explanation: 'Use the month chunk у серпні.'
+        explanation: 'Use the month phrase у серпні.'

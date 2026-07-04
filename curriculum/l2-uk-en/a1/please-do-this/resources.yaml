@@ -2,15 +2,11 @@
   role: grammar reference
   source_ref: "Заболотний: Наказовий спосіб"
   notes: "Plan-backed grammar reference; adapted here to active A1 ти/ви request forms only."
-- title: "Wiki: pedagogy/a1/please-do-this"
-  role: internal wiki
-  source_ref: "Wiki: pedagogy/a1/please-do-this"
-  notes: "Authoritative pedagogical brief for M43 please-do-this, including L2 interference repairs and decolonized imperative guidance."
 - title: "Ukrainian Lessons: How to Ask for and Give Help in Ukrainian"
   role: learner article
   source_ref: "Ukrainian Lessons ask-for-help"
   url: https://www.ukrainianlessons.com/ask-for-help/
-  notes: "Learner-facing support for polite Ukrainian requests with будь ласка."
+  notes: "Support for polite Ukrainian requests with будь ласка."
 - title: "Ukrainian Course: Free Ukrainian Course Lesson 12"
   role: grammar lesson
   source_ref: "ukrainiancourse.com"

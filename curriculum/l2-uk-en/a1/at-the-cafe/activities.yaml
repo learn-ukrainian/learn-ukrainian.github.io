@@ -21,7 +21,7 @@ inline:
       - left: 'Вам тут чи із собою?'
         right: 'ask about format'
       - left: 'Велику каву, будь ласка.'
-        right: 'order a size chunk'
+        right: 'order a size phrase'
   - id: act-2
     type: fill-in
     title: Order with мені
@@ -82,7 +82,7 @@ inline:
           - 'маленьку каву'
           - 'маленька кава'
           - 'маленької кави'
-        explanation: 'Use маленьку каву as one ordering chunk.'
+        explanation: 'Use маленьку каву as one ordering phrase.'
   - id: act-3
     type: quiz
     title: What do you say?
@@ -159,7 +159,7 @@ inline:
             correct: false
           - text: 'Що ви рекомендуєте?'
             correct: false
-        explanation: 'Карткою is the card-payment chunk.'
+        explanation: 'Карткою is the card-payment phrase.'
   - id: act-4
     type: fill-in
     title: Complete the cafe dialogue
@@ -220,13 +220,13 @@ workbook:
         explanation: 'Тут and із собою are the format answers.'
       - statement: 'Велику каву is taught here as an adjective table.'
         answer: false
-        explanation: 'It is taught as one cafe chunk.'
+        explanation: 'It is taught as one cafe phrase.'
       - statement: 'Кава на винос is the course form.'
         answer: false
         explanation: 'Use кава із собою.'
       - statement: 'Можна карткою? asks whether card payment is possible.'
         answer: true
-        explanation: 'Карткою is the card-payment chunk.'
+        explanation: 'Карткою is the card-payment phrase.'
       - statement: 'Дуже смачно було! is a food praise line.'
         answer: true
         explanation: 'Use it after the meal.'
@@ -352,7 +352,7 @@ workbook:
           - 'Кава із собою.'
           - 'Кава на винос.'
           - 'Кава з себе.'
-        explanation: 'The course chunk is із собою.'
+        explanation: 'The course phrase is із собою.'
       - sentence: 'Дайте пірожене.'
         error: 'пірожене'
         answer: 'Дайте тістечко.'

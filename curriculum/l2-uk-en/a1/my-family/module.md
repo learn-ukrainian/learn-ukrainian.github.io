@@ -23,7 +23,7 @@ By the end, you can:
 ## Діало́ги
 
 Read the Ukrainian first as a photo exchange. You do not need the whole grammar
-of possession. Treat **У ме́не є** and **У те́бе є** as whole chunks.
+of possession. Treat **У ме́не є** and **У те́бе є** as whole phrases.
 
 ```text
 О́ля: Приві́т, Ма́рку! Це фо́то моє́ї сім'ї́.
@@ -77,7 +77,7 @@ A short connected answer can reuse M5 and add family:
 Notice the question word from earlier modules: **хто?** asks about a person.
 For this lesson, use it in **Хто це?** and keep the answers short.
 
-The old name chunk still works inside family talk: **Мене звати [ім'я]**. Use
+The old name phrase still works inside family talk: **Мене звати [ім'я]**. Use
 it as one memorized block before you add family information.
 
 <!-- INJECT_ACTIVITY: act-1 -->
@@ -134,7 +134,7 @@ level.
 English says "I have a brother." Ukrainian normally uses a different shape:
 **У ме́не є брат.** Learn it as one piece.
 
-| Ukrainian chunk | English use |
+| Ukrainian phrase | English use |
 | --- | --- |
 | **У мене є брат.** | I have a brother. |
 | **У мене є сестра.** | I have a sister. |
@@ -146,11 +146,11 @@ English says "I have a brother." Ukrainian normally uses a different shape:
 | **Ні, у мене тільки один брат.** | No, I only have one brother. |
 
 Do not build the English sentence word by word with a verb for "have." Your
-safe chunk is **У мене є...**. The other forms, such as "he has" and
+safe phrase is **У мене є...**. The other forms, such as "he has" and
 "she has," need more grammar, so they stay as recognition only inside
 dialogues.
 
-Use the easy number agreement chunks:
+Use the easy number agreement phrases:
 
 | Masculine | Feminine |
 | --- | --- |
@@ -214,7 +214,7 @@ Use **чи** for a choice or a yes/no photo question:
 
 The Resources tab has optional Ukrainian Lessons Podcast pages for this topic:
 Episode 6 for **сім'я́ / У ме́не є...**, Episode 7 for **мій / моя́**, and
-Episode 10 for connected review speech. Choose one short chunk, listen once,
+Episode 10 for connected review speech. Choose one short phrase, listen once,
 repeat once, and come back to the page.
 
 For handwriting recognition, ask a teacher, tutor, or classmate to write these
@@ -256,5 +256,5 @@ and **одру́жений** for married. Register note: for everyday family tal
 not the first photo-sharing word for "husband."
 
 In the workbook, build a small family-photo script step by step: choose safe
-sentences, pick the everyday Ukrainian family word, sort one/two chunks, notice
+sentences, pick the everyday Ukrainian family word, sort one/two phrases, notice
 the formal name signal, and then complete a short photo dialogue.

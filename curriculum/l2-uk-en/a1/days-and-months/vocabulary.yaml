@@ -56,31 +56,31 @@
   example: "Учора понеділок."
 - word: у понеділок
   translation: on Monday
-  pos: calendar chunk
+  pos: calendar phrase
   example: "У понеділок я працюю."
 - word: у вівторок
   translation: on Tuesday
-  pos: calendar chunk
+  pos: calendar phrase
   example: "У вівторок урок."
 - word: у середу
   translation: on Wednesday
-  pos: calendar chunk
+  pos: calendar phrase
   example: "У середу зустріч."
 - word: у четвер
   translation: on Thursday
-  pos: calendar chunk
+  pos: calendar phrase
   example: "У четвер кава."
 - word: у п'ятницю
   translation: on Friday
-  pos: calendar chunk
+  pos: calendar phrase
   example: "У п'ятницю фільм."
 - word: в суботу
   translation: on Saturday
-  pos: calendar chunk
+  pos: calendar phrase
   example: "В суботу я гуляю."
 - word: в неділю
   translation: on Sunday
-  pos: calendar chunk
+  pos: calendar phrase
   example: "В неділю я вдома."
 - word: січень
   translation: January
@@ -132,51 +132,51 @@
   example: "Грудень — це зима."
 - word: у січні
   translation: in January
-  pos: month chunk
+  pos: month phrase
   example: "Свято у січні."
 - word: у лютому
   translation: in February
-  pos: month chunk
+  pos: month phrase
   example: "Зустріч у лютому."
 - word: у березні
   translation: in March
-  pos: month chunk
+  pos: month phrase
   example: "День народження у березні."
 - word: у квітні
   translation: in April
-  pos: month chunk
+  pos: month phrase
   example: "Урок у квітні."
 - word: у травні
   translation: in May
-  pos: month chunk
+  pos: month phrase
   example: "Кава у травні."
 - word: у червні
   translation: in June
-  pos: month chunk
+  pos: month phrase
   example: "Зустріч у червні."
 - word: у липні
   translation: in July
-  pos: month chunk
+  pos: month phrase
   example: "Канікули у липні."
 - word: у серпні
   translation: in August
-  pos: month chunk
+  pos: month phrase
   example: "Канікули у серпні."
 - word: у вересні
   translation: in September
-  pos: month chunk
+  pos: month phrase
   example: "Школа у вересні."
 - word: у жовтні
   translation: in October
-  pos: month chunk
+  pos: month phrase
   example: "Зустріч у жовтні."
 - word: у листопаді
   translation: in November
-  pos: month chunk
+  pos: month phrase
   example: "Вистава у листопаді."
 - word: у грудні
   translation: in December
-  pos: month chunk
+  pos: month phrase
   example: "Свято у грудні."
 - word: зима
   translation: winter
@@ -220,19 +220,19 @@
   example: "Коли твій день народження?"
 - word: першого січня
   translation: on January first
-  pos: date chunk
+  pos: date phrase
   example: "Свято першого січня."
 - word: п'ятнадцятого березня
   translation: on March fifteenth
-  pos: date chunk
+  pos: date phrase
   example: "День народження п'ятнадцятого березня."
 - word: двадцять другого серпня
   translation: on August twenty-second
-  pos: date chunk
+  pos: date phrase
   example: "День народження двадцять другого серпня."
 - word: першого вересня
   translation: on September first
-  pos: date chunk
+  pos: date phrase
   example: "Школа починається першого вересня."
 - word: коли?
   translation: when?
@@ -240,7 +240,7 @@
   example: "Коли зустріч?"
 - word: якого числа?
   translation: what date?
-  pos: question chunk
+  pos: question phrase
   example: "Якого числа день народження?"
 - word: планувати
   translation: to plan

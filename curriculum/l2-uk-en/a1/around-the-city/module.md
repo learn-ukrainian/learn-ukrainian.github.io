@@ -99,14 +99,14 @@ Three route questions keep the grammar small: **де?**, **куди?**, and
 
 **1. Де? Місцевий відмінок (Locative case).** Use this when someone or
 something is already in one place: **я в школі**, **банк у центрі**, **аптека
-на розі**, **я живу в Києві**. These are location chunks. They use **в/у** or
+на розі**, **я живу в Києві**. These are location phrases. They use **в/у** or
 **на** plus the **місцевий відмінок** form.
 
 **2. Куди? Знахідний відмінок (Accusative case).** Use this when there is
 movement: **я йду в магазин**, **ми йдемо до бібліотеки**, **вона їде до
 центру**, **я йду на зупинку**. Motion verbs such as **іти** and **їхати** help
 you hear the direction job. The **до + родовий відмінок (Genitive case)**
-chunk, as in **до бібліотеки**, is a ready A1 route phrase here.
+phrase, as in **до бібліотеки**, is a ready A1 route phrase here.
 
 **3. Як? / чим? Route method.** Add how the person moves: **пішки**, **на
 метро**, **автобусом**. This part does not replace **де?** or **куди?**; it
@@ -116,7 +116,7 @@ answers a different question.
 | --- | --- | --- | --- |
 | static place | **де?** | **в/у/на + місцевий відмінок** | **Я в парку.** |
 | direction | **куди?** | **в/у/на + знахідний відмінок** | **Я йду в парк.** |
-| route chunk with **до** | **куди?** | **до + родовий відмінок** | **Я йду до бібліотеки.** |
+| route phrase with **до** | **куди?** | **до + родовий відмінок** | **Я йду до бібліотеки.** |
 | transport | **чим? / як?** | **автобусом / на метро** | **Їду автобусом.** |
 
 :::tip
@@ -150,10 +150,10 @@ Use these practical words:
 | **хвилина** | minute | **П'ять хвилин пішки.** |
 | **на околиці** | on the outskirts | **Школа на околиці.** |
 
-For now, command forms are fixed route chunks: **ідіть прямо**, **ідіть
+For now, command forms are fixed route phrases: **ідіть прямо**, **ідіть
 направо**, **ідіть наліво**, **їдьте на метро**, **їдьте автобусом**. The next
 grammar module can explain the imperative; today the goal is to understand and
-reuse the route chunks.
+reuse the route phrases.
 
 Keep the live city route short: **прямо**, **направо**, **наліво**, **до
 центру**, **на розі**. Later you will learn richer spatial words, but today the

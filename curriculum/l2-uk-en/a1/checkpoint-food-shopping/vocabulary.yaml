@@ -104,15 +104,15 @@
   example: "Холодна вода."
 - word: я снідаю
   translation: I eat breakfast
-  pos: chunk
+  pos: phrase
   example: "Я снідаю вдома."
 - word: я обідаю
   translation: I eat lunch
-  pos: chunk
+  pos: phrase
   example: "Я обідаю в кафе."
 - word: я вечеряю
   translation: I eat dinner
-  pos: chunk
+  pos: phrase
   example: "Я вечеряю з друзями."
 - word: їсти
   translation: to eat
@@ -132,19 +132,19 @@
   example: "Я люблю борщ."
 - word: я їм
   translation: I eat
-  pos: chunk
+  pos: phrase
   example: "Я їм сир."
 - word: я п'ю
   translation: I drink
-  pos: chunk
+  pos: phrase
   example: "Я п'ю каву."
 - word: я хочу
   translation: I want
-  pos: chunk
+  pos: phrase
   example: "Я хочу чаю."
 - word: ти любиш
   translation: you like
-  pos: chunk
+  pos: phrase
   example: "Ти любиш борщ?"
 - word: ринок
   translation: market
@@ -184,11 +184,11 @@
   example: "Скільки коштує хліб?"
 - word: скільки коштує
   translation: how much does it cost
-  pos: chunk
+  pos: phrase
   example: "Скільки коштує сир?"
 - word: скільки коштують
   translation: how much do they cost
-  pos: chunk
+  pos: phrase
   example: "Скільки коштують помідори?"
 - word: гривня
   translation: hryvnia
@@ -208,11 +208,11 @@
   example: "Можна карткою?"
 - word: карткою
   translation: by card
-  pos: chunk
+  pos: phrase
   example: "Карткою, будь ласка."
 - word: готівкою
   translation: in cash
-  pos: chunk
+  pos: phrase
   example: "Готівкою, будь ласка."
 - word: купити
   translation: to buy
@@ -232,15 +232,15 @@
   example: "Кілограм яблук."
 - word: пляшка води
   translation: bottle of water
-  pos: chunk
+  pos: phrase
   example: "Пляшка води коштує десять гривень."
 - word: пачка чаю
   translation: pack of tea
-  pos: chunk
+  pos: phrase
   example: "Дайте пачку чаю."
 - word: шматок хліба
   translation: piece of bread
-  pos: chunk
+  pos: phrase
   example: "Олена бере шматок хліба."
 - word: склянка
   translation: glass
@@ -324,23 +324,23 @@
   example: "Анна каже: Смачного!"
 - word: Дайте, будь ласка
   translation: Please give
-  pos: chunk
+  pos: phrase
   example: "Дайте, будь ласка, рахунок."
 - word: Мені каву, будь ласка
   translation: Coffee for me, please
-  pos: chunk
+  pos: phrase
   example: "Мені каву, будь ласка."
 - word: Можна карткою?
   translation: Can I pay by card?
-  pos: chunk
+  pos: phrase
   example: "Можна карткою?"
 - word: Тут, будь ласка
   translation: For here, please
-  pos: chunk
+  pos: phrase
   example: "Тут, будь ласка."
 - word: із собою
   translation: to go
-  pos: chunk
+  pos: phrase
   example: "Вам тут чи із собою?"
 - word: дорого
   translation: expensive

@@ -244,15 +244,15 @@
   example: "Сіль солона."
 - word: без цукру
   translation: without sugar
-  pos: chunk
+  pos: phrase
   example: "Чай без цукру."
 - word: без молока
   translation: without milk
-  pos: chunk
+  pos: phrase
   example: "Кава без молока."
 - word: з молоком
   translation: with milk
-  pos: chunk
+  pos: phrase
   example: "Кава з молоком."
 - word: Смачного!
   translation: Enjoy your meal!

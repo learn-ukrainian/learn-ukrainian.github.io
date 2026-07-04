@@ -235,7 +235,7 @@ workbook:
             correct: false
         explanation: 'Use Повторіть, будь ласка.'
   - type: error-correction
-    title: Repair health chunks
+    title: Repair health phrases
     instruction: Fix the sentence by using the safe A1 health phrase.
     items:
       - sentence: 'Моя голова болить.'
@@ -245,7 +245,7 @@ workbook:
       - sentence: 'Я маю біль голова.'
         error: 'Я маю біль голова'
         correction: 'У мене болить голова'
-        explanation: 'Use the natural Ukrainian health chunk.'
+        explanation: 'Use the natural Ukrainian health phrase.'
       - sentence: 'Я є хворий.'
         error: 'Я є хворий'
         correction: 'Я хворий'

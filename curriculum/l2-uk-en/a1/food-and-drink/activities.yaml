@@ -51,8 +51,8 @@ inline:
         right: 'sparkling water'
   - id: act-3
     type: fill-in
-    title: Cafe drink chunks
-    instruction: Choose the whole chunk that completes the service line.
+    title: Cafe drink phrases
+    instruction: Choose the whole phrase that completes the service line.
     items:
       - sentence: 'Мені каву ___, будь ласка.'
         answer: 'з молоком'
@@ -60,14 +60,14 @@ inline:
           - 'з молоком'
           - 'з молоко'
           - 'без молоко'
-        explanation: 'Learn каву з молоком as one service chunk.'
+        explanation: 'Learn каву з молоком as one service phrase.'
       - sentence: 'Чай ___, будь ласка.'
         answer: 'без цукру'
         options:
           - 'без цукру'
           - 'без цукор'
           - 'з цукор'
-        explanation: 'Без цукру is the ready chunk.'
+        explanation: 'Без цукру is the ready phrase.'
       - sentence: 'Я їм хліб ___.'
         answer: 'з маслом'
         options:
@@ -88,7 +88,7 @@ inline:
           - 'без молока'
           - 'без молоко'
           - 'з молока'
-        explanation: 'Без молока is memorized here as a chunk.'
+        explanation: 'Без молока is memorized here as a phrase.'
       - sentence: "Вона п'є чай ___."
         answer: 'з лимоном'
         options:
@@ -104,7 +104,7 @@ inline:
       - statement: 'Борщ is a Ukrainian cultural dish in this module.'
         answer: true
         explanation: 'It is named as Ukrainian family and cultural food.'
-      - statement: 'Без цукру is practiced as a full chunk.'
+      - statement: 'Без цукру is practiced as a full phrase.'
         answer: true
         explanation: 'Practice the whole phrase as a service line.'
       - statement: 'Творог is the standard course word for cheese.'
@@ -174,7 +174,7 @@ workbook:
             correct: false
           - text: 'Чай з цукру, будь ласка.'
             correct: false
-        explanation: 'Use the memorized chunk без цукру.'
+        explanation: 'Use the memorized phrase без цукру.'
       - prompt: 'What do you say as people start eating?'
         options:
           - text: 'Смачного!'
@@ -269,7 +269,7 @@ workbook:
           - 'з молоком'
           - 'без цукру'
           - 'смачна'
-        explanation: 'Кава з молоком is a whole drink chunk.'
+        explanation: 'Кава з молоком is a whole drink phrase.'
   - type: unjumble
     title: Build safe food lines
     instruction: Put the words in a natural A1 order.
@@ -405,7 +405,7 @@ workbook:
           - 'Дайте чай без цукру.'
           - 'Дайте чай без цукор.'
           - 'Дайте чай з цукру.'
-        explanation: 'Без цукру is memorized as a whole chunk.'
+        explanation: 'Без цукру is memorized as a whole phrase.'
       - sentence: 'Чай з цукор.'
         error: 'з цукор'
         answer: 'Чай з цукром.'
@@ -413,7 +413,7 @@ workbook:
           - 'Чай з цукром.'
           - 'Чай з цукор.'
           - 'Чай без цукром.'
-        explanation: 'Чай з цукром is a whole drink chunk.'
+        explanation: 'Чай з цукром is a whole drink phrase.'
       - sentence: 'Борщ дуже смачно.'
         error: 'дуже смачно'
         answer: 'Борщ дуже смачний.'

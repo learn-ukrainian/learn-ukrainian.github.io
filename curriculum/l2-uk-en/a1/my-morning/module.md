@@ -53,7 +53,7 @@ Notice the difference between a reflexive morning action and a regular action.
 **Вмиваюся**, **одягаюся**, **навчаюся**, and **дивлюся** end in **-ся**.
 **Снідаю**, **лежу**, **гуляю**, and **йду** do not. For this lesson, build the
 regular Group One reflexive forms first, and learn **дивлюся на телефон** as a
-ready chunk from the dialogue.
+ready phrase from the dialogue.
 
 ## Дієслова на -ся
 
@@ -126,7 +126,7 @@ You can keep the story short:
 <!-- INJECT_ACTIVITY: act-4 -->
 
 The verb **йти** is irregular: **я йду**, **ти йдеш**, **він / вона йде**.
-Learn these as ready chunks for the end of the morning story: **я йду на
+Learn these as ready phrases for the end of the morning story: **я йду на
 роботу**, **ти йдеш до школи**, **вона йде в університет**.
 
 Make your own four- or five-sentence version by changing only the time, place,

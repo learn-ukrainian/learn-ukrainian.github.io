@@ -48,19 +48,19 @@
   example: "Дме вітер."
 - word: іде дощ
   translation: it is raining
-  pos: weather chunk
+  pos: weather phrase
   example: "Зараз іде дощ."
 - word: іде сніг
   translation: it is snowing
-  pos: weather chunk
+  pos: weather phrase
   example: "Взимку іде сніг."
 - word: дме вітер
   translation: the wind is blowing
-  pos: weather chunk
+  pos: weather phrase
   example: "Сьогодні дме вітер."
 - word: світить сонце
   translation: the sun is shining
-  pos: weather chunk
+  pos: weather phrase
   example: "Світить сонце."
 - word: сьогодні
   translation: today
@@ -128,9 +128,9 @@
   example: "Восени хмарно."
 - word: Мені холодно.
   translation: I am cold.
-  pos: state chunk
+  pos: state phrase
   example: "Увечері мені холодно."
 - word: Мені подобається...
   translation: I like...
-  pos: preference chunk
+  pos: preference phrase
   example: "Мені подобається літо."

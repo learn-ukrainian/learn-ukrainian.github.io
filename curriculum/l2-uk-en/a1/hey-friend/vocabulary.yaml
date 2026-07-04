@@ -12,7 +12,7 @@
   example: "Гей, друже!"
 - word: друже
   translation: friend! (vocative)
-  pos: chunk
+  pos: phrase
   example: "Привіт, друже!"
 - word: друг
   translation: male friend
@@ -24,7 +24,7 @@
   example: "Це моя подруга."
 - word: подруго
   translation: female friend! (vocative)
-  pos: chunk
+  pos: phrase
   example: "Подруго, дякую!"
 - word: брат
   translation: brother
@@ -32,7 +32,7 @@
   example: "Це мій брат."
 - word: брате
   translation: brother! (vocative)
-  pos: chunk
+  pos: phrase
   example: "Брате, ходімо."
 - word: сестра
   translation: sister
@@ -40,7 +40,7 @@
   example: "Це моя сестра."
 - word: сестро
   translation: sister! (vocative)
-  pos: chunk
+  pos: phrase
   example: "Сестро, ходи сюди."
 - word: мама
   translation: mom
@@ -48,7 +48,7 @@
   example: "Це моя мама."
 - word: мамо
   translation: Mom! (vocative)
-  pos: chunk
+  pos: phrase
   example: "Мамо, де телефон?"
 - word: тато
   translation: dad
@@ -56,15 +56,15 @@
   example: "Це мій тато."
 - word: тату
   translation: Dad! (vocative)
-  pos: chunk
+  pos: phrase
   example: "Тату, я вдома."
 - word: синку
   translation: son! (vocative)
-  pos: chunk
+  pos: phrase
   example: "На столі, синку."
 - word: дочко
   translation: daughter! (vocative)
-  pos: chunk
+  pos: phrase
   example: "У кишені, дочко."
 - word: бабуся
   translation: grandmother
@@ -72,7 +72,7 @@
   example: "Це моя бабуся."
 - word: бабусю
   translation: Grandma! (vocative)
-  pos: chunk
+  pos: phrase
   example: "Бабусю, ми йдемо."
 - word: дідусь
   translation: grandfather
@@ -80,7 +80,7 @@
   example: "Це мій дідусь."
 - word: дідусю
   translation: Grandpa! (vocative)
-  pos: chunk
+  pos: phrase
   example: "Дідусю, ми вдома."
 - word: Олена
   translation: Olena
@@ -144,7 +144,7 @@
   example: "Це пан Іван."
 - word: пане
   translation: Mr.!; sir! (vocative)
-  pos: chunk
+  pos: phrase
   example: "Добрий день, пане Іване!"
 - word: пані
   translation: Ms.; Mrs.; ma'am
@@ -156,7 +156,7 @@
   example: "Це вчитель."
 - word: вчителю
   translation: teacher! (vocative)
-  pos: chunk
+  pos: phrase
   example: "Вчителю, можна питання?"
 - word: прізвище
   translation: surname
@@ -164,9 +164,9 @@
   example: "Яке твоє прізвище?"
 - word: Добрий день
   translation: Good afternoon; hello
-  pos: chunk
+  pos: phrase
   example: "Добрий день, пане Іване!"
 - word: До побачення
   translation: goodbye
-  pos: chunk
+  pos: phrase
   example: "До побачення, Андрію!"

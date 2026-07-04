@@ -23,7 +23,7 @@ The task is simple: speak clearly in short A1 lines.
 | stay in touch | **Ось мій номер. Напиши мені.** |
 
 :::tip[A1 boundary]
-Keep the speech short. Use known chunks, known time words, and the compound
+Keep the speech short. Use known phrases, known time words, and the compound
 future **буду / будемо + infinitive**.
 :::
 
@@ -266,7 +266,7 @@ Support after the Ukrainian lines:
 
 ### Repair final A1 lines
 
-In the finale, repair the line before you continue. Keep the clear A1 chunk.
+In the finale, repair the line before you continue. Keep the clear A1 phrase.
 
 | Avoid | Use |
 | --- | --- |

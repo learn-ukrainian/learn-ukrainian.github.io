@@ -117,7 +117,7 @@ Here **ми їмо** and **ми п'ємо** move the verbs into the plural. The 
 objects stay simple: **суп**, **салат**, **сік** do not change; **вода** becomes
 **воду** after **п'ємо** and **хочу**.
 
-You also meet **хотіти** again as a useful chunk builder. **Я хочу їсти** and
+You also meet **хотіти** again as a useful phrase builder. **Я хочу їсти** and
 **Я хочу пити** are safe A1 lines. If you name a thing, use the direct-object
 form: **Я хочу воду**, **я хочу каву**, **я хочу суп**.
 

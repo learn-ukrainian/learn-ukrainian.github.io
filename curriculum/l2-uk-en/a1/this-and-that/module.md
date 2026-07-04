@@ -155,7 +155,7 @@ If your brain hesitates, use a two-step loop. First name the thing with
 contrast: **цей телефон — той телефон**, **ця камера — та камера**,
 **це радіо — те радіо**. You are not learning a new idea each time. You are
 changing one small choice: near or far, then masculine, feminine, neuter, or
-plural. That is enough for today. Small correct chunks beat long uncertain
+plural. That is enough for today. Small correct phrases beat long uncertain
 sentences for now.
 
 <!-- INJECT_ACTIVITY: act-4 -->
@@ -196,14 +196,14 @@ Most of this module stays in the nominative:
 - **та вулиця**
 - **те дерево**
 
-You may also meet two buying chunks:
+You may also meet two buying phrases:
 
 - **Я хочу цю книгу.**
 - **Я хочу цей олівець.**
 
 Do not build the full case table today. Just notice the useful feminine
-shopping chunk **цю книгу**. If you say **цей книгу**, the pointing word and
-the feminine noun do not match. The safe chunk is **цю книгу**.
+shopping phrase **цю книгу**. If you say **цей книгу**, the pointing word and
+the feminine noun do not match. The safe phrase is **цю книгу**.
 
 You may also see emphatic pointing forms:
 
@@ -225,7 +225,7 @@ Keep these repairs close:
 | What is this? This is a table. | **Що це? — Це стіл.** | **Что это? — Это стіл.** |
 | That book and a pen are in the room. | **У кімнаті є та книга і ручка.** | **У кімнаті є та книга та ручка.** |
 
-The buying chunk **цю сумку / цю книгу** is just a useful phrase today. You do
+The buying phrase **цю сумку / цю книгу** is just a useful phrase today. You do
 not need the full case table yet.
 
 ### Мініперевірка: мій світ

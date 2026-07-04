@@ -134,7 +134,7 @@ Support after the Ukrainian lines:
 | **Фармацевт: Так, ось краплі.** | Pharmacist: Yes, here are drops. |
 | **Покупець: Дякую. Скільки це коштує?** | Customer: Thank you. How much does this cost? |
 
-At A1, learn the pharmacy phrases as chunks:
+At A1, learn the pharmacy expressions as fixed forms:
 **таблетки від головного болю**, **щось від кашлю**, **щось від нежитю**.
 Do not analyze the case after **від** here.
 
@@ -302,7 +302,7 @@ Keep the Ukrainian phrase shape.
 | <bad>**У мене є нежить.**</bad> | **У мене нежить.** |
 
 These repairs are about natural Ukrainian phrases. You do not need to name the
-grammar. Memorize the safe chunks and use them.
+grammar. Memorize the safe phrases and use them.
 
 ## Підсумок
 

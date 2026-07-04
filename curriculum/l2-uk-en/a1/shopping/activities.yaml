@@ -160,7 +160,7 @@ inline:
         right: 'книгарня'
   - id: act-4
     type: fill-in
-    title: Quantity chunks
+    title: Quantity phrases
     instruction: Choose the quantity word or phrase that fits the product.
     items:
       - sentence: 'Дайте, будь ласка, ___ яблук.'
@@ -169,7 +169,7 @@ inline:
           - 'один кілограм'
           - 'одна пляшка'
           - 'один літр'
-        explanation: 'Use один кілограм яблук as a buying chunk.'
+        explanation: 'Use один кілограм яблук as a buying phrase.'
       - sentence: 'Дайте ___ молока.'
         answer: 'літр'
         options:
@@ -261,12 +261,12 @@ workbook:
       - statement: 'Скільки коштують яблука? is used for plural apples.'
         answer: true
         explanation: 'Use коштують with plural items.'
-      - statement: 'Кілограм яблук is taught here as a ready shopping chunk.'
+      - statement: 'Кілограм яблук is taught here as a ready shopping phrase.'
         answer: true
         explanation: 'The module avoids a full case lesson.'
       - statement: 'Карткою, будь ласка means by card, please.'
         answer: true
-        explanation: 'It is the checkout payment chunk.'
+        explanation: 'It is the checkout payment phrase.'
       - statement: 'З вас сто сім гривень is a greeting.'
         answer: false
         explanation: 'It is a checkout total.'
@@ -280,8 +280,8 @@ workbook:
         answer: true
         explanation: 'Грн appears on price labels.'
   - type: match-up
-    title: Shopping chunks
-    instruction: Match the product with a natural buying chunk.
+    title: Shopping phrases
+    instruction: Match the product with a natural buying phrase.
     pairs:
       - left: 'яблука'
         right: 'один кілограм яблук'
@@ -360,7 +360,7 @@ workbook:
           - 'У вас є хліб?'
           - 'Ви маєте хліб?'
           - 'Вас є хліб?'
-        explanation: 'Use the shop availability chunk У вас є.'
+        explanation: 'Use the shop availability phrase У вас є.'
       - sentence: 'Я плачу з карткою.'
         error: 'Я плачу з карткою.'
         answer: 'Карткою, будь ласка.'
@@ -368,7 +368,7 @@ workbook:
           - 'Карткою, будь ласка.'
           - 'Я плачу з карткою.'
           - 'З карткою, будь ласка.'
-        explanation: 'At checkout, use the chunk Карткою, будь ласка.'
+        explanation: 'At checkout, use the phrase Карткою, будь ласка.'
       - sentence: 'Дайте один кілограм яблука.'
         error: 'Дайте один кілограм яблука.'
         answer: 'Дайте, будь ласка, один кілограм яблук.'
@@ -376,7 +376,7 @@ workbook:
           - 'Дайте, будь ласка, один кілограм яблук.'
           - 'Дайте один кілограм яблука.'
           - 'Дайте одна кілограм яблук.'
-        explanation: 'Use the whole chunk один кілограм яблук.'
+        explanation: 'Use the whole phrase один кілограм яблук.'
       - sentence: 'Це коштує 50 гривн.'
         error: 'Це коштує 50 гривн.'
         answer: 'Це коштує 50 гривень.'

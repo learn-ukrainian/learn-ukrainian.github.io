@@ -5,7 +5,7 @@ different habit from English. For the hour on the clock, Ukrainian asks **кот
 година?** and answers with a feminine ordinal word: **перша**, **друга**,
 **третя**, **четверта**. Think of it as "which hour is it?" rather than "how
 many hours are there?" You do not need a full grammar table yet. You need a
-small, reliable set of time chunks.
+small, reliable set of time phrases.
 
 By the end, you can:
 
@@ -57,7 +57,7 @@ word.
 
 **О котрій годині?** asks for a schedule: **о дев'ятій**, **о першій**,
 **о другій**. The shape changes because the phrase means "at that hour." For
-now, learn the schedule forms as whole chunks. Do not try to build a full case
+now, learn the schedule forms as whole phrases. Do not try to build a full case
 paradigm. Your active job is to pair a daily action with a time:
 **Я прокидаюся о сьомій. Я снідаю о восьмій. Я працюю о дев'ятій.**
 
@@ -113,11 +113,11 @@ This is the first important contrast. **П'ять годин** is not the same a
 година** means the point on the clock: five o'clock. So the safe answer to
 **Котра година?** is **Зараз п'ята**, not **Зараз є п'ять годин**.
 
-Half hours use a second, very common chunk for **30 хвилин**: **пів на** plus
+Half hours use a second, very common phrase for **30 хвилин**: **пів на** plus
 the next hour. It means **половина до наступної години**: the phrase looks
 forward to the hour that is coming.
 
-| Clock | Safe chunk |
+| Clock | Safe phrase |
 | --- | --- |
 | 1:30 | **пів на другу** |
 | 2:30 | **пів на третю** |
@@ -126,7 +126,7 @@ forward to the hour that is coming.
 
 At this level, use **пів на** for recognition and simple production. Say
 **пів на сьому**, not **пів сьомої**. The small word **на** is part of the
-chunk. Without **на**, the phrase is not the safe standard form for this course.
+phrase. Without **на**, the phrase is not the safe standard form for this course.
 
 :::tip
 For a half hour, name the hour that is coming next: 6:30 is **пів на сьому**,
@@ -145,7 +145,7 @@ secure with full hours and **пів на**.
 ## О котрій?
 
 When the question is about a schedule, use **О котрій годині?** The answer
-changes from the clock label to the "at" chunk:
+changes from the clock label to the "at" phrase:
 
 | Clock answer | Schedule answer |
 | --- | --- |
@@ -166,7 +166,7 @@ Most forms use **о**: **о першій**, **о другій**, **о восьм
 **одинадцятій**, the smooth form is **об одинадцятій**. Learn it as one sound
 group: **об одинадцятій**.
 
-Now attach the chunk to verbs you already know:
+Now attach the phrase to verbs you already know:
 
 - **Я прокидаюся о сьомій ранку.**
 - **Я снідаю о восьмій.**
@@ -222,14 +222,14 @@ Third card: repair the unsafe time habits before they become automatic.
 Keep the course pattern simple and stable. For clock time, use
 **перша**, **друга**, **третя**. For a scheduled action, use **о/об**:
 **о першій**, **о другій**, **об одинадцятій**. For half hours, keep **на** in
-the chunk: **пів на восьму**.
+the phrase: **пів на восьму**.
 :::
 
 | Avoid | Use | Why |
 | --- | --- | --- |
 | <del>Зараз є п'ять годин.</del> | **Зараз п'ята (година).** | clock time uses the feminine ordinal hour |
 | <del>Уроки починаються у вісім годин.</del> | **Уроки починаються о восьмій.** | schedule time uses **о/об**, not **у/в** |
-| <del>Пів восьмої.</del> | **Пів на восьму.** | **на** belongs to the half-hour chunk |
+| <del>Пів восьмої.</del> | **Пів на восьму.** | **на** belongs to the half-hour phrase |
 
 For your own answer, write five short lines. Use one line for the time now, one
 line for waking up, one line for work or study, one line for lunch or dinner,

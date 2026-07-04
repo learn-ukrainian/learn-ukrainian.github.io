@@ -106,12 +106,12 @@ Answer:
 
 Use Ukrainian cultural forms clearly: **борщ**, **вареники**, and **сало** are
 Ukrainian food words in this course, not generic regional labels. **Вареники з
-картоплею** is a memorized food chunk here, just like **кава з молоком**.
+картоплею** is a memorized food phrase here, just like **кава з молоком**.
 
-:::tip[Food chunks]
+:::tip[Food phrases]
 Say the whole phrase when it helps: **кава з молоком**, **вареники з
 картоплею**, **кілограм яблук**. You do not need a new grammar explanation for
-these chunks today.
+these phrases today.
 :::
 
 <!-- INJECT_ACTIVITY: act-3 -->
@@ -137,7 +137,7 @@ Female nouns on **-а/-я** often change to **-у/-ю**: **вода → воду
 **кава → каву**. Masculine inanimate food words often stay unchanged:
 **сир → сир**, **борщ → борщ**, **хліб → хліб**. Your food lines are simple:
 **Я їм сир**, **Я люблю борщ**. Service phrases such as **Дайте води** and
-**Хочу чаю** can stay memorized chunks, not a new case lesson.
+**Хочу чаю** can stay memorized phrases, not a new case lesson.
 
 :::tip[Checkpoint habit]
 When you are unsure, choose the A1 sentence you can say quickly: **Я п'ю

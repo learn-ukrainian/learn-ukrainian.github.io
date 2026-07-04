@@ -229,3 +229,46 @@ def test_non_mdx_explicit_file_is_ignored(tmp_path: Path, capsys) -> None:
     output = capsys.readouterr().out
     assert exit_code == 0
     assert output == "0 findings: no learner surface files to scan.\n"
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        "- 🔗 **Wiki: pedagogy/a1/x** — internal brief.\n",
+        "- **Synthesis of M42-M46 content** — checkpoint note.\n",
+        "- **Internal module M43: please-do-this** — reused.\n",
+    ],
+)
+def test_internal_resource_refs_are_flagged(text: str, tmp_path: Path) -> None:
+    bad = tmp_path / "bad.mdx"
+    bad.write_text(text, encoding="utf-8")
+    findings = check_no_internal_ids.scan_files([bad])
+    assert any(finding.kind == "internal resource ref" for finding in findings)
+
+
+def test_resources_chunk_id_provenance_key_is_not_flagged(tmp_path: Path) -> None:
+    res = tmp_path / "resources.yaml"
+    res.write_text(
+        '- title: "T"\n'
+        "  role: textbook\n"
+        "  chunk_id: 1-klas-bukvar_s0023\n"
+        "  notes: retrieved because no literal chunk_id in the plan\n",
+        encoding="utf-8",
+    )
+    lines = [finding.line_no for finding in check_no_internal_ids.scan_files([res])]
+    assert 3 not in lines  # the provenance KEY line is skipped
+    assert 4 in lines  # a prose mention of chunk_id still leaks
+
+
+def test_core_a1_surfaces_are_guarded(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(check_no_internal_ids, "PROJECT_ROOT", tmp_path)
+    a1_mdx = tmp_path / "site/src/content/docs/a1/x.mdx"
+    a1_src = tmp_path / "curriculum/l2-uk-en/a1/x/resources.yaml"
+    b1_mdx = tmp_path / "site/src/content/docs/b1/y.mdx"
+    for p in (a1_mdx, a1_src, b1_mdx):
+        p.parent.mkdir(parents=True, exist_ok=True)
+        p.write_text("x\n", encoding="utf-8")
+    assert check_no_internal_ids.is_published_seminar_mdx(a1_mdx)
+    assert check_no_internal_ids.is_published_seminar_mdx(a1_src)
+    # A core level not yet in GUARDED_CORE_LEVELS is not scanned yet.
+    assert not check_no_internal_ids.is_published_seminar_mdx(b1_mdx)

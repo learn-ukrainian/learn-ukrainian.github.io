@@ -4,7 +4,7 @@
   example: "Наказовий спосіб допомагає просити про дію."
 - word: будь ласка
   translation: please
-  pos: chunk
+  pos: phrase
   example: "Читайте, будь ласка."
 - word: читати
   translation: to read

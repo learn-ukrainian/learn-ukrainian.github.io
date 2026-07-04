@@ -53,7 +53,7 @@ inline:
           - тепло
           - холодно
           - спекотно
-        explanation: 'Навесні тепло is the target season-weather chunk.'
+        explanation: 'Навесні тепло is the target season-weather phrase.'
       - sentence: 'Сьогодні мінус п''ять, дуже ___.'
         answer: холодно
         options:
@@ -93,7 +93,7 @@ inline:
           - подобається
           - любить
           - робить
-        explanation: 'Use the chunk тобі подобається.'
+        explanation: 'Use the phrase тобі подобається.'
       - sentence: '— Чому ти любиш літо? — Тому що влітку ___.'
         answer: сонячно
         options:

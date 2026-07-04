@@ -2,13 +2,13 @@
 
 Numbers are useful immediately: prices, ages, notebooks, and phone
 numbers. Ukrainian numbers also change the noun after them, so this module
-keeps the rule practical. You will learn the chunks you need first, and leave
+keeps the rule practical. You will learn the phrases you need first, and leave
 the full grammar for later.
 
 By the end, you can:
 
 - count from **нуль** to **сто**;
-- read useful price chunks up to **тисяча гривень**;
+- read useful price phrases up to **тисяча гривень**;
 - ask **Скільки коштує...?** for prices;
 - answer **Скільки тобі років?** with **Мені ... рік / роки / років**;
 - read a Ukrainian phone number in small groups;
@@ -47,7 +47,7 @@ Support after the Ukrainian lines:
 | **Продавець: Сто п'ятдесят гривень.** | Seller: One hundred fifty hryvnias. |
 | **Покупець: Добре, дякую.** | Customer: Good, thank you. |
 
-Keep **гривня / гривні / гривень** as a price chunk:
+Keep **гривня / гривні / гривень** as a price phrase:
 
 - **одна гривня**
 - **дві гривні**, **три гривні**, **чотири гривні**
@@ -57,7 +57,7 @@ Do not turn this into a case lesson. For now, remember the 1 / 2-4 / 5+ price
 pattern.
 
 For more than one item, you may hear **Скільки коштують три булочки?** Keep
-**коштує** and **коштують** as price-question chunks for now.
+**коштує** and **коштують** as price-question phrases for now.
 
 :::tip
 When you hear a price, first catch the number, then catch the money word.
@@ -89,9 +89,9 @@ Two numbers show gender early:
 - **один олівець**, **одна ручка**, **одне тістечко**
 - **два олівці**, **дві ручки**
 
-For 5 and above, use a memorized chunk with the noun:
+For 5 and above, use a memorized phrase with the noun:
 **п'ять зошитів**, **шість студентів**, **десять гривень**. The full grammar
-comes later; the chunk is enough now.
+comes later; the phrase is enough now.
 
 The teens mostly end in **-надцять**:
 
@@ -118,7 +118,7 @@ Use numbers with familiar objects from earlier modules:
 - **одне тістечко**, **два тістечка**, **п'ять тістечок**
 
 The last noun form changes at **5+**. At A1, do not analyze the case name yet.
-Learn the phrases as useful shopping and classroom chunks. The pattern is
+Learn these as useful shopping and classroom phrases. The pattern is
 visible enough: **1** has one form, **2-4** has another, and **5+** has another.
 That is the same memory hook you need for **гривня**, **рік**, and everyday
 objects.
@@ -151,7 +151,7 @@ Combined numbers are simple:
 - **сорок сім**
 - **дев'яносто дев'ять**
 
-For prices, learn these useful chunks:
+For prices, learn these useful phrases:
 
 | Price | Ukrainian |
 | --- | --- |
@@ -219,7 +219,7 @@ Support after the Ukrainian lines:
 The word **років** is often left understood after the first question. The safe
 full answer is still **Мені двадцять п'ять років**.
 
-Use the same person chunks for other people:
+Use the same person phrases for other people:
 
 - **Тобі двадцять два роки.**
 - **Вам двадцять п'ять років.**
@@ -255,7 +255,7 @@ Support after the Ukrainian lines:
 | **Марко: Так, усе правильно.** | Marko: Yes, everything is correct. |
 
 For A1, reading by groups is enough. You do not need every phone-number style.
-The key habits are **нуль** at the start and clear chunks such as
+The key habits are **нуль** at the start and clear phrases such as
 **сорок п'ять**, **шістдесят сім**.
 
 Try these aloud:
@@ -341,6 +341,6 @@ Support after the Ukrainian lines:
 | **Мій номер телефону — нуль дев'яносто сім, три два один, сорок п'ять, шістдесят сім.** | My phone number is zero ninety-seven, three two one, forty-five, sixty-seven. |
 | **Повторіть, будь ласка.** | Please repeat. |
 
-Say those lines until the chunks feel boring. That is the point: numbers should
+Say those lines until the phrases feel boring. That is the point: numbers should
 become quick enough that you can use them while buying bread, writing a phone
 number, or answering a simple personal question.

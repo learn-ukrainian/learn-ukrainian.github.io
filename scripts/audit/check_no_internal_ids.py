@@ -32,6 +32,12 @@ SEMINAR_DOC_TRACKS = {
     "ruth",
 }
 
+# Core l2-uk-en levels whose learner surfaces are guarded by this gate. Historically
+# only folk + seminar tracks were scanned, which let internal-register jargon (chunk,
+# "Wiki: pedagogy/…") accumulate in core content unchecked. Add a level here ONLY once
+# it is clean, or the gate will block unrelated commits touching that level.
+GUARDED_CORE_LEVELS = {"a1"}
+
 FOLK_LEARNER_SOURCE_FILES = {
     "module.md",
     "activities.yaml",
@@ -68,6 +74,12 @@ INTERNAL_REGISTER_PATTERNS = (
         "build/process term",
         re.compile(r"\b(?:chunk(?:_ids?)?s?|source_chunk(?:_ids?)?)\b", re.IGNORECASE),
     ),
+    # Internal authoring cross-references dumped into resources.yaml that render
+    # as bogus learner resources ("Wiki: pedagogy/…", "Synthesis of M42-M46 content",
+    # "Internal module M43"). See scripts/audit/strip_internal_resource_entries.py.
+    PatternSpec("internal resource ref", re.compile(r"Wiki:\s*pedagogy", re.IGNORECASE)),
+    PatternSpec("internal resource ref", re.compile(r"\bSynthesis of M\d", re.IGNORECASE)),
+    PatternSpec("internal resource ref", re.compile(r"\bInternal module M\d", re.IGNORECASE)),
     PatternSpec("build/process term", re.compile(r"\bcorpus[ -]ids?\b", re.IGNORECASE)),
     PatternSpec("build/process term", re.compile(r"\binternal[ -]corpus\b", re.IGNORECASE)),
     PatternSpec("build/process term", re.compile(r"\bservice[ -]ids?\b", re.IGNORECASE)),
@@ -103,6 +115,13 @@ FOLK_INTERNAL_REGISTER_PATTERNS = (
 )
 
 LEARNER_SURFACE_PATTERNS = (*INTERNAL_ID_PATTERNS, *INTERNAL_REGISTER_PATTERNS)
+
+# `chunk_id:` / `packet_chunk_id:` keys in resources.yaml are load-bearing corpus
+# provenance (consumed by linear_pipeline._plan_reference_match_gate) that the MDX
+# renderer strips — they never reach a learner surface, so a bare provenance-key
+# line is not a leak. Prose that mentions the term is still scanned.
+_RESOURCE_PROVENANCE_KEY_RE = re.compile(r"^\s*(?:-\s*)?(?:packet_)?chunk_id\s*:", re.IGNORECASE)
+_RESOURCE_FILENAMES = {"resources.yaml", "resources.yml"}
 
 
 @dataclass(frozen=True, order=True)
@@ -216,9 +235,14 @@ def is_published_seminar_mdx(path: Path, *, allow_external: bool = False) -> boo
         return suffix == ".mdx" and _is_routable_reading(path)
 
     if len(parts) >= 6 and parts[:4] == ("site", "src", "content", "docs"):
-        return suffix == ".mdx" and parts[4] in SEMINAR_DOC_TRACKS
+        return suffix == ".mdx" and parts[4] in (SEMINAR_DOC_TRACKS | GUARDED_CORE_LEVELS)
 
-    return len(parts) == 5 and parts[:3] == ("curriculum", "l2-uk-en", "folk") and parts[4] in FOLK_LEARNER_SOURCE_FILES
+    return (
+        len(parts) == 5
+        and parts[:2] == ("curriculum", "l2-uk-en")
+        and parts[2] in (GUARDED_CORE_LEVELS | {"folk"})
+        and parts[4] in FOLK_LEARNER_SOURCE_FILES
+    )
 
 
 def scan_candidates(paths: list[Path], *, allow_external: bool = False) -> list[Path]:
@@ -234,8 +258,11 @@ def scan_candidates(paths: list[Path], *, allow_external: bool = False) -> list[
 
 def scan_file(path: Path) -> list[Finding]:
     findings: list[Finding] = []
+    is_resources = path.name in _RESOURCE_FILENAMES
     text = path.read_text(encoding="utf-8")
     for line_no, line in enumerate(text.splitlines(), start=1):
+        if is_resources and _RESOURCE_PROVENANCE_KEY_RE.match(line):
+            continue
         for spec in _learner_surface_patterns(path):
             for match in spec.pattern.finditer(line):
                 findings.append(

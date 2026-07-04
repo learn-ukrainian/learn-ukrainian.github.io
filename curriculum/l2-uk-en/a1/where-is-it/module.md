@@ -9,7 +9,7 @@ By the end, you can:
 - answer **Де?** with **в/у** or **на** plus a common place form;
 - recognize the **місцевий відмінок** as the place case;
 - use the helper questions **на/у кому? на/у чому?**;
-- choose common chunks such as **у банку**, **в магазині**, **на вулиці**;
+- choose common phrases such as **у банку**, **в магазині**, **на вулиці**;
 - keep static location **де?** separate from direction **куди?**;
 - say **в Україні**, **у Києві**, and **у Львові** with confidence.
 
@@ -43,7 +43,7 @@ Support after the Ukrainian lines:
 | **Марко: Вона на дивані!** | Marko: She is on the sofa! |
 
 Next, use the same pattern in a new city. The neighbor is answering the same
-question with practical place chunks.
+question with practical place phrases.
 
 ```text
 Новий мешканець: Добрий день! Де аптека?
@@ -65,7 +65,7 @@ Support after the Ukrainian lines:
 | **Новий мешканець: Де пошта?** | New resident: Where is the post office? |
 | **Сусід: Пошта на площі. Ми кажемо: я на пошті.** | Neighbor: The post office is on the square. We say: I am at the post office. |
 
-The useful chunks are small but important:
+The useful phrases are small but important:
 
 | Base word | Answer to **Де?** |
 | --- | --- |
@@ -107,7 +107,7 @@ Here **живу**, **працюю**, and **є** describe a static place. They an
 
 **Питання «Де?» та базові прийменники.** At A1, make one strong association:
 **Де?** needs a place phrase. Most beginner answers use
-**в/у** or **на** plus a changed noun. Say the whole chunk aloud:
+**в/у** or **на** plus a changed noun. Say the whole phrase aloud:
 **я вдома**, **мама на роботі**, **ми в школі**. Do not drop the preposition:
 **Книга на столі**, not **Книга столі**.
 
@@ -116,7 +116,7 @@ changes the noun ending for location. The dictionary form is only the starting
 form: **школа -> в школі**, **робота -> на роботі**, **місто -> у місті**.
 Some masculine place words use **-у**: **банк -> у банку**, **парк -> у
 парку**. Other common masculine places use **-і**: **офіс -> в офісі**,
-**урок -> на уроці**. For now, learn frequent place chunks rather than a full
+**урок -> на уроці**. For now, learn frequent place phrases rather than a full
 declension table.
 
 Keep these A1 forms together with their prepositions:
@@ -152,7 +152,7 @@ word **Київ**. To describe exact place, the word must fit the place phrase:
 **Семантичний вибір між «в/у» та «на».** Use **в/у** for inside a
 closed or contained place: **в школі**, **у банку**, **в магазині**, **у
 лікарні**, **в кафе**. Use **на** for many open spaces, surfaces, events, and
-traditional institution chunks: **на вулиці**, **на площі**, **на роботі**,
+traditional institution phrases: **на вулиці**, **на площі**, **на роботі**,
 **на уроці**, **на пошті**, **на вокзалі**.
 With countries and cities in static place answers, choose **в/у**:
 **в Україні**, **у Києві**, **у Львові**, **в Одесі**.
@@ -173,7 +173,7 @@ For cities, use **в/у**: **у Києві**, **у Львові**, **в Одес
 
 Do not explain Ukrainian locative through Russian grammar terms, and do not
 describe Ukrainian sounds by comparing them to Russian sounds. This lesson uses
-Ukrainian questions, Ukrainian examples, and Ukrainian place chunks.
+Ukrainian questions, Ukrainian examples, and Ukrainian place phrases.
 
 <!-- INJECT_ACTIVITY: act-4 -->
 
@@ -195,11 +195,11 @@ for static answers.
 Use this four-part check whenever you answer **Де?**
 
 1. Ask the real question: **Де?**
-2. Choose the preposition chunk: **в/у** or **на**.
+2. Choose the preposition phrase: **в/у** or **на**.
 3. Use the place form: **школі**, **роботі**, **банку**, **пошті**, **місті**.
 4. Read the full sentence aloud and check whether it means static location.
 
-Keep these chunks ready:
+Keep these phrases ready:
 
 | English idea | Ukrainian place answer |
 | --- | --- |
@@ -238,5 +238,5 @@ Support after the Ukrainian lines:
 | **Де найближча аптека?** | Where is the nearest pharmacy? |
 
 Use short A1 answers first: **Я живу в Україні. Я живу у Львові. Я працюю в
-офісі. Аптека на вулиці. Пошта на площі.** Those chunks are enough to move into
+офісі. Аптека на вулиці. Пошта на площі.** Those phrases are enough to move into
 the next module, **Моє місто**.
