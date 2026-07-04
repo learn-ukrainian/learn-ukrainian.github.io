@@ -64,6 +64,25 @@ GLM_DEFAULT_TIMEOUT_S = 1800
 # China-egress constraint forbids invoking GLM.
 _CI_ENV_VARS = ("CI", "GITHUB_ACTIONS", "GITLAB_CI", "BUILDKITE", "JENKINS_URL")
 
+# Google Gemma 4 fleet member (Apr 2026, Apache-2.0), reached FREE via the
+# OpenRouter provider under opencode. The 31B dense variant is the default; the
+# 26B-A4B MoE (#1 on the lang-uk leaderboard) is reachable via ``--model``.
+# Western-hosted + permissively licensed → NO egress guard (unlike GLM).
+#
+# ROLE (bakeoff evidence 2026-07-04, docs/projects/ua-eval-harness/model-evidence.md):
+# a FREE Google-family lane that is deterministically surface-clean on Ukrainian
+# writing (VESUM-valid, 0 russicisms in the 31B probe) — use it to OFFLOAD
+# surface-level UK writing / russicism review and code review from the METERED
+# lanes (Claude / Codex). Cross-family to OpenAI / Anthropic / DeepSeek.
+#
+# ⚠️ HARD FACTUALITY CAVEAT: Gemma FABRICATES facts on seminar / factual content
+# (the 31B probe invented folk-culture claims while staying surface-clean) —
+# surface-clean ≠ factually accurate. NEVER use it as a fact-checker or for
+# factual / seminar CONTENT review without a source-enforced gate. Being
+# Google-family, it is NOT a clean cross-family reviewer of agy / Gemini work.
+GEMMA_MODEL = "openrouter/google/gemma-4-31b-it"
+GEMMA_DEFAULT_TIMEOUT_S = 900  # chat model (no browsing); MoE variants can be slow
+
 
 def ask_opencode(
     content: str,
@@ -252,6 +271,69 @@ def ask_glm(
         task_id=task_id,
         msg_type="response",
         from_llm="glm",
+        to_llm=from_llm,
+        to_model=from_model,
+    )
+    acknowledge(msg_id)
+    acknowledge(reply_id)
+
+    return msg_id
+
+
+def ask_gemma(
+    content: str,
+    task_id: str,
+    msg_type: str = "query",
+    data: str | None = None,
+    model: str | None = None,
+    from_llm: str = "claude",
+    from_model: str | None = None,
+    no_timeout: bool = False,
+) -> int:
+    """Send a message AND invoke Google Gemma 4 (31B-it) one-shot via opencode.
+
+    ``gemma`` is a FREE Google-family lane (OpenRouter-hosted, Apache-2.0). Use
+    it to OFFLOAD from the metered lanes (Claude / Codex): it is deterministically
+    surface-clean on Ukrainian writing (VESUM-valid, 0 russicisms in the 31B
+    bakeoff) and a serviceable code reviewer, cross-family to OpenAI / Anthropic
+    / DeepSeek.
+
+    ⚠️ It FABRICATES facts on seminar / factual content (surface-clean ≠
+    factually accurate) — do NOT use it as a fact-checker or for factual /
+    seminar CONTENT review without a source-enforced gate. Being Google-family,
+    it is NOT a clean cross-family reviewer of agy / Gemini work.
+
+    ``model`` overrides the pinned ``GEMMA_MODEL`` — e.g. the 26B-A4B MoE
+    (``openrouter/google/gemma-4-26b-a4b-it``, #1 on the lang-uk leaderboard) —
+    while tags drift (see the "examples not constants" note in
+    model-assignment.md).
+    """
+    effective_model = model or GEMMA_MODEL
+    msg_id = send_message(
+        content,
+        task_id,
+        msg_type,
+        data,
+        from_llm=from_llm,
+        to_llm="gemma",
+        from_model=from_model,
+        to_model=effective_model,
+    )
+    print(f"\n🚀 Invoking gemma ({effective_model}) to process message #{msg_id}...")
+    response = _invoke_opencode(
+        content,
+        effective_model,
+        output_format="json",
+        data=data,
+        no_timeout=no_timeout,
+        default_timeout_s=GEMMA_DEFAULT_TIMEOUT_S,
+    )
+
+    reply_id = send_message(
+        content=response,
+        task_id=task_id,
+        msg_type="response",
+        from_llm="gemma",
         to_llm=from_llm,
         to_model=from_model,
     )
