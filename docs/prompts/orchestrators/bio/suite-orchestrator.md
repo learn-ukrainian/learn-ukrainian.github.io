@@ -1,61 +1,134 @@
 # BIO Orchestrator Suite
 
-Prompt version: 0.2
-Last reviewed: 2026-06-30
+Prompt version: 0.3
+Last reviewed: 2026-07-04
 
 ## Source Assumptions
 
 - BIO is a seminar biography track, not C1 core. It uses source-tier dossiers, decolonization review, portrait/image-rights rules, politically charged biography framing, and human-centered narrative prose.
 - **SSOT module ordering / slugs:** `curriculum/l2-uk-en/curriculum.yaml` (`levels.bio.modules`, 387 slugs). The 2026-06-29 expansion appended **+77 new slugs** (`modules[310:387]`) in six groups; roster framing lives in `docs/audits/bio-ukrainian-expansion-research-2026-06-29.md`, surface inventory in `docs/audits/bio-readiness-matrix-2026-06-29.md`.
 - The 130/180-figure appendix in `docs/audits/bio-track-gap-audit-2026-05-26.md` covers the original roster only; do not treat it as the SSOT for +77.
-- Current source surfaces include `curriculum/l2-uk-en/plans/bio/*.yaml`, `docs/research/bio/*.md`, `wiki/figures/*.md`, `wiki/figures/*.sources.yaml`, BIO audits, and BIO best-practice docs.
+- Current source surfaces include `curriculum/l2-uk-en/plans/bio/*.yaml`, `docs/research/bio/*.md`, `wiki/figures/*.md`, `wiki/figures/*.sources.yaml`, `curriculum/l2-uk-en/bio/<slug>/`, generated site BIO pages, BIO audits, and BIO best-practice docs.
 - Every production module needs primary-voice readings where available: autobiographical writing, letters, poems, speeches, memoir passages, court statements, diaries, interviews, archival documents, or reliable contemporaneous documents by/about the figure.
-- This suite covers readiness-gate, base-prep, production, quality audit, and remediation. Use only the stage that matches the task.
+- This suite covers readiness-gate, base-prep, production, quality audit, LLM-QG closure, and remediation. Use only the stage that matches the task.
 
 ## Goal
 
-Orchestrate BIO work without touching unrelated tracks. Keep the +77 expansion behind the readiness/base-prep gate, build production modules only after source artifacts pass, and make each finished BIO page teach by telling the story of an important human being rather than narrating how a lesson is constructed.
+Orchestrate BIO from scattered source surfaces to shippable student modules.
+The ultimate goal is not merely adding dossiers: every selected BIO figure must
+reach module-ready or module-shipped state with the required plan, dossier, wiki
+packet, image/rights notes, source/reading leads, module files, generated page,
+deterministic gates, persisted LLM-QG, and independent review.
+
+Do this without touching unrelated tracks. Keep source preparation separate from
+module production, build production modules only after source artifacts pass, and
+make each finished BIO page teach by telling the story of an important human
+being rather than narrating how a lesson is constructed.
+
+## Definition Of Ready And Done
+
+Use these states in issue comments, worker prompts, and monitor handoffs:
+
+- `inventory`: slug exists in `curriculum.yaml` or candidate queue, but surfaces
+  have not been checked against live repo state.
+- `source-ready`: dossier exists and passes xref/source-tier checks.
+- `plan-ready`: plan YAML exists, parses, matches the dossier's figure and
+  framing, and has no seminar-quality or title/subject drift blockers.
+- `wiki-ready`: `wiki/figures/<slug>.md` and `.sources.yaml` exist, have clear
+  source roles and portrait/image-rights notes, and pass wiki subject/source
+  checks where applicable.
+- `module-ready`: source-ready + plan-ready + wiki-ready, with reading/source
+  leads and image-rights decisions recorded. This is the earliest state where a
+  writer may build `curriculum/l2-uk-en/bio/<slug>/`.
+- `module-built`: module, activities, vocabulary, resources, generated MDX, and
+  permitted readings exist and pass deterministic gates.
+- `qg-current`: the built module has current persisted LLM-QG state in the local
+  LLM-QG store or a current module-local `llm_qg.json`; generated QG artifacts
+  and telemetry DBs stay out of PR diffs.
+- `shipped`: module-built + qg-current + independent review clear + merged.
+
+If a slug is missing one or more prep surfaces, dispatch base-prep workers before
+module writers. If a slug is built but lacks current LLM-QG, route QG closure
+before claiming it shipped.
 
 ## Readiness Gate And Stage Sequencing
 
-- **Readiness gate / audit:** inspect roster, source surfaces, rights, framing risks, and sequencing. Write only durable audit notes under `docs/audits/` when explicitly scoped.
+- **Readiness gate / audit:** inspect roster, source surfaces, rights, framing risks, LLM-QG state, and sequencing. Write only durable audit notes under `docs/audits/` when explicitly scoped.
 - **Base prep (#4005 pattern):** write dossier -> plan YAML -> wiki packet, in that order, for promoted target slugs only. No `module.md`, activities, vocabulary, resources, site MDX, or generated output in base-prep PRs.
-- **Production:** only after dossier and plan pass. Write current-layout module files under `curriculum/l2-uk-en/bio/<slug>/` plus generated site MDX and permitted reading pages/resources.
+- **Production:** only after dossier, plan, and wiki packet pass. Write current-layout module files under `curriculum/l2-uk-en/bio/<slug>/` plus generated site MDX and permitted reading pages/resources.
 - **Quality audit:** read built pages and source artifacts; record findings without writing generated `status/`, curriculum `audit/`, or curriculum `review/` artifacts.
+- **LLM-QG closure:** for built modules without current LLM-QG, run or route the documented LLM-QG/parity path, persist the result, keep telemetry/QG artifacts out of PRs unless explicitly allowed, and treat near-threshold seminar modules as candidates for second independent review.
 - **Remediation:** fix source authority, framing, narrative voice, activity placement, MDX/render, and validation blockers in small scoped PRs.
 
-**Hard rule for +77:** do not write any BIO module under `curriculum/l2-uk-en/bio/<slug>/...` until that slug's dossier and plan exist and pass. The Bilash pilot (`oleksandr-bilash`, #4004) is an exception because its source artifacts already exist and it is the production/remediation pilot.
+**Hard rule for +77 and later additions:** do not write any BIO module under `curriculum/l2-uk-en/bio/<slug>/...` until that slug's dossier, plan, and wiki packet exist and pass. The Bilash pilot (`oleksandr-bilash`, #4004) is an exception only because its source artifacts already existed and it was the first production/remediation pilot. It still must not be counted as shipped until `module_quality_audit.py --level bio` reports current LLM-QG.
+
+**Known live follow-up as of 2026-07-04:** `oleksandr-bilash` is built and surface-policy clean, but `module_quality_audit.py --level bio --format json` reported `llm_qg_status: missing`, `needs_llm_qg: true`, and `second_review_reason: seminar_high_risk`. Re-check live state before acting, then route LLM-QG closure if still missing.
 
 ## Fleet Operating Model
 
 BIO has hundreds of figures; do not run it as one agent doing every step. Use a
-fleet pipeline, but keep the orchestrator accountable for integration.
+visible-worker pipeline, but keep the orchestrator accountable for integration.
 
-- **Codex orchestrator:** owns queue state, worktree creation, branch naming,
-  final diff review, PR creation, independent-review routing, merge decisions,
-  scheduler updates, and artifact hygiene.
-- **Parallel dossier workers:** may draft or repair one dossier file each:
-  `docs/research/bio/<slug>.md`. A dossier worker must not touch plan YAML,
-  modules, activities, vocabulary, MDX, wiki packets, status/audit/review
-  artifacts, telemetry DB files, linter configs, package files, or unrelated
-  files.
-- **Source/cross-track explorers:** use cheap read-only agents for existing
-  curriculum links, source-tier packets, naming variants, image-rights notes,
-  and factual-risk summaries. They report claims and citations, not essays.
-- **Specialist review routing:** Claude is the preferred independent reviewer
-  for BIO content. Use AGY (Gemini-family via bridge) for adversarial source/factual checks,
-  DeepSeek/Hermes-style review for decolonization and sensitive framing when
-  available, Grok-build for build/CI diagnostics, and Cursor for UI/front-end or
-  larger code diffs when the route is active.
-- **Sequential merge queue:** multiple dossiers may be prepared in parallel,
-  but merge in BIO order unless the orchestrator records an explicit reason to
-  skip or hold a slug. CI/CodeQL and unresolved independent-review findings are
-  blockers.
-- **Token economy:** deterministic tools first. Do not ask a model to verify
-  paths, whitespace, YAML parseability, or CI state. Compress large logs/source
-  dumps with Headroom before cross-agent handoff. Keep worker briefs compact and
-  include only slug, scope, target file, source leads, validation commands, and
-  forbidden writes.
+- **Codex orchestrator/release manager:** owns live-state inspection, queue
+  state, worktree/thread creation, branch naming, issue ledger updates, final
+  diff review, deterministic gates, independent-review routing, merge decisions,
+  scheduler updates, and artifact hygiene. The orchestrator does not write
+  dossiers or modules inline except to fix a narrow release blocker.
+- **Visible worker threads only for writing:** writer workers run in visible
+  Codex app threads/worktrees, own their branch/PR, open draft PRs, and stop.
+  Hidden `scripts/delegate.py` workers are allowed only if the user explicitly
+  asks for invisible local delegation.
+- **Parallelism target:** keep two independent writer workers active by default
+  when scopes are disjoint. Use three only for low-risk one-file base-prep
+  slices after the pipeline has stayed clean. Keep at most two open worker PRs
+  awaiting orchestrator review at once.
+- **Read-only helpers:** source/cross-track explorers may run in parallel with
+  writer workers for existing curriculum links, source-tier packets, naming
+  variants, image-rights notes, missing-surface matrices, and factual-risk
+  summaries. They report claims and citations, not essays.
+- **Worker ownership patterns:** dossier-only workers own
+  `docs/research/bio/<slug>.md`; plan-only workers own
+  `curriculum/l2-uk-en/plans/bio/<slug>.yaml`; wiki workers own
+  `wiki/figures/<slug>.md` and `wiki/figures/<slug>.sources.yaml`; module
+  writers own only the explicitly listed files under
+  `curriculum/l2-uk-en/bio/<slug>/`, generated MDX, and permitted readings.
+  Do not mix base-prep and module production in one worker unless a prior
+  readiness matrix explicitly authorizes that slice.
+- **Sequential merge queue:** workers may prepare independent PRs in parallel,
+  but the orchestrator merges one PR at a time after scope, gates, CI, and
+  independent review are clean. Merge order follows dependency order:
+  dossier -> plan -> wiki -> module -> QG/remediation, unless the issue ledger
+  records a reason to skip or hold a slug.
+- **Specialist review routing:** use an independent non-Codex route for BIO
+  factual/decolonization/content review. AGY/Gemini via the project bridge is a
+  known working route; DeepSeek/Hermes-style review is suitable for
+  decolonization and sensitive framing when available; Cursor/non-Codex review
+  is suitable for UI/front-end or larger code diffs. Internal Codex helper
+  review does not satisfy the independent-review gate.
+- **Token economy and speed:** deterministic tools first. Do not ask a model to
+  verify paths, whitespace, YAML parseability, CI state, or simple inventory.
+  Compress large logs/source dumps with Headroom before cross-agent handoff.
+  Keep worker briefs compact: slug, stage, owned files, known source leads,
+  validation commands, forbidden writes, and stop condition.
+
+## Monitor Wake Protocol
+
+Every wake starts from live state, not memory:
+
+1. Run `git status --short --branch` at repo root. Preserve unrelated dirty
+   files and worktrees.
+2. Inspect active visible worker threads/worktrees first. If any worker has a
+   draft PR, review that PR before dispatching more writing.
+3. Query open BIO PRs and the relevant GitHub issue/ledger. Do not rely only on
+   the previous heartbeat summary.
+4. Run or refresh the readiness matrix for the active queue: plan, dossier, wiki
+   packet, module files, generated MDX, readings/resources, LLM-QG state, and
+   known blockers.
+5. Fill the pipeline only after review capacity is clear: target two active
+   independent workers, not a single leisurely worker and not an unbounded pile
+   of PRs.
+6. Merge clean PRs one at a time, fast-forward root `main`, archive workers,
+   clean worktrees/branches, update the ledger, then dispatch the next worker.
 
 ## WORKTREE_ROOT Setup
 
@@ -74,7 +147,9 @@ git rev-parse --show-toplevel
 
 ## Read First
 
-- `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`
+- `AGENTS.md` for Codex. Non-Codex workers may read their provider-specific
+  instruction files when their runtime requires it; Codex workers should not
+  load `CLAUDE.md` or `GEMINI.md` for normal startup.
 - `docs/prompts/orchestrators/shared/repo-rules.md`
 - `docs/prompts/orchestrators/shared/validation-checklist.md`
 - `docs/prompts/orchestrators/shared/telemetry-and-pr.md`
@@ -187,10 +262,10 @@ cross-track path discovery, rendered-page reading, leakage scoring, activity
 placement verification, and CI/build triage. Compress long findings with
 Headroom before passing them between agents.
 
-Do not use the full fleet as theater. For a single narrow dossier, one Codex
-integration pass plus Claude review may be the economical path. For batches,
-prepare several read-only/source or one-file dossier tasks in parallel, then
-merge sequentially.
+Do not use the full fleet as theater. For a single narrow release-blocker fix,
+one worker plus an independent non-Codex review may be the economical path. For
+batches, prepare several read-only/source or one-file base-prep tasks in
+parallel, then merge sequentially.
 
 The main orchestrator owns edits, PR creation, independent review routing, and
 merge decisions. Worker diffs are never trusted until the orchestrator reviews
@@ -225,6 +300,15 @@ Base-prep dossier validation:
 .venv/bin/python scripts/audit/lint_bio_dossier_xref.py --paths docs/research/bio/<slug>.md
 ```
 
+Plan, discovery, and wiki readiness validation:
+
+```bash
+.venv/bin/python scripts/validate/lint_seminar_quality.py --paths curriculum/l2-uk-en/plans/bio/<slug>.yaml --severity high
+.venv/bin/python scripts/validate/check_discovery_integrity.py --track bio --json
+.venv/bin/python scripts/validate/check_wiki_subject.py --paths wiki/figures/<slug>.md
+.venv/bin/python scripts/validate/lint_seminar_quality.py --paths wiki/figures/<slug>.md --severity high
+```
+
 Production/remediation validation:
 
 ```bash
@@ -238,15 +322,32 @@ Production/remediation validation:
 
 For rendered-page checks, build or preview the site when practical and verify `/bio/<slug>/` has no 404, no English/internal leakage in learner prose, and non-empty Lesson and Workbook/Activities tabs.
 
+LLM-QG status and closure for built modules:
+
+```bash
+.venv/bin/python scripts/audit/module_quality_audit.py --level bio --format summary
+.venv/bin/python scripts/audit/module_quality_audit.py --level bio --format json --output /tmp/bio-module-quality-audit.json
+.venv/bin/python scripts/build/run_llm_qg_parity.py bio <slug> --reviewer <non-author-reviewer>
+git diff --name-only | rg -n '(^|/)llm_qg\\.json$|^data/telemetry/'
+```
+
+`run_llm_qg_parity.py` writes `llm_qg.json` and persists the DB record; do not
+commit `llm_qg.json` or telemetry DB files unless a task explicitly changes the
+artifact policy. After closure, rerun `module_quality_audit.py --level bio` and
+record whether the slug is `current_db`, `current_file_only`, or still missing
+or stale. Built seminar modules with near-threshold results or sensitive content
+should get a second independent non-Codex review.
+
 ## Expected Final Response
 
 ```text
-BIO stage: <preflight | production | quality-audit | remediation>
+BIO stage: <preflight | base-prep | production | quality-audit | llm-qg-closure | remediation>
 Scope: <slugs or audit report>
+Readiness state: <inventory | source-ready | plan-ready | wiki-ready | module-ready | module-built | qg-current | shipped>
 Narrative/register: <score and blockers/no blockers>
 Reading coverage: <hosted/link-only/excerpt-only/omit/needed counts>
 Activity split: <inline=n, workbook=n, rendered lesson/workbook status or not applicable>
-Quality score: <LLM fingerprint, English leakage, internal leakage, unresolved blockers>
+Quality score: <LLM fingerprint, English leakage, internal leakage, LLM-QG status, unresolved blockers>
 Files changed: <paths>
 Validation run: <commands and outcomes>
 Telemetry: <posted | not module-build | unavailable with reason>
