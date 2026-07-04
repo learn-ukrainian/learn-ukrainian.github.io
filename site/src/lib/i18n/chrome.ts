@@ -30,6 +30,7 @@ const en = {
   'nav.a1': 'A1',
   'nav.a2': 'A2',
   'nav.b1': 'B1',
+  'nav.b2': 'B2',
   'nav.dailyWords': 'Words of the Day',
   'nav.atlas': 'Word Atlas',
   'nav.readings': 'Reading reference',
@@ -108,14 +109,16 @@ const en = {
 
   // Homepage index.astro (real route `/`)
   'home.eyebrow': 'Course ladder and reference tools',
-  'home.introHeading': 'Start with A1. Continue with A2. Move into released B1 when you are ready.',
+  'home.introHeading': 'Start with A1. Continue through A2 and B1. Move into B2 when you are ready.',
   'home.introBody':
-    'The released course path is A1, then A2, then B1. B2 is open as the next preview map so learners and teachers can see the upper-intermediate direction without treating it as a finished release. Word Atlas supports the course as a reference tool, not as a separate course track. Seminar tracks are listed for context, but they are not public entry points yet.',
+    'The released course path is A1, then A2, then B1, then B2. B2 is open for upper-intermediate study while additional evaluator review continues separately. Word Atlas supports the course as a reference tool, not as a separate course track. Seminar tracks are listed for context, but they are not public entry points yet.',
   'home.actionStartA1': 'Start A1',
   'home.actionOpenB1Preview': 'Open B1',
+  'home.actionOpenB2': 'Open B2',
   'home.roadmapA1': 'Released beginner course',
   'home.roadmapA2': 'Released continuation course',
   'home.roadmapB1': 'Released intermediate course',
+  'home.roadmapB2': 'Released upper-intermediate course',
   'home.roadmapAtlasDesc': 'Reference tool',
   'home.roadmapSeminars': 'Seminars',
   'home.roadmapSeminarsNote': 'Not promoted yet',
@@ -126,13 +129,15 @@ const en = {
     '69 modules take learners from the A2 bridge through everyday situations, cases, aspect, and the A2 finale.',
   'home.cardB1Desc':
     '94 released modules take learners through Ukrainian-led intermediate grammar, communication, checkpoints, and a B1 practice exam.',
+  'home.cardB2Desc':
+    '93 released modules cover advanced syntax, register, professional communication, lexicology, and the B2 final exam.',
   'home.cardAtlasDesc':
     'A learner reference that goes beyond a lexicon: meanings, morphology, usage, etymology where available, and course links.',
   'home.cardReadingsDesc':
     'A searchable library of full primary-source texts that any seminar links into for close reading. Public-domain, verbatim, and sourced.',
   'home.courseMapHeading': 'Course Map',
   'home.courseMapBody':
-    'This map separates released courses, preview work, and future inventory. The recommended learner path is A1 first, then A2, then B1, with B2 available as the next preview map. Seminar tracks are shown for context only and are not promoted as learner entry points yet.',
+    'This map separates released courses, preview work, and future inventory. The recommended learner path is A1 first, then A2, then B1, then B2. Seminar tracks are shown for context only and are not promoted as learner entry points yet.',
   'home.courseLadder': 'Course Ladder',
   'home.seminarTracks': 'Seminar Tracks',
   'home.track.beginner': 'Beginner Course',
@@ -202,7 +207,7 @@ const en = {
   'search.emptyCode': 'No Results',
   'search.emptyTitle': 'No matching pages.',
   'search.emptyBody':
-    'Try a broader term, a Ukrainian lemma, or open A1, B1, B2 Preview, Word Atlas, or Etymology directly.',
+    'Try a broader term, a Ukrainian lemma, or open A1, B1, B2, Word Atlas, or Etymology directly.',
   'search.suggested': 'Suggested Pages',
   'search.hint': 'Start with a broad query or use the shortcuts.',
 
@@ -249,6 +254,7 @@ const uk: Record<ChromeKey, string> = {
   'nav.a1': 'A1',
   'nav.a2': 'A2',
   'nav.b1': 'B1',
+  'nav.b2': 'B2',
   'nav.dailyWords': 'Слова дня',
   'nav.atlas': 'Атлас слів',
   'nav.readings': 'Хрестоматія',
@@ -322,14 +328,16 @@ const uk: Record<ChromeKey, string> = {
   'home.ctaBtn': 'Почати з A1',
 
   'home.eyebrow': 'Драбина курсу та довідкові інструменти',
-  'home.introHeading': 'Почніть з A1. Продовжіть A2. Переходьте до випущеного B1, коли будете готові.',
+  'home.introHeading': 'Почніть з A1. Продовжіть A2 і B1. Переходьте до B2, коли будете готові.',
   'home.introBody':
-    'Випущений шлях курсу — A1, потім A2, потім B1. B2 відкритий як наступна карта-анонс, щоб учні й викладачі бачили напрям вище середнього рівня без сприйняття його як завершеного випуску. Атлас слів підтримує курс як довідковий інструмент, а не як окремий навчальний напрям. Семінарські напрями подано для контексту, але вони ще не є публічними точками входу.',
+    'Випущений шлях курсу — A1, потім A2, потім B1, потім B2. B2 відкритий для навчання на рівні вище середнього, а додаткова експертна оцінка триває окремо. Атлас слів підтримує курс як довідковий інструмент, а не як окремий навчальний напрям. Семінарські напрями подано для контексту, але вони ще не є публічними точками входу.',
   'home.actionStartA1': 'Почати A1',
   'home.actionOpenB1Preview': 'Відкрити B1',
+  'home.actionOpenB2': 'Відкрити B2',
   'home.roadmapA1': 'Випущений початковий курс',
   'home.roadmapA2': 'Випущений курс-продовження',
   'home.roadmapB1': 'Випущений середній курс',
+  'home.roadmapB2': 'Випущений курс вище середнього рівня',
   'home.roadmapAtlasDesc': 'Довідковий інструмент',
   'home.roadmapSeminars': 'Семінари',
   'home.roadmapSeminarsNote': 'Ще не просувається',
@@ -340,13 +348,15 @@ const uk: Record<ChromeKey, string> = {
     '69 модулів ведуть учнів від містка A2 через повсякденні ситуації, відмінки, вид і фінал A2.',
   'home.cardB1Desc':
     '94 випущені модулі ведуть учнів через середню граматику, комунікацію, контрольні точки та пробний екзамен B1 українською.',
+  'home.cardB2Desc':
+    '93 випущені модулі охоплюють складний синтаксис, регістри, професійну комунікацію, лексикологію та фінальний іспит B2.',
   'home.cardAtlasDesc':
     'Довідник для учня, що виходить за межі словника: значення, морфологія, вживання, етимологія за наявності та посилання на курс.',
   'home.cardReadingsDesc':
     'Пошукова бібліотека повних текстів першоджерел, на які посилається будь-який семінар для детального читання. У суспільному надбанні, дослівно, із зазначеним джерелом.',
   'home.courseMapHeading': 'Карта програми',
   'home.courseMapBody':
-    'Ця карта розділяє випущені курси, анонсовану роботу та майбутній інвентар. Рекомендований шлях учня — спочатку A1, потім A2, потім B1, з B2 як наступною картою-анонсом. Семінарські напрями показано лише для контексту й не просуваються як точки входу для учнів.',
+    'Ця карта розділяє випущені курси, анонсовану роботу та майбутній інвентар. Рекомендований шлях учня — спочатку A1, потім A2, потім B1, потім B2. Семінарські напрями показано лише для контексту й не просуваються як точки входу для учнів.',
   'home.courseLadder': 'Драбина курсу',
   'home.seminarTracks': 'Семінарські напрями',
   'home.track.beginner': 'Початковий курс',
@@ -413,7 +423,7 @@ const uk: Record<ChromeKey, string> = {
   'search.emptyCode': 'Немає результатів',
   'search.emptyTitle': 'Немає відповідних сторінок.',
   'search.emptyBody':
-    'Спробуйте загальніший запит, українську лему або відкрийте A1, B1, B2 (анонс), Атлас слів чи Етимологію напряму.',
+    'Спробуйте загальніший запит, українську лему або відкрийте A1, B1, B2, Атлас слів чи Етимологію напряму.',
   'search.suggested': 'Рекомендовані сторінки',
   'search.hint': 'Почніть із загального запиту або скористайтеся посиланнями.',
 

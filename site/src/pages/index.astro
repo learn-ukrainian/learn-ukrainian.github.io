@@ -34,7 +34,7 @@ const coreTracks: TrackRow[] = ([
   { id: 'a1', label: 'A1', titleKey: 'home.track.beginner', statusKey: 'status.released' },
   { id: 'a2', label: 'A2', titleKey: 'home.track.preIntermediate', statusKey: 'status.released' },
   { id: 'b1', label: 'B1', titleKey: 'home.track.intermediate', statusKey: 'status.released' },
-  { id: 'b2', label: 'B2', titleKey: 'home.track.upperIntermediate', statusKey: 'status.preview' },
+  { id: 'b2', label: 'B2', titleKey: 'home.track.upperIntermediate', statusKey: 'status.released' },
   { id: 'c1', label: 'C1', titleKey: 'home.track.advanced', statusKey: 'status.planned' },
   { id: 'c2', label: 'C2', titleKey: 'home.track.mastery', statusKey: 'status.longRange' },
 ] as TrackRow[]).map((track) => ({ ...track, href: trackHref(track.id) }));
@@ -61,7 +61,7 @@ const seminarTracks: TrackRow[] = ([
 
 <CourseLayout
   title="Learn Ukrainian"
-  description="An English learner interface for released A1, A2, and B1 Ukrainian courses, a B2 preview, and the Word Atlas reference tool."
+  description="An English learner interface for released A1, A2, B1, and B2 Ukrainian courses, plus the Word Atlas reference tool."
   eyebrowKey="home.eyebrow"
   subtitle="A practical English interface for learning Ukrainian."
   currentPath="/"
@@ -76,13 +76,14 @@ const seminarTracks: TrackRow[] = ([
       </p>
       <div class="home-actions">
         <a class="home-primary" href="/a1/"><ChromeText k="home.actionStartA1" /></a>
-        <a class="home-secondary" href="/b1/"><ChromeText k="home.actionOpenB1Preview" /></a>
+        <a class="home-secondary" href="/b2/"><ChromeText k="home.actionOpenB2" /></a>
       </div>
     </div>
     <aside class="roadmap-panel" aria-label="Roadmap">
       <div><strong>A1</strong><span><ChromeText k="home.roadmapA1" /></span></div>
       <div><strong>A2</strong><span><ChromeText k="home.roadmapA2" /></span></div>
       <div><strong>B1</strong><span><ChromeText k="home.roadmapB1" /></span></div>
+      <div><strong>B2</strong><span><ChromeText k="home.roadmapB2" /></span></div>
       <div><strong><ChromeText k="nav.atlas" /></strong><span><ChromeText k="home.roadmapAtlasDesc" /></span></div>
       <div><strong><ChromeText k="home.roadmapSeminars" /></strong><span><ChromeText k="home.roadmapSeminarsNote" /></span></div>
     </aside>
@@ -105,6 +106,11 @@ const seminarTracks: TrackRow[] = ([
         <span class="track-badge b1"><ChromeText k="nav.b1" /></span>
         <h3><ChromeText k="home.track.intermediate" /></h3>
         <p><ChromeText k="home.cardB1Desc" /></p>
+      </a>
+      <a class="lu-card" href="/b2/">
+        <span class="track-badge b2"><ChromeText k="nav.b2" /></span>
+        <h3><ChromeText k="home.track.upperIntermediate" /></h3>
+        <p><ChromeText k="home.cardB2Desc" /></p>
       </a>
       <a class="lu-card" href="/lexicon/">
         <span class="track-badge atlas"><ChromeText k="label.reference" /></span>
@@ -261,6 +267,7 @@ const seminarTracks: TrackRow[] = ([
     .track-badge.a1 { background: var(--lu-green); }
     .track-badge.a2 { background: #1565C0; }
     .track-badge.b1 { background: #E65100; }
+    .track-badge.b2 { background: #C2185B; }
     .track-badge.atlas { background: var(--lu-teal); }
     /* In dark mode --lu-green/--lu-teal go pale, so white text fails. */
     :global([data-theme='dark']) .track-badge.a1,

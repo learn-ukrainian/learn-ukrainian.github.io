@@ -44,8 +44,16 @@ TRACK_CONFIG = {
     },
     "b2": {
         "title": "B2 — Upper Intermediate",
-        "uk_title": "Впевнено",
+        "uk_title": "Впевнено · Confident Ukrainian",
         "uk_sub": "Upper-intermediate Ukrainian course",
+        "landing_description": (
+            "Released upper-intermediate Ukrainian course — {module_count} modules in curriculum order"
+        ),
+        "landing_subtitle": (
+            "Released upper-intermediate Ukrainian course — {active_count} learner pages available"
+        ),
+        "progress_title": "B2 Release Status",
+        "progress_description": "{active_count} available · deterministic checks clear · {planned_count} planned",
         "word_target": 4000,
     },
     "c1": {"title": "C1 — Advanced", "uk_title": "Вільно", "uk_sub": "Advanced Ukrainian course", "word_target": 4000},
@@ -203,6 +211,25 @@ def escape_js_string(s: str | int | float) -> str:
     """Escape string for JavaScript object literal."""
     s = str(s) if not isinstance(s, str) else s
     return s.replace("\\", "\\\\").replace('"', '\\"').replace("\n", " ")
+
+
+def format_track_template(
+    template: str,
+    *,
+    level: str,
+    module_count: int,
+    active_count: int,
+    done_count: int,
+    planned_count: int,
+) -> str:
+    """Format optional track display overrides from generated landing counts."""
+    return template.format(
+        level=level.upper(),
+        module_count=module_count,
+        active_count=active_count,
+        done_count=done_count,
+        planned_count=planned_count,
+    )
 
 
 def validate_module_groups(level: str, modules: list[str], groups: list[dict]) -> list[dict]:
@@ -373,6 +400,22 @@ def generate_landing_page(level: str, curriculum: dict) -> str:
         progress_title = f"{level.upper()} Build Status"
         progress_description = f"{active_count} available · {done_count} reviewed · {planned_count} planned"
         description = f"{track_subtitle} — {len(modules)} modules in curriculum order"
+
+    format_kwargs = {
+        "level": level,
+        "module_count": len(modules),
+        "active_count": active_count,
+        "done_count": done_count,
+        "planned_count": planned_count,
+    }
+    if config.get("landing_description"):
+        description = format_track_template(config["landing_description"], **format_kwargs)
+    if config.get("landing_subtitle"):
+        subtitle = format_track_template(config["landing_subtitle"], **format_kwargs)
+    if config.get("progress_title"):
+        progress_title = format_track_template(config["progress_title"], **format_kwargs)
+    if config.get("progress_description"):
+        progress_description = format_track_template(config["progress_description"], **format_kwargs)
 
     mdx = f"""---
 title: "{config["title"]}"
