@@ -160,13 +160,6 @@ if command -v npm >/dev/null 2>&1 \
     echo "Agent extensions deployed"
 fi
 
-# Keep Headroom routing healthy when the local proxy is configured. The helper
-# is sourced because it may clear dead proxy environment variables before launch.
-if [ -f "$TARGET_DIR/scripts/ensure_headroom.sh" ]; then
-    # shellcheck source=scripts/ensure_headroom.sh
-    source "$TARGET_DIR/scripts/ensure_headroom.sh"
-fi
-
 echo ""
 echo "LEARN UKRAINIAN - Ukrainian Language Learning"
 echo ""

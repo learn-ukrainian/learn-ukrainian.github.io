@@ -1,13 +1,5 @@
 {
   "mcpServers": {
-    "headroom": {
-      "type": "stdio",
-      "command": "headroom",
-      "args": [
-        "mcp",
-        "serve"
-      ]
-    },
     "sources": {
       "type": "streamable-http",
       "url": "http://127.0.0.1:8766/mcp"

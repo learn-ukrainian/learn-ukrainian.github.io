@@ -16,7 +16,7 @@
 
 > **Status**: `curriculum/l2-uk-en/{level}/status/{slug}.json` | Update: `.venv/bin/python scripts/audit_module.py {path}`
 
-> **Cross-session Memory**: Built-in auto-memory at `~/.claude/projects/.../memory/MEMORY.md`. Inter-agent comms via `.venv/bin/python scripts/ai_agent_bridge/__main__.py`; Headroom is also available as the `headroom` MCP server for compressed handoffs, retrieval, stats, and shared proxy memory. Gemini-family work routes through AGY, not Gemini CLI or Gemini Code Assist; see `docs/guardrails/agent-fleet-tooling.md`.
+> **Cross-session Memory**: Built-in auto-memory at `~/.claude/projects/.../memory/MEMORY.md`. Inter-agent comms via `.venv/bin/python scripts/ai_agent_bridge/__main__.py`. Gemini-family work routes through AGY, not Gemini CLI or Gemini Code Assist; see `docs/guardrails/agent-fleet-tooling.md`.
 
 > **Default subagent**: Always use `subagent_type: "curriculum-orchestrator"` when spawning agents for curriculum orchestration work.
 
@@ -73,19 +73,6 @@ Detailed standards in `docs/best-practices/`. Read the relevant doc before worki
 For shared delegation, artifact hygiene, Python invocation, worktree layout, commit trailers, and independent review routing, defer to `AGENTS.md`. Independent review must not be self-review, and internal GPT helper swarms do not satisfy the external gate. Current external lanes: Hermes -> DeepSeek 4 Pro; Agy -> Gemini models and Claude Opus 4.6 when available; Cursor -> non-Codex models including Composer 2.5. If Claude main provider is unavailable before Monday, June 29, 2026 09:00 Budapest local time, do not block on Claude; use another independent non-Codex route. Full protocol: [`agent-cooperation.md`](docs/best-practices/agent-cooperation.md)
 
 > **Fleet roster + when-to-use + no-idle routing (READ to keep lanes busy):** [`docs/best-practices/agent-activity-matrix.md`](docs/best-practices/agent-activity-matrix.md) — §2 roster (current lanes/cost/models) + §2b capacity routing (free lane → next work). Canonical per-task routing rule: `agents_extensions/shared/rules/model-assignment.md` (served at `/api/rules`).
-
-### Headroom
-
-Headroom runs locally at `http://127.0.0.1:8787`; MCP is exposed at
-the `headroom` stdio server via `headroom mcp serve`. Use
-`headroom_compress` before sharing logs, search results, tool outputs, or
-handoffs over roughly 200 lines / 20 KB; pass the hash plus a short summary,
-and retrieve the original only when needed. Check health with
-`curl -s http://127.0.0.1:8787/health`; start it with
-`headroom install start --profile default` if it is down. Do not run
-`headroom learn --apply` unless explicitly requested because it rewrites agent
-instruction files. Do not treat Headroom memory as factual authority for
-curriculum content.
 
 ---
 

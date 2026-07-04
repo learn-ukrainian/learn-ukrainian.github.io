@@ -311,30 +311,6 @@ need a note such as "solo run; no swarm used". See
 `docs/runbooks/module-build-token-telemetry.md`. The SQLite database under
 `data/telemetry/` is local runtime state and must not be committed.
 
-## Headroom Shared Context
-
-Headroom is installed locally for cross-agent compression and memory. The shared
-proxy runs at `http://127.0.0.1:8787`; MCP is configured as the `headroom`
-stdio server via `headroom mcp serve`.
-
-Use Headroom explicitly for large cross-agent handoffs, long tool outputs,
-logs, search results, and other context that would otherwise be pasted
-wholesale between agents. If a handoff/log/search result is roughly over 200
-lines or 20 KB, call `headroom_compress` first and pass the hash plus a short
-summary; retrieve the original with `headroom_retrieve` only when the details
-are needed. The proxy also provides persistent memory across supported
-providers, but Headroom memory is not a source of truth for curriculum facts.
-
-Operational notes:
-
-- If Headroom is not running, start it with `headroom install start --profile default`.
-- Check health with `curl -s http://127.0.0.1:8787/health`.
-- Check MCP tools with `headroom mcp serve` or the active agent's MCP tool list.
-- Track use with `curl -s http://127.0.0.1:8787/stats | jq '.summary.mcp'`.
-- Do not run `headroom learn --apply` unless the user explicitly requests it;
-  it can rewrite `CLAUDE.md`, `AGENTS.md`, or other agent instruction files.
-
----
 
 ## Project Architecture
 

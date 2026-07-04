@@ -25,7 +25,6 @@ CLAUDE_RULE_FILES = (
     "_load-via-api.md",
     "activity-yaml.md",
     "goal-driven-runs.md",
-    "headroom.md",
     "mcp-sources-and-dictionaries.md",
     "pipeline.md",
     "ukrainian-linguistics.md",

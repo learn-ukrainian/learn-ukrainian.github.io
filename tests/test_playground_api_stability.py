@@ -101,9 +101,6 @@ DASHBOARD_LOADS = {
         "/api/runtime/recent?limit=50",
         "/api/runtime/auth",
     ],
-    "headroom.html": [
-        "/api/runtime/headroom/stats",
-    ],
     "routing.html": [
         "/api/state/routing-budget",
         "/api/runtime/agents",
@@ -164,7 +161,6 @@ BUDGETS = {
     "/api/rag/search_text?q=test&limit=5": 1.5,
     "/api/runtime/agents": 1.5,
     "/api/runtime/auth": 1.5,
-    "/api/runtime/headroom/stats": 1.5,
     "/api/runtime/recent?limit=50": 1.5,
     "/api/runtime/usage?days=7": 1.5,
     "/api/state/routing-budget": 1.5,
