@@ -1,0 +1,140 @@
+- lemma: прислів'я
+  translation: proverb; completed proverbial judgment
+  pos: іменник
+  usage: Прислів'я зазвичай формулює завершене судження, оцінку або застереження.
+- lemma: приказка
+  translation: saying; figurative proverbial phrase
+  pos: іменник
+  usage: Приказка може назвати ситуацію образно, не доводячи думку до повного висновку.
+- lemma: приповідка
+  translation: proverbial saying; regional scholarly term
+  pos: іменник
+  usage: Приповідка особливо важлива для галицького корпусу Франка.
+- lemma: паремія
+  translation: paremia; proverb-like short form
+  pos: іменник
+  usage: Паремія охоплює прислів'я, приказки, приповідки й близькі малі форми.
+- lemma: пареміологія
+  translation: paremiology
+  pos: іменник
+  usage: Пареміологія вивчає короткі сталі форми як мовний і культурний феномен.
+- lemma: пареміографія
+  translation: collection and publication of proverbs
+  pos: іменник
+  usage: Пареміографія XIX століття дала великі українські корпуси коротких форм.
+- lemma: завершене судження
+  translation: completed judgment
+  pos: словосполука
+  usage: Завершене судження відрізняє прислів'я від багатьох приказкових зворотів.
+- lemma: образний зворот
+  translation: figurative turn of phrase
+  pos: словосполука
+  usage: Образний зворот може працювати як коротка мітка ситуації.
+- lemma: принагідність
+  translation: situational use
+  pos: іменник
+  usage: Принагідність показує, що формула оживає в конкретній розмові.
+- lemma: ситуативний
+  translation: situational
+  pos: прикметник
+  usage: Ситуативний вислів не претендує на правило для всіх обставин.
+- lemma: двочленність
+  translation: two-part structure
+  pos: іменник
+  usage: Двочленність допомагає прислів'ю зіставити ситуацію і наслідок.
+- lemma: антитеза
+  translation: antithesis
+  pos: іменник
+  usage: Антитеза протиставляє слово й діло, працю й ледарство або свого й чужого.
+- lemma: паралелізм
+  translation: parallelism
+  pos: іменник
+  usage: Паралелізм повторює синтаксичну будову й підсилює пам'ятність формули.
+- lemma: ритмізація
+  translation: rhythmic shaping
+  pos: іменник
+  usage: Ритмізація робить короткий вислів легшим для запам'ятовування.
+- lemma: алітерація
+  translation: alliteration
+  pos: іменник
+  usage: Алітерація підсилює звукову щільність короткої форми.
+- lemma: еліпсис
+  translation: ellipsis
+  pos: іменник
+  usage: Еліпсис дозволяє приказці лишити висновок слухачеві.
+- lemma: джерельний статус
+  translation: source status
+  pos: словосполука
+  usage: Джерельний статус визначає, чи можна цитувати формулу дослівно.
+- lemma: варіантність
+  translation: variation
+  pos: іменник
+  usage: Варіантність є ознакою живої традиції, а не дефектом запису.
+- lemma: нормалізація
+  translation: normalization
+  pos: іменник
+  usage: Нормалізація цитати може стерти регіональну форму джерела.
+- lemma: галицький запис
+  translation: Galician record
+  pos: словосполука
+  usage: Галицький запис у Франковому корпусі треба читати як джерельний варіант.
+- lemma: Номис
+  translation: Nomys; pen name of Matvii Symonov
+  pos: власна назва
+  usage: Видання Номиса стало головною опорою української пареміографії XIX століття.
+- lemma: Франків корпус
+  translation: Franko's corpus of Galician proverbial sayings
+  pos: словосполука
+  usage: Франків корпус показує регіональну багатошаровість українських приповідок.
+- lemma: фразеологізм
+  translation: idiom; phraseological unit
+  pos: іменник
+  usage: Фразеологізм може стояти поруч із приказкою, але не завжди є прислів'ям.
+- lemma: етикетна формула
+  translation: etiquette formula
+  pos: словосполука
+  usage: Етикетна формула виконує дію привітання або побажання.
+- lemma: афоризм
+  translation: aphorism
+  pos: іменник
+  usage: Афоризм може стати крилатим висловом, але не автоматично народним прислів'ям.
+- lemma: крилатий вислів
+  translation: catchphrase; winged expression
+  pos: словосполука
+  usage: Крилатий вислів може переходити між літературою і розмовним мовленням.
+- lemma: переспів
+  translation: ironic reworking
+  pos: іменник
+  usage: Переспів переробляє впізнавану форму й змінює її висновок.
+- lemma: соціальна оцінка
+  translation: social judgment
+  pos: словосполука
+  usage: Соціальна оцінка є однією з головних функцій паремії.
+- lemma: непричетність
+  translation: non-involvement; detachment
+  pos: іменник
+  usage: Непричетність може маскуватися образом хати на краю.
+- lemma: самоусунення
+  translation: self-removal; withdrawal from responsibility
+  pos: іменник
+  usage: Самоусунення стає етичною проблемою, коли людина відмовляється від спільної дії.
+- lemma: ледарство
+  translation: idleness
+  pos: іменник
+  usage: Ледарство у пареміях часто називається короткою образною формулою.
+- lemma: гостинність
+  translation: hospitality
+  pos: іменник
+  usage: Гостинність може виражатися етикетною сталою формулою.
+- lemma: антиколоніальний
+  translation: anti-colonial
+  pos: прикметник
+  usage: Антиколоніальний підхід не розчиняє український матеріал у чужій імперській рамці.
+- lemma: імперська термінологія
+  translation: imperial terminology
+  pos: словосполука
+  usage: Імперська термінологія в старій назві джерела не є сучасною рамкою ідентичності.
+- lemma: етична межа
+  translation: ethical boundary
+  pos: словосполука
+  usage: Етична межа допомагає відрізнити історичний аналіз від прямого сучасного вживання.
