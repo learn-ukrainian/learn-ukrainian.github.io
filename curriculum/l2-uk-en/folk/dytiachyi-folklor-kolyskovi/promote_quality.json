@@ -1,0 +1,69 @@
+{
+  "assembled_mdx_sha256": "112580f9507f4c9dd2b5e2b1be3eb1604863fcee972f449cc823dfd847192b68",
+  "content_hash": {
+    "algorithm": "sha256",
+    "basis": "lesson_sources_v2",
+    "digest": "9fb1f0c97bd574a32e3f1d88ee8d383f1759074a71886baefdad557a086b356a",
+    "files": [
+      {
+        "path": "curriculum/l2-uk-en/plans/folk/dytiachyi-folklor-kolyskovi.yaml",
+        "sha256": "a904e40084b8d30ac15b5e452efc499b2fb9ee3f681935ee2fad2713fab975ed"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/dytiachyi-folklor-kolyskovi/module.md",
+        "sha256": "72192d2597fbbbb526760c503d23aa515d7e6ab0e9ca08c825c83dbbf9738b41"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/dytiachyi-folklor-kolyskovi/activities.yaml",
+        "sha256": "eb1b58425b6938ea63c77d1929b17a272083fa055e8bc7602deed0d117684724"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/dytiachyi-folklor-kolyskovi/vocabulary.yaml",
+        "sha256": "bad381e722cb8fc2b1c17c336a4803dba3d675a9f4f14cf13588d9e03f80f2d2"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/dytiachyi-folklor-kolyskovi/resources.yaml",
+        "sha256": "a68a9c42d1cad5245f88b6d9449664b7c3d378291639c20d2360ae5d6a5cd1f1"
+      }
+    ]
+  },
+  "evidence": {
+    "decolonization": "Module frames child folklore as Ukrainian family and peer-group verbal practice without Russocentric reduction, while acknowledging wider Slavic circulation for \u0415\u043d\u0438\u043a\u0438-\u0431\u0435\u043d\u0438\u043a\u0438.",
+    "pedagogical": "V2 inline/workbook activities cover performance situation, lullaby formula analysis, contact sequence, source discipline, safe teasing boundaries, and stage/choral status.",
+    "review": "Claude Opus 4.8 independent re-review returned PASS with no remaining blockers, majors, or minors; bridge message 4 at 2026-07-04T17:41:24Z.",
+    "source_policy": "Popular lullaby openings remain paraphrase-only; three direct counting formulas are confirmed with verify_quote matched true, confidence 0.963-1.0, source wave8-ukr-lit-entsyklopediia chunk fc2291b5_c4533."
+  },
+  "floors": {
+    "beauty": 8.5,
+    "decolonization": 9.0,
+    "engagement": 8.5,
+    "naturalness": 8.5,
+    "pedagogical": 8.5,
+    "tone": 8.5
+  },
+  "profile": "folk_promote_v1",
+  "review_artifact": null,
+  "reviewer": {
+    "agent": "claude",
+    "family": "anthropic",
+    "model": "Claude Opus 4.8"
+  },
+  "schema_version": 1,
+  "scored_at": "2026-07-04T17:54:12Z",
+  "scores": {
+    "beauty": 8.7,
+    "decolonization": 9.0,
+    "engagement": 8.7,
+    "naturalness": 8.8,
+    "pedagogical": 8.9,
+    "tone": 8.8
+  },
+  "slug": "dytiachyi-folklor-kolyskovi",
+  "track": "folk",
+  "verdict": "PASS",
+  "writer": {
+    "agent": "codex",
+    "family": "openai",
+    "model": "gpt-5"
+  }
+}
