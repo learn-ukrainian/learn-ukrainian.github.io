@@ -5,6 +5,27 @@ from __future__ import annotations
 from scripts.build.linear_pipeline import _build_vesum_text, _vesum_gate
 
 
+def test_textbook_author_spelling_variant_not_verified() -> None:
+    """Литвінова is a known spelling variant of the whitelisted textbook author Літвінова."""
+    sent_for_verification: set[str] = set()
+
+    def verify_words(words: list[str]) -> dict[str, list[dict[str, str]]]:
+        sent_for_verification.update(words)
+        return {word: [{"lemma": word}] for word in words}
+
+    result = _vesum_gate(
+        module_text="Литвінова",
+        activities=[],
+        vocabulary=[],
+        resources=[],
+        verify_words_fn=verify_words,
+        level="b1",
+    )
+
+    assert result["passed"] is True
+    assert "литвінова" not in sent_for_verification
+
+
 def test_mc_distractor_text_not_verified() -> None:
     """options marked intentional_error: true (deliberate wrong distractors) must not be checked against VESUM."""
     activity = {

@@ -192,6 +192,11 @@ def test_b1_canary_snippets_include_required_examples() -> None:
         in snippet
         for snippet in b1_snippets
     )
+    assert any(
+        "У застереженні зміст інший: будь обережний, щоб небажаний результат не стався."
+        in snippet
+        for snippet in b1_snippets
+    )
 
 
 def test_extract_issue_ids_reads_top_level_and_dimensional_findings() -> None:
@@ -207,7 +212,7 @@ def test_extract_issue_ids_reads_top_level_and_dimensional_findings() -> None:
                     {"kind": "seminar_register_pathos"},
                     {"type": "ENGLISH_LEAKAGE"},
                 ],
-                "flags_raised": ["unnatural anthropomorphism"],
+                "flags_raised": ["unnatural anthropomorphism", "ukrainian grammar calque"],
             },
         },
         "other": "must be ignored",
@@ -221,6 +226,7 @@ def test_extract_issue_ids_reads_top_level_and_dimensional_findings() -> None:
         "INTERNAL_LEAKAGE",
         "AWKWARD_PASSIVE_RESULT_STATE",
         "UNNATURAL_ANTHROPOMORPHISM",
+        "UKRAINIAN_GRAMMAR_CALQUE",
     }
 
 
@@ -238,6 +244,7 @@ def test_evaluator_fails_when_required_issue_ids_are_missing_for_level() -> None
     assert not report["passed"]
     assert report["level"] == "b1"
     assert "UNNATURAL_ANTHROPOMORPHISM" in report["missing_issue_ids"]
+    assert "UKRAINIAN_GRAMMAR_CALQUE" in report["missing_issue_ids"]
     assert "ENGLISH_LEAKAGE" in report["missing_issue_ids"]
 
 

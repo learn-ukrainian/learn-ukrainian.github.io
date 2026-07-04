@@ -133,7 +133,7 @@
 - lemma: перемішати
   translation: "to mix"
   pos: verb:pf
-  usage: "Перемішайте начинку."
+  usage: "Перемішайте овочі."
 - lemma: перемішувати
   translation: "to mix"
   pos: verb:impf
@@ -177,13 +177,13 @@
 - lemma: відчиняти
   translation: "to open (door/window)"
   pos: verb:impf
-  usage: "Не відчиняйте двері незнайомим людям."
+  usage: "Не відчиняйте дверей незнайомим людям."
 - lemma: відкрити
-  translation: "to open (file/app/book)"
+  translation: "to open (file/app/topic/account)"
   pos: verb:pf
   usage: "Відкрийте застосунок."
 - lemma: відкривати
-  translation: "to open (file/app/book)"
+  translation: "to open (file/app/topic/account)"
   pos: verb:impf
   usage: "Не відкривайте підозрілі файли."
 - lemma: закрити

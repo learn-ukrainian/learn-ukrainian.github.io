@@ -1058,6 +1058,22 @@ def _validate_llm_qg_dim_grounding(
     )
 
 
+def _llm_qg_retry_prompt(prompt: str, error: linear_pipeline.LinearPipelineError) -> str:
+    return "\n\n".join(
+        [
+            "## Previous Response Rejected",
+            "Your previous JSON response failed validation and was discarded.",
+            f"Validation error: {error}",
+            (
+                "Return a fresh JSON object. Copy every `evidence_quotes`, "
+                "`evidence`, and `findings[].quote` value exactly from Generated "
+                "Content; do not repair grammar or reconstruct quotes from memory."
+            ),
+            prompt,
+        ]
+    )
+
+
 def _llm_qg_balanced_json_objects(text: str) -> list[str]:
     objects: list[str] = []
     depth = 0
@@ -1218,9 +1234,12 @@ def _run_llm_qg(
                 task_id = f"{task_id}-s{sample_index + 1}"
             last_error: linear_pipeline.LinearPipelineError | None = None
             for attempt in range(1, LLM_QG_DIM_MAX_ATTEMPTS + 1):
+                attempt_prompt = _llm_qg_retry_prompt(prompt, last_error) if last_error is not None else prompt
+                if attempt > 1:
+                    prompt_path.write_text(attempt_prompt, encoding="utf-8")
                 result = invoke(
                     agent_name,
-                    prompt,
+                    attempt_prompt,
                     mode="read-only",
                     cwd=module_dir,
                     model=defaults["model"],
@@ -2162,41 +2181,24 @@ def _run(args: argparse.Namespace) -> int:
         else:
             if resume_enabled:
                 force_rerun = True
-            if level in SEMINAR_LEVELS:
-                llm_qg = linear_pipeline.run_llm_qg_with_corrections(
-                    plan=plan,
-                    plan_path=plan_path,
-                    plan_content=plan_content,
-                    module_dir=module_dir,
-                    writer=writer,
-                    llm_qg_runner=_run_llm_qg,
-                    reviewer_override=llm_qg_reviewer_override,
-                    profile=profile,
-                    wiki_manifest=wiki_manifest,
-                    implementation_map=impl_map,
-                    stdout_silence_timeout=args.writer_timeout,
-                    use_generator=use_generator,
-                    obligation_checklist=obligation_checklist,
-                    max_rounds=linear_pipeline.llm_qg_max_rounds_for_level(level),
-                    event_sink=tracker.emit,
-                    reviewer_samples=llm_qg_reviewer_samples,
-                )
-            else:
-                llm_qg = _run_llm_qg(
-                    plan=plan,
-                    plan_content=plan_content,
-                    module_dir=module_dir,
-                    writer=writer,
-                    reviewer_override=reviewer_override,
-                    profile=profile,
-                    wiki_manifest=wiki_manifest,
-                    implementation_map=impl_map,
-                    stdout_silence_timeout=args.writer_timeout,
-                    use_generator=use_generator,
-                    obligation_checklist=obligation_checklist,
-                    event_sink=tracker.emit,
-                    reviewer_samples=llm_qg_reviewer_samples,
-                )
+            llm_qg = linear_pipeline.run_llm_qg_with_corrections(
+                plan=plan,
+                plan_path=plan_path,
+                plan_content=plan_content,
+                module_dir=module_dir,
+                writer=writer,
+                llm_qg_runner=_run_llm_qg,
+                reviewer_override=llm_qg_reviewer_override,
+                profile=profile,
+                wiki_manifest=wiki_manifest,
+                implementation_map=impl_map,
+                stdout_silence_timeout=args.writer_timeout,
+                use_generator=use_generator,
+                obligation_checklist=obligation_checklist,
+                max_rounds=linear_pipeline.llm_qg_max_rounds_for_level(level),
+                event_sink=tracker.emit,
+                reviewer_samples=llm_qg_reviewer_samples,
+            )
             linear_pipeline.write_json(module_dir / "llm_qg.json", llm_qg)
             llm_qg_source = "v7_build"
         _persist_llm_qg_result(

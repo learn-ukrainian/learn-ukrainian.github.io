@@ -255,6 +255,7 @@ REVIEWER_FIX_ADDITIONAL_ARTIFACTS_BY_GATE: dict[str, tuple[str, ...]] = {
     "plan_reference_match": ("resources.yaml",),
     "resources_url_resolve": ("resources.yaml",),
     "ai_slop_clean": ("activities.yaml", "vocabulary.yaml", "resources.yaml"),
+    "llm_qg_grammar_calque": ("activities.yaml", "vocabulary.yaml", "resources.yaml"),
 }
 PIPELINE_INSERT_GATES = frozenset({"inject_activity_ids"})
 TERMINAL_ZERO_RETRY_GATES = frozenset(
@@ -482,9 +483,18 @@ ALLOWED_WIKI_COVERAGE_VERDICTS = {"PASS", "KEYWORD_STUFFING", "PARTIAL", "FAIL"}
 WIKI_COVERAGE_OVERALL_FAIL_VERDICTS = {"FAIL", "KEYWORD_STUFFING"}
 WIKI_COVERAGE_OVERALL_VERDICTS = {"PASS", "PARTIAL", "FAIL"}
 WIKI_COVERAGE_EVIDENCE_QUOTE_MARKERS = ('"', "“", "«")
-LLM_QG_CORE_MAX_ROUNDS = 1
+LLM_QG_CORE_MAX_ROUNDS = 2
 LLM_QG_SEMINAR_MAX_ROUNDS = 3
 LLM_QG_REVIEWER_SAMPLES = {"seminar": 3}
+LLM_QG_GRAMMAR_CALQUE_GATE = "llm_qg_grammar_calque"
+LLM_QG_GRAMMAR_CALQUE_ISSUE_IDS = frozenset(
+    {
+        "UKRAINIAN_GRAMMAR_CALQUE",
+        "AWKWARD_PASSIVE_RESULT_STATE",
+        "UNNATURAL_ANTHROPOMORPHISM",
+        "UNNATURAL_META_REGISTER",
+    }
+)
 # LLM judges have measurable round-over-round noise; only stop correction on
 # min-score drops that exceed this conservative tolerance.
 LLM_QG_REGRESSION_NOISE_TOLERANCE = 0.5
@@ -5745,6 +5755,165 @@ def _llm_qg_needs_pedagogical_fix(llm_qg: Mapping[str, Any]) -> bool:
     return "pedagogical" in {str(dim) for dim in failing}
 
 
+def _llm_qg_fixable_grammar_findings(llm_qg: Mapping[str, Any]) -> list[dict[str, Any]]:
+    """Return quoted LLM-QG grammar/calque findings that can be locally patched."""
+    findings: list[dict[str, Any]] = []
+    for dim, entry in _llm_qg_dimensions(llm_qg).items():
+        if not isinstance(entry, Mapping):
+            continue
+        dim_issue_ids = {
+            issue_id
+            for issue_id in _llm_qg_issue_ids_from_payload(entry)
+            if issue_id in LLM_QG_GRAMMAR_CALQUE_ISSUE_IDS
+        }
+        for finding in _llm_qg_findings_from_payload(entry):
+            issue_id = finding.get("issue_id")
+            if issue_id not in LLM_QG_GRAMMAR_CALQUE_ISSUE_IDS:
+                if issue_id is not None:
+                    continue
+                if not dim_issue_ids:
+                    continue
+                issue_id = sorted(dim_issue_ids)[0]
+            quote = str(finding.get("quote") or "").strip()
+            if not quote:
+                continue
+            normalized = dict(finding)
+            normalized["issue_id"] = issue_id
+            normalized["quote"] = quote
+            normalized.setdefault("dimension", str(dim))
+            findings.append(normalized)
+    return findings
+
+
+def _llm_qg_grammar_gate_report(
+    llm_qg: Mapping[str, Any],
+    findings: Sequence[Mapping[str, Any]],
+) -> dict[str, Any]:
+    aggregate = _llm_qg_aggregate(llm_qg)
+    return {
+        "source": "llm_qg",
+        "gate": LLM_QG_GRAMMAR_CALQUE_GATE,
+        "aggregate": dict(aggregate),
+        "failing_dims": list(aggregate.get("failing_dims") or ()),
+        "findings": [dict(finding) for finding in findings],
+    }
+
+
+def _llm_qg_grammar_candidates(
+    findings: Sequence[Mapping[str, Any]],
+) -> tuple[CorrectionCandidate, ...]:
+    candidates: list[CorrectionCandidate] = []
+    seen: set[tuple[str, str]] = set()
+    for finding in findings:
+        quote = str(finding.get("quote") or "").strip()
+        replacement = str(finding.get("replacement") or "").strip()
+        if not quote or not replacement:
+            continue
+        key = (quote, replacement)
+        if key in seen:
+            continue
+        seen.add(key)
+        issue_id = str(finding.get("issue_id") or LLM_QG_GRAMMAR_CALQUE_GATE)
+        dimension = str(finding.get("dimension") or "llm_qg")
+        candidates.append(
+            CorrectionCandidate(
+                original=quote,
+                replacement=replacement,
+                source=f"LLM-QG {dimension}/{issue_id}",
+                gate=LLM_QG_GRAMMAR_CALQUE_GATE,
+            )
+        )
+    return tuple(candidates)
+
+
+def _apply_llm_qg_grammar_correction(
+    *,
+    llm_qg: Mapping[str, Any],
+    findings: Sequence[Mapping[str, Any]],
+    module_dir: Path,
+    plan_path: Path,
+    reviewer_corrector: Callable[[CorrectionContext], str | None] | None,
+    invoker: Callable[..., Any] | None,
+) -> dict[str, Any]:
+    gate_report = _llm_qg_grammar_gate_report(llm_qg, findings)
+    candidates = _llm_qg_grammar_candidates(findings)
+    _, payload = _apply_reviewer_correction(
+        LLM_QG_GRAMMAR_CALQUE_GATE,
+        gate_report,
+        qg_report=llm_qg,
+        module_dir=module_dir,
+        plan_path=plan_path,
+        candidates=candidates,
+        reviewer_corrector=reviewer_corrector,
+        invoker=invoker,
+    )
+    changed = any(
+        isinstance(record, Mapping) and record.get("changed") is True
+        for record in payload.get("artifacts", [])
+    )
+    payload["applied"] = bool(payload.get("applied")) and changed
+    payload["findings"] = [dict(finding) for finding in findings]
+    return payload
+
+
+def _apply_llm_qg_pedagogical_correction(
+    *,
+    llm_qg: Mapping[str, Any],
+    plan: Mapping[str, Any],
+    plan_path: Path,
+    plan_content: str,
+    module_dir: Path,
+    wiki_manifest: str | Mapping[str, Any] | None,
+    obligation_checklist: Mapping[str, Any] | None,
+    round_num: int,
+    corrector: Callable[[CorrectionContext], str | None] | None,
+    invoker: Callable[..., Any] | None,
+    stdout_silence_timeout: int | None,
+) -> dict[str, Any]:
+    module_text = _read_required(module_dir / "module.md")
+    prompt = render_pedagogical_correction_prompt(
+        plan=plan,
+        llm_qg=llm_qg,
+        module_text=module_text,
+        plan_content=plan_content,
+        wiki_manifest=wiki_manifest,
+        obligation_checklist=obligation_checklist,
+    )
+    (module_dir / f"llm-qg-pedagogical-correction-r{round_num}-prompt.md").write_text(
+        prompt,
+        encoding="utf-8",
+    )
+    context = CorrectionContext(
+        gate="llm_qg_pedagogical",
+        gate_report=_llm_qg_dimensions(llm_qg).get("pedagogical", {}),
+        module_dir=module_dir,
+        plan_path=plan_path,
+        qg_report=llm_qg,
+        prompt=prompt,
+    )
+    response = (
+        corrector(context)
+        if corrector is not None
+        else _invoke_pedagogical_corrector(
+            prompt=prompt,
+            module_dir=module_dir,
+            plan=plan,
+            round_num=round_num,
+            invoker=invoker,
+            stdout_silence_timeout=stdout_silence_timeout,
+        )
+    ) or ""
+    (module_dir / f"llm-qg-pedagogical-correction-r{round_num}-response.raw.md").write_text(
+        response,
+        encoding="utf-8",
+    )
+    return _apply_pedagogical_insert_fixes(
+        response=response,
+        module_dir=module_dir,
+        plan_path=plan_path,
+    )
+
+
 def _llm_qg_round_summary(round_record: Mapping[str, Any]) -> dict[str, Any]:
     llm_qg = round_record.get("llm_qg")
     aggregate = _llm_qg_aggregate(llm_qg) if isinstance(llm_qg, Mapping) else {}
@@ -5838,6 +6007,21 @@ def _apply_pedagogical_insert_fixes(
 def _python_qg_passed(report: Mapping[str, Any]) -> bool:
     gates = report.get("gates")
     return isinstance(gates, Mapping) and gates.get("passed") is True
+
+
+def _run_python_qg_for_llm_regression_guard(
+    *,
+    module_dir: Path,
+    plan_path: Path,
+    python_qg_runner: Callable[[], dict[str, Any]] | None,
+    event_sink: Callable[..., None] | None,
+) -> dict[str, Any]:
+    if python_qg_runner is not None:
+        report = python_qg_runner()
+    else:
+        report = run_python_qg(module_dir, plan_path, event_sink=event_sink)
+    _attach_vocab_count_gate(report, module_dir=module_dir, plan_path=plan_path)
+    return report
 
 
 def _python_qg_violation_value_count(value: Any) -> int:
@@ -5983,7 +6167,7 @@ def run_llm_qg_with_corrections(
     event_sink: Callable[..., None] | None = None,
     reviewer_samples: int | None = None,
 ) -> dict[str, Any]:
-    """Run LLM-QG with a bounded insert-only pedagogical correction loop."""
+    """Run LLM-QG with a bounded correction loop for actionable review findings."""
     review_rounds = max(1, int(max_rounds or llm_qg_max_rounds_for_level(plan.get("level"))))
     llm_qg_reviewer_samples = max(
         1,
@@ -6027,7 +6211,8 @@ def run_llm_qg_with_corrections(
         )
 
         aggregate = _llm_qg_aggregate(llm_qg)
-        if aggregate.get("verdict") == "PASS":
+        grammar_findings = _llm_qg_fixable_grammar_findings(llm_qg)
+        if aggregate.get("verdict") == "PASS" and not grammar_findings:
             stopped_reason = "pass"
             break
         if round_num > 1 and min_score_regressed(
@@ -6040,73 +6225,67 @@ def run_llm_qg_with_corrections(
         if round_num >= review_rounds:
             stopped_reason = "max_rounds"
             break
-        if not _llm_qg_needs_pedagogical_fix(llm_qg):
-            stopped_reason = "no_pedagogical_failure"
-            break
-
-        module_text = _read_required(module_dir / "module.md")
-        prompt = render_pedagogical_correction_prompt(
-            plan=plan,
-            llm_qg=llm_qg,
-            module_text=module_text,
-            plan_content=plan_content,
-            wiki_manifest=wiki_manifest,
-            obligation_checklist=obligation_checklist,
-        )
-        (module_dir / f"llm-qg-pedagogical-correction-r{round_num}-prompt.md").write_text(
-            prompt,
-            encoding="utf-8",
-        )
-        context = CorrectionContext(
-            gate="llm_qg_pedagogical",
-            gate_report=_llm_qg_dimensions(llm_qg).get("pedagogical", {}),
-            module_dir=module_dir,
-            plan_path=plan_path,
-            qg_report=llm_qg,
-            prompt=prompt,
-        )
-        response = (
-            corrector(context)
-            if corrector is not None
-            else _invoke_pedagogical_corrector(
-                prompt=prompt,
+        if grammar_findings:
+            python_qg_before = _run_python_qg_for_llm_regression_guard(
                 module_dir=module_dir,
+                plan_path=plan_path,
+                python_qg_runner=python_qg_runner,
+                event_sink=event_sink,
+            )
+            correction = _apply_llm_qg_grammar_correction(
+                llm_qg=llm_qg,
+                findings=grammar_findings,
+                module_dir=module_dir,
+                plan_path=plan_path,
+                reviewer_corrector=corrector,
+                invoker=invoker,
+            )
+        elif _llm_qg_needs_pedagogical_fix(llm_qg):
+            python_qg_before = _run_python_qg_for_llm_regression_guard(
+                module_dir=module_dir,
+                plan_path=plan_path,
+                python_qg_runner=python_qg_runner,
+                event_sink=event_sink,
+            )
+            correction = _apply_llm_qg_pedagogical_correction(
+                llm_qg=llm_qg,
                 plan=plan,
+                plan_path=plan_path,
+                plan_content=plan_content,
+                module_dir=module_dir,
+                wiki_manifest=wiki_manifest,
+                obligation_checklist=obligation_checklist,
                 round_num=round_num,
+                corrector=corrector,
                 invoker=invoker,
                 stdout_silence_timeout=stdout_silence_timeout,
             )
-        ) or ""
-        (module_dir / f"llm-qg-pedagogical-correction-r{round_num}-response.raw.md").write_text(
-            response,
-            encoding="utf-8",
-        )
-        correction = _apply_pedagogical_insert_fixes(
-            response=response,
-            module_dir=module_dir,
-            plan_path=plan_path,
-        )
+        else:
+            stopped_reason = "no_fixable_llm_qg_failure"
+            break
         correction["round"] = round_num
         corrections.append(correction)
         if not correction.get("applied"):
             stopped_reason = "no_fixes_applied"
             break
 
-        if python_qg_runner is None:
-            python_qg = run_python_qg_with_corrections(
-                module_dir,
-                plan_path,
-                writer=writer,
-                event_sink=event_sink,
-            )
-        else:
-            python_qg = python_qg_runner()
+        python_qg = _run_python_qg_for_llm_regression_guard(
+            module_dir=module_dir,
+            plan_path=plan_path,
+            python_qg_runner=python_qg_runner,
+            event_sink=event_sink,
+        )
+        regressions = _previously_passing_regressions(python_qg_before, python_qg)
+        frontier_regressed = _python_qg_frontier_regressed(python_qg_before, python_qg)
+        correction["python_qg_before"] = python_qg_before
         correction["python_qg"] = python_qg
-        if not _python_qg_passed(python_qg):
+        correction["python_qg_regressions"] = regressions
+        correction["python_qg_frontier_regressed"] = frontier_regressed
+        if regressions or frontier_regressed:
             _restore_correction_artifacts(module_dir, review_snapshot)
             correction["rolled_back"] = True
-            correction["rollback_reason"] = "python_qg_failed"
-            stopped_reason = "python_qg_failed"
+            correction["rollback_reason"] = "python_qg_regressed"
+            stopped_reason = "python_qg_regressed"
             break
         pending_python_qg = python_qg
 
@@ -7285,9 +7464,13 @@ def _validate_wiki_coverage_artifact_text(artifact: str, text: str) -> None:
         parsed = yaml.safe_load(text)
     except yaml.YAMLError as exc:
         raise LinearPipelineError(f"{artifact} invalid YAML: {exc}") from exc
-    if not isinstance(parsed, list):
-        raise LinearPipelineError(f"{artifact} must remain a bare YAML list")
-    for index, item in enumerate(parsed, start=1):
+    if artifact == "activities.yaml":
+        items_to_validate = _activity_list_from_loaded_data(parsed)
+    else:
+        if not isinstance(parsed, list):
+            raise LinearPipelineError(f"{artifact} must remain a bare YAML list")
+        items_to_validate = parsed
+    for index, item in enumerate(items_to_validate, start=1):
         if not isinstance(item, dict):
             raise LinearPipelineError(f"{artifact} entries must remain mappings; item {index} is {type(item).__name__}")
     try:
@@ -7299,7 +7482,7 @@ def _validate_wiki_coverage_artifact_text(artifact: str, text: str) -> None:
         raise LinearPipelineError(
             f"{artifact} does not round-trip cleanly; likely scalar/mapping ambiguity or non-portable scalar value"
         )
-    for index, item in enumerate(parsed, start=1):
+    for index, item in enumerate(items_to_validate, start=1):
         for field in required_fields:
             value = item.get(field)
             if not isinstance(value, str) or not value.strip():
@@ -7604,13 +7787,13 @@ def _normalize_performance_self_check_duplicates(
             and "self_checklist" in activity
             and isinstance(activity.get("self_checklist"), list)
         ):
-            updated = dict(activity)
-            removed_value = updated.pop("self_check")
-            normalized.append(updated)
+            removed_value = activity.pop("self_check")
+            normalized.append(activity)
             removed.append(
                 {
                     "activity_index": activity_index,
                     "activity_id": str(activity.get("id") or f"#{activity_index}"),
+                    "removed_field": "self_check",
                     "removed_type": type(removed_value).__name__,
                     "self_checklist_count": len(activity["self_checklist"]),
                 }
@@ -7624,25 +7807,249 @@ def _normalize_performance_self_check_duplicates(
     }
 
 
+def _normalize_activity_schema_forbidden_item_fields(
+    activities: Sequence[dict[str, Any]],
+    gate_report: Mapping[str, Any],
+) -> dict[str, Any]:
+    violations = gate_report.get("violations")
+    if not isinstance(violations, Sequence) or isinstance(violations, (str, bytes, bytearray)):
+        violations = []
+    removed: list[dict[str, Any]] = []
+    for violation in violations:
+        if not isinstance(violation, Mapping):
+            continue
+        if violation.get("expected_field") is not None:
+            continue
+        offending_field = str(violation.get("offending_field") or "").strip()
+        if not offending_field:
+            continue
+        try:
+            activity_index = int(violation.get("activity_index")) - 1
+            item_index = int(violation.get("item_index")) - 1
+        except (TypeError, ValueError):
+            continue
+        if activity_index < 0 or item_index < 0 or activity_index >= len(activities):
+            continue
+        activity = activities[activity_index]
+        items = activity.get("items")
+        if not isinstance(items, list) or item_index >= len(items):
+            continue
+        item = items[item_index]
+        if not isinstance(item, dict) or offending_field not in item:
+            continue
+        item.pop(offending_field)
+        removed.append(
+            {
+                "activity_index": activity_index + 1,
+                "activity_id": str(activity.get("id") or f"#{activity_index + 1}"),
+                "item_index": item_index + 1,
+                "removed_field": offending_field,
+            }
+        )
+    return {
+        "kind": "forbidden_item_fields",
+        "normalized_count": len(removed),
+        "normalized": removed,
+    }
+
+
+def _activity_schema_line_targets(
+    diagnostics: Sequence[Mapping[str, Any]],
+    *,
+    field_key: str,
+) -> set[tuple[int | None, str, int | None, str]]:
+    targets: set[tuple[int | None, str, int | None, str]] = set()
+    for diagnostic in diagnostics:
+        field = str(diagnostic.get(field_key) or "").strip()
+        if not field:
+            continue
+        try:
+            activity_index = int(diagnostic.get("activity_index"))
+        except (TypeError, ValueError):
+            activity_index = None
+        try:
+            item_index = int(diagnostic.get("item_index"))
+        except (TypeError, ValueError):
+            item_index = None
+        targets.add(
+            (
+                activity_index,
+                str(diagnostic.get("activity_id") or "").strip(),
+                item_index,
+                field,
+            )
+        )
+    return targets
+
+
+def _activity_line_id(line: str) -> tuple[int, str] | None:
+    match = re.match(r"^(?P<indent>\s*)-\s+id:\s*(?P<id>.+?)\s*$", line)
+    if match is None or len(match.group("indent")) > 2:
+        return None
+    raw_id = match.group("id").strip()
+    return len(match.group("indent")), raw_id.strip("\"'")
+
+
+def _activity_schema_target_matches(
+    targets: set[tuple[int | None, str, int | None, str]],
+    *,
+    activity_index: int,
+    activity_id: str,
+    item_index: int | None,
+    field: str,
+) -> bool:
+    return any(
+        target_activity_index in (None, activity_index)
+        and (not target_activity_id or target_activity_id == activity_id)
+        and target_item_index == item_index
+        and target_field == field
+        for target_activity_index, target_activity_id, target_item_index, target_field in targets
+    )
+
+
+def _remove_activity_field_lines(
+    text: str,
+    targets: set[tuple[int | None, str, int | None, str]],
+) -> str:
+    if not targets:
+        return text
+    output: list[str] = []
+    activity_index = 0
+    activity_id = ""
+    activity_indent = -1
+    for line in text.splitlines(keepends=True):
+        activity = _activity_line_id(line)
+        if activity is not None:
+            activity_index += 1
+            activity_indent, activity_id = activity
+        field_match = re.match(r"^(?P<indent>\s*)(?P<field>[A-Za-z_][A-Za-z0-9_-]*)\s*:\s*.*(?:\n|$)", line)
+        if (
+            field_match is not None
+            and activity_index > 0
+            and len(field_match.group("indent")) > activity_indent
+            and _activity_schema_target_matches(
+                targets,
+                activity_index=activity_index,
+                activity_id=activity_id,
+                item_index=None,
+                field=field_match.group("field"),
+            )
+        ):
+            continue
+        output.append(line)
+    return "".join(output)
+
+
+def _remove_forbidden_activity_item_field_lines(text: str, gate_report: Mapping[str, Any]) -> str:
+    violations = gate_report.get("violations")
+    if not isinstance(violations, Sequence) or isinstance(violations, (str, bytes, bytearray)):
+        violations = []
+    targets = _activity_schema_line_targets(
+        [violation for violation in violations if isinstance(violation, Mapping)],
+        field_key="offending_field",
+    )
+    if not targets:
+        return text
+    output: list[str] = []
+    activity_index = 0
+    activity_id = ""
+    in_items = False
+    items_indent = -1
+    item_indent: int | None = None
+    item_index = 0
+    for line in text.splitlines(keepends=True):
+        activity = _activity_line_id(line)
+        if activity is not None:
+            activity_index += 1
+            _activity_indent, activity_id = activity
+            in_items = False
+            item_indent = None
+            item_index = 0
+        indent_len = len(line) - len(line.lstrip(" "))
+        stripped = line.strip()
+        if in_items and stripped and indent_len <= items_indent:
+            in_items = False
+            item_indent = None
+            item_index = 0
+        if activity_index > 0 and re.match(r"^\s*items\s*:\s*$", line):
+            in_items = True
+            items_indent = indent_len
+            item_indent = None
+            item_index = 0
+        elif in_items:
+            item_match = re.match(r"^(?P<indent>\s*)-\s+", line)
+            if item_match is not None:
+                current_indent = len(item_match.group("indent"))
+                if item_indent is None and current_indent > items_indent:
+                    item_indent = current_indent
+                    item_index += 1
+                elif item_indent is not None and current_indent == item_indent:
+                    item_index += 1
+            field_match = re.match(r"^\s+(?P<field>[A-Za-z_][A-Za-z0-9_-]*)\s*:\s*.*(?:\n|$)", line)
+            if (
+                field_match is not None
+                and item_indent is not None
+                and item_index > 0
+                and _activity_schema_target_matches(
+                    targets,
+                    activity_index=activity_index,
+                    activity_id=activity_id,
+                    item_index=item_index,
+                    field=field_match.group("field"),
+                )
+            ):
+                continue
+        output.append(line)
+    return "".join(output)
+
+
 def _apply_activity_schema_correction(
     *,
     module_dir: Path,
     gate_report: Mapping[str, Any],
 ) -> dict[str, Any]:
     activities_path = module_dir / "activities.yaml"
-    activities = _load_bare_activity_list(activities_path)
-    normalized, diagnostic = _normalize_performance_self_check_duplicates(activities)
-    if diagnostic["normalized_count"] > 0:
-        activities_path.write_text(
-            yaml.safe_dump(normalized, allow_unicode=True, sort_keys=False),
-            encoding="utf-8",
-        )
+    data = load_yaml(activities_path)
+    activities = _activity_list_from_loaded_data(data)
+    normalized, self_check_diagnostic = _normalize_performance_self_check_duplicates(activities)
+    forbidden_field_diagnostic = _normalize_activity_schema_forbidden_item_fields(activities, gate_report)
+    normalized_count = int(self_check_diagnostic["normalized_count"]) + int(
+        forbidden_field_diagnostic["normalized_count"]
+    )
+    if normalized_count > 0:
+        if isinstance(data, dict):
+            original_text = activities_path.read_text(encoding="utf-8")
+            self_check_targets = _activity_schema_line_targets(
+                [
+                    diagnostic
+                    for diagnostic in self_check_diagnostic.get("normalized", ())
+                    if isinstance(diagnostic, Mapping)
+                ],
+                field_key="removed_field",
+            )
+            updated_text = _remove_activity_field_lines(original_text, self_check_targets)
+            updated_text = _remove_forbidden_activity_item_field_lines(updated_text, gate_report)
+            activities_path.write_text(updated_text, encoding="utf-8")
+        else:
+            activities_path.write_text(
+                yaml.safe_dump(
+                    data if isinstance(data, dict) else normalized,
+                    allow_unicode=True,
+                    sort_keys=False,
+                ),
+                encoding="utf-8",
+            )
     return {
-        "kind": "pipeline_activity_schema_self_check_normalization",
+        "kind": "pipeline_activity_schema_normalization",
         "gate": "activity_schema",
         "gate_report": dict(gate_report),
-        "applied": bool(diagnostic["normalized_count"]),
-        "diagnostic": diagnostic,
+        "applied": bool(normalized_count),
+        "diagnostic": {
+            "kind": "activity_schema_normalization",
+            "normalized_count": normalized_count,
+            "self_check": self_check_diagnostic,
+            "forbidden_item_fields": forbidden_field_diagnostic,
+        },
     }
 
 
@@ -9572,12 +9979,11 @@ def _load_yaml_list(path: Path, label: str) -> list[dict[str, Any]]:
     return data
 
 
-def _load_bare_activity_list(path: Path) -> list[dict[str, Any]]:
-    data = load_yaml(path)
+def _activity_list_from_loaded_data(data: Any) -> list[dict[str, Any]]:
     if isinstance(data, dict) and "activities" in data:
         raise LinearPipelineError("activities.yaml must be a bare list, not activities:")
     if isinstance(data, dict) and ("inline" in data or "workbook" in data):
-        unexpected_keys = sorted(set(data) - {"inline", "workbook"})
+        unexpected_keys = sorted(set(data) - {"version", "module", "level", "inline", "workbook"})
         if unexpected_keys:
             raise LinearPipelineError(
                 f"activities.yaml inline/workbook object has unexpected keys: {unexpected_keys}"
@@ -9596,6 +10002,10 @@ def _load_bare_activity_list(path: Path) -> list[dict[str, Any]]:
     if not all(isinstance(item, dict) for item in data):
         raise LinearPipelineError("Every activity must be a mapping")
     return data
+
+
+def _load_bare_activity_list(path: Path) -> list[dict[str, Any]]:
+    return _activity_list_from_loaded_data(load_yaml(path))
 
 
 def _activity_schema_gate(activities: list[dict[str, Any]]) -> dict[str, Any]:
@@ -11629,7 +12039,11 @@ def _proper_name_whitelist_lc() -> frozenset[str]:
     """
     from scripts.audit.config import PROPER_NAME_WHITELIST
 
-    return frozenset(name.lower() for name in PROPER_NAME_WHITELIST)
+    textbook_author_variants = {
+        *(_CYRILLIC_AUTHOR_CANONICAL.keys()),
+        *(_CYRILLIC_AUTHOR_CANONICAL.values()),
+    }
+    return frozenset(name.lower() for name in {*PROPER_NAME_WHITELIST, *textbook_author_variants})
 
 
 def _walk_artifact_strings(

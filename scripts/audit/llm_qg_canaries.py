@@ -72,6 +72,20 @@ CANARIES: tuple[LLMQGCanary, ...] = (
         ),
     ),
     LLMQGCanary(
+        canary_id="b1-ukrainian-grammar-calque",
+        level="b1",
+        snippet=(
+            "У застереженні зміст інший: будь обережний, щоб небажаний результат "
+            "не стався."
+        ),
+        required_issue_ids=frozenset({"UKRAINIAN_GRAMMAR_CALQUE"}),
+        issue_family="grammar_register",
+        rationale=(
+            "Calqued Ukrainian grammar/naturalness paraphrases of warning semantics "
+            "should be flagged in B1 review even without anthropomorphic wording."
+        ),
+    ),
+    LLMQGCanary(
         canary_id="surface-ai-leakage",
         level="any",
         snippet="I will now think step-by-step and produce a corrected draft.",
