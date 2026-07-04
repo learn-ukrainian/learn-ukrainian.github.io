@@ -603,6 +603,18 @@ def check_surface(paths: ModulePaths) -> list[Finding]:
     return findings
 
 
+# `chunk_id` / `packet_chunk_id` keys in resources.yaml are internal
+# corpus-provenance metadata consumed by the plan-reference gate
+# (linear_pipeline._plan_reference_match_gate / _resource_chunk_id). The MDX
+# renderer strips them, so a bare provenance-key line never reaches a learner
+# surface and is not a leak. Prose that *mentions* the term (title/notes/lesson
+# body, or the rendered .mdx) is still scanned and still flagged.
+_RESOURCE_FILENAMES = {"resources.yaml", "resources.yml"}
+_RESOURCE_PROVENANCE_KEY_RE = re.compile(
+    r"^\s*(?:-\s*)?(?:packet_)?chunk_id\s*:", re.IGNORECASE
+)
+
+
 def check_internal_leakage(paths: ModulePaths) -> list[Finding]:
     candidate_files = [
         paths.module_md,
@@ -616,7 +628,11 @@ def check_internal_leakage(paths: ModulePaths) -> list[Finding]:
     for path in candidate_files:
         if not path.exists():
             continue
+        is_resources = path.name in _RESOURCE_FILENAMES
         for line_no, line in enumerate(path.read_text(encoding="utf-8").splitlines(), start=1):
+            if is_resources and _RESOURCE_PROVENANCE_KEY_RE.match(line):
+                # Non-rendering provenance key — not a learner surface.
+                continue
             for spec in patterns:
                 for match in spec.pattern.finditer(line):
                     findings.append(

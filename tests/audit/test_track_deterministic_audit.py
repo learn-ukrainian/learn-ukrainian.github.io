@@ -139,3 +139,30 @@ def test_surface_gate_reports_b2_english_leak(tmp_path, monkeypatch) -> None:
     findings = audit.check_surface(paths)
 
     assert any(item.category == "english_internal_leakage" and item.severity == "high" for item in findings)
+
+
+def test_internal_leakage_skips_resource_provenance_key(tmp_path, monkeypatch) -> None:
+    """`chunk_id:` / `packet_chunk_id:` keys in resources.yaml are non-rendering
+    corpus-provenance metadata (consumed by the plan-reference gate), so a bare
+    provenance-key line must NOT be flagged — but prose mentioning the term still is."""
+    patch_roots(monkeypatch, tmp_path)
+    write_minimal_module(tmp_path, "test-one", 1)
+    resources = tmp_path / "curriculum" / "l2-uk-en" / "b2" / "test-one" / "resources.yaml"
+    resources.write_text(
+        "- title: Буквар 1 клас, с. 24\n"
+        "  role: textbook\n"
+        "  chunk_id: 1-klas-bukvar-2018_s0023\n"
+        "  packet_chunk_id: 1-klas-bukvar-2018_s0024\n"
+        "  notes: retrieved via search_text; no literal chunk_id in plan\n",
+        encoding="utf-8",
+    )
+
+    paths = audit.select_modules("b2", (1, 1), None)[0]
+    findings = audit.check_internal_leakage(paths)
+    leaks = [f for f in findings if f.file and f.file.endswith("resources.yaml")]
+
+    # The bare provenance-key lines are skipped...
+    assert not any(f.line == 3 for f in leaks), "chunk_id: key line should not be flagged"
+    assert not any(f.line == 4 for f in leaks), "packet_chunk_id: key line should not be flagged"
+    # ...but the notes prose that MENTIONS chunk_id still leaks (renders in Resources tab).
+    assert any(f.line == 5 for f in leaks), "notes prose mentioning chunk_id must still be flagged"
