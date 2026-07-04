@@ -108,7 +108,7 @@ focus: >-
   переривали інституційні виключення та мітка «неблагонадійний», без
   задокументованого арештового дела в наявних джерелах.
 level: BIO
-module: bio-197
+module: bio-219
 objectives:
 - >-
   Аналізувати збірку *Степові думи та співи* (1889) та роль південно-східної
@@ -156,7 +156,7 @@ references:
   title: Дума
   type: primary
   work: Степові думи та співи
-sequence: 197
+sequence: 219
 slug: ivan-manzhura
 subtitle: The Steppe Poet Marked Unreliable by Imperial Institutions
 title: 'Іван Манжура: Степові думи під імперським тиском'

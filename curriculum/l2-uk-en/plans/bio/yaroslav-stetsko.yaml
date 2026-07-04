@@ -100,7 +100,7 @@ focus: >-
   складних дискусій. Аналіз його політичних поглядів, нацистського ув'язнення, повоєнного
   лідерства, а також визнання контроверсійних антисемітських текстів.
 level: BIO
-module: bio-278
+module: bio-300
 objectives:
 - Аналізувати політичний та ідеологічний доробок Ярослава Стецька.
 - Розуміти історичні обставини проголошення Акта 30 червня 1941 року та його наслідки.
@@ -130,7 +130,7 @@ references:
   path: Ukrainian Nationalists and the Holocaust
   title: John-Paul Himka. "Ukrainian Nationalists and the Holocaust"
   type: reference
-sequence: 278
+sequence: 300
 slug: yaroslav-stetsko
 subtitle: The 1941 Proclamation, Ideology, and Exile Leadership
 title: 'Ярослав Стецько: Акт 30 червня та ідеологія ОУН(б)'

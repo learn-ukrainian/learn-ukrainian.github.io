@@ -70,7 +70,7 @@ content_outline:
   words: 700
 focus: 'Mykola Vasylenko: a legal historian who became Minister of Education in the Hetmanate, co-founded the Ukrainian Academy of Sciences, and navigated the treacherous political landscape of the early Soviet period, ultimately facing repression.'
 level: BIO
-module: bio-066
+module: bio-088
 objectives:
 - Аналізувати життя та спадщину Миколи Василенка як юриста і державного діяча
 - Оцінювати внесок Василенка у створення ключових українських інституцій, зокрема Академії Наук
@@ -98,7 +98,7 @@ references:
   note: Контекст політичних репресій проти української інтелігенції, в рамках яких було заарештовано Василенка.
   path: https://uk.wikipedia.org/wiki/Справа_«Спілки_визволення_України»
   type: reference
-sequence: 66
+sequence: 88
 slug: mykola-vasylenko
 subtitle: The Tragedy of a Statesman in a Stateless Era
 title: 'Микола Василенко: Юрист і державник'

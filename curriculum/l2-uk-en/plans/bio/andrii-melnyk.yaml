@@ -96,7 +96,7 @@ focus: >-
   консервативного націоналізму. Аналіз його військового досвіду, причин розколу ОУН,
   авторитарної ідеології та нацистського ув'язнення.
 level: BIO
-module: bio-279
+module: bio-301
 objectives:
 - Аналізувати біографію Андрія Мельника від служби в армії УНР до лідерства в ОУН(м).
 - Розуміти ідеологічні та поколіннєві причини розколу ОУН на мельниківське та бандерівське крила.
@@ -130,7 +130,7 @@ references:
   path: Stepan Bandera
   title: Grzegorz Rossolinski-Liebe. "Stepan Bandera"
   type: reference
-sequence: 279
+sequence: 301
 slug: andrii-melnyk
 subtitle: The OUN-M Leader, UNR Army Veteran, and Factional Division
 title: 'Андрій Мельник: ОУН(м) та авторитарний націоналізм'

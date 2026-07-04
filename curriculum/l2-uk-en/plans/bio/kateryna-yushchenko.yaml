@@ -68,7 +68,7 @@ content_outline:
   words: 700
 focus: The life and work of Kateryna Yushchenko, creator of the Address Language (the world's first high-level programming language), and the reasons for her relative obscurity in the West.
 level: BIO
-module: bio-132
+module: bio-154
 objectives:
 - Критично аналізувати життя та спадщину Катерини Ющенко як піонерки кібернетики
 - Оцінювати внесок Адресної мови в історію програмування, враховуючи контекст "холодної війни"
@@ -94,7 +94,7 @@ references:
   notes: Institute where Yushchenko worked
   type: reference
   url: https://icyb.kiev.ua/
-sequence: 132
+sequence: 154
 slug: kateryna-yushchenko
 subtitle: 'Kateryna Yushchenko: Mother of the Programming Language'
 title: 'Катерина Ющенко: Мати мови програмування'

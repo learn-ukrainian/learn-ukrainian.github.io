@@ -67,7 +67,7 @@ content_outline:
   words: 700
 focus: The biography of Ivan Lypa, analyzing the inherent conflict between his roles as a doctor sworn to heal, a writer, and a revolutionary ideologue. Examines the formation and failure of the Brotherhood of Tarasivtsi and Lypa's complex legacy as a prophet of Ukrainian independence.
 level: BIO
-module: bio-063
+module: bio-085
 objectives:
 - Аналізувати ідеологію та діяльність Братства тарасівців, визначаючи його місце в українському національному русі.
 - Критично оцінювати внутрішній конфлікт Івана Липи між професійним обов'язком лікаря та місією політичного діяча.
@@ -95,7 +95,7 @@ references:
   type: reference
   url: https://uk.wikipedia.org/wiki/Братство_тарасівців
   work: Братство тарасівців (Wikipedia UA)
-sequence: 63
+sequence: 85
 slug: ivan-lypa
 subtitle: 'Ivan Lypa: Doctor, Writer, and Ideologue'
 title: 'Іван Липа: Лікар і письменник'

@@ -89,7 +89,7 @@ focus: >-
   боротьба проти радянської каральної системи та лідерство в умовах
   сучасної російської окупації Криму.
 level: BIO
-module: bio-309
+module: bio-331
 objectives:
 - Аналізувати етапи боротьби кримських татар за повернення з місць депортації.
 - Розуміти механізми переслідування дисидентів у СРСР.
@@ -115,7 +115,7 @@ references:
   path: https://www.president.gov.ua/documents/8052023-49265
   title: Указ Президента №492/2023
   type: reference
-sequence: 309
+sequence: 331
 slug: mustafa-dzhemiliev
 subtitle: The Unbreakable Leader of the Crimean Tatar National Movement
 title: 'Мустафа Джемілєв: Повернення і спротив'

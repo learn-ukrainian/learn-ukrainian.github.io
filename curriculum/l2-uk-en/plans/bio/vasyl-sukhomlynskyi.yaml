@@ -69,7 +69,7 @@ content_outline:
   words: 700
 focus: The life and work of Vasyl Sukhomlynskyi, focusing on his humanist "pedagogy of the heart", the experimental Pavlysh school, and his complex relationship with the Soviet educational system.
 level: BIO
-module: bio-131
+module: bio-153
 objectives:
 - Критично аналізувати парадокс Василя Сухомлинського — офіційно визнаного радянського педагога, звинуваченого в "абстрактному гуманізмі"
 - Пояснювати ключові принципи "педагогіки серця" та експерименту в Павлиській школі
@@ -95,7 +95,7 @@ references:
   note: Сучасний погляд на життя та творчість батька від доньки, яка є провідною дослідницею його спадщини.
   type: reference
   work: Василь Сухомлинський. У пошуках істини
-sequence: 131
+sequence: 153
 slug: vasyl-sukhomlynskyi
 subtitle: 'Vasyl Sukhomlynskyi: Pedagogue of the Heart'
 title: 'Василь Сухомлинський: Педагог серця'

@@ -69,7 +69,7 @@ content_outline:
   words: 700
 focus: Volodymyr Ivasyuk's life, the cultural phenomenon of "Chervona Ruta", his mysterious death, and his role as a symbol of Ukrainian cultural resistance against Soviet suppression.
 level: BIO
-module: bio-149
+module: bio-171
 objectives:
 - Аналізувати життя і творчість Володимира Івасюка в контексті культурного опору в УРСР
 - Критично оцінювати різні версії його смерті, розрізняючи факти, інтерпретації та радянську пропаганду
@@ -97,7 +97,7 @@ references:
   note: Компіляція з відкритих джерел, спогадів та аналітичних статей про життя і смерть Івасюка.
   path: wiki/bio/volodymyr-ivasyuk.md
   type: wiki
-sequence: 149
+sequence: 171
 slug: volodymyr-ivasyuk
 subtitle: The Man Who Wrote a Nation's Anthem
 title: 'Володимир Івасюк: Автор Червоної рути'

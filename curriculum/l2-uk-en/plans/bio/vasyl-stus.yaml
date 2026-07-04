@@ -71,7 +71,7 @@ content_outline:
   words: 700
 focus: The life, dissident activity, and poetic legacy of Vasyl Stus, focusing on his role as a symbol of unbroken spirit against the Soviet regime, his 'spiritual vertical', and the price of moral choice.
 level: BIO
-module: bio-143
+module: bio-165
 objectives:
 - Критично аналізувати життя та спадщину Василя Стуса, розрізняючи біографічний факт та агіографічний міф
 - Оцінювати його поезію як форму екзистенційного та політичного спротиву тоталітарній системі
@@ -95,7 +95,7 @@ references:
   note: Музей Василя Стуса — Матеріали про життя та творчість
   path: https://stus.museum/
   type: reference
-sequence: 143
+sequence: 165
 slug: vasyl-stus
 subtitle: 'Vasyl Stus: An Upright Stand of the Spirit'
 title: 'Василь Стус: Вертикальне стояння духу'

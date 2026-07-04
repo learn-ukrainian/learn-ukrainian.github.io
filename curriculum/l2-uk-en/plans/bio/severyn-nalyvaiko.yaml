@@ -69,7 +69,7 @@ content_outline:
   words: 700
 focus: The 1594-1596 uprising led by Severyn Nalyvaiko, his transition from mercenary to rebel leader, the Solonytsia tragedy, and his contested legacy as a national hero versus a brutal bandit.
 level: BIO
-module: bio-018
+module: bio-020
 objectives:
 - Аналізувати причини, перебіг та наслідки першого великого козацького повстання в Речі Посполитій
 - Давати критичну оцінку постаті Северина Наливайка, розрізняючи історичні факти, міфи та ідеологічні інтерпретації
@@ -93,7 +93,7 @@ references:
   note: Класичний аналіз повстання Наливайка, його причин та наслідків
   type: primary
   work: Історія України-Руси, том 7
-sequence: 18
+sequence: 20
 slug: severyn-nalyvaiko
 subtitle: 'Severyn Nalyvaiko: The Cossack Rebel Leader'
 title: 'Северин Наливайко: Лідер козацького повстання'

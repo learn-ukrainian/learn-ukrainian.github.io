@@ -68,7 +68,7 @@ content_outline:
   words: 700
 focus: Biography of Danylo Apostol, focusing on his reforms ("Reshytelni punkty", judicial and economic reforms), the compromises made with the Russian Empire, and the anti-hagiographical view of his legacy as a pragmatic stabilizer versus a manager of decline.
 level: BIO
-module: bio-028
+module: bio-052
 objectives:
 - Оцінити реформаторську діяльність Данила Апостола в економічній, судовій та адміністративній сферах
 - Проаналізувати правовий статус Гетьманщини за «Рішительними пунктами» як інструмент компромісу та імперського контролю
@@ -94,7 +94,7 @@ references:
   note: Аналіз епохи після Мазепи та контексту, в якому діяв Апостол
   type: primary
   work: '«Волимо вмерти, а не зрадити»: гетьман Іван Мазепа і його соратники'
-sequence: 28
+sequence: 52
 slug: danylo-apostol
 subtitle: 'The Hetmanate''s Pragmatist: Reform and Compromise'
 title: 'Данило Апостол: Останній обраний гетьман'

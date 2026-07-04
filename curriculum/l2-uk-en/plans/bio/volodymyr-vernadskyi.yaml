@@ -66,7 +66,7 @@ content_outline:
   words: 700
 focus: Vernadsky's concepts of biosphere/noosphere, his role in founding the UA Academy of Sciences, and the ethical compromises of a scientist under totalitarianism
 level: BIO
-module: bio-058
+module: bio-080
 objectives:
 - Аналізувати концепцію ноосфери та її відмінність від біосфери, застосовуючи ці поняття до сучасних проблем
 - Оцінювати складну роль Вернадського у заснуванні Української академії наук в контексті його роботи в Російській імперії та СРСР
@@ -93,7 +93,7 @@ references:
   type: primary
   url: http://www.history.org.ua/?termin=Vernadsky_V
   work: Вернадський Володимир Іванович
-sequence: 58
+sequence: 80
 slug: volodymyr-vernadskyi
 subtitle: 'Volodymyr Vernadsky: The Noosphere and Compromise'
 title: 'Володимир Вернадський: Ноосфера та компроміс'

@@ -142,7 +142,7 @@ focus: >-
   "Саду Гетсиманського", політичний голос ДіПі-еміграції та свідок радянського
   табірного механізму.
 level: BIO
-module: bio-201
+module: bio-223
 objectives:
 - >-
   Аналізувати життєвий шлях Івана Багряного від Охтирки й МАРС до таборів,
@@ -186,7 +186,7 @@ references:
   title: Чому я не хочу вертатись до СРСР?
   type: primary
   work: Чому я не хочу вертатись до СРСР?
-sequence: 201
+sequence: 223
 slug: ivan-bahrianyi
 subtitle: The Soviet Camp Survivor Who Refused Repatriation
 title: 'Іван Багряний: Табір, втеча і право не повертатися'

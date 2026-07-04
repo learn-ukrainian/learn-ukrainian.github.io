@@ -23,10 +23,10 @@ activity_hints:
   type: essay-response
 cefr_min: C1
 connects_to:
-- bio-72 (Lesya Ukrainka)
-- bio-42 (Marko Vovchok)
-- bio-123 (Bohdan Ihor Antonych)
-- bio-135 (Yevhen Sverstiuk)
+- bio-94 (Lesya Ukrainka)
+- bio-64 (Marko Vovchok)
+- bio-145 (Bohdan Ihor Antonych)
+- bio-157 (Yevhen Sverstiuk)
 content_outline:
 - points:
   - 'Парадокс: Як перша жінка-лауреатка Шевченківської премії, авторка найбільшого роману в жіночій прозі, змогла вижити під чотирма окупаційними режимами (Австро-Угорщина, Польща, нацисти, совіти), не втративши свого «дикого», вільного духу?'
@@ -71,7 +71,7 @@ content_outline:
   words: 700
 focus: 'Biography of Iryna Vilde: survival strategies under four regimes, the price of compromise, and the creation of feminist psychological prose in Galicia.'
 level: BIO
-module: bio-177
+module: bio-199
 objectives:
 - Критично аналізувати творчий шлях Ірини Вільде як першої жінки-лауреатки Шевченківської премії
 - Досліджувати стратегії виживання та моральні дилеми галицької інтелігенції під чотирма окупаційними режимами
@@ -96,7 +96,7 @@ references:
   note: Біографічне дослідження, що аналізує складні життєві вибори письменниці.
   type: primary
   work: Ірина Вільде. Штрихи до портрета
-sequence: 177
+sequence: 199
 slug: iryna-vilde
 subtitle: 'Iryna Vilde: A Butterfly on Pins'
 title: 'Ірина Вільде: Метелик на шпильках'

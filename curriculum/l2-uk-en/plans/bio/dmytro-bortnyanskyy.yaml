@@ -23,10 +23,10 @@ activity_hints:
   type: essay-response
 cefr_min: C1
 connects_to:
-- bio-34 (Maksym Berezovskyy)
-- bio-38 (Semen Hulak Artemovskyy)
-- bio-48 (Mykola Lysenko)
-- bio-77 (Mykola Leontovych)
+- bio-56 (Maksym Berezovskyy)
+- bio-60 (Semen Hulak Artemovskyy)
+- bio-70 (Mykola Lysenko)
+- bio-99 (Mykola Leontovych)
 content_outline:
 - points:
   - 'Провокація: Бортнянський — творець "російського" класичного стилю, але чи міг він з''явитися без української музичної традиції? Парадокс композитора, що став символом імперії, яка намагалася знищити його власну культуру.'
@@ -69,7 +69,7 @@ content_outline:
   words: 700
 focus: The life of Dmytro Bortnyanskyy as a case study of cultural appropriation, the role of Ukrainian talent in the Russian Empire, and the creation of an "imperial classical" style.
 level: BIO
-module: bio-035
+module: bio-057
 objectives:
 - Аналізувати життя та спадщину Дмитра Бортнянського в контексті культурного привласнення імперією
 - Розрізняти українські та італійські впливи на творчість композитора
@@ -95,7 +95,7 @@ references:
   note: Аналіз проблеми "Бортнянський і українська ідентичність" в історіографії.
   type: primary
   work: Стиль-епоха-композитор в українському музикознавстві
-sequence: 35
+sequence: 57
 slug: dmytro-bortnyanskyy
 subtitle: From Ukrainian Prodigy to Imperial Maestro
 title: 'Дмитро Бортнянський: Придворний маестро'

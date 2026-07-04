@@ -100,7 +100,7 @@ focus: >-
   майстер-графік, що загинув у протистоянні з радянськими спецслужбами,
   залишивши потужну мистецьку спадщину в повному політичному контексті.
 level: BIO
-module: bio-296
+module: bio-318
 objectives:
 - Розуміти місце Ніла Хасевича в історії українського мистецтва та підпільного руху.
 - Аналізувати візуальні елементи його гравюр як форму політичної комунікації.
@@ -120,7 +120,7 @@ references:
   path: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CK%5CH%5CKhasevychNil.htm
   title: Khasevych, Nil (IEU)
   type: reference
-sequence: 296
+sequence: 318
 slug: nil-khasevych
 subtitle: The Underground Graphic Artist of the UPA
 title: 'Ніл Хасевич: Різець проти імперії'

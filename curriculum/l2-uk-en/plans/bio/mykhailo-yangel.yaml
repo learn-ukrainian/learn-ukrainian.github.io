@@ -68,7 +68,7 @@ content_outline:
   words: 700
 focus: 'Mykhailo Yangel as a complex figure: the rivalry with Korolev, the dual nature of his creations (shield vs. sword), the Nedelin catastrophe, and his enduring legacy in Dnipro.'
 level: BIO
-module: bio-125
+module: bio-147
 objectives:
 - Критично аналізувати внесок Михайла Янгеля, розглядаючи його як у контексті науково-технічного прогресу, так і в контексті гонки озброєнь.
 - Порівнювати інженерні школи Янгеля та Корольова, ідентифікуючи їхні ключові відмінності та філософію.
@@ -95,7 +95,7 @@ references:
   note: Джерело для секції "Тінь", містить деталі трагедії.
   type: primary
   url: https://en.wikipedia.org/wiki/Nedelin_catastrophe
-sequence: 125
+sequence: 147
 slug: mykhailo-yangel
 subtitle: 'Mykhailo Yangel: Creator of the Missile Shield and Space Power'
 title: 'Михайло Янгель: Творець ракетного щита та космічної міці'

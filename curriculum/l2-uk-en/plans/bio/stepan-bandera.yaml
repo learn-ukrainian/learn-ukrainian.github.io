@@ -106,7 +106,7 @@ focus: >-
   політичних дискусій. Аналіз його діяльності, ув'язнення в Заксенгаузені, вбивства КДБ,
   а також складних питань участі ОУН(б) у подіях Другої світової війни.
 level: BIO
-module: bio-277
+module: bio-299
 objectives:
 - Аналізувати політичну діяльність Степана Бандери в контексті українського націоналістичного руху.
 - Розуміти історичні умови та механізми переслідування Бандери польською, німецькою та радянською владами.
@@ -140,7 +140,7 @@ references:
   path: https://ratinggroup.ua/
   title: Rating Group. "The Tenth National Survey" (2022)
   type: reference
-sequence: 277
+sequence: 299
 slug: stepan-bandera
 subtitle: The OUN-B Leader, Political Violence, and the KGB Assassination
 title: 'Степан Бандера: Ідеолог ОУН(б) та міфи навколо нього'

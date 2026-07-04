@@ -103,7 +103,7 @@ content_outline:
 focus: >-
   Юрій Тютюнник як генерал-хорунжий Армії УНР та жертва чекістських спецслужб. Аналіз його ролі в Зимових походах та використання його образу в радянській пропаганді перед розстрілом.
 level: BIO
-module: bio-281
+module: bio-303
 objectives:
 - Розуміти роль Юрія Тютюнника як генерала-хорунжого Армії УНР та організатора повстанського руху.
 - Аналізувати механізми радянських спецслужб щодо повернення емігрантів на прикладі операції ГПУ/ОГПУ.
@@ -121,7 +121,7 @@ references:
   path: https://www.encyclopediaofukraine.com/display.asp?linkPath=pages%5CT%5CI%5CTiutiunnykYurii.htm
   title: Tiutiunnyk, Yurii (IEU)
   type: reference
-sequence: 281
+sequence: 303
 slug: yurii-tiutiunnyk
 subtitle: The UNR General Lured and Destroyed by Soviet State Security
 title: 'Юрій Тютюнник: Від Зимових походів до пастки ДПУ'

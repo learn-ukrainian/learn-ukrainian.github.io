@@ -100,7 +100,7 @@ content_outline:
 focus: >-
   Лев Ребет як діяч ОУН, теоретик демократичного націоналізму в еміграції та жертва політичного вбивства КДБ. Аналіз його політичної еволюції та механізмів радянського екстериторіального терору.
 level: BIO
-module: bio-283
+module: bio-305
 objectives:
 - Аналізувати еволюцію політичних поглядів Лева Ребета від участі в ОУН-Б до теоретизації демократичного націоналізму.
 - Досліджувати радянський екстериторіальний державний терор на прикладі вбивства Ребета агентом КДБ.
@@ -122,7 +122,7 @@ references:
   path: https://www.icj.org/wp-content/uploads/2013/07/ICJ-Bulletin-15-1963-eng.pdf
   title: ICJ Bulletin no. 15 (1963)
   type: reference
-sequence: 283
+sequence: 305
 slug: lev-rebet
 subtitle: The Nationalist Theorist Assassinated by the KGB
 title: 'Лев Ребет: Ідеологія нації та отрута КДБ'

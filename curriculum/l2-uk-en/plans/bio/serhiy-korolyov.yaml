@@ -71,7 +71,7 @@ content_outline:
   words: 700
 focus: 'Serhiy Korolyov: the paradox of a Gulag victim becoming the architect of the Soviet space program, and the modern-day reclamation of his Ukrainian identity from Russian historical narratives.'
 level: BIO
-module: bio-121
+module: bio-143
 objectives:
 - Аналізувати життя Сергія Корольова як приклад трагічної долі української інтелігенції в СРСР.
 - Критично оцінювати суперечливі інтерпретації його спадщини в російському та українському дискурсах.
@@ -95,7 +95,7 @@ references:
   note: Контекст сталінських репресій та ув'язнення Корольова.
   path: https://uk.wikipedia.org/wiki/ГУЛАГ
   type: reference
-sequence: 121
+sequence: 143
 slug: serhiy-korolyov
 subtitle: The Ukrainian who Opened the Cosmos
 title: 'Сергій Корольов: Батько космічної ери'

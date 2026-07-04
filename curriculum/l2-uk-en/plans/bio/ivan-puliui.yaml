@@ -23,7 +23,7 @@ activity_hints:
   type: essay-response
 cefr_min: C1
 connects_to:
-- bio-165 (Volodymyr Vakulenko)
+- bio-187 (Volodymyr Vakulenko)
 - hist ukrainians-world module
 content_outline:
 - points:
@@ -63,7 +63,7 @@ content_outline:
   words: 700
 focus: Ivan Puliui's pioneering work on X-rays, his complex relationship with the discovery's official history, his role in translating the Bible into Ukrainian, and the anti-hagiographic view of a scientist-patriot.
 level: BIO
-module: bio-049
+module: bio-071
 objectives:
 - Критично оцінювати внесок Пулюя в контексті відкриття X-променів та дебату про пріоритет
 - Аналізувати подвійну ідентичність Пулюя як науковця світового рівня та українського патріота-просвітителя
@@ -94,7 +94,7 @@ references:
   source_name: Puliui Museum and Archives
   type: reference
   url: https://puliui.org.ua/
-sequence: 49
+sequence: 71
 slug: ivan-puliui
 subtitle: The Physicist Who Saw the Invisible and Translated the Sacred
 title: 'Іван Пулюй: Світло і тінь першовідкривача'

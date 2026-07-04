@@ -94,7 +94,7 @@ focus: >-
   антиімперські есе. Аналіз непрямого радянського тиску (цензура, рамка «радянського письменника»)
   без вигаданого ув''язнення.
 level: BIO
-module: bio-233
+module: bio-255
 objectives:
 - >-
   Розрізняти біографічні факти Гуцала (освіта, бібліографія, дати) від спрощень шкільного канону
@@ -126,7 +126,7 @@ references:
 - note: Базова енциклопедична довідка.
   title: Гуцало Євген Пилипович (Вікіпедія)
   type: reference
-sequence: 233
+sequence: 255
 slug: yevhen-hutsalo
 subtitle: Lyrical Prose and Soviet Framing Without Imprisonment
 title: 'Євген Гуцало: сільська пам''ять і тихий тиск системи'

@@ -117,7 +117,7 @@ focus: >-
   поєднує львівську культурну пам'ять, радянську криміналізацію шкільного й
   релігійного голосу, жіночий табірний спротив та пострадянське повернення рукописів.
 level: BIO
-module: bio-251
+module: bio-273
 objectives:
 - >-
   Пояснювати самостійну біографію Ірини Калинець як авторки, педагогині й
@@ -161,7 +161,7 @@ references:
   title: Шлюб із полином
   type: primary
   work: Шлюб із полином
-sequence: 251
+sequence: 273
 slug: iryna-kalynets
 subtitle: Poet, Teacher, Political Prisoner, and Keeper of Cultural Memory
 title: 'Ірина Калинець: школа пам''яті і дорога вигнання'

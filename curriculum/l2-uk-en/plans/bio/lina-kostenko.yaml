@@ -69,7 +69,7 @@ content_outline:
   words: 700
 focus: The paradox of silence as resistance, the burden of being the "conscience of the nation", and the literary phenomenon of "Marusya Churay". An anti-hagiographic look at a living icon.
 level: BIO
-module: bio-138
+module: bio-160
 objectives:
 - Аналізувати феномен «творчого мовчання» як форми громадянського спротиву та його роль у формуванні морального авторитету.
 - Критично оцінювати статус «совісті нації» та його вплив на творчість і публічний образ митця.
@@ -100,7 +100,7 @@ references:
   note: Додаткові біографічні дані, повний список творів, хронологія.
   path: wiki/bio/lina-kostenko.md
   type: wiki
-sequence: 138
+sequence: 160
 slug: lina-kostenko
 subtitle: 'Lina Kostenko: The Conscience and Voice of an Epoch'
 title: 'Ліна Костенко: Совість і голос епохи'

@@ -67,7 +67,7 @@ content_outline:
   words: 700
 focus: Vasyl Kuk's leadership in the final years of UPA, his capture and captivity by the KGB, the moral and strategic complexities of his 1960 "Open Letter", and his legacy as a symbol of unbroken resistance.
 level: BIO
-module: bio-128
+module: bio-150
 objectives:
 - Аналізувати керівництво Василя Кука в останні роки існування УПА як збройної сили
 - Оцінювати тактику психологічного тиску, яку КДБ застосовувало проти лідерів українського підпілля
@@ -93,7 +93,7 @@ references:
   note: Електронний архів Українського визвольного руху — доступ до оцифрованих документів КДБ у справі Василя Кука (об'єкт "Борсук").
   path: wiki/sources/avr-org-ua.md
   type: reference
-sequence: 128
+sequence: 150
 slug: vasyl-kuk
 subtitle: The Last Commander's Dilemma
 title: 'Василь Кук: Останній командир'

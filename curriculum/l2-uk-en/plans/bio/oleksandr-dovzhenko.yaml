@@ -66,7 +66,7 @@ content_outline:
   words: 700
 focus: The biography of Oleksandr Dovzhenko, exploring his status as a world cinema icon, the creator of Ukrainian poetic cinema ("Earth", "Zvenyhora", "Arsenal"), and his tragic, complex relationship with Soviet power, which celebrated and then creatively crushed him. The module focuses on the anti-hagiographic reading of his life, contrasting his global achievements with the personal anguish and political compromises documented in his diaries, particularly around the banning of "Ukraine in Flames".
 level: BIO
-module: bio-102
+module: bio-124
 objectives:
 - Критично аналізувати зв'язок між творчістю Олександра Довженка та політичним контекстом радянської епохи
 - Розрізняти риси українського поетичного кіно на прикладі фільмів «Земля» та «Арсенал»
@@ -102,7 +102,7 @@ references:
   note: Спогади сучасника про Довженка в період ВАПЛІТЕ та конфліктів.
   type: primary
   work: Зустрічі і прощання
-sequence: 102
+sequence: 124
 slug: oleksandr-dovzhenko
 subtitle: The Tragedy of a Genius
 title: 'Олександр Довженко: Трагедія генія'

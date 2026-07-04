@@ -68,7 +68,7 @@ content_outline:
   words: 700
 focus: The life of Wilhelm von Habsburg (Vasyl Vyshyvanyi), his choice of Ukrainian identity, command of the Sich Riflemen, political ambitions, and tragic end.
 level: BIO
-module: bio-106
+module: bio-128
 objectives:
 - Аналізувати складний життєвий шлях Василя Вишиваного як приклад конфлікту між імперським походженням та свідомим національним вибором
 - Критично оцінювати його політичні амбіції та військову діяльність у контексті українських визвольних змагань
@@ -95,7 +95,7 @@ references:
   type: primary
   url: https://archives.gov.ua/
   work: Військові накази та листування
-sequence: 106
+sequence: 128
 slug: vasyl-vyshyvanyi
 subtitle: Archduke Wilhelm von Habsburg, the Ukrainian Colonel
 title: 'Василь Вишиваний: Князь-українець'

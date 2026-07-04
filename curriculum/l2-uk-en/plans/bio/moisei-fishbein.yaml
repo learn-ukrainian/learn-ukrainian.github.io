@@ -70,7 +70,7 @@ content_outline:
   words: 700
 focus: Biography of Moisei Fishbein, a Jewish poet who wrote in Ukrainian. Examines his conscious language choice as a political act, his role in the Ukrainian-Jewish dialogue, and his legacy as a symbol of decolonization, challenging Russian imperial myths about Ukrainian antisemitism.
 level: BIO
-module: bio-178
+module: bio-200
 objectives:
 - Проаналізувати свідомий вибір української мови Мойсеєм Фішбейном як політичний та культурний акт
 - Дослідити роль єврейських інтелектуалів у формуванні сучасної української культури
@@ -97,7 +97,7 @@ references:
   note: Контекст премії, що підкреслює інтелектуальну мужність Фішбейна
   type: reference
   work: Премія імені Василя Стуса
-sequence: 178
+sequence: 200
 slug: moisei-fishbein
 subtitle: The Jewish Intellectual Who Chose the Ukrainian Language
 title: 'Мойсей Фішбейн: Пророк українською'

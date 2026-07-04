@@ -69,7 +69,7 @@ content_outline:
   words: 700
 focus: The role of Sylvestr Kosiv during the Khmelnytsky Uprising, his preservation of church autonomy, the writing of the Paterikon, and his refusal to swear allegiance to the Moscow Tsar.
 level: BIO
-module: bio-023
+module: bio-025
 objectives:
 - Критично оцінювати роль Сильвестра Косіва у збереженні автономії Української православної церкви в умовах Хмельниччини
 - Аналізувати "Патерикон" як літературний твір та політичний маніфест, що утверджував тяглість київської духовної традиції
@@ -100,7 +100,7 @@ references:
   note: Інтелектуальна історія та роль Церкви в Ранньомодерну добу
   type: primary
   work: Нарис історії України з найдавніших часів до кінця XVIII ст.
-sequence: 23
+sequence: 25
 slug: sylvestr-kosiv
 subtitle: 'Sylvestr Kosiv: Metropolitan in a Turbulent Era'
 title: 'Сильвестр Косів: Митрополит у буремну епоху'

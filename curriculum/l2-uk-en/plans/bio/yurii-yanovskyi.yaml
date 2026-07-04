@@ -129,7 +129,7 @@ focus: >-
   жертва двох хвиль радянської цензури: заборони "Чотирьох шабель" 1930 року та
   знищення "Живої води" після атаки Кагановича 1947 року.
 level: BIO
-module: bio-228
+module: bio-250
 objectives:
 - >-
   Аналізувати ранню біографію Яновського через Маєрове, приховане
@@ -173,7 +173,7 @@ references:
   title: Жива вода
   type: primary
   work: Жива вода
-sequence: 228
+sequence: 250
 slug: yurii-yanovskyi
 subtitle: The Neoromantic Broken by Censorship
 title: 'Юрій Яновський: "Жива вода" під батогом цензури'

@@ -66,7 +66,7 @@ content_outline:
   words: 700
 focus: The life of Ivan Ohienko, examining his complex roles as a linguist who codified modern Ukrainian, a statesman in the UNR government, and the head of the Ukrainian Autocephalous Orthodox Church who completed the first full Bible translation into modern Ukrainian.
 level: BIO
-module: bio-082
+module: bio-104
 objectives:
 - 'Аналізувати життя та діяльність Івана Огієнка як єдність трьох іпостасей: вченого, церковного діяча та політика'
 - Критично оцінювати його внесок у кодифікацію української мови, розглядаючи аргументи "за" і "проти" його підходу
@@ -93,7 +93,7 @@ references:
   type: reference
   url: https://bible.ua/
   work: Біблія в перекладі Івана Огієнка
-sequence: 82
+sequence: 104
 slug: ivan-ohienko
 subtitle: The Man Who Gave Ukraine Its Bible and Its Orthography
 title: 'Іван Огієнко: Митрополит і Захисник Мови'

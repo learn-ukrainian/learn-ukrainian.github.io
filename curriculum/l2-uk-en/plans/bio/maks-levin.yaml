@@ -88,7 +88,7 @@ focus: >-
   Макс Левін як видатний український фотодокументаліст, його гуманістичний фокус на досвіді людей
   під час війни та його цілеспрямована страта російськими військовими на Київщині навесні 2022 року.
 level: BIO
-module: bio-268
+module: bio-290
 objectives:
 - >-
   Оцінювати роль Макса Левіна та його фотопроєктів (зокрема AFTERILOVAISK) у
@@ -112,7 +112,7 @@ references:
   path: https://pen.org.ua/maks-levin
   title: Maks Levin (PEN Ukraine)
   type: reference
-sequence: 268
+sequence: 290
 slug: maks-levin
 subtitle: The Photojournalist Executed by Russian Forces
 title: 'Макс Левін: Документалістика як зброя'

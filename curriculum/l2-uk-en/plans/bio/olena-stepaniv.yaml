@@ -69,7 +69,7 @@ content_outline:
   words: 700
 focus: 'Olena Stepaniv as a case study in anti-hagiography: the first female Ukrainian officer, her combat experience in WWI, subsequent scientific career, and eventual persecution by the Soviet regime. Explores the conflict between her role as a national hero, a feminist symbol, and the harsh realities of her life.'
 level: BIO
-module: bio-099
+module: bio-121
 objectives:
 - Аналізувати життєвий шлях Олени Степанів, виходячи за межі агіографічного образу, згідно з принципом анти-агіографії
 - Критично оцінювати її роль як у визвольних змаганнях, так і в науці, враховуючи історичний контекст та гендерні стереотипи епохи
@@ -98,7 +98,7 @@ references:
   note: Дослідження про наукову діяльність О. Степанів на географічному факультеті
   source: Національний університет ім. І. Франка
   type: reference
-sequence: 99
+sequence: 121
 slug: olena-stepaniv
 subtitle: The First Female Officer in the Ukrainian Army
 title: 'Олена Степанів: Перша жінка-офіцер'
