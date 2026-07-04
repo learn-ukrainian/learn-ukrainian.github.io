@@ -7,7 +7,7 @@
   role: podcast
   source_ref: "docs/resources/podcasts/podcast_db.json: ULP-046"
   url: "https://www.ukrainianlessons.com/episode46/"
-  notes: "Learner-facing grocery-store episode focused on genitive after quantities."
+  notes: "Grocery-store episode focused on genitive after quantities."
 - title: "ULP: Phrasebook Food"
   role: phrasebook
   source_ref: "docs/resources/ulp-articles-index.yaml: /ph-food/"

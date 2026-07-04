@@ -2,7 +2,7 @@
   role: podcast
   source_ref: "docs/resources/external_resources.yaml: a1-hey-friend"
   url: "https://www.ukrainianlessons.com/episode69/"
-  notes: "Catalogued learner-facing vocative lesson; useful for hearing vocative forms in context."
+  notes: "Catalogued vocative lesson; useful for hearing vocative forms in context."
 - title: "Dobra Forma 3-1: Vocative Case Feminine Nouns"
   role: article
   source_ref: "docs/resources/dobraforma/dobraforma_db.json: df-007"

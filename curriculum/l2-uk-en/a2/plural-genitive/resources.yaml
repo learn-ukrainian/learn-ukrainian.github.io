@@ -12,7 +12,7 @@
   role: article
   source_ref: "docs/resources/dobraforma/dobraforma_db.json: df-022"
   url: "https://opentext.ku.edu/dobraforma/chapter/6-3/"
-  notes: "Learner-facing practice with common exception groups."
+  notes: "Practice with common exception groups."
 - title: "ULP: Nouns After Numbers"
   role: article
   source_ref: "docs/resources/ulp-articles-index.yaml: /nouns-after-numbers/"

@@ -2,7 +2,7 @@
   role: article
   source_ref: "docs/resources/ulp-articles-index.yaml: /genitive-case/"
   url: "https://www.ukrainianlessons.com/genitive-case/"
-  notes: "Learner-facing overview of genitive functions, including plural genitive examples."
+  notes: "Overview of genitive functions, including plural genitive examples."
 - title: "ULP: Plural of Ukrainian Nouns - Special Forms"
   role: article
   source_ref: "docs/resources/ulp-articles-index.yaml: /plural-of-ukrainian-nouns-special-forms/"
@@ -17,4 +17,4 @@
   role: article
   source_ref: "docs/resources/talkukrainian/talkukrainian_db.json: tu-016"
   url: "https://talkukrainian.com/genitive-case/"
-  notes: "Additional learner-facing explanation of the genitive case."
+  notes: "Additional explanation of the genitive case."

@@ -2,7 +2,7 @@
   role: article
   source_ref: "docs/resources/external_resources.yaml: a1-what-is-it-like"
   url: https://www.ukrainianlessons.com/vocabulary-adjectives/
-  notes: "Learner-facing adjective vocabulary that supports short descriptions of people."
+  notes: "Adjective vocabulary that supports short descriptions of people."
 - title: "Talk Ukrainian: Adjectives"
   role: article
   source_ref: "docs/resources/talkukrainian/talkukrainian_db.json: tu-022"

@@ -2,7 +2,7 @@
   role: article
   source_ref: "docs/resources/ulp-articles-index.yaml: /prepositions-cases/"
   url: "https://www.ukrainianlessons.com/prepositions-cases/"
-  notes: "Learner-facing overview of which cases follow common Ukrainian prepositions."
+  notes: "Overview of which cases follow common Ukrainian prepositions."
 - title: "ULP: Location vs Destination Prepositions"
   role: article
   source_ref: "docs/resources/ulp-articles-index.yaml: /location-destination-prepositions/"

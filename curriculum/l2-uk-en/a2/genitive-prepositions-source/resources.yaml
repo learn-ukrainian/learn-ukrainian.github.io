@@ -2,7 +2,7 @@
   role: article
   source_ref: "docs/resources/ulp-articles-index.yaml: /genitive-case/"
   url: "https://www.ukrainianlessons.com/genitive-case/"
-  notes: "Learner-facing overview of common genitive uses, including after prepositions."
+  notes: "Overview of common genitive uses, including after prepositions."
 - title: "ULP: Prepositions and Cases"
   role: article
   source_ref: "docs/resources/ulp-articles-index.yaml: /prepositions-cases/"

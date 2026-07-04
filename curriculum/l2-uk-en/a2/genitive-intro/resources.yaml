@@ -2,7 +2,7 @@
   role: article
   source_ref: "docs/resources/ulp-articles-index.yaml: /genitive-case/"
   url: https://www.ukrainianlessons.com/genitive-case/
-  notes: "Learner-facing overview of genitive meanings, including absence and quantity."
+  notes: "Overview of genitive meanings, including absence and quantity."
 - title: "Talk Ukrainian: Genitive case"
   role: article
   source_ref: "docs/resources/talkukrainian/talkukrainian_db.json: tu-016"

@@ -2,7 +2,7 @@
   role: article
   source_ref: "docs/resources/talkukrainian/talkukrainian_db.json: tu-030"
   url: https://talkukrainian.com/verb-aspect/
-  notes: "Short learner-facing overview of process vs result, useful after the lesson dialogue."
+  notes: "Short overview of process vs result, useful after the lesson dialogue."
 - title: "Perfective Verbs"
   role: article
   source_ref: "docs/resources/ulp-articles-index.yaml: /perfective-verbs/"

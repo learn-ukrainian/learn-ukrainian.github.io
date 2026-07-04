@@ -7,7 +7,7 @@
   role: podcast
   source_ref: "docs/resources/external_resources.yaml: a2-instrumental-profession"
   url: "https://www.ukrainianlessons.com/episode62/"
-  notes: "Learner-facing instrumental episode that reinforces pronoun forms."
+  notes: "Instrumental episode that reinforces pronoun forms."
 - title: "ULP: Possessive Pronouns Declension"
   role: article
   source_ref: "docs/resources/ulp-articles-index.yaml: /possessive-pronouns-declension/"
@@ -22,4 +22,4 @@
   role: article
   source_ref: "docs/resources/ulp-articles-index.yaml: /adjectives-adverbs-chart/"
   url: "https://www.ukrainianlessons.com/adjectives-adverbs-chart/"
-  notes: "Learner-facing adjective reference for reviewing base adjective forms."
+  notes: "Adjective reference for reviewing base adjective forms."

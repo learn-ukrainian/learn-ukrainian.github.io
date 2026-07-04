@@ -2,7 +2,7 @@
   role: article
   source_ref: "docs/resources/external_resources.yaml: a2-aspect-mastery"
   url: "https://opentext.ku.edu/dobraforma/chapter/27-3/"
-  notes: "Catalogued learner-facing practice with aspectual pair formation."
+  notes: "Catalogued practice with aspectual pair formation."
 - title: "Dobra Forma 27-1: Introduction to Verbal Aspect"
   role: article
   source_ref: "docs/resources/external_resources.yaml: a2-aspect-mastery"
@@ -12,7 +12,7 @@
   role: article
   source_ref: "docs/resources/ulp-articles-index.yaml: /perfective-verbs/"
   url: "https://www.ukrainianlessons.com/perfective-verbs/"
-  notes: "Learner-facing examples of completed actions and common perfective forms."
+  notes: "Examples of completed actions and common perfective forms."
 - title: "Talk Ukrainian: Verb Aspect"
   role: article
   source_ref: "docs/resources/talkukrainian/talkukrainian_db.json: tu-030"

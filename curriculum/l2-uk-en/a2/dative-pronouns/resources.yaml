@@ -2,7 +2,7 @@
   role: article
   source_ref: "docs/resources/external_resources.yaml: a2-dative-pronouns"
   url: "https://www.ukrainianlessons.com/intro-cases/"
-  notes: "Learner-facing overview of Ukrainian cases for review before dative pronoun practice."
+  notes: "Overview of Ukrainian cases for review before dative pronoun practice."
 - title: "Dobra Forma: Personal Pronouns - Dative Case Forms"
   role: article
   source_ref: "docs/resources/dobraforma/dobraforma_db.json: df-048"

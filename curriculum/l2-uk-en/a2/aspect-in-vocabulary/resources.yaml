@@ -7,7 +7,7 @@
   role: article
   source_ref: "docs/resources/ulp-articles-index.yaml: /perfective-verbs/"
   url: https://www.ukrainianlessons.com/perfective-verbs/
-  notes: "Learner-facing follow-up on how completed-action verbs are formed and recognized."
+  notes: "Follow-up on how completed-action verbs are formed and recognized."
 - title: "Dobra Forma: Verbal Aspect (Other Types of Aspectual Pairs)"
   role: article
   source_ref: "docs/resources/dobraforma/dobraforma_db.json: df-080"
