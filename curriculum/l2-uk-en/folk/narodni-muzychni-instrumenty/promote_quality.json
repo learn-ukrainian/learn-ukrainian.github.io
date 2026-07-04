@@ -1,0 +1,69 @@
+{
+  "assembled_mdx_sha256": "6f4faee751c9dc736a41c7b8935f0f8b96505fa4eaa6883f7ce1be68e3972e88",
+  "content_hash": {
+    "algorithm": "sha256",
+    "basis": "lesson_sources_v2",
+    "digest": "096d0726cc3b69661db3fd086e3e8f6779e655fdc953b55daf53967de7cb7a0a",
+    "files": [
+      {
+        "path": "curriculum/l2-uk-en/plans/folk/narodni-muzychni-instrumenty.yaml",
+        "sha256": "b9d86f63c3e2862ee9c3d1f8897ab101424645250ea0bbdb9a7bdd69ffb44388"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/narodni-muzychni-instrumenty/module.md",
+        "sha256": "49649203874563ce4b3aff341b3f0888431f4945b05683381e56d74a534b3a45"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/narodni-muzychni-instrumenty/activities.yaml",
+        "sha256": "e4cb32ff4a02d4f0063a07cb3aae00fa027a1de44290b47292a8bcdaa2932853"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/narodni-muzychni-instrumenty/vocabulary.yaml",
+        "sha256": "508bb0cef1f29ca61c34292cf9bf8d74851d3a3a3f8674d525960016fcdec994"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/narodni-muzychni-instrumenty/resources.yaml",
+        "sha256": "aa80596c8959cb6dd11fb2f842ee61a326ecd98c3dc3f976232b4712ac9c3299"
+      }
+    ]
+  },
+  "evidence": {
+    "decolonization": "The lesson avoids decorative folk-mass and authenticity-cliche framing, preserves kobza/bandura/lira distinctions, treats trembita source disagreement explicitly, and separates institutional history from Soviet ideological language.",
+    "pedagogy": "C1/C1+ Ukrainian prose connects material culture, sound, technique, event, institution, and modern reuse with V2 inline/workbook practice and 43 vocabulary items.",
+    "review": "Claude Opus 4.8 independent review found one major process-language leak and one minor English resource-note issue; both were fixed in source, regenerated to MDX, and follow-up review returned PASS with no blockers. A later focused quote-verification pass tightened the Yanovskyi fragment to its attested order; final local gates required VESUM-clean rewrites without changing source discipline.",
+    "source_policy": "Source-grounded module distinguishes instrument construction, repertoire, social role, performer status, regional usage, revival, Soviet academicization, and source confidence without invented songs, audio scenes, makers, or image identifiers; final resource links are live and gate-compatible."
+  },
+  "floors": {
+    "beauty": 8.5,
+    "decolonization": 9.0,
+    "engagement": 8.5,
+    "naturalness": 8.5,
+    "pedagogical": 8.5,
+    "tone": 8.5
+  },
+  "profile": "folk_promote_v1",
+  "review_artifact": null,
+  "reviewer": {
+    "agent": "claude",
+    "family": "anthropic",
+    "model": "claude-opus-4-8"
+  },
+  "schema_version": 1,
+  "scored_at": "2026-07-04T20:20:43Z",
+  "scores": {
+    "beauty": 8.7,
+    "decolonization": 9.2,
+    "engagement": 8.8,
+    "naturalness": 8.8,
+    "pedagogical": 8.9,
+    "tone": 8.8
+  },
+  "slug": "narodni-muzychni-instrumenty",
+  "track": "folk",
+  "verdict": "PASS",
+  "writer": {
+    "agent": "codex",
+    "family": "openai",
+    "model": "gpt-5"
+  }
+}
