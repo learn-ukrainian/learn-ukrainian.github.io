@@ -475,7 +475,7 @@ def test_private_teacher_second_decision_ledger_stays_review_only() -> None:
     assert summary == {
         "files": 1,
         "rows": 20,
-        "decision_counts": {"approve_for_publish": 20},
+        "decision_counts": {"approve_for_publish": 19, "reject": 1},
     }
     assert payload["source_queue"]["promotion_batch_size"] == 20
     assert payload["production_outputs_updated"] == []
@@ -697,7 +697,7 @@ def test_private_teacher_tenth_decision_ledger_stays_review_only() -> None:
     assert summary == {
         "files": 1,
         "rows": 21,
-        "decision_counts": {"approve_for_publish": 21},
+        "decision_counts": {"approve_for_publish": 20, "reject": 1},
     }
     assert payload["source_queue"]["generated_from_pr"] == 4205
     assert payload["source_queue"]["promotion_batch_size"] == 21
