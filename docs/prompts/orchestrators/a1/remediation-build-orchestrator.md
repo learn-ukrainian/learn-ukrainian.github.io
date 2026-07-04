@@ -78,9 +78,9 @@ git rev-parse --show-toplevel
 - Keep vocabulary useful, concrete, and level-appropriate; verify suspicious words against local tools before adding.
 - Separate targeted patches from rebuilds. Rebuild only when the audit finding cannot be fixed safely with local edits.
 
-## Helpers And Headroom
+## Helpers
 
-Helpers are allowed for bounded validation or mechanical YAML/MDX checks, with disjoint file ownership. Do not delegate final pedagogy decisions. Use Headroom compression for helper output or logs over 200 lines or 20 KB.
+Helpers are allowed for bounded validation or mechanical YAML/MDX checks, with disjoint file ownership. Do not delegate final pedagogy decisions. For helper output or logs over 200 lines or 20 KB, summarize and push bulky evidence behind a file path or PR link.
 
 ## Validation Commands
 

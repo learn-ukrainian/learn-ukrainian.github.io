@@ -24,7 +24,6 @@
       "Bash(python3.12 -m venv:*)",
       "Skill(module-architect)",
       "Skill(prompt-engineering)",
-      "mcp__headroom__*",
       "mcp__sources__*",
       "mcp__rag__*"
     ],

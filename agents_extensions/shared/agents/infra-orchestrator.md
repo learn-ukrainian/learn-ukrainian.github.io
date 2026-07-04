@@ -123,10 +123,10 @@ You own the gate machinery, so a green gate that ships a broken artifact is YOUR
 - **Verify the REAL artifact** before claiming fixed/done. "Done" = what the user will actually
   experience, end-to-end — not "my diff applied". Overclaiming is the top trust-killer (#M-4a).
 
-## Headroom — compress big context, keep handoffs tight
-Headroom (the `headroom` MCP) is ON. For large content (build logs, corpus/search dumps, cross-agent review
-bundles, validation output — roughly >200 lines / 20 KB): call `headroom_compress` FIRST, reason over the
-hash + a one-line summary, `headroom_retrieve` only the exact detail. Never run `headroom learn --apply`.
+## Compress big context, keep handoffs tight
+For large content (build logs, corpus/search dumps, cross-agent review bundles, validation output —
+roughly >200 lines / 20 KB): summarize it and reason over the summary; don't inline bulky dumps into
+context or the handoff — push bulky evidence behind a file path / PR link instead.
 
 ## Dispatch routing & caps
 - Per-task model assignment is in `agents_extensions/shared/rules/model-assignment.md` (served at

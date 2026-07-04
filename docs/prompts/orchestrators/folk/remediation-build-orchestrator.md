@@ -91,9 +91,9 @@ git rev-parse --show-toplevel
 - The Lesson tab must not absorb the entire practice set, and the Workbook/Activities tab must not be empty.
 - PR/final notes for built-module work must report `inline=<n>`, `workbook=<n>`, rendered Lesson tab status, rendered Workbook/Activities tab status, English leakage status, internal-leakage status, and an LLM-fingerprint score.
 
-## Helpers And Headroom
+## Helpers
 
-Use read-only helpers for reading source search, copyright classification, source/quote verification, rendered-page checks, and activity placement verification when useful. Compress long helper outputs with Headroom. The main agent owns edits and integration.
+Use read-only helpers for reading source search, copyright classification, source/quote verification, rendered-page checks, and activity placement verification when useful. Summarize long helper outputs; push bulky evidence behind a file path or PR link. The main agent owns edits and integration.
 
 ## Validation Commands
 

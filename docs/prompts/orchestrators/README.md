@@ -77,9 +77,9 @@ Helpers are optional. Use one to three read-only explorers only when they materi
 
 Every module-build PR must state `swarm_used`, `swarm_label`, and `swarm_note` in token telemetry. Solo runs still need `swarm_used: false`, `swarm_label: none`, and a note such as `solo run; no swarm used`.
 
-## Headroom Policy
+## Context Discipline
 
-Use Headroom compression for helper summaries, logs, searches, or handoffs over roughly 200 lines or 20 KB. Pass the compressed hash plus a short summary, and retrieve the full content only when exact details are needed. Do not treat Headroom memory as the source of truth for curriculum facts, and do not run `headroom learn --apply`.
+For helper summaries, logs, searches, or handoffs over roughly 200 lines or 20 KB, summarize and reason over the summary; push bulky evidence behind a file path / PR link rather than pasting it wholesale.
 
 ## Track Creation Order
 

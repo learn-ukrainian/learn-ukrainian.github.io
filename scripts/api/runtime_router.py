@@ -8,13 +8,10 @@ import inspect
 import json
 import os
 import sys
-import urllib.error
-import urllib.request
 from collections import defaultdict
 from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
 from typing import Any
-from urllib.parse import urljoin
 
 from fastapi import APIRouter, HTTPException, Query
 
@@ -29,8 +26,6 @@ router = APIRouter(tags=["runtime"])
 ADAPTERS_DIR = Path(__file__).resolve().parent.parent / "agent_runtime" / "adapters"
 USAGE_DIR = BATCH_STATE_DIR / "api_usage"
 _KNOWN_OUTCOMES = ("ok", "error", "timeout", "rate_limited")
-HEADROOM_PROXY_URL = os.environ.get("HEADROOM_PROXY_URL", "http://127.0.0.1:8787").rstrip("/")
-HEADROOM_TIMEOUT_S = 0.75
 
 
 def _parse_iso_datetime(value: str | None) -> datetime | None:
@@ -242,167 +237,6 @@ def _rounded(value: Any, digits: int = 2) -> float | None:
     return round(float(number), digits) if number is not None else None
 
 
-def _first_number(*values: Any) -> int | float | None:
-    for value in values:
-        number = _number(value)
-        if number is not None:
-            return number
-    return None
-
-
-def _first_rounded(*values: Any, digits: int = 2) -> float | None:
-    for value in values:
-        rounded = _rounded(value, digits)
-        if rounded is not None:
-            return rounded
-    return None
-
-
-def _headroom_endpoint(path: str) -> str:
-    return urljoin(f"{HEADROOM_PROXY_URL}/", path.lstrip("/"))
-
-
-def _request_headroom_json(path: str, *, timeout_s: float) -> dict[str, Any]:
-    request = urllib.request.Request(
-        _headroom_endpoint(path),
-        headers={"Accept": "application/json"},
-        method="GET",
-    )
-    with urllib.request.urlopen(request, timeout=timeout_s) as response:
-        raw = response.read()
-    payload = json.loads(raw.decode("utf-8"))
-    if not isinstance(payload, dict):
-        raise ValueError(f"Headroom {path} returned non-object JSON")
-    return payload
-
-
-def _collect_headroom_piece(path: str, *, timeout_s: float) -> tuple[dict[str, Any] | None, str | None]:
-    try:
-        return _request_headroom_json(path, timeout_s=timeout_s), None
-    except (OSError, TimeoutError, urllib.error.URLError, json.JSONDecodeError, ValueError) as exc:
-        return None, f"{type(exc).__name__}: {exc}"
-
-
-def _summarize_headroom_stats(
-    *,
-    stats: dict[str, Any] | None,
-    health: dict[str, Any] | None,
-    errors: list[str],
-) -> dict[str, Any]:
-    summary = _nested(stats, "summary") if stats else {}
-    compression = _nested(summary, "compression") or {}
-    cost = _nested(summary, "cost") or {}
-    tokens = _nested(stats, "tokens") or {}
-    requests = _nested(stats, "requests") or {}
-    persistent = _nested(stats, "persistent_savings") or {}
-    lifetime = _nested(persistent, "lifetime") or {}
-    display_session = _nested(persistent, "display_session") or {}
-    prefix_cache = _nested(stats, "prefix_cache", "totals") or {}
-    memory_check = _nested(health, "checks", "memory") or {}
-    service_status = str(_nested(health, "status") or "unavailable")
-    stats_available = isinstance(stats, dict)
-    health_ready = bool(_nested(health, "ready")) if isinstance(health, dict) else False
-
-    tokens_saved = _first_number(
-        _nested(tokens, "saved"),
-        _nested(compression, "total_tokens_removed"),
-        _nested(lifetime, "tokens_saved"),
-    )
-    savings_percent = _first_rounded(
-        _nested(tokens, "savings_percent"),
-        _nested(tokens, "active_savings_percent"),
-        _nested(cost, "savings_pct"),
-    )
-
-    return {
-        "available": stats_available and service_status == "healthy",
-        "status": service_status,
-        "checked_at": _isoformat_z(datetime.now(UTC)),
-        "proxy_url": HEADROOM_PROXY_URL,
-        "errors": errors,
-        "service": {
-            "ready": health_ready,
-            "version": _nested(health, "version"),
-            "uptime_seconds": _number(_nested(health, "uptime_seconds")),
-            "backend": _nested(health, "config", "backend"),
-            "memory": {
-                "enabled": bool(memory_check.get("enabled")) if isinstance(memory_check, dict) else False,
-                "ready": bool(memory_check.get("ready")) if isinstance(memory_check, dict) else False,
-                "status": memory_check.get("status") if isinstance(memory_check, dict) else None,
-                "backend": memory_check.get("backend") if isinstance(memory_check, dict) else None,
-                "initialized": bool(memory_check.get("initialized")) if isinstance(memory_check, dict) else False,
-            },
-        },
-        "summary": {
-            "api_requests": _number(_nested(summary, "api_requests")),
-            "primary_model": _nested(summary, "primary_model"),
-            "requests_compressed": _number(_nested(compression, "requests_compressed")),
-            "avg_compression_pct": _rounded(_nested(compression, "avg_compression_pct")),
-            "best_compression_pct": _rounded(_nested(compression, "best_compression_pct")),
-            "best_detail": _nested(compression, "best_detail"),
-            "tokens_saved": tokens_saved,
-            "savings_percent": savings_percent,
-            "cost_without_headroom_usd": _rounded(_nested(cost, "without_headroom_usd")),
-            "cost_with_headroom_usd": _rounded(_nested(cost, "with_headroom_usd")),
-            "cost_saved_usd": _rounded(_nested(cost, "total_saved_usd")),
-            "cost_savings_pct": _rounded(_nested(cost, "savings_pct")),
-        },
-        "lifetime": {
-            "requests": _number(_nested(lifetime, "requests")),
-            "tokens_saved": _number(_nested(lifetime, "tokens_saved")),
-            "compression_savings_usd": _rounded(_nested(lifetime, "compression_savings_usd")),
-            "total_input_tokens": _number(_nested(lifetime, "total_input_tokens")),
-            "total_input_cost_usd": _rounded(_nested(lifetime, "total_input_cost_usd")),
-        },
-        "session": {
-            "requests": _number(_nested(display_session, "requests")),
-            "tokens_saved": _number(_nested(display_session, "tokens_saved")),
-            "compression_savings_usd": _rounded(_nested(display_session, "compression_savings_usd")),
-            "total_input_tokens": _number(_nested(display_session, "total_input_tokens")),
-            "total_input_cost_usd": _rounded(_nested(display_session, "total_input_cost_usd")),
-            "savings_percent": _rounded(_nested(display_session, "savings_percent")),
-            "started_at": _nested(display_session, "started_at"),
-            "last_activity_at": _nested(display_session, "last_activity_at"),
-        },
-        "mcp": {
-            "compressions": _number(_nested(summary, "mcp", "compressions")),
-            "tokens_removed": _number(_nested(summary, "mcp", "tokens_removed")),
-            "retrievals": _number(_nested(summary, "mcp", "retrievals")),
-        },
-        "prefix_cache": {
-            "cache_read_tokens": _number(_nested(prefix_cache, "cache_read_tokens")),
-            "cache_write_tokens": _number(_nested(prefix_cache, "cache_write_tokens")),
-            "hit_rate": _rounded(_nested(prefix_cache, "hit_rate")),
-            "request_hit_rate": _rounded(_nested(prefix_cache, "request_hit_rate")),
-            "bust_count": _number(_nested(prefix_cache, "bust_count")),
-            "net_savings_usd": _rounded(_nested(prefix_cache, "net_savings_usd")),
-        },
-        "requests": {
-            "total": _number(_nested(requests, "total")),
-            "cached": _number(_nested(requests, "cached")),
-            "failed": _number(_nested(requests, "failed")),
-            "rate_limited": _number(_nested(requests, "rate_limited")),
-            "by_provider": _nested(requests, "by_provider") or {},
-            "by_model": _nested(requests, "by_model") or {},
-        },
-        "tokens": {
-            "input": _number(_nested(tokens, "input")),
-            "output": _number(_nested(tokens, "output")),
-            "saved": _number(_nested(tokens, "saved")),
-            "total_before_compression": _number(_nested(tokens, "total_before_compression")),
-            "proxy_total_before_compression": _number(_nested(tokens, "proxy_total_before_compression")),
-            "savings_percent": _rounded(_nested(tokens, "savings_percent")),
-        },
-    }
-
-
-def headroom_stats_snapshot(*, timeout_s: float = HEADROOM_TIMEOUT_S) -> dict[str, Any]:
-    health, health_error = _collect_headroom_piece("/health", timeout_s=timeout_s)
-    stats, stats_error = _collect_headroom_piece("/stats", timeout_s=timeout_s)
-    errors = [error for error in (health_error, stats_error) if error]
-    return _summarize_headroom_stats(stats=stats, health=health, errors=errors)
-
-
 @router.get("/agents")
 async def runtime_agents():
     agents = await asyncio.to_thread(list_runtime_agents)
@@ -427,13 +261,6 @@ async def runtime_headroom(
         raise HTTPException(status_code=400, detail="Both 'agent' and 'model' query params are required")
     ok, reason = await asyncio.to_thread(has_headroom, agent, model)
     return {"agent": agent, "model": model, "has_headroom": ok, "reason": reason}
-
-
-@router.get("/headroom/stats")
-async def runtime_headroom_stats(
-    timeout_s: float = Query(HEADROOM_TIMEOUT_S, ge=0.1, le=3.0),
-):
-    return await asyncio.to_thread(headroom_stats_snapshot, timeout_s=timeout_s)
 
 
 @router.get("/recent")

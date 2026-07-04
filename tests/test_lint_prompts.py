@@ -289,7 +289,7 @@ git rev-parse --show-toplevel
 
 - Run the right stage.
 
-## Helpers And Headroom
+## Helpers
 
 Use helpers sparingly.
 

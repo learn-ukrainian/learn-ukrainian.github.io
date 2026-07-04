@@ -81,7 +81,7 @@ Default to a solo preflight audit unless a helper will materially improve covera
 - The main auditor owns final readiness verdict, blocker inventory, remediation batching, PR creation, independent-family review routing, merge decisions, and git hygiene.
 - Do not let helpers read secrets, source `.envrc`, call `gh`, request reviews, open PRs, merge PRs, or edit plans/wiki/discovery/curriculum/site files.
 - Record helper roles in the durable report and PR body; set `swarm_used: true` when any helper or reviewer thread did bounded preflight audit work. Solo audits still require `swarm_used: false`, `swarm_label: none`, and `swarm_note`.
-- Use Headroom compression for helper output or logs over 200 lines or 20 KB; pass the hash plus a short summary.
+- For helper output or logs over 200 lines or 20 KB, summarize and push bulky evidence behind a file path or PR link.
 
 ## Durable Report Path
 

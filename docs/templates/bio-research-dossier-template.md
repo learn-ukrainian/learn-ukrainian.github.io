@@ -17,7 +17,7 @@ read-only source discovery and path checks, but must not stage, commit, create
 PRs, request independent review, merge, or edit any other file. The BIO
 orchestrator reviews and integrates worker output, runs deterministic checks,
 routes Claude/AGY (Gemini-family via bridge)/other independent review as
-needed, and merges in BIO order. Use Headroom for long source packets or logs
+needed, and merges in BIO order. Summarize long source packets or logs
 instead of pasting them into agent-to-agent prompts.
 
 **Token-economy rule.** Use deterministic commands before model calls: `rg`,

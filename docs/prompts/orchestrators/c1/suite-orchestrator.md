@@ -77,9 +77,9 @@ git rev-parse --show-toplevel
 - Do not backfill content with generic cultural trivia; each module needs a defensible advanced-language purpose.
 - Check that C1 cultural modules do not duplicate FOLK seminar reading rules unless the plan explicitly asks for primary-source seminar work.
 
-## Helpers And Headroom
+## Helpers
 
-Use one to three helpers only for plan/discovery inventory, targeted validation, or source lookup. Compress long outputs with Headroom. The main orchestrator owns scope, edits, review routing, and merge readiness.
+Use one to three helpers only for plan/discovery inventory, targeted validation, or source lookup. Summarize long outputs; push bulky evidence behind a file path or PR link. The main orchestrator owns scope, edits, review routing, and merge readiness.
 
 ## Validation Commands
 

@@ -79,9 +79,9 @@ git rev-parse --show-toplevel
 - Use the activity YAML shape already present in the module.
 - Separate targeted patches from full rebuilds.
 
-## Helpers And Headroom
+## Helpers
 
-Helpers are allowed for bounded validation, YAML checks, or source coverage checks with clear file ownership. The main orchestrator owns final pedagogy. Use Headroom compression for helper output or logs over 200 lines or 20 KB.
+Helpers are allowed for bounded validation, YAML checks, or source coverage checks with clear file ownership. The main orchestrator owns final pedagogy. For helper output or logs over 200 lines or 20 KB, summarize and push bulky evidence behind a file path or PR link.
 
 ## Validation Commands
 

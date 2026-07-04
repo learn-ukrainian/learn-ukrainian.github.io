@@ -175,8 +175,8 @@ helper materially reduces risk or wall-clock time.
 - Record helper roles in PR text; set `swarm_used: true` when any helper or
   reviewer thread did bounded build work. Solo runs still require
   `swarm_used: false`, `swarm_label: none`, and `swarm_note`.
-- Use Headroom compression for helper output or logs over 200 lines or 20 KB;
-  pass the hash plus a short summary.
+- For helper output or logs over 200 lines or 20 KB, summarize and
+  push bulky evidence behind a file path or PR link.
 
 ## Validation
 

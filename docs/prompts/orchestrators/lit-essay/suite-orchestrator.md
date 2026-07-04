@@ -82,9 +82,9 @@ git rev-parse --show-toplevel
 - The Lesson tab must not absorb the entire practice set, and the Workbook/Activities tab must not be empty.
 - PR/final notes for built-module work must report `inline=<n>`, `workbook=<n>`, rendered Lesson tab status, rendered Workbook/Activities tab status, English leakage status, internal-leakage status, and an LLM-fingerprint score.
 
-## Helpers And Headroom
+## Helpers
 
-Use one to three read-only helpers for source discovery, rights classification, rendered-page checks, leakage scoring, and track-specific framing review when useful. Compress long helper outputs with Headroom. The main orchestrator owns edits, review routing, PR creation, and merge decisions.
+Use one to three read-only helpers for source discovery, rights classification, rendered-page checks, leakage scoring, and track-specific framing review when useful. Summarize long helper outputs; push bulky evidence behind a file path or PR link. The main orchestrator owns edits, review routing, PR creation, and merge decisions.
 
 Independent review must be read-only and must inspect learner-facing output, source grounding, track framing, English/internal leakage, activity placement, and unresolved risks. Treat unresolved findings as blockers.
 

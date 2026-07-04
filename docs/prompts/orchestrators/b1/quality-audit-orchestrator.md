@@ -77,9 +77,9 @@ git rev-parse --show-toplevel
 - Run deterministic module audits without `--fix` for built modules in scope where feasible, and record any failures alongside subjective findings.
 - Record all findings and group them into targeted patch batches, full rebuild candidates, source/wiki gaps, and validation/tooling issues.
 
-## Helpers And Headroom
+## Helpers
 
-Read-only helpers are allowed for module inventories or coverage matrices. Do not delegate final severity calls. Use Headroom compression for helper output or searches over 200 lines or 20 KB.
+Read-only helpers are allowed for module inventories or coverage matrices. Do not delegate final severity calls. For helper output or searches over 200 lines or 20 KB, summarize and push bulky evidence behind a file path or PR link.
 
 ## Durable Report Path
 

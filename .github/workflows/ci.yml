@@ -13,7 +13,6 @@ on:
       - 'scripts/**/*.py'
       - 'scripts/check_rules_deployment.sh'
       - 'scripts/deploy_prompts.sh'
-      - 'scripts/ensure_headroom.sh'
       - 'start-claude.sh'
       - 'scripts/lib/handoff_identity.sh'
       - 'start-codex.sh'
@@ -91,7 +90,6 @@ jobs:
               - 'scripts/**/*.py'
               - 'scripts/check_rules_deployment.sh'
               - 'scripts/deploy_prompts.sh'
-              - 'scripts/ensure_headroom.sh'
               - 'start-claude.sh'
               - 'scripts/lib/handoff_identity.sh'
               - 'start-codex.sh'
@@ -143,7 +141,6 @@ jobs:
               - 'start-codex.sh'
               - 'scripts/check_rules_deployment.sh'
               - 'scripts/deploy_prompts.sh'
-              - 'scripts/ensure_headroom.sh'
               - 'scripts/lint/**/*.py'
               - 'scripts/lint_prompts.py'
               - 'agents_extensions/shared/**'
@@ -421,7 +418,6 @@ jobs:
             start-claude.sh \
             start-codex.sh \
             scripts/lib/handoff_identity.sh \
-            scripts/ensure_headroom.sh \
             scripts/deploy_prompts.sh \
             scripts/check_rules_deployment.sh
 
