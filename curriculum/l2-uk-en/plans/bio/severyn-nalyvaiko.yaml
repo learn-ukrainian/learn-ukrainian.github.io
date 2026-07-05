@@ -94,7 +94,7 @@ readings:
   caveats: Довідка ЕІУ. Читаючи про повстання, слід критично ставитися до термінології «бунту», що часто походить з польських урядових джерел того часу, і бачити в ньому спробу козацтва виступити політичною силою.
 - title: Повстання Наливайка
   source: Енциклопедія історії України
-  source_url: http://history.org.ua/?termin=Nalyvajka_povstannia
+  source_url: http://history.org.ua/?termin=Nalyvajka_povstannia_1594
   language: uk
   genre: encyclopedia
   source_type: reference
@@ -122,7 +122,7 @@ sequence: 20
 slug: severyn-nalyvaiko
 subtitle: 'Severyn Nalyvaiko: The Cossack Rebel Leader'
 title: 'Северин Наливайко: Лідер козацького повстання'
-version: '4.2'
+version: '4.3'
 vocabulary_hints:
 - definition: масовий збройний виступ проти існуючої влади
   pos: с.
