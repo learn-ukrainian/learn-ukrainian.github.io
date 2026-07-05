@@ -1,9 +1,9 @@
 {
-  "assembled_mdx_sha256": "1e8d517d62b46da8a34655496c47f98dde903c1e6685ff06b2606f95f8f3fec2",
+  "assembled_mdx_sha256": null,
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "df269969b965b7c11c38b090b2e36593eb88131678f7153912f15f58dbbc9d30",
+    "digest": "d97334be8705dfc42f099fc91fce5e85c1540b84a1f177cd63e37f1511aa25a0",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/narodni-opovidannia-buvalshchyny-memoraty.yaml",
@@ -11,7 +11,7 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/narodni-opovidannia-buvalshchyny-memoraty/module.md",
-        "sha256": "53e315c6188fc596fa6881e4e476480855326264124c1fb11cc70690474fe9b2"
+        "sha256": "514d6d57d035d074946dcc88f232e84cc9c7180099d2aad4de03f2c8eb151f33"
       },
       {
         "path": "curriculum/l2-uk-en/folk/narodni-opovidannia-buvalshchyny-memoraty/activities.yaml",
@@ -28,11 +28,10 @@
     ]
   },
   "evidence": {
-    "decolonization": "Distinguishes Ukrainian material from imperial bibliographic framing without romantic-nationalist overclaim.",
-    "engagement": "V2 inline/workbook activities cover genre ID, source passporting, motif analysis, comparison, and seminar writing.",
-    "pedagogical": "Teaches genre boundary, narrator stance, credibility markers, social function, and source caution.",
-    "review": "Claude-first bridge failed because local Claude native binary was not installed; direct AGY/Gemini 3.1 Pro High review found no blockers.",
-    "source_policy": "Quote-sparse build avoids unverified witness excerpts and uses only live allowlisted learner resource."
+    "gates": "Hardened reading gate, MDX parity/drift checks, reading coverage tests, MDX validation, assemble/render gates, and VESUM/resource gates passed; promote_quality refreshed after review.",
+    "quote_verification": "All added excerpts were checked through local sources.verify_quote at confidence 1.0; Claude independently re-checked all 10 fragments.",
+    "reading_remediation": "Added learner-visible structured on-site shortened primary readings; external links remain supplementary only.",
+    "review": "Claude Opus 4.8 review-folk-reading-remediation-m25-m28 approved the batch; one identifier typo was fixed before sidecar refresh."
   },
   "floors": {
     "beauty": 8.5,
@@ -45,12 +44,12 @@
   "profile": "folk_promote_v1",
   "review_artifact": null,
   "reviewer": {
-    "agent": "agy",
-    "family": "google",
-    "model": "Gemini 3.1 Pro (High)"
+    "agent": "claude",
+    "family": "anthropic",
+    "model": "Claude Opus 4.8"
   },
   "schema_version": 1,
-  "scored_at": "2026-07-04T13:40:58Z",
+  "scored_at": "2026-07-05T16:47:53Z",
   "scores": {
     "beauty": 8.9,
     "decolonization": 9.1,

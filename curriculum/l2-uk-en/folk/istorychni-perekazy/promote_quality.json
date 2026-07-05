@@ -1,9 +1,9 @@
 {
-  "assembled_mdx_sha256": "0e36b1e08659d780a83dea80f0ede9eba5127280ef747f5fdf2cb9362609c648",
+  "assembled_mdx_sha256": null,
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "91af7e7f71897cfbc8f5c169864027cff5479f9ae4a8b60160f52850a0b5c25f",
+    "digest": "25f83b3c3082d33894bf2368d5db68039765f3505a6291df1167b901034efa57",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/istorychni-perekazy.yaml",
@@ -11,7 +11,7 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/istorychni-perekazy/module.md",
-        "sha256": "22d819b9ae10777e114fd40b29f4df3918f8cac19da790789013ea8306368758"
+        "sha256": "17526a1f2b55328b4e9dd718c720c987e21446001847dabc4e63b9301bc4a779"
       },
       {
         "path": "curriculum/l2-uk-en/folk/istorychni-perekazy/activities.yaml",
@@ -28,10 +28,10 @@
     ]
   },
   "evidence": {
-    "gates": "Activity V2 schema, vocabulary CLI, MDX generation drift, source parity, forward parity, word target, VESUM/resource QG, leak/decolonization scans, and git diff hygiene passed after final cleanup.",
-    "historical_register": "Lesson distinguishes history, memory, legend, later retelling, chronicle/archive limits, oral tradition, and local landscape memory without treating tales as archival fact.",
-    "independent_review": "Claude-first route failed because the local Claude native binary was not installed; AGY/Gemini 3.1 Pro High fallback found the M24 metadata blocker and Stepan Razin minor findings, then focused re-review returned NO BLOCKERS.",
-    "provenance": "Public-domain/official source notes only; no hosted readings fabricated; short fragments checked against Wikisource exact pages after local verify_quote lacked corpus coverage; EIU pages used as context references, not primary readings."
+    "gates": "Hardened reading gate, MDX parity/drift checks, reading coverage tests, MDX validation, assemble/render gates, and VESUM/resource gates passed; promote_quality refreshed after review.",
+    "quote_verification": "All added excerpts were checked through local sources.verify_quote at confidence 1.0; Claude independently re-checked all 10 fragments.",
+    "reading_remediation": "Added learner-visible structured on-site shortened primary readings; external links remain supplementary only.",
+    "review": "Claude Opus 4.8 review-folk-reading-remediation-m25-m28 approved the batch; one identifier typo was fixed before sidecar refresh."
   },
   "floors": {
     "beauty": 8.5,
@@ -44,12 +44,12 @@
   "profile": "folk_promote_v1",
   "review_artifact": null,
   "reviewer": {
-    "agent": "agy",
-    "family": "google",
-    "model": "gemini-3.1-pro-high"
+    "agent": "claude",
+    "family": "anthropic",
+    "model": "Claude Opus 4.8"
   },
   "schema_version": 1,
-  "scored_at": "2026-07-04T12:48:06Z",
+  "scored_at": "2026-07-05T16:47:53Z",
   "scores": {
     "beauty": 8.7,
     "decolonization": 9.1,
