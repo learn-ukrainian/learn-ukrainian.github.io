@@ -130,12 +130,31 @@ sys.exit(1)
 ' "$repo_root" "$@"
 }
 
-if [[ "${AGENT_NO_MERGE:-}" == "1" ]] && _blocks_branch_switch "$@"; then
-  cat >&2 <<EOF
+# INCIDENT 2026-07-05 (fork bomb): _blocks_branch_switch spawns a python guard whose
+# worktree_containment._run_git calls bare "git" -> PATH resolves back to THIS shim ->
+# guard again -> infinite bash+python chains until the per-user process limit (observed:
+# ~2,200 stuck processes, machine-wide fork failures). Two independent breakers:
+#   1. Bash-side pre-filter: the guard only concerns checkout/switch — never spawn the
+#      python (which itself runs git) for any other subcommand.
+#   2. AGENT_GIT_SHIM_GUARD_ACTIVE sentinel, FAIL-CLOSED (codex review msg 2014): the
+#      guard's subtree only ever runs read-only plumbing (rev-parse/show-ref/ls-files),
+#      which the pre-filter passes through. A checkout/switch arriving WITH the sentinel
+#      set is therefore either recursion or spoofing — both are DENIED outright, without
+#      spawning the guard python. Spoofing the sentinel strengthens the block; it cannot
+#      bypass it. The push-deny above stays active regardless.
+if [[ "${AGENT_NO_MERGE:-}" == "1" ]] && [[ "${1:-}" == "checkout" || "${1:-}" == "switch" ]]; then
+  if [[ "${AGENT_GIT_SHIM_GUARD_ACTIVE:-}" == "1" ]]; then
+    cat >&2 <<EOF
+error: branch switch denied inside the containment guard's own subtree (fail-closed sentinel).
+EOF
+    exit 1
+  elif AGENT_GIT_SHIM_GUARD_ACTIVE=1 _blocks_branch_switch "$@"; then
+    cat >&2 <<EOF
 error: agent cannot switch branches in the primary checkout.
        Create and cd into a dispatch worktree (.worktrees/dispatch/<agent>/<task>/) before switching branches.
 EOF
-  exit 1
+    exit 1
+  fi
 fi
 
 real_git="$(_real_git)" || {
