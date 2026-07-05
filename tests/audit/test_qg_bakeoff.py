@@ -347,3 +347,348 @@ def test_run_one_with_default_live_runner_is_guarded(
 
     with pytest.raises(qg_bakeoff.BakeoffConfigError, match="QG_BAKEOFF=1"):
         qg_bakeoff.run_one(route, _fixture(), output_dir=tmp_path)
+
+
+def test_matrix_survives_schema_invalid_cell_and_retry_failures_reruns_it(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A schema-invalid model payload is a MEASURED error cell, never a matrix crash.
+
+    First live run: gemma findings flunked validate_finding and killed all 24
+    cells (ValueError propagated out of run_matrix). Error cells score as
+    all-claims-missing; --retry-failures re-runs ONLY error cells.
+    """
+    monkeypatch.delenv("CI", raising=False)
+    monkeypatch.setenv("QG_BAKEOFF", "1")
+    fixture = _fixture()
+    calls: list[str] = []
+
+    def flaky_runner(
+        run_route: llm_reviewer_dispatch.ReviewerRoute,
+        _prompt: str,
+        _task_id: str,
+    ) -> llm_reviewer_dispatch.DispatchResult:
+        calls.append(run_route.reviewer_model_id)
+        if run_route.reviewer_model_id.endswith("bad-model"):
+            raise ValueError("finding missing required fields: attribution")
+        return _dispatch_result(
+            {
+                "findings": [],
+                "fact_checks": [
+                    {
+                        "claim": "True claim.",
+                        "verdict": "CONFIRMED",
+                        "grounding": {
+                            "tool": "sources_query_wikipedia",
+                            "query": "True claim",
+                            "evidence_excerpt": "True claim",
+                            "tool_call_id": "call_1",
+                        },
+                    },
+                    {
+                        "claim": "Fabricated claim.",
+                        "verdict": "UNATTESTED_AFTER_SEARCH",
+                        "grounding": {
+                            "tool": "sources_query_wikipedia",
+                            "query": "True claim",
+                            "evidence_excerpt": "Fabricated claim",
+                            "tool_call_id": "call_1",
+                        },
+                    },
+                ],
+                "evidence_gaps": [],
+            },
+            run_route,
+        )
+
+    runs = qg_bakeoff.run_matrix(
+        [fixture],
+        ["openrouter/test/bad-model", "openrouter/test/good-model"],
+        output_dir=tmp_path,
+        runner=flaky_runner,
+    )
+
+    assert len(runs) == 2
+    by_status = {run.artifact["model"]["pin"]: run.artifact["status"] for run in runs}
+    assert by_status["openrouter/test/bad-model"] == "error"
+    assert by_status["openrouter/test/good-model"] == "ran"
+    error_artifact = next(r.artifact for r in runs if r.artifact["status"] == "error")
+    assert error_artifact["error"]["class"] == "ValueError"
+    assert error_artifact["score"]["missing_claims"] == len(fixture.claims)
+    assert (tmp_path / qg_bakeoff.SCORECARD_NAME).exists()
+
+    # resume: neither cell re-runs without flags
+    calls.clear()
+    qg_bakeoff.run_matrix(
+        [fixture],
+        ["openrouter/test/bad-model", "openrouter/test/good-model"],
+        output_dir=tmp_path,
+        runner=flaky_runner,
+    )
+    assert calls == []
+
+    # --retry-failures: ONLY the error cell re-runs
+    calls.clear()
+    qg_bakeoff.run_matrix(
+        [fixture],
+        ["openrouter/test/bad-model", "openrouter/test/good-model"],
+        output_dir=tmp_path,
+        runner=flaky_runner,
+        retry_failures=True,
+    )
+    assert calls == ["openrouter/test/bad-model"]
+
+
+def test_retry_failures_still_runs_missing_cells_and_overwrites_error_on_success(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """--retry-failures is a RESUME MODIFIER (codex review of #4463):
+
+    missing cells run as in plain resume; error cells re-run and a successful
+    retry OVERWRITES the error artifact.
+    """
+    monkeypatch.delenv("CI", raising=False)
+    monkeypatch.setenv("QG_BAKEOFF", "1")
+    fixture = _fixture()
+    good_payload = {
+        "findings": [],
+        "fact_checks": [
+            {
+                "claim": "True claim.",
+                "verdict": "CONFIRMED",
+                "grounding": {
+                    "tool": "sources_query_wikipedia",
+                    "query": "True claim",
+                    "evidence_excerpt": "True claim",
+                    "tool_call_id": "call_1",
+                },
+            },
+            {
+                "claim": "Fabricated claim.",
+                "verdict": "UNATTESTED_AFTER_SEARCH",
+                "grounding": {
+                    "tool": "sources_query_wikipedia",
+                    "query": "True claim",
+                    "evidence_excerpt": "Fabricated claim",
+                    "tool_call_id": "call_1",
+                },
+            },
+        ],
+        "evidence_gaps": [],
+    }
+    fail_once = {"flaky": True}
+    calls: list[str] = []
+
+    def runner(
+        run_route: llm_reviewer_dispatch.ReviewerRoute,
+        _prompt: str,
+        _task_id: str,
+    ) -> llm_reviewer_dispatch.DispatchResult:
+        calls.append(run_route.reviewer_model_id)
+        if run_route.reviewer_model_id.endswith("flaky-model") and fail_once.pop("flaky", False):
+            raise ValueError("Expecting value: line 1 column 1 (char 0)")
+        return _dispatch_result(good_payload, run_route)
+
+    # Pass 1: flaky errors, fresh model absent entirely.
+    runs = qg_bakeoff.run_matrix(
+        [fixture], ["openrouter/test/flaky-model"], output_dir=tmp_path, runner=runner
+    )
+    assert runs[0].artifact["status"] == "error"
+
+    # Pass 2 with retry_failures: error cell re-runs AND the missing fresh-model cell runs.
+    calls.clear()
+    runs = qg_bakeoff.run_matrix(
+        [fixture],
+        ["openrouter/test/flaky-model", "openrouter/test/fresh-model"],
+        output_dir=tmp_path,
+        runner=runner,
+        retry_failures=True,
+    )
+    assert sorted(calls) == ["openrouter/test/flaky-model", "openrouter/test/fresh-model"]
+    statuses = {run.artifact["model"]["pin"]: run.artifact["status"] for run in runs}
+    assert statuses == {
+        "openrouter/test/flaky-model": "ran",
+        "openrouter/test/fresh-model": "ran",
+    }
+
+
+def test_error_artifact_preserves_response_head_for_parse_failures(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.delenv("CI", raising=False)
+    monkeypatch.setenv("QG_BAKEOFF", "1")
+    fixture = _fixture()
+
+    def prose_runner(
+        run_route: llm_reviewer_dispatch.ReviewerRoute,
+        _prompt: str,
+        _task_id: str,
+    ) -> llm_reviewer_dispatch.DispatchResult:
+        return llm_reviewer_dispatch.DispatchResult(
+            response_text="Ой у лузі червона калина — no JSON here.",
+            reviewer_model_id=run_route.reviewer_model_id,
+            reviewer_family=run_route.reviewer_family,
+            route_name=run_route.route_name,
+            tool_call_count=1,
+            tools_used=("sources_query_wikipedia",),
+            tool_events=(
+                {
+                    "tool": "sources_query_wikipedia",
+                    "input": {"query": "калина"},
+                    "status": "completed",
+                    "tool_call_id": "call_1",
+                    "output": "калина",
+                },
+            ),
+        )
+
+    route = qg_bakeoff.bakeoff_route_for_model("openrouter/test/prose-model")
+    run = qg_bakeoff.run_one(route, fixture, output_dir=tmp_path, runner=prose_runner)
+
+    assert run.artifact["status"] == "error"
+    assert run.artifact["error"]["class"] == "BakeoffCellError"
+    assert "червона калина" in run.artifact["error"]["response_head"]
+
+
+def test_nonconforming_findings_counted_not_fatal(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Findings-schema flunk is an ORTHOGONAL metric — fact_checks still score.
+
+    Live gemma cells emitted valid fact_checks with findings missing the strict
+    11 required fields; voiding those cells confounded the central fact-check
+    measurement with contract-following noise.
+    """
+    monkeypatch.delenv("CI", raising=False)
+    monkeypatch.setenv("QG_BAKEOFF", "1")
+    fixture = _fixture()
+    payload = {
+        "findings": [{"excerpt": "щось", "message": "bare finding, misses 11 fields"}],
+        "fact_checks": [
+            {
+                "claim": "True claim.",
+                "verdict": "CONFIRMED",
+                "grounding": {
+                    "tool": "sources_query_wikipedia",
+                    "query": "True claim",
+                    "evidence_excerpt": "True claim",
+                    "tool_call_id": "call_1",
+                },
+            },
+            {
+                "claim": "Fabricated claim.",
+                "verdict": "UNATTESTED_AFTER_SEARCH",
+                "grounding": {
+                    "tool": "sources_query_wikipedia",
+                    "query": "True claim",
+                    "evidence_excerpt": "Fabricated claim",
+                    "tool_call_id": "call_1",
+                },
+            },
+        ],
+        "evidence_gaps": [],
+    }
+
+    def runner(
+        run_route: llm_reviewer_dispatch.ReviewerRoute,
+        _prompt: str,
+        _task_id: str,
+    ) -> llm_reviewer_dispatch.DispatchResult:
+        return _dispatch_result(payload, run_route)
+
+    route = qg_bakeoff.bakeoff_route_for_model("openrouter/test/loose-findings-model")
+    run = qg_bakeoff.run_one(route, fixture, output_dir=tmp_path, runner=runner)
+
+    assert run.artifact["status"] != "error"
+    assert run.artifact["findings_schema_invalid"] is True
+    assert run.artifact["payload"]["findings"] == []
+    assert run.artifact["score"]["model_judgment_score"] == 30
+
+    # Invalid FACT_CHECKS remain a genuine error cell (regression guard).
+    bad_facts = dict(payload, findings=[], fact_checks=[{"claim": "x", "verdict": "NOT_A_VERDICT"}])
+
+    def bad_runner(
+        run_route: llm_reviewer_dispatch.ReviewerRoute,
+        _prompt: str,
+        _task_id: str,
+    ) -> llm_reviewer_dispatch.DispatchResult:
+        return _dispatch_result(bad_facts, run_route)
+
+    bad_route = qg_bakeoff.bakeoff_route_for_model("openrouter/test/bad-facts-model")
+    bad_run = qg_bakeoff.run_one(bad_route, fixture, output_dir=tmp_path, runner=bad_runner)
+    assert bad_run.artifact["status"] == "error"
+
+
+def test_trailing_garbage_after_valid_json_is_lenient_parsed_and_flagged(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Live deepseek-v4-flash class: valid payload + trailing text ("Extra data")."""
+    monkeypatch.delenv("CI", raising=False)
+    monkeypatch.setenv("QG_BAKEOFF", "1")
+    fixture = _fixture()
+    payload = {
+        "findings": [],
+        "fact_checks": [
+            {
+                "claim": "True claim.",
+                "verdict": "CONFIRMED",
+                "grounding": {
+                    "tool": "sources_query_wikipedia",
+                    "query": "True claim",
+                    "evidence_excerpt": "True claim",
+                    "tool_call_id": "call_1",
+                },
+            },
+            {
+                "claim": "Fabricated claim.",
+                "verdict": "UNATTESTED_AFTER_SEARCH",
+                "grounding": {
+                    "tool": "sources_query_wikipedia",
+                    "query": "True claim",
+                    "evidence_excerpt": "Fabricated claim",
+                    "tool_call_id": "call_1",
+                },
+            },
+        ],
+        "evidence_gaps": [],
+    }
+
+    def runner(
+        run_route: llm_reviewer_dispatch.ReviewerRoute,
+        _prompt: str,
+        _task_id: str,
+    ) -> llm_reviewer_dispatch.DispatchResult:
+        return llm_reviewer_dispatch.DispatchResult(
+            response_text=json.dumps(payload) + "\n\nОсь мій аналіз повністю.",
+            reviewer_model_id=run_route.reviewer_model_id,
+            reviewer_family=run_route.reviewer_family,
+            route_name=run_route.route_name,
+            tool_call_count=1,
+            tools_used=("sources_query_wikipedia",),
+            tool_events=(_event(),),
+        )
+
+    route = qg_bakeoff.bakeoff_route_for_model("openrouter/test/trailing-model")
+    run = qg_bakeoff.run_one(route, fixture, output_dir=tmp_path, runner=runner)
+
+    assert run.artifact["status"] != "error"
+    assert run.artifact["response_parse_lenient"] is True
+    assert run.artifact["score"]["model_judgment_score"] == 30
+
+    # Pure prose still fails closed.
+    def prose_runner(
+        run_route: llm_reviewer_dispatch.ReviewerRoute,
+        _prompt: str,
+        _task_id: str,
+    ) -> llm_reviewer_dispatch.DispatchResult:
+        return llm_reviewer_dispatch.DispatchResult(
+            response_text="Жодного JSON тут немає.",
+            reviewer_model_id=run_route.reviewer_model_id,
+            reviewer_family=run_route.reviewer_family,
+            route_name=run_route.route_name,
+            tool_call_count=1,
+            tools_used=("sources_query_wikipedia",),
+            tool_events=(_event(),),
+        )
+
+    prose_route = qg_bakeoff.bakeoff_route_for_model("openrouter/test/prose-only-model")
+    prose_run = qg_bakeoff.run_one(prose_route, fixture, output_dir=tmp_path, runner=prose_runner)
+    assert prose_run.artifact["status"] == "error"

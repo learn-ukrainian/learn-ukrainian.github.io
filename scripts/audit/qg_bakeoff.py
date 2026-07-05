@@ -87,10 +87,39 @@ class BakeoffConfigError(ValueError):
     """Configuration or fixture validation error."""
 
 
+class BakeoffCellError(ValueError):
+    """Per-cell failure carrying the raw response head for diagnosis."""
+
+    def __init__(self, message: str, *, response_head: str | None = None) -> None:
+        super().__init__(message)
+        self.response_head = response_head
+
+
 ProviderRunner = Callable[
     [llm_reviewer_dispatch.ReviewerRoute, str, str],
     llm_reviewer_dispatch.DispatchResult | str,
 ]
+
+
+def _lenient_first_json_object(response_text: str) -> Mapping[str, Any] | None:
+    """Parse the FIRST JSON object from a response with trailing garbage.
+
+    Measured live (deepseek-v4-flash): a valid payload followed by extra text
+    ("Extra data: char 7498"). JSON hygiene is a contract defect worth
+    counting, not a reason to void the fact-check measurement. Returns None
+    when no leading object parses.
+    """
+    text = response_text.strip()
+    if "```json" in text:
+        text = text.split("```json", 1)[1]
+    elif text.startswith("```"):
+        text = text.split("```", 1)[1]
+    text = text.lstrip()
+    try:
+        payload, _end = json.JSONDecoder().raw_decode(text)
+    except json.JSONDecodeError:
+        return None
+    return payload if isinstance(payload, Mapping) else None
 
 
 def require_offline_opt_in() -> None:
@@ -201,6 +230,7 @@ def run_matrix(
     output_dir: Path,
     runner: ProviderRunner = invoke_bakeoff_route,
     force: bool = False,
+    retry_failures: bool = False,
 ) -> list[BakeoffRun]:
     """Run or resume every model x fixture pair and write a scorecard.
 
@@ -221,6 +251,7 @@ def run_matrix(
                     output_dir=output_dir,
                     runner=runner,
                     force=force,
+                    retry_failures=retry_failures,
                 )
             )
     write_scorecard(output_dir / SCORECARD_NAME, [run.artifact for run in runs])
@@ -234,6 +265,7 @@ def run_one(
     output_dir: Path,
     runner: ProviderRunner = invoke_bakeoff_route,
     force: bool = False,
+    retry_failures: bool = False,
 ) -> BakeoffRun:
     """Run or resume one model x passage bakeoff artifact.
 
@@ -246,14 +278,59 @@ def run_one(
     artifact_path = output_dir / f"{pin_slug(route.reviewer_model_id)}__{fixture.slug}.json"
     if artifact_path.exists() and not force:
         artifact = json.loads(artifact_path.read_text(encoding="utf-8"))
-        return BakeoffRun(artifact_path=artifact_path, artifact=artifact, skipped=True)
+        # retry_failures is a RESUME MODIFIER: missing cells always run (plain
+        # resume behavior), completed cells always skip, and error cells re-run
+        # only under the flag (codex review of #4463 pinned these semantics).
+        if not (retry_failures and artifact.get("status") == "error"):
+            return BakeoffRun(artifact_path=artifact_path, artifact=artifact, skipped=True)
 
     # ``folk`` is the track level; it maps to the seminar policy family in
     # content_surface_gates. There is no literal ``seminar`` level.
     prompt = llm_reviewer.build_reviewer_prompt(BAKEOFF_LEVEL, f"bakeoff-{fixture.slug}", fixture.passage_md)
     task_id = f"qg-bakeoff-{pin_slug(route.reviewer_model_id)}-{fixture.slug}"
     started = time.monotonic()
-    gate_result = _invoke_and_gate(route, prompt, task_id, runner)
+    try:
+        gate_result = _invoke_and_gate(route, prompt, task_id, runner)
+    except (ValueError, llm_reviewer_dispatch.ReviewerDispatchError) as exc:
+        # A model that cannot produce a schema-valid grounded payload (or a
+        # provider that errors out) is a MEASURED per-cell outcome, never a
+        # matrix crash (first live run: gemma findings flunked validate_finding
+        # and killed all 24 cells). Score = every fixture claim missing.
+        wall_seconds = round(time.monotonic() - started, 3)
+        artifact = {
+            "schema_version": RUN_SCHEMA_VERSION,
+            "created_at": _now_z(),
+            "fixture": {
+                "slug": fixture.slug,
+                "title": fixture.title,
+                "claim_count": len(fixture.claims),
+            },
+            "model": {
+                "pin": route.reviewer_model_id,
+                "pin_slug": pin_slug(route.reviewer_model_id),
+                "family": route.reviewer_family,
+                "route_name": route.route_name,
+                "bridge_command": list(route.bridge_command),
+            },
+            "status": "error",
+            "error": {
+                "class": type(exc).__name__,
+                "message": str(exc)[:2000],
+                "response_head": getattr(exc, "response_head", None),
+            },
+            "workflow_verdict": "ERROR",
+            "attempt_count": None,
+            "dispatch": {},
+            "gate_outcomes": {},
+            "payload": {},
+            "score": score_payload({"fact_checks": []}, fixture),
+            "tool_call_count": 0,
+            "wall_seconds": wall_seconds,
+        }
+        artifact_path.write_text(
+            json.dumps(artifact, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+        )
+        return BakeoffRun(artifact_path=artifact_path, artifact=artifact)
     wall_seconds = round(time.monotonic() - started, 3)
     score = score_payload(gate_result["payload"], fixture)
     gate_outcomes = gate_result["gate_outcomes"]
@@ -279,6 +356,8 @@ def run_one(
         },
         "status": gate_result["status"],
         "workflow_verdict": gate_result["workflow_verdict"],
+        "findings_schema_invalid": bool(gate_result.get("findings_schema_invalid")),
+        "response_parse_lenient": bool(gate_result.get("response_parse_lenient")),
         "attempt_count": gate_result["attempt_count"],
         "dispatch": dispatch,
         "gate_outcomes": gate_outcomes,
@@ -461,6 +540,14 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--models", action="append", help="Comma-separated or repeated OpenRouter/opencode model pins")
     parser.add_argument("--out-dir", type=Path, default=None)
     parser.add_argument("--force", action="store_true", help="Redo runs even when artifact JSON exists")
+    parser.add_argument(
+        "--retry-failures",
+        action="store_true",
+        help=(
+            "Resume modifier: in addition to running MISSING cells (normal resume), "
+            "re-run cells whose existing artifact has status=error. Completed cells stay skipped."
+        ),
+    )
     args = parser.parse_args(argv)
 
     try:
@@ -468,7 +555,9 @@ def main(argv: Sequence[str] | None = None) -> int:
         fixtures = load_fixtures(args.fixtures_dir, args.fixtures)
         pins = model_pins_from_args(args.models)
         output_dir = args.out_dir or default_output_dir()
-        runs = run_matrix(fixtures, pins, output_dir=output_dir, force=args.force)
+        runs = run_matrix(
+        fixtures, pins, output_dir=output_dir, force=args.force, retry_failures=args.retry_failures
+    )
     except BakeoffConfigError as exc:
         print(str(exc), file=sys.stderr)
         return 2
@@ -496,8 +585,37 @@ def _invoke_and_gate(
         # (cursor review of #4458): an over-budget run hard-fails identically
         # in the harness and in live gating.
         llm_reviewer_dispatch.enforce_tool_budget(dispatch)
-        payload = dict(llm_reviewer_dispatch._json_payload_from_response(result.response_text))
-        llm_reviewer.validate_reviewer_payload(payload, BAKEOFF_POLICY_FAMILY)
+        response_parse_lenient = False
+        try:
+            payload = dict(llm_reviewer_dispatch._json_payload_from_response(result.response_text))
+        except ValueError as exc:
+            lenient = _lenient_first_json_object(result.response_text)
+            if lenient is None:
+                # Preserve what the model actually said — the first live run
+                # left only "Expecting value: char 0", undiagnosable offline.
+                raise BakeoffCellError(str(exc), response_head=result.response_text[:2000]) from exc
+            payload = dict(lenient)
+            response_parse_lenient = True
+        # MEASUREMENT-VALIDITY SPLIT (live gemma cells, 2026-07-05): the bakeoff
+        # measures FACT-CHECK quality; strict `findings` schema compliance is an
+        # ORTHOGONAL axis. gemma emitted valid fact_checks with non-conforming
+        # findings — voiding the cell would confound the central metric with
+        # contract-following noise. Harness-only: strip non-conforming findings,
+        # count the defect (`findings_schema_invalid`), keep gating fact_checks
+        # strictly. The LIVE pipeline stays strict (SCHEMA_FAILURE) — unchanged.
+        findings_schema_invalid = False
+        try:
+            llm_reviewer.validate_reviewer_payload(payload, BAKEOFF_POLICY_FAMILY)
+        except ValueError as exc:
+            stripped = dict(payload)
+            stripped["findings"] = []
+            try:
+                llm_reviewer.validate_reviewer_payload(stripped, BAKEOFF_POLICY_FAMILY)
+            except ValueError:
+                # fact_checks/evidence_gaps themselves are invalid → real error cell.
+                raise BakeoffCellError(str(exc), response_head=result.response_text[:2000]) from exc
+            findings_schema_invalid = True
+            payload = stripped
         attempt = {
             "attempt": attempt_count,
             "tool_call_count": dispatch.get("tool_call_count"),
@@ -573,6 +691,7 @@ def _invoke_and_gate(
         }
         attempt["grounding"] = grounding
         attempt["factual_sweep"] = {"incomplete": sweep_incomplete}
+        attempt["findings_schema_invalid"] = findings_schema_invalid
         attempts.append(attempt)
         status = _status_for_gates(grounding_gate, sweep_incomplete)
         workflow_verdict = "FAIL" if sweep_incomplete else ("WARN" if status != "ran" else "PASS")
@@ -582,6 +701,8 @@ def _invoke_and_gate(
             "attempt_count": attempt_count,
             "dispatch": dispatch,
             "payload": payload,
+            "findings_schema_invalid": findings_schema_invalid,
+            "response_parse_lenient": response_parse_lenient,
             "gate_outcomes": {
                 "attempts": attempts,
                 "theatre": {"status": "passed", "retried": theatre_retried},
@@ -589,6 +710,8 @@ def _invoke_and_gate(
                 "deep_read": attempt["deep_read"],
                 "grounding": grounding,
                 "factual_sweep": {"incomplete": sweep_incomplete},
+                "findings_schema_invalid": findings_schema_invalid,
+                "response_parse_lenient": response_parse_lenient,
             },
         }
 
