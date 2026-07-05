@@ -1,9 +1,9 @@
 {
-  "assembled_mdx_sha256": "42939799b675ade5bf35b2010b1c9e9cd3f462ad37fffaf72b8bb75c4c447e25",
+  "assembled_mdx_sha256": "c597cac489a2fb71005deac541f0a9b8a9df4786dd56e6d696bc872154b004fc",
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "467620adbd1a8c2ec23db126f8a3fe73ed6cba56d41dcff16e5b0564ea016a84",
+    "digest": "76c6a53dd31f0c144723972f6ff804ecc372fa3549d956e6cde0cd319d15cb8c",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/holosinnya.yaml",
@@ -11,7 +11,7 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/holosinnya/module.md",
-        "sha256": "23ad9c86288d843ac229ab0b77b3fc65f11c0c166a56561a9213f42f780ece42"
+        "sha256": "6bdf87e8ba0ed2fa8e4c682602f6289391a1e0032ae83fd95661ef1dea73612f"
       },
       {
         "path": "curriculum/l2-uk-en/folk/holosinnya/activities.yaml",
@@ -28,11 +28,9 @@
     ]
   },
   "evidence": {
-    "decolonization": "FOLK framing and Ukrainian agency remain intact; no Russian-imperial or ethnographic-reduction framing introduced.",
-    "engagement": "Lesson now tells learners that reading happens through short embedded lament fragments, matching the module's intentional format.",
-    "naturalness": "Learner-facing AI/build/register leakage cleanup keeps the prose in Ukrainian seminar register without process instructions.",
-    "pedagogical": "Cleanup preserves the original module learning spine while clarifying whether the reading surface is short embedded fragments or a hosted reading widget.",
-    "review": "Claude route was attempted first; AGY/Gemini fallback review blockers were fixed before final validation."
+    "reading_remediation": "Batch A adds or fixes substantial structured on-site primary readings with dash-led provenance and public-domain rights decisions.",
+    "review": "Claude opus route was used first; an initial stdin send-order miss was retried through Claude, which found one blocker; follow-up Claude review confirmed blockers none.",
+    "source_verification": "sources.verify_quote matched the new Hrushevsky/Drahomanov/Shevchenko/Ukrlib passages at 0.919-1.0 confidence; reading gate passed for all six modules."
   },
   "floors": {
     "beauty": 8.5,
@@ -50,7 +48,7 @@
     "model": "claude-opus-4-8"
   },
   "schema_version": 1,
-  "scored_at": "2026-07-02T16:26:22Z",
+  "scored_at": "2026-07-05T21:40:54Z",
   "scores": {
     "beauty": 8.8,
     "decolonization": 9.1,
