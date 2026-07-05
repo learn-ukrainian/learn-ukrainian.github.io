@@ -13,6 +13,7 @@ Cold-start: fetch this endpoint as step 2 of the orientation sequence
 
 Offline fallback (API unreachable):
 
+    agents_extensions/shared/rules/operator-expectations.md
     agents_extensions/shared/rules/critical-rules.md
     agents_extensions/shared/rules/non-negotiable-rules.md
     agents_extensions/shared/rules/workflow.md

@@ -51,6 +51,7 @@ When you run `hermes -z PROMPT -m model`, the system prompt is built from 8 slot
 | openai-codex | oauth | device_code | ✅ (gpt-5.5 via subscription) |
 | openrouter | api_key | env `OPENROUTER_API_KEY` | ✅ (long-tail catalog: qwen, gemma, …) |
 | xai-oauth | oauth | loopback_pkce (Grok) | ✅ |
+| zai | api_key | env `GLM_API_KEY` | ✅ (⚠️ GLM = China-hosted — same LOCAL-ONLY rule as opencode glm: never CI/automated pipelines) |
 
 **Changed since the May baseline:** anthropic and copilot are gone from the pool; DeepSeek and
 OpenRouter now flow through API keys (the May doc's "all API keys UNSET" no longer holds).
@@ -67,6 +68,11 @@ sources    http://127.0.0.1:8766/mcp    all tools    ✓ enabled
 Only our project's `sources` server is registered. It exposes 30+ Ukrainian-source tools (`verify_word`, `verify_words`, `verify_lemma`, `check_modern_form`, `search_text`, `check_russian_shadow`, `query_pravopys`, `search_grinchenko_1907`, `search_style_guide`, `search_synonyms`, `query_cefr_level`, `search_heritage`, etc.). Tools auto-flow into the model's tool list on every `-z` call (no per-invocation flag needed).
 
 ## Built-in toolsets enabled by default (`hermes tools list`)
+
+> **v0.18.0 re-probe (2026-07-05): 16 toolsets enabled** (was 11 in May). New since the
+> baseline: `x_search`, `session_search`, `clarify`, `delegation`, `cronjob` as toolsets;
+> still disabled: `video`, `video_gen`, `context_engine`. Table below is the May baseline —
+> re-probe with `hermes tools list` before relying on a specific toolset.
 
 | Toolset | Status | What it does |
 |---|---|---|
@@ -85,7 +91,7 @@ Only our project's `sources` server is registered. It exposes 30+ Ukrainian-sour
 | video_gen | ✗ disabled | Video generation |
 | moa | ✗ disabled | Mixture of Agents |
 
-**Implication:** when we route a model through Hermes (e.g. `-m grok-4.3`), it gains all 11 enabled tools on top of whatever MCP tools we've registered. If we want a "raw model, no tools" probe, we'd need to disable toolsets per-invocation (flag TBD).
+**Implication:** when we route a model through Hermes (e.g. `-m grok-4.3`), it gains ALL enabled toolsets (16 as of v0.18.0) on top of whatever MCP tools we've registered. If we want a "raw model, no tools" probe, we'd need to disable toolsets per-invocation (flag TBD).
 
 ## Skills installed (`hermes skills list`)
 
@@ -166,7 +172,7 @@ Profiles bundle: model + gateway + alias + distribution + SOUL.md + .env. Curren
 ```yaml
 tool_loop_guardrails:
   warnings_enabled: true             # warn when model loops on same tool
-  hard_stop_enabled: false           # ❗ DOES NOT STOP — only warns
+  hard_stop_enabled: true            # ✅ flipped 2026-07-05 (was false since May)
   warn_after:
     exact_failure: 2                 # warn after 2 identical failed calls
     same_tool_failure: 3
@@ -175,7 +181,11 @@ tool_loop_guardrails:
     exact_failure: 5                 # would stop after 5 if enabled
 ```
 
-**Recommendation:** enable `hard_stop_enabled: true` to prevent runaway tool loops on a misbehaving model. Cheap insurance.
+**Applied 2026-07-05** (verify: `grep hard_stop_enabled ~/.hermes/config.yaml` → `true`).
+Watch-item: a hard stop after 5 identical failures can abort legitimate V7 writer/reviewer runs
+when the `sources` MCP is transiently flaky (repeated `verify_words` timeouts). If V7
+hermes-backed runs start aborting on transient tool errors, raise `hard_stop_after.exact_failure`
+or scope-disable for the writer profile — record the change in § Automation adoption plan.
 
 ## OpenAI-compat proxy (`hermes proxy`)
 
@@ -286,8 +296,8 @@ Prioritized, each item with its trigger condition and owner-lane. Status legend:
 | P | Feature | Action | Why / trigger | Status |
 |---|---|---|---|---|
 | P0 | `tool_loop_guardrails.hard_stop_enabled: true` | flip in `~/.hermes/config.yaml` | Cheap insurance against runaway tool loops on any hermes-routed model (recommended since May, never actioned). Warn thresholds already tuned; hard-stop at 5 identical failures. | ✅ applied 2026-07-05 |
-| P1 | `fallback_providers` | set `openrouter` as fallback for the deepseek + xai lanes | Expectation #6 (limits happen — handle them): auto-fail-over at the harness level beats every agent hand-implementing retry-elsewhere. Keeps V7 grok-tools + deepseek reviews alive through provider hiccups. | 🟡 next infra PR (config-only; verify with a forced-failure probe) |
-| P1 | `hermes cron` | nightly READ-ONLY deterministic sweep: `track_deterministic_audit` per published level + `hermes insights` snapshot → report file the Monitor API serves | Recurring drift detection without burning an orchestrator session on polling. Read-only: cron jobs must NOT build/commit (build policy unchanged: agent-run, `--worktree`). | 🟡 pilot 1 job, review output for a week, then extend |
+| P1 | `fallback_providers` | set `openrouter` as fallback for the deepseek + xai lanes | Expectation #6 (limits happen — handle them): auto-fail-over at the harness level beats every agent hand-implementing retry-elsewhere. Keeps V7 grok-tools + deepseek reviews alive through provider hiccups. ⚠️ Guardrails: the ACTUAL substituted provider/model must be surfaced in the run artifact (review-independence, cost, and egress change with the substitution — silent failover violates the operator contract #6); zai/GLM must NEVER be a fallback target for automated runs (LOCAL-ONLY). | 🟡 next infra PR (config-only; forced-failure probe + substitution-logging REQUIRED before enabling) |
+| P1 | `hermes cron` | nightly READ-ONLY deterministic sweep over the published levels (explicitly: a1 a2 b1 b2): `track_deterministic_audit --track <lvl>` + `hermes insights` snapshot → report written ONLY to a gitignored runtime path the Monitor API serves | Recurring drift detection without burning an orchestrator session on polling. "Read-only" must be MECHANICAL, not prose: hermes enables `file`/`terminal`/`code_execution` toolsets by default, so the cron job runs with `--ignore-rules` + toolsets disabled (or an isolated read-only cwd) and its prompt template forbids writes outside the report path. Never builds/commits (build policy unchanged: agent-run, `--worktree`). | 🟡 pilot 1 job with the toolset-disable recipe, review output for a week, then extend |
 | P1 | Session store FTS5 | recipe: `hermes sessions list` / `hermes sessions show <id>`; grep 21M+ tokens of past writer/judge transcripts for prompt forensics | Every `-z` call is already recorded — free provenance for "what did the writer actually see" debugging (cf. #M-10 build-artifact forensics). | ✅ documented (recipe here; no config change needed) |
 | P2 | `hermes insights` | use INSTEAD of log-grepping for lane utilization stats; feed the monthly quota review | Deterministic usage data per model/session — supports expectation #4 (keep lanes busy) with numbers, not vibes. | ✅ documented |
 | P2 | Kanban / native delegation / gateway / ACP / proxy | **do not adopt now** | Overlap with load-bearing in-house tooling (delegate.py worktree isolation, Monitor API, GH issues as public SSOT, `:8767` proxy). Migration = high blast radius, low marginal value today. Re-evaluate if delegate.py grows a second concurrency bug. | ⬜ stance recorded |
