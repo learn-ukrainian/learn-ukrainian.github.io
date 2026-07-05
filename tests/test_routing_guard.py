@@ -76,3 +76,71 @@ def test_delegate_dispatch_is_wired() -> None:
     src = Path("scripts/delegate.py").read_text(encoding="utf-8")
     assert "assert_agent_routing_allowed" in src
     assert "assert_model_routing_allowed" in src
+
+
+def test_hermes_transport_is_wired_and_default_model_allowed(monkeypatch: pytest.MonkeyPatch) -> None:
+    """ask-hermes is a NON-opencode transport: it needs its own guard.
+
+    Regression (deepseek review 2026-07-05, finding 1): the hermes lane had a
+    qwen default model and no guard — every bare ask-hermes silently burned the
+    banned model, and --model could route subscription families via OpenRouter.
+    The guard must fire BEFORE send_message (no orphaned bridge messages).
+    """
+    from scripts.ai_agent_bridge import _hermes
+
+    def _boom(*args, **kwargs):  # pragma: no cover - failure path
+        raise AssertionError("send_message must not run for a refused model")
+
+    monkeypatch.setattr(_hermes, "send_message", _boom)
+    with pytest.raises(RoutingGuardError):
+        _hermes.ask_hermes("hi", task_id="t", model="qwen/qwen3.6-plus")
+    with pytest.raises(RoutingGuardError):
+        _hermes.ask_hermes("hi", task_id="t", model="openrouter/anthropic/claude-sonnet-5")
+    # The shipped default must itself be guard-allowed, or every bare
+    # ask-hermes would error out.
+    assert_model_routing_allowed(_hermes.HERMES_DEFAULT_MODEL, context="test")
+    assert "qwen" not in _hermes.HERMES_DEFAULT_MODEL.lower()
+
+
+def test_delegate_help_does_not_advertise_qwen() -> None:
+    """Banned agent must not appear in argparse choices (UX trap: --help offers
+    it, the guard rejects it at dispatch)."""
+    from pathlib import Path
+
+    src = Path("scripts/delegate.py").read_text(encoding="utf-8")
+    assert '"qwen",' not in src.replace("'", '"')
+
+
+def test_delegate_dispatch_dry_run_rejects_guarded_model(tmp_path) -> None:
+    """Functional interplay check (deepseek finding 3): a banned --model must
+    exit 2 with the guard message BEFORE the dry-run task_id prints — proving
+    cmd_dispatch actually reaches the guard (late import included)."""
+    import subprocess
+    import sys
+    from pathlib import Path
+
+    repo_root = Path(__file__).resolve().parent.parent
+    result = subprocess.run(
+        [
+            sys.executable,
+            str(repo_root / "scripts" / "delegate.py"),
+            "dispatch",
+            "--agent",
+            "codex",
+            "--model",
+            "openrouter/anthropic/claude-sonnet-5",
+            "--task-id",
+            "guard-dry-run-test",
+            "--prompt",
+            "noop",
+            "--dry-run",
+        ],
+        capture_output=True,
+        text=True,
+        cwd=repo_root,
+        env={**__import__("os").environ, "LU_ROUTING_GUARD_OVERRIDE": ""},
+        timeout=120,
+    )
+    assert result.returncode == 2, result.stdout + result.stderr
+    assert "SUBSCRIPTION family" in result.stderr
+    assert "guard-dry-run-test" not in result.stdout

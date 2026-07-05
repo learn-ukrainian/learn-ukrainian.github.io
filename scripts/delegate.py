@@ -2118,7 +2118,10 @@ def build_parser() -> argparse.ArgumentParser:
         formatter_class=_dispatch_help_formatter,
     )
     d.add_argument("--agent", required=True,
-                   choices=["codex", "gemini", "claude", "grok", "grok-build", "deepseek", "qwen", "agy", "cursor"],
+                   choices=["codex", "gemini", "claude", "grok", "grok-build", "deepseek", "agy", "cursor"],
+                   # "qwen" removed from choices (banned agent): advertising it in --help
+                   # while the routing guard rejects it at dispatch is a UX trap. The
+                   # guard still catches programmatic Namespace bypass.
                    help="Agent to run for the task: codex, gemini, claude, grok (Hermes), "
                         "grok-build (native grok CLI), deepseek, qwen, agy, or cursor.")
     d.add_argument("--task-id", required=True,
