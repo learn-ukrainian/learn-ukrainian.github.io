@@ -90,6 +90,61 @@ def test_hermes_parse_reads_fallback_from_agent_log(tmp_path, capsys):
     assert HERMES_SUBSTITUTION_MARKER in capsys.readouterr().err
 
 
+@pytest.mark.parametrize(
+    ("emission", "expected_provider", "expected_model"),
+    [
+        # hermes_cli/cli_agent_setup_mixin.py:65 (auth-failure path, provider-first)
+        (
+            "⚠️  Primary auth failed — switching to fallback: "
+            "openrouter / deepseek/deepseek-v3.2",
+            "openrouter",
+            "deepseek/deepseek-v3.2",
+        ),
+        # agent/chat_completion_helpers.py:1484 (buffer status, model-first)
+        (
+            "🔄 Primary model failed — switching to fallback: "
+            "deepseek/deepseek-v3.2 via openrouter",
+            "openrouter",
+            "deepseek/deepseek-v3.2",
+        ),
+        # agent/conversation_loop.py:4848 (empty-response buffer status)
+        (
+            "↻ Switched to fallback: deepseek/deepseek-v3.2 (openrouter)",
+            "openrouter",
+            "deepseek/deepseek-v3.2",
+        ),
+        # agent/conversation_loop.py:4853 (empty-response logger line)
+        (
+            "Fallback activated after empty responses: "
+            "now using deepseek/deepseek-v3.2 on openrouter",
+            "openrouter",
+            "deepseek/deepseek-v3.2",
+        ),
+    ],
+)
+def test_hermes_parse_matches_all_real_fallback_emission_formats(
+    tmp_path, emission, expected_provider, expected_model
+):
+    """Every fallback format hermes-agent actually emits must be detected."""
+    logs = tmp_path / "logs"
+    logs.mkdir()
+    (logs / "agent.log").write_text(f"{emission}\n", encoding="utf-8")
+    plan = _plan_with_metadata(tmp_path)
+
+    result = HermesDeepSeekAdapter().parse_response(
+        stdout="probe ok",
+        stderr="",
+        returncode=0,
+        output_file=None,
+        plan=plan,
+    )
+
+    assert result.substitution is not None
+    assert result.substitution["substituted"] is True
+    assert result.substitution["actual_provider"] == expected_provider
+    assert result.substitution["actual_model"] == expected_model
+
+
 def test_hermes_parse_records_no_substitution_when_route_is_unchanged(tmp_path):
     (tmp_path / "logs").mkdir()
     (tmp_path / "logs" / "agent.log").write_text("", encoding="utf-8")

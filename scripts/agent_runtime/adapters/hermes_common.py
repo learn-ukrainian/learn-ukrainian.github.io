@@ -28,6 +28,29 @@ _FALLBACK_STATUS_RE = re.compile(
     r"(?P<actual_provider>[A-Za-z0-9_.:-]+)",
     re.IGNORECASE,
 )
+# Auth-failure path emits provider-first with a spaced slash
+# (hermes_cli/cli_agent_setup_mixin.py:65: "⚠️  Primary auth failed —
+# switching to fallback: {provider} / {model}"). Provider names never
+# contain "/"; models may (e.g. deepseek/deepseek-v3.2), so split on the
+# SPACED slash only.
+_FALLBACK_AUTH_RE = re.compile(
+    r"Primary auth failed\s*[—–-]+\s*switching to fallback:\s*"
+    r"(?P<actual_provider>[^\s/]+)\s+/\s+(?P<actual_model>\S+)",
+    re.IGNORECASE,
+)
+# Empty-response retry path (agent/conversation_loop.py:4848/:4853) emits two
+# more formats: buffer status "↻ Switched to fallback: {model} ({provider})"
+# and logger line "Fallback activated after empty responses: now using
+# {model} on {provider}".
+_FALLBACK_EMPTY_STATUS_RE = re.compile(
+    r"Switched to fallback:\s*(?P<actual_model>\S+)\s*\((?P<actual_provider>[^)]+)\)",
+    re.IGNORECASE,
+)
+_FALLBACK_EMPTY_LOG_RE = re.compile(
+    r"Fallback activated after empty responses:\s*now using\s+"
+    r"(?P<actual_model>\S+)\s+on\s+(?P<actual_provider>\S+)",
+    re.IGNORECASE,
+)
 _FORBIDDEN_GLM_MODEL_RE = re.compile(r"(^|[/_.:-])glm($|[/_.:-]|\d)", re.IGNORECASE)
 
 HERMES_SUBSTITUTION_MARKER = "HERMES_FALLBACK_SUBSTITUTION"
@@ -304,16 +327,23 @@ def _read_log_since_offset(log_path: Path, offset: int) -> str:
 
 def _fallback_match(text: str) -> tuple[str, str] | None:
     matches: list[tuple[str, str]] = []
-    for match in _FALLBACK_LOG_RE.finditer(text):
-        matches.append((
-            match.group("actual_provider").strip(),
-            match.group("actual_model").strip(),
-        ))
-    for match in _FALLBACK_STATUS_RE.finditer(text):
-        matches.append((
-            match.group("actual_provider").strip(),
-            match.group("actual_model").strip(),
-        ))
+    # All patterns verified verbatim against hermes-agent source
+    # (chat_completion_helpers.py:1484/:1488, cli_agent_setup_mixin.py:65,
+    # conversation_loop.py:4848/:4853). Keep the families in sync with
+    # upstream when Hermes is updated.
+    fallback_patterns = (
+        _FALLBACK_LOG_RE,
+        _FALLBACK_STATUS_RE,
+        _FALLBACK_AUTH_RE,
+        _FALLBACK_EMPTY_STATUS_RE,
+        _FALLBACK_EMPTY_LOG_RE,
+    )
+    for pattern in fallback_patterns:
+        for match in pattern.finditer(text):
+            matches.append((
+                match.group("actual_provider").strip(),
+                match.group("actual_model").strip(),
+            ))
     return matches[-1] if matches else None
 
 
