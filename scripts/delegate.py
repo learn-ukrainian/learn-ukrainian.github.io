@@ -504,6 +504,49 @@ def _resolve_write_cwd_error(
     )
 
 
+def _format_dirty_entries(entries: list[dict[str, str]], *, limit: int = 10) -> str:
+    shown = [f"{entry.get('xy', '').strip() or '??'} {entry.get('path', '')}" for entry in entries[:limit]]
+    if len(entries) > limit:
+        shown.append(f"... and {len(entries) - limit} more")
+    return ", ".join(shown) if shown else "(none)"
+
+
+def _resolve_dirty_primary_checkout_error(*, mode: str) -> str | None:
+    """Reject write-capable dispatch when the protected primary checkout is dirty.
+
+    This is separate from the #4445 isolation check: even a correctly isolated
+    new worktree should not be dispatched while main/master already has tracked
+    or untracked non-ignored dirt, because the next worker inherits polluted
+    operator state. Read-only dispatches stay allowed for preflight and diagnosis.
+    """
+    if mode not in _WRITE_CAPABLE_MODES:
+        return None
+
+    wc = _load_worktree_containment()
+    try:
+        status = wc.primary_checkout_dirty_status(_REPO_ROOT)
+    except Exception as exc:
+        return (
+            "❌ could not verify primary checkout cleanliness before "
+            f"write-capable dispatch: {type(exc).__name__}: {exc}"
+        )
+
+    if not status.get("protected_branch") or not status.get("dirty"):
+        return None
+
+    entries = status.get("entries") or []
+    return (
+        "❌ primary checkout is dirty; refusing write-capable dispatch before "
+        "creating branch/worktree residue.\n"
+        f"   cwd: {status.get('checked_cwd')}\n"
+        f"   command: {status.get('checked_command')}\n"
+        f"   branch: {status.get('branch')}\n"
+        f"   dirty files: {_format_dirty_entries(entries)}\n"
+        "   Clean/stash the primary checkout, or keep only gitignored local "
+        "runtime state, then retry."
+    )
+
+
 def _fetch_base(base: str) -> bool:
     """Fetch ``origin/{base}``. Returns True iff the remote ref is resolvable."""
     proc = subprocess.run(
@@ -1564,6 +1607,11 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
     )
     if write_cwd_error:
         print(write_cwd_error, file=sys.stderr)
+        return 2
+
+    dirty_primary_error = _resolve_dirty_primary_checkout_error(mode=args.mode)
+    if dirty_primary_error:
+        print(dirty_primary_error, file=sys.stderr)
         return 2
 
     # Refuse to clobber a task that's still alive — whether it's in

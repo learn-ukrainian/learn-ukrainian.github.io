@@ -4,7 +4,10 @@ from __future__ import annotations
 
 import asyncio
 import contextlib
+import os
+import subprocess
 import time
+from pathlib import Path
 
 import pytest
 from fastapi.testclient import TestClient
@@ -53,6 +56,42 @@ def _patch_orient_sources(monkeypatch) -> None:
     monkeypatch.setattr(api_main, "_collect_session_hints_orient_data", lambda: [{"file": "docs/session-state/example.md", "first_line": "# Example"}])
 
 
+def _clean_git_env() -> dict[str, str]:
+    return {
+        key: value
+        for key, value in os.environ.items()
+        if not key.startswith("GIT_") and not key.startswith("PRE_COMMIT")
+    }
+
+
+def _git(repo: Path, *args: str) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(
+        ["git", "-C", str(repo), *args],
+        check=True,
+        capture_output=True,
+        text=True,
+        env=_clean_git_env(),
+    )
+
+
+def _init_orient_git_repo(tmp_path: Path) -> Path:
+    repo = tmp_path / "repo"
+    repo.mkdir()
+    subprocess.run(
+        ["git", "init", "-q", "-b", "main", str(repo)],
+        check=True,
+        capture_output=True,
+        text=True,
+        env=_clean_git_env(),
+    )
+    _git(repo, "config", "user.email", "test@example.com")
+    _git(repo, "config", "user.name", "Test")
+    (repo / "tracked.txt").write_text("clean\n", encoding="utf-8")
+    _git(repo, "add", "tracked.txt")
+    _git(repo, "commit", "-q", "-m", "init")
+    return repo
+
+
 def test_orient_returns_all_top_level_keys(monkeypatch):
     _patch_orient_sources(monkeypatch)
 
@@ -73,6 +112,26 @@ def test_orient_returns_all_top_level_keys(monkeypatch):
         "session_hints",
     }
     assert expected <= set(data)
+
+
+def test_orient_git_exposes_primary_checkout_dirty_signal(monkeypatch, tmp_path):
+    original_git_collector = api_main._collect_git_orient_data
+    repo = _init_orient_git_repo(tmp_path)
+    (repo / "tracked.txt").write_text("dirty\n", encoding="utf-8")
+    _patch_orient_sources(monkeypatch)
+    monkeypatch.setattr(api_main, "PROJECT_ROOT", repo)
+    monkeypatch.setattr(api_main, "_collect_git_orient_data", original_git_collector)
+
+    response = client.get("/api/orient?fresh=true")
+
+    assert response.status_code == 200
+    git_info = response.json()["git"]
+    assert git_info["primary_checkout_dirty"] is True
+    assert git_info["primary_checkout"]["checked_cwd"] == str(repo)
+    assert git_info["primary_checkout"]["tracked_dirty_count"] == 1
+    assert git_info["primary_checkout"]["entries"] == [
+        {"xy": " M", "path": "tracked.txt", "kind": "tracked"}
+    ]
 
 
 def test_health_includes_core_bare_canary():

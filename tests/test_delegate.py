@@ -2283,7 +2283,7 @@ def _init_repo_with_worktree(tmp_path: Path) -> tuple[Path, Path]:
     )
     _git(main, "config", "user.email", "test@example.com")
     _git(main, "config", "user.name", "Test")
-    (main / ".gitignore").write_text(".worktrees/\n")
+    (main / ".gitignore").write_text(".worktrees/\nlocal_state/\n")
     (main / "tracked.txt").write_text("x\n")
     _git(main, "add", "-A")
     _git(main, "commit", "-q", "-m", "init")
@@ -2426,6 +2426,53 @@ def test_write_guard_rejects_explicit_worktree_pointing_at_primary(tmp_path):
     assert "primary checkout" in err
 
 
+def _primary_dirty_status(main: Path) -> dict:
+    return delegate._load_worktree_containment().primary_checkout_dirty_status(main)
+
+
+def test_primary_dirty_status_clean_main(tmp_path):
+    main, _ = _init_repo_with_worktree(tmp_path)
+
+    status = _primary_dirty_status(main)
+
+    assert status["dirty"] is False
+    assert status["dirty_count"] == 0
+
+
+def test_primary_dirty_status_tracks_modified_file(tmp_path):
+    main, _ = _init_repo_with_worktree(tmp_path)
+    (main / "tracked.txt").write_text("dirty\n")
+
+    status = _primary_dirty_status(main)
+
+    assert status["dirty"] is True
+    assert status["tracked_dirty_count"] == 1
+    assert status["entries"] == [{"xy": " M", "path": "tracked.txt", "kind": "tracked"}]
+
+
+def test_primary_dirty_status_tracks_untracked_nonignored_file(tmp_path):
+    main, _ = _init_repo_with_worktree(tmp_path)
+    (main / "scratch.txt").write_text("new\n")
+
+    status = _primary_dirty_status(main)
+
+    assert status["dirty"] is True
+    assert status["untracked_dirty_count"] == 1
+    assert status["entries"] == [{"xy": "??", "path": "scratch.txt", "kind": "untracked"}]
+
+
+def test_primary_dirty_status_ignores_gitignored_local_state(tmp_path):
+    main, _ = _init_repo_with_worktree(tmp_path)
+    local_state = main / "local_state" / "cache.json"
+    local_state.parent.mkdir()
+    local_state.write_text("{}\n")
+
+    status = _primary_dirty_status(main)
+
+    assert status["dirty"] is False
+    assert status["dirty_count"] == 0
+
+
 # --- cmd_dispatch end-to-end tests ------------------------------------------
 
 
@@ -2440,6 +2487,56 @@ def test_dispatch_read_only_allows_repo_root(tmp_tasks_dir, monkeypatch):
     state = delegate._read_state(delegate._state_path("ro-root"))
     assert state is not None
     assert state["cwd"] == str(delegate._REPO_ROOT)
+
+
+def test_dispatch_read_only_allows_dirty_primary_checkout(
+    tmp_tasks_dir, tmp_path, monkeypatch,
+):
+    """Read-only preflight still runs so agents can inspect and report dirt."""
+    main, _ = _init_repo_with_worktree(tmp_path)
+    (main / "tracked.txt").write_text("dirty\n")
+    monkeypatch.setattr(delegate, "_REPO_ROOT", main)
+    monkeypatch.setattr(delegate.subprocess, "Popen", lambda *a, **k: _GuardFakeProc())
+    args = _write_args(task_id="ro-dirty-main", mode="read-only", cwd=None, worktree=None)
+
+    rc = delegate.cmd_dispatch(args)
+
+    assert rc == 0
+    state = delegate._read_state(delegate._state_path("ro-dirty-main"))
+    assert state is not None
+    assert state["cwd"] == str(main)
+
+
+def test_dispatch_rejects_write_capable_when_primary_checkout_dirty(
+    tmp_tasks_dir, tmp_path, monkeypatch, capsys,
+):
+    main, _ = _init_repo_with_worktree(tmp_path)
+    (main / "tracked.txt").write_text("dirty\n")
+    monkeypatch.setattr(delegate, "_REPO_ROOT", main)
+    args = _write_args(
+        task_id="dirty-main",
+        mode="workspace-write",
+        cwd=None,
+        worktree="auto",
+    )
+
+    rc = delegate.cmd_dispatch(args)
+
+    assert rc == 2
+    assert delegate._read_state(delegate._state_path("dirty-main")) is None
+    err = capsys.readouterr().err
+    assert "primary checkout is dirty" in err
+    assert "git status --porcelain=v1 -z --untracked-files=all" in err
+    assert "tracked.txt" in err
+    assert not (main / ".worktrees" / "dispatch" / "codex" / "dirty-main").exists()
+    branch_proc = subprocess.run(
+        ["git", "-C", str(main), "branch", "--list", "codex/dirty-main"],
+        check=True,
+        capture_output=True,
+        text=True,
+        env=delegate._sanitized_git_env(),
+    )
+    assert branch_proc.stdout.strip() == ""
 
 
 def test_dispatch_rejects_workspace_write_without_worktree(tmp_tasks_dir, capsys):
@@ -2470,7 +2567,8 @@ def test_dispatch_rejects_workspace_write_cwd_primary_checkout(
 def test_dispatch_accepts_workspace_write_cwd_added_worktree(
     tmp_tasks_dir, tmp_path, monkeypatch,
 ):
-    _, dispatch_wt = _init_repo_with_worktree(tmp_path)
+    main, dispatch_wt = _init_repo_with_worktree(tmp_path)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", main)
     _patch_worker_popen(monkeypatch)
     args = _write_args(
         task_id="ww-cwd-wt", mode="workspace-write", cwd=str(dispatch_wt), worktree=None,
