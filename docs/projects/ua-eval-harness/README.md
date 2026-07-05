@@ -62,6 +62,10 @@ These are NOT the harness, but they are the scorer-side foundation:
   harness-transport decisions.
 - [Leaderboard boundary](leaderboard-boundary.md) — what #2156 measures vs what is
   delegated to the lang-uk leaderboard, plus the metadata interop bridge (#4289).
+- [Surzhyk eval scoping](surzhyk-eval-scoping.md) — #4287 fleet-reviewed task definition,
+  5-class variety taxonomy, GRAC pointer-only fixture policy, IAA pilot gate.
+- [PL/EN borrowing eval scoping](pl-en-borrowing-scoping.md) — #4288 fleet-reviewed lexical-borrowing
+  boundary (syntactic EN calques stay in #2156), harmful-vs-accepted decision rule, source landscape.
 
 ## Design TBD (these are the questions next session should answer)
 
