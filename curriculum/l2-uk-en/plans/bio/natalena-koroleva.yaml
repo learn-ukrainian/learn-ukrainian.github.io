@@ -154,7 +154,7 @@ references:
   title: Легенди старокиївські
   type: primary
   work: Легенди старокиївські
-- note: Досьє з джерельними caveat про раннє життя, вигнання, радянське стирання і самоконструювання.
+- note: Досьє з джерельними застереженнями про раннє життя, вигнання, радянське стирання і самоконструювання.
   path: docs/research/bio/natalena-koroleva.md
   title: Наталена Королева — Research Dossier
   type: research
@@ -162,7 +162,7 @@ sequence: 400
 slug: natalena-koroleva
 subtitle: Вибрана українськість, вигнання і легенди Києва
 title: 'Наталена Королева: Без коріння, але з мовою'
-version: '1.0'
+version: '1.1'
 vocabulary_hints:
 - definition: вимушене або тривале життя поза батьківщиною; також спільнота поза країною
   pos: ж.

@@ -153,7 +153,7 @@ references:
   title: Щедрий вечір
   type: primary
   work: Щедрий вечір
-- note: Досьє з фактами, цензурними caveat, забороною вигадувати арешт і ризиком спрощення офіційного статусу.
+- note: Досьє з фактами, цензурними застереженнями, забороною вигадувати арешт і ризиком спрощення офіційного статусу.
   path: docs/research/bio/mykhailo-stelmakh.md
   title: Михайло Стельмах — Research Dossier
   type: research
@@ -161,7 +161,7 @@ sequence: 401
 slug: mykhailo-stelmakh
 subtitle: Сільська пам'ять, фольклор і цензурований канон
 title: 'Михайло Стельмах: Мова села і тиск дозволеного'
-version: '1.1'
+version: '1.2'
 vocabulary_hints:
 - definition: наука про народну культуру, усну творчість, звичаї і пісні
   pos: ч.

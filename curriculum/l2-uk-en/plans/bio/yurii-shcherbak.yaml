@@ -166,7 +166,7 @@ references:
   title: Чорнобиль
   type: primary
   work: Чорнобиль
-- note: Досьє з caveat про живу постать, дату народження, Чорнобиль, дипломатію і пізню політичну прозу.
+- note: Досьє із застереженнями про живу постать, дату народження, Чорнобиль, дипломатію і пізню політичну прозу.
   path: docs/research/bio/yurii-shcherbak.md
   title: Юрій Щербак — Research Dossier
   type: research
@@ -174,7 +174,7 @@ sequence: 402
 slug: yurii-shcherbak
 subtitle: Чорнобиль, екологія і дипломатія доказу
 title: 'Юрій Щербак: Доказ після катастрофи'
-version: '1.0'
+version: '1.1'
 vocabulary_hints:
 - definition: лікар або науковець, що вивчає поширення хвороб у спільнотах
   pos: ч.
