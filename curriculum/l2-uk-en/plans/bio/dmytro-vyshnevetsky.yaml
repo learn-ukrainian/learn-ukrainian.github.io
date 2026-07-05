@@ -78,6 +78,21 @@ persona:
   role: Історик, що відділяє міф про Байду від реальної, повної суперечностей біографії князя Вишневецького.
   voice: Anti-Hagiographer
 phase: BIO
+readings:
+- title: "Вишневецький Дмитро Іванович"
+  source_name: "Енциклопедія історії України"
+  source_url: "https://www.history.org.ua/?termin=Vyshnevetskyi_D"
+  language: uk
+  type: "encyclopedia_entry"
+  clearance: "public_domain"
+  notes: "Аналіз реальної політичної і військової діяльності засновника Хортицької фортеці."
+- title: "Пісня про Байду"
+  source_name: "Українські народні думи та пісні"
+  source_url: "https://litopys.org.ua/dumy/dum44.htm"
+  language: uk
+  type: "folk_song"
+  clearance: "public_domain"
+  notes: "Фольклорне джерело для порівняння міфу з історичними реаліями."
 references:
 - title: Dmytro Vyshnevetsky
   note: Compiled research notes on Vyshnevetsky, covering both historical facts and folkloric interpretations.
@@ -97,7 +112,7 @@ sequence: 16
 slug: dmytro-vyshnevetsky
 subtitle: 'Dmytro Vyshnevetsky: Baida — The First Hetman'
 title: 'Дмитро Вишневецький: Байда — Перший Гетьман'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: укріплений військовий табір козаків, адміністративний і військовий центр
   pos: ж.

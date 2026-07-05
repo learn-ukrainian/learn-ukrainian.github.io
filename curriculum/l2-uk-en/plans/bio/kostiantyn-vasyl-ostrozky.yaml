@@ -75,6 +75,21 @@ persona:
   role: Модератор семінару, що ставить під сумнів офіційні наративи та шукає складні відповіді на прості питання про героїв.
   voice: Nuanced-Historian
 phase: BIO.4
+readings:
+- title: "Острозький Василь-Костянтин Костянтинович"
+  source_name: "Енциклопедія історії України"
+  source_url: "https://www.history.org.ua/?termin=Ostrozky_V"
+  language: uk
+  type: "encyclopedia_entry"
+  clearance: "public_domain"
+  notes: "Академічний огляд діяльності 'некоронованого короля Русі' та його просвітницької роботи."
+- title: "Острозька академія та друкарня"
+  source_name: "Історичний нарис"
+  source_url: ""
+  language: uk
+  type: "article"
+  clearance: "hosting: reading-needed"
+  notes: "Потрібен адаптований текст про створення Острозької академії та видання Біблії як інструментів культурного державотворення."
 references:
 - title: Kostiantyn Vasyl Ostrozky
   note: Compiled from Hrushevsky, Subtelny, Plokhy — full biography, context of the Commonwealth, cultural and religious situation
@@ -94,7 +109,7 @@ sequence: 17
 slug: kostiantyn-vasyl-ostrozky
 subtitle: 'Kostiantyn-Vasyl Ostrozky: The Enlightener Prince'
 title: 'Костянтин-Василь Острозький: Князь-Просвітник'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: багатий і впливовий покровитель наук, мистецтв або освіти
   pos: ч.
