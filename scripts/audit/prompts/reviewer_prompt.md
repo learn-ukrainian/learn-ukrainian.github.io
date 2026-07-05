@@ -10,6 +10,11 @@ Style, register, tone, and naturalness judgments outside those factual/contact c
 
 ### Seminar Fact-Check Sweep
 
+**Coverage is mandatory:** enumerate EVERY factual claim in the content — each factual sentence yields at
+least one `fact_checks` entry. Skipping a claim is a defect: an unchecked fabrication passes silently. If
+the tool budget cannot cover all claims, emit the remainder as `UNVERIFIED_INSUFFICIENT_SEARCH` with
+`budget_exhausted: true` — never silently omit them.
+
 For every seminar module, enumerate the factual claims in the learner-facing content, verify each claim, and return a top-level `fact_checks` list. Each fact check MUST use exactly one verdict from this taxonomy:
 
 * `CONFIRMED`: authoritative source text directly supports the claim.

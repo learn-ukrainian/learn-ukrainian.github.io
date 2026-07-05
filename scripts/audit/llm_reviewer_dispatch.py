@@ -1149,18 +1149,29 @@ def _grounding_matches_events(
     grounding: Mapping[str, Any],
     events: Sequence[Mapping[str, Any]],
 ) -> bool:
+    """True when the grounding is backed by a captured tool event.
+
+    Match semantics (live-proof fix, 2026-07-05): tool name + query must match
+    a captured event AND the excerpt must be a substring of that event's
+    captured output. ``tool_call_id`` is ADVISORY — the transport-level id
+    (e.g. ``chatcmpl-tool-…``) is never shown to the model, so requiring
+    equality failed every legitimate grounding in the live «Веснянки» proof
+    while adding nothing against fabrication (a fabricated excerpt still has
+    to appear verbatim in a real captured output for a query really made).
+    """
     query = str(grounding.get("query") or "").strip()
     excerpt = str(grounding.get("evidence_excerpt") or "").strip()
-    call_id = str(grounding.get("tool_call_id") or "").strip()
-    if not query or not excerpt or not call_id:
+    if not query or not excerpt:
         return False
+    tool = str(grounding.get("tool") or "").strip()
     for event in events:
-        if str(event.get("tool_call_id") or "") != call_id:
+        if tool and str(event.get("tool") or "").strip() != tool:
             continue
         if not _event_input_matches_query(event, query):
-            return False
+            continue
         output = event.get("output")
-        return isinstance(output, str) and excerpt in output
+        if isinstance(output, str) and excerpt in output:
+            return True
     return False
 
 
