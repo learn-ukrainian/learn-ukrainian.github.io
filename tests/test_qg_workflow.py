@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import sqlite3
 from pathlib import Path
 from typing import Any
 
@@ -171,6 +172,7 @@ def test_tier2_policy_gate_reaches_seminar_and_skips_a1_a2(tmp_path: Path) -> No
             route_name="opencode_frontier",
             tool_call_count=1,
             tools_used=("sources_query_wikipedia",),
+            tool_events=(_wiki_event(mode="section"),),
         )
 
     seminar_dir = _write_module(
@@ -355,6 +357,7 @@ def test_cache_hit_revalidates_theatre_gate_on_stored_payload(tmp_path: Path) ->
             route_name="opencode_frontier",
             tool_call_count=1,
             tools_used=("sources_query_wikipedia",),
+            tool_events=(_wiki_event(mode="section"),),
         )
 
     record = qg_workflow.review_module(
@@ -372,6 +375,274 @@ def test_cache_hit_revalidates_theatre_gate_on_stored_payload(tmp_path: Path) ->
     assert calls == 1
 
 
+def test_cache_hit_replays_grounding_gate_from_stored_tool_events(tmp_path: Path) -> None:
+    seminar_dir = _write_module(
+        tmp_path,
+        level="folk",
+        slug="cache-grounding",
+        module_md="# Семінар\n\nВеснянки — це весняні обрядові пісні.\n",
+    )
+    db_path = tmp_path / "qg.db"
+    prompt = llm_reviewer.build_reviewer_prompt(
+        level="folk",
+        slug="cache-grounding",
+        module_md=(seminar_dir / "module.md").read_text(encoding="utf-8"),
+        activities_yaml=(seminar_dir / "activities.yaml").read_text(encoding="utf-8"),
+        vocabulary_yaml=(seminar_dir / "vocabulary.yaml").read_text(encoding="utf-8"),
+        resources_yaml=(seminar_dir / "resources.yaml").read_text(encoding="utf-8"),
+    )
+    fabricated_finding = qg_schema.build_finding(
+        issue_id="SEMINAR_FACTUAL_DETAIL",
+        issue_class="other",
+        dimension="seminar_sensitivity",
+        severity="warning",
+        file="module.md",
+        line=3,
+        span={"start": 0, "end": 8},
+        excerpt="Веснянки",
+        message="Fabricated grounding should fail cache replay.",
+        confidence="llm_judgment",
+        detector={"adapter": "llm_reviewer", "rule_id": "SEMINAR_FACTUAL_DETAIL"},
+        attribution={"corpus": "reviewer"},
+        grounding={
+            "tool": "sources_query_wikipedia",
+            "query": "Веснянки",
+            "evidence_excerpt": "вигаданий фрагмент",
+            "tool_call_id": "call_1",
+        },
+    )
+    payload = qg_workflow._payload_from_findings(
+        [fabricated_finding],
+        fact_checks=json.loads(_seminar_response())["fact_checks"],
+    )
+    llm_qg_store.record_llm_qg(
+        level="folk",
+        slug="cache-grounding",
+        module_dir=seminar_dir,
+        payload=payload,
+        gate_version=qg_workflow.DEFAULT_GATE_VERSION,
+        prompt_hash=llm_qg_store.prompt_hash_for_text(prompt),
+        checker_version=CHECKER_VERSION,
+        level_policy_family="seminar",
+        reviewer_model="test-reviewer",
+        reviewer_family="test-family",
+        route_name=None,
+        tool_call_count=1,
+        tools_used=("sources_query_wikipedia",),
+        tool_events=(_wiki_event(mode="section"),),
+        source="test",
+        path=db_path,
+    )
+    calls = 0
+
+    def reviewer(_target: qg_workflow.ReviewTarget, _prompt: str) -> str:
+        nonlocal calls
+        calls += 1
+        return _seminar_response()
+
+    record = qg_workflow.review_module(
+        _target(seminar_dir, level="folk", slug="cache-grounding"),
+        options=qg_workflow.WorkflowOptions(
+            enable_llm=True,
+            reviewer_model_id="test-reviewer",
+            reviewer_family="test-family",
+        ),
+        reviewer=reviewer,
+        store_path=db_path,
+    )
+
+    issue_ids = [
+        finding["issue_id"]
+        for dimension in record["dimensions"].values()
+        for finding in dimension["findings"]
+    ]
+    tier2 = _tier(record, 2)
+    assert tier2["status"] == llm_reviewer_dispatch.UNGROUNDED_FINDINGS
+    assert tier2["cache_regate"] == "replayed"
+    assert "SEMINAR_FACTUAL_DETAIL" not in issue_ids
+    assert "LLM_REVIEWER_GROUNDING_GATE" in issue_ids
+    assert calls == 0
+
+
+def test_cache_hit_deep_read_retry_requirement_falls_through_to_live_run(tmp_path: Path) -> None:
+    seminar_dir = _write_module(
+        tmp_path,
+        level="folk",
+        slug="cache-deep-read",
+        module_md="# Семінар\n\nВеснянки — це весняні обрядові пісні.\n",
+    )
+    db_path = tmp_path / "qg.db"
+    prompt = llm_reviewer.build_reviewer_prompt(
+        level="folk",
+        slug="cache-deep-read",
+        module_md=(seminar_dir / "module.md").read_text(encoding="utf-8"),
+        activities_yaml=(seminar_dir / "activities.yaml").read_text(encoding="utf-8"),
+        vocabulary_yaml=(seminar_dir / "vocabulary.yaml").read_text(encoding="utf-8"),
+        resources_yaml=(seminar_dir / "resources.yaml").read_text(encoding="utf-8"),
+    )
+    old = llm_qg_store.record_llm_qg(
+        level="folk",
+        slug="cache-deep-read",
+        module_dir=seminar_dir,
+        payload=qg_workflow._payload_from_reviewer_payload(json.loads(_seminar_response())),
+        gate_version=qg_workflow.DEFAULT_GATE_VERSION,
+        prompt_hash=llm_qg_store.prompt_hash_for_text(prompt),
+        checker_version=CHECKER_VERSION,
+        level_policy_family="seminar",
+        reviewer_model="test-reviewer",
+        reviewer_family="test-family",
+        route_name=None,
+        tool_call_count=1,
+        tools_used=("sources_query_wikipedia",),
+        tool_events=(_wiki_event(mode="summary"),),
+        source="test",
+        path=db_path,
+    )
+    calls = 0
+
+    def reviewer(_target: qg_workflow.ReviewTarget, _prompt: str) -> llm_reviewer_dispatch.DispatchResult:
+        nonlocal calls
+        calls += 1
+        return _seminar_dispatch(events=(_wiki_event(mode="section"),))
+
+    record = qg_workflow.review_module(
+        _target(seminar_dir, level="folk", slug="cache-deep-read"),
+        options=qg_workflow.WorkflowOptions(
+            enable_llm=True,
+            reviewer_model_id="test-reviewer",
+            reviewer_family="test-family",
+        ),
+        reviewer=reviewer,
+        store_path=db_path,
+    )
+
+    latest = llm_qg_store.latest_llm_qg("folk", "cache-deep-read", path=db_path)
+    assert _tier(record, 2)["status"] == "ran"
+    assert "cache_regate" not in _tier(record, 2)
+    assert calls == 1
+    assert latest is not None
+    assert latest.run_id != old.run_id
+
+
+def test_pre_change_cache_row_without_tool_events_is_marked_unavailable(tmp_path: Path) -> None:
+    seminar_dir = _write_module(
+        tmp_path,
+        level="folk",
+        slug="legacy-cache",
+        module_md="# Семінар\n\nУчасники аналізують джерела спокійно й уважно.\n",
+    )
+    db_path = tmp_path / "qg.db"
+    prompt = llm_reviewer.build_reviewer_prompt(
+        level="folk",
+        slug="legacy-cache",
+        module_md=(seminar_dir / "module.md").read_text(encoding="utf-8"),
+        activities_yaml=(seminar_dir / "activities.yaml").read_text(encoding="utf-8"),
+        vocabulary_yaml=(seminar_dir / "vocabulary.yaml").read_text(encoding="utf-8"),
+        resources_yaml=(seminar_dir / "resources.yaml").read_text(encoding="utf-8"),
+    )
+    stored = llm_qg_store.record_llm_qg(
+        level="folk",
+        slug="legacy-cache",
+        module_dir=seminar_dir,
+        payload=qg_workflow._payload_from_findings([]),
+        gate_version=qg_workflow.DEFAULT_GATE_VERSION,
+        prompt_hash=llm_qg_store.prompt_hash_for_text(prompt),
+        checker_version=CHECKER_VERSION,
+        level_policy_family="seminar",
+        reviewer_model="test-reviewer",
+        reviewer_family="test-family",
+        route_name=None,
+        tool_call_count=1,
+        tools_used=("sources_query_wikipedia",),
+        tool_events=(_wiki_event(mode="section"),),
+        source="test",
+        path=db_path,
+    )
+    with sqlite3.connect(db_path) as conn:
+        conn.execute("UPDATE llm_qg_runs SET tool_events_json = NULL WHERE run_id = ?", (stored.run_id,))
+
+    calls = 0
+
+    def reviewer(_target: qg_workflow.ReviewTarget, _prompt: str) -> str:
+        nonlocal calls
+        calls += 1
+        return _seminar_response()
+
+    record = qg_workflow.review_module(
+        _target(seminar_dir, level="folk", slug="legacy-cache"),
+        options=qg_workflow.WorkflowOptions(
+            enable_llm=True,
+            reviewer_model_id="test-reviewer",
+            reviewer_family="test-family",
+        ),
+        reviewer=reviewer,
+        store_path=db_path,
+    )
+
+    tier2 = _tier(record, 2)
+    assert tier2["status"] == "cache_hit"
+    assert tier2["cache_regate"] == "unavailable"
+    assert calls == 0
+
+
+def test_live_and_cache_paths_use_shared_reviewer_gate_helper(tmp_path: Path, monkeypatch: Any) -> None:
+    seminar_dir = _write_module(
+        tmp_path,
+        level="folk",
+        slug="shared-helper",
+        module_md="# Семінар\n\nВеснянки — це весняні обрядові пісні.\n",
+    )
+    db_path = tmp_path / "qg.db"
+    calls: list[bool] = []
+
+    def fake_gate(
+        payload: dict[str, Any],
+        dispatch_meta: dict[str, Any],
+        *,
+        policy_family: str,
+        theatre_retry_available: bool,
+        deep_read_retry_available: bool,
+        retry_unavailable_fails: bool = False,
+    ) -> qg_workflow._ReviewerGateOutcome:
+        calls.append(retry_unavailable_fails)
+        clean_payload = dict(payload)
+        return qg_workflow._ReviewerGateOutcome(
+            payload=clean_payload,
+            findings=[],
+            grounding_gate=llm_reviewer_dispatch.GroundingGateResult(payload=clean_payload),
+        )
+
+    monkeypatch.setattr(qg_workflow, "_run_reviewer_gate_sequence", fake_gate)
+
+    def reviewer(_target: qg_workflow.ReviewTarget, _prompt: str) -> llm_reviewer_dispatch.DispatchResult:
+        return _seminar_dispatch(events=(_wiki_event(mode="section"),))
+
+    first = qg_workflow.review_module(
+        _target(seminar_dir, level="folk", slug="shared-helper"),
+        options=qg_workflow.WorkflowOptions(
+            enable_llm=True,
+            reviewer_model_id="test-reviewer",
+            reviewer_family="test-family",
+        ),
+        reviewer=reviewer,
+        store_path=db_path,
+    )
+    second = qg_workflow.review_module(
+        _target(seminar_dir, level="folk", slug="shared-helper"),
+        options=qg_workflow.WorkflowOptions(
+            enable_llm=True,
+            reviewer_model_id="test-reviewer",
+            reviewer_family="test-family",
+        ),
+        reviewer=None,
+        store_path=db_path,
+    )
+
+    assert _tier(first, 2)["status"] == "ran"
+    assert _tier(second, 2)["status"] == "cache_hit"
+    assert calls == [False, True]
+
+
 def test_tier2_threads_tool_telemetry_into_store(tmp_path: Path) -> None:
     seminar_dir = _write_module(
         tmp_path,
@@ -380,6 +651,16 @@ def test_tier2_threads_tool_telemetry_into_store(tmp_path: Path) -> None:
         module_md="# Семінар\n\nУчасники аналізують джерела спокійно й уважно.\n",
     )
     db_path = tmp_path / "qg.db"
+    events = (
+        _wiki_event(mode="section"),
+        {
+            "tool": "sources_search_heritage",
+            "input": {"query": "Веснянки"},
+            "status": "completed",
+            "tool_call_id": "call_2",
+            "output": "Heritage result",
+        },
+    )
 
     def reviewer(_target: qg_workflow.ReviewTarget, _prompt: str) -> llm_reviewer_dispatch.DispatchResult:
         return llm_reviewer_dispatch.DispatchResult(
@@ -389,6 +670,7 @@ def test_tier2_threads_tool_telemetry_into_store(tmp_path: Path) -> None:
             route_name="opencode_frontier",
             tool_call_count=6,
             tools_used=("sources_query_wikipedia", "sources_search_heritage"),
+            tool_events=events,
         )
 
     record = qg_workflow.review_module(
@@ -407,6 +689,7 @@ def test_tier2_threads_tool_telemetry_into_store(tmp_path: Path) -> None:
     assert stored is not None
     assert stored.tool_call_count == 6
     assert stored.tools_used == ("sources_query_wikipedia", "sources_search_heritage")
+    assert stored.tool_events == events
 
 
 def test_summary_only_positive_verdict_after_retry_fails_inadmissible_citations(tmp_path: Path) -> None:

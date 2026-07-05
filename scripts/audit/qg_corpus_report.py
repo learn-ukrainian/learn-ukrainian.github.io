@@ -519,6 +519,7 @@ def _completion_summary(
     completion_counts: Counter[str] = Counter()
     workflow_verdict_counts: Counter[str] = Counter()
     tier2_status_counts: Counter[str] = Counter()
+    cache_regate_counts: Counter[str] = Counter()
     provider_error = 0
     parse_failure = 0
     skipped_budget = 0
@@ -537,6 +538,9 @@ def _completion_summary(
         status = str(tier2.get("status") or "")
         if status:
             tier2_status_counts[status] += 1
+        cache_regate = str(tier2.get("cache_regate") or "")
+        if cache_regate:
+            cache_regate_counts[cache_regate] += 1
         if status == "provider_error" or workflow_verdict == "PROVIDER_FAILURE":
             provider_error += 1
         if status in {"parse_failure", "schema_failure"} or workflow_verdict in {"PARSE_FAILURE", "SCHEMA_FAILURE"}:
@@ -546,6 +550,7 @@ def _completion_summary(
         "completion_status_counts": dict(sorted(completion_counts.items())),
         "workflow_verdict_counts": dict(sorted(workflow_verdict_counts.items())),
         "tier2_status_counts": dict(sorted(tier2_status_counts.items())),
+        "cache_regate_counts": dict(sorted(cache_regate_counts.items())),
         "skipped_budget": skipped_budget,
         "incomplete": incomplete,
         "provider_error": provider_error,

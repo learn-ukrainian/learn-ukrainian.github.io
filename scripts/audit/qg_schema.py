@@ -86,6 +86,9 @@ FACT_CHECK_VERDICTS = frozenset(
 )
 MAX_REVIEWER_FACT_CHECKS = 40
 GROUNDING_REQUIRED_DIMENSIONS = frozenset({"seminar_sensitivity", "decolonization"})
+# Keep in exact sync with scripts/audit/prompts/reviewer_prompt.md. The prompt's
+# earlier broader "russicism/contact" wording was narrowed because the schema
+# exposes no separate russicism or heritage-contact issue_class.
 GROUNDING_REQUIRED_SEMINAR_CLASSES = frozenset({"calque", "false_friend"})
 GROUNDING_KEYS = frozenset({"tool", "query", "evidence_excerpt", "tool_call_id"})
 

@@ -31,6 +31,7 @@ CONTENT_FILES = ("module.md", "activities.yaml", "vocabulary.yaml", "resources.y
 EVIDENCE_SCHEMA_VERSION = "llm_qg_evidence.v1"
 SUPPORTED_EVIDENCE_GATE_VERSIONS = frozenset({"v7.llm_qg.1"})
 DIMENSION_ORDER = ("pedagogical", "naturalness", "decolonization", "engagement", "tone")
+TOOL_EVENT_KEYS = ("tool", "input", "status", "tool_call_id", "output")
 
 
 @dataclass(frozen=True, slots=True)
@@ -53,6 +54,7 @@ class StoredQG:
     tool_call_count: int = 0
     tools_used: tuple[str, ...] = ()
     route_name: str | None = None
+    tool_events: tuple[dict[str, Any], ...] | None = None
 
     def is_current_for(self, module_dir: Path) -> bool:
         return self.content_sha == content_sha_for_module(module_dir)
@@ -197,6 +199,7 @@ def _ensure_composite_columns(conn: sqlite3.Connection) -> None:
         "route_name": "TEXT",
         "tool_call_count": "INTEGER",
         "tools_used_json": "TEXT",
+        "tool_events_json": "TEXT",
     }
     for name, column_type in additions.items():
         if name not in existing:
@@ -237,6 +240,16 @@ def _finding_category(item: dict[str, Any]) -> Any:
     )
 
 
+def _normalize_tool_events(tool_events: Sequence[Mapping[str, Any]]) -> tuple[dict[str, Any], ...]:
+    """Return the replayable subset of normalized dispatch tool events."""
+    normalized: list[dict[str, Any]] = []
+    for event in tool_events:
+        if not isinstance(event, Mapping):
+            continue
+        normalized.append({key: event.get(key) for key in TOOL_EVENT_KEYS})
+    return tuple(normalized)
+
+
 def record_llm_qg(
     *,
     level: str,
@@ -252,6 +265,7 @@ def record_llm_qg(
     route_name: str | None = None,
     tool_call_count: int = 0,
     tools_used: Sequence[str] = (),
+    tool_events: Sequence[Mapping[str, Any]] = (),
     source: str = "pipeline",
     run_id: str | None = None,
     path: Path | None = None,
@@ -267,6 +281,7 @@ def record_llm_qg(
     findings = _iter_findings(payload)
     tools_used_tuple = tuple(str(tool) for tool in tools_used)
     tool_call_count_int = int(tool_call_count)
+    normalized_tool_events = _normalize_tool_events(tool_events)
 
     with closing(connect_sqlite(str(resolved))) as conn:
         conn.execute("PRAGMA foreign_keys = ON")
@@ -277,11 +292,11 @@ def record_llm_qg(
                 run_id, created_at, level, slug, content_sha, gate_version,
                 prompt_hash, checker_version, level_policy_family,
                 reviewer_model, reviewer_family, route_name,
-                tool_call_count, tools_used_json,
+                tool_call_count, tools_used_json, tool_events_json,
                 source, verdict, terminal_verdict,
                 min_score, min_dim, payload_json
             )
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ON CONFLICT(run_id) DO UPDATE SET
                 created_at = excluded.created_at,
                 level = excluded.level,
@@ -296,6 +311,7 @@ def record_llm_qg(
                 route_name = excluded.route_name,
                 tool_call_count = excluded.tool_call_count,
                 tools_used_json = excluded.tools_used_json,
+                tool_events_json = excluded.tool_events_json,
                 source = excluded.source,
                 verdict = excluded.verdict,
                 terminal_verdict = excluded.terminal_verdict,
@@ -318,6 +334,7 @@ def record_llm_qg(
                 route_name,
                 tool_call_count_int,
                 _json_dumps(list(tools_used_tuple)),
+                _json_dumps(list(normalized_tool_events)),
                 source,
                 aggregate.get("verdict"),
                 aggregate.get("terminal_verdict"),
@@ -366,6 +383,7 @@ def record_llm_qg(
         tool_call_count=tool_call_count_int,
         tools_used=tools_used_tuple,
         route_name=route_name,
+        tool_events=normalized_tool_events,
     )
 
 
@@ -390,6 +408,19 @@ def _tools_used_from_row(row: sqlite3.Row) -> tuple[str, ...]:
     return tuple(str(item) for item in loaded)
 
 
+def _tool_events_from_row(row: sqlite3.Row) -> tuple[dict[str, Any], ...] | None:
+    raw = _row_key(row, "tool_events_json")
+    if raw is None:
+        return None
+    try:
+        loaded = json.loads(str(raw))
+    except (json.JSONDecodeError, ValueError):
+        return None
+    if not isinstance(loaded, list):
+        return None
+    return _normalize_tool_events(item for item in loaded if isinstance(item, Mapping))
+
+
 def _row_to_record(row: sqlite3.Row) -> StoredQG:
     raw_tool_count = _row_key(row, "tool_call_count")
     return StoredQG(
@@ -409,6 +440,7 @@ def _row_to_record(row: sqlite3.Row) -> StoredQG:
         tool_call_count=int(raw_tool_count) if raw_tool_count is not None else 0,
         tools_used=_tools_used_from_row(row),
         route_name=_row_key(row, "route_name"),
+        tool_events=_tool_events_from_row(row),
     )
 
 
