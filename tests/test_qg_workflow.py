@@ -92,6 +92,39 @@ def _seminar_response() -> str:
     )
 
 
+def _wiki_event(
+    *,
+    query: str = "Веснянки",
+    mode: str = "summary",
+    output: str = "Веснянки — це весняні обрядові пісні.",
+    call_id: str = "call_1",
+) -> dict[str, Any]:
+    return {
+        "tool": "sources_query_wikipedia",
+        "input": {"query": query, "mode": mode},
+        "status": "completed",
+        "tool_call_id": call_id,
+        "output": output,
+    }
+
+
+def _seminar_dispatch(
+    *,
+    response_text: str | None = None,
+    events: tuple[dict[str, Any], ...] = (),
+    tool_call_count: int | None = None,
+) -> llm_reviewer_dispatch.DispatchResult:
+    return llm_reviewer_dispatch.DispatchResult(
+        response_text=response_text or _seminar_response(),
+        reviewer_model_id="test-reviewer",
+        reviewer_family="test-family",
+        route_name="opencode_frontier",
+        tool_call_count=len(events) if tool_call_count is None else tool_call_count,
+        tools_used=tuple(dict.fromkeys(str(event["tool"]) for event in events)),
+        tool_events=events,
+    )
+
+
 def _target(module_dir: Path, *, level: str = "b1", slug: str | None = None) -> qg_workflow.ReviewTarget:
     return qg_workflow.ReviewTarget(
         level=level,
@@ -221,6 +254,48 @@ def test_composite_cache_invalidates_on_gate_version_bump(tmp_path: Path) -> Non
     assert calls == 2
 
 
+def test_default_gate_version_v3_invalidates_v2_cache_rows(tmp_path: Path) -> None:
+    assert qg_workflow.DEFAULT_GATE_VERSION == "qg_workflow.v3"
+    module_dir = _write_module(tmp_path)
+    db_path = tmp_path / "qg.db"
+    prompt = llm_reviewer.build_reviewer_prompt(
+        level="b1",
+        slug="clean-module",
+        module_md=(module_dir / "module.md").read_text(encoding="utf-8"),
+        activities_yaml=(module_dir / "activities.yaml").read_text(encoding="utf-8"),
+        vocabulary_yaml=(module_dir / "vocabulary.yaml").read_text(encoding="utf-8"),
+        resources_yaml=(module_dir / "resources.yaml").read_text(encoding="utf-8"),
+    )
+    llm_qg_store.record_llm_qg(
+        level="b1",
+        slug="clean-module",
+        module_dir=module_dir,
+        payload=qg_workflow._payload_from_findings([]),
+        gate_version="qg_workflow.v2",
+        prompt_hash=llm_qg_store.prompt_hash_for_text(prompt),
+        checker_version=CHECKER_VERSION,
+        level_policy_family="b1_plus",
+        reviewer_model="test-reviewer",
+        path=db_path,
+    )
+    calls = 0
+
+    def reviewer(_target: qg_workflow.ReviewTarget, _prompt: str) -> str:
+        nonlocal calls
+        calls += 1
+        return _reviewer_response()
+
+    record = qg_workflow.review_module(
+        _target(module_dir),
+        options=qg_workflow.WorkflowOptions(enable_llm=True, reviewer_model_id="test-reviewer"),
+        reviewer=reviewer,
+        store_path=db_path,
+    )
+
+    assert _tier(record, 2)["status"] == "ran"
+    assert calls == 1
+
+
 def test_cache_hit_revalidates_theatre_gate_on_stored_payload(tmp_path: Path) -> None:
     seminar_dir = _write_module(
         tmp_path,
@@ -332,6 +407,147 @@ def test_tier2_threads_tool_telemetry_into_store(tmp_path: Path) -> None:
     assert stored is not None
     assert stored.tool_call_count == 6
     assert stored.tools_used == ("sources_query_wikipedia", "sources_search_heritage")
+
+
+def test_summary_only_positive_verdict_after_retry_fails_inadmissible_citations(tmp_path: Path) -> None:
+    seminar_dir = _write_module(
+        tmp_path,
+        level="folk",
+        slug="summary-only-positive",
+        module_md="# Семінар\n\nВеснянки — це весняні обрядові пісні.\n",
+    )
+    summary_event = _wiki_event(mode="summary")
+    calls: list[str] = []
+
+    def reviewer(_target: qg_workflow.ReviewTarget, prompt: str) -> llm_reviewer_dispatch.DispatchResult:
+        calls.append(prompt)
+        return _seminar_dispatch(events=(summary_event,))
+
+    db_path = tmp_path / "qg.db"
+    record = qg_workflow.review_module(
+        _target(seminar_dir, level="folk", slug="summary-only-positive"),
+        options=qg_workflow.WorkflowOptions(
+            enable_llm=True,
+            reviewer_model_id="test-reviewer",
+            reviewer_family="test-family",
+        ),
+        reviewer=reviewer,
+        store_path=db_path,
+    )
+
+    tier = _tier(record, 2)
+    assert tier["status"] == "inadmissible_citations"
+    assert tier["inadmissible_positive_verdicts"] == 1
+    assert tier["invalid_fact_checks"] == 0
+    assert record["workflow_verdict"] == "FAIL"
+    assert record["terminal_verdict"] == "FAIL"
+    assert len(calls) == 2
+    assert "Deep Read Required" in calls[1]
+
+    gate_findings = [
+        finding
+        for dimension in record["dimensions"].values()
+        for finding in dimension["findings"]
+        if finding["issue_id"] == "LLM_REVIEWER_GROUNDING_GATE"
+    ]
+    assert gate_findings[0]["message"] == (
+        "reviewer confirmed/refuted claims on summary-only wiki evidence after the forced "
+        "deep-read retry — factual sweep uncertified"
+    )
+    stored = llm_qg_store.latest_llm_qg("folk", "summary-only-positive", path=db_path)
+    assert stored is not None
+    assert stored.payload["inadmissible_positive_verdicts"] == 1
+    fact_check = stored.payload["fact_checks"][0]
+    assert fact_check["verdict"] == "UNVERIFIED_INSUFFICIENT_SEARCH"
+    assert fact_check["original_verdict"] == "CONFIRMED"
+    assert fact_check["admissibility_downgraded"] is True
+
+
+def test_required_ungrounded_finding_status_precedes_inadmissible_citations(tmp_path: Path) -> None:
+    seminar_dir = _write_module(
+        tmp_path,
+        level="folk",
+        slug="ungrounded-plus-summary",
+        module_md="# Семінар\n\nВеснянки — це весняні обрядові пісні.\n",
+    )
+    summary_event = _wiki_event(mode="summary")
+    required_finding = {
+        "issue_id": "SEMINAR_FACTUAL_DETAIL",
+        "issue_class": "other",
+        "dimension": "seminar_sensitivity",
+        "severity": "warning",
+        "excerpt": "Веснянки",
+        "message": "Fabricated grounding should keep the ungrounded status.",
+        "grounding": {
+            "tool": "sources_query_wikipedia",
+            "query": "Веснянки",
+            "evidence_excerpt": "вигаданий фрагмент",
+            "tool_call_id": "call_1",
+        },
+    }
+    response = json.dumps(
+        {
+            "findings": [required_finding],
+            "fact_checks": json.loads(_seminar_response())["fact_checks"],
+            "evidence_gaps": [],
+        },
+        ensure_ascii=False,
+    )
+    calls = 0
+
+    def reviewer(_target: qg_workflow.ReviewTarget, _prompt: str) -> llm_reviewer_dispatch.DispatchResult:
+        nonlocal calls
+        calls += 1
+        return _seminar_dispatch(response_text=response, events=(summary_event,))
+
+    record = qg_workflow.review_module(
+        _target(seminar_dir, level="folk", slug="ungrounded-plus-summary"),
+        options=qg_workflow.WorkflowOptions(
+            enable_llm=True,
+            reviewer_model_id="test-reviewer",
+            reviewer_family="test-family",
+        ),
+        reviewer=reviewer,
+        store_path=tmp_path / "qg.db",
+    )
+
+    tier = _tier(record, 2)
+    assert tier["status"] == llm_reviewer_dispatch.UNGROUNDED_FINDINGS
+    assert tier["inadmissible_positive_verdicts"] == 1
+    assert calls == 2
+
+
+def test_tier2_theatre_then_deep_read_retry_stays_within_three_calls(tmp_path: Path) -> None:
+    seminar_dir = _write_module(
+        tmp_path,
+        level="folk",
+        slug="retry-budget",
+        module_md="# Семінар\n\nВеснянки — це весняні обрядові пісні.\n",
+    )
+    summary_event = _wiki_event(mode="summary")
+    calls: list[str] = []
+
+    def reviewer(_target: qg_workflow.ReviewTarget, prompt: str) -> llm_reviewer_dispatch.DispatchResult:
+        calls.append(prompt)
+        if len(calls) == 1:
+            return _seminar_dispatch(tool_call_count=0)
+        return _seminar_dispatch(events=(summary_event,))
+
+    record = qg_workflow.review_module(
+        _target(seminar_dir, level="folk", slug="retry-budget"),
+        options=qg_workflow.WorkflowOptions(
+            enable_llm=True,
+            reviewer_model_id="test-reviewer",
+            reviewer_family="test-family",
+        ),
+        reviewer=reviewer,
+        store_path=tmp_path / "qg.db",
+    )
+
+    assert _tier(record, 2)["status"] == "inadmissible_citations"
+    assert len(calls) == 3
+    assert "Tools Required" in calls[1]
+    assert "Deep Read Required" in calls[2]
 
 
 def test_budget_exhaustion_emits_skipped_budget_and_incomplete(tmp_path: Path) -> None:
