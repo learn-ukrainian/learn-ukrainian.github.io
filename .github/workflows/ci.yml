@@ -927,6 +927,10 @@ jobs:
       working-directory: site
       run: npx playwright install --with-deps chromium
 
+    - name: Build site for Playwright preview
+      working-directory: site
+      run: npm run build
+
     - name: Run Playwright E2E
       working-directory: site
       run: npx playwright test
