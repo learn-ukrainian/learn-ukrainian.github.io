@@ -82,6 +82,37 @@ persona:
   role: Модератор семінару, що руйнує чорно-білі оцінки та змушує студентів бачити складність і парадокси історії
   voice: Nuanced-Historian
 phase: BIO.2
+readings:
+- title: 'Юрій I Львович: Енциклопедія історії України'
+  language: uk
+  genre: encyclopedia
+  source_type: reference
+  role: context
+  source_url: 'http://history.org.ua/?termin=Yuriy_Lvovych'
+  license: copyright
+  hosting: link-only
+  cefr_min: C1
+  learner_task: 'Зрозуміти значення титулу Короля Русі та заснування митрополії.'
+- title: 'Королівство Русі (Вікіпедія)'
+  language: uk
+  genre: encyclopedia
+  source_type: reference
+  role: context
+  source_url: 'https://uk.wikipedia.org/wiki/Королівство_Русі'
+  license: CC-BY-SA
+  hosting: link-only
+  cefr_min: B2
+  learner_task: 'Дослідити геополітичний статус Королівства в часи Юрія І.'
+- title: 'Галицька митрополія (Вікіпедія)'
+  language: uk
+  genre: encyclopedia
+  source_type: reference
+  role: context
+  source_url: 'https://uk.wikipedia.org/wiki/Галицька_митрополія'
+  license: CC-BY-SA
+  hosting: link-only
+  cefr_min: B2
+  learner_task: 'Ознайомитись з церковною незалежністю держави.'
 references:
 - title: Юрій I Львович (Wikipedia UA)
   name: Юрій I Львович (Wikipedia UA)
@@ -102,7 +133,7 @@ sequence: 12
 slug: yuriy-lvovych
 subtitle: 'Yuriy I Lvovych: The Last King of Rus'''
 title: 'Юрій I Львович: Останній Король Русі'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: пристрій для відбитку офіційного знака або сам відбиток, що підтверджує автентичність документа
   pos: ж.

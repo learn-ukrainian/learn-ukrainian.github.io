@@ -78,6 +78,37 @@ persona:
   role: Літописець, що бачив і тріумф коронації, і приниження в Орді. Розповідає історію без прикрас, з болем і гордістю.
   voice: RoyalChronicler-Realist
 phase: BIO.1
+readings:
+- title: 'Данило Галицький: Енциклопедія історії України'
+  language: uk
+  genre: encyclopedia
+  source_type: reference
+  role: context
+  source_url: 'http://history.org.ua/?termin=Danylo_Halyckyj'
+  license: copyright
+  hosting: link-only
+  cefr_min: C1
+  learner_task: 'Ознайомитись з етапами правління та політичною стратегією короля.'
+- title: 'Галицько-Волинський літопис (про Данила)'
+  language: uk
+  genre: chronicle
+  source_type: primary
+  role: source-analysis
+  source_url: 'http://litopys.org.ua/litop/lit.htm'
+  license: public-domain
+  hosting: excerpt-only
+  cefr_min: C1
+  learner_task: 'Проаналізувати опис коронації та взаємин з Ордою.'
+- title: 'Данило Романович (Вікіпедія)'
+  language: uk
+  genre: encyclopedia
+  source_type: reference
+  role: context
+  source_url: 'https://uk.wikipedia.org/wiki/Данило_Романович'
+  license: CC-BY-SA
+  hosting: link-only
+  cefr_min: B2
+  learner_task: 'Перевірити основні віхи державотворення.'
 references:
 - title: Danylo Halytskyi
   note: Compiled from Hrushevsky, Plokhy, Hrytsak — key facts and interpretations
@@ -97,7 +128,7 @@ sequence: 10
 slug: danylo-halytskyi
 subtitle: The King Who Chose the West
 title: 'Данило Галицький: Король Русі'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: урочиста церемонія покладання корони на монарха, що символізує початок його правління
   pos: ж.

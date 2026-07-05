@@ -80,6 +80,37 @@ persona:
   role: Модератор семінару, який спонукає студентів відійти від чорно-білих оцінок і побачити в Леві Даниловичі складну історичну постать, що діяла в екстремальних умовах.
   voice: Nuanced-Historian
 phase: BIO.2
+readings:
+- title: 'Лев Данилович: Енциклопедія історії України'
+  language: uk
+  genre: encyclopedia
+  source_type: reference
+  role: context
+  source_url: 'http://history.org.ua/?termin=Lev_Danylovych'
+  license: copyright
+  hosting: link-only
+  cefr_min: C1
+  learner_task: 'Вивчити політичну спадщину та містобудівну діяльність князя.'
+- title: 'Галицько-Волинський літопис (діяльність Лева)'
+  language: uk
+  genre: chronicle
+  source_type: primary
+  role: source-analysis
+  source_url: 'http://litopys.org.ua/litop/lit.htm'
+  license: public-domain
+  hosting: excerpt-only
+  cefr_min: C1
+  learner_task: 'Порівняти літописні оцінки політики Лева з діями Данила.'
+- title: 'Лев I Данилович (Вікіпедія)'
+  language: uk
+  genre: encyclopedia
+  source_type: reference
+  role: context
+  source_url: 'https://uk.wikipedia.org/wiki/Лев_I_Данилович'
+  license: CC-BY-SA
+  hosting: link-only
+  cefr_min: B2
+  learner_task: 'Ознайомитись із роллю Лева в розвитку Львова.'
 references:
 - title: Lev Danylovych
   note: Compiled research based on Hrushevsky, primary chronicles, and modern analysis.
@@ -99,7 +130,7 @@ sequence: 11
 slug: lev-danylovych
 subtitle: 'Lev Danylovych: Builder of Lviv'
 title: 'Лев Данилович: Будівничий Львова'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: головне місто держави, де перебувають вищі органи влади й управління
   pos: ж.
