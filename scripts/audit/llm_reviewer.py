@@ -8,7 +8,7 @@ Conforms to the canonical schema version ua_contact_quality_evidence.v1.
 from __future__ import annotations
 
 import json
-from collections.abc import Sequence
+from collections.abc import Mapping, Sequence
 from pathlib import Path
 from typing import Any
 
@@ -173,22 +173,18 @@ def parse_and_evaluate_llm_response(
     activities_yaml: str = "",
     vocabulary_yaml: str = "",
     resources_yaml: str = "",
-) -> list[dict[str, Any]]:
+    *,
+    return_payload: bool = False,
+) -> list[dict[str, Any]] | dict[str, Any]:
     """Parse JSON response from the LLM and map findings to qg_schema."""
     findings: list[dict[str, Any]] = []
 
     try:
         # Simple extraction of JSON from raw response text in case it has markdown wrappers
-        clean_text = response_text.strip()
-        if "```json" in clean_text:
-            clean_text = clean_text.split("```json")[1].split("```")[0].strip()
-        elif "```" in clean_text:
-            clean_text = clean_text.split("```")[1].split("```")[0].strip()
-
-        data = json.loads(clean_text)
+        data = _json_payload_from_response(response_text)
     except Exception as e:
         # Return a parsing defect finding if JSON parsing completely fails
-        return [
+        parse_findings = [
             qg_schema.build_finding(
                 issue_id="LLM_RESPONSE_PARSE_FAILURE",
                 issue_class="other",
@@ -206,10 +202,14 @@ def parse_and_evaluate_llm_response(
                 }
             )
         ]
+        if return_payload:
+            return {"findings": parse_findings, "fact_checks": [], "evidence_gaps": []}
+        return parse_findings
 
     raw_findings = data.get("findings", [])
     if not isinstance(raw_findings, list):
-        return findings
+        payload = {"findings": findings, "fact_checks": [], "evidence_gaps": []}
+        return payload if return_payload else findings
 
     for item in raw_findings:
         if not isinstance(item, dict):
@@ -222,6 +222,7 @@ def parse_and_evaluate_llm_response(
         excerpt = item.get("excerpt", "").strip()
         message = item.get("message", "No message provided.")
         suggested_replacement = item.get("suggested_replacement")
+        grounding = item.get("grounding") if isinstance(item.get("grounding"), dict) else None
 
         # Decide which file this excerpt lives in
         file_name = "module.md"
@@ -257,6 +258,7 @@ def parse_and_evaluate_llm_response(
                 confidence="llm_judgment",
                 disposition="defect",
                 suggested_replacement=suggested_replacement,
+                grounding=grounding,
                 detector={
                     "adapter": "llm_reviewer_evaluator",
                     "rule_id": f"llm_{issue_id.lower()}",
@@ -268,4 +270,32 @@ def parse_and_evaluate_llm_response(
             )
         )
 
-    return findings
+    payload = {
+        "findings": findings,
+        "fact_checks": _list_of_mappings(data.get("fact_checks")),
+        "evidence_gaps": _list_of_mappings(data.get("evidence_gaps")),
+    }
+    return payload if return_payload else findings
+
+
+def validate_reviewer_payload(payload: Mapping[str, Any], policy_family: str | None) -> None:
+    """Validate a parsed reviewer payload before persistence or cache reuse."""
+    qg_schema.validate_reviewer_payload(payload, policy_family)
+
+
+def _json_payload_from_response(response_text: str) -> Mapping[str, Any]:
+    clean_text = response_text.strip()
+    if "```json" in clean_text:
+        clean_text = clean_text.split("```json")[1].split("```")[0].strip()
+    elif "```" in clean_text:
+        clean_text = clean_text.split("```")[1].split("```")[0].strip()
+    data = json.loads(clean_text)
+    if not isinstance(data, Mapping):
+        raise ValueError("reviewer response JSON must be an object")
+    return data
+
+
+def _list_of_mappings(value: Any) -> list[dict[str, Any]]:
+    if not isinstance(value, list):
+        return []
+    return [dict(item) for item in value if isinstance(item, Mapping)]

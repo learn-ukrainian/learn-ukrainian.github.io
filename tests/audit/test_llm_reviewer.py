@@ -1,6 +1,8 @@
 from __future__ import annotations
 
-from scripts.audit import llm_reviewer, qg_schema
+import json
+
+from scripts.audit import llm_reviewer, qg_schema, qg_workflow
 
 # Ground truth bad content text for B1-27
 B1_27_BAD_TEXT = """# Вид у наказовому способі
@@ -213,3 +215,73 @@ def test_llm_response_parse_failure_emits_valid_finding() -> None:
     assert findings[0]["dimension"] == "mechanics"
     assert findings[0]["severity"] == "critical"
     qg_schema.validate_finding(findings[0])
+
+
+def test_reviewer_payload_round_trip_preserves_grounding_fact_checks_and_gaps() -> None:
+    module = """# Веснянки
+
+Веснянки — це весняні обрядові пісні.
+"""
+    response = json.dumps(
+        {
+            "findings": [
+                {
+                    "issue_id": "SEMINAR_FACTUAL_DETAIL",
+                    "issue_class": "other",
+                    "dimension": "seminar_sensitivity",
+                    "severity": "warning",
+                    "excerpt": "весняні обрядові пісні",
+                    "message": "Grounded seminar finding.",
+                    "grounding": {
+                        "tool": "sources_query_wikipedia",
+                        "query": "Веснянки",
+                        "evidence_excerpt": "весняні обрядові пісні",
+                        "tool_call_id": "call_1",
+                    },
+                }
+            ],
+            "fact_checks": [
+                {
+                    "claim": "Веснянки — це весняні обрядові пісні.",
+                    "verdict": "CONFIRMED",
+                    "grounding": {
+                        "tool": "sources_query_wikipedia",
+                        "query": "Веснянки",
+                        "evidence_excerpt": "весняні обрядові пісні",
+                        "tool_call_id": "call_1",
+                    },
+                    "deep_read_attempted": False,
+                    "budget_exhausted": False,
+                }
+            ],
+            "evidence_gaps": [
+                {
+                    "claim": "Гаї були прикрашені стрічками.",
+                    "suspected_issue": "Unattested ritual detail.",
+                    "searches": ["sources_search_text: веснянки гаї стрічками"],
+                    "status": "unresolved",
+                    "reason": "No attestation in required sources.",
+                }
+            ],
+        },
+        ensure_ascii=False,
+    )
+
+    parsed = llm_reviewer.parse_and_evaluate_llm_response(
+        response,
+        module_md=module,
+        return_payload=True,
+    )
+    assert isinstance(parsed, dict)
+    payload = qg_workflow._payload_from_reviewer_payload(parsed)
+    llm_reviewer.validate_reviewer_payload(payload, "seminar")
+
+    assert payload["findings"][0]["grounding"] == {
+        "tool": "sources_query_wikipedia",
+        "query": "Веснянки",
+        "evidence_excerpt": "весняні обрядові пісні",
+        "tool_call_id": "call_1",
+    }
+    assert payload["fact_checks"][0]["verdict"] == "CONFIRMED"
+    assert payload["fact_checks"][0]["grounding"]["tool_call_id"] == "call_1"
+    assert payload["evidence_gaps"][0]["searches"] == ["sources_search_text: веснянки гаї стрічками"]

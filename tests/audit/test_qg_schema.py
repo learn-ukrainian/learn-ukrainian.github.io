@@ -134,6 +134,78 @@ def test_semantic_false_friend_finding_carries_sense_context() -> None:
     }
 
 
+def test_grounded_finding_required_for_seminar_contact_classes() -> None:
+    finding = qg_schema.build_finding(
+        issue_id="SEMINAR_CALQUE",
+        issue_class="calque",
+        dimension="contact_calque",
+        severity="warning",
+        file="module.md",
+        line=3,
+        span={"start": 0, "end": 5},
+        excerpt="калька",
+        message="Seminar contact judgment needs evidence.",
+    )
+
+    with pytest.raises(ValueError, match="requires grounding"):
+        qg_schema.validate_grounded_finding(finding, "seminar")
+
+    finding["grounding"] = {
+        "tool": "sources_search_heritage",
+        "query": "калька",
+        "evidence_excerpt": "калька",
+        "tool_call_id": "call_1",
+    }
+    qg_schema.validate_grounded_finding(finding, "seminar")
+    qg_schema.validate_grounded_finding(finding, "b1_plus")
+
+
+def test_reviewer_payload_validates_fact_check_verdicts_and_length_cap() -> None:
+    payload = {
+        "findings": [],
+        "fact_checks": [
+            {
+                "claim": "Веснянки є весняними обрядовими піснями.",
+                "verdict": "CONFIRMED",
+                "grounding": {
+                    "tool": "sources_query_wikipedia",
+                    "query": "Веснянки",
+                    "evidence_excerpt": "обрядових пісень",
+                    "tool_call_id": "call_1",
+                },
+            }
+        ],
+        "evidence_gaps": [
+            {
+                "claim": "Немає підтвердження.",
+                "suspected_issue": "Unattested ritual detail.",
+                "searches": ["sources_search_text: веснянки гаї"],
+                "status": "unresolved",
+                "reason": "No attestation in required sources.",
+            }
+        ],
+    }
+    qg_schema.validate_reviewer_payload(payload, "seminar")
+
+    bad_verdict = {**payload, "fact_checks": [{**payload["fact_checks"][0], "verdict": "UNVERIFIED"}]}
+    with pytest.raises(ValueError, match=r"unsupported fact_check\.verdict"):
+        qg_schema.validate_reviewer_payload(bad_verdict, "seminar")
+
+    too_many = {
+        **payload,
+        "fact_checks": [
+            {
+                "claim": f"claim {idx}",
+                "verdict": "UNVERIFIED_INSUFFICIENT_SEARCH",
+                "budget_exhausted": True,
+            }
+            for idx in range(qg_schema.MAX_REVIEWER_FACT_CHECKS + 1)
+        ],
+    }
+    with pytest.raises(ValueError, match="exceeds cap"):
+        qg_schema.validate_reviewer_payload(too_many, "seminar")
+
+
 def test_evidence_record_validates_nested_findings_and_keeps_legacy_versions() -> None:
     finding = qg_schema.build_ua_gec_finding(
         error="на протязі",
