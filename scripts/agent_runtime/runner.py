@@ -1923,8 +1923,11 @@ def invoke(
 
     substitution = parse.substitution
     record_model = telemetry.model
+    # isinstance guard mirrors _safe_substitution_record: adapters (and test
+    # mocks) may hand back arbitrary objects; only a real dict payload may
+    # override resolved telemetry.
     if (
-        substitution
+        isinstance(substitution, dict)
         and substitution.get("substituted")
         and substitution.get("actual_model")
     ):
