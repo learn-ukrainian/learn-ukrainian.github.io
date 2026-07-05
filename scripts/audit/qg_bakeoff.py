@@ -101,6 +101,27 @@ ProviderRunner = Callable[
 ]
 
 
+def _lenient_first_json_object(response_text: str) -> Mapping[str, Any] | None:
+    """Parse the FIRST JSON object from a response with trailing garbage.
+
+    Measured live (deepseek-v4-flash): a valid payload followed by extra text
+    ("Extra data: char 7498"). JSON hygiene is a contract defect worth
+    counting, not a reason to void the fact-check measurement. Returns None
+    when no leading object parses.
+    """
+    text = response_text.strip()
+    if "```json" in text:
+        text = text.split("```json", 1)[1]
+    elif text.startswith("```"):
+        text = text.split("```", 1)[1]
+    text = text.lstrip()
+    try:
+        payload, _end = json.JSONDecoder().raw_decode(text)
+    except json.JSONDecodeError:
+        return None
+    return payload if isinstance(payload, Mapping) else None
+
+
 def require_offline_opt_in() -> None:
     """Refuse CI and require explicit local experiment opt-in."""
     if os.environ.get("CI"):
@@ -336,6 +357,7 @@ def run_one(
         "status": gate_result["status"],
         "workflow_verdict": gate_result["workflow_verdict"],
         "findings_schema_invalid": bool(gate_result.get("findings_schema_invalid")),
+        "response_parse_lenient": bool(gate_result.get("response_parse_lenient")),
         "attempt_count": gate_result["attempt_count"],
         "dispatch": dispatch,
         "gate_outcomes": gate_outcomes,
@@ -563,12 +585,17 @@ def _invoke_and_gate(
         # (cursor review of #4458): an over-budget run hard-fails identically
         # in the harness and in live gating.
         llm_reviewer_dispatch.enforce_tool_budget(dispatch)
+        response_parse_lenient = False
         try:
             payload = dict(llm_reviewer_dispatch._json_payload_from_response(result.response_text))
         except ValueError as exc:
-            # Preserve what the model actually said — the first live run left
-            # only "Expecting value: char 0" with no way to diagnose offline.
-            raise BakeoffCellError(str(exc), response_head=result.response_text[:2000]) from exc
+            lenient = _lenient_first_json_object(result.response_text)
+            if lenient is None:
+                # Preserve what the model actually said — the first live run
+                # left only "Expecting value: char 0", undiagnosable offline.
+                raise BakeoffCellError(str(exc), response_head=result.response_text[:2000]) from exc
+            payload = dict(lenient)
+            response_parse_lenient = True
         # MEASUREMENT-VALIDITY SPLIT (live gemma cells, 2026-07-05): the bakeoff
         # measures FACT-CHECK quality; strict `findings` schema compliance is an
         # ORTHOGONAL axis. gemma emitted valid fact_checks with non-conforming
@@ -675,6 +702,7 @@ def _invoke_and_gate(
             "dispatch": dispatch,
             "payload": payload,
             "findings_schema_invalid": findings_schema_invalid,
+            "response_parse_lenient": response_parse_lenient,
             "gate_outcomes": {
                 "attempts": attempts,
                 "theatre": {"status": "passed", "retried": theatre_retried},
@@ -683,6 +711,7 @@ def _invoke_and_gate(
                 "grounding": grounding,
                 "factual_sweep": {"incomplete": sweep_incomplete},
                 "findings_schema_invalid": findings_schema_invalid,
+                "response_parse_lenient": response_parse_lenient,
             },
         }
 

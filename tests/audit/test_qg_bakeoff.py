@@ -615,3 +615,80 @@ def test_nonconforming_findings_counted_not_fatal(tmp_path: Path, monkeypatch: p
     bad_route = qg_bakeoff.bakeoff_route_for_model("openrouter/test/bad-facts-model")
     bad_run = qg_bakeoff.run_one(bad_route, fixture, output_dir=tmp_path, runner=bad_runner)
     assert bad_run.artifact["status"] == "error"
+
+
+def test_trailing_garbage_after_valid_json_is_lenient_parsed_and_flagged(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Live deepseek-v4-flash class: valid payload + trailing text ("Extra data")."""
+    monkeypatch.delenv("CI", raising=False)
+    monkeypatch.setenv("QG_BAKEOFF", "1")
+    fixture = _fixture()
+    payload = {
+        "findings": [],
+        "fact_checks": [
+            {
+                "claim": "True claim.",
+                "verdict": "CONFIRMED",
+                "grounding": {
+                    "tool": "sources_query_wikipedia",
+                    "query": "True claim",
+                    "evidence_excerpt": "True claim",
+                    "tool_call_id": "call_1",
+                },
+            },
+            {
+                "claim": "Fabricated claim.",
+                "verdict": "UNATTESTED_AFTER_SEARCH",
+                "grounding": {
+                    "tool": "sources_query_wikipedia",
+                    "query": "True claim",
+                    "evidence_excerpt": "Fabricated claim",
+                    "tool_call_id": "call_1",
+                },
+            },
+        ],
+        "evidence_gaps": [],
+    }
+
+    def runner(
+        run_route: llm_reviewer_dispatch.ReviewerRoute,
+        _prompt: str,
+        _task_id: str,
+    ) -> llm_reviewer_dispatch.DispatchResult:
+        return llm_reviewer_dispatch.DispatchResult(
+            response_text=json.dumps(payload) + "\n\nОсь мій аналіз повністю.",
+            reviewer_model_id=run_route.reviewer_model_id,
+            reviewer_family=run_route.reviewer_family,
+            route_name=run_route.route_name,
+            tool_call_count=1,
+            tools_used=("sources_query_wikipedia",),
+            tool_events=(_event(),),
+        )
+
+    route = qg_bakeoff.bakeoff_route_for_model("openrouter/test/trailing-model")
+    run = qg_bakeoff.run_one(route, fixture, output_dir=tmp_path, runner=runner)
+
+    assert run.artifact["status"] != "error"
+    assert run.artifact["response_parse_lenient"] is True
+    assert run.artifact["score"]["model_judgment_score"] == 30
+
+    # Pure prose still fails closed.
+    def prose_runner(
+        run_route: llm_reviewer_dispatch.ReviewerRoute,
+        _prompt: str,
+        _task_id: str,
+    ) -> llm_reviewer_dispatch.DispatchResult:
+        return llm_reviewer_dispatch.DispatchResult(
+            response_text="Жодного JSON тут немає.",
+            reviewer_model_id=run_route.reviewer_model_id,
+            reviewer_family=run_route.reviewer_family,
+            route_name=run_route.route_name,
+            tool_call_count=1,
+            tools_used=("sources_query_wikipedia",),
+            tool_events=(_event(),),
+        )
+
+    prose_route = qg_bakeoff.bakeoff_route_for_model("openrouter/test/prose-only-model")
+    prose_run = qg_bakeoff.run_one(prose_route, fixture, output_dir=tmp_path, runner=prose_runner)
+    assert prose_run.artifact["status"] == "error"
