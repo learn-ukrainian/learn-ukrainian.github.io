@@ -79,6 +79,21 @@ persona:
   role: Історик-джерелознавець, що читає Сулиму крізь ворожі й прихильні джерела й не робить із нього ні пірата, ні бездоганного героя
   voice: Source-Critical Historian
 phase: BIO
+readings:
+- title: "Сулима Іван"
+  source_name: "Енциклопедія історії України"
+  source_url: "https://www.history.org.ua/?termin=Sulyma_I"
+  language: uk
+  type: "encyclopedia_entry"
+  clearance: "public_domain"
+  notes: "Енциклопедична довідка про походження, здобуття Кодака 1635 року та наслідки повстання."
+- title: "Стратегічний задум І. Сулими після зруйнування фортеці Кодак"
+  source_name: "Науковий вісник Чернівецького університету: Історія"
+  source_url: ""
+  language: uk
+  type: "academic_article"
+  clearance: "hosting: reading-needed"
+  notes: "Необхідно підготувати читання-адаптацію фрагментів статті Т. Ковальця про реконструкцію подій після Кодака."
 references:
 - note: 'Стаття ЕІУ (В. Щербак): дрібна шляхта, кошовий отаман, похід на Кодак 1635 року, страта у Варшаві'
   path: https://www.history.org.ua/?termin=Sulyma_I
@@ -106,7 +121,7 @@ sequence: 28
 slug: ivan-sulyma
 subtitle: 'Ivan Sulyma: The Man Who Destroyed Kodak'
 title: 'Іван Сулима: Хто зруйнував Кодак'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: укріплена військова споруда; Кодак збудували, щоб контролювати рух між Січчю та волостю
   pos: ж.
