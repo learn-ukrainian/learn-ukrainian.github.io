@@ -209,6 +209,11 @@ def check_targets(targets: list[ModuleTarget]) -> int:
     print("\nGenerated MDX drift detected. Commit regenerated MDX for:")
     for path in drifted:
         print(f"  - {path.relative_to(PROJECT_ROOT)}")
+    print(
+        "\nHint: if your branch predates generator changes on the base branch (scripts/generate_mdx/*),\n"
+        "merge or rebase onto the base, regenerate the listed modules, and commit the result.\n"
+        "Also verify site/src/data/lexicon-manifest.json matches the pointer (scripts/lexicon/manifest_io.py:load_manifest re-hydrates)."
+    )
     return 1
 
 

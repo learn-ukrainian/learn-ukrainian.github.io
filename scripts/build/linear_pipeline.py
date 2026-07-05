@@ -13131,6 +13131,7 @@ def _extract_plan_pronunciation_video_urls(plan: Mapping[str, Any]) -> list[dict
 
 _HOSTED_READING_VALUES = frozenset({"host", "hosted"})
 _READING_COVERAGE_FLOOR = 4
+_READING_COVERAGE_MIN_STRUCTURED = 1
 _READING_TITLE_STRIP_CHARS = " \t\r\n«»„“”\"'‘’"
 _READING_COVERAGE_BLOCK_RE = re.compile(
     r"^:::primary-reading(?P<attrs>[^\n]*)\n(?P<body>.*?)^:::\s*$",
@@ -13167,6 +13168,21 @@ def _primary_reading_slug_attrs(blocks: Sequence[re.Match[str]]) -> set[str]:
     }
 
 
+def _structured_primary_reading_blocks(blocks: Sequence[re.Match[str]]) -> list[re.Match[str]]:
+    """Return blocks that are both on-site linked and attributed."""
+
+    structured_blocks: list[re.Match[str]] = []
+    for block in blocks:
+        if not _primary_reading_attribution_lines(block.group("body")):
+            continue
+        has_reading_slug = any(
+            match.group("slug").strip() for match in _PRIMARY_READING_SLUG_ATTR_RE.finditer(block.group("attrs"))
+        )
+        if has_reading_slug:
+            structured_blocks.append(block)
+    return structured_blocks
+
+
 def _hosted_plan_readings(plan: Mapping[str, Any]) -> list[dict[str, str]]:
     readings = plan.get("readings")
     if not isinstance(readings, list):
@@ -13200,6 +13216,9 @@ def _reading_coverage_gate(module_text: str, plan: Mapping[str, Any]) -> dict[st
         for line in _primary_reading_attribution_lines(block.group("body"))
     ]
     reading_slug_attrs = _primary_reading_slug_attrs(blocks)
+    structured_blocks = _structured_primary_reading_blocks(blocks)
+    structured_reading_slug_attrs = _primary_reading_slug_attrs(structured_blocks)
+    unstructured_primary_readings = len(blocks) - len(structured_blocks)
 
     missing: list[dict[str, str]] = []
     matched: list[dict[str, str]] = []
@@ -13213,9 +13232,15 @@ def _reading_coverage_gate(module_text: str, plan: Mapping[str, Any]) -> dict[st
         # Source modules can surface generated hosted readings before MDX conversion
         # as a primary-reading directive attribute rather than a rendered link.
         matched_by_directive_attr = bool(slug and slug in reading_slug_attrs)
-        if matched_by_title or matched_by_slug or matched_by_directive_attr:
+        matched_by_structured_directive = bool(slug and slug in structured_reading_slug_attrs)
+        matched_by_on_site_reading = matched_by_structured_directive
+        if level_key != "folk":
+            matched_by_on_site_reading = matched_by_title or matched_by_slug or matched_by_directive_attr
+        if matched_by_on_site_reading:
             matched_by = "title"
-            if matched_by_slug:
+            if matched_by_structured_directive:
+                matched_by = "structured_primary_reading"
+            elif matched_by_slug:
                 matched_by = "reading_link"
             elif matched_by_directive_attr:
                 matched_by = "primary_reading_attr"
@@ -13223,15 +13248,28 @@ def _reading_coverage_gate(module_text: str, plan: Mapping[str, Any]) -> dict[st
         else:
             missing.append(reading)
 
-    passed = not missing
+    missing_on_site_reading = level_key == "folk" and len(structured_reading_slug_attrs) < _READING_COVERAGE_MIN_STRUCTURED
+    passed = not missing and not missing_on_site_reading
     report: dict[str, Any] = {
         "passed": passed,
         "severity": "HARD" if not passed else None,
         "checked": len(hosted_readings),
         "surfaced_primary_readings": len(blocks),
+        "structured_on_site_readings": len(structured_blocks),
+        "unstructured_primary_readings": unstructured_primary_readings,
         "matched_hosted_readings": matched,
         "missing_hosted_readings": missing,
     }
+    if missing_on_site_reading:
+        report["missing_on_site_reading"] = {
+            "severity": "HARD",
+            "message": (
+                "FOLK modules require at least one structured on-site "
+                'primary-reading block with a reading="..." slug and attribution; '
+                "external link-only resources and orphan inline snippets are supplementary only"
+            ),
+            "expected_minimum": _READING_COVERAGE_MIN_STRUCTURED,
+        }
 
     exception = str(plan.get("reading_coverage_exception") or "").strip()
     if len(blocks) < _READING_COVERAGE_FLOOR and not exception:

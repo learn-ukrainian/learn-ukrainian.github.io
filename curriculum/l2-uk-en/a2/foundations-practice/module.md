@@ -6,10 +6,7 @@
 сценарії. Тому урок іде через ситуації, а не через довгий список
 правил.
 
-English rail: this is scenario practice. Imperfective forms keep the
-process or planned activity open; perfective forms mark a completed step
-or a promised single result. Future perfective like `куплю` means "I
-will buy / I will get it done", not "I have already bought".
+**Підказка.** Це практичне заняття за сценаріями. Недоконаний вид дієслова показує відкритий процес або заплановану дію; доконаний вид позначає завершений крок або конкретний результат у майбутньому. Форма майбутнього часу доконаного виду на зразок `куплю` означає «я куплю / я це зроблю» (обіцянка/результат), а не «я вже купив».
 
 ## Сценарій 1 — плануємо новосілля
 

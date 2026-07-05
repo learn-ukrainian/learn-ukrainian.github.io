@@ -167,10 +167,221 @@ perceptual rotation), plus the §5 option-validator. Violations = build red.
   the next item from the §6 selector, not a raw shuffle.
 - Counts use `uaPlural` (locked).
 
+## 9. Drill-type expansion (v4 — GH #4383) — new modes fed by `data/atlas.db` (entry-model v1, #4378)
+
+The 4 live modes drill recognition + one production skill (case cloze). The Atlas enrichment already
+carries data for far more. Decks feed from **`data/atlas.db`** once entry-model SSG lands (plan roadmap
+step 5 / #4385); until then, from the manifest export — the deck **schema** is DB-shaped either way.
+
+**Base eligibility for every mode** (on top of per-mode gates): article `review_state = approved` AND
+`visibility = public` AND `is_practice_eligible` (§2). ⟦codex v4⟧ `is_practice_eligible` (and every
+`is_*_eligible` below) becomes a **deterministic DB-backed predicate** (view or builder-materialised
+column on `data/atlas.db`) — prose-only predicates don't gate anything; missing/unknown ⇒ **false**
+(fail-closed). Everything below inherits the locked invariants:
+SRS-first precedence (§6), one grade per presentation (§4), fail-closed generation (§2/§5/§7),
+seeded/deterministic build (§1), FSRS card unit = `lemmaId + mode` (§1).
+
+| Mode (new) | Atlas data | Fill phase dep. | Eligibility gate | CEFR availability |
+|---|---|---|---|---|
+| `paradigm` — declension/conjugation | `enrichment.morphology.paradigm` (VESUM) | **Phase 1 (local)** | `is_paradigm_eligible` | A2 (chips) · B1+ (typed) |
+| `stress` — stress placement | `enrichment.stress` | **Phase 1 (local)** | `is_stress_eligible` | A1+ |
+| `synonym` — synonym/antonym match | `sections.synonyms` / `sections.antonyms` | antonyms Phase 1 · synonyms **Phase 2 (slovnyk)** | `is_synonym_eligible` | B1+ |
+| `idiom` — idiom→meaning match | `sections.idioms` / phraseologism articles | Phase 1 + Phase 2 | `is_idiom_eligible` | B1+ (curated A2 exceptions) |
+| `heritage` — decolonization pick | `heritage_status.curated_calque` + §6_note corrections | **Phase 1 (curated)** | `is_heritage_eligible` | B1+ (curated A2 exceptions) |
+| `listening` — dictation | `enrichment.pronunciation.ipa` + audio | **DEFERRED** — needs an audio/TTS decision; IPA alone is not a drill. Placeholder only, NOT in v4 scope. | — | — |
+
+### 9.1 `paradigm` — slot production (declension / conjugation)
+
+- **Item**: prompt = lemma + target slot named in Ukrainian («орудний відмінок, однина» / «2-га особа
+  однини, теперішній час»); ⟦agy v4⟧ at A2 the UA term carries an EN abbreviation **subtitle gloss**
+  («instr. sg») — UA-first stays hard (§4a already uses UA case names), the subtitle drops at B1.
+  Answer = the slot form. A2 = chips (options are OTHER slots of the SAME
+  paradigm — inherent same-root distractors; §5 validator applies: unique normalised labels, no
+  answer-position/length tell). B1+ = typed with `czNorm` (stress/apostrophe tolerant, form strict).
+- **Gate `is_paradigm_eligible`**: complete non-defective VESUM paradigm; a slot whose surface form is
+  VESUM-ambiguous (non-discriminative across slots, e.g. syncretic gen.sg=acc.sg) is **skipped
+  per-slot**; < 3 usable slots → word ineligible (fail-closed, consistent with §2).
+- **SRS**: ONE card `lemmaId+paradigm` (not per slot). ⟦codex v4⟧ The card records **per-slot
+  outcomes** (client-side history + §10.1 presentation metadata); rotation biases toward **missed and
+  stale** slots, not plain least-recently-tested — one card must not over-promote on easy slots.
+  Conditional coverage invariant like §6-case: if ≥3 slots eligible, last 8 presentations cover ≥3.
+- **Mastery gate**: production mode → enters only after recognition baseline (generalises the §4 cloze
+  gate to a single **production-gate** shared by `cloze` and `paradigm`).
+- **Wrong-slot scaffold (§4 analog)**: right paradigm, wrong slot → amber case-miss (counts in SRS,
+  first attempt grades); feedback names BOTH slots with the form delta («це давальний: брат**ові**;
+  потрібен орудний: брат**ом**»).
+
+### 9.2 `stress` — stress placement
+
+- **Item**: word rendered unstressed, syllable nuclei tappable; learner taps the stressed vowel.
+  Feedback shows the stressed form (audio later, with `listening`).
+- **Gate `is_stress_eligible`**: ≥2 vowels; **exactly one attested stress position**. Variant-stress and
+  stress-homograph lemmas (насипа́ти/наси́пати aspect pairs) are **excluded** in v1 — meaning-bearing
+  stress is a future advanced drill, not a v1 edge case to guess at (fail-closed).
+- ⟦agy v4⟧ **Light exposure gate** (not the full production-gate): a word enters `stress` only after
+  ≥1 prior presentation in any recognition mode — day-one stress on a never-seen word is blind
+  guessing, but stress is form-learning, so the bar stays minimal. Available from A1.
+- Distractors are inherent (the other syllables) so §5 anti-gaming is trivially satisfied.
+- **SRS**: `lemmaId+stress`.
+
+### 9.3 `synonym` — synonym / antonym match
+
+- **Item**: MC «Оберіть синонім до …» / «Оберіть антонім до …». Polarity (syn/ant) is tracked as §6
+  perceptual variety (like `recallDirection`) — one mode, two felt shapes.
+- **Gate `is_synonym_eligible`**: the target syn/antonym must ITSELF be an approved public atlas
+  article at **≤ learner level** ⟦agy v4: level+1 targets = unlearned words as active answers — no⟧
+  (so it is verified vocabulary, not an unvetted string); ≥3 valid
+  distractors constructible under §5 buckets (same POS, no shared EN-gloss headword with prompt OR
+  answer); pairs whose glosses are near-identical to a distractor's are skipped (validator).
+- **Coverage honesty**: synonyms are slovnyk-sourced → deck grows with fill **Phase 2**; build reports
+  coverage, never pads (§9.7).
+- **SRS**: `lemmaId+synonym` on the PROMPT lemma.
+
+### 9.4 `idiom` — idiom → meaning
+
+- **Item**: MC: idiom prompt → pick the meaning. Meanings in **Ukrainian** (EN gloss as subtitle only —
+  max-immersion rule is non-negotiable), CEFR-graded meaning text.
+- **Gate `is_idiom_eligible`**: idiom carries a curated meaning gloss from Фразеологічний/slovnyk; under
+  entry-model v1 idioms are their own `phraseologism` articles — the drill item links to that article
+  (component-lemma backlink per the entry-model doc). B1+ default; A2 only for curator-flagged
+  transparent idioms.
+- **SRS**: card on the phraseologism article's own id (`idiomArticleId+idiom`).
+
+### 9.5 `heritage` — decolonization drill (mission flagship)
+
+- **Item**: «Оберіть питоме українське слово»: prompt = a reviewed **Ukrainian sentence frame** with
+  the slot (EN meaning as subtitle gloss ONLY — ⟦agy v4⟧ an EN-primary prompt violates max-immersion);
+  options = native form(s) + the russianism/calque + §5-valid distractors. Picking the calque is
+  a scored miss with the **cited correction** as feedback (Антоненко-Давидович + heritage sources —
+  the citation ships in the deck item, verbatim from `heritage_status.§6_note`).
+- **Framing rule (pedagogy, hard)**: the russianism appears ONLY inside this mode, always ⚠️-marked in
+  feedback, NEVER as a flashcard/matching/choice target anywhere else — we drill
+  recognition-and-replacement, we do not teach the calque.
+- **Gate `is_heritage_eligible`**: **curated pairs only, fail-closed** — a `curated_calque` correction
+  with ≥1 citation AND the native alternative is an approved public article. Never generated from raw
+  `russian_shadow` scores (the щитовидка/місцезнаходження rejects are drill items, not targets).
+  ⟦codex v4⟧ "Curated" is a **validated contract, not a JSON convention**: the deck builder consumes a
+  `heritage_pair` schema — `{nativeSlug, calqueLabel, corrections[], citations[] (≥1), sourceFamily}` —
+  schema-validated at build; any pair failing validation is dropped and reported, never emitted.
+- ⟦agy v4⟧ **Availability**: default **B1+** (calque exposure before core vocab is solid = lexical
+  interference); **A2 only for curator-flagged high-frequency pairs whose native form is A-level
+  vocabulary** — the mission-flagship pairs learners actually meet at A2, not the long tail.
+- **SRS**: `nativeLemmaId+heritage` (the native word is what's being learned).
+
+### 9.6 Selector + client integration (amends §6/§8)
+
+- `PracticeMode` union + `PRACTICE_MODES` + `isPracticeMode` in `srs.ts` gain the new modes.
+  ⚠️ Migration ⟦codex v4 — hardened⟧: the current `parseCardKey` remaps ANY unknown mode to
+  `flashcards`; that silently corrupts state for old clients reading new-mode keys (and synced
+  events). Change the contract: only **legacy no-`::` keys** map to `flashcards`; an **explicit
+  unknown mode** is **quarantined** (state preserved untouched, card excluded from scheduling) —
+  never remapped. Adding modes bumps `deckVersion`; ship the parser change BEFORE any new-mode deck.
+- Per-mode debt counters (§6) extend to all modes; session bootstrap covers each AVAILABLE mode once.
+- Sub-queue caps: cloze ~25% stays; `paradigm`+`stress` share a soft ~30% production guideline;
+  `heritage`/`idiom`/`synonym` are scarce → own sub-queues like cloze, lapsed/urgent-due exempt.
+- **Production-gate** (§9.1) is one shared predicate; `stress` and recognition modes bypass it.
+- CEFR mode-availability matrix ships in the deck index per level (client never hardcodes it).
+
+### 9.7 Deck architecture at 250k + coverage gates (amends §1/§3/§7)
+
+- Per-drill shards following the existing split: `lexicon/practice-{mode}.{lvl}.json` (index/lexemes
+  stay shared), lazy-loaded per enabled mode, **CI raw+gzip budget per shard per level**.
+- Builder (`generate_practice_deck.py`, later `scripts/atlas/build_practice_decks.py` reading
+  `data/atlas.db`) emits per (level × mode) coverage %, and the §3 `clozeCoverage` CI gate generalises:
+  **warn on thin decks** for every scarce mode (cloze, synonym, idiom, heritage) with per-mode
+  thresholds; a thin deck WARNS and ships small — it is never padded with unvetted items.
+- ⟦codex v4⟧ **Per-mode option-set validators in CI** — §5's validator is cloze-form-specific; each MC
+  mode gets its own (synonym: register/length balance, no semantic near-duplicate of the answer among
+  distractors; idiom: meaning-text length balance; heritage: no source-label leakage marking the
+  native form, calque never visually distinguishable pre-answer). Violations = build red, like §5.
+- Acceptance (from GH #4383): deck builder consumes `data/atlas.db`; **≥3 new drill types live**
+  (paradigm, stress, heritage are the Phase-1-ready trio); FSRS extended across modes; coverage %
+  reported per level; CI warns on thin decks.
+
+## 10. Practice Hub backend (v4 — GH #4384) — DESIGN ONLY, implementation gated
+
+**Status: design.** Implementation starts only after this section passes fleet review + user go.
+The static path (§1) stays authoritative forever: **no account = exactly today's offline behaviour.**
+The backend is progressive enhancement for accounts + cross-device sync + analytics — never a fork.
+
+### 10.1 Sync model — append-only review-event log (the core decision)
+
+Do NOT sync FSRS state (two offline devices reviewing the same card would clobber each other — LWW on
+scheduler state is wrong by construction). FSRS-6 state is a deterministic fold over the review
+history, so **sync the log, derive the state**:
+
+```
+ReviewEvent {
+  eventId ULID, lemmaId, mode, rating, reviewedAt, deckVersion, clientId,
+  presentation? { slotId?, clozeId?, polarity?, optionSetId? }   // ⟦codex v4⟧ ignored by FSRS;
+}                          // feeds slot rotation / frame no-repeat / coverage after a restore
+```
+
+- Client appends events locally (today: also start recording this log client-side even WITHOUT a
+  backend — cheap, enables history backfill at first login; IndexedDB when > a few MB, per §1).
+- Sync ⟦codex v4 — cursors defined⟧: **upload** = idempotent push, server ACKs per `eventId`
+  (unACKed events re-push); **download** = a **server-assigned monotonic sequence number**
+  (`serverSeq`, stamped at ingest) as the pull cursor — never a `reviewedAt` cursor, which loses
+  late-arriving offline events. Replay through deterministic FSRS-6 → identical state on every
+  device. Conflict-free by construction (append-only set union on `eventId`; idempotent upsert).
+  Snapshots are a fast-restore cache, never authority.
+- ⟦codex v4⟧ **Canonical replay order + clock policy** (determinism is a contract, not a vibe):
+  server stamps `serverReceivedAt` + `serverSeq`; client clocks are validated — `reviewedAt` in the
+  future of `serverReceivedAt` (+ skew window) or absurdly old is **clamped** to `serverReceivedAt`.
+  Replay folds each card's events ordered by `(clampedReviewedAt, eventId)` — both synced fields, so
+  every device folds identically; clamped time is also what FSRS uses for elapsed-interval input.
+- ⟦codex v4⟧ **FSRS params are part of the contract**: scheduler params/settings live in an
+  account-level record with an `fsrsParamsVersion`; replay pins the version. Devices never fold the
+  same log under different parameters (that would fork state exactly like LWW would).
+- `deckVersion` invalidation stays client-side (§1); events from older deck versions replay fine
+  (card key = `lemmaId+mode` is version-stable).
+
+### 10.2 Stack — PocketBase v1 (researched 2026-07-05)
+
+**PocketBase**: single Go binary + SQLite (matches the `atlas.db` ethos), MIT-licensed, self-hostable
+on the smallest VPS/free tier, built-in auth (email OTP/magic-link + OAuth), realtime, admin UI. The
+needed API surface (auth + one append-only collection + one snapshot collection) maps 1:1 — smallest
+possible ops burden for a permanently non-commercial project. **Alternative** if analytics outgrow
+SQLite: Supabase (self-hostable Postgres multi-service stack). ⟦codex v4⟧ The **event log is
+portable; auth/rules/admin are NOT** — so backend v1 ships a **backend-adapter + export contract**
+(full per-user event-log export as JSON, documented restore path, scheduled backups) from day one;
+"migration" means replaying exports into the next stack, and users can always take their data out.
+**Rejected**: Firebase (proprietary, not self-hostable — violates project policy); custom FastAPI
+service (needless bespoke surface for commodity auth+CRUD).
+
+### 10.3 Data model + auth + analytics
+
+- `users` — PocketBase-native. Auth = email OTP/magic-link (+ optional OAuth). Account deletion =
+  hard-delete user + events — ⟦agy v4⟧ enforced at the DB layer (`ON DELETE CASCADE`), NOT via the
+  append-only API rules (which would block it); the client, on deletion or auth-invalidation, purges
+  local scheduling state + the IndexedDB event log.
+- `review_events` — the §10.1 shape; unique `eventId`; indexed `(user, serverSeq)` (the pull cursor)
+  + `(user, reviewedAt)` for analytics; append-only rules
+  (no update/delete via API). ⟦agy v4⟧ Events carry NO userId client-side — the server scopes rows by
+  the authenticated session at upload; pre-login local history uploads on first sync (backfill).
+- `snapshots` — `(user, schemaVersion, blob, updatedAt)` — optional fast-restore.
+- **Analytics** = server-side derivations of the event log ONLY (deck health, per-item difficulty,
+  thin-mode detection feeding §9.7 curation). No third-party trackers; aggregate stats opt-in.
+  ⟦agy v4⟧ PocketBase request logs anonymise/strip client IP + User-Agent (its defaults keep both).
+
+### 10.4 Explicitly out of scope for backend v1 (named so they aren't re-litigated)
+
+Search/data API at 250k entries; live slovnyk/Wikipedia enrichment proxy; server-side FSRS parameter
+optimisation. Each is a v2 candidate behind its own design gate.
+
 ---
 *Revision log: v1 (design locked with user) → v2 folds in the codex/agy/cursor fleet review of
 2026-06-24. v3 applies the codex re-review (5 consistency fixes: hard rules → SRS-subordinate).
 **v3.1 — FLEET RE-REVIEW PASSED** (the mandatory infra-orchestrator fleet-gate is satisfied): codex
 "All 5 are resolved; blocker cleared" (bridge msg 1427, 2026-06-24); agy "v2 correctly resolves all
 my prior findings… no blocker" (bridge msg 1424). Build kickoff AUTHORIZED by the user and dispatched
-to codex as task `practice-hub-pr1b-build` (2026-06-24) — supersedes the empty-placeholder #3777.*
+to codex as task `practice-hub-pr1b-build` (2026-06-24) — supersedes the empty-placeholder #3777.
+**v4 (2026-07-05, GH #4383/#4384)** adds §9 drill-type expansion from `data/atlas.db` (paradigm /
+stress / synonym / idiom / heritage; listening deferred) + §10 Practice Hub backend design
+(event-log sync, PocketBase). §§0–8 are UNCHANGED — v4 extends, it does not reopen the locked
+interaction model. **v4 FLEET REVIEW FOLDED (2026-07-05)**: codex (bridge msg 1831 — 6 blockers:
+DB-backed eligibility predicates, heritage_pair validated contract, parseCardKey quarantine,
+canonical replay order + clock clamps, presentation metadata in events, fsrsParamsVersion; + 3
+non-blockers, 1 nit — ALL folded, marked ⟦codex v4⟧) and agy (bridge msg 1828 — 3 blockers:
+stress exposure gate, A2 metalanguage subtitle, heritage UA-first prompt; + 5 non-blockers, 1 nit —
+folded, marked ⟦agy v4⟧; heritage availability adjudicated to B1+ with curated A2 exceptions).*

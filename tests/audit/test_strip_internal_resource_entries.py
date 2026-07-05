@@ -57,6 +57,44 @@ def test_source_ref_junk_without_url_still_stripped() -> None:
     assert strip.is_internal_entry(role="reference", title="Brief", source_ref="docs/pedagogy/brief.md", url="")
 
 
+def test_internal_url_paths_are_stripped_without_source_ref() -> None:
+    assert strip.is_internal_entry(
+        role="textbook",
+        title="Internal wiki source",
+        source_ref="",
+        url="wiki/grammar/b1/prepositions-spatial-review.sources.yaml#S1",
+    )
+    assert strip.is_internal_entry(
+        role="textbook",
+        title="Internal docs wiki source",
+        source_ref="",
+        url="docs/wiki/grammar/b1/prepositions-spatial-review.md",
+    )
+    assert strip.is_internal_entry(
+        role="curriculum",
+        title="Prior B1 module",
+        source_ref="",
+        url="b1/prepositions-spatial-review",
+    )
+
+
+def test_strips_wrapped_resources_list_with_internal_urls() -> None:
+    text = (
+        "resources:\n"
+        '  - title: "B1 grammar wiki: spatial prepositions"\n'
+        '    url: "wiki/grammar/b1/prepositions-spatial-review.md"\n'
+        "    type: internal\n"
+        '  - title: "Real article"\n'
+        "    role: article\n"
+        '    url: "https://example.com/real"\n'
+    )
+    new, removed = strip.strip_yaml(text)
+    assert removed == ["B1 grammar wiki: spatial prepositions"]
+    assert "wiki/grammar/b1/prepositions-spatial-review.md" not in new
+    assert "Real article" in new
+    assert new.startswith("resources:\n")
+
+
 def test_reference_and_resource_catalog_source_refs_are_kept() -> None:
     """B1 regression: docs/references/ (textbook corpus) and docs/resources/ (external
     catalog) are legit provenance dirs — a url-less textbook citation whose source_ref
@@ -99,3 +137,16 @@ def test_mdx_empty_state_note() -> None:
     out = strip.strip_mdx(mdx, ["Synthesis of M1"])
     assert "Synthesis of M1" not in out
     assert strip._EMPTY_NOTE in out
+
+
+def test_mdx_linked_resource_empty_state_note() -> None:
+    mdx = (
+        "<TabItem label=\"Ресурси\">\n\n"
+        ":::info[🎧 🔗 Зовнішні ресурси]\n\n"
+        "**🔗 Онлайн-ресурси:**\n"
+        "- 🔗 [Spatial prepositions review](b1/prepositions-spatial-review) — internal.\n"
+        ":::\n\n</TabItem>\n"
+    )
+    out = strip.strip_mdx(mdx, ["Spatial prepositions review"])
+    assert "b1/prepositions-spatial-review" not in out
+    assert strip._EMPTY_NOTE_UK in out

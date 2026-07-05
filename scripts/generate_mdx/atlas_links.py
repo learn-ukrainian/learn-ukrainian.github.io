@@ -48,6 +48,8 @@ _STRESS_MARKS = {"́", "̀"}
 # з'їсти / зʼїсти / з`їсти all match the same Atlas key.
 _APOSTROPHES = {"’", "ʼ", "ʹ", "`", "´", "‘"}
 
+_warned_manifest_unavailable = False
+
 
 def normalize_lemma(word: str) -> str:
     """Normalise a surface word to its stress-free, case-folded Atlas key."""
@@ -71,9 +73,14 @@ def _load_index(manifest_path: str) -> dict[str, str]:
     Cached per resolved path — production callers hit a single cached load;
     tests pass a unique tmp path and get isolated indices.
     """
+    global _warned_manifest_unavailable
     try:
         data = load_manifest(Path(manifest_path))
-    except (FileNotFoundError, OSError, ValueError):
+    except (FileNotFoundError, OSError, ValueError) as exc:
+        if not _warned_manifest_unavailable:
+            import sys
+            print(f"WARNING: atlas manifest unavailable ({exc!r}) — generating MDX without atlas links", file=sys.stderr)
+            _warned_manifest_unavailable = True
         return {}
 
     index: dict[str, str] = {}

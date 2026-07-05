@@ -117,3 +117,32 @@ wiki drafting**. **Not** a sole seminar writer and **not** a sole factual review
 modules, use it **only behind a non-Gemma source/factual gate.** This supersedes the blunt "fabricates facts
 → never a fact-checker" framing: the failure mode is **over-generation beyond the source packet**, which a
 full source packet + a non-Gemma verification gate contains.
+
+## Harness experiment: opencode vs Hermes for tooled fact-checking (2026-07-05, #2156 step 1)
+
+**Question:** which harness grounds gemma-4-31b's seminar fact-checking better? Same prompt, same model,
+same `sources` MCP server — the «Веснянки» passage with 2 planted fabrications (the model's own, from the
+bakeoff above) + 3 true claims.
+
+| | opencode (sources+lightpanda MCP) | hermes -z (sources MCP) |
+|---|---|---|
+| runtime | ~3 min | ~11 min |
+| tool telemetry | 7 `tool_use` NDJSON events (wikipedia, definitions, heritage, search_text ×2, literary, гаївки follow-up) | real retrieval (verbatim Grade-6 textbook quotes in our MCP's source-label format) but **0 calls captured** — `-z` one-shot fires no usable per-run hook telemetry (filed #4390) |
+| true claims | 3/3 CONFIRMED with real citations (its decomposition folded «пагорби» into the ritual claim) | 3/4 — its decomposition split «пагорби» into a standalone claim and left that true claim UNVERIFIED |
+| fabrication: «гаї» ribbon-trees | withheld ✓ (honest UNVERIFIED: "no tool evidence for прикрашених стрічками") | **CONFIRMED ✗** — rationalized from the word «гаївки» while itself noting the detail was never found |
+| fabrication: melody «світлість та піднесення» | withheld ✓ | withheld ✓ |
+
+**Verdict: opencode is the reviewer transport** (speed, per-run observability — a tool-theatre gate is
+impossible without it — and calibration: hermes-gemma endorsed a fabrication WITH tools available, the
+exact confident-fabrication failure the harness exists to catch). Hermes remains the V7 writer transport.
+
+**Both harnesses stopped short of active refutation** — the refutation evidence was one section-read away
+(uk.wiki «Веснянки» §2: «Мелодії веснянок побудовані на багаторазовому повторенні однієї-двох поспівок у
+межах невеликого діапазону»), but both settled for `summary` mode. → the tooled-reviewer design (brief v2,
+fleet-reviewed by codex/cursor/agy 2026-07-05) makes deep-reads a deterministic post-parse gate, not prompt
+prose, and requires grounding excerpts to substring-match captured tool payloads (anti-fabricated-grounding).
+
+**Etymology nuance for the gold sheet:** ЕСУМ marks the *гаївка* etymology «неясне» (гоголь-bird / гай /
+ягли-просо theories; the гай derivation is called «непереконлива» in the *ягілка* entry). Correct verdicts:
+the «гаї» decorated-tree *ritual* claim → REFUTED-as-unattested; the *etymology* → CONTESTED (present both,
+never assert one). This distinction is now first-class in the reviewer's verdict taxonomy.
