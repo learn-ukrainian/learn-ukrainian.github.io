@@ -318,9 +318,15 @@ seeded/deterministic build (§1), FSRS card unit = `lemmaId + mode` (§1).
 - **Data**: pure VESUM — the tags already ride `enrichment.morphology` + `pos`; ZERO curation.
   ⟦v5 probe⟧ 2,214 nouns (gender) · 1,069 verbs (aspect) · 598 adjectives in today's manifest.
 - **Gate `is_classify_eligible`** (per category set, fail-closed): the VESUM tag exists and is
-  UNAMBIGUOUS (pluralia tantum → excluded from gender; bi-aspectual verbs → excluded from aspect;
-  heteroclitic nouns → excluded from declension). A word can be eligible in one set and excluded
-  from another.
+  UNAMBIGUOUS. Explicit per-set exclusions ⟦agy v5 review⟧: **gender** — pluralia tantum (двері,
+  ножиці — no singular ⇒ no gender assignment) AND common-gender nouns (спільний рід, VESUM
+  double-gender entries: сирота, колега, суддя); **aspect** — bi-aspectual verbs; **declension** —
+  everything outside the І–IV відміна system: heteroclitic nouns, pluralia tantum, indeclinable
+  nouns (незмінні: шосе, бюро), and substantivized adjectives that VESUM lemmatizes as nouns yet
+  inflect adjectivally (минуле, майбутнє; черговий-type stay `adj` and self-exclude from noun
+  pools). Gate at the LEMMA level, never the surface form — VESUM form→lemma collisions are real
+  (verified: окуляри→окуляр, шахи→шах, таксі→такса). A word can be eligible in one set and
+  excluded from another.
 - **Anti-gaming (§5)**: options are the CLOSED category set (all genders / both aspects) — inherent
   balance; validator asserts the deck never lets one category exceed ~60% of a session's classify
   items (else learners meta-game the base rate).
@@ -337,9 +343,17 @@ seeded/deterministic build (§1), FSRS card unit = `lemmaId + mode` (§1).
   `heritage_pair`: `{slugA, slugB, frames[] (≥1 per direction), distinction_gloss_uk, citations[]
   (≥1 — Гринчишин «Словник паронімів», Антоненко, or СУМ senses)}`. Both slugs must be approved
   public articles. Any pair failing validation is dropped and reported — never emitted.
+- **Option congruency (anti-gaming, §5)** ⟦agy v5 review⟧: every option in a frame MUST surface in
+  the exact morphological form the slot requires (same case/gender/number for nominals; same
+  person/number/tense for verbs). A form-mismatched distractor (fem-sg slot, target *тактовна*,
+  distractor *тактичний*) lets agreement clues solve the item with zero semantic knowledge. The
+  §5-style build validator rejects any frame whose options do not share the slot's agreement
+  feature bundle (VESUM tags of the surface forms must match on case/gender/number/person/tense).
 - **Sources for curation** (a curation-lane task, not build-time generation): Гринчишин paronym
   dictionary (check corpus availability), Антоненко-Давидович confusable entries, and the 6
-  existing module `contrast_pair` activities as seeds.
+  existing module `contrast_pair` activities as seeds. **Aspectual pairs are NOT paronyms**
+  ⟦agy v5 review⟧ (видові пари — писати/написати, вирішувати/вирішити — one lexeme in two
+  aspects): the curation lane excludes them; that contrast belongs to `classify`'s aspect axis.
 - **Both directions drilled**: the pair generates a card per member (`lemmaId+paronym`), frames
   chosen so each member is the correct answer in its own frames (no "always-B" tell; §5 validator).
 - **Availability**: B1+ (meaning-discrimination presupposes both words' recognition baseline —
