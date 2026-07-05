@@ -126,17 +126,23 @@ Deck build stays **static, CEFR-segmented, sharded** (`practice-index/lexemes/cl
 `data/atlas.db` (this DB) once populated. `is_practice_eligible` gate = gloss + CEFR/course anchor, no derived
 forms, no surzhyk.
 
-## 5b. Backend — when (mostly: NOT in the current roadmap)
+## 5b. Backend — a PLANNED scale-up goal for the Practice Hub (user 2026-07-05)
 
-The design is deliberately **backend-free**: static Astro SSG from the DB + prebuilt FTS index + prebuilt
-practice decks, with **client-side FSRS-6 (`ts-fsrs`) + `localStorage`** for scheduling state. That covers
-browse, search, AND spaced-repetition practice of 250k articles with no server. A backend is only needed for
-things NOT in scope today:
-1. **Cross-device / account sync** of practice progress (localStorage is per-device) — deferred until users ask.
-2. **Live enrichment** — slovnyk.me fetch at request time (we prebuild instead).
-3. **Search index too big to ship** — if per-form aliases (millions) + full definitions exceed a comfortable
-   client download; then search moves behind an API.
-None of these block the corpus-fill or practice-coverage work. Stay static.
+**Phase 1 (now): static.** Astro SSG from the DB + prebuilt FTS index + prebuilt CEFR-sharded decks +
+client-side FSRS-6 (`ts-fsrs`) + `localStorage`. Ships value with no server and unblocks corpus fill + the
+first new drill types.
+
+**Phase 2 (as we scale — a REAL goal, not deferred-indefinitely): add a Practice Hub backend.** Tracked in
+**#4384**. Hard problems it must solve:
+- **Accounts + cross-device sync** of FSRS scheduling state (localStorage is per-device; learners want their
+  streak/progress everywhere). Auth, user data model, conflict-free sync of card deltas keyed by `lemmaId+mode`
+  + `deckVersion`.
+- **Server-side scheduling / analytics** — aggregate difficulty, item-level performance, deck health, adaptive
+  selection beyond what a static deck can do.
+- **Search / data API** if the client index outgrows a shippable size at 250k (per-form aliases → millions).
+- **Live/on-demand enrichment** — slovnyk.me/wiki fetch behind a cache API instead of prebuild-only.
+Design must keep the static path working (offline-first / progressive enhancement), not fork the app.
+This is genuinely hard (auth, sync semantics, data model, hosting for a non-commercial project) — a fable task.
 
 ## 6. Roadmap (sequenced — schema BEFORE mass-fill, else we migrate 250k twice)
 
@@ -149,10 +155,19 @@ None of these block the corpus-fill or practice-coverage work. Stay static.
 4. **Phase-2 slovnyk/wiki paced fill** — background work-queue within rate limits.
 5. **Manifest/site generation from the DB** (Astro SSG) + entry-model gates in CI.
 6. **Other resources** (curriculum #4222, textbooks #3934, Ohoiko #4223) via the same DB intake path.
-7. **Practice coverage (§5):** feed decks from `data/atlas.db`; add the drill types the data already supports
-   (declension/conjugation, stress, synonym/antonym match, idiom-match, decolonization pick) beyond today's 4
-   live modes. Stays static + client-side FSRS (no backend).
-8. Backend: NOT needed for the above (§5b). Only for cross-device account sync, later, if users ask.
+7. **Practice coverage — GH #4383. START WITH DESIGN (user 2026-07-05):** first EXPAND
+   `docs/poc/word-atlas/PRACTICE-HUB-SPEC.md` + the design page `docs/poc/word-atlas/practice-hub.html` to
+   define the new drill types (declension/conjugation, stress, synonym/antonym, idiom, decolonization), the
+   backend sync model, and scaling — THEN implement decks from `data/atlas.db` (§5). Spec is the interaction SSOT.
+8. **Practice Hub backend — GH #4384 (§5b):** static-first (client FSRS + localStorage), then add accounts +
+   cross-device FSRS sync + analytics as a real scale-up goal, offline-first / progressive enhancement.
+
+> **Honest scope note (correcting an earlier overclaim):** the DB foundation (#4380) is the START, not "the
+> hard part done." Hard problems still open: enrichment QUALITY at scale (garbage-fill risk — Kaikki
+> translation+etymology wiring, honest `uncovered` labeling), entry_type edge cases (proper names / idiom-vs-term /
+> homographs / aspect pairs), inflected-alias generation from VESUM at 250k, search + SSG at 250k, the practice
+> pedagogy (FSRS across modes, anti-gaming, cloze answer model), and the backend (auth + sync semantics). These
+> are why fable drives from here — for the hard problems, not a mechanical grind.
 
 ## 7. Open validation items
 - Confirm SQLite-wasm client FTS size is acceptable at 250k before committing to no-backend search.
