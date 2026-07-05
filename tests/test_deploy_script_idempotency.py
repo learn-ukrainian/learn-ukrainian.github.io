@@ -13,6 +13,7 @@ DEPLOY_SCRIPT = Path("scripts/deploy_prompts.sh")
 CHECK_SCRIPT = Path("scripts/check_rules_deployment.sh")
 DRIFT_TARGET = Path(".claude/rules/pipeline.md")
 CODEX_HOOK_TARGET = Path(".codex/hooks/session-setup.sh")
+CODEX_HOOKS_CONFIG = Path(".codex/hooks.json")
 UNSCOPED_RULE_FILES = (
     "operator-expectations.md",
     "critical-rules.md",
@@ -102,6 +103,10 @@ def test_fresh_deploy_produces_synced_output(tmp_path: Path) -> None:
         f"stdout: {check_result.stdout}\nstderr: {check_result.stderr}"
     )
     assert (repo / CODEX_HOOK_TARGET).exists()
+    assert (repo / CODEX_HOOKS_CONFIG).exists()
+    assert (repo / CODEX_HOOKS_CONFIG).read_text(encoding="utf-8") == (
+        repo / "agents_extensions" / "codex" / "hooks.json"
+    ).read_text(encoding="utf-8")
     assert (repo / ".codex" / "memory" / "MEMORY.md").exists()
     assert (repo / ".gemini/config.yaml").exists()
     deployed_claude_rules = sorted(
@@ -131,6 +136,17 @@ def test_claude_rule_exclusion_list_covers_unscoped_files() -> None:
         assert f'"rules/{filename}"' in script
 
 
+def test_drift_checker_orphan_globs_match_deploy_script() -> None:
+    """The post-deploy drift checker must mirror deploy orphan globs."""
+    deploy = (REPO_ROOT / DEPLOY_SCRIPT).read_text(encoding="utf-8")
+    check = (REPO_ROOT / CHECK_SCRIPT).read_text(encoding="utf-8")
+
+    assert 'ORPHAN_PATHS_CLAUDE="scheduled_tasks.lock worktrees *-epic"' in deploy
+    assert '"*-epic" \\' in check
+    assert "*-handoff.md" in deploy
+    assert '"*-handoff.md" \\' in check
+
+
 def test_second_deploy_is_noop_for_codex_target(tmp_path: Path) -> None:
     """Two consecutive deploys should leave the Codex target unchanged."""
     repo = _init_checkout(tmp_path)
@@ -147,6 +163,35 @@ def test_second_deploy_is_noop_for_codex_target(tmp_path: Path) -> None:
     assert "agents_extensions/shared → .codex: no changes" in second_result.stdout
     assert "agents_extensions/codex → .codex: no changes" in second_result.stdout
     assert "No changes to deploy." in second_result.stdout
+
+
+def test_codex_hooks_json_is_managed_source_not_orphan() -> None:
+    """Codex hooks config must be deployed from agents_extensions/codex."""
+    deploy = (REPO_ROOT / DEPLOY_SCRIPT).read_text(encoding="utf-8")
+    check = (REPO_ROOT / CHECK_SCRIPT).read_text(encoding="utf-8")
+
+    assert (REPO_ROOT / "agents_extensions" / "codex" / "hooks.json").exists()
+    assert 'ORPHAN_PATHS_CODEX="agents/curriculum-orchestrator.toml agents/curriculum-writer.toml config.toml"' in deploy
+    assert 'CODEX_OVERLAY_PATHS="hooks.json memory"' in deploy
+    assert '"hooks.json" \\' in check
+
+
+def test_missing_codex_hooks_json_is_drift(tmp_path: Path) -> None:
+    """The drift checker must fail if runtime .codex/hooks.json disappears."""
+    repo = _init_checkout(tmp_path)
+
+    deploy_result = _run(repo, DEPLOY_SCRIPT)
+    assert deploy_result.returncode == 0, (
+        f"deploy failed:\nstdout: {deploy_result.stdout}\nstderr: {deploy_result.stderr}"
+    )
+
+    (repo / CODEX_HOOKS_CONFIG).unlink()
+
+    check_result = _run(repo, CHECK_SCRIPT)
+    combined_output = f"{check_result.stdout}\n{check_result.stderr}"
+    assert check_result.returncode != 0
+    assert "Deploy-script drift between agents_extensions/codex and .codex" in combined_output
+    assert "Missing deployed overlay file: .codex/hooks.json" in combined_output
 
 
 def test_codex_orphan_is_caught(tmp_path: Path) -> None:

@@ -76,10 +76,13 @@ ORPHAN_PATHS_CLAUDE="scheduled_tasks.lock worktrees *-epic"
 ORPHAN_PATHS_AGENT="wake cache prompts tmp *-thread-bootstrap.md *-handoff.md *-thread-lease.json *-brief.md dispatch-*.md"
 ORPHAN_PATHS_AGENTS=""
 # agents/curriculum-orchestrator.toml and agents/curriculum-writer.toml —
-# Codex agent definitions with no shared equivalent.
-# memory/ — Codex-owned durable memory deployed from agents_extensions/codex/.
-# config.toml and hooks.json — Codex CLI configuration files managed directly by Codex.
-ORPHAN_PATHS_CODEX="agents/curriculum-orchestrator.toml agents/curriculum-writer.toml config.toml hooks.json memory"
+# Codex agent definitions with no source equivalent.
+# config.toml — Codex CLI configuration managed directly by Codex.
+ORPHAN_PATHS_CODEX="agents/curriculum-orchestrator.toml agents/curriculum-writer.toml config.toml"
+# Codex overlay paths are managed by agents_extensions/codex/, not by the shared
+# tree. Exclude them from the shared rsync/delete pass, then verify them with the
+# overlay drift check. hooks.json is intentionally here, not in ORPHAN_PATHS_CODEX.
+CODEX_OVERLAY_PATHS="hooks.json memory"
 # tmp/ — Gemini CLI runtime workspace (e.g. .gemini/tmp/learn-ukrainian/);
 #        local working state, NOT a deploy artifact. Preserve across rsync --delete.
 # config.yaml — repository-level Gemini Code Assist for GitHub configuration.
@@ -155,7 +158,7 @@ orphan_fail=false
 check_orphans "$SHARED_EXTENSIONS" ".claude" "$ORPHAN_PATHS_CLAUDE" "$SHARED_EXTENSIONS → .claude" || orphan_fail=true
 check_orphans "$SHARED_EXTENSIONS" ".agent" "$ORPHAN_PATHS_AGENT" "$SHARED_EXTENSIONS → .agent" || orphan_fail=true
 check_orphans "$SHARED_EXTENSIONS/skills" ".agents/skills" "$ORPHAN_PATHS_AGENTS" "$SHARED_EXTENSIONS/skills → .agents/skills" || orphan_fail=true
-check_orphans "$SHARED_EXTENSIONS" ".codex" "$ORPHAN_PATHS_CODEX" "$SHARED_EXTENSIONS → .codex" || orphan_fail=true
+check_orphans "$SHARED_EXTENSIONS" ".codex" "$ORPHAN_PATHS_CODEX $CODEX_OVERLAY_PATHS" "$SHARED_EXTENSIONS → .codex" || orphan_fail=true
 check_orphans "gemini_extensions" ".gemini" "$ORPHAN_PATHS_GEMINI" "gemini_extensions → .gemini" || orphan_fail=true
 check_orphans "$SHARED_EXTENSIONS/rules" ".gemini/rules" "" "$SHARED_EXTENSIONS/rules → .gemini/rules" || orphan_fail=true
 if [[ "$orphan_fail" == true ]]; then
@@ -255,7 +258,7 @@ diff_dirs \
     "$ORPHAN_PATHS_CLAUDE $CLAUDE_RULE_AUTOLOAD_EXCLUDE_PATHS"
 diff_dirs "$SHARED_EXTENSIONS" ".agent" "$SHARED_EXTENSIONS → .agent" "$ORPHAN_PATHS_AGENT"
 diff_dirs "$SHARED_EXTENSIONS/skills" ".agents/skills" "$SHARED_EXTENSIONS/skills → .agents/skills" "$ORPHAN_PATHS_AGENTS"
-diff_dirs "$SHARED_EXTENSIONS" ".codex" "$SHARED_EXTENSIONS → .codex" "$ORPHAN_PATHS_CODEX"
+diff_dirs "$SHARED_EXTENSIONS" ".codex" "$SHARED_EXTENSIONS → .codex" "$ORPHAN_PATHS_CODEX $CODEX_OVERLAY_PATHS"
 if [[ -d "$CODEX_EXTENSIONS" ]]; then
     diff_overlay_files "$CODEX_EXTENSIONS" ".codex" "$CODEX_EXTENSIONS → .codex"
 fi
@@ -280,7 +283,7 @@ rsync -av --delete $(build_excludes "$ORPHAN_PATHS_CLAUDE $CLAUDE_RULE_AUTOLOAD_
 # shellcheck disable=SC2046
 rsync -av --delete $(build_excludes "$ORPHAN_PATHS_AGENT") "$SHARED_EXTENSIONS/" .agent/
 # shellcheck disable=SC2046
-rsync -av --delete $(build_excludes "$ORPHAN_PATHS_CODEX") "$SHARED_EXTENSIONS/" .codex/
+rsync -av --delete $(build_excludes "$ORPHAN_PATHS_CODEX $CODEX_OVERLAY_PATHS") "$SHARED_EXTENSIONS/" .codex/
 if [[ -d "$CODEX_EXTENSIONS" ]]; then
     rsync -av "$CODEX_EXTENSIONS/" .codex/
 fi
