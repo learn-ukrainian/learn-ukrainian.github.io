@@ -166,3 +166,23 @@ def test_internal_leakage_skips_resource_provenance_key(tmp_path, monkeypatch) -
     assert not any(f.line == 4 for f in leaks), "packet_chunk_id: key line should not be flagged"
     # ...but the notes prose that MENTIONS chunk_id still leaks (renders in Resources tab).
     assert any(f.line == 5 for f in leaks), "notes prose mentioning chunk_id must still be flagged"
+
+
+def test_module_paths_wiki_resolution() -> None:
+    # 1. A1 should point under pedagogy/a1
+    a1_module = DummyModule("greeting", "Greeting", "a1", 1)
+    a1_paths = audit.module_paths("a1", a1_module)
+    assert "wiki/pedagogy/a1/greeting.md" in a1_paths.wiki.as_posix()
+    assert "wiki/pedagogy/a1/greeting.sources.yaml" in a1_paths.wiki_sources.as_posix()
+
+    # 2. B1 should point under grammar/b1
+    b1_module = DummyModule("aspect", "Aspect", "b1", 1)
+    b1_paths = audit.module_paths("b1", b1_module)
+    assert "wiki/grammar/b1/aspect.md" in b1_paths.wiki.as_posix()
+    assert "wiki/grammar/b1/aspect.sources.yaml" in b1_paths.wiki_sources.as_posix()
+
+    # 3. Unmapped track should fall back to grammar/track
+    unmapped_module = DummyModule("topic", "Topic", "unknown-track", 1)
+    unmapped_paths = audit.module_paths("unknown-track", unmapped_module)
+    assert "wiki/grammar/unknown-track/topic.md" in unmapped_paths.wiki.as_posix()
+    assert "wiki/grammar/unknown-track/topic.sources.yaml" in unmapped_paths.wiki_sources.as_posix()
