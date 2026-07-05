@@ -37,8 +37,7 @@ budget rails, and explicit human spend sign-off.
 - Seminar, contested-gold, and factual-sensitive review routes to `ask-agy
   --to-model gemini-3.1-pro-high`.
 - Escalation/disputed spot audit is Claude-only and is not the batch default.
-- DeepSeek/Hermes/OpenRouter reviewer routes are hard-banned for automated
-  LLM-QG batches.
+- DeepSeek/Hermes reviewer routes are hard-banned for automated LLM-QG batches.
 
 Live review also enforces cross-family lineage. The dispatcher resolves author
 family from explicit `--author-family`, committed metadata, or git history. If

@@ -218,14 +218,14 @@ def route_for_review(
 
 
 def assert_route_allowed(route: ReviewerRoute) -> None:
-    """Hard-ban DeepSeek/Hermes->OpenRouter automated reviewer routes."""
+    """Hard-ban DeepSeek/Hermes automated reviewer routes."""
 
     haystack = " ".join(
         [route.route_name, route.reviewer_model_id, route.reviewer_family, *route.bridge_command]
     )
     lowered = haystack.lower()
     if normalize_family(haystack) == "deepseek" or "hermes" in lowered:
-        raise ReviewerRouteError("DeepSeek/Hermes/OpenRouter reviewer routes are forbidden")
+        raise ReviewerRouteError("DeepSeek/Hermes reviewer routes are forbidden")
 
 
 def resolve_author_lineage(
