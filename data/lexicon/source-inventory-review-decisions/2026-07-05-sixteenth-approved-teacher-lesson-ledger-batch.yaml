@@ -1408,7 +1408,7 @@ decisions:
 - lemma: горище
   decision: approve_for_publish
   approved_pos: noun
-  approved_gloss: attics
+  approved_gloss: attic
   sense_note: private teacher-lesson explicit vocabulary table
   source_inventory:
     key: '3660462215386458'
@@ -2116,7 +2116,7 @@ decisions:
 - lemma: копійка
   decision: approve_for_publish
   approved_pos: noun
-  approved_gloss: coin
+  approved_gloss: kopeck (coin)
   sense_note: private teacher-lesson explicit vocabulary table
   source_inventory:
     key: 8c08be309dd3d52a

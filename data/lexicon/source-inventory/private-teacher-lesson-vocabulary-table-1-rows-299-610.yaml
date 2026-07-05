@@ -663,7 +663,7 @@ sources:
       table.
   - lemma: горище
     pos: noun
-    gloss: attics
+    gloss: attic
     locator: explicit vocabulary table row 414
     context: Reviewed headword metadata derived from an explicit private lesson vocabulary
       table.
@@ -987,7 +987,7 @@ sources:
       table.
   - lemma: копійка
     pos: noun
-    gloss: coin
+    gloss: kopeck (coin)
     locator: explicit vocabulary table row 477
     context: Reviewed headword metadata derived from an explicit private lesson vocabulary
       table.
