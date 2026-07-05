@@ -335,6 +335,7 @@ def run_one(
         },
         "status": gate_result["status"],
         "workflow_verdict": gate_result["workflow_verdict"],
+        "findings_schema_invalid": bool(gate_result.get("findings_schema_invalid")),
         "attempt_count": gate_result["attempt_count"],
         "dispatch": dispatch,
         "gate_outcomes": gate_outcomes,
@@ -564,11 +565,30 @@ def _invoke_and_gate(
         llm_reviewer_dispatch.enforce_tool_budget(dispatch)
         try:
             payload = dict(llm_reviewer_dispatch._json_payload_from_response(result.response_text))
-            llm_reviewer.validate_reviewer_payload(payload, BAKEOFF_POLICY_FAMILY)
         except ValueError as exc:
             # Preserve what the model actually said — the first live run left
             # only "Expecting value: char 0" with no way to diagnose offline.
             raise BakeoffCellError(str(exc), response_head=result.response_text[:2000]) from exc
+        # MEASUREMENT-VALIDITY SPLIT (live gemma cells, 2026-07-05): the bakeoff
+        # measures FACT-CHECK quality; strict `findings` schema compliance is an
+        # ORTHOGONAL axis. gemma emitted valid fact_checks with non-conforming
+        # findings — voiding the cell would confound the central metric with
+        # contract-following noise. Harness-only: strip non-conforming findings,
+        # count the defect (`findings_schema_invalid`), keep gating fact_checks
+        # strictly. The LIVE pipeline stays strict (SCHEMA_FAILURE) — unchanged.
+        findings_schema_invalid = False
+        try:
+            llm_reviewer.validate_reviewer_payload(payload, BAKEOFF_POLICY_FAMILY)
+        except ValueError as exc:
+            stripped = dict(payload)
+            stripped["findings"] = []
+            try:
+                llm_reviewer.validate_reviewer_payload(stripped, BAKEOFF_POLICY_FAMILY)
+            except ValueError:
+                # fact_checks/evidence_gaps themselves are invalid → real error cell.
+                raise BakeoffCellError(str(exc), response_head=result.response_text[:2000]) from exc
+            findings_schema_invalid = True
+            payload = stripped
         attempt = {
             "attempt": attempt_count,
             "tool_call_count": dispatch.get("tool_call_count"),
@@ -644,6 +664,7 @@ def _invoke_and_gate(
         }
         attempt["grounding"] = grounding
         attempt["factual_sweep"] = {"incomplete": sweep_incomplete}
+        attempt["findings_schema_invalid"] = findings_schema_invalid
         attempts.append(attempt)
         status = _status_for_gates(grounding_gate, sweep_incomplete)
         workflow_verdict = "FAIL" if sweep_incomplete else ("WARN" if status != "ran" else "PASS")
@@ -653,6 +674,7 @@ def _invoke_and_gate(
             "attempt_count": attempt_count,
             "dispatch": dispatch,
             "payload": payload,
+            "findings_schema_invalid": findings_schema_invalid,
             "gate_outcomes": {
                 "attempts": attempts,
                 "theatre": {"status": "passed", "retried": theatre_retried},
@@ -660,6 +682,7 @@ def _invoke_and_gate(
                 "deep_read": attempt["deep_read"],
                 "grounding": grounding,
                 "factual_sweep": {"incomplete": sweep_incomplete},
+                "findings_schema_invalid": findings_schema_invalid,
             },
         }
 

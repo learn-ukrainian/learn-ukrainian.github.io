@@ -548,3 +548,70 @@ def test_error_artifact_preserves_response_head_for_parse_failures(
     assert run.artifact["status"] == "error"
     assert run.artifact["error"]["class"] == "BakeoffCellError"
     assert "червона калина" in run.artifact["error"]["response_head"]
+
+
+def test_nonconforming_findings_counted_not_fatal(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Findings-schema flunk is an ORTHOGONAL metric — fact_checks still score.
+
+    Live gemma cells emitted valid fact_checks with findings missing the strict
+    11 required fields; voiding those cells confounded the central fact-check
+    measurement with contract-following noise.
+    """
+    monkeypatch.delenv("CI", raising=False)
+    monkeypatch.setenv("QG_BAKEOFF", "1")
+    fixture = _fixture()
+    payload = {
+        "findings": [{"excerpt": "щось", "message": "bare finding, misses 11 fields"}],
+        "fact_checks": [
+            {
+                "claim": "True claim.",
+                "verdict": "CONFIRMED",
+                "grounding": {
+                    "tool": "sources_query_wikipedia",
+                    "query": "True claim",
+                    "evidence_excerpt": "True claim",
+                    "tool_call_id": "call_1",
+                },
+            },
+            {
+                "claim": "Fabricated claim.",
+                "verdict": "UNATTESTED_AFTER_SEARCH",
+                "grounding": {
+                    "tool": "sources_query_wikipedia",
+                    "query": "True claim",
+                    "evidence_excerpt": "Fabricated claim",
+                    "tool_call_id": "call_1",
+                },
+            },
+        ],
+        "evidence_gaps": [],
+    }
+
+    def runner(
+        run_route: llm_reviewer_dispatch.ReviewerRoute,
+        _prompt: str,
+        _task_id: str,
+    ) -> llm_reviewer_dispatch.DispatchResult:
+        return _dispatch_result(payload, run_route)
+
+    route = qg_bakeoff.bakeoff_route_for_model("openrouter/test/loose-findings-model")
+    run = qg_bakeoff.run_one(route, fixture, output_dir=tmp_path, runner=runner)
+
+    assert run.artifact["status"] != "error"
+    assert run.artifact["findings_schema_invalid"] is True
+    assert run.artifact["payload"]["findings"] == []
+    assert run.artifact["score"]["model_judgment_score"] == 30
+
+    # Invalid FACT_CHECKS remain a genuine error cell (regression guard).
+    bad_facts = dict(payload, findings=[], fact_checks=[{"claim": "x", "verdict": "NOT_A_VERDICT"}])
+
+    def bad_runner(
+        run_route: llm_reviewer_dispatch.ReviewerRoute,
+        _prompt: str,
+        _task_id: str,
+    ) -> llm_reviewer_dispatch.DispatchResult:
+        return _dispatch_result(bad_facts, run_route)
+
+    bad_route = qg_bakeoff.bakeoff_route_for_model("openrouter/test/bad-facts-model")
+    bad_run = qg_bakeoff.run_one(bad_route, fixture, output_dir=tmp_path, runner=bad_runner)
+    assert bad_run.artifact["status"] == "error"
