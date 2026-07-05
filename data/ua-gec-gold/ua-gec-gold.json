@@ -8,7 +8,9 @@
     "repository": "https://github.com/grammarly/ua-gec",
     "license": "CC BY 4.0",
     "license_url": "https://creativecommons.org/licenses/by/4.0/",
+    "copyright": "© UA-GEC authors (Syvokon, Nahorna et al.) / Grammarly. Original error annotations reused under CC BY 4.0.",
     "citation": "Syvokon et al., UNLP 2023",
+    "modifications": "Derivative of UA-GEC: a small curated subset selected from the full corpus (context-strip/length/dedup filters — see the `curation` and `counts` blocks). Error/correction TEXT is reproduced verbatim; UA-GEC gold `error_type` tags are preserved as-is (not re-labelled). Added fields: schema mapping (`mapped_tag`), span offsets, and evidence-schema wiring. See `known_limitations` for verified UA-GEC gold-noise (some F/Calque rows are non-calque lexical/register edits).",
     "retrieval_date": "2026-07-05",
     "source_commit": "4757f72f192c4a41e4c8fb1d9690a948f87cf6d6",
     "source_version": "2.0"
@@ -57,6 +59,10 @@
       "tag_limit_reached": 6546,
       "too_short_single_word_form": 956
     }
+  },
+  "known_limitations": {
+    "gold_noise": "UA-GEC gold tags are preserved verbatim and NOT re-labelled. Independent review (AGY/Gemini, 2026-07-05) + tool verification (VESUM + СУМ-20/heritage) confirmed that some `F/Calque` gold rows are non-calque lexical/register edits where the flagged form is valid Ukrainian. Verified examples: «уверх»→«вгору», «вішалкою»→«вішаком», «срібляним»→«срібним» (all VESUM/СУМ-attested native, russianism=False). Kept faithful to gold on purpose (an eval gold set must not be re-judged by a different model); scorers/reviewers (#4308/#4309) must treat the calque axis as noisy and a contested-flag review pass is a tracked follow-up.",
+    "review_provenance": "AGY gemini-3.1-pro-high, task 4306-agy-review; claims tool-verified before acceptance."
   },
   "counts": {
     "total_candidates": 8478,

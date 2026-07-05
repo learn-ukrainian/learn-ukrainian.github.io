@@ -150,6 +150,9 @@ def test_fixture_round_trip_preserves_attribution_tags_spans_and_schema(tmp_path
     assert loaded["attribution"]["license"] == "CC BY 4.0"
     assert loaded["attribution"]["retrieval_date"] == "2026-07-05"
     assert loaded["attribution"]["source_version"] == "2.0"
+    # CC BY 4.0 §3(a)(1): derivative must indicate modifications + retain copyright.
+    assert loaded["attribution"]["copyright"]
+    assert "subset" in loaded["attribution"]["modifications"].lower()
 
     assert [item["tag"] for item in loaded["items"]] == ["F/Calque", "G/Case", "G/Gender"]
     for item in loaded["items"]:
@@ -168,6 +171,11 @@ def test_committed_fixture_preserves_tags_spans_and_attribution() -> None:
     assert fixture["attribution"]["dataset"] == "UA-GEC"
     assert fixture["attribution"]["source"] == "grammarly/ua-gec"
     assert fixture["attribution"]["license"] == "CC BY 4.0"
+    # CC BY 4.0 compliance on the committed derivative: modifications notice + copyright.
+    assert "subset" in fixture["attribution"]["modifications"].lower()
+    assert fixture["attribution"]["copyright"]
+    # Verified UA-GEC gold-noise is documented, not silently re-labelled.
+    assert "gold_noise" in fixture["known_limitations"]
     assert fixture["counts"]["kept"] == len(fixture["items"])
     assert set(fixture["counts"]["kept_by_tag"]) == {"F/Calque", "G/Case", "G/Gender"}
 
