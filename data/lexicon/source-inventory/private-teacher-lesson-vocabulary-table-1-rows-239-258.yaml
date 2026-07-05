@@ -1,0 +1,105 @@
+---
+version: 1
+kind: atlas_source_inventory
+sources:
+  - id: private-teacher-lesson-vocabulary-table-1-rows-239-258
+    source_family: teacher_lesson
+    extraction_mode: curated_headword
+    title: Private teacher lesson vocabulary - explicit table rows 239-258
+    locator: local-only explicit vocabulary table rows 239-258
+    notes: >-
+      Derived headword metadata only; raw private lesson material is local-only
+      and not committed. Daily Word, Practice, and cloze remain frozen without
+      explicit surface_admission. Rows 243 and 256 are multi-word idiom/collocation
+      entries deferred pending a collocation intake convention.
+    headwords:
+      - lemma: перезавантажувати
+        pos: verb
+        gloss: "to reload (imperfective)"
+        locator: explicit vocabulary table row 239
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: перезавантажити
+        pos: verb
+        gloss: "to reload (perfective)"
+        locator: explicit vocabulary table row 240
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: завантажувати
+        pos: verb
+        gloss: "to download (imperfective)"
+        locator: explicit vocabulary table row 241
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: завантажити
+        pos: verb
+        gloss: "to download (perfective)"
+        locator: explicit vocabulary table row 242
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: мило
+        pos: noun
+        gloss: "soap"
+        locator: explicit vocabulary table row 244
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: переважати
+        pos: verb
+        gloss: "to prevail"
+        locator: explicit vocabulary table row 245
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: вважати
+        pos: verb
+        gloss: "to consider, to regard"
+        locator: explicit vocabulary table row 246
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: зневажати
+        pos: verb
+        gloss: "to disrespect"
+        locator: explicit vocabulary table row 247
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: зважати
+        pos: verb
+        gloss: "to consider, to observe"
+        locator: explicit vocabulary table row 248
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: заважати
+        pos: verb
+        gloss: "to annoy"
+        locator: explicit vocabulary table row 249
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: розробляти
+        pos: verb
+        gloss: "to develop (imperfective)"
+        locator: explicit vocabulary table row 250
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: розробити
+        pos: verb
+        gloss: "to develop (perfective)"
+        locator: explicit vocabulary table row 251
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: розробник
+        pos: noun
+        gloss: "developer"
+        locator: explicit vocabulary table row 252
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: заперечення
+        pos: noun
+        gloss: "objection"
+        locator: explicit vocabulary table row 253
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: благати
+        pos: verb
+        gloss: "to beg to do something"
+        locator: explicit vocabulary table row 254
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: спогад
+        pos: noun
+        gloss: "memory (a picture in your head)"
+        locator: explicit vocabulary table row 255
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: порожніти
+        pos: verb
+        gloss: "to get empty (imperfective)"
+        locator: explicit vocabulary table row 257
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: спорожніти
+        pos: verb
+        gloss: "to get empty (perfective)"
+        locator: explicit vocabulary table row 258
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.

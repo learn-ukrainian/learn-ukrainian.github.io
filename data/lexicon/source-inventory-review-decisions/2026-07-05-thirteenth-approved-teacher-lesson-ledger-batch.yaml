@@ -1,0 +1,248 @@
+---
+version: 1
+kind: atlas_source_inventory_review_decisions
+batch_id: source-inventory-thirteenth-approved-teacher-lesson-ledger-batch-2026-07-05
+batch_label: thirteenth-approved-teacher-lesson-ledger-batch
+reviewer: content-review
+reviewed_at: '2026-07-05'
+source_queue:
+  workflow: source_inventory_publish_review_queue.v1
+  total_queue_rows: 258
+  approved_in_queue: 18
+  promotion_batch_size: 18
+production_outputs_updated: []
+decisions:
+- lemma: перезавантажувати
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to reload (imperfective)
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: d2d8d7d5a4ca9ca0
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-239-258.yaml
+    locator: explicit vocabulary table row 239
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-239-258
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: перезавантажити
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to reload (perfective)
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: dc1dfb9c37a049c3
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-239-258.yaml
+    locator: explicit vocabulary table row 240
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-239-258
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: завантажувати
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to download (imperfective)
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 11040b31481ef740
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-239-258.yaml
+    locator: explicit vocabulary table row 241
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-239-258
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: завантажити
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to download (perfective)
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 030c9cb6bfdae487
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-239-258.yaml
+    locator: explicit vocabulary table row 242
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-239-258
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: мило
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: soap
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 53c70bdad9c6b3d9
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-239-258.yaml
+    locator: explicit vocabulary table row 244
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-239-258
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: переважати
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to prevail
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 9d98b04bbb943094
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-239-258.yaml
+    locator: explicit vocabulary table row 245
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-239-258
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: вважати
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to consider, to regard
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 613c65c5a7b18fa8
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-239-258.yaml
+    locator: explicit vocabulary table row 246
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-239-258
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: зневажати
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to disrespect
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 81f0ebe6b172f03e
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-239-258.yaml
+    locator: explicit vocabulary table row 247
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-239-258
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: зважати
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to consider, to observe
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: dfbde2da16b8694d
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-239-258.yaml
+    locator: explicit vocabulary table row 248
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-239-258
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: заважати
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to annoy
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 2f3ad45bc9c08f13
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-239-258.yaml
+    locator: explicit vocabulary table row 249
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-239-258
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: розробляти
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to develop (imperfective)
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: a26def42d39b9bea
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-239-258.yaml
+    locator: explicit vocabulary table row 250
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-239-258
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: розробити
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to develop (perfective)
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 80941def34c121de
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-239-258.yaml
+    locator: explicit vocabulary table row 251
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-239-258
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: розробник
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: developer
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 94dbf1d3603ed664
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-239-258.yaml
+    locator: explicit vocabulary table row 252
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-239-258
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: заперечення
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: objection
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 2fa6a9d28ce23bcc
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-239-258.yaml
+    locator: explicit vocabulary table row 253
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-239-258
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: благати
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to beg to do something
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 253e03aae1d28ff4
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-239-258.yaml
+    locator: explicit vocabulary table row 254
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-239-258
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: спогад
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: memory (a picture in your head)
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 26125fb2818b4811
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-239-258.yaml
+    locator: explicit vocabulary table row 255
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-239-258
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: порожніти
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to get empty (imperfective)
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 3ee4cb3e5dfc7951
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-239-258.yaml
+    locator: explicit vocabulary table row 257
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-239-258
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: спорожніти
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to get empty (perfective)
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: d3c3fbbce6aaf608
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-239-258.yaml
+    locator: explicit vocabulary table row 258
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-239-258
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
