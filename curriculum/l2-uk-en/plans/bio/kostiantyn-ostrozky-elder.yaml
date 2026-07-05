@@ -79,6 +79,21 @@ persona:
   role: Military Strategist
   voice: Senior Biographer
 phase: BIO
+readings:
+- title: "Острозький Костянтин Іванович"
+  source_name: "Енциклопедія історії України"
+  source_url: "https://www.history.org.ua/?termin=Ostrozky_K_I"
+  language: uk
+  type: "encyclopedia_entry"
+  clearance: "public_domain"
+  notes: "Академічна довідка про кар'єру та меценатство гетьмана."
+- title: "Битва під Оршею (1514)"
+  source_name: "Музей Шереметьєвих / Історичні статті"
+  source_url: ""
+  language: uk
+  type: "article"
+  clearance: "hosting: reading-needed"
+  notes: "Потрібен адаптований текст про битву під Оршею з акцентом на тактику та союз литовсько-руських військ."
 references:
 - title: Костянтин Іванович Острозький (Wikipedia UA)
   name: Костянтин Іванович Острозький (Wikipedia UA)
@@ -96,7 +111,7 @@ sequence: 13
 slug: kostiantyn-ostrozky-elder
 subtitle: 'Kostiantyn Ostrozky: Hetman of Two Nations'
 title: 'Костянтин Іванович Острозький: Гетьман двох народів'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: у Великому князівстві Литовському — найвища військова посада, головнокомандувач армії.
   pos: ч.
