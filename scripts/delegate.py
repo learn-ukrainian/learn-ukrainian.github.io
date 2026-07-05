@@ -548,9 +548,18 @@ def _resolve_dirty_primary_checkout_error(*, mode: str) -> str | None:
 
 
 def _fetch_base(base: str) -> bool:
-    """Fetch ``origin/{base}``. Returns True iff the remote ref is resolvable."""
+    """Fetch ``origin/{base}``. Returns True iff the remote ref is resolvable.
+
+    ``base`` may be a plain branch name (``main``) or an origin-prefixed ref
+    (``origin/main`` — the form the dispatch runbooks mandate). The remote
+    refspec is always the plain branch: ``git fetch origin origin/main`` asks
+    the remote for a ref literally named ``origin/main``, which does not
+    exist, so the fetch fails and callers silently fall back to the local
+    (possibly stale) remote-tracking ref.
+    """
+    branch = _base_branch_name(base)
     proc = subprocess.run(
-        ["git", "fetch", "origin", base],
+        ["git", "fetch", "origin", branch],
         cwd=_REPO_ROOT,
         capture_output=True,
         text=True,
@@ -559,7 +568,7 @@ def _fetch_base(base: str) -> bool:
     if proc.returncode != 0:
         return False
     verify = subprocess.run(
-        ["git", "rev-parse", "--verify", f"origin/{base}"],
+        ["git", "rev-parse", "--verify", f"origin/{branch}"],
         cwd=_REPO_ROOT,
         capture_output=True,
         text=True,
@@ -1008,10 +1017,13 @@ def _validate_existing_worktree(
 
     # 3. Stale-base check. Refresh origin/{base} first; ignore fetch failure
     # (we'll use whatever ref is locally available and warn instead of hard-
-    # failing offline).
+    # failing offline). Normalize so an origin-prefixed ``base`` (the form
+    # the dispatch runbooks mandate) never yields ``origin/origin/main`` —
+    # that unresolvable ref made this whole check a silent no-op.
+    origin_ref = _origin_base_ref(base)
     _fetch_base(base)
     count_proc = subprocess.run(
-        ["git", "rev-list", "--count", f"HEAD..origin/{base}"],
+        ["git", "rev-list", "--count", f"HEAD..{origin_ref}"],
         cwd=path,
         capture_output=True,
         text=True,
@@ -1028,12 +1040,12 @@ def _validate_existing_worktree(
         return False
 
     print(
-        f"⚠️  worktree {path} is {behind} commit(s) behind origin/{base}; "
+        f"⚠️  worktree {path} is {behind} commit(s) behind {origin_ref}; "
         f"attempting fast-forward rebase",
         file=sys.stderr,
     )
     rebase_proc = subprocess.run(
-        ["git", "rebase", f"origin/{base}"],
+        ["git", "rebase", origin_ref],
         cwd=path,
         capture_output=True,
         text=True,
@@ -1046,7 +1058,7 @@ def _validate_existing_worktree(
             cwd=path, capture_output=True, text=True, check=False,
         )
         raise WorktreeStaleBase(
-            f"worktree at {path} is {behind} commit(s) behind origin/{base} "
+            f"worktree at {path} is {behind} commit(s) behind {origin_ref} "
             f"and rebase failed. Resolve manually or remove:\n"
             f"    git worktree remove {path}"
         )
@@ -1162,14 +1174,18 @@ def _ensure_worktree(
     # Fix 1 (#1476): fetch origin/{base} and branch from the remote ref,
     # not the local one. Local `main` drifts the moment a PR merges while
     # a dispatch is queued — this is the stale-base footgun Codex
-    # diagnosed in bridge msg #431 (2026-04-23).
+    # diagnosed in bridge msg #431 (2026-04-23). Normalize so an
+    # origin-prefixed ``base`` (``--base origin/main``, the mandated form)
+    # fetches ``main`` and branches from ``origin/main`` — not the
+    # unresolvable ``origin/origin/main``.
+    origin_ref = _origin_base_ref(base)
     if _fetch_base(base):
-        worktree_base_ref = f"origin/{base}"
+        worktree_base_ref = origin_ref
     else:
         print(
-            f"⚠️  `git fetch origin {base}` failed or origin/{base} is "
-            f"unresolvable; falling back to local {base}. This worktree "
-            f"may be branched from a stale tip.",
+            f"⚠️  `git fetch origin {_base_branch_name(base)}` failed or "
+            f"{origin_ref} is unresolvable; falling back to local {base}. "
+            f"This worktree may be branched from a stale tip.",
             file=sys.stderr,
         )
         worktree_base_ref = base
