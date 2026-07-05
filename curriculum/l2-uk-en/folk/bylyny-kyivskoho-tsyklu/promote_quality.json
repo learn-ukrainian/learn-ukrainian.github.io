@@ -1,9 +1,9 @@
 {
-  "assembled_mdx_sha256": "0fbdd775798ae2660594afa8a8b290c18430c27b55cdd1fed6c8047204f0980e",
+  "assembled_mdx_sha256": "e2b76587b3b20283c8db92a756c58e4d10ff80ca7b7212dd15dc078a76c5b8e4",
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "365af52bdaef7d6c4f6a997526115e7f06187d532ed6aa46802cb3b55ce5cb80",
+    "digest": "ec5b3240c5bb98b9fd399d172177ce497e71828ed79113f2cfb5754c4e3baad6",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/bylyny-kyivskoho-tsyklu.yaml",
@@ -11,7 +11,7 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/bylyny-kyivskoho-tsyklu/module.md",
-        "sha256": "929b9c771ee7c0ee092caf391b6add01f0f7d6103b944ef048ee904800c2bbfa"
+        "sha256": "5b8d0a171b6bac04e05ed65cd8a7b310e53118b5d82d35c2161cb6b0af638012"
       },
       {
         "path": "curriculum/l2-uk-en/folk/bylyny-kyivskoho-tsyklu/activities.yaml",
@@ -19,7 +19,7 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/bylyny-kyivskoho-tsyklu/vocabulary.yaml",
-        "sha256": "ef721aa3a1171e8190207433078fa315cba1cb26fb12a02bcd918a76ce742f59"
+        "sha256": "cf32f249019273f44676866f8470d03cbb16eb2a290bf0388cddb6037dcd48ea"
       },
       {
         "path": "curriculum/l2-uk-en/folk/bylyny-kyivskoho-tsyklu/resources.yaml",
@@ -28,11 +28,10 @@
     ]
   },
   "evidence": {
-    "christian_framing": "Sofia/Lavra and Christian memory are handled respectfully without occult or primitive-superstition framing.",
-    "decolonization": "Module centers Kyiv/Rus and Ukrainian cultural agency while explicitly refusing imperial ownership framing and uninterrupted-continuity overclaim.",
-    "provenance": "No hosted reading page is invented; stylized activity formulas are labeled as illustrations, not source excerpts.",
-    "review": "Claude review task review-folk-m13-bylyny-kyivskoho-tsyklu found no remaining blockers after provenance and duplicate-word fixes.",
-    "source_hygiene": "Python QG, activity validation, vocabulary validation, MDX validation, MDX render, and resource liveness pass; only sidecar was pending before recording."
+    "learner_surface": "Structured PrimaryReading blocks use dash-led source attribution and generated MDX now separates closing PrimaryReading JSX from following markdown.",
+    "reading_coverage": "Added or converted learner-visible structured on-site shortened primary readings; external/full-version links remain supplementary only.",
+    "review": "Claude local CLI failed before producing a review; AGY/Gemini review found two remediation blockers, both fixed, and focused follow-up returned PASS/no blockers.",
+    "source_hygiene": "Readings are bounded as verified corpus, scholarly witness, textbook/pedagogical fragment, or authorial public-domain excerpts; no fabricated dialogue, songs, or source claims were introduced."
   },
   "floors": {
     "beauty": 8.5,
@@ -45,12 +44,12 @@
   "profile": "folk_promote_v1",
   "review_artifact": null,
   "reviewer": {
-    "agent": "claude",
-    "family": "anthropic",
-    "model": "claude-opus-4-8"
+    "agent": "agy",
+    "family": "google",
+    "model": "gemini-3.1-pro-high"
   },
   "schema_version": 1,
-  "scored_at": "2026-07-02T20:42:47Z",
+  "scored_at": "2026-07-05T12:13:39Z",
   "scores": {
     "beauty": 8.8,
     "decolonization": 9.4,

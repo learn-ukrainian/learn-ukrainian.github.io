@@ -1,9 +1,9 @@
 {
-  "assembled_mdx_sha256": "55ab556f20d13c4e4c76a21861e02a4d946a3f082649ff28a7c81f5f90346f3e",
+  "assembled_mdx_sha256": "a71b7ca70067e5bec22d42b307d7550b192581e1c1f5093ea7ca83afd72fb121",
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "9e5cb7160b15a8877ba8b600d6cfcaf8f1f3f82fcff5016c7c94d0bd202fdfc3",
+    "digest": "a68b64b76cbd0b32837f495f883fa44020786f3fac823bfd661642a029d2d1ff",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/suspilno-pobutovi-pisni.yaml",
@@ -11,7 +11,7 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/suspilno-pobutovi-pisni/module.md",
-        "sha256": "8b836f929a724d7e5f65397e666f9e90fc24fc7506fbf74fbca17ae4bb318626"
+        "sha256": "73e091c7f89f79c58e143adfbb9954182d2cf90b807ff7dc1a979418ad1aa021"
       },
       {
         "path": "curriculum/l2-uk-en/folk/suspilno-pobutovi-pisni/activities.yaml",
@@ -28,10 +28,10 @@
     ]
   },
   "evidence": {
-    "decolonization": "Module distinguishes Ukrainian burlak, chumak, recruit, zhovnir, hired-labor, serf, and emigration contexts without Russian-imperial defaults or Soviet teleology.",
-    "learner_surface": "Ukrainian-facing lesson and V2 activities avoid internal module IDs, process register, and English leakage outside vocabulary glosses.",
-    "review": "Claude Opus 4.8 reviewed the FOLK module and cleared source/framing/resource risks after two text findings were fixed and MDX regenerated.",
-    "source_hygiene": "Quoted fragments were verified through repo source tooling; unverified emigration title is kept as title-level context only and not quoted."
+    "learner_surface": "Structured PrimaryReading blocks use dash-led source attribution and generated MDX now separates closing PrimaryReading JSX from following markdown.",
+    "reading_coverage": "Added learner-visible structured on-site shortened primary readings; the k\u043e\u0437\u0430\u0446\u044c\u043a\u0438\u0439 excerpt was tightened to the attested textbook/corpus \u0442\u0430 variant.",
+    "review": "Claude local CLI failed before producing a review; AGY/Gemini review found two remediation blockers, both fixed, and focused follow-up returned PASS/no blockers.",
+    "source_hygiene": "Readings are bounded as verified corpus/scholarly witness excerpts; no fabricated dialogue, songs, or source claims were introduced."
   },
   "floors": {
     "beauty": 8.5,
@@ -44,12 +44,12 @@
   "profile": "folk_promote_v1",
   "review_artifact": null,
   "reviewer": {
-    "agent": "claude",
-    "family": "anthropic",
-    "model": "claude-opus-4-8"
+    "agent": "agy",
+    "family": "google",
+    "model": "gemini-3.1-pro-high"
   },
   "schema_version": 1,
-  "scored_at": "2026-07-03T09:18:11Z",
+  "scored_at": "2026-07-05T12:18:49Z",
   "scores": {
     "beauty": 8.8,
     "decolonization": 9.2,

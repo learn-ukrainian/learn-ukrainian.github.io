@@ -29,6 +29,7 @@ import { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphe
 import VariantComparison from '@site/src/components/VariantComparison';
 import MotifFormula from '@site/src/components/MotifFormula';
 import PerformanceActivity from '@site/src/components/PerformanceActivity';
+import PrimaryReading from '@site/src/components/PrimaryReading';
 import EssayResponse from '@site/src/components/EssayResponse';
 import ComparativeStudy from '@site/src/components/ComparativeStudy';
 import ReadingActivity from '@site/src/components/ReadingActivity';
@@ -149,7 +150,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 коломийкового уявлення. Без них жанр втрачає багато барви. Але
 деколонізоване читання не мусить робити з регіонального походження
 екзотичну клітку. Коломийка є українською формою, а не музейним
-знаком "далекої окраїни". Вона має карпатський центр тяжіння і ширше
+знаком "далекої периферії". Вона має карпатський центр тяжіння і ширше
 українське побутування; коломийковий розмір має ще ширший пісенний і
 літературний шлях.
 
@@ -272,13 +273,22 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 гуцульським танцювальним імпульсом, а й ширшим пісенним способом
 організувати ліричний голос.
 
+<PrimaryReading>
+
+Посіяла огірочки низько над водою,
+сама буду поливати дрібною сльозою.
+
+— Народна творчість, коломийковий фрагмент у науковому свідченні
+Мирослава Поповича; приклад розміру, не польовий запис
+
+</PrimaryReading>
+
 Літературний свідок іншого типу дає Михайло Коцюбинський у "Тінях
-забутих предків", де в пам'яті Івана звучить співанка коханої:
-"Ізгадай мні, мій миленький, два рази на днину, а я тебе ізгадаю сім
-раз на годину". Тут важить не тільки фольклорний колорит. Короткий
-рядок стає частиною психологічної пам'яті героя. Співанка звучить як
-щось дуже близьке, але вже втрачене; вона належить усній культурі
-персонажів і водночас працює всередині модерної української прози.
+забутих предків", де в пам'яті Івана звучить коротка співанка коханої.
+Тут важить не тільки фольклорний колорит. Короткий рядок стає частиною
+психологічної пам'яті героя. Співанка звучить як щось дуже близьке, але
+вже втрачене; вона належить усній культурі персонажів і водночас працює
+всередині модерної української прози.
 
 Саме такі свідки вчать обережності. Ми можемо аналізувати ритм,
 стислість, інтонацію, діалектну барву, пам'ять голосу. Але ми не
@@ -465,7 +475,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 відчутною.
 
 Кохання в коломийці теж багатоголосе. Воно може бути ніжним,
-кепкувальним, ревнивим, сором'язливим, сміливим, образливим або
+насмішкуватим, ревнивим, сором'язливим, сміливим, образливим або
 самоіронічним. Саме дворядковість робить цей голос рухомим: перший
 рядок може створити очікування ласки, а другий повернути до жарту;
 перший може подати жарт, а другий раптом відкрити болючу залежність.
@@ -678,7 +688,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 бачити короткість без знецінення. Коломийка потребує саме такого
 слуху: теплого, уважного і джерельно чесного.
 
-Для семінарної роботи зручно мати коротку матрицю запитань. Якщо
+Для роботи на семінарі зручно мати коротку матрицю запитань. Якщо
 перед вами публічна добірка, спитайте: хто її подав, чи видно
 джерело, чи можна відокремити текст від редакторської рамки? Якщо
 перед вами наукова цитата, спитайте: яку тезу вона підтримує і чого
@@ -747,7 +757,7 @@ import { Tabs, TabItem } from '@astrojs/starlight/components';
 </TabItem>
 <TabItem label="Словник">
 
-<VocabCard client:only="react" words={JSON.parse(`[{"word":"коломийка","translation":"kolomyika; short Ukrainian song-dance stanza","pos":"noun","example":"Коломийка поєднує коротку співану форму з танцювальним відблиском.","examples":["kolomyika; short Ukrainian song-dance stanza","Коломийка поєднує коротку співану форму з танцювальним відблиском."]},{"word":"коломийковий вірш","translation":"kolomyika meter","pos":"noun phrase","example":"Коломийковий вірш має чотирнадцять складів і паузу після восьмого.","examples":["kolomyika meter","Коломийковий вірш має чотирнадцять складів і паузу після восьмого."]},{"word":"цезура","translation":"caesura; rhythmic pause","pos":"noun","example":"Цезура після восьмого складу допомагає почути поворот думки.","examples":["caesura; rhythmic pause","Цезура після восьмого складу допомагає почути поворот думки."]},{"word":"дворядкова строфа","translation":"two-line stanza","pos":"noun phrase","example":"Дворядкова строфа змушує коломийку говорити стисло.","examples":["two-line stanza","Дворядкова строфа змушує коломийку говорити стисло."]},{"word":"жіноча рима","translation":"feminine rhyme","pos":"noun phrase","example":"Жіноча рима м'яко, але виразно замикає коломийковий рядок.","examples":["feminine rhyme","Жіноча рима м'яко, але виразно замикає коломийковий рядок."]},{"word":"приспівка","translation":"short refrain-like song","pos":"noun","example":"Приспівка до танцю може з часом жити як самостійна строфа.","examples":["short refrain-like song","Приспівка до танцю може з часом жити як самостійна строфа."]},{"word":"в'язанка","translation":"linked cycle; medley","pos":"noun","example":"В'язанка поєднує окремі коломийкові строфи асоціативним рухом.","examples":["linked cycle; medley","В'язанка поєднує окремі коломийкові строфи асоціативним рухом."]},{"word":"коломийкар","translation":"kolomyika maker or performer","pos":"noun","example":"Коломийкар добирає, складає або нанизує строфи під ситуацію.","examples":["kolomyika maker or performer","Коломийкар добирає, складає або нанизує строфи під ситуацію."]},{"word":"співанка","translation":"song; sung piece","pos":"noun","example":"Співанка у прозі Коцюбинського працює як пам'ять голосу.","examples":["song; sung piece","Співанка у прозі Коцюбинського працює як пам'ять голосу."]},{"word":"залицяння","translation":"courtship","pos":"noun","example":"Залицяння в коломийці часто говорить натяком і дотепом.","examples":["courtship","Залицяння в коломийці часто говорить натяком і дотепом."]},{"word":"вечорниці","translation":"evening youth gathering","pos":"noun","example":"На вечорницях коломийка може звучати як діалог між голосами.","examples":["evening youth gathering","На вечорницях коломийка може звучати як діалог між голосами."]},{"word":"рекрутчина","translation":"military conscription burden","pos":"noun","example":"Рекрутчина належить до соціальних тем коломийкового корпусу.","examples":["military conscription burden","Рекрутчина належить до соціальних тем коломийкового корпусу."]},{"word":"панський гніт","translation":"oppression by landlords","pos":"noun phrase","example":"Панський гніт може ставати об'єктом короткої сатиричної строфи.","examples":["oppression by landlords","Панський гніт може ставати об'єктом короткої сатиричної строфи."]},{"word":"дотеп","translation":"wit; pointed joke","pos":"noun","example":"Дотеп у коломийці часто має соціальний нерв.","examples":["wit; pointed joke","Дотеп у коломийці часто має соціальний нерв."]},{"word":"джерельне походження","translation":"source origin","pos":"noun phrase","example":"Джерельне походження показує, звідки походить текст і як його можна цитувати.","examples":["source origin","Джерельне походження показує, звідки походить текст і як його можна цитувати."]},{"word":"джерельна межа","translation":"source boundary","pos":"noun phrase","example":"Джерельна межа відрізняє народний запис від літературного свідка.","examples":["source boundary","Джерельна межа відрізняє народний запис від літературного свідка."]},{"word":"екзотизація","translation":"exoticization","pos":"noun","example":"Екзотизація зменшує регіональну форму до барвистої картинки.","examples":["exoticization","Екзотизація зменшує регіональну форму до барвистої картинки."]},{"word":"стилізація","translation":"stylization","pos":"noun","example":"Стилізація може наслідувати ритм, але не є народним джерелом.","examples":["stylization","Стилізація може наслідувати ритм, але не є народним джерелом."],"atlas_href":"/lexicon/стилізація/"},{"word":"побутування","translation":"circulation; lived practice","pos":"noun","example":"Побутування коломийки охоплює танець, спів, сцену і книжний запис.","examples":["circulation; lived practice","Побутування коломийки охоплює танець, спів, сцену і книжний запис."]},{"word":"усна словесність","translation":"oral verbal art","pos":"noun phrase","example":"Усна словесність живить письмову українську літературу.","examples":["oral verbal art","Усна словесність живить письмову українську літературу."]}]`)} title="Словник" />
+<VocabCard client:only="react" words={JSON.parse(`[{"word":"коломийка","translation":"kolomyika; short Ukrainian song-dance stanza","pos":"noun","example":"Коломийка поєднує коротку співану форму з танцювальним відблиском.","examples":["Коломийка поєднує коротку співану форму з танцювальним відблиском."]},{"word":"коломийковий вірш","translation":"kolomyika meter","pos":"noun phrase","example":"Коломийковий вірш має чотирнадцять складів і паузу після восьмого.","examples":["Коломийковий вірш має чотирнадцять складів і паузу після восьмого."]},{"word":"цезура","translation":"caesura; rhythmic pause","pos":"noun","example":"Цезура після восьмого складу допомагає почути поворот думки.","examples":["Цезура після восьмого складу допомагає почути поворот думки."]},{"word":"дворядкова строфа","translation":"two-line stanza","pos":"noun phrase","example":"Дворядкова строфа змушує коломийку говорити стисло.","examples":["Дворядкова строфа змушує коломийку говорити стисло."]},{"word":"жіноча рима","translation":"feminine rhyme","pos":"noun phrase","example":"Жіноча рима м'яко, але виразно замикає коломийковий рядок.","examples":["Жіноча рима м'яко, але виразно замикає коломийковий рядок."]},{"word":"приспівка","translation":"short refrain-like song","pos":"noun","example":"Приспівка до танцю може з часом жити як самостійна строфа.","examples":["Приспівка до танцю може з часом жити як самостійна строфа."]},{"word":"в'язанка","translation":"linked cycle; medley","pos":"noun","example":"В'язанка поєднує окремі коломийкові строфи асоціативним рухом.","examples":["В'язанка поєднує окремі коломийкові строфи асоціативним рухом."]},{"word":"коломийкар","translation":"kolomyika maker or performer","pos":"noun","example":"Коломийкар добирає, складає або нанизує строфи під ситуацію.","examples":["Коломийкар добирає, складає або нанизує строфи під ситуацію."]},{"word":"співанка","translation":"song; sung piece","pos":"noun","example":"Співанка у прозі Коцюбинського працює як пам'ять голосу.","examples":["Співанка у прозі Коцюбинського працює як пам'ять голосу."]},{"word":"залицяння","translation":"courtship","pos":"noun","example":"Залицяння в коломийці часто говорить натяком і дотепом.","examples":["Залицяння в коломийці часто говорить натяком і дотепом."]},{"word":"вечорниці","translation":"evening youth gathering","pos":"noun","example":"На вечорницях коломийка може звучати як діалог між голосами.","examples":["На вечорницях коломийка може звучати як діалог між голосами."]},{"word":"рекрутчина","translation":"military conscription burden","pos":"noun","example":"Рекрутчина належить до соціальних тем коломийкового корпусу.","examples":["Рекрутчина належить до соціальних тем коломийкового корпусу."]},{"word":"панський гніт","translation":"oppression by landlords","pos":"noun phrase","example":"Панський гніт може ставати об'єктом короткої сатиричної строфи.","examples":["Панський гніт може ставати об'єктом короткої сатиричної строфи."]},{"word":"дотеп","translation":"wit; pointed joke","pos":"noun","example":"Дотеп у коломийці часто має соціальний нерв.","examples":["Дотеп у коломийці часто має соціальний нерв."]},{"word":"джерельне походження","translation":"source origin","pos":"noun phrase","example":"Джерельне походження показує, звідки походить текст і як його можна цитувати.","examples":["Джерельне походження показує, звідки походить текст і як його можна цитувати."]},{"word":"джерельна межа","translation":"source boundary","pos":"noun phrase","example":"Джерельна межа відрізняє народний запис від літературного свідка.","examples":["Джерельна межа відрізняє народний запис від літературного свідка."]},{"word":"екзотизація","translation":"exoticization","pos":"noun","example":"Екзотизація зменшує регіональну форму до барвистої картинки.","examples":["Екзотизація зменшує регіональну форму до барвистої картинки."]},{"word":"стилізація","translation":"stylization","pos":"noun","example":"Стилізація може наслідувати ритм, але не є народним джерелом.","examples":["Стилізація може наслідувати ритм, але не є народним джерелом."]},{"word":"побутування","translation":"circulation; lived practice","pos":"noun","example":"Побутування коломийки охоплює танець, спів, сцену і книжний запис.","examples":["Побутування коломийки охоплює танець, спів, сцену і книжний запис."]},{"word":"усна словесність","translation":"oral verbal art","pos":"noun phrase","example":"Усна словесність живить письмову українську літературу.","examples":["Усна словесність живить письмову українську літературу."]}]`)} title="Словник" />
 
 <FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"коломийка","back":"kolomyika; short Ukrainian song-dance stanza"},{"front":"коломийковий вірш","back":"kolomyika meter"},{"front":"цезура","back":"caesura; rhythmic pause"},{"front":"дворядкова строфа","back":"two-line stanza"},{"front":"жіноча рима","back":"feminine rhyme"},{"front":"приспівка","back":"short refrain-like song"},{"front":"в'язанка","back":"linked cycle; medley"},{"front":"коломийкар","back":"kolomyika maker or performer"},{"front":"співанка","back":"song; sung piece"},{"front":"залицяння","back":"courtship"},{"front":"вечорниці","back":"evening youth gathering"},{"front":"рекрутчина","back":"military conscription burden"},{"front":"панський гніт","back":"oppression by landlords"},{"front":"дотеп","back":"wit; pointed joke"},{"front":"джерельне походження","back":"source origin"},{"front":"джерельна межа","back":"source boundary"},{"front":"екзотизація","back":"exoticization"},{"front":"стилізація","back":"stylization"},{"front":"побутування","back":"circulation; lived practice"},{"front":"усна словесність","back":"oral verbal art"}]`)} />
 
