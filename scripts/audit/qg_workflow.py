@@ -4,7 +4,9 @@
 This composes the deterministic/lookup adapters and the gated LLM reviewer into
 one canonical ``qg_schema`` evidence record per module. Live reviewer dispatch
 is intentionally absent until #4370 calibrates the prompt and canary runbook;
-callers must inject a reviewer response or reuse a composite cache hit.
+callers must inject a reviewer response or reuse a composite cache hit. The
+live Tier-2 retry composition is capped at three reviewer calls per module:
+initial response, at most one theatre retry, and at most one deep-read retry.
 """
 
 from __future__ import annotations
@@ -116,6 +118,19 @@ class BudgetState:
         cost = float(observed_cost_usd if observed_cost_usd is not None else estimate.get("estimated_cost_usd") or 0.0)
         self.cost_usd += cost
         self.daily_cost_usd += cost
+
+
+@dataclass(frozen=True, slots=True)
+class _ReviewerGateOutcome:
+    """Deterministic post-response reviewer gate outcome."""
+
+    payload: dict[str, Any]
+    findings: list[dict[str, Any]]
+    status: str = "ran"
+    workflow_override: str | None = None
+    grounding_gate: llm_reviewer_dispatch.GroundingGateResult | None = None
+    retry_reason: str | None = None
+    gate_reason: str | None = None
 
 
 def review_module(
@@ -715,29 +730,70 @@ def _run_tier2(
             "tools_used": list(cached.tools_used),
             "route_name": cached.route_name,
         }
-        try:
-            llm_reviewer.validate_reviewer_payload(cached_payload, policy_family)
-            cache_theatre = llm_reviewer_dispatch.tool_theatre_violation(
-                policy_family=policy_family,
-                payload=cached_payload,
-                dispatch_meta=cached_meta,
-            )
-        except ValueError:
-            cache_theatre = {"status": llm_reviewer_dispatch.INVALID_TOOL_THEATRE}
-        if cache_theatre is None:
-            findings = _findings_from_payload(cached_payload)
-            return {
-                "findings": findings,
-                "result": {
-                    **base_result,
-                    "status": "cache_hit",
-                    "findings": len(findings),
-                    "cache_run_id": cached.run_id,
-                },
-                "llm_used": True,
-                "reviewer_model_id": reviewer_model_id,
-                "reviewer_family": reviewer_family,
-            }
+        if cached.tool_events is not None:
+            cached_meta["tool_events"] = [dict(event) for event in cached.tool_events]
+            try:
+                llm_reviewer.validate_reviewer_payload(cached_payload, policy_family)
+                cache_gate = _run_reviewer_gate_sequence(
+                    cached_payload,
+                    cached_meta,
+                    policy_family=policy_family,
+                    theatre_retry_available=True,
+                    deep_read_retry_available=True,
+                    retry_unavailable_fails=True,
+                )
+            except ValueError:
+                cache_gate = _ReviewerGateOutcome(
+                    payload=cached_payload,
+                    findings=[],
+                    retry_reason="schema_failure",
+                )
+            if cache_gate.retry_reason is None:
+                findings = cache_gate.findings
+                grounding_gate = cache_gate.grounding_gate or llm_reviewer_dispatch.GroundingGateResult(
+                    payload=cache_gate.payload
+                )
+                return {
+                    "findings": findings,
+                    "result": {
+                        **base_result,
+                        "status": "cache_hit" if cache_gate.status == "ran" else cache_gate.status,
+                        "findings": len(findings),
+                        "cache_run_id": cached.run_id,
+                        "cache_regate": "replayed",
+                        "invalid_fact_checks": grounding_gate.invalid_fact_checks,
+                        "inadmissible_positive_verdicts": grounding_gate.inadmissible_positive_verdicts,
+                    },
+                    "llm_used": True,
+                    "workflow_verdict": cache_gate.workflow_override,
+                    "reviewer_model_id": reviewer_model_id,
+                    "reviewer_family": reviewer_family,
+                }
+        else:
+            try:
+                llm_reviewer.validate_reviewer_payload(cached_payload, policy_family)
+                cache_theatre = llm_reviewer_dispatch.tool_theatre_violation(
+                    policy_family=policy_family,
+                    payload=cached_payload,
+                    dispatch_meta=cached_meta,
+                )
+            except ValueError:
+                cache_theatre = {"status": llm_reviewer_dispatch.INVALID_TOOL_THEATRE}
+            if cache_theatre is None:
+                findings = _findings_from_payload(cached_payload)
+                return {
+                    "findings": findings,
+                    "result": {
+                        **base_result,
+                        "status": "cache_hit",
+                        "findings": len(findings),
+                        "cache_run_id": cached.run_id,
+                        "cache_regate": "unavailable",
+                    },
+                    "llm_used": True,
+                    "reviewer_model_id": reviewer_model_id,
+                    "reviewer_family": reviewer_family,
+                }
 
     stale_cache = _has_stale_cache(
         level=level,
@@ -948,26 +1004,35 @@ def _run_tier2(
                 "reviewer_family": reviewer_family,
             }
 
-        theatre = llm_reviewer_dispatch.tool_theatre_violation(
+        gate_outcome = _run_reviewer_gate_sequence(
+            payload,
+            dispatch_meta,
             policy_family=policy_family,
-            payload=payload,
-            dispatch_meta=dispatch_meta,
+            theatre_retry_available=not theatre_retried,
+            deep_read_retry_available=not deep_read_retried,
         )
-        if theatre is not None:
-            if not theatre_retried:
-                theatre_retried = True
-                attempt_prompt = llm_reviewer_dispatch.reviewer_retry_prompt(
-                    prompt,
-                    llm_reviewer_dispatch.INVALID_TOOL_THEATRE,
-                )
-                continue
+        if gate_outcome.retry_reason == llm_reviewer_dispatch.INVALID_TOOL_THEATRE:
+            theatre_retried = True
+            attempt_prompt = llm_reviewer_dispatch.reviewer_retry_prompt(
+                prompt,
+                llm_reviewer_dispatch.INVALID_TOOL_THEATRE,
+            )
+            continue
+        if gate_outcome.retry_reason == llm_reviewer_dispatch.DEEP_READ_REQUIRED:
+            deep_read_retried = True
+            attempt_prompt = llm_reviewer_dispatch.reviewer_retry_prompt(
+                prompt,
+                llm_reviewer_dispatch.DEEP_READ_REQUIRED,
+            )
+            continue
+        if gate_outcome.status == llm_reviewer_dispatch.RETRY_EXHAUSTED:
             return {
                 "findings": [],
                 "result": {
                     **base_result,
                     "status": llm_reviewer_dispatch.RETRY_EXHAUSTED,
                     "reason": llm_reviewer_dispatch.INVALID_TOOL_THEATRE,
-                    "gate_reason": theatre.get("reason"),
+                    "gate_reason": gate_outcome.gate_reason,
                     "estimate": estimate,
                     "dispatch": dispatch_meta,
                 },
@@ -978,76 +1043,11 @@ def _run_tier2(
                 "reviewer_family": reviewer_family,
             }
 
-        if llm_reviewer_dispatch.deep_read_required(payload, dispatch_meta):
-            if not deep_read_retried:
-                deep_read_retried = True
-                attempt_prompt = llm_reviewer_dispatch.reviewer_retry_prompt(
-                    prompt,
-                    llm_reviewer_dispatch.DEEP_READ_REQUIRED,
-                )
-                continue
-            payload = llm_reviewer_dispatch.mark_deep_read_attempted(payload)
-            llm_reviewer.validate_reviewer_payload(payload, policy_family)
-
-        grounding_gate = llm_reviewer_dispatch.enforce_grounding_against_tool_events(
-            payload,
-            dispatch_meta,
-            policy_family=policy_family,
-        )
-        payload = grounding_gate.payload
-        sweep_incomplete = llm_reviewer_dispatch.factual_sweep_incomplete(
-            payload,
-            policy_family=policy_family,
-            invalid_fact_checks=grounding_gate.invalid_fact_checks,
-        )
-        if grounding_gate.inadmissible_positive_verdicts:
-            payload["inadmissible_positive_verdicts"] = grounding_gate.inadmissible_positive_verdicts
-        if (
-            grounding_gate.required_ungrounded_findings
-            or grounding_gate.invalid_fact_checks
-            or grounding_gate.inadmissible_positive_verdicts
-            or sweep_incomplete
-        ):
-            if (
-                grounding_gate.inadmissible_positive_verdicts
-                and not grounding_gate.invalid_fact_checks
-                and not grounding_gate.required_ungrounded_findings
-            ):
-                tier2_status = "inadmissible_citations"
-            elif grounding_gate.required_ungrounded_findings or grounding_gate.invalid_fact_checks:
-                tier2_status = llm_reviewer_dispatch.UNGROUNDED_FINDINGS
-            else:
-                tier2_status = "factual_sweep_incomplete"
-            workflow_override = "FAIL" if sweep_incomplete else "WARN"
-            severity = "critical" if sweep_incomplete else "warning"
-            message = "Grounded reviewer gate found ungrounded evidence or an incomplete seminar fact-check sweep."
-            if (
-                grounding_gate.inadmissible_positive_verdicts
-                and not grounding_gate.invalid_fact_checks
-                and not grounding_gate.required_ungrounded_findings
-            ):
-                message = (
-                    "reviewer confirmed/refuted claims on summary-only wiki evidence after the forced "
-                    "deep-read retry — factual sweep uncertified"
-                )
-            findings = [
-                *_findings_from_payload(payload),
-                _reviewer_gate_finding(
-                    severity=severity,
-                    issue_id="LLM_REVIEWER_GROUNDING_GATE",
-                    message=message,
-                ),
-            ]
-            payload = _payload_from_findings(
-                findings,
-                fact_checks=payload.get("fact_checks", []),
-                evidence_gaps=payload.get("evidence_gaps", []),
-            )
-            if grounding_gate.inadmissible_positive_verdicts:
-                payload["inadmissible_positive_verdicts"] = grounding_gate.inadmissible_positive_verdicts
-            llm_reviewer.validate_reviewer_payload(payload, policy_family)
-        else:
-            findings = _findings_from_payload(payload)
+        payload = gate_outcome.payload
+        findings = gate_outcome.findings
+        tier2_status = gate_outcome.status
+        workflow_override = gate_outcome.workflow_override
+        grounding_gate = gate_outcome.grounding_gate or llm_reviewer_dispatch.GroundingGateResult(payload=payload)
         break
 
     llm_qg_store.record_llm_qg(
@@ -1062,8 +1062,9 @@ def _run_tier2(
         reviewer_model=reviewer_model_id,
         reviewer_family=reviewer_family,
         route_name=route_name,
-        tool_call_count=int(dispatch_meta.get("tool_call_count") or 0),
+        tool_call_count=llm_reviewer_dispatch.tool_call_count_from_dispatch_meta(dispatch_meta),
         tools_used=[str(tool) for tool in (dispatch_meta.get("tools_used") or ())],
+        tool_events=llm_reviewer_dispatch.tool_events_from_dispatch_meta(dispatch_meta),
         source="qg_workflow",
         path=store_path,
     )
@@ -1234,6 +1235,120 @@ def _record_daily_spend(
 
 def _parse_failed(findings: Sequence[Mapping[str, Any]]) -> bool:
     return any(str(finding.get("issue_id")) == "LLM_RESPONSE_PARSE_FAILURE" for finding in findings)
+
+
+def _run_reviewer_gate_sequence(
+    payload: Mapping[str, Any],
+    dispatch_meta: Mapping[str, Any],
+    *,
+    policy_family: str,
+    theatre_retry_available: bool,
+    deep_read_retry_available: bool,
+    retry_unavailable_fails: bool = False,
+) -> _ReviewerGateOutcome:
+    """Apply the canonical theatre/deep-read/grounding/factual-sweep gates."""
+    working_payload = dict(payload)
+    theatre = llm_reviewer_dispatch.tool_theatre_violation(
+        policy_family=policy_family,
+        payload=working_payload,
+        dispatch_meta=dispatch_meta,
+    )
+    if theatre is not None:
+        if theatre_retry_available or retry_unavailable_fails:
+            return _ReviewerGateOutcome(
+                payload=working_payload,
+                findings=[],
+                retry_reason=llm_reviewer_dispatch.INVALID_TOOL_THEATRE,
+                gate_reason=str(theatre.get("reason") or ""),
+            )
+        return _ReviewerGateOutcome(
+            payload=working_payload,
+            findings=[],
+            status=llm_reviewer_dispatch.RETRY_EXHAUSTED,
+            workflow_override=llm_reviewer_dispatch.INVALID_TOOL_THEATRE,
+            gate_reason=str(theatre.get("reason") or ""),
+        )
+
+    if llm_reviewer_dispatch.deep_read_required(working_payload, dispatch_meta):
+        if deep_read_retry_available or retry_unavailable_fails:
+            return _ReviewerGateOutcome(
+                payload=working_payload,
+                findings=[],
+                retry_reason=llm_reviewer_dispatch.DEEP_READ_REQUIRED,
+            )
+        working_payload = llm_reviewer_dispatch.mark_deep_read_attempted(working_payload)
+        llm_reviewer.validate_reviewer_payload(working_payload, policy_family)
+
+    grounding_gate = llm_reviewer_dispatch.enforce_grounding_against_tool_events(
+        working_payload,
+        dispatch_meta,
+        policy_family=policy_family,
+    )
+    working_payload = grounding_gate.payload
+    sweep_incomplete = llm_reviewer_dispatch.factual_sweep_incomplete(
+        working_payload,
+        policy_family=policy_family,
+        invalid_fact_checks=grounding_gate.invalid_fact_checks,
+    )
+    if grounding_gate.inadmissible_positive_verdicts:
+        working_payload["inadmissible_positive_verdicts"] = grounding_gate.inadmissible_positive_verdicts
+    if (
+        grounding_gate.required_ungrounded_findings
+        or grounding_gate.invalid_fact_checks
+        or grounding_gate.inadmissible_positive_verdicts
+        or sweep_incomplete
+    ):
+        if (
+            grounding_gate.inadmissible_positive_verdicts
+            and not grounding_gate.invalid_fact_checks
+            and not grounding_gate.required_ungrounded_findings
+        ):
+            status = "inadmissible_citations"
+        elif grounding_gate.required_ungrounded_findings or grounding_gate.invalid_fact_checks:
+            status = llm_reviewer_dispatch.UNGROUNDED_FINDINGS
+        else:
+            status = "factual_sweep_incomplete"
+        workflow_override = "FAIL" if sweep_incomplete else "WARN"
+        severity = "critical" if sweep_incomplete else "warning"
+        message = "Grounded reviewer gate found ungrounded evidence or an incomplete seminar fact-check sweep."
+        if (
+            grounding_gate.inadmissible_positive_verdicts
+            and not grounding_gate.invalid_fact_checks
+            and not grounding_gate.required_ungrounded_findings
+        ):
+            message = (
+                "reviewer confirmed/refuted claims on summary-only wiki evidence after the forced "
+                "deep-read retry — factual sweep uncertified"
+            )
+        findings = [
+            *_findings_from_payload(working_payload),
+            _reviewer_gate_finding(
+                severity=severity,
+                issue_id="LLM_REVIEWER_GROUNDING_GATE",
+                message=message,
+            ),
+        ]
+        working_payload = _payload_from_findings(
+            findings,
+            fact_checks=working_payload.get("fact_checks", []),
+            evidence_gaps=working_payload.get("evidence_gaps", []),
+        )
+        if grounding_gate.inadmissible_positive_verdicts:
+            working_payload["inadmissible_positive_verdicts"] = grounding_gate.inadmissible_positive_verdicts
+        llm_reviewer.validate_reviewer_payload(working_payload, policy_family)
+        return _ReviewerGateOutcome(
+            payload=working_payload,
+            findings=findings,
+            status=status,
+            workflow_override=workflow_override,
+            grounding_gate=grounding_gate,
+        )
+
+    return _ReviewerGateOutcome(
+        payload=working_payload,
+        findings=_findings_from_payload(working_payload),
+        grounding_gate=grounding_gate,
+    )
 
 
 def _has_stale_cache(

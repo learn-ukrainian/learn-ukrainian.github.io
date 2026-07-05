@@ -81,6 +81,52 @@ persona:
   role: Модератор семінару, що відділяє житіє від життя, а святого від князя, проблематизуючи офіційні наративи
   voice: Hagiography-Skeptic
 phase: BIO
+readings:
+- title: 'Михайло Всеволодович: Енциклопедія історії України'
+  language: uk
+  genre: encyclopedia
+  source_type: reference
+  role: context
+  source_url: 'http://history.org.ua/?termin=Mykhajlo_Vsevolodovych'
+  license: copyright
+  hosting: link-only
+  cefr_min: C1
+  learner_task: 'Ознайомитись з родоводом та політичною діяльністю князя.'
+  caveats: 'Довідкова стаття задає біографічний каркас; агіографічні мотиви мучеництва треба аналізувати окремо від політичної реконструкції.'
+- title: 'Житіє Михайла Чернігівського в історико-культурному викладі'
+  language: uk
+  genre: scholarly excerpt
+  source_type: secondary
+  role: source-analysis
+  source: 'internal:wave7-istkult-t2-xiii-xvii#484d0ffb_c0578'
+  license: copyright
+  hosting: excerpt-only
+  cefr_min: C1
+  learner_task: 'Відділити цитовану агіографічну фразу від наукового коментаря й визначити, як створюється образ мученика.'
+  caveats: 'Внутрішній корпусний фрагмент з «Історії української культури» подає жанровий контекст і коротку цитату з житія; це не повний текст самого «Сказання».'
+  rights_note: 'Підставовий твір — «Історія української культури», т. 2; використовувати лише короткий контрольований уривок або переказ, не хостити повний текст.'
+- title: 'Плано Карпіні про страту руського князя в Орді'
+  language: uk
+  genre: travel account
+  source_type: primary
+  role: reading-needed
+  source: 'reading-needed: verify a Ukrainian-hosted translation excerpt from «Історія монголів» before module build'
+  license: unknown
+  hosting: reading-needed
+  cefr_min: C1
+  learner_task: 'Після верифікації українського уривка зіставити зовнішній опис Орди з агіографічною моделлю мучеництва.'
+  caveats: 'Не підміняти текст Плано Карпіні переказом із довідників; потрібні перевірка українського перекладу, прав і стабільного доступу.'
+- title: 'Михайло Всеволодович (Вікіпедія)'
+  language: uk
+  genre: encyclopedia
+  source_type: reference
+  role: context
+  source_url: 'https://uk.wikipedia.org/wiki/Михайло_Всеволодович'
+  license: CC-BY-SA
+  hosting: link-only
+  cefr_min: B2
+  learner_task: 'Вивчити дати та ключові події життя.'
+  caveats: 'Орієнтаційне читання; перевіряти факти за ЕІУ та першоджерельними матеріалами, особливо щодо культу мучеництва.'
 references:
 - title: Михайло Всеволодович
   note: Загальна біографія, дати та родовід
@@ -105,7 +151,7 @@ sequence: 9
 slug: mykhailo-chernihivskyi
 subtitle: 'Mykhailo of Chernihiv: The Martyr Prince'
 title: 'Михайло Чернігівський: Князь-мученик'
-version: '4.0'
+version: '4.3'
 vocabulary_hints:
 - definition: смерть, прийнята за віру; свідома жертва життям заради вищих переконань
   pos: с.

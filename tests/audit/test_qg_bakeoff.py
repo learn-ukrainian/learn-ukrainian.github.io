@@ -50,7 +50,7 @@ def test_fixture_validation_rejects_duplicate_claim_id(tmp_path: Path) -> None:
             {
                 "slug": "bad",
                 "title": "Bad",
-                "passage_md": "x",
+                "passage_md": "a b",
                 "claims": [
                     {"claim_id": "dup", "claim": "a", "is_true": True},
                     {"claim_id": "dup", "claim": "b", "is_true": True},
@@ -167,6 +167,77 @@ def test_claim_matching_accepts_standalone_extraction_from_anchor_fragment() -> 
 
     assert score["missing_claims"] == 0
     assert score["model_judgment_score"] == 10
+
+
+def test_claim_matching_prefers_tightest_containing_row_over_first() -> None:
+    """Containment must pick the most specific row, not the first in row order
+    (codex review, PR #4485): a broad row with a different verdict must not
+    shadow a tighter, more specific match."""
+    fixture = qg_bakeoff.BakeoffFixture(
+        slug="specific",
+        title="Specific",
+        passage_md="x",
+        claims=(qg_bakeoff.FixtureClaim("m", "вінок пускали на воду.", False, "M", "real quote"),),
+    )
+    payload = {
+        "fact_checks": [
+            # Broad row FIRST (row-order trap): whole-paragraph quote, honest verdict.
+            {
+                "claim": "Дівчата плели вінки, вінок пускали на воду, а хлопці стрибали через вогонь.",
+                "verdict": "UNATTESTED_AFTER_SEARCH",
+            },
+            # Tighter row SECOND: sentence-level quote, endorses the fabrication.
+            {"claim": "Вінок пускали на воду, співаючи.", "verdict": "CONFIRMED"},
+        ]
+    }
+
+    score = qg_bakeoff.score_payload(payload, fixture)
+
+    assert score["missing_claims"] == 0
+    (per_claim,) = score["claims"]
+    assert per_claim["model_claim"] == "Вінок пускали на воду, співаючи."
+    # CONFIRMED on a fabricated claim = the fatal endorsement constant.
+    assert per_claim["model_judgment_points"] == qg_factcheck_scoring.score_verdict(
+        "CONFIRMED", claim_is_true=False
+    )
+
+
+def test_negative_verdict_on_shared_sentence_does_not_refute_true_subclaim() -> None:
+    """A REFUTED row for a compound sentence (one true + one fabricated
+    sub-claim) targets the fabricated part; the true sub-claim must count
+    missing (−10), never refuted-true (−50) (codex review, PR #4485)."""
+    fixture = qg_bakeoff.BakeoffFixture(
+        slug="compound",
+        title="Compound",
+        passage_md="x",
+        claims=(
+            qg_bakeoff.FixtureClaim("t", "Веснянки співали навесні.", True),
+            qg_bakeoff.FixtureClaim("f", "лише чоловіки у шкіряних масках.", False, "M", "real quote"),
+        ),
+    )
+    compound = "Веснянки співали навесні лише чоловіки у шкіряних масках."
+    payload = {"fact_checks": [{"claim": compound, "verdict": "REFUTED_BY_CONTRADICTION"}]}
+
+    score = qg_bakeoff.score_payload(payload, fixture)
+
+    by_id = {row["claim_id"]: row for row in score["claims"]}
+    # Fabricated sub-claim: refutation transfers (the model caught it).
+    assert by_id["f"]["matched"] is True
+    assert by_id["f"]["model_judgment_points"] == qg_factcheck_scoring.score_verdict(
+        "REFUTED_BY_CONTRADICTION", claim_is_true=False
+    )
+    # True sub-claim: the negative verdict must NOT transfer — missing, not refuted.
+    assert by_id["t"]["matched"] is False
+    assert by_id["t"]["reason"] == "missing_claim"
+    assert by_id["t"]["model_judgment_points"] == qg_bakeoff.MISSING_CLAIM_PENALTY
+    # A CONFIRMED compound row still transfers to the true sub-claim.
+    confirmed = {"fact_checks": [{"claim": compound, "verdict": "CONFIRMED"}]}
+    score2 = qg_bakeoff.score_payload(confirmed, fixture)
+    by_id2 = {row["claim_id"]: row for row in score2["claims"]}
+    assert by_id2["t"]["matched"] is True
+    assert by_id2["f"]["model_judgment_points"] == qg_factcheck_scoring.score_verdict(
+        "CONFIRMED", claim_is_true=False
+    )
 
 
 def test_resume_skips_existing_artifact(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -692,3 +763,97 @@ def test_trailing_garbage_after_valid_json_is_lenient_parsed_and_flagged(
     prose_route = qg_bakeoff.bakeoff_route_for_model("openrouter/test/prose-only-model")
     prose_run = qg_bakeoff.run_one(prose_route, fixture, output_dir=tmp_path, runner=prose_runner)
     assert prose_run.artifact["status"] == "error"
+
+
+def test_containment_matching_maps_sentence_quotes_to_subspan_claims(tmp_path: Path) -> None:
+    """Models quote passage SENTENCES; fixture claims are sub-spans (live finding)."""
+    fixture = qg_bakeoff.BakeoffFixture(
+        slug="contain",
+        title="Containment",
+        passage_md="x",
+        claims=(
+            qg_bakeoff.FixtureClaim(claim_id="c-true", claim="Колядки — величальна поезія українського народу.", is_true=True),
+            qg_bakeoff.FixtureClaim(
+                claim_id="c-m",
+                claim="Обходи очолювали заміжні жінки.",
+                is_true=False,
+                fabrication_class="M",
+                distractor_evidence="жінкам колядувати заборонено",
+            ),
+        ),
+    )
+    payload = {
+        "fact_checks": [
+            {
+                # ONE sentence-quote covering BOTH sub-claims → verdict applies to each.
+                "claim": "Колядки — величальна поезія українського народу, а обходи очолювали заміжні жінки.",
+                "verdict": "CONFIRMED",
+            },
+        ]
+    }
+    score = qg_bakeoff.score_payload(payload, fixture)
+    assert score["missing_claims"] == 0
+    by_id = {c["claim_id"]: c for c in score["claims"]}
+    assert by_id["c-true"]["model_judgment_points"] == 20
+    assert by_id["c-m"]["model_judgment_points"] == -100  # confirming the sentence = confirming the fabrication
+
+
+def test_rescore_recomputes_from_stored_payloads_without_model_calls(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.delenv("CI", raising=False)
+    monkeypatch.setenv("QG_BAKEOFF", "1")
+    fixture = _fixture()
+    # a stored artifact whose payload quotes the WHOLE sentence (old matcher → missing)
+    artifact = {
+        "schema_version": qg_bakeoff.RUN_SCHEMA_VERSION,
+        "fixture": {"slug": fixture.slug, "title": fixture.title, "claim_count": len(fixture.claims)},
+        "model": {"pin": "openrouter/test/m", "pin_slug": "openrouter-test-m", "family": "test", "route_name": "bakeoff_test", "bridge_command": []},
+        "status": "ran",
+        "workflow_verdict": "PASS",
+        "attempt_count": 1,
+        "dispatch": {},
+        "gate_outcomes": {"grounding": {"invalid_fact_checks": 0, "inadmissible_positive_verdicts": 0}},
+        "payload": {
+            "fact_checks": [
+                {"claim": "True claim. Додаткові слова навколо.", "verdict": "CONFIRMED"},
+                {"claim": "Fabricated claim. Ще слова.", "verdict": "UNATTESTED_AFTER_SEARCH"},
+            ]
+        },
+        "score": {"model_judgment_score": -999},
+        "tool_call_count": 1,
+        "wall_seconds": 1.0,
+    }
+    fixtures_dir = tmp_path / "fx"
+    fixtures_dir.mkdir()
+    (fixtures_dir / f"{fixture.slug}.json").write_text(
+        json.dumps(
+            {
+                "slug": fixture.slug,
+                "title": fixture.title,
+                "passage_md": fixture.passage_md,
+                "claims": [
+                    {
+                        "claim_id": c.claim_id,
+                        "claim": c.claim,
+                        "is_true": c.is_true,
+                        "fabrication_class": c.fabrication_class,
+                        "distractor_evidence": c.distractor_evidence,
+                    }
+                    for c in fixture.claims
+                ],
+            },
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+    out = tmp_path / "out"
+    out.mkdir()
+    (out / "openrouter-test-m__anchor.json").write_text(json.dumps(artifact, ensure_ascii=False), encoding="utf-8")
+
+    n = qg_bakeoff.rescore_artifacts(out, fixtures_dir)
+
+    assert n == 1
+    updated = json.loads((out / "openrouter-test-m__anchor.json").read_text(encoding="utf-8"))
+    assert updated["score"]["model_judgment_score"] == 30  # 20 + 10, containment matched
+    assert updated["score"]["missing_claims"] == 0
+    assert "rescored_at" in updated
+    assert (out / qg_bakeoff.SCORECARD_NAME).exists()

@@ -4,7 +4,7 @@
 
 For seminar content and fact-sensitive reviews, source grounding is REQUIRED for:
 * findings in `seminar_sensitivity` or `decolonization`;
-* calque, false-friend, russicism, or heritage-contact judgments on seminar content.
+* `calque` or `false_friend` judgments on seminar content.
 
 Style, register, tone, and naturalness judgments outside those factual/contact categories remain prompt-only judgments and do not require source grounding.
 

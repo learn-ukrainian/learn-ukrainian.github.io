@@ -109,11 +109,47 @@ references:
   note: Сучасна французька біографія, що підкреслює українське походження Анни
   type: reference
   work: Anne de Kiev. Une reine de France venue d'Ukraine
+readings:
+- title: "Анна Ярославна"
+  language: uk
+  genre: encyclopedia
+  source_type: reference
+  role: context
+  source: "Енциклопедія історії України (history.org.ua)"
+  source_url: "https://history.org.ua/?termin=Anna_Y"
+  license: copyright
+  hosting: link-only
+  cefr_min: C1
+  learner_task: "Ознайомитися з фактами про життя Анни Ярославни та її роль у дипломатії Київської Русі."
+  caveats: "Академічний стиль."
+- title: "П'ять міфів про Анну Ярославну"
+  language: uk
+  genre: article
+  source_type: source-critical
+  role: source-analysis
+  source: "Локальна історія"
+  source_url: "https://localhistory.org.ua/texts/statti/piat-mifiv-pro-annu-iaroslavnu/"
+  license: copyright
+  hosting: link-only
+  cefr_min: C1
+  learner_task: "Проаналізувати, як популярні міфи про Анну Ярославну співвідносяться з документальними свідченнями про її підпис."
+  caveats: "Популярно-наукова стаття, не первинний документ; використовувати для джерельної критики, а не як заміну грамоті."
+- title: "Грамота абатству Святого Крепіна 1063 року з підписом Анни Ярославни"
+  language: uk
+  genre: charter
+  source_type: primary
+  role: reading-needed
+  source: "reading-needed: verify a Ukrainian-hosted charter facsimile or scholarly edition before module build"
+  license: unknown
+  hosting: reading-needed
+  cefr_min: C1
+  learner_task: "Після верифікації джерела зіставити кириличний підпис із пізнішими інтерпретаціями."
+  caveats: "Потрібна окрема перевірка текстової ідентичності, прав і стабільного доступу; не підміняти грамоту переказами або неперевіреними зображеннями."
 sequence: 5
 slug: knyazhna-anna-yaroslavna
 subtitle: Київська княжна на престолі Франції
 title: 'Анна Ярославна: Королева Франції'
-version: '4.0'
+version: '4.2'
 vocabulary_hints:
 - definition: тимчасове правління державою однією особою (регентом) у разі неповноліття або хвороби монарха
   pos: с.

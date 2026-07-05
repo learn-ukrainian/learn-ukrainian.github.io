@@ -11,6 +11,11 @@ from typing import Any
 
 import yaml
 
+from ..routes import (
+    RUNTIME_ROUTE_TOOL_CONFIG_KEY,
+    forbidden_glm_error,
+    is_forbidden_glm_route,
+)
 from .base import InvocationPlan
 
 _ANSI_RE = re.compile(r"\x1b\[[0-?]*[ -/]*[@-~]")
@@ -51,8 +56,6 @@ _FALLBACK_EMPTY_LOG_RE = re.compile(
     r"(?P<actual_model>\S+)\s+on\s+(?P<actual_provider>\S+)",
     re.IGNORECASE,
 )
-_FORBIDDEN_GLM_MODEL_RE = re.compile(r"(^|[/_.:-])glm($|[/_.:-]|\d)", re.IGNORECASE)
-
 HERMES_SUBSTITUTION_MARKER = "HERMES_FALLBACK_SUBSTITUTION"
 HERMES_GLM_FORBIDDEN_MARKER = "HERMES_GLM_FORBIDDEN"
 
@@ -151,30 +154,21 @@ def _normalize_route_part(value: Any) -> str:
     return str(value or "").strip()
 
 
-def is_forbidden_glm_route(provider: Any, model: Any) -> bool:
-    """Return True for local-only zai/GLM routes forbidden in automation."""
-    provider_text = _normalize_route_part(provider).lower()
-    model_text = _normalize_route_part(model).lower()
-    if provider_text in {"zai", "z-ai", "glm"}:
-        return True
-    if model_text.startswith(("zai/", "z-ai/")):
-        return True
-    return bool(_FORBIDDEN_GLM_MODEL_RE.search(model_text))
-
-
-def forbidden_glm_error(
+def resolve_hermes_requested_route(
     *,
-    provider: Any,
-    model: Any,
-    source: str,
-) -> str:
-    """Build the explicit hard-fail text for forbidden zai/GLM routes."""
-    return (
-        f"{HERMES_GLM_FORBIDDEN_MARKER}: automated Hermes run refused "
-        f"local-only zai/GLM route from {source}: "
-        f"provider={_normalize_route_part(provider)!r} "
-        f"model={_normalize_route_part(model)!r}"
-    )
+    tool_config: dict | None,
+    default_provider: str,
+    requested_model: str,
+    provider_forced: bool = False,
+) -> tuple[str, str, bool]:
+    """Apply a runner-level provider/model override for Hermes lanes."""
+    raw_route = (tool_config or {}).get(RUNTIME_ROUTE_TOOL_CONFIG_KEY)
+    if not isinstance(raw_route, dict):
+        return default_provider, requested_model, provider_forced
+
+    provider = _normalize_route_part(raw_route.get("provider")) or default_provider
+    route_model = _normalize_route_part(raw_route.get("model")) or requested_model
+    return provider, route_model, True
 
 
 def _fallback_entries(config: dict[str, Any]) -> list[dict[str, Any]]:

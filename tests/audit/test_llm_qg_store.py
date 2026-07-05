@@ -226,12 +226,20 @@ def test_legacy_db_without_tool_columns_migrates_on_read(tmp_path: Path) -> None
     assert record is not None
     assert record.tool_call_count == 0
     assert record.tools_used == ()
+    assert record.tool_events is None
     assert record.route_name is None
 
     cols = {row[1] for row in sqlite3.connect(db_path).execute("PRAGMA table_info(llm_qg_runs)")}
-    assert {"route_name", "tool_call_count", "tools_used_json"} <= cols
+    assert {"route_name", "tool_call_count", "tools_used_json", "tool_events_json"} <= cols
 
     # WRITE through the new code path on the migrated DB: also must not raise.
+    event = {
+        "tool": "sources_query_wikipedia",
+        "input": {"query": "Веснянки", "mode": "section"},
+        "status": "completed",
+        "tool_call_id": "call_1",
+        "output": "Веснянки — це весняні обрядові пісні.",
+    }
     stored = record_llm_qg(
         level="b1",
         slug="aspect-in-imperatives",
@@ -241,19 +249,30 @@ def test_legacy_db_without_tool_columns_migrates_on_read(tmp_path: Path) -> None
         route_name="opencode_frontier",
         tool_call_count=5,
         tools_used=["sources_query_wikipedia"],
+        tool_events=[event],
         path=db_path,
     )
     assert stored.tool_call_count == 5
     assert stored.tools_used == ("sources_query_wikipedia",)
+    assert stored.tool_events == (event,)
     reread = latest_llm_qg("b1", "aspect-in-imperatives", content_sha=stored.content_sha, path=db_path)
     assert reread is not None
     assert reread.tool_call_count == 5
     assert reread.tools_used == ("sources_query_wikipedia",)
+    assert reread.tool_events == (event,)
 
 
 def test_tool_telemetry_round_trips_through_store(tmp_path: Path) -> None:
     module_dir = _module(tmp_path)
     db_path = tmp_path / "qg.db"
+    event = {
+        "tool": "sources_search_heritage",
+        "input": {"query": "Веснянки"},
+        "status": "completed",
+        "tool_call_id": "call_1",
+        "output": {"rows": ["heritage result"]},
+        "ignored_extra": "not persisted",
+    }
     record_llm_qg(
         level="b1",
         slug="aspect-in-imperatives",
@@ -263,6 +282,7 @@ def test_tool_telemetry_round_trips_through_store(tmp_path: Path) -> None:
         route_name="opencode_frontier",
         tool_call_count=7,
         tools_used=("sources_search_heritage", "sources_query_wikipedia"),
+        tool_events=(event,),
         path=db_path,
     )
     record = latest_llm_qg("b1", "aspect-in-imperatives", path=db_path)
@@ -270,6 +290,15 @@ def test_tool_telemetry_round_trips_through_store(tmp_path: Path) -> None:
     assert record.tool_call_count == 7
     assert record.tools_used == ("sources_search_heritage", "sources_query_wikipedia")
     assert record.route_name == "opencode_frontier"
+    assert record.tool_events == (
+        {
+            "tool": "sources_search_heritage",
+            "input": {"query": "Веснянки"},
+            "status": "completed",
+            "tool_call_id": "call_1",
+            "output": {"rows": ["heritage result"]},
+        },
+    )
 
 
 def test_composite_cache_key_includes_route_name(tmp_path: Path) -> None:

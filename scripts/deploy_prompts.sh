@@ -73,7 +73,12 @@ ORPHAN_PATHS_CLAUDE="scheduled_tasks.lock worktrees *-epic"
 #          source-tracked. Without these patterns a single in-flight brief aborts the
 #          ENTIRE deploy (every target), so committed source prompt fixes silently never
 #          reach .claude/ + .codex/ + .agent/ runtime — agents keep running stale prompts (#3456).
-ORPHAN_PATHS_AGENT="wake cache prompts tmp *-thread-bootstrap.md *-handoff.md *-thread-lease.json *-brief.md dispatch-*.md"
+# dispatch-briefs/ — the DIRECTORY successor to the top-level dispatch-*.md scatter:
+#          orchestrators now collect per-dispatch briefs under .agent/dispatch-briefs/
+#          (e.g. 4497-runner-failover.md). The dispatch-*.md FILE glob does not match a
+#          directory, so without this entry the first collected brief aborts every
+#          deploy — the #3456 failure class again, one level down.
+ORPHAN_PATHS_AGENT="wake cache prompts tmp *-thread-bootstrap.md *-handoff.md *-thread-lease.json *-brief.md dispatch-*.md dispatch-briefs"
 ORPHAN_PATHS_AGENTS=""
 # agents/curriculum-orchestrator.toml and agents/curriculum-writer.toml —
 # Codex agent definitions with no source equivalent.
