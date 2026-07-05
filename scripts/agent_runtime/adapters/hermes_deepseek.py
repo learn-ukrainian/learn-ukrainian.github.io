@@ -35,6 +35,7 @@ from .base import InvocationPlan
 from .hermes_common import (
     build_hermes_invocation_context,
     build_hermes_parse_fields,
+    resolve_hermes_requested_route,
     sources_mcp_registered,
     top_level_agent_effort,
     translate_mcp_prefix_for_hermes,
@@ -94,10 +95,16 @@ class HermesDeepSeekAdapter:
             )
 
         requested_model = model or self.default_model
+        requested_provider, requested_model, provider_forced = resolve_hermes_requested_route(
+            tool_config=tool_config,
+            default_provider="deepseek",
+            requested_model=requested_model,
+        )
         context = build_hermes_invocation_context(
             tool_config=tool_config,
-            requested_provider="deepseek",
+            requested_provider=requested_provider,
             requested_model=requested_model,
+            provider_forced=provider_forced,
         )
         config = context.config
         configured_effort = top_level_agent_effort(config)
@@ -124,8 +131,11 @@ class HermesDeepSeekAdapter:
 
         hermes_bin = shutil.which("hermes") or "hermes"
         hermes_prompt = translate_mcp_prefix_for_hermes(prompt)
+        cmd = [hermes_bin, "-z", hermes_prompt, "-m", requested_model]
+        if provider_forced:
+            cmd.extend(["--provider", requested_provider])
         return InvocationPlan(
-            cmd=[hermes_bin, "-z", hermes_prompt, "-m", requested_model],
+            cmd=cmd,
             cwd=cwd,
             stdin_payload="",
             output_file=None,

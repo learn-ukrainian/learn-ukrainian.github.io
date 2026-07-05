@@ -133,6 +133,56 @@ points:
   and raises `RateLimitedError` before burning a quota slot on a
   known-rate-limited call.
 
+## Runner-level provider failover (#4497)
+
+Provider failover is optional and configured per runtime lane in
+`scripts/config/agent_runtime_failover.yaml`. The default file has
+`chains: {}`; absent lane chain means `runner.invoke()` keeps the previous
+single-route behavior exactly.
+
+Configured chains are ordered route lists:
+
+```yaml
+chains:
+  deepseek:
+    cooldown_ttl_s: 300
+    routes:
+      - provider: deepseek
+        model: deepseek-v4-pro
+      - provider: openrouter
+        model: qwen/qwen3.6-plus
+```
+
+On eligible failures only, the runner marks the failed provider/model/profile
+route in a SQLite cooldown store at
+`batch_state/agent_runtime_failover_cooldowns.sqlite3` and reinvokes the same
+adapter with the next route. Parallel dispatches share that cooldown state.
+The next dispatch starts at the first non-cooling route, so a recently dead
+primary is not re-probed immediately.
+
+Eligible trigger classes are deliberately narrow: 401/403 auth failure,
+429/quota exhaustion, 5xx/overloaded, transport failures such as connection
+refused/reset/read timeout, and parsed-but-empty responses. Content-policy
+refusals and 4xx request-format errors do not fail over.
+
+Every runner-level switch emits the same substitution-shaped payload used by
+Hermes fallback surfacing: `requested_provider`, `requested_model`,
+`actual_provider`, `actual_model`, `substituted`, `source`, and `marker`.
+The payload flows into the usage record, delegate state, telemetry event, and
+a loud stderr/logger marker (`AGENT_RUNTIME_FAILOVER_SUBSTITUTION`). Silent
+provider/model substitution is forbidden.
+
+v1 adapter coverage:
+
+| Lane | Route override support |
+|---|---|
+| `deepseek`, `qwen`, `grok` | Hermes provider + model via runner route metadata and `--provider` when forced. |
+| `agy` | Model override through the existing `--model` mapping; provider is informational unless encoded by the CLI model label. |
+| Other adapters | Model-only chains work when the adapter's existing `model` argument can express the route. |
+
+The runner rejects zai/GLM failover targets before launch using the shared
+local-only route guard.
+
 ## Dispatch worktree layout (#1476)
 
 `delegate.py dispatch --worktree ...` creates the dispatched agent a

@@ -1,0 +1,22 @@
+# Runner-level agent provider failover chains.
+#
+# Default is intentionally empty: absent lane chain means runner.invoke() keeps
+# its previous single-route behavior exactly. Populate per-lane chains only for
+# adapters that can express the requested route via model/provider override.
+#
+# Shape:
+# chains:
+#   deepseek:
+#     cooldown_ttl_s: 300
+#     routes:
+#       - provider: deepseek
+#         model: deepseek-v4-pro
+#       - provider: openrouter
+#         model: qwen/qwen3.6-plus
+#
+# v1 coverage:
+# - Hermes-backed lanes (deepseek, qwen, grok): provider + model override.
+# - agy: model override; provider is informational unless encoded by the CLI
+#   model label.
+# - Other adapters: chain only if their existing model flag can express it.
+chains: {}
