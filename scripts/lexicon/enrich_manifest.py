@@ -1728,8 +1728,35 @@ def _phraseology_definition_body(definition: str, phrase: str) -> str:
     return _truncate_text(body, 650)
 
 
-_FRAZEOLOHICHNYI_FTS_AVAILABLE: bool | None = None
+_FRAZEOLOHICHNYI_FTS_AVAILABLE: dict[str, bool] = {}
 _FRAZEOLOHICHNYI_FTS_WARN_LOGGED = False
+
+_ASCII_LOWER_TABLE = str.maketrans("ABCDEFGHIJKLMNOPQRSTUVWXYZ", "abcdefghijklmnopqrstuvwxyz")
+
+
+def _db_cache_key(conn: sqlite3.Connection) -> str:
+    """Stable per-database cache key: the main DB file path, or a
+    per-connection sentinel for in-memory/temporary databases.
+
+    Index-availability verdicts are properties of the DATABASE, not the
+    process — a process-global cache would let DB A's verdict leak onto
+    DB B (codex review of #4514, finding 2).
+    """
+    try:
+        for _seq, name, path in conn.execute("PRAGMA database_list"):
+            if name == "main":
+                return path or f"conn:{id(conn)}"
+    except sqlite3.Error:
+        pass
+    return f"conn:{id(conn)}"
+
+
+def _ascii_lower_contains(text: str, needle: str) -> bool:
+    """Replicate SQLite's ASCII-only ``lower()`` + ``LIKE '%needle%'``
+    semantics — the parity predicate for index-accelerated paths (SQLite's
+    ``lower()`` does not fold Cyrillic)."""
+    return needle in text.translate(_ASCII_LOWER_TABLE)
+
 
 def _is_connection_readonly(conn: sqlite3.Connection) -> bool:
     try:
@@ -1740,23 +1767,25 @@ def _is_connection_readonly(conn: sqlite3.Connection) -> bool:
         return True
 
 def _ensure_frazeolohichnyi_fts(conn: sqlite3.Connection) -> bool:
-    global _FRAZEOLOHICHNYI_FTS_AVAILABLE, _FRAZEOLOHICHNYI_FTS_WARN_LOGGED
-    if _FRAZEOLOHICHNYI_FTS_AVAILABLE is not None:
-        return _FRAZEOLOHICHNYI_FTS_AVAILABLE
+    global _FRAZEOLOHICHNYI_FTS_WARN_LOGGED
+    key = _db_cache_key(conn)
+    cached = _FRAZEOLOHICHNYI_FTS_AVAILABLE.get(key)
+    if cached is not None:
+        return cached
 
     # 1. Verify SQLite runtime supports trigram (3.34+)
     if sqlite3.sqlite_version_info < (3, 34, 0):
-        _FRAZEOLOHICHNYI_FTS_AVAILABLE = False
+        _FRAZEOLOHICHNYI_FTS_AVAILABLE[key] = False
         return False
 
     # Check if frazeolohichnyi table exists
     try:
         cur = conn.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='frazeolohichnyi'")
         if not cur.fetchone():
-            _FRAZEOLOHICHNYI_FTS_AVAILABLE = False
+            _FRAZEOLOHICHNYI_FTS_AVAILABLE[key] = False
             return False
     except sqlite3.Error:
-        _FRAZEOLOHICHNYI_FTS_AVAILABLE = False
+        _FRAZEOLOHICHNYI_FTS_AVAILABLE[key] = False
         return False
 
     # Check if index table exists
@@ -1764,7 +1793,7 @@ def _ensure_frazeolohichnyi_fts(conn: sqlite3.Connection) -> bool:
         cur = conn.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='frazeolohichnyi_fts'")
         exists = cur.fetchone() is not None
     except sqlite3.Error:
-        _FRAZEOLOHICHNYI_FTS_AVAILABLE = False
+        _FRAZEOLOHICHNYI_FTS_AVAILABLE[key] = False
         return False
 
     if exists:
@@ -1781,7 +1810,7 @@ def _ensure_frazeolohichnyi_fts(conn: sqlite3.Connection) -> bool:
                     "INSERT INTO frazeolohichnyi_fts(rowid, word, definition) "
                     "SELECT id, word, definition FROM frazeolohichnyi"
                 )
-            _FRAZEOLOHICHNYI_FTS_AVAILABLE = True
+            _FRAZEOLOHICHNYI_FTS_AVAILABLE[key] = True
             return True
         except sqlite3.Error as e:
             if not _FRAZEOLOHICHNYI_FTS_WARN_LOGGED:
@@ -1793,7 +1822,7 @@ def _ensure_frazeolohichnyi_fts(conn: sqlite3.Connection) -> bool:
         if not _FRAZEOLOHICHNYI_FTS_WARN_LOGGED:
             print("Warning: frazeolohichnyi_fts table is missing and connection is read-only. Falling back to LIKE.", file=sys.stderr)
             _FRAZEOLOHICHNYI_FTS_WARN_LOGGED = True
-        _FRAZEOLOHICHNYI_FTS_AVAILABLE = False
+        _FRAZEOLOHICHNYI_FTS_AVAILABLE[key] = False
         return False
 
     try:
@@ -1806,17 +1835,17 @@ def _ensure_frazeolohichnyi_fts(conn: sqlite3.Connection) -> bool:
             "INSERT INTO frazeolohichnyi_fts(rowid, word, definition) "
             "SELECT id, word, definition FROM frazeolohichnyi"
         )
-        _FRAZEOLOHICHNYI_FTS_AVAILABLE = True
+        _FRAZEOLOHICHNYI_FTS_AVAILABLE[key] = True
         return True
     except sqlite3.Error as e:
         if not _FRAZEOLOHICHNYI_FTS_WARN_LOGGED:
             print(f"Warning: Failed to create/populate frazeolohichnyi_fts ({e}). Falling back to LIKE.", file=sys.stderr)
             _FRAZEOLOHICHNYI_FTS_WARN_LOGGED = True
-        _FRAZEOLOHICHNYI_FTS_AVAILABLE = False
+        _FRAZEOLOHICHNYI_FTS_AVAILABLE[key] = False
         return False
 
 
-_UKRAJINET_INDEX_AVAILABLE: bool | None = None
+_UKRAJINET_INDEX_AVAILABLE: dict[str, bool] = {}
 _UKRAJINET_INDEX_WARN_LOGGED = False
 
 def _populate_ukrajinet_word_index(conn: sqlite3.Connection) -> None:
@@ -1840,24 +1869,26 @@ def _populate_ukrajinet_word_index(conn: sqlite3.Connection) -> None:
         )
 
 def _ensure_ukrajinet_word_index(conn: sqlite3.Connection) -> bool:
-    global _UKRAJINET_INDEX_AVAILABLE, _UKRAJINET_INDEX_WARN_LOGGED
-    if _UKRAJINET_INDEX_AVAILABLE is not None:
-        return _UKRAJINET_INDEX_AVAILABLE
+    global _UKRAJINET_INDEX_WARN_LOGGED
+    key = _db_cache_key(conn)
+    cached = _UKRAJINET_INDEX_AVAILABLE.get(key)
+    if cached is not None:
+        return cached
 
     try:
         cur = conn.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='ukrajinet'")
         if not cur.fetchone():
-            _UKRAJINET_INDEX_AVAILABLE = False
+            _UKRAJINET_INDEX_AVAILABLE[key] = False
             return False
     except sqlite3.Error:
-        _UKRAJINET_INDEX_AVAILABLE = False
+        _UKRAJINET_INDEX_AVAILABLE[key] = False
         return False
 
     try:
         cur = conn.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='ukrajinet_word_index'")
         exists = cur.fetchone() is not None
     except sqlite3.Error:
-        _UKRAJINET_INDEX_AVAILABLE = False
+        _UKRAJINET_INDEX_AVAILABLE[key] = False
         return False
 
     if exists:
@@ -1871,7 +1902,7 @@ def _ensure_ukrajinet_word_index(conn: sqlite3.Connection) -> bool:
                     return False
 
                 _populate_ukrajinet_word_index(conn)
-            _UKRAJINET_INDEX_AVAILABLE = True
+            _UKRAJINET_INDEX_AVAILABLE[key] = True
             return True
         except sqlite3.Error as e:
             if not _UKRAJINET_INDEX_WARN_LOGGED:
@@ -1883,7 +1914,7 @@ def _ensure_ukrajinet_word_index(conn: sqlite3.Connection) -> bool:
         if not _UKRAJINET_INDEX_WARN_LOGGED:
             print("Warning: ukrajinet_word_index table is missing and connection is read-only. Falling back to LIKE.", file=sys.stderr)
             _UKRAJINET_INDEX_WARN_LOGGED = True
-        _UKRAJINET_INDEX_AVAILABLE = False
+        _UKRAJINET_INDEX_AVAILABLE[key] = False
         return False
 
     try:
@@ -1896,13 +1927,13 @@ def _ensure_ukrajinet_word_index(conn: sqlite3.Connection) -> bool:
             "CREATE INDEX IF NOT EXISTS idx_ukrajinet_word_index_key ON ukrajinet_word_index(word_key)"
         )
         _populate_ukrajinet_word_index(conn)
-        _UKRAJINET_INDEX_AVAILABLE = True
+        _UKRAJINET_INDEX_AVAILABLE[key] = True
         return True
     except sqlite3.Error as e:
         if not _UKRAJINET_INDEX_WARN_LOGGED:
             print(f"Warning: Failed to create/populate ukrajinet_word_index ({e}). Falling back to LIKE.", file=sys.stderr)
             _UKRAJINET_INDEX_WARN_LOGGED = True
-        _UKRAJINET_INDEX_AVAILABLE = False
+        _UKRAJINET_INDEX_AVAILABLE[key] = False
         return False
 
 
@@ -1913,10 +1944,6 @@ def _idioms_frazeolohichnyi(conn: sqlite3.Connection, lemma: str, *, limit: int 
     if not variants:
         return None
 
-    def _sqlite_like_match(text: str, var: str) -> bool:
-        lower_text = text.translate(str.maketrans("ABCDEFGHIJKLMNOPQRSTUVWXYZ", "abcdefghijklmnopqrstuvwxyz"))
-        return var in lower_text
-
     rows: list[tuple[str, str, str]] = []
     seen_ids: set[int] = set()
     try:
@@ -1925,13 +1952,20 @@ def _idioms_frazeolohichnyi(conn: sqlite3.Connection, lemma: str, *, limit: int 
             cursor = None
             if use_fts:
                 try:
-                    query_val = f'"{variant.replace("\"", "\"\"")}"'
+                    # The FTS subquery only NARROWS the scanned rows; the
+                    # original lower()+LIKE predicate stays in SQL so the
+                    # emitted row set — including the LIMIT-80 cutoff — is
+                    # identical to the fallback by construction (trigram
+                    # folds Cyrillic case, SQLite lower() does not; codex
+                    # review of #4514, finding 1).
+                    query_val = '"' + variant.replace('"', '""') + '"'
                     cursor = conn.execute(
                         "SELECT id, word, definition, source FROM frazeolohichnyi "
                         "WHERE id IN ("
                         "  SELECT rowid FROM frazeolohichnyi_fts WHERE frazeolohichnyi_fts MATCH ?"
-                        ") ORDER BY id LIMIT 80",
-                        (query_val,),
+                        ") AND (lower(word) LIKE ? OR lower(definition) LIKE ?) "
+                        "ORDER BY id LIMIT 80",
+                        (query_val, f"%{variant}%", f"%{variant}%"),
                     )
                 except sqlite3.Error:
                     cursor = None
@@ -1947,12 +1981,8 @@ def _idioms_frazeolohichnyi(conn: sqlite3.Connection, lemma: str, *, limit: int 
                 row_id = int(row[0])
                 if row_id in seen_ids:
                     continue
-                word_val = str(row[1] or "")
-                def_val = str(row[2] or "")
-                if use_fts and not (_sqlite_like_match(word_val, variant) or _sqlite_like_match(def_val, variant)):
-                    continue
                 seen_ids.add(row_id)
-                rows.append((word_val, def_val, str(row[3] or "")))
+                rows.append((str(row[1] or ""), str(row[2] or ""), str(row[3] or "")))
     except sqlite3.OperationalError as exc:
         if _missing_table(exc):
             return None
@@ -2455,34 +2485,46 @@ def _synonyms_from_wiktionary(conn: sqlite3.Connection, lemma: str, out: list[st
 def _synonyms_from_ukrajinet(conn: sqlite3.Connection, lemma: str, out: list[str], seen: set[str]) -> None:
     use_idx = _ensure_ukrajinet_word_index(conn)
     for variant in _split_lemma_variants(lemma):
+        needle = variant.casefold()
+        indexed = False
         cursor = None
         if use_idx:
-            tokens = re.findall(rf"[{_CYRILLIC_WORD_CHARS}]+", variant.casefold())
+            # Derive the lookup token with the SAME normalizer the index was
+            # built with, so build-time and lookup-time keys can never drift.
+            tokens = re.findall(rf"[{_CYRILLIC_WORD_CHARS}]+", _normalise_synonym(variant))
             if tokens:
-                search_token = tokens[0]
                 try:
                     cursor = conn.execute(
-                        "SELECT words FROM ukrajinet JOIN ukrajinet_word_index "
-                        "ON ukrajinet.rowid = ukrajinet_word_index.rowid "
-                        "WHERE ukrajinet_word_index.word_key = ?",
-                        (search_token,),
+                        "SELECT words FROM ukrajinet WHERE rowid IN ("
+                        "  SELECT rowid FROM ukrajinet_word_index WHERE word_key = ?"
+                        ")",
+                        (tokens[0],),
                     )
+                    indexed = True
                 except sqlite3.Error:
                     cursor = None
+                    indexed = False
 
         if cursor is None:
             cursor = conn.execute(
                 "SELECT words FROM ukrajinet WHERE lower(words) LIKE ?",
-                (f"%{variant.casefold()}%",),
+                (f"%{needle}%",),
             )
 
         rows = cursor.fetchall()
         for (words_json,) in rows:
+            raw_text = str(words_json or "")
+            # Parity guard: the index folds Cyrillic case (casefold at build
+            # time) but SQLite's lower()+LIKE does not, so the indexed path
+            # can surface rows the fallback never matched. Re-apply the exact
+            # LIKE predicate so both paths emit identical sets.
+            if indexed and not _ascii_lower_contains(raw_text, needle):
+                continue
             try:
                 words = [str(w).strip() for w in json.loads(words_json or "[]")]
             except (TypeError, ValueError):
                 continue
-            if not any(_contains_whole_token(_normalise_synonym(word), variant.casefold()) for word in words):
+            if not any(_contains_whole_token(_normalise_synonym(word), needle) for word in words):
                 continue
             for candidate in words:
                 _add_candidate(out, seen, lemma, candidate)
