@@ -55,7 +55,8 @@ Exit codes:
   2  probe assertion or isolated-config validation failed
 
 Related docs:
-  docs/best-practices/hermes-usage.md#automation-adoption-plan-2026-07-05--user-order-hermes-is-more-than-a-harness-use-its-features-for-automation
+  docs/references/private/hermes-usage.md § Automation adoption plan
+  (gitignored machine-local doc; tracked stub: docs/best-practices/hermes-usage.md)
 """,
     )
     parser.add_argument(

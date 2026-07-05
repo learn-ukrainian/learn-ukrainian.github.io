@@ -62,8 +62,10 @@ Consequences:
   general outage map). ALWAYS note a substitution in the artifact — silent rerouting hides
   review-independence, cost, and egress changes.
 - **Hermes is also an automation platform** (cron, kanban, insights, session FTS, gateway,
-  openai-compat proxy) — study + adoption plan: `docs/best-practices/hermes-usage.md` § Automation
-  adoption plan. Prefer harness-level automation over hand-rolled polling where it fits.
+  openai-compat proxy) — study + adoption plan: `docs/references/private/hermes-usage.md`
+  § Automation adoption plan (gitignored machine-local doc — operator OPSEC policy 2026-07-05;
+  tracked stub at `docs/best-practices/hermes-usage.md`). Prefer harness-level automation over
+  hand-rolled polling where it fits.
 
 **Model names here are current-as-of-2026-06-23 EXAMPLES, not constants** — grok-build, cursor, agy, hermes change CLIs/flags/models often. Confirm current capability via this file, `docs/best-practices/agent-activity-matrix.md`, `ab check-model`, the agent's `--help`, or `docs/agent-runtime-guide.md` before relying on a specific string. Worked example: the 2026-06-23 Atlas warning-taxonomy plan — a 3-agent panel (codex, agy-pro, cursor) caught real defects no single seat saw.
 

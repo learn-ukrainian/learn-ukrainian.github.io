@@ -216,7 +216,7 @@ def main() -> int:
                "  Prompt template: agents_extensions/shared/prompts/hermes-nightly-audit.md\n"
                "  Monitor Router: scripts/api/hermes_cron_router.py\n"
                "  Auditor script: scripts/audit/track_deterministic_audit.py\n"
-               "  Specification: docs/best-practices/hermes-usage.md",
+               "  Specification: docs/references/private/hermes-usage.md (gitignored; see stub at docs/best-practices/hermes-usage.md)",
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
     parser.add_argument(
