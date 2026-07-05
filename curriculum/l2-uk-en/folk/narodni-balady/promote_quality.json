@@ -1,9 +1,9 @@
 {
-  "assembled_mdx_sha256": "b7a49709c2568740a95b7a83f89ba3581f9f15bcdf1eef68ec29d568c287966c",
+  "assembled_mdx_sha256": "97c5b41c050e5f4a0a0f90b7d2faac115b5fe468aac96e8ed8529d161e954a9f",
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "d22417f39bdc0b6c03c9044392abe802bff4ce3930e079e0a9eba407151e1d8a",
+    "digest": "5b3eeee740f46fc0d195b2cdd797de89cf72ab8f67800104f406d658c0dfe838",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/narodni-balady.yaml",
@@ -11,7 +11,7 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/narodni-balady/module.md",
-        "sha256": "a6144309fbeb41125fed0f679f97468f47456490b121cfe63ce43d08f68b6cc5"
+        "sha256": "dc08baf31251e43b8d0e324538f3ca41e3fd720dcd1fa04ebf7c55b7ca691cfd"
       },
       {
         "path": "curriculum/l2-uk-en/folk/narodni-balady/activities.yaml",
@@ -23,15 +23,15 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/narodni-balady/resources.yaml",
-        "sha256": "aa5e23d7a06cc1a725f54a257895ffccd1213aac45d4fc80794b0b595685474a"
+        "sha256": "80c1d0093a0c9d7577dff1f5eab8f503f4f1a9d2a2a39a56d42c3e3e54c43e97"
       }
     ]
   },
   "evidence": {
-    "learner_surface": "Structured PrimaryReading blocks use dash-led source attribution and generated MDX now separates closing PrimaryReading JSX from following markdown.",
-    "reading_coverage": "Added or converted learner-visible structured on-site shortened primary readings; external/full-version links remain supplementary only.",
-    "review": "Claude local CLI failed before producing a review; AGY/Gemini review found two remediation blockers, both fixed, and focused follow-up returned PASS/no blockers.",
-    "source_hygiene": "Readings are bounded as verified corpus, scholarly witness, textbook/pedagogical fragment, or authorial public-domain excerpts; no fabricated dialogue, songs, or source claims were introduced."
+    "learner_surface": "Structured PrimaryReading block is substantial, on-site, dash-attributed, and generated into the site MDX mirror.",
+    "reading_coverage": "Direct hardened reading gate passed for Batch B target modules with one substantial structured reading each.",
+    "review": "Claude CLI failed before producing review content; AGY/Gemini final follow-up returned PASS after metadata cleanup and resource-liveness repairs.",
+    "source_hygiene": "M19 uses the verified traditional corpus excerpt Oi na hori vohon horyt; verification metadata is kept in PR evidence/sidecar, not learner text; public-domain/traditional rights are stated."
   },
   "floors": {
     "beauty": 8.5,
@@ -49,7 +49,7 @@
     "model": "gemini-3.1-pro-high"
   },
   "schema_version": 1,
-  "scored_at": "2026-07-05T12:13:39Z",
+  "scored_at": "2026-07-05T22:59:02Z",
   "scores": {
     "beauty": 8.8,
     "decolonization": 9.3,
@@ -64,6 +64,6 @@
   "writer": {
     "agent": "codex",
     "family": "openai",
-    "model": "gpt-5"
+    "model": "gpt-5-codex"
   }
 }
