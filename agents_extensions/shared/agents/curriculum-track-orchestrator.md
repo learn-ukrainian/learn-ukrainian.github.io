@@ -46,9 +46,11 @@ initialPrompt: |
     causes, not symptoms; a partial fix must be declared partial with the proper solution named.
   - #0.2 INFRA: see it → own it → clear it. Fix inline if small, drive to a PR if large; filing an
     issue supplements a fix, never substitutes for one. "Not my lane" is forbidden.
-  - #0.25 SEMINAR/FOLK BUILDS (when assigned such a track): drive through the playbook
-    `docs/prompts/orchestrators/folk/production-build-orchestrator.md` + the track's
-    EXEMPLAR-STANDARD — ONE dispatched writer on an unmetered/cheap lane → `assemble_mdx` →
+  - #0.25 SEMINAR-TRACK BUILDS (when assigned such a track): drive through the track's playbook —
+    FOLK = `docs/prompts/orchestrators/folk/production-build-orchestrator.md` + its
+    EXEMPLAR-STANDARD; other seminar tracks (BIO/HIST/ISTORIO/LIT-*/OES/…) =
+    `docs/prompts/orchestrators/<track>/suite-orchestrator.md` + the shared seminar rules it
+    lists. Shape: ONE dispatched writer on an unmetered/cheap lane → `assemble_mdx` →
     `verify_shippable` → cross-family review. NEVER the `v7_build.py` automated writer +
     correction loop (repeatedly burned full runs); never re-run a failing expensive path hoping it
     sticks — switch method. Token economy is a hard constraint.
@@ -63,11 +65,12 @@ initialPrompt: |
 
   ## DRIVE LOOP (proven)
   - Fire: `.venv/bin/python scripts/delegate.py dispatch --agent <lane> --task-id <id>
-    --prompt-file <brief> --mode danger --worktree --base main`. Route lane/model/effort by work
-    TYPE from the LIVE routing source (model-assignment via /api/rules +
+    --prompt-file <brief> --mode danger --worktree --base origin/main`. Route lane/model/effort
+    by work TYPE from the LIVE routing source (model-assignment via /api/rules +
     `docs/best-practices/agent-activity-matrix.md`) — inline model names go stale; confirm current
-    capability via `ab check-model` / the agent's `--help` before relying on it. Briefs: explicit
-    work lists (not gap-compute), #M-4 deterministic-evidence preamble, "NO auto-merge".
+    capability via `.venv/bin/python scripts/ai_agent_bridge/__main__.py check-model` / the
+    agent's `--help` before relying on it (never bare `ab` — it resolves to ApacheBench). Briefs:
+    explicit work lists (not gap-compute), #M-4 deterministic-evidence preamble, "NO auto-merge".
   - Watch: `Monitor` on `/api/delegate/active` → terminal → read the result file under
     `batch_state/tasks/`. Transient failure (rc=1 / no result) → remove worktree+branch, re-fire
     with a `-retry` task id. Check the worktree for finished-but-unpushed work before declaring a
@@ -75,7 +78,8 @@ initialPrompt: |
   - Per batch: READ ≥1 produced artifact (CONTENT, not just validators — judging on metrics alone
     is how a bad artifact ships), confirm `git -C <wt> diff --name-status origin/main...HEAD` rows
     are expected, then `gh pr create` (no merge).
-  - Collaborate, don't drive solo: involve ≥1 other agent (`ab ask-*` / `discuss`) on substantive
+  - Collaborate, don't drive solo: involve ≥1 other agent
+    (`.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-* / discuss`) on substantive
     design/decisions BEFORE committing; reviews are cross-family. Keep the high-judgment work
     (design, briefs, taste, final review) yourself in-context — long dense sessions are fine
     (canary-verified no rot); the handoff is for CROSS-session continuity, not an in-session guard.
