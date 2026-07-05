@@ -1,17 +1,18 @@
 # Shared Reading Section Rules
 
-Prompt suite component version: 0.2
-Last reviewed: 2026-06-21
+Prompt suite component version: 0.3
+Last reviewed: 2026-07-05
 
-The global reading reference is the seminar equivalent of a lexicon: modules should connect learners to original texts, either hosted on-site when copyright allows or linked externally when hosting is not allowed.
+The global reading reference is the seminar equivalent of a lexicon: modules should connect learners to original texts. For FOLK, external links are supplementary only; the lesson itself must contain rights-safe, on-site shortened reading content.
 
 ## Required Reading Coverage
 
 - A seminar module's reading layer is a **researched primary-text catalog**, not a single token reading. Before writing, survey the corpus and source registries for **every distinct, verifiable primary text** that belongs to the module's topic (each song, duma, poem, chronicle passage, or other primary artifact appropriate to the track) — then surface as many as the corpus genuinely supports.
 - **Per-track minimum (corpus-bound).** Each seminar track sets a primary-text floor. **FOLK targets ≥4 distinct primary readings per module when the gate-safe corpus holds ≥4 distinct verified fragments** (`docs/folk-epic/EXEMPLAR-STANDARD.md` §3). A module may surface fewer **only** when the corpus genuinely lacks that many distinct verified texts — e.g. `zamovliannia` / `narodni-viruvannia`, whose gate-safe corpus carries the genre only as encyclopedia-embedded formulas, not standalone primary rows (record `reading-needed`). **Availability is a verified number, never an assumption:** the preflight audit (#3696) found the koliadky corpus holds 6 distinct carols (not the 2 an earlier note guessed), so its floor is ≥4 — survey the corpus before concluding a topic is genuinely low.
+- **FOLK on-site minimum.** Every active FOLK module must include at least one learner-visible on-site shortened primary reading excerpt, and should include 2-4 when the verified rights-safe corpus permits. A link-only external source does not satisfy the minimum; the external full version may be listed only as a supplement.
 - **Never backfill to the floor.** Do not pad the catalog to hit a number with from-memory text, paraphrase, reconstructed fragments, or scholarly-quoted snippets. Under-coverage relative to corpus availability is recorded as a `reading-needed` finding — never hidden, never faked.
 - If no usable reading is present yet, record it as a blocker or explicit `reading-needed` task; do not silently omit readings.
-- A reading can be a full original text, an excerpt, a chronicle/source passage, a literary work, a folk text, or another primary artifact appropriate to the track.
+- A reading can be a full original text, a shortened verbatim excerpt, a chronicle/source passage, a literary work, a folk text, or another primary artifact appropriate to the track.
 
 ## Primary Text vs Scholarship
 
@@ -57,8 +58,8 @@ When the module has `resources.yaml`, include one or more `role: reading` entrie
 Every reading candidate must carry a decision:
 
 - `hosted`: public-domain or otherwise clearly hostable; create/update `site/src/content/readings/<slug>.mdx`.
-- `linked-only`: not hostable or uncertain, but a stable public teaching/source URL exists; add `role: reading` link and learner task.
-- `excerpt-only`: only a short compliant excerpt may be quoted; link to the original when possible.
+- `linked-only`: not hostable or uncertain, but a stable public teaching/source URL exists; add `role: reading` link and learner task. For FOLK, this is supplementary and never counts as the required on-site shortened reading.
+- `excerpt-only`: only a short compliant excerpt may be quoted; include that shortened on-site excerpt with attribution when rights-safe, and link to the original when possible.
 - `omit`: no reliable, learner-safe, or pedagogically usable source exists after search; record the search and reason.
 - `reading-needed`: the module needs the source, but no verified usable text or rights decision exists yet; record it as a blocker.
 
@@ -81,9 +82,11 @@ The body should render the text with `PrimaryReading` and include source/copyrig
 
 ## Lesson Linking
 
-- Use `:::primary-reading` blocks for verbatim source work inside FOLK lesson sources.
+- Use `:::primary-reading{reading="<slug>"}` blocks for verbatim source work inside FOLK lesson sources, with a source attribution line in the block body beginning with an em dash, for example `— Джерело, назва`.
 - The generator links `PrimaryReading` boxes to `/readings/<slug>/` only when the reading file exists; missing files must not create broken links.
-- For link-only or excerpt-only readings, add a student-facing `role: reading` resource and mention the reading task in the lesson without pretending the full text is hosted.
+- Orphan `:::primary-reading` snippets without a `reading="<slug>"` source link do not satisfy FOLK reading coverage.
+- For link-only readings, add a student-facing `role: reading` resource and mention the reading task in the lesson without pretending the full text is hosted.
+- For excerpt-only readings, include the shortened on-site excerpt as the reading content and treat external full/source links as supplementary.
 
 - Hosted reading pages are public learner pages when `published` and `canonical` are not false. They may name the public source and show the public URL, but must not expose the build workflow: no `chunk_id`, `source_chunk`, corpus/service IDs, `source hammer`, `hosted reading`, `public reading`, `learner-facing`, or validation-tool language. Unpublished or noncanonical retained readings may carry maintenance notes only while they remain unroutable.
 
