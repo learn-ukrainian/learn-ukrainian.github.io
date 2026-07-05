@@ -52,6 +52,9 @@ def test_review_candidates_use_committed_inventories_and_keep_provenance(
     expected_pos = {candidate.pos for candidate in expected_candidates if candidate.pos}
 
     monkeypatch.setattr(review.grow, "_source_connection", lambda path: nullcontext(object()))
+    # Hermetic scope = inventory→candidates plumbing; the lemma-validity screen has its own
+    # dedicated tests below and consults real dbs when present, so stub it here.
+    monkeypatch.setattr(review, "screen_auto_merge_lemma_validity", lambda payload, **kw: [])
     monkeypatch.setattr(review.grow, "_preserve_wiki_reference_cache", lambda: nullcontext())
     monkeypatch.setattr(review.grow.enrich_manifest, "_load_kaikki_lookup", lambda: {})
     monkeypatch.setattr(review.grow.enrich_manifest, "_sum11_has_flag_columns", lambda conn: False)
@@ -503,3 +506,65 @@ def test_review_workflow_rejects_live_atlas_output_directory() -> None:
 def test_review_workflow_rejects_static_lexicon_outputs(static_output: Path) -> None:
     with pytest.raises(SourceInventoryError, match="site/public/lexicon"):
         review.resolve_review_output_path(static_output)
+
+
+class _FakeVesumLookup:
+    """Stub with the VesumLemmaLookup surface used by _check_lemma_in_vesum."""
+
+    def __init__(self, known: set[str]):
+        self._known = {k.casefold() for k in known}
+
+    def has_lemma(self, lemma: str) -> bool:
+        return lemma.casefold() in self._known
+
+    def close(self) -> None:  # pragma: no cover - symmetry with the real lookup
+        pass
+
+
+def test_lemma_validity_screen_demotes_vesum_absent_auto_merge() -> None:
+    """PR #4415 lesson: VESUM-absent lemmas must not stay auto_merge (благополуччя class)."""
+    payload: dict[str, Any] = {
+        "counts": {"auto_merge": 2, "needs_review": 0},
+        "auto_merge": [
+            {"lemma": "добробут", "source_provenance": ["x"]},
+            {"lemma": "благополуччя", "source_provenance": ["x"]},
+        ],
+        "needs_review": [],
+    }
+    demoted = review.screen_auto_merge_lemma_validity(
+        payload, vesum=_FakeVesumLookup({"добробут"}), heritage=None
+    )
+    assert demoted == ["благополуччя"]
+    assert [e["lemma"] for e in payload["auto_merge"]] == ["добробут"]
+    assert len(payload["needs_review"]) == 1
+    wrapped = payload["needs_review"][0]
+    assert wrapped["entry"]["lemma"] == "благополуччя"
+    assert wrapped["reason"].startswith("lemma_in_vesum:")
+    assert payload["counts"] == {"auto_merge": 1, "needs_review": 1}
+
+
+def test_lemma_validity_screen_skips_when_vesum_unavailable() -> None:
+    """No db ⇒ no demotions — CI parity with the conformance gate's degradation."""
+    payload: dict[str, Any] = {
+        "counts": {"auto_merge": 1, "needs_review": 0},
+        "auto_merge": [{"lemma": "неіснуючеслово", "source_provenance": ["x"]}],
+        "needs_review": [],
+    }
+    demoted = review.screen_auto_merge_lemma_validity(payload, vesum=None, heritage=None)
+    assert demoted == []
+    assert len(payload["auto_merge"]) == 1
+
+
+def test_lemma_validity_screen_exempts_genuine_multiword() -> None:
+    """Multi-word phrases are legitimately VESUM-absent — never demoted for absence."""
+    payload: dict[str, Any] = {
+        "counts": {"auto_merge": 1, "needs_review": 0},
+        "auto_merge": [
+            {"lemma": "мікрохвильова піч", "source_provenance": ["x"]},
+        ],
+        "needs_review": [],
+    }
+    review.screen_auto_merge_lemma_validity(
+        payload, vesum=_FakeVesumLookup({"мікрохвильова", "піч"}), heritage=None
+    )
+    assert [e["lemma"] for e in payload["auto_merge"]] == ["мікрохвильова піч"]
