@@ -14,6 +14,8 @@ import gzip
 import hashlib
 import json
 import subprocess
+import tempfile
+from contextlib import nullcontext
 from pathlib import Path
 from typing import Any
 from urllib.parse import quote
@@ -27,6 +29,8 @@ DEFAULT_GZIP = ROOT / "site" / "src" / "data" / "lexicon-manifest.json.gz"
 DEFAULT_RELEASE_TAG = "atlas-manifest"
 DEFAULT_REPO = "learn-ukrainian/learn-ukrainian.github.io"
 ASSET_NAME = "lexicon-manifest.json.gz"
+VERSIONED_ASSET_PREFIX = "lexicon-manifest-"
+VERSIONED_ASSET_SUFFIX = ".json.gz"
 REQUIRED_POINTER_KEYS = (
     "asset_url",
     "release_tag",
@@ -57,6 +61,10 @@ def _read_json(path: Path) -> dict[str, Any]:
 
 def _asset_url(repo: str, release_tag: str, asset_name: str = ASSET_NAME) -> str:
     return f"https://github.com/{repo}/releases/download/{release_tag}/{quote(asset_name)}"
+
+
+def versioned_asset_name(json_sha256: str) -> str:
+    return f"{VERSIONED_ASSET_PREFIX}{json_sha256[:12]}{VERSIONED_ASSET_SUFFIX}"
 
 
 def validate_manifest_fingerprint(
@@ -144,15 +152,18 @@ def build_pointer_payload(
     if not isinstance(manifest_version, str) or not manifest_version:
         raise ManifestPublishError(f"{manifest_path} must contain a non-empty version")
 
+    json_sha256 = _sha256(manifest_bytes)
+    gz_sha256 = _sha256(gzip_bytes)
+
     pointer = {
-        "asset_url": _asset_url(repo, release_tag),
+        "asset_url": _asset_url(repo, release_tag, versioned_asset_name(json_sha256)),
         "release_tag": release_tag,
         "manifest_version": manifest_version,
         "manifest_fingerprint": fingerprint["fingerprint"],
         "fingerprint_schema_version": fingerprint["schema_version"],
         "generated_at": manifest.get("generated_at"),
-        "gz_sha256": _sha256(gzip_bytes),
-        "json_sha256": _sha256(manifest_bytes),
+        "gz_sha256": gz_sha256,
+        "json_sha256": json_sha256,
         "gz_bytes": len(gzip_bytes),
         "json_bytes": len(manifest_bytes),
         "note": "Pins GitHub Release asset manifest for #3659; hydrate it build time instead committing raw JSON.",
@@ -171,22 +182,99 @@ def write_pointer(pointer_path: Path, payload: dict[str, Any]) -> None:
 def upload_release_asset(
     gzip_path: Path = DEFAULT_GZIP,
     *,
+    asset_name: str = ASSET_NAME,
     release_tag: str = DEFAULT_RELEASE_TAG,
     repo: str = DEFAULT_REPO,
+    clobber: bool = True,
 ) -> None:
-    subprocess.run(
-        [
+    upload_path = gzip_path
+    with tempfile.TemporaryDirectory() if gzip_path.name != asset_name else nullcontext(None) as temp_dir:
+        if temp_dir is not None:
+            upload_path = Path(temp_dir) / asset_name
+            upload_path.write_bytes(gzip_path.read_bytes())
+
+        command = [
             "gh",
             "release",
             "upload",
             release_tag,
-            str(gzip_path),
+            str(upload_path),
             "--repo",
             repo,
-            "--clobber",
-        ],
+        ]
+        if clobber:
+            command.append("--clobber")
+        subprocess.run(command, check=True)
+
+
+def _release_asset_names(*, release_tag: str = DEFAULT_RELEASE_TAG, repo: str = DEFAULT_REPO) -> set[str]:
+    result = subprocess.run(
+        ["gh", "release", "view", release_tag, "--repo", repo, "--json", "assets"],
         check=True,
+        capture_output=True,
+        text=True,
     )
+    payload = json.loads(result.stdout)
+    assets = payload.get("assets", [])
+    if not isinstance(assets, list):
+        raise ManifestPublishError("gh release view returned malformed assets payload")
+    return {asset["name"] for asset in assets if isinstance(asset, dict) and isinstance(asset.get("name"), str)}
+
+
+def _download_release_asset(
+    asset_name: str,
+    *,
+    release_tag: str = DEFAULT_RELEASE_TAG,
+    repo: str = DEFAULT_REPO,
+) -> bytes:
+    result = subprocess.run(
+        ["gh", "release", "download", release_tag, "-p", asset_name, "-O", "-", "--repo", repo],
+        check=True,
+        capture_output=True,
+    )
+    return result.stdout
+
+
+def verify_existing_release_asset(
+    asset_name: str,
+    *,
+    expected_gz_bytes: bytes,
+    release_tag: str = DEFAULT_RELEASE_TAG,
+    repo: str = DEFAULT_REPO,
+) -> None:
+    existing = _download_release_asset(asset_name, release_tag=release_tag, repo=repo)
+    if existing != expected_gz_bytes:
+        raise ManifestPublishError(
+            f"Existing Atlas manifest release asset {asset_name} does not match local gzip bytes"
+        )
+
+
+def upload_manifest_assets(
+    gzip_path: Path,
+    pointer: dict[str, Any],
+    *,
+    release_tag: str = DEFAULT_RELEASE_TAG,
+    repo: str = DEFAULT_REPO,
+) -> None:
+    """Upload immutable + canonical assets; prune old versioned assets manually when the release gets heavy."""
+    versioned_name = versioned_asset_name(pointer["json_sha256"])
+    gzip_bytes = gzip_path.read_bytes()
+    if versioned_name in _release_asset_names(release_tag=release_tag, repo=repo):
+        verify_existing_release_asset(
+            versioned_name,
+            expected_gz_bytes=gzip_bytes,
+            release_tag=release_tag,
+            repo=repo,
+        )
+    else:
+        upload_release_asset(
+            gzip_path,
+            asset_name=versioned_name,
+            release_tag=release_tag,
+            repo=repo,
+            clobber=False,
+        )
+    upload_release_asset(gzip_path, asset_name=ASSET_NAME, release_tag=release_tag, repo=repo, clobber=True)
 
 
 def publish_manifest(
@@ -211,7 +299,7 @@ def publish_manifest(
     if dry_run:
         return pointer
 
-    upload_release_asset(gzip_path, release_tag=release_tag, repo=repo)
+    upload_manifest_assets(gzip_path, pointer, release_tag=release_tag, repo=repo)
     write_pointer(pointer_path, pointer)
     return pointer
 
@@ -241,6 +329,7 @@ def main() -> int:
         f"{'would publish' if args.dry_run else 'published'}: "
         f"{pointer['manifest_version']} {pointer['manifest_fingerprint']}"
     )
+    print(f"asset_url: {pointer['asset_url']}")
     return 0
 
 
