@@ -1,6 +1,6 @@
 # Word Atlas — entry-model v1 on the site: SSG from `atlas.db` (GH #4385)
 
-- status: draft (pending fleet review)
+- status: fleet-reviewed (codex msg 1892, 2026-07-05 — 3 blockers + 5 non-blockers, ALL folded, marked ⟦codex⟧)
 - owner: fable (atlas/practice-hub track driver)
 - date: 2026-07-05
 - parent plan: `docs/plans/atlas-entry-model-v1-and-corpus-fill.md` (roadmap step 5)
@@ -21,10 +21,22 @@ hydrate manifest (pointer→asset, unchanged)          [existing]
 
 - Zero new release infrastructure: the DB stays a derived, gitignored build artifact; the
   manifest release asset (+ #4411 content-addressed pointers) remains the transport.
-- The migration already materializes the entry-model fields (`entry_type`, `display_head`,
-  `review_state`, `visibility`, aliases, related_entries) — the site gets them for free.
-- CI: the deploy job builds the DB after hydrate; `atlas_db` gate failures (entry_type violations /
-  alias orphans) fail the build — this wires the DB builder's own gates into CI as #4385 asks.
+- The migration materializes the entry-model fields (`entry_type`, `display_head`,
+  `review_state`, `visibility`, aliases, related_entries). ⟦codex B1⟧ It does NOT yet project
+  everything `WordAtlasArticle` renders (`primary_source`, `course_usage`, top-level
+  `wiki_reference`, rich `textbooks`/`external_materials`, …) — PR-1 therefore ships a
+  **DB→article compatibility projection** (full public article payload per slug) gated by
+  **render-parity tests** (golden-page diff: DB-rendered vs manifest-rendered for a fixture set
+  covering every entry_type + the прапор/файний POC pages).
+- CI: the deploy job builds the DB after hydrate; `atlas_db` gate failures (entry_type violations)
+  fail the build. ⟦codex B2⟧ The current builder only PARTIALLY checks alias targets (silently
+  drops unresolved `form_of`) — PR-1 adds an explicit **post-build alias validation**: every
+  public alias must join an approved+public article, with actionable per-alias failure output.
+- ⟦codex NB4⟧ `site/package.json` gains `better-sqlite3`; the DB build runs after hydrate in BOTH
+  local and deploy paths; any CI cache of the DB keys on pointer sha + `atlas_db.py`/schema hash.
+- ⟦codex NB5⟧ PR-1 carries a **build-perf gate**: benchmark DB build + `getStaticPaths` at current
+  size AND synthetic 50k/250k; the read layer is a shared preloaded row map (one DB pass), never
+  per-page DB churn.
 
 **Phase B (at ~250k, separate epic step):** publish `atlas.db` itself as the content-addressed
 release asset (same `<sha12>` scheme as #4411) and drop the JSON manifest entirely; the manifest
@@ -63,12 +75,22 @@ templates:
   - `lexicon-search-aliases.json` — alias rows (`alias`, `kind`, `target_slug`), deduplicated at
     build (`alias_deduplication` gate); consumed by the typeahead to RESOLVE to article slugs,
     never displayed as standalone results.
-- Typeahead behavior: alias hit → show the target article row (with a small «→ display_head»
-  resolution hint); direct article hits rank above alias resolutions.
-- `alias_target_integrity` runs at artifact build: any alias whose target is not an approved public
-  article FAILS the build (fail-closed, matches the DB builder's gate).
+- Typeahead behavior ⟦codex NB6 — concrete result shape⟧: the client model carries
+  `{matchedAlias, aliasKind, targetSlug, targetHead}`; an alias hit renders as
+  «matchedAlias → display_head» so typing «Іване» visibly resolves rather than mysteriously
+  showing «Іван». Direct article hits rank above alias resolutions; direct+alias duplicates
+  dedupe to the direct hit.
+- `alias_target_integrity` at artifact build ⟦codex NB7 — refined fail-closed⟧: aliases targeting
+  queued/non-public articles are FILTERED before public emission (with counted diagnostics in the
+  build log); the build FAILS only if a row already selected for the public artifact targets a
+  non-public/missing article. Fail-closed on emission, not on the queue's existence.
 - Runbook OD-1 resolved: `form_of` records live ONLY in the aliases artifact (and the DB `aliases`
   table) — they leave the manifest's entry stream entirely; they never increment totals.
+- ⟦codex B3 — URL blast radius⟧ **336 `form_of` slugs are PUBLISHED ROUTES today** — removing them
+  from the entry stream must not 404 them. PR-3 generates **redirect stubs** for every retired
+  form-slug (Astro redirect/meta-refresh to the target article slug), excludes them from the
+  sitemap, and adds **URL-parity tests** (every pre-migration public route resolves to 200-or-
+  redirect post-migration).
 
 ## 4. Static status API — counts by type
 
@@ -106,7 +128,7 @@ Wire the runbook's 11 acceptance gates as follows (no new gate concepts — plac
 | # | Decision | Resolution |
 |---|---|---|
 | OD-1 | `form_of` in manifest vs separate artifact | **Separate aliases artifact** (§3); manifest entry stream = articles only |
-| OD-2 | frequency threshold for standalone `expression` admission | **Provisional: curriculum-target OR GRAC ≥ 1.0/million**, labeled provisional in the gate config; revisit with real corpus data after Phase-2 fill — NOT hardcoded policy |
+| OD-2 | frequency threshold for standalone `expression` admission | **Advisory-only provisional: curriculum-target OR GRAC ≥ 1.0/million.** ⟦codex NB8⟧ This number must NOT silently become policy — it stays out of any CI/publish gate until a **Decision Card goes to the user** at the point the expression-admission gate is actually built. |
 | OD-3 | components required before expression publish | **No** — publish allowed; un-approved component renders unlinked (§2); `component_cross_links` guards against broken links, not against publication |
 | OD-4 | rename `[lemma].astro` | **Yes**, in the routes PR (§7 PR-2) |
 
@@ -114,9 +136,9 @@ Wire the runbook's 11 acceptance gates as follows (no new gate concepts — plac
 
 | PR | Scope | Est. |
 |---|---|---|
-| **PR-1** `ssg-db-read` | build step (hydrate→atlas_db in deploy), better-sqlite3 read layer, `[slug].astro` data from DB (render parity with today — no visual change), CI wiring §1 | M |
+| **PR-1** `ssg-db-read` | build step (hydrate→atlas_db in deploy), better-sqlite3 dep + shared preloaded read layer, **DB→article compatibility projection + render-parity tests** ⟦B1⟧, **post-build alias validation** ⟦B2⟧, **perf benchmark gate (50k/250k synthetic)** ⟦NB5⟧, CI wiring + cache keys ⟦NB4⟧ | M-L |
 | **PR-2** `entry-type-templates` | `expression-detail.html` POC design source + route-map row (FIRST), then the §2 dispatcher + templates + rename | M-L |
-| **PR-3** `search-alias-split` | §3 artifacts + typeahead resolution + gates | M |
+| **PR-3** `search-alias-split` | §3 artifacts + typeahead resolution shape ⟦NB6⟧ + emission-scoped fail-closed ⟦NB7⟧ + **form-slug redirect stubs + URL-parity tests** ⟦B3⟧ | M-L |
 | **PR-4** `status-counts` | §4 API + UI count fix + remaining gates | S |
 
 Each PR: fleet-reviewed cross-family, browser-verified per #M-4a (article pages of each entry_type
