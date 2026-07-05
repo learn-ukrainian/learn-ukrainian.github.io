@@ -101,6 +101,24 @@ def test_href_missing_manifest_is_graceful(tmp_path):
     assert atlas_href_for("робота", missing) is None
 
 
+def test_href_missing_manifest_warns_stderr(tmp_path, capsys):
+    from scripts.generate_mdx import atlas_links
+    # Reset global state for test reliability
+    atlas_links._warned_manifest_unavailable = False
+    atlas_links._load_index.cache_clear()
+
+    missing = str(tmp_path / "does-not-exist.json")
+    assert atlas_href_for("робота", missing) is None
+
+    captured = capsys.readouterr()
+    assert "WARNING: atlas manifest unavailable" in captured.err
+
+    # Call again to ensure it only warns once per process
+    assert atlas_href_for("робота", missing) is None
+    captured2 = capsys.readouterr()
+    assert "WARNING: atlas manifest unavailable" not in captured2.err
+
+
 # ── integrity-gating inside the generator ────────────────────────────────────
 
 def test_vocab_component_links_only_lemmas_with_atlas_pages(monkeypatch):

@@ -193,8 +193,20 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Cache Atlas lexicon manifest
-        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+      - name: Restore Atlas lexicon manifest cache
+        id: atlas-manifest-cache
+        uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        with:
+          path: site/src/data/lexicon-manifest.json
+          key: lexicon-manifest-${{ hashFiles('site/src/data/lexicon-manifest.pointer.json') }}
+
+      - name: Verify Atlas manifest matches pointer (rehydrate if stale)
+        run: |
+          python -c "import sys; sys.path.insert(0, 'scripts'); from lexicon.manifest_io import load_manifest; load_manifest(); print('Atlas manifest verified against pointer')"
+
+      - name: Save Atlas lexicon manifest cache
+        if: steps.atlas-manifest-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
         with:
           path: site/src/data/lexicon-manifest.json
           key: lexicon-manifest-${{ hashFiles('site/src/data/lexicon-manifest.pointer.json') }}
@@ -516,8 +528,20 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Cache Atlas lexicon manifest
-        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+      - name: Restore Atlas lexicon manifest cache
+        id: atlas-manifest-cache
+        uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        with:
+          path: site/src/data/lexicon-manifest.json
+          key: lexicon-manifest-${{ hashFiles('site/src/data/lexicon-manifest.pointer.json') }}
+
+      - name: Verify Atlas manifest matches pointer (rehydrate if stale)
+        run: |
+          python -c "import sys; sys.path.insert(0, 'scripts'); from lexicon.manifest_io import load_manifest; load_manifest(); print('Atlas manifest verified against pointer')"
+
+      - name: Save Atlas lexicon manifest cache
+        if: steps.atlas-manifest-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
         with:
           path: site/src/data/lexicon-manifest.json
           key: lexicon-manifest-${{ hashFiles('site/src/data/lexicon-manifest.pointer.json') }}
@@ -561,8 +585,20 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Cache Atlas lexicon manifest
-        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+      - name: Restore Atlas lexicon manifest cache
+        id: atlas-manifest-cache
+        uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        with:
+          path: site/src/data/lexicon-manifest.json
+          key: lexicon-manifest-${{ hashFiles('site/src/data/lexicon-manifest.pointer.json') }}
+
+      - name: Verify Atlas manifest matches pointer (rehydrate if stale)
+        run: |
+          python -c "import sys; sys.path.insert(0, 'scripts'); from lexicon.manifest_io import load_manifest; load_manifest(); print('Atlas manifest verified against pointer')"
+
+      - name: Save Atlas lexicon manifest cache
+        if: steps.atlas-manifest-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
         with:
           path: site/src/data/lexicon-manifest.json
           key: lexicon-manifest-${{ hashFiles('site/src/data/lexicon-manifest.pointer.json') }}
@@ -643,9 +679,22 @@ jobs:
             requirements-lock.txt
             pyproject.toml
 
-      - name: Cache Atlas lexicon manifest
+      - name: Restore Atlas lexicon manifest cache
         if: needs.changes.outputs.python == 'true'
-        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        id: atlas-manifest-cache
+        uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        with:
+          path: site/src/data/lexicon-manifest.json
+          key: lexicon-manifest-${{ hashFiles('site/src/data/lexicon-manifest.pointer.json') }}
+
+      - name: Verify Atlas manifest matches pointer (rehydrate if stale)
+        if: needs.changes.outputs.python == 'true'
+        run: |
+          python -c "import sys; sys.path.insert(0, 'scripts'); from lexicon.manifest_io import load_manifest; load_manifest(); print('Atlas manifest verified against pointer')"
+
+      - name: Save Atlas lexicon manifest cache
+        if: needs.changes.outputs.python == 'true' && steps.atlas-manifest-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
         with:
           path: site/src/data/lexicon-manifest.json
           key: lexicon-manifest-${{ hashFiles('site/src/data/lexicon-manifest.pointer.json') }}
@@ -782,8 +831,20 @@ jobs:
           cache: 'npm'
           cache-dependency-path: site/package-lock.json
 
-      - name: Cache Atlas lexicon manifest
-        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+      - name: Restore Atlas lexicon manifest cache
+        id: atlas-manifest-cache
+        uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        with:
+          path: site/src/data/lexicon-manifest.json
+          key: lexicon-manifest-${{ hashFiles('site/src/data/lexicon-manifest.pointer.json') }}
+
+      - name: Verify Atlas manifest matches pointer (rehydrate if stale)
+        run: |
+          python3 -c "import sys; sys.path.insert(0, 'scripts'); from lexicon.manifest_io import load_manifest; load_manifest(); print('Atlas manifest verified against pointer')"
+
+      - name: Save Atlas lexicon manifest cache
+        if: steps.atlas-manifest-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
         with:
           path: site/src/data/lexicon-manifest.json
           key: lexicon-manifest-${{ hashFiles('site/src/data/lexicon-manifest.pointer.json') }}
@@ -819,8 +880,20 @@ jobs:
         cache: 'npm'
         cache-dependency-path: site/package-lock.json
 
-    - name: Cache Atlas lexicon manifest
-      uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+    - name: Restore Atlas lexicon manifest cache
+      id: atlas-manifest-cache
+      uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+      with:
+        path: site/src/data/lexicon-manifest.json
+        key: lexicon-manifest-${{ hashFiles('site/src/data/lexicon-manifest.pointer.json') }}
+
+    - name: Verify Atlas manifest matches pointer (rehydrate if stale)
+      run: |
+        python3 -c "import sys; sys.path.insert(0, 'scripts'); from lexicon.manifest_io import load_manifest; load_manifest(); print('Atlas manifest verified against pointer')"
+
+    - name: Save Atlas lexicon manifest cache
+      if: steps.atlas-manifest-cache.outputs.cache-hit != 'true'
+      uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
       with:
         path: site/src/data/lexicon-manifest.json
         key: lexicon-manifest-${{ hashFiles('site/src/data/lexicon-manifest.pointer.json') }}

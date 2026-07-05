@@ -42,7 +42,7 @@ def test_ignores_unrelated_files() -> None:
 
 
 def test_check_targets_fails_when_generation_changes_mdx(
-    tmp_path: Path, monkeypatch
+    tmp_path: Path, monkeypatch, capsys
 ) -> None:
     mdx_root = tmp_path / "site" / "src" / "content" / "docs"
     mdx_path = mdx_root / "a1" / "things-have-gender.mdx"
@@ -61,6 +61,11 @@ def test_check_targets_fails_when_generation_changes_mdx(
     )
 
     assert rc == 1
+
+    captured = capsys.readouterr()
+    assert "Generated MDX drift detected" in captured.out
+    assert "Hint: if your branch predates generator changes" in captured.out
+    assert "verify site/src/data/lexicon-manifest.json matches" in captured.out
 
 
 def test_seminar_targets_use_assemble_mdx(tmp_path: Path, monkeypatch) -> None:
