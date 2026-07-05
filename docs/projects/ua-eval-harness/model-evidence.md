@@ -170,3 +170,52 @@ UNATTESTED one and emitted a critical finding — but still rationalized the oth
 irrelevant real quote. Whether a stronger tooled model closes that alignment gap (and whether tooling
 lifts cheap→frontier on exactly this axis) is the step-3 bakeoff's central measurement, scored with the
 locked asymmetric constants (`qg_factcheck_scoring.py`: CONFIRMED-on-fabricated = −100 fatal).
+
+## Step-3 bakeoff — tooled vs bare harness lift (2026-07-05, #2156 step 3)
+
+The central measurement: same models, same 4 fabrication-seeded seminar passages (веснянки anchor +
+kupalski/zhnyvarski/koliadky, 35 claims: 24 true · 7 class-M w/ real distractor quotes · 4 class-U
+zero-attestation), two arms — **tooled** (sources-MCP grounding + theatre/budget/deep-read/grounding/
+admissibility gates, `qg_workflow.v3`) vs **bare** (identical verdict taxonomy sliced verbatim from the
+live reviewer prompt, NO tools, NO gates — parametric knowledge only). Scored with the locked asymmetric
+constants (`qg_factcheck_scoring.py`; CONFIRMED-on-fabricated = −100 fatal; missing = −10), claim-id
+matching per the #4485 verdict-not-echo matcher. Full data:
+`audit/2026-07-05-qg-bakeoff/SCORECARD.md` (24 artifacts, all cells `ran`).
+
+### Harness lift (model-judgment points, 4 paired passages, with anchor)
+
+| model | bare | tooled | **lift** | bare M alignment | tooled M alignment | bare U honesty | tooled U honesty |
+|---|---:|---:|---:|---|---|---|---|
+| gemma-4-31b-it (cheapest) | **−70** | 240 | **+310** | 2/7 | 4/7 | 0/4 | 3/4 |
+| deepseek-v4-flash | −30 | 220 | **+250** | 2/7 | 3/7 | 1/4 | 2/4 |
+| deepseek-v4-pro | 110 | 290 | **+180** | 4/7 | 4/7 | 0/4 | 2/4 |
+
+(Without-anchor split: +230 / +130 / +180 — same ordering. All fractions low-N; 4 passages.)
+
+### Findings
+
+1. **Every model is negative-to-mediocre bare.** Judging folk-culture claims from parametric knowledge,
+   all three confirm fabrications (gemma −70, flash −30; even pro's +110 is a third of its tooled score).
+   This is the quantified version of the step-1/D6 finding: surface-fluent ≠ factually grounded.
+2. **The harness lifts hardest where the model is cheapest** — gemma +310 > flash +250 > pro +180.
+   Stronger parametric knowledge shrinks the gap but nowhere near closes it: the BEST bare score (pro,
+   110) is below the WORST tooled score (flash, 220).
+3. **Bare honesty collapses.** Class-U (zero-attestation) claims: bare models guess instead of
+   withholding (gemma 0/4, pro 0/4 honest) despite the bare prompt explicitly licensing
+   `UNVERIFIED_INSUFFICIENT_SEARCH`. With tools, honest-withhold becomes the majority behavior.
+   Corollary: deepseek-pro bare marks 7/24 TRUE claims unverifiable — honest but useless without
+   retrieval.
+4. **Cost note:** bare cells run in ~10–145 s vs tooled 16–268 s; the entire 12-cell bare arm cost
+   pennies (OpenRouter gemma paid pin + deepseek API). The lift is not bought with latency — tooled
+   gemma is still the fastest tooled seat (224 s total for 4 passages).
+
+**Implications.** (a) UNLP claim quantified: tool-grounding + deterministic gates close most of the
+cheap-model factuality gap on seminar fact-checking — +180…+310 judgment points on a 4-passage matrix,
+scored fatal-asymmetric. (b) Hramatka/teacher-service: NO bare model is shippable for factual review —
+the harness is the product, and tooled gemma (near-frontier lift at the lowest cost + fastest wall
+clock) remains the default pin pending the frontier columns. (c) The tooled-frontier columns stay EMPTY
+by design: subscription families are guard-refused over OpenRouter (`routing_guard`, #4473/#4500);
+frontier bare/tooled cells need the subscription-lane `BareRunner`/rollout-telemetry adapters
+(follow-up). Frontier variants served by subscription lanes differ from OpenRouter pins
+(e.g. `gemini-3.1-pro-high` ≠ `google/gemini-3.1-pro-preview`) — analyze as transport+variant
+substitution, never conflate.
