@@ -4,7 +4,7 @@ sequence: 6
 slug: zhnyvarski-obzhynkovi-pisni
 title: "Жниварські та обжинкові пісні"
 subtitle: "Harvest labor, obzhynky, wreath, sheaf, community voice"
-version: 6
+version: 7
 status: locked
 phase: base-first
 cefr_min: C1
@@ -158,13 +158,13 @@ references:
   - title: "Жали женчики, жали"
     title_en: "The harvesters reaped"
     genre: "Жниварська пісня"
-    role: primary
-    type: primary
+    role: citation
+    type: reference
     source: "Народна творчість. УкрЛіб."
     source_url: "https://www.ukrlib.com.ua/narod/printout.php?id=2&bookid=0"
     license: public_domain
-    publication: phase_b_required
-    reading_slug: "zhnyvarska-pisnia-zhaly-zhenchyky-zhaly"
+    publication: supplementary
+    note: "Короткий повний текст лишається цитованим прикладом, але не є достатнім самостійним семінарським читанням."
   - title: "Котився віночок по полю"
     title_en: "The little wreath rolled across the field"
     genre: "Обжинкова пісня"

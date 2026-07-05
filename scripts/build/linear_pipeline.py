@@ -9034,7 +9034,14 @@ def run_python_qg(
     with contextlib.suppress(LinearPipelineError, ValueError):
         wiki_manifest = build_wiki_manifest_data(plan_path, plan=plan)
     record("resource_coverage", _resource_coverage_gate(resources, plan, wiki_manifest))
-    record("reading_coverage", _reading_coverage_gate(module_text, plan))
+    record(
+        "reading_coverage",
+        _reading_coverage_gate(
+            module_text,
+            plan,
+            readings_dir=PROJECT_ROOT / "site" / "src" / "content" / "readings",
+        ),
+    )
     record(
         "resources_url_resolve",
         _resources_url_resolve_gate(
@@ -13132,12 +13139,47 @@ def _extract_plan_pronunciation_video_urls(plan: Mapping[str, Any]) -> list[dict
 _HOSTED_READING_VALUES = frozenset({"host", "hosted"})
 _READING_COVERAGE_FLOOR = 4
 _READING_COVERAGE_MIN_STRUCTURED = 1
+_READING_COVERAGE_MIN_PASSAGE_LINES = 6
+_READING_COVERAGE_MIN_PASSAGE_WORDS = 40
 _READING_TITLE_STRIP_CHARS = " \t\r\n«»„“”\"'‘’"
 _READING_COVERAGE_BLOCK_RE = re.compile(
     r"^:::primary-reading(?P<attrs>[^\n]*)\n(?P<body>.*?)^:::\s*$",
     re.MULTILINE | re.DOTALL,
 )
 _PRIMARY_READING_SLUG_ATTR_RE = re.compile(r'\breading\s*=\s*"(?P<slug>[^"]+)"')
+_PRIMARY_READING_TEXT_PROP_RE = re.compile(
+    r"<PrimaryReading\b[^>]*\btext=\{`(?P<text>.*?)`\}\s*/?>",
+    re.DOTALL,
+)
+_PRIMARY_READING_CHILDREN_RE = re.compile(
+    r"<PrimaryReading\b[^>]*>\s*(?P<text>.*?)\s*</PrimaryReading>",
+    re.DOTALL,
+)
+_PRIMARY_READING_ATTRIBUTION_MARKERS = (
+    "суспільне надбання",
+    "public domain",
+    "creative commons",
+    "cc by",
+    "cc-by",
+    "джерел",
+    "публічн",
+    "wikisource",
+    "ukrlib",
+    "ізборник",
+    "енциклопед",
+    "збірник",
+    "видан",
+    "досліджен",
+    "корпус",
+    "народна творчість",
+    "літопис",
+    "пісня",
+    "фрагмент",
+    "свідчення",
+    "цитовано",
+    "зібрання",
+    "твор",
+)
 
 
 def _normalize_reading_title(value: object) -> str:
@@ -13149,15 +13191,47 @@ def _primary_reading_blocks(module_text: str) -> list[re.Match[str]]:
     return list(_READING_COVERAGE_BLOCK_RE.finditer(module_text))
 
 
-def _primary_reading_attribution_lines(block_body: str) -> list[str]:
+def _primary_reading_body_lines(block_body: str) -> list[str]:
     lines: list[str] = []
     for line in block_body.splitlines():
         stripped = line.strip()
         while stripped.startswith(">"):
             stripped = stripped[1:].strip()
-        if stripped.startswith(("—", "–", "-")):
-            lines.append(stripped)
+        lines.append(stripped)
     return lines
+
+
+def _looks_like_primary_reading_attribution(paragraph: str) -> bool:
+    stripped = paragraph.strip()
+    if not stripped.startswith(("—", "–", "-")):
+        return False
+    normalized = stripped.casefold()
+    return any(marker in normalized for marker in _PRIMARY_READING_ATTRIBUTION_MARKERS)
+
+
+def _primary_reading_attribution_indexes(block_body: str) -> set[int]:
+    lines = _primary_reading_body_lines(block_body)
+    end = len(lines) - 1
+    while end >= 0 and not lines[end]:
+        end -= 1
+    if end < 0:
+        return set()
+
+    start = end
+    while start >= 0 and not lines[start].startswith(("—", "–", "-")):
+        start -= 1
+    if start < 0:
+        return set()
+
+    paragraph = "\n".join(lines[start : end + 1])
+    if not _looks_like_primary_reading_attribution(paragraph):
+        return set()
+    return set(range(start, end + 1))
+
+
+def _primary_reading_attribution_lines(block_body: str) -> list[str]:
+    lines = _primary_reading_body_lines(block_body)
+    return [lines[index] for index in sorted(_primary_reading_attribution_indexes(block_body)) if lines[index]]
 
 
 def _primary_reading_slug_attrs(blocks: Sequence[re.Match[str]]) -> set[str]:
@@ -13183,6 +13257,73 @@ def _structured_primary_reading_blocks(blocks: Sequence[re.Match[str]]) -> list[
     return structured_blocks
 
 
+def _primary_reading_passage_text(block_body: str) -> str:
+    passage_lines: list[str] = []
+    attribution_indexes = _primary_reading_attribution_indexes(block_body)
+    for index, stripped in enumerate(_primary_reading_body_lines(block_body)):
+        if not stripped or index in attribution_indexes:
+            continue
+        passage_lines.append(stripped)
+    return "\n".join(passage_lines)
+
+
+def _reading_passage_counts(text: str) -> tuple[int, int]:
+    lines = [line.strip() for line in text.splitlines() if line.strip()]
+    words = re.findall(r"[А-Яа-яІіЇїЄєҐґA-Za-z0-9'’\-]+", text)
+    return len(lines), len(words)
+
+
+def _substantial_reading_passage(text: str) -> bool:
+    lines, words = _reading_passage_counts(text)
+    return lines >= 2 and (
+        lines >= _READING_COVERAGE_MIN_PASSAGE_LINES
+        or words >= _READING_COVERAGE_MIN_PASSAGE_WORDS
+    )
+
+
+def _hosted_reading_text(reading_slug: str, readings_dir: Path) -> str:
+    if not reading_slug:
+        return ""
+    path = readings_dir / f"{reading_slug}.mdx"
+    if not path.exists():
+        return ""
+    text = path.read_text(encoding="utf-8")
+    match = _PRIMARY_READING_TEXT_PROP_RE.search(text)
+    if match:
+        return match.group("text")
+    match = _PRIMARY_READING_CHILDREN_RE.search(text)
+    if not match:
+        return ""
+    return re.sub(r"<[^>]+>", "", match.group("text"))
+
+
+def _substantial_structured_primary_readings(
+    blocks: Sequence[re.Match[str]],
+    readings_dir: Path,
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    substantial: list[dict[str, Any]] = []
+    too_short: list[dict[str, Any]] = []
+    for block in blocks:
+        slug_match = next(_PRIMARY_READING_SLUG_ATTR_RE.finditer(block.group("attrs")), None)
+        slug = slug_match.group("slug").strip() if slug_match else ""
+        inline_text = _primary_reading_passage_text(block.group("body"))
+        hosted_text = _hosted_reading_text(slug, readings_dir)
+        inline_lines, inline_words = _reading_passage_counts(inline_text)
+        hosted_lines, hosted_words = _reading_passage_counts(hosted_text)
+        record = {
+            "reading_slug": slug,
+            "inline_lines": inline_lines,
+            "inline_words": inline_words,
+            "hosted_lines": hosted_lines,
+            "hosted_words": hosted_words,
+        }
+        if _substantial_reading_passage(inline_text) or _substantial_reading_passage(hosted_text):
+            substantial.append(record)
+        else:
+            too_short.append(record)
+    return substantial, too_short
+
+
 def _hosted_plan_readings(plan: Mapping[str, Any]) -> list[dict[str, str]]:
     readings = plan.get("readings")
     if not isinstance(readings, list):
@@ -13203,7 +13344,12 @@ def _hosted_plan_readings(plan: Mapping[str, Any]) -> list[dict[str, str]]:
     return hosted_readings
 
 
-def _reading_coverage_gate(module_text: str, plan: Mapping[str, Any]) -> dict[str, Any]:
+def _reading_coverage_gate(
+    module_text: str,
+    plan: Mapping[str, Any],
+    *,
+    readings_dir: Path | None = None,
+) -> dict[str, Any]:
     level_key = str(plan.get("level") or "").strip().casefold()
     if level_key not in SEMINAR_LEVELS:
         return {"passed": True, "skipped": "non-seminar"}
@@ -13218,6 +13364,11 @@ def _reading_coverage_gate(module_text: str, plan: Mapping[str, Any]) -> dict[st
     reading_slug_attrs = _primary_reading_slug_attrs(blocks)
     structured_blocks = _structured_primary_reading_blocks(blocks)
     structured_reading_slug_attrs = _primary_reading_slug_attrs(structured_blocks)
+    readings_dir = readings_dir or PROJECT_ROOT / "site" / "src" / "content" / "readings"
+    substantial_readings, short_readings = _substantial_structured_primary_readings(
+        structured_blocks,
+        readings_dir,
+    )
     unstructured_primary_readings = len(blocks) - len(structured_blocks)
 
     missing: list[dict[str, str]] = []
@@ -13249,16 +13400,20 @@ def _reading_coverage_gate(module_text: str, plan: Mapping[str, Any]) -> dict[st
             missing.append(reading)
 
     missing_on_site_reading = level_key == "folk" and len(structured_reading_slug_attrs) < _READING_COVERAGE_MIN_STRUCTURED
-    passed = not missing and not missing_on_site_reading
+    missing_substantial_reading = level_key == "folk" and len(substantial_readings) < _READING_COVERAGE_MIN_STRUCTURED
+    has_unstructured_readings = level_key == "folk" and unstructured_primary_readings > 0
+    passed = not missing and not missing_on_site_reading and not missing_substantial_reading and not has_unstructured_readings
     report: dict[str, Any] = {
         "passed": passed,
         "severity": "HARD" if not passed else None,
         "checked": len(hosted_readings),
         "surfaced_primary_readings": len(blocks),
         "structured_on_site_readings": len(structured_blocks),
+        "substantial_on_site_readings": len(substantial_readings),
         "unstructured_primary_readings": unstructured_primary_readings,
         "matched_hosted_readings": matched,
         "missing_hosted_readings": missing,
+        "short_structured_readings": short_readings,
     }
     if missing_on_site_reading:
         report["missing_on_site_reading"] = {
@@ -13269,6 +13424,26 @@ def _reading_coverage_gate(module_text: str, plan: Mapping[str, Any]) -> dict[st
                 "external link-only resources and orphan inline snippets are supplementary only"
             ),
             "expected_minimum": _READING_COVERAGE_MIN_STRUCTURED,
+        }
+    if missing_substantial_reading:
+        report["missing_substantial_reading"] = {
+            "severity": "HARD",
+            "message": (
+                "FOLK modules require at least one structured on-site reading "
+                "with a real shortened passage, not a one-line/token quote"
+            ),
+            "expected_minimum": _READING_COVERAGE_MIN_STRUCTURED,
+            "minimum_lines": _READING_COVERAGE_MIN_PASSAGE_LINES,
+            "minimum_words": _READING_COVERAGE_MIN_PASSAGE_WORDS,
+        }
+    if has_unstructured_readings:
+        report["unstructured_reading_failure"] = {
+            "severity": "HARD",
+            "message": (
+                "FOLK primary-reading blocks must include a reading=\"...\" slug "
+                "and dash-led source attribution; orphan snippets are not valid reading content"
+            ),
+            "count": unstructured_primary_readings,
         }
 
     exception = str(plan.get("reading_coverage_exception") or "").strip()

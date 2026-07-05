@@ -1,17 +1,17 @@
 {
-  "assembled_mdx_sha256": "439f6cc29aab43393eacdaf6a5dee397c6782a762d68a5f8af61d7d17ff1bd7a",
+  "assembled_mdx_sha256": "1ae0b05e75bcd440f51f97ded26f10036e36b1dc09316fee417d1c1aaa8b2fcd",
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "133bb3cec00bd2452573485ea18e5b10e7180fa77665a79ea5a1086564de5439",
+    "digest": "f8b5e99d929203cb3e9af4cef926e9de58578bfaf2974c07a3fc4cfb7edf5feb",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/zhnyvarski-obzhynkovi-pisni.yaml",
-        "sha256": "564182a954f5a45a48da3779b5b07320f2d952d896e4d1cabcb52268e04e325a"
+        "sha256": "168b2781a7bd6e0fa534e7ba807b24d3d25ed4905f5bafed4f2ea2de2daec58d"
       },
       {
         "path": "curriculum/l2-uk-en/folk/zhnyvarski-obzhynkovi-pisni/module.md",
-        "sha256": "a7f794a7543662d379c330df889273f41b2928545e3c2e641345c1081db40ede"
+        "sha256": "018f4e91b459341d7968d45d8ef33f315e9982ed10c217425329cc60c839f2ca"
       },
       {
         "path": "curriculum/l2-uk-en/folk/zhnyvarski-obzhynkovi-pisni/activities.yaml",
@@ -31,8 +31,10 @@
     "beauty": "Fluent academic Ukrainian with tight arcs from labor and body to obzhynky, poetics, and evidence limits.",
     "decolonization": "Social-address/decolonization section resists decorative ethnography and over-symbolizing; no Russian-imperial frame.",
     "engagement": "Four short public primary texts, inline activities, and useful tip/note/important callouts anchor the lesson.",
+    "m06_short_song": "Short \u0416\u0430\u043b\u0438 \u0436\u0435\u043d\u0447\u0438\u043a\u0438, \u0436\u0430\u043b\u0438 text demoted to supplementary citation; structured readings now use three substantial harvest/obzhynky passages.",
     "naturalness": "Learner-facing AI/build/register leakage cleanup keeps the prose in Ukrainian seminar register without process instructions.",
     "pedagogical": "Repeatable method: row, action, object, addressee, and bounded conclusion, with model answers and rubric.",
+    "reading_reread": "M3-M6 reread enforces substantial on-site PrimaryReading passages; one-line/token readings no longer satisfy the FOLK reading gate. Claude Opus closeout review-folk-reading-reread-m3-m6-closeout returned SHIP-READY.",
     "review": "Claude route was attempted first; AGY/Gemini fallback review blockers were fixed before final validation.",
     "tone": "Serious Ukrainian teaching voice keeps labor, fatigue, hierarchy, humor, and community visible without sentimentality."
   },
@@ -52,7 +54,7 @@
     "model": "claude-opus-4-8"
   },
   "schema_version": 1,
-  "scored_at": "2026-07-02T16:26:22Z",
+  "scored_at": "2026-07-05T20:30:09Z",
   "scores": {
     "beauty": 9.0,
     "decolonization": 9.0,

@@ -1,9 +1,9 @@
 {
-  "assembled_mdx_sha256": "b767192f6fdabd929a81ec3cd2c8b6c76a496a81129ba818dedd46029bb8034f",
+  "assembled_mdx_sha256": "22e9ccc1ae53c871157959e32a63f87b5f35268e41a1b9199bbc649416116503",
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "61bfe3b74f3542fa27eb3c32b4deb89f9dae70a9fac06003e68d52058dccf9f8",
+    "digest": "06b5921004e1642cab626278b4ffbd0e46f0d94436bcbd4fb9ebd1ff8718e75a",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/koliadky-shchedrivky.yaml",
@@ -11,7 +11,7 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/koliadky-shchedrivky/module.md",
-        "sha256": "18aea919d958ee85aba3ac188aa3ab913cebc8f184f1669bb887d6821d28204f"
+        "sha256": "0c82c229f9ea4229bd8985f051c158d62bf90e93e7168d97965779f072477f0c"
       },
       {
         "path": "curriculum/l2-uk-en/folk/koliadky-shchedrivky/activities.yaml",
@@ -32,6 +32,7 @@
     "naturalness": "Learner-facing AI/build/register leakage cleanup keeps the prose in Ukrainian seminar register without process instructions.",
     "pedagogy": "The replacement section teaches winter praise variants through addressee, household space, gift imagery, and evidence limits, with the Anna/Danube carol as the gospodynia variant.",
     "quote_integrity": "mcp__sources.verify_quote matched the four embedded M03 lesson excerpts: Oi syvaia 1.0, Shchedryk 0.9929, Pryletila zozulenka 1.0, Oi nad Dunaiem/Anna 1.0; hosted reading pages contain the excerpts.",
+    "reading_reread": "M3-M6 reread enforces substantial on-site PrimaryReading passages; one-line/token readings no longer satisfy the FOLK reading gate. Claude Opus closeout review-folk-reading-reread-m3-m6-closeout returned SHIP-READY.",
     "review": "Claude route was attempted first; AGY/Gemini fallback review blockers were fixed before final validation.",
     "source_hygiene": "Reading citations use public Ukrlib URLs only; removed Yak shche ne bulo routes are taught_in empty, published false, canonical false, and absent from built dist routes."
   },
@@ -46,12 +47,12 @@
   "profile": "folk_promote_v1",
   "review_artifact": null,
   "reviewer": {
-    "agent": "agy",
-    "family": "google",
-    "model": "gemini-3.1-pro-high"
+    "agent": "claude",
+    "family": "anthropic",
+    "model": "claude-opus-4-8"
   },
   "schema_version": 1,
-  "scored_at": "2026-07-02T16:26:22Z",
+  "scored_at": "2026-07-05T20:22:08Z",
   "scores": {
     "beauty": 9.5,
     "decolonization": 9.5,

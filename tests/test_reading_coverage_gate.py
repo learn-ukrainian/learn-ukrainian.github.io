@@ -12,18 +12,27 @@ from scripts.build.linear_pipeline import PYTHON_QG_GATE_ORDER, _reading_coverag
 def _run_fixture_gate(tmp_path: Path, plan: dict[str, Any], module_text: str) -> dict[str, Any]:
     plan_path = tmp_path / "plan.yaml"
     module_path = tmp_path / "module.md"
+    readings_dir = tmp_path / "readings"
+    readings_dir.mkdir(exist_ok=True)
     plan_path.write_text(yaml.safe_dump(plan, allow_unicode=True, sort_keys=False), encoding="utf-8")
     module_path.write_text(module_text, encoding="utf-8")
     loaded_plan = yaml.safe_load(plan_path.read_text(encoding="utf-8"))
-    return _reading_coverage_gate(module_path.read_text(encoding="utf-8"), loaded_plan)
+    return _reading_coverage_gate(module_path.read_text(encoding="utf-8"), loaded_plan, readings_dir=readings_dir)
 
 
 def _primary_reading_block(title: str, slug: str | None = None) -> str:
     attrs = f'{{reading="{slug}"}}' if slug else ""
     return f""":::primary-reading{attrs}
-> Рядок першоджерела.
+> Перший рядок уривка.
+> Другий рядок уривка.
+> Третій рядок уривка.
+> Четвертий рядок уривка.
+> П'ятий рядок уривка.
+> Шостий рядок уривка.
+> Сьомий рядок уривка.
+> Восьмий рядок уривка.
 
-— Народна творчість, {title}
+— Народна творчість, {title}; суспільне надбання.
 :::
 """
 
@@ -80,6 +89,7 @@ def test_hard_fail_when_host_reading_has_only_bare_external_link(tmp_path: Path)
         {"title": "«Ой весна»", "reading_slug": "oi-vesna"},
     ]
     assert result["missing_on_site_reading"]["severity"] == "HARD"
+    assert result["missing_substantial_reading"]["severity"] == "HARD"
     assert result["warning"]["severity"] == "WARNING"
 
 
@@ -146,6 +156,136 @@ def test_orphan_inline_snippets_do_not_count_as_folk_on_site_reading(tmp_path: P
     assert result["surfaced_primary_readings"] == 2
     assert result["structured_on_site_readings"] == 0
     assert result["unstructured_primary_readings"] == 2
+    assert result["missing_on_site_reading"]["severity"] == "HARD"
+    assert result["missing_substantial_reading"]["severity"] == "HARD"
+    assert result["unstructured_reading_failure"] == {
+        "severity": "HARD",
+        "message": (
+            'FOLK primary-reading blocks must include a reading="..." slug '
+            "and dash-led source attribution; orphan snippets are not valid reading content"
+        ),
+        "count": 2,
+    }
+
+
+def test_one_line_structured_reading_does_not_satisfy_folk_coverage(tmp_path: Path) -> None:
+    plan = {"level": "folk", "readings": []}
+    module_text = """:::primary-reading{reading="thin-token"}
+> Один рядок.
+
+— Народна творчість, «Тонкий уривок»
+:::
+"""
+
+    result = _run_fixture_gate(tmp_path, plan, module_text)
+
+    assert result["passed"] is False
+    assert result["structured_on_site_readings"] == 1
+    assert result["substantial_on_site_readings"] == 0
+    assert result["short_structured_readings"] == [
+        {
+            "reading_slug": "thin-token",
+            "inline_lines": 1,
+            "inline_words": 2,
+            "hosted_lines": 0,
+            "hosted_words": 0,
+        }
+    ]
+    assert result["missing_substantial_reading"]["severity"] == "HARD"
+
+
+def test_single_long_line_structured_reading_does_not_satisfy_folk_coverage(tmp_path: Path) -> None:
+    plan = {"level": "folk", "readings": []}
+    module_text = (
+        ':::primary-reading{reading="long-line"}\n'
+        "> Один довгий рядок уривка має багато слів і навмисно тягнеться "
+        "далі як суцільна цитата без нормальної рядкової організації, "
+        "але такий фрагмент усе одно не є повноцінним читанням для семінару.\n\n"
+        "— Народна творчість, «Довгий тонкий уривок»\n"
+        ":::\n"
+    )
+
+    result = _run_fixture_gate(tmp_path, plan, module_text)
+
+    assert result["passed"] is False
+    assert result["structured_on_site_readings"] == 1
+    assert result["substantial_on_site_readings"] == 0
+    assert result["short_structured_readings"][0]["reading_slug"] == "long-line"
+    assert result["short_structured_readings"][0]["inline_lines"] == 1
+    assert result["missing_substantial_reading"]["severity"] == "HARD"
+
+
+def test_dash_led_dialogue_counts_as_primary_reading_passage(tmp_path: Path) -> None:
+    plan = {"level": "folk", "readings": []}
+    module_text = """:::primary-reading{reading="dialogue-song"}
+— Купайло, Купайло!
+
+— Де ти зимувало?
+
+— Зимувало в лісі.
+
+— Ночувало в стрісі.
+
+— Стояло край поля.
+
+— Чекало громади.
+
+— Народна творчість, «Купайло, Купайло»; суспільне надбання.
+:::
+"""
+
+    result = _run_fixture_gate(tmp_path, plan, module_text)
+
+    assert result["passed"] is True
+    assert result["structured_on_site_readings"] == 1
+    assert result["substantial_on_site_readings"] == 1
+    assert result["short_structured_readings"] == []
+
+
+def test_wrapped_dash_attribution_counts_as_structured_reading(tmp_path: Path) -> None:
+    plan = {"level": "folk", "readings": []}
+    module_text = """:::primary-reading{reading="wrapped-source-note"}
+> Перший рядок уривка.
+> Другий рядок уривка.
+> Третій рядок уривка.
+> Четвертий рядок уривка.
+> П'ятий рядок уривка.
+> Шостий рядок уривка.
+— Самійло Величко, літописна проза про Івана Сірка; короткий перевірений
+фрагмент, який читаємо як писемний сусід історичного переказу
+:::
+"""
+
+    result = _run_fixture_gate(tmp_path, plan, module_text)
+
+    assert result["passed"] is True
+    assert result["structured_on_site_readings"] == 1
+    assert result["substantial_on_site_readings"] == 1
+    assert result["short_structured_readings"] == []
+
+
+def test_mid_passage_dash_dialogue_is_not_misread_as_attribution(tmp_path: Path) -> None:
+    plan = {"level": "folk", "readings": []}
+    module_text = """:::primary-reading{reading="missing-attribution"}
+Перший рядок уривка.
+
+— «Діалогічний рядок»,
+
+Третій рядок уривка.
+
+Четвертий рядок уривка.
+
+П'ятий рядок уривка.
+
+Шостий рядок уривка.
+:::
+"""
+
+    result = _run_fixture_gate(tmp_path, plan, module_text)
+
+    assert result["passed"] is False
+    assert result["structured_on_site_readings"] == 0
+    assert result["unstructured_primary_readings"] == 1
     assert result["missing_on_site_reading"]["severity"] == "HARD"
 
 
