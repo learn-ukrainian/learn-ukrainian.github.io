@@ -1,9 +1,9 @@
 {
-  "assembled_mdx_sha256": "6564a255dc2a78789b9ae17a924e035890be129f680ed686eea8df8389f51794",
+  "assembled_mdx_sha256": "722eaae3f5ecdcc4a3a24690bb8c51c774a9528e70cf417f7f56ed3da9c797cc",
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "4789403b4a942f80b73611f92b7364e3b18a5fe62d64ef649825e2c04a8be723",
+    "digest": "8e75c1e1dc2833cec2f8b429d36f169e9fc1b4b9c5729e64716721a997bad4f4",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/narodni-lehendy.yaml",
@@ -11,7 +11,7 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/narodni-lehendy/module.md",
-        "sha256": "6e55d2146d92506d784d66d8ccb8767479bda9e8f5600ae86c68953cf5c262e3"
+        "sha256": "102d0884c29a2e75e0e6502c63d629b96c9186e102e4c3b7c616506a602891bc"
       },
       {
         "path": "curriculum/l2-uk-en/folk/narodni-lehendy/activities.yaml",
@@ -28,10 +28,10 @@
     ]
   },
   "evidence": {
-    "gates": "Activity V2 schema, vocabulary CLI, explicit MDX generation drift, source parity, forward parity, internal-ID/register scan, and verify_shippable components passed after local DB/dependency setup; final full rerun pending after last VESUM wording fix.",
-    "independent_review": "Claude-first route failed because the native Claude binary was not installed; AGY/Gemini fallback review returned PASS. Post-review edits only corrected VESUM spelling/forms and equivalent phrasing.",
-    "religious_register": "Lesson distinguishes church doctrine, folk Christianity, apocryphal legend, ritual imagination, and scholarly commentary.",
-    "source_hygiene": "Three short fragments only; no hosted reading fabrication or full sacred/legend text reconstruction; provenance documented for Wikisource fragments and repo quote-confirmed Krypiakevych fragment."
+    "independent_review": "Claude Opus 4.8 reviewed the batch, found one M22 fidelity blocker, and follow-up approved after the textbook-attested tale opening fix.",
+    "local_gates": "MDX generation drift, source parity, forward parity, direct hardened reading gate, diff check, and focused shippable gates passed except for a transient Wikimedia API rate-limit on pre-existing M22 resource references.",
+    "reading_remediation": "Batch 2 adds or converts learner-visible structured on-site PrimaryReading excerpts; external links are supplementary only.",
+    "source_hygiene": "Short verified or textbook-attested excerpts only; no full-text reconstruction and no invented readings."
   },
   "floors": {
     "beauty": 8.5,
@@ -44,12 +44,12 @@
   "profile": "folk_promote_v1",
   "review_artifact": null,
   "reviewer": {
-    "agent": "agy",
-    "family": "google",
-    "model": "gemini-3.1-pro-high"
+    "agent": "claude",
+    "family": "anthropic",
+    "model": "claude-opus-4.8"
   },
   "schema_version": 1,
-  "scored_at": "2026-07-04T11:37:35Z",
+  "scored_at": "2026-07-05T15:03:26Z",
   "scores": {
     "beauty": 8.7,
     "decolonization": 9.1,

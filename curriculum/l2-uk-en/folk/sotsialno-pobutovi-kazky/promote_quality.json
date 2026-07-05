@@ -1,9 +1,9 @@
 {
-  "assembled_mdx_sha256": "9a83bda02c71051b54268109aa5c6d563aa0742886c56c78ef38836539c9ff2f",
+  "assembled_mdx_sha256": "1c701284f9bc0ce3cd8f959393342934e7cc90b7f516d0e176727f729510e003",
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "afee534373528ebf4fd71f95b714b47f68a7f15a9f99acef08ae7b67b75243ab",
+    "digest": "4c0d62fcd612d9901c68ab3fdd35af4bedee47c7b63e6587b029398b037203b6",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/sotsialno-pobutovi-kazky.yaml",
@@ -11,7 +11,7 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/sotsialno-pobutovi-kazky/module.md",
-        "sha256": "c08b3addf0f343f8168e077f739a4f7fa60892c800fd5e54455532cf54e1bf88"
+        "sha256": "61f482b6bbf753bdc04f7d789dbc7ca29362e54da5137f5443caa52568424172"
       },
       {
         "path": "curriculum/l2-uk-en/folk/sotsialno-pobutovi-kazky/activities.yaml",
@@ -28,10 +28,10 @@
     ]
   },
   "evidence": {
-    "gates": "python_qg, MDX render, activity validation, and MDX generation drift green before recording.",
-    "independent_review": "Claude-first route failed because native Claude binary was not installed; AGY/Gemini review found process-register blockers; fixes applied; AGY/Gemini follow-up returned PASS.",
-    "register": "Source scan for lesson/module/course/process labels in M23 source returned no hits after fixes.",
-    "source_hygiene": "Short Wikisource fragments only; no full-text reconstruction; Storozhenko/Kvitka framed as authorial literature, not folk records."
+    "independent_review": "Claude Opus 4.8 reviewed the batch, found one M22 fidelity blocker, and follow-up approved after the textbook-attested tale opening fix.",
+    "local_gates": "MDX generation drift, source parity, forward parity, direct hardened reading gate, diff check, and focused shippable gates passed except for a transient Wikimedia API rate-limit on pre-existing M22 resource references.",
+    "reading_remediation": "Batch 2 adds or converts learner-visible structured on-site PrimaryReading excerpts; external links are supplementary only.",
+    "source_hygiene": "Short verified or textbook-attested excerpts only; no full-text reconstruction and no invented readings."
   },
   "floors": {
     "beauty": 8.5,
@@ -44,12 +44,12 @@
   "profile": "folk_promote_v1",
   "review_artifact": null,
   "reviewer": {
-    "agent": "agy",
-    "family": "google",
-    "model": "gemini-3.5-flash-high"
+    "agent": "claude",
+    "family": "anthropic",
+    "model": "claude-opus-4.8"
   },
   "schema_version": 1,
-  "scored_at": "2026-07-04T10:12:35Z",
+  "scored_at": "2026-07-05T15:03:26Z",
   "scores": {
     "beauty": 8.7,
     "decolonization": 9.2,
