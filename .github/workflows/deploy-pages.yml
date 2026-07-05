@@ -48,6 +48,17 @@ jobs:
           cache: 'npm'
           cache-dependency-path: site/package-lock.json
 
+      - name: Setup Python
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6.2.0
+        with:
+          python-version-file: '.python-version'
+
+      - name: Create Python venv
+        working-directory: .
+        run: |
+          python -m venv .venv
+          .venv/bin/python -m pip install --upgrade pip
+
       - name: Restore Atlas lexicon manifest cache
         id: atlas-manifest-cache
         uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
@@ -58,7 +69,7 @@ jobs:
       - name: Verify Atlas manifest matches pointer (rehydrate if stale)
         working-directory: .
         run: |
-          python3 -c "import sys; sys.path.insert(0, 'scripts'); from lexicon.manifest_io import load_manifest; load_manifest(); print('Atlas manifest verified against pointer')"
+          .venv/bin/python -c "import sys; sys.path.insert(0, 'scripts'); from lexicon.manifest_io import load_manifest; load_manifest(); print('Atlas manifest verified against pointer')"
 
       - name: Save Atlas lexicon manifest cache
         if: steps.atlas-manifest-cache.outputs.cache-hit != 'true'

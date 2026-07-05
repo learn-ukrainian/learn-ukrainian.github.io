@@ -5,6 +5,16 @@ The JSON manifest becomes a generated export of this DB, not the store.
 
 Migration is deterministic and idempotent: it rebuilds the DB from the current
 manifest. entry_type / alias / provenance are assigned by rule (no LLM).
+
+Compatibility projection contract for PR-1 SSG DB reads:
+``article_payloads.payload_json`` stores the exact public manifest entry object
+that ``site/src/lexicon/WordAtlasArticle.astro`` consumes today, keyed by the
+route slug and preserving manifest route order. This table is deliberately an
+opaque build-time projection, not the normalized entry-model schema: it includes
+current ``form_of`` routes until the alias/redirect split lands in PR-3, while
+the normalized ``articles`` table continues to treat ``form_of`` rows as alias
+records. Any field newly consumed by the Astro article must be present in this
+projection and covered by render-parity tests.
 """
 
 from __future__ import annotations
@@ -13,6 +23,7 @@ import argparse
 import json
 import re
 import sqlite3
+import sys
 import unicodedata
 from pathlib import Path
 from typing import Any
@@ -87,6 +98,16 @@ CREATE TABLE IF NOT EXISTS articles (
     created_at TEXT,
     updated_at TEXT
 );
+CREATE TABLE IF NOT EXISTS manifest_metadata (
+    key TEXT PRIMARY KEY,
+    value_json TEXT NOT NULL
+);
+CREATE TABLE IF NOT EXISTS article_payloads (
+    slug TEXT PRIMARY KEY,
+    route_order INTEGER NOT NULL,
+    payload_json TEXT NOT NULL,
+    is_public_route INTEGER NOT NULL CHECK (is_public_route IN (0, 1))
+);
 CREATE TABLE IF NOT EXISTS article_provenance (
     slug TEXT NOT NULL,
     source_family TEXT,
@@ -99,6 +120,7 @@ CREATE TABLE IF NOT EXISTS aliases (
     kind TEXT NOT NULL CHECK (kind IN ({_sql_enum(ALIAS_KINDS)})),
     source TEXT,
     target_slug TEXT NOT NULL,
+    visibility TEXT NOT NULL DEFAULT 'public' CHECK (visibility IN ({_sql_enum(VISIBILITIES)})),
     UNIQUE (alias, kind, target_slug)
 );
 CREATE TABLE IF NOT EXISTS related_entries (
@@ -122,6 +144,7 @@ CREATE TABLE IF NOT EXISTS enrichment (
 CREATE INDEX IF NOT EXISTS idx_aliases_target ON aliases(target_slug);
 CREATE INDEX IF NOT EXISTS idx_prov_slug ON article_provenance(slug);
 CREATE INDEX IF NOT EXISTS idx_enrichment_slug ON enrichment(slug);
+CREATE INDEX IF NOT EXISTS idx_article_payloads_route ON article_payloads(is_public_route, route_order);
 CREATE VIRTUAL TABLE IF NOT EXISTS articles_fts USING fts5(
     slug UNINDEXED, display_head, lemma, gloss, aliases
 );
@@ -166,6 +189,23 @@ def _iso(entry: dict[str, Any]) -> str | None:
     return entry.get("updated_at") or entry.get("created_at")
 
 
+def is_public_route_payload(entry: dict[str, Any]) -> bool:
+    """Mirror the current Astro word-page route filter for compatibility payloads."""
+    lemma = str(entry.get("lemma") or "").strip()
+    slug = str(entry.get("url_slug") or "").strip()
+    return bool(lemma and slug and entry.get("pos") != "grammar term")
+
+
+def _insert_manifest_metadata(cur: sqlite3.Cursor, manifest: dict[str, Any]) -> None:
+    for key in ("version", "generated_at"):
+        value = manifest.get(key)
+        if value is not None:
+            cur.execute(
+                "INSERT OR REPLACE INTO manifest_metadata(key, value_json) VALUES (?, ?)",
+                (key, json.dumps(value, ensure_ascii=False)),
+            )
+
+
 def migrate_manifest(manifest_path: Path, db_path: Path) -> dict[str, int]:
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     entries = manifest.get("entries", [])
@@ -175,37 +215,49 @@ def migrate_manifest(manifest_path: Path, db_path: Path) -> dict[str, int]:
     conn = sqlite3.connect(db_path)
     conn.executescript(SCHEMA)
     cur = conn.cursor()
+    _insert_manifest_metadata(cur, manifest)
 
-    counts = {"articles": 0, "aliases": 0, "provenance": 0, "enrichment": 0, "form_aliases": 0}
+    counts = {"articles": 0, "aliases": 0, "provenance": 0, "enrichment": 0, "form_aliases": 0, "payloads": 0}
     by_type: dict[str, int] = {}
 
     # first pass: gather article slugs so form_of aliases only resolve to real articles
-    article_slugs: set[str] = set()
+    article_visibility: dict[str, str] = {}
     for e in entries:
         if e.get("form_of"):
             continue
-        article_slugs.add(str(e.get("url_slug") or e.get("lemma")).strip())
+        slug = str(e.get("url_slug") or e.get("lemma")).strip()
+        if slug:
+            article_visibility[slug] = "private" if e.get("pos") == "grammar term" else "public"
 
     def _form_of_target(form_of: Any) -> str | None:
         if isinstance(form_of, dict):
             return str(form_of.get("url_slug") or form_of.get("lemma") or "").strip() or None
         return str(form_of).strip() or None
 
-    for e in entries:
+    for route_order, e in enumerate(entries):
         lemma = str(e.get("lemma") or "").strip()
         slug = str(e.get("url_slug") or lemma).strip()
         if not lemma or not slug:
             continue
         display_head = str(e.get("display_head") or lemma).strip()
 
+        if is_public_route_payload(e):
+            cur.execute(
+                """INSERT OR REPLACE INTO article_payloads
+                   (slug, route_order, payload_json, is_public_route)
+                   VALUES (?, ?, ?, 1)""",
+                (slug, route_order, json.dumps(e, ensure_ascii=False)),
+            )
+            counts["payloads"] += 1
+
         # form_of records -> alias rows, not articles (only if target is a real article)
         form_of = e.get("form_of")
         if form_of:
             target = _form_of_target(form_of)
-            if target and target in article_slugs:
+            if target and target in article_visibility:
                 cur.execute(
-                    "INSERT OR IGNORE INTO aliases(alias, kind, source, target_slug) VALUES (?,?,?,?)",
-                    (unstressed(lemma), "inflected_form", "manifest:form_of", target),
+                    "INSERT OR IGNORE INTO aliases(alias, kind, source, target_slug, visibility) VALUES (?,?,?,?,?)",
+                    (unstressed(lemma), "inflected_form", "manifest:form_of", target, article_visibility[target]),
                 )
                 counts["form_aliases"] += 1
             else:
@@ -260,7 +312,10 @@ def migrate_manifest(manifest_path: Path, db_path: Path) -> dict[str, int]:
         ]
         for a, k, s, t in alias_rows:
             if a and a != slug:
-                cur.execute("INSERT OR IGNORE INTO aliases(alias, kind, source, target_slug) VALUES (?,?,?,?)", (a, k, s, t))
+                cur.execute(
+                    "INSERT OR IGNORE INTO aliases(alias, kind, source, target_slug, visibility) VALUES (?,?,?,?,?)",
+                    (a, k, s, t, visibility),
+                )
                 counts["aliases"] += 1
 
         # enrichment sections (from enrichment + sections + top-level pronunciation/wiki/heritage)
@@ -300,15 +355,76 @@ def migrate_manifest(manifest_path: Path, db_path: Path) -> dict[str, int]:
     return counts
 
 
+def validate_alias_targets(db_path: Path) -> dict[str, int]:
+    """Validate every emitted alias resolves to an approved public article."""
+    conn = sqlite3.connect(db_path)
+    conn.row_factory = sqlite3.Row
+    failures = conn.execute(
+        """SELECT al.alias, al.kind, al.target_slug, a.review_state, a.visibility
+           FROM aliases al
+           LEFT JOIN articles a ON a.slug = al.target_slug
+           WHERE al.visibility = 'public'
+             AND (
+                a.slug IS NULL
+                OR a.review_state != 'approved'
+                OR a.visibility != 'public'
+             )
+           ORDER BY al.target_slug, al.kind, al.alias"""
+    ).fetchall()
+    counts = {
+        "public_aliases": int(conn.execute("SELECT COUNT(*) FROM aliases WHERE visibility='public'").fetchone()[0]),
+        "private_aliases": int(conn.execute("SELECT COUNT(*) FROM aliases WHERE visibility='private'").fetchone()[0]),
+        "distinct_public_targets": int(
+            conn.execute("SELECT COUNT(DISTINCT target_slug) FROM aliases WHERE visibility='public'").fetchone()[0]
+        ),
+        "approved_public_articles": int(
+            conn.execute("SELECT COUNT(*) FROM articles WHERE review_state='approved' AND visibility='public'").fetchone()[0]
+        ),
+        "failures": len(failures),
+    }
+    conn.close()
+
+    if failures:
+        for row in failures:
+            if row["review_state"] is None:
+                reason = "missing target article"
+            elif row["review_state"] != "approved":
+                reason = f"target review_state={row['review_state']!r}"
+            else:
+                reason = f"target visibility={row['visibility']!r}"
+            print(
+                "alias_target_integrity failure: "
+                f"alias={row['alias']!r} kind={row['kind']!r} target_slug={row['target_slug']!r} reason={reason}",
+                file=sys.stderr,
+            )
+        raise ValueError(f"{len(failures)} alias target(s) are not approved public articles")
+
+    print("atlas_db alias validation:", json.dumps(counts, ensure_ascii=False))
+    return counts
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description="Build/migrate the Word Atlas entry-model v1 SQLite DB.")
     ap.add_argument("--manifest", type=Path, default=DEFAULT_MANIFEST)
     ap.add_argument("--db", type=Path, default=DEFAULT_DB)
+    ap.add_argument(
+        "--validate-aliases-only",
+        action="store_true",
+        help="Validate alias targets in an existing DB without rebuilding it.",
+    )
     args = ap.parse_args()
-    counts = migrate_manifest(args.manifest, args.db)
-    by_type = counts.pop("by_type", {})
-    print("atlas_db migrate:", json.dumps(counts, ensure_ascii=False))
-    print("by entry_type:", json.dumps(by_type, ensure_ascii=False))
+    try:
+        if args.validate_aliases_only:
+            validate_alias_targets(args.db)
+            return
+        counts = migrate_manifest(args.manifest, args.db)
+        by_type = counts.pop("by_type", {})
+        print("atlas_db migrate:", json.dumps(counts, ensure_ascii=False))
+        print("by entry_type:", json.dumps(by_type, ensure_ascii=False))
+        validate_alias_targets(args.db)
+    except ValueError as exc:
+        print(f"atlas_db validation failed: {exc}", file=sys.stderr)
+        raise SystemExit(1) from exc
 
 
 if __name__ == "__main__":

@@ -5,6 +5,8 @@ from __future__ import annotations
 import json
 import sqlite3
 
+import pytest
+
 from scripts.atlas import atlas_db
 
 
@@ -57,6 +59,21 @@ def test_migration_shapes_and_gates(tmp_path):
     assert q("SELECT COUNT(*) FROM enrichment WHERE slug='прапор'")[0][0] >= 3
     assert q("SELECT COUNT(*) FROM articles_fts")[0][0] == 3
     assert q("SELECT slug FROM articles_fts WHERE articles_fts MATCH 'прапор'")[0][0] == "прапор"
+
+    # Compatibility projection keeps the exact current Astro route surface:
+    # form_of rows still render until PR-3 redirects them, but grammar terms do not.
+    payload_slugs = [row[0] for row in q("SELECT slug FROM article_payloads ORDER BY route_order")]
+    assert payload_slugs == ["прапор", "іван", "іване", "гхост", "сліпа-зона"]
+    payload = json.loads(q("SELECT payload_json FROM article_payloads WHERE slug='іване'")[0][0])
+    assert payload["form_of"] == {"lemma": "Іван", "url_slug": "іван"}
+
+    metadata = dict(q("SELECT key, value_json FROM manifest_metadata"))
+    assert metadata == {}
+
+    validation = atlas_db.validate_alias_targets(db)
+    assert validation["failures"] == 0
+    assert validation["public_aliases"] >= 1
+    assert validation["private_aliases"] == 0
     conn.close()
 
 
@@ -65,6 +82,26 @@ def test_alias_helpers():
     assert atlas_db.transliterate("розвідка") == "rozvidka"
     assert atlas_db.classify_entry_type({"lemma": "сліпа зона"}) == "multiword_term"
     assert atlas_db.classify_entry_type({"lemma": "розвідка"}) == "lemma"
+
+
+def test_alias_validator_reports_actionable_failures(tmp_path, capsys):
+    db = tmp_path / "atlas.db"
+    atlas_db.migrate_manifest(_manifest(tmp_path), db)
+    conn = sqlite3.connect(db)
+    conn.execute(
+        "INSERT INTO aliases(alias, kind, source, target_slug) VALUES (?,?,?,?)",
+        ("orphan-alias", "spelling_variant", "test", "missing-slug"),
+    )
+    conn.commit()
+    conn.close()
+
+    with pytest.raises(ValueError, match="alias target"):
+        atlas_db.validate_alias_targets(db)
+
+    captured = capsys.readouterr()
+    assert "alias_target_integrity failure:" in captured.err
+    assert "alias='orphan-alias'" in captured.err
+    assert "target_slug='missing-slug'" in captured.err
 
 
 def test_hardening_gates(tmp_path):
@@ -89,6 +126,7 @@ def test_hardening_gates(tmp_path):
     # metaterm is private, real word is public
     rows = dict(conn.execute("SELECT slug, visibility FROM articles").fetchall())
     assert rows == {"pluralia-tantum": "private", "кава": "public"}
+    assert conn.execute("SELECT COUNT(*) FROM article_payloads").fetchone()[0] == 1
 
     # timestamps not conflated; display_head kept verbatim (incl. stress mark)
     head, created, updated = conn.execute(
@@ -99,8 +137,6 @@ def test_hardening_gates(tmp_path):
 
     # CHECK constraints are load-bearing: invalid enum values are REJECTED by
     # the storage layer (a filler bug cannot silently write them)
-    import pytest
-
     for stmt, params in [
         ("INSERT INTO articles(slug, display_head, lemma, entry_type, review_state, visibility) VALUES (?,?,?,?,?,?)",
          ("x", "x", "x", "grammar term", "approved", "public")),  # not an entry-model type

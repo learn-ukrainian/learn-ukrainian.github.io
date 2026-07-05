@@ -446,7 +446,9 @@ Additional audit guardrails:
 - `scripts/audit/atlas_source_census.py` - aggregate-only Word Atlas source intake census; public reports must not include raw source text, private paths, or candidate lemma lists
 - `scripts/audit/atlas_entry_model_census.py` - aggregate-only Word Atlas entry-model census; separates reviewed article entries by `entry_type` from alias/form records
 - `scripts/audit/atlas_source_entry_count.py` - aggregate-only Word Atlas source-corpus entry-demand census by finalized entry-model bucket; public reports must not include source text, private paths, filenames, or candidate lists
+- `scripts/atlas/atlas_db.py` - rebuild `data/atlas.db` from the hydrated Atlas manifest, materialize the Astro article payload projection, and validate alias targets
 - `scripts/atlas/fill_local.py` - Phase-1 offline local enrichment writer for `data/atlas.db`; reads local dictionary/cache data only and reports per-section before/after coverage
+- `site/scripts/benchmark-atlas-db.mjs` - benchmark Atlas DB build, preload, and getStaticPaths mapping at current and synthetic sizes
 - `scripts/audit/curriculum_qg_harness.py` - deterministic Ukrainian curriculum QG fixture harness; use it to calibrate B1-27, A1/A2 scaffolding, B1+ leakage, and seminar-register checks before changing QG behavior
 
 ### Build pipeline entry point
@@ -617,7 +619,9 @@ Use this before content generation to verify plan files still match `scripts/aud
 | `scripts/audit/atlas_source_census.py` | Build aggregate-safe Word Atlas source planning counts | `.venv/bin/python scripts/audit/atlas_source_census.py --markdown-out docs/runbooks/word-atlas-source-census-planning.md` |
 | `scripts/audit/atlas_entry_model_census.py` | Count reviewed Atlas entries by finalized `entry_type` bucket | `.venv/bin/python scripts/audit/atlas_entry_model_census.py --format markdown` |
 | `scripts/audit/atlas_source_entry_count.py` | Estimate aggregate source-corpus Atlas entry backlog by finalized bucket | `.venv/bin/python scripts/audit/atlas_source_entry_count.py --include-ohoiko-private --markdown-out docs/runbooks/word-atlas-source-entry-count.md` |
+| `scripts/atlas/atlas_db.py` | Rebuild `data/atlas.db`, materialize article payloads, and validate public alias targets | `.venv/bin/python -m scripts.atlas.atlas_db --db data/atlas.db` |
 | `scripts/atlas/fill_local.py` | Fill `data/atlas.db` with Phase-1 local Atlas enrichment rows | `.venv/bin/python -m scripts.atlas.fill_local --db data/atlas.db --report-json /tmp/atlas-fill-local-report.json` |
+| `site/scripts/benchmark-atlas-db.mjs` | Benchmark Atlas DB build, preloaded payload read, and getStaticPaths mapping | `npm --prefix site run atlas:perf` |
 | `scripts/audit/curriculum_qg_harness.py` | Run calibrated Ukrainian QG fixtures or scan one module into compact evidence | `.venv/bin/python scripts/audit/curriculum_qg_harness.py --fixtures tests/fixtures/curriculum_qg/fixtures.yaml` |
 | `scripts/audit/ingest_ua_gec_gold.py` | Curate the small attributed UA-GEC gold fixture for the #2156 eval harness | `.venv/bin/python scripts/audit/ingest_ua_gec_gold.py --dry-run` |
 | `scripts/audit/module_quality_audit.py` | Report surface and LLM-QG/compact evidence coverage by level | `.venv/bin/python scripts/audit/module_quality_audit.py --level b1 --format summary` |
