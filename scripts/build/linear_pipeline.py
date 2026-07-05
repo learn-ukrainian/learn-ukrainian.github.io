@@ -9052,7 +9052,10 @@ def run_python_qg(
         "published_quote_for_publishable_refs",
         _published_quote_for_publishable_refs_gate(module_text, plan, module_dir),
     )
-    record("textbook_quote_fidelity", _textbook_quote_fidelity_gate(module_text, level=level))
+    record(
+        "textbook_quote_fidelity",
+        _textbook_quote_fidelity_gate(module_text, level=level, module_slug=slug),
+    )
     telemetry_present = _writer_tool_call_telemetry_present(module_dir)
     record(
         "resources_search_attempted",
@@ -15754,17 +15757,25 @@ def _strip_frontmatter(text: str) -> str:
 def _strip_frontmatter_and_headings(text: str) -> str:
     text = _strip_frontmatter(text)
     return "\n".join(line for line in text.splitlines() if not line.lstrip().startswith("#"))
-def _textbook_quote_fidelity_gate(module_text: str, level: str | None = None) -> dict[str, Any]:
+def _textbook_quote_fidelity_gate(
+    module_text: str,
+    level: str | None = None,
+    *,
+    module_slug: str | None = None,
+) -> dict[str, Any]:
     """Verify textbook quote fidelity against the sources DB."""
     import re
 
     from rapidfuzz import distance
 
+    from scripts.build.seminar_quote_exemptions import lookup_seminar_quote_exemption
     from scripts.wiki.sources_db import search_literary, search_textbooks
 
     violations: list[dict[str, Any]] = []
+    warnings: list[dict[str, Any]] = []
     checked = 0
     level_key = str(level or "").strip().lower()
+    slug_key = str(module_slug or "").strip().lower()
     quotes = _extract_blockquote_records(module_text, level=level)
 
     def _normalize(s: str) -> str:
@@ -15777,32 +15788,11 @@ def _textbook_quote_fidelity_gate(module_text: str, level: str | None = None) ->
             and re.search(r"\bp\.?\s*\d+", attribution, flags=re.IGNORECASE)
         )
 
-    for q in quotes:
-        text = q["quote"]
-        attr = q["attribution"]
-        nv = q["no_verify"]
-
-        if not text:
-            continue
-
-        checked += 1
-
-        if not attr:
-            if not nv:
-                violations.append({
-                    "quote": text,
-                    "attribution": "",
-                    "reason": "Missing attribution without NO_VERIFY"
-                })
-            continue
-
-        if nv:
-            continue
-
+    def _corpus_fidelity_violation(text: str, attr: str) -> dict[str, Any] | None:
         ukr_words = re.findall(r'[а-яіїєґА-ЯІЇЄҐ]+', text)
         keywords = {w.lower() for w in ukr_words if len(w) >= 3}
         if not keywords:
-            continue
+            return None
 
         search_fn = search_textbooks
         corpus_name = "textbook corpus"
@@ -15816,12 +15806,11 @@ def _textbook_quote_fidelity_gate(module_text: str, level: str | None = None) ->
             hits = []
 
         if not hits:
-            violations.append({
+            return {
                 "quote": text,
                 "attribution": attr,
-                "reason": f"No match in {corpus_name}"
-            })
-            continue
+                "reason": f"No match in {corpus_name}",
+            }
 
         norm_quote = _normalize(text)
         best_diff = float('inf')
@@ -15854,19 +15843,77 @@ def _textbook_quote_fidelity_gate(module_text: str, level: str | None = None) ->
                     best_source_text = chunk
 
         if best_diff >= 3:
-            violations.append({
+            return {
                 "quote": text,
                 "attribution": attr,
                 "reason": f"Text differs by >=3 chars (diff: {best_diff})",
-                "nearest_source": best_source_text
+                "nearest_source": best_source_text,
+            }
+        return None
+
+    for q in quotes:
+        text = q["quote"]
+        attr = q["attribution"]
+        nv = q["no_verify"]
+
+        if not text:
+            continue
+
+        checked += 1
+
+        if not attr:
+            if not nv:
+                violations.append({
+                    "quote": text,
+                    "attribution": "",
+                    "reason": "Missing attribution without NO_VERIFY"
+                })
+            continue
+
+        if nv and level_key not in SEMINAR_LEVELS:
+            continue
+
+        violation = _corpus_fidelity_violation(text, attr)
+        if violation is None:
+            continue
+
+        if nv and level_key in SEMINAR_LEVELS:
+            exemption = lookup_seminar_quote_exemption(slug_key, text)
+            if exemption:
+                warnings.append({
+                    "quote": text,
+                    "attribution": attr,
+                    "reason": "NO_VERIFY seminar quote exempted from corpus match",
+                    "exemption": exemption,
+                })
+                continue
+            violations.append({
+                "quote": text,
+                "attribution": attr,
+                "reason": (
+                    "NO_VERIFY on seminar level but fragment not corpus-attested "
+                    "and not exempted"
+                ),
             })
+            continue
+
+        violations.append(violation)
 
     passed = len(violations) == 0
+    if violations:
+        message = f"verify_quote: {checked} checked, {len(violations)} violations"
+    elif warnings:
+        message = (
+            f"verify_quote: {checked} verified, {len(warnings)} seminar exemptions"
+        )
+    else:
+        message = f"verify_quote: {checked} verified"
     return {
         "passed": passed,
         "checked": checked,
         "violations": violations,
-        "message": f"verify_quote: {checked} checked, {len(violations)} violations" if violations else f"verify_quote: {checked} verified",
-        "verdict": "PASS" if passed else "REJECT",
-        "severity": "HARD" if not passed else None
+        "warnings": warnings,
+        "message": message,
+        "verdict": "WARN" if passed and warnings else "PASS" if passed else "REJECT",
+        "severity": "WARN" if passed and warnings else "HARD" if not passed else None,
     }
