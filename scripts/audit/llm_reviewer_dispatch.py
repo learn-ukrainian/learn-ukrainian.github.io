@@ -1172,6 +1172,13 @@ def _is_wiki_event(event: Mapping[str, Any]) -> bool:
 
 
 def _positive_verdict_summary_only(fact_check: Mapping[str, Any], events: Sequence[Mapping[str, Any]]) -> bool:
+    """True when a positive verdict's grounding is backed only by shallow wiki access.
+
+    Fail-closed on wiki mode (cursor review of #4429): any matching wiki event
+    whose mode is NOT a deep-read mode (``summary``, ``search``, missing/empty,
+    unknown labels) counts as shallow — otherwise a summary-grade CONFIRMED
+    slips through admissibility whenever telemetry omits the mode.
+    """
     verdict = str(fact_check.get("verdict") or "")
     if verdict not in _POSITIVE_FACT_CHECK_VERDICTS:
         return False
@@ -1179,7 +1186,11 @@ def _positive_verdict_summary_only(fact_check: Mapping[str, Any], events: Sequen
     if not isinstance(grounding, Mapping):
         return False
     matches = _grounding_matching_events(grounding, events)
-    return bool(matches) and all(_is_wiki_event(event) and _event_mode(event) == "summary" for event in matches)
+    return (
+        bool(matches)
+        and all(_is_wiki_event(event) for event in matches)
+        and not any(_event_mode(event) in _DEEP_READ_WIKI_MODES for event in matches)
+    )
 
 
 def _grounding_matches_events(

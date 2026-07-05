@@ -1197,3 +1197,58 @@ def test_refuted_by_contradiction_summary_only_grounding_downgrades() -> None:
     assert result.payload["fact_checks"][0]["verdict"] == "UNVERIFIED_INSUFFICIENT_SEARCH"
     assert result.payload["fact_checks"][0]["original_verdict"] == "REFUTED_BY_CONTRADICTION"
     assert result.inadmissible_positive_verdicts == 1
+
+
+@pytest.mark.parametrize("shallow_mode", ["search", "", "snippet"])
+def test_non_deep_wiki_mode_positive_verdict_is_inadmissible(shallow_mode: str) -> None:
+    """Missing/unknown wiki modes must fail CLOSED, not certify (cursor review of #4429).
+
+    ``all(mode == "summary")`` failed open: one matching wiki event with
+    ``mode=""``/``"search"`` let a shallow-grounded CONFIRMED through both the
+    retry and the downgrade. Shallow = wiki-only matches with NO deep-read mode.
+    """
+    payload = json.loads(_fact_response())
+    shallow_event = _sources_event(mode=shallow_mode, output="Веснянки — це весняні обрядові пісні.")
+
+    assert llm_reviewer_dispatch.deep_read_required(payload, {"tool_events": [shallow_event]}) is True
+
+    attempted = json.loads(_fact_response(extra_fact_fields={"deep_read_attempted": True}))
+    result = llm_reviewer_dispatch.enforce_grounding_against_tool_events(
+        attempted,
+        {"tool_events": [shallow_event]},
+        policy_family="seminar",
+    )
+    fact_check = result.payload["fact_checks"][0]
+    assert fact_check["verdict"] == "UNVERIFIED_INSUFFICIENT_SEARCH"
+    assert fact_check["original_verdict"] == "CONFIRMED"
+    assert result.inadmissible_positive_verdicts == 1
+
+
+def test_contested_summary_only_grounding_downgrades() -> None:
+    payload = json.loads(
+        _fact_response(
+            verdict="CONTESTED",
+            extra_fact_fields={"deep_read_attempted": True},
+        )
+    )
+    summary_event = _sources_event(mode="summary", output="Веснянки — це весняні обрядові пісні.")
+
+    result = llm_reviewer_dispatch.enforce_grounding_against_tool_events(
+        payload,
+        {"tool_events": [summary_event]},
+        policy_family="seminar",
+    )
+
+    fact_check = result.payload["fact_checks"][0]
+    assert fact_check["verdict"] == "UNVERIFIED_INSUFFICIENT_SEARCH"
+    assert fact_check["original_verdict"] == "CONTESTED"
+    assert result.inadmissible_positive_verdicts == 1
+
+
+def test_ellipsized_evidence_mass_boundary_twelve_nonspace_chars() -> None:
+    """Retained-segment nonspace mass: 11 chars fails closed, 12 passes."""
+    output = "абвгд еєжзиі клмнопрст"
+    # Two retained segments (5 + 7 = 12 nonspace chars) in order → match.
+    assert llm_reviewer_dispatch._output_contains_excerpt(output, "абвгд…клмнопр") is True
+    # 5 + 6 = 11 nonspace chars → evidence-mass guard fails closed.
+    assert llm_reviewer_dispatch._output_contains_excerpt(output, "абвгд…клмноп") is False
