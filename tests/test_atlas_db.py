@@ -115,4 +115,11 @@ def test_hardening_gates(tmp_path):
     ]:
         with pytest.raises(sqlite3.IntegrityError):
             conn.execute(stmt, params)
+
+    # NULL phase and NULL pos remain valid (the CHECKs constrain values, not presence)
+    conn.execute("INSERT INTO enrichment(slug, section, payload_json) VALUES ('кава', 'etymology', '{}')")
+    conn.execute(
+        "INSERT INTO articles(slug, display_head, lemma, entry_type, review_state, visibility)"
+        " VALUES ('тест', 'тест', 'тест', 'lemma', 'approved', 'public')"
+    )
     conn.close()
