@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PoC — Атлас слів · ExpressionArticle (expression / phraseologism / proverb)</title>
+<!--
+  DESIGN SOURCE-OF-TRUTH PoC — NOT production code.
+  Self-contained: all CSS + JS inline, no build step, no external requests.
+  ExpressionArticle contract (atlas-ssg-entry-model-frontend.md §2):
+    Sections (omit when empty): Значення · Вжиток · Компоненти · Варіанти
+    NO paradigm table / NO «Парадигма» section.
+  Manifest-grounded lemmas: site/src/data/lexicon-manifest.json
+-->
+<style>
+  :root {
+    color-scheme: light;
+    --lu-blue: #0057B8; --lu-blue-dark: #004B9C; --lu-blue-light: #E8F0FE;
+    --lu-yellow: #FFD700; --lu-yellow-dark: #E6B800; --lu-yellow-light: #FFF9E0;
+    --lu-green: #2E7D32; --lu-green-light: #E8F5E9;
+    --lu-red: #C62828; --lu-red-light: #FFEBEE;
+    --lu-teal: #00695C; --lu-teal-light: #E0F2F1;
+    --lu-purple: #6A1B9A; --lu-purple-light: #F3E5F5;
+    --lu-orange: #E65100; --lu-orange-light: #FFF3E0;
+    --lu-gray-600: #757575; --lu-gray-900: #212121;
+    --lu-page-bg: #FAFAFA;
+    --lu-surface: #FFFFFF;
+    --lu-surface-raised: #FFFFFF;
+    --lu-surface-muted: #F5F7FA;
+    --lu-border: #E4E7EC;
+    --lu-header-bg: rgba(255, 255, 255, 0.96);
+    --lu-text: #212121;
+    --lu-text-muted: #676F7A;
+    --lu-radius: 8px;
+    --lu-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    --lu-shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.12);
+    --lu-max-width: 1200px;
+    --lu-content-width: 840px;
+    --lu-on-yellow: #1A1A1A;
+    --lu-footer-bg: #1A1F26;
+    --lu-primary: #0057B7; --lu-on-primary: #FFFFFF;
+    --lu-accent: #FFD700; --lu-on-accent: #1c1e21;
+    --lu-state-active: rgba(0, 87, 183, .08);
+    --lu-state-correct-bg: rgba(46, 125, 50, .08); --lu-state-correct-fg: #2E7D32;
+    --lu-state-wrong-bg: rgba(198, 40, 40, .08); --lu-state-wrong-fg: #C62828;
+    --lu-id-lexicon: linear-gradient(135deg, #00695C, #004D40);
+  }
+  [data-theme='dark'] {
+    color-scheme: dark;
+    --lu-blue: #6AA9FF; --lu-blue-dark: #A8CFFF; --lu-blue-light: rgba(106, 169, 255, 0.16);
+    --lu-yellow: #FFD84D; --lu-yellow-dark: #FFE58A; --lu-yellow-light: rgba(255, 216, 77, 0.12);
+    --lu-green: #7BCF86; --lu-green-light: rgba(123, 207, 134, 0.14);
+    --lu-red: #F47770; --lu-red-light: rgba(244, 119, 112, 0.14);
+    --lu-teal: #7AD7CB; --lu-teal-light: rgba(122, 215, 203, 0.14);
+    --lu-purple: #C58BFF; --lu-purple-light: rgba(197, 139, 255, 0.14);
+    --lu-orange: #FFB061; --lu-orange-light: rgba(255, 176, 97, 0.14);
+    --lu-gray-600: #A9B2BF; --lu-gray-900: #F4F7FB;
+    --lu-page-bg: #111418;
+    --lu-surface: #171B21;
+    --lu-surface-raised: #1D232B;
+    --lu-surface-muted: #222A33;
+    --lu-border: #303A46;
+    --lu-header-bg: rgba(17, 20, 24, 0.94);
+    --lu-text: #F4F7FB;
+    --lu-text-muted: #A9B2BF;
+    --lu-shadow: 0 2px 8px rgba(0, 0, 0, 0.28);
+    --lu-shadow-lg: 0 4px 18px rgba(0, 0, 0, 0.36);
+    --lu-primary: #5B9BD5; --lu-on-primary: #10151B;
+    --lu-state-active: rgba(91, 155, 213, .22);
+    --lu-state-correct-bg: rgba(46, 160, 70, .26); --lu-state-correct-fg: #81C995;
+    --lu-state-wrong-bg: rgba(210, 70, 70, .26); --lu-state-wrong-fg: #F28B82;
+    --lu-id-lexicon: linear-gradient(135deg, #175A50, #123F39);
+  }
+
+  * { box-sizing: border-box; }
+  html { background: var(--lu-page-bg); color: var(--lu-text);
+    font-family: "Noto Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif; }
+  body { margin: 0; background: var(--lu-page-bg); color: var(--lu-text); line-height: 1.7;
+    -webkit-font-smoothing: antialiased; }
+  h1, h2, h3 { line-height: 1.2; }
+  a { color: var(--lu-blue); }
+  :focus-visible { outline: none; box-shadow: 0 0 0 3px var(--lu-state-active); border-radius: 6px; }
+  @media (prefers-reduced-motion: reduce) {
+    * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+  }
+
+  .pocbar {
+    position: sticky; top: 0; z-index: 300;
+    display: flex; flex-wrap: wrap; align-items: center; gap: 12px 16px;
+    padding: 9px 20px; font-size: 13px;
+    background: #0d1014; color: #E9EDF3;
+    border-bottom: 1px solid #2a323d;
+  }
+  .pocbar label { opacity: .68; font-weight: 700; letter-spacing: .02em; }
+  .pocbar select {
+    appearance: none; -webkit-appearance: none;
+    background: #1b222b url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23aeb6c2'/%3E%3C/svg%3E") no-repeat right 12px center;
+    color: #E9EDF3; border: 1px solid #39424e; border-radius: 7px;
+    padding: 6px 30px 6px 12px; font: inherit; font-weight: 700; cursor: pointer;
+  }
+  .poc-theme { display: inline-flex; gap: 0; border: 1px solid #39424e; border-radius: 7px; overflow: hidden; }
+  .poc-theme button {
+    border: 0; background: transparent; color: #aeb6c2; font: inherit; font-weight: 800;
+    padding: 6px 12px; cursor: pointer; min-height: 32px;
+  }
+  .poc-theme button.active { background: var(--lu-accent); color: #1c1e21; }
+  .poc-label { margin-left: auto; color: var(--lu-accent); font-weight: 800; letter-spacing: .03em; white-space: nowrap; }
+
+  .poc-anno {
+    display: inline-flex; align-items: center; gap: 6px;
+    margin: 0 0 14px; padding: 4px 10px; border-radius: 999px;
+    background: var(--lu-yellow-light); border: 1px dashed var(--lu-yellow-dark);
+    color: var(--lu-text-muted); font-size: 11.5px; font-weight: 700; letter-spacing: .02em;
+  }
+  .poc-anno::before { content: "✦"; color: var(--lu-yellow-dark); }
+
+  .skip-link {
+    position: fixed; top: 8px; left: 8px; z-index: 400;
+    padding: 8px 12px; border-radius: 6px; background: var(--lu-yellow);
+    color: var(--lu-on-yellow); font-weight: 900; text-decoration: none;
+    transform: translateY(-160%);
+  }
+  .skip-link:focus { transform: none; }
+
+  .lu-header {
+    position: sticky; top: 41px; z-index: 50;
+    background: var(--lu-header-bg); border-bottom: 1px solid var(--lu-border);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, .04); backdrop-filter: blur(12px);
+  }
+  .lu-header-inner {
+    max-width: var(--lu-max-width); height: 56px; margin: 0 auto; padding: 0 24px;
+    display: flex; align-items: center; gap: 18px;
+  }
+  .lu-logo { display: flex; align-items: center; gap: 10px; color: var(--lu-text);
+    font-size: 1rem; font-weight: 800; text-decoration: none; white-space: nowrap; }
+  .lu-logo-mark { width: 32px; height: 32px; display: inline-grid; place-items: center;
+    border-radius: 8px; background: #0057B8; color: #fff; font-weight: 900; font-size: .82rem; }
+  .lu-nav { display: flex; align-items: center; gap: 2px; min-width: 0; flex: 1; }
+  .lu-nav a { padding: 6px 11px; border-radius: 8px; color: var(--lu-gray-600);
+    font-size: .82rem; font-weight: 700; text-decoration: none; white-space: nowrap; }
+  .lu-nav a:hover { background: var(--lu-blue-light); color: var(--lu-blue); }
+  .lu-nav a.is-current { background: #0057B8; color: #fff; }
+  [data-theme='dark'] .lu-nav a.is-current { background: var(--lu-primary); color: var(--lu-on-primary); }
+  .lu-header-tools { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+  .lu-ghost {
+    display: inline-flex; align-items: center; gap: 6px; min-height: 34px; padding: 0 11px;
+    border: 1px solid var(--lu-border); border-radius: 8px; background: transparent;
+    color: var(--lu-text); font: inherit; font-size: .8rem; font-weight: 800; cursor: pointer;
+  }
+  .lu-ghost:hover { border-color: var(--lu-primary); color: var(--lu-primary); }
+
+  .wrap-narrow { max-width: var(--lu-content-width); margin: 0 auto; padding: 0 24px; }
+
+  .lex-badge {
+    display: inline-flex; align-items: center; min-height: 1.75rem; padding: 0 .65rem;
+    border-radius: 4px; background: var(--lu-state-active); color: var(--lu-primary);
+    font-size: .78rem; font-weight: 900; letter-spacing: .04em; text-transform: uppercase;
+  }
+  .cefr-chip, .dialect-chip {
+    display: inline-flex; align-items: center; min-height: 1.35rem; padding: 0 .45rem;
+    border-radius: 4px; background: var(--lu-state-active); color: var(--lu-primary);
+    font-size: .72rem; font-weight: 800; text-transform: uppercase;
+  }
+  .dialect-chip { text-transform: none; font-weight: 600; }
+  .type-badge {
+    display: inline-flex; align-items: center; min-height: 1.5rem; padding: 0 .55rem;
+    border-radius: 999px; font-size: .72rem; font-weight: 900; letter-spacing: .04em;
+    text-transform: uppercase; border: 1px solid transparent;
+  }
+  .type-badge[data-type="expression"] {
+    background: var(--lu-teal-light); color: var(--lu-teal); border-color: color-mix(in srgb, var(--lu-teal) 35%, transparent);
+  }
+  .type-badge[data-type="phraseologism"] {
+    background: var(--lu-purple-light); color: var(--lu-purple); border-color: color-mix(in srgb, var(--lu-purple) 35%, transparent);
+  }
+  .type-badge[data-type="proverb"] {
+    background: var(--lu-orange-light); color: var(--lu-orange); border-color: color-mix(in srgb, var(--lu-orange) 35%, transparent);
+  }
+  .type-badge[data-type="multiword_term"] {
+    background: var(--lu-blue-light); color: var(--lu-blue); border-color: color-mix(in srgb, var(--lu-blue) 35%, transparent);
+  }
+
+  .expr-hero {
+    padding: 2.5rem 24px 1.5rem;
+    background: linear-gradient(180deg, var(--lu-surface-muted) 0%, var(--lu-page-bg) 100%);
+    border-bottom: 1px solid var(--lu-border);
+  }
+  .expr-hero-inner { max-width: var(--lu-content-width); margin: 0 auto; }
+  .expr-head-row { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 12px 16px; }
+  .expr-title {
+    margin: .35rem 0 0; font-size: clamp(2rem, 4vw, 3rem); font-weight: 900; line-height: 1.08;
+    color: var(--lu-text);
+  }
+  .expr-gloss { margin: .5rem 0 0; max-width: 58ch; color: var(--lu-text-muted); font-size: 1.05rem; }
+  .expr-badges { display: flex; flex-wrap: wrap; gap: .4rem; margin-top: .85rem; }
+
+  .article-body { padding: 2rem 24px 4rem; }
+  .atlas-section { margin-bottom: 2.25rem; }
+  .atlas-section h2 {
+    display: inline-block; margin: 0 0 1rem; padding-bottom: 6px;
+    font-size: clamp(1.35rem, 2.5vw, 1.75rem); color: var(--lu-text);
+    border-bottom: 3px solid var(--lu-yellow);
+  }
+  .def-card {
+    padding: 1rem 1.1rem; border: 1px solid var(--lu-border); border-radius: var(--lu-radius);
+    background: var(--lu-surface); box-shadow: 0 1px 2px rgba(0,0,0,.04);
+  }
+  .def-card + .def-card { margin-top: .75rem; }
+  .def-source { display: flex; flex-wrap: wrap; align-items: center; gap: 8px;
+    margin-bottom: .5rem; font-size: .78rem; font-weight: 800; color: var(--lu-text-muted);
+    text-transform: uppercase; letter-spacing: .04em; }
+  .src-pill {
+    padding: 2px 8px; border-radius: 4px; background: var(--lu-state-active); color: var(--lu-primary);
+  }
+  .def-text { margin: 0; color: var(--lu-text); }
+
+  .usage-list { margin: 0; padding: 0; list-style: none; display: grid; gap: .65rem; }
+  .usage-item {
+    padding: .85rem 1rem; border: 1px solid var(--lu-border); border-radius: var(--lu-radius);
+    background: var(--lu-surface);
+  }
+  .usage-item strong { color: var(--lu-blue); font-weight: 900; }
+  .usage-meta { display: block; margin-top: .25rem; font-size: .82rem; color: var(--lu-text-muted); }
+
+  .component-list { display: flex; flex-wrap: wrap; gap: .5rem; margin: 0; padding: 0; list-style: none; }
+  .component-chip {
+    display: inline-flex; align-items: center; gap: 6px; min-height: 2rem; padding: 0 .75rem;
+    border-radius: 999px; border: 1px solid var(--lu-border); background: var(--lu-surface-muted);
+    font-size: .9rem; font-weight: 800;
+  }
+  .component-chip a { color: var(--lu-blue); text-decoration: none; }
+  .component-chip a:hover { text-decoration: underline; }
+  .component-chip.is-plain { color: var(--lu-text); border-style: dashed; opacity: .92; }
+  .component-legend { margin: .75rem 0 0; font-size: .82rem; color: var(--lu-text-muted); }
+
+  .variant-list { margin: 0; padding: 0; list-style: none; display: grid; gap: .5rem; }
+  .variant-item {
+    display: flex; flex-wrap: wrap; align-items: baseline; gap: .5rem .75rem;
+    padding: .7rem .9rem; border: 1px solid var(--lu-border); border-radius: var(--lu-radius);
+    background: var(--lu-surface);
+  }
+  .variant-lemma { font-weight: 900; color: var(--lu-text); }
+  .variant-gloss { color: var(--lu-text-muted); font-size: .92rem; }
+
+  .entry-view { display: none; }
+  .entry-view.active { display: block; animation: viewfade .28s ease; }
+  @keyframes viewfade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+
+  .lu-footer {
+    margin-top: 0; padding: 44px 24px 22px;
+    background: var(--lu-footer-bg); color: rgba(255, 255, 255, .72);
+    border-top: 4px solid var(--lu-yellow);
+  }
+  .lu-footer-inner { max-width: var(--lu-max-width); margin: 0 auto; font-size: .82rem; }
+  .lu-footer-tagline { color: var(--lu-yellow); font-weight: 800; }
+</style>
+</head>
+<body data-theme="dark">
+<a class="skip-link" href="#main">Перейти до вмісту</a>
+
+<div class="pocbar">
+  <label for="poc-entry">Запис</label>
+  <select id="poc-entry" aria-label="Перемкнути приклад ExpressionArticle">
+    <option value="expression" selected>expression · «А тебе?»</option>
+    <option value="phraseologism">phraseologism · «давати на лапу»</option>
+    <option value="phraseologism2">phraseologism · «бабине літо» (enriched)</option>
+    <option value="proverb">proverb · «Бери вовка в плуг…»</option>
+    <option value="multiword">multiword_term · «Івана Купала» (manifest grounding)</option>
+  </select>
+  <div class="poc-theme" role="group" aria-label="Тема">
+    <button type="button" data-theme-choice="dark" class="active">Темна</button>
+    <button type="button" data-theme-choice="light">Світла</button>
+  </div>
+  <span class="poc-label">PoC · ExpressionArticle · #4385 PR-2 design source</span>
+</div>
+
+<header class="lu-header">
+  <div class="lu-header-inner">
+    <a class="lu-logo" href="practice-hub.html">
+      <span class="lu-logo-mark">LU</span><span>Learn Ukrainian</span>
+    </a>
+    <nav class="lu-nav" aria-label="Основна навігація">
+      <a href="practice-hub.html">Home</a>
+      <a href="practice-hub.html">A1</a><a href="practice-hub.html">A2</a><a href="practice-hub.html">B1</a>
+      <a href="practice-hub.html">Words of the Day</a>
+      <a class="is-current" href="expression-detail.html">Word Atlas</a>
+    </nav>
+    <div class="lu-header-tools">
+      <button class="lu-ghost" id="theme-quick" type="button" aria-label="Перемкнути тему">☀</button>
+      <button class="lu-ghost" type="button">УКР</button>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- expression · А тебе? -->
+<article id="view-expression" class="entry-view active" aria-label="expression — А тебе?">
+  <header class="expr-hero">
+    <div class="expr-hero-inner">
+      <span class="lex-badge">Лексикон · ExpressionArticle</span>
+      <div class="expr-head-row">
+        <div>
+          <h1 class="expr-title">А тебе?</h1>
+          <p class="expr-gloss">And you? (after a name question)</p>
+        </div>
+      </div>
+      <div class="expr-badges">
+        <span class="type-badge" data-type="expression">expression</span>
+        <span class="cefr-chip">CEFR A1</span>
+      </div>
+    </div>
+  </header>
+  <div class="article-body wrap-narrow">
+    <p class="poc-anno">PoC — секції з даними лише; порожні блоки не рендеряться (#3631). Пошук/alias-resolution — PR-3.</p>
+
+    <section class="atlas-section" aria-labelledby="exp-meaning">
+      <h2 id="exp-meaning">Значення</h2>
+      <div class="def-card">
+        <div class="def-source"><span class="src-pill">gloss</span><span>lexicon-manifest.json</span></div>
+        <p class="def-text">And you? (after a name question)</p>
+      </div>
+    </section>
+
+    <section class="atlas-section" aria-labelledby="exp-usage">
+      <h2 id="exp-usage">Вжиток</h2>
+      <ul class="usage-list">
+        <li class="usage-item">
+          <strong>A1 · sounds-letters-and-hello</strong>
+          <span class="usage-meta">built_vocabulary · module 1</span>
+        </li>
+        <li class="usage-item">
+          <strong>A1 · who-am-i</strong>
+          <span class="usage-meta">built_vocabulary · module 5</span>
+        </li>
+      </ul>
+    </section>
+
+    <section class="atlas-section" aria-labelledby="exp-components">
+      <h2 id="exp-components">Компоненти</h2>
+      <ul class="component-list" aria-label="Компоненти вислову">
+        <li class="component-chip is-plain" title="queued / non-public — plain text, no link">а</li>
+        <li class="component-chip"><a href="#" title="approved + public article">тебе</a></li>
+      </ul>
+      <p class="component-legend">Затверджений публічний компонент → посилання; у черзі / непублічний → звичайний текст без бейджа.</p>
+    </section>
+
+    <section class="atlas-section" aria-labelledby="exp-variants">
+      <h2 id="exp-variants">Варіанти</h2>
+      <ul class="variant-list">
+        <li class="variant-item">
+          <span class="variant-lemma">А у тебе?</span>
+          <span class="variant-gloss">And you? (after How are you?)</span>
+        </li>
+      </ul>
+    </section>
+  </div>
+</article>
+
+<!-- phraseologism · давати на лапу -->
+<article id="view-phraseologism" class="entry-view" aria-label="phraseologism — давати на лапу">
+  <header class="expr-hero">
+    <div class="expr-hero-inner">
+      <span class="lex-badge">Лексикон · ExpressionArticle</span>
+      <div class="expr-head-row">
+        <div>
+          <h1 class="expr-title">давати на лапу</h1>
+          <p class="expr-gloss">to bribe; idiom</p>
+        </div>
+      </div>
+      <div class="expr-badges">
+        <span class="type-badge" data-type="phraseologism">phraseologism</span>
+      </div>
+    </div>
+  </header>
+  <div class="article-body wrap-narrow">
+    <section class="atlas-section" aria-labelledby="phr-meaning">
+      <h2 id="phr-meaning">Значення</h2>
+      <div class="def-card">
+        <div class="def-source"><span class="src-pill">gloss</span><span>lexicon-manifest.json</span></div>
+        <p class="def-text">to bribe; idiom</p>
+      </div>
+    </section>
+
+    <section class="atlas-section" aria-labelledby="phr-usage">
+      <h2 id="phr-usage">Вжиток</h2>
+      <ul class="usage-list">
+        <li class="usage-item">
+          <strong>source_inventory_grow</strong>
+          <span class="usage-meta">private-teacher-lesson-vocabulary-table-1 · row 184</span>
+        </li>
+      </ul>
+    </section>
+
+    <section class="atlas-section" aria-labelledby="phr-components">
+      <h2 id="phr-components">Компоненти</h2>
+      <ul class="component-list" aria-label="Компоненти фразеологізму">
+        <li class="component-chip"><a href="#" title="approved + public article">давати</a></li>
+        <li class="component-chip is-plain" title="queued / non-public — plain text">на</li>
+        <li class="component-chip"><a href="#" title="approved + public article">лапу</a></li>
+      </ul>
+      <p class="component-legend">Середній компонент «на» без окремої статті — без посилання.</p>
+    </section>
+  </div>
+</article>
+
+<!-- phraseologism (enriched) · бабине літо — typology fix: this is a set expression, NOT a proverb -->
+<article id="view-phraseologism2" class="entry-view" aria-label="phraseologism — бабине літо">
+  <header class="expr-hero">
+    <div class="expr-hero-inner">
+      <span class="lex-badge">Лексикон · ExpressionArticle</span>
+      <div class="expr-head-row">
+        <div>
+          <h1 class="expr-title">бабине літо</h1>
+          <p class="expr-gloss">Indian summer, warm autumn spell</p>
+        </div>
+      </div>
+      <div class="expr-badges">
+        <span class="type-badge" data-type="phraseologism">phraseologism</span>
+        <span class="cefr-chip">CEFR B1</span>
+      </div>
+    </div>
+  </header>
+  <div class="article-body wrap-narrow">
+    <section class="atlas-section" aria-labelledby="prv-meaning">
+      <h2 id="prv-meaning">Значення</h2>
+      <div class="def-card">
+        <div class="def-source"><span class="src-pill">Вікісловник</span><span>enrichment.meaning</span></div>
+        <p class="def-text">погідні, теплі дні на початку осені</p>
+      </div>
+      <div class="def-card">
+        <div class="def-source"><span class="src-pill">Фразеологічний словник</span><span>sections.idioms</span></div>
+        <p class="def-text">павутиння, що літає в цей період</p>
+      </div>
+    </section>
+
+    <section class="atlas-section" aria-labelledby="prv-usage">
+      <h2 id="prv-usage">Вжиток</h2>
+      <ul class="usage-list">
+        <li class="usage-item">
+          <strong>B1 · nature-and-environment</strong>
+          <span class="usage-meta">built_vocabulary · module 47</span>
+        </li>
+        <li class="usage-item">
+          День був ясний, сонячний та теплий. Починалось бабине літо
+          <span class="usage-meta">Іван Ле · Фразеологічний словник</span>
+        </li>
+      </ul>
+    </section>
+
+    <section class="atlas-section" aria-labelledby="prv-components">
+      <h2 id="prv-components">Компоненти</h2>
+      <ul class="component-list" aria-label="Компоненти вислову">
+        <li class="component-chip is-plain" title="queued / non-public">бабине</li>
+        <li class="component-chip"><a href="#" title="approved + public article">літо</a></li>
+      </ul>
+    </section>
+
+    <section class="atlas-section" aria-labelledby="prv-variants">
+      <h2 id="prv-variants">Варіанти</h2>
+      <ul class="variant-list">
+        <li class="variant-item">
+          <span class="variant-lemma">бабині літа</span>
+          <span class="variant-gloss">форма з Фразеологічного словника (sections.idioms)</span>
+        </li>
+      </ul>
+    </section>
+  </div>
+</article>
+
+<!-- proverb · корпусна приповідка (folk/prykazky-ta-pryslivia, reading hrushevskyi-franko-vovk-u-pluzi-prypovidka) -->
+<article id="view-proverb" class="entry-view" aria-label="proverb — Бери вовка в плуг, а він сі дивит у луг">
+  <header class="expr-hero">
+    <div class="expr-hero-inner">
+      <span class="lex-badge">Лексикон · ExpressionArticle</span>
+      <div class="expr-head-row">
+        <div>
+          <h1 class="expr-title">Бери вовка в плуг, а він сі дивит у луг.</h1>
+          <p class="expr-gloss">Galician proverb about an unfit participant in shared work</p>
+        </div>
+      </div>
+      <div class="expr-badges">
+        <span class="type-badge" data-type="proverb">proverb</span>
+        <span class="dialect-chip">правопис і форма не нормалізовані</span>
+      </div>
+    </div>
+  </header>
+  <div class="article-body wrap-narrow">
+    <section class="atlas-section" aria-labelledby="pvb-meaning">
+      <h2 id="pvb-meaning">Значення</h2>
+      <div class="def-card">
+        <div class="def-source"><span class="src-pill">корпус</span><span>folk/prykazky-ta-pryslivia · hrushevskyi-franko-vovk-u-pluzi-prypovidka</span></div>
+        <p class="def-text">«Стискає комічний сюжет про непридатного учасника спільної роботи.»</p>
+      </div>
+    </section>
+
+    <section class="atlas-section" aria-labelledby="pvb-usage">
+      <h2 id="pvb-usage">Вжиток</h2>
+      <ul class="usage-list">
+        <li class="usage-item">
+          <strong>FOLK · prykazky-ta-pryslivia</strong>
+          <span class="usage-meta">Михайло Грушевський про Франків корпус «Галицько-руських народних приповідок»</span>
+        </li>
+      </ul>
+    </section>
+
+    <section class="atlas-section" aria-labelledby="pvb-components">
+      <h2 id="pvb-components">Компоненти</h2>
+      <ul class="component-list" aria-label="Компоненти прислів'я">
+        <li class="component-chip"><a href="#" title="approved + public article">вовк</a></li>
+        <li class="component-chip is-plain" title="queued / non-public — plain text">плуг</li>
+        <li class="component-chip"><a href="#" title="approved + public article">луг</a></li>
+      </ul>
+    </section>
+
+    <p class="poc-anno">Секція «Варіанти» відсутня в даних → повністю опущена (#3631) — прислів'я ніколи не рендерить порожню оболонку.</p>
+  </div>
+</article>
+
+<!-- multiword_term grounding · Івана Купала (required manifest entry; TermArticle in PR-2) -->
+<article id="view-multiword" class="entry-view" aria-label="Івана Купала — manifest grounding">
+  <header class="expr-hero">
+    <div class="expr-hero-inner">
+      <span class="lex-badge">Лексикон · manifest grounding</span>
+      <div class="expr-head-row">
+        <div>
+          <h1 class="expr-title">Івана Купала</h1>
+          <p class="expr-gloss">Ivan Kupala holiday</p>
+        </div>
+      </div>
+      <div class="expr-badges">
+        <span class="type-badge" data-type="multiword_term">multiword_term</span>
+        <span class="cefr-chip">CEFR B1</span>
+      </div>
+    </div>
+  </header>
+  <div class="article-body wrap-narrow">
+    <p class="poc-anno">Обовʼязковий manifest-запис (#4385). У PR-2 «Івана Купала» → TermArticle; тут показано спільну секційну розмітку без «Парадигми».</p>
+
+    <section class="atlas-section" aria-labelledby="mw-meaning">
+      <h2 id="mw-meaning">Значення</h2>
+      <div class="def-card">
+        <div class="def-source"><span class="src-pill">Вікіпедія</span><span>enrichment.meaning</span></div>
+        <p class="def-text">Свя́то Купа́ла — традиційне, дохристиянське свято східних слов'ян, старослов'янське свято, що після запровадження християнства відзначалося перед Різдвом Івана Предтечі.</p>
+      </div>
+    </section>
+
+    <section class="atlas-section" aria-labelledby="mw-usage">
+      <h2 id="mw-usage">Вжиток</h2>
+      <ul class="usage-list">
+        <li class="usage-item">
+          <strong>B1 · leisure-culture-festivals</strong>
+          <span class="usage-meta">built_vocabulary · module 68</span>
+        </li>
+      </ul>
+    </section>
+
+    <section class="atlas-section" aria-labelledby="mw-components">
+      <h2 id="mw-components">Компоненти</h2>
+      <ul class="component-list" aria-label="Компоненти назви">
+        <li class="component-chip"><a href="#" title="approved + public article">Іван</a></li>
+        <li class="component-chip is-plain" title="queued / non-public">Купала</li>
+      </ul>
+    </section>
+  </div>
+</article>
+
+</main>
+
+<footer class="lu-footer">
+  <div class="lu-footer-inner">
+    <p class="lu-footer-tagline">PoC design source — ExpressionArticle (#4385)</p>
+    <p>Жодної секції «Парадигма». Порожні секції опускаються. Дані з lexicon-manifest.json.</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var entrySelect = document.getElementById("poc-entry");
+  var views = {
+    expression: document.getElementById("view-expression"),
+    phraseologism: document.getElementById("view-phraseologism"),
+    phraseologism2: document.getElementById("view-phraseologism2"),
+    proverb: document.getElementById("view-proverb"),
+    multiword: document.getElementById("view-multiword")
+  };
+
+  function showEntry(key) {
+    Object.keys(views).forEach(function (k) {
+      if (views[k]) views[k].classList.toggle("active", k === key);
+    });
+    if (entrySelect) entrySelect.value = key;
+  }
+
+  if (entrySelect) {
+    entrySelect.addEventListener("change", function () { showEntry(entrySelect.value); });
+  }
+
+  function setTheme(mode) {
+    document.body.setAttribute("data-theme", mode);
+    document.querySelectorAll("[data-theme-choice]").forEach(function (b) {
+      b.classList.toggle("active", b.getAttribute("data-theme-choice") === mode);
+    });
+  }
+  document.querySelectorAll("[data-theme-choice]").forEach(function (b) {
+    b.addEventListener("click", function () { setTheme(b.getAttribute("data-theme-choice")); });
+  });
+  var quick = document.getElementById("theme-quick");
+  if (quick) {
+    quick.addEventListener("click", function () {
+      setTheme(document.body.getAttribute("data-theme") === "dark" ? "light" : "dark");
+    });
+  }
+})();
+</script>
+</body>
+</html>
