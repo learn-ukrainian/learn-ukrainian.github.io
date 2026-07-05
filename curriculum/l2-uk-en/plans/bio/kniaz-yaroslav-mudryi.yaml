@@ -99,7 +99,7 @@ readings:
   source_type: reference
   role: context
   source: "Енциклопедія історії України (history.org.ua)"
-  source_url: "http://resource.history.org.ua/"
+  source_url: "https://history.org.ua/?termin=Yaroslav_M"
   license: copyright
   hosting: link-only
   cefr_min: C1
@@ -111,29 +111,29 @@ readings:
   source_type: primary
   role: primary
   source: "Ізборник (izbornyk.org.ua)"
-  source_url: "http://izbornyk.org.ua/"
+  source_url: "http://izbornyk.org.ua/rizne/pravdstat.htm"
   license: public_domain
   hosting: excerpt-only
   cefr_min: C1
   learner_task: "Проаналізувати статті першого збірника законів: заміну кровної помсти на систему штрафів («віру»)."
   caveats: "Давньоруський текст потребує глосарію; специфічна юридична лексика."
-- title: "Софійський собор у Києві"
+- title: "Місто Ярослава (ЕСУ)"
   language: uk
   genre: encyclopedia
   source_type: reference
   role: context
-  source: "Енциклопедія сучасної України (esu.com.ua)"
-  source_url: "https://esu.com.ua/"
+  source: "Енциклопедія сучасної України: Місто Ярослава"
+  source_url: "https://esu.com.ua/article-67932"
   license: copyright
   hosting: link-only
   cefr_min: C1
-  learner_task: "Ознайомитися з культурним символом епохи Ярослава Мудрого."
-  caveats: "Короткий довідковий формат."
+  learner_task: "Ознайомитися з міським і сакральним контекстом будівничої програми Ярослава, зокрема роллю Софійського собору."
+  caveats: "Контекстна стаття про міський простір, не самостійна біографія князя; використовувати для архітектурного тла."
 sequence: 4
 slug: kniaz-yaroslav-mudryi
 subtitle: 'The Lawgiver Prince: Yaroslav the Wise'
 title: 'Князь Ярослав Мудрий: Законодавець'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: внутрішній збройний конфлікт, війна між членами однієї династії або соціальної групи за владу
   pos: ж.

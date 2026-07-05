@@ -102,7 +102,7 @@ readings:
   source_type: reference
   role: context
   source: "Енциклопедія історії України (history.org.ua)"
-  source_url: "http://resource.history.org.ua/"
+  source_url: "https://history.org.ua/?termin=Volodymyr_Sv"
   license: copyright
   hosting: link-only
   cefr_min: C1
@@ -114,7 +114,7 @@ readings:
   source_type: primary
   role: primary
   source: "Ізборник (izbornyk.org.ua)"
-  source_url: "http://izbornyk.org.ua/"
+  source_url: "http://izbornyk.org.ua/pvlyar/yar04.htm"
   license: public_domain
   hosting: excerpt-only
   cefr_min: C1
@@ -126,7 +126,7 @@ readings:
   source_type: reference
   role: context
   source: "Національний музей історії України (nmiu.org)"
-  source_url: "https://nmiu.org/"
+  source_url: "https://nmiu.org/qr-codes/1952-zlatnik-volodimira-svyatoslavicha-kop-ya-ta-sr-blyaniki-k-nets-kh-pochatok-kh-st"
   license: copyright
   hosting: link-only
   cefr_min: C1
@@ -136,7 +136,7 @@ sequence: 3
 slug: volodymyr-velykii
 subtitle: 'Volodymyr the Great: Saint, Sinner, Architect'
 title: 'Володимир Великий: Святий, грішник, архітектор'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: внутрішній розбрат, збройна боротьба за владу між членами однієї династії чи народу
   pos: ж.

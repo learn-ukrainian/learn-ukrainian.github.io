@@ -101,7 +101,7 @@ readings:
   source_type: reference
   role: context
   source: "Енциклопедія історії України (history.org.ua)"
-  source_url: "http://resource.history.org.ua/"
+  source_url: "https://history.org.ua/?termin=Volodymyr_Mo"
   license: copyright
   hosting: link-only
   cefr_min: C1
@@ -113,7 +113,7 @@ readings:
   source_type: primary
   role: primary
   source: "Ізборник (izbornyk.org.ua)"
-  source_url: "http://izbornyk.org.ua/"
+  source_url: "http://izbornyk.org.ua/pvlyar/yar09.htm"
   license: public_domain
   hosting: excerpt-only
   cefr_min: C1
@@ -125,7 +125,7 @@ readings:
   source_type: primary
   role: primary
   source: "Ізборник (izbornyk.org.ua)"
-  source_url: "http://izbornyk.org.ua/"
+  source_url: "http://izbornyk.org.ua/pvlyar/yar10.htm"
   license: public_domain
   hosting: excerpt-only
   cefr_min: C1
@@ -135,7 +135,7 @@ sequence: 6
 slug: volodymyr-monomakh
 subtitle: 'Volodymyr Monomakh: Strengthener of Rus'''
 title: 'Володимир Мономах: Укріплювач Русі'
-version: '4.2'
+version: '4.3'
 vocabulary_hints:
 - definition: історичний період ослаблення центральної влади в Київській Русі та зміцнення окремих князівств
   pos: ж.

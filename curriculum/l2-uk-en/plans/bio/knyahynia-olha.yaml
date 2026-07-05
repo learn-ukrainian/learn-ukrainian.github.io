@@ -112,7 +112,7 @@ readings:
   source_type: reference
   role: context
   source: "Енциклопедія історії України (history.org.ua)"
-  source_url: "http://resource.history.org.ua/"
+  source_url: "https://history.org.ua/?termin=Olha"
   license: copyright
   hosting: link-only
   cefr_min: C1
@@ -124,29 +124,29 @@ readings:
   source_type: primary
   role: primary
   source: "Ізборник (izbornyk.org.ua)"
-  source_url: "http://izbornyk.org.ua/"
+  source_url: "http://izbornyk.org.ua/pvlyar/yar02.htm"
   license: public_domain
   hosting: excerpt-only
   cefr_min: C1
   learner_task: "Проаналізувати легендарний образ княгині, її помсту древлянам та візит до Константинополя."
   caveats: "Адаптований або оригінальний давньоруський текст потребує глосарію."
-- title: "Княгиня Ольга"
+- title: "Княгиня Ольга в статті «Київ» (ЕСУ)"
   language: uk
   genre: encyclopedia
   source_type: reference
   role: context
-  source: "Енциклопедія сучасної України (esu.com.ua)"
-  source_url: "https://esu.com.ua/"
+  source: "Енциклопедія сучасної України: Київ"
+  source_url: "https://esu.com.ua/article-11194"
   license: copyright
   hosting: link-only
   cefr_min: C1
-  learner_task: "Ознайомитися із сучасною енциклопедичною оцінкою діяльності Ольги."
-  caveats: "Короткий довідковий формат."
+  learner_task: "Знайти фрагмент про княжу добу Києва й пояснити, як дипломатія Ольги вписана в історію міста."
+  caveats: "Контекстна довідка про Київ, не самостійна біографія Ольги; використовувати лише як додатковий міський контекст."
 sequence: 1
 slug: knyahynia-olha
 subtitle: 'Princess Olha: Architect of a State'
 title: 'Княгиня Ольга: Архітекторка держави'
-version: '4.2'
+version: '4.3'
 vocabulary_hints:
 - definition: архаїчна система збору данини шляхом об'їзду князем та дружиною підвладних територій; буквально «ходіння по людях»
   pos: с.

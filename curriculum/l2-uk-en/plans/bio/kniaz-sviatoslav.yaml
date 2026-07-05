@@ -102,7 +102,7 @@ readings:
   source_type: reference
   role: context
   source: "Енциклопедія історії України (history.org.ua)"
-  source_url: "http://resource.history.org.ua/"
+  source_url: "https://history.org.ua/?termin=Sviatoslav_I"
   license: copyright
   hosting: link-only
   cefr_min: C1
@@ -114,7 +114,7 @@ readings:
   source_type: primary
   role: primary
   source: "Ізборник (izbornyk.org.ua)"
-  source_url: "http://izbornyk.org.ua/"
+  source_url: "http://izbornyk.org.ua/pvlyar/yar02.htm"
   license: public_domain
   hosting: excerpt-only
   cefr_min: C1
@@ -126,7 +126,7 @@ readings:
   source_type: reference
   role: context
   source: "Енциклопедія історії України (history.org.ua)"
-  source_url: "http://resource.history.org.ua/"
+  source_url: "https://history.org.ua/?termin=Khozarskyj_kahanat"
   license: copyright
   hosting: link-only
   cefr_min: C1
@@ -136,7 +136,7 @@ sequence: 2
 slug: kniaz-sviatoslav
 subtitle: 'Prince Sviatoslav: The Warrior Conqueror'
 title: 'Князь Святослав: Воїн-завойовник'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: 'у давньоруському контексті: постійне військо князя, його найближчі соратники та радники'
   pos: ж.
