@@ -3,7 +3,11 @@
   "type": "module",
   "version": "0.0.1",
   "scripts": {
-    "hydrate": "node ./scripts/hydrate-manifest.mjs && node ./scripts/hydrate-practice-deck.mjs",
+    "atlas:build-db": "cd .. && .venv/bin/python -m scripts.atlas.atlas_db --db data/atlas.db",
+    "atlas:perf": "node ./scripts/benchmark-atlas-db.mjs",
+    "atlas:validate-aliases": "cd .. && .venv/bin/python -m scripts.atlas.atlas_db --db data/atlas.db --validate-aliases-only",
+    "hydrate": "node ./scripts/hydrate-manifest.mjs && npm run atlas:build-db && node ./scripts/hydrate-practice-deck.mjs",
+    "hydrate:manifest": "node ./scripts/hydrate-manifest.mjs && npm run atlas:build-db",
     "hydrate:practice": "node ./scripts/hydrate-practice-deck.mjs",
     "dev": "npm run hydrate && astro dev",
     "start": "npm run dev",
@@ -11,9 +15,9 @@
     "build:full": "npm run hydrate && BUILD_ETYMOLOGY_ROUTES=1 astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "test": "npm run hydrate:practice && vitest run",
-    "test:watch": "npm run hydrate:practice && vitest --watch",
-    "test:coverage": "npm run hydrate:practice && vitest run --coverage"
+    "test": "npm run hydrate && vitest run",
+    "test:watch": "npm run hydrate && vitest --watch",
+    "test:coverage": "npm run hydrate && vitest run --coverage"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.9",
@@ -24,6 +28,7 @@
     "@types/react": "^19.2.15",
     "@types/react-dom": "^19.2.3",
     "astro": "^6.4.7",
+    "better-sqlite3": "^12.11.1",
     "playwright": "^1.60.0",
     "react": "^19.2.5",
     "react-dom": "^19.2.7",
@@ -39,6 +44,7 @@
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^14.6.1",
+    "@types/better-sqlite3": "^7.6.13",
     "@vitest/coverage-v8": "^4.1.8",
     "happy-dom": "^20.10.6",
     "vitest": "^4.1.9"
