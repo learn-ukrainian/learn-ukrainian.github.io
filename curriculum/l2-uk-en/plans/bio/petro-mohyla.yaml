@@ -86,11 +86,25 @@ readings:
   source: Енциклопедія історії України
   source_url: http://history.org.ua/?termin=Mohyla_P
   language: uk
-  source_type: academic
-  role: biography
+  genre: encyclopedia
+  source_type: reference
+  role: context
+  cefr_min: C1
   license: copyright
   hosting: link-only
+  learner_task: Скласти карту реформ Могили й розділити освітні, богословські та інституційні кроки.
   caveats: Довідка ЕІУ. Розглядаючи освітні реформи, важливо розрізняти модернізацію і вестернізацію/латинізацію, та оцінювати постать поза російською парадигмою «возз'єднання».
+- title: Требник або Православне сповідання віри Петра Могили
+  source: 'reading-needed: verify a rights-clear Ukrainian edition or stable excerpt before module build'
+  language: uk
+  genre: reform text
+  source_type: primary
+  role: reading-needed
+  cefr_min: C1
+  license: unknown
+  hosting: reading-needed
+  learner_task: Дібрати короткий уривок, який показує реформаторську логіку Могили як нормування практики, а не лише біографічний факт.
+  caveats: Не хостити повний богослужбовий чи богословський текст без правової перевірки; потрібен короткий уривок або публічна українська електронна редакція.
 references:
 - title: Petro Mohyla
   note: Compiled from Plokhy, Subtelny, Hrushevsky
@@ -115,7 +129,7 @@ sequence: 24
 slug: petro-mohyla
 subtitle: 'Petro Mohyla: Founder of the Academy and Reformer of the Church'
 title: 'Петро Могила: Засновник академії та реформатор церкви'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: найвищий ієрарх помісної православної церкви, голова митрополії
   pos: ч.
