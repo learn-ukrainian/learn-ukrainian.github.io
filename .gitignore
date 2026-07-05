@@ -47,6 +47,9 @@ curriculum/l2-uk-direct/_orchestration/
 /opencode.write.jsonl
 /*.write.jsonl
 
+# QG bakeoff live payloads are local run artifacts; SCORECARD.md remains committable.
+audit/*-qg-bakeoff/*.json
+
 
 # Python
 __pycache__/
