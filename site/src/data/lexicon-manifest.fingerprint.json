@@ -1,5 +1,5 @@
 {
-  "fingerprint": "60367f42ef5f2dda11f6e7c52bc55c16353f3ca84a5c516c3972c89e7d992ce1",
+  "fingerprint": "341c696f64cbbe3553bac44e34eb38fcb03c7317df8ea8da99e8cae81e522d9d",
   "inputs": {
     "lexicon_code": [
       {
@@ -9,6 +9,10 @@
       {
         "path": "scripts/lexicon/assess_kaikki_fillability.py",
         "sha256": "406e7ad427f0b7ecfb60bd0de0ff5cc00899025bf75c5af2fc045d80426028b9"
+      },
+      {
+        "path": "scripts/lexicon/atlas_db.py",
+        "sha256": "3f5050589bb1d5e7d6a3eea32509a5a251746186e3d74c488b0ed2b844d7b0a4"
       },
       {
         "path": "scripts/lexicon/build_data_manifest.py",
@@ -115,6 +119,6 @@
   "schema_version": 1,
   "scope": "lexicon code only; excludes module vocabulary and dictionary DB/cache state",
   "stats": {
-    "lexicon_code_files": 27
+    "lexicon_code_files": 28
   }
 }
