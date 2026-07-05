@@ -25,9 +25,9 @@ aliases:
 - Артем Чех
 - Артем Олександрович Чередник
 - Artem Chekh
-- Artem Cherednyk (legal-name/source variant)
-- Artem Cherednik (source variant)
-- Artem Tschech (Commons/German-style variant)
+- Artem Cherednyk
+- Artem Cherednik
+- Artem Tschech
 cefr_min: C1
 connects_to:
 - iryna-tsilyk
@@ -77,7 +77,7 @@ content_outline:
   - 'Фінальна вправа: скласти карту жанрів Чеха й для кожного жанру вказати, яку правду він може дати, а яку не має права обіцяти.'
   section: 'Дискусія та підсумок: Як читати автора на війні'
   words: 700
-focus: Artem Chekh taught as a living Ukrainian writer, screenwriter, and serviceman whose completed prose works about frontline service, 1990s memory, post-Soviet trauma, and civilian-military identity must be read without heroic simplification, operational detail, or reduction of literature to biography.
+focus: Артем Чех як живий український письменник, сценарист і військовослужбовець, чиї завершені прозові тексти про фронтову службу, пам'ять 1990-х, пострадянську травму та цивільно-військову ідентичність потрібно читати без героїчного спрощення, операційних деталей і зведення літератури до біографії.
 level: BIO
 module: bio-409
 objectives:
@@ -91,7 +91,7 @@ persona:
   voice: Veteran-Writing Source Critic
 phase: BIO
 references:
-- note: Дослідницьке досьє з перевіреними фактами, військовими caveat, книжковими якорями, перекладними назвами й ризиками живої постаті.
+- note: Дослідницьке досьє з перевіреними фактами, військовими застереженнями, книжковими якорями, перекладними назвами й ризиками живої постаті.
   path: docs/research/bio/artem-chekh.md
   title: Artem Chekh — Research Dossier
   type: research
@@ -111,7 +111,7 @@ sequence: 409
 slug: artem-chekh
 subtitle: 'Artem Chekh: War, Memory, and the Civilian Self'
 title: 'Артем Чех: Війна, пам''ять і цивільне «я»'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: людина, яка служить у війську; для живої постаті поточний статус потребує перевірки
   pos: ч.

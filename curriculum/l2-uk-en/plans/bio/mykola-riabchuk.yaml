@@ -9,7 +9,7 @@ activity_hints:
   items: 5
   placement: inline
   type: true-false
-- focus: 'Дебати: чи допомагає модель «двох Україн» зрозуміти політичні відмінності, чи закріплює стереотипи? Обидві позиції з caveat автора'
+- focus: 'Дебати: чи допомагає модель «двох Україн» зрозуміти політичні відмінності, чи закріплює стереотипи? Обидві позиції із застереженням автора'
   placement: workbook
   type: debate
 - focus: 'Критичний аналіз: як «Від Малоросії до України», «Postcolonial Syndrome» і «Лексикон націоналіста» змінюють мову самоопису'
@@ -26,8 +26,8 @@ aliases:
 - Микола Рябчук
 - Mykola Riabchuk
 - Mykola Yuriiovych Riabchuk
-- Mykola Ryabchuk (catalogue/search variant)
-- Mikołaj Riabczuk (catalogue/search variant)
+- Mykola Ryabchuk
+- Mikołaj Riabczuk
 cefr_min: C1
 connects_to:
 - volodymyr-yermolenko
@@ -77,7 +77,7 @@ content_outline:
   - 'Фінальна вправа: взяти три зовнішні кліше про Україну й переформулювати їх так, щоб українці були не об''єктом, а дієвцями.'
   section: 'Дискусія та підсумок: Україна як суб''єкт власного опису'
   words: 700
-focus: Mykola Riabchuk taught as a living Ukrainian essayist and public intellectual whose postcolonial vocabulary exposes imperial knowledge and internalized "Little Russian" frames, while his influential "Two Ukraines" model must be handled as contested, dated, and potentially stereotype-producing.
+focus: Микола Рябчук як живий український есеїст і публічний інтелектуал, чия постколоніальна мова виявляє імперське знання та інтеріоризовані малоросійські рамки, тоді як впливову модель «двох Україн» потрібно подавати як дискусійну, датовану й потенційно стереотипотворчу.
 level: BIO
 module: bio-406
 objectives:
@@ -91,7 +91,7 @@ persona:
   voice: Postcolonial Essay Critic
 phase: BIO
 references:
-- note: Дослідницьке досьє з перевіреними фактами, джерельними caveat, ключовими працями й ризиками моделі «двох Україн».
+- note: Дослідницьке досьє з перевіреними фактами, джерельними застереженнями, ключовими працями й ризиками моделі «двох Україн».
   path: docs/research/bio/mykola-riabchuk.md
   title: Mykola Riabchuk — Research Dossier
   type: research
@@ -99,7 +99,7 @@ references:
   path: https://ipiend.gov.ua/en/employee/mykola-yurioivych-riabchuk/
   title: Mykola Yurioivych Riabchuk (Kuras Institute)
   type: reference
-- note: Авторський текст із ключовим застереженням щодо моделі «двох Україн»; не викладати модель без цього caveat.
+- note: Авторський текст із ключовим застереженням щодо моделі «двох Україн»; не викладати модель без цього застереження.
   path: https://www.iwm.at/transit-online/ukraine-one-state-two-countries-with-comments
   title: 'Ukraine: One State, Two Countries? With Comments'
   type: primary
@@ -111,7 +111,7 @@ sequence: 406
 slug: mykola-riabchuk
 subtitle: 'Mykola Riabchuk: Postcolonial Ukraine and the Danger of Simple Maps'
 title: 'Микола Рябчук: Постколоніальна Україна і небезпека простих карт'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: напрям думки, що аналізує наслідки імперського панування для мови, культури й самоопису
   pos: ч.

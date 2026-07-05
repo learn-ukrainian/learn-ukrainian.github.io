@@ -25,9 +25,9 @@ aliases:
 - Ірина Андріївна Цілик
 - Ірина Цілик
 - Iryna Tsilyk
-- Ira Tsilyk (search variant)
-- Irina Tsilyk (search variant; not learner-facing)
-- Iryna Cilyk (catalogue/search variant)
+- Ira Tsilyk
+- Irina Tsilyk
+- Iryna Cilyk
 cefr_min: C1
 connects_to:
 - nataliia-vorozhbyt
@@ -65,7 +65,7 @@ content_outline:
   words: 1300
 - points:
   - '[!anti-hagiography] Фестивальні призи не роблять фільм етично бездоганним; семінар має питати, хто контролює кадр, монтаж, контекст і право на вразливість.'
-  - 'Мовна реальність прифронтових територій не має ставати русоцентричною рамкою; її пояснюємо через lived context, війну й українську суб''єктність.'
+  - 'Мовна реальність прифронтових територій не має ставати русоцентричною рамкою; її пояснюємо через реалії життя, війну й українську суб''єктність.'
   - 'Родинні зв''язки з Артемом Чехом доречні для «Я і Фелікс», але не мають замінювати аналіз власної режисерської і письменницької роботи Цілик.'
   - 'Поточні проєкти, зокрема анімаційно-документальні задуми про повномасштабне вторгнення, не подаємо як завершені без свіжого джерела.'
   section: 'Тінь: Камера, травма й межі публічного свідчення'
@@ -77,7 +77,7 @@ content_outline:
   - 'Фінальна вправа: написати короткий етичний протокол для перегляду воєнного документального фільму без експлуатації травми.'
   section: 'Дискусія та підсумок: Хто тримає камеру'
   words: 700
-focus: Iryna Tsilyk taught as a living Ukrainian filmmaker, writer, and screenwriter whose documentary and fiction work centers wartime witness, agency, camera ethics, and literary-cinematic adaptation without reducing Ukrainian subjects to passive victims or foreign-festival discovery.
+focus: Ірина Цілик як жива українська режисерка, письменниця й сценаристка, чия документальна та ігрова робота зосереджує воєнне свідчення, агентність, етику камери й літературно-кінематографічну адаптацію без зведення українських суб'єктів до пасивних жертв або фестивального відкриття ззовні.
 level: BIO
 module: bio-407
 objectives:
@@ -91,7 +91,7 @@ persona:
   voice: Documentary-Ethics Film Critic
 phase: BIO
 references:
-- note: Дослідницьке досьє з перевіреними фактами, фільмографічними якорями, джерельними caveat і ризиками щодо живої постаті.
+- note: Дослідницьке досьє з перевіреними фактами, фільмографічними якорями, джерельними застереженнями й ризиками щодо живої постаті.
   path: docs/research/bio/iryna-tsilyk.md
   title: Iryna Tsilyk — Research Dossier
   type: research
@@ -111,7 +111,7 @@ sequence: 407
 slug: iryna-tsilyk
 subtitle: 'Iryna Tsilyk: Camera, War, and the Ethics of Witness'
 title: 'Ірина Цілик: Камера, війна і етика свідчення'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: мистецький і журналістський жанр, що працює з реальними людьми, подіями й документальними матеріалами
   pos: с.

@@ -26,8 +26,8 @@ aliases:
 - Оксана Кісь
 - Oksana Kis
 - Oksana Romanivna Kis
-- Oksana Kis' (catalogue/search variant)
-- Oksana Kiś (catalogue/search variant)
+- Oksana Kis'
+- Oksana Kiś
 cefr_min: C1
 connects_to:
 - tamara-hundorova
@@ -77,7 +77,7 @@ content_outline:
   - 'Фінальна вправа: переписати три речення з об''єктної позиції в суб''єктну — не «жінки постраждали», а «жінки свідчили, діяли, зберігали, пам''ятали».'
   section: 'Дискусія та підсумок: Хто є суб''єктом історії'
   words: 700
-focus: Oksana Kis taught as a living Ukrainian feminist historian and anthropologist whose work on women's history, Gulag testimony, Holodomor memory, oral history, and epistemological justice decolonizes Soviet/Russian-centered historiography while requiring careful anti-triumphalist treatment of survival.
+focus: Оксана Кісь як жива українська феміністична історикиня й антропологиня, чия праця про жіночу історію, свідчення ҐУЛАҐу, пам'ять про Голодомор, усну історію та епістемологічну справедливість деколонізує радянсько-російськоцентричну історіографію й потребує обережного анти-тріумфалістського трактування виживання.
 level: BIO
 module: bio-405
 objectives:
@@ -111,7 +111,7 @@ sequence: 405
 slug: oksana-kis
 subtitle: 'Oksana Kis: Women''s History, the Gulag, and Epistemological Justice'
 title: 'Оксана Кісь: Жіноча історія, ҐУЛАҐ і епістемологічна справедливість'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: напрям історії, що досліджує жінок як дієвиць, авторок джерел і творчинь пам'яті
   pos: ж.

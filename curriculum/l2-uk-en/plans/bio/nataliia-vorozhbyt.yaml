@@ -26,9 +26,9 @@ aliases:
 - Наталія Ворожбит
 - Наталка Ворожбит
 - Nataliia Vorozhbyt
-- Natalka Vorozhbyt (professional/source variant)
-- Natalka Vorozhbit (publisher/source variant)
-- Natalya Vorozhbit (catalogue/search variant)
+- Natalka Vorozhbyt
+- Natalka Vorozhbit
+- Natalya Vorozhbit
 cefr_min: C1
 connects_to:
 - iryna-tsilyk
@@ -66,7 +66,7 @@ content_outline:
   words: 1300
 - points:
   - '[!anti-hagiography] Ворожбит не треба викладати як автоматичну «голос війни»: її тексти ставлять незручні питання про владу автора, глядача й сцени над чужим болем.'
-  - 'Сексуальне насильство, страх і переміщення потребують content warning і відповідальної педагогіки; не просимо студентів «зіграти травму» як вправу.'
+  - 'Сексуальне насильство, страх і переміщення потребують попередження про зміст і відповідальної педагогіки; не просимо студентів «зіграти травму» як вправу.'
   - 'Шевченківська премія 2022 року стосується сценічної постановки «Погані дороги» й була командною; не подаємо її як одноосібну нагороду за фільм.'
   - 'Різні романізації і професійне ім''я Natalka/Nataliia/Natalya мають лишатися пошуковими примітками, а не причиною плутанини в learner-facing тексті.'
   section: 'Тінь: Мова, травма й відповідальність драматургині'
@@ -78,7 +78,7 @@ content_outline:
   - 'Фінальна вправа: скласти етичну пам''ятку для аналізу сцени з воєнної драми без травматичного видовища.'
   section: 'Дискусія та підсумок: Як сцена відповідає за свідчення'
   words: 700
-focus: Nataliia Vorozhbyt taught as a living Ukrainian playwright, screenwriter, director, and field-builder whose documentary theatre and war cinema address Holodomor memory, Maidan testimony, Donbas, displacement, and Russian aggression while requiring careful treatment of language history, trauma staging, and shared award attribution.
+focus: Наталія Ворожбит як жива українська драматургиня, сценаристка, режисерка й організаторка поля, чиї документальний театр і воєнне кіно працюють із пам'яттю про Голодомор, свідченнями Майдану, Донбасом, переміщенням і російською агресією, потребуючи обережного трактування мовної історії, сценічної травми та командної атрибуції нагород.
 level: BIO
 module: bio-408
 objectives:
@@ -92,7 +92,7 @@ persona:
   voice: Documentary-Theatre Critic
 phase: BIO
 references:
-- note: Дослідницьке досьє з перевіреними фактами, джерельними caveat, назвами творів, романізаційними варіантами й етичними ризиками.
+- note: Дослідницьке досьє з перевіреними фактами, джерельними застереженнями, назвами творів, романізаційними варіантами й етичними ризиками.
   path: docs/research/bio/nataliia-vorozhbyt.md
   title: Nataliia Vorozhbyt — Research Dossier
   type: research
@@ -112,7 +112,7 @@ sequence: 408
 slug: nataliia-vorozhbyt
 subtitle: 'Nataliia Vorozhbyt: Documentary Theatre, War, and Bad Roads'
 title: 'Наталія Ворожбит: Документальний театр, війна і погані дороги'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: авторка драматичних творів для сцени або екрану
   pos: ж.

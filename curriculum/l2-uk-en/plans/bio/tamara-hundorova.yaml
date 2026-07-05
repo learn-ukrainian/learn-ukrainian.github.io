@@ -26,8 +26,8 @@ aliases:
 - Тамара Гундорова
 - Tamara Hundorova
 - Tamara Ivanivna Hundorova
-- Tamara Gundorova (catalogue/search variant; not learner-facing)
-- Tamara Hundorowa (catalogue/search variant; not learner-facing)
+- Tamara Gundorova
+- Tamara Hundorowa
 cefr_min: C1
 connects_to:
 - vira-aheieva
@@ -77,7 +77,7 @@ content_outline:
   - 'Фінальна вправа: сформулювати одну сильну й одну проблемну сторону кожної рамки — постколоніальної, феміністичної, чорнобильської, кітчевої.'
   section: 'Дискусія та підсумок: Як критика змінює карту культури'
   words: 700
-focus: Tamara Hundorova taught as a living Ukrainian literary scholar and public intellectual whose work on modernism, Chornobyl, kitsch, gender, and postcolonial trauma helps decolonize the canon while requiring source caveats, theory-limit checks, and anti-hagiographic discussion.
+focus: Тамара Гундорова як жива українська літературознавиця й публічна інтелектуалка, чия праця про модернізм, Чорнобиль, кітч, гендер і постколоніальну травму допомагає деколонізувати канон і водночас потребує джерельних застережень, перевірки меж теорії та антиагіографічного обговорення.
 level: BIO
 module: bio-404
 objectives:
@@ -111,7 +111,7 @@ sequence: 404
 slug: tamara-hundorova
 subtitle: 'Tamara Hundorova: Canon, Chornobyl, and Postcolonial Trauma'
 title: 'Тамара Гундорова: Канон, Чорнобиль і постколоніальна травма'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: усталена сукупність авторів і творів, які культура визнає центральними; у модулі це поле суперечки, а не список святинь
   pos: ч.
