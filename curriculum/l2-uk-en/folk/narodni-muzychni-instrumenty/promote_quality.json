@@ -1,9 +1,9 @@
 {
-  "assembled_mdx_sha256": "6f4faee751c9dc736a41c7b8935f0f8b96505fa4eaa6883f7ce1be68e3972e88",
+  "assembled_mdx_sha256": "2f6976903186c82224af8367794058d9545f21c93a34adbd7bacff7236e8779b",
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "096d0726cc3b69661db3fd086e3e8f6779e655fdc953b55daf53967de7cb7a0a",
+    "digest": "1653205ed72d6f582076a13b1658c284b2601c064ede8e0bd83afd5c60da0a18",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/narodni-muzychni-instrumenty.yaml",
@@ -11,7 +11,7 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/narodni-muzychni-instrumenty/module.md",
-        "sha256": "49649203874563ce4b3aff341b3f0888431f4945b05683381e56d74a534b3a45"
+        "sha256": "ad745053ade6b72afebe5ab9ff2e8ecd34173f6ae09dbd56d388e5ad308d1fe6"
       },
       {
         "path": "curriculum/l2-uk-en/folk/narodni-muzychni-instrumenty/activities.yaml",
@@ -28,10 +28,10 @@
     ]
   },
   "evidence": {
-    "decolonization": "The lesson avoids decorative folk-mass and authenticity-cliche framing, preserves kobza/bandura/lira distinctions, treats trembita source disagreement explicitly, and separates institutional history from Soviet ideological language.",
-    "pedagogy": "C1/C1+ Ukrainian prose connects material culture, sound, technique, event, institution, and modern reuse with V2 inline/workbook practice and 43 vocabulary items.",
-    "review": "Claude Opus 4.8 independent review found one major process-language leak and one minor English resource-note issue; both were fixed in source, regenerated to MDX, and follow-up review returned PASS with no blockers. A later focused quote-verification pass tightened the Yanovskyi fragment to its attested order; final local gates required VESUM-clean rewrites without changing source discipline.",
-    "source_policy": "Source-grounded module distinguishes instrument construction, repertoire, social role, performer status, regional usage, revival, Soviet academicization, and source confidence without invented songs, audio scenes, makers, or image identifiers; final resource links are live and gate-compatible."
+    "decolonization": "Instrument discussion continues to avoid decorative museum-list and authenticity-binary framing.",
+    "pedagogical": "Structured readings ground instrument sound and social ensemble framing without turning literary scenes into organology claims.",
+    "review": "Claude Opus 4.8 bridge message 2 PASS for Batch 4 reading remediation; all instrument excerpts verified, no blockers. DeepSeek not used.",
+    "source_policy": "Added on-site shortened readings from verified Nechui-Levytsky and Yanovsky literary sound fragments; no invented songs, makers, audio claims, or image IDs."
   },
   "floors": {
     "beauty": 8.5,
@@ -49,7 +49,7 @@
     "model": "claude-opus-4-8"
   },
   "schema_version": 1,
-  "scored_at": "2026-07-04T20:20:43Z",
+  "scored_at": "2026-07-05T17:49:56Z",
   "scores": {
     "beauty": 8.7,
     "decolonization": 9.2,

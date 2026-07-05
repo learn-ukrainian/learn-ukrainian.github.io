@@ -1,9 +1,9 @@
 {
-  "assembled_mdx_sha256": "112580f9507f4c9dd2b5e2b1be3eb1604863fcee972f449cc823dfd847192b68",
+  "assembled_mdx_sha256": "1b2cffda309ce9838fd231d73a08a8537be9531b2d17d78197ebe2c8ee27b6ef",
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "9fb1f0c97bd574a32e3f1d88ee8d383f1759074a71886baefdad557a086b356a",
+    "digest": "780d343000b82c81ef2eb33bee0b16ccbce53139e551eb112106f5d655605a1c",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/dytiachyi-folklor-kolyskovi.yaml",
@@ -11,7 +11,7 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/dytiachyi-folklor-kolyskovi/module.md",
-        "sha256": "72192d2597fbbbb526760c503d23aa515d7e6ab0e9ca08c825c83dbbf9738b41"
+        "sha256": "92c93d2d9d1d1862a9365d682d7e86224cb9d382ef89388c60923c3df1149c19"
       },
       {
         "path": "curriculum/l2-uk-en/folk/dytiachyi-folklor-kolyskovi/activities.yaml",
@@ -28,10 +28,10 @@
     ]
   },
   "evidence": {
-    "decolonization": "Module frames child folklore as Ukrainian family and peer-group verbal practice without Russocentric reduction, while acknowledging wider Slavic circulation for \u0415\u043d\u0438\u043a\u0438-\u0431\u0435\u043d\u0438\u043a\u0438.",
-    "pedagogical": "V2 inline/workbook activities cover performance situation, lullaby formula analysis, contact sequence, source discipline, safe teasing boundaries, and stage/choral status.",
-    "review": "Claude Opus 4.8 independent re-review returned PASS with no remaining blockers, majors, or minors; bridge message 4 at 2026-07-04T17:41:24Z.",
-    "source_policy": "Popular lullaby openings remain paraphrase-only; three direct counting formulas are confirmed with verify_quote matched true, confidence 0.963-1.0, source wave8-ukr-lit-entsyklopediia chunk fc2291b5_c4533."
+    "decolonization": "Child folklore remains framed as Ukrainian family and peer-group practice with careful notes on circulation and no sentimental flattening.",
+    "pedagogical": "Separated each counting formula into exact structured readings so learners compare sleep-wish, counting, sound-row, and fragmentary-scenario forms.",
+    "review": "Claude Opus 4.8 bridge message 2 PASS for Batch 4 reading remediation; all lullaby/counting excerpts verified, no blockers. DeepSeek not used.",
+    "source_policy": "Added on-site shortened primary readings from verified encyclopedia-attested lullaby and counting-out formulas; no invented lullabies or rhymes."
   },
   "floors": {
     "beauty": 8.5,
@@ -46,10 +46,10 @@
   "reviewer": {
     "agent": "claude",
     "family": "anthropic",
-    "model": "Claude Opus 4.8"
+    "model": "claude-opus-4-8"
   },
   "schema_version": 1,
-  "scored_at": "2026-07-04T17:54:12Z",
+  "scored_at": "2026-07-05T17:49:56Z",
   "scores": {
     "beauty": 8.7,
     "decolonization": 9.0,
