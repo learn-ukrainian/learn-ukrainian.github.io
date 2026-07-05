@@ -73,6 +73,7 @@ def generate_review_candidates(
             out=temp_out,
         )
         validate_source_provenance(payload)
+        screen_auto_merge_lemma_validity(payload)
     finally:
         temp_out.unlink(missing_ok=True)
 
@@ -87,6 +88,81 @@ def generate_review_candidates(
     }
     grow.write_candidates(payload, output_path)
     return payload
+
+
+_USE_DEFAULT_LOOKUP = object()
+
+
+def screen_auto_merge_lemma_validity(
+    payload: dict[str, Any],
+    *,
+    vesum: Any = _USE_DEFAULT_LOOKUP,
+    heritage: Any = _USE_DEFAULT_LOOKUP,
+) -> list[str]:
+    """Demote VESUM-absent ``auto_merge`` candidates to ``needs_review``.
+
+    Defense-in-depth from the 14th-window lesson (PR #4415): the candidates stage
+    auto-merged «благополуччя», which is absent from VESUM and would only have been
+    caught by the ledger reject / the publish-time ``lemma_in_vesum`` self-check.
+    Reuses the conformance gate's policy verbatim — multi-word/proper-noun/deliberate-
+    warning exemptions, Грінченко/ЕСУМ heritage fallback, curated modern-technical
+    allowlist, and silent skip when ``data/vesum.db`` is unavailable (CI parity with
+    the gate itself). Returns the demoted lemmas.
+    """
+    from scripts.audit import validate_atlas_conformance as conformance
+
+    if vesum is _USE_DEFAULT_LOOKUP:
+        vesum = conformance.DEFAULT_VESUM if conformance.DEFAULT_VESUM.exists() else None
+    if heritage is _USE_DEFAULT_LOOKUP:
+        heritage = conformance.DEFAULT_SOURCES_DB if conformance.DEFAULT_SOURCES_DB.exists() else None
+    lookup = conformance._coerce_vesum_lookup(vesum)
+    heritage_lookup = conformance._coerce_heritage_lookup(heritage)
+    should_close_lookup = (
+        isinstance(lookup, conformance.VesumLemmaLookup) and lookup is not vesum
+    )
+    should_close_heritage = (
+        isinstance(heritage_lookup, conformance.HeritageLemmaLookup)
+        and heritage_lookup is not heritage
+    )
+    demoted: list[str] = []
+    try:
+        kept: list[dict[str, Any]] = []
+        for entry in payload.get("auto_merge", []):
+            if not isinstance(entry, dict):
+                kept.append(entry)
+                continue
+            lemma = str(entry.get("lemma") or "").strip()
+            violations: list[conformance.Violation] = []
+            conformance._check_lemma_in_vesum(
+                entry, lemma, lookup, violations, heritage=heritage_lookup
+            )
+            if violations:
+                payload.setdefault("needs_review", []).append(
+                    {
+                        "entry": entry,
+                        "reason": f"lemma_in_vesum:{violations[0].detail}",
+                    }
+                )
+                demoted.append(lemma)
+            else:
+                kept.append(entry)
+        payload["auto_merge"] = kept
+    finally:
+        if should_close_lookup:
+            lookup.close()
+        if should_close_heritage:
+            heritage_lookup.close()
+
+    counts = payload.get("counts")
+    if isinstance(counts, dict) and demoted:
+        counts["auto_merge"] = len(payload.get("auto_merge", []))
+        counts["needs_review"] = len(payload.get("needs_review", []))
+    if demoted:
+        print(
+            "lemma-validity screen demoted "
+            f"{len(demoted)} auto_merge candidate(s) to needs_review: {', '.join(sorted(demoted))}"
+        )
+    return demoted
 
 
 def validate_source_provenance(payload: dict[str, Any]) -> None:
