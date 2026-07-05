@@ -33,6 +33,30 @@ Invocation (`scripts/ai_agent_bridge/__main__.py`): `ask-codex` · `ask-agy --to
 
 **opencode-routed cross-family reviewers (pool · glm · gemma):** opencode is a multi-provider ROUTER — the fleet member is the MODEL, not "opencode" (`ask-opencode <model>` is the generic escape hatch; `ask-pool`/`ask-glm`/`ask-gemma` are the named members). **Live web fact-checking is a HARNESS property (opencode + lightpanda MCP), NOT a model trait — any opencode-hosted model browses** (kubedojo-verified incl. deepseek); don't treat it as unique to pool/glm. Since the coding floor is uniformly high across the fleet, route by the DIFFERENTIATOR (kubedojo 5-agent scorecard 2026-07-04): **pool** = **free** cross-family code review + web-verify *volume*; **glm** = deep security/bug review + **large-context cross-file coherence audits**; grok-build = sharpest final code-review gate; deepseek = cheap all-rounder (+ browses when opencode-hosted); **gemma** (Google Gemma 4 `31b-it`, **cheap** — paid but negligible ~$0.12/$0.35 per M tok; genuinely-$0 `:free` variant exists but rate-limited/less stable, use via `--model` for bursts) = a metered-lane OFFLOAD for **(a) cheap SURFACE review** — reliably flags russicisms/calques, Latin-letter leakage, imperial/decolonization framing — and **(b) SOURCE-CONSTRAINED wiki drafting** — with a full source packet it cites every factual sentence and invents no sources (user probes 2026-07-05, `docs/projects/ua-eval-harness/model-evidence.md`). ⚠️ it is **NOT a sole seminar writer** (adds unsupported details beyond the source packet) and **NOT a sole factual reviewer** (not trustworthy on accuracy yet) — gate seminar/factual work behind a **non-Gemma** source/factual check; Google-family → not a clean reviewer of agy/Gemini work. **pool and glm are NOT for Ukrainian content / prose / pedagogy** — both are code models (glm anglicizes/code-switches, pool is worse); for UK content see the "Ukrainian CONTENT" row above (we author, not translate; cursor is NOT russicism-safe on long UK text). **pool** = poolside.ai `laguna-m.1`, **free** (watch weekly limits on bursts). ⚠️ **glm** = Zhipu `glm-5.2`, **China-hosted (Zhipu/z.ai) → prompt data egresses to China → LOCAL-ONLY: never in CI / automated pipelines or with sensitive data** (`ask-glm` refuses under any CI env var as a backstop); prefer a Western-lab reviewer for top-stakes. Bridge (consult/review) only today — no `delegate.py --agent pool|glm|gemma` dispatch adapter yet, and no V7 `--writer gemma-tools` yet (the opencode→delegate adapter + tool-calling writer harness are scoped follow-ups; a plain OpenRouter chat model has no `sources`-MCP harness).
 
+## Harness vs model — route by BOTH (added 2026-07-05; user order: fleet utilization is paramount)
+
+A fleet member = MODEL × HARNESS. The same model behaves differently in different harnesses, and
+several models are reachable through more than one. Know both axes before routing:
+
+| Harness | What it adds to ANY model it hosts | Models reachable through it | Entry points |
+|---|---|---|---|
+| **hermes** (v0.18.x — full agent platform, NOT a thin wrapper) | SOUL.md project persona · `sources` MCP (30+ UK tools) auto-attached · 11 built-in toolsets (web, browser, terminal, code-exec, files…) · session store w/ FTS5 search · agent loop up to 90 turns | deepseek (API key), gpt-5.5 (codex OAuth), grok (xai OAuth), OpenRouter catalog (qwen, gemma, …) — probe `hermes auth list` | `ab ask-hermes --model <m>` (one-shot Q&A/review) · `delegate.py dispatch --agent deepseek\|grok\|qwen` (execution) · V7 `--writer/--reviewer grok-tools` |
+| **opencode** (multi-provider router) | lightpanda MCP → **live web browsing/fact-check is a HARNESS property here** — any hosted model browses (kubedojo-verified incl. deepseek) | pool (poolside laguna-m.1, free) · glm (⚠️ LOCAL-ONLY) · gemma · deepseek · any OpenRouter model | `ab ask-pool` / `ask-glm` / `ask-gemma` (named) · `ab ask-opencode <model>` (generic) |
+| **native CLIs** (codex, cursor, agy, grok-build, claude) | each CLI's own tool loop + repo context; capabilities differ per CLI | one primary family each | `ab ask-codex` / `ask-cursor` / `ask-agy` / `ask-grok-build` / `ask-claude` · `delegate.py dispatch --agent <a>` |
+
+Consequences:
+- **A model "lacking" a capability may just be in the wrong harness** — deepseek can't browse
+  natively but browses via opencode; any hermes-hosted model gets VESUM/`sources` tools for free.
+- **Limits are per-harness-credential, not per-model**: when a lane quotas out, the same model is
+  often reachable through another harness (e.g. gpt-5.5 native codex CLI ↔ hermes codex-OAuth;
+  deepseek via delegate-hermes ↔ opencode). Check `hermes auth list` + `/api/orient` headroom,
+  then `scripts/config/agent_fallback_substitutions.yaml`.
+- **Hermes is also an automation platform** (cron, kanban, insights, session FTS, gateway,
+  openai-compat proxy) — study + adoption plan: `docs/best-practices/hermes-usage.md` § Automation
+  adoption plan. Prefer harness-level automation over hand-rolled polling where it fits.
+- deepseek still has no dedicated `ask-*`; one-shot deepseek = `ab ask-hermes --model <deepseek-model>`
+  or `ab ask-opencode <deepseek-model>`; execution = `delegate.py dispatch --agent deepseek`.
+
 **Model names here are current-as-of-2026-06-23 EXAMPLES, not constants** — grok-build, cursor, agy, hermes change CLIs/flags/models often. Confirm current capability via this file, `docs/best-practices/agent-activity-matrix.md`, `ab check-model`, the agent's `--help`, or `docs/agent-runtime-guide.md` before relying on a specific string. Worked example: the 2026-06-23 Atlas warning-taxonomy plan — a 3-agent panel (codex, agy-pro, cursor) caught real defects no single seat saw.
 
 ## Claude reviewer-seat economics (2026-06-12)

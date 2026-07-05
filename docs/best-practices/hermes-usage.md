@@ -1,6 +1,7 @@
 # Hermes Agent — usage guide for learn-ukrainian
 
-> **Status:** baseline survey 2026-05-16. Hermes Agent v0.13.0 (2026.5.7).
+> **Status:** baseline survey 2026-05-16 (v0.13.0) · **refreshed 2026-07-05 against live
+> v0.18.0 (2026.7.1)** — auth pool re-probed, § Automation adoption plan added.
 > Replaces "Hermes is a thin LLM wrapper" mental model. It is a full agent
 > platform with 40+ subcommands, a SQLite session store, native delegation,
 > kanban, cron, skills, plugins, and messaging gateways.
@@ -42,18 +43,20 @@ When you run `hermes -z PROMPT -m model`, the system prompt is built from 8 slot
 
 **To verify it's loaded:** check `~/.hermes/sessions/session_*.json` for the most recent session — search for `"system_prompt"` and confirm SOUL.md content appears in slot #1.
 
-## Auth pool (per `hermes auth list`)
+## Auth pool (per `hermes auth list` — re-probed 2026-07-05, v0.18.0)
 
 | Provider | Type | Source | Status |
 |---|---|---|---|
-| anthropic | oauth | claude_code | ⚠️ logged-in flag set but silent-drop (#2036) |
-| copilot | api_key | gh CLI token | ✅ |
-| openai-codex | oauth | device_code | ✅ |
+| deepseek | api_key | env `DEEPSEEK_API_KEY` | ✅ (dirt-cheap lane — the delegate deepseek adapter rides this) |
+| openai-codex | oauth | device_code | ✅ (gpt-5.5 via subscription) |
+| openrouter | api_key | env `OPENROUTER_API_KEY` | ✅ (long-tail catalog: qwen, gemma, …) |
 | xai-oauth | oauth | loopback_pkce (Grok) | ✅ |
 
-**The `auth status PROVIDER` is unreliable for anthropic** — it reports "logged in" but `hermes -z -m claude-opus-4-7` returns empty stdout (issue #2036). Don't trust the status flag; probe with an actual call.
-
-**API-key surface** (env vars Hermes recognizes, per `hermes status`): `OPENAI_API_KEY`, `GEMINI_API_KEY`, `XAI_API_KEY`, `ANTHROPIC_API_KEY`, plus `GH_TOKEN`, `OPENROUTER_API_KEY`, and ~15 others including providers we don't use (DeepSeek, Z.AI/GLM, Kimi, StepFun, MiniMax). All currently UNSET — auth flows exclusively through OAuth pool.
+**Changed since the May baseline:** anthropic and copilot are gone from the pool; DeepSeek and
+OpenRouter now flow through API keys (the May doc's "all API keys UNSET" no longer holds).
+Historical lesson from the anthropic silent-drop era (#2036) stands: **never trust the
+`auth status` flag; probe with an actual call.** Auth changes between refreshes —
+`hermes auth list` is the source of truth, not this table.
 
 ## MCP servers (per `hermes mcp list`)
 
@@ -274,6 +277,30 @@ Per `audit/2026-05-17-judge-calibration-matrix/REPORT.md`:
 **Hermes-vs-native_cli for the same model:** mixed. gpt-5.5 medium with_mcp gets +4.9pp via Hermes; gpt-5.5 high without_mcp gets -66.7pp via Hermes (collapses to 0%). Hermes is not strictly better or worse — depends on model + effort + MCP.
 
 **Without-MCP Hermes cells all errored** (harness bug: calls `hermes mcp` when no MCP attached). To be cleaned in the next harness iteration.
+
+## Automation adoption plan (2026-07-05 — user order: "hermes is more than a harness; use its features for automation")
+
+Prioritized, each item with its trigger condition and owner-lane. Status legend:
+✅ applied · 🟡 approved-pending-implementation · ⬜ evaluate-then-decide.
+
+| P | Feature | Action | Why / trigger | Status |
+|---|---|---|---|---|
+| P0 | `tool_loop_guardrails.hard_stop_enabled: true` | flip in `~/.hermes/config.yaml` | Cheap insurance against runaway tool loops on any hermes-routed model (recommended since May, never actioned). Warn thresholds already tuned; hard-stop at 5 identical failures. | ✅ applied 2026-07-05 |
+| P1 | `fallback_providers` | set `openrouter` as fallback for the deepseek + xai lanes | Expectation #6 (limits happen — handle them): auto-fail-over at the harness level beats every agent hand-implementing retry-elsewhere. Keeps V7 grok-tools + deepseek reviews alive through provider hiccups. | 🟡 next infra PR (config-only; verify with a forced-failure probe) |
+| P1 | `hermes cron` | nightly READ-ONLY deterministic sweep: `track_deterministic_audit` per published level + `hermes insights` snapshot → report file the Monitor API serves | Recurring drift detection without burning an orchestrator session on polling. Read-only: cron jobs must NOT build/commit (build policy unchanged: agent-run, `--worktree`). | 🟡 pilot 1 job, review output for a week, then extend |
+| P1 | Session store FTS5 | recipe: `hermes sessions list` / `hermes sessions show <id>`; grep 21M+ tokens of past writer/judge transcripts for prompt forensics | Every `-z` call is already recorded — free provenance for "what did the writer actually see" debugging (cf. #M-10 build-artifact forensics). | ✅ documented (recipe here; no config change needed) |
+| P2 | `hermes insights` | use INSTEAD of log-grepping for lane utilization stats; feed the monthly quota review | Deterministic usage data per model/session — supports expectation #4 (keep lanes busy) with numbers, not vibes. | ✅ documented |
+| P2 | Kanban / native delegation / gateway / ACP / proxy | **do not adopt now** | Overlap with load-bearing in-house tooling (delegate.py worktree isolation, Monitor API, GH issues as public SSOT, `:8767` proxy). Migration = high blast radius, low marginal value today. Re-evaluate if delegate.py grows a second concurrency bug. | ⬜ stance recorded |
+| P2 | `hermes doctor` + `hermes auth list` probes | add to the services troubleshooting runbook as first-line hermes diagnostics | Faster than re-deriving from raw config every incident. | ✅ documented |
+
+Ground rules for all hermes automation:
+- Cron/automated hermes runs are **read-only analysis lanes** — no commits, no builds, no
+  curriculum writes. Anything that mutates the repo keeps going through `delegate.py` dispatch
+  with worktree isolation + PR + review.
+- Every adopted feature gets a forced-failure verification before we rely on it (#M-4 —
+  a fallback that was never seen failing over is an assumption, not a feature).
+- Config flips in `~/.hermes/config.yaml` are machine-local: record them HERE (this section) so
+  a machine rebuild can replay them; the file itself is not in the repo.
 
 ## References
 
