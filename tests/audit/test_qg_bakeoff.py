@@ -6,7 +6,7 @@ from typing import Any
 
 import pytest
 
-from scripts.audit import llm_reviewer_dispatch, qg_bakeoff, qg_factcheck_scoring
+from scripts.audit import llm_reviewer_dispatch, qg_bakeoff, qg_factcheck_scoring, qg_schema
 
 
 def _fixture() -> qg_bakeoff.BakeoffFixture:
@@ -41,6 +41,51 @@ def _dispatch_result(payload: dict[str, Any], route: llm_reviewer_dispatch.Revie
         tools_used=("sources_query_wikipedia",),
         tool_events=(_event(),),
     )
+
+
+def _bare_dispatch_result(
+    payload: dict[str, Any], route: llm_reviewer_dispatch.ReviewerRoute
+) -> llm_reviewer_dispatch.DispatchResult:
+    """A bare (tool-free) dispatch: no tool calls, no tool events, no grounding."""
+    return llm_reviewer_dispatch.DispatchResult(
+        response_text=json.dumps(payload, ensure_ascii=False),
+        reviewer_model_id=route.reviewer_model_id,
+        reviewer_family=route.reviewer_family,
+        route_name=route.route_name,
+        tool_call_count=0,
+        tools_used=(),
+        tool_events=(),
+    )
+
+
+# The tooled reviewer output that passes theatre + grounding gates (CONFIRMED grounded,
+# UNATTESTED grounded) → model judgment 30 for _fixture().
+_TOOLED_GRODED_PAYLOAD: dict[str, Any] = {
+    "findings": [],
+    "fact_checks": [
+        {
+            "claim": "True claim.",
+            "verdict": "CONFIRMED",
+            "grounding": {
+                "tool": "sources_query_wikipedia",
+                "query": "True claim",
+                "evidence_excerpt": "True claim",
+                "tool_call_id": "call_1",
+            },
+        },
+        {
+            "claim": "Fabricated claim.",
+            "verdict": "UNATTESTED_AFTER_SEARCH",
+            "grounding": {
+                "tool": "sources_query_wikipedia",
+                "query": "True claim",
+                "evidence_excerpt": "Fabricated claim",
+                "tool_call_id": "call_1",
+            },
+        },
+    ],
+    "evidence_gaps": [],
+}
 
 
 def test_fixture_validation_rejects_duplicate_claim_id(tmp_path: Path) -> None:
@@ -311,6 +356,9 @@ def test_run_one_uses_scripted_runner_without_live_invocation(tmp_path: Path) ->
     run = qg_bakeoff.run_one(route, fixture, output_dir=tmp_path, runner=runner)
 
     assert run.artifact["status"] == "ran"
+    assert run.artifact["arm"] == "tooled"
+    assert run.artifact_path.name.endswith("__sample.json")
+    assert not run.artifact_path.name.endswith("__bare.json")
     assert run.artifact["score"]["model_judgment_score"] == 30
     assert run.artifact["score"]["live_admissible_score"] == 30
 
@@ -857,3 +905,292 @@ def test_rescore_recomputes_from_stored_payloads_without_model_calls(tmp_path: P
     assert updated["score"]["missing_claims"] == 0
     assert "rescored_at" in updated
     assert (out / qg_bakeoff.SCORECARD_NAME).exists()
+
+
+# --- Bare control arm (#2156 step 3: harness-lift measurement) --------------
+
+
+def test_bare_prompt_reuses_taxonomy_verbatim_without_tool_mandate() -> None:
+    """Bare prompt: same verdict taxonomy (so scoring is identical) but NO tool mandate."""
+    prompt = qg_bakeoff.build_bare_factcheck_prompt("Веснянки", "Spring songs. Гаї shown.")
+
+    # The verdict set is reused VERBATIM from the live reviewer template — no fork.
+    assert qg_bakeoff._reviewer_verdict_taxonomy() in prompt
+    for verdict in qg_schema.FACT_CHECK_VERDICTS:
+        assert verdict in prompt
+
+    # Same JSON contract (fact_checks with claim + verdict, literal spans).
+    assert "fact_checks" in prompt
+    assert "verbatim span" in prompt
+
+    # No tool/search/grounding MANDATE (those tooled sections must be absent).
+    assert "Required Search Protocol" not in prompt
+    assert "Tool Budget" not in prompt
+    assert "at most 3 tool calls" not in prompt
+    # Bare explicitly permits the can't-verify verdict and judges from own knowledge.
+    assert "UNVERIFIED_INSUFFICIENT_SEARCH" in prompt
+    assert "own knowledge" in prompt
+    assert "ignored by bare scoring" in prompt
+
+
+def test_bare_run_skips_gates_confirmed_without_grounding_passes(tmp_path: Path) -> None:
+    """A payload that WOULD fail the tooled theatre/grounding gates passes bare.
+
+    CONFIRMED with NO grounding and ZERO tool calls trips tooled theatre; bare has
+    no gates by design, so it is scored on model judgment alone.
+    """
+    fixture = _fixture()
+    route = qg_bakeoff.bakeoff_route_for_model("openrouter/google/gemma-4-31b-it")
+    payload = {
+        "fact_checks": [
+            {"claim": "True claim.", "verdict": "CONFIRMED"},
+            {"claim": "Fabricated claim.", "verdict": "UNATTESTED_AFTER_SEARCH"},
+        ]
+    }
+
+    def runner(
+        run_route: llm_reviewer_dispatch.ReviewerRoute,
+        _prompt: str,
+        _task_id: str,
+    ) -> llm_reviewer_dispatch.DispatchResult:
+        return _bare_dispatch_result(payload, run_route)
+
+    run = qg_bakeoff.run_one_bare(route, fixture, output_dir=tmp_path, runner=runner)
+
+    assert run.artifact["status"] == "ran"
+    assert run.artifact["arm"] == "bare"
+    assert run.artifact["workflow_verdict"] == "BARE"
+    assert run.artifact["gate_outcomes"] == {}
+    assert run.artifact["tool_call_count"] == 0
+    assert run.artifact_path.name.endswith("__bare.json")
+    # CONFIRMED-on-true (+20) + UNATTESTED-on-fabricated (+10) = 30, same scorer as tooled.
+    assert run.artifact["score"]["model_judgment_score"] == 30
+    assert run.artifact["score"]["invalid_fact_checks"] == 0
+    assert run.artifact["score"]["inadmissible_positive_verdicts"] == 0
+
+
+def test_bare_strips_nonconforming_findings_and_still_scores(tmp_path: Path) -> None:
+    """Findings are orthogonal to the bare fact-check measurement: stripped + flagged."""
+    fixture = _fixture()
+    route = qg_bakeoff.bakeoff_route_for_model("openrouter/test/bare-findings")
+    payload = {
+        "findings": [{"excerpt": "щось", "message": "bare finding, misses required fields"}],
+        "fact_checks": [
+            {"claim": "True claim.", "verdict": "CONFIRMED"},
+            {"claim": "Fabricated claim.", "verdict": "UNATTESTED_AFTER_SEARCH"},
+        ],
+    }
+
+    def runner(
+        run_route: llm_reviewer_dispatch.ReviewerRoute,
+        _prompt: str,
+        _task_id: str,
+    ) -> llm_reviewer_dispatch.DispatchResult:
+        return _bare_dispatch_result(payload, run_route)
+
+    run = qg_bakeoff.run_one_bare(route, fixture, output_dir=tmp_path, runner=runner)
+
+    assert run.artifact["status"] == "ran"
+    assert run.artifact["findings_schema_invalid"] is True
+    assert run.artifact["payload"]["findings"] == []
+    assert run.artifact["score"]["model_judgment_score"] == 30
+
+
+def test_bare_invalid_fact_checks_is_error_cell(tmp_path: Path) -> None:
+    """An out-of-taxonomy verdict is a real error cell (score = every claim missing)."""
+    fixture = _fixture()
+    route = qg_bakeoff.bakeoff_route_for_model("openrouter/test/bad-bare")
+
+    def runner(
+        run_route: llm_reviewer_dispatch.ReviewerRoute,
+        _prompt: str,
+        _task_id: str,
+    ) -> llm_reviewer_dispatch.DispatchResult:
+        return _bare_dispatch_result({"fact_checks": [{"claim": "x", "verdict": "NOPE"}]}, run_route)
+
+    run = qg_bakeoff.run_one_bare(route, fixture, output_dir=tmp_path, runner=runner)
+
+    assert run.artifact["status"] == "error"
+    assert run.artifact["arm"] == "bare"
+    assert run.artifact["score"]["missing_claims"] == len(fixture.claims)
+
+
+def test_run_one_bare_with_default_runner_is_guarded(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.delenv("CI", raising=False)
+    monkeypatch.delenv("QG_BAKEOFF", raising=False)
+    route = qg_bakeoff.bakeoff_route_for_model("openrouter/google/gemma-4-31b-it")
+
+    with pytest.raises(qg_bakeoff.BakeoffConfigError, match="QG_BAKEOFF=1"):
+        qg_bakeoff.run_one_bare(route, _fixture(), output_dir=tmp_path)
+
+
+def test_arm_both_runs_tooled_and_bare_cells_and_scorecard_shows_lift(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """--arm both runs 2 cells per pair; the scorecard carries the harness-lift column.
+
+    Bare CONFIRMS the fabrication (rationalizes without sources: −80) while the tooled
+    reviewer catches it (+30) → harness_lift = 30 − (−80) = 110, the pitch headline.
+    """
+    monkeypatch.delenv("CI", raising=False)
+    monkeypatch.setenv("QG_BAKEOFF", "1")
+    fixture = _fixture()
+    bare_payload = {
+        "fact_checks": [
+            {"claim": "True claim.", "verdict": "CONFIRMED"},
+            {"claim": "Fabricated claim.", "verdict": "CONFIRMED"},
+        ]
+    }
+
+    def tooled_runner(
+        run_route: llm_reviewer_dispatch.ReviewerRoute,
+        _prompt: str,
+        _task_id: str,
+    ) -> llm_reviewer_dispatch.DispatchResult:
+        return _dispatch_result(_TOOLED_GRODED_PAYLOAD, run_route)
+
+    def bare_runner(
+        run_route: llm_reviewer_dispatch.ReviewerRoute,
+        _prompt: str,
+        _task_id: str,
+    ) -> llm_reviewer_dispatch.DispatchResult:
+        return _bare_dispatch_result(bare_payload, run_route)
+
+    runs = qg_bakeoff.run_matrix(
+        [fixture],
+        ["openrouter/google/gemma-4-31b-it"],
+        output_dir=tmp_path,
+        runner=tooled_runner,
+        bare_runner=bare_runner,
+        arm="both",
+    )
+
+    assert sorted(run.artifact["arm"] for run in runs) == ["bare", "tooled"]
+    names = sorted(p.name for p in tmp_path.glob("*.json"))
+    assert any(n.endswith("__bare.json") for n in names)
+    assert any(n.endswith("__sample.json") for n in names)
+
+    scorecard = (tmp_path / qg_bakeoff.SCORECARD_NAME).read_text(encoding="utf-8")
+    assert "| model | passage | arm |" in scorecard  # runs table gained the arm column
+    assert "Harness Lift With Anchor" in scorecard
+    assert "harness_lift" in scorecard
+    assert "| 110 |" in scorecard  # tooled 30 − bare (−80)
+
+
+def test_arm_bare_after_tooled_scorecard_keeps_both_arms(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Running one arm rebuilds the scorecard from ALL artifacts on disk (both arms)."""
+    monkeypatch.delenv("CI", raising=False)
+    monkeypatch.setenv("QG_BAKEOFF", "1")
+    fixture = _fixture()
+
+    def tooled_runner(
+        run_route: llm_reviewer_dispatch.ReviewerRoute,
+        _prompt: str,
+        _task_id: str,
+    ) -> llm_reviewer_dispatch.DispatchResult:
+        return _dispatch_result(_TOOLED_GRODED_PAYLOAD, run_route)
+
+    def bare_runner(
+        run_route: llm_reviewer_dispatch.ReviewerRoute,
+        _prompt: str,
+        _task_id: str,
+    ) -> llm_reviewer_dispatch.DispatchResult:
+        return _bare_dispatch_result(
+            {"fact_checks": [{"claim": "True claim.", "verdict": "CONFIRMED"}]}, run_route
+        )
+
+    pins = ["openrouter/google/gemma-4-31b-it"]
+    qg_bakeoff.run_matrix([fixture], pins, output_dir=tmp_path, runner=tooled_runner, arm="tooled")
+    qg_bakeoff.run_matrix([fixture], pins, output_dir=tmp_path, bare_runner=bare_runner, arm="bare")
+
+    scorecard = (tmp_path / qg_bakeoff.SCORECARD_NAME).read_text(encoding="utf-8")
+    # both arms appear in the totals even though only bare ran last.
+    assert "| tooled |" in scorecard
+    assert "| bare |" in scorecard
+
+
+def test_rescore_covers_both_arms_and_backfills_arm(tmp_path: Path) -> None:
+    """Rescore recomputes BOTH arms and backfills ``arm`` on legacy tooled artifacts."""
+    fixture = _fixture()
+    fixtures_dir = tmp_path / "fx"
+    fixtures_dir.mkdir()
+    (fixtures_dir / f"{fixture.slug}.json").write_text(
+        json.dumps(
+            {
+                "slug": fixture.slug,
+                "title": fixture.title,
+                "passage_md": fixture.passage_md,
+                "claims": [
+                    {
+                        "claim_id": c.claim_id,
+                        "claim": c.claim,
+                        "is_true": c.is_true,
+                        "fabrication_class": c.fabrication_class,
+                        "distractor_evidence": c.distractor_evidence,
+                    }
+                    for c in fixture.claims
+                ],
+            },
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+    out = tmp_path / "out"
+    out.mkdir()
+    # legacy tooled artifact: NO arm field, stale score.
+    (out / "m__sample.json").write_text(
+        json.dumps(
+            {
+                "schema_version": qg_bakeoff.RUN_SCHEMA_VERSION,
+                "fixture": {"slug": fixture.slug, "title": fixture.title, "claim_count": 2},
+                "model": {"pin": "openrouter/test/m"},
+                "gate_outcomes": {"grounding": {"invalid_fact_checks": 0, "inadmissible_positive_verdicts": 0}},
+                "payload": {
+                    "fact_checks": [
+                        {"claim": "True claim.", "verdict": "CONFIRMED"},
+                        {"claim": "Fabricated claim.", "verdict": "UNATTESTED_AFTER_SEARCH"},
+                    ]
+                },
+                "score": {"model_judgment_score": -999},
+            },
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+    # bare artifact: arm=bare, no gate_outcomes at all.
+    (out / "m__sample__bare.json").write_text(
+        json.dumps(
+            {
+                "schema_version": qg_bakeoff.RUN_SCHEMA_VERSION,
+                "arm": "bare",
+                "fixture": {"slug": fixture.slug, "title": fixture.title, "claim_count": 2},
+                "model": {"pin": "openrouter/test/m"},
+                "payload": {
+                    "fact_checks": [
+                        {"claim": "True claim.", "verdict": "CONFIRMED"},
+                        {"claim": "Fabricated claim.", "verdict": "CONFIRMED"},
+                    ]
+                },
+                "score": {"model_judgment_score": -999},
+            },
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+
+    n = qg_bakeoff.rescore_artifacts(out, fixtures_dir)
+
+    assert n == 2
+    tooled = json.loads((out / "m__sample.json").read_text(encoding="utf-8"))
+    bare = json.loads((out / "m__sample__bare.json").read_text(encoding="utf-8"))
+    assert tooled["arm"] == "tooled"  # backfilled
+    assert bare["arm"] == "bare"  # preserved
+    assert tooled["score"]["model_judgment_score"] == 30  # 20 + 10
+    assert bare["score"]["model_judgment_score"] == -80  # 20 + (−100) CONFIRMED-on-fabricated
+    assert bare["score"]["invalid_fact_checks"] == 0
+    scorecard = (out / qg_bakeoff.SCORECARD_NAME).read_text(encoding="utf-8")
+    assert "Harness Lift With Anchor" in scorecard
