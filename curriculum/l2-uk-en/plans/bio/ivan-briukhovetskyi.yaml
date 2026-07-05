@@ -117,7 +117,7 @@ sequence: 40
 slug: ivan-briukhovetskyi
 subtitle: 'Ivan Briukhovetskyi: The Black Council and the Moscow Articles'
 title: 'Іван Брюховецький: Чорна рада і Московські статті'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: загальна козацька рада за участю поспільства («черні») під Ніжином 1663 року, на якій Брюховецького обрали гетьманом
   pos: ж.
@@ -147,3 +147,19 @@ vocabulary_hints:
   pos: ж.
   word: чернь
 word_target: 5000
+
+readings:
+- hosting: reading-needed
+  language: uk
+  rationale: "Детальний аналіз політичного шляху Брюховецького: від антистаршинської демагогії до радикального антимосковського повстання."
+  source: "Енциклопедія історії України"
+  title: "Брюховецький Іван Мартинович"
+  type: encyclopedia
+  url: "http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Briukhovetsky_I"
+- hosting: reading-needed
+  language: uk
+  rationale: "Розбір Московських статей 1665 року — угоди, яка підірвала автономію Гетьманщини та стала каталізатором соціального вибуху."
+  source: "Енциклопедія історії України"
+  title: "Московські статті 1665"
+  type: encyclopedia
+  url: "http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Moskovski_statti_1665"
