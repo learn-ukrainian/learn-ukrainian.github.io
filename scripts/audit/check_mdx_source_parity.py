@@ -236,14 +236,6 @@ def main(argv: list[str] | None = None) -> int:
     parser = build_parser()
     args = parser.parse_args(argv)
 
-    if os.environ.get("MDX_PARITY_BULK_REGEN") == "1":
-        # Check if the number of MDX files changed is > 50 (or just skip per brief)
-        # Brief says: "if a commit changes >50 MDX files AND the commit message contains [regen-mdx] or [bulk-regen], allow through"
-        # Since CI sets the env var conditionally based on commit message, we can just skip if set.
-        # But we should still verify >50 files changed if possible, though the brief says "Handles the bulk-regen exemption via env var MDX_PARITY_BULK_REGEN=1 (CI sets it conditionally)"
-        # Let's enforce the >50 rule here if we have changed files list.
-        pass
-
     changed_files = []
     mdx_files = []
     base = None
@@ -289,8 +281,11 @@ def main(argv: list[str] | None = None) -> int:
             print(f"{path}: {msg}")
         return 1 if violations else 0
 
-    if os.environ.get("MDX_PARITY_BULK_REGEN") == "1" and len(mdx_files) > 50:
-        print("Skipping due to MDX_PARITY_BULK_REGEN=1 and >50 MDX files changed.")
+    # Accept "1"/"true" — a GitHub Actions boolean expression yields `true`,
+    # and the historical unparenthesized env expression shipped that for the
+    # title-tag paths (see PR #4399 incident).
+    if os.environ.get("MDX_PARITY_BULK_REGEN", "").lower() in {"1", "true"} and len(mdx_files) > 50:
+        print("Skipping due to MDX_PARITY_BULK_REGEN and >50 MDX files changed.")
         return 0
 
     violations = check_parity(mdx_files, set(changed_files), base=base, cached=cached)
