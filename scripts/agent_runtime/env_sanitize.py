@@ -88,6 +88,15 @@ _PROVIDER_SAFE_NAME_ALLOWLIST = {
     "codex": {
         "CODEX_HOME",
     },
+    "deepseek": {
+        "HERMES_HOME",
+    },
+    "grok": {
+        "HERMES_HOME",
+    },
+    "qwen": {
+        "HERMES_HOME",
+    },
 }
 
 

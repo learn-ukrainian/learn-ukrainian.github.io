@@ -97,6 +97,7 @@ def list_delegate_tasks(
                 "model": task.get("model"),
                 "effort": task.get("effort"),
                 "cli_version": task.get("cli_version"),
+                "substitution": task.get("substitution"),
                 "status": derived_status,
                 "started_at": task.get("started_at"),
                 "duration_s": task.get("duration_s"),

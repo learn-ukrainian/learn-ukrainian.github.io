@@ -166,7 +166,7 @@ def _resolve_effort_from_plan(agent_name: str, plan: InvocationPlan) -> str | No
         return _arg_after(plan.cmd, "--effort")
     if agent_name == "gemini":
         return None
-    if agent_name in ("grok", "deepseek"):
+    if agent_name in ("grok", "deepseek", "qwen"):
         # Hermes -z mode: effort is config-scoped (~/.hermes/config.yaml),
         # not surfaced on the command line. Adapter logs a warning when the
         # caller's request disagrees with the config — telemetry has nothing
@@ -186,7 +186,7 @@ def _resolve_model_from_defaults(agent_name: str, requested_model: str | None) -
             _gemini_settings(),
             ("model", "defaultModel", "selectedModel", "modelName", "default_model"),
         )
-    if agent_name in ("grok", "deepseek"):
+    if agent_name in ("grok", "deepseek", "qwen"):
         return _default_model_for(agent_name)
     if agent_name == "claude":
         return _default_model_for(agent_name)

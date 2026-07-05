@@ -658,6 +658,7 @@ def test_dispatch_initial_state_includes_resolved_telemetry(tmp_tasks_dir):
     assert state["model"] == "gpt-5.5"
     assert state["effort"] == "high"
     assert state["cli_version"] == "0.123.0"
+    assert state["substitution"] is None
 
 
 def test_dispatch_creates_logs_subdir_for_slashed_task_id(tmp_tasks_dir, monkeypatch):
@@ -975,6 +976,13 @@ def test_run_worker_emits_one_terminal_dispatch_event_with_cost_fields(
             "model": "text-embedding-3-small",
             "effort": "unknown",
             "cli_version": "test",
+            "substitution": {
+                "requested_provider": "deepseek",
+                "requested_model": "deepseek-v4-pro",
+                "actual_provider": "openrouter",
+                "actual_model": "deepseek/deepseek-v3.2",
+                "substituted": True,
+            },
             "usage_record": {"tokens": 1_000},
         },
     )()
@@ -1008,6 +1016,10 @@ def test_run_worker_emits_one_terminal_dispatch_event_with_cost_fields(
     assert event["prompt_chars"] == 2
     assert event["response_chars"] == 4
     assert event["tokens"] == 1_000
+    assert event["substitution"]["substituted"] is True
+    state = delegate._read_state(state_path)
+    assert state is not None
+    assert state["substitution"]["actual_provider"] == "openrouter"
     assert event["cost_usd"] == pytest.approx(0.00002)
     assert event["billing_model"] == "per_token"
     assert event["cost_provenance"] == "priced"

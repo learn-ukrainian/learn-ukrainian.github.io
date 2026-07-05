@@ -608,6 +608,7 @@ def _build_usage_record(
     stalled: bool,
     stderr_excerpt: str | None,
     tokens: int | None,
+    substitution: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Assemble the usage record dict per design doc § 4.5 schema."""
     # Ensure unbounded strings are capped so the JSON stays under POSIX PIPE_BUF (4KB)
@@ -617,7 +618,7 @@ def _build_usage_record(
     safe_provider_session_id = session_id[:100] if session_id else None
     telemetry_source = os.environ.get("LU_TELEMETRY_SOURCE")
 
-    return {
+    record = {
         "ts": datetime.now(UTC).isoformat(),
         "agent": agent,
         "entrypoint": entrypoint,
@@ -642,6 +643,67 @@ def _build_usage_record(
         "stderr_excerpt": (stderr_excerpt or "")[:500] if stderr_excerpt else None,
         "tokens": tokens,
     }
+    safe_substitution = _safe_substitution_record(substitution)
+    if safe_substitution is not None:
+        record["substitution"] = safe_substitution
+    return record
+
+
+def _safe_substitution_record(
+    substitution: dict[str, Any] | None,
+) -> dict[str, Any] | None:
+    """Return a bounded, non-secret substitution payload for persistence."""
+    if not isinstance(substitution, dict):
+        return None
+    safe: dict[str, Any] = {}
+    for key in (
+        "requested_provider",
+        "requested_model",
+        "actual_provider",
+        "actual_model",
+        "source",
+        "marker",
+    ):
+        value = substitution.get(key)
+        safe[key] = str(value)[:200] if value is not None else None
+    safe["substituted"] = bool(substitution.get("substituted"))
+    return safe
+
+
+def _emit_substitution_event(
+    *,
+    agent_name: str,
+    entrypoint: str,
+    task_id: str | None,
+    cwd: Path,
+    model: str,
+    substitution: dict[str, Any] | None,
+    event_sink: Callable[..., None] | None,
+) -> None:
+    """Emit a telemetry event when a harness-level provider/model changed."""
+    safe_substitution = _safe_substitution_record(substitution)
+    if not safe_substitution or not safe_substitution.get("substituted"):
+        return
+    payload = {
+        "agent": agent_name,
+        "entrypoint": entrypoint,
+        "task_id": task_id[:100] if task_id else None,
+        "cwd": str(cwd)[-250:] if cwd else "",
+        "model": model,
+        "substitution": safe_substitution,
+    }
+    if event_sink is not None:
+        with contextlib.suppress(Exception):
+            event_sink("agent_runtime_substitution", **payload)
+    try:
+        try:
+            from telemetry.emit import emit_event
+        except ImportError:  # pragma: no cover - package import path
+            from scripts.telemetry.emit import emit_event
+
+        emit_event("agent_runtime_substitution", payload)
+    except Exception:
+        pass
 
 
 @dataclass(frozen=True)
@@ -1131,6 +1193,7 @@ def _execute_invocation_plan(
                 session_id=parse.session_id,
                 tokens=parse.tokens,
                 tool_calls=parse.tool_calls,
+                substitution=parse.substitution,
             )
         return _ExecutionOutcome(
             parse=parse,
@@ -1205,6 +1268,7 @@ def _raise_for_kill_reason(
     initial_response_timeout: int | None,
     stall_timeout: int,
     hard_timeout: int,
+    event_sink: Callable[..., None] | None = None,
 ) -> None:
     """Map watchdog kill reasons to typed runtime errors + usage records."""
     if not kill_reason:
@@ -1230,6 +1294,16 @@ def _raise_for_kill_reason(
             stalled=True,
             stderr_excerpt=parse.stderr_excerpt or execution.stderr_text[:500],
             tokens=None,  # TODO(#3153 PR2): extract tokens for this result path.
+            substitution=parse.substitution,
+        )
+        _emit_substitution_event(
+            agent_name=agent_name,
+            entrypoint=entrypoint,
+            task_id=task_id,
+            cwd=cwd,
+            model=model,
+            substitution=parse.substitution,
+            event_sink=event_sink,
         )
         write_record(record)
         raise AgentStalledError(
@@ -1265,6 +1339,16 @@ def _raise_for_kill_reason(
                 )
             ),
             tokens=None,  # TODO(#3153 PR2): extract tokens for this result path.
+            substitution=parse.substitution,
+        )
+        _emit_substitution_event(
+            agent_name=agent_name,
+            entrypoint=entrypoint,
+            task_id=task_id,
+            cwd=cwd,
+            model=model,
+            substitution=parse.substitution,
+            event_sink=event_sink,
         )
         write_record(record)
         raise AgentStalledError(
@@ -1296,6 +1380,16 @@ def _raise_for_kill_reason(
                 or tail_liveness_file_for_debug(execution.liveness_paths)[:500]
             ),
             tokens=None,  # TODO(#3153 PR2): extract tokens for this result path.
+            substitution=parse.substitution,
+        )
+        _emit_substitution_event(
+            agent_name=agent_name,
+            entrypoint=entrypoint,
+            task_id=task_id,
+            cwd=cwd,
+            model=model,
+            substitution=parse.substitution,
+            event_sink=event_sink,
         )
         write_record(record)
         raise AgentTimeoutError(agent_name, hard_timeout)
@@ -1817,6 +1911,7 @@ def invoke(
             initial_response_timeout=initial_response_timeout,
             stall_timeout=stall_timeout,
             hard_timeout=hard_timeout,
+            event_sink=event_sink,
         )
 
     if parse.rate_limited:
@@ -1826,10 +1921,29 @@ def invoke(
     else:
         outcome = "error"
 
+    substitution = parse.substitution
+    record_model = telemetry.model
+    if (
+        substitution
+        and substitution.get("substituted")
+        and substitution.get("actual_model")
+    ):
+        record_model = str(substitution["actual_model"])[:200]
+
+    _emit_substitution_event(
+        agent_name=agent_name,
+        entrypoint=entrypoint,
+        task_id=task_id,
+        cwd=effective_cwd,
+        model=record_model,
+        substitution=substitution,
+        event_sink=event_sink,
+    )
+
     record = _build_usage_record(
         agent=agent_name,
         entrypoint=entrypoint,
-        model=telemetry.model,
+        model=record_model,
         mode=mode,
         task_id=task_id,
         cwd=effective_cwd,
@@ -1843,20 +1957,21 @@ def invoke(
         stalled=False,
         stderr_excerpt=parse.stderr_excerpt,
         tokens=parse.tokens,
+        substitution=substitution,
     )
     write_record(record)
 
     if parse.rate_limited:
         raise RateLimitedError(
             agent_name,
-            telemetry.model,
+            record_model,
             reason=(parse.stderr_excerpt or "")[:200],
         )
 
     return Result(
         ok=parse.ok,
         agent=agent_name,
-        model=telemetry.model,
+        model=record_model,
         mode=mode,
         effort=telemetry.effort,
         cli_version=telemetry.cli_version,
@@ -1870,4 +1985,5 @@ def invoke(
         usage_record=record,
         tool_calls=list(parse.tool_calls),
         tool_calls_total=getattr(parse, "tool_calls_total", len(parse.tool_calls)),
+        substitution=substitution,
     )
