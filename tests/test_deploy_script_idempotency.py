@@ -14,6 +14,7 @@ CHECK_SCRIPT = Path("scripts/check_rules_deployment.sh")
 DRIFT_TARGET = Path(".claude/rules/pipeline.md")
 CODEX_HOOK_TARGET = Path(".codex/hooks/session-setup.sh")
 UNSCOPED_RULE_FILES = (
+    "operator-expectations.md",
     "critical-rules.md",
     "non-negotiable-rules.md",
     "workflow.md",

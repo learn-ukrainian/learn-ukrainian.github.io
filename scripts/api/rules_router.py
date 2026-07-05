@@ -63,6 +63,7 @@ def _matches_etag(if_none_match: str | None, digest: str) -> bool:
 # this order is a user-visible contract change — agents that cache the
 # concatenated blob by hash will see a new hash and refetch.
 RULE_SOURCES: tuple[str, ...] = (
+    "agents_extensions/shared/rules/operator-expectations.md",
     "agents_extensions/shared/rules/critical-rules.md",
     "agents_extensions/shared/rules/non-negotiable-rules.md",
     "agents_extensions/shared/rules/workflow.md",

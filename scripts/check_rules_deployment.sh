@@ -98,7 +98,8 @@ check_pair \
     "rules/workflow.md" \
     "rules/delegate-must-use-worktree.md" \
     "rules/cli-help-standard.md" \
-    "rules/model-assignment.md" || drift=1
+    "rules/model-assignment.md" \
+    "rules/operator-expectations.md" || drift=1
 check_pair \
     "agents_extensions/shared" \
     ".agent" \
