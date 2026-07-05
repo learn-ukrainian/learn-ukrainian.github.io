@@ -1,6 +1,7 @@
 # Cost-Aware Curriculum QG Workflow
 
-Issue: [#4310](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4310)
+Issues: [#4310](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4310),
+[#4311](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4311)
 
 `scripts/audit/qg_workflow.py` composes the #4308 scorer adapters and the #4309
 reviewer helpers into one canonical `ua_contact_quality_evidence.v1` record
@@ -23,9 +24,27 @@ is used for richer diagnostics.
 
 Seminar-family modules must be eligible for Tier 2 because factual,
 decolonization, register, and living-subject risks are not fully covered by
-Tier 0/1. Live Tier-2 dispatch remains flag-off until #4370 calibration lands;
-callers must provide a precomputed reviewer response, reuse a cache hit, or run
-with dry-run estimates only.
+Tier 0/1. Live Tier-2 dispatch is available only through
+`--live-reviewer`; broad execution remains gated by dry-run approval, canaries,
+budget rails, and explicit human spend sign-off.
+
+## Live Dispatcher
+
+`scripts/audit/llm_reviewer_dispatch.py` owns live reviewer routing:
+
+- B1+ surface review routes to `ask-gemma` with
+  `openrouter/google/gemma-4-31b-it`.
+- Seminar, contested-gold, and factual-sensitive review routes to `ask-agy
+  --to-model gemini-3.1-pro-high`.
+- Escalation/disputed spot audit is Claude-only and is not the batch default.
+- DeepSeek/Hermes/OpenRouter reviewer routes are hard-banned for automated
+  LLM-QG batches.
+
+Live review also enforces cross-family lineage. The dispatcher resolves author
+family from explicit `--author-family`, committed metadata, or git history. If
+lineage is unavailable, the live call fails closed. If the reviewer family
+matches the author family, the call is blocked as self-review; there is no
+silent fallback to a same-family reviewer.
 
 ## Cost Controls
 
@@ -40,15 +59,25 @@ Use `--dry-run` before broad reviewer spend:
 
 Dry-run writes nothing. It reports per-tier module counts, Tier-1 gold-row
 matches, and Tier-2 token/cost estimates bucketed by level-policy family. The
-current estimator uses prompt size with profile-specific completion budgets;
-future telemetry can replace the estimator without changing the evidence
-contract.
+dry-run JSON also contains a gateable artifact with:
+
+- exact module list and chosen reviewer route/model,
+- per-tier counts,
+- warm/cold/stale cache estimate,
+- expected spend by reviewer model,
+- stale-cache count,
+- exact non-dry run command.
+
+The current estimator uses prompt size with route-specific completion budgets.
+Use `--calibrate --live-reviewer` on a small, approved probe set before trusting
+broad frontier totals; calibration reports an observed/estimated cost factor.
 
 Tier-2 budgets are checked before any reviewer call:
 
 - `--max-llm-calls` is the primary per-run ceiling.
-- `--max-cost-usd` caps the whole run.
-- `--max-daily-cost-usd` is a local safety rail.
+- `--max-cost-usd` caps the whole run and is required for live non-dry runs.
+- `--max-daily-cost-usd` is a local safety rail persisted under
+  `data/telemetry/`.
 - `--max-module-cost-usd` blocks pathological prompts.
 
 Budget exhaustion is explicit: the evidence carries
@@ -57,9 +86,14 @@ Budget exhaustion is explicit: the evidence carries
 schema-valid by using top-level `verdict: FAIL` and `terminal_verdict: FAIL`
 when fail-closed mode is active.
 
-Broad Tier-2 batches require a passing canary result from
-`scripts/audit/llm_qg_canaries.py` before reviewer spend. Dry-run does not need
-the canary because it does not call the reviewer.
+Any live Tier-2 call requires a passing dispatcher canary artifact for the same
+level, gate version, prompt template hash, reviewer model, reviewer family, and
+route. Mixed-level batches need one canary artifact per level family. Dry-run
+does not need the canary because it does not call the reviewer.
+
+The batch aborts and marks remaining records `INCOMPLETE` when any hard rail
+fires: canary failure, self-review, parse/schema failure rate above 5%,
+provider error rate above 10%, or observed cost above 125% of the estimate.
 
 ## Cache Key
 
