@@ -2,7 +2,7 @@
   role: article
   source_ref: "docs/resources/ulp-articles-index.yaml: /prepositions-cases/"
   url: "https://www.ukrainianlessons.com/prepositions-cases/"
-  notes: "Learner-facing overview of Ukrainian prepositions and the cases they require."
+  notes: "Overview of Ukrainian prepositions and the cases they require."
 - title: "ULP: Genitive Case (Родовий відмінок)"
   role: article
   source_ref: "docs/resources/ulp-articles-index.yaml: /genitive-case/"
@@ -17,4 +17,4 @@
   role: article
   source_ref: "docs/resources/talkukrainian/talkukrainian_db.json: tu-034"
   url: "https://talkukrainian.com/prepositions/"
-  notes: "Short learner-facing guide for broader review of common Ukrainian prepositions."
+  notes: "Short guide for broader review of common Ukrainian prepositions."

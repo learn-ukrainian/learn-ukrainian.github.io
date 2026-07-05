@@ -1,0 +1,69 @@
+{
+  "assembled_mdx_sha256": "15b1ecb453283dc30047a5ce91aa14d6e16fec5da4c7996c2b4975379ed6ae57",
+  "content_hash": {
+    "algorithm": "sha256",
+    "basis": "lesson_sources_v2",
+    "digest": "ff4dc12ab44d84e81645989b8b5e0f47c81dc84ab2d5658ab487529ab8f3ca95",
+    "files": [
+      {
+        "path": "curriculum/l2-uk-en/plans/folk/pysankarstvo.yaml",
+        "sha256": "dfbcd46f985cacbc4fe8dfb5fcd5d34e46b78d29a2aa08e803276cc8020a8e7d"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/pysankarstvo/module.md",
+        "sha256": "f6aef2754fa051255bceb2f05e4b53cf6744c473255f068a412b63fd554af03f"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/pysankarstvo/activities.yaml",
+        "sha256": "c1fdd6b447480ec67c12ebf44faef73b3a6b3c925b633c5d4f0e680c088c49ed"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/pysankarstvo/vocabulary.yaml",
+        "sha256": "3999f6753601c687e7c2426910ba3ddf23d7d0ecd19a8e698356168be88e7dd8"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/pysankarstvo/resources.yaml",
+        "sha256": "26587e47f1e0d4d21b752ebbd146968396d4879cfa9531a0a67f0488593b4783"
+      }
+    ]
+  },
+  "evidence": {
+    "decolonization": "Avoids unchanged-pagan-code and single-canonical-style claims, distinguishes archaeological ceramic eggs from preserved bird-egg and modern practice evidence, and frames the 2024 UNESCO Ukraine-Estonia inscription without dissolving Ukrainian authorship.",
+    "pedagogy": "C1+ seminar prose separates wax-resist technique, egg-name distinctions, motif systems, regional schools, Easter gift exchange, museum and diaspora layers, with inline and workbook tasks grounded in dossier evidence.",
+    "review": "Claude Opus 4.8 independent review found one blocker, the unattested vocabulary item pysancharka. The item and prose occurrence were removed/replaced with attested pysankarka, MDX was regenerated, and follow-up local validators and scans confirmed no matches remain.",
+    "source_policy": "Dossier-supported claims only; no invented museum objects, images, artifact IDs, workshop sequences, or popular sayings. Two early-modern Easter fragments were verified under Antolohiia chunk 21c791c4_c0098 before embedding and marked as corpus-checked."
+  },
+  "floors": {
+    "beauty": 8.5,
+    "decolonization": 9.0,
+    "engagement": 8.5,
+    "naturalness": 8.5,
+    "pedagogical": 8.5,
+    "tone": 8.5
+  },
+  "profile": "folk_promote_v1",
+  "review_artifact": null,
+  "reviewer": {
+    "agent": "claude",
+    "family": "anthropic",
+    "model": "claude-opus-4-8"
+  },
+  "schema_version": 1,
+  "scored_at": "2026-07-04T22:53:41Z",
+  "scores": {
+    "beauty": 8.8,
+    "decolonization": 9.1,
+    "engagement": 8.7,
+    "naturalness": 8.7,
+    "pedagogical": 8.8,
+    "tone": 8.8
+  },
+  "slug": "pysankarstvo",
+  "track": "folk",
+  "verdict": "PASS",
+  "writer": {
+    "agent": "codex",
+    "family": "openai",
+    "model": "gpt-5"
+  }
+}

@@ -2,7 +2,7 @@
   role: article
   source_ref: "docs/resources/ulp-article-mappings.yaml: euphony"
   url: "https://www.ukrainianlessons.com/euphony/"
-  notes: "Learner-facing guide to у/в, і/й, and з/із/зі alternations."
+  notes: "Guide to у/в, і/й, and з/із/зі alternations."
 - title: "МійКлас: Основні випадки чергування у-в, і-й, з-із-зі"
   role: article
   source_ref: "docs/resources/miyklas-resources.yaml: a1.euphony"

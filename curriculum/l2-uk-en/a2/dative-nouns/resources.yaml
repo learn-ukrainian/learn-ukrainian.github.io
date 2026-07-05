@@ -2,7 +2,7 @@
   role: article
   source_ref: "docs/resources/external_resources.yaml: a2-dative-nouns"
   url: "https://www.ukrainianlessons.com/intro-cases/"
-  notes: "Learner-facing overview of Ukrainian cases for reviewing dative noun roles."
+  notes: "Overview of Ukrainian cases for reviewing dative noun roles."
 - title: "Dobra Forma: Dative Case - Feminine Nouns"
   role: article
   source_ref: "docs/resources/dobraforma/dobraforma_db.json: df-036"

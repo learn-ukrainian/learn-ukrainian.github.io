@@ -2,12 +2,12 @@
   role: article
   source_ref: "docs/resources/ulp-articles-index.yaml: /ukrainian-cases-chart/"
   url: "https://www.ukrainianlessons.com/ukrainian-cases-chart/"
-  notes: "Learner-facing overview of the case system for students who want a map before A2 work begins."
+  notes: "Overview of the case system for students who want a map before diving in."
 - title: "МійКлас: Основні випадки чергування у-в, і-й, з-із-зі"
   role: article
   source_ref: "docs/resources/miyklas-resources.yaml: a1.euphony"
   url: "https://www.miyklas.com.ua/p/ukrainska-mova/5-klas/fonetika-grafika-orfoepiia-orfografiia-14565/osnovni-vipadki-cherguvannia-u-v-i-i-z-iz-zi-pravila-milozvuchnosti-41612"
-  notes: "Ukrainian-language reference for у/в, і/й, and з/із/зі alternations without exposing internal course notes."
+  notes: "Ukrainian-language reference for у/в, і/й, and з/із/зі alternations."
 - title: "ULP: Verb Aspect in Ukrainian"
   role: article
   source_ref: "docs/resources/ulp-articles-index.yaml: /verb-aspect-in-ukrainian-differences/"

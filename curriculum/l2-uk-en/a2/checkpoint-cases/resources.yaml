@@ -2,7 +2,7 @@
   role: article
   source_ref: "docs/resources/external_resources.yaml: a2-checkpoint-cases"
   url: "https://www.ukrainianlessons.com/intro-cases/"
-  notes: "Learner-facing overview for reviewing the full case system."
+  notes: "Overview for reviewing the full case system."
 - title: "ULP: Ukrainian Cases Chart"
   role: article
   source_ref: "docs/resources/ulp-articles-index.yaml: /ukrainian-cases-chart/"
@@ -22,4 +22,4 @@
   role: practice
   source_ref: "docs/resources/external_resources.yaml: a2-checkpoint-cases"
   url: "https://talkukrainian.com/grammatical-cases/"
-  notes: "Public learner-facing case practice page for additional checkpoint review."
+  notes: "Public case practice page for additional checkpoint review."
