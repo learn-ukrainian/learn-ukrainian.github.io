@@ -81,6 +81,14 @@ persona:
   role: Модератор семінару, що розглядає Немирича не як "пророка", а як трагічну фігуру, чиї аристократичні ідеали були несумісні з реаліями козацької революції.
   voice: Lypynsky-School-Historian
 phase: BIO
+readings:
+- title: 'Немирич Юрій Стефанович'
+  source: 'Енциклопедія історії України'
+  url: 'https://www.history.org.ua/?termin=Nemyrych_Yu'
+  type: reference
+  language: uk
+  hosting: link-only
+  note: 'Енциклопедична стаття про політичну та інтелектуальну діяльність Юрія Немирича.'
 references:
 - title: Yuriy Nemyrych
   note: Compiled from Hrushevsky, Lypynsky, Plokhy — primary source analysis, historiography
@@ -100,7 +108,7 @@ sequence: 36
 slug: yuriy-nemyrych
 subtitle: 'Yuriy Nemyrych: The Architect of an Unbuilt State'
 title: 'Юрій Немирич: Архітектор незбудованої держави'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: Пропонована козацькою старшиною назва для третьої, рівноправної Речі Посполитій, частини федерації за Гадяцьким договором.
   pos: с.
