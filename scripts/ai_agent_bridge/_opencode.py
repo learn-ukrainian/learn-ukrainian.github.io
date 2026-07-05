@@ -64,22 +64,32 @@ GLM_DEFAULT_TIMEOUT_S = 1800
 # China-egress constraint forbids invoking GLM.
 _CI_ENV_VARS = ("CI", "GITHUB_ACTIONS", "GITLAB_CI", "BUILDKITE", "JENKINS_URL")
 
-# Google Gemma 4 fleet member (Apr 2026, Apache-2.0), reached FREE via the
-# OpenRouter provider under opencode. The 31B dense variant is the default; the
-# 26B-A4B MoE (#1 on the lang-uk leaderboard) is reachable via ``--model``.
+# Google Gemma 4 fleet member (Apr 2026, Apache-2.0), reached via the OpenRouter
+# provider under opencode. Default pin = the 31B dense PAID endpoint.
 # Western-hosted + permissively licensed → NO egress guard (unlike GLM).
 #
-# ROLE (bakeoff evidence 2026-07-04, docs/projects/ua-eval-harness/model-evidence.md):
-# a FREE Google-family lane that is deterministically surface-clean on Ukrainian
-# writing (VESUM-valid, 0 russicisms in the 31B probe) — use it to OFFLOAD
-# surface-level UK writing / russicism review and code review from the METERED
-# lanes (Claude / Codex). Cross-family to OpenAI / Anthropic / DeepSeek.
+# COST (OpenRouter, verified 2026-07-05): the pinned ``-it`` endpoint is PAID but
+# negligible — ~$0.12 / $0.35 per MILLION prompt / completion tokens (a module
+# review is fractions of a cent). A genuinely-$0 ``:free`` endpoint also exists
+# (``openrouter/google/gemma-4-31b-it:free``) but free-tier endpoints are
+# rate-limited (per-min + per-day caps) and less stable → prefer it only via
+# ``--model`` for high-volume / non-critical bursts, NOT as the default. (Do not
+# call this lane "free" — the default pin costs money, just very little.)
 #
-# ⚠️ HARD FACTUALITY CAVEAT: Gemma FABRICATES facts on seminar / factual content
-# (the 31B probe invented folk-culture claims while staying surface-clean) —
-# surface-clean ≠ factually accurate. NEVER use it as a fact-checker or for
-# factual / seminar CONTENT review without a source-enforced gate. Being
-# Google-family, it is NOT a clean cross-family reviewer of agy / Gemini work.
+# ROLE (user probes 2026-07-05, docs/projects/ua-eval-harness/model-evidence.md):
+# a cheap Google-family lane to OFFLOAD from the metered lanes (Claude / Codex).
+# Ukrainian is fluent + surface-clean (VESUM-valid, 0 russicisms). USE IT FOR:
+#   • cheap SURFACE review — reliably flags russicisms / calques, Latin-letter
+#     leakage, and imperial / decolonization framing problems;
+#   • SOURCE-CONSTRAINED wiki drafting — given a full source packet it produced
+#     concise markdown + YAML with NO invented sources and every factual
+#     sentence cited.
+# DO NOT USE IT AS:
+#   • a SOLE seminar writer — it adds unsupported details / inferences beyond
+#     the supplied source packet (fluent but over-generates);
+#   • a SOLE factual reviewer — not trustworthy on factual accuracy yet.
+# For seminar / factual content, gate it behind a NON-Gemma source/factual check.
+# Google-family → not a clean cross-family reviewer of agy / Gemini work.
 GEMMA_MODEL = "openrouter/google/gemma-4-31b-it"
 GEMMA_DEFAULT_TIMEOUT_S = 900  # chat model (no browsing); MoE variants can be slow
 
@@ -292,21 +302,29 @@ def ask_gemma(
 ) -> int:
     """Send a message AND invoke Google Gemma 4 (31B-it) one-shot via opencode.
 
-    ``gemma`` is a FREE Google-family lane (OpenRouter-hosted, Apache-2.0). Use
-    it to OFFLOAD from the metered lanes (Claude / Codex): it is deterministically
-    surface-clean on Ukrainian writing (VESUM-valid, 0 russicisms in the 31B
-    bakeoff) and a serviceable code reviewer, cross-family to OpenAI / Anthropic
-    / DeepSeek.
+    ``gemma`` is a cheap Google-family lane (OpenRouter-hosted, Apache-2.0) to
+    OFFLOAD from the metered lanes (Claude / Codex). The pinned ``-it`` endpoint
+    is PAID but negligible (~$0.12/$0.35 per M tok); a genuinely-$0 ``:free``
+    endpoint exists but is rate-limited / less stable → pass it via ``model``
+    only for high-volume bursts. Ukrainian is fluent + surface-clean (VESUM-valid,
+    0 russicisms). Cross-family to OpenAI / Anthropic / DeepSeek.
 
-    ⚠️ It FABRICATES facts on seminar / factual content (surface-clean ≠
-    factually accurate) — do NOT use it as a fact-checker or for factual /
-    seminar CONTENT review without a source-enforced gate. Being Google-family,
-    it is NOT a clean cross-family reviewer of agy / Gemini work.
+    USE IT FOR (user probes 2026-07-05, model-evidence.md):
+    - cheap SURFACE review — reliably flags russicisms / calques, Latin-letter
+      leakage, imperial / decolonization framing;
+    - SOURCE-CONSTRAINED wiki drafting — with a full source packet it cites every
+      factual sentence and invents no sources.
+
+    ⚠️ DO NOT use it as a SOLE seminar writer (it adds unsupported details beyond
+    the source packet) or a SOLE factual reviewer (not trustworthy on accuracy
+    yet). For seminar / factual content, gate it behind a NON-Gemma source /
+    factual check. Being Google-family, it is NOT a clean reviewer of agy / Gemini
+    work.
 
     ``model`` overrides the pinned ``GEMMA_MODEL`` — e.g. the 26B-A4B MoE
-    (``openrouter/google/gemma-4-26b-a4b-it``, #1 on the lang-uk leaderboard) —
-    while tags drift (see the "examples not constants" note in
-    model-assignment.md).
+    (``openrouter/google/gemma-4-26b-a4b-it``, #1 on the lang-uk leaderboard) or
+    the free ``openrouter/google/gemma-4-31b-it:free`` endpoint — while tags
+    drift (see the "examples not constants" note in model-assignment.md).
     """
     effective_model = model or GEMMA_MODEL
     msg_id = send_message(

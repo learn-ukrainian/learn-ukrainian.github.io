@@ -26,8 +26,8 @@ CC-BY-4.0 attribution propagated. Maintainer explicitly welcomed UA-GEC F/Calque
 ## Gemma 4 baseline (2026-07-04)
 
 **Why Gemma 4 is the anchor model:** it sits on the public leaderboard (`gemma-4-26B-A4B-it` = **#1**,
-avg rank 1.59) **and** is open-weights (Apache 2.0) **and** free on OpenRouter → it bridges the public
-leaderboard and our harness with one shared, top-ranked, reproducible model. Runs as both a *subject*
+avg rank 1.59) **and** is open-weights (Apache 2.0) **and** cheap-to-free on OpenRouter (see Cost note) →
+it bridges the public leaderboard and our harness with one shared, top-ranked, reproducible model. Runs as both a *subject*
 (evaluate its Ukrainian) and a candidate *reviewer* (#4309) — tested separately, no assumption that
 leaderboard rank implies judge quality.
 
@@ -40,7 +40,7 @@ leaderboard rank implies judge quality.
 
 | Model | A2 (Eng-support) | B2 (pure) | Seminar | Russicisms | Notes |
 |---|---|---|---|---|---|
-| **gemma-4-31b-it** (Dense) | 100% | 100% | 100% | 0 | free on OpenRouter; terse (under word targets); 1 Latin-script leak `zimy` in S3 |
+| **gemma-4-31b-it** (Dense) | 100% | 100% | 100% | 0 | paid but negligible (see Cost note); terse (under word targets); 1 Latin-script leak `zimy` in S3 |
 | **gemma-4-26b-a4b-it** (MoE, LB #1) | 98.0% | 98.4% | 99.0% | 1 (S1) | truncated to S1 only on first run (MoE-reasoning output cap); slightly lower cleanliness |
 
 **Finding:** 31B (Dense) ≥ 26B (MoE) on our task, consistent with Dense-beats-MoE-on-quality. Both are
@@ -85,8 +85,35 @@ exact `(reasoning)(0-shot)` config — results are labelled **"via OpenRouter,"*
 the leaderboard's local vLLM run. Bit-exact reproduction (if ever needed) = self-host the Apache-2.0 HF
 checkpoint locally; costs compute, not OpenRouter credit.
 
-### Cost note
+### Cost note (corrected 2026-07-05)
 
-31B is **free** on OpenRouter and near commercial-parity on UA writing → a lane that can **offload work
-from the metered Claude/Codex lanes**, not a place to spend. Any future spend is only for corpus-scale
-throughput (#4311) if free-tier rate limits bind.
+OpenRouter pricing (verified 2026-07-05 via `GET /api/v1/models`), per **million** tokens (prompt/completion):
+
+| endpoint | prompt | completion | notes |
+|---|---|---|---|
+| `gemma-4-31b-it` | $0.12 | $0.35 | **default pin** — paid but negligible (a module review = fractions of a cent) |
+| `gemma-4-31b-it:free` | $0 | $0 | genuinely free, but **rate-limited (per-min + per-day) and less stable** — `gemma-3-27b-it:free` already "errored server-side" in the per-run log above |
+| `gemma-4-26b-a4b-it` | $0.06 | $0.33 | MoE, cheaper still |
+| `gemma-4-26b-a4b-it:free` | $0 | $0 | free MoE, same rate-limit caveat |
+
+**The lane is NOT literally "free"** — the earlier "free on OpenRouter" claim was wrong. The default is the
+**paid** `-it` endpoint (stable, effectively-free at our volume); the `:free` endpoint is reachable via
+`--model` for high-volume / non-critical bursts. Still a strong **offload from the metered Claude/Codex
+lanes**. Any real spend is only corpus-scale throughput (#4311).
+
+### Applied-use probes (2026-07-05, user-run) — role calibration
+
+Beyond the deterministic writing scores, four applied probes fixed Gemma's actual fleet role:
+
+| probe | result | verdict |
+|---|---|---|
+| Bridge smoke (`ask-gemma`) | returned `GEMMA_OK` | ✅ lane wired end-to-end |
+| **Seminar review** | correctly BLOCKED seeded russicisms/calques, Latin-letter leakage, and imperial/decolonization framing | ✅ usable for cheap **surface review** |
+| **Seminar writing** | fluent Ukrainian, but **added unsupported details / inferences outside the supplied source packet** | ❌ **not** a production autonomous seminar writer |
+| **Wiki packet** (fully-supplied source records) | concise markdown + YAML, **no invented sources, every factual sentence cited** | ✅ promising for **source-constrained** wiki drafting |
+
+**Current read (authoritative role):** usable NOW for **(a) cheap surface review** and **(b) source-constrained
+wiki drafting**. **Not** a sole seminar writer and **not** a sole factual reviewer yet. For seminar / factual
+modules, use it **only behind a non-Gemma source/factual gate.** This supersedes the blunt "fabricates facts
+→ never a fact-checker" framing: the failure mode is **over-generation beyond the source packet**, which a
+full source packet + a non-Gemma verification gate contains.
