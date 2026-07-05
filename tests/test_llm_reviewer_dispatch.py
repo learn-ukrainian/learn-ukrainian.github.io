@@ -92,7 +92,12 @@ def test_deepseek_routes_are_excluded() -> None:
         output_usd_per_mtok=0.0,
     )
 
-    with pytest.raises(llm_reviewer_dispatch.ReviewerRouteError):
+    llm_reviewer_dispatch.assert_route_allowed(llm_reviewer_dispatch.GEMMA_SURFACE_ROUTE)
+
+    with pytest.raises(
+        llm_reviewer_dispatch.ReviewerRouteError,
+        match="DeepSeek/Hermes reviewer routes are forbidden",
+    ):
         llm_reviewer_dispatch.assert_route_allowed(bad_route)
     hermes_route = llm_reviewer_dispatch.ReviewerRoute(
         route_name="hermes_bad",
@@ -104,7 +109,10 @@ def test_deepseek_routes_are_excluded() -> None:
         output_usd_per_mtok=0.0,
     )
 
-    with pytest.raises(llm_reviewer_dispatch.ReviewerRouteError):
+    with pytest.raises(
+        llm_reviewer_dispatch.ReviewerRouteError,
+        match="DeepSeek/Hermes reviewer routes are forbidden",
+    ):
         llm_reviewer_dispatch.assert_route_allowed(hermes_route)
     assert all("deepseek" not in route.reviewer_model_id for route in llm_reviewer_dispatch.ROUTES)
 
