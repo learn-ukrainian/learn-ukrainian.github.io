@@ -1,9 +1,9 @@
 {
-  "assembled_mdx_sha256": "81b58c074d0d533752e53d11b9783e5653f7131a3f97900e88e96e7ecd896a1d",
+  "assembled_mdx_sha256": "b4e0847b4d3a239bf7fabb7795ee45045ff775700925d3c4da943427d3d1b0ac",
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "91c1c224c891605fd09087803eb02eee1e8a8dbf829d6a2b68705a8d6cb35ed3",
+    "digest": "a78d6c9809e345d1de3c9dfb4c58da6dbd479e9a252d0d3b6e2adad8afa5004e",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/narodni-tantsi.yaml",
@@ -11,7 +11,7 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/narodni-tantsi/module.md",
-        "sha256": "50272899ce4c286fd6e8d28370266b4c999f707ecc8fa418698238ae86ac7a1a"
+        "sha256": "8c589f69f42f3a39db0847e13c1d9aff8bbf1bdbccc4ac4acca5228d0384d7f1"
       },
       {
         "path": "curriculum/l2-uk-en/folk/narodni-tantsi/activities.yaml",
@@ -28,10 +28,10 @@
     ]
   },
   "evidence": {
-    "decolonization": "Avoids stage-as-village truth framing, marks Virsky and Soviet ensemble work as academic stylization, distinguishes contact and regional forms, and handles hopak, arkan, metelytsia, kolomyika, and hrechanyky without nationalist or authenticity absolutes.",
-    "pedagogy": "C1+ seminar prose separates tanok, horo-vod and gaivka movement, social dance, music, region, gendered space, and stage transformation; inline and workbook activities ask for source-aware analysis rather than generic answer grading.",
-    "review": "Claude Opus 4.8 independent review found no content or register blockers, requested resource and provenance fixes, and follow-up confirmed no blockers remain after litopys anchor fixes, ukrlib fetch checks, act-2 quote normalization, mak quote verification, activity schema correction, and RitualSequencing shuffle confirmation.",
-    "source_policy": "Dossier-supported claims only; no invented choreography, recordings, captions, performer stories, or image identifiers. Verified fragments are bounded, the hrechanyky refrain is not quoted, and public resource URLs were fetch-checked."
+    "decolonization": "Dance framing keeps stage-vs-village and regional/source-disagreement boundaries explicit.",
+    "pedagogical": "Seven PrimaryReading blocks ground movement formulas without inventing choreography or treating stage style as village practice.",
+    "review": "Claude Opus 4.8 bridge message 2 PASS for Batch 5 reading remediation; format, attribution, framing, and MDX-source sync clean. DeepSeek not used.",
+    "source_policy": "Converted verified dance/wesnianka/haivka snippets into structured on-site readings; external links remain supplementary."
   },
   "floors": {
     "beauty": 8.5,
@@ -49,7 +49,7 @@
     "model": "claude-opus-4-8"
   },
   "schema_version": 1,
-  "scored_at": "2026-07-04T21:47:17Z",
+  "scored_at": "2026-07-05T18:18:43Z",
   "scores": {
     "beauty": 8.7,
     "decolonization": 9.2,

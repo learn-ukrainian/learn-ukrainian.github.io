@@ -1,9 +1,9 @@
 {
-  "assembled_mdx_sha256": "0eba50ce2b976ffe9e7b1ec2d2bf109b4e98d279b8f74f0c0314e9992643203b",
+  "assembled_mdx_sha256": "388007298f6bbe736305c9c20b406dba33ab1540ce20613d07bcf1a348d03af1",
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "1f9425204260302e59b648fc5e807bcf3b84694c93b576a02bd796662afa268e",
+    "digest": "9902d1f4a33496554c697a0c52bb90acff6d8187d2cd248f39f66693deb1b2a7",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/narodni-remesla-ta-khudozhni-promysly.yaml",
@@ -11,7 +11,7 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/narodni-remesla-ta-khudozhni-promysly/module.md",
-        "sha256": "d67e927e3ae118cfce637923f039b3d34f64fb598325cc7deccaa345bc6b81a4"
+        "sha256": "c9b5a5f7bacf5a16648537918db4a9a8f7b069c43502d494bd3432f7099928db"
       },
       {
         "path": "curriculum/l2-uk-en/folk/narodni-remesla-ta-khudozhni-promysly/activities.yaml",
@@ -28,10 +28,10 @@
     ]
   },
   "evidence": {
-    "decolonization": "Frames crafts through material labor, regional plurality, Soviet institutional pressure, post-1991 revival, \u042e\u041d\u0415\u0421\u041a\u041e and living heritage transmission, and decolonization without unchanged-code or single-style claims.",
-    "pedagogy": "C1+ seminar prose and V2 activities require learners to distinguish \u0440\u0435\u043c\u0435\u0441\u043b\u043e, \u0434\u043e\u043c\u0430\u0448\u043d\u0456\u0439 \u043f\u0440\u043e\u043c\u0438\u0441\u0435\u043b, \u0445\u0443\u0434\u043e\u0436\u043d\u0456\u0439 \u043f\u0440\u043e\u043c\u0438\u0441\u0435\u043b, \u0430\u0440\u0442\u0456\u043b\u044c/factory/institution, living transmission, market, and source limits.",
-    "review": "Claude Opus 4.8 independent review gave a conditional pass, then follow-up PASS after verifying inline activity injection, VocabCard example format, vocabulary cleanup, and deterministic gates.",
-    "source_policy": "Built from the research dossier and verified public-source evidence only; the short Franko fragment was verified, ESU dates were spot-checked, and no invented proverbs, object IDs, media claims, or universal motif dictionary claims were added."
+    "decolonization": "Craft framing keeps artel/factory/institutional context distinct from family and local craft transmission.",
+    "pedagogical": "Reading grounds craft transmission as one family-workshop witness, not the only model of training.",
+    "review": "Claude Opus 4.8 bridge message 2 PASS for Batch 5 reading remediation; no blockers. DeepSeek not used.",
+    "source_policy": "Converted verified Franko domestic-craft fragment into structured on-site reading; popular craft sayings remain paraphrase-only without verification."
   },
   "floors": {
     "beauty": 8.5,
@@ -49,7 +49,7 @@
     "model": "claude-opus-4-8"
   },
   "schema_version": 1,
-  "scored_at": "2026-07-05T08:42:24Z",
+  "scored_at": "2026-07-05T18:18:43Z",
   "scores": {
     "beauty": 8.7,
     "decolonization": 9.2,
