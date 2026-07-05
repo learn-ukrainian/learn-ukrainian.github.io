@@ -42,6 +42,7 @@ from .base import InvocationPlan
 from .hermes_common import (
     build_hermes_invocation_context,
     build_hermes_parse_fields,
+    resolve_hermes_requested_route,
     sources_mcp_registered,
     top_level_agent_effort,
     translate_mcp_prefix_for_hermes,
@@ -101,11 +102,17 @@ class HermesQwenAdapter:
             )
 
         requested_model = model or self.default_model
-        context = build_hermes_invocation_context(
+        requested_provider, requested_model, provider_forced = resolve_hermes_requested_route(
             tool_config=tool_config,
-            requested_provider="openrouter",
+            default_provider="openrouter",
             requested_model=requested_model,
             provider_forced=True,
+        )
+        context = build_hermes_invocation_context(
+            tool_config=tool_config,
+            requested_provider=requested_provider,
+            requested_model=requested_model,
+            provider_forced=provider_forced,
         )
         config = context.config
         configured_effort = top_level_agent_effort(config)
@@ -143,13 +150,11 @@ class HermesQwenAdapter:
         # Investigated 2026-05-19: verified that the flag rescues k2.5, k2.6,
         # minimax-m2.7; qwen/* and other previously-working models continue
         # to work unchanged.
+        cmd = [hermes_bin, "-z", hermes_prompt, "-m", requested_model]
+        if provider_forced:
+            cmd.extend(["--provider", requested_provider])
         return InvocationPlan(
-            cmd=[
-                hermes_bin,
-                "-z", hermes_prompt,
-                "-m", requested_model,
-                "--provider", "openrouter",
-            ],
+            cmd=cmd,
             cwd=cwd,
             stdin_payload="",
             output_file=None,

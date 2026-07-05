@@ -28,6 +28,7 @@ from __future__ import annotations
 
 import contextlib
 import importlib
+import logging
 import os
 import re
 import shutil
@@ -57,6 +58,17 @@ from .errors import (
     AgentUnavailableError,
     RateLimitedError,
 )
+from .failover import (
+    FailoverChain,
+    FailoverCooldownStore,
+    FailoverRoute,
+    classify_failover_trigger,
+    emit_runner_substitution_marker,
+    load_failover_chain,
+    ordered_available_routes,
+    substitution_for_route,
+    tool_config_with_route,
+)
 from .registry import AGENTS, get_agent_entry
 from .result import ParseResult, Result
 from .telemetry import InvocationTelemetry, resolve_invocation_telemetry
@@ -78,6 +90,7 @@ except ImportError:  # pragma: no cover - package import path
 # fast enough that stall detection fires within 1s of the threshold, slow
 # enough that we don't burn CPU in the wait loop.
 _POLL_INTERVAL_S = 1.0
+_logger = logging.getLogger(__name__)
 _STDIN_TEMP_PREFIX = "agent-runtime-stdin-"
 _SHIMS_DIR = Path(__file__).resolve().parent / "shims"
 _MCP_RUNTIME_INIT_TIMEOUT_S = 30.0
@@ -1703,6 +1716,306 @@ def _invoke_gemini_with_fallback(
     )
 
 
+def _write_rate_limited_short_circuit(
+    *,
+    agent_name: str,
+    entrypoint: str,
+    model: str,
+    mode: str,
+    task_id: str | None,
+    cwd: Path,
+    session_id: str | None,
+    prompt: str,
+    reason: str,
+) -> None:
+    record = _build_usage_record(
+        agent=agent_name,
+        entrypoint=entrypoint,
+        model=model,
+        mode=mode,
+        task_id=task_id,
+        cwd=cwd,
+        session_id=session_id,
+        duration_s=0.0,
+        input_chars=len(prompt),
+        output_chars=0,
+        returncode=None,
+        outcome="rate_limited",
+        rate_limited=True,
+        stalled=False,
+        stderr_excerpt=f"pre-call headroom check: {reason}",
+        tokens=None,  # TODO(#3153 PR2): extract tokens for this result path.
+    )
+    write_record(record)
+
+
+def _route_substitution_for_attempt(
+    *,
+    requested_route: FailoverRoute,
+    actual_route: FailoverRoute,
+    source_trigger: str,
+    adapter_substitution: dict[str, Any] | None,
+) -> dict[str, Any] | None:
+    return substitution_for_route(
+        requested_route=requested_route,
+        actual_route=actual_route,
+        source=f"agent-runtime-failover:{source_trigger}",
+        adapter_substitution=adapter_substitution,
+    )
+
+
+def _invoke_with_runner_failover(
+    *,
+    agent_name: str,
+    adapter: AgentAdapter,
+    chain: FailoverChain,
+    prompt: str,
+    mode: str,
+    cwd: Path,
+    task_id: str | None,
+    session_id: str | None,
+    tool_config: dict | None,
+    entrypoint: str,
+    hard_timeout: int,
+    stall_timeout: int,
+    stdout_silence_timeout: int | None,
+    initial_response_timeout: int | None,
+    event_sink: Callable[..., None] | None,
+    effort: str | None,
+) -> Result:
+    """Run one invocation through the configured runner-level failover chain."""
+    store = FailoverCooldownStore()
+    routes = ordered_available_routes(chain, store)
+    requested_route = chain.routes[0]
+    if not routes:
+        reason = "all configured runner failover routes are cooling"
+        _write_rate_limited_short_circuit(
+            agent_name=agent_name,
+            entrypoint=entrypoint,
+            model=requested_route.model,
+            mode=mode,
+            task_id=task_id,
+            cwd=cwd,
+            session_id=session_id,
+            prompt=prompt,
+            reason=reason,
+        )
+        raise RateLimitedError(agent_name, requested_route.model, reason)
+
+    overall_start = time.monotonic()
+    last_trigger = "requested"
+    last_headroom_failure: tuple[FailoverRoute, str] | None = None
+
+    for attempt_index, route in enumerate(routes):
+        headroom_ok, headroom_reason = has_headroom(agent_name, route.model)
+        has_next_route = attempt_index < len(routes) - 1
+        if not headroom_ok:
+            store.mark_cooldown(
+                route,
+                agent_name=agent_name,
+                trigger="rate_limited",
+                ttl_s=chain.cooldown_ttl_s,
+            )
+            last_headroom_failure = (route, headroom_reason)
+            last_trigger = "rate_limited"
+            if has_next_route:
+                continue
+            _write_rate_limited_short_circuit(
+                agent_name=agent_name,
+                entrypoint=entrypoint,
+                model=route.model,
+                mode=mode,
+                task_id=task_id,
+                cwd=cwd,
+                session_id=session_id,
+                prompt=prompt,
+                reason=headroom_reason,
+            )
+            raise RateLimitedError(agent_name, route.model, headroom_reason)
+
+        attempt_tool_config = tool_config_with_route(tool_config, route)
+        plan = adapter.build_invocation(
+            prompt=prompt,
+            mode=mode,
+            cwd=cwd,
+            model=route.model,
+            task_id=task_id,
+            session_id=session_id,
+            tool_config=attempt_tool_config,
+            effort=effort,
+        )
+
+        telemetry = resolve_invocation_telemetry(
+            agent_name=agent_name,
+            plan=plan,
+            requested_model=route.model,
+            requested_effort=effort,
+        )
+
+        execution = _execute_invocation_plan(
+            agent_name=agent_name,
+            adapter=adapter,
+            plan=plan,
+            prompt=prompt,
+            mode=mode,
+            cwd=cwd,
+            model=route.model,
+            task_id=task_id,
+            session_id=session_id,
+            entrypoint=entrypoint,
+            hard_timeout=hard_timeout,
+            stall_timeout=stall_timeout,
+            tool_config=attempt_tool_config,
+            event_sink=event_sink,
+            stdout_silence_timeout=stdout_silence_timeout,
+            initial_response_timeout=initial_response_timeout,
+        )
+        parse = execution.parse
+        trigger = None
+        if not parse.ok or execution.kill_reason:
+            trigger = classify_failover_trigger(
+                parse=parse,
+                returncode=execution.returncode,
+                kill_reason=execution.kill_reason,
+                stdout_text=execution.stdout_text,
+                stderr_text=execution.stderr_text,
+            )
+
+        if trigger:
+            store.mark_cooldown(
+                route,
+                agent_name=agent_name,
+                trigger=trigger,
+                ttl_s=chain.cooldown_ttl_s,
+            )
+            last_trigger = trigger
+            if has_next_route:
+                continue
+
+        if execution.kill_reason:
+            _raise_for_kill_reason(
+                agent_name=agent_name,
+                kill_reason=execution.kill_reason,
+                execution=execution,
+                prompt=prompt,
+                entrypoint=entrypoint,
+                model=route.model,
+                mode=mode,
+                task_id=task_id,
+                cwd=cwd,
+                session_id=session_id,
+                stdout_silence_timeout=stdout_silence_timeout,
+                initial_response_timeout=initial_response_timeout,
+                stall_timeout=stall_timeout,
+                hard_timeout=hard_timeout,
+                event_sink=event_sink,
+            )
+
+        if parse.rate_limited:
+            outcome = "rate_limited"
+        elif parse.ok:
+            outcome = "ok"
+        else:
+            outcome = "error"
+
+        source_trigger = last_trigger
+        if route != requested_route and source_trigger == "requested":
+            source_trigger = "cooldown"
+        substitution = _route_substitution_for_attempt(
+            requested_route=requested_route,
+            actual_route=route,
+            source_trigger=source_trigger,
+            adapter_substitution=parse.substitution,
+        )
+        emit_runner_substitution_marker(substitution, logger=_logger)
+
+        record_model = telemetry.model
+        if (
+            isinstance(substitution, dict)
+            and substitution.get("substituted")
+            and substitution.get("actual_model")
+        ):
+            record_model = str(substitution["actual_model"])[:200]
+
+        _emit_substitution_event(
+            agent_name=agent_name,
+            entrypoint=entrypoint,
+            task_id=task_id,
+            cwd=cwd,
+            model=record_model,
+            substitution=substitution,
+            event_sink=event_sink,
+        )
+
+        duration_s = time.monotonic() - overall_start
+        record = _build_usage_record(
+            agent=agent_name,
+            entrypoint=entrypoint,
+            model=record_model,
+            mode=mode,
+            task_id=task_id,
+            cwd=cwd,
+            session_id=session_id,
+            duration_s=duration_s,
+            input_chars=len(prompt),
+            output_chars=len(parse.response),
+            returncode=execution.returncode,
+            outcome=outcome,
+            rate_limited=parse.rate_limited,
+            stalled=False,
+            stderr_excerpt=parse.stderr_excerpt,
+            tokens=parse.tokens,
+            substitution=substitution,
+        )
+        write_record(record)
+
+        if parse.rate_limited:
+            raise RateLimitedError(
+                agent_name,
+                record_model,
+                reason=(parse.stderr_excerpt or "")[:200],
+            )
+
+        return Result(
+            ok=parse.ok,
+            agent=agent_name,
+            model=record_model,
+            mode=mode,
+            effort=telemetry.effort,
+            cli_version=telemetry.cli_version,
+            response=parse.response,
+            stderr_excerpt=parse.stderr_excerpt,
+            duration_s=duration_s,
+            session_id=parse.session_id,
+            rate_limited=parse.rate_limited,
+            stalled=False,
+            returncode=execution.returncode,
+            usage_record=record,
+            tool_calls=list(parse.tool_calls),
+            tool_calls_total=getattr(parse, "tool_calls_total", len(parse.tool_calls)),
+            substitution=substitution,
+        )
+
+    if last_headroom_failure is not None:
+        route, reason = last_headroom_failure
+        _write_rate_limited_short_circuit(
+            agent_name=agent_name,
+            entrypoint=entrypoint,
+            model=route.model,
+            mode=mode,
+            task_id=task_id,
+            cwd=cwd,
+            session_id=session_id,
+            prompt=prompt,
+            reason=reason,
+        )
+        raise RateLimitedError(agent_name, route.model, reason)
+
+    raise AgentUnavailableError(
+        f"Agent {agent_name!r} has an empty runner failover route set"
+    )
+
+
 def invoke(
     agent_name: str,
     prompt: str,
@@ -1812,29 +2125,45 @@ def invoke(
 
     # ---------- 5. Pre-call rate-limit check ----------
     effective_model = model or adapter.default_model
+    failover_chain = load_failover_chain(
+        agent_name,
+        effective_model=effective_model,
+    )
+    if failover_chain is not None:
+        return _invoke_with_runner_failover(
+            agent_name=agent_name,
+            adapter=adapter,
+            chain=failover_chain,
+            prompt=prompt,
+            mode=mode,
+            cwd=effective_cwd,
+            task_id=task_id,
+            session_id=session_id,
+            tool_config=tool_config,
+            entrypoint=entrypoint,
+            hard_timeout=hard_timeout,
+            stall_timeout=stall_timeout,
+            stdout_silence_timeout=stdout_silence_timeout,
+            initial_response_timeout=initial_response_timeout,
+            event_sink=event_sink,
+            effort=effort,
+        )
+
     ok, reason = has_headroom(agent_name, effective_model)
     if not ok:
         # Record the short-circuit for observability — the caller didn't
         # burn a quota slot, but we still want the usage log to show it.
-        record = _build_usage_record(
-            agent=agent_name,
+        _write_rate_limited_short_circuit(
+            agent_name=agent_name,
             entrypoint=entrypoint,
             model=effective_model,
             mode=mode,
             task_id=task_id,
             cwd=effective_cwd,
             session_id=session_id,
-            duration_s=0.0,
-            input_chars=len(prompt),
-            output_chars=0,
-            returncode=None,
-            outcome="rate_limited",
-            rate_limited=True,
-            stalled=False,
-            stderr_excerpt=f"pre-call headroom check: {reason}",
-            tokens=None,  # TODO(#3153 PR2): extract tokens for this result path.
+            prompt=prompt,
+            reason=reason,
         )
-        write_record(record)
         raise RateLimitedError(agent_name, effective_model, reason)
 
     if agent_name == "gemini":

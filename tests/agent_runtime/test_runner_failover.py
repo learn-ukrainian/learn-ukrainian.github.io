@@ -1,0 +1,399 @@
+"""Runner-level failover tests for agent_runtime."""
+from __future__ import annotations
+
+import sys
+import types
+from pathlib import Path
+from types import SimpleNamespace
+from typing import Any
+
+import pytest
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
+
+from agent_runtime import runner as runner_mod
+from agent_runtime.adapters.base import InvocationPlan
+from agent_runtime.errors import RateLimitedError
+from agent_runtime.failover import (
+    FAILOVER_CONFIG_ENV,
+    FAILOVER_COOLDOWN_DB_ENV,
+    RUNNER_FAILOVER_MARKER,
+)
+from agent_runtime.result import ParseResult
+from agent_runtime.routes import RUNTIME_ROUTE_TOOL_CONFIG_KEY
+
+
+class _FailoverTestAdapter:
+    name = "failover-test"
+    default_model = "primary-model"
+    supported_modes = frozenset({"read-only", "workspace-write", "danger"})
+
+    def __init__(self) -> None:
+        self.attempts: list[str] = []
+
+    def build_invocation(
+        self,
+        *,
+        prompt: str,
+        mode: str,
+        cwd: Path,
+        model: str | None,
+        task_id: str | None,
+        session_id: str | None,
+        tool_config: dict | None,
+        effort: str | None = None,
+    ) -> InvocationPlan:
+        _ = prompt
+        _ = mode
+        _ = task_id
+        _ = session_id
+        _ = effort
+        route = dict((tool_config or {}).get(RUNTIME_ROUTE_TOOL_CONFIG_KEY) or {})
+        route_model = str(route.get("model") or model or self.default_model)
+        self.attempts.append(route_model)
+        return InvocationPlan(
+            cmd=["fake-agent", route_model],
+            cwd=cwd,
+            metadata={"route": route},
+        )
+
+    def parse_response(
+        self,
+        *,
+        stdout: str,
+        stderr: str,
+        returncode: int,
+        output_file: Path | None,
+        plan: InvocationPlan | None = None,
+        call_start_time: float | None = None,
+    ) -> ParseResult:
+        _ = stdout
+        _ = stderr
+        _ = returncode
+        _ = output_file
+        _ = plan
+        _ = call_start_time
+        raise AssertionError("_execute_invocation_plan is stubbed in these tests")
+
+    def liveness_signal_paths(self, plan: InvocationPlan) -> tuple[Path, ...]:
+        _ = plan
+        return ()
+
+
+@pytest.fixture(autouse=True)
+def _clear_adapter_cache():
+    runner_mod._ADAPTER_CACHE.clear()
+    yield
+    runner_mod._ADAPTER_CACHE.clear()
+
+
+def _write_failover_config(tmp_path: Path, *, forbidden: bool = False) -> Path:
+    fallback_provider = "zai" if forbidden else "fallback-provider"
+    fallback_model = "glm-4.6" if forbidden else "fallback-model"
+    config_path = tmp_path / "agent_runtime_failover.yaml"
+    config_path.write_text(
+        "\n".join(
+            [
+                "chains:",
+                "  failover-test:",
+                "    cooldown_ttl_s: 600",
+                "    routes:",
+                "      - provider: primary-provider",
+                "        model: primary-model",
+                f"      - provider: {fallback_provider}",
+                f"        model: {fallback_model}",
+                "",
+            ]
+        ),
+        encoding="utf-8",
+    )
+    return config_path
+
+
+def _install_fake_runtime(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+    outcomes_by_model: dict[str, dict[str, Any]],
+    *,
+    forbidden_config: bool = False,
+) -> tuple[_FailoverTestAdapter, list[dict[str, Any]], list[tuple[str, dict[str, Any]]]]:
+    config_path = _write_failover_config(tmp_path, forbidden=forbidden_config)
+    monkeypatch.setenv(FAILOVER_CONFIG_ENV, str(config_path))
+    monkeypatch.setenv(
+        FAILOVER_COOLDOWN_DB_ENV,
+        str(tmp_path / "cooldowns.sqlite3"),
+    )
+
+    adapter = _FailoverTestAdapter()
+    runner_mod._ADAPTER_CACHE["failover-test"] = adapter
+
+    records: list[dict[str, Any]] = []
+    emitted_events: list[tuple[str, dict[str, Any]]] = []
+    fake_emit = types.ModuleType("telemetry.emit")
+    fake_emit.emit_event = (
+        lambda event_name, payload: emitted_events.append((event_name, payload))
+    )
+    monkeypatch.setitem(sys.modules, "telemetry.emit", fake_emit)
+    monkeypatch.setattr(runner_mod, "write_record", records.append)
+    monkeypatch.setattr(runner_mod, "has_headroom", lambda _agent, _model: (True, ""))
+    monkeypatch.setattr(
+        runner_mod,
+        "resolve_invocation_telemetry",
+        lambda agent_name, plan, requested_model, requested_effort: SimpleNamespace(
+            model=requested_model,
+            effort=requested_effort or "unknown",
+            cli_version=f"{agent_name}-test",
+        ),
+    )
+
+    def fake_execute(*, plan: InvocationPlan, **_kwargs: Any) -> runner_mod._ExecutionOutcome:
+        route = plan.metadata["route"]
+        outcome = outcomes_by_model[str(route["model"])]
+        return runner_mod._ExecutionOutcome(
+            parse=outcome["parse"],
+            duration_s=0.01,
+            returncode=outcome.get("returncode", 1),
+            kill_reason=outcome.get("kill_reason"),
+            stdout_text=outcome.get("stdout_text", ""),
+            stderr_text=outcome.get("stderr_text", ""),
+            liveness_paths=(),
+        )
+
+    monkeypatch.setattr(runner_mod, "_execute_invocation_plan", fake_execute)
+    return adapter, records, emitted_events
+
+
+_TRIGGER_CASES = [
+    (
+        "auth",
+        {
+            "parse": ParseResult(
+                ok=False,
+                response="",
+                stderr_excerpt="401 unauthorized after refresh attempt failed",
+            ),
+            "returncode": 1,
+            "stderr_text": "401 unauthorized after refresh attempt failed",
+        },
+    ),
+    (
+        "rate_limited",
+        {
+            "parse": ParseResult(
+                ok=False,
+                response="",
+                stderr_excerpt="quota exceeded",
+                rate_limited=True,
+            ),
+            "returncode": 1,
+            "stderr_text": "quota exceeded",
+        },
+    ),
+    (
+        "overloaded",
+        {
+            "parse": ParseResult(
+                ok=False,
+                response="",
+                stderr_excerpt="HTTP 503 overloaded",
+            ),
+            "returncode": 1,
+            "stderr_text": "HTTP 503 overloaded",
+        },
+    ),
+    (
+        "transport",
+        {
+            "parse": ParseResult(
+                ok=False,
+                response="",
+                stderr_excerpt="connection refused",
+            ),
+            "returncode": 1,
+            "stderr_text": "connection refused",
+        },
+    ),
+    (
+        "empty_response",
+        {
+            "parse": ParseResult(ok=False, response="", stderr_excerpt=None),
+            "returncode": 0,
+            "stderr_text": "",
+        },
+    ),
+]
+
+
+@pytest.mark.parametrize(("trigger_name", "primary_failure"), _TRIGGER_CASES)
+def test_runner_failover_switches_for_eligible_trigger_classes(
+    tmp_path,
+    monkeypatch,
+    capsys,
+    trigger_name,
+    primary_failure,
+):
+    sink_events: list[tuple[str, dict[str, Any]]] = []
+    adapter, records, emitted_events = _install_fake_runtime(
+        monkeypatch,
+        tmp_path,
+        {
+            "primary-model": primary_failure,
+            "fallback-model": {
+                "parse": ParseResult(ok=True, response="fallback ok"),
+                "returncode": 0,
+            },
+        },
+    )
+
+    result = runner_mod.invoke(
+        "failover-test",
+        "hello",
+        mode="read-only",
+        cwd=tmp_path,
+        event_sink=lambda name, **fields: sink_events.append((name, fields)),
+    )
+
+    assert adapter.attempts == ["primary-model", "fallback-model"]
+    assert result.ok is True
+    assert result.response == "fallback ok"
+    assert result.substitution is not None
+    assert result.substitution["requested_provider"] == "primary-provider"
+    assert result.substitution["actual_provider"] == "fallback-provider"
+    assert result.substitution["marker"] == RUNNER_FAILOVER_MARKER
+    assert result.substitution["source"] == f"agent-runtime-failover:{trigger_name}"
+    assert records[0]["substitution"]["substituted"] is True
+    assert sink_events[0][0] == "agent_runtime_substitution"
+    assert emitted_events[0][0] == "agent_runtime_substitution"
+    assert RUNNER_FAILOVER_MARKER in capsys.readouterr().err
+
+
+def test_runner_failover_does_not_switch_for_content_policy(
+    tmp_path,
+    monkeypatch,
+    capsys,
+):
+    adapter, records, _emitted_events = _install_fake_runtime(
+        monkeypatch,
+        tmp_path,
+        {
+            "primary-model": {
+                "parse": ParseResult(
+                    ok=False,
+                    response="",
+                    stderr_excerpt="content policy refusal",
+                ),
+                "returncode": 1,
+                "stderr_text": "content policy refusal",
+            },
+            "fallback-model": {
+                "parse": ParseResult(ok=True, response="fallback ok"),
+                "returncode": 0,
+            },
+        },
+    )
+
+    result = runner_mod.invoke("failover-test", "hello", mode="read-only", cwd=tmp_path)
+
+    assert adapter.attempts == ["primary-model"]
+    assert result.ok is False
+    assert result.substitution is None
+    assert records[0]["outcome"] == "error"
+    assert "substitution" not in records[0]
+    assert RUNNER_FAILOVER_MARKER not in capsys.readouterr().err
+
+
+def test_runner_failover_cooldown_routes_next_dispatch_directly_to_fallback(
+    tmp_path,
+    monkeypatch,
+):
+    adapter, records, _emitted_events = _install_fake_runtime(
+        monkeypatch,
+        tmp_path,
+        {
+            "primary-model": {
+                "parse": ParseResult(
+                    ok=False,
+                    response="",
+                    stderr_excerpt="connection refused",
+                ),
+                "returncode": 1,
+                "stderr_text": "connection refused",
+            },
+            "fallback-model": {
+                "parse": ParseResult(ok=True, response="fallback ok"),
+                "returncode": 0,
+            },
+        },
+    )
+
+    first = runner_mod.invoke("failover-test", "hello", mode="read-only", cwd=tmp_path)
+    first_attempts = list(adapter.attempts)
+    adapter.attempts.clear()
+    second = runner_mod.invoke("failover-test", "hello", mode="read-only", cwd=tmp_path)
+
+    assert first.ok is True
+    assert first_attempts == ["primary-model", "fallback-model"]
+    assert second.ok is True
+    assert adapter.attempts == ["fallback-model"]
+    assert second.substitution is not None
+    assert second.substitution["source"] == "agent-runtime-failover:cooldown"
+    assert len(records) == 2
+
+
+def test_runner_failover_cools_final_failed_route_and_short_circuits_all_cooling(
+    tmp_path,
+    monkeypatch,
+):
+    adapter, records, _emitted_events = _install_fake_runtime(
+        monkeypatch,
+        tmp_path,
+        {
+            "primary-model": {
+                "parse": ParseResult(
+                    ok=False,
+                    response="",
+                    stderr_excerpt="connection refused",
+                ),
+                "returncode": 1,
+                "stderr_text": "connection refused",
+            },
+            "fallback-model": {
+                "parse": ParseResult(
+                    ok=False,
+                    response="",
+                    stderr_excerpt="HTTP 503 overloaded",
+                ),
+                "returncode": 1,
+                "stderr_text": "HTTP 503 overloaded",
+            },
+        },
+    )
+
+    first = runner_mod.invoke("failover-test", "hello", mode="read-only", cwd=tmp_path)
+    first_attempts = list(adapter.attempts)
+    adapter.attempts.clear()
+
+    with pytest.raises(RateLimitedError, match=r"all configured.*cooling"):
+        runner_mod.invoke("failover-test", "hello", mode="read-only", cwd=tmp_path)
+
+    assert first.ok is False
+    assert first_attempts == ["primary-model", "fallback-model"]
+    assert adapter.attempts == []
+    assert records[-1]["outcome"] == "rate_limited"
+
+
+def test_runner_failover_rejects_forbidden_glm_target(tmp_path, monkeypatch):
+    _adapter, _records, _emitted_events = _install_fake_runtime(
+        monkeypatch,
+        tmp_path,
+        {
+            "primary-model": {
+                "parse": ParseResult(ok=True, response="primary ok"),
+                "returncode": 0,
+            },
+        },
+        forbidden_config=True,
+    )
+
+    with pytest.raises(ValueError, match="HERMES_GLM_FORBIDDEN"):
+        runner_mod.invoke("failover-test", "hello", mode="read-only", cwd=tmp_path)
