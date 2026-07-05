@@ -617,6 +617,7 @@ Use this before content generation to verify plan files still match `scripts/aud
 | `scripts/audit/atlas_entry_model_census.py` | Count reviewed Atlas entries by finalized `entry_type` bucket | `.venv/bin/python scripts/audit/atlas_entry_model_census.py --format markdown` |
 | `scripts/audit/atlas_source_entry_count.py` | Estimate aggregate source-corpus Atlas entry backlog by finalized bucket | `.venv/bin/python scripts/audit/atlas_source_entry_count.py --include-ohoiko-private --markdown-out docs/runbooks/word-atlas-source-entry-count.md` |
 | `scripts/audit/curriculum_qg_harness.py` | Run calibrated Ukrainian QG fixtures or scan one module into compact evidence | `.venv/bin/python scripts/audit/curriculum_qg_harness.py --fixtures tests/fixtures/curriculum_qg/fixtures.yaml` |
+| `scripts/audit/ingest_ua_gec_gold.py` | Curate the small attributed UA-GEC gold fixture for the #2156 eval harness | `.venv/bin/python scripts/audit/ingest_ua_gec_gold.py --dry-run` |
 | `scripts/audit/module_quality_audit.py` | Report surface and LLM-QG/compact evidence coverage by level | `.venv/bin/python scripts/audit/module_quality_audit.py --level b1 --format summary` |
 | `scripts/audit/lint_session_state.py` | Check handoff docs for missing env-file references | `.venv/bin/python scripts/audit/lint_session_state.py --all` |
 | `scripts/audit/lint_anti_menu.py` | Detect anti-menu sign-off prompts in markdown | `.venv/bin/python scripts/audit/lint_anti_menu.py --text docs/session-state/current.md` |
@@ -695,6 +696,43 @@ seminar-register pathos. Single-module scans emit compact evidence shaped like
 `qg_evidence.json`: module id, level policy, checker version/config/hash,
 content hash, dimensional scores/findings, compact spans/excerpts, LLM metadata
 placeholders, and provenance.
+
+### `scripts/audit/ingest_ua_gec_gold.py`
+
+Curates the small tracked UA-GEC fixture for the #2156 eval harness. It reads
+the local ignored `data/sources.db` table `ua_gec_errors`, recovers sentence
+context/spans from the local `data/ua-gec` clone, maps tags through
+`scripts/audit/qg_schema.py`, and writes `data/ua-gec-gold/ua-gec-gold.json`
+with top-level CC-BY-4.0 attribution and per-row `build_ua_gec_finding` output.
+
+Run the dry-run first; it prints candidate totals, per-tag/source-language
+counts, kept/rejected totals, and rejection reasons without writing files.
+
+```bash
+.venv/bin/python scripts/audit/ingest_ua_gec_gold.py --dry-run
+```
+
+Dispatch worktrees may not contain the ignored local source clone/database. In
+that case, pass the main-checkout source paths explicitly:
+
+```bash
+.venv/bin/python scripts/audit/ingest_ua_gec_gold.py --dry-run \
+  --db-path /path/to/learn-ukrainian/data/sources.db \
+  --ua-gec-root /path/to/learn-ukrainian/data/ua-gec
+
+.venv/bin/python scripts/audit/ingest_ua_gec_gold.py \
+  --db-path /path/to/learn-ukrainian/data/sources.db \
+  --ua-gec-root /path/to/learn-ukrainian/data/ua-gec \
+  --retrieval-date YYYY-MM-DD
+```
+
+The curation policy is intentionally not a raw extract: it prioritizes
+`F/Calque` rows with Russian source language, includes `G/Case` and
+`G/Gender`, rejects rows without recoverable context, duplicate pairs, empty
+edits, known context-stripped junk such as `рожі -> мармизи` and
+`вдів -> одягнув`, short opaque word-form pairs, and excessive
+same-document/tag repeats. Tune the documented CLI constants only when the
+fixture policy itself is changing.
 
 ### `scripts/audit/module_quality_audit.py`
 
