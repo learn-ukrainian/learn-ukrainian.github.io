@@ -259,7 +259,7 @@ describe('lexicon SRS facade', () => {
 
   test('practice mode set is coupled to the deck-version sentinel', () => {
     const versionByModeSet: Record<string, number> = {
-      'flashcards|matching|choice|cloze|paradigm|stress|heritage': 2,
+      'flashcards|matching|choice|cloze|paradigm|stress|heritage|synonym|classify|paronym': 3,
     };
 
     expect(versionByModeSet[PRACTICE_MODES.join('|')]).toBe(PRACTICE_MODE_DECK_VERSION);
