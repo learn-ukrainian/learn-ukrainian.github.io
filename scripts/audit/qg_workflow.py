@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import shlex
 import sys
 from collections import defaultdict
 from collections.abc import Callable, Mapping, Sequence
@@ -27,7 +28,13 @@ if str(SCRIPTS_DIR) not in sys.path:
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from scripts.audit import llm_qg_canaries, llm_qg_store, llm_reviewer, qg_schema
+from scripts.audit import (
+    llm_qg_canaries,
+    llm_qg_store,
+    llm_reviewer,
+    llm_reviewer_dispatch,
+    qg_schema,
+)
 from scripts.audit.content_surface_gates import policy_for_level
 from scripts.audit.curriculum_qg_harness import CHECKER_VERSION, checker_config_hash
 from scripts.audit.qg_adapters import (
@@ -43,7 +50,7 @@ DEFAULT_REVIEWER_FAMILY = "qg_workflow"
 LLM_POLICY_FAMILIES = frozenset({"b1_plus", "seminar"})
 CONTENT_HASH_BASIS = "llm_qg_store.CONTENT_FILES"
 
-Reviewer = Callable[["ReviewTarget", str], str | Mapping[str, Any]]
+Reviewer = Callable[["ReviewTarget", str], Any]
 
 
 @dataclass(frozen=True, slots=True)
@@ -64,6 +71,11 @@ class WorkflowOptions:
     gate_version: str = DEFAULT_GATE_VERSION
     reviewer_model_id: str = DEFAULT_REVIEWER_MODEL_ID
     reviewer_family: str = DEFAULT_REVIEWER_FAMILY
+    live_reviewer: bool = False
+    author_family: str | None = None
+    canary_artifacts: Mapping[str, Path] | None = None
+    daily_spend_path: Path | None = None
+    run_command: str | None = None
     enable_llm: bool = False
     force_llm: bool = False
     llm_on_fail: bool = False
@@ -97,9 +109,9 @@ class BudgetState:
             return False, "max_daily_cost_usd"
         return True, None
 
-    def record_spend(self, estimate: Mapping[str, Any]) -> None:
+    def record_spend(self, estimate: Mapping[str, Any], *, observed_cost_usd: float | None = None) -> None:
         self.llm_calls += 1
-        cost = float(estimate.get("estimated_cost_usd") or 0.0)
+        cost = float(observed_cost_usd if observed_cost_usd is not None else estimate.get("estimated_cost_usd") or 0.0)
         self.cost_usd += cost
         self.daily_cost_usd += cost
 
@@ -198,6 +210,8 @@ def review_module(
         llm_required_by_policy=bool(tier2.get("llm_required_by_policy")),
         llm_required_by_harness=tier0_verdict != "PASS",
         llm_cost_override=bool(tier2.get("llm_cost_override")),
+        reviewer_model_id=str(tier2.get("reviewer_model_id") or effective_options.reviewer_model_id),
+        reviewer_family=str(tier2.get("reviewer_family") or effective_options.reviewer_family),
         options=effective_options,
     )
 
@@ -215,6 +229,11 @@ def dry_run_modules(
         gate_version=dry_options.gate_version,
         reviewer_model_id=dry_options.reviewer_model_id,
         reviewer_family=dry_options.reviewer_family,
+        live_reviewer=dry_options.live_reviewer,
+        author_family=dry_options.author_family,
+        canary_artifacts=dry_options.canary_artifacts,
+        daily_spend_path=dry_options.daily_spend_path,
+        run_command=dry_options.run_command,
         enable_llm=True,
         force_llm=dry_options.force_llm,
         llm_on_fail=dry_options.llm_on_fail,
@@ -276,12 +295,25 @@ def dry_run_modules(
                     bucket["estimated_cost_usd"] += float(estimate.get("estimated_cost_usd") or 0.0)
                 if tier.get("status") == "skipped_budget":
                     counts["tier2_skipped_budget"] += 1
+    gateable = _dry_run_gateable_artifact(
+        records=records,
+        counts=counts,
+        level_profiles=dict(sorted(by_family.items())),
+        options=dry_options,
+    )
     return {
         "schema_version": "qg_workflow_dry_run.v1",
         "dry_run": True,
         "writes": 0,
         "counts": counts,
         "level_profiles": dict(sorted(by_family.items())),
+        "module_list": gateable["module_list"],
+        "per_tier_counts": gateable["per_tier_counts"],
+        "cache_estimate": gateable["cache_estimate"],
+        "expected_spend": gateable["expected_spend"],
+        "stale_cache_count": gateable["cache_estimate"]["stale"],
+        "exact_run_command": gateable["exact_run_command"],
+        "gateable_artifact": gateable,
         "modules": records,
     }
 
@@ -296,23 +328,37 @@ def review_modules(
     """Run the workflow over a bounded target list with shared budget state."""
 
     effective_options = options or WorkflowOptions()
-    if (
+    if effective_options.live_reviewer:
+        _validate_live_reviewer_preflight(targets, effective_options)
+    elif (
         len(targets) > 1
         and _llm_enabled_for_any_target(targets, effective_options)
         and not effective_options.canary_passed
     ):
         raise ValueError("broad LLM batches require an explicit passing canary pre-gate")
-    budget = BudgetState()
-    return [
-        review_module(
+    budget = BudgetState(daily_cost_usd=_initial_daily_spend(effective_options))
+    records: list[dict[str, Any]] = []
+    for index, target in enumerate(targets):
+        record = review_module(
             target,
             options=effective_options,
             reviewer=reviewer,
             store_path=store_path,
             budget=budget,
         )
-        for target in targets
-    ]
+        records.append(record)
+        abort_reason = _batch_abort_reason(records)
+        if abort_reason and index + 1 < len(targets):
+            for remaining in targets[index + 1:]:
+                records.append(
+                    _build_aborted_record(
+                        remaining,
+                        options=effective_options,
+                        reason=abort_reason,
+                    )
+                )
+            break
+    return records
 
 
 def canary_result_passes(path: Path, *, level: str) -> bool:
@@ -321,6 +367,199 @@ def canary_result_passes(path: Path, *, level: str) -> bool:
     payload = json.loads(path.read_text(encoding="utf-8"))
     report = llm_qg_canaries.evaluate_canaries(payload, level)
     return bool(report.get("passed"))
+
+
+def _dry_run_gateable_artifact(
+    *,
+    records: Sequence[Mapping[str, Any]],
+    counts: Mapping[str, Any],
+    level_profiles: Mapping[str, Mapping[str, Any]],
+    options: WorkflowOptions,
+) -> dict[str, Any]:
+    module_list: list[dict[str, Any]] = []
+    expected_by_reviewer: dict[str, dict[str, Any]] = defaultdict(
+        lambda: {"modules": 0, "estimated_cost_usd": 0.0, "estimated_total_tokens": 0}
+    )
+    warm = cold = stale = 0
+    total_cost = 0.0
+    total_tokens = 0
+    for record in records:
+        tier2 = _tier_from_record(record, 2)
+        estimate = tier2.get("estimate") if isinstance(tier2.get("estimate"), Mapping) else {}
+        cache_status = "warm" if tier2.get("status") == "cache_hit" else estimate.get("cache_status") or "none"
+        if cache_status == "warm":
+            warm += 1
+        elif cache_status == "stale":
+            stale += 1
+        elif tier2.get("status") == "dry_run_estimate":
+            cold += 1
+        reviewer_model = str(tier2.get("reviewer_model_id") or record["qg_workflow"]["reviewer_model_id"])
+        cost = float(estimate.get("estimated_cost_usd") or 0.0)
+        tokens = int(estimate.get("estimated_total_tokens") or 0)
+        total_cost += cost
+        total_tokens += tokens
+        if cost or tokens:
+            bucket = expected_by_reviewer[reviewer_model]
+            bucket["modules"] += 1
+            bucket["estimated_cost_usd"] += cost
+            bucket["estimated_total_tokens"] += tokens
+        module_list.append(
+            {
+                "module_id": record["module_id"],
+                "level": str(record["module_id"]).split("/", 1)[0],
+                "slug": str(record["module_id"]).split("/", 1)[1],
+                "module_dir": record["provenance"]["module_dir"],
+                "policy_family": record["level_policy"]["family"],
+                "tier2_status": tier2.get("status"),
+                "reviewer_model_id": reviewer_model,
+                "reviewer_family": tier2.get("reviewer_family"),
+                "reviewer_route": tier2.get("reviewer_route"),
+                "cache_status": cache_status,
+                "estimated_cost_usd": cost,
+            }
+        )
+    return {
+        "schema_version": "qg_workflow_dry_run_gate.v1",
+        "module_list": module_list,
+        "per_tier_counts": dict(counts),
+        "level_profiles": dict(level_profiles),
+        "cache_estimate": {
+            "warm": warm,
+            "cold": cold,
+            "stale": stale,
+        },
+        "expected_spend": {
+            "estimated_cost_usd": round(total_cost, 6),
+            "estimated_total_tokens": total_tokens,
+            "by_reviewer_model": {
+                model: {
+                    "modules": values["modules"],
+                    "estimated_cost_usd": round(float(values["estimated_cost_usd"]), 6),
+                    "estimated_total_tokens": values["estimated_total_tokens"],
+                }
+                for model, values in sorted(expected_by_reviewer.items())
+            },
+        },
+        "exact_run_command": options.run_command or "",
+    }
+
+
+def _validate_live_reviewer_preflight(
+    targets: Sequence[ReviewTarget],
+    options: WorkflowOptions,
+) -> None:
+    if options.dry_run:
+        return
+    if _llm_enabled_for_any_target(targets, options) and options.max_cost_usd is None:
+        raise ValueError("live Tier-2 runs require --max-cost-usd")
+
+
+def _initial_daily_spend(options: WorkflowOptions) -> float:
+    if not options.live_reviewer or options.max_daily_cost_usd is None:
+        return 0.0
+    return llm_reviewer_dispatch.read_daily_spend(options.daily_spend_path)
+
+
+def _batch_abort_reason(records: Sequence[Mapping[str, Any]]) -> str | None:
+    attempted = 0
+    provider_errors = 0
+    parse_failures = 0
+    for record in records:
+        tier2 = _tier_from_record(record, 2)
+        status = str(tier2.get("status"))
+        if status in {"ran", "provider_error", "parse_failure", "schema_failure", "cost_overrun"}:
+            attempted += 1
+        if status == "provider_error":
+            provider_errors += 1
+        if status in {"parse_failure", "schema_failure"}:
+            parse_failures += 1
+        if status == "cost_overrun":
+            return "cost_overrun"
+        if status == "self_review_blocked":
+            return "self_review_blocked"
+        if status == "lineage_required":
+            return "lineage_required"
+        if status == "skipped_canary_required":
+            return "canary_required"
+    if attempted and parse_failures / attempted > 0.05:
+        return "parse_failure_rate"
+    if attempted and provider_errors / attempted > 0.10:
+        return "provider_error_rate"
+    return None
+
+
+def _build_aborted_record(
+    target: ReviewTarget,
+    *,
+    options: WorkflowOptions,
+    reason: str,
+) -> dict[str, Any]:
+    level = target.level.strip().lower()
+    slug = target.slug.strip() or target.module_dir.name
+    policy = policy_for_level(level)
+    texts = _read_module_texts(target.module_dir)
+    prompt = llm_reviewer.build_reviewer_prompt(
+        level=level,
+        slug=slug,
+        module_md=texts.get("module.md", ""),
+        activities_yaml=texts.get("activities.yaml", ""),
+        vocabulary_yaml=texts.get("vocabulary.yaml", ""),
+        resources_yaml=texts.get("resources.yaml", ""),
+    )
+    prompt_hash = llm_qg_store.prompt_hash_for_text(prompt)
+    content_sha = llm_qg_store.content_sha_for_module(target.module_dir)
+    route = _tier2_route(
+        options=options,
+        policy_family=policy.family,
+        contested_gold_suppressed=False,
+    )
+    reviewer_model_id = route.reviewer_model_id if route else options.reviewer_model_id
+    reviewer_family = route.reviewer_family if route else options.reviewer_family
+    tiers = [
+        {"tier": 0, "name": "deterministic_structural", "status": "not_run_batch_aborted"},
+        {"tier": 1, "name": "ua_gec_gold_fixture", "status": "not_run_batch_aborted"},
+        {
+            "tier": 2,
+            "name": "llm_reviewer",
+            "status": "aborted_batch",
+            "reason": reason,
+            "llm_required_by_policy": policy.family in LLM_POLICY_FAMILIES,
+            "policy_family": policy.family,
+            "reviewer_model_id": reviewer_model_id,
+            "reviewer_family": reviewer_family,
+            "findings": 0,
+        },
+    ]
+    return _build_evidence_record(
+        level=level,
+        slug=slug,
+        target=target,
+        policy_family=policy.family,
+        policy_english=policy.english_policy,
+        content_sha=content_sha,
+        prompt_hash=prompt_hash,
+        findings=[],
+        tier_results=tiers,
+        workflow_verdict="INCOMPLETE",
+        completion_status="INCOMPLETE",
+        llm_used=False,
+        llm_required_by_policy=policy.family in LLM_POLICY_FAMILIES,
+        llm_required_by_harness=False,
+        llm_cost_override=False,
+        reviewer_model_id=reviewer_model_id,
+        reviewer_family=reviewer_family,
+        options=options,
+    )
+
+
+def _tier_from_record(record: Mapping[str, Any], tier_number: int) -> dict[str, Any]:
+    workflow = record.get("qg_workflow")
+    tiers = workflow.get("tiers") if isinstance(workflow, Mapping) else []
+    if isinstance(tiers, list):
+        for tier in tiers:
+            if isinstance(tier, Mapping) and tier.get("tier") == tier_number:
+                return dict(tier)
+    return {}
 
 
 def _tier0_findings(
@@ -385,15 +624,32 @@ def _run_tier2(
         or options.calibration_sample
         or contested_gold_suppressed
     )
+    route = _tier2_route(
+        options=options,
+        policy_family=policy_family,
+        contested_gold_suppressed=contested_gold_suppressed,
+    )
+    reviewer_model_id = route.reviewer_model_id if route else options.reviewer_model_id
+    reviewer_family = route.reviewer_family if route else options.reviewer_family
     base_result: dict[str, Any] = {
         "tier": 2,
         "name": "llm_reviewer",
         "llm_required_by_policy": policy_eligible,
         "policy_family": policy_family,
+        "reviewer_model_id": reviewer_model_id,
+        "reviewer_family": reviewer_family,
         "findings": 0,
     }
+    if route is not None:
+        base_result["reviewer_route"] = route.route_name
+        base_result["bridge_command"] = list(route.bridge_command)
     if not policy_eligible:
-        return {"findings": [], "result": {**base_result, "status": "skipped_policy"}}
+        return {
+            "findings": [],
+            "result": {**base_result, "status": "skipped_policy"},
+            "reviewer_model_id": reviewer_model_id,
+            "reviewer_family": reviewer_family,
+        }
     if tier0_hard_fail and not (options.llm_on_fail or options.calibration_sample):
         return {
             "findings": [],
@@ -404,6 +660,8 @@ def _run_tier2(
                 "reason": "Tier-0 hard FAIL short-circuits LLM by default; use --llm-on-fail to opt in.",
             },
             "llm_cost_override": True,
+            "reviewer_model_id": reviewer_model_id,
+            "reviewer_family": reviewer_family,
         }
     if not options.enable_llm:
         return {
@@ -413,7 +671,27 @@ def _run_tier2(
                 "status": "skipped_flag_off",
                 "reason": "Live Tier-2 reviewer remains flag-off until #4370 calibration lands.",
             },
+            "reviewer_model_id": reviewer_model_id,
+            "reviewer_family": reviewer_family,
         }
+
+    if options.live_reviewer:
+        blocked = _live_reviewer_block(
+            target=target,
+            level=level,
+            slug=slug,
+            route=route,
+            options=options,
+        )
+        if blocked is not None:
+            return {
+                "findings": [],
+                "result": {**base_result, **blocked},
+                "workflow_verdict": "INCOMPLETE",
+                "completion_status": "INCOMPLETE",
+                "reviewer_model_id": reviewer_model_id,
+                "reviewer_family": reviewer_family,
+            }
 
     cached = llm_qg_store.current_llm_qg_for_module(
         level,
@@ -423,7 +701,7 @@ def _run_tier2(
         prompt_hash=prompt_hash,
         checker_version=CHECKER_VERSION,
         level_policy_family=policy_family,
-        reviewer_model=options.reviewer_model_id,
+        reviewer_model=reviewer_model_id,
         path=store_path,
     )
     if cached is not None:
@@ -437,9 +715,39 @@ def _run_tier2(
                 "cache_run_id": cached.run_id,
             },
             "llm_used": True,
+            "reviewer_model_id": reviewer_model_id,
+            "reviewer_family": reviewer_family,
         }
 
-    estimate = estimate_llm_cost(prompt, policy_family)
+    stale_cache = _has_stale_cache(
+        level=level,
+        slug=slug,
+        gate_version=options.gate_version,
+        checker_version=CHECKER_VERSION,
+        level_policy_family=policy_family,
+        reviewer_model=reviewer_model_id,
+        store_path=store_path,
+    )
+    estimate = (
+        llm_reviewer_dispatch.estimate_route_cost(prompt, route, policy_family=policy_family)
+        if route is not None
+        else estimate_llm_cost(prompt, policy_family)
+    )
+    estimate["cache_status"] = "stale" if stale_cache else "cold"
+    if options.live_reviewer and not options.dry_run and options.max_cost_usd is None:
+        return {
+            "findings": [],
+            "result": {
+                **base_result,
+                "status": "skipped_budget_required",
+                "reason": "max_cost_usd_required",
+                "estimate": estimate,
+            },
+            "workflow_verdict": "SKIPPED_BUDGET",
+            "completion_status": "INCOMPLETE",
+            "reviewer_model_id": reviewer_model_id,
+            "reviewer_family": reviewer_family,
+        }
     allowed, reason = budget.spend_allowed(estimate, options)
     if not allowed:
         return {
@@ -452,6 +760,8 @@ def _run_tier2(
             },
             "workflow_verdict": "SKIPPED_BUDGET",
             "completion_status": "INCOMPLETE",
+            "reviewer_model_id": reviewer_model_id,
+            "reviewer_family": reviewer_family,
         }
     if options.dry_run:
         return {
@@ -460,9 +770,21 @@ def _run_tier2(
                 **base_result,
                 "status": "dry_run_estimate",
                 "estimate": estimate,
+                "stale_cache": stale_cache,
             },
+            "reviewer_model_id": reviewer_model_id,
+            "reviewer_family": reviewer_family,
         }
-    if reviewer is None:
+    effective_reviewer = reviewer
+    if effective_reviewer is None and options.live_reviewer and route is not None:
+        effective_reviewer = llm_reviewer_dispatch.LiveReviewerDispatcher(
+            policy_family=policy_family,
+            gate_version=options.gate_version,
+            contested_gold_suppressed=contested_gold_suppressed,
+            factual_sensitive=policy_family == "seminar",
+            author_family=options.author_family,
+        )
+    if effective_reviewer is None:
         return {
             "findings": [],
             "result": {
@@ -473,18 +795,109 @@ def _run_tier2(
             },
             "workflow_verdict": "INCOMPLETE",
             "completion_status": "INCOMPLETE",
+            "reviewer_model_id": reviewer_model_id,
+            "reviewer_family": reviewer_family,
         }
 
-    budget.record_spend(estimate)
-    raw_response = reviewer(target, prompt)
-    response_text = json.dumps(raw_response, ensure_ascii=False) if isinstance(raw_response, Mapping) else str(raw_response)
-    findings = llm_reviewer.parse_and_evaluate_llm_response(
-        response_text,
-        module_md=texts.get("module.md", ""),
-        activities_yaml=texts.get("activities.yaml", ""),
-        vocabulary_yaml=texts.get("vocabulary.yaml", ""),
-        resources_yaml=texts.get("resources.yaml", ""),
-    )
+    try:
+        raw_response = effective_reviewer(target, prompt)
+    except llm_reviewer_dispatch.ReviewerDispatchError as exc:
+        budget.record_spend(estimate)
+        return {
+            "findings": [],
+            "result": {
+                **base_result,
+                "status": "provider_error",
+                "reason": type(exc).__name__,
+                "message": str(exc),
+                "estimate": estimate,
+            },
+            "workflow_verdict": "PROVIDER_FAILURE",
+            "completion_status": "INCOMPLETE",
+            "reviewer_model_id": reviewer_model_id,
+            "reviewer_family": reviewer_family,
+        }
+    response_text, dispatch_meta = _coerce_reviewer_response(raw_response)
+    actual_model_id = str(dispatch_meta.get("reviewer_model_id") or reviewer_model_id)
+    actual_family = str(dispatch_meta.get("reviewer_family") or reviewer_family)
+    observed_cost = _observed_cost(dispatch_meta)
+    budget.record_spend(estimate, observed_cost_usd=observed_cost)
+    if route is not None:
+        _record_daily_spend(
+            options=options,
+            level=level,
+            slug=slug,
+            route=route,
+            estimate=estimate,
+            observed_cost_usd=observed_cost,
+        )
+    if actual_model_id != reviewer_model_id or actual_family != reviewer_family:
+        return {
+            "findings": [],
+            "result": {
+                **base_result,
+                "status": "provider_error",
+                "reason": "reviewer_identity_mismatch",
+                "actual_reviewer_model_id": actual_model_id,
+                "actual_reviewer_family": actual_family,
+                "estimate": estimate,
+            },
+            "workflow_verdict": "PROVIDER_FAILURE",
+            "completion_status": "INCOMPLETE",
+            "reviewer_model_id": actual_model_id,
+            "reviewer_family": actual_family,
+        }
+    if _cost_overrun(estimate, observed_cost):
+        return {
+            "findings": [],
+            "result": {
+                **base_result,
+                "status": "cost_overrun",
+                "estimate": estimate,
+                "observed_cost_usd": observed_cost,
+                "reason": "observed_cost_gt_125pct_estimate",
+            },
+            "workflow_verdict": "COST_OVERRUN",
+            "completion_status": "INCOMPLETE",
+            "reviewer_model_id": reviewer_model_id,
+            "reviewer_family": reviewer_family,
+        }
+    try:
+        findings = llm_reviewer.parse_and_evaluate_llm_response(
+            response_text,
+            module_md=texts.get("module.md", ""),
+            activities_yaml=texts.get("activities.yaml", ""),
+            vocabulary_yaml=texts.get("vocabulary.yaml", ""),
+            resources_yaml=texts.get("resources.yaml", ""),
+        )
+    except ValueError as exc:
+        return {
+            "findings": [],
+            "result": {
+                **base_result,
+                "status": "schema_failure",
+                "reason": str(exc),
+                "estimate": estimate,
+            },
+            "workflow_verdict": "SCHEMA_FAILURE",
+            "completion_status": "INCOMPLETE",
+            "reviewer_model_id": reviewer_model_id,
+            "reviewer_family": reviewer_family,
+        }
+    if _parse_failed(findings):
+        return {
+            "findings": findings,
+            "result": {
+                **base_result,
+                "status": "parse_failure",
+                "findings": len(findings),
+                "estimate": estimate,
+            },
+            "workflow_verdict": "PARSE_FAILURE",
+            "completion_status": "INCOMPLETE",
+            "reviewer_model_id": reviewer_model_id,
+            "reviewer_family": reviewer_family,
+        }
     payload = _payload_from_findings(findings)
     llm_qg_store.record_llm_qg(
         level=level,
@@ -495,8 +908,8 @@ def _run_tier2(
         prompt_hash=prompt_hash,
         checker_version=CHECKER_VERSION,
         level_policy_family=policy_family,
-        reviewer_model=options.reviewer_model_id,
-        reviewer_family=options.reviewer_family,
+        reviewer_model=reviewer_model_id,
+        reviewer_family=reviewer_family,
         source="qg_workflow",
         path=store_path,
     )
@@ -507,9 +920,185 @@ def _run_tier2(
             "status": "ran",
             "findings": len(findings),
             "estimate": estimate,
+            "dispatch": dispatch_meta,
         },
         "llm_used": True,
+        "reviewer_model_id": reviewer_model_id,
+        "reviewer_family": reviewer_family,
     }
+
+
+def _tier2_route(
+    *,
+    options: WorkflowOptions,
+    policy_family: str,
+    contested_gold_suppressed: bool,
+) -> llm_reviewer_dispatch.ReviewerRoute | None:
+    if not options.live_reviewer:
+        return None
+    return llm_reviewer_dispatch.route_for_review(
+        policy_family=policy_family,
+        contested_gold_suppressed=contested_gold_suppressed,
+        factual_sensitive=policy_family == "seminar",
+    )
+
+
+def _live_reviewer_block(
+    *,
+    target: ReviewTarget,
+    level: str,
+    slug: str,
+    route: llm_reviewer_dispatch.ReviewerRoute | None,
+    options: WorkflowOptions,
+) -> dict[str, Any] | None:
+    if route is None:
+        return None
+    if options.dry_run:
+        return None
+    try:
+        lineage = llm_reviewer_dispatch.resolve_author_lineage(
+            level=level,
+            slug=slug,
+            module_dir=target.module_dir,
+            explicit_author_family=options.author_family,
+        )
+        llm_reviewer_dispatch.validate_cross_family(route, lineage)
+    except llm_reviewer_dispatch.ReviewerSelfReviewError as exc:
+        return {
+            "status": "self_review_blocked",
+            "reason": "self_review",
+            "message": str(exc),
+        }
+    except llm_reviewer_dispatch.ReviewerLineageError as exc:
+        return {
+            "status": "lineage_required",
+            "reason": "author_family_unavailable",
+            "message": str(exc),
+        }
+    except llm_reviewer_dispatch.ReviewerRouteError as exc:
+        return {
+            "status": "provider_error",
+            "reason": "disallowed_reviewer_route",
+            "message": str(exc),
+        }
+    if not options.dry_run and not _exact_canary_passes(level=level, route=route, options=options):
+        return {
+            "status": "skipped_canary_required",
+            "reason": "exact_canary_required",
+            "message": "live Tier-2 calls require a passing same-route canary artifact",
+        }
+    return None
+
+
+def _exact_canary_passes(
+    *,
+    level: str,
+    route: llm_reviewer_dispatch.ReviewerRoute,
+    options: WorkflowOptions,
+) -> bool:
+    artifacts = options.canary_artifacts or {}
+    for key in (_canary_level_key(level), level.strip().lower(), "seminar"):
+        path = artifacts.get(key)
+        if path and llm_reviewer_dispatch.canary_artifact_passes(
+            path,
+            level=level,
+            gate_version=options.gate_version,
+            route=route,
+        ):
+            return True
+    return False
+
+
+def _canary_level_key(level: str) -> str:
+    policy = policy_for_level(level)
+    if policy.family == "seminar":
+        return "seminar"
+    clean = level.strip().lower()
+    if clean.startswith("b1"):
+        return "b1"
+    return clean
+
+
+def _coerce_reviewer_response(raw_response: Any) -> tuple[str, dict[str, Any]]:
+    if isinstance(raw_response, llm_reviewer_dispatch.DispatchResult):
+        return raw_response.response_text, raw_response.metadata()
+    if isinstance(raw_response, Mapping):
+        dispatch = raw_response.get("_llm_reviewer_dispatch")
+        if isinstance(dispatch, Mapping):
+            response = raw_response.get("response_text") or raw_response.get("response")
+            if isinstance(response, str):
+                return response, dict(dispatch)
+        return json.dumps(raw_response, ensure_ascii=False), {}
+    return str(raw_response), {}
+
+
+def _observed_cost(dispatch_meta: Mapping[str, Any]) -> float | None:
+    value = dispatch_meta.get("observed_cost_usd")
+    if value is None:
+        return None
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return None
+
+
+def _cost_overrun(
+    estimate: Mapping[str, Any],
+    observed_cost: float | None,
+) -> bool:
+    if observed_cost is None:
+        return False
+    estimated = float(estimate.get("estimated_cost_usd") or 0.0)
+    if estimated <= 0:
+        return False
+    return observed_cost > estimated * 1.25
+
+
+def _record_daily_spend(
+    *,
+    options: WorkflowOptions,
+    level: str,
+    slug: str,
+    route: llm_reviewer_dispatch.ReviewerRoute,
+    estimate: Mapping[str, Any],
+    observed_cost_usd: float | None,
+) -> None:
+    if not options.live_reviewer:
+        return
+    llm_reviewer_dispatch.append_daily_spend(
+        path=options.daily_spend_path,
+        level=level,
+        slug=slug,
+        route=route,
+        estimated_cost_usd=float(estimate.get("estimated_cost_usd") or 0.0),
+        observed_cost_usd=observed_cost_usd,
+    )
+
+
+def _parse_failed(findings: Sequence[Mapping[str, Any]]) -> bool:
+    return any(str(finding.get("issue_id")) == "LLM_RESPONSE_PARSE_FAILURE" for finding in findings)
+
+
+def _has_stale_cache(
+    *,
+    level: str,
+    slug: str,
+    gate_version: str,
+    checker_version: str,
+    level_policy_family: str,
+    reviewer_model: str,
+    store_path: Path | None,
+) -> bool:
+    latest = llm_qg_store.latest_llm_qg(
+        level,
+        slug,
+        gate_version=gate_version,
+        checker_version=checker_version,
+        level_policy_family=level_policy_family,
+        reviewer_model=reviewer_model,
+        path=store_path,
+    )
+    return latest is not None
 
 
 def estimate_llm_cost(prompt: str, policy_family: str) -> dict[str, Any]:
@@ -546,6 +1135,8 @@ def _build_evidence_record(
     llm_required_by_policy: bool,
     llm_required_by_harness: bool,
     llm_cost_override: bool,
+    reviewer_model_id: str,
+    reviewer_family: str,
     options: WorkflowOptions,
 ) -> dict[str, Any]:
     dimensions = dimensions_from_findings(findings)
@@ -575,7 +1166,12 @@ def _build_evidence_record(
             "llm_policy_families": sorted(LLM_POLICY_FAMILIES),
         },
         dimensions=dimensions,
-        checker_runs=_checker_runs(tier_results, options),
+        checker_runs=_checker_runs(
+            tier_results,
+            options,
+            reviewer_model_id=reviewer_model_id,
+            reviewer_family=reviewer_family,
+        ),
         content_sha=content_sha,
         provenance={
             "created_at": _now_z(),
@@ -590,12 +1186,13 @@ def _build_evidence_record(
     record["qg_workflow"] = {
         "gate_version": options.gate_version,
         "prompt_hash": prompt_hash,
-        "checker_version": CHECKER_VERSION,
-        "checker_config_hash": checker_config_hash(),
-        "reviewer_model_id": options.reviewer_model_id,
-        "content_hash_basis": CONTENT_HASH_BASIS,
-        "content_files": list(llm_qg_store.CONTENT_FILES),
-        "tiers": [dict(item) for item in tier_results],
+            "checker_version": CHECKER_VERSION,
+            "checker_config_hash": checker_config_hash(),
+            "reviewer_model_id": reviewer_model_id,
+            "reviewer_family": reviewer_family,
+            "content_hash_basis": CONTENT_HASH_BASIS,
+            "content_files": list(llm_qg_store.CONTENT_FILES),
+            "tiers": [dict(item) for item in tier_results],
     }
     record["llm_review"] = {
         "used": llm_used,
@@ -616,6 +1213,9 @@ def _build_evidence_record(
 def _checker_runs(
     tier_results: Sequence[Mapping[str, Any]],
     options: WorkflowOptions,
+    *,
+    reviewer_model_id: str,
+    reviewer_family: str,
 ) -> list[dict[str, Any]]:
     runs = [
         {
@@ -642,8 +1242,8 @@ def _checker_runs(
                 "source": "llm_reviewer",
                 "checker": options.gate_version,
                 "config_hash": None,
-                "provider": options.reviewer_family,
-                "model": options.reviewer_model_id,
+                "provider": reviewer_family,
+                "model": reviewer_model_id,
             }
         )
     return runs
@@ -777,6 +1377,109 @@ def _reviewer_from_response(path: Path | None) -> Reviewer | None:
     return reviewer
 
 
+def calibrate_modules(
+    targets: Sequence[ReviewTarget],
+    *,
+    options: WorkflowOptions,
+    reviewer: Reviewer | None = None,
+    store_path: Path | None = None,
+    probes: int = 5,
+) -> dict[str, Any]:
+    """Run a small live probe set and report observed/estimated cost factors."""
+
+    if not options.live_reviewer:
+        raise ValueError("--calibrate requires --live-reviewer")
+    if options.max_cost_usd is None:
+        raise ValueError("--calibrate requires --max-cost-usd")
+    sample = list(targets[: max(1, probes)])
+    calibration_options = WorkflowOptions(
+        gate_version=options.gate_version,
+        reviewer_model_id=options.reviewer_model_id,
+        reviewer_family=options.reviewer_family,
+        live_reviewer=True,
+        author_family=options.author_family,
+        canary_artifacts=options.canary_artifacts,
+        daily_spend_path=options.daily_spend_path,
+        run_command=options.run_command,
+        enable_llm=True,
+        force_llm=True,
+        llm_on_fail=True,
+        calibration_sample=True,
+        dry_run=False,
+        canary_passed=options.canary_passed,
+        max_llm_calls=options.max_llm_calls,
+        max_cost_usd=options.max_cost_usd,
+        max_daily_cost_usd=options.max_daily_cost_usd,
+        max_module_cost_usd=options.max_module_cost_usd,
+        fail_closed_on_llm_skip=options.fail_closed_on_llm_skip,
+    )
+    records = review_modules(
+        sample,
+        options=calibration_options,
+        reviewer=reviewer,
+        store_path=store_path,
+    )
+    factors: list[float] = []
+    probes_out: list[dict[str, Any]] = []
+    for record in records:
+        tier2 = _tier_from_record(record, 2)
+        estimate = tier2.get("estimate") if isinstance(tier2.get("estimate"), Mapping) else {}
+        dispatch = tier2.get("dispatch") if isinstance(tier2.get("dispatch"), Mapping) else {}
+        estimated_cost = float(estimate.get("estimated_cost_usd") or 0.0)
+        observed_cost = _observed_cost(dispatch)
+        if estimated_cost > 0 and observed_cost is not None:
+            factors.append(observed_cost / estimated_cost)
+        probes_out.append(
+            {
+                "module_id": record["module_id"],
+                "status": tier2.get("status"),
+                "reviewer_model_id": tier2.get("reviewer_model_id"),
+                "estimated_cost_usd": estimated_cost,
+                "observed_cost_usd": observed_cost,
+            }
+        )
+    factor = sorted(factors)[len(factors) // 2] if factors else None
+    return {
+        "schema_version": "qg_workflow_calibration.v1",
+        "probe_count": len(probes_out),
+        "cost_factor_median": round(factor, 4) if factor is not None else None,
+        "probes": probes_out,
+        "run_command": options.run_command,
+    }
+
+
+def _canary_artifacts_from_args(
+    args: argparse.Namespace,
+    targets: Sequence[ReviewTarget],
+) -> dict[str, Path]:
+    artifacts: dict[str, Path] = {}
+    for spec in args.canary_artifact or []:
+        if "=" not in spec:
+            raise ValueError("--canary-artifact must use LEVEL=PATH")
+        level, raw_path = spec.split("=", 1)
+        artifacts[_canary_level_key(level)] = Path(raw_path)
+    if args.canary_result and args.live_reviewer and len(targets) == 1:
+        artifacts.setdefault(_canary_level_key(targets[0].level), args.canary_result)
+    return artifacts
+
+
+def _exact_run_command(argv: Sequence[str]) -> str:
+    filtered: list[str] = []
+    skip_next = False
+    drop_value_after = {"--output"}
+    for item in argv:
+        if skip_next:
+            skip_next = False
+            continue
+        if item == "--dry-run":
+            continue
+        if item in drop_value_after:
+            skip_next = True
+            continue
+        filtered.append(item)
+    return ".venv/bin/python scripts/audit/qg_workflow.py " + shlex.join(filtered)
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--module-dir", type=Path, help="Single module directory to review.")
@@ -793,28 +1496,48 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--force-llm", action="store_true", help="Enable Tier-2 for this run and override A1/A2 policy skip.")
     parser.add_argument("--llm-on-fail", action="store_true", help="Run Tier-2 even after Tier-0 hard FAIL.")
     parser.add_argument("--calibration-sample", action="store_true", help="Treat targets as an explicit calibration sample.")
+    parser.add_argument("--live-reviewer", action="store_true", help="Use the live reviewer dispatcher; requires budget and exact canary artifacts.")
+    parser.add_argument("--author-family", help="Explicit module author family for live cross-family review.")
     parser.add_argument("--max-llm-calls", type=int, help="Per-run reviewer call ceiling.")
     parser.add_argument("--max-cost-usd", type=float, help="Per-run cost ceiling.")
     parser.add_argument("--max-daily-cost-usd", type=float, help="Per-day safety rail for this local run.")
     parser.add_argument("--max-module-cost-usd", type=float, help="Per-module pathological prompt cost cap.")
+    parser.add_argument("--daily-spend-ledger", type=Path, help="Optional local JSONL spend ledger path.")
     parser.add_argument("--gate-version", default=DEFAULT_GATE_VERSION)
     parser.add_argument("--reviewer-model-id", default=DEFAULT_REVIEWER_MODEL_ID)
     parser.add_argument("--reviewer-family", default=DEFAULT_REVIEWER_FAMILY)
     parser.add_argument("--db", type=Path, help="Optional LLM-QG SQLite cache path.")
     parser.add_argument("--llm-response-json", type=Path, help="Precomputed reviewer response JSON; no live dispatch.")
     parser.add_argument("--canary-result", type=Path, help="Reviewer canary JSON that must pass before broad LLM.")
+    parser.add_argument(
+        "--canary-artifact",
+        action="append",
+        default=[],
+        help="Exact dispatcher canary artifact in LEVEL=PATH form; repeat for mixed-level live batches.",
+    )
+    parser.add_argument("--calibrate", action="store_true", help="Run up to five live probes to calibrate route cost estimates.")
+    parser.add_argument("--calibration-probes", type=int, default=5, help="Number of live probes for --calibrate.")
     parser.add_argument("--format", choices=("json", "summary"), default="summary")
     parser.add_argument("--output", type=Path, help="Optional output file.")
     return parser
 
 
 def main(argv: list[str] | None = None) -> int:
-    args = build_parser().parse_args(argv)
+    argv_list = list(argv) if argv is not None else sys.argv[1:]
+    args = build_parser().parse_args(argv_list)
     try:
         targets = _targets_from_args(args)
-        enable_llm = bool(args.force_llm or args.llm_response_json or args.dry_run or args.db)
+        canary_artifacts = _canary_artifacts_from_args(args, targets)
+        enable_llm = bool(
+            args.force_llm
+            or args.llm_response_json
+            or args.dry_run
+            or args.db
+            or args.live_reviewer
+            or args.calibrate
+        )
         canary_passed = False
-        if not args.dry_run and len(targets) > 1 and _llm_enabled_for_any_target(
+        if not args.dry_run and not args.live_reviewer and len(targets) > 1 and _llm_enabled_for_any_target(
             targets,
             WorkflowOptions(
                 enable_llm=enable_llm,
@@ -832,10 +1555,15 @@ def main(argv: list[str] | None = None) -> int:
             gate_version=args.gate_version,
             reviewer_model_id=args.reviewer_model_id,
             reviewer_family=args.reviewer_family,
+            live_reviewer=args.live_reviewer or args.calibrate,
+            author_family=args.author_family,
+            canary_artifacts=canary_artifacts,
+            daily_spend_path=args.daily_spend_ledger,
+            run_command=_exact_run_command(argv_list),
             enable_llm=enable_llm,
             force_llm=args.force_llm,
             llm_on_fail=args.llm_on_fail,
-            calibration_sample=args.calibration_sample,
+            calibration_sample=args.calibration_sample or args.calibrate,
             dry_run=args.dry_run,
             canary_passed=canary_passed,
             max_llm_calls=args.max_llm_calls,
@@ -843,7 +1571,15 @@ def main(argv: list[str] | None = None) -> int:
             max_daily_cost_usd=args.max_daily_cost_usd,
             max_module_cost_usd=args.max_module_cost_usd,
         )
-        if args.dry_run:
+        if args.calibrate:
+            payload = calibrate_modules(
+                targets,
+                options=options,
+                reviewer=_reviewer_from_response(args.llm_response_json),
+                store_path=args.db,
+                probes=args.calibration_probes,
+            )
+        elif args.dry_run:
             payload: dict[str, Any] | list[dict[str, Any]] = dry_run_modules(
                 targets,
                 options=options,
@@ -880,6 +1616,12 @@ def _summary(payload: Mapping[str, Any] | Sequence[Mapping[str, Any]]) -> str:
             f"Tier-1 gold rows matched: {counts['tier1_gold_rows_matched']}\n"
             f"Tier-2 estimated calls: {counts['tier2_estimated_calls']}"
         )
+    if isinstance(payload, Mapping) and payload.get("schema_version") == "qg_workflow_calibration.v1":
+        return (
+            "QG workflow calibration\n"
+            f"Probes: {payload['probe_count']}\n"
+            f"Median cost factor: {payload['cost_factor_median']}"
+        )
     records = [payload] if isinstance(payload, Mapping) else list(payload)
     lines = ["QG workflow evidence"]
     for record in records:
@@ -893,6 +1635,8 @@ def _summary(payload: Mapping[str, Any] | Sequence[Mapping[str, Any]]) -> str:
 def _passes(payload: Mapping[str, Any] | Sequence[Mapping[str, Any]]) -> bool:
     if isinstance(payload, Mapping) and payload.get("dry_run") is True:
         return True
+    if isinstance(payload, Mapping) and payload.get("schema_version") == "qg_workflow_calibration.v1":
+        return all(str(probe.get("status")) == "ran" for probe in payload.get("probes", []))
     records = [payload] if isinstance(payload, Mapping) else list(payload)
     return all(str(record.get("terminal_verdict")) == "PASS" for record in records)
 
