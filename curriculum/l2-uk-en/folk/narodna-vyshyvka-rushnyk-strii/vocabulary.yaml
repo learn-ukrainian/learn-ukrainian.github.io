@@ -1,0 +1,184 @@
+- lemma: вишивка
+  translation: embroidery
+  pos: іменник
+  usage: Вишивка поєднує техніку шва, орнамент і пам'ять руки.
+- lemma: вишиванка
+  translation: embroidered shirt
+  pos: іменник
+  usage: Вишиванка є видимим сучасним символом, але не вичерпує всієї народної вишивки.
+- lemma: рушник
+  translation: towel, ritual embroidered cloth
+  pos: іменник
+  usage: Рушник може бути побутовою тканиною, хатнім знаком або обрядовою річчю.
+- lemma: обрядовий рушник
+  translation: ritual towel
+  pos: словосполука
+  usage: Обрядовий рушник треба читати через дію, у якій він використовується.
+- lemma: божник
+  translation: icon towel
+  pos: іменник
+  usage: Божник прикрашає образи і входить у хатній сакральний простір.
+- lemma: кілковий рушник
+  translation: towel hung on a peg or near icons
+  pos: словосполука
+  usage: Кілковий рушник пов'язаний із хатнім розміщенням, а не з витиранням рук.
+- lemma: стрій
+  translation: traditional dress ensemble
+  pos: іменник
+  usage: Стрій охоплює сорочку, поясний одяг, головний убір, взуття і спосіб носіння.
+- lemma: сорочка
+  translation: shirt
+  pos: іменник
+  usage: Сорочка організує орнамент через рукав, горловину, пазуху і поділ.
+- lemma: уставка
+  translation: shoulder insert
+  pos: іменник
+  usage: Уставка може бути одним із головних полів вишивки на сорочці.
+- lemma: пазуха
+  translation: shirt opening, bosom area
+  pos: іменник
+  usage: Пазуха на чоловічій сорочці часто стає помітним місцем оздоблення.
+- lemma: манжета
+  translation: cuff
+  pos: іменник
+  usage: Манжета позначає межу рукава і зап'ястя.
+- lemma: поділ
+  translation: hem
+  pos: іменник
+  usage: Поділ є нижньою межею сорочки або спіднього одягу.
+- lemma: низь
+  translation: nyz embroidery technique
+  pos: іменник
+  usage: Низь ведеться з вивороту і вимагає точного рахунку ниток.
+- lemma: занизування
+  translation: counted underside embroidery
+  pos: іменник
+  usage: Занизування показує приховану дисципліну майстрині.
+- lemma: лиштва
+  translation: counted satin-like stitch
+  pos: іменник
+  usage: Лиштва поєднує рахунок ниток і двобічну виразність.
+- lemma: гладь
+  translation: satin stitch
+  pos: іменник
+  usage: Гладь заповнює площину і створює рельєф на тканині.
+- lemma: мережка
+  translation: drawn-thread embroidery
+  pos: іменник
+  usage: Мережка виникає з витягнутих і оброблених ниток полотна.
+- lemma: вирізування
+  translation: cutwork
+  pos: іменник
+  usage: Вирізування перетворює контрольовану порожнечу на частину орнаменту.
+- lemma: гаптування
+  translation: goldwork or rich embroidery
+  pos: іменник
+  usage: Гаптування пов'язує народну тему з церковним і міським шитвом.
+- lemma: заполоч
+  translation: colored embroidery thread
+  pos: іменник
+  usage: Заполоч додає кольорову виразність до тканини.
+- lemma: лелітки
+  translation: sequins
+  pos: іменник
+  usage: Лелітки в буковинському контексті належать до логіки блискучих матеріалів.
+- lemma: намітка
+  translation: long married woman's headcloth
+  pos: іменник
+  usage: Намітка може позначати шлюбний стан і зберігатися у весільній або похоронній пам'яті.
+- lemma: очіпок
+  translation: married woman's cap
+  pos: іменник
+  usage: Очіпок є частиною соціальної мови головного убору.
+- lemma: плахта
+  translation: traditional wrap skirt
+  pos: іменник
+  usage: Плахта входить до жіночого строю як поясний одяг.
+- lemma: запаска
+  translation: apron-like wrap garment
+  pos: іменник
+  usage: Запаска формує силует і регіональну норму жіночого вбрання.
+- lemma: крайка
+  translation: woven belt
+  pos: іменник
+  usage: Крайка підперізує стрій і може мати власний орнаментальний ритм.
+- lemma: кептар
+  translation: sheepskin vest
+  pos: іменник
+  usage: Кептар поєднує тканину, хутро, шкіру і метал у карпатському строї.
+- lemma: сердак
+  translation: wool outer coat
+  pos: іменник
+  usage: Сердак належить до верхнього одягу в традиційному строї.
+- lemma: свита
+  translation: homespun outer coat
+  pos: іменник
+  usage: Свита показує матеріальну й сезонну сторону строю.
+- lemma: постоли
+  translation: traditional leather footwear
+  pos: іменник
+  usage: Постоли особливо промовисті в карпатському сільському контексті.
+- lemma: личаки
+  translation: bast shoes
+  pos: іменник
+  usage: Личаки пов'язують стрій із поліським матеріальним світом.
+- lemma: покуть
+  translation: icon corner
+  pos: іменник
+  usage: Покуть може бути місцем, де рушник працює поруч з образами.
+- lemma: сватання
+  translation: matchmaking ritual
+  pos: іменник
+  usage: У сватанні рушники можуть бути знаком згоди.
+- lemma: старости
+  translation: matchmakers
+  pos: іменник
+  usage: Старости в окремих звичаях отримують або носять рушники.
+- lemma: коровай
+  translation: wedding bread
+  pos: іменник
+  usage: Коровай може лежати на рушнику в почесному весільному режимі.
+- lemma: хліб-сіль
+  translation: bread and salt
+  pos: словосполука
+  usage: Хліб-сіль на рушникові може бути жестом гостинності або протокольним знаком.
+- lemma: дерево життя
+  translation: tree of life
+  pos: словосполука
+  usage: Дерево життя треба тлумачити через конкретний предмет і джерело.
+- lemma: ромб
+  translation: rhombus motif
+  pos: іменник
+  usage: Ромб має сильне символічне поле, але не однакове значення всюди.
+- lemma: рожа
+  translation: rosette motif
+  pos: іменник
+  usage: Рожа може бути квіткою, розетою або композиційним центром.
+- lemma: меандр
+  translation: meander motif
+  pos: іменник
+  usage: Меандр належить до геометричних мотивів, які потребують контексту.
+- lemma: джерельна межа
+  translation: source boundary
+  pos: словосполука
+  usage: Джерельна межа не дозволяє перетворити один зразок на правило для всіх.
+- lemma: шароварщина
+  translation: reductive folk-costume kitsch
+  pos: іменник
+  usage: Шароварщина стирає регіони, техніки і реальну складність строю.
+- lemma: фольклоризація
+  translation: folklorization
+  pos: іменник
+  usage: Радянська фольклоризація могла підтримувати виробництво і водночас контролювати зміст.
+- lemma: апропріація
+  translation: appropriation
+  pos: іменник
+  usage: Апропріація стирає українське походження узору або техніки.
+- lemma: майстриня
+  translation: craftswoman, master maker
+  pos: іменник
+  usage: Майстриня тримає техніку, пам'ять руки і локальну школу.
+- lemma: скриня
+  translation: chest
+  pos: іменник
+  usage: Скриня зберігає сорочки, рушники і родинну пам'ять.
