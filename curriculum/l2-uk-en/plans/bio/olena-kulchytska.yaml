@@ -21,7 +21,7 @@ activity_hints:
   type: essay-response
 cefr_min: C1
 connects_to:
-- bio-362
+- bio-384
 - bio-314
 - bio-105
 - bio-317
@@ -95,7 +95,7 @@ focus: >-
   візуального архіву західноукраїнської культури; аналіз книжки, графічної техніки,
   народної архітектури, воєнної пам'яті та складної публічної ролі під кількома режимами.
 level: BIO
-module: bio-363
+module: bio-385
 objectives:
 - Аналізувати графічні техніки Кульчицької та їхню роль у книжковій, етнографічній і музейній культурі.
 - Пояснювати, як народний одяг, архітектура й регіональні образи можуть працювати як національний архів.
@@ -123,7 +123,7 @@ references:
   path: https://nml.com.ua/museum/hudozhno-memorialniy-muzey-oleni-kulchitskoyi/
   title: Художньо-меморіальний музей Олени Кульчицької
   type: reference
-sequence: 363
+sequence: 385
 slug: olena-kulchytska
 subtitle: Графіка як переносний архів
 title: 'Олена Кульчицька: Графіка як архів нації'

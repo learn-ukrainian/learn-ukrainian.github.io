@@ -24,8 +24,8 @@ activity_hints:
 cefr_min: C1
 connects_to:
 - bio-314
-- bio-360
-- bio-361
+- bio-382
+- bio-383
 - bio-105
 - bio-125
 content_outline:
@@ -98,7 +98,7 @@ focus: >-
   мистецтв; аналіз триптиха `Життя`, модерної української художньої школи та
   поствоєнного радянського тиску через арешт, контроль і позбавлення статусу.
 level: BIO
-module: bio-362
+module: bio-384
 objectives:
 - Аналізувати `Життя` як центральний твір українського модернізму через композицію, триптих і монументальність.
 - Пояснювати роль Федора Кричевського в Українській академії мистецтв і педагогічній традиції.
@@ -126,7 +126,7 @@ references:
   path: https://naoma.edu.ua/akademiya/istoriya-naoma/vydatni-osobystosti/fedir-krychevskyj-3/
   title: Федір Кричевський (НАОМА)
   type: reference
-sequence: 362
+sequence: 384
 slug: fedir-krychevskyi
 subtitle: Ректор, триптих і ціна виживання
 title: 'Федір Кричевський: Життя під тиском'

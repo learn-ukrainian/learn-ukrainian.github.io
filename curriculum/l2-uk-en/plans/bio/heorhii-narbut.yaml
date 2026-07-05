@@ -22,7 +22,7 @@ activity_hints:
 cefr_min: C1
 connects_to:
 - bio-314
-- bio-360
+- bio-383
 - hist-tsentralna-rada
 - istorio-universaly-unr
 - oes-numbers-currency
@@ -97,7 +97,7 @@ focus: >-
   років: банкноти, марки, шрифти, геральдика й Українська академія мистецтв під
   тиском війни та інституційної крихкості.
 level: BIO
-module: bio-360
+module: bio-382
 objectives:
 - Аналізувати банкноти, марки, шрифти й герби як джерела української державної культури.
 - Пояснювати роль Георгія Нарбута в Українській академії мистецтв і графіці УНР без перебільшення одноосібного авторства герба.
@@ -125,7 +125,7 @@ references:
   path: https://bank.gov.ua/ua/uah/uah-history
   title: Історія української гривні (НБУ)
   type: reference
-sequence: 360
+sequence: 382
 slug: heorhii-narbut
 subtitle: Графічна мова української державності
 title: 'Георгій Нарбут: Банкнота, шрифт і держава'
