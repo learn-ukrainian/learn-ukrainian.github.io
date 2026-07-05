@@ -36,8 +36,16 @@ INTERNAL_ROLES = {"checkpoint source"}
 _INTERNAL_TITLE_RE = re.compile(
     r"^(?:Wiki:\s*pedagogy|Synthesis of M|Internal module|Plan:\s)", re.IGNORECASE
 )
+# A source_ref pointing back into the repo marks build provenance — EXCEPT the two
+# external-material catalog dirs, which record where a *genuine* resource was sourced:
+#   docs/references/  — the reference corpus (school textbooks, style guides, …)
+#   docs/resources/   — the external-resource catalog (ULP/DobraForma/podcast index)
+# A role=textbook citation like source_ref "docs/references/textbooks-txt/9-klas-…voron-2017.txt"
+# is a real learner resource (its source_ref is load-bearing for the plan-reference gate), not junk.
+# Without this carve-out the tool deleted 26 legitimate B1 textbook citations.
 _INTERNAL_REF_RE = re.compile(
-    r"^(?:curriculum/|wiki/|docs/|Wiki:\s*pedagogy|Synthesis of )", re.IGNORECASE
+    r"^(?:curriculum/|wiki/|docs/(?!references/|resources/)|Wiki:\s*pedagogy|Synthesis of )",
+    re.IGNORECASE,
 )
 _EMPTY_NOTE = "This module introduces no new external resources."
 _ROLE_RE = re.compile(r"^\s+role:\s*(.+?)\s*$")

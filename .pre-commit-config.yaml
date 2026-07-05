@@ -152,11 +152,11 @@ repos:
           (?x)^(
             site/src/content/
           (
-            docs/(a1|a2|folk|hist|istorio|bio|lit|lit-essay|lit-hist-fic|lit-fantastika|
+            docs/(a1|a2|b1|folk|hist|istorio|bio|lit|lit-essay|lit-hist-fic|lit-fantastika|
             lit-war|lit-humor|lit-youth|lit-doc|lit-drama|lit-crimea|oes|ruth)/.*\.mdx|
             readings/.*\.mdx
           )|
-            curriculum/l2-uk-en/(a1|a2|folk)/[^/]+/(module\.md|activities\.ya?ml|vocabulary\.ya?ml|resources\.ya?ml)
+            curriculum/l2-uk-en/(a1|a2|b1|folk)/[^/]+/(module\.md|activities\.ya?ml|vocabulary\.ya?ml|resources\.ya?ml)
           )$
         stages: [pre-commit]
       - id: check-locked-module-not-published

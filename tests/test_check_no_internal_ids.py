@@ -247,6 +247,31 @@ def test_internal_resource_refs_are_flagged(text: str, tmp_path: Path) -> None:
     assert any(finding.kind == "internal resource ref" for finding in findings)
 
 
+def test_chunk_id_inside_html_comment_is_not_flagged(tmp_path: Path) -> None:
+    """B1 regression: <!-- VERIFY … chunk_id="…" --> authoring markers never render,
+    so build-provenance inside an HTML comment is not a learner-surface leak; the same
+    term in rendered prose still is."""
+    doc = tmp_path / "m.md"
+    doc.write_text(
+        'Rendered chunk mention 5794da94_c0817.\n'
+        '<!-- VERIFY: source="MCP" chunk_id="7-klas-ukrmova-avramenko-2024_s0078" -->\n'
+        'Another visible id 40beaaff_c0000 here.\n',
+        encoding="utf-8",
+    )
+    lines = [f.line_no for f in check_no_internal_ids.scan_files([doc])]
+    assert 2 not in lines  # the comment line is blanked
+    assert 1 in lines and 3 in lines  # rendered corpus ids still flagged
+
+
+def test_multiline_html_comment_is_not_flagged(tmp_path: Path) -> None:
+    doc = tmp_path / "m.mdx"
+    doc.write_text(
+        "Before.\n<!-- note:\nchunk_id=\"7-klas_s0001\"\nsource hammer\n-->\nAfter.\n",
+        encoding="utf-8",
+    )
+    assert check_no_internal_ids.scan_files([doc]) == []  # all leak-y text is inside the comment
+
+
 def test_resources_chunk_id_provenance_key_is_not_flagged(tmp_path: Path) -> None:
     res = tmp_path / "resources.yaml"
     res.write_text(
@@ -265,11 +290,11 @@ def test_core_a1_surfaces_are_guarded(tmp_path: Path, monkeypatch: pytest.Monkey
     monkeypatch.setattr(check_no_internal_ids, "PROJECT_ROOT", tmp_path)
     a1_mdx = tmp_path / "site/src/content/docs/a1/x.mdx"
     a1_src = tmp_path / "curriculum/l2-uk-en/a1/x/resources.yaml"
-    b1_mdx = tmp_path / "site/src/content/docs/b1/y.mdx"
-    for p in (a1_mdx, a1_src, b1_mdx):
+    b2_mdx = tmp_path / "site/src/content/docs/b2/y.mdx"
+    for p in (a1_mdx, a1_src, b2_mdx):
         p.parent.mkdir(parents=True, exist_ok=True)
         p.write_text("x\n", encoding="utf-8")
     assert check_no_internal_ids.is_published_seminar_mdx(a1_mdx)
     assert check_no_internal_ids.is_published_seminar_mdx(a1_src)
-    # A core level not yet in GUARDED_CORE_LEVELS is not scanned yet.
-    assert not check_no_internal_ids.is_published_seminar_mdx(b1_mdx)
+    # A core level not yet in GUARDED_CORE_LEVELS (b2) is not scanned yet.
+    assert not check_no_internal_ids.is_published_seminar_mdx(b2_mdx)
