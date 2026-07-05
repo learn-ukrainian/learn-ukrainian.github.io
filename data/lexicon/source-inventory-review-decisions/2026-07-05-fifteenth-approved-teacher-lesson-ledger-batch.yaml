@@ -1,0 +1,253 @@
+---
+version: 1
+kind: atlas_source_inventory_review_decisions
+batch_id: source-inventory-fifteenth-approved-teacher-lesson-ledger-batch-2026-07-05
+batch_label: fifteenth-approved-teacher-lesson-ledger-batch
+reviewer: content-review
+reviewed_at: '2026-07-05'
+source_queue:
+  workflow: source_inventory_publish_review_queue.v1
+  total_queue_rows: 298
+  approved_in_queue: 17
+  promotion_batch_size: 17
+production_outputs_updated: []
+decisions:
+- lemma: пацієнт
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: patient
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: a0e0920262b53f32
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-279-298.yaml
+    locator: explicit vocabulary table row 279
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-279-298
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: олень
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: deer
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 04c9752b88660622
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-279-298.yaml
+    locator: explicit vocabulary table row 280
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-279-298
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: вистачати
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to be enough, to be sufficient
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 2b175e6ee3136292
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-279-298.yaml
+    locator: explicit vocabulary table row 281
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-279-298
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: їстівний
+  decision: approve_for_publish
+  approved_pos: adj
+  approved_gloss: edible
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 42870c45bec65c58
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-279-298.yaml
+    locator: explicit vocabulary table row 282
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-279-298
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: сміятися
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to laugh (at)
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 8c9bd110a56b9581
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-279-298.yaml
+    locator: explicit vocabulary table row 283
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-279-298
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: гостринка
+  decision: needs_more_evidence
+  sense_note: 'needs_more_evidence (2026-07-05, fable/track-driver): genuine colloquial
+    derivative of «гострий» (''a touch of spiciness''), NOT a russianism (russian_shadow
+    0.25 noise-level), but unpublishable today — absent from VESUM AND zero heritage
+    attestation (no Грінченко, no ЕСУМ, no СУМ-20 via search_heritage). Would fail
+    the lemma_in_vesum publish gate; no citable definition to render. Revisit if a
+    dictionary source attests it.'
+  source_inventory:
+    key: f03873bf9104bdf4
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-279-298.yaml
+    locator: explicit vocabulary table row 284
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-279-298
+    source_family: teacher_lesson
+  evidence_refs:
+  - 'VESUM verify_words: NOT FOUND'
+  - 'search_heritage: no evidence rows'
+  - 'russian_shadow: 0.25 sub-threshold (not a russianism)'
+- lemma: благодійний
+  decision: approve_for_publish
+  approved_pos: adj
+  approved_gloss: charity (adj)
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: a414d83bcdd5ff48
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-279-298.yaml
+    locator: explicit vocabulary table row 285
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-279-298
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: копчений
+  decision: approve_for_publish
+  approved_pos: adj
+  approved_gloss: smoked
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: d53e10fa350b75ea
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-279-298.yaml
+    locator: explicit vocabulary table row 286
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-279-298
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: глибина
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: depth
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: ace5ebedeecf2077
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-279-298.yaml
+    locator: explicit vocabulary table row 288
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-279-298
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: чистити
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to clean, to peel, to brush clean (imperfective)
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 87fb22370839e9d5
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-279-298.yaml
+    locator: explicit vocabulary table row 289
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-279-298
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: почистити
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to clean, to peel, to brush clean (perfective)
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: d74ac09f8bfc2f64
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-279-298.yaml
+    locator: explicit vocabulary table row 290
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-279-298
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: проваритися
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to be boiled (perfective)
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 48cd4e309d30150e
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-279-298.yaml
+    locator: explicit vocabulary table row 291
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-279-298
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: помішувати
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to stir (imperfective)
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: fd916bc4b6bf0be1
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-279-298.yaml
+    locator: explicit vocabulary table row 292
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-279-298
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: помішати
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to stir (perfective)
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 47f32d83df9bd7ab
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-279-298.yaml
+    locator: explicit vocabulary table row 293
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-279-298
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: пригоріти
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to burn, to stick to the bottom
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: c5bc88cd2bd70414
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-279-298.yaml
+    locator: explicit vocabulary table row 294
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-279-298
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: конфорка
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: burner
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 3bc0c6ff74159d19
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-279-298.yaml
+    locator: explicit vocabulary table row 295
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-279-298
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: полягти
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: to die (in war as a soldier)
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: eb6b36ce4ecc4716
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-279-298.yaml
+    locator: explicit vocabulary table row 296
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-279-298
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: повітря
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: air
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 57ffa736af76f7fd
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-279-298.yaml
+    locator: explicit vocabulary table row 298
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-279-298
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table

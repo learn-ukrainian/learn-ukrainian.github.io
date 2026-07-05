@@ -1,0 +1,105 @@
+---
+version: 1
+kind: atlas_source_inventory
+sources:
+  - id: private-teacher-lesson-vocabulary-table-1-rows-279-298
+    source_family: teacher_lesson
+    extraction_mode: curated_headword
+    title: Private teacher lesson vocabulary - explicit table rows 279-298
+    locator: local-only explicit vocabulary table rows 279-298
+    notes: >-
+      Derived headword metadata only; raw private lesson material is local-only
+      and not committed. Daily Word, Practice, and cloze remain frozen without
+      explicit surface_admission. Rows 287 and 297 are multi-word idiom/collocation
+      entries deferred pending a collocation intake convention.
+    headwords:
+      - lemma: пацієнт
+        pos: noun
+        gloss: patient
+        locator: explicit vocabulary table row 279
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: олень
+        pos: noun
+        gloss: deer
+        locator: explicit vocabulary table row 280
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: вистачати
+        pos: verb
+        gloss: to be enough, to be sufficient
+        locator: explicit vocabulary table row 281
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: їстівний
+        pos: adj
+        gloss: edible
+        locator: explicit vocabulary table row 282
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: сміятися
+        pos: verb
+        gloss: to laugh (at)
+        locator: explicit vocabulary table row 283
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: гостринка
+        pos: noun
+        gloss: a spicy thing, spice
+        locator: explicit vocabulary table row 284
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: благодійний
+        pos: adj
+        gloss: charity (adj)
+        locator: explicit vocabulary table row 285
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: копчений
+        pos: adj
+        gloss: smoked
+        locator: explicit vocabulary table row 286
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: глибина
+        pos: noun
+        gloss: depth
+        locator: explicit vocabulary table row 288
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: чистити
+        pos: verb
+        gloss: to clean, to peel, to brush clean (imperfective)
+        locator: explicit vocabulary table row 289
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: почистити
+        pos: verb
+        gloss: to clean, to peel, to brush clean (perfective)
+        locator: explicit vocabulary table row 290
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: проваритися
+        pos: verb
+        gloss: to be boiled (perfective)
+        locator: explicit vocabulary table row 291
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: помішувати
+        pos: verb
+        gloss: to stir (imperfective)
+        locator: explicit vocabulary table row 292
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: помішати
+        pos: verb
+        gloss: to stir (perfective)
+        locator: explicit vocabulary table row 293
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: пригоріти
+        pos: verb
+        gloss: to burn, to stick to the bottom
+        locator: explicit vocabulary table row 294
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: конфорка
+        pos: noun
+        gloss: burner
+        locator: explicit vocabulary table row 295
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: полягти
+        pos: verb
+        gloss: to die (in war as a soldier)
+        locator: explicit vocabulary table row 296
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: повітря
+        pos: noun
+        gloss: air
+        locator: explicit vocabulary table row 298
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
