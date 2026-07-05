@@ -146,3 +146,27 @@ prose, and requires grounding excerpts to substring-match captured tool payloads
 ягли-просо theories; the гай derivation is called «непереконлива» in the *ягілка* entry). Correct verdicts:
 the «гаї» decorated-tree *ritual* claim → REFUTED-as-unattested; the *etymology* → CONTESTED (present both,
 never assert one). This distinction is now first-class in the reviewer's verdict taxonomy.
+
+## Live «Веснянки» proof — the tooled reviewer end-to-end (2026-07-05, #2156 design D6)
+
+First live runs of the full merged machinery (PR #4401 transport/telemetry + PR #4414 contract/gates +
+PR #4418 live-proof fixes): `build_reviewer_prompt` → `FRONTIER_OPENCODE_ROUTE` (gemma-4-31b + sources MCP,
+MCP fail-fast) → NDJSON telemetry → theatre/budget/deep-read/grounding gates → verdict taxonomy.
+
+**Run 2 scorecard (post-fixes) vs the D6 criteria:**
+
+| criterion | result |
+|---|---|
+| «гаї» fabrication | ✅ `UNATTESTED_AFTER_SEARCH` + a **critical `UNATTESTED_FACT` finding** + `evidence_gaps` entry — the step-1 honest-withhold is now a first-class labeled verdict |
+| melody fabrication | ❌ **CONFIRMED on a real-but-irrelevant excerpt** («Весну зустрічали радісно й пишно…» = festive greeting ≠ melodic characterization). Claim↔evidence semantic alignment is model judgment — un-gateable by construction (deepseek's #4418 review, vector (a)) |
+| true claims | ✅ all CONFIRMED with section-depth wiki quotes; search protocol followed (grinchenko in the mix) |
+| coverage | ✅ 8/8 claims enumerated after the #4418 prompt mandate (run 1 silently skipped the melody claim) |
+| telemetry/gates | ✅ 4 tool calls captured; theatre/budget/deep-read all functioned; round-trip preserved grounding |
+| grounding gate calibration | ⚠️ run 1 exposed the transport-`tool_call_id` false-negative (fixed in #4418); run 2 exposes **quote abridgment** — the model ellipsizes excerpts («Весня́нки**...** назва…») → 4/7 legit groundings fail the literal substring check (#4416 item 3, now P1) |
+
+**The finding that frames step 3:** tools + deterministic gates shrank the fabrication surface at the
+cheap tier — ungrounded gemma asserted both fabrications (step 1); tooled-and-gated gemma correctly
+UNATTESTED one and emitted a critical finding — but still rationalized the other into CONFIRMED with an
+irrelevant real quote. Whether a stronger tooled model closes that alignment gap (and whether tooling
+lifts cheap→frontier on exactly this axis) is the step-3 bakeoff's central measurement, scored with the
+locked asymmetric constants (`qg_factcheck_scoring.py`: CONFIRMED-on-fabricated = −100 fatal).
