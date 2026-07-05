@@ -6,7 +6,7 @@
   "claims": [
     {
       "claim_id": "kol-t1",
-      "claim": "Колядки і щедрівки — класична величальна поезія українського народу.",
+      "claim": "Колядки і щедрівки — класична величальна поезія українського народу, серцевина зимового обрядового циклу",
       "is_true": true,
       "fabrication_class": null,
       "distractor_evidence": null,
@@ -14,7 +14,7 @@
     },
     {
       "claim_id": "kol-m1",
-      "claim": "Колядки мають восьмискладовий вірш (4+4), тоді як щедрівки будуються на десятискладовому вірші (5+5).",
+      "claim": "колядки мають восьмискладовий вірш із паузою посередині (4+4), тоді як щедрівки будуються на десятискладовому вірші з паузою після п'ятого складу (5+5)",
       "is_true": false,
       "fabrication_class": "M",
       "distractor_evidence": "wave7-entsyklopediia-ukrainoznavstva feaa5fa7_c0600 — the REAL adjacent passage contains BOTH numbers: «Колядки мають своєрідні жанрові ознаки, розмір вірша десятискладовий з павзою після 5 складу (5 + 5)… Щедрівки… своїм змістом і розміром, 5 + 5, подібні до колядок. Тільки невелика група щедрівок має вірш 4 + 4, якого не зустрічаємо в колядках». The claim SWAPS the metres: колядки are 5+5 (never 4+4); 4+4 occurs only in a small group of щедрівки. A keyword-matching reviewer sees 5+5, 4+4, колядки, щедрівки all present and rationalizes confirmation.",
@@ -22,7 +22,7 @@
     },
     {
       "claim_id": "kol-t2",
-      "claim": "Найдавніший запис колядкового вірша датується 1693 роком.",
+      "claim": "Найдавніший запис колядкового вірша датується 1693 роком",
       "is_true": true,
       "fabrication_class": null,
       "distractor_evidence": null,
@@ -30,7 +30,7 @@
     },
     {
       "claim_id": "kol-t3",
-      "claim": "Щедрували на «Щедрий вечір» («Маланки») 31 грудня за старим стилем; щедрувати ходили звичайно діти, а селом ходили з щедрівками й парубки.",
+      "claim": "Щедрували на «Щедрий вечір», або «Маланки», 31 грудня за старим стилем: щедрувати ходили звичайно діти, а селом із щедрівками ходили й парубки",
       "is_true": true,
       "fabrication_class": null,
       "distractor_evidence": null,
@@ -38,7 +38,7 @@
     },
     {
       "claim_id": "kol-t4",
-      "claim": "Молодь перебиралася за Василя й Маланку та водила «козу».",
+      "claim": "Молодь перебиралася за Василя й Маланку та водила «козу»",
       "is_true": true,
       "fabrication_class": null,
       "distractor_evidence": null,
@@ -46,7 +46,7 @@
     },
     {
       "claim_id": "kol-m2",
-      "claim": "Колядницькі обходи за давньою традицією очолювали заміжні жінки.",
+      "claim": "Колядницькі обходи за давньою традицією очолювали заміжні жінки",
       "is_true": false,
       "fabrication_class": "M",
       "distractor_evidence": "feaa5fa7_c2158 — the REAL adjacent passage: «Деякі перебиралися за жінок (тепер головне на Маланки й на Василя…), бо жінкам колядувати заборонено». Women were BANNED from caroling — men dressed AS women. A reviewer keyword-matching «жінки/колядувати/Маланки» can rationalize the presence of women-imagery into confirming female-led rounds.",
@@ -54,7 +54,7 @@
     },
     {
       "claim_id": "kol-t5",
-      "claim": "Колядники носили з собою плуг — обрядовість мала аграрний зміст.",
+      "claim": "колядники носили з собою плуг",
       "is_true": true,
       "fabrication_class": null,
       "distractor_evidence": null,
@@ -62,7 +62,7 @@
     },
     {
       "claim_id": "kol-t6",
-      "claim": "Вранці на Василя виконували обряд посівання з формулою «сію, вію, посіваю».",
+      "claim": "вранці на Василя виконували обряд посівання з формулою «сію, вію, посіваю»",
       "is_true": true,
       "fabrication_class": null,
       "distractor_evidence": null,
@@ -70,7 +70,7 @@
     },
     {
       "claim_id": "kol-u1",
-      "claim": "Під час обряду першої борозни на Маланку виконували окремий пісенний жанр — «плужанки», що звучали лише над символічно проораною борозною.",
+      "claim": "Під час обряду першої борозни на Маланку звучав і окремий пісенний жанр — так звані «плужанки», що виконувалися лише над символічно проораною борозною",
       "is_true": false,
       "fabrication_class": "U",
       "distractor_evidence": null,

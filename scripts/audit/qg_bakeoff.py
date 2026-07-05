@@ -171,6 +171,14 @@ def load_fixture(path: Path) -> BakeoffFixture:
             raise BakeoffConfigError(f"{path}: {claim_id}: false claims require fabrication_class")
         if fabrication_class == "M" and not (isinstance(distractor, str) and distractor.strip()):
             raise BakeoffConfigError(f"{path}: {claim_id}: class-M claims require distractor_evidence")
+        if _normalize_claim_loose(claim) not in _normalize_claim_loose(passage_md):
+            # Load-bearing (first scored matrix, 2026-07-05): models fact-check
+            # by quoting PASSAGE spans; paraphrased fixture claims can never
+            # match and score as "missing". Claims MUST be literal sub-spans.
+            raise BakeoffConfigError(
+                f"{path}: {claim_id}: claim text must be a literal sub-span of passage_md "
+                f"(loose-normalized) — paraphrases break claim matching"
+            )
         claims.append(
             FixtureClaim(
                 claim_id=claim_id,
@@ -370,20 +378,77 @@ def run_one(
     return BakeoffRun(artifact_path=artifact_path, artifact=artifact)
 
 
+
+_CLAIM_PUNCT_RE = re.compile(r"[^\w\s]", re.UNICODE)
+
+
+def _normalize_claim_loose(text: str) -> str:
+    """Claim matching only: punctuation-insensitive on top of the base norm.
+
+    Live finding: fixture claims end with «.» where the model's sentence-quote
+    continues with «,» — containment failed on the period alone.
+    """
+    return " ".join(_CLAIM_PUNCT_RE.sub(" ", _normalize_claim_text(text)).split())
+
+
+def _match_rows_to_claims(
+    rows: list[dict[str, Any]],
+    fixture: BakeoffFixture,
+) -> tuple[dict[str, dict[str, Any]], list[dict[str, Any]]]:
+    """Map model fact-check rows onto fixture claims (containment matching).
+
+    Live finding (first scored matrix, 2026-07-05): models quote PASSAGE
+    SENTENCES verbatim while fixture claims are trimmed sub-spans of those
+    sentences — exact-normalized matching left 22-30/35 claims "missing" and
+    the scorecard measured claim-echo fidelity instead of verdict quality.
+
+    Matching, in precedence order per fixture claim:
+    1. exact normalized equality (the anchor-fixture path, unchanged);
+    2. containment: normalized fixture claim is a substring of ONE model row's
+       normalized claim (models quote whole sentences; fixture claims are
+       sub-spans). A single model row MAY cover multiple fixture claims — that
+       is semantically fair: confirming a sentence that contains a fabricated
+       sub-claim IS confirming the fabrication (the shared-sentence M-traps).
+    3. reverse containment (model row quotes a sub-span of the fixture claim),
+       guarded by a length floor so tiny fragments cannot claim-jack.
+    Rows that match nothing stay unmatched (counted, visible in artifacts).
+    """
+    matched: dict[str, dict[str, Any]] = {}
+    used_rows: set[int] = set()
+    norm_rows = [(_normalize_claim_loose(str(r.get("claim") or "")), r) for r in rows]
+
+    for claim in fixture.claims:
+        want = _normalize_claim_loose(claim.claim)
+        if not want:
+            continue
+        # 1. exact
+        hit = next((i for i, (nr, _r) in enumerate(norm_rows) if nr == want), None)
+        # 2. fixture-claim ⊆ model-row
+        if hit is None:
+            hit = next((i for i, (nr, _r) in enumerate(norm_rows) if nr and want in nr), None)
+        # 3. model-row ⊆ fixture-claim (length floor: ≥60% of the fixture claim)
+        if hit is None:
+            hit = next(
+                (
+                    i
+                    for i, (nr, _r) in enumerate(norm_rows)
+                    if nr and nr in want and len(nr) >= max(20, int(0.6 * len(want)))
+                ),
+                None,
+            )
+        if hit is not None:
+            matched[claim.claim_id] = norm_rows[hit][1]
+            used_rows.add(hit)
+
+    unmatched = [r for i, (_nr, r) in enumerate(norm_rows) if i not in used_rows]
+    return matched, unmatched
+
+
 def score_payload(payload: Mapping[str, Any], fixture: BakeoffFixture) -> dict[str, Any]:
     """Score a gated payload against fixture truth, keyed by stable claim_id."""
     fact_checks = payload.get("fact_checks")
     rows = [dict(row) for row in fact_checks] if isinstance(fact_checks, list) else []
-    fixture_by_norm = {_normalize_claim_text(claim.claim): claim for claim in fixture.claims}
-    matched: dict[str, dict[str, Any]] = {}
-    unmatched_rows: list[dict[str, Any]] = []
-    for row in rows:
-        claim_text = row.get("claim")
-        fixture_claim = fixture_by_norm.get(_normalize_claim_text(str(claim_text or "")))
-        if fixture_claim is None or fixture_claim.claim_id in matched:
-            unmatched_rows.append(row)
-            continue
-        matched[fixture_claim.claim_id] = row
+    matched, unmatched_rows = _match_rows_to_claims(rows, fixture)
 
     truth_by_claim_id = {claim.claim_id: claim.is_true for claim in fixture.claims}
     scoring_rows: list[dict[str, Any]] = []
@@ -533,6 +598,37 @@ def pin_slug(pin: str) -> str:
     return slug or "model"
 
 
+
+def rescore_artifacts(output_dir: Path, fixtures_dir: Path = FIXTURE_DIR) -> int:
+    """Recompute scores for existing artifacts from their STORED payloads.
+
+    Zero model invocations — pure offline rescoring, for matcher/scoring
+    changes (e.g. the containment matcher). Rewrites each artifact's score
+    block and the scorecard.
+    """
+    fixtures = {f.slug: f for f in load_fixtures(fixtures_dir)}
+    artifacts: list[dict[str, Any]] = []
+    count = 0
+    for path in sorted(output_dir.glob("*.json")):
+        artifact = json.loads(path.read_text(encoding="utf-8"))
+        slug = (artifact.get("fixture") or {}).get("slug")
+        fixture = fixtures.get(slug)
+        if fixture is None:
+            artifacts.append(artifact)
+            continue
+        score = score_payload(artifact.get("payload") or {}, fixture)
+        grounding = (artifact.get("gate_outcomes") or {}).get("grounding") or {}
+        score["invalid_fact_checks"] = int(grounding.get("invalid_fact_checks") or 0)
+        score["inadmissible_positive_verdicts"] = int(grounding.get("inadmissible_positive_verdicts") or 0)
+        artifact["score"] = score
+        artifact["rescored_at"] = _now_z()
+        path.write_text(json.dumps(artifact, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+        artifacts.append(artifact)
+        count += 1
+    write_scorecard(output_dir / SCORECARD_NAME, artifacts)
+    return count
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--fixtures-dir", type=Path, default=FIXTURE_DIR)
@@ -548,9 +644,20 @@ def main(argv: Sequence[str] | None = None) -> int:
             "re-run cells whose existing artifact has status=error. Completed cells stay skipped."
         ),
     )
+    parser.add_argument(
+        "--rescore",
+        action="store_true",
+        help="Recompute scores for EXISTING artifacts from stored payloads (no model calls)",
+    )
     args = parser.parse_args(argv)
 
     try:
+        if args.rescore:
+            output_dir = args.out_dir or default_output_dir()
+            n = rescore_artifacts(output_dir, args.fixtures_dir)
+            print(f"rescored {n} artifacts under {output_dir}")
+            print(f"scorecard: {output_dir / SCORECARD_NAME}")
+            return 0
         require_offline_opt_in()
         fixtures = load_fixtures(args.fixtures_dir, args.fixtures)
         pins = model_pins_from_args(args.models)

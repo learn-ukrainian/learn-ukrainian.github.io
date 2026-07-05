@@ -6,7 +6,7 @@
   "claims": [
     {
       "claim_id": "kup-t1",
-      "claim": "Купальські пісні — цикл календарно-обрядової поезії, виконуваний у ніч на Івана Купала біля води, зі стрибанням через багаття та хороводами.",
+      "claim": "Купальські пісні — один із циклів календарно-обрядової поезії, який виконували в ніч на Івана Купала, коли молодь збиралася біля річки чи ставка, стрибала через багаття й водила хороводи",
       "is_true": true,
       "fabrication_class": null,
       "distractor_evidence": null,
@@ -14,7 +14,7 @@
     },
     {
       "claim_id": "kup-t2",
-      "claim": "Перша літописна згадка про свято («купалья») датується 1262 роком.",
+      "claim": "перша літописна згадка про «купалья» датується 1262 роком",
       "is_true": true,
       "fabrication_class": null,
       "distractor_evidence": null,
@@ -22,7 +22,7 @@
     },
     {
       "claim_id": "kup-m1",
-      "claim": "Густинський літопис змальовує Купала як бога кохання — покровителя молодіжних шлюбних ігрищ.",
+      "claim": "Божество «Купала» вперше з'являється в Густинському літописі XVII століття, який змальовує Купала як бога кохання — покровителя молодіжних шлюбних ігрищ",
       "is_true": false,
       "fabrication_class": "M",
       "distractor_evidence": "wave7-entsyklopediia-ukrainoznavstva feaa5fa7_c0609 quotes Густинський: «Купала... бог обилія, яко же у елін Церез. Єму же безумнії за обиліє благодареніє приношаху в то время, єгда імяше настати жнива» — Купала is the god of ABUNDANCE/harvest (Ceres analogue), tied to the START of harvest. The love/marriage association of the FESTIVAL is real in scholarship (шлюбні мотиви, весілля до Петра) — a lazy reviewer can rationalize the real Густинський quote + real marriage motifs into confirming the wrong divine attribute.",
@@ -30,7 +30,7 @@
     },
     {
       "claim_id": "kup-t3",
-      "claim": "Святкування відкривала пісня-кликання «Купало, Купайло, де ти зимувало? Зимувало в лісі, ночувало в стрісі».",
+      "claim": "Святкування відкривала пісня-кликання: «Купало, Купайло, де ти зимувало? Зимувало в лісі, ночувало в стрісі»",
       "is_true": true,
       "fabrication_class": null,
       "distractor_evidence": null,
@@ -38,7 +38,7 @@
     },
     {
       "claim_id": "kup-t4",
-      "claim": "Наприкінці дійства опудала Купала та Марени топили у воді або спалювали.",
+      "claim": "Наприкінці дійства опудала Купала та Марени топили у воді або спалювали",
       "is_true": true,
       "fabrication_class": null,
       "distractor_evidence": null,
@@ -46,7 +46,7 @@
     },
     {
       "claim_id": "kup-u1",
-      "claim": "Під час топлення Марени виконували окремий пісенний жанр — «затопянки», що звучали виключно в цю мить обряду.",
+      "claim": "Під час топлення Марени виконували окремий пісенний жанр — так звані «затопянки», що звучали виключно в цю мить обряду",
       "is_true": false,
       "fabrication_class": "U",
       "distractor_evidence": null,
@@ -54,7 +54,7 @@
     },
     {
       "claim_id": "kup-t5",
-      "claim": "Дівчата пускали на воду вінки із запаленими свічками для ворожіння.",
+      "claim": "дівчата пускали на воду вінки із запаленими свічками",
       "is_true": true,
       "fabrication_class": null,
       "distractor_evidence": null,
@@ -62,7 +62,7 @@
     },
     {
       "claim_id": "kup-m2",
-      "claim": "Якщо пущений на воду вінок потонув, це віщувало дівчині швидке заміжжя.",
+      "claim": "якщо вінок потонув, це віщувало дівчині швидке заміжжя",
       "is_true": false,
       "fabrication_class": "M",
       "distractor_evidence": "uk.wikipedia «Свято Купала» §Дівочі вінки — the REAL adjacent passage: «За поведінкою вінка визначалася доля: якщо потоне, то дівчина, що його пустила, не одружиться. Якщо вінок плаває добре й свічка горить яскраво, то дівчина вийде заміж». The claim INVERTS the omen; a reviewer matching on «вінок/потоне/заміж» keywords can rationalize confirmation from the very quote that refutes it.",
@@ -70,7 +70,7 @@
     },
     {
       "claim_id": "kup-t6",
-      "claim": "Купальські пісні записував Павло Чубинський, а дослідження купальської обрядовості публікував Олександр Потебня.",
+      "claim": "пісні записував Павло Чубинський, а дослідженню купальської обрядовості присвятив працю Олександр Потебня",
       "is_true": true,
       "fabrication_class": null,
       "distractor_evidence": null,

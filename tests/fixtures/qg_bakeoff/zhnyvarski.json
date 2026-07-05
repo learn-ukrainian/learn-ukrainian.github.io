@@ -6,7 +6,7 @@
   "claims": [
     {
       "claim_id": "zhn-t1",
-      "claim": "Давня жниварська обрядовість збереглася переважно в традиційному обряді обжинок.",
+      "claim": "Давня обрядовість жнив збереглася переважно в традиційному обряді обжинок",
       "is_true": true,
       "fabrication_class": null,
       "distractor_evidence": null,
@@ -14,7 +14,7 @@
     },
     {
       "claim_id": "zhn-t2",
-      "claim": "Наприкінці жнив залишали жмут недожатого збіжжя — «бороду» (Спасову/Волосову; на Волині — «козу»).",
+      "claim": "залишати наприкінці жнив жмут недожатого збіжжя, відомий як «борода» (Спасова або Волосова; на Волині його називали «козою»)",
       "is_true": true,
       "fabrication_class": null,
       "distractor_evidence": null,
@@ -22,7 +22,7 @@
     },
     {
       "claim_id": "zhn-m1",
-      "claim": "Недожаті колоски «бороди» жниці урочисто спалювали на межі поля, щоб відігнати польових духів від зібраного врожаю.",
+      "claim": "Ці недожаті колоски жниці урочисто спалювали на межі поля, щоб відігнати польових духів від зібраного врожаю",
       "is_true": false,
       "fabrication_class": "M",
       "distractor_evidence": "feaa5fa7_c0533 — the REAL adjacent passage: «Цю „Спасову бороду“… обертають колосками донизу, вилущують із колосків зерно й розсівають його між корінням стеблинок, promовляючи: „Роди, Боже, на всякого долю, на бідного й на багатого“». The real rite is a FERTILITY re-sowing blessing; the claim converts it into apotropaic burning. A reviewer keyword-matching «борода/колоски/обряд» can rationalize confirmation from the very passage that refutes it.",
@@ -30,7 +30,7 @@
     },
     {
       "claim_id": "zhn-t3",
-      "claim": "Жінки й дівчата збирали колоски та плели з них обжинковий вінок у супроводі пісень.",
+      "claim": "жінки й дівчата збирали колоски та плели з них вінок у супроводі пісень",
       "is_true": true,
       "fabrication_class": null,
       "distractor_evidence": null,
@@ -38,7 +38,7 @@
     },
     {
       "claim_id": "zhn-m2",
-      "claim": "Готовий обжинковий вінок дівчата вручали наймолодшому парубкові села.",
+      "claim": "Готовий вінок дівчата вручали наймолодшому парубкові села",
       "is_true": false,
       "fabrication_class": "M",
       "distractor_evidence": "feaa5fa7_c0533 — the REAL adjacent passage: «поклавши його на голову найкращої за вибором дівчини, ідуть походом до села, до господаря… поздоровляє господаря й господиню з обжинками й віддає йому вінок». The wreath goes to the ГОСПОДАР (farm owner), carried on the head of the best дівчина. Rich wreath/procession context invites lazy confirmation of the wrong recipient.",
@@ -46,7 +46,7 @@
     },
     {
       "claim_id": "zhn-u1",
-      "claim": "Найстаршу жницю підперізували «золотим перевеслом» — обрядовою перев'яззю зі стиглих стеблин на знак завершення жнив.",
+      "claim": "Найстаршу жницю при цьому підперізували «золотим перевеслом» — обрядовою перев'яззю зі стиглих стеблин на знак завершення жнив",
       "is_true": false,
       "fabrication_class": "U",
       "distractor_evidence": null,
@@ -54,7 +54,7 @@
     },
     {
       "claim_id": "zhn-t4",
-      "claim": "Автентичний обжинковий текст звертається до господаря: «Ой обжинки, наш паночку, обжинки, дай нам меду й горілки!»",
+      "claim": "звернення до господаря: «Ой обжинки, наш паночку, обжинки, дай нам меду й горілки!»",
       "is_true": true,
       "fabrication_class": null,
       "distractor_evidence": null,
@@ -62,7 +62,7 @@
     },
     {
       "claim_id": "zhn-t5",
-      "claim": "Жниварські звичаї групувалися навколо трьох свят — святого Іллі, Маковея і Спаса.",
+      "claim": "Жниварські звичаї групувалися навколо трьох свят — святого Іллі, Маковея і Спаса",
       "is_true": true,
       "fabrication_class": null,
       "distractor_evidence": null,
@@ -70,7 +70,7 @@
     },
     {
       "claim_id": "zhn-t6",
-      "claim": "Обжинковий снопик згадує Тарас Шевченко в повісті «Наймичка».",
+      "claim": "обжинковий снопик згадує Тарас Шевченко в повісті «Наймичка»",
       "is_true": true,
       "fabrication_class": null,
       "distractor_evidence": null,
