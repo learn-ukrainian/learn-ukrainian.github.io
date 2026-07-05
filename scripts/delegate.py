@@ -1596,6 +1596,21 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         print("❌ --prompt or --prompt-file is required", file=sys.stderr)
         return 2
 
+    if str(_REPO_ROOT) not in sys.path:
+        sys.path.insert(0, str(_REPO_ROOT))
+    from scripts.ai_agent_bridge.routing_guard import (
+        RoutingGuardError,
+        assert_agent_routing_allowed,
+        assert_model_routing_allowed,
+    )
+
+    try:
+        assert_agent_routing_allowed(args.agent, context="delegate dispatch")
+        assert_model_routing_allowed(getattr(args, "model", None), context="delegate dispatch --model")
+    except RoutingGuardError as exc:
+        print(f"❌ {exc}", file=sys.stderr)
+        return 2
+
     if getattr(args, "check_budget", False) and not getattr(args, "force_agent", False):
         _check_routing_budget_for_dispatch(args.agent)
 
@@ -2239,7 +2254,10 @@ def build_parser() -> argparse.ArgumentParser:
         formatter_class=_dispatch_help_formatter,
     )
     d.add_argument("--agent", required=True,
-                   choices=["codex", "gemini", "claude", "grok", "grok-build", "deepseek", "qwen", "agy", "cursor"],
+                   choices=["codex", "gemini", "claude", "grok", "grok-build", "deepseek", "agy", "cursor"],
+                   # "qwen" removed from choices (banned agent): advertising it in --help
+                   # while the routing guard rejects it at dispatch is a UX trap. The
+                   # guard still catches programmatic Namespace bypass.
                    help="Agent to run for the task: codex, gemini, claude, grok (Hermes), "
                         "grok-build (native grok CLI), deepseek, qwen, agy, or cursor.")
     d.add_argument("--task-id", required=True,

@@ -38,7 +38,10 @@ from pathlib import Path
 
 from ._messaging import acknowledge, send_message
 
-OPENCODE_DEFAULT_MODEL = "openrouter/qwen/qwen3.7-max"
+# Default was qwen3.7-max (EXPENSIVE) until 2026-07-05 — a silent money trap
+# for every ask-opencode call without --model. gemma-4-31b-it is the cheap
+# documented surface lane and passes the routing guard.
+OPENCODE_DEFAULT_MODEL = "openrouter/google/gemma-4-31b-it"
 OPENCODE_DEFAULT_TIMEOUT_S = 900
 
 # poolside.ai fleet member. Use the NATIVE poolside provider path — it browses
@@ -394,6 +397,9 @@ def _run_opencode(
     :func:`_invoke_opencode_detailed` (text + tool telemetry) so the argv
     construction, timeout, and error handling live in exactly one place.
     """
+    from scripts.ai_agent_bridge.routing_guard import assert_model_routing_allowed
+
+    assert_model_routing_allowed(model, context="opencode transport (_run_opencode)")
     opencode_bin = shutil.which("opencode")
     if not opencode_bin:
         raise SystemExit("ask-opencode: opencode CLI not found in PATH")

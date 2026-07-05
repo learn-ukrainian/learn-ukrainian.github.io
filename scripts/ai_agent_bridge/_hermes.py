@@ -8,7 +8,7 @@ hermes the same way they route through codex/gemini.
 
 Invocation pattern:
     .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-hermes <content> \\
-      --task-id <task> --model qwen/qwen3.6-plus
+      --task-id <task> --model deepseek-v4-flash
 
 Under the hood: hermes -z "<content>" -m <model>
 """
@@ -20,8 +20,13 @@ import subprocess
 from pathlib import Path
 
 from ._messaging import acknowledge, send_message
+from .routing_guard import assert_model_routing_allowed
 
-HERMES_DEFAULT_MODEL = "qwen/qwen3.6-plus"
+# deepseek-flash is the dominant real usage of this lane (off-seat code review,
+# "dirt cheap" API). The previous default (qwen/qwen3.6-plus) violated the
+# standing qwen exclusion — every bare ask-hermes silently burned the banned
+# model (deepseek review 2026-07-05, PR #4473 finding 1).
+HERMES_DEFAULT_MODEL = "deepseek-v4-flash"
 HERMES_DEFAULT_TIMEOUT_S = 900  # 15 min — adversarial reviews can be long
 
 
@@ -38,6 +43,10 @@ def ask_hermes(
 ) -> int:
     """Send message to Hermes AND invoke Hermes one-shot to process it."""
     effective_model = model or HERMES_DEFAULT_MODEL
+    # Guard BEFORE send_message so a refused model leaves no orphaned bridge
+    # message behind (hermes is a non-opencode transport; _run_opencode's
+    # guard never sees this path).
+    assert_model_routing_allowed(effective_model, context="ask-hermes transport")
     msg_id = send_message(
         content,
         task_id,
