@@ -132,8 +132,10 @@ decisions:
 - lemma: заважати
   decision: approve_for_publish
   approved_pos: verb
-  approved_gloss: to annoy
-  sense_note: private teacher-lesson explicit vocabulary table
+  approved_gloss: to hinder, to get in the way
+  sense_note: private teacher-lesson explicit vocabulary table; gloss adjusted from
+    source's 'to annoy' per СУМ-11 (перешкоджати — to hinder/obstruct); 'annoy' =
+    дратувати/надокучати
   source_inventory:
     key: 2f3ad45bc9c08f13
     path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-239-258.yaml
