@@ -79,6 +79,51 @@ persona:
   role: Ведучий семінару з джерелознавства, що ставить під сумнів канонічні інтерпретації та шукає політичний підтекст.
   voice: Scholarly-Skeptic
 phase: BIO.1
+readings:
+- title: 'Нестор Літописець: Енциклопедія історії України'
+  language: uk
+  genre: encyclopedia
+  source_type: reference
+  role: context
+  source_url: 'http://history.org.ua/?termin=Nestor_Litopysec'
+  license: copyright
+  hosting: link-only
+  cefr_min: C1
+  learner_task: 'Ознайомитися з академічною біографією Нестора.'
+  caveats: 'Довідкова стаття задає біографічний контекст; авторство літопису й редакційні гіпотези потрібно перевіряти за джерелознавчими працями.'
+- title: 'Повість минулих літ (переклад В. Яременка)'
+  language: uk
+  genre: chronicle
+  source_type: primary
+  role: source-analysis
+  source_url: 'http://litopys.org.ua/povist/pov.htm'
+  license: public-domain
+  hosting: excerpt-only
+  cefr_min: C1
+  learner_task: 'Проаналізувати мову та стиль літопису.'
+  caveats: 'Середньовічний літопис у модерному перекладі; використовувати уривки з поясненням жанру, редакцій і політичного контексту.'
+- title: 'Житіє преподобного отця нашого Нестора'
+  language: uk
+  genre: hagiography
+  source_type: primary
+  role: context
+  source_url: 'http://litopys.org.ua/paterik/pater18.htm'
+  license: public-domain
+  hosting: link-only
+  cefr_min: C1
+  learner_task: 'Порівняти історичні факти з агіографічним описом.'
+  caveats: 'Агіографічний текст не є нейтральною біографією; читати як церковний жанр із власною риторикою святості.'
+- title: 'Нестор-літописець (ЕСУ)'
+  language: uk
+  genre: encyclopedia
+  source_type: reference
+  role: context
+  source_url: 'https://esu.com.ua/article-73138'
+  license: copyright
+  hosting: link-only
+  cefr_min: B2
+  learner_task: 'Перевірити основні факти з біографії.'
+  caveats: 'Коротка енциклопедична довідка; не замінює аналізу літописного тексту й історіографічної дискусії.'
 references:
 - title: Index
   note: Повість минулих літ в перекладі та з коментарями
@@ -97,7 +142,7 @@ sequence: 7
 slug: nestor-litopysets
 subtitle: 'Nestor the Chronicler: The Father of Ukrainian Historiography'
 title: 'Нестор Літописець: Батько української історіографії'
-version: '4.0'
+version: '4.2'
 vocabulary_hints:
 - definition: укладач літопису, середньовічний історик
   pos: ч.
