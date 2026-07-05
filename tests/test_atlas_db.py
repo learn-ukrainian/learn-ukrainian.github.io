@@ -1,4 +1,4 @@
-"""Tests for the Word Atlas entry-model v1 SQLite store (scripts/lexicon/atlas_db.py)."""
+"""Tests for the Word Atlas entry-model v1 SQLite store (scripts/atlas/atlas_db.py)."""
 
 from __future__ import annotations
 
@@ -65,3 +65,54 @@ def test_alias_helpers():
     assert atlas_db.transliterate("розвідка") == "rozvidka"
     assert atlas_db.classify_entry_type({"lemma": "сліпа зона"}) == "multiword_term"
     assert atlas_db.classify_entry_type({"lemma": "розвідка"}) == "lemma"
+
+
+def test_hardening_gates(tmp_path):
+    """PR #4380 review findings: metaterm visibility, CHECKs, timestamps, display_head."""
+    entries = [
+        # grammar metaterm -> article kept but PRIVATE (the #3776 lexeme_filter
+        # decision, encoded at the SSOT layer)
+        {"lemma": "pluralia tantum", "url_slug": "pluralia-tantum", "gloss": "plural-only",
+         "pos": "grammar term", "primary_source": "curriculum"},
+        # distinct created_at / updated_at survive separately (agy finding);
+        # display_head honored when present
+        {"lemma": "ка́ва", "url_slug": "кава", "gloss": "coffee", "pos": "noun",
+         "display_head": "ка́ва", "created_at": "2026-01-01", "updated_at": "2026-06-30",
+         "primary_source": "curriculum"},
+    ]
+    p = tmp_path / "manifest.json"
+    p.write_text(json.dumps({"entries": entries}, ensure_ascii=False), encoding="utf-8")
+    db = tmp_path / "atlas.db"
+    atlas_db.migrate_manifest(p, db)
+    conn = sqlite3.connect(db)
+
+    # metaterm is private, real word is public
+    rows = dict(conn.execute("SELECT slug, visibility FROM articles").fetchall())
+    assert rows == {"pluralia-tantum": "private", "кава": "public"}
+
+    # timestamps not conflated; display_head kept verbatim (incl. stress mark)
+    head, created, updated = conn.execute(
+        "SELECT display_head, created_at, updated_at FROM articles WHERE slug='кава'"
+    ).fetchone()
+    assert head == "ка́ва"
+    assert (created, updated) == ("2026-01-01", "2026-06-30")
+
+    # CHECK constraints are load-bearing: invalid enum values are REJECTED by
+    # the storage layer (a filler bug cannot silently write them)
+    import pytest
+
+    for stmt, params in [
+        ("INSERT INTO articles(slug, display_head, lemma, entry_type, review_state, visibility) VALUES (?,?,?,?,?,?)",
+         ("x", "x", "x", "grammar term", "approved", "public")),  # not an entry-model type
+        ("INSERT INTO articles(slug, display_head, lemma, entry_type, review_state, visibility) VALUES (?,?,?,?,?,?)",
+         ("y", "y", "y", "lemma", "looks_fine", "public")),  # invalid review_state
+        ("INSERT INTO aliases(alias, kind, source, target_slug) VALUES (?,?,?,?)",
+         ("z", "typo_kind", "test", "кава")),  # invalid alias kind
+        ("INSERT INTO enrichment(slug, section, payload_json, phase) VALUES (?,?,?,?)",
+         ("кава", "unknown_section", "{}", "local")),  # invalid section
+        ("INSERT INTO enrichment(slug, section, payload_json, phase) VALUES (?,?,?,?)",
+         ("кава", "meaning", "{}", "guessed")),  # invalid phase
+    ]:
+        with pytest.raises(sqlite3.IntegrityError):
+            conn.execute(stmt, params)
+    conn.close()
