@@ -18,8 +18,9 @@ def _run_fixture_gate(tmp_path: Path, plan: dict[str, Any], module_text: str) ->
     return _reading_coverage_gate(module_path.read_text(encoding="utf-8"), loaded_plan)
 
 
-def _primary_reading_block(title: str) -> str:
-    return f""":::primary-reading
+def _primary_reading_block(title: str, slug: str | None = None) -> str:
+    attrs = f'{{reading="{slug}"}}' if slug else ""
+    return f""":::primary-reading{attrs}
 > Рядок першоджерела.
 
 — Народна творчість, {title}
@@ -27,13 +28,16 @@ def _primary_reading_block(title: str) -> str:
 """
 
 
-def _module_with_four_blocks(first_title: str = "«Інший текст»") -> str:
+def _module_with_four_blocks(
+    first_title: str = "«Інший текст»",
+    first_slug: str = "pershyi-tekst",
+) -> str:
     return "\n".join(
         [
-            _primary_reading_block(first_title),
-            _primary_reading_block("«Другий текст»"),
-            _primary_reading_block("«Третій текст»"),
-            _primary_reading_block("«Четвертий текст»"),
+            _primary_reading_block(first_title, first_slug),
+            _primary_reading_block("«Другий текст»", "druhyi-tekst"),
+            _primary_reading_block("«Третій текст»", "tretii-tekst"),
+            _primary_reading_block("«Четвертий текст»", "chetvertyi-tekst"),
         ]
     )
 
@@ -43,7 +47,7 @@ def test_reading_coverage_gate_registered_in_python_qg_order() -> None:
     assert PYTHON_QG_GATE_ORDER.index("reading_coverage") < PYTHON_QG_GATE_ORDER.index("resources_url_resolve")
 
 
-def test_hard_pass_when_host_reading_title_is_in_primary_reading_attribution(tmp_path: Path) -> None:
+def test_hard_pass_when_host_reading_is_structured_on_site_excerpt(tmp_path: Path) -> None:
     plan = {
         "level": "folk",
         "readings": [
@@ -51,14 +55,15 @@ def test_hard_pass_when_host_reading_title_is_in_primary_reading_attribution(tmp
         ],
     }
 
-    result = _run_fixture_gate(tmp_path, plan, _module_with_four_blocks('"Ой весна"'))
+    result = _run_fixture_gate(tmp_path, plan, _module_with_four_blocks('"Ой весна"', "oi-vesna"))
 
     assert result["passed"] is True
     assert result["missing_hosted_readings"] == []
+    assert result["structured_on_site_readings"] == 4
     assert "warning" not in result
 
 
-def test_hard_pass_when_host_reading_slug_link_is_in_module(tmp_path: Path) -> None:
+def test_hard_fail_when_host_reading_has_only_bare_external_link(tmp_path: Path) -> None:
     plan = {
         "level": "folk",
         "readings": [
@@ -68,8 +73,13 @@ def test_hard_pass_when_host_reading_slug_link_is_in_module(tmp_path: Path) -> N
 
     result = _run_fixture_gate(tmp_path, plan, "Read the hosted source at /readings/oi-vesna/.")
 
-    assert result["passed"] is True
-    assert result["missing_hosted_readings"] == []
+    assert result["passed"] is False
+    assert result["severity"] == "HARD"
+    assert result["structured_on_site_readings"] == 0
+    assert result["missing_hosted_readings"] == [
+        {"title": "«Ой весна»", "reading_slug": "oi-vesna"},
+    ]
+    assert result["missing_on_site_reading"]["severity"] == "HARD"
     assert result["warning"]["severity"] == "WARNING"
 
 
@@ -102,13 +112,13 @@ def test_title_normalization_matches_quote_glyphs_case_and_whitespace(tmp_path: 
         ],
     }
 
-    result = _run_fixture_gate(tmp_path, plan, _module_with_four_blocks("„думи нічні“"))
+    result = _run_fixture_gate(tmp_path, plan, _module_with_four_blocks("„думи нічні“", "dumy-nichni"))
 
     assert result["passed"] is True
     assert result["missing_hosted_readings"] == []
 
 
-def test_linked_only_reading_omission_is_not_a_failure(tmp_path: Path) -> None:
+def test_linked_only_reading_omission_is_failure_for_folk(tmp_path: Path) -> None:
     plan = {
         "level": "folk",
         "readings": [
@@ -116,19 +126,42 @@ def test_linked_only_reading_omission_is_not_a_failure(tmp_path: Path) -> None:
         ],
     }
 
-    result = _run_fixture_gate(tmp_path, plan, _module_with_four_blocks())
+    result = _run_fixture_gate(tmp_path, plan, "")
 
-    assert result["passed"] is True
+    assert result["passed"] is False
+    assert result["severity"] == "HARD"
     assert result["checked"] == 0
     assert result["missing_hosted_readings"] == []
+    assert result["missing_on_site_reading"]["severity"] == "HARD"
+
+
+def test_orphan_inline_snippets_do_not_count_as_folk_on_site_reading(tmp_path: Path) -> None:
+    plan = {"level": "folk", "readings": []}
+    module_text = "\n".join([_primary_reading_block("«Один»"), _primary_reading_block("«Два»")])
+
+    result = _run_fixture_gate(tmp_path, plan, module_text)
+
+    assert result["passed"] is False
+    assert result["severity"] == "HARD"
+    assert result["surfaced_primary_readings"] == 2
+    assert result["structured_on_site_readings"] == 0
+    assert result["unstructured_primary_readings"] == 2
+    assert result["missing_on_site_reading"]["severity"] == "HARD"
 
 
 def test_floor_warning_is_advisory_and_exception_suppresses_it(tmp_path: Path) -> None:
     plan = {"level": "folk", "readings": []}
-    module_text = "\n".join([_primary_reading_block("«Один»"), _primary_reading_block("«Два»")])
+    module_text = "\n".join(
+        [
+            _primary_reading_block("«Один»", "odyn"),
+            _primary_reading_block("«Два»", "dva"),
+        ]
+    )
 
     warning_result = _run_fixture_gate(tmp_path, plan, module_text)
     assert warning_result["passed"] is True
+    assert warning_result["structured_on_site_readings"] == 2
+    assert "missing_on_site_reading" not in warning_result
     assert warning_result["warning"] == {
         "severity": "WARNING",
         "message": (
@@ -146,6 +179,7 @@ def test_floor_warning_is_advisory_and_exception_suppresses_it(tmp_path: Path) -
     }
     exception_result = _run_fixture_gate(tmp_path, exception_plan, module_text)
     assert exception_result["passed"] is True
+    assert "missing_on_site_reading" not in exception_result
     assert "warning" not in exception_result
 
 
@@ -176,7 +210,7 @@ def test_non_seminar_level_is_skipped(tmp_path: Path) -> None:
                     },
                 ],
             },
-            _module_with_four_blocks("«Ой весна»"),
+            _module_with_four_blocks("«Ой весна»", "oi-vesna"),
             False,
             id="hosted-title-attribution",
         ),
@@ -191,7 +225,7 @@ def test_non_seminar_level_is_skipped(tmp_path: Path) -> None:
                     },
                 ],
             },
-            _module_with_four_blocks("«Гей, соколи»"),
+            _module_with_four_blocks("«Гей, соколи»", "hei-sokoly"),
             False,
             id="hosted-alias-attribution",
         ),
@@ -206,7 +240,10 @@ def test_non_seminar_level_is_skipped(tmp_path: Path) -> None:
                     },
                 ],
             },
-            _module_with_four_blocks("«Дума про втечу трьох братів з Азова»"),
+            _module_with_four_blocks(
+                "«Дума про втечу трьох братів з Азова»",
+                "duma-pro-vtechu-trokh-brativ-z-azova",
+            ),
             False,
             id="long-hosted-title-attribution",
         ),
@@ -221,7 +258,7 @@ def test_non_seminar_level_is_skipped(tmp_path: Path) -> None:
                     },
                 ],
             },
-            _module_with_four_blocks("«Щедрий вечір»"),
+            _module_with_four_blocks("«Щедрий вечір»", "shchedryi-vechir"),
             False,
             id="hosted-title-no-floor-warning",
         ),
@@ -234,6 +271,7 @@ def test_fixture_folk_modules_all_pass_reading_coverage(
 
     assert result["passed"] is True
     assert result["missing_hosted_readings"] == []
+    assert result["structured_on_site_readings"] == 4
     if expect_floor_warning:
         assert result["warning"]["severity"] == "WARNING"
     else:
