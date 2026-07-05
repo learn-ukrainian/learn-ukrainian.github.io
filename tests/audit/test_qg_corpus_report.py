@@ -194,7 +194,10 @@ def test_workflow_records_count_failures_spend_and_warn_conversion(tmp_path: Pat
         completion_status="INCOMPLETE",
     )
 
-    report = qg_corpus_report.build_report(workflow_payloads=[[pass_record, provider_record, parse_record]])
+    report = qg_corpus_report.build_report(
+        workflow_payloads=[[pass_record, provider_record, parse_record]],
+        db_path=tmp_path / "empty.db",
+    )
 
     assert report["warn_to_reviewer_confirmed"]["warn_findings"] == 1
     assert report["warn_to_reviewer_confirmed"]["reviewer_confirmed"] == 1
