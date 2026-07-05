@@ -49,14 +49,21 @@ _INTERNAL_REF_RE = re.compile(
     r"^(?:curriculum/|wiki/|docs/(?!references/)|Wiki:\s*pedagogy|Synthesis of )",
     re.IGNORECASE,
 )
+_INTERNAL_URL_RE = re.compile(
+    r"^(?:wiki/|docs/wiki/|(?:a1|a2|b1|b2|c1|c2|hist|bio|lit|istorio|oes|ruth|folk)/)",
+    re.IGNORECASE,
+)
 _EMPTY_NOTE = "This module introduces no new external resources."
+_EMPTY_NOTE_UK = "*Немає зовнішніх ресурсів для цього модуля.*"
 _ROLE_RE = re.compile(r"^\s+role:\s*(.+?)\s*$")
+_TYPE_RE = re.compile(r"^\s+type:\s*(.+?)\s*$")
 _SOURCEREF_RE = re.compile(r"^\s+source_ref:\s*(.+?)\s*$")
 _URL_RE = re.compile(r"^\s+url:\s*(.+?)\s*$")
-_TITLE_RE = re.compile(r'^-\s*title:\s*(.+?)\s*$')
+_TITLE_RE = re.compile(r'^\s*-\s*title:\s*(.+?)\s*$')
+_ENTRY_START_RE = re.compile(r"^(?P<indent>\s*)-\s")
 _EXTERNAL_URL_RE = re.compile(r"^https?://", re.IGNORECASE)
 _EXT_RES_BLOCK_RE = re.compile(
-    r"^:::info\[[^\]]*External Resources[^\]]*\]\n.*?^:::\n",
+    r"^:::info\[[^\]]*(?:External Resources|Зовнішні ресурси)[^\]]*\]\n.*?^:::\n",
     re.DOTALL | re.MULTILINE,
 )
 
@@ -70,6 +77,8 @@ def is_internal_entry(*, role: str, title: str, source_ref: str, url: str = "") 
     if r.startswith(INTERNAL_ROLE_PREFIXES) or r in INTERNAL_ROLES:
         return True
     if _INTERNAL_TITLE_RE.match(_norm(title)):
+        return True
+    if _INTERNAL_URL_RE.match(_norm(url).lstrip("./")):
         return True
     # A `source_ref` pointing back into the repo (docs/, wiki/, curriculum/, "Wiki:
     # pedagogy", "Synthesis of") normally marks a build-provenance pointer. But genuine
@@ -85,22 +94,33 @@ def is_internal_entry(*, role: str, title: str, source_ref: str, url: str = "") 
     return bool(_INTERNAL_REF_RE.match(_norm(source_ref)))
 
 
-def _split_entry_blocks(text: str) -> list[list[str]]:
+def _split_entry_blocks(text: str) -> tuple[list[str], list[list[str]]]:
     """Split a resources.yaml into top-level ``- `` entry blocks, preserving lines."""
+    prefix: list[str] = []
     blocks: list[list[str]] = []
     current: list[str] = []
+    entry_indent: str | None = None
     for line in text.splitlines(keepends=True):
-        if line.startswith("- "):
+        match = _ENTRY_START_RE.match(line)
+        is_entry_start = False
+        if match:
+            indent = match.group("indent")
+            if entry_indent is None:
+                entry_indent = indent
+                is_entry_start = True
+            elif indent == entry_indent:
+                is_entry_start = True
+        if is_entry_start:
             if current:
                 blocks.append(current)
             current = [line]
         elif current:
             current.append(line)
         else:
-            current = [line]
+            prefix.append(line)
     if current:
         blocks.append(current)
-    return blocks
+    return prefix, blocks
 
 
 def _block_field(block: list[str], pattern: re.Pattern[str]) -> str:
@@ -118,7 +138,7 @@ def _block_title(block: list[str]) -> str:
 
 def _block_is_internal(block: list[str]) -> bool:
     return is_internal_entry(
-        role=_block_field(block, _ROLE_RE),
+        role=_block_field(block, _ROLE_RE) or _block_field(block, _TYPE_RE),
         title=_block_title(block),
         source_ref=_block_field(block, _SOURCEREF_RE),
         url=_block_field(block, _URL_RE),
@@ -129,26 +149,36 @@ def strip_yaml(text: str) -> tuple[str, list[str]]:
     """Return (new_text, removed_titles). Empty result becomes ``[]``."""
     if text.strip() in ("", "[]"):
         return text, []
-    blocks = _split_entry_blocks(text)
+    prefix, blocks = _split_entry_blocks(text)
+    if not blocks:
+        return text, []
     kept, removed_titles = [], []
     for block in blocks:
-        if block[0].startswith("- ") and _block_is_internal(block):
+        if _ENTRY_START_RE.match(block[0]) and _block_is_internal(block):
             removed_titles.append(_block_title(block))
         else:
             kept.append(block)
     if not kept:
         return "[]\n", removed_titles
-    return "".join("".join(b) for b in kept), removed_titles
+    return "".join(prefix) + "".join("".join(b) for b in kept), removed_titles
 
 
 def strip_mdx(text: str, removed_titles: list[str]) -> str:
     """Remove the rendered resource bullets for removed titles; fix empty blocks."""
     if not removed_titles:
         return text
+
+    def _removed_title_in_line(line: str) -> bool:
+        for title in removed_titles:
+            escaped = re.escape(title)
+            if f"**{title}**" in line or re.search(rf"\[{escaped}\]\(", line):
+                return True
+        return False
+
     keep_lines = []
     for line in text.splitlines(keepends=True):
         stripped = line.lstrip()
-        if stripped.startswith("- ") and any(f"**{t}**" in line for t in removed_titles):
+        if stripped.startswith("- ") and _removed_title_in_line(line):
             continue
         keep_lines.append(line)
     text = "".join(keep_lines)
@@ -157,6 +187,8 @@ def strip_mdx(text: str, removed_titles: list[str]) -> str:
         block = m.group(0)
         if re.search(r"^\s*-\s", block, re.MULTILINE):
             return block  # still has bullets
+        if "Зовнішні ресурси" in block:
+            return f"{_EMPTY_NOTE_UK}\n"
         return f"{_EMPTY_NOTE}\n"
 
     return _EXT_RES_BLOCK_RE.sub(_fix_block, text)

@@ -14,11 +14,3 @@
   role: textbook
   notes: "Підтримка розрізнення прямого й переносного значення, зокрема контраст `пливе думка` / `пливе корабель`."
   source_ref: "5-klas-ukrmova-zabolotnyi-2023, p.22"
-- title: "Motion base review"
-  role: curriculum
-  notes: "Попередній B1 модуль, який встановлює базові пари дієслів руху в прямому значенні."
-  url: "b1/motion-base-review"
-- title: "Motion flight and swim"
-  role: curriculum
-  notes: "Безпосередній попередник для прямого вживання летіти/літати і пливти/плавати; M42 переносить частину цих форм у метафори."
-  url: "b1/motion-flight-swim"
