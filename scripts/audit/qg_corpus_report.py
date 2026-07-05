@@ -203,6 +203,8 @@ def cache_status_for_targets(
     latest_by_composite = {_composite_key(record): record for record in latest_records_by_composite(raw_records)}
     modules_with_any_record = {(record.level, record.slug) for record in raw_records}
     for target in targets:
+        clean_level = target.level.strip().lower()
+        clean_slug = target.slug.strip()
         key = _target_composite_key(
             target=target,
             gate_version=gate_version,
@@ -210,12 +212,12 @@ def cache_status_for_targets(
             reviewer_model_id=reviewer_model_id,
         )
         record = latest_by_composite.get(key)
-        status = "hit" if record else "stale" if (target.level, target.slug) in modules_with_any_record else "miss"
+        status = "hit" if record else "stale" if (clean_level, clean_slug) in modules_with_any_record else "miss"
         counts[status] += 1
-        by_level[target.level][status] += 1
+        by_level[clean_level][status] += 1
         modules.append(
             {
-                "module_id": f"{target.level}/{target.slug}",
+                "module_id": f"{clean_level}/{clean_slug}",
                 "status": status,
                 "run_id": record.run_id if record else None,
                 "gate_version": record.gate_version if record else None,
@@ -246,13 +248,15 @@ def latest_composite_match_for_target(
 
     if not db_path.exists():
         return "miss", None
+    clean_level = target.level.strip().lower()
+    clean_slug = target.slug.strip()
     prompt_hash = _prompt_hash_for_target(target)
     content_sha = llm_qg_store.content_sha_for_module(target.module_dir)
-    policy_family = policy_for_level(target.level).family
+    policy_family = policy_for_level(clean_level).family
     record = _latest_exact_composite(
         db_path=db_path,
-        level=target.level,
-        slug=target.slug,
+        level=clean_level,
+        slug=clean_slug,
         content_sha=content_sha,
         gate_version=gate_version,
         prompt_hash=prompt_hash,
@@ -263,7 +267,7 @@ def latest_composite_match_for_target(
     if record is not None:
         return "hit", record
     latest, _errors = load_db_records(db_path)
-    stale = any(record.level == target.level and record.slug == target.slug for record in latest)
+    stale = any(record.level == clean_level and record.slug == clean_slug for record in latest)
     return ("stale" if stale else "miss"), None
 
 
@@ -274,15 +278,16 @@ def _target_composite_key(
     checker_version: str,
     reviewer_model_id: str,
 ) -> tuple[Any, ...]:
+    clean_level = target.level.strip().lower()
     return (
-        target.level,
-        target.slug,
+        clean_level,
+        target.slug.strip(),
         llm_qg_store.content_sha_for_module(target.module_dir),
         gate_version,
         _prompt_hash_for_target(target),
         checker_version,
-        policy_for_level(target.level).family,
-        reviewer_model_id,
+        _norm_str(policy_for_level(clean_level).family),
+        _norm_str(reviewer_model_id),
     )
 
 
@@ -374,6 +379,13 @@ def unlp_metric_schema() -> dict[str, Any]:
     }
 
 
+def _norm_str(v: str | None) -> str | None:
+    if v is None:
+        return None
+    s = str(v).strip()
+    return s if s else None
+
+
 def _latest_exact_composite(
     *,
     db_path: Path,
@@ -396,8 +408,8 @@ def _latest_exact_composite(
         gate_version,
         prompt_hash,
         checker_version,
-        level_policy_family,
-        reviewer_model,
+        _norm_str(level_policy_family),
+        _norm_str(reviewer_model),
     )
     matches = [record for record in rows if _composite_key(record) == wanted]
     if not matches:
@@ -430,13 +442,13 @@ def _backfill_decision(record: Mapping[str, Any], db_path: Path) -> dict[str, An
         gate_version=str(workflow.get("gate_version") or ""),
         prompt_hash=workflow.get("prompt_hash"),
         checker_version=workflow.get("checker_version"),
-        level_policy_family=str(level_policy.get("family") or ""),
-        reviewer_model=str(workflow.get("reviewer_model_id") or ""),
+        level_policy_family=level_policy.get("family"),
+        reviewer_model=workflow.get("reviewer_model_id"),
     )
     if exact is not None:
         return {"module_id": module_id, "status": "current", "run_id": exact.run_id}
     rows, _errors = load_db_records(db_path)
-    stale = any(item.level == level and item.slug == slug for item in rows)
+    stale = any(item.level == level.strip().lower() and item.slug == slug.strip() for item in rows)
     return {"module_id": module_id, "status": "stale" if stale else "missing"}
 
 
@@ -584,6 +596,7 @@ def _spend_summary(
     estimated = 0.0
     observed = 0.0
     records_with_cost = 0
+    observed_seen = False
     accepted = 0
     for record in [*_records_as_mappings(db_records), *workflow_records]:
         if str(record.get("terminal_verdict") or _aggregate(record).get("terminal_verdict") or "").upper() == "PASS":
@@ -602,10 +615,11 @@ def _spend_summary(
         )
         if observed_value is not None:
             observed += float(observed_value or 0.0)
+            observed_seen = True
             cost_seen = True
         if cost_seen:
             records_with_cost += 1
-    numerator = observed if observed else estimated
+    numerator = observed if observed_seen else estimated
     return {
         "accepted_evidence": accepted,
         "records_with_cost": records_with_cost,
@@ -791,8 +805,8 @@ def _prompt_hash_for_target(target: ReportTarget) -> str | None:
         path = target.module_dir / name
         texts[name] = path.read_text(encoding="utf-8") if path.exists() else ""
     prompt = llm_reviewer.build_reviewer_prompt(
-        level=target.level,
-        slug=target.slug,
+        level=target.level.strip().lower(),
+        slug=target.slug.strip(),
         module_md=texts.get("module.md", ""),
         activities_yaml=texts.get("activities.yaml", ""),
         vocabulary_yaml=texts.get("vocabulary.yaml", ""),
@@ -809,8 +823,8 @@ def _composite_key(record: ReportRecord) -> tuple[Any, ...]:
         record.gate_version,
         record.prompt_hash,
         record.checker_version,
-        record.level_policy_family,
-        record.reviewer_model,
+        _norm_str(record.level_policy_family),
+        _norm_str(record.reviewer_model),
     )
 
 
