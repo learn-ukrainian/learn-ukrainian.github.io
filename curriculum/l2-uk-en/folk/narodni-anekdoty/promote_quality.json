@@ -1,9 +1,9 @@
 {
-  "assembled_mdx_sha256": "073532154e626608be1ccd7dd6cfe4e55f4b4d880b3f3ab231ce31c2b0946d02",
+  "assembled_mdx_sha256": "84aa21af0817a4ccf2752f8690cdadfe350688a9b423338174e38c16f6163236",
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "b1b2910db8bc1e4e992b82ce450cc44636fbff6d11871ad29551b25ad02056ae",
+    "digest": "f70ec46011b1434b68fa50983e5fbfbad7d22c258539c990b83c1d6d4d890a6c",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/narodni-anekdoty.yaml",
@@ -11,7 +11,7 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/narodni-anekdoty/module.md",
-        "sha256": "91586d5e32e26c42fe1941e05bfab39e9887d90900c922f2b2cd8a3df2c449dc"
+        "sha256": "1d02f778287330cb72f972acb2d9a48e02fd3de00b0ba38747b19587572891e4"
       },
       {
         "path": "curriculum/l2-uk-en/folk/narodni-anekdoty/activities.yaml",
@@ -28,10 +28,10 @@
     ]
   },
   "evidence": {
-    "decolonization": "Module treats folk humor as Ukrainian verbal tradition with anti-imperial framing, critical handling of москаль/Roma/clergy/pan/servant stereotypes, and no punch-down performance prompts.",
-    "pedagogical": "Lesson teaches short comic prose through source discipline, social target analysis, safe performance boundaries, V2 inline/workbook activities, and a 340-460 word exemplar.",
-    "review": "Claude Opus 4.8 independent review follow-up returned PASS with no blocker/major/minor findings; only optional nits. No DeepSeek used.",
-    "source_policy": "Full anecdotes are paraphrase-only; the only embedded verbatim fragment is a short verified formula from the dossier/Chyzhevsky evidence, with broader plots framed analytically."
+    "decolonization": "Humor framing remains stereotype-aware and avoids punch-down normalization while adding verified reading content.",
+    "pedagogical": "Structured PrimaryReading now grounds the joke/anecdote seminar surface with a short attributed excerpt rather than link-only support.",
+    "review": "Claude Opus 4.8 bridge message 2 PASS for Batch 4 reading remediation; all excerpts verified, no blockers. DeepSeek not used.",
+    "source_policy": "Added on-site shortened primary reading from verified Chyzhevsky/Kvitka-adjacent comic formula; external references remain supplementary."
   },
   "floors": {
     "beauty": 8.5,
@@ -42,14 +42,14 @@
     "tone": 8.5
   },
   "profile": "folk_promote_v1",
-  "review_artifact": "ai_agent_bridge messages 2 and 4; follow-up PASS at 2026-07-04T16:51:24Z",
+  "review_artifact": null,
   "reviewer": {
     "agent": "claude",
     "family": "anthropic",
-    "model": "Claude Opus 4.8"
+    "model": "claude-opus-4-8"
   },
   "schema_version": 1,
-  "scored_at": "2026-07-04T16:52:00Z",
+  "scored_at": "2026-07-05T17:49:56Z",
   "scores": {
     "beauty": 8.8,
     "decolonization": 9.2,

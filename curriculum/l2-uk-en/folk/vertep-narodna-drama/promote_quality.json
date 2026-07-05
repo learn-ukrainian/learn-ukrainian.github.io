@@ -1,9 +1,9 @@
 {
-  "assembled_mdx_sha256": "5752ccbc73497ce1aa0a79cd7f8bf058677123979177a52553032f9cb10ac5af",
+  "assembled_mdx_sha256": "6fbcf959160bf90c7f2f3319d1e943cc1c4ecbbedee7ce145ac1f777205062f8",
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "8e408d9845f71613a2319e7aac43e37b7c8a8aecc16965c60cb12ee4c0c5ee10",
+    "digest": "faa63da2571c28e13df4d0853a210393f02c6677f6ffe454ad6aae0ad203870c",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/vertep-narodna-drama.yaml",
@@ -11,7 +11,7 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/vertep-narodna-drama/module.md",
-        "sha256": "94c74b8f0c74857dd59306d2cfa0c8328fe8350d58f2ea50655abe8d4bba200e"
+        "sha256": "6032640416e04b2721093ea639cc993ac5df400aede86a52a96fb21077fdff57"
       },
       {
         "path": "curriculum/l2-uk-en/folk/vertep-narodna-drama/activities.yaml",
@@ -28,10 +28,10 @@
     ]
   },
   "evidence": {
-    "decolonization": "Module centers Ukrainian school drama, interlude, puppet/live performance, Soviet suppression and revival without Russocentric derivation; stereotype roles are contextualized.",
-    "pedagogical": "V2 inline/workbook activities cover form distinction, two-tier symbolics, ritual sequence, ethical stereotype handling, variant comparison, performance, and decolonization.",
-    "review": "Claude Opus 4.8 independent review PASS via project bridge; no blockers or majors; post-review nits addressed and final source removes learner-facing performance-text quotations.",
-    "source_policy": "No learner-facing performance dialogue is quoted; risky or uncertain dialogue and stereotype-heavy material is paraphrased and critically framed."
+    "decolonization": "Religious and stock-character framing remains critical, non-preaching, and stereotype-aware.",
+    "pedagogical": "Structured readings ground sacred-tier, Rachel, and Death motifs without fabricating dialogue or staging details.",
+    "review": "Claude Opus 4.8 bridge message 2 PASS for Batch 4 reading remediation; all three safe vertep excerpts verified, no blockers. DeepSeek not used.",
+    "source_policy": "Added on-site shortened readings from verified XVIII-century vertep anthology fragments while excluding stereotype-heavy interlude monologues."
   },
   "floors": {
     "beauty": 8.5,
@@ -46,10 +46,10 @@
   "reviewer": {
     "agent": "claude",
     "family": "anthropic",
-    "model": "Claude Opus 4.8"
+    "model": "claude-opus-4-8"
   },
   "schema_version": 1,
-  "scored_at": "2026-07-04T18:56:47Z",
+  "scored_at": "2026-07-05T17:49:56Z",
   "scores": {
     "beauty": 8.7,
     "decolonization": 9.1,
