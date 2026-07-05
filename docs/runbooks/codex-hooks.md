@@ -14,6 +14,56 @@ Codex hook facts verified from the current OpenAI Codex manual on 2026-07-05:
 - Hook command trust is separate from project trust. For automation that already
   vets the hook source, use `--dangerously-bypass-hook-trust`.
 
+## Primary-checkout write guard (#4448)
+
+`guard-primary-checkout-write.py` is a `PreToolUse` guard that blocks a write
+tool from dirtying tracked files in the *primary checkout* while it sits on a
+protected branch (`main`/`master`). It is wired into both providers:
+
+- Claude (`agents_extensions/shared/settings.json`): the `Bash` matcher plus a
+  `Write|Edit|MultiEdit` matcher.
+- Codex (`agents_extensions/codex/hooks.json`): the `^Bash$` matcher plus a
+  `^(Write|Edit|MultiEdit|apply_patch)$` matcher.
+
+Every containment decision is delegated to
+`scripts.guardrails.worktree_containment` (#4444); the hook only maps each
+provider payload onto the target path(s) that module classifies. Writes into a
+`.worktrees/**` dispatch worktree, any other registered worktree, gitignored
+local/runtime state, or paths outside the repo are allowed. On a block the hook
+exits 2 and tells the agent to create/`cd` into
+`.worktrees/dispatch/<agent>/<task>/`.
+
+### Covered write surfaces
+
+- `Write` / `Edit` / `MultiEdit` — `tool_input.file_path`.
+- `apply_patch` and Codex `Edit`/`Write` aliases — file paths parsed from the
+  `*** Add/Update/Delete File:` / `*** Move to:` patch headers. #4447 verified
+  Codex CLI fires `PreToolUse` for `apply_patch` (see the empirical result
+  below), so the guard can enforce that path for the CLI.
+- `Bash` — write-capable redirection (`>`, `>>`, `&>`), `tee`, and in-place
+  editors (`sed -i` / `perl -i`). Read-only preflight (`git status`, `git log`,
+  `rg`, `cat`, …) exposes no write target and is never blocked.
+
+### Coverage limitations (by design)
+
+- Bash write detection is heuristic. Arbitrary write vectors — `dd of=`,
+  `cp`/`mv` destinations, `python -c "open(...,'w')"`, `$EDITOR` — are **not**
+  parsed. Those paths rely on physical worktree isolation plus the monitor
+  tripwire (#4449) and git shim (#4450), not on this hook.
+- The guard is **not** the primary Codex enforcement layer for surfaces Codex
+  does not expose as hookable. #4447 confirmed Codex **CLI** `apply_patch`/`Bash`
+  interception, but Codex **Desktop** direct-edit interception is unverified. If
+  Desktop (or any provider) does not emit a hookable `Bash`/`apply_patch`/`Edit`/
+  `Write` event, this hook cannot enforce that path — #4445/#4446/#4449 carry it
+  instead.
+- Enforcement is scoped to protected branches. If the primary checkout is
+  deliberately on a feature branch, or git cannot resolve the branch, the hook
+  stays out of the way (fail open). It is a safety net; physical isolation is the
+  real guarantee.
+
+Tests: `tests/test_guard_primary_checkout_write.py` (pure payload extraction plus
+end-to-end block/allow against a real repo with a dispatch worktree).
+
 ## CLI probe
 
 Run the probe from the repository root:
