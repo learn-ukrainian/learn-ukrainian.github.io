@@ -22,6 +22,21 @@
 
 ---
 
+## Operator Contract (binding — loads without tools)
+
+The operator's working contract is `agents_extensions/shared/rules/operator-expectations.md`
+(served FIRST at `GET /api/rules`; digests also in `AGENTS.md` and `GEMINI.md` § Operator
+Contract). Headless `claude -p` runs may not fetch the API — this digest keeps the contract
+in-context regardless: quality over shortcuts · root-cause fixes · git/PR hygiene +
+`X-Agent` trailers · whole-fleet utilization, review gate = independent CROSS-FAMILY
+reviewer (discussion ≠ review) · route by model × harness fit · handle limits, NOTE
+substitutions · tool-backed claims only (UK word/stress/morphology facts VESUM/`sources`-
+verified, never guessed) · clean code + current docs · **max UA immersion EXCEPT A1**
+(English scaffolding there is by design; from A2 never raise English) · drive, don't defer ·
+repo hard gates bind.
+
+---
+
 ## Best Practices Reference
 
 Detailed standards in `docs/best-practices/`. Read the relevant doc before working in that area.

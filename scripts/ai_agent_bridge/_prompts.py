@@ -236,6 +236,13 @@ Violating this rule destroys the caller's work in progress. There is no exceptio
 """
 
 
+OPERATOR_CONTRACT_DIGEST = """Operator contract (binding; full text: agents_extensions/shared/rules/operator-expectations.md):
+quality over shortcuts - root-cause fixes - tool-backed claims only (Ukrainian word/stress/
+morphology facts VESUM/`sources`-verified, never guessed) - max UA immersion EXCEPT A1 (its
+English scaffolding is by design; from A2 never raise English) - reviews need an independent
+cross-family reviewer (discussion does not satisfy the gate) - note any lane substitution."""
+
+
 def build_agy_prompt(msg: dict, review: bool = False) -> str:
     """Build prompt for Agy (Antigravity CLI) invocation.
 
@@ -246,6 +253,8 @@ def build_agy_prompt(msg: dict, review: bool = False) -> str:
     standing rules here explicitly forbid those routes for bridge Q&A.
     """
     prompt = f"""You are Agy (Antigravity CLI, Gemini-3.5-Flash-High), receiving a message from {msg['from'].title()} via the message broker.
+
+{OPERATOR_CONTRACT_DIGEST}
 
 ---
 Task ID: {msg['task_id'] or 'none'}
