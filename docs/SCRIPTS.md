@@ -697,6 +697,45 @@ seminar-register pathos. Single-module scans emit compact evidence shaped like
 content hash, dimensional scores/findings, compact spans/excerpts, LLM metadata
 placeholders, and provenance.
 
+### `scripts/audit/qg_workflow.py`
+
+Cost-aware tiered curriculum QG workflow for #2156 / #4310. It composes
+deterministic structural checks, optional UA-GEC gold lookup, and the gated LLM
+reviewer into one canonical `qg_schema` evidence record. Live LLM dispatch is
+not wired by default; Tier 2 uses a composite cache hit or an explicitly
+provided reviewer response until #4370 calibration lands.
+
+```bash
+# Dry-run before broad reviewer spend; writes nothing
+.venv/bin/python scripts/audit/qg_workflow.py \
+  --target b1:aspect-in-imperatives:curriculum/l2-uk-en/b1/aspect-in-imperatives \
+  --dry-run \
+  --format json
+
+# Single-module deterministic workflow evidence
+.venv/bin/python scripts/audit/qg_workflow.py \
+  --module-dir curriculum/l2-uk-en/b1/aspect-in-imperatives \
+  --level b1 \
+  --slug aspect-in-imperatives \
+  --format json
+```
+
+Tier 0 always runs `DeterministicRuleAdapter` and
+`llm_reviewer.run_structural_checks()`. A hard Tier-0 `FAIL` skips Tier 2 by
+default for cost, overriding the harness's `llm_review.required` flag; use
+`--llm-on-fail` only when richer diagnostics are worth reviewer spend. Tier 2
+is eligible by `policy_for_level(level).family` (`b1_plus` and `seminar`) or by
+explicit `--force-llm` / calibration sample. Broad Tier-2 runs require a
+passing `llm_qg_canaries.py` result and budget ceilings such as
+`--max-llm-calls` or `--max-cost-usd`.
+
+The LLM cache reuses `scripts/audit/llm_qg_store.py` with the composite key
+`content_sha + gate_version + prompt_hash + checker_version +
+level_policy.family + reviewer_model_id`. The content basis is
+`llm_qg_store.CONTENT_FILES` (`module.md`, `activities.yaml`,
+`vocabulary.yaml`, `resources.yaml`), not the promotion sidecar's plan-inclusive
+hash.
+
 ### `scripts/audit/ingest_ua_gec_gold.py`
 
 Curates the small tracked UA-GEC fixture for the #2156 eval harness. It reads

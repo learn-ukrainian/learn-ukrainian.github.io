@@ -53,6 +53,8 @@ These are NOT the harness, but they are the scorer-side foundation:
   `scripts/audit/qg_schema.py`.
 - [Scorer adapter boundaries](scorer-adapters.md) document the #4308
   deterministic, UA-GEC-fixture, and LLM-placeholder adapter layer.
+- [Cost-aware curriculum QG workflow](cost-aware-qg-workflow.md) documents the
+  #4310 tiered, short-circuiting workflow and composite LLM cache key.
 - [Agent fleet evidence for #4307](agent-fleet-4307.md) records the concrete
   fleet lanes used for the schema slice and the observed strengths/weaknesses.
 
