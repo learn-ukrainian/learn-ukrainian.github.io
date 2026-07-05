@@ -1,0 +1,18 @@
+# Canonical read-online URLs for the Ukrainian school textbooks cited as
+# `role: textbook` resources (source_ref: docs/references/textbooks-txt/<file>.txt).
+# Keyed by the .txt filename stem. Consumed by scripts/audit/stamp_textbook_urls.py,
+# which stamps `url:` onto matching textbook resource entries so the renderer shows a
+# clickable citation (title → link) instead of the internal source_ref path.
+#
+# Host: pidruchnyk.com.ua (free read-online + PDF). Every URL VERIFIED live 2026-07-05.
+# Fallbacks if a page ever moves: osvita.ua/school/textbook, shkola.in.ua, 4book.org.
+
+3-klas-ukrainska-mova-vashulenko-2020-1: "https://pidruchnyk.com.ua/1524-ukrmova-ta-chytannya-vashulenko-3klas-nush.html"
+6-klas-ukrmova-litvinova-2023: "https://pidruchnyk.com.ua/2596-ukrmova-6-klas-litvinova.html"
+7-klas-ukrmova-litvinova-2024: "https://pidruchnyk.com.ua/2872-ukrainska-mova-litvinova-7-klas-2024.html"
+7-klas-ukrmova-zabolotnyi-2024: "https://pidruchnyk.com.ua/2873-ukrainska-mova-zabolotnyi-7-klas-2024.html"
+8-klas-ukrmova-zabolotnyi-2025: "https://pidruchnyk.com.ua/2902-ukrainska-mova-zabolotnyi-8-klas-2025.html"
+9-klas-ukrajinska-mova-voron-2017: "https://pidruchnyk.com.ua/1027-ukrmova-voron-9klas.html"
+10-klas-ukrmova-karaman-2018: "https://pidruchnyk.com.ua/3082-ukrmova-10-klas-karaman.html"
+11-klas-ukrajinska-mova-avramenko-2019: "https://pidruchnyk.com.ua/1239-ukrainska-mova-11-klas-avramenko.html"
+11-klas-ukrajinska-mova-voron-2019: "https://pidruchnyk.com.ua/1316-ukrmova-voron-11-klas.html"

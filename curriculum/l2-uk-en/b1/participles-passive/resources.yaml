@@ -1,18 +1,6 @@
 - title: "B1 M66: Пасивні дієприкметники"
   role: curriculum
   notes: "Основний модуль про пасивні дієприкметники, суфікси -н-, -ен-/-єн-, -т-, узгодження та зв'язок із формами на -но/-то."
-- title: "B1 M65: Активні дієприкметники"
-  role: curriculum
-  notes: "Попередній модуль дає межу між активним значенням і дією, виконаною над предметом."
-  source_ref: curriculum/l2-uk-en/b1/participles-active/module.md
-- title: "B1 M30: Пасивний стан (вступ)"
-  role: curriculum
-  notes: "Попередній модуль про пасивні конструкції на -ся та безособові форми на -но/-то."
-  source_ref: curriculum/l2-uk-en/b1/passive-voice-intro/module.md
-- title: "B1 M67: Дієприкметниковий зворот"
-  role: curriculum
-  notes: "Наступний модуль розбере залежні слова при дієприкметнику та пунктуацію."
-  source_ref: curriculum/l2-uk-en/plans/b1/participle-phrases.yaml
 - title: "Авраменко, 7 клас: творення пасивних дієприкметників"
   role: reference
   notes: "Джерело для визначення пасивних дієприкметників, трьох суфіксальних груп і паралельних форм."

@@ -1,16 +1,4 @@
-- title: "B1 grammar wiki: motion base review"
-  role: internal
-  notes: "Reference overview for basic Ukrainian motion-verb pairs, present/past paradigms, stress notes, and common L2 errors."
-  url: "wiki/grammar/b1/motion-base-review.md"
-- title: "Motion-verb source registry"
-  role: internal
-  notes: "Textbook source registry used by the grammar wiki for forms such as ідемо, веземо, їжджу, ходжу, біжать."
-  url: "wiki/grammar/b1/motion-base-review.sources.yaml"
 - title: "Spatial prepositions review"
   role: curriculum
   notes: "Previous B1 module that certifies the place/direction contrast used here: до + родовий, в/на + знахідний, під столом vs під стіл."
   url: "b1/prepositions-spatial-review"
-- title: "Motion prefixes: arrival preview"
-  role: internal
-  notes: "Next grammar wiki for prefixed arrival verbs such as прийти, приїхати, доїхати. This M35 lesson prepares the unprefixed base pairs."
-  url: "wiki/grammar/b1/motion-prefixes-arrival.md"

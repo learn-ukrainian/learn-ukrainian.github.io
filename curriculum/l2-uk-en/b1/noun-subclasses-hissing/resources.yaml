@@ -18,18 +18,6 @@
   role: textbook
   notes: Планове джерело для поділу іменників I та II відмін на тверду, м'яку і мішану групи.
   source_ref: Голуб Grade 6, p.75
-- title: Local B1 simplification-consonants module
-  role: curriculum
-  notes: Сусідній завершений B1 модуль для стилю пояснення, V2 активностей і морфонологічного контексту.
-  source_ref: curriculum/l2-uk-en/b1/simplification-consonants/module.md
-- title: Local B1 alternation-vowels module
-  role: curriculum
-  notes: Попередній B1.1 модуль для повторення руху голосних у словах ніж - ножем, ківш - ковшем.
-  source_ref: curriculum/l2-uk-en/b1/alternation-vowels/module.md
-- title: Local direct B1 II declension modules
-  role: curriculum
-  notes: Використано як внутрішній контраст для другої відміни чоловічого та середнього роду; зміст перевірено проти планових джерел.
-  source_ref: curriculum/l2-uk-direct/b1/druha-vidmina-cholovichyi.yaml; curriculum/l2-uk-direct/b1/druha-vidmina-seredniy.yaml
 - title: Goroh and Slovnyk.ua form checks
   role: dictionary
   notes: Використано для перевірки нормативних форм товаришем, сторожем, слухачем, ножем, ключем, плечем, прізвищем, серцем, плечима.

@@ -383,20 +383,45 @@ def _public_resource_description(item: dict) -> str:
     return ''
 
 
+_INTERNAL_REF_PATH_RE = re.compile(r'^(?:curriculum/|wiki/|docs/|\.{0,2}/)', re.IGNORECASE)
+
+
+def _is_internal_ref_path(ref: str) -> bool:
+    """True if a ``source_ref`` is an internal repo path/file rather than a citation.
+
+    Textbook entries carry ``source_ref`` as build provenance — often a repo path such
+    as ``docs/references/textbooks-txt/9-klas-…voron-2017.txt`` (load-bearing for
+    ``_plan_reference_match_gate``). Such a path must never render on a learner surface;
+    a human citation string (e.g. ``"State Standard 2024, §4.2.4.1"``) may.
+    """
+    r = ref.strip()
+    return bool(_INTERNAL_REF_PATH_RE.match(r)) or r.lower().endswith(('.txt', '.md', '.yaml', '.yml'))
+
+
 def _format_textbook_resource(item: dict) -> list[str]:
-    title = _public_resource_text(item.get('title')) or 'Unknown'
+    title = _public_resource_text(item.get('title'))
     author = _public_resource_text(item.get('author'))
     pages = item.get('pages') or item.get('page') or ''
     desc = _public_resource_description(item)
-    source_ref = _public_resource_text(item.get('source_ref')) or title
 
-    display_title = source_ref
+    # Display the human title. `source_ref` is internal provenance (usually a repo path)
+    # and must never reach a learner surface — fall back to it only when it is a citation
+    # string, never an internal repo path.
+    display_title = title
+    if not display_title:
+        ref = _public_resource_text(item.get('source_ref'))
+        display_title = ref if (ref and not _is_internal_ref_path(ref)) else 'Unknown'
+
     if pages and str(pages) not in display_title:
         display_title = f"{display_title}, p. {pages}"
     if author and not display_title.startswith(author):
         display_title = f"{author} — {display_title}"
 
-    lines = [f"> - 📚 **{display_title}**"]
+    # Render a clickable link when a public URL is present (e.g. an online edition or
+    # the on-site reader); otherwise a plain bold citation.
+    url = validate_and_clean_url(str(item.get('url') or ''), display_title)
+    label = f"[{display_title}]({url})" if url else f"**{display_title}**"
+    lines = [f"> - 📚 {label}"]
     if desc:
         lines.append(f">   {desc}")
     return lines
@@ -495,7 +520,7 @@ def vocab_items_to_components(items: list[dict], header_text: str = "Vocabulary"
             "pos": item.get('pos', ''),
             "gender": item.get('gender', ''),
             "example": example,
-            "examples": [value for value in (translation, example) if value],
+            "examples": [example] if example else [],
             # Render-time, integrity-gated link to the Word Atlas page (None when
             # the lemma has no Atlas page → dropped by the empty-value filter below).
             "atlas_href": atlas_href_for(lemma),

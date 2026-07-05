@@ -18,10 +18,6 @@
   role: textbook
   notes: Планове джерело для форм звертання й кличного відмінка в діалогічному поясненні.
   source_ref: Авраменко Grade 10, p.175
-- title: Wiki grammar article for B1 alternation-consonants-nouns
-  role: wiki
-  notes: Використано як внутрішню карту типів чергування, типових L2 помилок і рекомендованої прогресії вправ.
-  source_ref: wiki/grammar/b1/alternation-consonants-nouns.md
 - title: Local B1 alternation-vowels module
   role: curriculum
   notes: Модуль продовжує морфонологічний блок після чергування голосних і зберігає той самий B1 формат.

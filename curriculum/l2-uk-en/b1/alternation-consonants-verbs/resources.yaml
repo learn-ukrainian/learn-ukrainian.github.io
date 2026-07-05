@@ -14,14 +14,6 @@
   role: textbook
   notes: Планове джерело для шкільного подання чергувань приголосних і зв'язку з попередніми морфонологічними темами.
   source_ref: Заболотний Grade 5, p.116-119
-- title: Local B1 alternation-vowels module
-  role: curriculum
-  notes: Попередній модуль B1.1, який вводить морфонологічну логіку через чергування голосних.
-  source_ref: curriculum/l2-uk-en/b1/alternation-vowels/module.md
-- title: Local B1 alternation-consonants-nouns module
-  role: curriculum
-  notes: Безпосередній попередник, який пояснює чергування приголосних в іменниках і готує контраст із дієсловами.
-  source_ref: curriculum/l2-uk-en/b1/alternation-consonants-nouns/module.md
 - title: Goroh словозміна and Slovnyk.ua verb-form checks
   role: dictionary
   notes: Використано для перевірки форм воджу, кручу, вожу, ношу, їжджу, прощу, чищу, можу, печу, роблю, куплю, ловлю і наказових контрастів.

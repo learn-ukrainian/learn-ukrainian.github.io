@@ -30,6 +30,7 @@ if str(PROJECT_ROOT) not in sys.path:
 from audit.check_no_internal_ids import (
     INTERNAL_ID_PATTERNS,
     INTERNAL_REGISTER_PATTERNS,
+    _blank_html_comments,
 )
 from audit.checks.yaml_schema_validation import validate_activity_yaml_file
 from audit.content_surface_gates import scan_module_surface
@@ -629,7 +630,10 @@ def check_internal_leakage(paths: ModulePaths) -> list[Finding]:
         if not path.exists():
             continue
         is_resources = path.name in _RESOURCE_FILENAMES
-        for line_no, line in enumerate(path.read_text(encoding="utf-8").splitlines(), start=1):
+        # HTML comments (e.g. <!-- VERIFY: … chunk_id="…" -->) never render, so blank
+        # them before scanning, consistent with check_no_internal_ids.scan_file.
+        text = _blank_html_comments(path.read_text(encoding="utf-8"))
+        for line_no, line in enumerate(text.splitlines(), start=1):
             if is_resources and _RESOURCE_PROVENANCE_KEY_RE.match(line):
                 # Non-rendering provenance key — not a learner surface.
                 continue

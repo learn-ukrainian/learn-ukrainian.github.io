@@ -22,15 +22,3 @@
   role: reference
   notes: Використано для перевірки нормативної варіантності родового однини на -і/-и у словах типу радості/радости, любові/любови, крові/крови.
   source_ref: Український правопис 2019
-- title: Local B1 alternation-vowels module
-  role: curriculum
-  notes: Попередній B1.1 модуль для зв'язку з чергуванням і/о/е у формах ніч - ночі, піч - печі, річ - речі.
-  source_ref: curriculum/l2-uk-en/b1/alternation-vowels/module.md
-- title: Local B1 simplification-consonants module
-  role: curriculum
-  notes: Сусідній модуль для стилю пояснення морфонологічних правил і V2 активностей у B1.1.
-  source_ref: curriculum/l2-uk-en/b1/simplification-consonants/module.md
-- title: Local B1 health-at-the-doctor module
-  role: curriculum
-  notes: Попередній тематичний модуль із формами крові та кров'ю у медичному контексті.
-  source_ref: curriculum/l2-uk-en/b1/health-at-the-doctor/module.md

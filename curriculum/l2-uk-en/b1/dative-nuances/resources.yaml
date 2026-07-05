@@ -16,10 +16,6 @@
   role: textbook
   notes: "Показує давальний учневі/учню, школі, учням, школам та паралельні чоловічі закінчення."
   source_ref: "4-klas-ukrayinska-mova-varzatska-2021-1, §12"
-- title: "A1 checkpoint communication review"
-  role: style
-  notes: "Нагадує, що завдяки вживається для позитивного результату; негативні причини краще виражати через або внаслідок."
-  source_ref: "wiki/pedagogy/a1/checkpoint-communication.md"
 - title: "State Standard 2024, §4.2.2.3"
   role: standard
   notes: "Підтримує розширення значень давального відмінка, зокрема адресата, стану, потреби і призначення."

@@ -2,22 +2,22 @@
   role: textbook
   notes: "Локальне джерело для ознак публіцистичного стилю: інформативність, логічність, фактографічність, точність, образність, оцінність, суспільно-політична лексика, риторичні запитання, звертання та вставні слова."
   source_ref: docs/references/textbooks-txt/9-klas-ukrajinska-mova-voron-2017.txt
+  url: "https://pidruchnyk.com.ua/1027-ukrmova-voron-9klas.html"
 - title: Вашуленко Grade 3, p.28
   role: textbook
   notes: Локальне джерело для базового визначення медіа як способів і засобів передавання інформації, різновидів медіа, масмедіа, достовірності інформації та розрізнення факту й судження.
   source_ref: docs/references/textbooks-txt/3-klas-ukrainska-mova-vashulenko-2020-1.txt
+  url: "https://pidruchnyk.com.ua/1524-ukrmova-ta-chytannya-vashulenko-3klas-nush.html"
 - title: Литвінова Grade 6, p.29-32
   role: textbook
   notes: Локальне джерело для видів і джерел інформації, фейків, недостовірної інформації, небезпеки фейкових повідомлень і структури короткого аргументованого висловлення.
   source_ref: docs/references/textbooks-txt/6-klas-ukrmova-litvinova-2023.txt
+  url: "https://pidruchnyk.com.ua/2596-ukrmova-6-klas-litvinova.html"
 - title: Ворон Grade 11, p.42-43
   role: textbook
   notes: Локальне джерело для риторичних фігур, емоційно-смислового увиразнення та прикладу з дієсловом "маніпулювати" в публічному мовленні.
   source_ref: docs/references/textbooks-txt/11-klas-ukrajinska-mova-voron-2019.txt
+  url: "https://pidruchnyk.com.ua/1316-ukrmova-voron-11-klas.html"
 - title: Source-index pass for plan-cited Avramenko/Zabolotnyi media sections
   role: textbook-index
   notes: MCP source index підтвердив планові тези про публіцистичний стиль, ЗМІ/масмедіа, медіатекст, надійні джерела, фейкову інформацію, критичне сприйняття та медіаграмотність; локальні VERIFY-коментарі в модулі прив'язані до наявних у checkout текстових джерел.
-- title: План модуля B1 M73
-  role: plan
-  notes: Використано як джерело цілей, тематичної лексики, структури уроку, діалогової ситуації та інтеграції з попередніми модулями B1.6.
-  source_ref: curriculum/l2-uk-en/plans/b1/society-and-media.yaml

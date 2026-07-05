@@ -36,7 +36,7 @@ SEMINAR_DOC_TRACKS = {
 # only folk + seminar tracks were scanned, which let internal-register jargon (chunk,
 # "Wiki: pedagogy/…") accumulate in core content unchecked. Add a level here ONLY once
 # it is clean, or the gate will block unrelated commits touching that level.
-GUARDED_CORE_LEVELS = {"a1", "a2"}
+GUARDED_CORE_LEVELS = {"a1", "a2", "b1"}
 
 FOLK_LEARNER_SOURCE_FILES = {
     "module.md",
@@ -127,6 +127,16 @@ LEARNER_SURFACE_PATTERNS = (*INTERNAL_ID_PATTERNS, *INTERNAL_REGISTER_PATTERNS)
 # line is not a leak. Prose that mentions the term is still scanned.
 _RESOURCE_PROVENANCE_KEY_RE = re.compile(r"^\s*(?:-\s*)?(?:packet_)?chunk_id\s*:", re.IGNORECASE)
 _RESOURCE_FILENAMES = {"resources.yaml", "resources.yml"}
+
+# HTML comments never reach a learner surface (the MDX/Markdown renderer strips them),
+# so build-provenance inside an authoring marker like
+# ``<!-- VERIFY: … chunk_id="7-klas-…_s0078" -->`` is not a leak. Blank the comment
+# spans (keeping newlines + offsets so finding line/column stay accurate) before scanning.
+_HTML_COMMENT_RE = re.compile(r"<!--.*?-->", re.DOTALL)
+
+
+def _blank_html_comments(text: str) -> str:
+    return _HTML_COMMENT_RE.sub(lambda m: re.sub(r"[^\n]", " ", m.group(0)), text)
 
 
 @dataclass(frozen=True, order=True)
@@ -264,7 +274,7 @@ def scan_candidates(paths: list[Path], *, allow_external: bool = False) -> list[
 def scan_file(path: Path) -> list[Finding]:
     findings: list[Finding] = []
     is_resources = path.name in _RESOURCE_FILENAMES
-    text = path.read_text(encoding="utf-8")
+    text = _blank_html_comments(path.read_text(encoding="utf-8"))
     for line_no, line in enumerate(text.splitlines(), start=1):
         if is_resources and _RESOURCE_PROVENANCE_KEY_RE.match(line):
             continue

@@ -14,18 +14,6 @@
   role: textbook
   notes: Планове джерело для теми здоров'я, профілактики та відповідальності за самопочуття.
   source_ref: Заболотний Grade 11, p.166
-- title: Local B1 alternation-vowels module
-  role: curriculum
-  notes: Попередній модуль B1.1 для зв'язку біль - болить, ніс - носа.
-  source_ref: curriculum/l2-uk-en/b1/alternation-vowels/module.md
-- title: Local B1 alternation-consonants-nouns module
-  role: curriculum
-  notes: Попередній модуль B1.1 для зв'язку вухо - у вусі, око - в оці.
-  source_ref: curriculum/l2-uk-en/b1/alternation-consonants-nouns/module.md
-- title: Local B1 alternation-consonants-verbs module
-  role: curriculum
-  notes: Безпосередній попередник для морфонологічної логіки в словотвірних родинах.
-  source_ref: curriculum/l2-uk-en/b1/alternation-consonants-verbs/module.md
 - title: Goroh словозміна and Slovnyk.ua form checks
   role: dictionary
   notes: Використано як словникову перевірку форм біль, кашель, нежить, ліки, краплі, крові, сечі.

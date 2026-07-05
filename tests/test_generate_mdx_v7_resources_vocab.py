@@ -63,6 +63,41 @@ def test_format_resources_for_mdx_uses_author_description_and_role_icon():
     assert "🔗 **Wikipedia overview**" in mdx
 
 
+def test_format_resources_for_mdx_textbook_shows_title_not_source_ref_path():
+    """B1 regression: a textbook citation must render its human `title`, never its
+    internal `source_ref` repo path; a public `url` makes it a clickable link."""
+    mdx = format_resources_for_mdx({
+        "books": [
+            {
+                "title": "9 клас: підрядні обставинні речення",
+                "role": "textbook",
+                "source_ref": "docs/references/textbooks-txt/9-klas-ukrajinska-mova-voron-2017.txt",
+                "notes": "Джерело для класифікації підрядних частин.",
+                "url": "https://pidruchnyk.com.ua/1027-ukrmova-voron-9klas.html",
+            },
+        ],
+    })
+    assert "docs/references/textbooks-txt" not in mdx  # internal path never leaks
+    assert (
+        "[9 клас: підрядні обставинні речення]"
+        "(https://pidruchnyk.com.ua/1027-ukrmova-voron-9klas.html)"
+    ) in mdx
+
+
+def test_format_resources_for_mdx_textbook_without_url_shows_bold_title():
+    mdx = format_resources_for_mdx({
+        "books": [
+            {
+                "title": "11 клас: пунктуація",
+                "role": "textbook",
+                "source_ref": "docs/references/textbooks-txt/11-klas-ukrajinska-mova-voron-2019.txt",
+            },
+        ],
+    })
+    assert "docs/references/textbooks-txt" not in mdx
+    assert "📚 **11 клас: пунктуація**" in mdx
+
+
 def test_format_resources_for_mdx_groups_mixed_roles_with_icons():
     mdx = format_resources_for_mdx([
         {
