@@ -1,0 +1,272 @@
+"""Tests for the primary-checkout write guard hook (issue #4448).
+
+Two layers:
+
+* **Pure extraction** — ``bash_write_targets`` / ``write_tool_targets`` are
+  driven directly with strings/dicts (no git), covering redirection, ``tee``,
+  in-place edits, quoted false-positives, and the Write/Edit/apply_patch
+  payload shapes.
+* **End-to-end decision** — the hook is run as a subprocess with a JSON payload
+  on stdin against a *real* git repo (primary checkout on ``main`` + a
+  registered ``.worktrees/dispatch/**`` worktree + gitignored state), asserting
+  the exit code and worktree-hint message. The decision itself is delegated to
+  ``scripts.guardrails.worktree_containment`` (#4444); these tests prove the
+  provider payloads map onto it correctly.
+
+The hook filename has hyphens, so pure-function tests load it via importlib.
+Only module-level defs run on import (``main`` is ``__main__``-guarded).
+"""
+
+from __future__ import annotations
+
+import importlib.util
+import json
+import os
+import subprocess
+from pathlib import Path
+
+import pytest
+
+REPO_ROOT = Path(__file__).resolve().parent.parent
+HOOK_PATH = REPO_ROOT / "agents_extensions/shared" / "hooks" / "guard-primary-checkout-write.py"
+
+# Git env vars that would hijack the throwaway repos below (inherited under
+# pre-commit / a git hook). Mirrors the module's own denylist.
+_GIT_ENV = {
+    "GIT_DIR", "GIT_WORK_TREE", "GIT_INDEX_FILE", "GIT_OBJECT_DIRECTORY",
+    "GIT_ALTERNATE_OBJECT_DIRECTORIES", "GIT_NAMESPACE", "GIT_CEILING_DIRECTORIES",
+    "GIT_DISCOVERY_ACROSS_FILESYSTEM", "GIT_COMMON_DIR",
+}
+
+
+def _load_hook():
+    spec = importlib.util.spec_from_file_location("guard_primary_checkout_write", HOOK_PATH)
+    assert spec and spec.loader, f"could not load hook at {HOOK_PATH}"
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+hook = _load_hook()
+
+
+# ===========================================================================
+# Pure extraction — Bash
+# ===========================================================================
+
+
+@pytest.mark.parametrize(
+    "command, expected",
+    [
+        # Read-only preflight commands expose no write target.
+        ("git status", []),
+        ("git log --oneline -5", []),
+        ("rg pattern scripts/", []),
+        ("cat curriculum/x.md", []),
+        ("git diff && git status", []),
+        # Redirection variants.
+        ("echo hi > out.txt", ["out.txt"]),
+        ("printf x >> a.log", ["a.log"]),
+        ("echo x &> both.txt", ["both.txt"]),
+        ("echo x 2>err.txt", ["err.txt"]),
+        ("build > /dev/null", ["/dev/null"]),
+        # tee (with wrapper + append flag).
+        ("cat a | tee out.txt", ["out.txt"]),
+        ("cat a | tee -a log.txt", ["log.txt"]),
+        ("sudo tee /etc/hosts", ["/etc/hosts"]),
+        # In-place editors — script excluded, files kept.
+        ('sed -i "s/x/y/" real.py', ["real.py"]),
+        ('sed -i.bak -e "s/a/b/" f1 f2', ["f1", "f2"]),
+        ('perl -pi -e "s/x/y/" z.txt', ["z.txt"]),
+        # Leading env assignment before the command word.
+        ("VAR=1 tee out2.txt", ["out2.txt"]),
+    ],
+)
+def test_bash_write_targets(command, expected):
+    assert hook.bash_write_targets(command) == expected
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        # A redirect char inside a quoted string is NOT a redirection.
+        'git commit -m "fix > thing"',
+        "echo 'a > b'",
+        # fd duplication is not a file write.
+        "echo x 2>&1",
+        # sed without an in-place flag does not write a file.
+        'sed "s/x/y/" real.py',
+    ],
+)
+def test_bash_no_false_positive_write(command):
+    assert hook.bash_write_targets(command) == []
+
+
+# ===========================================================================
+# Pure extraction — structured write tools
+# ===========================================================================
+
+
+def test_write_tool_targets_file_path():
+    assert hook.write_tool_targets({"file_path": "/repo/x.py", "content": "hi"}) == ["/repo/x.py"]
+    assert hook.write_tool_targets({"file_path": "rel/y.md"}) == ["rel/y.md"]
+
+
+def test_write_tool_targets_apply_patch():
+    patch = (
+        "*** Begin Patch\n"
+        "*** Add File: scripts/new.py\n+print(1)\n"
+        "*** Update File: docs/z.md\n"
+        "*** Delete File: old/gone.txt\n"
+        "*** End Patch\n"
+    )
+    assert hook.write_tool_targets({"input": patch}) == [
+        "scripts/new.py",
+        "docs/z.md",
+        "old/gone.txt",
+    ]
+
+
+def test_write_tool_targets_apply_patch_move():
+    patch = "*** Begin Patch\n*** Move to: dst/here.py\n*** Move from: src/there.py\n*** End Patch\n"
+    assert hook.write_tool_targets({"patch": patch}) == ["dst/here.py", "src/there.py"]
+
+
+# ===========================================================================
+# End-to-end decision against a real repo + worktree
+# ===========================================================================
+
+
+def _clean_env() -> dict[str, str]:
+    return {k: v for k, v in os.environ.items() if k not in _GIT_ENV}
+
+
+def _git(repo: Path, *args: str) -> None:
+    subprocess.run(
+        ["git", "-C", str(repo), *args],
+        check=True, capture_output=True, text=True, env=_clean_env(),
+    )
+
+
+def _python() -> str:
+    venv = REPO_ROOT / ".venv" / "bin" / "python"
+    return str(venv) if venv.exists() else "python3"
+
+
+@pytest.fixture
+def repo(tmp_path: Path) -> Path:
+    """Primary checkout on ``main`` + a dispatch worktree + gitignored state."""
+    main = tmp_path / "main"
+    main.mkdir()
+    _git(main, "init", "-q", "-b", "main")
+    _git(main, "config", "user.email", "test@example.com")
+    _git(main, "config", "user.name", "Test")
+
+    (main / "curriculum").mkdir()
+    (main / "curriculum" / "tracked.md").write_text("original\n", encoding="utf-8")
+    (main / ".gitignore").write_text("local_state/\n*.local\n", encoding="utf-8")
+    _git(main, "add", "curriculum/tracked.md", ".gitignore")
+    _git(main, "commit", "-q", "-m", "init")
+
+    _git(main, "worktree", "add", "-q",
+         ".worktrees/dispatch/claude/task-1", "-b", "claude/task-1")
+    return main
+
+
+def _run(repo: Path, payload: dict) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(
+        [_python(), str(HOOK_PATH)],
+        input=json.dumps(payload),
+        cwd=repo, check=False, capture_output=True, text=True, env=_clean_env(),
+    )
+
+
+def _write_payload(repo: Path, tool: str, rel: str) -> dict:
+    return {"tool_name": tool, "cwd": str(repo), "tool_input": {"file_path": str(repo / rel)}}
+
+
+def test_tracked_primary_file_write_blocked(repo: Path):
+    result = _run(repo, _write_payload(repo, "Write", "curriculum/tracked.md"))
+    assert result.returncode == 2, result.stderr
+    assert ".worktrees/dispatch/" in result.stderr
+
+
+def test_untracked_new_primary_file_write_blocked(repo: Path):
+    # A brand-new tracked-to-be file in the primary checkout also dirties it.
+    result = _run(repo, _write_payload(repo, "Write", "curriculum/brand-new.md"))
+    assert result.returncode == 2, result.stderr
+
+
+def test_gitignored_local_state_write_allowed(repo: Path):
+    result = _run(repo, _write_payload(repo, "Write", "local_state/scratch.json"))
+    assert result.returncode == 0, result.stderr
+
+
+def test_dispatch_worktree_write_allowed(repo: Path):
+    payload = _write_payload(repo, "Edit", ".worktrees/dispatch/claude/task-1/curriculum/tracked.md")
+    result = _run(repo, payload)
+    assert result.returncode == 0, result.stderr
+
+
+def test_read_only_bash_allowed(repo: Path):
+    for command in ("git status", "cat curriculum/tracked.md", "git log --oneline"):
+        payload = {"tool_name": "Bash", "cwd": str(repo), "tool_input": {"command": command}}
+        result = _run(repo, payload)
+        assert result.returncode == 0, f"{command!r}: {result.stderr}"
+
+
+def test_write_capable_bash_redirect_blocked(repo: Path):
+    payload = {
+        "tool_name": "Bash", "cwd": str(repo),
+        "tool_input": {"command": "echo tampered > curriculum/tracked.md"},
+    }
+    result = _run(repo, payload)
+    assert result.returncode == 2, result.stderr
+    assert ".worktrees/dispatch/" in result.stderr
+
+
+def test_write_capable_bash_tee_blocked(repo: Path):
+    payload = {
+        "tool_name": "Bash", "cwd": str(repo),
+        "tool_input": {"command": "echo x | tee curriculum/tracked.md"},
+    }
+    result = _run(repo, payload)
+    assert result.returncode == 2, result.stderr
+
+
+def test_bash_redirect_to_gitignored_allowed(repo: Path):
+    payload = {
+        "tool_name": "Bash", "cwd": str(repo),
+        "tool_input": {"command": "echo x > local_state/out.log"},
+    }
+    result = _run(repo, payload)
+    assert result.returncode == 0, result.stderr
+
+
+def test_apply_patch_tracked_file_blocked(repo: Path):
+    patch = "*** Begin Patch\n*** Update File: curriculum/tracked.md\n@@\n-original\n+tampered\n*** End Patch\n"
+    payload = {"tool_name": "apply_patch", "cwd": str(repo), "tool_input": {"input": patch}}
+    result = _run(repo, payload)
+    assert result.returncode == 2, result.stderr
+    assert ".worktrees/dispatch/" in result.stderr
+
+
+def test_not_enforced_off_protected_branch(repo: Path):
+    # If the primary checkout is deliberately on a feature branch, the guard
+    # stays out of the way — enforcement is scoped to protected branches.
+    _git(repo, "checkout", "-q", "-b", "maintenance")
+    result = _run(repo, _write_payload(repo, "Write", "curriculum/tracked.md"))
+    assert result.returncode == 0, result.stderr
+
+
+def test_bash_write_from_worktree_targeting_main_blocked(repo: Path):
+    # An agent working in the dispatch worktree that reaches back into the
+    # primary checkout via an absolute path is still blocked (containment is by
+    # resolved real path, not by cwd).
+    worktree = repo / ".worktrees/dispatch/claude/task-1"
+    payload = {
+        "tool_name": "Bash", "cwd": str(worktree),
+        "tool_input": {"command": f"echo x > {repo / 'curriculum' / 'tracked.md'}"},
+    }
+    result = _run(repo, payload)
+    assert result.returncode == 2, result.stderr

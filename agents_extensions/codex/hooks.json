@@ -52,6 +52,23 @@
             "command": "\"$(git rev-parse --show-toplevel)/.venv/bin/python\" \"$(git rev-parse --show-toplevel)/.codex/hooks/guard-secret-print.py\"",
             "timeout": 5,
             "statusMessage": "Checking secret-print safety"
+          },
+          {
+            "type": "command",
+            "command": "\"$(git rev-parse --show-toplevel)/.venv/bin/python\" \"$(git rev-parse --show-toplevel)/.codex/hooks/guard-primary-checkout-write.py\"",
+            "timeout": 5,
+            "statusMessage": "Checking primary-checkout write safety"
+          }
+        ]
+      },
+      {
+        "matcher": "^(Write|Edit|MultiEdit|apply_patch)$",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"$(git rev-parse --show-toplevel)/.venv/bin/python\" \"$(git rev-parse --show-toplevel)/.codex/hooks/guard-primary-checkout-write.py\"",
+            "timeout": 5,
+            "statusMessage": "Checking primary-checkout write safety"
           }
         ]
       }
