@@ -166,6 +166,7 @@ _SLOVNYK_UKRENG_LABEL = "Українсько-англійський словн�
 _SLOVNYK_UKRENG_SOURCE = f"slovnyk.me: {_SLOVNYK_UKRENG_LABEL}"
 _SLOVNYK_BASE = "https://slovnyk.me"
 _SLOVNYK_CACHE_SCHEMA_VERSION = 2
+_OFFLINE_VALUES = {"1", "true", "yes", "on"}
 _WARNING_CLASSIFICATIONS = {"russianism", "sovietism", "surzhyk"}
 
 _SYNONYM_LABEL_WORDS = {
@@ -758,6 +759,10 @@ def _unescape_html_entities(text: str) -> str:
     return previous.replace("\u00a0", " ")
 
 
+def _phase1_offline_mode() -> bool:
+    return os.environ.get("LEXICON_SLOVNYK_OFFLINE", "").strip().casefold() in _OFFLINE_VALUES
+
+
 def clean_html_entities(text: str) -> str:
     """Unescape HTML entities, including double-escaped ones, and normalise spaces."""
     return re.sub(r"\s+", " ", _unescape_html_entities(text)).strip()
@@ -1105,6 +1110,9 @@ def _fetch_slovnyk_entry(lemma: str, lookup_word: str, slug: str) -> dict[str, A
     ``_SlovnykTransientError`` only after exhausting retries (caller leaves the slug uncached
     so a later run retries it).
     """
+    if _phase1_offline_mode():
+        return None
+
     url = f"{_SLOVNYK_BASE}/dict/{slug}/{quote(lookup_word)}"
     for attempt in range(_SLOVNYK_MAX_RETRIES + 1):
         _polite_slovnyk_delay()
@@ -1181,6 +1189,9 @@ def _slovnyk_cache(lemma: str) -> dict[str, Any]:
     else:
         cache = _new_slovnyk_cache(lemma, lookup_word)
         lookups = cache["lookups"]
+
+    if _phase1_offline_mode():
+        return cache
 
     for slug in _SLOVNYK_LOOKUP_SLUGS:
         if slug in lookups:
@@ -2964,6 +2975,9 @@ def _grac_word_candidates(word: str) -> list[str]:
 
 
 def _fetch_grac_frequency_batch(words: list[str]) -> dict[str, dict[str, Any] | None]:
+    if _phase1_offline_mode():
+        return {word: None for word in words}
+
     candidates_by_word = {word: _grac_word_candidates(word) for word in words}
     candidate_to_words: dict[str, list[str]] = {}
     for word, candidates in candidates_by_word.items():
@@ -3008,6 +3022,9 @@ def _ensure_grac_frequency_cache(words: list[str]) -> None:
     global _GRAC_FREQUENCY_CACHE_DIRTY
     cache = _load_grac_frequency_cache()
     missing = [word for word in words if word not in cache]
+    if _phase1_offline_mode():
+        return
+
     for start in range(0, len(missing), _GRAC_BATCH_SIZE):
         batch = missing[start : start + _GRAC_BATCH_SIZE]
         results = _fetch_grac_frequency_batch(batch)
@@ -3607,6 +3624,9 @@ def query_wikipedia(title: str) -> dict[str, Any] | None:
     missing article is not re-requested). Tests replace the whole function via
     monkeypatch, so the cache does not interfere with mocking.
     """
+    if _phase1_offline_mode():
+        return None
+
     try:
         from scripts.rag.source_query import wikipedia_summary
 
@@ -3621,6 +3641,9 @@ def _cached_wikipedia_summary(title: str) -> dict[str, Any] | None:
     if title in cache:
         cached = cache[title]
         return cached if isinstance(cached, dict) else None
+    if _phase1_offline_mode():
+        return None
+
     wiki_data = query_wikipedia(title)
     cache[title] = wiki_data if isinstance(wiki_data, dict) else None
     _WIKI_REFERENCE_CACHE_DIRTY = True
