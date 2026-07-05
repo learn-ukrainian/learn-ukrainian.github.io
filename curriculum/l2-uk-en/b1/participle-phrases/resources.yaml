@@ -1,22 +1,6 @@
 - title: "B1 M67: Дієприкметниковий зворот"
   role: curriculum
   notes: "Основний модуль про дієприкметник із залежними словами, означуване слово, позицію звороту та коми."
-- title: "B1 M66: Пасивні дієприкметники"
-  role: curriculum
-  notes: "Попередній модуль дає форми пасивних дієприкметників, які найчастіше стають ядром звороту."
-  source_ref: curriculum/l2-uk-en/b1/participles-passive/module.md
-- title: "B1 M65: Активні дієприкметники"
-  role: curriculum
-  notes: "Попередній модуль пояснює активне значення і небезпеку калькованих форм на -учий/-ючий."
-  source_ref: curriculum/l2-uk-en/b1/participles-active/module.md
-- title: "A2: Підрядні означальні речення"
-  role: curriculum
-  notes: "Пов'язана тема для перетворення звороту на речення з який/яка/яке/які."
-  source_ref: wiki/grammar/a2/relative-clauses.md
-- title: "Wiki B1: Дієприкметниковий зворот"
-  role: reference
-  notes: "Локальний узагальнений конспект за підручниками: означуване слово, постпозиція, препозиція, типові помилки L2."
-  source_ref: wiki/grammar/b1/participle-phrases.md
 - title: "Авраменко, 7 клас: дієприкметниковий зворот"
   role: reference
   notes: "Джерело для шкільного правила про дієприкметник із залежними словами та коми."

@@ -1,24 +1,5 @@
-- title: "B1 M81 plan: Речення мети"
-  role: curriculum
-  notes: "Планове джерело для підрядних обставинних мети, сполучників щоб, для того щоб, аби, з тим щоб і контрасту зі з'ясувальним щоб."
-  source_ref: curriculum/l2-uk-en/plans/b1/complex-subordinate-purpose.yaml
 - title: "9 клас: підрядні речення мети"
   role: textbook
   notes: "Локальне джерело для визначення підрядних мети, питань для чого? з якою метою? і сполучників щоб, для того щоб, з тим щоб, аби."
   source_ref: docs/references/textbooks-txt/9-klas-ukrajinska-mova-voron-2017.txt
-- title: "B1 M80: Речення умови"
-  role: curriculum
-  notes: "Попередній сертифікований модуль для контрасту між умовою за якої? і метою для чого?"
-  source_ref: curriculum/l2-uk-en/b1/complex-subordinate-condition/module.md
-- title: "B1 M76: З'ясувальні речення"
-  role: curriculum
-  notes: "Попередній модуль для розрізнення цільового щоб і з'ясувального щоб після слів бажання, прохання та наказу."
-  source_ref: curriculum/l2-uk-en/b1/complex-subordinate-object/module.md
-- title: "B1 M60: Причина і мета"
-  role: curriculum
-  notes: "Попередній модуль для зв'язку між прийменниковими моделями мети для, заради, задля і підрядними реченнями мети."
-  source_ref: curriculum/l2-uk-en/b1/prepositions-cause-purpose/module.md
-- title: "B1 M82 plan: Речення допусту"
-  role: curriculum
-  notes: "Наступний плановий модуль для переходу від мети для чого? до допусту попри що?"
-  source_ref: curriculum/l2-uk-en/plans/b1/complex-subordinate-concess.yaml
+  url: "https://pidruchnyk.com.ua/1027-ukrmova-voron-9klas.html"

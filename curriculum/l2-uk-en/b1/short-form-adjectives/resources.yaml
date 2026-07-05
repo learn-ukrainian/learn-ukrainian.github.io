@@ -1,14 +1,6 @@
 - title: "B1 M69: Короткі прикметники"
   role: curriculum
   notes: "Основний B1 модуль про короткі форми прикметників, нестягнені поетичні форми, сучасні присудкові моделі та редагування типових помилок."
-- title: "B1 plan: short-form-adjectives"
-  role: curriculum
-  notes: "Плановий перелік цілей і лексики: короткий прикметник, повний прикметник, потрібен, певен, годен, ладен, варт, рад, зелен, ясен, народнопоетичний."
-  source_ref: curriculum/l2-uk-en/plans/b1/short-form-adjectives.yaml
-- title: "Local grammar wiki: short-form-adjectives"
-  role: reference
-  notes: "Локальний орієнтир для B1: не навчати продуктивну російську модель, активно тренувати сучасні присудкові слова, пасивно розпізнавати поетичні короткі форми."
-  source_ref: wiki/grammar/b1/short-form-adjectives.md
 - title: "Avramenko Grade 6 Ukrainian language, p.130"
   role: textbook
   notes: "Джерело для розрізнення повних і коротких прикметників: повні форми змінюються, короткі не змінюються й не мають закінчення; короткі й нестягнені форми властиві фольклору та поезії."

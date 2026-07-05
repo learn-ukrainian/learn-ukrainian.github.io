@@ -19,14 +19,6 @@
   url: https://ich.unesco.org/en/USL/culture-of-ukrainian-borscht-cooking-01852
   notes: "Офіційне джерело для точної культурної довідки: Ukrainian borshch cooking culture is inscribed on the List of Intangible Cultural Heritage in Need of Urgent Safeguarding."
   source_ref: UNESCO ICH USL 01852
-- title: Local B1 noun-subclasses-masculine module
-  role: curriculum
-  notes: Попередній B1.1 модуль для зв'язку з розподілом родового відмінка чоловічих іменників і моделлю -а/-у.
-  source_ref: curriculum/l2-uk-en/b1/noun-subclasses-masculine/module.md
-- title: Local B1 simplification-consonants module
-  role: curriculum
-  notes: Безпосередній сусідній модуль для стилю B1, VERIFY-коментарів, V2 activities і вкладок MDX.
-  source_ref: curriculum/l2-uk-en/b1/simplification-consonants/module.md
 - title: Goroh and Slovnyk.ua form checks
   role: dictionary
   notes: Використано для перевірки нормативних форм борщу, узвару, вареників, деруна, сметаною, пампушками, чайові, меню, кафе.

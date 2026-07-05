@@ -1,20 +1,10 @@
-- title: "B1 M80 plan: Речення умови"
-  role: curriculum
-  notes: "Планове джерело для підрядних обставинних умови, реальних і нереальних умов, умовного коли та співвідносних слів."
-  source_ref: curriculum/l2-uk-en/plans/b1/complex-subordinate-condition.yaml
 - title: "9 клас: складнопідрядні речення"
   role: textbook
   notes: "Локальне джерело для питань до підрядної умови, сполучників якщо, якби, коли, як та зіставлення з часовими реченнями."
   source_ref: docs/references/textbooks-txt/9-klas-ukrajinska-mova-voron-2017.txt
+  url: "https://pidruchnyk.com.ua/1027-ukrmova-voron-9klas.html"
 - title: "11 клас: узагальнення підрядних обставинних"
   role: textbook
   notes: "Джерело для повторення обставинних підрядних, співвідносного то та контрасту умови з причиною."
   source_ref: docs/references/textbooks-txt/11-klas-ukrajinska-mova-voron-2019.txt
-- title: "B1 M79: Речення причини"
-  role: curriculum
-  notes: "Попередній сертифікований модуль для контрасту між фактичною причиною і можливою умовою."
-  source_ref: curriculum/l2-uk-en/b1/complex-subordinate-reason/module.md
-- title: "B1 M81 plan: Речення мети"
-  role: curriculum
-  notes: "Наступний плановий модуль для переходу від умови за якої? до мети для чого?"
-  source_ref: curriculum/l2-uk-en/plans/b1/complex-subordinate-purpose.yaml
+  url: "https://pidruchnyk.com.ua/1316-ukrmova-voron-11-klas.html"

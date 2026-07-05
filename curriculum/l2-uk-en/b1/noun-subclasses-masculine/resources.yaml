@@ -18,11 +18,3 @@
   role: dictionary
   notes: Додаткова перевірка парадигм киянин, громадянин, львів'янин, столяр, слюсар, гончар.
   source_ref: kyivdictionary.com
-- title: Local B1 simplification-consonants module
-  role: curriculum
-  notes: Безпосередній попередній модуль для переходу від морфонологічних змін до підкласів іменників.
-  source_ref: curriculum/l2-uk-en/b1/simplification-consonants/module.md
-- title: Local B1 alternation-consonants-nouns module
-  role: curriculum
-  notes: Попередній модуль для порівняння з кличним відмінком і для застереження, що тут немає чергування г/к/х.
-  source_ref: curriculum/l2-uk-en/b1/alternation-consonants-nouns/module.md

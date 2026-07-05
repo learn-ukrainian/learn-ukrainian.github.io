@@ -1,30 +1,11 @@
 - title: "B1 M70: Дієприслівники недоконаного виду"
   role: curriculum
   notes: "Основний B1 модуль про дієприслівник як незмінювану дієслівну форму, творення форм на -учи/-ючи та -ачи/-ячи, одночасність дій і правило спільного підмета."
-- title: "B1 plan: gerunds-imperfective"
-  role: curriculum
-  notes: "Плановий перелік цілей і лексики: дієприслівник, недоконаний вид, одночасність, логічний підмет, обставина, читаючи, слухаючи, пишучи, говорячи."
-  source_ref: curriculum/l2-uk-en/plans/b1/gerunds-imperfective.yaml
-- title: "B1 M69: Короткі прикметники"
-  role: curriculum
-  notes: "Попередній модуль закріплює розрізнення активних і читацьких форм та готує до точного стилістичного вибору дієприслівників."
-  source_ref: curriculum/l2-uk-en/b1/short-form-adjectives/module.md
-- title: "B1 M71 plan: Дієприслівники доконаного виду"
-  role: curriculum
-  notes: "Наступний модуль розширює контраст: доконаний дієприслівник позначає попередню завершену дію, на відміну від одночасної недоконаної дії."
-  source_ref: curriculum/l2-uk-en/plans/b1/gerunds-perfective.yaml
 - title: "Литвінова, 7 клас: дієприслівник"
   role: textbook
   notes: "Джерело для визначення дієприслівника як незмінюваної форми дієслова, синтаксичної ролі обставини, правила спільного підмета, творення форм теперішнього часу та правопису."
   source_ref: docs/references/textbooks-txt/7-klas-ukrmova-litvinova-2024.txt
-- title: "Local grammar wiki: sport-i-dozvillia"
-  role: reference
-  notes: "Локальний орієнтир для алгоритму творення: 3-тя особа множини теперішнього часу, основа, суфікс, постфікс -сь у зворотних дієсловах; також для застереження про спільний суб'єкт."
-  source_ref: wiki/grammar/b2/sport-i-dozvillia.md
-- title: "Local grammar wiki: aspect-nuances-imperative-infinitive"
-  role: reference
-  notes: "Джерело для видової семантики: дієприслівники недоконаного виду позначають незавершену додаткову дію, одночасну з дією присудка."
-  source_ref: wiki/grammar/b2/aspect-nuances-imperative-infinitive.md
+  url: "https://pidruchnyk.com.ua/2872-ukrainska-mova-litvinova-7-klas-2024.html"
 - title: "MiyKlas grammar index: Grade 7 gerunds"
   role: reference
   notes: "Покажчик тем 7 класу, де дієприслівник і дієприслівниковий зворот подані як окремі морфологічні теми."

@@ -19,10 +19,6 @@
   role: textbook
   notes: Планове джерело для правила е/о після шиплячих і й та частотних слів на зразок вечеря, бджола, пшоно.
   source_ref: Заболотний Grade 7, p.55-56
-- title: Wiki grammar article for B1 alternation-vowels
-  role: wiki
-  notes: Використано як внутрішню карту типів чергування, типових L2 помилок і рекомендованої прогресії вправ.
-  source_ref: wiki/grammar/b1/alternation-vowels.md
 - title: Local B1 aspect modules M01-M10
   role: curriculum
   notes: Модуль продовжує B1 після контрольної з виду й переносить навичку роботи з родинами форм у морфонологічний блок.

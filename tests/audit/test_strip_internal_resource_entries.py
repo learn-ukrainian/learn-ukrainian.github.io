@@ -57,6 +57,31 @@ def test_source_ref_junk_without_url_still_stripped() -> None:
     assert strip.is_internal_entry(role="reference", title="Brief", source_ref="docs/pedagogy/brief.md", url="")
 
 
+def test_reference_and_resource_catalog_source_refs_are_kept() -> None:
+    """B1 regression: docs/references/ (textbook corpus) and docs/resources/ (external
+    catalog) are legit provenance dirs — a url-less textbook citation whose source_ref
+    points there must NOT be stripped. Without the carve-out, 26 real B1 textbook
+    citations were deleted."""
+    # docs/references/ textbook citations are url-less by nature → always kept.
+    assert not strip.is_internal_entry(
+        role="textbook",
+        title="9 клас: підрядні обставинні речення",
+        source_ref="docs/references/textbooks-txt/9-klas-ukrajinska-mova-voron-2017.txt",
+    )
+    # docs/resources/ catalog entries are kept ONLY via the url-guard (real ones carry a URL)…
+    assert not strip.is_internal_entry(
+        role="article", title="ULP", source_ref="docs/resources/ulp-articles-index.yaml: /x/",
+        url="https://ulp.com/x/",
+    )
+    # …a url-LESS docs/resources/ entry is still junk.
+    assert strip.is_internal_entry(
+        role="article", title="ULP", source_ref="docs/resources/ulp-articles-index.yaml: /x/"
+    )
+    # Other docs/ paths (internal authoring briefs) are still junk.
+    assert strip.is_internal_entry(role="reference", title="Brief", source_ref="docs/pedagogy/brief.md")
+    assert strip.is_internal_entry(role="curriculum", title="M77", source_ref="curriculum/l2-uk-en/b1/x/module.md")
+
+
 def test_empty_module_becomes_bracket_list() -> None:
     new, removed = strip.strip_yaml('- title: t\n  role: internal synthesis\n  source_ref: "Synthesis of M1"\n  notes: x\n')
     assert new.strip() == "[]"

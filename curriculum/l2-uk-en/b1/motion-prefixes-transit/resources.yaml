@@ -1,11 +1,3 @@
-- title: "B1 grammar wiki: motion prefixes transit"
-  role: internal
-  notes: "Reference overview for пере- and про- with motion verbs: перейти, переїхати, перенести, пройти, проїхати, провести, preposition government, and L2 errors."
-  url: "wiki/grammar/b1/motion-prefixes-transit.md"
-- title: "Motion-prefix transit source registry"
-  role: internal
-  notes: "Textbook source registry used for prefixed motion verbs and route-language examples, including перейти дорогу and пройти route instructions."
-  url: "wiki/grammar/b1/motion-prefixes-transit.sources.yaml"
 - title: "Motion-prefix in/out"
   role: curriculum
   notes: "Previous prefix module that certifies crossing a boundary inward or outward: зайти, заїхати, вийти, виїхати."
