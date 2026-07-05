@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PoC — Атлас слів · Слова дня · Практика (Word Atlas / Words of the Day)</title>
+<!-- v4 modes (spec §9): paradigm/stress/synonym/idiom/heritage — added 2026-07-05; listening deferred -->
 <!--
   DESIGN SOURCE-OF-TRUTH PoC — NOT production code.
   Self-contained: all CSS + JS inline, no build step. Opens directly in a browser.
@@ -339,6 +340,19 @@
   .mode-card[data-accent="teal"] .mc-ico { background: var(--lu-teal-light); color: var(--lu-teal); }
   .mode-card[data-accent="purple"] .mc-ico { background: var(--lu-purple-light); color: var(--lu-purple); }
   .mode-card[data-accent="orange"] .mc-ico { background: var(--lu-orange-light); color: var(--lu-orange); }
+  .mode-card[data-accent="green"] .mc-ico { background: var(--lu-green-light); color: var(--lu-green); }
+  .mode-card[data-accent="indigo"] .mc-ico { background: rgba(63, 81, 181, .14); color: #5C6BC0; }
+  [data-theme='dark'] .mode-card[data-accent="indigo"] .mc-ico { background: rgba(121, 134, 203, .18); color: #9FA8DA; }
+  .mode-card[data-accent="rose"] .mc-ico { background: rgba(194, 24, 91, .1); color: #C2185B; }
+  [data-theme='dark'] .mode-card[data-accent="rose"] .mc-ico { background: rgba(240, 98, 146, .16); color: #F48FB1; }
+  .mode-card[data-accent="cyan"] .mc-ico { background: rgba(0, 131, 143, .12); color: #00838F; }
+  [data-theme='dark'] .mode-card[data-accent="cyan"] .mc-ico { background: rgba(77, 208, 225, .14); color: #4DD0E1; }
+  .mode-card[data-accent="gold"] .mc-ico { background: var(--lu-yellow-light); color: var(--lu-yellow-dark); }
+  .mode-card.is-disabled {
+    opacity: .52; cursor: not-allowed; pointer-events: none;
+    border-style: dashed; transform: none !important; box-shadow: none !important;
+  }
+  .mode-card.is-disabled .mc-arrow { display: none; }
 
   .ph-track { margin-top: 1.4rem; padding: 14px 16px; border-radius: 10px;
     border: 1px solid var(--lu-border); background: var(--lu-surface-muted);
@@ -504,6 +518,38 @@
   .cz-chip.wrong { border-color: var(--lu-red); background: var(--lu-state-wrong-bg); color: var(--lu-state-wrong-fg); }
   .cz-chip:disabled { opacity: .5; cursor: default; }
 
+  /* ============================== v4 DRILL MODES (spec §9) ========= */
+  .pd-prompt { margin: 0 0 .35rem; font-size: 1.35rem; font-weight: 900; }
+  .pd-prompt b { color: var(--lu-blue); }
+  .pd-slot { margin: 0 0 1.1rem; color: var(--lu-text-muted); font-size: .95rem; font-weight: 700; }
+  .pd-slot em { font-style: normal; font-weight: 600; opacity: .85; }
+  .pd-blank-row {
+    font-size: 1.45rem; font-weight: 600; line-height: 1.6; margin: 0 0 1rem;
+    padding: 1.2rem 1.4rem; border-radius: 14px; border: 1px solid var(--lu-border);
+    background: var(--lu-surface-raised); box-shadow: var(--lu-shadow);
+  }
+  .st-word {
+    display: inline-flex; flex-wrap: wrap; gap: .15rem; font-size: clamp(2rem, 5vw, 2.8rem);
+    font-weight: 900; letter-spacing: .04em;
+  }
+  .st-vowel {
+    min-width: 2.4rem; min-height: 2.4rem; padding: 0 .35rem;
+    border: 2px solid var(--lu-border); border-radius: 10px;
+    background: var(--lu-surface); color: var(--lu-text);
+    font: inherit; font-size: inherit; font-weight: 900; cursor: pointer;
+    transition: border-color .12s, background .12s, transform .1s;
+  }
+  .st-vowel:hover:not(:disabled) { border-color: var(--lu-primary); transform: translateY(-2px); }
+  .st-vowel.correct { border-color: var(--lu-green); background: var(--lu-state-correct-bg); color: var(--lu-state-correct-fg); }
+  .st-vowel.wrong { border-color: var(--lu-red); background: var(--lu-state-wrong-bg); color: var(--lu-state-wrong-fg); }
+  .st-vowel:disabled { cursor: default; }
+  .st-result { margin: .6rem 0 0; font-size: 1.35rem; font-weight: 900; min-height: 1.6rem; }
+  .st-result[data-tone="ok"] { color: var(--lu-state-correct-fg); }
+  .st-result[data-tone="bad"] { color: var(--lu-state-wrong-fg); }
+  .id-prompt { font-size: 1.35rem; font-weight: 900; margin: 0 0 1.1rem; }
+  .id-prompt b { color: var(--lu-blue); }
+  .mc-opt .mc-gloss-en { display: block; margin-top: 2px; font-size: .78rem; font-weight: 600; color: var(--lu-text-muted); }
+
   /* ============================================== RESPONSIVE ======== */
   @media (max-width: 860px) {
     .lu-nav { display: none; }
@@ -585,6 +631,11 @@
     <option value="matching">6 · Добір пар</option>
     <option value="choice">7 · Вибір</option>
     <option value="cloze">8 · Заповніть пропуск</option>
+    <option value="paradigm">9 · Форми слова</option>
+    <option value="stress">10 · Наголос</option>
+    <option value="synonym">11 · Синоніми й антоніми</option>
+    <option value="idiom">12 · Фразеологізми</option>
+    <option value="heritage">13 · Питоме слово</option>
   </select>
   <div class="poc-theme" role="group" aria-label="Тема">
     <button type="button" data-theme-choice="dark" class="active">Темна</button>
@@ -750,6 +801,61 @@
         <p class="mc-desc">Підставте слово в речення. Найближче до живого вживання в контексті.</p>
         <div class="mc-meta"><span class="mc-step">Продукування</span><span class="mc-arrow">→</span></div>
       </button>
+
+      <button class="mode-card" role="listitem" data-accent="green" data-go="paradigm" type="button">
+        <div class="mc-top">
+          <span class="mc-ico" aria-hidden="true">📐</span>
+          <div><div class="mc-title">Форми слова</div><div class="mc-en">Paradigm</div></div>
+        </div>
+        <p class="mc-desc">Оберіть правильну форму за відмінком або особою. Ті самі корені — різні закінчення.</p>
+        <div class="mc-meta"><span class="cefr-chip">A2+</span><span class="mc-step">Продукування</span><span class="mc-arrow">→</span></div>
+      </button>
+
+      <button class="mode-card" role="listitem" data-accent="indigo" data-go="stress" type="button">
+        <div class="mc-top">
+          <span class="mc-ico" aria-hidden="true">ˈ</span>
+          <div><div class="mc-title">Наголос</div><div class="mc-en">Stress</div></div>
+        </div>
+        <p class="mc-desc">Торкніться наголошеного голосного. Форма без наголосу — ви ставите його.</p>
+        <div class="mc-meta"><span class="cefr-chip">A1+</span><span class="mc-step">Форма</span><span class="mc-arrow">→</span></div>
+      </button>
+
+      <button class="mode-card" role="listitem" data-accent="rose" data-go="synonym" type="button">
+        <div class="mc-top">
+          <span class="mc-ico" aria-hidden="true">⇄</span>
+          <div><div class="mc-title">Синоніми й антоніми</div><div class="mc-en">Synonyms</div></div>
+        </div>
+        <p class="mc-desc">Оберіть синонім або антонім до слова з вашого рівня.</p>
+        <div class="mc-meta"><span class="cefr-chip">B1+</span><span class="mc-step">Лексика</span><span class="mc-arrow">→</span></div>
+      </button>
+
+      <button class="mode-card" role="listitem" data-accent="cyan" data-go="idiom" type="button">
+        <div class="mc-top">
+          <span class="mc-ico" aria-hidden="true">💬</span>
+          <div><div class="mc-title">Фразеологізми</div><div class="mc-en">Idioms</div></div>
+        </div>
+        <p class="mc-desc">Зіставте стійкий вираз із його значенням українською.</p>
+        <div class="mc-meta"><span class="cefr-chip">B1+</span><span class="mc-step">Лексика</span><span class="mc-arrow">→</span></div>
+      </button>
+
+      <button class="mode-card" role="listitem" data-accent="gold" data-go="heritage" type="button">
+        <div class="mc-top">
+          <span class="mc-ico" aria-hidden="true">🇺🇦</span>
+          <div><div class="mc-title">Питоме слово</div><div class="mc-en">Heritage</div></div>
+        </div>
+        <p class="mc-desc">Оберіть питоме українське слово замість кальок і русизмів у реченні.</p>
+        <div class="mc-meta"><span class="cefr-chip">B1+</span><span class="mc-step">A2 вибрані</span><span class="mc-arrow">→</span></div>
+      </button>
+
+      <button class="mode-card is-disabled" role="listitem" data-accent="blue" type="button" disabled
+        aria-disabled="true" aria-label="Слухання — незабаром">
+        <div class="mc-top">
+          <span class="mc-ico" aria-hidden="true">🎧</span>
+          <div><div class="mc-title">Слухання</div><div class="mc-en">Listening</div></div>
+        </div>
+        <p class="mc-desc">Диктант за аудіо — режим у розробці, залежить від рішення щодо TTS.</p>
+        <div class="mc-meta"><span class="mc-step">незабаром</span></div>
+      </button>
     </div>
 
     <p class="ph-track">📈 Режими йдуть від <b>розпізнавання</b> до <b>продукування</b> — так слово закріплюється
@@ -875,6 +981,103 @@
   </div>
 </section>
 
+<!-- =============================== VIEW — PARADIGM (§9.1) ===================== -->
+<section id="view-paradigm" class="page-view" role="region" aria-label="Форми слова">
+  <div class="stage">
+    <div class="stage-bar">
+      <button class="stage-back" data-go="home" type="button">← Режими</button>
+      <h2>Форми слова</h2>
+      <span class="queue-pill" aria-hidden="true"><span id="pd-score">0 правильних</span></span>
+    </div>
+    <p class="pd-prompt" id="pd-prompt">брат</p>
+    <p class="pd-slot" id="pd-slot"></p>
+    <p class="pd-blank-row" id="pd-blank" aria-hidden="true">?</p>
+    <p class="live-status" id="pd-live" data-tone="info" aria-live="polite" role="status">&nbsp;</p>
+    <div class="cz-options" id="pd-options"></div>
+    <div class="stage-foot">
+      <div class="spacer"></div>
+      <button class="btn btn-accent" id="pd-next" type="button" hidden>Далі →</button>
+    </div>
+  </div>
+</section>
+
+<!-- =============================== VIEW — STRESS (§9.2) ======================= -->
+<section id="view-stress" class="page-view" role="region" aria-label="Наголос">
+  <div class="stage">
+    <div class="stage-bar">
+      <button class="stage-back" data-go="home" type="button">← Режими</button>
+      <h2>Наголос</h2>
+      <span class="queue-pill" aria-hidden="true"><span id="st-score">0 правильних</span></span>
+    </div>
+    <p class="cz-task">Торкніться наголошеного голосного.</p>
+    <div class="st-word" id="st-word" role="group" aria-label="Голосні літери слова"></div>
+    <p class="st-result" id="st-result" data-tone="info" aria-live="polite" role="status">&nbsp;</p>
+    <p class="live-status" id="st-live" data-tone="info" aria-live="polite" role="status">&nbsp;</p>
+    <div class="stage-foot">
+      <div class="spacer"></div>
+      <button class="btn btn-accent" id="st-next" type="button" hidden>Далі →</button>
+    </div>
+  </div>
+</section>
+
+<!-- =============================== VIEW — SYNONYM (§9.3) ====================== -->
+<section id="view-synonym" class="page-view" role="region" aria-label="Синоніми й антоніми">
+  <div class="stage">
+    <div class="stage-bar">
+      <button class="stage-back" data-go="home" type="button">← Режими</button>
+      <h2>Синоніми й антоніми</h2>
+      <span class="queue-pill" aria-hidden="true"><span id="sy-score">0 правильних</span></span>
+    </div>
+    <p class="mc-q" id="sy-q"></p>
+    <p class="mc-sub">Оберіть один варіант · клавіші <kbd>1</kbd>–<kbd>4</kbd></p>
+    <p class="live-status" id="sy-live" data-tone="info" aria-live="polite" role="status">&nbsp;</p>
+    <div class="mc-options" id="sy-options"></div>
+    <div class="stage-foot">
+      <div class="spacer"></div>
+      <button class="btn btn-accent" id="sy-next" type="button" hidden>Далі →</button>
+    </div>
+  </div>
+</section>
+
+<!-- =============================== VIEW — IDIOM (§9.4) ======================== -->
+<section id="view-idiom" class="page-view" role="region" aria-label="Фразеологізми">
+  <div class="stage">
+    <div class="stage-bar">
+      <button class="stage-back" data-go="home" type="button">← Режими</button>
+      <h2>Фразеологізми</h2>
+      <span class="queue-pill" aria-hidden="true"><span id="id-score">0 правильних</span></span>
+    </div>
+    <p class="id-prompt" id="id-prompt"></p>
+    <p class="mc-sub">Оберіть значення українською</p>
+    <p class="live-status" id="id-live" data-tone="info" aria-live="polite" role="status">&nbsp;</p>
+    <div class="mc-options" id="id-options"></div>
+    <div class="stage-foot">
+      <div class="spacer"></div>
+      <button class="btn btn-accent" id="id-next" type="button" hidden>Далі →</button>
+    </div>
+  </div>
+</section>
+
+<!-- =============================== VIEW — HERITAGE (§9.5) ===================== -->
+<section id="view-heritage" class="page-view" role="region" aria-label="Питоме слово">
+  <div class="stage">
+    <div class="stage-bar">
+      <button class="stage-back" data-go="home" type="button">← Режими</button>
+      <h2>Питоме слово</h2>
+      <span class="queue-pill" aria-hidden="true"><span id="hg-score">0 правильних</span></span>
+    </div>
+    <p class="cz-task">Оберіть питоме українське слово для пропуску.</p>
+    <p class="cz-sentence" id="hg-sentence"></p>
+    <p class="cz-translate" id="hg-translate"></p>
+    <p class="live-status" id="hg-live" data-tone="info" aria-live="polite" role="status">&nbsp;</p>
+    <div class="mc-options" id="hg-options"></div>
+    <div class="stage-foot">
+      <div class="spacer"></div>
+      <button class="btn btn-accent" id="hg-next" type="button" hidden>Далі →</button>
+    </div>
+  </div>
+</section>
+
 </main>
 
 <!-- ====================================================== SHARED FOOTER ======= -->
@@ -980,7 +1183,8 @@ function correctLabel(n){ return n + " " + uaPlural(n, "правильна", "п
 function chip(sev,label){ return '<span class="her-chip" data-sev="'+sev+'">'+esc(label)+'</span>'; }
 
 /* ============================== VIEW ROUTER ================================= */
-var VIEWS = ["landing","browse","wod","home","flashcards","matching","choice","cloze"];
+var VIEWS = ["landing","browse","wod","home","flashcards","matching","choice","cloze",
+  "paradigm","stress","synonym","idiom","heritage"];
 var sel = document.getElementById("poc-view");
 function showView(id){
   if (VIEWS.indexOf(id) < 0) id = "landing";
@@ -1000,6 +1204,11 @@ function showView(id){
   if (id==="matching") initMatch();
   if (id==="choice") initChoice();
   if (id==="cloze") initCloze();
+  if (id==="paradigm") initParadigm();
+  if (id==="stress") initStress();
+  if (id==="synonym") initSynonym();
+  if (id==="idiom") initIdiom();
+  if (id==="heritage") initHeritage();
 }
 sel.addEventListener("change", function(){ showView(sel.value); });
 document.addEventListener("click", function(e){
@@ -1518,6 +1727,321 @@ document.getElementById("cz-form").addEventListener("submit", function(e){
   answerCloze(document.getElementById("cz-input").value, null, null);
 });
 document.getElementById("cz-next").addEventListener("click", nextCloze);
+
+/* ============================== PARADIGM (§9.1) =========================== */
+/* Chips mode: every option is another slot of the SAME paradigm — a wrong-word
+   pick is impossible (only wrong-slot scaffolds apply). */
+var PARADIGM_DECK = [
+  { lemma:"брат", slotUa:"орудний відмінок, однина", slotEn:"instr. sg", answer:"братом",
+    chips:[{ label:"брат", role:"wrongslot", wrongCaseUa:"називний", wrongCaseEn:"nom." },
+           { label:"брата", role:"wrongslot", wrongCaseUa:"родовий", wrongCaseEn:"gen." },
+           { label:"братові", role:"wrongslot", wrongCaseUa:"давальний", wrongCaseEn:"dat." },
+           { label:"братом", role:"answer" }],
+    scaffold:function(){ return "Це давальний: брат<strong>ові</strong>. Потрібен орудний: брат<strong>ом</strong>."; },
+    scaffoldFor:function(chip){
+      if (chip.label === "братові") return this.scaffold();
+      return "Це "+chip.wrongCaseUa+": брат<strong>"+chip.label.replace(/^брат/,"")+"</strong>. Потрібен орудний: брат<strong>ом</strong>.";
+    } },
+  { lemma:"брат", slotUa:"родовий відмінок, однина", slotEn:"gen. sg", answer:"брата",
+    chips:[{ label:"брат", role:"wrongslot", wrongCaseUa:"називний" },
+           { label:"брата", role:"answer" },
+           { label:"братові", role:"wrongslot", wrongCaseUa:"давальний" },
+           { label:"братом", role:"wrongslot", wrongCaseUa:"орудний" }],
+    scaffoldFor:function(chip){
+      return "Це "+chip.wrongCaseUa+": брат<strong>"+chip.label.replace(/^брат/,"")+"</strong>. Потрібен родовий: брат<strong>а</strong>.";
+    } },
+  { lemma:"брат", slotUa:"місцевий відмінок, однина", slotEn:"loc. sg", answer:"(на) браті",
+    chips:[{ label:"брата", role:"wrongslot", wrongCaseUa:"родовий" },
+           { label:"братові", role:"wrongslot", wrongCaseUa:"давальний" },
+           { label:"братом", role:"wrongslot", wrongCaseUa:"орудний" },
+           { label:"(на) браті", role:"answer" }],
+    scaffoldFor:function(chip){
+      var tail = chip.label.indexOf("брат") >= 0 ? chip.label.replace(/^.*брат/,"") : chip.label;
+      return "Це "+chip.wrongCaseUa+": брат<strong>"+tail+"</strong>. Потрібен місцевий: (на) брат<strong>і</strong>.";
+    } }
+];
+var pdItem = null, pdIdx = 0, pdAnswered = false, pdGraded = false, pdCorrect = 0;
+function initParadigm(){ pdIdx = 0; pdCorrect = 0; renderParadigm(); }
+function renderParadigm(){
+  pdAnswered = false; pdGraded = false;
+  pdItem = PARADIGM_DECK[pdIdx % PARADIGM_DECK.length];
+  document.getElementById("pd-prompt").innerHTML = "<b>"+esc(pdItem.lemma)+"</b>";
+  document.getElementById("pd-slot").innerHTML = esc(pdItem.slotUa)
+    + ' <em aria-hidden="true">'+esc(pdItem.slotEn)+'</em>';
+  document.getElementById("pd-blank").textContent = "?";
+  document.getElementById("pd-blank").classList.remove("filled","bad");
+  var box = document.getElementById("pd-options");
+  box.innerHTML = "";
+  shuffle(pdItem.chips).forEach(function(c){
+    var b = document.createElement("button");
+    b.type = "button"; b.className = "cz-chip"; b.textContent = c.label;
+    b.dataset.role = c.role;
+    b.addEventListener("click", function(){ answerParadigm(c, b); });
+    box.appendChild(b);
+  });
+  setLive("pd-live", "Оберіть форму для зазначеного відмінка.", "info");
+  document.getElementById("pd-next").hidden = true;
+}
+function answerParadigm(chip, btn){
+  if (pdAnswered) return;
+  if (chip.role === "answer"){
+    pdAnswered = true;
+    if (!pdGraded){ pdGraded = true; pdCorrect++; }
+    document.querySelectorAll("#pd-options .cz-chip").forEach(function(b){
+      b.disabled = true;
+      if (b.dataset.role === "answer") b.classList.add("correct");
+    });
+    document.getElementById("pd-blank").textContent = pdItem.answer;
+    document.getElementById("pd-blank").classList.add("filled");
+    setLive("pd-live", "✓ Правильно — «"+pdItem.answer+"» ("+pdItem.slotUa+").", "ok");
+    document.getElementById("pd-score").textContent = correctLabel(pdCorrect);
+    document.getElementById("pd-next").hidden = false;
+    return;
+  }
+  if (chip.role === "wrongslot"){
+  // SCAFFOLD (§4 analog): first attempt grades as case-miss; blank stays open; chips re-enabled.
+    if (!pdGraded){ pdGraded = true; }
+    btn.disabled = true; btn.classList.add("wrong");
+    document.getElementById("pd-blank").textContent = "?";
+    document.getElementById("pd-blank").classList.remove("filled","bad");
+    var msg = pdItem.scaffoldFor ? pdItem.scaffoldFor(chip) : pdItem.scaffold();
+    var live = document.getElementById("pd-live");
+    live.setAttribute("data-tone", "warn");
+    live.innerHTML = msg;
+    document.querySelectorAll("#pd-options .cz-chip").forEach(function(b){
+      if (!b.classList.contains("wrong")) b.disabled = false;
+    });
+  }
+}
+document.getElementById("pd-next").addEventListener("click", function(){
+  pdIdx++;
+  renderParadigm();
+});
+
+/* ============================== STRESS (§9.2) =============================== */
+var STRESS_DECK = [
+  { plain:"вода", stressed:"вода́", stressIdx:1 },
+  { plain:"мова", stressed:"мо́ва", stressIdx:0 }
+];
+var stItem = null, stIdx = 0, stAnswered = false, stCorrect = 0;
+var VOWELS = /[аеєиіїоуюяАЕЄИІЇОУЮЯ]/;
+function initStress(){ stIdx = 0; stCorrect = 0; renderStress(); }
+function stressVowelIndices(word){
+  var out = [];
+  for (var i = 0; i < word.length; i++){
+    if (VOWELS.test(word.charAt(i))) out.push(i);
+  }
+  return out;
+}
+function renderStress(){
+  stAnswered = false;
+  stItem = STRESS_DECK[stIdx % STRESS_DECK.length];
+  var vowelIdxs = stressVowelIndices(stItem.plain);
+  var box = document.getElementById("st-word");
+  box.innerHTML = "";
+  var vi = 0;
+  for (var i = 0; i < stItem.plain.length; i++){
+    var ch = stItem.plain.charAt(i);
+    if (VOWELS.test(ch)){
+      var b = document.createElement("button");
+      b.type = "button"; b.className = "st-vowel";
+      b.textContent = ch;
+      b.dataset.vi = String(vi);
+      b.setAttribute("aria-label", "Голосний «"+ch+"»");
+      b.addEventListener("click", function(){ answerStress(+this.dataset.vi, this); });
+      box.appendChild(b);
+      vi++;
+    } else {
+      var s = document.createElement("span");
+      s.textContent = ch; s.setAttribute("aria-hidden","true");
+      box.appendChild(s);
+    }
+  }
+  document.getElementById("st-result").textContent = "\u00a0";
+  document.getElementById("st-result").setAttribute("data-tone","info");
+  setLive("st-live", "Слово "+(stIdx+1)+" з "+STRESS_DECK.length+". Торкніться наголошеного голосного.", "info");
+  document.getElementById("st-next").hidden = true;
+}
+function answerStress(pickedVi, btn){
+  if (stAnswered) return;
+  stAnswered = true;
+  var ok = pickedVi === stItem.stressIdx;
+  document.querySelectorAll("#st-word .st-vowel").forEach(function(b){
+    b.disabled = true;
+    if (+b.dataset.vi === stItem.stressIdx) b.classList.add("correct");
+    else if (+b.dataset.vi === pickedVi && !ok) b.classList.add("wrong");
+  });
+  var res = document.getElementById("st-result");
+  if (ok){
+    stCorrect++;
+    res.textContent = "✓ "+stItem.stressed;
+    res.setAttribute("data-tone","ok");
+    setLive("st-live","✓ Правильно!","ok");
+  } else {
+    res.textContent = stItem.stressed;
+    res.setAttribute("data-tone","bad");
+    setLive("st-live","✕ Правильний наголос: "+stItem.stressed,"bad");
+  }
+  document.getElementById("st-score").textContent = correctLabel(stCorrect);
+  document.getElementById("st-next").hidden = false;
+}
+document.getElementById("st-next").addEventListener("click", function(){
+  stIdx++;
+  if (stIdx >= STRESS_DECK.length){ stIdx = 0; stCorrect = 0; }
+  renderStress();
+});
+
+/* ============================== SYNONYM (§9.3) ============================== */
+var SYNONYM_DECK = [
+  { polarity:"syn", prompt:"гарний", q:'Оберіть синонім до „гарний"',
+    options:["красивий","сумний","швидкий","високий"], answer:"красивий" },
+  { polarity:"ant", prompt:"великий", q:'Оберіть антонім до „великий"',
+    options:["малий","довгий","теплий","новий"], answer:"малий" }
+];
+var syItem = null, syIdx = 0, syAnswered = false, syCorrect = 0;
+function initSynonym(){ syIdx = 0; syCorrect = 0; renderSynonym(); }
+function renderSynonym(){
+  syAnswered = false;
+  syItem = SYNONYM_DECK[syIdx % SYNONYM_DECK.length];
+  syIdx++;
+  document.getElementById("sy-q").textContent = syItem.q;
+  var box = document.getElementById("sy-options");
+  box.innerHTML = "";
+  shuffle(syItem.options).forEach(function(label,i){
+    var b = document.createElement("button");
+    b.type = "button"; b.className = "mc-opt";
+    b.innerHTML = '<span class="mc-key">'+(i+1)+'</span>'+esc(label);
+    b.dataset.correct = (label === syItem.answer) ? "1" : "0";
+    b.addEventListener("click", function(){ answerSynonym(b); });
+    box.appendChild(b);
+  });
+  setLive("sy-live","\u00a0","info");
+  document.getElementById("sy-next").hidden = true;
+}
+function answerSynonym(btn){
+  if (syAnswered) return; syAnswered = true;
+  var ok = btn.dataset.correct === "1";
+  document.querySelectorAll("#sy-options .mc-opt").forEach(function(b){
+    b.disabled = true;
+    if (b.dataset.correct === "1") b.classList.add("correct");
+  });
+  if (ok){ syCorrect++; setLive("sy-live","✓ Правильно!","ok"); }
+  else { btn.classList.add("wrong"); setLive("sy-live","✕ Правильна відповідь підсвічена.","bad"); }
+  document.getElementById("sy-score").textContent = correctLabel(syCorrect);
+  document.getElementById("sy-next").hidden = false;
+}
+document.getElementById("sy-next").addEventListener("click", renderSynonym);
+document.addEventListener("keydown", function(e){
+  if (!document.getElementById("view-synonym").classList.contains("active")) return;
+  if (["1","2","3","4"].indexOf(e.key) >= 0 && !syAnswered){
+    var b = document.querySelectorAll("#sy-options .mc-opt")[+e.key-1];
+    if (b) answerSynonym(b);
+  } else if (e.key === "Enter" && syAnswered){ renderSynonym(); }
+});
+
+/* ============================== IDIOM (§9.4) ================================= */
+var IDIOM_DECK = [
+  { idiom:"байдики бити", answer:"ледарювати, нічого не робити", answerEn:"to idle about",
+    options:[
+      { label:"ледарювати, нічого не робити", en:"to idle about" },
+      { label:"швидко бігти", en:"" },
+      { label:"голосно сміятися", en:"" },
+      { label:"багато працювати", en:"" }
+    ] }
+];
+var idItem = null, idAnswered = false, idCorrect = 0;
+function initIdiom(){ idCorrect = 0; renderIdiom(); }
+function renderIdiom(){
+  idAnswered = false;
+  idItem = IDIOM_DECK[0];
+  document.getElementById("id-prompt").innerHTML = "Що означає «<b>"+esc(idItem.idiom)+"</b>»?";
+  var box = document.getElementById("id-options");
+  box.innerHTML = "";
+  shuffle(idItem.options).forEach(function(o,i){
+    var b = document.createElement("button");
+    b.type = "button"; b.className = "mc-opt";
+    var en = o.en ? '<span class="mc-gloss-en">'+esc(o.en)+'</span>' : "";
+    b.innerHTML = '<span class="mc-key">'+(i+1)+'</span><span>'+esc(o.label)+en+'</span>';
+    b.dataset.correct = (o.label === idItem.answer) ? "1" : "0";
+    b.addEventListener("click", function(){ answerIdiom(b); });
+    box.appendChild(b);
+  });
+  setLive("id-live","\u00a0","info");
+  document.getElementById("id-next").hidden = true;
+}
+function answerIdiom(btn){
+  if (idAnswered) return; idAnswered = true;
+  var ok = btn.dataset.correct === "1";
+  document.querySelectorAll("#id-options .mc-opt").forEach(function(b){
+    b.disabled = true;
+    if (b.dataset.correct === "1") b.classList.add("correct");
+  });
+  if (ok){ idCorrect++; setLive("id-live","✓ Правильно!","ok"); }
+  else { btn.classList.add("wrong"); setLive("id-live","✕ Правильна відповідь підсвічена.","bad"); }
+  document.getElementById("id-score").textContent = correctLabel(idCorrect);
+  document.getElementById("id-next").hidden = false;
+}
+document.getElementById("id-next").addEventListener("click", renderIdiom);
+
+/* ============================== HERITAGE (§9.5) ============================= */
+/* Data source in production: heritage_status.curated_calque (heritage_pair schema, fail-closed). */
+var HERITAGE_DECK = [
+  { frame:"Ми організували благодійний ____ у школі.", frameEn:"charity event",
+    answer:"захід",
+    options:[
+      { label:"захід", role:"native" },
+      { label:"міроприємство", role:"calque" },
+      { label:"випадок", role:"distractor" },
+      { label:"концерт", role:"distractor" }
+    ],
+    calqueFeedback:'⚠️ „міроприємство" — калька з рос. «мероприятие». Вживайте: захід, заходи. — Антоненко-Давидович, «Як ми говоримо»'
+  }
+];
+var hgItem = null, hgAnswered = false, hgCorrect = 0;
+function initHeritage(){ hgCorrect = 0; renderHeritage(); }
+function renderHeritage(){
+  hgAnswered = false;
+  hgItem = HERITAGE_DECK[0];
+  document.getElementById("hg-sentence").innerHTML =
+    esc(hgItem.frame).replace("____", '<span class="cz-blank" id="hg-blank">?</span>');
+  document.getElementById("hg-translate").textContent = hgItem.frameEn;
+  var box = document.getElementById("hg-options");
+  box.innerHTML = "";
+  shuffle(hgItem.options).forEach(function(o,i){
+    var b = document.createElement("button");
+    b.type = "button"; b.className = "mc-opt";
+    b.innerHTML = '<span class="mc-key">'+(i+1)+'</span>'+esc(o.label);
+    b.dataset.role = o.role;
+    b.addEventListener("click", function(){ answerHeritage(o, b); });
+    box.appendChild(b);
+  });
+  setLive("hg-live","\u00a0","info");
+  document.getElementById("hg-next").hidden = true;
+}
+function answerHeritage(opt, btn){
+  if (hgAnswered) return;
+  hgAnswered = true;
+  var blank = document.getElementById("hg-blank");
+  document.querySelectorAll("#hg-options .mc-opt").forEach(function(b){ b.disabled = true; });
+  blank.textContent = opt.label;
+  if (opt.role === "native"){
+    hgCorrect++;
+    btn.classList.add("correct");
+    blank.classList.add("filled");
+    setLive("hg-live","✓ Правильно — питоме слово.","ok");
+  } else if (opt.role === "calque"){
+    btn.classList.add("wrong");
+    blank.classList.add("filled","bad");
+    setLive("hg-live", hgItem.calqueFeedback, "bad");
+  } else {
+    btn.classList.add("wrong");
+    blank.classList.add("filled","bad");
+    setLive("hg-live","✗ Не те слово","bad");
+  }
+  document.getElementById("hg-score").textContent = correctLabel(hgCorrect);
+  document.getElementById("hg-next").hidden = false;
+}
+document.getElementById("hg-next").addEventListener("click", renderHeritage);
 
 /* ============================== HELPERS / BOOT ============================ */
 function setLive(id, msg, tone){
