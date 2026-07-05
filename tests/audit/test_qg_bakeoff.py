@@ -437,3 +437,114 @@ def test_matrix_survives_schema_invalid_cell_and_retry_failures_reruns_it(
         retry_failures=True,
     )
     assert calls == ["openrouter/test/bad-model"]
+
+
+def test_retry_failures_still_runs_missing_cells_and_overwrites_error_on_success(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """--retry-failures is a RESUME MODIFIER (codex review of #4463):
+
+    missing cells run as in plain resume; error cells re-run and a successful
+    retry OVERWRITES the error artifact.
+    """
+    monkeypatch.delenv("CI", raising=False)
+    monkeypatch.setenv("QG_BAKEOFF", "1")
+    fixture = _fixture()
+    good_payload = {
+        "findings": [],
+        "fact_checks": [
+            {
+                "claim": "True claim.",
+                "verdict": "CONFIRMED",
+                "grounding": {
+                    "tool": "sources_query_wikipedia",
+                    "query": "True claim",
+                    "evidence_excerpt": "True claim",
+                    "tool_call_id": "call_1",
+                },
+            },
+            {
+                "claim": "Fabricated claim.",
+                "verdict": "UNATTESTED_AFTER_SEARCH",
+                "grounding": {
+                    "tool": "sources_query_wikipedia",
+                    "query": "True claim",
+                    "evidence_excerpt": "Fabricated claim",
+                    "tool_call_id": "call_1",
+                },
+            },
+        ],
+        "evidence_gaps": [],
+    }
+    fail_once = {"flaky": True}
+    calls: list[str] = []
+
+    def runner(
+        run_route: llm_reviewer_dispatch.ReviewerRoute,
+        _prompt: str,
+        _task_id: str,
+    ) -> llm_reviewer_dispatch.DispatchResult:
+        calls.append(run_route.reviewer_model_id)
+        if run_route.reviewer_model_id.endswith("flaky-model") and fail_once.pop("flaky", False):
+            raise ValueError("Expecting value: line 1 column 1 (char 0)")
+        return _dispatch_result(good_payload, run_route)
+
+    # Pass 1: flaky errors, fresh model absent entirely.
+    runs = qg_bakeoff.run_matrix(
+        [fixture], ["openrouter/test/flaky-model"], output_dir=tmp_path, runner=runner
+    )
+    assert runs[0].artifact["status"] == "error"
+
+    # Pass 2 with retry_failures: error cell re-runs AND the missing fresh-model cell runs.
+    calls.clear()
+    runs = qg_bakeoff.run_matrix(
+        [fixture],
+        ["openrouter/test/flaky-model", "openrouter/test/fresh-model"],
+        output_dir=tmp_path,
+        runner=runner,
+        retry_failures=True,
+    )
+    assert sorted(calls) == ["openrouter/test/flaky-model", "openrouter/test/fresh-model"]
+    statuses = {run.artifact["model"]["pin"]: run.artifact["status"] for run in runs}
+    assert statuses == {
+        "openrouter/test/flaky-model": "ran",
+        "openrouter/test/fresh-model": "ran",
+    }
+
+
+def test_error_artifact_preserves_response_head_for_parse_failures(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.delenv("CI", raising=False)
+    monkeypatch.setenv("QG_BAKEOFF", "1")
+    fixture = _fixture()
+
+    def prose_runner(
+        run_route: llm_reviewer_dispatch.ReviewerRoute,
+        _prompt: str,
+        _task_id: str,
+    ) -> llm_reviewer_dispatch.DispatchResult:
+        return llm_reviewer_dispatch.DispatchResult(
+            response_text="Ой у лузі червона калина — no JSON here.",
+            reviewer_model_id=run_route.reviewer_model_id,
+            reviewer_family=run_route.reviewer_family,
+            route_name=run_route.route_name,
+            tool_call_count=1,
+            tools_used=("sources_query_wikipedia",),
+            tool_events=(
+                {
+                    "tool": "sources_query_wikipedia",
+                    "input": {"query": "калина"},
+                    "status": "completed",
+                    "tool_call_id": "call_1",
+                    "output": "калина",
+                },
+            ),
+        )
+
+    route = qg_bakeoff.bakeoff_route_for_model("openrouter/test/prose-model")
+    run = qg_bakeoff.run_one(route, fixture, output_dir=tmp_path, runner=prose_runner)
+
+    assert run.artifact["status"] == "error"
+    assert run.artifact["error"]["class"] == "BakeoffCellError"
+    assert "червона калина" in run.artifact["error"]["response_head"]

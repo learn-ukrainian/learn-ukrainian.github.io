@@ -87,6 +87,14 @@ class BakeoffConfigError(ValueError):
     """Configuration or fixture validation error."""
 
 
+class BakeoffCellError(ValueError):
+    """Per-cell failure carrying the raw response head for diagnosis."""
+
+    def __init__(self, message: str, *, response_head: str | None = None) -> None:
+        super().__init__(message)
+        self.response_head = response_head
+
+
 ProviderRunner = Callable[
     [llm_reviewer_dispatch.ReviewerRoute, str, str],
     llm_reviewer_dispatch.DispatchResult | str,
@@ -249,6 +257,9 @@ def run_one(
     artifact_path = output_dir / f"{pin_slug(route.reviewer_model_id)}__{fixture.slug}.json"
     if artifact_path.exists() and not force:
         artifact = json.loads(artifact_path.read_text(encoding="utf-8"))
+        # retry_failures is a RESUME MODIFIER: missing cells always run (plain
+        # resume behavior), completed cells always skip, and error cells re-run
+        # only under the flag (codex review of #4463 pinned these semantics).
         if not (retry_failures and artifact.get("status") == "error"):
             return BakeoffRun(artifact_path=artifact_path, artifact=artifact, skipped=True)
 
@@ -281,7 +292,11 @@ def run_one(
                 "bridge_command": list(route.bridge_command),
             },
             "status": "error",
-            "error": {"class": type(exc).__name__, "message": str(exc)[:2000]},
+            "error": {
+                "class": type(exc).__name__,
+                "message": str(exc)[:2000],
+                "response_head": getattr(exc, "response_head", None),
+            },
             "workflow_verdict": "ERROR",
             "attempt_count": None,
             "dispatch": {},
@@ -505,7 +520,10 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument(
         "--retry-failures",
         action="store_true",
-        help="Re-run only cells whose existing artifact has status=error",
+        help=(
+            "Resume modifier: in addition to running MISSING cells (normal resume), "
+            "re-run cells whose existing artifact has status=error. Completed cells stay skipped."
+        ),
     )
     args = parser.parse_args(argv)
 
@@ -544,8 +562,13 @@ def _invoke_and_gate(
         # (cursor review of #4458): an over-budget run hard-fails identically
         # in the harness and in live gating.
         llm_reviewer_dispatch.enforce_tool_budget(dispatch)
-        payload = dict(llm_reviewer_dispatch._json_payload_from_response(result.response_text))
-        llm_reviewer.validate_reviewer_payload(payload, BAKEOFF_POLICY_FAMILY)
+        try:
+            payload = dict(llm_reviewer_dispatch._json_payload_from_response(result.response_text))
+            llm_reviewer.validate_reviewer_payload(payload, BAKEOFF_POLICY_FAMILY)
+        except ValueError as exc:
+            # Preserve what the model actually said — the first live run left
+            # only "Expecting value: char 0" with no way to diagnose offline.
+            raise BakeoffCellError(str(exc), response_head=result.response_text[:2000]) from exc
         attempt = {
             "attempt": attempt_count,
             "tool_call_count": dispatch.get("tool_call_count"),
