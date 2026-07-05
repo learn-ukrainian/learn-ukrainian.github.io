@@ -51,6 +51,8 @@ These are NOT the harness, but they are the scorer-side foundation:
 - [UA contact quality evidence schema](schema.md) documents
   `ua_contact_quality_evidence.v1` and the helper module
   `scripts/audit/qg_schema.py`.
+- [Scorer adapter boundaries](scorer-adapters.md) document the #4308
+  deterministic, UA-GEC-fixture, and LLM-placeholder adapter layer.
 - [Agent fleet evidence for #4307](agent-fleet-4307.md) records the concrete
   fleet lanes used for the schema slice and the observed strengths/weaknesses.
 
