@@ -97,7 +97,7 @@ references:
   note: Джерелознавча рамка Лободи як центральної постаті низового козацтва, динаміка переговорів, послідовність Переяслав–Лубни–Солониця, смерть у таборі.
   path: http://litopys.org.ua/hrushrus/iur70405.htm
   title: Історія України-Руси, том 7, розділ IV (Ізборник)
-  type: primary
+  type: academic
   work: Історія України-Руси, том 7
 - note: Дослідницьке досьє з перевіреними фактами, джерельними анкерами та переліком спірних питань.
   path: docs/research/bio/hryhorii-loboda.md
@@ -107,7 +107,7 @@ sequence: 21
 slug: hryhorii-loboda
 subtitle: 'Hryhorii Loboda: The Cossack Leader Executed by His Own Camp'
 title: 'Григорій Лобода: провідник, якого стратив власний табір'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: командний прошарок козацького війська; козацька верхівка
   pos: ж.
