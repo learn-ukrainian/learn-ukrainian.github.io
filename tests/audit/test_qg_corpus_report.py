@@ -174,6 +174,7 @@ def test_workflow_records_count_failures_spend_and_warn_conversion(tmp_path: Pat
         completion_status="COMPLETE",
         estimated_cost=0.2,
         observed_cost=0.4,
+        cache_regate="replayed",
     )
     provider_record = _workflow_record(
         _module(tmp_path, slug="provider"),
@@ -204,6 +205,7 @@ def test_workflow_records_count_failures_spend_and_warn_conversion(tmp_path: Pat
     assert report["completion"]["provider_error"] == 1
     assert report["completion"]["parse_failure"] == 1
     assert report["completion"]["incomplete"] == 2
+    assert report["completion"]["cache_regate_counts"] == {"replayed": 1}
     assert report["spend"]["accepted_evidence"] == 1
     assert report["spend"]["observed_cost_usd"] == 0.5
     assert report["spend"]["spend_per_accepted_evidence_usd"] == 0.5
@@ -241,6 +243,7 @@ def _workflow_record(
     completion_status: str = "COMPLETE",
     estimated_cost: float | None = None,
     observed_cost: float | None = None,
+    cache_regate: str | None = None,
 ) -> dict[str, Any]:
     target = _target(module_dir, slug=slug)
     payload = _payload(*(findings or []))
@@ -254,6 +257,8 @@ def _workflow_record(
         tier2["estimate"] = {"estimated_cost_usd": estimated_cost}
     if observed_cost is not None:
         tier2["dispatch"] = {"observed_cost_usd": observed_cost}
+    if cache_regate is not None:
+        tier2["cache_regate"] = cache_regate
     return {
         "schema_version": qg_schema.SCHEMA_VERSION,
         "module_id": f"b1/{slug}",

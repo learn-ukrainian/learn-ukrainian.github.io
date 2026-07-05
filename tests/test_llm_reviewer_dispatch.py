@@ -368,6 +368,32 @@ def test_theatre_gate_rejects_irrelevant_tool_only_run(tmp_path: Path) -> None:
     assert calls == 2
 
 
+def test_tools_used_only_theatre_fallback_requires_tool_name_relevance_for_claims() -> None:
+    payload = json.loads(_fact_response())
+    dispatch_meta = {
+        "route_name": "opencode_frontier",
+        "tool_call_count": 1,
+        "tools_used": ["sources_query_wikipedia"],
+    }
+
+    violation = llm_reviewer_dispatch.tool_theatre_violation(
+        policy_family="seminar",
+        payload=payload,
+        dispatch_meta=dispatch_meta,
+    )
+    no_claim_violation = llm_reviewer_dispatch.tool_theatre_violation(
+        policy_family="seminar",
+        payload={"findings": []},
+        dispatch_meta=dispatch_meta,
+    )
+
+    assert violation == {
+        "status": llm_reviewer_dispatch.INVALID_TOOL_THEATRE,
+        "reason": "no_relevant_source_tool_calls",
+    }
+    assert no_claim_violation is None
+
+
 def test_theatre_gate_retry_then_invalid_zero_tool_path(tmp_path: Path) -> None:
     module_dir = _write_module(tmp_path, level="folk", slug="vesnianky")
     calls = 0

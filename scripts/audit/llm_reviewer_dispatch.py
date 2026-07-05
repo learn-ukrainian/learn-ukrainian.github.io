@@ -954,7 +954,7 @@ def tool_theatre_violation(
     if (
         isinstance(tools_used, Sequence)
         and not isinstance(tools_used, (str, bytes))
-        and any(_is_source_tool(str(tool)) for tool in tools_used)
+        and any(_source_tool_name_relevant(str(tool), claim_tokens) for tool in tools_used)
     ):
         return None
     return {"status": INVALID_TOOL_THEATRE, "reason": "no_relevant_source_tool_calls"}
@@ -1114,6 +1114,14 @@ def _source_event_relevant(event: Mapping[str, Any], claim_tokens: set[str]) -> 
     if not claim_tokens:
         return True
     return bool(claim_tokens.intersection(_event_query_tokens(event)))
+
+
+def _source_tool_name_relevant(tool: str, claim_tokens: set[str]) -> bool:
+    if not _is_source_tool(tool):
+        return False
+    if not claim_tokens:
+        return True
+    return bool(claim_tokens.intersection(_tokenize(tool)))
 
 
 def _payload_claim_tokens(payload: Mapping[str, Any]) -> set[str]:
