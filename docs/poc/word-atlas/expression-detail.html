@@ -156,11 +156,12 @@
     border-radius: 4px; background: var(--lu-state-active); color: var(--lu-primary);
     font-size: .78rem; font-weight: 900; letter-spacing: .04em; text-transform: uppercase;
   }
-  .cefr-chip {
+  .cefr-chip, .dialect-chip {
     display: inline-flex; align-items: center; min-height: 1.35rem; padding: 0 .45rem;
     border-radius: 4px; background: var(--lu-state-active); color: var(--lu-primary);
     font-size: .72rem; font-weight: 800; text-transform: uppercase;
   }
+  .dialect-chip { text-transform: none; font-weight: 600; }
   .type-badge {
     display: inline-flex; align-items: center; min-height: 1.5rem; padding: 0 .55rem;
     border-radius: 999px; font-size: .72rem; font-weight: 900; letter-spacing: .04em;
@@ -262,7 +263,8 @@
   <select id="poc-entry" aria-label="Перемкнути приклад ExpressionArticle">
     <option value="expression" selected>expression · «А тебе?»</option>
     <option value="phraseologism">phraseologism · «давати на лапу»</option>
-    <option value="proverb">proverb · «бабине літо»</option>
+    <option value="phraseologism2">phraseologism · «бабине літо» (enriched)</option>
+    <option value="proverb">proverb · «Бери вовка в плуг…»</option>
     <option value="multiword">multiword_term · «Івана Купала» (manifest grounding)</option>
   </select>
   <div class="poc-theme" role="group" aria-label="Тема">
@@ -402,8 +404,8 @@
   </div>
 </article>
 
-<!-- proverb · бабине літо -->
-<article id="view-proverb" class="entry-view" aria-label="proverb — бабине літо">
+<!-- phraseologism (enriched) · бабине літо — typology fix: this is a set expression, NOT a proverb -->
+<article id="view-phraseologism2" class="entry-view" aria-label="phraseologism — бабине літо">
   <header class="expr-hero">
     <div class="expr-hero-inner">
       <span class="lex-badge">Лексикон · ExpressionArticle</span>
@@ -414,7 +416,7 @@
         </div>
       </div>
       <div class="expr-badges">
-        <span class="type-badge" data-type="proverb">proverb</span>
+        <span class="type-badge" data-type="phraseologism">phraseologism</span>
         <span class="cefr-chip">CEFR B1</span>
       </div>
     </div>
@@ -463,6 +465,55 @@
         </li>
       </ul>
     </section>
+  </div>
+</article>
+
+<!-- proverb · корпусна приповідка (folk/prykazky-ta-pryslivia, reading hrushevskyi-franko-vovk-u-pluzi-prypovidka) -->
+<article id="view-proverb" class="entry-view" aria-label="proverb — Бери вовка в плуг, а він сі дивит у луг">
+  <header class="expr-hero">
+    <div class="expr-hero-inner">
+      <span class="lex-badge">Лексикон · ExpressionArticle</span>
+      <div class="expr-head-row">
+        <div>
+          <h1 class="expr-title">Бери вовка в плуг, а він сі дивит у луг.</h1>
+          <p class="expr-gloss">Galician proverb about an unfit participant in shared work</p>
+        </div>
+      </div>
+      <div class="expr-badges">
+        <span class="type-badge" data-type="proverb">proverb</span>
+        <span class="dialect-chip">правопис і форма не нормалізовані</span>
+      </div>
+    </div>
+  </header>
+  <div class="article-body wrap-narrow">
+    <section class="atlas-section" aria-labelledby="pvb-meaning">
+      <h2 id="pvb-meaning">Значення</h2>
+      <div class="def-card">
+        <div class="def-source"><span class="src-pill">корпус</span><span>folk/prykazky-ta-pryslivia · hrushevskyi-franko-vovk-u-pluzi-prypovidka</span></div>
+        <p class="def-text">«Стискає комічний сюжет про непридатного учасника спільної роботи.»</p>
+      </div>
+    </section>
+
+    <section class="atlas-section" aria-labelledby="pvb-usage">
+      <h2 id="pvb-usage">Вжиток</h2>
+      <ul class="usage-list">
+        <li class="usage-item">
+          <strong>FOLK · prykazky-ta-pryslivia</strong>
+          <span class="usage-meta">Михайло Грушевський про Франків корпус «Галицько-руських народних приповідок»</span>
+        </li>
+      </ul>
+    </section>
+
+    <section class="atlas-section" aria-labelledby="pvb-components">
+      <h2 id="pvb-components">Компоненти</h2>
+      <ul class="component-list" aria-label="Компоненти прислів'я">
+        <li class="component-chip"><a href="#" title="approved + public article">вовк</a></li>
+        <li class="component-chip is-plain" title="queued / non-public — plain text">плуг</li>
+        <li class="component-chip"><a href="#" title="approved + public article">луг</a></li>
+      </ul>
+    </section>
+
+    <p class="poc-anno">Секція «Варіанти» відсутня в даних → повністю опущена (#3631) — прислів'я ніколи не рендерить порожню оболонку.</p>
   </div>
 </article>
 
@@ -529,6 +580,7 @@
   var views = {
     expression: document.getElementById("view-expression"),
     phraseologism: document.getElementById("view-phraseologism"),
+    phraseologism2: document.getElementById("view-phraseologism2"),
     proverb: document.getElementById("view-proverb"),
     multiword: document.getElementById("view-multiword")
   };
