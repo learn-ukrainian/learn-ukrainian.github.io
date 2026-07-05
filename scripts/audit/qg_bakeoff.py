@@ -235,7 +235,14 @@ def run_one(
     runner: ProviderRunner = invoke_bakeoff_route,
     force: bool = False,
 ) -> BakeoffRun:
-    """Run or resume one model x passage bakeoff artifact."""
+    """Run or resume one model x passage bakeoff artifact.
+
+    Belt-and-suspenders (cursor re-review nit): the LIVE default runner is
+    guarded here too; injected runners are offline by construction and stay
+    guard-free so scripted tests need no env setup.
+    """
+    if runner is invoke_bakeoff_route:
+        require_offline_opt_in()
     artifact_path = output_dir / f"{pin_slug(route.reviewer_model_id)}__{fixture.slug}.json"
     if artifact_path.exists() and not force:
         artifact = json.loads(artifact_path.read_text(encoding="utf-8"))

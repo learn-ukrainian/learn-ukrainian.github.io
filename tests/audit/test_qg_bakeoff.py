@@ -336,3 +336,14 @@ def test_force_reruns_existing_artifact(tmp_path: Path) -> None:
     assert run.skipped is False
     assert calls, "force=True must re-invoke the runner despite the existing artifact"
     assert run.artifact["status"] == "ran"
+
+
+def test_run_one_with_default_live_runner_is_guarded(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.delenv("CI", raising=False)
+    monkeypatch.delenv("QG_BAKEOFF", raising=False)
+    route = qg_bakeoff.bakeoff_route_for_model("openrouter/google/gemma-4-31b-it")
+
+    with pytest.raises(qg_bakeoff.BakeoffConfigError, match="QG_BAKEOFF=1"):
+        qg_bakeoff.run_one(route, _fixture(), output_dir=tmp_path)
