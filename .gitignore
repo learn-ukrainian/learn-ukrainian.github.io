@@ -353,6 +353,12 @@ curriculum/l2-uk-en/*/*/knowledge_packet.md
 # Regenerate when ESUM data changes:
 #   .venv/bin/python scripts/etymology/build_data_manifest.py
 data/lexicon/slovnyk_cache/
+# Network-fetch enrichment caches (Wikipedia summaries, GRAC frequency). Churny +
+# growing toward the full-corpus target; like slovnyk_cache/ + the manifest they do
+# NOT belong in git. Kept local + Drive-backed via scripts/backup-data.sh (rsyncs all
+# of data/); CI never reads them (it hydrates the published release-asset manifest).
+# Regenerate on demand via scripts/lexicon/enrich_manifest.py.
+data/lexicon/cache/
 # Generated build artifact: regenerate on demand with
 #   .venv/bin/python -m scripts.lexicon.grow_lexicon_from_content (#3675 P2; promotion = P3)
 data/lexicon/grow_candidates.json
