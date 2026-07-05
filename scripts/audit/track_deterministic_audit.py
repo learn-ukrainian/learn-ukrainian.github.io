@@ -35,6 +35,7 @@ from audit.check_no_internal_ids import (
 from audit.checks.yaml_schema_validation import validate_activity_yaml_file
 from audit.content_surface_gates import scan_module_surface
 from manifest_utils import get_modules_for_level
+from wiki.config import TRACK_WRITE_DOMAIN
 
 CURRICULUM_ROOT = PROJECT_ROOT / "curriculum" / "l2-uk-en"
 SITE_DOCS_ROOT = PROJECT_ROOT / "site" / "src" / "content" / "docs"
@@ -192,6 +193,13 @@ def parse_slug_filter(values: list[str] | None) -> set[str] | None:
 def module_paths(track: str, module: Any) -> ModulePaths:
     slug = module.slug
     module_dir = CURRICULUM_ROOT / track / slug
+    if track in TRACK_WRITE_DOMAIN:
+        wiki_root = PROJECT_ROOT / "wiki" / TRACK_WRITE_DOMAIN[track]
+    else:
+        # Fallback for tracks NOT in TRACK_WRITE_DOMAIN (seminars use per-slug _get_domain() logic in scripts/wiki/compile.py):
+        # keep current grammar/{track} behavior UNCHANGED but leave a short comment noting seminar tracks need per-slug domain
+        # resolution at their deterministic-audit rollout.
+        wiki_root = WIKI_GRAMMAR_ROOT / track
     return ModulePaths(
         track=track,
         module_num=int(module.local_num),
@@ -203,8 +211,8 @@ def module_paths(track: str, module: Any) -> ModulePaths:
         activities=module_dir / "activities.yaml",
         vocabulary=module_dir / "vocabulary.yaml",
         resources=module_dir / "resources.yaml",
-        wiki=WIKI_GRAMMAR_ROOT / track / f"{slug}.md",
-        wiki_sources=WIKI_GRAMMAR_ROOT / track / f"{slug}.sources.yaml",
+        wiki=wiki_root / f"{slug}.md",
+        wiki_sources=wiki_root / f"{slug}.sources.yaml",
         site_mdx=SITE_DOCS_ROOT / track / f"{slug}.mdx",
     )
 
