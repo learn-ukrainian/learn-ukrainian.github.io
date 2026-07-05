@@ -33,7 +33,7 @@ B1_27_BAD_LLM_RESPONSE = """{
       "issue_id": "UNNATURAL_ANTHROPOMORPHISM",
       "issue_class": "other",
       "dimension": "ukrainian_style",
-      "severity": "critical",
+      "severity": "warning",
       "excerpt": "Застереження каже: будь обережний",
       "message": "Abstract lesson metalanguage should not be anthropomorphized as a speaker."
     },
@@ -41,7 +41,7 @@ B1_27_BAD_LLM_RESPONSE = """{
       "issue_id": "UKRAINIAN_GRAMMAR_CALQUE",
       "issue_class": "grammar",
       "dimension": "ukrainian_style",
-      "severity": "critical",
+      "severity": "warning",
       "excerpt": "радить не робити певної поведінки",
       "message": "The government and nominalized behavior phrase are translated and unnatural."
     },
@@ -49,7 +49,7 @@ B1_27_BAD_LLM_RESPONSE = """{
       "issue_id": "UNNATURAL_META_REGISTER",
       "issue_class": "register",
       "dimension": "ukrainian_style",
-      "severity": "critical",
+      "severity": "warning",
       "excerpt": "дія має дати конкретний результат чи описати процес?",
       "message": "This abstract prompt-like sentence is not natural learner-facing Ukrainian."
     },
@@ -57,7 +57,7 @@ B1_27_BAD_LLM_RESPONSE = """{
       "issue_id": "UKRAINIAN_GRAMMAR_CALQUE",
       "issue_class": "grammar",
       "dimension": "ukrainian_style",
-      "severity": "critical",
+      "severity": "warning",
       "excerpt": "доконаний вид дає результат із вікном",
       "message": "The metaphor and argument structure are literal and unidiomatic."
     },
@@ -65,7 +65,7 @@ B1_27_BAD_LLM_RESPONSE = """{
       "issue_id": "CALQUED_PREPOSITION",
       "issue_class": "calque",
       "dimension": "ukrainian_style",
-      "severity": "critical",
+      "severity": "warning",
       "excerpt": "У кухні",
       "message": "In this ordinary locative teaching context, use the idiomatic На кухні."
     }
