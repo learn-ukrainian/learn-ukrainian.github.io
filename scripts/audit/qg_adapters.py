@@ -164,7 +164,9 @@ class DeterministicRuleAdapter:
         return normalized
 
     def _semantic_plan_findings(self, plan_path: Path) -> list[dict[str, Any]]:
-        plan_text = plan_path.read_text(encoding="utf-8") if plan_path.exists() else ""
+        if not plan_path.exists():
+            return []
+        plan_text = plan_path.read_text(encoding="utf-8")
         normalized: list[dict[str, Any]] = []
         for finding in scan_plan_for_russianisms(plan_path):
             excerpt = str(finding.get("original_entry") or finding.get("word") or "semantic false friend")
@@ -194,12 +196,14 @@ class UaGecGoldFixtureAdapter:
 
     def __init__(self, fixture_path: Path = UA_GEC_GOLD_PATH) -> None:
         self.fixture_path = fixture_path
+        self._payload_cache: dict[str, Any] | None = None
 
     def findings(self, target: ScorerInput) -> list[dict[str, Any]]:
         items = self._load_items()
         if target.fixture_id:
             items = [item for item in items if item.get("id") == target.fixture_id]
-        return [self._normalize_item(item) for item in items]
+        known_limitations = self.known_limitations
+        return [self._normalize_item(item, known_limitations) for item in items]
 
     @property
     def known_limitations(self) -> dict[str, Any]:
@@ -208,10 +212,12 @@ class UaGecGoldFixtureAdapter:
         return dict(limitations) if isinstance(limitations, Mapping) else {}
 
     def _load_payload(self) -> dict[str, Any]:
-        payload = json.loads(self.fixture_path.read_text(encoding="utf-8"))
-        if not isinstance(payload, dict):
-            raise ValueError("UA-GEC gold fixture must be a JSON object")
-        return payload
+        if self._payload_cache is None:
+            payload = json.loads(self.fixture_path.read_text(encoding="utf-8"))
+            if not isinstance(payload, dict):
+                raise ValueError("UA-GEC gold fixture must be a JSON object")
+            self._payload_cache = payload
+        return self._payload_cache
 
     def _load_items(self) -> list[dict[str, Any]]:
         payload = self._load_payload()
@@ -220,9 +226,8 @@ class UaGecGoldFixtureAdapter:
             raise ValueError("UA-GEC gold fixture missing items list")
         return [item for item in items if isinstance(item, dict)]
 
-    def _normalize_item(self, item: Mapping[str, Any]) -> dict[str, Any]:
+    def _normalize_item(self, item: Mapping[str, Any], known_limitations: Mapping[str, Any]) -> dict[str, Any]:
         finding = dict(item.get("finding") or {})
-        qg_schema.validate_finding(finding)
         finding["confidence"] = self.confidence
         detector = dict(finding.get("detector") or {})
         detector["adapter"] = self.name
@@ -232,7 +237,7 @@ class UaGecGoldFixtureAdapter:
             "fixture_id": item.get("id"),
             "gold_tag": item.get("tag"),
             "gold_relabelled": False,
-            "known_limitations": self.known_limitations,
+            "known_limitations": dict(known_limitations),
             "contested_flag": None,
             "contested_flag_follow_up": "#4364",
         }
