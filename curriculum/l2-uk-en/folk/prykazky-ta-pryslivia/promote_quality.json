@@ -1,9 +1,9 @@
 {
-  "assembled_mdx_sha256": "70b72115191f3572907cf1463014c6cbe7f07f719515489dca0303652dfe702a",
+  "assembled_mdx_sha256": null,
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "77286698a1366881cf2f4fc8084b8cdbfa9922c2bbfb9e3a3f1de2d790b4fed6",
+    "digest": "e151c804772a422cabbd13845adf2fa96d92685dfabbfed46f2ec2c8ee903d39",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/prykazky-ta-pryslivia.yaml",
@@ -11,7 +11,7 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/prykazky-ta-pryslivia/module.md",
-        "sha256": "063825e9c18ce635991657e550548182eaf24ff829cae5ae402119a3960eeb24"
+        "sha256": "9bdf846c72304af953f38a5e488f99e335af7a70713a181614bd6c6d274e609f"
       },
       {
         "path": "curriculum/l2-uk-en/folk/prykazky-ta-pryslivia/activities.yaml",
@@ -28,11 +28,10 @@
     ]
   },
   "evidence": {
-    "decolonization": "Ukrainian parеmiology is framed through named Ukrainian collectors, regional variation, and anti-imperial source history without Russocentric derivation claims.",
-    "engagement": "V2 inline/workbook activities cover proverb-function analysis, source evaluation, variant comparison, comparative study, and seminar essay practice.",
-    "pedagogical": "Build teaches proverb/saying boundaries, two-part structure, metaphor, pragmatics, source discipline, contradiction, and ethical limits of modern use.",
-    "review": "Claude Opus review found three blockers in round 1; fixes were applied and regenerated. Round 2 confirmed blockers resolved and no new blockers.",
-    "source_policy": "Verbatim proverb fragments kept short. Manual spot-check confirmed four Galician fragments in Hrushevsky's discussion of Franko's corpus; the Franko page separately confirms the fox-and-hens fragment. Popular unverified forms are treated as paraphrase-only."
+    "gates": "Hardened reading gate, MDX parity/drift checks, reading coverage tests, MDX validation, assemble/render gates, and VESUM/resource gates passed; promote_quality refreshed after review.",
+    "quote_verification": "All added excerpts were checked through local sources.verify_quote at confidence 1.0; Claude independently re-checked all 10 fragments.",
+    "reading_remediation": "Added learner-visible structured on-site shortened primary readings; external links remain supplementary only.",
+    "review": "Claude Opus 4.8 review-folk-reading-remediation-m25-m28 approved the batch; one identifier typo was fixed before sidecar refresh."
   },
   "floors": {
     "beauty": 8.5,
@@ -43,14 +42,14 @@
     "tone": 8.5
   },
   "profile": "folk_promote_v1",
-  "review_artifact": "ai_agent_bridge messages 2 and 4; task ids review-folk-m27-prykazky-ta-pryslivia and review-folk-m27-prykazky-ta-pryslivia-r2",
+  "review_artifact": null,
   "reviewer": {
     "agent": "claude",
     "family": "anthropic",
     "model": "Claude Opus 4.8"
   },
   "schema_version": 1,
-  "scored_at": "2026-07-04T14:31:58Z",
+  "scored_at": "2026-07-05T16:47:53Z",
   "scores": {
     "beauty": 8.8,
     "decolonization": 9.2,

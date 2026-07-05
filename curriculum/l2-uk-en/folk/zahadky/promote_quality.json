@@ -1,9 +1,9 @@
 {
-  "assembled_mdx_sha256": "e626b3f26832c4a1990f612bae1089e26d691941e5cf9e02820b7ac4a8c7000c",
+  "assembled_mdx_sha256": null,
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "d556f198a4e70d399d1bc0bd83d1328836be3413490c350f42e0bb81e1fa3a08",
+    "digest": "a32624c737d976c8ae7053bd20bd07f69a400f63b0076f33c8626600f2e454f4",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/zahadky.yaml",
@@ -11,7 +11,7 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/zahadky/module.md",
-        "sha256": "cc52befa85407d6fc6065d3b3433c79ac11c0296482cfa2cae24288f3e4357cc"
+        "sha256": "71804d50ad6b1300dffa193668d366d051a0bc1bdcf7e6e01c24831e32e4ae6c"
       },
       {
         "path": "curriculum/l2-uk-en/folk/zahadky/activities.yaml",
@@ -28,10 +28,10 @@
     ]
   },
   "evidence": {
-    "decolonization": "Module centers Ukrainian riddle practice, variant discipline, household/material knowledge, and anti-flattening cautions without Russocentric derivation claims.",
-    "pedagogical": "Lesson teaches hidden naming, metaphor, performance context, source passports, and responsible comparison through V2 inline/workbook activities.",
-    "review": "Claude Opus 4.8 independent reviews messages 2 and 4 returned PASS with no blockers; no DeepSeek used.",
-    "source_policy": "Quoted riddle fragments are limited to source-dossier confidence-1.0 forms; do-not-quote and uncertain variants are paraphrased or omitted."
+    "gates": "Hardened reading gate, MDX parity/drift checks, reading coverage tests, MDX validation, assemble/render gates, and VESUM/resource gates passed; promote_quality refreshed after review.",
+    "quote_verification": "All added excerpts were checked through local sources.verify_quote at confidence 1.0; Claude independently re-checked all 10 fragments.",
+    "reading_remediation": "Added learner-visible structured on-site shortened primary readings; external links remain supplementary only.",
+    "review": "Claude Opus 4.8 review-folk-reading-remediation-m25-m28 approved the batch; one identifier typo was fixed before sidecar refresh."
   },
   "floors": {
     "beauty": 8.5,
@@ -49,7 +49,7 @@
     "model": "Claude Opus 4.8"
   },
   "schema_version": 1,
-  "scored_at": "2026-07-04T16:00:26Z",
+  "scored_at": "2026-07-05T16:47:53Z",
   "scores": {
     "beauty": 8.8,
     "decolonization": 9.1,
