@@ -1,0 +1,433 @@
+{
+  "ua-gec-gold-001": {
+    "contested": true,
+    "evidence": [
+      {
+        "table": "esum",
+        "headword": "повзти"
+      },
+      {
+        "table": "esum",
+        "headword": "сувершность"
+      }
+    ]
+  },
+  "ua-gec-gold-002": {
+    "contested": false,
+    "evidence": []
+  },
+  "ua-gec-gold-003": {
+    "contested": false,
+    "evidence": []
+  },
+  "ua-gec-gold-004": {
+    "contested": false,
+    "evidence": []
+  },
+  "ua-gec-gold-005": {
+    "contested": true,
+    "evidence": [
+      {
+        "table": "esum",
+        "headword": "бремсберг"
+      },
+      {
+        "table": "esum",
+        "headword": "гйрка"
+      },
+      {
+        "table": "esum",
+        "headword": "грун"
+      },
+      {
+        "table": "esum",
+        "headword": "керм"
+      },
+      {
+        "table": "esum",
+        "headword": "кйзлик1"
+      },
+      {
+        "table": "esum",
+        "headword": "кропивка"
+      },
+      {
+        "table": "grinchenko",
+        "headword": "гірка"
+      },
+      {
+        "table": "grinchenko",
+        "headword": "гіркий"
+      }
+    ]
+  },
+  "ua-gec-gold-006": {
+    "contested": true,
+    "evidence": [
+      {
+        "table": "esum",
+        "headword": "абаї"
+      },
+      {
+        "table": "esum",
+        "headword": "ава1"
+      },
+      {
+        "table": "esum",
+        "headword": "авдотка"
+      },
+      {
+        "table": "esum",
+        "headword": "авчик"
+      },
+      {
+        "table": "esum",
+        "headword": "аглая"
+      },
+      {
+        "table": "esum",
+        "headword": "вид"
+      },
+      {
+        "table": "esum",
+        "headword": "невиданський"
+      },
+      {
+        "table": "esum",
+        "headword": "підганяють"
+      },
+      {
+        "table": "grinchenko",
+        "headword": "вид"
+      },
+      {
+        "table": "grinchenko",
+        "headword": "виділ"
+      },
+      {
+        "table": "grinchenko",
+        "headword": "виділити"
+      },
+      {
+        "table": "grinchenko",
+        "headword": "виділовий"
+      },
+      {
+        "table": "grinchenko",
+        "headword": "виділяти"
+      },
+      {
+        "table": "grinchenko",
+        "headword": "видіти"
+      }
+    ]
+  },
+  "ua-gec-gold-007": {
+    "contested": false,
+    "evidence": []
+  },
+  "ua-gec-gold-008": {
+    "contested": false,
+    "evidence": []
+  },
+  "ua-gec-gold-009": {
+    "contested": false,
+    "evidence": []
+  },
+  "ua-gec-gold-010": {
+    "contested": false,
+    "evidence": []
+  },
+  "ua-gec-gold-011": {
+    "contested": false,
+    "evidence": []
+  },
+  "ua-gec-gold-012": {
+    "contested": false,
+    "evidence": []
+  },
+  "ua-gec-gold-013": {
+    "contested": false,
+    "evidence": []
+  },
+  "ua-gec-gold-014": {
+    "contested": true,
+    "evidence": [
+      {
+        "table": "esum",
+        "headword": "вилохвостець"
+      },
+      {
+        "table": "esum",
+        "headword": "софдброкі"
+      },
+      {
+        "table": "grinchenko",
+        "headword": "вилка"
+      }
+    ]
+  },
+  "ua-gec-gold-015": {
+    "contested": false,
+    "evidence": []
+  },
+  "ua-gec-gold-016": {
+    "contested": true,
+    "evidence": [
+      {
+        "table": "esum",
+        "headword": "віхало"
+      },
+      {
+        "table": "esum",
+        "headword": "пі"
+      },
+      {
+        "table": "esum",
+        "headword": "фогаш"
+      },
+      {
+        "table": "esum",
+        "headword": "шараги"
+      }
+    ]
+  },
+  "ua-gec-gold-017": {
+    "contested": false,
+    "evidence": []
+  },
+  "ua-gec-gold-018": {
+    "contested": false,
+    "evidence": []
+  },
+  "ua-gec-gold-019": {
+    "contested": false,
+    "evidence": []
+  },
+  "ua-gec-gold-020": {
+    "contested": false,
+    "evidence": []
+  },
+  "ua-gec-gold-021": {
+    "contested": false,
+    "evidence": []
+  },
+  "ua-gec-gold-022": {
+    "contested": false,
+    "evidence": []
+  },
+  "ua-gec-gold-023": {
+    "contested": true,
+    "evidence": [
+      {
+        "table": "esum",
+        "headword": "срібляявий"
+      },
+      {
+        "table": "grinchenko",
+        "headword": "срібляний"
+      }
+    ]
+  },
+  "ua-gec-gold-024": {
+    "contested": true,
+    "evidence": [
+      {
+        "table": "grinchenko",
+        "headword": "стряхнути"
+      }
+    ]
+  },
+  "ua-gec-gold-025": {
+    "contested": true,
+    "evidence": [
+      {
+        "table": "esum",
+        "headword": "фрачок"
+      }
+    ]
+  },
+  "ua-gec-gold-026": {
+    "contested": false,
+    "evidence": []
+  },
+  "ua-gec-gold-027": {
+    "contested": false,
+    "evidence": []
+  },
+  "ua-gec-gold-028": {
+    "contested": true,
+    "evidence": [
+      {
+        "table": "esum",
+        "headword": "апломб"
+      },
+      {
+        "table": "esum",
+        "headword": "висок"
+      },
+      {
+        "table": "esum",
+        "headword": "висіти"
+      },
+      {
+        "table": "esum",
+        "headword": "груз1"
+      },
+      {
+        "table": "esum",
+        "headword": "перевижшати"
+      },
+      {
+        "table": "grinchenko",
+        "headword": "вискакувати"
+      },
+      {
+        "table": "grinchenko",
+        "headword": "вискалити"
+      },
+      {
+        "table": "grinchenko",
+        "headword": "вискаляти"
+      },
+      {
+        "table": "grinchenko",
+        "headword": "вискалятися"
+      },
+      {
+        "table": "grinchenko",
+        "headword": "висок"
+      }
+    ]
+  },
+  "ua-gec-gold-029": {
+    "contested": true,
+    "evidence": [
+      {
+        "table": "esum",
+        "headword": "копа"
+      },
+      {
+        "table": "esum",
+        "headword": "копати1"
+      },
+      {
+        "table": "esum",
+        "headword": "копати2"
+      },
+      {
+        "table": "grinchenko",
+        "headword": "копний"
+      },
+      {
+        "table": "grinchenko",
+        "headword": "копнути"
+      }
+    ]
+  },
+  "ua-gec-gold-030": {
+    "contested": false,
+    "evidence": []
+  },
+  "ua-gec-gold-031": {
+    "contested": false,
+    "evidence": []
+  },
+  "ua-gec-gold-032": {
+    "contested": true,
+    "evidence": [
+      {
+        "table": "esum",
+        "headword": "шабста"
+      },
+      {
+        "table": "esum",
+        "headword": "шльохати"
+      },
+      {
+        "table": "esum",
+        "headword": "ізкае"
+      }
+    ]
+  },
+  "ua-gec-gold-033": {
+    "contested": false,
+    "evidence": []
+  },
+  "ua-gec-gold-034": {
+    "contested": false,
+    "evidence": []
+  },
+  "ua-gec-gold-035": {
+    "contested": false,
+    "evidence": []
+  },
+  "ua-gec-gold-036": {
+    "contested": false,
+    "evidence": []
+  },
+  "ua-gec-gold-037": {
+    "contested": false,
+    "evidence": []
+  },
+  "ua-gec-gold-038": {
+    "contested": false,
+    "evidence": []
+  },
+  "ua-gec-gold-039": {
+    "contested": false,
+    "evidence": []
+  },
+  "ua-gec-gold-040": {
+    "contested": false,
+    "evidence": []
+  },
+  "ua-gec-gold-041": {
+    "contested": false,
+    "evidence": []
+  },
+  "ua-gec-gold-042": {
+    "contested": false,
+    "evidence": []
+  },
+  "ua-gec-gold-043": {
+    "contested": false,
+    "evidence": []
+  },
+  "ua-gec-gold-044": {
+    "contested": false,
+    "evidence": []
+  },
+  "ua-gec-gold-045": {
+    "contested": false,
+    "evidence": []
+  },
+  "ua-gec-gold-046": {
+    "contested": false,
+    "evidence": []
+  },
+  "ua-gec-gold-047": {
+    "contested": false,
+    "evidence": []
+  },
+  "ua-gec-gold-048": {
+    "contested": false,
+    "evidence": []
+  },
+  "ua-gec-gold-049": {
+    "contested": false,
+    "evidence": []
+  },
+  "ua-gec-gold-050": {
+    "contested": false,
+    "evidence": []
+  },
+  "ua-gec-gold-051": {
+    "contested": false,
+    "evidence": []
+  },
+  "ua-gec-gold-052": {
+    "contested": false,
+    "evidence": []
+  }
+}
