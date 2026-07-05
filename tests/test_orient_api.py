@@ -134,6 +134,35 @@ def test_orient_git_exposes_primary_checkout_dirty_signal(monkeypatch, tmp_path)
     ]
 
 
+def test_orient_git_survives_primary_checkout_probe_failure(monkeypatch, tmp_path):
+    original_git_collector = api_main._collect_git_orient_data
+    repo = _init_orient_git_repo(tmp_path)
+    _patch_orient_sources(monkeypatch)
+    monkeypatch.setattr(api_main, "PROJECT_ROOT", repo)
+    monkeypatch.setattr(api_main, "_collect_git_orient_data", original_git_collector)
+
+    from scripts.guardrails import worktree_containment
+
+    def broken_primary_status(_start):
+        raise RuntimeError("git status failed")
+
+    monkeypatch.setattr(
+        worktree_containment,
+        "primary_checkout_dirty_status",
+        broken_primary_status,
+    )
+
+    response = client.get("/api/orient?fresh=true")
+
+    assert response.status_code == 200
+    git_info = response.json()["git"]
+    assert git_info["branch"]
+    assert git_info["head"]
+    assert git_info["primary_checkout_dirty"] is False
+    assert git_info["primary_checkout"]["error"] == "git status failed"
+    assert git_info["primary_checkout"]["checked_cwd"] == str(repo)
+
+
 def test_health_includes_core_bare_canary():
     """#2842: the health section surfaces the git core.bare detection canary."""
     health = api_main._collect_health_orient_data()

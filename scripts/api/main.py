@@ -303,7 +303,23 @@ def _collect_git_orient_data() -> dict:
             ahead_value = int(ahead_proc.stdout.strip() or "0")
         except ValueError:
             ahead_value = 0
-    primary_status = worktree_containment.primary_checkout_dirty_status(PROJECT_ROOT)
+    try:
+        primary_status = worktree_containment.primary_checkout_dirty_status(PROJECT_ROOT)
+    except Exception as exc:
+        branch = branch_proc.stdout.strip()
+        primary_status = {
+            "main_root": str(PROJECT_ROOT),
+            "branch": branch,
+            "protected_branch": branch in worktree_containment.PROTECTED_BRANCHES,
+            "dirty": False,
+            "dirty_count": 0,
+            "tracked_dirty_count": 0,
+            "untracked_dirty_count": 0,
+            "entries": [],
+            "checked_cwd": str(PROJECT_ROOT),
+            "checked_command": "git status --porcelain=v1 -z --untracked-files=all",
+            "error": str(exc),
+        }
 
     return {
         "branch": branch_proc.stdout.strip(),
