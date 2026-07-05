@@ -98,6 +98,7 @@ CLAUDE_RULE_AUTOLOAD_EXCLUDES=(
     "rules/delegate-must-use-worktree.md"
     "rules/cli-help-standard.md"
     "rules/model-assignment.md"
+    "rules/operator-expectations.md"
 )
 CLAUDE_RULE_AUTOLOAD_EXCLUDE_PATHS="${CLAUDE_RULE_AUTOLOAD_EXCLUDES[*]}"
 

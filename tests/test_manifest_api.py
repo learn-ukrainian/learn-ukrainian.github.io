@@ -28,8 +28,9 @@ client = TestClient(api_main.app, raise_server_exceptions=False)
 
 
 def test_rule_sources_includes_all_unscoped_files():
-    """All 6 always-load Claude rule files must be served by /api/rules."""
+    """All always-load (API-served) rule files must be served by /api/rules."""
     expected = {
+        "agents_extensions/shared/rules/operator-expectations.md",
         "agents_extensions/shared/rules/critical-rules.md",
         "agents_extensions/shared/rules/non-negotiable-rules.md",
         "agents_extensions/shared/rules/workflow.md",
