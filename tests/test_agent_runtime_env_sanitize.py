@@ -187,6 +187,20 @@ def test_build_agent_env_preserves_safe_allowlist_and_applies_overrides_first():
     assert "UNRELATED" not in env
 
 
+def test_hermes_home_override_reaches_hermes_backed_agents():
+    with patch.dict(
+        "os.environ",
+        {"PATH": "/usr/bin", "HOME": "/Users/example"},
+        clear=True,
+    ):
+        for provider in ("deepseek", "grok", "qwen"):
+            env = build_agent_env(
+                provider=provider,
+                overrides={"HERMES_HOME": "/tmp/hermes-fallback-probe"},
+            )
+            assert env["HERMES_HOME"] == "/tmp/hermes-fallback-probe"
+
+
 @dataclass
 class _SmokePlan:
     cmd: list[str]

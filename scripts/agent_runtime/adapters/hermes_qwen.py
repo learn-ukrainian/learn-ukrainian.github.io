@@ -33,26 +33,21 @@ the configured runtime behavior.
 from __future__ import annotations
 
 import logging
-import re
 import shutil
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
-
-import yaml
 
 from ..result import ParseResult
 from .base import InvocationPlan
+from .hermes_common import (
+    build_hermes_invocation_context,
+    build_hermes_parse_fields,
+    sources_mcp_registered,
+    top_level_agent_effort,
+    translate_mcp_prefix_for_hermes,
+)
 
 _logger = logging.getLogger(__name__)
-
-_ANSI_RE = re.compile(r"\x1b\[[0-?]*[ -/]*[@-~]")
-_RATE_LIMIT_RE = re.compile(
-    r"rate limit|rate_limit|quota exceeded|too many requests|\bHTTP 429\b|\b429\b",
-    re.IGNORECASE,
-)
-_HERMES_CONFIG_PATH = Path.home() / ".hermes" / "config.yaml"
-
 
 @dataclass(frozen=True)
 class HermesQwenParseResult(ParseResult):
@@ -65,51 +60,6 @@ class HermesQwenParseResult(ParseResult):
     """
 
     tool_calls_total: int | None = None
-
-
-def _strip_ansi(text: str) -> str:
-    return _ANSI_RE.sub("", text or "").strip()
-
-
-def _read_hermes_config(path: Path = _HERMES_CONFIG_PATH) -> dict[str, Any]:
-    try:
-        data = yaml.safe_load(path.read_text(encoding="utf-8"))
-    except (OSError, yaml.YAMLError):
-        return {}
-    return data if isinstance(data, dict) else {}
-
-
-def _top_level_agent_effort(config: dict[str, Any]) -> str | None:
-    agent = config.get("agent")
-    if not isinstance(agent, dict):
-        return None
-    effort = agent.get("reasoning_effort")
-    if isinstance(effort, str) and effort.strip():
-        return effort.strip()
-    return None
-
-
-def _sources_mcp_registered(config: dict[str, Any]) -> bool:
-    servers = config.get("mcp_servers")
-    if not isinstance(servers, dict):
-        return False
-    sources = servers.get("sources")
-    if not isinstance(sources, dict):
-        return False
-    return bool(sources.get("enabled") is not False and sources.get("url"))
-
-
-def _translate_mcp_prefix_for_hermes(prompt: str) -> str:
-    """Rewrite ``mcp__sources__X`` → ``mcp_sources_X`` for Hermes routing.
-
-    See ``hermes_deepseek.py`` for the full rationale. Hermes registers
-    MCP tools with single-underscore naming (``mcp_sources_*``) while
-    the canonical writer prompt documents the double-underscore MCP-spec
-    form (``mcp__sources__*``) used by claude/codex. Translating the
-    prompt before Hermes invocation lets the model emit names Hermes
-    can actually dispatch.
-    """
-    return prompt.replace("mcp__sources__", "mcp_sources_")
 
 
 class HermesQwenAdapter:
@@ -150,8 +100,15 @@ class HermesQwenAdapter:
                 max_budget_usd,
             )
 
-        config = _read_hermes_config()
-        configured_effort = _top_level_agent_effort(config)
+        requested_model = model or self.default_model
+        context = build_hermes_invocation_context(
+            tool_config=tool_config,
+            requested_provider="openrouter",
+            requested_model=requested_model,
+            provider_forced=True,
+        )
+        config = context.config
+        configured_effort = top_level_agent_effort(config)
         if effort and configured_effort and configured_effort != effort:
             _logger.warning(
                 "Hermes Qwen effort=%r requested, but ~/.hermes/config.yaml "
@@ -167,14 +124,14 @@ class HermesQwenAdapter:
                 effort,
             )
 
-        if not _sources_mcp_registered(config):
+        if not sources_mcp_registered(config):
             _logger.warning(
                 "Hermes Qwen did not find enabled mcp_servers.sources in "
                 "~/.hermes/config.yaml; MCP tool availability depends on Hermes config"
             )
 
         hermes_bin = shutil.which("hermes") or "hermes"
-        hermes_prompt = _translate_mcp_prefix_for_hermes(prompt)
+        hermes_prompt = translate_mcp_prefix_for_hermes(prompt)
         # Force --provider openrouter explicitly. Hermes' top-level
         # `model.provider: openrouter` is NOT honored for some vendor prefixes
         # at per-invocation `-m` routing time: `moonshotai/*` and `minimax/*`
@@ -190,14 +147,15 @@ class HermesQwenAdapter:
             cmd=[
                 hermes_bin,
                 "-z", hermes_prompt,
-                "-m", model or self.default_model,
+                "-m", requested_model,
                 "--provider", "openrouter",
             ],
             cwd=cwd,
             stdin_payload="",
             output_file=None,
-            env_overrides={},
+            env_overrides=context.env_overrides,
             liveness_paths=(),
+            metadata=context.metadata,
         )
 
     def parse_response(
@@ -212,23 +170,25 @@ class HermesQwenAdapter:
     ) -> HermesQwenParseResult:
         """Parse Hermes final stdout into a runtime result."""
         _ = output_file
-        _ = plan
         _ = call_start_time
 
-        response = _strip_ansi(stdout)
-        clean_stderr = _strip_ansi(stderr)
-        rate_limited = returncode != 0 and bool(_RATE_LIMIT_RE.search(clean_stderr))
-        ok = returncode == 0 and bool(response) and not rate_limited
-        stderr_excerpt = None if ok else (clean_stderr or response or None)
+        fields = build_hermes_parse_fields(
+            stdout=stdout,
+            stderr=stderr,
+            returncode=returncode,
+            plan=plan,
+            logger=_logger,
+        )
 
         return HermesQwenParseResult(
-            ok=ok,
-            response=response if ok else "",
-            stderr_excerpt=stderr_excerpt[:500] if stderr_excerpt else None,
-            rate_limited=rate_limited,
+            ok=fields.ok,
+            response=fields.response,
+            stderr_excerpt=fields.stderr_excerpt,
+            rate_limited=fields.rate_limited,
             session_id=None,
             tokens=None,
             tool_calls=[],
+            substitution=fields.substitution,
             tool_calls_total=None,
         )
 

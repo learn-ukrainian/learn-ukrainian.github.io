@@ -1096,6 +1096,9 @@ def _emit_terminal_dispatch_event(
 
         usage_record = getattr(result, "usage_record", None)
         tokens = usage_record.get("tokens") if isinstance(usage_record, dict) else None
+        substitution = final_state.get("substitution")
+        if substitution is None and isinstance(usage_record, dict):
+            substitution = usage_record.get("substitution")
         model = final_state.get("model")
         cost = compute_cost(
             str(model).strip() if model else None,
@@ -1117,6 +1120,7 @@ def _emit_terminal_dispatch_event(
                 "prompt_chars": final_state.get("prompt_chars", fallback_prompt_chars),
                 "response_chars": final_state.get("response_chars"),
                 "tokens": tokens,
+                "substitution": substitution,
                 "cost_usd": cost.cost_usd,
                 "billing_model": cost.billing_model,
                 "cost_provenance": cost.provenance,
@@ -1328,10 +1332,16 @@ def _run_worker(
     ):
         worktree_reap = _reap_finished_worktree(Path(worktree_path))
 
+    usage_record = getattr(result, "usage_record", None)
+    substitution = getattr(result, "substitution", None)
+    if substitution is None and isinstance(usage_record, dict):
+        substitution = usage_record.get("substitution")
+
     final_state.update({
         "model": getattr(result, "model", final_state.get("model")),
         "effort": getattr(result, "effort", final_state.get("effort")),
         "cli_version": getattr(result, "cli_version", final_state.get("cli_version")),
+        "substitution": substitution,
         "status": final_status,
         "finished_at": datetime.now(UTC).isoformat(),
         "duration_s": round(duration_s, 3),
@@ -1543,6 +1553,7 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         "result_file": None,
         "stderr_excerpt": None,
         "returncode": None,
+        "substitution": None,
     }
     _write_state_atomic(state_path, initial_state)
 

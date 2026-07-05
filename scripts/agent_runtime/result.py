@@ -48,6 +48,10 @@ class ParseResult:
             data. Arguments are source-shaped and may contain synthetic
             ``_raw`` / ``_value`` keys. Timestamps are provider strings or
             lenient ISO-8601 fallbacks.
+        substitution: Non-secret route identity for harness-level fallback.
+            Hermes adapters populate this with requested_provider/model and
+            actual_provider/model so silent provider/model substitution cannot
+            disappear between parse, usage telemetry, and delegate state.
     """
     ok: bool
     response: str
@@ -56,6 +60,7 @@ class ParseResult:
     session_id: str | None = None
     tokens: int | None = None
     tool_calls: list[dict[str, Any]] = field(default_factory=list)
+    substitution: dict[str, Any] | None = None
 
 
 @dataclass(frozen=True)
@@ -95,6 +100,10 @@ class Result:
         tool_calls_total: Total tool calls surfaced by the provider trace.
             ``None`` means the provider/CLI did not expose telemetry, not
             "verified zero".
+        substitution: Non-secret route identity for harness-level fallback.
+            Present for adapters that can determine requested vs actual
+            provider/model. When ``substituted`` is true, callers must treat
+            the run as a different review/cost/egress lane.
     """
     ok: bool
     agent: str
@@ -112,3 +121,4 @@ class Result:
     usage_record: dict[str, Any] = field(default_factory=dict)
     tool_calls: list[dict[str, Any]] = field(default_factory=list)
     tool_calls_total: int | None = 0
+    substitution: dict[str, Any] | None = None

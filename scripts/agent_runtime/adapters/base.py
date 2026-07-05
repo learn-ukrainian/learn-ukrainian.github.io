@@ -67,6 +67,10 @@ class InvocationPlan:
             Used by the runner's stall detector as a fallback when stdout
             is buffered/redirected. Can be empty; if so, only stdout
             streaming is used for liveness.
+        metadata: Adapter-owned structured context for parse/telemetry steps.
+            The runner treats this as opaque data and passes the plan back to
+            ``parse_response`` unchanged. Keep values non-secret because they
+            may flow into runtime usage artifacts.
     """
     cmd: list[str]
     cwd: Path
@@ -75,6 +79,7 @@ class InvocationPlan:
     env_overrides: dict[str, str] = field(default_factory=dict)
     env_unsets: tuple[str, ...] = ()
     liveness_paths: tuple[Path, ...] = ()
+    metadata: dict[str, object] = field(default_factory=dict)
 
 
 @runtime_checkable

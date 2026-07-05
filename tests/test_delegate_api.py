@@ -63,6 +63,7 @@ def test_tasks_lists_state_files(tmp_path, monkeypatch):
     assert data["tasks"][0]["model"] == "gpt-5.5"
     assert data["tasks"][0]["effort"] == "high"
     assert data["tasks"][0]["cli_version"] == "0.123.0"
+    assert data["tasks"][0]["substitution"] is None
 
 
 def test_tasks_status_filter(tmp_path, monkeypatch):
