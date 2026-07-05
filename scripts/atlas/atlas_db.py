@@ -56,17 +56,32 @@ ENRICHMENT_SECTIONS = {
     "calque_note",
 }
 
-SCHEMA = """
+REVIEW_STATES = {"approved", "needs_review", "rejected"}
+VISIBILITIES = {"public", "private"}
+ENRICHMENT_PHASES = {"migration", "local", "slovnyk", "uncovered"}
+
+
+def _sql_enum(values: set[str]) -> str:
+    """Render a Python enum set as a deterministic SQL IN-list."""
+    return ", ".join(f"'{v}'" for v in sorted(values))
+
+
+# CHECK constraints are generated from the Python enum sets above so the
+# entry-model gates are load-bearing at the STORAGE layer: a Phase-1/2 filler
+# bug cannot silently insert an invalid entry_type/kind/section — the DB
+# rejects it. The DB is rebuilt by migrate_manifest, so schema evolution is a
+# code change, never an in-place migration.
+SCHEMA = f"""
 PRAGMA journal_mode = WAL;
 CREATE TABLE IF NOT EXISTS articles (
     slug TEXT PRIMARY KEY,
     display_head TEXT NOT NULL,
     lemma TEXT NOT NULL,
-    entry_type TEXT NOT NULL,
+    entry_type TEXT NOT NULL CHECK (entry_type IN ({_sql_enum(ARTICLE_ENTRY_TYPES)})),
     pos TEXT,
     gloss TEXT,
-    review_state TEXT NOT NULL,
-    visibility TEXT NOT NULL,
+    review_state TEXT NOT NULL CHECK (review_state IN ({_sql_enum(REVIEW_STATES)})),
+    visibility TEXT NOT NULL CHECK (visibility IN ({_sql_enum(VISIBILITIES)})),
     cefr TEXT,
     heritage_classification TEXT,
     created_at TEXT,
@@ -81,7 +96,7 @@ CREATE TABLE IF NOT EXISTS article_provenance (
 );
 CREATE TABLE IF NOT EXISTS aliases (
     alias TEXT NOT NULL,
-    kind TEXT NOT NULL,
+    kind TEXT NOT NULL CHECK (kind IN ({_sql_enum(ALIAS_KINDS)})),
     source TEXT,
     target_slug TEXT NOT NULL,
     UNIQUE (alias, kind, target_slug)
@@ -96,11 +111,11 @@ CREATE TABLE IF NOT EXISTS related_entries (
 );
 CREATE TABLE IF NOT EXISTS enrichment (
     slug TEXT NOT NULL,
-    section TEXT NOT NULL,
+    section TEXT NOT NULL CHECK (section IN ({_sql_enum(ENRICHMENT_SECTIONS)})),
     payload_json TEXT NOT NULL,
     source TEXT,
     filled_at TEXT,
-    phase TEXT,
+    phase TEXT CHECK (phase IS NULL OR phase IN ({_sql_enum(ENRICHMENT_PHASES)})),
     UNIQUE (slug, section),
     FOREIGN KEY (slug) REFERENCES articles(slug)
 );
@@ -181,6 +196,7 @@ def migrate_manifest(manifest_path: Path, db_path: Path) -> dict[str, int]:
         slug = str(e.get("url_slug") or lemma).strip()
         if not lemma or not slug:
             continue
+        display_head = str(e.get("display_head") or lemma).strip()
 
         # form_of records -> alias rows, not articles (only if target is a real article)
         form_of = e.get("form_of")
@@ -205,13 +221,20 @@ def migrate_manifest(manifest_path: Path, db_path: Path) -> dict[str, int]:
         if isinstance(enrichment.get("cefr"), dict):
             cefr_val = enrichment["cefr"].get("level")
 
+        # Grammar metaterms (pluralia tantum, знахідний відмінок, …) are reference
+        # data, not learner-facing dictionary articles — #3776's lexeme_filter
+        # excludes them at every manifest consumer. Encode that decision at the
+        # SSOT layer so DB-driven site generation cannot resurrect them as
+        # public articles.
+        visibility = "private" if e.get("pos") == "grammar term" else "public"
         cur.execute(
             """INSERT OR REPLACE INTO articles
                (slug, display_head, lemma, entry_type, pos, gloss, review_state,
                 visibility, cefr, heritage_classification, created_at, updated_at)
                VALUES (?,?,?,?,?,?,?,?,?,?,?,?)""",
-            (slug, lemma, lemma, etype, e.get("pos"), e.get("gloss"),
-             "approved", "public", cefr_val, heritage_cls, _iso(e), _iso(e)),
+            (slug, display_head, lemma, etype, e.get("pos"), e.get("gloss"),
+             "approved", visibility, cefr_val, heritage_cls,
+             e.get("created_at"), e.get("updated_at")),
         )
         counts["articles"] += 1
 
