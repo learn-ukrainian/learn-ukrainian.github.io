@@ -17,7 +17,13 @@ passed locally, including under a CI-mimic env (minimal venv, anonymous hydrate)
    unparenthesized — `a || b || c || d && '1' || '0'` yields boolean `true` (not `'1'`) for the
    title-tag paths, and the checker tested `== "1"`, so the bulk-regen exemption had NEVER
    fired via PR title. Fixed: parenthesized expression + checker accepts `{"1","true"}`.
+5. LIVE VALIDATION (same day): the new verify step caught a real broken-pin window — the
+   `atlas-manifest` release asset was replaced in place (10:45Z) while the matching pointer bump
+   sat in unmerged PR #4405, leaving main's pin unsatisfiable and all silent consumers
+   regenerating link-less MDX.
 **Prevention:** cache content must be verified against its pin after restore (a cache key does
 not pin content); silent degradation in generators is forbidden — degrade loudly. When a
 drift/parity CI check disagrees with local, FIRST diff the merge ref vs your base
-(`git merge origin/main` locally reproduces it), not the environment.
+(`git merge origin/main` locally reproduces it), not the environment. Release-pinned assets are
+immutable-by-contract: never replace the pinned asset in place — upload to a staging tag and
+promote atomically with the pointer-bump merge.
