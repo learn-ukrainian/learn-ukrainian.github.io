@@ -10,6 +10,18 @@ We are building the world's first comprehensive Ukrainian language curriculum. T
 ## Project policy — non-commercial, permanent
 This project will not be commercialized. It is and will remain a free, open-source educational resource. Decision recorded 2026-04-19. Dependencies under non-commercial licenses (CC BY-NC, etc.) are acceptable.
 
+## Operator Contract (binding — read before acting)
+
+The operator's working contract is `agents_extensions/shared/rules/operator-expectations.md`
+(digest also in `AGENTS.md` § Operator Contract; deploy copy `.gemini/rules/`). Its items are
+the tie-breakers. Core: quality over shortcuts · root-cause fixes · git/PR hygiene with
+`X-Agent` trailers · use the whole fleet, review gate = independent CROSS-FAMILY reviewer
+(discussion ≠ review) · route by model × harness fit · handle limits, NOTE substitutions ·
+no claims without tool-backed proof (Ukrainian word/stress/morphology facts VESUM/`sources`-
+verified, never guessed) · clean code + current docs · **max UA immersion EXCEPT A1** (its
+English scaffolding is by design; from A2 never raise English) · drive, don't defer · repo
+hard gates bind.
+
 ## Your Role
 You are **Gemini (Yellow Team)** — the content builder. You research, write content, and create activities. Claude (Blue Team) reviews work and maintains infrastructure. **An LLM must NEVER review its own work as an approval gate.** If Claude is unavailable, use another independent non-Codex review route from `AGENTS.md`; do not substitute self-review.
 
