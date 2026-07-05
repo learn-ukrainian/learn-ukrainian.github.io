@@ -2,6 +2,10 @@
 
 This document defines the calibration criteria, level profiles, false-positive/false-negative controls, and structural validation specifications implemented for the LLM reviewer layer in the Ukrainian-quality gates evaluation harness (#4309).
 
+> [!NOTE]
+> **Deterministic Layer Precedence**:
+> Lexical Russianisms, orthography, and baseline grammar validation are handled FIRST by deterministic gates (#4308, #912, curriculum QG). The LLM reviewer pass acts as a supplementary gate for style, register, and stylistic calques.
+
 ---
 
 ## 1. Level Profiles & Immersion Policies
@@ -28,18 +32,25 @@ Linguistic expectations and immersion rules are strictly partitioned by target C
 
 ---
 
-## 2. B1-27 Calibration Criteria (HARD Calibration)
+## 2. Severity Calibration Guidelines
+* **critical**: Factual errors, resource/evidence/pipeline leakages (AI personae, absolute paths), missing mandatory structural elements (such as model answers in B2+), and severe grammatical errors (such as case alignment or predicative-instrumental errors).
+* **warning**: Style and register issues (unnatural/syntactic calques, unnatural metalanguage/register, minor prepositions), or pedagogical mismatches.
+* **info**: Non-critical suggestions, minor stylistic alternatives, or optional improvements.
+
+---
+
+## 3. B1-27 Calibration Criteria (HARD Calibration)
 
 The B1-27 *restored-bad* examples contain unidiomatic or calqued Ukrainian constructions that are not lexical Russianisms (pure Russian words) but are stylistic/syntactic defects. The reviewer must detect:
 
-| Restored-Bad Phrase | Expected Issue ID | Dimension | Target Idiomatic Ukrainian | Rationale |
-|---|---|---|---|---|
-| `застосунок має бути відкритий` | `AWKWARD_PASSIVE_RESULT_STATE` | `ukrainian_style` | `відкрийте застосунок` / `застосунок має бути відкритим` | Impersonal/active voice is preferred over literal passive state translations. |
-| `Застереження каже: будь обережний` | `UNNATURAL_ANTHROPOMORPHISM` | `ukrainian_style` | `Зверніть увагу` / `Будьте обережні` | Abstract warning blocks must not be anthropomorphized as speakers. |
-| `радить не робити певної поведінки` | `UKRAINIAN_GRAMMAR_CALQUE` | `ukrainian_style` | `рекомендує уникати...` | Unnatural verbal government and nominalization. |
-| `дія має дати конкретний результат чи описати процес?` | `UNNATURAL_META_REGISTER` | `ukrainian_style` | (Avoid in learner-facing text) | Overly abstract syntactic metalanguage / prompt leakage. |
-| `доконаний вид дає результат із вікном` | `UKRAINIAN_GRAMMAR_CALQUE` | `ukrainian_style` | `доконаний вид позначає результат...` | Literal calqued metaphor and unidiomatic argument structure. |
-| `У кухні` | `CALQUED_PREPOSITION` | `ukrainian_style` | `На кухні` | Location prep calque; "На кухні" is the standard locative context. |
+| Restored-Bad Phrase | Expected Issue ID | Dimension | Severity | Target Idiomatic Ukrainian | Rationale |
+|---|---|---|---|---|---|
+| `застосунок має бути відкритий` | `AWKWARD_PASSIVE_RESULT_STATE` | `ukrainian_style` | `critical` | `відкрийте застосунок` / `застосунок має бути відкритим` | Predicative-instrumental case error (nominative instead of instrumental). Do NOT flag 'має бути відкритим'. |
+| `Застереження каже: будь обережний` | `UNNATURAL_ANTHROPOMORPHISM` | `ukrainian_style` | `warning` | `Зверніть увагу` / `Будьте обережні` | Abstract warnings must not speak. Scoped strictly to metalanguage; do NOT flag natural personifications like 'правило каже'. |
+| `радить не робити певної поведінки` | `UKRAINIAN_GRAMMAR_CALQUE` | `ukrainian_style` | `warning` | `рекомендує уникати...` | Unnatural verbal government and nominalization calque. Downgraded to warning. |
+| `дія має дати конкретний результат чи описати процес?` | `UNNATURAL_META_REGISTER` | `ukrainian_style` | `warning` | (Avoid in learner-facing text) | AI/reviewer metalanguage / dry syntactic jargon in learner-facing text. Downgraded to warning. |
+| `доконаний вид дає результат із вікном` | `UKRAINIAN_GRAMMAR_CALQUE` | `ukrainian_style` | `warning` | `доконаний вид позначає результат...` | Literal calqued metaphor and unidiomatic argument structure. Downgraded to warning. |
+| `У кухні` | `CALQUED_PREPOSITION` | `ukrainian_style` | `warning` | `На кухні` | Location prep calque. Downgraded to warning; do not auto-fail in informal contexts. |
 
 ---
 
