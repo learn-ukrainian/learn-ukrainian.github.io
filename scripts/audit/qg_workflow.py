@@ -44,9 +44,9 @@ from scripts.audit.qg_adapters import (
     dimensions_from_findings,
 )
 
-# v2 (#2156): seminar/factual now routes through the tooled opencode transport;
-# bump invalidates every ungrounded v1 llm_qg.db row so it re-runs with tools.
-DEFAULT_GATE_VERSION = "qg_workflow.v2"
+# v3 (#4416): grounding/admissibility gates changed; cache hits only re-check
+# theatre, so pre-fix rows must miss the composite cache and re-run with tools.
+DEFAULT_GATE_VERSION = "qg_workflow.v3"
 DEFAULT_REVIEWER_MODEL_ID = "llm-reviewer-disabled-until-4370"
 DEFAULT_REVIEWER_FAMILY = "qg_workflow"
 LLM_POLICY_FAMILIES = frozenset({"b1_plus", "seminar"})
@@ -1000,27 +1000,42 @@ def _run_tier2(
             policy_family=policy_family,
             invalid_fact_checks=grounding_gate.invalid_fact_checks,
         )
+        if grounding_gate.inadmissible_positive_verdicts:
+            payload["inadmissible_positive_verdicts"] = grounding_gate.inadmissible_positive_verdicts
         if (
             grounding_gate.required_ungrounded_findings
             or grounding_gate.invalid_fact_checks
+            or grounding_gate.inadmissible_positive_verdicts
             or sweep_incomplete
         ):
-            tier2_status = (
-                llm_reviewer_dispatch.UNGROUNDED_FINDINGS
-                if grounding_gate.required_ungrounded_findings or grounding_gate.invalid_fact_checks
-                else "factual_sweep_incomplete"
-            )
+            if (
+                grounding_gate.inadmissible_positive_verdicts
+                and not grounding_gate.invalid_fact_checks
+                and not grounding_gate.required_ungrounded_findings
+            ):
+                tier2_status = "inadmissible_citations"
+            elif grounding_gate.required_ungrounded_findings or grounding_gate.invalid_fact_checks:
+                tier2_status = llm_reviewer_dispatch.UNGROUNDED_FINDINGS
+            else:
+                tier2_status = "factual_sweep_incomplete"
             workflow_override = "FAIL" if sweep_incomplete else "WARN"
             severity = "critical" if sweep_incomplete else "warning"
+            message = "Grounded reviewer gate found ungrounded evidence or an incomplete seminar fact-check sweep."
+            if (
+                grounding_gate.inadmissible_positive_verdicts
+                and not grounding_gate.invalid_fact_checks
+                and not grounding_gate.required_ungrounded_findings
+            ):
+                message = (
+                    "reviewer confirmed/refuted claims on summary-only wiki evidence after the forced "
+                    "deep-read retry — factual sweep uncertified"
+                )
             findings = [
                 *_findings_from_payload(payload),
                 _reviewer_gate_finding(
                     severity=severity,
                     issue_id="LLM_REVIEWER_GROUNDING_GATE",
-                    message=(
-                        "Grounded reviewer gate found ungrounded evidence or an incomplete seminar "
-                        "fact-check sweep."
-                    ),
+                    message=message,
                 ),
             ]
             payload = _payload_from_findings(
@@ -1028,6 +1043,8 @@ def _run_tier2(
                 fact_checks=payload.get("fact_checks", []),
                 evidence_gaps=payload.get("evidence_gaps", []),
             )
+            if grounding_gate.inadmissible_positive_verdicts:
+                payload["inadmissible_positive_verdicts"] = grounding_gate.inadmissible_positive_verdicts
             llm_reviewer.validate_reviewer_payload(payload, policy_family)
         else:
             findings = _findings_from_payload(payload)
@@ -1058,6 +1075,8 @@ def _run_tier2(
             "findings": len(findings),
             "estimate": estimate,
             "dispatch": dispatch_meta,
+            "invalid_fact_checks": grounding_gate.invalid_fact_checks,
+            "inadmissible_positive_verdicts": grounding_gate.inadmissible_positive_verdicts,
         },
         "llm_used": True,
         "workflow_verdict": workflow_override,

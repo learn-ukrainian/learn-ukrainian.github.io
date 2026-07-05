@@ -641,12 +641,14 @@ def validate_fact_check(fact_check: Mapping[str, Any]) -> None:
     if not isinstance(claim, str) or not claim.strip():
         raise ValueError("fact_check.claim must be a non-empty string")
     _require_member("fact_check.verdict", fact_check.get("verdict"), FACT_CHECK_VERDICTS)
+    if "original_verdict" in fact_check:
+        _require_member("fact_check.original_verdict", fact_check.get("original_verdict"), FACT_CHECK_VERDICTS)
     grounding = fact_check.get("grounding")
     if grounding is not None:
         validate_grounding(grounding)
     if fact_check.get("verdict") in {"CONFIRMED", "REFUTED_BY_CONTRADICTION", "CONTESTED"} and grounding is None:
         raise ValueError("fact_check verdict requires grounding")
-    for bool_key in ("deep_read_attempted", "budget_exhausted"):
+    for bool_key in ("deep_read_attempted", "budget_exhausted", "admissibility_downgraded"):
         if bool_key in fact_check and not isinstance(fact_check[bool_key], bool):
             raise ValueError(f"fact_check.{bool_key} must be a boolean")
     searches = fact_check.get("searches")

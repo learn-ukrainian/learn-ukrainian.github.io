@@ -14,6 +14,7 @@ import re
 import shutil
 import subprocess
 import tempfile
+import unicodedata
 from collections.abc import Callable, Iterator, Mapping, Sequence
 from contextlib import suppress
 from dataclasses import asdict, dataclass
@@ -66,6 +67,8 @@ _COAUTHOR_RE = re.compile(r"^Co-Authored-By:\s*([^<\n]+)", re.IGNORECASE | re.MU
 _SOURCE_TOOL_PREFIXES = ("sources_", "mcp__sources")
 _WIKI_TOOL_MARKERS = ("wikipedia", "wiki")
 _DEEP_READ_WIKI_MODES = {"section", "sections", "extract", "article", "page"}
+_POSITIVE_FACT_CHECK_VERDICTS = frozenset({"CONFIRMED", "REFUTED_BY_CONTRADICTION", "CONTESTED"})
+_ELLIPSIS_RE = re.compile(r"\[…\]|\[\.\.\.\]|…|\.{3,}")
 
 _THEATRE_RETRY_REMINDER = """
 
@@ -82,7 +85,7 @@ _DEEP_READ_RETRY_REMINDER = """
 
 ## Reviewer Retry: Deep Read Required
 
-The prior response used only wiki summary-mode access for an unattested or unverified claim. Re-run the relevant wiki query in section/extract mode before deciding the verdict, then return only the required JSON object.
+The prior response used wiki summary-mode evidence where summary-only evidence is inadmissible for any verdict. Re-run the relevant wiki query in section/extract mode before deciding the verdict, then return only the required JSON object.
 """
 
 
@@ -192,6 +195,7 @@ class GroundingGateResult:
     ungrounded_findings: int = 0
     required_ungrounded_findings: int = 0
     invalid_fact_checks: int = 0
+    inadmissible_positive_verdicts: int = 0
 
 
 ProviderRunner = Callable[[ReviewerRoute, str, str], DispatchResult | str]
@@ -967,6 +971,11 @@ def deep_read_required(payload: Mapping[str, Any], dispatch_meta: Mapping[str, A
     for fact_check in fact_checks:
         if not isinstance(fact_check, Mapping):
             continue
+        if (
+            fact_check.get("deep_read_attempted") is not True
+            and _positive_verdict_summary_only(fact_check, events)
+        ):
+            return True
         verdict = str(fact_check.get("verdict") or "")
         if not verdict.startswith(("UNATTESTED", "UNVERIFIED")):
             continue
@@ -990,16 +999,19 @@ def deep_read_required(payload: Mapping[str, Any], dispatch_meta: Mapping[str, A
 
 
 def mark_deep_read_attempted(payload: Mapping[str, Any]) -> dict[str, Any]:
-    """Mark unattested/unverified fact checks as having received the forced retry."""
+    """Mark all fact checks as having received the shared forced deep-read retry.
+
+    The flag is only consumed by :func:`deep_read_required`, and the workflow has
+    one shared retry budget, so marking every fact-check records that this
+    reviewer response was evaluated after the forced retry opportunity.
+    """
     out = dict(payload)
     marked: list[dict[str, Any]] = []
     for fact_check in payload.get("fact_checks", []):
         if not isinstance(fact_check, Mapping):
             continue
         item = dict(fact_check)
-        verdict = str(item.get("verdict") or "")
-        if verdict.startswith(("UNATTESTED", "UNVERIFIED")):
-            item["deep_read_attempted"] = True
+        item["deep_read_attempted"] = True
         marked.append(item)
     out["fact_checks"] = marked
     return out
@@ -1032,20 +1044,34 @@ def enforce_grounding_against_tool_events(
         kept_findings.append(item)
 
     invalid_fact_checks = 0
-    for fact_check in payload.get("fact_checks", []):
+    inadmissible_positive_verdicts = 0
+    checked_fact_checks: list[dict[str, Any]] = []
+    raw_fact_checks = payload.get("fact_checks", [])
+    for fact_check in raw_fact_checks if isinstance(raw_fact_checks, list) else []:
         if not isinstance(fact_check, Mapping):
             continue
-        grounding = fact_check.get("grounding")
+        item = dict(fact_check)
+        grounding = item.get("grounding")
         if isinstance(grounding, Mapping) and not _grounding_matches_events(grounding, events):
             invalid_fact_checks += 1
+        elif item.get("deep_read_attempted") is True and _positive_verdict_summary_only(item, events):
+            original_verdict = str(item.get("verdict") or "")
+            item["original_verdict"] = original_verdict
+            item["verdict"] = "UNVERIFIED_INSUFFICIENT_SEARCH"
+            item["admissibility_downgraded"] = True
+            inadmissible_positive_verdicts += 1
+        checked_fact_checks.append(item)
 
     out = dict(payload)
     out["findings"] = kept_findings
+    if isinstance(raw_fact_checks, list):
+        out["fact_checks"] = checked_fact_checks
     return GroundingGateResult(
         payload=out,
         ungrounded_findings=ungrounded,
         required_ungrounded_findings=required_ungrounded,
         invalid_fact_checks=invalid_fact_checks,
+        inadmissible_positive_verdicts=inadmissible_positive_verdicts,
     )
 
 
@@ -1145,6 +1171,28 @@ def _is_wiki_event(event: Mapping[str, Any]) -> bool:
     return any(marker in tool for marker in _WIKI_TOOL_MARKERS)
 
 
+def _positive_verdict_summary_only(fact_check: Mapping[str, Any], events: Sequence[Mapping[str, Any]]) -> bool:
+    """True when a positive verdict's grounding is backed only by shallow wiki access.
+
+    Fail-closed on wiki mode (cursor review of #4429): any matching wiki event
+    whose mode is NOT a deep-read mode (``summary``, ``search``, missing/empty,
+    unknown labels) counts as shallow — otherwise a summary-grade CONFIRMED
+    slips through admissibility whenever telemetry omits the mode.
+    """
+    verdict = str(fact_check.get("verdict") or "")
+    if verdict not in _POSITIVE_FACT_CHECK_VERDICTS:
+        return False
+    grounding = fact_check.get("grounding")
+    if not isinstance(grounding, Mapping):
+        return False
+    matches = _grounding_matching_events(grounding, events)
+    return (
+        bool(matches)
+        and all(_is_wiki_event(event) for event in matches)
+        and not any(_event_mode(event) in _DEEP_READ_WIKI_MODES for event in matches)
+    )
+
+
 def _grounding_matches_events(
     grounding: Mapping[str, Any],
     events: Sequence[Mapping[str, Any]],
@@ -1152,27 +1200,82 @@ def _grounding_matches_events(
     """True when the grounding is backed by a captured tool event.
 
     Match semantics (live-proof fix, 2026-07-05): tool name + query must match
-    a captured event AND the excerpt must be a substring of that event's
-    captured output. ``tool_call_id`` is ADVISORY — the transport-level id
+    a captured event AND the normalized excerpt must be present in that event's
+    captured output. Abridged excerpts with ellipsis markers match only when all
+    retained normalized segments appear in order in the SAME event output, with
+    short-glue and evidence-mass guards. ``tool_call_id`` is ADVISORY — the transport-level id
     (e.g. ``chatcmpl-tool-…``) is never shown to the model, so requiring
     equality failed every legitimate grounding in the live «Веснянки» proof
     while adding nothing against fabrication (a fabricated excerpt still has
-    to appear verbatim in a real captured output for a query really made).
+    to appear in a real captured output for a query really made).
     """
+    return bool(_grounding_matching_events(grounding, events))
+
+
+def _grounding_matching_events(
+    grounding: Mapping[str, Any],
+    events: Sequence[Mapping[str, Any]],
+) -> tuple[Mapping[str, Any], ...]:
+    """Return captured events whose tool/query/output back this grounding."""
     query = str(grounding.get("query") or "").strip()
     excerpt = str(grounding.get("evidence_excerpt") or "").strip()
     if not query or not excerpt:
-        return False
+        return ()
     tool = str(grounding.get("tool") or "").strip()
+    matches: list[Mapping[str, Any]] = []
     for event in events:
         if tool and str(event.get("tool") or "").strip() != tool:
             continue
         if not _event_input_matches_query(event, query):
             continue
-        output = event.get("output")
-        if isinstance(output, str) and excerpt in output:
-            return True
-    return False
+        output = _event_output_text(event)
+        if output is not None and _output_contains_excerpt(output, excerpt):
+            matches.append(event)
+    return tuple(matches)
+
+
+def _event_output_text(event: Mapping[str, Any]) -> str | None:
+    output = event.get("output")
+    if output is None:
+        return None
+    if isinstance(output, str):
+        return output
+    if isinstance(output, (Mapping, list)):
+        return json.dumps(output, ensure_ascii=False, default=str)
+    return str(output)
+
+
+def _output_contains_excerpt(output: str, excerpt: str) -> bool:
+    normalized_output = _normalize_for_match(output)
+    if not _ELLIPSIS_RE.search(excerpt):
+        normalized_excerpt = _normalize_for_match(excerpt)
+        return bool(normalized_output and normalized_excerpt and normalized_excerpt in normalized_output)
+
+    segments = [segment for segment in _excerpt_segments(excerpt) if len(segment) >= 4]
+    if not segments:
+        return False
+    evidence_mass = sum(len(segment.replace(" ", "")) for segment in segments)
+    if evidence_mass < 12:
+        return False
+
+    cursor = 0
+    for segment in segments:
+        index = normalized_output.find(segment, cursor)
+        if index == -1:
+            return False
+        cursor = index + len(segment)
+    return True
+
+
+def _normalize_for_match(text: str) -> str:
+    normalized = unicodedata.normalize("NFKC", text)
+    normalized = normalized.replace("\u0301", "").replace("\u0341", "")
+    normalized = re.sub(r"\s+", " ", normalized)
+    return normalized.casefold().strip()
+
+
+def _excerpt_segments(excerpt: str) -> list[str]:
+    return [segment for part in _ELLIPSIS_RE.split(excerpt) if (segment := _normalize_for_match(part))]
 
 
 def _event_input_matches_query(event: Mapping[str, Any], query: str) -> bool:

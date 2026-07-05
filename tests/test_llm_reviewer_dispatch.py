@@ -7,8 +7,8 @@ from unittest.mock import patch
 
 import pytest
 
-from scripts.ai_agent_bridge._opencode import OpencodeStreamParse
-from scripts.audit import llm_qg_store, llm_reviewer_dispatch, qg_workflow
+from scripts.ai_agent_bridge._opencode import OpencodeStreamParse, _extract_tool_event
+from scripts.audit import llm_qg_store, llm_reviewer_dispatch, qg_schema, qg_workflow
 
 _DISPATCH = "scripts.audit.llm_reviewer_dispatch"
 
@@ -931,3 +931,324 @@ def test_grounding_matches_despite_model_invented_call_id() -> None:
     # and a query never actually made still fails
     ghost_query = dict(grounding, query="мелодика веснянок")
     assert llm_reviewer_dispatch._grounding_matches_events(ghost_query, events) is False
+
+
+@pytest.mark.parametrize("ellipsis", ["…", "..."])
+def test_grounding_matches_ellipsized_excerpt_segments_in_order(ellipsis: str) -> None:
+    events = (
+        _sources_event(
+            output=(
+                "# Веснянки\n"
+                "Весня́нки — назва старовинних слов'янських обрядових пісень, "
+                "що виконуються навесні."
+            ),
+        ),
+    )
+    grounding = {
+        "tool": "sources_query_wikipedia",
+        "query": "Веснянки",
+        "evidence_excerpt": f"Веснянки {ellipsis} слов'янських обрядових пісень",
+        "tool_call_id": "model-invented",
+    }
+
+    assert llm_reviewer_dispatch._grounding_matches_events(grounding, events) is True
+
+
+def test_grounding_rejects_out_of_order_ellipsized_segments() -> None:
+    events = (
+        _sources_event(
+            output="Веснянки — назва старовинних слов'янських обрядових пісень.",
+        ),
+    )
+    grounding = {
+        "tool": "sources_query_wikipedia",
+        "query": "Веснянки",
+        "evidence_excerpt": "слов'янських обрядових пісень … Веснянки",
+        "tool_call_id": "call_1",
+    }
+
+    assert llm_reviewer_dispatch._grounding_matches_events(grounding, events) is False
+
+
+def test_grounding_rejects_ellipsized_segments_spanning_events() -> None:
+    events = (
+        _sources_event(output="Веснянки — назва старовинних пісень.", call_id="call_1"),
+        _sources_event(output="Обрядових пісень багато виконують навесні.", call_id="call_2"),
+    )
+    grounding = {
+        "tool": "sources_query_wikipedia",
+        "query": "Веснянки",
+        "evidence_excerpt": "Веснянки … обрядових пісень",
+        "tool_call_id": "call_1",
+    }
+
+    assert llm_reviewer_dispatch._grounding_matches_events(grounding, events) is False
+
+
+def test_grounding_normalizes_nfkc_whitespace_case_and_ukrainian_stress_only() -> None:
+    events = (_sources_event(output="Весня́нки\u00a0— НАЗВА старовинних пісень."),)
+    grounding = {
+        "tool": "sources_query_wikipedia",
+        "query": "Веснянки",
+        "evidence_excerpt": "веснянки — назва",
+        "tool_call_id": "call_1",
+    }
+
+    assert llm_reviewer_dispatch._grounding_matches_events(grounding, events) is True
+    assert llm_reviewer_dispatch._normalize_for_match("й ї") == "й ї"
+
+
+def test_grounding_rejects_fabricated_segment_among_real_segments() -> None:
+    events = (_sources_event(output="Веснянки — назва старовинних обрядових пісень."),)
+    grounding = {
+        "tool": "sources_query_wikipedia",
+        "query": "Веснянки",
+        "evidence_excerpt": "Веснянки … стрічкові гаї … обрядових пісень",
+        "tool_call_id": "call_1",
+    }
+
+    assert llm_reviewer_dispatch._grounding_matches_events(grounding, events) is False
+
+
+def test_grounding_rejects_ellipsized_excerpt_with_only_short_glue_segments() -> None:
+    events = (_sources_event(output="а в і"),)
+    grounding = {
+        "tool": "sources_query_wikipedia",
+        "query": "Веснянки",
+        "evidence_excerpt": "а…в…і",
+        "tool_call_id": "call_1",
+    }
+
+    assert llm_reviewer_dispatch._grounding_matches_events(grounding, events) is False
+
+
+def test_grounding_matches_dict_shaped_event_output_after_stringify() -> None:
+    events = (
+        _sources_event(
+            output={
+                "title": "Веснянки",
+                "body": "Веснянки — це весняні обрядові пісні.",
+            },
+        ),
+    )
+    grounding = {
+        "tool": "sources_query_wikipedia",
+        "query": "Веснянки",
+        "evidence_excerpt": "весняні обрядові пісні",
+        "tool_call_id": "call_1",
+    }
+
+    assert llm_reviewer_dispatch._grounding_matches_events(grounding, events) is True
+
+
+def test_extract_tool_event_preserves_dict_output_as_json_text() -> None:
+    extracted = _extract_tool_event(
+        {
+            "type": "tool_use",
+            "part": {
+                "tool": "sources_query_wikipedia",
+                "callID": "call_1",
+                "state": {
+                    "status": "completed",
+                    "input": {"query": "Веснянки", "mode": "summary"},
+                    "output": {"title": "Веснянки", "body": ["весняні обрядові пісні"]},
+                },
+            },
+        }
+    )
+
+    assert extracted is not None
+    assert isinstance(extracted["output"], str)
+    assert json.loads(extracted["output"]) == {"title": "Веснянки", "body": ["весняні обрядові пісні"]}
+
+
+def test_positive_verdict_summary_only_grounding_forces_deep_read_retry() -> None:
+    payload = json.loads(_fact_response())
+    summary_event = _sources_event(mode="summary", output="Веснянки — це весняні обрядові пісні.")
+
+    assert llm_reviewer_dispatch.deep_read_required(payload, {"tool_events": [summary_event]}) is True
+
+    payload["fact_checks"][0]["deep_read_attempted"] = True
+    assert llm_reviewer_dispatch.deep_read_required(payload, {"tool_events": [summary_event]}) is False
+
+
+def test_summary_only_positive_verdict_downgrades_after_deep_read_attempt() -> None:
+    payload = json.loads(_fact_response(extra_fact_fields={"deep_read_attempted": True}))
+    summary_event = _sources_event(mode="summary", output="Веснянки — це весняні обрядові пісні.")
+
+    result = llm_reviewer_dispatch.enforce_grounding_against_tool_events(
+        payload,
+        {"tool_events": [summary_event]},
+        policy_family="seminar",
+    )
+
+    fact_check = result.payload["fact_checks"][0]
+    assert fact_check["verdict"] == "UNVERIFIED_INSUFFICIENT_SEARCH"
+    assert fact_check["original_verdict"] == "CONFIRMED"
+    assert fact_check["admissibility_downgraded"] is True
+    assert result.inadmissible_positive_verdicts == 1
+    assert result.invalid_fact_checks == 0
+    assert llm_reviewer_dispatch.factual_sweep_incomplete(
+        result.payload,
+        policy_family="seminar",
+        invalid_fact_checks=result.invalid_fact_checks,
+    )
+    qg_schema.validate_reviewer_payload(result.payload, "seminar")
+
+
+def test_deep_read_wiki_positive_verdict_remains_admissible() -> None:
+    payload = json.loads(_fact_response(extra_fact_fields={"deep_read_attempted": True}))
+    section_event = _sources_event(mode="section", output="Веснянки — це весняні обрядові пісні.")
+
+    result = llm_reviewer_dispatch.enforce_grounding_against_tool_events(
+        payload,
+        {"tool_events": [section_event]},
+        policy_family="seminar",
+    )
+
+    assert result.payload["fact_checks"][0]["verdict"] == "CONFIRMED"
+    assert result.inadmissible_positive_verdicts == 0
+
+
+def test_positive_verdict_matching_summary_and_deep_events_is_admissible() -> None:
+    payload = json.loads(_fact_response(extra_fact_fields={"deep_read_attempted": True}))
+    summary_event = _sources_event(mode="summary", output="Веснянки — це весняні обрядові пісні.")
+    section_event = _sources_event(
+        mode="section",
+        output="У розділі сказано: Веснянки — це весняні обрядові пісні.",
+        call_id="call_2",
+    )
+
+    result = llm_reviewer_dispatch.enforce_grounding_against_tool_events(
+        payload,
+        {"tool_events": [summary_event, section_event]},
+        policy_family="seminar",
+    )
+
+    assert result.payload["fact_checks"][0]["verdict"] == "CONFIRMED"
+    assert result.inadmissible_positive_verdicts == 0
+
+
+def test_neighboring_deep_read_event_does_not_rescue_summary_grounded_verdict() -> None:
+    payload = json.loads(_fact_response(extra_fact_fields={"deep_read_attempted": True}))
+    summary_event = _sources_event(mode="summary", output="Веснянки — це весняні обрядові пісні.")
+    other_section = _sources_event(
+        query="Гаївка",
+        mode="section",
+        output="Гаївка має окрему історію опису.",
+        call_id="call_2",
+    )
+
+    result = llm_reviewer_dispatch.enforce_grounding_against_tool_events(
+        payload,
+        {"tool_events": [summary_event, other_section]},
+        policy_family="seminar",
+    )
+
+    assert result.payload["fact_checks"][0]["verdict"] == "UNVERIFIED_INSUFFICIENT_SEARCH"
+    assert result.inadmissible_positive_verdicts == 1
+
+
+def test_non_wiki_positive_grounding_is_not_summary_admissibility_failure() -> None:
+    payload = json.loads(
+        _fact_response(
+            grounding_query="Веснянки література",
+            evidence_excerpt="весняні обрядові пісні",
+            extra_fact_fields={"deep_read_attempted": True},
+        )
+    )
+    payload["fact_checks"][0]["grounding"]["tool"] = "sources_search_literary"
+    literary_event = _sources_event(
+        query="Веснянки література",
+        output="Веснянки — це весняні обрядові пісні.",
+        tool="sources_search_literary",
+    )
+
+    result = llm_reviewer_dispatch.enforce_grounding_against_tool_events(
+        payload,
+        {"tool_events": [literary_event]},
+        policy_family="seminar",
+    )
+
+    assert result.payload["fact_checks"][0]["verdict"] == "CONFIRMED"
+    assert result.inadmissible_positive_verdicts == 0
+
+
+def test_refuted_by_contradiction_summary_only_grounding_downgrades() -> None:
+    payload = json.loads(
+        _fact_response(
+            verdict="REFUTED_BY_CONTRADICTION",
+            claim="Мелодика веснянок завжди світла й піднесена.",
+            evidence_excerpt="повторенні однієї-двох поспівок",
+            extra_fact_fields={"deep_read_attempted": True},
+        )
+    )
+    summary_event = _sources_event(
+        mode="summary",
+        output="Мелодія веснянок часто побудована на повторенні однієї-двох поспівок.",
+    )
+
+    result = llm_reviewer_dispatch.enforce_grounding_against_tool_events(
+        payload,
+        {"tool_events": [summary_event]},
+        policy_family="seminar",
+    )
+
+    assert result.payload["fact_checks"][0]["verdict"] == "UNVERIFIED_INSUFFICIENT_SEARCH"
+    assert result.payload["fact_checks"][0]["original_verdict"] == "REFUTED_BY_CONTRADICTION"
+    assert result.inadmissible_positive_verdicts == 1
+
+
+@pytest.mark.parametrize("shallow_mode", ["search", "", "snippet"])
+def test_non_deep_wiki_mode_positive_verdict_is_inadmissible(shallow_mode: str) -> None:
+    """Missing/unknown wiki modes must fail CLOSED, not certify (cursor review of #4429).
+
+    ``all(mode == "summary")`` failed open: one matching wiki event with
+    ``mode=""``/``"search"`` let a shallow-grounded CONFIRMED through both the
+    retry and the downgrade. Shallow = wiki-only matches with NO deep-read mode.
+    """
+    payload = json.loads(_fact_response())
+    shallow_event = _sources_event(mode=shallow_mode, output="Веснянки — це весняні обрядові пісні.")
+
+    assert llm_reviewer_dispatch.deep_read_required(payload, {"tool_events": [shallow_event]}) is True
+
+    attempted = json.loads(_fact_response(extra_fact_fields={"deep_read_attempted": True}))
+    result = llm_reviewer_dispatch.enforce_grounding_against_tool_events(
+        attempted,
+        {"tool_events": [shallow_event]},
+        policy_family="seminar",
+    )
+    fact_check = result.payload["fact_checks"][0]
+    assert fact_check["verdict"] == "UNVERIFIED_INSUFFICIENT_SEARCH"
+    assert fact_check["original_verdict"] == "CONFIRMED"
+    assert result.inadmissible_positive_verdicts == 1
+
+
+def test_contested_summary_only_grounding_downgrades() -> None:
+    payload = json.loads(
+        _fact_response(
+            verdict="CONTESTED",
+            extra_fact_fields={"deep_read_attempted": True},
+        )
+    )
+    summary_event = _sources_event(mode="summary", output="Веснянки — це весняні обрядові пісні.")
+
+    result = llm_reviewer_dispatch.enforce_grounding_against_tool_events(
+        payload,
+        {"tool_events": [summary_event]},
+        policy_family="seminar",
+    )
+
+    fact_check = result.payload["fact_checks"][0]
+    assert fact_check["verdict"] == "UNVERIFIED_INSUFFICIENT_SEARCH"
+    assert fact_check["original_verdict"] == "CONTESTED"
+    assert result.inadmissible_positive_verdicts == 1
+
+
+def test_ellipsized_evidence_mass_boundary_twelve_nonspace_chars() -> None:
+    """Retained-segment nonspace mass: 11 chars fails closed, 12 passes."""
+    output = "абвгд еєжзиі клмнопрст"
+    # Two retained segments (5 + 7 = 12 nonspace chars) in order → match.
+    assert llm_reviewer_dispatch._output_contains_excerpt(output, "абвгд…клмнопр") is True
+    # 5 + 6 = 11 nonspace chars → evidence-mass guard fails closed.
+    assert llm_reviewer_dispatch._output_contains_excerpt(output, "абвгд…клмноп") is False

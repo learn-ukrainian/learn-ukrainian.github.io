@@ -494,6 +494,8 @@ def _extract_tool_event(event: dict) -> dict | None:
     Handles the observed opencode shape (top-level ``type == "tool_use"`` with a
     nested ``part`` whose ``state`` carries ``input``/``status``/``output`` and
     whose ``callID`` is the tool-call id) while tolerating flatter/older shapes.
+    Structured outputs are serialized to JSON text; ``None`` is kept only when
+    opencode genuinely emitted no output.
     """
     part = event.get("part")
     if not isinstance(part, dict):
@@ -504,6 +506,14 @@ def _extract_tool_event(event: dict) -> dict | None:
     state = part.get("state") if isinstance(part.get("state"), dict) else {}
     tool_input = state.get("input", part.get("input"))
     output = state.get("output", part.get("output"))
+    if output is None:
+        output_text = None
+    elif isinstance(output, str):
+        output_text = output
+    elif isinstance(output, (dict, list)):
+        output_text = json.dumps(output, ensure_ascii=False, default=str)
+    else:
+        output_text = str(output)
     status = state.get("status") or part.get("status") or event.get("status")
     tool_call_id = part.get("callID") or part.get("tool_call_id") or part.get("id") or event.get("callID")
     return {
@@ -511,7 +521,7 @@ def _extract_tool_event(event: dict) -> dict | None:
         "input": tool_input,
         "status": status if isinstance(status, str) else None,
         "tool_call_id": tool_call_id if isinstance(tool_call_id, str) else None,
-        "output": output if isinstance(output, str) else None,
+        "output": output_text,
     }
 
 
