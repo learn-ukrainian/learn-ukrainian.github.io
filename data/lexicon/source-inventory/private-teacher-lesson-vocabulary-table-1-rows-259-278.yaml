@@ -1,0 +1,115 @@
+---
+version: 1
+kind: atlas_source_inventory
+sources:
+  - id: private-teacher-lesson-vocabulary-table-1-rows-259-278
+    source_family: teacher_lesson
+    extraction_mode: curated_headword
+    title: Private teacher lesson vocabulary - explicit table rows 259-278
+    locator: local-only explicit vocabulary table rows 259-278
+    notes: >-
+      Derived headword metadata only; raw private lesson material is local-only
+      and not committed. Daily Word, Practice, and cloze remain frozen without
+      explicit surface_admission. Rows 259 and 263 are multi-word idiom/collocation
+      entries deferred pending a collocation intake convention.
+    headwords:
+      - lemma: відмінний
+        pos: adj
+        gloss: excellent
+        locator: explicit vocabulary table row 259
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: буря
+        pos: noun
+        gloss: storm
+        locator: explicit vocabulary table row 260
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: бруд
+        pos: noun
+        gloss: dirt
+        locator: explicit vocabulary table row 261
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: співбесіда
+        pos: noun
+        gloss: job interview
+        locator: explicit vocabulary table row 262
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: колода
+        pos: noun
+        gloss: deck
+        locator: explicit vocabulary table row 264
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: виконувати
+        pos: verb
+        gloss: to complete (imperfective)
+        locator: explicit vocabulary table row 265
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: виконати
+        pos: verb
+        gloss: to complete (perfective)
+        locator: explicit vocabulary table row 266
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: мілкий
+        pos: adj
+        gloss: shallow
+        locator: explicit vocabulary table row 267
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: мілина
+        pos: noun
+        gloss: shallow water
+        locator: explicit vocabulary table row 268
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: глибина
+        pos: noun
+        gloss: depth
+        locator: explicit vocabulary table row 269
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: звільнювати
+        pos: verb
+        gloss: to fire, to sack (imperfective)
+        locator: explicit vocabulary table row 270
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: звільнити
+        pos: verb
+        gloss: to fire, to sack (perfective)
+        locator: explicit vocabulary table row 271
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: звільнятися
+        pos: verb
+        gloss: to quit a job (imperfective)
+        locator: explicit vocabulary table row 272
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: звільнитися
+        pos: verb
+        gloss: to quit a job (perfective)
+        locator: explicit vocabulary table row 273
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: огидний
+        pos: adj
+        gloss: disgusting
+        locator: explicit vocabulary table row 274
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: огида
+        pos: noun
+        gloss: disgust
+        locator: explicit vocabulary table row 275
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: дитячий
+        pos: adj
+        gloss: childish
+        locator: explicit vocabulary table row 276
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: вагітний
+        pos: adj
+        gloss: pregnant
+        locator: explicit vocabulary table row 277
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: благополуччя
+        pos: noun
+        gloss: wellbeing
+        locator: explicit vocabulary table row 278
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: добробут
+        pos: noun
+        gloss: wellbeing
+        locator: explicit vocabulary table row 278
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
