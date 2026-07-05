@@ -1,0 +1,216 @@
+- lemma: ремесло
+  translation: craft, trade
+  pos: іменник
+  usage: Ремесло поєднує матеріал, інструмент, навичку і соціальне передавання.
+- lemma: промисел
+  translation: cottage industry, occupation
+  pos: іменник
+  usage: Домашній промисел міг підтримувати родину в сезон нестачі або перед ярмарком.
+- lemma: художній промисел
+  translation: artistic craft industry
+  pos: словосполука
+  usage: Художній промисел має не лише користь, а й локальну мистецьку мову.
+- lemma: домашній промисел
+  translation: household craft production
+  pos: словосполука
+  usage: Домашній промисел часто передавався через родину й щоденне спостереження.
+- lemma: артіль
+  translation: cooperative workshop, artel
+  pos: іменник
+  usage: Артіль могла підтримувати майстрів і водночас стандартизувати вироби.
+- lemma: промартіль
+  translation: industrial cooperative
+  pos: іменник
+  usage: Промартіль переводила частину ремісничої праці в планове виробництво.
+- lemma: осередок
+  translation: center, local hub
+  pos: іменник
+  usage: Осередок треба називати точно, бо Опішня і Косів мають різні керамічні мови.
+- lemma: носій традиції
+  translation: tradition bearer
+  pos: словосполука
+  usage: Носій традиції передає не лише мотив, а й техніку, жест і межу помилки.
+- lemma: майстер
+  translation: master craftsperson
+  pos: іменник
+  usage: Майстер тримає пам'ять матеріалу й відповідає за якість речі.
+- lemma: майстриня
+  translation: craftswoman, master maker
+  pos: іменник
+  usage: Майстриня може працювати в родині, школі, артілі, музеї або приватній майстерні.
+- lemma: підмайстер
+  translation: journeyman, assistant craftsperson
+  pos: іменник
+  usage: Підмайстер уже має навички, але ще не здобув повного статусу майстра.
+- lemma: гончарство
+  translation: pottery
+  pos: іменник
+  usage: Гончарство починається з підготовки глини й завершується випалом.
+- lemma: гончарний круг
+  translation: potter's wheel
+  pos: словосполука
+  usage: Гончарний круг поєднує рух ноги, руки і центрування глини.
+- lemma: горно
+  translation: kiln, forge
+  pos: іменник
+  usage: Горно може бути місцем випалу кераміки або розігріву металу.
+- lemma: полива
+  translation: glaze
+  pos: іменник
+  usage: Полива змінює поверхню посуду після випалу.
+- lemma: ангоб
+  translation: slip coating
+  pos: іменник
+  usage: Ангоб дає кераміці тло або шар для подальшого розпису.
+- lemma: куманець
+  translation: ring-shaped ceramic flask
+  pos: іменник
+  usage: Куманець може бути одночасно посудиною, скульптурною формою і ярмарковою річчю.
+- lemma: кахля
+  translation: stove tile
+  pos: іменник
+  usage: Косівська кахля може нести сюжет, колір і ритований контур.
+- lemma: ритований контур
+  translation: incised outline
+  pos: словосполука
+  usage: Ритований контур тримає колір у Косівській мальованій кераміці.
+- lemma: Петриківський розпис
+  translation: Petrykivka decorative painting
+  pos: власна назва
+  usage: Петриківський розпис треба читати через мазок, школу і сучасну передачу.
+- lemma: зернятко
+  translation: seed-like brushstroke
+  pos: іменник
+  usage: Зернятко є одним із базових рухів у петриківській техніці.
+- lemma: гребінчик
+  translation: comb-like brushstroke
+  pos: іменник
+  usage: Гребінчик створює ритм листя або пелюсток у розписі.
+- lemma: ткацтво
+  translation: weaving
+  pos: іменник
+  usage: Ткацтво працює через основу, уток, натяг і повтор.
+- lemma: килимарство
+  translation: carpet weaving
+  pos: іменник
+  usage: Килимарство має власні осередки, майстерні, барвники й ринок.
+- lemma: основа
+  translation: warp
+  pos: іменник
+  usage: Основа тримає вертикальну структуру тканини або килима.
+- lemma: уток
+  translation: weft
+  pos: іменник
+  usage: Уток проходить крізь основу й творить ткану поверхню.
+- lemma: кросна
+  translation: loom
+  pos: іменник
+  usage: Кросна організовують натяг і порядок ткання.
+- lemma: рапорт
+  translation: repeated pattern unit
+  pos: іменник
+  usage: Рапорт у килимі створює повтор, який треба читати через композицію.
+- lemma: барвник
+  translation: dye
+  pos: іменник
+  usage: Барвник пов'язує колір із рослинною, тваринною або хімічною сировиною.
+- lemma: деревообробка
+  translation: woodworking
+  pos: іменник
+  usage: Деревообробка залежить від сушіння, волокна і властивостей деревини.
+- lemma: дереворізьба
+  translation: woodcarving
+  pos: іменник
+  usage: Дереворізьба може поєднувати геометричний орнамент, інкрустацію і ужиткову форму.
+- lemma: інкрустація
+  translation: inlay
+  pos: іменник
+  usage: Інкрустація вводить у дерево метал, ріг, бісер або інший матеріал.
+- lemma: бондарство
+  translation: cooperage
+  pos: іменник
+  usage: Бондарство тримається на точності клепок, дна й обручів.
+- lemma: клепка
+  translation: stave
+  pos: іменник
+  usage: Клепка є дерев'яною частиною стінки бочки або діжі.
+- lemma: обруч
+  translation: hoop, band
+  pos: іменник
+  usage: Обруч стискає клепки й допомагає посудині тримати форму.
+- lemma: діжа
+  translation: dough tub
+  pos: іменник
+  usage: Діжа має господарську функцію і потребує бондарської точності.
+- lemma: цебер
+  translation: wooden pail, tub
+  pos: іменник
+  usage: Цебер показує ужиткову сторону дерев'яного посуду.
+- lemma: лозоплетіння
+  translation: wickerwork
+  pos: іменник
+  usage: Лозоплетіння вимагає правильної заготівлі прута й пам'яті пальців.
+- lemma: лоза
+  translation: willow vine, wicker
+  pos: іменник
+  usage: Лоза має бути достатньо гнучкою, щоб не ламатися під час плетіння.
+- lemma: стояк
+  translation: upright stake in basketry
+  pos: іменник
+  usage: Стояк задає вертикальну форму кошика.
+- lemma: гутництво
+  translation: glassmaking
+  pos: іменник
+  usage: Гутництво залежить від піску, поташу, лісу, печі й швидкого формування скла.
+- lemma: гутник
+  translation: glassmaker
+  pos: іменник
+  usage: Гутник працює з розплавленим склом у короткому часовому вікні.
+- lemma: склодувна трубка
+  translation: glassblowing pipe
+  pos: словосполука
+  usage: Склодувна трубка дає форму посудині через видих і обертання.
+- lemma: поташ
+  translation: potash
+  pos: іменник
+  usage: Поташ був важливою сировиною для історичного скляного виробництва.
+- lemma: ковальство
+  translation: blacksmithing
+  pos: іменник
+  usage: Ковальство тримає господарство через металеві знаряддя, завіси, підкови й ножі.
+- lemma: ковадло
+  translation: anvil
+  pos: іменник
+  usage: Ковадло приймає удар молота й формує метал.
+- lemma: гартування
+  translation: hardening, tempering
+  pos: іменник
+  usage: Гартування змінює міцність металевої речі.
+- lemma: кушнірство
+  translation: furriery
+  pos: іменник
+  usage: Кушнірство поєднує вичинку хутра, крій, шиття й локальний одяг.
+- lemma: кушнір
+  translation: furrier
+  pos: іменник
+  usage: Кушнір шиє хутряні вироби й працює з тепловою функцією одягу.
+- lemma: чинбарство
+  translation: tanning
+  pos: іменник
+  usage: Чинбарство готує шкіру для подальшого ремісничого використання.
+- lemma: лимарство
+  translation: saddlery, harness making
+  pos: іменник
+  usage: Лимарство пов'язане зі шкіряною збруєю і господарською мобільністю.
+- lemma: кожух
+  translation: sheepskin coat
+  pos: іменник
+  usage: Кожух є одягом, ремісничою річчю, тепловою архітектурою і знаком статусу.
+- lemma: нематеріальна спадщина
+  translation: intangible heritage
+  pos: словосполука
+  usage: Нематеріальна спадщина зосереджує увагу на носіях, передачі знань і живій практиці.
+- lemma: сувенірний ринок
+  translation: souvenir market
+  pos: словосполука
+  usage: Сувенірний ринок може зробити традицію видимою, але також спростити техніку й джерело.
