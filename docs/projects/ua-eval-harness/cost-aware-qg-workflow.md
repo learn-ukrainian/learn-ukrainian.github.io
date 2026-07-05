@@ -33,9 +33,26 @@ budget rails, and explicit human spend sign-off.
 `scripts/audit/llm_reviewer_dispatch.py` owns live reviewer routing:
 
 - B1+ surface review routes to `ask-gemma` with
-  `openrouter/google/gemma-4-31b-it`.
-- Seminar, contested-gold, and factual-sensitive review routes to `ask-agy
-  --to-model gemini-3.1-pro-high`.
+  `openrouter/google/gemma-4-31b-it` (surface/register review is prompt-only —
+  no MCP requirement).
+- Seminar, contested-gold, and factual-sensitive review routes to the tooled
+  **`FRONTIER_OPENCODE_ROUTE`**: opencode transport with the **sources MCP**
+  wired in, so factual/decolonization findings can be grounded (#2156, D0/D5).
+  This replaces the old ungrounded `ask-agy --to-model gemini-3.1-pro-high`
+  route, which an ungrounded reviewer could not use to catch the gemma
+  fabrication class in `model-evidence.md`. The agy route stays **defined for
+  fallback/reference** but is no longer returned by `route_for_review`. The
+  frontier model is pinned to `openrouter/google/gemma-4-31b-it` until the
+  step-3 bakeoff selects a frontier model (`openrouter/google/gemini-3.1-pro`
+  is not yet reachable via `opencode models`).
+- **MCP fail-fast:** before a grounded (frontier) opencode reviewer call the
+  dispatcher verifies the `sources` MCP is configured + enabled in the ambient
+  opencode config *and* that its endpoint (`http://127.0.0.1:8766/mcp`)
+  responds. On failure it raises `ReviewerProviderError` — a grounded reviewer
+  run must never silently proceed without tools.
+- Each opencode reviewer run parses the NDJSON stream once for per-call
+  telemetry; `DispatchResult` carries `tool_call_count` and `tools_used`, which
+  the workflow persists to `llm_qg.db` (`tool_call_count`, `tools_used_json`).
 - Escalation/disputed spot audit is Claude-only and is not the batch default.
 - DeepSeek/Hermes reviewer routes are hard-banned for automated LLM-QG batches.
 
@@ -106,7 +123,11 @@ content_sha
 + checker_version
 + level_policy.family
 + reviewer_model_id
++ route_name
 ```
+
+`route_name` (#2156) joins the composite key so a transport change invalidates
+ungrounded cache rows even when the reviewer model id is unchanged.
 
 The canonical content basis is `llm_qg_store.CONTENT_FILES`:
 
@@ -122,6 +143,13 @@ basis under `qg_workflow.content_hash_basis` and
 
 `gate_version` and `prompt_hash` must bump when #4370 changes reviewer
 calibration; stale LLM evidence then misses the composite cache automatically.
+
+`DEFAULT_GATE_VERSION` was bumped to **`qg_workflow.v2`** (#2156) when
+seminar/factual moved onto the tooled opencode transport. Implication: every
+pre-#2156 (ungrounded, v1) row in a local `data/telemetry/llm_qg.db` now misses
+the composite cache and re-runs through the grounded route on the next
+`--live-reviewer` pass. This is intended — v1 evidence was produced without
+tools and must not be reused.
 
 ## Contested Gold
 

@@ -189,6 +189,129 @@ def test_evidence_record_detects_stale_module_content(tmp_path: Path) -> None:
     assert not evidence_record_is_current_for_module(evidence, module_dir)
 
 
+_LEGACY_SCHEMA = """
+CREATE TABLE llm_qg_runs (
+    run_id TEXT PRIMARY KEY, created_at TEXT NOT NULL, level TEXT NOT NULL,
+    slug TEXT NOT NULL, content_sha TEXT NOT NULL, gate_version TEXT NOT NULL,
+    prompt_hash TEXT, checker_version TEXT, level_policy_family TEXT,
+    reviewer_model TEXT, reviewer_family TEXT, source TEXT NOT NULL,
+    verdict TEXT, terminal_verdict TEXT, min_score REAL, min_dim TEXT,
+    payload_json TEXT NOT NULL
+);
+CREATE TABLE llm_qg_findings (
+    id INTEGER PRIMARY KEY AUTOINCREMENT, run_id TEXT NOT NULL, category TEXT,
+    severity TEXT, file TEXT, quote TEXT, replacement TEXT, payload_json TEXT NOT NULL
+);
+"""
+
+
+def test_legacy_db_without_tool_columns_migrates_on_read(tmp_path: Path) -> None:
+    module_dir = _module(tmp_path)
+    db_path = tmp_path / "legacy.db"
+
+    # Build a store with the pre-#2156 schema (no route_name / tool_call_count /
+    # tools_used_json columns) and a legacy row inserted directly.
+    with sqlite3.connect(db_path) as conn:
+        conn.executescript(_LEGACY_SCHEMA)
+        conn.execute(
+            """INSERT INTO llm_qg_runs
+               (run_id, created_at, level, slug, content_sha, gate_version, source, payload_json)
+               VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",
+            ("legacy-1", "2020-01-01T00:00:00Z", "b1", "aspect-in-imperatives", "oldsha", "gate.v0", "legacy", "{}"),
+        )
+
+    # READ through the new code path: must not raise, columns backfilled, and the
+    # new tool fields default cleanly for a legacy row.
+    record = latest_llm_qg("b1", "aspect-in-imperatives", path=db_path)
+    assert record is not None
+    assert record.tool_call_count == 0
+    assert record.tools_used == ()
+    assert record.route_name is None
+
+    cols = {row[1] for row in sqlite3.connect(db_path).execute("PRAGMA table_info(llm_qg_runs)")}
+    assert {"route_name", "tool_call_count", "tools_used_json"} <= cols
+
+    # WRITE through the new code path on the migrated DB: also must not raise.
+    stored = record_llm_qg(
+        level="b1",
+        slug="aspect-in-imperatives",
+        module_dir=module_dir,
+        payload=_payload(),
+        gate_version="qg_workflow.v2",
+        route_name="opencode_frontier",
+        tool_call_count=5,
+        tools_used=["sources_query_wikipedia"],
+        path=db_path,
+    )
+    assert stored.tool_call_count == 5
+    assert stored.tools_used == ("sources_query_wikipedia",)
+    reread = latest_llm_qg("b1", "aspect-in-imperatives", content_sha=stored.content_sha, path=db_path)
+    assert reread is not None
+    assert reread.tool_call_count == 5
+    assert reread.tools_used == ("sources_query_wikipedia",)
+
+
+def test_tool_telemetry_round_trips_through_store(tmp_path: Path) -> None:
+    module_dir = _module(tmp_path)
+    db_path = tmp_path / "qg.db"
+    record_llm_qg(
+        level="b1",
+        slug="aspect-in-imperatives",
+        module_dir=module_dir,
+        payload=_payload(),
+        gate_version="qg_workflow.v2",
+        route_name="opencode_frontier",
+        tool_call_count=7,
+        tools_used=("sources_search_heritage", "sources_query_wikipedia"),
+        path=db_path,
+    )
+    record = latest_llm_qg("b1", "aspect-in-imperatives", path=db_path)
+    assert record is not None
+    assert record.tool_call_count == 7
+    assert record.tools_used == ("sources_search_heritage", "sources_query_wikipedia")
+    assert record.route_name == "opencode_frontier"
+
+
+def test_composite_cache_key_includes_route_name(tmp_path: Path) -> None:
+    module_dir = _module(tmp_path)
+    db_path = tmp_path / "qg.db"
+    stored = record_llm_qg(
+        level="b1",
+        slug="aspect-in-imperatives",
+        module_dir=module_dir,
+        payload=_payload(),
+        gate_version="qg_workflow.v2",
+        reviewer_model="shared-model",
+        route_name="opencode_frontier",
+        path=db_path,
+    )
+
+    # Same model, DIFFERENT route -> cache miss (transport change invalidates).
+    assert (
+        latest_llm_qg(
+            "b1",
+            "aspect-in-imperatives",
+            content_sha=stored.content_sha,
+            reviewer_model="shared-model",
+            route_name="agy_frontier",
+            path=db_path,
+        )
+        is None
+    )
+    # Matching route -> hit.
+    assert (
+        latest_llm_qg(
+            "b1",
+            "aspect-in-imperatives",
+            content_sha=stored.content_sha,
+            reviewer_model="shared-model",
+            route_name="opencode_frontier",
+            path=db_path,
+        )
+        is not None
+    )
+
+
 def test_evidence_record_rejects_unknown_schema_gate_and_terminal_verdict(tmp_path: Path) -> None:
     module_dir = _module(tmp_path)
     db_path = tmp_path / "qg.db"

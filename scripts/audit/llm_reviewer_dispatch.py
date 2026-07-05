@@ -9,10 +9,12 @@ exactness, and local spend persistence. The workflow calls it through the same
 from __future__ import annotations
 
 import json
+import os
 import re
+import shutil
 import subprocess
 import tempfile
-from collections.abc import Callable, Mapping, Sequence
+from collections.abc import Callable, Iterator, Mapping, Sequence
 from dataclasses import asdict, dataclass
 from datetime import UTC, date, datetime
 from pathlib import Path
@@ -30,7 +32,16 @@ CANARY_SCHEMA_VERSION = "llm_reviewer_dispatch_canary.v1"
 
 GEMMA_MODEL_ID = "openrouter/google/gemma-4-31b-it"
 FRONTIER_MODEL_ID = "gemini-3.1-pro-high"
+# TODO(#2156 step-3 bakeoff): pin `openrouter/google/gemini-3.1-pro` once it is
+# reachable via `opencode models`. As of 2026-07-05 only `-preview` variants
+# resolve (`opencode models | grep gemini-3.1-pro` -> `gemini-3.1-pro-preview`),
+# so the seminar/factual opencode route pins the step-1-validated gemma-4-31b-it
+# endpoint until the bakeoff selects the frontier model.
+FRONTIER_OPENCODE_MODEL_ID = "openrouter/google/gemma-4-31b-it"
 CLAUDE_SPOT_AUDIT_MODEL_ID = "claude-opus-4.6"
+# The sources MCP endpoint opencode reviewer routes ground against (mirrors the
+# `sources` entry in ~/.config/opencode/opencode.jsonc).
+SOURCES_MCP_URL = "http://127.0.0.1:8766/mcp"
 
 _TOKEN_DIVISOR = 3.5
 _AUTHOR_FIELDS = (
@@ -126,6 +137,8 @@ class DispatchResult:
     observed_completion_tokens: int | None = None
     observed_cost_usd: float | None = None
     usage: Mapping[str, Any] | None = None
+    tool_call_count: int = 0
+    tools_used: tuple[str, ...] = ()
 
     def metadata(self) -> dict[str, Any]:
         return {
@@ -136,6 +149,8 @@ class DispatchResult:
             "observed_completion_tokens": self.observed_completion_tokens,
             "observed_cost_usd": self.observed_cost_usd,
             "usage": dict(self.usage or {}),
+            "tool_call_count": self.tool_call_count,
+            "tools_used": list(self.tools_used),
         }
 
 
@@ -150,6 +165,11 @@ GEMMA_SURFACE_ROUTE = ReviewerRoute(
     input_usd_per_mtok=0.12,
     output_usd_per_mtok=0.35,
 )
+# Kept for fallback/reference (do NOT delete — #2156). `route_for_review` no
+# longer returns this route; seminar/factual now flows through the tooled
+# opencode route below so the reviewer can ground factual claims against the
+# sources MCP. An ungrounded agy reviewer cannot catch the gemma fabrication
+# class documented in docs/projects/ua-eval-harness/model-evidence.md.
 FRONTIER_FACTUAL_ROUTE = ReviewerRoute(
     route_name="agy_frontier",
     bridge_command=("ask-agy", "--to-model", FRONTIER_MODEL_ID, "--review"),
@@ -158,6 +178,18 @@ FRONTIER_FACTUAL_ROUTE = ReviewerRoute(
     purpose="Seminar, contested-gold, or factual-sensitive review",
     input_usd_per_mtok=1.25,
     output_usd_per_mtok=10.0,
+)
+# Tooled seminar/factual reviewer: opencode transport with the sources MCP
+# wired in, so factual/decolonization findings are grounded (design D0/D5,
+# #2156). Model per routing policy — see FRONTIER_OPENCODE_MODEL_ID TODO.
+FRONTIER_OPENCODE_ROUTE = ReviewerRoute(
+    route_name="opencode_frontier",
+    bridge_command=("ask-opencode", "--model", FRONTIER_OPENCODE_MODEL_ID),
+    reviewer_model_id=FRONTIER_OPENCODE_MODEL_ID,
+    reviewer_family="google",
+    purpose="Seminar/factual/contested-gold review, grounded via sources MCP over opencode",
+    input_usd_per_mtok=0.12,
+    output_usd_per_mtok=0.35,
 )
 CLAUDE_SPOT_AUDIT_ROUTE = ReviewerRoute(
     route_name="claude_spot_audit",
@@ -171,6 +203,7 @@ CLAUDE_SPOT_AUDIT_ROUTE = ReviewerRoute(
 ROUTES: tuple[ReviewerRoute, ...] = (
     GEMMA_SURFACE_ROUTE,
     FRONTIER_FACTUAL_ROUTE,
+    FRONTIER_OPENCODE_ROUTE,
     CLAUDE_SPOT_AUDIT_ROUTE,
 )
 
@@ -213,7 +246,9 @@ def route_for_review(
     if escalation:
         return CLAUDE_SPOT_AUDIT_ROUTE
     if policy_family == "seminar" or contested_gold_suppressed or factual_sensitive:
-        return FRONTIER_FACTUAL_ROUTE
+        # Grounded (tooled) opencode route — not the ungrounded agy route (#2156
+        # D0). FRONTIER_FACTUAL_ROUTE stays defined for fallback/reference.
+        return FRONTIER_OPENCODE_ROUTE
     return GEMMA_SURFACE_ROUTE
 
 
@@ -379,17 +414,13 @@ def invoke_bridge_route(route: ReviewerRoute, prompt: str, task_id: str) -> Disp
 
     assert_route_allowed(route)
     if route.route_name == GEMMA_SURFACE_ROUTE.route_name:
-        from scripts.ai_agent_bridge._opencode import _invoke_opencode
-
-        try:
-            response = _invoke_opencode(
-                prompt,
-                route.reviewer_model_id,
-                output_format="json",
-            )
-        except SystemExit as exc:
-            raise ReviewerProviderError(str(exc)) from exc
-        return _result_from_text(prompt, response, route)
+        # Surface/register review is prompt-only per design D1 — no MCP gate.
+        return _invoke_opencode_reviewer(prompt, route, default_timeout_s=900, require_mcp=False)
+    if route.route_name == FRONTIER_OPENCODE_ROUTE.route_name:
+        # Seminar/factual review MUST be grounded — fail-fast if the sources MCP
+        # is not configured + reachable (design D0; step-1 lesson). Browsing +
+        # dense tool sweeps run long, so allow a wider timeout than gemma.
+        return _invoke_opencode_reviewer(prompt, route, default_timeout_s=1800, require_mcp=True)
     if route.route_name == FRONTIER_FACTUAL_ROUTE.route_name:
         return _invoke_output_path_bridge(
             route,
@@ -758,6 +789,230 @@ def _result_from_text(prompt: str, response: str, route: ReviewerRoute) -> Dispa
         observed_completion_tokens=estimate_tokens(response),
         observed_cost_usd=_cost_for_observed_text(prompt, response, route),
     )
+
+
+def _invoke_opencode_reviewer(
+    prompt: str,
+    route: ReviewerRoute,
+    *,
+    default_timeout_s: int,
+    require_mcp: bool,
+) -> DispatchResult:
+    """Run a reviewer route over opencode, capturing tool telemetry.
+
+    Both opencode reviewer routes (gemma surface + frontier factual) parse the
+    NDJSON stream once so ``tool_call_count``/``tools_used`` land on the
+    DispatchResult. ``require_mcp`` gates the grounded factual route on a
+    configured + reachable sources MCP.
+    """
+    if require_mcp:
+        _assert_sources_mcp_available()
+    from scripts.ai_agent_bridge._opencode import _invoke_opencode_detailed
+
+    try:
+        parse = _invoke_opencode_detailed(
+            prompt,
+            route.reviewer_model_id,
+            output_format="json",
+            default_timeout_s=default_timeout_s,
+        )
+    except SystemExit as exc:
+        raise ReviewerProviderError(str(exc)) from exc
+    return _result_from_stream(prompt, parse, route)
+
+
+def _result_from_stream(prompt: str, parse: Any, route: ReviewerRoute) -> DispatchResult:
+    """Build a DispatchResult from an ``OpencodeStreamParse`` (text + tools)."""
+    tool_events = tuple(getattr(parse, "tool_events", ()) or ())
+    response = getattr(parse, "text", "") or ""
+    return DispatchResult(
+        response_text=response,
+        reviewer_model_id=route.reviewer_model_id,
+        reviewer_family=route.reviewer_family,
+        route_name=route.route_name,
+        observed_prompt_tokens=estimate_tokens(prompt),
+        observed_completion_tokens=estimate_tokens(response),
+        observed_cost_usd=_cost_for_observed_text(prompt, response, route),
+        tool_call_count=len(tool_events),
+        tools_used=_distinct_tools(tool_events),
+    )
+
+
+def _distinct_tools(tool_events: Sequence[Mapping[str, Any]]) -> tuple[str, ...]:
+    """Distinct tool names in first-seen order across the run's tool events."""
+    seen: list[str] = []
+    for event in tool_events:
+        name = event.get("tool")
+        if isinstance(name, str) and name and name not in seen:
+            seen.append(name)
+    return tuple(seen)
+
+
+# --- Sources MCP fail-fast (design D0; step-1 lesson) ----------------------
+
+_JSONC_TOKEN_RE = re.compile(r'"(?:\\.|[^"\\])*"|/\*.*?\*/|//[^\n]*', re.DOTALL)
+
+
+def _loads_jsonc(text: str) -> Any:
+    """Parse JSON-with-comments (opencode config) tolerantly; None on failure.
+
+    Strips ``//`` line + ``/* */`` block comments (never inside string literals)
+    and trailing commas before ``json.loads``.
+    """
+
+    def _strip(match: re.Match[str]) -> str:
+        token = match.group(0)
+        return token if token.startswith('"') else ""
+
+    cleaned = _JSONC_TOKEN_RE.sub(_strip, text)
+    cleaned = re.sub(r",(\s*[}\]])", r"\1", cleaned)
+    try:
+        return json.loads(cleaned)
+    except (json.JSONDecodeError, ValueError):
+        return None
+
+
+def _opencode_config_paths() -> list[Path]:
+    """Candidate opencode config files, LOWEST -> HIGHEST precedence.
+
+    Mirrors opencode's documented merge order: global config (home /
+    $XDG_CONFIG_HOME), then a file named by $OPENCODE_CONFIG, then the nearest
+    project ``opencode.json[c]`` walking up from cwd. Within one directory,
+    ``.jsonc`` is listed after ``.json`` so it wins the merge (opencode's
+    preferred extension). $OPENCODE_CONFIG_CONTENT (inline JSON) is handled
+    separately in :func:`_iter_opencode_configs` as the top source.
+    """
+    paths: list[Path] = []
+    home = Path.home()
+    paths.append(home / ".config" / "opencode" / "opencode.json")
+    paths.append(home / ".config" / "opencode" / "opencode.jsonc")
+    xdg = os.environ.get("XDG_CONFIG_HOME")
+    if xdg:
+        paths.append(Path(xdg) / "opencode" / "opencode.json")
+        paths.append(Path(xdg) / "opencode" / "opencode.jsonc")
+    env_cfg = os.environ.get("OPENCODE_CONFIG")
+    if env_cfg:
+        paths.append(Path(env_cfg))
+    project = _nearest_project_opencode_config(Path.cwd())
+    if project is not None:
+        paths.append(project)
+    return paths
+
+
+def _nearest_project_opencode_config(start: Path) -> Path | None:
+    """Nearest project ``opencode.json[c]`` walking up from ``start``.
+
+    Stops at the first directory containing one (nearest wins, matching
+    opencode's project-config discovery) or at a repo root (``.git``).
+    """
+    for parent in [start, *start.parents]:
+        for name in ("opencode.jsonc", "opencode.json"):
+            candidate = parent / name
+            if candidate.exists():
+                return candidate
+        if (parent / ".git").exists():
+            return None
+    return None
+
+
+def _iter_opencode_configs() -> Iterator[Any]:
+    """Parsed opencode configs in LOWEST -> HIGHEST precedence order."""
+    for path in _opencode_config_paths():
+        if not path.exists():
+            continue
+        try:
+            text = path.read_text(encoding="utf-8")
+        except OSError:
+            continue
+        data = _loads_jsonc(text)
+        if data is not None:
+            yield data
+    inline = os.environ.get("OPENCODE_CONFIG_CONTENT")
+    if inline:
+        data = _loads_jsonc(inline)
+        if data is not None:
+            yield data
+
+
+def _load_opencode_config() -> Any:
+    """The EFFECTIVE opencode config across its documented merge sources.
+
+    opencode merges (low -> high): global config, $OPENCODE_CONFIG, nearest
+    project ``opencode.json[c]``, inline $OPENCODE_CONFIG_CONTENT. Reading only
+    the first global file can falsely BLOCK a legit grounded run (sources wired
+    via project/env config) or falsely PASS one (a higher-precedence config
+    disables it) — codex review of #4401. Shallow-merges top-level keys plus
+    one level of the ``mcp`` map — sufficient for the sources gate; not a full
+    deep merge.
+    """
+    merged: dict[str, Any] = {}
+    found = False
+    for data in _iter_opencode_configs():
+        if not isinstance(data, Mapping):
+            continue
+        found = True
+        for key, value in data.items():
+            if (
+                key == "mcp"
+                and isinstance(value, Mapping)
+                and isinstance(merged.get("mcp"), Mapping)
+            ):
+                merged["mcp"] = {**merged["mcp"], **value}
+            else:
+                merged[key] = value
+    return merged if found else None
+
+
+def _http_endpoint_responds(url: str, *, timeout_s: int = 3) -> bool:
+    """True if the endpoint returns ANY HTTP status (design D0: any response = up).
+
+    The MCP endpoint streams, so ``curl --max-time`` exits 28 (timeout) even
+    though it received a status line — key on the emitted ``%{http_code}``, not
+    curl's exit code. ``000`` (connection refused / DNS fail) means down.
+    """
+    curl = shutil.which("curl")
+    if not curl:
+        return False
+    try:
+        proc = subprocess.run(
+            [curl, "-s", "-o", os.devnull, "-w", "%{http_code}", "--max-time", str(timeout_s), url],
+            capture_output=True,
+            text=True,
+            timeout=timeout_s + 5,
+        )
+    except (OSError, subprocess.SubprocessError):
+        return False
+    code = (proc.stdout or "").strip()
+    return code.isdigit() and code != "000"
+
+
+def _assert_sources_mcp_available() -> None:
+    """Fail-fast unless the sources MCP is configured AND reachable.
+
+    A grounded reviewer run without tools must never silently proceed (design
+    D0; step-1 lesson). Reads the ambient opencode config for an enabled
+    ``sources`` MCP entry, then probes its endpoint.
+    """
+    config = _load_opencode_config()
+    sources = None
+    if isinstance(config, Mapping):
+        mcp = config.get("mcp")
+        if isinstance(mcp, Mapping):
+            sources = mcp.get("sources")
+    if not isinstance(sources, Mapping) or sources.get("enabled") is False:
+        raise ReviewerProviderError(
+            "sources MCP is not configured/enabled in the effective opencode "
+            "config (merged: global ~/.config/opencode/opencode.json[c], "
+            "$OPENCODE_CONFIG, project opencode.json[c], "
+            "$OPENCODE_CONFIG_CONTENT); a grounded reviewer run must not "
+            "proceed without tools (design D0, #2156)."
+        )
+    url = str(sources.get("url") or SOURCES_MCP_URL)
+    if not _http_endpoint_responds(url):
+        raise ReviewerProviderError(
+            f"sources MCP endpoint {url} is not reachable; start the MCP server "
+            "before a grounded reviewer run (design D0, #2156)."
+        )
 
 
 def _cost_for_observed_text(prompt: str, response: str, route: ReviewerRoute) -> float:
