@@ -3,7 +3,7 @@
 ### 2026-07-05 — Atlas-manifest cache poisoning + stale-base MDX drift (PR #4386 CI failure)
 **What broke:** PR #4386's `MDX Generation Drift` CI job failed 3× while the identical check
 passed locally, including under a CI-mimic env (minimal venv, anonymous hydrate).
-**Why (three stacked causes):**
+**Root cause:** three stacked causes —
 1. ACTUAL cause: the PR branch was based before #4381's `scripts/generate_mdx/resources.py` and
    examples-dedup changes; CI regenerates on the MERGE ref (new generator) vs committed MDX (old
    generator). Fixed by merging main + regenerating the touched modules.
