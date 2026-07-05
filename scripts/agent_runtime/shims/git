@@ -59,6 +59,85 @@ if [[ "${AGENT_NO_MERGE:-}" == "1" ]] && _blocks_git_push "$@"; then
   _deny
 fi
 
+_blocks_branch_switch() {
+  local shim_dir
+  shim_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+  local repo_root
+  repo_root="$(cd "$shim_dir/../../.." && pwd)"
+
+  "$repo_root/.venv/bin/python" -c '
+import sys
+import subprocess
+from pathlib import Path
+
+repo_root = sys.argv[1]
+git_args = sys.argv[2:]
+
+sys.path.insert(0, repo_root)
+from scripts.guardrails.worktree_containment import is_primary_checkout, is_protected_branch, PROTECTED_BRANCHES
+
+if not (is_primary_checkout() and is_protected_branch()):
+    sys.exit(1)
+
+if not git_args:
+    sys.exit(1)
+
+cmd = git_args[0]
+if cmd not in ("checkout", "switch"):
+    sys.exit(1)
+
+creates_branch = any(arg in ("-b", "-B", "-c", "-C") for arg in git_args[1:])
+if creates_branch:
+    sys.exit(0)
+
+target = None
+for arg in git_args[1:]:
+    if arg == "--":
+        break
+    if not arg.startswith("-"):
+        target = arg
+        break
+
+if not target:
+    sys.exit(1)
+
+if target in PROTECTED_BRANCHES:
+    sys.exit(1)
+
+if cmd == "switch":
+    if "--detach" not in git_args and "-d" not in git_args:
+        sys.exit(0)
+    sys.exit(1)
+
+is_local = (subprocess.run(["git", "show-ref", "--verify", "--quiet", f"refs/heads/{target}"]).returncode == 0)
+is_remote = (subprocess.run(["git", "show-ref", "--verify", "--quiet", f"refs/remotes/origin/{target}"]).returncode == 0)
+
+if is_local or is_remote:
+    target_idx = git_args.index(target)
+    remaining_args = git_args[target_idx+1:]
+    if "--" in remaining_args:
+        sys.exit(1)
+    has_file_args = False
+    for arg in remaining_args:
+        if not arg.startswith("-"):
+            has_file_args = True
+            break
+    if has_file_args:
+        sys.exit(1)
+    sys.exit(0)
+
+sys.exit(1)
+' "$repo_root" "$@"
+}
+
+if [[ "${AGENT_NO_MERGE:-}" == "1" ]] && _blocks_branch_switch "$@"; then
+  cat >&2 <<EOF
+error: agent cannot switch branches in the primary checkout.
+       Create and cd into a dispatch worktree (.worktrees/dispatch/<agent>/<task>/) before switching branches.
+EOF
+  exit 1
+fi
+
 real_git="$(_real_git)" || {
   echo "error: could not locate the real git binary behind the agent shim." >&2
   exit 127
