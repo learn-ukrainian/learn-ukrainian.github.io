@@ -52,6 +52,14 @@ def test_agents_md_carries_binding_digest() -> None:
     assert "EXCEPT A1" in body, "digest lost the A1 immersion exception"
 
 
+def test_gemini_md_carries_binding_digest() -> None:
+    """agy/gemini one-shots boot from GEMINI.md, not AGENTS.md — proven by the
+    2026-07-05 live canary (agy answered NOT LOADED before this digest)."""
+    body = (REPO / "GEMINI.md").read_text(encoding="utf-8")
+    assert "operator-expectations.md" in body, "GEMINI.md lost the contract pointer"
+    assert "EXCEPT A1" in body, "GEMINI.md digest lost the A1 immersion exception"
+
+
 def test_deploy_lock_step_lists_include_contract() -> None:
     """deploy excludes x drift-checker x idempotency fixtures must move
     together (learned the hard way in #4412 round 3)."""
