@@ -404,13 +404,23 @@ def _match_rows_to_claims(
 
     Matching, in precedence order per fixture claim:
     1. exact normalized equality (the anchor-fixture path, unchanged);
-    2. containment: normalized fixture claim is a substring of ONE model row's
+    2. containment: normalized fixture claim is a substring of a model row's
        normalized claim (models quote whole sentences; fixture claims are
-       sub-spans). A single model row MAY cover multiple fixture claims — that
-       is semantically fair: confirming a sentence that contains a fabricated
-       sub-claim IS confirming the fabrication (the shared-sentence M-traps).
+       sub-spans). Among multiple containing rows the TIGHTEST (shortest) row
+       wins — first-row-wins was row-order dependent and could score a broad
+       row's verdict over a more specific one (codex review, PR #4485).
+       A single model row MAY cover multiple fixture claims, but broad-row
+       verdict transfer is polarity-guarded: confirming a sentence that
+       contains a fabricated sub-claim IS confirming the fabrication (the
+       shared-sentence M-traps), and any verdict on a span containing a
+       fabrication is a judgment ABOUT that fabrication — but a NEGATIVE
+       verdict on a compound sentence usually targets the fabricated part,
+       so it must NOT transfer to a TRUE sub-claim the model never separately
+       judged (it would score refuted-true −50 for a verdict the model never
+       issued; the claim counts missing −10 instead).
     3. reverse containment (model row quotes a sub-span of the fixture claim),
-       guarded by a length floor so tiny fragments cannot claim-jack.
+       guarded by a length floor so tiny fragments cannot claim-jack; among
+       multiple candidates the LONGEST (most coverage) wins.
     Rows that match nothing stay unmatched (counted, visible in artifacts).
     """
     matched: dict[str, dict[str, Any]] = {}
@@ -423,19 +433,28 @@ def _match_rows_to_claims(
             continue
         # 1. exact
         hit = next((i for i, (nr, _r) in enumerate(norm_rows) if nr == want), None)
-        # 2. fixture-claim ⊆ model-row
+        # 2. fixture-claim ⊆ model-row: tightest containing row; only a
+        #    CONFIRMED judgment transfers from a broader span to a TRUE claim.
         if hit is None:
-            hit = next((i for i, (nr, _r) in enumerate(norm_rows) if nr and want in nr), None)
-        # 3. model-row ⊆ fixture-claim (length floor: ≥60% of the fixture claim)
+            candidates = [
+                i
+                for i, (nr, r) in enumerate(norm_rows)
+                if nr
+                and want in nr
+                and (not claim.is_true or _judgment_verdict(r) == "CONFIRMED")
+            ]
+            if candidates:
+                hit = min(candidates, key=lambda i: len(norm_rows[i][0]))
+        # 3. model-row ⊆ fixture-claim (length floor: ≥60% of the fixture
+        #    claim): longest contained row.
         if hit is None:
-            hit = next(
-                (
-                    i
-                    for i, (nr, _r) in enumerate(norm_rows)
-                    if nr and nr in want and len(nr) >= max(20, int(0.6 * len(want)))
-                ),
-                None,
-            )
+            candidates = [
+                i
+                for i, (nr, _r) in enumerate(norm_rows)
+                if nr and nr in want and len(nr) >= max(20, int(0.6 * len(want)))
+            ]
+            if candidates:
+                hit = max(candidates, key=lambda i: len(norm_rows[i][0]))
         if hit is not None:
             matched[claim.claim_id] = norm_rows[hit][1]
             used_rows.add(hit)

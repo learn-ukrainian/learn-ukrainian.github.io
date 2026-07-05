@@ -169,6 +169,77 @@ def test_claim_matching_accepts_standalone_extraction_from_anchor_fragment() -> 
     assert score["model_judgment_score"] == 10
 
 
+def test_claim_matching_prefers_tightest_containing_row_over_first() -> None:
+    """Containment must pick the most specific row, not the first in row order
+    (codex review, PR #4485): a broad row with a different verdict must not
+    shadow a tighter, more specific match."""
+    fixture = qg_bakeoff.BakeoffFixture(
+        slug="specific",
+        title="Specific",
+        passage_md="x",
+        claims=(qg_bakeoff.FixtureClaim("m", "вінок пускали на воду.", False, "M", "real quote"),),
+    )
+    payload = {
+        "fact_checks": [
+            # Broad row FIRST (row-order trap): whole-paragraph quote, honest verdict.
+            {
+                "claim": "Дівчата плели вінки, вінок пускали на воду, а хлопці стрибали через вогонь.",
+                "verdict": "UNATTESTED_AFTER_SEARCH",
+            },
+            # Tighter row SECOND: sentence-level quote, endorses the fabrication.
+            {"claim": "Вінок пускали на воду, співаючи.", "verdict": "CONFIRMED"},
+        ]
+    }
+
+    score = qg_bakeoff.score_payload(payload, fixture)
+
+    assert score["missing_claims"] == 0
+    (per_claim,) = score["claims"]
+    assert per_claim["model_claim"] == "Вінок пускали на воду, співаючи."
+    # CONFIRMED on a fabricated claim = the fatal endorsement constant.
+    assert per_claim["model_judgment_points"] == qg_factcheck_scoring.score_verdict(
+        "CONFIRMED", claim_is_true=False
+    )
+
+
+def test_negative_verdict_on_shared_sentence_does_not_refute_true_subclaim() -> None:
+    """A REFUTED row for a compound sentence (one true + one fabricated
+    sub-claim) targets the fabricated part; the true sub-claim must count
+    missing (−10), never refuted-true (−50) (codex review, PR #4485)."""
+    fixture = qg_bakeoff.BakeoffFixture(
+        slug="compound",
+        title="Compound",
+        passage_md="x",
+        claims=(
+            qg_bakeoff.FixtureClaim("t", "Веснянки співали навесні.", True),
+            qg_bakeoff.FixtureClaim("f", "лише чоловіки у шкіряних масках.", False, "M", "real quote"),
+        ),
+    )
+    compound = "Веснянки співали навесні лише чоловіки у шкіряних масках."
+    payload = {"fact_checks": [{"claim": compound, "verdict": "REFUTED_BY_CONTRADICTION"}]}
+
+    score = qg_bakeoff.score_payload(payload, fixture)
+
+    by_id = {row["claim_id"]: row for row in score["claims"]}
+    # Fabricated sub-claim: refutation transfers (the model caught it).
+    assert by_id["f"]["matched"] is True
+    assert by_id["f"]["model_judgment_points"] == qg_factcheck_scoring.score_verdict(
+        "REFUTED_BY_CONTRADICTION", claim_is_true=False
+    )
+    # True sub-claim: the negative verdict must NOT transfer — missing, not refuted.
+    assert by_id["t"]["matched"] is False
+    assert by_id["t"]["reason"] == "missing_claim"
+    assert by_id["t"]["model_judgment_points"] == qg_bakeoff.MISSING_CLAIM_PENALTY
+    # A CONFIRMED compound row still transfers to the true sub-claim.
+    confirmed = {"fact_checks": [{"claim": compound, "verdict": "CONFIRMED"}]}
+    score2 = qg_bakeoff.score_payload(confirmed, fixture)
+    by_id2 = {row["claim_id"]: row for row in score2["claims"]}
+    assert by_id2["t"]["matched"] is True
+    assert by_id2["f"]["model_judgment_points"] == qg_factcheck_scoring.score_verdict(
+        "CONFIRMED", claim_is_true=False
+    )
+
+
 def test_resume_skips_existing_artifact(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.delenv("CI", raising=False)
     monkeypatch.setenv("QG_BAKEOFF", "1")
