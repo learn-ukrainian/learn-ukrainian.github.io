@@ -104,13 +104,39 @@ Validity/russianism is a rule, not a judgment:
   `expression`/`phraseologism`/`proverb` only on idiom/formula/proverb evidence (Фразеологічний / proverb list).
 Only VESUM-absent + no-heritage words land in `needs_review` for a human glance — everything else is automatic.
 
-## 5. Backend — when (not for the read-only Atlas)
+## 5. Practice coverage — the data supports many drill types; only 4 modes are live
 
-Static (Astro SSG from SQLite + prebuilt FTS index, or ship SQLite-wasm for client FTS) covers browse+search
-of 250k lemma articles. **Introduce a backend at these triggers, not before:**
-1. **User state** — Practice Hub (SRS scheduling, progress, streaks, accounts). Per-user + write-heavy. THE real trigger.
-2. **Live enrichment** — slovnyk.me fetch on cache-miss at request time (vs prebuilt).
-3. **Search index outgrows a client-side ship** — per-form aliases (millions) + full definitions too big to download → search behind an API.
+Per the LOCKED spec `docs/poc/word-atlas/PRACTICE-HUB-SPEC.md` (user 2026-06-24; re-homed to
+`/words-of-the-day/practice/` #3811). The atlas enrichment already carries the data for far more drills than
+the 4 live modes (Flashcards, Matching, Choice-MC, Cloze). **Add proper coverage** by turning the rich fields
+into drill types, all from prebuilt decks:
+
+| Atlas data field | Drill type to add |
+|---|---|
+| `enrichment.morphology.paradigm.cases` | declension / conjugation (case + number production) |
+| `enrichment.stress` | stress-placement drill (choose the stressed syllable) |
+| `sections.synonyms` / `antonyms` | synonym / antonym match |
+| `enrichment.pronunciation.ipa` + audio (future) | listening / dictation |
+| `heritage_status` / `§6 calque` | "pick the non-russianism" decolonization drill |
+| `enrichment.idioms` | idiom-meaning match |
+| `enrichment.cefr` | level-segmented session mixing (already the deck axis) |
+
+Deck build stays **static, CEFR-segmented, sharded** (`practice-index/lexemes/cloze.{lvl}.json`); FSRS card unit
+= `lemmaId + mode`. Cloze answer model is case-demanding + scaffolded (§4 of the spec). Feed decks from
+`data/atlas.db` (this DB) once populated. `is_practice_eligible` gate = gloss + CEFR/course anchor, no derived
+forms, no surzhyk.
+
+## 5b. Backend — when (mostly: NOT in the current roadmap)
+
+The design is deliberately **backend-free**: static Astro SSG from the DB + prebuilt FTS index + prebuilt
+practice decks, with **client-side FSRS-6 (`ts-fsrs`) + `localStorage`** for scheduling state. That covers
+browse, search, AND spaced-repetition practice of 250k articles with no server. A backend is only needed for
+things NOT in scope today:
+1. **Cross-device / account sync** of practice progress (localStorage is per-device) — deferred until users ask.
+2. **Live enrichment** — slovnyk.me fetch at request time (we prebuild instead).
+3. **Search index too big to ship** — if per-form aliases (millions) + full definitions exceed a comfortable
+   client download; then search moves behind an API.
+None of these block the corpus-fill or practice-coverage work. Stay static.
 
 ## 6. Roadmap (sequenced — schema BEFORE mass-fill, else we migrate 250k twice)
 
@@ -123,7 +149,10 @@ of 250k lemma articles. **Introduce a backend at these triggers, not before:**
 4. **Phase-2 slovnyk/wiki paced fill** — background work-queue within rate limits.
 5. **Manifest/site generation from the DB** (Astro SSG) + entry-model gates in CI.
 6. **Other resources** (curriculum #4222, textbooks #3934, Ohoiko #4223) via the same DB intake path.
-7. Backend only when Practice Hub / index-size triggers hit (§5).
+7. **Practice coverage (§5):** feed decks from `data/atlas.db`; add the drill types the data already supports
+   (declension/conjugation, stress, synonym/antonym match, idiom-match, decolonization pick) beyond today's 4
+   live modes. Stays static + client-side FSRS (no backend).
+8. Backend: NOT needed for the above (§5b). Only for cross-device account sync, later, if users ask.
 
 ## 7. Open validation items
 - Confirm SQLite-wasm client FTS size is acceptable at 250k before committing to no-backend search.
