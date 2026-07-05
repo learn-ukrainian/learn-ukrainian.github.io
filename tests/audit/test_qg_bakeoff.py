@@ -1079,6 +1079,130 @@ def test_arm_both_runs_tooled_and_bare_cells_and_scorecard_shows_lift(
     assert "| 110 |" in scorecard  # tooled 30 − bare (−80)
 
 
+def test_harness_lift_computed_over_paired_cells_only() -> None:
+    """Unpaired fixtures must not leak into the lift (codex review, PR #4500
+    finding 1): tooled has fixtures a+b, bare only a → lift uses a alone."""
+
+    def _artifact(slug: str, arm: str, mj: int) -> dict:
+        return {
+            "model": {"pin": "pin/x"},
+            "fixture": {"slug": slug},
+            "arm": arm,
+            "score": {
+                "model_judgment_score": mj,
+                "fractions": {"class_m_alignment": {"numerator": 1, "denominator": 2}},
+            },
+        }
+
+    lines = qg_bakeoff._harness_lift_section(
+        "Test",
+        [
+            _artifact("a", "tooled", 30),
+            _artifact("b", "tooled", 150),  # unpaired — must NOT count
+            _artifact("a", "bare", -80),
+        ],
+    )
+    row = next(line for line in lines if line.startswith("| pin/x"))
+    # paired=1, tooled=30 (not 180), bare=-80, lift=110
+    assert row.split("|")[2].strip() == "1"
+    assert "| 30 |" in row
+    assert "| 110 |" in row
+    assert "180" not in row
+
+    # Zero paired fixtures → n/a, never a fabricated number.
+    lines = qg_bakeoff._harness_lift_section("Test", [_artifact("a", "tooled", 30)])
+    row = next(line for line in lines if line.startswith("| pin/x"))
+    assert "n/a" in row and "30" not in row.replace("| 0 |", "")
+
+
+def test_run_matrix_preflights_pins_against_routing_guard(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A subscription-family pin must fail the matrix at config time — before
+    any cell runs (codex review, PR #4500 finding 2)."""
+    from scripts.ai_agent_bridge.routing_guard import RoutingGuardError
+
+    monkeypatch.delenv("CI", raising=False)
+    monkeypatch.delenv("LU_ROUTING_GUARD_OVERRIDE", raising=False)
+    monkeypatch.setenv("QG_BAKEOFF", "1")
+    calls = 0
+
+    def runner(*args, **kwargs):  # pragma: no cover - must never run
+        nonlocal calls
+        calls += 1
+        raise AssertionError("runner must not fire for a guarded pin")
+
+    with pytest.raises(RoutingGuardError):
+        qg_bakeoff.run_matrix(
+            [_fixture()],
+            ["openrouter/anthropic/claude-sonnet-5"],
+            output_dir=tmp_path,
+            runner=runner,
+            bare_runner=runner,
+            arm="both",
+        )
+    assert calls == 0
+    assert not list(tmp_path.glob("*.json"))
+
+
+def test_reviewer_opencode_transport_is_guarded(monkeypatch: pytest.MonkeyPatch) -> None:
+    """The reviewer dispatch runs its OWN opencode invocation (not the bridge's
+    guarded _run_opencode) — the guard must sit at this transport too."""
+    from scripts.ai_agent_bridge.routing_guard import RoutingGuardError
+
+    monkeypatch.delenv("LU_ROUTING_GUARD_OVERRIDE", raising=False)
+    route = qg_bakeoff.bakeoff_route_for_model("openrouter/openai/gpt-5.5")
+    with pytest.raises(RoutingGuardError):
+        llm_reviewer_dispatch._invoke_opencode_reviewer(
+            "prompt", route, default_timeout_s=1, require_mcp=False
+        )
+
+
+def test_bare_strips_gate_only_fields_before_scoring(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """A bare model self-emitting admissibility_downgraded/original_verdict must
+    not split the judgment/live columns (codex review, PR #4500 finding 3): no
+    bare gate produced those fields, so they are stripped before scoring."""
+    monkeypatch.delenv("CI", raising=False)
+    monkeypatch.setenv("QG_BAKEOFF", "1")
+    fixture = _fixture()
+    gamed_payload = {
+        "fact_checks": [
+            {"claim": "True claim.", "verdict": "CONFIRMED"},
+            {
+                # Gaming attempt: CONFIRMED live verdict, honest-looking
+                # "downgraded" judgment verdict.
+                "claim": "Fabricated claim.",
+                "verdict": "CONFIRMED",
+                "admissibility_downgraded": True,
+                "original_verdict": "UNATTESTED_AFTER_SEARCH",
+            },
+        ]
+    }
+
+    def bare_runner(
+        run_route: llm_reviewer_dispatch.ReviewerRoute,
+        _prompt: str,
+        _task_id: str,
+    ) -> llm_reviewer_dispatch.DispatchResult:
+        return _bare_dispatch_result(gamed_payload, run_route)
+
+    run = qg_bakeoff.run_one_bare(
+        qg_bakeoff.bakeoff_route_for_model("openrouter/google/gemma-4-31b-it"),
+        fixture,
+        output_dir=tmp_path,
+        runner=bare_runner,
+    )
+
+    score = run.artifact["score"]
+    # Both columns score the emitted verdict: CONFIRMED on the fabrication.
+    assert score["model_judgment_score"] == score["live_admissible_score"]
+    by_id = {row["claim_id"]: row for row in score["claims"]}
+    assert by_id["c-false"]["model_judgment_verdict"] == "CONFIRMED"
+    # The persisted payload rows carry ONLY claim + verdict.
+    for row in run.artifact["payload"]["fact_checks"]:
+        assert sorted(row) == ["claim", "verdict"]
+
+
 def test_arm_bare_after_tooled_scorecard_keeps_both_arms(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

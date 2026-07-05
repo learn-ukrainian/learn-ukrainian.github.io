@@ -410,6 +410,15 @@ def _parse_bare_payload(response_text: str) -> tuple[dict[str, Any], bool, bool]
             raise BakeoffCellError(str(exc2), response_head=response_text[:2000]) from exc2
         findings_schema_invalid = True
         payload = stripped
+    # Strip every fact_checks row to the two bare-legitimate fields (codex
+    # review, PR #4500 finding 3): score_payload honors gate-produced fields
+    # like admissibility_downgraded/original_verdict (_judgment_verdict), so a
+    # bare model could self-emit them and split the judgment/live columns. No
+    # bare gate produced them — they are untrusted input, not measurements.
+    payload["fact_checks"] = [
+        {"claim": row["claim"], "verdict": row["verdict"]}
+        for row in payload.get("fact_checks", [])
+    ]
     return payload, response_parse_lenient, findings_schema_invalid
 
 
@@ -439,6 +448,15 @@ def run_matrix(
     require_offline_opt_in()
     if arm not in _ARM_CHOICES:
         raise BakeoffConfigError(f"arm must be one of {list(_ARM_CHOICES)}; got {arm!r}")
+    # Preflight EVERY pin against the standing routing orders before any cell
+    # runs (codex review, PR #4500 finding 2): a subscription-family or qwen
+    # pin must fail the whole matrix at config time, not burn N-1 cells first.
+    # Defense-in-depth: _invoke_opencode_reviewer re-asserts at the transport,
+    # covering injected runners and non-matrix callers.
+    from scripts.ai_agent_bridge.routing_guard import assert_model_routing_allowed
+
+    for pin in model_pins:
+        assert_model_routing_allowed(pin, context="qg_bakeoff matrix pin")
     output_dir.mkdir(parents=True, exist_ok=True)
     run_tooled = arm in (TOOLED_ARM, BOTH_ARM)
     run_bare = arm in (BARE_ARM, BOTH_ARM)
@@ -1261,46 +1279,66 @@ def _totals_and_lift_section(title: str, artifacts: Sequence[Mapping[str, Any]])
                 wall=round(row["wall_seconds"], 3),
             )
         )
-    lines.extend(_harness_lift_section(title, totals))
+    lines.extend(_harness_lift_section(title, artifacts))
     return lines
 
 
 def _harness_lift_section(
     title: str,
-    totals: Mapping[tuple[str, str], Mapping[str, Any]],
+    artifacts: Sequence[Mapping[str, Any]],
 ) -> list[str]:
     """Per-model tooled-vs-bare comparison with the headline harness-lift column.
 
-    Lift = tooled model_judgment − bare model_judgment (positive = tooling helps). It
-    is shown only when a model has BOTH arms on disk; otherwise the arm is ``n/a`` and
-    lift is ``n/a`` — never a fabricated zero.
+    Lift = tooled model_judgment − bare model_judgment (positive = tooling helps),
+    computed over PAIRED (model, fixture) cells ONLY — fixtures with an artifact
+    in BOTH arms for that model (codex review, PR #4500 finding 1: subtracting
+    unpaired aggregate totals fabricates lift from missing cells). Error
+    artifacts count (they are measured cells, scored all-missing); ABSENT
+    artifacts do not. A model with zero paired fixtures shows ``n/a`` — never a
+    fabricated number.
     """
-    by_model: dict[str, dict[str, Mapping[str, Any]]] = defaultdict(dict)
-    for (model, arm), row in totals.items():
-        by_model[model][arm] = row
+    cells: dict[str, dict[str, dict[str, Mapping[str, Any]]]] = defaultdict(lambda: defaultdict(dict))
+    for artifact in artifacts:
+        cells[_model_pin(artifact)][_fixture_slug(artifact)][_artifact_arm(artifact)] = _score(artifact)
     lines = [
         "",
         f"## Harness Lift {title}",
         "",
-        "Lift = tooled model judgment − bare model judgment (positive = the harness helps).",
+        "Lift = tooled model judgment − bare model judgment (positive = the harness helps),",
+        "over PAIRED passages only (both arms on disk for that model+passage).",
         "M alignment is the discriminating fraction; low-N marks denominators below 10.",
         "",
-        "| model | tooled model judgment | bare model judgment | harness_lift | tooled M alignment | bare M alignment |",
-        "| --- | ---: | ---: | ---: | --- | --- |",
+        "| model | paired passages | tooled model judgment | bare model judgment | harness_lift | tooled M alignment | bare M alignment |",
+        "| --- | ---: | ---: | ---: | ---: | --- | --- |",
     ]
-    for model in sorted(by_model):
-        arms = by_model[model]
-        tooled = arms.get(TOOLED_ARM)
-        bare = arms.get(BARE_ARM)
-        tooled_mj = tooled["model_judgment_score"] if tooled else None
-        bare_mj = bare["model_judgment_score"] if bare else None
-        lift = tooled_mj - bare_mj if (tooled_mj is not None and bare_mj is not None) else None
-        tooled_m = (
-            _fraction_label(_fraction(tooled["class_m_good"], tooled["class_m_total"])) if tooled else "n/a"
+    for model in sorted(cells):
+        paired = sorted(
+            slug
+            for slug, arms in cells[model].items()
+            if TOOLED_ARM in arms and BARE_ARM in arms
         )
-        bare_m = _fraction_label(_fraction(bare["class_m_good"], bare["class_m_total"])) if bare else "n/a"
+        if not paired:
+            lines.append(f"| {model} | 0 | n/a | n/a | n/a | n/a | n/a |")
+            continue
+
+        def _summed(arm: str, key: str, *, slugs: Sequence[str] = paired, pin: str = model) -> int:
+            return sum(int(cells[pin][slug][arm].get(key) or 0) for slug in slugs)
+
+        def _summed_fraction(arm: str, *, slugs: Sequence[str] = paired, pin: str = model) -> dict[str, Any]:
+            numerator = denominator = 0
+            for slug in slugs:
+                fractions = cells[pin][slug][arm].get("fractions")
+                m_fraction = fractions.get("class_m_alignment") if isinstance(fractions, Mapping) else None
+                if isinstance(m_fraction, Mapping):
+                    numerator += int(m_fraction.get("numerator") or 0)
+                    denominator += int(m_fraction.get("denominator") or 0)
+            return _fraction(numerator, denominator)
+
+        tooled_mj = _summed(TOOLED_ARM, "model_judgment_score")
+        bare_mj = _summed(BARE_ARM, "model_judgment_score")
         lines.append(
-            f"| {model} | {_na(tooled_mj)} | {_na(bare_mj)} | {_na(lift)} | {tooled_m} | {bare_m} |"
+            f"| {model} | {len(paired)} | {tooled_mj} | {bare_mj} | {tooled_mj - bare_mj} "
+            f"| {_fraction_label(_summed_fraction(TOOLED_ARM))} | {_fraction_label(_summed_fraction(BARE_ARM))} |"
         )
     return lines
 
