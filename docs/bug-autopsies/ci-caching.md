@@ -13,6 +13,10 @@ passed locally, including under a CI-mimic env (minimal venv, anonymous hydrate)
    (rehydrate) → immediate save.
 3. LATENT: `atlas_links._load_index` fail-softs to `{}` on any manifest error — silently
    producing links-less MDX that misreports as content drift. Fixed: loud stderr warning.
+4. LATENT (found via PR #4399): the `MDX_PARITY_BULK_REGEN` workflow expression was
+   unparenthesized — `a || b || c || d && '1' || '0'` yields boolean `true` (not `'1'`) for the
+   title-tag paths, and the checker tested `== "1"`, so the bulk-regen exemption had NEVER
+   fired via PR title. Fixed: parenthesized expression + checker accepts `{"1","true"}`.
 **Prevention:** cache content must be verified against its pin after restore (a cache key does
 not pin content); silent degradation in generators is forbidden — degrade loudly. When a
 drift/parity CI check disagrees with local, FIRST diff the merge ref vs your base

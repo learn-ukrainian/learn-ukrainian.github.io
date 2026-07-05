@@ -554,7 +554,10 @@ jobs:
 
       - name: Check MDX source parity
         env:
-          MDX_PARITY_BULK_REGEN: ${{ contains(github.event.pull_request.title, '[regen-mdx]') || contains(github.event.pull_request.title, '[bulk-regen]') || contains(github.event.pull_request.body, '[regen-mdx]') || contains(github.event.pull_request.body, '[bulk-regen]') && '1' || '0' }}
+          # Parenthesized: without parens, && binds tighter than || and the
+          # title-tag paths yield boolean `true` (not '1'), which the checker
+          # rejects — the exemption silently never fired (found via PR #4399).
+          MDX_PARITY_BULK_REGEN: ${{ (contains(github.event.pull_request.title, '[regen-mdx]') || contains(github.event.pull_request.title, '[bulk-regen]') || contains(github.event.pull_request.body, '[regen-mdx]') || contains(github.event.pull_request.body, '[bulk-regen]')) && '1' || '0' }}
         run: |
           .venv/bin/python scripts/audit/check_mdx_source_parity.py --changed-vs-base origin/main
 
