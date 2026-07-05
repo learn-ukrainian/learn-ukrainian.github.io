@@ -275,6 +275,8 @@ def _run_command(args: list[str], *, timeout: float = 2.0) -> subprocess.Complet
 
 
 def _collect_git_orient_data() -> dict:
+    from scripts.guardrails import worktree_containment
+
     branch_proc = _run_command(["git", "branch", "--show-current"])
     head_proc = _run_command(["git", "rev-parse", "--short=9", "HEAD"])
     ahead_proc = _run_command(["git", "rev-list", "--count", "origin/main..HEAD"])
@@ -301,12 +303,31 @@ def _collect_git_orient_data() -> dict:
             ahead_value = int(ahead_proc.stdout.strip() or "0")
         except ValueError:
             ahead_value = 0
+    try:
+        primary_status = worktree_containment.primary_checkout_dirty_status(PROJECT_ROOT)
+    except Exception as exc:
+        branch = branch_proc.stdout.strip()
+        primary_status = {
+            "main_root": str(PROJECT_ROOT),
+            "branch": branch,
+            "protected_branch": branch in worktree_containment.PROTECTED_BRANCHES,
+            "dirty": False,
+            "dirty_count": 0,
+            "tracked_dirty_count": 0,
+            "untracked_dirty_count": 0,
+            "entries": [],
+            "checked_cwd": str(PROJECT_ROOT),
+            "checked_command": "git status --porcelain=v1 -z --untracked-files=all",
+            "error": str(exc),
+        }
 
     return {
         "branch": branch_proc.stdout.strip(),
         "head": head_proc.stdout.strip(),
         "ahead_of_origin": ahead_value,
         "recent_commits": recent_commits,
+        "primary_checkout_dirty": primary_status["dirty"],
+        "primary_checkout": primary_status,
     }
 
 

@@ -56,6 +56,7 @@ __all__ = [
     "is_protected_branch",
     "is_tracked",
     "is_write_allowed",
+    "primary_checkout_dirty_status",
     "registered_worktrees",
     "resolve_main_root",
 ]
@@ -363,6 +364,71 @@ def is_protected_branch(root: Path | str | None = None) -> bool:
     """True if the checkout at ``root`` is on a :data:`PROTECTED_BRANCHES` branch."""
     branch = current_branch(root)
     return branch is not None and branch in PROTECTED_BRANCHES
+
+
+def _parse_status_porcelain_z(stdout: str) -> list[dict[str, str]]:
+    """Parse ``git status --porcelain=v1 -z`` entries.
+
+    Ignored files are absent because callers do not pass ``--ignored``. Rename
+    and copy entries carry a second NUL-delimited source path; we skip that
+    extra token because the destination path is sufficient for the dirty-main
+    tripwire.
+    """
+    entries: list[dict[str, str]] = []
+    parts = stdout.split("\0")
+    index = 0
+    while index < len(parts):
+        raw = parts[index]
+        index += 1
+        if not raw:
+            continue
+        xy = raw[:2]
+        path = raw[3:] if len(raw) > 3 else ""
+        entries.append({
+            "xy": xy,
+            "path": path,
+            "kind": "untracked" if xy == "??" else "tracked",
+        })
+        if xy[:1] in {"R", "C"} or xy[1:2] in {"R", "C"}:
+            index += 1
+    return entries
+
+
+def primary_checkout_dirty_status(start: Path | str | None = None) -> dict:
+    """Return dirty-state detail for the protected primary checkout.
+
+    The check intentionally uses git status plumbing from the primary checkout
+    root and omits ignored files, so gitignored local runtime state does not
+    count as dirty. Tracked modifications/deletions and untracked non-ignored
+    files both count because either would pollute the primary checkout for the
+    next dispatched writer.
+    """
+    main_root = resolve_main_root(start)
+    branch = current_branch(main_root)
+    command = ("git", "status", "--porcelain=v1", "-z", "--untracked-files=all")
+    proc = _run_git(main_root, *command[1:])
+    if proc.returncode != 0:
+        detail = proc.stderr.strip() or proc.stdout.strip() or "git status failed"
+        raise RuntimeError(
+            f"could not inspect primary checkout dirty state "
+            f"(cwd={main_root}, command={' '.join(command)}): {detail}"
+        )
+
+    entries = _parse_status_porcelain_z(proc.stdout or "")
+    tracked_count = sum(1 for entry in entries if entry["kind"] == "tracked")
+    untracked_count = sum(1 for entry in entries if entry["kind"] == "untracked")
+    return {
+        "main_root": str(main_root),
+        "branch": branch,
+        "protected_branch": branch in PROTECTED_BRANCHES if branch else False,
+        "dirty": bool(entries),
+        "dirty_count": len(entries),
+        "tracked_dirty_count": tracked_count,
+        "untracked_dirty_count": untracked_count,
+        "entries": entries,
+        "checked_cwd": str(main_root),
+        "checked_command": " ".join(command),
+    }
 
 
 # ---------------------------------------------------------------------------
