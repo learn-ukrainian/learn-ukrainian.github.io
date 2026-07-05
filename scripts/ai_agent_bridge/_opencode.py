@@ -394,6 +394,9 @@ def _run_opencode(
     :func:`_invoke_opencode_detailed` (text + tool telemetry) so the argv
     construction, timeout, and error handling live in exactly one place.
     """
+    from scripts.routing_guard import assert_model_routing_allowed
+
+    assert_model_routing_allowed(model, context="opencode transport (_run_opencode)")
     opencode_bin = shutil.which("opencode")
     if not opencode_bin:
         raise SystemExit("ask-opencode: opencode CLI not found in PATH")

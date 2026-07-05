@@ -1461,6 +1461,15 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         print("❌ --prompt or --prompt-file is required", file=sys.stderr)
         return 2
 
+    from scripts.routing_guard import RoutingGuardError, assert_agent_routing_allowed, assert_model_routing_allowed
+
+    try:
+        assert_agent_routing_allowed(args.agent, context="delegate dispatch")
+        assert_model_routing_allowed(getattr(args, "model", None), context="delegate dispatch --model")
+    except RoutingGuardError as exc:
+        print(f"❌ {exc}", file=sys.stderr)
+        return 2
+
     if getattr(args, "check_budget", False) and not getattr(args, "force_agent", False):
         _check_routing_budget_for_dispatch(args.agent)
 
