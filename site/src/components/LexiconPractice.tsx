@@ -66,7 +66,12 @@ const RATING_LABELS: Record<PracticeRating, string> = {
   easy: 'Легко',
 };
 
-const MODE_LABELS: Record<PracticeModeFilter, string> = {
+type VisiblePracticeModeFilter = Extract<
+  PracticeModeFilter,
+  'mixed' | 'flashcards' | 'matching' | 'choice' | 'cloze'
+>;
+
+const MODE_LABELS: Record<VisiblePracticeModeFilter, string> = {
   mixed: 'Mixed',
   flashcards: 'Flashcards',
   matching: 'Matching',
@@ -74,10 +79,10 @@ const MODE_LABELS: Record<PracticeModeFilter, string> = {
   cloze: 'Cloze',
 };
 
-const MODE_CARD_ORDER: PracticeModeFilter[] = ['mixed', 'flashcards', 'matching', 'choice', 'cloze'];
+const MODE_CARD_ORDER: VisiblePracticeModeFilter[] = ['mixed', 'flashcards', 'matching', 'choice', 'cloze'];
 
 const MODE_META: Record<
-  PracticeModeFilter,
+  VisiblePracticeModeFilter,
   {
     title: string;
     en: string;
@@ -122,6 +127,10 @@ const MODE_META: Record<
     accent: 'orange',
   },
 };
+
+function visiblePracticeMode(mode: PracticeModeFilter): VisiblePracticeModeFilter {
+  return mode in MODE_META ? (mode as VisiblePracticeModeFilter) : 'mixed';
+}
 
 const HERITAGE_COLORS: Record<string, string> = {
   native: 'var(--lu-teal)',
@@ -271,7 +280,7 @@ function cardData(entry: PracticeLexeme) {
   };
 }
 
-function ModeIcon({ mode }: { mode: PracticeModeFilter }) {
+function ModeIcon({ mode }: { mode: VisiblePracticeModeFilter }) {
   if (mode === 'matching') {
     return (
       <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
@@ -611,7 +620,7 @@ export default function LexiconPractice({
 
   useEffect(() => {
     if (!started) return;
-    document.title = `${MODE_LABELS[mode]} Practice - Words of the Day`;
+    document.title = `${MODE_LABELS[visiblePracticeMode(mode)]} Practice - Words of the Day`;
   }, [mode, started]);
 
   async function ensureDeck(
@@ -830,8 +839,11 @@ export default function LexiconPractice({
     todayWorkload > 0 ? Math.min(100, (correctToday / todayWorkload) * 100) : correctToday > 0 ? 100 : 0;
   const todayRingStyle = { '--pct': String(todayPct) } as CSSProperties;
   const stageMode: PracticeModeFilter = selection?.mode ?? mode;
+  const visibleStageMode = visiblePracticeMode(stageMode);
   const stageTitle =
-    mode === 'mixed' && selection ? `Мікс · ${MODE_META[stageMode].title}` : MODE_META[stageMode].title;
+    mode === 'mixed' && selection && visibleStageMode !== 'mixed'
+      ? `Мікс · ${MODE_META[visibleStageMode].title}`
+      : MODE_META[visibleStageMode].title;
   const correctLabel = `${correctToday} ${uaPlural(correctToday)}`;
 
   return (

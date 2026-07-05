@@ -5,6 +5,7 @@ import {
   State,
   type Card as FsrsCard,
   type FSRSParameters,
+  type Grade,
   type RecordLogItem,
 } from 'ts-fsrs';
 
@@ -21,7 +22,20 @@ const MIN_WORD_REPEAT_WINDOW = 8;
 const DEFAULT_RECOGNITION_STABILITY = 3;
 
 export type PracticeRating = 'again' | 'hard' | 'good' | 'easy';
-export type PracticeMode = 'flashcards' | 'matching' | 'choice' | 'cloze';
+export const PRACTICE_MODE_DECK_VERSION = 2;
+export const PRACTICE_MODES = [
+  'flashcards',
+  'matching',
+  'choice',
+  'cloze',
+  // Phase-1-ready drill trio only; synonym/idiom/listening stay out until their data phases land.
+  'paradigm',
+  'stress',
+  'heritage',
+] as const;
+const PRACTICE_MODE_SET = new Set<string>(PRACTICE_MODES);
+
+export type PracticeMode = (typeof PRACTICE_MODES)[number];
 export type PracticeModeFilter = PracticeMode | 'mixed';
 export type RecallDirection = 'uk-to-meaning' | 'meaning-to-uk';
 export type ChoicePolarity = 'word-to-meaning' | 'meaning-to-word';
@@ -251,6 +265,10 @@ interface StorageLike {
   removeItem(key: string): void;
 }
 
+export type ParsedCardKey =
+  | { lemmaId: string; mode: PracticeMode; quarantined: false }
+  | { lemmaId: string; mode: null; rawMode: string; quarantined: true };
+
 const FSRS6_DEFAULT_PARAMS: FSRSParameters = {
   request_retention: 0.9,
   maximum_interval: 36500,
@@ -265,14 +283,12 @@ const FSRS6_DEFAULT_PARAMS: FSRSParameters = {
   relearning_steps: ['10m'],
 };
 
-const RATING_TO_FSRS: Record<PracticeRating, Rating> = {
+const RATING_TO_FSRS: Record<PracticeRating, Grade> = {
   again: Rating.Again,
   hard: Rating.Hard,
   good: Rating.Good,
   easy: Rating.Easy,
 };
-
-const PRACTICE_MODES: PracticeMode[] = ['flashcards', 'matching', 'choice', 'cloze'];
 
 const memoryStore = new Map<string, string>();
 const memoryStorage: StorageLike = {
@@ -395,17 +411,33 @@ function isPracticeRating(value: unknown): value is PracticeRating {
   return value === 'again' || value === 'hard' || value === 'good' || value === 'easy';
 }
 
-function isPracticeMode(value: unknown): value is PracticeMode {
-  return (
-    value === 'flashcards' || value === 'matching' || value === 'choice' || value === 'cloze'
-  );
+export function isPracticeMode(value: unknown): value is PracticeMode {
+  return typeof value === 'string' && PRACTICE_MODE_SET.has(value);
 }
 
-function parseCardKey(key: string): { lemmaId: string; mode: PracticeMode } {
-  const [lemmaId, rawMode] = key.split('::');
+export function parseCardKey(key: string): ParsedCardKey {
+  const separatorIndex = key.indexOf('::');
+  if (separatorIndex < 0) {
+    return {
+      lemmaId: key,
+      mode: 'flashcards',
+      quarantined: false,
+    };
+  }
+  const lemmaId = key.slice(0, separatorIndex) || key;
+  const rawMode = key.slice(separatorIndex + 2);
+  if (!isPracticeMode(rawMode)) {
+    return {
+      lemmaId,
+      mode: null,
+      rawMode,
+      quarantined: true,
+    };
+  }
   return {
-    lemmaId: lemmaId || key,
-    mode: isPracticeMode(rawMode) ? rawMode : 'flashcards',
+    lemmaId,
+    mode: rawMode,
+    quarantined: false,
   };
 }
 
@@ -550,10 +582,10 @@ export function loadState(
   }
 
   if (parsed.version === CURRENT_VERSION) {
-    const state = hydrateStore(parsed as PersistedSrsSchemaV3, settings, raw, {
+    const state = hydrateStore(parsed as unknown as PersistedSrsSchemaV3, settings, raw, {
       ...emptyFlags(),
       settingsCorrupt,
-      clockJump: detectClockJump((parsed as PersistedSrsSchemaV3).lastSavedAt, now),
+      clockJump: detectClockJump((parsed as unknown as PersistedSrsSchemaV3).lastSavedAt, now),
     });
     if (state) {
       activeState = state;
@@ -732,13 +764,16 @@ export function masteredCount(threshold = 21, mode: PracticeMode = 'flashcards')
   const state = currentState();
   let count = 0;
   for (const [key, card] of state.cards.entries()) {
-    if (parseCardKey(key).mode === mode && card.stability >= threshold) count += 1;
+    const parsed = parseCardKey(key);
+    if (!parsed.quarantined && parsed.mode === mode && card.stability >= threshold) count += 1;
   }
   return count;
 }
 
 function lexemeId(entry: Pick<PracticeLexeme, 'lemmaId'> | { slug?: string; lemma?: string }): string {
-  return 'lemmaId' in entry && entry.lemmaId ? entry.lemmaId : entry.slug ?? entry.lemma ?? '';
+  if ('lemmaId' in entry && entry.lemmaId) return entry.lemmaId;
+  const fallback = entry as { slug?: string; lemma?: string };
+  return fallback.slug ?? fallback.lemma ?? '';
 }
 
 export function getDueQueue<T extends Pick<PracticeLexeme, 'lemmaId'> | PracticeDeckEntry>(
@@ -925,10 +960,17 @@ export function selectNextPracticeItem(
   for (const indexItem of deck.index) {
     const lemma = maps.lexemes.get(indexItem.lemmaId);
     if (!lemma) continue;
-    const modes = indexItem.modes.filter((mode) => modeFilter === 'mixed' || mode === modeFilter);
+    const modes = indexItem.modes.filter(
+      (mode): mode is PracticeMode =>
+        isPracticeMode(mode) && (modeFilter === 'mixed' || mode === modeFilter),
+    );
     for (const mode of modes) {
       if (mode === 'cloze') {
-        if (modeFilter !== 'cloze' && !recognitionMastered(indexItem.lemmaId, state, minRecognitionStability)) continue;
+        if (
+          modeFilter !== 'cloze' &&
+          !recognitionMastered(indexItem.lemmaId, state, minRecognitionStability)
+        )
+          continue;
         for (const clozeId of indexItem.clozeIds) {
           const cloze = maps.cloze.get(clozeId);
           if (!cloze) continue;
