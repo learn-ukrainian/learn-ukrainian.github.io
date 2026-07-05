@@ -94,6 +94,17 @@ readings:
   cefr_min: C1
   learner_task: 'Зрозуміти значення титулу Короля Русі та заснування митрополії.'
   caveats: 'Довідкова стаття задає хронологію й титулатуру; інтерпретації державної спадкоємності треба перевіряти за нумізматичними та літописними джерелами.'
+- title: 'Печатка Юрія I Львовича з титулом короля Русі'
+  language: uk
+  genre: seal
+  source_type: primary
+  role: reading-needed
+  source: 'reading-needed: verify a rights-clear Ukrainian-hosted facsimile or scholarly edition of the seal legend before module build'
+  license: unknown
+  hosting: reading-needed
+  cefr_min: C1
+  learner_task: 'Після верифікації джерела пояснити, як титул «король Русі» працює як документальний доказ державної традиції.'
+  caveats: 'Не підміняти печатку загальною статтею про Королівство Русі; потрібні перевірка зображення або видання легенди, прав і стабільного доступу.'
 - title: 'Королівство Русі (Вікіпедія)'
   language: uk
   genre: encyclopedia
@@ -136,7 +147,7 @@ sequence: 12
 slug: yuriy-lvovych
 subtitle: 'Yuriy I Lvovych: The Last King of Rus'''
 title: 'Юрій I Львович: Останній Король Русі'
-version: '4.2'
+version: '4.3'
 vocabulary_hints:
 - definition: пристрій для відбитку офіційного знака або сам відбиток, що підтверджує автентичність документа
   pos: ж.
