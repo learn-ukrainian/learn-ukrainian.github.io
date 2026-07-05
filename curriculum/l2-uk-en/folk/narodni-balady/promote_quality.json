@@ -1,9 +1,9 @@
 {
-  "assembled_mdx_sha256": "29b863206a31dcd3381890d581c070b03db47a973a72bdf7b415961194826db2",
+  "assembled_mdx_sha256": "b7a49709c2568740a95b7a83f89ba3581f9f15bcdf1eef68ec29d568c287966c",
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "752e1869d1a03f1e360f0d60e13956ad9048650f59ca9216ceeee0d9cad259de",
+    "digest": "d22417f39bdc0b6c03c9044392abe802bff4ce3930e079e0a9eba407151e1d8a",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/narodni-balady.yaml",
@@ -11,7 +11,7 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/narodni-balady/module.md",
-        "sha256": "11aa1d6e9883717a2eb04bcdb044bc96fa517c476cd60eabb85244d70101af6c"
+        "sha256": "a6144309fbeb41125fed0f679f97468f47456490b121cfe63ce43d08f68b6cc5"
       },
       {
         "path": "curriculum/l2-uk-en/folk/narodni-balady/activities.yaml",
@@ -28,10 +28,10 @@
     ]
   },
   "evidence": {
-    "decolonization": "Module frames Ukrainian ballad tradition as autonomous and European-connected without flattening it into imperial or generic East Slavic categories.",
-    "learner_surface": "Ukrainian-facing module, activities, generated MDX, and resources avoid internal IDs, process register, English leakage, and writer-facing grading language.",
-    "review": "Claude Opus 4.8 initial review found one learner-facing resource-title blocker and two provenance findings; follow-up approved after Ukrainian source_ref attempt, same-chunk quote confirmation, and Dunai paraphrase.",
-    "source_hygiene": "Both quoted \u041e\u0439 \u043d\u0430 \u0433\u043e\u0440\u0456 \u0432\u043e\u0433\u043e\u043d\u044c \u0433\u043e\u0440\u0438\u0442\u044c fragments were verified with repo source tooling and confirmed by Claude follow-up via chunk context; unsafe or non-corpus items remain context-only or paraphrased, and no fabricated hosted reading page is used."
+    "learner_surface": "Structured PrimaryReading blocks use dash-led source attribution and generated MDX now separates closing PrimaryReading JSX from following markdown.",
+    "reading_coverage": "Added or converted learner-visible structured on-site shortened primary readings; external/full-version links remain supplementary only.",
+    "review": "Claude local CLI failed before producing a review; AGY/Gemini review found two remediation blockers, both fixed, and focused follow-up returned PASS/no blockers.",
+    "source_hygiene": "Readings are bounded as verified corpus, scholarly witness, textbook/pedagogical fragment, or authorial public-domain excerpts; no fabricated dialogue, songs, or source claims were introduced."
   },
   "floors": {
     "beauty": 8.5,
@@ -44,12 +44,12 @@
   "profile": "folk_promote_v1",
   "review_artifact": null,
   "reviewer": {
-    "agent": "claude",
-    "family": "anthropic",
-    "model": "claude-opus-4-8"
+    "agent": "agy",
+    "family": "google",
+    "model": "gemini-3.1-pro-high"
   },
   "schema_version": 1,
-  "scored_at": "2026-07-03T22:18:30Z",
+  "scored_at": "2026-07-05T12:13:39Z",
   "scores": {
     "beauty": 8.8,
     "decolonization": 9.3,

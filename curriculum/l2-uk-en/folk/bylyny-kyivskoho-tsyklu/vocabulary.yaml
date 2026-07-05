@@ -2,10 +2,10 @@
   translation: heroic epic song; bylina
   pos: noun
   usage: Билина київського циклу працює через формулу, гіперболу і повільний епічний рух.
-- lemma: старина
-  translation: traditional name for a bylina; old-time song
-  pos: noun
-  usage: Старина підкреслює пам'ять про давні часи, а не просто жанрову етикетку.
+- lemma: самоназва старого епосу
+  translation: traditional self-name for old epic song
+  pos: noun phrase
+  usage: Самоназва старого епосу підкреслює пам'ять про давні часи.
 - lemma: київський цикл
   translation: Kyiv cycle
   pos: noun phrase

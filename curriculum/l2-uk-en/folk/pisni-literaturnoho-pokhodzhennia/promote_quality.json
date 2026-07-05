@@ -1,9 +1,9 @@
 {
-  "assembled_mdx_sha256": "7f4929491bf0bd011e5d817c7bf650d0d079d1bbed3e1c295dd883e583eb8d52",
+  "assembled_mdx_sha256": "f2960f0e9cbfddaad7ac1ea6cdffa865e31d30172b4544dd365be5d393847b51",
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "016cddc577c612be09438d8bb97daa0903d4178c151a34242a437f473cfb981d",
+    "digest": "faecf204100fa67817236c15dcdc2cd21a8f0f59762ff9742c00e265ea912f0c",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/pisni-literaturnoho-pokhodzhennia.yaml",
@@ -11,7 +11,7 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/pisni-literaturnoho-pokhodzhennia/module.md",
-        "sha256": "01b012cd195df0c279475792c59342422b7f75f674b5fe26e79ca460ff187752"
+        "sha256": "9ec5ce11f1a76dc397c9bb54ba343bac2feeefe6a05cf64ae6d0a300fd8d500b"
       },
       {
         "path": "curriculum/l2-uk-en/folk/pisni-literaturnoho-pokhodzhennia/activities.yaml",
@@ -28,10 +28,10 @@
     ]
   },
   "evidence": {
-    "decolonization": "Module treats literary-origin songs as Ukrainian cultural circulation with explicit authorship, provenance limits, and resistance to imperial anonymization.",
-    "learner_surface": "Ukrainian-facing source, activities, generated MDX, and resources avoid internal IDs, English leakage, AI/process language, and writer-facing grading register.",
-    "review": "Claude Opus 4.8 review task review-folk-m20-pisni-literaturnoho-pokhodzhennia found one dangling-fragment blocker and one learner-facing CEFR-label issue; both were fixed before scoring. Follow-up corpus-hammer removed Klymovsky and Petrenko verbatim fragments that did not match local verify_quote.",
-    "source_hygiene": "Only short corpus-matched fragments are embedded for Skovoroda and Shevchenko; Klymovsky and Petrenko are handled through title/provenance discussion; no fabricated hosted reading page is used."
+    "learner_surface": "Structured PrimaryReading blocks use dash-led source attribution and generated MDX now separates closing PrimaryReading JSX from following markdown.",
+    "reading_coverage": "Added or converted learner-visible structured on-site shortened primary readings; external/full-version links remain supplementary only.",
+    "review": "Claude local CLI failed before producing a review; AGY/Gemini review found two remediation blockers, both fixed, and focused follow-up returned PASS/no blockers.",
+    "source_hygiene": "Readings are bounded as verified corpus, scholarly witness, textbook/pedagogical fragment, or authorial public-domain excerpts; no fabricated dialogue, songs, or source claims were introduced."
   },
   "floors": {
     "beauty": 8.5,
@@ -44,12 +44,12 @@
   "profile": "folk_promote_v1",
   "review_artifact": null,
   "reviewer": {
-    "agent": "claude",
-    "family": "anthropic",
-    "model": "claude-opus-4-8"
+    "agent": "agy",
+    "family": "google",
+    "model": "gemini-3.1-pro-high"
   },
   "schema_version": 1,
-  "scored_at": "2026-07-03T23:10:15Z",
+  "scored_at": "2026-07-05T12:13:40Z",
   "scores": {
     "beauty": 8.8,
     "decolonization": 9.3,

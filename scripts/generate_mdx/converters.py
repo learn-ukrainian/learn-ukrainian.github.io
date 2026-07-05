@@ -309,7 +309,7 @@ def convert_folk_content_blocks(content: str) -> str:
             work = attrs.get("reading") or _primary_reading_work_title(block_content)
             href = reading_href_for(work) if work else None
             href_prop = f' href="{escape_jsx(href)}"' if href else ''
-            return f"<PrimaryReading{href_prop}>\n\n{block_content}\n\n</PrimaryReading>"
+            return f"<PrimaryReading{href_prop}>\n\n{block_content}\n\n</PrimaryReading>\n"
 
         payload = _yaml_directive_payload(block_content)
         if block_type == 'myth-box':

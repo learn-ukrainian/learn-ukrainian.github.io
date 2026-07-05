@@ -1,9 +1,9 @@
 {
-  "assembled_mdx_sha256": "35a0f254e64e6a59bb44bb22d7cda416e9670513ba8b686c381d2e61c97c4151",
+  "assembled_mdx_sha256": "bf101f21d38084e8c599036ca082047965cf4a584fdd02e5d6a3b586828e11ef",
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "a5e87e317658710e4e54d7f2d2f986a649a39efc5d27fed6870e2f1095a3dda9",
+    "digest": "cdf018f08c6cefe6be63c83d61bea0e755a768d4f66dbf28af8657a13cdb254f",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/kolomyiky.yaml",
@@ -11,7 +11,7 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/kolomyiky/module.md",
-        "sha256": "4e29236137a5d8944776f74ef700e4928f5ab9e7f7656dfa43e13728017997f7"
+        "sha256": "a3d34533c081ece13cabe1eef7759f134273e4874964928a04d8c2ff110426cf"
       },
       {
         "path": "curriculum/l2-uk-en/folk/kolomyiky/activities.yaml",
@@ -28,11 +28,10 @@
     ]
   },
   "evidence": {
-    "christian_framing": "Kolomyiky are framed as Ukrainian song, dance, short-form lyric, and social wit without occult, primitive-superstition, or hostile ethnographic register.",
-    "decolonization": "The module avoids exoticizing the Carpathian center, separates kolomyika from generic smallness, and treats oral tradition as a source of form rather than a lower cultural layer.",
-    "provenance": "No hosted reading page is fabricated; corpus-verified witness excerpts are bounded as scholarly/literary witnesses, with linked resources kept distinct from primary hosted text.",
-    "review": "Claude Opus 4.8 review cleared substantive FOLK source/form/provenance risks; its HighCultureBridge render-spacing finding was fixed in the generator and regenerated.",
-    "source_hygiene": "Direct quality gate, activity/vocabulary validation, MDX validation, and render-spacing regeneration pass for FOLK M17 before final PR gates."
+    "learner_surface": "Structured PrimaryReading blocks use dash-led source attribution and generated MDX now separates closing PrimaryReading JSX from following markdown.",
+    "reading_coverage": "Added or converted learner-visible structured on-site shortened primary readings; external/full-version links remain supplementary only.",
+    "review": "Claude local CLI failed before producing a review; AGY/Gemini review found two remediation blockers, both fixed, and focused follow-up returned PASS/no blockers.",
+    "source_hygiene": "Readings are bounded as verified corpus, scholarly witness, textbook/pedagogical fragment, or authorial public-domain excerpts; no fabricated dialogue, songs, or source claims were introduced."
   },
   "floors": {
     "beauty": 8.5,
@@ -45,12 +44,12 @@
   "profile": "folk_promote_v1",
   "review_artifact": null,
   "reviewer": {
-    "agent": "claude",
-    "family": "anthropic",
-    "model": "claude-opus-4-8"
+    "agent": "agy",
+    "family": "google",
+    "model": "gemini-3.1-pro-high"
   },
   "schema_version": 1,
-  "scored_at": "2026-07-03T00:25:09Z",
+  "scored_at": "2026-07-05T12:13:39Z",
   "scores": {
     "beauty": 8.8,
     "decolonization": 9.2,
