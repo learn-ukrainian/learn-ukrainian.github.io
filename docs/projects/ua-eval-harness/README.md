@@ -1,6 +1,6 @@
 # Project: Ukrainian Calque + Grammar Evaluation Harness
 
-> **Status:** Scoping. We want to build this for **UNLP 2027** publication. Scope: a dedicated LLM evaluation harness covering both **calque** (Russianism / contact-borrowing patterns) and **grammar** in Ukrainian generation.
+> **Status (2026-07-05):** Curriculum-facing machinery Phases 1–4 MERGED — schema (#4322/#4307), F/Calque gold curation (#4306), 3-tier scorer adapters (#4308), LLM reviewer prompt+evaluator (#4309), cost-aware workflow (#4310), calibration scaffolding (#4370), reviewer-dispatch (#4311a), corpus report (#4311b). **Active now: tool-augmenting the reviewer** (grounded fact-checking via opencode + sources MCP; fleet-reviewed design v2, 2026-07-05) → then the seminar tier bakeoff. Publication target: **UNLP 2027**.
 
 > **For future sessions: this is the canonical pick-up entrypoint.** When the user says "let's continue the eval harness work" or asks about the UNLP project, read this file first.
 
@@ -57,6 +57,11 @@ These are NOT the harness, but they are the scorer-side foundation:
   #4310 tiered, short-circuiting workflow and composite LLM cache key.
 - [Agent fleet evidence for #4307](agent-fleet-4307.md) records the concrete
   fleet lanes used for the schema slice and the observed strengths/weaknesses.
+- [Model evidence](model-evidence.md) — per-model probe results (Gemma 4 bakeoff,
+  the opencode-vs-hermes tooled fact-check experiment) that ground routing and
+  harness-transport decisions.
+- [Leaderboard boundary](leaderboard-boundary.md) — what #2156 measures vs what is
+  delegated to the lang-uk leaderboard, plus the metadata interop bridge (#4289).
 
 ## Design TBD (these are the questions next session should answer)
 
@@ -90,7 +95,7 @@ These are NOT the harness, but they are the scorer-side foundation:
 
 - **Surzhyk-specific eval (spoken register)** — calques are a subset of Surzhyk patterns; an eval scoped narrowly to spoken-register Surzhyk is a different shape and could be a follow-on project.
 - **Polonisms, anglicisms as primary scope** — schema supports them via `source_lang`, but Russian is priority-1 because that is where empirical LLM harm concentrates today.
-- **General Ukrainian LLM capability** — covered by the lang-uk leaderboard.
+- **General Ukrainian LLM capability** — covered by the lang-uk leaderboard; the boundary + interop bridge are documented in [leaderboard-boundary.md](leaderboard-boundary.md) (#4289). Surzhyk follow-up = #4287; polonism/anglicism expansion = #4288.
 
 ## Timeline anchors (loose)
 
