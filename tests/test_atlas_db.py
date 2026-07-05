@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 import sqlite3
 
-from scripts.lexicon import atlas_db
+from scripts.atlas import atlas_db
 
 
 def _manifest(tmp_path):
