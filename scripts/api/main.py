@@ -63,6 +63,7 @@ from .git_hygiene_router import router as git_hygiene_router
 from .gold_router import router as gold_router
 from .governance_router import collect_governance_summary
 from .governance_router import router as governance_router
+from .hermes_cron_router import router as hermes_cron_router
 from .images_router import router as images_router
 from .issues_router import router as issues_router
 from .rag_router import router as rag_router
@@ -146,6 +147,7 @@ app.include_router(discussions_router, prefix="/api/discussions", tags=["discuss
 app.include_router(git_hygiene_router, prefix="/api/git", tags=["git"])
 app.include_router(gold_router, prefix="/api/gold")
 app.include_router(governance_router, prefix="/api/state/governance", tags=["governance"])
+app.include_router(hermes_cron_router, prefix="/api/hermes-cron", tags=["hermes-cron"])
 app.include_router(build_events_router, prefix="/api/build/events")
 app.include_router(images_router, prefix="/api/images")
 app.include_router(issues_router, prefix="/api/issues", tags=["issues"])

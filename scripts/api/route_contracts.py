@@ -408,6 +408,16 @@ ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
         "keep",
     ),
     RouteContract(
+        "/api/hermes-cron/latest", "exact", "http",
+        "Latest nightly sweep audit results and insights.",
+        "batch_state/hermes_cron/latest.json and latest.md.",
+        "No route cache; reads from the latest generated nightly audit artifacts.",
+        ("agents", "docs"),
+        "None.",
+        "low",
+        "keep",
+    ),
+    RouteContract(
         "/api/issues/map", "exact", "http",
         "Open issue map grouped by category.",
         "gh issue list output.",
