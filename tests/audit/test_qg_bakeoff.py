@@ -126,6 +126,9 @@ def test_bakeoff_deepseek_route_stays_unregistered_while_live_policy_rejects_dee
     assert all(existing.route_name != route.route_name for existing in llm_reviewer_dispatch.ROUTES)
     with pytest.raises(llm_reviewer_dispatch.ReviewerRouteError):
         llm_reviewer_dispatch.assert_route_allowed(route)
+    hermes_route = qg_bakeoff.bakeoff_route_for_model("hermes/some-model-pin")
+    with pytest.raises(llm_reviewer_dispatch.ReviewerRouteError):
+        llm_reviewer_dispatch.assert_route_allowed(hermes_route)
 
 
 def test_scoring_counts_missing_claim_and_preserves_model_judgment_on_downgrade() -> None:
@@ -166,7 +169,9 @@ def test_claim_matching_accepts_standalone_extraction_from_anchor_fragment() -> 
     assert score["model_judgment_score"] == 10
 
 
-def test_resume_skips_existing_artifact(tmp_path: Path) -> None:
+def test_resume_skips_existing_artifact(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.delenv("CI", raising=False)
+    monkeypatch.setenv("QG_BAKEOFF", "1")
     fixture = _fixture()
     route = qg_bakeoff.bakeoff_route_for_model("openrouter/google/gemma-4-31b-it")
     artifact_path = tmp_path / f"{qg_bakeoff.pin_slug(route.reviewer_model_id)}__{fixture.slug}.json"
@@ -237,3 +242,97 @@ def test_run_one_uses_scripted_runner_without_live_invocation(tmp_path: Path) ->
     assert run.artifact["status"] == "ran"
     assert run.artifact["score"]["model_judgment_score"] == 30
     assert run.artifact["score"]["live_admissible_score"] == 30
+
+
+def test_run_matrix_is_guarded_on_direct_programmatic_call(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Cursor review of #4458 (blocker): run_matrix must enforce the opt-in itself."""
+    monkeypatch.delenv("CI", raising=False)
+    monkeypatch.delenv("QG_BAKEOFF", raising=False)
+    fixture = _fixture()
+
+    def fail_runner(
+        _route: llm_reviewer_dispatch.ReviewerRoute,
+        _prompt: str,
+        _task_id: str,
+    ) -> llm_reviewer_dispatch.DispatchResult:
+        raise AssertionError("guard must fire before any provider invocation")
+
+    with pytest.raises(qg_bakeoff.BakeoffConfigError, match="QG_BAKEOFF=1"):
+        qg_bakeoff.run_matrix(
+            [fixture],
+            ["openrouter/google/gemma-4-31b-it"],
+            output_dir=tmp_path,
+            runner=fail_runner,
+        )
+
+    monkeypatch.setenv("QG_BAKEOFF", "1")
+    monkeypatch.setenv("CI", "1")
+    with pytest.raises(qg_bakeoff.BakeoffConfigError, match="CI"):
+        qg_bakeoff.run_matrix(
+            [fixture],
+            ["openrouter/google/gemma-4-31b-it"],
+            output_dir=tmp_path,
+            runner=fail_runner,
+        )
+
+
+def test_force_reruns_existing_artifact(tmp_path: Path) -> None:
+    fixture = _fixture()
+    route = qg_bakeoff.bakeoff_route_for_model("openrouter/google/gemma-4-31b-it")
+    artifact_path = tmp_path / f"{qg_bakeoff.pin_slug(route.reviewer_model_id)}__{fixture.slug}.json"
+    artifact_path.write_text(
+        json.dumps(
+            {
+                "schema_version": qg_bakeoff.RUN_SCHEMA_VERSION,
+                "fixture": {"slug": fixture.slug},
+                "model": {"pin": route.reviewer_model_id},
+                "score": {},
+            }
+        ),
+        encoding="utf-8",
+    )
+    calls: list[str] = []
+
+    def runner(
+        run_route: llm_reviewer_dispatch.ReviewerRoute,
+        _prompt: str,
+        _task_id: str,
+    ) -> llm_reviewer_dispatch.DispatchResult:
+        calls.append(run_route.reviewer_model_id)
+        return _dispatch_result(
+            {
+                "findings": [],
+                "fact_checks": [
+                    {
+                        "claim": "True claim.",
+                        "verdict": "CONFIRMED",
+                        "grounding": {
+                            "tool": "sources_query_wikipedia",
+                            "query": "True claim",
+                            "evidence_excerpt": "True claim",
+                            "tool_call_id": "call_1",
+                        },
+                    },
+                    {
+                        "claim": "Fabricated claim.",
+                        "verdict": "UNATTESTED_AFTER_SEARCH",
+                        "grounding": {
+                            "tool": "sources_query_wikipedia",
+                            "query": "True claim",
+                            "evidence_excerpt": "Fabricated claim",
+                            "tool_call_id": "call_1",
+                        },
+                    },
+                ],
+                "evidence_gaps": [],
+            },
+            run_route,
+        )
+
+    run = qg_bakeoff.run_one(route, fixture, output_dir=tmp_path, runner=runner, force=True)
+
+    assert run.skipped is False
+    assert calls, "force=True must re-invoke the runner despite the existing artifact"
+    assert run.artifact["status"] == "ran"

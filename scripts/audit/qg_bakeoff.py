@@ -202,7 +202,13 @@ def run_matrix(
     runner: ProviderRunner = invoke_bakeoff_route,
     force: bool = False,
 ) -> list[BakeoffRun]:
-    """Run or resume every model x fixture pair and write a scorecard."""
+    """Run or resume every model x fixture pair and write a scorecard.
+
+    Guarded on EVERY entry path (cursor review of #4458, blocker): a direct
+    programmatic call with the default live runner must not bypass the
+    CI-refusal / ``QG_BAKEOFF=1`` opt-in that ``main()`` enforces.
+    """
+    require_offline_opt_in()
     output_dir.mkdir(parents=True, exist_ok=True)
     runs: list[BakeoffRun] = []
     for pin in model_pins:
@@ -479,12 +485,17 @@ def _invoke_and_gate(
         attempt_count += 1
         result = _coerce_dispatch_result(runner(route, attempt_prompt, task_id), route, prompt)
         dispatch = result.metadata()
+        # Budget BEFORE parse/theatre — mirrors qg_workflow._run_tier2 ordering
+        # (cursor review of #4458): an over-budget run hard-fails identically
+        # in the harness and in live gating.
+        llm_reviewer_dispatch.enforce_tool_budget(dispatch)
         payload = dict(llm_reviewer_dispatch._json_payload_from_response(result.response_text))
         llm_reviewer.validate_reviewer_payload(payload, BAKEOFF_POLICY_FAMILY)
         attempt = {
             "attempt": attempt_count,
             "tool_call_count": dispatch.get("tool_call_count"),
             "tools_used": dispatch.get("tools_used", []),
+            "tool_budget": {"status": "passed"},
         }
         theatre = llm_reviewer_dispatch.tool_theatre_violation(
             policy_family=BAKEOFF_POLICY_FAMILY,
@@ -510,15 +521,13 @@ def _invoke_and_gate(
                 "gate_outcomes": {
                     "attempts": attempts,
                     "theatre": theatre,
-                    "tool_budget": {"status": "not_run"},
+                    "tool_budget": {"status": "passed"},
                     "deep_read": {"required": False, "retried": deep_read_retried},
                     "grounding": _empty_grounding(),
                     "factual_sweep": {"incomplete": True},
                 },
             }
         attempt["theatre"] = {"status": "passed"}
-        llm_reviewer_dispatch.enforce_tool_budget(dispatch)
-        attempt["tool_budget"] = {"status": "passed"}
 
         if llm_reviewer_dispatch.deep_read_required(payload, dispatch):
             attempt["deep_read"] = {"required": True, "retried": deep_read_retried}
