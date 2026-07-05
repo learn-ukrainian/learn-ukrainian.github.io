@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pytest
 
-from scripts.routing_guard import (
+from scripts.ai_agent_bridge.routing_guard import (
     RoutingGuardError,
     assert_agent_routing_allowed,
     assert_model_routing_allowed,

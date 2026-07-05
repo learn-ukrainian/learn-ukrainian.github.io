@@ -1461,7 +1461,13 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         print("❌ --prompt or --prompt-file is required", file=sys.stderr)
         return 2
 
-    from scripts.routing_guard import RoutingGuardError, assert_agent_routing_allowed, assert_model_routing_allowed
+    if str(_REPO_ROOT) not in sys.path:
+        sys.path.insert(0, str(_REPO_ROOT))
+    from scripts.ai_agent_bridge.routing_guard import (
+        RoutingGuardError,
+        assert_agent_routing_allowed,
+        assert_model_routing_allowed,
+    )
 
     try:
         assert_agent_routing_allowed(args.agent, context="delegate dispatch")
