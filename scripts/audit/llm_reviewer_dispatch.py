@@ -14,7 +14,7 @@ import re
 import shutil
 import subprocess
 import tempfile
-from collections.abc import Callable, Mapping, Sequence
+from collections.abc import Callable, Iterator, Mapping, Sequence
 from dataclasses import asdict, dataclass
 from datetime import UTC, date, datetime
 from pathlib import Path
@@ -873,18 +873,50 @@ def _loads_jsonc(text: str) -> Any:
 
 
 def _opencode_config_paths() -> list[Path]:
+    """Candidate opencode config files, LOWEST -> HIGHEST precedence.
+
+    Mirrors opencode's documented merge order: global config (home /
+    $XDG_CONFIG_HOME), then a file named by $OPENCODE_CONFIG, then the nearest
+    project ``opencode.json[c]`` walking up from cwd. Within one directory,
+    ``.jsonc`` is listed after ``.json`` so it wins the merge (opencode's
+    preferred extension). $OPENCODE_CONFIG_CONTENT (inline JSON) is handled
+    separately in :func:`_iter_opencode_configs` as the top source.
+    """
     paths: list[Path] = []
+    home = Path.home()
+    paths.append(home / ".config" / "opencode" / "opencode.json")
+    paths.append(home / ".config" / "opencode" / "opencode.jsonc")
     xdg = os.environ.get("XDG_CONFIG_HOME")
     if xdg:
-        paths.append(Path(xdg) / "opencode" / "opencode.jsonc")
         paths.append(Path(xdg) / "opencode" / "opencode.json")
-    home = Path.home()
-    paths.append(home / ".config" / "opencode" / "opencode.jsonc")
-    paths.append(home / ".config" / "opencode" / "opencode.json")
+        paths.append(Path(xdg) / "opencode" / "opencode.jsonc")
+    env_cfg = os.environ.get("OPENCODE_CONFIG")
+    if env_cfg:
+        paths.append(Path(env_cfg))
+    project = _nearest_project_opencode_config(Path.cwd())
+    if project is not None:
+        paths.append(project)
     return paths
 
 
-def _load_opencode_config() -> Any:
+def _nearest_project_opencode_config(start: Path) -> Path | None:
+    """Nearest project ``opencode.json[c]`` walking up from ``start``.
+
+    Stops at the first directory containing one (nearest wins, matching
+    opencode's project-config discovery) or at a repo root (``.git``).
+    """
+    for parent in [start, *start.parents]:
+        for name in ("opencode.jsonc", "opencode.json"):
+            candidate = parent / name
+            if candidate.exists():
+                return candidate
+        if (parent / ".git").exists():
+            return None
+    return None
+
+
+def _iter_opencode_configs() -> Iterator[Any]:
+    """Parsed opencode configs in LOWEST -> HIGHEST precedence order."""
     for path in _opencode_config_paths():
         if not path.exists():
             continue
@@ -894,8 +926,41 @@ def _load_opencode_config() -> Any:
             continue
         data = _loads_jsonc(text)
         if data is not None:
-            return data
-    return None
+            yield data
+    inline = os.environ.get("OPENCODE_CONFIG_CONTENT")
+    if inline:
+        data = _loads_jsonc(inline)
+        if data is not None:
+            yield data
+
+
+def _load_opencode_config() -> Any:
+    """The EFFECTIVE opencode config across its documented merge sources.
+
+    opencode merges (low -> high): global config, $OPENCODE_CONFIG, nearest
+    project ``opencode.json[c]``, inline $OPENCODE_CONFIG_CONTENT. Reading only
+    the first global file can falsely BLOCK a legit grounded run (sources wired
+    via project/env config) or falsely PASS one (a higher-precedence config
+    disables it) — codex review of #4401. Shallow-merges top-level keys plus
+    one level of the ``mcp`` map — sufficient for the sources gate; not a full
+    deep merge.
+    """
+    merged: dict[str, Any] = {}
+    found = False
+    for data in _iter_opencode_configs():
+        if not isinstance(data, Mapping):
+            continue
+        found = True
+        for key, value in data.items():
+            if (
+                key == "mcp"
+                and isinstance(value, Mapping)
+                and isinstance(merged.get("mcp"), Mapping)
+            ):
+                merged["mcp"] = {**merged["mcp"], **value}
+            else:
+                merged[key] = value
+    return merged if found else None
 
 
 def _http_endpoint_responds(url: str, *, timeout_s: int = 3) -> bool:
@@ -936,9 +1001,11 @@ def _assert_sources_mcp_available() -> None:
             sources = mcp.get("sources")
     if not isinstance(sources, Mapping) or sources.get("enabled") is False:
         raise ReviewerProviderError(
-            "sources MCP is not configured/enabled in the opencode config "
-            "(~/.config/opencode/opencode.jsonc); a grounded reviewer run must "
-            "not proceed without tools (design D0, #2156)."
+            "sources MCP is not configured/enabled in the effective opencode "
+            "config (merged: global ~/.config/opencode/opencode.json[c], "
+            "$OPENCODE_CONFIG, project opencode.json[c], "
+            "$OPENCODE_CONFIG_CONTENT); a grounded reviewer run must not "
+            "proceed without tools (design D0, #2156)."
         )
     url = str(sources.get("url") or SOURCES_MCP_URL)
     if not _http_endpoint_responds(url):

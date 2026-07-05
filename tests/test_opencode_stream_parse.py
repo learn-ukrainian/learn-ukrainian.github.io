@@ -136,3 +136,25 @@ def test_garbage_and_non_tool_events_are_ignored() -> None:
 
     assert parse.text == "ok"
     assert parse.tool_events == ()
+
+
+def test_dedupe_prefers_tool_call_id() -> None:
+    """codex review of #4401 (Low): distinct repeated identical calls must be
+    COUNTED (retry/redundancy signal for the theatre gate); pending->completed
+    transitions of ONE call (same id) still collapse to the final status."""
+    lines = [
+        # one call transitioning pending -> completed (same id): collapses
+        '{"type": "tool", "part": {"tool": "sources_verify_word", "callID": "c1", "state": {"input": {"word": "гай"}, "status": "pending"}}}',
+        '{"type": "tool", "part": {"tool": "sources_verify_word", "callID": "c1", "state": {"input": {"word": "гай"}, "status": "completed"}}}',
+        # a DISTINCT second call with identical input (different id): counted
+        '{"type": "tool", "part": {"tool": "sources_verify_word", "callID": "c2", "state": {"input": {"word": "гай"}, "status": "completed"}}}',
+        # id-less event with same input: falls back to (tool, input) key —
+        # collapses into ONE id-less entry
+        '{"type": "tool", "part": {"tool": "sources_verify_word", "state": {"input": {"word": "гай"}, "status": "completed"}}}',
+        '{"type": "text", "part": {"text": "done"}}',
+    ]
+    parse = _parse_opencode_stream("\n".join(lines))
+    assert parse.text == "done"
+    assert len(parse.tool_events) == 3  # c1 (collapsed), c2, id-less
+    c1 = next(e for e in parse.tool_events if e.get("tool_call_id") == "c1")
+    assert c1["status"] == "completed"

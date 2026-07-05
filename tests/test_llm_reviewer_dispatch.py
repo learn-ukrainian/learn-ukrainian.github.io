@@ -438,3 +438,64 @@ def test_dry_run_gateable_artifact_shape(tmp_path: Path) -> None:
     assert artifact["expected_spend"]["estimated_cost_usd"] > 0
     assert artifact["exact_run_command"].startswith(".venv/bin/python scripts/audit/qg_workflow.py")
     assert "--dry-run" not in artifact["exact_run_command"]
+
+
+def test_load_opencode_config_merges_documented_sources(tmp_path, monkeypatch) -> None:
+    """codex review of #4401 (High): the gate must read the EFFECTIVE config.
+
+    opencode merges global -> $OPENCODE_CONFIG -> project -> inline content;
+    reading only the first global file falsely blocks (sources wired in a
+    higher-precedence source) or falsely passes (higher-precedence disable).
+    """
+    home = tmp_path / "home"
+    (home / ".config" / "opencode").mkdir(parents=True)
+    (home / ".config" / "opencode" / "opencode.jsonc").write_text(
+        '{"mcp": {"sources": {"enabled": true, "url": "http://global/mcp"}}, "theme": "g"}',
+        encoding="utf-8",
+    )
+    env_cfg = tmp_path / "env-config.json"
+    env_cfg.write_text('{"mcp": {"lightpanda": {"enabled": true}}}', encoding="utf-8")
+    project = tmp_path / "proj"
+    project.mkdir()
+    (project / "opencode.json").write_text(
+        '{"mcp": {"sources": {"enabled": true, "url": "http://project/mcp"}}}',
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(Path, "home", staticmethod(lambda: home))
+    monkeypatch.setenv("OPENCODE_CONFIG", str(env_cfg))
+    monkeypatch.delenv("OPENCODE_CONFIG_CONTENT", raising=False)
+    monkeypatch.delenv("XDG_CONFIG_HOME", raising=False)
+    monkeypatch.chdir(project)
+
+    merged = llm_reviewer_dispatch._load_opencode_config()
+    # project sources overrides global; env config's other mcp entries survive
+    assert merged["mcp"]["sources"]["url"] == "http://project/mcp"
+    assert merged["mcp"]["lightpanda"] == {"enabled": True}
+    assert merged["theme"] == "g"
+
+    # inline content is the TOP source — a disable there must win (false-pass guard)
+    monkeypatch.setenv(
+        "OPENCODE_CONFIG_CONTENT", '{"mcp": {"sources": {"enabled": false}}}'
+    )
+    merged = llm_reviewer_dispatch._load_opencode_config()
+    assert merged["mcp"]["sources"] == {"enabled": False}
+
+
+def test_project_config_discovered_walking_up_to_repo_root(tmp_path, monkeypatch) -> None:
+    home = tmp_path / "home"
+    (home / ".config").mkdir(parents=True)
+    repo = tmp_path / "repo"
+    nested = repo / "a" / "b"
+    nested.mkdir(parents=True)
+    (repo / ".git").mkdir()
+    (repo / "opencode.jsonc").write_text(
+        '{"mcp": {"sources": {"enabled": true, "url": "http://repo/mcp"}}}', encoding="utf-8"
+    )
+    monkeypatch.setattr(Path, "home", staticmethod(lambda: home))
+    monkeypatch.delenv("OPENCODE_CONFIG", raising=False)
+    monkeypatch.delenv("OPENCODE_CONFIG_CONTENT", raising=False)
+    monkeypatch.delenv("XDG_CONFIG_HOME", raising=False)
+    monkeypatch.chdir(nested)
+
+    merged = llm_reviewer_dispatch._load_opencode_config()
+    assert merged["mcp"]["sources"]["url"] == "http://repo/mcp"

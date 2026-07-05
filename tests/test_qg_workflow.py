@@ -353,3 +353,52 @@ def test_current_b1_27_production_stays_green_without_llm_bulk_run() -> None:
     assert record["llm_review"]["used"] is False
     assert _tier(record, 2)["status"] == "skipped_flag_off"
     qg_schema.validate_record(record)
+
+
+def test_tier2_rejects_route_name_mismatch(tmp_path: Path) -> None:
+    """codex review of #4401 (Medium): route_name keys the composite cache — an
+    injected reviewer answering from the WRONG route (same model/family) must
+    fail identity, not poison route-keyed cache rows."""
+    seminar_dir = _write_module(
+        tmp_path,
+        level="folk",
+        slug="route-mismatch",
+        module_md="# Семінар\n\nУчасники аналізують джерела спокійно й уважно.\n",
+    )
+    db_path = tmp_path / "qg.db"
+
+    expected_route = llm_reviewer_dispatch.FRONTIER_OPENCODE_ROUTE
+
+    def reviewer(_target: qg_workflow.ReviewTarget, _prompt: str) -> llm_reviewer_dispatch.DispatchResult:
+        return llm_reviewer_dispatch.DispatchResult(
+            response_text='{"findings": []}',
+            reviewer_model_id=expected_route.reviewer_model_id,
+            reviewer_family=expected_route.reviewer_family,
+            route_name="agy_frontier",  # WRONG route: expected opencode_frontier
+        )
+
+    # live_reviewer resolves the expected route; the canary/lineage block is
+    # out of scope here (tested elsewhere) — patch it away to isolate the
+    # route-identity check.
+    from unittest.mock import patch
+
+    with patch.object(qg_workflow, "_live_reviewer_block", return_value=None):
+        record = qg_workflow.review_module(
+            _target(seminar_dir, level="folk", slug="route-mismatch"),
+            options=qg_workflow.WorkflowOptions(
+                enable_llm=True,
+                live_reviewer=True,
+                max_cost_usd=5.0,
+                reviewer_model_id=expected_route.reviewer_model_id,
+                reviewer_family=expected_route.reviewer_family,
+            ),
+            reviewer=reviewer,
+            store_path=db_path,
+        )
+
+    tier2 = _tier(record, 2)
+    assert tier2["status"] == "provider_error"
+    assert tier2["reason"] == "reviewer_identity_mismatch"
+    assert tier2["actual_route_name"] == "agy_frontier"
+    # nothing persisted for the poisoned run
+    assert llm_qg_store.latest_llm_qg("folk", "route-mismatch", path=db_path) is None

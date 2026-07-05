@@ -825,6 +825,7 @@ def _run_tier2(
     response_text, dispatch_meta = _coerce_reviewer_response(raw_response)
     actual_model_id = str(dispatch_meta.get("reviewer_model_id") or reviewer_model_id)
     actual_family = str(dispatch_meta.get("reviewer_family") or reviewer_family)
+    actual_route_name = str(dispatch_meta.get("route_name") or route_name)
     observed_cost = _observed_cost(dispatch_meta)
     budget.record_spend(estimate, observed_cost_usd=observed_cost)
     if route is not None:
@@ -836,7 +837,17 @@ def _run_tier2(
             estimate=estimate,
             observed_cost_usd=observed_cost,
         )
-    if actual_model_id != reviewer_model_id or actual_family != reviewer_family:
+    if (
+        actual_model_id != reviewer_model_id
+        or actual_family != reviewer_family
+        # route_name keys the composite cache — a reviewer answering from the
+        # wrong route must not poison route-keyed rows (codex review of #4401;
+        # LiveReviewerDispatcher checks this itself, but _run_tier2 accepts
+        # arbitrary reviewer callables). Only enforceable when the workflow
+        # resolved an expected route (live mode); injected test reviewers with
+        # no resolved route (route_name=None) keep their reported name.
+        or (route_name is not None and actual_route_name != route_name)
+    ):
         return {
             "findings": [],
             "result": {
@@ -845,6 +856,7 @@ def _run_tier2(
                 "reason": "reviewer_identity_mismatch",
                 "actual_reviewer_model_id": actual_model_id,
                 "actual_reviewer_family": actual_family,
+                "actual_route_name": actual_route_name,
                 "estimate": estimate,
             },
             "workflow_verdict": "PROVIDER_FAILURE",

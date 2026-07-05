@@ -514,7 +514,17 @@ def _extract_tool_event(event: dict) -> dict | None:
 
 
 def _tool_event_key(event: dict) -> str:
-    """Stable dedupe key for a tool event: tool name + canonical input JSON."""
+    """Stable dedupe key for a tool event.
+
+    ``tool_call_id`` is the PRIMARY key when present: pending->completed
+    transitions of one call share an id (collapse), while distinct repeated
+    identical calls keep distinct ids (counted — retry/redundancy signal the
+    theatre gate needs; codex review of #4401). Falls back to tool name +
+    canonical input JSON when the stream carries no id.
+    """
+    call_id = event.get("tool_call_id")
+    if isinstance(call_id, str) and call_id:
+        return f"id\0{call_id}"
     try:
         input_json = json.dumps(event.get("input"), sort_keys=True, ensure_ascii=False, default=str)
     except (TypeError, ValueError):
