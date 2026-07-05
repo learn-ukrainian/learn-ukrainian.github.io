@@ -36,15 +36,17 @@ INTERNAL_ROLES = {"checkpoint source"}
 _INTERNAL_TITLE_RE = re.compile(
     r"^(?:Wiki:\s*pedagogy|Synthesis of M|Internal module|Plan:\s)", re.IGNORECASE
 )
-# A source_ref pointing back into the repo marks build provenance — EXCEPT the two
-# external-material catalog dirs, which record where a *genuine* resource was sourced:
-#   docs/references/  — the reference corpus (school textbooks, style guides, …)
-#   docs/resources/   — the external-resource catalog (ULP/DobraForma/podcast index)
-# A role=textbook citation like source_ref "docs/references/textbooks-txt/9-klas-…voron-2017.txt"
-# is a real learner resource (its source_ref is load-bearing for the plan-reference gate), not junk.
-# Without this carve-out the tool deleted 26 legitimate B1 textbook citations.
+# A source_ref pointing back into the repo marks build provenance — EXCEPT
+# docs/references/, the reference corpus (school textbooks, style guides) whose
+# citations are url-less by nature. A role=textbook citation like source_ref
+# "docs/references/textbooks-txt/9-klas-…voron-2017.txt" is a real learner resource
+# (its source_ref is load-bearing for the plan-reference gate), not junk — without this
+# carve-out the tool deleted 26 legitimate B1 textbook citations.
+# docs/resources/ (the external-resource catalog, e.g. ULP/DobraForma index) is NOT
+# carved out here: its genuine entries always carry an external URL and are kept by the
+# url-guard in is_internal_entry, so a url-LESS docs/resources/ entry is still junk.
 _INTERNAL_REF_RE = re.compile(
-    r"^(?:curriculum/|wiki/|docs/(?!references/|resources/)|Wiki:\s*pedagogy|Synthesis of )",
+    r"^(?:curriculum/|wiki/|docs/(?!references/)|Wiki:\s*pedagogy|Synthesis of )",
     re.IGNORECASE,
 )
 _EMPTY_NOTE = "This module introduces no new external resources."
