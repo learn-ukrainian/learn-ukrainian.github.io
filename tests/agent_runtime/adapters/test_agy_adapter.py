@@ -235,6 +235,17 @@ def _model_after_flag(plan) -> str | None:
     return plan.cmd[plan.cmd.index("--model") + 1]
 
 
+def _value_after_flag(plan, flag: str) -> str | None:
+    if flag not in plan.cmd:
+        return None
+    return plan.cmd[plan.cmd.index(flag) + 1]
+
+
+def test_build_invocation_sets_print_timeout(tmp_path: Path) -> None:
+    plan = _build(tmp_path, model=None)
+    assert _value_after_flag(plan, "--print-timeout") == agy_module._AGY_PRINT_TIMEOUT
+
+
 def test_build_invocation_maps_model_slug(tmp_path: Path) -> None:
     # A runtime slug is mapped to agy's --model display string. agy accepts the
     # display label (verified 2026-06-05) but NOT the bare slug, so the adapter

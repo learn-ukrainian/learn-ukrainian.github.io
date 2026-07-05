@@ -88,6 +88,12 @@ _SAVED_OUTPUT_POINTER_RE = re.compile(
     re.IGNORECASE,
 )
 _MAX_INLINE_TOOL_RESULT_BYTES = 1_000_000
+# Delegate's default hard_timeout is 7200s. Agy's print-mode default is 5m0s,
+# which is tighter than the runner guards; keep the CLI's own print wait aligned
+# with the delegate default until build_invocation can receive the actual
+# per-dispatch hard_timeout. TODO(#4441): plumb hard_timeout through the adapter
+# ABI if a future shared contract revision carries runner guard values.
+_AGY_PRINT_TIMEOUT = "120m"
 
 # Canonical model display strings accepted by ``agy --model`` (verbatim from
 # ``agy models``). A caller may pass a slug (``gemini-3.1-pro-high``) or the
@@ -190,6 +196,8 @@ class AgyAdapter:
             "-p",
             prompt,
             "--dangerously-skip-permissions",
+            "--print-timeout",
+            _AGY_PRINT_TIMEOUT,
             "--log-file",
             str(log_path),
         ]
