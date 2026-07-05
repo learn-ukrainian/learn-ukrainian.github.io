@@ -211,6 +211,36 @@ def test_budget_exhaustion_emits_skipped_budget_and_incomplete(tmp_path: Path) -
     assert calls == 0
 
 
+def test_dry_run_estimates_tier2_without_reviewer_or_canary(tmp_path: Path) -> None:
+    first = _write_module(tmp_path, slug="clean-one")
+    second = _write_module(tmp_path, slug="clean-two")
+    output = tmp_path / "dry-run.json"
+
+    code = qg_workflow.main(
+        [
+            "--target",
+            f"b1:clean-one:{first}",
+            "--target",
+            f"b1:clean-two:{second}",
+            "--dry-run",
+            "--format",
+            "json",
+            "--output",
+            str(output),
+        ]
+    )
+    payload = json.loads(output.read_text(encoding="utf-8"))
+
+    assert code == 0
+    assert payload["dry_run"] is True
+    assert payload["writes"] == 0
+    assert payload["counts"]["modules"] == 2
+    assert payload["counts"]["tier2_estimated_calls"] == 2
+    assert payload["level_profiles"]["b1_plus"]["tier2_estimated_calls"] == 2
+    assert payload["level_profiles"]["b1_plus"]["estimated_prompt_tokens"] > 0
+    assert payload["level_profiles"]["b1_plus"]["estimated_cost_usd"] > 0
+
+
 def test_workflow_dedupes_cached_tier2_findings_by_finding_id(tmp_path: Path) -> None:
     activities = (
         "- id: wb-essay-missing\n"

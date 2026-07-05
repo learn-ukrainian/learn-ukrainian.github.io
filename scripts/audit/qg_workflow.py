@@ -215,7 +215,7 @@ def dry_run_modules(
         gate_version=dry_options.gate_version,
         reviewer_model_id=dry_options.reviewer_model_id,
         reviewer_family=dry_options.reviewer_family,
-        enable_llm=dry_options.enable_llm,
+        enable_llm=True,
         force_llm=dry_options.force_llm,
         llm_on_fail=dry_options.llm_on_fail,
         calibration_sample=dry_options.calibration_sample,
@@ -812,9 +812,9 @@ def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
     try:
         targets = _targets_from_args(args)
-        enable_llm = bool(args.force_llm or args.llm_response_json)
+        enable_llm = bool(args.force_llm or args.llm_response_json or args.dry_run or args.db)
         canary_passed = False
-        if len(targets) > 1 and _llm_enabled_for_any_target(
+        if not args.dry_run and len(targets) > 1 and _llm_enabled_for_any_target(
             targets,
             WorkflowOptions(
                 enable_llm=enable_llm,

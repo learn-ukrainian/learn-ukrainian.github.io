@@ -258,6 +258,7 @@ def record_llm_qg(
 
     with closing(connect_sqlite(str(resolved))) as conn:
         conn.execute("PRAGMA foreign_keys = ON")
+        _ensure_composite_columns(conn)
         conn.execute(
             """
             INSERT INTO llm_qg_runs (
