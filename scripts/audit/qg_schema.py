@@ -75,6 +75,19 @@ DISPOSITIONS = frozenset(
         "suppressed_fp",
     }
 )
+FACT_CHECK_VERDICTS = frozenset(
+    {
+        "CONFIRMED",
+        "REFUTED_BY_CONTRADICTION",
+        "UNATTESTED_AFTER_SEARCH",
+        "CONTESTED",
+        "UNVERIFIED_INSUFFICIENT_SEARCH",
+    }
+)
+MAX_REVIEWER_FACT_CHECKS = 40
+GROUNDING_REQUIRED_DIMENSIONS = frozenset({"seminar_sensitivity", "decolonization"})
+GROUNDING_REQUIRED_SEMINAR_CLASSES = frozenset({"calque", "false_friend"})
+GROUNDING_KEYS = frozenset({"tool", "query", "evidence_excerpt", "tool_call_id"})
 
 DEFAULT_ATTRIBUTION = {
     "corpus": None,
@@ -280,6 +293,7 @@ def build_finding(
     suggested_replacement: str | Sequence[str] | None = None,
     detector: Mapping[str, Any] | None = None,
     attribution: Mapping[str, Any] | None = None,
+    grounding: Mapping[str, Any] | None = None,
     sense_context: Mapping[str, Any] | None = None,
     metadata: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
@@ -316,6 +330,8 @@ def build_finding(
         finding["sense_context"] = dict(sense_context)
     if metadata:
         finding["metadata"] = dict(metadata)
+    if grounding:
+        finding["grounding"] = dict(grounding)
     finding["finding_id"] = make_finding_id(finding)
     validate_finding(finding)
     return finding
@@ -582,6 +598,102 @@ def validate_finding(finding: Mapping[str, Any]) -> None:
         raise ValueError("detector must be a mapping")
     if not isinstance(finding["attribution"], Mapping):
         raise ValueError("attribution must be a mapping")
+    grounding = finding.get("grounding")
+    if grounding is not None:
+        validate_grounding(grounding)
+
+
+def finding_requires_grounding(finding: Mapping[str, Any], policy_family: str | None) -> bool:
+    """Return True when the D1 grounding matrix requires this finding to cite tools."""
+    family = str(policy_family or "").strip().lower()
+    dimension = str(finding.get("dimension") or "")
+    issue_class = str(finding.get("issue_class") or "")
+    if dimension in GROUNDING_REQUIRED_DIMENSIONS:
+        return True
+    return family == "seminar" and issue_class in GROUNDING_REQUIRED_SEMINAR_CLASSES
+
+
+def validate_grounded_finding(finding: Mapping[str, Any], policy_family: str | None) -> None:
+    """Validate one reviewer finding plus the D1 grounding requirement."""
+    validate_finding(finding)
+    if finding_requires_grounding(finding, policy_family) and not finding.get("grounding"):
+        raise ValueError("finding requires grounding")
+
+
+def validate_grounding(grounding: Mapping[str, Any]) -> None:
+    """Validate the traceable reviewer grounding object."""
+    if not isinstance(grounding, Mapping):
+        raise ValueError("grounding must be a mapping")
+    missing = sorted(key for key in GROUNDING_KEYS if key not in grounding)
+    if missing:
+        raise ValueError(f"grounding missing required fields: {', '.join(missing)}")
+    for key in sorted(GROUNDING_KEYS):
+        value = grounding.get(key)
+        if not isinstance(value, str) or not value.strip():
+            raise ValueError(f"grounding.{key} must be a non-empty string")
+
+
+def validate_fact_check(fact_check: Mapping[str, Any]) -> None:
+    """Validate one reviewer fact-check row."""
+    if not isinstance(fact_check, Mapping):
+        raise ValueError("fact_check must be a mapping")
+    claim = fact_check.get("claim")
+    if not isinstance(claim, str) or not claim.strip():
+        raise ValueError("fact_check.claim must be a non-empty string")
+    _require_member("fact_check.verdict", fact_check.get("verdict"), FACT_CHECK_VERDICTS)
+    grounding = fact_check.get("grounding")
+    if grounding is not None:
+        validate_grounding(grounding)
+    if fact_check.get("verdict") in {"CONFIRMED", "REFUTED_BY_CONTRADICTION", "CONTESTED"} and grounding is None:
+        raise ValueError("fact_check verdict requires grounding")
+    for bool_key in ("deep_read_attempted", "budget_exhausted"):
+        if bool_key in fact_check and not isinstance(fact_check[bool_key], bool):
+            raise ValueError(f"fact_check.{bool_key} must be a boolean")
+    searches = fact_check.get("searches")
+    if searches is not None:
+        _validate_string_list(searches, "fact_check.searches")
+
+
+def validate_evidence_gap(evidence_gap: Mapping[str, Any]) -> None:
+    """Validate one reviewer evidence-gap row."""
+    if not isinstance(evidence_gap, Mapping):
+        raise ValueError("evidence_gap must be a mapping")
+    for key in ("claim", "suspected_issue", "status", "reason"):
+        value = evidence_gap.get(key)
+        if not isinstance(value, str) or not value.strip():
+            raise ValueError(f"evidence_gap.{key} must be a non-empty string")
+    _validate_string_list(evidence_gap.get("searches"), "evidence_gap.searches")
+
+
+def validate_reviewer_payload(payload: Mapping[str, Any], policy_family: str | None) -> None:
+    """Validate an LLM reviewer payload before cache write or cache reuse."""
+    if not isinstance(payload, Mapping):
+        raise ValueError("reviewer payload must be a mapping")
+    findings = payload.get("findings", [])
+    if not isinstance(findings, list):
+        raise ValueError("reviewer payload findings must be a list")
+    for finding in findings:
+        if not isinstance(finding, Mapping):
+            raise ValueError("reviewer payload findings entries must be mappings")
+        validate_grounded_finding(finding, policy_family)
+    fact_checks = payload.get("fact_checks", [])
+    if not isinstance(fact_checks, list):
+        raise ValueError("reviewer payload fact_checks must be a list")
+    if len(fact_checks) > MAX_REVIEWER_FACT_CHECKS:
+        raise ValueError(
+            f"reviewer payload fact_checks exceeds cap: {len(fact_checks)} > {MAX_REVIEWER_FACT_CHECKS}"
+        )
+    for fact_check in fact_checks:
+        if not isinstance(fact_check, Mapping):
+            raise ValueError("reviewer payload fact_checks entries must be mappings")
+        validate_fact_check(fact_check)
+    evidence_gaps = payload.get("evidence_gaps", [])
+    if not isinstance(evidence_gaps, list):
+        raise ValueError("reviewer payload evidence_gaps must be a list")
+    for evidence_gap in evidence_gaps:
+        if not isinstance(evidence_gap, Mapping):
+            raise ValueError("reviewer payload evidence_gaps entries must be mappings")
+        validate_evidence_gap(evidence_gap)
 
 
 def validate_record(record: Mapping[str, Any]) -> None:
@@ -613,3 +725,11 @@ def validate_record(record: Mapping[str, Any]) -> None:
 def _require_member(name: str, value: object, allowed: frozenset[str]) -> None:
     if not isinstance(value, str) or value not in allowed:
         raise ValueError(f"unsupported {name}: {value!r}")
+
+
+def _validate_string_list(value: object, name: str) -> None:
+    if not isinstance(value, list):
+        raise ValueError(f"{name} must be a list")
+    for item in value:
+        if not isinstance(item, str) or not item.strip():
+            raise ValueError(f"{name} entries must be non-empty strings")

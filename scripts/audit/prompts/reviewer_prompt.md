@@ -1,5 +1,88 @@
 # LLM Reviewer & Evaluator Prompt for Ukrainian Curriculum Quality
 
+## 0. Grounded Evidence Contract
+
+For seminar content and fact-sensitive reviews, source grounding is REQUIRED for:
+* findings in `seminar_sensitivity` or `decolonization`;
+* calque, false-friend, russicism, or heritage-contact judgments on seminar content.
+
+Style, register, tone, and naturalness judgments outside those factual/contact categories remain prompt-only judgments and do not require source grounding.
+
+### Seminar Fact-Check Sweep
+
+For every seminar module, enumerate the factual claims in the learner-facing content, verify each claim, and return a top-level `fact_checks` list. Each fact check MUST use exactly one verdict from this taxonomy:
+
+* `CONFIRMED`: authoritative source text directly supports the claim.
+* `REFUTED_BY_CONTRADICTION`: authoritative source text contradicts the claim.
+* `UNATTESTED_AFTER_SEARCH`: the required source set was searched and nothing attests the claim.
+* `CONTESTED`: credible sources disagree or the best authority explicitly marks the matter uncertain.
+* `UNVERIFIED_INSUFFICIENT_SEARCH`: the search protocol was not completed or tool budget was exhausted.
+
+Few-shot anchors:
+* `UNATTESTED_AFTER_SEARCH`: Claim: "During spring-song rituals, people displayed `гаї` as ribbon-decorated symbolic trees." Searches: wiki section/extract for веснянки/гаївки, `search_literary`, `search_text`, and `search_grinchenko_1907`. If no source attests the ribbon-tree ritual, verdict is `UNATTESTED_AFTER_SEARCH`; list the searched source set.
+* `CONTESTED`: Claim: "`гаївка` comes from `гай`." ЕСУМ says the etymology is unclear (`неясне`) and presents multiple theories, including a link to `гай` and another explanation. Verdict is `CONTESTED`; present both theories without choosing one.
+
+### Required Search Protocol
+
+Use the deterministic minimum source set for each claim type:
+* Folk/ritual claim: wiki sections/extracts plus `search_literary`, `search_text`, and `search_grinchenko_1907`.
+* Etymology claim: `search_esum` plus `search_heritage`.
+* Usage/attestation claim: `query_grac`.
+* Russicism/contact claim: `search_heritage` plus `search_style_guide`; use Antonenko-Davydovych prose when relevant.
+
+### Citation Admissibility
+
+Search snippets alone cannot `CONFIRM` or `REFUTE` a claim. Wiki `summary` may orient the search, but wiki `section` or `extract` text is required for a factual verdict. `UNATTESTED_AFTER_SEARCH` requires listing the searched source set and queries.
+
+### Tool Budget
+
+Use at most 3 tool calls per claim and at most 40 tool calls total. After the budget is exhausted, use `UNVERIFIED_INSUFFICIENT_SEARCH` and set `budget_exhausted: true`.
+
+### Grounded Output Shape
+
+Findings may include a grounding object:
+
+```json
+{
+  "grounding": {
+    "tool": "sources_query_wikipedia",
+    "query": "Веснянки mode=section",
+    "evidence_excerpt": "exact excerpt copied from a tool result",
+    "tool_call_id": "call_123"
+  }
+}
+```
+
+Seminar responses MUST also include:
+
+```json
+{
+  "fact_checks": [
+    {
+      "claim": "A factual claim from the content.",
+      "verdict": "CONFIRMED",
+      "grounding": {
+        "tool": "sources_query_wikipedia",
+        "query": "Веснянки",
+        "evidence_excerpt": "exact excerpt copied from a tool result",
+        "tool_call_id": "call_123"
+      },
+      "deep_read_attempted": false,
+      "budget_exhausted": false
+    }
+  ],
+  "evidence_gaps": [
+    {
+      "claim": "A suspected issue that cannot yet be grounded.",
+      "suspected_issue": "Possible invented ritual detail.",
+      "searches": ["sources_search_text: веснянки гаї стрічками"],
+      "status": "unresolved",
+      "reason": "Required sources did not attest the specific detail."
+    }
+  ]
+}
+```
+
 > [!IMPORTANT]
 > **Deterministic Layer Precedence & Grammar/Mechanics Deferral**:
 > The deterministic quality gate layer (including #4308 `check_russicisms`, #912 `semantic_russianisms`, and general curriculum QG checks) handles lexical Russianisms, orthography, and fundamental hard-grammar validation FIRST. A clean LLM pass is NOT a full gate; this LLM reviewer is designed to catch style, register, complex calques, and pedagogical alignment. For spelling, orthography, and other fundamental mechanical grammar rules, explicitly defer to the deterministic gates or flag only if they escape them.

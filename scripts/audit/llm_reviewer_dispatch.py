@@ -15,6 +15,7 @@ import shutil
 import subprocess
 import tempfile
 from collections.abc import Callable, Iterator, Mapping, Sequence
+from contextlib import suppress
 from dataclasses import asdict, dataclass
 from datetime import UTC, date, datetime
 from pathlib import Path
@@ -23,7 +24,7 @@ from uuid import uuid4
 
 import yaml
 
-from scripts.audit import llm_qg_canaries, llm_reviewer
+from scripts.audit import llm_qg_canaries, llm_reviewer, qg_schema
 from scripts.audit.content_surface_gates import policy_for_level
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -42,8 +43,14 @@ CLAUDE_SPOT_AUDIT_MODEL_ID = "claude-opus-4.6"
 # The sources MCP endpoint opencode reviewer routes ground against (mirrors the
 # `sources` entry in ~/.config/opencode/opencode.jsonc).
 SOURCES_MCP_URL = "http://127.0.0.1:8766/mcp"
+MAX_REVIEWER_TOOLS = 40
+INVALID_TOOL_THEATRE = "INVALID_TOOL_THEATRE"
+RETRY_EXHAUSTED = "RETRY_EXHAUSTED"
+UNGROUNDED_FINDINGS = "ungrounded_findings"
+DEEP_READ_REQUIRED = "deep_read_required"
 
 _TOKEN_DIVISOR = 3.5
+_TOKEN_RE = re.compile(r"[\w’'-]+", re.UNICODE)
 _AUTHOR_FIELDS = (
     "author_family",
     "writer_family",
@@ -56,6 +63,27 @@ _AUTHOR_FIELDS = (
 )
 _X_AGENT_RE = re.compile(r"^X-Agent:\s*([^/\s:]+)", re.IGNORECASE | re.MULTILINE)
 _COAUTHOR_RE = re.compile(r"^Co-Authored-By:\s*([^<\n]+)", re.IGNORECASE | re.MULTILINE)
+_SOURCE_TOOL_PREFIXES = ("sources_", "mcp__sources")
+_WIKI_TOOL_MARKERS = ("wikipedia", "wiki")
+_DEEP_READ_WIKI_MODES = {"section", "sections", "extract", "article", "page"}
+
+_THEATRE_RETRY_REMINDER = """
+
+---
+
+## Reviewer Retry: Tools Required
+
+The prior seminar/factual review did not satisfy the deterministic tool gate. You must call the sources MCP tools before answering. Use relevant queries that overlap the factual claims, then return only the required JSON object.
+"""
+
+_DEEP_READ_RETRY_REMINDER = """
+
+---
+
+## Reviewer Retry: Deep Read Required
+
+The prior response used only wiki summary-mode access for an unattested or unverified claim. Re-run the relevant wiki query in section/extract mode before deciding the verdict, then return only the required JSON object.
+"""
 
 
 class ReviewerDispatchError(RuntimeError):
@@ -139,6 +167,7 @@ class DispatchResult:
     usage: Mapping[str, Any] | None = None
     tool_call_count: int = 0
     tools_used: tuple[str, ...] = ()
+    tool_events: tuple[Mapping[str, Any], ...] = ()
 
     def metadata(self) -> dict[str, Any]:
         return {
@@ -151,7 +180,18 @@ class DispatchResult:
             "usage": dict(self.usage or {}),
             "tool_call_count": self.tool_call_count,
             "tools_used": list(self.tools_used),
+            "tool_events": [dict(event) for event in self.tool_events],
         }
+
+
+@dataclass(frozen=True, slots=True)
+class GroundingGateResult:
+    """Result of anti-fabricated-grounding filtering."""
+
+    payload: dict[str, Any]
+    ungrounded_findings: int = 0
+    required_ungrounded_findings: int = 0
+    invalid_fact_checks: int = 0
 
 
 ProviderRunner = Callable[[ReviewerRoute, str, str], DispatchResult | str]
@@ -835,6 +875,7 @@ def _result_from_stream(prompt: str, parse: Any, route: ReviewerRoute) -> Dispat
         observed_cost_usd=_cost_for_observed_text(prompt, response, route),
         tool_call_count=len(tool_events),
         tools_used=_distinct_tools(tool_events),
+        tool_events=tuple(dict(event) for event in tool_events),
     )
 
 
@@ -846,6 +887,292 @@ def _distinct_tools(tool_events: Sequence[Mapping[str, Any]]) -> tuple[str, ...]
         if isinstance(name, str) and name and name not in seen:
             seen.append(name)
     return tuple(seen)
+
+
+# --- Deterministic reviewer gates (design D4) ------------------------------
+
+
+def reviewer_retry_prompt(prompt: str, reason: str) -> str:
+    """Append a deterministic retry reminder to the reviewer prompt."""
+    if reason == DEEP_READ_REQUIRED:
+        return f"{prompt}{_DEEP_READ_RETRY_REMINDER}"
+    return f"{prompt}{_THEATRE_RETRY_REMINDER}"
+
+
+def tool_events_from_dispatch_meta(dispatch_meta: Mapping[str, Any]) -> tuple[dict[str, Any], ...]:
+    """Return normalized tool events from dispatch metadata."""
+    raw_events = dispatch_meta.get("tool_events")
+    if not isinstance(raw_events, Sequence) or isinstance(raw_events, (str, bytes)):
+        return ()
+    return tuple(dict(event) for event in raw_events if isinstance(event, Mapping))
+
+
+def tool_call_count_from_dispatch_meta(dispatch_meta: Mapping[str, Any]) -> int:
+    """Return the deterministic tool-call count, preferring explicit metadata."""
+    raw_count = dispatch_meta.get("tool_call_count")
+    try:
+        count = int(raw_count) if raw_count is not None else 0
+    except (TypeError, ValueError):
+        count = 0
+    return max(count, len(tool_events_from_dispatch_meta(dispatch_meta)))
+
+
+def enforce_tool_budget(dispatch_meta: Mapping[str, Any]) -> None:
+    """Hard-fail reviewer runs that exceed the tool budget."""
+    count = tool_call_count_from_dispatch_meta(dispatch_meta)
+    if count > MAX_REVIEWER_TOOLS:
+        raise ReviewerDispatchError(
+            f"reviewer used {count} tools; hard cap is {MAX_REVIEWER_TOOLS}"
+        )
+
+
+def tool_theatre_violation(
+    *,
+    policy_family: str,
+    payload: Mapping[str, Any],
+    dispatch_meta: Mapping[str, Any],
+) -> dict[str, Any] | None:
+    """Return a theatre-gate violation for grounded routes, else None."""
+    if not _requires_grounded_tools(policy_family, dispatch_meta):
+        return None
+    count = tool_call_count_from_dispatch_meta(dispatch_meta)
+    if count <= 0:
+        return {"status": INVALID_TOOL_THEATRE, "reason": "no_tool_calls"}
+
+    events = tool_events_from_dispatch_meta(dispatch_meta)
+    claim_tokens = _payload_claim_tokens(payload)
+    if events:
+        if not any(_source_event_relevant(event, claim_tokens) for event in events):
+            return {"status": INVALID_TOOL_THEATRE, "reason": "irrelevant_tool_calls"}
+        return None
+
+    tools_used = dispatch_meta.get("tools_used")
+    if (
+        isinstance(tools_used, Sequence)
+        and not isinstance(tools_used, (str, bytes))
+        and any(_is_source_tool(str(tool)) for tool in tools_used)
+    ):
+        return None
+    return {"status": INVALID_TOOL_THEATRE, "reason": "no_relevant_source_tool_calls"}
+
+
+def deep_read_required(payload: Mapping[str, Any], dispatch_meta: Mapping[str, Any]) -> bool:
+    """Return True when summary-only wiki access requires one forced retry."""
+    events = tool_events_from_dispatch_meta(dispatch_meta)
+    if not events:
+        return False
+    fact_checks = payload.get("fact_checks")
+    if not isinstance(fact_checks, list):
+        return False
+    for fact_check in fact_checks:
+        if not isinstance(fact_check, Mapping):
+            continue
+        verdict = str(fact_check.get("verdict") or "")
+        if not verdict.startswith(("UNATTESTED", "UNVERIFIED")):
+            continue
+        if fact_check.get("deep_read_attempted") is True:
+            continue
+        claim_tokens = _tokenize(str(fact_check.get("claim") or ""))
+        summary_seen = False
+        deep_seen = False
+        for event in events:
+            if not _is_wiki_event(event):
+                continue
+            query_tokens = _event_query_tokens(event)
+            if claim_tokens and not claim_tokens.intersection(query_tokens):
+                continue
+            mode = _event_mode(event)
+            summary_seen = summary_seen or mode == "summary"
+            deep_seen = deep_seen or mode in _DEEP_READ_WIKI_MODES
+        if summary_seen and not deep_seen:
+            return True
+    return False
+
+
+def mark_deep_read_attempted(payload: Mapping[str, Any]) -> dict[str, Any]:
+    """Mark unattested/unverified fact checks as having received the forced retry."""
+    out = dict(payload)
+    marked: list[dict[str, Any]] = []
+    for fact_check in payload.get("fact_checks", []):
+        if not isinstance(fact_check, Mapping):
+            continue
+        item = dict(fact_check)
+        verdict = str(item.get("verdict") or "")
+        if verdict.startswith(("UNATTESTED", "UNVERIFIED")):
+            item["deep_read_attempted"] = True
+        marked.append(item)
+    out["fact_checks"] = marked
+    return out
+
+
+def enforce_grounding_against_tool_events(
+    payload: Mapping[str, Any],
+    dispatch_meta: Mapping[str, Any],
+    *,
+    policy_family: str,
+) -> GroundingGateResult:
+    """Drop findings whose claimed grounding is not present in this run's tools."""
+    events = tool_events_from_dispatch_meta(dispatch_meta)
+    if not events:
+        return GroundingGateResult(payload=dict(payload))
+
+    kept_findings: list[dict[str, Any]] = []
+    ungrounded = 0
+    required_ungrounded = 0
+    for finding in payload.get("findings", []):
+        if not isinstance(finding, Mapping):
+            continue
+        item = dict(finding)
+        grounding = item.get("grounding")
+        if isinstance(grounding, Mapping) and not _grounding_matches_events(grounding, events):
+            ungrounded += 1
+            if qg_schema.finding_requires_grounding(item, policy_family):
+                required_ungrounded += 1
+            continue
+        kept_findings.append(item)
+
+    invalid_fact_checks = 0
+    for fact_check in payload.get("fact_checks", []):
+        if not isinstance(fact_check, Mapping):
+            continue
+        grounding = fact_check.get("grounding")
+        if isinstance(grounding, Mapping) and not _grounding_matches_events(grounding, events):
+            invalid_fact_checks += 1
+
+    out = dict(payload)
+    out["findings"] = kept_findings
+    return GroundingGateResult(
+        payload=out,
+        ungrounded_findings=ungrounded,
+        required_ungrounded_findings=required_ungrounded,
+        invalid_fact_checks=invalid_fact_checks,
+    )
+
+
+def factual_sweep_incomplete(
+    payload: Mapping[str, Any],
+    *,
+    policy_family: str,
+    invalid_fact_checks: int = 0,
+) -> bool:
+    """Return True when a seminar response lacks a complete factual sweep."""
+    if str(policy_family).strip().lower() != "seminar":
+        return False
+    fact_checks = payload.get("fact_checks")
+    if not isinstance(fact_checks, list) or not fact_checks:
+        return True
+    if invalid_fact_checks:
+        return True
+    for fact_check in fact_checks:
+        if not isinstance(fact_check, Mapping):
+            return True
+        if fact_check.get("verdict") == "UNVERIFIED_INSUFFICIENT_SEARCH":
+            return True
+    return False
+
+
+def _requires_grounded_tools(policy_family: str, dispatch_meta: Mapping[str, Any]) -> bool:
+    route_name = str(dispatch_meta.get("route_name") or "")
+    return str(policy_family).strip().lower() == "seminar" or route_name == FRONTIER_OPENCODE_ROUTE.route_name
+
+
+def _is_source_tool(tool: str) -> bool:
+    clean = tool.strip().lower()
+    return clean.startswith(_SOURCE_TOOL_PREFIXES) or clean.startswith("search_") or clean.startswith("query_")
+
+
+def _source_event_relevant(event: Mapping[str, Any], claim_tokens: set[str]) -> bool:
+    tool = str(event.get("tool") or "")
+    if not _is_source_tool(tool):
+        return False
+    if not claim_tokens:
+        return True
+    return bool(claim_tokens.intersection(_event_query_tokens(event)))
+
+
+def _payload_claim_tokens(payload: Mapping[str, Any]) -> set[str]:
+    texts: list[str] = []
+    fact_checks = payload.get("fact_checks")
+    if isinstance(fact_checks, list):
+        texts.extend(str(item.get("claim") or "") for item in fact_checks if isinstance(item, Mapping))
+    findings = payload.get("findings")
+    if isinstance(findings, list):
+        for finding in findings:
+            if isinstance(finding, Mapping):
+                texts.append(str(finding.get("excerpt") or ""))
+                texts.append(str(finding.get("message") or ""))
+    return _tokenize(" ".join(texts))
+
+
+def _tokenize(text: str) -> set[str]:
+    return {token.lower() for token in _TOKEN_RE.findall(text) if len(token) >= 3}
+
+
+def _event_query_tokens(event: Mapping[str, Any]) -> set[str]:
+    return _tokenize(" ".join(_tool_query_candidates(event)))
+
+
+def _tool_query_candidates(event: Mapping[str, Any]) -> list[str]:
+    tool_input = event.get("input")
+    candidates: list[str] = []
+    if isinstance(tool_input, Mapping):
+        for key in ("query", "q", "claim", "word", "headword", "lemma", "text"):
+            value = tool_input.get(key)
+            if isinstance(value, str) and value.strip():
+                candidates.append(value.strip())
+        query = tool_input.get("query") or tool_input.get("q")
+        mode = tool_input.get("mode")
+        if isinstance(query, str) and isinstance(mode, str):
+            candidates.append(f"{query.strip()} mode={mode.strip()}")
+        with suppress(TypeError, ValueError):
+            candidates.append(json.dumps(tool_input, ensure_ascii=False, sort_keys=True))
+    elif isinstance(tool_input, str) and tool_input.strip():
+        candidates.append(tool_input.strip())
+    return candidates
+
+
+def _event_mode(event: Mapping[str, Any]) -> str:
+    tool_input = event.get("input")
+    if isinstance(tool_input, Mapping):
+        mode = tool_input.get("mode")
+        if isinstance(mode, str):
+            return mode.strip().lower()
+    return ""
+
+
+def _is_wiki_event(event: Mapping[str, Any]) -> bool:
+    tool = str(event.get("tool") or "").lower()
+    return any(marker in tool for marker in _WIKI_TOOL_MARKERS)
+
+
+def _grounding_matches_events(
+    grounding: Mapping[str, Any],
+    events: Sequence[Mapping[str, Any]],
+) -> bool:
+    query = str(grounding.get("query") or "").strip()
+    excerpt = str(grounding.get("evidence_excerpt") or "").strip()
+    call_id = str(grounding.get("tool_call_id") or "").strip()
+    if not query or not excerpt or not call_id:
+        return False
+    for event in events:
+        if str(event.get("tool_call_id") or "") != call_id:
+            continue
+        if not _event_input_matches_query(event, query):
+            return False
+        output = event.get("output")
+        return isinstance(output, str) and excerpt in output
+    return False
+
+
+def _event_input_matches_query(event: Mapping[str, Any], query: str) -> bool:
+    normalized = _normalize_query(query)
+    if not normalized:
+        return False
+    return any(_normalize_query(candidate) == normalized for candidate in _tool_query_candidates(event))
+
+
+def _normalize_query(value: str) -> str:
+    return " ".join(str(value).strip().lower().split())
 
 
 # --- Sources MCP fail-fast (design D0; step-1 lesson) ----------------------

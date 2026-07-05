@@ -70,6 +70,28 @@ def _reviewer_response(issue_id: str = "LLM_STYLE_REVIEW") -> str:
     )
 
 
+def _seminar_response() -> str:
+    return json.dumps(
+        {
+            "findings": [],
+            "fact_checks": [
+                {
+                    "claim": "Веснянки — це весняні обрядові пісні.",
+                    "verdict": "CONFIRMED",
+                    "grounding": {
+                        "tool": "sources_query_wikipedia",
+                        "query": "Веснянки",
+                        "evidence_excerpt": "весняні обрядові пісні",
+                        "tool_call_id": "call_1",
+                    },
+                }
+            ],
+            "evidence_gaps": [],
+        },
+        ensure_ascii=False,
+    )
+
+
 def _target(module_dir: Path, *, level: str = "b1", slug: str | None = None) -> qg_workflow.ReviewTarget:
     return qg_workflow.ReviewTarget(
         level=level,
@@ -107,9 +129,16 @@ def test_tier_order_and_tier0_hard_fail_short_circuits_llm(tmp_path: Path) -> No
 def test_tier2_policy_gate_reaches_seminar_and_skips_a1_a2(tmp_path: Path) -> None:
     calls: list[str] = []
 
-    def reviewer(target: qg_workflow.ReviewTarget, _prompt: str) -> str:
+    def reviewer(target: qg_workflow.ReviewTarget, _prompt: str) -> llm_reviewer_dispatch.DispatchResult:
         calls.append(target.level)
-        return '{"findings": []}'
+        return llm_reviewer_dispatch.DispatchResult(
+            response_text=_seminar_response(),
+            reviewer_model_id="test-reviewer",
+            reviewer_family="test-family",
+            route_name="opencode_frontier",
+            tool_call_count=1,
+            tools_used=("sources_query_wikipedia",),
+        )
 
     seminar_dir = _write_module(
         tmp_path,
@@ -122,7 +151,11 @@ def test_tier2_policy_gate_reaches_seminar_and_skips_a1_a2(tmp_path: Path) -> No
 
     seminar = qg_workflow.review_module(
         _target(seminar_dir, level="folk", slug="calm-seminar"),
-        options=qg_workflow.WorkflowOptions(enable_llm=True, reviewer_model_id="test-reviewer"),
+        options=qg_workflow.WorkflowOptions(
+            enable_llm=True,
+            reviewer_model_id="test-reviewer",
+            reviewer_family="test-family",
+        ),
         reviewer=reviewer,
         store_path=tmp_path / "seminar-qg.db",
     )
@@ -188,6 +221,82 @@ def test_composite_cache_invalidates_on_gate_version_bump(tmp_path: Path) -> Non
     assert calls == 2
 
 
+def test_cache_hit_revalidates_theatre_gate_on_stored_payload(tmp_path: Path) -> None:
+    seminar_dir = _write_module(
+        tmp_path,
+        level="folk",
+        slug="cache-theatre",
+        module_md="# Семінар\n\nВеснянки — це весняні обрядові пісні.\n",
+    )
+    db_path = tmp_path / "qg.db"
+    prompt = llm_reviewer.build_reviewer_prompt(
+        level="folk",
+        slug="cache-theatre",
+        module_md=(seminar_dir / "module.md").read_text(encoding="utf-8"),
+        activities_yaml=(seminar_dir / "activities.yaml").read_text(encoding="utf-8"),
+        vocabulary_yaml=(seminar_dir / "vocabulary.yaml").read_text(encoding="utf-8"),
+        resources_yaml=(seminar_dir / "resources.yaml").read_text(encoding="utf-8"),
+    )
+    payload = qg_workflow._payload_from_findings(
+        [],
+        fact_checks=[
+            {
+                "claim": "Веснянки — це весняні обрядові пісні.",
+                "verdict": "CONFIRMED",
+                "grounding": {
+                    "tool": "sources_query_wikipedia",
+                    "query": "Веснянки",
+                    "evidence_excerpt": "весняні обрядові пісні",
+                    "tool_call_id": "call_1",
+                },
+            }
+        ],
+    )
+    llm_qg_store.record_llm_qg(
+        level="folk",
+        slug="cache-theatre",
+        module_dir=seminar_dir,
+        payload=payload,
+        gate_version=qg_workflow.DEFAULT_GATE_VERSION,
+        prompt_hash=llm_qg_store.prompt_hash_for_text(prompt),
+        checker_version=CHECKER_VERSION,
+        level_policy_family="seminar",
+        reviewer_model="test-reviewer",
+        reviewer_family="test-family",
+        tool_call_count=0,
+        tools_used=(),
+        source="test",
+        path=db_path,
+    )
+    calls = 0
+
+    def reviewer(_target: qg_workflow.ReviewTarget, _prompt: str) -> llm_reviewer_dispatch.DispatchResult:
+        nonlocal calls
+        calls += 1
+        return llm_reviewer_dispatch.DispatchResult(
+            response_text=_seminar_response(),
+            reviewer_model_id="test-reviewer",
+            reviewer_family="test-family",
+            route_name="opencode_frontier",
+            tool_call_count=1,
+            tools_used=("sources_query_wikipedia",),
+        )
+
+    record = qg_workflow.review_module(
+        _target(seminar_dir, level="folk", slug="cache-theatre"),
+        options=qg_workflow.WorkflowOptions(
+            enable_llm=True,
+            reviewer_model_id="test-reviewer",
+            reviewer_family="test-family",
+        ),
+        reviewer=reviewer,
+        store_path=db_path,
+    )
+
+    assert _tier(record, 2)["status"] == "ran"
+    assert calls == 1
+
+
 def test_tier2_threads_tool_telemetry_into_store(tmp_path: Path) -> None:
     seminar_dir = _write_module(
         tmp_path,
@@ -199,7 +308,7 @@ def test_tier2_threads_tool_telemetry_into_store(tmp_path: Path) -> None:
 
     def reviewer(_target: qg_workflow.ReviewTarget, _prompt: str) -> llm_reviewer_dispatch.DispatchResult:
         return llm_reviewer_dispatch.DispatchResult(
-            response_text='{"findings": []}',
+            response_text=_seminar_response(),
             reviewer_model_id="test-reviewer",
             reviewer_family="test-family",
             route_name="opencode_frontier",

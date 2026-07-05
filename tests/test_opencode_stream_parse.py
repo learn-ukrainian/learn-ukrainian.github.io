@@ -38,14 +38,15 @@ def test_real_fixture_extracts_seven_tool_events() -> None:
     ]
 
 
-def test_each_tool_event_has_the_four_normalized_keys() -> None:
+def test_each_tool_event_has_the_five_normalized_keys() -> None:
     parse = _parse_opencode_stream(FIXTURE.read_text(encoding="utf-8"))
 
     for event in parse.tool_events:
-        assert set(event) == {"tool", "input", "status", "tool_call_id"}
+        assert set(event) == {"tool", "input", "status", "tool_call_id", "output"}
         assert event["status"] == "completed"
         assert isinstance(event["tool_call_id"], str) and event["tool_call_id"]
         assert isinstance(event["input"], dict)
+        assert isinstance(event["output"], str)
 
 
 def test_assistant_text_is_recovered_and_wrapper_matches() -> None:
@@ -91,6 +92,7 @@ def test_dedupes_repeated_tool_call_keeping_final_status() -> None:
 
     assert len(parse.tool_events) == 1
     assert parse.tool_events[0]["status"] == "completed"
+    assert parse.tool_events[0]["output"] is None
     assert parse.text == "done"
 
 

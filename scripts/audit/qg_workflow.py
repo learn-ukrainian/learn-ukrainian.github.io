@@ -709,19 +709,35 @@ def _run_tier2(
         path=store_path,
     )
     if cached is not None:
-        findings = _findings_from_payload(cached.payload)
-        return {
-            "findings": findings,
-            "result": {
-                **base_result,
-                "status": "cache_hit",
-                "findings": len(findings),
-                "cache_run_id": cached.run_id,
-            },
-            "llm_used": True,
-            "reviewer_model_id": reviewer_model_id,
-            "reviewer_family": reviewer_family,
+        cached_payload = dict(cached.payload)
+        cached_meta = {
+            "tool_call_count": cached.tool_call_count,
+            "tools_used": list(cached.tools_used),
+            "route_name": cached.route_name,
         }
+        try:
+            llm_reviewer.validate_reviewer_payload(cached_payload, policy_family)
+            cache_theatre = llm_reviewer_dispatch.tool_theatre_violation(
+                policy_family=policy_family,
+                payload=cached_payload,
+                dispatch_meta=cached_meta,
+            )
+        except ValueError:
+            cache_theatre = {"status": llm_reviewer_dispatch.INVALID_TOOL_THEATRE}
+        if cache_theatre is None:
+            findings = _findings_from_payload(cached_payload)
+            return {
+                "findings": findings,
+                "result": {
+                    **base_result,
+                    "status": "cache_hit",
+                    "findings": len(findings),
+                    "cache_run_id": cached.run_id,
+                },
+                "llm_used": True,
+                "reviewer_model_id": reviewer_model_id,
+                "reviewer_family": reviewer_family,
+            }
 
     stale_cache = _has_stale_cache(
         level=level,
@@ -804,118 +820,219 @@ def _run_tier2(
             "reviewer_family": reviewer_family,
         }
 
-    try:
-        raw_response = effective_reviewer(target, prompt)
-    except llm_reviewer_dispatch.ReviewerDispatchError as exc:
-        budget.record_spend(estimate)
-        return {
-            "findings": [],
-            "result": {
-                **base_result,
-                "status": "provider_error",
-                "reason": type(exc).__name__,
-                "message": str(exc),
-                "estimate": estimate,
-            },
-            "workflow_verdict": "PROVIDER_FAILURE",
-            "completion_status": "INCOMPLETE",
-            "reviewer_model_id": reviewer_model_id,
-            "reviewer_family": reviewer_family,
-        }
-    response_text, dispatch_meta = _coerce_reviewer_response(raw_response)
-    actual_model_id = str(dispatch_meta.get("reviewer_model_id") or reviewer_model_id)
-    actual_family = str(dispatch_meta.get("reviewer_family") or reviewer_family)
-    actual_route_name = str(dispatch_meta.get("route_name") or route_name)
-    observed_cost = _observed_cost(dispatch_meta)
-    budget.record_spend(estimate, observed_cost_usd=observed_cost)
-    if route is not None:
-        _record_daily_spend(
-            options=options,
-            level=level,
-            slug=slug,
-            route=route,
-            estimate=estimate,
-            observed_cost_usd=observed_cost,
+    attempt_prompt = prompt
+    theatre_retried = False
+    deep_read_retried = False
+    payload: dict[str, Any]
+    findings: list[dict[str, Any]]
+    dispatch_meta: dict[str, Any]
+    tier2_status = "ran"
+    workflow_override: str | None = None
+    while True:
+        try:
+            raw_response = effective_reviewer(target, attempt_prompt)
+        except llm_reviewer_dispatch.ReviewerDispatchError as exc:
+            budget.record_spend(estimate)
+            return {
+                "findings": [],
+                "result": {
+                    **base_result,
+                    "status": "provider_error",
+                    "reason": type(exc).__name__,
+                    "message": str(exc),
+                    "estimate": estimate,
+                },
+                "workflow_verdict": "PROVIDER_FAILURE",
+                "completion_status": "INCOMPLETE",
+                "reviewer_model_id": reviewer_model_id,
+                "reviewer_family": reviewer_family,
+            }
+        response_text, dispatch_meta = _coerce_reviewer_response(raw_response)
+        actual_model_id = str(dispatch_meta.get("reviewer_model_id") or reviewer_model_id)
+        actual_family = str(dispatch_meta.get("reviewer_family") or reviewer_family)
+        actual_route_name = str(dispatch_meta.get("route_name") or route_name)
+        observed_cost = _observed_cost(dispatch_meta)
+        budget.record_spend(estimate, observed_cost_usd=observed_cost)
+        if route is not None:
+            _record_daily_spend(
+                options=options,
+                level=level,
+                slug=slug,
+                route=route,
+                estimate=estimate,
+                observed_cost_usd=observed_cost,
+            )
+        if (
+            actual_model_id != reviewer_model_id
+            or actual_family != reviewer_family
+            # route_name keys the composite cache — a reviewer answering from the
+            # wrong route must not poison route-keyed rows (codex review of #4401;
+            # LiveReviewerDispatcher checks this itself, but _run_tier2 accepts
+            # arbitrary reviewer callables). Only enforceable when the workflow
+            # resolved an expected route (live mode); injected test reviewers with
+            # no resolved route (route_name=None) keep their reported name.
+            or (route_name is not None and actual_route_name != route_name)
+        ):
+            return {
+                "findings": [],
+                "result": {
+                    **base_result,
+                    "status": "provider_error",
+                    "reason": "reviewer_identity_mismatch",
+                    "actual_reviewer_model_id": actual_model_id,
+                    "actual_reviewer_family": actual_family,
+                    "actual_route_name": actual_route_name,
+                    "estimate": estimate,
+                },
+                "workflow_verdict": "PROVIDER_FAILURE",
+                "completion_status": "INCOMPLETE",
+                "reviewer_model_id": actual_model_id,
+                "reviewer_family": actual_family,
+            }
+        if _cost_overrun(estimate, observed_cost):
+            return {
+                "findings": [],
+                "result": {
+                    **base_result,
+                    "status": "cost_overrun",
+                    "estimate": estimate,
+                    "observed_cost_usd": observed_cost,
+                    "reason": "observed_cost_gt_125pct_estimate",
+                },
+                "workflow_verdict": "COST_OVERRUN",
+                "completion_status": "INCOMPLETE",
+                "reviewer_model_id": reviewer_model_id,
+                "reviewer_family": reviewer_family,
+            }
+        llm_reviewer_dispatch.enforce_tool_budget(dispatch_meta)
+        try:
+            parsed_payload = llm_reviewer.parse_and_evaluate_llm_response(
+                response_text,
+                module_md=texts.get("module.md", ""),
+                activities_yaml=texts.get("activities.yaml", ""),
+                vocabulary_yaml=texts.get("vocabulary.yaml", ""),
+                resources_yaml=texts.get("resources.yaml", ""),
+                return_payload=True,
+            )
+            if not isinstance(parsed_payload, Mapping):
+                raise ValueError("parsed reviewer payload must be a mapping")
+            payload = _payload_from_reviewer_payload(parsed_payload)
+            llm_reviewer.validate_reviewer_payload(payload, policy_family)
+        except ValueError as exc:
+            return {
+                "findings": [],
+                "result": {
+                    **base_result,
+                    "status": "schema_failure",
+                    "reason": str(exc),
+                    "estimate": estimate,
+                },
+                "workflow_verdict": "SCHEMA_FAILURE",
+                "completion_status": "INCOMPLETE",
+                "reviewer_model_id": reviewer_model_id,
+                "reviewer_family": reviewer_family,
+            }
+        findings = _findings_from_payload(payload)
+        if _parse_failed(findings):
+            return {
+                "findings": findings,
+                "result": {
+                    **base_result,
+                    "status": "parse_failure",
+                    "findings": len(findings),
+                    "estimate": estimate,
+                },
+                "workflow_verdict": "PARSE_FAILURE",
+                "completion_status": "INCOMPLETE",
+                "reviewer_model_id": reviewer_model_id,
+                "reviewer_family": reviewer_family,
+            }
+
+        theatre = llm_reviewer_dispatch.tool_theatre_violation(
+            policy_family=policy_family,
+            payload=payload,
+            dispatch_meta=dispatch_meta,
         )
-    if (
-        actual_model_id != reviewer_model_id
-        or actual_family != reviewer_family
-        # route_name keys the composite cache — a reviewer answering from the
-        # wrong route must not poison route-keyed rows (codex review of #4401;
-        # LiveReviewerDispatcher checks this itself, but _run_tier2 accepts
-        # arbitrary reviewer callables). Only enforceable when the workflow
-        # resolved an expected route (live mode); injected test reviewers with
-        # no resolved route (route_name=None) keep their reported name.
-        or (route_name is not None and actual_route_name != route_name)
-    ):
-        return {
-            "findings": [],
-            "result": {
-                **base_result,
-                "status": "provider_error",
-                "reason": "reviewer_identity_mismatch",
-                "actual_reviewer_model_id": actual_model_id,
-                "actual_reviewer_family": actual_family,
-                "actual_route_name": actual_route_name,
-                "estimate": estimate,
-            },
-            "workflow_verdict": "PROVIDER_FAILURE",
-            "completion_status": "INCOMPLETE",
-            "reviewer_model_id": actual_model_id,
-            "reviewer_family": actual_family,
-        }
-    if _cost_overrun(estimate, observed_cost):
-        return {
-            "findings": [],
-            "result": {
-                **base_result,
-                "status": "cost_overrun",
-                "estimate": estimate,
-                "observed_cost_usd": observed_cost,
-                "reason": "observed_cost_gt_125pct_estimate",
-            },
-            "workflow_verdict": "COST_OVERRUN",
-            "completion_status": "INCOMPLETE",
-            "reviewer_model_id": reviewer_model_id,
-            "reviewer_family": reviewer_family,
-        }
-    try:
-        findings = llm_reviewer.parse_and_evaluate_llm_response(
-            response_text,
-            module_md=texts.get("module.md", ""),
-            activities_yaml=texts.get("activities.yaml", ""),
-            vocabulary_yaml=texts.get("vocabulary.yaml", ""),
-            resources_yaml=texts.get("resources.yaml", ""),
+        if theatre is not None:
+            if not theatre_retried:
+                theatre_retried = True
+                attempt_prompt = llm_reviewer_dispatch.reviewer_retry_prompt(
+                    prompt,
+                    llm_reviewer_dispatch.INVALID_TOOL_THEATRE,
+                )
+                continue
+            return {
+                "findings": [],
+                "result": {
+                    **base_result,
+                    "status": llm_reviewer_dispatch.RETRY_EXHAUSTED,
+                    "reason": llm_reviewer_dispatch.INVALID_TOOL_THEATRE,
+                    "gate_reason": theatre.get("reason"),
+                    "estimate": estimate,
+                    "dispatch": dispatch_meta,
+                },
+                "workflow_verdict": llm_reviewer_dispatch.INVALID_TOOL_THEATRE,
+                "completion_status": "INCOMPLETE",
+                "llm_used": True,
+                "reviewer_model_id": reviewer_model_id,
+                "reviewer_family": reviewer_family,
+            }
+
+        if llm_reviewer_dispatch.deep_read_required(payload, dispatch_meta):
+            if not deep_read_retried:
+                deep_read_retried = True
+                attempt_prompt = llm_reviewer_dispatch.reviewer_retry_prompt(
+                    prompt,
+                    llm_reviewer_dispatch.DEEP_READ_REQUIRED,
+                )
+                continue
+            payload = llm_reviewer_dispatch.mark_deep_read_attempted(payload)
+            llm_reviewer.validate_reviewer_payload(payload, policy_family)
+
+        grounding_gate = llm_reviewer_dispatch.enforce_grounding_against_tool_events(
+            payload,
+            dispatch_meta,
+            policy_family=policy_family,
         )
-    except ValueError as exc:
-        return {
-            "findings": [],
-            "result": {
-                **base_result,
-                "status": "schema_failure",
-                "reason": str(exc),
-                "estimate": estimate,
-            },
-            "workflow_verdict": "SCHEMA_FAILURE",
-            "completion_status": "INCOMPLETE",
-            "reviewer_model_id": reviewer_model_id,
-            "reviewer_family": reviewer_family,
-        }
-    if _parse_failed(findings):
-        return {
-            "findings": findings,
-            "result": {
-                **base_result,
-                "status": "parse_failure",
-                "findings": len(findings),
-                "estimate": estimate,
-            },
-            "workflow_verdict": "PARSE_FAILURE",
-            "completion_status": "INCOMPLETE",
-            "reviewer_model_id": reviewer_model_id,
-            "reviewer_family": reviewer_family,
-        }
-    payload = _payload_from_findings(findings)
+        payload = grounding_gate.payload
+        sweep_incomplete = llm_reviewer_dispatch.factual_sweep_incomplete(
+            payload,
+            policy_family=policy_family,
+            invalid_fact_checks=grounding_gate.invalid_fact_checks,
+        )
+        if (
+            grounding_gate.required_ungrounded_findings
+            or grounding_gate.invalid_fact_checks
+            or sweep_incomplete
+        ):
+            tier2_status = (
+                llm_reviewer_dispatch.UNGROUNDED_FINDINGS
+                if grounding_gate.required_ungrounded_findings or grounding_gate.invalid_fact_checks
+                else "factual_sweep_incomplete"
+            )
+            workflow_override = "FAIL" if sweep_incomplete else "WARN"
+            severity = "critical" if sweep_incomplete else "warning"
+            findings = [
+                *_findings_from_payload(payload),
+                _reviewer_gate_finding(
+                    severity=severity,
+                    issue_id="LLM_REVIEWER_GROUNDING_GATE",
+                    message=(
+                        "Grounded reviewer gate found ungrounded evidence or an incomplete seminar "
+                        "fact-check sweep."
+                    ),
+                ),
+            ]
+            payload = _payload_from_findings(
+                findings,
+                fact_checks=payload.get("fact_checks", []),
+                evidence_gaps=payload.get("evidence_gaps", []),
+            )
+            llm_reviewer.validate_reviewer_payload(payload, policy_family)
+        else:
+            findings = _findings_from_payload(payload)
+        break
+
     llm_qg_store.record_llm_qg(
         level=level,
         slug=slug,
@@ -937,12 +1054,13 @@ def _run_tier2(
         "findings": findings,
         "result": {
             **base_result,
-            "status": "ran",
+            "status": tier2_status,
             "findings": len(findings),
             "estimate": estimate,
             "dispatch": dispatch_meta,
         },
         "llm_used": True,
+        "workflow_verdict": workflow_override,
         "reviewer_model_id": reviewer_model_id,
         "reviewer_family": reviewer_family,
     }
@@ -1165,7 +1283,11 @@ def _build_evidence_record(
     aggregate = _aggregate_from_dimensions(dimensions)
     schema_verdict = aggregate["verdict"]
     terminal_verdict = aggregate["terminal_verdict"]
-    if completion_status == "INCOMPLETE" and options.fail_closed_on_llm_skip:
+    infra_only_incomplete = workflow_verdict in {
+        llm_reviewer_dispatch.INVALID_TOOL_THEATRE,
+        llm_reviewer_dispatch.RETRY_EXHAUSTED,
+    }
+    if completion_status == "INCOMPLETE" and options.fail_closed_on_llm_skip and not infra_only_incomplete:
         schema_verdict = "FAIL"
         terminal_verdict = "FAIL"
     aggregate.update(
@@ -1271,14 +1393,38 @@ def _checker_runs(
     return runs
 
 
-def _payload_from_findings(findings: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
+def _payload_from_findings(
+    findings: Sequence[Mapping[str, Any]],
+    *,
+    fact_checks: Sequence[Mapping[str, Any]] = (),
+    evidence_gaps: Sequence[Mapping[str, Any]] = (),
+) -> dict[str, Any]:
     dimensions = dimensions_from_findings(findings)
     return {
         "schema_version": qg_schema.SCHEMA_VERSION,
         "aggregate": _aggregate_from_dimensions(dimensions),
         "dimensions": dimensions,
         "findings": [dict(finding) for finding in findings],
+        "fact_checks": [dict(item) for item in fact_checks],
+        "evidence_gaps": [dict(item) for item in evidence_gaps],
     }
+
+
+def _payload_from_reviewer_payload(payload: Mapping[str, Any]) -> dict[str, Any]:
+    findings = payload.get("findings", [])
+    if not isinstance(findings, list):
+        raise ValueError("reviewer payload findings must be a list")
+    fact_checks = payload.get("fact_checks", [])
+    evidence_gaps = payload.get("evidence_gaps", [])
+    return _payload_from_findings(
+        [dict(item) for item in findings if isinstance(item, Mapping)],
+        fact_checks=[dict(item) for item in fact_checks if isinstance(item, Mapping)]
+        if isinstance(fact_checks, list)
+        else (),
+        evidence_gaps=[dict(item) for item in evidence_gaps if isinstance(item, Mapping)]
+        if isinstance(evidence_gaps, list)
+        else (),
+    )
 
 
 def _findings_from_payload(payload: Mapping[str, Any]) -> list[dict[str, Any]]:
@@ -1298,6 +1444,30 @@ def _findings_from_payload(payload: Mapping[str, Any]) -> list[dict[str, Any]]:
     for finding in out:
         qg_schema.validate_finding(finding)
     return out
+
+
+def _reviewer_gate_finding(*, severity: str, issue_id: str, message: str) -> dict[str, Any]:
+    return qg_schema.build_finding(
+        issue_id=issue_id,
+        issue_class="other",
+        dimension="mechanics",
+        severity=severity,
+        file="llm_response",
+        line=None,
+        span=None,
+        excerpt="grounded reviewer gate",
+        message=message,
+        confidence="deterministic",
+        disposition="defect",
+        detector={
+            "adapter": "llm_reviewer_dispatch",
+            "rule_id": issue_id,
+        },
+        attribution={
+            "corpus": "reviewer_tool_telemetry",
+            "evidence": "Deterministic grounded-reviewer gate",
+        },
+    )
 
 
 def _aggregate_from_dimensions(dimensions: Mapping[str, Mapping[str, Any]]) -> dict[str, Any]:

@@ -8,16 +8,22 @@ from unittest.mock import patch
 import pytest
 
 from scripts.ai_agent_bridge._opencode import OpencodeStreamParse
-from scripts.audit import llm_reviewer_dispatch, qg_workflow
+from scripts.audit import llm_qg_store, llm_reviewer_dispatch, qg_workflow
 
 _DISPATCH = "scripts.audit.llm_reviewer_dispatch"
 
 
-def _write_module(tmp_path: Path, *, level: str = "b1", slug: str = "sample") -> Path:
+def _write_module(
+    tmp_path: Path,
+    *,
+    level: str = "b1",
+    slug: str = "sample",
+    module_md: str | None = None,
+) -> Path:
     module_dir = tmp_path / level / slug
     module_dir.mkdir(parents=True)
     (module_dir / "module.md").write_text(
-        "# Модуль\n\nУчні читають український текст і виконують коротке завдання.\n",
+        module_md or "# Модуль\n\nУчні читають український текст і виконують коротке завдання.\n",
         encoding="utf-8",
     )
     (module_dir / "activities.yaml").write_text("[]\n", encoding="utf-8")
@@ -32,6 +38,16 @@ def _target(module_dir: Path, *, level: str = "b1") -> qg_workflow.ReviewTarget:
 
 def _tier(record: dict[str, Any], tier_number: int) -> dict[str, Any]:
     return next(tier for tier in record["qg_workflow"]["tiers"] if tier["tier"] == tier_number)
+
+
+def _issue_ids(record: dict[str, Any]) -> list[str]:
+    return [
+        str(finding["issue_id"])
+        for entry in record.get("dimensions", {}).values()
+        if isinstance(entry, dict)
+        for finding in entry.get("findings", [])
+        if isinstance(finding, dict)
+    ]
 
 
 def _canary_artifact(tmp_path: Path, *, level: str = "b1") -> Path:
@@ -64,6 +80,80 @@ def _dispatch_result(response: str, *, observed_cost_usd: float = 0.0) -> llm_re
         reviewer_family=route.reviewer_family,
         route_name=route.route_name,
         observed_cost_usd=observed_cost_usd,
+    )
+
+
+def _seminar_options() -> qg_workflow.WorkflowOptions:
+    return qg_workflow.WorkflowOptions(
+        enable_llm=True,
+        reviewer_model_id="test-reviewer",
+        reviewer_family="test-family",
+    )
+
+
+def _sources_event(
+    *,
+    query: str = "Веснянки",
+    mode: str = "section",
+    output: str = "Веснянки — це весняні обрядові пісні.",
+    call_id: str = "call_1",
+    tool: str = "sources_query_wikipedia",
+) -> dict[str, Any]:
+    return {
+        "tool": tool,
+        "input": {"query": query, "mode": mode},
+        "status": "completed",
+        "tool_call_id": call_id,
+        "output": output,
+    }
+
+
+def _seminar_result(
+    response: str,
+    events: tuple[dict[str, Any], ...],
+    *,
+    tool_call_count: int | None = None,
+) -> llm_reviewer_dispatch.DispatchResult:
+    return llm_reviewer_dispatch.DispatchResult(
+        response_text=response,
+        reviewer_model_id="test-reviewer",
+        reviewer_family="test-family",
+        route_name="opencode_frontier",
+        tool_call_count=len(events) if tool_call_count is None else tool_call_count,
+        tools_used=tuple(dict.fromkeys(str(event["tool"]) for event in events)),
+        tool_events=events,
+    )
+
+
+def _fact_response(
+    *,
+    verdict: str = "CONFIRMED",
+    claim: str = "Веснянки — це весняні обрядові пісні.",
+    grounding_query: str = "Веснянки",
+    evidence_excerpt: str = "весняні обрядові пісні",
+    tool_call_id: str = "call_1",
+    findings: list[dict[str, Any]] | None = None,
+    extra_fact_fields: dict[str, Any] | None = None,
+) -> str:
+    fact_check: dict[str, Any] = {
+        "claim": claim,
+        "verdict": verdict,
+        **(extra_fact_fields or {}),
+    }
+    if verdict in {"CONFIRMED", "REFUTED_BY_CONTRADICTION", "CONTESTED", "UNATTESTED_AFTER_SEARCH"}:
+        fact_check["grounding"] = {
+            "tool": "sources_query_wikipedia",
+            "query": grounding_query,
+            "evidence_excerpt": evidence_excerpt,
+            "tool_call_id": tool_call_id,
+        }
+    return json.dumps(
+        {
+            "findings": findings or [],
+            "fact_checks": [fact_check],
+            "evidence_gaps": [],
+        },
+        ensure_ascii=False,
     )
 
 
@@ -228,6 +318,318 @@ def test_gemma_surface_route_does_not_require_mcp() -> None:
     invoke.assert_called_once()
     assert result.route_name == "gemma_surface"
     assert result.tool_call_count == 0
+
+
+def test_theatre_gate_retries_zero_tool_run_then_accepts_valid_retry(tmp_path: Path) -> None:
+    module_dir = _write_module(tmp_path, level="folk", slug="vesnianky")
+    calls: list[str] = []
+    valid_event = _sources_event(output="Веснянки — це весняні обрядові пісні.")
+
+    def reviewer(_target: qg_workflow.ReviewTarget, prompt: str) -> llm_reviewer_dispatch.DispatchResult:
+        calls.append(prompt)
+        if len(calls) == 1:
+            return _seminar_result(_fact_response(), (), tool_call_count=0)
+        return _seminar_result(_fact_response(), (valid_event,))
+
+    record = qg_workflow.review_module(
+        _target(module_dir, level="folk"),
+        options=_seminar_options(),
+        reviewer=reviewer,
+        store_path=tmp_path / "qg.db",
+    )
+
+    assert _tier(record, 2)["status"] == "ran"
+    assert len(calls) == 2
+    assert "Tools Required" in calls[1]
+
+
+def test_theatre_gate_rejects_irrelevant_tool_only_run(tmp_path: Path) -> None:
+    module_dir = _write_module(tmp_path, level="folk", slug="vesnianky")
+    irrelevant = _sources_event(query="борщ", output="Борщ — страва.")
+    calls = 0
+
+    def reviewer(_target: qg_workflow.ReviewTarget, _prompt: str) -> llm_reviewer_dispatch.DispatchResult:
+        nonlocal calls
+        calls += 1
+        return _seminar_result(_fact_response(), (irrelevant,))
+
+    record = qg_workflow.review_module(
+        _target(module_dir, level="folk"),
+        options=_seminar_options(),
+        reviewer=reviewer,
+        store_path=tmp_path / "qg.db",
+    )
+
+    tier = _tier(record, 2)
+    assert tier["status"] == llm_reviewer_dispatch.RETRY_EXHAUSTED
+    assert tier["reason"] == llm_reviewer_dispatch.INVALID_TOOL_THEATRE
+    assert record["completion_status"] == "INCOMPLETE"
+    assert record["terminal_verdict"] == "PASS"
+    assert calls == 2
+
+
+def test_theatre_gate_retry_then_invalid_zero_tool_path(tmp_path: Path) -> None:
+    module_dir = _write_module(tmp_path, level="folk", slug="vesnianky")
+    calls = 0
+
+    def reviewer(_target: qg_workflow.ReviewTarget, _prompt: str) -> llm_reviewer_dispatch.DispatchResult:
+        nonlocal calls
+        calls += 1
+        return _seminar_result(_fact_response(), (), tool_call_count=0)
+
+    record = qg_workflow.review_module(
+        _target(module_dir, level="folk"),
+        options=_seminar_options(),
+        reviewer=reviewer,
+        store_path=tmp_path / "qg.db",
+    )
+
+    assert _tier(record, 2)["status"] == llm_reviewer_dispatch.RETRY_EXHAUSTED
+    assert record["completion_status"] == "INCOMPLETE"
+    assert calls == 2
+
+
+def test_deep_read_gate_retries_summary_only_unverified_then_accepts_attested(tmp_path: Path) -> None:
+    module_dir = _write_module(tmp_path, level="folk", slug="vesnianky")
+    calls: list[str] = []
+    summary_event = _sources_event(mode="summary", output="Короткий опис веснянок.")
+    section_event = _sources_event(mode="section", output="Веснянки — це весняні обрядові пісні.")
+
+    def reviewer(_target: qg_workflow.ReviewTarget, prompt: str) -> llm_reviewer_dispatch.DispatchResult:
+        calls.append(prompt)
+        if len(calls) == 1:
+            return _seminar_result(
+                _fact_response(verdict="UNVERIFIED_INSUFFICIENT_SEARCH"),
+                (summary_event,),
+            )
+        return _seminar_result(_fact_response(), (section_event,))
+
+    record = qg_workflow.review_module(
+        _target(module_dir, level="folk"),
+        options=_seminar_options(),
+        reviewer=reviewer,
+        store_path=tmp_path / "qg.db",
+    )
+
+    assert _tier(record, 2)["status"] == "ran"
+    assert len(calls) == 2
+    assert "Deep Read Required" in calls[1]
+
+
+def test_budget_cap_raises_before_cache_write(tmp_path: Path) -> None:
+    module_dir = _write_module(tmp_path, level="folk", slug="vesnianky")
+    db_path = tmp_path / "qg.db"
+
+    def reviewer(_target: qg_workflow.ReviewTarget, _prompt: str) -> llm_reviewer_dispatch.DispatchResult:
+        event = _sources_event()
+        return _seminar_result(
+            _fact_response(),
+            (event,),
+            tool_call_count=llm_reviewer_dispatch.MAX_REVIEWER_TOOLS + 1,
+        )
+
+    with pytest.raises(llm_reviewer_dispatch.ReviewerDispatchError, match="hard cap"):
+        qg_workflow.review_module(
+            _target(module_dir, level="folk"),
+            options=_seminar_options(),
+            reviewer=reviewer,
+            store_path=db_path,
+        )
+
+    assert llm_qg_store.latest_llm_qg("folk", "vesnianky", path=db_path) is None
+
+
+def test_fake_grounding_excerpt_absent_from_telemetry_drops_required_finding(tmp_path: Path) -> None:
+    module_dir = _write_module(tmp_path, level="folk", slug="vesnianky")
+    event = _sources_event(output="Веснянки — це весняні обрядові пісні.")
+    finding = {
+        "issue_id": "SEMINAR_FACTUAL_DETAIL",
+        "issue_class": "other",
+        "dimension": "seminar_sensitivity",
+        "severity": "warning",
+        "excerpt": "український текст",
+        "message": "Grounding excerpt is fabricated.",
+        "grounding": {
+            "tool": "sources_query_wikipedia",
+            "query": "Веснянки",
+            "evidence_excerpt": "цього фрагмента немає в telemetry",
+            "tool_call_id": "call_1",
+        },
+    }
+
+    def reviewer(_target: qg_workflow.ReviewTarget, _prompt: str) -> llm_reviewer_dispatch.DispatchResult:
+        return _seminar_result(_fact_response(findings=[finding]), (event,))
+
+    record = qg_workflow.review_module(
+        _target(module_dir, level="folk"),
+        options=_seminar_options(),
+        reviewer=reviewer,
+        store_path=tmp_path / "qg.db",
+    )
+
+    tier = _tier(record, 2)
+    assert tier["status"] == llm_reviewer_dispatch.UNGROUNDED_FINDINGS
+    issue_ids = _issue_ids(record)
+    assert "SEMINAR_FACTUAL_DETAIL" not in issue_ids
+    assert "LLM_REVIEWER_GROUNDING_GATE" in issue_ids
+    assert record["verdict"] == "WARN"
+    assert record["terminal_verdict"] == "PASS"
+
+
+def test_fake_grounding_query_without_matching_tool_use_drops_required_finding(tmp_path: Path) -> None:
+    module_dir = _write_module(tmp_path, level="folk", slug="vesnianky")
+    event = _sources_event(query="Веснянки", output="Веснянки — це весняні обрядові пісні.")
+    finding = {
+        "issue_id": "SEMINAR_FACTUAL_DETAIL",
+        "issue_class": "other",
+        "dimension": "seminar_sensitivity",
+        "severity": "warning",
+        "excerpt": "український текст",
+        "message": "Grounding query is not logged.",
+        "grounding": {
+            "tool": "sources_query_wikipedia",
+            "query": "гаї стрічками",
+            "evidence_excerpt": "весняні обрядові пісні",
+            "tool_call_id": "call_1",
+        },
+    }
+
+    def reviewer(_target: qg_workflow.ReviewTarget, _prompt: str) -> llm_reviewer_dispatch.DispatchResult:
+        return _seminar_result(_fact_response(findings=[finding]), (event,))
+
+    record = qg_workflow.review_module(
+        _target(module_dir, level="folk"),
+        options=_seminar_options(),
+        reviewer=reviewer,
+        store_path=tmp_path / "qg.db",
+    )
+
+    assert _tier(record, 2)["status"] == llm_reviewer_dispatch.UNGROUNDED_FINDINGS
+    assert "SEMINAR_FACTUAL_DETAIL" not in _issue_ids(record)
+
+
+def test_offline_vesnianky_fixture_exercises_all_fact_check_verdicts(tmp_path: Path) -> None:
+    module_dir = _write_module(
+        tmp_path,
+        level="folk",
+        slug="vesnianky",
+        module_md=(
+            "# Веснянки\n\n"
+            "Веснянки — це весняні обрядові пісні. Їхні мелодії нібито завжди світлі й піднесені. "
+            "Гаївка має спірну етимологію, а обряд зі стрічковими деревами не засвідчений.\n"
+        ),
+    )
+    events = (
+        _sources_event(
+            query="Веснянки",
+            output="Веснянки — це весняні обрядові пісні.",
+            call_id="call_confirmed",
+        ),
+        _sources_event(
+            query="Веснянки мелодика",
+            output="Мелодія веснянок часто побудована на повторенні однієї-двох поспівок.",
+            call_id="call_refuted",
+        ),
+        _sources_event(
+            query="веснянки гаї стрічками",
+            output="No results for: веснянки гаї стрічками",
+            call_id="call_unattested",
+            tool="sources_search_text",
+        ),
+        _sources_event(
+            query="гаївка етимологія",
+            output="ЕСУМ: походження слова неясне; подано кілька пояснень.",
+            call_id="call_contested",
+            tool="sources_search_esum",
+        ),
+        _sources_event(
+            query="веснянки психологічне відновлення",
+            output="No deep source found before budget expired.",
+            call_id="call_unverified",
+            tool="sources_search_literary",
+        ),
+    )
+    fact_checks = [
+        {
+            "claim": "Веснянки — це весняні обрядові пісні.",
+            "verdict": "CONFIRMED",
+            "grounding": {
+                "tool": "sources_query_wikipedia",
+                "query": "Веснянки",
+                "evidence_excerpt": "весняні обрядові пісні",
+                "tool_call_id": "call_confirmed",
+            },
+        },
+        {
+            "claim": "Мелодика веснянок завжди світла й піднесена.",
+            "verdict": "REFUTED_BY_CONTRADICTION",
+            "grounding": {
+                "tool": "sources_query_wikipedia",
+                "query": "Веснянки мелодика",
+                "evidence_excerpt": "повторенні однієї-двох поспівок",
+                "tool_call_id": "call_refuted",
+            },
+        },
+        {
+            "claim": "У ритуалі виставляли гаї як дерева зі стрічками.",
+            "verdict": "UNATTESTED_AFTER_SEARCH",
+            "grounding": {
+                "tool": "sources_search_text",
+                "query": "веснянки гаї стрічками",
+                "evidence_excerpt": "No results",
+                "tool_call_id": "call_unattested",
+            },
+            "deep_read_attempted": True,
+            "searches": [
+                "sources_query_wikipedia: Веснянки",
+                "sources_search_literary: веснянки гаї",
+                "sources_search_text: веснянки гаї стрічками",
+                "sources_search_grinchenko_1907: гаї",
+            ],
+        },
+        {
+            "claim": "Гаївка походить від слова гай.",
+            "verdict": "CONTESTED",
+            "grounding": {
+                "tool": "sources_search_esum",
+                "query": "гаївка етимологія",
+                "evidence_excerpt": "походження слова неясне",
+                "tool_call_id": "call_contested",
+            },
+        },
+        {
+            "claim": "Веснянки доводять психологічне відновлення людини.",
+            "verdict": "UNVERIFIED_INSUFFICIENT_SEARCH",
+            "budget_exhausted": True,
+            "deep_read_attempted": True,
+        },
+    ]
+    response = json.dumps({"findings": [], "fact_checks": fact_checks, "evidence_gaps": []}, ensure_ascii=False)
+
+    def reviewer(_target: qg_workflow.ReviewTarget, _prompt: str) -> llm_reviewer_dispatch.DispatchResult:
+        return _seminar_result(response, events)
+
+    db_path = tmp_path / "qg.db"
+    record = qg_workflow.review_module(
+        _target(module_dir, level="folk"),
+        options=_seminar_options(),
+        reviewer=reviewer,
+        store_path=db_path,
+    )
+
+    assert _tier(record, 2)["status"] == "factual_sweep_incomplete"
+    assert record["terminal_verdict"] == "FAIL"
+    assert _tier(record, 2)["dispatch"]["tool_call_count"] == 5
+    latest = llm_qg_store.latest_llm_qg("folk", "vesnianky", path=db_path)
+    assert latest is not None
+    verdicts = [row["verdict"] for row in latest.payload["fact_checks"]]
+    assert verdicts == [
+        "CONFIRMED",
+        "REFUTED_BY_CONTRADICTION",
+        "UNATTESTED_AFTER_SEARCH",
+        "CONTESTED",
+        "UNVERIFIED_INSUFFICIENT_SEARCH",
+    ]
 
 
 def test_http_endpoint_responds_true_on_streaming_timeout() -> None:

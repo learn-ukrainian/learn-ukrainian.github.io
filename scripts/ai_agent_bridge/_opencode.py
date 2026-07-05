@@ -371,7 +371,7 @@ class OpencodeStreamParse:
     deduped, ordered tuple of MCP/tool invocations the model made during the
     run — the per-run observability the tool-theatre and grounding gates
     (#2156) are built on. Each event is a minimal
-    ``{tool, input, status, tool_call_id}`` dict.
+    ``{tool, input, status, tool_call_id, output}`` dict.
     """
 
     text: str
@@ -489,11 +489,11 @@ def _invoke_opencode_detailed(
 
 
 def _extract_tool_event(event: dict) -> dict | None:
-    """Normalize one NDJSON tool event to ``{tool, input, status, tool_call_id}``.
+    """Normalize one NDJSON tool event to a compact telemetry dict.
 
     Handles the observed opencode shape (top-level ``type == "tool_use"`` with a
-    nested ``part`` whose ``state`` carries ``input``/``status`` and whose
-    ``callID`` is the tool-call id) while tolerating flatter/older shapes.
+    nested ``part`` whose ``state`` carries ``input``/``status``/``output`` and
+    whose ``callID`` is the tool-call id) while tolerating flatter/older shapes.
     """
     part = event.get("part")
     if not isinstance(part, dict):
@@ -503,6 +503,7 @@ def _extract_tool_event(event: dict) -> dict | None:
         return None
     state = part.get("state") if isinstance(part.get("state"), dict) else {}
     tool_input = state.get("input", part.get("input"))
+    output = state.get("output", part.get("output"))
     status = state.get("status") or part.get("status") or event.get("status")
     tool_call_id = part.get("callID") or part.get("tool_call_id") or part.get("id") or event.get("callID")
     return {
@@ -510,6 +511,7 @@ def _extract_tool_event(event: dict) -> dict | None:
         "input": tool_input,
         "status": status if isinstance(status, str) else None,
         "tool_call_id": tool_call_id if isinstance(tool_call_id, str) else None,
+        "output": output if isinstance(output, str) else None,
     }
 
 
