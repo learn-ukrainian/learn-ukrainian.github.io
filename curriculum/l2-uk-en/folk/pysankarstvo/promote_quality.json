@@ -1,9 +1,9 @@
 {
-  "assembled_mdx_sha256": "15b1ecb453283dc30047a5ce91aa14d6e16fec5da4c7996c2b4975379ed6ae57",
+  "assembled_mdx_sha256": "7a96f4fd0a3aa660fcc577fcc3117ba402be7f27cd0d78925f12727fe9c60dda",
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "ff4dc12ab44d84e81645989b8b5e0f47c81dc84ab2d5658ab487529ab8f3ca95",
+    "digest": "974136aeb53272198f85be8bd99b97a8cc313994ad0adfccbe7d9572ba1b9a1e",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/pysankarstvo.yaml",
@@ -11,7 +11,7 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/pysankarstvo/module.md",
-        "sha256": "f6aef2754fa051255bceb2f05e4b53cf6744c473255f068a412b63fd554af03f"
+        "sha256": "93c65e25c688c6bff727df4755e3dc1ca6f3f70fda3cdc9ecdb8e28dd9c2513a"
       },
       {
         "path": "curriculum/l2-uk-en/folk/pysankarstvo/activities.yaml",
@@ -28,10 +28,10 @@
     ]
   },
   "evidence": {
-    "decolonization": "Avoids unchanged-pagan-code and single-canonical-style claims, distinguishes archaeological ceramic eggs from preserved bird-egg and modern practice evidence, and frames the 2024 UNESCO Ukraine-Estonia inscription without dissolving Ukrainian authorship.",
-    "pedagogy": "C1+ seminar prose separates wax-resist technique, egg-name distinctions, motif systems, regional schools, Easter gift exchange, museum and diaspora layers, with inline and workbook tasks grounded in dossier evidence.",
-    "review": "Claude Opus 4.8 independent review found one blocker, the unattested vocabulary item pysancharka. The item and prose occurrence were removed/replaced with attested pysankarka, MDX was regenerated, and follow-up local validators and scans confirmed no matches remain.",
-    "source_policy": "Dossier-supported claims only; no invented museum objects, images, artifact IDs, workshop sequences, or popular sayings. Two early-modern Easter fragments were verified under Antolohiia chunk 21c791c4_c0098 before embedding and marked as corpus-checked."
+    "decolonization": "Attribution notes avoid universal pagan-code and single-canonical-style claims.",
+    "pedagogical": "Readings ground pysanka as gift/social object without fabricating motif meanings or workshop sequences.",
+    "review": "Claude Opus 4.8 bridge message 2 PASS for Batch 5 reading remediation; no blockers. DeepSeek not used.",
+    "source_policy": "Converted two verified early-modern Easter/pysanka fragments into structured on-site readings; motif legends remain paraphrase-only."
   },
   "floors": {
     "beauty": 8.5,
@@ -49,7 +49,7 @@
     "model": "claude-opus-4-8"
   },
   "schema_version": 1,
-  "scored_at": "2026-07-04T22:53:41Z",
+  "scored_at": "2026-07-05T18:18:43Z",
   "scores": {
     "beauty": 8.8,
     "decolonization": 9.1,

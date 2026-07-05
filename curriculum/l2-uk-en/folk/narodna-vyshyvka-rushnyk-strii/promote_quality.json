@@ -1,9 +1,9 @@
 {
-  "assembled_mdx_sha256": "0eb5e77deb05f954e6d0d157491938032e7f736d357a3e4110571fd896bc2d9a",
+  "assembled_mdx_sha256": "bef3c3079d6394a6d288f7e2091621569577fa9a0d08a3c44123048de47ee24b",
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "f0af4e0dfb5a8cf81008be1749633020c9e81ddab6417513a576350c9ee8f0db",
+    "digest": "6b4871f37db6803bc042830dc9c2c652092a3f6bdbe766c9f1d46716f3cee26d",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/narodna-vyshyvka-rushnyk-strii.yaml",
@@ -11,7 +11,7 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/narodna-vyshyvka-rushnyk-strii/module.md",
-        "sha256": "3809321048e9fc316a34269ae109b2ebb945752a50ed8376420b8947d747c88e"
+        "sha256": "755b66951a26653cf4ee5e1520ce5ed261abdab58e445d659567d7e17441deff"
       },
       {
         "path": "curriculum/l2-uk-en/folk/narodna-vyshyvka-rushnyk-strii/activities.yaml",
@@ -28,10 +28,10 @@
     ]
   },
   "evidence": {
-    "decolonization": "Separates embroidery, rushnyk, sorochka, strii, ritual/domestic textile uses, regional technique, diaspora/revival, Soviet reframing, and modern identity without unchanged-pagan-code or single-canon claims.",
-    "pedagogy": "C1+ seminar prose and V2 activities require learners to distinguish object, technique, body system, regional evidence, and source boundaries; the essay exemplar now matches the 260-word minimum.",
-    "review": "Claude Opus 4.8 independent review found resource placeholders, quote attribution gaps, a YAML colon scalar, index plural agreement, missing sidecar, and short essay exemplar; all findings were fixed and MDX regenerated.",
-    "source_policy": "Built from the dossier spine and corpus-verified literary fragments only; no invented motif dictionary, artifact IDs, museum objects, songs, captions, or universal regional claims."
+    "decolonization": "Notes avoid cheap identity shorthand and keep religious/domestic/material contexts distinct.",
+    "pedagogical": "Readings ground embroidery/rushnyk discussion in short attributed literary evidence without universal motif dictionaries.",
+    "review": "Claude Opus 4.8 bridge message 2 PASS for Batch 5 reading remediation; no blockers. DeepSeek not used.",
+    "source_policy": "Converted verified Hrinchenko and Nechui-Levytsky rushnyk fragments into structured on-site readings; songs/formulas remain do-not-quote unless verified."
   },
   "floors": {
     "beauty": 8.5,
@@ -49,7 +49,7 @@
     "model": "claude-opus-4-8"
   },
   "schema_version": 1,
-  "scored_at": "2026-07-05T00:14:25Z",
+  "scored_at": "2026-07-05T18:18:43Z",
   "scores": {
     "beauty": 8.8,
     "decolonization": 9.1,
