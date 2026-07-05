@@ -153,7 +153,7 @@ references:
   path: https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&I21DBN=EIU&P21DBN=EIU&S21CNR=20&S21COLORTERMS=0&S21FMT=eiu_all&S21P01=0&S21P02=0&S21P03=TRN%3D&S21REF=10&S21STN=1&S21STR=Scherbak_Yurij&Z21ID=
   title: Щербак Юрій Миколайович (Енциклопедія історії України)
   type: reference
-- note: Профіль лауреата і документ про Шевченківську премію 2026 року за `Мертва пам'ять. Голоси і крики`.
+- note: Офіційний профіль лауреата Шевченківської премії 2026 року за `Мертва пам'ять. Голоси і крики`; перевірено як актуальну віху для живої постаті.
   path: https://knpu.gov.ua/winners/shcherbak-iurij-mykolajovych/
   title: Щербак Юрій Миколайович (Комітет з Національної премії України імені Тараса Шевченка)
   type: reference
@@ -174,7 +174,7 @@ sequence: 402
 slug: yurii-shcherbak
 subtitle: Чорнобиль, екологія і дипломатія доказу
 title: 'Юрій Щербак: Доказ після катастрофи'
-version: '1.1'
+version: '1.2'
 vocabulary_hints:
 - definition: лікар або науковець, що вивчає поширення хвороб у спільнотах
   pos: ч.
