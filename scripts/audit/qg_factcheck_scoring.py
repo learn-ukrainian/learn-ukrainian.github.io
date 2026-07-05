@@ -42,11 +42,20 @@ def score_fact_checks(
     fact_checks: list[Mapping[str, Any]],
     truth_by_claim: Mapping[str, bool],
 ) -> int:
-    """Score fact-check rows by exact claim text."""
+    """Score fact-check rows by exact claim text.
+
+    Scores the MODEL's raw judgment: when the admissibility gate downgraded a
+    positive verdict (#4416 / PR #4429 sets ``admissibility_downgraded`` and
+    preserves ``original_verdict``), score the original verdict — otherwise a
+    gate-downgraded CONFIRMED-on-fabricated would score 0 instead of the fatal
+    −100 the bakeoff exists to measure.
+    """
     total = 0
     for row in fact_checks:
         claim = row.get("claim")
         verdict = row.get("verdict")
+        if row.get("admissibility_downgraded") is True and isinstance(row.get("original_verdict"), str):
+            verdict = row["original_verdict"]
         if not isinstance(claim, str) or not isinstance(verdict, str):
             continue
         if claim not in truth_by_claim:
