@@ -1941,12 +1941,14 @@ document.addEventListener("keydown", function(e){
 
 /* ============================== IDIOM (§9.4) ================================= */
 var IDIOM_DECK = [
+  /* Anti-gaming (§9.7): options carry NO EN subtitle — an asymmetric gloss on one option
+     is a visual answer tell. The EN gloss is revealed post-answer in the feedback line. */
   { idiom:"байдики бити", answer:"ледарювати, нічого не робити", answerEn:"to idle about",
     options:[
-      { label:"ледарювати, нічого не робити", en:"to idle about" },
-      { label:"швидко бігти", en:"" },
-      { label:"голосно сміятися", en:"" },
-      { label:"багато працювати", en:"" }
+      { label:"ледарювати, нічого не робити" },
+      { label:"швидко бігти" },
+      { label:"голосно сміятися" },
+      { label:"багато працювати" }
     ] }
 ];
 var idItem = null, idAnswered = false, idCorrect = 0;
@@ -1960,8 +1962,7 @@ function renderIdiom(){
   shuffle(idItem.options).forEach(function(o,i){
     var b = document.createElement("button");
     b.type = "button"; b.className = "mc-opt";
-    var en = o.en ? '<span class="mc-gloss-en">'+esc(o.en)+'</span>' : "";
-    b.innerHTML = '<span class="mc-key">'+(i+1)+'</span><span>'+esc(o.label)+en+'</span>';
+    b.innerHTML = '<span class="mc-key">'+(i+1)+'</span><span>'+esc(o.label)+'</span>';
     b.dataset.correct = (o.label === idItem.answer) ? "1" : "0";
     b.addEventListener("click", function(){ answerIdiom(b); });
     box.appendChild(b);
@@ -1976,8 +1977,9 @@ function answerIdiom(btn){
     b.disabled = true;
     if (b.dataset.correct === "1") b.classList.add("correct");
   });
-  if (ok){ idCorrect++; setLive("id-live","✓ Правильно!","ok"); }
-  else { btn.classList.add("wrong"); setLive("id-live","✕ Правильна відповідь підсвічена.","bad"); }
+  var enGloss = idItem.answerEn ? " («"+idItem.answerEn+"»)" : "";
+  if (ok){ idCorrect++; setLive("id-live","✓ Правильно!"+enGloss,"ok"); }
+  else { btn.classList.add("wrong"); setLive("id-live","✕ Правильна відповідь підсвічена."+enGloss,"bad"); }
   document.getElementById("id-score").textContent = correctLabel(idCorrect);
   document.getElementById("id-next").hidden = false;
 }
