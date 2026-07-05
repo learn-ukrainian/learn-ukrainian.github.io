@@ -201,6 +201,7 @@ def run_matrix(
     output_dir: Path,
     runner: ProviderRunner = invoke_bakeoff_route,
     force: bool = False,
+    retry_failures: bool = False,
 ) -> list[BakeoffRun]:
     """Run or resume every model x fixture pair and write a scorecard.
 
@@ -221,6 +222,7 @@ def run_matrix(
                     output_dir=output_dir,
                     runner=runner,
                     force=force,
+                    retry_failures=retry_failures,
                 )
             )
     write_scorecard(output_dir / SCORECARD_NAME, [run.artifact for run in runs])
@@ -234,6 +236,7 @@ def run_one(
     output_dir: Path,
     runner: ProviderRunner = invoke_bakeoff_route,
     force: bool = False,
+    retry_failures: bool = False,
 ) -> BakeoffRun:
     """Run or resume one model x passage bakeoff artifact.
 
@@ -246,14 +249,52 @@ def run_one(
     artifact_path = output_dir / f"{pin_slug(route.reviewer_model_id)}__{fixture.slug}.json"
     if artifact_path.exists() and not force:
         artifact = json.loads(artifact_path.read_text(encoding="utf-8"))
-        return BakeoffRun(artifact_path=artifact_path, artifact=artifact, skipped=True)
+        if not (retry_failures and artifact.get("status") == "error"):
+            return BakeoffRun(artifact_path=artifact_path, artifact=artifact, skipped=True)
 
     # ``folk`` is the track level; it maps to the seminar policy family in
     # content_surface_gates. There is no literal ``seminar`` level.
     prompt = llm_reviewer.build_reviewer_prompt(BAKEOFF_LEVEL, f"bakeoff-{fixture.slug}", fixture.passage_md)
     task_id = f"qg-bakeoff-{pin_slug(route.reviewer_model_id)}-{fixture.slug}"
     started = time.monotonic()
-    gate_result = _invoke_and_gate(route, prompt, task_id, runner)
+    try:
+        gate_result = _invoke_and_gate(route, prompt, task_id, runner)
+    except (ValueError, llm_reviewer_dispatch.ReviewerDispatchError) as exc:
+        # A model that cannot produce a schema-valid grounded payload (or a
+        # provider that errors out) is a MEASURED per-cell outcome, never a
+        # matrix crash (first live run: gemma findings flunked validate_finding
+        # and killed all 24 cells). Score = every fixture claim missing.
+        wall_seconds = round(time.monotonic() - started, 3)
+        artifact = {
+            "schema_version": RUN_SCHEMA_VERSION,
+            "created_at": _now_z(),
+            "fixture": {
+                "slug": fixture.slug,
+                "title": fixture.title,
+                "claim_count": len(fixture.claims),
+            },
+            "model": {
+                "pin": route.reviewer_model_id,
+                "pin_slug": pin_slug(route.reviewer_model_id),
+                "family": route.reviewer_family,
+                "route_name": route.route_name,
+                "bridge_command": list(route.bridge_command),
+            },
+            "status": "error",
+            "error": {"class": type(exc).__name__, "message": str(exc)[:2000]},
+            "workflow_verdict": "ERROR",
+            "attempt_count": None,
+            "dispatch": {},
+            "gate_outcomes": {},
+            "payload": {},
+            "score": score_payload({"fact_checks": []}, fixture),
+            "tool_call_count": 0,
+            "wall_seconds": wall_seconds,
+        }
+        artifact_path.write_text(
+            json.dumps(artifact, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+        )
+        return BakeoffRun(artifact_path=artifact_path, artifact=artifact)
     wall_seconds = round(time.monotonic() - started, 3)
     score = score_payload(gate_result["payload"], fixture)
     gate_outcomes = gate_result["gate_outcomes"]
@@ -461,6 +502,11 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--models", action="append", help="Comma-separated or repeated OpenRouter/opencode model pins")
     parser.add_argument("--out-dir", type=Path, default=None)
     parser.add_argument("--force", action="store_true", help="Redo runs even when artifact JSON exists")
+    parser.add_argument(
+        "--retry-failures",
+        action="store_true",
+        help="Re-run only cells whose existing artifact has status=error",
+    )
     args = parser.parse_args(argv)
 
     try:
@@ -468,7 +514,9 @@ def main(argv: Sequence[str] | None = None) -> int:
         fixtures = load_fixtures(args.fixtures_dir, args.fixtures)
         pins = model_pins_from_args(args.models)
         output_dir = args.out_dir or default_output_dir()
-        runs = run_matrix(fixtures, pins, output_dir=output_dir, force=args.force)
+        runs = run_matrix(
+        fixtures, pins, output_dir=output_dir, force=args.force, retry_failures=args.retry_failures
+    )
     except BakeoffConfigError as exc:
         print(str(exc), file=sys.stderr)
         return 2

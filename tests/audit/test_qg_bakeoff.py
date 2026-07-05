@@ -347,3 +347,93 @@ def test_run_one_with_default_live_runner_is_guarded(
 
     with pytest.raises(qg_bakeoff.BakeoffConfigError, match="QG_BAKEOFF=1"):
         qg_bakeoff.run_one(route, _fixture(), output_dir=tmp_path)
+
+
+def test_matrix_survives_schema_invalid_cell_and_retry_failures_reruns_it(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A schema-invalid model payload is a MEASURED error cell, never a matrix crash.
+
+    First live run: gemma findings flunked validate_finding and killed all 24
+    cells (ValueError propagated out of run_matrix). Error cells score as
+    all-claims-missing; --retry-failures re-runs ONLY error cells.
+    """
+    monkeypatch.delenv("CI", raising=False)
+    monkeypatch.setenv("QG_BAKEOFF", "1")
+    fixture = _fixture()
+    calls: list[str] = []
+
+    def flaky_runner(
+        run_route: llm_reviewer_dispatch.ReviewerRoute,
+        _prompt: str,
+        _task_id: str,
+    ) -> llm_reviewer_dispatch.DispatchResult:
+        calls.append(run_route.reviewer_model_id)
+        if run_route.reviewer_model_id.endswith("bad-model"):
+            raise ValueError("finding missing required fields: attribution")
+        return _dispatch_result(
+            {
+                "findings": [],
+                "fact_checks": [
+                    {
+                        "claim": "True claim.",
+                        "verdict": "CONFIRMED",
+                        "grounding": {
+                            "tool": "sources_query_wikipedia",
+                            "query": "True claim",
+                            "evidence_excerpt": "True claim",
+                            "tool_call_id": "call_1",
+                        },
+                    },
+                    {
+                        "claim": "Fabricated claim.",
+                        "verdict": "UNATTESTED_AFTER_SEARCH",
+                        "grounding": {
+                            "tool": "sources_query_wikipedia",
+                            "query": "True claim",
+                            "evidence_excerpt": "Fabricated claim",
+                            "tool_call_id": "call_1",
+                        },
+                    },
+                ],
+                "evidence_gaps": [],
+            },
+            run_route,
+        )
+
+    runs = qg_bakeoff.run_matrix(
+        [fixture],
+        ["openrouter/test/bad-model", "openrouter/test/good-model"],
+        output_dir=tmp_path,
+        runner=flaky_runner,
+    )
+
+    assert len(runs) == 2
+    by_status = {run.artifact["model"]["pin"]: run.artifact["status"] for run in runs}
+    assert by_status["openrouter/test/bad-model"] == "error"
+    assert by_status["openrouter/test/good-model"] == "ran"
+    error_artifact = next(r.artifact for r in runs if r.artifact["status"] == "error")
+    assert error_artifact["error"]["class"] == "ValueError"
+    assert error_artifact["score"]["missing_claims"] == len(fixture.claims)
+    assert (tmp_path / qg_bakeoff.SCORECARD_NAME).exists()
+
+    # resume: neither cell re-runs without flags
+    calls.clear()
+    qg_bakeoff.run_matrix(
+        [fixture],
+        ["openrouter/test/bad-model", "openrouter/test/good-model"],
+        output_dir=tmp_path,
+        runner=flaky_runner,
+    )
+    assert calls == []
+
+    # --retry-failures: ONLY the error cell re-runs
+    calls.clear()
+    qg_bakeoff.run_matrix(
+        [fixture],
+        ["openrouter/test/bad-model", "openrouter/test/good-model"],
+        output_dir=tmp_path,
+        runner=flaky_runner,
+        retry_failures=True,
+    )
+    assert calls == ["openrouter/test/bad-model"]
