@@ -849,6 +849,16 @@ def _invoke_opencode_reviewer(
     DispatchResult. ``require_mcp`` gates the grounded factual route on a
     configured + reachable sources MCP.
     """
+    # Routing guard at the transport (codex review, PR #4500 finding 2): this
+    # function runs its OWN opencode invocation — it never passes through the
+    # bridge's guarded _run_opencode — so without this line a subscription-
+    # family pin (openrouter/anthropic|openai|google/gemini-*) or a qwen pin
+    # would reach OpenRouter unguarded from the reviewer/bakeoff paths.
+    # RoutingGuardError deliberately propagates (config error, not a per-cell
+    # provider flake).
+    from scripts.ai_agent_bridge.routing_guard import assert_model_routing_allowed
+
+    assert_model_routing_allowed(route.reviewer_model_id, context="reviewer opencode transport")
     if require_mcp:
         _assert_sources_mcp_available()
     from scripts.ai_agent_bridge._opencode import _invoke_opencode_detailed

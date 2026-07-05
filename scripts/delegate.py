@@ -2307,7 +2307,7 @@ def build_parser() -> argparse.ArgumentParser:
                    # while the routing guard rejects it at dispatch is a UX trap. The
                    # guard still catches programmatic Namespace bypass.
                    help="Agent to run for the task: codex, gemini, claude, grok (Hermes), "
-                        "grok-build (native grok CLI), deepseek, qwen, agy, or cursor.")
+                        "grok-build (native grok CLI), deepseek, agy, or cursor.")
     d.add_argument("--task-id", required=True,
                    help="Stable task identifier used for state/log files, e.g. review-123.")
     d.add_argument("--prompt", help="Prompt text, or '-' to read the prompt from stdin.")

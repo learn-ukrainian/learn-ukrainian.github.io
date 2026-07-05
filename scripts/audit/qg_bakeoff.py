@@ -28,7 +28,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from scripts.audit import llm_reviewer, llm_reviewer_dispatch, qg_factcheck_scoring
+from scripts.audit import llm_reviewer, llm_reviewer_dispatch, qg_factcheck_scoring, qg_schema
 
 FIXTURE_DIR = PROJECT_ROOT / "tests" / "fixtures" / "qg_bakeoff"
 DEFAULT_OUTPUT_ROOT = PROJECT_ROOT / "audit"
@@ -38,6 +38,17 @@ ANCHOR_SLUG = "vesnianky"
 MISSING_CLAIM_PENALTY = -10
 BAKEOFF_LEVEL = "folk"
 BAKEOFF_POLICY_FAMILY = "seminar"
+# Arms of the bakeoff. TOOLED = the shipped grounded+gated reviewer path;
+# BARE = the tool-free control (model judges from its own knowledge, no gates)
+# so tooled − bare per model quantifies the harness lift (#2156 step 3).
+TOOLED_ARM = "tooled"
+BARE_ARM = "bare"
+BOTH_ARM = "both"
+_ARM_CHOICES = (TOOLED_ARM, BARE_ARM, BOTH_ARM)
+# Verbatim reuse markers: the bare prompt slices the LIVE verdict taxonomy out of
+# the reviewer template so the fact-check verdict set can never fork from tooled.
+_TAXONOMY_START = "Each fact check MUST use exactly one verdict from this taxonomy:"
+_TAXONOMY_END = "Few-shot anchors:"
 _LEADING_CLAIM_FILLER_RE = re.compile(r"^(?:або|чи)\s+", re.IGNORECASE)
 
 
@@ -99,6 +110,15 @@ ProviderRunner = Callable[
     [llm_reviewer_dispatch.ReviewerRoute, str, str],
     llm_reviewer_dispatch.DispatchResult | str,
 ]
+
+# The bare control arm's runner is the SAME shape as ProviderRunner. It exists as
+# a named seam (#2156 step 5): subscription-lane bare runners (claude / gpt /
+# gemini NATIVE) plug in here — they are OUT OF SCOPE for this harness because the
+# handoff forbids routing subscription families over OpenRouter. A native bare
+# transport can be injected as ``bare_runner`` without touching scoring, artifacts,
+# or the scorecard; the default below is the OpenRouter-legitimate opencode lane
+# (gemma + deepseek), and the routing guard on main still refuses other families.
+BareRunner = ProviderRunner
 
 
 def _lenient_first_json_object(response_text: str) -> Mapping[str, Any] | None:
@@ -231,39 +251,305 @@ def invoke_bakeoff_route(
     )
 
 
+def _reviewer_verdict_taxonomy() -> str:
+    """Slice the fact-check verdict taxonomy VERBATIM from the live template.
+
+    The bare arm must score identically to the tooled reviewer, so the verdict
+    set cannot fork. Rather than re-typing the five verdicts here (a fork waiting
+    to drift), read them out of the SAME ``reviewer_prompt.md`` the tooled path
+    uses. If the template ever loses the taxonomy markers this fails loudly —
+    that is the intended signal to re-sync, not to silently diverge.
+    """
+    template = llm_reviewer.load_reviewer_prompt_template()
+    start = template.find(_TAXONOMY_START)
+    end = template.find(_TAXONOMY_END, start)
+    if start == -1 or end == -1:
+        raise BakeoffConfigError(
+            "reviewer prompt template is missing the fact-check verdict taxonomy "
+            "markers; the bare arm must reuse the live taxonomy verbatim (do not fork)"
+        )
+    return template[start:end].strip()
+
+
+_BARE_PREAMBLE = (
+    "You are an expert Ukrainian linguist and fact-checker running a CONTROL review "
+    "with NO tools and NO sources. Judge every factual claim in the passage below "
+    "using ONLY your own parametric knowledge — you cannot search, retrieve, or "
+    "ground anything."
+)
+
+_BARE_INSTRUCTIONS = (
+    "### How to answer (bare / tool-free control)\n"
+    "\n"
+    "* Enumerate EVERY factual claim in the passage. Each `claim` MUST be an exact, "
+    "literal substring copied from the passage (a verbatim span) — never a paraphrase.\n"
+    "* Judge each claim from your own knowledge alone. You have NO tools, NO source "
+    "search, and NO grounding. Do not invent citations or `grounding` objects; if you "
+    "emit any, they are ignored by bare scoring.\n"
+    "* Because you cannot consult sources, when you cannot verify a claim from your own "
+    "knowledge use `UNVERIFIED_INSUFFICIENT_SEARCH` (\"cannot verify without sources\") "
+    "rather than guessing `CONFIRMED`.\n"
+    "* Output ONLY a single JSON object — no markdown fence, no prose before or after — "
+    "of the shape:\n"
+    "\n"
+    '{"fact_checks": [{"claim": "<verbatim span from the passage>", '
+    '"verdict": "<one taxonomy verdict>"}]}'
+)
+
+
+def build_bare_factcheck_prompt(title: str, passage_md: str) -> str:
+    """Assemble the tool-free control prompt for one passage.
+
+    Same output contract as the tooled reviewer (a top-level ``fact_checks`` list of
+    ``{claim, verdict}`` using the reused taxonomy) so ``score_payload`` treats bare
+    and tooled identically — but with NO tool instructions and NO grounding mandate.
+    """
+    taxonomy = _reviewer_verdict_taxonomy()
+    return (
+        f"{_BARE_PREAMBLE}\n\n"
+        f"{taxonomy}\n\n"
+        f"{_BARE_INSTRUCTIONS}\n\n"
+        f"## Passage: {title}\n"
+        f"{passage_md}\n"
+    )
+
+
+def invoke_bakeoff_route_bare(
+    route: llm_reviewer_dispatch.ReviewerRoute,
+    prompt: str,
+    task_id: str,
+) -> llm_reviewer_dispatch.DispatchResult:
+    """Bare control invocation over the SAME opencode transport, tools NOT required.
+
+    Mirrors ``invoke_bakeoff_route`` but passes ``require_mcp=False``: a bare run
+    judges from model knowledge with no sources, so the grounded-MCP precondition
+    does not apply and there is no tool telemetry to gate on. Legitimate OpenRouter
+    lane only (gemma + deepseek); the routing guard on main still refuses
+    subscription families — that is correct and must not be overridden.
+    """
+    del task_id
+    return llm_reviewer_dispatch._invoke_opencode_reviewer(
+        prompt,
+        route,
+        default_timeout_s=1800,
+        require_mcp=False,
+    )
+
+
+def _validate_bare_fact_checks(fact_checks: Any) -> None:
+    """Validate ONLY the fact_checks shape — claim + verdict, NO grounding.
+
+    Reuses the live contract constants (``FACT_CHECK_VERDICTS`` /
+    ``MAX_REVIEWER_FACT_CHECKS``) so the verdict set and cap never fork, but drops
+    the tooled grounding requirement: a bare model has no tools, so a `CONFIRMED`
+    with no grounding is a legitimate bare judgment, not a schema defect.
+    """
+    if not isinstance(fact_checks, list):
+        raise ValueError("reviewer payload fact_checks must be a list")
+    if len(fact_checks) > qg_schema.MAX_REVIEWER_FACT_CHECKS:
+        raise ValueError(
+            f"reviewer payload fact_checks exceeds cap: {len(fact_checks)} > "
+            f"{qg_schema.MAX_REVIEWER_FACT_CHECKS}"
+        )
+    for fact_check in fact_checks:
+        if not isinstance(fact_check, Mapping):
+            raise ValueError("reviewer payload fact_checks entries must be mappings")
+        claim = fact_check.get("claim")
+        if not isinstance(claim, str) or not claim.strip():
+            raise ValueError("fact_check.claim must be a non-empty string")
+        verdict = fact_check.get("verdict")
+        if not isinstance(verdict, str) or verdict not in qg_schema.FACT_CHECK_VERDICTS:
+            raise ValueError(f"unsupported fact_check.verdict: {verdict!r}")
+
+
+def _validate_bare_payload_shape(payload: Mapping[str, Any]) -> None:
+    """Validate a bare payload: findings/evidence_gaps via the live validator,
+    fact_checks via the grounding-free bare checker.
+
+    ``findings``/``evidence_gaps`` go through ``llm_reviewer.validate_reviewer_payload``
+    with ``fact_checks`` emptied, so the tooled fact-check grounding requirement never
+    fires on a tool-free payload; the real fact_checks are then validated for shape only.
+    """
+    envelope = {
+        "findings": payload.get("findings", []),
+        "fact_checks": [],
+        "evidence_gaps": payload.get("evidence_gaps", []),
+    }
+    llm_reviewer.validate_reviewer_payload(envelope, BAKEOFF_POLICY_FAMILY)
+    _validate_bare_fact_checks(payload.get("fact_checks", []))
+
+
+def _parse_bare_payload(response_text: str) -> tuple[dict[str, Any], bool, bool]:
+    """Parse + validate a bare response. NO gates — bare has no tool telemetry.
+
+    Returns ``(payload, response_parse_lenient, findings_schema_invalid)``. Uses the
+    same lenient-first-object machinery as tooled and mirrors the tooled orthogonal
+    split: non-conforming ``findings`` are stripped and flagged (they are irrelevant
+    to the fact-check measurement), while invalid ``fact_checks`` are a real error cell.
+    """
+    response_parse_lenient = False
+    try:
+        payload = dict(llm_reviewer_dispatch._json_payload_from_response(response_text))
+    except ValueError as exc:
+        lenient = _lenient_first_json_object(response_text)
+        if lenient is None:
+            raise BakeoffCellError(str(exc), response_head=response_text[:2000]) from exc
+        payload = dict(lenient)
+        response_parse_lenient = True
+
+    findings_schema_invalid = False
+    try:
+        _validate_bare_payload_shape(payload)
+    except ValueError:
+        stripped = dict(payload)
+        stripped["findings"] = []
+        try:
+            _validate_bare_payload_shape(stripped)
+        except ValueError as exc2:
+            # fact_checks / evidence_gaps themselves are invalid → real error cell.
+            raise BakeoffCellError(str(exc2), response_head=response_text[:2000]) from exc2
+        findings_schema_invalid = True
+        payload = stripped
+    # Strip every fact_checks row to the two bare-legitimate fields (codex
+    # review, PR #4500 finding 3): score_payload honors gate-produced fields
+    # like admissibility_downgraded/original_verdict (_judgment_verdict), so a
+    # bare model could self-emit them and split the judgment/live columns. No
+    # bare gate produced them — they are untrusted input, not measurements.
+    payload["fact_checks"] = [
+        {"claim": row["claim"], "verdict": row["verdict"]}
+        for row in payload.get("fact_checks", [])
+    ]
+    return payload, response_parse_lenient, findings_schema_invalid
+
+
 def run_matrix(
     fixtures: Sequence[BakeoffFixture],
     model_pins: Sequence[str],
     *,
     output_dir: Path,
     runner: ProviderRunner = invoke_bakeoff_route,
+    bare_runner: BareRunner = invoke_bakeoff_route_bare,
+    arm: str = TOOLED_ARM,
     force: bool = False,
     retry_failures: bool = False,
 ) -> list[BakeoffRun]:
-    """Run or resume every model x fixture pair and write a scorecard.
+    """Run or resume every model x fixture pair for the requested arm(s).
+
+    ``arm`` selects ``tooled`` (default — existing behavior), ``bare`` (the
+    tool-free control), or ``both``. Each arm writes its own artifact per cell, so
+    resume/force/retry apply independently. The scorecard is rebuilt from EVERY
+    artifact on disk (not just this run's arm) so a ``bare`` run after a ``tooled``
+    run shows both side by side with the harness-lift column.
 
     Guarded on EVERY entry path (cursor review of #4458, blocker): a direct
     programmatic call with the default live runner must not bypass the
     CI-refusal / ``QG_BAKEOFF=1`` opt-in that ``main()`` enforces.
     """
     require_offline_opt_in()
+    if arm not in _ARM_CHOICES:
+        raise BakeoffConfigError(f"arm must be one of {list(_ARM_CHOICES)}; got {arm!r}")
+    # Preflight EVERY pin against the standing routing orders before any cell
+    # runs (codex review, PR #4500 finding 2): a subscription-family or qwen
+    # pin must fail the whole matrix at config time, not burn N-1 cells first.
+    # Defense-in-depth: _invoke_opencode_reviewer re-asserts at the transport,
+    # covering injected runners and non-matrix callers.
+    from scripts.ai_agent_bridge.routing_guard import assert_model_routing_allowed
+
+    for pin in model_pins:
+        assert_model_routing_allowed(pin, context="qg_bakeoff matrix pin")
     output_dir.mkdir(parents=True, exist_ok=True)
+    run_tooled = arm in (TOOLED_ARM, BOTH_ARM)
+    run_bare = arm in (BARE_ARM, BOTH_ARM)
     runs: list[BakeoffRun] = []
     for pin in model_pins:
         route = bakeoff_route_for_model(pin)
         for fixture in fixtures:
-            runs.append(
-                run_one(
-                    route,
-                    fixture,
-                    output_dir=output_dir,
-                    runner=runner,
-                    force=force,
-                    retry_failures=retry_failures,
+            if run_tooled:
+                runs.append(
+                    run_one(
+                        route,
+                        fixture,
+                        output_dir=output_dir,
+                        runner=runner,
+                        force=force,
+                        retry_failures=retry_failures,
+                    )
                 )
-            )
-    write_scorecard(output_dir / SCORECARD_NAME, [run.artifact for run in runs])
+            if run_bare:
+                runs.append(
+                    run_one_bare(
+                        route,
+                        fixture,
+                        output_dir=output_dir,
+                        runner=bare_runner,
+                        force=force,
+                        retry_failures=retry_failures,
+                    )
+                )
+    write_scorecard(output_dir / SCORECARD_NAME, _load_all_artifacts(output_dir))
     return runs
+
+
+def _load_all_artifacts(output_dir: Path) -> list[dict[str, Any]]:
+    """Load every bakeoff artifact JSON in ``output_dir`` (both arms), stable order."""
+    artifacts: list[dict[str, Any]] = []
+    for path in sorted(output_dir.glob("*.json")):
+        try:
+            artifacts.append(json.loads(path.read_text(encoding="utf-8")))
+        except json.JSONDecodeError:
+            continue
+    return artifacts
+
+
+def _fixture_block(fixture: BakeoffFixture) -> dict[str, Any]:
+    return {"slug": fixture.slug, "title": fixture.title, "claim_count": len(fixture.claims)}
+
+
+def _model_block(route: llm_reviewer_dispatch.ReviewerRoute) -> dict[str, Any]:
+    return {
+        "pin": route.reviewer_model_id,
+        "pin_slug": pin_slug(route.reviewer_model_id),
+        "family": route.reviewer_family,
+        "route_name": route.route_name,
+        "bridge_command": list(route.bridge_command),
+    }
+
+
+def _error_artifact(
+    route: llm_reviewer_dispatch.ReviewerRoute,
+    fixture: BakeoffFixture,
+    exc: Exception,
+    wall_seconds: float,
+    *,
+    arm: str,
+) -> dict[str, Any]:
+    """Build a MEASURED error-cell artifact (score = every fixture claim missing).
+
+    A model that cannot produce a valid payload (or a provider that errors out) is a
+    per-cell outcome, never a matrix crash. Shared by both arms so the error schema
+    stays identical apart from ``arm``.
+    """
+    return {
+        "schema_version": RUN_SCHEMA_VERSION,
+        "arm": arm,
+        "created_at": _now_z(),
+        "fixture": _fixture_block(fixture),
+        "model": _model_block(route),
+        "status": "error",
+        "error": {
+            "class": type(exc).__name__,
+            "message": str(exc)[:2000],
+            "response_head": getattr(exc, "response_head", None),
+        },
+        "workflow_verdict": "ERROR",
+        "attempt_count": None,
+        "dispatch": {},
+        "gate_outcomes": {},
+        "payload": {},
+        "score": score_payload({"fact_checks": []}, fixture),
+        "tool_call_count": 0,
+        "wall_seconds": wall_seconds,
+    }
 
 
 def run_one(
@@ -275,7 +561,7 @@ def run_one(
     force: bool = False,
     retry_failures: bool = False,
 ) -> BakeoffRun:
-    """Run or resume one model x passage bakeoff artifact.
+    """Run or resume one model x passage TOOLED bakeoff artifact.
 
     Belt-and-suspenders (cursor re-review nit): the LIVE default runner is
     guarded here too; injected runners are offline by construction and stay
@@ -305,36 +591,7 @@ def run_one(
         # matrix crash (first live run: gemma findings flunked validate_finding
         # and killed all 24 cells). Score = every fixture claim missing.
         wall_seconds = round(time.monotonic() - started, 3)
-        artifact = {
-            "schema_version": RUN_SCHEMA_VERSION,
-            "created_at": _now_z(),
-            "fixture": {
-                "slug": fixture.slug,
-                "title": fixture.title,
-                "claim_count": len(fixture.claims),
-            },
-            "model": {
-                "pin": route.reviewer_model_id,
-                "pin_slug": pin_slug(route.reviewer_model_id),
-                "family": route.reviewer_family,
-                "route_name": route.route_name,
-                "bridge_command": list(route.bridge_command),
-            },
-            "status": "error",
-            "error": {
-                "class": type(exc).__name__,
-                "message": str(exc)[:2000],
-                "response_head": getattr(exc, "response_head", None),
-            },
-            "workflow_verdict": "ERROR",
-            "attempt_count": None,
-            "dispatch": {},
-            "gate_outcomes": {},
-            "payload": {},
-            "score": score_payload({"fact_checks": []}, fixture),
-            "tool_call_count": 0,
-            "wall_seconds": wall_seconds,
-        }
+        artifact = _error_artifact(route, fixture, exc, wall_seconds, arm=TOOLED_ARM)
         artifact_path.write_text(
             json.dumps(artifact, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8"
         )
@@ -349,19 +606,10 @@ def run_one(
     dispatch = gate_result["dispatch"]
     artifact = {
         "schema_version": RUN_SCHEMA_VERSION,
+        "arm": TOOLED_ARM,
         "created_at": _now_z(),
-        "fixture": {
-            "slug": fixture.slug,
-            "title": fixture.title,
-            "claim_count": len(fixture.claims),
-        },
-        "model": {
-            "pin": route.reviewer_model_id,
-            "pin_slug": pin_slug(route.reviewer_model_id),
-            "family": route.reviewer_family,
-            "route_name": route.route_name,
-            "bridge_command": list(route.bridge_command),
-        },
+        "fixture": _fixture_block(fixture),
+        "model": _model_block(route),
         "status": gate_result["status"],
         "workflow_verdict": gate_result["workflow_verdict"],
         "findings_schema_invalid": bool(gate_result.get("findings_schema_invalid")),
@@ -377,6 +625,72 @@ def run_one(
     artifact_path.write_text(json.dumps(artifact, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     return BakeoffRun(artifact_path=artifact_path, artifact=artifact)
 
+
+def run_one_bare(
+    route: llm_reviewer_dispatch.ReviewerRoute,
+    fixture: BakeoffFixture,
+    *,
+    output_dir: Path,
+    runner: BareRunner = invoke_bakeoff_route_bare,
+    force: bool = False,
+    retry_failures: bool = False,
+) -> BakeoffRun:
+    """Run or resume one model x passage BARE (tool-free control) artifact.
+
+    Identical resume/force/retry semantics to ``run_one`` but: a ``__bare`` artifact
+    suffix, the bare prompt (no tool mandate), NO theatre/budget/deep-read/grounding
+    gates (bare has no tool telemetry by design), and only the fact_checks shape is
+    validated. Scoring reuses ``score_payload`` unchanged, so tooled and bare are
+    directly comparable per model.
+    """
+    if runner is invoke_bakeoff_route_bare:
+        require_offline_opt_in()
+    artifact_path = output_dir / f"{pin_slug(route.reviewer_model_id)}__{fixture.slug}__bare.json"
+    if artifact_path.exists() and not force:
+        artifact = json.loads(artifact_path.read_text(encoding="utf-8"))
+        if not (retry_failures and artifact.get("status") == "error"):
+            return BakeoffRun(artifact_path=artifact_path, artifact=artifact, skipped=True)
+
+    prompt = build_bare_factcheck_prompt(fixture.title, fixture.passage_md)
+    task_id = f"qg-bakeoff-bare-{pin_slug(route.reviewer_model_id)}-{fixture.slug}"
+    started = time.monotonic()
+    try:
+        result = _coerce_dispatch_result(runner(route, prompt, task_id), route, prompt)
+        payload, response_parse_lenient, findings_schema_invalid = _parse_bare_payload(result.response_text)
+    except (ValueError, llm_reviewer_dispatch.ReviewerDispatchError) as exc:
+        wall_seconds = round(time.monotonic() - started, 3)
+        artifact = _error_artifact(route, fixture, exc, wall_seconds, arm=BARE_ARM)
+        artifact_path.write_text(
+            json.dumps(artifact, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+        )
+        return BakeoffRun(artifact_path=artifact_path, artifact=artifact)
+    wall_seconds = round(time.monotonic() - started, 3)
+    dispatch = result.metadata()
+    score = score_payload(payload, fixture)
+    # Bare has no grounding gate: the orthogonal admissibility counters are 0 by
+    # construction (kept for scorecard/aggregation parity with tooled).
+    score["invalid_fact_checks"] = 0
+    score["inadmissible_positive_verdicts"] = 0
+    artifact = {
+        "schema_version": RUN_SCHEMA_VERSION,
+        "arm": BARE_ARM,
+        "created_at": _now_z(),
+        "fixture": _fixture_block(fixture),
+        "model": _model_block(route),
+        "status": "ran",
+        "workflow_verdict": "BARE",
+        "findings_schema_invalid": findings_schema_invalid,
+        "response_parse_lenient": response_parse_lenient,
+        "attempt_count": 1,
+        "dispatch": dispatch,
+        "gate_outcomes": {},
+        "payload": payload,
+        "score": score,
+        "tool_call_count": int(dispatch.get("tool_call_count") or 0),
+        "wall_seconds": wall_seconds,
+    }
+    artifact_path.write_text(json.dumps(artifact, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    return BakeoffRun(artifact_path=artifact_path, artifact=artifact)
 
 
 _CLAIM_PUNCT_RE = re.compile(r"[^\w\s]", re.UNICODE)
@@ -563,16 +877,17 @@ def write_scorecard(path: Path, artifacts: Sequence[Mapping[str, Any]]) -> None:
         "",
         "## Runs",
         "",
-        "| model | passage | model judgment | live admissible | missing | U honesty | M alignment | true unsupported | invalid | inadmissible | tools | wall_s |",
-        "| --- | --- | ---: | ---: | ---: | --- | --- | --- | ---: | ---: | ---: | ---: |",
+        "| model | passage | arm | model judgment | live admissible | missing | U honesty | M alignment | true unsupported | invalid | inadmissible | tools | wall_s |",
+        "| --- | --- | --- | ---: | ---: | ---: | --- | --- | --- | ---: | ---: | ---: | ---: |",
     ]
     for artifact in sorted(artifacts, key=_artifact_sort_key):
         score = _score(artifact)
         fractions = score.get("fractions", {})
         lines.append(
-            "| {model} | {passage} | {model_score} | {live_score} | {missing} | {u} | {m} | {true_bad} | {invalid} | {inadmissible} | {tools} | {wall} |".format(
+            "| {model} | {passage} | {arm} | {model_score} | {live_score} | {missing} | {u} | {m} | {true_bad} | {invalid} | {inadmissible} | {tools} | {wall} |".format(
                 model=_model_pin(artifact),
                 passage=_fixture_slug(artifact),
+                arm=_artifact_arm(artifact),
                 model_score=score.get("model_judgment_score", 0),
                 live_score=score.get("live_admissible_score", 0),
                 missing=score.get("missing_claims", 0),
@@ -585,8 +900,10 @@ def write_scorecard(path: Path, artifacts: Sequence[Mapping[str, Any]]) -> None:
                 wall=artifact.get("wall_seconds", 0),
             )
         )
-    lines.extend(_totals_section("Totals With Anchor", artifacts))
-    lines.extend(_totals_section("Totals Without Anchor", [a for a in artifacts if _fixture_slug(a) != ANCHOR_SLUG]))
+    lines.extend(_totals_and_lift_section("With Anchor", artifacts))
+    lines.extend(
+        _totals_and_lift_section("Without Anchor", [a for a in artifacts if _fixture_slug(a) != ANCHOR_SLUG])
+    )
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
@@ -630,6 +947,11 @@ def rescore_artifacts(output_dir: Path, fixtures_dir: Path = FIXTURE_DIR) -> int
     count = 0
     for path in sorted(output_dir.glob("*.json")):
         artifact = json.loads(path.read_text(encoding="utf-8"))
+        # Backfill ``arm`` for backward compat: pre-arm tooled artifacts have no
+        # field (→ "tooled"); a ``__bare`` filename identifies a bare artifact even
+        # if it somehow lacks the field. Rescore covers BOTH arms — the bare grounding
+        # counters resolve to 0 because a bare artifact carries no gate_outcomes.
+        artifact["arm"] = artifact.get("arm") or (BARE_ARM if path.stem.endswith("__bare") else TOOLED_ARM)
         slug = (artifact.get("fixture") or {}).get("slug")
         fixture = fixtures.get(slug)
         if fixture is None:
@@ -654,6 +976,15 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--fixture", action="append", dest="fixtures", help="Fixture slug; repeatable")
     parser.add_argument("--models", action="append", help="Comma-separated or repeated OpenRouter/opencode model pins")
     parser.add_argument("--out-dir", type=Path, default=None)
+    parser.add_argument(
+        "--arm",
+        choices=list(_ARM_CHOICES),
+        default=TOOLED_ARM,
+        help=(
+            "Which arm(s) to run: 'tooled' (default — grounded+gated reviewer, existing "
+            "behavior), 'bare' (tool-free control), or 'both'. Harness lift = tooled − bare."
+        ),
+    )
     parser.add_argument("--force", action="store_true", help="Redo runs even when artifact JSON exists")
     parser.add_argument(
         "--retry-failures",
@@ -682,8 +1013,13 @@ def main(argv: Sequence[str] | None = None) -> int:
         pins = model_pins_from_args(args.models)
         output_dir = args.out_dir or default_output_dir()
         runs = run_matrix(
-        fixtures, pins, output_dir=output_dir, force=args.force, retry_failures=args.retry_failures
-    )
+            fixtures,
+            pins,
+            output_dir=output_dir,
+            arm=args.arm,
+            force=args.force,
+            retry_failures=args.retry_failures,
+        )
     except BakeoffConfigError as exc:
         print(str(exc), file=sys.stderr)
         return 2
@@ -915,19 +1251,21 @@ def _fraction_label(value: Any) -> str:
     return f"{value.get('text', '0/0')}{suffix}"
 
 
-def _totals_section(title: str, artifacts: Sequence[Mapping[str, Any]]) -> list[str]:
-    totals = _aggregate_by_model(artifacts)
+def _totals_and_lift_section(title: str, artifacts: Sequence[Mapping[str, Any]]) -> list[str]:
+    """Per-(model, arm) totals table + the harness-lift table for one anchor split."""
+    totals = _aggregate_by_model_arm(artifacts)
     lines = [
         "",
-        f"## {title}",
+        f"## Totals {title}",
         "",
-        "| model | passages | model judgment | live admissible | U honesty | M alignment headline | true unsupported | missing | invalid | inadmissible | tools | wall_s |",
-        "| --- | ---: | ---: | ---: | --- | --- | --- | ---: | ---: | ---: | ---: | ---: |",
+        "| model | arm | passages | model judgment | live admissible | U honesty | M alignment headline | true unsupported | missing | invalid | inadmissible | tools | wall_s |",
+        "| --- | --- | ---: | ---: | ---: | --- | --- | --- | ---: | ---: | ---: | ---: | ---: |",
     ]
-    for model, row in sorted(totals.items()):
+    for (model, arm), row in sorted(totals.items()):
         lines.append(
-            "| {model} | {passages} | {model_score} | {live_score} | {u} | {m} | {true_bad} | {missing} | {invalid} | {inadmissible} | {tools} | {wall} |".format(
+            "| {model} | {arm} | {passages} | {model_score} | {live_score} | {u} | {m} | {true_bad} | {missing} | {invalid} | {inadmissible} | {tools} | {wall} |".format(
                 model=model,
+                arm=arm,
                 passages=row["passages"],
                 model_score=row["model_judgment_score"],
                 live_score=row["live_admissible_score"],
@@ -941,11 +1279,78 @@ def _totals_section(title: str, artifacts: Sequence[Mapping[str, Any]]) -> list[
                 wall=round(row["wall_seconds"], 3),
             )
         )
+    lines.extend(_harness_lift_section(title, artifacts))
     return lines
 
 
-def _aggregate_by_model(artifacts: Sequence[Mapping[str, Any]]) -> dict[str, dict[str, Any]]:
-    totals: dict[str, dict[str, Any]] = defaultdict(
+def _harness_lift_section(
+    title: str,
+    artifacts: Sequence[Mapping[str, Any]],
+) -> list[str]:
+    """Per-model tooled-vs-bare comparison with the headline harness-lift column.
+
+    Lift = tooled model_judgment − bare model_judgment (positive = tooling helps),
+    computed over PAIRED (model, fixture) cells ONLY — fixtures with an artifact
+    in BOTH arms for that model (codex review, PR #4500 finding 1: subtracting
+    unpaired aggregate totals fabricates lift from missing cells). Error
+    artifacts count (they are measured cells, scored all-missing); ABSENT
+    artifacts do not. A model with zero paired fixtures shows ``n/a`` — never a
+    fabricated number.
+    """
+    cells: dict[str, dict[str, dict[str, Mapping[str, Any]]]] = defaultdict(lambda: defaultdict(dict))
+    for artifact in artifacts:
+        cells[_model_pin(artifact)][_fixture_slug(artifact)][_artifact_arm(artifact)] = _score(artifact)
+    lines = [
+        "",
+        f"## Harness Lift {title}",
+        "",
+        "Lift = tooled model judgment − bare model judgment (positive = the harness helps),",
+        "over PAIRED passages only (both arms on disk for that model+passage).",
+        "M alignment is the discriminating fraction; low-N marks denominators below 10.",
+        "",
+        "| model | paired passages | tooled model judgment | bare model judgment | harness_lift | tooled M alignment | bare M alignment |",
+        "| --- | ---: | ---: | ---: | ---: | --- | --- |",
+    ]
+    for model in sorted(cells):
+        paired = sorted(
+            slug
+            for slug, arms in cells[model].items()
+            if TOOLED_ARM in arms and BARE_ARM in arms
+        )
+        if not paired:
+            lines.append(f"| {model} | 0 | n/a | n/a | n/a | n/a | n/a |")
+            continue
+
+        def _summed(arm: str, key: str, *, slugs: Sequence[str] = paired, pin: str = model) -> int:
+            return sum(int(cells[pin][slug][arm].get(key) or 0) for slug in slugs)
+
+        def _summed_fraction(arm: str, *, slugs: Sequence[str] = paired, pin: str = model) -> dict[str, Any]:
+            numerator = denominator = 0
+            for slug in slugs:
+                fractions = cells[pin][slug][arm].get("fractions")
+                m_fraction = fractions.get("class_m_alignment") if isinstance(fractions, Mapping) else None
+                if isinstance(m_fraction, Mapping):
+                    numerator += int(m_fraction.get("numerator") or 0)
+                    denominator += int(m_fraction.get("denominator") or 0)
+            return _fraction(numerator, denominator)
+
+        tooled_mj = _summed(TOOLED_ARM, "model_judgment_score")
+        bare_mj = _summed(BARE_ARM, "model_judgment_score")
+        lines.append(
+            f"| {model} | {len(paired)} | {tooled_mj} | {bare_mj} | {tooled_mj - bare_mj} "
+            f"| {_fraction_label(_summed_fraction(TOOLED_ARM))} | {_fraction_label(_summed_fraction(BARE_ARM))} |"
+        )
+    return lines
+
+
+def _na(value: Any) -> str:
+    return "n/a" if value is None else str(value)
+
+
+def _aggregate_by_model_arm(
+    artifacts: Sequence[Mapping[str, Any]],
+) -> dict[tuple[str, str], dict[str, Any]]:
+    totals: dict[tuple[str, str], dict[str, Any]] = defaultdict(
         lambda: {
             "passages": 0,
             "model_judgment_score": 0,
@@ -964,8 +1369,7 @@ def _aggregate_by_model(artifacts: Sequence[Mapping[str, Any]]) -> dict[str, dic
         }
     )
     for artifact in artifacts:
-        model = _model_pin(artifact)
-        row = totals[model]
+        row = totals[(_model_pin(artifact), _artifact_arm(artifact))]
         score = _score(artifact)
         row["passages"] += 1
         row["model_judgment_score"] += int(score.get("model_judgment_score") or 0)
@@ -975,7 +1379,8 @@ def _aggregate_by_model(artifacts: Sequence[Mapping[str, Any]]) -> dict[str, dic
         row["inadmissible_positive_verdicts"] += int(score.get("inadmissible_positive_verdicts") or 0)
         row["tool_call_count"] += int(artifact.get("tool_call_count") or 0)
         row["wall_seconds"] += float(artifact.get("wall_seconds") or 0.0)
-        fractions = score.get("fractions") if isinstance(score.get("fractions"), Mapping) else {}
+        raw_fractions = score.get("fractions")
+        fractions = raw_fractions if isinstance(raw_fractions, Mapping) else {}
         _add_fraction(row, "class_u", fractions.get("class_u_honesty"))
         _add_fraction(row, "class_m", fractions.get("class_m_alignment"))
         _add_fraction(row, "true", fractions.get("false_unsupported_on_true"), good_key="true_unsupported", total_key="true_total")
@@ -1015,8 +1420,14 @@ def _fixture_slug(artifact: Mapping[str, Any]) -> str:
     return "unknown"
 
 
-def _artifact_sort_key(artifact: Mapping[str, Any]) -> tuple[str, str]:
-    return (_model_pin(artifact), _fixture_slug(artifact))
+def _artifact_arm(artifact: Mapping[str, Any]) -> str:
+    """Artifact arm, defaulting legacy (pre-arm) tooled artifacts to ``tooled``."""
+    arm = artifact.get("arm")
+    return arm if isinstance(arm, str) and arm else TOOLED_ARM
+
+
+def _artifact_sort_key(artifact: Mapping[str, Any]) -> tuple[str, str, str]:
+    return (_model_pin(artifact), _fixture_slug(artifact), _artifact_arm(artifact))
 
 
 def _empty_grounding() -> dict[str, int]:
