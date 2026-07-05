@@ -46,8 +46,7 @@
 знаєте форму, не вгадуйте закінчення. Спочатку знайдіть, що керує
 словом.
 
-English rescue: "case" is not chosen by English word order. In Ukrainian,
-ask what controls the noun: a preposition, a verb, or a familiar context.
+**Підказка.** Відмінок не обирається за порядком слів в англійському реченні. В українській мові запитайте себе, що керує іменником: прийменник, дієслово чи знайома ситуація.
 
 <!-- INJECT_ACTIVITY: act-1 -->
 
