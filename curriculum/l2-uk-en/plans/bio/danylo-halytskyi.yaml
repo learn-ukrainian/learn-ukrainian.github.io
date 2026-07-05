@@ -89,6 +89,7 @@ readings:
   hosting: link-only
   cefr_min: C1
   learner_task: 'Ознайомитись з етапами правління та політичною стратегією короля.'
+  caveats: 'Довідкова стаття корисна для хронології; інтерпретацію коронації, дипломатії та війни треба звіряти з літописними уривками.'
 - title: 'Галицько-Волинський літопис (про Данила)'
   language: uk
   genre: chronicle
@@ -99,6 +100,7 @@ readings:
   hosting: excerpt-only
   cefr_min: C1
   learner_task: 'Проаналізувати опис коронації та взаємин з Ордою.'
+  caveats: 'Середньовічний літопис у модерному виданні; використовувати уривки з поясненням жанру, редакційної традиції та політичної риторики.'
 - title: 'Данило Романович (Вікіпедія)'
   language: uk
   genre: encyclopedia
@@ -109,6 +111,7 @@ readings:
   hosting: link-only
   cefr_min: B2
   learner_task: 'Перевірити основні віхи державотворення.'
+  caveats: 'Орієнтаційне читання; перевіряти титули, дати та оцінки за ЕІУ й літописними джерелами.'
 references:
 - title: Danylo Halytskyi
   note: Compiled from Hrushevsky, Plokhy, Hrytsak — key facts and interpretations
@@ -128,7 +131,7 @@ sequence: 10
 slug: danylo-halytskyi
 subtitle: The King Who Chose the West
 title: 'Данило Галицький: Король Русі'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: урочиста церемонія покладання корони на монарха, що символізує початок його правління
   pos: ж.

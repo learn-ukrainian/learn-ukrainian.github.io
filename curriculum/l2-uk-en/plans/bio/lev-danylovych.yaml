@@ -91,6 +91,7 @@ readings:
   hosting: link-only
   cefr_min: C1
   learner_task: 'Вивчити політичну спадщину та містобудівну діяльність князя.'
+  caveats: 'Довідкова стаття стисло подає правління; твердження про столицю, дипломатію та спадщину звіряти з літописними уривками.'
 - title: 'Галицько-Волинський літопис (діяльність Лева)'
   language: uk
   genre: chronicle
@@ -101,6 +102,7 @@ readings:
   hosting: excerpt-only
   cefr_min: C1
   learner_task: 'Порівняти літописні оцінки політики Лева з діями Данила.'
+  caveats: 'Літописний текст потребує джерелознавчого коментаря; використовувати короткі уривки з поясненням жанру й редакційної перспективи.'
 - title: 'Лев I Данилович (Вікіпедія)'
   language: uk
   genre: encyclopedia
@@ -111,6 +113,7 @@ readings:
   hosting: link-only
   cefr_min: B2
   learner_task: 'Ознайомитись із роллю Лева в розвитку Львова.'
+  caveats: 'Орієнтаційне читання; спірні дати й топонімічні твердження перевіряти за ЕІУ та академічними джерелами.'
 references:
 - title: Lev Danylovych
   note: Compiled research based on Hrushevsky, primary chronicles, and modern analysis.
@@ -130,7 +133,7 @@ sequence: 11
 slug: lev-danylovych
 subtitle: 'Lev Danylovych: Builder of Lviv'
 title: 'Лев Данилович: Будівничий Львова'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: головне місто держави, де перебувають вищі органи влади й управління
   pos: ж.

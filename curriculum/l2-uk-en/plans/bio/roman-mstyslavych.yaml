@@ -93,6 +93,7 @@ readings:
   hosting: link-only
   cefr_min: C1
   learner_task: 'Вивчити основні віхи життя та державотворення князя.'
+  caveats: 'Довідкова стаття стисло подає політичну кар''єру; причинно-наслідкові висновки треба звіряти з літописними уривками.'
 - title: 'Галицько-Волинський літопис'
   language: uk
   genre: chronicle
@@ -103,6 +104,7 @@ readings:
   hosting: excerpt-only
   cefr_min: C1
   learner_task: 'Проаналізувати фрагменти, що стосуються правління Романа Мстиславича.'
+  caveats: 'Середньовічний літопис у виданні для читання; використовувати вибрані уривки з поясненням редакції, жанру й датування.'
 - title: 'Галицько-Волинське князівство (Вікіпедія)'
   language: uk
   genre: encyclopedia
@@ -113,6 +115,7 @@ readings:
   hosting: link-only
   cefr_min: B2
   learner_task: 'Зрозуміти геополітичний контекст утворення держави.'
+  caveats: 'Орієнтаційне читання; фактичні твердження перевіряти за ЕІУ та першоджерельними уривками.'
 references:
 - title: Роман Мстиславич (Wikipedia UA)
   note: Biography, military campaigns, unification of principalities
@@ -133,7 +136,7 @@ sequence: 8
 slug: roman-mstyslavych
 subtitle: 'Roman the Great: Founder of the Galicia-Volhynia State'
 title: 'Роман Мстиславич: Засновник Галицько-Волинської держави'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: монарх з необмеженою верховною владою, автократ
   pos: ч.
