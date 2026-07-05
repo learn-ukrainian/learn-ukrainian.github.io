@@ -1,9 +1,9 @@
 {
-  "assembled_mdx_sha256": "33af2d5718d7966ad550caa307304c17e38a23d917c78fbf01251000e78def02",
+  "assembled_mdx_sha256": "5c9872fd12d07548863cfec25c45ce8dbf98a1694902e5adda01a6d2816cc040",
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "ab8269d987b2bdd999cdf14065c8bca25edc7f26ece36b302ed89cff6d006086",
+    "digest": "2cedc47c7ff5f88ce6b1be3d9b8abec2fcd7e388ccd137198e217f9c1c5e15a5",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/kazky-pro-tvaryn.yaml",
@@ -11,7 +11,7 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/kazky-pro-tvaryn/module.md",
-        "sha256": "dbe7c6121a0e39f29101100adde73d36a0300ad3ee54d79f45efdf2801e0a258"
+        "sha256": "25e7e8937c50649a81407095ca2eb861c0acccb1c91a5f61e22de2f6c46d50fa"
       },
       {
         "path": "curriculum/l2-uk-en/folk/kazky-pro-tvaryn/activities.yaml",
@@ -28,11 +28,10 @@
     ]
   },
   "evidence": {
-    "activity_density": "Every activity now carries at least twelve analytical variants, questions, comparison items, or rubric criteria.",
-    "decolonization": "Module frames Ukrainian animal tales as Ukrainian animal epic with world parallels without Russocentric absorption.",
-    "independent_review": "Claude route failed because the native Claude binary is not installed; AGY/Gemini findings were fixed or resolved against active deterministic gates.",
-    "learner_surface": "Ukrainian-facing source and activities avoid internal IDs, English process leakage, and writer-facing grading register.",
-    "source_hygiene": "No hosted animal-tale reading fabricated; only a short Franko literary witness is embedded, with textbook-only and title-only material explicitly bounded."
+    "independent_review": "Claude Opus 4.8 reviewed the batch, found one M22 fidelity blocker, and follow-up approved after the textbook-attested tale opening fix.",
+    "local_gates": "MDX generation drift, source parity, forward parity, direct hardened reading gate, diff check, and focused shippable gates passed except for a transient Wikimedia API rate-limit on pre-existing M22 resource references.",
+    "reading_remediation": "Batch 2 adds or converts learner-visible structured on-site PrimaryReading excerpts; external links are supplementary only.",
+    "source_hygiene": "Short verified or textbook-attested excerpts only; no full-text reconstruction and no invented readings."
   },
   "floors": {
     "beauty": 8.5,
@@ -45,12 +44,12 @@
   "profile": "folk_promote_v1",
   "review_artifact": null,
   "reviewer": {
-    "agent": "agy",
-    "family": "google",
-    "model": "gemini-3.1-pro-high"
+    "agent": "claude",
+    "family": "anthropic",
+    "model": "claude-opus-4.8"
   },
   "schema_version": 1,
-  "scored_at": "2026-07-04T08:38:20Z",
+  "scored_at": "2026-07-05T15:03:25Z",
   "scores": {
     "beauty": 8.7,
     "decolonization": 9.2,
