@@ -99,13 +99,13 @@ references:
 - author: Грушевський М.
   note: Джерельна мова універсалів і боровицької декларації, проблема Киселевої гарантії; звіряти видання перед цитуванням
   title: Історія України-Руси, том 8
-  type: primary
+  type: academic
   work: Історія України-Руси, том 8
 sequence: 29
 slug: pavlo-pavliuk-but
 subtitle: 'Pavlo Pavliuk (But): The 1637 Uprising'
 title: 'Павло Павлюк (Бут): Повстання 1637 року'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: офіційний список козаків на службі корони; поза ним статус козака був напівлегальним
   pos: ч.
