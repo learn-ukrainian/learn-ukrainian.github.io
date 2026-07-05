@@ -8,6 +8,7 @@ curriculum modules and they do not dispatch prompts.
 
 from __future__ import annotations
 
+import contextlib
 import json
 from collections.abc import Iterable, Mapping, Sequence
 from dataclasses import dataclass, field
@@ -194,8 +195,9 @@ class UaGecGoldFixtureAdapter:
     name = "ua_gec_gold_fixture"
     confidence = "lookup_heuristic"
 
-    def __init__(self, fixture_path: Path = UA_GEC_GOLD_PATH) -> None:
+    def __init__(self, fixture_path: Path = UA_GEC_GOLD_PATH, contested_sidecar_path: Path | None = None) -> None:
         self.fixture_path = fixture_path
+        self.contested_sidecar_path = contested_sidecar_path
         self._payload_cache: dict[str, Any] | None = None
 
     def findings(self, target: ScorerInput) -> list[dict[str, Any]]:
@@ -203,7 +205,15 @@ class UaGecGoldFixtureAdapter:
         if target.fixture_id:
             items = [item for item in items if item.get("id") == target.fixture_id]
         known_limitations = self.known_limitations
-        return [self._normalize_item(item, known_limitations) for item in items]
+
+        # Load sidecar if present
+        contested_flags = {}
+        sidecar_path = self.contested_sidecar_path or self.fixture_path.with_suffix(".contested.json")
+        if sidecar_path.exists():
+            with contextlib.suppress(Exception):
+                contested_flags = json.loads(sidecar_path.read_text(encoding="utf-8"))
+
+        return [self._normalize_item(item, known_limitations, contested_flags) for item in items]
 
     @property
     def known_limitations(self) -> dict[str, Any]:
@@ -226,19 +236,30 @@ class UaGecGoldFixtureAdapter:
             raise ValueError("UA-GEC gold fixture missing items list")
         return [item for item in items if isinstance(item, dict)]
 
-    def _normalize_item(self, item: Mapping[str, Any], known_limitations: Mapping[str, Any]) -> dict[str, Any]:
+    def _normalize_item(
+        self,
+        item: Mapping[str, Any],
+        known_limitations: Mapping[str, Any],
+        contested_flags: Mapping[str, Any] | None = None,
+    ) -> dict[str, Any]:
         finding = dict(item.get("finding") or {})
         finding["confidence"] = self.confidence
         detector = dict(finding.get("detector") or {})
         detector["adapter"] = self.name
         finding["detector"] = detector
         metadata = dict(finding.get("metadata") or {})
+
+        item_id = item.get("id")
+        contested_flag = None
+        if contested_flags and isinstance(contested_flags, Mapping) and item_id in contested_flags:
+            contested_flag = contested_flags[item_id].get("contested")
+
         metadata["ua_gec_gold"] = {
-            "fixture_id": item.get("id"),
+            "fixture_id": item_id,
             "gold_tag": item.get("tag"),
             "gold_relabelled": False,
             "known_limitations": dict(known_limitations),
-            "contested_flag": None,
+            "contested_flag": contested_flag,
             "contested_flag_follow_up": "#4364",
         }
         finding["metadata"] = metadata
