@@ -80,6 +80,14 @@ persona:
   role: Модератор, що ставить під сумнів офіційну церковну історію, шукаючи політичні та економічні мотиви за духовними деклараціями
   voice: Ecclesiastical-Historian-Skeptic
 phase: BIO.1
+readings:
+- title: "Косів Сильвестр"
+  source_name: "Енциклопедія історії України"
+  source_url: "http://www.history.org.ua/?termin=Kosiv_S"
+  language: uk
+  type: reference
+  hosting: reading-needed
+  rationale: "Енциклопедична стаття про життєпис митрополита, що потребує адаптації для студентів рівня C1, зосереджена на його політичному балансуванні та відмові від присяги."
 references:
 - title: Sylvestr Kosiv
   note: Compiled from Wikipedia UA, Hrushevsky, Plokhy
@@ -104,7 +112,7 @@ sequence: 25
 slug: sylvestr-kosiv
 subtitle: 'Sylvestr Kosiv: Metropolitan in a Turbulent Era'
 title: 'Сильвестр Косів: Митрополит у буремну епоху'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: вищий духовний сан єпископа, глава автокефальної або автономної православної церкви
   pos: ч.
