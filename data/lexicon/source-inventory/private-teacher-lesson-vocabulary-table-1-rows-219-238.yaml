@@ -1,0 +1,100 @@
+---
+version: 1
+kind: atlas_source_inventory
+sources:
+  - id: private-teacher-lesson-vocabulary-table-1-rows-219-238
+    source_family: teacher_lesson
+    extraction_mode: curated_headword
+    title: Private teacher lesson vocabulary - explicit table rows 219-238
+    locator: local-only explicit vocabulary table rows 219-238
+    notes: >-
+      Derived headword metadata only; raw private lesson material is local-only
+      and not committed. Daily Word, Practice, and cloze remain frozen without
+      explicit surface_admission. Rows 222 and 233 are multi-word idiom/collocation
+      entries deferred pending a collocation intake convention.
+    headwords:
+      - lemma: державний
+        pos: adj
+        gloss: "governmental"
+        locator: explicit vocabulary table row 219
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: видаляти
+        pos: verb
+        gloss: "to remove (imperfective)"
+        locator: explicit vocabulary table row 220
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: видалити
+        pos: verb
+        gloss: "to remove (perfective)"
+        locator: explicit vocabulary table row 221
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: запобігати
+        pos: verb
+        gloss: "to prevent (imperfective)"
+        locator: explicit vocabulary table row 223
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: запобігти
+        pos: verb
+        gloss: "to prevent (perfective)"
+        locator: explicit vocabulary table row 224
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: вигорання
+        pos: noun
+        gloss: "burnout"
+        locator: explicit vocabulary table row 225
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: насипати
+        pos: verb
+        gloss: "to pour in, to add dry goods (e.g. onto a plate); imperfective насипати and perfective насипати are homographs distinguished by stress"
+        locator: explicit vocabulary table rows 226-227
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: зволожувати
+        pos: verb
+        gloss: "to moisturise (imperfective)"
+        locator: explicit vocabulary table row 228
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: зволожити
+        pos: verb
+        gloss: "to moisturise (perfective)"
+        locator: explicit vocabulary table row 229
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: клеїти
+        pos: verb
+        gloss: "to glue, to stick (imperfective)"
+        locator: explicit vocabulary table row 230
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: приклеїти
+        pos: verb
+        gloss: "to glue on, to stick on (perfective)"
+        locator: explicit vocabulary table row 231
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: ділянка
+        pos: noun
+        gloss: "area, plot, land, site"
+        locator: explicit vocabulary table row 232
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: надувний
+        pos: adj
+        gloss: "inflatable"
+        locator: explicit vocabulary table row 234
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: розвідка
+        pos: noun
+        gloss: "intelligence, reconnaissance"
+        locator: explicit vocabulary table row 235
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: склад
+        pos: noun
+        gloss: "content, warehouse"
+        locator: explicit vocabulary table row 236
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: зависати
+        pos: verb
+        gloss: "to freeze (computer/phone), to hang, to lag (imperfective)"
+        locator: explicit vocabulary table row 237
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.
+      - lemma: зависнути
+        pos: verb
+        gloss: "to freeze (computer/phone), to hang, to lag (perfective)"
+        locator: explicit vocabulary table row 238
+        context: Reviewed headword metadata derived from an explicit private lesson vocabulary table.

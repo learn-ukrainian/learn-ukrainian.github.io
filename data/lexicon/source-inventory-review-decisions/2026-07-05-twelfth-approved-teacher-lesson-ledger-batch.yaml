@@ -1,0 +1,235 @@
+---
+version: 1
+kind: atlas_source_inventory_review_decisions
+batch_id: source-inventory-twelfth-approved-teacher-lesson-ledger-batch-2026-07-05
+batch_label: twelfth-approved-teacher-lesson-ledger-batch
+reviewer: content-review
+reviewed_at: '2026-07-05'
+source_queue:
+  workflow: source_inventory_publish_review_queue.v1
+  total_queue_rows: 238
+  approved_in_queue: 17
+  promotion_batch_size: 17
+production_outputs_updated: []
+decisions:
+- lemma: державний
+  decision: approve_for_publish
+  approved_pos: adj
+  approved_gloss: "governmental"
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 0b62d38764966e9a
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-219-238.yaml
+    locator: explicit vocabulary table row 219
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-219-238
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: видаляти
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: "to remove (imperfective)"
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 83cbbd32ff1f7c39
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-219-238.yaml
+    locator: explicit vocabulary table row 220
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-219-238
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: видалити
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: "to remove (perfective)"
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 0ed2ed598c7b686e
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-219-238.yaml
+    locator: explicit vocabulary table row 221
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-219-238
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: запобігати
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: "to prevent (imperfective)"
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: eb4411e703a5ae3f
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-219-238.yaml
+    locator: explicit vocabulary table row 223
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-219-238
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: запобігти
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: "to prevent (perfective)"
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 8bd54837ebc8bbb9
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-219-238.yaml
+    locator: explicit vocabulary table row 224
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-219-238
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: вигорання
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: "burnout"
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 48550fe555582e5a
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-219-238.yaml
+    locator: explicit vocabulary table row 225
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-219-238
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: насипати
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: "to pour in, to add dry goods (e.g. onto a plate); imperfective насипати and perfective насипати are homographs distinguished by stress"
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 771678f53ddc3d2a
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-219-238.yaml
+    locator: explicit vocabulary table rows 226-227
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-219-238
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: зволожувати
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: "to moisturise (imperfective)"
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 7026574a1fbac4a9
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-219-238.yaml
+    locator: explicit vocabulary table row 228
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-219-238
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: зволожити
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: "to moisturise (perfective)"
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 9bee6bba04f426a8
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-219-238.yaml
+    locator: explicit vocabulary table row 229
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-219-238
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: клеїти
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: "to glue, to stick (imperfective)"
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 4e7e20af73ecc262
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-219-238.yaml
+    locator: explicit vocabulary table row 230
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-219-238
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: приклеїти
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: "to glue on, to stick on (perfective)"
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: d7ce8ecbccd7f059
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-219-238.yaml
+    locator: explicit vocabulary table row 231
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-219-238
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: ділянка
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: "area, plot, land, site"
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 07e58ecee19232f1
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-219-238.yaml
+    locator: explicit vocabulary table row 232
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-219-238
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: надувний
+  decision: approve_for_publish
+  approved_pos: adj
+  approved_gloss: "inflatable"
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: a242e4d306775790
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-219-238.yaml
+    locator: explicit vocabulary table row 234
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-219-238
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: розвідка
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: "intelligence, reconnaissance"
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 95752fd345527312
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-219-238.yaml
+    locator: explicit vocabulary table row 235
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-219-238
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: склад
+  decision: approve_for_publish
+  approved_pos: noun
+  approved_gloss: "content, warehouse"
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 4af985cf314e667b
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-219-238.yaml
+    locator: explicit vocabulary table row 236
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-219-238
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: зависати
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: "to freeze (computer/phone), to hang, to lag (imperfective)"
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 414adc7d82f309a4
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-219-238.yaml
+    locator: explicit vocabulary table row 237
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-219-238
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
+- lemma: зависнути
+  decision: approve_for_publish
+  approved_pos: verb
+  approved_gloss: "to freeze (computer/phone), to hang, to lag (perfective)"
+  sense_note: private teacher-lesson explicit vocabulary table
+  source_inventory:
+    key: 5b7eb9e1622e29ea
+    path: data/lexicon/source-inventory/private-teacher-lesson-vocabulary-table-1-rows-219-238.yaml
+    locator: explicit vocabulary table row 238
+    source_id: private-teacher-lesson-vocabulary-table-1-rows-219-238
+    source_family: teacher_lesson
+  evidence_refs:
+  - private teacher-lesson explicit vocabulary table
