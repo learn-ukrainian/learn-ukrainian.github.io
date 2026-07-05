@@ -128,7 +128,7 @@ bakeoff above) + 3 true claims.
 |---|---|---|
 | runtime | ~3 min | ~11 min |
 | tool telemetry | 7 `tool_use` NDJSON events (wikipedia, definitions, heritage, search_text ×2, literary, гаївки follow-up) | real retrieval (verbatim Grade-6 textbook quotes in our MCP's source-label format) but **0 calls captured** — `-z` one-shot fires no usable per-run hook telemetry (filed #4390) |
-| true claims (3) | 3/3 CONFIRMED with real citations | 3/4 (пагорби — a true claim — left UNVERIFIED) |
+| true claims | 3/3 CONFIRMED with real citations (its decomposition folded «пагорби» into the ritual claim) | 3/4 — its decomposition split «пагорби» into a standalone claim and left that true claim UNVERIFIED |
 | fabrication: «гаї» ribbon-trees | withheld ✓ (honest UNVERIFIED: "no tool evidence for прикрашених стрічками") | **CONFIRMED ✗** — rationalized from the word «гаївки» while itself noting the detail was never found |
 | fabrication: melody «світлість та піднесення» | withheld ✓ | withheld ✓ |
 
