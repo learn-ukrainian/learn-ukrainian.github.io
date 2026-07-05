@@ -80,6 +80,30 @@ persona:
   role: Модератор семінару, що ставить під сумнів офіційні церковні історії, розглядаючи релігійних діячів як політичних акторів у складних контекстах
   voice: Critical-Church-Historian
 phase: BIO
+readings:
+- title: Борецький Іов
+  source: Енциклопедія історії України
+  source_url: http://history.org.ua/?termin=Boretskyj_I
+  language: uk
+  genre: encyclopedia
+  source_type: reference
+  role: context
+  cefr_min: C1
+  license: copyright
+  hosting: link-only
+  learner_task: Виписати, які політичні актори стояли за відновленням ієрархії 1620 року, і пояснити роль братств та козаків.
+  caveats: Академічна довідка. Важливо читати через деколоніальну оптику, пам'ятаючи, що «відновлення ієрархії» було актом політичної суб'єктності всупереч волі центральної влади Речі Посполитої.
+- title: Протестація або Юстифікація Йова Борецького
+  source: 'reading-needed: verify a rights-clear Ukrainian edition or stable excerpt before module build'
+  language: uk
+  genre: polemical text
+  source_type: primary
+  role: reading-needed
+  cefr_min: C1
+  license: unknown
+  hosting: reading-needed
+  learner_task: Підібрати короткий уривок, у якому Борецький обґрунтовує легітимність православної ієрархії та громадський захист церкви.
+  caveats: Не підміняти первинний полемічний текст переказом; перед модульним складанням потрібна перевірена українська публікація або контрольований уривок з правами.
 references:
 - title: Iov Boretskyi
   note: Збірний файл з української та англійської Вікіпедії, доповнений даними з праць Грушевського
@@ -99,7 +123,7 @@ sequence: 19
 slug: iov-boretskyi
 subtitle: 'Iov Boretskyi: Defender of Orthodoxy and Restorer of the Hierarchy'
 title: 'Йов Борецький: Захисник православ''я'
-version: '4.0'
+version: '4.2'
 vocabulary_hints:
 - definition: система посад і звань у церкві, від нижчих до найвищих
   pos: ж.
