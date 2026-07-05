@@ -78,6 +78,16 @@ persona:
   role: Модератор семінару, що аналізує Сагайдачного не як ікону, а як прагматичного політика в епоху криз
   voice: Realpolitik-Historian
 phase: BIO
+readings:
+- title: Конашевич-Сагайдачний Петро Кононович
+  source: Енциклопедія історії України
+  source_url: http://history.org.ua/?termin=Konashevich_Sagaidachny
+  language: uk
+  source_type: academic
+  role: biography
+  license: copyright
+  hosting: link-only
+  caveats: Академічна біографія. Аналізуючи походи (особливо на Москву) та угоди з урядом, важливо уникати як радянського таврування «найманцем», так і сучасного надмірного глорифікування, бачачи прагматичного державотворця.
 references:
 - title: Петро Конашевич Сагайдачний
   note: Петро Конашевич-Сагайдачний (Wikipedia UA)
@@ -96,7 +106,7 @@ sequence: 23
 slug: petro-sahaidachny
 subtitle: 'Petro Sahaidachny: The Statesman Hetman'
 title: 'Петро Сагайдачний: Гетьман-Державник'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: офіційний список козаків, прийнятих на військову службу Речі Посполитої
   pos: ч.

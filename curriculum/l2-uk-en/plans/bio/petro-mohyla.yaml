@@ -81,6 +81,16 @@ persona:
   role: Модератор семінару, що ставить під сумнів усталені оцінки Могили, змушуючи розрізняти модернізацію, вестернізацію та ціну реформ
   voice: Critical-Historian
 phase: BIO
+readings:
+- title: Могила Петро Симеонович
+  source: Енциклопедія історії України
+  source_url: http://history.org.ua/?termin=Mohyla_P
+  language: uk
+  source_type: academic
+  role: biography
+  license: copyright
+  hosting: link-only
+  caveats: Довідка ЕІУ. Розглядаючи освітні реформи, важливо розрізняти модернізацію і вестернізацію/латинізацію, та оцінювати постать поза російською парадигмою «возз'єднання».
 references:
 - title: Petro Mohyla
   note: Compiled from Plokhy, Subtelny, Hrushevsky
@@ -105,7 +115,7 @@ sequence: 24
 slug: petro-mohyla
 subtitle: 'Petro Mohyla: Founder of the Academy and Reformer of the Church'
 title: 'Петро Могила: Засновник академії та реформатор церкви'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: найвищий ієрарх помісної православної церкви, голова митрополії
   pos: ч.

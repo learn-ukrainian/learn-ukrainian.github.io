@@ -84,6 +84,16 @@ primary_annotations:
 - '[!anti-hagiography]'
 - '[!decolonization]'
 - '[!biography]'
+readings:
+- title: Смотрицький Мелетій Герасимович
+  source: Енциклопедія історії України
+  source_url: http://history.org.ua/?termin=Smotrytskyj_M
+  language: uk
+  source_type: academic
+  role: biography
+  license: copyright
+  hosting: link-only
+  caveats: ЕІУ. При вивченні діяльності Мелетія Смотрицького слід уникати російських імперських наративів, які привласнювали його «Граматику», та усвідомлювати його внесок як самостійного українського мислителя і творця київської інтелектуальної традиції.
 references:
 - title: Meletii Smotrytskyi
   note: Життя, праці, аналіз "Граматики", контекст полеміки
@@ -104,7 +114,7 @@ sequence: 22
 slug: meletii-smotrytskyi
 subtitle: 'Meletii Smotrytskyi: The Man Who Wrote the Grammar'
 title: 'Мелетій Смотрицький: Творець граматики'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: систематичний опис мови, її законів та правил; праця, що містить такий опис
   pos: ж.

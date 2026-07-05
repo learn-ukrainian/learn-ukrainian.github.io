@@ -79,6 +79,16 @@ persona:
   role: 'Прокурор і адвокат Наливайка водночас: ставить незручні питання, руйнує міфи, але визнає історичний масштаб постаті'
   voice: Critical-Historian
 phase: BIO
+readings:
+- title: Наливайко Семерій (Северин)
+  source: Енциклопедія історії України
+  source_url: http://history.org.ua/?termin=Nalyvajko_S
+  language: uk
+  source_type: academic
+  role: biography
+  license: copyright
+  hosting: link-only
+  caveats: Довідка ЕІУ. Читаючи про повстання, слід критично ставитися до термінології «бунту», що часто походить з польських урядових джерел того часу, і бачити в ньому спробу козацтва виступити політичною силою.
 references:
 - title: Северин Наливайко
   note: Загальна біографічна довідка
@@ -97,7 +107,7 @@ sequence: 20
 slug: severyn-nalyvaiko
 subtitle: 'Severyn Nalyvaiko: The Cossack Rebel Leader'
 title: 'Северин Наливайко: Лідер козацького повстання'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: масовий збройний виступ проти існуючої влади
   pos: с.
