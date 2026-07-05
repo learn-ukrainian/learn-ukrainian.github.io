@@ -169,7 +169,7 @@ readings:
     source_type: primary
     role: reading
     source: УкрЛіб
-    source_url: https://www.ukrlib.com.ua/books/printit.php?tid=7554
+    source_url: https://www.ukrlib.com.ua/books/printit.php?tid=101
     license: copyrighted
     rights_note: Текст пісні (автор слів Дмитро Павличко, помер у 2023 році) та музика (Олександр Білаш, помер у 2003 році) захищені авторським правом. Хостинг повної версії заборонений.
     hosting: link-only
@@ -182,7 +182,7 @@ readings:
     source_type: primary
     role: reading
     source: Українські пісні (pisni.org.ua)
-    source_url: https://www.pisni.org.ua/songs/85.html
+    source_url: https://www.pisni.org.ua/songs/66348.html
     license: copyrighted
     rights_note: Текст пісні (автор слів Михайло Ткач, помер у 2007 році) та музика (Олександр Білаш, помер у 2003 році) захищені авторським правом. Хостинг повної версії заборонений.
     hosting: link-only
@@ -195,26 +195,26 @@ readings:
     source_type: primary
     role: reading
     source: УкрЛіб
-    source_url: https://www.ukrlib.com.ua/books/printit.php?tid=7563
+    source_url: https://www.ukrlib.com.ua/books/printit.php?tid=117
     license: copyrighted
     rights_note: Текст пісні (автор слів Дмитро Павличко, помер у 2023 році) та музика (Олександр Білаш, помер у 2003 році) є об'єктами авторського права. Хостинг повної версії заборонений.
     hosting: link-only
     cefr_min: C1
     learner_task: Ознайомитися з поетичним текстом пісні до фільму «Сон» про Тараса Шевченка та проаналізувати традиційний образ лелек як символу туги за рідною землею та вимушеного вигнання.
     caveats: Використовує пестливі народнопоетичні форми («лелеченьки», «крилонька»), що потребує уваги до відтінків значень у художньому стилі.
-  - title: Документальна виставка до 95-річчя від дня народження композитора Олександра Білаша (1931–2003)
+  - title: Білаш Олександр Іванович
     language: uk
-    genre: Архівна публікація / Біографічний опис
+    genre: Енциклопедична стаття / Біографічна довідка
     source_type: reference
     role: supplementary-reading
-    source: Центральний державний архів-музей літератури і мистецтва України (ЦДАМЛМ України)
-    source_url: https://csamla.archives.gov.ua/2026/03/06/до-95-річчя-від-дня-народження-видатн-2/
-    license: restricted
-    rights_note: Матеріали та фотодокументи офіційного сайту ЦДАМЛМ України захищені авторським правом архівної установи.
+    source: Енциклопедія Сучасної України
+    source_url: https://esu.com.ua/article-39952
+    license: copyrighted
+    rights_note: Текст ЕСУ є довідковим матеріалом української енциклопедичної установи; використовувати як link-only джерело, не хостити повну статтю.
     hosting: link-only
     cefr_min: C1
-    learner_task: Прочитати офіційну довідку архіву-музею про склад та опис особового фонду Олександра Білаша, ознайомитися зі списком збережених документів та фотографій.
-    caveats: Текст орієнтований на архівну та музейну специфіку, містить офіційно-ділову та фахову термінологію (особовий фонд, опис, архівні документи).
+    learner_task: Прочитати енциклопедичну довідку, виписати ключові етапи освіти, нагород і жанрового діапазону Білаша та порівняти їх із пісенними текстами в цьому пакеті.
+    caveats: Довідкова стаття стисло подає біографічні факти й перелік творів; її треба доповнювати аналізом пісенної рецепції, а не читати як повний культурний портрет.
   - title: Білаш Олександр Іванович
     language: uk
     genre: Енциклопедична стаття / Довідка
@@ -259,7 +259,7 @@ sequence: 374
 slug: oleksandr-bilash
 subtitle: 'Oleksandr Bilash: Ukrainian Song and Cultural Memory'
 title: "Олександр Білаш: Українська пісня і пам'ять"
-version: '4.2'
+version: '4.3'
 vocabulary_hints:
   - definition: людина, що створює музику; автор музичних творів
     pos: ч.
