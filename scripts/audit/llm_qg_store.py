@@ -14,7 +14,7 @@ import json
 import os
 import sqlite3
 from collections import Counter
-from collections.abc import Mapping
+from collections.abc import Mapping, Sequence
 from contextlib import closing
 from dataclasses import dataclass
 from datetime import UTC, datetime
@@ -50,6 +50,9 @@ class StoredQG:
     source: str
     payload: dict[str, Any]
     created_at: str
+    tool_call_count: int = 0
+    tools_used: tuple[str, ...] = ()
+    route_name: str | None = None
 
     def is_current_for(self, module_dir: Path) -> bool:
         return self.content_sha == content_sha_for_module(module_dir)
@@ -190,6 +193,10 @@ def _ensure_composite_columns(conn: sqlite3.Connection) -> None:
     additions = {
         "checker_version": "TEXT",
         "level_policy_family": "TEXT",
+        # #2156: transport identity in the composite cache key + tool telemetry.
+        "route_name": "TEXT",
+        "tool_call_count": "INTEGER",
+        "tools_used_json": "TEXT",
     }
     for name, column_type in additions.items():
         if name not in existing:
@@ -242,6 +249,9 @@ def record_llm_qg(
     level_policy_family: str | None = None,
     reviewer_model: str | None = None,
     reviewer_family: str | None = None,
+    route_name: str | None = None,
+    tool_call_count: int = 0,
+    tools_used: Sequence[str] = (),
     source: str = "pipeline",
     run_id: str | None = None,
     path: Path | None = None,
@@ -255,6 +265,8 @@ def record_llm_qg(
     content_sha = content_sha_for_module(module_dir)
     aggregate = _aggregate(payload)
     findings = _iter_findings(payload)
+    tools_used_tuple = tuple(str(tool) for tool in tools_used)
+    tool_call_count_int = int(tool_call_count)
 
     with closing(connect_sqlite(str(resolved))) as conn:
         conn.execute("PRAGMA foreign_keys = ON")
@@ -264,10 +276,12 @@ def record_llm_qg(
             INSERT INTO llm_qg_runs (
                 run_id, created_at, level, slug, content_sha, gate_version,
                 prompt_hash, checker_version, level_policy_family,
-                reviewer_model, reviewer_family, source, verdict, terminal_verdict,
+                reviewer_model, reviewer_family, route_name,
+                tool_call_count, tools_used_json,
+                source, verdict, terminal_verdict,
                 min_score, min_dim, payload_json
             )
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ON CONFLICT(run_id) DO UPDATE SET
                 created_at = excluded.created_at,
                 level = excluded.level,
@@ -279,6 +293,9 @@ def record_llm_qg(
                 level_policy_family = excluded.level_policy_family,
                 reviewer_model = excluded.reviewer_model,
                 reviewer_family = excluded.reviewer_family,
+                route_name = excluded.route_name,
+                tool_call_count = excluded.tool_call_count,
+                tools_used_json = excluded.tools_used_json,
                 source = excluded.source,
                 verdict = excluded.verdict,
                 terminal_verdict = excluded.terminal_verdict,
@@ -298,6 +315,9 @@ def record_llm_qg(
                 level_policy_family,
                 reviewer_model,
                 reviewer_family,
+                route_name,
+                tool_call_count_int,
+                _json_dumps(list(tools_used_tuple)),
                 source,
                 aggregate.get("verdict"),
                 aggregate.get("terminal_verdict"),
@@ -343,10 +363,35 @@ def record_llm_qg(
         source=source,
         payload=payload,
         created_at=created_at,
+        tool_call_count=tool_call_count_int,
+        tools_used=tools_used_tuple,
+        route_name=route_name,
     )
 
 
+def _row_key(row: sqlite3.Row, key: str) -> Any:
+    """Return a column value if present, else None (legacy rows lack new cols)."""
+    try:
+        return row[key]
+    except (IndexError, KeyError):
+        return None
+
+
+def _tools_used_from_row(row: sqlite3.Row) -> tuple[str, ...]:
+    raw = _row_key(row, "tools_used_json")
+    if not raw:
+        return ()
+    try:
+        loaded = json.loads(str(raw))
+    except (json.JSONDecodeError, ValueError):
+        return ()
+    if not isinstance(loaded, list):
+        return ()
+    return tuple(str(item) for item in loaded)
+
+
 def _row_to_record(row: sqlite3.Row) -> StoredQG:
+    raw_tool_count = _row_key(row, "tool_call_count")
     return StoredQG(
         run_id=str(row["run_id"]),
         level=str(row["level"]),
@@ -361,6 +406,9 @@ def _row_to_record(row: sqlite3.Row) -> StoredQG:
         source=str(row["source"]),
         payload=json.loads(str(row["payload_json"])),
         created_at=str(row["created_at"]),
+        tool_call_count=int(raw_tool_count) if raw_tool_count is not None else 0,
+        tools_used=_tools_used_from_row(row),
+        route_name=_row_key(row, "route_name"),
     )
 
 
@@ -374,6 +422,7 @@ def latest_llm_qg(
     checker_version: str | None = None,
     level_policy_family: str | None = None,
     reviewer_model: str | None = None,
+    route_name: str | None = None,
     path: Path | None = None,
 ) -> StoredQG | None:
     """Return the newest persisted QG run for a module, optionally hash-bound."""
@@ -389,6 +438,7 @@ def latest_llm_qg(
         ("checker_version", checker_version),
         ("level_policy_family", level_policy_family),
         ("reviewer_model", reviewer_model),
+        ("route_name", route_name),
     ):
         if value is not None:
             where += f" AND {column} = ?"
@@ -423,6 +473,7 @@ def current_llm_qg_for_module(
     checker_version: str | None = None,
     level_policy_family: str | None = None,
     reviewer_model: str | None = None,
+    route_name: str | None = None,
     path: Path | None = None,
 ) -> StoredQG | None:
     """Return the newest QG run whose content hash matches current artifacts."""
@@ -435,6 +486,7 @@ def current_llm_qg_for_module(
         checker_version=checker_version,
         level_policy_family=level_policy_family,
         reviewer_model=reviewer_model,
+        route_name=route_name,
         path=path,
     )
 

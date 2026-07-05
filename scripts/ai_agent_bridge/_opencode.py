@@ -33,6 +33,7 @@ import json
 import os
 import shutil
 import subprocess
+from dataclasses import dataclass
 from pathlib import Path
 
 from ._messaging import acknowledge, send_message
@@ -361,7 +362,23 @@ def ask_gemma(
     return msg_id
 
 
-def _invoke_opencode(
+@dataclass(frozen=True, slots=True)
+class OpencodeStreamParse:
+    """One-pass parse of an opencode ``--format json`` (NDJSON) stream.
+
+    ``text`` is the assistant's final answer (same value the thin
+    :func:`_parse_opencode_ndjson` wrapper returns). ``tool_events`` is the
+    deduped, ordered tuple of MCP/tool invocations the model made during the
+    run — the per-run observability the tool-theatre and grounding gates
+    (#2156) are built on. Each event is a minimal
+    ``{tool, input, status, tool_call_id}`` dict.
+    """
+
+    text: str
+    tool_events: tuple[dict, ...]
+
+
+def _run_opencode(
     content: str,
     model: str,
     *,
@@ -371,6 +388,12 @@ def _invoke_opencode(
     no_timeout: bool = False,
     default_timeout_s: int = OPENCODE_DEFAULT_TIMEOUT_S,
 ) -> str:
+    """Run one ``opencode run`` subprocess and return its raw stdout.
+
+    Shared subprocess core for both :func:`_invoke_opencode` (text-only) and
+    :func:`_invoke_opencode_detailed` (text + tool telemetry) so the argv
+    construction, timeout, and error handling live in exactly one place.
+    """
     opencode_bin = shutil.which("opencode")
     if not opencode_bin:
         raise SystemExit("ask-opencode: opencode CLI not found in PATH")
@@ -403,24 +426,114 @@ def _invoke_opencode(
     if result.returncode != 0:
         raise SystemExit(f"ask-opencode: opencode exited {result.returncode}\nstderr: {result.stderr[-2000:]}")
 
+    return result.stdout
+
+
+def _invoke_opencode(
+    content: str,
+    model: str,
+    *,
+    variant: str | None = None,
+    output_format: str = "default",
+    data: str | None = None,
+    no_timeout: bool = False,
+    default_timeout_s: int = OPENCODE_DEFAULT_TIMEOUT_S,
+) -> str:
+    stdout = _run_opencode(
+        content,
+        model,
+        variant=variant,
+        output_format=output_format,
+        data=data,
+        no_timeout=no_timeout,
+        default_timeout_s=default_timeout_s,
+    )
     if output_format == "json":
-        return _parse_opencode_ndjson(result.stdout)
+        return _parse_opencode_ndjson(stdout)
 
     # opencode run (--format default) prints ANSI control codes and a banner
     # before the response; the JSON stream is cleaner to parse. Callers that
     # need reliable text extraction should request output_format="json".
-    return result.stdout.strip()
+    return stdout.strip()
 
 
-def _parse_opencode_ndjson(stdout: str) -> str:
-    """Extract the assistant's final text from opencode ``--format json`` output.
+def _invoke_opencode_detailed(
+    content: str,
+    model: str,
+    *,
+    variant: str | None = None,
+    output_format: str = "json",
+    data: str | None = None,
+    no_timeout: bool = False,
+    default_timeout_s: int = OPENCODE_DEFAULT_TIMEOUT_S,
+) -> OpencodeStreamParse:
+    """Invoke opencode and return assistant text **plus** tool telemetry.
 
-    Each stdout line is a JSON event. Assistant text lives in events with a
-    top-level ``type == "text"`` (``event["part"]["text"]``). Reasoning, tool,
-    step-start/finish and other event types are ignored. Falls back to the raw
-    (stripped) stdout if no text parts parse — robust to opencode format drift.
+    Only the audit reviewer-dispatch layer needs this; the bridge verbs keep
+    using :func:`_invoke_opencode` (``-> str``). Tool events only exist in the
+    NDJSON stream, so this defaults ``output_format="json"``; a ``default``
+    format run yields no tool events.
+    """
+    stdout = _run_opencode(
+        content,
+        model,
+        variant=variant,
+        output_format=output_format,
+        data=data,
+        no_timeout=no_timeout,
+        default_timeout_s=default_timeout_s,
+    )
+    if output_format == "json":
+        return _parse_opencode_stream(stdout)
+    return OpencodeStreamParse(text=stdout.strip(), tool_events=())
+
+
+def _extract_tool_event(event: dict) -> dict | None:
+    """Normalize one NDJSON tool event to ``{tool, input, status, tool_call_id}``.
+
+    Handles the observed opencode shape (top-level ``type == "tool_use"`` with a
+    nested ``part`` whose ``state`` carries ``input``/``status`` and whose
+    ``callID`` is the tool-call id) while tolerating flatter/older shapes.
+    """
+    part = event.get("part")
+    if not isinstance(part, dict):
+        part = {}
+    tool = part.get("tool") or part.get("name") or event.get("tool")
+    if not isinstance(tool, str) or not tool:
+        return None
+    state = part.get("state") if isinstance(part.get("state"), dict) else {}
+    tool_input = state.get("input", part.get("input"))
+    status = state.get("status") or part.get("status") or event.get("status")
+    tool_call_id = part.get("callID") or part.get("tool_call_id") or part.get("id") or event.get("callID")
+    return {
+        "tool": tool,
+        "input": tool_input,
+        "status": status if isinstance(status, str) else None,
+        "tool_call_id": tool_call_id if isinstance(tool_call_id, str) else None,
+    }
+
+
+def _tool_event_key(event: dict) -> str:
+    """Stable dedupe key for a tool event: tool name + canonical input JSON."""
+    try:
+        input_json = json.dumps(event.get("input"), sort_keys=True, ensure_ascii=False, default=str)
+    except (TypeError, ValueError):
+        input_json = str(event.get("input"))
+    return f"{event.get('tool')}\0{input_json}"
+
+
+def _parse_opencode_stream(stdout: str) -> OpencodeStreamParse:
+    """Parse an opencode NDJSON stream ONCE into text + deduped tool events.
+
+    Assistant text lives in ``type == "text"`` events (``part.text``); tool
+    invocations live in ``type in {"tool", "tool_use"}`` events. Tool events are
+    deduped by ``(tool, input-json)`` keeping the FINAL status (opencode may emit
+    the same call multiple times as it transitions pending -> completed) while
+    preserving first-seen order. Falls back to raw (stripped) stdout for text if
+    no text parts parse — robust to opencode format drift.
     """
     chunks: list[str] = []
+    deduped: dict[str, dict] = {}
     for raw_line in stdout.splitlines():
         line = raw_line.strip()
         if not line.startswith("{"):
@@ -429,12 +542,29 @@ def _parse_opencode_ndjson(stdout: str) -> str:
             event = json.loads(line)
         except json.JSONDecodeError:
             continue
-        if event.get("type") != "text":
+        event_type = event.get("type")
+        if event_type == "text":
+            part = event.get("part") or {}
+            text = part.get("text")
+            if isinstance(text, str):
+                chunks.append(text)
             continue
-        part = event.get("part") or {}
-        text = part.get("text")
-        if isinstance(text, str):
-            chunks.append(text)
+        if event_type in ("tool", "tool_use"):
+            extracted = _extract_tool_event(event)
+            if extracted is not None:
+                # Overwrite keeps the FINAL status; dict order keeps first-seen.
+                deduped[_tool_event_key(extracted)] = extracted
 
     parsed = "".join(chunks).strip()
-    return parsed if parsed else stdout.strip()
+    text = parsed if parsed else stdout.strip()
+    return OpencodeStreamParse(text=text, tool_events=tuple(deduped.values()))
+
+
+def _parse_opencode_ndjson(stdout: str) -> str:
+    """Extract the assistant's final text from opencode ``--format json`` output.
+
+    Thin ``.text`` wrapper over :func:`_parse_opencode_stream` — signature kept
+    ``-> str`` because ~8 bridge call sites (ask_gemma/ask_pool/ask_glm/...) and
+    their tests assume a plain string.
+    """
+    return _parse_opencode_stream(stdout).text

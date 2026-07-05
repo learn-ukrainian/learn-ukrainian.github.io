@@ -44,7 +44,9 @@ from scripts.audit.qg_adapters import (
     dimensions_from_findings,
 )
 
-DEFAULT_GATE_VERSION = "qg_workflow.v1"
+# v2 (#2156): seminar/factual now routes through the tooled opencode transport;
+# bump invalidates every ungrounded v1 llm_qg.db row so it re-runs with tools.
+DEFAULT_GATE_VERSION = "qg_workflow.v2"
 DEFAULT_REVIEWER_MODEL_ID = "llm-reviewer-disabled-until-4370"
 DEFAULT_REVIEWER_FAMILY = "qg_workflow"
 LLM_POLICY_FAMILIES = frozenset({"b1_plus", "seminar"})
@@ -631,6 +633,7 @@ def _run_tier2(
     )
     reviewer_model_id = route.reviewer_model_id if route else options.reviewer_model_id
     reviewer_family = route.reviewer_family if route else options.reviewer_family
+    route_name = route.route_name if route else None
     base_result: dict[str, Any] = {
         "tier": 2,
         "name": "llm_reviewer",
@@ -702,6 +705,7 @@ def _run_tier2(
         checker_version=CHECKER_VERSION,
         level_policy_family=policy_family,
         reviewer_model=reviewer_model_id,
+        route_name=route_name,
         path=store_path,
     )
     if cached is not None:
@@ -726,6 +730,7 @@ def _run_tier2(
         checker_version=CHECKER_VERSION,
         level_policy_family=policy_family,
         reviewer_model=reviewer_model_id,
+        route_name=route_name,
         store_path=store_path,
     )
     estimate = (
@@ -910,6 +915,9 @@ def _run_tier2(
         level_policy_family=policy_family,
         reviewer_model=reviewer_model_id,
         reviewer_family=reviewer_family,
+        route_name=route_name,
+        tool_call_count=int(dispatch_meta.get("tool_call_count") or 0),
+        tools_used=[str(tool) for tool in (dispatch_meta.get("tools_used") or ())],
         source="qg_workflow",
         path=store_path,
     )
@@ -1087,6 +1095,7 @@ def _has_stale_cache(
     checker_version: str,
     level_policy_family: str,
     reviewer_model: str,
+    route_name: str | None,
     store_path: Path | None,
 ) -> bool:
     latest = llm_qg_store.latest_llm_qg(
@@ -1096,6 +1105,7 @@ def _has_stale_cache(
         checker_version=checker_version,
         level_policy_family=level_policy_family,
         reviewer_model=reviewer_model,
+        route_name=route_name,
         path=store_path,
     )
     return latest is not None

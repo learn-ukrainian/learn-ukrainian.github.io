@@ -6,7 +6,7 @@ from typing import Any
 
 import yaml
 
-from scripts.audit import llm_qg_store, llm_reviewer, qg_schema, qg_workflow
+from scripts.audit import llm_qg_store, llm_reviewer, llm_reviewer_dispatch, qg_schema, qg_workflow
 from scripts.audit.curriculum_qg_harness import CHECKER_VERSION
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -186,6 +186,43 @@ def test_composite_cache_invalidates_on_gate_version_bump(tmp_path: Path) -> Non
     assert _tier(second, 2)["status"] == "cache_hit"
     assert _tier(third, 2)["status"] == "ran"
     assert calls == 2
+
+
+def test_tier2_threads_tool_telemetry_into_store(tmp_path: Path) -> None:
+    seminar_dir = _write_module(
+        tmp_path,
+        level="folk",
+        slug="tooled-seminar",
+        module_md="# Семінар\n\nУчасники аналізують джерела спокійно й уважно.\n",
+    )
+    db_path = tmp_path / "qg.db"
+
+    def reviewer(_target: qg_workflow.ReviewTarget, _prompt: str) -> llm_reviewer_dispatch.DispatchResult:
+        return llm_reviewer_dispatch.DispatchResult(
+            response_text='{"findings": []}',
+            reviewer_model_id="test-reviewer",
+            reviewer_family="test-family",
+            route_name="opencode_frontier",
+            tool_call_count=6,
+            tools_used=("sources_query_wikipedia", "sources_search_heritage"),
+        )
+
+    record = qg_workflow.review_module(
+        _target(seminar_dir, level="folk", slug="tooled-seminar"),
+        options=qg_workflow.WorkflowOptions(
+            enable_llm=True,
+            reviewer_model_id="test-reviewer",
+            reviewer_family="test-family",
+        ),
+        reviewer=reviewer,
+        store_path=db_path,
+    )
+
+    assert _tier(record, 2)["status"] == "ran"
+    stored = llm_qg_store.latest_llm_qg("folk", "tooled-seminar", path=db_path)
+    assert stored is not None
+    assert stored.tool_call_count == 6
+    assert stored.tools_used == ("sources_query_wikipedia", "sources_search_heritage")
 
 
 def test_budget_exhaustion_emits_skipped_budget_and_incomplete(tmp_path: Path) -> None:
