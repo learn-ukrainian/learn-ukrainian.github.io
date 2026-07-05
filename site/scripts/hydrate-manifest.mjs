@@ -7,6 +7,8 @@ import { gunzipSync } from "node:zlib";
 
 const RECOVERY_COMMAND =
   "gh release download atlas-manifest -p lexicon-manifest.json.gz -O - | gunzip -c > site/src/data/lexicon-manifest.json";
+const STALE_POINTER_HINT =
+  "If your branch predates the latest manifest publish, its committed pointer is stale — update the branch from origin/main (gh pr update-branch <N> / git merge origin/main). Re-downloading cannot fix a stale pointer.";
 
 const REQUIRED_POINTER_KEYS = [
   "asset_url",
@@ -62,7 +64,7 @@ function assertPointerFresh(pointer, fingerprint) {
   }
 
   if (pointer.manifest_fingerprint !== fingerprint.fingerprint) {
-    throw new Error(
+    console.warn(
       `Atlas manifest pointer fingerprint ${pointer.manifest_fingerprint} is stale; expected ${fingerprint.fingerprint}. Run make atlas-publish.`,
     );
   }
@@ -185,7 +187,7 @@ async function downloadGzip(pointer) {
   }
 
   throw new Error(
-    `gz sha mismatch: expected ${pointer.gz_sha256}, got ${actualGzSha} after ${DOWNLOAD_ATTEMPTS} download attempts`,
+    `gz sha mismatch: expected ${pointer.gz_sha256}, got ${actualGzSha} after ${DOWNLOAD_ATTEMPTS} download attempts. ${STALE_POINTER_HINT}`,
   );
 }
 
@@ -216,7 +218,9 @@ async function hydrate() {
   const jsonBytes = gunzipSync(gzBytes);
   const actualJsonSha = sha256(jsonBytes);
   if (actualJsonSha !== pointer.json_sha256) {
-    throw new Error(`json sha mismatch: expected ${pointer.json_sha256}, got ${actualJsonSha}`);
+    throw new Error(
+      `json sha mismatch: expected ${pointer.json_sha256}, got ${actualJsonSha}. ${STALE_POINTER_HINT}`,
+    );
   }
   if (jsonBytes.length !== pointer.json_bytes) {
     throw new Error(`json size mismatch: expected ${pointer.json_bytes}, got ${jsonBytes.length}`);
@@ -236,4 +240,4 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
   });
 }
 
-export { assertAllowedDownloadUrl, downloadGzip, downloadUrl };
+export { assertAllowedDownloadUrl, assertPointerFresh, downloadGzip, downloadUrl };

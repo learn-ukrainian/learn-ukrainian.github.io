@@ -10,6 +10,8 @@ import pytest
 
 from scripts.lexicon import manifest_io
 
+STALE_POINTER_HINT = "Re-downloading cannot fix a stale pointer."
+
 
 def _json_bytes(payload: dict) -> bytes:
     return json.dumps(payload, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
@@ -113,6 +115,7 @@ def test_load_manifest_raises_on_gz_sha256_mismatch(
         manifest_io.load_manifest(path=manifest_path)
 
     assert "gh release download atlas-manifest" in str(excinfo.value)
+    assert STALE_POINTER_HINT in str(excinfo.value)
     assert not manifest_path.exists()
 
 

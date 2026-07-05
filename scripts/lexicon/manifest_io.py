@@ -21,6 +21,11 @@ RECOVERY_COMMAND = (
     "gh release download atlas-manifest -p lexicon-manifest.json.gz -O - "
     "| gunzip -c > site/src/data/lexicon-manifest.json"
 )
+STALE_POINTER_HINT = (
+    "If your branch predates the latest manifest publish, its committed pointer is stale — "
+    "update the branch from origin/main (gh pr update-branch <N> / git merge origin/main). "
+    "Re-downloading cannot fix a stale pointer."
+)
 REQUIRED_POINTER_KEYS = (
     "asset_url",
     "release_tag",
@@ -136,7 +141,8 @@ def _hydrate(path: Path, pointer: dict[str, Any]) -> dict[str, Any]:
             "gz sha256 mismatch: "
             f"expected {pointer['gz_sha256']}, got {gz_sha} "
             f"after {DOWNLOAD_ATTEMPTS} download attempts. "
-            f"Manual recovery command: {RECOVERY_COMMAND}"
+            f"Manual recovery command: {RECOVERY_COMMAND}. "
+            f"{STALE_POINTER_HINT}"
         )
 
     assert gz_bytes is not None
@@ -146,7 +152,8 @@ def _hydrate(path: Path, pointer: dict[str, Any]) -> dict[str, Any]:
         raise ValueError(
             "json sha256 mismatch after gzip decompress: "
             f"expected {pointer['json_sha256']}, got {json_sha}. "
-            f"Manual recovery command: {RECOVERY_COMMAND}"
+            f"Manual recovery command: {RECOVERY_COMMAND}. "
+            f"{STALE_POINTER_HINT}"
         )
 
     manifest = _decode_manifest(json_bytes, pointer["asset_url"])
