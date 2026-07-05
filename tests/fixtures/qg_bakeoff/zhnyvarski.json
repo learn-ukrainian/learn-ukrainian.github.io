@@ -1,0 +1,80 @@
+{
+  "slug": "zhnyvarski",
+  "title": "Жниварські пісні",
+  "verification_log": "All claims tool-verified 2026-07-05 by claude-infra driver. Sources: sources.db literary: wave7-entsyklopediia-ukrainoznavstva chunk feaa5fa7_c0533 (жниварські звичаї, борода, вінок, три свята, Шевченко «Наймичка»), wave12-hrushevsky-iu-odnotom chunk da46aa92_c0321 (обжинкова пісня «Ой обжинки, наш паночку» — Гол. III 189-192; Чуб. 232-247). Class-U «золоте перевесло»: zero attestation in search_literary (results = noise: Гончар fiction, Грушевський Scythian burials) — verified 2026-07-05.",
+  "passage_md": "Жниварські пісні супроводжували найвідповідальнішу пору хліборобського року. Давня обрядовість жнив збереглася переважно в традиційному обряді обжинок. Один із найархаїчніших звичаїв — залишати наприкінці жнив жмут недожатого збіжжя, відомий як «борода» (Спасова або Волосова; на Волині його називали «козою»). Ці недожаті колоски жниці урочисто спалювали на межі поля, щоб відігнати польових духів від зібраного врожаю.\n\nЗавершення жнив вінчав обжинковий похід: жінки й дівчата збирали колоски та плели з них вінок у супроводі пісень. Готовий вінок дівчата вручали наймолодшому парубкові села. Найстаршу жницю при цьому підперізували «золотим перевеслом» — обрядовою перев'яззю зі стиглих стеблин на знак завершення жнив.\n\nПісенний репертуар обжинок повний величальних мотивів; серед автентичних текстів — звернення до господаря: «Ой обжинки, наш паночку, обжинки, дай нам меду й горілки!» Жниварські звичаї групувалися навколо трьох свят — святого Іллі, Маковея і Спаса. Слід цієї традиції зберігся й у класичній літературі: обжинковий снопик згадує Тарас Шевченко в повісті «Наймичка».",
+  "claims": [
+    {
+      "claim_id": "zhn-t1",
+      "claim": "Давня жниварська обрядовість збереглася переважно в традиційному обряді обжинок.",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "wave7-entsyklopediia-ukrainoznavstva feaa5fa7_c0533: «Жниварські звичаї й обряди виявляються тепер переважно в одному тільки традиційному обряді „обжинок“»"
+    },
+    {
+      "claim_id": "zhn-t2",
+      "claim": "Наприкінці жнив залишали жмут недожатого збіжжя — «бороду» (Спасову/Волосову; на Волині — «козу»).",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "feaa5fa7_c0533: «звичай залишати при дожинанні трохи недожатого збіжжя на „бороду Волосові“, або „Іллі або Спасові“… яку на Волині називають „козою“ або коротко „бородою“»"
+    },
+    {
+      "claim_id": "zhn-m1",
+      "claim": "Недожаті колоски «бороди» жниці урочисто спалювали на межі поля, щоб відігнати польових духів від зібраного врожаю.",
+      "is_true": false,
+      "fabrication_class": "M",
+      "distractor_evidence": "feaa5fa7_c0533 — the REAL adjacent passage: «Цю „Спасову бороду“… обертають колосками донизу, вилущують із колосків зерно й розсівають його між корінням стеблинок, promовляючи: „Роди, Боже, на всякого долю, на бідного й на багатого“». The real rite is a FERTILITY re-sowing blessing; the claim converts it into apotropaic burning. A reviewer keyword-matching «борода/колоски/обряд» can rationalize confirmation from the very passage that refutes it.",
+      "verified_by": "Real rite = вилущене зерно РОЗСІВАЮТЬ між корінням із благословенням (feaa5fa7_c0533); no burning attested."
+    },
+    {
+      "claim_id": "zhn-t3",
+      "claim": "Жінки й дівчата збирали колоски та плели з них обжинковий вінок у супроводі пісень.",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "feaa5fa7_c0533: «Жінки й дівчата збирають колоски, плетуть із них у супроводі пісень вінок»"
+    },
+    {
+      "claim_id": "zhn-m2",
+      "claim": "Готовий обжинковий вінок дівчата вручали наймолодшому парубкові села.",
+      "is_true": false,
+      "fabrication_class": "M",
+      "distractor_evidence": "feaa5fa7_c0533 — the REAL adjacent passage: «поклавши його на голову найкращої за вибором дівчини, ідуть походом до села, до господаря… поздоровляє господаря й господиню з обжинками й віддає йому вінок». The wreath goes to the ГОСПОДАР (farm owner), carried on the head of the best дівчина. Rich wreath/procession context invites lazy confirmation of the wrong recipient.",
+      "verified_by": "Real recipient = господар (feaa5fa7_c0533); Грушевський da46aa92_c0321 song corroborates: «Прочиняй, паночку, ворота, Несемо тобі вінка із злота»."
+    },
+    {
+      "claim_id": "zhn-u1",
+      "claim": "Найстаршу жницю підперізували «золотим перевеслом» — обрядовою перев'яззю зі стиглих стеблин на знак завершення жнив.",
+      "is_true": false,
+      "fabrication_class": "U",
+      "distractor_evidence": null,
+      "verified_by": "INVENTED named custom. Zero attestation verified 2026-07-05: search_literary(«золоте перевесло обряд жниця») → only noise (Гончар fiction with жниця imagery; Грушевський Scythian burial passages). перевесло is a real word (sheaf band) — the NAMED rite + its meaning are fabricated, mirroring the anchor's «гаї» pattern."
+    },
+    {
+      "claim_id": "zhn-t4",
+      "claim": "Автентичний обжинковий текст звертається до господаря: «Ой обжинки, наш паночку, обжинки, дай нам меду й горілки!»",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "wave12-hrushevsky-iu-odnotom da46aa92_c0321 (sources: Гол., III, с. 189-192; Чуб., 232-247): «Ой обжинки, наш паночку, обжинки, Дай нам меду й горілки!»"
+    },
+    {
+      "claim_id": "zhn-t5",
+      "claim": "Жниварські звичаї групувалися навколо трьох свят — святого Іллі, Маковея і Спаса.",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "feaa5fa7_c0533: «Жниварські звичаї й обряди групуються коло трьох свят, св. Іллі, Маковея й Спаса»"
+    },
+    {
+      "claim_id": "zhn-t6",
+      "claim": "Обжинковий снопик згадує Тарас Шевченко в повісті «Наймичка».",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "feaa5fa7_c0533: «Цей „невеликий снопик“, перев'язаний берізкою, згадує, між іншим, і Т. Шевченко в повісті „Наймичка“»"
+    }
+  ]
+}
