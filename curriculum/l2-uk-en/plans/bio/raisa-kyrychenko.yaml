@@ -197,9 +197,9 @@ references:
     type: dossier
 sequence: 378
 slug: raisa-kyrychenko
-subtitle: The Poltava Voice of Ukrainian Song Heritage
+subtitle: Полтавський голос української пісенної спадщини
 title: 'Раїса Кириченко: Голос Полтавщини'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
   - definition: середній жіночий співочий голос між сопрано і контральто
     pos: с.

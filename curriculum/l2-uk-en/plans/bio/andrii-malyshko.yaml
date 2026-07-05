@@ -198,9 +198,9 @@ references:
     type: dossier
 sequence: 371
 slug: andrii-malyshko
-subtitle: Poetry That Became Ukrainian Song Memory
+subtitle: Поезія, що стала українською пісенною пам'яттю
 title: 'Андрій Малишко: Поезія, що стала піснею'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
   - definition: здатність поетичного тексту природно переходити у пісенне виконання
     pos: ж.

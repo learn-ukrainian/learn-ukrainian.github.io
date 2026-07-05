@@ -197,9 +197,9 @@ references:
     type: dossier
 sequence: 372
 slug: platon-maiboroda
-subtitle: Melody as Ukrainian Public Memory
+subtitle: Мелодія як українська публічна пам'ять
 title: 'Платон Майборода: Мелодія української пам''яті'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
   - definition: плавна, співуча мелодична лінія
     pos: ж.
