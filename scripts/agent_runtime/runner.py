@@ -80,6 +80,10 @@ except ImportError:  # pragma: no cover - package import path
 _POLL_INTERVAL_S = 1.0
 _STDIN_TEMP_PREFIX = "agent-runtime-stdin-"
 _SHIMS_DIR = Path(__file__).resolve().parent / "shims"
+# Repo root that owns this runner (scripts/agent_runtime/runner.py → parents[2]).
+# Used by the #4446 write-cwd guard as a cheap pre-filter: only a cwd inside this
+# checkout's own file tree can be its protected primary checkout.
+_RUNNER_REPO_TREE = Path(__file__).resolve().parents[2]
 _MCP_RUNTIME_INIT_TIMEOUT_S = 30.0
 _MCP_TOOL_EVENT_RE = re.compile(
     r"\bmcp:\s+(?P<server>[A-Za-z0-9_.-]+)/(?P<tool>[A-Za-z0-9_.-]+)\s+"
@@ -1703,6 +1707,89 @@ def _invoke_gemini_with_fallback(
     )
 
 
+# ---------------------------------------------------------------------------
+# Write-capable cwd isolation (#4446)
+# ---------------------------------------------------------------------------
+#
+# Write-capable modes (``workspace-write`` / ``danger``) let the spawned CLI
+# mutate files via apply_patch / Edit / Bash. Provider hooks (#4448) can miss
+# those edit surfaces, so isolation must be correct *by construction*: this
+# runner — the single chokepoint every orchestrated invocation funnels through —
+# refuses to spawn a write-capable child in a *primary checkout that sits on a
+# protected branch*, regardless of how the caller assembled ``cwd``. That is the
+# real "never dirty main" hazard #4446 targets, and it aligns the runtime layer
+# with the protected-branch scoping of the hook (#4448), monitor tripwire
+# (#4449), and git shim (#4450). It backstops delegate's stricter CLI-arg
+# preflight (#4445), which additionally requires a worktree for *every* delegate
+# write dispatch irrespective of branch — this guard is the universal minimum,
+# not a duplicate of that policy. Read-only invocations and worktrees (dispatch
+# or otherwise) are always allowed; inspecting from the repo root is legitimate.
+
+_WRITE_CAPABLE_MODES = frozenset({"workspace-write", "danger"})
+
+_WRITE_CWD_HINT = (
+    "Write-capable invocations must run inside a dispatch worktree "
+    "(.worktrees/dispatch/<agent>/<task>/), never a primary checkout that is on "
+    "a protected branch (main/master)."
+)
+
+
+def _load_worktree_containment():
+    """Import the shared containment predicate (#4444).
+
+    Mirrors the dual-candidate import in :func:`_load_adapter`: the ``scripts.*``
+    name resolves when the repo root is on ``sys.path`` (``python -m ...`` /
+    pytest), while the delegate worker and build entrypoints put only
+    ``scripts/`` on the path, where the ``scripts.``-stripped name resolves.
+    Returns ``None`` only if neither import succeeds (a broken deployment).
+    """
+    for candidate in (
+        "scripts.guardrails.worktree_containment",
+        "guardrails.worktree_containment",
+    ):
+        try:
+            return importlib.import_module(candidate)
+        except ImportError:
+            continue
+    return None
+
+
+def _ensure_write_cwd_isolated(cwd: Path, *, mode: str, agent_name: str) -> None:
+    """Refuse a write-capable spawn whose cwd is a protected primary checkout.
+
+    Raises ``ValueError`` when ``cwd`` classifies as ``primary_checkout`` (#4444)
+    *and* that checkout is on a protected branch, or when the containment
+    predicate cannot be imported (fail closed — a write-capable spawn we cannot
+    prove is isolated is exactly what this guard exists to prevent). Dispatch
+    worktrees, any other registered worktree, out-of-repo paths, and primary
+    checkouts deliberately on a feature branch all pass.
+    """
+    wc = _load_worktree_containment()
+    if wc is None:
+        raise ValueError(
+            f"cannot verify worktree isolation for write-capable mode={mode!r} "
+            f"(agent {agent_name!r}): the containment predicate "
+            f"(scripts.guardrails.worktree_containment, #4444) failed to import. "
+            f"Refusing to spawn. {_WRITE_CWD_HINT}"
+        )
+    resolved = wc.canonicalize(cwd)
+    # Cheap containment gate: only a cwd inside this checkout's own file tree can
+    # be its primary checkout root. Out-of-tree cwds (temp dirs, externally
+    # located worktrees) are isolated from the primary checkout by definition, so
+    # skip the git-plumbing classify — and its subprocess — entirely for them.
+    if not resolved.is_relative_to(_RUNNER_REPO_TREE):
+        return
+    if wc.classify_repo_path(resolved, cwd=resolved) != "primary_checkout":
+        return
+    if not wc.is_protected_branch(resolved):
+        return
+    raise ValueError(
+        f"cwd {str(cwd)!r} is the primary checkout on a protected branch; "
+        f"write-capable mode={mode!r} for agent {agent_name!r} may not spawn "
+        f"there. {_WRITE_CWD_HINT}"
+    )
+
+
 def invoke(
     agent_name: str,
     prompt: str,
@@ -1797,12 +1884,17 @@ def invoke(
         )
 
     # ---------- 3. Validate cwd for write modes ----------
-    if mode in ("workspace-write", "danger") and cwd is None:
-        raise ValueError(
-            f"cwd is mandatory for mode={mode!r}. Write-capable invocations "
-            f"must pin their working directory to prevent cross-worktree "
-            f"contamination."
-        )
+    if mode in _WRITE_CAPABLE_MODES:
+        if cwd is None:
+            raise ValueError(
+                f"cwd is mandatory for mode={mode!r}. Write-capable invocations "
+                f"must pin their working directory to prevent cross-worktree "
+                f"contamination."
+            )
+        # #4446: enforce worktree isolation by construction at the spawn
+        # chokepoint — a write-capable child may never run in a protected
+        # primary checkout, regardless of how the caller assembled cwd.
+        _ensure_write_cwd_isolated(cwd, mode=mode, agent_name=agent_name)
     effective_cwd = cwd or Path.cwd()
     current_run_id()
     current_session_id()
