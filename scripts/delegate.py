@@ -11,8 +11,9 @@ controls how long to wait.
 CLI:
 
     # Fire a task. Returns immediately with the task-id.
+    # Write-capable modes (workspace-write / danger) require a dispatch worktree.
     delegate.py dispatch --agent codex --task-id my-task \
-        --prompt "do the thing" [--mode workspace-write] [--model gpt-5.5]
+        --prompt "do the thing" [--mode workspace-write --worktree] [--model gpt-5.5]
         [--allow-merge]
 
     # Check status without blocking.
@@ -373,6 +374,134 @@ def _classify_worktree_layout(path: Path | str | None) -> str | None:
         if len(parts) >= 2:
             return "flat"
     return None
+
+
+# ---------------------------------------------------------------------------
+# Write-capable-mode worktree guard (#4445)
+# ---------------------------------------------------------------------------
+#
+# ``workspace-write`` and ``danger`` let the delegated worker mutate files. Both
+# MUST run inside an isolated dispatch worktree so those writes never dirty the
+# protected primary checkout — the operator contract must not rely on a model
+# *remembering* the worktree rule. ``read-only`` dispatches are exempt: repo-root
+# preflight and creating a worktree from the primary checkout stay allowed.
+
+_WRITE_CAPABLE_MODES = frozenset({"workspace-write", "danger"})
+
+_WRITE_WORKTREE_HINT = (
+    "Write-capable dispatch must run inside a dispatch worktree, never the "
+    "primary checkout. Preferred: pass bare `--worktree` to auto-create "
+    ".worktrees/dispatch/<agent>/<task>/. Alternatively point `--cwd` at an "
+    "existing added worktree there."
+)
+
+
+def _load_worktree_containment():
+    """Import the shared containment predicate (#4444), ensuring repo root on path.
+
+    Mirrors the import guard used for :mod:`scripts.orchestration.reap_worktrees`
+    below: running ``scripts/delegate.py`` directly puts ``scripts/`` (not the
+    repo root) on ``sys.path``, so the ``scripts.*`` package needs its parent.
+    """
+    if str(_REPO_ROOT) not in sys.path:
+        sys.path.insert(0, str(_REPO_ROOT))
+    from scripts.guardrails import worktree_containment
+    return worktree_containment
+
+
+def _resolve_cwd_path(raw: str) -> Path:
+    """Resolve a ``--cwd`` argument the way the spawned worker will see it.
+
+    A relative ``--cwd`` is handed to the worker subprocess verbatim and thus
+    resolved against the dispatch process cwd, so classify it the same way.
+    """
+    p = Path(raw).expanduser()
+    if not p.is_absolute():
+        p = Path.cwd() / p
+    return p.resolve()
+
+
+def _is_verified_added_worktree(path: Path) -> bool:
+    """True if ``path`` resolves inside a git-registered worktree that is not the
+    primary checkout.
+
+    "Verified" means the containing worktree appears in ``git worktree list``. A
+    bare directory that only *looks* like ``.worktrees/**`` but was never
+    ``git worktree add``-ed does NOT qualify — the worker would otherwise run
+    outside any real worktree while believing it was isolated.
+    """
+    wc = _load_worktree_containment()
+    target = wc.canonicalize(path)
+    start = target if target.exists() else target.parent
+    try:
+        main_root = wc.resolve_main_root(start)
+    except wc.NotAGitRepositoryError:
+        return False
+    for worktree in wc.registered_worktrees(main_root):
+        if worktree == main_root:
+            continue
+        if target == worktree or target.is_relative_to(worktree):
+            return True
+    return False
+
+
+def _resolve_write_cwd_error(
+    *, mode: str, worktree_arg: str | None, cwd_arg: str | None,
+) -> str | None:
+    """Reject a write-capable dispatch that would run outside a verified worktree.
+
+    Returns an operator-facing error string, or None when the dispatch is safe.
+    Evaluated before any side effects (log files, ``git worktree add``) so a
+    rejection leaves no worktree/branch residue behind.
+
+    Policy (issue #4445):
+
+    * ``--worktree`` (bare/``auto``) is the recommended path and always lands in
+      ``.worktrees/dispatch/<agent>/<task>/`` — :func:`_ensure_worktree` creates
+      or validates it. An explicit ``--worktree PATH`` is rejected only when it
+      *is* the primary checkout.
+    * ``--cwd`` is allowed only when it resolves to a verified added worktree,
+      never the primary checkout or a bare in-repo directory.
+    * With neither flag the worker would default to the primary checkout, so a
+      write-capable dispatch is rejected outright.
+    """
+    if mode not in _WRITE_CAPABLE_MODES:
+        return None
+
+    wc = _load_worktree_containment()
+
+    if worktree_arg:
+        # Bare ``--worktree`` (the sentinel ``auto``) auto-derives the dispatch
+        # subtree — always isolated, nothing to verify up front.
+        if worktree_arg == "auto":
+            return None
+        candidate = _normalize_worktree_path(worktree_arg)
+        if wc.is_primary_checkout(candidate):
+            return (
+                f"❌ --worktree {worktree_arg!r} points at the primary checkout; "
+                f"write-capable dispatch may not run there.\n   {_WRITE_WORKTREE_HINT}"
+            )
+        return None
+
+    if cwd_arg:
+        candidate = _resolve_cwd_path(cwd_arg)
+        if wc.is_primary_checkout(candidate):
+            return (
+                f"❌ --cwd {cwd_arg!r} resolves inside the primary checkout; "
+                f"write-capable dispatch may not run there.\n   {_WRITE_WORKTREE_HINT}"
+            )
+        if not _is_verified_added_worktree(candidate):
+            return (
+                f"❌ --cwd {cwd_arg!r} is not a verified git worktree; "
+                f"write-capable dispatch requires an added worktree under "
+                f".worktrees/dispatch/<agent>/<task>/.\n   {_WRITE_WORKTREE_HINT}"
+            )
+        return None
+
+    return (
+        f"❌ --mode {mode} requires an isolated worktree; without --worktree/--cwd "
+        f"the worker would run in the primary checkout.\n   {_WRITE_WORKTREE_HINT}"
+    )
 
 
 def _fetch_base(base: str) -> bool:
@@ -1416,19 +1545,25 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
     max_budget_usd = getattr(args, "max_budget_usd", None)
     keep_worktree = bool(getattr(args, "keep_worktree", False))
 
-    if args.mode == "danger" and not worktree_arg:
-        print(
-            "❌ --mode danger requires --worktree to keep delegated writes out "
-            "of the main checkout.",
-            file=sys.stderr,
-        )
-        return 2
     if args.cwd and worktree_arg:
         print(
             "❌ --cwd and --worktree are mutually exclusive. Use --worktree for "
             "delegated write isolation.",
             file=sys.stderr,
         )
+        return 2
+
+    # Write-capable modes (workspace-write / danger) must resolve to a verified
+    # added worktree — never the primary checkout (#4445). Read-only dispatches
+    # stay exempt so repo-root preflight keeps working. Evaluated before any
+    # side effects so a rejection leaves no worktree/branch/log residue.
+    write_cwd_error = _resolve_write_cwd_error(
+        mode=args.mode,
+        worktree_arg=worktree_arg,
+        cwd_arg=args.cwd,
+    )
+    if write_cwd_error:
+        print(write_cwd_error, file=sys.stderr)
         return 2
 
     # Refuse to clobber a task that's still alive — whether it's in
@@ -2069,8 +2204,9 @@ def build_parser() -> argparse.ArgumentParser:
         ),
         epilog=(
             "Examples:\n"
-            "  .venv/bin/python scripts/delegate.py dispatch --agent codex --task-id review-123 --prompt-file prompt.md --mode workspace-write --cwd .\n"
-            "  .venv/bin/python scripts/delegate.py dispatch --agent codex --task-id pr-123 --prompt-file brief.md --mode danger --worktree .worktrees/codex-pr-123\n"
+            "  .venv/bin/python scripts/delegate.py dispatch --agent codex --task-id review-123 --prompt-file prompt.md --mode read-only\n"
+            "  .venv/bin/python scripts/delegate.py dispatch --agent codex --task-id fix-123 --prompt-file brief.md --mode workspace-write --worktree\n"
+            "  .venv/bin/python scripts/delegate.py dispatch --agent codex --task-id pr-123 --prompt-file brief.md --mode danger --worktree\n"
             "  .venv/bin/python scripts/delegate.py dispatch --agent claude --task-id review-456 --prompt-file brief.md --max-budget-usd 0.50\n"
             "  .venv/bin/python scripts/delegate.py status-or-fail review-123\n"
             "  .venv/bin/python scripts/delegate.py wait review-123 --timeout 600\n"
@@ -2112,7 +2248,9 @@ def build_parser() -> argparse.ArgumentParser:
     d.add_argument("--prompt-file", help="Read the prompt body from this file path.")
     d.add_argument("--mode", default="read-only",
                    choices=["read-only", "workspace-write", "danger"],
-                   help="Runtime mode (default: read-only). Use danger only with --worktree.")
+                   help="Runtime mode (default: read-only). workspace-write and danger "
+                        "require a verified dispatch worktree (bare --worktree, or --cwd "
+                        "pointing at an existing added worktree); read-only may run from repo root.")
     d.add_argument("--model", default=None,
                    help="Optional model override, e.g. gpt-5.5 or gemini-3.1-pro-preview.")
     d.add_argument(
@@ -2130,18 +2268,20 @@ def build_parser() -> argparse.ArgumentParser:
         ),
     )
     d.add_argument("--cwd", default=None,
-                   help="Working directory for the worker (default: repo root)")
+                   help="Working directory for the worker (default: repo root). "
+                        "For workspace-write/danger it must be a verified added "
+                        "worktree, never the primary checkout — prefer --worktree.")
     d.add_argument(
         "--worktree",
         nargs="?",
         const="auto",
         default=None,
         help=(
-            "Run inside this git worktree (created on demand, required for "
-            "--mode danger). Pass `--worktree PATH` to use a specific path "
-            "(back-compat with existing `.worktrees/{agent}-{task}/` "
-            "layout), or `--worktree` alone to auto-derive the new default "
-            "`.worktrees/dispatch/{agent}/{task}/`."
+            "Run inside this git worktree (created on demand). Required for "
+            "write-capable modes (workspace-write, danger). Pass `--worktree` "
+            "alone (recommended) to auto-derive `.worktrees/dispatch/{agent}/"
+            "{task}/`, or `--worktree PATH` to reuse a specific added worktree "
+            "(validated against the expected dispatch branch before reuse)."
         ),
     )
     d.add_argument(

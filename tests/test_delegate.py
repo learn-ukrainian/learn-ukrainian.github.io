@@ -2249,6 +2249,303 @@ def test_new_dispatch_uses_dispatch_subtree(tmp_tasks_dir, monkeypatch, capsys):
     assert state["worktree_layout"] == "dispatch"
 
 
+# ---------------------------------------------------------------------------
+# Write-capable-mode worktree guard (#4445)
+#
+# workspace-write / danger must resolve to a *verified added worktree*, never
+# the primary checkout — enforcement lives in delegate, not a model's memory.
+# read-only repo-root preflight and worktree creation from the primary checkout
+# stay allowed.
+# ---------------------------------------------------------------------------
+
+
+def _init_repo_with_worktree(tmp_path: Path) -> tuple[Path, Path]:
+    """Build a real primary checkout + one registered dispatch worktree.
+
+    Returns ``(main, dispatch_wt)`` as resolved absolute paths. Uses git
+    plumbing rather than fake ``.git`` files because the containment predicate
+    the guard relies on asks git (``worktree list``/``rev-parse``), not string
+    prefixes. The dispatch worktree sits on branch ``codex/task-1``.
+    """
+    env = delegate._sanitized_git_env()
+
+    def _git(cwd: Path, *args: str) -> None:
+        subprocess.run(
+            ["git", "-C", str(cwd), *args],
+            check=True, capture_output=True, text=True, env=env,
+        )
+
+    main = tmp_path / "main"
+    main.mkdir()
+    subprocess.run(
+        ["git", "init", "-q", "-b", "main", str(main)],
+        check=True, capture_output=True, text=True, env=env,
+    )
+    _git(main, "config", "user.email", "test@example.com")
+    _git(main, "config", "user.name", "Test")
+    (main / ".gitignore").write_text(".worktrees/\n")
+    (main / "tracked.txt").write_text("x\n")
+    _git(main, "add", "-A")
+    _git(main, "commit", "-q", "-m", "init")
+
+    dispatch_wt = main / ".worktrees" / "dispatch" / "codex" / "task-1"
+    _git(main, "worktree", "add", "-q", "-b", "codex/task-1", str(dispatch_wt))
+
+    return main.resolve(), dispatch_wt.resolve()
+
+
+class _GuardFakeStdin:
+    def write(self, _data):
+        pass
+
+    def close(self):
+        pass
+
+
+class _GuardFakeProc:
+    pid = 44551
+    stdin = _GuardFakeStdin()
+
+
+def _patch_worker_popen(monkeypatch):
+    """Fake the worker spawn while letting real ``git`` still run.
+
+    ``delegate.subprocess`` and ``worktree_containment.subprocess`` are the same
+    module object, so a blanket ``Popen`` patch would also break the containment
+    guard's git plumbing (``subprocess.run`` uses ``Popen`` internally). Route
+    ``git`` invocations to the real Popen and fake only the ``.venv`` worker.
+    """
+    real_popen = delegate.subprocess.Popen
+
+    def fake_popen(cmd, *a, **k):
+        if cmd and str(cmd[0]) == "git":
+            return real_popen(cmd, *a, **k)
+        return _GuardFakeProc()
+
+    monkeypatch.setattr(delegate.subprocess, "Popen", fake_popen)
+
+
+def _write_args(**overrides):
+    """Namespace for a cmd_dispatch call, defaulting to a write-capable mode."""
+    import argparse
+
+    base = {
+        "agent": "codex",
+        "task_id": "wt-guard",
+        "prompt": "do it",
+        "prompt_file": None,
+        "mode": "workspace-write",
+        "model": None,
+        "cwd": None,
+        "worktree": None,
+        "base": "main",
+        "hard_timeout": 3600,
+        "allow_merge": False,
+    }
+    base.update(overrides)
+    return argparse.Namespace(**base)
+
+
+# --- _resolve_write_cwd_error unit tests (deterministic policy) -------------
+
+
+def test_write_guard_allows_read_only_repo_root():
+    assert delegate._resolve_write_cwd_error(
+        mode="read-only", worktree_arg=None, cwd_arg=None,
+    ) is None
+
+
+def test_write_guard_allows_bare_worktree_for_both_write_modes():
+    for mode in ("workspace-write", "danger"):
+        assert delegate._resolve_write_cwd_error(
+            mode=mode, worktree_arg="auto", cwd_arg=None,
+        ) is None
+
+
+def test_write_guard_rejects_write_mode_without_isolation():
+    for mode in ("workspace-write", "danger"):
+        err = delegate._resolve_write_cwd_error(
+            mode=mode, worktree_arg=None, cwd_arg=None,
+        )
+        assert err is not None
+        assert "worktree" in err
+
+
+def test_write_guard_rejects_cwd_primary_checkout(tmp_path):
+    main, _ = _init_repo_with_worktree(tmp_path)
+    err = delegate._resolve_write_cwd_error(
+        mode="workspace-write", worktree_arg=None, cwd_arg=str(main),
+    )
+    assert err is not None
+    assert "primary checkout" in err
+
+
+def test_write_guard_rejects_cwd_in_repo_outside_worktrees(tmp_path):
+    main, _ = _init_repo_with_worktree(tmp_path)
+    subdir = main / "pkg"
+    subdir.mkdir()
+    err = delegate._resolve_write_cwd_error(
+        mode="danger", worktree_arg=None, cwd_arg=str(subdir),
+    )
+    assert err is not None
+    assert "primary checkout" in err
+
+
+def test_write_guard_accepts_cwd_added_worktree(tmp_path):
+    _, dispatch_wt = _init_repo_with_worktree(tmp_path)
+    assert delegate._resolve_write_cwd_error(
+        mode="workspace-write", worktree_arg=None, cwd_arg=str(dispatch_wt),
+    ) is None
+    # A subdirectory inside the verified worktree is equally fine.
+    sub = dispatch_wt / "nested"
+    sub.mkdir()
+    assert delegate._resolve_write_cwd_error(
+        mode="danger", worktree_arg=None, cwd_arg=str(sub),
+    ) is None
+
+
+def test_write_guard_rejects_cwd_unregistered_worktree_dir(tmp_path):
+    """A directory that only *looks* like .worktrees/** but was never
+    `git worktree add`-ed is not a verified worktree."""
+    main, _ = _init_repo_with_worktree(tmp_path)
+    ghost = main / ".worktrees" / "dispatch" / "codex" / "ghost"
+    ghost.mkdir(parents=True)
+    err = delegate._resolve_write_cwd_error(
+        mode="workspace-write", worktree_arg=None, cwd_arg=str(ghost),
+    )
+    assert err is not None
+    assert "verified git worktree" in err
+
+
+def test_write_guard_rejects_explicit_worktree_pointing_at_primary(tmp_path):
+    main, _ = _init_repo_with_worktree(tmp_path)
+    err = delegate._resolve_write_cwd_error(
+        mode="danger", worktree_arg=str(main), cwd_arg=None,
+    )
+    assert err is not None
+    assert "primary checkout" in err
+
+
+# --- cmd_dispatch end-to-end tests ------------------------------------------
+
+
+def test_dispatch_read_only_allows_repo_root(tmp_tasks_dir, monkeypatch):
+    """Read-only preflight from the primary checkout stays allowed."""
+    monkeypatch.setattr(delegate.subprocess, "Popen", lambda *a, **k: _GuardFakeProc())
+    args = _write_args(task_id="ro-root", mode="read-only", cwd=None, worktree=None)
+
+    rc = delegate.cmd_dispatch(args)
+
+    assert rc == 0
+    state = delegate._read_state(delegate._state_path("ro-root"))
+    assert state is not None
+    assert state["cwd"] == str(delegate._REPO_ROOT)
+
+
+def test_dispatch_rejects_workspace_write_without_worktree(tmp_tasks_dir, capsys):
+    args = _write_args(task_id="ww-no-wt", mode="workspace-write", cwd=None, worktree=None)
+
+    rc = delegate.cmd_dispatch(args)
+
+    assert rc == 2
+    assert delegate._read_state(delegate._state_path("ww-no-wt")) is None
+    assert "worktree" in capsys.readouterr().err
+
+
+def test_dispatch_rejects_workspace_write_cwd_primary_checkout(
+    tmp_tasks_dir, tmp_path, capsys,
+):
+    main, _ = _init_repo_with_worktree(tmp_path)
+    args = _write_args(
+        task_id="ww-cwd-main", mode="workspace-write", cwd=str(main), worktree=None,
+    )
+
+    rc = delegate.cmd_dispatch(args)
+
+    assert rc == 2
+    assert delegate._read_state(delegate._state_path("ww-cwd-main")) is None
+    assert "primary checkout" in capsys.readouterr().err
+
+
+def test_dispatch_accepts_workspace_write_cwd_added_worktree(
+    tmp_tasks_dir, tmp_path, monkeypatch,
+):
+    _, dispatch_wt = _init_repo_with_worktree(tmp_path)
+    _patch_worker_popen(monkeypatch)
+    args = _write_args(
+        task_id="ww-cwd-wt", mode="workspace-write", cwd=str(dispatch_wt), worktree=None,
+    )
+
+    rc = delegate.cmd_dispatch(args)
+
+    assert rc == 0
+    state = delegate._read_state(delegate._state_path("ww-cwd-wt"))
+    assert state is not None
+    assert Path(state["cwd"]) == dispatch_wt
+
+
+def test_dispatch_accepts_bare_worktree_for_workspace_write(
+    tmp_tasks_dir, monkeypatch,
+):
+    _, fake_run = _make_run_stub()
+    monkeypatch.setattr(delegate.subprocess, "run", fake_run)
+    monkeypatch.setattr(delegate.subprocess, "Popen", lambda *a, **k: _GuardFakeProc())
+    args = _write_args(
+        task_id="ww-bare", mode="workspace-write", cwd=None, worktree="auto",
+    )
+
+    rc = delegate.cmd_dispatch(args)
+
+    assert rc == 0
+    state = delegate._read_state(delegate._state_path("ww-bare"))
+    assert state is not None
+    wt = Path(state["worktree_path"])
+    assert wt.parts[-4:] == (".worktrees", "dispatch", "codex", "ww-bare")
+
+
+def test_dispatch_accepts_explicit_added_worktree(tmp_tasks_dir, tmp_path, monkeypatch):
+    """An explicit --worktree pointing at a real registered dispatch worktree
+    is reused, not rejected."""
+    main, dispatch_wt = _init_repo_with_worktree(tmp_path)
+    # _ensure_worktree's reuse validation shells out to git without sanitizing
+    # the environment, so under a git hook (pre-commit/pre-push) an inherited
+    # GIT_DIR/GIT_WORK_TREE would hijack `cwd=<worktree>` and report the outer
+    # repo's branch. Strip those so the throwaway worktree resolves correctly.
+    _sanitize_git_env_for_test(monkeypatch)
+    # Route delegate's worktree machinery at the throwaway repo so reuse
+    # validation and provisioning never touch the real checkout or network.
+    monkeypatch.setattr(delegate, "_REPO_ROOT", main)
+    _patch_worker_popen(monkeypatch)
+    args = _write_args(
+        agent="codex",
+        task_id="task-1",
+        mode="workspace-write",
+        cwd=None,
+        worktree=str(dispatch_wt),
+        base="main",
+    )
+
+    rc = delegate.cmd_dispatch(args)
+
+    assert rc == 0
+    state = delegate._read_state(delegate._state_path("task-1"))
+    assert state is not None
+    assert state["worktree_reused"] is True
+    assert Path(state["cwd"]) == dispatch_wt
+
+
+def test_dispatch_help_omits_deprecated_cwd_dot_example():
+    """Issue #4445: help/examples must not advertise `--cwd .` or a flat
+    worktree layout for write-capable work."""
+    help_text = delegate.build_parser().format_help()
+    assert "--cwd ." not in help_text
+    assert "--mode workspace-write --cwd" not in help_text
+    # The flat `.worktrees/<agent>-<task>` example is gone; bare --worktree
+    # is the advertised write-capable path.
+    assert ".worktrees/codex-pr-123" not in help_text
+    assert "--mode workspace-write --worktree" in help_text
+
+
 def test_list_and_status_walk_both_layouts(tmp_tasks_dir, tmp_path, capsys, monkeypatch):
     """Fix 4 (#1476): both the deprecated flat layout and the new dispatch
     subtree layout must surface in `list`, and flat-layout tasks emit
