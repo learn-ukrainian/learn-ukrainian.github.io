@@ -224,6 +224,12 @@ def test_agent_transient_briefs_are_preserved(tmp_path: Path) -> None:
     brief.write_text("transient dispatch brief\n", encoding="utf-8")
     dispatch = agent_dir / "dispatch-3098-slice3.md"
     dispatch.write_text("transient dispatch prompt\n", encoding="utf-8")
+    # Regression (2026-07-05): briefs now also collect under the dispatch-briefs/
+    # DIRECTORY, which the dispatch-*.md FILE glob does not match — an undeclared
+    # dir aborted every deploy until declared in ORPHAN_PATHS_AGENT.
+    collected = agent_dir / "dispatch-briefs" / "4497-runner-failover.md"
+    collected.parent.mkdir(parents=True)
+    collected.write_text("collected dispatch brief\n", encoding="utf-8")
 
     deploy_result = _run(repo, DEPLOY_SCRIPT)
     assert deploy_result.returncode == 0, (
@@ -233,6 +239,7 @@ def test_agent_transient_briefs_are_preserved(tmp_path: Path) -> None:
     # rsync --delete must preserve the declared transient scratch.
     assert brief.exists(), "atlas-3150-brief.md was wiped by rsync --delete"
     assert dispatch.exists(), "dispatch-3098-slice3.md was wiped by rsync --delete"
+    assert collected.exists(), "dispatch-briefs/ brief was wiped by rsync --delete"
 
 
 def test_claude_epic_dirs_are_preserved(tmp_path: Path) -> None:
