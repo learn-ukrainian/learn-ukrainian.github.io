@@ -105,8 +105,9 @@ Remove with (flat layout — back-compat for older worktrees):
 
 ## When YOU (not a delegated agent) need isolation
 
-Same rule — use a worktree. Don't branch in the main checkout. Use the
-subtree layout:
+Same rule — use a worktree. Don't branch in the main checkout. You may start at the repository root and run `git status --short --branch` as a read-only preflight/orientation step, but do not implement there. Any implementation edit, branch work, commit, or PR must happen from a worktree unless the user explicitly authorizes an exception. This prose rule is a reminder/backstop; mechanical enforcement is tracked in #4444-#4450.
+
+Use the subtree layout:
 
     git worktree add -b claude/<issue>-<topic> .worktrees/dispatch/claude/<issue>-<topic>
     cd .worktrees/dispatch/claude/<issue>-<topic>

@@ -29,7 +29,8 @@ bind as part of this contract.
 
 ## Global Codex Operating Rules
 
-- Start every task at the repository root and run `git status --short --branch` before editing.
+- Start every task at the repository root and run `git status --short --branch` before editing. **This is a read-only preflight/orientation step only.** Do not use this as permission to implement from the primary checkout.
+- **Any implementation edit, branch work, commit, or PR MUST happen from a worktree (`.worktrees/dispatch/<agent>/<task>/`)** unless the user explicitly authorizes an exception. This prose rule is a reminder/backstop; mechanical enforcement is tracked in #4444-#4450.
 - Preserve user and unrelated changes; do not revert, delete, or clean up work outside the task.
 - Use multi-agent delegation for non-trivial work that can run in parallel without shared-file contention.
 - Keep worker scopes disjoint, and explicitly tell agents not to revert or overwrite others' changes.
