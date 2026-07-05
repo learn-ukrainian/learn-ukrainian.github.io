@@ -22,18 +22,6 @@
   role: textbook
   notes: Планове джерело для початкового пояснення множинних іменників через сани, окуляри, двері.
   source_ref: Вашуленко Grade 3, p.116
-- title: Local B1 health-at-the-doctor module
-  role: curriculum
-  notes: Попередній B1 модуль для зв'язку з лексемою ліки і медичним контекстом.
-  source_ref: curriculum/l2-uk-en/b1/health-at-the-doctor/module.md
-- title: Local B1 simplification-consonants module
-  role: curriculum
-  notes: Сусідній завершений B1 модуль для структури clean Markdown, VERIFY comments, activity injection pattern, vocabulary and resources sidecars.
-  source_ref: curriculum/l2-uk-en/b1/simplification-consonants/module.md
-- title: Local B1 alternation-vowels module
-  role: curriculum
-  notes: Попередній морфонологічний модуль для зв'язку ворота - воріт із чергуванням голосних.
-  source_ref: curriculum/l2-uk-en/b1/alternation-vowels/module.md
 - title: Goroh and Slovnyk.ua form checks
   role: dictionary
   notes: Використано для перевірки нормативних форм дверей, дверима, дверми, грошей, грошима, грішми, воріт, воротами, ворітьми, ножиць, саней, саньми, санями, канікул, радощів.

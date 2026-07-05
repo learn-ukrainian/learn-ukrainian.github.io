@@ -1,30 +1,21 @@
 - title: "B1 M71: Дієприслівники доконаного виду"
   role: curriculum
   notes: "Основний B1 модуль про доконані дієприслівники: попередня завершена дія, суфікси -вши/-ши, зворотні форми на -вшись/-шись, спільний підмет і стилістичний вибір."
-- title: "B1 M70: Дієприслівники недоконаного виду"
-  role: curriculum
-  notes: "Попередній модуль дає контраст одночасності: читаючи, слухаючи, пишучи, говорячи."
-  source_ref: curriculum/l2-uk-en/b1/gerunds-imperfective/module.md
-- title: "B1 M71 plan: gerunds-perfective"
-  role: curriculum
-  notes: "Плановий перелік цілей і лексики: дієприслівник доконаного виду, різночасність, прочитавши, дізнавшись, повернувшись, попередність."
-  source_ref: curriculum/l2-uk-en/plans/b1/gerunds-perfective.yaml
-- title: "B1 M72 plan: Дієприслівниковий зворот"
-  role: curriculum
-  notes: "Наступний модуль розгортає пунктуацію, винятки та стилістику дієприслівникових зворотів."
-  source_ref: curriculum/l2-uk-en/plans/b1/gerund-phrases.yaml
 - title: "Заболотний, 7 клас: вид і час дієприслівників"
   role: textbook
   notes: "Джерело для контрасту що роблячи? / що зробивши?, одночасності та попередньої завершеної дії."
   source_ref: docs/references/textbooks-txt/7-klas-ukrmova-zabolotnyi-2024.txt
+  url: "https://pidruchnyk.com.ua/2873-ukrainska-mova-zabolotnyi-7-klas-2024.html"
 - title: "Литвінова, 7 клас: творення дієприслівників"
   role: textbook
   notes: "Джерело для творення форм на -вши/-ши, збереження -ся/-сь у зворотних дієсловах і вимовних зауваг."
   source_ref: docs/references/textbooks-txt/7-klas-ukrmova-litvinova-2024.txt
+  url: "https://pidruchnyk.com.ua/2872-ukrainska-mova-litvinova-7-klas-2024.html"
 - title: "Караман, 10 клас: дієприслівник"
   role: textbook
   notes: "Підтверджує творення доконаних дієприслівників за допомогою -вши/-ши та правило спільного виконавця з присудком."
   source_ref: docs/references/textbooks-txt/10-klas-ukrmova-karaman-2018.txt
+  url: "https://pidruchnyk.com.ua/3082-ukrmova-10-klas-karaman.html"
 - title: "Local source lookup"
   role: reference
   notes: "Headroom source-summary hash 649f40138506906375fcd14f: локальний пошук джерел для M71 підтвердив попередність, -вши/-ши, зворотність і спільний підмет."

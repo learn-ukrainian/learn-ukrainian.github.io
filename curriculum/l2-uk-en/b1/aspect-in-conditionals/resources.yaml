@@ -1,28 +1,4 @@
 ---
-- title: "B1 M24 plan: Вид в умовних реченнях"
-  role: curriculum
-  notes: "Планове джерело для взаємодії реальної/нереальної умови з доконаним і недоконаним видом."
-  source_ref: curriculum/l2-uk-en/plans/b1/aspect-in-conditionals.yaml
-- title: "B1 M22: Умовний спосіб (реальний)"
-  role: curriculum
-  notes: "Попередній модуль для якщо-речень, реальних майбутніх умов і наслідків."
-  source_ref: curriculum/l2-uk-en/b1/conditionals-real/module.md
-- title: "B1 M23: Умовний спосіб (нереальний)"
-  role: curriculum
-  notes: "Попередній модуль для якби-речень, контрфактичних ситуацій і розміщення частки б/би."
-  source_ref: curriculum/l2-uk-en/b1/conditionals-unreal/module.md
-- title: "B1 M04: Вид у минулому часі"
-  role: curriculum
-  notes: "Попередній аспектний модуль для розрізнення процесу, тла, події й завершеного результату."
-  source_ref: curriculum/l2-uk-en/b1/aspect-past-tense/module.md
-- title: "B1 M05: Вид у майбутньому часі"
-  role: curriculum
-  notes: "Попередній аспектний модуль для доконаного майбутнього результату та недоконаного майбутнього процесу."
-  source_ref: curriculum/l2-uk-en/b1/aspect-future-tense/module.md
-- title: "State Standard 2024 B1 aspect and condition functions"
-  role: standard
-  notes: "Локальний стандарт для B1-функцій умови, припущення, планування й аспектної точності."
-  source_ref: docs/l2-uk-en/UKRAINIAN-STATE-STANDARD-2024.txt
 - title: "Литвінова Grade 7, p.88-92"
   role: textbook
   notes: "Планове джерело для умовного способу, якщо/якби, частки б/би та вибору виду в умовних конструкціях."

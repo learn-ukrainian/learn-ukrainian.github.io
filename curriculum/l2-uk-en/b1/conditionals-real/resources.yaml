@@ -2,19 +2,3 @@
   role: textbook
   notes: Планове джерело для складнопідрядних речень умови, сполучників якщо, коли, як, якби та необов'язкового співвідносного слова то.
   source_ref: Заболотний Grade 8, p.114
-- title: State Standard 2024 B1 condition functions
-  role: standard
-  notes: Локальний стандарт для функції умови й наслідку на B1 та розмежування реальних конструкцій з якщо і нереальних з якби.
-  source_ref: docs/l2-uk-en/UKRAINIAN-STATE-STANDARD-2024.txt
-- title: Local A2 synthetic future module
-  role: curriculum
-  notes: Повторення форм майбутнього часу, потрібних для якщо-речень з реальним майбутнім результатом.
-  source_ref: curriculum/l2-uk-en/a2/synthetic-future/module.md
-- title: Local B1 aspect-future-tense module
-  role: curriculum
-  notes: Попередній B1 модуль для вибору доконаного і недоконаного виду в майбутніх планах.
-  source_ref: curriculum/l2-uk-en/b1/aspect-future-tense/module.md
-- title: Local B1 daily-life-and-routines module
-  role: curriculum
-  notes: Практичний контекст розкладу, звички і щоденних умов для природних якщо-речень.
-  source_ref: curriculum/l2-uk-en/b1/daily-life-and-routines/module.md

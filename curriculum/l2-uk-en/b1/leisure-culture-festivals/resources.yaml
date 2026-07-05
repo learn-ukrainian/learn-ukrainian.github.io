@@ -1,18 +1,6 @@
 - title: "B1 M68: Дозвілля, культура і свята"
   role: curriculum
   notes: "Основний комунікативний модуль про дозвілля, культурні події, свята, традиції, ресторанні ситуації та аргументацію."
-- title: "B1 plan: leisure-culture-festivals"
-  role: curriculum
-  notes: "Плановий словник і комунікативні ситуації: хобі, мистецтво, Різдво, Великдень, Івана Купала, ресторан і регіональна кухня."
-  source_ref: curriculum/l2-uk-en/plans/b1/leisure-culture-festivals.yaml
-- title: "B1 direct: Українські традиції поглиблено"
-  role: curriculum
-  notes: "Локальний B1-орієнтир для групування традицій: Різдво, Великдень, весілля, загальні символи, формула На свято прийнято..."
-  source_ref: curriculum/l2-uk-direct/b1/tradytsii-pohlybbleno.yaml
-- title: "A2 wiki: Nature and traditions"
-  role: reference
-  notes: "Нормативні примітки про назви свят, капіталізацію, прийменник на + знахідний для свят, Великдень і Святвечір."
-  source_ref: wiki/grammar/a2/nature-and-traditions.md
 - title: "Zabolotnyi Grade 6 Ukrainian language, p.77-78"
   role: textbook
   notes: "Джерело для читання про свято Івана Купала: ніч із 6 на 7 липня, багаття, Марена, вінки, вода."
@@ -25,7 +13,3 @@
   role: textbook
   notes: "Джерело для календарно-обрядових пісень: веснянки, купальські, щедрівки, колядки та зимовий цикл."
   source_ref: 6-klas-ukrlit-avramenko-2023 p.6, p.10-22
-- title: "B1 restaurant-and-food module"
-  role: curriculum
-  notes: "Попередній B1 модуль для ресторанної лексики, українських страв, ввічливих замовлень і регіональної кухні."
-  source_ref: curriculum/l2-uk-en/b1/restaurant-and-food/module.md
