@@ -60,6 +60,30 @@ def test_gemini_md_carries_binding_digest() -> None:
     assert "EXCEPT A1" in body, "GEMINI.md digest lost the A1 immersion exception"
 
 
+def test_claude_md_carries_binding_digest() -> None:
+    """Headless `claude -p` boots from CLAUDE.md and may not fetch /api/rules
+    — the digest must live in the file itself."""
+    body = (REPO / "CLAUDE.md").read_text(encoding="utf-8")
+    assert "operator-expectations.md" in body
+    assert "EXCEPT A1" in body, "CLAUDE.md digest lost the A1 immersion exception"
+
+
+def test_agy_bridge_prompt_injects_contract_digest() -> None:
+    """The agy CLI loads NO repo context files in bridge one-shot mode
+    (canary-proven NOT LOADED twice on 2026-07-05, even after the GEMINI.md
+    digest) — the bridge prompt builder must inject the digest itself."""
+    import sys
+
+    sys.path.insert(0, str(REPO / "scripts"))
+    from ai_agent_bridge._prompts import build_agy_prompt
+
+    out = build_agy_prompt(
+        {"from": "claude", "task_id": "t", "type": "query", "content": "x", "data": None}
+    )
+    assert "operator-expectations.md" in out
+    assert "EXCEPT A1" in out
+
+
 def test_deploy_lock_step_lists_include_contract() -> None:
     """deploy excludes x drift-checker x idempotency fixtures must move
     together (learned the hard way in #4412 round 3)."""
