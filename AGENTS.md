@@ -6,6 +6,27 @@
 
 ---
 
+## Operator Contract (binding for ALL agents — read before acting)
+
+The operator's working contract is `agents_extensions/shared/rules/operator-expectations.md`
+(deploy copies: `.codex/rules/` · `.agent/rules/` · `.gemini/rules/`; served FIRST at
+`GET http://localhost:8765/api/rules`). Its items are the tie-breakers when instructions
+conflict. Digest — read the full file for the binding wording:
+**1** Quality: no shortcuts, no threshold-lowering, no "for now" · **2** Best practices +
+root-cause fixes · **3** Git/GitHub hygiene: worktrees, PRs only, post-merge cleanup,
+`X-Agent` trailer · **4** Use the whole fleet; the review gate needs an independent
+**cross-family** reviewer (discussion/panels do NOT satisfy it) · **5** Route by
+model × harness fit (`model-assignment.md` § Harness vs model) · **6** Limits are normal:
+substitute lanes and NOTE the substitution in the artifact · **7** No claims without
+tool-backed proof; Ukrainian word/stress/morphology facts VESUM/`sources`-verified, never
+guessed · **8** Clean code, current docs; prune stale context when touched · **9** Max UA
+immersion EXCEPT A1 (its English scaffolding is by design; from A2 never raise English) ·
+**10** Drive, don't defer: execute determinable next actions, report past-tense ·
+**11** Repo hard gates (worktree layout, `.venv/bin/python`, artifact hygiene, no secrets)
+bind as part of this contract.
+
+---
+
 ## Global Codex Operating Rules
 
 - Start every task at the repository root and run `git status --short --branch` before editing.
