@@ -1,432 +1,447 @@
 {
   "ua-gec-gold-001": {
+    "basis": "heritage_classifier",
+    "calque_warning": false,
+    "classification": "standard",
     "contested": true,
     "evidence": [
       {
-        "table": "esum",
-        "headword": "повзти"
-      },
-      {
-        "table": "esum",
-        "headword": "сувершность"
+        "detail": "word_form match (1 form analysis)",
+        "ref": "уверх",
+        "source": "VESUM"
       }
-    ]
+    ],
+    "russian_shadow": false
   },
   "ua-gec-gold-002": {
+    "basis": "heritage_classifier",
+    "calque_warning": true,
+    "classification": "unknown",
     "contested": false,
-    "evidence": []
+    "evidence": [],
+    "russian_shadow": true
   },
   "ua-gec-gold-003": {
+    "basis": "heritage_classifier",
+    "calque_warning": true,
+    "classification": "unknown",
     "contested": false,
-    "evidence": []
+    "evidence": [],
+    "russian_shadow": true
   },
   "ua-gec-gold-004": {
+    "basis": "heritage_classifier",
+    "calque_warning": true,
+    "classification": "unknown",
     "contested": false,
-    "evidence": []
+    "evidence": [],
+    "russian_shadow": true
   },
   "ua-gec-gold-005": {
+    "basis": "heritage_classifier",
+    "calque_warning": false,
+    "classification": "standard",
     "contested": true,
     "evidence": [
       {
-        "table": "esum",
-        "headword": "бремсберг"
-      },
-      {
-        "table": "esum",
-        "headword": "гйрка"
-      },
-      {
-        "table": "esum",
-        "headword": "грун"
-      },
-      {
-        "table": "esum",
-        "headword": "керм"
-      },
-      {
-        "table": "esum",
-        "headword": "кйзлик1"
-      },
-      {
-        "table": "esum",
-        "headword": "кропивка"
-      },
-      {
-        "table": "grinchenko",
-        "headword": "гірка"
-      },
-      {
-        "table": "grinchenko",
-        "headword": "гіркий"
+        "detail": "word_form match (4 form analysis)",
+        "ref": "гірка",
+        "source": "VESUM"
       }
-    ]
+    ],
+    "russian_shadow": false
   },
   "ua-gec-gold-006": {
+    "basis": "heritage_classifier",
+    "calque_warning": false,
+    "classification": "standard",
     "contested": true,
     "evidence": [
       {
-        "table": "esum",
-        "headword": "абаї"
-      },
-      {
-        "table": "esum",
-        "headword": "ава1"
-      },
-      {
-        "table": "esum",
-        "headword": "авдотка"
-      },
-      {
-        "table": "esum",
-        "headword": "авчик"
-      },
-      {
-        "table": "esum",
-        "headword": "аглая"
-      },
-      {
-        "table": "esum",
-        "headword": "вид"
-      },
-      {
-        "table": "esum",
-        "headword": "невиданський"
-      },
-      {
-        "table": "esum",
-        "headword": "підганяють"
-      },
-      {
-        "table": "grinchenko",
-        "headword": "вид"
-      },
-      {
-        "table": "grinchenko",
-        "headword": "виділ"
-      },
-      {
-        "table": "grinchenko",
-        "headword": "виділити"
-      },
-      {
-        "table": "grinchenko",
-        "headword": "виділовий"
-      },
-      {
-        "table": "grinchenko",
-        "headword": "виділяти"
-      },
-      {
-        "table": "grinchenko",
-        "headword": "видіти"
+        "detail": "word_form match (1 form analysis)",
+        "ref": "вид",
+        "source": "VESUM"
       }
-    ]
+    ],
+    "russian_shadow": false
   },
   "ua-gec-gold-007": {
+    "basis": "heritage_classifier",
+    "calque_warning": true,
+    "classification": "unknown",
     "contested": false,
-    "evidence": []
+    "evidence": [],
+    "russian_shadow": true
   },
   "ua-gec-gold-008": {
+    "basis": "multiword_not_evaluated",
     "contested": false,
     "evidence": []
   },
   "ua-gec-gold-009": {
+    "basis": "multiword_not_evaluated",
     "contested": false,
     "evidence": []
   },
   "ua-gec-gold-010": {
+    "basis": "heritage_classifier",
+    "calque_warning": false,
+    "classification": "unknown",
     "contested": false,
-    "evidence": []
+    "evidence": [],
+    "russian_shadow": false
   },
   "ua-gec-gold-011": {
-    "contested": false,
-    "evidence": []
+    "basis": "heritage_classifier",
+    "calque_warning": false,
+    "classification": "standard",
+    "contested": true,
+    "evidence": [
+      {
+        "detail": "word_form match (2 form analysis)",
+        "ref": "любовник",
+        "source": "VESUM"
+      }
+    ],
+    "russian_shadow": false
   },
   "ua-gec-gold-012": {
-    "contested": false,
-    "evidence": []
+    "basis": "heritage_classifier",
+    "calque_warning": false,
+    "classification": "standard",
+    "contested": true,
+    "evidence": [
+      {
+        "detail": "word_form match (2 form analysis)",
+        "ref": "любовник",
+        "source": "VESUM"
+      }
+    ],
+    "russian_shadow": false
   },
   "ua-gec-gold-013": {
+    "basis": "heritage_classifier",
+    "calque_warning": false,
+    "classification": "standard",
     "contested": false,
-    "evidence": []
+    "evidence": [
+      {
+        "detail": "благонамірений. Значення: який має добрі, щирі наміри; те саме, що благонадійний 2",
+        "ref": "8884",
+        "source": "wiktionary"
+      }
+    ],
+    "russian_shadow": true
   },
   "ua-gec-gold-014": {
+    "basis": "heritage_classifier",
+    "calque_warning": false,
+    "classification": "standard",
     "contested": true,
     "evidence": [
       {
-        "table": "esum",
-        "headword": "вилохвостець"
-      },
-      {
-        "table": "esum",
-        "headword": "софдброкі"
-      },
-      {
-        "table": "grinchenko",
-        "headword": "вилка"
+        "detail": "word_form match (1 form analysis)",
+        "ref": "вилка",
+        "source": "VESUM"
       }
-    ]
+    ],
+    "russian_shadow": false
   },
   "ua-gec-gold-015": {
+    "basis": "heritage_classifier",
+    "calque_warning": true,
+    "classification": "unknown",
     "contested": false,
-    "evidence": []
+    "evidence": [],
+    "russian_shadow": true
   },
   "ua-gec-gold-016": {
+    "basis": "heritage_classifier",
+    "calque_warning": false,
+    "classification": "standard",
     "contested": true,
     "evidence": [
       {
-        "table": "esum",
-        "headword": "віхало"
-      },
-      {
-        "table": "esum",
-        "headword": "пі"
-      },
-      {
-        "table": "esum",
-        "headword": "фогаш"
-      },
-      {
-        "table": "esum",
-        "headword": "шараги"
+        "detail": "word_form match (1 form analysis)",
+        "ref": "вішалка",
+        "source": "VESUM"
       }
-    ]
+    ],
+    "russian_shadow": false
   },
   "ua-gec-gold-017": {
+    "basis": "heritage_classifier",
+    "calque_warning": true,
+    "classification": "unknown",
     "contested": false,
-    "evidence": []
+    "evidence": [],
+    "russian_shadow": true
   },
   "ua-gec-gold-018": {
-    "contested": false,
-    "evidence": []
+    "basis": "heritage_classifier",
+    "calque_warning": false,
+    "classification": "standard",
+    "contested": true,
+    "evidence": [
+      {
+        "detail": "word_form match (1 form analysis)",
+        "ref": "запихавшись",
+        "source": "VESUM"
+      }
+    ],
+    "russian_shadow": false
   },
   "ua-gec-gold-019": {
+    "basis": "heritage_classifier",
+    "calque_warning": true,
+    "classification": "unknown",
     "contested": false,
-    "evidence": []
+    "evidence": [],
+    "russian_shadow": true
   },
   "ua-gec-gold-020": {
+    "basis": "heritage_classifier",
+    "calque_warning": true,
+    "classification": "unknown",
     "contested": false,
-    "evidence": []
+    "evidence": [],
+    "russian_shadow": true
   },
   "ua-gec-gold-021": {
+    "basis": "heritage_classifier",
+    "calque_warning": false,
+    "classification": "unknown",
     "contested": false,
-    "evidence": []
+    "evidence": [],
+    "russian_shadow": false
   },
   "ua-gec-gold-022": {
+    "basis": "heritage_classifier",
+    "calque_warning": true,
+    "classification": "unknown",
     "contested": false,
-    "evidence": []
+    "evidence": [],
+    "russian_shadow": true
   },
   "ua-gec-gold-023": {
+    "basis": "heritage_classifier",
+    "calque_warning": false,
+    "classification": "standard",
     "contested": true,
     "evidence": [
       {
-        "table": "esum",
-        "headword": "срібляявий"
-      },
-      {
-        "table": "grinchenko",
-        "headword": "срібляний"
+        "detail": "word_form match (3 form analysis)",
+        "ref": "срібляний",
+        "source": "VESUM"
       }
-    ]
+    ],
+    "russian_shadow": false
   },
   "ua-gec-gold-024": {
+    "basis": "heritage_classifier",
+    "calque_warning": false,
+    "classification": "standard",
     "contested": true,
     "evidence": [
       {
-        "table": "grinchenko",
-        "headword": "стряхнути"
+        "detail": "word_form match (1 form analysis)",
+        "ref": "стряхнути",
+        "source": "VESUM"
       }
-    ]
+    ],
+    "russian_shadow": false
   },
   "ua-gec-gold-025": {
+    "basis": "heritage_classifier",
+    "calque_warning": false,
+    "classification": "standard",
     "contested": true,
     "evidence": [
       {
-        "table": "esum",
-        "headword": "фрачок"
+        "detail": "word_form match (3 form analysis)",
+        "ref": "фрачний",
+        "source": "VESUM"
       }
-    ]
+    ],
+    "russian_shadow": false
   },
   "ua-gec-gold-026": {
+    "basis": "heritage_classifier",
+    "calque_warning": false,
+    "classification": "unknown",
     "contested": false,
-    "evidence": []
+    "evidence": [],
+    "russian_shadow": false
   },
   "ua-gec-gold-027": {
+    "basis": "heritage_classifier",
+    "calque_warning": true,
+    "classification": "unknown",
     "contested": false,
-    "evidence": []
+    "evidence": [],
+    "russian_shadow": true
   },
   "ua-gec-gold-028": {
+    "basis": "heritage_classifier",
+    "calque_warning": false,
+    "classification": "standard",
     "contested": true,
     "evidence": [
       {
-        "table": "esum",
-        "headword": "апломб"
-      },
-      {
-        "table": "esum",
-        "headword": "висок"
-      },
-      {
-        "table": "esum",
-        "headword": "висіти"
-      },
-      {
-        "table": "esum",
-        "headword": "груз1"
-      },
-      {
-        "table": "esum",
-        "headword": "перевижшати"
-      },
-      {
-        "table": "grinchenko",
-        "headword": "вискакувати"
-      },
-      {
-        "table": "grinchenko",
-        "headword": "вискалити"
-      },
-      {
-        "table": "grinchenko",
-        "headword": "вискаляти"
-      },
-      {
-        "table": "grinchenko",
-        "headword": "вискалятися"
-      },
-      {
-        "table": "grinchenko",
-        "headword": "висок"
+        "detail": "word_form match (1 form analysis)",
+        "ref": "висок",
+        "source": "VESUM"
       }
-    ]
+    ],
+    "russian_shadow": false
   },
   "ua-gec-gold-029": {
+    "basis": "heritage_classifier",
+    "calque_warning": false,
+    "classification": "standard",
     "contested": true,
     "evidence": [
       {
-        "table": "esum",
-        "headword": "копа"
-      },
-      {
-        "table": "esum",
-        "headword": "копати1"
-      },
-      {
-        "table": "esum",
-        "headword": "копати2"
-      },
-      {
-        "table": "grinchenko",
-        "headword": "копний"
-      },
-      {
-        "table": "grinchenko",
-        "headword": "копнути"
+        "detail": "word_form match (2 form analysis)",
+        "ref": "копний,копнути",
+        "source": "VESUM"
       }
-    ]
+    ],
+    "russian_shadow": false
   },
   "ua-gec-gold-030": {
+    "basis": "heritage_classifier",
+    "calque_warning": false,
+    "classification": "unknown",
     "contested": false,
-    "evidence": []
+    "evidence": [],
+    "russian_shadow": false
   },
   "ua-gec-gold-031": {
-    "contested": false,
-    "evidence": []
-  },
-  "ua-gec-gold-032": {
+    "basis": "heritage_classifier",
+    "calque_warning": false,
+    "classification": "standard",
     "contested": true,
     "evidence": [
       {
-        "table": "esum",
-        "headword": "шабста"
-      },
-      {
-        "table": "esum",
-        "headword": "шльохати"
-      },
-      {
-        "table": "esum",
-        "headword": "ізкае"
+        "detail": "word_form match (1 form analysis)",
+        "ref": "нирнути",
+        "source": "VESUM"
       }
-    ]
+    ],
+    "russian_shadow": false
+  },
+  "ua-gec-gold-032": {
+    "basis": "heritage_classifier",
+    "calque_warning": false,
+    "classification": "standard",
+    "contested": true,
+    "evidence": [
+      {
+        "detail": "word_form match (1 form analysis)",
+        "ref": "виключити",
+        "source": "VESUM"
+      }
+    ],
+    "russian_shadow": false
   },
   "ua-gec-gold-033": {
+    "basis": "non_calque_tag",
     "contested": false,
     "evidence": []
   },
   "ua-gec-gold-034": {
+    "basis": "non_calque_tag",
     "contested": false,
     "evidence": []
   },
   "ua-gec-gold-035": {
+    "basis": "non_calque_tag",
     "contested": false,
     "evidence": []
   },
   "ua-gec-gold-036": {
+    "basis": "non_calque_tag",
     "contested": false,
     "evidence": []
   },
   "ua-gec-gold-037": {
+    "basis": "non_calque_tag",
     "contested": false,
     "evidence": []
   },
   "ua-gec-gold-038": {
+    "basis": "non_calque_tag",
     "contested": false,
     "evidence": []
   },
   "ua-gec-gold-039": {
+    "basis": "non_calque_tag",
     "contested": false,
     "evidence": []
   },
   "ua-gec-gold-040": {
+    "basis": "non_calque_tag",
     "contested": false,
     "evidence": []
   },
   "ua-gec-gold-041": {
+    "basis": "non_calque_tag",
     "contested": false,
     "evidence": []
   },
   "ua-gec-gold-042": {
+    "basis": "non_calque_tag",
     "contested": false,
     "evidence": []
   },
   "ua-gec-gold-043": {
+    "basis": "non_calque_tag",
     "contested": false,
     "evidence": []
   },
   "ua-gec-gold-044": {
+    "basis": "non_calque_tag",
     "contested": false,
     "evidence": []
   },
   "ua-gec-gold-045": {
+    "basis": "non_calque_tag",
     "contested": false,
     "evidence": []
   },
   "ua-gec-gold-046": {
+    "basis": "non_calque_tag",
     "contested": false,
     "evidence": []
   },
   "ua-gec-gold-047": {
+    "basis": "non_calque_tag",
     "contested": false,
     "evidence": []
   },
   "ua-gec-gold-048": {
+    "basis": "non_calque_tag",
     "contested": false,
     "evidence": []
   },
   "ua-gec-gold-049": {
+    "basis": "non_calque_tag",
     "contested": false,
     "evidence": []
   },
   "ua-gec-gold-050": {
+    "basis": "non_calque_tag",
     "contested": false,
     "evidence": []
   },
   "ua-gec-gold-051": {
+    "basis": "non_calque_tag",
     "contested": false,
     "evidence": []
   },
   "ua-gec-gold-052": {
+    "basis": "non_calque_tag",
     "contested": false,
     "evidence": []
   }
