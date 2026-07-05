@@ -92,11 +92,48 @@ references:
   note: Систематизована довідка з фактів, дат, імен; hyvä для швидкої перевірки.
   path: wiki/history/kyivan-rus/yaroslav-the-wise.md
   type: wiki
+readings:
+- title: "Ярослав Мудрий"
+  language: uk
+  genre: encyclopedia
+  source_type: reference
+  role: context
+  source: "Енциклопедія історії України (history.org.ua)"
+  source_url: "http://resource.history.org.ua/"
+  license: copyright
+  hosting: link-only
+  cefr_min: C1
+  learner_task: "Ознайомитися з діяльністю Ярослава Мудрого як державного будівничого та законодавця."
+  caveats: "Академічний стиль."
+- title: "Руська правда (уривки)"
+  language: uk
+  genre: legal
+  source_type: primary
+  role: primary
+  source: "Ізборник (izbornyk.org.ua)"
+  source_url: "http://izbornyk.org.ua/"
+  license: public_domain
+  hosting: excerpt-only
+  cefr_min: C1
+  learner_task: "Проаналізувати статті першого збірника законів: заміну кровної помсти на систему штрафів («віру»)."
+  caveats: "Давньоруський текст потребує глосарію; специфічна юридична лексика."
+- title: "Софійський собор у Києві"
+  language: uk
+  genre: encyclopedia
+  source_type: reference
+  role: context
+  source: "Енциклопедія сучасної України (esu.com.ua)"
+  source_url: "https://esu.com.ua/"
+  license: copyright
+  hosting: link-only
+  cefr_min: C1
+  learner_task: "Ознайомитися з культурним символом епохи Ярослава Мудрого."
+  caveats: "Короткий довідковий формат."
 sequence: 4
 slug: kniaz-yaroslav-mudryi
 subtitle: 'The Lawgiver Prince: Yaroslav the Wise'
 title: 'Князь Ярослав Мудрий: Законодавець'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: внутрішній збройний конфлікт, війна між членами однієї династії або соціальної групи за владу
   pos: ж.

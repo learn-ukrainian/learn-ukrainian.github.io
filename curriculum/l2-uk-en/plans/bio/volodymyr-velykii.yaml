@@ -95,11 +95,48 @@ references:
   note: Загальна біографія, дати, ключові події.
   type: external
   url: https://uk.wikipedia.org/wiki/Володимир_Святославич
+readings:
+- title: "Володимир Святославич Святий"
+  language: uk
+  genre: encyclopedia
+  source_type: reference
+  role: context
+  source: "Енциклопедія історії України (history.org.ua)"
+  source_url: "http://resource.history.org.ua/"
+  license: copyright
+  hosting: link-only
+  cefr_min: C1
+  learner_task: "Ознайомитися з офіційною академічною біографією князя, його реформами та процесом хрещення Русі."
+  caveats: "Академічний стиль."
+- title: "Повість минулих літ (уривки про вибір віри та хрещення)"
+  language: uk
+  genre: chronicle
+  source_type: primary
+  role: primary
+  source: "Ізборник (izbornyk.org.ua)"
+  source_url: "http://izbornyk.org.ua/"
+  license: public_domain
+  hosting: excerpt-only
+  cefr_min: C1
+  learner_task: "Проаналізувати літописну легенду про вибір релігії Володимиром та її ідеологічне значення."
+  caveats: "Давньоруський текст потребує глосарію; літописна ідеалізація."
+- title: "Златники та срібляники Володимира Великого"
+  language: uk
+  genre: article
+  source_type: reference
+  role: context
+  source: "Національний музей історії України (nmiu.org)"
+  source_url: "https://nmiu.org/"
+  license: copyright
+  hosting: link-only
+  cefr_min: C1
+  learner_task: "Ознайомитися з першими монетами Русі як символом державного суверенітету."
+  caveats: "Специфічна нумізматична термінологія."
 sequence: 3
 slug: volodymyr-velykii
 subtitle: 'Volodymyr the Great: Saint, Sinner, Architect'
 title: 'Володимир Великий: Святий, грішник, архітектор'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: внутрішній розбрат, збройна боротьба за владу між членами однієї династії чи народу
   pos: ж.
