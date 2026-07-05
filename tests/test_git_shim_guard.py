@@ -96,18 +96,34 @@ def test_checkout_consults_guard(shim_fixture: dict[str, Path]) -> None:
     assert shim_fixture["log"].exists(), "guard python was NOT consulted for checkout"
 
 
-def test_sentinel_breaks_recursion(shim_fixture: dict[str, Path]) -> None:
-    """A nested call under the guard (sentinel set) must skip the guard entirely."""
+def test_sentinel_fails_closed_on_branch_switch(shim_fixture: dict[str, Path]) -> None:
+    """checkout/switch under the sentinel is DENIED without spawning the guard.
+
+    Fail-closed design (codex review msg 2014): the guard's subtree only runs
+    read-only plumbing, so a sentinel-bearing checkout/switch is recursion or
+    spoofing — both must be blocked, never allowed and never recursed into.
+    """
     result = _run_shim(
         shim_fixture,
         "checkout",
         "some-branch",
         extra_env={"AGENT_GIT_SHIM_GUARD_ACTIVE": "1"},
     )
-    assert not shim_fixture["log"].exists(), "sentinel did not suppress the guard — recursion possible"
-    # the underlying real git checkout fails (branch doesn't exist) but the shim
-    # itself must have exec'd through to real git rather than blocking:
-    assert "cannot switch branches" not in result.stderr
+    assert not shim_fixture["log"].exists(), "guard python spawned under sentinel — recursion possible"
+    assert result.returncode == 1
+    assert "fail-closed sentinel" in result.stderr
+
+
+def test_sentinel_passes_readonly_plumbing(shim_fixture: dict[str, Path]) -> None:
+    """Non-switch commands under the sentinel pass through without the guard."""
+    result = _run_shim(
+        shim_fixture,
+        "status",
+        "--porcelain",
+        extra_env={"AGENT_GIT_SHIM_GUARD_ACTIVE": "1"},
+    )
+    assert result.returncode == 0, result.stderr
+    assert not shim_fixture["log"].exists()
 
 
 def test_push_deny_still_active_with_sentinel(shim_fixture: dict[str, Path]) -> None:
