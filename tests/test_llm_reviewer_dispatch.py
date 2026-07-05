@@ -901,3 +901,33 @@ def test_project_config_discovered_walking_up_to_repo_root(tmp_path, monkeypatch
 
     merged = llm_reviewer_dispatch._load_opencode_config()
     assert merged["mcp"]["sources"]["url"] == "http://repo/mcp"
+
+
+def test_grounding_matches_despite_model_invented_call_id() -> None:
+    """Live «Веснянки» proof regression (2026-07-05): the transport tool_call_id
+    (chatcmpl-tool-…) is never shown to the model, which invents call_0/call_1.
+    Grounding validity = tool + query + excerpt ⊆ captured output; the id is
+    advisory. Requiring id equality failed EVERY legitimate grounding live."""
+    events = (
+        {
+            "tool": "sources_query_wikipedia",
+            "input": {"mode": "extract", "query": "Веснянки"},
+            "status": "completed",
+            "tool_call_id": "chatcmpl-tool-8aa58af0f4248afc",
+            "output": "# Веснянки\nВесня́нки — назва старовинних слов'янських обрядових пісень.",
+        },
+    )
+    grounding = {
+        "tool": "sources_query_wikipedia",
+        "query": "Веснянки",
+        "evidence_excerpt": "назва старовинних слов'янських обрядових пісень",
+        "tool_call_id": "call_0",  # model-invented — must NOT invalidate
+    }
+    assert llm_reviewer_dispatch._grounding_matches_events(grounding, events) is True
+
+    # fabrication still caught: excerpt absent from every captured output
+    fabricated = dict(grounding, evidence_excerpt="гаї — це прикрашені стрічками дерева")
+    assert llm_reviewer_dispatch._grounding_matches_events(fabricated, events) is False
+    # and a query never actually made still fails
+    ghost_query = dict(grounding, query="мелодика веснянок")
+    assert llm_reviewer_dispatch._grounding_matches_events(ghost_query, events) is False
