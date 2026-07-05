@@ -39,11 +39,14 @@ lang-uk; we may *cite* it (as the model-evidence doc does) but never re-measure 
 To make #2156 findings comparable against lang-uk rows without copying their scope, each harness run
 records — all already present in `ua_contact_quality_evidence.v1` or the run store:
 
-1. **Exact model identity** (`reviewer_model_id` / writer model slug, provider-qualified, e.g.
-   `openrouter/google/gemma-4-31b-it`) — joinable to a lang-uk leaderboard row when one exists.
-2. **Schema + gate version** (`ua_contact_quality_evidence.v1`, `qg_workflow.v2`) — so cross-citations pin
+1. **Exact model identity** — `reviewer_model_id` (run store `llm_qg_runs`) / writer model slug,
+   provider-qualified (e.g. `openrouter/google/gemma-4-31b-it`) — joinable to a lang-uk leaderboard row
+   when one exists.
+2. **Schema + gate version** — the schema identity (`ua_contact_quality_evidence.v1`) and the workflow
+   `gate_version` (`qg_workflow.v1` today; v2 lands with the reviewer-tooling PRs) — so cross-citations pin
    the harness contract they were measured under.
-3. **Content hash + source_lang** — reproducibility anchors lang-uk doesn't need but any joint analysis does.
+3. **`content_sha` + `source_lang`** (schema record fields) — reproducibility anchors lang-uk doesn't need
+   but any joint analysis does.
 
 That is the whole bridge. No shared scoring, no synced releases, no scraped leaderboard data.
 
