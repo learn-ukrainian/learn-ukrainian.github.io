@@ -91,8 +91,7 @@ check_pair \
     ".claude" \
     "scheduled_tasks.lock" \
     "worktrees" \
-    "folk-epic" \
-    "bio-epic" \
+    "*-epic" \
     "rules/critical-rules.md" \
     "rules/non-negotiable-rules.md" \
     "rules/workflow.md" \
@@ -108,7 +107,7 @@ check_pair \
     "prompts" \
     "tmp" \
     "*-thread-bootstrap.md" \
-    "*-thread-handoff.md" \
+    "*-handoff.md" \
     "*-thread-lease.json" \
     "*-brief.md" \
     "dispatch-*.md" || drift=1
