@@ -43,6 +43,8 @@ class StoredQG:
     content_sha: str
     gate_version: str
     prompt_hash: str | None
+    checker_version: str | None
+    level_policy_family: str | None
     reviewer_model: str | None
     reviewer_family: str | None
     source: str
@@ -132,6 +134,8 @@ def init_db(path: Path | None = None) -> Path:
                 content_sha     TEXT NOT NULL,
                 gate_version    TEXT NOT NULL,
                 prompt_hash     TEXT,
+                checker_version TEXT,
+                level_policy_family TEXT,
                 reviewer_model  TEXT,
                 reviewer_family TEXT,
                 source          TEXT NOT NULL,
@@ -164,8 +168,32 @@ def init_db(path: Path | None = None) -> Path:
                 ON llm_qg_findings(category, severity);
             """
         )
+        _ensure_composite_columns(conn)
+        conn.execute(
+            """
+            CREATE INDEX IF NOT EXISTS idx_llm_qg_composite
+                ON llm_qg_runs(
+                    level, slug, content_sha, gate_version, prompt_hash,
+                    checker_version, level_policy_family, reviewer_model,
+                    created_at DESC
+                )
+            """
+        )
         conn.commit()
     return resolved
+
+
+def _ensure_composite_columns(conn: sqlite3.Connection) -> None:
+    """Backfill optional composite-key columns on older local stores."""
+    rows = conn.execute("PRAGMA table_info(llm_qg_runs)").fetchall()
+    existing = {str(row[1]) for row in rows}
+    additions = {
+        "checker_version": "TEXT",
+        "level_policy_family": "TEXT",
+    }
+    for name, column_type in additions.items():
+        if name not in existing:
+            conn.execute(f"ALTER TABLE llm_qg_runs ADD COLUMN {name} {column_type}")
 
 
 def _aggregate(payload: dict[str, Any]) -> dict[str, Any]:
@@ -210,6 +238,8 @@ def record_llm_qg(
     payload: dict[str, Any],
     gate_version: str,
     prompt_hash: str | None = None,
+    checker_version: str | None = None,
+    level_policy_family: str | None = None,
     reviewer_model: str | None = None,
     reviewer_family: str | None = None,
     source: str = "pipeline",
@@ -228,14 +258,16 @@ def record_llm_qg(
 
     with closing(connect_sqlite(str(resolved))) as conn:
         conn.execute("PRAGMA foreign_keys = ON")
+        _ensure_composite_columns(conn)
         conn.execute(
             """
             INSERT INTO llm_qg_runs (
                 run_id, created_at, level, slug, content_sha, gate_version,
-                prompt_hash, reviewer_model, reviewer_family, source, verdict,
-                terminal_verdict, min_score, min_dim, payload_json
+                prompt_hash, checker_version, level_policy_family,
+                reviewer_model, reviewer_family, source, verdict, terminal_verdict,
+                min_score, min_dim, payload_json
             )
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ON CONFLICT(run_id) DO UPDATE SET
                 created_at = excluded.created_at,
                 level = excluded.level,
@@ -243,6 +275,8 @@ def record_llm_qg(
                 content_sha = excluded.content_sha,
                 gate_version = excluded.gate_version,
                 prompt_hash = excluded.prompt_hash,
+                checker_version = excluded.checker_version,
+                level_policy_family = excluded.level_policy_family,
                 reviewer_model = excluded.reviewer_model,
                 reviewer_family = excluded.reviewer_family,
                 source = excluded.source,
@@ -260,6 +294,8 @@ def record_llm_qg(
                 content_sha,
                 gate_version,
                 prompt_hash,
+                checker_version,
+                level_policy_family,
                 reviewer_model,
                 reviewer_family,
                 source,
@@ -300,6 +336,8 @@ def record_llm_qg(
         content_sha=content_sha,
         gate_version=gate_version,
         prompt_hash=prompt_hash,
+        checker_version=checker_version,
+        level_policy_family=level_policy_family,
         reviewer_model=reviewer_model,
         reviewer_family=reviewer_family,
         source=source,
@@ -316,6 +354,8 @@ def _row_to_record(row: sqlite3.Row) -> StoredQG:
         content_sha=str(row["content_sha"]),
         gate_version=str(row["gate_version"]),
         prompt_hash=row["prompt_hash"],
+        checker_version=row["checker_version"],
+        level_policy_family=row["level_policy_family"],
         reviewer_model=row["reviewer_model"],
         reviewer_family=row["reviewer_family"],
         source=str(row["source"]),
@@ -329,6 +369,11 @@ def latest_llm_qg(
     slug: str,
     *,
     content_sha: str | None = None,
+    gate_version: str | None = None,
+    prompt_hash: str | None = None,
+    checker_version: str | None = None,
+    level_policy_family: str | None = None,
+    reviewer_model: str | None = None,
     path: Path | None = None,
 ) -> StoredQG | None:
     """Return the newest persisted QG run for a module, optionally hash-bound."""
@@ -337,11 +382,21 @@ def latest_llm_qg(
         return None
     params: list[Any] = [level.strip().lower(), slug.strip()]
     where = "level = ? AND slug = ?"
-    if content_sha is not None:
-        where += " AND content_sha = ?"
-        params.append(content_sha)
+    for column, value in (
+        ("content_sha", content_sha),
+        ("gate_version", gate_version),
+        ("prompt_hash", prompt_hash),
+        ("checker_version", checker_version),
+        ("level_policy_family", level_policy_family),
+        ("reviewer_model", reviewer_model),
+    ):
+        if value is not None:
+            where += f" AND {column} = ?"
+            params.append(value)
     try:
         with closing(connect_sqlite(str(resolved))) as conn:
+            _ensure_composite_columns(conn)
+            conn.commit()
             conn.row_factory = sqlite3.Row
             row = conn.execute(
                 f"""
@@ -363,6 +418,11 @@ def current_llm_qg_for_module(
     slug: str,
     module_dir: Path,
     *,
+    gate_version: str | None = None,
+    prompt_hash: str | None = None,
+    checker_version: str | None = None,
+    level_policy_family: str | None = None,
+    reviewer_model: str | None = None,
     path: Path | None = None,
 ) -> StoredQG | None:
     """Return the newest QG run whose content hash matches current artifacts."""
@@ -370,6 +430,11 @@ def current_llm_qg_for_module(
         level,
         slug,
         content_sha=content_sha_for_module(module_dir),
+        gate_version=gate_version,
+        prompt_hash=prompt_hash,
+        checker_version=checker_version,
+        level_policy_family=level_policy_family,
+        reviewer_model=reviewer_model,
         path=path,
     )
 
@@ -379,10 +444,25 @@ def current_payload_for_module(
     slug: str,
     module_dir: Path,
     *,
+    gate_version: str | None = None,
+    prompt_hash: str | None = None,
+    checker_version: str | None = None,
+    level_policy_family: str | None = None,
+    reviewer_model: str | None = None,
     path: Path | None = None,
 ) -> dict[str, Any] | None:
     """Return the current QG payload for a module, or ``None`` if missing/stale."""
-    record = current_llm_qg_for_module(level, slug, module_dir, path=path)
+    record = current_llm_qg_for_module(
+        level,
+        slug,
+        module_dir,
+        gate_version=gate_version,
+        prompt_hash=prompt_hash,
+        checker_version=checker_version,
+        level_policy_family=level_policy_family,
+        reviewer_model=reviewer_model,
+        path=path,
+    )
     if record is None:
         return None
     return {
@@ -392,6 +472,10 @@ def current_payload_for_module(
             "created_at": record.created_at,
             "content_sha": record.content_sha,
             "gate_version": record.gate_version,
+            "prompt_hash": record.prompt_hash,
+            "checker_version": record.checker_version,
+            "level_policy_family": record.level_policy_family,
+            "reviewer_model": record.reviewer_model,
             "source": record.source,
         },
     }
@@ -431,6 +515,8 @@ def compact_evidence_for_record(
         "content_sha": record.content_sha,
         "gate_version": record.gate_version,
         "prompt_hash": record.prompt_hash,
+        "checker_version": record.checker_version,
+        "level_policy_family": record.level_policy_family,
         "provenance": {
             "created_at": record.created_at,
             "run_id": record.run_id,
