@@ -279,3 +279,117 @@ def _workflow_record(
             "tiers": [tier2],
         },
     }
+
+
+def test_target_composite_key_normalization(tmp_path: Path) -> None:
+    db_path = tmp_path / "qg.db"
+    module_dir = _module(tmp_path, level="B1", slug="sample-slug ")
+
+    # Store record using normalized b1 and sample-slug
+    target_clean = qg_corpus_report.ReportTarget(level="b1", slug="sample-slug", module_dir=module_dir)
+    llm_qg_store.record_llm_qg(
+        level=target_clean.level,
+        slug=target_clean.slug,
+        module_dir=module_dir,
+        payload=_payload(),
+        gate_version="gate.v1",
+        prompt_hash=qg_corpus_report._prompt_hash_for_target(target_clean),
+        checker_version=CHECKER_VERSION,
+        level_policy_family="b1_plus",
+        reviewer_model="model-a",
+        reviewer_family="test-family",
+        source="test",
+        path=db_path,
+    )
+
+    # Create target with raw mixed-case and spaces
+    target_raw = qg_corpus_report.ReportTarget(level="B1", slug="sample-slug ", module_dir=module_dir)
+
+    # Verify _target_composite_key does normalization
+    key = qg_corpus_report._target_composite_key(
+        target=target_raw,
+        gate_version="gate.v1",
+        checker_version=CHECKER_VERSION,
+        reviewer_model_id="model-a",
+    )
+    assert key[0] == "b1"
+    assert key[1] == "sample-slug"
+
+    # Check cache status for raw target
+    report = qg_corpus_report.build_report(
+        db_path=db_path,
+        targets=[target_raw],
+        gate_version="gate.v1",
+        checker_version=CHECKER_VERSION,
+        reviewer_model_id="model-a",
+    )
+    # Ensure cache is a hit
+    assert report["cache"]["hit"] == 1
+    assert report["cache"]["stale"] == 0
+    assert report["cache"]["miss"] == 0
+
+
+def test_backfill_null_vs_empty_string_policy_family(tmp_path: Path) -> None:
+    db_path = tmp_path / "qg.db"
+    module_dir = _module(tmp_path, level="b1", slug="backfill-null")
+    target = _target(module_dir, slug="backfill-null")
+
+    # Record a run in the DB with level_policy_family = None (NULL)
+    llm_qg_store.record_llm_qg(
+        level=target.level,
+        slug=target.slug,
+        module_dir=module_dir,
+        payload=_payload(),
+        gate_version="gate.v1",
+        prompt_hash=qg_corpus_report._prompt_hash_for_target(target),
+        checker_version=CHECKER_VERSION,
+        level_policy_family=None,
+        reviewer_model="model-a",
+        reviewer_family="test-family",
+        source="test",
+        path=db_path,
+    )
+
+    # Check that a workflow record with empty string family doesn't insert duplicate
+    wf_record = _workflow_record(module_dir, slug="backfill-null", terminal_verdict="PASS")
+    # Change the family in the workflow record mock to "" (empty string)
+    wf_record["level_policy"] = {"family": ""}
+
+    result = qg_corpus_report.backfill_from_workflow_records([wf_record], db_path=db_path, dry_run=False)
+
+    assert result["counts"] == {"current": 1}
+    with sqlite3.connect(db_path) as conn:
+        rows = conn.execute("SELECT count(*) FROM llm_qg_runs").fetchone()[0]
+    assert rows == 1
+
+
+def test_spend_fallback_missing_vs_zero_observed(tmp_path: Path) -> None:
+    module_dir = _module(tmp_path, slug="spend-test")
+
+    # Test case A: Observed cost is missing (None), estimated cost is present
+    wf_missing_observed = _workflow_record(
+        module_dir,
+        slug="spend-test",
+        estimated_cost=0.2,
+        observed_cost=None,
+    )
+    report_missing = qg_corpus_report.build_report(
+        workflow_payloads=[[wf_missing_observed]],
+        db_path=tmp_path / "empty1.db",
+    )
+    # Should fallback to estimated (0.2)
+    assert report_missing["spend"]["spend_per_accepted_evidence_usd"] == 0.2
+
+    # Test case B: Observed cost is exactly 0.0, estimated cost is present
+    wf_zero_observed = _workflow_record(
+        module_dir,
+        slug="spend-test",
+        estimated_cost=0.2,
+        observed_cost=0.0,
+    )
+    report_zero = qg_corpus_report.build_report(
+        workflow_payloads=[[wf_zero_observed]],
+        db_path=tmp_path / "empty2.db",
+    )
+    # Should report exactly 0.0, not falling back to 0.2!
+    assert report_zero["spend"]["spend_per_accepted_evidence_usd"] == 0.0
