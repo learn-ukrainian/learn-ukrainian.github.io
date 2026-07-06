@@ -109,7 +109,15 @@ sequence: 66
 slug: ivan-nechuy-levytskyi
 subtitle: 'Ivan Nechuy-Levytskyi: Master of Ukrainian Realism'
 title: 'Іван Нечуй-Левицький: Майстер українського реалізму'
-version: '4.0'
+readings:
+- hosting: excerpt-only
+  language: uk
+  source_name: "Вікіпедія"
+  source_url: "https://uk.wikipedia.org/wiki/Нечуй-Левицький_Іван_Семенович"
+  task: "Ознайомлення з біографічними відомостями та творчим доробком"
+  title: "Нечуй-Левицький Іван Семенович"
+  type: encyclopedia
+version: '4.1'
 vocabulary_hints:
 - definition: літературний напрям, що ставить за мету правдиве, об'єктивне зображення дійсності
   pos: ч.

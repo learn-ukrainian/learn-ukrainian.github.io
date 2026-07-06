@@ -98,7 +98,15 @@ sequence: 64
 slug: marko-vovchok
 subtitle: From Russian Noblewoman to the Voice of Ukrainian Serfs
 title: 'Марко Вовчок: Голос пригноблених'
-version: '4.0'
+readings:
+- hosting: excerpt-only
+  language: uk
+  source_name: "Вікіпедія"
+  source_url: "https://uk.wikipedia.org/wiki/Марко_Вовчок"
+  task: "Огляд життєвого шляху та впливу на українську літературу"
+  title: "Марко Вовчок"
+  type: encyclopedia
+version: '4.1'
 vocabulary_hints:
 - definition: вигадане ім'я, яке автор використовує замість справжнього
   pos: ч.

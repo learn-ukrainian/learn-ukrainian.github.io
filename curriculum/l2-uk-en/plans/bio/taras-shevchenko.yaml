@@ -105,7 +105,15 @@ sequence: 61
 slug: taras-shevchenko
 subtitle: Від кріпака до символу нації — анатомія українського пророка
 title: 'Тарас Шевченко: Національний Пророк'
-version: '4.0'
+readings:
+- hosting: excerpt-only
+  language: uk
+  source_name: "Ізборник"
+  source_url: "http://litopys.org.ua/shevchenko/shev.htm"
+  task: "Огляд ключових етапів життя за хронологією"
+  title: "Тарас Шевченко: Біографія"
+  type: biography
+version: '4.1'
 vocabulary_hints:
 - definition: особисто залежний від пана селянин, фактично раб
   pos: ч.
