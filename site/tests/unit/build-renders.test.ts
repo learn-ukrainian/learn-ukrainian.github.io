@@ -130,8 +130,8 @@ describe('Astro build renders all pages', () => {
     const html = readFileSync(weatherPage, 'utf-8');
 
     expect(html).not.toContain('starlight-tab-item');
-    expect((html.match(/role="tab"/g) || []).length).toBeGreaterThan(0);
-    expect((html.match(/role="tabpanel"/g) || []).length).toBeGreaterThan(0);
+    expect(html).toContain('role="tablist"');
+    expect((html.match(/class="lu-tab-panel"/g) || []).length).toBeGreaterThan(0);
   });
 
   it('renders directive admonitions instead of raw directive markers', () => {

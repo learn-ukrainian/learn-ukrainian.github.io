@@ -50,3 +50,10 @@ Practice, or cloze.
 Do not add FastAPI routes for public Atlas learner data unless the deployment
 target changes away from GitHub Pages or the route is explicitly local/admin
 only. Public learner data must stay available as static JSON.
+
+Practice and search shard JSON under `public/api/lexicon/` and
+`public/lexicon/search/` is materialized by `hydrate-lexicon-api-shards.ts`
+during `npm run hydrate`. GitHub Pages serves these as static files (default
+cache headers); the `search-api-shard` / `practice-api-shard` helpers document
+the intended `Cache-Control: public, max-age=3600` contract for tests and any
+future CDN `_headers` wiring.

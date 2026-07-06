@@ -1,6 +1,7 @@
 // @ts-check
 import { realpathSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
+import { unified } from '@astrojs/markdown-remark';
 import { defineConfig } from 'astro/config';
 import mdx from '@astrojs/mdx';
 import react from '@astrojs/react';
@@ -12,6 +13,10 @@ import remarkAdmonitions from './plugins/remark-admonitions.mjs';
 import vocabEtymologyLinker from './plugins/vocab-etymology-link.mjs';
 
 const remarkPlugins = [remarkDirective, remarkAdmonitions, remarkGfm, vocabEtymologyLinker];
+const markdownProcessor = unified({
+  remarkPlugins,
+  rehypePlugins: [rehypeMermaid],
+});
 const starlightRoot = fileURLToPath(new URL('.', import.meta.url));
 const starlightNodeModules = realpathSync(fileURLToPath(new URL('./node_modules', import.meta.url)));
 // Folk un-hidden 2026-06-14 for the preview/seminar-test launch (reverses
@@ -49,8 +54,7 @@ export default defineConfig({
   compressHTML: true,
 
   markdown: {
-    remarkPlugins,
-    rehypePlugins: [rehypeMermaid],
+    processor: markdownProcessor,
   },
 
   // Prevent duplicate React instances (SSR + client hydration)
@@ -93,10 +97,7 @@ export default defineConfig({
         },
       },
     },
-    mdx({
-      remarkPlugins,
-      rehypePlugins: [rehypeMermaid],
-    }),
+    mdx(),
     react(),
     sitemap({
       filter: (page) => !isHiddenPublicPage(page) && !isRedirectSource(page),

@@ -244,6 +244,10 @@ site/public/lexicon/practice-paradigm.*.json
 site/public/lexicon/practice-synonym.*.json
 site/public/lexicon/practice-heritage.*.json
 site/public/lexicon/practice-paronym.*.json
+site/public/api/lexicon/practice-index.*.json
+site/public/api/lexicon/practice-lexemes.*.json
+site/public/api/lexicon/practice-cloze.*.json
+site/public/lexicon/search/*.json
 /testbed/*
 !/testbed/reference/
 data/sum11/
