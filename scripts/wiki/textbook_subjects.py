@@ -252,3 +252,76 @@ def subject_for_source_file(source_file: str) -> str | None:
         if any(token in key for token in tokens):
             return subject
     return None
+
+# Canonical Cyrillic author forms keyed by the Latin transliteration used
+# in source_file slugs. SINGLE SOURCE OF TRUTH (PR #4650 refactor): the
+# 2026-05-15 author_uk migration and scripts/ingest/incremental_textbook_ingest.py
+# both import THIS map — never grow a parallel copy again (the dual-map drift
+# bit the batch-2 ingest: 'gisem' existed here-adjacent but not in the tool's
+# local dict). Every value must be title-probed or front-matter-verified.
+AUTHOR_UK_BY_TRANSLIT: dict[str, str] = {
+    # Core mova/lit textbook authors (originally in TRANSLITS)
+    "karaman": "Караман",
+    "zakhariychuk": "Захарійчук",
+    "zaharijchuk": "Захарійчук",
+    "zahariichuk": "Захарійчук",
+    "kravcova": "Кравцова",
+    "kravtsova": "Кравцова",
+    "avramenko": "Авраменко",
+    "glazova": "Глазова",
+    "hlazova": "Глазова",
+    "zabolotnyi": "Заболотний",
+    "zabolotnij": "Заболотний",
+    "zakharchuk": "Захарчук",
+    "vashulenko": "Вашуленко",
+    "bolshakova": "Большакова",
+    "mishhenko": "Міщенко",
+    "mishchenko": "Міщенко",
+    "litvinova": "Літвінова",
+    "golub": "Голуб",
+    "varzatska": "Варзацька",
+    "ponomarova": "Пономарова",
+    # Additional textbook authors present in the corpus
+    "borzenko": "Борзенко",
+    "burnejko": "Бурнейко",
+    "galimov": "Галімов",
+    "gisem": "Гісем",
+    # Хлібовська: front-matter of 7-klas/8-klas/11-klas history textbooks
+    # confirms Х (Kh), not Г — the Latin transliteration here is unusual
+    # (h→Х instead of the more common h→Г). Verified via in-corpus
+    # textbook front-matter (2026-05-15 audit).
+    "hlibovska": "Хлібовська",
+    "kovalenko": "Коваленко",
+    "onatiy": "Онатій",
+    "pometun": "Пометун",
+    "savchenko": "Савченко",
+    "savchuk": "Савчук",
+    "schupak": "Щупак",
+    "shchupak": "Щупак",
+    "voron": "Ворон",
+    # #4593 wave-1 STEM authors (title-probed from source pages 2026-07-06)
+    "ryvkind": "Ривкінд",
+    "ister": "Істер",
+    "merzliak": "Мерзляк",
+    "zadorozhnyi": "Задорожний",
+    "bariakhtar": "Бар'яхтар",
+    "hryhorovych": "Григорович",
+    "popel": "Попель",
+    "anderson": "Андерсон",
+    "pryshliak": "Пришляк",
+    "krupska": "Крупська",
+    "lukianchykov": "Лук'янчиков",
+    "narovlianskyi": "Наровлянський",
+    "fuka": "Фука",
+    "komarovska": "Комаровська",
+    "masol": "Масол",
+    "zapotockyi": "Запотоцький",
+    "hilberh": "Гільберг",
+    # Non-textbook author-name strings already stored in Latin/English on
+    # ingestion (literary works, podcast, style-guide author). Map them
+    # to Cyrillic so author_uk is uniformly Cyrillic when populated.
+    "Anna Ohoiko": "Анна Огоїко",
+    "Borys Antonenko-Davydovych": "Борис Антоненко-Давидович",
+    "Mykola Pohribnyi": "Микола Погрібний",
+    "Ukrainian Lessons Podcast": "Ukrainian Lessons Podcast",
+}

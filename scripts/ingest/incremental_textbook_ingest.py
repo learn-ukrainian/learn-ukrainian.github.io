@@ -29,33 +29,13 @@ PROJECT_ROOT = SCRIPT_PATH.parents[2]
 sys.path.insert(0, str(PROJECT_ROOT / "scripts"))
 
 from wiki.build_sources_db import _build_textbook_row
+from wiki.textbook_subjects import AUTHOR_UK_BY_TRANSLIT
 
 CHUNKS_DIR = PROJECT_ROOT / "data" / "textbook_chunks"
 DEFAULT_DB = PROJECT_ROOT / "data" / "sources.db"
 
-# Canonical Cyrillic author forms, title-probed from source pages during
-# wave-1 acquisition (#4593, 2026-07-06). Keep in sync with the migration
-# mapping in scripts/migrations/2026-05-15-add-author-uk-to-textbooks.py.
-AUTHOR_UK: dict[str, str] = {
-    "ryvkind": "Ривкінд",
-    "ister": "Істер",
-    "merzliak": "Мерзляк",
-    "zadorozhnyi": "Задорожний",
-    "bariakhtar": "Бар'яхтар",
-    "hryhorovych": "Григорович",
-    "popel": "Попель",
-    "anderson": "Андерсон",
-    # #4593 batch-2 authors (title-probed 2026-07-06)
-    "pryshliak": "Пришляк",
-    "krupska": "Крупська",
-    "lukianchykov": "Лук'янчиков",
-    "narovlianskyi": "Наровлянський",
-    "fuka": "Фука",
-    "komarovska": "Комаровська",
-    "masol": "Масол",
-    "zapotockyi": "Запотоцький",
-    "hilberh": "Гільберг",
-}
+# Author map: single source of truth in wiki.textbook_subjects (PR #4650).
+AUTHOR_UK = AUTHOR_UK_BY_TRANSLIT
 
 WAVE1_SLUGS: tuple[str, ...] = (
     "5-klas-informatyka-ryvkind-2022",
