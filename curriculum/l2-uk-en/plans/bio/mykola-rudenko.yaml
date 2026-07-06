@@ -112,6 +112,17 @@ persona:
     судового переслідування.
   voice: Human Rights Historian
 phase: BIO
+readings:
+- hosting: museum.khpg.org
+  language: uk
+  note: Профіль у музеї-архіві дисидентського руху.
+  role: context
+  source: https://museum.khpg.org/1113912354
+- hosting: reading-needed
+  language: uk
+  note: 'reading-needed: verify stable ukrainian hosting for primary text "Енергія прогресу" або "Хрест".'
+  role: reading-needed
+  source: 'reading-needed: mykola-rudenko-primary'
 references:
 - note: Базова енциклопедична стаття про життя і діяльність.
   title: Руденко Микола Данилович (ЕІУ)
@@ -135,7 +146,7 @@ sequence: 256
 slug: mykola-rudenko
 subtitle: From Stalinist Loyalist to Founder of the Ukrainian Helsinki Group
 title: 'Микола Руденко: самвидав, УГГ і ціна правди'
-version: '1.0'
+version: '1.1'
 vocabulary_hints:
 - definition: людина, яка захищає права людини в умовах переслідування
   pos: ч.

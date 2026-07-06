@@ -130,6 +130,17 @@ persona:
     російському привласненню.
   voice: Intellectual Historian
 phase: BIO
+readings:
+- hosting: resource.history.org.ua
+  language: uk
+  note: Енциклопедична стаття про життя та репресії письменниці.
+  role: context
+  source: https://history.org.ua/?termin=Tulub_Z
+- hosting: reading-needed
+  language: uk
+  note: 'reading-needed: verify stable ukrainian hosting for primary text "Людолови" (або "В степу безкраїм за Уралом").'
+  role: reading-needed
+  source: 'reading-needed: zinaida-tulub-primary'
 references:
 - author: Г. Герасимова
   note: Енциклопедична стаття про життя та репресії письменниці.
@@ -156,7 +167,7 @@ sequence: 253
 slug: zinaida-tulub
 subtitle: The Historical Novelist Devoured by the Gulag
 title: 'Зінаїда Тулуб: Людолови історії'
-version: '1.0'
+version: '1.1'
 vocabulary_hints:
 - definition: великий за обсягом епічний прозовий твір зі складним сюжетом і багатьма персонажами
   pos: ч.

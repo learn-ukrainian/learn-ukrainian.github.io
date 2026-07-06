@@ -129,6 +129,17 @@ persona:
     митця.
   voice: Intellectual Historian
 phase: BIO
+readings:
+- hosting: reading-needed
+  language: uk
+  note: 'reading-needed: verify ESU URL for Kovinka or another stable bio source.'
+  role: reading-needed
+  source: 'reading-needed: oleksandr-kovinka-context'
+- hosting: reading-needed
+  language: uk
+  note: 'reading-needed: verify stable ukrainian hosting for primary text "Як мене купали й сповивали".'
+  role: reading-needed
+  source: 'reading-needed: oleksandr-kovinka-primary'
 references:
 - note: Основна стаття про життя, репресії та творчість письменника.
   title: Ковінька Олександр Іванович (Енциклопедія Сучасної України)
@@ -154,7 +165,7 @@ sequence: 254
 slug: oleksandr-kovinka
 subtitle: The Humorist Who Survived Twenty-One Years in the Camps
 title: 'Олександр Ковінька: Гумор, що пережив Магадан'
-version: '1.0'
+version: '1.1'
 vocabulary_hints:
 - definition: невеликий гумористичний прозовий твір з добродушним, м'яким сміхом
   pos: ж.
