@@ -22,6 +22,30 @@ activity_hints:
   placement: workbook
   type: essay-response
 cefr_min: C1
+readings:
+  - title: "Ступка Богдан Сильвестрович"
+    source_name: "Енциклопедія Сучасної України"
+    source_url: "https://esu.com.ua/article-8695"
+    language: uk
+    genre: "encyclopedia"
+    source_type: "biography"
+    role: "primary_bio"
+    cefr_min: C1
+    license: "copyrighted"
+    hosting: "link-only"
+    learner_task: "Ознайомитися з ключовими віхами життя та творчості."
+    caveats: "Офіційний енциклопедичний стиль."
+  - title: "Інтерв'ю Богдана Ступки про театр"
+    source_name: "Підлягає уточненню"
+    language: uk
+    genre: "interview"
+    source_type: "biography"
+    role: "reading-needed"
+    cefr_min: C1
+    license: "unknown"
+    hosting: "reading-needed"
+    learner_task: "Аналіз його філософії акторства та національної ідентичності."
+    caveats: "Знайти репрезентативне інтерв'ю або уривок з його спогадів."
 connects_to:
 - bio-ivan-franko
 - bio-vasyl-stus
@@ -100,7 +124,7 @@ sequence: 167
 slug: bohdan-stupka
 subtitle: 'Bohdan Stupka: The Hetman of the Stage'
 title: 'Богдан Ступка: Гетьман сцени'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: повна зміна зовнішнього вигляду та внутрішнього стану для виконання ролі
   pos: с.

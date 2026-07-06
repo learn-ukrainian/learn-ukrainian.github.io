@@ -22,6 +22,30 @@ activity_hints:
   placement: workbook
   type: essay-response
 cefr_min: C1
+readings:
+  - title: "Василь Симоненко"
+    source_name: "Вікіпедія"
+    source_url: "https://uk.wikipedia.org/wiki/Симоненко_Василь_Андрійович"
+    language: uk
+    genre: "encyclopedia"
+    source_type: "biography"
+    role: "fallback"
+    cefr_min: C1
+    license: "cc-by-sa"
+    hosting: "link-only"
+    learner_task: "Ознайомитися з основними етапами життя та творчості поета."
+    caveats: "Вікіпедія використовується як резервне джерело."
+  - title: "Есе або щоденники про Симоненка"
+    source_name: "Підлягає уточненню"
+    language: uk
+    genre: "essay"
+    source_type: "biography"
+    role: "reading-needed"
+    cefr_min: C1
+    license: "unknown"
+    hosting: "reading-needed"
+    learner_task: "Аналіз складного образу поета."
+    caveats: "Потрібно знайти якісне есе про подвійність його образу як 'ніжного бунтаря' до початку збірки модуля."
 connects_to:
 - bio-77-vasyl-stus
 - bio-72-alla-horska
@@ -102,7 +126,7 @@ sequence: 163
 slug: vasyl-symonenko
 subtitle: 'Vasyl Symonenko: The Tender Rebel'
 title: 'Василь Симоненко: Ніжний бунтар'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: учасник руху творчої та громадської інтелігенції в УРСР у 1960-х роках, що протистояв радянській ідеології
   pos: ч.

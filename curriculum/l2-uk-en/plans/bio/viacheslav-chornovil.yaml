@@ -22,6 +22,30 @@ activity_hints:
   placement: workbook
   type: essay-response
 cefr_min: C1
+readings:
+  - title: "Чорновіл В'ячеслав Максимович"
+    source_name: "Вікіпедія"
+    source_url: "https://uk.wikipedia.org/wiki/Чорновіл_В%27ячеслав_Максимович"
+    language: uk
+    genre: "encyclopedia"
+    source_type: "biography"
+    role: "fallback"
+    cefr_min: C1
+    license: "cc-by-sa"
+    hosting: "link-only"
+    learner_task: "Простежити еволюцію Чорновола від дисидента до політика."
+    caveats: "Вікіпедія використовується як резервне джерело."
+  - title: "Статті або інтерв'ю В'ячеслава Чорновола"
+    source_name: "Підлягає уточненню"
+    language: uk
+    genre: "interview"
+    source_type: "biography"
+    role: "reading-needed"
+    cefr_min: C1
+    license: "unknown"
+    hosting: "reading-needed"
+    learner_task: "Аналіз політичних поглядів та незламності."
+    caveats: "Потрібно підібрати репрезентативне інтерв'ю або статтю."
 connects_to:
 - bio-77-vasyl-stus
 - bio-71-levko-lukyanenko
@@ -104,7 +128,7 @@ sequence: 164
 slug: viacheslav-chornovil
 subtitle: 'Viacheslav Chornovil: The Unbroken Human Rights Defender'
 title: 'В''ячеслав Чорновіл: Незламний правозахисник'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: людина, що професійно чи в рамках громадської діяльності займається захистом прав людини
   pos: ч.
