@@ -4,7 +4,9 @@ import json
 import sqlite3
 from pathlib import Path
 from typing import Any
+from unittest.mock import patch
 
+import pytest
 import yaml
 
 from scripts.audit import llm_qg_store, llm_reviewer, llm_reviewer_dispatch, qg_schema, qg_workflow
@@ -999,6 +1001,8 @@ def test_tier2_rejects_route_name_mismatch(tmp_path: Path) -> None:
                 max_cost_usd=5.0,
                 reviewer_model_id=expected_route.reviewer_model_id,
                 reviewer_family=expected_route.reviewer_family,
+                daily_spend_path=tmp_path / "spend.jsonl",
+                circuit_state_path=tmp_path / "circuit.json",
             ),
             reviewer=reviewer,
             store_path=db_path,
@@ -1010,3 +1014,198 @@ def test_tier2_rejects_route_name_mismatch(tmp_path: Path) -> None:
     assert tier2["actual_route_name"] == "agy_frontier"
     # nothing persisted for the poisoned run
     assert llm_qg_store.latest_llm_qg("folk", "route-mismatch", path=db_path) is None
+
+
+def _record_circuit_window(path: Path, statuses: list[str]) -> dict[str, Any]:
+    status: dict[str, Any] = {}
+    for index, tier2_status in enumerate(statuses):
+        status = llm_qg_store.record_live_tier2_outcome(
+            level="folk",
+            slug=f"circuit-{index}",
+            gate_version=qg_workflow.DEFAULT_GATE_VERSION,
+            reviewer_model=llm_reviewer_dispatch.FRONTIER_OPENCODE_ROUTE.reviewer_model_id,
+            reviewer_family=llm_reviewer_dispatch.FRONTIER_OPENCODE_ROUTE.reviewer_family,
+            route_name=llm_reviewer_dispatch.FRONTIER_OPENCODE_ROUTE.route_name,
+            status=tier2_status,
+            path=path,
+        )
+    return status
+
+
+def test_live_tier2_circuit_trips_at_first_integer_over_threshold(tmp_path: Path) -> None:
+    circuit_path = tmp_path / "circuit.json"
+    closed = _record_circuit_window(
+        circuit_path,
+        ["ran"] * 25 + ["provider_error"] * 4 + ["ran"],
+    )
+
+    assert closed["attempted"] == 30
+    assert closed["terminal_failures"] == 4
+    assert closed["open"] is False
+
+    opened = llm_qg_store.record_live_tier2_outcome(
+        level="folk",
+        slug="circuit-open",
+        gate_version=qg_workflow.DEFAULT_GATE_VERSION,
+        reviewer_model=llm_reviewer_dispatch.FRONTIER_OPENCODE_ROUTE.reviewer_model_id,
+        reviewer_family=llm_reviewer_dispatch.FRONTIER_OPENCODE_ROUTE.reviewer_family,
+        route_name=llm_reviewer_dispatch.FRONTIER_OPENCODE_ROUTE.route_name,
+        status="provider_error",
+        path=circuit_path,
+    )
+
+    assert opened["attempted"] == 30
+    assert opened["terminal_failures"] == 5
+    assert opened["open"] is True
+    assert "circuit_open" in opened["operator_message"]
+
+
+def test_live_tier2_gate_downgrades_do_not_count_as_circuit_failures(tmp_path: Path) -> None:
+    circuit_path = tmp_path / "circuit.json"
+    status = _record_circuit_window(
+        circuit_path,
+        ["ran"] * 25 + [llm_reviewer_dispatch.UNGROUNDED_FINDINGS] * 5,
+    )
+
+    assert status["attempted"] == 30
+    assert status["terminal_failures"] == 0
+    assert status["open"] is False
+
+
+def test_circuit_open_refuses_live_dispatch(tmp_path: Path) -> None:
+    circuit_path = tmp_path / "circuit.json"
+    _record_circuit_window(circuit_path, ["ran"] * 25 + ["provider_error"] * 5)
+    seminar_dir = _write_module(
+        tmp_path,
+        level="folk",
+        slug="blocked-live",
+        module_md="# Семінар\n\nВеснянки — це весняні обрядові пісні.\n",
+    )
+    calls = 0
+
+    def reviewer(_target: qg_workflow.ReviewTarget, _prompt: str) -> str:
+        nonlocal calls
+        calls += 1
+        return _seminar_response()
+
+    record = qg_workflow.review_module(
+        _target(seminar_dir, level="folk", slug="blocked-live"),
+        options=qg_workflow.WorkflowOptions(
+            enable_llm=True,
+            live_reviewer=True,
+            max_cost_usd=5.0,
+            circuit_state_path=circuit_path,
+        ),
+        reviewer=reviewer,
+        store_path=tmp_path / "qg.db",
+    )
+
+    tier2 = _tier(record, 2)
+    assert tier2["status"] == "circuit_open"
+    assert tier2["reason"] == "circuit_open"
+    assert "circuit_open" in tier2["message"]
+    assert calls == 0
+
+
+def test_reset_circuit_allows_live_dispatch_after_operator_clear(tmp_path: Path) -> None:
+    circuit_path = tmp_path / "circuit.json"
+    _record_circuit_window(circuit_path, ["ran"] * 25 + ["provider_error"] * 5)
+    output = tmp_path / "reset.json"
+
+    code = qg_workflow.main(
+        [
+            "--reset-circuit",
+            "--qg-circuit-state",
+            str(circuit_path),
+            "--format",
+            "json",
+            "--output",
+            str(output),
+        ]
+    )
+
+    reset_payload = json.loads(output.read_text(encoding="utf-8"))
+    assert code == 0
+    assert reset_payload["open"] is False
+    assert llm_qg_store.live_tier2_circuit_status(circuit_path)["open"] is False
+
+    seminar_dir = _write_module(
+        tmp_path,
+        level="folk",
+        slug="reset-live",
+        module_md="# Семінар\n\nВеснянки — це весняні обрядові пісні.\n",
+    )
+    expected_route = llm_reviewer_dispatch.FRONTIER_OPENCODE_ROUTE
+    calls = 0
+
+    def reviewer(_target: qg_workflow.ReviewTarget, _prompt: str) -> llm_reviewer_dispatch.DispatchResult:
+        nonlocal calls
+        calls += 1
+        return llm_reviewer_dispatch.DispatchResult(
+            response_text=_seminar_response(),
+            reviewer_model_id=expected_route.reviewer_model_id,
+            reviewer_family=expected_route.reviewer_family,
+            route_name=expected_route.route_name,
+            tool_call_count=1,
+            tools_used=("sources_query_wikipedia",),
+            tool_events=(_wiki_event(mode="section"),),
+        )
+
+    with patch.object(qg_workflow, "_live_reviewer_block", return_value=None):
+        record = qg_workflow.review_module(
+            _target(seminar_dir, level="folk", slug="reset-live"),
+            options=qg_workflow.WorkflowOptions(
+                enable_llm=True,
+                live_reviewer=True,
+                max_cost_usd=5.0,
+                circuit_state_path=circuit_path,
+                daily_spend_path=tmp_path / "spend.jsonl",
+            ),
+            reviewer=reviewer,
+            store_path=tmp_path / "qg.db",
+        )
+
+    assert _tier(record, 2)["status"] == "ran"
+    assert calls == 1
+    assert llm_qg_store.live_tier2_circuit_status(circuit_path)["open"] is False
+
+
+def test_live_batch_preflight_failure_short_circuits_before_dispatch(
+    tmp_path: Path,
+    monkeypatch: Any,
+) -> None:
+    first = _write_module(
+        tmp_path,
+        level="folk",
+        slug="batch-one",
+        module_md="# Семінар\n\nУчасники аналізують джерела.\n",
+    )
+    second = _write_module(
+        tmp_path,
+        level="folk",
+        slug="batch-two",
+        module_md="# Семінар\n\nУчасники аналізують джерела.\n",
+    )
+
+    def fail_preflight(_routes: Any) -> None:
+        raise llm_reviewer_dispatch.ReviewerPreflightError(
+            "opencode_unavailable",
+            "opencode missing in test",
+        )
+
+    monkeypatch.setattr(llm_reviewer_dispatch, "live_batch_preflight", fail_preflight)
+
+    with pytest.raises(ValueError, match="opencode_unavailable"):
+        qg_workflow.review_modules(
+            [
+                _target(first, level="folk", slug="batch-one"),
+                _target(second, level="folk", slug="batch-two"),
+            ],
+            options=qg_workflow.WorkflowOptions(
+                enable_llm=True,
+                live_reviewer=True,
+                max_cost_usd=5.0,
+                circuit_state_path=tmp_path / "circuit.json",
+            ),
+            store_path=tmp_path / "qg.db",
+        )

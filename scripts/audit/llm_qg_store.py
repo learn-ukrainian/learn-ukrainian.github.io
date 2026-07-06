@@ -27,6 +27,20 @@ from scripts.api.resilience import connect_sqlite
 
 DEFAULT_DB_PATH = PROJECT_ROOT / "data" / "telemetry" / "llm_qg.db"
 DB_ENV_VAR = "LEARN_UKRAINIAN_LLM_QG_DB"
+DEFAULT_CIRCUIT_STATE_PATH = PROJECT_ROOT / "data" / "telemetry" / "llm_qg_live_circuit.json"
+CIRCUIT_ENV_VAR = "LEARN_UKRAINIAN_LLM_QG_CIRCUIT"
+CIRCUIT_SCHEMA_VERSION = "llm_qg_live_circuit.v1"
+CIRCUIT_WINDOW_SIZE = 30
+CIRCUIT_FAILURE_RATE_THRESHOLD = 0.15
+CIRCUIT_TERMINAL_FAILURE_STATUSES = frozenset(
+    {
+        "provider_error",
+        "parse_failure",
+        "schema_failure",
+        "RETRY_EXHAUSTED",
+        "timeout",
+    }
+)
 CONTENT_FILES = ("module.md", "activities.yaml", "vocabulary.yaml", "resources.yaml")
 EVIDENCE_SCHEMA_VERSION = "llm_qg_evidence.v1"
 SUPPORTED_EVIDENCE_GATE_VERSIONS = frozenset({"v7.llm_qg.1"})
@@ -67,12 +81,23 @@ def db_path(path: Path | None = None) -> Path:
     return Path(os.environ.get(DB_ENV_VAR, str(DEFAULT_DB_PATH)))
 
 
+def circuit_state_path(path: Path | None = None) -> Path:
+    """Return the configured live Tier-2 circuit state path."""
+    if path is not None:
+        return path
+    return Path(os.environ.get(CIRCUIT_ENV_VAR, str(DEFAULT_CIRCUIT_STATE_PATH)))
+
+
 def _now_z() -> str:
     return datetime.now(UTC).isoformat().replace("+00:00", "Z")
 
 
 def _json_dumps(value: Any) -> str:
     return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+
+
+def _json_pretty(value: Any) -> str:
+    return json.dumps(value, ensure_ascii=False, indent=2, sort_keys=True)
 
 
 def _sha256_bytes(data: bytes) -> str:
@@ -186,6 +211,153 @@ def init_db(path: Path | None = None) -> Path:
         )
         conn.commit()
     return resolved
+
+
+def live_tier2_circuit_status(path: Path | None = None) -> dict[str, Any]:
+    """Return deterministic live Tier-2 circuit state from the sidecar file."""
+    state = _read_circuit_state(path)
+    return _circuit_status_from_state(state)
+
+
+def live_tier2_circuit_open_message(path: Path | None = None) -> str:
+    """Return the operator-facing message for an open live Tier-2 circuit."""
+    status = live_tier2_circuit_status(path)
+    message = status.get("operator_message")
+    if isinstance(message, str) and message:
+        return message
+    return _circuit_open_message(status)
+
+
+def reset_live_tier2_circuit(path: Path | None = None) -> dict[str, Any]:
+    """Clear the live Tier-2 circuit until new live outcomes trip it again."""
+    resolved = circuit_state_path(path)
+    state = _empty_circuit_state()
+    now = _now_z()
+    state["reset_at"] = now
+    state["updated_at"] = now
+    _write_circuit_state(resolved, state)
+    return _circuit_status_from_state(state)
+
+
+def record_live_tier2_outcome(
+    *,
+    level: str,
+    slug: str,
+    gate_version: str,
+    reviewer_model: str | None,
+    reviewer_family: str | None,
+    route_name: str | None,
+    status: str,
+    reason: str | None = None,
+    path: Path | None = None,
+) -> dict[str, Any]:
+    """Persist one completed live Tier-2 passage outcome for circuit accounting."""
+    resolved = circuit_state_path(path)
+    state = _read_circuit_state(resolved)
+    outcome_status = status.strip()
+    now = _now_z()
+    outcome = {
+        "created_at": now,
+        "level": level.strip().lower(),
+        "slug": slug.strip(),
+        "gate_version": gate_version,
+        "reviewer_model": reviewer_model,
+        "reviewer_family": reviewer_family,
+        "route_name": route_name,
+        "status": outcome_status,
+        "reason": reason,
+        "terminal_failure": live_tier2_status_is_terminal_failure(outcome_status),
+    }
+    outcomes = [item for item in state.get("live_outcomes", []) if isinstance(item, Mapping)]
+    outcomes.append(outcome)
+    state["live_outcomes"] = outcomes[-CIRCUIT_WINDOW_SIZE:]
+    state["updated_at"] = now
+    status_payload = _circuit_status_from_state(state)
+    if status_payload["open"] and not state.get("opened_at"):
+        state["opened_at"] = now
+    state["operator_message"] = _circuit_open_message(status_payload) if status_payload["open"] else None
+    _write_circuit_state(resolved, state)
+    return _circuit_status_from_state(state)
+
+
+def live_tier2_status_is_terminal_failure(status: str) -> bool:
+    """Return True for infra/provider terminal failures that trip the circuit."""
+    return status.strip() in CIRCUIT_TERMINAL_FAILURE_STATUSES
+
+
+def _empty_circuit_state() -> dict[str, Any]:
+    return {
+        "schema_version": CIRCUIT_SCHEMA_VERSION,
+        "window_size": CIRCUIT_WINDOW_SIZE,
+        "failure_rate_threshold": CIRCUIT_FAILURE_RATE_THRESHOLD,
+        "opened_at": None,
+        "operator_message": None,
+        "live_outcomes": [],
+    }
+
+
+def _read_circuit_state(path: Path | None = None) -> dict[str, Any]:
+    resolved = circuit_state_path(path)
+    if not resolved.exists():
+        return _empty_circuit_state()
+    try:
+        loaded = json.loads(resolved.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return _empty_circuit_state()
+    if not isinstance(loaded, dict) or loaded.get("schema_version") != CIRCUIT_SCHEMA_VERSION:
+        return _empty_circuit_state()
+    state = _empty_circuit_state()
+    state.update(loaded)
+    outcomes = state.get("live_outcomes")
+    state["live_outcomes"] = outcomes if isinstance(outcomes, list) else []
+    return state
+
+
+def _write_circuit_state(path: Path, state: Mapping[str, Any]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(_json_pretty(dict(state)) + "\n", encoding="utf-8")
+
+
+def _circuit_status_from_state(state: Mapping[str, Any]) -> dict[str, Any]:
+    raw_outcomes = state.get("live_outcomes")
+    outcomes = [item for item in raw_outcomes if isinstance(item, Mapping)] if isinstance(raw_outcomes, list) else []
+    window = outcomes[-CIRCUIT_WINDOW_SIZE:]
+    failure_count = sum(1 for item in window if item.get("terminal_failure") is True)
+    attempted = len(window)
+    failure_rate = (failure_count / attempted) if attempted else 0.0
+    threshold_exceeded = attempted >= CIRCUIT_WINDOW_SIZE and failure_rate > CIRCUIT_FAILURE_RATE_THRESHOLD
+    opened_at = state.get("opened_at") if isinstance(state.get("opened_at"), str) else None
+    is_open = bool(opened_at) or threshold_exceeded
+    status = {
+        "schema_version": CIRCUIT_SCHEMA_VERSION,
+        "open": is_open,
+        "opened_at": opened_at,
+        "window_size": CIRCUIT_WINDOW_SIZE,
+        "attempted": attempted,
+        "terminal_failures": failure_count,
+        "failure_rate": round(failure_rate, 6),
+        "failure_rate_threshold": CIRCUIT_FAILURE_RATE_THRESHOLD,
+        "operator_message": None,
+    }
+    if is_open:
+        status["operator_message"] = (
+            state.get("operator_message")
+            if isinstance(state.get("operator_message"), str) and state.get("operator_message")
+            else _circuit_open_message(status)
+        )
+    return status
+
+
+def _circuit_open_message(status: Mapping[str, Any]) -> str:
+    failures = int(status.get("terminal_failures") or 0)
+    attempted = int(status.get("attempted") or 0)
+    threshold = float(status.get("failure_rate_threshold") or CIRCUIT_FAILURE_RATE_THRESHOLD)
+    return (
+        "live Tier-2 circuit_open: "
+        f"{failures}/{attempted} recent live passages ended in terminal provider/parse/schema/"
+        f"timeout failures (> {threshold:.0%}). Fix or reroute the reviewer lane, then reset with "
+        ".venv/bin/python scripts/audit/qg_workflow.py --reset-circuit."
+    )
 
 
 def _ensure_composite_columns(conn: sqlite3.Connection) -> None:

@@ -106,6 +106,14 @@ class ReviewerProviderError(ReviewerDispatchError):
     """Provider invocation failed before a parseable reviewer response."""
 
 
+class ReviewerPreflightError(ReviewerProviderError):
+    """Batch-level live transport preflight failed with a named reason."""
+
+    def __init__(self, reason: str, message: str) -> None:
+        super().__init__(message)
+        self.reason = reason
+
+
 class ReviewerLineageError(ReviewerDispatchError):
     """Module author lineage is unavailable in live mode."""
 
@@ -525,6 +533,84 @@ def estimate_route_cost(
         **measured_fields,
         "basis": basis,
     }
+
+
+def live_batch_preflight(routes: Sequence[ReviewerRoute], *, timeout_s: int = 10) -> dict[str, Any]:
+    """Verify the live Tier-2 transport before a broad batch spends quota."""
+    unique_routes = _unique_routes(routes)
+    if not unique_routes:
+        return {
+            "status": "skipped",
+            "reason": "no_live_routes",
+            "routes": [],
+        }
+    opencode = shutil.which("opencode")
+    if not opencode:
+        raise ReviewerPreflightError(
+            "opencode_unavailable",
+            "opencode CLI not found on PATH; live Tier-2 batch preflight cannot proceed",
+        )
+    for route in unique_routes:
+        try:
+            assert_route_allowed(route)
+            if route.requires_mcp:
+                _assert_sources_mcp_available()
+        except ReviewerRouteError as exc:
+            raise ReviewerPreflightError("route_disallowed", str(exc)) from exc
+        except ReviewerProviderError as exc:
+            raise ReviewerPreflightError("sources_mcp_unavailable", str(exc)) from exc
+    try:
+        proc = subprocess.run(
+            [opencode, "models"],
+            cwd=PROJECT_ROOT,
+            capture_output=True,
+            text=True,
+            timeout=timeout_s,
+        )
+    except subprocess.TimeoutExpired as exc:
+        raise ReviewerPreflightError("opencode_models_timeout", str(exc)) from exc
+    except OSError as exc:
+        raise ReviewerPreflightError("opencode_models_unavailable", str(exc)) from exc
+    if proc.returncode != 0:
+        message = (proc.stderr or proc.stdout or "opencode models failed").strip()
+        raise ReviewerPreflightError("opencode_models_failed", message[-1000:])
+    model_listing = f"{proc.stdout}\n{proc.stderr}"
+    missing = [
+        route.reviewer_model_id
+        for route in unique_routes
+        if not _model_list_contains(model_listing, route.reviewer_model_id)
+    ]
+    if missing:
+        raise ReviewerPreflightError(
+            "reviewer_model_unavailable",
+            "opencode models did not list required reviewer model(s): " + ", ".join(missing),
+        )
+    return {
+        "status": "passed",
+        "reason": None,
+        "routes": [route.route_name for route in unique_routes],
+        "reviewer_model_ids": [route.reviewer_model_id for route in unique_routes],
+        "sources_mcp_required": any(route.requires_mcp for route in unique_routes),
+    }
+
+
+def _unique_routes(routes: Sequence[ReviewerRoute]) -> list[ReviewerRoute]:
+    unique: list[ReviewerRoute] = []
+    seen: set[str] = set()
+    for route in routes:
+        key = f"{route.route_name}\0{route.reviewer_model_id}"
+        if key in seen:
+            continue
+        seen.add(key)
+        unique.append(route)
+    return unique
+
+
+def _model_list_contains(model_listing: str, model_id: str) -> bool:
+    text = model_listing.lower()
+    clean = model_id.strip().lower()
+    tail = clean.rsplit("/", 1)[-1]
+    return clean in text or tail in text
 
 
 def prompt_template_hash() -> str:
