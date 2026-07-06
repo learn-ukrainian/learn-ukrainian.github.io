@@ -1,0 +1,69 @@
+{
+  "assembled_mdx_sha256": "9fbb641a294ce79d9eebfcc73f2fa06211455713bc4eded26b207ca49adbf643",
+  "content_hash": {
+    "algorithm": "sha256",
+    "basis": "lesson_sources_v2",
+    "digest": "05d19c6e385aca0efecdd28ba50e0270a6d8fa5676e1225c9864bf0195911e08",
+    "files": [
+      {
+        "path": "curriculum/l2-uk-en/plans/folk/narodne-zhytlo-sadyba-hospodarstvo.yaml",
+        "sha256": "3071f2e72985e9a3bb8b27fd96931d58657a1554f16fcda64a6df344f2ebac3a"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/narodne-zhytlo-sadyba-hospodarstvo/module.md",
+        "sha256": "db6f2c72c3977bd58afe7ef5b7bfaa8284fd806c7b5b1291c0c6283a30f62dc0"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/narodne-zhytlo-sadyba-hospodarstvo/activities.yaml",
+        "sha256": "915f34dbde6a40e3df4e1a5a27a1f216b59facb41a275907077cff21d7683f85"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/narodne-zhytlo-sadyba-hospodarstvo/vocabulary.yaml",
+        "sha256": "d69ba41fca3d504d474c9622dbf39cabf2e67ee4b2782f1ad547d0286ac44671"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/narodne-zhytlo-sadyba-hospodarstvo/resources.yaml",
+        "sha256": "ab79a880951f3b7cdd64f1e01eb014240b2f9437087f29cf21792434f288f088"
+      }
+    ]
+  },
+  "evidence": {
+    "decolonization": "Module resists white-house-with-cherries flattening, Russocentric izba framing, tourist ethnodecor, Soviet modernization-as-neutral truth, and romantic poverty idylls while preserving regional nuance.",
+    "pedagogical": "V2 inline/workbook activities separate lesson checks from workbook practice; generated reading section is populated and direct PrimaryReading symptom audit passes.",
+    "review": "Claude Opus 4.8 project bridge task review-folk-m37-narodne-zhytlo-sadyba-hospodarstvo messages 2 and 4: no blockers; follow-up cleared the Wikisource URL, act-1 answer, and Litopys wording findings. DeepSeek not used.",
+    "source_policy": "M37 uses two verified public-domain Shevchenko high-culture afterlife excerpts as substantial structured primary-reading blocks; building-rite words, proverbs, popular sayings, images/audio, and museum artifacts are not invented."
+  },
+  "floors": {
+    "beauty": 8.5,
+    "decolonization": 9.0,
+    "engagement": 8.5,
+    "naturalness": 8.5,
+    "pedagogical": 8.5,
+    "tone": 8.5
+  },
+  "profile": "folk_promote_v1",
+  "review_artifact": null,
+  "reviewer": {
+    "agent": "claude",
+    "family": "anthropic",
+    "model": "claude-opus-4-8"
+  },
+  "schema_version": 1,
+  "scored_at": "2026-07-06T23:44:23Z",
+  "scores": {
+    "beauty": 8.8,
+    "decolonization": 9.3,
+    "engagement": 8.8,
+    "naturalness": 8.8,
+    "pedagogical": 8.9,
+    "tone": 8.9
+  },
+  "slug": "narodne-zhytlo-sadyba-hospodarstvo",
+  "track": "folk",
+  "verdict": "PASS",
+  "writer": {
+    "agent": "codex",
+    "family": "openai",
+    "model": "gpt-5"
+  }
+}
