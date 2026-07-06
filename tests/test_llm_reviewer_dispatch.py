@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import ast
 import json
+from dataclasses import replace
 from pathlib import Path
 from typing import Any
 from unittest.mock import patch
@@ -164,13 +166,57 @@ def test_routing_b1_surface_uses_gemma_and_seminar_uses_tooled_opencode() -> Non
 
     assert b1_route.bridge_command[0] == "ask-gemma"
     assert b1_route.reviewer_model_id == "openrouter/google/gemma-4-31b-it"
+    assert b1_route.requires_mcp is False
     # #2156: seminar/factual now flows through the tooled opencode route, not agy.
     assert seminar_route is llm_reviewer_dispatch.FRONTIER_OPENCODE_ROUTE
     assert seminar_route.route_name == "opencode_frontier"
     assert seminar_route.bridge_command[:2] == ("ask-opencode", "--model")
+    assert seminar_route.requires_mcp is True
     assert factual_route is llm_reviewer_dispatch.FRONTIER_OPENCODE_ROUTE
     # The old agy route stays defined for fallback/reference (not returned).
     assert llm_reviewer_dispatch.FRONTIER_FACTUAL_ROUTE.reviewer_model_id == "gemini-3.1-pro-high"
+
+
+@pytest.mark.parametrize(
+    ("model_id", "expected_profile", "median_tools", "max_tools", "median_wall_s"),
+    [
+        ("openrouter/google/gemma-4-31b-it", "gemma-4-31b-it", 4.0, 5, 34.685),
+        ("openrouter/deepseek/deepseek-v4-pro", "deepseek-v4-pro", 15.5, 17, 210.8475),
+        ("openrouter/deepseek/deepseek-v4-flash", "deepseek-v4-flash", 30.0, 35, 170.207),
+    ],
+)
+def test_estimates_attach_scorecard_measured_cost_profiles(
+    model_id: str,
+    expected_profile: str,
+    median_tools: float,
+    max_tools: int,
+    median_wall_s: float,
+) -> None:
+    route = replace(llm_reviewer_dispatch.FRONTIER_OPENCODE_ROUTE, reviewer_model_id=model_id)
+
+    estimate = llm_reviewer_dispatch.estimate_route_cost(
+        "Перевірте фактичні твердження.",
+        route,
+        policy_family="seminar",
+    )
+
+    assert estimate["measured_cost_profile"] == expected_profile
+    assert estimate["estimated_tool_call_median"] == median_tools
+    assert estimate["observed_tool_call_max"] == max_tools
+    assert estimate["tool_call_anomaly_threshold"] == max_tools * 1.5
+    assert estimate["estimated_wall_s_median"] == median_wall_s
+    assert llm_reviewer_dispatch.SCORECARD_COST_BASIS_PATH in estimate["basis"]
+    assert llm_reviewer_dispatch.SCORECARD_COST_BASIS_GENERATED_AT in estimate["basis"]
+    assert estimate["estimated_cost_usd"] > 0
+
+
+def test_qg_workflow_legacy_estimate_uses_scorecard_basis() -> None:
+    estimate = qg_workflow.estimate_llm_cost("Перевірте фактичні твердження.", "seminar")
+
+    assert estimate["measured_cost_profile"] == "gemma-4-31b-it"
+    assert estimate["estimated_tool_call_median"] == 4.0
+    assert llm_reviewer_dispatch.SCORECARD_COST_BASIS_PATH in estimate["basis"]
+    assert "replace with telemetry median" not in estimate["basis"]
 
 
 def test_self_review_hard_fails() -> None:
@@ -658,6 +704,31 @@ def test_offline_vesnianky_fixture_exercises_all_fact_check_verdicts(tmp_path: P
     ]
 
 
+def test_tool_call_anomaly_is_soft_telemetry_warning(tmp_path: Path) -> None:
+    module_dir = _write_module(tmp_path, level="folk", slug="vesnianky")
+    event = _sources_event(output="Веснянки — це весняні обрядові пісні.")
+
+    def reviewer(_target: qg_workflow.ReviewTarget, _prompt: str) -> llm_reviewer_dispatch.DispatchResult:
+        return _seminar_result(_fact_response(), (event,), tool_call_count=13)
+
+    record = qg_workflow.review_module(
+        _target(module_dir, level="folk"),
+        options=_seminar_options(),
+        reviewer=reviewer,
+        store_path=tmp_path / "qg.db",
+    )
+
+    tier = _tier(record, 2)
+    assert tier["status"] == "ran"
+    warning = tier["dispatch"]["telemetry_warning"]
+    assert warning["kind"] == "tool_call_anomaly"
+    assert warning["severity"] == "warning"
+    assert warning["observed_tool_call_count"] == 13
+    assert warning["observed_tool_call_max"] == 5
+    assert warning["measured_cost_profile"] == "gemma-4-31b-it"
+    assert record["completion_status"] == "COMPLETE"
+
+
 def test_http_endpoint_responds_true_on_streaming_timeout() -> None:
     # curl on a streaming MCP endpoint exits 28 but still emits %{http_code}=200;
     # liveness must key on the code, not curl's exit status.
@@ -718,6 +789,45 @@ def test_live_single_call_requires_exact_canary(tmp_path: Path) -> None:
 
     assert _tier(record, 2)["status"] == "skipped_canary_required"
     assert record["completion_status"] == "INCOMPLETE"
+    assert calls == 0
+
+
+def test_live_seminar_route_hard_fails_if_mcp_not_required(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    module_dir = _write_module(tmp_path, level="folk", slug="vesnianky")
+    prompt_only_route = replace(llm_reviewer_dispatch.FRONTIER_OPENCODE_ROUTE, requires_mcp=False)
+    calls = 0
+
+    def reviewer(_target: qg_workflow.ReviewTarget, _prompt: str) -> llm_reviewer_dispatch.DispatchResult:
+        nonlocal calls
+        calls += 1
+        return _seminar_result(_fact_response(), (_sources_event(),))
+
+    monkeypatch.setattr(
+        llm_reviewer_dispatch,
+        "route_for_review",
+        lambda **_kwargs: prompt_only_route,
+    )
+    record = qg_workflow.review_module(
+        _target(module_dir, level="folk"),
+        options=qg_workflow.WorkflowOptions(
+            enable_llm=True,
+            live_reviewer=True,
+            author_family="openai",
+            max_cost_usd=1.0,
+            daily_spend_path=tmp_path / "spend.jsonl",
+        ),
+        reviewer=reviewer,
+        store_path=tmp_path / "qg.db",
+    )
+
+    tier = _tier(record, 2)
+    assert tier["status"] == "provider_error"
+    assert tier["reason"] == "disallowed_reviewer_route"
+    assert "sources MCP" in tier["message"]
+    assert record["workflow_verdict"] == "INCOMPLETE"
     assert calls == 0
 
 
@@ -978,6 +1088,58 @@ def test_grounding_matches_ellipsized_excerpt_segments_in_order(ellipsis: str) -
     }
 
     assert llm_reviewer_dispatch._grounding_matches_events(grounding, events) is True
+
+
+def _ast_call_name(node: ast.AST) -> str | None:
+    if isinstance(node, ast.Name):
+        return node.id
+    if isinstance(node, ast.Attribute):
+        return node.attr
+    return None
+
+
+def _ast_string(node: ast.AST) -> str | None:
+    if isinstance(node, ast.Constant) and isinstance(node.value, str):
+        return node.value
+    return None
+
+
+def test_no_production_entrypoint_constructs_bare_bakeoff_arm() -> None:
+    root = Path(__file__).resolve().parents[1]
+    bare_entrypoints = {
+        "BARE_ARM",
+        "BOTH_ARM",
+        "build_bare_factcheck_prompt",
+        "invoke_bakeoff_route_bare",
+        "run_one_bare",
+    }
+    violations: list[str] = []
+    source_paths = [
+        *sorted((root / "scripts" / "build").rglob("*.py")),
+        *sorted((root / "scripts" / "audit").rglob("*.py")),
+    ]
+    for path in source_paths:
+        if path.name == "qg_bakeoff.py":
+            continue
+        tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
+        for node in ast.walk(tree):
+            if isinstance(node, ast.ImportFrom) and node.module in {
+                "scripts.audit.qg_bakeoff",
+                "audit.qg_bakeoff",
+                "qg_bakeoff",
+            }:
+                for alias in node.names:
+                    if alias.name in bare_entrypoints:
+                        violations.append(f"{path.relative_to(root)} imports {alias.name}")
+            elif isinstance(node, ast.Call):
+                call_name = _ast_call_name(node.func)
+                if call_name in bare_entrypoints:
+                    violations.append(f"{path.relative_to(root)} calls {call_name}")
+                for keyword in node.keywords:
+                    if keyword.arg == "arm" and _ast_string(keyword.value) in {"bare", "both"}:
+                        violations.append(f"{path.relative_to(root)} passes arm={_ast_string(keyword.value)!r}")
+
+    assert violations == []
 
 
 def test_grounding_rejects_out_of_order_ellipsized_segments() -> None:
