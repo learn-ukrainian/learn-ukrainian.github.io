@@ -285,6 +285,14 @@ def test_negative_verdict_on_shared_sentence_does_not_refute_true_subclaim() -> 
     )
 
 
+def test_model_pins_reject_whitespace_mega_pin() -> None:
+    """A space-separated --models string must fail fast, not run garbage cells
+    (live burn 2026-07-05: one mega-pin ran 4 junk artifacts)."""
+    with pytest.raises(qg_bakeoff.BakeoffConfigError, match="whitespace"):
+        qg_bakeoff.model_pins_from_args(["pin/a pin/b pin/c"])
+    assert qg_bakeoff.model_pins_from_args(["pin/a,pin/b"]) == ["pin/a", "pin/b"]
+
+
 def test_resume_skips_existing_artifact(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.delenv("CI", raising=False)
     monkeypatch.setenv("QG_BAKEOFF", "1")

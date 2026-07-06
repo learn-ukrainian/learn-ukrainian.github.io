@@ -920,6 +920,15 @@ def model_pins_from_args(values: Sequence[str] | None) -> list[str]:
             pins.extend(piece.strip() for piece in value.split(",") if piece.strip())
         if not pins:
             raise BakeoffConfigError("--models was provided but no model pins were parsed")
+        # Fail fast on malformed pins (live burn 2026-07-05: a space-separated
+        # --models string parsed as ONE mega-pin and ran 4 garbage cells
+        # instead of erroring). Pins are comma-separated; whitespace inside a
+        # pin is always a caller mistake.
+        malformed = [pin for pin in pins if any(ch.isspace() for ch in pin)]
+        if malformed:
+            raise BakeoffConfigError(
+                f"model pins must not contain whitespace (use commas to separate): {malformed!r}"
+            )
         return pins
     unresolved = [candidate.label for candidate in DEFAULT_CANDIDATE_MODELS if candidate.unresolved]
     if unresolved:
