@@ -82,6 +82,21 @@ persona:
   role: Історик-джерелознавець, що відрізняє джерельну біографію Ханенка від ярлика «польський ставленик», тримаючи видимими і його козацько-правову риторику, і ціну острозького курсу
   voice: Source-Critical Historian
 phase: BIO
+readings:
+- hosting: link-only
+  language: uk
+  rationale: "Біографічний якір для роботи з ярликом «польський ставленик»: учень відокремлює уманську полкову базу, претендентську булаву, Острозьку угоду й арешт 1677 року."
+  source: "Енциклопедія історії України"
+  title: "Ханенко Михайло Степанович"
+  type: encyclopedia
+  url: "https://history.org.ua/?termin=Khanenko_M"
+- hosting: link-only
+  language: uk
+  rationale: "Документальний контекст Острозької угоди: учень визначає, які автономні права вона лишала, а які звужувала під протекцією Речі Посполитої."
+  source: "Енциклопедія історії України"
+  title: "Острозька угода 1670"
+  type: encyclopedia
+  url: "https://history.org.ua/?termin=Ostrozkyj_dohovir_1670"
 references:
 - note: 'Стаття ЕІУ (Т. Чухліб): уманський полковник, підтримка Юрія Хмельницького, обрання 1669 року, Острозька угода, Бучач, поступка булави 1674 року, арешт 1677 року'
   path: https://www.history.org.ua/?termin=Khanenko_M
@@ -118,7 +133,7 @@ sequence: 43
 slug: mykhailo-khanenko
 subtitle: 'Mykhailo Khanenko: The Right-Bank Claimant''s Mace'
 title: 'Михайло Ханенко: Претендентська булава Правобережжя'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: гетьман, визнаний лише частиною козацтва й країни; Ханенка обрала рада від частини Правобережжя
   pos: ч.
