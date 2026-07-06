@@ -118,7 +118,7 @@ sequence: 42
 slug: petro-doroshenko
 subtitle: 'Petro Doroshenko: The Sun of the Ruin'
 title: 'Петро Дорошенко: Сонце Руїни'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: залежність меншої держави від сильнішої на умовах заступництва; Дорошенко шукав османського протекторату як третьої гарантії проти поділу
   pos: ч.
@@ -151,3 +151,19 @@ vocabulary_hints:
   pos: ж.
   word: Руїна
 word_target: 5000
+
+readings:
+- hosting: reading-needed
+  language: uk
+  rationale: "Комплексний життєпис Петра Дорошенка, його амбітної програми 'Сонце Руїни' та її трагічного краху."
+  source: "Енциклопедія історії України"
+  title: "Дорошенко Петро Дорофійович"
+  type: encyclopedia
+  url: "http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Doroshenko_P"
+- hosting: reading-needed
+  language: uk
+  rationale: "Аналіз Корсунської угоди, що закріпила перехід Правобережної Гетьманщини під протекторат Османської імперії."
+  source: "Енциклопедія історії України"
+  title: "Корсунська угода 1669"
+  type: encyclopedia
+  url: "http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Korsunska_ugoda_1669"
