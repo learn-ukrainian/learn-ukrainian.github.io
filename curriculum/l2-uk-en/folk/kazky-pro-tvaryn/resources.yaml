@@ -2,20 +2,15 @@
   author: Іван Франко
   type: literary
   role: reading
-  url: https://www.ukrlib.com.ua/books/printit.php?tid=25866
+  url: https://uk.wikisource.org/wiki/Твори_(Франко,_1956–1962)/7/Фарбований_Лис
   notes: >-
-    Літературна обробка звіриного епосу; використовувати як авторський текст,
-    не як народний дослівний запис.
-- title: Казка
-  type: reference
-  role: article
-  url: https://uk.wikipedia.org/wiki/Казка
+    Літературна обробка звіриного епосу; використано скорочений on-site
+    уривок із авторського тексту Франка, який є суспільним надбанням; не
+    народний дослівний запис.
+- title: Когут перехитрив лиса
+  type: primary
+  role: reading
+  url: https://uk.wikisource.org/wiki/Когут_перехитрив_лиса
   notes: >-
-    Зовнішній орієнтир для класифікації казок; не замінює перевірене джерело
-    окремого варіанта.
-- title: Байка
-  type: reference
-  role: article
-  url: https://uk.wikipedia.org/wiki/Байка
-  notes: >-
-    Допоміжний контраст для межі між казкою про тварин і байкою.
+    Публічний фольклорний текст на Вікіджерелах; використано скорочений
+    on-site уривок, PD-UA-exempt / суспільне надбання.
