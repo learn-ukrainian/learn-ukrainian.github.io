@@ -1,22 +1,28 @@
 import { describe, expect, test } from "vitest";
-import type { APIRoute, GetStaticPaths } from "astro";
+import type { APIRoute } from "astro";
 import { GET as getContract } from "@site/src/pages/api/lexicon/contract.json";
 import { GET as getDailyPool } from "@site/src/pages/api/lexicon/daily-pool.json";
 import {
-  GET as getPracticeCloze,
-  getStaticPaths as getPracticeClozePaths,
-} from "@site/src/pages/api/lexicon/practice-cloze.[level].json";
+  practiceApiStaticPaths,
+  practiceShardResponse,
+} from "@site/src/lib/lexicon/practice-api-shard";
 import {
-  GET as getPracticeIndex,
-  getStaticPaths as getPracticeIndexPaths,
-} from "@site/src/pages/api/lexicon/practice-index.[level].json";
-import {
-  GET as getPracticeLexemes,
-  getStaticPaths as getPracticeLexemesPaths,
-} from "@site/src/pages/api/lexicon/practice-lexemes.[level].json";
+  searchApiStaticPaths,
+  searchShardResponse,
+} from "@site/src/lib/lexicon/search-api-shard";
 import { GET as getSearchIndex } from "@site/src/pages/api/lexicon/search-index.json";
 import { GET as getStatus } from "@site/src/pages/api/lexicon/status.json";
 import { PRACTICE_LEVELS } from "@site/src/lib/lexicon/runtime-contract";
+
+const getPracticeCloze: APIRoute = ({ params }) =>
+  practiceShardResponse("practice-cloze", params.level);
+const getPracticeIndex: APIRoute = ({ params }) =>
+  practiceShardResponse("practice-index", params.level);
+const getPracticeLexemes: APIRoute = ({ params }) =>
+  practiceShardResponse("practice-lexemes", params.level);
+const getPracticeClozePaths = practiceApiStaticPaths;
+const getPracticeIndexPaths = practiceApiStaticPaths;
+const getPracticeLexemesPaths = practiceApiStaticPaths;
 
 async function routeJson<T>(
   route: APIRoute,
@@ -28,8 +34,8 @@ async function routeJson<T>(
   return (await response.json()) as T;
 }
 
-async function routePaths(getStaticPaths: GetStaticPaths): Promise<string[]> {
-  const paths = await getStaticPaths({ paginate: () => [] } as Parameters<GetStaticPaths>[0]);
+async function routePaths(getStaticPaths: () => ReturnType<typeof practiceApiStaticPaths>): Promise<string[]> {
+  const paths = await getStaticPaths();
   return paths.map((path) => {
     if (!("params" in path)) throw new Error("expected static params");
     return String(path.params.level);
@@ -149,5 +155,17 @@ describe("lexicon static API routes", () => {
   expect(index.counts.cloze).toBe(cloze.cloze.length);
   expect(index.counts.lexemes).toBeGreaterThan(1000);
     expect(index.counts.cloze).toBe(22);
-});
+  });
+
+  test("materializes search shards for static /lexicon/search/{shard}.json URLs", async () => {
+    const paths = searchApiStaticPaths();
+    expect(paths.length).toBeGreaterThan(1);
+
+    const response = searchShardResponse("u043e");
+    expect(response.status).toBe(200);
+    expect(response.headers.get("Content-Type")).toContain("application/json");
+    expect(response.headers.get("Cache-Control")).toBe("public, max-age=3600");
+    const rows = (await response.json()) as unknown[];
+    expect(rows.length).toBeGreaterThan(0);
+  });
 });

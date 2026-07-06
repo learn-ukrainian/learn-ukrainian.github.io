@@ -96,6 +96,21 @@ export function searchShardKeysForRow(
   return [...keys].sort();
 }
 
+export function buildSearchRowsByShard(
+  manifest: SearchShardManifest,
+  rows: SearchRow[],
+): Map<string, SearchRow[]> {
+  const rowsByShard = new Map<string, SearchRow[]>(
+    Object.keys(manifest.shards).map((key) => [key, []]),
+  );
+  for (const row of rows) {
+    for (const key of searchShardKeysForRow(manifest, row)) {
+      rowsByShard.get(key)?.push(row);
+    }
+  }
+  return rowsByShard;
+}
+
 function matchTier(row: SearchRow, nq: string): number | null {
   const hasLatin = LATIN_RE.test(nq);
   const hasCyrillic = CYRILLIC_RE.test(nq);

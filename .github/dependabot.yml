@@ -36,6 +36,12 @@ updates:
       prefix: "deps"
     labels:
       - "dependencies"
+    # Astro + @astrojs/* majors must bump together (peer ERESOLVE if split).
+    groups:
+      astro:
+        patterns:
+          - "astro"
+          - "@astrojs/*"
     # Only security updates — we don't want churn on minor bumps
     open-pull-requests-limit: 5
 

@@ -14,6 +14,9 @@ export default getViteConfig({
     globals: true,
     setupFiles: ['./tests/setup.ts'],
     include: ['tests/unit/**/*.{test,spec}.{ts,tsx}'],
+    // build-renders.test.ts shells out to `npm run build`; parallel file workers
+    // contend on data/atlas.db and can surface transient "Caught error rendering".
+    fileParallelism: false,
     // Disable caching to prevent stale module issues when adding components
     cache: false,
     coverage: {

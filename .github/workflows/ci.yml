@@ -172,6 +172,7 @@ jobs:
               - 'site/src/data/lexicon-practice-deck.pointer.json'
               - 'site/src/data/lexicon-practice-reviewed-sources.json'
               - 'site/scripts/hydrate-practice-deck.mjs'
+              - 'site/scripts/hydrate-lexicon-api-shards.ts'
             postmortems:
               - '.github/workflows/ci.yml'
               - 'docs/bug-autopsies/**'

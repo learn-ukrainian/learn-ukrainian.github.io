@@ -1,7 +1,7 @@
 // @vitest-environment node
 
 import Database from 'better-sqlite3';
-import { getContainerRenderer } from '@astrojs/react';
+import { getContainerRenderer } from '@astrojs/react/container-renderer';
 import { experimental_AstroContainer as AstroContainer } from 'astro/container';
 import { loadRenderers } from 'astro:container';
 import { describe, expect, test } from 'vitest';
