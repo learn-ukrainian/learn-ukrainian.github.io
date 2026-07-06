@@ -502,6 +502,38 @@ def test_synonym_qualifiers_and_sense_guard_for_shliakh(monkeypatch) -> None:
     assert "кам'янка (діал.)" in items
 
 
+def test_synonym_frequency_qualifiers_are_preserved(monkeypatch) -> None:
+    _patch_vesum_analyses(
+        monkeypatch,
+        {
+            "джерело": "noun",
+            "ключ": "noun",
+            "криниця": "noun",
+            "криничка": "noun",
+            "керниця": "noun",
+        },
+    )
+    cache = {
+        "lookups": {
+            "synonyms": {
+                "dictionary_slug": "synonyms",
+                "dictionary_label": "Словник синонімів української мови",
+                "word": "джерело",
+                "source_url": "https://slovnyk.me/dict/synonyms/джерело",
+                "text": "джерело ДЖЕРЕЛО́, КЛЮЧ рідше, КРИНИ́ЧКА, КРИНИ́ЦЯ рідко, КЕРНИ́ЦЯ діал. Джерело: тест",
+            },
+        }
+    }
+
+    section = _synonyms_slovnyk("джерело", cache, entry_pos="noun")
+    assert section is not None
+    items = section["items"]
+
+    assert "ключ (рідше)" in items
+    assert "криниця (рідко)" in items
+    assert "керниця (діал.)" in items
+
+
 def test_synonym_sense_guard_for_richka(monkeypatch) -> None:
     _patch_vesum_analyses(
         monkeypatch,
