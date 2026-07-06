@@ -109,8 +109,14 @@ constructs a bare-arm invocation (bare exists only under `QG_BAKEOFF=1`).
 ### E3 — Minimum regression canary ⏳ (the operational switch)
 Run the 4-fixture tooled matrix on the PRODUCTION pin (`--arm tooled --force`, fresh out-dir), then
 evaluate with the deterministic checker (build item: `scripts/audit/qg_tier2_canary_check.py`,
-nonzero exit on fail — never human-parsed SCORECARD). PASS requires ALL, per the STRICT live path
-(bakeoff-orthogonal stripping does NOT apply to production):
+nonzero exit on fail — never human-parsed SCORECARD). The canary set is PINNED to the four
+folk-domain anchors (`qg_tier2_canary_check.CANARY_FIXTURE_SLUGS`: koliadky, kupalski, vesnianky,
+zhnyvarski), NOT to every fixture in `tests/fixtures/qg_bakeoff/` — that directory is also the growth
+corpus for the #4312 paper (e.g. the #4539 history-domain passages), and extra passages must not move
+the 7/4 denominators or the required-artifact set. Expanding the pinned set is a DELIBERATE
+re-calibration (bump denominators + thresholds in one reviewed commit), never a side effect of adding
+a bakeoff fixture. PASS requires ALL, per the STRICT live path (bakeoff-orthogonal stripping does NOT
+apply to production):
 - (a) every cell: `status=ran`, `invalid_fact_checks=0`, `required_ungrounded_findings=0`,
   `findings_schema_invalid=false`, no parse/provider failure. NOTE (codex, verified): today's
   tooled cells are `ungrounded_findings` — the current pin does NOT yet pass; that is the point.

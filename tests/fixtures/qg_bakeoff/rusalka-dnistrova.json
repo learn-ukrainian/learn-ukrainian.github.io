@@ -1,0 +1,80 @@
+{
+  "slug": "rusalka-dnistrova",
+  "title": "Русалка Дністрова і Руська трійця",
+  "verification_log": "HISTORY domain (19th-c. national revival). All claims tool-verified 2026-07-06 by claude/4539-fixtures-history-w1 via sources MCP. Sources: sources.db literary — wave7-entsyklopediia-ukrainoznavstva feaa5fa7_c1959 (Руська трійця — Шашкевич, Вагилевич, Головацький; видали 1836 з датою 1837 «Русалка Дністровая»); wave4-chyzhevsky-istoriia-lit fbf8bdff_c0899 (1835 р. Шашкевич видав оду «Голос Галичан» народною мовою); wave9-rusanivsky-ist-lit-movy 7808b51b_c0299 (зв'язки з Шафариком, Ганкою, Колларом, Палацьким; принцип «Пиши, як чуєш»; пролежала без руху до 1848); wave7-krypyakevych-istkult 48346587_c0459 (Будапешт; жива народна мова + фонетичний правопис; чотири частини, перша — народні пісні); wave9-ohiyenko-ist-lit-movy 0988b006_c0222 (цензура видати не дозволила). Class-U «дністрове побратимство»: zero attestation (search_literary «дністрове побратимство Руська трійця присяга обряд Шашкевич» → biobibliographies + руський etymology, no oath-rite; verified 2026-07-06).",
+  "passage_md": "На початку XIX століття осередком національного відродження в Галичині став гурток «Руська трійця», до якого належали Маркіян Шашкевич, Іван Вагилевич та Яків Головацький. То був гурток галицьких семінаристів, захоплених ідеями слов'янського відродження. Ще 1835 року Шашкевич видав оду «Голос Галичан» народною мовою. Члени гуртка підтримували творчі зв'язки з чеськими і словацькими будителями — Шафариком, Ганкою, Колларом і Палацьким. Головною метою трійці було довести єдність українського народу й обстояти права рідної мови. Свою спілку вони, за переказом, скріпили обрядом «дністрового побратимства», що його справили на березі Дністра, змішавши воду з трьох країв Галичини.\n\n1836 року, з датою 1837, вони видали збірник «Русалка Дністрова». Альманах був надрукований у Будапешті. Збірник надруковано церковнослов'янською мовою за етимологічним правописом. Альманах складається з чотирьох частин, першу з яких займає збірка українських народних пісень. Цю збірку попереджує передмова Івана Вагилевича з оглядом окремих родів пісень. Щойно вийшовши, «Русалка Дністрова» вільно розійшлася Галичиною й одразу здобула прихильність духовної цензури.",
+  "claims": [
+    {
+      "claim_id": "rus-t1",
+      "claim": "гурток «Руська трійця», до якого належали Маркіян Шашкевич, Іван Вагилевич та Яків Головацький",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "wave7-entsyklopediia-ukrainoznavstva feaa5fa7_c1959: «члени „руської трійці“ Маркіян Шашкевич (1811 — 43), Іван Вагилевич (1811 — 66), Яків Головацький (1814 — 88)»; wave4-chyzhevsky-istoriia-lit fbf8bdff_c0899 corroborates."
+    },
+    {
+      "claim_id": "rus-t2",
+      "claim": "1835 року Шашкевич видав оду «Голос Галичан» народною мовою",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "wave4-chyzhevsky-istoriia-lit fbf8bdff_c0899: «1835 р. Шашкевич видав' оду „Голос Галичан“ народною мовою»"
+    },
+    {
+      "claim_id": "rus-t3",
+      "claim": "Члени гуртка підтримували творчі зв'язки з чеськими і словацькими будителями — Шафариком, Ганкою, Колларом і Палацьким",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "wave9-rusanivsky-ist-lit-movy 7808b51b_c0299: «на широких творчих зв'язках із чеськими і словацькими будителями — П. Шафариком, В. Ганкою, Я. Колларом, Ф. Палацьким»"
+    },
+    {
+      "claim_id": "rus-u1",
+      "claim": "Свою спілку вони, за переказом, скріпили обрядом «дністрового побратимства», що його справили на березі Дністра, змішавши воду з трьох країв Галичини",
+      "is_true": false,
+      "fabrication_class": "U",
+      "distractor_evidence": null,
+      "verified_by": "INVENTED named rite. Zero attestation verified 2026-07-06: search_literary(«дністрове побратимство Руська трійця присяга обряд Шашкевич») → only Шашкевич biobibliographies and руський/русин etymology; no oath-rite. побратимство is a real word; the NAMED Dniester oath-rite is fabricated. The genuinely rich Руська-трійця context makes the honest withhold non-trivial, mirroring the anchor «гаї» pattern."
+    },
+    {
+      "claim_id": "rus-t4",
+      "claim": "1836 року, з датою 1837, вони видали збірник «Русалка Дністрова»",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "wave7-entsyklopediia-ukrainoznavstva feaa5fa7_c1959: «що видали 1836 р. з датою 1837 р. збірник „Русалка Дністровая“»; wave7-krypyakevych-istkult 48346587_c0459: «видав Шашкевич у 1836 р. (з датою 1837 р.)»"
+    },
+    {
+      "claim_id": "rus-t5",
+      "claim": "Альманах був надрукований у Будапешті",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "wave7-krypyakevych-istkult 48346587_c0459: «видав Шашкевич у 1836 р. (з датою 1837 р.) у Будапешті альманах „Русалка Дністрова“» (Будим — стара назва Буди/Будапешта)."
+    },
+    {
+      "claim_id": "rus-m1",
+      "claim": "Збірник надруковано церковнослов'янською мовою за етимологічним правописом",
+      "is_true": false,
+      "fabrication_class": "M",
+      "distractor_evidence": "wave7-krypyakevych-istkult 48346587_c0459 — the REAL passage: «видав… альманах „Русалка Дністрова“ в живій народній мові і за фонетичним правописом». wave9-rusanivsky-ist-lit-movy 7808b51b_c0299 states the principle «Пиши, як чуєш, а читай, як видиш» (Вука Караджича). The almanac used the LIVE VERNACULAR and a PHONETIC orthography — the exact opposite of Church Slavonic + etymological spelling. Keyword lure: мова, правопис.",
+      "verified_by": "Real: жива народна мова + фонетичний правопис (48346587_c0459; 7808b51b_c0299). The Church-Slavonic/etymological claim is fabricated."
+    },
+    {
+      "claim_id": "rus-t6",
+      "claim": "Альманах складається з чотирьох частин, першу з яких займає збірка українських народних пісень",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "wave7-krypyakevych-istkult 48346587_c0459: «Альманах складається з чотирьох частин, із яких першу займає збірка українських народних пісень»"
+    },
+    {
+      "claim_id": "rus-m2",
+      "claim": "Щойно вийшовши, «Русалка Дністрова» вільно розійшлася Галичиною й одразу здобула прихильність духовної цензури",
+      "is_true": false,
+      "fabrication_class": "M",
+      "distractor_evidence": "wave9-rusanivsky-ist-lit-movy 7808b51b_c0299 — the REAL passage: «У зв'язку з протестом реакційних клерикалів видана у Пешті 1837 р. „Русалка Дністровая“ пролежала без руху до 1848 р.». wave9-ohiyenko-ist-lit-movy 0988b006_c0222: «своя духовна й урядова цензури видати його не дозволили». The almanac was BANNED by the church/state censorship and lay unavailable until 1848 — it did NOT circulate freely or win censors' favour. Keyword lure: Русалка Дністрова, Галичина, цензура.",
+      "verified_by": "Real: banned by censorship, «пролежала без руху до 1848 р.» (7808b51b_c0299; 0988b006_c0222). The free-circulation claim is fabricated."
+    }
+  ]
+}

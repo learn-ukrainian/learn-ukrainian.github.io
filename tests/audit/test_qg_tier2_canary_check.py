@@ -13,7 +13,9 @@ BAKEOFF_ROUTE = qg_bakeoff.bakeoff_route_for_model(PIN).route_name
 
 def _passing_artifacts() -> list[dict[str, Any]]:
     artifacts: list[dict[str, Any]] = []
-    for fixture in qg_bakeoff.load_fixtures():
+    # The arming canary is pinned to its calibration set, not the whole bakeoff
+    # corpus — mirror that here so extra research fixtures do not perturb the gate.
+    for fixture in qg_bakeoff.load_fixtures(slugs=qg_tier2_canary_check.CANARY_FIXTURE_SLUGS):
         claims: list[dict[str, Any]] = []
         for claim in fixture.claims:
             verdict = "CONFIRMED" if claim.is_true else "UNATTESTED_AFTER_SEARCH"
