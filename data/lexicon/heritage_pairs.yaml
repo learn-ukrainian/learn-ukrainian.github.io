@@ -21,6 +21,43 @@ pairs:
   cefrAvailability: b1
   curator: fable-2026-07-06
   notes: has module frame
+- calqueLabel: благополучний
+  calqueSurfaces:
+  - благополучний
+  - благополучна
+  nativeSlug: щасливий
+  nativeLemma: щасливий
+  kind: lexical
+  corrections:
+  - щасливий
+  rationale: 'Антоненко: недоречний старослов''янізм під впливом рос.; українські відповідники щасливий,
+    щасний, безпечний'
+  citations:
+  - antonenko:81 Благополучний чи щасливий
+  sourceFamily: antonenko
+  sourceFamilies:
+  - antonenko
+  cefrAvailability: b1
+  curator: fable-2026-07-06
+  notes: безпечний correction dropped — not a manifest article yet
+- calqueLabel: болільник
+  calqueSurfaces:
+  - болільник
+  - болільники
+  nativeSlug: вболівальник
+  nativeLemma: вболівальник
+  kind: lexical
+  corrections:
+  - вболівальник
+  rationale: 'Антоненко: боліти = відчувати біль/жаль; спортивний уболівальник — вболівальник (від вболівати
+    за когось)'
+  citations:
+  - antonenko:14 Болільник чи вболівальник
+  sourceFamily: antonenko
+  sourceFamilies:
+  - antonenko
+  cefrAvailability: b1
+  curator: fable-2026-07-06
 - calqueLabel: біля
   calqueSurfaces:
   - біля
@@ -295,6 +332,26 @@ pairs:
   curator: fable-2026-07-06
   calqueSense: вирушити в дорогу (рос. отправиться)
   authenticSense: відправити щось кудись (перехідне)
+- calqueLabel: відсутність
+  calqueSurfaces:
+  - відсутність
+  - відсутності
+  nativeSlug: нестача
+  nativeLemma: нестача
+  kind: sense_restricted
+  corrections:
+  - нестача
+  rationale: 'Антоненко: про речі — брак/нестача; відсутність — про людей'
+  citations:
+  - antonenko:19 Відсутність, присутність, брак, наявність
+  sourceFamily: antonenko
+  sourceFamilies:
+  - antonenko
+  cefrAvailability: b1
+  curator: fable-2026-07-06
+  calqueSense: 'про речі: «відсутність доказів» (рос. отсутствие)'
+  authenticSense: відсутність людей (відсутній на зборах)
+  notes: брак correction dropped — not a manifest article yet
 - calqueLabel: вірний
   calqueSurfaces:
   - вірно
@@ -659,6 +716,24 @@ pairs:
   calqueSense: царина знань/діяльності (рос. область знаний)
   authenticSense: адміністративна область
   notes: MERGE область→ділянка/сфера; CHECK галузь in manifest
+- calqueLabel: облік
+  calqueSurfaces:
+  - облік
+  nativeSlug: обличчя
+  nativeLemma: обличчя
+  kind: sense_restricted
+  corrections:
+  - обличчя
+  rationale: 'Антоненко: рос. облик механічно перенесене; українською — обличчя (переносно)'
+  citations:
+  - antonenko:50 Облік і обличчя
+  sourceFamily: antonenko
+  sourceFamilies:
+  - antonenko
+  cefrAvailability: b1
+  curator: fable-2026-07-06
+  calqueSense: 'зовнішній образ: «облік сучасника» (рос. облик)'
+  authenticSense: облік = облічування, реєстрація (взяти на облік)
 - calqueLabel: образ
   calqueSurfaces:
   - образ
@@ -693,6 +768,24 @@ pairs:
   sourceFamilies:
   - ua-gec
   cefrAvailability: a2
+  curator: fable-2026-07-06
+- calqueLabel: пануючий
+  calqueSurfaces:
+  - пануючий
+  - пануючі
+  nativeSlug: панівний
+  nativeLemma: панівний
+  kind: lexical
+  corrections:
+  - панівний
+  rationale: 'Антоненко: між пануючий і панівний немає значеннєвої різниці — пануючий суперечить духові
+    мови, завжди панівний'
+  citations:
+  - antonenko:190 Пануючий чи панівний
+  sourceFamily: antonenko
+  sourceFamilies:
+  - antonenko
+  cefrAvailability: b1
   curator: fable-2026-07-06
 - calqueLabel: папа
   calqueSurfaces:
@@ -754,6 +847,24 @@ pairs:
   - ua-gec
   cefrAvailability: b1
   curator: fable-2026-07-06
+- calqueLabel: переписка
+  calqueSurfaces:
+  - переписка
+  nativeSlug: листування
+  nativeLemma: листування
+  kind: sense_restricted
+  corrections:
+  - листування
+  rationale: 'Антоненко: обмін листами зветься листування; переписка — копіювання'
+  citations:
+  - antonenko:53 Переписка й листування
+  sourceFamily: antonenko
+  sourceFamilies:
+  - antonenko
+  cefrAvailability: b1
+  curator: fable-2026-07-06
+  calqueSense: обмін листами (рос. переписка)
+  authenticSense: переписування = процес копіювання написаного
 - calqueLabel: пол
   calqueSurfaces:
   - полу
@@ -811,6 +922,42 @@ pairs:
   curator: fable-2026-07-06
   calqueSense: публікація в соцмережі (рос./англ. пост)
   authenticSense: військовий пост; релігійний піст — окрема лексема
+- calqueLabel: початкуючий
+  calqueSurfaces:
+  - початкуючий
+  - початкуючі
+  nativeSlug: початківець
+  nativeLemma: початківець
+  kind: lexical
+  corrections:
+  - початківець
+  rationale: 'Антоненко: рос. начинающий → початківець (початківець-письменник, початківець-художник)'
+  citations:
+  - antonenko:192 Початкуючий – початківець
+  sourceFamily: antonenko
+  sourceFamilies:
+  - antonenko
+  cefrAvailability: b1
+  curator: fable-2026-07-06
+- calqueLabel: працюючий
+  calqueSurfaces:
+  - працюючий
+  - працюючі
+  nativeSlug: працівник
+  nativeLemma: працівник
+  kind: lexical
+  corrections:
+  - працівник
+  - трудівник
+  rationale: 'Антоненко (у статті 192): працюючий – що працює – трудящий, трудівник, працівник'
+  citations:
+  - antonenko:192 Початкуючий – початківець (кінцівка статті)
+  sourceFamily: antonenko
+  sourceFamilies:
+  - antonenko
+  cefrAvailability: b1
+  curator: fable-2026-07-06
+  notes: трудівник kept as display correction; manifest gate applies to nativeSlug only
 - calqueLabel: приймати
   calqueSurfaces:
   - приймати
@@ -836,6 +983,25 @@ pairs:
   authenticSense: приймати гостей, приймати рішення
   notes: GEC correction was вживати(ліки); canonical flagship form = брати участь; needs authored frames
     both
+- calqueLabel: присвоїти
+  calqueSurfaces:
+  - присвоїли
+  - присвоїти
+  nativeSlug: надати
+  nativeLemma: надати
+  kind: sense_restricted
+  corrections:
+  - надати
+  rationale: 'Антоненко: звання, ордени, права надають; присвоїти — привласнити'
+  citations:
+  - antonenko:173 Присвоїти й надати
+  sourceFamily: antonenko
+  sourceFamilies:
+  - antonenko
+  cefrAvailability: b1
+  curator: fable-2026-07-06
+  calqueSense: присвоїти звання/права (рос. присвоить звание)
+  authenticSense: присвоїти = привласнити чуже
 - calqueLabel: пробка
   calqueSurfaces:
   - пробках
@@ -876,6 +1042,24 @@ pairs:
   curator: fable-2026-07-06
   calqueSense: піднімати питання/тему (рос. поднимать вопрос)
   authenticSense: фізично піднімати
+- calqueLabel: підписка
+  calqueSurfaces:
+  - підписка
+  nativeSlug: передплата
+  nativeLemma: передплата
+  kind: sense_restricted
+  corrections:
+  - передплата
+  rationale: 'Антоненко: газети передплачують; підписка — зобов''язання'
+  citations:
+  - antonenko:55 Підписка й передплата
+  sourceFamily: antonenko
+  sourceFamilies:
+  - antonenko
+  cefrAvailability: b1
+  curator: fable-2026-07-06
+  calqueSense: передплата газет/журналів (рос. подписка)
+  authenticSense: підписка = письмове зобов'язання, ствердження підписом
 - calqueLabel: слідуючий
   calqueSurfaces:
   - слідуючий
