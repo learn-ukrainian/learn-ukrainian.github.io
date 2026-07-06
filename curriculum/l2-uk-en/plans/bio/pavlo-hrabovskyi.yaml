@@ -134,6 +134,26 @@ persona:
     російського імперського заслання, не зводячи поета до мученицького епізоду.
   voice: Intellectual Historian
 phase: BIO
+readings:
+- source: "Енциклопедія історії України"
+  title: "Грабовський Павло Арсенович"
+  url: "https://www.history.org.ua/?termin=Grabovsky_P"
+  language: "uk"
+  hosting: "link-only"
+  rights_note: "Copyrighted, link only"
+- source: "ЕСУ"
+  title: "Грабовський Павло Арсенович"
+  url: "https://esu.com.ua/article-26782"
+  language: "uk"
+  hosting: "link-only"
+  rights_note: "Copyrighted, link only"
+- source: "Вікіджерела"
+  title: "Швачка (Пролїсок)"
+  url: "https://uk.wikisource.org/wiki/Пролїсок/Швачка"
+  language: "uk"
+  hosting: "link-only"
+  rights_note: "Public domain text, hosted externally"
+
 references:
 - note: Стаття про життя, репресії та літературний доробок поета.
   path: https://www.history.org.ua/?termin=Grabovsky_P
@@ -159,7 +179,7 @@ sequence: 215
 slug: pavlo-hrabovskyi
 subtitle: The Civic Poet and Translator Exiled to Siberia by the Empire
 title: 'Павло Грабовський: Поет неволі та галицького слова'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: примусове виселення у віддалену місцевість як вид адміністративного покарання
   pos: с.

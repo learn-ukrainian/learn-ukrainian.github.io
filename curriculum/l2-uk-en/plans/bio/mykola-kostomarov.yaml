@@ -126,6 +126,26 @@ persona:
     репресію, відрізняючи засвідчені джерелами факти від пізнішого міфу.
   voice: Intellectual Historian
 phase: BIO
+readings:
+- source: "Енциклопедія історії України"
+  title: "Костомаров Микола Іванович"
+  url: "https://www.history.org.ua/?termin=Kostomarov_M"
+  language: "uk"
+  hosting: "link-only"
+  rights_note: "Copyrighted, link only"
+- source: "Вікіджерела"
+  title: "Книги битія українського народу"
+  url: "https://uk.wikisource.org/wiki/Книги_битія_українського_народу"
+  language: "uk"
+  hosting: "link-only"
+  rights_note: "Public domain text, hosted externally"
+- source: "Вікіджерела"
+  title: "Дві руські народності"
+  url: "https://uk.wikisource.org/wiki/Дві_руські_народності"
+  language: "uk"
+  hosting: "link-only"
+  rights_note: "Public domain text, hosted externally"
+
 references:
 - note: Стаття про життя, братство та репресію; джерело розбіжності щодо дати народження.
   path: https://www.history.org.ua/?termin=Kostomarov_M
@@ -150,7 +170,7 @@ sequence: 216
 slug: mykola-kostomarov
 subtitle: The Historian and Brotherhood Founder Imprisoned for Imagining a Free Ukraine
 title: 'Микола Костомаров: Братство, "Книги битія" та імперська фортеця'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: добровільне об'єднання людей задля спільної мети; Кирило-Мефодіївське братство
   pos: с.

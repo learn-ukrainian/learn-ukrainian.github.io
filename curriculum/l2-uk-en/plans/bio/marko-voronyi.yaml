@@ -124,6 +124,20 @@ persona:
     голос автора, і точну хронологію репресій.
   voice: Intellectual Historian
 phase: BIO
+readings:
+- source: "ЕСУ"
+  title: "Вороний Марко Миколайович"
+  url: "https://esu.com.ua/article-29782"
+  language: "uk"
+  hosting: "link-only"
+  rights_note: "Copyrighted, link only"
+- source: "Музей-заповідник М. Коцюбинського"
+  title: "Співець трагічної епохи..."
+  url: "https://kotsubinsky.org/news/spivec_tragichnoji_epokhi_do_115_richchja_z_dnja_narodzhennja_marka_voronogo_18_03_1904_3_11_1937/2019-03-18-1381"
+  language: "uk"
+  hosting: "link-only"
+  rights_note: "Copyrighted, link only"
+
 references:
 - note: Основна українська енциклопедична стаття про Марка Вороного.
   path: https://esu.com.ua/article-29782
@@ -150,7 +164,7 @@ sequence: 211
 slug: marko-voronyi
 subtitle: The Second-Generation Poet in the Solovki-Sandarmokh Mechanism
 title: "Марко Вороний: Власний голос у знищеній літературній родині"
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: ім'я, яким автор підписує твори замість або поруч зі справжнім іменем
   pos: ч.
