@@ -162,11 +162,17 @@ references:
   note: 'Незгодні: українська інтелігенція в русі опору 1960—1980-х років. К.: Либідь, 1995 — контекст дисидентського руху.'
   title: Незгодні
   type: reference
+readings:
+- hosting: link-only
+  language: uk
+  role: Основна біографічна стаття про Івана Кандибу.
+  source: Вікіпедія
+  url: https://uk.wikipedia.org/wiki/Кандиба_Іван_Олексійович
 sequence: 281
 slug: ivan-kandyba
 subtitle: The Jurist Who Co-Founded the Ukrainian Helsinki Group
 title: 'Іван Кандиба: Юрист Української Гельсінської групи'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: особа, що професійно або на громадських засадах захищає права людини
   pos: ч.

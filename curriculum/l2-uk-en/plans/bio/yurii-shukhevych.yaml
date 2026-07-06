@@ -131,11 +131,17 @@ references:
   path: https://uk.wikipedia.org/wiki/Шухевич_Юрій-Богдан_Романович
   title: Шухевич Юрій-Богдан Романович
   type: reference
+readings:
+- hosting: link-only
+  language: uk
+  role: Основна біографічна довідка про Юрія Шухевича.
+  source: Харківська правозахисна група (ХПГ)
+  url: https://museum.khpg.org/1114002064
 sequence: 279
 slug: yurii-shukhevych
 subtitle: Punished as a Son, a Dissident by His Own Choice
 title: 'Юрій Шухевич: Покараний як син, інакодумець за власним вибором'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: людина, що відкрито дотримується поглядів, відмінних від панівної ідеології, і зазнає за
     це переслідувань.
