@@ -141,6 +141,13 @@ persona:
     досвід політичного ув'язнення.
   voice: Human Rights Historian
 phase: BIO
+readings:
+- hosting: link-only
+  language: uk
+  notes: Стаття про життя і громадську діяльність.
+  role: primary
+  source: Енциклопедія Сучасної України (ЕСУ)
+  url: https://esu.com.ua/article-887407
 references:
 - note: Стаття про життя і громадську діяльність.
   path: https://esu.com.ua/article-887407
@@ -162,7 +169,7 @@ sequence: 274
 slug: nadiia-svitlychna
 subtitle: The Information Labor of Dissidence
 title: 'Надія Світлична: Інформаційна праця як спротив'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: представниця покоління українських митців та інтелектуалів 1960-х років, що обстоювали національну культуру й громадянські права
   pos: ж.

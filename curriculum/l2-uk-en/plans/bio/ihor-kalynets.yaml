@@ -138,6 +138,13 @@ persona:
     культурної пам'яті.
   voice: Literary-Historical Analyst
 phase: BIO
+readings:
+- hosting: link-only
+  language: uk
+  notes: Оновлена енциклопедична стаття з датою смерті, біографією, творами і премією.
+  role: primary
+  source: Енциклопедія Сучасної України (ЕСУ)
+  url: https://esu.com.ua/article-10472
 references:
 - note: Оновлена енциклопедична стаття з датою смерті, біографією, творами і премією.
   path: https://esu.com.ua/article-10472
@@ -164,7 +171,7 @@ sequence: 272
 slug: ihor-kalynets
 subtitle: Neo-Baroque Poet, Political Prisoner, and Witness of Cultural Resistance
 title: 'Ігор Калинець: невольнича муза і поезія як вчинок'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: стильова манера складної, багатошарової образності, що переосмислює барокову спадщину в модерній поезії
   pos: с.
