@@ -78,6 +78,14 @@ persona:
   role: Модератор семінару, що ставить під сумнів романтичні міфи та фокусується на політичних розрахунках, ціні рішень та довгострокових наслідках.
   voice: Historical-Realist
 phase: BIO.3
+readings:
+- hosting: link-only
+  language: uk
+  note: Базова енциклопедична стаття про життєвий шлях, союз із Карлом XII та Іваном Мазепою.
+  source_name: Енциклопедія історії України (Інститут історії України НАНУ)
+  source_type: encyclopedia
+  source_url: http://www.history.org.ua/?termin=Hordiienko_K
+  title: Гордієнко Кость
 references:
 - title: Kost Hordiyenko
   note: Internal wiki compilation on Hordiyenko, his alliance, and the 1710 Constitution.
@@ -97,7 +105,7 @@ sequence: 49
 slug: kost-hordiyenko
 subtitle: The Koshovyi Otaman Who Defied an Empire
 title: 'Кость Гордієнко: Останній Лицар Запорожжя'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: найвища виборна посада у Запорозькій Січі, голова козацького уряду
   pos: ч.
