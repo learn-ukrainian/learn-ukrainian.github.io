@@ -1070,11 +1070,14 @@ def test_subscription_runtime_bare_invokes_agent_runtime_with_bare_claude_config
             "agent_name": "claude",
             "prompt": "bare prompt",
             "mode": "read-only",
-            "cwd": qg_bakeoff.PROJECT_ROOT,
+            "cwd": qg_bakeoff._neutral_runtime_cwd(),
             "model": qg_bakeoff.CLAUDE_SUBSCRIPTION_BARE_MODEL_ID,
             "task_id": "task-1",
             "session_id": None,
-            "tool_config": {"use_bare": True, "output_format": "stream-json"},
+            # use_bare=False is load-bearing: `claude --bare` bypasses the
+            # OAuth session and demands ANTHROPIC_API_KEY — on the
+            # subscription machine it fails "Not logged in" (2026-07-06 probe).
+            "tool_config": {"use_bare": False, "output_format": "stream-json"},
             "entrypoint": qg_bakeoff.BARE_RUNTIME_ENTRYPOINT,
             "hard_timeout": 1800,
             "stall_timeout": 600,
@@ -1082,6 +1085,52 @@ def test_subscription_runtime_bare_invokes_agent_runtime_with_bare_claude_config
     ]
     assert result.usage and result.usage["cli_version"] == "claude-code 2.2.0"
     assert result.usage["resolved_model"] == "claude-opus-resolved"
+    assert result.usage["cwd_policy"] == "neutral-tmp"
+
+
+def test_subscription_runtime_bare_cwd_is_outside_the_repo(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Standing-rules firewall: bare cells must NEVER run from inside the repo.
+
+    Agent CLIs walk up from cwd to load CLAUDE.md / AGENTS.md / GEMINI.md —
+    a cwd under PROJECT_ROOT injects project standing rules into a
+    measurement that promises a bare prompt (caught live 2026-07-06: the
+    gpt/gemini cells ran with repo rules in context).
+    """
+    seen_cwds: list[Path] = []
+
+    def fake_invoke(agent_name: str, prompt: str, **kwargs: Any) -> SimpleNamespace:
+        seen_cwds.append(Path(kwargs["cwd"]))
+        return SimpleNamespace(
+            ok=True,
+            response=json.dumps({"fact_checks": []}),
+            rate_limited=False,
+            returncode=0,
+            stderr_excerpt=None,
+            usage_record={},
+            cli_version="x",
+            agent=agent_name,
+            model="m",
+            tool_calls=[],
+            tool_calls_total=0,
+        )
+
+    monkeypatch.setattr("scripts.agent_runtime.runner.invoke", fake_invoke)
+    for pin in (
+        qg_bakeoff.CLAUDE_SUBSCRIPTION_BARE_MODEL_ID,
+        qg_bakeoff.GPT_SUBSCRIPTION_BARE_MODEL_ID,
+        qg_bakeoff.GEMINI_SUBSCRIPTION_BARE_MODEL_ID,
+    ):
+        route = qg_bakeoff.route_for_matrix_pin(pin, arm=qg_bakeoff.BARE_ARM)
+        qg_bakeoff.invoke_subscription_bare_route(route, "bare prompt", f"task-{pin}")
+
+    assert len(seen_cwds) == 3
+    repo_root = qg_bakeoff.PROJECT_ROOT.resolve()
+    for cwd in seen_cwds:
+        resolved = cwd.resolve()
+        assert resolved != repo_root
+        assert not resolved.is_relative_to(repo_root)
 
 
 def test_subscription_runtime_bare_artifact_identity_and_filename(tmp_path: Path) -> None:
