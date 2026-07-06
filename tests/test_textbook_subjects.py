@@ -192,3 +192,30 @@ def test_wave1_stem_url_config_slugs_map_to_canonical_subjects() -> None:
     for slug, expected_subject in WAVE1_STEM_TEXTBOOK_SOURCE_FILES.items():
         subject_token = slug.split("-klas-", maxsplit=1)[1].split("-", maxsplit=1)[0]
         assert normalize_subject_slug(subject_token) == expected_subject
+
+
+BATCH2_SOURCE_FILES: dict[str, str] = {
+    "11-klas-astronomiya-pryshliak-2019": "astronomiya",
+    "10-klas-ekonomika-krupska-2018": "ekonomika",
+    "10-klas-pravoznavstvo-lukianchykov-2018": "pravoznavstvo",
+    "11-klas-pravoznavstvo-narovlianskyi-2019": "pravoznavstvo",
+    "10-klas-hromadianska-gisem-2018": "hromadianska",
+    "10-klas-zakhyst-fuka-2023": "zakhyst",
+    "8-klas-mystetstvo-komarovska-2025": "mystetstvo",
+    "9-klas-mystetstvo-masol-2017": "mystetstvo",
+    "6-klas-heohrafiya-zapotockyi-2023": "heohrafiya",
+    "7-klas-heohrafiya-hilberh-2024": "heohrafiya",
+    "8-klas-heohrafiya-hilberh-2025": "heohrafiya",
+}
+
+
+def test_batch2_slugs_resolve_to_new_canonical_subjects() -> None:
+    """#4593 batch 2: applied-register subjects (gap-audit rank-1 consumers)."""
+    from scripts.wiki.textbook_subjects import (
+        CANONICAL_TEXTBOOK_SUBJECTS,
+        subject_for_source_file,
+    )
+
+    for slug, expected in BATCH2_SOURCE_FILES.items():
+        assert subject_for_source_file(slug) == expected, slug
+        assert expected in CANONICAL_TEXTBOOK_SUBJECTS

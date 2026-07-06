@@ -45,6 +45,16 @@ AUTHOR_UK: dict[str, str] = {
     "hryhorovych": "Григорович",
     "popel": "Попель",
     "anderson": "Андерсон",
+    # #4593 batch-2 authors (title-probed 2026-07-06)
+    "pryshliak": "Пришляк",
+    "krupska": "Крупська",
+    "lukianchykov": "Лук'янчиков",
+    "narovlianskyi": "Наровлянський",
+    "fuka": "Фука",
+    "komarovska": "Комаровська",
+    "masol": "Масол",
+    "zapotockyi": "Запотоцький",
+    "hilberh": "Гільберг",
 }
 
 WAVE1_SLUGS: tuple[str, ...] = (

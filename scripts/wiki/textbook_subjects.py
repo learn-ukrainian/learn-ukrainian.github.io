@@ -18,6 +18,12 @@ CANONICAL_TEXTBOOK_SUBJECTS: tuple[str, ...] = (
     "khimiya",
     "biolohiya",
     "heohrafiya",
+    "astronomiya",
+    "ekonomika",
+    "pravoznavstvo",
+    "hromadianska",
+    "zakhyst",
+    "mystetstvo",
 )
 
 
@@ -151,6 +157,12 @@ _SUBJECT_ALIASES: dict[str, str] = {
 
 
 _SUBJECT_TOKEN_PATTERNS: tuple[tuple[str, tuple[str, ...]], ...] = (
+    ("astronomiya", ("astronomiya", "astronomiia", "astronomija")),
+    ("ekonomika", ("ekonomika", "ekonomka")),
+    ("pravoznavstvo", ("pravoznavstvo",)),
+    ("hromadianska", ("hromadianska", "gromadianska", "gromadjanska")),
+    ("zakhyst", ("zakhyst", "zahyst")),
+    ("mystetstvo", ("mystetstvo", "mystectvo", "mistectvo")),
     (
         "lexicon",
         (
