@@ -714,9 +714,86 @@ const frontmatter = {
   }
 
   :global(.lexicon-choice),
-  :global(.lexicon-cloze) {
+  :global(.lexicon-cloze),
+  :global(.lexicon-heritage) {
     display: grid;
     gap: 1rem;
+  }
+
+  :global(.heritage-task) {
+    margin: 0 0 -0.1rem;
+    color: var(--lu-teal);
+    font-size: 0.92rem;
+    font-weight: 900;
+  }
+
+  :global(.heritage-sentence) {
+    margin: 0;
+    padding: 1.4rem 1.5rem;
+    border: 1px solid var(--lu-border);
+    border-left: 4px solid var(--lu-teal);
+    border-radius: 14px;
+    background: var(--lu-surface-raised);
+    box-shadow: var(--lu-shadow);
+    color: var(--lu-text);
+    font-size: 1.45rem;
+    font-weight: 700;
+    line-height: 1.6;
+  }
+
+  :global(.heritage-slot) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 96px;
+    padding: 0 10px;
+    margin: 0 4px;
+    border-bottom: 3px solid var(--lu-teal);
+    color: var(--lu-teal);
+    font-weight: 900;
+  }
+
+  :global(.heritage-slot.filled) {
+    border-bottom-color: var(--lu-green);
+    color: var(--lu-state-correct-fg);
+  }
+
+  :global(.heritage-feedback) {
+    margin: 0;
+    padding: 0.85rem 0.95rem;
+    border-radius: 8px;
+    font-weight: 800;
+    line-height: 1.45;
+  }
+
+  :global(.heritage-feedback p) {
+    margin: 0;
+  }
+
+  :global(.heritage-feedback p + p) {
+    margin-top: 0.35rem;
+  }
+
+  :global(.heritage-feedback.correct) {
+    background: var(--lu-state-correct-bg);
+    color: var(--lu-state-correct-fg);
+  }
+
+  :global(.heritage-feedback.calque) {
+    border: 1px solid color-mix(in srgb, var(--lu-orange) 40%, transparent);
+    background: var(--lu-orange-light);
+    color: var(--lu-orange);
+  }
+
+  :global(.heritage-feedback.wrong) {
+    background: var(--lu-state-wrong-bg);
+    color: var(--lu-state-wrong-fg);
+  }
+
+  :global(.heritage-citation) {
+    color: var(--lu-text-muted);
+    font-size: 0.86rem;
+    font-weight: 700;
   }
 
   :global(.mc-q) {

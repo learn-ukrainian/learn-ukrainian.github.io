@@ -8,6 +8,7 @@ import {
   loadState,
   saveState,
   type PracticeDeckData,
+  type PracticeHeritageItem,
   type PracticeLexeme,
   type PracticeMode,
 } from '@site/src/lib/lexicon/srs';
@@ -29,13 +30,23 @@ function mockShardFetch(counts: Partial<Record<CefrLevel, number>>) {
   const fn = vi.fn(async (input: RequestInfo | URL) => {
     const url = String(input);
     requested.push(url);
-    const match = url.match(/practice-(index|lexemes|cloze)\.([ABC][12])\.json/);
+    const match = url.match(
+      /practice-(index|lexemes|cloze|stress|classify|paradigm|synonym|heritage)\.([ABC][12])\.json/,
+    );
     if (!match) return notFoundResponse();
-    const kind = match[1] as 'index' | 'lexemes' | 'cloze';
+    const kind = match[1] as
+      | 'index'
+      | 'lexemes'
+      | 'cloze'
+      | 'stress'
+      | 'classify'
+      | 'paradigm'
+      | 'synonym'
+      | 'heritage';
     const level = match[2] as CefrLevel;
     const n = counts[level];
     if (n === undefined) return notFoundResponse(); // shard not published (e.g. C2)
-    if (kind === 'cloze') return okJson({ cloze: [] });
+    if (kind !== 'index' && kind !== 'lexemes') return okJson({ [kind]: [] });
     const lexemes = Array.from({ length: n }, (_unused, i) =>
       lexeme(
         `${level}-${i}`,
@@ -182,6 +193,70 @@ function sampleDeck(): PracticeDeckData {
         ],
       },
     ],
+  };
+}
+
+function heritagePracticeItem(): PracticeHeritageItem {
+  return {
+    heritageId: 'her-dim-fixture',
+    lemmaId: 'dim',
+    srsKey: cardKey('dim', 'heritage'),
+    lemma: 'дім',
+    nativeLemma: 'дім',
+    calqueLabel: 'дом',
+    kind: 'lexical',
+    prompt: 'Я бачу ___ щодня.',
+    answer: 'дім',
+    calque: 'дом',
+    origin: 'fixture',
+    frameIndex: 1,
+    cefr: 'A2',
+    options: [
+      { label: 'дім' },
+      { label: 'дом' },
+      { label: 'хата' },
+      { label: 'місто' },
+    ],
+    rationale: 'у цьому значенні потрібне питоме слово',
+    citations: ['Антоненко-Давидович: fixture'],
+    corrections: ['дім'],
+    sourceFamily: 'fixture',
+  };
+}
+
+function heritageDeck({ includeItems = true } = {}): PracticeDeckData {
+  const entry = lexeme(
+    'dim',
+    'дім',
+    'home',
+    {
+      nominative: 'дім',
+      accusative: 'дім',
+      locative: 'домі',
+    },
+    { cefr: 'A2', heritage: 'native' },
+  );
+  return {
+    deckVersion: 'test-heritage',
+    level: 'A2',
+    lexemes: [entry],
+    index: [
+      {
+        lemmaId: entry.lemmaId,
+        lemma: entry.lemma,
+        cefr: 'A2',
+        modes: ['heritage'],
+        hasCloze: false,
+        clozeIds: [],
+        newOrder: 0,
+      },
+    ],
+    cloze: [],
+    stress: [],
+    classify: [],
+    paradigm: [],
+    synonym: [],
+    heritage: includeItems ? [heritagePracticeItem()] : [],
   };
 }
 
@@ -468,6 +543,120 @@ describe('LexiconPractice', () => {
     expect(labels).toHaveLength(4);
     // The verb answer is present whichever polarity the selector picked.
     expect(labels.some((label) => label === 'бачити' || label === 'to see')).toBe(true);
+  });
+
+  test('heritage renders in mixed sessions and heritage focus mode', async () => {
+    const user = userEvent.setup();
+    const mixedRender = render(
+      <LexiconPractice
+        initialDeck={heritageDeck()}
+        autoStart
+        initialMode="mixed"
+        advanceDelayMs={10_000}
+      />,
+    );
+
+    expect(screen.getByTestId('practice-heritage')).toBeInTheDocument();
+    expect(screen.getByText('Оберіть питоме українське слово.')).toBeInTheDocument();
+    expect(screen.getByText(/Я бачу/)).toBeInTheDocument();
+
+    mixedRender.unmount();
+    const { container } = render(<LexiconPractice initialDeck={heritageDeck()} advanceDelayMs={10_000} />);
+    expect(screen.getByText('Спадщина')).toBeInTheDocument();
+
+    await user.click(container.querySelector<HTMLButtonElement>('[data-mode="heritage"]')!);
+
+    expect(await screen.findByTestId('practice-heritage')).toBeInTheDocument();
+  });
+
+  test('heritage calque miss scores again and shows cited correction', async () => {
+    const user = userEvent.setup();
+    render(
+      <LexiconPractice
+        initialDeck={heritageDeck()}
+        autoStart
+        initialMode="heritage"
+        advanceDelayMs={10_000}
+      />,
+    );
+
+    await user.click(
+      within(screen.getByTestId('practice-heritage')).getByRole('button', { name: /дом/ }),
+    );
+
+    const feedback = screen.getByTestId('practice-heritage-feedback');
+    expect(feedback).toHaveTextContent('⚠️ калька; у цьому значенні потрібне питоме слово');
+    expect(feedback).toHaveTextContent('Джерело: Антоненко-Давидович: fixture');
+    await waitFor(() => {
+      expect(storedState().reviews[0]).toMatchObject({
+        lemmaId: 'dim',
+        mode: 'heritage',
+        rating: 'again',
+        cardKey: cardKey('dim', 'heritage'),
+      });
+    });
+  });
+
+  test('heritage plain distractor miss does not leak calque correction feedback', async () => {
+    const user = userEvent.setup();
+    render(
+      <LexiconPractice
+        initialDeck={heritageDeck()}
+        autoStart
+        initialMode="heritage"
+        advanceDelayMs={10_000}
+      />,
+    );
+
+    await user.click(
+      within(screen.getByTestId('practice-heritage')).getByRole('button', { name: /місто/ }),
+    );
+
+    const feedback = screen.getByTestId('practice-heritage-feedback');
+    expect(feedback).toHaveTextContent('Ще раз');
+    expect(feedback).not.toHaveTextContent('калька');
+    expect(feedback).not.toHaveTextContent('у цьому значенні потрібне питоме слово');
+    expect(feedback).not.toHaveTextContent('Антоненко-Давидович');
+    await waitFor(() => {
+      expect(storedState().reviews[0]).toMatchObject({
+        lemmaId: 'dim',
+        mode: 'heritage',
+        rating: 'again',
+      });
+    });
+  });
+
+  test('heritage correct answer scores good', async () => {
+    const user = userEvent.setup();
+    render(
+      <LexiconPractice
+        initialDeck={heritageDeck()}
+        autoStart
+        initialMode="heritage"
+        advanceDelayMs={10_000}
+      />,
+    );
+
+    await user.click(
+      within(screen.getByTestId('practice-heritage')).getByRole('button', { name: /дім/ }),
+    );
+
+    expect(screen.getByTestId('practice-heritage-feedback')).toHaveTextContent('Правильно');
+    await waitFor(() => {
+      expect(storedState().reviews[0]).toMatchObject({
+        lemmaId: 'dim',
+        mode: 'heritage',
+        rating: 'good',
+        cardKey: cardKey('dim', 'heritage'),
+      });
+    });
+  });
+
+  test('hides heritage mode card when the loaded deck has no heritage items', () => {
+    render(<LexiconPractice initialDeck={heritageDeck({ includeItems: false })} />);
+
+    expect(screen.queryByText('Спадщина')).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /Спадщина/ })).not.toBeInTheDocument();
   });
 
   test('cloze wrong-case answer records one case miss and leaves blank open', async () => {
