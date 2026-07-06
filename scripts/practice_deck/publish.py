@@ -24,6 +24,12 @@ KINDS = {
     "index": ("practice-index.{level}.json", "atlas-practice-index"),
     "lexemes": ("practice-lexemes.{level}.json", "atlas-practice-lexemes"),
     "cloze": ("practice-cloze.{level}.json", "atlas-practice-cloze"),
+    "stress": ("practice-stress.{level}.json", "atlas-practice-stress"),
+    "classify": ("practice-classify.{level}.json", "atlas-practice-classify"),
+    "paradigm": ("practice-paradigm.{level}.json", "atlas-practice-paradigm"),
+    "synonym": ("practice-synonym.{level}.json", "atlas-practice-synonym"),
+    "heritage": ("practice-heritage.{level}.json", "atlas-practice-heritage"),
+    "paronym": ("practice-paronym.{level}.json", "atlas-practice-paronym"),
 }
 
 

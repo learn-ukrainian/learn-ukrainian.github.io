@@ -57,6 +57,19 @@ def _write_practice_deck(practice_dir: Path, *, deck_version: str = "atlas-pract
                 "cloze": [],
             },
         )
+        for kind, (_template, schema) in KINDS.items():
+            if kind in {"index", "lexemes", "cloze"}:
+                continue
+            _write_json(
+                practice_dir / f"practice-{kind}.{level}.json",
+                {
+                    "schema": schema,
+                    "schemaVersion": 1,
+                    "deckVersion": deck_version,
+                    "level": level,
+                    kind: [],
+                },
+            )
 
 
 def test_publish_practice_deck_dry_run_builds_hash_pinned_package(tmp_path: Path) -> None:

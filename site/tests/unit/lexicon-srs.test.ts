@@ -142,6 +142,82 @@ function modeDeck(rows: { id: string; modes: PracticeMode[] }[]): PracticeDeckDa
     level: 'A1',
     lexemes,
     cloze: [],
+    stress: rows
+      .filter((row) => row.modes.includes('stress'))
+      .map((row) => ({
+        stressId: `${row.id}:stress`,
+        lemmaId: row.id,
+        lemma: row.id,
+        stressed: `${row.id}́`,
+        unstressed: row.id,
+        stressIndex: 0,
+        nuclei: [{ index: 0, label: row.id[0] ?? 'а' }, { index: 1, label: 'а' }],
+        source: 'fixture',
+      })),
+    classify: rows
+      .filter((row) => row.modes.includes('classify'))
+      .map((row) => ({
+        classifyId: `${row.id}:classify`,
+        lemmaId: row.id,
+        lemma: row.id,
+        source: 'fixture',
+        sets: [
+          {
+            setId: 'gender',
+            setLabelUk: 'рід',
+            answer: 'masculine',
+            answerLabelUk: 'чоловічий',
+            options: [
+              { value: 'masculine', labelUk: 'чоловічий' },
+              { value: 'feminine', labelUk: 'жіночий' },
+              { value: 'neuter', labelUk: 'середній' },
+            ],
+          },
+          {
+            setId: 'pos',
+            setLabelUk: 'частина мови',
+            answer: 'noun',
+            answerLabelUk: 'іменник',
+            options: [
+              { value: 'noun', labelUk: 'іменник' },
+              { value: 'verb', labelUk: 'дієслово' },
+              { value: 'adjective', labelUk: 'прикметник' },
+            ],
+          },
+        ],
+      })),
+    paradigm: rows
+      .filter((row) => row.modes.includes('paradigm'))
+      .map((row) => ({
+        paradigmId: `${row.id}:paradigm:1`,
+        lemmaId: row.id,
+        lemma: row.id,
+        slot: { case: 'знахідний', number: 'singular', labelUk: 'знахідний відмінок, однина' },
+        form: `${row.id}у`,
+        options: [
+          { label: `${row.id}у`, kind: 'answer' },
+          { label: row.id, kind: 'same-paradigm' },
+          { label: `${row.id}і`, kind: 'same-paradigm' },
+          { label: `${row.id}ом`, kind: 'same-paradigm' },
+        ],
+      })),
+    synonym: rows
+      .filter((row) => row.modes.includes('synonym'))
+      .map((row) => ({
+        synonymId: `${row.id}:synonym`,
+        lemmaId: row.id,
+        targetLemmaId: `${row.id}-target`,
+        polarity: 'synonym' as const,
+        prompt: row.id,
+        answer: `${row.id}-answer`,
+        source: 'fixture',
+        options: [
+          { label: `${row.id}-answer`, lemmaId: `${row.id}-target`, kind: 'answer' },
+          { label: `${row.id}-d1`, lemmaId: `${row.id}-d1`, kind: 'distractor' },
+          { label: `${row.id}-d2`, lemmaId: `${row.id}-d2`, kind: 'distractor' },
+          { label: `${row.id}-d3`, lemmaId: `${row.id}-d3`, kind: 'distractor' },
+        ],
+      })),
     index: rows.map((row, index) => ({
       lemmaId: row.id,
       lemma: row.id,
@@ -168,7 +244,7 @@ describe('lexicon SRS facade', () => {
     });
   });
 
-  test('parses known card-key modes including the Phase-1 drill trio', () => {
+  test('parses known card-key modes and schedules backed wave-1 drills', () => {
     for (const mode of PRACTICE_MODES) {
       expect(isPracticeMode(mode)).toBe(true);
       expect(parseCardKey(`alpha::${mode}`)).toEqual({
@@ -178,12 +254,36 @@ describe('lexicon SRS facade', () => {
       });
     }
 
-    for (const mode of ['paradigm', 'stress', 'heritage'] as const) {
+    for (const mode of ['paradigm', 'stress', 'classify', 'synonym'] as const) {
       const selection = selectNextPracticeItem(modeDeck([{ id: `${mode}-alpha`, modes: [mode] }]), {
         now: NOW,
       });
       expect(selection?.mode).toBe(mode);
     }
+    expect(selectNextPracticeItem(modeDeck([{ id: 'heritage-alpha', modes: ['heritage'] }]), { now: NOW })).toBeNull();
+  });
+
+  test('classify rotates outcome sets while keeping one SRS card key', () => {
+    const testDeck = modeDeck([{ id: 'classify-alpha', modes: ['classify'] }]);
+    const first = selectNextPracticeItem(testDeck, { now: NOW, modeFilter: 'classify' });
+
+    if (!first) throw new Error('expected classify selection');
+    expect(first?.mode).toBe('classify');
+    expect(first?.cardKey).toBe(cardKey('classify-alpha', 'classify'));
+    expect(first?.classifySetId).toBe('gender');
+
+    const history: SelectionHistoryItem[] = [
+      {
+        itemId: first.itemId,
+        lemmaId: first.lemma.lemmaId,
+        mode: first.mode,
+        classifySetId: first.classifySetId,
+      },
+    ];
+    const rotated = selectNextPracticeItem(testDeck, { now: NOW, modeFilter: 'classify', history });
+
+    expect(rotated?.cardKey).toBe(first.cardKey);
+    expect(rotated?.classifySetId).toBe('pos');
   });
 
   test('quarantines explicit unknown card-key modes without rewriting stored state', () => {

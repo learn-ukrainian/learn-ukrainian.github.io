@@ -238,6 +238,12 @@ site/src/data/lexicon-practice-deck.json.gz
 site/public/lexicon/practice-index.*.json
 site/public/lexicon/practice-lexemes.*.json
 site/public/lexicon/practice-cloze.*.json
+site/public/lexicon/practice-stress.*.json
+site/public/lexicon/practice-classify.*.json
+site/public/lexicon/practice-paradigm.*.json
+site/public/lexicon/practice-synonym.*.json
+site/public/lexicon/practice-heritage.*.json
+site/public/lexicon/practice-paronym.*.json
 /testbed/*
 !/testbed/reference/
 data/sum11/
