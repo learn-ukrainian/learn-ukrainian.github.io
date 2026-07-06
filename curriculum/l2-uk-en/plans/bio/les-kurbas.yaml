@@ -87,7 +87,7 @@ primary_annotations:
 readings:
 - title: "Курбас Лесь"
   source: Енциклопедія Сучасної України (ЕСУ)
-  url: https://esu.com.ua/article-51829
+  url: https://esu.com.ua/article-51798
   language: uk
   type: biography
   role: context
@@ -119,7 +119,7 @@ sequence: 111
 slug: les-kurbas
 subtitle: The Man Who Reinvented Ukrainian Theatre
 title: 'Лесь Курбас: Реформатор театру'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: мистецький напрям, що характеризується розривом з традиціями та пошуком нових форм і засобів вираження
   pos: ч.
