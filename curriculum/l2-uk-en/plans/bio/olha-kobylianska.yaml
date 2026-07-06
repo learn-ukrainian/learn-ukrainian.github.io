@@ -93,7 +93,7 @@ readings:
 - title: Царівна (фрагменти)
   language: uk
   source: УкрЛіб
-  url: https://www.ukrlib.com.ua/books/printit.php?tid=1027
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=462
   type: primary
   role: analysis
   hosting: excerpt-only
@@ -117,7 +117,7 @@ sequence: 79
 slug: olha-kobylianska
 subtitle: 'The Eagle of Bukovyna: Modernist and Feminist'
 title: 'Ольга Кобилянська: Модерністка і феміністка'
-version: '4.2'
+version: '4.3'
 vocabulary_hints:
 - definition: загальний напрям у мистецтві та літературі кінця XIX – початку XX ст., що характеризується розривом із традиціями та пошуком нових форм
   pos: ч.

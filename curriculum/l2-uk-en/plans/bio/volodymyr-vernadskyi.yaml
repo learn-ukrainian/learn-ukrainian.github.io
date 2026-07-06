@@ -86,14 +86,14 @@ readings:
   role: reference
   hosting: link-only
   task: Ознайомитися з фактами біографії та проаналізувати його діяльність в УАН.
-- title: Щоденники (фрагменти)
+- title: 1917 рік у щоденникових записах В. І. Вернадського
   language: uk
-  source: НБУВ — електронна колекція В. І. Вернадського
-  url: https://nbuv.gov.ua/vernadsky/
-  type: primary
+  source: Наукова періодика України (НБУВ)
+  url: https://nbuv.gov.ua/UJRN/Uxxs_2013_18_12
+  type: article
   role: reflection
-  hosting: reading-needed
-  task: Проаналізувати особисті записи про Україну та наукові компроміси.
+  hosting: link-only
+  task: Проаналізувати щоденникові записи про 1917 рік та наукові компроміси.
 references:
 - title: Volodymyr Vernadskyi
   note: Compiled research notes, key debates, and primary source excerpts.
@@ -114,7 +114,7 @@ sequence: 80
 slug: volodymyr-vernadskyi
 subtitle: 'Volodymyr Vernadsky: The Noosphere and Compromise'
 title: 'Володимир Вернадський: Ноосфера та компроміс'
-version: '4.2'
+version: '4.3'
 vocabulary_hints:
 - definition: сукупність частин земної оболонки (літо-, гідро- й атмосфери), яка заселена живими організмами та перетворена ними
   pos: ж.
