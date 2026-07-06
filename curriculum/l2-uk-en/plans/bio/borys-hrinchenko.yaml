@@ -79,6 +79,23 @@ persona:
   role: Модератор дискусії, що ставить під сумнів очевидні істини про «користь» стандартизації та показує її людську ціну.
   voice: Lexicography-Historian
 phase: BIO
+readings:
+- title: Грінченко Борис Дмитрович
+  language: uk
+  source: Енциклопедія історії України (ЕІУ)
+  url: http://www.history.org.ua/?termin=Hrinchenko_B_D
+  type: encyclopedia
+  role: reference
+  hosting: link-only
+  task: Ознайомитися з основними етапами створення «Словника української мови».
+- title: Словник української мови (онлайн-версія)
+  language: uk
+  source: Hrinchenko.com
+  url: https://hrinchenko.com/
+  type: reference
+  role: analysis
+  hosting: link-only
+  task: Проаналізувати лексикографічні принципи Грінченка та словникові статті.
 references:
 - title: Borys Hrinchenko
   note: Compiled from primary and secondary sources on Hrinchenko's life and the history of Ukrainian lexicography.
@@ -96,7 +113,7 @@ sequence: 78
 slug: borys-hrinchenko
 subtitle: 'Borys Hrinchenko: Guardian of the Ukrainian Word'
 title: 'Борис Грінченко: Вартовий українського слова'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: фахівець, що займається створенням словників
   pos: ч.

@@ -77,6 +77,23 @@ persona:
   role: Модератор семінару, що ставить незручні питання, вимагає дивитися за межі офіційної біографії та аналізувати моральні дилеми вченого.
   voice: Critical Biographer
 phase: BIO
+readings:
+- title: Вернадський Володимир Іванович
+  language: uk
+  source: Енциклопедія історії України (ЕІУ)
+  url: http://www.history.org.ua/?termin=Vernadsky_V
+  type: encyclopedia
+  role: reference
+  hosting: link-only
+  task: Ознайомитися з фактами біографії та проаналізувати його діяльність в УАН.
+- title: Щоденники (фрагменти)
+  language: uk
+  source: Національна бібліотека України імені В. І. Вернадського (НБУВ)
+  url: http://www.nbuv.gov.ua/
+  type: primary
+  role: reflection
+  hosting: reading-needed
+  task: Проаналізувати особисті записи про Україну та наукові компроміси.
 references:
 - title: Volodymyr Vernadskyi
   note: Compiled research notes, key debates, and primary source excerpts.
@@ -97,7 +114,7 @@ sequence: 80
 slug: volodymyr-vernadskyi
 subtitle: 'Volodymyr Vernadsky: The Noosphere and Compromise'
 title: 'Володимир Вернадський: Ноосфера та компроміс'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: сукупність частин земної оболонки (літо-, гідро- й атмосфери), яка заселена живими організмами та перетворена ними
   pos: ж.

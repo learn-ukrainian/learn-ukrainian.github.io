@@ -81,6 +81,23 @@ persona:
   role: Модератор семінару, що ставить під сумнів усталені міфи про «Вічного Каменяра» та шукає живу людину за пам'ятником
   voice: Franko-Skeptic
 phase: BIO
+readings:
+- title: Франко Іван Якович
+  language: uk
+  source: Енциклопедія історії України (ЕІУ)
+  url: http://www.history.org.ua/?termin=Franko_I_Ya
+  type: encyclopedia
+  role: reference
+  hosting: link-only
+  task: Ознайомитися з фактами біографії та проаналізувати його політичну та літературну діяльність.
+- title: Що таке поступ?
+  language: uk
+  source: Ізборник (Зібрання творів)
+  url: http://litopys.org.ua/
+  type: primary
+  role: analysis
+  hosting: excerpt-only
+  task: Прочитати фрагменти трактату та обговорити еволюцію поглядів Франка.
 references:
 - title: Ivan Franko
   note: Compiled research notes, primary source quotes, and critical interpretations for this module.
@@ -105,7 +122,7 @@ sequence: 76
 slug: ivan-franko
 subtitle: 'Titan of Labor: A Critical Biography'
 title: 'Іван Франко: Каменяр'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: 'у переносному значенні: людина, що важкою працею прокладає шлях для інших; піонер, новатор'
   pos: ч.
