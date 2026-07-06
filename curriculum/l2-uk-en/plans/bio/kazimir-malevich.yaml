@@ -82,8 +82,8 @@ persona:
 phase: BIO.4
 readings:
 - title: "Малевич Казимир Северинович"
-  source: "Вікіпедія"
-  url: "https://uk.wikipedia.org/wiki/Малевич_Казимир_Северинович"
+  source: "Енциклопедія Сучасної України (ЕСУ)"
+  url: "https://esu.com.ua/article-61120"
   language: uk
   type: article
   role: "Загальна біографічна довідка з акцентом на його українське походження та супрематизм."
@@ -119,7 +119,7 @@ sequence: 101
 slug: kazimir-malevich
 subtitle: 'Kazimir Malevich: A Revolution in Art'
 title: 'Казимир Малевич: Революція в мистецтві'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: напрям авангардного мистецтва, заснований К. Малевичем, що базується на комбінаціях простих геометричних фігур
   pos: ч.

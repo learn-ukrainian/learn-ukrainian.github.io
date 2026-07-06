@@ -83,7 +83,7 @@ phase: BIO.4
 readings:
 - title: "Бойчук Михайло Львович"
   source: "Енциклопедія Сучасної України (ЕСУ)"
-  url: "https://esu.com.ua/article-41005"
+  url: "https://esu.com.ua/article-36196"
   language: uk
   type: article
   role: "Академічна біографія засновника школи українського монументального мистецтва."
@@ -101,7 +101,7 @@ references:
   name: Бойчук Михайло Львович (Енциклопедія Сучасної України)
   note: Академічна біографія з ключовими датами та фактами.
   type: primary
-  url: https://esu.com.ua/article-41005
+  url: https://esu.com.ua/article-36196
 - title: Михайло Бойчук та його школа
   author: Сергій Білокінь
   note: Фундаментальна праця про життя та творчість художника та його учнів.
@@ -120,7 +120,7 @@ sequence: 105
 slug: mykhailo-boichuk
 subtitle: 'Mykhailo Boychuk: Monumentalism as Destiny'
 title: 'Михайло Бойчук: Монументалізм як доля'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: напрям в архітектурі та образотворчому мистецтві, що прагне до створення творів великого масштабу, які б виражали значні соціальні або історичні ідеї.
   pos: ч.
