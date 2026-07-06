@@ -397,7 +397,12 @@ def _run_opencode(
     :func:`_invoke_opencode_detailed` (text + tool telemetry) so the argv
     construction, timeout, and error handling live in exactly one place.
     """
-    from scripts.ai_agent_bridge.routing_guard import assert_model_routing_allowed
+    # Relative import: script-path invocation (python scripts/ai_agent_bridge/
+    # __main__.py, the documented form) puts scripts/ on sys.path, so the
+    # package is `ai_agent_bridge` — an absolute `scripts.` self-import breaks
+    # every opencode-routed lane there (#4473 regression; _hermes.py already
+    # uses the relative form).
+    from .routing_guard import assert_model_routing_allowed
 
     assert_model_routing_allowed(model, context="opencode transport (_run_opencode)")
     opencode_bin = shutil.which("opencode")
