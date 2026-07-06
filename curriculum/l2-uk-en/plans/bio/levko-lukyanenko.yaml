@@ -81,13 +81,13 @@ persona:
   voice: Legal-Historian
 phase: BIO
 readings:
-- caveats: "Вікіпедія: обсяг статті великий, слід зосередитися на розділах про УРСС, суди та створення Акту проголошення незалежності."
-  clearance: "Creative Commons Attribution-ShareAlike License"
+- caveats: "Гасло ЕСУ подає стабільну біографічну рамку; для роботи з Актом проголошення незалежності окремо потрібне читання документа Верховної Ради."
+  clearance: "link-only"
   language: uk
   learner_task: "Дослідити шлях від дисидента-в'язня до автора головного документа незалежної України."
   role: "primary_bio"
-  source_name: "Вікіпедія"
-  source_url: "https://uk.wikipedia.org/wiki/%D0%9B%D1%83%D0%BA%27%D1%8F%D0%BD%D0%B5%D0%BD%D0%BA%D0%BE_%D0%9B%D0%B5%D0%B2%D0%BA%D0%BE_%D0%93%D1%80%D0%B8%D0%B3%D0%BE%D1%80%D0%BE%D0%B2%D0%B8%D1%87"
+  source_name: "Енциклопедія Сучасної України"
+  source_url: "https://esu.com.ua/article-59216"
   title: "Лук'яненко Левко Григорович"
   type: "biography"
 references:
@@ -114,7 +114,7 @@ sequence: 156
 slug: levko-lukyanenko
 subtitle: From Death Sentence to Father of Independence
 title: 'Левко Лук''яненко: Автор Акту незалежності'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: людина, що відкрито висловлює погляди, які розходяться з панівною ідеологією, і зазнає за це переслідувань.
   pos: ч.

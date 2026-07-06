@@ -81,13 +81,13 @@ persona:
   voice: Pedagogical-Realist
 phase: BIO
 readings:
-- caveats: "Вікіпедія: стаття може фокусуватися на загальновідомих фактах без глибокого аналізу ідеологічних конфліктів педагога."
-  clearance: "Creative Commons Attribution-ShareAlike License"
+- caveats: "Довідка ЕІУ дає стислу біографічну рамку; семінар має окремо тримати питання радянського освітнього контексту й гуманістичної педагогіки Сухомлинського."
+  clearance: "link-only"
   language: uk
   learner_task: "Прочитати про створення Павлиської школи та основні принципи гуманістичної педагогіки Сухомлинського."
   role: "primary_bio"
-  source_name: "Вікіпедія"
-  source_url: "https://uk.wikipedia.org/wiki/%D0%A1%D1%83%D1%85%D0%BE%D0%BC%D0%BB%D0%B8%D0%BD%D1%81%D1%8C%D0%BA%D0%B8%D0%B9_%D0%92%D0%B0%D1%81%D0%B8%D0%BB%D1%8C_%D0%9E%D0%BB%D0%B5%D0%BA%D1%81%D0%B0%D0%BD%D0%B4%D1%80%D0%BE%D0%B2%D0%B8%D1%87"
+  source_name: "Енциклопедія історії України"
+  source_url: "https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&I21DBN=EIu&P21DBN=EIU&S21CNR=20&S21COLORTERMS=0&S21FMT=eiu_all&S21P01=0&S21P02=0&S21P03=TRN%3D&S21REF=10&S21STN=1&S21STR=Sukhomlynskyj_V&Z21ID="
   title: "Сухомлинський Василь Олександрович"
   type: "biography"
 references:
@@ -109,7 +109,7 @@ sequence: 153
 slug: vasyl-sukhomlynskyi
 subtitle: 'Vasyl Sukhomlynskyi: Pedagogue of the Heart'
 title: 'Василь Сухомлинський: Педагог серця'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: наука про сутність, закономірності, принципи, методи і форми навчання і виховання людини
   pos: ж.
