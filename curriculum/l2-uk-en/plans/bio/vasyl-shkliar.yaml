@@ -77,6 +77,30 @@ persona:
   role: Модератор семінару, що ставить гострі питання про межу між історією та літературою, фактом та міфом.
   voice: Critical Literary Analyst
 phase: BIO
+readings:
+- title: '«Українське суспільство мовчить, зціпивши зуби» - Василь Шкляр'
+  source_name: Радіо Свобода
+  source_url: https://www.radiosvoboda.org/a/24413939.html
+  language: uk
+  genre: 'Інтерв''ю'
+  source_type: 'Журналістика'
+  role: authorial-position
+  cefr_min: C1
+  license: 'copyrighted'
+  hosting: link-only
+  learner_task: 'Проаналізувати, як Шкляр сам формулює роль письменника, історичної пам''яті та політичної позиції; відокремити авторську самопрезентацію від перевірних фактів.'
+  caveats: 'Інтерв''ю є майданчиком прямої мови автора, тому його потрібно читати поруч із критикою масового історичного роману й академічними джерелами про Холодний Яр.'
+- title: Критичний матеріал про роман «Чорний ворон»
+  source_name: Підлягає уточненню
+  language: uk
+  genre: 'Літературна критика / Рецензія'
+  source_type: reading-needed
+  role: reading-needed
+  cefr_min: C1
+  license: unknown
+  hosting: reading-needed
+  learner_task: 'Підібрати українську критичну рецензію, що розбирає маскульт, історичну пам''ять і ризик ідеалізації в романі.'
+  caveats: 'Не підставляти неперевірену назву або URL; потрібна окрема курація якісного критичного джерела.'
 references:
 - title: Василь Шкляр (Wikipedia UA)
   name: Василь Шкляр (Wikipedia UA)
@@ -97,7 +121,7 @@ sequence: 173
 slug: vasyl-shkliar
 subtitle: 'Vasyl Shkliar: Master of the Historical Novel'
 title: 'Василь Шкляр: Майстер історичного роману'
-version: '4.0'
+version: '4.2'
 vocabulary_hints:
 - definition: книга, що видається найбільшим накладом і має комерційний успіх
   pos: ч.

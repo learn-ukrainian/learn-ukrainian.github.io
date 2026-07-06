@@ -78,6 +78,30 @@ persona:
   role: Модератор семінару, що ставить незручні питання та вимагає дивитися за фасад офіційної біографії.
   voice: Anti-Hagiographer
 phase: BIO
+readings:
+- title: Каденюк Леонід Костянтинович
+  source_name: Енциклопедія Сучасної України
+  source_url: https://esu.com.ua/article-12076
+  language: uk
+  genre: Енциклопедична стаття
+  source_type: reference
+  role: primary_bio
+  cefr_min: C1
+  license: copyrighted
+  hosting: link-only
+  learner_task: 'Виписати військову освіту, випробувальну кар''єру, місію STS-87 та українські державні ролі; відділити факти польоту від символічного образу "першого космонавта незалежної України".'
+  caveats: 'ЕСУ дає стислий довідковий каркас; питання радянської авіаційної кар''єри й українського символічного переозначення потребують окремої дискусії.'
+- title: 'Уривок зі щоденника Леоніда Каденюка під час місії STS-87'
+  source_name: Книга «Місія — Космос»
+  language: uk
+  genre: 'Мемуари / Щоденник'
+  source_type: 'Первинне джерело'
+  role: 'Безпосереднє свідчення про політ та наукову роботу'
+  cefr_min: C1
+  license: 'copyrighted'
+  hosting: 'reading-needed'
+  learner_task: 'Проаналізувати стилістику записів: як балансують наукові спостереження та патріотичні рефлексії.'
+  caveats: 'Текст був відредагований для публікації, тому може не відображати спонтанні думки.'
 references:
 - title: Каденюк Леонід Костянтинович
   note: Леонід Каденюк (Wikipedia UA) — базова біографічна інформація
@@ -96,7 +120,7 @@ sequence: 172
 slug: leonid-kadenyuk
 subtitle: 'Leonid Kadenyuk: The First Astronaut of Independent Ukraine'
 title: 'Леонід Каденюк: Перший космонавт незалежної України'
-version: '4.0'
+version: '4.2'
 vocabulary_hints:
 - definition: людина, яка здійснила політ у космос; льотчик-випробувач космічної техніки
   pos: ч.

@@ -80,6 +80,31 @@ persona:
   role: Модератор семінару, який розглядає біографію Івасюка як детективну історію, де за романтичним образом митця ховається трагедія протистояння людини і системи.
   voice: Cultural-Historian-Investigator
 phase: BIO.4
+readings:
+- title: Івасюк Володимир Михайлович
+  source_name: Енциклопедія Сучасної України
+  source_url: https://esu.com.ua/article-13545
+  language: uk
+  genre: Енциклопедична стаття
+  source_type: reference
+  role: primary_bio
+  cefr_min: C1
+  license: copyrighted
+  hosting: link-only
+  learner_task: 'Виписати освіту, музичні твори, інституційне визнання та обережні формулювання щодо смерті; порівняти енциклопедичну рамку з популярними міфами про Івасюка.'
+  caveats: 'ЕСУ стисло подає біографію і творчий доробок; питання обставин смерті не можна розв''язувати без окремо перевірених архівних або слідчих джерел.'
+- title: Сторінки пам'яті Володимира Івасюка
+  source_name: Меморіальний сайт Володимира Івасюка
+  source_url: https://ivasyuk.org.ua/
+  language: uk
+  genre: Меморіальний сайт / Архівні матеріали
+  source_type: reference
+  role: supplementary-reading
+  cefr_min: B2
+  license: unknown
+  hosting: link-only
+  learner_task: 'Знайти матеріали про пісні, фестивальну пам''ять і рецепцію Івасюка; позначити, де сайт працює як меморіальний архів, а де як некритична пам''ятна рамка.'
+  caveats: 'Меморіальний ресурс корисний для орієнтації й добору текстів, але має пам''ятний тон; фактичні твердження потрібно звіряти з ЕСУ або архівними джерелами.'
 references:
 - note: Основна біографічна канва, дати, ключові події.
   title: Володимир Івасюк (Wikipedia UA)
@@ -101,7 +126,7 @@ sequence: 171
 slug: volodymyr-ivasyuk
 subtitle: The Man Who Wrote a Nation's Anthem
 title: 'Володимир Івасюк: Автор Червоної рути'
-version: '4.0'
+version: '4.2'
 vocabulary_hints:
 - definition: жанр популярної розважальної музики; сцена для таких виступів
   pos: ж.

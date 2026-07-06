@@ -79,6 +79,30 @@ persona:
   role: Модератор семінару, що досліджує зв'язок між особистою етикою, ціною вибору та національною історією
   voice: Historian-Philosopher
 phase: BIO
+readings:
+- title: Маринович Мирослав Франкович
+  source_name: Енциклопедія Сучасної України
+  source_url: https://esu.com.ua/article-63634
+  language: uk
+  genre: Енциклопедична стаття
+  source_type: reference
+  role: primary_bio
+  cefr_min: C1
+  license: copyrighted
+  hosting: link-only
+  learner_task: 'Скласти хронологію нагляду КДБ, участі в правозахисному русі, ув''язнення, заслання та пізнішої інтелектуальної діяльності; відокремити факти від пізнішої моральної репутації.'
+  caveats: 'Довідка задає фактичний каркас і перелік відзнак; для семінарної розмови про ціну свободи її треба доповнювати мемуарами або перевіреними інтерв''ю.'
+- title: 'Фрагменти з книги «Всесвіт за колючим дротом»'
+  source_name: Видавництво УКУ
+  language: uk
+  genre: 'Мемуари'
+  source_type: 'Первинне джерело'
+  role: 'Документальне свідчення про досвід ГУЛАГу'
+  cefr_min: C1
+  license: 'copyrighted'
+  hosting: 'reading-needed'
+  learner_task: 'Прочитати уривок про побут у таборі та проаналізувати стратегії виживання та збереження гідності.'
+  caveats: 'Текст насичений табірним жаргоном та специфічною лексикою, що може ускладнити розуміння.'
 references:
 - title: Myroslav Marynovych
   note: Compiled from Wikipedia, UCU sources, Amnesty International archives
@@ -103,7 +127,7 @@ sequence: 170
 slug: myroslav-marynovych
 subtitle: 'Myroslav Marynovych: The Conscience of a Nation'
 title: 'Мирослав Маринович: Совість нації'
-version: '4.0'
+version: '4.2'
 vocabulary_hints:
 - definition: людина, що свідомо протистоїть панівній ідеології та політичному режиму, часто ризикуючи власною свободою
   pos: ч.
