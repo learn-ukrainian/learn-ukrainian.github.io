@@ -1,7 +1,7 @@
 ---
 readings:
 - source_name: "Іван Багряний (Енциклопедія Сучасної України)"
-  source_url: "https://esu.com.ua/article-3121"
+  source_url: "https://esu.com.ua/article-38762"
   language: "uk"
   hosting: "link-only"
   rights_note: "Copyrighted, educational use"
@@ -201,7 +201,7 @@ sequence: 223
 slug: ivan-bahrianyi
 subtitle: The Soviet Camp Survivor Who Refused Repatriation
 title: 'Іван Багряний: Табір, втеча і право не повертатися'
-version: '4.2'
+version: '4.3'
 vocabulary_hints:
 - definition: вигадане або вибране ім'я, під яким автор друкує твори
   pos: ч.
