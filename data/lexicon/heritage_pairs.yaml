@@ -352,6 +352,24 @@ pairs:
   calqueSense: 'про речі: «відсутність доказів» (рос. отсутствие)'
   authenticSense: відсутність людей (відсутній на зборах)
   notes: брак correction dropped — not a manifest article yet
+- calqueLabel: відчитати
+  calqueSurfaces:
+  - відчитати
+  nativeSlug: вичитати
+  nativeLemma: вичитати
+  kind: sense_restricted
+  corrections:
+  - вичитати
+  rationale: 'Антоненко: рос. отчитывать → вичитати КОМУСЬ (не когось) або прочитати комусь нотацію'
+  citations:
+  - antonenko:133 Відчитати чи вичитати
+  sourceFamily: antonenko
+  sourceFamilies:
+  - antonenko
+  cefrAvailability: b1
+  curator: fable-2026-07-06
+  calqueSense: ганити когось (рос. отчитать когось)
+  authenticSense: відчитати = прочитати повністю (звіт, лекцію)
 - calqueLabel: вірний
   calqueSurfaces:
   - вірно
@@ -456,6 +474,45 @@ pairs:
   calqueSense: медик, звертання до медика (рос. доктор)
   authenticSense: науковий ступінь (доктор наук)
   notes: MERGE of доктор→лікарю/лікар/лікарка
+- calqueLabel: другий
+  calqueSurfaces:
+  - другий
+  - другі
+  nativeSlug: інший
+  nativeLemma: інший
+  kind: sense_restricted
+  corrections:
+  - інший
+  rationale: 'Антоненко: у сучасній мові другий — тільки порядковий числівник; для «other» — інший'
+  citations:
+  - antonenko:200 Другий та інший
+  sourceFamily: antonenko
+  sourceFamilies:
+  - antonenko
+  cefrAvailability: a2
+  curator: fable-2026-07-06
+  calqueSense: у значенні «інший» (рос. другой)
+  authenticSense: порядковий числівник (другий раз, другий поверх)
+- calqueLabel: дійсно
+  calqueSurfaces:
+  - дійсно
+  nativeSlug: справді
+  nativeLemma: справді
+  kind: sense_restricted
+  corrections:
+  - справді
+  rationale: 'Антоненко: надуживання дійсно; українська має справді, насправді, на ділі'
+  citations:
+  - antonenko:89 Дійсний, дійсно, в дійсності, справжній, справді
+  sourceFamily: antonenko
+  sourceFamilies:
+  - antonenko
+  cefrAvailability: b1
+  curator: fable-2026-07-06
+  calqueSense: рутинний підсилювач під рос. действительно («я дійсно не бачив»)
+  authenticSense: дійсний/дійсно — про чинність, реальність (дійсний квиток)
+  notes: насправді correction dropped — not a manifest article yet; дійсний→справжній pair DEFERRED (справжній
+    absent)
 - calqueLabel: задача
   calqueSurfaces:
   - задач
@@ -557,6 +614,24 @@ pairs:
   calqueSense: вставне слово (рос. значит)
   authenticSense: дієслово значити = мати значення
   notes: calqueLabel deliberately the frozen form «значить»
+- calqueLabel: крокувати
+  calqueSurfaces:
+  - крокувати
+  - крокує
+  nativeSlug: іти
+  nativeLemma: іти
+  kind: lexical
+  corrections:
+  - іти
+  rationale: 'Антоненко: штучний новотвір під рос. шагать; природні дієслова — іти, простувати, прямувати'
+  citations:
+  - antonenko:153 Крокувати, простувати, іти
+  sourceFamily: antonenko
+  sourceFamilies:
+  - antonenko
+  cefrAvailability: b1
+  curator: fable-2026-07-06
+  notes: простувати/прямувати corrections dropped — not manifest articles yet
 - calqueLabel: куток
   calqueSurfaces:
   - кутку
@@ -611,6 +686,26 @@ pairs:
   curator: fable-2026-07-06
   calqueSense: 'рослинний жир: «соняшникове масло» (рос. масло)'
   authenticSense: масло = тваринний жир (вершкове)
+- calqueLabel: матися
+  calqueSurfaces:
+  - мається
+  - маються
+  nativeSlug: бути
+  nativeLemma: бути
+  kind: sense_restricted
+  corrections:
+  - бути
+  - мати
+  rationale: 'Антоненко: «мається вибір» недоречне — є/маємо великий вибір'
+  citations:
+  - antonenko:156 Матися, бути, траплятися, мати
+  sourceFamily: antonenko
+  sourceFamilies:
+  - antonenko
+  cefrAvailability: b1
+  curator: fable-2026-07-06
+  calqueSense: «мається великий вибір» (рос. имеется)
+  authenticSense: матися = почуватися (як маєшся?)
 - calqueLabel: надо
   calqueSurfaces:
   - надо
@@ -753,6 +848,24 @@ pairs:
   calqueSense: «яким образом» (рос. каким образом)
   authenticSense: художній образ
   notes: CHECK чин in manifest; frame required
+- calqueLabel: обслуга
+  calqueSurfaces:
+  - обслуга
+  nativeSlug: обслуговування
+  nativeLemma: обслуговування
+  kind: sense_restricted
+  corrections:
+  - обслуговування
+  rationale: 'Антоненко: обслуга — не дія, а люди; дія — обслуговування'
+  citations:
+  - antonenko:49 Обслуга й обслуговування
+  sourceFamily: antonenko
+  sourceFamilies:
+  - antonenko
+  cefrAvailability: b1
+  curator: fable-2026-07-06
+  calqueSense: 'дія, що задовольняє потреби: «поштова обслуга»'
+  authenticSense: обслуга = група людей, призначених виконувати роботу (військ. розрахунок)
 - calqueLabel: палатка
   calqueSurfaces:
   - палатці
@@ -1060,6 +1173,25 @@ pairs:
   curator: fable-2026-07-06
   calqueSense: передплата газет/журналів (рос. подписка)
   authenticSense: підписка = письмове зобов'язання, ствердження підписом
+- calqueLabel: розповсюджувати
+  calqueSurfaces:
+  - розповсюджувати
+  - розповсюджує
+  nativeSlug: поширювати
+  nativeLemma: поширювати
+  kind: sense_restricted
+  corrections:
+  - поширювати
+  rationale: 'Антоненко: ідеї, чутки, вплив поширюють; розповсюджують примірники'
+  citations:
+  - antonenko:169 Поширювати й розповсюджувати
+  sourceFamily: antonenko
+  sourceFamilies:
+  - antonenko
+  cefrAvailability: b1
+  curator: fable-2026-07-06
+  calqueSense: про ідеї, чутки, вплив («розповсюджувати ідеї»)
+  authenticSense: розповсюджувати = фізично роздавати (книжки, листівки)
 - calqueLabel: слідуючий
   calqueSurfaces:
   - слідуючий
