@@ -217,6 +217,24 @@ LIT-DRAMA.
 | 4 | Standalone folk primary texts beyond the current narrow genres. | Reviewer grounding and writer sourcing for FOLK modules. | Standalone folk-primary literary genres total 35 chunks; FOLK sampled corpus attestation is 165/200 and PULS coverage is 24/200. |
 | 5 | Specialized advanced vocabulary support for BIO and upper-level curriculum terms. | Atlas, benchmark, reviewer grounding. | BIO sampled corpus attestation is 19/24 and PULS coverage is 1/24; B2 sampled corpus attestation is 169/200 and PULS coverage is 49/200. |
 
+## Final acquisition ranking — orchestrator judgment (2026-07-06)
+
+This section is the binding gate output; the table above is the evidence draft it
+was judged from. Rule applied: an active-consumer gap outranks a future-consumer
+gap, and a gap already being closed by a live track epic is NOT an acquisition
+item — it gets re-audited after that epic lands, not double-acquired.
+
+| Rank | Item | Disposition |
+| ---: | --- | --- |
+| 1 | STEM/applied school textbooks | **EXECUTING** — approved acquisition #4593 (34 core books, wave 1 grades 5–9). Re-run this audit's domain queries after ingest to confirm the 0-chunk cell closes. |
+| 2 | Press/current-news Ukrainian | **NEXT CANDIDATE, gated** — first genuinely NEW channel type; needs a license-posture decision at THIS gate (state/public broadcasters e.g. Суспільне first) before any proposal. Consumer weight rises when C1/C2 build starts (0 published today). |
+| 3 | Spontaneous contemporary conversational | **PARKED** — primary consumer (Hramatka) is itself gated; hardest legitimate sourcing. Revisit when Hramatka ungates. |
+| — | Folk primaries (draft rank 4) | **NOT AN ACQUISITION ITEM** — actively closing via the folk epic's reading expansion (batches C–E in flight). Re-audit after the epic lands; acquire only what still remains. |
+| — | BIO/advanced vocabulary (draft rank 5) | **NOT AN ACQUISITION ITEM** — partially closed by #4593 rank 1 (STEM terminology) + the BIO epic's reading packets; BIO sample was n=24, too small to rank on. Re-audit post-ingest with a larger sample. |
+
+Standing rule going forward: any corpus-expansion proposal must cite this report's
+deterministic queries (re-run, not quoted) and name its consumer, per #4594.
+
 ## Methods and raw evidence
 
 All commands below were run from:
