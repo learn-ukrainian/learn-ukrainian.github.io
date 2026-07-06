@@ -83,7 +83,7 @@ readings:
 - title: Грінченко Борис Дмитрович
   language: uk
   source: Енциклопедія історії України (ЕІУ)
-  url: http://www.history.org.ua/?termin=Hrinchenko_B_D
+  url: https://history.org.ua/?termin=Hrinchenko_B_D
   type: encyclopedia
   role: reference
   hosting: link-only
@@ -113,7 +113,7 @@ sequence: 78
 slug: borys-hrinchenko
 subtitle: 'Borys Hrinchenko: Guardian of the Ukrainian Word'
 title: 'Борис Грінченко: Вартовий українського слова'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: фахівець, що займається створенням словників
   pos: ч.

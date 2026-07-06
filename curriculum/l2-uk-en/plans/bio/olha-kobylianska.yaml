@@ -85,15 +85,15 @@ readings:
 - title: Кобилянська Ольга Юліанівна
   language: uk
   source: Енциклопедія історії України (ЕІУ)
-  url: http://www.history.org.ua/?termin=Kobylianska_O
+  url: https://history.org.ua/?termin=Kobylianska_O
   type: encyclopedia
   role: reference
   hosting: link-only
   task: Ознайомитися з біографією письменниці та її роллю в українському модернізмі.
-- title: Людина / Царівна (фрагменти)
+- title: Царівна (фрагменти)
   language: uk
-  source: Ізборник
-  url: http://litopys.org.ua/
+  source: УкрЛіб
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=1027
   type: primary
   role: analysis
   hosting: excerpt-only
@@ -117,7 +117,7 @@ sequence: 79
 slug: olha-kobylianska
 subtitle: 'The Eagle of Bukovyna: Modernist and Feminist'
 title: 'Ольга Кобилянська: Модерністка і феміністка'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: загальний напрям у мистецтві та літературі кінця XIX – початку XX ст., що характеризується розривом із традиціями та пошуком нових форм
   pos: ч.

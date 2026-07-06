@@ -90,7 +90,7 @@ readings:
 - title: Самійленко Володимир Іванович
   language: uk
   source: Енциклопедія історії України (ЕІУ)
-  url: http://www.history.org.ua/?termin=Samijlenko_V
+  url: https://history.org.ua/?termin=Samijlenko_V
   type: encyclopedia
   role: reference
   hosting: link-only
@@ -112,7 +112,7 @@ sequence: 81
 slug: volodymyr-samiilenko
 subtitle: 'Volodymyr Samiilenko: Poet, Satirist, and Language Builder'
 title: 'Володимир Самійленко: Поет, сатирик і будівничий мови'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: гостре, викривальне осміяння суспільних вад, негативних явищ чи конкретних осіб
   pos: ж.

@@ -85,15 +85,15 @@ readings:
 - title: Франко Іван Якович
   language: uk
   source: Енциклопедія історії України (ЕІУ)
-  url: http://www.history.org.ua/?termin=Franko_I_Ya
+  url: https://history.org.ua/?termin=Franko_I_Ya
   type: encyclopedia
   role: reference
   hosting: link-only
   task: Ознайомитися з фактами біографії та проаналізувати його політичну та літературну діяльність.
 - title: Що таке поступ?
   language: uk
-  source: Ізборник (Зібрання творів)
-  url: http://litopys.org.ua/
+  source: Діаспоріана
+  url: https://diasporiana.org.ua/ideologiya/12272-franko-i-shho-take-postup/
   type: primary
   role: analysis
   hosting: excerpt-only
@@ -122,7 +122,7 @@ sequence: 76
 slug: ivan-franko
 subtitle: 'Titan of Labor: A Critical Biography'
 title: 'Іван Франко: Каменяр'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: 'у переносному значенні: людина, що важкою працею прокладає шлях для інших; піонер, новатор'
   pos: ч.
