@@ -94,6 +94,31 @@ persona:
     Модератор семінару, який досліджує український авангард та конструктивізм, уникаючи мокри та спрощеної глорифікації.
   voice: Intellectual Historian
 phase: BIO
+readings:
+- hosting: link-only
+  language: uk
+  learner_task: >-
+    Ознайомтеся зі статтею про Валер'яна Поліщука. Зверніть увагу на його роль як лідера та ідеолога літературної групи «Авангард».
+  license: copyrighted
+  notes: >-
+    Енциклопедична стаття про поета-конструктивіста та його модерністський доробок.
+  rights_note: Текст захищено авторським правом. Надається лише посилання на зовнішній ресурс.
+  role: primary
+  source_name: Енциклопедія сучасної України (ЕСУ)
+  source_type: article
+  source_url: https://esu.com.ua/article-881253
+- hosting: link-only
+  language: uk
+  learner_task: >-
+    Прочитайте статтю про творчий та життєвий шлях Валер'яна Поліщука, а також про механізм його репресії та фальсифікації дати смерті.
+  license: creative-commons
+  notes: >-
+    Оглядова стаття, що описує індустріальну лірику та обставини загибелі митця.
+  rights_note: Матеріал поширюється за ліцензією CC BY-SA. Надається посилання на оригінал.
+  role: secondary
+  source_name: Вікіпедія
+  source_type: article
+  source_url: https://uk.wikipedia.org/wiki/%D0%9F%D0%BE%D0%BB%D1%96%D1%89%D1%83%D0%BA_%D0%92%D0%B0%D0%BB%D0%B5%D1%80%27%D1%8F%D0%BD_%D0%9B%D1%8C%D0%B2%D0%BE%D0%B2%D0%B8%D1%87
 references:
 - note: Енциклопедична стаття.
   path: https://esu.com.ua/article-881253
@@ -125,7 +150,7 @@ sequence: 209
 slug: valerian-polishchuk
 subtitle: The Constructivist Poet Erased Twice
 title: 'Валер''ян Поліщук: авангард, конструктивізм і Сандармох'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: напрям у модерністській літературі 1920-х, що експериментує з мовою та формою
   pos: ч.
