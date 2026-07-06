@@ -228,6 +228,44 @@ def test_stray_non_canary_artifact_fails_closed(tmp_path: Path) -> None:
     )
 
 
+def test_multirun_dir_refused_with_explicit_reason(tmp_path: Path) -> None:
+    artifacts = _passing_artifacts()
+    artifacts[0]["run_index"] = 2
+
+    verdict = _verdict_for(tmp_path, artifacts)
+
+    assert verdict["passed"] is False
+    assert verdict["failure_reasons"] == [qg_tier2_canary_check.MULTI_RUN_DIR_UNSUPPORTED]
+
+
+def test_load_tooled_artifacts_skips_foreign_tooled_json(tmp_path: Path) -> None:
+    artifacts = _passing_artifacts()
+    _write_artifacts(tmp_path, artifacts)
+    (tmp_path / "foreign.json").write_text(
+        json.dumps({"arm": qg_bakeoff.TOOLED_ARM, "passed": True}),
+        encoding="utf-8",
+    )
+
+    verdict = qg_tier2_canary_check.evaluate_canary_dir(tmp_path, run_date="2026-07-06")
+
+    assert verdict["passed"] is True
+
+
+def test_duplicate_run1_artifacts_still_fail(tmp_path: Path) -> None:
+    artifacts = _passing_artifacts()
+    _write_artifacts(tmp_path, artifacts)
+    duplicate = copy.deepcopy(artifacts[0])
+    (tmp_path / "duplicate-run1.json").write_text(
+        json.dumps(duplicate, ensure_ascii=False),
+        encoding="utf-8",
+    )
+
+    verdict = qg_tier2_canary_check.evaluate_canary_dir(tmp_path, run_date="2026-07-06")
+
+    assert verdict["passed"] is False
+    assert any("duplicate artifact cell" in reason for reason in verdict["failure_reasons"])
+
+
 def test_missing_fixture_artifact_fails(tmp_path: Path) -> None:
     artifacts = _passing_artifacts()[:-1]
 

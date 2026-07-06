@@ -28,6 +28,7 @@ CLASS_M_MIN_NUMERATOR = 4
 CLASS_M_EXPECTED_DENOMINATOR = 7
 CLASS_U_MIN_NUMERATOR = 3
 CLASS_U_EXPECTED_DENOMINATOR = 4
+MULTI_RUN_DIR_UNSUPPORTED = "multi_run_dir_unsupported"
 
 # The E3 arming canary is calibrated to a PINNED fixture set — the four folk-domain
 # anchor passages — NOT to whatever happens to live in qg_bakeoff.FIXTURE_DIR. That
@@ -102,6 +103,31 @@ def evaluate_canary_dir(
     allowlist = load_allowlist(allowlist_path)
     artifacts, load_failures = _load_tooled_artifacts(output_dir)
     failure_reasons = list(load_failures)
+    if MULTI_RUN_DIR_UNSUPPORTED in failure_reasons:
+        return {
+            "schema_version": VERDICT_SCHEMA_VERSION,
+            "created_at": _now_z(),
+            "verdict": "FAIL",
+            "passed": False,
+            "failure_reasons": [MULTI_RUN_DIR_UNSUPPORTED],
+            "summary": {
+                "artifact_count": 0,
+                "missing_claims": 0,
+                "class_m_alignment": _fraction(0, 0),
+                "class_u_honesty": _fraction(0, 0),
+                "class_u_confirmed": [],
+                "class_m_confirmed_unallowlisted": [],
+                "class_m_confirmed_allowlisted": [],
+            },
+            "provenance": _provenance(
+                fixtures=fixtures,
+                gate_version=gate_version,
+                pin=pin,
+                route_name=production_route_name,
+                bakeoff_route_name=expected_bakeoff_route,
+                run_date=run_date,
+            ),
+        }
 
     seen_slugs: set[str] = set()
     seen_cells: set[tuple[str, str]] = set()
@@ -283,10 +309,14 @@ def main(argv: Sequence[str] | None = None) -> int:
 def _load_tooled_artifacts(output_dir: Path) -> tuple[list[tuple[Path, dict[str, Any]]], list[str]]:
     artifacts: list[tuple[Path, dict[str, Any]]] = []
     failures: list[str] = []
+    multi_run_seen = False
     if not output_dir.exists():
         return artifacts, [f"output directory does not exist: {output_dir}"]
     for path in sorted(output_dir.glob("*.json")):
         if path.name == VERDICT_FILENAME:
+            continue
+        if qg_bakeoff._artifact_filename_run_index(path) > 1:
+            multi_run_seen = True
             continue
         try:
             payload = json.loads(path.read_text(encoding="utf-8"))
@@ -296,6 +326,21 @@ def _load_tooled_artifacts(output_dir: Path) -> tuple[list[tuple[Path, dict[str,
         if not isinstance(payload, dict):
             failures.append(f"{path.name}: artifact must be a JSON object")
             continue
+        if not qg_bakeoff._is_bakeoff_cell(payload):
+            continue
+        try:
+            artifact_run_index = qg_bakeoff._artifact_run_index(payload)
+        except qg_bakeoff.BakeoffConfigError as exc:
+            failures.append(str(exc))
+            continue
+        if artifact_run_index > 1:
+            multi_run_seen = True
+            continue
+        try:
+            qg_bakeoff._assert_artifact_filename_matches_run_index(path, payload)
+        except qg_bakeoff.BakeoffConfigError as exc:
+            failures.append(str(exc))
+            continue
         arm = payload.get("arm") or qg_bakeoff.TOOLED_ARM
         if arm == qg_bakeoff.BARE_ARM:
             continue
@@ -303,6 +348,8 @@ def _load_tooled_artifacts(output_dir: Path) -> tuple[list[tuple[Path, dict[str,
             failures.append(f"{path.name}: unsupported arm {arm!r}")
             continue
         artifacts.append((path, payload))
+    if multi_run_seen:
+        return [], [MULTI_RUN_DIR_UNSUPPORTED]
     return artifacts, failures
 
 
