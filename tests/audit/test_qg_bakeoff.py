@@ -1633,3 +1633,34 @@ def test_rescore_covers_both_arms_and_backfills_arm(tmp_path: Path) -> None:
     assert "| unknown [" not in scorecard  # foreign JSON never becomes a model row
     verdict_after = json.loads((out / "tier2-canary-verdict.json").read_text(encoding="utf-8"))
     assert "rescored_at" not in verdict_after  # untouched, not rewritten
+
+
+def test_load_all_artifacts_skips_foreign_json(tmp_path: Path) -> None:
+    """The run_matrix scorecard path must apply the same foreign-JSON filter.
+
+    codex review on #4581: fixing only rescore left _load_all_artifacts (used
+    by run_matrix's scorecard write) ingesting tier2-canary-verdict.json and
+    rendering the phantom 'unknown' row. Shared predicate covers both paths.
+    """
+    (tmp_path / "m__sample__bare__opencode.json").write_text(
+        json.dumps(
+            {
+                "schema_version": qg_bakeoff.RUN_SCHEMA_VERSION,
+                "arm": "bare",
+                "fixture": {"slug": "sample"},
+                "model": {"pin": "openrouter/test/m"},
+                "score": {"model_judgment_score": 10},
+            }
+        ),
+        encoding="utf-8",
+    )
+    (tmp_path / "tier2-canary-verdict.json").write_text(
+        json.dumps({"schema_version": "qg_tier2_canary_verdict.v1", "passed": True}),
+        encoding="utf-8",
+    )
+    (tmp_path / "no-schema.json").write_text(json.dumps({"passed": True}), encoding="utf-8")
+
+    artifacts = qg_bakeoff._load_all_artifacts(tmp_path)
+
+    assert len(artifacts) == 1
+    assert artifacts[0]["model"]["pin"] == "openrouter/test/m"

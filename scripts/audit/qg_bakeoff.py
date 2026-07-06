@@ -875,14 +875,29 @@ def run_matrix(
     return runs
 
 
+def _is_bakeoff_cell(artifact: Mapping[str, Any]) -> bool:
+    """True iff this JSON is a real bakeoff cell artifact, not a foreign file.
+
+    Out-dirs accumulate non-cell JSONs (live trap: ``tier2-canary-verdict.json``
+    from the canary checker) — scoring one fabricates an ``unknown`` scorecard
+    row with a phantom passage count. Shared predicate for EVERY artifact-load
+    path (codex review on #4581 caught the run_matrix sibling of the rescore fix).
+    """
+    schema = artifact.get("schema_version")
+    return isinstance(schema, str) and schema.startswith("qg_bakeoff_run.")
+
+
 def _load_all_artifacts(output_dir: Path) -> list[dict[str, Any]]:
-    """Load every bakeoff artifact JSON in ``output_dir`` (both arms), stable order."""
+    """Load every bakeoff CELL artifact JSON in ``output_dir`` (both arms), stable order."""
     artifacts: list[dict[str, Any]] = []
     for path in sorted(output_dir.glob("*.json")):
         try:
-            artifacts.append(json.loads(path.read_text(encoding="utf-8")))
+            artifact = json.loads(path.read_text(encoding="utf-8"))
         except json.JSONDecodeError:
             continue
+        if not _is_bakeoff_cell(artifact):
+            continue
+        artifacts.append(artifact)
     return artifacts
 
 
@@ -1529,12 +1544,9 @@ def rescore_artifacts(output_dir: Path, fixtures_dir: Path = FIXTURE_DIR) -> int
     count = 0
     for path in sorted(output_dir.glob("*.json")):
         artifact = json.loads(path.read_text(encoding="utf-8"))
-        schema = artifact.get("schema_version")
-        if not (isinstance(schema, str) and schema.startswith("qg_bakeoff_run.")):
-            # Foreign JSON in the out-dir (e.g. tier2-canary-verdict.json) is
-            # NOT a bakeoff cell — scoring it fabricates an 'unknown' scorecard
-            # row with a phantom passage count (caught live 2026-07-06 when a
-            # canary verdict file polluted the totals table).
+        if not _is_bakeoff_cell(artifact):
+            # See _is_bakeoff_cell — foreign JSONs (canary verdicts etc.)
+            # must never be rescored or rendered as cells.
             continue
         # Backfill ``arm`` for backward compat: pre-arm tooled artifacts have no
         # field (→ "tooled"); a ``__bare`` filename identifies a bare artifact even
