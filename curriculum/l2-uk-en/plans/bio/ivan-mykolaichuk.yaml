@@ -24,17 +24,17 @@ activity_hints:
 cefr_min: C1
 readings:
   - title: "Миколайчук Іван Васильович"
-    source_name: "Вікіпедія"
-    source_url: "https://uk.wikipedia.org/wiki/Миколайчук_Іван_Васильович"
+    source_name: "Енциклопедія Сучасної України"
+    source_url: "https://esu.com.ua/article-65302"
     language: uk
     genre: "encyclopedia"
     source_type: "biography"
-    role: "fallback"
+    role: "primary_bio"
     cefr_min: C1
-    license: "cc-by-sa"
+    license: "copyrighted"
     hosting: "link-only"
     learner_task: "Огляд акторських ролей та режисерських робіт."
-    caveats: "Вікіпедія використовується як резервне джерело."
+    caveats: "Енциклопедична довідка задає біографічний каркас; для аналізу поетичного кіно потрібен окремий фаховий текст."
   - title: "Есе про українське поетичне кіно та Миколайчука"
     source_name: "Підлягає уточненню"
     language: uk
@@ -127,7 +127,7 @@ sequence: 166
 slug: ivan-mykolaichuk
 subtitle: 'Ivan Mykolaichuk: The Soul of Ukrainian Cinema'
 title: 'Іван Миколайчук: Душа українського кіно'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: напрям у кінематографі, що характеризується метафоричністю, символізмом та візуальною виразністю, ставлячи художній образ вище за сюжет
   pos: с.

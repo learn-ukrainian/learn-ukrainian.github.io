@@ -24,17 +24,17 @@ activity_hints:
 cefr_min: C1
 readings:
   - title: "Стус Василь Семенович"
-    source_name: "Вікіпедія"
-    source_url: "https://uk.wikipedia.org/wiki/Стус_Василь_Семенович"
+    source_name: "Енциклопедія історії України"
+    source_url: "https://history.org.ua/?termin=Stus_V"
     language: uk
     genre: "encyclopedia"
-    source_type: "biography"
-    role: "fallback"
+    source_type: "reference"
+    role: "primary_bio"
     cefr_min: C1
-    license: "cc-by-sa"
+    license: "copyrighted"
     hosting: "link-only"
     learner_task: "Ознайомитися з біографією та історією дисидентського руху."
-    caveats: "Вікіпедія використовується як базове джерело."
+    caveats: "Академічна довідка задає фактичний каркас; етичну позицію Стуса потрібно аналізувати через окремо перевірені листи або спогади."
   - title: "Листи до сина або спогади сучасників"
     source_name: "Підлягає уточненню"
     language: uk
@@ -123,7 +123,7 @@ sequence: 165
 slug: vasyl-stus
 subtitle: 'Vasyl Stus: An Upright Stand of the Spirit'
 title: 'Василь Стус: Вертикальне стояння духу'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: людина, що активно протистоїть офіційній ідеології та політичному режиму
   pos: ч.
