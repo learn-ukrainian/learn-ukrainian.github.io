@@ -48,7 +48,9 @@ curriculum/l2-uk-direct/_orchestration/
 /*.write.jsonl
 
 # QG bakeoff live payloads are local run artifacts; SCORECARD.md remains committable.
-audit/*-qg-bakeoff/*.json
+# The trailing * also covers the -multirun out-dirs the #4539 harness derives
+# (audit/<date>-qg-bakeoff-multirun/) — see default_output_dir(multi_run=True).
+audit/*-qg-bakeoff*/*.json
 
 
 # Python
