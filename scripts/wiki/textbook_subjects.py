@@ -24,6 +24,12 @@ CANONICAL_TEXTBOOK_SUBJECTS: tuple[str, ...] = (
     "hromadianska",
     "zakhyst",
     "mystetstvo",
+    "vsesvitnia",
+    "zarlit",
+    "pryroda",
+    "zdorovia",
+    "etyka",
+    "finansova",
 )
 
 
@@ -157,11 +163,17 @@ _SUBJECT_ALIASES: dict[str, str] = {
 
 
 _SUBJECT_TOKEN_PATTERNS: tuple[tuple[str, tuple[str, ...]], ...] = (
+    # fizyka MUST precede astronomiya: integrated «Фізика і астрономія» course
+    # stems (e.g. 11-klas-fizika-astronomiia-zasekina-2019-standart) contain both
+    # tokens and are physics-primary — labelling them astronomiya would leave the
+    # fizyka-11 gap-audit cell falsely at 0 chunks (#4593 batch 3). Pure astronomy
+    # stems carry no fizyk/fizik token and still resolve to astronomiya.
+    ("fizyka", ("fizyk", "fizik", "physics")),
     ("astronomiya", ("astronomiya", "astronomiia", "astronomija")),
     ("ekonomika", ("ekonomika", "ekonomka")),
     ("pravoznavstvo", ("pravoznavstvo",)),
     ("hromadianska", ("hromadianska", "gromadianska", "gromadjanska")),
-    ("zakhyst", ("zakhyst", "zahyst")),
+    ("zakhyst", ("zakhyst", "zahyst", "zakhist")),
     ("mystetstvo", ("mystetstvo", "mystectvo", "mistectvo")),
     (
         "lexicon",
@@ -178,6 +190,14 @@ _SUBJECT_TOKEN_PATTERNS: tuple[tuple[str, tuple[str, ...]], ...] = (
         ),
     ),
     ("bukvar", ("bukvar",)),
+    (
+        "zarlit",
+        (
+            "zarubizhna",
+            "zarubzhna",
+            "zarlit",
+        ),
+    ),
     (
         "ukrlit",
         (
@@ -200,6 +220,12 @@ _SUBJECT_TOKEN_PATTERNS: tuple[tuple[str, tuple[str, ...]], ...] = (
         ),
     ),
     (
+        "vsesvitnia",
+        (
+            "vsesvit",
+        ),
+    ),
+    (
         "istoriya",
         (
             "istoriya",
@@ -208,17 +234,20 @@ _SUBJECT_TOKEN_PATTERNS: tuple[tuple[str, tuple[str, ...]], ...] = (
             "istoria",
         ),
     ),
-    ("informatyka", ("informatyka",)),
-    ("matematyka", ("matematyka",)),
+    ("informatyka", ("informatyk", "informatik")),
+    ("matematyka", ("matematyk", "matematik")),
     ("algebra", ("algebra",)),
-    ("heometriya", ("heometriya", "geometriya", "geometry")),
-    ("fizyka", ("fizyka", "physics")),
-    ("khimiya", ("khimiya", "chemistry")),
-    ("biolohiya", ("biolohiya", "biolohiia", "biologia", "biology")),
+    ("heometriya", ("heometri", "geometri", "geometry")),
+    ("khimiya", ("khimi", "himi", "chemistry")),
+    ("biolohiya", ("biolohi", "biologi", "biology")),
     (
         "heohrafiya",
-        ("heohrafiya", "heohrafiia", "geohrafiya", "geografiya", "geography"),
+        ("heohrafi", "geografi", "geohrafi", "geography"),
     ),
+    ("pryroda", ("pryrod", "piznaiemo", "piznaemo", "prirod")),
+    ("zdorovia", ("zdorov",)),
+    ("etyka", ("etyka", "etika")),
+    ("finansova", ("finans", "pidpryiemn")),
 )
 
 
@@ -324,4 +353,52 @@ AUTHOR_UK_BY_TRANSLIT: dict[str, str] = {
     "Borys Antonenko-Davydovych": "Борис Антоненко-Давидович",
     "Mykola Pohribnyi": "Микола Погрібний",
     "Ukrainian Lessons Podcast": "Ukrainian Lessons Podcast",
+    # #4593 batch-3 authors (title-probed 2026-07-06)
+    "voloshchuk": "Волощук",
+    "voloschuk": "Волощук",
+    "voloshhuk": "Волощук",
+    "ladychenko": "Ладиченко",
+    "korshevniuk": "Коршевнюк",
+    "korshevnuk": "Коршевнюк",
+    "meleshchenko": "Мелещенко",
+    "meleschenko": "Мелещенко",
+    "rublia": "Рубля",
+    "rublya": "Рубля",
+    "davydiuk": "Давидюк",
+    "mandrenko": "Мандренко",
+    "hushchyna": "Гущина",
+    "gushchyna": "Гущина",
+    "guschyna": "Гущина",
+    "plastun": "Пластун",
+    "remekh": "Ремех",
+    "gilberg": "Гільберг",
+    "vasylkiv": "Васильків",
+    "nelin": "Нелін",
+    "shalamov": "Шаламов",
+    "zasekina": "Засєкіна",
+    "zasiekina": "Засєкіна",
+    "pestushko": "Пестушко",
+    "homiak": "Криховець-Хом'як",
+    "krihovec-homyak": "Криховець-Хом'як",
+    "gudyma": "Гудима",
+    "hudyma": "Гудима",
+    "gudima": "Гудима",
+    "nazarenko": "Назаренко",
+    "rudenko": "Руденко",
+    "vorontsova": "Воронцова",
+    "voroncova": "Воронцова",
+    "boiko": "Бойко",
+    "boyko": "Бойко",
+    "bojko": "Бойко",
+    "kovbasenko": "Ковбасенко",
+    "merzlyak": "Мерзляк",
+    "merzljak": "Мерзляк",
+    "grygorovych": "Григорович",
+    "zadorozhnyj": "Задорожний",
+    "zadorozhnij": "Задорожний",
+    # #4593 batch-3 scan-fallback edition switches (title-probed 2026-07-07):
+    # Воронцова/Гущина/Шиян zdorovia-8 scans → Василенко digital; Давидюк/
+    # Данилевська/Мелещенко etyka-6 scans → Мартинюк digital.
+    "vasylenko": "Василенко",
+    "martyniuk": "Мартинюк",
 }
