@@ -81,6 +81,23 @@ persona:
   role: Модератор семінару, що досліджує межу між історичною реальністю та створенням національного міфу
   voice: Senior-Biographer
 phase: BIO.4
+readings:
+- caveats: Академічна енциклопедична стаття.
+  hosting: external
+  language: uk
+  role: Контекст
+  source_name: Енциклопедія історії України
+  source_type: Енциклопедія
+  task: Ознайомитися з фактами біографії Ольги Басараб та її діяльністю в УВО.
+  title: Басараб Ольга Михайлівна
+  url: http://www.history.org.ua/?termin=Basarab_O
+- hosting: reading-needed
+  language: uk
+  role: Контекст
+  source_type: Стаття
+  task: Знайти статтю про розвідувальну діяльність Басараб або деталі судової справи.
+  title: Стаття про розвідувальну діяльність Ольги Басараб
+  url: null
 references:
 - title: Olha Basarab
   note: Compiled research notes on Basarab's life, UVO activities, and the controversy surrounding her death.
@@ -102,7 +119,7 @@ sequence: 113
 slug: olha-basarab
 subtitle: 'Olha Basarab: Intelligence Agent and Martyr'
 title: 'Ольга Басараб: Розвідниця і мучениця'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: жінка, яка таємно збирає відомості про супротивника
   pos: ж.

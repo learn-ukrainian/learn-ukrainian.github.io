@@ -128,6 +128,23 @@ persona:
     знищення культурної еліти.
   voice: Intellectual Historian
 phase: BIO
+readings:
+- caveats: Академічна енциклопедична стаття.
+  hosting: external
+  language: uk
+  role: Контекст
+  source_name: Енциклопедія історії України
+  source_type: Енциклопедія
+  task: Прочитати статтю про Миколу Зерова та його роль у русі неокласиків.
+  title: Зеров Микола Костянтинович (ЕІУ)
+  url: http://www.history.org.ua/?termin=Zerov_M
+- hosting: reading-needed
+  language: uk
+  role: Першоджерело
+  source_type: Поезія
+  task: Надати для читання сонет "Pro domo" з коротким глосарієм неокласичних термінів.
+  title: Сонет "Pro domo"
+  url: null
 references:
 - note: Академічна стаття про життя і творчість поета.
   path: https://esu.com.ua/article-16057
@@ -160,7 +177,7 @@ sequence: 114
 slug: mykola-zerov
 subtitle: The Leader of the Kyiv Neoclassicists Executed by the Terror
 title: 'Микола Зеров: Лідер неокласиків і дорога до Сандармоху'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: естетика київських поетів 1920-х — культ строгої класичної форми, європейської
     та античної традиції; Зеров був її лідером
