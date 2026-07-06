@@ -152,6 +152,17 @@ persona:
     літературу та деколоніальне читання радянського стирання.
   voice: Intellectual Historian
 phase: BIO
+readings:
+- source_name: "Винниченко Володимир Кирилович (ЕІУ)"
+  source_url: "http://www.history.org.ua/?termin=Vynnychenko_V"
+  language: "uk"
+  hosting: "link-only"
+  rights_note: "Copyrighted material; link to official EIU article."
+- source_name: "Постать Володимира Винниченка (Радіо Свобода)"
+  source_url: "https://www.radiosvoboda.org/a/30748066.html"
+  language: "uk"
+  hosting: "link-only"
+  rights_note: "Copyrighted journalistic material; link provided to Radio Svoboda."
 references:
 - note: Основна англомовна енциклопедична стаття про життя, політичну діяльність і літературний доробок.
   path: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CV%5CY%5CVynnychenkoVolodymyr.htm
@@ -179,7 +190,7 @@ sequence: 222
 slug: volodymyr-vynnychenko
 subtitle: The Modernist Statesman Erased by the Soviet Canon
 title: 'Володимир Винниченко: Письменник, прем''єр і вигнанець'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: вимушений або добровільний виїзд за межі батьківщини, часто через політичний тиск
   pos: ж.

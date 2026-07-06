@@ -110,6 +110,17 @@ persona:
     Модератор семінару першої хвилі еміграції, який називає радянське стирання репресією і не романтизує емігрантську сатиру без контексту.
   voice: Intellectual Historian
 phase: BIO
+readings:
+- source_name: "Олександр Олесь (Енциклопедія історії України)"
+  source_url: "http://www.history.org.ua/?termin=Oles_O"
+  language: "uk"
+  hosting: "link-only"
+  rights_note: "Copyrighted material; link to official EIU page."
+- source_name: "Олександр Олесь (Вікіпедія)"
+  source_url: "https://uk.wikipedia.org/wiki/Олександр_Олесь"
+  language: "uk"
+  hosting: "link-only"
+  rights_note: "CC BY-SA 3.0 license; linking to article to ensure proper attribution."
 references:
 - note: Authoritative English-language encyclopedia entry; emigration, ban, works.
   path: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CO%5CL%5COlesOleksander.htm
@@ -137,7 +148,7 @@ sequence: 221
 slug: oleksandr-oles
 subtitle: The Symbolist Poet Erased by Soviet Censorship and Exiled by Revolution's Defeat
 title: 'Олександр Олесь: Символізм, еміграція та стирання'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: літературний напрям кінця XIX — початку XX ст., що використовує символи та музичність вірша
   pos: ч.
