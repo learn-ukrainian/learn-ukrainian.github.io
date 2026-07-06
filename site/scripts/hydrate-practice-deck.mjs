@@ -6,6 +6,8 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 import { gunzipSync } from "node:zlib";
 
 const RECOVERY_COMMAND = "node site/scripts/hydrate-practice-deck.mjs";
+const STALE_POINTER_HINT =
+  "If your branch predates the latest practice deck publish, its committed pointer is stale — update the branch from origin/main (gh pr update-branch <N> / git merge origin/main). Re-downloading cannot fix a stale pointer.";
 
 const REQUIRED_POINTER_KEYS = [
   "asset_url",
@@ -149,7 +151,7 @@ async function downloadGzip(pointer) {
     );
   }
   throw new Error(
-    `gz sha mismatch: expected ${pointer.gz_sha256}, got ${actualGzSha} after ${DOWNLOAD_ATTEMPTS} download attempts`,
+    `gz sha mismatch: expected ${pointer.gz_sha256}, got ${actualGzSha} after ${DOWNLOAD_ATTEMPTS} download attempts. ${STALE_POINTER_HINT}`,
   );
 }
 
@@ -169,7 +171,7 @@ function parsePackage(packageBytes, pointer) {
   }
   const actualPackageSha = sha256(packageBytes);
   if (actualPackageSha !== pointer.package_sha256) {
-    throw new Error(`package sha mismatch: expected ${pointer.package_sha256}, got ${actualPackageSha}`);
+    throw new Error(`package sha mismatch: expected ${pointer.package_sha256}, got ${actualPackageSha}. ${STALE_POINTER_HINT}`);
   }
   const packagePayload = JSON.parse(packageBytes.toString("utf8"));
   if (packagePayload.schema !== "atlas-practice-deck-package") {
