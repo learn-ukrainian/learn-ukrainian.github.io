@@ -1734,21 +1734,32 @@ _FRAZEOLOHICHNYI_FTS_WARN_LOGGED = False
 _ASCII_LOWER_TABLE = str.maketrans("ABCDEFGHIJKLMNOPQRSTUVWXYZ", "abcdefghijklmnopqrstuvwxyz")
 
 
-def _db_cache_key(conn: sqlite3.Connection) -> str:
-    """Stable per-database cache key: the main DB file path, or a
-    per-connection sentinel for in-memory/temporary databases.
+def _db_cache_key(conn: sqlite3.Connection) -> str | None:
+    """Stable per-database cache key: the main DB file path, or ``None`` for
+    in-memory/temporary (pathless) databases — those are never cached.
 
     Index-availability verdicts are properties of the DATABASE, not the
     process — a process-global cache would let DB A's verdict leak onto
-    DB B (codex review of #4514, finding 2).
+    DB B (codex review of #4514, finding 2). Pathless DBs get no key at
+    all: an ``id(conn)``-based sentinel is reused by the allocator after
+    the connection closes, leaking a stale verdict onto an unrelated new
+    connection (codex re-review, reproduced).
     """
     try:
         for _seq, name, path in conn.execute("PRAGMA database_list"):
             if name == "main":
-                return path or f"conn:{id(conn)}"
+                return path or None
     except sqlite3.Error:
         pass
-    return f"conn:{id(conn)}"
+    return None
+
+
+def _cache_verdict(cache: dict[str, bool], key: str | None, verdict: bool) -> bool:
+    """Record an availability verdict for file-backed DBs; pathless DBs
+    (key=None) are never cached."""
+    if key is not None:
+        cache[key] = verdict
+    return verdict
 
 
 def _ascii_lower_contains(text: str, needle: str) -> bool:
@@ -1775,26 +1786,22 @@ def _ensure_frazeolohichnyi_fts(conn: sqlite3.Connection) -> bool:
 
     # 1. Verify SQLite runtime supports trigram (3.34+)
     if sqlite3.sqlite_version_info < (3, 34, 0):
-        _FRAZEOLOHICHNYI_FTS_AVAILABLE[key] = False
-        return False
+        return _cache_verdict(_FRAZEOLOHICHNYI_FTS_AVAILABLE, key, False)
 
     # Check if frazeolohichnyi table exists
     try:
         cur = conn.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='frazeolohichnyi'")
         if not cur.fetchone():
-            _FRAZEOLOHICHNYI_FTS_AVAILABLE[key] = False
-            return False
+            return _cache_verdict(_FRAZEOLOHICHNYI_FTS_AVAILABLE, key, False)
     except sqlite3.Error:
-        _FRAZEOLOHICHNYI_FTS_AVAILABLE[key] = False
-        return False
+        return _cache_verdict(_FRAZEOLOHICHNYI_FTS_AVAILABLE, key, False)
 
     # Check if index table exists
     try:
         cur = conn.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='frazeolohichnyi_fts'")
         exists = cur.fetchone() is not None
     except sqlite3.Error:
-        _FRAZEOLOHICHNYI_FTS_AVAILABLE[key] = False
-        return False
+        return _cache_verdict(_FRAZEOLOHICHNYI_FTS_AVAILABLE, key, False)
 
     if exists:
         try:
@@ -1810,8 +1817,7 @@ def _ensure_frazeolohichnyi_fts(conn: sqlite3.Connection) -> bool:
                     "INSERT INTO frazeolohichnyi_fts(rowid, word, definition) "
                     "SELECT id, word, definition FROM frazeolohichnyi"
                 )
-            _FRAZEOLOHICHNYI_FTS_AVAILABLE[key] = True
-            return True
+            return _cache_verdict(_FRAZEOLOHICHNYI_FTS_AVAILABLE, key, True)
         except sqlite3.Error as e:
             if not _FRAZEOLOHICHNYI_FTS_WARN_LOGGED:
                 print(f"Warning: Failed to verify/populate frazeolohichnyi_fts ({e}). Falling back to LIKE.", file=sys.stderr)
@@ -1822,8 +1828,7 @@ def _ensure_frazeolohichnyi_fts(conn: sqlite3.Connection) -> bool:
         if not _FRAZEOLOHICHNYI_FTS_WARN_LOGGED:
             print("Warning: frazeolohichnyi_fts table is missing and connection is read-only. Falling back to LIKE.", file=sys.stderr)
             _FRAZEOLOHICHNYI_FTS_WARN_LOGGED = True
-        _FRAZEOLOHICHNYI_FTS_AVAILABLE[key] = False
-        return False
+        return _cache_verdict(_FRAZEOLOHICHNYI_FTS_AVAILABLE, key, False)
 
     try:
         conn.execute(
@@ -1835,14 +1840,12 @@ def _ensure_frazeolohichnyi_fts(conn: sqlite3.Connection) -> bool:
             "INSERT INTO frazeolohichnyi_fts(rowid, word, definition) "
             "SELECT id, word, definition FROM frazeolohichnyi"
         )
-        _FRAZEOLOHICHNYI_FTS_AVAILABLE[key] = True
-        return True
+        return _cache_verdict(_FRAZEOLOHICHNYI_FTS_AVAILABLE, key, True)
     except sqlite3.Error as e:
         if not _FRAZEOLOHICHNYI_FTS_WARN_LOGGED:
             print(f"Warning: Failed to create/populate frazeolohichnyi_fts ({e}). Falling back to LIKE.", file=sys.stderr)
             _FRAZEOLOHICHNYI_FTS_WARN_LOGGED = True
-        _FRAZEOLOHICHNYI_FTS_AVAILABLE[key] = False
-        return False
+        return _cache_verdict(_FRAZEOLOHICHNYI_FTS_AVAILABLE, key, False)
 
 
 _UKRAJINET_INDEX_AVAILABLE: dict[str, bool] = {}
@@ -1878,18 +1881,15 @@ def _ensure_ukrajinet_word_index(conn: sqlite3.Connection) -> bool:
     try:
         cur = conn.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='ukrajinet'")
         if not cur.fetchone():
-            _UKRAJINET_INDEX_AVAILABLE[key] = False
-            return False
+            return _cache_verdict(_UKRAJINET_INDEX_AVAILABLE, key, False)
     except sqlite3.Error:
-        _UKRAJINET_INDEX_AVAILABLE[key] = False
-        return False
+        return _cache_verdict(_UKRAJINET_INDEX_AVAILABLE, key, False)
 
     try:
         cur = conn.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='ukrajinet_word_index'")
         exists = cur.fetchone() is not None
     except sqlite3.Error:
-        _UKRAJINET_INDEX_AVAILABLE[key] = False
-        return False
+        return _cache_verdict(_UKRAJINET_INDEX_AVAILABLE, key, False)
 
     if exists:
         try:
@@ -1902,8 +1902,7 @@ def _ensure_ukrajinet_word_index(conn: sqlite3.Connection) -> bool:
                     return False
 
                 _populate_ukrajinet_word_index(conn)
-            _UKRAJINET_INDEX_AVAILABLE[key] = True
-            return True
+            return _cache_verdict(_UKRAJINET_INDEX_AVAILABLE, key, True)
         except sqlite3.Error as e:
             if not _UKRAJINET_INDEX_WARN_LOGGED:
                 print(f"Warning: Failed to verify/populate ukrajinet_word_index ({e}). Falling back to LIKE.", file=sys.stderr)
@@ -1914,8 +1913,7 @@ def _ensure_ukrajinet_word_index(conn: sqlite3.Connection) -> bool:
         if not _UKRAJINET_INDEX_WARN_LOGGED:
             print("Warning: ukrajinet_word_index table is missing and connection is read-only. Falling back to LIKE.", file=sys.stderr)
             _UKRAJINET_INDEX_WARN_LOGGED = True
-        _UKRAJINET_INDEX_AVAILABLE[key] = False
-        return False
+        return _cache_verdict(_UKRAJINET_INDEX_AVAILABLE, key, False)
 
     try:
         conn.execute(
@@ -1927,14 +1925,12 @@ def _ensure_ukrajinet_word_index(conn: sqlite3.Connection) -> bool:
             "CREATE INDEX IF NOT EXISTS idx_ukrajinet_word_index_key ON ukrajinet_word_index(word_key)"
         )
         _populate_ukrajinet_word_index(conn)
-        _UKRAJINET_INDEX_AVAILABLE[key] = True
-        return True
+        return _cache_verdict(_UKRAJINET_INDEX_AVAILABLE, key, True)
     except sqlite3.Error as e:
         if not _UKRAJINET_INDEX_WARN_LOGGED:
             print(f"Warning: Failed to create/populate ukrajinet_word_index ({e}). Falling back to LIKE.", file=sys.stderr)
             _UKRAJINET_INDEX_WARN_LOGGED = True
-        _UKRAJINET_INDEX_AVAILABLE[key] = False
-        return False
+        return _cache_verdict(_UKRAJINET_INDEX_AVAILABLE, key, False)
 
 
 def _idioms_frazeolohichnyi(conn: sqlite3.Connection, lemma: str, *, limit: int = 3) -> dict[str, Any] | None:

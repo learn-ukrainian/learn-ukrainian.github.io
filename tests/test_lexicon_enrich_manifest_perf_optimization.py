@@ -286,6 +286,42 @@ def test_index_availability_cached_per_database(tmp_path):
     conn_b.close()
 
 
+def test_pathless_db_verdicts_never_cached(monkeypatch):
+    """codex re-review repro: id(conn)-keyed sentinels get REUSED by the
+    allocator after an in-memory connection closes, leaking a stale True
+    verdict onto an unrelated new :memory: DB whose empty sidecar index then
+    silently returns []. Pathless DBs must not be cached at all."""
+    monkeypatch.setattr(
+        enrich_manifest_module,
+        "_candidate_allowed",
+        lambda lemma, candidate: True
+    )
+    enrich_manifest_module._UKRAJINET_INDEX_AVAILABLE.clear()
+
+    conn_a = sqlite3.connect(":memory:")
+    conn_a.execute("CREATE TABLE ukrajinet (id INTEGER PRIMARY KEY, words TEXT NOT NULL DEFAULT '')")
+    conn_a.execute("INSERT INTO ukrajinet (words) VALUES (?)", (json.dumps(["бігати", "швидко"], ensure_ascii=False),))
+    conn_a.commit()
+    assert enrich_manifest_module._db_cache_key(conn_a) is None
+    assert enrich_manifest_module._ensure_ukrajinet_word_index(conn_a) is True
+    # Verdict must NOT have been cached anywhere.
+    assert enrich_manifest_module._UKRAJINET_INDEX_AVAILABLE == {}
+    conn_a.close()
+
+    # New :memory: DB (id(conn) may be recycled): table + EMPTY sidecar index.
+    # A leaked True verdict would skip population and return [] silently.
+    conn_b = sqlite3.connect(":memory:")
+    conn_b.execute("CREATE TABLE ukrajinet (id INTEGER PRIMARY KEY, words TEXT NOT NULL DEFAULT '')")
+    conn_b.execute("INSERT INTO ukrajinet (words) VALUES (?)", (json.dumps(["бігати", "швидко"], ensure_ascii=False),))
+    conn_b.execute("CREATE TABLE ukrajinet_word_index (word_key TEXT, rowid INTEGER)")
+    conn_b.commit()
+
+    out, seen = [], set()
+    _synonyms_from_ukrajinet(conn_b, "бігати", out, seen)
+    assert "швидко" in out
+    conn_b.close()
+
+
 def test_frazeolohichnyi_short_variant_fallback_and_missing_table(tmp_path):
     db_path = tmp_path / "test_sources_short.db"
     conn = sqlite3.connect(db_path)
