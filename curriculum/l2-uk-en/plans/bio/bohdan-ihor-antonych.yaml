@@ -79,6 +79,15 @@ persona:
   role: Модератор семінару, що ставить під сумнів усталені кліше про "співучого лемка" і розкриває інтелектуальну складність його метафізики та болісні конфлікти ідентичності.
   voice: Poet-Philosopher-Skeptic
 phase: BIO.4
+readings:
+- clearance: public
+  language: uk
+  rationale: Базовий життєпис для розуміння формування поета та його місця в українській літературі
+  role: Primary biography
+  source_name: Енциклопедія Сучасної України
+  source_url: https://esu.com.ua/article-42956
+  title: Антонич Богдан-Ігор
+  type: biography
 references:
 - title: Антонич Богдан Ігор
   note: Comprehensive biography of the Lemko-born modernist poet
@@ -98,7 +107,7 @@ sequence: 145
 slug: bohdan-ihor-antonych
 subtitle: 'Bohdan-Ihor Antonych: The Green Gospel'
 title: 'Богдан-Ігор Антонич: Зелена Євангелія'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: до християнські вірування, засновані на обожненні сил природи; у Антонича — філософська система
   pos: с.

@@ -78,6 +78,15 @@ persona:
   role: Прокурор на суді історії, що ставить незручні питання і вимагає доказів, а не віри.
   voice: Inquisitorial Analyst
 phase: BIO.4
+readings:
+- clearance: public
+  language: uk
+  rationale: Енциклопедичний життєпис останнього Головнокомандувача УПА
+  role: Primary biography
+  source_name: Енциклопедія Сучасної України
+  source_url: https://esu.com.ua/article-51093
+  title: Кук Василь Степанович
+  type: biography
 references:
 - title: '"Останній командир УПА. Життя і боротьба Василя Кука"'
   author: Аліна Понипаляк
@@ -97,7 +106,7 @@ sequence: 150
 slug: vasyl-kuk
 subtitle: The Last Commander's Dilemma
 title: 'Василь Кук: Останній командир'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: найвища військова посада, особа, що очолює всі збройні сили
   pos: ч.
