@@ -1,0 +1,77 @@
+{
+  "schema": 1,
+  "entries": [
+    {
+      "table": "wikipedia",
+      "source_file_pattern": "*",
+      "license": "CC-BY-SA-4.0",
+      "verdict": "SHIP",
+      "basis_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "basis_note": "LICENSE-CONTENT.md, Wikipedia section: Ukrainian Wikipedia context is CC BY-SA 4.0."
+    },
+    {
+      "table": "ukrainian_wiki",
+      "source_file_pattern": "*",
+      "license": "CC-BY-SA-4.0",
+      "verdict": "SHIP",
+      "basis_url": "https://creativecommons.org/licenses/by-sa/4.0/",
+      "basis_note": "LICENSE-CONTENT.md covers project-authored wiki/**/*.md content under CC BY-SA 4.0."
+    },
+    {
+      "table": "grinchenko",
+      "source_file_pattern": "*",
+      "license": "PUBLIC_DOMAIN",
+      "verdict": "SHIP",
+      "basis_url": "https://uk.wikipedia.org/wiki/Словарь_української_мови",
+      "basis_note": "LICENSE-CONTENT.md, Dictionaries section: Грінченко 1907 is public domain."
+    },
+    {
+      "table": "sum11",
+      "source_file_pattern": "*",
+      "license": "PUBLIC_DOMAIN",
+      "verdict": "SHIP",
+      "basis_url": "https://sum.in.ua/",
+      "basis_note": "LICENSE-CONTENT.md, Dictionaries section: СУМ-11 is marked public domain, with sovietization caveat."
+    },
+    {
+      "table": "wiktionary",
+      "source_file_pattern": "*",
+      "license": "CC-BY-SA-3.0",
+      "verdict": "SHIP",
+      "basis_url": "https://creativecommons.org/licenses/by-sa/3.0/",
+      "basis_note": "LICENSE-CONTENT.md, Dictionaries section: English Wiktionary / Kaikki fallback is CC BY-SA 3.0."
+    },
+    {
+      "table": "forms",
+      "source_file_pattern": "*",
+      "license": "VESUM-MIT-ish",
+      "verdict": "SHIP",
+      "basis_url": "https://github.com/brown-uk/dict_uk",
+      "basis_note": "LICENSE-CONTENT.md, Dictionaries section: VESUM is listed as an open-source morphological database."
+    },
+    {
+      "table": "literary_texts",
+      "source_file_pattern": "ukrlib-franko",
+      "license": "PUBLIC_DOMAIN",
+      "verdict": "SHIP",
+      "basis_url": "https://uk.wikipedia.org/wiki/Іван_Франко",
+      "basis_note": "data/authors_rights.yaml lists Іван Франко death_year 1916; LICENSE-CONTENT.md marks Franko public domain."
+    },
+    {
+      "table": "literary_texts",
+      "source_file_pattern": "ukrlib-kotlyarevsky",
+      "license": "PUBLIC_DOMAIN",
+      "verdict": "SHIP",
+      "basis_url": "https://uk.wikipedia.org/wiki/Іван_Котляревський",
+      "basis_note": "data/authors_rights.yaml lists Іван Котляревський death_year 1838; LICENSE-CONTENT.md marks pre-1924 literary sources public domain."
+    },
+    {
+      "table": "literary_texts",
+      "source_file_pattern": "ukrlib-skovoroda",
+      "license": "PUBLIC_DOMAIN",
+      "verdict": "SHIP",
+      "basis_url": "https://uk.wikipedia.org/wiki/Григорій_Сковорода",
+      "basis_note": "Hryhorii Skovoroda died in 1794; LICENSE-CONTENT.md marks public-domain primary literary sources as quotable."
+    }
+  ]
+}

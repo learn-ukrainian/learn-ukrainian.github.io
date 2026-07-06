@@ -10,9 +10,27 @@ def test_all_fixture_evidence_has_rights_matrix_row():
     with open(matrix_path, encoding="utf-8") as f:
         rights_data = json.load(f)
 
+    valid_classifications = {"POINTER", "QUOTED_TEXT"}
+    valid_verdicts = {"SHIP", "POINTER_ONLY", "REPLACE", "UNKNOWN"}
+
     matrix_keys = set()
     for row in rights_data:
         matrix_keys.add((row["fixture"], row["claim_id"], row["quote_or_ref"]))
+        assert row.get("classification") in valid_classifications, (
+            f"Row missing or invalid classification: {row}"
+        )
+        assert row.get("verdict") in valid_verdicts, f"Row has invalid verdict: {row}"
+
+        if row["classification"] == "QUOTED_TEXT":
+            assert row["verdict"] == "UNKNOWN" or (row.get("matched_table") and row.get("chunk_id")), (
+                f"QUOTED_TEXT rows require matched_table+chunk_id unless verdict is UNKNOWN: {row}"
+            )
+            if row["verdict"] == "UNKNOWN":
+                assert row.get("license") == "UNKNOWN", f"UNKNOWN quoted rows must not claim a license: {row}"
+
+        if row["classification"] == "POINTER":
+            assert row.get("verdict") == "SHIP", f"Pointer rows should auto-ship: {row}"
+            assert row.get("license") == "N/A", f"Pointer rows should not claim a source license: {row}"
 
     # Extract dynamically from fixtures
     found_keys = set()
