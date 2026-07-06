@@ -1,4 +1,14 @@
 ---
+readings:
+- source_name: "Дараган Юрій Юрійович (Вікіпедія)"
+  source_url: "https://uk.wikipedia.org/wiki/Дараган_Юрій_Юрійович"
+  language: "uk"
+  hosting: "link-only"
+  rights_note: "CC BY-SA 4.0"
+- source_name: "Юрій Дараган: Біографія та поезія"
+  language: "uk"
+  hosting: "reading-needed"
+  rights_note: "Need rights-clear primary text or scholarly article"
 activity_hints:
 - after_section: 'Тінь: Табір, що породив поезію і вбив поета'
   focus: Перевірка розуміння механізму загибелі поета та обставин його ранньої смерті
@@ -95,7 +105,7 @@ sequence: 228
 slug: yurii-darahan
 subtitle: The Founding Poet of the Prague School, Dead at Thirty-Two
 title: 'Юрій Дараган: «Сагайдак» і заспів пражан'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: козацький футляр для стріл і лука; у Дарагана — назва збірки та вояцький символ
   pos: ч.

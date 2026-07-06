@@ -1,4 +1,14 @@
 ---
+readings:
+- source_name: "Юрій Клен (Вікіпедія)"
+  source_url: "https://uk.wikipedia.org/wiki/Юрій_Клен"
+  language: "uk"
+  hosting: "link-only"
+  rights_note: "CC BY-SA 4.0"
+- source_name: "Юрій Клен: Біографія та твори"
+  language: "uk"
+  hosting: "reading-needed"
+  rights_note: "Need rights-clear primary text or scholarly article"
 activity_hints:
 - after_section: 'Тінь: Знищення «ґрона п''ятірного»'
   focus: Перевірка розуміння механізму знищення неокласиків і ролі поеми «Прокляті роки» як свідчення
@@ -97,7 +107,7 @@ sequence: 227
 slug: yurii-klen
 subtitle: The Neoclassicist Who Escaped to Bear Witness
 title: 'Юрій Клен: Свідок знищеного «ґрона п''ятірного»'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: мистецький напрям, що звертається до класичної форми, ясності та культурної традиції; в Україні 1920-х — коло київських поетів
   pos: ч.
