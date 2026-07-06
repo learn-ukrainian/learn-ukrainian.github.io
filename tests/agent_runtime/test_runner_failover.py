@@ -517,3 +517,26 @@ def test_chain_route_missing_model_after_index_zero_warns_and_drops(
 
     assert chain is None  # single usable route -> feature disabled
     assert any("deepseek[1] dropped" in rec.getMessage() for rec in caplog.records)
+
+
+def test_shipped_grok_chain_is_grok_family_only():
+    """#4583: grok lane fails over inside the x-ai family via openrouter.
+    Route 0 inherits the dispatch-requested model (xai subscription seat)."""
+    from agent_runtime.failover import (
+        default_failover_config_path,
+        load_failover_chain,
+    )
+
+    chain = load_failover_chain(
+        "grok",
+        effective_model="grok-4.3",
+        path=default_failover_config_path(),
+    )
+
+    assert chain is not None, "shipped config must define the grok chain"
+    assert [route.provider for route in chain.routes] == ["xai", "openrouter"]
+    assert chain.routes[0].model == "grok-4.3"
+    assert chain.routes[1].model.startswith("x-ai/"), (
+        f"fallback left the grok family: {chain.routes[1].model}"
+    )
+    assert chain.cooldown_ttl_s == 300
