@@ -1,3 +1,5 @@
+/// <reference types="vitest/config" />
+
 /**
  * Vitest configuration — Astro's recommended approach.
  * `getViteConfig` applies the full Astro/Vite pipeline (React JSX transform,

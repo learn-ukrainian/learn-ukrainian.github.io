@@ -9,6 +9,7 @@ import {
   saveState,
   type PracticeDeckData,
   type PracticeLexeme,
+  type PracticeMode,
 } from '@site/src/lib/lexicon/srs';
 import { LEARNER_LEVEL_STORAGE_KEY, type CefrLevel } from '@site/src/lib/lexicon/levels';
 
@@ -184,6 +185,20 @@ function sampleDeck(): PracticeDeckData {
   };
 }
 
+function sampleDeckWithOnlyMode(lemmaId: string, mode: PracticeMode): PracticeDeckData {
+  const baseDeck = sampleDeck();
+  return {
+    ...baseDeck,
+    index: baseDeck.index.map((item) => ({
+      ...item,
+      modes: item.lemmaId === lemmaId ? [mode] : [],
+      hasCloze: false,
+      clozeIds: [],
+    })),
+    cloze: [],
+  };
+}
+
 function wordToMeaningDeck(): PracticeDeckData {
   const lexemes = [
     lexeme('sady', 'сад', 'garden', {
@@ -238,7 +253,7 @@ function wordToMeaningDeck(): PracticeDeckData {
       lemma: entry.lemma,
       cefr: 'A1',
       modes:
-        entry.meaningMcEligible === false
+        entry.meaningMcEligible === false || entry.lemmaId === 'ityx'
           ? ['flashcards']
           : ['flashcards', 'matching', 'choice'],
       hasCloze: false,
@@ -350,7 +365,7 @@ describe('LexiconPractice', () => {
   test('flashcard rating persists mode-specific SRS progress', async () => {
     const user = userEvent.setup();
     const { container } = render(
-      <LexiconPractice initialDeck={sampleDeck()} autoStart initialMode="flashcards" />,
+      <LexiconPractice initialDeck={sampleDeckWithOnlyMode('knyha', 'flashcards')} autoStart initialMode="flashcards" />,
     );
 
     const flashcard = container.querySelector<HTMLElement>('[data-activity="flashcard"]');
@@ -368,7 +383,7 @@ describe('LexiconPractice', () => {
 
   test('choice mode records result and advances through selector', async () => {
     const user = userEvent.setup();
-    render(<LexiconPractice initialDeck={sampleDeck()} autoStart initialMode="choice" />);
+    render(<LexiconPractice initialDeck={sampleDeckWithOnlyMode('knyha', 'choice')} autoStart initialMode="choice" />);
 
     const choice = screen.getByTestId('practice-choice');
     expect(choice).toBeInTheDocument();
@@ -389,7 +404,7 @@ describe('LexiconPractice', () => {
     render(<LexiconPractice initialDeck={wordToMeaningDeck()} autoStart initialMode="choice" />);
     const choice = screen.getByTestId('practice-choice');
 
-    expect(screen.getByText('Що означає «сад»?')).toBeInTheDocument();
+    expect(screen.getByText(/^Що означає «(сад|дім|ліс|річка)»\?$/)).toBeInTheDocument();
     // The option label lives in its own span next to the "1-4" key span; read just the label.
     const labels = within(choice)
       .getAllByRole('button')

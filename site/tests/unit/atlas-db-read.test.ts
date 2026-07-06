@@ -1,9 +1,8 @@
 // @vitest-environment node
 
 import Database from 'better-sqlite3';
-import { getContainerRenderer } from '@astrojs/react/container-renderer';
+import reactRenderer from '@astrojs/react/server.js';
 import { experimental_AstroContainer as AstroContainer } from 'astro/container';
-import { loadRenderers } from 'astro:container';
 import { describe, expect, test } from 'vitest';
 import { resolve } from 'node:path';
 import manifest from '@site/src/data/lexicon-manifest.json';
@@ -24,7 +23,7 @@ interface EntryTypeRow {
   slug: string;
 }
 
-type AstroComponent = Parameters<InstanceType<typeof AstroContainer>['renderToString']>[0];
+type AstroComponent = Parameters<AstroContainer['renderToString']>[0];
 
 interface AstroComponentModule {
   default: AstroComponent;
@@ -107,8 +106,8 @@ describe('Atlas DB SSG read parity', () => {
     const { default: WordAtlasArticle } = (await import(
       '@site/src/lexicon/WordAtlasArticle.astro'
     )) as AstroComponentModule;
-    const renderers = await loadRenderers([getContainerRenderer()]);
-    const container = await AstroContainer.create({ renderers });
+    const container = await AstroContainer.create();
+    container.addServerRenderer({ renderer: reactRenderer });
     let differing = 0;
 
     for (const slug of fixtureSlugs) {
