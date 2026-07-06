@@ -22,6 +22,30 @@ activity_hints:
   placement: workbook
   type: essay-response
 cefr_min: C1
+readings:
+  - title: "Яковенко Наталя Миколаївна"
+    source_name: "Енциклопедія історії України"
+    source_url: "https://history.org.ua/?termin=Yakovenko_Nataliia"
+    language: uk
+    genre: "encyclopedia"
+    source_type: "reference"
+    role: "primary_bio"
+    cefr_min: C1
+    license: "copyrighted"
+    hosting: "link-only"
+    learner_task: "Ознайомитися з науковим шляхом історикині."
+    caveats: "Академічна довідка подає біографічний каркас; методологічну позицію Яковенко варто добирати окремим інтерв'ю або уривком."
+  - title: "Уривок з праць або інтерв'ю для «Критики»"
+    source_name: "Підлягає уточненню"
+    language: uk
+    genre: "essay"
+    source_type: "biography"
+    role: "reading-needed"
+    cefr_min: C1
+    license: "unknown"
+    hosting: "reading-needed"
+    learner_task: "Розуміння методологічного перевороту в історіографії."
+    caveats: "Потрібно знайти ліцензійно чистий уривок, що ілюструє її підхід до деконструкції народницької історії."
 connects_to:
 - bio-yaroslav-hrytsak
 - bio-mykhailo-hrushevskyi
@@ -104,7 +128,7 @@ sequence: 168
 slug: natalia-yakovenko
 subtitle: 'Natalia Yakovenko: The Matriarch of Critical History'
 title: 'Наталя Яковенко: Матріарх критичної історії'
-version: '4.0'
+version: '4.2'
 vocabulary_hints:
 - definition: спеціальна історична дисципліна, що вивчає історичні джерела, їх походження, достовірність та методику роботи з ними
   pos: с.

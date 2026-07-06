@@ -22,6 +22,30 @@ activity_hints:
   placement: workbook
   type: essay-response
 cefr_min: C1
+readings:
+  - title: "Стус Василь Семенович"
+    source_name: "Енциклопедія історії України"
+    source_url: "https://history.org.ua/?termin=Stus_V"
+    language: uk
+    genre: "encyclopedia"
+    source_type: "reference"
+    role: "primary_bio"
+    cefr_min: C1
+    license: "copyrighted"
+    hosting: "link-only"
+    learner_task: "Ознайомитися з біографією та історією дисидентського руху."
+    caveats: "Академічна довідка задає фактичний каркас; етичну позицію Стуса потрібно аналізувати через окремо перевірені листи або спогади."
+  - title: "Листи до сина або спогади сучасників"
+    source_name: "Підлягає уточненню"
+    language: uk
+    genre: "memoir"
+    source_type: "biography"
+    role: "reading-needed"
+    cefr_min: C1
+    license: "unknown"
+    hosting: "reading-needed"
+    learner_task: "Розуміння етичної позиції та 'вертикального стояння'."
+    caveats: "Потрібно вибрати листи з табору або уривки спогадів для глибокого аналізу."
 connects_to:
 - bio-76-viacheslav-chornovil
 - bio-72-alla-horska
@@ -99,7 +123,7 @@ sequence: 165
 slug: vasyl-stus
 subtitle: 'Vasyl Stus: An Upright Stand of the Spirit'
 title: 'Василь Стус: Вертикальне стояння духу'
-version: '4.0'
+version: '4.2'
 vocabulary_hints:
 - definition: людина, що активно протистоїть офіційній ідеології та політичному режиму
   pos: ч.
