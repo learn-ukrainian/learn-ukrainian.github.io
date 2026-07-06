@@ -579,7 +579,13 @@ def _neutral_runtime_cwd() -> Path:
     """
     global _NEUTRAL_RUNTIME_CWD
     if _NEUTRAL_RUNTIME_CWD is None or not _NEUTRAL_RUNTIME_CWD.exists():
-        _NEUTRAL_RUNTIME_CWD = Path(tempfile.mkdtemp(prefix="qg-bakeoff-bare-"))
+        candidate = Path(tempfile.mkdtemp(prefix="qg-bakeoff-bare-"))
+        repo_root = PROJECT_ROOT.resolve()
+        if candidate.resolve() == repo_root or candidate.resolve().is_relative_to(repo_root):
+            # TMPDIR pointed under the repo — the firewall would silently
+            # fail (codex review, #4577). Force a genuinely external dir.
+            candidate = Path(tempfile.mkdtemp(prefix="qg-bakeoff-bare-", dir="/tmp"))
+        _NEUTRAL_RUNTIME_CWD = candidate
     return _NEUTRAL_RUNTIME_CWD
 
 
