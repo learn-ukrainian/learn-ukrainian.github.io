@@ -80,6 +80,16 @@ persona:
   role: Модератор семінару, що ставить під сумнів будь-які канони, включно з каноном самого Андруховича
   voice: Postmodern-Provocateur
 phase: BIO
+readings:
+- hosting: reading-needed
+  language: uk
+  learner_task: "Читати біографію та аналізувати ранню творчість письменника"
+  license: unknown
+  rights_note: "Потрібно знайти стабільне джерело (не Вікіпедію)"
+  role: primary
+  source_name: "Біографія Юрія Андруховича"
+  source_type: article
+  source_url: ""
 references:
 - title: Yuri Andrukhovych
   note: 'Системна біографія: від Бу-Ба-Бу до європейського інтелектуала. Зібрано з відкритих джерел.'
@@ -99,7 +109,7 @@ sequence: 181
 slug: yuri-andrukhovych
 subtitle: 'Yuri Andrukhovych: Carnival on the Ruins of an Empire'
 title: 'Юрій Андрухович: Карнавал на руїнах імперії'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: філософський і мистецький напрям, що ставить під сумнів великі наративи та класичні істини
   pos: ч.

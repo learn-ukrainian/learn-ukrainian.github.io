@@ -77,6 +77,16 @@ persona:
   role: Модератор семінару, що проводить студента від споглядання природи до глибин філософії та літератури, ставлячи точні, неспішні питання
   voice: Meditative-Analyst
 phase: BIO.16
+readings:
+- hosting: reading-needed
+  language: uk
+  learner_task: "Читати про формування 'станіславівського феномену' та біографію автора"
+  license: unknown
+  rights_note: "Потрібно знайти стабільне джерело (не Вікіпедію)"
+  role: primary
+  source_name: "Біографія Тараса Прохаська"
+  source_type: article
+  source_url: ""
 references:
 - title: Taras Prokhasko
   note: Основна біографічна інформація, хронологія творчості, список нагород
@@ -97,7 +107,7 @@ sequence: 183
 slug: taras-prokhasko
 subtitle: 'Taras Prokhasko: The Stanislaviv Phenomenon'
 title: 'Тарас Прохасько: Станіславівський феномен'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: наука про рослини та їхнє життя
   pos: ж.

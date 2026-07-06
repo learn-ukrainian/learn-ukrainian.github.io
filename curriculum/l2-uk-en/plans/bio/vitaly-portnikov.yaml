@@ -78,6 +78,16 @@ persona:
   role: Модератор дискусії про роль публічного інтелектуала, що розглядає Портникова не як ікону, а як складне, впливове явище в українському суспільстві.
   voice: Critical-Sympathetic
 phase: BIO
+readings:
+- hosting: reading-needed
+  language: uk
+  learner_task: "Читати та аналізувати ключові етапи діяльності журналіста"
+  license: unknown
+  rights_note: "Потрібно знайти стабільне джерело (не Вікіпедію)"
+  role: primary
+  source_name: "Біографія Віталія Портникова"
+  source_type: article
+  source_url: ""
 references:
 - title: Портников Віталій Янович
   author: Wikipedia Contributors
@@ -98,7 +108,7 @@ sequence: 182
 slug: vitaly-portnikov
 subtitle: The Analyst on the Frontline of the Information War
 title: 'Віталій Портников: Журналіст і аналітик'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: фахівець, що займається аналізом, дослідженням у якій-небудь галузі
   pos: ч.
