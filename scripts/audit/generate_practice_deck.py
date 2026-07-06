@@ -91,9 +91,10 @@ NO_PAIR_PROBABILITY = {
 HERITAGE_KINDS = frozenset({"lexical", "sense_restricted"})
 HERITAGE_DEFAULT_AVAILABILITY = "B1"
 HERITAGE_OPTION_LEAK_PATTERN = re.compile(
-    r"(?:⚠|кальк|calque|русизм|russianism|суржик)",
+    r"(?:⚠|кальк|calque|русизм|russianism|суржик|рос\.)",
     re.IGNORECASE,
 )
+HERITAGE_PUBLIC_OPTION_KEYS = frozenset({"label"})
 
 CASE_LABELS_UA = {
     "nominative": "називний",
@@ -1602,20 +1603,10 @@ def _valid_heritage_frames(pair: dict[str, Any]) -> list[dict[str, Any]]:
 def _heritage_pair_native_lexeme(
     pair: dict[str, Any],
     lexemes_by_id: dict[str, dict[str, Any]],
-    by_plain_lemma: dict[str, dict[str, Any]],
 ) -> dict[str, Any] | None:
     native_slug = _clean_text(pair.get("nativeSlug"))
     if native_slug and native_slug in lexemes_by_id:
         return lexemes_by_id[native_slug]
-    native_lemma = _clean_text(pair.get("nativeLemma"))
-    if native_lemma:
-        lexeme = by_plain_lemma.get(_plain(native_lemma))
-        if lexeme:
-            return lexeme
-    for correction in _clean_text_list(pair.get("corrections")):
-        lexeme = by_plain_lemma.get(_plain(correction))
-        if lexeme:
-            return lexeme
     return None
 
 
@@ -1693,11 +1684,23 @@ def _shuffle_heritage_options(heritage_id: str, options: list[dict[str, str]]) -
     )
 
 
+def _strip_heritage_option_metadata(item: dict[str, Any]) -> dict[str, Any]:
+    stripped = {**item}
+    stripped["options"] = [
+        {"label": str(option.get("label") or "")}
+        for option in item.get("options", [])
+        if isinstance(option, dict)
+    ]
+    return stripped
+
+
 def _build_heritage_items(
     pair: dict[str, Any],
     lexeme: dict[str, Any],
     all_lexemes: list[dict[str, Any]],
     deck_version: str,
+    *,
+    public_options: bool = True,
 ) -> list[dict[str, Any]]:
     frames = _valid_heritage_frames(pair)
     if not frames:
@@ -1750,7 +1753,7 @@ def _build_heritage_items(
         if item["kind"] == "sense_restricted":
             item["calqueSense"] = _clean_text(pair.get("calqueSense")) or ""
             item["authenticSense"] = _clean_text(pair.get("authenticSense")) or ""
-        items.append(item)
+        items.append(_strip_heritage_option_metadata(item) if public_options else item)
     return items
 
 
@@ -1824,7 +1827,7 @@ def validate_synonym_item(item: dict[str, Any]) -> list[str]:
     return errors
 
 
-def validate_heritage_item(item: dict[str, Any]) -> list[str]:
+def validate_heritage_item(item: dict[str, Any], *, internal_options: bool = False) -> list[str]:
     errors: list[str] = []
     for field in ("heritageId", "lemmaId", "srsKey", "prompt", "answer", "calque", "rationale"):
         if not _clean_text(item.get(field)):
@@ -1844,6 +1847,15 @@ def validate_heritage_item(item: dict[str, Any]) -> list[str]:
     labels = [str(option.get("label") or "") for option in option_objects]
     if any(HERITAGE_OPTION_LEAK_PATTERN.search(label) for label in labels):
         errors.append("heritage options must not visually mark the calque pre-answer")
+    if not internal_options:
+        for option in option_objects:
+            leaked_keys = sorted(set(option) - HERITAGE_PUBLIC_OPTION_KEYS)
+            if leaked_keys:
+                errors.append(
+                    "heritage options must expose only label; "
+                    f"remove leaked option keys {leaked_keys}"
+                )
+                break
     normalized = [_plain(label) for label in labels]
     if len(set(normalized)) != len(normalized):
         errors.append("heritage options must be unique after normalization")
@@ -1853,27 +1865,28 @@ def validate_heritage_item(item: dict[str, Any]) -> list[str]:
         errors.append("heritage answer must be present exactly once")
     if normalized.count(calque) != 1:
         errors.append("heritage calque must be present exactly once")
-    kinds = Counter(str(option.get("kind") or "") for option in option_objects)
-    if kinds.get("answer") != 1:
-        errors.append("heritage options must contain exactly one answer")
-    if kinds.get("calque") != 1:
-        errors.append("heritage options must contain exactly one calque")
-    if kinds.get("distractor") != 2:
-        errors.append("heritage options must contain exactly two distractors")
     lengths = [len(label) for label in labels]
     if lengths and max(lengths) - min(lengths) > 12:
         errors.append("heritage option label lengths exceed bounded distribution")
-    pos_values = {
-        str(option.get("pos") or "")
-        for option in option_objects
-        if option.get("kind") != "calque" and option.get("pos")
-    }
-    if len(pos_values) > 1:
-        errors.append("heritage distractors must stay within one POS bucket")
-    for option in option_objects:
-        if option.get("kind") not in {"answer", "calque", "distractor"}:
-            errors.append("heritage option kind is not recognized")
-            break
+    if internal_options:
+        kinds = Counter(str(option.get("kind") or "") for option in option_objects)
+        if kinds.get("answer") != 1:
+            errors.append("heritage options must contain exactly one answer")
+        if kinds.get("calque") != 1:
+            errors.append("heritage options must contain exactly one calque")
+        if kinds.get("distractor") != 2:
+            errors.append("heritage options must contain exactly two distractors")
+        pos_values = {
+            str(option.get("pos") or "")
+            for option in option_objects
+            if option.get("kind") != "calque" and option.get("pos")
+        }
+        if len(pos_values) > 1:
+            errors.append("heritage distractors must stay within one POS bucket")
+        for option in option_objects:
+            if option.get("kind") not in {"answer", "calque", "distractor"}:
+                errors.append("heritage option kind is not recognized")
+                break
     return errors
 
 
@@ -2105,7 +2118,7 @@ def build_practice_shards(
         if not frames:
             heritage_frame_debt += 1
             continue
-        native_lexeme = _heritage_pair_native_lexeme(pair, lexemes_by_id, by_plain_lemma)
+        native_lexeme = _heritage_pair_native_lexeme(pair, lexemes_by_id)
         if not native_lexeme:
             native_slug = _clean_text(pair.get("nativeSlug")) or "<missing>"
             print(
@@ -2114,7 +2127,13 @@ def build_practice_shards(
                 file=sys.stderr,
             )
             continue
-        for item in _build_heritage_items(pair, native_lexeme, all_lexemes, deck_version):
+        for item in _build_heritage_items(
+            pair,
+            native_lexeme,
+            all_lexemes,
+            deck_version,
+            public_options=False,
+        ):
             level = str(item.get("cefr") or "")
             if level not in mode_by_level:
                 print(
@@ -2122,14 +2141,22 @@ def build_practice_shards(
                     file=sys.stderr,
                 )
                 continue
-            item_errors = validate_heritage_item(item)
+            item_errors = validate_heritage_item(item, internal_options=True)
             if item_errors:
                 print(
                     f"WARN: heritage_pair[{index}] item dropped: {'; '.join(item_errors)}",
                     file=sys.stderr,
                 )
                 continue
-            mode_by_level[level]["heritage"].append(item)
+            public_item = _strip_heritage_option_metadata(item)
+            public_errors = validate_heritage_item(public_item)
+            if public_errors:
+                print(
+                    f"WARN: heritage_pair[{index}] item dropped: {'; '.join(public_errors)}",
+                    file=sys.stderr,
+                )
+                continue
+            mode_by_level[level]["heritage"].append(public_item)
             mode_lemma_ids[level]["heritage"].add(native_lexeme["lemmaId"])
     if heritage_frame_debt:
         print(

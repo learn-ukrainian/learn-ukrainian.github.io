@@ -231,6 +231,7 @@ def test_heritage_items_wire_mode_counts_and_index_modes() -> None:
 
     assert len(heritage) == 1
     assert heritage[0]["lemmaId"] == "knyha"
+    assert all(set(option) == {"label"} for option in heritage[0]["options"])
     assert a2["index"]["counts"]["modeCounts"]["heritage"] == 1
     assert a2["index"]["counts"]["modeCoverage"]["heritage"] == 0.1429
     assert "heritage" in index_item["modes"]
@@ -240,16 +241,48 @@ def test_heritage_item_options_are_valid_and_do_not_mark_calque() -> None:
     pair = _fixture_heritage_pair()
     lexemes = _fixture_lexemes()
     item = _build_heritage_items(pair, lexemes[0], lexemes, "deck-v1")[0]
+    internal_item = _build_heritage_items(
+        pair,
+        lexemes[0],
+        lexemes,
+        "deck-v1",
+        public_options=False,
+    )[0]
 
     assert validate_heritage_item(item) == []
+    assert validate_heritage_item(internal_item, internal_options=True) == []
+    assert all(set(option) == {"label"} for option in item["options"])
+    assert all("kind" in option for option in internal_item["options"])
 
     marked = json.loads(json.dumps(item))
     for option in marked["options"]:
-        if option["kind"] == "calque":
-            option["label"] = f"⚠ {option['label']}"
+        if option["label"] == marked["calque"]:
+            option["label"] = f"рос. {option['label']}"
             break
 
     assert "heritage options must not visually mark the calque pre-answer" in validate_heritage_item(marked)
+
+
+def test_heritage_pair_native_slug_must_resolve_without_native_lemma_fallback(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    pair = _fixture_heritage_pair()
+    pair["nativeSlug"] = "missing-slug"
+    pair["nativeLemma"] = "книга"
+    pair["corrections"] = ["книга"]
+
+    shards = build_practice_shards(
+        read_manifest(MANIFEST),
+        ReviewedSourceAllowlist.from_path(ALLOWLIST),
+        JsonVesumVerifier.from_path(VESUM),
+        read_cloze_sources(CLOZE_SOURCES),
+        BuildConfig(),
+        [pair],
+    )
+    captured = capsys.readouterr()
+
+    assert all(level["heritage"]["heritage"] == [] for level in shards.values())
+    assert "nativeSlug 'missing-slug' not in practice lexemes; emitted 0 items" in captured.err
 
 
 def test_heritage_item_ids_and_options_are_deterministic() -> None:
