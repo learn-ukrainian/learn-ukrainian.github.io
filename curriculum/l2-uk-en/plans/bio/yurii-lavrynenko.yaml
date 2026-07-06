@@ -76,6 +76,24 @@ persona:
     Модератор семінару, який досліджує інтелектуальну історію, уникаючи як радянського стирання, так і бездумної глорифікації.
   voice: Intellectual Historian
 phase: BIO
+readings:
+- hosting: esu.com.ua
+  language: uk
+  note: Академічна довідка про життєвий шлях критика та історію створення антології.
+  role: encyclopedia
+  source: 'Лавріненко Юрій Андріянович (ЕСУ)'
+  url: https://esu.com.ua/article-52788
+- hosting: nibu.kyiv.ua
+  language: uk
+  note: Матеріали виставки Національної історичної бібліотеки України, присвячені життю і діяльності.
+  role: exhibition-materials
+  source: 'Лавріненко Юрій Андріянович (НІБУ)'
+  url: https://nibu.kyiv.ua/exhibitions/839/
+- hosting: reading-needed
+  language: uk
+  note: Передмова або уривок з антології «Розстріляне відродження» для прямого читання.
+  role: primary-excerpt
+  source: 'reading-needed: уривок з передмови до антології «Розстріляне відродження»'
 references:
 - note: Канонічне ім'я, арешт 1933 року.
   path: https://esu.com.ua/article-52788
@@ -102,7 +120,7 @@ sequence: 245
 slug: yurii-lavrynenko
 subtitle: The Editor Who Named the Executed Renaissance
 title: 'Юрій Лавріненко: Антологія Розстріляного відродження'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: покоління 1920-х рр., знищене репресіями
   pos: ч.

@@ -76,6 +76,29 @@ persona:
     Модератор семінару, який досліджує інтелектуальну історію, уникаючи як радянського стирання, так і бездумної глорифікації.
   voice: Intellectual Historian
 phase: BIO
+readings:
+- hosting: esu.com.ua
+  language: uk
+  note: Короткий життєпис етнографа та огляд його основних праць.
+  role: encyclopedia
+  source: 'Воропай Олекса (ЕСУ)'
+  url: https://esu.com.ua/article-29877
+- hosting: vue.gov.ua
+  language: uk
+  note: Велика енциклопедична стаття (Велика українська енциклопедія) про життєвий шлях.
+  role: encyclopedia
+  source: 'Воропай, Олекса Іванович (ВУЕ)'
+  url: https://vue.gov.ua/Воропай,_Олекса_Іванович
+- hosting: reading-needed
+  language: uk
+  note: Біографічний нарис про життя і діяльність О. Воропая у Великій Британії.
+  role: biography-overview
+  source: 'reading-needed: Олекса Воропай (Українці у Сполученому Королівстві)'
+- hosting: reading-needed
+  language: uk
+  note: Уривок із переднього слова до книги «Звичаї нашого народу» для аналізу ідей про мову та звичаї.
+  role: primary-excerpt
+  source: 'reading-needed: передмова до книги «Звичаї нашого народу»'
 references:
 - note: Канонічна стаття ВУЕ.
   path: https://vue.gov.ua/Воропай,_Олекса_Іванович
@@ -102,7 +125,7 @@ sequence: 246
 slug: oleksa-voropai
 subtitle: The Ethnographer Who Preserved Ukrainian Village Life in Exile
 title: 'Олекса Воропай: Звичаї нашого народу у еміграції'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: народний обряд або звичай
   pos: ж.

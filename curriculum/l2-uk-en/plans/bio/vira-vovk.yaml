@@ -84,6 +84,24 @@ persona:
     Модератор семінару, який досліджує діаспорну поезію та переклад як інструмент культурної суб'єктності, уникаючи як радянського стирання, так і бездумної глорифікації.
   voice: Intellectual Historian
 phase: BIO
+readings:
+- hosting: esu.com.ua
+  language: uk
+  note: Офіційна енциклопедична довідка про життєвий шлях і творчість.
+  role: encyclopedia
+  source: 'Вовк Віра (ЕСУ)'
+  url: https://esu.com.ua/article-35205
+- hosting: zbruc.eu
+  language: uk
+  note: Стаття з нагоди смерті письменниці з оцінкою її внеску в культуру.
+  role: obituary-reflection
+  source: 'Померла Віра Вовк (1926–2022) (Збруч)'
+  url: https://zbruc.eu/node/112524
+- hosting: reading-needed
+  language: uk
+  note: Розгорнута стаття-портрет про зв'язок поетки з Бразилією та Україною.
+  role: longform-profile
+  source: 'reading-needed: Віра Вовк (Читомо)'
 references:
 - note: Життєпис, членство в УВАН/НТШ, премії, переклади.
   path: https://esu.com.ua/article-35205
@@ -114,7 +132,7 @@ sequence: 242
 slug: vira-vovk
 subtitle: The Diaspora Poet-Translator Who Built Ukrainian Literature in Brazil
 title: 'Віра Вовк: Поезія та переклад між Бразилією і Україною'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: розселення народу за межами історичної батьківщини
   pos: ж.

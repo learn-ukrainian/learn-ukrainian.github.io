@@ -108,6 +108,19 @@ persona:
     вільної української науки, уникаючи як радянського стирання, так і глорифікації.
   voice: Intellectual Historian
 phase: BIO
+readings:
+- hosting: istpravda.com.ua
+  language: uk
+  note: Короткий некролог із викладом біографічних фактів та значення постаті.
+  role: biography-overview
+  source: 'In memoriam. Помер Богдан Рубчак (Історична правда)'
+  url: https://www.istpravda.com.ua/short/2018/09/24/152978/
+- hosting: ukrlit.net
+  language: uk
+  note: Оглядова стаття про поетику та наукову спадщину Рубчака, придатна для читання уривками.
+  role: literary-analysis
+  source: 'Поезія української діаспори: Богдан Рубчак (ukrlit.net)'
+  url: https://ukrlit.net/info/diaspora/27.html
 references:
 - note: Internet Encyclopedia of Ukraine; біографія, дати, доробок.
   path: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CR%5CU%5CRubchakBohdan.htm
@@ -138,7 +151,7 @@ sequence: 241
 slug: bohdan-rubchak
 subtitle: The Poet-Scholar Who Theorised Ukrainian Modernism in Exile
 title: 'Богдан Рубчак: Поет і вчений Нью-Йоркської групи'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: сукупність мистецьких напрямів XX століття, що поривали з традиційними формами на
     користь експерименту
