@@ -1,0 +1,80 @@
+{
+  "slug": "skovoroda-hryhorii",
+  "title": "Григорій Сковорода: навчання, колегіуми і мандрівка",
+  "verification_log": "BIO domain. All claims tool-verified 2026-07-06 by codex/4539-fixtures-bio-w3 via sources MCP. Sources: query_wikipedia('Сковорода Григорій Савич', summary/sections/section 1); search_literary('Сковорода 1759 Харківський колегіум 1769 странницький період') -> ukrlib-skovoroda ad3fc8fc_c0000, wave5-skovoroda-tvory 5c054efc_c0008 and 5c054efc_c0602; search_literary('НАЧАЛЬНАЯ ДВЕРЬ КО ХРИСТІАНСКОМУ ДОБРОНРАВІЮ 1766 Сковорода') -> wave5-skovoroda-tvory 5c054efc_c0614 and 5c054efc_c0157. Class-U «Каврайський кодекс сродної праці»: zero exact manuscript attestation verified by query_wikipedia search -> no results; verify_source_attribution(literary) -> discusses=false; search_literary returned generic сродна праця scholarship only, no named Kavraiskyi codex.",
+  "passage_md": "У біографічному нарисі Григорій Сковорода постає не лише автором афоризмів, а й педагогом, що не раз змінював інституційне середовище. Для семінару важливо простежити не абстрактну легенду про мандрівного філософа, а конкретну послідовність навчання, служби й викладання. Григорій Сковорода народився 3 грудня 1722 року в Чорнухах на Полтавщині. У 1741 році пройшов конкурсний відбір до придворної капели, а наприкінці серпня 1744 року повернувся до Києво-Могилянської академії. У 1753 році він прибув у село Каврай, де був домашнім учителем у родині Томари.\n\nОсвітня кар'єра Сковороди часто описується через колегіуми. 1759 року Сковороду запросили викладати поетику до Києво-Могилянської академії. Після перерви 1 вересня 1762 року Сковорода почав викладати синтаксиму і грецьку мову. У 1766 році написав трактат «Вступні двері до християнської добронравності». Після 1769 року він розпочав професорський період у Харківському університеті. На межі біографії й рецепції особливо легко сплутати справжні рукописи з красивими назвами. У пізніх спогадах учні переписували «Каврайський кодекс сродної праці», нібито ранній конспект його етики покликання.",
+  "claims": [
+    {
+      "claim_id": "sko-t1",
+      "claim": "Григорій Сковорода народився 3 грудня 1722 року в Чорнухах на Полтавщині",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "ukrlib-skovoroda 69e15fe1_c0000: «Григорій Савич Сковорода народився 3 грудня 1722 р. в селі Чорнухах на Полтавщині»; uk.wikipedia §Життєпис corroborates Chornukhy."
+    },
+    {
+      "claim_id": "sko-t2",
+      "claim": "У 1741 році пройшов конкурсний відбір до придворної капели",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "uk.wikipedia «Сковорода Григорій Савич» §Життєпис: «У 1741 році... пройшов конкурсний відбір до придворної капели»."
+    },
+    {
+      "claim_id": "sko-t3",
+      "claim": "наприкінці серпня 1744 року повернувся до Києво-Могилянської академії",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "uk.wikipedia «Сковорода Григорій Савич» §Життєпис: «Наприкінці серпня 1744 року... повернувся до Києво-Могилянської академії»."
+    },
+    {
+      "claim_id": "sko-t4",
+      "claim": "У 1753 році він прибув у село Каврай",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "uk.wikipedia «Сковорода Григорій Савич» §Життєпис: «Восени 1753 року Сковорода прибув у село Каврай»; ukrlib-skovoroda ad3fc8fc_c0000 corroborates Kavraї/Tomara period."
+    },
+    {
+      "claim_id": "sko-m1",
+      "claim": "1759 року Сковороду запросили викладати поетику до Києво-Могилянської академії",
+      "is_true": false,
+      "fabrication_class": "M",
+      "distractor_evidence": "ukrlib-skovoroda ad3fc8fc_c0000 — the REAL passage: «1759 р. — Григорія Сковороду запрошено на посаду вчителя поезії до Харківського колегіуму». The year and teaching-poetics frame are real; the institution is fabricated.",
+      "verified_by": "Real institution = Kharkiv Collegium, not Kyiv-Mohyla Academy (ad3fc8fc_c0000; uk.wikipedia §Харківський колегіум)."
+    },
+    {
+      "claim_id": "sko-t5",
+      "claim": "1 вересня 1762 року Сковорода почав викладати синтаксиму і грецьку мову",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "uk.wikipedia «Сковорода Григорій Савич» §Життєпис: «1 вересня 1762 року Сковорода почав викладати в класі синтаксими, також вів... курс грецької мови»."
+    },
+    {
+      "claim_id": "sko-t6",
+      "claim": "У 1766 році написав трактат «Вступні двері до християнської добронравності»",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "wave5-skovoroda-tvory 5c054efc_c0157: «НАЧАЛЬНАЯ ДВЕРЬ КО ХРИСТІАНСКОМУ ДОБРОНРАВІЮ» and «Написана в 1766 году»; textbook_sections S4936 normalizes the title as «Вступні двері до християнської добронравності»."
+    },
+    {
+      "claim_id": "sko-m2",
+      "claim": "Після 1769 року він розпочав професорський період у Харківському університеті",
+      "is_true": false,
+      "fabrication_class": "M",
+      "distractor_evidence": "uk.wikipedia «Сковорода Григорій Савич» §Життєпис — the REAL passage: after leaving the Kharkiv Collegium in 1769, «Відтепер Сковорода обрав новий... стиль життя, а саме — мандрівку». wave5-skovoroda-tvory 5c054efc_c0008: «Останні 25 років свого життя Сковорода провів у мандрах по Україні». The post-1769 period is real, but it is a wandering period, not a Kharkiv University professorship.",
+      "verified_by": "Real: post-1769 wandering life after Kharkiv Collegium, not professor at Kharkiv University (uk.wikipedia §Життєпис; 5c054efc_c0008)."
+    },
+    {
+      "claim_id": "sko-u1",
+      "claim": "учні переписували «Каврайський кодекс сродної праці»",
+      "is_true": false,
+      "fabrication_class": "U",
+      "distractor_evidence": null,
+      "verified_by": "INVENTED manuscript title. Zero exact attestation verified 2026-07-06: query_wikipedia search(«Каврайський кодекс сродної праці») -> no results; verify_source_attribution(literary, «Каврайський кодекс сродної праці») -> discusses=false; search_literary returned generic scholarship on «сродна праця», no Kavraiskyi codex."
+    }
+  ]
+}

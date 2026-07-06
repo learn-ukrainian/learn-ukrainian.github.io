@@ -1,0 +1,80 @@
+{
+  "slug": "ahatanhel-krymskyi",
+  "title": "Агатангел Кримський: академічна біографія і східні студії",
+  "verification_log": "BIO domain. All claims tool-verified 2026-07-06 by codex/4539-fixtures-bio-w3 via sources MCP. Sources: query_wikipedia('Кримський Агатангел Юхимович', summary/sections/section 1); search_literary('Агатангел Кримський біографія') -> wave8-ukr-lit-entsyklopediia fc2291b5_c3942, wave4-ukrainska-mova-encyclopedia 1af78606_c0008, wave7-popovych-narys-kultury 68ba0555_c0972. Class-U «Мирзівський звід тридцяти мов»: zero exact attestation verified by query_wikipedia search -> no results; verify_source_attribution(literary) -> discusses=false; search_literary returned only generic звід/мов component noise, no named manuscript.",
+  "passage_md": "У біографічному семінарі Агатангел Кримський постає як учений, чия особиста траєкторія поєднала українську гуманітаристику й орієнталістику. Саме тому джерела варто читати як карту установ, мовних компетенцій і політичного тиску, а не як набір меморіальних формул. Агатангел Кримський народився 3 (15) січня 1871 року у Володимирі-Волинському. Він закінчив Колегію Павла Ґалаґана 1889 року, а після московського навчання 1892 року закінчив Лазаревський інститут східних мов. Далі, 1896 року закінчив Московський університет. У 1896—1898 роках перебував у науковому відрядженні в Єгипті та Марокко.\n\nПісля повернення Кримський працював у Лазаревському інституті, і з 1900 року був професором Лазаревського інституту східних мов. 1918 року переїхав до Львова, де став неодмінним секретарем Наукового товариства імені Шевченка. В академічний період він організовував мовознавчі комісії, а протягом 1921—1929 років був директором Інституту української наукової мови. Для перевірки таких біографій особливо важливо не змішувати реальні посади з пізнішими символічними назвами. Пізніша пам'ять про вченого іноді змішує реальні архіви з легендою: у київському архіві виявили рукопис «Мирзівський звід тридцяти мов», начебто укладений Кримським для студентів-сходознавців.",
+  "claims": [
+    {
+      "claim_id": "kry-t1",
+      "claim": "Агатангел Кримський народився 3 (15) січня 1871 року у Володимирі-Волинському",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "wave8-ukr-lit-entsyklopediia fc2291b5_c3942: «3(15).І 1871, м. Володимир-Волинський... — 25.I 1942, Кустанай»; uk.wikipedia «Кримський Агатангел Юхимович» §Життєпис corroborates."
+    },
+    {
+      "claim_id": "kry-t2",
+      "claim": "закінчив Колегію Павла Ґалаґана 1889 року",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "wave4-ukrainska-mova-encyclopedia 1af78606_c0008: «Закін. 1889 Колегію Павла Ґалаґана в Києві»; fc2291b5_c3942 gives the same college sequence."
+    },
+    {
+      "claim_id": "kry-t3",
+      "claim": "1892 року закінчив Лазаревський інститут східних мов",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "wave8-ukr-lit-entsyklopediia fc2291b5_c3942: «Закін. 1892 Лазарев. ін-т сх. мов (Москва)»; 1af78606_c0008 corroborates."
+    },
+    {
+      "claim_id": "kry-t4",
+      "claim": "1896 року закінчив Московський університет",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "wave8-ukr-lit-entsyklopediia fc2291b5_c3942: «і 1896 — Моск. ун-т»; wave4-ukrainska-mova-encyclopedia 1af78606_c0008 corroborates."
+    },
+    {
+      "claim_id": "kry-m1",
+      "claim": "У 1896—1898 роках перебував у науковому відрядженні в Єгипті та Марокко",
+      "is_true": false,
+      "fabrication_class": "M",
+      "distractor_evidence": "wave8-ukr-lit-entsyklopediia fc2291b5_c3942 — the REAL passage: «У 1896 — 98 перебував у наук. відрядженні в Сирії та Лівані». wave4-ukrainska-mova-encyclopedia 1af78606_c0008 repeats «у Лівані та Сирії». The dates and travel-frame are real; the Egypt/Morocco destinations are fabricated.",
+      "verified_by": "Real destinations = Syria and Lebanon (fc2291b5_c3942; 1af78606_c0008). Egypt/Morocco are a wrong-place inversion."
+    },
+    {
+      "claim_id": "kry-t5",
+      "claim": "з 1900 року був професором Лазаревського інституту східних мов",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "wave8-ukr-lit-entsyklopediia fc2291b5_c3942: «У 1898 — 1918 працював у Лазарев. ін-ті сх. мов (з 1900 — професор)»."
+    },
+    {
+      "claim_id": "kry-m2",
+      "claim": "1918 року переїхав до Львова, де став неодмінним секретарем Наукового товариства імені Шевченка",
+      "is_true": false,
+      "fabrication_class": "M",
+      "distractor_evidence": "wave4-ukrainska-mova-encyclopedia 1af78606_c0008 — the REAL passage: «1918 переїхав до Києва, де взяв діяльну участь в організації УАН (1918). До 1928 — її неодмінний секретар». The move-to-city and secretary role are real, but they belong to Kyiv/UAN, not Lviv/NTSH.",
+      "verified_by": "Real: Kyiv and Ukrainian Academy of Sciences secretary (1af78606_c0008; fc2291b5_c3942; uk.wikipedia §Життєпис). Lviv/NTSH is fabricated."
+    },
+    {
+      "claim_id": "kry-t6",
+      "claim": "протягом 1921—1929 років був директором Інституту української наукової мови",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "wave8-ukr-lit-entsyklopediia fc2291b5_c3942: «У 1921 — 29 — директор Ін-ту укр. наук. мови»; 1af78606_c0008 corroborates."
+    },
+    {
+      "claim_id": "kry-u1",
+      "claim": "у київському архіві виявили рукопис «Мирзівський звід тридцяти мов»",
+      "is_true": false,
+      "fabrication_class": "U",
+      "distractor_evidence": null,
+      "verified_by": "INVENTED manuscript title. Zero exact attestation verified 2026-07-06: query_wikipedia search(«Мирзівський звід тридцяти мов») -> no results; verify_source_attribution(literary, «Мирзівський звід тридцяти мов») -> discusses=false; search_literary(«Мирзівський звід тридцяти мов») returned generic звід/мов chunks only, no named Krymsky manuscript."
+    }
+  ]
+}
