@@ -109,6 +109,28 @@ persona:
     неопублікованих текстів.
   voice: Human Rights Historian
 phase: BIO
+readings:
+- language: uk
+  hosting: reading-needed
+  notes: Енциклопедична стаття про правозахисника та поета.
+  role: reading-needed
+  source: 'reading-needed: yurii-lytvyn-esu-profile'
+  source_name: Енциклопедія сучасної України (ЕСУ)
+  title: Литвин Юрій Тимонович
+- language: uk
+  hosting: reading-needed
+  notes: Профіль у музеї-архіві дисидентського руху.
+  role: reading-needed
+  source: 'reading-needed: yurii-lytvyn-khpg-profile'
+  source_name: Віртуальний музей дисидентського руху (ХПГ)
+  title: Литвин Юрій Тимонович
+- language: uk
+  hosting: reading-needed
+  notes: Есе про правозахисний рух (1979). Потребує надійного українського онлайн-джерела.
+  role: reading-needed
+  source: 'reading-needed: pravozakhysnyi-rukh-v-ukraini-primary'
+  source_name: Самвидав
+  title: Правозахисний рух в Україні, його засади і перспективи
 references:
 - note: Енциклопедична стаття; розбіжність метаданих по батькові зафіксована в досьє.
   title: Литвин Юрій Тимонович (ЕСУ)
@@ -132,7 +154,7 @@ sequence: 269
 slug: yurii-lytvyn
 subtitle: Poet, Publicist, and UHG Member Who Died in Special-Regime Custody
 title: 'Юрій Литвин: правозахисник, самвидав і табір 1984'
-version: '1.0'
+version: '1.2'
 vocabulary_hints:
 - definition: людина, яка захищає права людини в умовах переслідування
   pos: ч.

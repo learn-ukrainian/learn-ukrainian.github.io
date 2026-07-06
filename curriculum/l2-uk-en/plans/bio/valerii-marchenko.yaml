@@ -110,6 +110,28 @@ persona:
     політв'язництва.
   voice: Human Rights Historian
 phase: BIO
+readings:
+- language: uk
+  hosting: reading-needed
+  notes: Енциклопедична стаття про життя та діяльність філолога й перекладача.
+  role: reading-needed
+  source: 'reading-needed: valerii-marchenko-esu-profile'
+  source_name: Енциклопедія сучасної України (ЕСУ)
+  title: Марченко Валерій Веніамінович
+- language: uk
+  hosting: reading-needed
+  notes: Біографічний профіль у музеї дисидентського руху.
+  role: reading-needed
+  source: 'reading-needed: valerii-marchenko-khpg-profile'
+  source_name: Віртуальний музей дисидентського руху (ХПГ)
+  title: Марченко Валерій Веніамінович
+- language: uk
+  hosting: reading-needed
+  notes: Самвидавне есе (1973). Потребує надійного джерела для читання уривків.
+  role: reading-needed
+  source: 'reading-needed: kyivskyi-dialoh-primary'
+  source_name: Самвидав
+  title: Київський діалог
 references:
 - note: Енциклопедична стаття про життя та діяльність.
   title: Марченко Валерій Веніамінович (ЕСУ)
@@ -133,7 +155,7 @@ sequence: 268
 slug: valerii-marchenko
 subtitle: Philologist, Translator, and Dissident Who Died After Medical Release Was Denied
 title: 'Валерій Марченко: самвидав, ст. 62 і смерть у лікарні'
-version: '1.0'
+version: '1.2'
 vocabulary_hints:
 - definition: людина, яка захищає права людини в умовах переслідування
   pos: ч.

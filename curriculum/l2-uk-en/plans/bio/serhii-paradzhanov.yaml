@@ -103,6 +103,21 @@ persona:
     культурний примус.
   voice: Film Historian
 phase: BIO
+readings:
+- language: uk
+  hosting: reading-needed
+  notes: Базова енциклопедична стаття про життя і творчість кінорежисера.
+  role: reading-needed
+  source: 'reading-needed: serhii-paradzhanov-esu-profile'
+  source_name: Енциклопедія сучасної України (ЕСУ)
+  title: Параджанов Сергій Йосипович
+- language: uk
+  hosting: reading-needed
+  notes: Матеріали про фільм як вершину українського поетичного кіно. Потребує надійного текстового джерела.
+  role: reading-needed
+  source: 'reading-needed: tini-zabutykh-predkiv-dovzhenko-center'
+  source_name: Довженко-Центр
+  title: Тіні забутих предків (фільм)
 references:
 - note: Базова енциклопедична стаття — ім'я, дати, твори.
   title: Параджанов Сергій Йосипович (ЕСУ)
@@ -126,7 +141,7 @@ sequence: 267
 slug: serhii-paradzhanov
 subtitle: Transnational Filmmaker of Ukrainian Poetic Cinema and Soviet Cultural Repression
 title: 'Сергій Параджанов: «Тіні забутих предків» і ціна неформатності'
-version: '1.0'
+version: '1.2'
 vocabulary_hints:
 - definition: кінематограф з поетичною образністю, символікою та нелінійним монтажем
   pos: с.
