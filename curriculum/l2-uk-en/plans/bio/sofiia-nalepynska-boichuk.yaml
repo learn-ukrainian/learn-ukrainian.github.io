@@ -136,6 +136,20 @@ persona:
     бездумної глорифікації.
   voice: Intellectual Historian
 phase: BIO
+readings:
+- source: "ЕСУ"
+  title: "Налепинська-Бойчук Софія"
+  url: "https://esu.com.ua/article-70885"
+  language: "uk"
+  hosting: "link-only"
+  rights_note: "Copyrighted, link only"
+- source: "Локальна історія"
+  title: "Традиції нашого штрихарства"
+  url: "https://localhistory.org.ua/rubrics/painting/traditsiyi-nashogo-shtrikharstva-derevoriti-sofiyi-nalepinskoyi-boichuk/"
+  language: "uk"
+  hosting: "link-only"
+  rights_note: "Copyrighted, link only"
+
 references:
 - note: Основна стаття про життя та мистецький доробок художниці.
   path: https://esu.com.ua/article-70885
@@ -162,7 +176,7 @@ sequence: 214
 slug: sofiia-nalepynska-boichuk
 subtitle: The Boychukist Graphic Artist Erased by the Terror
 title: 'Софія Налепинська-Бойчук: Дереворит і доля бойчукістки'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: гравюра, відбита з рисунка, вирізаного на дерев'яній дошці; основна техніка Налепинської-Бойчук
   pos: ч.

@@ -127,6 +127,20 @@ persona:
     аналізом радянської репресивної процедури.
   voice: Intellectual Historian
 phase: BIO
+readings:
+- source: "ЕСУ"
+  title: "Крушельницький Антін"
+  url: "https://esu.com.ua/article-221"
+  language: "uk"
+  hosting: "link-only"
+  rights_note: "Copyrighted, link only"
+- source: "Вінницький державний педагогічний університет"
+  title: "Крушельницький Антін Владиславович"
+  url: "https://vspu.edu.ua/faculty/filolog/ukr/persons/kryshelnuckii-antin.html"
+  language: "uk"
+  hosting: "link-only"
+  rights_note: "Copyrighted, link only"
+
 references:
 - note: Основна українська енциклопедична стаття про Антіна Крушельницького.
   path: https://esu.com.ua/article-221
@@ -157,7 +171,7 @@ sequence: 213
 slug: antin-krushelnytskyi
 subtitle: The Galician Educator and Family Patriarch Destroyed at Sandarmokh
 title: "Антін Крушельницький: Галицька культурна родина під ударом терору"
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: фахівець і громадський діяч, пов'язаний з освітою, вихованням і навчанням
   pos: ч.

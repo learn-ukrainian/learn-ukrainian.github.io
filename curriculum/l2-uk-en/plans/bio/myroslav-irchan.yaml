@@ -124,6 +124,14 @@ persona:
     видань і політичних виборів, не підміняючи її радянськими ярликами.
   voice: Intellectual Historian
 phase: BIO
+readings:
+- source: "ЕСУ"
+  title: "Ірчан Мирослав"
+  url: "https://esu.com.ua/article-12635"
+  language: "uk"
+  hosting: "link-only"
+  rights_note: "Copyrighted, link only"
+
 references:
 - note: Основна українська енциклопедична стаття про Ірчана.
   path: https://esu.com.ua/article-12635
@@ -150,7 +158,7 @@ sequence: 212
 slug: myroslav-irchan
 subtitle: The Transnational Theater Organizer Reframed as an Enemy
 title: "Мирослав Ірчан: Театр, діаспора і шлях до Сандармоху"
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: ім'я, під яким автор публікується замість свого цивільного імені
   pos: ч.
