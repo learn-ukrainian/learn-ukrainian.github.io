@@ -33,6 +33,11 @@ REQUIRED_POINTER_KEYS = (
 )
 DOWNLOAD_ATTEMPTS = 3
 ALLOWED_RELEASE_PATH_PREFIX = "/learn-ukrainian/learn-ukrainian.github.io/releases/download/"
+STALE_POINTER_HINT = (
+    "If your branch predates the latest practice deck publish, its committed pointer is stale — "
+    "update the branch from origin/main (gh pr update-branch <N> / git merge origin/main). "
+    "Re-downloading cannot fix a stale pointer."
+)
 
 
 class PracticeDeckHydrationError(RuntimeError):
@@ -170,6 +175,7 @@ def _download_gzip(pointer: dict[str, Any]) -> bytes:
         "gz sha256 mismatch: "
         f"expected {pointer['gz_sha256']}, got {actual_gz_sha} "
         f"after {DOWNLOAD_ATTEMPTS} download attempts. "
+        f"{STALE_POINTER_HINT} "
         f"Manual recovery command: {RECOVERY_COMMAND}"
     )
 
@@ -230,7 +236,8 @@ def _decode_package(data: bytes, pointer: dict[str, Any]) -> list[tuple[str, byt
     actual_sha = _sha256(data)
     if actual_sha != pointer["package_sha256"]:
         raise PracticeDeckHydrationError(
-            f"package sha mismatch: expected {pointer['package_sha256']}, got {actual_sha}"
+            f"package sha mismatch: expected {pointer['package_sha256']}, got {actual_sha}. "
+            f"{STALE_POINTER_HINT}"
         )
     package = json.loads(data.decode("utf-8"))
     if not isinstance(package, dict):

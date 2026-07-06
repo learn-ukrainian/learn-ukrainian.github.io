@@ -10,6 +10,8 @@ import {
 
 const ASSET_URL =
   'https://github.com/learn-ukrainian/learn-ukrainian.github.io/releases/download/atlas-practice-deck/lexicon-practice-deck.json.gz';
+const VERSIONED_ASSET_URL =
+  'https://github.com/learn-ukrainian/learn-ukrainian.github.io/releases/download/atlas-practice-deck/lexicon-practice-deck-atlas-practice-v1-0123456789ab.json.gz';
 
 function sha256(data: Buffer): string {
   return createHash('sha256').update(data).digest('hex');
@@ -72,6 +74,16 @@ describe('hydrate practice deck release download', () => {
     );
   });
 
+  test('preserves the versioned filename when adding cache-busting query parameters', () => {
+    const { pointer } = packageFixture();
+    const pointerWithVersioned = { ...pointer, asset_url: VERSIONED_ASSET_URL };
+
+    expect(downloadUrl(pointerWithVersioned, 0)).toBe(VERSIONED_ASSET_URL);
+    expect(downloadUrl(pointerWithVersioned, 1)).toBe(
+      `${VERSIONED_ASSET_URL}?atlas_practice_deck_sha256=${pointer.gz_sha256}&atlas_practice_deck_attempt=1`,
+    );
+  });
+
   test('retries stale gzip responses with cache-busting URL', async () => {
     const { gzBytes, pointer } = packageFixture();
     const staleGzBytes = gzipSync(Buffer.from('{"old":true}'));
@@ -87,6 +99,16 @@ describe('hydrate practice deck release download', () => {
     );
   });
 
+  test('explains that re-downloading cannot fix a stale pointer after repeated sha mismatch', async () => {
+    const { pointer } = packageFixture();
+    const staleGzBytes = gzipSync(Buffer.from('{"old":true}'));
+    const fetchMock = vi.fn().mockResolvedValue(okResponse(staleGzBytes));
+    vi.stubGlobal('fetch', fetchMock);
+
+    await expect(downloadGzip(pointer)).rejects.toThrow('Re-downloading cannot fix a stale pointer.');
+    expect(fetchMock).toHaveBeenCalledTimes(3);
+  });
+
   test('verifies package and shard hashes before writing', () => {
     const { packageBytes, pointer } = packageFixture();
 
@@ -95,6 +117,10 @@ describe('hydrate practice deck release download', () => {
     expect(files).toHaveLength(1);
     expect(files[0][0]).toBe('practice-index.A1.json');
     expect(files[0][1].toString('utf8')).toContain('"atlas-practice-index"');
+  });
+
+  test('accepts versioned github.com release-asset URLs unchanged', () => {
+    expect(assertAllowedDownloadUrl(VERSIONED_ASSET_URL)).toBe(VERSIONED_ASSET_URL);
   });
 
   test.each([
