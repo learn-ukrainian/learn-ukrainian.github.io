@@ -105,6 +105,28 @@ persona:
     опору без ув'язнення.
   voice: Literary Historian
 phase: BIO
+readings:
+- language: uk
+  hosting: reading-needed
+  notes: Енциклопедична стаття про поета Київської школи.
+  role: reading-needed
+  source: 'reading-needed: vasyl-holoborodko-esu-profile'
+  source_name: Енциклопедія сучасної України (ЕСУ)
+  title: Голобородько Василь Іванович
+- language: uk
+  hosting: reading-needed
+  notes: Перша збірка (1970). Потребує надійного онлайн-джерела для читання (лише посилання на фрагменти, уникати порушення авторських прав).
+  role: reading-needed
+  source: 'reading-needed: letiuchie-vikontse-primary'
+  source_name: Видавництво "Смолоскип"
+  title: Летюче віконце
+- language: uk
+  hosting: reading-needed
+  notes: Інтерв'ю про публікаційну траєкторію та цензуру (2015).
+  role: reading-needed
+  source: 'reading-needed: mene-pidstrelyly-na-zleti-interview'
+  source_name: Українська літературна газета
+  title: «Мене підстрелили на злеті»
 references:
 - note: Енциклопедична стаття про життя та поетику.
   title: Голобородько Василь Іванович (ЕСУ)
@@ -127,7 +149,7 @@ sequence: 266
 slug: vasyl-holoborodko
 subtitle: Kyiv School Poet Silenced by Cultural Gatekeeping, Not Imprisonment
 title: 'Василь Голобородько: міфопоетика під забороною друку'
-version: '1.0'
+version: '1.2'
 vocabulary_hints:
 - definition: напрям української поезії 1960–1980-х із асоціативною образністю та фольклорними резонансами
   pos: ж.
