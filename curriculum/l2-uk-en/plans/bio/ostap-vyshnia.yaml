@@ -131,6 +131,16 @@ persona:
     демонізації.
   voice: Intellectual Historian
 phase: BIO
+readings:
+- language: uk
+  note: Енциклопедія Сучасної України; основна стаття про життя та творчість письменника. Джерело стабільне.
+  role: context
+  source: 'https://esu.com.ua/article-34351'
+- hosting: reading-needed
+  language: uk
+  note: Первинний текст (напр., "Моя автобіографія" або усмішки) потребує перевірки на вільні ліцензії.
+  role: reading-needed
+  source: 'reading-needed: первинний текст'
 references:
 - note: Основна стаття про життя та творчість письменника.
   path: https://esu.com.ua/article-34351
@@ -157,7 +167,7 @@ sequence: 251
 slug: ostap-vyshnia
 subtitle: The King of Satire Broken and Weaponized by the Terror
 title: 'Остап Вишня: Усмішка крізь сльози'
-version: '1.0'
+version: '1.1'
 vocabulary_hints:
 - definition: короткий гумористично-сатиричний прозовий твір; жанр, який Остап Вишня запровадив замість іншомовного «фейлетон»
   pos: ж.

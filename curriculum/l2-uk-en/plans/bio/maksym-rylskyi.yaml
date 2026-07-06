@@ -143,6 +143,17 @@ persona:
     нагляд без замовчування вимушених компромісів.
   voice: Intellectual Historian
 phase: BIO
+readings:
+- hosting: reading-needed
+  language: uk
+  note: Біографічний або історичний контекст потребує стабільного посилання (наприклад, стаття в ЕІУ).
+  role: reading-needed
+  source: 'reading-needed: контекст (біографія)'
+- hosting: reading-needed
+  language: uk
+  note: Первинний текст (напр., неокласичні поезії) потребує перевірки на вільні ліцензії та стабільний хостинг.
+  role: reading-needed
+  source: 'reading-needed: первинний текст'
 references:
 - title: Рильський Максим Тадейович
   note: Енциклопедія Сучасної України; основні факти життя, освіти й доробку.
@@ -169,7 +180,7 @@ sequence: 248
 slug: maksym-rylskyi
 subtitle: The Neoclassicist Who Preserved Balance Under Surveillance
 title: 'Максим Рильський: Неокласик під справою "Ставка"'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: >-
     напрям української поезії 1920-х років, що поєднував класичну форму,

@@ -143,6 +143,16 @@ persona:
     радянську цензуру з увагою до біографічної суперечності.
   voice: Intellectual Historian
 phase: BIO
+readings:
+- language: uk
+  note: Енциклопедія Сучасної України; стаття про життя та творчість. Джерело стабільне.
+  role: context
+  source: 'https://esu.com.ua/article-889403'
+- hosting: reading-needed
+  language: uk
+  note: Первинний текст (напр., вірш "Любіть Україну!") потребує перевірки на вільні ліцензії та стабільний хостинг.
+  role: reading-needed
+  source: 'reading-needed: первинний текст'
 references:
 - note: Основна енциклопедична стаття про життя, твори, архіви та пізні видання.
   path: https://esu.com.ua/article-889403
@@ -170,7 +180,7 @@ sequence: 249
 slug: volodymyr-sosiura
 subtitle: The Lyric Poet Accused for Loving Ukraine
 title: 'Володимир Сосюра: "Любіть Україну!" під цензурою'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: рід поезії, у якому переважає особисте почуття, переживання й внутрішній голос
   pos: ж.
