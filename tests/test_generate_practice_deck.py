@@ -13,6 +13,7 @@ from scripts.audit.generate_practice_deck import (
     JsonVesumVerifier,
     ReviewedSourceAllowlist,
     _build_classify_items,
+    _build_heritage_items,
     _build_lexeme,
     _build_paradigm_items,
     _declension_category,
@@ -23,8 +24,10 @@ from scripts.audit.generate_practice_deck import (
     build_practice_shards,
     main,
     read_cloze_sources,
+    read_heritage_pairs,
     read_manifest,
     validate_classify_item,
+    validate_heritage_item,
     validate_heritage_pair,
     validate_option_set,
     validate_paradigm_item,
@@ -37,6 +40,7 @@ MANIFEST = FIXTURES / "lexicon-practice-manifest.json"
 ALLOWLIST = FIXTURES / "lexicon-practice-reviewed-allowlist.json"
 VESUM = FIXTURES / "lexicon-practice-vesum.json"
 CLOZE_SOURCES = FIXTURES / "lexicon-practice-cloze-sources.json"
+HERITAGE_PAIRS = FIXTURES / "lexicon-practice-heritage-pairs.yaml"
 
 
 def test_default_target_preserves_committed_practice_surface() -> None:
@@ -50,6 +54,16 @@ def _build(config: BuildConfig | None = None, cloze_sources_path: Path | None = 
     verifier = JsonVesumVerifier.from_path(VESUM)
     cloze_sources = read_cloze_sources(cloze_sources_path) if cloze_sources_path else []
     return build_practice_shards(entries, allowlist, verifier, cloze_sources, config or BuildConfig())
+
+
+def _fixture_lexemes() -> list[dict[str, object]]:
+    verifier = JsonVesumVerifier.from_path(VESUM)
+    lexemes = [_build_lexeme(entry, verifier) for entry in read_manifest(MANIFEST)]
+    return [lexeme for lexeme in lexemes if lexeme]
+
+
+def _fixture_heritage_pair() -> dict[str, object]:
+    return read_heritage_pairs(HERITAGE_PAIRS)[0]
 
 
 def test_fixture_build_emits_sharded_schema() -> None:
@@ -99,6 +113,156 @@ def test_manifest_cloze_fields_are_ignored_without_curated_sources() -> None:
     assert shards["A1"]["index"]["counts"]["lexemes"] == 7
     assert shards["A1"]["index"]["counts"]["cloze"] == 0
     assert shards["A1"]["cloze"]["cloze"] == []
+
+
+def test_read_heritage_pairs_missing_file_warns(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    rows = read_heritage_pairs(tmp_path / "missing-heritage.yaml")
+
+    captured = capsys.readouterr()
+    assert rows == []
+    assert "WARN: no curated heritage pairs found; emitting empty heritage deck" in captured.err
+
+
+def test_read_heritage_pairs_empty_file_warns(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    path = tmp_path / "empty-heritage.yaml"
+    path.write_text("", encoding="utf-8")
+
+    rows = read_heritage_pairs(path)
+
+    captured = capsys.readouterr()
+    assert rows == []
+    assert "WARN: curated heritage pairs empty; emitting empty heritage deck" in captured.err
+
+
+def test_heritage_pair_v51_validator_accepts_framed_lexical_pair() -> None:
+    pair = _fixture_heritage_pair()
+
+    assert validate_heritage_pair(pair) == []
+
+
+def test_heritage_pair_v51_validator_rejects_missing_senses_and_bad_frames() -> None:
+    missing_senses = {
+        **_fixture_heritage_pair(),
+        "kind": "sense_restricted",
+        "calqueSense": "",
+        "authenticSense": "",
+        "frames": [
+            {
+                "sentence_with_slot": "Я читаю ___.",
+                "answer_form": "книгу",
+                "calque_form": "кнігу",
+                "origin": "fixture-frame",
+                "disambiguated": True,
+            }
+        ],
+    }
+    no_disambiguation = {
+        **missing_senses,
+        "calqueSense": "calque sense",
+        "authenticSense": "authentic sense",
+        "frames": [
+            {
+                "sentence_with_slot": "Я читаю ___.",
+                "answer_form": "книгу",
+                "calque_form": "кнігу",
+                "origin": "fixture-frame",
+            }
+        ],
+    }
+    multi_slot = {
+        **_fixture_heritage_pair(),
+        "frames": [
+            {
+                "sentence_with_slot": "___ і ще ___",
+                "answer_form": "книгу",
+                "calque_form": "кнігу",
+                "origin": "fixture-frame",
+            }
+        ],
+    }
+
+    assert any("missing calqueSense" in error for error in validate_heritage_pair(missing_senses))
+    assert any("missing authenticSense" in error for error in validate_heritage_pair(missing_senses))
+    assert any("disambiguated: true" in error for error in validate_heritage_pair(no_disambiguation))
+    assert any("exactly one ___ slot" in error for error in validate_heritage_pair(multi_slot))
+
+
+def test_heritage_builder_fails_closed_without_frames(capsys: pytest.CaptureFixture[str]) -> None:
+    pair = _fixture_heritage_pair()
+    pair.pop("frames")
+    lexemes = _fixture_lexemes()
+
+    assert validate_heritage_pair(pair) == []
+    assert _build_heritage_items(pair, lexemes[0], lexemes, "deck-v1") == []
+
+    shards = build_practice_shards(
+        read_manifest(MANIFEST),
+        ReviewedSourceAllowlist.from_path(ALLOWLIST),
+        JsonVesumVerifier.from_path(VESUM),
+        read_cloze_sources(CLOZE_SOURCES),
+        BuildConfig(),
+        [pair],
+    )
+    captured = capsys.readouterr()
+
+    assert shards["A1"]["heritage"]["heritage"] == []
+    assert "1 records without frames — emitted 0 items for them" in captured.err
+
+
+def test_heritage_items_wire_mode_counts_and_index_modes() -> None:
+    entries = json.loads(json.dumps(read_manifest(MANIFEST)))
+    for entry in entries:
+        entry["enrichment"]["cefr"]["level"] = "A2"
+        entry["course_usage"][0]["track"] = "a2"
+    entries[3]["pos"] = "verb"
+    entries[4]["pos"] = "adjective"
+
+    shards = build_practice_shards(
+        entries,
+        ReviewedSourceAllowlist.from_path(ALLOWLIST),
+        JsonVesumVerifier.from_path(VESUM),
+        read_cloze_sources(CLOZE_SOURCES),
+        BuildConfig(),
+        [_fixture_heritage_pair()],
+    )
+    a2 = shards["A2"]
+    heritage = a2["heritage"]["heritage"]
+    index_item = next(item for item in a2["index"]["items"] if item["lemmaId"] == "knyha")
+
+    assert len(heritage) == 1
+    assert heritage[0]["lemmaId"] == "knyha"
+    assert a2["index"]["counts"]["modeCounts"]["heritage"] == 1
+    assert a2["index"]["counts"]["modeCoverage"]["heritage"] == 0.1429
+    assert "heritage" in index_item["modes"]
+
+
+def test_heritage_item_options_are_valid_and_do_not_mark_calque() -> None:
+    pair = _fixture_heritage_pair()
+    lexemes = _fixture_lexemes()
+    item = _build_heritage_items(pair, lexemes[0], lexemes, "deck-v1")[0]
+
+    assert validate_heritage_item(item) == []
+
+    marked = json.loads(json.dumps(item))
+    for option in marked["options"]:
+        if option["kind"] == "calque":
+            option["label"] = f"⚠ {option['label']}"
+            break
+
+    assert "heritage options must not visually mark the calque pre-answer" in validate_heritage_item(marked)
+
+
+def test_heritage_item_ids_and_options_are_deterministic() -> None:
+    pair = _fixture_heritage_pair()
+    lexemes = _fixture_lexemes()
+
+    first = _build_heritage_items(pair, lexemes[0], lexemes, "deck-v1")[0]
+    second = _build_heritage_items(pair, lexemes[0], lexemes, "deck-v1")[0]
+    changed_version = _build_heritage_items(pair, lexemes[0], lexemes, "deck-v2")[0]
+
+    assert first["heritageId"] == second["heritageId"]
+    assert first["options"] == second["options"]
+    assert first["heritageId"] != changed_version["heritageId"]
 
 
 def test_stress_position_preserves_non_stress_combining_marks() -> None:

@@ -1,0 +1,20 @@
+schema_version: 1
+pairs:
+  - nativeSlug: knyha
+    nativeLemma: книга
+    calqueLabel: кніга
+    calqueSurfaces:
+      - кніга
+    kind: lexical
+    corrections:
+      - книга
+    rationale: fixture rationale with cited correction
+    citations:
+      - fixture:heritage
+    sourceFamily: fixture
+    cefrAvailability: a2
+    frames:
+      - sentence_with_slot: Я читаю ___.
+        answer_form: книгу
+        calque_form: кнігу
+        origin: fixture-frame

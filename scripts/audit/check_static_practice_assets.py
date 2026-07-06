@@ -25,6 +25,7 @@ if str(AUDIT_DIR) not in sys.path:
 from generate_practice_deck import (
     validate_classify_item,
     validate_classify_session_cap,
+    validate_heritage_item,
     validate_paradigm_item,
     validate_synonym_item,
 )
@@ -441,6 +442,12 @@ def _check_level(
                 errors.extend(
                     f"{paths[kind]}: synonym[{index}] {error}"
                     for error in validate_synonym_item(item)
+                )
+        elif kind == "heritage":
+            for index, item in enumerate(item for item in rows if isinstance(item, dict)):
+                errors.extend(
+                    f"{paths[kind]}: heritage[{index}] {error}"
+                    for error in validate_heritage_item(item)
                 )
         elif kind == "paradigm":
             for index, item in enumerate(item for item in rows if isinstance(item, dict)):
