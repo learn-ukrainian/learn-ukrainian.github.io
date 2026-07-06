@@ -1,12 +1,16 @@
 import { beforeEach, describe, expect, test } from 'vitest';
 import {
+  PRACTICE_MODE_DECK_VERSION,
+  PRACTICE_MODES,
   SRS_BACKUP_KEY,
   SRS_STORAGE_KEY,
   cardKey,
   detectClockJump,
   getDueQueue,
+  isPracticeMode,
   loadState,
   masteredCount,
+  parseCardKey,
   rateCard,
   saveState,
   selectNextPracticeItem,
@@ -150,26 +154,117 @@ function modeDeck(rows: { id: string; modes: PracticeMode[] }[]): PracticeDeckDa
   };
 }
 
-function historyFromSelection(selection: NonNullable<ReturnType<typeof selectNextPracticeItem>>) {
-  return {
-    itemId: selection.itemId,
-    lemmaId: selection.lemma.lemmaId,
-    mode: selection.mode,
-    clozeId: selection.cloze?.clozeId,
-    sentenceFrameId: selection.cloze?.sentenceFrameId,
-    blankCase: selection.cloze?.blankCase,
-    recallDirection: selection.recallDirection,
-    choicePolarity: selection.choicePolarity,
-    lapsed: selection.lapsed,
-  } satisfies SelectionHistoryItem;
-}
-
 beforeEach(() => {
   localStorage.clear();
   loadState(localStorage, NOW);
 });
 
 describe('lexicon SRS facade', () => {
+  test('parses legacy no-separator card keys as flashcards', () => {
+    expect(parseCardKey('alpha')).toEqual({
+      lemmaId: 'alpha',
+      mode: 'flashcards',
+      quarantined: false,
+    });
+  });
+
+  test('parses known card-key modes including the Phase-1 drill trio', () => {
+    for (const mode of PRACTICE_MODES) {
+      expect(isPracticeMode(mode)).toBe(true);
+      expect(parseCardKey(`alpha::${mode}`)).toEqual({
+        lemmaId: 'alpha',
+        mode,
+        quarantined: false,
+      });
+    }
+
+    for (const mode of ['paradigm', 'stress', 'heritage'] as const) {
+      const selection = selectNextPracticeItem(modeDeck([{ id: `${mode}-alpha`, modes: [mode] }]), {
+        now: NOW,
+      });
+      expect(selection?.mode).toBe(mode);
+    }
+  });
+
+  test('quarantines explicit unknown card-key modes without rewriting stored state', () => {
+    const listeningCard = stateCard({ due: NOW.getTime() - HOUR_MS, stability: 99 });
+    const garbageCard = stateCard({ due: NOW.getTime() - DAY_MS, stability: 88 });
+    const raw = JSON.stringify({
+      version: 3,
+      cards: {
+        'alpha::listening': listeningCard,
+        'beta::garbage': garbageCard,
+      },
+      reviews: [],
+      lastSavedAt: NOW.getTime(),
+    });
+    localStorage.setItem(SRS_STORAGE_KEY, raw);
+
+    const state = loadState(localStorage, NOW);
+
+    expect(parseCardKey('alpha::listening')).toEqual({
+      lemmaId: 'alpha',
+      mode: null,
+      rawMode: 'listening',
+      quarantined: true,
+    });
+    expect(parseCardKey('beta::garbage')).toEqual({
+      lemmaId: 'beta',
+      mode: null,
+      rawMode: 'garbage',
+      quarantined: true,
+    });
+    expect([...state.cards.keys()]).toEqual(['alpha::listening', 'beta::garbage']);
+    expect(
+      selectNextPracticeItem(modeDeck([{ id: 'alpha', modes: ['listening' as PracticeMode] }]), {
+        now: NOW,
+      }),
+    ).toBeNull();
+
+    expect(saveState(state, localStorage, NOW.getTime())).toEqual({ ok: true });
+    const saved = JSON.parse(localStorage.getItem(SRS_STORAGE_KEY) ?? '{}');
+    expect(saved.cards['alpha::listening']).toEqual(listeningCard);
+    expect(saved.cards['beta::garbage']).toEqual(garbageCard);
+  });
+
+  test('stability counters and selector debt skip quarantined unknown-mode cards', () => {
+    const state = loadState(localStorage, NOW);
+    state.cards.set('alpha::garbage', stateCard({ stability: 99, due: NOW.getTime() - DAY_MS }));
+    state.cards.set('beta::listening', stateCard({ stability: 99, due: NOW.getTime() - DAY_MS }));
+    state.cards.set(
+      cardKey('gamma', 'choice'),
+      stateCard({ stability: 5, due: NOW.getTime() - HOUR_MS }),
+    );
+
+    expect(masteredCount(21)).toBe(0);
+    expect(masteredCount(21, 'choice')).toBe(0);
+
+    const selection = selectNextPracticeItem(
+      modeDeck([
+        { id: 'alpha', modes: ['garbage' as PracticeMode] },
+        { id: 'gamma', modes: ['choice'] },
+      ]),
+      {
+        now: NOW,
+        history: [
+          { itemId: 'choice-1', lemmaId: 'choice-1', mode: 'choice' },
+          { itemId: 'choice-2', lemmaId: 'choice-2', mode: 'choice' },
+        ],
+      },
+    );
+
+    expect(selection?.lemma.lemmaId).toBe('gamma');
+    expect(selection?.mode).toBe('choice');
+  });
+
+  test('practice mode set is coupled to the deck-version sentinel', () => {
+    const versionByModeSet: Record<string, number> = {
+      'flashcards|matching|choice|cloze|paradigm|stress|heritage|synonym|classify|paronym': 3,
+    };
+
+    expect(versionByModeSet[PRACTICE_MODES.join('|')]).toBe(PRACTICE_MODE_DECK_VERSION);
+  });
+
   test('schedules deterministically with FSRS defaults', () => {
     const first = rateCard('alpha', 'good', NOW);
     localStorage.clear();
