@@ -152,11 +152,20 @@ references:
   title: Арії трьох П'єро
   type: primary
   work: Арії трьох П'єро
+readings:
+- language: uk
+  notes: 'Матеріали на "Історичній правді" про фабрикацію кримінальної справи проти Михайля Семенка та його страту радянським режимом.'
+  source_name: Історична правда
+  source_url: https://www.istpravda.com.ua/articles/2020/10/24/158319/
+- language: uk
+  notes: 'Аналітична стаття про епатажний український футуризм, "спалення Кобзаря" як деколоніальний жест та роль Семенка в авангарді.'
+  source_name: Локальна історія
+  source_url: https://localhistory.org.ua/texts/statti/mikhail-semenko-i-futuryzm/
 sequence: 203
 slug: mykhail-semenko
 subtitle: The Futurist Visionary Who Reimagined Ukrainian Poetry
 title: 'Михайль Семенко: Засновник українського авангарду'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: >-
     авангардний напрям у мистецтві початку XX століття, що проголошував культ

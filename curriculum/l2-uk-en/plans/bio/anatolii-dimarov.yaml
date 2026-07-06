@@ -98,11 +98,20 @@ references:
   note: Контекстуалізація постаті Дімарова як одного з символів української стійкості.
   type: primary
   work: Проєкт «Незламні»
+readings:
+- language: uk
+  notes: 'Матеріали "Локальної історії" про творчість Анатолія Дімарова як живого свідка катастроф XX століття, з акцентом на його роман "І будуть люди".'
+  source_name: Локальна історія
+  source_url: https://localhistory.org.ua/texts/statti/i-budut-liudi-chy-zmozhe-serial-stati-dlia-ukrayintsiv-tym-chym-ie-chornobil-dlia-svitu/
+- language: uk
+  notes: 'Стаття на "Читомо" про цензурування творів Дімарова в радянські часи та історію публікації повних текстів його епопей.'
+  source_name: Читомо
+  source_url: https://chytomo.com/anatolij-dimarov-ta-joho-vyruba-cenzuroju-proza/
 sequence: 202
 slug: anatolii-dimarov
 subtitle: A Chronicle of a Man Who Outlived Three Regimes
 title: 'Анатолій Дімаров: Прожити й розповісти'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: насильницьке позбавлення селян власності та їх виселення радянською владою
   pos: с.

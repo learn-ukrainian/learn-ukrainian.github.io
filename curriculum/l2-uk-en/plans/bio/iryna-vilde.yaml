@@ -96,11 +96,20 @@ references:
   note: Біографічне дослідження, що аналізує складні життєві вибори письменниці.
   type: primary
   work: Ірина Вільде. Штрихи до портрета
+readings:
+- language: uk
+  notes: 'Есе на "Локальній історії" про суперечливі життєві вибори та жіночу незалежність Ірини Вільде, що руйнує стереотипи про радянську конформістку.'
+  source_name: Локальна історія
+  source_url: https://localhistory.org.ua/texts/statti/irina-vilde-ne-khtila-b-buti-khoroshim-khlopchikom/
+- language: uk
+  notes: 'Аналітична стаття на "Читомо" про літературний феномен "Сестер Річинських" та особистісні компроміси письменниці.'
+  source_name: Читомо
+  source_url: https://chytomo.com/dzerkalo-zhyttia-iryny-vilde-z-nadhrobnym-vinkom/
 sequence: 199
 slug: iryna-vilde
 subtitle: 'Iryna Vilde: A Butterfly on Pins'
 title: 'Ірина Вільде: Метелик на шпильках'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: жінка, яка професійно займається літературною творчістю
   pos: ж.

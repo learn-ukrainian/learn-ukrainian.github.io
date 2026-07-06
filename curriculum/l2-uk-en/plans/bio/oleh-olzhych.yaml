@@ -99,11 +99,20 @@ references:
   note: Академічне дослідження постаті Ольжича в контексті його оточення
   type: primary
   work: 'Олег Ольжич і Олена Теліга: Нариси про життя і творчість'
+readings:
+- language: uk
+  notes: 'Стаття на "Історичній правді" про життя та діяльність поета як символа національного героїзму, що тривалий час був під радянським "табу".'
+  source_name: Історична правда
+  source_url: https://www.istpravda.com.ua/articles/2012/07/21/90100/
+- language: uk
+  notes: 'Матеріал на "Локальній історії" з фокусом на останні роки життя Ольжича, обставини його арешту ґестапо та загибель у концтаборі.'
+  source_name: Локальна історія
+  source_url: https://localhistory.org.ua/texts/statti/zagibel-olzhicha/
 sequence: 201
 slug: oleh-olzhych
 subtitle: 'Oleh Olzhych: A stone from God''s sling'
 title: 'Олег Ольжич: Камінь з Божої пращі'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: учасник таємної організації, що бореться проти окупаційної влади
   pos: ч.

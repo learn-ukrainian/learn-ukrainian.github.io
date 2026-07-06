@@ -129,11 +129,20 @@ references:
   note: Посмертна збірка поезій, що зберегла найкращі зразки його "тихої" лірики.
   type: primary
   work: Медобір
+readings:
+- language: uk
+  notes: 'Матеріал на "Читомо" про унікальну позицію Свідзінського як поета, що обрав "внутрішню еміграцію" та зберіг творчу незалежність.'
+  source_name: Читомо
+  source_url: https://chytomo.com/volodymyr-svidzinskyj-dyskurs-movchannia/
+- language: uk
+  notes: 'Розбір поезії Свідзінського на "Локальній історії", фокус на метафізичному катастрофізмі та трагічній загибелі від рук НКВС.'
+  source_name: Локальна історія
+  source_url: https://localhistory.org.ua/texts/statti/volodymyr-svidzinskyi-katastrofizm/
 sequence: 204
 slug: volodymyr-svidzinskyi
 subtitle: The Poet of Silence Burned Alive by the NKVD
 title: 'Володимир Свідзінський: Внутрішня еміграція і знищення поета'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: метафоричне визначення стану людини в тоталітарному суспільстві, коли вона
     відмежовується від публічного життя та офіційної ідеології

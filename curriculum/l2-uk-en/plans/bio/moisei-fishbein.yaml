@@ -97,11 +97,20 @@ references:
   note: Контекст премії, що підкреслює інтелектуальну мужність Фішбейна
   type: reference
   work: Премія імені Василя Стуса
+readings:
+- language: uk
+  notes: 'Матеріал від PEN Ukraine про роль Мойсея Фішбейна як "пророка українською" та його внесок в українсько-єврейський діалог.'
+  source_name: Український ПЕН
+  source_url: https://pen.org.ua/in-memoriam-mojsej-fishbejn
+- language: uk
+  notes: 'Стаття-спогад на "Історичній правді" про громадянську позицію поета та його боротьбу з імперськими антисемітськими міфами.'
+  source_name: Історична правда
+  source_url: https://www.istpravda.com.ua/articles/2020/05/27/157588/
 sequence: 200
 slug: moisei-fishbein
 subtitle: The Jewish Intellectual Who Chose the Ukrainian Language
 title: 'Мойсей Фішбейн: Пророк українською'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: свідоме рішення особистості використовувати певну мову в житті та творчості, часто як політичний акт
   pos: ч.
