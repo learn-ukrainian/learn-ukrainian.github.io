@@ -187,7 +187,7 @@ sequence: 138
 slug: heo-shkurupii
 subtitle: The King of the Futuro-Prairies Consumed by the Terror
 title: 'Гео Шкурупій: Король футуропрерій та доля футуриста'
-version: '4.2'
+version: '4.3'
 vocabulary_hints:
 - definition: авангардний напрям мистецтва початку XX століття, що відкидав
     традицію й оспівував техніку, місто та майбутнє
@@ -218,14 +218,12 @@ vocabulary_hints:
   word: реабілітація
 word_target: 5200
 readings:
-- caveats: Енциклопедична стаття.
+- caveats: Авторська культурно-історична розвідка; не замінює академічну енциклопедію.
   hosting: external
   language: uk
   role: Контекст
-  source_name: Вікіпедія
+  source_name: Український тиждень
   source_type: Стаття
-  task: Ознайомитися з життєписом та участю Ґео Шкурупія в літературних
-    об'єднаннях 1920-х років.
-  title: Ґео Шкурупій
-  url:
-    https://uk.wikipedia.org/wiki/%D2%90%D0%B5%D0%BE_%D0%A8%D0%BA%D1%83%D1%80%D1%83%D0%BF%D1%96%D0%B9
+  task: Ознайомитися з життєписом та участю Ґео Шкурупія в літературних об'єднаннях 1920-х років.
+  title: Шкурупій від А до Я
+  url: https://tyzhden.ua/shkurupij-vid-a-do-ia/

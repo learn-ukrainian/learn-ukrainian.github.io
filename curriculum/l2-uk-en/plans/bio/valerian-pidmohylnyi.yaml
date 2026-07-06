@@ -190,7 +190,7 @@ sequence: 137
 slug: valerian-pidmohylnyi
 subtitle: The Urban Modernist Prose Master Murdered at Sandarmokh
 title: 'Валер''ян Підмогильний: Місто, відчуження і шлях на Соловки'
-version: '4.2'
+version: '4.3'
 vocabulary_hints:
 - definition: письменник, який пише прозу, а не віршами
   pos: ч.
@@ -228,4 +228,4 @@ readings:
   source_type: Енциклопедія
   task: Ознайомитися з біографією та творчим шляхом Валер'яна Підмогильного.
   title: Підмогильний Валер'ян Петрович
-  url: https://esu.com.ua/article-34751
+  url: https://esu.com.ua/article-879628

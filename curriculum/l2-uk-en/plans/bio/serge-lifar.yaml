@@ -142,7 +142,7 @@ sequence: 139
 slug: serge-lifar
 subtitle: 'Serge Lifar: Genius and Shadow'
 title: 'Серж Лифар: Геній і тінь'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: мистецтво створення та сценічної постановки танців, балетних
     вистав
@@ -180,13 +180,12 @@ vocabulary_hints:
   word: pas de deux
 word_target: 5000
 readings:
-- caveats: Енциклопедична стаття.
+- caveats: Академічна енциклопедична стаття.
   hosting: external
   language: uk
   role: Контекст
-  source_name: Вікіпедія
-  source_type: Стаття
+  source_name: Енциклопедія Сучасної України
+  source_type: Енциклопедія
   task: Ознайомитися з фактами біографії та балетною кар'єрою Сержа Лифаря.
-  title: Серж Лифар
-  url:
-    https://uk.wikipedia.org/wiki/%D0%A1%D0%B5%D1%80%D0%B6_%D0%9B%D0%B8%D1%84%D0%B0%D1%80
+  title: Лифар Серж
+  url: https://esu.com.ua/article-55275

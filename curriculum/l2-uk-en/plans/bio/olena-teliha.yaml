@@ -154,7 +154,7 @@ sequence: 140
 slug: olena-teliha
 subtitle: 'Olena Teliha: The Fiery Muse of Action'
 title: 'Олена Теліга: Вогняна муза чину'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: дія, вчинок; особливо — дія, що має моральне та суспільне значення
   pos: ч.
@@ -191,14 +191,13 @@ vocabulary_hints:
   word: hagiography
 word_target: 5200
 readings:
-- caveats: Енциклопедична стаття.
+- caveats: Академічна енциклопедична стаття; тема потребує уважного читання без іконізації.
   hosting: external
   language: uk
   role: Контекст
-  source_name: Вікіпедія
-  source_type: Стаття
+  source_name: Енциклопедія історії України
+  source_type: Енциклопедія
   task: Ознайомитися з життям і творчістю Олени Теліги, звернувши увагу на її
     діяльність під час Другої світової війни.
   title: Теліга Олена Іванівна
-  url:
-    https://uk.wikipedia.org/wiki/%D0%A2%D0%B5%D0%BB%D1%96%D0%B3%D0%B0_%D0%9E%D0%BB%D0%B5%D0%BD%D0%B0_%D0%86%D0%B2%D0%B0%D0%BD%D1%96%D0%B2%D0%BD%D0%B0
+  url: https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&I21DBN=EIu&P21DBN=EIU&S21CNR=20&S21COLORTERMS=0&S21FMT=eiu_all&S21P01=0&S21P02=0&S21P03=TRN%3D&S21REF=10&S21STN=1&S21STR=Teliha_O&Z21ID=
