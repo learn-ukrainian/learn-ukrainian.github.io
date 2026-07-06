@@ -78,6 +78,23 @@ persona:
   role: Дослідник, що розвінчує радянські міфи та розкриває політичний контекст за культурними явищами, повертаючи Україні її вкрадену історію.
   voice: Cultural-Historian-Debunker
 phase: BIO.1
+readings:
+- title: "Леонтович Микола Дмитрович"
+  source: "Енциклопедія Сучасної України"
+  url: "https://esu.com.ua/article-54321"
+  language: uk
+  type: encyclopedia
+  role: "Енциклопедичний огляд життя та творчості"
+  hosting: link-only
+  task: "Ознайомтеся з біографією та значенням творчості композитора."
+- title: "Леонтович Микола Дмитрович (Вікіпедія)"
+  source: "Вікіпедія"
+  url: "https://uk.wikipedia.org/wiki/%D0%9B%D0%B5%D0%BE%D0%BD%D1%82%D0%BE%D0%B2%D0%B8%D1%87_%D0%9C%D0%B8%D0%BA%D0%BE%D0%BB%D0%B0_%D0%94%D0%BC%D0%B8%D1%82%D1%80%D0%BE%D0%B2%D0%B8%D1%87"
+  language: uk
+  type: encyclopedia
+  role: "Додатковий біографічний огляд"
+  hosting: link-only
+  task: "Прочитайте інформацію про трагічну долю автора «Щедрика»."
 references:
 - title: Микола Леонтович
   note: Основна біографія, перелік творів, деталі трагічної загибелі.
@@ -97,7 +114,7 @@ sequence: 99
 slug: mykola-leontovych
 subtitle: 'The Murder of "Shchedryk": How the world''s most famous carol lost its author'
 title: 'Микола Леонтович: Вбивство «Щедрика»'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: українська обрядова пісня, що виконується напередодні Старого Нового року з побажаннями добробуту
   pos: ж.
