@@ -22,6 +22,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
+from rag.chunk_quality import DEFAULT_SYMBOL_NOISE_THRESHOLD, apply_symbol_noise_gate
 from rag.config import (
     CHUNK_MAX_TOKENS,
     CHUNK_MIN_TOKENS,
@@ -288,7 +289,8 @@ def check_quality(text: str) -> tuple[bool, float]:
 
 
 def process_pdf(pdf_path: Path, output_dir: Path | None = None,
-                force_ocr: bool = False) -> dict:
+                force_ocr: bool = False,
+                symbol_noise_threshold: float = DEFAULT_SYMBOL_NOISE_THRESHOLD) -> dict:
     """Process a single PDF into chunks.
 
     Returns summary dict with counts and quality stats.
@@ -321,33 +323,50 @@ def process_pdf(pdf_path: Path, output_dir: Path | None = None,
     print(f"  Found {len(sections)} sections")
 
     # Step 3: Chunk each section
-    all_chunks = []
+    raw_chunks = []
     quality_stats = {"clean": 0, "flagged": 0}
 
     for section in sections:
         chunks = chunk_text(section["text"], section["title"])
         for _i, chunk in enumerate(chunks):
-            is_clean, ratio = check_quality(chunk["text"])
-
-            chunk_record = {
-                "chunk_id": f"{meta['pdf_stem']}_s{len(all_chunks):04d}",
+            raw_chunks.append({
                 "text": chunk["text"],
                 "token_count": chunk["token_count"],
                 "section_title": section["title"],
                 "section_level": section["level"],
-                "quality": {
-                    "is_clean": is_clean,
-                    "clean_ratio": round(ratio, 3),
-                },
-                **{k: v for k, v in meta.items() if k != "pdf_stem"},
-                "pdf_stem": meta["pdf_stem"],
-            }
-            all_chunks.append(chunk_record)
+            })
 
-            if is_clean:
-                quality_stats["clean"] += 1
-            else:
-                quality_stats["flagged"] += 1
+    kept_chunks, noise_stats = apply_symbol_noise_gate(
+        raw_chunks,
+        source_file=meta["pdf_stem"],
+        threshold=symbol_noise_threshold,
+        warn=lambda message: print(f"  {message}"),
+    )
+    print(f"  Noise gate: {json.dumps(noise_stats.manifest_record(), ensure_ascii=False)}")
+
+    all_chunks = []
+    for chunk in kept_chunks:
+        is_clean, ratio = check_quality(chunk["text"])
+
+        chunk_record = {
+            "chunk_id": f"{meta['pdf_stem']}_s{len(all_chunks):04d}",
+            "text": chunk["text"],
+            "token_count": chunk["token_count"],
+            "section_title": chunk["section_title"],
+            "section_level": chunk["section_level"],
+            "quality": {
+                "is_clean": is_clean,
+                "clean_ratio": round(ratio, 3),
+            },
+            **{k: v for k, v in meta.items() if k != "pdf_stem"},
+            "pdf_stem": meta["pdf_stem"],
+        }
+        all_chunks.append(chunk_record)
+
+        if is_clean:
+            quality_stats["clean"] += 1
+        else:
+            quality_stats["flagged"] += 1
 
     # Save chunks as JSONL
     output_file = output_dir / f"{meta['pdf_stem']}.jsonl"
@@ -358,6 +377,11 @@ def process_pdf(pdf_path: Path, output_dir: Path | None = None,
     summary = {
         "pdf": pdf_path.name,
         "total_chunks": len(all_chunks),
+        "source_file": meta["pdf_stem"],
+        "chunks_kept": noise_stats.chunks_kept,
+        "chunks_dropped_noise": noise_stats.chunks_dropped_noise,
+        "drop_ratio": round(noise_stats.drop_ratio, 3),
+        "symbol_noise_threshold": symbol_noise_threshold,
         "clean_chunks": quality_stats["clean"],
         "flagged_chunks": quality_stats["flagged"],
         "sections": len(sections),
@@ -391,6 +415,12 @@ def main():
     parser.add_argument("--grade", type=int, nargs="+", help="Process specific grades")
     parser.add_argument("--force-ocr", action="store_true",
                         help="Force OCR mode even for digital PDFs (slow)")
+    parser.add_argument(
+        "--noise-threshold",
+        type=float,
+        default=DEFAULT_SYMBOL_NOISE_THRESHOLD,
+        help="Drop chunks whose symbol-noise density exceeds this fraction",
+    )
     args = parser.parse_args()
 
     if args.pdf:
@@ -398,7 +428,11 @@ def main():
         if not pdf_path.exists():
             print(f"Error: {pdf_path} not found", file=sys.stderr)
             sys.exit(1)
-        summary = process_pdf(pdf_path, force_ocr=args.force_ocr)
+        summary = process_pdf(
+            pdf_path,
+            force_ocr=args.force_ocr,
+            symbol_noise_threshold=args.noise_threshold,
+        )
         print(f"\nDone: {json.dumps(summary, indent=2)}")
 
     elif args.all or args.grade:
@@ -409,13 +443,18 @@ def main():
         print(f"Found {len(pdfs)} PDFs to process\n")
         summaries = []
         for pdf in pdfs:
-            summary = process_pdf(pdf, force_ocr=args.force_ocr)
+            summary = process_pdf(
+                pdf,
+                force_ocr=args.force_ocr,
+                symbol_noise_threshold=args.noise_threshold,
+            )
             summaries.append(summary)
             print()
         total_chunks = sum(s["total_chunks"] for s in summaries)
         total_flagged = sum(s["flagged_chunks"] for s in summaries)
+        total_dropped_noise = sum(s["chunks_dropped_noise"] for s in summaries)
         print(f"=== Total: {total_chunks} chunks from {len(pdfs)} PDFs "
-              f"({total_flagged} flagged) ===")
+              f"({total_flagged} flagged, {total_dropped_noise} noise-dropped) ===")
 
     else:
         parser.print_help()
