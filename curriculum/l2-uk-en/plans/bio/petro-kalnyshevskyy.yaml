@@ -79,6 +79,14 @@ persona:
   role: Модератор семінару, що спонукає студентів аналізувати першоджерела та ставити під сумнів офіційні та героїзовані версії історії
   voice: Archivist-Skeptic
 phase: BIO
+readings:
+- hosting: link-only
+  language: uk
+  note: Енциклопедична стаття про останнього кошового отамана Запорозької Січі та його долю після її ліквідації.
+  source_name: Енциклопедія історії України (Інститут історії України НАНУ)
+  source_type: encyclopedia
+  source_url: http://www.history.org.ua/?termin=Kalnyshevskyj_P
+  title: Калнишевський Петро Іванович
 references:
 - title: Petro Kalnyshevskyy
   note: 'Збірна довідка: біографія, ліквідація Січі, ув''язнення, канонізація'
@@ -98,7 +106,7 @@ sequence: 54
 slug: petro-kalnyshevskyy
 subtitle: 'The Last Koshovyi: Prosperity, Surrender, and Martyrdom'
 title: 'Петро Калнишевський: Останній кошовий'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: найвища виборна посада у Запорозькій Січі, голова козацького уряду
   pos: ч.
