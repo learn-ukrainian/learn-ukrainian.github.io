@@ -1602,6 +1602,22 @@ def test_rescore_covers_both_arms_and_backfills_arm(tmp_path: Path) -> None:
         encoding="utf-8",
     )
 
+    # Foreign JSON in the out-dir (the live trap: a tier2-canary-verdict.json
+    # written by the canary checker) — rescore must SKIP it entirely, not
+    # fabricate an 'unknown' scorecard row with a phantom passage count.
+    (out / "tier2-canary-verdict.json").write_text(
+        json.dumps(
+            {
+                "schema_version": "qg_tier2_canary_verdict.v1",
+                "passed": True,
+                "failure_reasons": [],
+                "summary": {"artifact_count": 4},
+            },
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+
     n = qg_bakeoff.rescore_artifacts(out, fixtures_dir)
 
     assert n == 2
@@ -1614,3 +1630,6 @@ def test_rescore_covers_both_arms_and_backfills_arm(tmp_path: Path) -> None:
     assert bare["score"]["invalid_fact_checks"] == 0
     scorecard = (out / qg_bakeoff.SCORECARD_NAME).read_text(encoding="utf-8")
     assert "Harness Lift With Anchor" in scorecard
+    assert "| unknown [" not in scorecard  # foreign JSON never becomes a model row
+    verdict_after = json.loads((out / "tier2-canary-verdict.json").read_text(encoding="utf-8"))
+    assert "rescored_at" not in verdict_after  # untouched, not rewritten

@@ -1529,6 +1529,13 @@ def rescore_artifacts(output_dir: Path, fixtures_dir: Path = FIXTURE_DIR) -> int
     count = 0
     for path in sorted(output_dir.glob("*.json")):
         artifact = json.loads(path.read_text(encoding="utf-8"))
+        schema = artifact.get("schema_version")
+        if not (isinstance(schema, str) and schema.startswith("qg_bakeoff_run.")):
+            # Foreign JSON in the out-dir (e.g. tier2-canary-verdict.json) is
+            # NOT a bakeoff cell — scoring it fabricates an 'unknown' scorecard
+            # row with a phantom passage count (caught live 2026-07-06 when a
+            # canary verdict file polluted the totals table).
+            continue
         # Backfill ``arm`` for backward compat: pre-arm tooled artifacts have no
         # field (→ "tooled"); a ``__bare`` filename identifies a bare artifact even
         # if it somehow lacks the field. Rescore covers BOTH arms — the bare grounding
