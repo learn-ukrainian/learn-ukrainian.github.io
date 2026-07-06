@@ -108,6 +108,18 @@ persona:
     і бездумної глорифікації.
   voice: Intellectual Historian
 phase: BIO
+readings:
+- hosting: history.org.ua
+  language: uk
+  note: Фундаментальна стаття про життя і діяльність ученого (Енциклопедія історії України).
+  role: encyclopedia
+  source: 'Чижевський Дмитро Іванович (ЕІУ)'
+  url: http://history.org.ua/?termin=Chyzhevskyj_D
+- hosting: reading-needed
+  language: uk
+  note: Уривок із праці «Український літературний барок» або спогадів про нього для прямого читання.
+  role: primary-excerpt
+  source: 'reading-needed: уривок з праць або листів Д. Чижевського'
 references:
 - title: Chyzhevsky, Dmytro
   note: Основна англомовна енциклопедична стаття про життя та науковий доробок.
@@ -131,7 +143,7 @@ sequence: 244
 slug: dmytro-chyzhevskyi
 subtitle: The Emigré Scholar Who Returned Ukrainian Literature to Europe
 title: 'Дмитро Чижевський: Філософ українського бароко'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: стиль у європейському мистецтві кінця XVI — середини XVIII століття, якому властиві складність,
     контрастність та теоцентризм
