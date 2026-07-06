@@ -378,3 +378,32 @@ def test_publish_guard_passes_fresh_regen_and_fails_stale_shards(
             dry_run=True,
             **input_paths,
         )
+
+
+def test_publish_script_style_invocation_reaches_projection_read(tmp_path: Path) -> None:
+    """The documented invocation (`make practice-deck-publish` → `$(PYTHON)
+    scripts/practice_deck/publish.py`) runs SCRIPT-style, without a package context.
+    The lazy `scripts.*` imports inside expected_deck_version() must still resolve
+    (#4660 review fix — sys.path bootstrap; the #4529 lazy-absolute-import class).
+    An empty sqlite file gets PAST the exists() guard and INTO the lazy-import path."""
+    import sys
+
+    repo_root = Path(publish_module.__file__).resolve().parents[2]
+    empty_db = tmp_path / "atlas.db"
+    empty_db.write_bytes(b"")
+    result = subprocess.run(
+        [
+            sys.executable,
+            str(repo_root / "scripts" / "practice_deck" / "publish.py"),
+            "--dry-run",
+            "--atlas-db",
+            str(empty_db),
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    combined = result.stdout + result.stderr
+    assert result.returncode != 0
+    assert "No module named 'scripts'" not in combined
+    assert "Failed to calculate expected deck version" in combined

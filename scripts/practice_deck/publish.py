@@ -8,6 +8,7 @@ import gzip
 import hashlib
 import json
 import subprocess
+import sys
 import tempfile
 from contextlib import nullcontext
 from pathlib import Path
@@ -15,6 +16,12 @@ from typing import Any
 from urllib.parse import quote
 
 ROOT = Path(__file__).resolve().parents[2]
+# Keep the documented script-style invocation working (`make practice-deck-publish` runs
+# `$(PYTHON) scripts/practice_deck/publish.py`): the lazy `scripts.practice_deck.io` import
+# inside expected_deck_version() needs the repo root on sys.path — same bootstrap as
+# scripts/audit/generate_practice_deck.py (and the #4529 lazy-absolute-self-import lesson).
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
 DEFAULT_PRACTICE_DIR = ROOT / "site" / "public" / "lexicon"
 DEFAULT_POINTER = ROOT / "site" / "src" / "data" / "lexicon-practice-deck.pointer.json"
 DEFAULT_GZIP = ROOT / "site" / "src" / "data" / "lexicon-practice-deck.json.gz"
