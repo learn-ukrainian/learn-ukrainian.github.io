@@ -152,6 +152,9 @@ Used 2026-06-15 to land the expanded folk corpus (#3193) without a `--force`:
   ```
 
 ## Known gaps & caveats
+- **#4594 — deterministic gap audit:** see
+  [docs/corpus-gap-audit.md](corpus-gap-audit.md) for the 2026-07-06 register × domain ×
+  CEFR/track evidence table and DRAFT consumer-driven acquisition queue.
 - **#2901 — `source_url` dropped:** ~92% of `literary_texts` rows have NULL `source_url`, so we can't
   always link a chunk back to its public web page (only izbornyk + new narod carry URLs).
 - **Folk genre primaries are thin** — standalone folk texts are only the 35 narod chunks; the rest of
