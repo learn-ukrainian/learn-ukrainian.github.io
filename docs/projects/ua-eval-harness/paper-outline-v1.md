@@ -1,18 +1,24 @@
 # Paper outline v1 — "Tool-Grounded Factuality Evaluation for Ukrainian: A Fabrication-Trap Benchmark" (#4312, UNLP 2027)
 
-Status: argument skeleton drafted 2026-07-06 (Fable session #29), while the first multi-run matrix runs.
+Status: v2 — hostile-seat review (grok, task review-4312-outline-r2) APPLIED 2026-07-06: "first" claim
+scoped with explicit UAlign/shared-task differentiation; tier-independence reframed as a scoped anchor
+finding; marketing tone moved out of §1; §6 gaps filled (transport parity, folk skew, internal origin,
+trap-count low-N as primary signal). Verdict path: "not argument-sound" → repairs below → re-reviewable.
 Numbers marked `[FINAL-MATRIX]` come from the frozen reference run; everything else is settled evidence.
 Working title deliberately plain; alternatives at the end.
 
-## The one-sentence thesis
-Capability leaderboards crown models that confidently confirm fabricated Ukrainian cultural facts;
-a curated-source tool harness with citation-admissibility gates turns the same cheap models into
-honest fact-checkers — we present the benchmark that measures this, the first for Ukrainian.
+## The one-sentence thesis (sober form — punchline lives in §5/§7 discussion, not the intro)
+We present, to our knowledge, the first tool-grounded factuality benchmark for Ukrainian built on
+engineered fabrication traps with verified gold, and show that on these traps a curated-source
+harness with citation-admissibility gates produces large honesty gains (harness lift) on cheap open
+models — while bare models across tiers, including frontier seats, confirmed seeded fabrications
+on the anchor passage [scoped: our traps, our domains, stated N].
 
 ## 1. Introduction
-- Hook: the best Ukrainian model on the community leaderboard (gemma-4-26B-A4B, avg-rank 1.59)
-  scores NEGATIVE on our fabrication traps when asked bare — it CONFIRMS invented folk facts.
-  Every frontier model we tested does (tier-independence, #4581). Capability ≠ grounded honesty.
+- Hook (method-first, per hostile review — no leaderboard-bashing): existing Ukrainian evaluation
+  measures capability on translated tasks; none measures whether a model, asked to fact-check
+  culturally specific claims, confirms fabrications or honestly withholds. We built the instrument;
+  the motivating production failure and the scoped bare-vs-tooled findings follow in §5.
 - Why Ukrainian, why culture: mid-resource language; cultural-heritage content is where parametric
   "knowledge" is thinnest and confident fabrication most harmful (education, decolonization stakes).
   Motivating incident: a production curriculum reviewer confirmed fabricated folk "facts"
@@ -24,9 +30,11 @@ honest fact-checkers — we present the benchmark that measures this, the first 
   C2 harness: tool-grounded reviewer with deterministic admissibility gates (citation ⊆ captured
      tool output; theatre gate; coverage mandate; budget caps) — model judgment isolated from
      retrieval honesty.
-  C3 findings: harness lift on cheap open models [+310 gemma-4-31b at n=4; FINAL-MATRIX with
-     variance bars]; bare honesty collapse is tier-independent (frontier bare rows negative on the
-     seeded anchor); best-bare < worst-tooled.
+  C3 findings (each stated with N/domain/transport qualifiers inline): harness lift on cheap open
+     models [+310 gemma-4-31b at n=4 folk-only; FINAL-MATRIX with variance bars]; on the seeded
+     anchor, bare frontier seats also scored negative [same-transport caveat: subscription-runtime
+     bare rows are a separate measurement profile pending raw-parity #4634 — never aggregated with
+     opencode rows; "best bare < worst tooled" is claimed WITHIN the opencode profile only].
   C4 release: public split + lm_eval-compatible results emitter + contamination defenses
      (held-out split, per-passage canaries, versioned freeze).
 
@@ -42,8 +50,17 @@ honest fact-checkers — we present the benchmark that measures this, the first 
   citations must be sub-spans of captured tool output — fabricated grounding is structurally
   detectable); (c) harness-lift as the measured quantity (same model ± tools), not model ranking
   alone; (d) mid-resource cultural domain.
-- Position sentence: to our knowledge the first tool-grounded factuality benchmark for Ukrainian,
-  and the first anywhere to measure harness lift on culturally-specific fabrication traps.
+- REQUIRED differentiation paragraph (hostile-seat finding 1 — the "first" claim survives only via
+  explicit deltas, named): **UAlign (UNLP 2025)** — Ukrainian alignment benchmark with a factuality
+  dimension; translated/adapted material (TruthfulQA-derived, machine-translated subsets); NOT
+  tool-grounded, no retrieval harness, no evaluator citation-admissibility, no engineered M/U traps
+  on native cultural facts, no harness-lift measurement. **UNLP shared tasks** (2025 manipulation
+  detection; 2026 RAG/doc-QA) — system evaluations grounding answers to provided documents, not a
+  fabrication-trap benchmark isolating reviewer honesty and lift. **PandaChat-RAG-sl** (Slovenian) —
+  RAG-system benchmark, different language and design. Scoped position sentence: to our knowledge
+  the first TOOL-GROUNDED factuality benchmark for Ukrainian with engineered, verification-receipted
+  fabrication traps, and the first to take harness lift as the dependent variable on culturally
+  specific fabrication.
 
 ## 3. Benchmark construction
 - Passage authoring: native-source-grounded (corpus + wiki), 150-200 words, claims are literal
@@ -83,8 +100,10 @@ honest fact-checkers — we present the benchmark that measures this, the first 
 - Headline table: per model × arm, model-judgment mean ± sd (3 runs), U-honesty, M-alignment,
   harness lift over paired passage means. [n=4 preview: gemma-4 −70→+240 (lift +310),
   ds-flash −30→+220, ds-pro +110→+290; best bare < worst tooled.]
-- Tier-independence: frontier bare rows (claude/gpt/gemini via subscription seats) negative on the
-  fabrication-seeded anchor — parametric scale does not buy grounded honesty. [#4581 finding + final rows]
+- Scoped anchor finding (NOT sold as general "tier-independence"): on the fabrication-seeded anchor,
+  bare frontier seats (claude/gpt/gemini, subscription-runtime profile) scored negative alongside the
+  cheap pins — reported with the transport caveat, the raw-parity status (#4634), and per-row low-N
+  flags. Generalization language deferred to whatever the FINAL-MATRIX + held-out data support.
 - Domain generalization: per-domain splits (folk/history/bio) [+ Tier-2 core-level calibration
   pilot as out-of-benchmark supporting evidence, #4637].
 - Stability: run-to-run verdict-class consistency per model×arm; error/flake accounting by transport
@@ -102,7 +121,19 @@ honest fact-checkers — we present the benchmark that measures this, the first 
 - Canary asymmetry (founding-four have none) + known +1 unmatched-fact-check perturbation on
   canary passages (diagnostic column only).
 - Gold labels: pipeline-verified [+ native-expert validation status honestly stated, #4632].
-- Judge residual: claim↔evidence alignment remains model judgment — measured, not gated.
+- Judge residual: claim↔evidence alignment remains model judgment — measured, not gated; tooled runs
+  still show substantial ungrounded_findings rates (gates reduce, not eliminate).
+- Transport: two bare-arm profiles (opencode vs subscription-runtime) are distinct measurements;
+  raw-parity (#4634) bounds but does not erase the difference.
+- Evidence skew: motivating incident and founding passages are folk-ritual; history/bio status stated
+  explicitly per-table; domain generalization claims limited accordingly.
+- Origin bias: the benchmark grew from internal curriculum failures — passage/trap selection may
+  reflect the failure modes we happened to hit first (disclosed; held-out authoring protocol as partial
+  mitigation).
+- Absolute trap counts are small — low-N is not a footnote but the PRIMARY qualifier on all honesty
+  statistics.
+- Scope note: this is the factuality sub-line of the broader #2156 contact-linguistics harness
+  (calque/grammar eval) — relationship stated so reviewers see the research program, not a one-off.
 - AI-assisted development disclosed; verification regime (cross-family adversarial review,
   fail-closed CI, tool-backed claims) described in an appendix — the instrument was built under the
   distrust regime it measures.
