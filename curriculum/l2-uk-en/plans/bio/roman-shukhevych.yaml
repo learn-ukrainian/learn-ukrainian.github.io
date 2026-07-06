@@ -80,6 +80,16 @@ persona:
   role: Модератор військово-історичного семінару, що вимагає відмовитись від чорно-білих оцінок і аналізувати лідера в контексті його епохи — "war is hell".
   voice: Military-Historian-Realist
 phase: BIO
+readings:
+- caveats: "Академічна енциклопедична стаття (УВАГА: тема містить складні питання воєнної пам'яті)."
+  hosting: external
+  language: uk
+  role: Контекст
+  source_name: Енциклопедія історії України
+  source_type: Енциклопедія
+  task: Ознайомитися з академічним викладом біографії Романа Шухевича та його діяльності.
+  title: Шухевич Роман Осипович
+  url: http://www.history.org.ua/?termin=Shukhevych_R
 references:
 - title: Roman Shukhevych
   note: Compiled summary from primary sources listed below and academic papers on UPA.
@@ -104,7 +114,7 @@ sequence: 142
 slug: roman-shukhevych
 subtitle: The Man and the Myth of the UPA Commander
 title: 'Роман Шухевич: Головний командир УПА'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: найвища військова посада, особа, що очолює всі збройні сили
   pos: ч.

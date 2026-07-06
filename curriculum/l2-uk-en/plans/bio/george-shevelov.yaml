@@ -79,6 +79,16 @@ persona:
   role: Модератор семінару, який розглядає Шевельова не як ікону, а як складну фігуру в центрі наукових та ідеологічних битв XX століття.
   voice: Philologist-Historian
 phase: BIO
+readings:
+- caveats: Академічна енциклопедична стаття.
+  hosting: external
+  language: uk
+  role: Контекст
+  source_name: Енциклопедія історії України
+  source_type: Енциклопедія
+  task: Ознайомитися з академічним викладом життя та наукової спадщини Юрія Шевельова.
+  title: Шевельов Юрій Володимирович
+  url: http://www.history.org.ua/?termin=Shevelov_Y
 references:
 - title: Шевельов Юрій Володимирович
   note: Загальна біографія, наукова кар''єра, перелік праць
@@ -102,7 +112,7 @@ sequence: 144
 slug: george-shevelov
 subtitle: The Man Who Demolished Imperial Myths About the Ukrainian Language
 title: 'Юрій Шевельов: Архітектор української лінгвістики'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: розділ мовознавства, що вивчає звукову будову мови та її функціонування
   pos: ж.
