@@ -1664,3 +1664,36 @@ def test_load_all_artifacts_skips_foreign_json(tmp_path: Path) -> None:
 
     assert len(artifacts) == 1
     assert artifacts[0]["model"]["pin"] == "openrouter/test/m"
+
+
+def test_default_fixture_corpus_loads_with_uniform_shape() -> None:
+    """The WHOLE shipped corpus must load + honor the 6T/2M/1U shape (codex review, #4589).
+
+    Loader failure-cases and per-fixture tests never load the real default dir,
+    so a malformed newly-added fixture would only fail at matrix time. This
+    test is count-agnostic on purpose - every future wave rides for free.
+    """
+    # The founding four are PINNED canary fixtures with recorded scorecard
+    # runs - retro-editing them would invalidate artifact comparability. They
+    # predate the 150-word floor (all four) and, for vesnianky (the original
+    # anchor), the 9-claim/6-2-1 recipe. Wave-era rules bind every wave since.
+    legacy_pre_floor = {"vesnianky", "kupalski", "zhnyvarski", "koliadky"}
+    legacy_pre_shape = {"vesnianky"}
+
+    fixtures = qg_bakeoff.load_fixtures()
+    assert len(fixtures) >= 13
+    for fixture in fixtures:
+        claims = fixture.claims
+        # Universal invariants - every fixture, every era.
+        assert claims, fixture.slug
+        for claim in claims:
+            assert claim.claim in fixture.passage_md, f"{fixture.slug}:{claim.claim_id}"
+        # Wave-era shape invariants.
+        if fixture.slug not in legacy_pre_shape:
+            true_claims = [c for c in claims if c.is_true]
+            m_claims = [c for c in claims if c.fabrication_class == "M"]
+            u_claims = [c for c in claims if c.fabrication_class == "U"]
+            assert len(claims) == 9, fixture.slug
+            assert (len(true_claims), len(m_claims), len(u_claims)) == (6, 2, 1), fixture.slug
+        if fixture.slug not in legacy_pre_floor:
+            assert len(fixture.passage_md.split()) >= 150, fixture.slug
