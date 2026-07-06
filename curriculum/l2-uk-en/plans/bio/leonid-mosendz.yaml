@@ -115,6 +115,17 @@ persona:
     до зради й не романтизуючи радянське знищення.
   voice: Intellectual Historian
 phase: BIO
+readings:
+- hosting: link-only
+  language: uk
+  rights_note: "Educational use / Public access"
+  source_name: "Мосендз Леонід Маркович (Енциклопедія історії України)"
+  source_url: "http://history.org.ua/?termin=Mosendz_L_M"
+- hosting: link-only
+  language: uk
+  rights_note: "Creative Commons Attribution-ShareAlike"
+  source_name: "Леонід Мосендз (Вікіпедія)"
+  source_url: "https://uk.wikipedia.org/wiki/Мосендз_Леонід_Маркович"
 references:
 - note: Енциклопедична стаття; контекст УНР і творчості.
   path: http://history.org.ua/?termin=Mosendz_L_M
@@ -139,7 +150,7 @@ sequence: 230
 slug: leonid-mosendz
 subtitle: The UNR Officer, Chemist, and Prague-School Storyteller
 title: 'Леонід Мосендз: Зодіяк і лицар Празької школи'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: українське літературне й ідейне коло еміграції в Чехословаччині міжвоєння, пов'язане з *Вісником*
   pos: ж.
