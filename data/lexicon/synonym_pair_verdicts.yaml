@@ -1,0 +1,6043 @@
+schema_version: 1
+policy: emit = deterministically-attested AND llm-approved
+judged_at: '2026-07-06'
+issue: 4504
+approved:
+- a: абиде
+  b: будь-де
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+  - wiktionary
+- a: абихто
+  b: будь-хто
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: абиякий
+  b: будь-який
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: абиякий
+  b: незадовільний
+  polarity: synonym
+  sources:
+  - synonyms
+- a: або
+  b: чи
+  polarity: synonym
+  sources:
+  - synonyms_karavansky
+  - wiktionary
+- a: абстрактний
+  b: конкретний
+  polarity: antonym
+  sources:
+  - wiktionary
+- a: адресант
+  b: відправник
+  polarity: synonym
+  sources:
+  - synonyms
+- a: акт
+  b: документ
+  polarity: synonym
+  sources:
+  - synonyms_karavansky
+- a: акт
+  b: дія
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: акт
+  b: подія
+  polarity: synonym
+  sources:
+  - synonyms_karavansky
+- a: актор
+  b: виконавець
+  polarity: synonym
+  sources:
+  - synonyms_karavansky
+- a: акцент
+  b: наголос
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: альтернатива
+  b: вибір
+  polarity: synonym
+  sources:
+  - synonyms_karavansky
+- a: аналіз
+  b: розбір
+  polarity: synonym
+  sources:
+  - synonyms
+- a: анотація
+  b: резюме
+  polarity: synonym
+  sources:
+  - synonyms_karavansky
+- a: антитеза
+  b: протиставлення
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: аптекар
+  b: фармацевт
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: аргумент
+  b: доказ
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: аргумент
+  b: підстава
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: аргумент
+  b: підтвердження
+  polarity: synonym
+  sources:
+  - synonyms
+- a: архаїзм
+  b: неологізм
+  polarity: antonym
+  sources:
+  - wiktionary
+- a: ательє
+  b: майстерня
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: афіша
+  b: оголошення
+  polarity: synonym
+  sources:
+  - synonyms_karavansky
+- a: багато
+  b: мало
+  polarity: antonym
+  sources:
+  - wiktionary
+- a: багато
+  b: чимало
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: бажання
+  b: побажання
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: бажати
+  b: хотіти
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+  - wiktionary
+- a: базар
+  b: ринок
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: базар
+  b: ярмарок
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: батько
+  b: тато
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+  - wiktionary
+- a: бачитися
+  b: зустрічатися
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: безперечно
+  b: безумовно
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: безпосередньо
+  b: прямо
+  polarity: synonym
+  sources:
+  - synonyms_karavansky
+- a: берег
+  b: узбережжя
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: берегти
+  b: зберігати
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: бирка
+  b: наліпка
+  polarity: synonym
+  sources:
+  - synonyms_karavansky
+- a: бити
+  b: стукати
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: близько
+  b: біля
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+  - wiktionary
+- a: близько
+  b: далеко
+  polarity: antonym
+  sources:
+  - wiktionary
+- a: близько
+  b: недалеко
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+  - wiktionary
+- a: близько
+  b: поблизу
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: близько
+  b: поруч
+  polarity: synonym
+  sources:
+  - synonyms
+- a: брама
+  b: ворота
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: брат
+  b: товариш
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: брати
+  b: діставати
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: брати
+  b: приймати
+  polarity: synonym
+  sources:
+  - synonyms_karavansky
+- a: бридкий
+  b: огидний
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: бридкий
+  b: потворний
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: бувай
+  b: вітаю
+  polarity: antonym
+  sources:
+  - wiktionary
+- a: будинок
+  b: дім
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: буква
+  b: літера
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+  - wiktionary
+- a: буквальний
+  b: дослівний
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: буря
+  b: завірюха
+  polarity: synonym
+  sources:
+  - synonyms
+- a: бігти
+  b: їхати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: білий
+  b: молочний
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: білий
+  b: сивий
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: біля
+  b: коло
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+  - wiktionary
+- a: біля
+  b: поблизу
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: варити
+  b: готувати
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: варт
+  b: гідний
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: вартий
+  b: гідний
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: вартість
+  b: ціна
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: вельми
+  b: вкрай
+  polarity: synonym
+  sources:
+  - synonyms
+- a: вельми
+  b: значно
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: вельми
+  b: набагато
+  polarity: synonym
+  sources:
+  - synonyms
+- a: вельми
+  b: надзвичайно
+  polarity: synonym
+  sources:
+  - synonyms
+- a: веселий
+  b: радісний
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: веснянки
+  b: ластовиння
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: вечір
+  b: ранок
+  polarity: antonym
+  sources:
+  - wiktionary
+- a: взаємини
+  b: відносини
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: взаємини
+  b: стосунки
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: взаємини
+  b: стосунок
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: вивчати
+  b: досліджувати
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: вивчення
+  b: дослідження
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: виглядати
+  b: чекати
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: вид
+  b: зовнішність
+  polarity: synonym
+  sources:
+  - synonyms
+- a: вид
+  b: категорія
+  polarity: synonym
+  sources:
+  - synonyms_karavansky
+- a: вид
+  b: обличчя
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: вид
+  b: пейзаж
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: видавати
+  b: зраджувати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: видавати
+  b: публікувати
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: виділяти
+  b: підкреслювати
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: викладач
+  b: вчитель
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: викладач
+  b: учитель
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: виконувати
+  b: здійснювати
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+  - wiktionary
+- a: виконувати
+  b: нести
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: вимова
+  b: орфоепія
+  polarity: synonym
+  sources:
+  - synonyms
+- a: виправлення
+  b: поправка
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: випробування
+  b: іспит
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: випускати
+  b: публікувати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: виразний
+  b: експресивний
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: виразність
+  b: експресія
+  polarity: synonym
+  sources:
+  - synonyms
+- a: вирушати
+  b: виїжджати
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: вирушати
+  b: від'їжджати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: вирушати
+  b: відходити
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: вирушати
+  b: подаватися
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: вирішити
+  b: ухвалити
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: вирішувати
+  b: ухвалювати
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: висвітлювати
+  b: пояснювати
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: висловлювати
+  b: говорити
+  polarity: synonym
+  sources:
+  - synonyms_karavansky
+  - wiktionary
+- a: висловлювати
+  b: казати
+  polarity: synonym
+  sources:
+  - synonyms_karavansky
+- a: висловлювати
+  b: передавати
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: виснажений
+  b: змарнілий
+  polarity: synonym
+  sources:
+  - synonyms
+- a: високий
+  b: низький
+  polarity: antonym
+  sources:
+  - wiktionary
+- a: висота
+  b: височина
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: витяг
+  b: уривок
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: витяг
+  b: цитата
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: вихід
+  b: виїзд
+  polarity: synonym
+  sources:
+  - synonyms
+  - wiktionary
+- a: вихід
+  b: вхід
+  polarity: antonym
+  sources:
+  - wiktionary
+- a: виїжджати
+  b: подаватися
+  polarity: synonym
+  sources:
+  - synonyms
+- a: вказівка
+  b: порада
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: вказівка
+  b: розпорядження
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: вказівка
+  b: інструкція
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: вкрай
+  b: значно
+  polarity: synonym
+  sources:
+  - synonyms
+- a: вкрай
+  b: надзвичайно
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: власний
+  b: свій
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: власник
+  b: господар
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+  - wiktionary
+- a: властивість
+  b: прикмета
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: вмиватися
+  b: митися
+  polarity: synonym
+  sources:
+  - synonyms_karavansky
+- a: вміти
+  b: могти
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: водити
+  b: супроводити
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: водночас
+  b: одночасно
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: водночас
+  b: разом
+  polarity: synonym
+  sources:
+  - synonyms
+- a: володіти
+  b: мати
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: вплив
+  b: дія
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: враження
+  b: ефект
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: вранці
+  b: зранку
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: вранці
+  b: рано
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: вродливий
+  b: гарна
+  polarity: synonym
+  sources:
+  - synonyms
+- a: вродливий
+  b: гарне
+  polarity: synonym
+  sources:
+  - synonyms
+- a: вродливий
+  b: гарний
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: вродливий
+  b: красен
+  polarity: synonym
+  sources:
+  - synonyms
+- a: вродливий
+  b: ладна
+  polarity: synonym
+  sources:
+  - synonyms
+- a: вродливий
+  b: прегарний
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: вродливий
+  b: файний
+  polarity: synonym
+  sources:
+  - synonyms
+- a: вставати
+  b: підводитися
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: втрачати
+  b: губити
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: вчити
+  b: навчати
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: вчора
+  b: сьогодні
+  polarity: antonym
+  sources:
+  - wiktionary
+- a: від'їжджати
+  b: подаватися
+  polarity: synonym
+  sources:
+  - synonyms
+- a: відбудова
+  b: відновлення
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: відгук
+  b: реакція
+  polarity: synonym
+  sources:
+  - synonyms_karavansky
+- a: відділ
+  b: відділення
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: відкладати
+  b: заощаджувати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: відкривати
+  b: відчиняти
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: відмінний
+  b: найкращий
+  polarity: synonym
+  sources:
+  - synonyms_karavansky
+- a: відмінний
+  b: якісний
+  polarity: synonym
+  sources:
+  - synonyms
+- a: відмінний
+  b: інший
+  polarity: synonym
+  sources:
+  - synonyms_karavansky
+- a: відносини
+  b: стосунки
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: відносини
+  b: стосунок
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: відомий
+  b: знайомий
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: відповідати
+  b: узгоджуватися
+  polarity: synonym
+  sources:
+  - synonyms_karavansky
+- a: відповідь
+  b: питання
+  polarity: antonym
+  sources:
+  - wiktionary
+- a: відсоток
+  b: частка
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: відходити
+  b: подаватися
+  polarity: synonym
+  sources:
+  - synonyms
+- a: відшкодувати
+  b: компенсувати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: вільний
+  b: самостійний
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: вітати
+  b: вітатися
+  polarity: synonym
+  sources:
+  - synonyms
+- a: вітчизняний
+  b: наш
+  polarity: synonym
+  sources:
+  - synonyms_karavansky
+- a: гарна
+  b: файний
+  polarity: synonym
+  sources:
+  - synonyms
+- a: гарна
+  b: чудовий
+  polarity: synonym
+  sources:
+  - synonyms
+- a: гарне
+  b: файний
+  polarity: synonym
+  sources:
+  - synonyms
+- a: гарне
+  b: чудовий
+  polarity: synonym
+  sources:
+  - synonyms
+- a: гарний
+  b: красен
+  polarity: synonym
+  sources:
+  - synonyms
+- a: гарний
+  b: ладна
+  polarity: synonym
+  sources:
+  - synonyms
+- a: гарний
+  b: прегарний
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: гарний
+  b: файний
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: гарний
+  b: чудовий
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: гарно
+  b: добре
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: гарно
+  b: мило
+  polarity: synonym
+  sources:
+  - synonyms_karavansky
+- a: гарно
+  b: чудово
+  polarity: synonym
+  sources:
+  - synonyms_karavansky
+- a: герой
+  b: персонаж
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: говорити
+  b: казати
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+  - wiktionary
+- a: говорити
+  b: оповідати
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+  - wiktionary
+- a: голова
+  b: начальник
+  polarity: synonym
+  sources:
+  - synonyms
+- a: головний
+  b: центральний
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: голосний
+  b: гучний
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: гора
+  b: яма
+  polarity: antonym
+  sources:
+  - wiktionary
+- a: город
+  b: місто
+  polarity: synonym
+  sources:
+  - synonyms_karavansky
+  - wiktionary
+- a: гостинець
+  b: дорога
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: гостинець
+  b: подарунок
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: готуватися
+  b: збиратися
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: громада
+  b: компанія
+  polarity: synonym
+  sources:
+  - synonyms
+- a: громада
+  b: суспільство
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: гідний
+  b: шановний
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: гіпербола
+  b: перебільшення
+  polarity: synonym
+  sources:
+  - synonyms
+- a: гіпотеза
+  b: припущення
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: далеко
+  b: набагато
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: дата
+  b: число
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: двір
+  b: подвір'я
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: дебати
+  b: дискусія
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: дебати
+  b: обговорення
+  polarity: synonym
+  sources:
+  - synonyms_karavansky
+- a: декларація
+  b: заява
+  polarity: synonym
+  sources:
+  - synonyms
+- a: деколи
+  b: інколи
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: деколи
+  b: іноді
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: декілька
+  b: кілька
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: день
+  b: ніч
+  polarity: antonym
+  sources:
+  - wiktionary
+- a: десь
+  b: мабуть
+  polarity: synonym
+  sources:
+  - synonyms_karavansky
+- a: деталь
+  b: частина
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: дещо
+  b: трохи
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: дзвонити
+  b: телефонувати
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: динамічний
+  b: живий
+  polarity: synonym
+  sources:
+  - synonyms_karavansky
+- a: директор
+  b: начальник
+  polarity: synonym
+  sources:
+  - synonyms
+- a: дискусія
+  b: обговорення
+  polarity: synonym
+  sources:
+  - synonyms_karavansky
+- a: дискусія
+  b: суперечка
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: дисципліна
+  b: порядок
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: добре
+  b: набагато
+  polarity: synonym
+  sources:
+  - synonyms
+- a: договір
+  b: домовленість
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: договір
+  b: умова
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: дозрілий
+  b: достиглий
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: доказ
+  b: показник
+  polarity: synonym
+  sources:
+  - synonyms_karavansky
+- a: доказ
+  b: підтвердження
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: документ
+  b: протокол
+  polarity: synonym
+  sources:
+  - synonyms_karavansky
+- a: домовленість
+  b: умова
+  polarity: synonym
+  sources:
+  - synonyms
+- a: донька
+  b: дочка
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+  - wiktionary
+- a: допис
+  b: стаття
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: допомога
+  b: опора
+  polarity: synonym
+  sources:
+  - synonyms
+- a: допомога
+  b: підтримка
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: дорога
+  b: шлях
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+  - wiktionary
+- a: дослівний
+  b: точний
+  polarity: synonym
+  sources:
+  - synonyms_karavansky
+- a: дослідження
+  b: розвідка
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: доступ
+  b: прохід
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: доходити
+  b: наближатися
+  polarity: synonym
+  sources:
+  - synonyms_karavansky
+- a: доходити
+  b: підходити
+  polarity: synonym
+  sources:
+  - synonyms_karavansky
+- a: дочка
+  b: син
+  polarity: antonym
+  sources:
+  - wiktionary
+- a: друг
+  b: товариш
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+  - wiktionary
+- a: другий
+  b: інший
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: дружина
+  b: чоловік
+  polarity: antonym
+  sources:
+  - wiktionary
+- a: дружити
+  b: товаришувати
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: дума
+  b: думка
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+  - wiktionary
+- a: дума
+  b: міркування
+  polarity: synonym
+  sources:
+  - synonyms
+- a: дума
+  b: погляд
+  polarity: synonym
+  sources:
+  - synonyms
+- a: думати
+  b: мислити
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: думка
+  b: міркування
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+  - wiktionary
+- a: думка
+  b: погляд
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+  - wiktionary
+- a: ділянка
+  b: площа
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: ділянка
+  b: сфера
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: дім
+  b: житло
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: евфонія
+  b: милозвучність
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: екзамен
+  b: іспит
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: екскурсія
+  b: прогулянка
+  polarity: synonym
+  sources:
+  - synonyms_karavansky
+- a: епітет
+  b: означення
+  polarity: synonym
+  sources:
+  - synonyms_karavansky
+- a: ефект
+  b: наслідок
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: живопис
+  b: малювання
+  polarity: synonym
+  sources:
+  - synonyms
+- a: житло
+  b: помешкання
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: забігати
+  b: заходити
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: завершення
+  b: закінчення
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: завершення
+  b: фінал
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+  - wiktionary
+- a: завершити
+  b: закінчити
+  polarity: synonym
+  sources:
+  - synonyms
+- a: завжди
+  b: ніколи
+  polarity: antonym
+  sources:
+  - wiktionary
+- a: завтра
+  b: сьогодні
+  polarity: antonym
+  sources:
+  - wiktionary
+- a: заголовок
+  b: рубрика
+  polarity: synonym
+  sources:
+  - synonyms_karavansky
+- a: задля
+  b: заради
+  polarity: synonym
+  sources:
+  - synonyms_karavansky
+- a: задоволення
+  b: радість
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: зазначати
+  b: позначати
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: закритий
+  b: замкнутий
+  polarity: synonym
+  sources:
+  - synonyms_karavansky
+- a: закінчення
+  b: фінал
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: заносити
+  b: записувати
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: заощаджувати
+  b: зберігати
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: запис
+  b: нотатки
+  polarity: synonym
+  sources:
+  - synonyms
+- a: запит
+  b: питання
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: запит
+  b: прохання
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: запрошувати
+  b: звати
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: зараз
+  b: сьогодні
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: застереження
+  b: попередження
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: зате
+  b: однак
+  polarity: synonym
+  sources:
+  - synonyms_karavansky
+- a: зате
+  b: проте
+  polarity: synonym
+  sources:
+  - synonyms_karavansky
+- a: затока
+  b: лиман
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: західний
+  b: східний
+  polarity: antonym
+  sources:
+  - wiktionary
+- a: збереження
+  b: охорона
+  polarity: synonym
+  sources:
+  - synonyms_karavansky
+- a: збирати
+  b: набирати
+  polarity: synonym
+  sources:
+  - synonyms_karavansky
+- a: зблідлий
+  b: побілілий
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: звичай
+  b: традиція
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: звичайний
+  b: сірий
+  polarity: synonym
+  sources:
+  - synonyms_karavansky
+- a: зима
+  b: літо
+  polarity: antonym
+  sources:
+  - wiktionary
+- a: знак
+  b: показник
+  polarity: synonym
+  sources:
+  - synonyms
+- a: знак
+  b: символ
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: знаменитість
+  b: зірка
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: знаряддя
+  b: інструмент
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: значно
+  b: набагато
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: значно
+  b: надзвичайно
+  polarity: synonym
+  sources:
+  - synonyms
+- a: значно
+  b: чимало
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: зранку
+  b: рано
+  polarity: synonym
+  sources:
+  - synonyms
+- a: зрештою
+  b: нарешті
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: зробити
+  b: створити
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: зрідка
+  b: рідко
+  polarity: synonym
+  sources:
+  - synonyms_karavansky
+- a: зрідка
+  b: інколи
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: зрідка
+  b: іноді
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: зустріч
+  b: побачення
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: зіставлення
+  b: порівняння
+  polarity: synonym
+  sources:
+  - synonyms
+- a: йти
+  b: подаватися
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: йти
+  b: іти
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: казати
+  b: оповідати
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: карта
+  b: меню
+  polarity: synonym
+  sources:
+  - synonyms
+- a: картка
+  b: листівка
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: категоричний
+  b: незаперечний
+  polarity: synonym
+  sources:
+  - synonyms_karavansky
+- a: категоричний
+  b: твердий
+  polarity: synonym
+  sources:
+  - synonyms
+- a: категорія
+  b: рід
+  polarity: synonym
+  sources:
+  - synonyms_karavansky
+- a: каштановий
+  b: коричневий
+  polarity: synonym
+  sources:
+  - synonyms
+- a: квартал
+  b: чверть
+  polarity: synonym
+  sources:
+  - synonyms_karavansky
+- a: квартира
+  b: помешкання
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: керування
+  b: керівництво
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: керівник
+  b: начальник
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: класифікація
+  b: систематизація
+  polarity: synonym
+  sources:
+  - synonyms
+- a: клієнт
+  b: покупець
+  polarity: synonym
+  sources:
+  - synonyms_karavansky
+- a: кмітливий
+  b: розумний
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: книга
+  b: книжка
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+  - wiktionary
+- a: колись
+  b: раніше
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: колишній
+  b: минулий
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+  - wiktionary
+- a: команда
+  b: наказ
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: команда
+  b: розпорядження
+  polarity: synonym
+  sources:
+  - synonyms
+- a: коментар
+  b: пояснення
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: коментар
+  b: тлумачення
+  polarity: synonym
+  sources:
+  - synonyms_karavansky
+- a: компанія
+  b: суспільство
+  polarity: synonym
+  sources:
+  - synonyms
+- a: композиція
+  b: конструкція
+  polarity: synonym
+  sources:
+  - synonyms
+- a: композиція
+  b: структура
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: компот
+  b: узвар
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+  - wiktionary
+- a: компроміс
+  b: поступка
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: конверт
+  b: пакет
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: конструкція
+  b: структура
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: конференція
+  b: нарада
+  polarity: synonym
+  sources:
+  - synonyms_karavansky
+- a: копіювати
+  b: наслідувати
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: копіювати
+  b: повторювати
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: кордон
+  b: межа
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+  - wiktionary
+- a: корпус
+  b: стан
+  polarity: synonym
+  sources:
+  - synonyms
+- a: котрий
+  b: який
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: кравець
+  b: кравчиня
+  polarity: synonym
+  sources:
+  - synonyms_karavansky
+- a: крамниця
+  b: магазин
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+  - wiktionary
+- a: красен
+  b: прегарний
+  polarity: synonym
+  sources:
+  - synonyms
+- a: красен
+  b: файний
+  polarity: synonym
+  sources:
+  - synonyms
+- a: красен
+  b: чудовий
+  polarity: synonym
+  sources:
+  - synonyms
+- a: краєвид
+  b: пейзаж
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: країна
+  b: сторона
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+  - wiktionary
+- a: кров
+  b: походження
+  polarity: synonym
+  sources:
+  - synonyms
+- a: куди
+  b: набагато
+  polarity: synonym
+  sources:
+  - synonyms_karavansky
+- a: куплет
+  b: строфа
+  polarity: synonym
+  sources:
+  - synonyms_karavansky
+- a: купівля
+  b: покупка
+  polarity: synonym
+  sources:
+  - synonyms
+- a: курс
+  b: маршрут
+  polarity: synonym
+  sources:
+  - synonyms
+- a: курс
+  b: напрямок
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: курс
+  b: шлях
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: кількість
+  b: число
+  polarity: synonym
+  sources:
+  - synonyms_karavansky
+- a: кінець
+  b: межа
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: кінець
+  b: фінал
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: кіно
+  b: фільм
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: кінцівка
+  b: нога
+  polarity: synonym
+  sources:
+  - synonyms_karavansky
+- a: лагідний
+  b: ласкавий
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: лагідний
+  b: ніжний
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: лагідний
+  b: спокійний
+  polarity: synonym
+  sources:
+  - synonyms_karavansky
+- a: ладна
+  b: файний
+  polarity: synonym
+  sources:
+  - synonyms
+- a: ласкавий
+  b: ніжний
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: ласкавий
+  b: пестливий
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: ледве
+  b: майже
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+  - wiktionary
+- a: лекція
+  b: урок
+  polarity: synonym
+  sources:
+  - synonyms_karavansky
+- a: либонь
+  b: мабуть
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+  - wiktionary
+- a: ліворуч
+  b: наліво
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: лінійка
+  b: лінія
+  polarity: synonym
+  sources:
+  - synonyms_karavansky
+  - wiktionary
+- a: мабуть
+  b: можливо
+  polarity: synonym
+  sources:
+  - synonyms
+- a: майбутній час
+  b: минулий час
+  polarity: antonym
+  sources:
+  - wiktionary
+- a: майстер
+  b: митець
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+  - wiktionary
+- a: майстер
+  b: фахівець
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+  - wiktionary
+- a: мало
+  b: трохи
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: малювати
+  b: описувати
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: мама
+  b: мати
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+  - wiktionary
+- a: мандрувати
+  b: подорожувати
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: мандрівка
+  b: подорож
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: матеріал
+  b: сировина
+  polarity: synonym
+  sources:
+  - synonyms
+- a: матеріал
+  b: тканина
+  polarity: synonym
+  sources:
+  - synonyms
+- a: мета
+  b: ціль
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+  - wiktionary
+- a: мимоволі
+  b: самохіть
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: минулий час
+  b: теперішній час
+  polarity: antonym
+  sources:
+  - wiktionary
+- a: множина
+  b: однина
+  polarity: antonym
+  sources:
+  - wiktionary
+- a: можливість
+  b: нагода
+  polarity: synonym
+  sources:
+  - synonyms_karavansky
+- a: мороз
+  b: холод
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: мрія
+  b: сон
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: місто
+  b: село
+  polarity: antonym
+  sources:
+  - wiktionary
+- a: місце
+  b: посада
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: місцевість
+  b: околиця
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: місцевість
+  b: район
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: місцевість
+  b: сторона
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+  - wiktionary
+- a: місцевість
+  b: україна
+  polarity: synonym
+  sources:
+  - synonyms
+- a: мішати
+  b: перемішувати
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: набагато
+  b: надзвичайно
+  polarity: synonym
+  sources:
+  - synonyms
+- a: наближатися
+  b: підходити
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: навігація
+  b: плавання
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: наголошувати
+  b: підкреслювати
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: над
+  b: під
+  polarity: antonym
+  sources:
+  - wiktionary
+- a: надсилати
+  b: подавати
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: найкращий
+  b: щонайкращий
+  polarity: synonym
+  sources:
+  - synonyms
+- a: наказ
+  b: розпорядження
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: наліпка
+  b: ярлик
+  polarity: synonym
+  sources:
+  - synonyms_karavansky
+- a: намір
+  b: план
+  polarity: synonym
+  sources:
+  - synonyms
+- a: наполегливий
+  b: упертий
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: направо
+  b: праворуч
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: нарада
+  b: рада
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+  - wiktionary
+- a: насамперед
+  b: спочатку
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: наслідок
+  b: продукт
+  polarity: synonym
+  sources:
+  - synonyms
+- a: наслідок
+  b: підсумок
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: наслідок
+  b: результат
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: невже
+  b: хіба
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: невизначений
+  b: неозначений
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: недалеко
+  b: поблизу
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: незадовільний
+  b: поганий
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: незгода
+  b: сварка
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: ненадійний
+  b: слизький
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: ненормативний
+  b: нормативний
+  polarity: antonym
+  sources:
+  - wiktionary
+- a: неозначений
+  b: темний
+  polarity: synonym
+  sources:
+  - synonyms
+- a: несподівано
+  b: раптом
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: нестерпний
+  b: пекельний
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: нести
+  b: носити
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: новий
+  b: сучасний
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: новітній
+  b: сучасний
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: норма
+  b: правило
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: ніжний
+  b: пестливий
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: ніжний
+  b: тендітний
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: ніхто
+  b: хто-небудь
+  polarity: antonym
+  sources:
+  - wiktionary
+- a: нічого
+  b: щось
+  polarity: antonym
+  sources:
+  - wiktionary
+- a: ніщо
+  b: щось
+  polarity: antonym
+  sources:
+  - wiktionary
+- a: область
+  b: сфера
+  polarity: synonym
+  sources:
+  - synonyms_karavansky
+- a: обов'язок
+  b: функція
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: обряд
+  b: церемонія
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: обслуговування
+  b: сервіс
+  polarity: synonym
+  sources:
+  - synonyms
+- a: обставина
+  b: факт
+  polarity: synonym
+  sources:
+  - synonyms_karavansky
+- a: обставини
+  b: становище
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: обстеження
+  b: огляд
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: обіцянка
+  b: слово
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: оголошення
+  b: повідомлення
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: одночасно
+  b: разом
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: описувати
+  b: оповідати
+  polarity: synonym
+  sources:
+  - synonyms_karavansky
+- a: оплата
+  b: платіж
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: оповідання
+  b: розповідь
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: оповідання
+  b: історія
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: оповідати
+  b: повідомляти
+  polarity: synonym
+  sources:
+  - synonyms
+- a: опонент
+  b: суперник
+  polarity: synonym
+  sources:
+  - synonyms_karavansky
+- a: опора
+  b: основа
+  polarity: synonym
+  sources:
+  - synonyms_karavansky
+- a: опора
+  b: підтримка
+  polarity: synonym
+  sources:
+  - synonyms
+- a: орфографія
+  b: правопис
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: особа
+  b: персонаж
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: особливість
+  b: прикмета
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: офіційний
+  b: службовий
+  polarity: synonym
+  sources:
+  - synonyms_karavansky
+- a: оцей
+  b: цей
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: оцінка
+  b: ціна
+  polarity: synonym
+  sources:
+  - synonyms
+- a: певен
+  b: твердий
+  polarity: synonym
+  sources:
+  - synonyms_karavansky
+- a: певний
+  b: твердий
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+  - wiktionary
+- a: перебігати
+  b: пробігати
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: передавати
+  b: подавати
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: переказ
+  b: розповідь
+  polarity: synonym
+  sources:
+  - synonyms_karavansky
+- a: перелік
+  b: список
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: перелік
+  b: індекс
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: перетворення
+  b: реформа
+  polarity: synonym
+  sources:
+  - synonyms_karavansky
+- a: перетворення
+  b: трансформація
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: перетин
+  b: перехрестя
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: переходити
+  b: проходити
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: персоніфікація
+  b: уособлення
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: перцепція
+  b: сприйняття
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: поблизу
+  b: поруч
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: побутовий
+  b: щоденний
+  polarity: synonym
+  sources:
+  - synonyms_karavansky
+- a: поважати
+  b: шанувати
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: повтор
+  b: повторення
+  polarity: synonym
+  sources:
+  - synonyms
+- a: погодити
+  b: узгодити
+  polarity: synonym
+  sources:
+  - synonyms
+- a: подорож
+  b: рейс
+  polarity: synonym
+  sources:
+  - synonyms_karavansky
+- a: подія
+  b: інцидент
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: поза
+  b: позиція
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: позиція
+  b: положення
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: позов
+  b: претензія
+  polarity: synonym
+  sources:
+  - synonyms
+- a: показник
+  b: прикмета
+  polarity: synonym
+  sources:
+  - synonyms
+- a: положення
+  b: теза
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: помалу
+  b: поступово
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: помалу
+  b: потроху
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: поняття
+  b: розуміння
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+  - wiktionary
+- a: поправка
+  b: правка
+  polarity: synonym
+  sources:
+  - synonyms
+- a: порада
+  b: пропозиція
+  polarity: synonym
+  sources:
+  - synonyms_karavansky
+- a: порада
+  b: рада
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+  - wiktionary
+- a: порушувати
+  b: турбувати
+  polarity: synonym
+  sources:
+  - synonyms
+- a: порядок
+  b: розпорядок
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: поспішати
+  b: спішити
+  polarity: synonym
+  sources:
+  - synonyms
+- a: постанова
+  b: розпорядження
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: постанова
+  b: ухвала
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: поступово
+  b: потроху
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: потік
+  b: річка
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: пошук
+  b: розвідка
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: прегарний
+  b: чудовий
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: прибувати
+  b: приходити
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: привіт
+  b: привітання
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: прикмета
+  b: симптом
+  polarity: synonym
+  sources:
+  - synonyms_karavansky
+- a: природа
+  b: характер
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: присудок
+  b: підмет
+  polarity: antonym
+  sources:
+  - wiktionary
+- a: проводжати
+  b: супроводжувати
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: проводжати
+  b: супроводити
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: продукти
+  b: харч
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: професія
+  b: фах
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+  - wiktionary
+- a: процес
+  b: хід
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: прудко
+  b: швидко
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: прямий
+  b: щирий
+  polarity: synonym
+  sources:
+  - synonyms_karavansky
+- a: південний
+  b: північний
+  polarity: antonym
+  sources:
+  - wiktionary
+- a: підробка
+  b: фальсифікат
+  polarity: synonym
+  sources:
+  - synonyms
+- a: підсумок
+  b: результат
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: радити
+  b: рекомендувати
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: радощі
+  b: радість
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: регламент
+  b: інструкція
+  polarity: synonym
+  sources:
+  - synonyms
+- a: родина
+  b: сім'я
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: рожевий
+  b: рум'яний
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: розв'язка
+  b: фінал
+  polarity: synonym
+  sources:
+  - synonyms
+- a: розкішний
+  b: чудовий
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: розповідь
+  b: історія
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: рутина
+  b: стереотип
+  polarity: synonym
+  sources:
+  - synonyms
+- a: рух
+  b: хід
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: ріка
+  b: річка
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: рішення
+  b: ухвала
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: сам
+  b: самотній
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: саме
+  b: щойно
+  polarity: synonym
+  sources:
+  - synonyms_karavansky
+- a: свято
+  b: фестиваль
+  polarity: synonym
+  sources:
+  - synonyms_karavansky
+- a: сердечний
+  b: щирий
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: сивий
+  b: сірий
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: склад
+  b: структура
+  polarity: synonym
+  sources:
+  - synonyms
+- a: словотворення
+  b: словотвір
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: слідкувати
+  b: стежити
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: спеціальність
+  b: фах
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+  - wiktionary
+- a: список
+  b: індекс
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: сподіватися
+  b: чекати
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: спосіб
+  b: стиль
+  polarity: synonym
+  sources:
+  - synonyms_karavansky
+- a: справді
+  b: щоправда
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: стан
+  b: табір
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: стереотип
+  b: штамп
+  polarity: synonym
+  sources:
+  - synonyms
+- a: стриманий
+  b: холодний
+  polarity: synonym
+  sources:
+  - synonyms_karavansky
+- a: строк
+  b: термін
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: стрічка
+  b: фільм
+  polarity: synonym
+  sources:
+  - synonyms
+- a: суміш
+  b: суржик
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: також
+  b: теж
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: там
+  b: тут
+  polarity: antonym
+  sources:
+  - wiktionary
+- a: темп
+  b: хода
+  polarity: synonym
+  sources:
+  - synonyms
+- a: темп
+  b: хід
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: тло
+  b: фон
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+  - wiktionary
+- a: той
+  b: цей
+  polarity: antonym
+  sources:
+  - wiktionary
+- a: турбувати
+  b: хвилювати
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: уривок
+  b: фрагмент
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: уривок
+  b: частина
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: установа
+  b: інституція
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: файний
+  b: чудовий
+  polarity: synonym
+  sources:
+  - synonyms
+- a: фокус
+  b: хитрощі
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: фокус
+  b: центр
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: фото
+  b: фотографія
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: харч
+  b: їжа
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: харчі
+  b: їжа
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: ходити
+  b: іти
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: частина
+  b: частка
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+  - wiktionary
+- a: частина
+  b: шматок
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: частина
+  b: інгредієнт
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: чомусь
+  b: щось
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+- a: чомусь
+  b: якось
+  polarity: synonym
+  sources:
+  - synonyms
+- a: інколи
+  b: іноді
+  polarity: synonym
+  sources:
+  - synonyms
+  - synonyms_karavansky
+rejected:
+- a: абстрактний
+  b: загальний
+  polarity: synonym
+  reason: абстрактний = утворений абстрагуванням; загальний = який стосується всіх.
+    Різні поняття.
+- a: абстрактний
+  b: книжний
+  polarity: synonym
+  reason: абстрактний = результат абстрагування; книжний = характерний для писемного
+    викладу. Різні поняття.
+- a: аварія
+  b: інцидент
+  polarity: synonym
+  reason: аварія = значне пошкодження механізму; інцидент = пригода, випадок. Гіперо-гіпонімічний
+    зв'язок, не синоніми.
+- a: акцент
+  b: вимова
+  polarity: synonym
+  reason: акцент — 'своєрідний характер вимови' (специфічний тип); вимова — загальне
+    поняття — гіпонім, не синонім
+- a: алегорія
+  b: двозначність
+  polarity: synonym
+  reason: алегорія = художній прийом, двозначність = неоднозначність. Різні поняття.
+- a: алегорія
+  b: підтекст
+  polarity: synonym
+  reason: алегорія = художній прийом (втілення абстрактного в образі); підтекст =
+    прихований зміст. Різні поняття.
+- a: арка
+  b: вікно
+  polarity: synonym
+  reason: Арка — архітектурна конструкція (склепіння); вікно — отвір для світла. Різні
+    елементи.
+- a: арка
+  b: двері
+  polarity: synonym
+  reason: Арка = дугоподібна конструкція, двері = отвір для входу/виходу; різні архітектурні
+    елементи.
+- a: архітектура
+  b: будівництво
+  polarity: synonym
+  reason: архітектура = мистецтво проектування будов; будівництво = процес спорудження.
+    Суміжні, але не синоніми.
+- a: атмосфера
+  b: повітря
+  polarity: synonym
+  reason: атмосфера = газова оболонка планети; повітря = суміш газів для дихання.
+    Атмосфера містить повітря, але це не синоніми.
+- a: багаж
+  b: те
+  polarity: synonym
+  reason: багаж = речі для перевезення; те = вказівний займенник «той» у середньому
+    роді. Жодного семантичного перетину.
+- a: багато
+  b: набагато
+  polarity: synonym
+  reason: багато = кількість («у великій кількості»); набагато = ступінь порівняння
+    («у великій мірі; значно»). Різні семантичні к
+- a: бажання
+  b: намір
+  polarity: synonym
+  reason: бажання = прагнення, хотіння (емоційне); намір = задум, план дій (раціональне).
+    Різні психологічні категорії.
+- a: базар
+  b: крик
+  polarity: synonym
+  reason: базар = торгівля/ринок; крик = сильний різкий звук голосу. Жаргонне «базар»
+    = шум не є літературним синонімом.
+- a: батько
+  b: тата
+  polarity: synonym
+  reason: обидва — назви батька; батько — офіційне, тато/тата — пестливе/розмовне;
+    реєстрова відмінність
+- a: бачення
+  b: зустріч
+  polarity: synonym
+  reason: бачення — сприйняття зором/візія; зустріч — контакт/побачення; різні концепти
+- a: бачення
+  b: побачення
+  polarity: synonym
+  reason: бачення (процес зорового сприйняття, візія) ≠ побачення (зустріч, побачення
+    закоханих); зовсім різні значення
+- a: безперечно
+  b: ясно
+  polarity: synonym
+  reason: безперечно = без сумніву (впевненість); ясно = чітко, зрозуміло. Різні семантичні
+    поля.
+- a: берегти
+  b: заощаджувати
+  polarity: synonym
+  reason: берегти = оберігати/не витрачати; заощаджувати = нагромаджувати заощадження.
+    Різні основні значення.
+- a: берегти
+  b: шанувати
+  polarity: synonym
+  reason: берегти = оберігати/зберігати; шанувати = поважати. Різні основні значення.
+- a: бережімо
+  b: заощаджувати
+  polarity: synonym
+  reason: бережімо — наказ.сп. від берегти «охороняти, захищати»; заощаджувати — «економити»;
+    різні значення
+- a: бережімо
+  b: зберігати
+  polarity: synonym
+  reason: обидва — збереження/охорона; берегти = охороняти, зберігати = тримати в
+    цілості
+- a: бережімо
+  b: шанувати
+  polarity: synonym
+  reason: берегти = оберігати/зберігати, шанувати = поважати; різні стрижневі значення,
+    немає спільного сенсу
+- a: бирка
+  b: ярлик
+  polarity: synonym
+  reason: бирка (діал.) = однорічна вівця; ярлик = етикетка, грамота; жодного перетину
+- a: бити
+  b: частувати
+  polarity: synonym
+  reason: бити — завдавати ударів; частувати — пригощати
+- a: брат
+  b: друг
+  polarity: synonym
+  reason: Брат — родинний звʼязок, друг — соціальний; різні відносини.
+- a: брат
+  b: друга
+  polarity: synonym
+  reason: Брат — іменник чоловічого роду; друга — нелематизована форма, не пара.
+- a: брат
+  b: другові
+  polarity: synonym
+  reason: брат = родинний зв'язок; друг = соціальний зв'язок (дружба); різні типи
+    стосунків
+- a: брата
+  b: племінник
+  polarity: synonym
+  reason: брат (родич, син тих самих батьків) ≠ племінник (син брата/сестри); різні
+    родинні зв'язки
+- a: брати
+  b: займати
+  polarity: synonym
+  reason: брати — фізично схоплювати/взяти; займати — займати місце/позичати; основні
+    значення не перетинаються
+- a: брати
+  b: набирати
+  polarity: synonym
+  reason: брати = схоплювати, брати руками; набирати = збирати/накопичувати/наймати.
+    Різні значення, хоча спільнокореневі.
+- a: бруківка
+  b: шлях
+  polarity: synonym
+  reason: бруківка — cobblestone pavement (тип покриття), не синонім шляху
+- a: буде
+  b: жити
+  polarity: synonym
+  reason: буде — форма майб.ч. 3 ос.одн. від бути; жити — існувати; різні дієслова
+- a: буде
+  b: стояти
+  polarity: synonym
+  reason: буде — форма майб.ч. від бути; стояти — перебувати вертикально; різні дієслова
+- a: будемо
+  b: жити
+  polarity: synonym
+  reason: будемо — форма бути; жити — окреме дієслово; різні лексеми
+- a: будемо
+  b: стояти
+  polarity: synonym
+  reason: будемо — 1 ос. мн. майб. часу від бути; стояти — зовсім інше дієслово
+- a: будете
+  b: жити
+  polarity: synonym
+  reason: будете — форма майб.ч. 2 ос.мн. від бути; жити — існувати; різні дієслова
+- a: будете
+  b: стояти
+  polarity: synonym
+  reason: будете — 2 ос. мн. майб. часу від бути; стояти — зовсім інше дієслово
+- a: будеш
+  b: жити
+  polarity: synonym
+  reason: будеш — 2 ос. одн. майб. часу від бути; жити — існувати/мешкати; різні дієслова
+- a: будеш
+  b: стояти
+  polarity: synonym
+  reason: будеш = 2 ос. одн. майб. часу від бути; стояти = перебувати у вертикальному
+    положенні. Жодного семантичного перетину.
+- a: будильник
+  b: годинник
+  polarity: synonym
+  reason: Будильник — різновид годинника зі спеціальним механізмом для дзвінка; гіперонім/гіпонім,
+    не синоніми.
+- a: буду
+  b: жити
+  polarity: synonym
+  reason: буду = 1 ос. одн. майб. часу від бути; жити = існувати/бути живим. Граматично
+    несумісні форми.
+- a: буду
+  b: стояти
+  polarity: synonym
+  reason: буду — 1 ос. одн. майб. часу від бути, стояти = перебувати у вертикальному
+    положенні; різні дієслова
+- a: будувати
+  b: піднімати
+  polarity: synonym
+  reason: будувати = споруджувати; піднімати = здіймати вгору. Різні основні значення.
+- a: будуть
+  b: жити
+  polarity: synonym
+  reason: будуть — форма бути (майб. час); жити — окреме дієслово
+- a: будуть
+  b: стояти
+  polarity: synonym
+  reason: будуть — форма майбутнього часу від бути; стояти — перебувати вертикально;
+    різні дієслова
+- a: будь-коли
+  b: завжди
+  polarity: synonym
+  reason: Будь-коли — «у всякий час» (будь-який момент), завжди — «повсякчас, постійно»
+    (універсальний квантор); різні значення.
+- a: будьмо
+  b: жити
+  polarity: synonym
+  reason: будьмо — форма наказового способу від бути; жити — існувати, проживати;
+    різні дієслова
+- a: будьмо
+  b: стояти
+  polarity: synonym
+  reason: будьмо — наказ.сп. від бути; стояти — перебувати вертикально; різні дієслова
+- a: будівля
+  b: дім
+  polarity: synonym
+  reason: 'Гіперо-гіпонімія: будівля — будь-яка споруда, дім — житлова будівля; не
+    взаємозамінні.'
+- a: булка
+  b: хліб
+  polarity: synonym
+  reason: булка = біла булочка (вид хліба); хліб = загальне поняття — гіпонімія, не
+    синонімія
+- a: бути
+  b: жив
+  polarity: synonym
+  reason: бути = існувати; жив = минулий час від жити (мешкати/існувати); різні дієслова
+- a: бути
+  b: жила
+  polarity: synonym
+  reason: бути — існувати, перебувати; жила — форма мин.ч. жін.р. від жити; різні
+    дієслова
+- a: бути
+  b: жити
+  polarity: synonym
+  reason: бути = існувати; жити = бути живим. Жити є окремим випадком буття, але не
+    синонімом.
+- a: бути
+  b: стояти
+  polarity: synonym
+  reason: бути = існувати/перебувати; стояти = бути у вертикальному положенні. Стояти
+    — окремий вид буття, не синонім.
+- a: буханка
+  b: коровай
+  polarity: synonym
+  reason: буханка — формовий хліб (буханець); коровай — весільний обрядовий хліб;
+    різні типи хлібних виробів
+- a: бігати
+  b: літати
+  polarity: synonym
+  reason: бігати = пересуватися по землі; літати = пересуватися в повітрі. Різні способи
+    руху.
+- a: бігти
+  b: перебігати
+  polarity: synonym
+  reason: Бігти = пересуватися бігом; перебігати (док.) = 'вибігати протягом певного
+    часу' — різні значення
+- a: бігти
+  b: поспішати
+  polarity: synonym
+  reason: бігти — фізичний рух бігом; поспішати — намагання зробити щось швидше; не
+    взаємозамінні.
+- a: бігти
+  b: пробігати
+  polarity: synonym
+  reason: бігти — швидко пересуватися; пробігати — бігти через/повз або бігати якийсь
+    час. Різні аспекти дії.
+- a: бігти
+  b: їдьте
+  polarity: synonym
+  reason: бігти — пересуватися бігом; їдьте — наказ.сп. від їхати; різні способи руху
+- a: біла
+  b: молочний
+  polarity: synonym
+  reason: білий — основний колір; молочний — відтінок білого; перетин у значенні кольору
+    (молочний = відтінок білого)
+- a: біле
+  b: молочний
+  polarity: synonym
+  reason: біле (сер. рід) і молочний (чол. рід) — різні граматичні форми; не взаємозамінні
+    в тому самому контексті. Леми білий/мол
+- a: білити
+  b: малювати
+  polarity: synonym
+  reason: білити = покривати білим розчином; малювати = зображувати фарбами. Різні
+    дії.
+- a: більш
+  b: гірше
+  polarity: synonym
+  reason: більш — маркер вищого ступеня порівняння; гірше — вищий ступінь від поганий;
+    різні функції
+- a: більш
+  b: швидше
+  polarity: synonym
+  reason: більш (more, comp. від багато) і швидше (faster, comp. від швидко) — різні
+    прислівники
+- a: біля
+  b: попри
+  polarity: synonym
+  reason: біля = коло/недалеко; попри = уздовж (застаріле). Різні просторові відношення.
+- a: білі
+  b: молочний
+  polarity: synonym
+  reason: білі (множина) і молочний (чол. рід однина) — різні граматичні форми; не
+    взаємозамінні.
+- a: важливий
+  b: великий
+  polarity: synonym
+  reason: важливий = significant/important; великий = big/large — різні значення,
+    немає спільного смислового поля
+- a: вартість
+  b: кошт
+  polarity: synonym
+  reason: вартість — виражена в грошах ціна; кошт(и) — гроші/капітал; вартість — абстрактна
+    величина, кошти — конкретні ресурси
+- a: вартість
+  b: оцінка
+  polarity: synonym
+  reason: вартість = виражена у грошах ціна; оцінка = процес/результат визначення
+    вартості або якості; пов'язані але не синоніми
+- a: ватажок
+  b: провідник
+  polarity: synonym
+  reason: ватажок = ватажок банди/загону (керівник ватаги, отаман); провідник = той,
+    хто вказує шлях — різні семантичні поля
+- a: ввічливий
+  b: привітний
+  polarity: synonym
+  reason: ввічливий = чемний/polite (дотримання правил пристойності); привітний =
+    friendly/щирий — різні риси характеру
+- a: везти
+  b: возити
+  polarity: synonym
+  reason: везти = unidirectional transport; возити = multidirectional/iterative —
+    різні аспектуальні категорії, не синоніми
+- a: великий
+  b: відомий
+  polarity: synonym
+  reason: великий = значний за розміром; відомий = знаний/славнозвісний; різні прикметники
+- a: вельми
+  b: добре
+  polarity: synonym
+  reason: вельми = дуже (підсилювач); добре = well/good (прислівник способу дії) —
+    різні семантичні категорії
+- a: вельми
+  b: чимало
+  polarity: synonym
+  reason: 'вельми = дуже (підсилювач ступеня); чимало = немало, досить багато (прислівник
+    кількості) — різні категорії: ступінь vs'
+- a: вередливий
+  b: змінний
+  polarity: synonym
+  reason: вередливий — примхливий (риса характеру); змінний — мінливий (об'єктивна
+    властивість); різні категорії
+- a: вершина
+  b: хребет
+  polarity: synonym
+  reason: вершина = peak/summit (найвища частина); хребет = ridge/spine — різні частини
+    гори, не синоніми
+- a: весна
+  b: квітень
+  polarity: synonym
+  reason: весна = season; квітень = month — гіпонім/гіперонім, не синонім
+- a: весна
+  b: молодість
+  polarity: synonym
+  reason: Лише метафоричний зв'язок ('весна життя'); не справжні синоніми.
+- a: весна
+  b: яр
+  polarity: synonym
+  reason: весна = spring; яр = ravine (глибока довга западина) — абсолютно різні значення,
+    омонімія/паронімія
+- a: вести
+  b: впроваджувати
+  polarity: synonym
+  reason: вести = lead/conduct; впроваджувати = implement/introduce — різні семантичні
+    домени
+- a: вести
+  b: проводжати
+  polarity: synonym
+  reason: вести = lead/guide (широкий спектр); проводжати = see off/accompany someone
+    departing — різні семантичні ролі
+- a: весілля
+  b: сватання
+  polarity: synonym
+  reason: весілля = wedding (обряд одруження); сватання = matchmaking/proposal — різні
+    етапи весільного обряду, не синоніми
+- a: взяти
+  b: затримати
+  polarity: synonym
+  reason: взяти = take; затримати = detain/delay — абсолютно різні значення
+- a: вибачати
+  b: дарувати
+  polarity: synonym
+  reason: вибачати = forgive; дарувати = give as gift (основне значення) — різні семантичні
+    домени, хоча дарувати має вторинне зна
+- a: вибачати
+  b: забувати
+  polarity: synonym
+  reason: вибачати = forgive; забувати = forget — тематично суміжні, але не синонімічні
+- a: вибігати
+  b: вилітати
+  polarity: synonym
+  reason: вибігати = run out; вилітати = fly out — співгіпоніми руху назовні, але
+    різний спосіб пересування
+- a: вигук
+  b: крик
+  polarity: synonym
+  reason: вигук = exclamation (голосно викрикнуте слово/фраза); крик = shout/scream
+    (сильний різкий звук голосу) — вигук є вербаль
+- a: вид
+  b: краєвид
+  polarity: synonym
+  reason: вид¹ — обличчя (основне значення); краєвид — пейзаж/ландшафт; хоча вид може
+    означати «те, що видно», основне значення не
+- a: видовище
+  b: вистава
+  polarity: synonym
+  reason: видовище = spectacle (ширше); вистава = theatrical performance (вужче) —
+    гіпонім, не синонім
+- a: виділяти
+  b: наголошувати
+  polarity: synonym
+  reason: виділяти = відокремлювати, виокремлювати фізично; наголошувати = акцентувати
+    увагу. Переносне значення виділяти ('підкре
+- a: викладач
+  b: вчителя
+  polarity: synonym
+  reason: обидва — педагогічні працівники; викладач — у вищій школі, вчитель — у школі;
+    різниця в регістрі, а не в значенні
+- a: викладач
+  b: професор
+  polarity: synonym
+  reason: професор — наукове звання, викладач — загальна назва; гіперо-гіпонімічні
+    відношення (професор ⊆ викладач)
+- a: викликати
+  b: порушувати
+  polarity: synonym
+  reason: 'викликати = cause/provoke; порушувати = violate/raise (issue) — різні семантичні
+    ролі: каузація vs ініціювання'
+- a: виконання
+  b: розпорядок
+  polarity: synonym
+  reason: виконання — здійснення, реалізація; розпорядок — встановлений порядок, режим;
+    різні поняття
+- a: виконувати
+  b: виробляти
+  polarity: synonym
+  reason: виконувати = execute/carry out; виробляти = produce/manufacture — виконання
+    vs виробництво, різні процеси
+- a: виконувати
+  b: відбувати
+  polarity: synonym
+  reason: виконувати = execute/carry out; відбувати = serve (term/punishment) — контекстно-залежний
+    збіг, але різні ядерні значенн
+- a: вилітати
+  b: випадати
+  polarity: synonym
+  reason: вилітати = fly out; випадати = fall out — різний спосіб руху (летіти vs
+    падати)
+- a: вимовляти
+  b: казати
+  polarity: synonym
+  reason: вимовляти — артикулювати/промовляти звуки; казати — повідомляти/говорити
+    щось; фонетичний vs комунікативний акт
+- a: виносити
+  b: зберігати
+  polarity: synonym
+  reason: виносити = забирати назовні; зберігати = оберігати, тримати цілим; протилежні
+    напрямки дії щодо об'єкта
+- a: виносити
+  b: носити
+  polarity: synonym
+  reason: виносити = carry out; носити = carry (general) — префікс 'ви-' додає просторову
+    специфікацію, не синоніми
+- a: виносити
+  b: приносити
+  polarity: synonym
+  reason: виносити = carry OUT; приносити = BRING — протилежні просторові префікси
+    (ви- vs при-)
+- a: випадати
+  b: сідати
+  polarity: synonym
+  reason: 'Не синоніми: випадати — падати звідкись; сідати — приймати сидяче положення.'
+- a: виправлення
+  b: правка
+  polarity: synonym
+  reason: виправлення = correction (ширше); правка = technical editing/proofreading
+    (вужче, технічне)
+- a: випробування
+  b: екзамен
+  polarity: synonym
+  reason: 'Гіперо-гіпонімія: екзамен — оцінка знань, випробування — ширше (будь-яке
+    випробування чогось).'
+- a: виробляти
+  b: здійснювати
+  polarity: synonym
+  reason: виробляти — виготовляти/продукувати; здійснювати — виконувати/реалізовувати
+- a: вирушати
+  b: відбувати
+  polarity: synonym
+  reason: вирушати = set out/depart; відбувати = serve/undergo — абсолютно різні значення
+- a: високий
+  b: відмінний
+  polarity: synonym
+  reason: Високий — «який має велику відстань знизу вгору»; відмінний — відмінний/чудовий.
+    Різні семантичні поля.
+- a: високий
+  b: якісний
+  polarity: synonym
+  reason: високий (tall/high) і якісний (qualitative/high-quality) — різні прикметники
+- a: вистава
+  b: виставка
+  polarity: synonym
+  reason: вистава = performance; виставка = exhibition — перформанс vs статичний показ,
+    абсолютно різні поняття
+- a: вистава
+  b: концерт
+  polarity: synonym
+  reason: вистава = theatrical performance; концерт = concert — різні типи вистав/заходів,
+    не синоніми
+- a: вистачати
+  b: діставати
+  polarity: synonym
+  reason: 'вистачати = be sufficient/enough; діставати = obtain/get — різні значення:
+    достатність vs отримання'
+- a: витрати
+  b: кошти
+  polarity: synonym
+  reason: витрати = expenses (витрачені гроші); кошти = funds/money — метонімія, не
+    синонімія
+- a: виходити
+  b: виїжджати
+  polarity: synonym
+  reason: виходити = exit on foot; виїжджати = exit by vehicle — різний спосіб пересування
+- a: виходити
+  b: йти
+  polarity: synonym
+  reason: виходити = exit/go out; йти = go/walk — префікс 'ви-' додає напрямок, гіпонім,
+    не синонім
+- a: виходити
+  b: ходити
+  polarity: synonym
+  reason: виходити = exit/go out; ходити = walk/go (iterative) — різний напрямок/значення
+    руху
+- a: вкрай
+  b: набагато
+  polarity: synonym
+  reason: 'вкрай (СУМ-11: «Дуже, надзвичайно; до краю» / «Повно, вщерть») — абсолютна
+    крайність; набагато — порівняльний ступінь. Р'
+- a: вночі
+  b: опівночі
+  polarity: synonym
+  reason: 'Різна часова специфіка: вночі = у нічний час, опівночі = о 12-й ночі; не
+    взаємозамінні.'
+- a: вовк
+  b: сірий
+  polarity: synonym
+  reason: Вовк — хижак; сірий — колір. Жодного спільного лексичного значення.
+- a: вогнище
+  b: вогонь
+  polarity: synonym
+  reason: 'Гіперо-гіпонімічний зв''язок: вогнище — конкретне розкладене багаття, вогонь
+    — загальне явище горіння; не синоніми.'
+- a: вода
+  b: напій
+  polarity: synonym
+  reason: Вода — конкретна рідина; напій — спеціально приготовлена рідина для пиття.
+    Гіперо-гіпонімія, не синоніми.
+- a: водити
+  b: ходити
+  polarity: synonym
+  reason: водити = lead/drive (перехідне); ходити = walk (неперехідне) — різна валентність
+    і значення
+- a: воду
+  b: напій
+  polarity: synonym
+  reason: вода — рідина, напій — будь-який питний продукт; гіперо-гіпонімічний зв'язок
+- a: возити
+  b: рухати
+  polarity: synonym
+  reason: Возити — переміщати транспортом (специфічний спосіб), рухати — переміщати
+    загалом; гіпонімічне відношення.
+- a: вокзал
+  b: станція
+  polarity: synonym
+  reason: Вокзал — будинок залізничної станції; станція — ширше поняття (залізнична,
+    автобусна тощо). Гіперо-гіпонімія.
+- a: волонтер
+  b: охочий
+  polarity: synonym
+  reason: Волонтер — заст. доброволець на військовій службі; охочий — той, хто виявляє
+    бажання. Різні семантичні поля.
+- a: вплив
+  b: враження
+  polarity: synonym
+  reason: Вплив — дія на когось/щось; враження — те, що залишається у свідомості від
+    побаченого. Різні поняття.
+- a: вплив
+  b: ефект
+  polarity: synonym
+  reason: Вплив — дія/причина, ефект — результат/враження; різні ланки каузального
+    ланцюга.
+- a: враження
+  b: дума
+  polarity: synonym
+  reason: Враження — сенсорний/емоційний відбиток; дума — когнітивний продукт мислення.
+- a: враження
+  b: думка
+  polarity: synonym
+  reason: Враження — сенсорний відбиток, думка — когнітивний продукт; різні категорії.
+- a: враження
+  b: поняття
+  polarity: synonym
+  reason: враження = чуттєвий досвід; поняття = логічна категорія, концепт; різні
+    когнітивні рівні
+- a: вродливий
+  b: ладен
+  polarity: synonym
+  reason: вродливий = гарний зовні; ладен = готовий/згоден (основне значення); різні
+    прикметники
+- a: вродливий
+  b: чудовий
+  polarity: synonym
+  reason: Вродливий — про фізичну вроду; чудовий — «прекрасний, чудесний» про якість
+    загалом. Різні семантичні поля.
+- a: вставати
+  b: відкриватися
+  polarity: synonym
+  reason: Вставати — підводитися на ноги; відкриватися — ставати відкритим. Жодного
+    спільного значення.
+- a: вулиця
+  b: провулок
+  polarity: synonym
+  reason: вулиця — простір між рядами будинків; провулок — вузький простір між двома
+    вулицями. Гіперо-гіпонім.
+- a: вхід
+  b: двері
+  polarity: synonym
+  reason: Вхід — дія входження або отвір; двері — конструктивний елемент. Не синоніми.
+- a: вхід
+  b: під'їзд
+  polarity: synonym
+  reason: Під'їзд відсутній у СУМ-11 та СУМ-20 (А–Р). У сучасному вжитку перетинаються
+    (вхід до будинку), але без словникового під
+- a: вхід
+  b: хід
+  polarity: synonym
+  reason: Вхід — входження/отвір; хід — рух/переміщення. Різні поняття.
+- a: вчитель
+  b: професор
+  polarity: synonym
+  reason: Професор — викладач вищого рангу; гіперо-гіпонімічний зв'язок, не синоніми.
+- a: вчителя
+  b: професор
+  polarity: synonym
+  reason: вчитель — шкільний педагог; професор — наукове звання у вищій школі; гіпонімія,
+    не синоніми
+- a: вчора
+  b: напередодні
+  polarity: synonym
+  reason: Вчора — конкретний попередній день; напередодні — «у попередній день або
+    взагалі у попередній час». Різна референція.
+- a: відбувати
+  b: здійснювати
+  polarity: synonym
+  reason: відбувати — пасивне переживання (відбувати покарання); здійснювати — активне
+    виконання; різні агентивні ролі
+- a: відбувати
+  b: зносити
+  polarity: synonym
+  reason: Відбувати — виконувати повинність, відпрацьовувати; зносити — приносити
+    докупи, збирати. Зовсім різні значення.
+- a: відбувати
+  b: подаватися
+  polarity: synonym
+  reason: відбувати (виконувати обов'язок, повинність) ≠ подаватися (вирушати); різні
+    значення
+- a: відділ
+  b: факультет
+  polarity: synonym
+  reason: Факультет — «Підрозділ (частина, відділ) вищого навчального закладу»; гіперо-гіпонімія,
+    не синоніми.
+- a: відкривати
+  b: знаходити
+  polarity: synonym
+  reason: відкривати = робити відкритим; знаходити = виявляти щось загублене/невідоме;
+    різні дії
+- a: відкриватися
+  b: починатися
+  polarity: synonym
+  reason: відкриватися — розкриватися, ставати доступним; починатися — починати здійснюватися.
+    Різні дієслова, не синоніми.
+- a: відмова
+  b: відповідь
+  polarity: synonym
+  reason: Відмова — різновид відповіді (негативної); гіперо-гіпонімічний зв'язок,
+    не повна синонімія.
+- a: відмова
+  b: незгода
+  polarity: synonym
+  reason: Відмова — негативна відповідь на прохання; незгода — «відсутність взаєморозуміння,
+    чвари». Різні поняття.
+- a: відмова
+  b: сватання
+  polarity: synonym
+  reason: Відмова — негативна відповідь; сватання — обряд сватання. Жодного спільного
+    значення.
+- a: відповідальність
+  b: відповідь
+  polarity: synonym
+  reason: відповідальність — обов'язок відповідати; відповідь — реакція на запитання;
+    пароніми, не синоніми
+- a: відповідник
+  b: калька
+  polarity: synonym
+  reason: Відповідник — лінгв. «слово однієї мови, що означає таке саме поняття, як
+    і слово іншої мови»; калька — різновид запозич
+- a: відповідник
+  b: синонім
+  polarity: synonym
+  reason: 'Різні поняття: відповідник — еквівалент у іншій системі (мові); синонім
+    — близьке за значенням слово в тій самій мові. Н'
+- a: відпустка
+  b: канікули
+  polarity: synonym
+  reason: відпустка — звільнення від роботи; канікули — перерва в навчанні; різні
+    сфери
+- a: відтінок
+  b: інтонація
+  polarity: synonym
+  reason: відтінок = різновид кольору або нюанс значення; інтонація = мелодійний лад
+    мови; різні домени
+- a: відходити
+  b: зникати
+  polarity: synonym
+  reason: відходити — віддалятися пішки; зникати — переставати бути видимим/існувати;
+    різні наслідки дії
+- a: вік
+  b: життя
+  polarity: synonym
+  reason: Вік — «тривалість життя»; життя — саме існування. Різні поняття, хоча й
+    тематично пов'язані.
+- a: вік
+  b: століття
+  polarity: synonym
+  reason: вік = період життя/тривалість існування; століття = 100 років; різні значення,
+    хоча споріднені
+- a: вік
+  b: час
+  polarity: synonym
+  reason: вік = age/century (конкретний проміжок); час = time (загальне) — гіпонімія
+- a: вірити
+  b: довіряти
+  polarity: synonym
+  reason: Вірити = бути переконаним у чомусь, довіряти = покладатися на когось; суміжні,
+    але різні об'єкти та природа дії.
+- a: вірш
+  b: поезія
+  polarity: synonym
+  reason: Вірш — окремий поетичний твір; поезія — вид мистецтва. Гіперо-гіпонімія,
+    не синоніми.
+- a: вірш
+  b: пісня
+  polarity: synonym
+  reason: Вірш — поетичний твір; пісня — словесно-музичний твір для співу. Різні жанри.
+- a: вітальня
+  b: кімната
+  polarity: synonym
+  reason: Вітальня — різновид кімнати (гіперо-гіпонімія), не повні синоніми.
+- a: вітати
+  b: запрошувати
+  polarity: synonym
+  reason: вітати — поздоровляти/зустрічати привітанням; запрошувати — кликати; зовсім
+    різні дії
+- a: вітати
+  b: частувати
+  polarity: synonym
+  reason: вітати — поздоровляти/вітати при зустрічі; частувати — пригощати
+- a: галка
+  b: кава
+  polarity: synonym
+  reason: Галка — птах; кава — напій/рослина. Жодного спільного значення; різні семантичні
+    поля.
+- a: гарний
+  b: ладен
+  polarity: synonym
+  reason: гарний = вродливий/добрий; ладен = готовий/згоден/добрий (діалектне); різні
+    основні значення
+- a: гніздо
+  b: кут
+  polarity: synonym
+  reason: гніздо — місце для виведення пташенят; кут — куток. Метафоричний збіг ('родинне
+    гніздо' / 'свій кут') недостатній для си
+- a: година
+  b: лекція
+  polarity: synonym
+  reason: Година — одиниця часу (60 хвилин); лекція — навчальний виклад. Немає спільного
+    значення.
+- a: година
+  b: урок
+  polarity: synonym
+  reason: година = одиниця часу (60 хв); урок = навчальне заняття — різні поняття,
+    хоча пов'язані в шкільному контексті
+- a: година
+  b: час
+  polarity: synonym
+  reason: година = hour (одиниця часу); час = time (загальне поняття) — гіпонімія,
+    не синонімія
+- a: головний
+  b: передній
+  polarity: synonym
+  reason: Головний = основний, передній = той, що спереду; різні просторові/якісні
+    категорії.
+- a: головний
+  b: перший
+  polarity: synonym
+  reason: Головний = основний/найважливіший, перший = порядковий номер; різні значення.
+- a: голосний
+  b: дзвінкий
+  polarity: synonym
+  reason: Голосний = сильний за звучанням (гучність), дзвінкий = який чітко/металево
+    звучить (тембр); різні акустичні характеристи
+- a: гора
+  b: горище
+  polarity: synonym
+  reason: Гора = підвищення рельєфу, горище = приміщення між стелею і покрівлею; спільнокореневі,
+    але різні значення.
+- a: гордість
+  b: гідність
+  polarity: synonym
+  reason: Гордість = почуття задоволення від досягнень, гідність = сукупність позитивних
+    моральних якостей; різні концепти.
+- a: гордість
+  b: честь
+  polarity: synonym
+  reason: гордість (pride/самоповага) і честь (honor) — різні поняття
+- a: горище
+  b: під
+  polarity: synonym
+  reason: горище — приміщення під дахом; під — прийменник; різні частини мови, різні
+    значення
+- a: гостинець
+  b: шлях
+  polarity: synonym
+  reason: гостинець² зі значенням 'великий шлях' — лише в Грінченку 1907, діалектне;
+    СУМ-11 і СУМ-20 не фіксують
+- a: готувати
+  b: збирати
+  polarity: synonym
+  reason: Готувати = робити придатним/готовим, збирати = складати докупи; різні дії
+    без спільного значення.
+- a: грати
+  b: різати
+  polarity: synonym
+  reason: 'СУМ-11: грати — іменник ''ґрати/переплетення'', різати — дієслово ''розділяти
+    гострим''; жодного перетину навіть з урахуванн'
+- a: гроза
+  b: злива
+  polarity: synonym
+  reason: Гроза = грім + блискавка + дощ, злива = дуже сильний дощ; злива є складовою
+    грози, але не синонімом.
+- a: громадянин
+  b: особа
+  polarity: synonym
+  reason: Громадянин = особа з правовим статусом у державі (гіпонім), особа = будь-яка
+    окрема людина (гіперонім).
+- a: гуляти
+  b: ходити
+  polarity: synonym
+  reason: гуляти — «Ходити не поспішаючи, для відпочинку» — це вид ходіння (гіпонімія),
+    не синонім
+- a: гучний
+  b: дзвінкий
+  polarity: synonym
+  reason: Гучний = який далеко чути (гучність), дзвінкий = з металевим/чистим тембром;
+    різні акустичні характеристики.
+- a: гідний
+  b: шановна
+  polarity: synonym
+  reason: гідний = вартий/заслуговує, шановна = шанована (ввічливе звертання); різні
+    значення
+- a: гідність
+  b: честь
+  polarity: synonym
+  reason: Гідність = внутрішні моральні якості, честь = зовнішня соціальна репутація;
+    суміжні, але не синонімічні концепти.
+- a: гідність
+  b: я
+  polarity: synonym
+  reason: гідність (dignity) і я (займенник 1 особи) — жодного спільного значення
+- a: гіпотетичний
+  b: можливий
+  polarity: synonym
+  reason: Гіпотетичний = заснований на гіпотезі (гаданий), можливий = такий, що може
+    статися; різний ступінь імовірності та різне
+- a: далеко
+  b: значно
+  polarity: synonym
+  reason: далеко — просторовий прислівник; значно — прислівник міри/ступеня; різні
+    семантичні розряди
+- a: дата
+  b: день
+  polarity: synonym
+  reason: Дата = календарний час події (число+місяць+рік), день = частина доби або
+    календарна одиниця; дата включає день, але не н
+- a: двері
+  b: доступ
+  polarity: synonym
+  reason: Двері — отвір у стіні, доступ — прохід; не взаємозамінні.
+- a: двір
+  b: садиба
+  polarity: synonym
+  reason: Двір — господарська ділянка біля будинку, садиба — житловий будинок із будівлями
+    та землею; різний масштаб, не синоніми.
+- a: деколи
+  b: зрідка
+  polarity: synonym
+  reason: Деколи = іноді/часом (нейтральна частота), зрідка = дуже рідко (нижча частота);
+    різна частотність.
+- a: дерун
+  b: млинець
+  polarity: synonym
+  reason: Дерун — оладка з тертої картоплі; млинець — тонкий коржик із рідкого тіста.
+    Різні страви.
+- a: деталь
+  b: обставина
+  polarity: synonym
+  reason: Деталь = окремий факт/подробиця, обставина = явище/подія, що супроводжує;
+    суміжні, але не синоніми.
+- a: дефект
+  b: мінус
+  polarity: synonym
+  reason: СУМ-11 і СУМ-20 фіксують лише математичні/кількісні значення 'мінус'; значення
+    'недолік' є розмовним калькуванням і не п
+- a: дефект
+  b: прогалина
+  polarity: synonym
+  reason: дефект = вада/несправність; прогалина = пропуск/порожнє місце; різні поняття
+- a: джерело
+  b: ключ
+  polarity: synonym
+  reason: СУМ-11, СУМ-20 і Грінченко не фіксують значення 'водне джерело' для 'ключ';
+    це значення є росіянізмом (рос. ключ = джере
+- a: джерельний
+  b: чистий
+  polarity: synonym
+  reason: Джерельний = прикм. до джерело (походження), чистий = незабруднений (стан);
+    різні семантичні категорії.
+- a: дисципліна
+  b: розпорядок
+  polarity: synonym
+  reason: Дисципліна = дотримання правил, розпорядок = заздалегідь встановлена послідовність
+    дій; різні категорії.
+- a: добре
+  b: значно
+  polarity: synonym
+  reason: добре — якісний прислівник (як?); значно — кількісний інтенсифікатор (наскільки?);
+    різні функції
+- a: добро
+  b: спадщина
+  polarity: synonym
+  reason: 'Не синоніми: добро — благо, позитивна цінність; спадщина — майно/культурні
+    надбання після смерті.'
+- a: добродій
+  b: людина
+  polarity: synonym
+  reason: Добродій = ввічлива форма звертання/застаріле 'пан'; людина = біологічний
+    вид/особистість; різні семантичні поля.
+- a: добродій
+  b: чоловік
+  polarity: synonym
+  reason: Добродій = застаріле/ввічливе 'пан, чоловік із привілейованих шарів'; чоловік
+    = особа чоловічої статі; різні конотації.
+- a: доброта
+  b: серце
+  polarity: antonym
+  reason: 'Не антоніми: доброта — моральна якість (чутливе ставлення), серце — орган
+    або символ почуттів; тематично пов''язані, але'
+- a: додавання
+  b: додаток
+  polarity: synonym
+  reason: Додавання = процес/дія, додаток = результат (те, що додається); процес vs.
+    об'єкт.
+- a: документ
+  b: карта
+  polarity: synonym
+  reason: документ = офіційний папір; карта = географічне зображення або гральна картка;
+    різні поняття
+- a: документ
+  b: лист
+  polarity: synonym
+  reason: 'Лист є різновидом документа, але не синонім: документ ширше поняття (гіперонім).'
+- a: документ
+  b: чек
+  polarity: synonym
+  reason: чек — різновид документа (гіпонім), не синонім
+- a: домашній
+  b: родинний
+  polarity: synonym
+  reason: домашній = стосовно дому/господарства; родинний = стосовно родини/сім'ї;
+    суміжні але різні концепти
+- a: допис
+  b: репортаж
+  polarity: synonym
+  reason: Допис = загальна стаття/повідомлення, репортаж = специфічний журналістський
+    жанр з місця подій; різні жанри.
+- a: доповідач
+  b: референт
+  polarity: synonym
+  reason: доповідач = той, хто виголошує доповідь; референт = посадова особа/той,
+    хто готує реферат; різні ролі
+- a: допомога
+  b: порятунок
+  polarity: synonym
+  reason: Допомога = сприяння (широке), порятунок = уникнення небезпеки/загибелі (вузьке,
+    гіпонім).
+- a: дорога
+  b: доступ
+  polarity: synonym
+  reason: дорога = шлях сполучення; доступ = можливість увійти/скористатися; різні
+    поняття
+- a: дорога
+  b: курс
+  polarity: synonym
+  reason: дорога — шлях сполучення; курс — напрям руху; споріднені, але не синоніми.
+- a: дорога
+  b: маршрут
+  polarity: synonym
+  reason: дорога = шлях/траса; маршрут = запланований шлях; суміжні, не синоніми
+- a: досвід
+  b: знання
+  polarity: synonym
+  reason: Досвід = сукупність знань, здобутих на практиці; знання = обізнаність у
+    чомусь; досвід включає знання, але не навпаки.
+- a: досвід
+  b: мудрість
+  polarity: synonym
+  reason: Досвід = набуті знання/вміння, мудрість = глибоке розуміння життя; досвід
+    може вести до мудрості, але не синонім.
+- a: досліджувати
+  b: розглядати
+  polarity: synonym
+  reason: Досліджувати = глибоко вивчати (науковий метод), розглядати = уважно оглядати/обговорювати
+    (поверхневий аналіз); різна г
+- a: досліджувати
+  b: розробляти
+  polarity: synonym
+  reason: Досліджувати = вивчати існуюче, розробляти = створювати нове/робити придатним;
+    різні фази діяльності.
+- a: доступ
+  b: хід
+  polarity: synonym
+  reason: Доступ — прохід/підхід; хід — рух/переміщення; різні семантичні поля.
+- a: доступ
+  b: шлях
+  polarity: synonym
+  reason: доступ = можливість/право увійти; шлях = дорога/маршрут; не синоніми — доступ
+    не є фізичним шляхом
+- a: дохід
+  b: прибуток
+  polarity: synonym
+  reason: дохід — застаріла форма дохід (надходження), прибуток = дохід мінус витрати;
+    близькі в фінансовій сфері, але не тотожні;
+- a: дощ
+  b: злива
+  polarity: synonym
+  reason: Злива — «дуже сильний дощ»; гіперо-гіпонімічні відносини, не синоніми.
+- a: друг
+  b: людина
+  polarity: synonym
+  reason: 'Гіперо-гіпонімічні відносини: друг — конкретний тип людини, не взаємозамінні.'
+- a: друга
+  b: людина
+  polarity: synonym
+  reason: друга = приятель/другий; людина = особа/індивід; друг є людиною, але це
+    гіперо-гіпонімія, не синонімія
+- a: друга
+  b: товариш
+  polarity: synonym
+  reason: «Друга» не є самостійною лемою (родовий/знахідний відмінок від «друг»),
+    не позначає окрему особу жіночої статі.
+- a: другий
+  b: протилежний
+  polarity: synonym
+  reason: другий — порядковий числівник '2-й' або 'інший'; протилежний — розташований
+    напроти, супротивний. Не синоніми.
+- a: другові
+  b: людина
+  polarity: synonym
+  reason: другові — форма давального відмінка від друг; людина — назва біологічного
+    виду; різні поняття
+- a: другові
+  b: товариш
+  polarity: synonym
+  reason: другові — дат.в. від друг; товариш — «близька людина, друг»; обидва на позначення
+    друга
+- a: дружити
+  b: ходити
+  polarity: synonym
+  reason: Дружити — соціальна дія, ходити — фізичне переміщення; немає спільного значення.
+- a: дуб
+  b: човен
+  polarity: synonym
+  reason: дуб (oak tree) і човен (boat) — жодного спільного значення
+- a: дума
+  b: оцінка
+  polarity: synonym
+  reason: Дума — думка/роздум, оцінка — судження про вартість/цінність; різні поняття.
+- a: дума
+  b: поняття
+  polarity: synonym
+  reason: дума = думка, міркування; поняття = концепт, логічна категорія; пов'язані
+    але не синоніми
+- a: дума
+  b: пісня
+  polarity: synonym
+  reason: Дума — специфічний епічний жанр, гіпонім до пісні; родо-видове відношення,
+    не синонімія.
+- a: дума
+  b: розуміння
+  polarity: synonym
+  reason: Дума — продукт мислення, розуміння — здатність/процес осягнення; різні категорії.
+- a: дума
+  b: характер
+  polarity: synonym
+  reason: Дума — думка, характер — сукупність психічних властивостей особистості;
+    немає спільного значення.
+- a: думати
+  b: припускати
+  polarity: synonym
+  reason: думати — мислити загалом (гіперонім); припускати — робити припущення (гіпонім);
+    родо-видові відношення, не синоніми
+- a: думка
+  b: оцінка
+  polarity: synonym
+  reason: Думка — продукт мислення, оцінка — судження про цінність/вартість; різні
+    поняття.
+- a: думка
+  b: поняття
+  polarity: synonym
+  reason: Думка — особистий продукт мислення, поняття — формально-логічна категорія
+    (узагальнення ознак); не взаємозамінні.
+- a: думка
+  b: пропозиція
+  polarity: synonym
+  reason: думка — продукт мислення, міркування; пропозиція — те, що пропонується.
+    Різні поняття.
+- a: думка
+  b: пісня
+  polarity: synonym
+  reason: 'Цілком різні поняття: думка — продукт мислення, пісня — музичний твір.'
+- a: думка
+  b: розуміння
+  polarity: synonym
+  reason: Думка — продукт мислення, розуміння — процес/здатність осягнення; різні
+    категорії.
+- a: думка
+  b: характер
+  polarity: synonym
+  reason: Думка — продукт мислення, характер — сукупність психічних рис особистості.
+- a: дядько
+  b: селянин
+  polarity: synonym
+  reason: Дядько — брат батька/матері або розмовне звертання до чоловіка, селянин
+    — житель села/хлібороб; різні поняття.
+- a: діалектний
+  b: обласний
+  polarity: synonym
+  reason: Діалектний — лінгвістичний термін (від діалект), обласний — адміністративний
+    (від область); рос. «областной» може означа
+- a: ділянка
+  b: шматок
+  polarity: synonym
+  reason: ділянка = частина земельної площі; шматок = частина предмета/речовини; різні
+    сфери застосування
+- a: дія
+  b: ефект
+  polarity: synonym
+  reason: Дія — процес/активність, ефект — результат/враження; різні фази каузального
+    ланцюга.
+- a: дія
+  b: обряд
+  polarity: synonym
+  reason: Дія = робота, діяльність; обряд = сукупність установлених звичаєм дій —
+    дія ширше, гіперонім
+- a: дія
+  b: церемонія
+  polarity: synonym
+  reason: дія = action (загальне); церемонія = ceremony (ритуал) — церемонія є видом
+    дії, але не синонім
+- a: діяч
+  b: персонаж
+  polarity: synonym
+  reason: Діяч = людина, що діє в якійсь сфері; персонаж = дійова особа в художньому
+    творі — різні поняття
+- a: екзамен
+  b: перевірка
+  polarity: synonym
+  reason: 'Гіперо-гіпонімія: екзамен — конкретний вид перевірки знань, перевірка —
+    ширше поняття.'
+- a: екзамен
+  b: тренування
+  polarity: synonym
+  reason: Екзамен — перевірка/оцінювання, тренування — навчання/вправи; різні цілі
+    (оцінка vs розвиток).
+- a: епітет
+  b: характеристика
+  polarity: synonym
+  reason: Епітет — коротке художнє означення; характеристика — розгорнутий опис істотних
+    ознак; різний масштаб.
+- a: ефект
+  b: результат
+  polarity: synonym
+  reason: Ефект — сильне враження або наслідок, результат — кінцевий підсумок; частковий
+    перетин, але не синоніми.
+- a: жест
+  b: знак
+  polarity: synonym
+  reason: 'Гіперо-гіпонімія: жест — конкретний тип знаку (руховий), знак — ширша категорія.'
+- a: жест
+  b: рух
+  polarity: synonym
+  reason: 'Гіперо-гіпонімія: жест — комунікативний рух; рух — загальне поняття переміщення.'
+- a: жест
+  b: сигнал
+  polarity: synonym
+  reason: 'Гіперо-гіпонімія: жест може бути сигналом, але сигнал — ширше поняття (зоровий,
+    слуховий тощо).'
+- a: жив
+  b: стояти
+  polarity: synonym
+  reason: жив — присудкове слово «живий» або форма мин.ч. від жити; стояти — перебувати
+    у вертикальному положенні; різні дієслова
+- a: живий
+  b: живучий
+  polarity: synonym
+  reason: Живий — стан (alive), живучий — якість (tenacious, resilient); різні категорії.
+- a: живий
+  b: образний
+  polarity: synonym
+  reason: Живий — який живе, життєвий; образний — який змальовує за допомогою образів
+    — тематично пов'язані, але не синоніми
+- a: живий
+  b: реальний
+  polarity: synonym
+  reason: 'Різні поняття: живий — який існує біологічно, реальний — який існує в дійсності
+    (протилежне уявному).'
+- a: жила
+  b: стояти
+  polarity: synonym
+  reason: Жила — кровоносна судина (анатомія), стояти — вертикальне положення; немає
+    спільного значення.
+- a: жити
+  b: сидіти
+  polarity: synonym
+  reason: Жити — бути живим/існувати/мешкати, сидіти — перебувати в сидячому положенні;
+    жодного семантичного перетину в літературн
+- a: жити
+  b: стояти
+  polarity: synonym
+  reason: Жити — існувати/бути живим, стояти — фізичне вертикальне положення; немає
+    спільного значення.
+- a: жити
+  b: є
+  polarity: synonym
+  reason: жити (to live) і є (is, форма бути) — різні дієслова
+- a: житло
+  b: кут
+  polarity: synonym
+  reason: житло — приміщення для проживання; кут — геометрична фігура або куток приміщення.
+    Немає спільного значення.
+- a: житло
+  b: поріг
+  polarity: synonym
+  reason: Житло — приміщення для життя, поріг — деревʼяний брус під дверима; немає
+    спільного значення.
+- a: життя
+  b: побут
+  polarity: synonym
+  reason: життя (загальне існування, буття) ≠ побут (повсякденний уклад, domestic
+    life); побут — підмножина життя
+- a: забезпечення
+  b: задоволення
+  polarity: synonym
+  reason: Забезпечення — надання/постачання, задоволення — задовільнення потреб; різні
+    дії.
+- a: завдання
+  b: мета
+  polarity: synonym
+  reason: Завдання — обсяг роботи для виконання, мета — те, до чого прагнуть; різні
+    категорії (засіб vs результат).
+- a: завдяки
+  b: через
+  polarity: synonym
+  reason: Обидва — причинові прийменники, але завдяки — позитивна причина, через —
+    нейтральна/негативна; не взаємозамінні без змін
+- a: заводитися
+  b: починатися
+  polarity: synonym
+  reason: заводитися — з'являтися, ставати наявним (розм.); починатися — починати
+    здійснюватися. Різні аспекти початку.
+- a: заголовок
+  b: шапка
+  polarity: synonym
+  reason: шапка у значенні «газетний заголовок» — калька з російської; стандартне
+    значення шапки — головний убір
+- a: заздалегідь
+  b: попереду
+  polarity: synonym
+  reason: заздалегідь — темпоральний прислівник (завчасно), попереду — просторовий
+    (спереду); різні семантичні осі
+- a: закінчення
+  b: кінець
+  polarity: synonym
+  reason: закінчення — процес завершення (дія); кінець — кінцева точка (просторова/часова
+    межа); гіперонімічний зв'язок, не синоні
+- a: замовлення
+  b: заявка
+  polarity: synonym
+  reason: замовлення — доручення на виготовлення/купівлю; заявка — офіційне подання/запит;
+    різні сфери вжитку
+- a: замок
+  b: фортеця
+  polarity: synonym
+  reason: замок — укріплене житло феодала (підтип фортеці); фортеця — військове укріплення
+    (ширше); гіперонімічний зв'язок
+- a: заносити
+  b: приносити
+  polarity: synonym
+  reason: заносити — вносити всередину/мимохідь; приносити — доставляти до місця призначення;
+    різні префіксальні значення
+- a: занось
+  b: приносити
+  polarity: synonym
+  reason: занось — наказ.сп. від заносити «доставляти, приносити кудись»; приносити
+    — «доставляти»; перетин у значенні доставки
+- a: запрошувати
+  b: просити
+  polarity: synonym
+  reason: запрошувати — кликати в гості/на захід; просити — звертатися з проханням;
+    різні комунікативні акти
+- a: зараз
+  b: спочатку
+  polarity: synonym
+  reason: 'Не синоніми: зараз — теперішній момент; спочатку — початковий момент дії.
+    Протилежні на часовій шкалі.'
+- a: зарплата
+  b: платіж
+  polarity: synonym
+  reason: зарплата — видове поняття (заробітна плата), платіж — родове; гіпонімія,
+    не синонімія
+- a: застереження
+  b: сигнал
+  polarity: synonym
+  reason: сигнал — загальне поняття (умовний знак); застереження — конкретний тип
+    попередження; лише тематична суміжність
+- a: засіб
+  b: рада
+  polarity: synonym
+  reason: засіб — знаряддя/препарат/спосіб; рада — порада/нарада; зовсім різні значення
+- a: засіб
+  b: спосіб
+  polarity: synonym
+  reason: засіб — інструментальний (конкретне знаряддя/препарат); спосіб — процедурний
+    (абстрактний метод); різні категорії
+- a: затишний
+  b: спокійний
+  polarity: synonym
+  reason: затишний — комфортний/захищений (просторова якість); спокійний — тихий/врівноважений
+    (емоційна/звукова якість); різні ви
+- a: захисник
+  b: опікун
+  polarity: synonym
+  reason: захисник — той, хто обороняє; опікун — той, хто піклується/доглядає; різні
+    соціальні ролі
+- a: заходити
+  b: починатися
+  polarity: synonym
+  reason: заходити — ідучи потрапляти кудись, входити; починатися — починати здійснюватися.
+    Не синоніми.
+- a: заходити
+  b: сідати
+  polarity: synonym
+  reason: 'Не синоніми: заходити — входити всередину; сідати — приймати сидяче положення.
+    Різні дії.'
+- a: заходити
+  b: ходити
+  polarity: synonym
+  reason: заходити = входити кудись; ходити = пересуватися пішки; різна спрямованість
+    руху
+- a: заява
+  b: петиція
+  polarity: synonym
+  reason: петиція — письмове колективне прохання (підтип заяви); гіперонімія
+- a: заява
+  b: прохання
+  polarity: synonym
+  reason: заява — ширше поняття (повідомлення/звернення будь-якого змісту); прохання
+    — конкретний тип із прохальною метою; гіперон
+- a: заява
+  b: скарга
+  polarity: synonym
+  reason: скарга — висловлення незадоволення (підтип заяви); гіперонімічний зв'язок
+- a: зберігати
+  b: шанувати
+  polarity: synonym
+  reason: зберігати — берегти/тримати; шанувати — поважати; зовсім різні значення
+- a: зберігатися
+  b: тримаймося
+  polarity: synonym
+  reason: зберігатися = залишатися цілим; триматися = утримуватися/поводитися; різні
+    дієслова
+- a: зберігатися
+  b: тримайся
+  polarity: synonym
+  reason: зберігатися — бути в схоронності; тримайся — наказ.сп. від триматися (утримуватися);
+    різні значення
+- a: збирати
+  b: складати
+  polarity: synonym
+  reason: збирати = накопичувати/колекціонувати; складати іспит = проходити іспит;
+    жодного перетину
+- a: звичай
+  b: установа
+  polarity: synonym
+  reason: звичай — культурна практика; установа — організація/заклад; зовсім різні
+- a: звичка
+  b: навички
+  polarity: synonym
+  reason: звичка = усталений спосіб поведінки; навичка = уміння, набуте практикою;
+    різні поняття
+- a: звіт
+  b: повідомлення
+  polarity: synonym
+  reason: звіт (офіційний документ про роботу) є різновидом повідомлення (будь-яка
+    інформація); гіпонімія, не синонімія
+- a: здійснювати
+  b: нести
+  polarity: synonym
+  reason: здійснювати — виконувати/реалізовувати; нести — фізично переносити; зовсім
+    різні
+- a: зима
+  b: холод
+  polarity: synonym
+  reason: зима = winter (пора року); холод = cold (температура) — метонімічний зв'язок,
+    не синонімія
+- a: знак
+  b: сигнал
+  polarity: synonym
+  reason: сигнал — підтип знаку (умовний знак для передачі повідомлення); гіперонімія
+- a: знаменитості
+  b: зірка
+  polarity: synonym
+  reason: зірка має переносне значення «знаменитість»; знаменитості — множина від
+    знаменитість
+- a: знаходити
+  b: помічати
+  polarity: synonym
+  reason: обидва — виявлення; знаходити = виявляти, помічати = звертати увагу; перетин
+    у значенні 'виявляти'
+- a: значення
+  b: роль
+  polarity: synonym
+  reason: значення — смисл/важливість; роль — функція/партія; різні семантичні поля
+- a: значно
+  b: куди
+  polarity: synonym
+  reason: значно — прислівник міри; куди — питальний/відносний прислівник напрямку;
+    зовсім різні
+- a: знижка
+  b: компроміс
+  polarity: synonym
+  reason: знижка — зменшення ціни (комерційний термін); компроміс — взаємна поступка
+    в переговорах; різні сфери
+- a: зносити
+  b: приносити
+  polarity: synonym
+  reason: зносити — руйнувати/зношувати; приносити — доставляти; різні префіксальні
+    значення
+- a: зобов'язання
+  b: обіцянка
+  polarity: synonym
+  reason: Обіцянка = добровільно дане зобов'язання — гіпонім; зобов'язання ширше (юридичне,
+    моральне)
+- a: зовнішність
+  b: обличчя
+  polarity: synonym
+  reason: обличчя — частина зовнішності (передня частина голови); партонімія, не синонімія
+- a: зовнішність
+  b: постава
+  polarity: synonym
+  reason: зовнішність — загальний вигляд; постава — положення тіла; постава є частиною
+    зовнішності, але не синонім
+- a: йти
+  b: ідіть
+  polarity: synonym
+  reason: йти — інфінітив; ідіть — наказовий спосіб 2 ос.мн.; різні граматичні форми
+    того самого дієслова, не синоніми
+- a: кадр
+  b: сцена
+  polarity: synonym
+  reason: кадр — окремий знімок/план (одиниця); сцена — сукупність кадрів/епізод (ціле);
+    меронімія
+- a: карта
+  b: лист
+  polarity: synonym
+  reason: Карта — географічне зображення; лист — рослинний орган або письмове повідомлення.
+    Немає перетину значень.
+- a: картка
+  b: лист
+  polarity: synonym
+  reason: Картка — невеликий аркуш твердого паперу; лист — орган рослини або письмове
+    повідомлення. Різні об'єкти.
+- a: картка
+  b: сторінка
+  polarity: synonym
+  reason: картка — картковий носій (пластик/папір); сторінка — бік аркуша в книзі;
+    різні об'єкти
+- a: картка
+  b: фото
+  polarity: synonym
+  reason: картка = card; фото = photo — різні об'єкти; фотокартка є похідним, але
+    картка сама по собі не синонім фото
+- a: картка
+  b: фотографія
+  polarity: synonym
+  reason: 'аналогічно #26 — картка ≠ фотографія без уточнення «фото-»'
+- a: категорія
+  b: родина
+  polarity: synonym
+  reason: категорія — розряд/клас; родина — сім'я (основне значення); у таксономії
+    родина є підкатегорією, не синонімом
+- a: категорія
+  b: сім'я
+  polarity: synonym
+  reason: категорія — абстрактний розряд; сім'я — родинна група людей; немає спільного
+    значення
+- a: кафе
+  b: ресторан
+  polarity: synonym
+  reason: 'Різні типи закладів харчування: кафе — невеликий заклад (кав''ярня), ресторан
+    — заклад із повним обслуговуванням; не сино'
+- a: каша
+  b: кутя
+  polarity: synonym
+  reason: кутя — різновид каші (обрядова страва); гіпонімія, не синонімія
+- a: каштановий
+  b: коричневі
+  polarity: synonym
+  reason: каштановий — відтінок коричневого (колір каштана); гіперо-гіпонімічні відношення,
+    не синоніми
+- a: кашу
+  b: кутя
+  polarity: synonym
+  reason: кутя = обрядова каша (різдвяна страва); каша = загальна назва страви з круп;
+    гіперо-гіпонімічні відношення
+- a: квашений
+  b: кислий
+  polarity: synonym
+  reason: квашений — одержаний ферментацією; кислий — смакова характеристика; квашене
+    може бути кислим, але не все кисле — квашене
+- a: квитанція
+  b: квиток
+  polarity: synonym
+  reason: квитанція — розписка про оплату; квиток — картка на право входу/проїзду;
+    різні функції
+- a: квиток
+  b: чек
+  polarity: synonym
+  reason: квиток = проїзний/вхідний документ; чек = банківський/касовий документ;
+    різні поняття
+- a: керівник
+  b: провідник
+  polarity: synonym
+  reason: керівник — той, хто очолює/управляє; провідник — той, хто вказує дорогу/супроводжує;
+    різні ролі
+- a: кліше
+  b: підпис
+  polarity: synonym
+  reason: кліше — рельєфний малюнок для друку або шаблонний вислів; підпис — власноручне
+    прізвище або напис. Зовсім різні поняття.
+- a: клієнт
+  b: пацієнт
+  polarity: synonym
+  reason: клієнт — у сфері послуг, пацієнт — у медицині; гіпонімічний зв'язок, не
+    синоніми
+- a: книжний
+  b: неживий
+  polarity: synonym
+  reason: книжний — характеристика стилю мовлення; неживий — мертвий; повністю різні
+    поняття
+- a: кобзар
+  b: музика
+  polarity: synonym
+  reason: кобзар — український народний співець (конкретний тип); музика — мистецтво
+    або музикант загалом; гіпонімія
+- a: кольори
+  b: фарба
+  polarity: synonym
+  reason: кольори = барви/відтінки, фарба = речовина для фарбування; суміжні, не синоніми
+- a: колір
+  b: фарба
+  polarity: synonym
+  reason: колір — візуальна властивість; фарба — речовина для забарвлення; суміжні,
+    але не синоніми
+- a: колія
+  b: лінія
+  polarity: synonym
+  reason: колія — наїжджене заглиблення/залізнична рейка; лінія — риска/смужка; колія
+    є типом лінії, але не синонім
+- a: колія
+  b: шлях
+  polarity: synonym
+  reason: колія — rut/track on a road (гіпонім шляху)
+- a: комора
+  b: магазин
+  polarity: synonym
+  reason: комора — будівля для зберігання зерна/краму; магазин — приміщення для роздрібної
+    торгівлі; різні функції
+- a: композиція
+  b: склад
+  polarity: synonym
+  reason: композиція — структура твору; склад¹ — приміщення для зберігання; різні
+    поняття
+- a: компот
+  b: юшка
+  polarity: synonym
+  reason: компот — солодкий фруктовий напій; юшка — суп (м'ясний, рибний, картопляний);
+    різні страви
+- a: комунальний
+  b: побутовий
+  polarity: synonym
+  reason: комунальний — належний до міського господарства; побутовий — пов'язаний
+    із щоденним життям; різні сфери
+- a: конверт
+  b: пакетик
+  polarity: synonym
+  reason: конверт — для листів, пакетик — маленький пакет; різні предмети
+- a: конструкція
+  b: склад
+  polarity: synonym
+  reason: конструкція — будова; склад¹ — приміщення для зберігання; немає спільного
+    значення
+- a: конструкція
+  b: ідіома
+  polarity: synonym
+  reason: конструкція (structure) і ідіома (idiom) — різні лінгвістичні поняття
+- a: концепція
+  b: світогляд
+  polarity: synonym
+  reason: концепція — система поглядів на конкретне явище; світогляд — загальна система
+    поглядів на світ; різний рівень узагальнен
+- a: корабель
+  b: човен
+  polarity: synonym
+  reason: корабель — велике морське судно; човен — невелике веслове судно; гіпонімія
+    за розміром, не синоніми
+- a: кордон
+  b: лінія
+  polarity: synonym
+  reason: кордон — державна межа (конкретне поняття); лінія — геометрична риска (загальне);
+    кордон є лінією, але не синонім
+- a: коридор
+  b: перехід
+  polarity: synonym
+  reason: коридор — вузький прохід у приміщенні; перехід — дія переходження або місце
+    переходу; різні поняття
+- a: користь
+  b: прибуток
+  polarity: synonym
+  reason: користь = позитивний ефект/вигода (ширше); прибуток = фінансовий дохід;
+    прибуток є видом користі, не синоніми
+- a: користь
+  b: інтерес
+  polarity: synonym
+  reason: користь — добрі наслідки, вигода; інтерес — увага, зацікавлення; різні поняття,
+    хоча пов'язані
+- a: коровай
+  b: хліб
+  polarity: synonym
+  reason: коровай — весільний обрядовий хліб (специфічний тип); хліб — загальний харчовий
+    продукт; гіпонімія
+- a: крапка
+  b: крапля
+  polarity: synonym
+  reason: крапка — цятка/плямка (графічний знак); крапля — маленька частинка рідини;
+    різні поняття
+- a: крашанка
+  b: писанка
+  polarity: synonym
+  reason: крашанка — фарбоване великоднє яйце; писанка — розмальоване великоднє яйце;
+    різні техніки декорування, не синоніми
+- a: крашанка
+  b: яйце
+  polarity: synonym
+  reason: крашанка¹ — пофарбоване великоднє яйце (гіпонім); діалектне значення 2 'яйце'
+    — діалектне
+- a: крашанка
+  b: яйця
+  polarity: synonym
+  reason: крашанка = фарбоване великоднє яйце (осн. знач.) або діал. яйце взагалі;
+    єдиний перетин — діалектний, що не є стандартни
+- a: краєвид
+  b: перспектива
+  polarity: synonym
+  reason: краєвид — вигляд місцевості; перспектива — спосіб зображення об'ємних предметів
+    або майбутні можливості; різні поняття
+- a: країна
+  b: місцевість
+  polarity: synonym
+  reason: країна — територіальна політична одиниця, місцевість — будь-яка територія.
+    Гіперонім/гіпонім, не взаємозамінні синоніми.
+- a: кремезний
+  b: широкоплечий
+  polarity: synonym
+  reason: кремезний — міцної будови тіла загалом; широкоплечий — лише про плечі; кремезний
+    часто має широкі плечі, але не всі широ
+- a: кров
+  b: характер
+  polarity: synonym
+  reason: кров = blood (біологічна рідина); характер = character — жодного перетину
+- a: кров
+  b: юшка
+  polarity: synonym
+  reason: кров — червона рідина в організмі; юшка — суп/рідка страва; хоча в розмовному
+    мовленні юшка може означати кров ('пустити
+- a: крупа
+  b: сніг
+  polarity: synonym
+  reason: 'Не синоніми: крупа — продукт харчування (зерно); сніг — атмосферні опади.'
+- a: крісло
+  b: посада
+  polarity: synonym
+  reason: крісло (меблі, стілець) ≠ посада (службове становище); хоча крісло має метафоричне
+    значення 'посада', основне значення —
+- a: крісло
+  b: стілець
+  polarity: synonym
+  reason: 'Не синоніми: крісло — м''яке сидіння з підлокітниками; стілець — жорстке
+    сидіння без підлокітників. Різні предмети меблів'
+- a: купувати
+  b: набирати
+  polarity: synonym
+  reason: купувати — придбавати за гроші; набирати — збирати/брати певну кількість;
+    різні дії
+- a: купівля
+  b: покупки
+  polarity: synonym
+  reason: обидва — пов'язані з придбанням; купівля = процес/акт, покупки = придбані
+    речі/процес
+- a: лагідний
+  b: товариський
+  polarity: synonym
+  reason: лагідний = спокійний, сумирний; товариський = sociable — різні риси характеру,
+    не синоніми
+- a: ладен
+  b: файний
+  polarity: synonym
+  reason: ладен = готовий/згоден; файний = гарний/добрий (розмовне/діалектне); різні
+    значення
+- a: ладен
+  b: чудовий
+  polarity: synonym
+  reason: ладен (ладний) — «готовий, згодний»; чудовий — «прекрасний, відмінний»;
+    зовсім різні значення
+- a: ладна
+  b: чудовий
+  polarity: synonym
+  reason: ладна (ладний, розм.) = гарний/красивий зовні; чудовий = прекрасний за якістю;
+    різні аспекти оцінки
+- a: летіти
+  b: літати
+  polarity: synonym
+  reason: Це видова пара дієслів руху (односпрямований / різноспрямований рух), а
+    не синоніми.
+- a: летіти
+  b: перебігати
+  polarity: synonym
+  reason: Летіти = пересуватися в повітрі; перебігати = бігати — різні способи руху
+- a: летіти
+  b: пробігати
+  polarity: synonym
+  reason: летіти — у повітрі; пробігати — бігом по землі; різні способи руху
+- a: летіти
+  b: їдьте
+  polarity: synonym
+  reason: летіти — пересуватися в повітрі; їдьте — наказовий спосіб від їхати (наземний
+    транспорт); різні дієслова
+- a: летіти
+  b: їхати
+  polarity: synonym
+  reason: летіти (fly, air) і їхати (go by vehicle, ground/water) — різні способи
+    руху
+- a: любити
+  b: потребувати
+  polarity: synonym
+  reason: любити — почуття прихильності; потребувати — відчувати нестачу, необхідність.
+    Різні поняття.
+- a: любов
+  b: подруга
+  polarity: synonym
+  reason: Любов — почуття; подруга — особа жіночої статі. Різні категорії понять.
+- a: люди
+  b: селяни
+  polarity: synonym
+  reason: 'Гіперо-гіпонімія: селяни — підмножина людей, не повні синоніми.'
+- a: людина
+  b: товариш
+  polarity: synonym
+  reason: людина = person/human; товариш = comrade — родове поняття vs соціальна роль,
+    не синоніми
+- a: лютий
+  b: поганий
+  polarity: synonym
+  reason: лютий (хижий, кровожерний, злий про звіра) ≠ поганий (загальна негативна
+    оцінка); різні семантичні поля
+- a: лють
+  b: серце
+  polarity: synonym
+  reason: Лють — сильний гнів; серце — орган кровообігу. Жодного перетину значень.
+- a: лід
+  b: сало
+  polarity: synonym
+  reason: Лід — замерзла вода; сало — тваринний жир. Грінченко не фіксує значення
+    'крига' для сала.
+- a: лікар
+  b: терапевт
+  polarity: synonym
+  reason: 'Гіперо-гіпонімічне відношення: терапевт — вид лікаря (спеціалізація). Родо-видові
+    відношення — не синоніми.'
+- a: лікарня
+  b: поліклініка
+  polarity: synonym
+  reason: лікарня (стаціонар) ≠ поліклініка (амбулаторний заклад); різні типи медичних
+    установ
+- a: лінія
+  b: рис
+  polarity: synonym
+  reason: лінія = пряма/межа; рис = характерна ознака/риса обличчя; різні значення
+- a: м'який
+  b: плавний
+  polarity: synonym
+  reason: м'який (тактильна властивість, 'не твердий') ≠ плавний (про рух, 'рівний,
+    без різких переходів'); різні якості
+- a: майбутнє
+  b: час
+  polarity: synonym
+  reason: майбутнє = future (часовий період); час = time (загальне) — гіпонімія
+- a: майже
+  b: трохи
+  polarity: synonym
+  reason: Майже — 'близько до повноти'; трохи — 'небагато, до деякої міри'. Різні
+    значення.
+- a: майстер
+  b: перукар
+  polarity: synonym
+  reason: 'СУМ-20: перукар = ''майстер, що підстригає, фарбує волосся'' — гіпонім/гіперонім,
+    не всі майстри — перукарі'
+- a: майстер
+  b: чаклун
+  polarity: synonym
+  reason: Майстер — фахівець; чаклун — особа, що займається магією (застаріле). Різні
+    семантичні поля.
+- a: маму
+  b: мати
+  polarity: synonym
+  reason: маму — знах.в. від мама; мати — наз.в. (або інфінітив); різні відмінкові
+    форми (або різні частини мови)
+- a: мандат
+  b: направлення
+  polarity: synonym
+  reason: мандат = документ про повноваження; направлення = скерування. Різні типи
+    документів, різні функції.
+- a: мандрівка
+  b: похід
+  polarity: synonym
+  reason: Похід — воєнна кампанія або організований груповий рух; мандрівка — подорож.
+    Різні контексти.
+- a: мандрівка
+  b: прогулянка
+  polarity: synonym
+  reason: Мандрівка — тривала подорож; прогулянка — коротке ходіння для відпочинку.
+    Різний масштаб.
+- a: маніпуляція
+  b: процедура
+  polarity: synonym
+  reason: Маніпуляція — складна ручна дія або психологічний вплив; процедура — встановлений
+    порядок дій. Різні поняття.
+- a: маршрут
+  b: напрямок
+  polarity: synonym
+  reason: Маршрут — заздалегідь визначений шлях; напрямок — вектор руху. Споріднені,
+    але не синоніми.
+- a: маршрут
+  b: шлях
+  polarity: synonym
+  reason: маршрут = заздалегідь визначений шлях (конкретний); шлях = дорога взагалі;
+    гіперо-гіпонімічні відношення
+- a: масний
+  b: родючий
+  polarity: synonym
+  reason: Масний — жирний/маслянистий, родючий — здатний давати врожай (про землю);
+    різні властивості, не синоніми.
+- a: машина
+  b: робот
+  polarity: synonym
+  reason: 'Гіперо-гіпонімія: робот — різновид машини (автомат).'
+- a: меблі
+  b: постанова
+  polarity: synonym
+  reason: Меблі — предмети обстановки; постанова — розпорядження органів влади. Жодного
+    перетину.
+- a: медуза
+  b: серце
+  polarity: synonym
+  reason: Медуза — морська тварина; серце — орган. Жодного семантичного перетину.
+- a: межа
+  b: поріг
+  polarity: synonym
+  reason: межа (лінія поділу, кордон) ≠ поріг (дерев'яний брус під дверима); хоча
+    обидва можуть метафорично означати 'ліміт', осно
+- a: межа
+  b: фінал
+  polarity: synonym
+  reason: межа = boundary/limit (просторове); фінал = ending (часове) — різні категорії
+- a: мислити
+  b: припускати
+  polarity: synonym
+  reason: Мислити — загальний процес міркування; припускати — робити припущення. Гіперо-гіпонімія,
+    не синоніми.
+- a: мити
+  b: поливати
+  polarity: synonym
+  reason: мити (очищати від бруду) ≠ поливати (змочувати рідиною); різні дії
+- a: молодь
+  b: молодята
+  polarity: synonym
+  reason: Молодь — молоде покоління загалом; молодята — наречені або молоде подружжя.
+    Різні референти.
+- a: молоко
+  b: сік
+  polarity: synonym
+  reason: 'Не синоніми: молоко — продукт тваринного походження; сік — рослинний напій.
+    Спільна категорія «напої», але не взаємозамі'
+- a: музика
+  b: музикант
+  polarity: synonym
+  reason: музика — вид мистецтва; музикант — виконавець музики; мистецтво vs людина
+    — різні категорії
+- a: міркування
+  b: поняття
+  polarity: synonym
+  reason: міркування (процес/результат роздумів) ≠ поняття (абстрактна ідея, концепт);
+    різні категорії
+- a: міст
+  b: підлога
+  polarity: synonym
+  reason: у сучасній українській мові міст = споруда для переходу; підлога = покриття
+    в приміщенні. Архаїчне значення 'підлога' дл
+- a: місто
+  b: порт
+  polarity: synonym
+  reason: місто (населений пункт) ≠ порт (гавань, транспортний вузол); різні поняття
+- a: місто
+  b: посада
+  polarity: synonym
+  reason: місто — населений пункт, посада — службове становище; різні семантичні поля.
+- a: місто
+  b: столиця
+  polarity: synonym
+  reason: Столиця — різновид міста (головне місто держави). Гіперо-гіпонімія.
+- a: місто
+  b: центр
+  polarity: synonym
+  reason: Місто — населений пункт; центр — середина або центральна частина. Центр
+    міста ≠ місто.
+- a: місце
+  b: місцевість
+  polarity: synonym
+  reason: Місце — конкретна точка; місцевість — ширша територія. Різний масштаб.
+- a: набагато
+  b: чимало
+  polarity: synonym
+  reason: чимало = кількість («немало, досить багато»); набагато = ступінь порівняння.
+    Різні семантичні категорії, хоча обидва вир
+- a: навколишній
+  b: побічний
+  polarity: synonym
+  reason: навколишній = той, що оточує; побічний = бічний, другорядний. Різні просторові
+    концепти.
+- a: навчання
+  b: наука
+  polarity: synonym
+  reason: навчання = процес навчання/викладання; наука = наука (science). Різні поняття.
+- a: навчання
+  b: освіта
+  polarity: synonym
+  reason: навчання = процес; освіта = система/результат. Суміжні, але не синоніми.
+- a: над
+  b: через
+  polarity: synonym
+  reason: над (above/over) і через (through/across) — різні просторові прийменники
+- a: намір
+  b: перспектива
+  polarity: synonym
+  reason: намір = задум; перспектива = майбутні можливості/вид на майбутнє. Різні
+    поняття.
+- a: намір
+  b: проєкт
+  polarity: synonym
+  reason: намір — задум, бажання зробити щось; проєкт — план, схема, задум. Перекриваються
+    частково, але не синоніми.
+- a: наполегливий
+  b: щирий
+  polarity: synonym
+  reason: наполегливий = стійкий, завзятий; щирий = відвертий, правдивий. Різні риси
+    характеру.
+- a: направлення
+  b: призначення
+  polarity: synonym
+  reason: направлення = скерування кудись (документ-направлення до лікаря); призначення
+    = призначення на посаду. Різні бюрократичн
+- a: насамперед
+  b: попереду
+  polarity: synonym
+  reason: насамперед = передусім (пріоритет), попереду = спереду (просторове положення);
+    різні значеннєві категорії
+- a: насамперед
+  b: раніше
+  polarity: synonym
+  reason: насамперед = передусім (пріоритет); раніше = колись, до цього часу (часова
+    віддаленість). Різні значення.
+- a: насіння
+  b: сім'я
+  polarity: synonym
+  reason: 'У сучасній українській мові: насіння = насіння рослин, сім''я = родина
+    (family). Архаїчне значення сім''я = ''seed'' зберегл'
+- a: наука
+  b: освіта
+  polarity: synonym
+  reason: наука = система знань (science); освіта = система навчання (education).
+    Різні поняття, хоча й суміжні.
+- a: начальник
+  b: провідник
+  polarity: synonym
+  reason: начальник = посадова особа-керівник; провідник = той, хто веде/показує шлях
+    (екскурсовод, лідер руху). Різні ролі.
+- a: наш
+  b: свій
+  polarity: synonym
+  reason: наш = присвійний займенник 1-ї особи множини (колективна власність); свій
+    = зворотний присвійний займенник (індивідуальн
+- a: невже
+  b: справді
+  polarity: synonym
+  reason: невже = питальна частка (сумнів); справді = стверджувальний прислівник («у
+    дійсності, насправді, дійсно»). Різні комунік
+- a: невже
+  b: чи
+  polarity: synonym
+  reason: невже = риторичний подив/сумнів, чи = нейтральне питання/альтернатива; різна
+    прагматика
+- a: недалеко
+  b: трохи
+  polarity: synonym
+  reason: недалеко = просторова близькість, трохи = мала кількість; різні семантичні
+    поля
+- a: неділя
+  b: тиждень
+  polarity: synonym
+  reason: 'Не синоніми: неділя — день тижня; тиждень — проміжок у сім днів. Частина
+    ≠ ціле.'
+- a: незадовільний
+  b: ніякий
+  polarity: synonym
+  reason: незадовільний = поганий, що не відповідає вимогам; ніякий = заперечний займенник
+    (жоден); абсолютно різні частини мови й
+- a: ненадійний
+  b: підозрілий
+  polarity: synonym
+  reason: ненадійний = якому не можна довіряти (функціональна ненадійність); підозрілий
+    = який викликає підозру (суб'єктивне сприй
+- a: неприємність
+  b: причина
+  polarity: synonym
+  reason: 'неприємність = прикра подія/ситуація; причина = те, що породжує інше явище.
+    Різні категорії: результат vs. причина.'
+- a: новий
+  b: інший
+  polarity: synonym
+  reason: новий (new) і інший (other/different) — не взаємозамінні
+- a: новітній
+  b: інший
+  polarity: synonym
+  reason: новітній (modern/contemporary) і інший (other) — різні ознаки
+- a: область
+  b: район
+  polarity: synonym
+  reason: 'Різні адміністративні рівні: область — вища одиниця, район — складова області;
+    не взаємозамінні.'
+- a: обличчя
+  b: постава
+  polarity: synonym
+  reason: Обличчя — передня частина голови; постава — положення тіла, манера триматися
+- a: образ
+  b: портрет
+  polarity: synonym
+  reason: образ (загальне зображення, імідж) ≠ портрет (зображення обличчя людини);
+    портрет — видове поняття
+- a: обідати
+  b: їсти
+  polarity: synonym
+  reason: Обідати = споживати їжу серед дня; їсти = споживати їжу взагалі — гіпонім/гіперонім
+- a: око
+  b: погляд
+  polarity: synonym
+  reason: Око = орган зору; погляд = спрямованість зору — різні поняття
+- a: околиця
+  b: передмістя
+  polarity: synonym
+  reason: околиця — частина населеного пункту (в межах); передмістя — поселення за
+    межею міста; різні просторові концепти
+- a: олія
+  b: фарба
+  polarity: synonym
+  reason: олія = oil (харчовий продукт); фарба = paint — олія може бути компонентом
+    фарби, але це не синоніми
+- a: опис
+  b: оповідання
+  polarity: synonym
+  reason: Опис = змалювання; оповідання = розповідь, наратив — опис є частиною оповідання,
+    але не синонім
+- a: оповідання
+  b: переказ
+  polarity: synonym
+  reason: оповідання = літературний жанр; переказ = відтворення змісту/грошовий переказ;
+    різні значення
+- a: охорона
+  b: супровід
+  polarity: synonym
+  reason: 'Не синоніми: охорона — захист від небезпеки; супровід — спільне пересування
+    або музичний акомпанемент.'
+- a: оцінка
+  b: поняття
+  polarity: synonym
+  reason: оцінка (судження про цінність) ≠ поняття (концепт); різні семантичні поля
+- a: оцінка
+  b: характеристика
+  polarity: synonym
+  reason: Оцінка = визначення вартості/якості; характеристика = опис істотних особливостей
+    — різні поняття
+- a: п'ята
+  b: підошва
+  polarity: synonym
+  reason: п'ята — heel (задня частина стопи); підошва — sole (нижня частина стопи/взуття).
+    Різні частини.
+- a: падати
+  b: сміятися
+  polarity: synonym
+  reason: 'Не синоніми: падати — рух униз; сміятися — емоційна реакція. Жодного спільного
+    значення.'
+- a: падати
+  b: сідати
+  polarity: synonym
+  reason: падати — рух униз, сідати — приймати сидяче положення; різні дії
+- a: палити
+  b: смажити
+  polarity: synonym
+  reason: 'Різні значення: палити — спалювати або курити; смажити — готувати їжу на
+    вогні/олії.'
+- a: пам'ятка
+  b: спогад
+  polarity: synonym
+  reason: 'Різні поняття: пам''ятка — об''єкт (культурна, архітектурна), що зберігається;
+    спогад — ментальний образ минулого.'
+- a: пам'ятка
+  b: інструкція
+  polarity: synonym
+  reason: пам'ятка (memo/guide) і інструкція (instruction) — різні за жанром і обов'язковістю
+- a: парк
+  b: сквер
+  polarity: synonym
+  reason: Парк = великий сад, сквер = невеликий громадський сад — тематично пов'язані,
+    але різні за розміром і функцією
+- a: паркан
+  b: стіна
+  polarity: synonym
+  reason: Паркан = огорожа, стіна = вертикальна частина будови — різні за типом і
+    функцією
+- a: парта
+  b: стіл
+  polarity: synonym
+  reason: 'Гіперо-гіпонімічне відношення: парта — різновид стола (шкільний). Родо-видові
+    відношення — не синоніми.'
+- a: певна
+  b: твердий
+  polarity: synonym
+  reason: обидва мають значення 'стійкий, непохитний, рішучий'; певний крок ≈ твердий
+    крок, певна рука ≈ тверда рука
+- a: пейзаж
+  b: перспектива
+  polarity: synonym
+  reason: Пейзаж = картина природи, краєвид; перспектива = спосіб зображення, майбутні
+    перспективи — різні поняття
+- a: переважати
+  b: переходити
+  polarity: synonym
+  reason: Переважати = виявляти перевагу; переходити = переправлятися через щось —
+    різні значення
+- a: перевал
+  b: перехід
+  polarity: synonym
+  reason: 'Перевал = прохід через гірський хребет; перехід = дія за знач. переходити
+    — різні: місце vs дія'
+- a: перевірка
+  b: іспит
+  polarity: synonym
+  reason: іспит — гіпонім перевірки (іспит = перевірка знань), не взаємозамінні
+- a: переговори
+  b: спілкування
+  polarity: synonym
+  reason: Переговори = розмова з метою домовитися; спілкування = ширше поняття — переговори
+    є гіпонімом спілкування
+- a: передній
+  b: перший
+  polarity: synonym
+  reason: Передній = просторова характеристика (попереду); перший = порядкова (початковий
+    у ряді)
+- a: передній
+  b: центральний
+  polarity: synonym
+  reason: Передній = попереду; центральний = в центрі, основний — різні просторові
+    та функціональні характеристики
+- a: переказ
+  b: чутка
+  polarity: synonym
+  reason: переказ (retelling/narration) і чутка (rumor) — різні значення
+- a: перелік
+  b: перепис
+  polarity: synonym
+  reason: Перелік = список; перепис = дія за знач. переписати, масовий статистичний
+    облік — різні поняття
+- a: переходити
+  b: сідати
+  polarity: synonym
+  reason: 'Не синоніми: переходити — змінювати місце; сідати — приймати сидяче положення.'
+- a: переходити
+  b: іти
+  polarity: synonym
+  reason: Переходити = переправлятися через щось; іти = пересуватися кроками — гіпонім/гіперонім
+- a: перший
+  b: центральний
+  polarity: synonym
+  reason: перший (порядковий числівник, 'перший за порядком') ≠ центральний ('розташований
+    у центрі'); різні семантичні поля
+- a: пил
+  b: пилок
+  polarity: synonym
+  reason: пил (дрібні тверді частинки землі, пилюка) ≠ пилок (сукупність клітин рослин
+    для розмноження); різні денотати
+- a: письмо
+  b: правопис
+  polarity: synonym
+  reason: письмо — уміння писати, спосіб зображення графічних знаків; правопис — правила
+    написання слів.
+- a: питання
+  b: проблема
+  polarity: synonym
+  reason: питання — звертання, що потребує відповіді; проблема — складне теоретичне
+    або практичне питання. Гіперо-гіпонім.
+- a: плавати
+  b: подорожувати
+  polarity: synonym
+  reason: плавати (пересуватися у воді) ≠ подорожувати (здійснювати подорож); різні
+    способи пересування
+- a: плавати
+  b: ходити
+  polarity: synonym
+  reason: плавати = swim; ходити = walk — різні способи пересування, не синоніми
+- a: платіж
+  b: ціна
+  polarity: synonym
+  reason: платіж (акт виплати або сума, що виплачується) ≠ ціна (вартість товару);
+    різні категорії
+- a: плита
+  b: піч
+  polarity: synonym
+  reason: 'Різні кухонні прилади: плита — пласка поверхня для готування, піч — споруда
+    для опалення/випікання; не синоніми.'
+- a: площа
+  b: підмет
+  polarity: synonym
+  reason: площа (територія) ≠ підмет (граматичний термін — головний член речення);
+    основне значення підмета — лінгвістичне
+- a: площа
+  b: рівнина
+  polarity: synonym
+  reason: Збіг лише у вузькому географічному контексті (соляна площа/рівнина); загалом
+    різні поняття — площа vs форма рельєфу. Нед
+- a: площа
+  b: шматок
+  polarity: synonym
+  reason: площа (поверхня, територія) ≠ шматок (фізичний фрагмент, відрізана частина);
+    різні поняття
+- a: поводитися
+  b: тримаймося
+  polarity: synonym
+  reason: поводитися — мати певну поведінку; тримаймося — наказ.сп. від триматися
+    (залишатися разом); різні значення
+- a: поводитися
+  b: тримайся
+  polarity: synonym
+  reason: триматися може означати 'поводитися певним чином' (триматися гідно = поводитися
+    гідно); перетин у значенні манери поведі
+- a: повідомлення
+  b: репортаж
+  polarity: synonym
+  reason: репортаж — специфічний вид повідомлення (журналістський жанр); гіперо-гіпонімія,
+    не синоніми
+- a: повідомляти
+  b: попереджати
+  polarity: synonym
+  reason: повідомляти (нейтрально інформувати) ≠ попереджати (застерігати, інформувати
+    заздалегідь про небезпеку); різні комунікат
+- a: погляд
+  b: поняття
+  polarity: synonym
+  reason: погляд (думка, точка зору, або зорове сприйняття) ≠ поняття (концепт); різні
+    значення
+- a: подавати
+  b: рухати
+  polarity: synonym
+  reason: 'Різні дієслова: подавати — давати/передавати/підносити, рухати — переміщати;
+    не синоніми.'
+- a: подорож
+  b: похід
+  polarity: synonym
+  reason: подорож (подорожування, туристична поїздка) ≠ похід (воєнна кампанія — основне
+    значення); хоча похід має вторинне значен
+- a: подорож
+  b: прогулянка
+  polarity: synonym
+  reason: подорож (тривала поїздка) ≠ прогулянка (коротка прогулянка для відпочинку);
+    різний масштаб і мета
+- a: подорожувати
+  b: ходити
+  polarity: synonym
+  reason: подорожувати (здійснювати подорож) ≠ ходити (пересуватися пішки); ходити
+    — спосіб пересування, подорожувати — мета/діяль
+- a: подія
+  b: причина
+  polarity: synonym
+  reason: подія (те, що сталося) ≠ причина (те, що породжує подію); причинно-наслідковий
+    зв'язок, не синонімія
+- a: подія
+  b: історія
+  polarity: synonym
+  reason: подія (факт, що стався) ≠ історія (наука про минуле, послідовний розвиток);
+    хоча історія має розмовне значення 'оповідь
+- a: покращувати
+  b: піднімати
+  polarity: synonym
+  reason: покращувати (робити кращим) ≠ піднімати (підіймати вгору); різні дії, хоча
+    піднімати має метафоричне 'підвищувати рівень
+- a: покупець
+  b: споживач
+  polarity: synonym
+  reason: покупець (той, хто купує) ≠ споживач (той, хто споживає/використовує); різні
+    ролі
+- a: половина
+  b: частина
+  polarity: synonym
+  reason: половина (одна з двох рівних частин) є різновидом частини (будь-якої); гіпонімія
+- a: полонина
+  b: рівнина
+  polarity: synonym
+  reason: Полонина — гірська безліса ділянка (Карпати), рівнина — пласка ділянка поверхні;
+    різні форми рельєфу.
+- a: понад
+  b: через
+  polarity: synonym
+  reason: понад (above/beyond) і через (through/across) — різні прийменники
+- a: поняття
+  b: характер
+  polarity: synonym
+  reason: поняття (концепт) ≠ характер (сукупність рис, вдача); різні категорії
+- a: попередження
+  b: сигнал
+  polarity: synonym
+  reason: попередження (повідомлення-застереження) ≠ сигнал (засіб передачі інформації);
+    сигнал — ширше поняття
+- a: порада
+  b: інструкція
+  polarity: synonym
+  reason: порада (advice, необов'язкова) і інструкція (binding instruction) — різні
+    за обов'язковістю
+- a: порушувати
+  b: рухати
+  polarity: synonym
+  reason: 'Різні дієслова: порушувати — робити неспокійним/недоторканим/розпочинати,
+    рухати — переміщати; не синоніми.'
+- a: порятунок
+  b: підтримка
+  polarity: synonym
+  reason: 'Різні поняття: порятунок — уникнення небезпеки/загибелі, підтримка — сприяння/допомога;
+    не синоніми.'
+- a: послуга
+  b: служба
+  polarity: synonym
+  reason: послуга — дія/вчинок/фахова діяльність на користь іншого; служба — виконання
+    службових обов'язків; не взаємозамінні в бі
+- a: постава
+  b: статура
+  polarity: synonym
+  reason: постава — звичне положення тіла, манера триматися; статура — будова тіла;
+    різні аспекти тіла.
+- a: походження
+  b: рід
+  polarity: synonym
+  reason: походження — належність за народженням; рід — форма спільності людей, родина;
+    гіперо-гіпонімічні відношення, а не синоні
+- a: починатися
+  b: приходити
+  polarity: synonym
+  reason: починатися — починати здійснюватися; приходити — з'являтися кудись пішки.
+    Не синоніми.
+- a: правило
+  b: установа
+  polarity: synonym
+  reason: правило — положення, принцип; установа — організація. Зовсім різні поняття.
+- a: працювати
+  b: робити
+  polarity: synonym
+  reason: працювати — затрачати зусилля, трудитися; робити — виконувати, займатися
+    якоюсь справою. Перекриваються частково, але не
+- a: працювати
+  b: ходити
+  polarity: synonym
+  reason: працювати — трудитися; ходити — переміщатися ногами. Різні дієслова.
+- a: працювати
+  b: іти
+  polarity: synonym
+  reason: працювати — трудитися; іти — пересуватися ногами. Різні дієслова.
+- a: прибувати
+  b: приїздити
+  polarity: synonym
+  reason: прибувати — прибувати будь-яким способом; приїздити — тільки транспортом.
+    Гіперо-гіпонім.
+- a: прибуття
+  b: приліт
+  polarity: synonym
+  reason: прибуття — загальне прибуття; приліт — прибуття літаком/птахом. Гіперо-гіпонім.
+- a: прибуття
+  b: приїзд
+  polarity: synonym
+  reason: прибуття — загальне прибуття (будь-яким способом); приїзд — прибуття транспортом.
+    Гіперо-гіпонім.
+- a: привітний
+  b: щирий
+  polarity: synonym
+  reason: привітний — доброзичливий, гостинний; щирий — відвертий, правдивий, нелукавий.
+    Різні риси характеру, не синоніми.
+- a: приклад
+  b: факт
+  polarity: synonym
+  reason: приклад = ілюстрація/взірець; факт = дійсна подія/істина; різні поняття
+- a: прикмета
+  b: якість
+  polarity: synonym
+  reason: прикмета — відмітна ознака; якість — ступінь вартості, цінності. Перекриваються
+    частково, але не синоніми.
+- a: приносити
+  b: присягатися
+  polarity: synonym
+  reason: приносити — доставляти щось; присягатися — клястися, обіцяти. Зовсім різні
+    дієслова.
+- a: пристань
+  b: причал
+  polarity: synonym
+  reason: пристань — обладнане місце на березі зі спорудами для стоянки суден; причал
+    — частина порту чи пристані. Гіперо-гіпонім.
+- a: приходити
+  b: ходити
+  polarity: synonym
+  reason: приходити = come/arrive (до пункту); ходити = walk (процес) — різне значення
+- a: причина
+  b: інцидент
+  polarity: synonym
+  reason: причина (cause) і інцидент (incident) — причинно-наслідковий зв'язок, не
+    синонімія
+- a: провулок
+  b: проїзд
+  polarity: synonym
+  reason: провулок — вузька вулиця; проїзд — прохід/проїзд між будинками; різні містобудівні
+    терміни
+- a: прогрес
+  b: хода
+  polarity: synonym
+  reason: прогрес — розвиток по висхідній лінії; хода — процес ходіння, ходьба. Зовсім
+    різні поняття.
+- a: прогулянка
+  b: прохід
+  polarity: synonym
+  reason: прогулянка — ходіння для відпочинку; прохід — місце, де можна проходити,
+    або дія проходити. Різні поняття.
+- a: продукт
+  b: результат
+  polarity: synonym
+  reason: Продукт — матеріальний результат людської праці; гіпонім до результату,
+    не повний синонім.
+- a: продукт
+  b: сировина
+  polarity: synonym
+  reason: 'Антонімічні у виробничому контексті: сировина — вихідний матеріал, продукт
+    — кінцевий результат.'
+- a: продуктивний
+  b: результативний
+  polarity: synonym
+  reason: продуктивний — спрямований на створення матеріальних благ; результативний
+    — який дає результат. Близькі, але не взаємоза
+- a: протилежний
+  b: інший
+  polarity: synonym
+  reason: протилежний — напроти, супротивний; інший — не цей, відмінний. Не синоніми.
+- a: професор
+  b: учитель
+  polarity: synonym
+  reason: обидва — викладачі, але різні рівні; це гіпонімія, не синонімія
+- a: професія
+  b: ремесло
+  polarity: synonym
+  reason: професія — вид заняття, що вимагає підготовки; ремесло — дрібне ручне виробництво.
+    Різні сфери.
+- a: професія
+  b: спеціальність
+  polarity: synonym
+  reason: професія — ширше поняття (лікар), спеціальність — вужче (кардіолог). Гіперо-гіпонім,
+    не синоніми.
+- a: проходити
+  b: іти
+  polarity: synonym
+  reason: проходити — просуватися через/повз, минати; іти — пересуватися ногами. Різні
+    дієслова.
+- a: процедура
+  b: розпорядок
+  polarity: synonym
+  reason: Процедура (запозичення з латини) — встановлений процес/метод, розпорядок
+    — режим/розклад; різні поняття. Відсутні в СУМ-
+- a: прямо
+  b: саме
+  polarity: synonym
+  reason: Прямо — навпростець/безпосередньо, саме — точно/якраз; різні прислівники.
+- a: підприємець
+  b: хто
+  polarity: synonym
+  reason: підприємець — особа, що займається підприємництвом; хто — займенник. Зовсім
+    різні частини мови.
+- a: підсумок
+  b: сумка
+  polarity: synonym
+  reason: 'Не синоніми: підсумок — результат, висновок; сумка — предмет для носіння
+    речей. WordNet auto-MT помилка.'
+- a: підсумок
+  b: фінал
+  polarity: synonym
+  reason: 'підсумок = result/summary; фінал = ending — різні поняття: підсумок підбивають,
+    фінал настає'
+- a: пісня
+  b: спів
+  polarity: synonym
+  reason: Пісня — результат (твір), спів — процес (дія співати); тематично пов'язані,
+    але не синоніми.
+- a: пішохід
+  b: щось
+  polarity: synonym
+  reason: пішохід — людина, що йде пішки; щось — неозначений займенник; абсолютно
+    різні частини мови і значення
+- a: разом
+  b: раптом
+  polarity: synonym
+  reason: 'Різні прислівники: разом — спільно/вкупі, раптом — зненацька/відразу; жодного
+    семантичного перетину.'
+- a: реальний
+  b: щирий
+  polarity: synonym
+  reason: 'Різні поняття: реальний — дійсний/об''єктивний, щирий — відвертий/правдивий
+    (про почуття).'
+- a: ремесло
+  b: спеціальність
+  polarity: synonym
+  reason: ремесло = дрібне ручне виробництво; спеціальність = галузь діяльності/фах;
+    різні рівні — ремесло конкретніше
+- a: ремесло
+  b: фах
+  polarity: synonym
+  reason: Ремесло — дрібне ручне виробництво, фах — вид заняття з певною підготовкою;
+    гіпонімічне відношення, не повна синонімія.
+- a: репортаж
+  b: розповідь
+  polarity: synonym
+  reason: Репортаж — журналістський жанр, різновид розповіді; гіпонім, не синонім.
+- a: рис
+  b: характеристика
+  polarity: synonym
+  reason: 'рис = rice (злак); характеристика = characterization — VESUM підтверджує:
+    рис (noun: rice), не риса (trait)'
+- a: родина
+  b: родич
+  polarity: synonym
+  reason: Родина — сім'я/сукупність родичів, родич — окрема особа у спорідненості;
+    різні поняття.
+- a: родина
+  b: рід
+  polarity: synonym
+  reason: Родина — сім'я (найближчі), рід — ширша спільність/клан/лінія; різний обсяг
+    поняття.
+- a: рожева
+  b: рум'яний
+  polarity: synonym
+  reason: рожевий = світло-червоний колір (загальний), рум'яний = рожевий відтінок
+    шкіри обличчя/випічки; різні сфери вживання, не
+- a: рожевий
+  b: червона
+  polarity: synonym
+  reason: рожевий — світло-червоний колір; червона — основний червоний колір, різні
+    кольори, не взаємозамінні
+- a: рожевий
+  b: червоне
+  polarity: synonym
+  reason: рожевий = світло-червоний колір; червоний = колір крові; різні кольори,
+    хоча споріднені
+- a: рожевий
+  b: червоний
+  polarity: synonym
+  reason: рожевий — світло-червоний (гіпонім червоного)
+- a: рожевий
+  b: червоні
+  polarity: synonym
+  reason: 'та сама гіпонімія: рожевий = світло-червоний відтінок'
+- a: розвиток
+  b: хід
+  polarity: synonym
+  reason: Розвиток — процес зростання/вдосконалення, хід — рух/перебіг; різні концепти,
+    не синоніми.
+- a: розвиток
+  b: історія
+  polarity: synonym
+  reason: розвиток (development) з'являється у визначенні історії, але вони не взаємозамінні
+- a: розумний
+  b: свідомий
+  polarity: synonym
+  reason: Розумний — який має ясний розум (інтелектуальна якість), свідомий — який
+    має свідомість/усвідомлює; різні якості.
+- a: рум'яний
+  b: червона
+  polarity: synonym
+  reason: рум'яний = рожевий/здоровий колір обличчя; червоний = яскравий колір; різні
+    кольори
+- a: рум'яний
+  b: червоне
+  polarity: synonym
+  reason: рум'яний = специфічний рожево-червоний відтінок (обличчя, випічка); червоний
+    = основний колір; гіперо-гіпонімічні віднош
+- a: рум'яний
+  b: червоний
+  polarity: synonym
+  reason: рум'яний — відтінок червоного кольору (гіпонім), не взаємозамінний
+- a: рум'яний
+  b: червоні
+  polarity: synonym
+  reason: рум'яний — рожевий відтінок (переважно про обличчя); червоний — основний
+    колір; різні кольори, не взаємозамінні
+- a: руханка
+  b: спорт
+  polarity: synonym
+  reason: Руханка — комплекс фізичних вправ (розминка); спорт — змагальна фізична
+    діяльність. Тематично пов'язані, але не синоніми
+- a: рухати
+  b: штовхати
+  polarity: synonym
+  reason: Рухати — переміщати (загальне), штовхати — рухати поштовхами (специфічний
+    спосіб); гіпонімічне відношення.
+- a: рядок
+  b: стрічка
+  polarity: synonym
+  reason: Рядок — лінія тексту/зменш. до ряд, стрічка — вузька смужка тканини; різні
+    поняття.
+- a: сарказм
+  b: іронія
+  polarity: synonym
+  reason: сарказм — їдка іронія (гіпонім, підвид іронії), не повний синонім
+- a: сварка
+  b: сцена
+  polarity: synonym
+  reason: 'Не синоніми: сварка — конфлікт, лайка; сцена — частина дії вистави або
+    майданчик. Сварка може бути сценою лише в перенос'
+- a: світлий
+  b: ясен
+  polarity: synonym
+  reason: обидва описують яскраве світло; світлий підкреслює інтенсивність, ясний
+    — чистоту/прозорість; перетин у значенні 'освітл
+- a: сивий
+  b: сіре
+  polarity: synonym
+  reason: сивий = сірувато-білий (про волосся), сірий = колір; різні семантичні поля
+- a: склад
+  b: статура
+  polarity: synonym
+  reason: 'Не синоніми: склад — сукупність частин або приміщення; статура — будова
+    тіла. Різні семантичні поля.'
+- a: слово
+  b: термін
+  polarity: synonym
+  reason: 'Гіперо-гіпонімічне відношення: термін — різновид слова (спеціальне). Родо-видові
+    відношення не є синонімами за правилами'
+- a: снідати
+  b: їсти
+  polarity: synonym
+  reason: 'Гіперо-гіпонімічне відношення: снідати — видове (вживати їжу вранці), їсти
+    — родове. За правилами — не синоніми.'
+- a: спина
+  b: хребет
+  polarity: synonym
+  reason: 'Не синоніми: спина — частина тіла (зовнішня), хребет — кісткова структура
+    всередині. Анатомічно пов''язані, але не взаємо'
+- a: справедливий
+  b: чесний
+  polarity: synonym
+  reason: справедливий (just/fair) і чесний (honest) — споріднені, але різні поняття
+- a: становище
+  b: табір
+  polarity: synonym
+  reason: 'Не синоніми: становище — ситуація, стан справ; табір — місце розташування
+    (військ, ув''язнених, відпочинку).'
+- a: статура
+  b: стать
+  polarity: synonym
+  reason: 'Не синоніми: статура — будова тіла, тілобудова; стать — біологічна категорія
+    (чоловіча/жіноча).'
+- a: сторож
+  b: хто
+  polarity: synonym
+  reason: 'Різні частини мови й семантика: сторож — іменник (особа), хто — питальний
+    займенник. Не порівнювані як синоніми.'
+- a: сторож
+  b: що-небудь
+  polarity: synonym
+  reason: 'Різні частини мови: сторож — іменник (особа), що-небудь — неозначений займенник.
+    Не синоніми.'
+- a: сторона
+  b: частина
+  polarity: synonym
+  reason: сторона (side/direction) і частина (part) — різні поняття, не взаємозамінні
+- a: стояти
+  b: є
+  polarity: synonym
+  reason: стояти (to stand) і є (is, форма бути) — різні дієслова
+- a: стояти
+  b: їдьте
+  polarity: antonym
+  reason: стояти = нерухомість; їхати = рух; антонімія часткова й контекстуальна,
+    не лексична пара
+- a: стояти
+  b: їхати
+  polarity: antonym
+  reason: стояти vs їхати — різні види стану/руху; антонім до стояти — рухатися, а
+    не їхати
+- a: страва
+  b: суміш
+  polarity: synonym
+  reason: 'Не синоніми: страва — їжа, суміш — поєднання різних речовин. Різні семантичні
+    поля.'
+- a: страва
+  b: харч
+  polarity: synonym
+  reason: 'Гіперо-гіпонімічне відношення: страва — конкретна приготовлена їжа (вид),
+    харч — їжа взагалі (рід).'
+- a: страва
+  b: харчі
+  polarity: synonym
+  reason: 'Гіперо-гіпонімічне відношення: страва — приготовлена їжа, харчі — продукти
+    харчування взагалі.'
+- a: страва
+  b: їжа
+  polarity: synonym
+  reason: 'Гіперо-гіпонімічне відношення: страва — конкретна приготовлена їжа (вид),
+    їжа — загальне поняття (рід).'
+- a: стриманий
+  b: холодна
+  polarity: synonym
+  reason: обидва — характеристика емоційної поведінки; стриманий = контрольований,
+    холодний = беземоційний; перетин у значенні 'не
+- a: студент
+  b: школяр
+  polarity: synonym
+  reason: студент (university student) і школяр (school pupil) — різні рівні освіти
+- a: суп
+  b: юшка
+  polarity: synonym
+  reason: 'Гіперо-гіпонімічне відношення: юшка — різновид супу (рибна юшка). Родо-видові
+    відношення — не синоніми.'
+- a: сфера
+  b: яблука
+  polarity: synonym
+  reason: сфера = галузь/куля; яблука = плоди; абсолютно різні поняття
+- a: сфера
+  b: яблуко
+  polarity: synonym
+  reason: сфера (sphere) і яблуко (apple) — жодного спільного значення
+- a: схил
+  b: узбіччя
+  polarity: synonym
+  reason: 'Не синоніми: схил — похила поверхня (гори, яру); узбіччя — край дороги.
+    Різні об''єкти.'
+- a: товариш
+  b: учасник
+  polarity: synonym
+  reason: товариш = comrade/friend (особисті стосунки); учасник = participant (нейтральна
+    роль) — не синоніми
+- a: товаришувати
+  b: ходити
+  polarity: synonym
+  reason: товаришувати = дружити; ходити = walk/go — жодного семантичного перетину
+- a: тренування
+  b: іспит
+  polarity: synonym
+  reason: тренування (training/practice) і іспит (exam) — різні етапи навчання
+- a: узвар
+  b: юшка
+  polarity: synonym
+  reason: узвар = солодкий компот із сухофруктів; юшка = суп (м'ясний/рибний) — різні
+    страви
+- a: умова
+  b: установа
+  polarity: synonym
+  reason: умова = condition; установа = institution — жодного семантичного перетину
+- a: уривок
+  b: цитата
+  polarity: synonym
+  reason: цитата = «точний, дослівний уривок» — цитата є різновидом уривка (гіпонімія),
+    не синонім
+- a: харч
+  b: хліб
+  polarity: synonym
+  reason: хліб є видом харчу (гіпонімія), а не синонімом; харч = загальне поняття
+    їжі
+- a: хвилювати
+  b: хвилюватися
+  polarity: synonym
+  reason: хвилювати = перехідне (турбувати когось); хвилюватися = неперехідне/зворотне
+    (бути схвильованим) — різна валентність
+- a: хода
+  b: хід
+  polarity: synonym
+  reason: хода = gait/хода (спосіб ходьби); хід = course/movement (ширше поняття)
+    — різні значення
+- a: ходити
+  b: ідіть
+  polarity: synonym
+  reason: ходити — інфінітив (різноспрямований рух); ідіть — наказ.сп.; різні граматичні
+    форми
+- a: частувати
+  b: шанувати
+  polarity: synonym
+  reason: частувати — пригощати їжею/питвом; шанувати — поважати
+- a: чесний
+  b: шановна
+  polarity: synonym
+  reason: чесний = правдивий, морально чистий; шановний = якого поважають; різні якості
+- a: чесний
+  b: шановний
+  polarity: synonym
+  reason: чесний (honest) і шановний (respected) — різні моральні якості
+- a: інцидент
+  b: історія
+  polarity: synonym
+  reason: інцидент (incident, неприємна подія) і історія (history/story) — різні поняття
+- a: іти
+  b: їдьте
+  polarity: synonym
+  reason: іти — пішки; їдьте — наказ.сп. від їхати (транспортом); різні способи руху
+- a: іти
+  b: їхати
+  polarity: synonym
+  reason: іти — go on foot; їхати — go by vehicle; різні способи руху

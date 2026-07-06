@@ -1,5 +1,5 @@
 {
-  "fingerprint": "7a830d004af49417d9c543ca95ba92e7ded5b4938addcbbb797ddd10458f35b3",
+  "fingerprint": "ad1406c5f2a4c4182c734b5876cc15a6668e6be48782190184301cdb20d2b4f6",
   "inputs": {
     "lexicon_code": [
       {
@@ -21,6 +21,10 @@
       {
         "path": "scripts/lexicon/build_slovnyk_mirror.py",
         "sha256": "065227dcaf26e86bc839ddb75a83a511459c410734adecd8beb3820bd5741231"
+      },
+      {
+        "path": "scripts/lexicon/build_synonym_verdicts_yaml.py",
+        "sha256": "f0b9b17fd194700272ca88c93050f38fea1c680e82845181d69146fd673df78c"
       },
       {
         "path": "scripts/lexicon/calque_corrections.py",
@@ -109,12 +113,16 @@
       {
         "path": "scripts/lexicon/verify_manifest.py",
         "sha256": "e128d60f2c72ca44fdc550fb99436adc27481d59b9877f22480f67a988ae3059"
+      },
+      {
+        "path": "scripts/lexicon/verify_synonym_pairs.py",
+        "sha256": "faa4f6b7236f37d15e21475f4564fcd311c44305a166aafc301215dbea26e7dd"
       }
     ]
   },
   "schema_version": 1,
   "scope": "lexicon code only; excludes module vocabulary and dictionary DB/cache state",
   "stats": {
-    "lexicon_code_files": 27
+    "lexicon_code_files": 29
   }
 }

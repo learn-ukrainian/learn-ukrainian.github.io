@@ -39,6 +39,7 @@ DEFAULT_ATLAS_DB = Path("data/atlas.db")
 DEFAULT_OUT_DIR = Path("site/public/lexicon")
 DEFAULT_ALLOWLIST = Path("site/src/data/lexicon-practice-reviewed-sources.json")
 DEFAULT_CLOZE_SOURCES = Path("site/src/data/lexicon-practice-cloze-sources.json")
+DEFAULT_SYNONYM_VERDICTS = Path("data/lexicon/synonym_pair_verdicts.yaml")
 # Keep the default above the current all-eligible deck size. A lower default
 # silently contracts the committed practice surface during routine cloze regen.
 DEFAULT_TARGET = 6000
@@ -1512,6 +1513,10 @@ def _build_synonym_items(
     by_plain_lemma: dict[str, dict[str, Any]],
     all_lexemes: list[dict[str, Any]],
     deck_version: str,
+    approved_set: set[tuple[str, str, str]],
+    rejected_set: set[tuple[str, str, str]],
+    synonym_verdicts_loaded: bool,
+    encountered_pairs: dict[str, dict[str, set[tuple[str, str, str]]]],
 ) -> list[dict[str, Any]]:
     items: list[dict[str, Any]] = []
     for polarity, section_name in (("synonym", "synonyms"), ("antonym", "antonyms")):
@@ -1526,6 +1531,27 @@ def _build_synonym_items(
             distractors = _valid_synonym_distractors(target, lexeme, all_lexemes)
             if len(distractors) < 3:
                 continue
+
+            l_plain = _plain(lexeme["lemma"])
+            t_plain = _plain(target["lemma"])
+            p1, p2 = (l_plain, t_plain) if l_plain <= t_plain else (t_plain, l_plain)
+            pair_key = (p1, p2, polarity)
+
+            level = lexeme["cefr"]
+
+            if not synonym_verdicts_loaded:
+                encountered_pairs[level]["awaiting"].add(pair_key)
+                continue
+
+            if pair_key in approved_set:
+                encountered_pairs[level]["approved"].add(pair_key)
+            elif pair_key in rejected_set:
+                encountered_pairs[level]["rejected"].add(pair_key)
+                continue
+            else:
+                encountered_pairs[level]["awaiting"].add(pair_key)
+                continue
+
             key = "\x1f".join((deck_version, lexeme["lemmaId"], target["lemmaId"], polarity))
             synonym_id = "syn_" + hashlib.sha1(key.encode("utf-8")).hexdigest()[:12]
             options = [
@@ -1718,6 +1744,7 @@ def build_practice_shards(
     verifier: VesumVerifier,
     cloze_sources: list[dict[str, Any]] | None = None,
     config: BuildConfig | None = None,
+    synonym_verdicts: dict[str, Any] | None = None,
 ) -> dict[str, dict[str, dict[str, Any]]]:
     if isinstance(cloze_sources, BuildConfig) and config is None:
         config = cloze_sources
@@ -1726,6 +1753,36 @@ def build_practice_shards(
         config = BuildConfig()
     if config.target < 0:
         raise ValueError("target must be non-negative")
+
+    if synonym_verdicts is None:
+        print("WARN: synonym verdicts file not found; emitting no synonym items", file=sys.stderr)
+        synonym_verdicts_loaded = False
+    elif isinstance(synonym_verdicts, Path):
+        synonym_verdicts = read_synonym_verdicts(synonym_verdicts)
+        synonym_verdicts_loaded = synonym_verdicts is not None
+    else:
+        synonym_verdicts_loaded = True
+    approved_set = set()
+    rejected_set = set()
+    if synonym_verdicts:
+        for item in synonym_verdicts.get("approved", []):
+            a_p = _plain(item["a"])
+            b_p = _plain(item["b"])
+            if a_p > b_p:
+                a_p, b_p = b_p, a_p
+            approved_set.add((a_p, b_p, item["polarity"]))
+        for item in synonym_verdicts.get("rejected", []):
+            a_p = _plain(item["a"])
+            b_p = _plain(item["b"])
+            if a_p > b_p:
+                a_p, b_p = b_p, a_p
+            rejected_set.add((a_p, b_p, item["polarity"]))
+
+    encountered_pairs: dict[str, dict[str, set[tuple[str, str, str]]]] = {
+        level: {"approved": set(), "rejected": set(), "awaiting": set()}
+        for level in CEFR_ORDER
+    }
+
     deck_version = f"atlas-practice-v{SCHEMA_VERSION}-{_manifest_fingerprint(entries)}"
     rng_seed = int(hashlib.sha256(deck_version.encode("utf-8")).hexdigest()[:16], 16)
     rng = random.Random(rng_seed)
@@ -1805,11 +1862,26 @@ def build_practice_shards(
         if paradigm_items:
             mode_lemma_ids["paradigm"].add(lexeme["lemmaId"])
 
-        synonym_items = _build_synonym_items(_entry, lexeme, by_plain_lemma, all_lexemes, deck_version)
+        synonym_items = _build_synonym_items(
+            _entry,
+            lexeme,
+            by_plain_lemma,
+            all_lexemes,
+            deck_version,
+            approved_set,
+            rejected_set,
+            synonym_verdicts_loaded,
+            encountered_pairs,
+        )
         for item in synonym_items:
             level = str(item.pop("level"))
             mode_by_level[level]["synonym"].append(item)
             mode_lemma_ids["synonym"].add(lexeme["lemmaId"])
+
+    global_awaiting = set()
+    for level in CEFR_ORDER:
+        global_awaiting.update(encountered_pairs[level]["awaiting"])
+    print(f"{len(global_awaiting)} synonym pairs awaiting verification — excluded")
 
     shards: dict[str, dict[str, dict[str, Any]]] = {}
     for level in PUBLISHED_LEVELS:
@@ -1900,6 +1972,7 @@ def build_practice_shards(
                 f"({index_payload['counts']['modeCoverage'][mode]:.2%})"
                 for mode in ("cloze", *DRILL_MODES)
             )
+            + f" synonym_pairs:approved={len(encountered_pairs[level]['approved'])},rejected={len(encountered_pairs[level]['rejected'])},awaiting={len(encountered_pairs[level]['awaiting'])}"
         )
         lexeme_payload = _level_payload(
             "atlas-practice-lexemes",
@@ -1974,6 +2047,18 @@ def read_cloze_sources(path: Path | None) -> list[dict[str, Any]]:
     if not rows:
         print("WARN: curated cloze sources empty; emitting recognition-only deck", file=sys.stderr)
     return rows
+
+
+def read_synonym_verdicts(path: Path | None) -> dict[str, Any] | None:
+    if path is None or not path.exists():
+        print("WARN: synonym verdicts file not found; emitting no synonym items", file=sys.stderr)
+        return None
+    import yaml
+    try:
+        return yaml.safe_load(path.read_text(encoding="utf-8"))
+    except Exception as e:
+        print(f"WARN: failed to load synonym verdicts file: {e}; emitting no synonym items", file=sys.stderr)
+        return None
 
 
 def run_broken_validator_fixtures() -> int:
@@ -2144,6 +2229,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--out-dir", type=Path, default=DEFAULT_OUT_DIR)
     parser.add_argument("--reviewed-allowlist", type=Path, default=DEFAULT_ALLOWLIST)
     parser.add_argument("--cloze-sources", type=Path, default=DEFAULT_CLOZE_SOURCES)
+    parser.add_argument("--synonym-verdicts", type=Path, default=DEFAULT_SYNONYM_VERDICTS)
     parser.add_argument("--vesum-fixture", type=Path)
     parser.add_argument("--target", type=int, default=DEFAULT_TARGET)
     parser.add_argument("--raw-limit", type=int, default=DEFAULT_RAW_LIMIT)
@@ -2162,6 +2248,7 @@ def main(argv: list[str] | None = None) -> int:
     entries = read_manifest(args.manifest) if args.manifest else read_atlas_db(args.atlas_db)
     allowlist = ReviewedSourceAllowlist.from_path(args.reviewed_allowlist)
     cloze_sources = read_cloze_sources(args.cloze_sources)
+    synonym_verdicts = read_synonym_verdicts(args.synonym_verdicts)
     verifier: VesumVerifier = (
         JsonVesumVerifier.from_path(args.vesum_fixture)
         if args.vesum_fixture
@@ -2174,7 +2261,7 @@ def main(argv: list[str] | None = None) -> int:
         fixture_note=args.fixture_note,
         source_label="fixture" if args.vesum_fixture or args.manifest else "atlas.db",
     )
-    shards = build_practice_shards(entries, allowlist, verifier, cloze_sources, config)
+    shards = build_practice_shards(entries, allowlist, verifier, cloze_sources, config, synonym_verdicts)
     apply_size_budgets(shards, config.raw_limit, config.gzip_limit)
     written = write_shards(shards, args.out_dir)
     for path in written:
