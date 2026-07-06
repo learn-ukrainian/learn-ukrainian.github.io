@@ -1,9 +1,9 @@
 {
-  "assembled_mdx_sha256": "b4e0847b4d3a239bf7fabb7795ee45045ff775700925d3c4da943427d3d1b0ac",
+  "assembled_mdx_sha256": "0b80dd3d4cc78159f4766ffe308163406a55d8f0ee3737f67c1f3d5a815d13bf",
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "a78d6c9809e345d1de3c9dfb4c58da6dbd479e9a252d0d3b6e2adad8afa5004e",
+    "digest": "c8db31b391f2a51ad4207fc6f1386b189d55a75702c0bb5cfd56a35b752b3573",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/narodni-tantsi.yaml",
@@ -11,7 +11,7 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/narodni-tantsi/module.md",
-        "sha256": "8c589f69f42f3a39db0847e13c1d9aff8bbf1bdbccc4ac4acca5228d0384d7f1"
+        "sha256": "b24276c86e265b554ded782eab3ea78f4a2ab2d8237c9acd948bbba9f49b909b"
       },
       {
         "path": "curriculum/l2-uk-en/folk/narodni-tantsi/activities.yaml",
@@ -29,9 +29,9 @@
   },
   "evidence": {
     "decolonization": "Dance framing keeps stage-vs-village and regional/source-disagreement boundaries explicit.",
-    "pedagogical": "Seven PrimaryReading blocks ground movement formulas without inventing choreography or treating stage style as village practice.",
-    "review": "Claude Opus 4.8 bridge message 2 PASS for Batch 5 reading remediation; format, attribution, framing, and MDX-source sync clean. DeepSeek not used.",
-    "source_policy": "Converted verified dance/wesnianka/haivka snippets into structured on-site readings; external links remain supplementary."
+    "pedagogical": "Readings ground movement formulas in substantial learner-visible passages without inventing choreography or treating stage style as village practice.",
+    "review": "Claude Opus 4.8 project bridge task batchf-reread-review-claude message 2 PASS for Batch F strict reread remediation; no blockers. DeepSeek not used.",
+    "source_policy": "Batch F strict reread replaced token dance formula blocks with two substantial Hrushevsky/Litopys public-domain on-site excerpts; former token formulas remain inline supplementary signals."
   },
   "floors": {
     "beauty": 8.5,
@@ -49,7 +49,7 @@
     "model": "claude-opus-4-8"
   },
   "schema_version": 1,
-  "scored_at": "2026-07-05T18:18:43Z",
+  "scored_at": "2026-07-06T14:53:50Z",
   "scores": {
     "beauty": 8.7,
     "decolonization": 9.2,

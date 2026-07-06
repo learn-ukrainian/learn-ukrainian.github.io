@@ -47,6 +47,36 @@
       "module_slug": "narodni-anekdoty",
       "reason": "Batch E verified Volodymyr Hnatiuk 1899 anecdote against the Internet Archive scan of Етнографічний збірник, т. 6, с. 1; local literary corpus does not contain this scan page.",
       "reviewer": "claude-opus-4-8"
+    },
+    "b2f7c233a6bf4282c6d8dc7450d95401dde57f0e2518a3e2bbd16befa2d8a2b6": {
+      "date": "2026-07-06",
+      "module_slug": "narodni-tantsi",
+      "reason": "Batch F verified public-domain Hrushevsky/Litopys Кривий танець excerpt; local literary corpus does not return the public Litopys page.",
+      "reviewer": "claude-opus-4-8"
+    },
+    "a593798ae0cacae6d7e0b09d6d1a546a233019e054a8dad3d5a6fe2db1240147": {
+      "date": "2026-07-06",
+      "module_slug": "narodni-tantsi",
+      "reason": "Batch F verified public-domain Hrushevsky/Litopys Шум excerpt; local literary corpus does not return the public Litopys page.",
+      "reviewer": "claude-opus-4-8"
+    },
+    "7037b99419bdd8caa6d478ead457123d4642e59e9a5d7b3291a010dfe682b4f2": {
+      "date": "2026-07-06",
+      "module_slug": "pysankarstvo",
+      "reason": "Batch F Claude review verified the ранньомодерний великодній excerpt verbatim and in-order against project corpus chunk 21c791c4_c0098; local fuzzy quote gate misses the shortened line wraps.",
+      "reviewer": "claude-opus-4-8"
+    },
+    "71f993963b4c98757094ef920d24987082f4292b7b112bf80a1fd926126a032a": {
+      "date": "2026-07-06",
+      "module_slug": "narodna-vyshyvka-rushnyk-strii",
+      "reason": "Batch F verified public-domain Hrinchenko Дівчина Леся excerpt from Ukrlib; local literary corpus does not return this public source page.",
+      "reviewer": "claude-opus-4-8"
+    },
+    "c8d614ff4e54b3eee509b7330bc88d06d70d1498650a9cc0b37958ad28387c38": {
+      "date": "2026-07-06",
+      "module_slug": "narodni-remesla-ta-khudozhni-promysly",
+      "reason": "Batch F verified public-domain Franko Домашній промисл excerpt from Ukrlib; local literary corpus does not return this public source page.",
+      "reviewer": "claude-opus-4-8"
     }
   }
 }
