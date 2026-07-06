@@ -1,0 +1,1395 @@
+schema_version: 1
+description: Curated heritage calque pairs for the §9.5 decolonization drill (#4505). Every record driver-adjudicated
+  with tool-backed evidence; never generated from raw russian_shadow scores.
+pairs:
+- calqueLabel: бажаючий
+  calqueSurfaces:
+  - бажаючі
+  nativeSlug: охочий
+  nativeLemma: охочий
+  kind: lexical
+  corrections:
+  - охочий
+  rationale: 'активний дієприкметник-калька; Антоненко: «Бажаючий – що (котрий, який) бажає – охочий»'
+  citations:
+  - antonenko:Бажаючий
+  - ua-gec:F/Calque n=1
+  sourceFamily: mixed
+  sourceFamilies:
+  - antonenko
+  - ua-gec
+  cefrAvailability: b1
+  curator: fable-2026-07-06
+  notes: has module frame
+- calqueLabel: благополучний
+  calqueSurfaces:
+  - благополучний
+  - благополучна
+  nativeSlug: щасливий
+  nativeLemma: щасливий
+  kind: lexical
+  corrections:
+  - щасливий
+  rationale: 'Антоненко: недоречний старослов''янізм під впливом рос.; українські відповідники щасливий,
+    щасний, безпечний'
+  citations:
+  - antonenko:81 Благополучний чи щасливий
+  sourceFamily: antonenko
+  sourceFamilies:
+  - antonenko
+  cefrAvailability: b1
+  curator: fable-2026-07-06
+  notes: безпечний correction dropped — not a manifest article yet
+- calqueLabel: болільник
+  calqueSurfaces:
+  - болільник
+  - болільники
+  nativeSlug: вболівальник
+  nativeLemma: вболівальник
+  kind: lexical
+  corrections:
+  - вболівальник
+  rationale: 'Антоненко: боліти = відчувати біль/жаль; спортивний уболівальник — вболівальник (від вболівати
+    за когось)'
+  citations:
+  - antonenko:14 Болільник чи вболівальник
+  sourceFamily: antonenko
+  sourceFamilies:
+  - antonenko
+  cefrAvailability: b1
+  curator: fable-2026-07-06
+- calqueLabel: біля
+  calqueSurfaces:
+  - біля
+  nativeSlug: близько
+  nativeLemma: близько
+  kind: sense_restricted
+  corrections:
+  - близько
+  rationale: legacy manifest curated_calque (біля) confirmed by GEC
+  citations:
+  - legacy-manifest:біля
+  - ua-gec:F/Calque n=1
+  sourceFamily: mixed
+  sourceFamilies:
+  - legacy-manifest
+  - ua-gec
+  cefrAvailability: a2
+  curator: fable-2026-07-06
+  calqueSense: 'кількісна приблизність: «біля п''яти» (рос. около пяти)'
+  authenticSense: просторове біля = поруч
+  notes: LEGACY MIGRATION row — merge with existing manifest record
+- calqueLabel: виглядати
+  calqueSurfaces:
+  - виглядати
+  nativeSlug: здаватися
+  nativeLemma: здаватися
+  kind: sense_restricted
+  corrections:
+  - здаватися
+  rationale: Грінченко/СУМ-20 attest 'look; peer out'; calque only when 'виглядає' replaces 'здається'
+    (= it seems).
+  citations:
+  - legacy-manifest:grinchenko
+  - legacy-manifest:sum-20
+  - legacy-manifest:grok-3098
+  sourceFamily: legacy-manifest
+  sourceFamilies:
+  - legacy-manifest
+  cefrAvailability: b1
+  curator: legacy+fable-2026-07-06
+  calqueSense: to seem / appear that (рос. выглядит = 'it seems')
+  authenticSense: to look (well/ill); to peer out (гарно виглядати; виглядати у вікно)
+- calqueLabel: вид
+  calqueSurfaces:
+  - виду
+  nativeSlug: краєвид
+  nativeLemma: краєвид
+  kind: sense_restricted
+  corrections:
+  - краєвид
+  rationale: 'Антоненко: «Вид, на виду, на видноті, вигляд, краєвид»'
+  citations:
+  - antonenko:Вид, на виду, на видноті, вигляд, краєвид
+  - ua-gec:F/Calque n=1
+  sourceFamily: mixed
+  sourceFamilies:
+  - antonenko
+  - ua-gec
+  cefrAvailability: b1
+  curator: fable-2026-07-06
+  calqueSense: 'краєвид: «гарний вид з вікна» (рос. вид)'
+  authenticSense: вид = біологічний таксон; граматична категорія
+  notes: narrowed to краєвид (scenery frames) — вигляд not yet a manifest article; add вигляд correction
+    after intake lands it
+- calqueLabel: виключення
+  calqueSurfaces:
+  - виключення
+  - виключенням
+  nativeSlug: виняток
+  nativeLemma: виняток
+  kind: sense_restricted
+  corrections:
+  - виняток
+  rationale: відхилення від правила — виняток
+  citations:
+  - ua-gec:F/Calque n=7 docs=7
+  sourceFamily: ua-gec
+  sourceFamilies:
+  - ua-gec
+  cefrAvailability: a2
+  curator: fable-2026-07-06
+  calqueSense: виняток із правила (рос. исключение)
+  authenticSense: виключення = дія (виключення зі списку, з університету)
+- calqueLabel: виключно
+  calqueSurfaces:
+  - виключно
+  nativeSlug: суто
+  nativeLemma: суто
+  kind: sense_restricted
+  corrections:
+  - суто
+  - винятково
+  - тільки
+  rationale: 'Антоненко: «Виключно, винятково, тільки, суто»'
+  citations:
+  - antonenko:Виключно, винятково, тільки, суто
+  - slovnyk:davydov
+  sourceFamily: mixed
+  sourceFamilies:
+  - antonenko
+  - slovnyk-dicts
+  cefrAvailability: b1
+  curator: fable-2026-07-06
+  calqueSense: у значенні «тільки, суто» (рос. исключительно)
+  authenticSense: виключно = як виняток
+- calqueLabel: вирішення
+  calqueSurfaces:
+  - вирішення
+  nativeSlug: розв-язання
+  nativeLemma: розв'язання
+  kind: sense_restricted
+  corrections:
+  - розв'язання
+  rationale: задачі/проблеми розв'язують; вирішення — про волевиявлення
+  citations:
+  - ua-gec:F/Collocation n=5 docs=5
+  - slovnyk:foreign_shtepa
+  sourceFamily: mixed
+  sourceFamilies:
+  - slovnyk-dicts
+  - ua-gec
+  cefrAvailability: b1
+  curator: fable-2026-07-06
+  calqueSense: розв'язання задачі/проблеми (рос. решение задачи)
+  authenticSense: ухвалення рішення (вирішення питання по суті)
+- calqueLabel: вирішити
+  calqueSurfaces:
+  - вирішити
+  nativeSlug: розв-язати
+  nativeLemma: розв'язати
+  kind: sense_restricted
+  corrections:
+  - розв'язати
+  rationale: задачі розв'язують; дієслівний відповідник пари вирішення→розв'язання
+  citations:
+  - ua-gec:F/Collocation n=3 docs=3
+  sourceFamily: ua-gec
+  sourceFamilies:
+  - ua-gec
+  cefrAvailability: b1
+  curator: fable-2026-07-06
+  calqueSense: розв'язати задачу/проблему (рос. решить задачу)
+  authenticSense: вирішити = ухвалити рішення
+- calqueLabel: включити
+  calqueSurfaces:
+  - включити
+  nativeSlug: увімкнути
+  nativeLemma: увімкнути
+  kind: sense_restricted
+  corrections:
+  - увімкнути
+  rationale: 'Антоненко: «Включати, умикати, виключати, вимикати» — світло вмикають'
+  citations:
+  - antonenko:Включати, умикати, виключати, вимикати
+  - ua-gec:F/Calque n=1
+  sourceFamily: mixed
+  sourceFamilies:
+  - antonenko
+  - ua-gec
+  cefrAvailability: b1
+  curator: fable-2026-07-06
+  calqueSense: світло/пристрій (рос. включить свет)
+  authenticSense: включити до списку/складу
+  notes: умикати dropped per agy review (aspect mismatch with включити)
+- calqueLabel: відкривати
+  calqueSurfaces:
+  - відкрив
+  - відкрила
+  - відкрити
+  - відкриває
+  - відкрито
+  nativeSlug: відчиняти
+  nativeLemma: відчиняти
+  kind: sense_restricted
+  corrections:
+  - відчиняти
+  - відчинити
+  rationale: 'Антоненко: «Відкривати, відчиняти, розгортати» — двері відчиняють'
+  citations:
+  - antonenko:Відкривати, відчиняти, розгортати
+  - ua-gec merged n=13 docs=13
+  sourceFamily: antonenko
+  sourceFamilies:
+  - antonenko
+  cefrAvailability: b1
+  curator: fable-2026-07-06
+  calqueSense: двері/вікно/крамницю фізично (рос. открыть дверь)
+  authenticSense: відкрити Америку, рахунок, засідання
+  notes: MERGE of відкрити→відчинити/відкривати→відчиняти/відкрито→відчинений
+- calqueLabel: відносно
+  calqueSurfaces:
+  - відносно
+  nativeSlug: щодо
+  nativeLemma: щодо
+  kind: sense_restricted
+  corrections:
+  - щодо
+  - стосовно
+  rationale: 'Антоненко: щодо/стосовно замість канцелярського відносно'
+  citations:
+  - antonenko:Порівняння, у порівнянні, порівняно
+  - slovnyk:foreign_shtepa
+  sourceFamily: mixed
+  sourceFamilies:
+  - antonenko
+  - slovnyk-dicts
+  cefrAvailability: b1
+  curator: fable-2026-07-06
+  calqueSense: прийменник «щодо» (рос. относительно)
+  authenticSense: відносно = порівняно (відносно небагато)
+- calqueLabel: відношення
+  calqueSurfaces:
+  - відношення
+  nativeSlug: ставлення
+  nativeLemma: ставлення
+  kind: sense_restricted
+  corrections:
+  - ставлення
+  - стосунки
+  - відносини
+  rationale: 'Антоненко: «Відношення, взаємини, стосунок, відносини»'
+  citations:
+  - antonenko:Відношення
+  - slovnyk:davydov
+  - ua-gec merged n=12 docs=8
+  sourceFamily: mixed
+  sourceFamilies:
+  - antonenko
+  - slovnyk-dicts
+  cefrAvailability: b1
+  curator: fable-2026-07-06
+  calqueSense: ставлення до когось/стосунки (рос. отношение)
+  authenticSense: математичне відношення; діловий документ
+  notes: MERGE of відношення→стосунок/ставлення/відносини; A2→B1 per agy review
+- calqueLabel: відправити
+  calqueSurfaces:
+  - відправити
+  nativeSlug: надіслати
+  nativeLemma: надіслати
+  kind: sense_restricted
+  corrections:
+  - надіслати
+  - надсилати
+  rationale: листи й повідомлення надсилають
+  citations:
+  - ua-gec:F/Collocation n=2 docs=2
+  sourceFamily: ua-gec
+  sourceFamilies:
+  - ua-gec
+  cefrAvailability: a2
+  curator: fable-2026-07-06
+  calqueSense: листи/повідомлення (рос. отправить письмо)
+  authenticSense: відправити поїзд, відправити службу
+- calqueLabel: відсутність
+  calqueSurfaces:
+  - відсутність
+  - відсутності
+  nativeSlug: нестача
+  nativeLemma: нестача
+  kind: sense_restricted
+  corrections:
+  - нестача
+  rationale: 'Антоненко: про речі — брак/нестача; відсутність — про людей'
+  citations:
+  - antonenko:19 Відсутність, присутність, брак, наявність
+  sourceFamily: antonenko
+  sourceFamilies:
+  - antonenko
+  cefrAvailability: b1
+  curator: fable-2026-07-06
+  calqueSense: 'про речі: «відсутність доказів» (рос. отсутствие)'
+  authenticSense: відсутність людей (відсутній на зборах)
+  notes: брак correction dropped — not a manifest article yet
+- calqueLabel: відчитати
+  calqueSurfaces:
+  - відчитати
+  nativeSlug: вичитати
+  nativeLemma: вичитати
+  kind: sense_restricted
+  corrections:
+  - вичитати
+  rationale: 'Антоненко: рос. отчитывать → вичитати КОМУСЬ (не когось) або прочитати комусь нотацію'
+  citations:
+  - antonenko:133 Відчитати чи вичитати
+  sourceFamily: antonenko
+  sourceFamilies:
+  - antonenko
+  cefrAvailability: b1
+  curator: fable-2026-07-06
+  calqueSense: ганити когось (рос. отчитать когось)
+  authenticSense: відчитати = прочитати повністю (звіт, лекцію)
+- calqueLabel: вірний
+  calqueSurfaces:
+  - вірно
+  - вірні
+  nativeSlug: правильний
+  nativeLemma: правильний
+  kind: sense_restricted
+  corrections:
+  - правильний
+  - правильно
+  - слушний
+  rationale: 'Антоненко: «Вірний, правдивий, правильний, певний, слушний»'
+  citations:
+  - antonenko:Вірний, правдивий, правильний
+  - ua-gec merged n=10 docs=10
+  sourceFamily: antonenko
+  sourceFamilies:
+  - antonenko
+  cefrAvailability: a2
+  curator: fable-2026-07-06
+  calqueSense: 'правильний: «вірна відповідь» (рос. верный ответ)'
+  authenticSense: вірний = відданий (вірний друг)
+  notes: MERGE вірно→правильно + вірний→правильний
+- calqueLabel: говоритися
+  calqueSurfaces:
+  - говориться
+  nativeSlug: сказати
+  nativeLemma: сказати
+  kind: sense_restricted
+  corrections:
+  - йдеться
+  - сказано
+  rationale: у тексті йдеться / сказано, не «говориться»
+  citations:
+  - ua-gec:F/Calque n=1
+  sourceFamily: ua-gec
+  sourceFamilies:
+  - ua-gec
+  cefrAvailability: b1
+  curator: fable-2026-07-06
+  calqueSense: «у статті говориться» (рос. говорится)
+  authenticSense: говорити як процес мовлення
+  notes: nativeSlug from сказати (GEC); corrections lead with йдеться — CHECK manifest for йтися
+- calqueLabel: да
+  calqueSurfaces:
+  - да
+  nativeSlug: так
+  nativeLemma: так
+  kind: lexical
+  corrections:
+  - так
+  rationale: 'канонічний суржик-маркер: рос. да; укр. так'
+  citations:
+  - ua-gec:F/Calque n=3 docs=2
+  sourceFamily: ua-gec
+  sourceFamilies:
+  - ua-gec
+  cefrAvailability: a2
+  curator: fable-2026-07-06
+  notes: Антоненко-збіг спурійний (функційне слово); GEC-цитата достатня
+- calqueLabel: даний
+  calqueSurfaces:
+  - дані
+  nativeSlug: цей
+  nativeLemma: цей
+  kind: sense_restricted
+  corrections:
+  - цей
+  rationale: вказівність передає цей/ця/це; «в даний час» → «зараз, нині»
+  citations:
+  - ua-gec:F/Calque n=1
+  - slovnyk:foreign_shtepa
+  sourceFamily: mixed
+  sourceFamilies:
+  - slovnyk-dicts
+  - ua-gec
+  cefrAvailability: b1
+  curator: fable-2026-07-06
+  calqueSense: канцелярит «в даний час», «дана книга» (рос. данный)
+  authenticSense: 'математичне: дана величина'
+  notes: native card = цей (a1); GEC surface was дані→ці
+- calqueLabel: доктор
+  calqueSurfaces:
+  - доктор
+  - докторе
+  nativeSlug: лікар
+  nativeLemma: лікар
+  kind: sense_restricted
+  corrections:
+  - лікар
+  - лікарка
+  rationale: доктор — науковий ступінь; медик — лікар/лікарка
+  citations:
+  - ua-gec:F/Calque n=31 docs=23 (merged 3 rows)
+  - slovnyk:foreign_shtepa
+  sourceFamily: mixed
+  sourceFamilies:
+  - slovnyk-dicts
+  - ua-gec
+  cefrAvailability: a2
+  curator: fable-2026-07-06
+  calqueSense: медик, звертання до медика (рос. доктор)
+  authenticSense: науковий ступінь (доктор наук)
+  notes: MERGE of доктор→лікарю/лікар/лікарка
+- calqueLabel: другий
+  calqueSurfaces:
+  - другий
+  - другі
+  nativeSlug: інший
+  nativeLemma: інший
+  kind: sense_restricted
+  corrections:
+  - інший
+  rationale: 'Антоненко: у сучасній мові другий — тільки порядковий числівник; для «other» — інший'
+  citations:
+  - antonenko:200 Другий та інший
+  sourceFamily: antonenko
+  sourceFamilies:
+  - antonenko
+  cefrAvailability: a2
+  curator: fable-2026-07-06
+  calqueSense: у значенні «інший» (рос. другой)
+  authenticSense: порядковий числівник (другий раз, другий поверх)
+- calqueLabel: дійсно
+  calqueSurfaces:
+  - дійсно
+  nativeSlug: справді
+  nativeLemma: справді
+  kind: sense_restricted
+  corrections:
+  - справді
+  rationale: 'Антоненко: надуживання дійсно; українська має справді, насправді, на ділі'
+  citations:
+  - antonenko:89 Дійсний, дійсно, в дійсності, справжній, справді
+  sourceFamily: antonenko
+  sourceFamilies:
+  - antonenko
+  cefrAvailability: b1
+  curator: fable-2026-07-06
+  calqueSense: рутинний підсилювач під рос. действительно («я дійсно не бачив»)
+  authenticSense: дійсний/дійсно — про чинність, реальність (дійсний квиток)
+  notes: насправді correction dropped — not a manifest article yet; дійсний→справжній pair DEFERRED (справжній
+    absent)
+- calqueLabel: задача
+  calqueSurfaces:
+  - задач
+  - задача
+  - задачами
+  nativeSlug: завдання
+  nativeLemma: завдання
+  kind: sense_restricted
+  corrections:
+  - завдання
+  rationale: задача — лише математична; у значенні «доручення, справа» — завдання
+  citations:
+  - ua-gec:F/Calque n=31 docs=25
+  - slovnyk:foreign_shtepa
+  sourceFamily: mixed
+  sourceFamilies:
+  - slovnyk-dicts
+  - ua-gec
+  cefrAvailability: a2
+  curator: fable-2026-07-06
+  calqueSense: загальне доручення/справа (рос. задача)
+  authenticSense: математична задача
+- calqueLabel: залив
+  calqueSurfaces:
+  - залив
+  nativeSlug: затока
+  nativeLemma: затока
+  kind: lexical
+  corrections:
+  - затока
+  rationale: рос. залив; питоме — затока
+  citations:
+  - ua-gec:F/Calque n=2 docs=2
+  sourceFamily: ua-gec
+  sourceFamilies:
+  - ua-gec
+  cefrAvailability: b1
+  curator: fable-2026-07-06
+  notes: VESUM mislemmatized to verb залити; calqueLabel = залив (noun)
+- calqueLabel: знаходити
+  calqueSurfaces:
+  - знаходить
+  nativeSlug: вважати
+  nativeLemma: вважати
+  kind: sense_restricted
+  corrections:
+  - вважати
+  rationale: думку виражає вважати; знаходити — про пошук
+  citations:
+  - ua-gec:F/Calque n=4 docs=1
+  sourceFamily: ua-gec
+  sourceFamilies:
+  - ua-gec
+  cefrAvailability: b1
+  curator: fable-2026-07-06
+  calqueSense: «знаходить це дивним» (рос. находит это странным)
+  authenticSense: знаходити загублене
+  notes: frame REQUIRED to disambiguate; single-doc but textbook calque
+- calqueLabel: знаходитися
+  calqueSurfaces:
+  - знаходиться
+  nativeSlug: розташований
+  nativeLemma: розташований
+  kind: sense_restricted
+  corrections:
+  - розташований
+  - бути
+  rationale: 'Антоненко: «Знаходитися, знайтися, бути, перебувати, пробувати» — про розташування кажуть
+    розташований/міститься'
+  citations:
+  - antonenko:Знаходитися, знайтися, бути, перебувати
+  - ua-gec merged n=5 docs=5
+  sourceFamily: antonenko
+  sourceFamilies:
+  - antonenko
+  cefrAvailability: b1
+  curator: fable-2026-07-06
+  calqueSense: 'стале місцеперебування: «будинок знаходиться» (рос. находится)'
+  authenticSense: знаходитися = бути знайденим (загублене знайшлося)
+  notes: MERGE знаходитися→розташований/стояти
+- calqueLabel: значить
+  calqueSurfaces:
+  - значить
+  nativeSlug: отже
+  nativeLemma: отже
+  kind: sense_restricted
+  corrections:
+  - отже
+  rationale: вставне «значить» — калька; питоме — отже
+  citations:
+  - ua-gec:F/Calque n=5 docs=5
+  - slovnyk:foreign_shtepa
+  sourceFamily: mixed
+  sourceFamilies:
+  - slovnyk-dicts
+  - ua-gec
+  cefrAvailability: b1
+  curator: fable-2026-07-06
+  calqueSense: вставне слово (рос. значит)
+  authenticSense: дієслово значити = мати значення
+  notes: calqueLabel deliberately the frozen form «значить»
+- calqueLabel: крокувати
+  calqueSurfaces:
+  - крокувати
+  - крокує
+  nativeSlug: іти
+  nativeLemma: іти
+  kind: lexical
+  corrections:
+  - іти
+  rationale: 'Антоненко: штучний новотвір під рос. шагать; природні дієслова — іти, простувати, прямувати'
+  citations:
+  - antonenko:153 Крокувати, простувати, іти
+  sourceFamily: antonenko
+  sourceFamilies:
+  - antonenko
+  cefrAvailability: b1
+  curator: fable-2026-07-06
+  notes: простувати/прямувати corrections dropped — not manifest articles yet
+- calqueLabel: куток
+  calqueSurfaces:
+  - кутку
+  nativeSlug: ріг
+  nativeLemma: ріг
+  kind: sense_restricted
+  corrections:
+  - ріг
+  rationale: перехрестя вулиць — ріг; куток — внутрішній
+  citations:
+  - ua-gec:F/Collocation n=1
+  sourceFamily: ua-gec
+  sourceFamilies:
+  - ua-gec
+  cefrAvailability: b1
+  curator: fable-2026-07-06
+  calqueSense: 'ріг вулиці: «на кутку» (рос. на углу)'
+  authenticSense: куток кімнати, затишний куток
+- calqueLabel: любий
+  calqueSurfaces:
+  - любий
+  nativeSlug: будь-який
+  nativeLemma: будь-який
+  kind: sense_restricted
+  corrections:
+  - будь-який
+  rationale: рос. любой ≠ укр. любий; для довільності — будь-який
+  citations:
+  - ua-gec:F/Calque n=1
+  sourceFamily: ua-gec
+  sourceFamilies:
+  - ua-gec
+  cefrAvailability: b1
+  curator: fable-2026-07-06
+  calqueSense: 'будь-який: «любий варіант» (рос. любой)'
+  authenticSense: любий = дорогий, коханий
+- calqueLabel: масло
+  calqueSurfaces:
+  - масла
+  nativeSlug: олія
+  nativeLemma: олія
+  kind: sense_restricted
+  corrections:
+  - олія
+  rationale: рослинна — олія; масло — вершкове
+  citations:
+  - ua-gec:F/Calque n=1
+  sourceFamily: ua-gec
+  sourceFamilies:
+  - ua-gec
+  cefrAvailability: a2
+  curator: fable-2026-07-06
+  calqueSense: 'рослинний жир: «соняшникове масло» (рос. масло)'
+  authenticSense: масло = тваринний жир (вершкове)
+- calqueLabel: матися
+  calqueSurfaces:
+  - мається
+  - маються
+  nativeSlug: бути
+  nativeLemma: бути
+  kind: sense_restricted
+  corrections:
+  - бути
+  - мати
+  rationale: 'Антоненко: «мається вибір» недоречне — є/маємо великий вибір'
+  citations:
+  - antonenko:156 Матися, бути, траплятися, мати
+  sourceFamily: antonenko
+  sourceFamilies:
+  - antonenko
+  cefrAvailability: b1
+  curator: fable-2026-07-06
+  calqueSense: «мається великий вибір» (рос. имеется)
+  authenticSense: матися = почуватися (як маєшся?)
+- calqueLabel: надо
+  calqueSurfaces:
+  - надо
+  nativeSlug: треба
+  nativeLemma: треба
+  kind: lexical
+  corrections:
+  - треба
+  rationale: рос. надо; питоме — треба; суржик-маркер
+  citations:
+  - ua-gec:F/Calque n=1
+  sourceFamily: ua-gec
+  sourceFamilies:
+  - ua-gec
+  cefrAvailability: a2
+  curator: fable-2026-07-06
+- calqueLabel: назад
+  calqueSurfaces:
+  - назад
+  nativeSlug: тому
+  nativeLemma: тому
+  kind: sense_restricted
+  corrections:
+  - тому
+  rationale: 'час позначає тому: «рік тому», не «рік назад»'
+  citations:
+  - ua-gec n=4 docs=3
+  - slovnyk:foreign_shtepa
+  sourceFamily: slovnyk-dicts
+  sourceFamilies:
+  - slovnyk-dicts
+  cefrAvailability: a2
+  curator: fable-2026-07-06
+  calqueSense: часове «рік назад» (рос. год назад)
+  authenticSense: просторовий напрямок (крок назад)
+- calqueLabel: начало
+  calqueSurfaces:
+  - начала
+  nativeSlug: початок
+  nativeLemma: початок
+  kind: sense_restricted
+  corrections:
+  - початок
+  rationale: про час — початок; начало — книжне «основа, суть, джерело»
+  citations:
+  - ua-gec:F/Calque n=1
+  sourceFamily: ua-gec
+  sourceFamilies:
+  - ua-gec
+  cefrAvailability: a2
+  curator: fable-2026-07-06
+  calqueSense: початок у часі (рос. начало)
+  authenticSense: філософське першоджерело, основа (вольове начало)
+  notes: 'agy review: reclassified lexical→sense_restricted'
+- calqueLabel: неділя
+  calqueSurfaces:
+  - неділя
+  nativeSlug: тиждень
+  nativeLemma: тиждень
+  kind: sense_restricted
+  corrections:
+  - тиждень
+  rationale: Грінченко attests неділя as Sunday; calque only when it means a week-long period → тиждень.
+  citations:
+  - legacy-manifest:glazova-10
+  - legacy-manifest:grinchenko
+  sourceFamily: legacy-manifest
+  sourceFamilies:
+  - legacy-manifest
+  cefrAvailability: b1
+  curator: legacy+fable-2026-07-06
+  calqueSense: week / a seven-day period (рос. неделя)
+  authenticSense: Sunday (day of the week)
+- calqueLabel: но
+  calqueSurfaces:
+  - но
+  nativeSlug: але
+  nativeLemma: але
+  kind: lexical
+  corrections:
+  - але
+  rationale: рос. сполучник но; укр. але — суржик-маркер
+  citations:
+  - ua-gec:F/Calque n=3 docs=3
+  sourceFamily: ua-gec
+  sourceFamilies:
+  - ua-gec
+  cefrAvailability: a2
+  curator: fable-2026-07-06
+- calqueLabel: область
+  calqueSurfaces:
+  - області
+  nativeSlug: сфера
+  nativeLemma: сфера
+  kind: sense_restricted
+  corrections:
+  - сфера
+  - ділянка
+  rationale: про царину — сфера/галузь/ділянка; область — адміністративна
+  citations:
+  - ua-gec merged n=2 docs=2
+  sourceFamily: mixed
+  sourceFamilies: []
+  cefrAvailability: b1
+  curator: fable-2026-07-06
+  calqueSense: царина знань/діяльності (рос. область знаний)
+  authenticSense: адміністративна область
+  notes: MERGE область→ділянка/сфера; CHECK галузь in manifest
+- calqueLabel: облік
+  calqueSurfaces:
+  - облік
+  nativeSlug: обличчя
+  nativeLemma: обличчя
+  kind: sense_restricted
+  corrections:
+  - обличчя
+  rationale: 'Антоненко: рос. облик механічно перенесене; українською — обличчя (переносно)'
+  citations:
+  - antonenko:50 Облік і обличчя
+  sourceFamily: antonenko
+  sourceFamilies:
+  - antonenko
+  cefrAvailability: b1
+  curator: fable-2026-07-06
+  calqueSense: 'зовнішній образ: «облік сучасника» (рос. облик)'
+  authenticSense: облік = облічування, реєстрація (взяти на облік)
+- calqueLabel: образ
+  calqueSurfaces:
+  - образ
+  nativeSlug: спосіб
+  nativeLemma: спосіб
+  kind: sense_restricted
+  corrections:
+  - спосіб
+  rationale: яким чином / у який спосіб, не «яким образом»
+  citations:
+  - ua-gec:F/Calque n=1
+  sourceFamily: ua-gec
+  sourceFamilies:
+  - ua-gec
+  cefrAvailability: b1
+  curator: fable-2026-07-06
+  calqueSense: «яким образом» (рос. каким образом)
+  authenticSense: художній образ
+  notes: CHECK чин in manifest; frame required
+- calqueLabel: обслуга
+  calqueSurfaces:
+  - обслуга
+  nativeSlug: обслуговування
+  nativeLemma: обслуговування
+  kind: sense_restricted
+  corrections:
+  - обслуговування
+  rationale: 'Антоненко: обслуга — не дія, а люди; дія — обслуговування'
+  citations:
+  - antonenko:49 Обслуга й обслуговування
+  sourceFamily: antonenko
+  sourceFamilies:
+  - antonenko
+  cefrAvailability: b1
+  curator: fable-2026-07-06
+  calqueSense: 'дія, що задовольняє потреби: «поштова обслуга»'
+  authenticSense: обслуга = група людей, призначених виконувати роботу (військ. розрахунок)
+- calqueLabel: палатка
+  calqueSurfaces:
+  - палатці
+  nativeSlug: намет
+  nativeLemma: намет
+  kind: sense_restricted
+  corrections:
+  - намет
+  rationale: туристичне шатро — намет; палатка в СУМ — торговельна споруда
+  citations:
+  - ua-gec:F/Calque n=2 docs=2
+  sourceFamily: ua-gec
+  sourceFamilies:
+  - ua-gec
+  cefrAvailability: a2
+  curator: fable-2026-07-06
+  calqueSense: туристичний намет (рос. палатка)
+  authenticSense: 'торговельна палатка — ятка, кіоск (СУМ: «тимчасове, звичайно літнє приміщення»)'
+  notes: 'agy review: reclassified lexical→sense_restricted (SUM attests trade-stall sense)'
+- calqueLabel: пануючий
+  calqueSurfaces:
+  - пануючий
+  - пануючі
+  nativeSlug: панівний
+  nativeLemma: панівний
+  kind: lexical
+  corrections:
+  - панівний
+  rationale: 'Антоненко: між пануючий і панівний немає значеннєвої різниці — пануючий суперечить духові
+    мови, завжди панівний'
+  citations:
+  - antonenko:190 Пануючий чи панівний
+  sourceFamily: antonenko
+  sourceFamilies:
+  - antonenko
+  cefrAvailability: b1
+  curator: fable-2026-07-06
+- calqueLabel: папа
+  calqueSurfaces:
+  - папа
+  nativeSlug: тато
+  nativeLemma: тато
+  kind: sense_restricted
+  corrections:
+  - тато
+  rationale: звертання до батька — тато; папа лише про понтифіка
+  citations:
+  - ua-gec:F/Calque n=1
+  - slovnyk:foreign_shtepa
+  sourceFamily: mixed
+  sourceFamilies:
+  - slovnyk-dicts
+  - ua-gec
+  cefrAvailability: a2
+  curator: fable-2026-07-06
+  calqueSense: батько (рос. папа)
+  authenticSense: Папа Римський
+- calqueLabel: пара
+  calqueSurfaces:
+  - пару
+  nativeSlug: кілька
+  nativeLemma: кілька
+  kind: sense_restricted
+  corrections:
+  - кілька
+  rationale: 'Антоненко: «Пара й кілька» — про неозначену кількість кажуть кілька'
+  citations:
+  - antonenko:Пара й кілька
+  - ua-gec:F/Calque n=18 docs=15
+  sourceFamily: mixed
+  sourceFamilies:
+  - antonenko
+  - ua-gec
+  cefrAvailability: a2
+  curator: fable-2026-07-06
+  calqueSense: 'приблизна кількість: «пару хвилин» (рос. пара минут)'
+  authenticSense: пара = двоє, комплект (пара шкарпеток)
+  notes: VESUM mislemmatized surface to «пар»; fixed to пара
+- calqueLabel: передня
+  calqueSurfaces:
+  - передню
+  - передній
+  nativeSlug: передпокій
+  nativeLemma: передпокій
+  kind: lexical
+  corrections:
+  - передпокій
+  rationale: субстантивована калька з рос. передняя; питоме — передпокій
+  citations:
+  - ua-gec:F/Calque n=10 docs=8
+  - slovnyk:foreign_shtepa
+  sourceFamily: mixed
+  sourceFamilies:
+  - slovnyk-dicts
+  - ua-gec
+  cefrAvailability: b1
+  curator: fable-2026-07-06
+- calqueLabel: переписка
+  calqueSurfaces:
+  - переписка
+  nativeSlug: листування
+  nativeLemma: листування
+  kind: sense_restricted
+  corrections:
+  - листування
+  rationale: 'Антоненко: обмін листами зветься листування; переписка — копіювання'
+  citations:
+  - antonenko:53 Переписка й листування
+  sourceFamily: antonenko
+  sourceFamilies:
+  - antonenko
+  cefrAvailability: b1
+  curator: fable-2026-07-06
+  calqueSense: обмін листами (рос. переписка)
+  authenticSense: переписування = процес копіювання написаного
+- calqueLabel: пол
+  calqueSurfaces:
+  - полу
+  nativeSlug: підлога
+  nativeLemma: підлога
+  kind: lexical
+  corrections:
+  - підлога
+  rationale: рос. пол; питоме — підлога
+  citations:
+  - ua-gec:F/Calque n=1
+  sourceFamily: ua-gec
+  sourceFamilies:
+  - ua-gec
+  cefrAvailability: a2
+  curator: fable-2026-07-06
+  notes: VESUM mislemmatized полу→пола(поділ одягу); calqueLabel fixed to пол
+- calqueLabel: положення
+  calqueSurfaces:
+  - положення
+  nativeSlug: становище
+  nativeLemma: становище
+  kind: sense_restricted
+  corrections:
+  - становище
+  rationale: про ситуацію — становище; положення — норма документа
+  citations:
+  - ua-gec:F/Calque n=4 docs=4
+  - slovnyk:foreign_shtepa
+  sourceFamily: mixed
+  sourceFamilies:
+  - slovnyk-dicts
+  - ua-gec
+  cefrAvailability: b1
+  curator: fable-2026-07-06
+  calqueSense: ситуація, стан (рос. положение)
+  authenticSense: пункт документа; позиція тіла
+- calqueLabel: пост
+  calqueSurfaces:
+  - посту
+  - пості
+  - постів
+  nativeSlug: допис
+  nativeLemma: допис
+  kind: sense_restricted
+  corrections:
+  - допис
+  rationale: соцмережева публікація — допис
+  citations:
+  - ua-gec:F/Calque n=9 docs=7
+  sourceFamily: ua-gec
+  sourceFamilies:
+  - ua-gec
+  cefrAvailability: b1
+  curator: fable-2026-07-06
+  calqueSense: публікація в соцмережі (рос./англ. пост)
+  authenticSense: військовий пост; релігійний піст — окрема лексема
+- calqueLabel: початкуючий
+  calqueSurfaces:
+  - початкуючий
+  - початкуючі
+  nativeSlug: початківець
+  nativeLemma: початківець
+  kind: lexical
+  corrections:
+  - початківець
+  rationale: 'Антоненко: рос. начинающий → початківець (початківець-письменник, початківець-художник)'
+  citations:
+  - antonenko:192 Початкуючий – початківець
+  sourceFamily: antonenko
+  sourceFamilies:
+  - antonenko
+  cefrAvailability: b1
+  curator: fable-2026-07-06
+- calqueLabel: працюючий
+  calqueSurfaces:
+  - працюючий
+  - працюючі
+  nativeSlug: працівник
+  nativeLemma: працівник
+  kind: lexical
+  corrections:
+  - працівник
+  - трудівник
+  rationale: 'Антоненко (у статті 192): працюючий – що працює – трудящий, трудівник, працівник'
+  citations:
+  - antonenko:192 Початкуючий – початківець (кінцівка статті)
+  sourceFamily: antonenko
+  sourceFamilies:
+  - antonenko
+  cefrAvailability: b1
+  curator: fable-2026-07-06
+  notes: трудівник kept as display correction; manifest gate applies to nativeSlug only
+- calqueLabel: приймати
+  calqueSurfaces:
+  - приймати
+  nativeSlug: брати
+  nativeLemma: брати
+  kind: sense_restricted
+  corrections:
+  - брати (участь)
+  - вживати (ліки)
+  rationale: 'Антоненко: «Приймати участь – брати участь»'
+  citations:
+  - antonenko:Приймати участь – брати участь
+  - slovnyk:davydov
+  - ua-gec:F/Collocation n=1
+  sourceFamily: mixed
+  sourceFamilies:
+  - antonenko
+  - slovnyk-dicts
+  - ua-gec
+  cefrAvailability: a2
+  curator: fable-2026-07-06
+  calqueSense: приймати участь (рос. принимать участие)
+  authenticSense: приймати гостей, приймати рішення
+  notes: GEC correction was вживати(ліки); canonical flagship form = брати участь; needs authored frames
+    both
+- calqueLabel: присвоїти
+  calqueSurfaces:
+  - присвоїли
+  - присвоїти
+  nativeSlug: надати
+  nativeLemma: надати
+  kind: sense_restricted
+  corrections:
+  - надати
+  rationale: 'Антоненко: звання, ордени, права надають; присвоїти — привласнити'
+  citations:
+  - antonenko:173 Присвоїти й надати
+  sourceFamily: antonenko
+  sourceFamilies:
+  - antonenko
+  cefrAvailability: b1
+  curator: fable-2026-07-06
+  calqueSense: присвоїти звання/права (рос. присвоить звание)
+  authenticSense: присвоїти = привласнити чуже
+- calqueLabel: пробка
+  calqueSurfaces:
+  - пробках
+  nativeSlug: затор
+  nativeLemma: затор
+  kind: sense_restricted
+  corrections:
+  - затор
+  rationale: на дорозі — затор
+  citations:
+  - ua-gec:F/Calque n=2 docs=2
+  sourceFamily: ua-gec
+  sourceFamilies:
+  - ua-gec
+  cefrAvailability: a2
+  curator: fable-2026-07-06
+  calqueSense: дорожній затор (рос. пробка)
+  authenticSense: пробка = корок (закорковування)
+- calqueLabel: піднімати
+  calqueSurfaces:
+  - піднімати
+  - піднімає
+  nativeSlug: порушувати
+  nativeLemma: порушувати
+  kind: sense_restricted
+  corrections:
+  - порушувати
+  rationale: питання порушують, не піднімають
+  citations:
+  - ua-gec:F/Collocation n=3 docs=3
+  - slovnyk:foreign_shtepa
+  - classifier:is_russianism
+  sourceFamily: mixed
+  sourceFamilies:
+  - slovnyk-dicts
+  - ua-gec
+  cefrAvailability: b1
+  curator: fable-2026-07-06
+  calqueSense: піднімати питання/тему (рос. поднимать вопрос)
+  authenticSense: фізично піднімати
+- calqueLabel: підписка
+  calqueSurfaces:
+  - підписка
+  nativeSlug: передплата
+  nativeLemma: передплата
+  kind: sense_restricted
+  corrections:
+  - передплата
+  rationale: 'Антоненко: газети передплачують; підписка — зобов''язання'
+  citations:
+  - antonenko:55 Підписка й передплата
+  sourceFamily: antonenko
+  sourceFamilies:
+  - antonenko
+  cefrAvailability: b1
+  curator: fable-2026-07-06
+  calqueSense: передплата газет/журналів (рос. подписка)
+  authenticSense: підписка = письмове зобов'язання, ствердження підписом
+- calqueLabel: розповсюджувати
+  calqueSurfaces:
+  - розповсюджувати
+  - розповсюджує
+  nativeSlug: поширювати
+  nativeLemma: поширювати
+  kind: sense_restricted
+  corrections:
+  - поширювати
+  rationale: 'Антоненко: ідеї, чутки, вплив поширюють; розповсюджують примірники'
+  citations:
+  - antonenko:169 Поширювати й розповсюджувати
+  sourceFamily: antonenko
+  sourceFamilies:
+  - antonenko
+  cefrAvailability: b1
+  curator: fable-2026-07-06
+  calqueSense: про ідеї, чутки, вплив («розповсюджувати ідеї»)
+  authenticSense: розповсюджувати = фізично роздавати (книжки, листівки)
+- calqueLabel: слідуючий
+  calqueSurfaces:
+  - слідуючий
+  nativeSlug: наступний
+  nativeLemma: наступний
+  kind: lexical
+  corrections:
+  - наступний
+  rationale: рос. следующий; use наступний for 'next'
+  citations:
+  - legacy-manifest:voron-9
+  - legacy-manifest:zabolotnyi-5
+  sourceFamily: legacy-manifest
+  sourceFamilies:
+  - legacy-manifest
+  cefrAvailability: b1
+  curator: legacy+fable-2026-07-06
+- calqueLabel: справа
+  calqueSurfaces:
+  - справа
+  nativeSlug: річ
+  nativeLemma: річ
+  kind: sense_restricted
+  corrections:
+  - річ
+  rationale: 'Антоненко: «Справа, діло, річ» — у розмовних зворотах питоме річ'
+  citations:
+  - antonenko:Справа, діло, річ
+  - slovnyk:davydov
+  - ua-gec n=16 docs=15
+  sourceFamily: mixed
+  sourceFamilies:
+  - antonenko
+  - slovnyk-dicts
+  cefrAvailability: b1
+  curator: fable-2026-07-06
+  calqueSense: «в чому справа», «це не моя справа» (рос. дело)
+  authenticSense: юридична/ділова справа
+  notes: nuanced; frame MUST disambiguate
+- calqueLabel: співпадіння
+  calqueSurfaces:
+  - співпадіння
+  nativeSlug: збіг
+  nativeLemma: збіг
+  kind: lexical
+  corrections:
+  - збіг
+  rationale: 'калька з рос. совпадение (класифікатор: is_russianism); питоме — збіг'
+  citations:
+  - ua-gec:F/Calque n=3 docs=3
+  - classifier:is_russianism
+  sourceFamily: ua-gec
+  sourceFamilies:
+  - ua-gec
+  cefrAvailability: a2
+  curator: fable-2026-07-06
+- calqueLabel: стакан
+  calqueSurfaces:
+  - стакан
+  nativeSlug: склянка
+  nativeLemma: склянка
+  kind: lexical
+  corrections:
+  - склянка
+  rationale: нормативне й частотне — склянка; стакан — СУМ «рідко», під рос. впливом
+  citations:
+  - ua-gec:F/Calque n=3 docs=2
+  sourceFamily: ua-gec
+  sourceFamilies:
+  - ua-gec
+  cefrAvailability: a2
+  curator: fable-2026-07-06
+  notes: native lemma normalized from GEC surface склянку; rationale softened per agy review (SUM attests
+    стакан as рідко)
+- calqueLabel: страховка
+  calqueSurfaces:
+  - страховка
+  nativeSlug: страхування
+  nativeLemma: страхування
+  kind: lexical
+  corrections:
+  - страхування
+  rationale: розмовна калька з рос. страховка; нормативне — страхування
+  citations:
+  - ua-gec:F/Calque n=1
+  - slovnyk:foreign_shtepa
+  sourceFamily: mixed
+  sourceFamilies:
+  - slovnyk-dicts
+  - ua-gec
+  cefrAvailability: b1
+  curator: fable-2026-07-06
+- calqueLabel: сідий
+  calqueSurfaces:
+  - сідий
+  nativeSlug: сивий
+  nativeLemma: сивий
+  kind: lexical
+  corrections:
+  - сивий
+  rationale: нормативне — сивий; сідий — рідковживаний варіант (СУМ «рідко»), закріплений рос. впливом
+  citations:
+  - ua-gec:F/Calque n=3 docs=3
+  sourceFamily: ua-gec
+  sourceFamilies:
+  - ua-gec
+  cefrAvailability: b1
+  curator: fable-2026-07-06
+  notes: rationale softened per agy review (Котляревський attestation exists)
+- calqueLabel: тьотя
+  calqueSurfaces:
+  - тьотя
+  nativeSlug: тітка
+  nativeLemma: тітка
+  kind: lexical
+  corrections:
+  - тітка
+  rationale: нейтральне — тітка; тьотя — розмовне запозичення з рос. (СУМ-20 «розм.»)
+  citations:
+  - ua-gec:F/Calque n=1
+  sourceFamily: ua-gec
+  sourceFamilies:
+  - ua-gec
+  cefrAvailability: a2
+  curator: fable-2026-07-06
+  notes: rationale register-based per agy review (Мирний/Сосюра attestations)
+- calqueLabel: фон
+  calqueSurfaces:
+  - фоні
+  nativeSlug: тло
+  nativeLemma: тло
+  kind: sense_restricted
+  corrections:
+  - тло
+  rationale: образно — на тлі; фон — термін
+  citations:
+  - ua-gec:F/Calque n=12 docs=8
+  sourceFamily: ua-gec
+  sourceFamilies:
+  - ua-gec
+  cefrAvailability: b1
+  curator: fable-2026-07-06
+  calqueSense: 'образне/зображальне тло: «на фоні подій»'
+  authenticSense: фізичний термін (радіаційний фон)
+  notes: A2→B1 per agy review (sense contrast too nuanced for A2)
+- calqueLabel: хорошо
+  calqueSurfaces:
+  - хорошо
+  nativeSlug: добре
+  nativeLemma: Добре
+  kind: lexical
+  corrections:
+  - добре
+  rationale: 'канонічний суржик-маркер: рос. хорошо; укр. добре'
+  citations:
+  - ua-gec:F/Calque n=2 docs=2
+  sourceFamily: ua-gec
+  sourceFamilies:
+  - ua-gec
+  cefrAvailability: a2
+  curator: fable-2026-07-06
+- calqueLabel: час
+  calqueSurfaces:
+  - час
+  nativeSlug: година
+  nativeLemma: година
+  kind: sense_restricted
+  corrections:
+  - година
+  rationale: про годинник — «котра година?», «о п'ятій годині»
+  citations:
+  - slovnyk:davydov
+  - ua-gec:F/Calque n=1
+  sourceFamily: mixed
+  sourceFamilies:
+  - slovnyk-dicts
+  - ua-gec
+  cefrAvailability: a2
+  curator: fable-2026-07-06
+  calqueSense: 'годинниковий час: «який час?» (рос. который час)'
+  authenticSense: час як загальне поняття
+- calqueLabel: чисто
+  calqueSurfaces:
+  - чисто
+  nativeSlug: суто
+  nativeLemma: суто
+  kind: sense_restricted
+  corrections:
+  - суто
+  rationale: про виключність — суто
+  citations:
+  - ua-gec:F/Calque n=1
+  sourceFamily: ua-gec
+  sourceFamilies:
+  - ua-gec
+  cefrAvailability: b1
+  curator: fable-2026-07-06
+  calqueSense: «чисто технічний» (рос. чисто технический)
+  authenticSense: чисто = охайно, без бруду
+- calqueLabel: шляпа
+  calqueSurfaces:
+  - шляпу
+  nativeSlug: капелюх
+  nativeLemma: капелюх
+  kind: lexical
+  corrections:
+  - капелюх
+  rationale: рос. шляпа; питоме укр. — капелюх
+  citations:
+  - ua-gec:F/Calque n=9 docs=6
+  sourceFamily: ua-gec
+  sourceFamilies:
+  - ua-gec
+  cefrAvailability: b1
+  curator: fable-2026-07-06
+  notes: lemma fixed from surface

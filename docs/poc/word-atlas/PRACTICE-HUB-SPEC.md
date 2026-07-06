@@ -273,9 +273,26 @@ seeded/deterministic build (§1), FSRS card unit = `lemmaId + mode` (§1).
   ⟦codex v4⟧ "Curated" is a **validated contract, not a JSON convention**: the deck builder consumes a
   `heritage_pair` schema — `{nativeSlug, calqueLabel, corrections[], citations[] (≥1), sourceFamily}` —
   schema-validated at build; any pair failing validation is dropped and reported, never emitted.
+- ⟦v5.1 — #4505 curation lane, agy-reviewed 2026-07-06⟧ **Schema extension + frames.** The curated
+  store is `data/lexicon/heritage_pairs.yaml`. On top of the v4 five-field minimum each record adds:
+  **`kind: lexical | sense_restricted`** — sense-restricted pairs (the неділя/задача class: the word
+  is standard Ukrainian, ONE sense is the calque) additionally REQUIRE `calqueSense` +
+  `authenticSense`; a bare lexical pair may not model them. **`frames[]` (optional per record,
+  mirroring §9.9)** — `{sentence_with_slot, answer_form, calque_form, origin, disambiguated}`.
+  **Item emission is fail-closed at the ITEM level**: a record without ≥1 frame validates as a
+  RECORD but emits NO items (reported as frame-coverage debt, never a degraded word-level fallback
+  item — sentence context is the pedagogy, not an optional garnish). For `sense_restricted` pairs
+  the frame validator additionally requires `disambiguated: true` — the curator's explicit
+  confirmation that the frame forces the calque sense (a frame where the authentic sense also fits
+  would teach avoidance of a correct word). Every record carries a source-backed `rationale`
+  (why the calque is wrong — shipped as feedback), and pairs are mined ONLY from attested evidence
+  (UA-GEC annotations, Антоненко-Давидович, anti-surzhyk dictionaries, legacy curated records) —
+  prevalence-gated so one-off idiosyncratic errors don't become drill targets.
 - ⟦agy v4⟧ **Availability**: default **B1+** (calque exposure before core vocab is solid = lexical
   interference); **A2 only for curator-flagged high-frequency pairs whose native form is A-level
   vocabulary** — the mission-flagship pairs learners actually meet at A2, not the long tail.
+  ⟦v5.1⟧ the mechanical A2 filter (native CEFR ≤ A2 + prevalence evidence) only NOMINATES;
+  the record ships A2 only with the curator flag (`cefrAvailability: a2`).
 - **SRS**: `nativeLemmaId+heritage` (the native word is what's being learned).
 
 ### 9.6 Selector + client integration (amends §6/§8)
