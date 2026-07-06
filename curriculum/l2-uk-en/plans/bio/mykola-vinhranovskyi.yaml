@@ -91,7 +91,22 @@ sequence: 260
 slug: mykola-vinhranovskyi
 subtitle: Poet, Filmmaker, and the Spectrum of Soviet Cultural Pressure
 title: 'Микола Вінграновський: свобода у формі'
-version: '1.0'
+readings:
+- title: "Вінграновський Микола Степанович"
+  source_name: "Енциклопедія Сучасної України"
+  source_url: "https://esu.com.ua/pdf/file/34622.pdf"
+  language: "uk"
+  role: "reference"
+  hosting: "link-only"
+  rights_note: "Open-access reference entry in Ukrainian from ESU."
+- title: "Поетика й публічні виступи Вінграновського"
+  source_name: "reading-needed"
+  source_url: "reading-needed"
+  language: "uk"
+  role: "reading-needed"
+  hosting: "reading-needed"
+  rights_note: "reading-needed: verify rights-safe Ukrainian source for verified primary excerpts."
+version: '1.1'
 vocabulary_hints:
 - word: шістдесятник
   pos: ч.
