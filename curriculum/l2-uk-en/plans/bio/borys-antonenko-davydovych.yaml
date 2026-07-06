@@ -86,7 +86,22 @@ sequence: 263
 slug: borys-antonenko-davydovych
 subtitle: The Prose Writer and Language Guardian Across Two Waves of Repression
 title: 'Борис Антоненко-Давидович: мова і табір'
-version: '1.0'
+readings:
+- title: "Антоненко-Давидович Борис Дмитрович"
+  source_name: "Енциклопедія Сучасної України"
+  source_url: "https://esu.com.ua/article-42948"
+  language: "uk"
+  role: "reference"
+  hosting: "link-only"
+  rights_note: "Open-access reference entry from ESU."
+- title: "Прямі тексти та свідчення з літературного доробку"
+  source_name: "reading-needed"
+  source_url: "reading-needed"
+  language: "uk"
+  role: "reading-needed"
+  hosting: "reading-needed"
+  rights_note: "reading-needed: primary literature text links in Ukrainian with stable learner-safe access."
+version: '1.1'
 vocabulary_hints:
 - word: проза
   pos: ж.
