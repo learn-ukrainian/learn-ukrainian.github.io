@@ -82,7 +82,7 @@ persona:
 phase: BIO.4
 references:
 - title: Mykhailo Hrushevskyi
-  note: 'Compiled from Плохій, Гирич, Портнов. Based on original Wikipedia article: https://uk.wikipedia.org/wiki/Михайло_Грушевський'
+  note: Зібрано за матеріалами Плохія, Гирича, Портнова та українських академічних довідкових джерел.
   path: wiki/bio/mykhailo-hrushevskyi.md
   type: wiki
 - title: Історія України-Руси
@@ -100,11 +100,28 @@ references:
   note: Сучасний погляд на місце Грушевського в українській історії
   type: reference
   work: 'Брама Європи: Історія України від скіфських воєн до незалежності'
+readings:
+- title: Грушевський Михайло Сергійович
+  language: uk
+  source: Енциклопедія Сучасної України
+  url: https://esu.com.ua/article-32114
+  type: encyclopedia
+  role: primary-bio
+  hosting: link-only
+  task: Ознайомитися з політичною та науковою діяльністю Михайла Грушевського.
+- title: Грушевський Михайло Сергійович (1866–1934)
+  language: uk
+  source: е-Архів Михайла Грушевського
+  url: https://hrushevsky.history.org.ua/item/0005781
+  type: archive-reference
+  role: context
+  hosting: link-only
+  task: Зіставити архівну довідку з енциклопедичною біографією і визначити, як поєднуються ролі історика, публіциста та політичного діяча.
 sequence: 87
 slug: mykhailo-hrushevskyi
 subtitle: The Historian Who Wrote a Nation into Existence
 title: 'Михайло Грушевський: Історик і президент'
-version: '4.0'
+version: '4.2'
 vocabulary_hints:
 - definition: наука, що вивчає розвиток історичних знань, методи та принципи історичного дослідження
   pos: ж.

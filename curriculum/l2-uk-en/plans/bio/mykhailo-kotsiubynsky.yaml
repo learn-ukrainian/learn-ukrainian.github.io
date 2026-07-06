@@ -105,11 +105,29 @@ references:
   note: Memorial museum dedicated to Kotsiubynsky's life and work
   type: reference
   url: https://kotsyubynsky.org.ua/
+readings:
+- title: Коцюбинський Михайло Михайлович
+  language: uk
+  source: Енциклопедія Сучасної України
+  url: https://esu.com.ua/article-1182
+  type: encyclopedia
+  role: primary-bio
+  hosting: link-only
+  task: Проаналізувати життєвий та творчий шлях Михайла Коцюбинського.
+- title: Тіні забутих предків
+  language: uk
+  source: УкрЛіб
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=1058
+  type: primary-text
+  role: literary-analysis
+  hosting: link-only
+  task: Прочитати обраний фрагмент повісті для аналізу імпресіоністичного стилю та гуцульських фольклорних мотивів.
+  caveats: Текст Коцюбинського є публічним надбанням, але зовнішній хостинг усе одно використовувати як посилання, не копіюючи повний твір у модуль.
 sequence: 83
 slug: mykhailo-kotsiubynsky
 subtitle: 'Mykhailo Kotsiubynskyi: The Impressionist of the Ukrainian Word'
 title: 'Михайло Коцюбинський: Імпресіоніст українського слова'
-version: '4.0'
+version: '4.2'
 vocabulary_hints:
 - definition: напрям у мистецтві, що ставить за мету відтворити особисті враження та спостереження, мінливі відчуття та переживання
   pos: ч.

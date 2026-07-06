@@ -83,23 +83,40 @@ references:
   note: Compiled from primary sources and academic research on Lypa and the Brotherhood of Tarasivtsi.
   path: wiki/bio/ivan-lypa.md
   type: wiki
-- title: Іван Липа (Wikipedia UA)
-  author: Various
-  note: General biographical information, list of works, and historical context.
+- title: Липа Іван Львович
+  author: Енциклопедія Сучасної України
+  note: Авторитетна українська енциклопедична довідка про біографію, громадську діяльність і твори Івана Липи.
   type: primary
-  url: https://uk.wikipedia.org/wiki/Липа_Іван_Львович
-  work: Іван Липа (Wikipedia UA)
-- title: Братство тарасівців (Wikipedia UA)
-  author: Various
-  note: Detailed information on the ideology, members, and fate of the organization Lypa co-founded.
+  url: https://esu.com.ua/article-54707
+  work: Липа Іван Львович
+- title: Братство тарасівців
+  author: Енциклопедія історії України
+  note: Українська історична довідка про програму, учасників і контекст організації, яку співзаснував Іван Липа.
   type: reference
-  url: https://uk.wikipedia.org/wiki/Братство_тарасівців
-  work: Братство тарасівців (Wikipedia UA)
+  url: https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&I21DBN=DOP&P21DBN=EIU&S21CNR=20&S21COLORTERMS=0&S21FMT=eiu_all&S21P01=0&S21P02=0&S21P03=TRN%3D&S21REF=10&S21STN=1&S21STR=Braterstvo_Tarasivtsiv&Z21ID=
+  work: Братство тарасівців
+readings:
+- title: Липа Іван Львович
+  language: uk
+  source: Енциклопедія Сучасної України
+  url: https://esu.com.ua/article-54707
+  type: encyclopedia
+  role: primary-bio
+  hosting: link-only
+  task: Ознайомитися з біографією лікаря та ідеолога Івана Липи.
+- title: Братство тарасівців
+  language: uk
+  source: Енциклопедія історії України
+  url: https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&I21DBN=DOP&P21DBN=EIU&S21CNR=20&S21COLORTERMS=0&S21FMT=eiu_all&S21P01=0&S21P02=0&S21P03=TRN%3D&S21REF=10&S21STN=1&S21STR=Braterstvo_Tarasivtsiv&Z21ID=
+  type: encyclopedia
+  role: context
+  hosting: link-only
+  task: Вивчити ідеологію та історію діяльності "Братства тарасівців".
 sequence: 85
 slug: ivan-lypa
 subtitle: 'Ivan Lypa: Doctor, Writer, and Ideologue'
 title: 'Іван Липа: Лікар і письменник'
-version: '4.0'
+version: '4.2'
 vocabulary_hints:
 - definition: політична незалежність, державний суверенітет
   pos: ж.
