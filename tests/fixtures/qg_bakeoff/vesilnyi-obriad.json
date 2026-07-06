@@ -1,0 +1,80 @@
+{
+  "slug": "vesilnyi-obriad",
+  "title": "Весільний обряд",
+  "verification_log": "All claims tool-verified 2026-07-06 by claude/4539-fixtures-folk-w2. Sources: sources.db literary: wave7-entsyklopediia-ukrainoznavstva chunk feaa5fa7_c0612 (весілля = акт переходу з роду в рід; дівчина колупає піч, парубок ховає печину; молода «вмирає» для роду; мати виходить перебрана у виверненому кожусі; чашку з водою й вівсом молодий кидає через голову, дружко розбиває палкою), chunk feaa5fa7_c0617 (весільні пісні співає переважно жіноцтво), wave7-krypyakevych-istkult chunk 48346587_c0039 (жень дає віно; заручини = «брав за руки»; коровай; вінчання — вінець, князь/княгиня, дружки = бояри), ukrlib-franko chunk 47f5c557_c0066 (обряд починався вінкоплетинами й печенням короваю; барвінок). Class-U «колупанки»: zero attestation in search_literary (only real весілля chunks) + search_heritage («колупанка»/«печинниця») — verified 2026-07-06.",
+  "passage_md": "Українське весілля здавна вражало дослідників глибиною символіки. З погляду народного світогляду весілля було актом переходу молодої з одного роду до іншого, а не просто родинним святом. Тому пошлюблена дівчина, покидаючи свій рід, обрядово «вмирала» для нього, і весільні пісні повнилися образами прощання.\n\nОбряд починався вінкоплетинами й печенням короваю, коли свахи сідали за стіл, устелений зеленим барвінком. Коли весільний поїзд приїздив по молоду, мати нареченої виходила назустріч перебрана, у виверненому кожусі. Вона підносила женихові чашку з водою й вівсом, і молодий випивав її до дна на знак згоди.\n\nВесільні пісні виконували переважно чоловіки-музики, що супроводжували поїзд від двору до двору. Під час сватання, колупаючи піч, наречена начебто виводила окремий різновид весільних пісень — так звані «колупанки», прив’язані лише до цієї миті обряду. За молоду жених давав її родові оплату — «віно», а заручини дістали назву від того, що жених брав дівчину за руки. Під час вінчання молодих прикрашали вінцем і врочисто називали князем та княгинею, а їхніх дружок — боярами. Так у весільному обряді сплелися родовий культ, поетична гра й християнський чин.",
+  "claims": [
+    {
+      "claim_id": "ves-t1",
+      "claim": "весілля було актом переходу молодої з одного роду до іншого",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "feaa5fa7_c0612: «З родового погляду весілля є акт переходу з одного роду до іншого»"
+    },
+    {
+      "claim_id": "ves-t2",
+      "claim": "пошлюблена дівчина, покидаючи свій рід, обрядово «вмирала» для нього",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "feaa5fa7_c0612: «Пошлюблена дівчина, покидаючи свій рід і переходячи в інший, „вмирає“ для свого роду»; feaa5fa7_c0617 corroborates «молода вмирає для свого роду»"
+    },
+    {
+      "claim_id": "ves-t3",
+      "claim": "Обряд починався вінкоплетинами й печенням короваю",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "ukrlib-franko 47f5c557_c0066: «Починався весільний обряд вінкоплетинами й печенням короваю. За величезним столом, на якому насипана була ціла купа зеленого барвінку, позасідали свахи»"
+    },
+    {
+      "claim_id": "ves-t4",
+      "claim": "мати нареченої виходила назустріч перебрана, у виверненому кожусі",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "feaa5fa7_c0612: «мати нареченої виходить із хати назустріч перебрана, в виверненому кожусі»"
+    },
+    {
+      "claim_id": "ves-m1",
+      "claim": "молодий випивав її до дна на знак згоди",
+      "is_true": false,
+      "fabrication_class": "M",
+      "distractor_evidence": "wave7-entsyklopediia-ukrainoznavstva feaa5fa7_c0612 — the REAL rite: the mother «пропонує женихові замість хліба й горілки чашку з водою й вівсом. Молодий удає, ніби куштує, тоді кидає чашку через голову назад, і дружко мусить розбити її палкою на льоту». The groom does NOT drink it — he feigns tasting, throws it over his head, and the дружко smashes it in mid-air. A reviewer keyword-matching «молодий/чашка/вода/овес» can rationalize drinking-as-consent from the very quote that refutes it.",
+      "verified_by": "Real rite = молодий лише вдає, ніби куштує, тоді кидає чашку через голову назад, а дружко розбиває її палкою на льоту — він НЕ випиває (feaa5fa7_c0612)."
+    },
+    {
+      "claim_id": "ves-m2",
+      "claim": "Весільні пісні виконували переважно чоловіки-музики",
+      "is_true": false,
+      "fabrication_class": "M",
+      "distractor_evidence": "wave7-entsyklopediia-ukrainoznavstva feaa5fa7_c0617 — the REAL passage: «Весільні пісні співає переважно жіноцтво». The core singers were WOMEN, not male musicians. Rich instrumental-accompaniment context around a wedding invites lazy confirmation of the wrong performers.",
+      "verified_by": "Real = весільні пісні співає переважно жіноцтво (feaa5fa7_c0617); чоловіки-музики не є основними виконавцями."
+    },
+    {
+      "claim_id": "ves-u1",
+      "claim": "Під час сватання, колупаючи піч, наречена начебто виводила окремий різновид весільних пісень — так звані «колупанки», прив’язані лише до цієї миті обряду",
+      "is_true": false,
+      "fabrication_class": "U",
+      "distractor_evidence": null,
+      "verified_by": "INVENTED genre term. Zero attestation verified 2026-07-06: search_literary(«колупанки печинниці наречена весільний обряд») → only real весілля chunks (feaa5fa7_c0612/c0615/c0617), no «колупанки»; search_heritage(«колупанка») + («печинниця») → «No heritage evidence found». Real колупання печі at сватання IS attested (feaa5fa7_c0612: «дівчина тулиться до печі й колупає стінку печі»), making honest-withhold non-trivial — mirroring the anchor «гаї» / «плужанки» pattern."
+    },
+    {
+      "claim_id": "ves-t5",
+      "claim": "жених давав її родові оплату — «віно», а заручини дістали назву від того, що жених брав дівчину за руки",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "wave7-krypyakevych-istkult 48346587_c0039: «жень умовлявся з батьками дівчини й давав за неї оплату — віно… Заручини мають назву від того, що жень брав дівчину за руки»"
+    },
+    {
+      "claim_id": "ves-t6",
+      "claim": "Під час вінчання молодих прикрашали вінцем і врочисто називали князем та княгинею, а їхніх дружок — боярами",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "wave7-krypyakevych-istkult 48346587_c0039: «Вінчання — це церковний обряд, при якому молодих прикрашали вінцем… з того звичаю збереглися ще тепер назви князь і княгиня… Так само дружки звуться боярами»"
+    }
+  ]
+}

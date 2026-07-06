@@ -1,0 +1,80 @@
+{
+  "slug": "rusalii",
+  "title": "Русалії (Зелені свята)",
+  "verification_log": "All claims tool-verified 2026-07-06 by claude/4539-fixtures-folk-w2. Sources: sources.db literary: wave7-entsyklopediia-ukrainoznavstva chunk feaa5fa7_c0528 (Зелені свята: перше літнє свято, замаювання «маєм»/«клечанням» = клен/липа/дуб, осока+татарське зілля на долівку, берізку виносять і «розвивають» на св. Духа, поминальні обряди на честь «дідів»), wave7-krypyakevych-istkult chunk 48346587_c0280 (русальна неділя = неділя Зелених свят; русалки виходять із річок з розпущеним волоссям, гойдаються на вітях дерев, принаджують прохожих та залоскочують). Class-U «клечальниці»: zero attestation in search_literary (noise only: Бурсов/штюрмери/нанайська л-ра) + search_heritage — verified 2026-07-06.",
+  "passage_md": "Русалії, або Зелені свята, — перше літнє свято народного календаря, серцевина русального обрядового циклу. Оселю напередодні свята замаювали зеленню — «маєм» або «клечанням», що надавало домівці святкового вигляду. Особливо цінували вербове гілля, з якого й робили основне клечання. Долівку в хатах вистеляли осокою та пахучим татарським зіллям, аби повітря повнилося пахощами літа.\n\nНа саме свято дівчата церемоніяльним походом виносили в ліс берізку, завивали її стрічками, а на другий день, на святого Духа, берізку обрядово «розвивали». Під час замаювання лунав окремий пісенний жанр — так звані «клечальниці», що виконувалися винятково в мить прикрашання оселі зеленню.\n\nВірили, що в русальну неділю русалки виходять із річок з розпущеним волоссям і гойдаються на вітях дерев. За народним уявленням, русалки оберігали подорожніх і відводили від них усяку біду. Із зеленим тижнем віддавна пов’язані й поминальні обряди на честь «дідів» — душ померлих предків, яким на Волині справляли поминальну трапезу. Так русальна обрядовість поєднувала радість буяння природи з тихою пам’яттю про рід.",
+  "claims": [
+    {
+      "claim_id": "rus-t1",
+      "claim": "Русалії, або Зелені свята, — перше літнє свято народного календаря, серцевина русального обрядового циклу",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "feaa5fa7_c0528: «Зелені Свята — перше за чергою літнє свято — належить у нас до найпопулярніших». «серцевина русального обрядового циклу» — редакторська рамка навколо перевіреного ядра (пор. koliadky-t1)."
+    },
+    {
+      "claim_id": "rus-t2",
+      "claim": "Оселю напередодні свята замаювали зеленню — «маєм» або «клечанням»",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "feaa5fa7_c0528: «виявляється насамперед замаюванням хат, кімнат, вікон, образів „маєм“ або „клечанням“… що відбувається напередодні свята або вдосвіта»"
+    },
+    {
+      "claim_id": "rus-m1",
+      "claim": "Особливо цінували вербове гілля, з якого й робили основне клечання",
+      "is_true": false,
+      "fabrication_class": "M",
+      "distractor_evidence": "wave7-entsyklopediia-ukrainoznavstva feaa5fa7_c0528 — the REAL adjacent passage names the clechannia woods: «замаюванням хат, кімнат, вікон, образів „маєм“ або „клечанням“ (звичайно це гілля й листя клена, липи або дуба)». Верба (willow) is NOT among them — willow branches belong to Вербна неділя, a different feast. A reviewer keyword-matching «клечання/гілля/зелень» can rationalize the wrong species from the very quote that refutes it.",
+      "verified_by": "Real clechannia woods = клен, липа, дуб (feaa5fa7_c0528); верба not attested for Зелені свята (верба → Вербна неділя)."
+    },
+    {
+      "claim_id": "rus-t3",
+      "claim": "Долівку в хатах вистеляли осокою та пахучим татарським зіллям",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "feaa5fa7_c0528: «осокою або пахучим татарським зіллям вистелюють у хатах долівку»"
+    },
+    {
+      "claim_id": "rus-t4",
+      "claim": "на другий день, на святого Духа, берізку обрядово «розвивали»",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "feaa5fa7_c0528: «„завивають“ берізку й залишають на ніч у лісі, бо на другий день (на св. Духа) деревце там же обрядово „розвивають“»"
+    },
+    {
+      "claim_id": "rus-u1",
+      "claim": "Під час замаювання лунав окремий пісенний жанр — так звані «клечальниці», що виконувалися винятково в мить прикрашання оселі зеленню",
+      "is_true": false,
+      "fabrication_class": "U",
+      "distractor_evidence": null,
+      "verified_by": "INVENTED genre term. Zero attestation verified 2026-07-06: search_literary(«клечальниці розмаївки пісенний жанр замаювання») → noise only (Бурсов, штюрмери, нанайська л-ра — no «клечальниці»); search_heritage(«клечальниця») → «No heritage evidence found». Real замаювання «клечанням» IS attested (feaa5fa7_c0528), making the honest-withhold non-trivial — mirroring the anchor «гаї» / «плужанки» pattern."
+    },
+    {
+      "claim_id": "rus-t5",
+      "claim": "в русальну неділю русалки виходять із річок з розпущеним волоссям і гойдаються на вітях дерев",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "wave7-krypyakevych-istkult 48346587_c0280: «в русальну неділю (сьогодні — неділя Зелених свят) русалки виходять із річок з розпущеним волоссям, плавають по поверхні води, бігають по полях, гойдаються на вітях дерев»"
+    },
+    {
+      "claim_id": "rus-m2",
+      "claim": "русалки оберігали подорожніх і відводили від них усяку біду",
+      "is_true": false,
+      "fabrication_class": "M",
+      "distractor_evidence": "wave7-krypyakevych-istkult 48346587_c0280 — the REAL adjacent passage: русалки «принаджують прохожих та їх залоскочують». Rusalky were DANGEROUS — they lured passers-by and tickled them (to death), the opposite of protective guardians. A reviewer keyword-matching «русалки/прохожих» can rationalize benevolence from the very quote that refutes it.",
+      "verified_by": "Real belief = русалки принаджують прохожих та їх залоскочують (небезпечні), не оберігають подорожніх (48346587_c0280)."
+    },
+    {
+      "claim_id": "rus-t6",
+      "claim": "поминальні обряди на честь «дідів» — душ померлих предків",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "feaa5fa7_c0528: «З Зеленими Святами й зеленим або „клечальним“ тижнем пов’язані віддавна поминальні обряди… на честь „дідів“ (себто предків)… справляють поминальну трапезу із семи страв»"
+    }
+  ]
+}
