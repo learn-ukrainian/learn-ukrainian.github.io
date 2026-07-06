@@ -79,6 +79,7 @@ class WorkflowOptions:
     author_family: str | None = None
     canary_artifacts: Mapping[str, Path] | None = None
     daily_spend_path: Path | None = None
+    circuit_state_path: Path | None = None
     run_command: str | None = None
     enable_llm: bool = False
     force_llm: bool = False
@@ -250,6 +251,7 @@ def dry_run_modules(
         author_family=dry_options.author_family,
         canary_artifacts=dry_options.canary_artifacts,
         daily_spend_path=dry_options.daily_spend_path,
+        circuit_state_path=dry_options.circuit_state_path,
         run_command=dry_options.run_command,
         enable_llm=True,
         force_llm=dry_options.force_llm,
@@ -346,7 +348,23 @@ def review_modules(
 
     effective_options = options or WorkflowOptions()
     if effective_options.live_reviewer:
-        _validate_live_reviewer_preflight(targets, effective_options)
+        if (
+            not effective_options.dry_run
+            and _llm_enabled_for_any_target(targets, effective_options)
+            and llm_qg_store.live_tier2_circuit_status(effective_options.circuit_state_path)["open"]
+        ):
+            message = llm_qg_store.live_tier2_circuit_open_message(effective_options.circuit_state_path)
+            return [
+                _build_aborted_record(
+                    target,
+                    options=effective_options,
+                    reason="circuit_open",
+                    status="circuit_open",
+                    message=message,
+                )
+                for target in targets
+            ]
+        _validate_live_reviewer_preflight(targets, effective_options, reviewer=reviewer)
     elif (
         len(targets) > 1
         and _llm_enabled_for_any_target(targets, effective_options)
@@ -464,11 +482,45 @@ def _dry_run_gateable_artifact(
 def _validate_live_reviewer_preflight(
     targets: Sequence[ReviewTarget],
     options: WorkflowOptions,
+    *,
+    reviewer: Reviewer | None,
 ) -> None:
     if options.dry_run:
         return
     if _llm_enabled_for_any_target(targets, options) and options.max_cost_usd is None:
         raise ValueError("live Tier-2 runs require --max-cost-usd")
+    if reviewer is not None:
+        return
+    if len(targets) <= 1 or not _llm_enabled_for_any_target(targets, options):
+        return
+    routes = _live_preflight_routes(targets, options)
+    try:
+        llm_reviewer_dispatch.live_batch_preflight(routes)
+    except llm_reviewer_dispatch.ReviewerPreflightError as exc:
+        raise ValueError(f"live Tier-2 quota preflight failed: {exc.reason}: {exc}") from exc
+
+
+def _live_preflight_routes(
+    targets: Sequence[ReviewTarget],
+    options: WorkflowOptions,
+) -> list[llm_reviewer_dispatch.ReviewerRoute]:
+    routes: list[llm_reviewer_dispatch.ReviewerRoute] = []
+    for target in targets:
+        policy = policy_for_level(target.level)
+        if not (
+            policy.family in LLM_POLICY_FAMILIES
+            or options.force_llm
+            or options.calibration_sample
+        ):
+            continue
+        route = _tier2_route(
+            options=options,
+            policy_family=policy.family,
+            contested_gold_suppressed=False,
+        )
+        if route is not None:
+            routes.append(route)
+    return routes
 
 
 def _initial_daily_spend(options: WorkflowOptions) -> float:
@@ -498,6 +550,8 @@ def _batch_abort_reason(records: Sequence[Mapping[str, Any]]) -> str | None:
             return "lineage_required"
         if status == "skipped_canary_required":
             return "canary_required"
+        if status == "circuit_open":
+            return "circuit_open"
     if attempted and parse_failures / attempted > 0.05:
         return "parse_failure_rate"
     if attempted and provider_errors / attempted > 0.10:
@@ -510,6 +564,8 @@ def _build_aborted_record(
     *,
     options: WorkflowOptions,
     reason: str,
+    status: str = "aborted_batch",
+    message: str | None = None,
 ) -> dict[str, Any]:
     level = target.level.strip().lower()
     slug = target.slug.strip() or target.module_dir.name
@@ -538,7 +594,7 @@ def _build_aborted_record(
         {
             "tier": 2,
             "name": "llm_reviewer",
-            "status": "aborted_batch",
+            "status": status,
             "reason": reason,
             "llm_required_by_policy": policy.family in LLM_POLICY_FAMILIES,
             "policy_family": policy.family,
@@ -547,6 +603,8 @@ def _build_aborted_record(
             "findings": 0,
         },
     ]
+    if message:
+        tiers[2]["message"] = message
     return _build_evidence_record(
         level=level,
         slug=slug,
@@ -694,6 +752,21 @@ def _run_tier2(
         }
 
     if options.live_reviewer:
+        circuit_status = llm_qg_store.live_tier2_circuit_status(options.circuit_state_path)
+        if circuit_status["open"]:
+            return {
+                "findings": [],
+                "result": {
+                    **base_result,
+                    "status": "circuit_open",
+                    "reason": "circuit_open",
+                    "message": llm_qg_store.live_tier2_circuit_open_message(options.circuit_state_path),
+                },
+                "workflow_verdict": "INCOMPLETE",
+                "completion_status": "INCOMPLETE",
+                "reviewer_model_id": reviewer_model_id,
+                "reviewer_family": reviewer_family,
+            }
         blocked = _live_reviewer_block(
             target=target,
             level=level,
@@ -890,6 +963,16 @@ def _run_tier2(
             raw_response = effective_reviewer(target, attempt_prompt)
         except llm_reviewer_dispatch.ReviewerDispatchError as exc:
             budget.record_spend(estimate)
+            _record_live_tier2_outcome(
+                options=options,
+                level=level,
+                slug=slug,
+                reviewer_model_id=reviewer_model_id,
+                reviewer_family=reviewer_family,
+                route_name=route_name,
+                status="provider_error",
+                reason=type(exc).__name__,
+            )
             return {
                 "findings": [],
                 "result": {
@@ -930,6 +1013,16 @@ def _run_tier2(
             # no resolved route (route_name=None) keep their reported name.
             or (route_name is not None and actual_route_name != route_name)
         ):
+            _record_live_tier2_outcome(
+                options=options,
+                level=level,
+                slug=slug,
+                reviewer_model_id=actual_model_id,
+                reviewer_family=actual_family,
+                route_name=actual_route_name,
+                status="provider_error",
+                reason="reviewer_identity_mismatch",
+            )
             return {
                 "findings": [],
                 "result": {
@@ -947,6 +1040,16 @@ def _run_tier2(
                 "reviewer_family": actual_family,
             }
         if _cost_overrun(estimate, observed_cost):
+            _record_live_tier2_outcome(
+                options=options,
+                level=level,
+                slug=slug,
+                reviewer_model_id=reviewer_model_id,
+                reviewer_family=reviewer_family,
+                route_name=route_name,
+                status="cost_overrun",
+                reason="observed_cost_gt_125pct_estimate",
+            )
             return {
                 "findings": [],
                 "result": {
@@ -979,6 +1082,16 @@ def _run_tier2(
             payload = _payload_from_reviewer_payload(parsed_payload)
             llm_reviewer.validate_reviewer_payload(payload, policy_family)
         except ValueError as exc:
+            _record_live_tier2_outcome(
+                options=options,
+                level=level,
+                slug=slug,
+                reviewer_model_id=reviewer_model_id,
+                reviewer_family=reviewer_family,
+                route_name=route_name,
+                status="schema_failure",
+                reason=str(exc),
+            )
             return {
                 "findings": [],
                 "result": {
@@ -994,6 +1107,15 @@ def _run_tier2(
             }
         findings = _findings_from_payload(payload)
         if _parse_failed(findings):
+            _record_live_tier2_outcome(
+                options=options,
+                level=level,
+                slug=slug,
+                reviewer_model_id=reviewer_model_id,
+                reviewer_family=reviewer_family,
+                route_name=route_name,
+                status="parse_failure",
+            )
             return {
                 "findings": findings,
                 "result": {
@@ -1030,6 +1152,16 @@ def _run_tier2(
             )
             continue
         if gate_outcome.status == llm_reviewer_dispatch.RETRY_EXHAUSTED:
+            _record_live_tier2_outcome(
+                options=options,
+                level=level,
+                slug=slug,
+                reviewer_model_id=reviewer_model_id,
+                reviewer_family=reviewer_family,
+                route_name=route_name,
+                status=llm_reviewer_dispatch.RETRY_EXHAUSTED,
+                reason=llm_reviewer_dispatch.INVALID_TOOL_THEATRE,
+            )
             return {
                 "findings": [],
                 "result": {
@@ -1054,6 +1186,16 @@ def _run_tier2(
         grounding_gate = gate_outcome.grounding_gate or llm_reviewer_dispatch.GroundingGateResult(payload=payload)
         break
 
+    _record_live_tier2_outcome(
+        options=options,
+        level=level,
+        slug=slug,
+        reviewer_model_id=reviewer_model_id,
+        reviewer_family=reviewer_family,
+        route_name=route_name,
+        status=tier2_status,
+        reason=workflow_override,
+    )
     llm_qg_store.record_llm_qg(
         level=level,
         slug=slug,
@@ -1239,6 +1381,32 @@ def _record_daily_spend(
         route=route,
         estimated_cost_usd=float(estimate.get("estimated_cost_usd") or 0.0),
         observed_cost_usd=observed_cost_usd,
+    )
+
+
+def _record_live_tier2_outcome(
+    *,
+    options: WorkflowOptions,
+    level: str,
+    slug: str,
+    reviewer_model_id: str | None,
+    reviewer_family: str | None,
+    route_name: str | None,
+    status: str,
+    reason: str | None = None,
+) -> dict[str, Any] | None:
+    if not options.live_reviewer or options.dry_run:
+        return None
+    return llm_qg_store.record_live_tier2_outcome(
+        level=level,
+        slug=slug,
+        gate_version=options.gate_version,
+        reviewer_model=reviewer_model_id,
+        reviewer_family=reviewer_family,
+        route_name=route_name,
+        status=status,
+        reason=reason,
+        path=options.circuit_state_path,
     )
 
 
@@ -1740,6 +1908,7 @@ def calibrate_modules(
         author_family=options.author_family,
         canary_artifacts=options.canary_artifacts,
         daily_spend_path=options.daily_spend_path,
+        circuit_state_path=options.circuit_state_path,
         run_command=options.run_command,
         enable_llm=True,
         force_llm=True,
@@ -1843,6 +2012,8 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--max-daily-cost-usd", type=float, help="Per-day safety rail for this local run.")
     parser.add_argument("--max-module-cost-usd", type=float, help="Per-module pathological prompt cost cap.")
     parser.add_argument("--daily-spend-ledger", type=Path, help="Optional local JSONL spend ledger path.")
+    parser.add_argument("--qg-circuit-state", type=Path, help="Optional live Tier-2 circuit sidecar JSON path.")
+    parser.add_argument("--reset-circuit", action="store_true", help="Clear the live Tier-2 circuit sidecar and exit unless targets are also supplied.")
     parser.add_argument("--gate-version", default=DEFAULT_GATE_VERSION)
     parser.add_argument("--reviewer-model-id", default=DEFAULT_REVIEWER_MODEL_ID)
     parser.add_argument("--reviewer-family", default=DEFAULT_REVIEWER_FAMILY)
@@ -1866,6 +2037,21 @@ def main(argv: list[str] | None = None) -> int:
     argv_list = list(argv) if argv is not None else sys.argv[1:]
     args = build_parser().parse_args(argv_list)
     try:
+        if args.reset_circuit:
+            reset_payload = llm_qg_store.reset_live_tier2_circuit(args.qg_circuit_state)
+            has_targets = bool(args.target or args.module_dir)
+            if not has_targets:
+                output = (
+                    json.dumps(reset_payload, ensure_ascii=False, indent=2, sort_keys=True)
+                    if args.format == "json"
+                    else "live Tier-2 circuit reset"
+                )
+                if args.output:
+                    args.output.parent.mkdir(parents=True, exist_ok=True)
+                    args.output.write_text(output + "\n", encoding="utf-8")
+                else:
+                    print(output)
+                return 0
         targets = _targets_from_args(args)
         canary_artifacts = _canary_artifacts_from_args(args, targets)
         enable_llm = bool(
@@ -1899,6 +2085,7 @@ def main(argv: list[str] | None = None) -> int:
             author_family=args.author_family,
             canary_artifacts=canary_artifacts,
             daily_spend_path=args.daily_spend_ledger,
+            circuit_state_path=args.qg_circuit_state,
             run_command=_exact_run_command(argv_list),
             enable_llm=enable_llm,
             force_llm=args.force_llm,
