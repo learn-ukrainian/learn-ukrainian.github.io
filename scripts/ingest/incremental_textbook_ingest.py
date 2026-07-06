@@ -129,9 +129,15 @@ TB_SQL = """INSERT INTO textbooks
 
 
 def ingest(slugs: list[str], *, db_path: Path, dry_run: bool) -> dict[str, int]:
+    """Run the delete+insert+FTS-resync cycle for ``slugs``.
+
+    Concurrency note (review, PR #4624): sources.db runs in WAL mode in
+    production, so MCP readers are not blocked by this writer; still,
+    prefer running while no build/review dispatch is mid-flight.
+    """
     counts: dict[str, int] = {}
     per_slug_rows = {slug: build_rows(slug) for slug in slugs}  # fail fast, pre-tx
-    conn = sqlite3.connect(str(db_path))
+    conn = sqlite3.connect(str(db_path), timeout=30.0)
     try:
         conn.execute("BEGIN")
         for slug, rows in per_slug_rows.items():
@@ -148,6 +154,11 @@ def ingest(slugs: list[str], *, db_path: Path, dry_run: bool) -> dict[str, int]:
             print("  DRY-RUN: rolled back")
         else:
             conn.execute("COMMIT")
+    except BaseException:
+        # Explicit rollback (review, PR #4624): never leave the live DB with
+        # an open write transaction on the error path.
+        conn.rollback()
+        raise
     finally:
         conn.close()
     return counts
@@ -167,7 +178,9 @@ def main(argv: list[str] | None = None) -> int:
     slugs = list(WAVE1_SLUGS) if args.wave1 else list(args.slugs)
     try:
         counts = ingest(slugs, db_path=args.db, dry_run=args.dry_run)
-    except IngestError as exc:
+    except (IngestError, ValueError) as exc:
+        # ValueError: _build_textbook_row's strictness gates (author_uk,
+        # unmapped subject) — surface cleanly instead of a traceback.
         print(f"ERROR: {exc}", file=sys.stderr)
         return 2
     total = sum(counts.values())
