@@ -80,6 +80,31 @@ persona:
   role: Модератор дискусії, що ставить під сумнів однозначні оцінки та спонукає шукати складність за героїчним фасадом.
   voice: Critical-Biographer
 phase: BIO
+readings:
+- title: Олег Сенцов
+  language: uk
+  genre: Біографічна довідка
+  source_type: reference
+  role: orientation
+  source: Український ПЕН
+  source_url: https://pen.org.ua/members/sentsov-oleg
+  license: copyrighted
+  rights_note: Матеріали сайту PEN Ukraine захищені авторським правом. Використовувати як link-only джерело.
+  hosting: link-only
+  cefr_min: C1
+  learner_task: Прочитати коротку довідку про творчість, громадську діяльність та ув'язнення режисера, виокремити етапи його спротиву.
+- title: "Олег Сенцов: «Моє завдання — не знімати кіно, а воювати»"
+  language: uk
+  genre: Інтерв'ю
+  source_type: primary
+  role: reading
+  source: Суспільне Культура
+  license: copyrighted
+  rights_note: Інтерв'ю та матеріали Суспільного захищені авторським правом.
+  hosting: reading-needed
+  cefr_min: C1
+  learner_task: Проаналізувати інтерв'ю Сенцова періоду повномасштабного вторгнення, звернувши увагу на його аргументацію щодо ролі митця під час війни.
+  caveats: Матеріал може містити жорстку риторику та описи бойових дій.
 references:
 - title: Wikipedia (UA)
   note: Базова хронологія життя та творчості, перелік нагород.
@@ -99,7 +124,7 @@ sequence: 188
 slug: oleg-sentsov
 subtitle: 'Oleh Sentsov: Director of His Own Fate and a Warrior'
 title: 'Олег Сенцов: Режисер власної долі та воїн'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: особа, позбавлена волі за політичні переконання або діяльність
   pos: ч.

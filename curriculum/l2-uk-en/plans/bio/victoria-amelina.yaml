@@ -77,6 +77,30 @@ persona:
   role: Модератор семінару, що балансує між аналізом літературної спадщини Амеліної та осмисленням її останньої правозахисної місії
   voice: Literary Analyst & Human Rights Advocate
 phase: Executed Renaissance 2.0
+readings:
+- title: Вікторія Амеліна
+  language: uk
+  genre: Біографічна довідка
+  source_type: reference
+  role: orientation
+  source: Український ПЕН
+  source_url: https://pen.org.ua/members/amelina-viktoriya
+  license: copyrighted
+  rights_note: Матеріали сайту PEN Ukraine захищені авторським правом. Використовувати як link-only джерело.
+  hosting: link-only
+  cefr_min: C1
+  learner_task: Ознайомитися з профілем письменниці на сайті Українського ПЕН, звернувши увагу на її перехід від художньої літератури до правозахисної роботи.
+- title: Спецпроєкт "Слова і кулі" або інше інтерв'ю Вікторії Амеліної
+  language: uk
+  genre: Інтерв'ю / Есей
+  source_type: primary
+  role: reading
+  source: Читомо / Український ПЕН
+  license: copyrighted
+  rights_note: Текст захищено авторським правом. Точне посилання на статтю потребує уточнення.
+  hosting: reading-needed
+  cefr_min: C1
+  learner_task: Прочитати розмову або есей Вікторії Амеліної про роль письменника під час війни та концепцію "Нового Розстріляного Відродження".
 references:
 - title: Victoria Amelina
   note: Curated page with key biographical facts, links to works, and critical reception
@@ -96,7 +120,7 @@ sequence: 192
 slug: victoria-amelina
 subtitle: The Price of Testimony
 title: Вікторія Амеліна
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: здатність особистості, спільноти бути активним творцем власної історії та культури, а не пасивним об'єктом зовнішніх впливів
   pos: ж.

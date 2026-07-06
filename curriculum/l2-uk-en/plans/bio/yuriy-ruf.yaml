@@ -80,6 +80,30 @@ persona:
   role: Історик і ветеран, який фіксує народження нового пантеону героїв, відмовляючись від напівтонів, бо на війні їх не існує.
   voice: Uncompromising-Chronicler
 phase: Executed Renaissance 2.0
+readings:
+- title: Юрій Руф
+  language: uk
+  genre: Енциклопедична стаття / Біографічна довідка
+  source_type: reference
+  role: orientation
+  source: Енциклопедія Сучасної України
+  source_url: https://esu.com.ua/article-77631
+  license: copyrighted
+  rights_note: Текст ЕСУ є довідковим матеріалом. Хостити повну статтю заборонено.
+  hosting: link-only
+  cefr_min: C1
+  learner_task: Ознайомитися з офіційною біографічною довідкою з Енциклопедії Сучасної України.
+- title: Документальний матеріал "Руф. Присутній"
+  language: uk
+  genre: Документальний матеріал
+  source_type: secondary
+  role: reading
+  source: Меморіал / Суспільне
+  license: copyrighted
+  rights_note: Потребує пошуку конкретного лінку на відео чи статтю платформи Меморіал або Суспільного.
+  hosting: reading-needed
+  cefr_min: C1
+  learner_task: Проаналізувати життєвий шлях Юрія Руфа за документальними матеріалами та спогадами сучасників.
 references:
 - title: Yuriy Ruf
   note: Базова компіляція фактів з відкритих джерел (Вікіпедія, інтерв'ю, некрологи).
@@ -99,7 +123,7 @@ sequence: 189
 slug: yuriy-ruf
 subtitle: 'Yuriy Ruf: A Poet on the Battlefield'
 title: 'Юрій Руф: Поет на полі бою'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: здатність бути активним діячем, а не пасивним об'єктом історії; право на власну волю та рішення
   pos: ж.

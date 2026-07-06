@@ -80,6 +80,31 @@ persona:
   role: Модератор семінару, що розглядає правозахист не як абстрактне добро, а як складну, сповнену дилем і компромісів професійну діяльність.
   voice: Human-Rights-Analyst
 phase: BIO
+readings:
+- title: Олександра Матвійчук
+  language: uk
+  genre: Біографічна довідка
+  source_type: reference
+  role: orientation
+  source: Український ПЕН
+  source_url: https://pen.org.ua/members/matvijchuk-oleksandra
+  license: copyrighted
+  rights_note: Матеріали сайту PEN Ukraine захищені авторським правом. Використовувати як link-only джерело.
+  hosting: link-only
+  cefr_min: C1
+  learner_task: Ознайомитися з довідкою про правозахисну діяльність Олександри Матвійчук та Центру громадянських свобод.
+- title: Нобелівська лекція "Час взяти на себе відповідальність"
+  language: uk
+  genre: Публічна промова / Лекція
+  source_type: primary
+  role: reading
+  source: NobelPrize.org
+  source_url: https://www.nobelprize.org/prizes/peace/2022/matviichuk/lecture/
+  license: copyrighted
+  rights_note: Текст Нобелівської лекції захищено авторським правом Фундації Нобеля.
+  hosting: link-only
+  cefr_min: C1
+  learner_task: Прочитати україномовну версію Нобелівської лекції та проаналізувати її головні тези про справедливість і права людини під час війни.
 references:
 - title: Олександра Матвійчук (Wikipedia UA)
   name: Олександра Матвійчук (Wikipedia UA)
@@ -100,7 +125,7 @@ sequence: 190
 slug: oleksandra-matviichuk
 subtitle: A Lawyer's Fight for Justice and the Voice of a Nobel Laureate
 title: 'Олександра Матвійчук: Право на справедливість та Нобелівський голос'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: жінка, що професійно займається захистом прав людини
   pos: ж.
