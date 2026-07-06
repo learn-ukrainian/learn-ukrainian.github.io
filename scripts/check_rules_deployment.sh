@@ -9,6 +9,9 @@ set -euo pipefail
 PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$PROJECT_ROOT"
 
+# shellcheck disable=SC1091
+source "$PROJECT_ROOT/scripts/deploy_orphan_paths.sh"
+
 check_pair() {
     local src="$1"
     local dst="$2"
@@ -84,44 +87,30 @@ check_overlay() {
 
 drift=0
 
-# These pairs and orphan exclusions must stay in lock-step with the
-# rsync calls and ORPHAN_PATHS_* declarations in scripts/deploy_prompts.sh.
+# Orphan exclusions must stay in lock-step with scripts/deploy_orphan_paths.sh
+# and the rsync calls in scripts/deploy_prompts.sh. Word-splitting matches deploy.
+# shellcheck disable=SC2086
 check_pair \
     "agents_extensions/shared" \
     ".claude" \
-    "scheduled_tasks.lock" \
-    "worktrees" \
-    "*-epic" \
-    "rules/critical-rules.md" \
-    "rules/non-negotiable-rules.md" \
-    "rules/workflow.md" \
-    "rules/delegate-must-use-worktree.md" \
-    "rules/cli-help-standard.md" \
-    "rules/model-assignment.md" \
-    "rules/operator-expectations.md" || drift=1
+    $ORPHAN_PATHS_CLAUDE \
+    $CLAUDE_RULE_AUTOLOAD_EXCLUDE_PATHS || drift=1
+# shellcheck disable=SC2086
 check_pair \
     "agents_extensions/shared" \
     ".agent" \
-    "wake" \
-    "cache" \
-    "prompts" \
-    "tmp" \
-    "*-thread-bootstrap.md" \
-    "*-handoff.md" \
-    "*-thread-lease.json" \
-    "*-brief.md" \
-    "dispatch-*.md" || drift=1
+    $ORPHAN_PATHS_AGENT || drift=1
+# shellcheck disable=SC2086
 check_pair \
     "agents_extensions/shared" \
     ".codex" \
-    "agents/curriculum-orchestrator.toml" \
-    "agents/curriculum-writer.toml" \
-    "config.toml" \
-    "hooks.json" \
-    "memory" || drift=1
+    $ORPHAN_PATHS_CODEX \
+    $CODEX_OVERLAY_PATHS || drift=1
 check_overlay "agents_extensions/codex" ".codex" || drift=1
-check_pair "agents_extensions/shared/skills" ".agents/skills" || drift=1
-check_pair "gemini_extensions" ".gemini" "config.yaml" "docs/" "rules/" "tmp/" || drift=1
+# shellcheck disable=SC2086
+check_pair "agents_extensions/shared/skills" ".agents/skills" $ORPHAN_PATHS_AGENTS || drift=1
+# shellcheck disable=SC2086
+check_pair "gemini_extensions" ".gemini" $ORPHAN_PATHS_GEMINI || drift=1
 check_pair "agents_extensions/shared/rules" ".gemini/rules" || drift=1
 
 exit "$drift"

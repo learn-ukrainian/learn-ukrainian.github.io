@@ -86,11 +86,19 @@ def test_agy_bridge_prompt_injects_contract_digest() -> None:
 
 def test_deploy_lock_step_lists_include_contract() -> None:
     """deploy excludes x drift-checker x idempotency fixtures must move
-    together (learned the hard way in #4412 round 3)."""
+    together (learned the hard way in #4412 round 3).
+
+    Since #4610 the lock-step lists live in ONE sourceable file
+    (scripts/deploy_orphan_paths.sh) that BOTH consumers source — the
+    contract entry must be in the shared file, and both scripts must
+    actually source it (a copy that drifts is the #4412 bug reborn).
+    """
+    shared = (REPO / "scripts/deploy_orphan_paths.sh").read_text(encoding="utf-8")
     deploy = (REPO / "scripts/deploy_prompts.sh").read_text(encoding="utf-8")
     checker = (REPO / "scripts/check_rules_deployment.sh").read_text(encoding="utf-8")
-    assert 'rules/operator-expectations.md' in deploy, "deploy autoload-exclude missing"
-    assert 'rules/operator-expectations.md' in checker, "drift-checker exclude missing"
+    assert 'rules/operator-expectations.md' in shared, "shared autoload-exclude missing"
+    assert "deploy_orphan_paths.sh" in deploy, "deploy does not source the shared lists"
+    assert "deploy_orphan_paths.sh" in checker, "drift-checker does not source the shared lists"
 
 
 def test_offline_fallback_lists_contract() -> None:
