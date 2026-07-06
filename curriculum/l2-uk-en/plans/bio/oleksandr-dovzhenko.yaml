@@ -77,6 +77,12 @@ persona:
   role: Модератор кіносемінару, що відділяє міфи від фактів та аналізує складні моральні вибори митця
   voice: Критик-біограф
 phase: BIO
+readings:
+- author: Енциклопедія Сучасної України
+  description: Академічна біографія Олександра Довженка.
+  difficulty: B2
+  title: Довженко Олександр Петрович
+  url: https://esu.com.ua/article-20465
 references:
 - title: Oleksandr Dovzhenko
   note: Compiled from ЕІУ, Корнієнко, and Dovzhenko's own writings.
@@ -106,7 +112,7 @@ sequence: 124
 slug: oleksandr-dovzhenko
 subtitle: The Tragedy of a Genius
 title: 'Олександр Довженко: Трагедія генія'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: творець фільму, що керує творчим процесом
   pos: ч.

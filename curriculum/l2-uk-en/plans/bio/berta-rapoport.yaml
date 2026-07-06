@@ -148,6 +148,12 @@ persona:
     радянської маргіналізації.
   voice: Maritime Historian
 phase: BIO
+readings:
+- author: Одеський мартиролог
+  description: Інституційний меморіальний запис про життя та кар'єру капітанки Берти Рапопорт.
+  difficulty: B2
+  title: Рапопорт Берта Яківна (1914–1967)
+  url: https://odessa-memory.info/ua/index.php?id=87
 references:
 - note: >-
     Інституційний меморіальний запис (Одеський мартиролог) — найсильніше доступне
@@ -173,7 +179,7 @@ sequence: 129
 slug: berta-rapoport
 subtitle: 'Berta Rapoport: One of the First Women Sea-Captains'
 title: 'Берта Рапопорт: Капітанка, яку море прийняло, а пам''ять забула'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: жінка, яка командує морським судном і відповідає за екіпаж та плавання
   pos: ж.

@@ -79,6 +79,12 @@ persona:
   role: Модератор семінару, що ставить під сумнів романтичні міфи та змушує студентів аналізувати мотивацію історичних постатей
   voice: Scholarly-Skeptical
 phase: BIO
+readings:
+- author: Енциклопедія Сучасної України
+  description: Академічна біографія Василя Вишиваного (Вільгельма Габсбурга).
+  difficulty: B2
+  title: Габсбург Вільгельм
+  url: https://esu.com.ua/article-27931
 references:
 - title: Vyshyvanyi Memoirs
   note: Фрагменти зі спогадів "Минають дні"
@@ -99,7 +105,7 @@ sequence: 128
 slug: vasyl-vyshyvanyi
 subtitle: Archduke Wilhelm von Habsburg, the Ukrainian Colonel
 title: 'Василь Вишиваний: Князь-українець'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: титул некоронованих членів австрійської імператорської династії Габсбургів
   pos: ч.
