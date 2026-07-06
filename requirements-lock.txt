@@ -87,7 +87,7 @@ lxml==6.1.1
 lz4==4.4.5
 mando==0.8.2
 marisa-trie==1.4.1
-markdown-it-py==4.0.0
+markdown-it-py==4.2.0
 markdown2==2.5.5
 markdownify==1.2.2
 marker-pdf==1.10.2
