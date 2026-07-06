@@ -138,6 +138,13 @@ persona:
     української культурної пам'яті.
   voice: Literary-Historical Analyst
 phase: BIO
+readings:
+- hosting: link-only
+  language: uk
+  notes: Енциклопедична стаття про біографію, твори, репресії і пізню освітню працю.
+  role: primary
+  source: Енциклопедія Сучасної України (ЕСУ)
+  url: https://esu.com.ua/article-10473
 references:
 - note: Енциклопедична стаття про біографію, твори, репресії і пізню освітню працю.
   path: https://esu.com.ua/article-10473
@@ -165,7 +172,7 @@ sequence: 273
 slug: iryna-kalynets
 subtitle: Poet, Teacher, Political Prisoner, and Keeper of Cultural Memory
 title: 'Ірина Калинець: школа пам''яті і дорога вигнання'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: українська християнська традиція, переслідувана радянською владою; важлива для родинної й культурної пам'яті Калинець
   pos: ж.

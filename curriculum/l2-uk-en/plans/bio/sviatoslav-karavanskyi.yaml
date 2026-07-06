@@ -141,6 +141,13 @@ persona:
     радянських репресій проти української мови.
   voice: Linguistic Historian
 phase: BIO
+readings:
+- hosting: link-only
+  language: uk
+  notes: Біографічна стаття.
+  role: primary
+  source: Енциклопедія Сучасної України (ЕСУ)
+  url: https://esu.com.ua/article-9625
 references:
 - note: Біографічна стаття.
   path: https://esu.com.ua/article-9625
@@ -166,7 +173,7 @@ sequence: 275
 slug: sviatoslav-karavanskyi
 subtitle: The Lexicographer Who Made Dictionaries a Weapon
 title: 'Святослав Караванський: Словник як національне «я»'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: фахівець, який укладає словники
   pos: ч.
