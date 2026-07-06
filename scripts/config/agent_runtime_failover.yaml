@@ -1,22 +1,49 @@
 # Runner-level agent provider failover chains.
 #
-# Default is intentionally empty: absent lane chain means runner.invoke() keeps
-# its previous single-route behavior exactly. Populate per-lane chains only for
-# adapters that can express the requested route via model/provider override.
+# An absent lane chain means runner.invoke() keeps its previous single-route
+# behavior exactly. Populate per-lane chains only for adapters that can
+# express the requested route via model/provider override.
 #
 # Shape:
 # chains:
-#   deepseek:
+#   <lane>:
 #     cooldown_ttl_s: 300
 #     routes:
-#       - provider: deepseek
-#         model: deepseek-v4-pro
-#       - provider: openrouter
-#         model: qwen/qwen3.6-plus
+#       - provider: <primary>     # model omitted on route 0 = inherit the
+#       - provider: <fallback>    #   dispatch-requested model
+#         model: <provider-scoped model slug>
+#
+# Rules:
+# - Keep fallback routes in the SAME model family as the lane. Reviewer-seat
+#   independence and per-task routing assume the family
+#   (agents_extensions/shared/rules/model-assignment.md). qwen is
+#   cost-excluded as a fallback target; zai/GLM is rejected at chain load
+#   (LOCAL-ONLY guard).
+# - Failovers are never silent: the runner emits the
+#   AGENT_RUNTIME_FAILOVER_SUBSTITUTION marker and persists the substitution
+#   in the usage record + telemetry event.
+# - After editing a chain, re-validate with a live forced-failure probe
+#   (scripts/agent_runtime/probe_fallback.py) against an isolated
+#   HERMES_HOME, with AGENT_RUNTIME_FAILOVER_CONFIG and
+#   AGENT_RUNTIME_FAILOVER_COOLDOWN_DB pointed at throwaway copies — never
+#   the live cooldown DB.
 #
 # v1 coverage:
 # - Hermes-backed lanes (deepseek, qwen, grok): provider + model override.
 # - agy: model override; provider is informational unless encoded by the CLI
 #   model label.
 # - Other adapters: chain only if their existing model flag can express it.
-chains: {}
+chains:
+  deepseek:
+    cooldown_ttl_s: 300
+    routes:
+      # Primary: native DeepSeek API. Model inherits the dispatch request
+      # (deepseek-v4-pro content/review, deepseek-v4-flash code review).
+      - provider: deepseek
+      # Same-family fallbacks via OpenRouter (slugs verified against the
+      # live OpenRouter catalog 2026-07-06). Pro before flash: quality over
+      # cost on the degraded path.
+      - provider: openrouter
+        model: deepseek/deepseek-v4-pro
+      - provider: openrouter
+        model: deepseek/deepseek-v4-flash
