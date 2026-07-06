@@ -89,7 +89,7 @@ readings:
   source_type: Енциклопедія
   task: Прочитати біографічну довідку про скульптора та звернути увагу на період його життя в Україні.
   title: Архипенко Олександр Порфирович
-  url: https://esu.com.ua/article-43391
+  url: https://esu.com.ua/article-44797
 - hosting: reading-needed
   language: uk
   role: Першоджерело
@@ -121,7 +121,7 @@ sequence: 112
 slug: oleksandr-arkhypenko
 subtitle: 'Alexander Archipenko: Sculptor of the Avant-Garde'
 title: 'Олександр Архипенко: Скульптор авангарду'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: вид образотворчого мистецтва, твори якого мають тривимірну, об'ємну форму і виконуються із твердих або пластичних матеріалів
   pos: ж.
