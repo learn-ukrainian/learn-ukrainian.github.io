@@ -83,6 +83,16 @@ persona:
   role: Модератор дискусії про складну спадщину радянської епохи, що уникає чорно-білих оцінок та показує еволюцію митця
   voice: Nuanced-Literary-Historian
 phase: BIO
+readings:
+- caveats: "Вікіпедія: можливий ідеалізований фокус на дисидентстві з меншою увагою до офіційного радянського етапу."
+  clearance: "Creative Commons Attribution-ShareAlike License"
+  language: uk
+  learner_task: "Ознайомитися з біографією, звернувши особливу увагу на історію написання та заборони роману «Собор»."
+  role: "primary_bio"
+  source_name: "Вікіпедія"
+  source_url: "https://uk.wikipedia.org/wiki/%D0%93%D0%BE%D0%BD%D1%87%D0%B0%D1%80_%D0%9E%D0%BB%D0%B5%D1%81%D1%8C_%D0%A2%D0%B5%D1%80%D0%B5%D0%BD%D1%82%D1%96%D0%B9%D0%BE%D0%B2%D0%B8%D1%87"
+  title: "Гончар Олесь Терентійович"
+  type: "biography"
 references:
 - title: Гончар Олесь Терентійович
   note: Загальна біографія, ключові дати та події
@@ -101,7 +111,7 @@ sequence: 152
 slug: oles-honchar
 subtitle: 'Oles Honchar: A Cathedral of Defiance'
 title: 'Олесь Гончар: Собор непокори'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: внутрішнє відчуття моральної відповідальності за свою поведінку та вчинки
   pos: ж.

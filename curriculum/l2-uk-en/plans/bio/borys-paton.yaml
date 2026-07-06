@@ -79,6 +79,16 @@ persona:
   role: Колишній співробітник Інституту електрозварювання, що бачив і розквіт, і застій, і намагається об'єктивно оцінити спадщину свого керівника
   voice: Paton-Era-Insider
 phase: BIO
+readings:
+- caveats: "Вікіпедія: стаття може містити надмірно деталізовані списки нагород та загальні формулювання."
+  clearance: "Creative Commons Attribution-ShareAlike License"
+  language: uk
+  learner_task: "Прочитати розділи про наукову діяльність та керівництво Академією наук, звернути увагу на період після 1991 року."
+  role: "primary_bio"
+  source_name: "Вікіпедія"
+  source_url: "https://uk.wikipedia.org/wiki/%D0%9F%D0%B0%D1%82%D0%BE%D0%BD_%D0%91%D0%BE%D1%80%D0%B8%D1%81_%D0%84%D0%B2%D0%B3%D0%B5%D0%BD%D0%BE%D0%B2%D0%B8%D1%87"
+  title: "Патон Борис Євгенович"
+  type: "biography"
 references:
 - title: Borys Paton
   note: Compiled biography from NAS of Ukraine sources, interviews, and academic publications
@@ -98,7 +108,7 @@ sequence: 151
 slug: borys-paton
 subtitle: Людина, що зварювала космос і 58 років очолювала українську науку
 title: 'Борис Патон: Академік століття'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: процес нероз'ємного з'єднання матеріалів шляхом встановлення між ними міжатомних зв'язків
   pos: с.
