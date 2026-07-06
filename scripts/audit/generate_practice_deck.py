@@ -13,7 +13,10 @@ import hashlib
 import json
 import random
 import re
+import sqlite3
 import sys
+import unicodedata
+from collections import Counter
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Protocol
@@ -28,6 +31,7 @@ if str(AUDIT_DIR) not in sys.path:
 from lexeme_filter import SURFACE_CLOZE, is_practice_eligible, is_surface_admitted
 
 DEFAULT_MANIFEST = Path("site/src/data/lexicon-manifest.json")
+DEFAULT_ATLAS_DB = Path("data/atlas.db")
 # Deck shards are served as literal static files from public/ (not via dynamic .json.ts
 # endpoints) so the fetch URL resolves identically in dev and prod — astro's
 # `trailingSlash: 'always'` otherwise serves a dynamic endpoint only at the trailing-slash
@@ -38,14 +42,43 @@ DEFAULT_CLOZE_SOURCES = Path("site/src/data/lexicon-practice-cloze-sources.json"
 # Keep the default above the current all-eligible deck size. A lower default
 # silently contracts the committed practice surface during routine cloze regen.
 DEFAULT_TARGET = 6000
-DEFAULT_RAW_LIMIT = 550_000
-DEFAULT_GZIP_LIMIT = 140_000
+DEFAULT_RAW_LIMIT = 1_600_000
+DEFAULT_GZIP_LIMIT = 180_000
 SCHEMA_VERSION = 1
 CEFR_ORDER = ("A1", "A2", "B1", "B2", "C1", "C2")
 CEFR_RANK = {level: index for index, level in enumerate(CEFR_ORDER)}
+PUBLISHED_LEVELS = ("A1", "A2", "B1", "B2", "C1")
+DRILL_MODES = ("stress", "classify", "paradigm", "synonym", "heritage", "paronym")
+MODE_SHARD_KEYS = ("cloze", *DRILL_MODES)
+MODE_SCHEMAS = {
+    "cloze": "atlas-practice-cloze",
+    "stress": "atlas-practice-stress",
+    "classify": "atlas-practice-classify",
+    "paradigm": "atlas-practice-paradigm",
+    "synonym": "atlas-practice-synonym",
+    "heritage": "atlas-practice-heritage",
+    "paronym": "atlas-practice-paronym",
+}
+MODE_BODY_KEYS = {
+    "cloze": "cloze",
+    "stress": "stress",
+    "classify": "classify",
+    "paradigm": "paradigm",
+    "synonym": "synonym",
+    "heritage": "heritage",
+    "paronym": "paronym",
+}
+THIN_WARN_THRESHOLDS = {
+    "cloze": 0.10,
+    "synonym": 0.05,
+    "heritage": 0.01,
+    "paronym": 0.01,
+}
 MEANING_MC_MAX_WORDS = 4
 MEANING_MC_MAX_CHARS = 32
 NUMBER_KEYS = ("singular", "plural")
+STRESS_MARK = "\u0301"
+UKRAINIAN_VOWELS = frozenset("аеєиіїоуюяАЕЄИІЇОУЮЯ")
 NO_PAIR_PROBABILITY = {
     "A1": 0.70,
     "A2": 0.62,
@@ -282,6 +315,33 @@ def _plain(value: str) -> str:
         .replace("ʼ", "'")
         .strip()
     )
+
+
+def _strip_stress(value: str) -> str:
+    return unicodedata.normalize("NFC", unicodedata.normalize("NFD", value).replace(STRESS_MARK, ""))
+
+
+def _stress_position(stressed: str) -> tuple[str, int | None]:
+    nfd = unicodedata.normalize("NFD", stressed)
+    if nfd.count(STRESS_MARK) != 1:
+        return (_strip_stress(stressed), None)
+    prefix, _suffix = nfd.split(STRESS_MARK, 1)
+    prefix_nfc = unicodedata.normalize("NFC", prefix)
+    if not prefix_nfc:
+        return (_strip_stress(stressed), None)
+    return (_strip_stress(stressed), len(prefix_nfc) - 1)
+
+
+def _vowel_nuclei(value: str) -> list[dict[str, Any]]:
+    return [
+        {"index": index, "label": char}
+        for index, char in enumerate(value)
+        if char in UKRAINIAN_VOWELS
+    ]
+
+
+def _slug_key(entry: dict[str, Any]) -> str:
+    return _clean_text(entry.get("url_slug")) or _stable_lemma_id(entry)
 
 
 def _headword(gloss: str) -> str:
@@ -1091,6 +1151,546 @@ def _build_cloze_items(
     return items
 
 
+def _stress_payload(entry: dict[str, Any]) -> dict[str, Any] | None:
+    stress = entry.get("enrichment", {}).get("stress") if isinstance(entry.get("enrichment"), dict) else None
+    if isinstance(stress, dict):
+        form = _clean_text(stress.get("form"))
+        source = _clean_text(stress.get("source"))
+    else:
+        form = _clean_text(stress)
+        source = None
+    if not form:
+        return None
+    unstressed, stress_index = _stress_position(form)
+    nuclei = _vowel_nuclei(unstressed)
+    if stress_index is None or len(nuclei) < 2:
+        return None
+    if sum(1 for nucleus in nuclei if nucleus["index"] == stress_index) != 1:
+        return None
+    lemma = _clean_text(entry.get("lemma")) or ""
+    if lemma and _plain(unstressed) != _plain(lemma):
+        return None
+    return {
+        "stressed": form,
+        "unstressed": unstressed,
+        "stressIndex": stress_index,
+        "nuclei": nuclei,
+        "source": source or "ukrainian-word-stress",
+    }
+
+
+def _morphology(entry: dict[str, Any]) -> dict[str, Any] | None:
+    enrichment = entry.get("enrichment")
+    if not isinstance(enrichment, dict):
+        return None
+    morphology = enrichment.get("morphology")
+    return morphology if isinstance(morphology, dict) else None
+
+
+def _morph_labels(morphology: dict[str, Any]) -> list[str]:
+    forms = morphology.get("forms")
+    if not isinstance(forms, list):
+        return []
+    labels: list[str] = []
+    for row in forms:
+        if not isinstance(row, dict):
+            continue
+        label = _clean_text(row.get("label"))
+        if label is not None:
+            labels.append(label)
+    return labels
+
+
+def _morph_pos(entry: dict[str, Any], morphology: dict[str, Any] | None = None) -> str:
+    raw = ""
+    if morphology is not None:
+        raw = str(morphology.get("pos") or "")
+    if not raw:
+        raw = str(entry.get("pos") or "")
+    value = raw.casefold()
+    if "іменник" in value or value.startswith("noun") or value in {"abbreviation", "proper noun", "plural noun"}:
+        return "noun"
+    if "дієслово" in value or value.startswith("verb") or value in {"infinitive", "imperative"}:
+        return "verb"
+    if "прикметник" in value or value.startswith("adj") or value == "adjective":
+        return "adjective"
+    if "прислівник" in value or value.startswith("adv"):
+        return "adverb"
+    if "числівник" in value or value == "numeral":
+        return "numeral"
+    if value in {"прийменник", "сполучник", "частка", "preposition", "conjunction", "particle"}:
+        return "function"
+    return ""
+
+
+CLASSIFY_LABELS: dict[str, dict[str, tuple[str, str | None]]] = {
+    "gender": {
+        "masculine": ("чоловічий рід", "masc."),
+        "feminine": ("жіночий рід", "fem."),
+        "neuter": ("середній рід", "neut."),
+    },
+    "aspect": {
+        "perfective": ("доконаний вид", "pfv."),
+        "imperfective": ("недоконаний вид", "impfv."),
+    },
+    "declension": {
+        "declension-1": ("І відміна", None),
+        "declension-2": ("ІІ відміна", None),
+        "declension-3": ("ІІІ відміна", None),
+        "declension-4": ("IV відміна", None),
+    },
+    "pos": {
+        "noun": ("іменник", "noun"),
+        "verb": ("дієслово", "verb"),
+        "adjective": ("прикметник", "adj."),
+        "adverb": ("прислівник", "adv."),
+        "numeral": ("числівник", "num."),
+        "function": ("службове слово", "function word"),
+    },
+}
+
+CLASSIFY_SET_LABELS: dict[str, tuple[str, str | None]] = {
+    "gender": ("рід", "gender"),
+    "aspect": ("вид", "aspect"),
+    "declension": ("відміна", "declension"),
+    "pos": ("частина мови", "part of speech"),
+}
+
+
+def _classify_options(set_id: str, level: str) -> list[dict[str, str]]:
+    options = []
+    for value, (label_uk, label_en) in CLASSIFY_LABELS[set_id].items():
+        option = {"value": value, "labelUk": label_uk}
+        if CEFR_RANK[level] <= CEFR_RANK["A1"] and label_en:
+            option["labelEn"] = label_en
+        options.append(option)
+    return options
+
+
+def _gender_category(labels: list[str]) -> str | None:
+    singular_labels = [label for label in labels if "множина" not in label]
+    if not singular_labels:
+        return None
+    genders: set[str] = set()
+    for label in singular_labels:
+        if "чол." in label:
+            genders.add("masculine")
+        if "жін." in label:
+            genders.add("feminine")
+        if "сер." in label:
+            genders.add("neuter")
+    return next(iter(genders)) if len(genders) == 1 else None
+
+
+def _aspect_category(labels: list[str]) -> str | None:
+    has_present = any("теперішній" in label for label in labels)
+    has_future = any("майбутній" in label for label in labels)
+    if has_present:
+        return "imperfective"
+    if has_future:
+        return "perfective"
+    return None
+
+
+def _declension_category(entry: dict[str, Any], labels: list[str], paradigm: dict[str, Any]) -> str | None:
+    if _morph_pos(entry) != "noun":
+        return None
+    if not _gender_category(labels):
+        return None
+    cases = paradigm.get("cases")
+    if not isinstance(cases, dict):
+        return None
+    nominative = cases.get("називний") or cases.get("nominative")
+    if not isinstance(nominative, dict):
+        return None
+    singular = _clean_text(nominative.get("singular"))
+    plural = _clean_text(nominative.get("plural"))
+    if not singular or (plural and _plain(singular) == _plain(plural)):
+        return None
+    lemma = _clean_text(entry.get("lemma")) or singular
+    gender = _gender_category(labels)
+    plain_lemma = _plain(lemma)
+    if gender == "feminine" and plain_lemma.endswith(("а", "я")):
+        return "declension-1"
+    if gender == "neuter" and plain_lemma.endswith(("а", "я")):
+        return "declension-4"
+    if gender in {"masculine", "neuter"}:
+        return "declension-2"
+    if gender == "feminine" and not plain_lemma.endswith(("а", "я")):
+        return "declension-3"
+    return None
+
+
+def _category_set_payload(set_id: str, value: str, level: str) -> dict[str, Any]:
+    set_label_uk, set_label_en = CLASSIFY_SET_LABELS[set_id]
+    answer_label_uk, answer_label_en = CLASSIFY_LABELS[set_id][value]
+    payload: dict[str, Any] = {
+        "setId": set_id,
+        "setLabelUk": set_label_uk,
+        "answer": value,
+        "answerLabelUk": answer_label_uk,
+        "options": _classify_options(set_id, level),
+    }
+    if CEFR_RANK[level] <= CEFR_RANK["A1"]:
+        if set_label_en:
+            payload["setLabelEn"] = set_label_en
+        if answer_label_en:
+            payload["answerLabelEn"] = answer_label_en
+    return payload
+
+
+def _build_classify_items(entry: dict[str, Any], lexeme: dict[str, Any]) -> list[dict[str, Any]]:
+    morphology = _morphology(entry)
+    if not morphology:
+        return []
+    labels = _morph_labels(morphology)
+    pos = _morph_pos(entry, morphology)
+    sets: list[dict[str, Any]] = []
+    if pos == "noun":
+        gender = _gender_category(labels)
+        if gender:
+            sets.append(_category_set_payload("gender", gender, lexeme["cefr"]))
+        declension = _declension_category(entry, labels, morphology.get("paradigm") if isinstance(morphology.get("paradigm"), dict) else {})
+        if declension and CEFR_RANK[lexeme["cefr"]] >= CEFR_RANK["B1"]:
+            sets.append(_category_set_payload("declension", declension, lexeme["cefr"]))
+    elif pos == "verb":
+        aspect = _aspect_category(labels)
+        if aspect and CEFR_RANK[lexeme["cefr"]] >= CEFR_RANK["A2"]:
+            sets.append(_category_set_payload("aspect", aspect, lexeme["cefr"]))
+    if pos in CLASSIFY_LABELS["pos"] and CEFR_RANK[lexeme["cefr"]] >= CEFR_RANK["A2"]:
+        sets.append(_category_set_payload("pos", pos, lexeme["cefr"]))
+    if not sets:
+        return []
+    return [
+        {
+            "classifyId": f"{lexeme['lemmaId']}:classify",
+            "lemmaId": lexeme["lemmaId"],
+            "lemma": lexeme["lemma"],
+            "sets": sets,
+            "source": "VESUM",
+        }
+    ]
+
+
+CASE_SLOT_LABELS: dict[str, tuple[str, str]] = {
+    "називний": ("називний відмінок", "nom."),
+    "родовий": ("родовий відмінок", "gen."),
+    "давальний": ("давальний відмінок", "dat."),
+    "знахідний": ("знахідний відмінок", "acc."),
+    "орудний": ("орудний відмінок", "instr."),
+    "місцевий": ("місцевий відмінок", "loc."),
+    "кличний": ("кличний відмінок", "voc."),
+}
+
+
+def _single_surface(value: Any) -> str | None:
+    text = _clean_text(value)
+    if not text or "/" in text:
+        return None
+    return text
+
+
+def _build_paradigm_items(lexeme: dict[str, Any]) -> list[dict[str, Any]]:
+    cases = lexeme.get("paradigm", {}).get("cases")
+    if not isinstance(cases, dict):
+        return []
+    slots: list[dict[str, str]] = []
+    seen_forms: set[str] = set()
+    duplicate_forms: set[str] = set()
+    for case_name, forms in cases.items():
+        if not isinstance(case_name, str) or not isinstance(forms, dict):
+            continue
+        case_key = case_name.strip()
+        if case_key not in CASE_SLOT_LABELS:
+            continue
+        for number in NUMBER_KEYS:
+            form = _single_surface(forms.get(number))
+            if not form:
+                continue
+            normalized = _plain(form)
+            if normalized in seen_forms:
+                duplicate_forms.add(normalized)
+            seen_forms.add(normalized)
+            slots.append({"case": case_key, "number": number, "form": form})
+    usable = [slot for slot in slots if _plain(slot["form"]) not in duplicate_forms]
+    if len(usable) < 3:
+        return []
+    forms = [slot["form"] for slot in usable]
+    items = []
+    for index, slot in enumerate(usable):
+        label_uk, label_en = CASE_SLOT_LABELS[slot["case"]]
+        number_uk = "однина" if slot["number"] == "singular" else "множина"
+        number_en = "sg" if slot["number"] == "singular" else "pl"
+        options = [{"label": slot["form"], "kind": "answer"}]
+        for other in usable:
+            if other is slot or _plain(other["form"]) == _plain(slot["form"]):
+                continue
+            options.append({"label": other["form"], "kind": "same-paradigm"})
+            if len(options) == 4:
+                break
+        if len(options) < 4:
+            continue
+        paradigm_id = f"{lexeme['lemmaId']}:paradigm:{index + 1}"
+        answer_index = int(hashlib.sha1(paradigm_id.encode("utf-8")).hexdigest()[:2], 16) % len(options)
+        answer = options.pop(0)
+        options.insert(answer_index, answer)
+        item: dict[str, Any] = {
+            "paradigmId": paradigm_id,
+            "lemmaId": lexeme["lemmaId"],
+            "lemma": lexeme["lemma"],
+            "slot": {
+                "case": slot["case"],
+                "number": slot["number"],
+                "labelUk": f"{label_uk}, {number_uk}",
+            },
+            "form": slot["form"],
+            "options": options,
+        }
+        if CEFR_RANK[lexeme["cefr"]] <= CEFR_RANK["A1"]:
+            item["slot"]["labelEn"] = f"{label_en} {number_en}"
+        items.append(item)
+    return items
+
+
+def _section_items(entry: dict[str, Any], section_name: str) -> list[str]:
+    sections = entry.get("sections")
+    if not isinstance(sections, dict):
+        return []
+    section = sections.get(section_name)
+    if not isinstance(section, dict):
+        return []
+    items = section.get("items")
+    if not isinstance(items, list):
+        return []
+    cleaned: list[str] = []
+    for item in items:
+        text = _clean_text(re.sub(r"\s*\([^)]*\)\s*", "", str(item)))
+        if text:
+            cleaned.append(text)
+    return cleaned
+
+
+def _synonym_option(
+    label: str,
+    lemma_id: str,
+    kind: str,
+) -> dict[str, str]:
+    return {"label": label, "lemmaId": lemma_id, "kind": kind}
+
+
+def _valid_synonym_distractors(
+    answer: dict[str, Any],
+    prompt: dict[str, Any],
+    lexemes: list[dict[str, Any]],
+) -> list[dict[str, Any]]:
+    blocked_heads = {_headword(prompt["gloss"]), _headword(answer["gloss"])}
+    candidates = []
+    for lexeme in lexemes:
+        if lexeme["lemmaId"] in {prompt["lemmaId"], answer["lemmaId"]}:
+            continue
+        if lexeme.get("pos") != answer.get("pos"):
+            continue
+        if _headword(lexeme["gloss"]) in blocked_heads:
+            continue
+        if _plain(lexeme["lemma"]) in {_plain(prompt["lemma"]), _plain(answer["lemma"])}:
+            continue
+        candidates.append(lexeme)
+    answer_len = len(answer["lemma"])
+    return sorted(
+        candidates,
+        key=lambda item: (
+            abs(len(item["lemma"]) - answer_len),
+            item["cefr"] != answer["cefr"],
+            item["lemmaId"],
+        ),
+    )
+
+
+def _build_synonym_items(
+    entry: dict[str, Any],
+    lexeme: dict[str, Any],
+    by_plain_lemma: dict[str, dict[str, Any]],
+    all_lexemes: list[dict[str, Any]],
+    deck_version: str,
+) -> list[dict[str, Any]]:
+    items: list[dict[str, Any]] = []
+    for polarity, section_name in (("synonym", "synonyms"), ("antonym", "antonyms")):
+        for target_label in _section_items(entry, section_name):
+            target = by_plain_lemma.get(_plain(target_label))
+            if not target:
+                continue
+            if CEFR_RANK[lexeme["cefr"]] < CEFR_RANK["B1"]:
+                continue
+            if CEFR_RANK[target["cefr"]] > CEFR_RANK[lexeme["cefr"]]:
+                continue
+            distractors = _valid_synonym_distractors(target, lexeme, all_lexemes)
+            if len(distractors) < 3:
+                continue
+            key = "\x1f".join((deck_version, lexeme["lemmaId"], target["lemmaId"], polarity))
+            synonym_id = "syn_" + hashlib.sha1(key.encode("utf-8")).hexdigest()[:12]
+            options = [
+                _synonym_option(target["lemma"], target["lemmaId"], "answer"),
+                *[
+                    _synonym_option(distractor["lemma"], distractor["lemmaId"], "distractor")
+                    for distractor in distractors[:3]
+                ],
+            ]
+            answer_index = int(hashlib.sha1(synonym_id.encode("utf-8")).hexdigest()[:2], 16) % len(options)
+            answer = options.pop(0)
+            options.insert(answer_index, answer)
+            item = {
+                "synonymId": synonym_id,
+                "lemmaId": lexeme["lemmaId"],
+                "targetLemmaId": target["lemmaId"],
+                "polarity": polarity,
+                "prompt": lexeme["lemma"],
+                "answer": target["lemma"],
+                "level": lexeme["cefr"],
+                "options": options,
+                "source": "ukrajinet-auto-translation",
+            }
+            items.append(item)
+    return items
+
+
+def validate_classify_item(item: dict[str, Any]) -> list[str]:
+    errors: list[str] = []
+    sets = item.get("sets")
+    if not isinstance(sets, list) or not sets:
+        return ["classify item must contain at least one category set"]
+    for category_set in sets:
+        if not isinstance(category_set, dict):
+            errors.append("classify category set must be an object")
+            continue
+        set_id = category_set.get("setId")
+        answer = category_set.get("answer")
+        options = category_set.get("options")
+        if set_id not in CLASSIFY_LABELS:
+            errors.append("classify category set is not closed")
+            continue
+        closed_values = set(CLASSIFY_LABELS[str(set_id)])
+        option_values = {
+            option.get("value")
+            for option in (options if isinstance(options, list) else [])
+            if isinstance(option, dict)
+        }
+        if option_values != closed_values:
+            errors.append(f"classify {set_id} options must equal the closed category set")
+        if answer not in closed_values:
+            errors.append(f"classify {set_id} answer must be in the closed category set")
+    return errors
+
+
+def validate_classify_session_cap(items: list[dict[str, Any]], cap: float = 0.60) -> list[str]:
+    counts: Counter[str] = Counter()
+    for item in items:
+        sets = item.get("sets")
+        if not isinstance(sets, list):
+            continue
+        for category_set in sets:
+            if isinstance(category_set, dict):
+                key = f"{category_set.get('setId')}:{category_set.get('answer')}"
+                counts[key] += 1
+    total = sum(counts.values())
+    if total < 4:
+        return []
+    worst = max(counts.values()) / total
+    if worst > cap:
+        return [f"classify session category cap exceeded: {worst:.2%} > {cap:.0%}"]
+    return []
+
+
+def validate_synonym_item(item: dict[str, Any]) -> list[str]:
+    errors: list[str] = []
+    options = item.get("options")
+    if not isinstance(options, list) or len(options) < 4:
+        return ["synonym option set must contain at least four options"]
+    labels = [str(option.get("label") or "") for option in options if isinstance(option, dict)]
+    normalized = [_plain(label) for label in labels]
+    if len(set(normalized)) != len(normalized):
+        errors.append("synonym options must be unique after normalization")
+    answer = _plain(str(item.get("answer") or ""))
+    if normalized.count(answer) != 1:
+        errors.append("synonym answer must be present exactly once")
+    lengths = [len(label) for label in labels]
+    if lengths and max(lengths) - min(lengths) > 12:
+        errors.append("synonym option label lengths exceed bounded distribution")
+    prompt = _plain(str(item.get("prompt") or ""))
+    for label in normalized:
+        if label and label != answer and (label in {answer, prompt} or answer in label or label in answer):
+            errors.append("synonym distractor must not be a near-duplicate of prompt or answer")
+            break
+    return errors
+
+
+def validate_paradigm_item(item: dict[str, Any]) -> list[str]:
+    errors: list[str] = []
+    options = item.get("options")
+    if not isinstance(options, list) or len(options) < 4:
+        return ["paradigm option set must contain at least four options"]
+    labels = [str(option.get("label") or "") for option in options if isinstance(option, dict)]
+    normalized = [_plain(label) for label in labels]
+    if len(set(normalized)) != len(normalized):
+        errors.append("paradigm options must be unique after normalization")
+    answer = _plain(str(item.get("form") or ""))
+    if normalized.count(answer) != 1:
+        errors.append("paradigm answer form must be present exactly once")
+    return errors
+
+
+def validate_heritage_pair(pair: dict[str, Any]) -> list[str]:
+    errors: list[str] = []
+    if not _clean_text(pair.get("nativeSlug")):
+        errors.append("heritage_pair missing nativeSlug")
+    if not _clean_text(pair.get("calqueLabel")):
+        errors.append("heritage_pair missing calqueLabel")
+    corrections = pair.get("corrections")
+    if not isinstance(corrections, list) or not corrections:
+        errors.append("heritage_pair corrections must be a nonempty list")
+    citations = pair.get("citations")
+    if not isinstance(citations, list) or not citations:
+        errors.append("heritage_pair citations must be a nonempty list")
+    if not _clean_text(pair.get("sourceFamily")):
+        errors.append("heritage_pair missing sourceFamily")
+    return errors
+
+
+def validate_paronym_pair(pair: dict[str, Any]) -> list[str]:
+    errors: list[str] = []
+    for field in ("slugA", "slugB", "distinction_gloss_uk"):
+        if not _clean_text(pair.get(field)):
+            errors.append(f"paronym_pair missing {field}")
+    frames = pair.get("frames")
+    if not isinstance(frames, list) or not frames:
+        errors.append("paronym_pair frames must be a nonempty list")
+    citations = pair.get("citations")
+    if not isinstance(citations, list) or not citations:
+        errors.append("paronym_pair citations must be a nonempty list")
+    return errors
+
+
+def validate_mode_items(mode: str, items: list[dict[str, Any]]) -> list[str]:
+    errors: list[str] = []
+    if mode == "classify":
+        for index, item in enumerate(items):
+            errors.extend(f"classify[{index}]: {error}" for error in validate_classify_item(item))
+        errors.extend(validate_classify_session_cap(items))
+    elif mode == "synonym":
+        for index, item in enumerate(items):
+            errors.extend(f"synonym[{index}]: {error}" for error in validate_synonym_item(item))
+    elif mode == "paradigm":
+        for index, item in enumerate(items):
+            errors.extend(f"paradigm[{index}]: {error}" for error in validate_paradigm_item(item))
+    return errors
+
+
+def _validate_mode_or_raise(level: str, mode: str, items: list[dict[str, Any]]) -> None:
+    errors = validate_mode_items(mode, items)
+    if errors:
+        joined = "; ".join(errors[:8])
+        raise ValueError(f"{level} {mode} validator failed: {joined}")
+
+
 def _level_payload(
     schema: str,
     deck_version: str,
@@ -1147,6 +1747,9 @@ def build_practice_shards(
             lexemes_by_entry.append((entry, lexeme))
 
     all_lexemes = [lexeme for _, lexeme in lexemes_by_entry]
+    by_plain_lemma: dict[str, dict[str, Any]] = {}
+    for lexeme in all_lexemes:
+        by_plain_lemma.setdefault(_plain(lexeme["lemma"]), lexeme)
     cloze_sources = cloze_sources or []
     cloze_by_lemma_id: dict[str, list[dict[str, Any]]] = {}
     cloze_by_lemma: dict[str, list[dict[str, Any]]] = {}
@@ -1159,6 +1762,11 @@ def build_practice_shards(
         target.setdefault(key_value, []).append(row)
     cloze_by_level: dict[str, list[dict[str, Any]]] = {level: [] for level in CEFR_ORDER}
     cloze_ids_by_lemma: dict[str, list[str]] = {}
+    mode_by_level: dict[str, dict[str, list[dict[str, Any]]]] = {
+        level: {mode: [] for mode in DRILL_MODES}
+        for level in CEFR_ORDER
+    }
+    mode_lemma_ids: dict[str, set[str]] = {mode: set() for mode in DRILL_MODES}
     for _entry, lexeme in lexemes_by_entry:
         if is_surface_admitted(_entry, SURFACE_CLOZE):
             source_rows = [
@@ -1175,13 +1783,42 @@ def build_practice_shards(
                 continue
             cloze_by_level[lexeme["cefr"]].append(item)
             cloze_ids_by_lemma.setdefault(lexeme["lemmaId"], []).append(item["clozeId"])
+        stress = _stress_payload(_entry)
+        if stress:
+            mode_by_level[lexeme["cefr"]]["stress"].append(
+                {
+                    "stressId": f"{lexeme['lemmaId']}:stress",
+                    "lemmaId": lexeme["lemmaId"],
+                    "lemma": lexeme["lemma"],
+                    **stress,
+                }
+            )
+            mode_lemma_ids["stress"].add(lexeme["lemmaId"])
+
+        classify_items = _build_classify_items(_entry, lexeme)
+        mode_by_level[lexeme["cefr"]]["classify"].extend(classify_items)
+        if classify_items:
+            mode_lemma_ids["classify"].add(lexeme["lemmaId"])
+
+        paradigm_items = _build_paradigm_items(lexeme)
+        mode_by_level[lexeme["cefr"]]["paradigm"].extend(paradigm_items)
+        if paradigm_items:
+            mode_lemma_ids["paradigm"].add(lexeme["lemmaId"])
+
+        synonym_items = _build_synonym_items(_entry, lexeme, by_plain_lemma, all_lexemes, deck_version)
+        for item in synonym_items:
+            level = str(item.pop("level"))
+            mode_by_level[level]["synonym"].append(item)
+            mode_lemma_ids["synonym"].add(lexeme["lemmaId"])
 
     shards: dict[str, dict[str, dict[str, Any]]] = {}
-    for level in CEFR_ORDER:
+    for level in PUBLISHED_LEVELS:
         level_lexemes = [lexeme for lexeme in all_lexemes if lexeme["cefr"] == level]
         if not level_lexemes:
             continue
         level_cloze = cloze_by_level[level]
+        for mode in ("classify", "paradigm", "synonym"):
+            _validate_mode_or_raise(level, mode, mode_by_level[level][mode])
         option_set_errors = validate_option_sets(level_cloze)
         if option_set_errors:
             print(
@@ -1199,6 +1836,9 @@ def build_practice_shards(
                 modes.extend(["matching", "choice"])
             if cloze_ids:
                 modes.append("cloze")
+            for drill_mode in DRILL_MODES:
+                if lexeme["lemmaId"] in mode_lemma_ids[drill_mode]:
+                    modes.append(drill_mode)
             index_items.append(
                 {
                     "lemmaId": lexeme["lemmaId"],
@@ -1229,7 +1869,38 @@ def build_practice_shards(
             "cloze": len(level_cloze),
             "clozeEligibleLexemes": len({item["lemmaId"] for item in level_cloze}),
             "clozeCoverage": coverage,
+            "modeCounts": {
+                "cloze": len(level_cloze),
+                **{mode: len(mode_by_level[level][mode]) for mode in DRILL_MODES},
+            },
+            "modeCoverage": {
+                "cloze": coverage,
+                **{
+                    mode: round(
+                        len({item["lemmaId"] for item in mode_by_level[level][mode]}) / len(level_lexemes),
+                        4,
+                    )
+                    for mode in DRILL_MODES
+                },
+            },
         }
+        for mode, threshold in THIN_WARN_THRESHOLDS.items():
+            mode_coverage = index_payload["counts"]["modeCoverage"].get(mode, 0.0)
+            if mode_coverage < threshold:
+                print(
+                    f"WARN: {level} {mode} coverage {mode_coverage:.4f} below {threshold:.2f}; "
+                    "deck ships small without padding",
+                    file=sys.stderr,
+                )
+        print(
+            "coverage "
+            f"{level}: "
+            + " ".join(
+                f"{mode}={index_payload['counts']['modeCounts'][mode]} "
+                f"({index_payload['counts']['modeCoverage'][mode]:.2%})"
+                for mode in ("cloze", *DRILL_MODES)
+            )
+        )
         lexeme_payload = _level_payload(
             "atlas-practice-lexemes",
             deck_version,
@@ -1246,10 +1917,22 @@ def build_practice_shards(
             "cloze",
             level_cloze,
         )
+        mode_payloads = {
+            mode: _level_payload(
+                MODE_SCHEMAS[mode],
+                deck_version,
+                level,
+                config,
+                MODE_BODY_KEYS[mode],
+                mode_by_level[level][mode],
+            )
+            for mode in DRILL_MODES
+        }
         shards[level] = {
             "index": index_payload,
             "lexemes": lexeme_payload,
             "cloze": cloze_payload,
+            **mode_payloads,
         }
     return shards
 
@@ -1260,6 +1943,24 @@ def read_manifest(path: Path) -> list[dict[str, Any]]:
     if not isinstance(entries, list):
         raise ValueError("manifest entries must be a list")
     return [entry for entry in entries if isinstance(entry, dict)]
+
+
+def read_atlas_db(path: Path) -> list[dict[str, Any]]:
+    if not path.exists():
+        raise FileNotFoundError(f"{path} not found; run npm --prefix site run atlas:build-db")
+    conn = sqlite3.connect(path)
+    try:
+        rows = conn.execute(
+            "SELECT payload_json FROM article_payloads WHERE is_public_route=1 ORDER BY route_order"
+        ).fetchall()
+    finally:
+        conn.close()
+    entries = []
+    for (payload_json,) in rows:
+        payload = json.loads(payload_json)
+        if isinstance(payload, dict):
+            entries.append(payload)
+    return entries
 
 
 def read_cloze_sources(path: Path | None) -> list[dict[str, Any]]:
@@ -1273,6 +1974,62 @@ def read_cloze_sources(path: Path | None) -> list[dict[str, Any]]:
     if not rows:
         print("WARN: curated cloze sources empty; emitting recognition-only deck", file=sys.stderr)
     return rows
+
+
+def run_broken_validator_fixtures() -> int:
+    failures = {
+        "classify": validate_classify_item(
+            {
+                "classifyId": "broken:classify",
+                "lemmaId": "broken",
+                "sets": [
+                    {
+                        "setId": "gender",
+                        "answer": "masculine",
+                        "options": [{"value": "masculine", "labelUk": "чоловічий рід"}],
+                    }
+                ],
+            }
+        ),
+        "synonym": validate_synonym_item(
+            {
+                "synonymId": "broken:synonym",
+                "lemmaId": "broken",
+                "prompt": "слово",
+                "answer": "слово",
+                "options": [
+                    {"label": "слово", "lemmaId": "a", "kind": "answer"},
+                    {"label": "слово", "lemmaId": "b", "kind": "distractor"},
+                    {"label": "дуже довгий варіант-підказка", "lemmaId": "c", "kind": "distractor"},
+                    {"label": "інше", "lemmaId": "d", "kind": "distractor"},
+                ],
+            }
+        ),
+        "paradigm": validate_paradigm_item(
+            {
+                "paradigmId": "broken:paradigm",
+                "lemmaId": "broken",
+                "form": "книгу",
+                "options": [
+                    {"label": "книгу", "kind": "answer"},
+                    {"label": "книгу", "kind": "same-paradigm"},
+                    {"label": "книзі", "kind": "same-paradigm"},
+                ],
+            }
+        ),
+        "heritage_pair": validate_heritage_pair(
+            {"nativeSlug": "слово", "calqueLabel": "калька", "corrections": [], "citations": []}
+        ),
+        "paronym_pair": validate_paronym_pair(
+            {"slugA": "адрес", "slugB": "адреса", "frames": [], "citations": []}
+        ),
+    }
+    print("Broken validator fixtures:")
+    ok = True
+    for name, errors in failures.items():
+        print(f"  {name}: {errors}")
+        ok = ok and bool(errors)
+    return 1 if ok else 2
 
 
 def _json_bytes(payload: dict[str, Any]) -> bytes:
@@ -1330,6 +2087,14 @@ def apply_size_budgets(
                     for item in cloze_items
                     if not isinstance(item, dict) or item.get("lemmaId") != removed_lemma_id
                 ]
+            for mode in DRILL_MODES:
+                mode_items = level_shards.get(mode, {}).get(MODE_BODY_KEYS[mode], [])
+                if isinstance(mode_items, list):
+                    mode_items[:] = [
+                        item
+                        for item in mode_items
+                        if not isinstance(item, dict) or item.get("lemmaId") != removed_lemma_id
+                    ]
             counts = level_shards.get("index", {}).get("counts")
             if isinstance(counts, dict) and isinstance(lexemes, list) and isinstance(cloze_items, list):
                 counts["lexemes"] = len(lexemes)
@@ -1340,6 +2105,25 @@ def apply_size_budgets(
                 counts["clozeCoverage"] = (
                     round(counts["clozeEligibleLexemes"] / len(lexemes), 4) if lexemes else 0
                 )
+                mode_counts = counts.setdefault("modeCounts", {})
+                mode_coverage = counts.setdefault("modeCoverage", {})
+                if isinstance(mode_counts, dict) and isinstance(mode_coverage, dict):
+                    mode_counts["cloze"] = len(cloze_items)
+                    mode_coverage["cloze"] = counts["clozeCoverage"]
+                    for mode in DRILL_MODES:
+                        mode_items = level_shards.get(mode, {}).get(MODE_BODY_KEYS[mode], [])
+                        if not isinstance(mode_items, list):
+                            continue
+                        mode_counts[mode] = len(mode_items)
+                        mode_coverage[mode] = (
+                            round(
+                                len({item["lemmaId"] for item in mode_items if isinstance(item, dict)})
+                                / len(lexemes),
+                                4,
+                            )
+                            if lexemes
+                            else 0
+                        )
 
 
 def write_shards(shards: dict[str, dict[str, dict[str, Any]]], out_dir: Path) -> list[Path]:
@@ -1355,7 +2139,8 @@ def write_shards(shards: dict[str, dict[str, dict[str, Any]]], out_dir: Path) ->
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--manifest", type=Path, default=DEFAULT_MANIFEST)
+    parser.add_argument("--atlas-db", type=Path, default=DEFAULT_ATLAS_DB)
+    parser.add_argument("--manifest", type=Path)
     parser.add_argument("--out-dir", type=Path, default=DEFAULT_OUT_DIR)
     parser.add_argument("--reviewed-allowlist", type=Path, default=DEFAULT_ALLOWLIST)
     parser.add_argument("--cloze-sources", type=Path, default=DEFAULT_CLOZE_SOURCES)
@@ -1364,9 +2149,17 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--raw-limit", type=int, default=DEFAULT_RAW_LIMIT)
     parser.add_argument("--gzip-limit", type=int, default=DEFAULT_GZIP_LIMIT)
     parser.add_argument("--fixture-note", type=str)
+    parser.add_argument(
+        "--broken-validator-fixtures",
+        action="store_true",
+        help="Run deliberately broken mode-validator fixtures and exit nonzero when validators catch them.",
+    )
     args = parser.parse_args(argv)
 
-    entries = read_manifest(args.manifest)
+    if args.broken_validator_fixtures:
+        return run_broken_validator_fixtures()
+
+    entries = read_manifest(args.manifest) if args.manifest else read_atlas_db(args.atlas_db)
     allowlist = ReviewedSourceAllowlist.from_path(args.reviewed_allowlist)
     cloze_sources = read_cloze_sources(args.cloze_sources)
     verifier: VesumVerifier = (
@@ -1379,7 +2172,7 @@ def main(argv: list[str] | None = None) -> int:
         raw_limit=args.raw_limit,
         gzip_limit=args.gzip_limit,
         fixture_note=args.fixture_note,
-        source_label="fixture" if args.vesum_fixture else "manifest",
+        source_label="fixture" if args.vesum_fixture or args.manifest else "atlas.db",
     )
     shards = build_practice_shards(entries, allowlist, verifier, cloze_sources, config)
     apply_size_budgets(shards, config.raw_limit, config.gzip_limit)

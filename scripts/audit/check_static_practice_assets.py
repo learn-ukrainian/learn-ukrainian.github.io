@@ -16,8 +16,18 @@ from pathlib import Path
 from typing import Any
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
+AUDIT_DIR = PROJECT_ROOT / "scripts" / "audit"
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
+if str(AUDIT_DIR) not in sys.path:
+    sys.path.insert(0, str(AUDIT_DIR))
+
+from generate_practice_deck import (
+    validate_classify_item,
+    validate_classify_session_cap,
+    validate_paradigm_item,
+    validate_synonym_item,
+)
 
 from scripts.practice_deck.io import ensure_practice_deck_hydrated
 
@@ -45,7 +55,24 @@ EXPECTED_SCHEMAS = {
     "index": "atlas-practice-index",
     "lexemes": "atlas-practice-lexemes",
     "cloze": "atlas-practice-cloze",
+    "stress": "atlas-practice-stress",
+    "classify": "atlas-practice-classify",
+    "paradigm": "atlas-practice-paradigm",
+    "synonym": "atlas-practice-synonym",
+    "heritage": "atlas-practice-heritage",
+    "paronym": "atlas-practice-paronym",
 }
+MODE_BODY_KEYS = {
+    "cloze": "cloze",
+    "stress": "stress",
+    "classify": "classify",
+    "paradigm": "paradigm",
+    "synonym": "synonym",
+    "heritage": "heritage",
+    "paronym": "paronym",
+}
+DRILL_MODES = ("stress", "classify", "paradigm", "synonym", "heritage", "paronym")
+MODE_SHARD_KINDS = ("cloze", *DRILL_MODES)
 
 
 def _read_json(path: Path, errors: list[str]) -> Any:
@@ -286,7 +313,10 @@ def _check_level(
     paths = {
         "index": practice_dir / f"practice-index.{level}.json",
         "lexemes": practice_dir / f"practice-lexemes.{level}.json",
-        "cloze": practice_dir / f"practice-cloze.{level}.json",
+        **{
+            kind: practice_dir / f"practice-{kind}.{level}.json"
+            for kind in MODE_SHARD_KINDS
+        },
     }
     shards = {
         kind: _check_shard_meta(
@@ -302,6 +332,10 @@ def _check_level(
     index_items = shards["index"].get("items")
     lexemes = shards["lexemes"].get("lexemes")
     cloze_items = shards["cloze"].get("cloze")
+    mode_items = {
+        kind: shards[kind].get(MODE_BODY_KEYS[kind])
+        for kind in DRILL_MODES
+    }
     if not isinstance(index_items, list):
         errors.append(f"{paths['index']}: items must be a list")
         index_items = []
@@ -311,6 +345,10 @@ def _check_level(
     if not isinstance(cloze_items, list):
         errors.append(f"{paths['cloze']}: cloze must be a list")
         cloze_items = []
+    for kind in DRILL_MODES:
+        if not isinstance(mode_items[kind], list):
+            errors.append(f"{paths[kind]}: {MODE_BODY_KEYS[kind]} must be a list")
+            mode_items[kind] = []
 
     if len(index_items) < min_lexemes:
         errors.append(f"{paths['index']}: {len(index_items)} items, expected at least {min_lexemes}")
@@ -378,6 +416,38 @@ def _check_level(
             reviewed=reviewed,
             errors=errors,
         )
+    for kind, rows in mode_items.items():
+        assert isinstance(rows, list)
+        for index, item in enumerate(rows):
+            prefix = f"{paths[kind]}: {MODE_BODY_KEYS[kind]}[{index}]"
+            if not isinstance(item, dict):
+                errors.append(f"{prefix} must be an object")
+                continue
+            lemma_id = item.get("lemmaId")
+            if not _has_text(lemma_id):
+                errors.append(f"{prefix} missing lemmaId")
+            elif str(lemma_id) not in lexeme_by_id:
+                errors.append(f"{prefix} lemmaId {lemma_id!r} missing from {level} lexeme shard")
+        if kind == "classify":
+            classify_rows = [item for item in rows if isinstance(item, dict)]
+            for index, item in enumerate(classify_rows):
+                errors.extend(
+                    f"{paths[kind]}: classify[{index}] {error}"
+                    for error in validate_classify_item(item)
+                )
+            errors.extend(f"{paths[kind]}: {error}" for error in validate_classify_session_cap(classify_rows))
+        elif kind == "synonym":
+            for index, item in enumerate(item for item in rows if isinstance(item, dict)):
+                errors.extend(
+                    f"{paths[kind]}: synonym[{index}] {error}"
+                    for error in validate_synonym_item(item)
+                )
+        elif kind == "paradigm":
+            for index, item in enumerate(item for item in rows if isinstance(item, dict)):
+                errors.extend(
+                    f"{paths[kind]}: paradigm[{index}] {error}"
+                    for error in validate_paradigm_item(item)
+                )
 
     counts = shards["index"].get("counts")
     if not isinstance(counts, dict):
@@ -394,11 +464,36 @@ def _check_level(
     for key, expected in expected_counts.items():
         if counts.get(key) != expected:
             errors.append(f"{paths['index']}: counts.{key} {counts.get(key)!r} != {expected!r}")
+    mode_counts = counts.get("modeCounts")
+    mode_coverage = counts.get("modeCoverage")
+    if not isinstance(mode_counts, dict):
+        errors.append(f"{paths['index']}: missing counts.modeCounts")
+        mode_counts = {}
+    if not isinstance(mode_coverage, dict):
+        errors.append(f"{paths['index']}: missing counts.modeCoverage")
+        mode_coverage = {}
+    for kind in MODE_SHARD_KINDS:
+        rows = cloze_items if kind == "cloze" else mode_items[kind]
+        assert isinstance(rows, list)
+        expected_count = len(rows)
+        expected_mode_coverage = (
+            round(len({item.get("lemmaId") for item in rows if isinstance(item, dict)}) / len(lexemes), 4)
+            if lexemes
+            else 0.0
+        )
+        if mode_counts.get(kind) != expected_count:
+            errors.append(f"{paths['index']}: counts.modeCounts.{kind} {mode_counts.get(kind)!r} != {expected_count!r}")
+        if mode_coverage.get(kind) != expected_mode_coverage:
+            errors.append(
+                f"{paths['index']}: counts.modeCoverage.{kind} "
+                f"{mode_coverage.get(kind)!r} != {expected_mode_coverage!r}"
+            )
 
     return {
         "index": len(index_items),
         "lexemes": len(lexemes),
         "cloze": len(cloze_items),
+        **{kind: len(rows) for kind, rows in mode_items.items() if isinstance(rows, list)},
         "deck_versions": sorted(versions),
     }
 
@@ -464,9 +559,10 @@ def _print_summary(summary: dict[str, Any]) -> None:
     print(f"Deck versions: {', '.join(summary['deck_versions']) or 'none'}")
     print(f"Reviewed cloze source allowlist rows: {summary['reviewed_sources']}")
     for level, row in summary["practice"].items():
+        mode_counts = " ".join(f"{mode}={row.get(mode, 0)}" for mode in DRILL_MODES)
         print(
             f"  {level}: index={row['index']} lexemes={row['lexemes']} "
-            f"cloze={row['cloze']}"
+            f"cloze={row['cloze']} {mode_counts}"
         )
 
 

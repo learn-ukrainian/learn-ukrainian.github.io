@@ -129,6 +129,66 @@ export interface PracticeClozeItem {
   attribution?: PracticeClozeAttribution;
 }
 
+export interface PracticeStressItem {
+  stressId: string;
+  lemmaId: string;
+  lemma: string;
+  stressed: string;
+  unstressed: string;
+  stressIndex: number;
+  nuclei: { index: number; label: string }[];
+  source: string;
+}
+
+export interface PracticeClassifyOption {
+  value: string;
+  labelUk: string;
+  labelEn?: string;
+}
+
+export interface PracticeClassifySet {
+  setId: 'gender' | 'aspect' | 'declension' | 'pos' | string;
+  setLabelUk: string;
+  setLabelEn?: string;
+  answer: string;
+  answerLabelUk: string;
+  answerLabelEn?: string;
+  options: PracticeClassifyOption[];
+}
+
+export interface PracticeClassifyItem {
+  classifyId: string;
+  lemmaId: string;
+  lemma: string;
+  sets: PracticeClassifySet[];
+  source: string;
+}
+
+export interface PracticeParadigmItem {
+  paradigmId: string;
+  lemmaId: string;
+  lemma: string;
+  slot: {
+    case: string;
+    number: 'singular' | 'plural';
+    labelUk: string;
+    labelEn?: string;
+  };
+  form: string;
+  options: { label: string; kind: 'answer' | 'same-paradigm' | string }[];
+}
+
+export interface PracticeSynonymItem {
+  synonymId: string;
+  lemmaId: string;
+  targetLemmaId: string;
+  polarity: 'synonym' | 'antonym';
+  prompt: string;
+  answer: string;
+  options: { label: string; lemmaId: string; kind: 'answer' | 'distractor' | string }[];
+  source: string;
+}
+
 export interface PracticeShardMeta {
   schema: string;
   schemaVersion: number;
@@ -156,12 +216,32 @@ export interface PracticeClozeShard extends PracticeShardMeta {
   cloze: PracticeClozeItem[];
 }
 
+export interface PracticeStressShard extends PracticeShardMeta {
+  stress: PracticeStressItem[];
+}
+
+export interface PracticeClassifyShard extends PracticeShardMeta {
+  classify: PracticeClassifyItem[];
+}
+
+export interface PracticeParadigmShard extends PracticeShardMeta {
+  paradigm: PracticeParadigmItem[];
+}
+
+export interface PracticeSynonymShard extends PracticeShardMeta {
+  synonym: PracticeSynonymItem[];
+}
+
 export interface PracticeDeckData {
   deckVersion: string;
   level: string;
   index: PracticeIndexItem[];
   lexemes: PracticeLexeme[];
   cloze: PracticeClozeItem[];
+  stress?: PracticeStressItem[];
+  classify?: PracticeClassifyItem[];
+  paradigm?: PracticeParadigmItem[];
+  synonym?: PracticeSynonymItem[];
   fixtureNote?: string;
 }
 
@@ -229,6 +309,7 @@ export interface SelectionHistoryItem {
   clozeId?: string;
   sentenceFrameId?: string;
   blankCase?: string;
+  classifySetId?: string;
   recallDirection?: RecallDirection;
   choicePolarity?: ChoicePolarity;
   lapsed?: boolean;
@@ -244,6 +325,11 @@ export interface PracticeSelection {
   due: number;
   lapsed: boolean;
   cloze?: PracticeClozeItem;
+  stress?: PracticeStressItem;
+  classify?: PracticeClassifyItem;
+  classifySetId?: string;
+  paradigm?: PracticeParadigmItem;
+  synonym?: PracticeSynonymItem;
   recallDirection: RecallDirection;
   choicePolarity: ChoicePolarity;
 }
@@ -805,9 +891,22 @@ export function getDueQueue<T extends Pick<PracticeLexeme, 'lemmaId'> | Practice
 }
 
 function deckMaps(deck: PracticeDeckData) {
+  const groupByLemma = <T extends { lemmaId: string }>(items: T[] | undefined) => {
+    const grouped = new Map<string, T[]>();
+    for (const item of items ?? []) {
+      const bucket = grouped.get(item.lemmaId) ?? [];
+      bucket.push(item);
+      grouped.set(item.lemmaId, bucket);
+    }
+    return grouped;
+  };
   return {
     lexemes: new Map(deck.lexemes.map((lexeme) => [lexeme.lemmaId, lexeme])),
     cloze: new Map(deck.cloze.map((item) => [item.clozeId, item])),
+    stress: new Map((deck.stress ?? []).map((item) => [item.lemmaId, item])),
+    classify: new Map((deck.classify ?? []).map((item) => [item.lemmaId, item])),
+    paradigm: groupByLemma(deck.paradigm),
+    synonym: groupByLemma(deck.synonym),
   };
 }
 
@@ -998,6 +1097,94 @@ export function selectNextPracticeItem(
         }
         continue;
       }
+      if (mode === 'stress') {
+        const stress = maps.stress.get(indexItem.lemmaId);
+        if (!stress) continue;
+        const key = cardKey(indexItem.lemmaId, mode);
+        const card = state.cards.get(key) ?? null;
+        candidates.push({
+          itemId: makeItemId(indexItem.lemmaId, mode, stress.stressId),
+          lemma,
+          indexItem,
+          mode,
+          cardKey: key,
+          cardState: card,
+          due: card?.due ?? 0,
+          lapsed: Boolean(card && card.lapses > 0 && card.due <= nowTime),
+          stress,
+          recallDirection: directionFor(key, history),
+          choicePolarity: polarityFor(key, history),
+        });
+        continue;
+      }
+      if (mode === 'classify') {
+        const classify = maps.classify.get(indexItem.lemmaId);
+        if (!classify || classify.sets.length === 0) continue;
+        const key = cardKey(indexItem.lemmaId, mode);
+        const card = state.cards.get(key) ?? null;
+        for (const set of classify.sets) {
+          candidates.push({
+            itemId: makeItemId(indexItem.lemmaId, mode, `${classify.classifyId}:${set.setId}`),
+            lemma,
+            indexItem,
+            mode,
+            cardKey: key,
+            cardState: card,
+            due: card?.due ?? 0,
+            lapsed: Boolean(card && card.lapses > 0 && card.due <= nowTime),
+            classify,
+            classifySetId: set.setId,
+            recallDirection: directionFor(key, history),
+            choicePolarity: polarityFor(key, history),
+          });
+        }
+        continue;
+      }
+      if (mode === 'paradigm') {
+        const items = maps.paradigm.get(indexItem.lemmaId) ?? [];
+        for (const paradigm of items) {
+          const key = cardKey(indexItem.lemmaId, mode);
+          const card = state.cards.get(key) ?? null;
+          candidates.push({
+            itemId: makeItemId(indexItem.lemmaId, mode, paradigm.paradigmId),
+            lemma,
+            indexItem,
+            mode,
+            cardKey: key,
+            cardState: card,
+            due: card?.due ?? 0,
+            lapsed: Boolean(card && card.lapses > 0 && card.due <= nowTime),
+            paradigm,
+            recallDirection: directionFor(key, history),
+            choicePolarity: polarityFor(key, history),
+          });
+        }
+        continue;
+      }
+      if (mode === 'synonym') {
+        const items = maps.synonym.get(indexItem.lemmaId) ?? [];
+        for (const synonym of items) {
+          const key = cardKey(indexItem.lemmaId, mode);
+          const card = state.cards.get(key) ?? null;
+          candidates.push({
+            itemId: makeItemId(indexItem.lemmaId, mode, synonym.synonymId),
+            lemma,
+            indexItem,
+            mode,
+            cardKey: key,
+            cardState: card,
+            due: card?.due ?? 0,
+            lapsed: Boolean(card && card.lapses > 0 && card.due <= nowTime),
+            synonym,
+            recallDirection: directionFor(key, history),
+            choicePolarity: polarityFor(key, history),
+          });
+        }
+        continue;
+      }
+      if (mode === 'heritage' || mode === 'paronym') {
+        continue;
+      }
       const key = cardKey(indexItem.lemmaId, mode);
       const card = state.cards.get(key) ?? null;
       candidates.push({
@@ -1128,6 +1315,12 @@ export function combinePracticeShards(
   indexShard: PracticeIndexShard,
   lexemeShard: PracticeLexemeShard,
   clozeShard?: PracticeClozeShard,
+  modeShards: {
+    stress?: PracticeStressShard;
+    classify?: PracticeClassifyShard;
+    paradigm?: PracticeParadigmShard;
+    synonym?: PracticeSynonymShard;
+  } = {},
 ): PracticeDeckData {
   return {
     deckVersion: indexShard.deckVersion,
@@ -1135,6 +1328,10 @@ export function combinePracticeShards(
     index: indexShard.items,
     lexemes: lexemeShard.lexemes,
     cloze: clozeShard?.cloze ?? [],
+    stress: modeShards.stress?.stress ?? [],
+    classify: modeShards.classify?.classify ?? [],
+    paradigm: modeShards.paradigm?.paradigm ?? [],
+    synonym: modeShards.synonym?.synonym ?? [],
     fixtureNote: indexShard.fixtureNote,
   };
 }

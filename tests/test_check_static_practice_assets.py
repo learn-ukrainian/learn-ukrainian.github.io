@@ -6,6 +6,8 @@ from pathlib import Path
 
 from scripts.audit.check_static_practice_assets import check_assets
 
+DRILL_MODES = ("stress", "classify", "paradigm", "synonym", "heritage", "paronym")
+
 
 def _write_json(path: Path, payload: object) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -100,6 +102,14 @@ def _write_level(practice_dir: Path, *, level: str = "A1", with_cloze: bool = Fa
                 "cloze": len(cloze_rows),
                 "clozeEligibleLexemes": 1 if with_cloze else 0,
                 "clozeCoverage": 1.0 if with_cloze else 0.0,
+                "modeCounts": {
+                    "cloze": len(cloze_rows),
+                    **{mode: 0 for mode in DRILL_MODES},
+                },
+                "modeCoverage": {
+                    "cloze": 1.0 if with_cloze else 0.0,
+                    **{mode: 0.0 for mode in DRILL_MODES},
+                },
             },
             "items": [
                 {
@@ -114,6 +124,19 @@ def _write_level(practice_dir: Path, *, level: str = "A1", with_cloze: bool = Fa
             ],
         },
     )
+    for mode in DRILL_MODES:
+        _write_json(
+            practice_dir / f"practice-{mode}.{level}.json",
+            {
+                "schema": f"atlas-practice-{mode}",
+                "schemaVersion": 1,
+                "deckVersion": deck_version,
+                "level": level,
+                "source": "fixture",
+                "sizeBudget": _budget(),
+                mode: [],
+            },
+        )
     _write_json(
         practice_dir / f"practice-lexemes.{level}.json",
         {

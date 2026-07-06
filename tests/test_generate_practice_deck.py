@@ -8,18 +8,28 @@ import pytest
 
 from scripts.audit.generate_practice_deck import (
     DEFAULT_TARGET,
+    DRILL_MODES,
     BuildConfig,
     JsonVesumVerifier,
     ReviewedSourceAllowlist,
+    _build_classify_items,
     _build_lexeme,
+    _build_paradigm_items,
+    _declension_category,
     _eligible_decoys,
     _option_strategy_for_level,
+    _stress_position,
     apply_size_budgets,
     build_practice_shards,
     main,
     read_cloze_sources,
     read_manifest,
+    validate_classify_item,
+    validate_heritage_pair,
     validate_option_set,
+    validate_paradigm_item,
+    validate_paronym_pair,
+    validate_synonym_item,
 )
 
 FIXTURES = Path("tests/fixtures")
@@ -48,14 +58,17 @@ def test_fixture_build_emits_sharded_schema() -> None:
 
     assert set(shards) == {"A1"}
     a1 = shards["A1"]
-    assert set(a1) == {"index", "lexemes", "cloze"}
+    assert set(a1) == {"index", "lexemes", "cloze", *DRILL_MODES}
     assert a1["index"]["schema"] == "atlas-practice-index"
     assert a1["lexemes"]["schema"] == "atlas-practice-lexemes"
     assert a1["cloze"]["schema"] == "atlas-practice-cloze"
+    for mode in DRILL_MODES:
+        assert a1[mode]["schema"] == f"atlas-practice-{mode}"
     assert a1["index"]["fixtureNote"] == "fixture sample"
     assert a1["index"]["counts"]["lexemes"] == 7
     assert a1["index"]["counts"]["cloze"] == 2
     assert a1["index"]["counts"]["clozeCoverage"] == 0.2857
+    assert a1["index"]["counts"]["modeCounts"]["cloze"] == 2
 
     lexeme = next(item for item in a1["lexemes"]["lexemes"] if item["lemmaId"] == "knyha")
     assert lexeme["lemma"] == "книга"
@@ -88,6 +101,61 @@ def test_manifest_cloze_fields_are_ignored_without_curated_sources() -> None:
     assert shards["A1"]["cloze"]["cloze"] == []
 
 
+def test_stress_position_preserves_non_stress_combining_marks() -> None:
+    assert _stress_position("пої́здка") == ("поїздка", 2)
+    assert _stress_position("кра́й") == ("край", 2)
+
+
+def test_neuter_a_ya_nouns_can_reach_fourth_declension() -> None:
+    entry = {"lemma": "ім'я", "pos": "noun"}
+    paradigm = {"cases": {"nominative": {"singular": "ім'я"}}}
+
+    assert _declension_category(entry, ["ім. сер."], paradigm) == "declension-4"
+
+
+def test_a2_classify_items_do_not_raise_english_labels() -> None:
+    entry = {
+        "lemma": "книга",
+        "pos": "noun",
+        "enrichment": {
+            "morphology": {
+                "pos": "noun",
+                "forms": [{"label": "ім. жін."}],
+                "paradigm": {"cases": {"nominative": {"singular": "книга"}}},
+            }
+        },
+    }
+    lexeme = {"lemmaId": "knyha", "lemma": "книга", "cefr": "A2"}
+
+    classify = _build_classify_items(entry, lexeme)[0]
+
+    assert "setLabelEn" not in classify["sets"][0]
+    assert "answerLabelEn" not in classify["sets"][0]
+    assert all("labelEn" not in option for option in classify["sets"][0]["options"])
+
+
+def test_paradigm_answer_position_is_deterministically_shuffled() -> None:
+    items = _build_paradigm_items(
+        {
+            "lemmaId": "test-lemma",
+            "lemma": "тест",
+            "cefr": "B1",
+            "paradigm": {
+                "cases": {
+                    "називний": {"singular": "тест"},
+                    "родовий": {"singular": "тесту"},
+                    "давальний": {"singular": "тестові"},
+                    "орудний": {"singular": "тестом"},
+                    "місцевий": {"singular": "тесті"},
+                }
+            },
+        }
+    )
+
+    assert items
+    assert any(item["options"][0]["kind"] != "answer" for item in items)
+
+
 def test_meaning_mc_eligibility_marks_clean_and_messy_glosses() -> None:
     shards = _build()
     a1 = shards["A1"]
@@ -112,6 +180,54 @@ def test_option_set_validator_rejects_phrase_labels() -> None:
     cloze["options"][1]["label"] = "and yours? formal"
 
     assert "option labels must not be phrase glosses" in validate_option_set(cloze)
+
+
+def test_mode_validators_reject_broken_fixtures() -> None:
+    classify_errors = validate_classify_item(
+        {
+            "classifyId": "broken:classify",
+            "lemmaId": "broken",
+            "sets": [
+                {
+                    "setId": "gender",
+                    "answer": "masculine",
+                    "options": [{"value": "masculine", "labelUk": "чоловічий рід"}],
+                }
+            ],
+        }
+    )
+    synonym_errors = validate_synonym_item(
+        {
+            "synonymId": "broken:synonym",
+            "lemmaId": "broken",
+            "prompt": "слово",
+            "answer": "слово",
+            "options": [
+                {"label": "слово", "lemmaId": "a", "kind": "answer"},
+                {"label": "слово", "lemmaId": "b", "kind": "distractor"},
+                {"label": "надто довгий варіант", "lemmaId": "c", "kind": "distractor"},
+                {"label": "інше", "lemmaId": "d", "kind": "distractor"},
+            ],
+        }
+    )
+    paradigm_errors = validate_paradigm_item(
+        {
+            "paradigmId": "broken:paradigm",
+            "lemmaId": "broken",
+            "form": "книгу",
+            "options": [
+                {"label": "книгу", "kind": "answer"},
+                {"label": "книгу", "kind": "same-paradigm"},
+                {"label": "книзі", "kind": "same-paradigm"},
+            ],
+        }
+    )
+
+    assert any("closed category set" in error for error in classify_errors)
+    assert any("unique" in error for error in synonym_errors)
+    assert any("at least four" in error for error in paradigm_errors)
+    assert validate_heritage_pair({"nativeSlug": "питомий"}) != []
+    assert validate_paronym_pair({"slugA": "адрес", "slugB": "адреса"}) != []
 
 
 def test_option_set_validator_rejects_capitalization_leak() -> None:
@@ -267,6 +383,8 @@ def test_cli_writes_fixture_shards(tmp_path: Path) -> None:
     assert index_path.exists()
     assert lexeme_path.exists()
     assert cloze_path.exists()
+    for mode in DRILL_MODES:
+        assert (tmp_path / f"practice-{mode}.A1.json").exists()
     payload = json.loads(index_path.read_text(encoding="utf-8"))
     assert payload["schema"] == "atlas-practice-index"
     assert payload["source"] == "fixture"

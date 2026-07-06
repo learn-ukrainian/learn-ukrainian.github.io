@@ -23,6 +23,7 @@ import {
   type PracticeRating,
   type PracticeSelection,
   type SelectionHistoryItem,
+  type PracticeClassifySet,
 } from '../lib/lexicon/srs';
 import {
   CEFR_LEVELS,
@@ -68,7 +69,15 @@ const RATING_LABELS: Record<PracticeRating, string> = {
 
 type VisiblePracticeModeFilter = Extract<
   PracticeModeFilter,
-  'mixed' | 'flashcards' | 'matching' | 'choice' | 'cloze'
+  | 'mixed'
+  | 'flashcards'
+  | 'matching'
+  | 'choice'
+  | 'cloze'
+  | 'stress'
+  | 'classify'
+  | 'paradigm'
+  | 'synonym'
 >;
 
 const MODE_LABELS: Record<VisiblePracticeModeFilter, string> = {
@@ -77,9 +86,23 @@ const MODE_LABELS: Record<VisiblePracticeModeFilter, string> = {
   matching: 'Matching',
   choice: 'Choice',
   cloze: 'Cloze',
+  stress: 'Stress',
+  classify: 'Classify',
+  paradigm: 'Paradigm',
+  synonym: 'Synonym',
 };
 
-const MODE_CARD_ORDER: VisiblePracticeModeFilter[] = ['mixed', 'flashcards', 'matching', 'choice', 'cloze'];
+const MODE_CARD_ORDER: VisiblePracticeModeFilter[] = [
+  'mixed',
+  'flashcards',
+  'matching',
+  'choice',
+  'cloze',
+  'stress',
+  'classify',
+  'paradigm',
+  'synonym',
+];
 
 const MODE_META: Record<
   VisiblePracticeModeFilter,
@@ -124,6 +147,34 @@ const MODE_META: Record<
     en: 'Cloze',
     description: 'Впишіть слово у потрібній формі. Відмінок має збігатися з реченням.',
     step: 'Відмінювання',
+    accent: 'orange',
+  },
+  stress: {
+    title: 'Наголос',
+    en: 'Stress',
+    description: 'Оберіть голосну, на яку падає наголос у слові.',
+    step: 'Форма слова',
+    accent: 'teal',
+  },
+  classify: {
+    title: 'Група',
+    en: 'Classify',
+    description: 'Визначте граматичну групу слова за даними VESUM.',
+    step: 'Морфологія',
+    accent: 'purple',
+  },
+  paradigm: {
+    title: 'Форма',
+    en: 'Paradigm',
+    description: 'Оберіть форму слова для потрібного відмінка й числа.',
+    step: 'Парадигма',
+    accent: 'blue',
+  },
+  synonym: {
+    title: 'Синоніми',
+    en: 'Synonyms',
+    description: 'Доберіть синонім або антонім до українського слова.',
+    step: 'Лексика',
     accent: 'orange',
   },
 };
@@ -369,6 +420,10 @@ function normalizeInitialDeck(initialDeck?: PracticeDeckData | PracticeLexeme[])
     })),
     lexemes,
     cloze: [],
+    stress: [],
+    classify: [],
+    paradigm: [],
+    synonym: [],
   };
 }
 
@@ -380,6 +435,7 @@ function historyFromSelection(selection: PracticeSelection): SelectionHistoryIte
     clozeId: selection.cloze?.clozeId,
     sentenceFrameId: selection.cloze?.sentenceFrameId,
     blankCase: selection.cloze?.blankCase,
+    classifySetId: selection.classifySetId,
     recallDirection: selection.recallDirection,
     choicePolarity: selection.choicePolarity,
     lapsed: selection.lapsed,
@@ -468,13 +524,86 @@ function choicePrompt(selection: PracticeSelection): string {
   return `Яке слово означає «${glossLabel(selection.lemma)}»?`;
 }
 
+function classifySet(selection: PracticeSelection): PracticeClassifySet | null {
+  const sets = selection.classify?.sets ?? [];
+  if (!sets.length) return null;
+  return sets.find((set) => set.setId === selection.classifySetId) ?? sets[0] ?? null;
+}
+
+function drillChoiceOptions(selection: PracticeSelection): ChoiceOption[] | null {
+  if (selection.stress) {
+    return selection.stress.nuclei.map((nucleus) => ({
+      label: nucleus.label,
+      correct: nucleus.index === selection.stress?.stressIndex,
+    }));
+  }
+  const selectedSet = classifySet(selection);
+  if (selectedSet) {
+    return selectedSet.options.map((option) => ({
+      label: option.labelEn ? `${option.labelUk} (${option.labelEn})` : option.labelUk,
+      correct: option.value === selectedSet.answer,
+    }));
+  }
+  if (selection.paradigm) {
+    return selection.paradigm.options.map((option) => ({
+      label: option.label,
+      correct: option.kind === 'answer',
+    }));
+  }
+  if (selection.synonym) {
+    return selection.synonym.options.map((option) => ({
+      label: option.label,
+      correct: option.kind === 'answer',
+    }));
+  }
+  return null;
+}
+
+function drillChoicePrompt(selection: PracticeSelection): { prompt: string; subtitle: string } | null {
+  if (selection.stress) {
+    return {
+      prompt: `Де наголос у слові «${selection.stress.unstressed}»?`,
+      subtitle: 'Оберіть наголошену голосну',
+    };
+  }
+  const selectedSet = classifySet(selection);
+  if (selectedSet) {
+    const setLabel = selectedSet.setLabelEn
+      ? `${selectedSet.setLabelUk} (${selectedSet.setLabelEn})`
+      : selectedSet.setLabelUk;
+    return {
+      prompt: `До якої групи належить «${selection.lemma.lemma}»?`,
+      subtitle: setLabel,
+    };
+  }
+  if (selection.paradigm) {
+    const slot = selection.paradigm.slot.labelEn
+      ? `${selection.paradigm.slot.labelUk} (${selection.paradigm.slot.labelEn})`
+      : selection.paradigm.slot.labelUk;
+    return {
+      prompt: `Яка форма від «${selection.lemma.lemma}»?`,
+      subtitle: slot,
+    };
+  }
+  if (selection.synonym) {
+    return {
+      prompt:
+        selection.synonym.polarity === 'antonym'
+          ? `Оберіть антонім до «${selection.synonym.prompt}»`
+          : `Оберіть синонім до «${selection.synonym.prompt}»`,
+      subtitle: 'Оберіть правильну відповідь',
+    };
+  }
+  return null;
+}
+
 function clozeParts(item: PracticeClozeItem): [string, string] {
   const [before, ...after] = item.sentence.split('___');
   return [before, after.join('___')];
 }
 
 function shouldLoadCloze(mode: PracticeModeFilter): boolean {
-  return mode === 'mixed' || mode === 'cloze';
+  return ['mixed', 'cloze', 'stress', 'classify', 'paradigm', 'synonym'].includes(mode);
 }
 
 /** Learner level persisted in the shared `lu-learner-level` key (also used by Words of the Day). */
@@ -510,6 +639,10 @@ function mergeDecks(decks: PracticeDeckData[], level: CefrLevel): PracticeDeckDa
     index: decks.flatMap((deck) => deck.index),
     lexemes: decks.flatMap((deck) => deck.lexemes),
     cloze: decks.flatMap((deck) => deck.cloze),
+    stress: decks.flatMap((deck) => deck.stress ?? []),
+    classify: decks.flatMap((deck) => deck.classify ?? []),
+    paradigm: decks.flatMap((deck) => deck.paradigm ?? []),
+    synonym: decks.flatMap((deck) => deck.synonym ?? []),
   };
 }
 
@@ -663,15 +796,46 @@ export default function LexiconPractice({
         nextDeck = mergeDecks(loaded, level);
       }
       if (includeCloze && (force || !clozeLoaded)) {
-        const clozeBatches = await Promise.all(
+        const shardBatches = await Promise.all(
           levels.map(async (shardLevel) => {
-            const clozeResponse = await fetch(`${shardBaseUrl}/practice-cloze.${shardLevel}.json`);
-            if (!clozeResponse.ok) return [];
-            const clozeShard = (await clozeResponse.json()) as { cloze: PracticeClozeItem[] };
-            return clozeShard.cloze ?? [];
+            const [
+              clozeResponse,
+              stressResponse,
+              classifyResponse,
+              paradigmResponse,
+              synonymResponse,
+            ] = await Promise.all([
+              fetch(`${shardBaseUrl}/practice-cloze.${shardLevel}.json`),
+              fetch(`${shardBaseUrl}/practice-stress.${shardLevel}.json`),
+              fetch(`${shardBaseUrl}/practice-classify.${shardLevel}.json`),
+              fetch(`${shardBaseUrl}/practice-paradigm.${shardLevel}.json`),
+              fetch(`${shardBaseUrl}/practice-synonym.${shardLevel}.json`),
+            ]);
+            const [clozeShard, stressShard, classifyShard, paradigmShard, synonymShard] =
+              await Promise.all([
+                clozeResponse.ok ? clozeResponse.json() : Promise.resolve({ cloze: [] }),
+                stressResponse.ok ? stressResponse.json() : Promise.resolve({ stress: [] }),
+                classifyResponse.ok ? classifyResponse.json() : Promise.resolve({ classify: [] }),
+                paradigmResponse.ok ? paradigmResponse.json() : Promise.resolve({ paradigm: [] }),
+                synonymResponse.ok ? synonymResponse.json() : Promise.resolve({ synonym: [] }),
+              ]);
+            return {
+              cloze: (clozeShard as { cloze?: PracticeClozeItem[] }).cloze ?? [],
+              stress: (stressShard as PracticeDeckData).stress ?? [],
+              classify: (classifyShard as PracticeDeckData).classify ?? [],
+              paradigm: (paradigmShard as PracticeDeckData).paradigm ?? [],
+              synonym: (synonymShard as PracticeDeckData).synonym ?? [],
+            };
           }),
         );
-        nextDeck = { ...nextDeck, cloze: clozeBatches.flat() };
+        nextDeck = {
+          ...nextDeck,
+          cloze: shardBatches.flatMap((batch) => batch.cloze),
+          stress: shardBatches.flatMap((batch) => batch.stress),
+          classify: shardBatches.flatMap((batch) => batch.classify),
+          paradigm: shardBatches.flatMap((batch) => batch.paradigm),
+          synonym: shardBatches.flatMap((batch) => batch.synonym),
+        };
         nextClozeLoaded = true;
       }
       // Ignore the result if a newer fetch (e.g. a later level switch) has superseded this one.
@@ -1061,6 +1225,32 @@ function PracticeItem({
     );
   }
 
+  const drillOptions = drillChoiceOptions(selection);
+  const drillPrompt = drillChoicePrompt(selection);
+  if (drillOptions && drillPrompt) {
+    return (
+      <div className="lexicon-choice" data-testid={`practice-${selection.mode}`}>
+        <p className="lexicon-choice-prompt mc-q">{drillPrompt.prompt}</p>
+        <p className="mc-sub">{drillPrompt.subtitle}</p>
+        <ul className="lexicon-option-list mc-options">
+          {drillOptions.map((option, index) => (
+            <li key={`${option.label}-${index}`}>
+              <button
+                className={`mc-opt${answerLocked && option.correct ? ' correct' : ''}`}
+                type="button"
+                disabled={answerLocked}
+                onClick={() => onChoice(option)}
+              >
+                <span className="mc-key">{index + 1}</span>
+                <span>{option.label}</span>
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
+    );
+  }
+
   if (selection.mode === 'matching') {
     const pairs = matchingPairs(selection, deck);
     if (!pairs.length) {
@@ -1088,7 +1278,7 @@ function PracticeItem({
       <p className="mc-sub">Оберіть правильну відповідь</p>
       <ul className="lexicon-option-list mc-options">
         {options.map((option, index) => (
-          <li key={option.label}>
+          <li key={`${option.label}-${index}`}>
             <button
               className={`mc-opt${answerLocked && option.correct ? ' correct' : ''}`}
               type="button"

@@ -67,7 +67,18 @@ def _safe_shard_name(name: object) -> str:
         raise PracticeDeckHydrationError("practice deck file path must be a non-empty string")
     if "/" in name or "\\" in name or name.startswith("."):
         raise PracticeDeckHydrationError(f"unsafe practice deck file path: {name!r}")
-    if not name.endswith(".json") or not name.startswith(("practice-index.", "practice-lexemes.", "practice-cloze.")):
+    allowed_prefixes = (
+        "practice-index.",
+        "practice-lexemes.",
+        "practice-cloze.",
+        "practice-stress.",
+        "practice-classify.",
+        "practice-paradigm.",
+        "practice-synonym.",
+        "practice-heritage.",
+        "practice-paronym.",
+    )
+    if not name.endswith(".json") or not name.startswith(allowed_prefixes):
         raise PracticeDeckHydrationError(f"unexpected practice deck file path: {name!r}")
     return name
 

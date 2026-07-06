@@ -26,7 +26,7 @@ const pointerPath = resolve(repoRoot, "site/src/data/lexicon-practice-deck.point
 const practiceDir = resolve(repoRoot, "site/public/lexicon");
 const DOWNLOAD_ATTEMPTS = 3;
 const ALLOWED_RELEASE_PATH_PREFIX = "/learn-ukrainian/learn-ukrainian.github.io/releases/download/";
-const SHARD_RE = /^practice-(index|lexemes|cloze)\.(A1|A2|B1|B2|C1)\.json$/;
+const SHARD_RE = /^practice-(index|lexemes|cloze|stress|classify|paradigm|synonym|heritage|paronym)\.(A1|A2|B1|B2|C1)\.json$/;
 
 function sha256(data) {
   return createHash("sha256").update(data).digest("hex");
