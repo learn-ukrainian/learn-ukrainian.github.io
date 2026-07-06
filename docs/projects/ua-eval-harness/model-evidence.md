@@ -192,6 +192,18 @@ matching per the #4485 verdict-not-echo matcher. Full data:
 
 (Without-anchor split, 3 passages: +230 / +130 / +180 — same ordering. All fractions low-N; the full matrix is 4 passages.)
 
+### Subscription-runtime bare rows (phase 1, #4540)
+
+subscription-runtime bare — not raw completion; do not compare to opencode bare rows or external leaderboards.
+
+Phase 1 adds a separate scorecard/evidence lane for native subscription bare cells
+(`claude-opus-4-8`, `gpt-5.5`, `gemini-3.1-pro-high`) through `agent_runtime.invoke`, with
+artifacts keyed by `{pin, transport, entrypoint}` and filenames shaped
+`<pin_slug>__<slug>__bare__<transport>.json`. **No live subscription-runtime rows are recorded
+in this evidence log yet**; the live driver runs them after the implementation merges. Until a
+raw-completion parity phase exists, these rows stay under their own header and are not blended
+with opencode bare rows or external leaderboard claims.
+
 ### Findings
 
 1. **Every model is negative-to-mediocre bare.** Judging folk-culture claims from parametric knowledge,
@@ -215,7 +227,7 @@ scored fatal-asymmetric. (b) Hramatka/teacher-service: NO bare model is shippabl
 the harness is the product, and tooled gemma (near-frontier lift at the lowest cost + fastest wall
 clock) remains the default pin pending the frontier columns. (c) The tooled-frontier columns stay EMPTY
 by design: subscription families are guard-refused over OpenRouter (`routing_guard`, #4473/#4500);
-frontier bare/tooled cells need the subscription-lane `BareRunner`/rollout-telemetry adapters
-(follow-up). Frontier variants served by subscription lanes differ from OpenRouter pins
+frontier bare cells now have a separate subscription-runtime lane, while tooled-frontier cells remain
+phase-2 telemetry-adapter work. Frontier variants served by subscription lanes differ from OpenRouter pins
 (e.g. `gemini-3.1-pro-high` ≠ `google/gemini-3.1-pro-preview`) — analyze as transport+variant
 substitution, never conflate.

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+from types import SimpleNamespace
 from typing import Any
 
 import pytest
@@ -970,7 +971,7 @@ def test_bare_run_skips_gates_confirmed_without_grounding_passes(tmp_path: Path)
     assert run.artifact["workflow_verdict"] == "BARE"
     assert run.artifact["gate_outcomes"] == {}
     assert run.artifact["tool_call_count"] == 0
-    assert run.artifact_path.name.endswith("__bare.json")
+    assert run.artifact_path.name.endswith("__bare__opencode.json")
     # CONFIRMED-on-true (+20) + UNATTESTED-on-fabricated (+10) = 30, same scorer as tooled.
     assert run.artifact["score"]["model_judgment_score"] == 30
     assert run.artifact["score"]["invalid_fact_checks"] == 0
@@ -1034,6 +1035,196 @@ def test_run_one_bare_with_default_runner_is_guarded(
         qg_bakeoff.run_one_bare(route, _fixture(), output_dir=tmp_path)
 
 
+def test_subscription_runtime_bare_invokes_agent_runtime_with_bare_claude_config(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    route = qg_bakeoff.route_for_matrix_pin(
+        qg_bakeoff.CLAUDE_SUBSCRIPTION_BARE_MODEL_ID,
+        arm=qg_bakeoff.BARE_ARM,
+    )
+    calls: list[dict[str, Any]] = []
+
+    def fake_invoke(agent_name: str, prompt: str, **kwargs: Any) -> SimpleNamespace:
+        calls.append({"agent_name": agent_name, "prompt": prompt, **kwargs})
+        return SimpleNamespace(
+            ok=True,
+            response=json.dumps({"fact_checks": []}),
+            rate_limited=False,
+            returncode=0,
+            stderr_excerpt=None,
+            usage_record={"model": "claude-opus-resolved"},
+            cli_version="claude-code 2.2.0",
+            agent=agent_name,
+            model="claude-opus-resolved",
+            tool_calls=[],
+            tool_calls_total=0,
+        )
+
+    monkeypatch.setattr("scripts.agent_runtime.runner.invoke", fake_invoke)
+
+    result = qg_bakeoff.invoke_subscription_bare_route(route, "bare prompt", "task-1")
+
+    assert result.response_text == json.dumps({"fact_checks": []})
+    assert calls == [
+        {
+            "agent_name": "claude",
+            "prompt": "bare prompt",
+            "mode": "read-only",
+            "cwd": qg_bakeoff.PROJECT_ROOT,
+            "model": qg_bakeoff.CLAUDE_SUBSCRIPTION_BARE_MODEL_ID,
+            "task_id": "task-1",
+            "session_id": None,
+            "tool_config": {"use_bare": True, "output_format": "stream-json"},
+            "entrypoint": qg_bakeoff.BARE_RUNTIME_ENTRYPOINT,
+            "hard_timeout": 1800,
+            "stall_timeout": 600,
+        }
+    ]
+    assert result.usage and result.usage["cli_version"] == "claude-code 2.2.0"
+    assert result.usage["resolved_model"] == "claude-opus-resolved"
+
+
+def test_subscription_runtime_bare_artifact_identity_and_filename(tmp_path: Path) -> None:
+    fixture = _fixture()
+    route = qg_bakeoff.route_for_matrix_pin(
+        qg_bakeoff.GPT_SUBSCRIPTION_BARE_MODEL_ID,
+        arm=qg_bakeoff.BARE_ARM,
+    )
+    payload = {
+        "fact_checks": [
+            {"claim": "True claim.", "verdict": "CONFIRMED"},
+            {"claim": "Fabricated claim.", "verdict": "UNATTESTED_AFTER_SEARCH"},
+        ]
+    }
+
+    def runner(
+        run_route: llm_reviewer_dispatch.ReviewerRoute,
+        _prompt: str,
+        _task_id: str,
+    ) -> llm_reviewer_dispatch.DispatchResult:
+        return llm_reviewer_dispatch.DispatchResult(
+            response_text=json.dumps(payload),
+            reviewer_model_id=run_route.reviewer_model_id,
+            reviewer_family=run_route.reviewer_family,
+            route_name=run_route.route_name,
+            usage={"model": "gpt-5.5-resolved", "cli_version": "codex 1.0.0"},
+        )
+
+    run = qg_bakeoff.run_one_bare(route, fixture, output_dir=tmp_path, runner=runner)
+
+    assert run.artifact_path.name == "gpt-5-5__sample__bare__runtime-codex.json"
+    assert route.input_usd_per_mtok == 0.0
+    assert route.output_usd_per_mtok == 0.0
+    model = run.artifact["model"]
+    assert model["route_name"] == "bare_runtime_gpt"
+    assert model["transport"] == "runtime-codex"
+    assert model["entrypoint"] == qg_bakeoff.BARE_RUNTIME_ENTRYPOINT
+    assert model["session_policy"] == "fresh"
+    assert model["measurement_tier"] == qg_bakeoff.SUBSCRIPTION_RUNTIME_BARE_TIER
+    assert model["cli_version"] == "codex 1.0.0"
+    assert model["resolved_model"] == "gpt-5.5-resolved"
+    assert model["pricing_basis"].startswith("subscription runtime bare seat")
+    assert model["bridge_command"][0] == "agent_runtime.invoke"
+    assert all(not str(part).startswith("ask-") for part in model["bridge_command"])
+
+
+def test_subscription_native_pins_are_refused_for_tooled_or_both() -> None:
+    with pytest.raises(qg_bakeoff.BakeoffConfigError, match="bare-only"):
+        qg_bakeoff.route_for_matrix_pin(
+            qg_bakeoff.GPT_SUBSCRIPTION_BARE_MODEL_ID,
+            arm=qg_bakeoff.TOOLED_ARM,
+        )
+    with pytest.raises(qg_bakeoff.BakeoffConfigError, match="bare-only"):
+        qg_bakeoff.route_for_matrix_pin(
+            qg_bakeoff.GEMINI_SUBSCRIPTION_BARE_MODEL_ID,
+            arm=qg_bakeoff.BOTH_ARM,
+        )
+
+
+def test_bare_transport_retry_once_and_records_attempts(tmp_path: Path) -> None:
+    fixture = _fixture()
+    route = qg_bakeoff.bakeoff_route_for_model("openrouter/test/flaky-transport")
+    calls = 0
+    payload = {
+        "fact_checks": [
+            {"claim": "True claim.", "verdict": "CONFIRMED"},
+            {"claim": "Fabricated claim.", "verdict": "UNATTESTED_AFTER_SEARCH"},
+        ]
+    }
+
+    def runner(
+        run_route: llm_reviewer_dispatch.ReviewerRoute,
+        _prompt: str,
+        _task_id: str,
+    ) -> llm_reviewer_dispatch.DispatchResult:
+        nonlocal calls
+        calls += 1
+        if calls == 1:
+            raise llm_reviewer_dispatch.ReviewerProviderError("connection reset")
+        return _bare_dispatch_result(payload, run_route)
+
+    run = qg_bakeoff.run_one_bare(route, fixture, output_dir=tmp_path, runner=runner)
+
+    assert calls == 2
+    assert run.artifact["status"] == "ran"
+    assert run.artifact["attempt_count"] == 2
+    assert run.artifact["transport_retry"] == {"attempted": True, "reason": "connection reset"}
+    assert run.artifact["timed_out"] is False
+
+
+def test_bare_parse_failure_does_not_retry_and_is_model_failure(tmp_path: Path) -> None:
+    fixture = _fixture()
+    route = qg_bakeoff.bakeoff_route_for_model("openrouter/test/prose")
+    calls = 0
+
+    def runner(
+        run_route: llm_reviewer_dispatch.ReviewerRoute,
+        _prompt: str,
+        _task_id: str,
+    ) -> llm_reviewer_dispatch.DispatchResult:
+        nonlocal calls
+        calls += 1
+        return llm_reviewer_dispatch.DispatchResult(
+            response_text="No JSON here.",
+            reviewer_model_id=run_route.reviewer_model_id,
+            reviewer_family=run_route.reviewer_family,
+            route_name=run_route.route_name,
+        )
+
+    run = qg_bakeoff.run_one_bare(route, fixture, output_dir=tmp_path, runner=runner)
+
+    assert calls == 1
+    assert run.artifact["status"] == "error"
+    assert run.artifact["failure_class"] == qg_bakeoff.FAILURE_CLASS_MODEL_FAILURE
+    assert run.artifact["attempt_count"] == 1
+    assert run.artifact["transport_retry"] == {"attempted": False, "reason": None}
+
+
+def test_bare_resume_transport_mismatch_hard_fails(tmp_path: Path) -> None:
+    fixture = _fixture()
+    route = qg_bakeoff.bakeoff_route_for_model("openrouter/google/gemma-4-31b-it")
+    artifact_path = qg_bakeoff._bare_artifact_path(tmp_path, route, fixture)
+    artifact_path.write_text(
+        json.dumps(
+            {
+                "schema_version": qg_bakeoff.RUN_SCHEMA_VERSION,
+                "arm": qg_bakeoff.BARE_ARM,
+                "fixture": {"slug": fixture.slug},
+                "model": {"pin": route.reviewer_model_id, "transport": "runtime-codex"},
+                "status": "ran",
+                "score": {},
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    def runner(*_args: Any, **_kwargs: Any) -> llm_reviewer_dispatch.DispatchResult:  # pragma: no cover
+        raise AssertionError("transport mismatch must fail before invocation")
+
+    with pytest.raises(qg_bakeoff.BakeoffConfigError, match="transport"):
+        qg_bakeoff.run_one_bare(route, fixture, output_dir=tmp_path, runner=runner)
+
+
 def test_arm_both_runs_tooled_and_bare_cells_and_scorecard_shows_lift(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
@@ -1077,11 +1268,11 @@ def test_arm_both_runs_tooled_and_bare_cells_and_scorecard_shows_lift(
 
     assert sorted(run.artifact["arm"] for run in runs) == ["bare", "tooled"]
     names = sorted(p.name for p in tmp_path.glob("*.json"))
-    assert any(n.endswith("__bare.json") for n in names)
+    assert any(n.endswith("__bare__opencode.json") for n in names)
     assert any(n.endswith("__sample.json") for n in names)
 
     scorecard = (tmp_path / qg_bakeoff.SCORECARD_NAME).read_text(encoding="utf-8")
-    assert "| model | passage | arm |" in scorecard  # runs table gained the arm column
+    assert "| model | transport | entrypoint | passage | arm |" in scorecard
     assert "Harness Lift With Anchor" in scorecard
     assert "harness_lift" in scorecard
     assert "| 110 |" in scorecard  # tooled 30 − bare (−80)
@@ -1121,6 +1312,54 @@ def test_harness_lift_computed_over_paired_cells_only() -> None:
     lines = qg_bakeoff._harness_lift_section("Test", [_artifact("a", "tooled", 30)])
     row = next(line for line in lines if line.startswith("| pin/x"))
     assert "n/a" in row and "30" not in row.replace("| 0 |", "")
+
+
+def test_harness_lift_key_includes_transport_and_entrypoint() -> None:
+    """Same pin + fixture but different transport must never fabricate a pair."""
+
+    def _artifact(transport: str, entrypoint: str, arm: str, mj: int) -> dict:
+        return {
+            "model": {
+                "pin": "same/pin",
+                "transport": transport,
+                "entrypoint": entrypoint,
+            },
+            "fixture": {"slug": "same-fixture"},
+            "arm": arm,
+            "score": {
+                "model_judgment_score": mj,
+                "fractions": {"class_m_alignment": {"numerator": 1, "denominator": 1}},
+            },
+        }
+
+    lines = qg_bakeoff._harness_lift_section(
+        "Test",
+        [
+            _artifact("opencode", "qg_bakeoff_opencode", "tooled", 30),
+            _artifact("runtime-codex", "qg_bakeoff_runtime", "bare", -80),
+        ],
+    )
+
+    rows = [line for line in lines if line.startswith("| same/pin")]
+    assert len(rows) == 2
+    assert all("| 0 | n/a | n/a | n/a |" in row for row in rows)
+    assert not any("| 110 |" in row for row in rows)
+
+
+def test_ops_quota_error_cells_are_excluded_from_judgment_aggregates() -> None:
+    route = qg_bakeoff.bakeoff_route_for_model("openrouter/test/quota")
+    artifact = qg_bakeoff._error_artifact(
+        route,
+        _fixture(),
+        qg_bakeoff.BakeoffOpsQuotaError("no headroom"),
+        0.1,
+        arm=qg_bakeoff.BARE_ARM,
+    )
+
+    assert artifact["failure_class"] == qg_bakeoff.FAILURE_CLASS_OPS_QUOTA
+    assert qg_bakeoff._aggregate_by_model_arm([artifact]) == {}
+    lines = qg_bakeoff._harness_lift_section("Test", [artifact])
+    assert not any(line.startswith("| openrouter/test/quota") for line in lines)
 
 
 def test_run_matrix_preflights_pins_against_routing_guard(

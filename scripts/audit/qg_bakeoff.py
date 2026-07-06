@@ -11,9 +11,11 @@ allowing a small, explicit offline experiment under ``QG_BAKEOFF=1``.
 from __future__ import annotations
 
 import argparse
+import contextlib
 import json
 import os
 import re
+import shutil
 import sys
 import time
 import unicodedata
@@ -32,7 +34,7 @@ from scripts.audit import llm_reviewer, llm_reviewer_dispatch, qg_factcheck_scor
 
 FIXTURE_DIR = PROJECT_ROOT / "tests" / "fixtures" / "qg_bakeoff"
 DEFAULT_OUTPUT_ROOT = PROJECT_ROOT / "audit"
-RUN_SCHEMA_VERSION = "qg_bakeoff_run.v1"
+RUN_SCHEMA_VERSION = "qg_bakeoff_run.v2"
 SCORECARD_NAME = "SCORECARD.md"
 ANCHOR_SLUG = "vesnianky"
 MISSING_CLAIM_PENALTY = -10
@@ -45,6 +47,22 @@ TOOLED_ARM = "tooled"
 BARE_ARM = "bare"
 BOTH_ARM = "both"
 _ARM_CHOICES = (TOOLED_ARM, BARE_ARM, BOTH_ARM)
+OPENCODE_TRANSPORT = "opencode"
+OPENCODE_ENTRYPOINT = "qg_bakeoff_opencode"
+OPENCODE_MEASUREMENT_TIER = "opencode_bare_or_tooled"
+BARE_RUNTIME_ENTRYPOINT = "qg_bakeoff_runtime"
+SUBSCRIPTION_RUNTIME_BARE_TIER = "subscription_runtime_bare"
+SUBSCRIPTION_BARE_BANNER = (
+    "subscription-runtime bare — not raw completion; do not compare to opencode bare rows or external leaderboards."
+)
+FAILURE_CLASS_TRANSPORT = "transport"
+FAILURE_CLASS_OPS_QUOTA = "ops_quota"
+FAILURE_CLASS_MODEL_FAILURE = "model_failure"
+_FAILURE_CLASSES = {
+    FAILURE_CLASS_TRANSPORT,
+    FAILURE_CLASS_OPS_QUOTA,
+    FAILURE_CLASS_MODEL_FAILURE,
+}
 # Verbatim reuse markers: the bare prompt slices the LIVE verdict taxonomy out of
 # the reviewer template so the fact-check verdict set can never fork from tooled.
 _TAXONOMY_START = "Each fact check MUST use exactly one verdict from this taxonomy:"
@@ -64,9 +82,9 @@ class CandidateModel:
 DEFAULT_CANDIDATE_MODELS: tuple[CandidateModel, ...] = (
     CandidateModel("gemma-4-31b", "openrouter/google/gemma-4-31b-it"),
     CandidateModel("deepseek-v4", "TODO_OPENROUTER_DEEPSEEK_V4_PIN", unresolved=True),
-    CandidateModel("claude-frontier", "TODO_OPENROUTER_ANTHROPIC_FRONTIER_PIN", unresolved=True),
-    CandidateModel("gpt-frontier", "TODO_OPENROUTER_OPENAI_FRONTIER_PIN", unresolved=True),
-    CandidateModel("gemini-frontier", "TODO_OPENROUTER_GOOGLE_GEMINI_FRONTIER_PIN", unresolved=True),
+    CandidateModel("claude-frontier-openrouter-unreachable", "TODO_OPENROUTER_ANTHROPIC_FRONTIER_PIN", unresolved=True),
+    CandidateModel("gpt-frontier-openrouter-unreachable", "TODO_OPENROUTER_OPENAI_FRONTIER_PIN", unresolved=True),
+    CandidateModel("gemini-frontier-openrouter-unreachable", "TODO_OPENROUTER_GOOGLE_GEMINI_FRONTIER_PIN", unresolved=True),
 )
 
 
@@ -94,6 +112,19 @@ class BakeoffRun:
     skipped: bool = False
 
 
+@dataclass(frozen=True, slots=True)
+class RouteIdentity:
+    transport: str
+    entrypoint: str
+    session_policy: str
+    measurement_tier: str
+    pricing_basis: str
+    resolved_model: str | None = None
+    cli_version: str = "unknown"
+    runtime_agent: str | None = None
+    tool_config: Mapping[str, Any] | None = None
+
+
 class BakeoffConfigError(ValueError):
     """Configuration or fixture validation error."""
 
@@ -106,19 +137,158 @@ class BakeoffCellError(ValueError):
         self.response_head = response_head
 
 
+class BakeoffTransportError(llm_reviewer_dispatch.ReviewerProviderError):
+    """Transport/CLI failure for retryable bare runtime cells."""
+
+    def __init__(
+        self,
+        message: str,
+        *,
+        timed_out: bool = False,
+        returncode: int | None = None,
+    ) -> None:
+        super().__init__(message)
+        self.timed_out = timed_out
+        self.returncode = returncode
+
+
+class BakeoffOpsQuotaError(llm_reviewer_dispatch.ReviewerProviderError):
+    """Auth/headroom/quota failure; excluded from judgment aggregates."""
+
+
+class BakeoffModelFailure(BakeoffCellError):
+    """Model returned empty/refusal/malformed content; measured as a model cell."""
+
+
 ProviderRunner = Callable[
     [llm_reviewer_dispatch.ReviewerRoute, str, str],
     llm_reviewer_dispatch.DispatchResult | str,
 ]
 
 # The bare control arm's runner is the SAME shape as ProviderRunner. It exists as
-# a named seam (#2156 step 5): subscription-lane bare runners (claude / gpt /
-# gemini NATIVE) plug in here — they are OUT OF SCOPE for this harness because the
-# handoff forbids routing subscription families over OpenRouter. A native bare
-# transport can be injected as ``bare_runner`` without touching scoring, artifacts,
-# or the scorecard; the default below is the OpenRouter-legitimate opencode lane
-# (gemma + deepseek), and the routing guard on main still refuses other families.
+# a named seam (#2156 step 5): OpenRouter/opencode bare cells and the phase-1
+# subscription-runtime bare cells both plug in here while sharing parsing,
+# scoring, artifacts, and scorecards.
 BareRunner = ProviderRunner
+
+
+CLAUDE_SUBSCRIPTION_BARE_MODEL_ID = "claude-opus-4-8"
+GPT_SUBSCRIPTION_BARE_MODEL_ID = "gpt-5.5"
+GEMINI_SUBSCRIPTION_BARE_MODEL_ID = "gemini-3.1-pro-high"
+_SUBSCRIPTION_PRICING_BASIS = (
+    "subscription runtime bare seat; marginal token pricing is not exposed by the CLI, "
+    "so per-cell price is recorded as 0.0 and must not be compared as API spend"
+)
+
+
+def _runtime_bridge_command(agent: str, model: str) -> tuple[str, ...]:
+    """Return the audited runtime call shape, not an ask-* bridge wrapper."""
+    if agent == "claude":
+        return (
+            "agent_runtime.invoke",
+            "claude",
+            "--entrypoint",
+            BARE_RUNTIME_ENTRYPOINT,
+            "--model",
+            model,
+            "--hard-timeout",
+            "1800",
+            "--tool-config",
+            "use_bare=true,output_format=stream-json",
+        )
+    if agent == "codex":
+        return (
+            "agent_runtime.invoke",
+            "codex",
+            "--entrypoint",
+            BARE_RUNTIME_ENTRYPOINT,
+            "--model",
+            model,
+            "--hard-timeout",
+            "1800",
+        )
+    if agent == "agy":
+        return (
+            "agent_runtime.invoke",
+            "agy",
+            "--entrypoint",
+            BARE_RUNTIME_ENTRYPOINT,
+            "--model",
+            model,
+            "--hard-timeout",
+            "1800",
+        )
+    raise BakeoffConfigError(f"unsupported subscription bare runtime agent: {agent!r}")
+
+
+SUBSCRIPTION_BARE_ROUTES: tuple[llm_reviewer_dispatch.ReviewerRoute, ...] = (
+    llm_reviewer_dispatch.ReviewerRoute(
+        route_name="bare_runtime_claude",
+        bridge_command=_runtime_bridge_command("claude", CLAUDE_SUBSCRIPTION_BARE_MODEL_ID),
+        reviewer_model_id=CLAUDE_SUBSCRIPTION_BARE_MODEL_ID,
+        reviewer_family="anthropic",
+        purpose="Subscription-runtime bare fact-check control via Claude Code",
+        input_usd_per_mtok=0.0,
+        output_usd_per_mtok=0.0,
+        requires_mcp=False,
+    ),
+    llm_reviewer_dispatch.ReviewerRoute(
+        route_name="bare_runtime_gpt",
+        bridge_command=_runtime_bridge_command("codex", GPT_SUBSCRIPTION_BARE_MODEL_ID),
+        reviewer_model_id=GPT_SUBSCRIPTION_BARE_MODEL_ID,
+        reviewer_family="openai",
+        purpose="Subscription-runtime bare fact-check control via Codex exec",
+        input_usd_per_mtok=0.0,
+        output_usd_per_mtok=0.0,
+        requires_mcp=False,
+    ),
+    llm_reviewer_dispatch.ReviewerRoute(
+        route_name="bare_runtime_gemini",
+        bridge_command=_runtime_bridge_command("agy", GEMINI_SUBSCRIPTION_BARE_MODEL_ID),
+        reviewer_model_id=GEMINI_SUBSCRIPTION_BARE_MODEL_ID,
+        reviewer_family="google",
+        purpose="Subscription-runtime bare fact-check control via Agy/Gemini",
+        input_usd_per_mtok=0.0,
+        output_usd_per_mtok=0.0,
+        requires_mcp=False,
+    ),
+)
+
+_SUBSCRIPTION_BARE_ROUTES_BY_PIN = {
+    route.reviewer_model_id: route for route in SUBSCRIPTION_BARE_ROUTES
+}
+_SUBSCRIPTION_BARE_IDENTITIES: dict[str, RouteIdentity] = {
+    "bare_runtime_claude": RouteIdentity(
+        transport="runtime-claude",
+        entrypoint=BARE_RUNTIME_ENTRYPOINT,
+        session_policy="fresh",
+        measurement_tier=SUBSCRIPTION_RUNTIME_BARE_TIER,
+        pricing_basis=_SUBSCRIPTION_PRICING_BASIS,
+        resolved_model=CLAUDE_SUBSCRIPTION_BARE_MODEL_ID,
+        runtime_agent="claude",
+        tool_config={"use_bare": True, "output_format": "stream-json"},
+    ),
+    "bare_runtime_gpt": RouteIdentity(
+        transport="runtime-codex",
+        entrypoint=BARE_RUNTIME_ENTRYPOINT,
+        session_policy="fresh",
+        measurement_tier=SUBSCRIPTION_RUNTIME_BARE_TIER,
+        pricing_basis=_SUBSCRIPTION_PRICING_BASIS,
+        resolved_model=GPT_SUBSCRIPTION_BARE_MODEL_ID,
+        runtime_agent="codex",
+        tool_config=None,
+    ),
+    "bare_runtime_gemini": RouteIdentity(
+        transport="runtime-agy",
+        entrypoint=BARE_RUNTIME_ENTRYPOINT,
+        session_policy="fresh",
+        measurement_tier=SUBSCRIPTION_RUNTIME_BARE_TIER,
+        pricing_basis=_SUBSCRIPTION_PRICING_BASIS,
+        resolved_model=GEMINI_SUBSCRIPTION_BARE_MODEL_ID,
+        runtime_agent="agy",
+        tool_config=None,
+    ),
+}
 
 
 def _lenient_first_json_object(response_text: str) -> Mapping[str, Any] | None:
@@ -232,6 +402,54 @@ def bakeoff_route_for_model(pin: str) -> llm_reviewer_dispatch.ReviewerRoute:
     )
 
 
+def route_for_matrix_pin(pin: str, *, arm: str) -> llm_reviewer_dispatch.ReviewerRoute:
+    """Resolve a requested pin to the only route allowed for the requested arm."""
+    subscription_route = _SUBSCRIPTION_BARE_ROUTES_BY_PIN.get(pin)
+    if subscription_route is not None:
+        if arm != BARE_ARM:
+            raise BakeoffConfigError(
+                "subscription-runtime native pins are bare-only; "
+                f"pin={pin!r} was requested with --arm {arm!r}"
+            )
+        return subscription_route
+    return bakeoff_route_for_model(pin)
+
+
+def _route_identity(route: llm_reviewer_dispatch.ReviewerRoute) -> RouteIdentity:
+    if route.route_name in _SUBSCRIPTION_BARE_IDENTITIES:
+        return _SUBSCRIPTION_BARE_IDENTITIES[route.route_name]
+    return RouteIdentity(
+        transport=OPENCODE_TRANSPORT,
+        entrypoint=OPENCODE_ENTRYPOINT,
+        session_policy="fresh",
+        measurement_tier=OPENCODE_MEASUREMENT_TIER,
+        pricing_basis="route-specific API pricing or measured scorecard profile; see reviewer dispatch cost basis",
+        resolved_model=route.reviewer_model_id,
+        cli_version="unknown",
+        runtime_agent=None,
+        tool_config=None,
+    )
+
+
+def _route_transport(route: llm_reviewer_dispatch.ReviewerRoute) -> str:
+    return _route_identity(route).transport
+
+
+def _transport_slug(transport: str) -> str:
+    return pin_slug(transport)
+
+
+def _is_subscription_bare_route(route: llm_reviewer_dispatch.ReviewerRoute) -> bool:
+    return route.route_name in _SUBSCRIPTION_BARE_IDENTITIES
+
+
+def _subscription_identity(route: llm_reviewer_dispatch.ReviewerRoute) -> RouteIdentity:
+    identity = _SUBSCRIPTION_BARE_IDENTITIES.get(route.route_name)
+    if identity is None or not identity.runtime_agent:
+        raise BakeoffConfigError(f"route is not a subscription-runtime bare route: {route.route_name!r}")
+    return identity
+
+
 def invoke_bakeoff_route(
     route: llm_reviewer_dispatch.ReviewerRoute,
     prompt: str,
@@ -319,14 +537,15 @@ def invoke_bakeoff_route_bare(
     prompt: str,
     task_id: str,
 ) -> llm_reviewer_dispatch.DispatchResult:
-    """Bare control invocation over the SAME opencode transport, tools NOT required.
+    """Bare control invocation over either opencode or subscription runtime.
 
-    Mirrors ``invoke_bakeoff_route`` but passes ``require_mcp=False``: a bare run
-    judges from model knowledge with no sources, so the grounded-MCP precondition
-    does not apply and there is no tool telemetry to gate on. Legitimate OpenRouter
-    lane only (gemma + deepseek); the routing guard on main still refuses
-    subscription families — that is correct and must not be overridden.
+    Opencode bare mirrors ``invoke_bakeoff_route`` with ``require_mcp=False``:
+    the model judges from its own knowledge with no sources. Subscription
+    bare routes go through ``agent_runtime.invoke`` with the same bare prompt,
+    no ask-* wrappers, and no standing-rules bridge framing.
     """
+    if _is_subscription_bare_route(route):
+        return invoke_subscription_bare_route(route, prompt, task_id)
     del task_id
     return llm_reviewer_dispatch._invoke_opencode_reviewer(
         prompt,
@@ -334,6 +553,130 @@ def invoke_bakeoff_route_bare(
         default_timeout_s=1800,
         require_mcp=False,
     )
+
+
+def invoke_subscription_bare_route(
+    route: llm_reviewer_dispatch.ReviewerRoute,
+    prompt: str,
+    task_id: str,
+) -> llm_reviewer_dispatch.DispatchResult:
+    """Invoke a subscription bare route through ``agent_runtime.invoke`` only."""
+    identity = _subscription_identity(route)
+    try:
+        from scripts.agent_runtime import runner as agent_runner
+        from scripts.agent_runtime.errors import (
+            AgentStalledError,
+            AgentTimeoutError,
+            AgentUnavailableError,
+            RateLimitedError,
+        )
+
+        result = agent_runner.invoke(
+            identity.runtime_agent or "",
+            prompt,
+            mode="read-only",
+            cwd=PROJECT_ROOT,
+            model=route.reviewer_model_id,
+            task_id=task_id,
+            session_id=None,
+            tool_config=dict(identity.tool_config or {}),
+            entrypoint=BARE_RUNTIME_ENTRYPOINT,
+            hard_timeout=1800,
+            stall_timeout=600,
+        )
+    except RateLimitedError as exc:
+        raise BakeoffOpsQuotaError(str(exc)) from exc
+    except AgentTimeoutError as exc:
+        raise BakeoffTransportError(str(exc), timed_out=True) from exc
+    except AgentStalledError as exc:
+        raise BakeoffTransportError(str(exc), timed_out=False) from exc
+    except AgentUnavailableError as exc:
+        raise BakeoffTransportError(str(exc), timed_out=False) from exc
+    except OSError as exc:
+        raise BakeoffTransportError(str(exc), timed_out=False) from exc
+    except Exception as exc:
+        raise BakeoffTransportError(str(exc), timed_out=False) from exc
+
+    usage = dict(result.usage_record or {})
+    usage.update(
+        {
+            "agent": result.agent,
+            "entrypoint": BARE_RUNTIME_ENTRYPOINT,
+            "cli_version": result.cli_version,
+            "resolved_model": result.model,
+            "returncode": result.returncode,
+        }
+    )
+    if result.rate_limited:
+        raise BakeoffOpsQuotaError(result.stderr_excerpt or "runtime reported rate limit")
+    if result.returncode not in (0, None) and not result.ok:
+        raise BakeoffTransportError(
+            result.stderr_excerpt or f"runtime returned non-zero exit {result.returncode}",
+            returncode=result.returncode,
+        )
+    if not result.ok:
+        raise BakeoffModelFailure(result.stderr_excerpt or "runtime returned no usable response")
+    response = (result.response or "").strip()
+    if not response:
+        raise BakeoffModelFailure("runtime returned empty response")
+    return llm_reviewer_dispatch.DispatchResult(
+        response_text=response,
+        reviewer_model_id=route.reviewer_model_id,
+        reviewer_family=route.reviewer_family,
+        route_name=route.route_name,
+        observed_prompt_tokens=llm_reviewer_dispatch.estimate_tokens(prompt),
+        observed_completion_tokens=llm_reviewer_dispatch.estimate_tokens(response),
+        observed_cost_usd=0.0,
+        usage=usage,
+        tool_call_count=int(result.tool_calls_total or 0),
+        tools_used=tuple(
+            str(call.get("name") or call.get("tool") or "")
+            for call in result.tool_calls
+            if isinstance(call, Mapping) and (call.get("name") or call.get("tool"))
+        ),
+        tool_events=tuple(dict(call) for call in result.tool_calls if isinstance(call, Mapping)),
+    )
+
+
+def preflight_subscription_bare_routes(routes: Sequence[llm_reviewer_dispatch.ReviewerRoute]) -> dict[str, Any]:
+    """Fail fast on local auth/headroom prerequisites before burning native cells."""
+    native_routes = [route for route in routes if _is_subscription_bare_route(route)]
+    if not native_routes:
+        return {"status": "skipped", "routes": []}
+    failures: list[str] = []
+    checked: list[str] = []
+    for route in native_routes:
+        identity = _subscription_identity(route)
+        checked.append(route.route_name)
+        agent = identity.runtime_agent or ""
+        if agent == "claude":
+            if not (shutil.which("npx") or shutil.which("claude")):
+                failures.append("claude: neither npx nor claude CLI is on PATH")
+            if not (Path.home() / ".claude").exists() and not os.environ.get("ANTHROPIC_API_KEY"):
+                failures.append("claude: no ~/.claude login state or ANTHROPIC_API_KEY visible")
+        elif agent == "codex":
+            if not shutil.which("codex"):
+                failures.append("codex: codex CLI is not on PATH")
+        elif agent == "agy":
+            agy_path = shutil.which("agy") or str(Path.home() / ".local/bin/agy")
+            if not Path(agy_path).exists():
+                failures.append("agy: agy CLI is not on PATH or ~/.local/bin/agy")
+        else:
+            failures.append(f"{route.route_name}: unsupported runtime agent {agent!r}")
+
+        try:
+            from scripts.agent_runtime.usage import has_headroom
+
+            ok, reason = has_headroom(agent, route.reviewer_model_id)
+        except Exception as exc:  # pragma: no cover - degraded local preflight only
+            failures.append(f"{agent}: headroom check failed: {type(exc).__name__}: {exc}")
+        else:
+            if not ok:
+                failures.append(f"{agent}/{route.reviewer_model_id}: no headroom: {reason}")
+
+    if failures:
+        raise BakeoffConfigError("subscription-runtime bare preflight failed: " + "; ".join(failures))
+    return {"status": "passed", "routes": checked}
 
 
 def _validate_bare_fact_checks(fact_checks: Any) -> None:
@@ -448,6 +791,7 @@ def run_matrix(
     require_offline_opt_in()
     if arm not in _ARM_CHOICES:
         raise BakeoffConfigError(f"arm must be one of {list(_ARM_CHOICES)}; got {arm!r}")
+    routes = [route_for_matrix_pin(pin, arm=arm) for pin in model_pins]
     # Preflight EVERY pin against the standing routing orders before any cell
     # runs (codex review, PR #4500 finding 2): a subscription-family or qwen
     # pin must fail the whole matrix at config time, not burn N-1 cells first.
@@ -455,14 +799,17 @@ def run_matrix(
     # covering injected runners and non-matrix callers.
     from scripts.ai_agent_bridge.routing_guard import assert_model_routing_allowed
 
-    for pin in model_pins:
-        assert_model_routing_allowed(pin, context="qg_bakeoff matrix pin")
+    for route in routes:
+        if _is_subscription_bare_route(route):
+            continue
+        assert_model_routing_allowed(route.reviewer_model_id, context="qg_bakeoff matrix pin")
+    if bare_runner is invoke_bakeoff_route_bare:
+        preflight_subscription_bare_routes(routes)
     output_dir.mkdir(parents=True, exist_ok=True)
     run_tooled = arm in (TOOLED_ARM, BOTH_ARM)
     run_bare = arm in (BARE_ARM, BOTH_ARM)
     runs: list[BakeoffRun] = []
-    for pin in model_pins:
-        route = bakeoff_route_for_model(pin)
+    for route in routes:
         for fixture in fixtures:
             if run_tooled:
                 runs.append(
@@ -505,14 +852,62 @@ def _fixture_block(fixture: BakeoffFixture) -> dict[str, Any]:
     return {"slug": fixture.slug, "title": fixture.title, "claim_count": len(fixture.claims)}
 
 
-def _model_block(route: llm_reviewer_dispatch.ReviewerRoute) -> dict[str, Any]:
+def _model_block(
+    route: llm_reviewer_dispatch.ReviewerRoute,
+    dispatch: Mapping[str, Any] | None = None,
+) -> dict[str, Any]:
+    identity = _route_identity(route)
+    usage = dispatch.get("usage") if isinstance(dispatch, Mapping) else None
+    usage_map = usage if isinstance(usage, Mapping) else {}
+    resolved_model = str(
+        usage_map.get("resolved_model")
+        or usage_map.get("model")
+        or identity.resolved_model
+        or route.reviewer_model_id
+    )
+    cli_version = str(usage_map.get("cli_version") or identity.cli_version or "unknown")
     return {
         "pin": route.reviewer_model_id,
         "pin_slug": pin_slug(route.reviewer_model_id),
         "family": route.reviewer_family,
         "route_name": route.route_name,
         "bridge_command": list(route.bridge_command),
+        "transport": identity.transport,
+        "entrypoint": identity.entrypoint,
+        "session_policy": identity.session_policy,
+        "measurement_tier": identity.measurement_tier,
+        "cli_version": cli_version,
+        "pricing_basis": identity.pricing_basis,
+        "resolved_model": resolved_model,
     }
+
+
+def _failure_class(exc: Exception) -> str:
+    try:
+        from scripts.agent_runtime.errors import AgentStalledError, AgentTimeoutError, RateLimitedError
+    except Exception:  # pragma: no cover - import path fallback only
+        AgentStalledError = AgentTimeoutError = RateLimitedError = type("_UnavailableRuntimeError", (Exception,), {})
+    if isinstance(exc, (BakeoffOpsQuotaError, RateLimitedError)):
+        return FAILURE_CLASS_OPS_QUOTA
+    if isinstance(
+        exc,
+        (
+            BakeoffTransportError,
+            llm_reviewer_dispatch.ReviewerProviderError,
+            AgentTimeoutError,
+            AgentStalledError,
+        ),
+    ):
+        return FAILURE_CLASS_TRANSPORT
+    return FAILURE_CLASS_MODEL_FAILURE
+
+
+def _timed_out(exc: Exception) -> bool:
+    try:
+        from scripts.agent_runtime.errors import AgentTimeoutError
+    except Exception:  # pragma: no cover - import path fallback only
+        AgentTimeoutError = type("_UnavailableRuntimeTimeout", (Exception,), {})
+    return bool(getattr(exc, "timed_out", False) or isinstance(exc, AgentTimeoutError))
 
 
 def _error_artifact(
@@ -522,6 +917,8 @@ def _error_artifact(
     wall_seconds: float,
     *,
     arm: str,
+    attempt_count: int = 1,
+    transport_retry: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Build a MEASURED error-cell artifact (score = every fixture claim missing).
 
@@ -529,6 +926,7 @@ def _error_artifact(
     per-cell outcome, never a matrix crash. Shared by both arms so the error schema
     stays identical apart from ``arm``.
     """
+    failure_class = _failure_class(exc)
     return {
         "schema_version": RUN_SCHEMA_VERSION,
         "arm": arm,
@@ -536,13 +934,16 @@ def _error_artifact(
         "fixture": _fixture_block(fixture),
         "model": _model_block(route),
         "status": "error",
+        "failure_class": failure_class,
         "error": {
             "class": type(exc).__name__,
             "message": str(exc)[:2000],
             "response_head": getattr(exc, "response_head", None),
         },
         "workflow_verdict": "ERROR",
-        "attempt_count": None,
+        "attempt_count": attempt_count,
+        "timed_out": _timed_out(exc),
+        "transport_retry": dict(transport_retry or {"attempted": False, "reason": None}),
         "dispatch": {},
         "gate_outcomes": {},
         "payload": {},
@@ -609,12 +1010,14 @@ def run_one(
         "arm": TOOLED_ARM,
         "created_at": _now_z(),
         "fixture": _fixture_block(fixture),
-        "model": _model_block(route),
+        "model": _model_block(route, dispatch),
         "status": gate_result["status"],
         "workflow_verdict": gate_result["workflow_verdict"],
         "findings_schema_invalid": bool(gate_result.get("findings_schema_invalid")),
         "response_parse_lenient": bool(gate_result.get("response_parse_lenient")),
         "attempt_count": gate_result["attempt_count"],
+        "timed_out": False,
+        "transport_retry": {"attempted": False, "reason": None},
         "dispatch": dispatch,
         "gate_outcomes": gate_outcomes,
         "payload": gate_result["payload"],
@@ -624,6 +1027,60 @@ def run_one(
     }
     artifact_path.write_text(json.dumps(artifact, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     return BakeoffRun(artifact_path=artifact_path, artifact=artifact)
+
+
+def _bare_artifact_path(
+    output_dir: Path,
+    route: llm_reviewer_dispatch.ReviewerRoute,
+    fixture: BakeoffFixture,
+) -> Path:
+    return output_dir / (
+        f"{pin_slug(route.reviewer_model_id)}__{fixture.slug}__bare__"
+        f"{_transport_slug(_route_transport(route))}.json"
+    )
+
+
+def _assert_resume_transport_matches(
+    artifact: Mapping[str, Any],
+    route: llm_reviewer_dispatch.ReviewerRoute,
+    artifact_path: Path,
+) -> None:
+    artifact_transport = _artifact_transport(artifact)
+    route_transport = _route_transport(route)
+    if artifact_transport != route_transport:
+        raise BakeoffConfigError(
+            f"{artifact_path}: existing bare artifact transport={artifact_transport!r} "
+            f"does not match route transport={route_transport!r}; use --force with a clean "
+            "artifact path instead of silently overwriting a different transport"
+        )
+
+
+def _invoke_bare_with_transport_retry(
+    route: llm_reviewer_dispatch.ReviewerRoute,
+    prompt: str,
+    task_id: str,
+    runner: BareRunner,
+) -> tuple[llm_reviewer_dispatch.DispatchResult, int, dict[str, Any]]:
+    retry_meta = {"attempted": False, "reason": None}
+    try:
+        return _coerce_dispatch_result(runner(route, prompt, task_id), route, prompt), 1, retry_meta
+    except Exception as exc:
+        if _failure_class(exc) != FAILURE_CLASS_TRANSPORT:
+            _attach_attempt_metadata(exc, attempt_count=1, transport_retry=retry_meta)
+            raise
+        retry_meta = {"attempted": True, "reason": str(exc)[:500]}
+    try:
+        return _coerce_dispatch_result(runner(route, prompt, task_id), route, prompt), 2, retry_meta
+    except Exception as exc:
+        _attach_attempt_metadata(exc, attempt_count=2, transport_retry=retry_meta)
+        raise
+
+
+def _attach_attempt_metadata(exc: Exception, *, attempt_count: int, transport_retry: Mapping[str, Any]) -> None:
+    with contextlib.suppress(Exception):
+        exc.attempt_count = attempt_count  # type: ignore[attr-defined]
+    with contextlib.suppress(Exception):
+        exc.transport_retry = dict(transport_retry)  # type: ignore[attr-defined]
 
 
 def run_one_bare(
@@ -645,21 +1102,32 @@ def run_one_bare(
     """
     if runner is invoke_bakeoff_route_bare:
         require_offline_opt_in()
-    artifact_path = output_dir / f"{pin_slug(route.reviewer_model_id)}__{fixture.slug}__bare.json"
+    artifact_path = _bare_artifact_path(output_dir, route, fixture)
     if artifact_path.exists() and not force:
         artifact = json.loads(artifact_path.read_text(encoding="utf-8"))
+        _assert_resume_transport_matches(artifact, route, artifact_path)
         if not (retry_failures and artifact.get("status") == "error"):
             return BakeoffRun(artifact_path=artifact_path, artifact=artifact, skipped=True)
 
     prompt = build_bare_factcheck_prompt(fixture.title, fixture.passage_md)
     task_id = f"qg-bakeoff-bare-{pin_slug(route.reviewer_model_id)}-{fixture.slug}"
     started = time.monotonic()
+    attempt_count = 1
+    transport_retry = {"attempted": False, "reason": None}
     try:
-        result = _coerce_dispatch_result(runner(route, prompt, task_id), route, prompt)
+        result, attempt_count, transport_retry = _invoke_bare_with_transport_retry(route, prompt, task_id, runner)
         payload, response_parse_lenient, findings_schema_invalid = _parse_bare_payload(result.response_text)
     except (ValueError, llm_reviewer_dispatch.ReviewerDispatchError) as exc:
         wall_seconds = round(time.monotonic() - started, 3)
-        artifact = _error_artifact(route, fixture, exc, wall_seconds, arm=BARE_ARM)
+        artifact = _error_artifact(
+            route,
+            fixture,
+            exc,
+            wall_seconds,
+            arm=BARE_ARM,
+            attempt_count=int(getattr(exc, "attempt_count", attempt_count) or attempt_count),
+            transport_retry=getattr(exc, "transport_retry", transport_retry),
+        )
         artifact_path.write_text(
             json.dumps(artifact, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8"
         )
@@ -676,12 +1144,14 @@ def run_one_bare(
         "arm": BARE_ARM,
         "created_at": _now_z(),
         "fixture": _fixture_block(fixture),
-        "model": _model_block(route),
+        "model": _model_block(route, dispatch),
         "status": "ran",
         "workflow_verdict": "BARE",
         "findings_schema_invalid": findings_schema_invalid,
         "response_parse_lenient": response_parse_lenient,
-        "attempt_count": 1,
+        "attempt_count": attempt_count,
+        "timed_out": False,
+        "transport_retry": transport_retry,
         "dispatch": dispatch,
         "gate_outcomes": {},
         "payload": payload,
@@ -868,6 +1338,9 @@ def score_payload(payload: Mapping[str, Any], fixture: BakeoffFixture) -> dict[s
 
 def write_scorecard(path: Path, artifacts: Sequence[Mapping[str, Any]]) -> None:
     """Write a markdown scorecard for the current artifact set."""
+    regular_artifacts = [a for a in artifacts if not _is_subscription_runtime_artifact(a)]
+    subscription_artifacts = [a for a in artifacts if _is_subscription_runtime_artifact(a)]
+    judgment_artifacts = [a for a in regular_artifacts if not _is_ops_quota_artifact(a)]
     lines = [
         "# QG Bakeoff Scorecard",
         "",
@@ -875,19 +1348,56 @@ def write_scorecard(path: Path, artifacts: Sequence[Mapping[str, Any]]) -> None:
         "",
         "Fractions are exact. `low-N` marks denominators below 10.",
         "",
-        "## Runs",
-        "",
-        "| model | passage | arm | model judgment | live admissible | missing | U honesty | M alignment | true unsupported | invalid | inadmissible | tools | wall_s |",
-        "| --- | --- | --- | ---: | ---: | ---: | --- | --- | --- | ---: | ---: | ---: | ---: |",
     ]
+    lines.extend(_runs_table_section("Runs", regular_artifacts))
+    lines.extend(_ops_quota_section(regular_artifacts))
+    lines.extend(_totals_and_lift_section("With Anchor", judgment_artifacts))
+    lines.extend(
+        _totals_and_lift_section(
+            "Without Anchor",
+            [a for a in judgment_artifacts if _fixture_slug(a) != ANCHOR_SLUG],
+        )
+    )
+    if subscription_artifacts:
+        lines.extend(
+            [
+                "",
+                "## Subscription Runtime Bare Rows",
+                "",
+                SUBSCRIPTION_BARE_BANNER,
+                "",
+            ]
+        )
+        lines.extend(_runs_table(subscription_artifacts))
+        lines.extend(_ops_quota_section(subscription_artifacts))
+    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
+def _runs_table_section(title: str, artifacts: Sequence[Mapping[str, Any]]) -> list[str]:
+    return ["", f"## {title}", "", *_runs_table(artifacts)]
+
+
+def _runs_table(artifacts: Sequence[Mapping[str, Any]]) -> list[str]:
+    lines = [
+        "| model | transport | entrypoint | passage | arm | status | failure_class | parse_lenient | model judgment | live admissible | missing | U honesty | M alignment | true unsupported | invalid | inadmissible | tools | wall_s |",
+        "| --- | --- | --- | --- | --- | --- | --- | --- | ---: | ---: | ---: | --- | --- | --- | ---: | ---: | ---: | ---: |",
+    ]
+    if not artifacts:
+        lines.append("| n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | 0 | 0 | 0 | 0/0 low-N | 0/0 low-N | 0/0 low-N | 0 | 0 | 0 | 0 |")
+        return lines
     for artifact in sorted(artifacts, key=_artifact_sort_key):
         score = _score(artifact)
         fractions = score.get("fractions", {})
         lines.append(
-            "| {model} | {passage} | {arm} | {model_score} | {live_score} | {missing} | {u} | {m} | {true_bad} | {invalid} | {inadmissible} | {tools} | {wall} |".format(
-                model=_model_pin(artifact),
+            "| {model} | {transport} | {entrypoint} | {passage} | {arm} | {status} | {failure_class} | {parse_lenient} | {model_score} | {live_score} | {missing} | {u} | {m} | {true_bad} | {invalid} | {inadmissible} | {tools} | {wall} |".format(
+                model=_model_label(artifact),
+                transport=_artifact_transport(artifact),
+                entrypoint=_artifact_entrypoint(artifact),
                 passage=_fixture_slug(artifact),
                 arm=_artifact_arm(artifact),
+                status=artifact.get("status", "unknown"),
+                failure_class=artifact.get("failure_class") or "n/a",
+                parse_lenient=bool(artifact.get("response_parse_lenient")),
                 model_score=score.get("model_judgment_score", 0),
                 live_score=score.get("live_admissible_score", 0),
                 missing=score.get("missing_claims", 0),
@@ -900,11 +1410,36 @@ def write_scorecard(path: Path, artifacts: Sequence[Mapping[str, Any]]) -> None:
                 wall=artifact.get("wall_seconds", 0),
             )
         )
-    lines.extend(_totals_and_lift_section("With Anchor", artifacts))
-    lines.extend(
-        _totals_and_lift_section("Without Anchor", [a for a in artifacts if _fixture_slug(a) != ANCHOR_SLUG])
-    )
-    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    return lines
+
+
+def _ops_quota_section(artifacts: Sequence[Mapping[str, Any]]) -> list[str]:
+    ops = [artifact for artifact in artifacts if _is_ops_quota_artifact(artifact)]
+    if not ops:
+        return []
+    lines = [
+        "",
+        "## Ops/Quota Excluded Cells",
+        "",
+        "| model | transport | entrypoint | passage | arm | message |",
+        "| --- | --- | --- | --- | --- | --- |",
+    ]
+    for artifact in sorted(ops, key=_artifact_sort_key):
+        error = artifact.get("error")
+        message = ""
+        if isinstance(error, Mapping):
+            message = str(error.get("message") or "")[:300].replace("\n", " ")
+        lines.append(
+            "| {model} | {transport} | {entrypoint} | {passage} | {arm} | {message} |".format(
+                model=_model_label(artifact),
+                transport=_artifact_transport(artifact),
+                entrypoint=_artifact_entrypoint(artifact),
+                passage=_fixture_slug(artifact),
+                arm=_artifact_arm(artifact),
+                message=message or "n/a",
+            )
+        )
+    return lines
 
 
 def default_output_dir(day: date | None = None) -> Path:
@@ -960,7 +1495,7 @@ def rescore_artifacts(output_dir: Path, fixtures_dir: Path = FIXTURE_DIR) -> int
         # field (→ "tooled"); a ``__bare`` filename identifies a bare artifact even
         # if it somehow lacks the field. Rescore covers BOTH arms — the bare grounding
         # counters resolve to 0 because a bare artifact carries no gate_outcomes.
-        artifact["arm"] = artifact.get("arm") or (BARE_ARM if path.stem.endswith("__bare") else TOOLED_ARM)
+        artifact["arm"] = artifact.get("arm") or (BARE_ARM if "__bare" in path.stem else TOOLED_ARM)
         slug = (artifact.get("fixture") or {}).get("slug")
         fixture = fixtures.get(slug)
         if fixture is None:
@@ -983,7 +1518,15 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--fixtures-dir", type=Path, default=FIXTURE_DIR)
     parser.add_argument("--fixture", action="append", dest="fixtures", help="Fixture slug; repeatable")
-    parser.add_argument("--models", action="append", help="Comma-separated or repeated OpenRouter/opencode model pins")
+    parser.add_argument(
+        "--models",
+        action="append",
+        help=(
+            "Comma-separated or repeated model pins. OpenRouter/opencode pins work for tooled/bare; "
+            "subscription native pins (claude-opus-4-8,gpt-5.5,gemini-3.1-pro-high) are --arm bare only. "
+            "LU_ROUTING_GUARD_OVERRIDE=1 is invalid for published scorecards."
+        ),
+    )
     parser.add_argument("--out-dir", type=Path, default=None)
     parser.add_argument(
         "--arm",
@@ -1270,7 +1813,8 @@ def _totals_and_lift_section(title: str, artifacts: Sequence[Mapping[str, Any]])
         "| model | arm | passages | model judgment | live admissible | U honesty | M alignment headline | true unsupported | missing | invalid | inadmissible | tools | wall_s |",
         "| --- | --- | ---: | ---: | ---: | --- | --- | --- | ---: | ---: | ---: | ---: | ---: |",
     ]
-    for (model, arm), row in sorted(totals.items()):
+    for (model_key, arm), row in sorted(totals.items()):
+        model = f"{model_key[0]} [{model_key[1]}/{model_key[2]}]"
         lines.append(
             "| {model} | {arm} | {passages} | {model_score} | {live_score} | {u} | {m} | {true_bad} | {missing} | {invalid} | {inadmissible} | {tools} | {wall} |".format(
                 model=model,
@@ -1306,9 +1850,11 @@ def _harness_lift_section(
     artifacts do not. A model with zero paired fixtures shows ``n/a`` — never a
     fabricated number.
     """
-    cells: dict[str, dict[str, dict[str, Mapping[str, Any]]]] = defaultdict(lambda: defaultdict(dict))
+    cells: dict[tuple[str, str, str], dict[str, dict[str, Mapping[str, Any]]]] = defaultdict(lambda: defaultdict(dict))
     for artifact in artifacts:
-        cells[_model_pin(artifact)][_fixture_slug(artifact)][_artifact_arm(artifact)] = _score(artifact)
+        if _is_ops_quota_artifact(artifact):
+            continue
+        cells[_model_key(artifact)][_fixture_slug(artifact)][_artifact_arm(artifact)] = _score(artifact)
     lines = [
         "",
         f"## Harness Lift {title}",
@@ -1320,23 +1866,35 @@ def _harness_lift_section(
         "| model | paired passages | tooled model judgment | bare model judgment | harness_lift | tooled M alignment | bare M alignment |",
         "| --- | ---: | ---: | ---: | ---: | --- | --- |",
     ]
-    for model in sorted(cells):
+    for model_key in sorted(cells):
         paired = sorted(
             slug
-            for slug, arms in cells[model].items()
+            for slug, arms in cells[model_key].items()
             if TOOLED_ARM in arms and BARE_ARM in arms
         )
+        model_label = f"{model_key[0]} [{model_key[1]}/{model_key[2]}]"
         if not paired:
-            lines.append(f"| {model} | 0 | n/a | n/a | n/a | n/a | n/a |")
+            lines.append(f"| {model_label} | 0 | n/a | n/a | n/a | n/a | n/a |")
             continue
 
-        def _summed(arm: str, key: str, *, slugs: Sequence[str] = paired, pin: str = model) -> int:
-            return sum(int(cells[pin][slug][arm].get(key) or 0) for slug in slugs)
+        def _summed(
+            arm: str,
+            key: str,
+            *,
+            slugs: Sequence[str] = paired,
+            identity: tuple[str, str, str] = model_key,
+        ) -> int:
+            return sum(int(cells[identity][slug][arm].get(key) or 0) for slug in slugs)
 
-        def _summed_fraction(arm: str, *, slugs: Sequence[str] = paired, pin: str = model) -> dict[str, Any]:
+        def _summed_fraction(
+            arm: str,
+            *,
+            slugs: Sequence[str] = paired,
+            identity: tuple[str, str, str] = model_key,
+        ) -> dict[str, Any]:
             numerator = denominator = 0
             for slug in slugs:
-                fractions = cells[pin][slug][arm].get("fractions")
+                fractions = cells[identity][slug][arm].get("fractions")
                 m_fraction = fractions.get("class_m_alignment") if isinstance(fractions, Mapping) else None
                 if isinstance(m_fraction, Mapping):
                     numerator += int(m_fraction.get("numerator") or 0)
@@ -1346,7 +1904,7 @@ def _harness_lift_section(
         tooled_mj = _summed(TOOLED_ARM, "model_judgment_score")
         bare_mj = _summed(BARE_ARM, "model_judgment_score")
         lines.append(
-            f"| {model} | {len(paired)} | {tooled_mj} | {bare_mj} | {tooled_mj - bare_mj} "
+            f"| {model_label} | {len(paired)} | {tooled_mj} | {bare_mj} | {tooled_mj - bare_mj} "
             f"| {_fraction_label(_summed_fraction(TOOLED_ARM))} | {_fraction_label(_summed_fraction(BARE_ARM))} |"
         )
     return lines
@@ -1358,8 +1916,8 @@ def _na(value: Any) -> str:
 
 def _aggregate_by_model_arm(
     artifacts: Sequence[Mapping[str, Any]],
-) -> dict[tuple[str, str], dict[str, Any]]:
-    totals: dict[tuple[str, str], dict[str, Any]] = defaultdict(
+) -> dict[tuple[tuple[str, str, str], str], dict[str, Any]]:
+    totals: dict[tuple[tuple[str, str, str], str], dict[str, Any]] = defaultdict(
         lambda: {
             "passages": 0,
             "model_judgment_score": 0,
@@ -1378,7 +1936,9 @@ def _aggregate_by_model_arm(
         }
     )
     for artifact in artifacts:
-        row = totals[(_model_pin(artifact), _artifact_arm(artifact))]
+        if _is_ops_quota_artifact(artifact):
+            continue
+        row = totals[(_model_key(artifact), _artifact_arm(artifact))]
         score = _score(artifact)
         row["passages"] += 1
         row["model_judgment_score"] += int(score.get("model_judgment_score") or 0)
@@ -1415,11 +1975,55 @@ def _score(artifact: Mapping[str, Any]) -> Mapping[str, Any]:
     return score if isinstance(score, Mapping) else {}
 
 
+def _model_key(artifact: Mapping[str, Any]) -> tuple[str, str, str]:
+    return (_model_pin(artifact), _artifact_transport(artifact), _artifact_entrypoint(artifact))
+
+
+def _model_label(artifact: Mapping[str, Any]) -> str:
+    pin, transport, entrypoint = _model_key(artifact)
+    return f"{pin} [{transport}/{entrypoint}]"
+
+
 def _model_pin(artifact: Mapping[str, Any]) -> str:
     model = artifact.get("model")
     if isinstance(model, Mapping):
         return str(model.get("pin") or model.get("pin_slug") or "unknown")
     return "unknown"
+
+
+def _artifact_transport(artifact: Mapping[str, Any]) -> str:
+    model = artifact.get("model")
+    if isinstance(model, Mapping):
+        transport = model.get("transport")
+        if isinstance(transport, str) and transport:
+            return transport
+    return OPENCODE_TRANSPORT
+
+
+def _artifact_entrypoint(artifact: Mapping[str, Any]) -> str:
+    model = artifact.get("model")
+    if isinstance(model, Mapping):
+        entrypoint = model.get("entrypoint")
+        if isinstance(entrypoint, str) and entrypoint:
+            return entrypoint
+    return OPENCODE_ENTRYPOINT
+
+
+def _artifact_measurement_tier(artifact: Mapping[str, Any]) -> str:
+    model = artifact.get("model")
+    if isinstance(model, Mapping):
+        tier = model.get("measurement_tier")
+        if isinstance(tier, str) and tier:
+            return tier
+    return OPENCODE_MEASUREMENT_TIER
+
+
+def _is_subscription_runtime_artifact(artifact: Mapping[str, Any]) -> bool:
+    return _artifact_measurement_tier(artifact) == SUBSCRIPTION_RUNTIME_BARE_TIER
+
+
+def _is_ops_quota_artifact(artifact: Mapping[str, Any]) -> bool:
+    return artifact.get("failure_class") == FAILURE_CLASS_OPS_QUOTA
 
 
 def _fixture_slug(artifact: Mapping[str, Any]) -> str:
@@ -1435,8 +2039,9 @@ def _artifact_arm(artifact: Mapping[str, Any]) -> str:
     return arm if isinstance(arm, str) and arm else TOOLED_ARM
 
 
-def _artifact_sort_key(artifact: Mapping[str, Any]) -> tuple[str, str, str]:
-    return (_model_pin(artifact), _fixture_slug(artifact), _artifact_arm(artifact))
+def _artifact_sort_key(artifact: Mapping[str, Any]) -> tuple[str, str, str, str, str]:
+    pin, transport, entrypoint = _model_key(artifact)
+    return (pin, transport, entrypoint, _fixture_slug(artifact), _artifact_arm(artifact))
 
 
 def _empty_grounding() -> dict[str, int]:
