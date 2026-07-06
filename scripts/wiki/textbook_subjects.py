@@ -393,6 +393,7 @@ AUTHOR_UK_BY_TRANSLIT: dict[str, str] = {
     "kovbasenko": "Ковбасенко",
     "merzlyak": "Мерзляк",
     "merzljak": "Мерзляк",
+    "barjakhtar": "Бар'яхтар",
     "grygorovych": "Григорович",
     "zadorozhnyj": "Задорожний",
     "zadorozhnij": "Задорожний",
