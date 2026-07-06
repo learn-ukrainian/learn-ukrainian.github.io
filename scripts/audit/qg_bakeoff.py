@@ -17,6 +17,7 @@ import os
 import re
 import shutil
 import sys
+import tempfile
 import time
 import unicodedata
 from collections import defaultdict
@@ -194,7 +195,13 @@ def _runtime_bridge_command(agent: str, model: str) -> tuple[str, ...]:
             "--hard-timeout",
             "1800",
             "--tool-config",
-            "use_bare=true,output_format=stream-json",
+            # use_bare=false is LOAD-BEARING: `claude --bare` skips the OAuth
+            # session entirely and requires ANTHROPIC_API_KEY — on the
+            # subscription machine it returns "Not logged in" (live-probed
+            # 2026-07-06, apiKeySource=none, error=authentication_failed).
+            # The subscription seat runs the standard -p path; the BARE part
+            # of the measurement is the prompt, not the CLI harness.
+            "use_bare=false,output_format=stream-json",
         )
     if agent == "codex":
         return (
@@ -266,7 +273,7 @@ _SUBSCRIPTION_BARE_IDENTITIES: dict[str, RouteIdentity] = {
         pricing_basis=_SUBSCRIPTION_PRICING_BASIS,
         resolved_model=CLAUDE_SUBSCRIPTION_BARE_MODEL_ID,
         runtime_agent="claude",
-        tool_config={"use_bare": True, "output_format": "stream-json"},
+        tool_config={"use_bare": False, "output_format": "stream-json"},
     ),
     "bare_runtime_gpt": RouteIdentity(
         transport="runtime-codex",
@@ -555,6 +562,27 @@ def invoke_bakeoff_route_bare(
     )
 
 
+_NEUTRAL_RUNTIME_CWD: Path | None = None
+
+
+def _neutral_runtime_cwd() -> Path:
+    """Out-of-repo cwd for subscription bare cells (standing-rules firewall).
+
+    Agent CLIs discover project standing rules by walking UP from cwd —
+    claude loads CLAUDE.md, codex loads AGENTS.md, gemini/agy loads GEMINI.md.
+    Running bare cells from PROJECT_ROOT silently injects those rules (VESUM
+    mandates, review protocols) into a measurement that promises a bare
+    prompt — exactly the framing the design v2 forbids. A per-process temp
+    dir outside the repo keeps the prompt bare. User-GLOBAL config
+    (~/.claude/CLAUDE.md etc.) may still load — that residue is part of what
+    measurement_tier=subscription_runtime_bare + the scorecard banner declare.
+    """
+    global _NEUTRAL_RUNTIME_CWD
+    if _NEUTRAL_RUNTIME_CWD is None or not _NEUTRAL_RUNTIME_CWD.exists():
+        _NEUTRAL_RUNTIME_CWD = Path(tempfile.mkdtemp(prefix="qg-bakeoff-bare-"))
+    return _NEUTRAL_RUNTIME_CWD
+
+
 def invoke_subscription_bare_route(
     route: llm_reviewer_dispatch.ReviewerRoute,
     prompt: str,
@@ -575,7 +603,7 @@ def invoke_subscription_bare_route(
             identity.runtime_agent or "",
             prompt,
             mode="read-only",
-            cwd=PROJECT_ROOT,
+            cwd=_neutral_runtime_cwd(),
             model=route.reviewer_model_id,
             task_id=task_id,
             session_id=None,
@@ -605,6 +633,10 @@ def invoke_subscription_bare_route(
             "cli_version": result.cli_version,
             "resolved_model": result.model,
             "returncode": result.returncode,
+            # Standing-rules firewall trail: bare cells run from an
+            # out-of-repo temp dir so project CLAUDE.md/AGENTS.md/GEMINI.md
+            # never reach the measured prompt.
+            "cwd_policy": "neutral-tmp",
         }
     )
     if result.rate_limited:
