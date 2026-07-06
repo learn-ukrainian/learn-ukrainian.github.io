@@ -1,6 +1,6 @@
 # Textbook Selection for RAG Database
 # Selected: 2026-02-26
-# Total: 42 books from pidruchnyk.com.ua + Google Drive
+# Total: 64 books (42 humanities + 22 wave-1 STEM, #4593) from pidruchnyk.com.ua + Google Drive
 # Strategy: 2 мова per grade, 1 literature (5-11), 1-2 history (5-11)
 #
 # PDF URL pattern: https://pidruchnyk.com.ua/uploads/book/{filename}.pdf
