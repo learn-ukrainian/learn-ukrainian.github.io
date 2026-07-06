@@ -1,9 +1,9 @@
 {
-  "assembled_mdx_sha256": "722eaae3f5ecdcc4a3a24690bb8c51c774a9528e70cf417f7f56ed3da9c797cc",
+  "assembled_mdx_sha256": "b64cb18d335245f1d98edb8ae3ed285830962bf066b6481bd1b9e3e6dab3a855",
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "8e75c1e1dc2833cec2f8b429d36f169e9fc1b4b9c5729e64716721a997bad4f4",
+    "digest": "740d26fb762ac32671d4188cad4684a190e3659a6d1f220e386b214f1c05973e",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/narodni-lehendy.yaml",
@@ -11,7 +11,7 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/narodni-lehendy/module.md",
-        "sha256": "102d0884c29a2e75e0e6502c63d629b96c9186e102e4c3b7c616506a602891bc"
+        "sha256": "dc98b7e0450542787baf48ab5fcbe84dc265381478e0fa0ecdbf2a58c24c355a"
       },
       {
         "path": "curriculum/l2-uk-en/folk/narodni-lehendy/activities.yaml",
@@ -23,15 +23,16 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/narodni-lehendy/resources.yaml",
-        "sha256": "268555c0e9f51668a45db46be826b58f0463780413cd63c6b4b606bbee8a53bb"
+        "sha256": "99f942a90faae40c14b36853b5bb74d872ff68fe35f26ca7f25d48a4b649edc9"
       }
     ]
   },
   "evidence": {
-    "independent_review": "Claude Opus 4.8 reviewed the batch, found one M22 fidelity blocker, and follow-up approved after the textbook-attested tale opening fix.",
-    "local_gates": "MDX generation drift, source parity, forward parity, direct hardened reading gate, diff check, and focused shippable gates passed except for a transient Wikimedia API rate-limit on pre-existing M22 resource references.",
-    "reading_remediation": "Batch 2 adds or converts learner-visible structured on-site PrimaryReading excerpts; external links are supplementary only.",
-    "source_hygiene": "Short verified or textbook-attested excerpts only; no full-text reconstruction and no invented readings."
+    "independent_review": "Claude Opus 4.8 bridge review on 2026-07-06 found no blockers for Batch C; minor M22 orthography and reading-slug findings were fixed before sidecar refresh.",
+    "module_specific": "M24 uses Wikisource \u00ab\u042f\u043a \u0432\u0438\u0439\u0448\u043b\u0438 \u043d\u0430 \u043d\u0435\u0431\u0456 \u0437\u043e\u0440\u0456 \"\u0432\u0456\u0437\"\u00bb PD-UA-exempt provenance and Kalynets \u00ab\u041a\u0456\u043d\u044c\u00bb from the 1921 public-domain edition.",
+    "reading_remediation": "Batch C replaces token-sized FOLK structured readings in M21-M24 with substantial learner-visible on-site shortened primary readings; external links remain supplementary.",
+    "rights_provenance": "Each PrimaryReading has dash-led source/provenance attribution and an explicit rights decision; Mykhailyk stays commentary because the longer witness is not as rights-clean for on-site excerpting.",
+    "source_hygiene": "Excerpts are verified against cited Wikisource/public sources, with no fabricated readings or unsupported source claims."
   },
   "floors": {
     "beauty": 8.5,
@@ -46,15 +47,15 @@
   "reviewer": {
     "agent": "claude",
     "family": "anthropic",
-    "model": "claude-opus-4.8"
+    "model": "claude-opus-4-8"
   },
   "schema_version": 1,
-  "scored_at": "2026-07-05T15:03:26Z",
+  "scored_at": "2026-07-06T04:42:19Z",
   "scores": {
     "beauty": 8.7,
-    "decolonization": 9.1,
-    "engagement": 8.7,
-    "naturalness": 8.7,
+    "decolonization": 9.5,
+    "engagement": 8.9,
+    "naturalness": 9.0,
     "pedagogical": 8.8,
     "tone": 8.8
   },
@@ -64,6 +65,6 @@
   "writer": {
     "agent": "codex",
     "family": "openai",
-    "model": "gpt-5"
+    "model": "gpt-5-codex"
   }
 }

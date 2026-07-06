@@ -1,9 +1,9 @@
 {
-  "assembled_mdx_sha256": "5c9872fd12d07548863cfec25c45ce8dbf98a1694902e5adda01a6d2816cc040",
+  "assembled_mdx_sha256": "54b8b1751cd2a8cd9735da7a0178bd6820e52c1aa96e80edca3a75eff0b8397b",
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "2cedc47c7ff5f88ce6b1be3d9b8abec2fcd7e388ccd137198e217f9c1c5e15a5",
+    "digest": "e40dfe2185eb3e4404468bc1fe31ac0527c15edda7d6c1e1d9323262e8479f4c",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/kazky-pro-tvaryn.yaml",
@@ -11,7 +11,7 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/kazky-pro-tvaryn/module.md",
-        "sha256": "25e7e8937c50649a81407095ca2eb861c0acccb1c91a5f61e22de2f6c46d50fa"
+        "sha256": "7d2ce0498913f17d99592dd1b9bfb8d5c9b553b11ab66ab20db97d0c727d5f47"
       },
       {
         "path": "curriculum/l2-uk-en/folk/kazky-pro-tvaryn/activities.yaml",
@@ -23,15 +23,16 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/kazky-pro-tvaryn/resources.yaml",
-        "sha256": "5d4d32dd7191a449da5b43be3545461989bbd07296f9fff20001d3b565f82c67"
+        "sha256": "8d821b63a9489094a890a0f901945c88f52623feda7330c8d4401710fd9f0cf0"
       }
     ]
   },
   "evidence": {
-    "independent_review": "Claude Opus 4.8 reviewed the batch, found one M22 fidelity blocker, and follow-up approved after the textbook-attested tale opening fix.",
-    "local_gates": "MDX generation drift, source parity, forward parity, direct hardened reading gate, diff check, and focused shippable gates passed except for a transient Wikimedia API rate-limit on pre-existing M22 resource references.",
-    "reading_remediation": "Batch 2 adds or converts learner-visible structured on-site PrimaryReading excerpts; external links are supplementary only.",
-    "source_hygiene": "Short verified or textbook-attested excerpts only; no full-text reconstruction and no invented readings."
+    "independent_review": "Claude Opus 4.8 bridge review on 2026-07-06 found no blockers for Batch C; minor M22 orthography and reading-slug findings were fixed before sidecar refresh.",
+    "module_specific": "M22 uses Franko \u00ab\u0424\u0430\u0440\u0431\u043e\u0432\u0430\u043d\u0438\u0439 \u041b\u0438\u0441\u00bb public-domain author text plus Wikisource \u00ab\u041a\u043e\u0433\u0443\u0442 \u043f\u0435\u0440\u0435\u0445\u0438\u0442\u0440\u0438\u0432 \u043b\u0438\u0441\u0430\u00bb PD-UA-exempt folklore excerpt with dialect preserved.",
+    "reading_remediation": "Batch C replaces token-sized FOLK structured readings in M21-M24 with substantial learner-visible on-site shortened primary readings; external links remain supplementary.",
+    "rights_provenance": "Each PrimaryReading has dash-led source/provenance attribution and an explicit rights decision; Mykhailyk stays commentary because the longer witness is not as rights-clean for on-site excerpting.",
+    "source_hygiene": "Excerpts are verified against cited Wikisource/public sources, with no fabricated readings or unsupported source claims."
   },
   "floors": {
     "beauty": 8.5,
@@ -46,17 +47,17 @@
   "reviewer": {
     "agent": "claude",
     "family": "anthropic",
-    "model": "claude-opus-4.8"
+    "model": "claude-opus-4-8"
   },
   "schema_version": 1,
-  "scored_at": "2026-07-05T15:03:25Z",
+  "scored_at": "2026-07-06T04:42:19Z",
   "scores": {
     "beauty": 8.7,
-    "decolonization": 9.2,
-    "engagement": 8.7,
-    "naturalness": 8.8,
+    "decolonization": 9.4,
+    "engagement": 8.9,
+    "naturalness": 9.1,
     "pedagogical": 8.8,
-    "tone": 8.8
+    "tone": 8.6
   },
   "slug": "kazky-pro-tvaryn",
   "track": "folk",
@@ -64,6 +65,6 @@
   "writer": {
     "agent": "codex",
     "family": "openai",
-    "model": "gpt-5"
+    "model": "gpt-5-codex"
   }
 }

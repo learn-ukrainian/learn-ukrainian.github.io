@@ -76,6 +76,34 @@ def test_folk_attributed_blockquote_archaism_is_exempt_from_vesum(
     assert "пір'єчку" not in looked_up
 
 
+def test_folk_structured_primary_reading_is_exempt_from_vesum(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    gate, seen = _gate(
+        """
+Перед читанням.
+
+:::primary-reading{reading="demo"}
+Параз бефель дань.
+
+— Народна творчість, Wikisource; суспільне надбання.
+:::
+
+Після читання.
+""",
+        level="folk",
+        missing_words={"параз", "бефель", "дань"},
+        monkeypatch=monkeypatch,
+    )
+
+    looked_up = {word for call in seen for word in call}
+    assert gate["passed"] is True
+    assert gate["missing"] == []
+    assert "параз" not in looked_up
+    assert "бефель" not in looked_up
+    assert "дань" not in looked_up
+
+
 def test_folk_same_archaism_in_prose_still_fails_vesum(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:

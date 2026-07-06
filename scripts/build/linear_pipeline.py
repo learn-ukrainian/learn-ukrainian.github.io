@@ -10281,7 +10281,7 @@ def _word_count(text: str) -> int:
 # rejects gemini-tools 1031/1200 (14% short).
 _WORD_COUNT_TOLERANCE_BELOW = 0.08
 _PRIMARY_READING_BLOCK_RE = re.compile(
-    r"(?:<!--\s*PRIMARY-READING\s*-->.*?<!--\s*/PRIMARY-READING\s*-->|^:::primary-reading\s*\n.*?\n:::\s*$)",
+    r"(?:<!--\s*PRIMARY-READING\s*-->.*?<!--\s*/PRIMARY-READING\s*-->|^:::primary-reading(?:\s*\{[^\n]*\})?\s*\n.*?\n:::\s*$)",
     re.IGNORECASE | re.DOTALL | re.MULTILINE,
 )
 
@@ -12297,6 +12297,7 @@ def _build_vesum_text(
             module_text,
             verified_primary_token_keys=verified_primary_token_keys,
         )
+        module_text = _strip_primary_reading_blocks(module_text)
     parts = [_strip_metalinguistic(module_text)]
     strip_activity_field: Callable[[str], str] | None = None
     if strip_verbatim_primaries:

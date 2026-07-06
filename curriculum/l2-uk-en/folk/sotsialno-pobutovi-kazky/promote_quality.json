@@ -1,9 +1,9 @@
 {
-  "assembled_mdx_sha256": "1c701284f9bc0ce3cd8f959393342934e7cc90b7f516d0e176727f729510e003",
+  "assembled_mdx_sha256": "d8a4f340fb69e59c6ad2e21177b7e4ec44aed01785bae63462b6732a8bde8c5e",
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "4c0d62fcd612d9901c68ab3fdd35af4bedee47c7b63e6587b029398b037203b6",
+    "digest": "1fd6694ebfe05d23b5dc7d67da6e21fa85eb2fa937ef4f17257730b231955e65",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/sotsialno-pobutovi-kazky.yaml",
@@ -11,7 +11,7 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/sotsialno-pobutovi-kazky/module.md",
-        "sha256": "61f482b6bbf753bdc04f7d789dbc7ca29362e54da5137f5443caa52568424172"
+        "sha256": "5262f22a3a029d003d63be07726c38a5bb7e831c62424f7f51cff8fe2d032e65"
       },
       {
         "path": "curriculum/l2-uk-en/folk/sotsialno-pobutovi-kazky/activities.yaml",
@@ -23,15 +23,16 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/sotsialno-pobutovi-kazky/resources.yaml",
-        "sha256": "4c9266962c9433e7e32d56cba73b92ed4a2d7540b904ab29ee8ce810174b8dfe"
+        "sha256": "1e907c91ca18dd4a523f1c99cf43ffc86c9a3bdbdf8e818e27604136ca4cdfe0"
       }
     ]
   },
   "evidence": {
-    "independent_review": "Claude Opus 4.8 reviewed the batch, found one M22 fidelity blocker, and follow-up approved after the textbook-attested tale opening fix.",
-    "local_gates": "MDX generation drift, source parity, forward parity, direct hardened reading gate, diff check, and focused shippable gates passed except for a transient Wikimedia API rate-limit on pre-existing M22 resource references.",
-    "reading_remediation": "Batch 2 adds or converts learner-visible structured on-site PrimaryReading excerpts; external links are supplementary only.",
-    "source_hygiene": "Short verified or textbook-attested excerpts only; no full-text reconstruction and no invented readings."
+    "independent_review": "Claude Opus 4.8 bridge review on 2026-07-06 found no blockers for Batch C; minor M22 orthography and reading-slug findings were fixed before sidecar refresh.",
+    "module_specific": "M23 expands four Wikisource \u00ab\u041c\u0443\u0434\u0440\u0430 \u0434\u0456\u0432\u0447\u0438\u043d\u0430\u00bb CC BY-SA page excerpts, kept shortened and on-site without claiming corpus completeness.",
+    "reading_remediation": "Batch C replaces token-sized FOLK structured readings in M21-M24 with substantial learner-visible on-site shortened primary readings; external links remain supplementary.",
+    "rights_provenance": "Each PrimaryReading has dash-led source/provenance attribution and an explicit rights decision; Mykhailyk stays commentary because the longer witness is not as rights-clean for on-site excerpting.",
+    "source_hygiene": "Excerpts are verified against cited Wikisource/public sources, with no fabricated readings or unsupported source claims."
   },
   "floors": {
     "beauty": 8.5,
@@ -46,16 +47,16 @@
   "reviewer": {
     "agent": "claude",
     "family": "anthropic",
-    "model": "claude-opus-4.8"
+    "model": "claude-opus-4-8"
   },
   "schema_version": 1,
-  "scored_at": "2026-07-05T15:03:26Z",
+  "scored_at": "2026-07-06T04:42:19Z",
   "scores": {
-    "beauty": 8.7,
+    "beauty": 8.6,
     "decolonization": 9.2,
-    "engagement": 8.7,
-    "naturalness": 8.7,
-    "pedagogical": 8.8,
+    "engagement": 8.8,
+    "naturalness": 9.0,
+    "pedagogical": 8.9,
     "tone": 8.7
   },
   "slug": "sotsialno-pobutovi-kazky",
@@ -64,6 +65,6 @@
   "writer": {
     "agent": "codex",
     "family": "openai",
-    "model": "gpt-5"
+    "model": "gpt-5-codex"
   }
 }
