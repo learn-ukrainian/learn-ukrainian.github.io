@@ -1,4 +1,15 @@
 ---
+readings:
+- source_name: "Іван Багряний (Енциклопедія Сучасної України)"
+  source_url: "https://esu.com.ua/article-3121"
+  language: "uk"
+  hosting: "link-only"
+  rights_note: "Copyrighted, educational use"
+- source_name: "Іван Багряний (Вікіпедія)"
+  source_url: "https://uk.wikipedia.org/wiki/Іван_Багряний"
+  language: "uk"
+  hosting: "link-only"
+  rights_note: "CC BY-SA 4.0"
 activity_hints:
 - after_section: 'Розминка'
   focus: Перевірка фактів про ім'я Лозов'яга, псевдонім Багряний і дату народження за двома календарями
@@ -190,7 +201,7 @@ sequence: 223
 slug: ivan-bahrianyi
 subtitle: The Soviet Camp Survivor Who Refused Repatriation
 title: 'Іван Багряний: Табір, втеча і право не повертатися'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: вигадане або вибране ім'я, під яким автор друкує твори
   pos: ч.

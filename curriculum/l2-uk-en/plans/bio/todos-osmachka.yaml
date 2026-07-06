@@ -1,4 +1,14 @@
 ---
+readings:
+- source_name: "Тодось Осьмачка (Вікіпедія)"
+  source_url: "https://uk.wikipedia.org/wiki/Тодось_Осьмачка"
+  language: "uk"
+  hosting: "link-only"
+  rights_note: "CC BY-SA 4.0"
+- source_name: "Осьмачка Тодось: Життя і творчість"
+  language: "uk"
+  hosting: "reading-needed"
+  rights_note: "Need rights-clear primary text or scholarly article"
 activity_hints:
 - after_section: 'Розминка'
   focus: Перевірка фактів про ім'я Теодосій Осьмачка, село Куцівка, КІНО та МАРС
@@ -189,7 +199,7 @@ sequence: 224
 slug: todos-osmachka
 subtitle: The Poet Who Survived Punitive Psychiatry
 title: 'Тодось Осьмачка: Поезія проти каральної психіатрії'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: використання психіатричних установ і діагнозів як інструменту політичного переслідування
   pos: ж.
