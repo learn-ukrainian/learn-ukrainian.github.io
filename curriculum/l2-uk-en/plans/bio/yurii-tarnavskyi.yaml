@@ -141,7 +141,7 @@ sequence: 239
 slug: yurii-tarnavskyi
 subtitle: The Architect of Ukraine's Depoeticised Verse in Exile
 title: 'Юрій Тарнавський: Депоетизований вірш Нью-Йоркської групи'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: вільний вірш без сталого розміру та рими; основна форма поетики Тарнавського
   pos: ч.
@@ -169,3 +169,22 @@ vocabulary_hints:
   pos: ж.
   word: діаспора
 word_target: 5200
+readings:
+- hosting: suspilne.media
+  language: uk
+  note: Оглядова стаття та некролог про Юрія Тарнавського від суспільного мовника.
+  role: biography
+  source: https://suspilne.media/1141186-pomer-pismennik-urij-tarnavskij/
+  title: Помер письменник Юрій Тарнавський
+- hosting: ukrlit.net
+  language: uk
+  note: Лекційний матеріал та огляд поезії Нью-Йоркської групи.
+  role: analysis
+  source: https://ukrlit.net/info/outside/15.html
+  title: Поезія української діаспори (Тарнавський)
+- hosting: reading-needed
+  language: uk
+  note: Програмна збірка-маніфест "депоетизованого" вірша.
+  role: primary
+  source: 'reading-needed: Юрій Тарнавський "Поезії про ніщо і інші поезії на цю саму тему"'
+  title: Поезії про ніщо і інші поезії на цю саму тему

@@ -166,7 +166,7 @@ sequence: 237
 slug: mykhailo-orest
 subtitle: Поет і архівіст розстріляного неокласицизму
 title: 'Михайло Орест: Держава слова після терору'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: мистецька течія, що спирається на класичну форму, дисципліну і європейську культурну пам'ять
   pos: ч.
@@ -190,3 +190,22 @@ vocabulary_hints:
   pos: с.
   word: перепоховання
 word_target: 5200
+readings:
+- hosting: esu.com.ua
+  language: uk
+  note: Оглядова стаття про життя та творчість Михайла Ореста.
+  role: biography
+  source: https://esu.com.ua/article-75699
+  title: Орест Михайло
+- hosting: tyktor.media
+  language: uk
+  note: Аналітична стаття про роль Ореста як самостійного поета та збереження спадщини брата.
+  role: analysis
+  source: https://tyktor.media/ktytor/mykhajlo-orest/
+  title: Михайло Орест. Недооцінений талант у тіні брата Миколи Зерова
+- hosting: diasporiana.org.ua
+  language: uk
+  note: Поетична збірка для ознайомлення з його неокласичною поетикою.
+  role: primary
+  source: https://diasporiana.org.ua/poeziya/19619-orest-m-derzhava-slova/
+  title: Держава слова

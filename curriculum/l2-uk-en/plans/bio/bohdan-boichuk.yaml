@@ -142,7 +142,7 @@ sequence: 238
 slug: bohdan-boichuk
 subtitle: The Émigré Modernist Who Co-Founded the New York Group
 title: 'Богдан Бойчук: Творче заперечення Нью-Йоркської групи'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: вимушене або добровільне переселення за межі батьківщини; середовище українців,
     що жили й творили поза УРСР
@@ -171,3 +171,22 @@ vocabulary_hints:
   pos: ж.
   word: деколонізація
 word_target: 5200
+readings:
+- hosting: esu.com.ua
+  language: uk
+  note: Енциклопедична довідка про життєвий шлях і творчість поета-модерніста.
+  role: biography
+  source: https://esu.com.ua/search_articles.php?id=36186
+  title: Бойчук Богдан Миколайович
+- hosting: chytomo.com
+  language: uk
+  note: Оглядовий матеріал (некролог) про значення Бойчука для Нью-Йоркської групи.
+  role: overview
+  source: https://chytomo.com/bohdan-bojchuk-2/
+  title: Богдан Бойчук. Один із чільних поетів Нью-Йоркської групи
+- hosting: reading-needed
+  language: uk
+  note: Дебютна збірка Бойчука для вивчення його поетики болю та екзистенціалізму.
+  role: primary
+  source: 'reading-needed: Богдан Бойчук "Час болю"'
+  title: Час болю
