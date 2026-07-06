@@ -123,6 +123,17 @@ persona:
     прасування й без діаспорного суду без доказів.
   voice: Intellectual Historian
 phase: BIO
+readings:
+- hosting: link-only
+  language: uk
+  rights_note: "Educational use / Public access"
+  source_name: "Петров Віктор Платонович (Енциклопедія історії України)"
+  source_url: "http://history.org.ua/?termin=Petrov_V_P"
+- hosting: link-only
+  language: uk
+  rights_note: "Educational use / Public access"
+  source_name: "Петров, Віктор Платонович (Велика українська енциклопедія)"
+  source_url: "https://vue.gov.ua/Петров,_Віктор_Платонович"
 references:
 - note: Англомовна енциклопедична стаття; еміграція 1944, МУН, зникнення 1949.
   path: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CP%5CE%5CPetrovViktor.htm
@@ -149,7 +160,7 @@ sequence: 233
 slug: viktor-domontovych
 subtitle: The Intellectual Novelist and the Open Dossier
 title: 'Віктор Домонтович: інтелектуальний роман і спірне повернення'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: прозовий жанр, що поєднує художній виклад із дослідженням реальної постаті
   pos: ж.

@@ -1,4 +1,14 @@
 ---
+readings:
+- source_name: "Королів Василь Костянтинович (Вікіпедія)"
+  source_url: "https://uk.wikipedia.org/wiki/Королів_Василь_Костянтинович"
+  language: "uk"
+  hosting: "link-only"
+  rights_note: "CC BY-SA 4.0"
+- source_name: "Василь Королів-Старий: Біографія"
+  language: "uk"
+  hosting: "reading-needed"
+  rights_note: "Need rights-clear primary text or scholarly article"
 activity_hints:
 - after_section: 'Розминка'
   focus: Перевірка фактів про ім'я Короліва-Старого, дату й місце народження та розбіжність джерел
@@ -179,7 +189,7 @@ sequence: 225
 slug: vasyl-koroliv-staryi
 subtitle: The Fairy-Tale Writer Erased as a Central Rada Founder
 title: 'Василь Королів-Старий: Казка, УНР і празьке вигнання'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: український революційний парламент, заснований 1917 року
   pos: ж.

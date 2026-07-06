@@ -133,6 +133,17 @@ persona:
     спрощень і без замовчування складних воєнних обставин.
   voice: Intellectual Historian
 phase: BIO
+readings:
+- hosting: link-only
+  language: uk
+  rights_note: "Educational use / Public access"
+  source_name: "Костецький Ігор (Енциклопедія Сучасної України)"
+  source_url: "https://esu.com.ua/article-4000"
+- hosting: link-only
+  language: uk
+  rights_note: "Educational use / Public access"
+  source_name: "Костецький, Ігор (Велика українська енциклопедія)"
+  source_url: "https://vue.gov.ua/Костецький,_Ігор"
 references:
 - note: Основна англомовна енциклопедична стаття про життя, МУР і видавничу працю.
   path: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CK%5CO%5CKostetskyIhor.htm
@@ -159,7 +170,7 @@ sequence: 234
 slug: ihor-kostetskyi
 subtitle: Український модерніст, який обрав Україну у вигнанні
 title: 'Ігор Костецький: Модернізм, МУР і вибір українства'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: свідомий вибір належності до певної спільноти, культури або традиції
   pos: ж.

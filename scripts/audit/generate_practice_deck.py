@@ -39,6 +39,7 @@ DEFAULT_ATLAS_DB = Path("data/atlas.db")
 DEFAULT_OUT_DIR = Path("site/public/lexicon")
 DEFAULT_ALLOWLIST = Path("site/src/data/lexicon-practice-reviewed-sources.json")
 DEFAULT_CLOZE_SOURCES = Path("site/src/data/lexicon-practice-cloze-sources.json")
+DEFAULT_HERITAGE_PAIRS = Path("data/lexicon/heritage_pairs.yaml")
 DEFAULT_SYNONYM_VERDICTS = Path("data/lexicon/synonym_pair_verdicts.yaml")
 # Keep the default above the current all-eligible deck size. A lower default
 # silently contracts the committed practice surface during routine cloze regen.
@@ -88,6 +89,13 @@ NO_PAIR_PROBABILITY = {
     "C1": 0.45,
     "C2": 0.45,
 }
+HERITAGE_KINDS = frozenset({"lexical", "sense_restricted"})
+HERITAGE_DEFAULT_AVAILABILITY = "B1"
+HERITAGE_OPTION_LEAK_PATTERN = re.compile(
+    r"(?:⚠|кальк|calque|русизм|russianism|суржик|рос\.)",
+    re.IGNORECASE,
+)
+HERITAGE_PUBLIC_OPTION_KEYS = frozenset({"label"})
 
 CASE_LABELS_UA = {
     "nominative": "називний",
@@ -1579,6 +1587,202 @@ def _build_synonym_items(
     return items
 
 
+def _clean_text_list(value: Any) -> list[str]:
+    if not isinstance(value, list):
+        return []
+    return [text for item in value if (text := _clean_text(item))]
+
+
+def _heritage_availability_level(pair: dict[str, Any]) -> str:
+    return _normalize_cefr(pair.get("cefrAvailability")) or HERITAGE_DEFAULT_AVAILABILITY
+
+
+def _heritage_frame_errors(frame: Any, kind: str) -> list[str]:
+    errors: list[str] = []
+    if not isinstance(frame, dict):
+        return ["heritage_pair frame must be an object"]
+    sentence = _clean_text(frame.get("sentence_with_slot"))
+    if not sentence:
+        errors.append("heritage_pair frame missing sentence_with_slot")
+    elif sentence.count("___") != 1:
+        errors.append("heritage_pair frame sentence_with_slot must contain exactly one ___ slot")
+    for field in ("answer_form", "calque_form", "origin"):
+        if not _clean_text(frame.get(field)):
+            errors.append(f"heritage_pair frame missing {field}")
+    if kind == "sense_restricted" and frame.get("disambiguated") is not True:
+        errors.append("sense_restricted heritage_pair frames require disambiguated: true")
+    return errors
+
+
+def _valid_heritage_frames(pair: dict[str, Any]) -> list[dict[str, Any]]:
+    kind = _clean_text(pair.get("kind")) or ""
+    frames = pair.get("frames")
+    if not isinstance(frames, list):
+        return []
+    return [
+        frame
+        for frame in frames
+        if isinstance(frame, dict) and not _heritage_frame_errors(frame, kind)
+    ]
+
+
+def _heritage_pair_native_lexeme(
+    pair: dict[str, Any],
+    lexemes_by_id: dict[str, dict[str, Any]],
+) -> dict[str, Any] | None:
+    native_slug = _clean_text(pair.get("nativeSlug"))
+    if native_slug and native_slug in lexemes_by_id:
+        return lexemes_by_id[native_slug]
+    return None
+
+
+def _heritage_option(
+    label: str,
+    kind: str,
+    lemma_id: str | None = None,
+    pos: str | None = None,
+) -> dict[str, str]:
+    option = {"label": label, "kind": kind}
+    if lemma_id:
+        option["lemmaId"] = lemma_id
+    if pos:
+        option["pos"] = pos
+    return option
+
+
+def _valid_heritage_distractors(
+    answer: dict[str, Any],
+    frame: dict[str, Any],
+    pair: dict[str, Any],
+    lexemes: list[dict[str, Any]],
+    level: str,
+) -> list[dict[str, Any]]:
+    answer_form = _clean_text(frame.get("answer_form")) or answer["lemma"]
+    calque_form = _clean_text(frame.get("calque_form")) or ""
+    blocked = {
+        _plain(answer["lemma"]),
+        _plain(answer_form),
+        _plain(calque_form),
+        _plain(_clean_text(pair.get("calqueLabel")) or ""),
+        *{_plain(value) for value in _clean_text_list(pair.get("corrections"))},
+        *{_plain(value) for value in _clean_text_list(pair.get("calqueSurfaces"))},
+    }
+    candidates = []
+    base_labels = [answer_form, calque_form]
+    for lexeme in lexemes:
+        if lexeme["lemmaId"] == answer["lemmaId"]:
+            continue
+        if lexeme.get("pos") != answer.get("pos"):
+            continue
+        if CEFR_RANK[lexeme["cefr"]] > CEFR_RANK[level]:
+            continue
+        label = lexeme["lemma"]
+        if _plain(label) in blocked:
+            continue
+        labels = [*base_labels, label]
+        if max(len(item) for item in labels) - min(len(item) for item in labels) > 12:
+            continue
+        candidates.append(lexeme)
+    answer_len = len(answer_form)
+    return sorted(
+        candidates,
+        key=lambda item: (
+            abs(len(item["lemma"]) - answer_len),
+            item["cefr"] != answer["cefr"],
+            item["lemmaId"],
+        ),
+    )
+
+
+def _shuffle_heritage_options(heritage_id: str, options: list[dict[str, str]]) -> list[dict[str, str]]:
+    return sorted(
+        options,
+        key=lambda option: hashlib.sha1(
+            "\x1f".join(
+                (
+                    heritage_id,
+                    option.get("kind", ""),
+                    option.get("label", ""),
+                    option.get("lemmaId", ""),
+                )
+            ).encode("utf-8")
+        ).hexdigest(),
+    )
+
+
+def _strip_heritage_option_metadata(item: dict[str, Any]) -> dict[str, Any]:
+    stripped = {**item}
+    stripped["options"] = [
+        {"label": str(option.get("label") or "")}
+        for option in item.get("options", [])
+        if isinstance(option, dict)
+    ]
+    return stripped
+
+
+def _build_heritage_items(
+    pair: dict[str, Any],
+    lexeme: dict[str, Any],
+    all_lexemes: list[dict[str, Any]],
+    deck_version: str,
+    *,
+    public_options: bool = True,
+) -> list[dict[str, Any]]:
+    frames = _valid_heritage_frames(pair)
+    if not frames:
+        return []
+    level = _heritage_availability_level(pair)
+    items: list[dict[str, Any]] = []
+    for index, frame in enumerate(frames, start=1):
+        answer_form = _clean_text(frame.get("answer_form"))
+        calque_form = _clean_text(frame.get("calque_form"))
+        sentence = _clean_text(frame.get("sentence_with_slot"))
+        origin = _clean_text(frame.get("origin"))
+        rationale = _clean_text(pair.get("rationale")) or ""
+        citations = _clean_text_list(pair.get("citations"))
+        if not all((answer_form, calque_form, sentence, origin, rationale, citations)):
+            continue
+        distractors = _valid_heritage_distractors(lexeme, frame, pair, all_lexemes, level)
+        if len(distractors) < 2:
+            continue
+        key = "\x1f".join((deck_version, lexeme["lemmaId"], sentence, answer_form, calque_form, origin))
+        heritage_id = "her_" + hashlib.sha1(key.encode("utf-8")).hexdigest()[:12]
+        options = [
+            _heritage_option(answer_form, "answer", lexeme["lemmaId"], lexeme.get("pos")),
+            _heritage_option(calque_form, "calque"),
+            *[
+                _heritage_option(distractor["lemma"], "distractor", distractor["lemmaId"], distractor.get("pos"))
+                for distractor in distractors[:2]
+            ],
+        ]
+        item: dict[str, Any] = {
+            "heritageId": heritage_id,
+            "lemmaId": lexeme["lemmaId"],
+            # §9.5: SRS identity is the native lemma, not each sentence frame.
+            "srsKey": f"{lexeme['lemmaId']}::heritage",
+            "lemma": lexeme["lemma"],
+            "nativeLemma": _clean_text(pair.get("nativeLemma")) or lexeme["lemma"],
+            "calqueLabel": _clean_text(pair.get("calqueLabel")) or calque_form,
+            "kind": _clean_text(pair.get("kind")) or "lexical",
+            "prompt": sentence,
+            "answer": answer_form,
+            "calque": calque_form,
+            "origin": origin,
+            "frameIndex": index,
+            "cefr": level,
+            "options": _shuffle_heritage_options(heritage_id, options),
+            "rationale": rationale,
+            "citations": citations,
+            "corrections": _clean_text_list(pair.get("corrections")),
+            "sourceFamily": _clean_text(pair.get("sourceFamily")) or "",
+        }
+        if item["kind"] == "sense_restricted":
+            item["calqueSense"] = _clean_text(pair.get("calqueSense")) or ""
+            item["authenticSense"] = _clean_text(pair.get("authenticSense")) or ""
+        items.append(_strip_heritage_option_metadata(item) if public_options else item)
+    return items
+
+
 def validate_classify_item(item: dict[str, Any]) -> list[str]:
     errors: list[str] = []
     sets = item.get("sets")
@@ -1649,6 +1853,69 @@ def validate_synonym_item(item: dict[str, Any]) -> list[str]:
     return errors
 
 
+def validate_heritage_item(item: dict[str, Any], *, internal_options: bool = False) -> list[str]:
+    errors: list[str] = []
+    for field in ("heritageId", "lemmaId", "srsKey", "prompt", "answer", "calque", "rationale"):
+        if not _clean_text(item.get(field)):
+            errors.append(f"heritage item missing {field}")
+    prompt = _clean_text(item.get("prompt"))
+    if prompt and prompt.count("___") != 1:
+        errors.append("heritage prompt must contain exactly one ___ slot")
+    citations = item.get("citations")
+    if not _clean_text_list(citations):
+        errors.append("heritage citations must be a nonempty list")
+    options = item.get("options")
+    if not isinstance(options, list) or len(options) != 4:
+        return [*errors, "heritage option set must contain exactly four options"]
+    option_objects = [option for option in options if isinstance(option, dict)]
+    if len(option_objects) != len(options):
+        errors.append("heritage options must be objects")
+    labels = [str(option.get("label") or "") for option in option_objects]
+    if any(HERITAGE_OPTION_LEAK_PATTERN.search(label) for label in labels):
+        errors.append("heritage options must not visually mark the calque pre-answer")
+    if not internal_options:
+        for option in option_objects:
+            leaked_keys = sorted(set(option) - HERITAGE_PUBLIC_OPTION_KEYS)
+            if leaked_keys:
+                errors.append(
+                    "heritage options must expose only label; "
+                    f"remove leaked option keys {leaked_keys}"
+                )
+                break
+    normalized = [_plain(label) for label in labels]
+    if len(set(normalized)) != len(normalized):
+        errors.append("heritage options must be unique after normalization")
+    answer = _plain(str(item.get("answer") or ""))
+    calque = _plain(str(item.get("calque") or ""))
+    if normalized.count(answer) != 1:
+        errors.append("heritage answer must be present exactly once")
+    if normalized.count(calque) != 1:
+        errors.append("heritage calque must be present exactly once")
+    lengths = [len(label) for label in labels]
+    if lengths and max(lengths) - min(lengths) > 12:
+        errors.append("heritage option label lengths exceed bounded distribution")
+    if internal_options:
+        kinds = Counter(str(option.get("kind") or "") for option in option_objects)
+        if kinds.get("answer") != 1:
+            errors.append("heritage options must contain exactly one answer")
+        if kinds.get("calque") != 1:
+            errors.append("heritage options must contain exactly one calque")
+        if kinds.get("distractor") != 2:
+            errors.append("heritage options must contain exactly two distractors")
+        pos_values = {
+            str(option.get("pos") or "")
+            for option in option_objects
+            if option.get("kind") != "calque" and option.get("pos")
+        }
+        if len(pos_values) > 1:
+            errors.append("heritage distractors must stay within one POS bucket")
+        for option in option_objects:
+            if option.get("kind") not in {"answer", "calque", "distractor"}:
+                errors.append("heritage option kind is not recognized")
+                break
+    return errors
+
+
 def validate_paradigm_item(item: dict[str, Any]) -> list[str]:
     errors: list[str] = []
     options = item.get("options")
@@ -1670,14 +1937,33 @@ def validate_heritage_pair(pair: dict[str, Any]) -> list[str]:
         errors.append("heritage_pair missing nativeSlug")
     if not _clean_text(pair.get("calqueLabel")):
         errors.append("heritage_pair missing calqueLabel")
-    corrections = pair.get("corrections")
-    if not isinstance(corrections, list) or not corrections:
+    if not _clean_text_list(pair.get("corrections")):
         errors.append("heritage_pair corrections must be a nonempty list")
-    citations = pair.get("citations")
-    if not isinstance(citations, list) or not citations:
+    if not _clean_text_list(pair.get("citations")):
         errors.append("heritage_pair citations must be a nonempty list")
     if not _clean_text(pair.get("sourceFamily")):
         errors.append("heritage_pair missing sourceFamily")
+    if not _clean_text(pair.get("rationale")):
+        errors.append("heritage_pair missing rationale")
+    kind = _clean_text(pair.get("kind"))
+    if kind not in HERITAGE_KINDS:
+        errors.append("heritage_pair kind must be lexical or sense_restricted")
+    if kind == "sense_restricted":
+        if not _clean_text(pair.get("calqueSense")):
+            errors.append("sense_restricted heritage_pair missing calqueSense")
+        if not _clean_text(pair.get("authenticSense")):
+            errors.append("sense_restricted heritage_pair missing authenticSense")
+    availability = _clean_text(pair.get("cefrAvailability"))
+    if availability and _normalize_cefr(availability) not in {"A2", "B1"}:
+        errors.append("heritage_pair cefrAvailability must be a2 or b1")
+    frames = pair.get("frames")
+    if frames is None:
+        return errors
+    if not isinstance(frames, list):
+        errors.append("heritage_pair frames must be a list")
+        return errors
+    for index, frame in enumerate(frames):
+        errors.extend(f"heritage_pair frames[{index}]: {error}" for error in _heritage_frame_errors(frame, kind or ""))
     return errors
 
 
@@ -1704,6 +1990,9 @@ def validate_mode_items(mode: str, items: list[dict[str, Any]]) -> list[str]:
     elif mode == "synonym":
         for index, item in enumerate(items):
             errors.extend(f"synonym[{index}]: {error}" for error in validate_synonym_item(item))
+    elif mode == "heritage":
+        for index, item in enumerate(items):
+            errors.extend(f"heritage[{index}]: {error}" for error in validate_heritage_item(item))
     elif mode == "paradigm":
         for index, item in enumerate(items):
             errors.extend(f"paradigm[{index}]: {error}" for error in validate_paradigm_item(item))
@@ -1744,6 +2033,7 @@ def build_practice_shards(
     verifier: VesumVerifier,
     cloze_sources: list[dict[str, Any]] | None = None,
     config: BuildConfig | None = None,
+    heritage_pairs: list[dict[str, Any]] | None = None,
     synonym_verdicts: dict[str, Any] | None = None,
 ) -> dict[str, dict[str, dict[str, Any]]]:
     if isinstance(cloze_sources, BuildConfig) and config is None:
@@ -1804,6 +2094,7 @@ def build_practice_shards(
             lexemes_by_entry.append((entry, lexeme))
 
     all_lexemes = [lexeme for _, lexeme in lexemes_by_entry]
+    lexemes_by_id = {lexeme["lemmaId"]: lexeme for lexeme in all_lexemes}
     by_plain_lemma: dict[str, dict[str, Any]] = {}
     for lexeme in all_lexemes:
         by_plain_lemma.setdefault(_plain(lexeme["lemma"]), lexeme)
@@ -1823,7 +2114,10 @@ def build_practice_shards(
         level: {mode: [] for mode in DRILL_MODES}
         for level in CEFR_ORDER
     }
-    mode_lemma_ids: dict[str, set[str]] = {mode: set() for mode in DRILL_MODES}
+    mode_lemma_ids: dict[str, dict[str, set[str]]] = {
+        level: {mode: set() for mode in DRILL_MODES}
+        for level in CEFR_ORDER
+    }
     for _entry, lexeme in lexemes_by_entry:
         if is_surface_admitted(_entry, SURFACE_CLOZE):
             source_rows = [
@@ -1850,17 +2144,17 @@ def build_practice_shards(
                     **stress,
                 }
             )
-            mode_lemma_ids["stress"].add(lexeme["lemmaId"])
+            mode_lemma_ids[lexeme["cefr"]]["stress"].add(lexeme["lemmaId"])
 
         classify_items = _build_classify_items(_entry, lexeme)
         mode_by_level[lexeme["cefr"]]["classify"].extend(classify_items)
         if classify_items:
-            mode_lemma_ids["classify"].add(lexeme["lemmaId"])
+            mode_lemma_ids[lexeme["cefr"]]["classify"].add(lexeme["lemmaId"])
 
         paradigm_items = _build_paradigm_items(lexeme)
         mode_by_level[lexeme["cefr"]]["paradigm"].extend(paradigm_items)
         if paradigm_items:
-            mode_lemma_ids["paradigm"].add(lexeme["lemmaId"])
+            mode_lemma_ids[lexeme["cefr"]]["paradigm"].add(lexeme["lemmaId"])
 
         synonym_items = _build_synonym_items(
             _entry,
@@ -1876,7 +2170,66 @@ def build_practice_shards(
         for item in synonym_items:
             level = str(item.pop("level"))
             mode_by_level[level]["synonym"].append(item)
-            mode_lemma_ids["synonym"].add(lexeme["lemmaId"])
+            mode_lemma_ids[level]["synonym"].add(lexeme["lemmaId"])
+
+    heritage_frame_debt = 0
+    for index, pair in enumerate(heritage_pairs or []):
+        pair_errors = validate_heritage_pair(pair)
+        if pair_errors:
+            print(
+                f"WARN: heritage_pair[{index}] dropped: {'; '.join(pair_errors)}",
+                file=sys.stderr,
+            )
+            continue
+        frames = _valid_heritage_frames(pair)
+        if not frames:
+            heritage_frame_debt += 1
+            continue
+        native_lexeme = _heritage_pair_native_lexeme(pair, lexemes_by_id)
+        if not native_lexeme:
+            native_slug = _clean_text(pair.get("nativeSlug")) or "<missing>"
+            print(
+                f"WARN: heritage_pair[{index}] nativeSlug {native_slug!r} not in practice lexemes; "
+                "emitted 0 items",
+                file=sys.stderr,
+            )
+            continue
+        for item in _build_heritage_items(
+            pair,
+            native_lexeme,
+            all_lexemes,
+            deck_version,
+            public_options=False,
+        ):
+            level = str(item.get("cefr") or "")
+            if level not in mode_by_level:
+                print(
+                    f"WARN: heritage_pair[{index}] unavailable CEFR level {level!r}; emitted 0 items",
+                    file=sys.stderr,
+                )
+                continue
+            item_errors = validate_heritage_item(item, internal_options=True)
+            if item_errors:
+                print(
+                    f"WARN: heritage_pair[{index}] item dropped: {'; '.join(item_errors)}",
+                    file=sys.stderr,
+                )
+                continue
+            public_item = _strip_heritage_option_metadata(item)
+            public_errors = validate_heritage_item(public_item)
+            if public_errors:
+                print(
+                    f"WARN: heritage_pair[{index}] item dropped: {'; '.join(public_errors)}",
+                    file=sys.stderr,
+                )
+                continue
+            mode_by_level[level]["heritage"].append(public_item)
+            mode_lemma_ids[level]["heritage"].add(native_lexeme["lemmaId"])
+    if heritage_frame_debt:
+        print(
+            f"heritage frame coverage: {heritage_frame_debt} records without frames — emitted 0 items for them",
+            file=sys.stderr,
+        )
 
     global_awaiting = set()
     for level in CEFR_ORDER:
@@ -1889,7 +2242,7 @@ def build_practice_shards(
         if not level_lexemes:
             continue
         level_cloze = cloze_by_level[level]
-        for mode in ("classify", "paradigm", "synonym"):
+        for mode in ("classify", "paradigm", "synonym", "heritage"):
             _validate_mode_or_raise(level, mode, mode_by_level[level][mode])
         option_set_errors = validate_option_sets(level_cloze)
         if option_set_errors:
@@ -1909,7 +2262,7 @@ def build_practice_shards(
             if cloze_ids:
                 modes.append("cloze")
             for drill_mode in DRILL_MODES:
-                if lexeme["lemmaId"] in mode_lemma_ids[drill_mode]:
+                if lexeme["lemmaId"] in mode_lemma_ids[level][drill_mode]:
                     modes.append(drill_mode)
             index_items.append(
                 {
@@ -2049,6 +2402,22 @@ def read_cloze_sources(path: Path | None) -> list[dict[str, Any]]:
     return rows
 
 
+def read_heritage_pairs(path: Path | None) -> list[dict[str, Any]]:
+    if path is None or not path.exists():
+        print("WARN: no curated heritage pairs found; emitting empty heritage deck", file=sys.stderr)
+        return []
+    import yaml
+
+    payload = yaml.safe_load(path.read_text(encoding="utf-8")) or []
+    pairs = payload.get("pairs") if isinstance(payload, dict) else payload
+    if not isinstance(pairs, list):
+        raise ValueError("heritage pairs must be a list or an object with pairs list")
+    rows = [row for row in pairs if isinstance(row, dict)]
+    if not rows:
+        print("WARN: curated heritage pairs empty; emitting empty heritage deck", file=sys.stderr)
+    return rows
+
+
 def read_synonym_verdicts(path: Path | None) -> dict[str, Any] | None:
     if path is None or not path.exists():
         print("WARN: synonym verdicts file not found; emitting no synonym items", file=sys.stderr)
@@ -2103,7 +2472,25 @@ def run_broken_validator_fixtures() -> int:
             }
         ),
         "heritage_pair": validate_heritage_pair(
-            {"nativeSlug": "слово", "calqueLabel": "калька", "corrections": [], "citations": []}
+            {
+                "nativeSlug": "slovo",
+                "calqueLabel": "калька",
+                "kind": "sense_restricted",
+                "corrections": ["слово"],
+                "citations": ["fixture:broken"],
+                "sourceFamily": "fixture",
+                "rationale": "fixture broken v5.1 case",
+                "calqueSense": "",
+                "authenticSense": "",
+                "frames": [
+                    {
+                        "sentence_with_slot": "___ і ще ___",
+                        "answer_form": "слово",
+                        "calque_form": "калька",
+                        "origin": "fixture",
+                    }
+                ],
+            }
         ),
         "paronym_pair": validate_paronym_pair(
             {"slugA": "адрес", "slugB": "адреса", "frames": [], "citations": []}
@@ -2229,6 +2616,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--out-dir", type=Path, default=DEFAULT_OUT_DIR)
     parser.add_argument("--reviewed-allowlist", type=Path, default=DEFAULT_ALLOWLIST)
     parser.add_argument("--cloze-sources", type=Path, default=DEFAULT_CLOZE_SOURCES)
+    parser.add_argument("--heritage-pairs", type=Path, default=DEFAULT_HERITAGE_PAIRS)
     parser.add_argument("--synonym-verdicts", type=Path, default=DEFAULT_SYNONYM_VERDICTS)
     parser.add_argument("--vesum-fixture", type=Path)
     parser.add_argument("--target", type=int, default=DEFAULT_TARGET)
@@ -2248,6 +2636,7 @@ def main(argv: list[str] | None = None) -> int:
     entries = read_manifest(args.manifest) if args.manifest else read_atlas_db(args.atlas_db)
     allowlist = ReviewedSourceAllowlist.from_path(args.reviewed_allowlist)
     cloze_sources = read_cloze_sources(args.cloze_sources)
+    heritage_pairs = read_heritage_pairs(args.heritage_pairs)
     synonym_verdicts = read_synonym_verdicts(args.synonym_verdicts)
     verifier: VesumVerifier = (
         JsonVesumVerifier.from_path(args.vesum_fixture)
@@ -2261,7 +2650,15 @@ def main(argv: list[str] | None = None) -> int:
         fixture_note=args.fixture_note,
         source_label="fixture" if args.vesum_fixture or args.manifest else "atlas.db",
     )
-    shards = build_practice_shards(entries, allowlist, verifier, cloze_sources, config, synonym_verdicts)
+    shards = build_practice_shards(
+        entries,
+        allowlist,
+        verifier,
+        cloze_sources,
+        config,
+        heritage_pairs=heritage_pairs,
+        synonym_verdicts=synonym_verdicts,
+    )
     apply_size_budgets(shards, config.raw_limit, config.gzip_limit)
     written = write_shards(shards, args.out_dir)
     for path in written:

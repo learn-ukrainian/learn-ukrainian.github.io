@@ -70,6 +70,17 @@ persona:
   role: Модератор семінару, який досліджує жіночий голос Празької школи та механізми радянського стирання еміграційно-державної традиції.
   voice: Intellectual Historian
 phase: BIO
+readings:
+- hosting: link-only
+  language: uk
+  rights_note: "Creative Commons Attribution-ShareAlike"
+  source_name: "Лівицька-Холодна Наталя Андріївна (Вікіпедія)"
+  source_url: "https://uk.wikipedia.org/wiki/Лівицька-Холодна_Наталя_Андріївна"
+- hosting: link-only
+  language: uk
+  rights_note: "Educational use / Public access"
+  source_name: "Наталя Лівицька-Холодна (УкрЛіб)"
+  source_url: "https://www.ukrlib.com.ua/bio/author.php?id=302"
 references:
 - author: Р. М. Коваль
   note: Стаття в Енциклопедії Сучасної України (esu.com.ua) про життя та творчість поетки.
@@ -96,7 +107,7 @@ sequence: 229
 slug: natalia-livytska-kholodna
 subtitle: The Last Great Voice of the Prague School
 title: 'Наталя Лівицька-Холодна: «Червоне й чорне» доньки УНР'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: вимушене переселення за межі батьківщини; спільнота переселенців
   pos: ж.

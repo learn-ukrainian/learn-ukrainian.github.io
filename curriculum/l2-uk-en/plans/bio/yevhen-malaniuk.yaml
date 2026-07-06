@@ -1,4 +1,14 @@
 ---
+readings:
+- source_name: "Маланюк Євген Филимонович (Вікіпедія)"
+  source_url: "https://uk.wikipedia.org/wiki/Маланюк_Євген_Филимонович"
+  language: "uk"
+  hosting: "link-only"
+  rights_note: "CC BY-SA 4.0"
+- source_name: "Євген Маланюк: Біографія"
+  language: "uk"
+  hosting: "reading-needed"
+  rights_note: "Need rights-clear primary text or scholarly article"
 activity_hints:
 - after_section: 'Тінь: Радянський наклеп і друга еміграція'
   focus: Перевірка розуміння механізму радянського наклепу та обставин другої еміграції
@@ -96,7 +106,7 @@ sequence: 226
 slug: yevhen-malaniuk
 subtitle: The Émigré Poet-Officer and Conscience of the Nation
 title: 'Євген Маланюк: Імператор залізних строф'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: філософське осмислення сенсу, рушіїв і напряму історичного процесу
   pos: ж.
