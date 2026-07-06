@@ -77,6 +77,45 @@ persona:
   role: Музичний критик, що спеціалізується на культурі діаспори. Пояснює складний баланс між комерційним успіхом та збереженням культурної ідентичності.
   voice: Kvitka-Insider
 phase: BIO
+readings:
+  - title: Цісик Квітка
+    language: uk
+    genre: Енциклопедична стаття / Довідка
+    source_type: reference
+    role: orientation
+    source: Вікіпедія
+    source_url: https://uk.wikipedia.org/wiki/Цісик_Квітка
+    license: CC-BY-SA-4.0
+    rights_note: Текст статті ліцензовано на умовах CC-BY-SA-4.0. Вільне використання з обов'язковим посиланням на першоджерело.
+    hosting: link-only
+    cefr_min: C1
+    learner_task: Ознайомитися з хронологією життя, музичною освітою та дискографією співачки для загального ознайомлення.
+    caveats: Матеріал з Вікіпедії може містити неточності та потребує критичного співставлення з академічними джерелами.
+  - title: Офіційна біографія Квітки Цісик
+    language: uk
+    genre: Біографічна довідка / Меморіальний сайт
+    source_type: primary
+    role: supplementary-reading
+    source: Офіційний сайт (kvitka.com)
+    source_url: https://www.kvitka.com/
+    license: copyrighted
+    rights_note: Матеріали офіційного сайту захищені авторським правом. Хостинг заборонений.
+    hosting: link-only
+    cefr_min: C1
+    learner_task: Ознайомитись із родинною версією біографії та дискографією, щоб зрозуміти, як зберігається пам'ять про співачку її рідними.
+    caveats: Сайт містить авторизовану біографію, яка може мати риси агіографії.
+  - title: Аналітична стаття про феномен Квітки Цісик (Потрібен матеріал)
+    language: uk
+    genre: Аналітична стаття / Журналістика
+    source_type: secondary
+    role: reading
+    source: Суспільне Культура / Локальна історія / Радіо Свобода
+    license: copyrighted
+    rights_note: Потрібно знайти стабільний лінк на якісну статтю про її два українські альбоми та їхній вплив на діаспору.
+    hosting: reading-needed
+    cefr_min: C1
+    learner_task: Прочитати статтю-аналіз про те, як американська комерційна співачка стала культурним символом української діаспори.
+    caveats: Текст має уникнути надмірної ідеалізації та зосередитись на культурному феномені.
 references:
 - title: Kvitka Tsisyk
   note: Compiled research notes on Cisyk's life, career, and reception.
@@ -94,7 +133,7 @@ sequence: 175
 slug: kvitka-tsisyk
 subtitle: 'Kvitka Cisyk: The Voice of the Ukrainian Diaspora'
 title: 'Квітка Цісик: Голос української діаспори'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: частина народу, що проживає за межами країни свого походження
   pos: ж.

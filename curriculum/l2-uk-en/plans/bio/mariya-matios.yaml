@@ -80,6 +80,44 @@ persona:
   role: Літературний критик, що досліджує зв'язок між регіональною ідентичністю та національною літературою
   voice: Critical-Regionalist
 phase: BIO.4
+readings:
+  - title: Матіос Марія Василівна
+    language: uk
+    genre: Енциклопедична стаття / Довідка
+    source_type: reference
+    role: orientation
+    source: Вікіпедія
+    source_url: https://uk.wikipedia.org/wiki/Матіос_Марія_Василівна
+    license: CC-BY-SA-4.0
+    rights_note: Текст статті ліцензовано на умовах CC-BY-SA-4.0. Вільне використання з обов'язковим посиланням на першоджерело.
+    hosting: link-only
+    cefr_min: C1
+    learner_task: Ознайомитися з біографією, переліком видань і поєднанням літературної та політичної кар'єри письменниці.
+    caveats: Стаття може фокусуватись на формальних досягненнях і не охоплювати глибину дискусій навколо її політичної діяльності.
+  - title: Уривок з роману "Солодка Даруся" (Потрібен матеріал)
+    language: uk
+    genre: Художня проза / Роман
+    source_type: primary
+    role: reading
+    source: Видавництво "Піраміда" або "А-БА-БА-ГА-ЛА-МА-ГА"
+    license: copyrighted
+    rights_note: Текст роману захищено авторським правом. Потрібен ознайомчий фрагмент, який легально розміщений у відкритому доступі.
+    hosting: reading-needed
+    cefr_min: C1
+    learner_task: Прочитати фрагмент роману, звертаючи увагу на буковинський діалект та способи передачі травматичного досвіду через мову (і мовчання).
+    caveats: Текст містить багато діалектизмів та описує важкі психологічні й історичні реалії.
+  - title: Інтерв'ю з Марією Матіос або критичний аналіз (Потрібен матеріал)
+    language: uk
+    genre: Інтерв'ю / Літературна критика
+    source_type: secondary
+    role: supplementary-reading
+    source: Українська правда / ЛітАкцент або інше надійне медіа
+    license: copyrighted
+    rights_note: Захищено авторським правом. Необхідно знайти стабільний лінк на якісне інтерв'ю чи рецензію.
+    hosting: reading-needed
+    cefr_min: C1
+    learner_task: Ознайомитися з позицією письменниці щодо її політичного вибору або з оцінками критиків щодо її переходу до публічної політики.
+    caveats: Текст відображатиме конфлікт між літературним ідеалізмом і прагматичною політикою.
 references:
 - title: Mariya Matios
   note: Compiled from Wikipedia UA, interviews, and literary criticism
@@ -99,7 +137,7 @@ sequence: 178
 slug: mariya-matios
 subtitle: How a regional voice gives words to national trauma
 title: 'Марія Матіос: Буковинський голос'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: той, що стосується Буковини — історичного регіону на заході України
   pos: прикм.
