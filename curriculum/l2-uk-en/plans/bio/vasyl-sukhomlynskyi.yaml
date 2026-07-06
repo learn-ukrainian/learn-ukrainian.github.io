@@ -80,6 +80,16 @@ persona:
   role: 'Модератор дискусії, який ставить питання: Чи можливо було реалізувати гуманістичну педагогіку в СРСР, і якою ціною?'
   voice: Pedagogical-Realist
 phase: BIO
+readings:
+- caveats: "Довідка ЕІУ дає стислу біографічну рамку; семінар має окремо тримати питання радянського освітнього контексту й гуманістичної педагогіки Сухомлинського."
+  clearance: "link-only"
+  language: uk
+  learner_task: "Прочитати про створення Павлиської школи та основні принципи гуманістичної педагогіки Сухомлинського."
+  role: "primary_bio"
+  source_name: "Енциклопедія історії України"
+  source_url: "https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&I21DBN=EIu&P21DBN=EIU&S21CNR=20&S21COLORTERMS=0&S21FMT=eiu_all&S21P01=0&S21P02=0&S21P03=TRN%3D&S21REF=10&S21STN=1&S21STR=Sukhomlynskyj_V&Z21ID="
+  title: "Сухомлинський Василь Олександрович"
+  type: "biography"
 references:
 - title: Vasyl Sukhomlynskyi
   note: Compiled from Wikipedia, educational encyclopedias, and critical analyses of his work.
@@ -99,7 +109,7 @@ sequence: 153
 slug: vasyl-sukhomlynskyi
 subtitle: 'Vasyl Sukhomlynskyi: Pedagogue of the Heart'
 title: 'Василь Сухомлинський: Педагог серця'
-version: '4.0'
+version: '4.2'
 vocabulary_hints:
 - definition: наука про сутність, закономірності, принципи, методи і форми навчання і виховання людини
   pos: ж.

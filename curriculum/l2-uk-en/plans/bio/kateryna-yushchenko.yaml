@@ -79,6 +79,16 @@ persona:
   role: Модератор семінару, який розглядає історію технологій не як лінійний прогрес, а як складну мережу ідей, інституцій та політичних контекстів.
   voice: Historian-of-Science
 phase: BIO.13
+readings:
+- caveats: "Довідка ЕІУ фіксує біографічну й наукову рамку; для технічних деталей Адресної мови варто давати додаткове пояснення, а не вимагати фахового читання з програмування."
+  clearance: "link-only"
+  language: uk
+  learner_task: "Прочитати про життєвий шлях вченої та її ключовий винахід — першу високорівневу мову програмування."
+  role: "primary_bio"
+  source_name: "Енциклопедія історії України"
+  source_url: "https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&I21DBN=EIU&P21DBN=EIU&S21CNR=20&S21COLORTERMS=0&S21FMT=eiu_all&S21P01=0&S21P02=0&S21P03=TRN%3D&S21REF=10&S21STN=1&S21STR=jushchenko_kateryna_logvynivna&Z21ID="
+  title: "Ющенко Катерина Логвинівна"
+  type: "biography"
 references:
 - title: Kateryna Yushchenko
   note: Compiled research notes on Yushchenko's life, work on Address Language, and context of Soviet cybernetics
@@ -98,7 +108,7 @@ sequence: 154
 slug: kateryna-yushchenko
 subtitle: 'Kateryna Yushchenko: Mother of the Programming Language'
 title: 'Катерина Ющенко: Мати мови програмування'
-version: '4.0'
+version: '4.2'
 vocabulary_hints:
 - definition: наука про загальні закони керування та зв'язку в машинах, живих організмах і суспільстві
   pos: ж.

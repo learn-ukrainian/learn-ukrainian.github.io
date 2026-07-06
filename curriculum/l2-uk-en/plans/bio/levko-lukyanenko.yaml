@@ -80,6 +80,16 @@ persona:
   role: Аналітик, що розглядає життя Лук'яненка через призму конфлікту між правом, ідеологією та державною силою.
   voice: Legal-Historian
 phase: BIO
+readings:
+- caveats: "Гасло ЕСУ подає стабільну біографічну рамку; для роботи з Актом проголошення незалежності окремо потрібне читання документа Верховної Ради."
+  clearance: "link-only"
+  language: uk
+  learner_task: "Дослідити шлях від дисидента-в'язня до автора головного документа незалежної України."
+  role: "primary_bio"
+  source_name: "Енциклопедія Сучасної України"
+  source_url: "https://esu.com.ua/article-59216"
+  title: "Лук'яненко Левко Григорович"
+  type: "biography"
 references:
 - title: Левко Лук'яненко
   note: Загальна біографія, ключові дати, дисидентська діяльність, роль у незалежності.
@@ -104,7 +114,7 @@ sequence: 156
 slug: levko-lukyanenko
 subtitle: From Death Sentence to Father of Independence
 title: 'Левко Лук''яненко: Автор Акту незалежності'
-version: '4.0'
+version: '4.2'
 vocabulary_hints:
 - definition: людина, що відкрито висловлює погляди, які розходяться з панівною ідеологією, і зазнає за це переслідувань.
   pos: ч.
