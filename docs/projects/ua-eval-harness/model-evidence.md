@@ -190,7 +190,7 @@ matching per the #4485 verdict-not-echo matcher. Full data:
 | deepseek-v4-flash | −30 | 220 | **+250** | 2/7 | 3/7 | 1/4 | 2/4 |
 | deepseek-v4-pro | 110 | 290 | **+180** | 4/7 | 4/7 | 0/4 | 2/4 |
 
-(Without-anchor split: +230 / +130 / +180 — same ordering. All fractions low-N; 4 passages.)
+(Without-anchor split, 3 passages: +230 / +130 / +180 — same ordering. All fractions low-N; the full matrix is 4 passages.)
 
 ### Findings
 
@@ -202,7 +202,7 @@ matching per the #4485 verdict-not-echo matcher. Full data:
    110) is below the WORST tooled score (flash, 220).
 3. **Bare honesty collapses.** Class-U (zero-attestation) claims: bare models guess instead of
    withholding (gemma 0/4, pro 0/4 honest) despite the bare prompt explicitly licensing
-   `UNVERIFIED_INSUFFICIENT_SEARCH`. With tools, honest-withhold becomes the majority behavior.
+   `UNVERIFIED_INSUFFICIENT_SEARCH`. With tools, honest-withhold becomes the dominant shift (gemma 3/4; flash and pro reach 2/4 from 1/4 and 0/4; 7/12 combined).
    Corollary: deepseek-pro bare marks 7/24 TRUE claims unverifiable — honest but useless without
    retrieval.
 4. **Cost note:** bare cells run in ~10–145 s vs tooled 16–268 s; the entire 12-cell bare arm cost
