@@ -79,6 +79,17 @@ persona:
   role: Проводить семінар про складні моральні вибори в українській історії, змушуючи студентів уникати чорно-білих оцінок
   voice: Senior Biographer
 phase: BIO
+readings:
+- source_name: "«Інтернаціоналізм чи русифікація?» (вибрані розділи)"
+  source_url: ""
+  source_type: "primary-source"
+  role: "text-analysis"
+  learner_task: "Аналіз публіцистичної аргументації та політичного контексту твору"
+  license: "unknown"
+  rights_note: "Самвидав; перевірити сучасний статус авторських прав для легального розміщення уривків"
+  hosting: "reading-needed"
+  language: "uk"
+  cefr_min: C1
 references:
 - title: Ivan Dziuba
   note: Compiled from uk.wikipedia.org, dissertation abstracts, and critical reviews
@@ -103,7 +114,7 @@ sequence: 161
 slug: ivan-dziuba
 subtitle: The Dissident Who Weaponized Leninism
 title: 'Іван Дзюба: Інтернаціоналізм чи русифікація?'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: політична ідеологія, що проголошує рівність і дружбу всіх націй (у радянському контексті — часто ширма для русифікації)
   pos: ч.
