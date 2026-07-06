@@ -77,6 +77,22 @@ persona:
   role: Історик, що розглядає Огієнка не як ікону, а як архітектора модерної української ідентичності — з усіма перевагами та недоліками його проєкту
   voice: Orthodox-Modernist
 phase: BIO
+readings:
+- title: "Огієнко Іван Іванович"
+  source: "Енциклопедія історії України (ЕІУ)"
+  url: "http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Ohiienko_I"
+  language: uk
+  type: article
+  role: "Академічна довідка про багатогранну діяльність вченого, церковного і громадського діяча."
+  hosting: link-only
+  task: "Ознайомитися з біографією та виділити основні досягнення Огієнка в мовознавстві та церковному служінні."
+- title: "Історія української літературної мови"
+  source: "Іван Огієнко (первинне джерело)"
+  language: uk
+  type: book
+  role: "Ключова праця Огієнка-мовознавця, де він викладає свою концепцію розвитку мови."
+  hosting: reading-needed
+  task: "Проаналізувати аргументи автора щодо необхідності очищення мови."
 references:
 - title: Ivan Ohienko
   note: Compiled research based on primary and secondary sources about Ohienko's life and work.
@@ -97,7 +113,7 @@ sequence: 104
 slug: ivan-ohienko
 subtitle: The Man Who Gave Ukraine Its Bible and Its Orthography
 title: 'Іван Огієнко: Митрополит і Захисник Мови'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: найвищий єпископський титул у православних церквах, глава церковної провінції
   pos: ч.
