@@ -199,10 +199,36 @@ subscription-runtime bare — not raw completion; do not compare to opencode bar
 Phase 1 adds a separate scorecard/evidence lane for native subscription bare cells
 (`claude-opus-4-8`, `gpt-5.5`, `gemini-3.1-pro-high`) through `agent_runtime.invoke`, with
 artifacts keyed by `{pin, transport, entrypoint}` and filenames shaped
-`<pin_slug>__<slug>__bare__<transport>.json`. **No live subscription-runtime rows are recorded
-in this evidence log yet**; the live driver runs them after the implementation merges. Until a
-raw-completion parity phase exists, these rows stay under their own header and are not blended
-with opencode bare rows or external leaderboard claims.
+`<pin_slug>__<slug>__bare__<transport>.json`. Until a raw-completion parity phase exists,
+these rows stay under their own header and are not blended with opencode bare rows or
+external leaderboard claims.
+
+**Live run 2026-07-06** (post-#4577: `use_bare=False` OAuth path + neutral-cwd standing-rules
+firewall, `cwd_policy=neutral-tmp` in every artifact; 12/12 cells `ran`; gemini seat
+artifact-verified `Gemini 3.1 Pro (High)`; with-anchor totals over the same 4 folk passages):
+
+| seat | transport | model judgment (4 passages) | per-passage |
+| --- | --- | ---: | --- |
+| claude-opus-4-8 | runtime-claude | **120** | 20 / 20 / −10 / 90 |
+| gpt-5.5 | runtime-codex | **60** | 50 / 70 / −40 / −20 |
+| gemini-3.1-pro-high | runtime-agy | **320** | 60 / 180 / −40 / 120 |
+
+Readings (all under the do-not-compare caveat above):
+1. **The anchor passage (vesnianky, seeded fabrications) is NEGATIVE for all three frontier
+   seats** (−10 / −40 / −40): every frontier model bare-CONFIRMED fabricated claims. The
+   class-M/U honesty collapse observed on cheap bare models reproduces at frontier tier —
+   parametric knowledge does not protect against confident folk-culture fabrication.
+2. claude/gpt bare (120/60) land BELOW every tooled cheap row (gemma +240 / ds-flash +220 /
+   ds-pro +290) — directionally consistent with the harness-lift thesis.
+3. Honest nuance: gemini-pro bare (320) numerically exceeds the best tooled cheap row
+   (ds-pro 290) on raw judgment score at n=4 — high per-passage variance (−40…180), no
+   grounding/admissibility gates on the bare arm, different transport+variant. This is
+   exactly the comparison the banner forbids; a tooled-frontier phase-2 (or raw-completion
+   parity 1.5) is required before any cross-lane ranking claim.
+4. Measurement-integrity note: the first live run (pre-#4577) had the claude seat 4/4
+   transport-dead (`--bare`+OAuth) and gpt/gemini cells contaminated by repo standing rules
+   (cwd=PROJECT_ROOT). Decontamination measurably shifted gpt scores (40/50/−70/−20 →
+   50/70/−40/−20) — cwd context is part of the measurement and is now firewalled + recorded.
 
 ### Findings
 
