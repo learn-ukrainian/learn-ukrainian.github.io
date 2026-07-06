@@ -1,6 +1,6 @@
 # Textbook Selection for RAG Database
 # Selected: 2026-02-26
-# Total: 64 books (42 humanities + 22 wave-1 STEM, #4593) from pidruchnyk.com.ua + Google Drive
+# Total: 115 books (42 humanities + 22 wave-1 STEM + 51 batch-3, #4593) from pidruchnyk.com.ua + Google Drive
 # Strategy: 2 мова per grade, 1 literature (5-11), 1-2 history (5-11)
 #
 # PDF URL pattern: https://pidruchnyk.com.ua/uploads/book/{filename}.pdf
@@ -522,3 +522,413 @@ books:
     author: Попель
     year: 2017
     slug: 1041-himiya-9-klas-popel-2017
+
+  # ═══════════════════════════════════════════════════════════════════
+  # BATCH 3 (#4593, user-approved 2026-07-06): HIGH+MEDIUM catalog-diff
+  # sets, технології excluded. 51 books, every title live-probed
+  # 2026-07-06 (subject+author+grade asserted against the served page).
+  # muzyka-6 DROPPED: only 2014 ed. exists (pre-2017 tier); domain covered
+  # by mystetstvo-6 Масол-2023.
+  # gdrive_id books: pidruchnyk page serves Google Drive, not uploads/*.pdf —
+  # downloaded via gdown; stock downloader skips them (needs_manual_pdf).
+  # ═══════════════════════════════════════════════════════════════════
+
+  # ── GRADE 5 (batch 3) ──
+  - id: g5-zarlit-voloshchuk
+    grade: 5
+    subject: zarlit
+    author: Волощук
+    year: 2022
+    slug: 1693-5_zarlit_voloschuk
+
+  - id: g5-pryroda-korshevniuk
+    grade: 5
+    subject: pryroda
+    author: Коршевнюк
+    year: 2022
+    slug: 1722-piznaiemo-pryrodu-korshevnuk-5-klas-2022
+
+  - id: g5-mystetstvo-rublia
+    grade: 5
+    subject: mystetstvo
+    author: Рубля
+    year: 2022
+    slug: 1709-mystectvo-rublia-5-klas
+    note: "year not in page title — verify on title page at QA"
+
+  - id: g5-etyka-meleshchenko
+    grade: 5
+    subject: etyka
+    author: Мелещенко
+    year: 2022
+    slug: 1695-etyka-5-klas-meleshchenko
+
+  - id: g5-zdorovia-vorontsova
+    grade: 5
+    subject: zdorovia
+    author: Воронцова
+    year: 2022
+    slug: 1707-zdorovia-bezpeka-ta-dobrobut-voroncova-5-klas
+
+  # ── GRADE 6 (batch 3) ──
+  - id: g6-pryroda-korshevniuk
+    grade: 6
+    subject: pryroda
+    author: Коршевнюк
+    year: 2023
+    slug: 2651-piznaiemo-pryrodu-6-klas-korshevniuk
+
+  - id: g6-mystetstvo-rublia
+    grade: 6
+    subject: mystetstvo
+    author: Рубля
+    year: 2023
+    slug: 2687-mystetstvo-6-klas-rublia
+    status: needs_manual_pdf
+    note: "Масол-2023 Drive copy = SCAN (quarantined _deferred_scans/); Рубля digital via page Drive link. On disk: 6-klas-mystetstvo-rublia-2023.pdf"
+
+  - id: g6-etyka-martyniuk
+    grade: 6
+    subject: etyka
+    author: Мартинюк
+    year: 2023
+    slug: 2632-etyka-6-klas-martyniuk
+    status: needs_manual_pdf
+    note: "Давидюк/Данилевська/Мелещенко-2023 all scans; Мартинюк digital via page Drive link. On disk: 6-klas-etyka-martyniuk-2023.pdf"
+
+  - id: g6-zdorovia-vorontsova
+    grade: 6
+    subject: zdorovia
+    author: Воронцова
+    year: 2023
+    slug: 2644-zdorovia-6-klas-vorontsova-2023
+    status: needs_manual_pdf
+    gdrive_id: 1esRiRruVTaSvo0c8mv90YTqjwmh2AP5G
+
+  # ── GRADE 7 (batch 3) ──
+  - id: g7-matematyka-ister
+    grade: 7
+    subject: matematyka
+    author: Істер
+    year: 2024
+    slug: 2879-matematyka-ister-7-klas-2024
+
+  - id: g7-vsesvitnia-ladychenko
+    grade: 7
+    subject: vsesvitnia
+    author: Ладиченко
+    year: 2024
+    slug: 2855-vsesvitnia-istoriia-ladychenko-7-klas-2024
+
+  - id: g7-zarlit-voloshchuk
+    grade: 7
+    subject: zarlit
+    author: Волощук
+    year: 2024
+    slug: 2858-zarubizhna-literatura-voloshchuk-7-klas-2024
+
+  - id: g7-mystetstvo-masol
+    grade: 7
+    subject: mystetstvo
+    author: Масол
+    year: 2024
+    slug: 2804-mystectvo-masol-7-klas-2024
+
+  - id: g7-zdorovia-hushchyna
+    grade: 7
+    subject: zdorovia
+    author: Гущина
+    year: 2024
+    slug: 2813-zdorovia-bezpeka-ta-dobrobut-gushchyna-7-klas-2024
+
+  # ── GRADE 8 (batch 3) ──
+  - id: g8-vsesvitnia-ladychenko
+    grade: 8
+    subject: vsesvitnia
+    author: Ладиченко
+    year: 2025
+    slug: 2976-vsesvitnia-istoriia-ladychenko-8-klas-2025
+
+  - id: g8-zarlit-voloshchuk
+    grade: 8
+    subject: zarlit
+    author: Волощук
+    year: 2025
+    slug: 2995-zarubizhna-literatura-voloshchuk-8-klas-2025
+
+  - id: g8-pryroda-mandrenko
+    grade: 8
+    subject: pryroda
+    author: Мандренко
+    year: 2025
+    slug: 2958-pryrodnychi-nauky-mandrenko-8-klas-2025
+
+  - id: g8-zdorovia-vasylenko
+    grade: 8
+    subject: zdorovia
+    author: Василенко
+    year: 2025
+    slug: 2997-zdorovia-bezpeka-ta-dobrobut-vasylenko-8-klas-2025
+    note: "Воронцова/Гущина/Шиян-2025 uploads = scans; Василенко = digital. On disk: 8-klas-zdorovia-vasylenko-2025.pdf"
+
+  - id: g8-hromadianska-vasylkiv
+    grade: 8
+    subject: hromadianska
+    author: Васильків
+    year: 2025
+    slug: 2988-gromadianska-osvita-vasylkiv-8-klas-2025
+    note: "Пометун-2025 upload = scan (quarantined); Васильків = digital. On disk: 8-klas-hromadianska-osvita-vasylkiv-2025.pdf"
+
+  - id: g8-finansova-plastun
+    grade: 8
+    subject: finansova
+    author: Пластун
+    year: 2025
+    slug: 2950-pidpryiemnyctvo-i-finansova-gramotnist-plastun-8-klas-2025
+
+  # ── GRADE 9 (batch 3 — 2026 NUS rollout, all via Drive) ──
+  - id: g9-vsesvitnia-pometun
+    grade: 9
+    subject: vsesvitnia
+    author: Пометун
+    year: 2026
+    slug: 3159-vsesvitnia-istoriia-9-klas-pometun-2026
+    status: needs_manual_pdf
+    gdrive_id: 1Kww54azkuJ51wJi8kV5yw2JxKGwMviId
+    note: "Ладиченко/Щупак-2026 Drive view-only; Пометун downloadable — edition switched at probe. On disk: 9-klas-vsesvitnia-istoriia-pometun-2026.pdf"
+
+  - id: g9-zarlit-kovbasenko
+    grade: 9
+    subject: zarlit
+    author: Ковбасенко
+    year: 2026
+    slug: 3176-zarubizhna-literatura-9-klas-kovbasenko-2026
+    status: needs_manual_pdf
+    gdrive_id: 11CAhqruccvsyJhvyiak4riPhcuUSH0Wa
+    note: "Волощук/Ніколенко-2026 Drive view-only; Ковбасенко downloadable — edition switched at probe. On disk: 9-klas-zarubizhna-literatura-kovbasenko-2026.pdf"
+
+  - id: g9-heohrafiya-boiko
+    grade: 9
+    subject: heohrafiya
+    author: Бойко
+    year: 2026
+    slug: 3162-geografiia-9-klas-boiko-2026
+    status: needs_manual_pdf
+    gdrive_id: 1zHXgiTgJ47l_0hFn2wIT09BJKVEx6GYc
+
+  - id: g9-pravoznavstvo-remekh
+    grade: 9
+    subject: pravoznavstvo
+    author: Ремех
+    year: 2026
+    slug: 3236-pravoznavstvo-9-klas-remekh-2026
+    status: needs_manual_pdf
+    gdrive_id: 1fyEjfNw9gUGrtlyPrCNAyj4iXdyxpz2F
+    note: "DEFERRED wave-3b: ALL 6 pravoznavstvo-9 2026 editions Drive view-only (probed 2026-07-06)"
+
+  - id: g9-pryroda-mandrenko
+    grade: 9
+    subject: pryroda
+    author: Мандренко
+    year: 2026
+    slug: 3238-pryrodnychi-nauky-9-klas-mandrenko-2026
+    status: needs_manual_pdf
+    gdrive_id: 1l8-daWxfbEvoQH4gXK6tWbsLMQ3cWbMr
+    note: "DEFERRED wave-3b: pid+shkola copies share the same view-only Drive file"
+
+  - id: g9-zdorovia-vorontsova
+    grade: 9
+    subject: zdorovia
+    author: Воронцова
+    year: 2026
+    slug: 3181-zdorovia-9-klas-voroncova-2026
+    status: needs_manual_pdf
+    gdrive_id: 1HKqtD_Ap3TicxfPtIGRfgRk-GTC4V-lb
+    note: "DEFERRED wave-3b: Воронцова + Шиян (shkola 3402) both view-only Drive"
+
+  - id: g9-hromadianska-pometun
+    grade: 9
+    subject: hromadianska
+    author: Пометун
+    year: 2026
+    slug: 3174-gromadianska-osvita-9-klas-pometun-2026
+    status: needs_manual_pdf
+    gdrive_id: 1vJu-vNVtSMMFfoxiA8QBh7oPbc3Hk-6k
+
+  - id: g9-finansova-hilberh
+    grade: 9
+    subject: finansova
+    author: Гільберг
+    year: 2026
+    slug: 3211-pidruchnyk-pidpryiemnyctvo-i-finansova-gramotnist-9-klas-gilberg-2026
+    status: needs_manual_pdf
+    gdrive_id: 1iOQa-xFK8ro8n4fKUImI_gF9KMs7_voQ
+    note: "DEFERRED wave-3b: Гільберг + Пластун (shkola 3415) + Ролік all view-only/no-link"
+
+  # ── GRADE 10 (batch 3) ──
+  - id: g10-algebra-ister
+    grade: 10
+    subject: algebra
+    author: Істер
+    year: 2018
+    slug: 1223-algebra-10-klas-ister
+
+  - id: g10-heometriya-ister
+    grade: 10
+    subject: heometriya
+    author: Істер
+    year: 2018
+    slug: 1178-geometriya-10-klas-ister
+
+  - id: g10-matematyka-merzliak
+    grade: 10
+    subject: matematyka
+    author: Мерзляк
+    year: 2018
+    slug: 1153-matematyka-10-klas-merzlyak
+
+  - id: g10-biolohiya-zadorozhnyi
+    grade: 10
+    subject: biolohiya
+    author: Задорожний
+    year: 2018
+    slug: 3113-biologiia-i-ekologiia-10-klas-zadorozhnyi-stan
+
+  - id: g10-fizyka-bariakhtar
+    grade: 10
+    subject: fizyka
+    author: Бар'яхтар
+    year: 2018
+    slug: 3079-fizyka-10-klas-bariakhtar
+
+  - id: g10-khimiya-hryhorovych
+    grade: 10
+    subject: khimiya
+    author: Григорович
+    year: 2018
+    slug: 3077-khimiia-10-klas-grygorovych
+
+  - id: g10-informatyka-rudenko
+    grade: 10
+    subject: informatyka
+    author: Руденко
+    year: 2018
+    slug: 3099-informatyka-10-11-klas-rudenko-stand
+    note: "рівень стандарту, combined 10(11) volume"
+
+  - id: g10-vsesvitnia-gisem
+    grade: 10
+    subject: vsesvitnia
+    author: Гісем
+    year: 2018
+    slug: 3109-vsesvitnia-istoriia-10-klas-gisem-stan
+    note: "Васильків-2023 (newest in-tier) upload = SCAN (quarantined); Гісем-2018 стандарт = digital. On disk: 10-klas-vsesvitnia-istoriia-gisem-2018-stand.pdf"
+
+  - id: g10-zarlit-voloshchuk
+    grade: 10
+    subject: zarlit
+    author: Волощук
+    year: 2018
+    slug: 1147-zarubizhna-10-klas-voloschuk
+
+  - id: g10-heohrafiya-boiko
+    grade: 10
+    subject: heohrafiya
+    author: Бойко
+    year: 2018
+    slug: 1184-geografiya-10-klas-boyko
+
+  # ── GRADE 11 (batch 3) ──
+  - id: g11-algebra-ister
+    grade: 11
+    subject: algebra
+    author: Істер
+    year: 2019
+    slug: 1250-algebra-ister-11-klas
+
+  - id: g11-heometriya-ister
+    grade: 11
+    subject: heometriya
+    author: Істер
+    year: 2019
+    slug: 1248-geometriya-11-klas-ister
+
+  - id: g11-matematyka-nelin
+    grade: 11
+    subject: matematyka
+    author: Нелін
+    year: 2019
+    slug: 3065-matematyka-11-klas-nelin
+
+  - id: g11-biolohiya-shalamov
+    grade: 11
+    subject: biolohiya
+    author: Шаламов
+    year: 2019
+    slug: 3111-biologiia-ekologiia-11-klas-shalamov
+
+  - id: g11-fizyka-zasiekina
+    grade: 11
+    subject: fizyka
+    author: Засєкіна
+    year: 2019
+    slug: 1277-fizyka-i-astronomiya-11-klas-zasekina
+    note: "фізика і астрономія — includes astronomy register"
+
+  - id: g11-khimiya-hryhorovych
+    grade: 11
+    subject: khimiya
+    author: Григорович
+    year: 2019
+    slug: 3059-khimiia-11-klas-grygorovych
+
+  - id: g11-informatyka-rudenko
+    grade: 11
+    subject: informatyka
+    author: Руденко
+    year: 2019
+    slug: 3066-informatyka-11-klas-rudenko
+
+  - id: g11-vsesvitnia-shchupak
+    grade: 11
+    subject: vsesvitnia
+    author: Щупак
+    year: 2024
+    slug: 3027-vsesvitnia-istoriia-shchupak-11-klas-2024
+
+  - id: g11-zarlit-voloshchuk
+    grade: 11
+    subject: zarlit
+    author: Волощук
+    year: 2019
+    slug: 1279-zarubizhna-11-klas-voloschuk
+
+  - id: g11-heohrafiya-pestushko
+    grade: 11
+    subject: heohrafiya
+    author: Пестушко
+    year: 2019
+    slug: 1242-geografiya-11klas-pestushko
+
+  - id: g11-ekonomika-krykhovets
+    grade: 11
+    subject: ekonomika
+    author: Криховець-Хом'як
+    year: 2019
+    slug: 1318-ekonomika-krihovec-homyak-11-klas
+
+  - id: g11-zakhyst-hudyma
+    grade: 11
+    subject: zakhyst
+    author: Гудима
+    year: 2019
+    slug: 1270-zahyst-vitchyzny-11-klass-gudyma-med
+    note: "Основи медичних знань variant — continues batch-2 first-aid register"
+
+  - id: g11-mystetstvo-nazarenko
+    grade: 11
+    subject: mystetstvo
+    author: Назаренко
+    year: 2019
+    slug: 3090-mystectvo-10-11-klas-nazarenko
+    note: "combined 10(11) volume, fills mystetstvo-11 slot"
