@@ -194,6 +194,7 @@ def test_plan_readings_block_is_integrity_gated(monkeypatch):
 
 def test_plan_readings_block_falls_back_to_structured_inline_readings(monkeypatch):
     monkeypatch.setattr(core, "reading_href_for", lambda slug: None)
+    monkeypatch.setattr(core, "reading_title_for", lambda slug: None)
 
     out = core._format_plan_readings_for_mdx(
         [],
@@ -213,6 +214,7 @@ def test_plan_readings_block_falls_back_to_structured_inline_readings(monkeypatc
 
 def test_plan_readings_block_uses_first_quoted_line_when_attribution_has_no_title(monkeypatch):
     monkeypatch.setattr(core, "reading_href_for", lambda slug: None)
+    monkeypatch.setattr(core, "reading_title_for", lambda slug: None)
 
     out = core._format_plan_readings_for_mdx(
         [],
@@ -228,12 +230,83 @@ def test_plan_readings_block_uses_first_quoted_line_when_attribution_has_no_titl
     assert "pysanky velykodnii dar fragment" not in out
 
 
+def test_plan_readings_block_uses_hosted_reading_title(monkeypatch):
+    monkeypatch.setattr(
+        core,
+        "reading_href_for",
+        lambda slug: f"/readings/{slug}/" if slug == "hnatiuk-kolomyiky-variantni-pryklady" else None,
+    )
+    monkeypatch.setattr(
+        core,
+        "reading_title_for",
+        lambda slug: "Приклади коломийкового співу у Володимира Гнатюка"
+        if slug == "hnatiuk-kolomyiky-variantni-pryklady"
+        else None,
+    )
+
+    out = core._format_plan_readings_for_mdx(
+        [],
+        ':::primary-reading{reading="hnatiuk-kolomyiky-variantni-pryklady"}\n'
+        "Скорочений уривок із друкованого джерела відкрито в хрестоматії.\n\n"
+        "— Народна творчість; приклади з видання \"Коломийки. Том I\"; права: public domain.\n"
+        ":::\n",
+        include_inline=True,
+    )
+
+    assert (
+        "[Приклади коломийкового співу у Володимира Гнатюка]"
+        "(/readings/hnatiuk-kolomyiky-variantni-pryklady/)"
+    ) in out
+    assert "hnatiuk kolomyiky variantni pryklady" not in out
+
+
+def test_plan_readings_block_accepts_explicit_inline_title(monkeypatch):
+    monkeypatch.setattr(core, "reading_href_for", lambda slug: None)
+    monkeypatch.setattr(core, "reading_title_for", lambda slug: None)
+
+    out = core._format_plan_readings_for_mdx(
+        [],
+        ':::primary-reading{reading="hnatiuk-nai-pan-znaie-hryts-uzhyvav" title="Хай пан знає, що Гриць уживав"}\n'
+        "> Вкрав Гриць пацюка в дворі і зарізав і тримав го дома.\n\n"
+        "— В. Гнатюк, «Етнографічний\\nзбірник»; права: суспільне надбання.\n"
+        ":::\n",
+        include_inline=True,
+    )
+
+    assert (
+        "[Хай пан знає, що Гриць уживав](#reading-hnatiuk-nai-pan-znaie-hryts-uzhyvav)"
+        in out
+    )
+    assert "Етнографічний" not in out
+
+
+def test_plan_readings_block_uses_inline_title_override(monkeypatch):
+    monkeypatch.setattr(core, "reading_href_for", lambda slug: None)
+    monkeypatch.setattr(core, "reading_title_for", lambda slug: None)
+
+    out = core._format_plan_readings_for_mdx(
+        [],
+        ':::primary-reading{reading="hnatiuk-nai-pan-znaie-hryts-uzhyvav"}\n'
+        "> Вкрав Гриць пацюка в дворі і зарізав і тримав го дома.\n\n"
+        "— В. Гнатюк, «Етнографічний\\nзбірник»; права: суспільне надбання.\n"
+        ":::\n",
+        include_inline=True,
+    )
+
+    assert (
+        "[Хай пан знає, що Гриць уживав](#reading-hnatiuk-nai-pan-znaie-hryts-uzhyvav)"
+        in out
+    )
+    assert "Етнографічний" not in out
+
+
 def test_plan_readings_block_deduplicates_plan_and_inline_readings(monkeypatch):
     monkeypatch.setattr(
         core,
         "reading_href_for",
         lambda slug: f"/readings/{slug}/" if slug == "shared-reading" else None,
     )
+    monkeypatch.setattr(core, "reading_title_for", lambda slug: None)
 
     out = core._format_plan_readings_for_mdx(
         [

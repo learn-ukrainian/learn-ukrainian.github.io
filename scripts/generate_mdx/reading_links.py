@@ -98,6 +98,28 @@ def _load_index(readings_dir: str) -> dict[str, str]:
     return index
 
 
+@lru_cache(maxsize=4)
+def _load_titles(readings_dir: str) -> dict[str, str]:
+    """Build ``{slug: learner-facing title}`` for existing reading files."""
+    root = Path(readings_dir)
+    if not root.is_dir():
+        return {}
+
+    titles: dict[str, str] = {}
+    for path in sorted(root.glob("*.mdx")):
+        slug = path.stem
+        try:
+            frontmatter = _frontmatter_for(path)
+        except OSError:
+            continue
+        if not _is_public_reading(frontmatter):
+            continue
+        title = frontmatter.get("title")
+        if isinstance(title, str) and title.strip():
+            titles[slug] = " ".join(title.split())
+    return titles
+
+
 def reading_href_for(work: str, readings_dir: str | Path | None = None) -> str | None:
     """Return ``/readings/{slug}/`` for ``work`` iff that reading file exists."""
     key = normalize_work_title(work)
@@ -106,3 +128,11 @@ def reading_href_for(work: str, readings_dir: str | Path | None = None) -> str |
     path = str(readings_dir) if readings_dir is not None else str(_DEFAULT_READINGS_DIR)
     slug = _load_index(path).get(key)
     return f"/readings/{slug}/" if slug else None
+
+
+def reading_title_for(slug: str, readings_dir: str | Path | None = None) -> str | None:
+    """Return the learner-facing title for a hosted reading slug, if present."""
+    if not slug:
+        return None
+    path = str(readings_dir) if readings_dir is not None else str(_DEFAULT_READINGS_DIR)
+    return _load_titles(path).get(slug)

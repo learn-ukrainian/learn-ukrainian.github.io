@@ -24,7 +24,7 @@ from .converters import (
     resolve_slug_links,
     yaml_activities_to_jsx,
 )
-from .reading_links import reading_href_for
+from .reading_links import reading_href_for, reading_title_for
 from .resources import (
     embed_youtube_video_links,
     format_resources_for_mdx,
@@ -287,14 +287,36 @@ def _directive_attrs(raw: str) -> dict[str, str]:
     return {match.group(1): match.group(2).strip() for match in _DIRECTIVE_ATTR_RE.finditer(raw[1:-1])}
 
 
-def _reading_title_from_primary_block(body: str, slug: str) -> str:
-    matches = list(_PRIMARY_READING_ATTRIBUTION_RE.finditer(body))
-    if matches:
-        return matches[-1].group("title").strip()
+def _clean_reading_title(title: str) -> str:
+    return " ".join(title.split()).strip(" ,.;:")
+
+
+_INLINE_READING_TITLE_OVERRIDES = {
+    "zaporozka-vdacha-nevydymi-kraiovi-voiny": "Запорозька вдача",
+    "franko-farbovanyi-lys-strakh-lisa-fragment": "Фарбований Лис: страх лиса",
+    "hnatiuk-nai-pan-znaie-hryts-uzhyvav": "Хай пан знає, що Гриць уживав",
+    "pro-zorianyi-viz-shchyrist-doshch-fragment": "Про Зоряний віз",
+    "kin-z-chorta-zrobyvsia-fragment": "Кінь з чорта зробився",
+}
+
+
+def _reading_title_from_primary_block(body: str, slug: str, attrs: dict[str, str]) -> str:
+    hosted_title = reading_title_for(slug)
+    if hosted_title:
+        return _clean_reading_title(hosted_title)
+    explicit_title = attrs.get("title", "")
+    if explicit_title:
+        return _clean_reading_title(explicit_title)
+    override_title = _INLINE_READING_TITLE_OVERRIDES.get(slug)
+    if override_title:
+        return override_title
     first_line = _PRIMARY_READING_QUOTED_LINE_RE.search(body)
     if first_line:
-        return first_line.group("line").strip(" ,.;:")
-    return slug.replace("-", " ").strip()
+        return _clean_reading_title(first_line.group("line"))
+    matches = list(_PRIMARY_READING_ATTRIBUTION_RE.finditer(body))
+    if matches:
+        return _clean_reading_title(matches[-1].group("title"))
+    return _clean_reading_title(slug.replace("-", " "))
 
 
 def _inline_primary_readings_for_mdx(body: str, existing_slugs: set[str]) -> list[dict[str, str]]:
@@ -309,7 +331,7 @@ def _inline_primary_readings_for_mdx(body: str, existing_slugs: set[str]) -> lis
         href = reading_href_for(slug) or f"#reading-{slug}"
         readings.append(
             {
-                "title": _reading_title_from_primary_block(match.group("body"), slug),
+                "title": _reading_title_from_primary_block(match.group("body"), slug, attrs),
                 "href": href,
                 "detail": "уривок у цьому модулі" if href.startswith("#") else "хрестоматія",
             }
