@@ -95,11 +95,28 @@ references:
   type: reference
   url: https://uk.wikipedia.org/wiki/Братство_тарасівців
   work: Братство тарасівців (Wikipedia UA)
+readings:
+- title: Липа Іван Львович
+  language: uk
+  source: Вікіпедія
+  url: https://uk.wikipedia.org/wiki/%D0%9B%D0%B8%D0%BF%D0%B0_%D0%86%D0%B2%D0%B0%D0%BD_%D0%9B%D1%8C%D0%B2%D0%BE%D0%B2%D0%B8%D1%87
+  type: encyclopedia
+  role: primary-bio
+  hosting: link-only
+  task: Ознайомитися з біографією лікаря та ідеолога Івана Липи.
+- title: Братство тарасівців
+  language: uk
+  source: Вікіпедія
+  url: https://uk.wikipedia.org/wiki/%D0%91%D1%80%D0%B0%D1%82%D1%81%D1%82%D0%B2%D0%BE_%D1%82%D0%B0%D1%80%D0%B0%D1%81%D1%96%D0%B2%D1%86%D1%96%D0%B2
+  type: encyclopedia
+  role: context
+  hosting: link-only
+  task: Вивчити ідеологію та історію діяльності "Братства тарасівців".
 sequence: 85
 slug: ivan-lypa
 subtitle: 'Ivan Lypa: Doctor, Writer, and Ideologue'
 title: 'Іван Липа: Лікар і письменник'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: політична незалежність, державний суверенітет
   pos: ж.

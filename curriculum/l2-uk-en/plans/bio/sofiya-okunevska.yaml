@@ -95,11 +95,20 @@ references:
   note: Матеріали про діяльність жіночих товариств Галичини, листування Окуневської з Наталією Кобринською.
   type: primary
   work: Архів жіночого руху
+readings:
+- title: Софія Окуневська-Морачевська
+  language: uk
+  source: Вікіпедія
+  url: https://uk.wikipedia.org/wiki/%D0%A1%D0%BE%D1%84%D1%96%D1%8F_%D0%9E%D0%BA%D1%83%D0%BD%D0%B5%D0%B2%D1%81%D1%8C%D0%BA%D0%B0-%D0%9C%D0%BE%D1%80%D0%B0%D1%87%D0%B5%D0%B2%D1%81%D1%8C%D0%BA%D0%B0
+  type: encyclopedia
+  role: primary-bio
+  hosting: link-only
+  task: Проаналізувати життєвий шлях першої лікарки Австро-Угорщини Софії Окуневської та її внесок у боротьбу за права жінок на освіту.
 sequence: 86
 slug: sofiya-okunevska
 subtitle: 'The Price of Being First: Medicine, Feminism, and the Costs of a Trailblazing Career'
 title: 'Софія Окуневська: Перша жінка-лікар'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: жінка, яка першою прокладає шлях у якійсь новій, невідомій галузі діяльності
   pos: ж.
