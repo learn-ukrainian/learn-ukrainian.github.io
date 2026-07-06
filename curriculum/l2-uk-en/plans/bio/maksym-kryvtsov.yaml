@@ -89,6 +89,25 @@ persona:
   role: Модератор семінару, який знав Максима особисто, але намагається зберегти критичну дистанцію, щоб проаналізувати його спадщину, а не просто оплакати втрату.
   voice: Grieving-but-Critical-Contemporary
 phase: BIO.4
+readings:
+- caveats: Містить емоційно важкі деталі війни та загибелі.
+  hosting: external
+  language: uk
+  role: Контекст
+  source_name: Читомо
+  source_type: Стаття
+  task: Ознайомитися з біографічними фактами та відгуками спільноти про поета.
+  title: На війні загинув поет Максим Кривцов
+  url: https://www.chytomo.com/na-vijni-zahynuv-poet-maksym-kryvtsov/
+- caveats: Короткий некролог.
+  hosting: external
+  language: uk
+  role: Контекст
+  source_name: Український ПЕН
+  source_type: Стаття
+  task: Прочитати про військовий шлях та літературну спадщину Кривцова.
+  title: На фронті загинув поет та військовий Максим Кривцов
+  url: https://pen.org.ua/na-fronti-zagynuv-poet-ta-vijskovyj-maksym-kryvtsov
 references:
 - title: Maksym Kryvtsov
   note: Compiled from public interviews, poems from "Вірші з бійниці", posts by friends and family.
@@ -107,7 +126,7 @@ sequence: 193
 slug: maksym-kryvtsov
 subtitle: Поет і воїн. Трагедія «Розстріляного Відродження 2.0»
 title: Максим «Далі» Кривцов
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: здатність бути активним діячем, творцем власної долі та історії, а не пасивним об'єктом зовнішніх впливів
   pos: ж.
