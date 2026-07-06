@@ -79,6 +79,23 @@ persona:
   role: Історик культури, що показує велич і трагедію українського генія через одну долю
   voice: Tragic-Biographer
 phase: BIO.3
+readings:
+- title: "Хоткевич Гнат Мартинович"
+  source: "Енциклопедія історії України (ЕІУ)"
+  url: "http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Khotkevych_H"
+  language: uk
+  type: article
+  role: "Детальна історична довідка про різнобічного генія та його трагічну долю."
+  hosting: link-only
+  task: "Виділити основні етапи його життя, зокрема період Гуцульського театру та відродження бандури."
+- title: "Гнат Хоткевич — життя геніального бандуриста"
+  source: "Український інтерес"
+  url: "https://uain.press/blogs/gnat-hotkevich-zhittya-genialnogo-bandurista-646242"
+  language: uk
+  type: article
+  role: "Додаткова стаття з фокусом на його музичну спадщину."
+  hosting: link-only
+  task: "Проаналізувати вплив митця на розвиток українського кобзарства."
 references:
 - title: Hnat Khotkevych
   note: Compiled from primary sources and academic articles on Khotkevych's life, bandura revival, and the Executed Renaissance
@@ -100,7 +117,7 @@ sequence: 100
 slug: hnat-khotkevych
 subtitle: 'Hnat Khotkevych: The One-Man Orchestra Silenced by the Executed Renaissance'
 title: 'Гнат Хоткевич: Людина-оркестр'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: музикант, що грає на бандурі
   pos: ч.

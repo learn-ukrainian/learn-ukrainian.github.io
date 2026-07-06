@@ -80,6 +80,22 @@ persona:
   role: Модератор семінару, що ставить під сумнів усталені наративи, вимагає доказів та вчить бачити за іконами авангарду складних людей у складному історичному контексті.
   voice: Art-Historian-Skeptic
 phase: BIO.4
+readings:
+- title: "Малевич Казимир Северинович"
+  source: "Вікіпедія"
+  url: "https://uk.wikipedia.org/wiki/Малевич_Казимир_Северинович"
+  language: uk
+  type: article
+  role: "Загальна біографічна довідка з акцентом на його українське походження та супрематизм."
+  hosting: link-only
+  task: "Ознайомитися з основними віхами творчості та дискусіями навколо його національної ідентичності."
+- title: "Від кубізму і футуризму до супрематизму. Новий живописний реалізм"
+  source: "Казимир Малевич (первинне джерело)"
+  language: uk
+  type: manifest
+  role: "Ключовий маніфест Малевича, де він викладає теорію супрематизму."
+  hosting: reading-needed
+  task: "Законспектувати основні ідеї 'звільнення' живопису від предметності."
 references:
 - title: Kazimir Malevich
   note: Compiled research on Malevich's Ukrainian period, Suprematism, and the decolonization debate.
@@ -103,7 +119,7 @@ sequence: 101
 slug: kazimir-malevich
 subtitle: 'Kazimir Malevich: A Revolution in Art'
 title: 'Казимир Малевич: Революція в мистецтві'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: напрям авангардного мистецтва, заснований К. Малевичем, що базується на комбінаціях простих геометричних фігур
   pos: ч.
