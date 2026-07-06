@@ -146,6 +146,66 @@ exact-item / word-spacing drops), and that the **soft** rules apply only when th
 scheduling (mode-penalty respected absent due pressure; conditional case coverage; no frame immediate-repeat;
 perceptual rotation), plus the §5 option-validator. Violations = build red.
 
+## 6b. SESSION MODEL — bounded sessions, not an open faucet ⟦fable 2026-07-06, user-directed; GH #4658⟧
+
+Practice must be a **well-defined session, not aimless practice** (user, 2026-07-06). The session layer
+WRAPS the §6 selector: the selector remains the single source of "next item"; the session only counts a
+budget down and stops. Session logic must never reorder or delay what the selector picks — the same
+subordination §0 imposes on variety.
+
+- **Session contract (primary CTA).** The home's primary action is one button — «Почати сесію» — with the
+  scope visible before starting: «N до повторення + M нових ≈ X хв» (X from a fixed 20s/item estimate).
+  Mode cards demote to a secondary "focus practice" row. Session sizes: quick 10 / standard 20 (default) /
+  «до нуля» (until due-queue empty). ⟦agy 2026-07-06 F2⟧ **Interface boundary**: the session layer defines
+  POOL CONSTRAINTS only (review budget, new-card allowance); the §6 selector retains total control over
+  ordering within the constrained pool — the session never sequences items itself.
+  ⟦agy 2026-07-06 F3⟧ **A1 scaffolding**: when the learner level is A1, session labels render with English
+  subtitles («Почати сесію» / *Start session*) per the project's A1-exception design; from A2 the labels
+  are Ukrainian-only — never raise English above A1.
+- **New-card caps.** `newPerSession` default 8, `newPerDay` default 20 (localStorage settings; a later
+  settings UI may expose them). The home separates the metrics: «До повторення: N» (reviews only) and
+  «Нові сьогодні: m/20». The today-ring denominator becomes `dueReviews + min(remaining daily new
+  allowance, available new)` — NEVER the whole deck (browser-verified defect: a fresh learner saw
+  «0/1150 сьогодні»).
+- **In-session progress + completion.** Stage bar shows «i/N». Completing the budget (or emptying the due
+  queue in «до нуля») renders a **session summary**: correct/lapsed counts, words that advanced to Review
+  state, streak effect, and a next-due preview («ще 12 о 18:00»), with «Ще одна сесія» / «Готово» CTAs.
+  ⟦agy 2026-07-06 F1 — replaces the earlier "end-on-success extra item" idea⟧ **Failed-card closure rule**:
+  a session does not close while an item rated `again` DURING this session remains unresolved — the item
+  re-enters the active pool (the §6 lapsed-exemption already re-exposes it) and the budget extends past N
+  by up to 5 items until each such item is answered successfully or the extension cap is reached (then the
+  summary lists it under «повторимо наступного разу»). Sessions end on resolution, not on an unrelated
+  success.
+- **Resume.** A session snapshot `{sessionSeed, history, budget, completed, modeFilter, level, startedAt}`
+  persists to `localStorage['lu-practice-session']` after every item. On mount, a snapshot younger than
+  6h with budget remaining offers «Продовжити сесію (i/N)»; starting fresh discards it. This also repairs
+  the variety/anti-repeat state loss on refresh (history was React-state only).
+  ⟦agy 2026-07-06 F4, adjudicated⟧ Resume restores seed + history + budget counters ONLY; item selection
+  recomputes against the LIVE FSRS store. The remaining queue is deliberately NOT persisted — ratings made
+  before the refresh mutated card state, so a stored queue would replay stale scheduling; recomputation is
+  correct-by-construction and keeps the selector the single source of "next item".
+- **Reveal-gated rating + interval preview.** Flashcards: rating buttons are INERT until the card is
+  flipped (browser-verified defect: rating an unseen answer is currently possible); keyboard rating keys
+  likewise. ⟦agy 2026-07-06 F6⟧ Keys: `Space`/`Enter` reveal; `1`–`4` (and the existing `a/h/g/e`) rate,
+  active only post-reveal; on flip, programmatic focus moves to the rating bar (screen-reader order
+  follows the interaction). After reveal, each rating button shows its scheduling consequence from the
+  FSRS preview («Ще раз ‹10 хв› · Добре ‹3 д› · Легко ‹7 д›») — the scheduler made visible is what makes
+  SRS feel purposeful.
+- **Stable stage.** The stage has a fixed min-height across item types (no interaction-zone jumping
+  between tall flashcards and compact MC); in-session the page hero collapses to a compact bar
+  (back · title · i/N) so controls stay above the fold at common laptop viewports.
+- **Failure states.** The practice island renders an error fallback with a retry button on hydration or
+  shard-fetch failure (browser-verified: a one-shot dynamic-import failure left the page permanently
+  blank). Unpublished level buttons (C2 today) render disabled with «скоро».
+
+**Tests**: session pool constraints (reviews before new within the pool; new ≤ newPerSession; daily
+allowance decrements and gates) while §6 ordering tests keep passing unchanged; today-ring denominator
+excludes uncapped new; completion fires at budget, with the failed-card closure extension (≤ +5, listed
+in the summary when capped); snapshot round-trip restores seed/history/budget and recomputes selection
+against live state; rating inert pre-flip (pointer AND keys); interval labels match `ts-fsrs` preview
+output; A1 renders EN subtitles, A2+ does not; level buttons without published shards are disabled.
+Violations = build red.
+
 ## 7. Quality / verification gates
 
 - All forms **VESUM-verified at build time** (skip non-discriminative/ambiguous forms — §2).
