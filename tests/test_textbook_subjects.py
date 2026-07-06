@@ -219,3 +219,15 @@ def test_batch2_slugs_resolve_to_new_canonical_subjects() -> None:
     for slug, expected in BATCH2_SOURCE_FILES.items():
         assert subject_for_source_file(slug) == expected, slug
         assert expected in CANONICAL_TEXTBOOK_SUBJECTS
+
+
+def test_author_map_single_source_and_batch2_authors_present() -> None:
+    """PR #4650: the dual-map drift class is dead — migration and ingest tool
+    must alias the canonical map, and every batch-1/2 slug author resolves."""
+    from scripts.ingest.incremental_textbook_ingest import AUTHOR_UK, WAVE1_SLUGS
+    from scripts.wiki.textbook_subjects import AUTHOR_UK_BY_TRANSLIT
+
+    assert AUTHOR_UK == AUTHOR_UK_BY_TRANSLIT
+    for slug in list(WAVE1_SLUGS) + list(BATCH2_SOURCE_FILES):
+        author = slug.split("-")[-2]
+        assert author in AUTHOR_UK_BY_TRANSLIT, slug

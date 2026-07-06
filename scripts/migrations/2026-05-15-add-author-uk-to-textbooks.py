@@ -31,8 +31,14 @@ from __future__ import annotations
 
 import argparse
 import sqlite3
+import sys
+from pathlib import Path as _P
+
+sys.path.insert(0, str(_P(__file__).resolve().parents[2] / 'scripts'))
 from dataclasses import dataclass, field
 from pathlib import Path
+
+from wiki.textbook_subjects import AUTHOR_UK_BY_TRANSLIT
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_DB = PROJECT_ROOT / "data" / "sources.db"
@@ -51,72 +57,10 @@ class MigrationStatus:
 # (plus the 6 entries added in PR #2013 and additional corpus authors
 # discovered via SELECT DISTINCT author FROM textbooks). Latin keys are
 # matched verbatim against textbooks.author.
-_LATIN_TO_UK: dict[str, str] = {
-    # Core mova/lit textbook authors (originally in TRANSLITS)
-    "karaman": "Караман",
-    "zakhariychuk": "Захарійчук",
-    "zaharijchuk": "Захарійчук",
-    "zahariichuk": "Захарійчук",
-    "kravcova": "Кравцова",
-    "kravtsova": "Кравцова",
-    "avramenko": "Авраменко",
-    "glazova": "Глазова",
-    "hlazova": "Глазова",
-    "zabolotnyi": "Заболотний",
-    "zabolotnij": "Заболотний",
-    "zakharchuk": "Захарчук",
-    "vashulenko": "Вашуленко",
-    "bolshakova": "Большакова",
-    "mishhenko": "Міщенко",
-    "mishchenko": "Міщенко",
-    "litvinova": "Літвінова",
-    "golub": "Голуб",
-    "varzatska": "Варзацька",
-    "ponomarova": "Пономарова",
-    # Additional textbook authors present in the corpus
-    "borzenko": "Борзенко",
-    "burnejko": "Бурнейко",
-    "galimov": "Галімов",
-    "gisem": "Гісем",
-    # Хлібовська: front-matter of 7-klas/8-klas/11-klas history textbooks
-    # confirms Х (Kh), not Г — the Latin transliteration here is unusual
-    # (h→Х instead of the more common h→Г). Verified via in-corpus
-    # textbook front-matter (2026-05-15 audit).
-    "hlibovska": "Хлібовська",
-    "kovalenko": "Коваленко",
-    "onatiy": "Онатій",
-    "pometun": "Пометун",
-    "savchenko": "Савченко",
-    "savchuk": "Савчук",
-    "schupak": "Щупак",
-    "shchupak": "Щупак",
-    "voron": "Ворон",
-    # #4593 wave-1 STEM authors (title-probed from source pages 2026-07-06)
-    "ryvkind": "Ривкінд",
-    "ister": "Істер",
-    "merzliak": "Мерзляк",
-    "zadorozhnyi": "Задорожний",
-    "bariakhtar": "Бар'яхтар",
-    "hryhorovych": "Григорович",
-    "popel": "Попель",
-    "anderson": "Андерсон",
-    "pryshliak": "Пришляк",
-    "krupska": "Крупська",
-    "lukianchykov": "Лук'янчиков",
-    "narovlianskyi": "Наровлянський",
-    "fuka": "Фука",
-    "komarovska": "Комаровська",
-    "masol": "Масол",
-    "zapotockyi": "Запотоцький",
-    "hilberh": "Гільберг",
-    # Non-textbook author-name strings already stored in Latin/English on
-    # ingestion (literary works, podcast, style-guide author). Map them
-    # to Cyrillic so author_uk is uniformly Cyrillic when populated.
-    "Anna Ohoiko": "Анна Огоїко",
-    "Borys Antonenko-Davydovych": "Борис Антоненко-Давидович",
-    "Mykola Pohribnyi": "Микола Погрібний",
-    "Ukrainian Lessons Podcast": "Ukrainian Lessons Podcast",
-}
+# Mapping moved to scripts/wiki/textbook_subjects.py::AUTHOR_UK_BY_TRANSLIT
+# (single source of truth; PR #4650). Kept as an alias for this module's
+# internal call sites and any external importers.
+_LATIN_TO_UK: dict[str, str] = AUTHOR_UK_BY_TRANSLIT
 
 
 def _has_column(conn: sqlite3.Connection, table: str, column: str) -> bool:
