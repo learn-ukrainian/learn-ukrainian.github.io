@@ -137,6 +137,12 @@ persona:
     механізми сталінського терору проти митців.
   voice: Literary Historian
 phase: BIO
+readings:
+- author: Енциклопедія Сучасної України
+  description: Академічна біографія Майка Йогансена.
+  difficulty: B2
+  title: Йогансен Майк (Михайло Гервасійович)
+  url: https://esu.com.ua/article-12974
 references:
 - note: Академічна біографічна стаття про життя й доробок письменника.
   path: https://esu.com.ua/article-12974
@@ -168,7 +174,7 @@ sequence: 127
 slug: maik-yohansen
 subtitle: 'Maik Yohansen: Avant-Garde Mystifier and Linguist of the Executed Renaissance'
 title: 'Майк Йогансен: Авангард, містифікація і розстріляне слово'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: мистецький напрям початку XX століття, що рвав із традицією й шукав радикально нових форм
   pos: ч.
