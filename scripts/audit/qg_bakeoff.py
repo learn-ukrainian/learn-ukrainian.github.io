@@ -25,6 +25,7 @@ from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass, replace
 from datetime import UTC, date, datetime
 from pathlib import Path
+from types import MappingProxyType
 from typing import Any
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
@@ -64,11 +65,36 @@ _FAILURE_CLASSES = {
     FAILURE_CLASS_OPS_QUOTA,
     FAILURE_CLASS_MODEL_FAILURE,
 }
+_RUN_SUFFIX_RE = re.compile(r"__r([1-9][0-9]*)$")
 # Verbatim reuse markers: the bare prompt slices the LIVE verdict taxonomy out of
 # the reviewer template so the fact-check verdict set can never fork from tooled.
 _TAXONOMY_START = "Each fact check MUST use exactly one verdict from this taxonomy:"
 _TAXONOMY_END = "Few-shot anchors:"
 _LEADING_CLAIM_FILLER_RE = re.compile(r"^(?:або|чи)\s+", re.IGNORECASE)
+
+DOMAIN_BY_SLUG: Mapping[str, str] = MappingProxyType(
+    {
+        "vesnianky": "folk",
+        "kupalski": "folk",
+        "zhnyvarski": "folk",
+        "koliadky": "folk",
+        "holosinnia": "folk",
+        "rusalii": "folk",
+        "vesilnyi-obriad": "folk",
+        "andriivski-vechornytsi": "folk",
+        "khmelnytskyi-1648": "history",
+        "khreshchennia-rusi": "history",
+        "yaroslav-sofiya": "history",
+        "zaporozka-sich": "history",
+        # The almanac fixture is routed to history because the measurement
+        # target is publication context and cultural-national movement history.
+        "rusalka-dnistrova": "history",
+        "ahatanhel-krymskyi": "bio",
+        "franko-ivan": "bio",
+        "lesya-ukrainka": "bio",
+        "skovoroda-hryhorii": "bio",
+    }
+)
 
 
 @dataclass(frozen=True, slots=True)
@@ -446,6 +472,69 @@ def _transport_slug(transport: str) -> str:
     return pin_slug(transport)
 
 
+def _validate_run_index(run_index: int) -> int:
+    if isinstance(run_index, bool) or not isinstance(run_index, int) or run_index < 1:
+        raise BakeoffConfigError(f"run_index must be an integer >= 1; got {run_index!r}")
+    return run_index
+
+
+def _artifact_run_index(artifact: Mapping[str, Any]) -> int:
+    """Return the artifact's authoritative 1-based run index.
+
+    ``run_index`` is additive for ``qg_bakeoff_run.v2``: legacy artifacts omit
+    it and are therefore run 1. Invalid explicit values fail closed because
+    aggregation and canary refusal depend on this field not being ambiguous.
+    """
+    raw = artifact.get("run_index", 1)
+    if isinstance(raw, bool) or not isinstance(raw, int) or raw < 1:
+        raise BakeoffConfigError(f"artifact run_index must be an integer >= 1; got {raw!r}")
+    return raw
+
+
+def _artifact_filename_run_index(path: Path) -> int:
+    match = _RUN_SUFFIX_RE.search(path.stem)
+    if match is None:
+        return 1
+    return int(match.group(1))
+
+
+def _assert_artifact_filename_matches_run_index(path: Path, artifact: Mapping[str, Any]) -> None:
+    field_run_index = _artifact_run_index(artifact)
+    filename_run_index = _artifact_filename_run_index(path)
+    if field_run_index != filename_run_index:
+        raise BakeoffConfigError(
+            f"{path}: artifact run_index={field_run_index} does not match "
+            f"filename run index={filename_run_index}"
+        )
+
+
+def _cell_artifact_path(
+    output_dir: Path,
+    route: llm_reviewer_dispatch.ReviewerRoute,
+    fixture: BakeoffFixture,
+    arm: str,
+    run_index: int = 1,
+) -> Path:
+    """Build the unique artifact path for one model/passage/arm/run cell."""
+    run_index = _validate_run_index(run_index)
+    if arm not in (TOOLED_ARM, BARE_ARM):
+        raise BakeoffConfigError(f"cell artifact arm must be {TOOLED_ARM!r} or {BARE_ARM!r}; got {arm!r}")
+    stem = f"{pin_slug(route.reviewer_model_id)}__{fixture.slug}"
+    if arm == BARE_ARM:
+        stem += f"__bare__{_transport_slug(_route_transport(route))}"
+    if run_index > 1:
+        stem += f"__r{run_index}"
+    return output_dir / f"{stem}.json"
+
+
+def domain_for_slug(slug: str) -> str:
+    """Return the locked bakeoff domain for a fixture slug, failing closed."""
+    try:
+        return DOMAIN_BY_SLUG[slug]
+    except KeyError as exc:
+        raise BakeoffConfigError(f"missing DOMAIN_BY_SLUG mapping for fixture slug: {slug!r}") from exc
+
+
 def _is_subscription_bare_route(route: llm_reviewer_dispatch.ReviewerRoute) -> bool:
     return route.route_name in _SUBSCRIPTION_BARE_IDENTITIES
 
@@ -813,6 +902,7 @@ def run_matrix(
     arm: str = TOOLED_ARM,
     force: bool = False,
     retry_failures: bool = False,
+    runs: int = 1,
 ) -> list[BakeoffRun]:
     """Run or resume every model x fixture pair for the requested arm(s).
 
@@ -827,6 +917,7 @@ def run_matrix(
     CI-refusal / ``QG_BAKEOFF=1`` opt-in that ``main()`` enforces.
     """
     require_offline_opt_in()
+    runs = _validate_run_index(runs)
     if arm not in _ARM_CHOICES:
         raise BakeoffConfigError(f"arm must be one of {list(_ARM_CHOICES)}; got {arm!r}")
     routes = [route_for_matrix_pin(pin, arm=arm) for pin in model_pins]
@@ -841,38 +932,41 @@ def run_matrix(
         if _is_subscription_bare_route(route):
             continue
         assert_model_routing_allowed(route.reviewer_model_id, context="qg_bakeoff matrix pin")
-    if bare_runner is invoke_bakeoff_route_bare:
-        preflight_subscription_bare_routes(routes)
     output_dir.mkdir(parents=True, exist_ok=True)
     run_tooled = arm in (TOOLED_ARM, BOTH_ARM)
     run_bare = arm in (BARE_ARM, BOTH_ARM)
-    runs: list[BakeoffRun] = []
-    for route in routes:
-        for fixture in fixtures:
-            if run_tooled:
-                runs.append(
-                    run_one(
-                        route,
-                        fixture,
-                        output_dir=output_dir,
-                        runner=runner,
-                        force=force,
-                        retry_failures=retry_failures,
+    matrix_runs: list[BakeoffRun] = []
+    for run_index in range(1, runs + 1):
+        if run_bare and bare_runner is invoke_bakeoff_route_bare:
+            preflight_subscription_bare_routes(routes)
+        for route in routes:
+            for fixture in fixtures:
+                if run_tooled:
+                    matrix_runs.append(
+                        run_one(
+                            route,
+                            fixture,
+                            output_dir=output_dir,
+                            runner=runner,
+                            force=force,
+                            retry_failures=retry_failures,
+                            run_index=run_index,
+                        )
                     )
-                )
-            if run_bare:
-                runs.append(
-                    run_one_bare(
-                        route,
-                        fixture,
-                        output_dir=output_dir,
-                        runner=bare_runner,
-                        force=force,
-                        retry_failures=retry_failures,
+                if run_bare:
+                    matrix_runs.append(
+                        run_one_bare(
+                            route,
+                            fixture,
+                            output_dir=output_dir,
+                            runner=bare_runner,
+                            force=force,
+                            retry_failures=retry_failures,
+                            run_index=run_index,
+                        )
                     )
-                )
     write_scorecard(output_dir / SCORECARD_NAME, _load_all_artifacts(output_dir))
-    return runs
+    return matrix_runs
 
 
 def _is_bakeoff_cell(artifact: Mapping[str, Any]) -> bool:
@@ -897,6 +991,7 @@ def _load_all_artifacts(output_dir: Path) -> list[dict[str, Any]]:
             continue
         if not _is_bakeoff_cell(artifact):
             continue
+        _assert_artifact_filename_matches_run_index(path, artifact)
         artifacts.append(artifact)
     return artifacts
 
@@ -970,6 +1065,7 @@ def _error_artifact(
     wall_seconds: float,
     *,
     arm: str,
+    run_index: int = 1,
     attempt_count: int = 1,
     transport_retry: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
@@ -983,6 +1079,7 @@ def _error_artifact(
     return {
         "schema_version": RUN_SCHEMA_VERSION,
         "arm": arm,
+        "run_index": _validate_run_index(run_index),
         "created_at": _now_z(),
         "fixture": _fixture_block(fixture),
         "model": _model_block(route),
@@ -1014,6 +1111,7 @@ def run_one(
     runner: ProviderRunner = invoke_bakeoff_route,
     force: bool = False,
     retry_failures: bool = False,
+    run_index: int = 1,
 ) -> BakeoffRun:
     """Run or resume one model x passage TOOLED bakeoff artifact.
 
@@ -1023,9 +1121,12 @@ def run_one(
     """
     if runner is invoke_bakeoff_route:
         require_offline_opt_in()
-    artifact_path = output_dir / f"{pin_slug(route.reviewer_model_id)}__{fixture.slug}.json"
+    run_index = _validate_run_index(run_index)
+    artifact_path = _cell_artifact_path(output_dir, route, fixture, TOOLED_ARM, run_index)
     if artifact_path.exists() and not force:
         artifact = json.loads(artifact_path.read_text(encoding="utf-8"))
+        _assert_artifact_filename_matches_run_index(artifact_path, artifact)
+        _assert_resume_transport_matches(artifact, route, artifact_path)
         # retry_failures is a RESUME MODIFIER: missing cells always run (plain
         # resume behavior), completed cells always skip, and error cells re-run
         # only under the flag (codex review of #4463 pinned these semantics).
@@ -1036,6 +1137,8 @@ def run_one(
     # content_surface_gates. There is no literal ``seminar`` level.
     prompt = llm_reviewer.build_reviewer_prompt(BAKEOFF_LEVEL, f"bakeoff-{fixture.slug}", fixture.passage_md)
     task_id = f"qg-bakeoff-{pin_slug(route.reviewer_model_id)}-{fixture.slug}"
+    if run_index > 1:
+        task_id = f"{task_id}-r{run_index}"
     started = time.monotonic()
     try:
         gate_result = _invoke_and_gate(route, prompt, task_id, runner)
@@ -1045,7 +1148,7 @@ def run_one(
         # matrix crash (first live run: gemma findings flunked validate_finding
         # and killed all 24 cells). Score = every fixture claim missing.
         wall_seconds = round(time.monotonic() - started, 3)
-        artifact = _error_artifact(route, fixture, exc, wall_seconds, arm=TOOLED_ARM)
+        artifact = _error_artifact(route, fixture, exc, wall_seconds, arm=TOOLED_ARM, run_index=run_index)
         artifact_path.write_text(
             json.dumps(artifact, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8"
         )
@@ -1061,6 +1164,7 @@ def run_one(
     artifact = {
         "schema_version": RUN_SCHEMA_VERSION,
         "arm": TOOLED_ARM,
+        "run_index": run_index,
         "created_at": _now_z(),
         "fixture": _fixture_block(fixture),
         "model": _model_block(route, dispatch),
@@ -1086,11 +1190,9 @@ def _bare_artifact_path(
     output_dir: Path,
     route: llm_reviewer_dispatch.ReviewerRoute,
     fixture: BakeoffFixture,
+    run_index: int = 1,
 ) -> Path:
-    return output_dir / (
-        f"{pin_slug(route.reviewer_model_id)}__{fixture.slug}__bare__"
-        f"{_transport_slug(_route_transport(route))}.json"
-    )
+    return _cell_artifact_path(output_dir, route, fixture, BARE_ARM, run_index)
 
 
 def _assert_resume_transport_matches(
@@ -1102,7 +1204,7 @@ def _assert_resume_transport_matches(
     route_transport = _route_transport(route)
     if artifact_transport != route_transport:
         raise BakeoffConfigError(
-            f"{artifact_path}: existing bare artifact transport={artifact_transport!r} "
+            f"{artifact_path}: existing artifact transport={artifact_transport!r} "
             f"does not match route transport={route_transport!r}; use --force with a clean "
             "artifact path instead of silently overwriting a different transport"
         )
@@ -1144,6 +1246,7 @@ def run_one_bare(
     runner: BareRunner = invoke_bakeoff_route_bare,
     force: bool = False,
     retry_failures: bool = False,
+    run_index: int = 1,
 ) -> BakeoffRun:
     """Run or resume one model x passage BARE (tool-free control) artifact.
 
@@ -1155,15 +1258,19 @@ def run_one_bare(
     """
     if runner is invoke_bakeoff_route_bare:
         require_offline_opt_in()
-    artifact_path = _bare_artifact_path(output_dir, route, fixture)
+    run_index = _validate_run_index(run_index)
+    artifact_path = _bare_artifact_path(output_dir, route, fixture, run_index)
     if artifact_path.exists() and not force:
         artifact = json.loads(artifact_path.read_text(encoding="utf-8"))
+        _assert_artifact_filename_matches_run_index(artifact_path, artifact)
         _assert_resume_transport_matches(artifact, route, artifact_path)
         if not (retry_failures and artifact.get("status") == "error"):
             return BakeoffRun(artifact_path=artifact_path, artifact=artifact, skipped=True)
 
     prompt = build_bare_factcheck_prompt(fixture.title, fixture.passage_md)
     task_id = f"qg-bakeoff-bare-{pin_slug(route.reviewer_model_id)}-{fixture.slug}"
+    if run_index > 1:
+        task_id = f"{task_id}-r{run_index}"
     started = time.monotonic()
     attempt_count = 1
     transport_retry = {"attempted": False, "reason": None}
@@ -1178,6 +1285,7 @@ def run_one_bare(
             exc,
             wall_seconds,
             arm=BARE_ARM,
+            run_index=run_index,
             attempt_count=int(getattr(exc, "attempt_count", attempt_count) or attempt_count),
             transport_retry=getattr(exc, "transport_retry", transport_retry),
         )
@@ -1195,6 +1303,7 @@ def run_one_bare(
     artifact = {
         "schema_version": RUN_SCHEMA_VERSION,
         "arm": BARE_ARM,
+        "run_index": run_index,
         "created_at": _now_z(),
         "fixture": _fixture_block(fixture),
         "model": _model_block(route, dispatch),
@@ -1394,6 +1503,8 @@ def write_scorecard(path: Path, artifacts: Sequence[Mapping[str, Any]]) -> None:
     regular_artifacts = [a for a in artifacts if not _is_subscription_runtime_artifact(a)]
     subscription_artifacts = [a for a in artifacts if _is_subscription_runtime_artifact(a)]
     judgment_artifacts = [a for a in regular_artifacts if not _is_ops_quota_artifact(a)]
+    all_judgment_artifacts = [a for a in artifacts if not _is_ops_quota_artifact(a)]
+    multi_run = _max_run_index(artifacts) > 1
     lines = [
         "# QG Bakeoff Scorecard",
         "",
@@ -1402,7 +1513,7 @@ def write_scorecard(path: Path, artifacts: Sequence[Mapping[str, Any]]) -> None:
         "Fractions are exact. `low-N` marks denominators below 10.",
         "",
     ]
-    lines.extend(_runs_table_section("Runs", regular_artifacts))
+    lines.extend(_runs_table_section("Runs", regular_artifacts, show_run=multi_run))
     lines.extend(_ops_quota_section(regular_artifacts))
     lines.extend(_totals_and_lift_section("With Anchor", judgment_artifacts))
     lines.extend(
@@ -1411,6 +1522,9 @@ def write_scorecard(path: Path, artifacts: Sequence[Mapping[str, Any]]) -> None:
             [a for a in judgment_artifacts if _fixture_slug(a) != ANCHOR_SLUG],
         )
     )
+    if multi_run:
+        lines.extend(_run_variance_section(all_judgment_artifacts, scheduled_runs=_max_run_index(artifacts)))
+        lines.extend(_domain_totals_section(all_judgment_artifacts))
     if subscription_artifacts:
         lines.extend(
             [
@@ -1421,48 +1535,68 @@ def write_scorecard(path: Path, artifacts: Sequence[Mapping[str, Any]]) -> None:
                 "",
             ]
         )
-        lines.extend(_runs_table(subscription_artifacts))
+        lines.extend(_runs_table(subscription_artifacts, show_run=multi_run))
         lines.extend(_ops_quota_section(subscription_artifacts))
     path.write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
-def _runs_table_section(title: str, artifacts: Sequence[Mapping[str, Any]]) -> list[str]:
-    return ["", f"## {title}", "", *_runs_table(artifacts)]
+def _runs_table_section(title: str, artifacts: Sequence[Mapping[str, Any]], *, show_run: bool = False) -> list[str]:
+    return ["", f"## {title}", "", *_runs_table(artifacts, show_run=show_run)]
 
 
-def _runs_table(artifacts: Sequence[Mapping[str, Any]]) -> list[str]:
-    lines = [
-        "| model | transport | entrypoint | passage | arm | status | failure_class | parse_lenient | model judgment | live admissible | missing | U honesty | M alignment | true unsupported | invalid | inadmissible | tools | wall_s |",
-        "| --- | --- | --- | --- | --- | --- | --- | --- | ---: | ---: | ---: | --- | --- | --- | ---: | ---: | ---: | ---: |",
-    ]
+def _runs_table(artifacts: Sequence[Mapping[str, Any]], *, show_run: bool = False) -> list[str]:
+    if show_run:
+        lines = [
+            "| model | transport | entrypoint | passage | arm | run | status | failure_class | parse_lenient | model judgment | live admissible | missing | U honesty | M alignment | true unsupported | invalid | inadmissible | tools | wall_s |",
+            "| --- | --- | --- | --- | --- | ---: | --- | --- | --- | ---: | ---: | ---: | --- | --- | --- | ---: | ---: | ---: | ---: |",
+        ]
+    else:
+        lines = [
+            "| model | transport | entrypoint | passage | arm | status | failure_class | parse_lenient | model judgment | live admissible | missing | U honesty | M alignment | true unsupported | invalid | inadmissible | tools | wall_s |",
+            "| --- | --- | --- | --- | --- | --- | --- | --- | ---: | ---: | ---: | --- | --- | --- | ---: | ---: | ---: | ---: |",
+        ]
     if not artifacts:
-        lines.append("| n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | 0 | 0 | 0 | 0/0 low-N | 0/0 low-N | 0/0 low-N | 0 | 0 | 0 | 0 |")
+        if show_run:
+            lines.append("| n/a | n/a | n/a | n/a | n/a | 0 | n/a | n/a | n/a | 0 | 0 | 0 | 0/0 low-N | 0/0 low-N | 0/0 low-N | 0 | 0 | 0 | 0 |")
+        else:
+            lines.append("| n/a | n/a | n/a | n/a | n/a | n/a | n/a | n/a | 0 | 0 | 0 | 0/0 low-N | 0/0 low-N | 0/0 low-N | 0 | 0 | 0 | 0 |")
         return lines
     for artifact in sorted(artifacts, key=_artifact_sort_key):
         score = _score(artifact)
         fractions = score.get("fractions", {})
-        lines.append(
-            "| {model} | {transport} | {entrypoint} | {passage} | {arm} | {status} | {failure_class} | {parse_lenient} | {model_score} | {live_score} | {missing} | {u} | {m} | {true_bad} | {invalid} | {inadmissible} | {tools} | {wall} |".format(
-                model=_model_label(artifact),
-                transport=_artifact_transport(artifact),
-                entrypoint=_artifact_entrypoint(artifact),
-                passage=_fixture_slug(artifact),
-                arm=_artifact_arm(artifact),
-                status=artifact.get("status", "unknown"),
-                failure_class=artifact.get("failure_class") or "n/a",
-                parse_lenient=bool(artifact.get("response_parse_lenient")),
-                model_score=score.get("model_judgment_score", 0),
-                live_score=score.get("live_admissible_score", 0),
-                missing=score.get("missing_claims", 0),
-                u=_fraction_label(fractions.get("class_u_honesty")),
-                m=_fraction_label(fractions.get("class_m_alignment")),
-                true_bad=_fraction_label(fractions.get("false_unsupported_on_true")),
-                invalid=score.get("invalid_fact_checks", 0),
-                inadmissible=score.get("inadmissible_positive_verdicts", 0),
-                tools=artifact.get("tool_call_count", 0),
-                wall=artifact.get("wall_seconds", 0),
+        values = {
+            "model": _model_label(artifact),
+            "transport": _artifact_transport(artifact),
+            "entrypoint": _artifact_entrypoint(artifact),
+            "passage": _fixture_slug(artifact),
+            "arm": _artifact_arm(artifact),
+            "run": _artifact_run_index(artifact),
+            "status": artifact.get("status", "unknown"),
+            "failure_class": artifact.get("failure_class") or "n/a",
+            "parse_lenient": bool(artifact.get("response_parse_lenient")),
+            "model_score": score.get("model_judgment_score", 0),
+            "live_score": score.get("live_admissible_score", 0),
+            "missing": score.get("missing_claims", 0),
+            "u": _fraction_label(fractions.get("class_u_honesty")),
+            "m": _fraction_label(fractions.get("class_m_alignment")),
+            "true_bad": _fraction_label(fractions.get("false_unsupported_on_true")),
+            "invalid": score.get("invalid_fact_checks", 0),
+            "inadmissible": score.get("inadmissible_positive_verdicts", 0),
+            "tools": artifact.get("tool_call_count", 0),
+            "wall": artifact.get("wall_seconds", 0),
+        }
+        if show_run:
+            lines.append(
+                "| {model} | {transport} | {entrypoint} | {passage} | {arm} | {run} | {status} | {failure_class} | {parse_lenient} | {model_score} | {live_score} | {missing} | {u} | {m} | {true_bad} | {invalid} | {inadmissible} | {tools} | {wall} |".format(
+                    **values
+                )
             )
-        )
+        else:
+            lines.append(
+                "| {model} | {transport} | {entrypoint} | {passage} | {arm} | {status} | {failure_class} | {parse_lenient} | {model_score} | {live_score} | {missing} | {u} | {m} | {true_bad} | {invalid} | {inadmissible} | {tools} | {wall} |".format(
+                    **values
+                )
+            )
     return lines
 
 
@@ -1495,9 +1629,10 @@ def _ops_quota_section(artifacts: Sequence[Mapping[str, Any]]) -> list[str]:
     return lines
 
 
-def default_output_dir(day: date | None = None) -> Path:
+def default_output_dir(day: date | None = None, *, multi_run: bool = False) -> Path:
     effective = day or datetime.now(UTC).date()
-    return DEFAULT_OUTPUT_ROOT / f"{effective.isoformat()}-qg-bakeoff"
+    suffix = "-qg-bakeoff-multirun" if multi_run else "-qg-bakeoff"
+    return DEFAULT_OUTPUT_ROOT / f"{effective.isoformat()}{suffix}"
 
 
 def model_pins_from_args(values: Sequence[str] | None) -> list[str]:
@@ -1548,6 +1683,7 @@ def rescore_artifacts(output_dir: Path, fixtures_dir: Path = FIXTURE_DIR) -> int
             # See _is_bakeoff_cell — foreign JSONs (canary verdicts etc.)
             # must never be rescored or rendered as cells.
             continue
+        _assert_artifact_filename_matches_run_index(path, artifact)
         # Backfill ``arm`` for backward compat: pre-arm tooled artifacts have no
         # field (→ "tooled"); a ``__bare`` filename identifies a bare artifact even
         # if it somehow lacks the field. Rescore covers BOTH arms — the bare grounding
@@ -1603,6 +1739,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             "re-run cells whose existing artifact has status=error. Completed cells stay skipped."
         ),
     )
+    parser.add_argument("--runs", type=int, default=1, help="Repeat every requested cell N times (default: 1)")
     parser.add_argument(
         "--rescore",
         action="store_true",
@@ -1617,10 +1754,11 @@ def main(argv: Sequence[str] | None = None) -> int:
             print(f"rescored {n} artifacts under {output_dir}")
             print(f"scorecard: {output_dir / SCORECARD_NAME}")
             return 0
+        runs_requested = _validate_run_index(args.runs)
         require_offline_opt_in()
         fixtures = load_fixtures(args.fixtures_dir, args.fixtures)
         pins = model_pins_from_args(args.models)
-        output_dir = args.out_dir or default_output_dir()
+        output_dir = args.out_dir or default_output_dir(multi_run=runs_requested > 1)
         runs = run_matrix(
             fixtures,
             pins,
@@ -1628,6 +1766,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             arm=args.arm,
             force=args.force,
             retry_failures=args.retry_failures,
+            runs=runs_requested,
         )
     except BakeoffConfigError as exc:
         print(str(exc), file=sys.stderr)
@@ -1844,6 +1983,26 @@ def _fabrication_success(verdict: str) -> bool:
     return qg_factcheck_scoring.score_verdict(verdict, claim_is_true=False) > 0
 
 
+def _claim_stability_class(claim: Mapping[str, Any]) -> str:
+    """Classify one scored claim for run-to-run stability.
+
+    The classes are intentionally coarse and paper-facing:
+    ``true-confirmed`` when a true claim is judged ``CONFIRMED``;
+    ``fabrication-caught`` when a false claim receives any verdict that scores
+    positively for a fabrication; ``missed`` when the fixture claim was not
+    matched; and ``other`` for admissibility edges such as UNATTESTED on a
+    true claim or any remaining non-headline outcome.
+    """
+    if claim.get("matched") is False:
+        return "missed"
+    verdict = str(claim.get("model_judgment_verdict") or _judgment_verdict(claim)).strip().upper()
+    if claim.get("is_true") is True and verdict == "CONFIRMED":
+        return "true-confirmed"
+    if claim.get("is_true") is False and _fabrication_success(verdict):
+        return "fabrication-caught"
+    return "other"
+
+
 def _fraction(numerator: int, denominator: int) -> dict[str, Any]:
     return {
         "numerator": numerator,
@@ -1860,9 +2019,198 @@ def _fraction_label(value: Any) -> str:
     return f"{value.get('text', '0/0')}{suffix}"
 
 
+_TOTAL_NUMERIC_KEYS = (
+    "model_judgment_score",
+    "live_admissible_score",
+    "missing_claims",
+    "invalid_fact_checks",
+    "inadmissible_positive_verdicts",
+    "tool_call_count",
+    "wall_seconds",
+)
+
+
+def _max_run_index(artifacts: Sequence[Mapping[str, Any]]) -> int:
+    if not artifacts:
+        return 1
+    return max(_artifact_run_index(artifact) for artifact in artifacts)
+
+
+def _empty_total_row() -> dict[str, Any]:
+    return {
+        "passages": 0,
+        "model_judgment_score": 0,
+        "live_admissible_score": 0,
+        "class_u_good": 0,
+        "class_u_total": 0,
+        "class_m_good": 0,
+        "class_m_total": 0,
+        "true_unsupported": 0,
+        "true_total": 0,
+        "missing_claims": 0,
+        "invalid_fact_checks": 0,
+        "inadmissible_positive_verdicts": 0,
+        "tool_call_count": 0,
+        "wall_seconds": 0.0,
+    }
+
+
+def _unique_judgment_cells(
+    artifacts: Sequence[Mapping[str, Any]],
+) -> dict[tuple[tuple[str, str, str], str, str, int], Mapping[str, Any]]:
+    cells: dict[tuple[tuple[str, str, str], str, str, int], Mapping[str, Any]] = {}
+    for artifact in artifacts:
+        if _is_ops_quota_artifact(artifact):
+            continue
+        key = (_model_key(artifact), _fixture_slug(artifact), _artifact_arm(artifact), _artifact_run_index(artifact))
+        cells[key] = artifact
+    return cells
+
+
+def _add_artifact_to_total(row: dict[str, Any], artifact: Mapping[str, Any]) -> None:
+    score = _score(artifact)
+    row["passages"] += 1
+    row["model_judgment_score"] += int(score.get("model_judgment_score") or 0)
+    row["live_admissible_score"] += int(score.get("live_admissible_score") or 0)
+    row["missing_claims"] += int(score.get("missing_claims") or 0)
+    row["invalid_fact_checks"] += int(score.get("invalid_fact_checks") or 0)
+    row["inadmissible_positive_verdicts"] += int(score.get("inadmissible_positive_verdicts") or 0)
+    row["tool_call_count"] += int(artifact.get("tool_call_count") or 0)
+    row["wall_seconds"] += float(artifact.get("wall_seconds") or 0.0)
+    raw_fractions = score.get("fractions")
+    fractions = raw_fractions if isinstance(raw_fractions, Mapping) else {}
+    _add_fraction(row, "class_u", fractions.get("class_u_honesty"))
+    _add_fraction(row, "class_m", fractions.get("class_m_alignment"))
+    _add_fraction(
+        row,
+        "true",
+        fractions.get("false_unsupported_on_true"),
+        good_key="true_unsupported",
+        total_key="true_total",
+    )
+
+
+def _mean(values: Sequence[float]) -> float:
+    return sum(values) / len(values) if values else 0.0
+
+
+def _sample_sd(values: Sequence[float]) -> float:
+    if len(values) < 2:
+        return 0.0
+    center = _mean(values)
+    return (sum((value - center) ** 2 for value in values) / (len(values) - 1)) ** 0.5
+
+
+def _stats(values: Sequence[float]) -> dict[str, Any]:
+    vals = list(values)
+    if not vals:
+        return {"mean": 0.0, "sd": 0.0, "min": 0.0, "max": 0.0, "n": 0, "values": []}
+    return {
+        "mean": _mean(vals),
+        "sd": _sample_sd(vals),
+        "min": min(vals),
+        "max": max(vals),
+        "n": len(vals),
+        "values": vals,
+    }
+
+
+def _run_fraction_rate(row: Mapping[str, Any], good_key: str, total_key: str) -> float | None:
+    denominator = int(row.get(total_key) or 0)
+    if denominator <= 0:
+        return None
+    return int(row.get(good_key) or 0) / denominator
+
+
+def _fraction_rate_summary(rows: Sequence[Mapping[str, Any]], good_key: str, total_key: str) -> dict[str, Any]:
+    rates: list[float] = []
+    denominators: list[int] = []
+    for row in rows:
+        denominator = int(row.get(total_key) or 0)
+        denominators.append(denominator)
+        rate = _run_fraction_rate(row, good_key, total_key)
+        if rate is not None:
+            rates.append(rate)
+    summary = _stats(rates)
+    summary["denominators"] = denominators
+    summary["low_n"] = any(denominator < 10 for denominator in denominators)
+    return summary
+
+
+def _format_number(value: float) -> str:
+    if abs(value - round(value)) < 1e-9:
+        return str(round(value))
+    return f"{value:.3f}".rstrip("0").rstrip(".")
+
+
+def _stats_label(value: Any) -> str:
+    if not isinstance(value, Mapping):
+        return _format_number(float(value or 0))
+    return "{mean} ± {sd} [{lo}..{hi}]".format(
+        mean=_format_number(float(value.get("mean") or 0.0)),
+        sd=_format_number(float(value.get("sd") or 0.0)),
+        lo=_format_number(float(value.get("min") or 0.0)),
+        hi=_format_number(float(value.get("max") or 0.0)),
+    )
+
+
+def _fraction_summary_label(value: Any) -> str:
+    if not isinstance(value, Mapping) or int(value.get("n") or 0) == 0:
+        return "0/0 low-N"
+    suffix = " low-N" if value.get("low_n") else ""
+    return f"{_stats_label(value)}{suffix}"
+
+
+def _summarize_run_rows(rows: Sequence[Mapping[str, Any]], run_indices: Sequence[int]) -> dict[str, Any]:
+    summary: dict[str, Any] = {
+        "multi_run": True,
+        "runs": len(rows),
+        "run_indices": list(run_indices),
+        "passages_per_run": [int(row.get("passages") or 0) for row in rows],
+    }
+    summary["passages"] = _stats([float(row.get("passages") or 0) for row in rows])
+    for key in _TOTAL_NUMERIC_KEYS:
+        summary[key] = _stats([float(row.get(key) or 0) for row in rows])
+    summary["class_u_honesty"] = _fraction_rate_summary(rows, "class_u_good", "class_u_total")
+    summary["class_m_alignment"] = _fraction_rate_summary(rows, "class_m_good", "class_m_total")
+    summary["false_unsupported_on_true"] = _fraction_rate_summary(rows, "true_unsupported", "true_total")
+    return summary
+
+
 def _totals_and_lift_section(title: str, artifacts: Sequence[Mapping[str, Any]]) -> list[str]:
     """Per-(model, arm) totals table + the harness-lift table for one anchor split."""
     totals = _aggregate_by_model_arm(artifacts)
+    if _max_run_index(artifacts) > 1:
+        lines = [
+            "",
+            f"## Totals {title}",
+            "",
+            "| model | arm | runs | passages/run | model judgment | live admissible | U honesty | M alignment headline | true unsupported | missing | invalid | inadmissible | tools | wall_s |",
+            "| --- | --- | ---: | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |",
+        ]
+        for (model_key, arm), row in sorted(totals.items()):
+            model = f"{model_key[0]} [{model_key[1]}/{model_key[2]}]"
+            passages = "/".join(str(value) for value in row["passages_per_run"]) or "0"
+            lines.append(
+                "| {model} | {arm} | {runs} | {passages} | {model_score} | {live_score} | {u} | {m} | {true_bad} | {missing} | {invalid} | {inadmissible} | {tools} | {wall} |".format(
+                    model=model,
+                    arm=arm,
+                    runs=row["runs"],
+                    passages=passages,
+                    model_score=_stats_label(row["model_judgment_score"]),
+                    live_score=_stats_label(row["live_admissible_score"]),
+                    u=_fraction_summary_label(row["class_u_honesty"]),
+                    m=_fraction_summary_label(row["class_m_alignment"]),
+                    true_bad=_fraction_summary_label(row["false_unsupported_on_true"]),
+                    missing=_stats_label(row["missing_claims"]),
+                    invalid=_stats_label(row["invalid_fact_checks"]),
+                    inadmissible=_stats_label(row["inadmissible_positive_verdicts"]),
+                    tools=_stats_label(row["tool_call_count"]),
+                    wall=_stats_label(row["wall_seconds"]),
+                )
+            )
+        lines.extend(_harness_lift_section(title, artifacts))
+        return lines
     lines = [
         "",
         f"## Totals {title}",
@@ -1907,6 +2255,8 @@ def _harness_lift_section(
     artifacts do not. A model with zero paired fixtures shows ``n/a`` — never a
     fabricated number.
     """
+    if _max_run_index(artifacts) > 1:
+        return _harness_lift_section_multirun(title, artifacts)
     cells: dict[tuple[str, str, str], dict[str, dict[str, Mapping[str, Any]]]] = defaultdict(lambda: defaultdict(dict))
     for artifact in artifacts:
         if _is_ops_quota_artifact(artifact):
@@ -1967,6 +2317,329 @@ def _harness_lift_section(
     return lines
 
 
+def _score_number(artifact: Mapping[str, Any], key: str) -> float:
+    return float(_score(artifact).get(key) or 0.0)
+
+
+def _score_fraction_rate(artifact: Mapping[str, Any], key: str) -> float | None:
+    fractions = _score(artifact).get("fractions")
+    fraction = fractions.get(key) if isinstance(fractions, Mapping) else None
+    if not isinstance(fraction, Mapping):
+        return None
+    denominator = int(fraction.get("denominator") or 0)
+    if denominator <= 0:
+        return None
+    return int(fraction.get("numerator") or 0) / denominator
+
+
+def _arm_mean_for_fixture(
+    runs: Mapping[int, Mapping[str, Any]],
+    key: str,
+) -> float:
+    return _mean([_score_number(artifact, key) for _run, artifact in sorted(runs.items())])
+
+
+def _arm_fraction_mean_for_fixture(
+    runs: Mapping[int, Mapping[str, Any]],
+    key: str,
+) -> float | None:
+    rates = [
+        rate
+        for _run, artifact in sorted(runs.items())
+        if (rate := _score_fraction_rate(artifact, key)) is not None
+    ]
+    return _mean(rates) if rates else None
+
+
+def _harness_lift_section_multirun(
+    title: str,
+    artifacts: Sequence[Mapping[str, Any]],
+) -> list[str]:
+    scheduled_runs = _max_run_index(artifacts)
+    cells: dict[
+        tuple[str, str, str],
+        dict[str, dict[str, dict[int, Mapping[str, Any]]]],
+    ] = defaultdict(lambda: defaultdict(lambda: defaultdict(dict)))
+    for artifact in artifacts:
+        if _is_ops_quota_artifact(artifact):
+            continue
+        cells[_model_key(artifact)][_fixture_slug(artifact)][_artifact_arm(artifact)][
+            _artifact_run_index(artifact)
+        ] = artifact
+
+    lines = [
+        "",
+        f"## Harness Lift {title}",
+        "",
+        "Lift = tooled model judgment mean − bare model judgment mean (positive = the harness helps),",
+        "over PAIRED passages only. For repeat runs each arm is averaged within a passage first;",
+        "run indexes are not paired across arms. Ranges are across paired passage lifts.",
+        f"Observed run ceiling: {scheduled_runs}.",
+        "",
+        "| model | paired passages | run coverage | tooled model judgment | bare model judgment | harness_lift | tooled M alignment | bare M alignment |",
+        "| --- | ---: | --- | --- | --- | --- | --- | --- |",
+    ]
+    for model_key in sorted(cells):
+        paired = sorted(
+            slug
+            for slug, arms in cells[model_key].items()
+            if TOOLED_ARM in arms and BARE_ARM in arms
+        )
+        model_label = f"{model_key[0]} [{model_key[1]}/{model_key[2]}]"
+        if not paired:
+            lines.append(f"| {model_label} | 0 | n/a | n/a | n/a | n/a | n/a | n/a |")
+            continue
+        tooled_means: list[float] = []
+        bare_means: list[float] = []
+        lifts: list[float] = []
+        tooled_m: list[float] = []
+        bare_m: list[float] = []
+        run_counts: list[int] = []
+        for slug in paired:
+            arms = cells[model_key][slug]
+            run_counts.extend([len(arms[TOOLED_ARM]), len(arms[BARE_ARM])])
+            tooled_mean = _arm_mean_for_fixture(arms[TOOLED_ARM], "model_judgment_score")
+            bare_mean = _arm_mean_for_fixture(arms[BARE_ARM], "model_judgment_score")
+            tooled_means.append(tooled_mean)
+            bare_means.append(bare_mean)
+            lifts.append(tooled_mean - bare_mean)
+            tooled_rate = _arm_fraction_mean_for_fixture(arms[TOOLED_ARM], "class_m_alignment")
+            bare_rate = _arm_fraction_mean_for_fixture(arms[BARE_ARM], "class_m_alignment")
+            if tooled_rate is not None:
+                tooled_m.append(tooled_rate)
+            if bare_rate is not None:
+                bare_m.append(bare_rate)
+        coverage = f"{min(run_counts)}..{max(run_counts)}/{scheduled_runs}" if run_counts else "0"
+        lines.append(
+            "| {model} | {paired} | {coverage} | {tooled} | {bare} | {lift} | {tooled_m} | {bare_m} |".format(
+                model=model_label,
+                paired=len(paired),
+                coverage=coverage,
+                tooled=_stats_label(_stats(tooled_means)),
+                bare=_stats_label(_stats(bare_means)),
+                lift=_stats_label(_stats(lifts)),
+                tooled_m=_fraction_summary_label(_stats(tooled_m) | {"low_n": True}),
+                bare_m=_fraction_summary_label(_stats(bare_m) | {"low_n": True}),
+            )
+        )
+    return lines
+
+
+def _claim_classes_by_id(artifact: Mapping[str, Any]) -> dict[str, str]:
+    claims = _score(artifact).get("claims")
+    if not isinstance(claims, list):
+        return {}
+    classes: dict[str, str] = {}
+    for index, claim in enumerate(claims):
+        if not isinstance(claim, Mapping):
+            continue
+        claim_id = str(claim.get("claim_id") or f"claim-{index}")
+        classes[claim_id] = _claim_stability_class(claim)
+    return classes
+
+
+def _cell_stability(
+    runs: Mapping[int, Mapping[str, Any]],
+    *,
+    scheduled_runs: int,
+) -> tuple[float | None, list[str]]:
+    flags: list[str] = []
+    run_indices = set(runs)
+    if run_indices != set(range(1, scheduled_runs + 1)):
+        flags.append("partial")
+    if any(artifact.get("status") == "error" for artifact in runs.values()):
+        flags.append("error")
+    parse_values = {bool(artifact.get("response_parse_lenient")) for artifact in runs.values()}
+    if len(parse_values) > 1:
+        flags.append("parse-lenient-variance")
+    if "partial" in flags or "error" in flags:
+        return None, flags
+    per_run_classes = {run: _claim_classes_by_id(artifact) for run, artifact in runs.items()}
+    claim_ids = sorted({claim_id for classes in per_run_classes.values() for claim_id in classes})
+    if not claim_ids:
+        return None, flags
+    stable = 0
+    for claim_id in claim_ids:
+        classes = {per_run_classes[run].get(claim_id, "missed") for run in range(1, scheduled_runs + 1)}
+        stable += int(len(classes) == 1)
+    return stable / len(claim_ids), flags
+
+
+def _run_variance_section(
+    artifacts: Sequence[Mapping[str, Any]],
+    *,
+    scheduled_runs: int,
+) -> list[str]:
+    cells = _unique_judgment_cells(artifacts)
+    per_run: dict[tuple[tuple[str, str, str], str, int], dict[str, Any]] = defaultdict(_empty_total_row)
+    grouped_cells: dict[
+        tuple[tuple[str, str, str], str, str],
+        dict[int, Mapping[str, Any]],
+    ] = defaultdict(dict)
+    for (_model_key_value, slug, arm, run_index), artifact in cells.items():
+        model_key = _model_key(artifact)
+        _add_artifact_to_total(per_run[(model_key, arm, run_index)], artifact)
+        grouped_cells[(model_key, slug, arm)][run_index] = artifact
+
+    lines = [
+        "",
+        "## Run Variance",
+        "",
+        "Run-level fractions are computed inside each run before mean/sd/range summaries; pooled numerators are not used.",
+        "Cells whose `response_parse_lenient` flag differs across runs are flagged because parser leniency can inflate apparent class instability.",
+        "Partial cells are excluded from arm-level stability. Error cells are flagged separately and never counted stable.",
+        "",
+        "### Per-Run Totals",
+        "",
+        "| model | arm | run | passages | errors | model judgment | live admissible | missing | U honesty | M alignment |",
+        "| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | --- | --- |",
+    ]
+    for (model_key, arm, run_index), row in sorted(per_run.items()):
+        model = f"{model_key[0]} [{model_key[1]}/{model_key[2]}]"
+        run_artifacts = [
+            artifact
+            for key, artifact in cells.items()
+            if key[0] == model_key and key[2] == arm and key[3] == run_index
+        ]
+        errors = sum(1 for artifact in run_artifacts if artifact.get("status") == "error")
+        lines.append(
+            "| {model} | {arm} | {run} | {passages} | {errors} | {model_score} | {live_score} | {missing} | {u} | {m} |".format(
+                model=model,
+                arm=arm,
+                run=run_index,
+                passages=row["passages"],
+                errors=errors,
+                model_score=row["model_judgment_score"],
+                live_score=row["live_admissible_score"],
+                missing=row["missing_claims"],
+                u=_fraction_label(_fraction(row["class_u_good"], row["class_u_total"])),
+                m=_fraction_label(_fraction(row["class_m_good"], row["class_m_total"])),
+            )
+        )
+
+    stability: dict[tuple[tuple[str, str, str], str], dict[str, Any]] = defaultdict(
+        lambda: {
+            "complete": 0,
+            "partial": 0,
+            "error": 0,
+            "parse_lenient_variance": 0,
+            "values": [],
+        }
+    )
+    flagged_rows: list[tuple[tuple[str, str, str], str, str, str, str]] = []
+    for (model_key, slug, arm), runs in sorted(grouped_cells.items()):
+        value, flags = _cell_stability(runs, scheduled_runs=scheduled_runs)
+        row = stability[(model_key, arm)]
+        if "partial" in flags:
+            row["partial"] += 1
+        if "error" in flags:
+            row["error"] += 1
+        if "parse-lenient-variance" in flags:
+            row["parse_lenient_variance"] += 1
+        if value is not None:
+            row["complete"] += 1
+            row["values"].append(value)
+        if flags:
+            flagged_rows.append((model_key, slug, arm, ",".join(str(run) for run in sorted(runs)), ", ".join(flags)))
+
+    lines.extend(
+        [
+            "",
+            "### Stability",
+            "",
+            "| model | arm | complete cells | partial cells | error cells | parse-lenient variance cells | stability |",
+            "| --- | --- | ---: | ---: | ---: | ---: | --- |",
+        ]
+    )
+    for (model_key, arm), row in sorted(stability.items()):
+        model = f"{model_key[0]} [{model_key[1]}/{model_key[2]}]"
+        lines.append(
+            "| {model} | {arm} | {complete} | {partial} | {error} | {parse_var} | {stability} |".format(
+                model=model,
+                arm=arm,
+                complete=row["complete"],
+                partial=row["partial"],
+                error=row["error"],
+                parse_var=row["parse_lenient_variance"],
+                stability=_stats_label(_stats(row["values"])) if row["values"] else "n/a",
+            )
+        )
+    if flagged_rows:
+        lines.extend(
+            [
+                "",
+                "### Flagged Cells",
+                "",
+                "| model | passage | arm | runs present | flags |",
+                "| --- | --- | --- | --- | --- |",
+            ]
+        )
+        for model_key, slug, arm, runs_present, flags in flagged_rows:
+            model = f"{model_key[0]} [{model_key[1]}/{model_key[2]}]"
+            lines.append(f"| {model} | {slug} | {arm} | {runs_present} | {flags} |")
+    return lines
+
+
+def _lift_stats_by_model(artifacts: Sequence[Mapping[str, Any]]) -> dict[tuple[str, str, str], dict[str, Any]]:
+    cells: dict[
+        tuple[str, str, str],
+        dict[str, dict[str, dict[int, Mapping[str, Any]]]],
+    ] = defaultdict(lambda: defaultdict(lambda: defaultdict(dict)))
+    for artifact in artifacts:
+        if _is_ops_quota_artifact(artifact):
+            continue
+        cells[_model_key(artifact)][_fixture_slug(artifact)][_artifact_arm(artifact)][
+            _artifact_run_index(artifact)
+        ] = artifact
+    lifts: dict[tuple[str, str, str], dict[str, Any]] = {}
+    for model_key, by_slug in cells.items():
+        values: list[float] = []
+        for arms in by_slug.values():
+            if TOOLED_ARM not in arms or BARE_ARM not in arms:
+                continue
+            values.append(
+                _arm_mean_for_fixture(arms[TOOLED_ARM], "model_judgment_score")
+                - _arm_mean_for_fixture(arms[BARE_ARM], "model_judgment_score")
+            )
+        if values:
+            lifts[model_key] = _stats(values)
+    return lifts
+
+
+def _domain_totals_section(artifacts: Sequence[Mapping[str, Any]]) -> list[str]:
+    by_domain: dict[str, list[Mapping[str, Any]]] = defaultdict(list)
+    for artifact in artifacts:
+        by_domain[domain_for_slug(_fixture_slug(artifact))].append(artifact)
+    lines = [
+        "",
+        "## Domain Totals",
+        "",
+        "| domain | model | arm | runs | passages/run | model judgment | U honesty | M alignment headline | harness_lift |",
+        "| --- | --- | --- | ---: | --- | --- | --- | --- | --- |",
+    ]
+    for domain in sorted(by_domain):
+        domain_artifacts = by_domain[domain]
+        totals = _aggregate_by_model_arm(domain_artifacts)
+        lifts = _lift_stats_by_model(domain_artifacts)
+        for (model_key, arm), row in sorted(totals.items()):
+            model = f"{model_key[0]} [{model_key[1]}/{model_key[2]}]"
+            if row.get("multi_run"):
+                runs = row["runs"]
+                passages = "/".join(str(value) for value in row["passages_per_run"]) or "0"
+                model_score = _stats_label(row["model_judgment_score"])
+                u = _fraction_summary_label(row["class_u_honesty"])
+                m = _fraction_summary_label(row["class_m_alignment"])
+            else:
+                runs = 1
+                passages = str(row["passages"])
+                model_score = str(row["model_judgment_score"])
+                u = _fraction_label(_fraction(row["class_u_good"], row["class_u_total"]))
+                m = _fraction_label(_fraction(row["class_m_good"], row["class_m_total"]))
+            lift = _stats_label(lifts[model_key]) if model_key in lifts else "n/a"
+            lines.append(f"| {domain} | {model} | {arm} | {runs} | {passages} | {model_score} | {u} | {m} | {lift} |")
+    return lines
+
+
 def _na(value: Any) -> str:
     return "n/a" if value is None else str(value)
 
@@ -1974,43 +2647,26 @@ def _na(value: Any) -> str:
 def _aggregate_by_model_arm(
     artifacts: Sequence[Mapping[str, Any]],
 ) -> dict[tuple[tuple[str, str, str], str], dict[str, Any]]:
-    totals: dict[tuple[tuple[str, str, str], str], dict[str, Any]] = defaultdict(
-        lambda: {
-            "passages": 0,
-            "model_judgment_score": 0,
-            "live_admissible_score": 0,
-            "class_u_good": 0,
-            "class_u_total": 0,
-            "class_m_good": 0,
-            "class_m_total": 0,
-            "true_unsupported": 0,
-            "true_total": 0,
-            "missing_claims": 0,
-            "invalid_fact_checks": 0,
-            "inadmissible_positive_verdicts": 0,
-            "tool_call_count": 0,
-            "wall_seconds": 0.0,
-        }
+    cells = _unique_judgment_cells(artifacts)
+    if _max_run_index(list(cells.values())) <= 1:
+        totals: dict[tuple[tuple[str, str, str], str], dict[str, Any]] = defaultdict(_empty_total_row)
+        for artifact in cells.values():
+            _add_artifact_to_total(totals[(_model_key(artifact), _artifact_arm(artifact))], artifact)
+        return dict(totals)
+
+    per_run: dict[tuple[tuple[str, str, str], str], dict[int, dict[str, Any]]] = defaultdict(
+        lambda: defaultdict(_empty_total_row)
     )
-    for artifact in artifacts:
-        if _is_ops_quota_artifact(artifact):
-            continue
-        row = totals[(_model_key(artifact), _artifact_arm(artifact))]
-        score = _score(artifact)
-        row["passages"] += 1
-        row["model_judgment_score"] += int(score.get("model_judgment_score") or 0)
-        row["live_admissible_score"] += int(score.get("live_admissible_score") or 0)
-        row["missing_claims"] += int(score.get("missing_claims") or 0)
-        row["invalid_fact_checks"] += int(score.get("invalid_fact_checks") or 0)
-        row["inadmissible_positive_verdicts"] += int(score.get("inadmissible_positive_verdicts") or 0)
-        row["tool_call_count"] += int(artifact.get("tool_call_count") or 0)
-        row["wall_seconds"] += float(artifact.get("wall_seconds") or 0.0)
-        raw_fractions = score.get("fractions")
-        fractions = raw_fractions if isinstance(raw_fractions, Mapping) else {}
-        _add_fraction(row, "class_u", fractions.get("class_u_honesty"))
-        _add_fraction(row, "class_m", fractions.get("class_m_alignment"))
-        _add_fraction(row, "true", fractions.get("false_unsupported_on_true"), good_key="true_unsupported", total_key="true_total")
-    return dict(totals)
+    for artifact in cells.values():
+        key = (_model_key(artifact), _artifact_arm(artifact))
+        run_index = _artifact_run_index(artifact)
+        _add_artifact_to_total(per_run[key][run_index], artifact)
+
+    totals: dict[tuple[tuple[str, str, str], str], dict[str, Any]] = {}
+    for key, rows_by_run in per_run.items():
+        run_indices = sorted(rows_by_run)
+        totals[key] = _summarize_run_rows([rows_by_run[index] for index in run_indices], run_indices)
+    return totals
 
 
 def _add_fraction(
@@ -2096,9 +2752,9 @@ def _artifact_arm(artifact: Mapping[str, Any]) -> str:
     return arm if isinstance(arm, str) and arm else TOOLED_ARM
 
 
-def _artifact_sort_key(artifact: Mapping[str, Any]) -> tuple[str, str, str, str, str]:
+def _artifact_sort_key(artifact: Mapping[str, Any]) -> tuple[str, str, str, str, str, int]:
     pin, transport, entrypoint = _model_key(artifact)
-    return (pin, transport, entrypoint, _fixture_slug(artifact), _artifact_arm(artifact))
+    return (pin, transport, entrypoint, _fixture_slug(artifact), _artifact_arm(artifact), _artifact_run_index(artifact))
 
 
 def _empty_grounding() -> dict[str, int]:
