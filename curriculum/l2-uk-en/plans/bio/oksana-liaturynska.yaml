@@ -120,6 +120,17 @@ persona:
     еміграцію до зради й не пом'якшуючи названі злочини НКВД.
   voice: Intellectual Historian
 phase: BIO
+readings:
+- hosting: link-only
+  language: uk
+  rights_note: "Creative Commons Attribution-ShareAlike"
+  source_name: "Лятуринська Оксана Михайлівна (Вікіпедія)"
+  source_url: "https://uk.wikipedia.org/wiki/Лятуринська_Оксана_Михайлівна"
+- hosting: link-only
+  language: uk
+  rights_note: "Educational use / Public access"
+  source_name: "Оксана Лятуринська (УкрЛіб)"
+  source_url: "https://www.ukrlib.com.ua/bio/author.php?id=233"
 references:
 - note: Англомовна енциклопедична стаття про життя та творчість.
   path: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CL%5CI%5CLiaturynskaOksana.htm
@@ -145,7 +156,7 @@ sequence: 231
 slug: oksana-liaturynska
 subtitle: The Prague Poet-Sculptor and the Family the NKVD Destroyed
 title: 'Оксана Лятуринська: Княжа емаль і згарище Лятуринщини'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: стислий, «вирізаний у камені» стиль мови; характерна риса поезії Лятуринської
   pos: ж.
