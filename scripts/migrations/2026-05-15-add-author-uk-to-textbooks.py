@@ -91,6 +91,15 @@ _LATIN_TO_UK: dict[str, str] = {
     "schupak": "Щупак",
     "shchupak": "Щупак",
     "voron": "Ворон",
+    # #4593 wave-1 STEM authors (title-probed from source pages 2026-07-06)
+    "ryvkind": "Ривкінд",
+    "ister": "Істер",
+    "merzliak": "Мерзляк",
+    "zadorozhnyi": "Задорожний",
+    "bariakhtar": "Бар'яхтар",
+    "hryhorovych": "Григорович",
+    "popel": "Попель",
+    "anderson": "Андерсон",
     # Non-textbook author-name strings already stored in Latin/English on
     # ingestion (literary works, podcast, style-guide author). Map them
     # to Cyrillic so author_uk is uniformly Cyrillic when populated.
