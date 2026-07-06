@@ -300,6 +300,24 @@ def test_plan_readings_block_uses_inline_title_override(monkeypatch):
     assert "Етнографічний" not in out
 
 
+def test_plan_readings_block_uses_plain_text_inline_title_override(monkeypatch):
+    monkeypatch.setattr(core, "reading_href_for", lambda slug: None)
+    monkeypatch.setattr(core, "reading_title_for", lambda slug: None)
+
+    out = core._format_plan_readings_for_mdx(
+        [],
+        ':::primary-reading{reading="chumatska-pisnia-idut-voly-iz-za-hory"}\n'
+        "Ідуть воли із-за гори та все половії,\n"
+        "А ярема попереду, та й поганяє.\n\n"
+        "— Народна творчість; права: суспільне надбання.\n"
+        ":::\n",
+        include_inline=True,
+    )
+
+    assert "[Ідуть воли із-за гори](#reading-chumatska-pisnia-idut-voly-iz-za-hory)" in out
+    assert "chumatska pisnia" not in out
+
+
 def test_plan_readings_block_deduplicates_plan_and_inline_readings(monkeypatch):
     monkeypatch.setattr(
         core,

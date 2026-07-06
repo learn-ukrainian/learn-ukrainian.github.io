@@ -297,6 +297,8 @@ _INLINE_READING_TITLE_OVERRIDES = {
     "hnatiuk-nai-pan-znaie-hryts-uzhyvav": "Хай пан знає, що Гриць уживав",
     "pro-zorianyi-viz-shchyrist-doshch-fragment": "Про Зоряний віз",
     "kin-z-chorta-zrobyvsia-fragment": "Кінь з чорта зробився",
+    "chumatska-pisnia-idut-voly-iz-za-hory": "Ідуть воли із-за гори",
+    "vertep-markevych-smert-herod-fragment": "Ірод і Смерть",
 }
 
 
