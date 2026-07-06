@@ -26,7 +26,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, ConfigDict, Field
 
-from ._config import _PARENT_ENV, CLAUDE_CMD, CODEX_CLI, GEMINI_CLI, REPO_ROOT
+from ._config import _PARENT_ENV, AGY_CLI, CLAUDE_CMD, CODEX_CLI, GEMINI_CLI, REPO_ROOT
 
 _DEFAULT_BACKEND_TIMEOUT_S = 120
 _HERMES_STDIN_MODULE = "scripts.ai_agent_bridge._hermes_stdin"
@@ -317,7 +317,8 @@ def _probe_codex() -> tuple[bool, str]:
 
 
 def _probe_gemini() -> tuple[bool, str]:
-    return _probe_cli([GEMINI_CLI, "--version"])
+    """Health probe for the Gemini-family route (AGY CLI, not retired gemini-cli)."""
+    return _probe_cli([AGY_CLI, "--version"])
 
 
 def _probe_claude() -> tuple[bool, str]:

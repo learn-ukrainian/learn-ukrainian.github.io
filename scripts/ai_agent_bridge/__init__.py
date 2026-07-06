@@ -41,6 +41,7 @@ from ._config import (
     _MODEL_CACHE,
     _MODEL_CACHE_TTL,
     _PARENT_ENV,
+    AGY_CLI,
     CLAUDE_CMD,
     CODEX_CLI,
     DB_PATH,
@@ -75,6 +76,7 @@ from ._model import _detect_model_error, check_model
 from ._prompts import build_claude_prompt, build_codex_prompt, build_gemini_prompt
 
 __all__ = [
+    "AGY_CLI",
     "CLAUDE_CMD",
     "CODEX_CLI",
     "DB_PATH",

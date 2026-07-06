@@ -1,21 +1,56 @@
 """Model availability checking."""
 
+import os
 import subprocess
 from pathlib import Path
 
-from ._config import _MODEL_CACHE, _MODEL_CACHE_TTL, _PARENT_ENV, GEMINI_CLI
+from agent_runtime.adapters.agy import (
+    _AGY_MODEL_BY_NORMALIZED,
+    AgyAdapter,
+    _normalize_model,
+)
+
+from ._config import _MODEL_CACHE, _MODEL_CACHE_TTL, _PARENT_ENV, AGY_CLI
 
 GROK_BUILD_DEFAULT_MODEL = "grok-build"
 GROK_BUILD_DEFAULT_EFFORT = "high"
 
+DEFAULT_CHECK_MODEL_TIMEOUT = int(os.environ.get("AB_CHECK_MODEL_TIMEOUT", "90"))
 
-def check_model(model: str, timeout: int = 15, force: bool = False) -> bool:
-    """Check if a Gemini model is available by sending a trivial prompt.
+_AGY_ADAPTER = AgyAdapter()
+_REPO_ROOT = Path(__file__).parent.parent.parent
+
+
+def _resolve_requested_agy_model(model: str) -> str | None:
+    """Map *model* to an AGY display label without default-model fallback."""
+    return _AGY_MODEL_BY_NORMALIZED.get(_normalize_model(model))
+
+
+def _build_agy_probe_plan(model: str, task_id: str = "check-model"):
+    """Build an agy print-mode probe for *model* (slug or display name)."""
+    if not _resolve_requested_agy_model(model):
+        return None
+    return _AGY_ADAPTER.build_invocation(
+        prompt="Reply with exactly: MODEL_OK",
+        mode="danger",
+        cwd=_REPO_ROOT,
+        model=model,
+        task_id=task_id,
+        session_id=None,
+        tool_config=None,
+    )
+
+
+def check_model(model: str, timeout: int | None = None, force: bool = False) -> bool:
+    """Check if an AGY model is available by sending a trivial prompt.
 
     Results are cached for 1 hour to avoid burning API quota.
     Returns True if the model responds, False if unavailable or errors.
     """
     import time as _time
+
+    if timeout is None:
+        timeout = DEFAULT_CHECK_MODEL_TIMEOUT
 
     # Check cache first (saves an API call)
     if not force and model in _MODEL_CACHE:
@@ -26,12 +61,26 @@ def check_model(model: str, timeout: int = 15, force: bool = False) -> bool:
             print(f"🔍 Model '{model}': {status} (cached {int(age)}s ago)")
             return available
 
+    plan = _build_agy_probe_plan(model)
+    if plan is None:
+        print(
+            f"❌ Model '{model}' is not a recognized AGY model. "
+            "Run `agy models` for supported display labels."
+        )
+        _MODEL_CACHE[model] = (False, _time.time())
+        return False
+
+    env = dict(_PARENT_ENV)
+    env.update(plan.env_overrides)
+
     try:
         result = subprocess.run(
-            [GEMINI_CLI, "-m", model, "-p", "Reply with exactly: MODEL_OK"],
-            capture_output=True, text=True, timeout=timeout,
-            cwd=str(Path(__file__).parent.parent.parent),
-            env=_PARENT_ENV,
+            plan.cmd,
+            capture_output=True,
+            text=True,
+            timeout=timeout,
+            cwd=str(_REPO_ROOT),
+            env=env,
         )
         if result.returncode == 0 and "MODEL_OK" in result.stdout:
             _MODEL_CACHE[model] = (True, _time.time())
@@ -44,7 +93,7 @@ def check_model(model: str, timeout: int = 15, force: bool = False) -> bool:
         _MODEL_CACHE[model] = (False, _time.time())
         return False
     except FileNotFoundError:
-        print(f"❌ Gemini CLI not found at: {GEMINI_CLI}")
+        print(f"❌ AGY CLI not found at: {AGY_CLI}")
         return False
 
 
@@ -60,7 +109,7 @@ def _handle_model_check_failure(result, model: str, _time):
 
 
 def _detect_model_error(stderr: str, model: str) -> str | None:
-    """Detect model-specific errors from Gemini CLI stderr.
+    """Detect model-specific errors from AGY stderr.
 
     Returns a user-friendly error message, or None if not a model error.
     """
