@@ -243,3 +243,76 @@ def test_registry_lists_deepseek_with_hermes_adapter():
     assert entry["default_model"] == "deepseek-v4-pro"
     assert entry["adapter"].endswith(":HermesDeepSeekAdapter")
     assert entry["resume_policy"] == "never"
+
+
+def test_deepseek_adapter_inband_http_error_is_not_ok():
+    """Hermes surfaces provider failures as final stdout with returncode 0.
+
+    Live-probed 2026-07-06: a forced bad key yields stdout
+    "HTTP 401: Authentication Fails, ..." and rc=0. That is a failed
+    invocation — never content — and the error must land in stderr_excerpt
+    so the runner failover classifier can route it.
+    """
+    result = HermesDeepSeekAdapter().parse_response(
+        stdout="HTTP 401: Authentication Fails, Your api key: ****robe is invalid",
+        stderr="",
+        returncode=0,
+        output_file=None,
+    )
+
+    assert result.ok is False
+    assert result.response == ""
+    assert "HTTP 401" in (result.stderr_excerpt or "")
+    assert result.rate_limited is False
+
+
+def test_deepseek_adapter_inband_429_sets_rate_limited():
+    result = HermesDeepSeekAdapter().parse_response(
+        stdout="HTTP 429: Too Many Requests",
+        stderr="",
+        returncode=0,
+        output_file=None,
+    )
+
+    assert result.ok is False
+    assert result.rate_limited is True
+
+
+def test_deepseek_adapter_inband_5xx_is_not_ok():
+    result = HermesDeepSeekAdapter().parse_response(
+        stdout="HTTP 503 — Service Unavailable — Ray 8c1a2b3d4e5f6789",
+        stderr="",
+        returncode=0,
+        output_file=None,
+    )
+
+    assert result.ok is False
+    assert "HTTP 503" in (result.stderr_excerpt or "")
+
+
+def test_deepseek_adapter_multiline_response_mentioning_http_error_stays_ok():
+    """Legit content that merely discusses an HTTP status must not be eaten."""
+    stdout = (
+        "HTTP 401 means the request lacked valid credentials.\n"
+        "Use www-authenticate to negotiate the scheme."
+    )
+    result = HermesDeepSeekAdapter().parse_response(
+        stdout=stdout,
+        stderr="",
+        returncode=0,
+        output_file=None,
+    )
+
+    assert result.ok is True
+    assert result.response == stdout
+
+
+def test_deepseek_adapter_single_line_non_error_response_stays_ok():
+    result = HermesDeepSeekAdapter().parse_response(
+        stdout="Verdict: HTTP 404 handling in routes.py is correct.",
+        stderr="",
+        returncode=0,
+        output_file=None,
+    )
+
+    assert result.ok is True

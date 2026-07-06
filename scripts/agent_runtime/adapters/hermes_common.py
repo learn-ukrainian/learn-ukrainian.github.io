@@ -56,6 +56,14 @@ _FALLBACK_EMPTY_LOG_RE = re.compile(
     r"(?P<actual_model>\S+)\s+on\s+(?P<actual_provider>\S+)",
     re.IGNORECASE,
 )
+# Hermes surfaces provider API failures as the FINAL assistant message on
+# stdout with returncode 0, formatted "HTTP {status}: {message}" or
+# "HTTP {status} — {title} — Ray {id}" (hermes-agent run_agent.py
+# _describe_api_error paths). Such a line is a failed invocation, not
+# content: without detection it parses ok=True, ships the error string as
+# the response, and the runner failover classifier never runs (probe
+# finding 2026-07-06, forced 401 → route 0 reported "ok").
+_INBAND_HTTP_ERROR_RE = re.compile(r"^HTTP\s+(?P<status>[45]\d{2})\b")
 HERMES_SUBSTITUTION_MARKER = "HERMES_FALLBACK_SUBSTITUTION"
 HERMES_GLM_FORBIDDEN_MARKER = "HERMES_GLM_FORBIDDEN"
 
@@ -429,6 +437,23 @@ def hermes_glm_guard_error(substitution: dict[str, Any] | None) -> str | None:
     )
 
 
+def _inband_provider_error(response: str) -> tuple[str, str] | None:
+    """Return ``(error_line, status)`` when stdout is an in-band HTTP error.
+
+    Deliberately conservative to avoid eating legitimate content: the whole
+    stripped response must be ONE line, at most 600 chars (hermes truncates
+    the provider message to ≤500), and start with ``HTTP 4xx``/``HTTP 5xx``.
+    A multi-line answer that merely discusses an HTTP status stays ok=True.
+    """
+    candidate = response.strip()
+    if not candidate or "\n" in candidate or len(candidate) > 600:
+        return None
+    match = _INBAND_HTTP_ERROR_RE.match(candidate)
+    if match is None:
+        return None
+    return candidate, match.group("status")
+
+
 def build_hermes_parse_fields(
     *,
     stdout: str,
@@ -455,6 +480,17 @@ def build_hermes_parse_fields(
             response="",
             stderr_excerpt=guard_error[:500],
             rate_limited=False,
+            substitution=substitution,
+        )
+
+    inband_error = _inband_provider_error(response) if returncode == 0 else None
+    if inband_error is not None:
+        error_text, status = inband_error
+        return HermesParseFields(
+            ok=False,
+            response="",
+            stderr_excerpt=error_text[:500],
+            rate_limited=rate_limited or status == "429",
             substitution=substitution,
         )
 
