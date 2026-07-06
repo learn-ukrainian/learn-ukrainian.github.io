@@ -9,6 +9,8 @@ import pytest
 
 from scripts.audit import llm_reviewer_dispatch, qg_bakeoff, qg_factcheck_scoring, qg_schema
 
+_DISPATCH = "scripts.audit.llm_reviewer_dispatch"
+
 
 def _fixture() -> qg_bakeoff.BakeoffFixture:
     return qg_bakeoff.BakeoffFixture(
@@ -1697,3 +1699,56 @@ def test_default_fixture_corpus_loads_with_uniform_shape() -> None:
             assert (len(true_claims), len(m_claims), len(u_claims)) == (6, 2, 1), fixture.slug
         if fixture.slug not in legacy_pre_floor:
             assert len(fixture.passage_md.split()) >= 150, fixture.slug
+
+
+def _snapshot_files(root: Path) -> set[Path]:
+    if not root.exists():
+        return set()
+    return {path for path in root.rglob("*") if path.is_file()}
+
+
+def test_offline_bakeoff_tooled_run_writes_zero_paths_outside_out_dir(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """#4642: bakeoff cells must not persist reviewer markdown under curriculum/."""
+    from unittest.mock import patch
+
+    from scripts.ai_agent_bridge._opencode import OpencodeStreamParse
+
+    repo = tmp_path / "repo"
+    (repo / "curriculum" / "l2-uk-en" / "folk").mkdir(parents=True)
+    monkeypatch.setattr(llm_reviewer_dispatch, "PROJECT_ROOT", repo)
+    monkeypatch.setattr(qg_bakeoff, "PROJECT_ROOT", repo)
+    monkeypatch.delenv("CI", raising=False)
+    monkeypatch.setenv("QG_BAKEOFF", "1")
+
+    fixture = _fixture()
+    route = qg_bakeoff.bakeoff_route_for_model("openrouter/google/gemma-4-31b-it")
+    out_dir = tmp_path / "bakeoff-out"
+    out_dir.mkdir(parents=True)
+    parse = OpencodeStreamParse(
+        text=json.dumps(_TOOLED_GRODED_PAYLOAD),
+        tool_events=(_event(),),
+    )
+
+    before = _snapshot_files(repo)
+    with (
+        patch(f"{_DISPATCH}._assert_sources_mcp_available"),
+        patch(
+            "scripts.ai_agent_bridge._opencode._invoke_opencode_detailed",
+            return_value=parse,
+        ),
+    ):
+        run = qg_bakeoff.run_one(
+            fixture=fixture,
+            route=route,
+            output_dir=out_dir,
+            runner=qg_bakeoff.invoke_bakeoff_route,
+            force=True,
+        )
+    after = _snapshot_files(repo)
+
+    assert after == before
+    assert run.artifact_path.is_file()
+    assert run.artifact_path.parent == out_dir

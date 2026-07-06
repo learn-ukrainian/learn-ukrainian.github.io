@@ -567,6 +567,7 @@ def invoke_bakeoff_route(
         route,
         default_timeout_s=1800,
         require_mcp=True,
+        no_module_persistence=True,
     )
 
 
@@ -653,6 +654,7 @@ def invoke_bakeoff_route_bare(
         route,
         default_timeout_s=1800,
         require_mcp=False,
+        no_module_persistence=True,
     )
 
 

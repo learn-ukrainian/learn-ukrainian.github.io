@@ -10,7 +10,7 @@ from unittest.mock import patch
 import pytest
 
 from scripts.ai_agent_bridge._opencode import OpencodeStreamParse, _extract_tool_event
-from scripts.audit import llm_qg_store, llm_reviewer_dispatch, qg_schema, qg_workflow
+from scripts.audit import llm_qg_store, llm_reviewer, llm_reviewer_dispatch, qg_schema, qg_workflow
 
 _DISPATCH = "scripts.audit.llm_reviewer_dispatch"
 
@@ -319,6 +319,58 @@ def test_invoke_bridge_route_opencode_populates_tool_fields() -> None:
     assert result.tool_call_count == 3
     # distinct tool names, first-seen order (query_wikipedia deduped by name)
     assert result.tools_used == ("sources_query_wikipedia", "sources_search_heritage")
+
+
+def test_invoke_opencode_reviewer_persists_module_review(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    repo = tmp_path / "repo"
+    monkeypatch.setattr(llm_reviewer_dispatch, "PROJECT_ROOT", repo)
+    route = llm_reviewer_dispatch.FRONTIER_OPENCODE_ROUTE
+    prompt = llm_reviewer.build_reviewer_prompt("folk", "vesnianky", "Passage text.")
+    parse = OpencodeStreamParse(text='{"findings": []}', tool_events=())
+    with (
+        patch(f"{_DISPATCH}._assert_sources_mcp_available"),
+        patch(
+            "scripts.ai_agent_bridge._opencode._invoke_opencode_detailed",
+            return_value=parse,
+        ),
+    ):
+        llm_reviewer_dispatch._invoke_opencode_reviewer(
+            prompt,
+            route,
+            default_timeout_s=30,
+            require_mcp=True,
+        )
+
+    review_path = repo / "curriculum" / "l2-uk-en" / "folk" / "vesnianky" / "review-review.md"
+    assert review_path.is_file()
+    assert review_path.read_text(encoding="utf-8") == '{"findings": []}'
+
+
+def test_invoke_opencode_reviewer_no_module_persistence_skips_curriculum_write(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo = tmp_path / "repo"
+    monkeypatch.setattr(llm_reviewer_dispatch, "PROJECT_ROOT", repo)
+    route = llm_reviewer_dispatch.FRONTIER_OPENCODE_ROUTE
+    prompt = llm_reviewer.build_reviewer_prompt("folk", "bakeoff-koliadky", "Passage text.")
+    parse = OpencodeStreamParse(text='{"findings": []}', tool_events=())
+    with (
+        patch(f"{_DISPATCH}._assert_sources_mcp_available"),
+        patch(
+            "scripts.ai_agent_bridge._opencode._invoke_opencode_detailed",
+            return_value=parse,
+        ),
+    ):
+        llm_reviewer_dispatch._invoke_opencode_reviewer(
+            prompt,
+            route,
+            default_timeout_s=30,
+            require_mcp=True,
+            no_module_persistence=True,
+        )
+
+    curriculum_root = repo / "curriculum" / "l2-uk-en"
+    assert not list(curriculum_root.rglob("review-review.md"))
 
 
 def test_frontier_opencode_fails_fast_when_mcp_endpoint_down() -> None:
