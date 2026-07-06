@@ -101,7 +101,15 @@ sequence: 62
 slug: panteleimon-kulish
 subtitle: 'Panteleimon Kulish: The European on the Farmstead'
 title: 'Пантелеймон Куліш: Європеєць на Хуторі'
-version: '4.0'
+readings:
+- hosting: link-only
+  language: uk
+  source_name: "Енциклопедія історії України"
+  source_url: "https://www.history.org.ua/?termin=Kulish_P_O"
+  task: "Ознайомлення з життєписом, правописною та видавничою спадщиною"
+  title: "Куліш Пантелеймон Олександрович"
+  type: encyclopedia
+version: '4.2'
 vocabulary_hints:
 - definition: гостра публічна суперечка з наукових, політичних, літературних питань
   pos: ж.

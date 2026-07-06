@@ -99,3 +99,26 @@ def test_git_global_config_sandboxed_system_left_intact() -> None:
     # System config deliberately NOT disabled — credential.helper must survive.
     assert "GIT_CONFIG_NOSYSTEM" not in env
     assert "GIT_CONFIG_SYSTEM" not in env
+
+
+def test_workdir_repointing_git_env_is_scrubbed() -> None:
+    """#4446: the child env must not carry vars that re-point its working root
+    back to the primary checkout. The strict allowlist drops GIT_WORK_TREE /
+    GIT_DIR / GIT_INDEX_FILE and PWD / OLDPWD, so a write-capable child cannot
+    escape its worktree cwd via inherited git-discovery or shell state."""
+    hostile = {
+        "PATH": "/usr/bin",
+        "HOME": "/Users/example",
+        "GIT_WORK_TREE": "/repo/primary",
+        "GIT_DIR": "/repo/primary/.git",
+        "GIT_INDEX_FILE": "/repo/primary/.git/index",
+        "GIT_COMMON_DIR": "/repo/primary/.git",
+        "PWD": "/repo/primary",
+        "OLDPWD": "/repo/primary/sub",
+    }
+    with patch.dict("os.environ", hostile, clear=True):
+        env = build_agent_env(provider="codex")
+
+    for leaked in ("GIT_WORK_TREE", "GIT_DIR", "GIT_INDEX_FILE",
+                   "GIT_COMMON_DIR", "PWD", "OLDPWD"):
+        assert leaked not in env, f"{leaked} must be scrubbed from the child env"

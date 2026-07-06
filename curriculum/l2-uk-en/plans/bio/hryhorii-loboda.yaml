@@ -78,6 +78,31 @@ persona:
   role: Історик, що повертає Лободі власну суб'єктність — співпровідника з власною спільнотою й вибором, а не додаток до біографії Наливайка.
   voice: Critical-Historian
 phase: BIO
+readings:
+- title: Лобода Григорій
+  source: Енциклопедія історії України
+  source_url: http://history.org.ua/?termin=Loboda_G
+  language: uk
+  genre: encyclopedia
+  source_type: reference
+  role: context
+  cefr_min: C1
+  license: copyright
+  hosting: link-only
+  learner_task: Відокремити біографічні факти Лободи від пізнішої Наливайкоцентричної пам'яті.
+  caveats: Академічна стаття. Деконструює Наливайкоцентричну пам'ять і відновлює суб'єктність Лободи як командира антиосманських походів і «козацького присуду», а не просто «зрадника» чи «поміркованого».
+- title: Історія України-Руси, том 7, розділ IV
+  source: Ізборник
+  source_url: http://litopys.org.ua/hrushrus/iur70405.htm
+  language: uk
+  genre: historiography
+  source_type: secondary
+  role: source-analysis
+  cefr_min: C1
+  license: public-domain
+  hosting: excerpt-only
+  learner_task: Зіставити опис переговорів і смерті Лободи з ЕІУ, позначаючи, де історик працює з таборовими чутками та пізнішими оцінками.
+  caveats: Грушевський є історіографічним джерелом початку XX ст.; читати як аргументовану реконструкцію, а не як безпосередній голос учасників Солоницького табору.
 references:
 - author: С. А. Леп'явко
   note: 'Базові факти: невідоме народження, смерть 1596, старшинство, гетьманство 1594–1596, Оргеїв, Акерман, молдовські походи, овруцька база, 8000–10000 козаків, готовність до примирення, арешт і страта під Солоницею.'
@@ -107,7 +132,7 @@ sequence: 21
 slug: hryhorii-loboda
 subtitle: 'Hryhorii Loboda: The Cossack Leader Executed by His Own Camp'
 title: 'Григорій Лобода: провідник, якого стратив власний табір'
-version: '4.1'
+version: '4.3'
 vocabulary_hints:
 - definition: командний прошарок козацького війська; козацька верхівка
   pos: ж.

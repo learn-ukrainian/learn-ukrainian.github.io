@@ -78,6 +78,21 @@ persona:
   role: Історик, що відділяє документального Остафія Дашковича від романтичного міфу XIX ст. про «першого гетьмана».
   voice: Anti-Hagiographer
 phase: BIO
+readings:
+- title: "Дашкевич Остафій"
+  source_name: "Енциклопедія історії України"
+  source_url: "https://www.history.org.ua/?termin=Dashkevych_O"
+  language: uk
+  type: "encyclopedia_entry"
+  clearance: "public_domain"
+  notes: "Енциклопедична довідка, що відділяє історичного урядника від міфу про 'першого гетьмана'."
+- title: "Проєкт прикордонної оборони 1533 року"
+  source_name: "Литовська метрика / Історичні реконструкції"
+  source_url: ""
+  language: uk
+  type: "historical_analysis"
+  clearance: "hosting: reading-needed"
+  notes: "Необхідно підготувати читання про пропозицію Дашковича на Пйотрковському сеймі щодо створення постійної залоги на Дніпрі."
 references:
 - author: В. О. Щербак
   note: 'Базові факти: овруцьке шляхетське походження, черкаське й канівське староство, застереження щодо неофіційних стосунків із козаками та міфу про «першого гетьмана».'
@@ -106,7 +121,7 @@ sequence: 15
 slug: ostap-dashkevych
 subtitle: 'Ostap Dashkevych: Frontier Starosta, Not the "First Hetman"'
 title: 'Остафій Дашкович: староста, а не «перший гетьман»'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: урядник, що керував містом чи округою (староством) у Великому князівстві Литовському та Речі Посполитій
   pos: ч.

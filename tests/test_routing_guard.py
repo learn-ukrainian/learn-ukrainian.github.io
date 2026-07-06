@@ -103,12 +103,24 @@ def test_hermes_transport_is_wired_and_default_model_allowed(monkeypatch: pytest
 
 
 def test_delegate_help_does_not_advertise_qwen() -> None:
-    """Banned agent must not appear in argparse choices (UX trap: --help offers
-    it, the guard rejects it at dispatch)."""
+    """Banned agent must not appear ANYWHERE in dispatch --help (UX trap:
+    --help offers it, the guard rejects it at dispatch). Runs the real parser
+    so both argparse choices AND help prose are covered (codex re-review of
+    #4500: the first source-check missed a prose mention)."""
+    import subprocess
+    import sys
     from pathlib import Path
 
-    src = Path("scripts/delegate.py").read_text(encoding="utf-8")
-    assert '"qwen",' not in src.replace("'", '"')
+    repo_root = Path(__file__).resolve().parent.parent
+    result = subprocess.run(
+        [sys.executable, str(repo_root / "scripts" / "delegate.py"), "dispatch", "--help"],
+        capture_output=True,
+        text=True,
+        cwd=repo_root,
+        timeout=120,
+    )
+    assert result.returncode == 0, result.stderr
+    assert "qwen" not in result.stdout.lower()
 
 
 def test_delegate_dispatch_dry_run_rejects_guarded_model(tmp_path) -> None:

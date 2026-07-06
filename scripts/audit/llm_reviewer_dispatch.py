@@ -69,6 +69,15 @@ _WIKI_TOOL_MARKERS = ("wikipedia", "wiki")
 _DEEP_READ_WIKI_MODES = {"section", "sections", "extract", "article", "page"}
 _POSITIVE_FACT_CHECK_VERDICTS = frozenset({"CONFIRMED", "REFUTED_BY_CONTRADICTION", "CONTESTED"})
 _ELLIPSIS_RE = re.compile(r"\[…\]|\[\.\.\.\]|…|\.{3,}")
+SCORECARD_COST_BASIS_PATH = "audit/2026-07-05-qg-bakeoff/SCORECARD.md"
+SCORECARD_COST_BASIS_GENERATED_AT = "2026-07-05T22:29:21.234824Z"
+SCORECARD_COST_BASIS = (
+    "measured tooled medians from "
+    f"{SCORECARD_COST_BASIS_PATH} (Generated: {SCORECARD_COST_BASIS_GENERATED_AT}); "
+    "tool_calls/passage median: gemma=4.0, ds-pro=15.5, ds-flash=30.0; "
+    "wall_s observed range=16.499-267.781; soft tool anomaly band=>1.5x observed max; "
+    f"hard tool cap={MAX_REVIEWER_TOOLS}"
+)
 
 _THEATRE_RETRY_REMINDER = """
 
@@ -120,11 +129,45 @@ class ReviewerRoute:
     purpose: str
     input_usd_per_mtok: float
     output_usd_per_mtok: float
+    requires_mcp: bool = False
 
     def asdict(self) -> dict[str, Any]:
         return {
             **asdict(self),
             "bridge_command": list(self.bridge_command),
+        }
+
+
+@dataclass(frozen=True, slots=True)
+class MeasuredCostProfile:
+    """Scorecard-measured reviewer cost factors for one model class."""
+
+    label: str
+    input_usd_per_mtok: float
+    output_usd_per_mtok: float
+    observed_tool_call_min: int
+    observed_tool_call_median: float
+    observed_tool_call_max: int
+    observed_wall_s_min: float
+    observed_wall_s_median: float
+    observed_wall_s_max: float
+    pricing_basis: str
+
+    @property
+    def tool_call_anomaly_threshold(self) -> float:
+        return self.observed_tool_call_max * 1.5
+
+    def estimate_fields(self) -> dict[str, Any]:
+        return {
+            "measured_cost_profile": self.label,
+            "estimated_tool_call_median": self.observed_tool_call_median,
+            "observed_tool_call_min": self.observed_tool_call_min,
+            "observed_tool_call_max": self.observed_tool_call_max,
+            "tool_call_anomaly_threshold": self.tool_call_anomaly_threshold,
+            "estimated_wall_s_median": self.observed_wall_s_median,
+            "observed_wall_s_min": self.observed_wall_s_min,
+            "observed_wall_s_max": self.observed_wall_s_max,
+            "pricing_basis": self.pricing_basis,
         }
 
 
@@ -234,6 +277,7 @@ FRONTIER_OPENCODE_ROUTE = ReviewerRoute(
     purpose="Seminar/factual/contested-gold review, grounded via sources MCP over opencode",
     input_usd_per_mtok=0.12,
     output_usd_per_mtok=0.35,
+    requires_mcp=True,
 )
 CLAUDE_SPOT_AUDIT_ROUTE = ReviewerRoute(
     route_name="claude_spot_audit",
@@ -250,6 +294,45 @@ ROUTES: tuple[ReviewerRoute, ...] = (
     FRONTIER_OPENCODE_ROUTE,
     CLAUDE_SPOT_AUDIT_ROUTE,
 )
+
+_MEASURED_COST_PROFILES: dict[str, MeasuredCostProfile] = {
+    "openrouter/google/gemma-4-31b-it": MeasuredCostProfile(
+        label="gemma-4-31b-it",
+        input_usd_per_mtok=0.12,
+        output_usd_per_mtok=0.35,
+        observed_tool_call_min=4,
+        observed_tool_call_median=4.0,
+        observed_tool_call_max=5,
+        observed_wall_s_min=16.499,
+        observed_wall_s_median=34.685,
+        observed_wall_s_max=137.964,
+        pricing_basis="OpenRouter gemma-4-31b-it pin",
+    ),
+    "openrouter/deepseek/deepseek-v4-pro": MeasuredCostProfile(
+        label="deepseek-v4-pro",
+        input_usd_per_mtok=0.435,
+        output_usd_per_mtok=0.87,
+        observed_tool_call_min=10,
+        observed_tool_call_median=15.5,
+        observed_tool_call_max=17,
+        observed_wall_s_min=164.376,
+        observed_wall_s_median=210.8475,
+        observed_wall_s_max=267.781,
+        pricing_basis="DeepSeek API deepseek-v4-pro cache-miss pricing",
+    ),
+    "openrouter/deepseek/deepseek-v4-flash": MeasuredCostProfile(
+        label="deepseek-v4-flash",
+        input_usd_per_mtok=0.14,
+        output_usd_per_mtok=0.28,
+        observed_tool_call_min=15,
+        observed_tool_call_median=30.0,
+        observed_tool_call_max=35,
+        observed_wall_s_min=140.463,
+        observed_wall_s_median=170.207,
+        observed_wall_s_max=238.279,
+        pricing_basis="DeepSeek API deepseek-v4-flash cache-miss pricing",
+    ),
+}
 
 
 def normalize_family(raw: Any) -> str | None:
@@ -294,6 +377,16 @@ def route_for_review(
         # D0). FRONTIER_FACTUAL_ROUTE stays defined for fallback/reference.
         return FRONTIER_OPENCODE_ROUTE
     return GEMMA_SURFACE_ROUTE
+
+
+def assert_mcp_required_for_policy(*, policy_family: str, route: ReviewerRoute) -> None:
+    """Fail closed if a grounded policy resolves to a prompt-only route."""
+
+    if policy_family.strip().lower() == "seminar" and not route.requires_mcp:
+        raise ReviewerRouteError(
+            "seminar live Tier-2 route must require the sources MCP; "
+            f"route={route.route_name!r} reviewer_model_id={route.reviewer_model_id!r}"
+        )
 
 
 def assert_route_allowed(route: ReviewerRoute) -> None:
@@ -351,6 +444,47 @@ def estimate_tokens(text: str) -> int:
     return max(1, round(len(text.encode("utf-8")) / _TOKEN_DIVISOR))
 
 
+def measured_cost_profile_for_model(model_id: str) -> MeasuredCostProfile | None:
+    """Return the scorecard-measured cost profile for a reviewer model id."""
+
+    lowered = model_id.strip().lower()
+    if lowered in _MEASURED_COST_PROFILES:
+        return _MEASURED_COST_PROFILES[lowered]
+    for key, profile in _MEASURED_COST_PROFILES.items():
+        if key.rsplit("/", 1)[-1] in lowered:
+            return profile
+    return None
+
+
+def measured_cost_profile_for_policy(policy_family: str) -> MeasuredCostProfile:
+    """Return the production scorecard profile used by the current policy route."""
+
+    if policy_family.strip().lower() == "seminar":
+        return _MEASURED_COST_PROFILES[FRONTIER_OPENCODE_MODEL_ID]
+    return _MEASURED_COST_PROFILES[GEMMA_MODEL_ID]
+
+
+def measured_estimated_cost_usd(
+    *,
+    prompt_tokens: int,
+    completion_tokens: int,
+    profile: MeasuredCostProfile,
+) -> float:
+    """Estimate token spend using measured model-class pricing."""
+
+    cost = (
+        prompt_tokens * profile.input_usd_per_mtok
+        + completion_tokens * profile.output_usd_per_mtok
+    ) / 1_000_000
+    return round(cost, 6)
+
+
+def measured_cost_basis(profile: MeasuredCostProfile) -> str:
+    """Return the audit basis string attached to every measured estimate."""
+
+    return f"{SCORECARD_COST_BASIS}; profile={profile.label}; pricing={profile.pricing_basis}"
+
+
 def estimate_route_cost(
     prompt: str,
     route: ReviewerRoute,
@@ -362,10 +496,23 @@ def estimate_route_cost(
 
     prompt_tokens = estimate_tokens(prompt)
     estimated_completion_tokens = completion_tokens or (900 if policy_family == "seminar" else 600)
-    cost = (
-        prompt_tokens * route.input_usd_per_mtok
-        + estimated_completion_tokens * route.output_usd_per_mtok
-    ) / 1_000_000
+    profile = measured_cost_profile_for_model(route.reviewer_model_id)
+    if profile is None:
+        cost = (
+            prompt_tokens * route.input_usd_per_mtok
+            + estimated_completion_tokens * route.output_usd_per_mtok
+        ) / 1_000_000
+        estimated_cost_usd = round(cost, 6)
+        measured_fields: dict[str, Any] = {}
+        basis = "route-specific prompt byte estimate; no scorecard profile for reviewer model"
+    else:
+        estimated_cost_usd = measured_estimated_cost_usd(
+            prompt_tokens=prompt_tokens,
+            completion_tokens=estimated_completion_tokens,
+            profile=profile,
+        )
+        measured_fields = profile.estimate_fields()
+        basis = measured_cost_basis(profile)
     return {
         "policy_family": policy_family,
         "route_name": route.route_name,
@@ -374,8 +521,9 @@ def estimate_route_cost(
         "estimated_prompt_tokens": prompt_tokens,
         "estimated_completion_tokens": estimated_completion_tokens,
         "estimated_total_tokens": prompt_tokens + estimated_completion_tokens,
-        "estimated_cost_usd": round(cost, 6),
-        "basis": "route-specific prompt byte estimate; calibrate before broad spend",
+        "estimated_cost_usd": estimated_cost_usd,
+        **measured_fields,
+        "basis": basis,
     }
 
 
@@ -464,7 +612,14 @@ def invoke_bridge_route(route: ReviewerRoute, prompt: str, task_id: str) -> Disp
         # Seminar/factual review MUST be grounded — fail-fast if the sources MCP
         # is not configured + reachable (design D0; step-1 lesson). Browsing +
         # dense tool sweeps run long, so allow a wider timeout than gemma.
-        return _invoke_opencode_reviewer(prompt, route, default_timeout_s=1800, require_mcp=True)
+        if not route.requires_mcp:
+            raise ReviewerRouteError("opencode frontier route must require the sources MCP")
+        return _invoke_opencode_reviewer(
+            prompt,
+            route,
+            default_timeout_s=1800,
+            require_mcp=route.requires_mcp,
+        )
     if route.route_name == FRONTIER_FACTUAL_ROUTE.route_name:
         return _invoke_output_path_bridge(
             route,
@@ -849,6 +1004,16 @@ def _invoke_opencode_reviewer(
     DispatchResult. ``require_mcp`` gates the grounded factual route on a
     configured + reachable sources MCP.
     """
+    # Routing guard at the transport (codex review, PR #4500 finding 2): this
+    # function runs its OWN opencode invocation — it never passes through the
+    # bridge's guarded _run_opencode — so without this line a subscription-
+    # family pin (openrouter/anthropic|openai|google/gemini-*) or a qwen pin
+    # would reach OpenRouter unguarded from the reviewer/bakeoff paths.
+    # RoutingGuardError deliberately propagates (config error, not a per-cell
+    # provider flake).
+    from scripts.ai_agent_bridge.routing_guard import assert_model_routing_allowed
+
+    assert_model_routing_allowed(route.reviewer_model_id, context="reviewer opencode transport")
     if require_mcp:
         _assert_sources_mcp_available()
     from scripts.ai_agent_bridge._opencode import _invoke_opencode_detailed
@@ -928,6 +1093,31 @@ def enforce_tool_budget(dispatch_meta: Mapping[str, Any]) -> None:
         raise ReviewerDispatchError(
             f"reviewer used {count} tools; hard cap is {MAX_REVIEWER_TOOLS}"
         )
+
+
+def tool_call_anomaly_warning(
+    dispatch_meta: Mapping[str, Any],
+    estimate: Mapping[str, Any],
+) -> dict[str, Any] | None:
+    """Return a soft telemetry warning when tool use exceeds measured norms."""
+
+    try:
+        threshold = float(estimate.get("tool_call_anomaly_threshold"))
+        observed_max = int(estimate.get("observed_tool_call_max"))
+    except (TypeError, ValueError):
+        return None
+    count = tool_call_count_from_dispatch_meta(dispatch_meta)
+    if count <= threshold:
+        return None
+    return {
+        "kind": "tool_call_anomaly",
+        "severity": "warning",
+        "observed_tool_call_count": count,
+        "observed_tool_call_max": observed_max,
+        "tool_call_anomaly_threshold": threshold,
+        "measured_cost_profile": estimate.get("measured_cost_profile"),
+        "basis": estimate.get("basis"),
+    }
 
 
 def tool_theatre_violation(

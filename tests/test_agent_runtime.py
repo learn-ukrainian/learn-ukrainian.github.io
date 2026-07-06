@@ -112,6 +112,7 @@ from agent_runtime.errors import (
 from agent_runtime.registry import AGENTS, get_agent_entry
 from agent_runtime.runner import (
     _enforce_resume_policy,
+    _ensure_write_cwd_isolated,
     _is_temp_file,
     _kill_process_tree,
     _load_adapter,
@@ -1571,6 +1572,116 @@ def test_invoke_requires_cwd_for_write_mode():
 def test_invoke_requires_cwd_for_danger_mode():
     with pytest.raises(ValueError, match="cwd is mandatory"):
         invoke("codex", "hello", mode="danger", cwd=None)
+
+
+# ---------------------------------------------------------------------------
+# #4446 — write-capable spawns must never land in a protected primary checkout
+# ---------------------------------------------------------------------------
+#
+# These build a *real* git repo + dispatch worktree in tmp_path (the containment
+# predicate is git-plumbing, not string prefixes) and point the runner's cheap
+# in-tree pre-filter (``_RUNNER_REPO_TREE``) at that repo so the guard actually
+# classifies it instead of short-circuiting on "not this checkout".
+
+def _git_wt(repo, *args):
+    env = {k: v for k, v in os.environ.items()
+           if k not in {"GIT_DIR", "GIT_WORK_TREE", "GIT_INDEX_FILE",
+                        "GIT_OBJECT_DIRECTORY", "GIT_ALTERNATE_OBJECT_DIRECTORIES",
+                        "GIT_NAMESPACE", "GIT_CEILING_DIRECTORIES",
+                        "GIT_DISCOVERY_ACROSS_FILESYSTEM", "GIT_COMMON_DIR"}}
+    return subprocess.run(["git", "-C", str(repo), *args],
+                          check=True, capture_output=True, text=True, env=env)
+
+
+@pytest.fixture
+def write_guard_repo(tmp_path, monkeypatch):
+    """A primary checkout on ``main`` with a registered dispatch worktree.
+
+    Points ``_RUNNER_REPO_TREE`` at it so the guard evaluates containment here.
+    """
+    main = tmp_path / "main"
+    main.mkdir()
+    _git_wt(main.parent, "init", "-q", "-b", "main", str(main))
+    _git_wt(main, "config", "user.email", "t@example.com")
+    _git_wt(main, "config", "user.name", "T")
+    (main / "tracked.txt").write_text("x\n")
+    _git_wt(main, "add", "-A")
+    _git_wt(main, "commit", "-q", "-m", "init")
+    dispatch_wt = main / ".worktrees" / "dispatch" / "codex" / "task-1"
+    _git_wt(main, "worktree", "add", "-q", "-b", "codex/task-1", str(dispatch_wt))
+
+    from agent_runtime import runner as runner_mod
+    monkeypatch.setattr(runner_mod, "_RUNNER_REPO_TREE", main.resolve())
+    return SimpleNamespace(main=main.resolve(), dispatch_wt=dispatch_wt.resolve())
+
+
+@pytest.mark.parametrize("mode", ["workspace-write", "danger"])
+def test_write_guard_rejects_primary_checkout_on_protected_branch(write_guard_repo, mode):
+    with pytest.raises(ValueError, match="primary checkout on a protected branch"):
+        _ensure_write_cwd_isolated(write_guard_repo.main, mode=mode, agent_name="codex")
+
+
+def test_write_guard_allows_dispatch_worktree(write_guard_repo):
+    # Must not raise: an isolated dispatch worktree is the sanctioned location.
+    _ensure_write_cwd_isolated(
+        write_guard_repo.dispatch_wt, mode="danger", agent_name="codex"
+    )
+
+
+def test_write_guard_allows_primary_checkout_on_feature_branch(write_guard_repo):
+    # Branch-scoped like #4448/#4449/#4450: a deliberately-checked-out feature
+    # branch in the primary checkout is a developer workspace, not a hazard.
+    _git_wt(write_guard_repo.main, "checkout", "-q", "-b", "feature/x")
+    _ensure_write_cwd_isolated(
+        write_guard_repo.main, mode="workspace-write", agent_name="codex"
+    )
+
+
+def test_write_guard_allows_out_of_tree_cwd(tmp_path):
+    # No monkeypatch of _RUNNER_REPO_TREE: a cwd outside this checkout's tree is
+    # isolated by definition and must skip the git-plumbing classify entirely.
+    outside = tmp_path / "somewhere-else"
+    outside.mkdir()
+    _ensure_write_cwd_isolated(outside, mode="danger", agent_name="codex")
+
+
+def test_write_guard_fails_closed_when_containment_unavailable(tmp_path, monkeypatch):
+    from agent_runtime import runner as runner_mod
+    monkeypatch.setattr(runner_mod, "_load_worktree_containment", lambda: None)
+    with pytest.raises(ValueError, match="failed to import"):
+        _ensure_write_cwd_isolated(tmp_path, mode="danger", agent_name="codex")
+
+
+def test_invoke_codex_write_lane_rejects_primary_checkout_cwd(write_guard_repo):
+    """End-to-end: a write-capable Codex invoke in the protected primary checkout
+    is refused at the chokepoint — the subprocess is never spawned there.
+
+    ``_spawn_subprocess`` is the seam (not ``subprocess.Popen``) so the guard's
+    real git classify runs while the agent spawn stays observable.
+    """
+    with patch("agent_runtime.runner._spawn_subprocess") as mock_spawn:
+        with pytest.raises(ValueError, match="primary checkout on a protected branch"):
+            invoke("codex", "hello", mode="danger", cwd=write_guard_repo.main)
+    mock_spawn.assert_not_called()
+
+
+def test_invoke_codex_write_lane_spawns_in_dispatch_worktree(write_guard_repo):
+    """End-to-end: a write-capable Codex invoke with a dispatch-worktree cwd
+    passes the guard and the spawn receives that worktree as cwd (never the main
+    checkout)."""
+    from agent_runtime.errors import AgentUnavailableError
+    with patch("agent_runtime.runner.has_headroom", return_value=(True, "")), \
+         patch("agent_runtime.runner.write_record"), \
+         patch(
+             "agent_runtime.runner._spawn_subprocess",
+             side_effect=FileNotFoundError("no codex binary"),
+         ) as mock_spawn, \
+         pytest.raises(AgentUnavailableError):
+        invoke("codex", "hello", mode="workspace-write", cwd=write_guard_repo.dispatch_wt)
+    mock_spawn.assert_called_once()
+    spawn_cwd = Path(mock_spawn.call_args.kwargs["cwd"]).resolve()
+    assert spawn_cwd == write_guard_repo.dispatch_wt
+    assert spawn_cwd != write_guard_repo.main
 
 
 def test_codex_adapter_dispatch_ignores_session_id_via_runner_policy(tmp_path):

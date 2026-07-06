@@ -106,11 +106,26 @@ references:
   note: Класична критична оцінка творчості Квітки, аналіз його ролі в літературному процесі
   type: critical
   work: Нове українське письменство
+readings:
+- title: "Квітка-Основ'яненко Григорій Федорович"
+  source_name: "Енциклопедія історії України (ЕІУ)"
+  source_url: "http://resource.history.org.ua/cgi-bin/eiu/history.exe?Z21ID=&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Kvitka_G_F"
+  language: uk
+  type: article
+  hosting: link-only
+  note: "Solid overview of his life, his dual role as a sentimentalist and a satirist, and his contributions to Ukrainian prose."
+- title: "Твори Квітки-Основ'яненка"
+  source_name: "Ізборник"
+  source_url: "http://litopys.org.ua/kvitka/kvit.htm"
+  language: uk
+  type: primary_source
+  hosting: excerpt-only
+  note: "Source for excerpts of 'Конотопська відьма' or 'Маруся' for learners to compare his satirical and sentimental styles."
 sequence: 59
 slug: hryhoriy-kvitka-osnovianenko
 subtitle: The Sentimentalist Satirist Who Forged a Literary Language
 title: 'Григорій Квітка-Основ''яненко: Батько української прози'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: письменник, який створює твори у прозовій (не віршованій) формі
   pos: ч.

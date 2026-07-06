@@ -698,6 +698,7 @@ def _run_tier2(
             target=target,
             level=level,
             slug=slug,
+            policy_family=policy_family,
             route=route,
             options=options,
         )
@@ -961,6 +962,9 @@ def _run_tier2(
                 "reviewer_family": reviewer_family,
             }
         llm_reviewer_dispatch.enforce_tool_budget(dispatch_meta)
+        telemetry_warning = llm_reviewer_dispatch.tool_call_anomaly_warning(dispatch_meta, estimate)
+        if telemetry_warning is not None:
+            dispatch_meta = {**dispatch_meta, "telemetry_warning": telemetry_warning}
         try:
             parsed_payload = llm_reviewer.parse_and_evaluate_llm_response(
                 response_text,
@@ -1106,6 +1110,7 @@ def _live_reviewer_block(
     target: ReviewTarget,
     level: str,
     slug: str,
+    policy_family: str,
     route: llm_reviewer_dispatch.ReviewerRoute | None,
     options: WorkflowOptions,
 ) -> dict[str, Any] | None:
@@ -1114,6 +1119,10 @@ def _live_reviewer_block(
     if options.dry_run:
         return None
     try:
+        llm_reviewer_dispatch.assert_mcp_required_for_policy(
+            policy_family=policy_family,
+            route=route,
+        )
         lineage = llm_reviewer_dispatch.resolve_author_lineage(
             level=level,
             slug=slug,
@@ -1380,15 +1389,20 @@ def estimate_llm_cost(prompt: str, policy_family: str) -> dict[str, Any]:
 
     prompt_tokens = max(1, len(prompt.encode("utf-8")) // 4)
     completion_tokens = 900 if policy_family == "seminar" else 600
-    per_1k = 0.012 if policy_family == "seminar" else 0.008 if policy_family == "b1_plus" else 0.004
+    profile = llm_reviewer_dispatch.measured_cost_profile_for_policy(policy_family)
     total_tokens = prompt_tokens + completion_tokens
     return {
         "policy_family": policy_family,
         "estimated_prompt_tokens": prompt_tokens,
         "estimated_completion_tokens": completion_tokens,
         "estimated_total_tokens": total_tokens,
-        "estimated_cost_usd": round(total_tokens / 1000.0 * per_1k, 6),
-        "basis": "prompt byte estimate; replace with telemetry median when available",
+        "estimated_cost_usd": llm_reviewer_dispatch.measured_estimated_cost_usd(
+            prompt_tokens=prompt_tokens,
+            completion_tokens=completion_tokens,
+            profile=profile,
+        ),
+        **profile.estimate_fields(),
+        "basis": llm_reviewer_dispatch.measured_cost_basis(profile),
     }
 
 

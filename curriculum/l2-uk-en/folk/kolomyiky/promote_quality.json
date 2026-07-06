@@ -1,9 +1,9 @@
 {
-  "assembled_mdx_sha256": "bf101f21d38084e8c599036ca082047965cf4a584fdd02e5d6a3b586828e11ef",
+  "assembled_mdx_sha256": "2798f2d169c2f7bca587c23dda5e38d905e963771dd5b2341bfa7a0a69c11369",
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "cdf018f08c6cefe6be63c83d61bea0e755a768d4f66dbf28af8657a13cdb254f",
+    "digest": "360d8bd7dd66ed0aefe9534f1dd6ae8c2f9d30d9cc90d8bd4eb38254fa1b39e5",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/kolomyiky.yaml",
@@ -11,7 +11,7 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/kolomyiky/module.md",
-        "sha256": "a3d34533c081ece13cabe1eef7759f134273e4874964928a04d8c2ff110426cf"
+        "sha256": "637f16626e01569e3ad0297898ee09a40d5386e7c732e0807ad465a28f277727"
       },
       {
         "path": "curriculum/l2-uk-en/folk/kolomyiky/activities.yaml",
@@ -23,15 +23,15 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/kolomyiky/resources.yaml",
-        "sha256": "4ea714355c020f3ca1da204c41f5f2eb771a6de4de2cbfdfcd9ec16e8b939806"
+        "sha256": "e7b4e78f41ca7006d7ad3d261b3535d2caba811b52bc63ef13eadaccf3dfdc68"
       }
     ]
   },
   "evidence": {
-    "learner_surface": "Structured PrimaryReading blocks use dash-led source attribution and generated MDX now separates closing PrimaryReading JSX from following markdown.",
-    "reading_coverage": "Added or converted learner-visible structured on-site shortened primary readings; external/full-version links remain supplementary only.",
-    "review": "Claude local CLI failed before producing a review; AGY/Gemini review found two remediation blockers, both fixed, and focused follow-up returned PASS/no blockers.",
-    "source_hygiene": "Readings are bounded as verified corpus, scholarly witness, textbook/pedagogical fragment, or authorial public-domain excerpts; no fabricated dialogue, songs, or source claims were introduced."
+    "learner_surface": "Structured PrimaryReading block points to a substantial on-site hosted reading, with VESUM-safe learner framing and dash-led attribution in the module.",
+    "reading_coverage": "Direct hardened reading gate passed for Batch B target modules with one substantial structured reading each.",
+    "review": "Claude CLI failed before producing review content; AGY/Gemini final follow-up returned PASS after metadata cleanup and resource-liveness repairs.",
+    "source_hygiene": "M10 uses Hnatiuk 1905 Kolomyiky volume I via Internet Archive, a public-domain printed source; dialect/old-spelling excerpts are preserved only in the hosted reading page."
   },
   "floors": {
     "beauty": 8.5,
@@ -49,13 +49,13 @@
     "model": "gemini-3.1-pro-high"
   },
   "schema_version": 1,
-  "scored_at": "2026-07-05T12:13:39Z",
+  "scored_at": "2026-07-05T23:01:56Z",
   "scores": {
     "beauty": 8.8,
     "decolonization": 9.2,
     "engagement": 8.7,
     "naturalness": 8.9,
-    "pedagogical": 8.9,
+    "pedagogical": 9.0,
     "tone": 9.0
   },
   "slug": "kolomyiky",
@@ -64,6 +64,6 @@
   "writer": {
     "agent": "codex",
     "family": "openai",
-    "model": "gpt-5"
+    "model": "gpt-5-codex"
   }
 }

@@ -80,6 +80,14 @@ persona:
   role: Модератор семінару, що ставить під сумнів глянцевий образ «королеви сцени» і показує ціну її вибору.
   voice: Senior-Biographer-Skeptic
 phase: BIO.2
+readings:
+- hosting: link-only
+  language: uk
+  source: Енциклопедія Сучасної України
+  task: "Ознайомтеся з театральною діяльністю Заньковецької та її роллю в українській сцені."
+  title: Заньковецька Марія Костянтинівна
+  type: article
+  url: https://esu.com.ua/article-14895
 references:
 - title: Mariya Zankovetska
   note: 'Збірна довідка: біографія, театральна кар''єра, відмова від імператорської сцени, вплив на культуру.'
@@ -98,7 +106,7 @@ sequence: 74
 slug: mariya-zankovetska
 subtitle: The First Lady of the Ukrainian Stage
 title: 'Марія Заньковецька: Перша леді сцени'
-version: '4.0'
+version: '4.2'
 vocabulary_hints:
 - definition: тип ролей, що відповідають сценічним даним актора
   pos: с.

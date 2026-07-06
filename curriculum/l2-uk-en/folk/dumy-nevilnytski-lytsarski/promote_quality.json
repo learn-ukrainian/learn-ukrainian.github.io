@@ -1,9 +1,9 @@
 {
-  "assembled_mdx_sha256": "e917c2d28fc526986245269254e4ff82aa092be61308420c4256870d7f2dfc5f",
+  "assembled_mdx_sha256": "82f5a0176eab4e761ebeb0f9a9d8e3fe8455d861259fc1838e5f0fd316f6d1dc",
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "455d5c0869426156ff2d8bcb548a02366db4297d07fd09832aef9dd5549b7a53",
+    "digest": "18b8fc33b1d7769c3e6b1d6143b0bb443faf82f5bfc9ae0ea0a1e1fcd2c78771",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/dumy-nevilnytski-lytsarski.yaml",
@@ -11,7 +11,7 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/dumy-nevilnytski-lytsarski/module.md",
-        "sha256": "fe7abd8238e1d1f5768daea70021b332fafbf1df2d77e0ce69779c495483ee95"
+        "sha256": "6661268f0752cd201f2ef813648c21dc8108e414337ea7257734f6b7472e7082"
       },
       {
         "path": "curriculum/l2-uk-en/folk/dumy-nevilnytski-lytsarski/activities.yaml",
@@ -28,11 +28,9 @@
     ]
   },
   "evidence": {
-    "decolonization": "Centers Ukrainian kobzar epic and rejects Russian-imperial flattening without romantic overclaim.",
-    "engagement": "Varied inline and workbook tasks cover formula, source evaluation, performance, comparison, and seminar writing.",
-    "naturalness": "Learner-facing AI/build/register leakage cleanup keeps the prose in Ukrainian seminar register without process instructions.",
-    "pedagogical": "Plan and module teach genre, performance, text record, literary reception, and evidence limits distinctly.",
-    "review": "Claude route was attempted first; AGY/Gemini fallback review blockers were fixed before final validation."
+    "reading_remediation": "Batch A adds or fixes substantial structured on-site primary readings with dash-led provenance and public-domain rights decisions.",
+    "review": "Claude opus route was used first; an initial stdin send-order miss was retried through Claude, which found one blocker; follow-up Claude review confirmed blockers none.",
+    "source_verification": "sources.verify_quote matched the new Hrushevsky/Drahomanov/Shevchenko/Ukrlib passages at 0.919-1.0 confidence; reading gate passed for all six modules."
   },
   "floors": {
     "beauty": 8.5,
@@ -50,7 +48,7 @@
     "model": "claude-opus-4-8"
   },
   "schema_version": 1,
-  "scored_at": "2026-07-02T16:26:22Z",
+  "scored_at": "2026-07-05T21:40:55Z",
   "scores": {
     "beauty": 8.9,
     "decolonization": 9.2,

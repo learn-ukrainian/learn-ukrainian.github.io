@@ -80,6 +80,21 @@ persona:
   role: Модератор семінару, який ставить під сумнів канонічний образ Драгоманова, змушуючи студентів бачити не ікону, а живу людину з її протиріччями та помилками.
   voice: Drahomanov-Skeptic
 phase: BIO
+readings:
+- title: "Драгоманов Михайло Петрович"
+  source: "Енциклопедія історії України"
+  url: "https://www.history.org.ua/?termin=Dragomanov_M"
+  language: uk
+  type: encyclopedia
+  hosting: link-only
+  task: "Знайдіть інформацію про еміграційний період життя Драгоманова. Як він продовжував впливати на український рух із-за кордону?"
+- title: "Михайло Драгоманов"
+  source: "Велика українська енциклопедія"
+  url: "https://vue.gov.ua/Драгоманов,_Михайло_Петрович"
+  language: uk
+  type: encyclopedia
+  hosting: link-only
+  task: "Прочитайте про основні політичні погляди мислителя. Що означала його концепція федералізму?"
 references:
 - title: Mykhailo Drahomanov
   note: Біографія, політичні погляди, вплив на культуру, зібрані з відкритих джерел (Wikipedia, праці істориків).
@@ -99,7 +114,7 @@ sequence: 69
 slug: mykhailo-drahomanov
 subtitle: 'Mykhailo Drahomanov: Architect of a European Ukraine'
 title: 'Михайло Драгоманов: Архітектор європейської України'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: політична концепція, що обстоює об'єднання окремих державних утворень в єдину федеративну державу з високим ступенем їхньої самостійності
   pos: ч.

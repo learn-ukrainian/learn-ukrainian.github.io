@@ -101,11 +101,26 @@ references:
   note: Класичний аналіз філософської системи Сковороди в контексті європейського бароко.
   type: secondary
   work: Філософія Г. С. Сковороди
+readings:
+- title: "Григорій Сковорода: Біографія"
+  source_name: "Енциклопедія історії України (ЕІУ)"
+  source_url: "http://resource.history.org.ua/cgi-bin/eiu/history.exe?Z21ID=&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Skovoroda_H"
+  language: uk
+  type: article
+  hosting: link-only
+  note: "Comprehensive academic overview of Skovoroda's life and philosophy. Highly reliable source for advanced learners."
+- title: "Твори Григорія Сковороди"
+  source_name: "Ізборник"
+  source_url: "http://izbornyk.org.ua/skovoroda/skovor.htm"
+  language: uk
+  type: primary_source
+  hosting: excerpt-only
+  note: "Primary texts of Skovoroda. Excerpts of 'Байки Харківські' and philosophical dialogues for analysis."
 sequence: 55
 slug: hryhoriy-skovoroda
 subtitle: 'Hryhoriy Skovoroda: The Wandering Philosopher'
 title: 'Григорій Сковорода: Мандрівний філософ'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: діяльність, що відповідає природним нахилам та покликанню людини; ключове поняття в філософії Сковороди
   pos: ж.

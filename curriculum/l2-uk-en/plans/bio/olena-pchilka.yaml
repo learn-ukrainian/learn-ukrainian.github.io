@@ -80,6 +80,14 @@ persona:
   role: Модератор семінару — ставить незручні питання про ціну геніальності та роль жінки в історії
   voice: Feminist-Literary-Critic
 phase: BIO
+readings:
+- hosting: link-only
+  language: uk
+  source: Велика українська енциклопедія
+  task: Зверніть увагу на її етнографічну та видавничу діяльність.
+  title: Пчілка, Олена
+  type: article
+  url: https://vue.gov.ua/Пчілка,_Олена
 references:
 - title: Olena Pchilka
   note: Зібрана біографія, основні дати, ключові твори та конфлікти
@@ -103,7 +111,7 @@ sequence: 72
 slug: olena-pchilka
 subtitle: 'Olena Pchilka: The Matriarch of Ukrainian Modernism'
 title: 'Олена Пчілка: Матріарх українського модернізму'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: жінка, яка є головою роду, родини; шанована, впливова жінка
   pos: ч.

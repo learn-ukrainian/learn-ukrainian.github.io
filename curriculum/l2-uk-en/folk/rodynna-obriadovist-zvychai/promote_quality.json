@@ -1,9 +1,9 @@
 {
-  "assembled_mdx_sha256": "c2634ac1633abd28d91fd6b8ebd3e5f8d4b248bf30556abe6e3a05b8df2f6cf7",
+  "assembled_mdx_sha256": "830a74f469aa26e9b1a1fc64d655d64d13158e9e15767636f2044656abd0af10",
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "9205bdb3cb901c4bd72e775f448c66e669214e9b0b14258d1d638e0bbd569ab6",
+    "digest": "f74ec9fd0c7865a0109cc7b3160e20a6e3e43cb94624eb7d86474b94e2bfd9fa",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/rodynna-obriadovist-zvychai.yaml",
@@ -11,7 +11,7 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/rodynna-obriadovist-zvychai/module.md",
-        "sha256": "2e5727a1884f13a510b7160197ca915ab506e66b1b59ee3f5b14399a505f4d14"
+        "sha256": "293b5685700c2f744f918e38465b82485be1a066e72ac140c565834d7ea57eda"
       },
       {
         "path": "curriculum/l2-uk-en/folk/rodynna-obriadovist-zvychai/activities.yaml",
@@ -28,14 +28,9 @@
     ]
   },
   "evidence": {
-    "beauty": "Fluent C1 Ukrainian seminar lesson links birth, christening, wedding, funeral, lament, and kinship voice through recurring transition images.",
-    "decolonization": "The module rejects decorative ethnography and hidden older-core claims, keeping Ukrainian family rites source-bound, Christian-community-aware, and agency-centered.",
-    "engagement": "Short verified fragments, careful-reading practice, inline checks, and focused workbook tasks give learners repeated evidence-based entry points.",
-    "naturalness": "Learner-facing AI/build/register leakage cleanup keeps the prose in Ukrainian seminar register without process instructions.",
-    "pedagogical": "Repeatable method asks learners to track action, performer, object, addressee, voice, formula, and proof limits across family rites.",
-    "review": "Claude route was attempted first; AGY/Gemini fallback review blockers were fixed before final validation.",
-    "source_hygiene": "Resources use public Wikisource/Wikipedia references, and the lesson marks short-fragment-only versus public-excerpt-candidate posture.",
-    "tone": "Serious seminar voice holds tenderness, hierarchy, grief, memory, and community pressure without nostalgia or spectacle."
+    "reading_remediation": "Batch A adds or fixes substantial structured on-site primary readings with dash-led provenance and public-domain rights decisions.",
+    "review": "Claude opus route was used first; an initial stdin send-order miss was retried through Claude, which found one blocker; follow-up Claude review confirmed blockers none.",
+    "source_verification": "sources.verify_quote matched the new Hrushevsky/Drahomanov/Shevchenko/Ukrlib passages at 0.919-1.0 confidence; reading gate passed for all six modules."
   },
   "floors": {
     "beauty": 8.5,
@@ -53,7 +48,7 @@
     "model": "claude-opus-4-8"
   },
   "schema_version": 1,
-  "scored_at": "2026-07-02T16:26:22Z",
+  "scored_at": "2026-07-05T21:40:55Z",
   "scores": {
     "beauty": 9.0,
     "decolonization": 9.0,

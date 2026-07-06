@@ -79,6 +79,21 @@ pedagogy: CBI
 persona:
   role: Модератор семінару, що ставить під сумнів офіційні наративи та змушує шукати глибші причини й наслідки
   voice: Senior-Biographer-Skeptic
+readings:
+- hosting: link-only
+  language: uk
+  note: Детальна стаття про життя, діяльність в еміграції та політичну спадщину гетьмана.
+  source_name: Енциклопедія історії України (Інститут історії України НАНУ)
+  source_type: encyclopedia
+  source_url: http://www.history.org.ua/?termin=Orlyk_P
+  title: Орлик Пилип Степанович
+- hosting: link-only
+  language: uk
+  note: Огляд конституційного проєкту та політичної угоди Пилипа Орлика зі старшиною.
+  source_name: Енциклопедія історії України (Інститут історії України НАНУ)
+  source_type: encyclopedia
+  source_url: http://www.history.org.ua/?termin=Pakty_i_konstytutsii_1710
+  title: Пакти і Конституції прав і вольностей Війська Запорозького 1710
 references:
 - title: Пилип Орлик
   note: Біографія, Конституція 1710 року, еміграція
@@ -97,7 +112,7 @@ sequence: 50
 slug: pylyp-orlyk
 subtitle: 'Pylyp Orlyk: Author of the First Ukrainian Constitution'
 title: 'Пилип Орлик: Автор першої української конституції'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: основний закон держави, що визначає її устрій, права та обов'язки громадян
   pos: ж.

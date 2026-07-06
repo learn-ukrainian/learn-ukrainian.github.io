@@ -80,6 +80,14 @@ persona:
   role: Модератор семінару, що ставить незручні питання про ціну та межі першої хвилі українського фемінізму, проблематизуючи постать «ікони».
   voice: Critical-Sympathizer
 phase: BIO
+readings:
+- hosting: link-only
+  language: uk
+  source: Енциклопедія Сучасної України
+  task: "Зверніть увагу на її роль у становленні жіночого руху та літературної модернізації."
+  title: Кобринська Наталія Іванівна
+  type: article
+  url: https://esu.com.ua/article-8894
 references:
 - title: Nataliya Kobrynska
   note: Compiled research notes on Kobrynska, her works, correspondence with Franko, and historiography of the women's movement.
@@ -104,7 +112,7 @@ sequence: 75
 slug: nataliya-kobrynska
 subtitle: The Birth of Ukrainian Feminism
 title: 'Наталія Кобринська: Народження українського фемінізму'
-version: '4.0'
+version: '4.2'
 vocabulary_hints:
 - definition: суспільно-політичний рух, метою якого є досягнення рівних прав для жінок
   pos: ч.

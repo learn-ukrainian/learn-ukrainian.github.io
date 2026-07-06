@@ -82,6 +82,21 @@ persona:
   role: Історик-ревізіоніст, що ставить під сумнів чорно-білі оцінки. Змушує бачити за політичними рішеннями людську драму, а за іконами — складних, неоднозначних людей.
   voice: Mazepa-Revisionist
 phase: BIO.3
+readings:
+- hosting: link-only
+  language: uk
+  rationale: "Біографічний якір для розбору Мазепи як гетьмана, дипломата й мецената: учень звіряє імперський ярлик «зради» з довгою службою, автономними інтересами й наслідками 1708-1709 років."
+  source: "Енциклопедія історії України"
+  title: "Мазепа Іван Степанович"
+  type: encyclopedia
+  url: "https://history.org.ua/?termin=Mazepa_I_S"
+- hosting: link-only
+  language: uk
+  rationale: "Тематичне читання для ціни вибору 1708 року: учень пов'язує знищення Батурина з політичним терором після переходу Мазепи до шведського союзу."
+  source: "Енциклопедія історії України"
+  title: "Батурина облога і штурм 1708"
+  type: encyclopedia
+  url: "https://history.org.ua/?termin=baturyna_obloga_i_shturm_1708"
 references:
 - title: Ivan Mazepa
   note: 'Compiled from: Субтельний, Плохій, ЕІУ. Біографія, гетьманат, Полтава, спадщина.'
@@ -106,7 +121,7 @@ sequence: 47
 slug: ivan-mazepa
 subtitle: 'Ivan Mazepa: Anatomy of a Choice'
 title: 'Іван Мазепа: Анатомія вибору'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: голова козацької держави, головнокомандувач війська
   pos: ч.

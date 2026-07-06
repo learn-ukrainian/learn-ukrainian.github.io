@@ -82,6 +82,21 @@ persona:
   role: Історик-джерелознавець, що відрізняє джерельну біографію Скоропадського від ярликів «слухняний намісник» і «рятівник автономії», тримаючи видимими і післяполтавську втрату поля дії, і обмежену суб'єктність усередині неї
   voice: Source-Critical Historian
 phase: BIO
+readings:
+- hosting: link-only
+  language: uk
+  rationale: "Біографічний якір для післяполтавського гетьманства: учень відрізняє старшинську процедуру, царський примус, Решетилівські статті, меценатство й нагляд у Глухові."
+  source: "Енциклопедія історії України"
+  title: "Скоропадський Іван Ілліч"
+  type: encyclopedia
+  url: "https://history.org.ua/?termin=Skoropadskyj_I"
+- hosting: link-only
+  language: uk
+  rationale: "Документальний контекст обмеженої оборони автономії: учень визначає, що просили 14 пунктів і які важелі командування, залог та фіскального контролю лишилися за Петром I."
+  source: "Енциклопедія історії України"
+  title: "Решетилівські статті 1709"
+  type: encyclopedia
+  url: "https://history.org.ua/?termin=Reshetylivski_statti_1709"
 references:
 - note: Internet Encyclopedia of Ukraine (О. Оглоблин) — 1646/1722, перехід з Умані на Лівобережжя, уряди, місії, стародубське полковництво, глухівське обрання, Решетилівка, Полтава, резидентський нагляд, розквартирування, колегія, тиск на друк і академію, поховання
   path: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CS%5CK%5CSkoropadskyIvan.htm
@@ -118,7 +133,7 @@ sequence: 48
 slug: ivan-skoropadskyi
 subtitle: 'Ivan Skoropadskyi: The Hlukhiv Mace under Oversight'
 title: 'Іван Скоропадський: Глухівська булава під наглядом'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: виборний очільник Війська Запорозького; Скоропадський був лівобережним гетьманом 1708-1722 років під наглядом
   pos: ч.
