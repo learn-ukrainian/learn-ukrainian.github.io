@@ -1,0 +1,81 @@
+{
+  "slug": "kyrylo-metodiivske-tovarystvo",
+  "title": "Кирило-Мефодіївське товариство",
+  "verification_log": "HISTORY domain. All claims tool-verified 2026-07-06 by claude/4539-fixtures-wave4-public via sources MCP. Source: query_wikipedia('Кирило-Мефодіївське товариство', §1 Створення + §6 Донос і розгром) — founded late 1845–early 1846 in KYIV; named for Cyril and Methodius; ring «Св. Кирило і Мефодій, січень 1846»; founders Білозерський, Гулак, Костомаров, Куліш, Маркович; Shevchenko joined April 1846; 12 members by autumn 1846; exposed March 1847 by informer Олексій Петров; «Закон Божий» a key charge document. Class-M m1 twists the city (real: Києві, not Харкові); m2 twists the ring inscription (real: «Св. Кирило і Мефодій, січень 1846», not a nationalist slogan). Class-U «Київський кодекс братолюбія»: zero attestation verified 2026-07-06 — query_wikipedia(search) → 'No Wikipedia results'; verify_source_attribution(literary) → discusses=false (evidence only the real «Закон Божий»/«Три літа» списки and the unrelated 1748 legal кодекс). Licensing: uk.wikipedia (CC BY-SA), quotes ≤25 words.",
+  "canary_sentence": "Їхні мрії про волю й сьогодні надихають молодих читачів.",
+  "passage_md": "Кирило-Мефодіївське товариство було першою українською політичною організацією нового часу, що постала на хвилі національного та слов'янського відродження. Таємне Україно-Слов'янське товариство було створене наприкінці 1845 — на початку 1846 року в Харкові. Організація була названа іменами відомих слов'янських просвітників Кирила і Мефодія. Ініціаторами створення братства виступили Василь Білозерський, Микола Гулак, Микола Костомаров, Пантелеймон Куліш та Опанас Маркович. У квітні 1846 року в братство вступив Тарас Шевченко. Його учасники обстоювали ідеї слов'янської федерації вільних народів, скасування кріпацтва та духовної рівності всіх людей. Свої погляди вони поширювали переважно рукописними творами. Знаком братства став перстень із написом «За волю України, 1846». Восени 1846 загальна кількість членів братства, за даними слідства, становила 12 осіб. Серед членів товариства переписували «Київський кодекс братолюбія», нібито ранній виклад їхньої програми. У березні 1847 року за доносом провокатора Олексія Петрова діяльність братства була викрита, а члени заарештовані. Програмний рукопис братства «Закон Божий» став одним з основних доказів обвинувачення. Їхні мрії про волю й сьогодні надихають молодих читачів.",
+  "claims": [
+    {
+      "claim_id": "kmt-m1",
+      "claim": "Таємне Україно-Слов'янське товариство було створене наприкінці 1845 — на початку 1846 року в Харкові",
+      "is_true": false,
+      "fabrication_class": "M",
+      "distractor_evidence": "query_wikipedia('Кирило-Мефодіївське товариство', §1) — the REAL passage: «Україно-Слов'янське товариство (Кирило-Мефодіївське братство) було створене наприкінці 1845 — на початку 1846 року в Києві». The founding CITY is fabricated: Київ, not Харків. Keyword lure: the date span and org name are verbatim-real; only the city is swapped.",
+      "verified_by": "Real: founded in Kyiv (uk.wikipedia §Створення); «в Харкові» is fabricated."
+    },
+    {
+      "claim_id": "kmt-t1",
+      "claim": "Організація була названа іменами відомих слов'янських просвітників Кирила і Мефодія",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "query_wikipedia('Кирило-Мефодіївське товариство', §1): «Організація була названа іменами відомих слов'янських просвітників Кирила і Мефодія»."
+    },
+    {
+      "claim_id": "kmt-t2",
+      "claim": "Ініціаторами створення братства виступили Василь Білозерський, Микола Гулак, Микола Костомаров, Пантелеймон Куліш та Опанас Маркович",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "query_wikipedia('Кирило-Мефодіївське товариство', §1): «Ініціаторами створення братства і його засновниками виступили Василь Білозерський, Микола Гулак, Микола Костомаров, Пантелеймон Куліш, Опанас Маркович»."
+    },
+    {
+      "claim_id": "kmt-t3",
+      "claim": "У квітні 1846 року в братство вступив Тарас Шевченко",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "query_wikipedia('Кирило-Мефодіївське товариство', §1): «У квітні 1846 року в братство вступив Тарас Шевченко»."
+    },
+    {
+      "claim_id": "kmt-m2",
+      "claim": "Знаком братства став перстень із написом «За волю України, 1846»",
+      "is_true": false,
+      "fabrication_class": "M",
+      "distractor_evidence": "query_wikipedia('Кирило-Мефодіївське товариство', §1) — the REAL passage: «Знаком братства став перстень з написом «Св. Кирило і Мефодій, січень 1846»». The inscription is fabricated: it was a religious dedication to Cyril and Methodius, not a nationalist slogan «За волю України». §6 corroborates the ring: «каблучка, на внутрішньому боці якої були слова: «В ім'я св. Кирила і Мефодія»».",
+      "verified_by": "Real inscription «Св. Кирило і Мефодій, січень 1846» (uk.wikipedia §Створення, §Донос); «За волю України» is fabricated."
+    },
+    {
+      "claim_id": "kmt-t4",
+      "claim": "Восени 1846 загальна кількість членів братства, за даними слідства, становила 12 осіб",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "query_wikipedia('Кирило-Мефодіївське товариство', §1): «Восени 1846 загальна кількість членів братства, за даними слідства, становила 12 осіб»."
+    },
+    {
+      "claim_id": "kmt-u1",
+      "claim": "Серед членів товариства переписували «Київський кодекс братолюбія»",
+      "is_true": false,
+      "fabrication_class": "U",
+      "distractor_evidence": null,
+      "verified_by": "INVENTED named manuscript. Zero attestation verified 2026-07-06: query_wikipedia(search, «Київський кодекс братолюбія») → 'No Wikipedia results'; verify_source_attribution(literary, «Київський кодекс братолюбія кирило-мефодіївців») → discusses=false (evidence only the real «Закон Божий»/«Сон»/«Три літа» списки circulated among the кирило-мефодіївці and the unrelated 1748 «Права, по которым судится малороссийский народ» кодекс). The real programmatic text was «Закон Божий» / «Книга буття українського народу»; a «Київський кодекс братолюбія» does not exist."
+    },
+    {
+      "claim_id": "kmt-t5",
+      "claim": "У березні 1847 року за доносом провокатора Олексія Петрова діяльність братства була викрита, а члени заарештовані",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "query_wikipedia('Кирило-Мефодіївське товариство', §6): «У березні 1847 року за доносом провокатора Олексія Петрова діяльність братства була викрита, а члени заарештовані»."
+    },
+    {
+      "claim_id": "kmt-t6",
+      "claim": "Програмний рукопис братства «Закон Божий» став одним з основних доказів обвинувачення",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "query_wikipedia('Кирило-Мефодіївське товариство', §6): Гулак «прочитав «Закон Божий» і навіть дозволив його переписати. Згодом цей документ став одним з основних доказів обвинувачення»."
+    }
+  ]
+}

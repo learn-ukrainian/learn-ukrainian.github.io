@@ -1735,5 +1735,437 @@
     "license": "UNKNOWN",
     "verdict": "UNKNOWN",
     "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+  },
+  {
+    "fixture": "vertep",
+    "claim_id": "root_vlog",
+    "quote_or_ref": "FOLK domain. All claims tool-verified 2026-07-06 by claude/4539-fixtures-wave4-public via sources MCP. Source: query_wikipedia('Вертеп', §6 Архітектоніка) — two-tier «небо»/«земля» house of wood or cardboard open to the viewer; upper tier = діва Марія з немовлям, lower = трон царя Ірода; вертепник водив ляльку по прорізах у підлозі; мechanized Смерть/Козак; ляльок могло бути до 40; канти = church music from a late-16th-c. reform; Куп'янська скриня reconstructed in the Soviet era. Class-M m1 swaps the tiers (real: Марія top, Ірод bottom); m2 inflates the doll count (real: до 40, not до ста). Class-U «Батуринська вертепна скриня»: zero attestation verified 2026-07-06 — query_wikipedia(search) → 'No Wikipedia results'; verify_source_attribution(literary) → discusses=false (evidence only generic vertep discussion + Mazepa's Batyryn palace, no named vertep box). All licensing: uk.wikipedia (CC BY-SA), quotes ≤25 words.",
+    "source": "Wikipedia",
+    "license": "CC-BY-SA-4.0",
+    "verdict": "SHIP",
+    "evidence": "LICENSE-CONTENT.md:109"
+  },
+  {
+    "fixture": "vertep",
+    "claim_id": "vertep-t1_verified",
+    "quote_or_ref": "query_wikipedia('Вертеп', §6): «Вертеп схожий на будиночок, що має два поверхи, які за християнською традицією трактувалися як «небо» і «земля»».",
+    "source": "Wikipedia",
+    "license": "CC-BY-SA-4.0",
+    "verdict": "SHIP",
+    "evidence": "LICENSE-CONTENT.md:109"
+  },
+  {
+    "fixture": "vertep",
+    "claim_id": "vertep-t2_verified",
+    "quote_or_ref": "query_wikipedia('Вертеп', §6): «Виготовлений із дерева або картону, відкритий з боку глядача, будиночок міг бути різного розміру».",
+    "source": "Wikipedia",
+    "license": "CC-BY-SA-4.0",
+    "verdict": "SHIP",
+    "evidence": "LICENSE-CONTENT.md:109"
+  },
+  {
+    "fixture": "vertep",
+    "claim_id": "vertep-m1_distractor",
+    "quote_or_ref": "query_wikipedia('Вертеп', §6) — the REAL passage: «На верхньому поверсі вертепу знаходилася нерухома фігура діви Марії з немовлям, а на нижньому — трон царя Ірода». The tiers are SWAPPED: Богородиця belongs on the upper («небо») level and Ірод's throne on the lower («земля»). Keyword lure: верхній/нижній поверх, трон Ірода, Богородиця all sit in the real описание.",
+    "source": "Wikipedia",
+    "license": "CC-BY-SA-4.0",
+    "verdict": "SHIP",
+    "evidence": "LICENSE-CONTENT.md:109"
+  },
+  {
+    "fixture": "vertep",
+    "claim_id": "vertep-m1_verified",
+    "quote_or_ref": "Real: Марія on top, Ірод below (uk.wikipedia §Архітектоніка). The swapped assignment is fabricated.",
+    "source": "Wikipedia",
+    "license": "CC-BY-SA-4.0",
+    "verdict": "SHIP",
+    "evidence": "LICENSE-CONTENT.md:109"
+  },
+  {
+    "fixture": "vertep",
+    "claim_id": "vertep-t3_verified",
+    "quote_or_ref": "query_wikipedia('Вертеп', §6): «Вертепник, який стояв позаду скрині, водив ляльку по прорізах у підлозі, спостерігаючи за дією у спеціальні віконечка».",
+    "source": "Wikipedia",
+    "license": "CC-BY-SA-4.0",
+    "verdict": "SHIP",
+    "evidence": "LICENSE-CONTENT.md:109"
+  },
+  {
+    "fixture": "vertep",
+    "claim_id": "vertep-t4_verified",
+    "quote_or_ref": "query_wikipedia('Вертеп', §6): «частина вертепних ляльок мали певну механізацію: Смерть замахувалася косою, Козак танцював, присідаючи, у царя Ірода голова злітала з плечей».",
+    "source": "Wikipedia",
+    "license": "CC-BY-SA-4.0",
+    "verdict": "SHIP",
+    "evidence": "LICENSE-CONTENT.md:109"
+  },
+  {
+    "fixture": "vertep",
+    "claim_id": "vertep-m2_distractor",
+    "quote_or_ref": "query_wikipedia('Вертеп', §6) — the REAL passage: «Ляльок у вертепах могло бути до 40». The count is inflated from до 40 to до ста. Keyword lure: «Ляльок у... могло бути до» matches the real sentence verbatim except for the number.",
+    "source": "Wikipedia",
+    "license": "CC-BY-SA-4.0",
+    "verdict": "SHIP",
+    "evidence": "LICENSE-CONTENT.md:109"
+  },
+  {
+    "fixture": "vertep",
+    "claim_id": "vertep-m2_verified",
+    "quote_or_ref": "Real: up to 40 puppets (uk.wikipedia §Архітектоніка); «до ста» is fabricated.",
+    "source": "Wikipedia",
+    "license": "CC-BY-SA-4.0",
+    "verdict": "SHIP",
+    "evidence": "LICENSE-CONTENT.md:109"
+  },
+  {
+    "fixture": "vertep",
+    "claim_id": "vertep-t5_verified",
+    "quote_or_ref": "query_wikipedia('Вертеп', §6): «звучали народні колядки і канти (вид церковної музики, що виник внаслідок реформи наприкінці XVI сторіччя)».",
+    "source": "Wikipedia",
+    "license": "CC-BY-SA-4.0",
+    "verdict": "SHIP",
+    "evidence": "LICENSE-CONTENT.md:109"
+  },
+  {
+    "fixture": "vertep",
+    "claim_id": "vertep-t6_verified",
+    "quote_or_ref": "query_wikipedia('Вертеп', §6 Куп'янська скриня): «Куп'янська скриня була реконструйована за радянської доби».",
+    "source": "Wikipedia",
+    "license": "CC-BY-SA-4.0",
+    "verdict": "SHIP",
+    "evidence": "LICENSE-CONTENT.md:109"
+  },
+  {
+    "fixture": "vertep",
+    "claim_id": "vertep-u1_verified",
+    "quote_or_ref": "INVENTED named relic. Zero attestation verified 2026-07-06: query_wikipedia(search, «Батуринська вертепна скриня») → 'No Wikipedia results'; verify_source_attribution(literary, «Батуринська вертепна скриня») → discusses=false (evidence is only generic vertep drama discussion and Mazepa's Batyryn palace, no named vertep box). Real named boxes are Куп'янська/Галаганівська/Славутинська/Сокиринська; a «Батуринська вертепна скриня» does not exist, mirroring the anchor «золоте перевесло» pattern.",
+    "source": "Wikipedia",
+    "license": "CC-BY-SA-4.0",
+    "verdict": "SHIP",
+    "evidence": "LICENSE-CONTENT.md:109"
+  },
+  {
+    "fixture": "kyrylo-metodiivske-tovarystvo",
+    "claim_id": "root_vlog",
+    "quote_or_ref": "HISTORY domain. All claims tool-verified 2026-07-06 by claude/4539-fixtures-wave4-public via sources MCP. Source: query_wikipedia('Кирило-Мефодіївське товариство', §1 Створення + §6 Донос і розгром) — founded late 1845–early 1846 in KYIV; named for Cyril and Methodius; ring «Св. Кирило і Мефодій, січень 1846»; founders Білозерський, Гулак, Костомаров, Куліш, Маркович; Shevchenko joined April 1846; 12 members by autumn 1846; exposed March 1847 by informer Олексій Петров; «Закон Божий» a key charge document. Class-M m1 twists the city (real: Києві, not Харкові); m2 twists the ring inscription (real: «Св. Кирило і Мефодій, січень 1846», not a nationalist slogan). Class-U «Київський кодекс братолюбія»: zero attestation verified 2026-07-06 — query_wikipedia(search) → 'No Wikipedia results'; verify_source_attribution(literary) → discusses=false (evidence only the real «Закон Божий»/«Три літа» списки and the unrelated 1748 legal кодекс). Licensing: uk.wikipedia (CC BY-SA), quotes ≤25 words.",
+    "source": "Wikipedia",
+    "license": "CC-BY-SA-4.0",
+    "verdict": "SHIP",
+    "evidence": "LICENSE-CONTENT.md:109"
+  },
+  {
+    "fixture": "kyrylo-metodiivske-tovarystvo",
+    "claim_id": "kmt-m1_distractor",
+    "quote_or_ref": "query_wikipedia('Кирило-Мефодіївське товариство', §1) — the REAL passage: «Україно-Слов'янське товариство (Кирило-Мефодіївське братство) було створене наприкінці 1845 — на початку 1846 року в Києві». The founding CITY is fabricated: Київ, not Харків. Keyword lure: the date span and org name are verbatim-real; only the city is swapped.",
+    "source": "Wikipedia",
+    "license": "CC-BY-SA-4.0",
+    "verdict": "SHIP",
+    "evidence": "LICENSE-CONTENT.md:109"
+  },
+  {
+    "fixture": "kyrylo-metodiivske-tovarystvo",
+    "claim_id": "kmt-m1_verified",
+    "quote_or_ref": "Real: founded in Kyiv (uk.wikipedia §Створення); «в Харкові» is fabricated.",
+    "source": "Wikipedia",
+    "license": "CC-BY-SA-4.0",
+    "verdict": "SHIP",
+    "evidence": "LICENSE-CONTENT.md:109"
+  },
+  {
+    "fixture": "kyrylo-metodiivske-tovarystvo",
+    "claim_id": "kmt-t1_verified",
+    "quote_or_ref": "query_wikipedia('Кирило-Мефодіївське товариство', §1): «Організація була названа іменами відомих слов'янських просвітників Кирила і Мефодія».",
+    "source": "Wikipedia",
+    "license": "CC-BY-SA-4.0",
+    "verdict": "SHIP",
+    "evidence": "LICENSE-CONTENT.md:109"
+  },
+  {
+    "fixture": "kyrylo-metodiivske-tovarystvo",
+    "claim_id": "kmt-t2_verified",
+    "quote_or_ref": "query_wikipedia('Кирило-Мефодіївське товариство', §1): «Ініціаторами створення братства і його засновниками виступили Василь Білозерський, Микола Гулак, Микола Костомаров, Пантелеймон Куліш, Опанас Маркович».",
+    "source": "Wikipedia",
+    "license": "CC-BY-SA-4.0",
+    "verdict": "SHIP",
+    "evidence": "LICENSE-CONTENT.md:109"
+  },
+  {
+    "fixture": "kyrylo-metodiivske-tovarystvo",
+    "claim_id": "kmt-t3_verified",
+    "quote_or_ref": "query_wikipedia('Кирило-Мефодіївське товариство', §1): «У квітні 1846 року в братство вступив Тарас Шевченко».",
+    "source": "Wikipedia",
+    "license": "CC-BY-SA-4.0",
+    "verdict": "SHIP",
+    "evidence": "LICENSE-CONTENT.md:109"
+  },
+  {
+    "fixture": "kyrylo-metodiivske-tovarystvo",
+    "claim_id": "kmt-m2_distractor",
+    "quote_or_ref": "query_wikipedia('Кирило-Мефодіївське товариство', §1) — the REAL passage: «Знаком братства став перстень з написом «Св. Кирило і Мефодій, січень 1846»». The inscription is fabricated: it was a religious dedication to Cyril and Methodius, not a nationalist slogan «За волю України». §6 corroborates the ring: «каблучка, на внутрішньому боці якої були слова: «В ім'я св. Кирила і Мефодія»».",
+    "source": "Wikipedia",
+    "license": "CC-BY-SA-4.0",
+    "verdict": "SHIP",
+    "evidence": "LICENSE-CONTENT.md:109"
+  },
+  {
+    "fixture": "kyrylo-metodiivske-tovarystvo",
+    "claim_id": "kmt-m2_verified",
+    "quote_or_ref": "Real inscription «Св. Кирило і Мефодій, січень 1846» (uk.wikipedia §Створення, §Донос); «За волю України» is fabricated.",
+    "source": "Wikipedia",
+    "license": "CC-BY-SA-4.0",
+    "verdict": "SHIP",
+    "evidence": "LICENSE-CONTENT.md:109"
+  },
+  {
+    "fixture": "kyrylo-metodiivske-tovarystvo",
+    "claim_id": "kmt-t4_verified",
+    "quote_or_ref": "query_wikipedia('Кирило-Мефодіївське товариство', §1): «Восени 1846 загальна кількість членів братства, за даними слідства, становила 12 осіб».",
+    "source": "Wikipedia",
+    "license": "CC-BY-SA-4.0",
+    "verdict": "SHIP",
+    "evidence": "LICENSE-CONTENT.md:109"
+  },
+  {
+    "fixture": "kyrylo-metodiivske-tovarystvo",
+    "claim_id": "kmt-u1_verified",
+    "quote_or_ref": "INVENTED named manuscript. Zero attestation verified 2026-07-06: query_wikipedia(search, «Київський кодекс братолюбія») → 'No Wikipedia results'; verify_source_attribution(literary, «Київський кодекс братолюбія кирило-мефодіївців») → discusses=false (evidence only the real «Закон Божий»/«Сон»/«Три літа» списки circulated among the кирило-мефодіївці and the unrelated 1748 «Права, по которым судится малороссийский народ» кодекс). The real programmatic text was «Закон Божий» / «Книга буття українського народу»; a «Київський кодекс братолюбія» does not exist.",
+    "source": "Wikipedia",
+    "license": "CC-BY-SA-4.0",
+    "verdict": "SHIP",
+    "evidence": "LICENSE-CONTENT.md:109"
+  },
+  {
+    "fixture": "kyrylo-metodiivske-tovarystvo",
+    "claim_id": "kmt-t5_verified",
+    "quote_or_ref": "query_wikipedia('Кирило-Мефодіївське товариство', §6): «У березні 1847 року за доносом провокатора Олексія Петрова діяльність братства була викрита, а члени заарештовані».",
+    "source": "Wikipedia",
+    "license": "CC-BY-SA-4.0",
+    "verdict": "SHIP",
+    "evidence": "LICENSE-CONTENT.md:109"
+  },
+  {
+    "fixture": "kyrylo-metodiivske-tovarystvo",
+    "claim_id": "kmt-t6_verified",
+    "quote_or_ref": "query_wikipedia('Кирило-Мефодіївське товариство', §6): Гулак «прочитав «Закон Божий» і навіть дозволив його переписати. Згодом цей документ став одним з основних доказів обвинувачення».",
+    "source": "Wikipedia",
+    "license": "CC-BY-SA-4.0",
+    "verdict": "SHIP",
+    "evidence": "LICENSE-CONTENT.md:109"
+  },
+  {
+    "fixture": "kotliarevskyi-ivan",
+    "claim_id": "root_vlog",
+    "quote_or_ref": "BIO domain. All claims tool-verified 2026-07-06 by claude/4539-fixtures-wave4-public via sources MCP. Source: query_wikipedia('Котляревський Іван Петрович', §1 Життєпис) — born in Poltava into a cancelaryst-noble family of the Ohonczyk arms; Poltava seminary 1789–1793; military service in the Siverskyi Carabinier regiment 1796–1808; from 1810 overseer of the 'House for raising children of poor gentry'; 1812 formed the 5th Poltava Cossack regiment; DIRECTOR of the POLTAVA free theatre 1816–1821; 1822 helped buy the actor Mykhailo SHCHEPKIN out of serfdom; died 29 Oct (10 Nov) 1838, buried in Poltava. Class-M m1 twists the theatre city (real: Полтавського, not Київського); m2 twists the freed serf (real: Михайла Щепкіна, not Шевченка — Shevchenko was freed in 1838 by Bryullov/Zhukovsky). Class-U «Полтавський зшиток козацьких приказок»: zero attestation verified 2026-07-06 — query_wikipedia(search) → 'No Wikipedia results'; verify_source_attribution(literary) → discusses=false (evidence only the real Котляревський museum/«Енеїда»/«Москаль-чарівник», no such зшиток). Licensing: uk.wikipedia (CC BY-SA), quotes ≤25 words.",
+    "source": "Wikipedia",
+    "license": "CC-BY-SA-4.0",
+    "verdict": "SHIP",
+    "evidence": "LICENSE-CONTENT.md:109"
+  },
+  {
+    "fixture": "kotliarevskyi-ivan",
+    "claim_id": "kot-t1_verified",
+    "quote_or_ref": "query_wikipedia('Котляревський Іван Петрович', §1): «Іван Котляревський народився в Полтаві... у сім'ї канцеляриста — шляхтича герба Огоньчик».",
+    "source": "Wikipedia",
+    "license": "CC-BY-SA-4.0",
+    "verdict": "SHIP",
+    "evidence": "LICENSE-CONTENT.md:109"
+  },
+  {
+    "fixture": "kotliarevskyi-ivan",
+    "claim_id": "kot-t2_verified",
+    "quote_or_ref": "query_wikipedia('Котляревський Іван Петрович', §1): «Після навчання в Полтавській духовній семінарії (1789—1793) працював канцеляристом».",
+    "source": "Wikipedia",
+    "license": "CC-BY-SA-4.0",
+    "verdict": "SHIP",
+    "evidence": "LICENSE-CONTENT.md:109"
+  },
+  {
+    "fixture": "kotliarevskyi-ivan",
+    "claim_id": "kot-t3_verified",
+    "quote_or_ref": "query_wikipedia('Котляревський Іван Петрович', §1): «У 1796—1808 роках перебував на військовій службі в Сіверському карабінерському полку».",
+    "source": "Wikipedia",
+    "license": "CC-BY-SA-4.0",
+    "verdict": "SHIP",
+    "evidence": "LICENSE-CONTENT.md:109"
+  },
+  {
+    "fixture": "kotliarevskyi-ivan",
+    "claim_id": "kot-t4_verified",
+    "quote_or_ref": "query_wikipedia('Котляревський Іван Петрович', §1): «З 1810 року працював наглядачем «Дому для виховання дітей бідних дворян»».",
+    "source": "Wikipedia",
+    "license": "CC-BY-SA-4.0",
+    "verdict": "SHIP",
+    "evidence": "LICENSE-CONTENT.md:109"
+  },
+  {
+    "fixture": "kotliarevskyi-ivan",
+    "claim_id": "kot-t5_verified",
+    "quote_or_ref": "query_wikipedia('Котляревський Іван Петрович', §1): у 1812 «сформував у містечку Горошині... 5-й Полтавський козачий полк малоросійського козачого війська».",
+    "source": "Wikipedia",
+    "license": "CC-BY-SA-4.0",
+    "verdict": "SHIP",
+    "evidence": "LICENSE-CONTENT.md:109"
+  },
+  {
+    "fixture": "kotliarevskyi-ivan",
+    "claim_id": "kot-m1_distractor",
+    "quote_or_ref": "query_wikipedia('Котляревський Іван Петрович', §1) — the REAL passage: «У 1816—1821 роках — директор Полтавського вільного театру». The CITY is fabricated: the theatre was in Полтава, not Київ. Keyword lure: «1816—1821... директор... вільного театру» is verbatim-real; only the city differs.",
+    "source": "Wikipedia",
+    "license": "CC-BY-SA-4.0",
+    "verdict": "SHIP",
+    "evidence": "LICENSE-CONTENT.md:109"
+  },
+  {
+    "fixture": "kotliarevskyi-ivan",
+    "claim_id": "kot-m1_verified",
+    "quote_or_ref": "Real: director of the POLTAVA free theatre (uk.wikipedia §Життєпис); «Київського» is fabricated.",
+    "source": "Wikipedia",
+    "license": "CC-BY-SA-4.0",
+    "verdict": "SHIP",
+    "evidence": "LICENSE-CONTENT.md:109"
+  },
+  {
+    "fixture": "kotliarevskyi-ivan",
+    "claim_id": "kot-m2_distractor",
+    "quote_or_ref": "query_wikipedia('Котляревський Іван Петрович', §1) — the REAL passage: «У 1822 році Котляревський сприяв викупові з кріпацтва українського і російського актора Михайла Щепкіна». The freed person is fabricated: it was the actor Михайло ЩЕПКІН, not Шевченко (Shevchenko was bought out of serfdom only in 1838, by Bryullov and Zhukovsky). Keyword lure: «1822... сприяв викупові з кріпацтва» is verbatim-real.",
+    "source": "Wikipedia",
+    "license": "CC-BY-SA-4.0",
+    "verdict": "SHIP",
+    "evidence": "LICENSE-CONTENT.md:109"
+  },
+  {
+    "fixture": "kotliarevskyi-ivan",
+    "claim_id": "kot-m2_verified",
+    "quote_or_ref": "Real: helped free the actor Mykhailo Shchepkin in 1822 (uk.wikipedia §Життєпис); «Тараса Шевченка» is fabricated.",
+    "source": "Wikipedia",
+    "license": "CC-BY-SA-4.0",
+    "verdict": "SHIP",
+    "evidence": "LICENSE-CONTENT.md:109"
+  },
+  {
+    "fixture": "kotliarevskyi-ivan",
+    "claim_id": "kot-u1_verified",
+    "quote_or_ref": "INVENTED named manuscript. Zero attestation verified 2026-07-06: query_wikipedia(search, «Полтавський зшиток козацьких приказок Котляревський») → 'No Wikipedia results'; verify_source_attribution(literary, «Полтавський зшиток козацьких приказок Котляревського») → discusses=false (evidence only the real Котляревський museum, «Енеїда», «Москаль-чарівник»). His real works are «Енеїда», «Наталка Полтавка», «Москаль-чарівник»; no «Полтавський зшиток козацьких приказок» exists.",
+    "source": "Wikipedia",
+    "license": "CC-BY-SA-4.0",
+    "verdict": "SHIP",
+    "evidence": "LICENSE-CONTENT.md:109"
+  },
+  {
+    "fixture": "kotliarevskyi-ivan",
+    "claim_id": "kot-t6_verified",
+    "quote_or_ref": "query_wikipedia('Котляревський Іван Петрович', §1): «Помер 29 жовтня (10 листопада) 1838 року... Похований у Полтаві».",
+    "source": "Wikipedia",
+    "license": "CC-BY-SA-4.0",
+    "verdict": "SHIP",
+    "evidence": "LICENSE-CONTENT.md:109"
+  },
+  {
+    "fixture": "lysenko-mykola",
+    "claim_id": "root_vlog",
+    "quote_or_ref": "BIO domain. All claims tool-verified 2026-07-06 by claude/4539-fixtures-wave4-public via sources MCP. Source: query_wikipedia('Лисенко Микола Віталійович', §4 Лейпциг, Київ, Петербург) — 1865–1867 justice-of-the-peace mediator in Tarashcha after Kyiv University; from 1867 studied at the LEIPZIG conservatory; 28 Dec 1867 successful Prague concert; summer 1868 married Olha O'Connor; 1869 finished a 4-year course in two years; first Shevchenko settings «Заповіт», «Ой одна я, одна», «Туман, туман долиною»; 5(17) Dec 1872 premiere of his opera «Чорноморці»; 1874–1875 studied in Petersburg under Rimsky-Korsakov. Class-M m1 twists the conservatory (real: Лейпцизькій, not Віденській); m2 twists the Petersburg mentor (real: Миколи Римського-Корсакова, not Петра Чайковського). Class-U Таращанська кантата «Голос предків»: zero attestation verified 2026-07-06 — query_wikipedia(search) → 'No Wikipedia results'; verify_source_attribution(literary) → discusses=false (evidence only real Lysenko cantatas «Радуйся, ниво неполитая», «Іван Гус», «Б'ють пороги», no «Голос предків»). Licensing: uk.wikipedia (CC BY-SA), quotes ≤25 words.",
+    "source": "Wikipedia",
+    "license": "CC-BY-SA-4.0",
+    "verdict": "SHIP",
+    "evidence": "LICENSE-CONTENT.md:109"
+  },
+  {
+    "fixture": "lysenko-mykola",
+    "claim_id": "lys-t1_verified",
+    "quote_or_ref": "query_wikipedia('Лисенко Микола Віталійович', §4): «У 1865—1867 роках, одразу після закінчення Київського університету, працював у Таращі на посаді мирового посередника».",
+    "source": "Wikipedia",
+    "license": "CC-BY-SA-4.0",
+    "verdict": "SHIP",
+    "evidence": "LICENSE-CONTENT.md:109"
+  },
+  {
+    "fixture": "lysenko-mykola",
+    "claim_id": "lys-m1_distractor",
+    "quote_or_ref": "query_wikipedia('Лисенко Микола Віталійович', §4) — the REAL passage: «З 1867 року навчався у Лейпцизькій консерваторії, де вчився як піаніст». The conservatory is fabricated: Лейпциг, not Відень. Keyword lure: «З 1867 року навчався у... консерваторії» is verbatim-real; only the city differs.",
+    "source": "Wikipedia",
+    "license": "CC-BY-SA-4.0",
+    "verdict": "SHIP",
+    "evidence": "LICENSE-CONTENT.md:109"
+  },
+  {
+    "fixture": "lysenko-mykola",
+    "claim_id": "lys-m1_verified",
+    "quote_or_ref": "Real: studied at the LEIPZIG conservatory from 1867 (uk.wikipedia §Лейпциг, Київ, Петербург); «Віденській» is fabricated.",
+    "source": "Wikipedia",
+    "license": "CC-BY-SA-4.0",
+    "verdict": "SHIP",
+    "evidence": "LICENSE-CONTENT.md:109"
+  },
+  {
+    "fixture": "lysenko-mykola",
+    "claim_id": "lys-t2_verified",
+    "quote_or_ref": "query_wikipedia('Лисенко Микола Віталійович', §4): «28 грудня 1867 року в Празі відбувся успішний концерт Лисенка, де він виконав багато українських пісень».",
+    "source": "Wikipedia",
+    "license": "CC-BY-SA-4.0",
+    "verdict": "SHIP",
+    "evidence": "LICENSE-CONTENT.md:109"
+  },
+  {
+    "fixture": "lysenko-mykola",
+    "claim_id": "lys-t3_verified",
+    "quote_or_ref": "query_wikipedia('Лисенко Микола Віталійович', §4): «Влітку 1868 року одружився з Ольгою О'Коннор, яку він узяв з собою до Лейпцига».",
+    "source": "Wikipedia",
+    "license": "CC-BY-SA-4.0",
+    "verdict": "SHIP",
+    "evidence": "LICENSE-CONTENT.md:109"
+  },
+  {
+    "fixture": "lysenko-mykola",
+    "claim_id": "lys-t4_verified",
+    "quote_or_ref": "query_wikipedia('Лисенко Микола Віталійович', §4): «1869 року завершив навчання у консерваторії, пройшовши 4-річний курс навчання усього за два роки».",
+    "source": "Wikipedia",
+    "license": "CC-BY-SA-4.0",
+    "verdict": "SHIP",
+    "evidence": "LICENSE-CONTENT.md:109"
+  },
+  {
+    "fixture": "lysenko-mykola",
+    "claim_id": "lys-t5_verified",
+    "quote_or_ref": "query_wikipedia('Лисенко Микола Віталійович', §4): «Лисенко написав і свої перші твори на слова Тараса Шевченка: «Заповіт», «Ой одна я, одна», «Туман, туман долиною»».",
+    "source": "Wikipedia",
+    "license": "CC-BY-SA-4.0",
+    "verdict": "SHIP",
+    "evidence": "LICENSE-CONTENT.md:109"
+  },
+  {
+    "fixture": "lysenko-mykola",
+    "claim_id": "lys-t6_verified",
+    "quote_or_ref": "query_wikipedia('Лисенко Микола Віталійович', §4): «5 (17) грудня 1872 року... відбулася перша вистава українського музичного театру в Києві — опера «Чорноморці», автором якої був Микола Лисенко».",
+    "source": "Wikipedia",
+    "license": "CC-BY-SA-4.0",
+    "verdict": "SHIP",
+    "evidence": "LICENSE-CONTENT.md:109"
+  },
+  {
+    "fixture": "lysenko-mykola",
+    "claim_id": "lys-m2_distractor",
+    "quote_or_ref": "query_wikipedia('Лисенко Микола Віталійович', §4) — the REAL passage: «У 1874—1875 роках вдосконалював майстерність у Петербурзі в Миколи Римського-Корсакова». The mentor is fabricated: it was Rimsky-Korsakov, not Tchaikovsky. Keyword lure: «У 1874—1875 роках вдосконалював майстерність у Петербурзі в» is verbatim-real; only the teacher's name differs.",
+    "source": "Wikipedia",
+    "license": "CC-BY-SA-4.0",
+    "verdict": "SHIP",
+    "evidence": "LICENSE-CONTENT.md:109"
+  },
+  {
+    "fixture": "lysenko-mykola",
+    "claim_id": "lys-m2_verified",
+    "quote_or_ref": "Real: studied under Rimsky-Korsakov in Petersburg 1874–1875 (uk.wikipedia §Лейпциг, Київ, Петербург); «Петра Чайковського» is fabricated.",
+    "source": "Wikipedia",
+    "license": "CC-BY-SA-4.0",
+    "verdict": "SHIP",
+    "evidence": "LICENSE-CONTENT.md:109"
+  },
+  {
+    "fixture": "lysenko-mykola",
+    "claim_id": "lys-u1_verified",
+    "quote_or_ref": "INVENTED named work. Zero attestation verified 2026-07-06: query_wikipedia(search, «Таращанська кантата Голос предків Лисенко») → 'No Wikipedia results'; verify_source_attribution(literary, «Таращанська кантата Голос предків Лисенка») → discusses=false (evidence lists real Lysenko cantatas «Радуйся, ниво неполитая», «Іван Гус», «Б'ють пороги», never «Голос предків»). No «Таращанська кантата «Голос предків»» exists.",
+    "source": "Wikipedia",
+    "license": "CC-BY-SA-4.0",
+    "verdict": "SHIP",
+    "evidence": "LICENSE-CONTENT.md:109"
   }
 ]
