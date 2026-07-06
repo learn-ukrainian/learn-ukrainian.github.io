@@ -77,6 +77,21 @@ persona:
   role: Модератор семінару, що змушує оцінювати політичні рішення не за намірами, а за наслідками. Провокує на аналіз ціни кожного вибору.
   voice: Realpolitik-Historian
 phase: BIO.2
+readings:
+- title: 'Виговський Іван Остапович'
+  source: 'Енциклопедія історії України'
+  url: 'https://www.history.org.ua/?termin=Vyhovskyj_I'
+  type: reference
+  language: uk
+  hosting: link-only
+  note: 'Оглядова стаття про життя та діяльність гетьмана.'
+- title: 'Гадяцький договір 1658'
+  source: 'Енциклопедія історії України'
+  url: 'https://www.history.org.ua/?termin=Gadiatsky_dogovir_1658'
+  type: reference
+  language: uk
+  hosting: link-only
+  note: 'Детальний розбір змісту та значення угоди.'
 references:
 - title: Іван Виговський
   author: Смолій В.А., Степанков В.С.
@@ -100,7 +115,7 @@ sequence: 35
 slug: ivan-vyhovskyi
 subtitle: 'Ivan Vyhovskyi: Architect of the Hadiach Union'
 title: 'Іван Виговський: Архітектор Гадяцької унії'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: договір 1658 р., що передбачав створення Великого князівства Руського як третьої частини Речі Посполитої
   pos: ж.
