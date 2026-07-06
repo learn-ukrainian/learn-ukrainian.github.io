@@ -107,14 +107,14 @@ slug: oleksander-potebnya
 subtitle: 'The Ukrainian Humboldt: A Biography of Mind'
 title: 'Олександр Потебня: Філософ мови'
 readings:
-- hosting: excerpt-only
+- hosting: link-only
   language: uk
-  source_name: "Вікіпедія"
-  source_url: "https://uk.wikipedia.org/wiki/Потебня_Олександр_Опанасович"
+  source_name: "Енциклопедія історії України"
+  source_url: "https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&I21DBN=DOP&P21DBN=EIU&S21CNR=20&S21COLORTERMS=0&S21FMT=eiu_all&S21P01=0&S21P02=0&S21P03=TRN%3D&S21REF=10&S21STN=1&S21STR=Potebnia_O&Z21ID="
   task: "Ознайомлення з філософськими та лінгвістичними поглядами вченого"
   title: "Потебня Олександр Опанасович"
   type: encyclopedia
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: фахівець, що вивчає мову, її структуру та функціонування
   pos: ч.
