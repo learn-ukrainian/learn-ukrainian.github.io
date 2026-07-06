@@ -99,7 +99,24 @@ sequence: 122
 slug: mykola-khvylovyi
 subtitle: The Rebel Who Chose Europe
 title: 'Микола Хвильовий: Геть від Москви!'
-version: '4.0'
+version: '4.1'
+readings:
+- title: Хвильовий Микола
+  language: uk
+  source: Енциклопедія історії України
+  url: https://history.org.ua/?termin=Khvylovyj_M
+  type: encyclopedia
+  role: primary-bio
+  hosting: link-only
+  task: Дослідити біографію Миколи Хвильового, його ідейну еволюцію та вплив на літературний процес 1920-х.
+- title: Україна чи Малоросія? (уривки)
+  language: uk
+  source: Памфлет
+  url: null
+  type: primary
+  role: source-context
+  hosting: reading-needed
+  task: Проаналізувати ключові аргументи Хвильового щодо орієнтації на «психологічну Європу».
 vocabulary_hints:
 - definition: умовна назва покоління української інтелігенції 1920-30-х років, яке було знищене тоталітарним режимом
   pos: с.

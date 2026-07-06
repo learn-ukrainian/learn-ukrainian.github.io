@@ -102,7 +102,24 @@ sequence: 121
 slug: olena-stepaniv
 subtitle: The First Female Officer in the Ukrainian Army
 title: 'Олена Степанів: Перша жінка-офіцер'
-version: '4.0'
+version: '4.2'
+readings:
+- title: Степанів-Дашкевич Олена Іванівна
+  language: uk
+  source: Енциклопедія історії України
+  url: https://history.org.ua/?termin=Stepaniv_D
+  type: encyclopedia
+  role: primary-bio
+  hosting: link-only
+  task: Прочитати про військову та наукову кар'єру Олени Степанів.
+- title: Нариси з часів Світової Війни (фрагменти)
+  language: uk
+  source: Мемуари
+  url: null
+  type: primary
+  role: source-context
+  hosting: reading-needed
+  task: Проаналізувати фрагменти спогадів Олени Степанів про бойові дії та побут УСС.
 vocabulary_hints:
 - definition: найнижче офіцерське звання в Українських Січових Стрільцях, еквівалент прапорщика
   pos: ж.

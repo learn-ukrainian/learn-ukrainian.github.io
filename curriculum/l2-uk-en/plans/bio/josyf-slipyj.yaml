@@ -97,7 +97,25 @@ sequence: 118
 slug: josyf-slipyj
 subtitle: 'Patriarch Josyf Slipyj: Unbreakable Confessor of Faith'
 title: 'Патріарх Йосиф Сліпий: Незламний сповідник віри'
-version: '4.0'
+version: '4.1'
+readings:
+- title: Сліпий Йосиф
+  language: uk
+  source: Енциклопедія історії України
+  url: https://history.org.ua/?termin=Slipyj_J
+  type: encyclopedia
+  role: primary-bio
+  hosting: link-only
+  task: Дослідити біографічну довідку про Йосифа Сліпого, звернувши увагу на ключові етапи його життя та боротьбу за УГКЦ.
+- title: Патріарх Йосиф Сліпий. Заповіт
+  language: uk
+  source: Першоджерело
+  url: null
+  type: primary
+  role: source-context
+  hosting: reading-needed
+  task: Проаналізувати "Заповіт" Йосифа Сліпого, виокремити його духовні та національні ідеї.
+  caveats: Потрібен адаптований або оригінальний текст "Заповіту" для аналізу.
 vocabulary_hints:
 - definition: глава помісної православної або східно-католицької церкви
   pos: ч.
