@@ -82,6 +82,21 @@ persona:
   role: Модератор, що ставить під сумнів усталені міфи про Роксолану, змушуючи розрізняти факти, пропаганду та легенди.
   voice: Critical-Historian
 phase: BIO
+readings:
+- title: "Роксолана"
+  source_name: "Енциклопедія історії України"
+  source_url: "https://www.history.org.ua/?termin=Roksolana"
+  language: uk
+  type: "encyclopedia_entry"
+  clearance: "public_domain"
+  notes: "Огляд життя Роксолани з фокусом на її політичний вплив та історичні факти."
+- title: "Листи Роксолани до європейських монархів"
+  source_name: "Османські архіви / Переклади"
+  source_url: ""
+  language: uk
+  type: "primary_source_excerpt"
+  clearance: "hosting: reading-needed"
+  notes: "Потрібно адаптувати український переклад кількох листів Роксолани для аналізу її дипломатичного стилю."
 references:
 - title: Роксолана (Wikipedia UA)
   name: Роксолана (Wikipedia UA)
@@ -107,7 +122,7 @@ sequence: 14
 slug: roksolana
 subtitle: The Ukrainian Sultana Who Redefined Ottoman Power
 title: 'Роксолана: Від рабині до султанші'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: дружина або мати правлячого султана, жінка з султанської родини
   pos: ж.

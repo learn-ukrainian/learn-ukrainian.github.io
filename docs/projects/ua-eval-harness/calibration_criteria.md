@@ -75,3 +75,81 @@ If missing, it triggers a `MISSING_MODEL_ANSWER` defect:
 * **Severity**: `critical`
 * **Disposition**: `defect`
 * **Confidence**: `deterministic`
+
+---
+
+## 5. Live Tier-2 Enablement — Exit Criteria (#4370 extension; fleet-reviewed 2026-07-06)
+
+Live Tier-2 (the tooled LLM reviewer auto-invoked inside `qg_workflow` on real modules, spending real
+quota) stays DISABLED until ALL criteria hold. Panel: codex + cursor + agy (bridge tasks
+`review-4370-exit-criteria*`), all findings folded; deepseek separately audited the underlying
+scorecard numbers. E3 is a **minimum regression canary** («better than bare + gates alive»), NOT a
+quality bar — arming does not assert seminar fact-checking is defect-free (the claim↔evidence
+alignment gap is un-gateable by construction).
+
+### E0 — The explicit arm (manual, user-visible)
+`WorkflowOptions.enable_llm` defaults off and `DEFAULT_REVIEWER_MODEL_ID` is the sentinel
+`llm-reviewer-disabled-until-4370`. Arming = replacing the sentinel with the production pin +
+enabling the flag in ONE reviewed commit that links the green E3 evidence. Scope the first arm to
+the SEMINAR route only (the B1+ gemma prompt-only route has no MCP grounding and needs its own
+canary before arming).
+
+### E1 — Grounded end-to-end evidence ✅ (recorded, with named residual)
+The transport→telemetry→gates→verdict chain ran live: D6 «Веснянки» (model-evidence.md §D6) and the
+step-3 matrix (SCORECARD.md, committed). NAMED RESIDUAL: the vesnianky melody M-trap was CONFIRMED
+on a real-but-irrelevant excerpt in both — claim↔evidence alignment is model judgment. The D6
+quote-abridgment debt is CLOSED (#4416/#4429, segment-wise normalized matching, `qg_workflow.v3`).
+
+### E2 — Bare control measured ✅ + no-bare-fallback is BINDING
+Harness lift +180…+310 (§step-3): bare models CONFIRM fabrications. Consequences: (a) Tier-2 has NO
+tool-less fallback — provider failure = PROVIDER_FAILURE/INCOMPLETE, never parametric judgment;
+(b) build item: `assert require_mcp` on the seminar live path + a lint that no production entrypoint
+constructs a bare-arm invocation (bare exists only under `QG_BAKEOFF=1`).
+
+### E3 — Minimum regression canary ⏳ (the operational switch)
+Run the 4-fixture tooled matrix on the PRODUCTION pin (`--arm tooled --force`, fresh out-dir), then
+evaluate with the deterministic checker (build item: `scripts/audit/qg_tier2_canary_check.py`,
+nonzero exit on fail — never human-parsed SCORECARD). PASS requires ALL, per the STRICT live path
+(bakeoff-orthogonal stripping does NOT apply to production):
+- (a) every cell: `status=ran`, `invalid_fact_checks=0`, `required_ungrounded_findings=0`,
+  `findings_schema_invalid=false`, no parse/provider failure. NOTE (codex, verified): today's
+  tooled cells are `ungrounded_findings` — the current pin does NOT yet pass; that is the point.
+- (b) `missing_claims=0` and class-M alignment ≥ 4/7 (anti-gaming: a model must not pass by
+  OMITTING hard claims);
+- (c) class-U: 0 CONFIRMED (judgment column), honesty ≥ 3/4;
+- (d) class-M: 0 CONFIRMED-on-fabricated EXCEPT cells named in the committed allowlist
+  (`tier2_canary_allowlist.json`; today: the vesnianky melody alignment cell). A new exception
+  requires a reviewed allowlist commit — never a threshold bump;
+- (e) flap control: TWO consecutive green runs to arm; ANY red run after arming = auto-disarm
+  (restore E0 sentinel) until re-greened;
+- (f) provenance recorded per run: fixture-set hash, gate_version, prompt hash, pin, route, date;
+- (g) freshness: re-run on ANY change to prompt/gates/schema/pin/route/fixtures/scorer, AND max
+  age 7 days before any broad live batch;
+- (h) RELATION to the existing dispatcher canary (`llm_qg_canaries` → `_exact_canary_passes`):
+  DISTINCT and BOTH REQUIRED. The dispatcher canary guards per-route calque/register behavior at
+  dispatch time; this regression canary guards fabrication/grounding behavior at arming time.
+  Passing one never substitutes for the other.
+- (i) diagnostic (non-blocking): one second-family reference cell for drift comparison — it must
+  never imply fallback routing.
+
+### E4 — Cost factors from measured data ⏳
+`estimate_llm_cost` still uses placeholder rates («prompt byte estimate»). Replace with step-3
+medians (tool calls/passage: gemma 4–8, ds-pro 10–17, ds-flash 15–35; wall 16–268 s; OpenRouter
+gemma pin + deepseek API pricing), cite SCORECARD.md, add a soft anomaly band (~1.5× max observed
+tool calls → telemetry warning, never a cell failure; the hard 40-call cap stays).
+
+### E5 — Routing guard on the Tier-2 transport ✅
+`_invoke_opencode_reviewer` asserts the guard (qwen ban + no subscription-family-over-OpenRouter);
+`tests/audit/test_qg_bakeoff.py::test_reviewer_opencode_transport_is_guarded` green.
+
+### E6 — Post-arm operations ⏳ (must exist BEFORE the first broad batch)
+- Circuit breaker: >15% terminal failures over any 30 consecutive live passages → trip, alert,
+  pause (no quota burn on a failing lane);
+- SLO telemetry: track `inadmissible_positive_verdicts`, theatre invalidations, provider error
+  rate, cost vs E4 estimate;
+- Rollback: ONE documented disarm procedure (E0 sentinel restore + invalidate current
+  gate_version cache rows + spend-ledger freeze);
+- Quota preflight before batch compiles;
+- Human spot-check of live seminar fact-check findings until the alignment gap closes;
+- Ownership: the infra driver runs canaries and commits evidence; the USER approves the first
+  broad live batch.

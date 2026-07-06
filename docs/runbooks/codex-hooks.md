@@ -64,6 +64,72 @@ exits 2 and tells the agent to create/`cd` into
 Tests: `tests/test_guard_primary_checkout_write.py` (pure payload extraction plus
 end-to-end block/allow against a real repo with a dispatch worktree).
 
+## Runtime write-cwd guard (#4446)
+
+The hook above is a *provider-side* control that only fires for surfaces a
+provider exposes as hookable. #4446 adds the complementary *runtime-side*
+control: `agent_runtime.runner.invoke` — the single chokepoint every
+orchestrated agent subprocess funnels through — refuses, **by construction**, to
+spawn a write-capable child (`workspace-write`/`danger`) whose `cwd` is a primary
+checkout sitting on a protected branch. No command-string intent parsing is
+involved; the decision is a pure containment classification.
+
+- **Reuses #4444.** The guard classifies `cwd` via
+  `scripts.guardrails.worktree_containment` (`classify_repo_path` +
+  `is_protected_branch`). Dispatch worktrees, any other registered worktree, and
+  out-of-repo paths all pass; only a primary checkout on `main`/`master` is
+  refused. A cheap in-tree pre-filter (`_RUNNER_REPO_TREE`) skips the git plumbing
+  for cwds outside this checkout's own file tree.
+- **Fails closed.** If the containment predicate cannot be imported, a
+  write-capable spawn is refused rather than allowed — an isolation we cannot
+  prove is treated as absent.
+- **Env cannot re-point the child.** `env_sanitize.build_agent_env` uses a strict
+  allowlist, so `GIT_WORK_TREE`/`GIT_DIR`/`GIT_INDEX_FILE`/`PWD`/`OLDPWD` are
+  dropped from the child env — a spawned agent cannot escape its worktree `cwd`
+  via inherited git-discovery or shell state
+  (`tests/test_env_sanitize.py::test_workdir_repointing_git_env_is_scrubbed`).
+
+### Relationship to #4445 and the branch scoping
+
+- **#4445 (delegate)** is the stricter, dispatch-specific CLI-arg preflight: it
+  requires a worktree for *every* delegate write dispatch, branch-agnostic. The
+  runtime guard is the *universal minimum* backstopping all callers, not a
+  duplicate of that policy.
+- The runtime guard is **protected-branch-scoped**, matching the hook (#4448),
+  monitor tripwire (#4449), and git shim (#4450): the hazard is dirtying `main`.
+  A primary checkout deliberately on a feature branch is a developer workspace
+  and is allowed.
+
+### Bridge write-mode alignment
+
+The read-only Q&A bridges (`ask-codex`, `ask-agy`, `grok`) inspect from the repo
+root under `read-only` and are unaffected. The Gemini bridge previously ran
+**every** invocation `workspace-write` (`--approval-mode=yolo`) from the primary
+checkout — so an `ask-gemini` query could silently mutate tracked files. #4446
+decouples the runtime write-mode from the CLI approval flag: only `--allow-write`
+callers (curriculum writers) get `workspace-write`; plain Q&A/review now runs
+`read-only`. Genuine write-intent invocations must therefore run from an isolated
+worktree, enforced by the guard above.
+
+### Scope boundaries (do not overclaim)
+
+- **Covered by construction:** orchestrated write-capable subprocesses launched
+  through `runner.invoke` — delegate dispatches, bridge write lanes, V7 pipeline
+  writers. These physically cannot spawn in a protected primary checkout.
+- **Not covered here:** direct interactive **Codex Desktop** (or any provider's
+  direct-edit UI) that never routes through `runner.invoke`. Those depend on the
+  provider hook (#4448), the operator self-check, and the monitor tripwire
+  (#4449) — not on this runtime guard.
+- **Known residual:** `v7_build.py --writer gemini-tools` pins the writer `cwd`
+  to the repo root (gemini-tools loads `.gemini/settings.json` from there); on a
+  primary checkout that is on `main` the guard refuses it. Run such builds from a
+  feature branch or migrate gemini-tools MCP discovery off the repo root. The
+  legacy v6 `scripts/pipeline/core.py` gemini writer is likewise guard-gated.
+
+Tests: `tests/test_agent_runtime.py` (`test_write_guard_*`,
+`test_invoke_codex_write_lane_*`) and `tests/test_gemini_bridge.py`
+(`test_run_gemini_sync_derives_runtime_mode_from_allow_write`).
+
 ## CLI probe
 
 Run the probe from the repository root:

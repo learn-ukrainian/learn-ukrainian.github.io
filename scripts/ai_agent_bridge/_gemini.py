@@ -315,7 +315,7 @@ def _run_gemini_sync(msg: dict, message_id: int, model: str, prompt: str,
             result = _run_gemini_attempt(msg, message_id, current_model, requested_model, prompt,
                                          timeout_val, stdout_only, output_path, skip_github,
                                          attempt, max_retries, base_delay, rate_limit_state,
-                                         auth_mode)
+                                         auth_mode, allow_write)
             if isinstance(result, dict) and result.get("action") == "fallback":
                 current_model = str(result["model"])
                 continue
@@ -337,7 +337,7 @@ def _run_gemini_sync(msg: dict, message_id: int, model: str, prompt: str,
 
 def _run_gemini_attempt(msg, message_id, model, requested_model, prompt, timeout_val,
                         stdout_only, output_path, skip_github, attempt, max_retries,
-                        base_delay, rate_limit_state, auth_mode):
+                        base_delay, rate_limit_state, auth_mode, allow_write=False):
     """Run a single Gemini CLI attempt via agent_runtime.
 
     Returns None to retry, False to stop, or (response, sent).
@@ -362,15 +362,22 @@ def _run_gemini_attempt(msg, message_id, model, requested_model, prompt, timeout
     if output_path:
         pre_snapshot = _git_status_snapshot()
 
-    # Gemini bridge is always write-enabled (--approval-mode=yolo) — preserving
-    # legacy behavior. Tool config is None because the bridge doesn't restrict
-    # MCP tools the way dispatch.py does.
+    # Runtime write-mode tracks write *intent*, decoupled from the CLI approval
+    # flag (#4446): only ``--allow-write`` callers (curriculum writers) need
+    # ``workspace-write`` (→ gemini ``--approval-mode=yolo``); plain Q&A / review
+    # runs ``read-only`` like the codex/agy bridges, so an ``ask-gemini`` query
+    # can no longer silently mutate the primary checkout. The runner's #4446
+    # guard rejects a write-capable spawn in a protected primary checkout, so
+    # write-intent invocations must run from an isolated worktree.
+    # Tool config is None because the bridge doesn't restrict MCP tools the way
+    # dispatch.py does.
+    runtime_mode = "workspace-write" if allow_write else "read-only"
     tool_config = {"auth_mode": auth_mode} if auth_mode else None
     try:
         result = runtime_invoke(
             "gemini",
             prompt,
-            mode="workspace-write",
+            mode=runtime_mode,
             cwd=REPO_ROOT,
             model=model,
             task_id=msg.get("task_id"),

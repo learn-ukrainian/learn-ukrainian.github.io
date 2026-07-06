@@ -1,9 +1,9 @@
 {
-  "assembled_mdx_sha256": "5c34945b51471c432ccd599b9b4f11a4e30189f47923942fdd562738d6fa6852",
+  "assembled_mdx_sha256": "03f03a5db09fb28d0065afd1173616bf0808d988c1f9848b345a98e1f9f63006",
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "81ae2e19b9f3bfca3dc0b10c01af8cdead64446f2be78bf2f5548d9db953056a",
+    "digest": "18995144f34864f9821e75a600f626ef00c67d011deb34a181e58ae2563302a8",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/dumy-sotsialno-pobutovi.yaml",
@@ -11,7 +11,7 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/dumy-sotsialno-pobutovi/module.md",
-        "sha256": "cba6dc41cedd3cf6918da252f938157e9bc9b1197d615e03923988385021886c"
+        "sha256": "f280bf9b643fe59dba4b2152c268771019bcf6ee291cea0d834cb2a54a78c773"
       },
       {
         "path": "curriculum/l2-uk-en/folk/dumy-sotsialno-pobutovi/activities.yaml",
@@ -28,12 +28,9 @@
     ]
   },
   "evidence": {
-    "beauty": "Clean C1 seminar prose, regenerated MDX, and learner-facing source fragments without process leakage.",
-    "decolonization": "Centers Ukrainian kobzar tradition and treats social-moral critique without Russian-imperial flattening.",
-    "engagement": "V2 split keeps two narrative-needed inline tasks and moves comparison, performance, critique, and essay work to the workbook tab.",
-    "naturalness": "Learner-facing AI/build/register leakage cleanup keeps the prose in Ukrainian seminar register without process instructions.",
-    "pedagogical": "Teaches genre, evidence limits, repertoires, direct text analysis, and formal poetics as distinct seminar skills.",
-    "review": "Claude route was attempted first; AGY/Gemini fallback review blockers were fixed before final validation."
+    "reading_remediation": "Batch A adds or fixes substantial structured on-site primary readings with dash-led provenance and public-domain rights decisions.",
+    "review": "Claude opus route was used first; an initial stdin send-order miss was retried through Claude, which found one blocker; follow-up Claude review confirmed blockers none.",
+    "source_verification": "sources.verify_quote matched the new Hrushevsky/Drahomanov/Shevchenko/Ukrlib passages at 0.919-1.0 confidence; reading gate passed for all six modules."
   },
   "floors": {
     "beauty": 8.5,
@@ -51,7 +48,7 @@
     "model": "claude-opus-4-8"
   },
   "schema_version": 1,
-  "scored_at": "2026-07-02T16:26:22Z",
+  "scored_at": "2026-07-05T21:40:54Z",
   "scores": {
     "beauty": 8.8,
     "decolonization": 9.1,

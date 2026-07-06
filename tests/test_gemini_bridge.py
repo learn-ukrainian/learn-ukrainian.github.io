@@ -175,6 +175,48 @@ def test_run_gemini_sync_passes_auth_mode_to_runtime(
     assert mock_invoke.call_args.kwargs["tool_config"] == {"auth_mode": "subscription"}
 
 
+def _ok_result() -> Result:
+    return Result(
+        ok=True, agent="gemini", model=PRO_MODEL, mode="read-only",
+        response="reply", stderr_excerpt=None, duration_s=0.1, session_id=None,
+        rate_limited=False, stalled=False, returncode=0, usage_record={},
+    )
+
+
+@pytest.mark.parametrize(
+    "allow_write, expected_mode",
+    [(False, "read-only"), (True, "workspace-write")],
+)
+@patch("ai_agent_bridge._gemini._route_gemini_response")
+@patch("ai_agent_bridge._gemini.acknowledge")
+@patch("ai_agent_bridge._gemini.runtime_invoke")
+def test_run_gemini_sync_derives_runtime_mode_from_allow_write(
+    mock_invoke, _ack, _route, bridge_db, allow_write, expected_mode,
+):
+    """#4446: the runtime write-mode tracks write *intent* (``--allow-write``),
+    not the CLI approval flag — plain Q&A runs ``read-only`` so an ``ask-gemini``
+    query can no longer silently mutate the primary checkout."""
+    message_id = send_message(
+        "Please review this", task_id="issue-4446", msg_type="query",
+        from_llm="claude", to_llm="gemini", to_model=PRO_MODEL, quiet=True,
+    )
+    msg = {"id": message_id, "task_id": "issue-4446", "from": "claude",
+           "to": "gemini", "type": "query", "content": "x", "data": None}
+    mock_invoke.return_value = _ok_result()
+
+    with patch("ai_agent_bridge._gemini._is_task_locked", return_value=False), \
+         patch("ai_agent_bridge._gemini._write_pid_file"), \
+         patch("ai_agent_bridge._gemini._remove_pid_file"), \
+         patch("ai_agent_bridge._gemini.atexit.register"):
+        _run_gemini_sync(
+            msg, message_id, PRO_MODEL, "bridge prompt", no_timeout=False,
+            stdout_only=True, output_path=None, allow_write=allow_write,
+            skip_github=True, auth_mode=None,
+        )
+
+    assert mock_invoke.call_args.kwargs["mode"] == expected_mode
+
+
 def test_handle_ask_gemini_routes_to_agy(monkeypatch):
     captured: dict[str, object] = {}
 

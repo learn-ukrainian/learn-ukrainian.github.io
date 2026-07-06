@@ -93,11 +93,26 @@ references:
   note: Compiled research notes on Kotlyarevsky's life, works, and critical interpretations.
   path: wiki/bio/ivan-kotliarevskyi.md
   type: wiki
+readings:
+- title: "Котляревський Іван Петрович"
+  source_name: "Енциклопедія історії України (ЕІУ)"
+  source_url: "http://resource.history.org.ua/cgi-bin/eiu/history.exe?Z21ID=&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Kotlyarevsky_I"
+  language: uk
+  type: article
+  hosting: link-only
+  note: "Academic historical and literary overview of Kotliarevskyi as the founder of modern Ukrainian literature."
+- title: "Енеїда"
+  source_name: "Ізборник"
+  source_url: "http://litopys.org.ua/kotlyar/kotl.htm"
+  language: uk
+  type: primary_source
+  hosting: excerpt-only
+  note: "Excerpts from Eneida to analyze the burlesque-travesty style and his use of living Ukrainian language."
 sequence: 58
 slug: ivan-kotliarevskyi
 subtitle: 'Ivan Kotliarevskyi: Father of Modern Literature'
 title: 'Іван Котляревський: Батько нової літератури'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: жанр пародійної поезії, що переодягає героїв відомого твору у простонародний одяг та обставини
   pos: ж.

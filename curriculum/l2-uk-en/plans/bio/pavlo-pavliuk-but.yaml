@@ -79,6 +79,28 @@ persona:
   role: Історик-джерелознавець, що показує повстання як конфлікт статусу й визнання, а не двобій героїв і лиходіїв
   voice: Source-Critical Historian
 phase: BIO
+readings:
+- title: "Бут (Павлюк) Павло Михнович"
+  source: "Енциклопедія історії України"
+  url: "https://www.history.org.ua/?termin=But_P"
+  language: uk
+  type: encyclopedia
+  hosting: link-only
+  task: "Прочитайте довідку та виділіть ключові етапи військової кар'єри Павлюка."
+- title: "Павлюка повстання 1637"
+  source: "Енциклопедія історії України"
+  url: "https://www.history.org.ua/?termin=Pavliuka_povstannia_1637"
+  language: uk
+  type: encyclopedia
+  hosting: link-only
+  task: "Знайдіть, які саме вимоги висували повстанці у своїх універсалах."
+- title: "Кумейки, битва 1637"
+  source: "Енциклопедія історії України"
+  url: "https://www.history.org.ua/?termin=Kumeiki_Bitva_1637"
+  language: uk
+  type: encyclopedia
+  hosting: link-only
+  task: "Ознайомтеся з перебігом битви. Що стало головною причиною поразки козацького війська?"
 references:
 - note: 'Стаття ЕІУ (В. Щербак): походи, участь у повстанні Сулими 1635 року, обрання 1637, страта у Варшаві'
   path: https://www.history.org.ua/?termin=But_P
@@ -105,7 +127,7 @@ sequence: 29
 slug: pavlo-pavliuk-but
 subtitle: 'Pavlo Pavliuk (But): The 1637 Uprising'
 title: 'Павло Павлюк (Бут): Повстання 1637 року'
-version: '4.1'
+version: '4.3'
 vocabulary_hints:
 - definition: офіційний список козаків на службі корони; поза ним статус козака був напівлегальним
   pos: ч.

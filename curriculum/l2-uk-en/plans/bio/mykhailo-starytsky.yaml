@@ -78,6 +78,21 @@ persona:
   role: Модератор семінару, що ставить під сумнів усталені міфи про «батька театру» і показує його як прагматичного менеджера в екстремальних умовах
   voice: Starytsky-Skeptic
 phase: BIO
+readings:
+- title: "Старицький Михайло Петрович"
+  source: "Енциклопедія історії України"
+  url: "https://www.history.org.ua/?termin=Starytskyj_M"
+  language: uk
+  type: encyclopedia
+  hosting: link-only
+  task: "Прочитайте про внесок Старицького у формування репертуару українського театру."
+- title: "«За двома зайцями»"
+  source: "УкрЛіб"
+  url: "https://www.ukrlib.com.ua/books/printit.php?tid=1086"
+  language: uk
+  type: primary_text
+  hosting: excerpt-only
+  task: "Ознайомтеся з уривком п'єси. Як драматург використовує мовну характеристику (суржик) для створення комічного ефекту?"
 references:
 - title: Mykhailo Starytsky
   note: Основа біографії, з якої витягнуто ключові факти та дати.
@@ -92,7 +107,7 @@ sequence: 68
 slug: mykhailo-starytsky
 subtitle: Як збудувати національну сцену всупереч імперії
 title: 'Михайло Старицький: Корифей українського театру'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: провідний, видатний діяч у певній галузі науки, мистецтва, літератури
   pos: ч.

@@ -1659,6 +1659,101 @@ def test_dispatch_creates_worktree_and_records_it(tmp_tasks_dir, tmp_path, monke
     assert "issue-1383-smoke" in captured.out
 
 
+def test_fetch_base_strips_origin_prefix(monkeypatch):
+    """`--base origin/main` (the mandated runbook form) must fetch refspec `main`.
+
+    `git fetch origin origin/main` asks the remote for a ref literally named
+    ``origin/main`` — nonexistent — so the fetch failed and every conforming
+    dispatch silently fell back to the local (possibly stale) tracking ref.
+    """
+    calls, fake_run = _make_run_stub()
+    monkeypatch.setattr(delegate.subprocess, "run", fake_run)
+
+    assert delegate._fetch_base("origin/main") is True
+
+    fetch_cmd = next(c for c in calls if c[:2] == ["git", "fetch"])
+    assert fetch_cmd == ["git", "fetch", "origin", "main"]
+    verify_cmd = next(
+        c for c in calls if c[:2] == ["git", "rev-parse"] and "--verify" in c
+    )
+    assert verify_cmd[-1] == "origin/main"
+
+
+def test_fetch_base_plain_branch_unchanged(monkeypatch):
+    calls, fake_run = _make_run_stub()
+    monkeypatch.setattr(delegate.subprocess, "run", fake_run)
+
+    assert delegate._fetch_base("main") is True
+
+    fetch_cmd = next(c for c in calls if c[:2] == ["git", "fetch"])
+    assert fetch_cmd == ["git", "fetch", "origin", "main"]
+
+
+def test_dispatch_origin_prefixed_base_branches_from_remote_ref(
+    tmp_tasks_dir, tmp_path, monkeypatch, capsys
+):
+    """base="origin/main" must produce `worktree add ... origin/main`,
+    never the unresolvable `origin/origin/main`."""
+    import argparse
+
+    class _FakeStdin:
+        def write(self, _data):
+            pass
+
+        def close(self):
+            pass
+
+    class _FakeProc:
+        pid = 24681
+        stdin = _FakeStdin()
+
+    calls, fake_run = _make_run_stub(rev_parse_head_sha="feedc0de")
+    monkeypatch.setattr(delegate.subprocess, "run", fake_run)
+    monkeypatch.setattr(delegate.subprocess, "Popen", lambda *a, **k: _FakeProc())
+
+    args = argparse.Namespace(
+        agent="codex",
+        task_id="origin-base-smoke",
+        prompt="Implement the fix",
+        prompt_file=None,
+        mode="danger",
+        model=None,
+        cwd=None,
+        worktree=str(tmp_path / ".worktrees" / "codex-origin-base"),
+        base="origin/main",
+        hard_timeout=3600,
+    )
+
+    rc = delegate.cmd_dispatch(args)
+
+    assert rc == 0
+    fetch_cmd = next(c for c in calls if c[:2] == ["git", "fetch"])
+    assert fetch_cmd == ["git", "fetch", "origin", "main"]
+    add_cmd = next(c for c in calls if c[:3] == ["git", "worktree", "add"])
+    assert add_cmd[-1] == "origin/main", (
+        f"worktree must be created from origin/main, got base={add_cmd[-1]!r}"
+    )
+
+
+def test_validate_existing_worktree_origin_prefixed_base(monkeypatch, tmp_path):
+    """The stale-base check must compare against origin/main, not
+    origin/origin/main (which made the check a silent no-op)."""
+    calls, fake_run = _make_run_stub(rev_list_count="2", abbrev_ref="codex/x")
+    monkeypatch.setattr(delegate.subprocess, "run", fake_run)
+
+    rebased = delegate._validate_existing_worktree(
+        path=tmp_path, expected_branch="codex/x", base="origin/main"
+    )
+
+    assert rebased is True
+    rev_list_cmd = next(c for c in calls if c[:2] == ["git", "rev-list"])
+    assert rev_list_cmd[-1] == "HEAD..origin/main"
+    rebase_cmd = next(
+        c for c in calls if c[:2] == ["git", "rebase"] and "--abort" not in c
+    )
+    assert rebase_cmd[-1] == "origin/main"
+
+
 def test_dispatch_defaults_worker_env_to_no_merge(tmp_tasks_dir, monkeypatch):
     import argparse
 

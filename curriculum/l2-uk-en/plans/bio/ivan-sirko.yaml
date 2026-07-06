@@ -94,7 +94,7 @@ sequence: 41
 slug: ivan-sirko
 subtitle: 'Ivan Sirko: The Legendary Koshovyi Otaman'
 title: 'Іван Сірко: Легендарний кошовий отаман'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: у народних віруваннях — козак, що володіє надприродними здібностями, може обертатися на вовка, ловити кулі руками
   pos: ч.
@@ -118,3 +118,19 @@ vocabulary_hints:
   pos: ж.
   word: булава
 word_target: 5200
+
+readings:
+- hosting: reading-needed
+  language: uk
+  rationale: "Наукова деконструкція біографії Івана Сірка, його військових кампаній та часто деструктивного втручання в гетьманську політику."
+  source: "Енциклопедія історії України"
+  title: "Сірко Іван Дмитрович"
+  type: encyclopedia
+  url: "http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Sirko_I"
+- hosting: reading-needed
+  language: uk
+  rationale: "Огляд ролі Сірка у подіях 1668 року під час антимосковського повстання Брюховецького та проголошення Дорошенка гетьманом обох берегів Дніпра."
+  source: "Енциклопедія історії України"
+  title: "Антимосковське повстання 1668"
+  type: encyclopedia
+  url: "http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Antymoskovske_povstannia_1668"

@@ -185,10 +185,20 @@ seeded/deterministic build (§1), FSRS card unit = `lemmaId + mode` (§1).
 |---|---|---|---|---|
 | `paradigm` — declension/conjugation | `enrichment.morphology.paradigm` (VESUM) | **Phase 1 (local)** | `is_paradigm_eligible` | A2 (chips) · B1+ (typed) |
 | `stress` — stress placement | `enrichment.stress` | **Phase 1 (local)** | `is_stress_eligible` | A1+ |
-| `synonym` — synonym/antonym match | `sections.synonyms` / `sections.antonyms` | antonyms Phase 1 · synonyms **Phase 2 (slovnyk)** | `is_synonym_eligible` | B1+ |
+| `synonym` — synonym/antonym match | `sections.synonyms` / `sections.antonyms` | **available NOW** ⟦v5 probe 2026-07-05: 796 prompts / 1,224 in-vocab pairs⟧ · slovnyk Phase 2 grows it | `is_synonym_eligible` | B1+ |
 | `idiom` — idiom→meaning match | `sections.idioms` / phraseologism articles | Phase 1 + Phase 2 | `is_idiom_eligible` | B1+ (curated A2 exceptions) |
-| `heritage` — decolonization pick | `heritage_status.curated_calque` + §6_note corrections | **Phase 1 (curated)** | `is_heritage_eligible` | B1+ (curated A2 exceptions) |
+| `heritage` — decolonization pick | `heritage_status.curated_calque` + §6_note corrections | **Phase 1 (curated)** ⟦v5 probe: 5 pairs — ships thin, fail-closed, until calque curation⟧ | `is_heritage_eligible` | B1+ (curated A2 exceptions) |
+| `classify` (v5, §9.8) — category sort | VESUM tags already in `enrichment.morphology` + `pos` | **available NOW** ⟦v5 probe: 2,214 nouns · 1,069 verbs · 598 adj⟧ | `is_classify_eligible` | A1+ (gender) · A2+ (aspect/declension) |
+| `paronym` (v5, §9.9) — confusable-pair pick | curated `paronym_pair` records | **curated only** ⟦v5: ~6 module seed pairs; grows via curation⟧ | `is_paronym_eligible` | B1+ |
 | `listening` — dictation | `enrichment.pronunciation.ipa` + audio | **DEFERRED** — needs an audio/TTS decision; IPA alone is not a drill. Placeholder only, NOT in v4 scope. | — | — |
+
+> **v5 scope note (user-approved 2026-07-05):** ALL suggested modes are wanted; build order follows
+> DATA-READINESS — Wave 1 decks = `stress` (4,467) · `classify` (3,881) · `paradigm` (2,180) ·
+> `synonym` (1,224 pairs); `heritage` + `paronym` ship machinery fail-closed and fill as curated
+> pairs land (curation lane: mine Antonenko/UA-GEC for calques, Гринчишин paronym dictionary +
+> module `contrast_pair` activities for paronyms). Antonym polarity rides the `synonym` mode for
+> free (43 in-vocab pairs today — thin, grows with intake). The mode union in `srs.ts` gains ALL
+> six at once (§9.6) — ONE deckVersion bump; a known mode with no deck simply contributes no cards.
 
 ### 9.1 `paradigm` — slot production (declension / conjugation)
 
@@ -294,9 +304,60 @@ seeded/deterministic build (§1), FSRS card unit = `lemmaId + mode` (§1).
   mode gets its own (synonym: register/length balance, no semantic near-duplicate of the answer among
   distractors; idiom: meaning-text length balance; heritage: no source-label leakage marking the
   native form, calque never visually distinguishable pre-answer). Violations = build red, like §5.
-- Acceptance (from GH #4383): deck builder consumes `data/atlas.db`; **≥3 new drill types live**
-  (paradigm, stress, heritage are the Phase-1-ready trio); FSRS extended across modes; coverage %
-  reported per level; CI warns on thin decks.
+- Acceptance (from GH #4383, amended v5): deck builder consumes `data/atlas.db`; **≥4 new drill
+  types live with non-thin decks** (stress, classify, paradigm, synonym — the data-ready wave) plus
+  heritage + paronym machinery fail-closed; FSRS extended across modes; coverage % reported per
+  level; CI warns on thin decks.
+
+### 9.8 `classify` — category sort (v5, user-approved 2026-07-05; ancestry: module `group-sort`, 249 instances)
+
+- **Item**: MC «До якої групи належить …?» — one word, pick its category. Category sets (each a
+  separate variety axis, §6): **gender** (чоловічий/жіночий/середній рід — nouns), **aspect**
+  (доконаний/недоконаний вид — verbs), **declension group** (І–IV відміна — nouns, B1+), **POS**
+  (частина мови — mixed decks, A2+). UA-first labels; EN subtitle gloss at A1–A2 only (§9.1 rule).
+- **Data**: pure VESUM — the tags already ride `enrichment.morphology` + `pos`; ZERO curation.
+  ⟦v5 probe⟧ 2,214 nouns (gender) · 1,069 verbs (aspect) · 598 adjectives in today's manifest.
+- **Gate `is_classify_eligible`** (per category set, fail-closed): the VESUM tag exists and is
+  UNAMBIGUOUS. Explicit per-set exclusions ⟦agy v5 review⟧: **gender** — pluralia tantum (двері,
+  ножиці — no singular ⇒ no gender assignment) AND common-gender nouns (спільний рід, VESUM
+  double-gender entries: сирота, колега, суддя); **aspect** — bi-aspectual verbs; **declension** —
+  everything outside the І–IV відміна system: heteroclitic nouns, pluralia tantum, indeclinable
+  nouns (незмінні: шосе, бюро), and substantivized adjectives that VESUM lemmatizes as nouns yet
+  inflect adjectivally (минуле, майбутнє; черговий-type stay `adj` and self-exclude from noun
+  pools). Gate at the LEMMA level, never the surface form — VESUM form→lemma collisions are real
+  (verified: окуляри→окуляр, шахи→шах, таксі→такса). A word can be eligible in one set and
+  excluded from another.
+- **Anti-gaming (§5)**: options are the CLOSED category set (all genders / both aspects) — inherent
+  balance; validator asserts the deck never lets one category exceed ~60% of a session's classify
+  items (else learners meta-game the base rate).
+- **SRS**: ONE card `lemmaId+classify` (not per category set); per-set outcomes recorded like §9.1
+  slots; rotation biases missed sets.
+- **Availability**: gender A1+ · aspect/POS A2+ · declension B1+.
+
+### 9.9 `paronym` — confusable-pair pick (v5, user-approved 2026-07-05; ancestry: module `contrast_pair`; the тактовний≠тактичний class)
+
+- **Item**: reviewed Ukrainian sentence frame with a slot (like §9.5); options = the correct
+  paronym + its confusable(s). Feedback ALWAYS shows both words with their distinct meanings and
+  one attested collocation each — the drill teaches the DISTINCTION, not just the answer.
+- **Data contract**: curated `paronym_pair` records, schema-validated at build like §9.5's
+  `heritage_pair`: `{slugA, slugB, frames[] (≥1 per direction), distinction_gloss_uk, citations[]
+  (≥1 — Гринчишин «Словник паронімів», Антоненко, or СУМ senses)}`. Both slugs must be approved
+  public articles. Any pair failing validation is dropped and reported — never emitted.
+- **Option congruency (anti-gaming, §5)** ⟦agy v5 review⟧: every option in a frame MUST surface in
+  the exact morphological form the slot requires (same case/gender/number for nominals; same
+  person/number/tense for verbs). A form-mismatched distractor (fem-sg slot, target *тактовна*,
+  distractor *тактичний*) lets agreement clues solve the item with zero semantic knowledge. The
+  §5-style build validator rejects any frame whose options do not share the slot's agreement
+  feature bundle (VESUM tags of the surface forms must match on case/gender/number/person/tense).
+- **Sources for curation** (a curation-lane task, not build-time generation): Гринчишин paronym
+  dictionary (check corpus availability), Антоненко-Давидович confusable entries, and the 6
+  existing module `contrast_pair` activities as seeds. **Aspectual pairs are NOT paronyms**
+  ⟦agy v5 review⟧ (видові пари — писати/написати, вирішувати/вирішити — one lexeme in two
+  aspects): the curation lane excludes them; that contrast belongs to `classify`'s aspect axis.
+- **Both directions drilled**: the pair generates a card per member (`lemmaId+paronym`), frames
+  chosen so each member is the correct answer in its own frames (no "always-B" tell; §5 validator).
+- **Availability**: B1+ (meaning-discrimination presupposes both words' recognition baseline —
+  the §9.1 production-gate analog applies on BOTH members).
 
 ## 10. Practice Hub backend (v4 — GH #4384) — DESIGN ONLY, implementation gated
 

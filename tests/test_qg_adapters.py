@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from pathlib import Path
 from typing import Any
 
@@ -75,9 +76,7 @@ def test_deterministic_adapter_wraps_russianism_calque_gate() -> None:
 def test_deterministic_adapter_wires_912_semantic_false_friend_linter(tmp_path: Path) -> None:
     plan_path = tmp_path / "aspect-in-imperatives.yaml"
     plan_path.write_text(
-        "vocabulary_hints:\n"
-        "  required:\n"
-        "    - 'лук (onion) — everyday food'\n",
+        "vocabulary_hints:\n  required:\n    - 'лук (onion) — everyday food'\n",
         encoding="utf-8",
     )
 
@@ -101,7 +100,9 @@ def test_deterministic_adapter_ignores_missing_plan_path(tmp_path: Path) -> None
 
 
 def test_ua_gec_fixture_adapter_preserves_gold_tag_and_noisy_axis_hook() -> None:
-    findings = UaGecGoldFixtureAdapter().findings(ScorerInput(fixture_id="ua-gec-gold-001"))
+    findings = UaGecGoldFixtureAdapter(contested_sidecar_path=Path("non-existent-sidecar.json")).findings(
+        ScorerInput(fixture_id="ua-gec-gold-001")
+    )
 
     assert len(findings) == 1
     finding = findings[0]
@@ -114,6 +115,27 @@ def test_ua_gec_fixture_adapter_preserves_gold_tag_and_noisy_axis_hook() -> None
     assert gold["contested_flag"] is None
     assert gold["contested_flag_follow_up"] == "#4364"
     assert "gold_noise" in gold["known_limitations"]
+
+
+def test_ua_gec_fixture_adapter_loads_contested_sidecar(tmp_path: Path) -> None:
+    sidecar_path = tmp_path / "sidecar.contested.json"
+    sidecar_data = {
+        "ua-gec-gold-001": {"contested": True, "evidence": []},
+        "ua-gec-gold-002": {"contested": False, "evidence": []},
+    }
+    sidecar_path.write_text(json.dumps(sidecar_data), encoding="utf-8")
+
+    # Load first item (contested=True)
+    findings = UaGecGoldFixtureAdapter(contested_sidecar_path=sidecar_path).findings(
+        ScorerInput(fixture_id="ua-gec-gold-001")
+    )
+    assert findings[0]["metadata"]["ua_gec_gold"]["contested_flag"] is True
+
+    # Load second item (contested=False)
+    findings = UaGecGoldFixtureAdapter(contested_sidecar_path=sidecar_path).findings(
+        ScorerInput(fixture_id="ua-gec-gold-002")
+    )
+    assert findings[0]["metadata"]["ua_gec_gold"]["contested_flag"] is False
 
 
 def test_llm_placeholder_adapter_normalizes_supplied_judgment_without_dispatch() -> None:

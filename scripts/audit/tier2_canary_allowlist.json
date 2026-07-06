@@ -1,0 +1,10 @@
+{
+  "schema_version": "tier2_canary_allowlist.v1",
+  "entries": [
+    {
+      "fixture": "vesnianky",
+      "claim_id": "vesnianky-06-melody",
+      "reason": "Known vesnianky melody alignment residual from #4370 E3 calibration."
+    }
+  ]
+}

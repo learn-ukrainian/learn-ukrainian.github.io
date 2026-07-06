@@ -1,9 +1,9 @@
 {
-  "assembled_mdx_sha256": "f2960f0e9cbfddaad7ac1ea6cdffa865e31d30172b4544dd365be5d393847b51",
+  "assembled_mdx_sha256": "9a9d80e1d0f176ea735437e65d0adec83ba9f287b27959ad5301b26db07e7eb5",
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "faecf204100fa67817236c15dcdc2cd21a8f0f59762ff9742c00e265ea912f0c",
+    "digest": "4d78607ca9cad46cf95d2156ea1f25947885ccd2833a6ce65b12084437a17972",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/pisni-literaturnoho-pokhodzhennia.yaml",
@@ -11,7 +11,7 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/pisni-literaturnoho-pokhodzhennia/module.md",
-        "sha256": "9ec5ce11f1a76dc397c9bb54ba343bac2feeefe6a05cf64ae6d0a300fd8d500b"
+        "sha256": "c10293509454c53dd4036eafb47c17737e87807a63a13d77a148e6d157c8c15e"
       },
       {
         "path": "curriculum/l2-uk-en/folk/pisni-literaturnoho-pokhodzhennia/activities.yaml",
@@ -23,15 +23,15 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/pisni-literaturnoho-pokhodzhennia/resources.yaml",
-        "sha256": "4e84ce022989853479564efdfe30ac42c72e9be2e4eee408b164c20cd8149929"
+        "sha256": "cde1b0bc4a74782de5e66f6bd27a5802d816fa6a052454b763f6c6f50f137586"
       }
     ]
   },
   "evidence": {
-    "learner_surface": "Structured PrimaryReading blocks use dash-led source attribution and generated MDX now separates closing PrimaryReading JSX from following markdown.",
-    "reading_coverage": "Added or converted learner-visible structured on-site shortened primary readings; external/full-version links remain supplementary only.",
-    "review": "Claude local CLI failed before producing a review; AGY/Gemini review found two remediation blockers, both fixed, and focused follow-up returned PASS/no blockers.",
-    "source_hygiene": "Readings are bounded as verified corpus, scholarly witness, textbook/pedagogical fragment, or authorial public-domain excerpts; no fabricated dialogue, songs, or source claims were introduced."
+    "learner_surface": "Structured PrimaryReading block points to a substantial on-site hosted reading, with VESUM-safe learner framing and dash-led attribution in the module.",
+    "reading_coverage": "Direct hardened reading gate passed for Batch B target modules with one substantial structured reading each.",
+    "review": "Claude CLI failed before producing review content; AGY/Gemini final follow-up returned PASS after metadata cleanup and resource-liveness repairs.",
+    "source_hygiene": "M20 uses the verified public-domain Klymovsky excerpt Yikhav kozak za Dunai; verification metadata is kept in PR evidence/sidecar, not learner text; author and rights are stated."
   },
   "floors": {
     "beauty": 8.5,
@@ -49,7 +49,7 @@
     "model": "gemini-3.1-pro-high"
   },
   "schema_version": 1,
-  "scored_at": "2026-07-05T12:13:40Z",
+  "scored_at": "2026-07-05T22:59:26Z",
   "scores": {
     "beauty": 8.8,
     "decolonization": 9.3,
@@ -64,6 +64,6 @@
   "writer": {
     "agent": "codex",
     "family": "openai",
-    "model": "gpt-5"
+    "model": "gpt-5-codex"
   }
 }

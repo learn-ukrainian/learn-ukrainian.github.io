@@ -117,7 +117,7 @@ sequence: 38
 slug: yurii-khmelnytskyi
 subtitle: 'Yurii Khmelnytskyi: The Burden of a Name'
 title: 'Юрій Хмельницький: Тягар імені'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: син гетьмана, династичний спадкоємець булави; статус, що надав Юрієві символічну легітимність без реальної влади
   pos: ч.
@@ -147,3 +147,19 @@ vocabulary_hints:
   pos: ж.
   word: Руїна
 word_target: 5000
+
+readings:
+- hosting: reading-needed
+  language: uk
+  rationale: "Академічна біографія Юрія Хмельницького. Важлива для розуміння трагедії 'гетьманича', який став заручником власного імені та зовнішніх впливів."
+  source: "Енциклопедія історії України"
+  title: "Хмельницький Юрій Богданович"
+  type: encyclopedia
+  url: "http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Khmelnytsky_Ju"
+- hosting: reading-needed
+  language: uk
+  rationale: "Аналіз ключового договору, який ознаменував розрив Юрія Хмельницького з Москвою та спробу відновити Гадяцькі домовленості."
+  source: "Енциклопедія історії України"
+  title: "Слободищенський трактат 1660"
+  type: encyclopedia
+  url: "http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Slobodyshchenskyj_traktat"

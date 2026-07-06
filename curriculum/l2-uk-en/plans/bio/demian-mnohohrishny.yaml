@@ -82,6 +82,21 @@ persona:
   role: Історик-джерелознавець, що відрізняє джерельну біографію Многогрішного від ярликів «московський ставленик» і «мученик автономії», тримаючи видимими і його оборону прав, і його примусові звички
   voice: Source-Critical Historian
 phase: BIO
+readings:
+- hosting: link-only
+  language: uk
+  rationale: "Біографічний якір для читання про чернігівське полковництво, антимосковський поворот 1668 року, Глухівську раду, Батуринську змову й сибірське заслання."
+  source: "Енциклопедія історії України"
+  title: "Многогрішний Дем'ян Гнатович"
+  type: encyclopedia
+  url: "https://history.org.ua/?termin=Mnohohrishnyj_D"
+- hosting: link-only
+  language: uk
+  rationale: "Контекст головного договору модуля: учень зіставляє відступ від Московських статей 1665 року з новими обмеженнями зовнішньої політики й воєводського нагляду."
+  source: "Енциклопедія історії України"
+  title: "Глухівські статті 1669"
+  type: encyclopedia
+  url: "https://history.org.ua/?termin=Glukhivski_statti_1669"
 references:
 - note: 'Стаття ЕІУ (Ю. Мицик, В. Горобець, З. Хижняк): коропське походження, чернігівське полковництво, призначення Дорошенком, Глухівські статті, політика, Батуринська змова, катування, сибірське заслання, служба в Селенгінську'
   path: https://www.history.org.ua/?termin=Mnohohrishnyj_D
@@ -122,7 +137,7 @@ sequence: 44
 slug: demian-mnohohrishny
 subtitle: 'Demian Mnohohrishny: The Hlukhiv Mace and Siberian Exile'
 title: 'Дем''ян Многогрішний: Глухівська булава й заслання'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: командир козацького полку; з 1665 року Многогрішний був чернігівським полковником
   pos: ч.
