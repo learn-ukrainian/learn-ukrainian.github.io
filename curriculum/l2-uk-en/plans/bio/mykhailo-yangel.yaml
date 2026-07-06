@@ -79,6 +79,15 @@ persona:
   role: Модератор семінару, що ставить під сумнів офіційну історію ракетобудування та розкриває її людський вимір.
   voice: Critical-Historian
 phase: BIO
+readings:
+- clearance: public
+  language: uk
+  rationale: Життєпис видатного конструктора ракетно-космічної техніки
+  role: Primary biography
+  source_name: Енциклопедія Сучасної України
+  source_url: https://esu.com.ua/article-77810
+  title: Янгель Михайло Кузьмич
+  type: biography
 references:
 - title: КБ «Південне» — Історія
   name: КБ «Південне» — Історія
@@ -99,7 +108,7 @@ sequence: 147
 slug: mykhailo-yangel
 subtitle: 'Mykhailo Yangel: Creator of the Missile Shield and Space Power'
 title: 'Михайло Янгель: Творець ракетного щита та космічної міці'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: галузь важкого машинобудування, що розробляє та виробляє ракети, ракетні комплекси та космічну техніку.
   pos: с.

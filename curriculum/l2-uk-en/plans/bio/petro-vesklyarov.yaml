@@ -80,6 +80,15 @@ persona:
   role: Дослідник, що аналізує телевізійні феномени як дзеркало суспільних настроїв та прихованих культурних кодів
   voice: TV Historian & Cultural Anthropologist
 phase: BIO.12
+readings:
+- clearance: public
+  language: uk
+  rationale: Огляд життя та творчості культового українського актора та телеведучого
+  role: Primary biography
+  source_name: Енциклопедія Сучасної України
+  source_url: https://esu.com.ua/article-33779
+  title: Вескляров Петро Юхимович
+  type: biography
 references:
 - title: Вескляров Петро Юхимович
   note: Основна біографічна довідка
@@ -99,7 +108,7 @@ sequence: 148
 slug: petro-vesklyarov
 subtitle: 'Did Panas: The Nation''s Storyteller'
 title: 'Дід Панас: Казкар нації'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: людина, що веде телевізійні програми
   pos: ч.

@@ -77,6 +77,15 @@ persona:
   role: Модератор семінару, що ставить гострі питання про ціну прогресу, етику вченого та межі втручання в людський організм.
   voice: Bioethics-Committee-Chair
 phase: BIO
+readings:
+- clearance: public
+  language: uk
+  rationale: Базова біографія для вивчення внеску Амосова в кардіохірургію та науку
+  role: Primary biography
+  source_name: Енциклопедія Сучасної України
+  source_url: https://esu.com.ua/article-44017
+  title: Амосов Микола Михайлович
+  type: biography
 references:
 - title: Mykola Amosov
   note: Compiled research notes on Amosov's life, work, and philosophical ideas.
@@ -101,7 +110,7 @@ sequence: 149
 slug: mykola-amosov
 subtitle: 'Mykola Amosov: Surgeon and Philosopher of Health'
 title: 'Микола Амосов: Хірург і філософ здоров''я'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: галузь хірургії, що займається лікуванням захворювань серця та судин оперативними методами
   pos: ж.
