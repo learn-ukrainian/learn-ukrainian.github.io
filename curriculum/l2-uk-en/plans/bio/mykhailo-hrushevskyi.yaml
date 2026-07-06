@@ -82,7 +82,7 @@ persona:
 phase: BIO.4
 references:
 - title: Mykhailo Hrushevskyi
-  note: 'Compiled from Плохій, Гирич, Портнов. Based on original Wikipedia article: https://uk.wikipedia.org/wiki/Михайло_Грушевський'
+  note: Зібрано за матеріалами Плохія, Гирича, Портнова та українських академічних довідкових джерел.
   path: wiki/bio/mykhailo-hrushevskyi.md
   type: wiki
 - title: Історія України-Руси
@@ -103,25 +103,25 @@ references:
 readings:
 - title: Грушевський Михайло Сергійович
   language: uk
-  source: Вікіпедія
-  url: https://uk.wikipedia.org/wiki/%D0%93%D1%80%D1%83%D1%88%D0%B5%D0%B2%D1%81%D1%8C%D0%BA%D0%B8%D0%B9_%D0%9C%D0%B8%D1%85%D0%B0%D0%B9%D0%BB%D0%BE_%D0%A1%D0%B5%D1%80%D0%B3%D1%96%D0%B9%D0%BE%D0%B2%D0%B8%D1%87
+  source: Енциклопедія Сучасної України
+  url: https://esu.com.ua/article-32114
   type: encyclopedia
   role: primary-bio
   hosting: link-only
   task: Ознайомитися з політичною та науковою діяльністю Михайла Грушевського.
-- title: Хто такі українці і чого вони хочуть (фрагмент)
+- title: Грушевський Михайло Сергійович (1866–1934)
   language: uk
-  source: Необхідно знайти
-  url: ''
-  type: primary-source
-  role: political-analysis
-  hosting: reading-needed
-  task: Проаналізувати аргументацію Грушевського в його політичному маніфесті 1917 року. (Потрібно знайти верифіковане українське джерело з оригінальним текстом статті).
+  source: е-Архів Михайла Грушевського
+  url: https://hrushevsky.history.org.ua/item/0005781
+  type: archive-reference
+  role: context
+  hosting: link-only
+  task: Зіставити архівну довідку з енциклопедичною біографією і визначити, як поєднуються ролі історика, публіциста та політичного діяча.
 sequence: 87
 slug: mykhailo-hrushevskyi
 subtitle: The Historian Who Wrote a Nation into Existence
 title: 'Михайло Грушевський: Історик і президент'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: наука, що вивчає розвиток історичних знань, методи та принципи історичного дослідження
   pos: ж.

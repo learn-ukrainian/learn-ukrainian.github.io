@@ -93,27 +93,27 @@ references:
   type: reference
   url: https://www.istpravda.com.ua/research/2011/03/12/32005/
 readings:
-- title: Трильовський Кирило Йосифович
+- title: Трильовський Кирило Йосипович
   language: uk
-  source: Вікіпедія
-  url: https://uk.wikipedia.org/wiki/%D0%A2%D1%80%D0%B8%D0%BB%D1%8C%D0%BE%D0%B2%D1%81%D1%8C%D0%BA%D0%B8%D0%B9_%D0%9A%D0%B8%D1%80%D0%B8%D0%BB%D0%BE_%D0%99%D0%BE%D1%81%D0%B8%D1%84%D0%BE%D0%B2%D0%B8%D1%87
+  source: Енциклопедія історії України
+  url: https://history.org.ua/?termin=Trylovskyj_K
   type: encyclopedia
   role: primary-bio
   hosting: link-only
   task: Ознайомитися з основними етапами життя та політичної кар'єри Кирила Трильовського.
-- title: Історія українських січових стрільців
+- title: Січ - організація Галичини
   language: uk
-  source: Історична правда
-  url: https://www.istpravda.com.ua/research/2011/03/12/32005/
-  type: article
+  source: Енциклопедія історії України
+  url: https://history.org.ua/?termin=Sich_tov
+  type: encyclopedia
   role: context
   hosting: link-only
-  task: Дослідити роль товариства "Січ" у формуванні легіону УСС.
+  task: Дослідити, як січовий рух у Галичині створював організаційне середовище для майбутнього українського військово-громадського руху.
 sequence: 82
 slug: kyrylo-trylovskyi
 subtitle: Адвокат, що викував націю у спорті та боротьбі
 title: 'Кирило Трильовський: Засновник Січі'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: українське молодіжне спортивно-патріотичне товариство, засноване на початку XX ст. в Галичині
   pos: ж.

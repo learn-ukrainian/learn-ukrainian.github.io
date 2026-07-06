@@ -102,27 +102,28 @@ references:
   type: primary
   work: Пастирське послання "Не вбий"
 readings:
-- title: Андрей (Шептицький)
+- title: Шептицький Андрей
   language: uk
-  source: Вікіпедія
-  url: https://uk.wikipedia.org/wiki/%D0%90%D0%BD%D0%B4%D1%80%D0%B5%D0%B9_%28%D0%A8%D0%B5%D0%BF%D1%82%D0%B8%D1%86%D1%8C%D0%BA%D0%B8%D0%B9%29
+  source: Енциклопедія історії України
+  url: https://history.org.ua/?termin=Sheptytskyj_A
   type: encyclopedia
   role: primary-bio
   hosting: link-only
   task: Дослідити біографію митрополита Андрея Шептицького та його вплив на УГКЦ і українське суспільство.
-- title: Пастирське послання "Не вбий"
+- title: Мудрий праведник у вогні світової війни
   language: uk
-  source: Необхідно знайти
-  url: ''
-  type: primary-source
-  role: historical-analysis
-  hosting: reading-needed
-  task: Прочитати пастирське послання для розуміння моральної позиції Шептицького під час Другої світової війни. (Потрібне посилання на верифікований текст послання).
+  source: УГКЦ
+  url: https://archives.ugcc.ua/articles/mudriy_pravednik_u_vogn%D1%96_sv%D1%96tovoi_v%D1%96yni_74409.html
+  type: article
+  role: source-context
+  hosting: link-only
+  task: Простежити, як у церковному коментарі подано послання «Не вбий» і моральну позицію Шептицького щодо політичного насильства.
+  caveats: Це не повний текст пастирського послання, а український церковний коментар із цитатами й контекстом; не підміняти ним первинний документ.
 sequence: 84
 slug: andrey-sheptytsky
 subtitle: A Moral Compass in the Age of Extremes
 title: 'Митрополит Андрей Шептицький: Пастир і рятівник'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: найвищий ієрарх у деяких християнських церквах, голова митрополії
   pos: ч.
