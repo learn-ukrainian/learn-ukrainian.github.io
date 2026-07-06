@@ -66,3 +66,10 @@ def test_apply_symbol_noise_gate_warns_when_drop_ratio_is_loud() -> None:
     assert len(warnings) == 1
     assert "WARNING: SYMBOL-NOISE gate dropped 1/2 chunks (50.0%)" in warnings[0]
     assert "book-with-layout-noise" in warnings[0]
+
+
+def test_ukrainian_apostrophe_forms_are_not_noise():
+    """мʼяч (U+02BC) and об'єкт (U+2019) are ordinary prose, not symbols."""
+
+    prose = "Мʼяч підстрибнув, і об'єкт зупинився — учні записали висновок…"
+    assert symbol_noise_density(prose) == 0.0

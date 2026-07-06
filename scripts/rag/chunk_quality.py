@@ -13,7 +13,11 @@ _UKRAINIAN_CYRILLIC_LETTERS = set(
     "АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯ"
     "абвгґдеєжзиіїйклмнопрстуфхцчшщьюя"
 )
-_COMMON_PUNCTUATION = set(".,;:!?()-—«»\"'")
+# Includes the apostrophe forms Ukrainian PDFs actually use (мʼяч, об'єкт):
+# U+02BC modifier letter apostrophe and U+2019 right single quote — plus
+# en-dash and ellipsis. Without these, ordinary prose characters count as
+# symbol noise and erode the threshold headroom on math-adjacent pages.
+_COMMON_PUNCTUATION = set(".,;:!?()-—«»\"'ʼ’–…")
 
 
 @dataclass(frozen=True)
