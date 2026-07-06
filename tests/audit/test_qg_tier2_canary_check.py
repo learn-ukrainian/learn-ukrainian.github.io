@@ -206,6 +206,28 @@ def test_class_m_confirmed_allowlisted_vs_unallowlisted(tmp_path: Path) -> None:
     )
 
 
+def test_stray_non_canary_artifact_fails_closed(tmp_path: Path) -> None:
+    """Research fixtures must never leak into the E3 canary set (codex review, #4574).
+
+    #4539 adds history-domain fixtures to tests/fixtures/qg_bakeoff/. A stray
+    artifact for a non-canary slug in the certification dir would silently
+    corrupt the class-M/U denominators if merely ignored — the checker must
+    REFUSE the dir with an explicit reason (fail-closed), forcing a clean
+    canary out-dir.
+    """
+    artifacts = _passing_artifacts()
+    stray = copy.deepcopy(artifacts[0])
+    stray["fixture"]["slug"] = "khmelnytskyi-1648"
+
+    verdict = _verdict_for(tmp_path, [*artifacts, stray])
+
+    assert verdict["passed"] is False
+    assert any(
+        "unexpected fixture artifacts: khmelnytskyi-1648" in reason
+        for reason in verdict["failure_reasons"]
+    )
+
+
 def test_missing_fixture_artifact_fails(tmp_path: Path) -> None:
     artifacts = _passing_artifacts()[:-1]
 
