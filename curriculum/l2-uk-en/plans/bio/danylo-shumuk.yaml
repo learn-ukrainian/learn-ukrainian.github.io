@@ -165,11 +165,17 @@ references:
   title: Пережите й передумане
   type: primary
   work: Пережите й передумане
+readings:
+- hosting: link-only
+  language: uk
+  role: Основна біографічна стаття про Данила Шумука.
+  source: Енциклопедія Сучасної України
+  url: https://esu.com.ua/article-887860
 sequence: 280
 slug: danylo-shumuk
 subtitle: The Political Prisoner of Three Regimes and His Memoir
 title: 'Данило Шумук: В''язень трьох режимів і мемуар «Пережите й передумане»'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: автор спогадів про пережите; той, хто пише мемуари
   pos: ч.

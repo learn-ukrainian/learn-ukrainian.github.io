@@ -122,11 +122,17 @@ references:
   title: Між смертю і життям
   type: primary
   work: Між смертю і життям
+readings:
+- hosting: link-only
+  language: uk
+  role: Основна біографічна стаття про Оксану Мешко.
+  source: Вікіпедія
+  url: https://uk.wikipedia.org/wiki/Мешко_Оксана_Яківна
 sequence: 278
 slug: oksana-meshko
 subtitle: The Cossack Mother of the Ukrainian Helsinki Group
 title: 'Оксана Мешко: Козацька матір Української Гельсінської групи'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: особа, що професійно або на громадських засадах захищає права людини.
   pos: ч.
