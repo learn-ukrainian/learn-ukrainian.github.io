@@ -112,6 +112,22 @@ persona:
     радянських ярликів і не вигадує арешт.
   voice: Rural Novella Historian
 phase: BIO
+readings:
+- hosting: resource.history.org.ua
+  language: uk
+  note: Енциклопедична стаття про життя і творчість Тютюнника.
+  role: context
+  source: https://history.org.ua/?termin=Tiutiunnyk_H_M
+- hosting: uhb.chl.kiev.ua
+  language: uk
+  note: Довідка для дитячої літератури та бібліографія.
+  role: context
+  source: https://uhb.chl.kiev.ua/autors/338-hryhir-hryhorii-mykhailovych-tiutiunnyk
+- hosting: reading-needed
+  language: uk
+  note: 'reading-needed: verify stable ukrainian hosting for "Три зозулі з поклоном".'
+  role: reading-needed
+  source: 'reading-needed: hryhir-tiutiunnyk-primary'
 references:
 - note: Базова англомовна енциклопедична стаття про життя і творчість.
   path: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CT%5CI%5CTiutiunnykHryhir.htm
@@ -132,7 +148,7 @@ sequence: 258
 slug: hryhir-tiutiunnyk
 subtitle: Rural Novellas, Censorship Pressure, and No Fabricated Arrest
 title: 'Григір Тютюнник: новела почуття під тиском цензури'
-version: '1.0'
+version: '1.1'
 vocabulary_hints:
 - definition: короткий прозовий твір з щільною психологічною драмою
   pos: ж.

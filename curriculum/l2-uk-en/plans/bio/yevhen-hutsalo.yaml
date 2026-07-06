@@ -111,6 +111,17 @@ persona:
     радянських ярликів і шкільних спрощень.
   voice: Rural Prose Historian
 phase: BIO
+readings:
+- hosting: esu.com.ua
+  language: uk
+  note: Базова енциклопедична стаття про Гуцала (ЕСУ).
+  role: context
+  source: https://esu.com.ua/article-25016
+- hosting: reading-needed
+  language: uk
+  note: 'reading-needed: verify stable ukrainian hosting for excerpt of "Лось" or "Ментальність орди".'
+  role: reading-needed
+  source: 'reading-needed: yevhen-hutsalo-primary'
 references:
 - note: Дати, бібліографія, нагороди, освіта.
   path: https://esu.com.ua/article-25016
@@ -130,7 +141,7 @@ sequence: 255
 slug: yevhen-hutsalo
 subtitle: Lyrical Prose and Soviet Framing Without Imprisonment
 title: 'Євген Гуцало: сільська пам''ять і тихий тиск системи'
-version: '1.0'
+version: '1.1'
 vocabulary_hints:
 - definition: територія або установа, де охороняють природу й тваринний світ
   pos: ч.

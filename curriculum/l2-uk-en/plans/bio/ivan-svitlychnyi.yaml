@@ -116,6 +116,22 @@ persona:
     документи судового переслідування.
   voice: Samvydav Network Historian
 phase: BIO
+readings:
+- hosting: museum-old.khpg.org
+  language: uk
+  note: Профіль у віртуальному музеї дисидентського руху; деталі суду й таборів.
+  role: context
+  source: https://museum-old.khpg.org/1113995279
+- hosting: nbuv.gov.ua
+  language: uk
+  note: Ювілейна довідка Національної бібліотеки України.
+  role: context
+  source: https://www.nbuv.gov.ua/node/4288
+- hosting: reading-needed
+  language: uk
+  note: 'reading-needed: verify stable ukrainian hosting for primary text "Серце для куль і для рим".'
+  role: reading-needed
+  source: 'reading-needed: ivan-svitlychnyi-primary'
 references:
 - note: Базова англомовна енциклопедична стаття про життя і діяльність.
   path: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CS%5CV%5CSvitlychnyIvan.htm
@@ -137,7 +153,7 @@ sequence: 257
 slug: ivan-svitlychnyi
 subtitle: Literary Critic, Samvydav Hub, and the Dobosh Case
 title: 'Іван Світличний: самвидав, табори й ціна слова'
-version: '1.0'
+version: '1.1'
 vocabulary_hints:
 - definition: самостійне або підпільне видання заборонених текстів
   pos: ч.
