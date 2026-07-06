@@ -126,6 +126,31 @@ persona:
     уникаючи як радянського стирання, так і спрощеної глорифікації.
   voice: Intellectual Historian
 phase: BIO
+readings:
+- hosting: link-only
+  language: uk
+  learner_task: >-
+    Ознайомтеся зі статтею про життя та творчий шлях Миколи Вороного. Зверніть увагу на його театральну та громадську діяльність.
+  license: copyrighted
+  notes: >-
+    Енциклопедична стаття про ключові етапи життя видатного письменника і перекладача.
+  rights_note: Текст захищено авторським правом. Надається лише посилання на зовнішній ресурс.
+  role: primary
+  source_name: Енциклопедія сучасної України (ЕСУ)
+  source_type: article
+  source_url: https://esu.com.ua/article-29783
+- hosting: link-only
+  language: uk
+  learner_task: >-
+    Прочитайте меморіальну довідку УІНП. Випишіть, як у ній подано арешт, заслання, повторний арешт і вирок особливої трійки.
+  license: copyrighted
+  notes: >-
+    Меморіальний матеріал УІНП дає стислий україномовний контекст про репресії та повертає увагу до механізму державного терору.
+  rights_note: Текст захищено авторським правом. Надається лише посилання на зовнішній ресурс.
+  role: context
+  source_name: Український інститут національної пам'яті
+  source_type: memorial_note
+  source_url: https://www.uinp.gov.ua/istorychnyy-kalendar/gruden/6/narodyvsya-mykola-voronyy
 references:
 - note: Енциклопедична стаття про життя, творчість та репресії.
   path: https://esu.com.ua/article-29783
@@ -153,7 +178,7 @@ sequence: 206
 slug: mykola-voronyi
 subtitle: The Symbolist Poet Who Built a Bridge to Europe
 title: 'Микола Вороний: Символізм, театр і особлива трійка'
-version: '4.1'
+version: '4.3'
 vocabulary_hints:
 - definition: напрям у літературі кінця XIX — початку XX століття, що використовує символи, музичність і алегорії
   pos: ч.

@@ -94,6 +94,31 @@ persona:
     Модератор семінару, який досліджує український авангард та конструктивізм, уникаючи мокри та спрощеної глорифікації.
   voice: Intellectual Historian
 phase: BIO
+readings:
+- hosting: link-only
+  language: uk
+  learner_task: >-
+    Ознайомтеся зі статтею про Валер'яна Поліщука. Зверніть увагу на його роль як лідера та ідеолога літературної групи «Авангард».
+  license: copyrighted
+  notes: >-
+    Енциклопедична стаття про поета-конструктивіста та його модерністський доробок.
+  rights_note: Текст захищено авторським правом. Надається лише посилання на зовнішній ресурс.
+  role: primary
+  source_name: Енциклопедія сучасної України (ЕСУ)
+  source_type: article
+  source_url: https://esu.com.ua/article-881253
+- hosting: link-only
+  language: uk
+  learner_task: >-
+    Прочитайте статтю «Читомо» про Валер'яна Поліщука. Випишіть один приклад, який ускладнює простий мартирологічний портрет автора.
+  license: copyrighted
+  notes: >-
+    Журнальний україномовний матеріал підтримує антиагіографічне читання та не підміняє біографію лише датою розстрілу.
+  rights_note: Текст захищено авторським правом. Надається лише посилання на зовнішній ресурс.
+  role: reading
+  source_name: Читомо
+  source_type: article
+  source_url: https://archive.chytomo.com/uncategorized/pershij-ukraiinskij-poet-shho-postrazhdav-za-pornografiyu
 references:
 - note: Енциклопедична стаття.
   path: https://esu.com.ua/article-881253
@@ -103,9 +128,9 @@ references:
   path: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CP%5CO%5CPolishchukValeriian.htm
   title: Polishchuk, Valeriian (IEU)
   type: reference
-- note: Архівно-музейна довідка про репресованих письменників.
-  path: https://old-csam.archives.gov.ua/ukr/vchiteli/
-  title: Репресовані письменники (ЦДАМЛМ)
+- note: Журнальна стаття про складну рецепцію Валер'яна Поліщука.
+  path: https://archive.chytomo.com/uncategorized/pershij-ukraiinskij-poet-shho-postrazhdav-za-pornografiyu
+  title: Перший український поет, що постраждав за «порнографію» (Читомо)
   type: reference
 - note: Перехресна перевірка дати розстрілу.
   path: https://uinp.gov.ua/pres-centr/novyny/sogodni-po-vsomu-sviti-chytayut-imena-zhertv-sandarmohu-spysok-rozstrilyanyh-ukrayinciv
@@ -125,7 +150,7 @@ sequence: 209
 slug: valerian-polishchuk
 subtitle: The Constructivist Poet Erased Twice
 title: 'Валер''ян Поліщук: авангард, конструктивізм і Сандармох'
-version: '4.1'
+version: '4.3'
 vocabulary_hints:
 - definition: напрям у модерністській літературі 1920-х, що експериментує з мовою та формою
   pos: ч.

@@ -122,6 +122,31 @@ persona:
     мартиролог, і водночас точно називає механізми радянського терору.
   voice: Intellectual Historian
 phase: BIO
+readings:
+- hosting: link-only
+  language: uk
+  learner_task: >-
+    Ознайомтеся з біографічною статтею про Олексу Влизька. Проаналізуйте, як морська та подорожня тематика відобразилася у його поезії.
+  license: copyrighted
+  notes: >-
+    Енциклопедична стаття про наймолодшого представника «Розстріляного відродження».
+  rights_note: Текст захищено авторським правом. Надається лише посилання на зовнішній ресурс.
+  role: primary
+  source_name: Енциклопедія сучасної України (ЕСУ)
+  source_type: article
+  source_url: https://esu.com.ua/article-35164
+- hosting: link-only
+  language: uk
+  learner_task: >-
+    Ознайомтеся з виставковою сторінкою НІБУ про Олексу Влизька. Оберіть один твір або біографічний факт, який допомагає читати його як автора, а не лише як жертву.
+  license: copyrighted
+  notes: >-
+    Бібліотечна виставка дає україномовний контекст корпусу та пам'яті без опори на енциклопедичний переказ.
+  rights_note: Текст захищено авторським правом. Надається лише посилання на зовнішній ресурс.
+  role: context
+  source_name: Національна історична бібліотека України
+  source_type: exhibition
+  source_url: https://nibu.kyiv.ua/exhibitions/627/
 references:
 - note: Основна українська енциклопедична стаття; містить альтернативне датування смерті.
   path: https://esu.com.ua/article-35164
@@ -131,9 +156,9 @@ references:
   path: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CV%5CL%5CVlyzkoOleksa.htm
   title: Vlyzko, Oleksa (IEU)
   type: reference
-- note: Архівно-музейний матеріал про хвилю репресій після вбивства Кірова та справу Влизька.
-  path: https://old-csam.archives.gov.ua/ukr/holovna/
-  title: ЦДАМЛМ України — матеріал про репресійну хвилю 1934 року
+- note: Бібліотечна виставкова сторінка про Олексу Влизька та його книжки.
+  path: https://nibu.kyiv.ua/exhibitions/627/
+  title: Олекса Влизько (НІБУ)
   type: reference
 - author: Олекса Влизько
   note: Морська збірка 1930 року; використовується для аналізу індустріально-морської образності.
@@ -149,7 +174,7 @@ sequence: 210
 slug: oleksa-vlyzko
 subtitle: The Young Maritime Modernist Destroyed in the 1934 Terror Wave
 title: "Олекса Влизько: Морська модерність і прискорений терор"
-version: '4.1'
+version: '4.3'
 vocabulary_hints:
 - definition: втрата слуху; у біографії Влизька — факт дитячої хвороби, який не слід подавати як сентиментальну легенду
   pos: ж.

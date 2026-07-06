@@ -120,6 +120,31 @@ persona:
     перетворення культурної мережі на кримінальну справу.
   voice: Intellectual Historian
 phase: BIO
+readings:
+- hosting: link-only
+  language: uk
+  learner_task: >-
+    Прочитайте статтю про Михайла Ялового (Юліана Шпола). Зверніть увагу на його роль як першого президента ВАПЛІТЕ та механізм сфабрикованої справи проти нього.
+  license: copyrighted
+  notes: >-
+    Біографічна довідка про організатора літературного життя 1920-х років та жертву сталінського терору.
+  rights_note: Текст захищено авторським правом. Надається лише посилання на зовнішній ресурс.
+  role: primary
+  source_name: Національна бібліотека України імені В. І. Вернадського (НБУВ)
+  source_type: article
+  source_url: https://www.nbuv.gov.ua/node/4119
+- hosting: link-only
+  language: uk
+  learner_task: >-
+    Знайдіть ім'я Михайла Ялового у списку УІНП про розстріляних у Сандармоху. Зафіксуйте дату страти й поясніть, чому це джерело важливе для перевірки біографії.
+  license: copyrighted
+  notes: >-
+    Український меморіальний список допомагає перевірити сандармоський етап репресій без опори на вторинний огляд.
+  rights_note: Текст захищено авторським правом. Надається лише посилання на зовнішній ресурс.
+  role: evidence
+  source_name: Український інститут національної пам'яті
+  source_type: memorial_list
+  source_url: https://uinp.gov.ua/pres-centr/novyny/sogodni-po-vsomu-sviti-chytayut-imena-zhertv-sandarmohu-spysok-rozstrilyanyh-ukrayinciv
 references:
 - note: Англомовна енциклопедична стаття про ВАПЛІТЕ, арешт і розстріл.
   path: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CY%5CA%5CYalovyMykhailo.htm
@@ -150,7 +175,7 @@ sequence: 207
 slug: mykhailo-yalovyi
 subtitle: The VAPLITE President Whose Arrest Signaled the End
 title: 'Михайло Яловий: ВАПЛІТЕ, сатира та справа УВО'
-version: '4.1'
+version: '4.3'
 vocabulary_hints:
 - definition: Вільна Академія Пролетарської Літератури — провідна літературна організація 1920-х років
   pos: ж.
