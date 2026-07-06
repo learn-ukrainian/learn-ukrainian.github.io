@@ -42,6 +42,11 @@ ANCHOR_SLUG = "vesnianky"
 MISSING_CLAIM_PENALTY = -10
 BAKEOFF_LEVEL = "folk"
 BAKEOFF_POLICY_FAMILY = "seminar"
+LM_EVAL_RESULTS_PREFIX = "results_"
+LM_EVAL_TASK_MODEL_JUDGMENT = "qg_factuality_model_judgment"
+LM_EVAL_TASK_U_HONESTY = "qg_factuality_u_honesty"
+LM_EVAL_TASK_M_ALIGNMENT = "qg_factuality_m_alignment"
+LM_EVAL_TASK_HARNESS_LIFT = "qg_factuality_harness_lift"
 # Arms of the bakeoff. TOOLED = the shipped grounded+gated reviewer path;
 # BARE = the tool-free control (model judges from its own knowledge, no gates)
 # so tooled − bare per model quantifies the harness lift (#2156 step 3).
@@ -1666,7 +1671,6 @@ def pin_slug(pin: str) -> str:
     return slug or "model"
 
 
-
 def rescore_artifacts(output_dir: Path, fixtures_dir: Path = FIXTURE_DIR) -> int:
     """Recompute scores for existing artifacts from their STORED payloads.
 
@@ -1707,6 +1711,310 @@ def rescore_artifacts(output_dir: Path, fixtures_dir: Path = FIXTURE_DIR) -> int
     return count
 
 
+def emit_lm_eval_results_from_dir(output_dir: Path, emit_dir: Path) -> list[Path]:
+    """Emit lang-uk/lm_eval-shaped result files from artifacts already on disk."""
+    return emit_lm_eval_results(_load_all_artifacts(output_dir), emit_dir)
+
+
+def emit_lm_eval_results(artifacts: Sequence[Mapping[str, Any]], emit_dir: Path) -> list[Path]:
+    """Write one ``results_<created_at>.json`` file per measured model identity."""
+    emit_dir.mkdir(parents=True, exist_ok=True)
+    grouped: dict[tuple[str, str, str], list[Mapping[str, Any]]] = defaultdict(list)
+    for artifact in artifacts:
+        if _is_ops_quota_artifact(artifact):
+            continue
+        grouped[_model_key(artifact)].append(artifact)
+
+    pin_counts: dict[str, int] = defaultdict(int)
+    for pin, _transport, _entrypoint in grouped:
+        pin_counts[pin] += 1
+
+    written: list[Path] = []
+    for model_key, model_artifacts in sorted(grouped.items()):
+        payload = _lm_eval_payload_for_model(model_key, model_artifacts)
+        stamp = _lm_eval_filename_stamp(model_artifacts)
+        model_dir = emit_dir / _lm_eval_model_dir_name(
+            model_key,
+            duplicate_pin=pin_counts[model_key[0]] > 1,
+        )
+        model_dir.mkdir(parents=True, exist_ok=True)
+        path = model_dir / f"{LM_EVAL_RESULTS_PREFIX}{stamp}.json"
+        path.write_text(json.dumps(payload, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+        written.append(path)
+    return written
+
+
+def _lm_eval_payload_for_model(
+    model_key: tuple[str, str, str],
+    artifacts: Sequence[Mapping[str, Any]],
+) -> dict[str, Any]:
+    pin, transport, entrypoint = model_key
+    totals = _aggregate_by_model_arm(artifacts)
+    available_arms = sorted({arm for key, arm in totals if key == model_key})
+    primary_arm = (
+        TOOLED_ARM
+        if (model_key, TOOLED_ARM) in totals
+        else (available_arms[0] if available_arms else TOOLED_ARM)
+    )
+    row = totals.get((model_key, primary_arm), _empty_total_row())
+    primary_artifacts = [
+        artifact
+        for artifact in artifacts
+        if _model_key(artifact) == model_key and _artifact_arm(artifact) == primary_arm
+    ]
+    partial_reasons = _partial_reasons(primary_artifacts)
+    task_meta = _lm_eval_task_meta(
+        model_key,
+        primary_arm,
+        row,
+        available_arms=available_arms,
+        partial_reasons=partial_reasons,
+    )
+    results: dict[str, dict[str, Any]] = {
+        LM_EVAL_TASK_MODEL_JUDGMENT: {
+            "score": _row_numeric_metric(row, "model_judgment_score"),
+            "qg_meta": task_meta | {"metric": "model_judgment_score"},
+        },
+        LM_EVAL_TASK_U_HONESTY: {
+            "score": _row_fraction_metric(row, "class_u"),
+            "qg_meta": task_meta
+            | {
+                "metric": "class_u_honesty",
+                "fraction": _row_fraction_meta(row, "class_u"),
+            },
+        },
+        LM_EVAL_TASK_M_ALIGNMENT: {
+            "score": _row_fraction_metric(row, "class_m"),
+            "qg_meta": task_meta
+            | {
+                "metric": "class_m_alignment",
+                "fraction": _row_fraction_meta(row, "class_m"),
+            },
+        },
+    }
+    lift = _lm_eval_harness_lift_for_model(model_key, artifacts)
+    if lift is not None:
+        results[LM_EVAL_TASK_HARNESS_LIFT] = {
+            "score": lift["score"],
+            "qg_meta": {
+                "metric": "harness_lift",
+                "arm": BOTH_ARM,
+                "available_arms": available_arms,
+                "primary_arm": TOOLED_ARM,
+                "comparison_arm": BARE_ARM,
+                "runs": lift["runs"],
+                "run_indices": lift["run_indices"],
+                "paired_passages": lift["paired_passages"],
+                "low_n": lift["paired_passages"] < 10,
+                "partial": bool(lift["partial_reasons"]),
+                "partial_reasons": lift["partial_reasons"],
+                "transport": transport,
+                "entrypoint": entrypoint,
+                "model_pin": pin,
+                "anchor_included": True,
+            },
+        }
+    return {
+        "config_general": {"model_name": pin},
+        "results": results,
+        "qg_meta": {
+            "schema_version": RUN_SCHEMA_VERSION,
+            "source": "qg_bakeoff",
+            "model_pin": pin,
+            "transport": transport,
+            "entrypoint": entrypoint,
+            "available_arms": available_arms,
+            "created_at": _lm_eval_filename_stamp(artifacts),
+            "partial": bool(_partial_reasons(artifacts)),
+        },
+    }
+
+
+def _lm_eval_model_dir_name(model_key: tuple[str, str, str], *, duplicate_pin: bool = False) -> str:
+    pin, transport, entrypoint = model_key
+    if duplicate_pin:
+        return f"{pin_slug(pin)}__{pin_slug(transport)}__{pin_slug(entrypoint)}"
+    return pin_slug(pin)
+
+
+def _lm_eval_filename_stamp(artifacts: Sequence[Mapping[str, Any]]) -> str:
+    stamps = [
+        str(artifact.get("created_at")).strip()
+        for artifact in artifacts
+        if isinstance(artifact.get("created_at"), str) and str(artifact.get("created_at")).strip()
+    ]
+    return max(stamps) if stamps else "unknown"
+
+
+def _lm_eval_task_meta(
+    model_key: tuple[str, str, str],
+    arm: str,
+    row: Mapping[str, Any],
+    *,
+    available_arms: Sequence[str],
+    partial_reasons: Sequence[str],
+) -> dict[str, Any]:
+    pin, transport, entrypoint = model_key
+    runs = int(row.get("runs") or 1)
+    run_indices = list(row.get("run_indices") or range(1, runs + 1))
+    passages = row.get("passages_per_run") if row.get("multi_run") else [int(row.get("passages") or 0)]
+    return {
+        "arm": arm,
+        "available_arms": list(available_arms),
+        "runs": runs,
+        "run_indices": run_indices,
+        "passages_per_run": passages,
+        "low_n": _row_any_low_n(row),
+        "partial": bool(partial_reasons),
+        "partial_reasons": list(partial_reasons),
+        "transport": transport,
+        "entrypoint": entrypoint,
+        "model_pin": pin,
+        "anchor_included": True,
+    }
+
+
+def _row_numeric_metric(row: Mapping[str, Any], key: str) -> float:
+    value = row.get(key)
+    if isinstance(value, Mapping):
+        return float(value.get("mean") or 0.0)
+    return float(value or 0.0)
+
+
+def _row_fraction_metric(row: Mapping[str, Any], prefix: str) -> float:
+    if row.get("multi_run"):
+        value = row.get(f"{prefix}_honesty" if prefix == "class_u" else f"{prefix}_alignment")
+        return float(value.get("mean") or 0.0) if isinstance(value, Mapping) else 0.0
+    denominator = int(row.get(f"{prefix}_total") or 0)
+    if denominator <= 0:
+        return 0.0
+    return int(row.get(f"{prefix}_good") or 0) / denominator
+
+
+def _row_fraction_meta(row: Mapping[str, Any], prefix: str) -> dict[str, Any]:
+    if row.get("multi_run"):
+        value = row.get(f"{prefix}_honesty" if prefix == "class_u" else f"{prefix}_alignment")
+        if isinstance(value, Mapping):
+            return {
+                "denominators": list(value.get("denominators") or []),
+                "low_n": bool(value.get("low_n")),
+            }
+        return {"denominators": [], "low_n": True}
+    numerator = int(row.get(f"{prefix}_good") or 0)
+    denominator = int(row.get(f"{prefix}_total") or 0)
+    return {
+        "numerator": numerator,
+        "denominator": denominator,
+        "text": f"{numerator}/{denominator}",
+        "low_n": denominator < 10,
+    }
+
+
+def _row_any_low_n(row: Mapping[str, Any]) -> bool:
+    if row.get("multi_run"):
+        return any(
+            bool(value.get("low_n"))
+            for key in ("class_u_honesty", "class_m_alignment", "false_unsupported_on_true")
+            if isinstance((value := row.get(key)), Mapping)
+        )
+    return any(int(row.get(key) or 0) < 10 for key in ("class_u_total", "class_m_total", "true_total"))
+
+
+def _partial_reasons(artifacts: Sequence[Mapping[str, Any]]) -> list[str]:
+    reasons: set[str] = set()
+    for artifact in artifacts:
+        if "created_at" not in artifact:
+            reasons.add("missing_created_at")
+        if "arm" not in artifact:
+            reasons.add("missing_arm")
+        if "run_index" not in artifact:
+            reasons.add("missing_run_index")
+        if not isinstance(artifact.get("fixture"), Mapping):
+            reasons.add("missing_fixture")
+        model = artifact.get("model")
+        if not isinstance(model, Mapping):
+            reasons.add("missing_model")
+        else:
+            if not isinstance(model.get("pin"), str):
+                reasons.add("missing_model_pin")
+            if not isinstance(model.get("transport"), str):
+                reasons.add("missing_transport")
+            if not isinstance(model.get("entrypoint"), str):
+                reasons.add("missing_entrypoint")
+        score = artifact.get("score")
+        if not isinstance(score, Mapping):
+            reasons.add("missing_score")
+            continue
+        for key in ("model_judgment_score", "fractions"):
+            if key not in score:
+                reasons.add(f"missing_score_{key}")
+        fractions = score.get("fractions")
+        if not isinstance(fractions, Mapping):
+            reasons.add("missing_score_fractions")
+            continue
+        for key in ("class_u_honesty", "class_m_alignment"):
+            if key not in fractions:
+                reasons.add(f"missing_fraction_{key}")
+    return sorted(reasons)
+
+
+def _lm_eval_harness_lift_for_model(
+    model_key: tuple[str, str, str],
+    artifacts: Sequence[Mapping[str, Any]],
+) -> dict[str, Any] | None:
+    cells: dict[str, dict[str, dict[int, Mapping[str, Any]]]] = defaultdict(lambda: defaultdict(dict))
+    for artifact in artifacts:
+        if _is_ops_quota_artifact(artifact) or _model_key(artifact) != model_key:
+            continue
+        cells[_fixture_slug(artifact)][_artifact_arm(artifact)][_artifact_run_index(artifact)] = artifact
+    paired = sorted(slug for slug, arms in cells.items() if TOOLED_ARM in arms and BARE_ARM in arms)
+    if not paired:
+        return None
+    paired_artifacts = [
+        artifact
+        for slug in paired
+        for arm in (TOOLED_ARM, BARE_ARM)
+        for artifact in cells[slug][arm].values()
+    ]
+    partial_reasons = _partial_reasons(paired_artifacts)
+    scheduled_runs = _max_run_index(
+        [artifact for arms in cells.values() for runs in arms.values() for artifact in runs.values()]
+    )
+    if scheduled_runs > 1:
+        lifts = [
+            _arm_mean_for_fixture(cells[slug][TOOLED_ARM], "model_judgment_score")
+            - _arm_mean_for_fixture(cells[slug][BARE_ARM], "model_judgment_score")
+            for slug in paired
+        ]
+        run_indices = sorted(
+            {run for slug in paired for arm in (TOOLED_ARM, BARE_ARM) for run in cells[slug][arm]}
+        )
+        return {
+            "score": _mean(lifts),
+            "runs": max((len(cells[slug][arm]) for slug in paired for arm in (TOOLED_ARM, BARE_ARM)), default=1),
+            "run_indices": run_indices,
+            "paired_passages": len(paired),
+            "partial_reasons": partial_reasons,
+        }
+    tooled = sum(
+        int(_score(cells[slug][TOOLED_ARM][1]).get("model_judgment_score") or 0)
+        for slug in paired
+        if 1 in cells[slug][TOOLED_ARM]
+    )
+    bare = sum(
+        int(_score(cells[slug][BARE_ARM][1]).get("model_judgment_score") or 0)
+        for slug in paired
+        if 1 in cells[slug][BARE_ARM]
+    )
+    return {
+        "score": float(tooled - bare),
+        "runs": 1,
+        "run_indices": [1],
+        "paired_passages": len(paired),
+        "partial_reasons": partial_reasons,
+    }
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--fixtures-dir", type=Path, default=FIXTURE_DIR)
@@ -1745,14 +2053,24 @@ def main(argv: Sequence[str] | None = None) -> int:
         action="store_true",
         help="Recompute scores for EXISTING artifacts from stored payloads (no model calls)",
     )
+    parser.add_argument(
+        "--emit-lm-eval",
+        type=Path,
+        default=None,
+        metavar="DIR",
+        help="Write lang-uk/lm_eval-shaped results_<created_at>.json files from artifacts on disk",
+    )
     args = parser.parse_args(argv)
 
     try:
         if args.rescore:
             output_dir = args.out_dir or default_output_dir()
             n = rescore_artifacts(output_dir, args.fixtures_dir)
+            emitted = emit_lm_eval_results_from_dir(output_dir, args.emit_lm_eval) if args.emit_lm_eval else []
             print(f"rescored {n} artifacts under {output_dir}")
             print(f"scorecard: {output_dir / SCORECARD_NAME}")
+            if args.emit_lm_eval:
+                print(f"lm-eval results: {len(emitted)} files under {args.emit_lm_eval}")
             return 0
         runs_requested = _validate_run_index(args.runs)
         require_offline_opt_in()
@@ -1768,11 +2086,14 @@ def main(argv: Sequence[str] | None = None) -> int:
             retry_failures=args.retry_failures,
             runs=runs_requested,
         )
+        emitted = emit_lm_eval_results_from_dir(output_dir, args.emit_lm_eval) if args.emit_lm_eval else []
     except BakeoffConfigError as exc:
         print(str(exc), file=sys.stderr)
         return 2
     print(f"wrote {len(runs)} bakeoff artifacts under {output_dir}")
     print(f"scorecard: {output_dir / SCORECARD_NAME}")
+    if args.emit_lm_eval:
+        print(f"lm-eval results: {len(emitted)} files under {args.emit_lm_eval}")
     return 0
 
 
