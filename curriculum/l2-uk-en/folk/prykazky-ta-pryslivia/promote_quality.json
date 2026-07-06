@@ -1,9 +1,9 @@
 {
-  "assembled_mdx_sha256": null,
+  "assembled_mdx_sha256": "b143190cd842dee56c8665c42336d92572be5381a4be11aa4c5833529f6da897",
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "e151c804772a422cabbd13845adf2fa96d92685dfabbfed46f2ec2c8ee903d39",
+    "digest": "0d160b6d9eb569ab1fb9d11ff2193d4a3a4f7199ae92dddd80c0d8e181251e1d",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/prykazky-ta-pryslivia.yaml",
@@ -11,7 +11,7 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/prykazky-ta-pryslivia/module.md",
-        "sha256": "9bdf846c72304af953f38a5e488f99e335af7a70713a181614bd6c6d274e609f"
+        "sha256": "e29ce5c91bd916d92b431c7affd633780fed81ad3ece65192681be00af176f04"
       },
       {
         "path": "curriculum/l2-uk-en/folk/prykazky-ta-pryslivia/activities.yaml",
@@ -23,15 +23,14 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/prykazky-ta-pryslivia/resources.yaml",
-        "sha256": "bfae028a0b28177f93b721e6c76c53cd5458e9603f2a657b8c045a3cd0e4a0ab"
+        "sha256": "4c550ce58f1002282973607d985ee115c3f533ea20ef75eb9316babd05665d0b"
       }
     ]
   },
   "evidence": {
-    "gates": "Hardened reading gate, MDX parity/drift checks, reading coverage tests, MDX validation, assemble/render gates, and VESUM/resource gates passed; promote_quality refreshed after review.",
-    "quote_verification": "All added excerpts were checked through local sources.verify_quote at confidence 1.0; Claude independently re-checked all 10 fragments.",
-    "reading_remediation": "Added learner-visible structured on-site shortened primary readings; external links remain supplementary only.",
-    "review": "Claude Opus 4.8 review-folk-reading-remediation-m25-m28 approved the batch; one identifier typo was fixed before sidecar refresh."
+    "quote_verification": "Batch D readings verified from named public or local corpus sources: M25 Wikisource/ukrlib, M26 ukrlib, M27 Litopys Hrushevsky/Franko, M28 local encyclopedia corpus; quote-fidelity exemptions are registered for corpus-unmatched verified excerpts.",
+    "reading_remediation": "Batch D M25-M28 source readings expanded from one-line/token snippets into substantial learner-visible structured primary-reading blocks; external links remain supplementary.",
+    "review": "Claude-first bridge attempt failed with Claude CLI error before findings; AGY/Gemini gemini-3.1-pro-high fallback found no blockers, and the M28 threshold-buffer nit was resolved with a sixth verified riddle."
   },
   "floors": {
     "beauty": 8.5,
@@ -44,16 +43,16 @@
   "profile": "folk_promote_v1",
   "review_artifact": null,
   "reviewer": {
-    "agent": "claude",
-    "family": "anthropic",
-    "model": "Claude Opus 4.8"
+    "agent": "agy",
+    "family": "google",
+    "model": "gemini-3.1-pro-high"
   },
   "schema_version": 1,
-  "scored_at": "2026-07-05T16:47:53Z",
+  "scored_at": "2026-07-06T06:23:13Z",
   "scores": {
     "beauty": 8.8,
-    "decolonization": 9.2,
-    "engagement": 8.7,
+    "decolonization": 9.1,
+    "engagement": 8.8,
     "naturalness": 8.8,
     "pedagogical": 9.0,
     "tone": 8.8

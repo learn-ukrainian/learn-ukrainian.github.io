@@ -1,9 +1,9 @@
 {
-  "assembled_mdx_sha256": null,
+  "assembled_mdx_sha256": "8823996e8e1154032c4cc0316346daec154e471d6eb92dd182674cd849641644",
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "25f83b3c3082d33894bf2368d5db68039765f3505a6291df1167b901034efa57",
+    "digest": "f0b955696d4d6d9ea095edff2ff9b2ab8a76447a1bfaeaa71bf6a2a30526b22c",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/istorychni-perekazy.yaml",
@@ -11,7 +11,7 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/istorychni-perekazy/module.md",
-        "sha256": "17526a1f2b55328b4e9dd718c720c987e21446001847dabc4e63b9301bc4a779"
+        "sha256": "44dee2961d9aa04b910c6b47e9bc64c74d1e3f0cef9b656df93dd893f8145238"
       },
       {
         "path": "curriculum/l2-uk-en/folk/istorychni-perekazy/activities.yaml",
@@ -23,15 +23,14 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/istorychni-perekazy/resources.yaml",
-        "sha256": "2efb7fffb8183985325cb9613c8cb5232f97869d5e15fc6979e671175ccecb32"
+        "sha256": "69ce9fef98d77fd2b8986f57c176b7a521283594dfd53ca92b185621142026ce"
       }
     ]
   },
   "evidence": {
-    "gates": "Hardened reading gate, MDX parity/drift checks, reading coverage tests, MDX validation, assemble/render gates, and VESUM/resource gates passed; promote_quality refreshed after review.",
-    "quote_verification": "All added excerpts were checked through local sources.verify_quote at confidence 1.0; Claude independently re-checked all 10 fragments.",
-    "reading_remediation": "Added learner-visible structured on-site shortened primary readings; external links remain supplementary only.",
-    "review": "Claude Opus 4.8 review-folk-reading-remediation-m25-m28 approved the batch; one identifier typo was fixed before sidecar refresh."
+    "quote_verification": "Batch D readings verified from named public or local corpus sources: M25 Wikisource/ukrlib, M26 ukrlib, M27 Litopys Hrushevsky/Franko, M28 local encyclopedia corpus; quote-fidelity exemptions are registered for corpus-unmatched verified excerpts.",
+    "reading_remediation": "Batch D M25-M28 source readings expanded from one-line/token snippets into substantial learner-visible structured primary-reading blocks; external links remain supplementary.",
+    "review": "Claude-first bridge attempt failed with Claude CLI error before findings; AGY/Gemini gemini-3.1-pro-high fallback found no blockers, and the M28 threshold-buffer nit was resolved with a sixth verified riddle."
   },
   "floors": {
     "beauty": 8.5,
@@ -44,18 +43,18 @@
   "profile": "folk_promote_v1",
   "review_artifact": null,
   "reviewer": {
-    "agent": "claude",
-    "family": "anthropic",
-    "model": "Claude Opus 4.8"
+    "agent": "agy",
+    "family": "google",
+    "model": "gemini-3.1-pro-high"
   },
   "schema_version": 1,
-  "scored_at": "2026-07-05T16:47:53Z",
+  "scored_at": "2026-07-06T06:23:13Z",
   "scores": {
-    "beauty": 8.7,
+    "beauty": 8.8,
     "decolonization": 9.1,
-    "engagement": 8.7,
+    "engagement": 8.8,
     "naturalness": 8.8,
-    "pedagogical": 8.8,
+    "pedagogical": 9.0,
     "tone": 8.8
   },
   "slug": "istorychni-perekazy",

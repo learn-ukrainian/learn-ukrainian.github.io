@@ -1,3 +1,40 @@
 {
-  "exemptions": {}
+  "exemptions": {
+    "1eb17c4c087e3b1c61a7ea5e73330ade6e95cfb2bf404f2c502f49c2bfca4ab9": {
+      "date": "2026-07-06",
+      "module_slug": "zahadky",
+      "reason": "Batch D verified traditional formulas in local encyclopedia corpus; selected lines are split across corpus chunks and require manual attestation.",
+      "reviewer": "agy-gemini-3.1-pro-high"
+    },
+    "2282d6df2f1d3a278e621c4ef189db1c9ff44d9f03ed814dbd9fc31e5438a51f": {
+      "date": "2026-07-06",
+      "module_slug": "istorychni-perekazy",
+      "reason": "Batch D verified Wikisource traditional-pereказ excerpt outside the local literary corpus; provenance and rights recorded in module/resources.",
+      "reviewer": "agy-gemini-3.1-pro-high"
+    },
+    "3b8710a4d7ca57972e844609b5d8253eda96ff43187ad1439197ef7a03896b54": {
+      "date": "2026-07-06",
+      "module_slug": "narodni-opovidannia-buvalshchyny-memoraty",
+      "reason": "Batch D verified public-domain Shevchenko excerpt from ukrlib; local literary corpus did not return this source chunk.",
+      "reviewer": "agy-gemini-3.1-pro-high"
+    },
+    "b1c04a693c7d0473a0ea98f7859cf7e997f1e664f279f3fe78a54feeab27bc43": {
+      "date": "2026-07-06",
+      "module_slug": "prykazky-ta-pryslivia",
+      "reason": "Batch D verified public-domain Hrushevsky/Litopys excerpt; local literary corpus did not return the public source page.",
+      "reviewer": "agy-gemini-3.1-pro-high"
+    },
+    "baf28d151476eafa0b28eb1d7aa302afd30ebf40124dc43b209fb72d3068ec16": {
+      "date": "2026-07-06",
+      "module_slug": "narodni-opovidannia-buvalshchyny-memoraty",
+      "reason": "Batch D verified traditional rusalia song from ukrlib; public source is outside the local literary corpus match.",
+      "reviewer": "agy-gemini-3.1-pro-high"
+    },
+    "bd1f638de796d8b687b4daa9d5bc96c907baa58ed8947c73164c08fe144ad72b": {
+      "date": "2026-07-06",
+      "module_slug": "istorychni-perekazy",
+      "reason": "Batch D verified traditional historical song from ukrlib; public source is outside the local literary corpus match.",
+      "reviewer": "agy-gemini-3.1-pro-high"
+    }
+  }
 }

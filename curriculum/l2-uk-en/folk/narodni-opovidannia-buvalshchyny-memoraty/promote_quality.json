@@ -1,9 +1,9 @@
 {
-  "assembled_mdx_sha256": null,
+  "assembled_mdx_sha256": "f1202533d3af7f4d9e55cbce35fb44d74cb2648bc322bea1dee78e077babf11a",
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "d97334be8705dfc42f099fc91fce5e85c1540b84a1f177cd63e37f1511aa25a0",
+    "digest": "a58d3ff0d4ef888c9012e0715df7b30b58bce09fd84f11adde5a5e08045e4d22",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/narodni-opovidannia-buvalshchyny-memoraty.yaml",
@@ -11,27 +11,26 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/narodni-opovidannia-buvalshchyny-memoraty/module.md",
-        "sha256": "514d6d57d035d074946dcc88f232e84cc9c7180099d2aad4de03f2c8eb151f33"
+        "sha256": "6dbed081764aa3ccf03f9cb0c9e7f0748a6355ece4797aea8261dc71c47b2024"
       },
       {
         "path": "curriculum/l2-uk-en/folk/narodni-opovidannia-buvalshchyny-memoraty/activities.yaml",
-        "sha256": "0524ed8ec80e499f216ad158da38c56c6e34f7871b708b1ce3036cec17319960"
+        "sha256": "cee23948f9773fb1b7ec866bf3c1851c50724c9e8e3a40e7a438b6b8fe0ad5f7"
       },
       {
         "path": "curriculum/l2-uk-en/folk/narodni-opovidannia-buvalshchyny-memoraty/vocabulary.yaml",
-        "sha256": "3f636c4f6cbec6719673da1a2b7bd0d4e0838e9a7ef8e6c1245add6d9235b938"
+        "sha256": "461831ae4676023140e9250bf2fbc930a452aa35dbd3c888f0113c4841b79630"
       },
       {
         "path": "curriculum/l2-uk-en/folk/narodni-opovidannia-buvalshchyny-memoraty/resources.yaml",
-        "sha256": "f733be6c118d23da59159bb2ef98484e92fb3ad766b3186608821fb42ef478a9"
+        "sha256": "bbefdabfb50e4ddf650d5e53e21395fcaaab6030a506cf7f2bc32ea4f8c5c014"
       }
     ]
   },
   "evidence": {
-    "gates": "Hardened reading gate, MDX parity/drift checks, reading coverage tests, MDX validation, assemble/render gates, and VESUM/resource gates passed; promote_quality refreshed after review.",
-    "quote_verification": "All added excerpts were checked through local sources.verify_quote at confidence 1.0; Claude independently re-checked all 10 fragments.",
-    "reading_remediation": "Added learner-visible structured on-site shortened primary readings; external links remain supplementary only.",
-    "review": "Claude Opus 4.8 review-folk-reading-remediation-m25-m28 approved the batch; one identifier typo was fixed before sidecar refresh."
+    "quote_verification": "Batch D readings verified from named public or local corpus sources: M25 Wikisource/ukrlib, M26 ukrlib, M27 Litopys Hrushevsky/Franko, M28 local encyclopedia corpus; quote-fidelity exemptions are registered for corpus-unmatched verified excerpts.",
+    "reading_remediation": "Batch D M25-M28 source readings expanded from one-line/token snippets into substantial learner-visible structured primary-reading blocks; external links remain supplementary.",
+    "review": "Claude-first bridge attempt failed with Claude CLI error before findings; AGY/Gemini gemini-3.1-pro-high fallback found no blockers, and the M28 threshold-buffer nit was resolved with a sixth verified riddle."
   },
   "floors": {
     "beauty": 8.5,
@@ -44,19 +43,19 @@
   "profile": "folk_promote_v1",
   "review_artifact": null,
   "reviewer": {
-    "agent": "claude",
-    "family": "anthropic",
-    "model": "Claude Opus 4.8"
+    "agent": "agy",
+    "family": "google",
+    "model": "gemini-3.1-pro-high"
   },
   "schema_version": 1,
-  "scored_at": "2026-07-05T16:47:53Z",
+  "scored_at": "2026-07-06T06:23:13Z",
   "scores": {
-    "beauty": 8.9,
+    "beauty": 8.8,
     "decolonization": 9.1,
     "engagement": 8.8,
-    "naturalness": 9.0,
-    "pedagogical": 9.1,
-    "tone": 9.0
+    "naturalness": 8.8,
+    "pedagogical": 9.0,
+    "tone": 8.8
   },
   "slug": "narodni-opovidannia-buvalshchyny-memoraty",
   "track": "folk",
