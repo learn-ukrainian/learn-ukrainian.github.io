@@ -1,9 +1,9 @@
 {
-  "assembled_mdx_sha256": "84aa21af0817a4ccf2752f8690cdadfe350688a9b423338174e38c16f6163236",
+  "assembled_mdx_sha256": "5f7464bbaeebbc75cb210127162e0b28c8905aa0ba0ff20db48c57d362e7cf44",
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "f70ec46011b1434b68fa50983e5fbfbad7d22c258539c990b83c1d6d4d890a6c",
+    "digest": "fb0ba4539a5eefc35df9bcb886ba85ee16ece202f3ab0ef31b8a5fda5784d3e6",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/narodni-anekdoty.yaml",
@@ -11,7 +11,7 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/narodni-anekdoty/module.md",
-        "sha256": "1d02f778287330cb72f972acb2d9a48e02fd3de00b0ba38747b19587572891e4"
+        "sha256": "ebfcf4e2541fe8edab8a63a10c7244c058cb35e4e56fdb8c3075de7e0147d649"
       },
       {
         "path": "curriculum/l2-uk-en/folk/narodni-anekdoty/activities.yaml",
@@ -28,10 +28,10 @@
     ]
   },
   "evidence": {
-    "decolonization": "Humor framing remains stereotype-aware and avoids punch-down normalization while adding verified reading content.",
-    "pedagogical": "Structured PrimaryReading now grounds the joke/anecdote seminar surface with a short attributed excerpt rather than link-only support.",
-    "review": "Claude Opus 4.8 bridge message 2 PASS for Batch 4 reading remediation; all excerpts verified, no blockers. DeepSeek not used.",
-    "source_policy": "Added on-site shortened primary reading from verified Chyzhevsky/Kvitka-adjacent comic formula; external references remain supplementary."
+    "decolonization": "Humor framing stays punch-up and source-disciplined: the substantial anecdote is read as poor-household wit under pan/control pressure, not as stereotype performance.",
+    "pedagogical": "Token Chyzhevsky/Kvitka formula replaced with a substantial learner-visible on-site Hnatiuk anecdote so students can analyze full micro-plot, dialect, and punchline mechanics.",
+    "review": "Claude Opus 4.8 bridge message #2 PASS for Batch E M29-M32; no blockers; DeepSeek not used.",
+    "source_policy": "Verified shortened primary reading from Volodymyr Hnatiuk, \"\u0413\u0430\u043b\u0438\u0446\u044c\u043a\u043e-\u0440\u0443\u0441\u044c\u043a\u0456 \u0430\u043d\u0435\u043a\u0434\u043e\u0442\u0438\", \"\u0415\u0442\u043d\u043e\u0433\u0440\u0430\u0444\u0456\u0447\u043d\u0438\u0439 \u0437\u0431\u0456\u0440\u043d\u0438\u043a\", \u0442. 6, \u041b\u044c\u0432\u0456\u0432, 1899, \u0441. 1; Internet Archive scan page visually checked; public domain; quote-fidelity exemption registered because the local corpus lacks this scan page."
   },
   "floors": {
     "beauty": 8.5,
@@ -49,7 +49,7 @@
     "model": "claude-opus-4-8"
   },
   "schema_version": 1,
-  "scored_at": "2026-07-05T17:49:56Z",
+  "scored_at": "2026-07-06T13:58:00Z",
   "scores": {
     "beauty": 8.8,
     "decolonization": 9.2,

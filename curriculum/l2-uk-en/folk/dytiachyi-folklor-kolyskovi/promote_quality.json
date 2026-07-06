@@ -1,9 +1,9 @@
 {
-  "assembled_mdx_sha256": "1b2cffda309ce9838fd231d73a08a8537be9531b2d17d78197ebe2c8ee27b6ef",
+  "assembled_mdx_sha256": "ec6dae439850d2a18e5ec0d82f36cdc96bc5c7475a09b0399bc927ccba84030c",
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "780d343000b82c81ef2eb33bee0b16ccbce53139e551eb112106f5d655605a1c",
+    "digest": "d6a4846bdb4377b8f439e89ba8bdb7398302f7261bef1a209f8dfaa7ac3a0f4a",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/dytiachyi-folklor-kolyskovi.yaml",
@@ -11,7 +11,7 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/dytiachyi-folklor-kolyskovi/module.md",
-        "sha256": "92c93d2d9d1d1862a9365d682d7e86224cb9d382ef89388c60923c3df1149c19"
+        "sha256": "bfac22d073a516f2eadd7a2e97a3f2539559fdd67cccfa2bbe6393a0ebc1ff06"
       },
       {
         "path": "curriculum/l2-uk-en/folk/dytiachyi-folklor-kolyskovi/activities.yaml",
@@ -28,10 +28,10 @@
     ]
   },
   "evidence": {
-    "decolonization": "Child folklore remains framed as Ukrainian family and peer-group practice with careful notes on circulation and no sentimental flattening.",
-    "pedagogical": "Separated each counting formula into exact structured readings so learners compare sleep-wish, counting, sound-row, and fragmentary-scenario forms.",
-    "review": "Claude Opus 4.8 bridge message 2 PASS for Batch 4 reading remediation; all lullaby/counting excerpts verified, no blockers. DeepSeek not used.",
-    "source_policy": "Added on-site shortened primary readings from verified encyclopedia-attested lullaby and counting-out formulas; no invented lullabies or rhymes."
+    "decolonization": "Child folklore remains framed as family and peer-group language practice without sentimental flattening or invented rhymes.",
+    "pedagogical": "Substantial hosted Wikisource lullaby replaces token lullaby/counting snippets; short lychylka formulas remain only as prose examples, not structured readings.",
+    "review": "Claude Opus 4.8 bridge message #2 PASS for Batch E M29-M32; non-blocking M30/M31 notes fixed; DeepSeek not used.",
+    "source_policy": "On-site shortened reading uses course-hosted/Wikisource public-domain text \"\u041e\u0439 \u0442\u0438, \u043a\u043e\u0442\u0435, \u043a\u043e\u0442\u043e\u0447\u043e\u043a\"; source punctuation and wording preserved; quote-fidelity exemption records the local corpus gap."
   },
   "floors": {
     "beauty": 8.5,
@@ -49,7 +49,7 @@
     "model": "claude-opus-4-8"
   },
   "schema_version": 1,
-  "scored_at": "2026-07-05T17:49:56Z",
+  "scored_at": "2026-07-06T14:09:32Z",
   "scores": {
     "beauty": 8.7,
     "decolonization": 9.0,
