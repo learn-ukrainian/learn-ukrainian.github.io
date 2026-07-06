@@ -18,6 +18,7 @@ import {
   loadState,
   masteredCount,
   nextDuePreviewTime,
+  parseCardKey,
   previewRatingIntervals,
   rateCard,
   resolveSessionCompletion,
@@ -33,6 +34,8 @@ import {
   type ChoicePolarity,
   type PracticeClozeItem,
   type PracticeDeckData,
+  type PracticeHeritageItem,
+  type PracticeHeritageShard,
   type PracticeIndexItem,
   type PracticeIndexShard,
   type PracticeLexeme,
@@ -71,6 +74,13 @@ interface StreakState {
 interface ChoiceOption {
   label: string;
   correct: boolean;
+  kind?: 'answer' | 'calque' | 'distractor';
+}
+
+interface HeritageFeedback {
+  kind: 'correct' | 'calque' | 'wrong';
+  text: string;
+  citations?: string[];
 }
 
 interface ClozeFeedback {
@@ -115,6 +125,7 @@ type VisiblePracticeModeFilter = Extract<
   | 'classify'
   | 'paradigm'
   | 'synonym'
+  | 'heritage'
 >;
 
 const MODE_LABELS: Record<VisiblePracticeModeFilter, string> = {
@@ -127,6 +138,7 @@ const MODE_LABELS: Record<VisiblePracticeModeFilter, string> = {
   classify: 'Classify',
   paradigm: 'Paradigm',
   synonym: 'Synonym',
+  heritage: 'Спадщина',
 };
 
 const MODE_CARD_ORDER: VisiblePracticeModeFilter[] = [
@@ -139,6 +151,7 @@ const MODE_CARD_ORDER: VisiblePracticeModeFilter[] = [
   'classify',
   'paradigm',
   'synonym',
+  'heritage',
 ];
 
 const MODE_META: Record<
@@ -213,6 +226,13 @@ const MODE_META: Record<
     description: 'Доберіть синонім або антонім до українського слова.',
     step: 'Лексика',
     accent: 'orange',
+  },
+  heritage: {
+    title: 'Спадщина',
+    en: 'Heritage',
+    description: 'Оберіть питоме українське слово.',
+    step: 'Питома лексика',
+    accent: 'teal',
   },
 };
 
@@ -405,6 +425,15 @@ function ModeIcon({ mode }: { mode: VisiblePracticeModeFilter }) {
     );
   }
 
+  if (mode === 'heritage') {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M12 4 5 7.5v5.2c0 3.9 2.6 6.2 7 7.3 4.4-1.1 7-3.4 7-7.3V7.5L12 4Z" />
+        <path d="M9 12.2 11.1 14l4-4.6" />
+      </svg>
+    );
+  }
+
   if (mode === 'mixed') {
     return (
       <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
@@ -422,6 +451,18 @@ function ModeIcon({ mode }: { mode: VisiblePracticeModeFilter }) {
       <path d="M9 9h6" />
       <path d="M9 13h4" />
     </svg>
+  );
+}
+
+function hasLoadedDrillShards(deck: PracticeDeckData | null): boolean {
+  return Boolean(
+    deck &&
+      (deck.cloze.length > 0 ||
+        (deck.stress?.length ?? 0) > 0 ||
+        (deck.classify?.length ?? 0) > 0 ||
+        (deck.paradigm?.length ?? 0) > 0 ||
+        (deck.synonym?.length ?? 0) > 0 ||
+        (deck.heritage?.length ?? 0) > 0),
   );
 }
 
@@ -473,10 +514,17 @@ function historyFromSelection(selection: PracticeSelection): SelectionHistoryIte
     sentenceFrameId: selection.cloze?.sentenceFrameId,
     blankCase: selection.cloze?.blankCase,
     classifySetId: selection.classifySetId,
+    heritageId: selection.heritage?.heritageId,
     recallDirection: selection.recallDirection,
     choicePolarity: selection.choicePolarity,
     lapsed: selection.lapsed,
   };
+}
+
+function reviewLemmaId(selection: PracticeSelection): string {
+  const parsed = parseCardKey(selection.cardKey);
+  if (!parsed.quarantined && parsed.mode === selection.mode) return parsed.lemmaId;
+  return selection.lemma.lemmaId;
 }
 
 function orderedChoiceOptions(
@@ -597,6 +645,40 @@ function drillChoiceOptions(selection: PracticeSelection): ChoiceOption[] | null
   return null;
 }
 
+function heritageOptions(item: PracticeHeritageItem): ChoiceOption[] {
+  const answer = czNorm(item.answer);
+  const calque = czNorm(item.calque);
+  return item.options.map((option) => {
+    const label = czNorm(option.label);
+    const correct = label === answer;
+    return {
+      label: option.label,
+      correct,
+      kind: correct ? 'answer' : label === calque ? 'calque' : 'distractor',
+    };
+  });
+}
+
+function heritageFeedbackFor(item: PracticeHeritageItem, option: ChoiceOption): HeritageFeedback {
+  if (option.correct) {
+    return {
+      kind: 'correct',
+      text: 'Правильно',
+    };
+  }
+  if (option.kind === 'calque') {
+    return {
+      kind: 'calque',
+      text: `⚠️ калька; ${item.rationale}`,
+      citations: item.citations,
+    };
+  }
+  return {
+    kind: 'wrong',
+    text: 'Ще раз',
+  };
+}
+
 function drillChoicePrompt(selection: PracticeSelection): { prompt: string; subtitle: string } | null {
   if (selection.stress) {
     return {
@@ -640,8 +722,13 @@ function clozeParts(item: PracticeClozeItem): [string, string] {
   return [before, after.join('___')];
 }
 
+function slotPromptParts(prompt: string): [string, string] {
+  const [before, ...after] = prompt.split('___');
+  return [before, after.join('___')];
+}
+
 function shouldLoadCloze(mode: PracticeModeFilter): boolean {
-  return ['mixed', 'cloze', 'stress', 'classify', 'paradigm', 'synonym'].includes(mode);
+  return ['mixed', 'cloze', 'stress', 'classify', 'paradigm', 'synonym', 'heritage'].includes(mode);
 }
 
 function sessionScopeIndexForMode(
@@ -652,6 +739,16 @@ function sessionScopeIndexForMode(
   return index
     .filter((item) => item.modes.includes(modeFilter))
     .map((item) => ({ ...item, modes: [modeFilter] }));
+}
+
+function shouldShowFocusModeCard(
+  practiceMode: VisiblePracticeModeFilter,
+  deck: PracticeDeckData | null,
+  indexForStats: PracticeIndexItem[],
+): boolean {
+  if (practiceMode !== 'heritage') return true;
+  if (deck) return (deck.heritage?.length ?? 0) > 0;
+  return indexForStats.some((item) => item.modes.includes('heritage'));
 }
 
 /** Learner level persisted in the shared `lu-learner-level` key (also used by Words of the Day). */
@@ -691,6 +788,7 @@ function mergeDecks(decks: PracticeDeckData[], level: CefrLevel): PracticeDeckDa
     classify: decks.flatMap((deck) => deck.classify ?? []),
     paradigm: decks.flatMap((deck) => deck.paradigm ?? []),
     synonym: decks.flatMap((deck) => deck.synonym ?? []),
+    heritage: decks.flatMap((deck) => deck.heritage ?? []),
   };
 }
 
@@ -713,7 +811,7 @@ function LexiconPracticeIsland({
   const [deck, setDeck] = useState<PracticeDeckData | null>(() => normalizeInitialDeck(initialDeck));
   const [clozeLoaded, setClozeLoaded] = useState(() => {
     const normalized = normalizeInitialDeck(initialDeck);
-    return Boolean(normalized && normalized.cloze.length > 0);
+    return hasLoadedDrillShards(normalized);
   });
   const [sessionPhase, setSessionPhase] = useState<SessionPhase>(autoStart ? 'active' : 'idle');
   const [sessionSeed, setSessionSeed] = useState(() => makePracticeSessionSeed());
@@ -753,6 +851,7 @@ function LexiconPracticeIsland({
   const [clozeInput, setClozeInput] = useState('');
   const [clozeFeedback, setClozeFeedback] = useState<ClozeFeedback | null>(null);
   const [clozeAttemptRecorded, setClozeAttemptRecorded] = useState(false);
+  const [heritageFeedback, setHeritageFeedback] = useState<HeritageFeedback | null>(null);
   const [dueIndex, setDueIndex] = useState<PracticeIndexItem[] | null>(null);
   const [publishedLevels] = useState<Set<CefrLevel>>(
     () => new Set(PUBLISHED_PRACTICE_LEVELS as unknown as CefrLevel[]),
@@ -862,6 +961,7 @@ function LexiconPracticeIsland({
     setClozeInput('');
     setClozeFeedback(null);
     setClozeAttemptRecorded(false);
+    setHeritageFeedback(null);
     if (selection) {
       window.setTimeout(() => stageRef.current?.focus(), 0);
     }
@@ -920,20 +1020,23 @@ function LexiconPracticeIsland({
               classifyResponse,
               paradigmResponse,
               synonymResponse,
+              heritageResponse,
             ] = await Promise.all([
               fetch(`${shardBaseUrl}/practice-cloze.${shardLevel}.json`),
               fetch(`${shardBaseUrl}/practice-stress.${shardLevel}.json`),
               fetch(`${shardBaseUrl}/practice-classify.${shardLevel}.json`),
               fetch(`${shardBaseUrl}/practice-paradigm.${shardLevel}.json`),
               fetch(`${shardBaseUrl}/practice-synonym.${shardLevel}.json`),
+              fetch(`${shardBaseUrl}/practice-heritage.${shardLevel}.json`),
             ]);
-            const [clozeShard, stressShard, classifyShard, paradigmShard, synonymShard] =
+            const [clozeShard, stressShard, classifyShard, paradigmShard, synonymShard, heritageShard] =
               await Promise.all([
                 clozeResponse.ok ? clozeResponse.json() : Promise.resolve({ cloze: [] }),
                 stressResponse.ok ? stressResponse.json() : Promise.resolve({ stress: [] }),
                 classifyResponse.ok ? classifyResponse.json() : Promise.resolve({ classify: [] }),
                 paradigmResponse.ok ? paradigmResponse.json() : Promise.resolve({ paradigm: [] }),
                 synonymResponse.ok ? synonymResponse.json() : Promise.resolve({ synonym: [] }),
+                heritageResponse.ok ? heritageResponse.json() : Promise.resolve({ heritage: [] }),
               ]);
             return {
               cloze: (clozeShard as { cloze?: PracticeClozeItem[] }).cloze ?? [],
@@ -941,6 +1044,7 @@ function LexiconPracticeIsland({
               classify: (classifyShard as PracticeDeckData).classify ?? [],
               paradigm: (paradigmShard as PracticeDeckData).paradigm ?? [],
               synonym: (synonymShard as PracticeDeckData).synonym ?? [],
+              heritage: (heritageShard as PracticeHeritageShard).heritage ?? [],
             };
           }),
         );
@@ -951,6 +1055,7 @@ function LexiconPracticeIsland({
           classify: shardBatches.flatMap((batch) => batch.classify),
           paradigm: shardBatches.flatMap((batch) => batch.paradigm),
           synonym: shardBatches.flatMap((batch) => batch.synonym),
+          heritage: shardBatches.flatMap((batch) => batch.heritage),
         };
         nextClozeLoaded = true;
       }
@@ -1129,7 +1234,7 @@ function LexiconPracticeIsland({
     const nextUnresolved = new Set(unresolvedCardKeys);
     let nextDeferred = [...deferredLemmas];
     try {
-      rateCard(current.lemma.lemmaId, current.mode, rating, new Date());
+      rateCard(reviewLemmaId(current), current.mode, rating, new Date());
       setStreak(recordStreak());
       if (rating === 'good' || rating === 'easy') {
         setSessionCorrect((value) => value + 1);
@@ -1208,7 +1313,11 @@ function LexiconPracticeIsland({
     if (!selection || answerLocked) return;
     const rating = option.correct ? 'good' : 'again';
     const outcome = recordReview(selection, rating);
+    const nextHeritageFeedback = selection.heritage
+      ? heritageFeedbackFor(selection.heritage, option)
+      : null;
     setAnswerLocked(true);
+    setHeritageFeedback(nextHeritageFeedback);
     setFeedback(
       option.correct ? `${selection.lemma.lemma}: Правильно` : `${selection.lemma.lemma}: Ще раз`,
     );
@@ -1476,7 +1585,11 @@ function LexiconPracticeIsland({
               ) : null}
             </h3>
             <div className="mode-grid mode-grid-focus">
-              {MODE_CARD_ORDER.filter((practiceMode) => practiceMode !== 'mixed').map((practiceMode) => {
+              {MODE_CARD_ORDER.filter(
+                (practiceMode) =>
+                  practiceMode !== 'mixed' &&
+                  shouldShowFocusModeCard(practiceMode, deck, indexForStats),
+              ).map((practiceMode) => {
                 const meta = MODE_META[practiceMode];
                 return (
                   <button
@@ -1550,6 +1663,7 @@ function LexiconPracticeIsland({
                   answerLocked={answerLocked}
                   clozeInput={clozeInput}
                   clozeFeedback={clozeFeedback}
+                  heritageFeedback={heritageFeedback}
                   onClozeInput={setClozeInput}
                   onFlashcardRating={(rating) => rateAndComplete(selection, rating)}
                   onChoice={handleChoice}
@@ -1559,6 +1673,10 @@ function LexiconPracticeIsland({
               ) : mode === 'cloze' && deck.cloze.length === 0 ? (
                 <p className="lexicon-practice-muted" data-testid="practice-cloze-empty">
                   Вправи з пропусками для цього рівня ще готуються. Спробуйте флешкартки, добір пар або вибір.
+                </p>
+              ) : mode === 'heritage' && (deck.heritage?.length ?? 0) === 0 ? (
+                <p className="lexicon-practice-muted" data-testid="practice-heritage-empty">
+                  Вправи зі спадщини для цього рівня ще готуються.
                 </p>
               ) : (
                 <p className="lexicon-practice-muted">Усі картки на зараз повторено.</p>
@@ -1587,6 +1705,7 @@ function PracticeItem({
   answerLocked,
   clozeInput,
   clozeFeedback,
+  heritageFeedback,
   onClozeInput,
   onFlashcardRating,
   onChoice,
@@ -1599,6 +1718,7 @@ function PracticeItem({
   answerLocked: boolean;
   clozeInput: string;
   clozeFeedback: ClozeFeedback | null;
+  heritageFeedback: HeritageFeedback | null;
   onClozeInput(value: string): void;
   onFlashcardRating(rating: PracticeRating): void;
   onChoice(option: ChoiceOption): void;
@@ -1630,6 +1750,17 @@ function PracticeItem({
         answerLocked={answerLocked}
         onInput={onClozeInput}
         onSubmit={onClozeSubmit}
+      />
+    );
+  }
+
+  if (selection.mode === 'heritage' && selection.heritage) {
+    return (
+      <PracticeHeritage
+        item={selection.heritage}
+        feedback={heritageFeedback}
+        answerLocked={answerLocked}
+        onChoice={onChoice}
       />
     );
   }
@@ -1700,6 +1831,61 @@ function PracticeItem({
           </li>
         ))}
       </ul>
+    </div>
+  );
+}
+
+function PracticeHeritage({
+  item,
+  feedback,
+  answerLocked,
+  onChoice,
+}: {
+  item: PracticeHeritageItem;
+  feedback: HeritageFeedback | null;
+  answerLocked: boolean;
+  onChoice(option: ChoiceOption): void;
+}) {
+  const [before, after] = slotPromptParts(item.prompt);
+  const options = heritageOptions(item);
+  const slotText = feedback?.kind === 'correct' ? item.answer : '___';
+  return (
+    <div className="lexicon-heritage" data-testid="practice-heritage">
+      <p className="heritage-task">Оберіть питоме українське слово.</p>
+      <p className="heritage-sentence">
+        <span>{before}</span>
+        <span className={feedback?.kind === 'correct' ? 'heritage-slot filled' : 'heritage-slot'}>
+          {slotText}
+        </span>
+        <span>{after}</span>
+      </p>
+      <ul className="lexicon-option-list mc-options">
+        {options.map((option, index) => (
+          <li key={`${option.label}-${index}`}>
+            <button
+              className={`mc-opt${answerLocked && option.correct ? ' correct' : ''}`}
+              type="button"
+              disabled={answerLocked}
+              onClick={() => onChoice(option)}
+            >
+              <span>{option.label}</span>
+            </button>
+          </li>
+        ))}
+      </ul>
+      {feedback ? (
+        <div
+          className={`heritage-feedback ${feedback.kind}`}
+          role={feedback.kind === 'wrong' ? 'alert' : 'status'}
+          aria-live="polite"
+          data-testid="practice-heritage-feedback"
+        >
+          <p>{feedback.text}</p>
+          {feedback.kind === 'calque' && feedback.citations?.length ? (
+            <p className="heritage-citation">Джерело: {feedback.citations.join('; ')}</p>
+          ) : null}
+        </div>
+      ) : null}
     </div>
   );
 }
