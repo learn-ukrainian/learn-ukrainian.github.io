@@ -76,6 +76,44 @@ persona:
   role: Модератор семінару, що ставить складні питання та уникає простої апології, змушуючи студентів бачити складнощі та суперечності.
   voice: Pahutyak-Admirer-With-Reservations
 phase: BIO
+readings:
+  - title: Пагутяк Галина Василівна
+    language: uk
+    genre: Енциклопедична стаття / Довідка
+    source_type: reference
+    role: orientation
+    source: Вікіпедія
+    source_url: https://uk.wikipedia.org/wiki/Пагутяк_Галина_Василівна
+    license: CC-BY-SA-4.0
+    rights_note: Текст статті ліцензовано на умовах CC-BY-SA-4.0. Вільне використання з обов'язковим посиланням на першоджерело.
+    hosting: link-only
+    cefr_min: C1
+    learner_task: Ознайомитися з біографічними даними, творчим доробком і місцем авторки в сучасній українській літературі.
+    caveats: Довідковий формат не передає стилістичної специфіки "химерного реалізму".
+  - title: Есеїстика Галини Пагутяк (Потрібен матеріал)
+    language: uk
+    genre: Есеїстика / Публіцистика
+    source_type: primary
+    role: reading
+    source: Авторський блог, Збруч або Українська правда
+    license: copyrighted
+    rights_note: Текст захищено авторським правом письменниці або видання. Потрібно знайти стабільний лінк на її авторську колонку.
+    hosting: reading-needed
+    cefr_min: C1
+    learner_task: Прочитати одне з есеїв авторки, щоб побачити її безкомпромісну позицію та перехід від містики до гострої соціальної критики.
+    caveats: Есеї часто містять суб'єктивні, гострі оцінки суспільно-політичних подій.
+  - title: Уривок з роману "Слуга з Добромиля" (Потрібен матеріал)
+    language: uk
+    genre: Художня проза / Химерний реалізм
+    source_type: primary
+    role: supplementary-reading
+    source: Видавництво "Піраміда" / Офіційний ресурс
+    license: copyrighted
+    rights_note: Текст роману захищено авторським правом. Потрібно знайти легальний ознайомчий фрагмент або отримати дозвіл.
+    hosting: reading-needed
+    cefr_min: C1
+    learner_task: Ознайомитися з художнім стилем Пагутяк, щоб зрозуміти атмосферу "урізької міфології" та елементи карпатської готики.
+    caveats: Текст може бути складним для розуміння через специфічну лексику, містичні алюзії та нелінійність оповіді.
 references:
 - title: Halyna Pahutyak
   note: Compiled from Wikipedia, critical essays, and publisher data. Primary source for biographical facts and major works.
@@ -95,7 +133,7 @@ sequence: 177
 slug: halyna-pahutyak
 subtitle: 'Halyna Pahutyak: Architect of Chimerical Worlds'
 title: 'Галина Пагутяк: Архітекторка химерних світів'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: літературний метод, що поєднує реалістичне зображення з елементами фантастики, містики, гротеску.
   pos: ч.
