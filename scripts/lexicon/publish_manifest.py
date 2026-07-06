@@ -277,6 +277,40 @@ def upload_manifest_assets(
     upload_release_asset(gzip_path, asset_name=ASSET_NAME, release_tag=release_tag, repo=repo, clobber=True)
 
 
+def assert_manifest_richness_publishable(
+    manifest_path: Path,
+    *,
+    max_poc_thin_pages: int | None = None,
+) -> dict[str, Any]:
+    """#4515: thin-page regressions can only ENTER at publish time — so the
+    binding cap lives here, not in per-PR CI (which audits the live asset and
+    therefore fails unrelated PRs after the fact; that step is now advisory).
+
+    Raises :class:`ManifestPublishError` with an actionable message when the
+    manifest about to be published carries more thin POC pages than the cap.
+    Runs on dry-run too (preflight should fail the same way the real publish
+    would). There is deliberately NO CLI override — enrich, don't bypass.
+    """
+    from scripts.audit.audit_atlas_poc_richness import (
+        DEFAULT_MAX_POC_THIN_PAGES,
+        audit_manifest,
+    )
+
+    cap = DEFAULT_MAX_POC_THIN_PAGES if max_poc_thin_pages is None else max_poc_thin_pages
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    summary = audit_manifest(manifest)
+    thin = int(summary["poc_thin_pages"])
+    if thin > cap:
+        raise ManifestPublishError(
+            f"publish blocked (#4515): manifest at {manifest_path} has {thin} thin "
+            f"POC pages (> cap {cap}). Enrich the thin entries before publishing "
+            f"(list them: scripts/audit/audit_atlas_poc_richness.py --format json; "
+            f"fill via enrich_entry / the fill recipe), then re-run. The cap has "
+            f"no publish-time override by design."
+        )
+    return summary
+
+
 def publish_manifest(
     *,
     manifest_path: Path = DEFAULT_MANIFEST,
@@ -287,6 +321,7 @@ def publish_manifest(
     repo: str = DEFAULT_REPO,
     dry_run: bool = False,
 ) -> dict[str, Any]:
+    assert_manifest_richness_publishable(manifest_path)
     gzip_manifest(manifest_path, gzip_path)
     pointer = build_pointer_payload(
         manifest_path=manifest_path,

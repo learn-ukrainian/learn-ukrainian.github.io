@@ -1,5 +1,5 @@
 {
-  "fingerprint": "972bff251ba7354a0d49cc20adf472ca294a7a8b16445494125f97f198480290",
+  "fingerprint": "49ad543e4e7494f65fb5d89360d595cee4774b6f835e664c3b2d4c11a388ab4b",
   "inputs": {
     "lexicon_code": [
       {
@@ -96,7 +96,7 @@
       },
       {
         "path": "scripts/lexicon/publish_manifest.py",
-        "sha256": "42f9ba38f59c9a5bb8a96227ae12278bda434df44a2c08b006c3f0deb85855f8"
+        "sha256": "9f2bf3446fdce1ce40feb5e9a7045a807a24e832bfb55c05705b87c2ad98479d"
       },
       {
         "path": "scripts/lexicon/reenrich_thin_manifest_entries.py",

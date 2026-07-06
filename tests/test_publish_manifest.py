@@ -168,3 +168,49 @@ def test_pointer_freshness_guard_fails_on_stale_pointer_fixture() -> None:
 
     with pytest.raises(ManifestPublishError, match="fingerprint is stale"):
         validate_pointer_freshness(pointer, fingerprint)
+
+
+def test_richness_gate_blocks_publish_above_cap(tmp_path: Path, monkeypatch) -> None:
+    """#4515: the binding thin-page cap lives at publish time. A manifest whose
+    audit exceeds the cap must raise ManifestPublishError before any gzip/
+    upload/pointer work happens — on dry-run too (preflight parity)."""
+    import scripts.audit.audit_atlas_poc_richness as richness
+    from scripts.lexicon.publish_manifest import assert_manifest_richness_publishable
+
+    manifest_path = tmp_path / "lexicon-manifest.json"
+    _write_json(manifest_path, {"version": "0.1", "entries": []})
+
+    monkeypatch.setattr(richness, "audit_manifest", lambda m: {"poc_thin_pages": 901})
+
+    with pytest.raises(ManifestPublishError, match=r"publish blocked \(#4515\).*901"):
+        assert_manifest_richness_publishable(manifest_path, max_poc_thin_pages=900)
+
+    # Wired into publish_manifest itself (cap from DEFAULT_MAX_POC_THIN_PAGES=900),
+    # and dry_run does NOT bypass it.
+    gzip_calls: list[Path] = []
+    monkeypatch.setattr(
+        "scripts.lexicon.publish_manifest.gzip_manifest",
+        lambda mp, gp: gzip_calls.append(mp),
+    )
+    with pytest.raises(ManifestPublishError, match=r"publish blocked \(#4515\)"):
+        publish_manifest(
+            manifest_path=manifest_path,
+            gzip_path=tmp_path / "m.json.gz",
+            pointer_path=tmp_path / "pointer.json",
+            fingerprint_path=tmp_path / "fp.json",
+            repo="learn-ukrainian/example",
+            dry_run=True,
+        )
+    assert gzip_calls == [], "gate must fire before any packaging work"
+
+
+def test_richness_gate_passes_at_cap_and_reports_summary(tmp_path: Path, monkeypatch) -> None:
+    import scripts.audit.audit_atlas_poc_richness as richness
+    from scripts.lexicon.publish_manifest import assert_manifest_richness_publishable
+
+    manifest_path = tmp_path / "lexicon-manifest.json"
+    _write_json(manifest_path, {"version": "0.1", "entries": []})
+
+    monkeypatch.setattr(richness, "audit_manifest", lambda m: {"poc_thin_pages": 900})
+    summary = assert_manifest_richness_publishable(manifest_path, max_poc_thin_pages=900)
+    assert summary["poc_thin_pages"] == 900
