@@ -21,6 +21,15 @@ pairs:
   cefrAvailability: b1
   curator: fable-2026-07-06
   notes: has module frame
+  frames:
+  - sentence_with_slot: У студії зібралися ___ навчатися після роботи.
+    answer_form: охочі
+    calque_form: бажаючі
+    origin: authored-codex-2026-07-06
+  - sentence_with_slot: Кожен ___ може записатися на безплатний курс.
+    answer_form: охочий
+    calque_form: бажаючий
+    origin: authored-codex-2026-07-06
 - calqueLabel: благополучний
   calqueSurfaces:
   - благополучний
@@ -40,6 +49,15 @@ pairs:
   cefrAvailability: b1
   curator: fable-2026-07-06
   notes: безпечний correction dropped — not a manifest article yet
+  frames:
+  - sentence_with_slot: У них була ___ родина.
+    answer_form: щаслива
+    calque_form: благополучна
+    origin: authored-codex-2026-07-06; curator-revised fable-2026-07-06
+  - sentence_with_slot: Ми мріємо про ___ майбутнє для дітей.
+    answer_form: щасливе
+    calque_form: благополучне
+    origin: authored-codex-2026-07-06
 - calqueLabel: болільник
   calqueSurfaces:
   - болільник
@@ -58,6 +76,15 @@ pairs:
   - antonenko
   cefrAvailability: b1
   curator: fable-2026-07-06
+  frames:
+  - sentence_with_slot: На стадіон прийшли ___ нашої команди.
+    answer_form: вболівальники
+    calque_form: болільники
+    origin: authored-codex-2026-07-06; curator-revised fable-2026-07-06
+  - sentence_with_slot: Після матчу ___ подякував гравцям за гру.
+    answer_form: вболівальник
+    calque_form: болільник
+    origin: authored-codex-2026-07-06
 - calqueLabel: біля
   calqueSurfaces:
   - біля
@@ -79,6 +106,17 @@ pairs:
   calqueSense: 'кількісна приблизність: «біля п''яти» (рос. около пяти)'
   authenticSense: просторове біля = поруч
   notes: LEGACY MIGRATION row — merge with existing manifest record
+  frames:
+  - sentence_with_slot: У залі було ___ сорока людей.
+    answer_form: близько
+    calque_form: біля
+    origin: authored-codex-2026-07-06
+    disambiguated: true
+  - sentence_with_slot: Ми чекали автобус ___ десяти хвилин.
+    answer_form: близько
+    calque_form: біля
+    origin: authored-codex-2026-07-06
+    disambiguated: true
 - calqueLabel: виглядати
   calqueSurfaces:
   - виглядати
@@ -100,6 +138,17 @@ pairs:
   curator: legacy+fable-2026-07-06
   calqueSense: to seem / appear that (рос. выглядит = 'it seems')
   authenticSense: to look (well/ill); to peer out (гарно виглядати; виглядати у вікно)
+  frames:
+  - sentence_with_slot: Після цих цифр план ___ занадто дорогим.
+    answer_form: здається
+    calque_form: виглядає
+    origin: authored-codex-2026-07-06
+    disambiguated: true
+  - sentence_with_slot: Без карти цей маршрут ___ небезпечним для туристів.
+    answer_form: здається
+    calque_form: виглядає
+    origin: authored-codex-2026-07-06
+    disambiguated: true
 - calqueLabel: вид
   calqueSurfaces:
   - виду
@@ -122,6 +171,17 @@ pairs:
   authenticSense: вид = біологічний таксон; граматична категорія
   notes: narrowed to краєвид (scenery frames) — вигляд not yet a manifest article; add вигляд correction
     after intake lands it
+  frames:
+  - sentence_with_slot: З гори відкрився чудовий ___ на місто.
+    answer_form: краєвид
+    calque_form: вид
+    origin: authored-codex-2026-07-06
+    disambiguated: true
+  - sentence_with_slot: З балкона ми побачили широкий ___ на річку.
+    answer_form: краєвид
+    calque_form: вид
+    origin: authored-codex-2026-07-06
+    disambiguated: true
 - calqueLabel: виключення
   calqueSurfaces:
   - виключення
@@ -141,6 +201,17 @@ pairs:
   curator: fable-2026-07-06
   calqueSense: виняток із правила (рос. исключение)
   authenticSense: виключення = дія (виключення зі списку, з університету)
+  frames:
+  - sentence_with_slot: Це правило діє без ___.
+    answer_form: винятку
+    calque_form: виключення
+    origin: authored-codex-2026-07-06
+    disambiguated: true
+  - sentence_with_slot: У цьому списку немає жодного ___.
+    answer_form: винятку
+    calque_form: виключення
+    origin: authored-codex-2026-07-06
+    disambiguated: true
 - calqueLabel: виключно
   calqueSurfaces:
   - виключно
@@ -163,6 +234,17 @@ pairs:
   curator: fable-2026-07-06
   calqueSense: у значенні «тільки, суто» (рос. исключительно)
   authenticSense: виключно = як виняток
+  frames:
+  - sentence_with_slot: Це ___ технічне питання.
+    answer_form: суто
+    calque_form: виключно
+    origin: authored-codex-2026-07-06
+    disambiguated: true
+  - sentence_with_slot: Розмова була ___ робочою.
+    answer_form: суто
+    calque_form: виключно
+    origin: authored-codex-2026-07-06
+    disambiguated: true
 - calqueLabel: вирішення
   calqueSurfaces:
   - вирішення
@@ -183,6 +265,17 @@ pairs:
   curator: fable-2026-07-06
   calqueSense: розв'язання задачі/проблеми (рос. решение задачи)
   authenticSense: ухвалення рішення (вирішення питання по суті)
+  frames:
+  - sentence_with_slot: Команда шукає ___ цієї проблеми.
+    answer_form: розв'язання
+    calque_form: вирішення
+    origin: authored-codex-2026-07-06
+    disambiguated: true
+  - sentence_with_slot: Для ___ задачі потрібен спокійний аналіз.
+    answer_form: розв'язання
+    calque_form: вирішення
+    origin: authored-codex-2026-07-06
+    disambiguated: true
 - calqueLabel: вирішити
   calqueSurfaces:
   - вирішити
@@ -201,6 +294,17 @@ pairs:
   curator: fable-2026-07-06
   calqueSense: розв'язати задачу/проблему (рос. решить задачу)
   authenticSense: вирішити = ухвалити рішення
+  frames:
+  - sentence_with_slot: Учні мають ___ складну задачу до п’ятниці.
+    answer_form: розв'язати
+    calque_form: вирішити
+    origin: authored-codex-2026-07-06
+    disambiguated: true
+  - sentence_with_slot: Ми спробуємо ___ цю проблему без поспіху.
+    answer_form: розв'язати
+    calque_form: вирішити
+    origin: authored-codex-2026-07-06
+    disambiguated: true
 - calqueLabel: включити
   calqueSurfaces:
   - включити
@@ -222,6 +326,17 @@ pairs:
   calqueSense: світло/пристрій (рос. включить свет)
   authenticSense: включити до списку/складу
   notes: умикати dropped per agy review (aspect mismatch with включити)
+  frames:
+  - sentence_with_slot: Будь ласка, ___ світло в коридорі.
+    answer_form: увімкни
+    calque_form: включи
+    origin: authored-codex-2026-07-06; curator-revised fable-2026-07-06
+    disambiguated: true
+  - sentence_with_slot: Я забув ___ ноутбук перед уроком.
+    answer_form: увімкнути
+    calque_form: включити
+    origin: authored-codex-2026-07-06
+    disambiguated: true
 - calqueLabel: відкривати
   calqueSurfaces:
   - відкрив
@@ -247,6 +362,17 @@ pairs:
   calqueSense: двері/вікно/крамницю фізично (рос. открыть дверь)
   authenticSense: відкрити Америку, рахунок, засідання
   notes: MERGE of відкрити→відчинити/відкривати→відчиняти/відкрито→відчинений
+  frames:
+  - sentence_with_slot: Не треба ___ вікно під час дощу.
+    answer_form: відчиняти
+    calque_form: відкривати
+    origin: authored-codex-2026-07-06
+    disambiguated: true
+  - sentence_with_slot: Оленка тихо ___ двері до класу.
+    answer_form: відчиняє
+    calque_form: відкриває
+    origin: authored-codex-2026-07-06
+    disambiguated: true
 - calqueLabel: відносно
   calqueSurfaces:
   - відносно
@@ -268,6 +394,17 @@ pairs:
   curator: fable-2026-07-06
   calqueSense: прийменник «щодо» (рос. относительно)
   authenticSense: відносно = порівняно (відносно небагато)
+  frames:
+  - sentence_with_slot: Є нові правила ___ безпеки в школі.
+    answer_form: щодо
+    calque_form: відносно
+    origin: authored-codex-2026-07-06
+    disambiguated: true
+  - sentence_with_slot: Учитель дав пораду ___ підготовки до іспиту.
+    answer_form: щодо
+    calque_form: відносно
+    origin: authored-codex-2026-07-06
+    disambiguated: true
 - calqueLabel: відношення
   calqueSurfaces:
   - відношення
@@ -292,6 +429,17 @@ pairs:
   calqueSense: ставлення до когось/стосунки (рос. отношение)
   authenticSense: математичне відношення; діловий документ
   notes: MERGE of відношення→стосунок/ставлення/відносини; A2→B1 per agy review
+  frames:
+  - sentence_with_slot: Мене засмутило його холодне ___ до команди.
+    answer_form: ставлення
+    calque_form: відношення
+    origin: authored-codex-2026-07-06
+    disambiguated: true
+  - sentence_with_slot: Добре ___ до клієнтів важливе для кав’ярні.
+    answer_form: ставлення
+    calque_form: відношення
+    origin: authored-codex-2026-07-06
+    disambiguated: true
 - calqueLabel: відправити
   calqueSurfaces:
   - відправити
@@ -311,6 +459,17 @@ pairs:
   curator: fable-2026-07-06
   calqueSense: листи/повідомлення (рос. отправить письмо)
   authenticSense: відправити поїзд, відправити службу
+  frames:
+  - sentence_with_slot: Не забудь ___ лист учителю.
+    answer_form: надіслати
+    calque_form: відправити
+    origin: authored-codex-2026-07-06
+    disambiguated: true
+  - sentence_with_slot: Я маю ___ фото мамі до вечора.
+    answer_form: надіслати
+    calque_form: відправити
+    origin: authored-codex-2026-07-06
+    disambiguated: true
 - calqueLabel: відсутність
   calqueSurfaces:
   - відсутність
@@ -331,6 +490,17 @@ pairs:
   calqueSense: 'про речі: «відсутність доказів» (рос. отсутствие)'
   authenticSense: відсутність людей (відсутній на зборах)
   notes: брак correction dropped — not a manifest article yet
+  frames:
+  - sentence_with_slot: Через ___ води похід скасували.
+    answer_form: нестачу
+    calque_form: відсутність
+    origin: authored-codex-2026-07-06
+    disambiguated: true
+  - sentence_with_slot: Ми відчули ___ часу перед дедлайном.
+    answer_form: нестачу
+    calque_form: відсутність
+    origin: authored-codex-2026-07-06
+    disambiguated: true
 - calqueLabel: відчитати
   calqueSurfaces:
   - відчитати
@@ -349,6 +519,17 @@ pairs:
   curator: fable-2026-07-06
   calqueSense: ганити когось (рос. отчитать когось)
   authenticSense: відчитати = прочитати повністю (звіт, лекцію)
+  frames:
+  - sentence_with_slot: Директор вирішив ___ учневі за грубість.
+    answer_form: вичитати
+    calque_form: відчитати
+    origin: authored-codex-2026-07-06
+    disambiguated: true
+  - sentence_with_slot: Мама може ___ синові за запізнення.
+    answer_form: вичитати
+    calque_form: відчитати
+    origin: authored-codex-2026-07-06
+    disambiguated: true
 - calqueLabel: вірний
   calqueSurfaces:
   - вірно
@@ -372,6 +553,17 @@ pairs:
   calqueSense: 'правильний: «вірна відповідь» (рос. верный ответ)'
   authenticSense: вірний = відданий (вірний друг)
   notes: MERGE вірно→правильно + вірний→правильний
+  frames:
+  - sentence_with_slot: На дошці написана ___ відповідь.
+    answer_form: правильна
+    calque_form: вірна
+    origin: authored-codex-2026-07-06
+    disambiguated: true
+  - sentence_with_slot: Оберіть ___ варіант у тесті.
+    answer_form: правильний
+    calque_form: вірний
+    origin: authored-codex-2026-07-06
+    disambiguated: true
 - calqueLabel: говоритися
   calqueSurfaces:
   - говориться
@@ -392,6 +584,17 @@ pairs:
   calqueSense: «у статті говориться» (рос. говорится)
   authenticSense: говорити як процес мовлення
   notes: nativeSlug from сказати (GEC); corrections lead with йдеться — CHECK manifest for йтися
+  frames:
+  - sentence_with_slot: У правилі ___, що винятків немає.
+    answer_form: сказано
+    calque_form: говориться
+    origin: authored-codex-2026-07-06
+    disambiguated: true
+  - sentence_with_slot: У листі ___ про нову дату зустрічі.
+    answer_form: сказано
+    calque_form: говориться
+    origin: authored-codex-2026-07-06
+    disambiguated: true
 - calqueLabel: да
   calqueSurfaces:
   - да
@@ -409,6 +612,15 @@ pairs:
   cefrAvailability: a2
   curator: fable-2026-07-06
   notes: Антоненко-збіг спурійний (функційне слово); GEC-цитата достатня
+  frames:
+  - sentence_with_slot: Оля відповіла ___, коли її спитали про готовність.
+    answer_form: так
+    calque_form: да
+    origin: authored-codex-2026-07-06
+  - sentence_with_slot: На прохання допомогти брат сказав ___.
+    answer_form: так
+    calque_form: да
+    origin: authored-codex-2026-07-06
 - calqueLabel: даний
   calqueSurfaces:
   - дані
@@ -430,6 +642,17 @@ pairs:
   calqueSense: канцелярит «в даний час», «дана книга» (рос. данный)
   authenticSense: 'математичне: дана величина'
   notes: native card = цей (a1); GEC surface was дані→ці
+  frames:
+  - sentence_with_slot: Підпишіть ___ документ сьогодні.
+    answer_form: цей
+    calque_form: даний
+    origin: authored-codex-2026-07-06
+    disambiguated: true
+  - sentence_with_slot: Прочитайте ___ текст до завтра.
+    answer_form: цей
+    calque_form: даний
+    origin: authored-codex-2026-07-06; curator-revised fable-2026-07-06
+    disambiguated: true
 - calqueLabel: доктор
   calqueSurfaces:
   - доктор
@@ -453,6 +676,17 @@ pairs:
   calqueSense: медик, звертання до медика (рос. доктор)
   authenticSense: науковий ступінь (доктор наук)
   notes: MERGE of доктор→лікарю/лікар/лікарка
+  frames:
+  - sentence_with_slot: Після огляду ___ призначив ліки.
+    answer_form: лікар
+    calque_form: доктор
+    origin: authored-codex-2026-07-06
+    disambiguated: true
+  - sentence_with_slot: Я записався до ___ на завтра.
+    answer_form: лікаря
+    calque_form: доктора
+    origin: authored-codex-2026-07-06
+    disambiguated: true
 - calqueLabel: другий
   calqueSurfaces:
   - другий
@@ -472,6 +706,17 @@ pairs:
   curator: fable-2026-07-06
   calqueSense: у значенні «інший» (рос. другой)
   authenticSense: порядковий числівник (другий раз, другий поверх)
+  frames:
+  - sentence_with_slot: Цей квиток не підходить, дайте ___.
+    answer_form: інший
+    calque_form: другий
+    origin: authored-codex-2026-07-06
+    disambiguated: true
+  - sentence_with_slot: На цю дату немає місць, оберімо ___ день.
+    answer_form: інший
+    calque_form: другий
+    origin: authored-codex-2026-07-06
+    disambiguated: true
 - calqueLabel: дійсно
   calqueSurfaces:
   - дійсно
@@ -492,6 +737,17 @@ pairs:
   authenticSense: дійсний/дійсно — про чинність, реальність (дійсний квиток)
   notes: насправді correction dropped — not a manifest article yet; дійсний→справжній pair DEFERRED (справжній
     absent)
+  frames:
+  - sentence_with_slot: Я ___ не знав про зміни.
+    answer_form: справді
+    calque_form: дійсно
+    origin: authored-codex-2026-07-06
+    disambiguated: true
+  - sentence_with_slot: Це ___ важлива новина для громади.
+    answer_form: справді
+    calque_form: дійсно
+    origin: authored-codex-2026-07-06
+    disambiguated: true
 - calqueLabel: задача
   calqueSurfaces:
   - задач
@@ -514,6 +770,17 @@ pairs:
   curator: fable-2026-07-06
   calqueSense: загальне доручення/справа (рос. задача)
   authenticSense: математична задача
+  frames:
+  - sentence_with_slot: Керівник дав мені ___ на ранок.
+    answer_form: завдання
+    calque_form: задачу
+    origin: authored-codex-2026-07-06
+    disambiguated: true
+  - sentence_with_slot: У списку на сьогодні є три ___ для команди.
+    answer_form: завдання
+    calque_form: задачі
+    origin: authored-codex-2026-07-06
+    disambiguated: true
 - calqueLabel: залив
   calqueSurfaces:
   - залив
@@ -531,6 +798,15 @@ pairs:
   cefrAvailability: b1
   curator: fable-2026-07-06
   notes: VESUM mislemmatized to verb залити; calqueLabel = залив (noun)
+  frames:
+  - sentence_with_slot: Корабель зайшов у ___ біля острова.
+    answer_form: затоку
+    calque_form: залив
+    origin: authored-codex-2026-07-06
+  - sentence_with_slot: На мапі ми знайшли ___ Чорного моря.
+    answer_form: затоку
+    calque_form: залив
+    origin: authored-codex-2026-07-06
 - calqueLabel: знаходити
   calqueSurfaces:
   - знаходить
@@ -550,6 +826,17 @@ pairs:
   calqueSense: «знаходить це дивним» (рос. находит это странным)
   authenticSense: знаходити загублене
   notes: frame REQUIRED to disambiguate; single-doc but textbook calque
+  frames:
+  - sentence_with_slot: Марко ___ цю ідею сміливою.
+    answer_form: вважає
+    calque_form: знаходить
+    origin: authored-codex-2026-07-06
+    disambiguated: true
+  - sentence_with_slot: Комісія ___ рішення корисним для громади.
+    answer_form: вважає
+    calque_form: знаходить
+    origin: authored-codex-2026-07-06
+    disambiguated: true
 - calqueLabel: знаходитися
   calqueSurfaces:
   - знаходиться
@@ -572,6 +859,17 @@ pairs:
   calqueSense: 'стале місцеперебування: «будинок знаходиться» (рос. находится)'
   authenticSense: знаходитися = бути знайденим (загублене знайшлося)
   notes: MERGE знаходитися→розташований/стояти
+  frames:
+  - sentence_with_slot: Музей ___ біля парку.
+    answer_form: розташований
+    calque_form: знаходиться
+    origin: authored-codex-2026-07-06
+    disambiguated: true
+  - sentence_with_slot: Школа ___ поруч із вокзалом.
+    answer_form: розташована
+    calque_form: знаходиться
+    origin: authored-codex-2026-07-06
+    disambiguated: true
 - calqueLabel: значить
   calqueSurfaces:
   - значить
@@ -593,6 +891,17 @@ pairs:
   calqueSense: вставне слово (рос. значит)
   authenticSense: дієслово значити = мати значення
   notes: calqueLabel deliberately the frozen form «значить»
+  frames:
+  - sentence_with_slot: Ми встигли на автобус, ___, прийдемо вчасно.
+    answer_form: отже
+    calque_form: значить
+    origin: authored-codex-2026-07-06
+    disambiguated: true
+  - sentence_with_slot: Дощ уже скінчився, ___, можна йти.
+    answer_form: отже
+    calque_form: значить
+    origin: authored-codex-2026-07-06
+    disambiguated: true
 - calqueLabel: крокувати
   calqueSurfaces:
   - крокувати
@@ -611,6 +920,15 @@ pairs:
   cefrAvailability: b1
   curator: fable-2026-07-06
   notes: простувати/прямувати corrections dropped — not manifest articles yet
+  frames:
+  - sentence_with_slot: Звідси зручно ___ до музею.
+    answer_form: іти
+    calque_form: крокувати
+    origin: authored-codex-2026-07-06
+  - sentence_with_slot: Після обіду ми плануємо ___ додому.
+    answer_form: іти
+    calque_form: крокувати
+    origin: authored-codex-2026-07-06
 - calqueLabel: куток
   calqueSurfaces:
   - кутку
@@ -629,6 +947,17 @@ pairs:
   curator: fable-2026-07-06
   calqueSense: 'ріг вулиці: «на кутку» (рос. на углу)'
   authenticSense: куток кімнати, затишний куток
+  frames:
+  - sentence_with_slot: Зустрінемось на ___ вулиці.
+    answer_form: розі
+    calque_form: кутку
+    origin: authored-codex-2026-07-06
+    disambiguated: true
+  - sentence_with_slot: Кафе відкрили на ___ нашої вулиці.
+    answer_form: розі
+    calque_form: кутку
+    origin: authored-codex-2026-07-06
+    disambiguated: true
 - calqueLabel: любий
   calqueSurfaces:
   - любий
@@ -647,6 +976,17 @@ pairs:
   curator: fable-2026-07-06
   calqueSense: 'будь-який: «любий варіант» (рос. любой)'
   authenticSense: любий = дорогий, коханий
+  frames:
+  - sentence_with_slot: Обери ___ колір для обкладинки.
+    answer_form: будь-який
+    calque_form: любий
+    origin: authored-codex-2026-07-06
+    disambiguated: true
+  - sentence_with_slot: Можеш прийти в ___ день цього тижня.
+    answer_form: будь-який
+    calque_form: любий
+    origin: authored-codex-2026-07-06
+    disambiguated: true
 - calqueLabel: масло
   calqueSurfaces:
   - масла
@@ -665,6 +1005,17 @@ pairs:
   curator: fable-2026-07-06
   calqueSense: 'рослинний жир: «соняшникове масло» (рос. масло)'
   authenticSense: масло = тваринний жир (вершкове)
+  frames:
+  - sentence_with_slot: У салат додай ___ з соняшнику.
+    answer_form: олію
+    calque_form: масло
+    origin: authored-codex-2026-07-06
+    disambiguated: true
+  - sentence_with_slot: Для смаження купили ___ з кукурудзи.
+    answer_form: олію
+    calque_form: масло
+    origin: authored-codex-2026-07-06
+    disambiguated: true
 - calqueLabel: матися
   calqueSurfaces:
   - мається
@@ -685,6 +1036,17 @@ pairs:
   curator: fable-2026-07-06
   calqueSense: «мається великий вибір» (рос. имеется)
   authenticSense: матися = почуватися (як маєшся?)
+  frames:
+  - sentence_with_slot: У бібліотеці ___ великий вибір книжок.
+    answer_form: є
+    calque_form: мається
+    origin: authored-codex-2026-07-06
+    disambiguated: true
+  - sentence_with_slot: На сайті ___ вся потрібна інформація.
+    answer_form: є
+    calque_form: мається
+    origin: authored-codex-2026-07-06
+    disambiguated: true
 - calqueLabel: надо
   calqueSurfaces:
   - надо
@@ -701,6 +1063,15 @@ pairs:
   - ua-gec
   cefrAvailability: a2
   curator: fable-2026-07-06
+  frames:
+  - sentence_with_slot: На завтра ___ підготувати короткий текст.
+    answer_form: треба
+    calque_form: надо
+    origin: authored-codex-2026-07-06
+  - sentence_with_slot: Перед дорогою ___ купити воду.
+    answer_form: треба
+    calque_form: надо
+    origin: authored-codex-2026-07-06
 - calqueLabel: назад
   calqueSurfaces:
   - назад
@@ -720,6 +1091,17 @@ pairs:
   curator: fable-2026-07-06
   calqueSense: часове «рік назад» (рос. год назад)
   authenticSense: просторовий напрямок (крок назад)
+  frames:
+  - sentence_with_slot: Два роки ___ ми жили в Одесі.
+    answer_form: тому
+    calque_form: назад
+    origin: authored-codex-2026-07-06
+    disambiguated: true
+  - sentence_with_slot: П’ять хвилин ___ почався урок.
+    answer_form: тому
+    calque_form: назад
+    origin: authored-codex-2026-07-06
+    disambiguated: true
 - calqueLabel: начало
   calqueSurfaces:
   - начала
@@ -739,6 +1121,17 @@ pairs:
   calqueSense: початок у часі (рос. начало)
   authenticSense: філософське першоджерело, основа (вольове начало)
   notes: 'agy review: reclassified lexical→sense_restricted'
+  frames:
+  - sentence_with_slot: Ми пропустили ___ фільму.
+    answer_form: початок
+    calque_form: начало
+    origin: authored-codex-2026-07-06
+    disambiguated: true
+  - sentence_with_slot: У розкладі змінили ___ занять.
+    answer_form: початок
+    calque_form: начало
+    origin: authored-codex-2026-07-06
+    disambiguated: true
 - calqueLabel: неділя
   calqueSurfaces:
   - неділя
@@ -758,6 +1151,17 @@ pairs:
   curator: legacy+fable-2026-07-06
   calqueSense: week / a seven-day period (рос. неделя)
   authenticSense: Sunday (day of the week)
+  frames:
+  - sentence_with_slot: Ми чекали ___ на відповідь.
+    answer_form: тиждень
+    calque_form: неділю
+    origin: authored-codex-2026-07-06
+    disambiguated: true
+  - sentence_with_slot: Через ___ почнуться канікули.
+    answer_form: тиждень
+    calque_form: неділю
+    origin: authored-codex-2026-07-06
+    disambiguated: true
 - calqueLabel: но
   calqueSurfaces:
   - но
@@ -774,6 +1178,15 @@ pairs:
   - ua-gec
   cefrAvailability: a2
   curator: fable-2026-07-06
+  frames:
+  - sentence_with_slot: Я хочу кави, ___ молока немає.
+    answer_form: але
+    calque_form: но
+    origin: authored-codex-2026-07-06
+  - sentence_with_slot: Було холодно, ___ ми пішли пішки.
+    answer_form: але
+    calque_form: но
+    origin: authored-codex-2026-07-06
 - calqueLabel: область
   calqueSurfaces:
   - області
@@ -793,6 +1206,17 @@ pairs:
   calqueSense: царина знань/діяльності (рос. область знаний)
   authenticSense: адміністративна область
   notes: MERGE область→ділянка/сфера; CHECK галузь in manifest
+  frames:
+  - sentence_with_slot: Вона працює у ___ освіти.
+    answer_form: сфері
+    calque_form: області
+    origin: authored-codex-2026-07-06
+    disambiguated: true
+  - sentence_with_slot: Це важлива ___ науки.
+    answer_form: сфера
+    calque_form: область
+    origin: authored-codex-2026-07-06
+    disambiguated: true
 - calqueLabel: облік
   calqueSurfaces:
   - облік
@@ -811,6 +1235,17 @@ pairs:
   curator: fable-2026-07-06
   calqueSense: 'зовнішній образ: «облік сучасника» (рос. облик)'
   authenticSense: облік = облічування, реєстрація (взяти на облік)
+  frames:
+  - sentence_with_slot: Новий парк змінив ___ району.
+    answer_form: обличчя
+    calque_form: облік
+    origin: authored-codex-2026-07-06
+    disambiguated: true
+  - sentence_with_slot: Архітектура формує ___ міста.
+    answer_form: обличчя
+    calque_form: облік
+    origin: authored-codex-2026-07-06
+    disambiguated: true
 - calqueLabel: образ
   calqueSurfaces:
   - образ
@@ -830,6 +1265,17 @@ pairs:
   calqueSense: «яким образом» (рос. каким образом)
   authenticSense: художній образ
   notes: CHECK чин in manifest; frame required
+  frames:
+  - sentence_with_slot: У який ___ можна оплатити квиток?
+    answer_form: спосіб
+    calque_form: образ
+    origin: authored-codex-2026-07-06
+    disambiguated: true
+  - sentence_with_slot: Яким ___ команда розв’яже проблему?
+    answer_form: способом
+    calque_form: образом
+    origin: authored-codex-2026-07-06
+    disambiguated: true
 - calqueLabel: обслуга
   calqueSurfaces:
   - обслуга
@@ -848,6 +1294,17 @@ pairs:
   curator: fable-2026-07-06
   calqueSense: 'дія, що задовольняє потреби: «поштова обслуга»'
   authenticSense: обслуга = група людей, призначених виконувати роботу (військ. розрахунок)
+  frames:
+  - sentence_with_slot: У рахунок включили плату за ___ столика.
+    answer_form: обслуговування
+    calque_form: обслугу
+    origin: authored-codex-2026-07-06
+    disambiguated: true
+  - sentence_with_slot: Курс навчає стандартів ___ клієнтів.
+    answer_form: обслуговування
+    calque_form: обслуги
+    origin: authored-codex-2026-07-06
+    disambiguated: true
 - calqueLabel: палатка
   calqueSurfaces:
   - палатці
@@ -867,6 +1324,17 @@ pairs:
   calqueSense: туристичний намет (рос. палатка)
   authenticSense: 'торговельна палатка — ятка, кіоск (СУМ: «тимчасове, звичайно літнє приміщення»)'
   notes: 'agy review: reclassified lexical→sense_restricted (SUM attests trade-stall sense)'
+  frames:
+  - sentence_with_slot: Ми поставили ___ біля озера.
+    answer_form: намет
+    calque_form: палатку
+    origin: authored-codex-2026-07-06
+    disambiguated: true
+  - sentence_with_slot: У поході діти спали в ___.
+    answer_form: наметі
+    calque_form: палатці
+    origin: authored-codex-2026-07-06
+    disambiguated: true
 - calqueLabel: пануючий
   calqueSurfaces:
   - пануючий
@@ -885,6 +1353,15 @@ pairs:
   - antonenko
   cefrAvailability: b1
   curator: fable-2026-07-06
+  frames:
+  - sentence_with_slot: У статті описано ___ погляд на проблему.
+    answer_form: панівний
+    calque_form: пануючий
+    origin: authored-codex-2026-07-06
+  - sentence_with_slot: Це була ___ думка в команді.
+    answer_form: панівна
+    calque_form: пануюча
+    origin: authored-codex-2026-07-06
 - calqueLabel: папа
   calqueSurfaces:
   - папа
@@ -905,6 +1382,17 @@ pairs:
   curator: fable-2026-07-06
   calqueSense: батько (рос. папа)
   authenticSense: Папа Римський
+  frames:
+  - sentence_with_slot: Мій ___ готує вечерю.
+    answer_form: тато
+    calque_form: папа
+    origin: authored-codex-2026-07-06
+    disambiguated: true
+  - sentence_with_slot: Після школи я зайшла до ___.
+    answer_form: тата
+    calque_form: папи
+    origin: authored-codex-2026-07-06
+    disambiguated: true
 - calqueLabel: пара
   calqueSurfaces:
   - пару
@@ -926,6 +1414,17 @@ pairs:
   calqueSense: 'приблизна кількість: «пару хвилин» (рос. пара минут)'
   authenticSense: пара = двоє, комплект (пара шкарпеток)
   notes: VESUM mislemmatized surface to «пар»; fixed to пара
+  frames:
+  - sentence_with_slot: Зачекай ___ хвилин біля входу.
+    answer_form: кілька
+    calque_form: пару
+    origin: authored-codex-2026-07-06
+    disambiguated: true
+  - sentence_with_slot: Я маю ___ запитань до вчителя.
+    answer_form: кілька
+    calque_form: пару
+    origin: authored-codex-2026-07-06
+    disambiguated: true
 - calqueLabel: передня
   calqueSurfaces:
   - передню
@@ -945,6 +1444,15 @@ pairs:
   - ua-gec
   cefrAvailability: b1
   curator: fable-2026-07-06
+  frames:
+  - sentence_with_slot: У ___ стоїть шафа для взуття.
+    answer_form: передпокої
+    calque_form: передній
+    origin: authored-codex-2026-07-06
+  - sentence_with_slot: Постав сумку в ___.
+    answer_form: передпокій
+    calque_form: передню
+    origin: authored-codex-2026-07-06
 - calqueLabel: переписка
   calqueSurfaces:
   - переписка
@@ -963,6 +1471,17 @@ pairs:
   curator: fable-2026-07-06
   calqueSense: обмін листами (рос. переписка)
   authenticSense: переписування = процес копіювання написаного
+  frames:
+  - sentence_with_slot: Ми зберегли ___ з учителем.
+    answer_form: листування
+    calque_form: переписку
+    origin: authored-codex-2026-07-06
+    disambiguated: true
+  - sentence_with_slot: Через ___ друзі краще пізнали одне одного.
+    answer_form: листування
+    calque_form: переписку
+    origin: authored-codex-2026-07-06
+    disambiguated: true
 - calqueLabel: пол
   calqueSurfaces:
   - полу
@@ -980,6 +1499,15 @@ pairs:
   cefrAvailability: a2
   curator: fable-2026-07-06
   notes: VESUM mislemmatized полу→пола(поділ одягу); calqueLabel fixed to пол
+  frames:
+  - sentence_with_slot: Помий ___ у коридорі.
+    answer_form: підлогу
+    calque_form: пол
+    origin: authored-codex-2026-07-06; curator-revised fable-2026-07-06
+  - sentence_with_slot: Сумка впала на ___ біля вікна.
+    answer_form: підлогу
+    calque_form: пол
+    origin: authored-codex-2026-07-06
 - calqueLabel: положення
   calqueSurfaces:
   - положення
@@ -1000,6 +1528,17 @@ pairs:
   curator: fable-2026-07-06
   calqueSense: ситуація, стан (рос. положение)
   authenticSense: пункт документа; позиція тіла
+  frames:
+  - sentence_with_slot: Після повені ___ у селі стало важким.
+    answer_form: становище
+    calque_form: положення
+    origin: authored-codex-2026-07-06
+    disambiguated: true
+  - sentence_with_slot: Війна змінила економічне ___ родини.
+    answer_form: становище
+    calque_form: положення
+    origin: authored-codex-2026-07-06
+    disambiguated: true
 - calqueLabel: пост
   calqueSurfaces:
   - посту
@@ -1020,6 +1559,17 @@ pairs:
   curator: fable-2026-07-06
   calqueSense: публікація в соцмережі (рос./англ. пост)
   authenticSense: військовий пост; релігійний піст — окрема лексема
+  frames:
+  - sentence_with_slot: Я прочитав твій ___ у фейсбуці.
+    answer_form: допис
+    calque_form: пост
+    origin: authored-codex-2026-07-06
+    disambiguated: true
+  - sentence_with_slot: Новий ___ зібрав багато коментарів.
+    answer_form: допис
+    calque_form: пост
+    origin: authored-codex-2026-07-06
+    disambiguated: true
 - calqueLabel: початкуючий
   calqueSurfaces:
   - початкуючий
@@ -1037,6 +1587,15 @@ pairs:
   - antonenko
   cefrAvailability: b1
   curator: fable-2026-07-06
+  frames:
+  - sentence_with_slot: Цей художник ще ___.
+    answer_form: початківець
+    calque_form: початкуючий
+    origin: authored-codex-2026-07-06
+  - sentence_with_slot: На курс записався один ___.
+    answer_form: початківець
+    calque_form: початкуючий
+    origin: authored-codex-2026-07-06
 - calqueLabel: працюючий
   calqueSurfaces:
   - працюючий
@@ -1056,6 +1615,15 @@ pairs:
   cefrAvailability: b1
   curator: fable-2026-07-06
   notes: трудівник kept as display correction; manifest gate applies to nativeSlug only
+  frames:
+  - sentence_with_slot: Кожен ___ підписав новий графік.
+    answer_form: працівник
+    calque_form: працюючий
+    origin: authored-codex-2026-07-06
+  - sentence_with_slot: У відділі бракує одного ___.
+    answer_form: працівника
+    calque_form: працюючого
+    origin: authored-codex-2026-07-06
 - calqueLabel: приймати
   calqueSurfaces:
   - приймати
@@ -1081,6 +1649,17 @@ pairs:
   authenticSense: приймати гостей, приймати рішення
   notes: GEC correction was вживати(ліки); canonical flagship form = брати участь; needs authored frames
     both
+  frames:
+  - sentence_with_slot: Я хочу ___ участь у конкурсі.
+    answer_form: брати
+    calque_form: приймати
+    origin: authored-codex-2026-07-06
+    disambiguated: true
+  - sentence_with_slot: Учні будуть ___ участь у проєкті.
+    answer_form: брати
+    calque_form: приймати
+    origin: authored-codex-2026-07-06
+    disambiguated: true
 - calqueLabel: присвоїти
   calqueSurfaces:
   - присвоїли
@@ -1100,6 +1679,17 @@ pairs:
   curator: fable-2026-07-06
   calqueSense: присвоїти звання/права (рос. присвоить звание)
   authenticSense: присвоїти = привласнити чуже
+  frames:
+  - sentence_with_slot: Рада вирішила ___ статус музею цій будівлі.
+    answer_form: надати
+    calque_form: присвоїти
+    origin: authored-codex-2026-07-06
+    disambiguated: true
+  - sentence_with_slot: Комісія може ___ звання переможця команді.
+    answer_form: надати
+    calque_form: присвоїти
+    origin: authored-codex-2026-07-06
+    disambiguated: true
 - calqueLabel: пробка
   calqueSurfaces:
   - пробках
@@ -1118,6 +1708,17 @@ pairs:
   curator: fable-2026-07-06
   calqueSense: дорожній затор (рос. пробка)
   authenticSense: пробка = корок (закорковування)
+  frames:
+  - sentence_with_slot: Через ___ ми запізнилися на урок.
+    answer_form: затор
+    calque_form: пробку
+    origin: authored-codex-2026-07-06
+    disambiguated: true
+  - sentence_with_slot: На мосту побачили ___ перед світлофором.
+    answer_form: затор
+    calque_form: пробку
+    origin: authored-codex-2026-07-06
+    disambiguated: true
 - calqueLabel: піднімати
   calqueSurfaces:
   - піднімати
@@ -1140,6 +1741,17 @@ pairs:
   curator: fable-2026-07-06
   calqueSense: піднімати питання/тему (рос. поднимать вопрос)
   authenticSense: фізично піднімати
+  frames:
+  - sentence_with_slot: На нараді будемо ___ питання безпеки.
+    answer_form: порушувати
+    calque_form: піднімати
+    origin: authored-codex-2026-07-06
+    disambiguated: true
+  - sentence_with_slot: Журналістка не хотіла ___ цю тему без доказів.
+    answer_form: порушувати
+    calque_form: піднімати
+    origin: authored-codex-2026-07-06
+    disambiguated: true
 - calqueLabel: підписка
   calqueSurfaces:
   - підписка
@@ -1158,6 +1770,17 @@ pairs:
   curator: fable-2026-07-06
   calqueSense: передплата газет/журналів (рос. подписка)
   authenticSense: підписка = письмове зобов'язання, ствердження підписом
+  frames:
+  - sentence_with_slot: Я оформила ___ на журнал.
+    answer_form: передплату
+    calque_form: підписку
+    origin: authored-codex-2026-07-06
+    disambiguated: true
+  - sentence_with_slot: Річна ___ на газету коштує недорого.
+    answer_form: передплата
+    calque_form: підписка
+    origin: authored-codex-2026-07-06
+    disambiguated: true
 - calqueLabel: розповсюджувати
   calqueSurfaces:
   - розповсюджувати
@@ -1177,6 +1800,17 @@ pairs:
   curator: fable-2026-07-06
   calqueSense: про ідеї, чутки, вплив («розповсюджувати ідеї»)
   authenticSense: розповсюджувати = фізично роздавати (книжки, листівки)
+  frames:
+  - sentence_with_slot: Не варто ___ чутки в класі.
+    answer_form: поширювати
+    calque_form: розповсюджувати
+    origin: authored-codex-2026-07-06
+    disambiguated: true
+  - sentence_with_slot: Цей блог швидко ___ корисні ідеї.
+    answer_form: поширює
+    calque_form: розповсюджує
+    origin: authored-codex-2026-07-06
+    disambiguated: true
 - calqueLabel: слідуючий
   calqueSurfaces:
   - слідуючий
@@ -1194,6 +1828,15 @@ pairs:
   - legacy-manifest
   cefrAvailability: b1
   curator: legacy+fable-2026-07-06
+  frames:
+  - sentence_with_slot: Наш ___ урок почнеться о дев’ятій.
+    answer_form: наступний
+    calque_form: слідуючий
+    origin: authored-codex-2026-07-06
+  - sentence_with_slot: Відкрийте ___ сторінку в підручнику.
+    answer_form: наступну
+    calque_form: слідуючу
+    origin: authored-codex-2026-07-06
 - calqueLabel: справа
   calqueSurfaces:
   - справа
@@ -1216,6 +1859,17 @@ pairs:
   calqueSense: «в чому справа», «це не моя справа» (рос. дело)
   authenticSense: юридична/ділова справа
   notes: nuanced; frame MUST disambiguate
+  frames:
+  - sentence_with_slot: Скажи чесно, у чому ___?
+    answer_form: річ
+    calque_form: справа
+    origin: authored-codex-2026-07-06
+    disambiguated: true
+  - sentence_with_slot: Не в тому ___, хто почав розмову.
+    answer_form: річ
+    calque_form: справа
+    origin: authored-codex-2026-07-06
+    disambiguated: true
 - calqueLabel: співпадіння
   calqueSurfaces:
   - співпадіння
@@ -1233,6 +1887,15 @@ pairs:
   - ua-gec
   cefrAvailability: a2
   curator: fable-2026-07-06
+  frames:
+  - sentence_with_slot: Ми помітили ___ дат у двох документах.
+    answer_form: збіг
+    calque_form: співпадіння
+    origin: authored-codex-2026-07-06
+  - sentence_with_slot: Перевірка показала ___ результатів.
+    answer_form: збіг
+    calque_form: співпадіння
+    origin: authored-codex-2026-07-06
 - calqueLabel: стакан
   calqueSurfaces:
   - стакан
@@ -1251,6 +1914,15 @@ pairs:
   curator: fable-2026-07-06
   notes: native lemma normalized from GEC surface склянку; rationale softened per agy review (SUM attests
     стакан as рідко)
+  frames:
+  - sentence_with_slot: Налий води в ___.
+    answer_form: склянку
+    calque_form: стакан
+    origin: authored-codex-2026-07-06
+  - sentence_with_slot: На столі поставили ___ молока.
+    answer_form: склянку
+    calque_form: стакан
+    origin: authored-codex-2026-07-06
 - calqueLabel: страховка
   calqueSurfaces:
   - страховка
@@ -1269,6 +1941,15 @@ pairs:
   - ua-gec
   cefrAvailability: b1
   curator: fable-2026-07-06
+  frames:
+  - sentence_with_slot: Перед поїздкою оформили ___ для всієї родини.
+    answer_form: страхування
+    calque_form: страховку
+    origin: authored-codex-2026-07-06
+  - sentence_with_slot: Компанія оплатила ___ працівників.
+    answer_form: страхування
+    calque_form: страховку
+    origin: authored-codex-2026-07-06
 - calqueLabel: сідий
   calqueSurfaces:
   - сідий
@@ -1286,6 +1967,15 @@ pairs:
   cefrAvailability: b1
   curator: fable-2026-07-06
   notes: rationale softened per agy review (Котляревський attestation exists)
+  frames:
+  - sentence_with_slot: У дідуся вже ___ вуса.
+    answer_form: сиві
+    calque_form: сіді
+    origin: authored-codex-2026-07-06
+  - sentence_with_slot: На фото був чоловік із ___ волоссям.
+    answer_form: сивим
+    calque_form: сідим
+    origin: authored-codex-2026-07-06
 - calqueLabel: тьотя
   calqueSurfaces:
   - тьотя
@@ -1303,6 +1993,15 @@ pairs:
   cefrAvailability: a2
   curator: fable-2026-07-06
   notes: rationale register-based per agy review (Мирний/Сосюра attestations)
+  frames:
+  - sentence_with_slot: Моя ___ живе у Львові.
+    answer_form: тітка
+    calque_form: тьотя
+    origin: authored-codex-2026-07-06
+  - sentence_with_slot: Я передав лист ___.
+    answer_form: тітці
+    calque_form: тьоті
+    origin: authored-codex-2026-07-06
 - calqueLabel: фон
   calqueSurfaces:
   - фоні
@@ -1322,6 +2021,17 @@ pairs:
   calqueSense: 'образне/зображальне тло: «на фоні подій»'
   authenticSense: фізичний термін (радіаційний фон)
   notes: A2→B1 per agy review (sense contrast too nuanced for A2)
+  frames:
+  - sentence_with_slot: На ___ цих подій рішення сприймається інакше.
+    answer_form: тлі
+    calque_form: фоні
+    origin: authored-codex-2026-07-06; curator-revised fable-2026-07-06
+    disambiguated: true
+  - sentence_with_slot: Новина прозвучала на ___ загальної тривоги.
+    answer_form: тлі
+    calque_form: фоні
+    origin: authored-codex-2026-07-06
+    disambiguated: true
 - calqueLabel: хорошо
   calqueSurfaces:
   - хорошо
@@ -1338,6 +2048,15 @@ pairs:
   - ua-gec
   cefrAvailability: a2
   curator: fable-2026-07-06
+  frames:
+  - sentence_with_slot: Після відпочинку мені стало ___.
+    answer_form: добре
+    calque_form: хорошо
+    origin: authored-codex-2026-07-06
+  - sentence_with_slot: Ти ___ пояснив нове правило.
+    answer_form: добре
+    calque_form: хорошо
+    origin: authored-codex-2026-07-06
 - calqueLabel: час
   calqueSurfaces:
   - час
@@ -1358,6 +2077,17 @@ pairs:
   curator: fable-2026-07-06
   calqueSense: 'годинниковий час: «який час?» (рос. который час)'
   authenticSense: час як загальне поняття
+  frames:
+  - sentence_with_slot: Я не маю годинника й не знаю, котра ___.
+    answer_form: година
+    calque_form: час
+    origin: authored-codex-2026-07-06
+    disambiguated: true
+  - sentence_with_slot: Учень тихо спитав, котра зараз ___.
+    answer_form: година
+    calque_form: час
+    origin: authored-codex-2026-07-06
+    disambiguated: true
 - calqueLabel: чисто
   calqueSurfaces:
   - чисто
@@ -1376,6 +2106,17 @@ pairs:
   curator: fable-2026-07-06
   calqueSense: «чисто технічний» (рос. чисто технический)
   authenticSense: чисто = охайно, без бруду
+  frames:
+  - sentence_with_slot: Це ___ технічний крок у процесі.
+    answer_form: суто
+    calque_form: чисто
+    origin: authored-codex-2026-07-06
+    disambiguated: true
+  - sentence_with_slot: Рішення має ___ практичну мету.
+    answer_form: суто
+    calque_form: чисто
+    origin: authored-codex-2026-07-06
+    disambiguated: true
 - calqueLabel: шляпа
   calqueSurfaces:
   - шляпу
@@ -1393,3 +2134,12 @@ pairs:
   cefrAvailability: b1
   curator: fable-2026-07-06
   notes: lemma fixed from surface
+  frames:
+  - sentence_with_slot: Перед виходом він узяв ___.
+    answer_form: капелюх
+    calque_form: шляпу
+    origin: authored-codex-2026-07-06
+  - sentence_with_slot: Дитина загубила ___ у трамваї.
+    answer_form: капелюх
+    calque_form: шляпу
+    origin: authored-codex-2026-07-06

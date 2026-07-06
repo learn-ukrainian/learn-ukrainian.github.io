@@ -1740,10 +1740,20 @@ def _build_heritage_items(
         origin = _clean_text(frame.get("origin"))
         rationale = _clean_text(pair.get("rationale")) or ""
         citations = _clean_text_list(pair.get("citations"))
+        pair_label = _clean_text(pair.get("calqueLabel")) or lexeme["lemmaId"]
         if not all((answer_form, calque_form, sentence, origin, rationale, citations)):
+            print(
+                f"WARN: heritage_pair {pair_label!r} frame {index} dropped: missing required field",
+                file=sys.stderr,
+            )
             continue
         distractors = _valid_heritage_distractors(lexeme, frame, pair, all_lexemes, level)
         if len(distractors) < 2:
+            print(
+                f"WARN: heritage_pair {pair_label!r} frame {index} dropped: "
+                f"{len(distractors)} same-POS distractors within level {level} (need 2)",
+                file=sys.stderr,
+            )
             continue
         key = "\x1f".join((deck_version, lexeme["lemmaId"], sentence, answer_form, calque_form, origin))
         heritage_id = "her_" + hashlib.sha1(key.encode("utf-8")).hexdigest()[:12]
