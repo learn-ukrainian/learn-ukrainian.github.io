@@ -81,6 +81,23 @@ persona:
   role: Задає незручні питання, руйнує «бронзовий» образ, показуючи живу, суперечливу людину замість ікони.
   voice: Критичний біограф
 phase: BIO
+readings:
+- title: Кобилянська Ольга Юліанівна
+  language: uk
+  source: Енциклопедія історії України (ЕІУ)
+  url: https://history.org.ua/?termin=Kobylianska_O
+  type: encyclopedia
+  role: reference
+  hosting: link-only
+  task: Ознайомитися з біографією письменниці та її роллю в українському модернізмі.
+- title: Царівна (фрагменти)
+  language: uk
+  source: УкрЛіб
+  url: https://www.ukrlib.com.ua/books/printit.php?tid=462
+  type: primary
+  role: analysis
+  hosting: excerpt-only
+  task: Прочитати фрагменти творів для розуміння ідей емансипації та ніцшеанства.
 references:
 - title: Olha Kobylianska
   note: Загальна біографія, список творів, ключові дати. Основа для семінару.
@@ -100,7 +117,7 @@ sequence: 79
 slug: olha-kobylianska
 subtitle: 'The Eagle of Bukovyna: Modernist and Feminist'
 title: 'Ольга Кобилянська: Модерністка і феміністка'
-version: '4.0'
+version: '4.3'
 vocabulary_hints:
 - definition: загальний напрям у мистецтві та літературі кінця XIX – початку XX ст., що характеризується розривом із традиціями та пошуком нових форм
   pos: ч.

@@ -78,6 +78,23 @@ persona:
   role: Модератор семінару, що ставить під сумнів канон, шукає недооцінені постаті та їхні справжні, часто неочевидні, внески
   voice: Історик літератури, що спеціалізується на «другому ряді» класиків
 phase: BIO
+readings:
+- title: 1864 — народився Володимир Самійленко
+  language: uk
+  source: Український інститут національної пам’яті (УІНП)
+  url: https://uinp.gov.ua/istorychnyy-kalendar/lyutyy/3/1864-narodyvsya-volodymyr-samiylenko
+  type: article
+  role: reference
+  hosting: link-only
+  task: Ознайомитися з біографією Самійленка та його національною позицією.
+- title: Самійленко Володимир Іванович
+  language: uk
+  source: Енциклопедія історії України (ЕІУ)
+  url: https://history.org.ua/?termin=Samijlenko_V
+  type: encyclopedia
+  role: reference
+  hosting: link-only
+  task: Дослідити роль письменника у протистоянні русифікації.
 references:
 - title: Volodymyr Samiilenko
   note: Compiled research notes on Samiilenko, his works, and historical context
@@ -95,7 +112,7 @@ sequence: 81
 slug: volodymyr-samiilenko
 subtitle: 'Volodymyr Samiilenko: Poet, Satirist, and Language Builder'
 title: 'Володимир Самійленко: Поет, сатирик і будівничий мови'
-version: '4.0'
+version: '4.2'
 vocabulary_hints:
 - definition: гостре, викривальне осміяння суспільних вад, негативних явищ чи конкретних осіб
   pos: ж.

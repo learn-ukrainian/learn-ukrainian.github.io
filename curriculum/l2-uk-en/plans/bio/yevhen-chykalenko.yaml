@@ -79,9 +79,26 @@ persona:
   role: 'Модератор семінару, який постійно ставить незручне питання: "А хто за все це платить?"'
   voice: Pragmatic-Accountant
 phase: BIO
+readings:
+- title: Чикаленко Євген Харлампійович
+  language: uk
+  source: Енциклопедія історії України (ЕІУ)
+  url: https://history.org.ua/?termin=Chykalenko_Y
+  type: encyclopedia
+  role: reference
+  hosting: link-only
+  task: Дослідити внесок Чикаленка у розвиток українського руху та періодичної преси.
+- title: Спогади (1861-1907)
+  language: uk
+  source: Діаспоріана
+  url: https://diasporiana.org.ua/memuari/1755-chikalenko-ye-spogadi-1861-1907/
+  type: primary
+  role: reflection
+  hosting: excerpt-only
+  task: Ознайомитися з фрагментами спогадів для розуміння мотивації мецената.
 references:
 - title: Yevhen Chykalenko
-  note: Опрацьована та доповнена біографічна довідка з uk.wikipedia.org
+  note: Compiled research notes on Chykalenko's publishing, patronage, and Ukrainian civic networks.
   path: wiki/bio/yevhen-chykalenko.md
   type: wiki
 - title: Щоденник (1907-1917)
@@ -103,7 +120,7 @@ sequence: 77
 slug: yevhen-chykalenko
 subtitle: Людина, яка платила за Україну
 title: 'Євген Чикаленко: Меценат і видавець'
-version: '4.0'
+version: '4.2'
 vocabulary_hints:
 - definition: особа, що безкорисливо підтримує розвиток культури, науки, мистецтва, часто з власних коштів
   pos: ч.
