@@ -80,11 +80,11 @@ readings:
 - hosting: link-only
   language: uk
   role: Офіційна біографічна довідка про Марію Грушевську.
-  source: Енциклопедія історії України
+  source: Енциклопедія історії української революції 1917–1921
   task: Ознайомтеся з енциклопедичною статтею про життя діячки.
   title: Грушевська Марія Сильвестрівна
   type: encyclopedia
-  url: http://ukr-revolution.history.org.ua/termin/grushevska_marija
+  url: https://ukr-revolution.history.org.ua/termin/grushevska_marija
 - hosting: link-only
   language: uk
   role: Додаткові відомості про її перекладацьку та громадську роботу.
@@ -129,7 +129,7 @@ sequence: 90
 slug: mariia-voiakovska
 subtitle: The Galician Translator and Educator Beyond the Shadow of a Great Man
 title: 'Марія Вояківська-Грушевська: Більше, ніж тінь'
-version: '5.1'
+version: '5.2'
 vocabulary_hints:
 - definition: жінка, що професійно перекладає тексти з однієї мови на іншу
   pos: ж.
