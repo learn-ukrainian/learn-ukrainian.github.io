@@ -11,6 +11,14 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 PROJECT_PYTHON = REPO_ROOT / ".venv" / "bin" / "python"
 DEPLOY_SCRIPT = Path("scripts/deploy_prompts.sh")
 CHECK_SCRIPT = Path("scripts/check_rules_deployment.sh")
+ORPHAN_PATHS_FILE = Path("scripts/deploy_orphan_paths.sh")
+ORPHAN_PATH_VARS = (
+    "ORPHAN_PATHS_CLAUDE",
+    "ORPHAN_PATHS_AGENT",
+    "ORPHAN_PATHS_AGENTS",
+    "ORPHAN_PATHS_CODEX",
+    "ORPHAN_PATHS_GEMINI",
+)
 DRIFT_TARGET = Path(".claude/rules/pipeline.md")
 CODEX_HOOK_TARGET = Path(".codex/hooks/session-setup.sh")
 CODEX_HOOKS_CONFIG = Path(".codex/hooks.json")
@@ -40,6 +48,7 @@ def _copy_repo_subset(target: Path) -> None:
     for relative_path in (
         DEPLOY_SCRIPT,
         CHECK_SCRIPT,
+        ORPHAN_PATHS_FILE,
         Path("scripts/lint_prompts.py"),
         Path("scripts/lint/lint_prompts.py"),
         Path("scripts/lint/lint_agent_skills.py"),
@@ -131,20 +140,73 @@ def test_fresh_deploy_produces_synced_output(tmp_path: Path) -> None:
 
 def test_claude_rule_exclusion_list_covers_unscoped_files() -> None:
     """The Claude-only exclusion list must cover every always-load rule."""
-    script = (REPO_ROOT / DEPLOY_SCRIPT).read_text(encoding="utf-8")
+    shared = (REPO_ROOT / ORPHAN_PATHS_FILE).read_text(encoding="utf-8")
     for filename in UNSCOPED_RULE_FILES:
-        assert f'"rules/{filename}"' in script
+        assert f'"rules/{filename}"' in shared
+
+
+def _bash_orphan_sets() -> dict[str, frozenset[str]]:
+    """Source deploy_orphan_paths.sh and return word-split path sets."""
+    bash = """
+set -euo pipefail
+source scripts/deploy_orphan_paths.sh
+echo "CLAUDE:${ORPHAN_PATHS_CLAUDE} ${CLAUDE_RULE_AUTOLOAD_EXCLUDE_PATHS}"
+echo "AGENT:${ORPHAN_PATHS_AGENT}"
+echo "AGENTS:${ORPHAN_PATHS_AGENTS}"
+echo "CODEX:${ORPHAN_PATHS_CODEX} ${CODEX_OVERLAY_PATHS}"
+echo "GEMINI:${ORPHAN_PATHS_GEMINI}"
+"""
+    result = subprocess.run(
+        ["bash", "-c", bash],
+        cwd=REPO_ROOT,
+        capture_output=True,
+        check=True,
+        text=True,
+    )
+    sets: dict[str, frozenset[str]] = {}
+    for line in result.stdout.splitlines():
+        label, _, paths = line.partition(":")
+        tokens = [token for token in paths.split() if token]
+        sets[label] = frozenset(tokens)
+    return sets
+
+
+def test_orphan_allowlist_single_sourced_no_inline_literals() -> None:
+    """Deploy and checker must source deploy_orphan_paths.sh — no duplicate literals."""
+    deploy = (REPO_ROOT / DEPLOY_SCRIPT).read_text(encoding="utf-8")
+    check = (REPO_ROOT / CHECK_SCRIPT).read_text(encoding="utf-8")
+    shared = (REPO_ROOT / ORPHAN_PATHS_FILE).read_text(encoding="utf-8")
+
+    assert 'source "$PROJECT_ROOT/scripts/deploy_orphan_paths.sh"' in deploy
+    assert 'source "$PROJECT_ROOT/scripts/deploy_orphan_paths.sh"' in check
+
+    for var in ORPHAN_PATH_VARS:
+        assert f'{var}="' in shared, f"{var} missing from shared orphan allowlist"
+        assert f'{var}="' not in deploy, f"{var} duplicated inline in deploy script"
+        assert f'{var}="' not in check, f"{var} duplicated inline in checker script"
+
+    assert 'CODEX_OVERLAY_PATHS="' in shared
+    assert 'CODEX_OVERLAY_PATHS="' not in deploy
+    assert 'CODEX_OVERLAY_PATHS="' not in check
+
+    # Literal orphan tokens must not reappear as checker check_pair args.
+    assert '"dispatch-briefs" \\' not in check
+    assert '"*-handoff.md" \\' not in check
+    assert '"hooks.json" \\' not in check
+
+    sets = _bash_orphan_sets()
+    assert "dispatch-briefs" in sets["AGENT"]
+    assert sets["CODEX"] >= {"hooks.json", "memory"}
+    assert sets["CLAUDE"] >= {"scheduled_tasks.lock", "worktrees", "*-epic"}
+    assert sets["CLAUDE"] >= {f"rules/{name}" for name in UNSCOPED_RULE_FILES}
 
 
 def test_drift_checker_orphan_globs_match_deploy_script() -> None:
     """The post-deploy drift checker must mirror deploy orphan globs."""
-    deploy = (REPO_ROOT / DEPLOY_SCRIPT).read_text(encoding="utf-8")
-    check = (REPO_ROOT / CHECK_SCRIPT).read_text(encoding="utf-8")
-
-    assert 'ORPHAN_PATHS_CLAUDE="scheduled_tasks.lock worktrees *-epic"' in deploy
-    assert '"*-epic" \\' in check
-    assert "*-handoff.md" in deploy
-    assert '"*-handoff.md" \\' in check
+    sets = _bash_orphan_sets()
+    assert "*-epic" in sets["CLAUDE"]
+    assert "*-handoff.md" in sets["AGENT"]
+    assert "dispatch-briefs" in sets["AGENT"]
 
 
 def test_second_deploy_is_noop_for_codex_target(tmp_path: Path) -> None:
@@ -167,13 +229,16 @@ def test_second_deploy_is_noop_for_codex_target(tmp_path: Path) -> None:
 
 def test_codex_hooks_json_is_managed_source_not_orphan() -> None:
     """Codex hooks config must be deployed from agents_extensions/codex."""
-    deploy = (REPO_ROOT / DEPLOY_SCRIPT).read_text(encoding="utf-8")
+    shared = (REPO_ROOT / ORPHAN_PATHS_FILE).read_text(encoding="utf-8")
     check = (REPO_ROOT / CHECK_SCRIPT).read_text(encoding="utf-8")
 
     assert (REPO_ROOT / "agents_extensions" / "codex" / "hooks.json").exists()
-    assert 'ORPHAN_PATHS_CODEX="agents/curriculum-orchestrator.toml agents/curriculum-writer.toml config.toml"' in deploy
-    assert 'CODEX_OVERLAY_PATHS="hooks.json memory"' in deploy
-    assert '"hooks.json" \\' in check
+    assert (
+        'ORPHAN_PATHS_CODEX="agents/curriculum-orchestrator.toml '
+        'agents/curriculum-writer.toml config.toml"'
+    ) in shared
+    assert 'CODEX_OVERLAY_PATHS="hooks.json memory"' in shared
+    assert "$CODEX_OVERLAY_PATHS" in check
 
 
 def test_missing_codex_hooks_json_is_drift(tmp_path: Path) -> None:
