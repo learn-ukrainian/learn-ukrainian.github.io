@@ -73,3 +73,14 @@ def test_ukrainian_apostrophe_forms_are_not_noise():
 
     prose = "Мʼяч підстрибнув, і об'єкт зупинився — учні записали висновок…"
     assert symbol_noise_density(prose) == 0.0
+
+
+def test_dollar_hyphen_repair_fixes_compound_words_only():
+    """2017-era font quirk: '$' between Cyrillic letters is a hyphen glyph."""
+    from scripts.rag.extract_text import _repair_dollar_hyphen
+
+    assert _repair_dollar_hyphen("гідроксид$іонів") == "гідроксид-іонів"
+    assert _repair_dollar_hyphen("фізико$хімічні") == "фізико-хімічні"
+    # prices / code stay untouched
+    assert _repair_dollar_hyphen("ціна 100$ за рік") == "ціна 100$ за рік"
+    assert _repair_dollar_hyphen("var x = a$b") == "var x = a$b"
