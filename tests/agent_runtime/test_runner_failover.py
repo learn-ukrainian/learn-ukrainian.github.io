@@ -397,3 +397,123 @@ def test_runner_failover_rejects_forbidden_glm_target(tmp_path, monkeypatch):
 
     with pytest.raises(ValueError, match="HERMES_GLM_FORBIDDEN"):
         runner_mod.invoke("failover-test", "hello", mode="read-only", cwd=tmp_path)
+
+
+def test_shipped_deepseek_chain_is_deepseek_family_only():
+    """Pin the shipped config: deepseek lane fails over inside its own family.
+
+    Guards the two banned drift directions for fallback targets: qwen
+    (cost-excluded) and zai/GLM (LOCAL-ONLY; the loader raises on it anyway).
+    Route 0 must inherit the dispatch-requested model so both pro and flash
+    dispatches keep their primary identity.
+    """
+    from agent_runtime.failover import (
+        default_failover_config_path,
+        load_failover_chain,
+    )
+
+    chain = load_failover_chain(
+        "deepseek",
+        effective_model="deepseek-v4-flash",
+        path=default_failover_config_path(),
+    )
+
+    assert chain is not None, "shipped config must define the deepseek chain"
+    assert [route.provider for route in chain.routes] == [
+        "deepseek",
+        "openrouter",
+        "openrouter",
+    ]
+    assert chain.routes[0].model == "deepseek-v4-flash"
+    for route in chain.routes[1:]:
+        assert route.model.startswith("deepseek/"), (
+            f"fallback route {route.index} left the deepseek family: "
+            f"{route.provider}/{route.model}"
+        )
+    assert chain.cooldown_ttl_s == 300
+
+
+def test_classifier_routes_hermes_credential_startup_failure_to_auth():
+    """Live-captured 2026-07-06: a dead/missing credential fails hermes at
+    startup with prose that previously matched NO trigger class, so the chain
+    never rotated. Credential rotation is the point — must classify as auth."""
+    from agent_runtime.failover import classify_failover_trigger
+
+    stderr = (
+        "hermes -z: agent failed: Provider 'deepseek' is set in config.yaml "
+        "but no API key was found. Set the DEEPSEEK_API_KEY environment "
+        "variable, or switch to a different provider with `hermes model`."
+    )
+    trigger = classify_failover_trigger(
+        parse=ParseResult(ok=False, response="", stderr_excerpt=stderr[:500]),
+        returncode=1,
+        kill_reason=None,
+        stdout_text="",
+        stderr_text=stderr,
+    )
+
+    assert trigger == "auth"
+
+
+def test_classifier_routes_inband_http_401_stdout_to_auth():
+    """Companion to the hermes_common in-band fix: once parse marks the
+    single-line 'HTTP 401: ...' stdout as not-ok, the classifier must see
+    auth in the excerpt."""
+    from agent_runtime.failover import classify_failover_trigger
+
+    excerpt = "HTTP 401: Authentication Fails, Your api key: ****robe is invalid"
+    trigger = classify_failover_trigger(
+        parse=ParseResult(ok=False, response="", stderr_excerpt=excerpt),
+        returncode=0,
+        kill_reason=None,
+        stdout_text="",
+        stderr_text="",
+    )
+
+    assert trigger == "auth"
+
+
+def test_classifier_refuses_to_rotate_on_inband_400():
+    """Review D2 (PR #4580): a request-format error would fail identically on
+    every route — the gate must return None so the chain is not burned."""
+    from agent_runtime.failover import classify_failover_trigger
+
+    trigger = classify_failover_trigger(
+        parse=ParseResult(
+            ok=False,
+            response="",
+            stderr_excerpt="HTTP 400: Invalid request: unknown parameter 'foo'",
+        ),
+        returncode=0,
+        kill_reason=None,
+        stdout_text="",
+        stderr_text="",
+    )
+
+    assert trigger is None
+
+
+def test_chain_route_missing_model_after_index_zero_warns_and_drops(
+    tmp_path, caplog
+):
+    """Review D4 (PR #4580): fail-safe stays (no raise), but loudly."""
+    import logging
+
+    from agent_runtime.failover import load_failover_chain
+
+    config = tmp_path / "failover.yaml"
+    config.write_text(
+        "chains:\n"
+        "  deepseek:\n"
+        "    routes:\n"
+        "      - provider: deepseek\n"
+        "      - provider: openrouter\n",  # missing model -> dropped
+        encoding="utf-8",
+    )
+    with caplog.at_level(logging.WARNING):
+        chain = load_failover_chain(
+            "deepseek", effective_model="deepseek-v4-pro", path=config
+        )
+
+    assert chain is None  # single usable route -> feature disabled
+    assert any("deepseek[1] dropped" in rec.getMessage() for rec in caplog.records)
