@@ -78,17 +78,34 @@ persona:
   role: Історик-архівіст, що працює з протоколами допитів СВУ, намагаючись відділити правду від брехні
   voice: Tragic-Realist
 phase: BIO
+readings:
+- hosting: link-only
+  language: uk
+  role: Біографія Людмили Старицької-Черняхівської.
+  source: Вікіпедія
+  task: Ознайомтеся з творчим та життєвим шляхом письменниці.
+  title: Людмила Старицька-Черняхівська
+  type: encyclopedia
+  url: https://uk.wikipedia.org/wiki/%D0%9B%D1%8E%D0%B4%D0%BC%D0%B8%D0%BB%D0%B0_%D0%A1%D1%82%D0%B0%D1%80%D0%B8%D1%86%D1%8C%D0%BA%D0%B0-%D0%A7%D0%B5%D1%80%D0%BD%D1%8F%D1%85%D1%96%D0%B2%D1%81%D1%8C%D0%BA%D0%B0
+- hosting: link-only
+  language: uk
+  role: Історичне тло репресій проти української інтелігенції.
+  source: Вікіпедія
+  task: Дослідіть історичний контекст репресій, що призвели до її загибелі.
+  title: Процес Спілки визволення України
+  type: encyclopedia
+  url: https://uk.wikipedia.org/wiki/%D0%9F%D1%80%D0%BE%D1%86%D0%B5%D1%81_%D0%A1%D0%BF%D1%96%D0%BB%D0%BA%D0%B8_%D0%B2%D0%B8%D0%B7%D0%B2%D0%BE%D0%BB%D0%B5%D0%BD%D0%BD%D1%8F_%D0%A3%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D0%B8
 references:
 - title: Людмила Старицька-Черняхівська (Wikipedia UA)
   name: Людмила Старицька-Черняхівська (Wikipedia UA)
   notes: Біографія, літературна та громадська діяльність
   type: primary
-  url: https://uk.wikipedia.org/wiki/Людмила_Старицька-Черняхівська
+  url: https://uk.wikipedia.org/wiki/%D0%9B%D1%8E%D0%B4%D0%BC%D0%B8%D0%BB%D0%B0_%D0%A1%D1%82%D0%B0%D1%80%D0%B8%D1%86%D1%8C%D0%BA%D0%B0-%D0%A7%D0%B5%D1%80%D0%BD%D1%8F%D1%85%D1%96%D0%B2%D1%81%D1%8C%D0%BA%D0%B0
 - title: Справа СВУ (Wikipedia UA)
   name: Справа СВУ (Wikipedia UA)
   notes: Сфабрикований процес та репресії проти української інтелігенції
   type: primary
-  url: https://uk.wikipedia.org/wiki/Справа_Спілки_визволення_України
+  url: https://uk.wikipedia.org/wiki/%D0%9F%D1%80%D0%BE%D1%86%D0%B5%D1%81_%D0%A1%D0%BF%D1%96%D0%BB%D0%BA%D0%B8_%D0%B2%D0%B8%D0%B7%D0%B2%D0%BE%D0%BB%D0%B5%D0%BD%D0%BD%D1%8F_%D0%A3%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D0%B8
 - title: Суди над «ворогами народу»
   author: Прімо, Я.
   note: Аналіз показових процесів у СРСР, включно з СВУ
@@ -98,12 +115,12 @@ references:
   name: Михайло Старицький (Wikipedia UA)
   notes: Батько — класик української літератури
   type: reference
-  url: https://uk.wikipedia.org/wiki/Михайло_Старицький
+  url: https://uk.wikipedia.org/wiki/%D0%9C%D0%B8%D1%85%D0%B0%D0%B9%D0%BB%D0%BE_%D0%A1%D1%82%D0%B0%D1%80%D0%B8%D1%86%D1%8C%D0%BA%D0%B8%D0%B9
 sequence: 89
 slug: liudmyla-starytska
 subtitle: 'Playwright Between Two Worlds: National Stage and Imperial Prison'
 title: 'Людмила Старицька-Черняхівська: Драматургиня'
-version: '4.0'
+version: '4.2'
 vocabulary_hints:
 - definition: найвидатніший діяч у певній галузі, основоположник (вживається щодо батька)
   pos: ч.
