@@ -80,6 +80,23 @@ persona:
   role: Провокатор, що ставить під сумнів офіційні версії, змушуючи відділяти військовий талант від політичних прорахунків
   voice: Historical-Debate-Moderator
 phase: BIO
+readings:
+- title: "Болбочан Петро Федорович"
+  source: Енциклопедія історії України (ЕІУ)
+  url: http://resource.history.org.ua/cgi-bin/eiu/history.exe?Z21ID=&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Bolbochan_P_F
+  language: uk
+  type: biography
+  role: context
+  hosting: link-only
+  task: Ознайомлення з військовою кар'єрою та причинами трагічної загибелі.
+- title: "Кримський похід 1918 року (накази та спогади)"
+  source: Історичні документи
+  url: null
+  language: uk
+  type: primary
+  role: primary
+  hosting: reading-needed
+  task: Аналіз швидкості та дисципліни військової операції з визволення Криму.
 references:
 - title: Petro Bolbochan
   note: Compiled research on Bolbochan's life, Crimean campaign, and the political conflict with the Directorate.
@@ -104,7 +121,7 @@ sequence: 108
 slug: petro-bolbochan
 subtitle: Triumph and Tragedy of the Liberator of Crimea
 title: 'Петро Болбочан: Тріумф і трагедія визволителя Криму'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: досвідчений воєначальник, що керує великими військовими з'єднаннями
   pos: ч.
