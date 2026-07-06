@@ -21,6 +21,12 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_MANIFEST = ROOT / "site" / "src" / "data" / "lexicon-manifest.json"
 
+# #4515: the BINDING thin-page cap. Enforced hard at publish time
+# (scripts/lexicon/publish_manifest.py) — the per-PR CI step reports the same
+# number advisorily. Raising this value is threshold-lowering and needs an
+# operator decision; the aligned fix is enriching thin pages before publish.
+DEFAULT_MAX_POC_THIN_PAGES = 900
+
 SCRIPT_DIR = Path(__file__).resolve().parent
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
