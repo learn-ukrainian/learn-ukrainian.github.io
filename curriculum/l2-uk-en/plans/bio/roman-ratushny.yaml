@@ -94,6 +94,25 @@ persona:
   role: Модератор дискусії, який спонукає студентів бачити не ікону, а складну особистість в історичному контексті
   voice: Критичний біограф
 phase: BIO.4
+readings:
+- caveats: Стаття містить детальний огляд його громадської діяльності.
+  hosting: external
+  language: uk
+  role: Контекст
+  source_name: Українська правда
+  source_type: Стаття
+  task: Дізнатися про боротьбу за Протасів Яр та становлення Романа як громадського діяча.
+  title: Роман Ратушний. Історія київського активіста
+  url: https://www.pravda.com.ua/articles/2022/06/18/7353272/
+- caveats: Короткий новинний формат з реакцією спільноти.
+  hosting: external
+  language: uk
+  role: Контекст
+  source_name: Суспільне Новини
+  source_type: Стаття
+  task: Ознайомитися з фактами військового шляху Ратушного в 93-й ОМБр.
+  title: Загинув лідер ГО "Захистимо Протасів Яр", розвідник 93-ї ОМБр Роман Ратушний
+  url: https://suspilne.media/250269-zaginuv-lider-go-zahistimo-protasiv-ar-rozvidnik-93-i-ombr-holodnij-ar-roman-ratusnij/
 references:
 - note: Загальна біографічна довідка, хронологія подій
   title: Роман Ратушний (Wikipedia UA)
@@ -110,7 +129,7 @@ sequence: 197
 slug: roman-ratushny
 subtitle: 'The Voice of Protasiy Yar: From Activist to Soldier'
 title: 'Роман Ратушний: Громадянин, активіст, воїн'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: здатність людини чи спільноти бути активним, свідомим і вільним діячем, творцем свого життя та історії
   pos: ж.

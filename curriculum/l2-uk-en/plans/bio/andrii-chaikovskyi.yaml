@@ -82,6 +82,25 @@ persona:
   role: Спеціаліст з історії галицької державності, який розглядає біографію Чайковського як case study про можливості та трагедії української інтелігенції на зламі епох.
   voice: Senior Historian
 phase: BIO
+readings:
+- caveats: Академічний матеріал з детальним аналізом життя та творчості.
+  hosting: external
+  language: uk
+  role: Контекст
+  source_name: Локальна історія
+  source_type: Стаття
+  task: Прочитати про вплив Чайковського на галицьке суспільство та його літературний доробок.
+  title: Андрій Чайковський. Адвокат і письменник, який створив міф про козаків
+  url: https://localhistory.org.ua/texts/statti/andrii-chaikovskii-advokat-i-pismennik-iakii-stvoriv-mif-pro-kozakiv/
+- caveats: Енциклопедична стаття з основними фактами.
+  hosting: external
+  language: uk
+  role: Контекст
+  source_name: Енциклопедія Сучасної України
+  source_type: Енциклопедія
+  task: Ознайомитися з хронологією життя та державницькою діяльністю письменника.
+  title: Чайковський Андрій Якович
+  url: https://esu.com.ua/article-37142
 references:
 - title: Andrii Chaikovskyi
   note: Compiled from Wikipedia UA, biography sites, and analysis of his major works.
@@ -101,7 +120,7 @@ sequence: 198
 slug: andrii-chaikovskyi
 subtitle: The Nation's Advocate
 title: 'Андрій Чайковський: Адвокат нації'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: процес створення та зміцнення інститутів незалежної держави
   pos: с.

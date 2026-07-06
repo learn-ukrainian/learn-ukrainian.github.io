@@ -81,6 +81,25 @@ persona:
 phase: Executed Renaissance 2.0
 prerequisites:
 - maksym-kryvtsov
+readings:
+- caveats: Некролог з деталями загибелі.
+  hosting: external
+  language: uk
+  role: Контекст
+  source_name: Український ПЕН
+  source_type: Стаття
+  task: Ознайомитися з біографічними даними та творчим шляхом митця.
+  title: На війні загинув поет, перекладач та музикант Ілля Чернілевський
+  url: https://pen.org.ua/na-vijni-zagynuv-poet-perekladach-ta-muzykant-illya-chernilevskyj
+- caveats: Стаття містить огляд перекладацької та акторської роботи.
+  hosting: external
+  language: uk
+  role: Контекст
+  source_name: Суспільне Культура
+  source_type: Стаття
+  task: Дізнатися про внесок Іллі Чернілевського в український дубляж та культуру.
+  title: На війні загинув український поет та музикант Ілля Чернілевський
+  url: https://suspilne.media/culture/237937-na-vijni-zaginuv-ukrainskij-poet-ta-muzikant-illa-cernilevskij/
 references:
 - title: Illia Chernilevskyi
   note: Зібрані факти біографії, посилання на публікації, інтерв'ю та основні твори.
@@ -95,7 +114,7 @@ sequence: 194
 slug: illia-chernilevskyi
 subtitle: Голос страченого покоління Z
 title: Ілля Чернілевський
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: здатність бути активним діячем, а не пасивним об'єктом історії; право на власну волю та позицію
   pos: ж.

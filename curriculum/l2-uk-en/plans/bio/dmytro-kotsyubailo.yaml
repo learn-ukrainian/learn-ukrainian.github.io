@@ -78,6 +78,25 @@ persona:
   role: Модератор семінару, що досліджує феномен сучасного українського героїзму, уникаючи плаского захоплення та шукаючи складність, ціну та значення за яскравим символом.
   voice: Nuanced-Historian
 phase: BIO
+readings:
+- caveats: Велика стаття з детальним описом бойового шляху.
+  hosting: external
+  language: uk
+  role: Контекст
+  source_name: Історична правда
+  source_type: Стаття
+  task: Дослідити шлях Дмитра Коцюбайла від учасника Революції Гідності до командира батальйону.
+  title: Да Вінчі. Історія Героя
+  url: https://www.istpravda.com.ua/articles/2023/03/9/162788/
+- caveats: Некролог з основними біографічними відомостями.
+  hosting: external
+  language: uk
+  role: Контекст
+  source_name: Суспільне Новини
+  source_type: Стаття
+  task: Ознайомитися з реакцією суспільства на загибель Да Вінчі.
+  title: На війні загинув командир "Вовків Да Вінчі" Дмитро Коцюбайло
+  url: https://suspilne.media/407338-na-vijni-zaginuv-komandir-vovkiv-da-vinci-dmitro-kocubajlo/
 references:
 - title: Дмитро Коцюбайло (Да Вінчі) в програмі «Рандеву з Яніною Соколовою»
   name: Дмитро Коцюбайло (Да Вінчі) в програмі «Рандеву з Яніною Соколовою»
@@ -103,7 +122,7 @@ sequence: 196
 slug: dmytro-kotsyubailo
 subtitle: 'Dmytro "Da Vinci" Kotsiubailo: Symbol of the Volunteer Generation'
 title: 'Дмитро «Да Вінчі» Коцюбайло: Символ покоління добровольців'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: особа, яка за власним бажанням, без примусу, зголосилася до військової служби або іншої суспільно важливої діяльності
   pos: ч.

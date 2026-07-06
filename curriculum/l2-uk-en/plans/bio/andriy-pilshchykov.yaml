@@ -79,6 +79,25 @@ persona:
   role: Модератор семінару, що аналізує не лише біографію, а й вплив однієї людини на стратегію та міжнародні відносини в умовах війни
   voice: Aviation Analyst
 phase: BIO
+readings:
+- caveats: Стаття-спогад з детальним аналізом його зусиль щодо F-16.
+  hosting: external
+  language: uk
+  role: Контекст
+  source_name: Українська правда
+  source_type: Стаття
+  task: Дізнатися про роль Андрія Пільщикова в лобіюванні західних винищувачів для України.
+  title: Джус і його мрія
+  url: https://www.pravda.com.ua/articles/2023/08/29/7417537/
+- caveats: Некролог від профільного видання.
+  hosting: external
+  language: uk
+  role: Контекст
+  source_name: Мілітарний
+  source_type: Стаття
+  task: Ознайомитися з професійним шляхом та досягненнями пілота.
+  title: 'Андрій Пільщиков: як загинув та ким був пілот на позивний "Juice"'
+  url: https://mil.in.ua/uk/news/zahynuv-pilot-andriy-pilshchykov-na-pozyvnyy-juice/
 references:
 - title: Андрій Пільщиков (Wikipedia UA)
   name: Андрій Пільщиков (Wikipedia UA)
@@ -97,7 +116,7 @@ sequence: 195
 slug: andriy-pilshchykov
 subtitle: 'Andriy "Juice" Pilshchykov: Defender of the Sky and Voice of Aviation'
 title: 'Андрій «Juice» Пільщиков: Захисник неба та голос авіації'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: бойовий літак, призначений для знищення повітряних цілей
   pos: ч.
