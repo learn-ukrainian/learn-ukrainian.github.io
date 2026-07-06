@@ -1,9 +1,9 @@
 {
-  "assembled_mdx_sha256": "388007298f6bbe736305c9c20b406dba33ab1540ce20613d07bcf1a348d03af1",
+  "assembled_mdx_sha256": "5ab295ac72d2dcc9add41090c2cf2c2b52ab7a10295f05d9147170ba521efa45",
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "9902d1f4a33496554c697a0c52bb90acff6d8187d2cd248f39f66693deb1b2a7",
+    "digest": "fec3ae00a950ab9e4bb2ac12f7845fd2e620ed701faeed19e9fa590dd2ec9ec8",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/narodni-remesla-ta-khudozhni-promysly.yaml",
@@ -11,7 +11,7 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/narodni-remesla-ta-khudozhni-promysly/module.md",
-        "sha256": "c9b5a5f7bacf5a16648537918db4a9a8f7b069c43502d494bd3432f7099928db"
+        "sha256": "05c43bbde94a081c2189e5e8009a778661b1a4efe1e527c78b450583c187cb53"
       },
       {
         "path": "curriculum/l2-uk-en/folk/narodni-remesla-ta-khudozhni-promysly/activities.yaml",
@@ -28,10 +28,10 @@
     ]
   },
   "evidence": {
-    "decolonization": "Craft framing keeps artel/factory/institutional context distinct from family and local craft transmission.",
+    "decolonization": "Craft framing keeps family, artel, factory, and institutional contexts distinct.",
     "pedagogical": "Reading grounds craft transmission as one family-workshop witness, not the only model of training.",
-    "review": "Claude Opus 4.8 bridge message 2 PASS for Batch 5 reading remediation; no blockers. DeepSeek not used.",
-    "source_policy": "Converted verified Franko domestic-craft fragment into structured on-site reading; popular craft sayings remain paraphrase-only without verification."
+    "review": "Claude Opus 4.8 project bridge task batchf-reread-review-claude message 2 PASS for Batch F strict reread remediation; no blockers. DeepSeek not used.",
+    "source_policy": "Batch F strict reread replaces the one-line craft reading with a substantial Franko \u0414\u043e\u043c\u0430\u0448\u043d\u0456\u0439 \u043f\u0440\u043e\u043c\u0438\u0441\u043b public-domain Ukrlib excerpt; sayings remain paraphrase-only without verification."
   },
   "floors": {
     "beauty": 8.5,
@@ -49,7 +49,7 @@
     "model": "claude-opus-4-8"
   },
   "schema_version": 1,
-  "scored_at": "2026-07-05T18:18:43Z",
+  "scored_at": "2026-07-06T14:53:52Z",
   "scores": {
     "beauty": 8.7,
     "decolonization": 9.2,

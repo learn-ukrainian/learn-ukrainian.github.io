@@ -1,9 +1,9 @@
 {
-  "assembled_mdx_sha256": "bef3c3079d6394a6d288f7e2091621569577fa9a0d08a3c44123048de47ee24b",
+  "assembled_mdx_sha256": "0f19a52361c409013d4dff5c280aafe25e47b75bdfc853f4fe5de5d22d6f7d43",
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "6b4871f37db6803bc042830dc9c2c652092a3f6bdbe766c9f1d46716f3cee26d",
+    "digest": "1fda23d0276548f35976f2f20cf99612d296d981e821f950a74e76ca7361753b",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/narodna-vyshyvka-rushnyk-strii.yaml",
@@ -11,7 +11,7 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/narodna-vyshyvka-rushnyk-strii/module.md",
-        "sha256": "755b66951a26653cf4ee5e1520ce5ed261abdab58e445d659567d7e17441deff"
+        "sha256": "af91c99136d8bf7b01b4216892184520fa606fb4252392211115e914c517dfce"
       },
       {
         "path": "curriculum/l2-uk-en/folk/narodna-vyshyvka-rushnyk-strii/activities.yaml",
@@ -28,10 +28,10 @@
     ]
   },
   "evidence": {
-    "decolonization": "Notes avoid cheap identity shorthand and keep religious/domestic/material contexts distinct.",
-    "pedagogical": "Readings ground embroidery/rushnyk discussion in short attributed literary evidence without universal motif dictionaries.",
-    "review": "Claude Opus 4.8 bridge message 2 PASS for Batch 5 reading remediation; no blockers. DeepSeek not used.",
-    "source_policy": "Converted verified Hrinchenko and Nechui-Levytsky rushnyk fragments into structured on-site readings; songs/formulas remain do-not-quote unless verified."
+    "decolonization": "Notes avoid cheap identity shorthand and keep religious, domestic, and material contexts distinct.",
+    "pedagogical": "Reading grounds embroidery and rushnyk as material work and social action without universal motif dictionaries.",
+    "review": "Claude Opus 4.8 project bridge task batchf-reread-review-claude message 2 PASS for Batch F strict reread remediation; no blockers. DeepSeek not used.",
+    "source_policy": "Batch F strict reread replaces token embroidery/rushnyk readings with one substantial Hrinchenko D\u0456\u0432\u0447\u0438\u043d\u0430 \u041b\u0435\u0441\u044f public-domain Ukrlib excerpt; short Hrinchenko/Nechui lines remain inline supplementary signals."
   },
   "floors": {
     "beauty": 8.5,
@@ -49,7 +49,7 @@
     "model": "claude-opus-4-8"
   },
   "schema_version": 1,
-  "scored_at": "2026-07-05T18:18:43Z",
+  "scored_at": "2026-07-06T14:53:51Z",
   "scores": {
     "beauty": 8.8,
     "decolonization": 9.1,

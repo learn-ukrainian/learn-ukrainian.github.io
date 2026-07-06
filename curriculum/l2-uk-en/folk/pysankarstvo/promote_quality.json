@@ -1,9 +1,9 @@
 {
-  "assembled_mdx_sha256": "7a96f4fd0a3aa660fcc577fcc3117ba402be7f27cd0d78925f12727fe9c60dda",
+  "assembled_mdx_sha256": "dbb2b7127ad82c6066912d9e0aaa864b6af8f2501676a8cbc68036b3ff696ce2",
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "974136aeb53272198f85be8bd99b97a8cc313994ad0adfccbe7d9572ba1b9a1e",
+    "digest": "20a84188a763bd4e02ac9e76ddc1a9b817b3b2eb17511a17f2461481f0f17561",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/pysankarstvo.yaml",
@@ -11,7 +11,7 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/pysankarstvo/module.md",
-        "sha256": "93c65e25c688c6bff727df4755e3dc1ca6f3f70fda3cdc9ecdb8e28dd9c2513a"
+        "sha256": "7ba7ce3a48b1ee05271d4ce45e7fe523fbe1d7b1a721d8c50f5e8715708272a2"
       },
       {
         "path": "curriculum/l2-uk-en/folk/pysankarstvo/activities.yaml",
@@ -28,10 +28,10 @@
     ]
   },
   "evidence": {
-    "decolonization": "Attribution notes avoid universal pagan-code and single-canonical-style claims.",
-    "pedagogical": "Readings ground pysanka as gift/social object without fabricating motif meanings or workshop sequences.",
-    "review": "Claude Opus 4.8 bridge message 2 PASS for Batch 5 reading remediation; no blockers. DeepSeek not used.",
-    "source_policy": "Converted two verified early-modern Easter/pysanka fragments into structured on-site readings; motif legends remain paraphrase-only."
+    "decolonization": "Attribution and prose avoid universal pagan-code and single-canonical-style claims.",
+    "pedagogical": "Reading grounds pysanka as gift/social object and marriage-horizon signal without fabricating motif meanings or workshop sequences.",
+    "review": "Claude Opus 4.8 project bridge task batchf-reread-review-claude message 2 PASS; M34 corpus quote verified verbatim and in-order against chunk 21c791c4_c0098. DeepSeek not used.",
+    "source_policy": "Batch F strict reread replaces token pysanka readings with one substantial old-Ukrainian Easter/pysanka excerpt from project corpus chunk 21c791c4_c0098; motif legends remain paraphrase-only."
   },
   "floors": {
     "beauty": 8.5,
@@ -49,7 +49,7 @@
     "model": "claude-opus-4-8"
   },
   "schema_version": 1,
-  "scored_at": "2026-07-05T18:18:43Z",
+  "scored_at": "2026-07-06T14:58:42Z",
   "scores": {
     "beauty": 8.8,
     "decolonization": 9.1,
