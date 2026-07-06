@@ -50,6 +50,7 @@ def _text_hit(row: dict[str, Any]) -> dict[str, Any]:
         "trust_tier": row.get("trust_tier", 0) or 0,
         "source_type": row.get("source_type", "textbook"),
         "source_file": row.get("source_file", ""),
+        "subject": row.get("subject") or "",
     }
 
 
@@ -100,11 +101,16 @@ def search_text(
 ) -> list[dict[str, Any]]:
     """Search textbook chunks through SQLite FTS5."""
     del rerank
-    rows = sources_db.search_textbooks(_keywords(query), max_total=max(limit * 3, limit))
+    canonical_subject = sources_db.normalize_subject_slug(subject)
+    rows = sources_db.search_textbooks(
+        _keywords(query),
+        max_total=max(limit * 3, limit),
+        subject=canonical_subject,
+    )
     hits = [_text_hit(row) for row in rows]
     if grade is not None:
         hits = [hit for hit in hits if hit.get("grade") == grade]
-    if subject:
+    if subject and canonical_subject is None:
         subject_l = subject.lower()
         hits = [
             hit

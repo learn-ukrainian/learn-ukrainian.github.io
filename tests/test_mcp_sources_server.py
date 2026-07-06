@@ -78,6 +78,13 @@ class TestListTools:
         assert "word" in vw.inputSchema["required"]
         assert "word" in vw.inputSchema["properties"]
 
+    def test_search_text_subject_schema(self, server_module):
+        tools = _run(server_module.list_tools())
+        search_text = next(t for t in tools if t.name == "search_text")
+        subject = search_text.inputSchema["properties"]["subject"]
+        assert subject["enum"] == list(server_module.CANONICAL_TEXTBOOK_SUBJECTS)
+        assert "ukrmova" in subject["description"]
+
     def test_verify_words_schema(self, server_module):
         tools = _run(server_module.list_tools())
         vw = next(t for t in tools if t.name == "verify_words")
@@ -146,6 +153,30 @@ class TestCallToolDispatch:
             mock.return_value = [MagicMock(text="ok")]
             _run(server_module.call_tool("search_sources", {"query": "голосні звуки"}))
             mock.assert_called_once_with({"query": "голосні звуки"})
+
+    def test_search_text_handler_passes_subject_filter(self, server_module):
+        hit = {
+            "chunk_id": "chunk-1",
+            "title": "Родовий відмінок",
+            "section_title": "Родовий відмінок",
+            "grade": "5",
+            "author": "Авраменко",
+            "subject": "ukrmova",
+            "text": "Родовий відмінок у шкільному підручнику.",
+        }
+        with patch("wiki.sources_db.search_textbooks", return_value=[hit]) as mock:
+            result = _run(
+                server_module.handle_search_text(
+                    {"query": "родовий відмінок", "subject": "ukrmova", "limit": 3}
+                )
+            )
+
+        assert "Subject**: ukrmova" in result[0].text
+        mock.assert_called_once()
+        args, kwargs = mock.call_args
+        assert "родовий" in args[0]
+        assert args[1] == 3
+        assert kwargs["subject"] == "ukrmova"
 
     def test_search_grinchenko_1907_dispatches(self, server_module):
         with patch.object(server_module, "handle_dict_search", new_callable=AsyncMock) as mock:
