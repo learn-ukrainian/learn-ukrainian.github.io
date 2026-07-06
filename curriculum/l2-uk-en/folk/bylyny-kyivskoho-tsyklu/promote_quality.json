@@ -1,9 +1,9 @@
 {
-  "assembled_mdx_sha256": "e2b76587b3b20283c8db92a756c58e4d10ff80ca7b7212dd15dc078a76c5b8e4",
+  "assembled_mdx_sha256": "7f16f89a93f972172de72d4531e20523276bda2983b7c598f8f46b2edc518581",
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "ec5b3240c5bb98b9fd399d172177ce497e71828ed79113f2cfb5754c4e3baad6",
+    "digest": "013c50542d58861422fc9007a2cf8f7cd6962d6baaee7bd0bb7e59c250c6738a",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/bylyny-kyivskoho-tsyklu.yaml",
@@ -11,7 +11,7 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/bylyny-kyivskoho-tsyklu/module.md",
-        "sha256": "5b8d0a171b6bac04e05ed65cd8a7b310e53118b5d82d35c2161cb6b0af638012"
+        "sha256": "8a3de9bbb84612f90d5c3706e6fed4e7c0446fae92aad6d24d0a9a9f6e526f61"
       },
       {
         "path": "curriculum/l2-uk-en/folk/bylyny-kyivskoho-tsyklu/activities.yaml",
@@ -28,10 +28,10 @@
     ]
   },
   "evidence": {
-    "learner_surface": "Structured PrimaryReading blocks use dash-led source attribution and generated MDX now separates closing PrimaryReading JSX from following markdown.",
-    "reading_coverage": "Added or converted learner-visible structured on-site shortened primary readings; external/full-version links remain supplementary only.",
-    "review": "Claude local CLI failed before producing a review; AGY/Gemini review found two remediation blockers, both fixed, and focused follow-up returned PASS/no blockers.",
-    "source_hygiene": "Readings are bounded as verified corpus, scholarly witness, textbook/pedagogical fragment, or authorial public-domain excerpts; no fabricated dialogue, songs, or source claims were introduced."
+    "learner_surface": "Structured PrimaryReading block points to a substantial on-site hosted reading, with VESUM-safe learner framing and dash-led attribution in the module.",
+    "reading_coverage": "Direct hardened reading gate passed for Batch B target modules with one substantial structured reading each.",
+    "review": "Claude CLI failed before producing review content; AGY/Gemini final follow-up returned PASS after metadata cleanup and resource-liveness repairs.",
+    "source_hygiene": "M13 uses FEB Diuk Stepanovych as late northern preservation evidence, not as an Old Kyiv autograph; traditional/public-domain reading text is attributed on site."
   },
   "floors": {
     "beauty": 8.5,
@@ -49,14 +49,14 @@
     "model": "gemini-3.1-pro-high"
   },
   "schema_version": 1,
-  "scored_at": "2026-07-05T12:13:39Z",
+  "scored_at": "2026-07-05T22:59:26Z",
   "scores": {
-    "beauty": 8.8,
-    "decolonization": 9.4,
-    "engagement": 8.8,
-    "naturalness": 9.0,
-    "pedagogical": 8.8,
-    "tone": 9.1
+    "beauty": 8.7,
+    "decolonization": 9.1,
+    "engagement": 8.6,
+    "naturalness": 8.8,
+    "pedagogical": 9.0,
+    "tone": 8.9
   },
   "slug": "bylyny-kyivskoho-tsyklu",
   "track": "folk",
@@ -64,6 +64,6 @@
   "writer": {
     "agent": "codex",
     "family": "openai",
-    "model": "gpt-5"
+    "model": "gpt-5-codex"
   }
 }
