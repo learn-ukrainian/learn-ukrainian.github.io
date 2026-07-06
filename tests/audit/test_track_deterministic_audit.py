@@ -186,3 +186,19 @@ def test_module_paths_wiki_resolution() -> None:
     unmapped_paths = audit.module_paths("unknown-track", unmapped_module)
     assert "wiki/grammar/unknown-track/topic.md" in unmapped_paths.wiki.as_posix()
     assert "wiki/grammar/unknown-track/topic.sources.yaml" in unmapped_paths.wiki_sources.as_posix()
+
+
+def test_a1_config_requires_wiki_like_b2() -> None:
+    """#4305 user decision 2026-07-06: A1 (published entry-point track)
+    promotes wiki + wiki_sources to required, mirroring B2; resources stays
+    optional and optional_missing stays info-level."""
+    import yaml
+    from audit.track_deterministic_audit import DEFAULT_CONFIG, merged_track_config
+
+    config = yaml.safe_load(DEFAULT_CONFIG.read_text(encoding="utf-8"))
+    for track in ("a1", "b2"):
+        merged = merged_track_config(config, track)
+        assert "wiki" in merged["required_files"], track
+        assert "wiki_sources" in merged["required_files"], track
+        assert "resources" in merged["optional_files"], track
+        assert merged["severity"]["optional_missing"] == "info", track

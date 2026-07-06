@@ -29,6 +29,22 @@ defaults:
     optional_missing: info
 
 tracks:
+  a1:
+    profile: core
+    required_files:
+      - plan
+      - module_md
+      - activities
+      - vocabulary
+      - site_mdx
+      - wiki
+      - wiki_sources
+    optional_files:
+      - resources
+    notes:
+      - "A1 is the published entry-point track: wiki + wiki_sources promoted to"
+      - "required per #4305 user decision 2026-07-06 (55/55 compiled at promotion;"
+      - "B2 precedent). optional_missing stays info per the same decision."
   b2:
     profile: core
     required_files:
