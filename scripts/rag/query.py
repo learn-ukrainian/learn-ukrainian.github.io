@@ -50,7 +50,7 @@ def _text_hit(row: dict[str, Any]) -> dict[str, Any]:
         "trust_tier": row.get("trust_tier", 0) or 0,
         "source_type": row.get("source_type", "textbook"),
         "source_file": row.get("source_file", ""),
-        "subject": row.get("subject", ""),
+        "subject": row.get("subject") or "",
     }
 
 
