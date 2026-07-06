@@ -79,6 +79,23 @@ persona:
   role: Модератор семінару, що ставить під сумнів офіційні наративи та шукає людський вимір за академічними працями
   voice: Історіограф-ревізіоніст
 phase: BIO.4
+readings:
+- title: "Полонська-Василенко Наталія Дмитрівна"
+  source: Енциклопедія історії України (ЕІУ)
+  url: https://history.org.ua/?termin=Polonska_V
+  language: uk
+  type: biography
+  role: context
+  hosting: link-only
+  task: Ознайомлення з життєвим шляхом та науковою діяльністю історикині.
+- title: "Історія України (Передмова та концептуальні уривки)"
+  source: Наталія Полонська-Василенко (першоджерело)
+  url: null
+  language: uk
+  type: primary
+  role: primary
+  hosting: reading-needed
+  task: Розуміння методологічного підходу до української історії та акту деколонізації.
 references:
 - title: Полонська Василенко Наталія Дмитрівна
   note: Загальна біографія, наукова діяльність, еміграція
@@ -96,7 +113,7 @@ sequence: 109
 slug: nataliia-polonska-vasylenko
 subtitle: The Woman Who Wrote the History of Ukraine
 title: 'Наталія Полонська-Василенко: Історикиня'
-version: '4.0'
+version: '4.2'
 vocabulary_hints:
 - definition: спеціальна історична дисципліна, що вивчає історію історичної науки, її розвиток, теорії та методи
   pos: ж.

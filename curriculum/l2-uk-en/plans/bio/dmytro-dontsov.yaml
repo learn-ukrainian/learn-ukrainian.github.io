@@ -79,6 +79,23 @@ persona:
   role: Модератор дискусії, що вимагає розрізняти ідеологію, історичний контекст та етичну оцінку
   voice: Contextual-Historian
 phase: BIO
+readings:
+- title: "Донцов Дмитро Іванович"
+  source: Енциклопедія історії України (ЕІУ)
+  url: https://history.org.ua/?termin=Doncov_D
+  language: uk
+  type: biography
+  role: context
+  hosting: link-only
+  task: Ознайомлення з життєвим шляхом та політичною еволюцією від соціалізму до націоналізму.
+- title: "Націоналізм (уривки)"
+  source: Дмитро Донцов (першоджерело)
+  url: null
+  language: uk
+  type: primary
+  role: primary
+  hosting: reading-needed
+  task: Аналіз стилю та аргументації Донцова, розуміння концепції 'інтегрального націоналізму'.
 references:
 - title: Донцов Дмитро Іванович
   note: Загальна біографічна довідка, хронологія життя
@@ -98,7 +115,7 @@ sequence: 107
 slug: dmytro-dontsov
 subtitle: The Architect of "Integral Nationalism" and His Controversial Legacy
 title: 'Дмитро Донцов: Ідеолог націоналізму'
-version: '4.0'
+version: '4.2'
 vocabulary_hints:
 - definition: філософський та політичний принцип, згідно з яким воля є першоосновою і рушієм усього сущого, зокрема суспільного розвитку
   pos: ч.

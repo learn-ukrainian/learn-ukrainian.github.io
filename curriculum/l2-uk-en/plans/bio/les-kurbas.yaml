@@ -84,6 +84,23 @@ primary_annotations:
 - '[!anti-hagiography]'
 - '[!decolonization]'
 - '[!biography]'
+readings:
+- title: "Курбас Лесь"
+  source: Енциклопедія Сучасної України (ЕСУ)
+  url: https://esu.com.ua/article-51798
+  language: uk
+  type: biography
+  role: context
+  hosting: link-only
+  task: Ознайомлення з новаторством у театральному мистецтві та трагічною долею режисера.
+- title: "Березіль: Із творчої спадщини (маніфести та статті)"
+  source: Лесь Курбас (першоджерело)
+  url: null
+  language: uk
+  type: primary
+  role: primary
+  hosting: reading-needed
+  task: Аналіз театральної системи 'перетворення' та концепції 'актора-філософа'.
 references:
 - title: Лесь Курбас
   note: Основна біографія, театральна діяльність, репресії
@@ -102,7 +119,7 @@ sequence: 111
 slug: les-kurbas
 subtitle: The Man Who Reinvented Ukrainian Theatre
 title: 'Лесь Курбас: Реформатор театру'
-version: '4.0'
+version: '4.2'
 vocabulary_hints:
 - definition: мистецький напрям, що характеризується розривом з традиціями та пошуком нових форм і засобів вираження
   pos: ч.
