@@ -83,11 +83,11 @@ phase: BIO
 readings:
 - hosting: link-only
   language: uk
-  source: Вікіпедія
-  task: "Зверніть увагу на її роль у заснуванні жіночого руху в Галичині (Примітка: використано Вікіпедію як резервне джерело)."
+  source: Енциклопедія Сучасної України
+  task: "Зверніть увагу на її роль у становленні жіночого руху та літературної модернізації."
   title: Кобринська Наталія Іванівна
   type: article
-  url: https://uk.wikipedia.org/wiki/Кобринська_Наталія_Іванівна
+  url: https://esu.com.ua/article-8894
 references:
 - title: Nataliya Kobrynska
   note: Compiled research notes on Kobrynska, her works, correspondence with Franko, and historiography of the women's movement.
@@ -112,7 +112,7 @@ sequence: 75
 slug: nataliya-kobrynska
 subtitle: The Birth of Ukrainian Feminism
 title: 'Наталія Кобринська: Народження українського фемінізму'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: суспільно-політичний рух, метою якого є досягнення рівних прав для жінок
   pos: ч.

@@ -82,11 +82,11 @@ phase: BIO
 readings:
 - hosting: link-only
   language: uk
-  source: Вікіпедія
-  task: "Прочитайте про першу жінку-палеонтолога (Примітка: використано Вікіпедію як резервне джерело)."
+  source: Енциклопедія Сучасної України
+  task: "Прочитайте академічну довідку про палеонтологічну працю Павлової та її шлях у науку."
   title: Павлова Марія Василівна
   type: article
-  url: https://uk.wikipedia.org/wiki/Павлова_Марія_Василівна
+  url: https://esu.com.ua/article-879600
 references:
 - title: Mariya Pavlova
   note: Compiled research notes for the module, including timelines and key publications.
@@ -106,7 +106,7 @@ sequence: 73
 slug: mariya-pavlova
 subtitle: 'Mariya Pavlova: The Woman Who Read Bones'
 title: 'Марія Павлова: Жінка, що читала кістки'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: наука, що вивчає вимерлі організми, їхні сліди та скам'янілі рештки
   pos: ж.
