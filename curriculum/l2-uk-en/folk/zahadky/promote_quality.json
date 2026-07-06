@@ -1,9 +1,9 @@
 {
-  "assembled_mdx_sha256": null,
+  "assembled_mdx_sha256": "68839a0eadfc53b6444df1b8a28060dd707ed8a06813ab52f3373e5b6efde0e8",
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "a32624c737d976c8ae7053bd20bd07f69a400f63b0076f33c8626600f2e454f4",
+    "digest": "aae016c9125a945c3597c858d030c3440a50c6affbdb6ad3e38ce69ae238e79b",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/zahadky.yaml",
@@ -11,7 +11,7 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/zahadky/module.md",
-        "sha256": "71804d50ad6b1300dffa193668d366d051a0bc1bdcf7e6e01c24831e32e4ae6c"
+        "sha256": "5cff11c276d6368dacb43ef62a72700c1b30074f44db8fd58f421554df550358"
       },
       {
         "path": "curriculum/l2-uk-en/folk/zahadky/activities.yaml",
@@ -23,15 +23,14 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/zahadky/resources.yaml",
-        "sha256": "12422f78b56c6ca44eccf6eac3867c538b175c6d3f35042904cde517eb307b8a"
+        "sha256": "ce67ed0852ab674038cca23ef2daaa8d56411106669e2bf87e85477d280f53ce"
       }
     ]
   },
   "evidence": {
-    "gates": "Hardened reading gate, MDX parity/drift checks, reading coverage tests, MDX validation, assemble/render gates, and VESUM/resource gates passed; promote_quality refreshed after review.",
-    "quote_verification": "All added excerpts were checked through local sources.verify_quote at confidence 1.0; Claude independently re-checked all 10 fragments.",
-    "reading_remediation": "Added learner-visible structured on-site shortened primary readings; external links remain supplementary only.",
-    "review": "Claude Opus 4.8 review-folk-reading-remediation-m25-m28 approved the batch; one identifier typo was fixed before sidecar refresh."
+    "quote_verification": "Batch D readings verified from named public or local corpus sources: M25 Wikisource/ukrlib, M26 ukrlib, M27 Litopys Hrushevsky/Franko, M28 local encyclopedia corpus; quote-fidelity exemptions are registered for corpus-unmatched verified excerpts.",
+    "reading_remediation": "Batch D M25-M28 source readings expanded from one-line/token snippets into substantial learner-visible structured primary-reading blocks; external links remain supplementary.",
+    "review": "Claude-first bridge attempt failed with Claude CLI error before findings; AGY/Gemini gemini-3.1-pro-high fallback found no blockers, and the M28 threshold-buffer nit was resolved with a sixth verified riddle."
   },
   "floors": {
     "beauty": 8.5,
@@ -44,12 +43,12 @@
   "profile": "folk_promote_v1",
   "review_artifact": null,
   "reviewer": {
-    "agent": "claude",
-    "family": "anthropic",
-    "model": "Claude Opus 4.8"
+    "agent": "agy",
+    "family": "google",
+    "model": "gemini-3.1-pro-high"
   },
   "schema_version": 1,
-  "scored_at": "2026-07-05T16:47:53Z",
+  "scored_at": "2026-07-06T06:23:13Z",
   "scores": {
     "beauty": 8.8,
     "decolonization": 9.1,
