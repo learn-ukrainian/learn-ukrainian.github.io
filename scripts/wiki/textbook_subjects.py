@@ -163,6 +163,12 @@ _SUBJECT_ALIASES: dict[str, str] = {
 
 
 _SUBJECT_TOKEN_PATTERNS: tuple[tuple[str, tuple[str, ...]], ...] = (
+    # fizyka MUST precede astronomiya: integrated «Фізика і астрономія» course
+    # stems (e.g. 11-klas-fizika-astronomiia-zasekina-2019-standart) contain both
+    # tokens and are physics-primary — labelling them astronomiya would leave the
+    # fizyka-11 gap-audit cell falsely at 0 chunks (#4593 batch 3). Pure astronomy
+    # stems carry no fizyk/fizik token and still resolve to astronomiya.
+    ("fizyka", ("fizyk", "fizik", "physics")),
     ("astronomiya", ("astronomiya", "astronomiia", "astronomija")),
     ("ekonomika", ("ekonomika", "ekonomka")),
     ("pravoznavstvo", ("pravoznavstvo",)),
@@ -232,7 +238,6 @@ _SUBJECT_TOKEN_PATTERNS: tuple[tuple[str, tuple[str, ...]], ...] = (
     ("matematyka", ("matematyk", "matematik")),
     ("algebra", ("algebra",)),
     ("heometriya", ("heometri", "geometri", "geometry")),
-    ("fizyka", ("fizyk", "fizik", "physics")),
     ("khimiya", ("khimi", "himi", "chemistry")),
     ("biolohiya", ("biolohi", "biologi", "biology")),
     (

@@ -265,7 +265,7 @@ def test_vsesvitnia_ordering_precedence() -> None:
         ("11-klas-algebra-ister-2019-prof", "algebra"),
         ("11-klas-biologiia-i-ekologia-shalamov-2019", "biolohiya"),
         ("11-klas-ekonomika-homiak-2019", "ekonomika"),
-        ("11-klas-fizika-astronomiia-zasekina-2019-standart", "astronomiya"),
+        ("11-klas-fizika-astronomiia-zasekina-2019-standart", "fizyka"),
         ("11-klas-geografija-pestushko-2019", "heohrafiya"),
         ("11-klas-geometria-ister-2019-prof", "heometriya"),
         ("11-klas-informatyka-rudenko-2019", "informatyka"),
@@ -304,6 +304,32 @@ def test_vsesvitnia_ordering_precedence() -> None:
 )
 def test_batch3_source_files_map_correctly(stem: str, expected_subject: str) -> None:
     assert subject_for_source_file(stem) == expected_subject
+
+
+def test_integrated_fizyka_astronomiia_is_physics_but_pure_astronomy_stays() -> None:
+    # Integrated «Фізика і астрономія» carries both tokens → fizyka (order-dependent);
+    # a pure astronomy stem has no fizyk/fizik token → astronomiya.
+    assert subject_for_source_file("11-klas-fizika-astronomiia-zasekina-2019-standart") == "fizyka"
+    assert subject_for_source_file("11-klas-astronomiya-pryshliak-2019") == "astronomiya"
+
+
+def test_batch3_author_translits_resolve_to_cyrillic() -> None:
+    expected = {
+        "voloshhuk": "Волощук",
+        "guschyna": "Гущина",
+        "gudima": "Гудима",
+        "homiak": "Криховець-Хом'як",
+        "bojko": "Бойко",
+        "merzljak": "Мерзляк",
+        "zadorozhnij": "Задорожний",
+        "zasekina": "Засєкіна",
+        "kovbasenko": "Ковбасенко",
+        "ladychenko": "Ладиченко",
+    }
+    from scripts.wiki.textbook_subjects import AUTHOR_UK_BY_TRANSLIT
+
+    for translit, cyrillic in expected.items():
+        assert AUTHOR_UK_BY_TRANSLIT[translit] == cyrillic
 
 
 def test_known_source_file_subjects_regression() -> None:
