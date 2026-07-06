@@ -169,7 +169,7 @@ sequence: 236
 slug: yurii-kosach
 subtitle: Суперечлива спадщина МУРівського модерніста
 title: 'Юрій Косач: Модернізм, вигнання і прорадянський поворот'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: таємна політична або військова діяльність, заборонена владою
   pos: с.
@@ -193,3 +193,22 @@ vocabulary_hints:
   pos: ж.
   word: відповідальність
 word_target: 5200
+readings:
+- hosting: esu.com.ua
+  language: uk
+  note: Енциклопедична стаття про Юрія Косача, його родину та життєвий шлях.
+  role: biography
+  source: https://esu.com.ua/article-5498
+  title: Косач Юрій Миколайович
+- hosting: history.org.ua
+  language: uk
+  note: Історичний огляд діяльності Косача від Енциклопедії історії України.
+  role: history
+  source: http://history.org.ua/?termin=Kosach_Yu
+  title: Косач Юрій Миколайович
+- hosting: litgazeta.com.ua
+  language: uk
+  note: Повість про модерністське відчуття вигнанця.
+  role: primary
+  source: https://litgazeta.com.ua/chytaty-onlayn/kosach-urij-enej-ta-zitta-inshih/
+  title: Еней і життя інших

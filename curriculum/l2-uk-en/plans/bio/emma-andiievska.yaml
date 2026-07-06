@@ -139,7 +139,7 @@ sequence: 240
 slug: emma-andiievska
 subtitle: The Surrealist of Donetsk Who Chose Ukrainian
 title: 'Емма Андієвська: Сюрреалізм і «мова моєї душі»'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: мистецький напрям XX століття, що відтворює образи сну, марення та підсвідомого;
     основа поетики Андієвської
@@ -167,3 +167,22 @@ vocabulary_hints:
   pos: ж.
   word: діаспора
 word_target: 5200
+readings:
+- hosting: esu.com.ua
+  language: uk
+  note: Базова енциклопедична інформація про сюрреалістку Нью-Йоркської групи.
+  role: biography
+  source: https://esu.com.ua/article-44101
+  title: Андієвська Емма
+- hosting: ukrainer.net
+  language: uk
+  note: Мультимедійний матеріал про ідентичність Емми Андієвської та її українську мову.
+  role: cultural-context
+  source: https://www.ukrainer.net/emma-andiievska/
+  title: Хто така Емма Андієвська?
+- hosting: reading-needed
+  language: uk
+  note: Збірка поезій 1958 року.
+  role: primary
+  source: 'reading-needed: Емма Андієвська "Народження ідола"'
+  title: Народження ідола
