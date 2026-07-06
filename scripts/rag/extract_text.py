@@ -101,6 +101,20 @@ def _repair_cp1251_mojibake(text: str) -> str:
     return "".join(result)
 
 
+_DOLLAR_HYPHEN_RE = re.compile(r"([а-яіїєґА-ЯІЇЄҐ])\$([а-яіїєґА-ЯІЇЄҐ])")
+
+
+def _repair_dollar_hyphen(text: str) -> str:
+    """Fix 2017-era font mapping where '$' stands in for a compound hyphen.
+
+    Live-measured on 9-klas-khimiya-popel-2017 (#4593 wave 1): 22 intra-word
+    occurrences like "фізико$хімічні"/"гідроксид$іонів" — the PDF font maps
+    the discretionary/compound hyphen glyph to '$'. Only rewrites '$' BETWEEN
+    Cyrillic letters, so prices and code snippets are untouched.
+    """
+    return _DOLLAR_HYPHEN_RE.sub(r"\1-\2", text)
+
+
 def extract_text_fast(pdf_path: Path) -> str:
     """Extract text from digital PDF using pymupdf (fast, no OCR)."""
     import pymupdf
@@ -111,6 +125,7 @@ def extract_text_fast(pdf_path: Path) -> str:
         text = doc[i].get_text()
         if text.strip():
             text = _repair_cp1251_mojibake(text.strip())
+            text = _repair_dollar_hyphen(text)
             pages.append(f"## Сторінка {i + 1}\n\n{text}")
     doc.close()
     return "\n\n".join(pages)
