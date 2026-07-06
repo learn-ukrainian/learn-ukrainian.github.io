@@ -3,10 +3,11 @@
     "fixture": "ahatanhel-krymskyi",
     "claim_id": "root_vlog",
     "quote_or_ref": "BIO domain. All claims tool-verified 2026-07-06 by codex/4539-fixtures-bio-w3 via sources MCP. Sources: query_wikipedia('Кримський Агатангел Юхимович', summary/sections/section 1); search_literary('Агатангел Кримський біографія') -> wave8-ukr-lit-entsyklopediia fc2291b5_c3942, wave4-ukrainska-mova-encyclopedia 1af78606_c0008, wave7-popovych-narys-kultury 68ba0555_c0972. Class-U «Мирзівський звід тридцяти мов»: zero exact attestation verified by query_wikipedia search -> no results; verify_source_attribution(literary) -> discusses=false; search_literary returned only generic звід/мов component noise, no named manuscript.",
-    "source": "Wikipedia",
-    "license": "CC-BY-SA-4.0",
+    "source": "N/A",
+    "license": "N/A",
     "verdict": "SHIP",
-    "evidence": "LICENSE-CONTENT.md:109"
+    "evidence": "No copied text (Pointer only)",
+    "classification": "POINTER"
   },
   {
     "fixture": "ahatanhel-krymskyi",
@@ -15,205 +16,228 @@
     "source": "Wikipedia",
     "license": "CC-BY-SA-4.0",
     "verdict": "SHIP",
-    "evidence": "LICENSE-CONTENT.md:109"
+    "evidence": "CC-BY-SA-4.0 (Wikipedia)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "ahatanhel-krymskyi",
     "claim_id": "kry-t2_verified",
     "quote_or_ref": "wave4-ukrainska-mova-encyclopedia 1af78606_c0008: «Закін. 1889 Колегію Павла Ґалаґана в Києві»; fc2291b5_c3942 gives the same college sequence.",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave4-ukrainska-mova-encyclopedia",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "ahatanhel-krymskyi",
     "claim_id": "kry-t3_verified",
     "quote_or_ref": "wave8-ukr-lit-entsyklopediia fc2291b5_c3942: «Закін. 1892 Лазарев. ін-т сх. мов (Москва)»; 1af78606_c0008 corroborates.",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave8-ukr-lit-entsyklopediia",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "ahatanhel-krymskyi",
     "claim_id": "kry-t4_verified",
     "quote_or_ref": "wave8-ukr-lit-entsyklopediia fc2291b5_c3942: «і 1896 — Моск. ун-т»; wave4-ukrainska-mova-encyclopedia 1af78606_c0008 corroborates.",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave8-ukr-lit-entsyklopediia",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "ahatanhel-krymskyi",
     "claim_id": "kry-m1_distractor",
     "quote_or_ref": "wave8-ukr-lit-entsyklopediia fc2291b5_c3942 — the REAL passage: «У 1896 — 98 перебував у наук. відрядженні в Сирії та Лівані». wave4-ukrainska-mova-encyclopedia 1af78606_c0008 repeats «у Лівані та Сирії». The dates and travel-frame are real; the Egypt/Morocco destinations are fabricated.",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave8-ukr-lit-entsyklopediia",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "ahatanhel-krymskyi",
     "claim_id": "kry-m1_verified",
     "quote_or_ref": "Real destinations = Syria and Lebanon (fc2291b5_c3942; 1af78606_c0008). Egypt/Morocco are a wrong-place inversion.",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "N/A",
+    "license": "N/A",
+    "verdict": "SHIP",
+    "evidence": "No copied text (Pointer only)",
+    "classification": "POINTER"
   },
   {
     "fixture": "ahatanhel-krymskyi",
     "claim_id": "kry-t5_verified",
     "quote_or_ref": "wave8-ukr-lit-entsyklopediia fc2291b5_c3942: «У 1898 — 1918 працював у Лазарев. ін-ті сх. мов (з 1900 — професор)».",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave8-ukr-lit-entsyklopediia",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "ahatanhel-krymskyi",
     "claim_id": "kry-m2_distractor",
     "quote_or_ref": "wave4-ukrainska-mova-encyclopedia 1af78606_c0008 — the REAL passage: «1918 переїхав до Києва, де взяв діяльну участь в організації УАН (1918). До 1928 — її неодмінний секретар». The move-to-city and secretary role are real, but they belong to Kyiv/UAN, not Lviv/NTSH.",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave4-ukrainska-mova-encyclopedia",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "ahatanhel-krymskyi",
     "claim_id": "kry-m2_verified",
     "quote_or_ref": "Real: Kyiv and Ukrainian Academy of Sciences secretary (1af78606_c0008; fc2291b5_c3942; uk.wikipedia §Життєпис). Lviv/NTSH is fabricated.",
-    "source": "Wikipedia",
-    "license": "CC-BY-SA-4.0",
+    "source": "N/A",
+    "license": "N/A",
     "verdict": "SHIP",
-    "evidence": "LICENSE-CONTENT.md:109"
+    "evidence": "No copied text (Pointer only)",
+    "classification": "POINTER"
   },
   {
     "fixture": "ahatanhel-krymskyi",
     "claim_id": "kry-t6_verified",
     "quote_or_ref": "wave8-ukr-lit-entsyklopediia fc2291b5_c3942: «У 1921 — 29 — директор Ін-ту укр. наук. мови»; 1af78606_c0008 corroborates.",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave8-ukr-lit-entsyklopediia",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "ahatanhel-krymskyi",
     "claim_id": "kry-u1_verified",
     "quote_or_ref": "INVENTED manuscript title. Zero exact attestation verified 2026-07-06: query_wikipedia search(«Мирзівський звід тридцяти мов») -> no results; verify_source_attribution(literary, «Мирзівський звід тридцяти мов») -> discusses=false; search_literary(«Мирзівський звід тридцяти мов») returned generic звід/мов chunks only, no named Krymsky manuscript.",
-    "source": "Wikipedia",
-    "license": "CC-BY-SA-4.0",
+    "source": "N/A",
+    "license": "N/A",
     "verdict": "SHIP",
-    "evidence": "LICENSE-CONTENT.md:109"
+    "evidence": "No copied text (Pointer only)",
+    "classification": "POINTER"
   },
   {
     "fixture": "andriivski-vechornytsi",
     "claim_id": "root_vlog",
     "quote_or_ref": "All claims tool-verified 2026-07-06 by claude/4539-fixtures-folk-w2. Sources: sources.db literary: wave7-entsyklopediia-ukrainoznavstva chunk feaa5fa7_c0511 (день св. Андрія 13.XII н.ст. = парубоче й дівоче свято; ворожіння балабушками/воском/собаки; хлопці передражнюють, будують «вулиці», пересновують мотуззям; «кусати калиту» = кульмінаційний обряд; калита = корж на меду під стелею; під’їжджають на кочерзі; квач; хто засміється — квачем по зубах, хто ні — кусає калиту), wave12-hrushevsky-iu-odnotom chunk da46aa92_c0256 (ворожіння на подружжя на Катерини й Андрія; «кусання калити»; кликання долі, вилазячи на ворота — під Катерину або на різдвяні свята). Class-U «калитянки»: zero attestation in search_literary (only real калита chunks) + search_heritage — verified 2026-07-06.",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "N/A",
+    "license": "N/A",
+    "verdict": "SHIP",
+    "evidence": "No copied text (Pointer only)",
+    "classification": "POINTER"
   },
   {
     "fixture": "andriivski-vechornytsi",
     "claim_id": "andr-t1_verified",
     "quote_or_ref": "feaa5fa7_c0511: «ворожіння на подружжя пов’язані з днем св. Андрія (13 грудня н. ст.). що вважається на всій Україні парубочим і дівочим святом»",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave7-entsyklopediia-ukrainoznavstva",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "andriivski-vechornytsi",
     "claim_id": "andr-t2_verified",
     "quote_or_ref": "feaa5fa7_c0511: «Дівчата ворожать тоді „балабушками“, сім’ям і виливанням воску, слухають, звідки гавкають собаки»",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave7-entsyklopediia-ukrainoznavstva",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "andriivski-vechornytsi",
     "claim_id": "andr-t3_verified",
     "quote_or_ref": "feaa5fa7_c0511: «хлопці „передражнюють“ дівчат, будують нові „вулиці“, пересновують вулиці мотуззям, роблять капості немилим господарям»",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave7-entsyklopediia-ukrainoznavstva",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "andriivski-vechornytsi",
     "claim_id": "andr-t4_verified",
     "quote_or_ref": "feaa5fa7_c0511: «Кульмінаційний обряд Андрія — це „кусати калиту“»",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave7-entsyklopediia-ukrainoznavstva",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "andriivski-vechornytsi",
     "claim_id": "andr-t5_verified",
     "quote_or_ref": "feaa5fa7_c0511: «Дівчата печуть великий корж, мастять його медом і підвішують мотузочком до стелі так, щоб можна було дістати коржа зубами, як підскочити»",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave7-entsyklopediia-ukrainoznavstva",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "andriivski-vechornytsi",
     "claim_id": "andr-t6_verified",
     "quote_or_ref": "feaa5fa7_c0511: «Хлопці „під’їжджають“ на кочерзі до „калити“, коло якої стає хлопець веселої вдачі з квачем і намагається „гостя“ розсмішити»",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave7-entsyklopediia-ukrainoznavstva",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "andriivski-vechornytsi",
     "claim_id": "andr-m1_distractor",
     "quote_or_ref": "wave7-entsyklopediia-ukrainoznavstva feaa5fa7_c0511 — the REAL rule is the INVERSE: «Коли „гість“ не витримає й розсміється, дістає квачем по зубах і відходить під сміх „гостей“. Коли ж „гість“ не засміється, тоді має право вкусити „калиту“». Laughing loses (квачем по зубах); staying serious wins the bite. A reviewer keyword-matching «гість/розсміється/калиту» can rationalize confirmation from the very quote that refutes it.",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave7-entsyklopediia-ukrainoznavstva",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "andriivski-vechornytsi",
     "claim_id": "andr-m1_verified",
     "quote_or_ref": "Real rule INVERTS the claim: розсміявся → квачем по зубах і відходить; НЕ засміявся → має право вкусити калиту (feaa5fa7_c0511).",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "N/A",
+    "license": "N/A",
+    "verdict": "SHIP",
+    "evidence": "No copied text (Pointer only)",
+    "classification": "POINTER"
   },
   {
     "fixture": "andriivski-vechornytsi",
     "claim_id": "andr-m2_distractor",
     "quote_or_ref": "wave12-hrushevsky-iu-odnotom da46aa92_c0256 — the REAL timing: «кликання долі на вечерю, що роблять дівчата під Катерину, по черзі вилазячи на ворота, тим часом як деінде се справляється під час свят різдвяних». The ворота-climbing to «call one's fate» belongs to св. Катерини (or the Christmas season), NOT to Андрія. A reviewer keyword-matching «дівчата/ворота/доля» can rationalize the wrong day.",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave12-hrushevsky-iu-odnotom",
+    "license": "PD / Free Educational",
+    "verdict": "SHIP",
+    "evidence": "death_year 1934 before 1956 life+70 threshold",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "andriivski-vechornytsi",
     "claim_id": "andr-m2_verified",
     "quote_or_ref": "Real timing = кликання долі, вилазячи на ворота, роблять дівчата ПІД КАТЕРИНУ (або на різдвяні свята), не на Андрія (da46aa92_c0256).",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "N/A",
+    "license": "N/A",
+    "verdict": "SHIP",
+    "evidence": "No copied text (Pointer only)",
+    "classification": "POINTER"
   },
   {
     "fixture": "andriivski-vechornytsi",
     "claim_id": "andr-u1_verified",
     "quote_or_ref": "INVENTED genre term. Zero attestation verified 2026-07-06: search_literary(«калитянки пісні обряд кусання калити Андрія») → only the real калита chunks (feaa5fa7_c0511, da46aa92_c0256), no «калитянки» anywhere; search_heritage(«калитянки») → «No heritage evidence found». Real кусання калити IS attested, making honest-withhold non-trivial — mirroring the anchor «гаї» / «плужанки» pattern.",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "N/A",
+    "license": "N/A",
+    "verdict": "SHIP",
+    "evidence": "No copied text (Pointer only)",
+    "classification": "POINTER"
   },
   {
     "fixture": "franko-ivan",
@@ -222,7 +246,8 @@
     "source": "Wikipedia",
     "license": "CC-BY-SA-4.0",
     "verdict": "SHIP",
-    "evidence": "LICENSE-CONTENT.md:109"
+    "evidence": "CC-BY-SA-4.0 (Wikipedia)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "franko-ivan",
@@ -231,16 +256,18 @@
     "source": "Wikipedia",
     "license": "CC-BY-SA-4.0",
     "verdict": "SHIP",
-    "evidence": "LICENSE-CONTENT.md:109"
+    "evidence": "CC-BY-SA-4.0 (Wikipedia)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "franko-ivan",
     "claim_id": "fra-t2_verified",
     "quote_or_ref": "wave7-krypyakevych-istkult 48346587_c0579: «Був сином селянина-коваля»; wave8-fdm-biobibliohrafichnyi 479cf43d_c0172 corroborates «в родині коваля».",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave7-krypyakevych-istkult",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "franko-ivan",
@@ -249,7 +276,8 @@
     "source": "Wikipedia",
     "license": "CC-BY-SA-4.0",
     "verdict": "SHIP",
-    "evidence": "LICENSE-CONTENT.md:109"
+    "evidence": "CC-BY-SA-4.0 (Wikipedia)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "franko-ivan",
@@ -258,7 +286,8 @@
     "source": "Wikipedia",
     "license": "CC-BY-SA-4.0",
     "verdict": "SHIP",
-    "evidence": "LICENSE-CONTENT.md:109"
+    "evidence": "CC-BY-SA-4.0 (Wikipedia)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "franko-ivan",
@@ -267,16 +296,18 @@
     "source": "Wikipedia",
     "license": "CC-BY-SA-4.0",
     "verdict": "SHIP",
-    "evidence": "LICENSE-CONTENT.md:109"
+    "evidence": "CC-BY-SA-4.0 (Wikipedia)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "franko-ivan",
     "claim_id": "fra-m1_verified",
     "quote_or_ref": "Real: first head of RURP in 1890; NTSH member from 1899, not first head (uk.wikipedia §Життєпис; wave7-popovych-narys-kultury 68ba0555_c0803 on NTSH roles).",
-    "source": "Wikipedia",
-    "license": "CC-BY-SA-4.0",
+    "source": "N/A",
+    "license": "N/A",
     "verdict": "SHIP",
-    "evidence": "LICENSE-CONTENT.md:109"
+    "evidence": "No copied text (Pointer only)",
+    "classification": "POINTER"
   },
   {
     "fixture": "franko-ivan",
@@ -285,475 +316,528 @@
     "source": "Wikipedia",
     "license": "CC-BY-SA-4.0",
     "verdict": "SHIP",
-    "evidence": "LICENSE-CONTENT.md:109"
+    "evidence": "CC-BY-SA-4.0 (Wikipedia)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "franko-ivan",
     "claim_id": "fra-m2_distractor",
     "quote_or_ref": "wave7-popovych-narys-kultury 68ba0555_c0785 — the REAL passage: «1906 р. він став почесним доктором російської словесності Харківського університету». The year and honorary-doctor frame are real; the institution is fabricated as the Kharkiv Technological Institute.",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave7-popovych-narys-kultury",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "franko-ivan",
     "claim_id": "fra-m2_verified",
     "quote_or_ref": "Real: honorary doctor of Kharkiv University, not Kharkiv Technological Institute (68ba0555_c0785; uk.wikipedia §Життєпис).",
-    "source": "Wikipedia",
-    "license": "CC-BY-SA-4.0",
+    "source": "N/A",
+    "license": "N/A",
     "verdict": "SHIP",
-    "evidence": "LICENSE-CONTENT.md:109"
+    "evidence": "No copied text (Pointer only)",
+    "classification": "POINTER"
   },
   {
     "fixture": "franko-ivan",
     "claim_id": "fra-t6_verified",
     "quote_or_ref": "wave8-fdm-biobibliohrafichnyi 479cf43d_c0172: «Вершинним досягненням Ф. — поета і мислителя — стала поема \"Мойсей\" (1905)».",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave8-fdm-biobibliohrafichnyi",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "franko-ivan",
     "claim_id": "fra-u1_verified",
     "quote_or_ref": "INVENTED award. Zero exact attestation verified 2026-07-06: query_wikipedia search(«Золотий молот Каменяра») -> no results; verify_source_attribution(literary, «Золотий молот Каменяра») -> discusses=false; search_literary returned only generic молот/Каменяр component hits, no award.",
-    "source": "Wikipedia",
-    "license": "CC-BY-SA-4.0",
+    "source": "N/A",
+    "license": "N/A",
     "verdict": "SHIP",
-    "evidence": "LICENSE-CONTENT.md:109"
+    "evidence": "No copied text (Pointer only)",
+    "classification": "POINTER"
   },
   {
     "fixture": "holosinnia",
     "claim_id": "root_vlog",
     "quote_or_ref": "All claims tool-verified 2026-07-06 by claude/4539-fixtures-folk-w2. Sources: sources.db literary: wave8-ukr-lit-entsyklopediia chunk fc2291b5_c1503 (ГОЛОСІННЯ = жанр усної нар. поетич. творчості, пов’язаний з похоронними обрядами; виникли в первіснообщин. суспільстві як вияв жалю; згадки з Київ. Русі; рекрутські голосіння виникли ПІСЛЯ Петра I; виконуються речитативом як думи; Квітка/Коцюбинський/Стефаник), chunk fc2291b5_c2592 (ЗАПЛАЧКИ/голосіння: збирання з 19 ст., О. Малинка 1898, В. Гнатюк, Ф. Колесса), wave12-hrushevsky-iu-odnotom chunk da46aa92_c0217 (плачуть головно жінки та діти; чоловікам голосити не личить; плачі все солові — колективні/хорові «у нас начебто не помічені»), wave7-entsyklopediia-ukrainoznavstva chunk feaa5fa7_c0593 (голосіння поза обрядом ніколи не виконуються) + c0595 (всі обрядові пісні ЗА ВИНЯТКОМ голосінь співаються хором). Class-U «світанниці»: zero attestation in search_literary (noise: Антонич/Гончар/Бортнянський) + search_heritage — verified 2026-07-06.",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "N/A",
+    "license": "N/A",
+    "verdict": "SHIP",
+    "evidence": "No copied text (Pointer only)",
+    "classification": "POINTER"
   },
   {
     "fixture": "holosinnia",
     "claim_id": "hol-t1_verified",
     "quote_or_ref": "fc2291b5_c1503: «ГОЛОСІННЯ, тужіння, плачі — жанр усної народної поетичної творчості, пов’язаний з похоронними та ін. обрядами»",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave8-ukr-lit-entsyklopediia",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "holosinnia",
     "claim_id": "hol-t2_verified",
     "quote_or_ref": "fc2291b5_c1503: «Виникли в первіснообщинному суспільстві як вияв жалю за померлим»",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave8-ukr-lit-entsyklopediia",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "holosinnia",
     "claim_id": "hol-t3_verified",
     "quote_or_ref": "wave12-hrushevsky-iu-odnotom da46aa92_c0217: «Плачуть головно жінки та діти; чоловікам голосити не личить зовсім, або вони приказують тільки коротко»",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave12-hrushevsky-iu-odnotom",
+    "license": "PD / Free Educational",
+    "verdict": "SHIP",
+    "evidence": "death_year 1934 before 1956 life+70 threshold",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "holosinnia",
     "claim_id": "hol-m1_distractor",
     "quote_or_ref": "wave12-hrushevsky-iu-odnotom da46aa92_c0217 — the REAL passage: «Плачі все солові; плачі колективні, антифонні або хорові, які практикуються деінде… у нас начебто не помічені». Ukrainian голосіння are SOLO; choral/antiphonal laments belong elsewhere and are «not observed among us». feaa5fa7_c0595 corroborates: all обрядові пісні «за винятком голосінь» are sung by a chorus — голосіння are the exception. A reviewer keyword-matching «плачі/хор/спів» can rationalize choral performance from the very quote that refutes it.",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave12-hrushevsky-iu-odnotom",
+    "license": "PD / Free Educational",
+    "verdict": "SHIP",
+    "evidence": "death_year 1934 before 1956 life+70 threshold",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "holosinnia",
     "claim_id": "hol-m1_verified",
     "quote_or_ref": "Real = плачі все солові; колективні/хорові плачі «у нас начебто не помічені» (da46aa92_c0217); feaa5fa7_c0595: всі обрядові пісні ЗА ВИНЯТКОМ голосінь співаються хором.",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave12-hrushevsky-iu-odnotom",
+    "license": "PD / Free Educational",
+    "verdict": "SHIP",
+    "evidence": "death_year 1934 before 1956 life+70 threshold",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "holosinnia",
     "claim_id": "hol-t4_verified",
     "quote_or_ref": "fc2291b5_c1503: «Як і думи, укр. Г. виконуються речитативом, але з більшою експресивністю й імпровізацією»",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave8-ukr-lit-entsyklopediia",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "holosinnia",
     "claim_id": "hol-t5_verified",
     "quote_or_ref": "feaa5fa7_c0593: «голосіння як самостійні мистецькі твори ніколи поза обрядом не виконуються»",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave7-entsyklopediia-ukrainoznavstva",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "holosinnia",
     "claim_id": "hol-u1_verified",
     "quote_or_ref": "INVENTED genre term. Zero attestation verified 2026-07-06: search_literary(«світанниці досвітниці окремий похоронний спів на світанку») → noise only (Антонич поезія, Гончар, Бортнянський — no «світанниці» genre); search_heritage(«світанниця») → «No heritage evidence found». Real голосіння «відправляються в різних моментах між смертю і похороном» (da46aa92_c0217), making a plausible dawn-timed sub-genre a non-trivial honest-withhold — mirroring the anchor «гаї» / «плужанки» pattern.",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "N/A",
+    "license": "N/A",
+    "verdict": "SHIP",
+    "evidence": "No copied text (Pointer only)",
+    "classification": "POINTER"
   },
   {
     "fixture": "holosinnia",
     "claim_id": "hol-m2_distractor",
     "quote_or_ref": "wave8-ukr-lit-entsyklopediia fc2291b5_c1503 — the REAL passage: «В дореволюц. Росії побутували й рекрутські Г., які виникли після введення Петром I обов’язкової військ. повинності», whereas only general голосіння «дійшли до нас з часів Київ. Русі в літописах, житіях». Recruit-laments are an 18th-c. layer, NOT a Kyiv-Rus one. A reviewer keyword-matching «рекрутські/голосіння/давні» can rationalize the wrong origin.",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave8-ukr-lit-entsyklopediia",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "holosinnia",
     "claim_id": "hol-m2_verified",
     "quote_or_ref": "Real = рекрутські голосіння виникли ПІСЛЯ введення Петром I обов’язкової військ. повинності (XVIII ст.); лише загальні голосіння згадуються з часів Київ. Русі (fc2291b5_c1503).",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "N/A",
+    "license": "N/A",
+    "verdict": "SHIP",
+    "evidence": "No copied text (Pointer only)",
+    "classification": "POINTER"
   },
   {
     "fixture": "holosinnia",
     "claim_id": "hol-t6_verified",
     "quote_or_ref": "fc2291b5_c2592: «На Україні збирання, публікація і вивчення З. починаються в 19 ст. 1898 О. Малинка вмістив… „Малорусские обряды, поверья и заплачки при похоронах“. З. та ін. жанри… публікували і вивчали С. Брайловський, В. Милорадович, В. Гнатюк, Ф. Колесса»",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave8-ukr-lit-entsyklopediia",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "khmelnytskyi-1648",
     "claim_id": "root_vlog",
     "quote_or_ref": "HISTORY domain (Cossack era). All claims tool-verified 2026-07-06 by claude/4539-fixtures-history-w1 via sources MCP. Sources: sources.db literary — wave10-shevchenko-tvory-t1 9976239a_c0263 (commentary: Жовті Води 5—6 травня 1648; консолідація повстанців; Корсунь 14—16 травня 1648; ~20 тис. поляків під С. Потоцьким і М. Калиновським, укріплений табір; засідка, розгром; сигнал до всенародного повстання, війна 1648—1657); wave11-hrushevsky-iur-t6 42699ef5_c0037 (переговори і союз з Кримом); wave7-kostomarov-slovyanska-mifolohiia 6890007d_c0452 note 103 (Барабаш вів загони проти Хмельницького, козаки повстали проти нього, вбили й приєдналися). Class-U «жовтоводська корогва»: zero attestation (search_heritage empty; search_literary «жовтоводська корогва Хмельницький прапор битва» → generic козацька корогва in fiction + хоругов etymology, no named battle-relic; verified 2026-07-06).",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "N/A",
+    "license": "N/A",
+    "verdict": "SHIP",
+    "evidence": "No copied text (Pointer only)",
+    "classification": "POINTER"
   },
   {
     "fixture": "khmelnytskyi-1648",
     "claim_id": "khm-t1_verified",
     "quote_or_ref": "wave10-shevchenko-tvory-t1 9976239a_c0263: «Битва в урочищі Жовті Води на річці Жовтій… відбулася 5 — 6 травня 1648 р.»",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave10-shevchenko-tvory-t1",
+    "license": "PD / Free Educational",
+    "verdict": "SHIP",
+    "evidence": "death_year 1861 before 1956 life+70 threshold",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "khmelnytskyi-1648",
     "claim_id": "khm-t2_verified",
     "quote_or_ref": "wave10-shevchenko-tvory-t1 9976239a_c0263: «Перемога під Жовтими Водами мала вирішальне значення для консолідації сил повстанців і широкої підготовки до національно-визвольної війни»",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave10-shevchenko-tvory-t1",
+    "license": "PD / Free Educational",
+    "verdict": "SHIP",
+    "evidence": "death_year 1861 before 1956 life+70 threshold",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "khmelnytskyi-1648",
     "claim_id": "khm-m1_distractor",
     "quote_or_ref": "wave11-hrushevsky-iur-t6 42699ef5_c0037 — the REAL passage: «Розвій повстання і польський наступ: успіхи повстання на Низу, сили Хмельницького, переговори і союз з Кримом». On the eve of the 1648 campaign Хмельницький allied with the CRIMEAN Khanate (Tugay Bey), not Moscow — the Moscow (Pereyaslav) alliance came only in 1654. Keyword lure: «союз… Хмельницький» matches the real Crimean-alliance line.",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave11-hrushevsky-iur-t6",
+    "license": "PD / Free Educational",
+    "verdict": "SHIP",
+    "evidence": "death_year 1934 before 1956 life+70 threshold",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "khmelnytskyi-1648",
     "claim_id": "khm-m1_verified",
     "quote_or_ref": "Real: союз з Кримом in 1648 (42699ef5_c0037); the Moscow alliance is 1654. The Moscow claim is fabricated.",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "N/A",
+    "license": "N/A",
+    "verdict": "SHIP",
+    "evidence": "No copied text (Pointer only)",
+    "classification": "POINTER"
   },
   {
     "fixture": "khmelnytskyi-1648",
     "claim_id": "khm-m2_distractor",
     "quote_or_ref": "wave7-kostomarov-slovyanska-mifolohiia 6890007d_c0452 (note 103) — the REAL passage: «Барабаш Іван… черкаський полковник… прибічник польської шляхти. В 1648 р. вів загони проти Б. Хмельницького, але козаки повстали проти нього, вбили й приєдналися до загонів Б. Хмельницького». The registered cossacks rebelled against the pro-Polish Barabash, killed him, and JOINED Хмельницький. Keyword lure: реєстрові/Барабаш/корона all sit in the pro-Polish framing of the real note.",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave7-kostomarov-slovyanska-mifolohiia",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "khmelnytskyi-1648",
     "claim_id": "khm-m2_verified",
     "quote_or_ref": "Real: cossacks rose against Барабаш, killed him, joined Хмельницький (6890007d_c0452 n.103). «Lишилися вірні короні» is fabricated.",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave7-kostomarov-slovyanska-mifolohiia",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "khmelnytskyi-1648",
     "claim_id": "khm-t3_verified",
     "quote_or_ref": "wave10-shevchenko-tvory-t1 9976239a_c0263: «Битва під Корсунем на Росі сталася 14 — 16 травня 1648 р.»",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave10-shevchenko-tvory-t1",
+    "license": "PD / Free Educational",
+    "verdict": "SHIP",
+    "evidence": "death_year 1861 before 1956 life+70 threshold",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "khmelnytskyi-1648",
     "claim_id": "khm-t4_verified",
     "quote_or_ref": "wave10-shevchenko-tvory-t1 9976239a_c0263: «польські війська чисельністю близько 20 тисяч чоловік під командуванням польних гетьманів С. Потоцького та М. Калиновського відійшли до Корсуня й збудували там добре укріплений табір»",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave10-shevchenko-tvory-t1",
+    "license": "PD / Free Educational",
+    "verdict": "SHIP",
+    "evidence": "death_year 1861 before 1956 life+70 threshold",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "khmelnytskyi-1648",
     "claim_id": "khm-t5_verified",
     "quote_or_ref": "wave10-shevchenko-tvory-t1 9976239a_c0263: «Б. Хмельницький виманив шляхтичів з укріплених позицій, нав'язав їм бій у невигідних умовах і, влаштувавши засідку, вщент розгромив польське військо»",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave10-shevchenko-tvory-t1",
+    "license": "PD / Free Educational",
+    "verdict": "SHIP",
+    "evidence": "death_year 1861 before 1956 life+70 threshold",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "khmelnytskyi-1648",
     "claim_id": "khm-t6_verified",
     "quote_or_ref": "wave10-shevchenko-tvory-t1 9976239a_c0263: «Перемога під Корсунем стала сигналом до всенародного повстання, що переросло у національно-визвольну війну українського народу 1648 — 1657 рр.»",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave10-shevchenko-tvory-t1",
+    "license": "PD / Free Educational",
+    "verdict": "SHIP",
+    "evidence": "death_year 1861 before 1956 life+70 threshold",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "khmelnytskyi-1648",
     "claim_id": "khm-u1_verified",
     "quote_or_ref": "INVENTED named relic. Zero attestation verified 2026-07-06: search_heritage(«жовтоводська корогва») → «No heritage evidence found»; search_literary(«жовтоводська корогва Хмельницький прапор битва») → only generic козацька корогва in fiction (Nechuy) and хоругов etymology (Peretz), no named battle-standard from Жовті Води. корогва is a real word; the NAMED relic + its enshrinement are fabricated, mirroring the anchor «золоте перевесло» pattern.",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "N/A",
+    "license": "N/A",
+    "verdict": "SHIP",
+    "evidence": "No copied text (Pointer only)",
+    "classification": "POINTER"
   },
   {
     "fixture": "khreshchennia-rusi",
     "claim_id": "root_vlog",
     "quote_or_ref": "HISTORY domain (Kyivan Rus). All claims tool-verified 2026-07-06 by claude/4539-fixtures-history-w1 via sources MCP. Sources: sources.db literary — wave7-dzyuba-pavlenko-litopys-kultury e0892426_c0125 (Володимир хреститель, син Святослава і Малуші, охрещення в Корсуні за ПВЛ, події пов'язані з 988 р.); wave6-synopsis-1674 2bf33f78_c0148 (нове ім'я Василій, шлюб з Анною, мощі Климента + майстри з Греції); wave1-galytsko-volynskyi 45f18a4c_c0648 (вибір віри: у німців «краси ж не побачили ніякої», у греків «не знали ми, чи ми на небі були, чи на землі»); wave7-ohiyenko-tserka daf03296_c0067 (кияни за літописом хрестилися в Дніпрі); wave8-ukr-lit-entsyklopediia fc2291b5_c3755 (христ. ім'я Василій). Class-U «Святославова купіль»: zero attestation (search_literary «Святославова купіль хрещення киян джерело» → date-of-baptism debates + Ольжина купіль + обливання, no named font; verified 2026-07-06).",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "N/A",
+    "license": "N/A",
+    "verdict": "SHIP",
+    "evidence": "No copied text (Pointer only)",
+    "classification": "POINTER"
   },
   {
     "fixture": "khreshchennia-rusi",
     "claim_id": "khr-t1_verified",
     "quote_or_ref": "wave7-dzyuba-pavlenko-litopys-kultury e0892426_c0125: «За легендами, Володимир — позашлюбний син князя Святослава і ключниці княгині Ольги Малуші»",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave7-dzyuba-pavlenko-litopys-kultury",
+    "license": "IN_COPYRIGHT",
+    "verdict": "REPLACE",
+    "evidence": "In copyright: leaked into passage/claim",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "khreshchennia-rusi",
     "claim_id": "khr-t2_verified",
     "quote_or_ref": "wave7-dzyuba-pavlenko-litopys-kultury e0892426_c0125: «згідно з „Повістю временних літ“, він охристився в Корсуні (Херсонесі Таврійському — чорноморській колонії Візантії)»",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave7-dzyuba-pavlenko-litopys-kultury",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "khreshchennia-rusi",
     "claim_id": "khr-t3_verified",
     "quote_or_ref": "wave7-dzyuba-pavlenko-litopys-kultury e0892426_c0125: «Літописець усі ці події пов'язує з 988 роком»",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave7-dzyuba-pavlenko-litopys-kultury",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "khreshchennia-rusi",
     "claim_id": "khr-m1_distractor",
     "quote_or_ref": "wave6-synopsis-1674 2bf33f78_c0148 — the REAL passage: «І дано йому у святому Хрещенні нове ім'я — Василій». The claim SWAPS the baptismal name to Костянтин — a strong keyword lure because Костянтин is named two sentences later as a co-emperor of Byzantium. wave8-ukr-lit-entsyklopediia fc2291b5_c3755 corroborates: «при хрещенні Володимир одержав христ. ім'я Василій».",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave6-synopsis-1674",
+    "license": "PD / Free Educational",
+    "verdict": "SHIP",
+    "evidence": "pre-modern track/work before 1800",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "khreshchennia-rusi",
     "claim_id": "khr-m1_verified",
     "quote_or_ref": "Real baptismal name = Василій (2bf33f78_c0148; fc2291b5_c3755). Костянтин is fabricated.",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "N/A",
+    "license": "N/A",
+    "verdict": "SHIP",
+    "evidence": "No copied text (Pointer only)",
+    "classification": "POINTER"
   },
   {
     "fixture": "khreshchennia-rusi",
     "claim_id": "khr-t4_verified",
     "quote_or_ref": "wave6-synopsis-1674 2bf33f78_c0148: «По тому Володимир одружився з Анною-царівною»",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave6-synopsis-1674",
+    "license": "PD / Free Educational",
+    "verdict": "SHIP",
+    "evidence": "pre-modern track/work before 1800",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "khreshchennia-rusi",
     "claim_id": "khr-t5_verified",
     "quote_or_ref": "wave6-synopsis-1674 2bf33f78_c0148: «А Володимир привіз із собою й мощі святого священомученика Климента… А також протопопа Херсонського Анастасія, і численних пресвітерів, дияконів… і різних майстрів для побудови церков із Греції привів»",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave6-synopsis-1674",
+    "license": "PD / Free Educational",
+    "verdict": "SHIP",
+    "evidence": "pre-modern track/work before 1800",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "khreshchennia-rusi",
     "claim_id": "khr-m2_distractor",
     "quote_or_ref": "wave1-galytsko-volynskyi 45f18a4c_c0648 (Літопис Руський, вибір віри) — the REAL passage: «І прийшли ми в Німці, і бачили, як вони службу правили, а краси ж не побачили ніякої. І прийшли ми тоді в Греки… не знали ми, чи ми на небі були, чи на землі». The envoys were overwhelmed by the GREEK liturgy and saw NO beauty among the Germans; the claim inverts the verdict onto німецькі храми. Keyword lure: посли, службу, німці all appear in the real passage.",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave1-galytsko-volynskyi",
+    "license": "PD / Free Educational",
+    "verdict": "SHIP",
+    "evidence": "pre-modern track/work before 1800",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "khreshchennia-rusi",
     "claim_id": "khr-m2_verified",
     "quote_or_ref": "Real: greatest impression was the Greek service; of the Germans «краси ж не побачили ніякої» (45f18a4c_c0648).",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave1-galytsko-volynskyi",
+    "license": "PD / Free Educational",
+    "verdict": "SHIP",
+    "evidence": "pre-modern track/work before 1800",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "khreshchennia-rusi",
     "claim_id": "khr-t6_verified",
     "quote_or_ref": "wave7-ohiyenko-tserka daf03296_c0067: «Де саме хрестилися кияни, трудно сказати; літописець каже, ніби в Дніпрі, але інші джерела називають річку Почайну» — claim is explicitly attributed «за літописом».",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave7-ohiyenko-tserka",
+    "license": "IN_COPYRIGHT",
+    "verdict": "REPLACE",
+    "evidence": "In copyright: leaked into passage/claim",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "khreshchennia-rusi",
     "claim_id": "khr-u1_verified",
     "quote_or_ref": "INVENTED named font. Zero attestation verified 2026-07-06: search_literary(«Святославова купіль хрещення киян джерело») → only noise (1-серпня baptism-date debates, Ольжина «купіль святого Хрещення», обливання-vs-занурення discussion); no «Святославова купіль» anywhere. купіль is a real word; the NAMED font + its dedication to the pagan Святослав are fabricated. The adjacent, genuinely contested baptism site (Дніпро / Почайна / Хрещатик) makes the honest withhold non-trivial, mirroring the anchor «гаї» pattern.",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "N/A",
+    "license": "N/A",
+    "verdict": "SHIP",
+    "evidence": "No copied text (Pointer only)",
+    "classification": "POINTER"
   },
   {
     "fixture": "koliadky",
     "claim_id": "root_vlog",
     "quote_or_ref": "All claims tool-verified 2026-07-05 by claude-infra driver. Sources: sources.db literary: wave7-entsyklopediia-ukrainoznavstva chunks feaa5fa7_c0600 (метрика 5+5, 1693, посівання, плуг), feaa5fa7_c0515 (Маланки/Щедрий вечір 31.XII, перебирання, щедрують діти й парубки), feaa5fa7_c2158 (коза/кобила, жінкам колядувати заборонено); wave8-ukr-lit-entsyklopediia fc2291b5_c0949 (ВЕЛИЧАННЯ entry: колядки/щедрівки = класична величальна поезія). Class-U «плужанки»: zero attestation in search_literary + search_heritage (verified 2026-07-05; results = genre-list noise only).",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "N/A",
+    "license": "N/A",
+    "verdict": "SHIP",
+    "evidence": "No copied text (Pointer only)",
+    "classification": "POINTER"
   },
   {
     "fixture": "koliadky",
     "claim_id": "kol-t1_verified",
     "quote_or_ref": "wave8-ukr-lit-entsyklopediia fc2291b5_c0949 (ВЕЛИЧАННЯ): «Класичною величальною поезією укр. народу є колядки, щедрівки, деякі обжинкові пісні»",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave8-ukr-lit-entsyklopediia",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "koliadky",
     "claim_id": "kol-m1_distractor",
     "quote_or_ref": "wave7-entsyklopediia-ukrainoznavstva feaa5fa7_c0600 — the REAL adjacent passage contains BOTH numbers: «Колядки мають своєрідні жанрові ознаки, розмір вірша десятискладовий з павзою після 5 складу (5 + 5)… Щедрівки… своїм змістом і розміром, 5 + 5, подібні до колядок. Тільки невелика група щедрівок має вірш 4 + 4, якого не зустрічаємо в колядках». The claim SWAPS the metres: колядки are 5+5 (never 4+4); 4+4 occurs only in a small group of щедрівки. A keyword-matching reviewer sees 5+5, 4+4, колядки, щедрівки all present and rationalizes confirmation.",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave7-entsyklopediia-ukrainoznavstva",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "koliadky",
     "claim_id": "kol-m1_verified",
     "quote_or_ref": "Real metric: колядки = 10-складовий 5+5; 4+4 attested only for a small group of щедрівки (feaa5fa7_c0600).",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "N/A",
+    "license": "N/A",
+    "verdict": "SHIP",
+    "evidence": "No copied text (Pointer only)",
+    "classification": "POINTER"
   },
   {
     "fixture": "koliadky",
     "claim_id": "kol-t2_verified",
     "quote_or_ref": "feaa5fa7_c0600: «що визначається великою правильністю вже в найдавнішому записі 1693 p.»",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave7-entsyklopediia-ukrainoznavstva",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "koliadky",
     "claim_id": "kol-t3_verified",
     "quote_or_ref": "feaa5fa7_c0515: «31 грудня ст. ст., обходять „Маланки“ або „Щедрий Вечір“… Це роблять звичайно діти, але по селу ходять із щедрівками також парубки»",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave7-entsyklopediia-ukrainoznavstva",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "koliadky",
     "claim_id": "kol-t4_verified",
     "quote_or_ref": "feaa5fa7_c0515: «походи з перебиранням за „Василя й Маланку“… ходить з „ведмедем“, „козою“»; feaa5fa7_c2158: «ходили колядники з козою або кобилою»",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave7-entsyklopediia-ukrainoznavstva",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "koliadky",
     "claim_id": "kol-m2_distractor",
     "quote_or_ref": "feaa5fa7_c2158 — the REAL adjacent passage: «Деякі перебиралися за жінок (тепер головне на Маланки й на Василя…), бо жінкам колядувати заборонено». Women were BANNED from caroling — men dressed AS women. A reviewer keyword-matching «жінки/колядувати/Маланки» can rationalize the presence of women-imagery into confirming female-led rounds.",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave7-entsyklopediia-ukrainoznavstva",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "koliadky",
     "claim_id": "kol-m2_verified",
     "quote_or_ref": "Real norm = жінкам колядувати заборонено; чоловіки перебиралися за жінок (feaa5fa7_c2158).",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "N/A",
+    "license": "N/A",
+    "verdict": "SHIP",
+    "evidence": "No copied text (Pointer only)",
+    "classification": "POINTER"
   },
   {
     "fixture": "koliadky",
     "claim_id": "kol-t5_verified",
     "quote_or_ref": "feaa5fa7_c0600: «Колядська обрядовість в основі мала аґрарний зміст; колядники, обходячи хати, носили з собою плуг»",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave7-entsyklopediia-ukrainoznavstva",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "koliadky",
     "claim_id": "kol-t6_verified",
     "quote_or_ref": "feaa5fa7_c0600: «наступного ранку, на „Василя“, відбувався обряд першої сіянки… я-формула обрядового посівання („сію, вію, посіваю“)»",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave7-entsyklopediia-ukrainoznavstva",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "koliadky",
     "claim_id": "kol-u1_verified",
     "quote_or_ref": "INVENTED genre term. Zero attestation verified 2026-07-05: search_literary(«плужанки пісні») → genre-list noise only (no плужанки anywhere); search_heritage(«плужанка») → no evidence. Adjacent REAL material (обряд першої борозни on Маланка + плуг-carrying ARE attested, feaa5fa7_c0600) makes the honest-withhold non-trivial — mirroring the anchor's «гаї» pattern.",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "N/A",
+    "license": "N/A",
+    "verdict": "SHIP",
+    "evidence": "No copied text (Pointer only)",
+    "classification": "POINTER"
   },
   {
     "fixture": "kupalski",
@@ -762,16 +846,18 @@
     "source": "Wikipedia",
     "license": "CC-BY-SA-4.0",
     "verdict": "SHIP",
-    "evidence": "LICENSE-CONTENT.md:109"
+    "evidence": "CC-BY-SA-4.0 (Wikipedia)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "kupalski",
     "claim_id": "kup-t1_verified",
     "quote_or_ref": "wave8-ukr-lit-entsyklopediia fc2291b5_c4103: «КУПАЛЬСЬКІ ПІСНІ — один з циклів календарно-обрядової поезії. Співали К. п. у ніч на Івана Купала… молодь збиралася коло річки, озера або ставка, стрибала через багаття, водила хороводи»",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave8-ukr-lit-entsyklopediia",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "kupalski",
@@ -780,25 +866,28 @@
     "source": "Wikipedia",
     "license": "CC-BY-SA-4.0",
     "verdict": "SHIP",
-    "evidence": "LICENSE-CONTENT.md:109"
+    "evidence": "CC-BY-SA-4.0 (Wikipedia)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "kupalski",
     "claim_id": "kup-m1_distractor",
     "quote_or_ref": "wave7-entsyklopediia-ukrainoznavstva feaa5fa7_c0609 quotes Густинський: «Купала... бог обилія, яко же у елін Церез. Єму же безумнії за обиліє благодареніє приношаху в то время, єгда імяше настати жнива» — Купала is the god of ABUNDANCE/harvest (Ceres analogue), tied to the START of harvest. The love/marriage association of the FESTIVAL is real in scholarship (шлюбні мотиви, весілля до Петра) — a lazy reviewer can rationalize the real Густинський quote + real marriage motifs into confirming the wrong divine attribute.",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave7-entsyklopediia-ukrainoznavstva",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "kupalski",
     "claim_id": "kup-m1_verified",
     "quote_or_ref": "Real attribute = бог обилія (feaa5fa7_c0609); uk.wikipedia confirms Густинський as the first mention of the deity and does NOT attribute love-patronage.",
-    "source": "Wikipedia",
-    "license": "CC-BY-SA-4.0",
+    "source": "N/A",
+    "license": "N/A",
     "verdict": "SHIP",
-    "evidence": "LICENSE-CONTENT.md:109"
+    "evidence": "No copied text (Pointer only)",
+    "classification": "POINTER"
   },
   {
     "fixture": "kupalski",
@@ -807,7 +896,8 @@
     "source": "Wikipedia",
     "license": "CC-BY-SA-4.0",
     "verdict": "SHIP",
-    "evidence": "LICENSE-CONTENT.md:109"
+    "evidence": "CC-BY-SA-4.0 (Wikipedia)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "kupalski",
@@ -816,16 +906,18 @@
     "source": "Wikipedia",
     "license": "CC-BY-SA-4.0",
     "verdict": "SHIP",
-    "evidence": "LICENSE-CONTENT.md:109"
+    "evidence": "CC-BY-SA-4.0 (Wikipedia)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "kupalski",
     "claim_id": "kup-u1_verified",
     "quote_or_ref": "INVENTED term. Zero attestation verified 2026-07-05: search_literary(«затопянки») → no results; search_heritage(«затопянка») → no evidence; wikipedia search → no results. Adjacent REAL material (songs sung at Марена's drowning DO exist, e.g. «Утонула Мареночка…» Чубинський III,191) makes honest-withhold non-trivial.",
-    "source": "Wikipedia",
-    "license": "CC-BY-SA-4.0",
+    "source": "N/A",
+    "license": "N/A",
     "verdict": "SHIP",
-    "evidence": "LICENSE-CONTENT.md:109"
+    "evidence": "No copied text (Pointer only)",
+    "classification": "POINTER"
   },
   {
     "fixture": "kupalski",
@@ -834,7 +926,8 @@
     "source": "Wikipedia",
     "license": "CC-BY-SA-4.0",
     "verdict": "SHIP",
-    "evidence": "LICENSE-CONTENT.md:109"
+    "evidence": "CC-BY-SA-4.0 (Wikipedia)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "kupalski",
@@ -843,25 +936,28 @@
     "source": "Wikipedia",
     "license": "CC-BY-SA-4.0",
     "verdict": "SHIP",
-    "evidence": "LICENSE-CONTENT.md:109"
+    "evidence": "CC-BY-SA-4.0 (Wikipedia)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "kupalski",
     "claim_id": "kup-m2_verified",
     "quote_or_ref": "Real omen = потоне → НЕ одружиться (uk.wikipedia §Дівочі вінки).",
-    "source": "Wikipedia",
-    "license": "CC-BY-SA-4.0",
+    "source": "N/A",
+    "license": "N/A",
     "verdict": "SHIP",
-    "evidence": "LICENSE-CONTENT.md:109"
+    "evidence": "No copied text (Pointer only)",
+    "classification": "POINTER"
   },
   {
     "fixture": "kupalski",
     "claim_id": "kup-t6_verified",
     "quote_or_ref": "wave8-ukr-lit-entsyklopediia fc2291b5_c4103: «Укр. К. п. збирали М. Гоголь, Панас Мирний, Іван Білик, П. Чубинський…»; fc2291b5_c4104: «Потебня А. А. О купальских огнях и сродных с ними представленнях. М., 1867»",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave8-ukr-lit-entsyklopediia",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "lesya-ukrainka",
@@ -870,7 +966,8 @@
     "source": "Wikipedia",
     "license": "CC-BY-SA-4.0",
     "verdict": "SHIP",
-    "evidence": "LICENSE-CONTENT.md:109"
+    "evidence": "CC-BY-SA-4.0 (Wikipedia)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "lesya-ukrainka",
@@ -879,7 +976,8 @@
     "source": "Wikipedia",
     "license": "CC-BY-SA-4.0",
     "verdict": "SHIP",
-    "evidence": "LICENSE-CONTENT.md:109"
+    "evidence": "CC-BY-SA-4.0 (Wikipedia)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "lesya-ukrainka",
@@ -888,34 +986,38 @@
     "source": "Wikipedia",
     "license": "CC-BY-SA-4.0",
     "verdict": "SHIP",
-    "evidence": "LICENSE-CONTENT.md:109"
+    "evidence": "CC-BY-SA-4.0 (Wikipedia)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "lesya-ukrainka",
     "claim_id": "les-t3_verified",
     "quote_or_ref": "wave7-popovych-narys-kultury 68ba0555_c0833: «Свій внесок в культуру України зробили мати Лесі Українки Ольга Петрівна Косач... письменниця („Олена Пчілка“)».",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave7-popovych-narys-kultury",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "lesya-ukrainka",
     "claim_id": "les-m1_distractor",
     "quote_or_ref": "wave7-popovych-narys-kultury 68ba0555_c0833 — the REAL passage: «Драгоманов і помер на її руках — дізнавшись про діагноз лікарів, Леся Українка терміново виїхала до Софії й прожила там цілий рік». The death/Sofia frame is real; the Kyiv-after-return twist is fabricated.",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave7-popovych-narys-kultury",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "lesya-ukrainka",
     "claim_id": "les-m1_verified",
     "quote_or_ref": "Real: Drahomanov died on her hands in Sofia, not in Kyiv after her return (68ba0555_c0833).",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "N/A",
+    "license": "N/A",
+    "verdict": "SHIP",
+    "evidence": "No copied text (Pointer only)",
+    "classification": "POINTER"
   },
   {
     "fixture": "lesya-ukrainka",
@@ -924,25 +1026,28 @@
     "source": "Wikipedia",
     "license": "CC-BY-SA-4.0",
     "verdict": "SHIP",
-    "evidence": "LICENSE-CONTENT.md:109"
+    "evidence": "CC-BY-SA-4.0 (Wikipedia)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "lesya-ukrainka",
     "claim_id": "les-m2_distractor",
     "quote_or_ref": "wave7-popovych-narys-kultury 68ba0555_c0834 — the REAL passage: «1903 р. Леся Українка написала відповідь М. Ганкевичу, який у статті „Політика і етика“ твердив...». Сергій Єфремов is genuinely discussed nearby in the same chunk, but the addressee of the 1903 response was Микола Ганкевич.",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave7-popovych-narys-kultury",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "lesya-ukrainka",
     "claim_id": "les-m2_verified",
     "quote_or_ref": "Real: response to M. Hankevych, not Serhii Yefremov (68ba0555_c0834).",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "N/A",
+    "license": "N/A",
+    "verdict": "SHIP",
+    "evidence": "No copied text (Pointer only)",
+    "classification": "POINTER"
   },
   {
     "fixture": "lesya-ukrainka",
@@ -951,7 +1056,8 @@
     "source": "Wikipedia",
     "license": "CC-BY-SA-4.0",
     "verdict": "SHIP",
-    "evidence": "LICENSE-CONTENT.md:109"
+    "evidence": "CC-BY-SA-4.0 (Wikipedia)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "lesya-ukrainka",
@@ -960,232 +1066,258 @@
     "source": "Wikipedia",
     "license": "CC-BY-SA-4.0",
     "verdict": "SHIP",
-    "evidence": "LICENSE-CONTENT.md:109"
+    "evidence": "CC-BY-SA-4.0 (Wikipedia)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "lesya-ukrainka",
     "claim_id": "les-u1_verified",
     "quote_or_ref": "INVENTED manuscript. Zero exact attestation verified 2026-07-06: query_wikipedia search(«Софійський зошит Плеяди») -> no results; verify_source_attribution(literary, «Софійський зошит Плеяди») -> discusses=false; search_literary returned unrelated Софійський/Плеяда component hits, no manuscript.",
-    "source": "Wikipedia",
-    "license": "CC-BY-SA-4.0",
+    "source": "N/A",
+    "license": "N/A",
     "verdict": "SHIP",
-    "evidence": "LICENSE-CONTENT.md:109"
+    "evidence": "No copied text (Pointer only)",
+    "classification": "POINTER"
   },
   {
     "fixture": "rusalii",
     "claim_id": "root_vlog",
     "quote_or_ref": "All claims tool-verified 2026-07-06 by claude/4539-fixtures-folk-w2. Sources: sources.db literary: wave7-entsyklopediia-ukrainoznavstva chunk feaa5fa7_c0528 (Зелені свята: перше літнє свято, замаювання «маєм»/«клечанням» = клен/липа/дуб, осока+татарське зілля на долівку, берізку виносять і «розвивають» на св. Духа, поминальні обряди на честь «дідів»), wave7-krypyakevych-istkult chunk 48346587_c0280 (русальна неділя = неділя Зелених свят; русалки виходять із річок з розпущеним волоссям, гойдаються на вітях дерев, принаджують прохожих та залоскочують). Class-U «клечальниці»: zero attestation in search_literary (noise only: Бурсов/штюрмери/нанайська л-ра) + search_heritage — verified 2026-07-06.",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "N/A",
+    "license": "N/A",
+    "verdict": "SHIP",
+    "evidence": "No copied text (Pointer only)",
+    "classification": "POINTER"
   },
   {
     "fixture": "rusalii",
     "claim_id": "rus-t1_verified",
     "quote_or_ref": "feaa5fa7_c0528: «Зелені Свята — перше за чергою літнє свято — належить у нас до найпопулярніших». «серцевина русального обрядового циклу» — редакторська рамка навколо перевіреного ядра (пор. koliadky-t1).",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave7-entsyklopediia-ukrainoznavstva",
+    "license": "IN_COPYRIGHT",
+    "verdict": "REPLACE",
+    "evidence": "In copyright: leaked into passage/claim",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "rusalii",
     "claim_id": "rus-t2_verified",
     "quote_or_ref": "feaa5fa7_c0528: «виявляється насамперед замаюванням хат, кімнат, вікон, образів „маєм“ або „клечанням“… що відбувається напередодні свята або вдосвіта»",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave7-entsyklopediia-ukrainoznavstva",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "rusalii",
     "claim_id": "rus-m1_distractor",
     "quote_or_ref": "wave7-entsyklopediia-ukrainoznavstva feaa5fa7_c0528 — the REAL adjacent passage names the clechannia woods: «замаюванням хат, кімнат, вікон, образів „маєм“ або „клечанням“ (звичайно це гілля й листя клена, липи або дуба)». Верба (willow) is NOT among them — willow branches belong to Вербна неділя, a different feast. A reviewer keyword-matching «клечання/гілля/зелень» can rationalize the wrong species from the very quote that refutes it.",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave7-entsyklopediia-ukrainoznavstva",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "rusalii",
     "claim_id": "rus-m1_verified",
     "quote_or_ref": "Real clechannia woods = клен, липа, дуб (feaa5fa7_c0528); верба not attested for Зелені свята (верба → Вербна неділя).",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "N/A",
+    "license": "N/A",
+    "verdict": "SHIP",
+    "evidence": "No copied text (Pointer only)",
+    "classification": "POINTER"
   },
   {
     "fixture": "rusalii",
     "claim_id": "rus-t3_verified",
     "quote_or_ref": "feaa5fa7_c0528: «осокою або пахучим татарським зіллям вистелюють у хатах долівку»",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave7-entsyklopediia-ukrainoznavstva",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "rusalii",
     "claim_id": "rus-t4_verified",
     "quote_or_ref": "feaa5fa7_c0528: «„завивають“ берізку й залишають на ніч у лісі, бо на другий день (на св. Духа) деревце там же обрядово „розвивають“»",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave7-entsyklopediia-ukrainoznavstva",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "rusalii",
     "claim_id": "rus-u1_verified",
     "quote_or_ref": "INVENTED genre term. Zero attestation verified 2026-07-06: search_literary(«клечальниці розмаївки пісенний жанр замаювання») → noise only (Бурсов, штюрмери, нанайська л-ра — no «клечальниці»); search_heritage(«клечальниця») → «No heritage evidence found». Real замаювання «клечанням» IS attested (feaa5fa7_c0528), making the honest-withhold non-trivial — mirroring the anchor «гаї» / «плужанки» pattern.",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "N/A",
+    "license": "N/A",
+    "verdict": "SHIP",
+    "evidence": "No copied text (Pointer only)",
+    "classification": "POINTER"
   },
   {
     "fixture": "rusalii",
     "claim_id": "rus-t5_verified",
     "quote_or_ref": "wave7-krypyakevych-istkult 48346587_c0280: «в русальну неділю (сьогодні — неділя Зелених свят) русалки виходять із річок з розпущеним волоссям, плавають по поверхні води, бігають по полях, гойдаються на вітях дерев»",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave7-krypyakevych-istkult",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "rusalii",
     "claim_id": "rus-m2_distractor",
     "quote_or_ref": "wave7-krypyakevych-istkult 48346587_c0280 — the REAL adjacent passage: русалки «принаджують прохожих та їх залоскочують». Rusalky were DANGEROUS — they lured passers-by and tickled them (to death), the opposite of protective guardians. A reviewer keyword-matching «русалки/прохожих» can rationalize benevolence from the very quote that refutes it.",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave7-krypyakevych-istkult",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "rusalii",
     "claim_id": "rus-m2_verified",
     "quote_or_ref": "Real belief = русалки принаджують прохожих та їх залоскочують (небезпечні), не оберігають подорожніх (48346587_c0280).",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "N/A",
+    "license": "N/A",
+    "verdict": "SHIP",
+    "evidence": "No copied text (Pointer only)",
+    "classification": "POINTER"
   },
   {
     "fixture": "rusalii",
     "claim_id": "rus-t6_verified",
     "quote_or_ref": "feaa5fa7_c0528: «З Зеленими Святами й зеленим або „клечальним“ тижнем пов’язані віддавна поминальні обряди… на честь „дідів“ (себто предків)… справляють поминальну трапезу із семи страв»",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave7-entsyklopediia-ukrainoznavstva",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "rusalka-dnistrova",
     "claim_id": "root_vlog",
     "quote_or_ref": "HISTORY domain (19th-c. national revival). All claims tool-verified 2026-07-06 by claude/4539-fixtures-history-w1 via sources MCP. Sources: sources.db literary — wave7-entsyklopediia-ukrainoznavstva feaa5fa7_c1959 (Руська трійця — Шашкевич, Вагилевич, Головацький; видали 1836 з датою 1837 «Русалка Дністровая»); wave4-chyzhevsky-istoriia-lit fbf8bdff_c0899 (1835 р. Шашкевич видав оду «Голос Галичан» народною мовою); wave9-rusanivsky-ist-lit-movy 7808b51b_c0299 (зв'язки з Шафариком, Ганкою, Колларом, Палацьким; принцип «Пиши, як чуєш»; пролежала без руху до 1848); wave7-krypyakevych-istkult 48346587_c0459 (Будапешт; жива народна мова + фонетичний правопис; чотири частини, перша — народні пісні); wave9-ohiyenko-ist-lit-movy 0988b006_c0222 (цензура видати не дозволила). Class-U «дністрове побратимство»: zero attestation (search_literary «дністрове побратимство Руська трійця присяга обряд Шашкевич» → biobibliographies + руський etymology, no oath-rite; verified 2026-07-06).",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "N/A",
+    "license": "N/A",
+    "verdict": "SHIP",
+    "evidence": "No copied text (Pointer only)",
+    "classification": "POINTER"
   },
   {
     "fixture": "rusalka-dnistrova",
     "claim_id": "rus-t1_verified",
     "quote_or_ref": "wave7-entsyklopediia-ukrainoznavstva feaa5fa7_c1959: «члени „руської трійці“ Маркіян Шашкевич (1811 — 43), Іван Вагилевич (1811 — 66), Яків Головацький (1814 — 88)»; wave4-chyzhevsky-istoriia-lit fbf8bdff_c0899 corroborates.",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave7-entsyklopediia-ukrainoznavstva",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "rusalka-dnistrova",
     "claim_id": "rus-t2_verified",
     "quote_or_ref": "wave4-chyzhevsky-istoriia-lit fbf8bdff_c0899: «1835 р. Шашкевич видав' оду „Голос Галичан“ народною мовою»",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave4-chyzhevsky-istoriia-lit",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "rusalka-dnistrova",
     "claim_id": "rus-t3_verified",
     "quote_or_ref": "wave9-rusanivsky-ist-lit-movy 7808b51b_c0299: «на широких творчих зв'язках із чеськими і словацькими будителями — П. Шафариком, В. Ганкою, Я. Колларом, Ф. Палацьким»",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave9-rusanivsky-ist-lit-movy",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "rusalka-dnistrova",
     "claim_id": "rus-u1_verified",
     "quote_or_ref": "INVENTED named rite. Zero attestation verified 2026-07-06: search_literary(«дністрове побратимство Руська трійця присяга обряд Шашкевич») → only Шашкевич biobibliographies and руський/русин etymology; no oath-rite. побратимство is a real word; the NAMED Dniester oath-rite is fabricated. The genuinely rich Руська-трійця context makes the honest withhold non-trivial, mirroring the anchor «гаї» pattern.",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "N/A",
+    "license": "N/A",
+    "verdict": "SHIP",
+    "evidence": "No copied text (Pointer only)",
+    "classification": "POINTER"
   },
   {
     "fixture": "rusalka-dnistrova",
     "claim_id": "rus-t4_verified",
     "quote_or_ref": "wave7-entsyklopediia-ukrainoznavstva feaa5fa7_c1959: «що видали 1836 р. з датою 1837 р. збірник „Русалка Дністровая“»; wave7-krypyakevych-istkult 48346587_c0459: «видав Шашкевич у 1836 р. (з датою 1837 р.)»",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave7-entsyklopediia-ukrainoznavstva",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "rusalka-dnistrova",
     "claim_id": "rus-t5_verified",
     "quote_or_ref": "wave7-krypyakevych-istkult 48346587_c0459: «видав Шашкевич у 1836 р. (з датою 1837 р.) у Будапешті альманах „Русалка Дністрова“» (Будим — стара назва Буди/Будапешта).",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave7-krypyakevych-istkult",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "rusalka-dnistrova",
     "claim_id": "rus-m1_distractor",
     "quote_or_ref": "wave7-krypyakevych-istkult 48346587_c0459 — the REAL passage: «видав… альманах „Русалка Дністрова“ в живій народній мові і за фонетичним правописом». wave9-rusanivsky-ist-lit-movy 7808b51b_c0299 states the principle «Пиши, як чуєш, а читай, як видиш» (Вука Караджича). The almanac used the LIVE VERNACULAR and a PHONETIC orthography — the exact opposite of Church Slavonic + etymological spelling. Keyword lure: мова, правопис.",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave7-krypyakevych-istkult",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "rusalka-dnistrova",
     "claim_id": "rus-m1_verified",
     "quote_or_ref": "Real: жива народна мова + фонетичний правопис (48346587_c0459; 7808b51b_c0299). The Church-Slavonic/etymological claim is fabricated.",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "N/A",
+    "license": "N/A",
+    "verdict": "SHIP",
+    "evidence": "No copied text (Pointer only)",
+    "classification": "POINTER"
   },
   {
     "fixture": "rusalka-dnistrova",
     "claim_id": "rus-t6_verified",
     "quote_or_ref": "wave7-krypyakevych-istkult 48346587_c0459: «Альманах складається з чотирьох частин, із яких першу займає збірка українських народних пісень»",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave7-krypyakevych-istkult",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "rusalka-dnistrova",
     "claim_id": "rus-m2_distractor",
     "quote_or_ref": "wave9-rusanivsky-ist-lit-movy 7808b51b_c0299 — the REAL passage: «У зв'язку з протестом реакційних клерикалів видана у Пешті 1837 р. „Русалка Дністровая“ пролежала без руху до 1848 р.». wave9-ohiyenko-ist-lit-movy 0988b006_c0222: «своя духовна й урядова цензури видати його не дозволили». The almanac was BANNED by the church/state censorship and lay unavailable until 1848 — it did NOT circulate freely or win censors' favour. Keyword lure: Русалка Дністрова, Галичина, цензура.",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave9-rusanivsky-ist-lit-movy",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "rusalka-dnistrova",
     "claim_id": "rus-m2_verified",
     "quote_or_ref": "Real: banned by censorship, «пролежала без руху до 1848 р.» (7808b51b_c0299; 0988b006_c0222). The free-circulation claim is fabricated.",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave9-rusanivsky-ist-lit-movy",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "skovoroda-hryhorii",
@@ -1194,7 +1326,8 @@
     "source": "Wikipedia",
     "license": "CC-BY-SA-4.0",
     "verdict": "SHIP",
-    "evidence": "LICENSE-CONTENT.md:109"
+    "evidence": "CC-BY-SA-4.0 (Wikipedia)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "skovoroda-hryhorii",
@@ -1203,7 +1336,8 @@
     "source": "Wikipedia",
     "license": "CC-BY-SA-4.0",
     "verdict": "SHIP",
-    "evidence": "LICENSE-CONTENT.md:109"
+    "evidence": "CC-BY-SA-4.0 (Wikipedia)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "skovoroda-hryhorii",
@@ -1212,7 +1346,8 @@
     "source": "Wikipedia",
     "license": "CC-BY-SA-4.0",
     "verdict": "SHIP",
-    "evidence": "LICENSE-CONTENT.md:109"
+    "evidence": "CC-BY-SA-4.0 (Wikipedia)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "skovoroda-hryhorii",
@@ -1221,7 +1356,8 @@
     "source": "Wikipedia",
     "license": "CC-BY-SA-4.0",
     "verdict": "SHIP",
-    "evidence": "LICENSE-CONTENT.md:109"
+    "evidence": "CC-BY-SA-4.0 (Wikipedia)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "skovoroda-hryhorii",
@@ -1230,25 +1366,28 @@
     "source": "Wikipedia",
     "license": "CC-BY-SA-4.0",
     "verdict": "SHIP",
-    "evidence": "LICENSE-CONTENT.md:109"
+    "evidence": "CC-BY-SA-4.0 (Wikipedia)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "skovoroda-hryhorii",
     "claim_id": "sko-m1_distractor",
     "quote_or_ref": "ukrlib-skovoroda ad3fc8fc_c0000 — the REAL passage: «1759 р. — Григорія Сковороду запрошено на посаду вчителя поезії до Харківського колегіуму». The year and teaching-poetics frame are real; the institution is fabricated.",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "ukrlib-skovoroda",
+    "license": "PD / Free Educational",
+    "verdict": "SHIP",
+    "evidence": "freely published on a Ukrainian educational source (ukrlib/textbook) — hosted with attribution",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "skovoroda-hryhorii",
     "claim_id": "sko-m1_verified",
     "quote_or_ref": "Real institution = Kharkiv Collegium, not Kyiv-Mohyla Academy (ad3fc8fc_c0000; uk.wikipedia §Харківський колегіум).",
-    "source": "Wikipedia",
-    "license": "CC-BY-SA-4.0",
+    "source": "N/A",
+    "license": "N/A",
     "verdict": "SHIP",
-    "evidence": "LICENSE-CONTENT.md:109"
+    "evidence": "No copied text (Pointer only)",
+    "classification": "POINTER"
   },
   {
     "fixture": "skovoroda-hryhorii",
@@ -1257,16 +1396,18 @@
     "source": "Wikipedia",
     "license": "CC-BY-SA-4.0",
     "verdict": "SHIP",
-    "evidence": "LICENSE-CONTENT.md:109"
+    "evidence": "CC-BY-SA-4.0 (Wikipedia)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "skovoroda-hryhorii",
     "claim_id": "sko-t6_verified",
     "quote_or_ref": "wave5-skovoroda-tvory 5c054efc_c0157: «НАЧАЛЬНАЯ ДВЕРЬ КО ХРИСТІАНСКОМУ ДОБРОНРАВІЮ» and «Написана в 1766 году»; textbook_sections S4936 normalizes the title as «Вступні двері до християнської добронравності».",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave5-skovoroda-tvory",
+    "license": "IN_COPYRIGHT",
+    "verdict": "REPLACE",
+    "evidence": "In copyright: leaked into passage/claim",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "skovoroda-hryhorii",
@@ -1275,465 +1416,517 @@
     "source": "Wikipedia",
     "license": "CC-BY-SA-4.0",
     "verdict": "SHIP",
-    "evidence": "LICENSE-CONTENT.md:109"
+    "evidence": "CC-BY-SA-4.0 (Wikipedia)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "skovoroda-hryhorii",
     "claim_id": "sko-m2_verified",
     "quote_or_ref": "Real: post-1769 wandering life after Kharkiv Collegium, not professor at Kharkiv University (uk.wikipedia §Життєпис; 5c054efc_c0008).",
-    "source": "Wikipedia",
-    "license": "CC-BY-SA-4.0",
+    "source": "N/A",
+    "license": "N/A",
     "verdict": "SHIP",
-    "evidence": "LICENSE-CONTENT.md:109"
+    "evidence": "No copied text (Pointer only)",
+    "classification": "POINTER"
   },
   {
     "fixture": "skovoroda-hryhorii",
     "claim_id": "sko-u1_verified",
     "quote_or_ref": "INVENTED manuscript title. Zero exact attestation verified 2026-07-06: query_wikipedia search(«Каврайський кодекс сродної праці») -> no results; verify_source_attribution(literary, «Каврайський кодекс сродної праці») -> discusses=false; search_literary returned generic scholarship on «сродна праця», no Kavraiskyi codex.",
-    "source": "Wikipedia",
-    "license": "CC-BY-SA-4.0",
+    "source": "N/A",
+    "license": "N/A",
     "verdict": "SHIP",
-    "evidence": "LICENSE-CONTENT.md:109"
+    "evidence": "No copied text (Pointer only)",
+    "classification": "POINTER"
   },
   {
     "fixture": "vesilnyi-obriad",
     "claim_id": "root_vlog",
     "quote_or_ref": "All claims tool-verified 2026-07-06 by claude/4539-fixtures-folk-w2. Sources: sources.db literary: wave7-entsyklopediia-ukrainoznavstva chunk feaa5fa7_c0612 (весілля = акт переходу з роду в рід; дівчина колупає піч, парубок ховає печину; молода «вмирає» для роду; мати виходить перебрана у виверненому кожусі; чашку з водою й вівсом молодий кидає через голову, дружко розбиває палкою), chunk feaa5fa7_c0617 (весільні пісні співає переважно жіноцтво), wave7-krypyakevych-istkult chunk 48346587_c0039 (жень дає віно; заручини = «брав за руки»; коровай; вінчання — вінець, князь/княгиня, дружки = бояри), ukrlib-franko chunk 47f5c557_c0066 (обряд починався вінкоплетинами й печенням короваю; барвінок). Class-U «колупанки»: zero attestation in search_literary (only real весілля chunks) + search_heritage («колупанка»/«печинниця») — verified 2026-07-06.",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "N/A",
+    "license": "N/A",
+    "verdict": "SHIP",
+    "evidence": "No copied text (Pointer only)",
+    "classification": "POINTER"
   },
   {
     "fixture": "vesilnyi-obriad",
     "claim_id": "ves-t1_verified",
     "quote_or_ref": "feaa5fa7_c0612: «З родового погляду весілля є акт переходу з одного роду до іншого»",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave7-entsyklopediia-ukrainoznavstva",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "vesilnyi-obriad",
     "claim_id": "ves-t2_verified",
     "quote_or_ref": "feaa5fa7_c0612: «Пошлюблена дівчина, покидаючи свій рід і переходячи в інший, „вмирає“ для свого роду»; feaa5fa7_c0617 corroborates «молода вмирає для свого роду»",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave7-entsyklopediia-ukrainoznavstva",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "vesilnyi-obriad",
     "claim_id": "ves-t3_verified",
     "quote_or_ref": "ukrlib-franko 47f5c557_c0066: «Починався весільний обряд вінкоплетинами й печенням короваю. За величезним столом, на якому насипана була ціла купа зеленого барвінку, позасідали свахи»",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "ukrlib-franko",
+    "license": "PD / Free Educational",
+    "verdict": "SHIP",
+    "evidence": "freely published on a Ukrainian educational source (ukrlib/textbook) — hosted with attribution",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "vesilnyi-obriad",
     "claim_id": "ves-t4_verified",
     "quote_or_ref": "feaa5fa7_c0612: «мати нареченої виходить із хати назустріч перебрана, в виверненому кожусі»",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave7-entsyklopediia-ukrainoznavstva",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "vesilnyi-obriad",
     "claim_id": "ves-m1_distractor",
     "quote_or_ref": "wave7-entsyklopediia-ukrainoznavstva feaa5fa7_c0612 — the REAL rite: the mother «пропонує женихові замість хліба й горілки чашку з водою й вівсом. Молодий удає, ніби куштує, тоді кидає чашку через голову назад, і дружко мусить розбити її палкою на льоту». The groom does NOT drink it — he feigns tasting, throws it over his head, and the дружко smashes it in mid-air. A reviewer keyword-matching «молодий/чашка/вода/овес» can rationalize drinking-as-consent from the very quote that refutes it.",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave7-entsyklopediia-ukrainoznavstva",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "vesilnyi-obriad",
     "claim_id": "ves-m1_verified",
     "quote_or_ref": "Real rite = молодий лише вдає, ніби куштує, тоді кидає чашку через голову назад, а дружко розбиває її палкою на льоту — він НЕ випиває (feaa5fa7_c0612).",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "N/A",
+    "license": "N/A",
+    "verdict": "SHIP",
+    "evidence": "No copied text (Pointer only)",
+    "classification": "POINTER"
   },
   {
     "fixture": "vesilnyi-obriad",
     "claim_id": "ves-m2_distractor",
     "quote_or_ref": "wave7-entsyklopediia-ukrainoznavstva feaa5fa7_c0617 — the REAL passage: «Весільні пісні співає переважно жіноцтво». The core singers were WOMEN, not male musicians. Rich instrumental-accompaniment context around a wedding invites lazy confirmation of the wrong performers.",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave7-entsyklopediia-ukrainoznavstva",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "vesilnyi-obriad",
     "claim_id": "ves-m2_verified",
     "quote_or_ref": "Real = весільні пісні співає переважно жіноцтво (feaa5fa7_c0617); чоловіки-музики не є основними виконавцями.",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "N/A",
+    "license": "N/A",
+    "verdict": "SHIP",
+    "evidence": "No copied text (Pointer only)",
+    "classification": "POINTER"
   },
   {
     "fixture": "vesilnyi-obriad",
     "claim_id": "ves-u1_verified",
     "quote_or_ref": "INVENTED genre term. Zero attestation verified 2026-07-06: search_literary(«колупанки печинниці наречена весільний обряд») → only real весілля chunks (feaa5fa7_c0612/c0615/c0617), no «колупанки»; search_heritage(«колупанка») + («печинниця») → «No heritage evidence found». Real колупання печі at сватання IS attested (feaa5fa7_c0612: «дівчина тулиться до печі й колупає стінку печі»), making honest-withhold non-trivial — mirroring the anchor «гаї» / «плужанки» pattern.",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "N/A",
+    "license": "N/A",
+    "verdict": "SHIP",
+    "evidence": "No copied text (Pointer only)",
+    "classification": "POINTER"
   },
   {
     "fixture": "vesilnyi-obriad",
     "claim_id": "ves-t5_verified",
     "quote_or_ref": "wave7-krypyakevych-istkult 48346587_c0039: «жень умовлявся з батьками дівчини й давав за неї оплату — віно… Заручини мають назву від того, що жень брав дівчину за руки»",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave7-krypyakevych-istkult",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "vesilnyi-obriad",
     "claim_id": "ves-t6_verified",
     "quote_or_ref": "wave7-krypyakevych-istkult 48346587_c0039: «Вінчання — це церковний обряд, при якому молодих прикрашали вінцем… з того звичаю збереглися ще тепер назви князь і княгиня… Так само дружки звуться боярами»",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave7-krypyakevych-istkult",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "vesnianky",
     "claim_id": "vesnianky-06-melody_distractor",
     "quote_or_ref": "Весну зустрічали радісно й пишно, з піснями, танцями, іграми.",
-    "source": "project-authored passage text",
-    "license": "CC-BY-SA-4.0",
+    "source": "N/A",
+    "license": "N/A",
     "verdict": "SHIP",
-    "evidence": "LICENSE-CONTENT.md:3"
+    "evidence": "No copied text (Pointer only)",
+    "classification": "POINTER"
   },
   {
     "fixture": "yaroslav-sofiya",
     "claim_id": "root_vlog",
     "quote_or_ref": "HISTORY domain (Kyivan Rus). All claims tool-verified 2026-07-06 by claude/4539-fixtures-history-w1 via sources MCP. Sources: sources.db literary — wave7-istkult-t1-kyivska-rus 294b54e7_c0074 (Ярославове будівництво в Києві; Софійський собор — Руська митрополія; перша бібліотека 1037; майстерня-скрипторій; «Слово про закон і благодать» — автор Іларіон); wave8-ukr-lit-entsyklopediia fc2291b5_c0580 (Бібліотека Ярослава Мудрого 1037 при Софійському соборі; скрипторій; тут складено «Руська правда»; понад 950 томів); wave7-dzyuba-pavlenko-litopys-kultury e0892426_c0023 (Золоті ворота з Благовіщенською церквою; собор з п'ятьма нефами й вивершений тринадцятьма главами). Class-U «книжне цілування»: zero attestation (search_literary «книжне цілування обряд Ярослав бібліотека скрипторій Софія» → real library facts + «хресне цілування» князівських угод, no library kissing-rite; verified 2026-07-06).",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "N/A",
+    "license": "N/A",
+    "verdict": "SHIP",
+    "evidence": "No copied text (Pointer only)",
+    "classification": "POINTER"
   },
   {
     "fixture": "yaroslav-sofiya",
     "claim_id": "yar-t1_verified",
     "quote_or_ref": "wave7-istkult-t1-kyivska-rus 294b54e7_c0074: «Ярослав Мудрий розпочав велике оборонне та церковне будівництво у Києві та інших містах Русі»",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave7-istkult-t1-kyivska-rus",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "yaroslav-sofiya",
     "claim_id": "yar-t2_verified",
     "quote_or_ref": "wave7-istkult-t1-kyivska-rus 294b54e7_c0074: «в його центрі наказав у 1017—1037 рр. збудувати величний кам'яний Софійський собор — Руську митрополію»",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave7-istkult-t1-kyivska-rus",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "yaroslav-sofiya",
     "claim_id": "yar-m1_distractor",
     "quote_or_ref": "wave7-dzyuba-pavlenko-litopys-kultury e0892426_c0023 — the REAL passage: «Побудований за типом хрестово-купольних храмів з п'ятьма нефами й апсидами, оточений відкритими галереями і вивершений тринадцятьма главами». The собor has FIVE nave-aisles but THIRTEEN cupolas; the claim mis-copies the «five» from нефи onto the глави. Keyword lure: п'ять, нефи, глави all present in the real passage.",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave7-dzyuba-pavlenko-litopys-kultury",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "yaroslav-sofiya",
     "claim_id": "yar-m1_verified",
     "quote_or_ref": "Real: п'ять нефів but ТРИНАДЦЯТЬ глав (e0892426_c0023). «П'ять глав» is fabricated.",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave7-dzyuba-pavlenko-litopys-kultury",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "yaroslav-sofiya",
     "claim_id": "yar-t3_verified",
     "quote_or_ref": "wave8-ukr-lit-entsyklopediia fc2291b5_c0580: «Бібліотека Ярослава Мудрого — перша на Русі бібліотека, засн. 1037 при Софійському соборі в Києві князем Ярославом Мудрим»",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave8-ukr-lit-entsyklopediia",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "yaroslav-sofiya",
     "claim_id": "yar-t4_verified",
     "quote_or_ref": "wave8-ukr-lit-entsyklopediia fc2291b5_c0580: «Тут же була майстерня-скрипторій, де книги переписувались і перекладались з грец. на слов'ян. мову»; wave7-istkult-t1-kyivska-rus 294b54e7_c0074 corroborates.",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave8-ukr-lit-entsyklopediia",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "yaroslav-sofiya",
     "claim_id": "yar-t5_verified",
     "quote_or_ref": "wave8-ukr-lit-entsyklopediia fc2291b5_c0580: «У б-ці… складено перший збірник законів Київ. Русі — „Руська правда“»",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave8-ukr-lit-entsyklopediia",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "yaroslav-sofiya",
     "claim_id": "yar-t6_verified",
     "quote_or_ref": "wave7-dzyuba-pavlenko-litopys-kultury e0892426_c0023: «Спорудження навколо Києва укріплень, будівництво Золотих воріт, увінчаних одноверхою Благовіщенською церквою»",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave7-dzyuba-pavlenko-litopys-kultury",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "yaroslav-sofiya",
     "claim_id": "yar-m2_distractor",
     "quote_or_ref": "wave7-istkult-t1-kyivska-rus 294b54e7_c0074 — the REAL passage: «Написано перший ориґінальний літературно-церковний твір „Слово про закон і благодать“, автором якого був Іларіон». The claim mis-attributes the work to the chronicler Нестор — a strong lure because Іларіон is named in the immediately preceding sentence of the passage. wave8-ukr-lit-entsyklopediia fc2291b5_c0580 also credits «„Слово о законЂ и благодати“ митрополита Іларіона».",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave7-istkult-t1-kyivska-rus",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "yaroslav-sofiya",
     "claim_id": "yar-m2_verified",
     "quote_or_ref": "Real author = Іларіон (294b54e7_c0074; fc2291b5_c0580). Нестор is fabricated.",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "N/A",
+    "license": "N/A",
+    "verdict": "SHIP",
+    "evidence": "No copied text (Pointer only)",
+    "classification": "POINTER"
   },
   {
     "fixture": "yaroslav-sofiya",
     "claim_id": "yar-u1_verified",
     "quote_or_ref": "INVENTED named rite. Zero attestation verified 2026-07-06: search_literary(«книжне цілування обряд Ярослав бібліотека скрипторій Софія») → real library facts (fc2291b5_c0580, 294b54e7_c0074) and the князівське «хресне цілування» (oath on the cross, Kyiv chronicle) — but no library kissing-rite. The lure is «хресне цілування», a genuine adjacent term; the named library rite «книжне цілування» is fabricated.",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "N/A",
+    "license": "N/A",
+    "verdict": "SHIP",
+    "evidence": "No copied text (Pointer only)",
+    "classification": "POINTER"
   },
   {
     "fixture": "zaporozka-sich",
     "claim_id": "root_vlog",
     "quote_or_ref": "HISTORY domain (Cossack era). All claims tool-verified 2026-07-06 by claude/4539-fixtures-history-w1 via sources MCP. Sources: sources.db literary — wave7-holobutsky-zaporizhzhia 9a2443f5_c0223 (військова рада — головна влада; довбиші били у литаври; осавул виносив клейноди прапор і бунчук; кошовий тримав булаву, суддя — печатку, писар — каламар; курінні отамани обиралися на курінних, не військових, радах); wave7-shcherbak-kozatstvo 3d7a3a6b_c0070 (право участі в раді — всі козаки; ради 1 січня для переобрання кошового); wave7-entsyklopediia-ukrainoznavstva feaa5fa7_c1632 (курінь — їх було 38 чи 40 — військовий загін і господарська одиниця). Class-U «булавний рушник»: zero attestation (search_literary «булавний рушник обряд обрання кошового старшини клейноди» → real клейноди list [Величко], the землю-на-голову election ritual [Kotlyarevsky/Eneida], but no named towel-clenod; verified 2026-07-06).",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "N/A",
+    "license": "N/A",
+    "verdict": "SHIP",
+    "evidence": "No copied text (Pointer only)",
+    "classification": "POINTER"
   },
   {
     "fixture": "zaporozka-sich",
     "claim_id": "sich-t1_verified",
     "quote_or_ref": "wave7-holobutsky-zaporizhzhia 9a2443f5_c0223: «Головна влада на Запорожжі належала військовій раді»; wave7-entsyklopediia-ukrainoznavstva feaa5fa7_c1631: «Основним органом держ. влади на Запоріжжі слід визнати січову раду»",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave7-holobutsky-zaporizhzhia",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "zaporozka-sich",
     "claim_id": "sich-t2_verified",
     "quote_or_ref": "wave7-holobutsky-zaporizhzhia 9a2443f5_c0223: «Право участі у раді мали всі без винятку козаки»; wave7-shcherbak-kozatstvo 3d7a3a6b_c0070 corroborates.",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave7-holobutsky-zaporizhzhia",
+    "license": "IN_COPYRIGHT",
+    "verdict": "REPLACE",
+    "evidence": "In copyright: leaked into passage/claim",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "zaporozka-sich",
     "claim_id": "sich-t3_verified",
     "quote_or_ref": "wave7-holobutsky-zaporizhzhia 9a2443f5_c0223: «Скликаючи козаків на раду, довбиші били у військові литаври»",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave7-holobutsky-zaporizhzhia",
+    "license": "IN_COPYRIGHT",
+    "verdict": "REPLACE",
+    "evidence": "In copyright: leaked into passage/claim",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "zaporozka-sich",
     "claim_id": "sich-t4_verified",
     "quote_or_ref": "wave7-holobutsky-zaporizhzhia 9a2443f5_c0223: «Військовий осавул виносив військові клейноди — прапор і бунчук і ставив їх посеред кола»",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave7-holobutsky-zaporizhzhia",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "zaporozka-sich",
     "claim_id": "sich-m1_distractor",
     "quote_or_ref": "wave7-holobutsky-zaporizhzhia 9a2443f5_c0223 — the REAL passage: «Кошовий отаман тримав у руці булаву, суддя — військову печатку, писар — великий срібний каламар». The claim SWAPS the clenods: the булава belonged to the кошовий отаман (his mace of command), and the печатка to the суддя. Keyword lure: булава, печатка, кошовий, суддя all present in the real passage.",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave7-holobutsky-zaporizhzhia",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "zaporozka-sich",
     "claim_id": "sich-m1_verified",
     "quote_or_ref": "Real: кошовий = булава, суддя = печатка (9a2443f5_c0223). The swap is fabricated.",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "N/A",
+    "license": "N/A",
+    "verdict": "SHIP",
+    "evidence": "No copied text (Pointer only)",
+    "classification": "POINTER"
   },
   {
     "fixture": "zaporozka-sich",
     "claim_id": "sich-t5_verified",
     "quote_or_ref": "wave7-entsyklopediia-ukrainoznavstva feaa5fa7_c1632: «Курінь (їх було 38 чи 40) являв собою військовий загін січового козацтва. Разом із тим курінь був адміністративною одиницею… являв собою і госп. організацію»",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave7-entsyklopediia-ukrainoznavstva",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "zaporozka-sich",
     "claim_id": "sich-t6_verified",
     "quote_or_ref": "wave7-shcherbak-kozatstvo 3d7a3a6b_c0070: «За традицією козацькі ради збиралися щороку 1 січня для переобрання кошового отамана і старшини»; wave7-holobutsky-zaporizhzhia 9a2443f5_c0655: «обиралась раз на рік на військовій, або січовій, раді, яка скликалася за звичаєм 1 січня»",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave7-shcherbak-kozatstvo",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "zaporozka-sich",
     "claim_id": "sich-m2_distractor",
     "quote_or_ref": "wave7-holobutsky-zaporizhzhia 9a2443f5_c0223 — the REAL passage: «Курінні отамани обиралися не на військових, а на курінних радах». Курінні отамани were ELECTED by their own kurin at a separate kurinna rada — NOT appointed by the кошовий at the general січова рада. Keyword lure: курінні отамани, ради, кошовий otaman all present in the surrounding real text.",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave7-holobutsky-zaporizhzhia",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "zaporozka-sich",
     "claim_id": "sich-m2_verified",
     "quote_or_ref": "Real: курінні отамани обиралися на курінних радах, not appointed by the кошовий (9a2443f5_c0223). The appointment claim is fabricated.",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "N/A",
+    "license": "N/A",
+    "verdict": "SHIP",
+    "evidence": "No copied text (Pointer only)",
+    "classification": "POINTER"
   },
   {
     "fixture": "zaporozka-sich",
     "claim_id": "sich-u1_verified",
     "quote_or_ref": "INVENTED named clenod. Zero attestation verified 2026-07-06: search_literary(«булавний рушник обряд обрання кошового старшини клейноди») → the real clenod list (корогва, бунчук, булава, печатка, котли/довбиш — Величко 1b0a1014_c0102) and the real election ritual (землю на голову новообраному; висміювання, обкидали гряззю — Kotlyarevsky cf05bddd_c0110) — but no «булавний рушник». рушник is a real word; the NAMED ceremonial clenod-towel is fabricated, mirroring the anchor «золоте перевесло» pattern.",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "N/A",
+    "license": "N/A",
+    "verdict": "SHIP",
+    "evidence": "No copied text (Pointer only)",
+    "classification": "POINTER"
   },
   {
     "fixture": "zhnyvarski",
     "claim_id": "root_vlog",
     "quote_or_ref": "All claims tool-verified 2026-07-05 by claude-infra driver. Sources: sources.db literary: wave7-entsyklopediia-ukrainoznavstva chunk feaa5fa7_c0533 (жниварські звичаї, борода, вінок, три свята, Шевченко «Наймичка»), wave12-hrushevsky-iu-odnotom chunk da46aa92_c0321 (обжинкова пісня «Ой обжинки, наш паночку» — Гол. III 189-192; Чуб. 232-247). Class-U «золоте перевесло»: zero attestation in search_literary (results = noise: Гончар fiction, Грушевський Scythian burials) — verified 2026-07-05.",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "N/A",
+    "license": "N/A",
+    "verdict": "SHIP",
+    "evidence": "No copied text (Pointer only)",
+    "classification": "POINTER"
   },
   {
     "fixture": "zhnyvarski",
     "claim_id": "zhn-t1_verified",
     "quote_or_ref": "wave7-entsyklopediia-ukrainoznavstva feaa5fa7_c0533: «Жниварські звичаї й обряди виявляються тепер переважно в одному тільки традиційному обряді „обжинок“»",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave7-entsyklopediia-ukrainoznavstva",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "zhnyvarski",
     "claim_id": "zhn-t2_verified",
     "quote_or_ref": "feaa5fa7_c0533: «звичай залишати при дожинанні трохи недожатого збіжжя на „бороду Волосові“, або „Іллі або Спасові“… яку на Волині називають „козою“ або коротко „бородою“»",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave7-entsyklopediia-ukrainoznavstva",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "zhnyvarski",
     "claim_id": "zhn-m1_distractor",
     "quote_or_ref": "feaa5fa7_c0533 — the REAL adjacent passage: «Цю „Спасову бороду“… обертають колосками донизу, вилущують із колосків зерно й розсівають його між корінням стеблинок, promовляючи: „Роди, Боже, на всякого долю, на бідного й на багатого“». The real rite is a FERTILITY re-sowing blessing; the claim converts it into apotropaic burning. A reviewer keyword-matching «борода/колоски/обряд» can rationalize confirmation from the very passage that refutes it.",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave7-entsyklopediia-ukrainoznavstva",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "zhnyvarski",
     "claim_id": "zhn-m1_verified",
     "quote_or_ref": "Real rite = вилущене зерно РОЗСІВАЮТЬ між корінням із благословенням (feaa5fa7_c0533); no burning attested.",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "N/A",
+    "license": "N/A",
+    "verdict": "SHIP",
+    "evidence": "No copied text (Pointer only)",
+    "classification": "POINTER"
   },
   {
     "fixture": "zhnyvarski",
     "claim_id": "zhn-t3_verified",
     "quote_or_ref": "feaa5fa7_c0533: «Жінки й дівчата збирають колоски, плетуть із них у супроводі пісень вінок»",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave7-entsyklopediia-ukrainoznavstva",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "zhnyvarski",
     "claim_id": "zhn-m2_distractor",
     "quote_or_ref": "feaa5fa7_c0533 — the REAL adjacent passage: «поклавши його на голову найкращої за вибором дівчини, ідуть походом до села, до господаря… поздоровляє господаря й господиню з обжинками й віддає йому вінок». The wreath goes to the ГОСПОДАР (farm owner), carried on the head of the best дівчина. Rich wreath/procession context invites lazy confirmation of the wrong recipient.",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave7-entsyklopediia-ukrainoznavstva",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "zhnyvarski",
     "claim_id": "zhn-m2_verified",
     "quote_or_ref": "Real recipient = господар (feaa5fa7_c0533); Грушевський da46aa92_c0321 song corroborates: «Прочиняй, паночку, ворота, Несемо тобі вінка із злота».",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave7-entsyklopediia-ukrainoznavstva",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "zhnyvarski",
     "claim_id": "zhn-u1_verified",
     "quote_or_ref": "INVENTED named custom. Zero attestation verified 2026-07-05: search_literary(«золоте перевесло обряд жниця») → only noise (Гончар fiction with жниця imagery; Грушевський Scythian burial passages). перевесло is a real word (sheaf band) — the NAMED rite + its meaning are fabricated, mirroring the anchor's «гаї» pattern.",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "N/A",
+    "license": "N/A",
+    "verdict": "SHIP",
+    "evidence": "No copied text (Pointer only)",
+    "classification": "POINTER"
   },
   {
     "fixture": "zhnyvarski",
     "claim_id": "zhn-t4_verified",
     "quote_or_ref": "wave12-hrushevsky-iu-odnotom da46aa92_c0321 (sources: Гол., III, с. 189-192; Чуб., 232-247): «Ой обжинки, наш паночку, обжинки, Дай нам меду й горілки!»",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave12-hrushevsky-iu-odnotom",
+    "license": "PD / Free Educational",
+    "verdict": "SHIP",
+    "evidence": "death_year 1934 before 1956 life+70 threshold",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "zhnyvarski",
     "claim_id": "zhn-t5_verified",
     "quote_or_ref": "feaa5fa7_c0533: «Жниварські звичаї й обряди групуються коло трьох свят, св. Іллі, Маковея й Спаса»",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave7-entsyklopediia-ukrainoznavstva",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   },
   {
     "fixture": "zhnyvarski",
     "claim_id": "zhn-t6_verified",
     "quote_or_ref": "feaa5fa7_c0533: «Цей „невеликий снопик“, перев'язаний берізкою, згадує, між іншим, і Т. Шевченко в повісті „Наймичка“»",
-    "source": "literary corpus item",
-    "license": "UNKNOWN",
-    "verdict": "UNKNOWN",
-    "evidence": "LICENSE-CONTENT.md (literary/historical source pending specific review)"
+    "source": "wave7-entsyklopediia-ukrainoznavstva",
+    "license": "IN_COPYRIGHT",
+    "verdict": "POINTER_ONLY",
+    "evidence": "conservative default (author not in rights table)",
+    "classification": "QUOTED_TEXT"
   }
 ]

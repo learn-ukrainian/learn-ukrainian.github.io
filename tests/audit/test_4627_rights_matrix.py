@@ -10,9 +10,16 @@ def test_all_fixture_evidence_has_rights_matrix_row():
     with open(matrix_path, encoding="utf-8") as f:
         rights_data = json.load(f)
 
+    valid_classifications = {"POINTER", "QUOTED_TEXT"}
+    valid_verdicts = {"SHIP", "POINTER_ONLY", "REPLACE", "UNKNOWN"}
+
     matrix_keys = set()
     for row in rights_data:
         matrix_keys.add((row["fixture"], row["claim_id"], row["quote_or_ref"]))
+        assert row.get("classification") in valid_classifications, f"Row missing or invalid classification: {row}"
+        verdict = row.get("verdict", "")
+        verdict_base = verdict.split(" ")[0] if verdict.startswith("UNKNOWN") else verdict
+        assert verdict_base in valid_verdicts, f"Row has invalid verdict {verdict}: {row}"
 
     # Extract dynamically from fixtures
     found_keys = set()
