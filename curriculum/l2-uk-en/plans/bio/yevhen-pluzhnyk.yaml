@@ -138,14 +138,14 @@ persona:
 phase: BIO
 readings:
 - title: "Плужник Євген Павлович"
-  url: "https://history.org.ua/?encyclop=&termin=Pluzhnyk_Y"
+  url: "https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&I21DBN=EIU&P21DBN=EIU1&S21CNR=20&S21COLORTERMS=0&S21FMT=eiu_all&S21P01=0&S21P02=0&S21P03=TRN%3D&S21REF=10&S21STN=1&S21STR=Pluzhnyk_Y&Z21ID="
   note: "Стаття в Енциклопедії історії України про життя, творчість та репресії поета."
 - title: "Євген Плужник — Історичний календар"
   url: "https://uinp.gov.ua/istorychnyy-kalendar/gruden/26/1001"
   note: "Біографічна довідка Українського інституту національної пам'яті."
 references:
 - note: Академічна біографія з життєвими датами, механізмом репресій та переліком творів.
-  path: http://history.org.ua/?encyclop=&termin=Pluzhnyk_Y
+  path: https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&I21DBN=EIU&P21DBN=EIU1&S21CNR=20&S21COLORTERMS=0&S21FMT=eiu_all&S21P01=0&S21P02=0&S21P03=TRN%3D&S21REF=10&S21STN=1&S21STR=Pluzhnyk_Y&Z21ID=
   title: Плужник Євген Павлович (ЕІУ)
   type: reference
 - note: Англомовна енциклопедична стаття (подає варіантну дату смерті 31 січня 1936).
@@ -174,7 +174,7 @@ sequence: 133
 slug: yevhen-pluzhnyk
 subtitle: The Poet of Quiet Sorrow Crushed by the Terror
 title: 'Євген Плужник: Поет тихої скорботи доби Розстріляного відродження'
-version: '4.2'
+version: '4.3'
 vocabulary_hints:
 - definition: напрям у мистецтві кінця ХІХ — початку ХХ ст., що передає миттєві враження, настрої та тонкі відтінки чуттів
   pos: ч.

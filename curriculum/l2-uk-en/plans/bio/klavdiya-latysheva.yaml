@@ -153,7 +153,7 @@ readings:
   url: "https://esu.com.ua/article-53414"
   note: "Енциклопедія Сучасної України. Біографічна стаття про першу в Україні математикиню, яка захистила кандидатську дисертацію."
 - title: "Клавдія Латишева: Математикиня, що подолала систему"
-  url: "https://stemisfem.org/latisheva"
+  url: "https://stemisfem.org/node/447"
   note: "Проєкт «Наука — це вона» (STEM is FEM). Сучасна рецепція життєвого шляху вченої."
 - title: "Латишева Клавдія Яківна"
   url: "https://uk.wikipedia.org/wiki/Латишева_Клавдія_Яківна"
@@ -178,14 +178,14 @@ references:
 - note: >-
     Сучасна рецепція й деколоніальне повернення імені — проєкт «Наука — це вона»
     (2021), 12 видатних українських жінок-учених.
-  path: https://stemisfem.org/latisheva
+  path: https://stemisfem.org/node/447
   title: 'Клавдія Латишева — STEM is FEM («Наука — це вона»)'
   type: reference
 sequence: 130
 slug: klavdiya-latysheva
 subtitle: 'Klavdiya Latysheva: The Mathematician Behind the Method'
 title: 'Клавдія Латишева: Перша математикиня та її метод'
-version: '4.2'
+version: '4.3'
 vocabulary_hints:
 - definition: жінка, яка професійно займається математикою
   pos: ж.
