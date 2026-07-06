@@ -326,6 +326,7 @@ def test_batch3_author_translits_resolve_to_cyrillic() -> None:
         "gudima": "Гудима",
         "homiak": "Криховець-Хом'як",
         "bojko": "Бойко",
+        "barjakhtar": "Бар'яхтар",
         "merzljak": "Мерзляк",
         "zadorozhnij": "Задорожний",
         "zasekina": "Засєкіна",
