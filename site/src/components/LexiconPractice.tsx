@@ -10,6 +10,7 @@ import {
   masteredCount,
   rateCard,
   selectNextPracticeItem,
+  seededAnswerIndex,
   uaPlural,
   validateClozeOptions,
   type ChoicePolarity,
@@ -59,6 +60,10 @@ interface ClozeFeedback {
 
 const STREAK_KEY = 'lu-lexicon-practice-streak';
 const MASTERED_THRESHOLD = 21;
+
+function makePracticeSessionSeed(): number {
+  return (Date.now() ^ Math.floor(Math.random() * 4294967296)) >>> 0;
+}
 
 const RATING_LABELS: Record<PracticeRating, string> = {
   again: 'Ще раз',
@@ -446,6 +451,7 @@ function orderedChoiceOptions(
   selection: PracticeSelection,
   deck: PracticeDeckData,
   polarity: ChoicePolarity,
+  sessionSeed: number,
 ): ChoiceOption[] {
   if (!isMeaningMcEligible(selection.lemma)) return [];
   const distractors = meaningDistractors(selection.lemma, deck, 3);
@@ -458,7 +464,7 @@ function orderedChoiceOptions(
       correct: false,
     })),
   ];
-  const answerIndex = selection.itemId.length % options.length;
+  const answerIndex = seededAnswerIndex(sessionSeed, selection.itemId, options.length);
   const [first] = options.splice(0, 1);
   options.splice(answerIndex, 0, first);
   return options;
@@ -660,6 +666,7 @@ export default function LexiconPractice({
     return Boolean(normalized && normalized.cloze.length > 0);
   });
   const [started, setStarted] = useState(autoStart);
+  const [sessionSeed, setSessionSeed] = useState(() => makePracticeSessionSeed());
   const [mode, setMode] = useState<PracticeModeFilter>(initialMode);
   const [learnerLevel, setLearnerLevel] = useState<CefrLevel>(() =>
     readLearnerLevel(normalizeCefrLevel(deckLevel)),
@@ -738,8 +745,9 @@ export default function LexiconPractice({
       history,
       modeFilter: mode,
       now: new Date(),
+      sessionSeed,
     });
-  }, [deck, history, mode, revision]);
+  }, [deck, history, mode, revision, sessionSeed]);
 
   useEffect(() => {
     setAnswerLocked(false);
@@ -854,6 +862,7 @@ export default function LexiconPractice({
   async function start(nextMode: PracticeModeFilter = mode) {
     setMode(nextMode);
     setStarted(true);
+    setSessionSeed(makePracticeSessionSeed());
     await ensureDeck(shouldLoadCloze(nextMode));
   }
 
@@ -1141,6 +1150,7 @@ export default function LexiconPractice({
             <PracticeItem
               selection={selection}
               deck={deck}
+              sessionSeed={sessionSeed}
               answerLocked={answerLocked}
               clozeInput={clozeInput}
               clozeFeedback={clozeFeedback}
@@ -1169,6 +1179,7 @@ export default function LexiconPractice({
 function PracticeItem({
   selection,
   deck,
+  sessionSeed,
   answerLocked,
   clozeInput,
   clozeFeedback,
@@ -1180,6 +1191,7 @@ function PracticeItem({
 }: {
   selection: PracticeSelection;
   deck: PracticeDeckData;
+  sessionSeed: number;
   answerLocked: boolean;
   clozeInput: string;
   clozeFeedback: ClozeFeedback | null;
@@ -1267,7 +1279,7 @@ function PracticeItem({
     );
   }
 
-  const options = orderedChoiceOptions(selection, deck, selection.choicePolarity);
+  const options = orderedChoiceOptions(selection, deck, selection.choicePolarity, sessionSeed);
   if (!options.length) {
     return <p className="lexicon-practice-muted">Зараз немає карток для вибору відповіді.</p>;
   }

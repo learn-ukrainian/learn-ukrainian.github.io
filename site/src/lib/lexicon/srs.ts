@@ -342,6 +342,7 @@ export interface SelectPracticeOptions {
   clozeSoftCap?: number;
   dueWindowMs?: number;
   wordRepeatWindow?: number;
+  sessionSeed?: number;
 }
 
 interface PersistedSrsSchemaV3 {
@@ -381,6 +382,39 @@ const RATING_TO_FSRS: Record<PracticeRating, Grade> = {
   good: Rating.Good,
   easy: Rating.Easy,
 };
+
+function hashString(value: string): number {
+  let hash = 2166136261;
+  for (let index = 0; index < value.length; index += 1) {
+    hash ^= value.charCodeAt(index);
+    hash = Math.imul(hash, 16777619);
+  }
+  return hash >>> 0;
+}
+
+function mulberry32(seed: number): () => number {
+  let value = seed >>> 0;
+  return () => {
+    value = (value + 0x6d2b79f5) >>> 0;
+    let result = Math.imul(value ^ (value >>> 15), 1 | value);
+    result ^= result + Math.imul(result ^ (result >>> 7), 61 | result);
+    return ((result ^ (result >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+export function seededPracticeHash(sessionSeed: number | undefined, value: string): number {
+  const seed = (Number.isFinite(sessionSeed) ? sessionSeed : 0) as number;
+  return Math.floor(mulberry32((seed >>> 0) ^ hashString(value))() * 4294967296);
+}
+
+export function seededAnswerIndex(
+  sessionSeed: number | undefined,
+  itemId: string,
+  optionCount: number,
+): number {
+  if (optionCount <= 0) return 0;
+  return seededPracticeHash(sessionSeed, `choice:${itemId}`) % optionCount;
+}
 
 const memoryStore = new Map<string, string>();
 const memoryStorage: StorageLike = {
@@ -890,7 +924,21 @@ export function getDueQueue<T extends Pick<PracticeLexeme, 'lemmaId'> | Practice
     });
 }
 
-function deckMaps(deck: PracticeDeckData) {
+interface DeckMaps {
+  lexemes: Map<string, PracticeLexeme>;
+  cloze: Map<string, PracticeClozeItem>;
+  stress: Map<string, PracticeStressItem>;
+  classify: Map<string, PracticeClassifyItem>;
+  paradigm: Map<string, PracticeParadigmItem[]>;
+  synonym: Map<string, PracticeSynonymItem[]>;
+}
+
+const deckMapsCache = new WeakMap<PracticeDeckData, DeckMaps>();
+const staticCandidateCache = new WeakMap<PracticeDeckData, Map<PracticeModeFilter, PracticeSelection[]>>();
+
+function deckMaps(deck: PracticeDeckData): DeckMaps {
+  const cached = deckMapsCache.get(deck);
+  if (cached) return cached;
   const groupByLemma = <T extends { lemmaId: string }>(items: T[] | undefined) => {
     const grouped = new Map<string, T[]>();
     for (const item of items ?? []) {
@@ -900,7 +948,7 @@ function deckMaps(deck: PracticeDeckData) {
     }
     return grouped;
   };
-  return {
+  const maps = {
     lexemes: new Map(deck.lexemes.map((lexeme) => [lexeme.lemmaId, lexeme])),
     cloze: new Map(deck.cloze.map((item) => [item.clozeId, item])),
     stress: new Map((deck.stress ?? []).map((item) => [item.lemmaId, item])),
@@ -908,6 +956,8 @@ function deckMaps(deck: PracticeDeckData) {
     paradigm: groupByLemma(deck.paradigm),
     synonym: groupByLemma(deck.synonym),
   };
+  deckMapsCache.set(deck, maps);
+  return maps;
 }
 
 function recognitionMastered(
@@ -925,71 +975,107 @@ function makeItemId(lemmaId: string, mode: PracticeMode, clozeId?: string): stri
   return clozeId ? `${lemmaId}:${mode}:${clozeId}` : `${lemmaId}:${mode}`;
 }
 
-function directionFor(candidateKey: string, history: SelectionHistoryItem[]): RecallDirection {
-  const last = [...history].reverse().find((item) => item.recallDirection)?.recallDirection;
+function lastRecallDirection(history: SelectionHistoryItem[]): RecallDirection | undefined {
+  for (let index = history.length - 1; index >= 0; index -= 1) {
+    const direction = history[index].recallDirection;
+    if (direction) return direction;
+  }
+  return undefined;
+}
+
+function directionFor(candidateKey: string, last: RecallDirection | undefined): RecallDirection {
   if (last === 'uk-to-meaning') return 'meaning-to-uk';
   if (last === 'meaning-to-uk') return 'uk-to-meaning';
   return candidateKey.length % 2 === 0 ? 'uk-to-meaning' : 'meaning-to-uk';
 }
 
-function polarityFor(candidateKey: string, history: SelectionHistoryItem[]): ChoicePolarity {
-  const last = [...history].reverse().find((item) => item.choicePolarity)?.choicePolarity;
+function lastChoicePolarity(history: SelectionHistoryItem[]): ChoicePolarity | undefined {
+  for (let index = history.length - 1; index >= 0; index -= 1) {
+    const polarity = history[index].choicePolarity;
+    if (polarity) return polarity;
+  }
+  return undefined;
+}
+
+function polarityFor(candidateKey: string, last: ChoicePolarity | undefined): ChoicePolarity {
   if (last === 'word-to-meaning') return 'meaning-to-word';
   if (last === 'meaning-to-word') return 'word-to-meaning';
   return candidateKey.length % 2 === 0 ? 'word-to-meaning' : 'meaning-to-word';
 }
 
 function sessionCounts(history: SelectionHistoryItem[]): Record<PracticeMode, number> {
-  return PRACTICE_MODES.reduce(
-    (counts, mode) => {
-      counts[mode] = history.filter((item) => item.mode === mode).length;
-      return counts;
-    },
-    {} as Record<PracticeMode, number>,
-  );
+  const counts = Object.fromEntries(PRACTICE_MODES.map((mode) => [mode, 0])) as Record<PracticeMode, number>;
+  for (const item of history) {
+    counts[item.mode] += 1;
+  }
+  return counts;
+}
+
+interface CandidatePenaltyContext {
+  counts: Record<PracticeMode, number>;
+  availableModes: Set<PracticeMode>;
+  recent: SelectionHistoryItem[];
+  lastThreeModes: Set<PracticeMode>;
+  candidateCases: Set<string>;
+  recentCases: Set<string>;
+  last: SelectionHistoryItem | undefined;
+  expectedModeCount: number;
+}
+
+function candidatePenaltyContext(
+  candidates: PracticeSelection[],
+  history: SelectionHistoryItem[],
+): CandidatePenaltyContext {
+  const availableModes = new Set<PracticeMode>();
+  const candidateCases = new Set<string>();
+  for (const candidate of candidates) {
+    availableModes.add(candidate.mode);
+    if (candidate.cloze) candidateCases.add(candidate.cloze.blankCase);
+  }
+  const recent = history.slice(-12);
+  const recentCases = new Set<string>();
+  for (const item of history.slice(-8)) {
+    if (item.mode === 'cloze' && item.blankCase) recentCases.add(item.blankCase);
+  }
+  const total = Math.max(1, history.length);
+  return {
+    counts: sessionCounts(history),
+    availableModes,
+    recent,
+    lastThreeModes: new Set(history.slice(-3).map((item) => item.mode)),
+    candidateCases,
+    recentCases,
+    last: history.at(-1),
+    expectedModeCount: total / Math.max(1, availableModes.size),
+  };
 }
 
 function candidatePenalty(
   candidate: PracticeSelection,
-  candidates: PracticeSelection[],
-  history: SelectionHistoryItem[],
+  context: CandidatePenaltyContext,
+  historyLength: number,
   clozeSoftCap: number,
   nowTime: number,
 ): number {
   if (candidate.lapsed) return -100_000;
   let penalty = 0;
-  const recent = history.slice(-12);
-  const lastThreeModes = history.slice(-3).map((item) => item.mode);
-  if (lastThreeModes.includes(candidate.mode)) penalty += 18;
-  const counts = sessionCounts(history);
-  const availableModes = new Set(candidates.map((item) => item.mode));
-  if (history.length < 8 && !counts[candidate.mode] && availableModes.size > 1) {
+  if (context.lastThreeModes.has(candidate.mode)) penalty += 18;
+  if (historyLength < 8 && !context.counts[candidate.mode] && context.availableModes.size > 1) {
     penalty -= 45;
   }
-  const total = Math.max(1, history.length);
-  const expected = total / Math.max(1, availableModes.size);
-  penalty -= Math.max(0, expected - counts[candidate.mode]) * 3;
+  penalty -= Math.max(0, context.expectedModeCount - context.counts[candidate.mode]) * 3;
 
-  if (candidate.mode === 'cloze' && recent.length >= 4) {
-    const clozeRatio = recent.filter((item) => item.mode === 'cloze').length / recent.length;
+  if (candidate.mode === 'cloze' && context.recent.length >= 4) {
+    const clozeRatio =
+      context.recent.filter((item) => item.mode === 'cloze').length / context.recent.length;
     if (clozeRatio >= clozeSoftCap && candidate.due > nowTime) penalty += 35;
   }
 
   if (candidate.cloze) {
-    const candidateCases = new Set(
-      candidates.filter((item) => item.cloze).map((item) => item.cloze?.blankCase),
-    );
-    const recentCases = new Set(
-      history
-        .slice(-8)
-        .filter((item) => item.mode === 'cloze' && item.blankCase)
-        .map((item) => item.blankCase),
-    );
-    if (candidateCases.size >= 3 && recentCases.size < 3) {
-      penalty += recentCases.has(candidate.cloze.blankCase) ? 16 : -12;
+    if (context.candidateCases.size >= 3 && context.recentCases.size < 3) {
+      penalty += context.recentCases.has(candidate.cloze.blankCase) ? 16 : -12;
     }
-    const last = history.at(-1);
-    if (last?.sentenceFrameId === candidate.cloze.sentenceFrameId) penalty += 60;
+    if (context.last?.sentenceFrameId === candidate.cloze.sentenceFrameId) penalty += 60;
   }
   return penalty;
 }
@@ -1020,8 +1106,13 @@ function applySpacingFilters(
 
 function urgencyBucket(candidate: PracticeSelection, nowTime: number): number {
   if (candidate.lapsed) return -1_000_000_000;
-  if (!candidate.cardState) return 0;
+  if (!candidate.cardState) return 1;
   return Math.floor((candidate.due - nowTime) / HOUR_MS);
+}
+
+function levelMatchBias(candidate: PracticeSelection, deckLevel: string): number {
+  if (candidate.cardState) return 0;
+  return candidate.indexItem.cefr === deckLevel ? 0 : 1;
 }
 
 function rankCandidates(
@@ -1029,22 +1120,215 @@ function rankCandidates(
   history: SelectionHistoryItem[],
   clozeSoftCap: number,
   nowTime: number,
+  deckLevel: string,
+  sessionSeed: number | undefined,
 ): PracticeSelection | null {
   // Urgency is the PRIMARY sort key (lapsed first, then most-overdue); the soft
   // anti-monotony penalty is only a TIEBREAK within the same urgency bucket. Adding the
   // penalty to the urgency score (as before) let a +18–60 penalty leak across hour-buckets
   // and overtake a genuinely-more-due card — variety must never delay a due/lapsed card.
+  const context = candidatePenaltyContext(pool, history);
+  const ranked = pool.map((candidate) => ({
+    candidate,
+    urgency: urgencyBucket(candidate, nowTime),
+    penalty: candidatePenalty(candidate, context, history.length, clozeSoftCap, nowTime),
+    levelBias: levelMatchBias(candidate, deckLevel),
+    seedHash: seededPracticeHash(sessionSeed, candidate.itemId),
+  }));
   return (
-    [...pool].sort((left, right) => {
+    ranked.sort((left, right) => {
       return (
-        urgencyBucket(left, nowTime) - urgencyBucket(right, nowTime) ||
-        candidatePenalty(left, pool, history, clozeSoftCap, nowTime) -
-          candidatePenalty(right, pool, history, clozeSoftCap, nowTime) ||
-        left.indexItem.newOrder - right.indexItem.newOrder ||
-        left.itemId.localeCompare(right.itemId)
+        left.urgency - right.urgency ||
+        left.penalty - right.penalty ||
+        left.levelBias - right.levelBias ||
+        left.seedHash - right.seedHash ||
+        left.candidate.itemId.localeCompare(right.candidate.itemId)
       );
-    })[0] ?? null
+    })[0]?.candidate ?? null
   );
+}
+
+function cachedSelection(
+  selection: Omit<PracticeSelection, 'cardState' | 'due' | 'lapsed' | 'recallDirection' | 'choicePolarity'>,
+): PracticeSelection {
+  return {
+    ...selection,
+    cardState: null,
+    due: 0,
+    lapsed: false,
+    recallDirection: 'uk-to-meaning',
+    choicePolarity: 'word-to-meaning',
+  };
+}
+
+function selectionSnapshot(selection: PracticeSelection): PracticeSelection {
+  return { ...selection };
+}
+
+function buildStaticCandidates(deck: PracticeDeckData, modeFilter: PracticeModeFilter): PracticeSelection[] {
+  const maps = deckMaps(deck);
+  const candidates: PracticeSelection[] = [];
+
+  for (const indexItem of deck.index) {
+    const lemma = maps.lexemes.get(indexItem.lemmaId);
+    if (!lemma) continue;
+    const modes = indexItem.modes.filter(
+      (mode): mode is PracticeMode =>
+        isPracticeMode(mode) && (modeFilter === 'mixed' || mode === modeFilter),
+    );
+    for (const mode of modes) {
+      if (mode === 'cloze') {
+        for (const clozeId of indexItem.clozeIds) {
+          const cloze = maps.cloze.get(clozeId);
+          if (!cloze) continue;
+          const key = cardKey(indexItem.lemmaId, 'cloze');
+          candidates.push(
+            cachedSelection({
+              itemId: makeItemId(indexItem.lemmaId, mode, clozeId),
+              lemma,
+              indexItem,
+              mode,
+              cardKey: key,
+              cloze,
+            }),
+          );
+        }
+        continue;
+      }
+      if (mode === 'stress') {
+        const stress = maps.stress.get(indexItem.lemmaId);
+        if (!stress) continue;
+        const key = cardKey(indexItem.lemmaId, mode);
+        candidates.push(
+          cachedSelection({
+            itemId: makeItemId(indexItem.lemmaId, mode, stress.stressId),
+            lemma,
+            indexItem,
+            mode,
+            cardKey: key,
+            stress,
+          }),
+        );
+        continue;
+      }
+      if (mode === 'classify') {
+        const classify = maps.classify.get(indexItem.lemmaId);
+        if (!classify || classify.sets.length === 0) continue;
+        const key = cardKey(indexItem.lemmaId, mode);
+        for (const set of classify.sets) {
+          candidates.push(
+            cachedSelection({
+              itemId: makeItemId(indexItem.lemmaId, mode, `${classify.classifyId}:${set.setId}`),
+              lemma,
+              indexItem,
+              mode,
+              cardKey: key,
+              classify,
+              classifySetId: set.setId,
+            }),
+          );
+        }
+        continue;
+      }
+      if (mode === 'paradigm') {
+        const items = maps.paradigm.get(indexItem.lemmaId) ?? [];
+        for (const paradigm of items) {
+          const key = cardKey(indexItem.lemmaId, mode);
+          candidates.push(
+            cachedSelection({
+              itemId: makeItemId(indexItem.lemmaId, mode, paradigm.paradigmId),
+              lemma,
+              indexItem,
+              mode,
+              cardKey: key,
+              paradigm,
+            }),
+          );
+        }
+        continue;
+      }
+      if (mode === 'synonym') {
+        const items = maps.synonym.get(indexItem.lemmaId) ?? [];
+        for (const synonym of items) {
+          const key = cardKey(indexItem.lemmaId, mode);
+          candidates.push(
+            cachedSelection({
+              itemId: makeItemId(indexItem.lemmaId, mode, synonym.synonymId),
+              lemma,
+              indexItem,
+              mode,
+              cardKey: key,
+              synonym,
+            }),
+          );
+        }
+        continue;
+      }
+      if (mode === 'heritage' || mode === 'paronym') {
+        continue;
+      }
+      const key = cardKey(indexItem.lemmaId, mode);
+      candidates.push(
+        cachedSelection({
+          itemId: makeItemId(indexItem.lemmaId, mode),
+          lemma,
+          indexItem,
+          mode,
+          cardKey: key,
+        }),
+      );
+    }
+  }
+
+  return candidates;
+}
+
+function staticCandidatesFor(deck: PracticeDeckData, modeFilter: PracticeModeFilter): PracticeSelection[] {
+  let byMode = staticCandidateCache.get(deck);
+  if (!byMode) {
+    byMode = new Map();
+    staticCandidateCache.set(deck, byMode);
+  }
+  const cached = byMode.get(modeFilter);
+  if (cached) return cached;
+  const candidates = buildStaticCandidates(deck, modeFilter);
+  byMode.set(modeFilter, candidates);
+  return candidates;
+}
+
+function refreshedCandidates(
+  deck: PracticeDeckData,
+  state: LoadedSrsState,
+  history: SelectionHistoryItem[],
+  modeFilter: PracticeModeFilter,
+  minRecognitionStability: number,
+  nowTime: number,
+): PracticeSelection[] {
+  const candidates: PracticeSelection[] = [];
+  const staticCandidates = staticCandidatesFor(deck, modeFilter);
+  const clozeRecognition = new Map<string, boolean>();
+  const recallDirection = lastRecallDirection(history);
+  const choicePolarity = lastChoicePolarity(history);
+
+  for (const candidate of staticCandidates) {
+    if (candidate.mode === 'cloze' && modeFilter !== 'cloze') {
+      let mastered = clozeRecognition.get(candidate.indexItem.lemmaId);
+      if (mastered === undefined) {
+        mastered = recognitionMastered(candidate.indexItem.lemmaId, state, minRecognitionStability);
+        clozeRecognition.set(candidate.indexItem.lemmaId, mastered);
+      }
+      if (!mastered) continue;
+    }
+    const card = state.cards.get(candidate.cardKey) ?? null;
+    candidate.cardState = card;
+    candidate.due = card?.due ?? 0;
+    candidate.lapsed = Boolean(card && card.lapses > 0 && card.due <= nowTime);
+    candidate.recallDirection = directionFor(candidate.cardKey, recallDirection);
+    candidate.choicePolarity = polarityFor(candidate.cardKey, choicePolarity);
+    candidates.push(candidate);
+  }
+
+  return candidates;
 }
 
 export function selectNextPracticeItem(
@@ -1058,149 +1342,18 @@ export function selectNextPracticeItem(
   const minRecognitionStability = options.minRecognitionStability ?? DEFAULT_RECOGNITION_STABILITY;
   const clozeSoftCap = options.clozeSoftCap ?? 0.25;
   const dueWindowMs = options.dueWindowMs ?? 0;
-  const wordRepeatWindow = Math.max(MIN_WORD_REPEAT_WINDOW, options.wordRepeatWindow ?? MIN_WORD_REPEAT_WINDOW);
-  const maps = deckMaps(deck);
-  const candidates: PracticeSelection[] = [];
-
-  for (const indexItem of deck.index) {
-    const lemma = maps.lexemes.get(indexItem.lemmaId);
-    if (!lemma) continue;
-    const modes = indexItem.modes.filter(
-      (mode): mode is PracticeMode =>
-        isPracticeMode(mode) && (modeFilter === 'mixed' || mode === modeFilter),
-    );
-    for (const mode of modes) {
-      if (mode === 'cloze') {
-        if (
-          modeFilter !== 'cloze' &&
-          !recognitionMastered(indexItem.lemmaId, state, minRecognitionStability)
-        )
-          continue;
-        for (const clozeId of indexItem.clozeIds) {
-          const cloze = maps.cloze.get(clozeId);
-          if (!cloze) continue;
-          const key = cardKey(indexItem.lemmaId, 'cloze');
-          const card = state.cards.get(key) ?? null;
-          candidates.push({
-            itemId: makeItemId(indexItem.lemmaId, mode, clozeId),
-            lemma,
-            indexItem,
-            mode,
-            cardKey: key,
-            cardState: card,
-            due: card?.due ?? 0,
-            lapsed: Boolean(card && card.lapses > 0 && card.due <= nowTime),
-            cloze,
-            recallDirection: directionFor(key, history),
-            choicePolarity: polarityFor(key, history),
-          });
-        }
-        continue;
-      }
-      if (mode === 'stress') {
-        const stress = maps.stress.get(indexItem.lemmaId);
-        if (!stress) continue;
-        const key = cardKey(indexItem.lemmaId, mode);
-        const card = state.cards.get(key) ?? null;
-        candidates.push({
-          itemId: makeItemId(indexItem.lemmaId, mode, stress.stressId),
-          lemma,
-          indexItem,
-          mode,
-          cardKey: key,
-          cardState: card,
-          due: card?.due ?? 0,
-          lapsed: Boolean(card && card.lapses > 0 && card.due <= nowTime),
-          stress,
-          recallDirection: directionFor(key, history),
-          choicePolarity: polarityFor(key, history),
-        });
-        continue;
-      }
-      if (mode === 'classify') {
-        const classify = maps.classify.get(indexItem.lemmaId);
-        if (!classify || classify.sets.length === 0) continue;
-        const key = cardKey(indexItem.lemmaId, mode);
-        const card = state.cards.get(key) ?? null;
-        for (const set of classify.sets) {
-          candidates.push({
-            itemId: makeItemId(indexItem.lemmaId, mode, `${classify.classifyId}:${set.setId}`),
-            lemma,
-            indexItem,
-            mode,
-            cardKey: key,
-            cardState: card,
-            due: card?.due ?? 0,
-            lapsed: Boolean(card && card.lapses > 0 && card.due <= nowTime),
-            classify,
-            classifySetId: set.setId,
-            recallDirection: directionFor(key, history),
-            choicePolarity: polarityFor(key, history),
-          });
-        }
-        continue;
-      }
-      if (mode === 'paradigm') {
-        const items = maps.paradigm.get(indexItem.lemmaId) ?? [];
-        for (const paradigm of items) {
-          const key = cardKey(indexItem.lemmaId, mode);
-          const card = state.cards.get(key) ?? null;
-          candidates.push({
-            itemId: makeItemId(indexItem.lemmaId, mode, paradigm.paradigmId),
-            lemma,
-            indexItem,
-            mode,
-            cardKey: key,
-            cardState: card,
-            due: card?.due ?? 0,
-            lapsed: Boolean(card && card.lapses > 0 && card.due <= nowTime),
-            paradigm,
-            recallDirection: directionFor(key, history),
-            choicePolarity: polarityFor(key, history),
-          });
-        }
-        continue;
-      }
-      if (mode === 'synonym') {
-        const items = maps.synonym.get(indexItem.lemmaId) ?? [];
-        for (const synonym of items) {
-          const key = cardKey(indexItem.lemmaId, mode);
-          const card = state.cards.get(key) ?? null;
-          candidates.push({
-            itemId: makeItemId(indexItem.lemmaId, mode, synonym.synonymId),
-            lemma,
-            indexItem,
-            mode,
-            cardKey: key,
-            cardState: card,
-            due: card?.due ?? 0,
-            lapsed: Boolean(card && card.lapses > 0 && card.due <= nowTime),
-            synonym,
-            recallDirection: directionFor(key, history),
-            choicePolarity: polarityFor(key, history),
-          });
-        }
-        continue;
-      }
-      if (mode === 'heritage' || mode === 'paronym') {
-        continue;
-      }
-      const key = cardKey(indexItem.lemmaId, mode);
-      const card = state.cards.get(key) ?? null;
-      candidates.push({
-        itemId: makeItemId(indexItem.lemmaId, mode),
-        lemma,
-        indexItem,
-        mode,
-        cardKey: key,
-        cardState: card,
-        due: card?.due ?? 0,
-        lapsed: Boolean(card && card.lapses > 0 && card.due <= nowTime),
-        recallDirection: directionFor(key, history),
-        choicePolarity: polarityFor(key, history),
-      });
-    }
-  }
+  const wordRepeatWindow = Math.max(
+    MIN_WORD_REPEAT_WINDOW,
+    options.wordRepeatWindow ?? MIN_WORD_REPEAT_WINDOW,
+  );
+  const candidates = refreshedCandidates(
+    deck,
+    state,
+    history,
+    modeFilter,
+    minRecognitionStability,
+    nowTime,
+  );
 
   const overduePool = candidates.filter((candidate) => candidate.due <= nowTime);
   const windowPool = candidates.filter(
@@ -1219,7 +1372,8 @@ export function selectNextPracticeItem(
   }
   if (!scheduledPool.length) return null;
 
-  return rankCandidates(scheduledPool, history, clozeSoftCap, nowTime);
+  const selection = rankCandidates(scheduledPool, history, clozeSoftCap, nowTime, deck.level, options.sessionSeed);
+  return selection ? selectionSnapshot(selection) : null;
 }
 
 export function czNorm(value: string): string {

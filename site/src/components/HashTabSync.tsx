@@ -1,6 +1,8 @@
 import React from 'react';
 
-export interface HashTabSyncProps {}
+export interface HashTabSyncProps {
+  nonce?: string;
+}
 
 type StarlightTabsElement = HTMLElement & {
   switchTab?: (tab: Element, index: number, animate?: boolean) => void;
@@ -15,11 +17,11 @@ declare global {
 export function installHashTabSync() {
   if (typeof window === 'undefined' || typeof document === 'undefined') return;
 
-  let originalHtmlOverflowAnchor;
-  let originalBodyOverflowAnchor;
-  let restoreOverflowAnchorTimer;
+  let originalHtmlOverflowAnchor: string | undefined;
+  let originalBodyOverflowAnchor: string | undefined;
+  let restoreOverflowAnchorTimer: number | undefined;
 
-  function currentHashId() {
+  function currentHashId(): string {
     try {
       return decodeURIComponent(window.location.hash.slice(1));
     } catch {
@@ -29,11 +31,11 @@ export function installHashTabSync() {
 
   const requestedHashId = currentHashId();
 
-  function isInternalTabHash(id) {
+  function isInternalTabHash(id: string): boolean {
     return /^tab-panel-\\d+$/.test(id);
   }
 
-  function targetHashId() {
+  function targetHashId(): string {
     const id = currentHashId();
     if (isInternalTabHash(id) && requestedHashId && !isInternalTabHash(requestedHashId)) {
       return requestedHashId;
@@ -41,7 +43,7 @@ export function installHashTabSync() {
     return id;
   }
 
-  function restoreRequestedHash(id) {
+  function restoreRequestedHash(id: string): void {
     if (!id || currentHashId() === id || !window.history || !window.history.replaceState) return;
     window.history.replaceState(null, '', '#' + encodeURIComponent(id));
   }
@@ -63,7 +65,7 @@ export function installHashTabSync() {
     if (typeof tabs.switchTab === 'function') {
       tabs.switchTab(tab, index, false);
     } else {
-      tab.click();
+      (tab as HTMLAnchorElement).click();
     }
   }
 
@@ -131,6 +133,6 @@ export function installHashTabSync() {
 
 const hashTabSyncScript = `(${installHashTabSync.toString()})();`;
 
-export default function HashTabSync(_props: HashTabSyncProps) {
-  return <script dangerouslySetInnerHTML={{ __html: hashTabSyncScript }} />;
+export default function HashTabSync({ nonce }: HashTabSyncProps) {
+  return <script nonce={nonce} dangerouslySetInnerHTML={{ __html: hashTabSyncScript }} />;
 }

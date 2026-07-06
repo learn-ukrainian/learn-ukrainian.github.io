@@ -14,12 +14,14 @@ import {
   rateCard,
   saveState,
   selectNextPracticeItem,
+  seededAnswerIndex,
   uaPlural,
   validateClozeOptions,
   type PracticeClozeItem,
   type PracticeDeckData,
   type PracticeLexeme,
   type PracticeMode,
+  type PracticeSelection,
   type SelectionHistoryItem,
 } from '@site/src/lib/lexicon/srs';
 
@@ -42,7 +44,12 @@ function stateCard(overrides: Partial<ReturnType<typeof rateCard>> = {}) {
   };
 }
 
-function lexeme(lemmaId: string, lemma = lemmaId, gloss = `${lemmaId} gloss`): PracticeLexeme {
+function lexeme(
+  lemmaId: string,
+  lemma = lemmaId,
+  gloss = `${lemmaId} gloss`,
+  cefr = 'A1',
+): PracticeLexeme {
   return {
     lemmaId,
     lemma,
@@ -50,7 +57,7 @@ function lexeme(lemmaId: string, lemma = lemmaId, gloss = `${lemmaId} gloss`): P
     gloss,
     ipa: null,
     pos: 'noun',
-    cefr: 'A1',
+    cefr,
     heritage: null,
     severity: null,
     paradigm: {
@@ -228,6 +235,65 @@ function modeDeck(rows: { id: string; modes: PracticeMode[] }[]): PracticeDeckDa
       newOrder: index,
     })),
   };
+}
+
+function flashcardDeck(
+  rows: { id: string; cefr?: string }[],
+  level = 'A1',
+  deckVersion = 'test',
+): PracticeDeckData {
+  const lexemes = rows.map((row) => lexeme(row.id, row.id, `${row.id} gloss`, row.cefr ?? 'A1'));
+  return {
+    deckVersion,
+    level,
+    lexemes,
+    cloze: [],
+    stress: [],
+    classify: [],
+    paradigm: [],
+    synonym: [],
+    index: lexemes.map((entry, index) => ({
+      lemmaId: entry.lemmaId,
+      lemma: entry.lemma,
+      cefr: entry.cefr ?? 'A1',
+      modes: ['flashcards'],
+      hasCloze: false,
+      clozeIds: [],
+      newOrder: index,
+    })),
+  };
+}
+
+function selectionHistory(selection: PracticeSelection): SelectionHistoryItem {
+  return {
+    itemId: selection.itemId,
+    lemmaId: selection.lemma.lemmaId,
+    mode: selection.mode,
+    clozeId: selection.cloze?.clozeId,
+    sentenceFrameId: selection.cloze?.sentenceFrameId,
+    blankCase: selection.cloze?.blankCase,
+    classifySetId: selection.classifySetId,
+    recallDirection: selection.recallDirection,
+    choicePolarity: selection.choicePolarity,
+    lapsed: selection.lapsed,
+  };
+}
+
+function newCardSequence(testDeck: PracticeDeckData, seed: number, count: number): PracticeSelection[] {
+  const history: SelectionHistoryItem[] = [];
+  const selections: PracticeSelection[] = [];
+  for (let index = 0; index < count; index += 1) {
+    const selection = selectNextPracticeItem(testDeck, {
+      now: NOW,
+      modeFilter: 'flashcards',
+      history,
+      sessionSeed: seed,
+    });
+    if (!selection) throw new Error(`expected selection ${index}`);
+    selections.push(selection);
+    history.push(selectionHistory(selection));
+  }
+  return selections;
 }
 
 beforeEach(() => {
@@ -590,6 +656,138 @@ describe('lexicon SRS facade', () => {
     expect(selection?.mode).toBe('matching');
   });
 
+  test('selector uses the session seed only as a stable tied-new-card tiebreak', () => {
+    const testDeck = flashcardDeck(
+      Array.from({ length: 30 }, (_, index) => ({ id: `seeded-${String(index).padStart(2, '0')}` })),
+    );
+
+    const firstRun = newCardSequence(testDeck, 12345, 10).map((selection) => selection.itemId);
+    const secondRun = newCardSequence(testDeck, 12345, 10).map((selection) => selection.itemId);
+    const differentSeedRun = newCardSequence(testDeck, 54321, 10).map((selection) => selection.itemId);
+
+    expect(secondRun).toEqual(firstRun);
+    expect(differentSeedRun).not.toEqual(firstRun);
+  });
+
+  test('selector returns immutable snapshots of cached candidates', () => {
+    const testDeck = flashcardDeck([{ id: 'snapshot' }]);
+    const first = selectNextPracticeItem(testDeck, {
+      now: NOW,
+      modeFilter: 'flashcards',
+      sessionSeed: 12345,
+    });
+    if (!first) throw new Error('expected first selection');
+    const firstPolarity = first.choicePolarity;
+
+    selectNextPracticeItem(testDeck, {
+      now: NOW,
+      modeFilter: 'flashcards',
+      history: [selectionHistory(first)],
+      sessionSeed: 12345,
+    });
+
+    expect(first.choicePolarity).toBe(firstPolarity);
+  });
+
+  test('due and lapsed cards beat tied new cards regardless of seed', () => {
+    const state = loadState(localStorage, NOW);
+    state.cards.set(cardKey('due-review', 'flashcards'), stateCard({ due: NOW.getTime() }));
+    const testDeck = flashcardDeck([
+      { id: 'fresh-a' },
+      { id: 'fresh-b' },
+      { id: 'due-review' },
+      { id: 'fresh-c' },
+    ]);
+
+    for (const seed of [1, 987654321]) {
+      const selection = selectNextPracticeItem(testDeck, {
+        now: NOW,
+        modeFilter: 'flashcards',
+        sessionSeed: seed,
+      });
+      expect(selection?.lemma.lemmaId).toBe('due-review');
+      expect(selection?.cardState).toBeTruthy();
+    }
+
+    state.cards.set(cardKey('lapsed-review', 'flashcards'), stateCard({ lapses: 1, due: NOW.getTime() - HOUR_MS }));
+    const lapsedDeck = flashcardDeck([
+      { id: 'fresh-a' },
+      { id: 'lapsed-review' },
+      { id: 'fresh-b' },
+    ]);
+    for (const seed of [1, 987654321]) {
+      const selection = selectNextPracticeItem(lapsedDeck, {
+        now: NOW,
+        modeFilter: 'flashcards',
+        sessionSeed: seed,
+      });
+      expect(selection?.lemma.lemmaId).toBe('lapsed-review');
+      expect(selection?.lapsed).toBe(true);
+    }
+  });
+
+  test('B1 decks introduce B1 new cards before same-urgency lower-level cards', () => {
+    const testDeck = flashcardDeck(
+      [
+        ...Array.from({ length: 10 }, (_, index) => ({ id: `a1-${index}`, cefr: 'A1' })),
+        ...Array.from({ length: 10 }, (_, index) => ({ id: `a2-${index}`, cefr: 'A2' })),
+        ...Array.from({ length: 10 }, (_, index) => ({ id: `b1-${index}`, cefr: 'B1' })),
+      ],
+      'B1',
+    );
+
+    const firstIntroductions = newCardSequence(testDeck, 20260706, 8);
+
+    expect(firstIntroductions.map((selection) => selection.indexItem.cefr)).toEqual(
+      Array.from({ length: 8 }, () => 'B1'),
+    );
+  });
+
+  test('seeded answer placement varies correct-answer positions across a session', () => {
+    const positions = new Set(
+      Array.from({ length: 20 }, (_, index) =>
+        seededAnswerIndex(20260706, `choice-fixture-${index}:choice`, 4),
+      ),
+    );
+
+    expect(positions.size).toBeGreaterThanOrEqual(3);
+    expect(seededAnswerIndex(111, 'choice-fixture-0:choice', 4)).not.toBe(
+      seededAnswerIndex(222, 'choice-fixture-0:choice', 4),
+    );
+  });
+
+  test('selector handles a warmed 18k-candidate transition under the perf budget', () => {
+    const testDeck = flashcardDeck(
+      Array.from({ length: 18_000 }, (_, index) => ({
+        id: `bench-${String(index).padStart(5, '0')}`,
+      })),
+      'A1',
+      'bench-optimized',
+    );
+    const history: SelectionHistoryItem[] = [
+      { itemId: 'history-choice-1', lemmaId: 'history-choice-1', mode: 'choice' },
+      { itemId: 'history-choice-2', lemmaId: 'history-choice-2', mode: 'choice' },
+    ];
+
+    selectNextPracticeItem(testDeck, { now: NOW, modeFilter: 'flashcards', sessionSeed: 123456789 });
+    const start = performance.now();
+    const selection = selectNextPracticeItem(testDeck, {
+      now: NOW,
+      modeFilter: 'flashcards',
+      history,
+      sessionSeed: 123456789,
+    });
+    const elapsed = performance.now() - start;
+
+    console.info(
+      `BENCH optimized selectNextPracticeItem 18000 candidates: ${elapsed.toFixed(2)}ms selected=${
+        selection?.itemId ?? 'null'
+      }`,
+    );
+    expect(selection).not.toBeNull();
+    expect(elapsed).toBeLessThan(50);
+  });
+
   test('explicit cloze mode reaches authored cloze before recognition mastery', () => {
     const selection = selectNextPracticeItem(practiceDeck(), {
       now: NOW,
@@ -597,7 +795,7 @@ describe('lexicon SRS facade', () => {
     });
 
     expect(selection?.mode).toBe('cloze');
-    expect(selection?.cloze?.clozeId).toBe('alpha-cloze');
+    expect(['alpha-cloze', 'beta-cloze', 'gamma-cloze']).toContain(selection?.cloze?.clozeId);
   });
 
   test('cloze soft cap yields to lapsed cloze pressure', () => {

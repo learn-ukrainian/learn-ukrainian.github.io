@@ -56,7 +56,7 @@ export function practiceShardResponse(
     });
   }
 
-  return new Response(readPracticeShardBytes(kind, level), {
+  return new Response(new Uint8Array(readPracticeShardBytes(kind, level)), {
     headers: PRACTICE_API_JSON_HEADERS,
   });
 }

@@ -1,6 +1,6 @@
 // @ts-check
 import { realpathSync } from 'node:fs';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, URL } from 'node:url';
 import { unified } from '@astrojs/markdown-remark';
 import { defineConfig } from 'astro/config';
 import mdx from '@astrojs/mdx';
@@ -21,8 +21,10 @@ const starlightRoot = fileURLToPath(new URL('.', import.meta.url));
 const starlightNodeModules = realpathSync(fileURLToPath(new URL('./node_modules', import.meta.url)));
 // Folk un-hidden 2026-06-14 for the preview/seminar-test launch (reverses
 // orchestrator #3027). Empty = nothing suppressed from public routing.
+/** @type {string[]} */
 const hiddenPublicPaths = [];
 
+/** @param {string} page */
 const isHiddenPublicPage = (page) => {
   const pathname = page.startsWith('http') ? new URL(page).pathname : page;
   return hiddenPublicPaths.some(
@@ -38,6 +40,7 @@ const redirects = {
   '/lexicon/practice': '/words-of-the-day/practice/',
 };
 
+/** @param {string} page */
 const isRedirectSource = (page) => {
   const pathname = page.startsWith('http') ? new URL(page).pathname : page;
   return Object.keys(redirects).some(
