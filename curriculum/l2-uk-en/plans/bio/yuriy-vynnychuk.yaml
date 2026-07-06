@@ -78,6 +78,18 @@ persona:
   role: Модератор семінару — ставить під сумнів межу між фактом і вигадкою, заохочує насолоджуватися грою, але не забувати про її правила.
   voice: Lviv-Knaipa-Chronicler
 phase: BIO.4
+readings:
+- title: 'Містифікатор на службі Львова: як Юрій Винничук вигадав історію міста'
+  source_name: ЛітАкцент
+  language: uk
+  genre: 'Літературна критика'
+  source_type: 'Літературознавчий есей'
+  role: 'Аналіз прийомів містифікації та постмодерної гри з історією'
+  cefr_min: C1
+  license: 'copyrighted'
+  hosting: 'reading-needed'
+  learner_task: 'Зібрати приклади того, як Винничук конструює "легенди". Обговорити етичні межі такої містифікації: чи це корисна "деколонізація" уяви, чи небезпечне розмивання правди?'
+  caveats: 'Критична стаття, яка може фокусуватися більше на літературних прийомах, ніж на ширшому культурному контексті Галичини.'
 references:
 - title: Yuriy Vynnychuk
   note: Compiled biographical data, list of works, key critical interpretations
@@ -102,7 +114,7 @@ sequence: 174
 slug: yuriy-vynnychuk
 subtitle: 'Yuriy Vynnychuk: The Lviv Storyteller and Mystifier'
 title: 'Юрій Винничук: Львівський казкар'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: свідоме введення в оману; твір, що видається за створений іншим автором або в іншу епоху
   pos: ж.

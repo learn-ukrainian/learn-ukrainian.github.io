@@ -79,6 +79,29 @@ persona:
   role: Модератор семінару, що досліджує зв'язок між особистою етикою, ціною вибору та національною історією
   voice: Historian-Philosopher
 phase: BIO
+readings:
+- title: 'Мирослав Маринович про Українську Гельсінську групу та ціну свободи'
+  source_name: Історична правда
+  language: uk
+  genre: 'Інтерв''ю'
+  source_type: 'Історична журналістика'
+  role: 'Джерело для розуміння мотивації та ціни дисидентства'
+  cefr_min: C1
+  license: 'copyrighted'
+  hosting: 'reading-needed'
+  learner_task: 'Виокремити аргументи Мариновича щодо того, чому діяльність УГГ була не політичною, а правозахисною. Оцінити "ціну", яку він заплатив за свої переконання.'
+  caveats: 'Інтерв''ю записувалося в роки незалежності, є ретроспективним осмисленням власного досвіду через призму часу.'
+- title: 'Фрагменти з книги «Всесвіт за колючим дротом»'
+  source_name: Видавництво УКУ
+  language: uk
+  genre: 'Мемуари'
+  source_type: 'Первинне джерело'
+  role: 'Документальне свідчення про досвід ГУЛАГу'
+  cefr_min: C1
+  license: 'copyrighted'
+  hosting: 'reading-needed'
+  learner_task: 'Прочитати уривок про побут у таборі та проаналізувати стратегії виживання та збереження гідності.'
+  caveats: 'Текст насичений табірним жаргоном та специфічною лексикою, що може ускладнити розуміння.'
 references:
 - title: Myroslav Marynovych
   note: Compiled from Wikipedia, UCU sources, Amnesty International archives
@@ -103,7 +126,7 @@ sequence: 170
 slug: myroslav-marynovych
 subtitle: 'Myroslav Marynovych: The Conscience of a Nation'
 title: 'Мирослав Маринович: Совість нації'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: людина, що свідомо протистоїть панівній ідеології та політичному режиму, часто ризикуючи власною свободою
   pos: ч.
