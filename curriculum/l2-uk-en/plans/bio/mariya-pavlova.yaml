@@ -79,6 +79,14 @@ persona:
   role: Модератор семінару, що проблематизує усталені біографії, виявляє приховані конфлікти та змушує бачити за "іконою" складну людську долю.
   voice: Nuanced-Historian
 phase: BIO
+readings:
+- hosting: link-only
+  language: uk
+  source: Вікіпедія
+  task: "Прочитайте про першу жінку-палеонтолога (Примітка: використано Вікіпедію як резервне джерело)."
+  title: Павлова Марія Василівна
+  type: article
+  url: https://uk.wikipedia.org/wiki/Павлова_Марія_Василівна
 references:
 - title: Mariya Pavlova
   note: Compiled research notes for the module, including timelines and key publications.
@@ -98,7 +106,7 @@ sequence: 73
 slug: mariya-pavlova
 subtitle: 'Mariya Pavlova: The Woman Who Read Bones'
 title: 'Марія Павлова: Жінка, що читала кістки'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: наука, що вивчає вимерлі організми, їхні сліди та скам'янілі рештки
   pos: ж.
