@@ -98,18 +98,30 @@ references:
   work: Ірина Вільде. Штрихи до портрета
 readings:
 - language: uk
-  notes: 'Есе на "Локальній історії" про суперечливі життєві вибори та жіночу незалежність Ірини Вільде, що руйнує стереотипи про радянську конформістку.'
-  source_name: Локальна історія
-  source_url: https://localhistory.org.ua/texts/statti/irina-vilde-ne-khtila-b-buti-khoroshim-khlopchikom/
+  source_type: reference
+  role: orientation
+  source_name: Енциклопедія Сучасної України
+  source_url: https://esu.com.ua/article-34550
+  license: copyrighted
+  rights_note: ЕСУ захищена авторським правом; використовувати як link-only джерело.
+  hosting: link-only
+  learner_task: Зібрати базову хронологію життя Ірини Вільде та позначити, які факти потрібні для розмови про виживання під різними режимами.
+  notes: Академічна українська довідка про біографію, освіту, творчість і громадську діяльність письменниці.
 - language: uk
-  notes: 'Аналітична стаття на "Читомо" про літературний феномен "Сестер Річинських" та особистісні компроміси письменниці.'
+  source_type: article
+  role: reading
   source_name: Читомо
-  source_url: https://chytomo.com/dzerkalo-zhyttia-iryny-vilde-z-nadhrobnym-vinkom/
+  source_url: https://chytomo.com/sestry-richynski-iak-hra-prestoliv-shcho-spilnoho-u-vilde-i-martina/
+  license: copyrighted
+  rights_note: Матеріал Читомо захищений авторським правом; не копіювати повний текст.
+  hosting: link-only
+  learner_task: Прочитати як літературну рамку до "Сестер Річинських" і виписати, як авторка пояснює масштаб роману та родинної саги.
+  notes: Українська стаття про роман "Сестри Річинські" як великий галицький родинний наратив.
 sequence: 199
 slug: iryna-vilde
 subtitle: 'Iryna Vilde: A Butterfly on Pins'
 title: 'Ірина Вільде: Метелик на шпильках'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: жінка, яка професійно займається літературною творчістю
   pos: ж.

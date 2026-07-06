@@ -154,18 +154,30 @@ references:
   work: Арії трьох П'єро
 readings:
 - language: uk
-  notes: 'Матеріали на "Історичній правді" про фабрикацію кримінальної справи проти Михайля Семенка та його страту радянським режимом.'
-  source_name: Історична правда
-  source_url: https://www.istpravda.com.ua/articles/2020/10/24/158319/
+  source_type: reference
+  role: orientation
+  source_name: Український інститут національної пам'яті
+  source_url: https://uinp.gov.ua/istorychnyy-kalendar/gruden/31/1892-narodyvsya-poet-myhayl-semenko
+  license: copyrighted
+  rights_note: Матеріал УІНП захищений авторським правом; використовувати як link-only джерело.
+  hosting: link-only
+  learner_task: Зібрати біографічні факти про Семенка і визначити, як УІНП пов'язує його з Розстріляним відродженням.
+  notes: Українська довідка УІНП про народження, футуризм і репресовану біографію Михайля Семенка.
 - language: uk
-  notes: 'Аналітична стаття про епатажний український футуризм, "спалення Кобзаря" як деколоніальний жест та роль Семенка в авангарді.'
   source_name: Локальна історія
-  source_url: https://localhistory.org.ua/texts/statti/mikhail-semenko-i-futuryzm/
+  source_type: article
+  role: reading
+  source_url: https://localhistory.org.ua/texts/statti/chomu-semenko-paliv-shevchenkiv-kobzar/
+  license: copyrighted
+  rights_note: Матеріал "Локальної історії" захищений авторським правом; використовувати як link-only джерело.
+  hosting: link-only
+  learner_task: Проаналізувати "спалення Кобзаря" як провокацію футуризму і порівняти її з деколоніальним читанням канону.
+  notes: Українська стаття Ярини Цимбал про Семенка, футуризм, епатаж і повернення авангарду до літературної пам'яті.
 sequence: 203
 slug: mykhail-semenko
 subtitle: The Futurist Visionary Who Reimagined Ukrainian Poetry
 title: 'Михайль Семенко: Засновник українського авангарду'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: >-
     авангардний напрям у мистецтві початку XX століття, що проголошував культ

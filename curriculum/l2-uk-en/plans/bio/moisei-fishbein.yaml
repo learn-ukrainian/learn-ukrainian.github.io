@@ -99,18 +99,30 @@ references:
   work: Премія імені Василя Стуса
 readings:
 - language: uk
-  notes: 'Матеріал від PEN Ukraine про роль Мойсея Фішбейна як "пророка українською" та його внесок в українсько-єврейський діалог.'
+  source_type: interview
+  role: reading
   source_name: Український ПЕН
-  source_url: https://pen.org.ua/in-memoriam-mojsej-fishbejn
+  source_url: https://pen.org.ua/mojsej-fishbejn-chuty-v-movi-gospodnyu-symfoniyu-j-nesty-tsyu-symfoniyu-inshym
+  license: copyrighted
+  rights_note: Матеріал Українського ПЕН захищений авторським правом; використовувати як link-only джерело.
+  hosting: link-only
+  learner_task: Прочитати розмову про українську мову Фішбейна і сформулювати, як він пов'язує переклад, віру та громадянську позицію.
+  notes: Українська PEN-розмова з біографічним блоком про еміграцію, повернення і перекладацьку працю Фішбейна.
 - language: uk
-  notes: 'Стаття-спогад на "Історичній правді" про громадянську позицію поета та його боротьбу з імперськими антисемітськими міфами.'
-  source_name: Історична правда
-  source_url: https://www.istpravda.com.ua/articles/2020/05/27/157588/
+  source_type: article
+  role: context
+  source_name: Радіо Свобода
+  source_url: https://www.radiosvoboda.org/a/moysey-fishbeyn-upa/31587500.html
+  license: copyrighted
+  rights_note: Матеріал Радіо Свобода захищений авторським правом; не хостити повний текст.
+  hosting: link-only
+  learner_task: Виписати аргументи про поєднання єврейської ідентичності, української мови та політичної солідарності.
+  notes: Українська стаття до 75-річчя поета про його український вибір, єврейське походження та ставлення до УПА.
 sequence: 200
 slug: moisei-fishbein
 subtitle: The Jewish Intellectual Who Chose the Ukrainian Language
 title: 'Мойсей Фішбейн: Пророк українською'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: свідоме рішення особистості використовувати певну мову в житті та творчості, часто як політичний акт
   pos: ч.

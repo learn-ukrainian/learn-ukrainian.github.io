@@ -101,18 +101,30 @@ references:
   work: 'Олег Ольжич і Олена Теліга: Нариси про життя і творчість'
 readings:
 - language: uk
-  notes: 'Стаття на "Історичній правді" про життя та діяльність поета як символа національного героїзму, що тривалий час був під радянським "табу".'
-  source_name: Історична правда
-  source_url: https://www.istpravda.com.ua/articles/2012/07/21/90100/
+  source_type: reference
+  role: orientation
+  source_name: Енциклопедія Сучасної України
+  source_url: https://esu.com.ua/article-76571
+  license: copyrighted
+  rights_note: ЕСУ захищена авторським правом; використовувати як link-only джерело.
+  hosting: link-only
+  learner_task: Скласти коротку карту трьох імен Ольжича — наукового, літературного та підпільного.
+  notes: Академічна українська довідка про Ольжича як поета, археолога, публіциста і діяча ОУН.
 - language: uk
-  notes: 'Матеріал на "Локальній історії" з фокусом на останні роки життя Ольжича, обставини його арешту ґестапо та загибель у концтаборі.'
+  source_type: article
+  role: reading
   source_name: Локальна історія
-  source_url: https://localhistory.org.ua/texts/statti/zagibel-olzhicha/
+  source_url: https://localhistory.org.ua/texts/chitanka/tilki-iedinogo-olega-olzhicha-zamorduvali-dopovid-pro-zhittia-poeta/
+  license: copyrighted
+  rights_note: Матеріал "Локальної історії" захищений авторським правом; використовувати як link-only джерело.
+  hosting: link-only
+  learner_task: Простежити, як текст описує арешт, Заксенгаузен і післявоєнну пам'ять без радянських замовчувань.
+  notes: Український матеріал про останні місяці життя Ольжича, його арешт ґестапо і загибель у Заксенгаузені.
 sequence: 201
 slug: oleh-olzhych
 subtitle: 'Oleh Olzhych: A stone from God''s sling'
 title: 'Олег Ольжич: Камінь з Божої пращі'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: учасник таємної організації, що бореться проти окупаційної влади
   pos: ч.
