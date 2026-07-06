@@ -418,12 +418,12 @@ books:
     year: 2024
     slug: 2823-fizyka-bariakhtar-7-klas-2024
 
-  - id: g7-heometriya-iershova
+  - id: g7-heometriya-merzliak
     grade: 7
     subject: heometriya
-    author: Єршова
+    author: Мерзляк
     year: 2024
-    slug: 2884-geometriia-iershova-7-klas-2024
+    slug: 2885-geometriia-merzliak-7-klas-2024
 
   - id: g7-informatyka-ryvkind
     grade: 7
@@ -446,12 +446,12 @@ books:
     year: 2025
     slug: 2906-algebra-merzliak-8-klas-2025
 
-  - id: g8-biolohiya-zadorozhnyi
+  - id: g8-biolohiya-anderson
     grade: 8
     subject: biolohiya
-    author: Задорожний
+    author: Андерсон
     year: 2025
-    slug: 2926-biologiia-zadorozhnyi-8-klas-2025
+    slug: 2923-biologiia-anderson-8-klas-2025
 
   - id: g8-fizyka-bariakhtar
     grade: 8
@@ -485,8 +485,8 @@ books:
     grade: 9
     subject: algebra
     author: Мерзляк
-    year: 2026
-    slug: 3143-algebra-9-klas-merzliak-2026
+    year: 2017
+    slug: 982-algebra-merzlyak-9-klas-2017
 
   - id: g9-biolohiya-zadorozhnyi
     grade: 9
@@ -499,26 +499,26 @@ books:
     grade: 9
     subject: fizyka
     author: Бар'яхтар
-    year: 2026
-    slug: 3255-fizyka-9-klas-bariakhtar-2026
+    year: 2022
+    slug: 3115-fizyka-9-klas-bariakhtar
 
   - id: g9-heometriya-merzliak
     grade: 9
     subject: heometriya
     author: Мерзляк
-    year: 2026
-    slug: 3171-geometriia-9-klas-merzliak-2026
+    year: 2017
+    slug: 996-geometriya-merzlyak-9-klas-2017
 
   - id: g9-informatyka-ryvkind
     grade: 9
     subject: informatyka
     author: Ривкінд
-    year: 2026
-    slug: 3190-informatyka-9-klas-ryvkind-2026
+    year: 2017
+    slug: 1046-informatika-9-klas-ryvkind-2017
 
   - id: g9-khimiya-popel
     grade: 9
     subject: khimiya
     author: Попель
-    year: 2026
-    slug: 3262-khimiia-9-klas-popel-2026
+    year: 2017
+    slug: 1041-himiya-9-klas-popel-2017
