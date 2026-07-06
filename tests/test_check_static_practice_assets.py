@@ -176,6 +176,41 @@ def _write_level(practice_dir: Path, *, level: str = "A1", with_cloze: bool = Fa
     )
 
 
+def _add_heritage_item(practice_dir: Path, *, options: list[dict[str, object]], level: str = "A1") -> None:
+    heritage_path = practice_dir / f"practice-heritage.{level}.json"
+    heritage_payload = json.loads(heritage_path.read_text(encoding="utf-8"))
+    heritage_payload["heritage"] = [
+        {
+            "heritageId": "her_fixture",
+            "lemmaId": "dim",
+            "srsKey": "dim::heritage",
+            "lemma": "дім",
+            "nativeLemma": "дім",
+            "calqueLabel": "дом",
+            "kind": "lexical",
+            "prompt": "Я бачу ___.",
+            "answer": "дім",
+            "calque": "дом",
+            "origin": "fixture",
+            "frameIndex": 1,
+            "cefr": level,
+            "options": options,
+            "rationale": "fixture rationale",
+            "citations": ["fixture:heritage"],
+            "corrections": ["дім"],
+            "sourceFamily": "fixture",
+        }
+    ]
+    _write_json(heritage_path, heritage_payload)
+
+    index_path = practice_dir / f"practice-index.{level}.json"
+    index_payload = json.loads(index_path.read_text(encoding="utf-8"))
+    index_payload["items"][0]["modes"].append("heritage")
+    index_payload["counts"]["modeCounts"]["heritage"] = 1
+    index_payload["counts"]["modeCoverage"]["heritage"] = 1.0
+    _write_json(index_path, index_payload)
+
+
 def _fixture_paths(tmp_path: Path) -> tuple[Path, Path, Path]:
     daily_pool = tmp_path / "lexicon-daily-pool.json"
     practice_dir = tmp_path / "lexicon"
@@ -247,6 +282,31 @@ def test_check_assets_accepts_allowlisted_cloze(tmp_path: Path) -> None:
     assert summary["ok"] is True
     assert summary["reviewed_sources"] == 1
     assert summary["total_cloze"] == 1
+
+
+def test_check_assets_rejects_heritage_option_metadata_leaks(tmp_path: Path) -> None:
+    daily_pool, practice_dir, reviewed_sources = _fixture_paths(tmp_path)
+    _add_heritage_item(
+        practice_dir,
+        options=[
+            {"label": "дім", "kind": "answer", "lemmaId": "dim", "pos": "noun"},
+            {"label": "дом", "kind": "calque"},
+            {"label": "сад", "kind": "distractor", "lemmaId": "sad", "pos": "noun"},
+            {"label": "ліс", "kind": "distractor", "lemmaId": "lis", "pos": "noun"},
+        ],
+    )
+
+    summary = check_assets(
+        daily_pool=daily_pool,
+        practice_dir=practice_dir,
+        reviewed_sources=reviewed_sources,
+        levels=("A1",),
+        min_daily_pool_size=2,
+        min_practice_lexemes_per_level=1,
+    )
+
+    assert summary["ok"] is False
+    assert any("heritage options must expose only label" in error for error in summary["errors"])
 
 
 def test_check_assets_reports_bad_daily_pool_rows(tmp_path: Path) -> None:
