@@ -102,12 +102,12 @@ sequence: 121
 slug: olena-stepaniv
 subtitle: The First Female Officer in the Ukrainian Army
 title: 'Олена Степанів: Перша жінка-офіцер'
-version: '4.1'
+version: '4.2'
 readings:
-- title: Степанів Олена Іванівна
+- title: Степанів-Дашкевич Олена Іванівна
   language: uk
   source: Енциклопедія історії України
-  url: https://history.org.ua/?termin=Stepaniv_O
+  url: https://history.org.ua/?termin=Stepaniv_D
   type: encyclopedia
   role: primary-bio
   hosting: link-only

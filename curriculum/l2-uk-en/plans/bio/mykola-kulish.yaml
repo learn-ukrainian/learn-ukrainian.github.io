@@ -101,12 +101,12 @@ sequence: 120
 slug: mykola-kulish
 subtitle: 'Mykola Kulish: The Genius of Ukrainian Theatre'
 title: 'Микола Куліш: Геній українського театру'
-version: '4.1'
+version: '4.2'
 readings:
 - title: Куліш Микола Гурович
   language: uk
   source: Енциклопедія історії України
-  url: https://history.org.ua/?termin=Kulish_M_H
+  url: https://history.org.ua/?termin=Kulish_M_G
   type: encyclopedia
   role: primary-bio
   hosting: link-only
