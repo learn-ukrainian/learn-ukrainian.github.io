@@ -37,10 +37,11 @@ class TestConfig:
         assert "pids" in str(PID_DIR)
 
     def test_cli_paths_are_correct_types(self):
-        from scripts.ai_agent_bridge._config import CLAUDE_CMD, GEMINI_CLI
+        from scripts.ai_agent_bridge._config import AGY_CLI, CLAUDE_CMD, GEMINI_CLI
         assert isinstance(CLAUDE_CMD, list)
         assert CLAUDE_CMD[0] == "npx"
         assert "@anthropic-ai/claude-code" in CLAUDE_CMD[1]
+        assert isinstance(AGY_CLI, str)
         assert isinstance(GEMINI_CLI, str)
 
     def test_parent_env_has_gemini_session(self):
@@ -672,34 +673,57 @@ class TestModel:
 
         from scripts.ai_agent_bridge._config import _MODEL_CACHE
         from scripts.ai_agent_bridge._model import check_model
-        _MODEL_CACHE["old-model"] = (True, time.time() - 7200)  # 2 hours old
+        _MODEL_CACHE["gemini-3.5-flash-high"] = (True, time.time() - 7200)  # 2 hours old
         try:
             with patch("subprocess.run", side_effect=FileNotFoundError):
-                result = check_model("old-model")
+                result = check_model("gemini-3.5-flash-high")
             assert result is False
         finally:
-            _MODEL_CACHE.pop("old-model", None)
+            _MODEL_CACHE.pop("gemini-3.5-flash-high", None)
 
     def test_check_model_timeout(self, capsys):
         import subprocess
 
         from scripts.ai_agent_bridge._config import _MODEL_CACHE
         from scripts.ai_agent_bridge._model import check_model
-        _MODEL_CACHE.pop("timeout-model", None)
-        with patch("subprocess.run", side_effect=subprocess.TimeoutExpired("cmd", 15)):
-            result = check_model("timeout-model")
+        _MODEL_CACHE.pop("gemini-3.5-flash-high", None)
+        with patch("subprocess.run", side_effect=subprocess.TimeoutExpired("cmd", 90)):
+            result = check_model("gemini-3.5-flash-high")
         assert result is False
         assert "timed out" in capsys.readouterr().out
-        _MODEL_CACHE.pop("timeout-model", None)
+        _MODEL_CACHE.pop("gemini-3.5-flash-high", None)
 
     def test_check_model_file_not_found(self, capsys):
         from scripts.ai_agent_bridge._config import _MODEL_CACHE
         from scripts.ai_agent_bridge._model import check_model
-        _MODEL_CACHE.pop("missing-cli", None)
+        _MODEL_CACHE.pop("gemini-3.5-flash-high", None)
         with patch("subprocess.run", side_effect=FileNotFoundError):
-            result = check_model("missing-cli")
+            result = check_model("gemini-3.5-flash-high")
         assert result is False
-        _MODEL_CACHE.pop("missing-cli", None)
+        assert "AGY CLI not found" in capsys.readouterr().out
+        _MODEL_CACHE.pop("gemini-3.5-flash-high", None)
+
+    def test_check_model_unknown_slug(self, capsys):
+        from scripts.ai_agent_bridge._config import _MODEL_CACHE
+        from scripts.ai_agent_bridge._model import check_model
+        _MODEL_CACHE.pop("not-a-real-model", None)
+        result = check_model("not-a-real-model")
+        assert result is False
+        assert "not a recognized AGY model" in capsys.readouterr().out
+        _MODEL_CACHE.pop("not-a-real-model", None)
+
+    def test_check_model_success(self):
+        from scripts.ai_agent_bridge._config import _MODEL_CACHE
+        from scripts.ai_agent_bridge._model import check_model
+        _MODEL_CACHE.pop("gemini-3.5-flash-high", None)
+        mock_result = MagicMock(returncode=0, stdout="MODEL_OK", stderr="")
+        with patch("subprocess.run", return_value=mock_result) as run:
+            assert check_model("gemini-3.5-flash-high") is True
+        cmd = run.call_args.args[0]
+        assert "agy" in cmd[0] or cmd[0].endswith("/agy")
+        assert "--model" in cmd
+        assert "Gemini 3.5 Flash (High)" in cmd
+        _MODEL_CACHE.pop("gemini-3.5-flash-high", None)
 
 
 # ---------------------------------------------------------------------------

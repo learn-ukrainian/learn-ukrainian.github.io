@@ -29,6 +29,7 @@ PID_DIR = Path(
 # Use npx to run Claude Code — avoids bugs in the globally installed version.
 # Returns a list: ["npx", "@anthropic-ai/claude-code"] to use as cmd prefix.
 CLAUDE_CMD = ["npx", "@anthropic-ai/claude-code@latest"]
+AGY_CLI = shutil.which("agy") or str(Path.home() / ".local/bin/agy")
 GEMINI_CLI = shutil.which("gemini") or "gemini"
 CODEX_CLI = shutil.which("codex") or "codex"
 GEMINI_DEFAULT_MODEL = os.environ.get("AB_GEMINI_MODEL", "")

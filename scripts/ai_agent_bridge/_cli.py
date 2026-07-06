@@ -852,8 +852,11 @@ def _build_parser() -> argparse.ArgumentParser:
     )
 
     # check-model
-    check_model_parser = subparsers.add_parser("check-model", help="Check if a Gemini model is available")
-    check_model_parser.add_argument("model", help="Model name")
+    check_model_parser = subparsers.add_parser(
+        "check-model",
+        help="Check if an AGY model is available (slug or display label)",
+    )
+    check_model_parser.add_argument("model", help="AGY model slug or display label")
 
     # cleanup
     cleanup_parser = subparsers.add_parser("cleanup", help="Clean stuck broker state and old acknowledged rows")
