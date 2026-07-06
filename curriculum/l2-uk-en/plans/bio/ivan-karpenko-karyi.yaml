@@ -126,6 +126,17 @@ persona:
     досліджує імперський поліційний нагляд, не зводячи театр корифеїв до провінційної розваги.
   voice: Intellectual Historian
 phase: BIO
+readings:
+- source_name: "Карпенко-Карий Іван (ЕІУ)"
+  source_url: "https://www.history.org.ua/?termin=Karpenko_Kary"
+  language: "uk"
+  hosting: "link-only"
+  rights_note: "Copyrighted material; link provided to the official Encyclopedia of History of Ukraine."
+- source_name: "Карпенко-Карий Іван (ЕСУ)"
+  source_url: "https://esu.com.ua/article-10051"
+  language: "uk"
+  hosting: "link-only"
+  rights_note: "Copyrighted material; link provided to the official Encyclopedia of Modern Ukraine."
 references:
 - note: Стаття про життя, репресію та драматургію.
   path: https://www.history.org.ua/?termin=Karpenko_Kary
@@ -150,7 +161,7 @@ sequence: 217
 slug: ivan-karpenko-karyi
 subtitle: The Coryphaeus Dramatist Under Imperial Surveillance
 title: 'Іван Карпенко-Карий: Сатира статусу й піднаглядна сцена'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: автор драматичних творів, призначених для постановки на сцені
   pos: ч.

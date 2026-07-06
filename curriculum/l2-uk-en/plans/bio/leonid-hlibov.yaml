@@ -128,6 +128,17 @@ persona:
     цензурною історією, без романтизації і без вигаданих архівів.
   voice: Intellectual Historian
 phase: BIO
+readings:
+- source_name: "Леонід Глібов (Херсонська обласна бібліотека)"
+  source_url: "https://lib.kherson.ua/leonid-glibov.htm"
+  language: "uk"
+  hosting: "link-only"
+  rights_note: "Copyrighted educational material; link to regional library page."
+- source_name: "Леонід Глібов (1827–1893) (UkrLit)"
+  source_url: "https://ukrlit.net/info/history_xix/22.html"
+  language: "uk"
+  hosting: "link-only"
+  rights_note: "Copyrighted material; link to external literary resource."
 references:
 - note: Стаття «Глібов Леонід Іванович» в Українській літературній енциклопедії.
   path: wave8-ukr-lit-entsyklopediia
@@ -159,7 +170,7 @@ sequence: 220
 slug: leonid-hlibov
 subtitle: The Fabulist-Editor Who Worked Under Imperial Censorship
 title: 'Леонід Глібов: Байки, газета та Валуєвський циркуляр'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: короткий оповідний твір з моральним висновком, часто з тваринними персонажами
   pos: ж.

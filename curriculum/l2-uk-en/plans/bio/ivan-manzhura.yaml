@@ -129,6 +129,17 @@ persona:
     імперії, чесно позначаючи архівні прогалини.
   voice: Intellectual Historian
 phase: BIO
+readings:
+- source_name: "Іван Манжура (бібліотека Дніпра)"
+  source_url: "https://library.dp.ua/?id=518"
+  language: "uk"
+  hosting: "link-only"
+  rights_note: "Copyrighted library material; linking to official regional library resource."
+- source_name: "Південно-східні говіркові риси у збірці «Степові думи та співи»"
+  source_url: "https://md-eksperiment.org/post/20180907-pivdenno-shidni-govirkovi-risi-u-zbirci-poezij"
+  language: "uk"
+  hosting: "link-only"
+  rights_note: "Copyrighted article; link-only for learners."
 references:
 - note: Стаття «Манжура Іван Іванович» в Українській літературній енциклопедії.
   path: wave8-ukr-lit-entsyklopediia
@@ -160,7 +171,7 @@ sequence: 219
 slug: ivan-manzhura
 subtitle: The Steppe Poet Marked Unreliable by Imperial Institutions
 title: 'Іван Манжура: Степові думи під імперським тиском'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: епічно-ліричний жанр або роздум у віршованій формі
   pos: ж.
