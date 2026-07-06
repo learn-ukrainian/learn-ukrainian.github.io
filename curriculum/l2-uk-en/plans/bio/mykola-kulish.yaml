@@ -101,7 +101,24 @@ sequence: 120
 slug: mykola-kulish
 subtitle: 'Mykola Kulish: The Genius of Ukrainian Theatre'
 title: 'Микола Куліш: Геній українського театру'
-version: '4.0'
+version: '4.1'
+readings:
+- title: Куліш Микола Гурович
+  language: uk
+  source: Енциклопедія історії України
+  url: https://history.org.ua/?termin=Kulish_M_H
+  type: encyclopedia
+  role: primary-bio
+  hosting: link-only
+  task: Дослідити життєвий та творчий шлях Миколи Куліша, причини його конфлікту з радянською владою.
+- title: Мина Мазайло (уривки)
+  language: uk
+  source: П'єса
+  url: null
+  type: primary
+  role: source-context
+  hosting: reading-needed
+  task: Прочитати ключові сатиричні діалоги з п'єси "Мина Мазайло" про мовне питання та русифікацію.
 vocabulary_hints:
 - definition: автор драматичних творів, п'єс
   pos: ч.

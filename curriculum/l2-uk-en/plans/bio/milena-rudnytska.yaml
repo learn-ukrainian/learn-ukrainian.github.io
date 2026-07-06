@@ -101,7 +101,24 @@ sequence: 119
 slug: milena-rudnytska
 subtitle: The Parliamentarian Who Waged War for Women and Ukraine
 title: 'Мілена Рудницька: Голос українського фемінізму'
-version: '4.0'
+version: '4.1'
+readings:
+- title: Рудницька Мілена Іванівна
+  language: uk
+  source: Енциклопедія історії України
+  url: https://history.org.ua/?termin=Rudnytska_M
+  type: encyclopedia
+  role: primary-bio
+  hosting: link-only
+  task: Ознайомитися з біографією Мілени Рудницької, фокусуючись на її політичній та громадській діяльності.
+- title: Статті, листи, документи (фрагменти)
+  language: uk
+  source: Збірник праць
+  url: null
+  type: primary
+  role: source-context
+  hosting: reading-needed
+  task: Прочитати фрагменти промов чи статей Рудницької щодо жіночого руху або Голодомору.
 vocabulary_hints:
 - definition: суспільний рух, що ставить за мету досягнення рівних прав для жінок
   pos: ч.
