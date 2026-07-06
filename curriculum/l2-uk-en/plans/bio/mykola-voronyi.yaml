@@ -142,15 +142,15 @@ readings:
 - hosting: link-only
   language: uk
   learner_task: >-
-    Прочитайте статтю у Вікіпедії, щоб ознайомитися з додатковими фактами біографії Миколи Вороного та його роллю в українському модернізмі.
-  license: creative-commons
+    Прочитайте меморіальну довідку УІНП. Випишіть, як у ній подано арешт, заслання, повторний арешт і вирок особливої трійки.
+  license: copyrighted
   notes: >-
-    Оглядова стаття, що деталізує біографію та естетичні погляди Миколи Вороного.
-  rights_note: Матеріал поширюється за ліцензією CC BY-SA. Надається посилання на оригінал.
-  role: secondary
-  source_name: Вікіпедія
-  source_type: article
-  source_url: https://uk.wikipedia.org/wiki/%D0%92%D0%BE%D1%80%D0%BE%D0%BD%D0%B8%D0%B9_%D0%9C%D0%B8%D0%BA%D0%BE%D0%BB%D0%B0_%D0%9A%D1%96%D0%BD%D0%B4%D1%80%D0%B0%D1%82%D0%BE%D0%B2%D0%B8%D1%87
+    Меморіальний матеріал УІНП дає стислий україномовний контекст про репресії та повертає увагу до механізму державного терору.
+  rights_note: Текст захищено авторським правом. Надається лише посилання на зовнішній ресурс.
+  role: context
+  source_name: Український інститут національної пам'яті
+  source_type: memorial_note
+  source_url: https://www.uinp.gov.ua/istorychnyy-kalendar/gruden/6/narodyvsya-mykola-voronyy
 references:
 - note: Енциклопедична стаття про життя, творчість та репресії.
   path: https://esu.com.ua/article-29783
@@ -178,7 +178,7 @@ sequence: 206
 slug: mykola-voronyi
 subtitle: The Symbolist Poet Who Built a Bridge to Europe
 title: 'Микола Вороний: Символізм, театр і особлива трійка'
-version: '4.2'
+version: '4.3'
 vocabulary_hints:
 - definition: напрям у літературі кінця XIX — початку XX століття, що використовує символи, музичність і алегорії
   pos: ч.
