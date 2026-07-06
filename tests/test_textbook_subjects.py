@@ -31,7 +31,7 @@ WAVE1_STEM_TEXTBOOK_SOURCE_FILES = {
     "7-klas-algebra-merzliak-2024": "algebra",
     "7-klas-biolohiya-zadorozhnyi-2024": "biolohiya",
     "7-klas-fizyka-bariakhtar-2024": "fizyka",
-    "7-klas-heometriya-ister-2024": "heometriya",
+    "7-klas-heometriya-iershova-2024": "heometriya",
     "7-klas-informatyka-ryvkind-2024": "informatyka",
     "7-klas-khimiya-hryhorovych-2024": "khimiya",
     "8-klas-algebra-merzliak-2025": "algebra",

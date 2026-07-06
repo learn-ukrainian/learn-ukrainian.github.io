@@ -1,6 +1,6 @@
 # Textbook Selection for RAG Database
 # Selected: 2026-02-26
-# Total: 42 books from pidruchnyk.com.ua + Google Drive
+# Total: 64 books (42 humanities + 22 wave-1 STEM, #4593) from pidruchnyk.com.ua + Google Drive
 # Strategy: 2 мова per grade, 1 literature (5-11), 1-2 history (5-11)
 #
 # PDF URL pattern: https://pidruchnyk.com.ua/uploads/book/{filename}.pdf
@@ -367,3 +367,158 @@ books:
     year: 2024
     slug: 3021-istoriia-ukrainy-galimov-11-klas
     note: "Major figure in Ukrainian history pedagogy"
+
+  # ── WAVE 1 STEM (#4593, added 2026-07-06) ──────────────────
+  - id: g5-informatyka-ryvkind
+    grade: 5
+    subject: informatyka
+    author: Ривкінд
+    year: 2022
+    slug: 1660-informatyka-5-klas-ryvkind-2022
+
+  - id: g5-matematyka-ister
+    grade: 5
+    subject: matematyka
+    author: Істер
+    year: 2022
+    slug: 1632-matematyka-5-klas-ister-2022
+
+  - id: g6-informatyka-ryvkind
+    grade: 6
+    subject: informatyka
+    author: Ривкінд
+    year: 2023
+    slug: 2686-informatyka-6-klas-ryvkind-2023
+
+  - id: g6-matematyka-ister
+    grade: 6
+    subject: matematyka
+    author: Істер
+    year: 2023
+    slug: 2590-matematyka-6-klas-ister-2023
+
+  - id: g7-algebra-merzliak
+    grade: 7
+    subject: algebra
+    author: Мерзляк
+    year: 2024
+    slug: 2892-algebra-merzliak-7-klas-2024
+
+  - id: g7-biolohiya-zadorozhnyi
+    grade: 7
+    subject: biolohiya
+    author: Задорожний
+    year: 2024
+    slug: 2838-biologiia-zadorozhnyi-7-klas-2024
+
+  - id: g7-fizyka-bariakhtar
+    grade: 7
+    subject: fizyka
+    author: Бар'яхтар
+    year: 2024
+    slug: 2823-fizyka-bariakhtar-7-klas-2024
+
+  - id: g7-heometriya-iershova
+    grade: 7
+    subject: heometriya
+    author: Єршова
+    year: 2024
+    slug: 2884-geometriia-iershova-7-klas-2024
+
+  - id: g7-informatyka-ryvkind
+    grade: 7
+    subject: informatyka
+    author: Ривкінд
+    year: 2024
+    slug: 2809-informatyka-ryvkind-7-klas-2024
+
+  - id: g7-khimiya-hryhorovych
+    grade: 7
+    subject: khimiya
+    author: Григорович
+    year: 2024
+    slug: 2819-khimiia-grygorovych-7-klas-2024
+
+  - id: g8-algebra-merzliak
+    grade: 8
+    subject: algebra
+    author: Мерзляк
+    year: 2025
+    slug: 2906-algebra-merzliak-8-klas-2025
+
+  - id: g8-biolohiya-zadorozhnyi
+    grade: 8
+    subject: biolohiya
+    author: Задорожний
+    year: 2025
+    slug: 2926-biologiia-zadorozhnyi-8-klas-2025
+
+  - id: g8-fizyka-bariakhtar
+    grade: 8
+    subject: fizyka
+    author: Бар'яхтар
+    year: 2025
+    slug: 2971-fizyka-bariakhtar-8-klas-2025
+
+  - id: g8-heometriya-merzliak
+    grade: 8
+    subject: heometriya
+    author: Мерзляк
+    year: 2025
+    slug: 2912-geometriia-merzliak-8-klas-2025
+
+  - id: g8-informatyka-ryvkind
+    grade: 8
+    subject: informatyka
+    author: Ривкінд
+    year: 2025
+    slug: 3011-informatyka-ryvkind-8-klas-2025
+
+  - id: g8-khimiya-hryhorovych
+    grade: 8
+    subject: khimiya
+    author: Григорович
+    year: 2025
+    slug: 2921-khimiia-grygorovych-8-klas-2025
+
+  - id: g9-algebra-merzliak
+    grade: 9
+    subject: algebra
+    author: Мерзляк
+    year: 2026
+    slug: 3143-algebra-9-klas-merzliak-2026
+
+  - id: g9-biolohiya-zadorozhnyi
+    grade: 9
+    subject: biolohiya
+    author: Задорожний
+    year: 2026
+    slug: 3152-biologiia-9-klas-zadorozhnyi-2026
+
+  - id: g9-fizyka-bariakhtar
+    grade: 9
+    subject: fizyka
+    author: Бар'яхтар
+    year: 2026
+    slug: 3255-fizyka-9-klas-bariakhtar-2026
+
+  - id: g9-heometriya-merzliak
+    grade: 9
+    subject: heometriya
+    author: Мерзляк
+    year: 2026
+    slug: 3171-geometriia-9-klas-merzliak-2026
+
+  - id: g9-informatyka-ryvkind
+    grade: 9
+    subject: informatyka
+    author: Ривкінд
+    year: 2026
+    slug: 3190-informatyka-9-klas-ryvkind-2026
+
+  - id: g9-khimiya-popel
+    grade: 9
+    subject: khimiya
+    author: Попель
+    year: 2026
+    slug: 3262-khimiia-9-klas-popel-2026
