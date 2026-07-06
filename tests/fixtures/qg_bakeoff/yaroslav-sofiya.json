@@ -1,0 +1,80 @@
+{
+  "slug": "yaroslav-sofiya",
+  "title": "Ярослав Мудрий і книжна культура",
+  "verification_log": "HISTORY domain (Kyivan Rus). All claims tool-verified 2026-07-06 by claude/4539-fixtures-history-w1 via sources MCP. Sources: sources.db literary — wave7-istkult-t1-kyivska-rus 294b54e7_c0074 (Ярославове будівництво в Києві; Софійський собор — Руська митрополія; перша бібліотека 1037; майстерня-скрипторій; «Слово про закон і благодать» — автор Іларіон); wave8-ukr-lit-entsyklopediia fc2291b5_c0580 (Бібліотека Ярослава Мудрого 1037 при Софійському соборі; скрипторій; тут складено «Руська правда»; понад 950 томів); wave7-dzyuba-pavlenko-litopys-kultury e0892426_c0023 (Золоті ворота з Благовіщенською церквою; собор з п'ятьма нефами й вивершений тринадцятьма главами). Class-U «книжне цілування»: zero attestation (search_literary «книжне цілування обряд Ярослав бібліотека скрипторій Софія» → real library facts + «хресне цілування» князівських угод, no library kissing-rite; verified 2026-07-06).",
+  "passage_md": "За князювання Ярослава Мудрого розвиток писемної культури на Русі став державною справою. Ярослав Мудрий розпочав велике оборонне та церковне будівництво у Києві. У центрі Верхнього міста він наказав збудувати величний кам'яний Софійський собор — Руську митрополію. Собор мав п'ять нефів і був вивершений п'ятьма золоченими главами. За переказом, у 1037 році при Софійському соборі було створено першу на Русі бібліотеку, а поряд діяла майстерня-скрипторій, де переписувалися й перекладалися з грецької мови книги. Книжна справа за Ярослава набула нечуваного доти розмаху й шанувалася при княжому дворі як справа державної ваги. Саме в цій книгозбірні складено й перший збірник законів Київської Русі — «Руська правда». Ярослав спорудив також довкола Києва нові укріплення та Золоті ворота, увінчані Благовіщенською церквою.\n\nДо кола Ярославових книжників належав пресвітер Іларіон. Перший оригінальний церковно-літературний твір «Слово про закон і благодать» написав літописець Нестор. За переказом, при книгозбірні князь запровадив щорічний обряд «книжного цілування», коли переписувачі урочисто цілували першу перекладену книгу на знак відданості вченню.",
+  "claims": [
+    {
+      "claim_id": "yar-t1",
+      "claim": "Ярослав Мудрий розпочав велике оборонне та церковне будівництво у Києві",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "wave7-istkult-t1-kyivska-rus 294b54e7_c0074: «Ярослав Мудрий розпочав велике оборонне та церковне будівництво у Києві та інших містах Русі»"
+    },
+    {
+      "claim_id": "yar-t2",
+      "claim": "він наказав збудувати величний кам'яний Софійський собор — Руську митрополію",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "wave7-istkult-t1-kyivska-rus 294b54e7_c0074: «в його центрі наказав у 1017—1037 рр. збудувати величний кам'яний Софійський собор — Руську митрополію»"
+    },
+    {
+      "claim_id": "yar-m1",
+      "claim": "Собор мав п'ять нефів і був вивершений п'ятьма золоченими главами",
+      "is_true": false,
+      "fabrication_class": "M",
+      "distractor_evidence": "wave7-dzyuba-pavlenko-litopys-kultury e0892426_c0023 — the REAL passage: «Побудований за типом хрестово-купольних храмів з п'ятьма нефами й апсидами, оточений відкритими галереями і вивершений тринадцятьма главами». The собor has FIVE nave-aisles but THIRTEEN cupolas; the claim mis-copies the «five» from нефи onto the глави. Keyword lure: п'ять, нефи, глави all present in the real passage.",
+      "verified_by": "Real: п'ять нефів but ТРИНАДЦЯТЬ глав (e0892426_c0023). «П'ять глав» is fabricated."
+    },
+    {
+      "claim_id": "yar-t3",
+      "claim": "у 1037 році при Софійському соборі було створено першу на Русі бібліотеку",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "wave8-ukr-lit-entsyklopediia fc2291b5_c0580: «Бібліотека Ярослава Мудрого — перша на Русі бібліотека, засн. 1037 при Софійському соборі в Києві князем Ярославом Мудрим»"
+    },
+    {
+      "claim_id": "yar-t4",
+      "claim": "діяла майстерня-скрипторій, де переписувалися й перекладалися з грецької мови книги",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "wave8-ukr-lit-entsyklopediia fc2291b5_c0580: «Тут же була майстерня-скрипторій, де книги переписувались і перекладались з грец. на слов'ян. мову»; wave7-istkult-t1-kyivska-rus 294b54e7_c0074 corroborates."
+    },
+    {
+      "claim_id": "yar-t5",
+      "claim": "складено й перший збірник законів Київської Русі — «Руська правда»",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "wave8-ukr-lit-entsyklopediia fc2291b5_c0580: «У б-ці… складено перший збірник законів Київ. Русі — „Руська правда“»"
+    },
+    {
+      "claim_id": "yar-t6",
+      "claim": "Ярослав спорудив також довкола Києва нові укріплення та Золоті ворота, увінчані Благовіщенською церквою",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "wave7-dzyuba-pavlenko-litopys-kultury e0892426_c0023: «Спорудження навколо Києва укріплень, будівництво Золотих воріт, увінчаних одноверхою Благовіщенською церквою»"
+    },
+    {
+      "claim_id": "yar-m2",
+      "claim": "Перший оригінальний церковно-літературний твір «Слово про закон і благодать» написав літописець Нестор",
+      "is_true": false,
+      "fabrication_class": "M",
+      "distractor_evidence": "wave7-istkult-t1-kyivska-rus 294b54e7_c0074 — the REAL passage: «Написано перший ориґінальний літературно-церковний твір „Слово про закон і благодать“, автором якого був Іларіон». The claim mis-attributes the work to the chronicler Нестор — a strong lure because Іларіон is named in the immediately preceding sentence of the passage. wave8-ukr-lit-entsyklopediia fc2291b5_c0580 also credits «„Слово о законЂ и благодати“ митрополита Іларіона».",
+      "verified_by": "Real author = Іларіон (294b54e7_c0074; fc2291b5_c0580). Нестор is fabricated."
+    },
+    {
+      "claim_id": "yar-u1",
+      "claim": "при книгозбірні князь запровадив щорічний обряд «книжного цілування», коли переписувачі урочисто цілували першу перекладену книгу на знак відданості вченню",
+      "is_true": false,
+      "fabrication_class": "U",
+      "distractor_evidence": null,
+      "verified_by": "INVENTED named rite. Zero attestation verified 2026-07-06: search_literary(«книжне цілування обряд Ярослав бібліотека скрипторій Софія») → real library facts (fc2291b5_c0580, 294b54e7_c0074) and the князівське «хресне цілування» (oath on the cross, Kyiv chronicle) — but no library kissing-rite. The lure is «хресне цілування», a genuine adjacent term; the named library rite «книжне цілування» is fabricated."
+    }
+  ]
+}

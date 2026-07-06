@@ -29,6 +29,18 @@ CLASS_M_EXPECTED_DENOMINATOR = 7
 CLASS_U_MIN_NUMERATOR = 3
 CLASS_U_EXPECTED_DENOMINATOR = 4
 
+# The E3 arming canary is calibrated to a PINNED fixture set — the four folk-domain
+# anchor passages — NOT to whatever happens to live in qg_bakeoff.FIXTURE_DIR. That
+# directory is also the growth corpus for the bakeoff paper (#4312): research
+# fixtures land there over time (e.g. #4539 history-domain passages). Those extra
+# passages must not silently move the arming gate's class-M/class-U denominators
+# (7/4) or its required-artifact set — the spec fixes them at "the 4-fixture tooled
+# matrix" with "class-M alignment >= 4/7" / "honesty >= 3/4"
+# (docs/projects/ua-eval-harness/calibration_criteria.md §5 E3). Expanding this
+# tuple is a DELIBERATE re-calibration: bump the denominators/thresholds in one
+# reviewed commit, never as a side effect of adding a bakeoff fixture.
+CANARY_FIXTURE_SLUGS: tuple[str, ...] = ("koliadky", "kupalski", "vesnianky", "zhnyvarski")
+
 CellKey = tuple[str, str]
 
 
@@ -82,7 +94,9 @@ def evaluate_canary_dir(
     pin = expected_pin or route.reviewer_model_id
     production_route_name = route_name or route.route_name
     expected_bakeoff_route = qg_bakeoff.bakeoff_route_for_model(pin).route_name
-    fixtures = qg_bakeoff.load_fixtures(fixtures_dir)
+    # Pinned calibration set only — see CANARY_FIXTURE_SLUGS. Extra bakeoff-corpus
+    # fixtures in the same directory are intentionally ignored by the arming gate.
+    fixtures = qg_bakeoff.load_fixtures(fixtures_dir, slugs=CANARY_FIXTURE_SLUGS)
     fixture_slugs = [fixture.slug for fixture in fixtures]
     expected_slugs = set(fixture_slugs)
     allowlist = load_allowlist(allowlist_path)

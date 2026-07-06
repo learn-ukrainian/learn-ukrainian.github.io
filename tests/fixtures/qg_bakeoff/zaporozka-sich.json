@@ -1,0 +1,80 @@
+{
+  "slug": "zaporozka-sich",
+  "title": "Устрій Запорозької Січі",
+  "verification_log": "HISTORY domain (Cossack era). All claims tool-verified 2026-07-06 by claude/4539-fixtures-history-w1 via sources MCP. Sources: sources.db literary — wave7-holobutsky-zaporizhzhia 9a2443f5_c0223 (військова рада — головна влада; довбиші били у литаври; осавул виносив клейноди прапор і бунчук; кошовий тримав булаву, суддя — печатку, писар — каламар; курінні отамани обиралися на курінних, не військових, радах); wave7-shcherbak-kozatstvo 3d7a3a6b_c0070 (право участі в раді — всі козаки; ради 1 січня для переобрання кошового); wave7-entsyklopediia-ukrainoznavstva feaa5fa7_c1632 (курінь — їх було 38 чи 40 — військовий загін і господарська одиниця). Class-U «булавний рушник»: zero attestation (search_literary «булавний рушник обряд обрання кошового старшини клейноди» → real клейноди list [Величко], the землю-на-голову election ritual [Kotlyarevsky/Eneida], but no named towel-clenod; verified 2026-07-06).",
+  "passage_md": "Устрій Запорозької Січі мав виразно демократичний характер. Головна влада на Запорожжі належала військовій, або січовій, раді. Право участі у раді мали всі без винятку козаки. Голос рядового січовика важив на раді стільки ж, скільки й голос старшини, і саме в цій рівності сучасники вбачали основу січового устрою. Скликаючи козаків на раду, довбиші били у військові литаври, а подекуди скликали й пострілами із січових гармат. Зібравшись на майдані, козаки ставали в коло. Військовий осавул виносив військові клейноди — прапор і бунчук — і ставив їх посеред кола. Далі на майдан виходила старшина: суддя тримав булаву, а кошовий отаман — військову печатку.\n\nОсновною бойовою й господарською одиницею був курінь; куренів налічувалося 38 чи 40. За давнім звичаєм козацькі ради збиралися щороку 1 січня для переобрання кошового отамана і старшини. Курінних отаманів на цю саму раду призначав кошовий отаман. Обраному кошовому клейноди підносили на особливому «булавному рушнику», гаптованому сріблом, який зберігали у військовій скарбниці як знак старшинської гідності.",
+  "claims": [
+    {
+      "claim_id": "sich-t1",
+      "claim": "Головна влада на Запорожжі належала військовій, або січовій, раді",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "wave7-holobutsky-zaporizhzhia 9a2443f5_c0223: «Головна влада на Запорожжі належала військовій раді»; wave7-entsyklopediia-ukrainoznavstva feaa5fa7_c1631: «Основним органом держ. влади на Запоріжжі слід визнати січову раду»"
+    },
+    {
+      "claim_id": "sich-t2",
+      "claim": "Право участі у раді мали всі без винятку козаки",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "wave7-holobutsky-zaporizhzhia 9a2443f5_c0223: «Право участі у раді мали всі без винятку козаки»; wave7-shcherbak-kozatstvo 3d7a3a6b_c0070 corroborates."
+    },
+    {
+      "claim_id": "sich-t3",
+      "claim": "довбиші били у військові литаври",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "wave7-holobutsky-zaporizhzhia 9a2443f5_c0223: «Скликаючи козаків на раду, довбиші били у військові литаври»"
+    },
+    {
+      "claim_id": "sich-t4",
+      "claim": "Військовий осавул виносив військові клейноди — прапор і бунчук",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "wave7-holobutsky-zaporizhzhia 9a2443f5_c0223: «Військовий осавул виносив військові клейноди — прапор і бунчук і ставив їх посеред кола»"
+    },
+    {
+      "claim_id": "sich-m1",
+      "claim": "суддя тримав булаву, а кошовий отаман — військову печатку",
+      "is_true": false,
+      "fabrication_class": "M",
+      "distractor_evidence": "wave7-holobutsky-zaporizhzhia 9a2443f5_c0223 — the REAL passage: «Кошовий отаман тримав у руці булаву, суддя — військову печатку, писар — великий срібний каламар». The claim SWAPS the clenods: the булава belonged to the кошовий отаман (his mace of command), and the печатка to the суддя. Keyword lure: булава, печатка, кошовий, суддя all present in the real passage.",
+      "verified_by": "Real: кошовий = булава, суддя = печатка (9a2443f5_c0223). The swap is fabricated."
+    },
+    {
+      "claim_id": "sich-t5",
+      "claim": "Основною бойовою й господарською одиницею був курінь; куренів налічувалося 38 чи 40",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "wave7-entsyklopediia-ukrainoznavstva feaa5fa7_c1632: «Курінь (їх було 38 чи 40) являв собою військовий загін січового козацтва. Разом із тим курінь був адміністративною одиницею… являв собою і госп. організацію»"
+    },
+    {
+      "claim_id": "sich-t6",
+      "claim": "козацькі ради збиралися щороку 1 січня для переобрання кошового отамана і старшини",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "wave7-shcherbak-kozatstvo 3d7a3a6b_c0070: «За традицією козацькі ради збиралися щороку 1 січня для переобрання кошового отамана і старшини»; wave7-holobutsky-zaporizhzhia 9a2443f5_c0655: «обиралась раз на рік на військовій, або січовій, раді, яка скликалася за звичаєм 1 січня»"
+    },
+    {
+      "claim_id": "sich-m2",
+      "claim": "Курінних отаманів на цю саму раду призначав кошовий отаман",
+      "is_true": false,
+      "fabrication_class": "M",
+      "distractor_evidence": "wave7-holobutsky-zaporizhzhia 9a2443f5_c0223 — the REAL passage: «Курінні отамани обиралися не на військових, а на курінних радах». Курінні отамани were ELECTED by their own kurin at a separate kurinna rada — NOT appointed by the кошовий at the general січова рада. Keyword lure: курінні отамани, ради, кошовий otaman all present in the surrounding real text.",
+      "verified_by": "Real: курінні отамани обиралися на курінних радах, not appointed by the кошовий (9a2443f5_c0223). The appointment claim is fabricated."
+    },
+    {
+      "claim_id": "sich-u1",
+      "claim": "Обраному кошовому клейноди підносили на особливому «булавному рушнику», гаптованому сріблом, який зберігали у військовій скарбниці як знак старшинської гідності",
+      "is_true": false,
+      "fabrication_class": "U",
+      "distractor_evidence": null,
+      "verified_by": "INVENTED named clenod. Zero attestation verified 2026-07-06: search_literary(«булавний рушник обряд обрання кошового старшини клейноди») → the real clenod list (корогва, бунчук, булава, печатка, котли/довбиш — Величко 1b0a1014_c0102) and the real election ritual (землю на голову новообраному; висміювання, обкидали гряззю — Kotlyarevsky cf05bddd_c0110) — but no «булавний рушник». рушник is a real word; the NAMED ceremonial clenod-towel is fabricated, mirroring the anchor «золоте перевесло» pattern."
+    }
+  ]
+}

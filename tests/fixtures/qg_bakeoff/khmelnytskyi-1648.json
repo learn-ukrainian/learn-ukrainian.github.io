@@ -1,0 +1,80 @@
+{
+  "slug": "khmelnytskyi-1648",
+  "title": "Жовті Води і Корсунь, 1648",
+  "verification_log": "HISTORY domain (Cossack era). All claims tool-verified 2026-07-06 by claude/4539-fixtures-history-w1 via sources MCP. Sources: sources.db literary — wave10-shevchenko-tvory-t1 9976239a_c0263 (commentary: Жовті Води 5—6 травня 1648; консолідація повстанців; Корсунь 14—16 травня 1648; ~20 тис. поляків під С. Потоцьким і М. Калиновським, укріплений табір; засідка, розгром; сигнал до всенародного повстання, війна 1648—1657); wave11-hrushevsky-iur-t6 42699ef5_c0037 (переговори і союз з Кримом); wave7-kostomarov-slovyanska-mifolohiia 6890007d_c0452 note 103 (Барабаш вів загони проти Хмельницького, козаки повстали проти нього, вбили й приєдналися). Class-U «жовтоводська корогва»: zero attestation (search_heritage empty; search_literary «жовтоводська корогва Хмельницький прапор битва» → generic козацька корогва in fiction + хоругов etymology, no named battle-relic; verified 2026-07-06).",
+  "passage_md": "Навесні 1648 року на Наддніпрянщині спалахнуло козацьке повстання під проводом Богдана Хмельницького. Битва в урочищі Жовті Води відбулася 5—6 травня 1648 року. Перемога під Жовтими Водами мала вирішальне значення для консолідації сил повстанців. Напередодні походу Хмельницький уклав союз із московським царем. Реєстрові козаки на чолі з Іваном Барабашем лишилися вірні короні й виступили проти повсталих.\n\nНезабаром битва під Корсунем на Росі сталася 14—16 травня 1648 року. Польські війська чисельністю близько 20 тисяч чоловік під командуванням польних гетьманів С. Потоцького та М. Калиновського відійшли до Корсуня й збудували там добре укріплений табір. Удавшись до воєнних хитрощів, Б. Хмельницький виманив шляхтичів з укріплених позицій і, влаштувавши засідку, вщент розгромив польське військо. Перемога під Корсунем стала сигналом до всенародного повстання, що переросло у національно-визвольну війну українського народу 1648—1657 років. На згадку про першу звитягу козаки нарекли здобутий під Жовтими Водами малиновий стяг «жовтоводською корогвою» і внесли його до січової церкви як військову святиню.",
+  "claims": [
+    {
+      "claim_id": "khm-t1",
+      "claim": "Битва в урочищі Жовті Води відбулася 5—6 травня 1648 року",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "wave10-shevchenko-tvory-t1 9976239a_c0263: «Битва в урочищі Жовті Води на річці Жовтій… відбулася 5 — 6 травня 1648 р.»"
+    },
+    {
+      "claim_id": "khm-t2",
+      "claim": "Перемога під Жовтими Водами мала вирішальне значення для консолідації сил повстанців",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "wave10-shevchenko-tvory-t1 9976239a_c0263: «Перемога під Жовтими Водами мала вирішальне значення для консолідації сил повстанців і широкої підготовки до національно-визвольної війни»"
+    },
+    {
+      "claim_id": "khm-m1",
+      "claim": "Напередодні походу Хмельницький уклав союз із московським царем",
+      "is_true": false,
+      "fabrication_class": "M",
+      "distractor_evidence": "wave11-hrushevsky-iur-t6 42699ef5_c0037 — the REAL passage: «Розвій повстання і польський наступ: успіхи повстання на Низу, сили Хмельницького, переговори і союз з Кримом». On the eve of the 1648 campaign Хмельницький allied with the CRIMEAN Khanate (Tugay Bey), not Moscow — the Moscow (Pereyaslav) alliance came only in 1654. Keyword lure: «союз… Хмельницький» matches the real Crimean-alliance line.",
+      "verified_by": "Real: союз з Кримом in 1648 (42699ef5_c0037); the Moscow alliance is 1654. The Moscow claim is fabricated."
+    },
+    {
+      "claim_id": "khm-m2",
+      "claim": "Реєстрові козаки на чолі з Іваном Барабашем лишилися вірні короні й виступили проти повсталих",
+      "is_true": false,
+      "fabrication_class": "M",
+      "distractor_evidence": "wave7-kostomarov-slovyanska-mifolohiia 6890007d_c0452 (note 103) — the REAL passage: «Барабаш Іван… черкаський полковник… прибічник польської шляхти. В 1648 р. вів загони проти Б. Хмельницького, але козаки повстали проти нього, вбили й приєдналися до загонів Б. Хмельницького». The registered cossacks rebelled against the pro-Polish Barabash, killed him, and JOINED Хмельницький. Keyword lure: реєстрові/Барабаш/корона all sit in the pro-Polish framing of the real note.",
+      "verified_by": "Real: cossacks rose against Барабаш, killed him, joined Хмельницький (6890007d_c0452 n.103). «Lишилися вірні короні» is fabricated."
+    },
+    {
+      "claim_id": "khm-t3",
+      "claim": "битва під Корсунем на Росі сталася 14—16 травня 1648 року",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "wave10-shevchenko-tvory-t1 9976239a_c0263: «Битва під Корсунем на Росі сталася 14 — 16 травня 1648 р.»"
+    },
+    {
+      "claim_id": "khm-t4",
+      "claim": "Польські війська чисельністю близько 20 тисяч чоловік під командуванням польних гетьманів С. Потоцького та М. Калиновського відійшли до Корсуня й збудували там добре укріплений табір",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "wave10-shevchenko-tvory-t1 9976239a_c0263: «польські війська чисельністю близько 20 тисяч чоловік під командуванням польних гетьманів С. Потоцького та М. Калиновського відійшли до Корсуня й збудували там добре укріплений табір»"
+    },
+    {
+      "claim_id": "khm-t5",
+      "claim": "Б. Хмельницький виманив шляхтичів з укріплених позицій і, влаштувавши засідку, вщент розгромив польське військо",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "wave10-shevchenko-tvory-t1 9976239a_c0263: «Б. Хмельницький виманив шляхтичів з укріплених позицій, нав'язав їм бій у невигідних умовах і, влаштувавши засідку, вщент розгромив польське військо»"
+    },
+    {
+      "claim_id": "khm-t6",
+      "claim": "Перемога під Корсунем стала сигналом до всенародного повстання, що переросло у національно-визвольну війну українського народу 1648—1657 років",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "wave10-shevchenko-tvory-t1 9976239a_c0263: «Перемога під Корсунем стала сигналом до всенародного повстання, що переросло у національно-визвольну війну українського народу 1648 — 1657 рр.»"
+    },
+    {
+      "claim_id": "khm-u1",
+      "claim": "козаки нарекли здобутий під Жовтими Водами малиновий стяг «жовтоводською корогвою» і внесли його до січової церкви як військову святиню",
+      "is_true": false,
+      "fabrication_class": "U",
+      "distractor_evidence": null,
+      "verified_by": "INVENTED named relic. Zero attestation verified 2026-07-06: search_heritage(«жовтоводська корогва») → «No heritage evidence found»; search_literary(«жовтоводська корогва Хмельницький прапор битва») → only generic козацька корогва in fiction (Nechuy) and хоругов etymology (Peretz), no named battle-standard from Жовті Води. корогва is a real word; the NAMED relic + its enshrinement are fabricated, mirroring the anchor «золоте перевесло» pattern."
+    }
+  ]
+}

@@ -13,7 +13,9 @@ BAKEOFF_ROUTE = qg_bakeoff.bakeoff_route_for_model(PIN).route_name
 
 def _passing_artifacts() -> list[dict[str, Any]]:
     artifacts: list[dict[str, Any]] = []
-    for fixture in qg_bakeoff.load_fixtures():
+    # The arming canary is pinned to its calibration set, not the whole bakeoff
+    # corpus — mirror that here so extra research fixtures do not perturb the gate.
+    for fixture in qg_bakeoff.load_fixtures(slugs=qg_tier2_canary_check.CANARY_FIXTURE_SLUGS):
         claims: list[dict[str, Any]] = []
         for claim in fixture.claims:
             verdict = "CONFIRMED" if claim.is_true else "UNATTESTED_AFTER_SEARCH"
@@ -201,6 +203,28 @@ def test_class_m_confirmed_allowlisted_vs_unallowlisted(tmp_path: Path) -> None:
     assert any(
         "class-M CONFIRMED fabricated claims not allowlisted" in reason
         for reason in unallowlisted_verdict["failure_reasons"]
+    )
+
+
+def test_stray_non_canary_artifact_fails_closed(tmp_path: Path) -> None:
+    """Research fixtures must never leak into the E3 canary set (codex review, #4574).
+
+    #4539 adds history-domain fixtures to tests/fixtures/qg_bakeoff/. A stray
+    artifact for a non-canary slug in the certification dir would silently
+    corrupt the class-M/U denominators if merely ignored — the checker must
+    REFUSE the dir with an explicit reason (fail-closed), forcing a clean
+    canary out-dir.
+    """
+    artifacts = _passing_artifacts()
+    stray = copy.deepcopy(artifacts[0])
+    stray["fixture"]["slug"] = "khmelnytskyi-1648"
+
+    verdict = _verdict_for(tmp_path, [*artifacts, stray])
+
+    assert verdict["passed"] is False
+    assert any(
+        "unexpected fixture artifacts: khmelnytskyi-1648" in reason
+        for reason in verdict["failure_reasons"]
     )
 
 
