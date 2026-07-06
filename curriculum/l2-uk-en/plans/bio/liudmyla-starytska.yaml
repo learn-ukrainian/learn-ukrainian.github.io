@@ -78,6 +78,23 @@ persona:
   role: Історик-архівіст, що працює з протоколами допитів СВУ, намагаючись відділити правду від брехні
   voice: Tragic-Realist
 phase: BIO
+readings:
+- hosting: link-only
+  language: uk
+  role: Біографія Людмили Старицької-Черняхівської.
+  source: Вікіпедія
+  task: Ознайомтеся з творчим та життєвим шляхом письменниці.
+  title: Людмила Старицька-Черняхівська
+  type: encyclopedia
+  url: https://uk.wikipedia.org/wiki/Людмила_Старицька-Черняхівська
+- hosting: link-only
+  language: uk
+  role: Історичне тло репресій проти української інтелігенції.
+  source: Вікіпедія
+  task: Дослідіть історичний контекст репресій, що призвели до її загибелі.
+  title: Справа Спілки визволення України
+  type: encyclopedia
+  url: https://uk.wikipedia.org/wiki/Справа_Спілки_визволення_України
 references:
 - title: Людмила Старицька-Черняхівська (Wikipedia UA)
   name: Людмила Старицька-Черняхівська (Wikipedia UA)
@@ -103,7 +120,7 @@ sequence: 89
 slug: liudmyla-starytska
 subtitle: 'Playwright Between Two Worlds: National Stage and Imperial Prison'
 title: 'Людмила Старицька-Черняхівська: Драматургиня'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: найвидатніший діяч у певній галузі, основоположник (вживається щодо батька)
   pos: ч.

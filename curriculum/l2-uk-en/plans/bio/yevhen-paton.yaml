@@ -83,6 +83,23 @@ persona:
   role: Модератор семінару, який ставить під сумнів героїчний наратив про "великого інженера", змушуючи аналізувати політичний контекст, моральні компроміси та людську ціну технологічного прогресу.
   voice: Critical-Historian-of-Technology
 phase: BIO.2
+readings:
+- hosting: link-only
+  language: uk
+  role: Загальна біографія та ключові досягнення інженера.
+  source: Вікіпедія
+  task: Ознайомтеся з життєписом видатного інженера-мостобудівника.
+  title: Патон Євген Оскарович
+  type: encyclopedia
+  url: https://uk.wikipedia.org/wiki/Патон_Євген_Оскарович
+- hosting: link-only
+  language: uk
+  role: Історія та сучасний стан інституту, заснованого Патоном.
+  source: Вікіпедія
+  task: Дізнайтеся про створення та діяльність Інституту електрозварювання.
+  title: Інститут електрозварювання імені Є. О. Патона
+  type: encyclopedia
+  url: https://uk.wikipedia.org/wiki/Інститут_електрозварювання_імені_Є._О._Патона
 references:
 - title: Патон Євген Оскарович
   note: Загальна біографія, дати, ключові досягнення
@@ -100,7 +117,7 @@ sequence: 91
 slug: yevhen-paton
 subtitle: 'Yevhen Paton: The Engineer Who United Ukraine'
 title: 'Євген Патон: Інженер, що з''єднав Україну'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: галузь інженерії, що займається проектуванням, будівництвом та експлуатацією мостів
   pos: с.

@@ -76,6 +76,23 @@ pedagogy: CBI
 persona:
   role: Модератор дискусії, що ставить під сумнів усталені наративи і вимагає доказів. Чому саме Бачинський, а не хтось інший? Де його слабкі місця?
   voice: Critical-Historian
+readings:
+- hosting: link-only
+  language: uk
+  role: Огляд життя і діяльності автора.
+  source: Вікіпедія
+  task: Прочитайте біографію Юліана Бачинського.
+  title: Бачинський Юліан Олександрович
+  type: encyclopedia
+  url: https://uk.wikipedia.org/wiki/Бачинський_Юліан_Олександрович
+- hosting: link-only
+  language: uk
+  role: Історія партії, співзасновником якої був Бачинський.
+  source: Вікіпедія
+  task: Ознайомтеся з політичним середовищем початку ХХ століття.
+  title: Русько-українська радикальна партія
+  type: encyclopedia
+  url: https://uk.wikipedia.org/wiki/Русько-українська_радикальна_партія
 references:
 - title: Yulian Bachynskyi
   note: Основна біографічна інформація, дати, ключові події
@@ -95,7 +112,7 @@ sequence: 92
 slug: yulian-bachynskyi
 subtitle: The Man Who Wrote the Book on Independence
 title: 'Юліан Бачинський: Теоретик незалежності'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: політичний термін, що означає «невизволені» або «неврятовані» території, які нація вважає своїми
   pos: ж.

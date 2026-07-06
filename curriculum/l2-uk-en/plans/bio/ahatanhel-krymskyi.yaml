@@ -81,6 +81,23 @@ persona:
   role: Модератор семінару, який розглядає біографію Кримського не як житіє святого, а як складну історичну драму, де наукові амбіції стикаються з політичними реаліями
   voice: Academic-Historian
 phase: BIO.3
+readings:
+- hosting: link-only
+  language: uk
+  role: Основна біографічна стаття про Агатангела Кримського.
+  source: Вікіпедія
+  task: Ознайомтеся з біографією видатного поліглота.
+  title: Кримський Агатангел Юхимович
+  type: encyclopedia
+  url: https://uk.wikipedia.org/wiki/Кримський_Агатангел_Юхимович
+- hosting: link-only
+  language: uk
+  role: Історія інституції, яку очолював Кримський.
+  source: Вікіпедія
+  task: Прочитайте про створення Інституту української наукової мови.
+  title: Інститут української наукової мови
+  type: encyclopedia
+  url: https://uk.wikipedia.org/wiki/Інститут_української_наукової_мови
 references:
 - title: Кримський Агатангел Юхимович
   note: Comprehensive biography covering life, scholarship, and tragic fate
@@ -100,7 +117,7 @@ sequence: 93
 slug: ahatanhel-krymskyi
 subtitle: 'Ahatanhel Krymskyi: Polyglot and Martyr of Science'
 title: 'Агатангел Кримський: Поліглот і мученик науки'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: людина, що володіє багатьма мовами
   pos: ч.

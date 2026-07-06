@@ -81,6 +81,23 @@ persona:
   role: Аналітик, що показує трагедію державника в епоху бездержавності, фокусуючись на конфлікті між ідеалом правової держави та реальністю революцій і диктатур.
   voice: Legal-Historian-Turned-Statesman
 phase: BIO
+readings:
+- hosting: link-only
+  language: uk
+  role: Огляд життя та діяльності Миколи Василенка.
+  source: Вікіпедія
+  task: Ознайомтеся з основними етапами біографії Миколи Василенка.
+  title: Микола Василенко
+  type: encyclopedia
+  url: https://uk.wikipedia.org/wiki/Микола_Василенко
+- hosting: link-only
+  language: uk
+  role: Контекст політичних репресій, жертвою яких став Василенко.
+  source: Вікіпедія
+  task: Прочитайте про сфабрикований судовий процес над українською інтелігенцією.
+  title: Справа «Спілки визволення України»
+  type: encyclopedia
+  url: https://uk.wikipedia.org/wiki/Справа_«Спілки_визволення_України»
 references:
 - title: Микола Василенко
   note: Основна біографічна довідка, перелік праць, дані про державну та наукову діяльність.
@@ -102,7 +119,7 @@ sequence: 88
 slug: mykola-vasylenko
 subtitle: The Tragedy of a Statesman in a Stateless Era
 title: 'Микола Василенко: Юрист і державник'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: сукупність правових наук, наука про право; правознавство
   pos: ж.
