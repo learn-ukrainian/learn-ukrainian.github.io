@@ -30,6 +30,8 @@ if str(AUDIT_DIR) not in sys.path:
 
 from lexeme_filter import SURFACE_CLOZE, is_practice_eligible, is_surface_admitted
 
+from scripts.practice_deck.io import compute_deck_version
+
 DEFAULT_MANIFEST = Path("site/src/data/lexicon-manifest.json")
 DEFAULT_ATLAS_DB = Path("data/atlas.db")
 # Deck shards are served as literal static files from public/ (not via dynamic .json.ts
@@ -492,11 +494,6 @@ def _stable_lemma_id(entry: dict[str, Any]) -> str:
         )
     )
     return hashlib.sha1(key.encode("utf-8")).hexdigest()[:16]
-
-
-def _manifest_fingerprint(entries: list[dict[str, Any]]) -> str:
-    payload = json.dumps(entries, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-    return hashlib.sha256(payload.encode("utf-8")).hexdigest()[:16]
 
 
 def _normalize_cefr(value: Any) -> str | None:
@@ -2083,7 +2080,13 @@ def build_practice_shards(
         for level in CEFR_ORDER
     }
 
-    deck_version = f"atlas-practice-v{SCHEMA_VERSION}-{_manifest_fingerprint(entries)}"
+    deck_version = compute_deck_version(
+        entries,
+        heritage_pairs,
+        synonym_verdicts,
+        cloze_sources,
+        SCHEMA_VERSION,
+    )
     rng_seed = int(hashlib.sha256(deck_version.encode("utf-8")).hexdigest()[:16], 16)
     rng = random.Random(rng_seed)
     eligible = [entry for entry in entries if is_practice_eligible(entry)]

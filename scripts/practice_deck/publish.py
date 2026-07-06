@@ -18,7 +18,10 @@ ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_PRACTICE_DIR = ROOT / "site" / "public" / "lexicon"
 DEFAULT_POINTER = ROOT / "site" / "src" / "data" / "lexicon-practice-deck.pointer.json"
 DEFAULT_GZIP = ROOT / "site" / "src" / "data" / "lexicon-practice-deck.json.gz"
-DEFAULT_MANIFEST = ROOT / "site" / "src" / "data" / "lexicon-manifest.json"
+DEFAULT_ATLAS_DB = ROOT / "data" / "atlas.db"
+DEFAULT_CLOZE_SOURCES = ROOT / "site" / "src" / "data" / "lexicon-practice-cloze-sources.json"
+DEFAULT_HERITAGE_PAIRS = ROOT / "data" / "lexicon" / "heritage_pairs.yaml"
+DEFAULT_SYNONYM_VERDICTS = ROOT / "data" / "lexicon" / "synonym_pair_verdicts.yaml"
 DEFAULT_RELEASE_TAG = "atlas-practice-deck"
 DEFAULT_REPO = "learn-ukrainian/learn-ukrainian.github.io"
 ASSET_NAME = "lexicon-practice-deck.json.gz"
@@ -52,23 +55,43 @@ def versioned_asset_name(deck_version: str) -> str:
     return f"lexicon-practice-deck-{deck_version}.json.gz"
 
 
-def expected_deck_version(manifest_path: Path) -> str:
-    if not manifest_path.exists():
+def expected_deck_version(
+    atlas_db_path: Path = DEFAULT_ATLAS_DB,
+    *,
+    heritage_pairs_path: Path | None = DEFAULT_HERITAGE_PAIRS,
+    synonym_verdicts_path: Path | None = DEFAULT_SYNONYM_VERDICTS,
+    cloze_sources_path: Path | None = DEFAULT_CLOZE_SOURCES,
+) -> str:
+    if not atlas_db_path.exists():
         raise PracticeDeckPublishError(
-            f"Manifest file {manifest_path} is missing. "
-            "Please build the manifest (e.g., run `make atlas`) first."
+            f"Atlas DB file {atlas_db_path} is missing. "
+            "Please build the atlas DB (e.g., run `npm --prefix site run atlas:build-db`) first."
         )
     try:
-        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
-        entries = manifest.get("entries") if isinstance(manifest, dict) else manifest
-        if not isinstance(entries, list):
-            raise PracticeDeckPublishError("manifest entries must be a list")
-        entries = [entry for entry in entries if isinstance(entry, dict)]
-        payload = json.dumps(entries, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-        fingerprint = hashlib.sha256(payload.encode("utf-8")).hexdigest()[:16]
-        return f"atlas-practice-v1-{fingerprint}"
+        from scripts.audit.generate_practice_deck import (
+            SCHEMA_VERSION,
+            read_atlas_db,
+            read_cloze_sources,
+            read_heritage_pairs,
+            read_synonym_verdicts,
+        )
+        from scripts.practice_deck.io import compute_deck_version
+
+        entries = read_atlas_db(atlas_db_path)
+        heritage_pairs = read_heritage_pairs(heritage_pairs_path)
+        synonym_verdicts = read_synonym_verdicts(synonym_verdicts_path)
+        cloze_sources = read_cloze_sources(cloze_sources_path)
+        return compute_deck_version(
+            entries,
+            heritage_pairs,
+            synonym_verdicts,
+            cloze_sources,
+            SCHEMA_VERSION,
+        )
     except Exception as exc:
-        raise PracticeDeckPublishError(f"Failed to calculate expected deck version: {exc}") from exc
+        raise PracticeDeckPublishError(
+            f"Failed to calculate expected deck version from atlas DB projection: {exc}"
+        ) from exc
 
 
 def _read_json_bytes(path: Path) -> tuple[bytes, dict[str, Any]]:
@@ -163,7 +186,12 @@ def build_pointer(
         "package_bytes": len(package_bytes),
         "file_count": len(pointer_files),
         "files": pointer_files,
-        "note": "Pins GitHub Release asset practice deck for #3796; hydrate it build/test time instead of committing shards.",
+        "note": (
+            "Pins GitHub Release asset practice deck for #3796; hydrate it build/test time instead of "
+            "committing shards. Deck versions fingerprint public atlas DB entries, heritage pairs, "
+            "synonym verdicts, and cloze sources; the first publish after that input expansion mints "
+            "a new versioned asset by design."
+        ),
     }
 
 
@@ -304,17 +332,25 @@ def publish_practice_deck(
     practice_dir: Path = DEFAULT_PRACTICE_DIR,
     gzip_path: Path = DEFAULT_GZIP,
     pointer_path: Path = DEFAULT_POINTER,
-    manifest_path: Path = DEFAULT_MANIFEST,
+    atlas_db_path: Path = DEFAULT_ATLAS_DB,
+    heritage_pairs_path: Path | None = DEFAULT_HERITAGE_PAIRS,
+    synonym_verdicts_path: Path | None = DEFAULT_SYNONYM_VERDICTS,
+    cloze_sources_path: Path | None = DEFAULT_CLOZE_SOURCES,
     release_tag: str = DEFAULT_RELEASE_TAG,
     repo: str = DEFAULT_REPO,
     dry_run: bool = False,
 ) -> dict[str, Any]:
     deck_version, pointer_files, package_files = collect_shards(practice_dir)
-    expected_version = expected_deck_version(manifest_path)
+    expected_version = expected_deck_version(
+        atlas_db_path,
+        heritage_pairs_path=heritage_pairs_path,
+        synonym_verdicts_path=synonym_verdicts_path,
+        cloze_sources_path=cloze_sources_path,
+    )
     if deck_version != expected_version:
         raise PracticeDeckPublishError(
             f"Practice deck version on disk {deck_version!r} does not match expected "
-            f"version {expected_version!r} from manifest. "
+            f"version {expected_version!r} from the public atlas DB and curated deck inputs. "
             "Please rebuild the practice deck (e.g., run `make practice-deck`) before publishing."
         )
     package_bytes = build_package(deck_version, package_files)
@@ -341,7 +377,10 @@ def main() -> int:
     parser.add_argument("--practice-dir", type=Path, default=DEFAULT_PRACTICE_DIR)
     parser.add_argument("--gzip", type=Path, default=DEFAULT_GZIP)
     parser.add_argument("--pointer", type=Path, default=DEFAULT_POINTER)
-    parser.add_argument("--manifest", type=Path, default=DEFAULT_MANIFEST)
+    parser.add_argument("--atlas-db", type=Path, default=DEFAULT_ATLAS_DB)
+    parser.add_argument("--cloze-sources", type=Path, default=DEFAULT_CLOZE_SOURCES)
+    parser.add_argument("--heritage-pairs", type=Path, default=DEFAULT_HERITAGE_PAIRS)
+    parser.add_argument("--synonym-verdicts", type=Path, default=DEFAULT_SYNONYM_VERDICTS)
     parser.add_argument("--release-tag", default=DEFAULT_RELEASE_TAG)
     parser.add_argument("--repo", default=DEFAULT_REPO)
     parser.add_argument("--dry-run", action="store_true", help="Build metadata without uploading/writing pointer")
@@ -350,7 +389,10 @@ def main() -> int:
         practice_dir=args.practice_dir,
         gzip_path=args.gzip,
         pointer_path=args.pointer,
-        manifest_path=args.manifest,
+        atlas_db_path=args.atlas_db,
+        heritage_pairs_path=args.heritage_pairs,
+        synonym_verdicts_path=args.synonym_verdicts,
+        cloze_sources_path=args.cloze_sources,
         release_tag=args.release_tag,
         repo=args.repo,
         dry_run=args.dry_run,

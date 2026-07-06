@@ -66,6 +66,16 @@ def _fixture_heritage_pair() -> dict[str, object]:
     return read_heritage_pairs(HERITAGE_PAIRS)[0]
 
 
+def _single_deck_version(shards: dict[str, dict[str, dict[str, object]]]) -> str:
+    versions = {
+        payload["deckVersion"]
+        for level_shards in shards.values()
+        for payload in level_shards.values()
+    }
+    assert len(versions) == 1
+    return versions.pop()
+
+
 def test_fixture_build_emits_sharded_schema() -> None:
     shards = _build(BuildConfig(fixture_note="fixture sample", source_label="fixture"))
     apply_size_budgets(shards, raw_limit=50_000, gzip_limit=15_000)
@@ -113,6 +123,81 @@ def test_manifest_cloze_fields_are_ignored_without_curated_sources() -> None:
     assert shards["A1"]["index"]["counts"]["lexemes"] == 7
     assert shards["A1"]["index"]["counts"]["cloze"] == 0
     assert shards["A1"]["cloze"]["cloze"] == []
+
+
+def test_deck_version_changes_when_any_deck_input_changes() -> None:
+    entries = read_manifest(MANIFEST)
+    cloze_sources = read_cloze_sources(CLOZE_SOURCES)
+    heritage_pairs = read_heritage_pairs(HERITAGE_PAIRS)
+    synonym_verdicts = {"approved": [], "rejected": []}
+    allowlist = ReviewedSourceAllowlist.from_path(ALLOWLIST)
+    verifier = JsonVesumVerifier.from_path(VESUM)
+
+    def version_for(
+        *,
+        entries_override: list[dict[str, object]] | None = None,
+        cloze_sources_override: list[dict[str, object]] | None = None,
+        heritage_pairs_override: list[dict[str, object]] | None = None,
+        synonym_verdicts_override: dict[str, object] | None = None,
+    ) -> str:
+        shards = build_practice_shards(
+            entries_override or entries,
+            allowlist,
+            verifier,
+            cloze_sources_override or cloze_sources,
+            BuildConfig(),
+            heritage_pairs=heritage_pairs_override or heritage_pairs,
+            synonym_verdicts=synonym_verdicts_override or synonym_verdicts,
+        )
+        return _single_deck_version(shards)
+
+    base_version = version_for()
+    changed_entries = json.loads(json.dumps(entries))
+    changed_entries[0]["gloss"] = "changed gloss"
+    changed_cloze_sources = json.loads(json.dumps(cloze_sources))
+    changed_cloze_sources[0]["sentence"] = "Змінене речення з ___."
+    changed_heritage_pairs = json.loads(json.dumps(heritage_pairs))
+    changed_heritage_pairs[0]["rationale"] = "changed rationale"
+    changed_synonym_verdicts = {
+        "approved": [{"a": "кіт", "b": "пес", "polarity": "synonym"}],
+        "rejected": [],
+    }
+
+    assert version_for(entries_override=changed_entries) != base_version
+    assert version_for(cloze_sources_override=changed_cloze_sources) != base_version
+    assert version_for(heritage_pairs_override=changed_heritage_pairs) != base_version
+    assert version_for(synonym_verdicts_override=changed_synonym_verdicts) != base_version
+
+
+def test_deck_version_stable_across_double_regen_with_identical_inputs() -> None:
+    entries = read_manifest(MANIFEST)
+    cloze_sources = read_cloze_sources(CLOZE_SOURCES)
+    heritage_pairs = read_heritage_pairs(HERITAGE_PAIRS)
+    synonym_verdicts = {"approved": [], "rejected": []}
+    allowlist = ReviewedSourceAllowlist.from_path(ALLOWLIST)
+    verifier = JsonVesumVerifier.from_path(VESUM)
+
+    first = build_practice_shards(
+        json.loads(json.dumps(entries)),
+        allowlist,
+        verifier,
+        json.loads(json.dumps(cloze_sources)),
+        BuildConfig(),
+        heritage_pairs=json.loads(json.dumps(heritage_pairs)),
+        synonym_verdicts=json.loads(json.dumps(synonym_verdicts)),
+    )
+    second = build_practice_shards(
+        json.loads(json.dumps(entries)),
+        allowlist,
+        verifier,
+        json.loads(json.dumps(cloze_sources)),
+        BuildConfig(),
+        heritage_pairs=json.loads(json.dumps(heritage_pairs)),
+        synonym_verdicts=json.loads(json.dumps(synonym_verdicts)),
+    )
+
+    assert _single_deck_version(first) == _single_deck_version(second)
+    assert first == second
 
 
 def test_read_heritage_pairs_missing_file_warns(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
@@ -646,7 +731,24 @@ def test_source_inventory_cloze_requires_explicit_cloze_admission() -> None:
 
     allowlist = ReviewedSourceAllowlist.from_path(ALLOWLIST)
     verifier = JsonVesumVerifier.from_path(VESUM)
-    cloze_sources = read_cloze_sources(CLOZE_SOURCES)
+    cloze_sources = [
+        *read_cloze_sources(CLOZE_SOURCES),
+        {
+            "lemma": "школа",
+            "lemmaId": "shkola",
+            "sentence": "Вона у ___.",
+            "blankCase": "locative",
+            "form": "школі",
+            "number": "singular",
+            "caseRule": "locative_static_u",
+            "clozeEn": "She is at school.",
+            "provenance": {
+                "status": "reviewed",
+                "path": "curriculum/l2-uk-en/a1/vocabulary/school.yaml",
+                "cardId": "school-shkola-1",
+            },
+        },
+    ]
     shards = build_practice_shards(entries, allowlist, verifier, cloze_sources, BuildConfig())
     cloze_ids = {
         item["lemmaId"]

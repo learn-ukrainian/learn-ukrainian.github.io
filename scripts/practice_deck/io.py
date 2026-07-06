@@ -48,6 +48,25 @@ def _sha256(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
 
+def compute_deck_version(
+    entries: list[dict[str, Any]] | None,
+    heritage_pairs: list[dict[str, Any]] | None,
+    synonym_verdicts: dict[str, Any] | None,
+    cloze_sources: list[dict[str, Any]] | None,
+    schema_version: int,
+) -> str:
+    payload = {
+        "schema_version": schema_version,
+        "entries": entries or [],
+        "heritage_pairs": heritage_pairs or [],
+        "synonym_verdicts": synonym_verdicts or {},
+        "cloze_sources": cloze_sources or [],
+    }
+    canonical = json.dumps(payload, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+    fingerprint = hashlib.sha256(canonical.encode("utf-8")).hexdigest()[:16]
+    return f"atlas-practice-v{schema_version}-{fingerprint}"
+
+
 def _read_json(path: Path) -> dict[str, Any]:
     payload = json.loads(path.read_text(encoding="utf-8"))
     if not isinstance(payload, dict):

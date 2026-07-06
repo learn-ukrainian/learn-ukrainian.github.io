@@ -62,6 +62,60 @@ def _pin_defaults(monkeypatch: pytest.MonkeyPatch, practice_dir: Path, pointer_p
     monkeypatch.setattr(practice_deck_io, "DEFAULT_POINTER", pointer_path)
 
 
+def test_compute_deck_version_fingerprints_all_inputs() -> None:
+    entries = [{"lemmaId": "knyha", "lemma": "knyha", "gloss": "book"}]
+    heritage_pairs = [{"nativeSlug": "knyha", "rationale": "fixture"}]
+    synonym_verdicts = {
+        "approved": [{"a": "knyha", "b": "tom", "polarity": "synonym"}],
+        "rejected": [],
+    }
+    cloze_sources = [{"lemmaId": "knyha", "sentence": "I read ___."}]
+
+    version = practice_deck_io.compute_deck_version(
+        entries,
+        heritage_pairs,
+        synonym_verdicts,
+        cloze_sources,
+        1,
+    )
+
+    assert version.startswith("atlas-practice-v1-")
+    fingerprint = version.removeprefix("atlas-practice-v1-")
+    assert len(fingerprint) == 16
+    assert all(char in "0123456789abcdef" for char in fingerprint)
+
+    variants = [
+        ([{**entries[0], "gloss": "book volume"}], heritage_pairs, synonym_verdicts, cloze_sources),
+        (entries, [{**heritage_pairs[0], "rationale": "changed"}], synonym_verdicts, cloze_sources),
+        (
+            entries,
+            heritage_pairs,
+            {"approved": synonym_verdicts["approved"], "rejected": [{"a": "x", "b": "y", "polarity": "antonym"}]},
+            cloze_sources,
+        ),
+        (entries, heritage_pairs, synonym_verdicts, [{**cloze_sources[0], "sentence": "Changed ___."}]),
+    ]
+    changed_versions = {
+        practice_deck_io.compute_deck_version(
+            variant_entries,
+            variant_heritage_pairs,
+            variant_synonym_verdicts,
+            variant_cloze_sources,
+            1,
+        )
+        for variant_entries, variant_heritage_pairs, variant_synonym_verdicts, variant_cloze_sources in variants
+    }
+
+    assert version not in changed_versions
+    assert len(changed_versions) == len(variants)
+
+
+def test_compute_deck_version_hashes_missing_inputs_as_empty_sentinels() -> None:
+    assert practice_deck_io.compute_deck_version(None, None, None, None, 1) == (
+        practice_deck_io.compute_deck_version([], [], {}, [], 1)
+    )
+
+
 def _request_url(request: object) -> str:
     return getattr(request, "full_url", str(request))
 
