@@ -77,6 +77,16 @@ persona:
   role: Культурний критик, що намагається розібратися у феномені Кузьми — де закінчується образ і починається людина.
   voice: Music-Journalist
 phase: BIO.16
+readings:
+- hosting: reading-needed
+  language: uk
+  learner_task: "Читати матеріал про творчий шлях та громадянську позицію музиканта"
+  license: unknown
+  rights_note: "Потрібно знайти стабільне джерело (не Вікіпедію)"
+  role: primary
+  source_name: "Кузьма Скрябін — Біографія та спадщина"
+  source_type: article
+  source_url: ""
 references:
 - title: Кузьменко Андрій Вікторович
   note: Загальна біографія, дискографія, фільмографія
@@ -96,7 +106,7 @@ sequence: 184
 slug: kuzma-skryabin
 subtitle: 'Kuzma Skryabin: The Voice of the People'
 title: 'Кузьма Скрябін: Голос народу'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: їдка, в'їдлива насмішка; сарказм на межі з глузуванням
   pos: ч.

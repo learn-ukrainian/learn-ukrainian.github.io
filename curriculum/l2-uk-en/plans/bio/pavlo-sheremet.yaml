@@ -80,6 +80,16 @@ persona:
   role: Модератор семінару, який особисто знав Павла і вимагає чесної, але критичної розмови про його спадщину, уникаючи як ідеалізації, так і очорнення.
   voice: Sheremet-Colleague
 phase: BIO.4
+readings:
+- hosting: reading-needed
+  language: uk
+  learner_task: "Читати про професійну діяльність та розслідування у справі журналіста"
+  license: unknown
+  rights_note: "Потрібно знайти стабільне джерело (не Вікіпедію)"
+  role: primary
+  source_name: "Павло Шеремет — Життя та місія"
+  source_type: article
+  source_url: ""
 references:
 - title: Pavlo Sheremet
   note: Compiled from key articles and the OCCRP investigation.
@@ -99,7 +109,7 @@ sequence: 185
 slug: pavlo-sheremet
 subtitle: 'Pavlo Sheremet: Journalism as a Mission for Freedom'
 title: 'Павло Шеремет: Журналістика як місія свободи'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: Право людини вільно висловлювати свої погляди і переконання.
   pos: ж.

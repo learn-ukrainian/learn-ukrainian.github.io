@@ -81,6 +81,16 @@ persona:
   role: Літературний критик, що пояснює феномен Жадана західній аудиторії, перекладаючи локальний контекст на універсальні поняття.
   voice: Zhadan-Specialist
 phase: BIO.1
+readings:
+- hosting: reading-needed
+  language: uk
+  learner_task: "Читати про творчий шлях письменника, волонтерство та його місце в культурі"
+  license: unknown
+  rights_note: "Потрібно знайти стабільне джерело (не Вікіпедію)"
+  role: primary
+  source_name: "Біографія Сергія Жадана"
+  source_type: article
+  source_url: ""
 references:
 - title: Serhiy Zhadan
   note: Compiled research notes on biography, works, activism, and critical reception.
@@ -104,7 +114,7 @@ sequence: 186
 slug: serhiy-zhadan
 subtitle: From Post-Soviet Underground to the Moral Voice of a Nation at War
 title: 'Сергій Жадан: Голос Донбасу'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: неофіційне, заборонене мистецтво або культурний рух, що протиставляє себе масовій культурі
   pos: ч.
