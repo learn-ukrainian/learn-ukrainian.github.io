@@ -148,6 +148,16 @@ persona:
     прозі та насильницьке редагування літературної пам'яті.
   voice: Intellectual Historian
 phase: BIO
+readings:
+- language: uk
+  note: Енциклопедія історії України; біографічна стаття. Джерело стабільне.
+  role: context
+  source: 'http://www.history.org.ua/?termin=Yanovsky_Yu_I'
+- hosting: reading-needed
+  language: uk
+  note: Первинний текст (напр., уривки з "Вершників" або "Майстра корабля") потребує перевірки на вільні ліцензії.
+  role: reading-needed
+  source: 'reading-needed: первинний текст'
 references:
 - note: Енциклопедія історії України; основна стаття з біографічними фактами й уточненням місця народження.
   path: http://www.history.org.ua/?termin=Yanovsky_Yu_I
@@ -177,7 +187,7 @@ sequence: 250
 slug: yurii-yanovskyi
 subtitle: The Neoromantic Broken by Censorship
 title: 'Юрій Яновський: "Жива вода" під батогом цензури'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: мистецький напрям, що оновлює романтичну піднесеність, міф і сильний образ у модерній формі
   pos: ч.

@@ -147,6 +147,17 @@ persona:
     кооптацію культури і відповідальність митця під примусом.
   voice: Intellectual Historian
 phase: BIO
+readings:
+- hosting: reading-needed
+  language: uk
+  note: Біографічний або історичний контекст потребує стабільного посилання (наприклад, стаття в ЕІУ).
+  role: reading-needed
+  source: 'reading-needed: контекст (біографія)'
+- hosting: reading-needed
+  language: uk
+  note: Первинний текст (напр., вірш "Ви знаєте, як липа шелестить") потребує перевірки на вільні ліцензії та стабільний хостинг.
+  role: reading-needed
+  source: 'reading-needed: первинний текст'
 references:
 - title: Тичина Павло Григорович
   note: Енциклопедія Сучасної України; основні факти життя, освіти й доробку.
@@ -173,7 +184,7 @@ sequence: 247
 slug: pavlo-tychyna
 subtitle: The Poet Broken by Glory
 title: 'Павло Тичина: "Соняшні кларнети" і покара славою'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: сукупність мистецьких течій кінця XIX і початку XX століття, що шукали нових форм для сучасного досвіду
   pos: ч.

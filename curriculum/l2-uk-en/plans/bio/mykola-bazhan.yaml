@@ -130,6 +130,16 @@ persona:
     спрощеного засудження.
   voice: Intellectual Historian
 phase: BIO
+readings:
+- language: uk
+  note: Енциклопедія Сучасної України; стаття про життя, творчість та архівні матеріали. Джерело стабільне.
+  role: context
+  source: 'https://esu.com.ua/article-38786'
+- hosting: reading-needed
+  language: uk
+  note: Первинний текст (напр., поезія з ранніх збірок) потребує перевірки на вільні ліцензії.
+  role: reading-needed
+  source: 'reading-needed: первинний текст'
 references:
 - note: Основна стаття про життя, творчість та архівні матеріали про справу НКВС.
   path: https://esu.com.ua/article-38786
@@ -157,7 +167,7 @@ sequence: 252
 slug: mykola-bazhan
 subtitle: The Avant-Garde Poet Broken and Co-opted by the Regime
 title: 'Микола Бажан: Будівлі духу й покара славою'
-version: '1.0'
+version: '1.1'
 vocabulary_hints:
 - definition: митець, що творить поезію
   pos: ч.
