@@ -148,6 +148,13 @@ persona:
     митця, який був водночас виконавцем і жертвою радянського терору.
   voice: Intellectual Historian
 phase: BIO
+readings:
+- title: "Фальківський Дмитро Никанорович"
+  url: "https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&I21DBN=EIU&P21DBN=ELIB&S21CNR=20&S21COLORTERMS=0&S21FMT=eiu_all&S21P01=0&S21P02=0&S21P03=TRN%3D&S21REF=10&S21STN=1&S21STR=Falkivskyj_D&Z21ID="
+  note: "Енциклопедія історії України. Академічна довідка про життя, творчість, чекістське минуле та розстріл поета."
+- title: "Народився Дмитро Фальківський (Левчук)"
+  url: "https://www.nbuv.gov.ua/node/4387"
+  note: "Національна бібліотека України імені В. І. Вернадського. Україніка в датах із бібліографічними посиланнями."
 references:
 - note: Англомовна енциклопедична стаття про життя, чекістське минуле й страту поета.
   path: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CF%5CA%5CFalkivskyDmytro.htm
@@ -155,7 +162,12 @@ references:
   type: reference
 - author: Герасимова Г. П.
   note: Енциклопедія історії України, Інститут історії України НАН України, 2013 (т. 10, с. 261).
+  path: https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&I21DBN=EIU&P21DBN=ELIB&S21CNR=20&S21COLORTERMS=0&S21FMT=eiu_all&S21P01=0&S21P02=0&S21P03=TRN%3D&S21REF=10&S21STN=1&S21STR=Falkivskyj_D&Z21ID=
   title: Фальківський Дмитро Никанорович (ЕІУ)
+  type: reference
+- note: НБУВ, Україніка в датах; коротка біографія з переліком творів і пов'язаних матеріалів е-бібліотеки.
+  path: https://www.nbuv.gov.ua/node/4387
+  title: Народився Дмитро Фальківський (Левчук), український письменник, сценарист, перекладач
   type: reference
 - note: Стартова навігація; дати народження і смерті звірені з ЕІУ та IEU.
   path: https://uk.wikipedia.org/wiki/Фальківський_Дмитро_Никанорович
@@ -180,7 +192,7 @@ sequence: 132
 slug: dmytro-falkivskyi
 subtitle: The Poet of Polissia Devoured by the Terror He Once Served
 title: 'Дмитро Фальківський: Очерет за колиску і куля терору'
-version: '4.1'
+version: '4.3'
 vocabulary_hints:
 - definition: оновлений символізм 1920-х — тяжіння до музичності, натяку й настрою; пізній стиль Фальківського
   pos: ч.

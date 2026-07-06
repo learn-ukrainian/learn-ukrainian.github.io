@@ -80,6 +80,10 @@ persona:
   role: Куратор виставки, що ставить під сумнів офіційні біографії та шукає людську драму за іконічними образами
   voice: Art-Historian-Skeptic
 phase: BIO
+readings:
+- title: "Білокур Катерина Василівна"
+  url: "https://uk.wikipedia.org/wiki/Білокур_Катерина_Василівна"
+  note: "Оглядова стаття у Вікіпедії про видатну українську художницю наївного мистецтва."
 references:
 - title: Білокур Катерина Василівна
   author: Вікіпедія
@@ -95,7 +99,7 @@ sequence: 135
 slug: kateryna-bilokur
 subtitle: 'Kateryna Bilokur: The Genius of Naïve Art'
 title: 'Катерина Білокур: Геній наївного мистецтва'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: напрям у мистецтві, для якого характерна творчість художників-самоуків, що не здобули формальної освіти
   pos: с.

@@ -81,6 +81,10 @@ persona:
   role: Слідчий у справі «забутого генія», що ставить під сумнів офіційні версії та шукає приховані мотиви в історії науки.
   voice: Cold-War-Historian
 phase: BIO
+readings:
+- title: "Кондратюк Юрій Васильович"
+  url: "https://uk.wikipedia.org/wiki/Кондратюк_Юрій_Васильович"
+  note: "Оглядова стаття у Вікіпедії про піонера світової космонавтики та розробника «траси Кондратюка»."
 references:
 - title: Yuriy Kondratiuk
   note: Compiled from Wikipedia, academic sources on history of science.
@@ -100,7 +104,7 @@ sequence: 131
 slug: yuriy-kondratiuk
 subtitle: Геній, що проміняв ім'я на зірки
 title: 'Юрій Кондратюк: Пророк космічних трас'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: наука про польоти літальних апаратів у світовий простір, і мистецтво їхнього водіння
   pos: ж.

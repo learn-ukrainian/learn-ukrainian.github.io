@@ -148,6 +148,13 @@ persona:
     і механізмом тоталітарного терору.
   voice: Literary Historian
 phase: BIO
+readings:
+- title: "Косинка Григорій Михайлович"
+  url: "https://esu.com.ua/article-3797"
+  note: "Стаття в Енциклопедії Сучасної України, що висвітлює життя та творчий шлях новеліста."
+- title: "1899 — народився Григорій Стрілець, письменник"
+  url: "https://uinp.gov.ua/istorychnyy-kalendar/lystopad/29/1899-narodyvsya-grygoriy-strilec-pysmennyk"
+  note: "Матеріал Українського інституту національної пам'яті про Григорія Косинку."
 references:
 - note: Стаття про життя та творчість письменника (автор — М. К. Наєнко).
   path: https://esu.com.ua/article-3797
@@ -179,7 +186,7 @@ sequence: 134
 slug: hryhorii-kosynka
 subtitle: 'Hryhorii Kosynka: The Executed Master of the Ukrainian Short Story'
 title: 'Григорій Косинка: Розстріляний майстер української новели'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: невеликий за обсягом прозовий твір про одну незвичайну подію з гострим, часто несподіваним фіналом
   pos: ж.
