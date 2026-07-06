@@ -209,7 +209,6 @@ pairs:
   kind: sense_restricted
   corrections:
   - увімкнути
-  - умикати
   rationale: 'Антоненко: «Включати, умикати, виключати, вимикати» — світло вмикають'
   citations:
   - antonenko:Включати, умикати, виключати, вимикати
@@ -222,6 +221,7 @@ pairs:
   curator: fable-2026-07-06
   calqueSense: світло/пристрій (рос. включить свет)
   authenticSense: включити до списку/складу
+  notes: умикати dropped per agy review (aspect mismatch with включити)
 - calqueLabel: відкривати
   calqueSurfaces:
   - відкрив
@@ -287,11 +287,11 @@ pairs:
   sourceFamilies:
   - antonenko
   - slovnyk-dicts
-  cefrAvailability: a2
+  cefrAvailability: b1
   curator: fable-2026-07-06
   calqueSense: ставлення до когось/стосунки (рос. отношение)
   authenticSense: математичне відношення; діловий документ
-  notes: MERGE of відношення→стосунок/ставлення/відносини
+  notes: MERGE of відношення→стосунок/ставлення/відносини; A2→B1 per agy review
 - calqueLabel: відправити
   calqueSurfaces:
   - відправити
@@ -311,27 +311,6 @@ pairs:
   curator: fable-2026-07-06
   calqueSense: листи/повідомлення (рос. отправить письмо)
   authenticSense: відправити поїзд, відправити службу
-- calqueLabel: відправитися
-  calqueSurfaces:
-  - відправився
-  - відправились
-  - відправитись
-  nativeSlug: вирушити
-  nativeLemma: вирушити
-  kind: sense_restricted
-  corrections:
-  - вирушити
-  - вирушати
-  rationale: у дорогу вирушають
-  citations:
-  - ua-gec:F/Calque+F/Collocation n=14 docs=12
-  sourceFamily: ua-gec
-  sourceFamilies:
-  - ua-gec
-  cefrAvailability: a2
-  curator: fable-2026-07-06
-  calqueSense: вирушити в дорогу (рос. отправиться)
-  authenticSense: відправити щось кудись (перехідне)
 - calqueLabel: відсутність
   calqueSurfaces:
   - відсутність
@@ -746,10 +725,10 @@ pairs:
   - начала
   nativeSlug: початок
   nativeLemma: початок
-  kind: lexical
+  kind: sense_restricted
   corrections:
   - початок
-  rationale: рос. начало; питоме — початок
+  rationale: про час — початок; начало — книжне «основа, суть, джерело»
   citations:
   - ua-gec:F/Calque n=1
   sourceFamily: ua-gec
@@ -757,6 +736,9 @@ pairs:
   - ua-gec
   cefrAvailability: a2
   curator: fable-2026-07-06
+  calqueSense: початок у часі (рос. начало)
+  authenticSense: філософське першоджерело, основа (вольове начало)
+  notes: 'agy review: reclassified lexical→sense_restricted'
 - calqueLabel: неділя
   calqueSurfaces:
   - неділя
@@ -871,10 +853,10 @@ pairs:
   - палатці
   nativeSlug: намет
   nativeLemma: намет
-  kind: lexical
+  kind: sense_restricted
   corrections:
   - намет
-  rationale: рос. палатка; питоме — намет
+  rationale: туристичне шатро — намет; палатка в СУМ — торговельна споруда
   citations:
   - ua-gec:F/Calque n=2 docs=2
   sourceFamily: ua-gec
@@ -882,6 +864,9 @@ pairs:
   - ua-gec
   cefrAvailability: a2
   curator: fable-2026-07-06
+  calqueSense: туристичний намет (рос. палатка)
+  authenticSense: 'торговельна палатка — ятка, кіоск (СУМ: «тимчасове, звичайно літнє приміщення»)'
+  notes: 'agy review: reclassified lexical→sense_restricted (SUM attests trade-stall sense)'
 - calqueLabel: пануючий
   calqueSurfaces:
   - пануючий
@@ -1256,7 +1241,7 @@ pairs:
   kind: lexical
   corrections:
   - склянка
-  rationale: рос. стакан; питоме — склянка
+  rationale: нормативне й частотне — склянка; стакан — СУМ «рідко», під рос. впливом
   citations:
   - ua-gec:F/Calque n=3 docs=2
   sourceFamily: ua-gec
@@ -1264,7 +1249,8 @@ pairs:
   - ua-gec
   cefrAvailability: a2
   curator: fable-2026-07-06
-  notes: native lemma normalized from GEC surface склянку
+  notes: native lemma normalized from GEC surface склянку; rationale softened per agy review (SUM attests
+    стакан as рідко)
 - calqueLabel: страховка
   calqueSurfaces:
   - страховка
@@ -1291,7 +1277,7 @@ pairs:
   kind: lexical
   corrections:
   - сивий
-  rationale: рос. седой; питоме — сивий
+  rationale: нормативне — сивий; сідий — рідковживаний варіант (СУМ «рідко»), закріплений рос. впливом
   citations:
   - ua-gec:F/Calque n=3 docs=3
   sourceFamily: ua-gec
@@ -1299,6 +1285,7 @@ pairs:
   - ua-gec
   cefrAvailability: b1
   curator: fable-2026-07-06
+  notes: rationale softened per agy review (Котляревський attestation exists)
 - calqueLabel: тьотя
   calqueSurfaces:
   - тьотя
@@ -1307,7 +1294,7 @@ pairs:
   kind: lexical
   corrections:
   - тітка
-  rationale: рос. тётя; питоме — тітка
+  rationale: нейтральне — тітка; тьотя — розмовне запозичення з рос. (СУМ-20 «розм.»)
   citations:
   - ua-gec:F/Calque n=1
   sourceFamily: ua-gec
@@ -1315,6 +1302,7 @@ pairs:
   - ua-gec
   cefrAvailability: a2
   curator: fable-2026-07-06
+  notes: rationale register-based per agy review (Мирний/Сосюра attestations)
 - calqueLabel: фон
   calqueSurfaces:
   - фоні
@@ -1329,10 +1317,11 @@ pairs:
   sourceFamily: ua-gec
   sourceFamilies:
   - ua-gec
-  cefrAvailability: a2
+  cefrAvailability: b1
   curator: fable-2026-07-06
   calqueSense: 'образне/зображальне тло: «на фоні подій»'
   authenticSense: фізичний термін (радіаційний фон)
+  notes: A2→B1 per agy review (sense contrast too nuanced for A2)
 - calqueLabel: хорошо
   calqueSurfaces:
   - хорошо
