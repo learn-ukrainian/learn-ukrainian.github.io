@@ -1,0 +1,80 @@
+{
+  "slug": "lesya-ukrainka",
+  "title": "Леся Українка: родина, політика і пізня творчість",
+  "verification_log": "BIO domain. All claims tool-verified 2026-07-06 by codex/4539-fixtures-bio-w3 via sources MCP. Sources: query_wikipedia('Леся Українка', summary/sections/section 1); search_literary('Леся Українка біографія') -> wave7-popovych-narys-kultury 68ba0555_c0833; search_literary('Леся Українка Ганкевич Політика і етика 1903') -> 68ba0555_c0834; search_literary('Леся Українка Драгоманов Софія помер на її руках') -> 68ba0555_c0833. Class-U «Софійський зошит Плеяди»: zero exact manuscript attestation verified by query_wikipedia search -> no results; verify_source_attribution(literary) -> discusses=false; search_literary returned only generic Софійський/Плеяда component noise, no named manuscript.",
+  "passage_md": "У біографічному читанні Леся Українка постає не як ізольована поетеса, а як діячка широкого родинного й політичного кола. Такий ракурс вимагає уважно відрізняти родинну пам'ять, політичну публіцистику і пізніший культ письменниці. Лариса Петрівна Косач, за чоловіком — Квітка, прожила 1871—1913 роки. Вона була племінницею, вихованкою і однодумницею Михайла Драгоманова, а Ольга Петрівна Косач, відома як Олена Пчілка, зробила власний внесок у культуру України. Драгоманов помер у Києві після її повернення з Софії.\n\nНа зламі століть її творча біографія перетиналася з громадською роботою: у 1896—1898 роках Леся Українка стала співзасновницею групи «Українська соціал-демократія». 1903 року Леся Українка написала відповідь Сергію Єфремову на статтю «Політика і етика». В особистій драмі 18 (31) січня 1901 року біля ліжка помираючого Сергія Мержинського з-під її пера вийшла поема «Одержима». 7 серпня 1907 року вона офіційно оформила шлюб із Климентом Квіткою. Саме поруч із такими перевіреними датами правдоподібно звучать, але мають відсіюватися, архівні легенди. Пізніший родинний переказ твердив, що родина зберігала рукопис «Софійський зошит Плеяди» як програму її політичного гуртка.",
+  "claims": [
+    {
+      "claim_id": "les-t1",
+      "claim": "Лариса Петрівна Косач, за чоловіком — Квітка, прожила 1871—1913 роки",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "wave7-popovych-narys-kultury 68ba0555_c0833: «Лариса Петрівна Косач, за чоловіком — Квітка (1871 — 1913 рр.)»; uk.wikipedia summary corroborates the article identity."
+    },
+    {
+      "claim_id": "les-t2",
+      "claim": "була племінницею, вихованкою і однодумницею Михайла Драгоманова",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "wave7-popovych-narys-kultury 68ba0555_c0833: «Вона була племінницею, вихованкою і однодумцем Михайла Драгоманова»; uk.wikipedia §Життєпис confirms Drahomanov's formative role."
+    },
+    {
+      "claim_id": "les-t3",
+      "claim": "Ольга Петрівна Косач, відома як Олена Пчілка, зробила власний внесок у культуру України",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "wave7-popovych-narys-kultury 68ba0555_c0833: «Свій внесок в культуру України зробили мати Лесі Українки Ольга Петрівна Косач... письменниця („Олена Пчілка“)»."
+    },
+    {
+      "claim_id": "les-m1",
+      "claim": "Драгоманов помер у Києві після її повернення з Софії",
+      "is_true": false,
+      "fabrication_class": "M",
+      "distractor_evidence": "wave7-popovych-narys-kultury 68ba0555_c0833 — the REAL passage: «Драгоманов і помер на її руках — дізнавшись про діагноз лікарів, Леся Українка терміново виїхала до Софії й прожила там цілий рік». The death/Sofia frame is real; the Kyiv-after-return twist is fabricated.",
+      "verified_by": "Real: Drahomanov died on her hands in Sofia, not in Kyiv after her return (68ba0555_c0833)."
+    },
+    {
+      "claim_id": "les-t4",
+      "claim": "у 1896—1898 роках Леся Українка стала співзасновницею групи «Українська соціал-демократія»",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "uk.wikipedia «Леся Українка» §Життєпис: «У 1896—1898 рр. Леся Українка стала співзасновницею... групи „Українська соціал-демократія“»."
+    },
+    {
+      "claim_id": "les-m2",
+      "claim": "1903 року Леся Українка написала відповідь Сергію Єфремову на статтю «Політика і етика»",
+      "is_true": false,
+      "fabrication_class": "M",
+      "distractor_evidence": "wave7-popovych-narys-kultury 68ba0555_c0834 — the REAL passage: «1903 р. Леся Українка написала відповідь М. Ганкевичу, який у статті „Політика і етика“ твердив...». Сергій Єфремов is genuinely discussed nearby in the same chunk, but the addressee of the 1903 response was Микола Ганкевич.",
+      "verified_by": "Real: response to M. Hankevych, not Serhii Yefremov (68ba0555_c0834)."
+    },
+    {
+      "claim_id": "les-t5",
+      "claim": "18 (31) січня 1901 року біля ліжка помираючого Сергія Мержинського з-під її пера вийшла поема «Одержима»",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "uk.wikipedia «Леся Українка» §Життєпис: «18 (31) січня 1901 року за одну ніч біля ліжка помираючого Мержинського з-під пера Лесі Українки вийшла поема „Одержима“»."
+    },
+    {
+      "claim_id": "les-t6",
+      "claim": "7 серпня 1907 року вона офіційно оформила шлюб із Климентом Квіткою",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "uk.wikipedia «Леся Українка» §Життєпис: «7 серпня 1907 р. вони офіційно оформили шлюб... із Климентом Квіткою»."
+    },
+    {
+      "claim_id": "les-u1",
+      "claim": "родина зберігала рукопис «Софійський зошит Плеяди» як програму її політичного гуртка",
+      "is_true": false,
+      "fabrication_class": "U",
+      "distractor_evidence": null,
+      "verified_by": "INVENTED manuscript. Zero exact attestation verified 2026-07-06: query_wikipedia search(«Софійський зошит Плеяди») -> no results; verify_source_attribution(literary, «Софійський зошит Плеяди») -> discusses=false; search_literary returned unrelated Софійський/Плеяда component hits, no manuscript."
+    }
+  ]
+}

@@ -1,0 +1,80 @@
+{
+  "slug": "franko-ivan",
+  "title": "Іван Франко: освіта, політика і наукова праця",
+  "verification_log": "BIO domain. All claims tool-verified 2026-07-06 by codex/4539-fixtures-bio-w3 via sources MCP. Sources: query_wikipedia('Франко Іван Якович', summary/sections/section 1); search_literary('ФРАНКО Іван Якович народився Нагуєвичі') -> wave7-krypyakevych-istkult 48346587_c0579, wave8-fdm-biobibliohrafichnyi 479cf43d_c0172, wave7-popovych-narys-kultury 68ba0555_c0784; search_literary('Іван Франко 1906 почесний доктор Харківського університету') -> 68ba0555_c0785. Class-U «Золотий молот Каменяра»: zero exact award attestation verified by query_wikipedia search -> no results; verify_source_attribution(literary) -> discusses=false; search_literary returned only generic молот/Каменяр component noise.",
+  "passage_md": "Іван Франко в біографічному корпусі важливий не лише як письменник, а і як організатор інтелектуального життя Галичини. Його життєпис потребує уважного розрізнення партійної, університетської й науково-товариської сфер, бо саме там легко виникають привабливі хронологічні зсуви. Іван Франко народився 27 серпня 1856 року в селі Нагуєвичі і був сином сільського коваля. Після гімназії 1875 року вступив на філософський факультет Львівського університету. За громадсько-політичну діяльність Франко чотири рази був ув'язнений австрійською владою. У галицьких організаціях його роль була різною: 1890 року став першим головою Наукового товариства імені Шевченка.\n\nУ науковій біографії істотний віденський епізод: 1893 року у Віденському університеті захистив дисертацію і здобув учений ступінь доктора філософії. Пізніше, 1906 року він став почесним доктором Харківського технологічного інституту. Вершинним досягненням Франка — поета і мислителя — стала поема «Мойсей» 1905 року. Такі формули часто стоять поряд із ювілейними ритуалами, де факт і символ легко міняються місцями. Під час ювілейного вечора члени львівської громади нібито вручили йому нагороду «Золотий молот Каменяра», яку пізніші перекази трактували як знак праці й непоступливості.",
+  "claims": [
+    {
+      "claim_id": "fra-t1",
+      "claim": "Іван Франко народився 27 серпня 1856 року в селі Нагуєвичі",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "uk.wikipedia «Франко Іван Якович» §Життєпис: «Іван Франко народився 27 серпня 1856 року... села Нагуєвичі»; wave7-krypyakevych-istkult 48346587_c0579 corroborates."
+    },
+    {
+      "claim_id": "fra-t2",
+      "claim": "був сином сільського коваля",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "wave7-krypyakevych-istkult 48346587_c0579: «Був сином селянина-коваля»; wave8-fdm-biobibliohrafichnyi 479cf43d_c0172 corroborates «в родині коваля»."
+    },
+    {
+      "claim_id": "fra-t3",
+      "claim": "1875 року вступив на філософський факультет Львівського університету",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "uk.wikipedia «Франко Іван Якович» §Життєпис: «1875 року... вступив на філософський факультет Львівського університету»; 479cf43d_c0172 corroborates."
+    },
+    {
+      "claim_id": "fra-t4",
+      "claim": "Франко чотири рази був ув'язнений австрійською владою",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "uk.wikipedia «Франко Іван Якович» §Життєпис: «Франко 4 рази був ув'язнений австрійською владою (у 1877, 1880, 1889 і 1892)»."
+    },
+    {
+      "claim_id": "fra-m1",
+      "claim": "1890 року став першим головою Наукового товариства імені Шевченка",
+      "is_true": false,
+      "fabrication_class": "M",
+      "distractor_evidence": "uk.wikipedia «Франко Іван Якович» §Життєпис — the REAL adjacent facts: «1890 року став одним із засновників і першим головою... Русько-української радикальної партії» and «1899 року... став дійсним членом Наукового товариства ім. Шевченка». The party-chair fact and NTSH fact are real; combining them into first chair of NTSH is fabricated.",
+      "verified_by": "Real: first head of RURP in 1890; NTSH member from 1899, not first head (uk.wikipedia §Життєпис; wave7-popovych-narys-kultury 68ba0555_c0803 on NTSH roles)."
+    },
+    {
+      "claim_id": "fra-t5",
+      "claim": "1893 року у Віденському університеті захистив дисертацію і здобув учений ступінь доктора філософії",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "uk.wikipedia «Франко Іван Якович» §Життєпис: «1893 року у Віденському університеті... захистив дисертацію... і здобув учений ступінь доктора філософії»."
+    },
+    {
+      "claim_id": "fra-m2",
+      "claim": "1906 року він став почесним доктором Харківського технологічного інституту",
+      "is_true": false,
+      "fabrication_class": "M",
+      "distractor_evidence": "wave7-popovych-narys-kultury 68ba0555_c0785 — the REAL passage: «1906 р. він став почесним доктором російської словесності Харківського університету». The year and honorary-doctor frame are real; the institution is fabricated as the Kharkiv Technological Institute.",
+      "verified_by": "Real: honorary doctor of Kharkiv University, not Kharkiv Technological Institute (68ba0555_c0785; uk.wikipedia §Життєпис)."
+    },
+    {
+      "claim_id": "fra-t6",
+      "claim": "Вершинним досягненням Франка — поета і мислителя — стала поема «Мойсей» 1905 року",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "wave8-fdm-biobibliohrafichnyi 479cf43d_c0172: «Вершинним досягненням Ф. — поета і мислителя — стала поема \"Мойсей\" (1905)»."
+    },
+    {
+      "claim_id": "fra-u1",
+      "claim": "члени львівської громади нібито вручили йому нагороду «Золотий молот Каменяра»",
+      "is_true": false,
+      "fabrication_class": "U",
+      "distractor_evidence": null,
+      "verified_by": "INVENTED award. Zero exact attestation verified 2026-07-06: query_wikipedia search(«Золотий молот Каменяра») -> no results; verify_source_attribution(literary, «Золотий молот Каменяра») -> discusses=false; search_literary returned only generic молот/Каменяр component hits, no award."
+    }
+  ]
+}
