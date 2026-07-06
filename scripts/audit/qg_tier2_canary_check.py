@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
-"""Deterministic E3 Tier-2 canary checker for qg_bakeoff artifacts."""
+"""Deterministic E3 Tier-2 canary checker for qg_bakeoff artifacts.
+
+The E3 gate consumes only single-run calibration directories for the pinned
+founding-four fixtures. Refusing multi-run directories is intentional: frozen
+multi-run reference evidence is a research artifact, not a canary input.
+"""
 
 from __future__ import annotations
 

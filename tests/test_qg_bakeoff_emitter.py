@@ -170,6 +170,61 @@ def _load_lang_uk_leaderboard_records(path: Path) -> list[dict[str, Any]]:
     return records
 
 
+def _artifact(
+    *,
+    slug: str,
+    arm: str,
+    run_index: int,
+    model_judgment_score: int,
+    class_u: tuple[int, int],
+    class_m: tuple[int, int],
+) -> dict[str, Any]:
+    return {
+        "schema_version": qg_bakeoff.RUN_SCHEMA_VERSION,
+        "arm": arm,
+        "run_index": run_index,
+        "created_at": CREATED_AT,
+        "fixture": {"slug": slug, "title": slug, "claim_count": 3},
+        "model": {
+            "pin": PIN,
+            "pin_slug": qg_bakeoff.pin_slug(PIN),
+            "transport": qg_bakeoff.OPENCODE_TRANSPORT,
+            "entrypoint": qg_bakeoff.OPENCODE_ENTRYPOINT,
+            "measurement_tier": qg_bakeoff.OPENCODE_MEASUREMENT_TIER,
+        },
+        "status": "ran",
+        "score": {
+            "model_judgment_score": model_judgment_score,
+            "live_admissible_score": model_judgment_score,
+            "missing_claims": 0,
+            "invalid_fact_checks": 0,
+            "inadmissible_positive_verdicts": 0,
+            "fractions": {
+                "class_u_honesty": {
+                    "numerator": class_u[0],
+                    "denominator": class_u[1],
+                    "text": f"{class_u[0]}/{class_u[1]}",
+                    "low_n": True,
+                },
+                "class_m_alignment": {
+                    "numerator": class_m[0],
+                    "denominator": class_m[1],
+                    "text": f"{class_m[0]}/{class_m[1]}",
+                    "low_n": True,
+                },
+                "false_unsupported_on_true": {
+                    "numerator": 0,
+                    "denominator": 1,
+                    "text": "0/1",
+                    "low_n": True,
+                },
+            },
+        },
+        "tool_call_count": 0,
+        "wall_seconds": 1.0,
+    }
+
+
 def test_emitter_round_trips_through_vendored_lang_uk_aggregation_shape(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
@@ -234,6 +289,91 @@ def test_emitter_round_trips_through_vendored_lang_uk_aggregation_shape(
     assert meta["partial"] is False
     assert meta["transport"] == qg_bakeoff.OPENCODE_TRANSPORT
     assert meta["entrypoint"] == qg_bakeoff.OPENCODE_ENTRYPOINT
+
+
+def test_emitter_multirun_metrics_match_run_aware_scorecard_means(tmp_path: Path) -> None:
+    artifacts = [
+        _artifact(
+            slug="passage-a",
+            arm=qg_bakeoff.TOOLED_ARM,
+            run_index=1,
+            model_judgment_score=10,
+            class_u=(0, 1),
+            class_m=(1, 1),
+        ),
+        _artifact(
+            slug="passage-a",
+            arm=qg_bakeoff.TOOLED_ARM,
+            run_index=2,
+            model_judgment_score=30,
+            class_u=(1, 1),
+            class_m=(1, 1),
+        ),
+        _artifact(
+            slug="passage-b",
+            arm=qg_bakeoff.TOOLED_ARM,
+            run_index=1,
+            model_judgment_score=50,
+            class_u=(1, 1),
+            class_m=(0, 1),
+        ),
+        _artifact(
+            slug="passage-b",
+            arm=qg_bakeoff.TOOLED_ARM,
+            run_index=2,
+            model_judgment_score=70,
+            class_u=(1, 1),
+            class_m=(1, 1),
+        ),
+        _artifact(
+            slug="passage-a",
+            arm=qg_bakeoff.BARE_ARM,
+            run_index=1,
+            model_judgment_score=-10,
+            class_u=(0, 1),
+            class_m=(0, 1),
+        ),
+        _artifact(
+            slug="passage-a",
+            arm=qg_bakeoff.BARE_ARM,
+            run_index=2,
+            model_judgment_score=10,
+            class_u=(0, 1),
+            class_m=(0, 1),
+        ),
+        _artifact(
+            slug="passage-b",
+            arm=qg_bakeoff.BARE_ARM,
+            run_index=1,
+            model_judgment_score=20,
+            class_u=(0, 1),
+            class_m=(0, 1),
+        ),
+        _artifact(
+            slug="passage-b",
+            arm=qg_bakeoff.BARE_ARM,
+            run_index=2,
+            model_judgment_score=20,
+            class_u=(0, 1),
+            class_m=(0, 1),
+        ),
+    ]
+    [result_path] = qg_bakeoff.emit_lm_eval_results(artifacts, tmp_path / "eval-results")
+
+    rows = _load_lang_uk_leaderboard_records(result_path)
+    by_task = {row["task"]: row["value"] for row in rows}
+    model_key = (PIN, qg_bakeoff.OPENCODE_TRANSPORT, qg_bakeoff.OPENCODE_ENTRYPOINT)
+    totals = qg_bakeoff._aggregate_by_model_arm(artifacts)
+    tooled = totals[(model_key, qg_bakeoff.TOOLED_ARM)]
+    lift = qg_bakeoff._lm_eval_harness_lift_for_model(model_key, artifacts)
+
+    assert tooled["model_judgment_score"]["mean"] == 80
+    assert sum(a["score"]["model_judgment_score"] for a in artifacts if a["arm"] == qg_bakeoff.TOOLED_ARM) == 160
+    assert by_task[qg_bakeoff.LM_EVAL_TASK_MODEL_JUDGMENT] == tooled["model_judgment_score"]["mean"]
+    assert by_task[qg_bakeoff.LM_EVAL_TASK_U_HONESTY] == tooled["class_u_honesty"]["mean"]
+    assert by_task[qg_bakeoff.LM_EVAL_TASK_M_ALIGNMENT] == tooled["class_m_alignment"]["mean"]
+    assert lift is not None
+    assert by_task[qg_bakeoff.LM_EVAL_TASK_HARNESS_LIFT] == lift["score"] == 30
 
 
 def test_emitter_marks_legacy_partial_without_wall_clock(tmp_path: Path) -> None:
