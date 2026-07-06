@@ -109,11 +109,26 @@ references:
   note: Деколоніальна перспектива на українську культуру XIX ст., роль митця в імперії
   type: primary
   work: Notre Dame d'Ukraine
+readings:
+- title: "Гулак-Артемовський Семен Степанович"
+  source_name: "Енциклопедія історії України (ЕІУ)"
+  source_url: "http://resource.history.org.ua/cgi-bin/eiu/history.exe?Z21ID=&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Gulak_S"
+  language: uk
+  type: article
+  hosting: link-only
+  note: "Comprehensive overview of his opera career and the creation of 'Zaporozhets za Dunayem'."
+- title: "Семен Гулак-Артемовський"
+  source_name: "Вікіпедія"
+  source_url: "https://uk.wikipedia.org/wiki/Гулак-Артемовський_Семен_Степанович"
+  language: uk
+  type: article
+  hosting: reading-needed
+  note: "Wiki article detailing his complex imperial identity. Needs adaptation to be a safe C1 reading for learners."
 sequence: 60
 slug: semen-hulak-artemovskyy
 subtitle: 'Semen Hulak-Artemovskyy: Creator of the First Ukrainian Opera'
 title: 'Семен Гулак-Артемовський: Творець першої української опери'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: музично-драматичний жанр, що поєднує музику, спів і сценічну дію
   pos: ж.

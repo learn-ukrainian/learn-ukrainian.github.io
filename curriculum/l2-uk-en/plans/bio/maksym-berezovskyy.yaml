@@ -91,11 +91,26 @@ references:
   note: Загальний культурний та стилістичний контекст епохи
   path: https://uk.wikipedia.org/wiki/Українське_бароко
   type: primary_source
+readings:
+- title: "Максим Березовський"
+  source_name: "Енциклопедія історії України (ЕІУ)"
+  source_url: "http://resource.history.org.ua/cgi-bin/eiu/history.exe?Z21ID=&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Berezovskyj_M_S"
+  language: uk
+  type: article
+  hosting: link-only
+  note: "Academic biography covering his early life in Hlukhiv, his time in Italy, and tragic return to St. Petersburg."
+- title: "Березовський Максим Созонтович"
+  source_name: "Енциклопедія сучасної України (ЕСУ)"
+  source_url: "https://esu.com.ua/article-39327"
+  language: uk
+  type: article
+  hosting: link-only
+  note: "Modern encyclopedia entry discussing his legacy and musical contributions as an outstanding Ukrainian composer."
 sequence: 56
 slug: maksym-berezovskyy
 subtitle: 'Maksym Berezovskyy: The Tragedy of a Lost Genius'
 title: 'Максим Березовський: Трагедія втраченого генія'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: автор музичних творів, творець музики
   pos: ч.
