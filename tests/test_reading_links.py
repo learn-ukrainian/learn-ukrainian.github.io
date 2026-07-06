@@ -143,7 +143,10 @@ def test_primary_reading_prefers_explicit_reading_attr(monkeypatch):
     )
 
     assert calls == ["shchedrivka-oi-syvaia-ta-i-zozulechka"]
-    assert '<PrimaryReading href="/readings/shchedrivka-oi-syvaia-ta-i-zozulechka/">' in out
+    assert (
+        '<PrimaryReading id="reading-shchedrivka-oi-syvaia-ta-i-zozulechka" '
+        'href="/readings/shchedrivka-oi-syvaia-ta-i-zozulechka/">'
+    ) in out
 
 
 def test_primary_reading_omits_missing_link(monkeypatch):
@@ -187,3 +190,65 @@ def test_plan_readings_block_is_integrity_gated(monkeypatch):
     assert "Колядка" in out
     assert "When world had no beginning" not in out
     assert "Broken" not in out
+
+
+def test_plan_readings_block_falls_back_to_structured_inline_readings(monkeypatch):
+    monkeypatch.setattr(core, "reading_href_for", lambda slug: None)
+
+    out = core._format_plan_readings_for_mdx(
+        [],
+        ':::primary-reading{reading="kryvyi-tanets-kintsia-ne-znaidemo-fragment"}\n'
+        "> Кривого танця йдемо,\n\n"
+        "— Михайло Грушевський, «Кривого танця йдемо»; права: суспільне надбання.\n"
+        ":::\n",
+        include_inline=True,
+    )
+
+    assert "**Тексти для читання**" in out
+    assert (
+        "- [Кривого танця йдемо](#reading-kryvyi-tanets-kintsia-ne-znaidemo-fragment) "
+        "— уривок у цьому модулі"
+    ) in out
+
+
+def test_plan_readings_block_uses_first_quoted_line_when_attribution_has_no_title(monkeypatch):
+    monkeypatch.setattr(core, "reading_href_for", lambda slug: None)
+
+    out = core._format_plan_readings_for_mdx(
+        [],
+        ':::primary-reading{reading="pysanky-velykodnii-dar-fragment"}\n'
+        "> Христос воскрес, о тім\n"
+        "> знайте\n\n"
+        "— Антологія давньої української літератури; права: суспільне надбання.\n"
+        ":::\n",
+        include_inline=True,
+    )
+
+    assert "[Христос воскрес, о тім](#reading-pysanky-velykodnii-dar-fragment)" in out
+    assert "pysanky velykodnii dar fragment" not in out
+
+
+def test_plan_readings_block_deduplicates_plan_and_inline_readings(monkeypatch):
+    monkeypatch.setattr(
+        core,
+        "reading_href_for",
+        lambda slug: f"/readings/{slug}/" if slug == "shared-reading" else None,
+    )
+
+    out = core._format_plan_readings_for_mdx(
+        [
+            {
+                "title": "«Плановий текст»",
+                "genre": "Пісня",
+                "reading_slug": "shared-reading",
+            }
+        ],
+        ':::primary-reading{reading="shared-reading"}\n'
+        "> Рядок.\n\n"
+        "— Народна творчість, «Інша назва»; права: суспільне надбання.\n"
+        ":::\n",
+        include_inline=True,
+    )
+
+    assert out.count("shared-reading") == 1
+    assert "Інша назва" not in out
