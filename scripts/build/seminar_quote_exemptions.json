@@ -12,6 +12,12 @@
       "reason": "Batch D verified Wikisource traditional-pereказ excerpt outside the local literary corpus; provenance and rights recorded in module/resources.",
       "reviewer": "agy-gemini-3.1-pro-high"
     },
+    "a3e17aa03f8133994f0c961067325803ece5b8223871801a6bc0b9f28562a344": {
+      "date": "2026-07-06",
+      "module_slug": "dytiachyi-folklor-kolyskovi",
+      "reason": "Batch E verified the public-domain Wikisource hosted lullaby Ой ти, коте, коточок; local literary corpus returns only an encyclopedia formula, not the full hosted reading.",
+      "reviewer": "claude-opus-4-8"
+    },
     "3b8710a4d7ca57972e844609b5d8253eda96ff43187ad1439197ef7a03896b54": {
       "date": "2026-07-06",
       "module_slug": "narodni-opovidannia-buvalshchyny-memoraty",
@@ -35,6 +41,12 @@
       "module_slug": "istorychni-perekazy",
       "reason": "Batch D verified traditional historical song from ukrlib; public source is outside the local literary corpus match.",
       "reviewer": "agy-gemini-3.1-pro-high"
+    },
+    "ce4286f8f87f0c12fc69e5aa3d659e7def82696c8867ef4f588fa42cd8ed8f37": {
+      "date": "2026-07-06",
+      "module_slug": "narodni-anekdoty",
+      "reason": "Batch E verified Volodymyr Hnatiuk 1899 anecdote against the Internet Archive scan of Етнографічний збірник, т. 6, с. 1; local literary corpus does not contain this scan page.",
+      "reviewer": "claude-opus-4-8"
     }
   }
 }

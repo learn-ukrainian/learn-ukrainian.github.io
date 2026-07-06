@@ -1,9 +1,9 @@
 {
-  "assembled_mdx_sha256": "2f6976903186c82224af8367794058d9545f21c93a34adbd7bacff7236e8779b",
+  "assembled_mdx_sha256": "aa4c572dbce788b2d7c6c6eadf90b5879255a52a2197eb523e928625d9fda75b",
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "1653205ed72d6f582076a13b1658c284b2601c064ede8e0bd83afd5c60da0a18",
+    "digest": "a6c99cd7986a08ffa6192da1737b96de7a521c569cd6ab57234b53d102ef521f",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/narodni-muzychni-instrumenty.yaml",
@@ -11,7 +11,7 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/narodni-muzychni-instrumenty/module.md",
-        "sha256": "ad745053ade6b72afebe5ab9ff2e8ecd34173f6ae09dbd56d388e5ad308d1fe6"
+        "sha256": "36fbbbcd12970c0fd6a7399b3651f908ce7fa2b034a4175382a1fb77fa2de038"
       },
       {
         "path": "curriculum/l2-uk-en/folk/narodni-muzychni-instrumenty/activities.yaml",
@@ -28,10 +28,10 @@
     ]
   },
   "evidence": {
-    "decolonization": "Instrument discussion continues to avoid decorative museum-list and authenticity-binary framing.",
-    "pedagogical": "Structured readings ground instrument sound and social ensemble framing without turning literary scenes into organology claims.",
-    "review": "Claude Opus 4.8 bridge message 2 PASS for Batch 4 reading remediation; all instrument excerpts verified, no blockers. DeepSeek not used.",
-    "source_policy": "Added on-site shortened readings from verified Nechui-Levytsky and Yanovsky literary sound fragments; no invented songs, makers, audio claims, or image IDs."
+    "decolonization": "Instrument discussion avoids museum-list authenticity binaries and avoids the adjacent anti-Jewish mock-language passage; excerpt functions as sound/social scene, not organology canon.",
+    "pedagogical": "Substantial Nechui-Levytskyi scene gives learners instrument entry, action verbs, ensemble texture, and community response in one readable passage.",
+    "review": "Claude Opus 4.8 bridge message #2 PASS for Batch E M29-M32; reviewer verified the excerpt verbatim against the literary corpus and noted no punch-down surfaced; DeepSeek not used.",
+    "source_policy": "Shortened public-domain excerpt from Ivan Nechui-Levytskyi, \"\u0423\u043a\u0440\u0430\u0457\u043d\u0441\u044c\u043a\u0456 \u0433\u0443\u043c\u043e\u0440\u0438\u0441\u0442\u0438 \u0442\u0430 \u0448\u0442\u0443\u043a\u0430\u0440\u0456\"; UkrLib title confirmed by web search; author died 1918; source wording and punctuation retained."
   },
   "floors": {
     "beauty": 8.5,
@@ -49,7 +49,7 @@
     "model": "claude-opus-4-8"
   },
   "schema_version": 1,
-  "scored_at": "2026-07-05T17:49:56Z",
+  "scored_at": "2026-07-06T13:45:00Z",
   "scores": {
     "beauty": 8.7,
     "decolonization": 9.2,

@@ -1,9 +1,9 @@
 {
-  "assembled_mdx_sha256": "6fbcf959160bf90c7f2f3319d1e943cc1c4ecbbedee7ce145ac1f777205062f8",
+  "assembled_mdx_sha256": "3ca946c796d72c4afaa7cd14003dd57fd8afd4ff25803630fa4b90bfeebd9057",
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "faa63da2571c28e13df4d0853a210393f02c6677f6ffe454ad6aae0ad203870c",
+    "digest": "d75a31484636b7158dea65e2013d2bd88179c8b17cfe121d4e974df6baa9ee87",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/vertep-narodna-drama.yaml",
@@ -11,7 +11,7 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/vertep-narodna-drama/module.md",
-        "sha256": "6032640416e04b2721093ea639cc993ac5df400aede86a52a96fb21077fdff57"
+        "sha256": "7c6ad5ef1167d75588188d688278413082845873ea7f781f9b271519a902cfe5"
       },
       {
         "path": "curriculum/l2-uk-en/folk/vertep-narodna-drama/activities.yaml",
@@ -28,10 +28,10 @@
     ]
   },
   "evidence": {
-    "decolonization": "Religious and stock-character framing remains critical, non-preaching, and stereotype-aware.",
-    "pedagogical": "Structured readings ground sacred-tier, Rachel, and Death motifs without fabricating dialogue or staging details.",
-    "review": "Claude Opus 4.8 bridge message 2 PASS for Batch 4 reading remediation; all three safe vertep excerpts verified, no blockers. DeepSeek not used.",
-    "source_policy": "Added on-site shortened readings from verified XVIII-century vertep anthology fragments while excluding stereotype-heavy interlude monologues."
+    "decolonization": "Vertep framing keeps the sacred-tier conflict focused on tyranny, mortality, and source history; the attribution identifies Markevych 1860 without reproducing obsolete imperial terminology in learner text.",
+    "pedagogical": "Two substantial Markevych/Wikisource/Izbornyk excerpts replace token lines and give learners enough dramatic context for Angel/Herod and Death/Herod scenes.",
+    "review": "Claude Opus 4.8 bridge message #2 PASS for Batch E M29-M32; first excerpt source match verified by reviewer; DeepSeek not used.",
+    "source_policy": "Shortened public-domain excerpts from Mykola Markevych, \"\u0412\u0435\u0440\u0442\u0435\u043f\" in the 1860 publication available through Wikisource/Izbornyk; historical orthography retained; stereotype-heavy interlude material not surfaced."
   },
   "floors": {
     "beauty": 8.5,
@@ -49,7 +49,7 @@
     "model": "claude-opus-4-8"
   },
   "schema_version": 1,
-  "scored_at": "2026-07-05T17:49:56Z",
+  "scored_at": "2026-07-06T14:15:31Z",
   "scores": {
     "beauty": 8.7,
     "decolonization": 9.1,
