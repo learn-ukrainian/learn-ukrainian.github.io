@@ -148,6 +148,10 @@ persona:
     митця, який був водночас виконавцем і жертвою радянського терору.
   voice: Intellectual Historian
 phase: BIO
+readings:
+- title: "Фальківський Дмитро Никанорович"
+  url: "https://uk.wikipedia.org/wiki/Фальківський_Дмитро_Никанорович"
+  note: "Оглядова стаття у Вікіпедії, яка розглядає його поетичну спадщину, участь у революції та страту."
 references:
 - note: Англомовна енциклопедична стаття про життя, чекістське минуле й страту поета.
   path: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CF%5CA%5CFalkivskyDmytro.htm
@@ -180,7 +184,7 @@ sequence: 132
 slug: dmytro-falkivskyi
 subtitle: The Poet of Polissia Devoured by the Terror He Once Served
 title: 'Дмитро Фальківський: Очерет за колиску і куля терору'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: оновлений символізм 1920-х — тяжіння до музичності, натяку й настрою; пізній стиль Фальківського
   pos: ч.

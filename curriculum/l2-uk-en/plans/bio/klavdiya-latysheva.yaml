@@ -148,6 +148,16 @@ persona:
     неіснуючих репресій.
   voice: History-of-Science Scholar
 phase: BIO
+readings:
+- title: "Латишева Клавдія Яківна"
+  url: "https://esu.com.ua/article-53414"
+  note: "Енциклопедія Сучасної України. Біографічна стаття про першу в Україні математикиню, яка захистила кандидатську дисертацію."
+- title: "Клавдія Латишева: Математикиня, що подолала систему"
+  url: "https://stemisfem.org/latisheva"
+  note: "Проєкт «Наука — це вона» (STEM is FEM). Сучасна рецепція життєвого шляху вченої."
+- title: "Латишева Клавдія Яківна"
+  url: "https://uk.wikipedia.org/wiki/Латишева_Клавдія_Яківна"
+  note: "Оглядова стаття у Вікіпедії з докладнішою бібліографією."
 references:
 - note: >-
     Авторитетна стаття: дати, ступені, деканство (1952–54), кафедра (1953–56),
@@ -175,7 +185,7 @@ sequence: 130
 slug: klavdiya-latysheva
 subtitle: 'Klavdiya Latysheva: The Mathematician Behind the Method'
 title: 'Клавдія Латишева: Перша математикиня та її метод'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: жінка, яка професійно займається математикою
   pos: ж.
