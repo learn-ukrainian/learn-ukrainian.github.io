@@ -483,7 +483,10 @@ def build_hermes_parse_fields(
             substitution=substitution,
         )
 
-    inband_error = _inband_provider_error(response) if returncode == 0 else None
+    # Not gated on returncode: the shape constraints are conservative on
+    # their own, and hermes pairing the stdout error line with a nonzero
+    # exit must not bypass detection (review D1, PR #4580).
+    inband_error = _inband_provider_error(response)
     if inband_error is not None:
         error_text, status = inband_error
         return HermesParseFields(

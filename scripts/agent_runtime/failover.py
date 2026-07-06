@@ -35,7 +35,10 @@ _RATE_LIMIT_RE = re.compile(
 # whose key is missing/disabled with "Provider '<name>' is set in config.yaml
 # but no API key was found ..." (live-captured 2026-07-06). Rotating to the
 # next route on a dead credential is the point of the chain, so these
-# classify as auth.
+# classify as auth. Judgment call: the phrasings are broad enough that a
+# provider passing through a verbose downstream error body could false-match;
+# accepted because the classifier only ever sees text from an already-failed
+# attempt, so the cost of a false positive is one extra route rotation.
 _AUTH_RE = re.compile(
     r"\b(?:401|403)\b|unauthorized|forbidden|invalid api key|"
     r"authentication failed|auth(?:orization)? failed|"
@@ -183,6 +186,17 @@ def load_failover_chain(
         profile_raw = raw_route.get("profile")
         profile = str(profile_raw).strip() if profile_raw is not None else None
         if not provider or not model:
+            # Fail-safe by design (malformed config must never break
+            # dispatches), but LOUD: a dropped route can silently disable
+            # the whole chain via the len<2 check below (review D4,
+            # PR #4580). Only route 0 may omit model (inherits request).
+            logging.getLogger(__name__).warning(
+                "runner failover chain %s[%d] dropped: missing %s "
+                "(routes after index 0 must set an explicit model)",
+                agent_name,
+                index,
+                "provider" if not provider else "model",
+            )
             continue
         if is_forbidden_glm_route(provider, model):
             raise ValueError(

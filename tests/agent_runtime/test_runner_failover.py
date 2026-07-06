@@ -471,3 +471,49 @@ def test_classifier_routes_inband_http_401_stdout_to_auth():
     )
 
     assert trigger == "auth"
+
+
+def test_classifier_refuses_to_rotate_on_inband_400():
+    """Review D2 (PR #4580): a request-format error would fail identically on
+    every route — the gate must return None so the chain is not burned."""
+    from agent_runtime.failover import classify_failover_trigger
+
+    trigger = classify_failover_trigger(
+        parse=ParseResult(
+            ok=False,
+            response="",
+            stderr_excerpt="HTTP 400: Invalid request: unknown parameter 'foo'",
+        ),
+        returncode=0,
+        kill_reason=None,
+        stdout_text="",
+        stderr_text="",
+    )
+
+    assert trigger is None
+
+
+def test_chain_route_missing_model_after_index_zero_warns_and_drops(
+    tmp_path, caplog
+):
+    """Review D4 (PR #4580): fail-safe stays (no raise), but loudly."""
+    import logging
+
+    from agent_runtime.failover import load_failover_chain
+
+    config = tmp_path / "failover.yaml"
+    config.write_text(
+        "chains:\n"
+        "  deepseek:\n"
+        "    routes:\n"
+        "      - provider: deepseek\n"
+        "      - provider: openrouter\n",  # missing model -> dropped
+        encoding="utf-8",
+    )
+    with caplog.at_level(logging.WARNING):
+        chain = load_failover_chain(
+            "deepseek", effective_model="deepseek-v4-pro", path=config
+        )
+
+    assert chain is None  # single usable route -> feature disabled
+    assert any("deepseek[1] dropped" in rec.getMessage() for rec in caplog.records)

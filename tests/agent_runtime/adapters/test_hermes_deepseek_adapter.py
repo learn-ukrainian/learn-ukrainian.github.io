@@ -316,3 +316,43 @@ def test_deepseek_adapter_single_line_non_error_response_stays_ok():
     )
 
     assert result.ok is True
+
+
+def test_deepseek_adapter_inband_error_detected_on_nonzero_returncode():
+    """Detection must not depend on returncode (review D1, PR #4580)."""
+    result = HermesDeepSeekAdapter().parse_response(
+        stdout="HTTP 401: Authentication Fails, Your api key: ****robe is invalid",
+        stderr="",
+        returncode=1,
+        output_file=None,
+    )
+
+    assert result.ok is False
+    assert "HTTP 401" in (result.stderr_excerpt or "")
+
+
+def test_deepseek_adapter_inband_ansi_wrapped_error_is_detected():
+    """strip_ansi runs before detection — a colorized error line still fails."""
+    result = HermesDeepSeekAdapter().parse_response(
+        stdout="\x1b[31mHTTP 401: Authentication Fails\x1b[0m",
+        stderr="",
+        returncode=0,
+        output_file=None,
+    )
+
+    assert result.ok is False
+    assert "HTTP 401" in (result.stderr_excerpt or "")
+
+
+def test_deepseek_adapter_inband_400_parses_as_failure():
+    """A 400 is still a failed invocation (never content) even though the
+    failover classifier deliberately refuses to rotate on it."""
+    result = HermesDeepSeekAdapter().parse_response(
+        stdout="HTTP 400: Invalid request: unknown parameter 'foo'",
+        stderr="",
+        returncode=0,
+        output_file=None,
+    )
+
+    assert result.ok is False
+    assert "HTTP 400" in (result.stderr_excerpt or "")
