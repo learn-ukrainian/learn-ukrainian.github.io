@@ -385,10 +385,13 @@ def test_publish_script_style_invocation_reaches_projection_read(tmp_path: Path)
     scripts/practice_deck/publish.py`) runs SCRIPT-style, without a package context.
     The lazy `scripts.*` imports inside expected_deck_version() must still resolve
     (#4660 review fix — sys.path bootstrap; the #4529 lazy-absolute-import class).
-    An empty sqlite file gets PAST the exists() guard and INTO the lazy-import path."""
+    Hermetic: fixture shards in a tmp practice dir get PAST collect_shards, and an
+    empty sqlite file gets PAST the exists() guard and INTO the lazy-import path."""
     import sys
 
     repo_root = Path(publish_module.__file__).resolve().parents[2]
+    practice_dir = tmp_path / "lexicon"
+    _write_practice_deck(practice_dir)
     empty_db = tmp_path / "atlas.db"
     empty_db.write_bytes(b"")
     result = subprocess.run(
@@ -396,6 +399,12 @@ def test_publish_script_style_invocation_reaches_projection_read(tmp_path: Path)
             sys.executable,
             str(repo_root / "scripts" / "practice_deck" / "publish.py"),
             "--dry-run",
+            "--practice-dir",
+            str(practice_dir),
+            "--gzip",
+            str(tmp_path / "deck.json.gz"),
+            "--pointer",
+            str(tmp_path / "pointer.json"),
             "--atlas-db",
             str(empty_db),
         ],
