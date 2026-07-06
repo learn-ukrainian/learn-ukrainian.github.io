@@ -79,6 +79,30 @@ persona:
   role: Ведучий розслідування, що розкриває зв'язки між локальною корупцією, бездіяльністю правоохоронних органів та долею однієї людини.
   voice: Investigative-Journalist
 phase: BIO
+readings:
+- title: Хто замовив Катю Гандзюк?
+  language: uk
+  genre: Аналітична стаття / Громадська ініціатива
+  source_type: secondary
+  role: orientation
+  source: Ініціатива "Хто замовив Катю Гандзюк?"
+  source_url: https://gandziuk.org
+  license: copyrighted
+  rights_note: Сайт ініціативи є агрегатором новин та розслідувань у справі.
+  hosting: link-only
+  cefr_min: C1
+  learner_task: Ознайомитися з хронологією боротьби за справедливість на сайті ініціативи пам'яті Катерини Гандзюк.
+- title: "Безкарність вбиває. Ким була і за що боролась Катя Гандзюк"
+  language: uk
+  genre: Аналітична стаття
+  source_type: secondary
+  role: reading
+  source: Українська правда
+  license: copyrighted
+  rights_note: Матеріал УП є об'єктом авторського права. Потребує точного посилання.
+  hosting: reading-needed
+  cefr_min: C1
+  learner_task: Прочитати статтю-некролог або розслідування про діяльність Гандзюк і виписати основні причини її конфлікту з місцевими елітами.
 references:
 - title: Kateryna Handziuk
   note: Compiled from Wikipedia, news investigations (Slidstvo.Info), and reports from human rights organizations.
@@ -93,7 +117,7 @@ sequence: 191
 slug: kateryna-handziuk
 subtitle: The Activist Who Paid the Ultimate Price for Justice
 title: 'Катерина Гандзюк: Голос правди та боротьба проти свавілля'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: жінка, яка веде активну громадсько-політичну діяльність
   pos: ж.

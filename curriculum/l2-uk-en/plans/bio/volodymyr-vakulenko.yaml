@@ -81,6 +81,32 @@ persona:
   role: Старший біограф, який намагається осмислити трагедію Вакуленка, поєднуючи особистий біль із суворим професійним аналізом
   voice: Senior-Biographer-Mourning
 phase: Executed Renaissance 2.0
+readings:
+- title: Вакуленко-К. Володимир
+  language: uk
+  genre: Біографічна довідка
+  source_type: reference
+  role: orientation
+  source: Український ПЕН
+  source_url: https://pen.org.ua/members/vakulenko-k-volodymyr
+  license: copyrighted
+  rights_note: Матеріали сайту PEN Ukraine захищені авторським правом. Використовувати як link-only джерело.
+  hosting: link-only
+  cefr_min: C1
+  learner_task: Ознайомитися з офіційною біографічною довідкою Українського ПЕН, виписати ключові факти літературної та громадської діяльності Вакуленка до окупації.
+- title: "Я перетворююсь... Щоденник окупації. Вибрані вірші"
+  language: uk
+  genre: Щоденник / Поезія
+  source_type: primary
+  role: reading
+  source: Vivat
+  source_url: https://vivat.com.ua/product/ya-peretvoryuyus-shchodennyk-okupatsiyi-vybrani-virshi
+  license: copyrighted
+  rights_note: Текст щоденника та віршів захищено авторським правом. Хостинг повної версії заборонений.
+  hosting: link-only
+  cefr_min: C1
+  learner_task: Ознайомитися з анотацією до книги та прочитати доступні фрагменти щоденника окупації для аналізу мови свідка та письменника під час війни.
+  caveats: Містить чутливий контент, описи життя в окупації та психологічного тиску.
 references:
 - title: Я перетворююсь. Щоденник окупації. Вибрані вірші
   author: Володимир Вакуленко
@@ -100,7 +126,7 @@ sequence: 187
 slug: volodymyr-vakulenko
 subtitle: Голос, який не змогли змусити замовкнути
 title: Володимир Вакуленко
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: здатність бути самостійним, незалежним у своїх діях та думках; риса, притаманна активному творцю, а не пасивній жертві
   pos: ж.
