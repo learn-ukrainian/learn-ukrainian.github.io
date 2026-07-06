@@ -79,17 +79,29 @@ persona:
   voice: Lviv-Knaipa-Chronicler
 phase: BIO.4
 readings:
-- title: 'Містифікатор на службі Львова: як Юрій Винничук вигадав історію міста'
-  source_name: ЛітАкцент
+- title: Винничук Юрій Павлович
+  source_name: Енциклопедія Сучасної України
+  source_url: https://esu.com.ua/article-34039
   language: uk
-  genre: 'Літературна критика'
-  source_type: 'Літературознавчий есей'
-  role: 'Аналіз прийомів містифікації та постмодерної гри з історією'
+  genre: Енциклопедична стаття
+  source_type: reference
+  role: primary_bio
   cefr_min: C1
-  license: 'copyrighted'
-  hosting: 'reading-needed'
-  learner_task: 'Зібрати приклади того, як Винничук конструює "легенди". Обговорити етичні межі такої містифікації: чи це корисна "деколонізація" уяви, чи небезпечне розмивання правди?'
-  caveats: 'Критична стаття, яка може фокусуватися більше на літературних прийомах, ніж на ширшому культурному контексті Галичини.'
+  license: copyrighted
+  hosting: link-only
+  learner_task: 'Виписати ранні львівські театральні й журналістські практики, прозові тексти та жанрову різноманітність; поставити питання, як довідкова біографія співвідноситься з образом містифікатора.'
+  caveats: 'ЕСУ подає базову біографію й перелік ранніх творів; для етики містифікації та львівського міфотворення потрібна окрема критична стаття або уривок з тексту.'
+- title: Критична стаття про містифікацію й львівський міф у прозі Винничука
+  source_name: Підлягає уточненню
+  language: uk
+  genre: Літературна критика
+  source_type: reading-needed
+  role: reading-needed
+  cefr_min: C1
+  license: unknown
+  hosting: reading-needed
+  learner_task: 'Підібрати українську критичну статтю про "Легенди Львова", "Танґо смерті" або постмодерну гру з історією; не використовувати неперевірені назви.'
+  caveats: 'Потрібна окрема курація, щоб не підмінити критику рекламним або довідковим текстом.'
 references:
 - title: Yuriy Vynnychuk
   note: Compiled biographical data, list of works, key critical interpretations
@@ -114,7 +126,7 @@ sequence: 174
 slug: yuriy-vynnychuk
 subtitle: 'Yuriy Vynnychuk: The Lviv Storyteller and Mystifier'
 title: 'Юрій Винничук: Львівський казкар'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: свідоме введення в оману; твір, що видається за створений іншим автором або в іншу епоху
   pos: ж.
