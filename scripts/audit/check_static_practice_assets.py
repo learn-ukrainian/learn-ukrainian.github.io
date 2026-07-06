@@ -26,7 +26,21 @@ DEFAULT_PRACTICE_DIR = Path("site/public/lexicon")
 DEFAULT_REVIEWED_SOURCES = Path("site/src/data/lexicon-practice-reviewed-sources.json")
 DEFAULT_LEVELS = ("A1", "A2", "B1", "B2", "C1")
 DAILY_CEFR_LEVELS = {"A1", "A2", "B1"}
-PRACTICE_MODES = {"flashcards", "matching", "choice", "cloze"}
+# Must mirror PRACTICE_MODES in site/src/lib/lexicon/srs.ts (spec v5 §9 union;
+# the check flags asset modes OUTSIDE this set, so listing not-yet-shipped
+# modes is safe — decks for them simply don't exist yet).
+PRACTICE_MODES = {
+    "flashcards",
+    "matching",
+    "choice",
+    "cloze",
+    "paradigm",
+    "stress",
+    "heritage",
+    "synonym",
+    "classify",
+    "paronym",
+}
 EXPECTED_SCHEMAS = {
     "index": "atlas-practice-index",
     "lexemes": "atlas-practice-lexemes",
