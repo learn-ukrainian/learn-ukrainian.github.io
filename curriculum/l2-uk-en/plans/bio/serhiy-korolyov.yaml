@@ -83,15 +83,15 @@ persona:
   voice: Historian-Debunker
 phase: BIO
 readings:
-- caveats: Академічна енциклопедична стаття.
+- caveats: Академічна енциклопедична стаття; подає радянську інституційну кар'єру поруч із українськими біографічними зв'язками.
   hosting: external
   language: uk
   role: Контекст
-  source_name: Енциклопедія історії України
+  source_name: Енциклопедія Сучасної України
   source_type: Енциклопедія
-  task: Ознайомитися з основними фактами біографії Сергія Корольова, включаючи період репресій.
+  task: Ознайомитися з біографією Сергія Корольова, розрізняючи українське походження й освіту від його радянської інституційної кар'єри.
   title: Корольов Сергій Павлович
-  url: http://www.history.org.ua/?termin=Korolov_S
+  url: https://esu.com.ua/article-5104
 references:
 - title: Корольов Сергій Павлович
   note: Базова біографія, перелік досягнень, інформація про українське походження.
@@ -109,7 +109,7 @@ sequence: 143
 slug: serhiy-korolyov
 subtitle: The Ukrainian who Opened the Cosmos
 title: 'Сергій Корольов: Батько космічної ери'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: інженер, що розробляє конструкції машин, механізмів, споруд
   pos: ч.

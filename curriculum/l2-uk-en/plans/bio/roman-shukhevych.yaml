@@ -89,7 +89,7 @@ readings:
   source_type: Енциклопедія
   task: Ознайомитися з академічним викладом біографії Романа Шухевича та його діяльності.
   title: Шухевич Роман Осипович
-  url: http://www.history.org.ua/?termin=Shukhevych_R
+  url: https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&I21DBN=EIu&P21DBN=EIU&S21CNR=20&S21COLORTERMS=0&S21FMT=eiu_all&S21P01=0&S21P02=0&S21P03=TRN%3D&S21REF=10&S21STN=1&S21STR=Shukhevych_R&Z21ID=
 references:
 - title: Roman Shukhevych
   note: Compiled summary from primary sources listed below and academic papers on UPA.
@@ -114,7 +114,7 @@ sequence: 142
 slug: roman-shukhevych
 subtitle: The Man and the Myth of the UPA Commander
 title: 'Роман Шухевич: Головний командир УПА'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: найвища військова посада, особа, що очолює всі збройні сили
   pos: ч.

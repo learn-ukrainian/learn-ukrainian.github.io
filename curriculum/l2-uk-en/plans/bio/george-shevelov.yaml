@@ -88,7 +88,7 @@ readings:
   source_type: Енциклопедія
   task: Ознайомитися з академічним викладом життя та наукової спадщини Юрія Шевельова.
   title: Шевельов Юрій Володимирович
-  url: http://www.history.org.ua/?termin=Shevelov_Y
+  url: https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&I21DBN=EIu&P21DBN=EIU&S21CNR=20&S21COLORTERMS=0&S21FMT=eiu_all&S21P01=0&S21P02=0&S21P03=TRN%3D&S21REF=10&S21STN=1&S21STR=Shevelov_Y&Z21ID=
 references:
 - title: Шевельов Юрій Володимирович
   note: Загальна біографія, наукова кар''єра, перелік праць
@@ -112,7 +112,7 @@ sequence: 144
 slug: george-shevelov
 subtitle: The Man Who Demolished Imperial Myths About the Ukrainian Language
 title: 'Юрій Шевельов: Архітектор української лінгвістики'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: розділ мовознавства, що вивчає звукову будову мови та її функціонування
   pos: ж.
