@@ -644,6 +644,16 @@ function shouldLoadCloze(mode: PracticeModeFilter): boolean {
   return ['mixed', 'cloze', 'stress', 'classify', 'paradigm', 'synonym'].includes(mode);
 }
 
+function sessionScopeIndexForMode(
+  index: PracticeIndexItem[],
+  modeFilter: PracticeModeFilter,
+): PracticeIndexItem[] {
+  if (modeFilter === 'mixed') return index;
+  return index
+    .filter((item) => item.modes.includes(modeFilter))
+    .map((item) => ({ ...item, modes: [modeFilter] }));
+}
+
 /** Learner level persisted in the shared `lu-learner-level` key (also used by Words of the Day). */
 function readLearnerLevel(fallback: CefrLevel): CefrLevel {
   if (typeof window === 'undefined') return fallback;
@@ -768,9 +778,11 @@ function LexiconPracticeIsland({
 
   useEffect(() => {
     if (!autoStart || !deck || plannedTotal > 0) return;
-    const plan = computeSessionScope(deck.index, sessionBudget, { dailyNewCount });
+    const plan = computeSessionScope(sessionScopeIndexForMode(deck.index, mode), sessionBudget, {
+      dailyNewCount,
+    });
     resetSessionTracking(plan, sessionBudget);
-  }, [autoStart, dailyNewCount, deck, plannedTotal, sessionBudget]);
+  }, [autoStart, dailyNewCount, deck, mode, plannedTotal, sessionBudget]);
 
   useEffect(() => {
     const page = document.querySelector('.lexicon-practice-page');
@@ -1025,7 +1037,7 @@ function LexiconPracticeIsland({
     setError(null);
     const loadedDeck = await ensureDeck(shouldLoadCloze(nextMode));
     if (!loadedDeck) return;
-    const index = loadedDeck.index;
+    const index = sessionScopeIndexForMode(loadedDeck.index, nextMode);
     const plan = computeSessionScope(index, budget, { dailyNewCount });
     const nextSeed = resume?.sessionSeed ?? makePracticeSessionSeed();
     if (resume) {

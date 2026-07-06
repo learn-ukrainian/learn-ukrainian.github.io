@@ -451,7 +451,7 @@ describe('LexiconPractice', () => {
         lemmaId: entry.lemmaId,
         lemma: entry.lemma,
         cefr: 'A1',
-        modes: ['flashcards', 'matching', 'choice'],
+        modes: entry.lemmaId === 'bachyty' ? ['choice'] : ['flashcards'],
         hasCloze: false,
         clozeIds: [],
         newOrder: index,
@@ -463,7 +463,7 @@ describe('LexiconPractice', () => {
     const labels = within(choice)
       .getAllByRole('button')
       .map((button) => button.querySelector('span:not(.mc-key)')?.textContent ?? '');
-    // First card is the small-POS verb (newOrder 0). Without cross-POS backfill it
+    // The only selectable choice card is the small-POS verb. Without cross-POS backfill it
     // would starve (<3 distractors) and not render; it must show a full 4-option set.
     expect(labels).toHaveLength(4);
     // The verb answer is present whichever polarity the selector picked.
