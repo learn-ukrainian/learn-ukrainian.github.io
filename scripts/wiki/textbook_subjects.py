@@ -396,4 +396,9 @@ AUTHOR_UK_BY_TRANSLIT: dict[str, str] = {
     "grygorovych": "Григорович",
     "zadorozhnyj": "Задорожний",
     "zadorozhnij": "Задорожний",
+    # #4593 batch-3 scan-fallback edition switches (title-probed 2026-07-07):
+    # Воронцова/Гущина/Шиян zdorovia-8 scans → Василенко digital; Давидюк/
+    # Данилевська/Мелещенко etyka-6 scans → Мартинюк digital.
+    "vasylenko": "Василенко",
+    "martyniuk": "Мартинюк",
 }

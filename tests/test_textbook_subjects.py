@@ -300,6 +300,12 @@ def test_vsesvitnia_ordering_precedence() -> None:
         ("9-klas-zarubizhna-literatura-kovbasenko-2026", "zarlit"),
         ("9-klas-geografiia-boiko-2026", "heohrafiya"),
         ("9-klas-hromadianska-osvita-pometun-2026", "hromadianska"),
+        # scan-fallback edition switches — the stems actually on disk (2026-07-07)
+        ("6-klas-mystetstvo-rublia-2023", "mystetstvo"),
+        ("6-klas-etyka-martyniuk-2023", "etyka"),
+        ("8-klas-zdorovia-vasylenko-2025", "zdorovia"),
+        ("8-klas-hromadianska-osvita-vasylkiv-2025", "hromadianska"),
+        ("10-klas-vsesvitnia-istoriia-gisem-2018-stand", "vsesvitnia"),
     ],
 )
 def test_batch3_source_files_map_correctly(stem: str, expected_subject: str) -> None:
