@@ -100,6 +100,15 @@ _LATIN_TO_UK: dict[str, str] = {
     "hryhorovych": "Григорович",
     "popel": "Попель",
     "anderson": "Андерсон",
+    "pryshliak": "Пришляк",
+    "krupska": "Крупська",
+    "lukianchykov": "Лук'янчиков",
+    "narovlianskyi": "Наровлянський",
+    "fuka": "Фука",
+    "komarovska": "Комаровська",
+    "masol": "Масол",
+    "zapotockyi": "Запотоцький",
+    "hilberh": "Гільберг",
     # Non-textbook author-name strings already stored in Latin/English on
     # ingestion (literary works, podcast, style-guide author). Map them
     # to Cyrillic so author_uk is uniformly Cyrillic when populated.
