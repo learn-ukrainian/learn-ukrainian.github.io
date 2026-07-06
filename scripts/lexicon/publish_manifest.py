@@ -304,9 +304,10 @@ def assert_manifest_richness_publishable(
         raise ManifestPublishError(
             f"publish blocked (#4515): manifest at {manifest_path} has {thin} thin "
             f"POC pages (> cap {cap}). Enrich the thin entries before publishing "
-            f"(list them: scripts/audit/audit_atlas_poc_richness.py --format json; "
-            f"fill via enrich_entry / the fill recipe), then re-run. The cap has "
-            f"no publish-time override by design."
+            f"(entry list: scripts/audit/audit_atlas_poc_richness.py --format tsv; "
+            f"machine-readable: --format json --limit 2000; fill via enrich_entry / "
+            f"the fill recipe), then re-run. The cap has no publish-time override "
+            f"by design."
         )
     return summary
 
