@@ -139,6 +139,23 @@ persona:
     поряд, відділяючи задокументований факт від легенди.
   voice: Literary Forensic Historian
 phase: BIO
+readings:
+- caveats: Публіцистичний лонгрід про долю репресованих.
+  hosting: external
+  language: uk
+  role: Контекст
+  source_name: Локальна історія
+  source_type: Стаття
+  task: Прочитати статтю про життя та трагічну загибель Олекси Слісаренка в Сандармосі.
+  title: 'Олекса Слісаренко. Опонент великодержавного шовінізму'
+  url: https://sandarmoh.localhistory.org.ua/slisarenko
+- hosting: reading-needed
+  language: uk
+  role: Першоджерело
+  source_type: Поезія / Проза
+  task: Знайти фрагмент ранньої лірики чи пригодницької прози Слісаренка.
+  title: Уривок із творів Олекси Слісаренка
+  url: null
 references:
 - note: Англомовна енциклопедична стаття про життя й доробок (справжнє прізвище, групи, твори, репресії).
   path: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CS%5CL%5CSlisarenkoOleksa.htm
@@ -170,7 +187,7 @@ sequence: 115
 slug: oleksa-slisarenko
 subtitle: The Avant-Garde Poet and Adventure-Novelist Executed at Sandarmokh
 title: 'Олекса Слісаренко: Чорний ангел і Сандармох'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: авангардний літературно-мистецький напрям початку XX ст., що відкидав традицію
     й проголошував культ нового, динаміки й технізованого слова

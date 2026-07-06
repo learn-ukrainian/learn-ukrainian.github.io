@@ -80,6 +80,23 @@ persona:
   role: Модератор семінару, що ставить складні питання про ціну боротьби, еволюцію методів та моральні дилеми лідера визвольного руху.
   voice: Critical-Historian
 phase: BIO.4
+readings:
+- caveats: Академічна енциклопедична стаття.
+  hosting: external
+  language: uk
+  role: Контекст
+  source_name: Енциклопедія історії України
+  source_type: Енциклопедія
+  task: Ознайомитися з життєписом Євгена Коновальця та його роллю у створенні УВО і ОУН.
+  title: Коновалець Євген Михайлович
+  url: https://history.org.ua/?termin=Konovalets_E
+- hosting: reading-needed
+  language: uk
+  role: Першоджерело
+  source_type: Стаття / Документ
+  task: Знайти фрагмент статті Коновальця або меморандуму ОУН, що розкриває його політичні погляди.
+  title: Фрагмент статті Є. Коновальця
+  url: null
 references:
 - title: Yevhen Konovalets
   note: Compiled from Wikipedia UA, Encyclopedia of Ukraine. Covers early life, military career, OUN leadership, assassination.
@@ -99,7 +116,7 @@ sequence: 117
 slug: yevhen-konovalets
 subtitle: 'Yevhen Konovalets: From Military Commander to Architect of the Underground'
 title: 'Євген Коновалець: Полковник і організатор'
-version: '4.0'
+version: '4.2'
 vocabulary_hints:
 - definition: вище офіцерське звання у збройних силах, зокрема в Армії УНР
   pos: ч.
