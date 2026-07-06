@@ -43,6 +43,8 @@ for _path in (PROJECT_ROOT, SCRIPTS_DIR):
     if str(_path) not in sys.path:
         sys.path.insert(0, str(_path))
 
+from wiki.textbook_subjects import CANONICAL_TEXTBOOK_SUBJECTS
+
 try:
     from mcp.server import Server
     from mcp.server.stdio import stdio_server
@@ -135,7 +137,11 @@ async def list_tools() -> list[Tool]:
                     },
                     "subject": {
                         "type": "string",
-                        "description": "Filter by subject (e.g., 'ukrainska-mova', 'bukvar'). Optional."
+                        "description": (
+                            "Optional canonical textbook subject slug. "
+                            "Examples: 'ukrmova', 'ukrlit', 'istoriya', 'bukvar'."
+                        ),
+                        "enum": list(CANONICAL_TEXTBOOK_SUBJECTS),
                     },
                     "trust_tier": {
                         "type": "integer",
@@ -1286,10 +1292,11 @@ async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
 async def handle_search_text(args: dict) -> list[TextContent]:
     query = args["query"]
     limit = min(args.get("limit", 5), 20)
+    subject = args.get("subject")
 
     from wiki.sources_db import search_textbooks
     keywords = {w for w in query.lower().split() if len(w) >= 3}
-    hits = await asyncio.to_thread(search_textbooks, keywords, limit)
+    hits = await asyncio.to_thread(search_textbooks, keywords, limit, subject=subject)
 
     if not hits:
         return [TextContent(type="text", text="No results found.")]
@@ -1299,6 +1306,7 @@ async def handle_search_text(args: dict) -> list[TextContent]:
         lines.append(f"### Result {i}")
         lines.append(f"- **Section**: {hit.get('section_title', hit.get('title', ''))}")
         lines.append(f"- **Source**: Grade {hit.get('grade', '?')}, {hit.get('author', '?')}")
+        lines.append(f"- **Subject**: {hit.get('subject', '')}")
         lines.append(f"- **Chunk ID**: `{hit.get('chunk_id', '')}`")
         lines.append(f"- **Text**:\n{hit.get('text', '')}")
         lines.append("")

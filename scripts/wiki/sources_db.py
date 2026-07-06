@@ -38,6 +38,7 @@ from .channels import rank_external_hits
 from .chunking import chunk_text, policy_for
 from .dense_rerank import _get_tokenizer, rerank_candidates, rerank_sections
 from .query_builder import build_query_buckets
+from .textbook_subjects import normalize_subject_slug
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 SOURCES_DB_PATH = PROJECT_ROOT / "data" / "sources.db"
@@ -1186,6 +1187,7 @@ def search_textbooks(
     max_total: int = 40,
     *,
     track: str | None = None,
+    subject: str | None = None,
 ) -> list[dict]:
     """Deprecated chunk-level FTS5 textbook search kept for backward compatibility.
 
@@ -1193,12 +1195,24 @@ def search_textbooks(
     Requests extra rows from FTS5 to compensate for filtered-out noise.
 
     `track`: accepted for backward compatibility with existing callers;
-    the value is no longer consulted. This function is deprecated; use
+    the value is no longer consulted. `subject` filters against the
+    canonical `textbooks.subject` slug. This function is deprecated; use
     `search_sources` for new code.
     """
     _ = track  # accepted for backward compatibility; ignored
     extra_where = ""
     extra_params: tuple = ()
+    if subject:
+        normalized_subject = normalize_subject_slug(subject)
+        if normalized_subject is None:
+            return []
+        if "subject" not in _table_columns("textbooks"):
+            raise sqlite3.OperationalError(
+                "textbooks.subject column missing; run "
+                "scripts/migrations/2026-07-06-add-subject-to-textbooks.py"
+            )
+        extra_where = "AND s.subject = ?"
+        extra_params = (normalized_subject,)
     # Request 2x to compensate for filtered TOC/noise chunks
     rows = _fts_search(
         "textbooks_fts", "textbooks", ukr_keywords, max_total * 2,

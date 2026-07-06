@@ -56,7 +56,7 @@ def sample_data(tmp_path):
          "grade": "5", "author": "avramenko", "author_uk": "Авраменко",
          "token_count": 50},
     ]
-    with open(tb_dir / "5-klas-test.jsonl", "w") as f:
+    with open(tb_dir / "5-klas-ukrmova-avramenko-2022.jsonl", "w") as f:
         for c in chunks:
             f.write(json.dumps(c, ensure_ascii=False) + "\n")
 
@@ -133,6 +133,7 @@ class TestBuildSourcesDb:
         # Check each table has data
         assert conn.execute("SELECT COUNT(*) FROM external_articles").fetchone()[0] == 2
         assert conn.execute("SELECT COUNT(*) FROM textbooks").fetchone()[0] == 1
+        assert conn.execute("SELECT subject FROM textbooks").fetchone()[0] == "ukrmova"
         assert conn.execute("SELECT COUNT(*) FROM literary_texts").fetchone()[0] == 1
         assert conn.execute("SELECT COUNT(*) FROM sum11").fetchone()[0] == 1
         assert conn.execute("SELECT COUNT(*) FROM grinchenko").fetchone()[0] == 1
@@ -184,6 +185,27 @@ class TestSourcesDb:
         results = search_textbooks({"родовий", "відмінок"}, max_total=5)
         assert len(results) >= 1
         assert results[0]["source_type"] == "textbook"
+
+    def test_search_textbooks_subject_filter(self, sample_data, monkeypatch):
+        self._build_and_patch(sample_data, monkeypatch)
+        from wiki.sources_db import search_textbooks
+
+        results = search_textbooks(
+            {"родовий", "відмінок"},
+            max_total=5,
+            subject="ukrainska-mova",
+        )
+        assert len(results) >= 1
+        assert {row["subject"] for row in results} == {"ukrmova"}
+
+        assert (
+            search_textbooks(
+                {"родовий", "відмінок"},
+                max_total=5,
+                subject="ukrlit",
+            )
+            == []
+        )
 
     def test_search_external(self, sample_data, monkeypatch):
         self._build_and_patch(sample_data, monkeypatch)

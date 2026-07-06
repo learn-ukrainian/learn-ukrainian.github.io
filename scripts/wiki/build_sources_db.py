@@ -59,11 +59,13 @@ if __package__ in {None, ""}:
     from wiki.config import GDRIVE_DATA
     from wiki.extract_sections import DEFAULT_REPORT_PATH, extract_sections
     from wiki.sources import build_literary_row
+    from wiki.textbook_subjects import subject_for_source_file
     from wiki.ukrainian_wiki_corpus import ensure_ukrainian_wiki_manifest, ensure_ukrainian_wiki_schema
 else:
     from .config import GDRIVE_DATA
     from .extract_sections import DEFAULT_REPORT_PATH, extract_sections
     from .sources import build_literary_row
+    from .textbook_subjects import subject_for_source_file
     from .ukrainian_wiki_corpus import ensure_ukrainian_wiki_manifest, ensure_ukrainian_wiki_schema
 
 SCHEMA = """
@@ -75,6 +77,10 @@ CREATE TABLE IF NOT EXISTS textbooks (
     title TEXT NOT NULL DEFAULT '',
     text TEXT NOT NULL DEFAULT '',
     source_file TEXT NOT NULL DEFAULT '',
+    -- subject: canonical ASCII slug from scripts/wiki/textbook_subjects.py.
+    -- Used by search_text(subject=...) and back-filled by
+    -- scripts/migrations/2026-07-06-add-subject-to-textbooks.py.
+    subject TEXT DEFAULT '',
     grade TEXT DEFAULT '',
     author TEXT DEFAULT '',
     -- author_uk: canonical Cyrillic form of the author. Populated by
@@ -89,6 +95,7 @@ CREATE VIRTUAL TABLE IF NOT EXISTS textbooks_fts USING fts5(
 CREATE TRIGGER IF NOT EXISTS textbooks_ai AFTER INSERT ON textbooks BEGIN
     INSERT INTO textbooks_fts(rowid, title, text) VALUES (new.id, new.title, new.text);
 END;
+CREATE INDEX IF NOT EXISTS idx_textbooks_subject ON textbooks(subject);
 
 CREATE TABLE IF NOT EXISTS external_articles (
     id INTEGER PRIMARY KEY,
@@ -287,6 +294,13 @@ def _build_textbook_row(
     ``author_uk`` directly — silently inserting rows with empty
     ``author_uk`` would break textbook citation resolution.
     """
+    subject = subject_for_source_file(source_file)
+    if subject is None:
+        raise ValueError(
+            f"Textbook source_file={source_file!r} has no canonical subject "
+            "mapping. Add it to scripts/wiki/textbook_subjects.py before "
+            "ingesting."
+        )
     author = str(entry.get("author") or "").strip()
     author_uk = str(entry.get("author_uk") or "").strip()
     if author and not author_uk:
@@ -301,6 +315,7 @@ def _build_textbook_row(
         entry.get("section_title", ""),
         entry.get("text", ""),
         source_file,
+        subject,
         entry.get("grade", grade),
         author,
         author_uk,
@@ -625,9 +640,9 @@ def build(db_path: Path | None = None,
     # --- Textbook chunks ---
     print("\n📖 Textbooks")
     tb_sql = """INSERT INTO textbooks
-                (chunk_id, title, text, source_file, grade, author,
+                (chunk_id, title, text, source_file, subject, grade, author,
                  author_uk, char_count)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)"""
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"""
     if tb_dir.exists():
         for grade_dir in sorted(tb_dir.glob("grade-*")):
             grade = grade_dir.name
