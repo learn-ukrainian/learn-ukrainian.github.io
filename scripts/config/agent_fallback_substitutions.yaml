@@ -1,6 +1,11 @@
 # Agent fallback substitution map — canonical source of truth.
-# Consumed by /api/state/routing-budget (when extended in follow-up PR) and
+# Consumed by /api/state/routing-budget and delegate.py --check-budget hard auto-sub.
 # referenced by orchestrator routing decisions (MEMORY.md, this file).
+
+# Machine-readable for hard auto-sub (when lane >90% burn on fresh snapshot):
+dispatch_fallbacks:
+  claude: codex
+  # codex/gemini/grok/cursor: unaffected (separate quotas) or per context in prose below
 #
 # Trigger condition: when a budget bucket is at status `near_cap` or higher
 # (burn_pct > 90), the orchestrator MUST use the substitution path below

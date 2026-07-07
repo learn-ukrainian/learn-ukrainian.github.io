@@ -13,8 +13,24 @@ import delegate
 
 
 class _FakeBudgetResponse:
-    def __init__(self, recommended: str = "codex"):
+    """Configurable fake for /routing-budget responses (supports rec, agents status for hard sub, stale, empty)."""
+
+    def __init__(
+        self,
+        recommended: str = "codex",
+        *,
+        status_for_agent: str | None = None,
+        burn_for_agent: float | None = None,
+        records_loaded: int = 5,
+        stale: bool = False,
+        empty: bool = False,
+    ):
         self.recommended = recommended
+        self.status_for_agent = status_for_agent
+        self.burn_for_agent = burn_for_agent
+        self.records_loaded = 0 if empty else records_loaded
+        self.stale = stale
+        self.empty = empty
 
     def __enter__(self):
         return self
@@ -23,15 +39,43 @@ class _FakeBudgetResponse:
         return False
 
     def read(self):
-        return json.dumps(
-            {
-                "recommendation": {
-                    "primary_agent_for_code": self.recommended,
-                    "rationale": "fixture rationale",
-                    "warnings": [],
+        rec = {
+            "primary_agent_for_code": None if self.empty else self.recommended,
+            "rationale": "fixture rationale (empty)" if self.empty else "fixture rationale",
+            "warnings": ["empty snapshot"] if self.empty else [],
+        }
+        agents = {}
+        # default fixture agents for claude/codex etc
+        for a in ("claude", "codex", "gemini"):
+            if a == "claude":
+                agents[a] = {
+                    "interactive": {"status": "cool", "burn_pct_7d": 10.0},
+                    "status": "cool",
+                    "burn_pct_7d": 10.0,
+                    "resets_at": "2026-07-14T00:00:00Z",
                 }
-            }
-        ).encode("utf-8")
+            else:
+                agents[a] = {"status": "cool", "burn_pct_7d": 20.0, "resets_at": "2026-07-14T00:00:00Z"}
+        if self.status_for_agent:
+            tgt = self.status_for_agent
+            if tgt == "claude":
+                agents["claude"]["status"] = "near_cap"
+                agents["claude"]["interactive"]["status"] = "near_cap"
+                agents["claude"]["interactive"]["burn_pct_7d"] = self.burn_for_agent or 95.0
+            elif tgt in agents:
+                agents[tgt]["status"] = self.status_for_agent
+                agents[tgt]["burn_pct_7d"] = self.burn_for_agent or 95.0
+        payload = {
+            "recommendation": rec,
+            "agents": agents if not self.empty else {},
+            "diagnostics": {
+                "records_loaded": self.records_loaded,
+                "stale": self.stale,
+                "data_age_s": 1000 if self.stale else 10,
+            },
+            "generated_at": "2026-07-07T12:00:00Z",
+        }
+        return json.dumps(payload).encode("utf-8")
 
 
 class _FakeStdin:
@@ -157,3 +201,59 @@ def test_check_budget_dry_run_does_not_spawn(monkeypatch, tmp_path, capsys):
     captured = capsys.readouterr()
     assert captured.out.strip() == "budget-check-fixture"
     assert "ROUTING WARNING" in captured.err
+
+
+def test_check_budget_hard_sub_on_near_cap_fresh(monkeypatch, tmp_path, capsys):
+    """AC1: >90% (near_cap) on fresh → hard auto-sub, note substitution, uses fallback."""
+    _patch_spawn(monkeypatch, tmp_path)
+    monkeypatch.setattr(delegate.time, "sleep", lambda _s: None)
+    # patch urlopen to return payload where passed claude is near_cap
+    monkeypatch.setattr(
+        delegate.urllib.request,
+        "urlopen",
+        lambda *_a, **_k: _FakeBudgetResponse("codex", status_for_agent="claude", burn_for_agent=95.0, records_loaded=10, stale=False),
+    )
+
+    rc = delegate.cmd_dispatch(_dispatch_args("--check-budget"))
+
+    assert rc == 0
+    out = capsys.readouterr()
+    assert "HARD AUTO-SUBSTITUTE" in out.err
+    assert "claude" in out.err and "codex" in out.err
+    assert "per agent_fallback_substitutions.yaml" in out.err
+
+
+def test_check_budget_no_hard_sub_on_stale(monkeypatch, tmp_path, capsys):
+    """Stale → no hard sub, advisory only."""
+    _patch_spawn(monkeypatch, tmp_path)
+    monkeypatch.setattr(delegate.time, "sleep", lambda _s: None)
+    monkeypatch.setattr(
+        delegate.urllib.request,
+        "urlopen",
+        lambda *_a, **_k: _FakeBudgetResponse("codex", status_for_agent="claude", burn_for_agent=95.0, records_loaded=3, stale=True),
+    )
+
+    rc = delegate.cmd_dispatch(_dispatch_args("--check-budget"))
+
+    assert rc == 0
+    err = capsys.readouterr().err
+    assert "stale" in err.lower()
+    assert "HARD AUTO-SUBSTITUTE" not in err
+
+
+def test_check_budget_no_sub_on_empty_snapshot(monkeypatch, tmp_path, capsys):
+    """Empty → no sub, suppressed."""
+    _patch_spawn(monkeypatch, tmp_path)
+    monkeypatch.setattr(delegate.time, "sleep", lambda _s: None)
+    monkeypatch.setattr(
+        delegate.urllib.request,
+        "urlopen",
+        lambda *_a, **_k: _FakeBudgetResponse("codex", empty=True),
+    )
+
+    rc = delegate.cmd_dispatch(_dispatch_args("--check-budget"))
+
+    assert rc == 0
+    err = capsys.readouterr().err
+    assert "empty snapshot" in err.lower()
+    assert "HARD AUTO-SUBSTITUTE" not in err

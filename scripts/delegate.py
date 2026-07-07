@@ -102,11 +102,14 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
+import yaml
+
 # Resolve repo root from this file's location so we work from any cwd.
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 _TASKS_DIR = _REPO_ROOT / "batch_state" / "tasks"
 _BASH_SECRETS_PATH = Path.home() / ".bash_secrets"
 _GH_TOKEN_AGENTS = {"codex", "claude", "bridge"}
+_FALLBACK_SUBS_PATH = _REPO_ROOT / "scripts" / "config" / "agent_fallback_substitutions.yaml"
 _MONITOR_API_BASE_URL = "http://localhost:8765"
 _logger = logging.getLogger(__name__)
 
@@ -1676,7 +1679,9 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         return 2
 
     if getattr(args, "check_budget", False) and not getattr(args, "force_agent", False):
-        _check_routing_budget_for_dispatch(args.agent)
+        dispatch_agent = _resolve_agent_with_budget_guard(args.agent)
+    else:
+        dispatch_agent = args.agent
 
     if getattr(args, "dry_run", False):
         print(task_id)
@@ -1709,13 +1714,13 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         # resolves to ``.worktrees/dispatch/{agent}/{task}/``. Explicit
         # paths remain unchanged for back-compat with in-flight dispatches.
         resolved_raw = (
-            str(_auto_worktree_path(args.agent, task_id))
+            str(_auto_worktree_path(dispatch_agent, task_id))
             if worktree_arg == "auto"
             else worktree_arg
         )
         try:
             worktree_path, worktree_branch, worktree_telemetry = _ensure_worktree(
-                agent=args.agent,
+                agent=dispatch_agent,
                 task_id=task_id,
                 raw_path=resolved_raw,
                 base=getattr(args, "base", None) or "main",
@@ -1727,7 +1732,7 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
     cwd = str(worktree_path or (Path(args.cwd) if args.cwd else _REPO_ROOT))
     prompt = _augment_prompt_with_worktree(prompt, worktree_path)
     start_telemetry = resolve_dispatch_start_telemetry(
-        agent_name=args.agent,
+        agent_name=dispatch_agent,
         requested_model=args.model,
         requested_effort=getattr(args, "effort", None),
     )
@@ -1738,7 +1743,7 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
     worktree_layout = worktree_telemetry.get("layout") if worktree_path else None
     initial_state = {
         "task_id": task_id,
-        "agent": args.agent,
+        "agent": dispatch_agent,
         "model": start_telemetry.model,
         "effort": start_telemetry.effort,
         "cli_version": start_telemetry.cli_version,
@@ -1803,7 +1808,7 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         str(Path(__file__).resolve()),
         "_worker",
         "--task-id", task_id,
-        "--agent", args.agent,
+        "--agent", dispatch_agent,
         "--mode", args.mode,
         "--cwd", cwd,
         "--hard-timeout", str(args.hard_timeout),
@@ -1827,7 +1832,7 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
     # explicit rather than implicit. Callers that want to scrub
     # secrets from the worker's env can override this here.
     worker_env = os.environ.copy()
-    _inject_gh_token_for_agent(worker_env, args.agent)
+    _inject_gh_token_for_agent(worker_env, dispatch_agent)
     worker_env["AGENT_NO_TELEMETRY_FOOTER"] = "1"
     if getattr(args, "allow_merge", False):
         worker_env.pop("AGENT_NO_MERGE", None)
@@ -2003,34 +2008,82 @@ def _fetch_routing_budget() -> dict[str, Any]:
     return payload if isinstance(payload, dict) else {}
 
 
-def _check_routing_budget_for_dispatch(agent: str) -> None:
+def _load_dispatch_fallbacks() -> dict[str, str]:
+    try:
+        data = yaml.safe_load(_FALLBACK_SUBS_PATH.read_text(encoding="utf-8")) or {}
+    except Exception:
+        return {}
+    subs = data.get("dispatch_fallbacks") if isinstance(data, dict) else {}
+    if isinstance(subs, dict):
+        return {str(k).lower(): str(v).lower() for k, v in subs.items() if v}
+    return {}
+
+
+def _resolve_agent_with_budget_guard(agent: str) -> str:
+    """Return possibly-substituted agent. Hard sub only on fresh snapshot when chosen lane near_cap (>90%).
+    Stale/empty: advisory only, no sub (never-trip guard). --force wins before call.
+    Substitution is NOTED (operator contract).
+    """
+    requested = (agent or "").strip().lower()
     try:
         payload = _fetch_routing_budget()
     except MonitorApiUnavailable:
         print("⚠ ROUTING CHECK SKIPPED: Monitor API unreachable", file=sys.stderr)
-        return
+        return requested
 
-    recommendation = payload.get("recommendation")
-    if not isinstance(recommendation, dict):
-        return
-    recommended = recommendation.get("primary_agent_for_code")
-    if not recommended or recommended == agent:
-        return
+    diags = payload.get("diagnostics") or {}
+    rec = payload.get("recommendation") or {}
+    agents = payload.get("agents") or {}
+    records_loaded = int(diags.get("records_loaded", 0) or 0)
+    is_stale = bool(diags.get("stale", False))
 
-    print(
-        f"⚠ ROUTING WARNING: budget recommends --agent {recommended}, "
-        f"you passed --agent {agent}.",
-        file=sys.stderr,
-    )
-    print(
-        f"Rationale: {recommendation.get('rationale') or 'No rationale provided.'}",
-        file=sys.stderr,
-    )
-    print(
-        "Proceed anyway? (use --force-agent to suppress this check, or Ctrl+C to abort.)",
-        file=sys.stderr,
-    )
-    time.sleep(3)
+    # empty or no data: suppress hard action + rec warning per constraint (a)
+    if records_loaded == 0 or not agents:
+        print("⚠ ROUTING CHECK: empty snapshot (records_loaded=0) — no primary rec, no hard sub (per design)", file=sys.stderr)
+        return requested
+
+    if is_stale:
+        print("⚠ ROUTING CHECK ADVISORY (stale snapshot, generatedAt/data age >15min) — verify manually; no hard sub", file=sys.stderr)
+        # still allow the rec warning if any, but no hard
+    else:
+        # advisory rec mismatch still emitted (for info)
+        recommended = rec.get("primary_agent_for_code")
+        if recommended and recommended != requested and recommended not in (None, "inline_orchestrator"):
+            print(
+                f"⚠ ROUTING WARNING: budget recommends --agent {recommended}, you passed --agent {requested}.",
+                file=sys.stderr,
+            )
+            if rec.get("rationale"):
+                print(f"Rationale: {rec['rationale']}", file=sys.stderr)
+
+    # HARD auto-sub only for subscription near_cap on FRESH non-empty
+    agent_info = agents.get(requested, {}) or {}
+    # claude may be nested
+    if requested == "claude":
+        status = (agent_info.get("interactive") or {}).get("status") or agent_info.get("status")
+    else:
+        status = agent_info.get("status")
+    burn = agent_info.get("burn_pct_7d") if requested != "claude" else (agent_info.get("interactive") or {}).get("burn_pct_7d") or agent_info.get("burn_pct_7d")
+
+    if status == "near_cap" and not is_stale and records_loaded > 0:
+        fallbacks = _load_dispatch_fallbacks()
+        sub = fallbacks.get(requested)
+        if not sub and requested == "claude":
+            # fallback inference for claude etc from prose in yaml
+            sub = "codex"
+        if sub and sub != requested:
+            note = (
+                f"🔄 HARD AUTO-SUBSTITUTE: --agent {requested} → {sub} "
+                f"(lane window >90% used / status=near_cap on FRESH snapshot; "
+                f"sub per agent_fallback_substitutions.yaml dispatch_fallbacks + documented cases). "
+                "Substitution noted for operator contract / review independence."
+            )
+            print(note, file=sys.stderr)
+            if burn is not None:
+                print(f"  (burn_pct_7d was ~{burn}%; resets_at={agent_info.get('resets_at')})", file=sys.stderr)
+            return sub
+
+    return requested
 
 
 def _status_or_fail_payload(task_id: str) -> dict[str, Any]:
