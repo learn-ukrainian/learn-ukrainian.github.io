@@ -2,6 +2,7 @@
 
 **Status**: Accepted
 **Date**: 2026-04-10 (landed) / 2026-04-11 (recorded)
+**Deciders**: Krisztian (project owner) — recorded retroactively 2026-07-07; ADR predates the Deciders convention
 **Related**: #1184 (implementation), `scripts/agent_runtime/`, `docs/agent-runtime-guide.md`
 
 ## Context
