@@ -1074,6 +1074,60 @@ describe('LexiconPractice', () => {
     expect(screen.getByLabelText('Відповідь у знахідний')).toBeInTheDocument();
   });
 
+  test('weak-area chip whose weakness yields no items shows a UA notice, clears focus, and never strands the learner', async () => {
+    // The learner is weak on the GENITIVE, but sampleDeck() only carries an ACCUSATIVE
+    // cloze — so the tapped focus pool resolves to zero items under the combined filter.
+    // The learner must not be stranded in an itemless «active» session.
+    seedWeakCaseLog('genitive', 24, 15);
+    const user = userEvent.setup();
+    render(<LexiconPractice initialDeck={sampleDeck()} />);
+
+    const chip = await screen.findByTestId('practice-weak-chip-genitive');
+    await user.click(chip);
+
+    // A UA idle notice is surfaced instead of opening an empty session.
+    expect(
+      await screen.findByText('Немає вправ для цього фокуса — колода оновиться після практики'),
+    ).toBeInTheDocument();
+
+    // No session opened: the idle home (start button + the chip) is still here, and no
+    // active cloze stage was rendered — the focus was cleared, not left active-but-empty.
+    expect(screen.getByTestId('practice-start-session')).toBeInTheDocument();
+    expect(screen.getByTestId('practice-weak-chip-genitive')).toBeInTheDocument();
+    expect(screen.queryByTestId('practice-cloze')).not.toBeInTheDocument();
+
+    // No resumable snapshot was written for the aborted focus attempt.
+    expect(localStorage.getItem('lu-practice-session')).toBeNull();
+  });
+
+  test('focus weakness is session-transient: it is never persisted, so a resumed session drops it', async () => {
+    // Tapping a chip starts a focus session AND writes a resume snapshot. The focus must
+    // NOT be encoded in that snapshot, so resuming can never re-apply the weakness filter.
+    seedWeakCaseLog('accusative', 24, 15);
+    seedRecognitionMastery('knyha');
+    const user = userEvent.setup();
+    const first = render(<LexiconPractice initialDeck={sampleDeck()} />);
+
+    await user.click(await screen.findByTestId('practice-weak-chip-accusative'));
+    await screen.findByTestId('practice-cloze');
+
+    // The persisted snapshot carries the mode but no focus weakness — transiency by design.
+    const raw = localStorage.getItem('lu-practice-session');
+    expect(raw).not.toBeNull();
+    const snapshot = JSON.parse(raw as string);
+    expect(snapshot.modeFilter).toBe('cloze');
+    expect(snapshot).not.toHaveProperty('focusWeakness');
+    expect(raw).not.toContain('focus');
+
+    // Remount from the same storage: the resume path re-enters the session with focus
+    // cleared (beginSession(..., focus=null)), so it starts a working session, not a
+    // stranded focus-filtered one.
+    first.unmount();
+    render(<LexiconPractice initialDeck={sampleDeck()} />);
+    await user.click(await screen.findByTestId('practice-resume-session'));
+    expect(await screen.findByTestId('practice-cloze')).toBeInTheDocument();
+  });
+
   test('double-Enter during dwell advances exactly once (no double completion)', async () => {
     const { fn } = mockShardFetch({});
     vi.spyOn(globalThis, 'fetch').mockImplementation(fn);

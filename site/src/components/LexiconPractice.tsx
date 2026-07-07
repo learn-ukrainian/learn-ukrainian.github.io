@@ -991,6 +991,16 @@ function LexiconPracticeIsland({
     return () => page.removeAttribute('data-in-session');
   }, [sessionPhase]);
 
+  // §6b: the weak-area chips are derived from `reviewLog` and only surface on the idle
+  // home. Re-derive the log from storage every time we (re)enter idle so the chips reflect
+  // the JUST-finished session's ratings — the in-session `refreshProgress` updates apply to
+  // the active React tree, but a return to idle from summary/«Додому» must re-read the
+  // persisted log so a newly-fixed (or newly-weak) case is shown or dropped immediately.
+  useEffect(() => {
+    if (!didInitRef.current || sessionPhase !== 'idle') return;
+    setReviewLog([...loadState().reviews]);
+  }, [sessionPhase]);
+
   // Eager-load ONLY the lightweight per-level index shards on mount (and on a
   // pre-session level change) so the «До повторення» tile + today ring reflect the
   // learner's real SRS due-count immediately — the most motivating number on the
@@ -1254,6 +1264,12 @@ function LexiconPracticeIsland({
     nextMode: PracticeModeFilter = 'mixed',
     budget: SessionBudget = sessionBudget,
     resume?: PracticeSessionSnapshot,
+    // §6b: the weak-area focus is passed EXPLICITLY here (never read from `focusWeakness`
+    // setState timing before the call) so the empty-pool probe below and the session's
+    // `poolFilter` see the same, deterministic value. A resumed session passes no focus,
+    // so `focusWeakness` is always cleared on resume — the focus is session-transient by
+    // design and is intentionally NOT persisted to `PracticeSessionSnapshot`.
+    focus: WeakArea | null = null,
   ) {
     setMode(nextMode);
     setSessionBudget(budget);
@@ -1267,6 +1283,32 @@ function LexiconPracticeIsland({
       };
       setDeck(loadedDeck);
     }
+    // A focus session must never strand the learner in an itemless «active» phase. Probe
+    // the loaded deck under the SAME combined filter the session would apply (weakness +
+    // §6b pool constraints); if nothing matches, clear the focus, surface the idle notice,
+    // and stay on the home rather than opening an empty session.
+    if (
+      focus &&
+      !selectNextPracticeItem(loadedDeck, {
+        modeFilter: nextMode,
+        now: new Date(),
+        sessionSeed: makePracticeSessionSeed(),
+        poolFilter: (candidate) =>
+          sessionPoolAllowsCandidate(candidate, sessionPoolConstraints) &&
+          matchesWeakness(candidate, focus),
+      })
+    ) {
+      setFocusWeakness(null);
+      setFeedback('Немає вправ для цього фокуса — колода оновиться після практики');
+      writePracticeSessionSnapshot(null);
+      setResumeSnapshot(null);
+      setSessionPhase('idle');
+      return;
+    }
+    setFocusWeakness(focus);
+    // A session is starting for real — drop any stale idle notice (e.g. the empty-focus
+    // message) so the active status line reads «Сесія …» cleanly.
+    setFeedback('');
     const index = sessionScopeIndexForMode(loadedDeck.index, nextMode);
     const plan = computeSessionScope(index, budget, { dailyNewCount });
     const nextSeed = resume?.sessionSeed ?? makePracticeSessionSeed();
@@ -1311,31 +1353,32 @@ function LexiconPracticeIsland({
   async function startSession(
     budget: SessionBudget = 20,
     nextMode: PracticeModeFilter = 'mixed',
+    focus: WeakArea | null = null,
   ) {
     writePracticeSessionSnapshot(null);
     setResumeSnapshot(null);
-    await beginSession(nextMode, budget);
+    await beginSession(nextMode, budget, undefined, focus);
   }
 
   async function resumeSession() {
     if (!resumeSnapshot) return;
-    setFocusWeakness(null);
-    await beginSession(resumeSnapshot.modeFilter, resumeSnapshot.budget, resumeSnapshot);
+    // A resumed session starts with NO focus: the weakness is session-transient (never
+    // persisted to the snapshot), so `beginSession(..., focus=null)` clears `focusWeakness`.
+    await beginSession(resumeSnapshot.modeFilter, resumeSnapshot.budget, resumeSnapshot, null);
   }
 
   async function startFocusMode(nextMode: PracticeModeFilter) {
-    setFocusWeakness(null);
-    await startSession(sessionBudget, nextMode);
+    await startSession(sessionBudget, nextMode, null);
   }
 
   /**
    * §6b: tapping a weak-area chip starts a focus session filtered to that weakness.
-   * Reuses `startSession` + the `poolFilter` hook — `focusWeakness` is read by the
-   * composed poolFilter, so no separate session-start path is introduced.
+   * The weakness is passed EXPLICITLY through `startSession` → `beginSession` (not via a
+   * pre-start `setFocusWeakness`), so the empty-pool probe and the session `poolFilter`
+   * share one deterministic value and an itemless focus never strands the learner.
    */
   async function startWeakAreaFocus(weakness: WeakArea) {
-    setFocusWeakness(weakness);
-    await startSession(sessionBudget, focusModeForWeakness(weakness));
+    await startSession(sessionBudget, focusModeForWeakness(weakness), weakness);
   }
 
   function clearFocus() {
@@ -1868,8 +1911,9 @@ function LexiconPracticeIsland({
           stats={summaryStats}
           showEnglishSubtitles={showEnglishSubtitles}
           onAnotherSession={() => {
-            setFocusWeakness(null);
-            void startSession(sessionBudget, mode);
+            // A fresh «another session» is never a focus session — startSession(focus=null)
+            // clears any weakness so the next session is the full pool for `mode`.
+            void startSession(sessionBudget, mode, null);
           }}
           onDone={finishPractice}
         />
