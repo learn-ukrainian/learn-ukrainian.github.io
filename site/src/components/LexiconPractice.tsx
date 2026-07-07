@@ -88,6 +88,12 @@ interface ClozeFeedback {
   text: string;
 }
 
+/** Result of scoring an item, carried until the learner completes/advances it. */
+interface CompletionOutcome {
+  nextUnresolved: Set<string>;
+  nextDeferred: PracticeLexeme[];
+}
+
 const STREAK_KEY = 'lu-lexicon-practice-streak';
 const MASTERED_THRESHOLD = 21;
 type SessionPhase = 'idle' | 'active' | 'summary';
@@ -839,6 +845,10 @@ function LexiconPracticeIsland({
   const [revision, setRevision] = useState(0);
   const [history, setHistory] = useState<SelectionHistoryItem[]>([]);
   const [answerLocked, setAnswerLocked] = useState(false);
+  // A WRONG answer parks its scored outcome here instead of auto-advancing, so the
+  // feedback panel (e.g. the §9.5 cited calque correction) dwells until the learner
+  // explicitly moves on via «Далі →» or Enter. Correct answers never set this.
+  const [pendingOutcome, setPendingOutcome] = useState<CompletionOutcome | null>(null);
   const [streak, setStreak] = useState<StreakState>({
     version: 1,
     current: 0,
@@ -962,10 +972,25 @@ function LexiconPracticeIsland({
     setClozeFeedback(null);
     setClozeAttemptRecorded(false);
     setHeritageFeedback(null);
+    setPendingOutcome(null);
     if (selection) {
       window.setTimeout(() => stageRef.current?.focus(), 0);
     }
   }, [selection?.itemId]);
+
+  // While a wrong answer dwells, Enter is a second way to advance (alongside the
+  // «Далі →» button) — the disabled option buttons blur to <body>, so we listen at
+  // the window level rather than on the stage.
+  useEffect(() => {
+    if (!pendingOutcome) return undefined;
+    const handleEnter = (event: KeyboardEvent) => {
+      if (event.key !== 'Enter') return;
+      event.preventDefault();
+      advancePending();
+    };
+    window.addEventListener('keydown', handleEnter);
+    return () => window.removeEventListener('keydown', handleEnter);
+  }, [pendingOutcome, selection]);
 
   useEffect(() => {
     if (sessionPhase !== 'active') return;
@@ -1309,6 +1334,15 @@ function LexiconPracticeIsland({
     completeSelection(current, outcome);
   }
 
+  /** Complete the parked (wrong-answer) selection once the learner chooses to advance. */
+  function advancePending() {
+    if (!selection || !pendingOutcome) return;
+    const outcome = pendingOutcome;
+    setPendingOutcome(null);
+    setAnswerLocked(false);
+    completeSelection(selection, outcome);
+  }
+
   function handleChoice(option: ChoiceOption) {
     if (!selection || answerLocked) return;
     const rating = option.correct ? 'good' : 'again';
@@ -1321,10 +1355,16 @@ function LexiconPracticeIsland({
     setFeedback(
       option.correct ? `${selection.lemma.lemma}: Правильно` : `${selection.lemma.lemma}: Ще раз`,
     );
-    window.setTimeout(() => {
-      setAnswerLocked(false);
-      completeSelection(selection, outcome);
-    }, advanceDelayMs);
+    if (option.correct) {
+      window.setTimeout(() => {
+        setAnswerLocked(false);
+        completeSelection(selection, outcome);
+      }, advanceDelayMs);
+      return;
+    }
+    // WRONG answer: dwell so the cited correction stays readable; the learner
+    // advances explicitly via «Далі →» / Enter (see advancePending).
+    setPendingOutcome(outcome);
   }
 
   function submitCloze(value: string, source: 'typed' | 'chip') {
@@ -1369,11 +1409,10 @@ function LexiconPracticeIsland({
       setClozeAttemptRecorded(true);
       setClozeFeedback({ kind: 'wrong-word', text: '✗ Не те слово' });
       if (source === 'chip') {
+        // Wrong chip pick is a wrong answer: dwell rather than auto-advance so the
+        // learner can read the correction before «Далі →» / Enter.
         setAnswerLocked(true);
-        window.setTimeout(() => {
-          setAnswerLocked(false);
-          completeSelection(selection, outcome);
-        }, advanceDelayMs);
+        setPendingOutcome(outcome);
       }
       return;
     }
@@ -1381,13 +1420,10 @@ function LexiconPracticeIsland({
     setClozeFeedback({ kind: 'wrong-word', text: '✗ Не те слово' });
     if (source === 'chip') {
       setAnswerLocked(true);
-      window.setTimeout(() => {
-        setAnswerLocked(false);
-        completeSelection(selection, {
-          nextUnresolved: new Set(unresolvedCardKeys),
-          nextDeferred: [...deferredLemmas],
-        });
-      }, advanceDelayMs);
+      setPendingOutcome({
+        nextUnresolved: new Set(unresolvedCardKeys),
+        nextDeferred: [...deferredLemmas],
+      });
     }
   }
 
@@ -1656,20 +1692,34 @@ function LexiconPracticeIsland({
           {deck && deck.index.length > 0 && (
             <div className="lexicon-practice-stage" ref={stageRef} tabIndex={-1}>
               {selection ? (
-                <PracticeItem
-                  selection={selection}
-                  deck={deck}
-                  sessionSeed={sessionSeed}
-                  answerLocked={answerLocked}
-                  clozeInput={clozeInput}
-                  clozeFeedback={clozeFeedback}
-                  heritageFeedback={heritageFeedback}
-                  onClozeInput={setClozeInput}
-                  onFlashcardRating={(rating) => rateAndComplete(selection, rating)}
-                  onChoice={handleChoice}
-                  onMatchingComplete={() => rateAndComplete(selection, 'good')}
-                  onClozeSubmit={submitCloze}
-                />
+                <>
+                  <PracticeItem
+                    selection={selection}
+                    deck={deck}
+                    sessionSeed={sessionSeed}
+                    answerLocked={answerLocked}
+                    clozeInput={clozeInput}
+                    clozeFeedback={clozeFeedback}
+                    heritageFeedback={heritageFeedback}
+                    onClozeInput={setClozeInput}
+                    onFlashcardRating={(rating) => rateAndComplete(selection, rating)}
+                    onChoice={handleChoice}
+                    onMatchingComplete={() => rateAndComplete(selection, 'good')}
+                    onClozeSubmit={submitCloze}
+                  />
+                  {pendingOutcome ? (
+                    <div className="lexicon-practice-advance" data-testid="practice-advance">
+                      <button
+                        type="button"
+                        className="btn btn-accent lexicon-practice-advance-btn"
+                        data-testid="practice-advance-button"
+                        onClick={advancePending}
+                      >
+                        Далі →
+                      </button>
+                    </div>
+                  ) : null}
+                </>
               ) : mode === 'cloze' && deck.cloze.length === 0 ? (
                 <p className="lexicon-practice-muted" data-testid="practice-cloze-empty">
                   Вправи з пропусками для цього рівня ще готуються. Спробуйте флешкартки, добір пар або вибір.

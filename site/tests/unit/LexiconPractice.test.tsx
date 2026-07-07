@@ -764,4 +764,95 @@ describe('LexiconPractice', () => {
     const good = container.querySelector('[data-rate="good"] .ri');
     expect(good?.textContent).toMatch(/‹.+›/);
   });
+
+  test('wrong answer dwells: feedback stays and it never auto-advances past 650ms', async () => {
+    const user = userEvent.setup();
+    // Default 650ms auto-advance window; a wrong answer must ignore it entirely.
+    render(<LexiconPractice initialDeck={heritageDeck()} autoStart initialMode="heritage" />);
+
+    await user.click(
+      within(screen.getByTestId('practice-heritage')).getByRole('button', { name: /дом/ }),
+    );
+
+    // A wrong (calque) pick parks in a dwell state with an explicit advance control.
+    expect(screen.getByTestId('practice-advance-button')).toBeInTheDocument();
+    expect(screen.getByTestId('practice-heritage-feedback')).toHaveTextContent('калька');
+
+    // Wait well past the 650ms correct-answer window — the item must still be here.
+    await new Promise((resolve) => setTimeout(resolve, 750));
+    expect(screen.getByTestId('practice-advance-button')).toBeInTheDocument();
+    expect(screen.getByTestId('practice-heritage-feedback')).toHaveTextContent('калька');
+  });
+
+  test('wrong answer advances on «Далі» click and on Enter', async () => {
+    const clickUser = userEvent.setup();
+    const clicked = render(
+      <LexiconPractice initialDeck={heritageDeck()} autoStart initialMode="heritage" advanceDelayMs={20} />,
+    );
+    await clickUser.click(
+      within(screen.getByTestId('practice-heritage')).getByRole('button', { name: /дом/ }),
+    );
+    expect(screen.getByTestId('practice-advance-button')).toBeInTheDocument();
+    await clickUser.click(screen.getByTestId('practice-advance-button'));
+    await waitFor(() =>
+      expect(screen.queryByTestId('practice-advance-button')).not.toBeInTheDocument(),
+    );
+    clicked.unmount();
+
+    const enterUser = userEvent.setup();
+    render(
+      <LexiconPractice initialDeck={heritageDeck()} autoStart initialMode="heritage" advanceDelayMs={20} />,
+    );
+    await enterUser.click(
+      within(screen.getByTestId('practice-heritage')).getByRole('button', { name: /дом/ }),
+    );
+    expect(screen.getByTestId('practice-advance-button')).toBeInTheDocument();
+    await enterUser.keyboard('{Enter}');
+    await waitFor(() =>
+      expect(screen.queryByTestId('practice-advance-button')).not.toBeInTheDocument(),
+    );
+  });
+
+  test('correct answer still auto-advances (never enters dwell)', async () => {
+    const user = userEvent.setup();
+    render(<LexiconPractice initialDeck={heritageDeck()} autoStart initialMode="heritage" advanceDelayMs={20} />);
+
+    await user.click(
+      within(screen.getByTestId('practice-heritage')).getByRole('button', { name: 'дім' }),
+    );
+
+    // Correct answers keep the snappy auto-advance: no dwell control ever appears.
+    expect(screen.queryByTestId('practice-advance-button')).not.toBeInTheDocument();
+    expect(screen.getByTestId('practice-heritage-feedback')).toHaveTextContent('Правильно');
+
+    // The snappy timer fires and moves off the item on its own — no «Далі» needed.
+    await waitFor(() =>
+      expect(screen.queryByTestId('practice-heritage-feedback')).not.toBeInTheDocument(),
+    );
+  });
+
+  test('heritage calque citation stays visible until «Далі»', async () => {
+    const user = userEvent.setup();
+    // Tiny auto-advance window — the cited correction must still outlast it.
+    render(<LexiconPractice initialDeck={heritageDeck()} autoStart initialMode="heritage" advanceDelayMs={20} />);
+
+    await user.click(
+      within(screen.getByTestId('practice-heritage')).getByRole('button', { name: /дом/ }),
+    );
+
+    expect(screen.getByTestId('practice-heritage-feedback')).toHaveTextContent(
+      'Джерело: Антоненко-Давидович: fixture',
+    );
+
+    // The cited §9.5 correction is the teaching moment — the 20ms timer must not erase it.
+    await new Promise((resolve) => setTimeout(resolve, 200));
+    expect(screen.getByTestId('practice-heritage-feedback')).toHaveTextContent(
+      'Джерело: Антоненко-Давидович: fixture',
+    );
+
+    await user.click(screen.getByTestId('practice-advance-button'));
+    await waitFor(() =>
+      expect(screen.queryByTestId('practice-advance-button')).not.toBeInTheDocument(),
+    );
+  });
 });
