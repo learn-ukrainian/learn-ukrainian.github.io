@@ -12,11 +12,16 @@
 
 decisions:
   - id: dec-001
-    status: active
+    status: superseded
     date: "2026-03-24"
     expires: "2026-06-24"
     scope: pipeline
     title: "V6 uses reviewer-as-fixer, not full rewrite"
+    superseded_note: >
+      2026-07-07 governance sweep: V6 pipeline retired (V7 only). The principle
+      SURVIVED — V7's reviewer emits exact <fixes> blocks applied deterministically
+      (linear_pipeline.py reviewer_fixes_* machinery); no full-rewrite path exists.
+      Empirical evidence (9.6→8.4 degradation) remains the canonical argument.
     reasoning: >
       Gemini proved FROM SCRATCH rewrites degrade content (9.6->9.2->8.4).
       Reviewer outputs exact find/replace pairs in <fixes> block. Pipeline
@@ -52,11 +57,16 @@ decisions:
     depends_on: []
 
   - id: dec-003
-    status: active
+    status: superseded
     date: "2026-04-03"
     expires: "2026-07-03"
     scope: pipeline
     title: "Cap review fix rounds at 4 with degradation detection"
+    superseded_note: >
+      2026-07-07 governance sweep: V7 replaced the flat 4-round cap with per-level
+      budgets — LLM_QG_CORE_MAX_ROUNDS=2, LLM_QG_SEMINAR_MAX_ROUNDS=3
+      (scripts/build/linear_pipeline.py:486-487). Degradation-detection principle
+      carried into the V7 gate design.
     reasoning: >
       5 rounds caused unnecessary API churn on modules where Gemini's
       severity gate was overly conservative (checkpoint-places: 8.9/10 for
@@ -78,9 +88,14 @@ decisions:
   - id: dec-004
     status: active
     date: "2026-03-28"
-    expires: "2026-06-28"
+    expires: "2027-07-07"
     scope: architecture
     title: "Bare slug filenames, no number prefixes"
+    renewal_note: >
+      2026-07-07 governance sweep: settled architecture — curriculum.yaml is the
+      ordering SSOT across the whole tree; zero rename cascades in 3+ months.
+      Renewed 12 months; candidate to fold into track-architecture.md and archive
+      at the next doc pass.
     reasoning: >
       Module ordering is defined in curriculum.yaml, not filenames.
       Bare slugs (my-family.md) are stable across reordering. Numbered
@@ -94,11 +109,16 @@ decisions:
     depends_on: []
 
   - id: dec-005
-    status: active
+    status: superseded
     date: "2026-04-03"
     expires: "2026-07-03"
     scope: tooling
     title: "Keep gemini-cli, fix dispatch retry logic"
+    superseded_note: >
+      2026-07-07 governance sweep: gemini-cli RETIRED — Gemini-family work routes
+      through the AGY lane (model-assignment.md; session-setup reports gemini-cli
+      not found). The retry-logic half of the decision survived and evolved into
+      the agent-runtime failover chains (#4501/#4580, live in production 2026-07-06).
     reasoning: >
       Evaluated vibeproxy, Factory Droid, OpenCode as gemini-cli replacements.
       Droid requires Factory API key (platform lock-in). VibeProxy/OpenCode

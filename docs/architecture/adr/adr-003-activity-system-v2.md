@@ -2,6 +2,7 @@
 
 **Status**: Accepted
 **Date**: 2026-02 (implemented) / 2026-04-11 (recorded)
+**Deciders**: Krisztian (project owner) — recorded retroactively 2026-07-07; ADR predates the Deciders convention
 **Related**: `docs/architecture/activity-system-v2.md`, `scripts/build/activity_schema.py`, `scripts/build/activity_validator.py`, `scripts/build/activity_repair.py`, `starlight/src/components/activities/`, #1185
 
 ## Context

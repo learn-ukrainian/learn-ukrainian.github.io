@@ -2,6 +2,7 @@
 
 **Status**: Accepted
 **Date**: 2026-04-20
+**Deciders**: Krisztian (project owner) — recorded retroactively 2026-07-07; ADR predates the Deciders convention
 **Related**: #1335 (epic), #1330 (diagnostic), #1101 (benchmark), ADR-005 (partially superseded), #1337, #1338, #1339, #1340, #1341, #1342, #1348
 
 ## Context

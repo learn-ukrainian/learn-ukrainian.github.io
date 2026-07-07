@@ -8,6 +8,7 @@
 
 **Status**: Accepted
 **Date**: 2026-04-06 (landed) / 2026-04-11 (recorded)
+**Deciders**: Krisztian (project owner) — recorded retroactively 2026-07-07; ADR predates the Deciders convention
 **Related**: #1129 (epic), #1136, #1161, #1171, `scripts/wiki/`, `docs/best-practices/track-architecture.md`
 
 ## Context
