@@ -27,10 +27,10 @@ pairs:
   curator: grok-build-2026-07-07
   notes: "intrans vs trans distinction; present forms"
   frames:
-  - sentence_with_slot: "Стіни ___ від часу й сонця."
-    answer_form: "біліють"
+  - sentence_with_slot: "Стіна ___ від часу й сонця."
+    answer_form: "біліє"
     confusable_form: "білить"
-    origin: authored-grok-build-2026-07-07
+    origin: authored-grok-build-2026-07-07  # curator fix: singular subject — plural стіни excluded білить by agreement alone (gameable)
   - sentence_with_slot: "Маляр ___ стіни новою фарбою."
     answer_form: "білить"
     confusable_form: "біліє"
@@ -95,11 +95,11 @@ pairs:
   curator: grok-build-2026-07-07
   notes: "noun vs deverbal noun; instrumental and nom contexts"
   frames:
-  - sentence_with_slot: "Він поставив свій ___ під договором."
+  - sentence_with_slot: "Він поставив ___ під договором."
     answer_form: "підпис"
     confusable_form: "підписання"
-    origin: authored-grok-build-2026-07-07
-  - sentence_with_slot: "___ угоди відбулося вчора в кабінеті."
+    origin: authored-grok-build-2026-07-07  # curator fix: dropped «свій» — masc agreement excluded neuter підписання by grammar alone
+  - sentence_with_slot: "___ угоди заплановано на наступний тиждень."
     answer_form: "Підписання"
     confusable_form: "Підпис"
-    origin: authored-grok-build-2026-07-07
+    origin: authored-grok-build-2026-07-07  # curator fix: impersonal заплановано — «відбулося» (neuter) excluded masc підпис by agreement alone
