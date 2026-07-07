@@ -20,7 +20,11 @@
 #          GLOB so rsync --delete preserves them AND future epics don't re-break
 #          deploy (the enumerated form silently orphaned atlas-epic — a new epic
 #          the allowlist hadn't been told about — aborting every deploy).
-ORPHAN_PATHS_CLAUDE="scheduled_tasks.lock worktrees *-epic"
+# settings.local.json — machine-local agent settings, UNTRACKED since 2026-07-07
+#          (#4717, public-repo privacy: carries local absolute paths). The deployed
+#          target copies are the live runtime config and must survive rsync --delete
+#          now that the shared source copy is gone from git/disk.
+ORPHAN_PATHS_CLAUDE="scheduled_tasks.lock worktrees *-epic settings.local.json"
 
 # --- shared → .agent ---
 # wake/  — scheduled-task state written by the Claude Code wake scheduler.
@@ -53,7 +57,7 @@ ORPHAN_PATHS_CLAUDE="scheduled_tasks.lock worktrees *-epic"
 #          (e.g. 4497-runner-failover.md). The dispatch-*.md FILE glob does not match a
 #          directory, so without this entry the first collected brief aborts every
 #          deploy — the #3456 failure class again, one level down.
-ORPHAN_PATHS_AGENT="wake cache prompts tmp *-thread-bootstrap.md *-handoff.md *-thread-lease.json *-brief.md dispatch-*.md dispatch-briefs"
+ORPHAN_PATHS_AGENT="wake cache prompts tmp *-thread-bootstrap.md *-handoff.md *-thread-lease.json *-brief.md dispatch-*.md dispatch-briefs settings.local.json"
 
 # --- shared/skills → .agents/skills ---
 ORPHAN_PATHS_AGENTS=""
@@ -62,7 +66,7 @@ ORPHAN_PATHS_AGENTS=""
 # agents/curriculum-orchestrator.toml and agents/curriculum-writer.toml —
 # Codex agent definitions with no source equivalent.
 # config.toml — Codex CLI configuration managed directly by Codex.
-ORPHAN_PATHS_CODEX="agents/curriculum-orchestrator.toml agents/curriculum-writer.toml config.toml"
+ORPHAN_PATHS_CODEX="agents/curriculum-orchestrator.toml agents/curriculum-writer.toml config.toml settings.local.json"
 
 # --- deploy-owned: Codex overlay paths (checker mirrors for .codex drift) ---
 # Managed by agents_extensions/codex/, not by the shared tree. Exclude them from
