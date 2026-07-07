@@ -10,7 +10,10 @@ from scripts.ai_agent_bridge._opencode import OPENCODE_DEFAULT_MODEL, _invoke_op
 def test_opencode_default_model_is_cheap_and_guard_allowed():
     from scripts.ai_agent_bridge.routing_guard import assert_model_routing_allowed
 
-    assert OPENCODE_DEFAULT_MODEL == "openrouter/google/gemma-4-31b-it"
+    # $0 default since 2026-07-07 (user order): Gemma via Google AI Studio
+    # direct — Gemma has NO paid SKU on the Gemini API, so this default
+    # cannot bill regardless of the key's project tier.
+    assert OPENCODE_DEFAULT_MODEL == "google-ais/gemma-4-31b-it"
     assert_model_routing_allowed(OPENCODE_DEFAULT_MODEL, context="default-model test")
 
 
@@ -102,3 +105,19 @@ def test_run_opencode_lazy_import_resolves_under_script_path_invocation():
     assert "LAZY-IMPORT-OK" in result.stdout, (
         f"stdout={result.stdout!r} stderr={result.stderr[-800:]!r}"
     )
+
+
+def test_strip_gemma_thought_keeps_answer_after_block():
+    from scripts.ai_agent_bridge._opencode import _strip_gemma_thought
+
+    raw = "<thought>reasoning here</thought>- приймають участь → беруть участь"
+    assert _strip_gemma_thought(raw) == "- приймають участь → беруть участь"
+
+
+def test_strip_gemma_thought_never_returns_empty():
+    """Live burn 2026-07-07: a run that closed inside <thought> arrived blank."""
+    from scripts.ai_agent_bridge._opencode import _strip_gemma_thought
+
+    raw = "<thought>the whole answer lives in here: беруть участь</thought>"
+    assert _strip_gemma_thought(raw) == raw
+    assert _strip_gemma_thought("  plain answer, no thought block") .strip() == "plain answer, no thought block"
