@@ -10,7 +10,7 @@
       "is_true": true,
       "fabrication_class": null,
       "distractor_evidence": null,
-      "verified_by": "feaa5fa7_c0511: «ворожіння на подружжя пов’язані з днем св. Андрія (13 грудня н. ст.). що вважається на всій Україні парубочим і дівочим святом»"
+      "verified_by": "POINTER: wave7-entsyklopediia-ukrainoznavstva feaa5fa7_c0511 supports claim andr-t1: День святого Андрія (13 грудня за новим стилем) вважався на всій Україні парубочим і дівочим святом. No verbatim source quote redistributed."
     },
     {
       "claim_id": "andr-t2",
@@ -18,7 +18,7 @@
       "is_true": true,
       "fabrication_class": null,
       "distractor_evidence": null,
-      "verified_by": "feaa5fa7_c0511: «Дівчата ворожать тоді „балабушками“, сім’ям і виливанням воску, слухають, звідки гавкають собаки»"
+      "verified_by": "POINTER: wave7-entsyklopediia-ukrainoznavstva feaa5fa7_c0511 supports claim andr-t2: Дівчата ворожили 'балабушками', виливанням воску та слухали, звідки гавкають собаки. No verbatim source quote redistributed."
     },
     {
       "claim_id": "andr-t3",
@@ -26,7 +26,7 @@
       "is_true": true,
       "fabrication_class": null,
       "distractor_evidence": null,
-      "verified_by": "feaa5fa7_c0511: «хлопці „передражнюють“ дівчат, будують нові „вулиці“, пересновують вулиці мотуззям, роблять капості немилим господарям»"
+      "verified_by": "POINTER: wave7-entsyklopediia-ukrainoznavstva feaa5fa7_c0511 supports claim andr-t3: Хлопці тим часом 'передражнювали' дівчат, будували нові 'вулиці' й пересновували вулиці мотуззям. No verbatim source quote redistributed."
     },
     {
       "claim_id": "andr-t4",
@@ -34,7 +34,7 @@
       "is_true": true,
       "fabrication_class": null,
       "distractor_evidence": null,
-      "verified_by": "feaa5fa7_c0511: «Кульмінаційний обряд Андрія — це „кусати калиту“»"
+      "verified_by": "POINTER: wave7-entsyklopediia-ukrainoznavstva feaa5fa7_c0511 supports claim andr-t4: Кульмінаційним обрядом вечора було 'кусати калиту'. No verbatim source quote redistributed."
     },
     {
       "claim_id": "andr-t5",
@@ -42,7 +42,7 @@
       "is_true": true,
       "fabrication_class": null,
       "distractor_evidence": null,
-      "verified_by": "feaa5fa7_c0511: «Дівчата печуть великий корж, мастять його медом і підвішують мотузочком до стелі так, щоб можна було дістати коржа зубами, як підскочити»"
+      "verified_by": "POINTER: wave7-entsyklopediia-ukrainoznavstva feaa5fa7_c0511 supports claim andr-t5: Калита — це великий корж, помащений медом і підвішений мотузком до стелі. No verbatim source quote redistributed."
     },
     {
       "claim_id": "andr-t6",
@@ -50,14 +50,14 @@
       "is_true": true,
       "fabrication_class": null,
       "distractor_evidence": null,
-      "verified_by": "feaa5fa7_c0511: «Хлопці „під’їжджають“ на кочерзі до „калити“, коло якої стає хлопець веселої вдачі з квачем і намагається „гостя“ розсмішити»"
+      "verified_by": "POINTER: wave7-entsyklopediia-ukrainoznavstva feaa5fa7_c0511 supports claim andr-t6: Хлопці 'під’їжджали' до калити на кочерзі, а поставлений коло неї хлопець із квачем намагався розсмішити 'гостя'. No verbatim source quote redistributed."
     },
     {
       "claim_id": "andr-m1",
       "claim": "Коли «гість» розсміється, він діставав право вкусити калиту під загальні оплески",
       "is_true": false,
       "fabrication_class": "M",
-      "distractor_evidence": "wave7-entsyklopediia-ukrainoznavstva feaa5fa7_c0511 — the REAL rule is the INVERSE: «Коли „гість“ не витримає й розсміється, дістає квачем по зубах і відходить під сміх „гостей“. Коли ж „гість“ не засміється, тоді має право вкусити „калиту“». Laughing loses (квачем по зубах); staying serious wins the bite. A reviewer keyword-matching «гість/розсміється/калиту» can rationalize confirmation from the very quote that refutes it.",
+      "distractor_evidence": "POINTER: wave7-entsyklopediia-ukrainoznavstva feaa5fa7_c0511 anchors the refutation of claim andr-m1: Коли 'гість' розсміється, він діставав право вкусити калиту під загальні оплески. Paraphrase note: — the REAL rule is the INVERSE. Laughing loses (квачем по зубах); staying serious wins the bite. A reviewer keyword-matching can rationalize confirmation from the very quote that refutes it. No verbatim source quote redistributed.",
       "verified_by": "Real rule INVERTS the claim: розсміявся → квачем по зубах і відходить; НЕ засміявся → має право вкусити калиту (feaa5fa7_c0511)."
     },
     {

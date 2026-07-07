@@ -100,7 +100,9 @@ _is_content_done = is_content_done
 router = APIRouter(tags=["state"])
 
 BUDGET_CONFIG_PATH = Path(__file__).resolve().parents[1] / "config" / "agent_budgets.yaml"
-AGENT_NAMES = ("claude", "codex", "gemini")
+SUBSCRIPTION_LANES = ("claude", "codex", "gemini", "grok", "cursor")
+API_LANES = ("deepseek",)  # representative; others via openrouter absent BY DESIGN
+AGENT_NAMES = SUBSCRIPTION_LANES  # only subscription lanes participate in CodexBar window checks
 STATE_SUMMARY_TTL_S = 60.0
 STATE_PIPELINE_TTL_S = 60.0
 STATE_RESEARCH_COVERAGE_TTL_S = 300.0
@@ -158,6 +160,18 @@ def _load_agent_budgets() -> tuple[dict[str, Any], list[str]]:
     return loaded, []
 
 
+def _load_budget_extras(budgets: dict[str, Any]) -> dict[str, Any]:
+    """Load optional extras like reset threshold (default 6h per sensible default for 'imminent')."""
+    if not isinstance(budgets, dict):
+        return {"reset_imminent_hours": 6}
+    val = budgets.get("reset_imminent_threshold_hours", 6)
+    try:
+        hours = int(val)
+    except (TypeError, ValueError):
+        hours = 6
+    return {"reset_imminent_hours": max(1, min(48, hours))}
+
+
 def _agent_key(raw_agent: str | None) -> str | None:
     agent = (raw_agent or "").lower().strip()
     for name in AGENT_NAMES:
@@ -194,7 +208,9 @@ def _sum_agent_spend(
     return spent, missing
 
 
-def _status_from_burn(burn_pct: float | None) -> str:
+def _status_from_burn(burn_pct: float | None, *, has_cap: bool = True) -> str:
+    if not has_cap:
+        return "unknown"
     if burn_pct is None:
         return "pre_launch"
     if burn_pct < 50:
@@ -230,6 +246,30 @@ def _days_until(today: date, target: date | None) -> int | None:
     return (target - today).days
 
 
+def _next_weekly_reset(current_time: datetime) -> str:
+    """Compute next ISO weekly reset boundary (treated as Monday 00:00Z for rolling weekly caps)."""
+    today = current_time.date()
+    # weekday: Mon=0 ... Sun=6; next Monday is (7 - wd) %7 , 0 means today if Mon
+    days_ahead = (7 - today.weekday()) % 7
+    if days_ahead == 0:
+        days_ahead = 7  # if exactly Monday, next is +7
+    reset_dt = datetime.combine(today + timedelta(days=days_ahead), datetime.min.time(), tzinfo=UTC)
+    return _isoformat_z(reset_dt)
+
+
+def _snapshot_is_stale(current_time: datetime, records: list[CostRecord], threshold_s: float = 900.0) -> tuple[bool, float | None]:
+    """Return (is_stale, age_s) based on most recent record mtime vs now.
+    15min=900s default per AC. If no records, not 'stale' but 'empty' handled separately.
+    """
+    if not records:
+        return False, None
+    latest = max((getattr(r, "mtime", datetime.min.replace(tzinfo=UTC)) or datetime.min.replace(tzinfo=UTC) for r in records), default=None)
+    if latest is None:
+        return False, None
+    age = (current_time - latest).total_seconds()
+    return age > threshold_s, round(age, 1)
+
+
 def _in_flight_by_agent() -> dict[str, int]:
     in_flight = {agent: 0 for agent in AGENT_NAMES}
     try:
@@ -245,76 +285,142 @@ def _in_flight_by_agent() -> dict[str, int]:
     return in_flight
 
 
-def _recommend_agent(agents: dict[str, Any], warnings: list[str]) -> dict[str, Any]:
-    status_by_agent = {
-        "claude": agents["claude"]["interactive"]["status"],
-        "codex": agents["codex"]["status"],
-        "gemini": agents["gemini"]["status"],
-    }
-    burn_by_agent = {
-        "claude": agents["claude"]["interactive"]["burn_pct_7d"],
-        "codex": agents["codex"]["burn_pct_7d"],
-        "gemini": agents["gemini"]["burn_pct_7d"],
-    }
+def _recommend_agent(
+    agents: dict[str, Any],
+    warnings: list[str],
+    *,
+    current_time: datetime | None = None,
+    reset_imminent_hours: int = 6,
+    is_stale: bool = False,
+    records_loaded: int = 0,
+) -> dict[str, Any]:
+    """Generalized recommendation over subscription lanes + reset-aware + empty/stale guards.
 
-    if all(status in {"hot", "near_cap"} for status in status_by_agent.values()):
-        warnings.append("all agents near cap — orchestrator inline-mode contingency may be needed soon")
+    Per design: when records_loaded==0 or empty snapshot, suppress primary rec (no confident pick from absent data).
+    Reset-aware: if top pick resets within N hours, note deferral warning (N configurable).
+    """
+    if is_stale:
+        warnings.append("snapshot stale (>15min old data) — advisory only, verify manually before trusting numbers")
+
+    if records_loaded == 0:
         return {
-            "primary_agent_for_code": "inline_orchestrator",
-            "rationale": "All agents are hot or near cap; preserve remaining provider quota for high-judgment work.",
+            "primary_agent_for_code": None,
+            "rationale": "Budget snapshot empty/absent (records_loaded=0); confident primary-lane recommendation suppressed per pinned design constraint. Use model-assignment.md + /api/orient runtime.headroom instead.",
+            "warnings": [*warnings, "empty snapshot — no recommendation emitted"],
+        }
+
+    # Build status/burn for core code lanes (claude special interactive, others flat); include grok/cursor if present
+    core = ["claude", "codex", "gemini"]
+    status_by_agent: dict[str, str] = {}
+    burn_by_agent: dict[str, float | None] = {}
+    resets_by: dict[str, str | None] = {}
+    for a in core:
+        if a not in agents:
+            continue
+        if a == "claude":
+            st = agents[a].get("interactive", {}).get("status") or agents[a].get("status", "unknown")
+            br = agents[a].get("interactive", {}).get("burn_pct_7d") or agents[a].get("burn_pct_7d")
+        else:
+            st = agents[a].get("status", "unknown")
+            br = agents[a].get("burn_pct_7d")
+        status_by_agent[a] = st
+        burn_by_agent[a] = br
+        resets_by[a] = agents[a].get("resets_at")
+
+    # include extra subs if they have data
+    for a in SUBSCRIPTION_LANES:
+        if a in core or a not in agents:
+            continue
+        status_by_agent[a] = agents[a].get("status", "unknown")
+        burn_by_agent[a] = agents[a].get("burn_pct_7d")
+        resets_by[a] = agents[a].get("resets_at")
+
+    # If no usable data at all for rec, suppress
+    usable = [a for a, s in status_by_agent.items() if s not in {"unknown", "pre_launch", None}]
+    if not usable or all(s in {"hot", "near_cap", "unknown"} for s in status_by_agent.values()):
+        if all(s in {"hot", "near_cap"} for s in status_by_agent.values() if s not in {"unknown"}):
+            warnings.append("all agents near cap — orchestrator inline-mode contingency may be needed soon")
+            return {
+                "primary_agent_for_code": "inline_orchestrator",
+                "rationale": "All agents are hot or near cap; preserve remaining provider quota for high-judgment work.",
+                "warnings": warnings,
+            }
+        return {
+            "primary_agent_for_code": None,
+            "rationale": "No usable subscription lane headroom data for confident recommendation (stale/empty/unknowns).",
             "warnings": warnings,
         }
 
+    # Reset-aware filter: identify imminent resets
+    imminent: list[str] = []
+    if current_time is not None:
+        for a, ra in resets_by.items():
+            if not ra:
+                continue
+            try:
+                rt = datetime.fromisoformat(ra.replace("Z", "+00:00"))
+                hours_left = (rt - current_time).total_seconds() / 3600.0
+                if 0 < hours_left <= reset_imminent_hours:
+                    imminent.append(a)
+            except Exception:
+                pass
+    if imminent:
+        warnings.append(f"lanes resetting soon (within {reset_imminent_hours}h): {', '.join(imminent)} — defer large batches on these if possible")
+
     if "near_cap" in status_by_agent.values():
-        candidates = [
-            agent for agent, status in status_by_agent.items()
-            if status in {"cool", "warm"}
-        ]
+        candidates = [agent for agent, st in status_by_agent.items() if st in {"cool", "warm"}]
         if candidates:
-            recommended = min(candidates, key=lambda agent: burn_by_agent[agent] or 0.0)
+            # prefer non-imminent if possible
+            non_imm = [c for c in candidates if c not in imminent] or candidates
+            recommended = min(non_imm, key=lambda agent: burn_by_agent.get(agent) or 0.0)
             return {
                 "primary_agent_for_code": recommended,
                 "rationale": (
                     f"At least one agent is near cap; {recommended} has the lowest "
-                    f"available 7d burn ({_format_pct(burn_by_agent[recommended])}%)."
+                    f"available 7d burn ({_format_pct(burn_by_agent.get(recommended))}%)."
                 ),
                 "warnings": warnings,
             }
 
-    agentic_pool = agents["claude"]["agentic_pool"]
-    if agentic_pool.get("active") and agentic_pool.get("status") == "cool":
+    # claude pool still special
+    if "claude" in agents:
+        agentic_pool = agents["claude"].get("agentic_pool", {})
+        if agentic_pool.get("active") and agentic_pool.get("status") == "cool":
+            return {
+                "primary_agent_for_code": "claude",
+                "rationale": "Claude agentic pool is active and cool; drain the separate monthly pool first.",
+                "warnings": warnings,
+            }
+
+    cool_warm = [a for a, s in status_by_agent.items() if s in {"cool", "warm"}]
+    if cool_warm:
+        # pick lowest burn, skip imminent if alternatives
+        pool = [c for c in cool_warm if c not in imminent] or cool_warm
+        recommended = min(pool, key=lambda agent: burn_by_agent.get(agent) or 0.0)
+        if recommended == "codex" or len(cool_warm) == len(status_by_agent):
+            rationale = (
+                "All agents cool or warm; default split applies. "
+                f"{recommended} 7d burn is {_format_pct(burn_by_agent.get(recommended))}%. "
+            )
+        else:
+            rationale = f"Mixed; {recommended} has lowest 7d burn ({_format_pct(burn_by_agent.get(recommended))}%)."
         return {
-            "primary_agent_for_code": "claude",
-            "rationale": "Claude agentic pool is active and cool; drain the separate monthly pool first.",
+            "primary_agent_for_code": recommended,
+            "rationale": rationale,
             "warnings": warnings,
         }
 
-    if all(status in {"cool", "warm"} for status in status_by_agent.values()):
-        codex_burn = burn_by_agent["codex"]
+    # fallback to lowest burn among known
+    known = list(status_by_agent.keys())
+    if known:
+        recommended = min(known, key=lambda agent: burn_by_agent.get(agent) or 0.0)
         return {
-            "primary_agent_for_code": "codex",
-            "rationale": (
-                "All agents cool or warm; default 3:3:3 split applies. "
-                f"Codex 7d burn is {_format_pct(codex_burn)}%. "
-                "Claude agentic pool "
-                + (
-                    "active."
-                    if agentic_pool.get("active")
-                    else "pre-launch — interactive pool used for claude headless."
-                )
-            ),
+            "primary_agent_for_code": recommended,
+            "rationale": f"Mixed routing state; {recommended} currently has the lowest 7d burn ({_format_pct(burn_by_agent.get(recommended))}%).",
             "warnings": warnings,
         }
 
-    recommended = min(status_by_agent, key=lambda agent: burn_by_agent[agent] or 0.0)
-    return {
-        "primary_agent_for_code": recommended,
-        "rationale": (
-            f"Mixed routing state; {recommended} currently has the lowest 7d burn "
-            f"({_format_pct(burn_by_agent[recommended])}%)."
-        ),
-        "warnings": warnings,
-    }
+    return {"primary_agent_for_code": None, "rationale": "insufficient data", "warnings": warnings}
 
 
 def compute_routing_budget(now: datetime | None = None) -> dict[str, Any]:
@@ -322,45 +428,49 @@ def compute_routing_budget(now: datetime | None = None) -> dict[str, Any]:
     today = current_time.date()
     window_start = current_time - timedelta(days=7)
     budgets, warnings = _load_agent_budgets()
+    extras = _load_budget_extras(budgets)
+    reset_hours = extras["reset_imminent_hours"]
+    resets_at = _next_weekly_reset(current_time)
+
+    # Empty config case: unknown statuses, suppressed rec (no confident pick from absent data)
     if not budgets:
-        agents = {
-            "claude": {
-                "interactive": {
-                    "spent_7d_usd": None,
-                    "weekly_cap_usd": None,
-                    "burn_pct_7d": None,
-                    "promo_active": False,
-                    "status": "pre_launch",
-                },
-                "agentic_pool": {
-                    "spent_cycle_usd": None,
-                    "monthly_cap_usd": None,
-                    "burn_pct_cycle": None,
-                    "active": False,
-                    "starts_on": None,
-                    "status": "pre_launch",
-                },
-            },
-            "codex": {"spent_7d_usd": None, "weekly_cap_usd": None, "burn_pct_7d": None, "status": "pre_launch"},
-            "gemini": {"spent_7d_usd": None, "weekly_cap_usd": None, "burn_pct_7d": None, "status": "pre_launch"},
+        agents = {}
+        for lane in SUBSCRIPTION_LANES:
+            if lane == "claude":
+                agents[lane] = {
+                    "interactive": {"spent_7d_usd": None, "weekly_cap_usd": None, "burn_pct_7d": None, "promo_active": False, "status": "unknown"},
+                    "agentic_pool": {"spent_cycle_usd": None, "monthly_cap_usd": None, "burn_pct_cycle": None, "active": False, "starts_on": None, "status": "unknown"},
+                    "spent_7d_usd": None, "weekly_cap_usd": None, "burn_pct_7d": None, "status": "unknown", "resets_at": resets_at,
+                }
+            else:
+                agents[lane] = {"spent_7d_usd": None, "weekly_cap_usd": None, "burn_pct_7d": None, "status": "unknown", "resets_at": resets_at}
+        rec = {
+            "primary_agent_for_code": None,
+            "rationale": "Budget config absent; recommendation suppressed (empty snapshot).",
+            "warnings": [*warnings, "empty snapshot — use model-assignment + /api/orient"],
         }
         return {
             "generated_at": _isoformat_z(current_time),
             "agents": agents,
             "in_flight": _in_flight_by_agent(),
-            "recommendation": {
-                "primary_agent_for_code": "inline_orchestrator",
-                "rationale": "Budget config could not be loaded; routing recommendation is unavailable.",
-                "warnings": warnings,
-            },
+            "recommendation": rec,
             "diagnostics": {
                 "records_loaded": 0,
                 "missing_cost_records": 0,
                 "window_start": _isoformat_z(window_start),
+                "stale": False,
+                "data_age_s": None,
+                "stale_threshold_s": 900,
             },
+            "ranked_by_headroom": [{"lane": lane, "type": "subscription", "status": "unknown", "burn_pct_7d": None, "remaining_pct": None, "resets_at": resets_at} for lane in SUBSCRIPTION_LANES] +
+                                 [{"lane": lane, "type": "api", "status": "unknown", "burn_pct_7d": None, "remaining_pct": None, "resets_at": None} for lane in API_LANES],
         }
 
     records = load_cost_records()
+    is_stale, data_age_s = _snapshot_is_stale(current_time, records)
+    if is_stale:
+        warnings.append("generatedAt/data age >15min — advisory downgraded to stale, verify manually (never hard block)")
+
     agents: dict[str, Any] = {}
     missing_cost_records = 0
 
@@ -375,6 +485,7 @@ def compute_routing_budget(now: datetime | None = None) -> dict[str, Any]:
     claude_spent, missing = _sum_agent_spend(records, agent="claude", since=window_start)
     missing_cost_records += missing
     claude_burn = _burn_pct(claude_spent, claude_cap)
+    claude_has_cap = claude_cap > 0
 
     starts_on = _parse_iso_date(agentic_config.get("starts_on"))
     agentic_active = bool(starts_on and today >= starts_on)
@@ -384,11 +495,18 @@ def compute_routing_budget(now: datetime | None = None) -> dict[str, Any]:
         agentic_spent, missing = _sum_agent_spend(records, agent="claude", since=cycle_start)
         missing_cost_records += missing
         agentic_burn = _burn_pct(agentic_spent, agentic_cap)
-        agentic_status = _status_from_burn(agentic_burn)
+        agentic_status = _status_from_burn(agentic_burn, has_cap=(agentic_cap > 0))
     else:
         agentic_spent = None
         agentic_burn = None
-        agentic_status = "pre_launch"
+        agentic_status = "pre_launch" if agentic_cap > 0 else "unknown"
+
+    claude_status = _status_from_burn(claude_burn, has_cap=claude_has_cap)
+    # empty snapshot special: force unknown (per AC, not cool when records_loaded==0)
+    force_unknown = (len(records) == 0)
+    if force_unknown:
+        claude_status = "unknown"
+        claude_burn = None
 
     agents["claude"] = {
         "interactive": {
@@ -396,7 +514,7 @@ def compute_routing_budget(now: datetime | None = None) -> dict[str, Any]:
             "weekly_cap_usd": _round_money(claude_cap),
             "burn_pct_7d": claude_burn,
             "promo_active": promo_active,
-            "status": _status_from_burn(claude_burn),
+            "status": claude_status,
         },
         "agentic_pool": {
             "spent_cycle_usd": _round_money(agentic_spent),
@@ -409,24 +527,34 @@ def compute_routing_budget(now: datetime | None = None) -> dict[str, Any]:
         "spent_7d_usd": _round_money(claude_spent),
         "weekly_cap_usd": _round_money(claude_cap),
         "burn_pct_7d": claude_burn,
-        "status": _status_from_burn(claude_burn),
+        "status": claude_status,
+        "resets_at": resets_at,
+        "remaining_pct": (100.0 - claude_burn) if claude_burn is not None else None,
     }
 
-    for agent in ("codex", "gemini"):
+    for agent in ("codex", "gemini", "grok", "cursor"):
         agent_config = budgets.get(agent) if isinstance(budgets.get(agent), dict) else {}
-        cap = float(agent_config.get("weekly_cap_usd") or 0.0)
+        cap = float(agent_config.get("weekly_cap_usd") or 0.0) if agent_config else 0.0
+        has_cap = cap > 0
         spent, missing = _sum_agent_spend(records, agent=agent, since=window_start)
         missing_cost_records += missing
-        burn = _burn_pct(spent, cap)
+        burn = _burn_pct(spent, cap) if has_cap else None
+        st = _status_from_burn(burn, has_cap=has_cap)
+        if force_unknown or not has_cap:
+            st = "unknown"
+            burn = None
         agents[agent] = {
             "spent_7d_usd": _round_money(spent),
-            "weekly_cap_usd": _round_money(cap),
+            "weekly_cap_usd": _round_money(cap) if has_cap else None,
             "burn_pct_7d": burn,
-            "status": _status_from_burn(burn),
+            "status": st,
+            "resets_at": resets_at,
+            "remaining_pct": (100.0 - burn) if burn is not None else None,
         }
 
+    # warnings for claude etc (only if not force_unknown)
     claude_burn_pct = agents["claude"]["interactive"]["burn_pct_7d"]
-    if agents["claude"]["interactive"]["status"] in {"hot", "near_cap"}:
+    if not force_unknown and agents["claude"]["interactive"]["status"] in {"hot", "near_cap"}:
         warnings.append(
             f"claude.interactive at {_format_pct(claude_burn_pct)}% — consider --agent codex for next mechanical fix"
         )
@@ -436,19 +564,61 @@ def compute_routing_budget(now: datetime | None = None) -> dict[str, Any]:
     promo_days = _days_until(today, promo_through)
     if promo_days is not None and 0 <= promo_days <= 14:
         warnings.append(
-            f"promo expires in {promo_days} days; +50% bonus capacity ends {promo_through.isoformat()}"
+            f"promo expires in {promo_days} days; +50% bonus capacity ends {promo_through.isoformat() if promo_through else ''}"
         )
+
+    rec = _recommend_agent(
+        agents, warnings,
+        current_time=current_time,
+        reset_imminent_hours=reset_hours,
+        is_stale=is_stale,
+        records_loaded=len(records),
+    )
+
+    # Build ranked view: subscription by remaining headroom (low burn = high remaining first), API always unknown
+    def _rank_key(lane: str) -> float:
+        a = agents.get(lane, {})
+        b = a.get("burn_pct_7d")
+        if b is None:
+            return 999.0
+        return b
+
+    ranked_subs = []
+    for lane in SUBSCRIPTION_LANES:
+        a = agents.get(lane, {})
+        ranked_subs.append({
+            "lane": lane,
+            "type": "subscription",
+            "status": a.get("status", "unknown"),
+            "burn_pct_7d": a.get("burn_pct_7d"),
+            "remaining_pct": a.get("remaining_pct"),
+            "resets_at": a.get("resets_at"),
+            "in_flight": _in_flight_by_agent().get(lane, 0),
+        })
+    ranked_subs.sort(key=lambda x: (x["status"] == "unknown", x.get("burn_pct_7d") or 999.0))
+
+    ranked_apis = [
+        {"lane": lane, "type": "api", "status": "unknown", "burn_pct_7d": None, "remaining_pct": None, "resets_at": None, "in_flight": 0}
+        for lane in API_LANES
+    ]
+    # per one design note treat absent as full, but AC requires status unknown NOT cool for ranked view
+    ranked = ranked_subs + ranked_apis
 
     return {
         "generated_at": _isoformat_z(current_time),
         "agents": agents,
         "in_flight": _in_flight_by_agent(),
-        "recommendation": _recommend_agent(agents, warnings),
+        "recommendation": rec,
         "diagnostics": {
             "records_loaded": len(records),
             "missing_cost_records": missing_cost_records,
             "window_start": _isoformat_z(window_start),
+            "stale": is_stale,
+            "data_age_s": data_age_s,
+            "stale_threshold_s": 900,
+            "reset_imminent_hours": reset_hours,
         },
+        "ranked_by_headroom": ranked,
     }
 
 

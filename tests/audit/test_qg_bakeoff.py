@@ -274,6 +274,39 @@ def test_bakeoff_deepseek_route_stays_unregistered_while_live_policy_rejects_dee
         llm_reviewer_dispatch.assert_route_allowed(hermes_route)
 
 
+def test_deepseek_direct_bakeoff_pins_use_opencode_identity_and_guard_allowed() -> None:
+    from scripts.ai_agent_bridge.routing_guard import assert_model_routing_allowed
+
+    for pin in qg_bakeoff.DEEPSEEK_DIRECT_PINS:
+        route = qg_bakeoff.bakeoff_route_for_model(pin)
+        identity = qg_bakeoff._route_identity(route)
+
+        assert route.bridge_command == ("ask-opencode", "--model", pin)
+        assert route.reviewer_family == "deepseek"
+        assert identity.transport == qg_bakeoff.OPENCODE_TRANSPORT
+        assert identity.entrypoint == qg_bakeoff.OPENCODE_ENTRYPOINT
+        assert identity.resolved_model == pin
+        assert_model_routing_allowed(pin, context="test")
+
+    # user order 2026-07-07: OpenRouter deepseek pins are guard-REFUSED by
+    # default (historical baselines; transport-comparison runs use the
+    # override env — billing-safe under the user's OR BYOK).
+    from scripts.ai_agent_bridge.routing_guard import RoutingGuardError
+
+    for pin in qg_bakeoff.DEEPSEEK_OPENROUTER_PINS:
+        with pytest.raises(RoutingGuardError):
+            assert_model_routing_allowed(pin, context="test")
+
+
+def test_default_deepseek_candidates_use_first_party_direct_pins() -> None:
+    deepseek_candidates = [
+        candidate for candidate in qg_bakeoff.DEFAULT_CANDIDATE_MODELS if "deepseek" in candidate.label
+    ]
+
+    assert [candidate.pin for candidate in deepseek_candidates] == list(qg_bakeoff.DEEPSEEK_DIRECT_PINS)
+    assert all(not candidate.unresolved for candidate in deepseek_candidates)
+
+
 def test_scoring_counts_missing_claim_and_preserves_model_judgment_on_downgrade() -> None:
     payload = {
         "fact_checks": [
@@ -1874,4 +1907,81 @@ def test_offline_bakeoff_tooled_run_writes_zero_paths_outside_out_dir(
 
     assert after == before
     assert run.artifact_path.is_file()
+    assert run.artifact_path.parent == out_dir
+
+
+def test_offline_bakeoff_tooled_run_firewalls_stray_reviewer_write(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """#4642 (second leak path): the tool-using opencode reviewer must run in an
+    out-of-repo cwd so a stray model write — the observed
+    curriculum/l2-uk-en/folk/status/bakeoff-koliadky-review.json — cannot land in
+    the checkout. The no_module_persistence flag (leak 1) only gates our own
+    markdown persistence, not the model's own writes; the offline harness for
+    leak 1 never exercised a stray write, so this drives one explicitly and
+    asserts ZERO writes outside out_dir, including status/.
+
+    RED before the cwd firewall (the transport inherits PROJECT_ROOT → the stray
+    relative write hits the repo); GREEN after (throwaway out-of-repo cwd).
+    """
+    from unittest.mock import patch
+
+    from scripts.ai_agent_bridge._opencode import OpencodeStreamParse
+
+    repo = tmp_path / "repo"
+    (repo / "curriculum" / "l2-uk-en" / "folk").mkdir(parents=True)
+    monkeypatch.setattr(llm_reviewer_dispatch, "PROJECT_ROOT", repo)
+    monkeypatch.setattr(qg_bakeoff, "PROJECT_ROOT", repo)
+    monkeypatch.delenv("CI", raising=False)
+    monkeypatch.setenv("QG_BAKEOFF", "1")
+
+    fixture = _fixture()
+    route = qg_bakeoff.bakeoff_route_for_model("openrouter/google/gemma-4-31b-it")
+    out_dir = tmp_path / "bakeoff-out"
+    out_dir.mkdir(parents=True)
+
+    seen: dict[str, Any] = {}
+
+    def fake_detailed(
+        content: str, model: str, *, cwd: Path | None = None, **kwargs: Any
+    ) -> OpencodeStreamParse:
+        # Simulate a bakeoff pseudo-module reviewer (Slug: bakeoff-koliadky) that
+        # writes a stray status file with a RELATIVE path; opencode resolves it
+        # against the subprocess cwd.
+        seen["cwd"] = cwd
+        base = Path(cwd) if cwd is not None else repo
+        stray = (
+            base / "curriculum" / "l2-uk-en" / "folk" / "status" / "bakeoff-koliadky-review.json"
+        )
+        stray.parent.mkdir(parents=True, exist_ok=True)
+        stray.write_text("{}", encoding="utf-8")
+        return OpencodeStreamParse(
+            text=json.dumps(_TOOLED_GRODED_PAYLOAD),
+            tool_events=(_event(),),
+        )
+
+    before = _snapshot_files(repo)
+    with (
+        patch(f"{_DISPATCH}._assert_sources_mcp_available"),
+        patch(
+            "scripts.ai_agent_bridge._opencode._invoke_opencode_detailed",
+            side_effect=fake_detailed,
+        ),
+    ):
+        run = qg_bakeoff.run_one(
+            fixture=fixture,
+            route=route,
+            output_dir=out_dir,
+            runner=qg_bakeoff.invoke_bakeoff_route,
+            force=True,
+        )
+    after = _snapshot_files(repo)
+
+    assert seen["cwd"] is not None
+    reviewer_cwd = Path(seen["cwd"])
+    assert reviewer_cwd != repo and repo not in reviewer_cwd.parents
+    assert after == before
+    assert not list(repo.rglob("*-review.json"))
+    assert not (repo / "curriculum" / "l2-uk-en" / "folk" / "status").exists()
     assert run.artifact_path.parent == out_dir

@@ -10,7 +10,7 @@
       "is_true": true,
       "fabrication_class": null,
       "distractor_evidence": null,
-      "verified_by": "wave7-holobutsky-zaporizhzhia 9a2443f5_c0223: «Головна влада на Запорожжі належала військовій раді»; wave7-entsyklopediia-ukrainoznavstva feaa5fa7_c1631: «Основним органом держ. влади на Запоріжжі слід визнати січову раду»"
+      "verified_by": "POINTER: wave7-holobutsky-zaporizhzhia 9a2443f5_c0223 supports claim sich-t1: Головна влада на Запорожжі належала військовій, або січовій, раді. Paraphrase note: wave7-entsyklopediia-ukrainoznavstva feaa5fa7_c1631. No verbatim source quote redistributed."
     },
     {
       "claim_id": "sich-t2",
@@ -18,7 +18,7 @@
       "is_true": true,
       "fabrication_class": null,
       "distractor_evidence": null,
-      "verified_by": "wave7-holobutsky-zaporizhzhia 9a2443f5_c0223: «Право участі у раді мали всі без винятку козаки»; wave7-shcherbak-kozatstvo 3d7a3a6b_c0070 corroborates."
+      "verified_by": "POINTER: wave7-holobutsky-zaporizhzhia 9a2443f5_c0223 supports claim sich-t2: Право участі у раді мали всі без винятку козаки. Paraphrase note: wave7-shcherbak-kozatstvo 3d7a3a6b_c0070 corroborates. No verbatim source quote redistributed."
     },
     {
       "claim_id": "sich-t3",
@@ -26,7 +26,7 @@
       "is_true": true,
       "fabrication_class": null,
       "distractor_evidence": null,
-      "verified_by": "wave7-holobutsky-zaporizhzhia 9a2443f5_c0223: «Скликаючи козаків на раду, довбиші били у військові литаври»"
+      "verified_by": "POINTER: wave7-holobutsky-zaporizhzhia 9a2443f5_c0223 supports claim sich-t3: довбиші били у військові литаври. No verbatim source quote redistributed."
     },
     {
       "claim_id": "sich-t4",
@@ -34,14 +34,14 @@
       "is_true": true,
       "fabrication_class": null,
       "distractor_evidence": null,
-      "verified_by": "wave7-holobutsky-zaporizhzhia 9a2443f5_c0223: «Військовий осавул виносив військові клейноди — прапор і бунчук і ставив їх посеред кола»"
+      "verified_by": "POINTER: wave7-holobutsky-zaporizhzhia 9a2443f5_c0223 supports claim sich-t4: Військовий осавул виносив військові клейноди — прапор і бунчук. No verbatim source quote redistributed."
     },
     {
       "claim_id": "sich-m1",
       "claim": "суддя тримав булаву, а кошовий отаман — військову печатку",
       "is_true": false,
       "fabrication_class": "M",
-      "distractor_evidence": "wave7-holobutsky-zaporizhzhia 9a2443f5_c0223 — the REAL passage: «Кошовий отаман тримав у руці булаву, суддя — військову печатку, писар — великий срібний каламар». The claim SWAPS the clenods: the булава belonged to the кошовий отаман (his mace of command), and the печатка to the суддя. Keyword lure: булава, печатка, кошовий, суддя all present in the real passage.",
+      "distractor_evidence": "POINTER: wave7-holobutsky-zaporizhzhia 9a2443f5_c0223 anchors the refutation of claim sich-m1: суддя тримав булаву, а кошовий отаман — військову печатку. Paraphrase note: The claim SWAPS the clenods: the булава belonged to the кошовий отаман (his mace of command), and the печатка to the суддя. Keyword lure: булава, печатка, кошовий, суддя all present in the real passage. No verbatim source quote redistributed.",
       "verified_by": "Real: кошовий = булава, суддя = печатка (9a2443f5_c0223). The swap is fabricated."
     },
     {
@@ -50,7 +50,7 @@
       "is_true": true,
       "fabrication_class": null,
       "distractor_evidence": null,
-      "verified_by": "wave7-entsyklopediia-ukrainoznavstva feaa5fa7_c1632: «Курінь (їх було 38 чи 40) являв собою військовий загін січового козацтва. Разом із тим курінь був адміністративною одиницею… являв собою і госп. організацію»"
+      "verified_by": "POINTER: wave7-entsyklopediia-ukrainoznavstva feaa5fa7_c1632 supports claim sich-t5: Основною бойовою й господарською одиницею був курінь; куренів налічувалося 38 чи 40. No verbatim source quote redistributed."
     },
     {
       "claim_id": "sich-t6",
@@ -58,14 +58,14 @@
       "is_true": true,
       "fabrication_class": null,
       "distractor_evidence": null,
-      "verified_by": "wave7-shcherbak-kozatstvo 3d7a3a6b_c0070: «За традицією козацькі ради збиралися щороку 1 січня для переобрання кошового отамана і старшини»; wave7-holobutsky-zaporizhzhia 9a2443f5_c0655: «обиралась раз на рік на військовій, або січовій, раді, яка скликалася за звичаєм 1 січня»"
+      "verified_by": "POINTER: wave7-shcherbak-kozatstvo 3d7a3a6b_c0070 supports claim sich-t6: козацькі ради збиралися щороку 1 січня для переобрання кошового отамана і старшини. Paraphrase note: wave7-holobutsky-zaporizhzhia 9a2443f5_c0655. No verbatim source quote redistributed."
     },
     {
       "claim_id": "sich-m2",
       "claim": "Курінних отаманів на цю саму раду призначав кошовий отаман",
       "is_true": false,
       "fabrication_class": "M",
-      "distractor_evidence": "wave7-holobutsky-zaporizhzhia 9a2443f5_c0223 — the REAL passage: «Курінні отамани обиралися не на військових, а на курінних радах». Курінні отамани were ELECTED by their own kurin at a separate kurinna rada — NOT appointed by the кошовий at the general січова рада. Keyword lure: курінні отамани, ради, кошовий otaman all present in the surrounding real text.",
+      "distractor_evidence": "POINTER: wave7-holobutsky-zaporizhzhia 9a2443f5_c0223 anchors the refutation of claim sich-m2: Курінних отаманів на цю саму раду призначав кошовий отаман. Paraphrase note: Курінні отамани were ELECTED by their own kurin at a separate kurinna rada — NOT appointed by the кошовий at the general січова рада. Keyword lure: курінні отамани, ради, кошовий otaman all present in the surrounding real text. No verbatim source quote redistributed.",
       "verified_by": "Real: курінні отамани обиралися на курінних радах, not appointed by the кошовий (9a2443f5_c0223). The appointment claim is fabricated."
     },
     {

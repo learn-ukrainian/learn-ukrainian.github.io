@@ -10,7 +10,7 @@
       "is_true": true,
       "fabrication_class": null,
       "distractor_evidence": null,
-      "verified_by": "fc2291b5_c1503: «ГОЛОСІННЯ, тужіння, плачі — жанр усної народної поетичної творчості, пов’язаний з похоронними та ін. обрядами»"
+      "verified_by": "POINTER: wave8-ukr-lit-entsyklopediia fc2291b5_c1503 supports claim hol-t1: Голосіння — жанр усної народної поетичної творчості, пов’язаний з похоронними обрядами. No verbatim source quote redistributed."
     },
     {
       "claim_id": "hol-t2",
@@ -18,7 +18,7 @@
       "is_true": true,
       "fabrication_class": null,
       "distractor_evidence": null,
-      "verified_by": "fc2291b5_c1503: «Виникли в первіснообщинному суспільстві як вияв жалю за померлим»"
+      "verified_by": "POINTER: wave8-ukr-lit-entsyklopediia fc2291b5_c1503 supports claim hol-t2: голосіння виникли в первіснообщинну добу як вияв жалю за померлим. No verbatim source quote redistributed."
     },
     {
       "claim_id": "hol-t3",
@@ -42,7 +42,7 @@
       "is_true": true,
       "fabrication_class": null,
       "distractor_evidence": null,
-      "verified_by": "fc2291b5_c1503: «Як і думи, укр. Г. виконуються речитативом, але з більшою експресивністю й імпровізацією»"
+      "verified_by": "POINTER: wave8-ukr-lit-entsyklopediia fc2291b5_c1503 supports claim hol-t4: Як і думи, голосіння виконували речитативом, з більшою експресивністю й імпровізацією. No verbatim source quote redistributed."
     },
     {
       "claim_id": "hol-t5",
@@ -50,7 +50,7 @@
       "is_true": true,
       "fabrication_class": null,
       "distractor_evidence": null,
-      "verified_by": "feaa5fa7_c0593: «голосіння як самостійні мистецькі твори ніколи поза обрядом не виконуються»"
+      "verified_by": "POINTER: wave7-entsyklopediia-ukrainoznavstva feaa5fa7_c0593 supports claim hol-t5: Поза обрядом голосіння як самостійні твори ніколи не виконувалися. No verbatim source quote redistributed."
     },
     {
       "claim_id": "hol-u1",
@@ -65,7 +65,7 @@
       "claim": "рекрутські голосіння виникли ще в Київській Русі, коли громада проводжала воїна",
       "is_true": false,
       "fabrication_class": "M",
-      "distractor_evidence": "wave8-ukr-lit-entsyklopediia fc2291b5_c1503 — the REAL passage: «В дореволюц. Росії побутували й рекрутські Г., які виникли після введення Петром I обов’язкової військ. повинності», whereas only general голосіння «дійшли до нас з часів Київ. Русі в літописах, житіях». Recruit-laments are an 18th-c. layer, NOT a Kyiv-Rus one. A reviewer keyword-matching «рекрутські/голосіння/давні» can rationalize the wrong origin.",
+      "distractor_evidence": "POINTER: wave8-ukr-lit-entsyklopediia fc2291b5_c1503 anchors the refutation of claim hol-m2: рекрутські голосіння виникли ще в Київській Русі, коли громада проводжала воїна. Paraphrase note: , whereas only general голосіння. Recruit-laments are an 18th-c. layer, NOT a Kyiv-Rus one. A reviewer keyword-matching can rationalize the wrong origin. No verbatim source quote redistributed.",
       "verified_by": "Real = рекрутські голосіння виникли ПІСЛЯ введення Петром I обов’язкової військ. повинності (XVIII ст.); лише загальні голосіння згадуються з часів Київ. Русі (fc2291b5_c1503)."
     },
     {
@@ -74,7 +74,7 @@
       "is_true": true,
       "fabrication_class": null,
       "distractor_evidence": null,
-      "verified_by": "fc2291b5_c2592: «На Україні збирання, публікація і вивчення З. починаються в 19 ст. 1898 О. Малинка вмістив… „Малорусские обряды, поверья и заплачки при похоронах“. З. та ін. жанри… публікували і вивчали С. Брайловський, В. Милорадович, В. Гнатюк, Ф. Колесса»"
+      "verified_by": "POINTER: wave8-ukr-lit-entsyklopediia fc2291b5_c2592 supports claim hol-t6: Українські голосіння записували й досліджували О. Малинка, В. Гнатюк та Ф. Колесса. No verbatim source quote redistributed."
     }
   ]
 }

@@ -1,0 +1,34 @@
+{
+  "failure_rate_threshold": 0.15,
+  "live_outcomes": [
+    {
+      "created_at": "2026-07-07T10:54:02.277452Z",
+      "gate_version": "qg_workflow.v3",
+      "level": "b1",
+      "reason": null,
+      "reviewer_family": "google",
+      "reviewer_model": "openrouter/google/gemma-4-31b-it",
+      "route_name": "gemma_surface",
+      "slug": "first",
+      "status": "parse_failure",
+      "terminal_failure": true
+    },
+    {
+      "created_at": "2026-07-07T10:54:02.280298Z",
+      "gate_version": "qg_workflow.v3",
+      "level": "b1",
+      "reason": "observed_cost_gt_125pct_estimate",
+      "reviewer_family": "google",
+      "reviewer_model": "openrouter/google/gemma-4-31b-it",
+      "route_name": "gemma_surface",
+      "slug": "sample",
+      "status": "cost_overrun",
+      "terminal_failure": false
+    }
+  ],
+  "opened_at": null,
+  "operator_message": null,
+  "schema_version": "llm_qg_live_circuit.v1",
+  "updated_at": "2026-07-07T10:54:02.280298Z",
+  "window_size": 30
+}

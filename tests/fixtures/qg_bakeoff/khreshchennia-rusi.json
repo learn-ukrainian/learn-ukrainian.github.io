@@ -10,7 +10,7 @@
       "is_true": true,
       "fabrication_class": null,
       "distractor_evidence": null,
-      "verified_by": "wave7-dzyuba-pavlenko-litopys-kultury e0892426_c0125: «За легендами, Володимир — позашлюбний син князя Святослава і ключниці княгині Ольги Малуші»"
+      "verified_by": "POINTER: wave7-dzyuba-pavlenko-litopys-kultury e0892426_c0125 supports claim khr-t1: За легендами, Володимир — позашлюбний син князя Святослава і ключниці княгині Ольги Малуші. No verbatim source quote redistributed."
     },
     {
       "claim_id": "khr-t2",
@@ -18,7 +18,7 @@
       "is_true": true,
       "fabrication_class": null,
       "distractor_evidence": null,
-      "verified_by": "wave7-dzyuba-pavlenko-litopys-kultury e0892426_c0125: «згідно з „Повістю временних літ“, він охристився в Корсуні (Херсонесі Таврійському — чорноморській колонії Візантії)»"
+      "verified_by": "POINTER: wave7-dzyuba-pavlenko-litopys-kultury e0892426_c0125 supports claim khr-t2: Згідно з 'Повістю временних літ', він охрестився в Корсуні — Херсонесі Таврійському, чорноморській колонії Візантії. No verbatim source quote redistributed."
     },
     {
       "claim_id": "khr-t3",
@@ -26,14 +26,14 @@
       "is_true": true,
       "fabrication_class": null,
       "distractor_evidence": null,
-      "verified_by": "wave7-dzyuba-pavlenko-litopys-kultury e0892426_c0125: «Літописець усі ці події пов'язує з 988 роком»"
+      "verified_by": "POINTER: wave7-dzyuba-pavlenko-litopys-kultury e0892426_c0125 supports claim khr-t3: літописець пов'язує ці події з 988 роком. No verbatim source quote redistributed."
     },
     {
       "claim_id": "khr-m1",
       "claim": "У святому Хрещенні князь одержав нове ім'я — Костянтин",
       "is_true": false,
       "fabrication_class": "M",
-      "distractor_evidence": "wave6-synopsis-1674 2bf33f78_c0148 — the REAL passage: «І дано йому у святому Хрещенні нове ім'я — Василій». The claim SWAPS the baptismal name to Костянтин — a strong keyword lure because Костянтин is named two sentences later as a co-emperor of Byzantium. wave8-ukr-lit-entsyklopediia fc2291b5_c3755 corroborates: «при хрещенні Володимир одержав христ. ім'я Василій».",
+      "distractor_evidence": "POINTER: wave8-ukr-lit-entsyklopediia fc2291b5_c3755 anchors the refutation of claim khr-m1: У святому Хрещенні князь одержав нове ім'я — Костянтин. Paraphrase note: wave6-synopsis-1674 2bf33f78_c0148 — source anchor. The claim SWAPS the baptismal name to Костянтин — a strong keyword lure because Костянтин is named two sentences later as a co-emperor of Byzantium. corroborates. No verbatim source quote redistributed.",
       "verified_by": "Real baptismal name = Василій (2bf33f78_c0148; fc2291b5_c3755). Костянтин is fabricated."
     },
     {
@@ -66,7 +66,7 @@
       "is_true": true,
       "fabrication_class": null,
       "distractor_evidence": null,
-      "verified_by": "wave7-ohiyenko-tserka daf03296_c0067: «Де саме хрестилися кияни, трудно сказати; літописець каже, ніби в Дніпрі, але інші джерела називають річку Почайну» — claim is explicitly attributed «за літописом»."
+      "verified_by": "POINTER: wave7-ohiyenko-tserka daf03296_c0067 supports claim khr-t6: за літописом, кияни прийняли хрещення у водах Дніпра. Paraphrase note: — claim is explicitly attributed. No verbatim source quote redistributed."
     },
     {
       "claim_id": "khr-u1",

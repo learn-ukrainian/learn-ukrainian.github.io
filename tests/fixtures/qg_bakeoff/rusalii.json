@@ -10,7 +10,7 @@
       "is_true": true,
       "fabrication_class": null,
       "distractor_evidence": null,
-      "verified_by": "feaa5fa7_c0528: «Зелені Свята — перше за чергою літнє свято — належить у нас до найпопулярніших». «серцевина русального обрядового циклу» — редакторська рамка навколо перевіреного ядра (пор. koliadky-t1)."
+      "verified_by": "POINTER: wave7-entsyklopediia-ukrainoznavstva feaa5fa7_c0528 supports claim rus-t1: Русалії, або Зелені свята, — перше літнє свято народного календаря, серцевина русального обрядового циклу. Paraphrase note: — редакторська рамка навколо перевіреного ядра (пор. koliadky-t1). No verbatim source quote redistributed."
     },
     {
       "claim_id": "rus-t2",
@@ -18,14 +18,14 @@
       "is_true": true,
       "fabrication_class": null,
       "distractor_evidence": null,
-      "verified_by": "feaa5fa7_c0528: «виявляється насамперед замаюванням хат, кімнат, вікон, образів „маєм“ або „клечанням“… що відбувається напередодні свята або вдосвіта»"
+      "verified_by": "POINTER: wave7-entsyklopediia-ukrainoznavstva feaa5fa7_c0528 supports claim rus-t2: Оселю напередодні свята замаювали зеленню — 'маєм' або 'клечанням'. No verbatim source quote redistributed."
     },
     {
       "claim_id": "rus-m1",
       "claim": "Особливо цінували вербове гілля, з якого й робили основне клечання",
       "is_true": false,
       "fabrication_class": "M",
-      "distractor_evidence": "wave7-entsyklopediia-ukrainoznavstva feaa5fa7_c0528 — the REAL adjacent passage names the clechannia woods: «замаюванням хат, кімнат, вікон, образів „маєм“ або „клечанням“ (звичайно це гілля й листя клена, липи або дуба)». Верба (willow) is NOT among them — willow branches belong to Вербна неділя, a different feast. A reviewer keyword-matching «клечання/гілля/зелень» can rationalize the wrong species from the very quote that refutes it.",
+      "distractor_evidence": "POINTER: wave7-entsyklopediia-ukrainoznavstva feaa5fa7_c0528 anchors the refutation of claim rus-m1: Особливо цінували вербове гілля, з якого й робили основне клечання. Paraphrase note: — the REAL adjacent passage names the clechannia woods. Верба (willow) is NOT among them — willow branches belong to Вербна неділя, a different feast. A reviewer keyword-matching can rationalize the wrong species from the very quote that refutes it. No verbatim source quote redistributed.",
       "verified_by": "Real clechannia woods = клен, липа, дуб (feaa5fa7_c0528); верба not attested for Зелені свята (верба → Вербна неділя)."
     },
     {
@@ -34,7 +34,7 @@
       "is_true": true,
       "fabrication_class": null,
       "distractor_evidence": null,
-      "verified_by": "feaa5fa7_c0528: «осокою або пахучим татарським зіллям вистелюють у хатах долівку»"
+      "verified_by": "POINTER: wave7-entsyklopediia-ukrainoznavstva feaa5fa7_c0528 supports claim rus-t3: Долівку в хатах вистеляли осокою та пахучим татарським зіллям. No verbatim source quote redistributed."
     },
     {
       "claim_id": "rus-t4",
@@ -42,7 +42,7 @@
       "is_true": true,
       "fabrication_class": null,
       "distractor_evidence": null,
-      "verified_by": "feaa5fa7_c0528: «„завивають“ берізку й залишають на ніч у лісі, бо на другий день (на св. Духа) деревце там же обрядово „розвивають“»"
+      "verified_by": "POINTER: wave7-entsyklopediia-ukrainoznavstva feaa5fa7_c0528 supports claim rus-t4: на другий день, на святого Духа, берізку обрядово 'розвивали'. No verbatim source quote redistributed."
     },
     {
       "claim_id": "rus-u1",
@@ -50,7 +50,7 @@
       "is_true": false,
       "fabrication_class": "U",
       "distractor_evidence": null,
-      "verified_by": "INVENTED genre term. Zero attestation verified 2026-07-06: search_literary(«клечальниці розмаївки пісенний жанр замаювання») → noise only (Бурсов, штюрмери, нанайська л-ра — no «клечальниці»); search_heritage(«клечальниця») → «No heritage evidence found». Real замаювання «клечанням» IS attested (feaa5fa7_c0528), making the honest-withhold non-trivial — mirroring the anchor «гаї» / «плужанки» pattern."
+      "verified_by": "POINTER: wave7-entsyklopediia-ukrainoznavstva feaa5fa7_c0528 anchors the verification/refutation note for claim rus-u1: Під час замаювання лунав окремий пісенний жанр — так звані 'клечальниці', що виконувалися винятково в мить прикрашання оселі зеленню. Paraphrase note: INVENTED genre term. Zero attestation verified 2026-07-06: search_literary() → noise only (Бурсов, штюрмери, нанайська л-ра — no ); search_heritage() →. Real замаювання IS attested (), making the honest-withhold non-trivial — mirroring the anchor / pattern. No verbatim source quote redistributed."
     },
     {
       "claim_id": "rus-t5",
@@ -58,14 +58,14 @@
       "is_true": true,
       "fabrication_class": null,
       "distractor_evidence": null,
-      "verified_by": "wave7-krypyakevych-istkult 48346587_c0280: «в русальну неділю (сьогодні — неділя Зелених свят) русалки виходять із річок з розпущеним волоссям, плавають по поверхні води, бігають по полях, гойдаються на вітях дерев»"
+      "verified_by": "POINTER: wave7-krypyakevych-istkult 48346587_c0280 supports claim rus-t5: в русальну неділю русалки виходять із річок з розпущеним волоссям і гойдаються на вітях дерев. No verbatim source quote redistributed."
     },
     {
       "claim_id": "rus-m2",
       "claim": "русалки оберігали подорожніх і відводили від них усяку біду",
       "is_true": false,
       "fabrication_class": "M",
-      "distractor_evidence": "wave7-krypyakevych-istkult 48346587_c0280 — the REAL adjacent passage: русалки «принаджують прохожих та їх залоскочують». Rusalky were DANGEROUS — they lured passers-by and tickled them (to death), the opposite of protective guardians. A reviewer keyword-matching «русалки/прохожих» can rationalize benevolence from the very quote that refutes it.",
+      "distractor_evidence": "POINTER: wave7-krypyakevych-istkult 48346587_c0280 anchors the refutation of claim rus-m2: русалки оберігали подорожніх і відводили від них усяку біду. Paraphrase note: — the REAL adjacent passage: русалки. Rusalky were DANGEROUS — they lured passers-by and tickled them (to death), the opposite of protective guardians. A reviewer keyword-matching can rationalize benevolence from the very quote that refutes it. No verbatim source quote redistributed.",
       "verified_by": "Real belief = русалки принаджують прохожих та їх залоскочують (небезпечні), не оберігають подорожніх (48346587_c0280)."
     },
     {
@@ -74,7 +74,7 @@
       "is_true": true,
       "fabrication_class": null,
       "distractor_evidence": null,
-      "verified_by": "feaa5fa7_c0528: «З Зеленими Святами й зеленим або „клечальним“ тижнем пов’язані віддавна поминальні обряди… на честь „дідів“ (себто предків)… справляють поминальну трапезу із семи страв»"
+      "verified_by": "POINTER: wave7-entsyklopediia-ukrainoznavstva feaa5fa7_c0528 supports claim rus-t6: поминальні обряди на честь 'дідів' — душ померлих предків. No verbatim source quote redistributed."
     }
   ]
 }

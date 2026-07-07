@@ -373,6 +373,59 @@ def test_invoke_opencode_reviewer_no_module_persistence_skips_curriculum_write(
     assert not list(curriculum_root.rglob("review-review.md"))
 
 
+def test_invoke_opencode_reviewer_runs_transport_outside_repo(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """#4642 (second leak path): the reviewer is a tool-using model with default
+    write tools, and opencode resolves relative tool-writes against the subprocess
+    cwd. The transport must run in an out-of-repo dir so a stray write (e.g. the
+    observed status/<slug>-review.json) never lands in the checkout. This is the
+    leak the no_module_persistence flag does NOT cover: that flag only gates our
+    own persist_reviewer_module_review, not the model's own file writes.
+
+    RED before the cwd firewall (transport inherits PROJECT_ROOT → stray write hits
+    the checkout); GREEN after (transport runs in a throwaway out-of-repo dir).
+    """
+    repo = tmp_path / "repo"
+    (repo / "curriculum" / "l2-uk-en" / "folk").mkdir(parents=True)
+    monkeypatch.setattr(llm_reviewer_dispatch, "PROJECT_ROOT", repo)
+    route = llm_reviewer_dispatch.FRONTIER_OPENCODE_ROUTE
+    prompt = llm_reviewer.build_reviewer_prompt("folk", "bakeoff-koliadky", "Passage text.")
+
+    seen: dict[str, Any] = {}
+
+    def fake_detailed(content: str, model: str, *, cwd: Path | None = None, **kwargs: Any) -> OpencodeStreamParse:
+        # Simulate a tool-using reviewer writing a stray status file with a
+        # RELATIVE path; opencode resolves it against the subprocess cwd.
+        seen["cwd"] = cwd
+        base = Path(cwd) if cwd is not None else repo
+        stray = base / "curriculum" / "l2-uk-en" / "folk" / "status" / "bakeoff-koliadky-review.json"
+        stray.parent.mkdir(parents=True, exist_ok=True)
+        stray.write_text("{}", encoding="utf-8")
+        return OpencodeStreamParse(text='{"findings": []}', tool_events=())
+
+    with (
+        patch(f"{_DISPATCH}._assert_sources_mcp_available"),
+        patch(
+            "scripts.ai_agent_bridge._opencode._invoke_opencode_detailed",
+            side_effect=fake_detailed,
+        ),
+    ):
+        llm_reviewer_dispatch._invoke_opencode_reviewer(
+            prompt,
+            route,
+            default_timeout_s=30,
+            require_mcp=True,
+            no_module_persistence=True,
+        )
+
+    assert seen["cwd"] is not None
+    reviewer_cwd = Path(seen["cwd"])
+    assert reviewer_cwd != repo and repo not in reviewer_cwd.parents
+    assert not list(repo.rglob("*-review.json"))
+    assert not (repo / "curriculum" / "l2-uk-en" / "folk" / "status").exists()
+
+
 def test_frontier_opencode_fails_fast_when_mcp_endpoint_down() -> None:
     route = llm_reviewer_dispatch.FRONTIER_OPENCODE_ROUTE
     config = {"mcp": {"sources": {"enabled": True, "url": llm_reviewer_dispatch.SOURCES_MCP_URL}}}

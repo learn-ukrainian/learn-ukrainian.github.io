@@ -10,14 +10,14 @@
       "is_true": true,
       "fabrication_class": null,
       "distractor_evidence": null,
-      "verified_by": "wave8-ukr-lit-entsyklopediia fc2291b5_c0949 (ВЕЛИЧАННЯ): «Класичною величальною поезією укр. народу є колядки, щедрівки, деякі обжинкові пісні»"
+      "verified_by": "POINTER: wave8-ukr-lit-entsyklopediia fc2291b5_c0949 supports claim kol-t1: Колядки і щедрівки — класична величальна поезія українського народу, серцевина зимового обрядового циклу. Paraphrase note: (ВЕЛИЧАННЯ). No verbatim source quote redistributed."
     },
     {
       "claim_id": "kol-m1",
       "claim": "колядки мають восьмискладовий вірш із паузою посередині (4+4), тоді як щедрівки будуються на десятискладовому вірші з паузою після п'ятого складу (5+5)",
       "is_true": false,
       "fabrication_class": "M",
-      "distractor_evidence": "wave7-entsyklopediia-ukrainoznavstva feaa5fa7_c0600 — the REAL adjacent passage contains BOTH numbers: «Колядки мають своєрідні жанрові ознаки, розмір вірша десятискладовий з павзою після 5 складу (5 + 5)… Щедрівки… своїм змістом і розміром, 5 + 5, подібні до колядок. Тільки невелика група щедрівок має вірш 4 + 4, якого не зустрічаємо в колядках». The claim SWAPS the metres: колядки are 5+5 (never 4+4); 4+4 occurs only in a small group of щедрівки. A keyword-matching reviewer sees 5+5, 4+4, колядки, щедрівки all present and rationalizes confirmation.",
+      "distractor_evidence": "POINTER: wave7-entsyklopediia-ukrainoznavstva feaa5fa7_c0600 anchors the refutation of claim kol-m1: колядки мають восьмискладовий вірш із паузою посередині (4+4), тоді як щедрівки будуються на десятискладовому вірші з паузою після п'ятого складу (5+5). Paraphrase note: — the REAL adjacent passage contains BOTH numbers. The claim SWAPS the metres: колядки are 5+5 (never 4+4); 4+4 occurs only in a small group of щедрівки. A keyword-matching reviewer sees 5+5, 4+4, колядки, щедрівки all present and rationalizes confirmation. No verbatim source quote redistributed.",
       "verified_by": "Real metric: колядки = 10-складовий 5+5; 4+4 attested only for a small group of щедрівки (feaa5fa7_c0600)."
     },
     {
@@ -26,7 +26,7 @@
       "is_true": true,
       "fabrication_class": null,
       "distractor_evidence": null,
-      "verified_by": "feaa5fa7_c0600: «що визначається великою правильністю вже в найдавнішому записі 1693 p.»"
+      "verified_by": "POINTER: wave7-entsyklopediia-ukrainoznavstva feaa5fa7_c0600 supports claim kol-t2: Найдавніший запис колядкового вірша датується 1693 роком. No verbatim source quote redistributed."
     },
     {
       "claim_id": "kol-t3",
@@ -34,7 +34,7 @@
       "is_true": true,
       "fabrication_class": null,
       "distractor_evidence": null,
-      "verified_by": "feaa5fa7_c0515: «31 грудня ст. ст., обходять „Маланки“ або „Щедрий Вечір“… Це роблять звичайно діти, але по селу ходять із щедрівками також парубки»"
+      "verified_by": "POINTER: wave7-entsyklopediia-ukrainoznavstva feaa5fa7_c0515 supports claim kol-t3: Щедрували на 'Щедрий вечір', або 'Маланки', 31 грудня за старим стилем: щедрувати ходили звичайно діти, а селом із щедрівками ходили й парубки. No verbatim source quote redistributed."
     },
     {
       "claim_id": "kol-t4",
@@ -42,14 +42,14 @@
       "is_true": true,
       "fabrication_class": null,
       "distractor_evidence": null,
-      "verified_by": "feaa5fa7_c0515: «походи з перебиранням за „Василя й Маланку“… ходить з „ведмедем“, „козою“»; feaa5fa7_c2158: «ходили колядники з козою або кобилою»"
+      "verified_by": "POINTER: wave7-entsyklopediia-ukrainoznavstva feaa5fa7_c0515 supports claim kol-t4: Молодь перебиралася за Василя й Маланку та водила 'козу'. Paraphrase note: feaa5fa7_c2158. No verbatim source quote redistributed."
     },
     {
       "claim_id": "kol-m2",
       "claim": "Колядницькі обходи за давньою традицією очолювали заміжні жінки",
       "is_true": false,
       "fabrication_class": "M",
-      "distractor_evidence": "feaa5fa7_c2158 — the REAL adjacent passage: «Деякі перебиралися за жінок (тепер головне на Маланки й на Василя…), бо жінкам колядувати заборонено». Women were BANNED from caroling — men dressed AS women. A reviewer keyword-matching «жінки/колядувати/Маланки» can rationalize the presence of women-imagery into confirming female-led rounds.",
+      "distractor_evidence": "POINTER: wave7-entsyklopediia-ukrainoznavstva feaa5fa7_c2158 anchors the refutation of claim kol-m2: Колядницькі обходи за давньою традицією очолювали заміжні жінки. Paraphrase note: — the REAL adjacent passage. Women were BANNED from caroling — men dressed AS women. A reviewer keyword-matching can rationalize the presence of women-imagery into confirming female-led rounds. No verbatim source quote redistributed.",
       "verified_by": "Real norm = жінкам колядувати заборонено; чоловіки перебиралися за жінок (feaa5fa7_c2158)."
     },
     {
@@ -58,7 +58,7 @@
       "is_true": true,
       "fabrication_class": null,
       "distractor_evidence": null,
-      "verified_by": "feaa5fa7_c0600: «Колядська обрядовість в основі мала аґрарний зміст; колядники, обходячи хати, носили з собою плуг»"
+      "verified_by": "POINTER: wave7-entsyklopediia-ukrainoznavstva feaa5fa7_c0600 supports claim kol-t5: колядники носили з собою плуг. No verbatim source quote redistributed."
     },
     {
       "claim_id": "kol-t6",
@@ -66,7 +66,7 @@
       "is_true": true,
       "fabrication_class": null,
       "distractor_evidence": null,
-      "verified_by": "feaa5fa7_c0600: «наступного ранку, на „Василя“, відбувався обряд першої сіянки… я-формула обрядового посівання („сію, вію, посіваю“)»"
+      "verified_by": "POINTER: wave7-entsyklopediia-ukrainoznavstva feaa5fa7_c0600 supports claim kol-t6: вранці на Василя виконували обряд посівання з формулою 'сію, вію, посіваю'. No verbatim source quote redistributed."
     },
     {
       "claim_id": "kol-u1",

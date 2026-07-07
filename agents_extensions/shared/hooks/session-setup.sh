@@ -131,27 +131,40 @@ if [ -f "$MEMORY_FILE" ]; then
 fi
 
 # 7. Check agents_extensions/shared/ → .claude/ sync drift
-# Excludes must match scripts/deploy_prompts.sh:
-#   - 6 rule files served by Monitor API (CLAUDE_RULE_AUTOLOAD_EXCLUDES) — intentionally
-#     removed from .claude/rules/ by remove_claude_autoload_rules() after sync.
-#   - ORPHAN_PATHS_CLAUDE: scheduled_tasks.lock (Claude scheduler state) + worktrees/ +
-#     folk-epic/ bio-epic/ (gitignored-local driver handoffs, user policy 2026-06-23).
-# Without these, every cold start flags a false-positive drift. Hook bug fix 2026-05-13.
+# Excludes must match scripts/deploy_prompts.sh, derived dynamically from
+# scripts/deploy_orphan_paths.sh to avoid hand-maintained drift (issue #4610).
+# Without these, every cold start flags a false-positive drift.
 if [ -d "$PROJECT_DIR/agents_extensions/shared" ] && [ -d "$PROJECT_DIR/.claude" ]; then
-  DRIFT=$(diff -rq "$PROJECT_DIR/agents_extensions/shared/" "$PROJECT_DIR/.claude/" \
-    --exclude='.DS_Store' \
-    --exclude='settings.local.json' \
-    --exclude='scheduled_tasks.lock' \
-    --exclude='worktrees' \
-    --exclude='folk-epic' \
-    --exclude='bio-epic' \
-    --exclude='critical-rules.md' \
-    --exclude='non-negotiable-rules.md' \
-    --exclude='workflow.md' \
-    --exclude='delegate-must-use-worktree.md' \
-    --exclude='cli-help-standard.md' \
-    --exclude='model-assignment.md' \
-    2>/dev/null | head -5)
+  DIFF_EXCLUDES=(".DS_Store")
+  ORPHAN_PATHS_SH="$PROJECT_DIR/scripts/deploy_orphan_paths.sh"
+  if [ -f "$ORPHAN_PATHS_SH" ]; then
+    # shellcheck disable=SC1090
+    source "$ORPHAN_PATHS_SH"
+    # set -f: ORPHAN_PATHS_CLAUDE carries glob patterns (*-epic) that must reach
+    # diff --exclude LITERALLY; without noglob the unquoted expansion would match
+    # against the hook's cwd if a *-epic entry ever appears there.
+    set -f
+    # shellcheck disable=SC2086
+    for item in $ORPHAN_PATHS_CLAUDE; do
+      DIFF_EXCLUDES+=("$item")
+    done
+    set +f
+    for path in "${CLAUDE_RULE_AUTOLOAD_EXCLUDES[@]}"; do
+      DIFF_EXCLUDES+=("$(basename "$path")")
+    done
+  else
+    # Fallback to the old static list if deploy_orphan_paths.sh is missing (graceful degradation)
+    for item in settings.local.json scheduled_tasks.lock worktrees folk-epic bio-epic critical-rules.md non-negotiable-rules.md workflow.md delegate-must-use-worktree.md cli-help-standard.md model-assignment.md; do
+      DIFF_EXCLUDES+=("$item")
+    done
+  fi
+
+  diff_args=(-rq)
+  for ex in "${DIFF_EXCLUDES[@]}"; do
+    diff_args+=("--exclude=$ex")
+  done
+
+  DRIFT=$(diff "${diff_args[@]}" "$PROJECT_DIR/agents_extensions/shared/" "$PROJECT_DIR/.claude/" 2>/dev/null | head -5)
   if [ -n "$DRIFT" ]; then
     DRIFT_COUNT=$(echo "$DRIFT" | wc -l | tr -d ' ')
     ISSUES+=("DEPLOY DRIFT: $DRIFT_COUNT file(s) differ between agents_extensions/shared/ and .claude/. Run: npm run agents:deploy")

@@ -257,3 +257,52 @@ frontier bare cells now have a separate subscription-runtime lane, while tooled-
 phase-2 telemetry-adapter work. Frontier variants served by subscription lanes differ from OpenRouter pins
 (e.g. `gemini-3.1-pro-high` ≠ `google/gemini-3.1-pro-preview`) — analyze as transport+variant
 substitution, never conflate.
+
+## Step-3 multi-run replication — 17 passages × 3 runs (2026-07-07, #4539)
+
+Scale-up of the 4-passage matrix: **17 public passages** (waves 1–3: folk 8 · history 5 · bio 4,
+each with pre-verified class-M distractors + class-U zero-attestation terms), **3 runs per cell**,
+both arms, same 3 cheap pins — 306 artifacts (`audit/2026-07-06-qg-bakeoff-multirun/SCORECARD.md`,
+run-aware aggregation + Run Variance + Domain Totals from the #4613 multi-run harness; error cells
+51→9 after one `--retry-failures` sweep).
+
+### Paired per-passage harness lift (with anchor, 17 passages, arms averaged within passage across runs)
+
+| model | bare total (3-run mean) | tooled total | lift/passage | 4-passage equivalent was |
+|---|---:|---:|---:|---:|
+| gemma-4-31b-it | 153 ± 130 [20..280] | 1733 ± 146 [1580..1870] | **+92.9 ± 88.3** | +77.5 |
+| deepseek-v4-pro | 1360 ± 148 | 1797 ± 312 | +25.7 ± 81.8 | +45.0 |
+| deepseek-v4-flash | 887 ± 285 | 1083 ± 500 | +11.6 ± 81.5 | +62.5 |
+
+(Without-anchor split, 16 passages: +92.5 / +26.9 / +11.3 — same ordering.)
+
+### Findings (what replicates, what breaks, what's confounded)
+
+1. **The gemma lift REPLICATES and strengthens.** Per-run bare totals [20..280] vs tooled
+   [1580..1870] are disjoint by >1,300 points across all three runs; per-passage lift +92.9
+   exceeds the 4-passage estimate (+77.5). Stability classifier: gemma 0.84 bare / 0.77 tooled —
+   best in class, 1 error-flagged cell in 102.
+2. **The deepseek lifts shrink into noise — but the measurement is transport-confounded.**
+   ds-flash: 4 error-flagged tooled passages + 62.7 missing-claims/run mean; cell error rates on
+   the opencode→OpenRouter chain measured ~21% (flash) / ~18% (pro) vs gemma 9% on the identical
+   chain. Error/partial cells score as failures and drag the tooled arm. Deepseek lift judgment
+   is DEFERRED to the first-party rerun (#4358 deepseek-direct); the frozen matrix runs deepseek
+   on the direct profile.
+3. **Retire the cross-model "best bare < worst tooled" phrasing.** At 17 passages it no longer
+   holds across models (ds-pro bare 1360 > ds-flash tooled 1083). The robust claims are
+   (a) per-model paired lift and (b) the honesty metrics below.
+4. **The tooled advantage concentrates in the safety-critical metrics.** Class-U honesty bare
+   collapses for ALL models at scale (0.06–0.08) vs tooled 0.92 (gemma) / 0.78 (pro) / 0.55
+   (flash); class-M alignment gemma 0.35→0.85. Sharpest framing: ds-pro bare posts the best raw
+   judgment (1360) while STILL confirming fabrications at a 0.08 U-honesty rate — strong bare
+   judgment does not buy honest withholding.
+5. **Domain story (gemma):** bare is NEGATIVE where parametric fabrication bites — bio −87,
+   folk −123 — and positive on well-attested history (+363). Tooling lift by domain: bio
+   +141/passage > folk +94 > history +53. Deepseek history lift is negative (−17/−21):
+   already-strong bare history + error-cell drag.
+6. **Sizing judgment for the freeze:** 3 runs/cell is adequate for release claims on stable
+   seats (gemma run-total sd ≈8% of mean); deepseek needs the transport fix, not more runs.
+   Path: wave-4 public passages (21 total, #4668) + deepseek-direct (#4358) → ONE final
+   clean-dir frozen matrix per spec F3. 9 residual error cells get one more optional
+   `--retry-failures` pass first (queued behind the frontier bare ×3 run currently writing
+   into the same dir).

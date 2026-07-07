@@ -10,7 +10,7 @@
       "is_true": true,
       "fabrication_class": null,
       "distractor_evidence": null,
-      "verified_by": "uk.wikipedia «Франко Іван Якович» §Життєпис: «Іван Франко народився 27 серпня 1856 року... села Нагуєвичі»; wave7-krypyakevych-istkult 48346587_c0579 corroborates."
+      "verified_by": "POINTER: wave7-krypyakevych-istkult 48346587_c0579 supports claim fra-t1: Іван Франко народився 27 серпня 1856 року в селі Нагуєвичі. Paraphrase note: uk.wikipedia §Життєпис; corroborates. No verbatim source quote redistributed."
     },
     {
       "claim_id": "fra-t2",
@@ -18,7 +18,7 @@
       "is_true": true,
       "fabrication_class": null,
       "distractor_evidence": null,
-      "verified_by": "wave7-krypyakevych-istkult 48346587_c0579: «Був сином селянина-коваля»; wave8-fdm-biobibliohrafichnyi 479cf43d_c0172 corroborates «в родині коваля»."
+      "verified_by": "POINTER: wave7-krypyakevych-istkult 48346587_c0579 supports claim fra-t2: був сином сільського коваля. Paraphrase note: wave8-fdm-biobibliohrafichnyi 479cf43d_c0172 corroborates. No verbatim source quote redistributed."
     },
     {
       "claim_id": "fra-t3",
@@ -57,7 +57,7 @@
       "claim": "1906 року він став почесним доктором Харківського технологічного інституту",
       "is_true": false,
       "fabrication_class": "M",
-      "distractor_evidence": "wave7-popovych-narys-kultury 68ba0555_c0785 — the REAL passage: «1906 р. він став почесним доктором російської словесності Харківського університету». The year and honorary-doctor frame are real; the institution is fabricated as the Kharkiv Technological Institute.",
+      "distractor_evidence": "POINTER: wave7-popovych-narys-kultury 68ba0555_c0785 anchors the refutation of claim fra-m2: 1906 року він став почесним доктором Харківського технологічного інституту. Paraphrase note: The year and honorary-doctor frame are real; the institution is fabricated as the Kharkiv Technological Institute. No verbatim source quote redistributed.",
       "verified_by": "Real: honorary doctor of Kharkiv University, not Kharkiv Technological Institute (68ba0555_c0785; uk.wikipedia §Життєпис)."
     },
     {
@@ -66,7 +66,7 @@
       "is_true": true,
       "fabrication_class": null,
       "distractor_evidence": null,
-      "verified_by": "wave8-fdm-biobibliohrafichnyi 479cf43d_c0172: «Вершинним досягненням Ф. — поета і мислителя — стала поема \"Мойсей\" (1905)»."
+      "verified_by": "POINTER: wave8-fdm-biobibliohrafichnyi 479cf43d_c0172 supports claim fra-t6: Вершинним досягненням Франка — поета і мислителя — стала поема 'Мойсей' 1905 року. No verbatim source quote redistributed."
     },
     {
       "claim_id": "fra-u1",

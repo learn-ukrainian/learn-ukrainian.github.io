@@ -24,12 +24,14 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_FIXTURE_DIR = REPO_ROOT / "tests/fixtures/qg_bakeoff"
 DEFAULT_RIGHTS_JSON = REPO_ROOT / "tests/fixtures/qg_bakeoff_rights/rights.json"
 DEFAULT_MATRIX_DOC = REPO_ROOT / "docs/projects/ua-eval-harness/fixture-rights-matrix.md"
+DEFAULT_REPLACE_LIST = REPO_ROOT / "docs/projects/ua-eval-harness/fixture-rights-replace-list.md"
 DEFAULT_LICENSE_MAP = Path(__file__).with_name("source_license_map.json")
 DEFAULT_SOURCES_DB = REPO_ROOT / "data/sources.db"
 DEFAULT_VESUM_DB = REPO_ROOT / "data/vesum.db"
 
 CHUNK_ID_RE = re.compile(r"\b(?:[a-f0-9]{8}_c\d{4}|[\w-]+_s\d{4}|ext-[\w-]+-\d+)\b")
 QUOTE_RE = re.compile(r"«([^»]+)»")
+EXPLICIT_POINTER_RE = re.compile(r"^\s*POINTER:", re.IGNORECASE)
 TOKEN_RE = re.compile(r"[0-9A-Za-zА-Яа-яІіЇїЄєҐґ'’ʼ-]{2,}", re.UNICODE)
 FTS_TOKEN_RE = re.compile(r"[0-9A-Za-zА-Яа-яІіЇїЄєҐґ]{2,}", re.UNICODE)
 
@@ -268,10 +270,12 @@ def extract_quote_candidates(text: str, row_kind: str) -> list[str]:
 
 
 def classify_row(claim_id: str, row_kind: str, text: str) -> str:
-    if claim_id == "root_vlog":
-        return "POINTER"
     if row_kind == "distractor":
         return "QUOTED_TEXT"
+    if claim_id == "root_vlog":
+        return "POINTER"
+    if EXPLICIT_POINTER_RE.match(text):
+        return "POINTER"
     if extract_quote_candidates(text, row_kind):
         return "QUOTED_TEXT"
     return "POINTER"
@@ -553,12 +557,30 @@ def load_license_map(path: Path) -> list[dict[str, str]]:
     entries = data.get("entries", [])
     if not isinstance(entries, list):
         raise ValueError(f"{path} must contain an entries list")
-    required = {"table", "source_file_pattern", "license", "verdict", "basis_url", "basis_note"}
+    required = {"table", "source_file_pattern", "license", "verdict", "basis_url", "license_basis"}
     for entry in entries:
         missing = required - set(entry)
         if missing:
             raise ValueError(f"License map entry missing {sorted(missing)}: {entry}")
     return entries
+
+
+def load_replace_list(path: Path) -> dict[tuple[str, str], str]:
+    if not path.exists():
+        return {}
+
+    replacements: dict[tuple[str, str], str] = {}
+    for raw_line in path.read_text(encoding="utf-8").splitlines():
+        line = raw_line.strip()
+        if not line.startswith("|") or set(line.replace("|", "").strip()) <= {"-", ":"}:
+            continue
+        cells = [cell.strip() for cell in line.strip("|").split("|")]
+        if len(cells) < 4 or cells[0] == "Fixture":
+            continue
+        fixture, claim_id, _why, action = cells[:4]
+        if action == "REPLACE":
+            replacements[(fixture, claim_id)] = _why
+    return replacements
 
 
 def license_for_hit(hit: SourceHit, license_entries: list[dict[str, str]]) -> dict[str, str] | None:
@@ -664,7 +686,7 @@ def make_quoted_row(
     else:
         license_name = license_entry["license"]
         verdict = license_entry["verdict"]
-        basis = license_entry["basis_note"]
+        basis = license_entry["license_basis"]
         basis_url = license_entry["basis_url"]
 
     return {
@@ -689,13 +711,40 @@ def make_quoted_row(
     }
 
 
+def make_replace_row(row: dict[str, Any], reason: str, replace_list: Path) -> dict[str, Any]:
+    try:
+        basis_url = str(replace_list.relative_to(REPO_ROOT))
+    except ValueError:
+        basis_url = str(replace_list)
+    return {
+        "fixture": row["fixture"],
+        "claim_id": row["claim_id"],
+        "quote_or_ref": row["quote_or_ref"],
+        "classification": "QUOTED_TEXT",
+        "matched_table": None,
+        "source_file": None,
+        "chunk_id": None,
+        "license": "N/A",
+        "verdict": "REPLACE",
+        "evidence": {
+            "match_method": "committed replace-list disposition",
+            "similarity": None,
+            "quote": None,
+            "license_basis": reason,
+            "license_basis_url": basis_url,
+        },
+    }
+
+
 def resolve_rows(
     fixture_dir: Path,
     sources_db: Path,
     vesum_db: Path,
     license_map: Path,
+    replace_list: Path = DEFAULT_REPLACE_LIST,
 ) -> list[dict[str, Any]]:
     license_entries = load_license_map(license_map)
+    replace_entries = load_replace_list(replace_list)
     connections: dict[str, sqlite3.Connection] = {
         "sources": sqlite3.connect(sources_db),
         "vesum": sqlite3.connect(vesum_db),
@@ -706,6 +755,10 @@ def resolve_rows(
         resolved: list[dict[str, Any]] = []
         for row in fixture_evidence_rows(fixture_dir):
             classification = classify_row(row["claim_id"], row["row_kind"], row["quote_or_ref"])
+            replace_reason = replace_entries.get((row["fixture"], row["claim_id"]))
+            if replace_reason:
+                resolved.append(make_replace_row(row, replace_reason, replace_list))
+                continue
             if classification == "POINTER":
                 resolved.append(make_pointer_row(row))
                 continue
@@ -751,7 +804,7 @@ def render_matrix_doc(rows: list[dict[str, Any]], license_map: Path) -> str:
         "",
         "## Method",
         "",
-        "This matrix replaces the prior LLM-labeled rights pass. The resolver now extracts fixture evidence rows mechanically, searches quoted text against local SQLite source rows, and applies only committed `scripts/audit/source_license_map.json` entries for license labels. Unmatched quotes and matched-but-unmapped sources are `UNKNOWN`; the resolver does not infer licenses from fixture prose.",
+        "This matrix replaces the prior LLM-labeled rights pass. The resolver now extracts fixture evidence rows mechanically, searches quoted text against local SQLite source rows, applies only committed `scripts/audit/source_license_map.json` entries for license labels, and marks rows from `docs/projects/ua-eval-harness/fixture-rights-replace-list.md` as `REPLACE`. Any remaining unmatched quote or matched-but-unmapped source fails closed as `UNKNOWN`; the committed matrix must have zero such rows.",
         "",
         "Pointer provenance rows contain no redistributable source quote and are classified `POINTER` with verdict `SHIP`.",
         "",
@@ -786,7 +839,7 @@ def render_matrix_doc(rows: list[dict[str, Any]], license_map: Path) -> str:
         ]
     )
     for entry in license_entries:
-        basis = f"{entry['basis_note']} ({entry['basis_url']})"
+        basis = f"{entry['license_basis']} ({entry['basis_url']})"
         lines.append(
             "| "
             + " | ".join(
@@ -870,13 +923,14 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--sources-db", type=Path, default=DEFAULT_SOURCES_DB)
     parser.add_argument("--vesum-db", type=Path, default=DEFAULT_VESUM_DB)
     parser.add_argument("--license-map", type=Path, default=DEFAULT_LICENSE_MAP)
+    parser.add_argument("--replace-list", type=Path, default=DEFAULT_REPLACE_LIST)
     parser.add_argument("--check", action="store_true", help="Resolve and print summary without writing files.")
     return parser
 
 
 def main() -> int:
     args = build_parser().parse_args()
-    rows = resolve_rows(args.fixtures, args.sources_db, args.vesum_db, args.license_map)
+    rows = resolve_rows(args.fixtures, args.sources_db, args.vesum_db, args.license_map, args.replace_list)
     if not args.check:
         write_outputs(rows, args.rights_json, args.matrix_doc, args.license_map)
     print_summary(rows, args.rights_json, args.matrix_doc, wrote=not args.check)

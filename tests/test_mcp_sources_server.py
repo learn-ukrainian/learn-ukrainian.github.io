@@ -85,6 +85,13 @@ class TestListTools:
         assert subject["enum"] == list(server_module.CANONICAL_TEXTBOOK_SUBJECTS)
         assert "ukrmova" in subject["description"]
 
+    def test_search_images_subject_schema(self, server_module):
+        tools = _run(server_module.list_tools())
+        search_images = next(t for t in tools if t.name == "search_images")
+        subject = search_images.inputSchema["properties"]["subject"]
+        assert subject["enum"] == list(server_module.CANONICAL_TEXTBOOK_SUBJECTS)
+        assert "ukrmova" in subject["description"]
+
     def test_verify_words_schema(self, server_module):
         tools = _run(server_module.list_tools())
         vw = next(t for t in tools if t.name == "verify_words")

@@ -10,7 +10,7 @@
       "is_true": true,
       "fabrication_class": null,
       "distractor_evidence": null,
-      "verified_by": "feaa5fa7_c0612: «З родового погляду весілля є акт переходу з одного роду до іншого»"
+      "verified_by": "POINTER: wave7-entsyklopediia-ukrainoznavstva feaa5fa7_c0612 supports claim ves-t1: весілля було актом переходу молодої з одного роду до іншого. No verbatim source quote redistributed."
     },
     {
       "claim_id": "ves-t2",
@@ -18,7 +18,7 @@
       "is_true": true,
       "fabrication_class": null,
       "distractor_evidence": null,
-      "verified_by": "feaa5fa7_c0612: «Пошлюблена дівчина, покидаючи свій рід і переходячи в інший, „вмирає“ для свого роду»; feaa5fa7_c0617 corroborates «молода вмирає для свого роду»"
+      "verified_by": "POINTER: wave7-entsyklopediia-ukrainoznavstva feaa5fa7_c0612 supports claim ves-t2: пошлюблена дівчина, покидаючи свій рід, обрядово 'вмирала' для нього. Paraphrase note: feaa5fa7_c0617 corroborates. No verbatim source quote redistributed."
     },
     {
       "claim_id": "ves-t3",
@@ -34,14 +34,14 @@
       "is_true": true,
       "fabrication_class": null,
       "distractor_evidence": null,
-      "verified_by": "feaa5fa7_c0612: «мати нареченої виходить із хати назустріч перебрана, в виверненому кожусі»"
+      "verified_by": "POINTER: wave7-entsyklopediia-ukrainoznavstva feaa5fa7_c0612 supports claim ves-t4: мати нареченої виходила назустріч перебрана, у виверненому кожусі. No verbatim source quote redistributed."
     },
     {
       "claim_id": "ves-m1",
       "claim": "молодий випивав її до дна на знак згоди",
       "is_true": false,
       "fabrication_class": "M",
-      "distractor_evidence": "wave7-entsyklopediia-ukrainoznavstva feaa5fa7_c0612 — the REAL rite: the mother «пропонує женихові замість хліба й горілки чашку з водою й вівсом. Молодий удає, ніби куштує, тоді кидає чашку через голову назад, і дружко мусить розбити її палкою на льоту». The groom does NOT drink it — he feigns tasting, throws it over his head, and the дружко smashes it in mid-air. A reviewer keyword-matching «молодий/чашка/вода/овес» can rationalize drinking-as-consent from the very quote that refutes it.",
+      "distractor_evidence": "POINTER: wave7-entsyklopediia-ukrainoznavstva feaa5fa7_c0612 anchors the refutation of claim ves-m1: молодий випивав її до дна на знак згоди. Paraphrase note: — the REAL rite: the mother. The groom does NOT drink it — he feigns tasting, throws it over his head, and the дружко smashes it in mid-air. A reviewer keyword-matching can rationalize drinking-as-consent from the very quote that refutes it. No verbatim source quote redistributed.",
       "verified_by": "Real rite = молодий лише вдає, ніби куштує, тоді кидає чашку через голову назад, а дружко розбиває її палкою на льоту — він НЕ випиває (feaa5fa7_c0612)."
     },
     {
@@ -49,7 +49,7 @@
       "claim": "Весільні пісні виконували переважно чоловіки-музики",
       "is_true": false,
       "fabrication_class": "M",
-      "distractor_evidence": "wave7-entsyklopediia-ukrainoznavstva feaa5fa7_c0617 — the REAL passage: «Весільні пісні співає переважно жіноцтво». The core singers were WOMEN, not male musicians. Rich instrumental-accompaniment context around a wedding invites lazy confirmation of the wrong performers.",
+      "distractor_evidence": "POINTER: wave7-entsyklopediia-ukrainoznavstva feaa5fa7_c0617 anchors the refutation of claim ves-m2: Весільні пісні виконували переважно чоловіки-музики. Paraphrase note: The core singers were WOMEN, not male musicians. Rich instrumental-accompaniment context around a wedding invites lazy confirmation of the wrong performers. No verbatim source quote redistributed.",
       "verified_by": "Real = весільні пісні співає переважно жіноцтво (feaa5fa7_c0617); чоловіки-музики не є основними виконавцями."
     },
     {
@@ -58,7 +58,7 @@
       "is_true": false,
       "fabrication_class": "U",
       "distractor_evidence": null,
-      "verified_by": "INVENTED genre term. Zero attestation verified 2026-07-06: search_literary(«колупанки печинниці наречена весільний обряд») → only real весілля chunks (feaa5fa7_c0612/c0615/c0617), no «колупанки»; search_heritage(«колупанка») + («печинниця») → «No heritage evidence found». Real колупання печі at сватання IS attested (feaa5fa7_c0612: «дівчина тулиться до печі й колупає стінку печі»), making honest-withhold non-trivial — mirroring the anchor «гаї» / «плужанки» pattern."
+      "verified_by": "POINTER: wave7-entsyklopediia-ukrainoznavstva feaa5fa7_c0612 anchors the verification/refutation note for claim ves-u1: Під час сватання, колупаючи піч, наречена начебто виводила окремий різновид весільних пісень — так звані 'колупанки', прив’язані лише до цієї миті обряду. Paraphrase note: INVENTED genre term. Zero attestation verified 2026-07-06: search_literary() → only real весілля chunks (/c0615/c0617), no; search_heritage() + () →. Real колупання печі at сватання IS attested (: ), making honest-withhold non-trivial — mirroring the anchor / pattern. No verbatim source quote redistributed."
     },
     {
       "claim_id": "ves-t5",
@@ -66,7 +66,7 @@
       "is_true": true,
       "fabrication_class": null,
       "distractor_evidence": null,
-      "verified_by": "wave7-krypyakevych-istkult 48346587_c0039: «жень умовлявся з батьками дівчини й давав за неї оплату — віно… Заручини мають назву від того, що жень брав дівчину за руки»"
+      "verified_by": "POINTER: wave7-krypyakevych-istkult 48346587_c0039 supports claim ves-t5: жених давав її родові оплату — 'віно', а заручини дістали назву від того, що жених брав дівчину за руки. No verbatim source quote redistributed."
     },
     {
       "claim_id": "ves-t6",
@@ -74,7 +74,7 @@
       "is_true": true,
       "fabrication_class": null,
       "distractor_evidence": null,
-      "verified_by": "wave7-krypyakevych-istkult 48346587_c0039: «Вінчання — це церковний обряд, при якому молодих прикрашали вінцем… з того звичаю збереглися ще тепер назви князь і княгиня… Так само дружки звуться боярами»"
+      "verified_by": "POINTER: wave7-krypyakevych-istkult 48346587_c0039 supports claim ves-t6: Під час вінчання молодих прикрашали вінцем і врочисто називали князем та княгинею, а їхніх дружок — боярами. No verbatim source quote redistributed."
     }
   ]
 }
