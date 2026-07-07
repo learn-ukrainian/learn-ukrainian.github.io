@@ -1801,6 +1801,9 @@ def _build_heritage_items(
             "corrections": _clean_text_list(pair.get("corrections")),
             "sourceFamily": _clean_text(pair.get("sourceFamily")) or "",
         }
+        rat_uk = _clean_text(pair.get("rationaleUk"))
+        if rat_uk:
+            item["rationaleUk"] = rat_uk
         if item["kind"] == "sense_restricted":
             item["calqueSense"] = _clean_text(pair.get("calqueSense")) or ""
             item["authenticSense"] = _clean_text(pair.get("authenticSense")) or ""

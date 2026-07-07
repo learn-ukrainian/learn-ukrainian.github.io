@@ -218,6 +218,7 @@ function heritagePracticeItem(): PracticeHeritageItem {
       { label: 'місто' },
     ],
     rationale: 'у цьому значенні потрібне питоме слово',
+    rationaleUk: 'у цьому значенні потрібне питоме слово',
     citations: ['Антоненко-Давидович: fixture'],
     corrections: ['дім'],
     sourceFamily: 'fixture',
@@ -657,6 +658,123 @@ describe('LexiconPractice', () => {
 
     expect(screen.queryByText('Спадщина')).not.toBeInTheDocument();
     expect(screen.queryByRole('button', { name: /Спадщина/ })).not.toBeInTheDocument();
+  });
+
+  test('heritage feedback renders rationaleUk when present and OMITS the detail line when absent', async () => {
+    const user = userEvent.setup();
+
+    // 1. With rationaleUk present
+    const itemWithRationale = heritagePracticeItem();
+    itemWithRationale.rationaleUk = 'питоме слово замість кальки';
+    itemWithRationale.rationale = 'some english detail';
+    const deckWithRationale = heritageDeck();
+    deckWithRationale.heritage = [itemWithRationale];
+
+    const { unmount } = render(
+      <LexiconPractice
+        initialDeck={deckWithRationale}
+        autoStart
+        initialMode="heritage"
+        advanceDelayMs={10_000}
+      />,
+    );
+
+    await user.click(
+      within(screen.getByTestId('practice-heritage')).getByRole('button', { name: /дом/ }),
+    );
+
+    const feedbackText = screen.getByTestId('practice-heritage-feedback').textContent;
+    expect(feedbackText).toContain('питоме слово замість кальки');
+    expect(feedbackText).not.toContain('some english detail');
+
+    unmount();
+
+    // 2. With rationaleUk absent
+    const itemWithoutRationale = heritagePracticeItem();
+    itemWithoutRationale.rationaleUk = undefined;
+    itemWithoutRationale.rationale = 'english explanation';
+    itemWithoutRationale.citations = []; // clear citations so they don't render
+    const deckWithoutRationale = heritageDeck();
+    deckWithoutRationale.heritage = [itemWithoutRationale];
+
+    render(
+      <LexiconPractice
+        initialDeck={deckWithoutRationale}
+        autoStart
+        initialMode="heritage"
+        advanceDelayMs={10_000}
+      />,
+    );
+
+    await user.click(
+      within(screen.getByTestId('practice-heritage')).getByRole('button', { name: /дом/ }),
+    );
+
+    const feedbackTextWithout = screen.getByTestId('practice-heritage-feedback').textContent;
+    expect(feedbackTextWithout).toBe('⚠️ калькаВідкрити в Атласі →');
+    expect(feedbackTextWithout).not.toContain('english explanation');
+  });
+
+  test('«Відкрити в Атласі →» link present in heritage feedback with correct href', async () => {
+    const user = userEvent.setup();
+    render(
+      <LexiconPractice
+        initialDeck={heritageDeck()}
+        autoStart
+        initialMode="heritage"
+        advanceDelayMs={10_000}
+      />,
+    );
+
+    await user.click(
+      within(screen.getByTestId('practice-heritage')).getByRole('button', { name: /дом/ }),
+    );
+
+    const link = screen.getByRole('link', { name: 'Відкрити в Атласі →' });
+    expect(link).toBeInTheDocument();
+    expect(link).toHaveAttribute('href', '/lexicon/dim/');
+  });
+
+  test('focus deep-link: deck filtered to the lemma, no double session start', async () => {
+    const originalSearch = window.location.search;
+    delete (window as any).location;
+    window.location = new URL('http://localhost/lexicon/practice/?lemmaId=dim') as any;
+
+    try {
+      const setItemSpy = vi.spyOn(localStorage, 'setItem');
+      const removeItemSpy = vi.spyOn(localStorage, 'removeItem');
+      const { fn } = mockShardFetch({ A1: 2, A2: 2 });
+      vi.spyOn(globalThis, 'fetch').mockImplementation(fn);
+
+      const sampleDeck = heritageDeck();
+      const multiLemmaDeck: PracticeDeckData = {
+        ...sampleDeck,
+        index: [
+          { lemmaId: 'dim', lemma: 'дім', cefr: 'A2', modes: ['heritage'], hasCloze: false, clozeIds: [], newOrder: 0 },
+          { lemmaId: 'knyha', lemma: 'книга', cefr: 'A1', modes: ['flashcards'], hasCloze: false, clozeIds: [], newOrder: 1 },
+        ],
+      };
+
+      render(<LexiconPractice initialDeck={multiLemmaDeck} autoStart={false} />);
+
+      await waitFor(() => {
+        expect(screen.getByTestId('practice-heritage')).toBeInTheDocument();
+      });
+      expect(screen.queryByTestId('practice-flashcards')).not.toBeInTheDocument();
+
+      const snapshotWrites = setItemSpy.mock.calls.filter(([key]) => key === 'lu-practice-session');
+      const snapshotRemoves = removeItemSpy.mock.calls.filter(([key]) => key === 'lu-practice-session');
+      expect(snapshotRemoves.length).toBe(1);
+      expect(snapshotWrites.length).toBe(1);
+
+      const startedSnapshot = JSON.parse(snapshotWrites[0][1]);
+      expect(startedSnapshot).not.toBeNull();
+      expect(startedSnapshot.modeFilter).toBe('mixed');
+      expect(startedSnapshot.budget).toBe(10);
+    } finally {
+      window.location = new URL('http://localhost/') as any;
+      vi.restoreAllMocks();
+    }
   });
 
   test('cloze wrong-case answer records one case miss and leaves blank open', async () => {

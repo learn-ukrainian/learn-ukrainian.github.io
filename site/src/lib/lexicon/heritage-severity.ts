@@ -22,16 +22,19 @@ export interface HeritageStatus {
   curated_calque?: {
     corrections?: string[];
     note?: string;
+    noteUk?: string;
     source?: string[];
   } | null;
   "§6_note"?: {
     corrections?: string[];
     note?: string;
+    noteUk?: string;
     source?: string[];
   } | null;
   reverse_calques?: Array<{
     calque: string;
     note?: string;
+    noteUk?: string;
     source?: string[];
   }> | null;
 }
@@ -108,7 +111,7 @@ function hasPositiveAttestation(status: HeritageStatus | null | undefined): bool
   );
 }
 
-function standardAlternatives(status: HeritageStatus | null | undefined, gloss: string | null): string[] {
+function sqlStyleAlternatives(status: HeritageStatus | null | undefined, gloss: string | null): string[] {
   const calqueWarning = nonEmptyStrings(status?.calque_warning?.standard_alternatives);
   if (calqueWarning.length > 0) return unique(calqueWarning);
 
@@ -127,6 +130,11 @@ function standardAlternatives(status: HeritageStatus | null | undefined, gloss: 
       .map((value) => value.trim())
       .filter(Boolean),
   );
+}
+
+// Keep the standardAlternatives alias in case it's used elsewhere or in tests.
+function standardAlternatives(status: HeritageStatus | null | undefined, gloss: string | null): string[] {
+  return sqlStyleAlternatives(status, gloss);
 }
 
 function hasCalqueAlternative(status: HeritageStatus | null | undefined): boolean {
@@ -218,10 +226,9 @@ export function resolveHeritageBoxes(entry: LexiconEntryForSeverity): HeritageBo
           : `Уникайте скалькованої форми ${reverseCalques.join(" або ")}.`,
       alternatives,
       detail:
-        status?.curated_calque?.note ??
-        status?.["§6_note"]?.note ??
-        status?.calque_warning?.detail ??
-        status?.reverse_calques?.[0]?.note,
+        status?.curated_calque?.noteUk ??
+        status?.["§6_note"]?.noteUk ??
+        status?.reverse_calques?.[0]?.noteUk,
     };
   } else if (severity === "treasured") {
     boxes.green = {

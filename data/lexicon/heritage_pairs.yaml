@@ -1,6 +1,6 @@
 schema_version: 1
-description: Curated heritage calque pairs for the §9.5 decolonization drill (#4505). Every record driver-adjudicated
-  with tool-backed evidence; never generated from raw russian_shadow scores.
+description: Curated heritage calque pairs for the §9.5 decolonization drill (#4505). Every record driver-adjudicated with
+  tool-backed evidence; never generated from raw russian_shadow scores.
 pairs:
 - calqueLabel: бажаючий
   calqueSurfaces:
@@ -39,8 +39,7 @@ pairs:
   kind: lexical
   corrections:
   - щасливий
-  rationale: 'Антоненко: недоречний старослов''янізм під впливом рос.; українські відповідники щасливий,
-    щасний, безпечний'
+  rationale: 'Антоненко: недоречний старослов''янізм під впливом рос.; українські відповідники щасливий, щасний, безпечний'
   citations:
   - antonenko:81 Благополучний чи щасливий
   sourceFamily: antonenko
@@ -67,8 +66,7 @@ pairs:
   kind: lexical
   corrections:
   - вболівальник
-  rationale: 'Антоненко: боліти = відчувати біль/жаль; спортивний уболівальник — вболівальник (від вболівати
-    за когось)'
+  rationale: 'Антоненко: боліти = відчувати біль/жаль; спортивний уболівальник — вболівальник (від вболівати за когось)'
   citations:
   - antonenko:14 Болільник чи вболівальник
   sourceFamily: antonenko
@@ -117,6 +115,9 @@ pairs:
     calque_form: біля
     origin: authored-codex-2026-07-06
     disambiguated: true
+  rationaleUk: Грінченко фіксує прийменник "біля" лише в просторовому значенні (коло, поруч). Уживання його для позначення
+    приблизності з числівниками (біля години, біля ста) є калькою (рос. около); у таких випадках слід уживати "близько" (близько
+    години, близько ста).
 - calqueLabel: виглядати
   calqueSurfaces:
   - виглядати
@@ -125,8 +126,7 @@ pairs:
   kind: sense_restricted
   corrections:
   - здаватися
-  rationale: Грінченко/СУМ-20 attest 'look; peer out'; calque only when 'виглядає' replaces 'здається'
-    (= it seems).
+  rationale: Грінченко/СУМ-20 attest 'look; peer out'; calque only when 'виглядає' replaces 'здається' (= it seems).
   citations:
   - legacy-manifest:grinchenko
   - legacy-manifest:sum-20
@@ -149,6 +149,9 @@ pairs:
     calque_form: виглядає
     origin: authored-codex-2026-07-06
     disambiguated: true
+  rationaleUk: Слова "виглядати" та "виглядає" в нормативній українській мові означають висуватися звідкись (виглядати у вікно)
+    або мати певний зовнішній вигляд (гарно виглядати). Уживання "виглядає, що..." у значенні "здається, що..." або "схоже
+    на те, що..." є калькою (рос. выглядит, как...).
 - calqueLabel: вид
   calqueSurfaces:
   - виду
@@ -169,8 +172,8 @@ pairs:
   curator: fable-2026-07-06
   calqueSense: 'краєвид: «гарний вид з вікна» (рос. вид)'
   authenticSense: вид = біологічний таксон; граматична категорія
-  notes: narrowed to краєвид (scenery frames) — вигляд not yet a manifest article; add вигляд correction
-    after intake lands it
+  notes: narrowed to краєвид (scenery frames) — вигляд not yet a manifest article; add вигляд correction after intake lands
+    it
   frames:
   - sentence_with_slot: З гори відкрився чудовий ___ на місто.
     answer_form: краєвид
@@ -717,6 +720,9 @@ pairs:
     calque_form: другий
     origin: authored-codex-2026-07-06
     disambiguated: true
+  rationaleUk: Згідно з Антоненком-Давидовичем, у сучасній українській мові слово "другий" слід уживати тільки як порядковий
+    числівник. Коли мовиться про відмінність, а не про порядок (рос. другой), нормативним є займенник "інший" (наприклад,
+    "інші засоби", "інший день").
 - calqueLabel: дійсно
   calqueSurfaces:
   - дійсно
@@ -735,8 +741,7 @@ pairs:
   curator: fable-2026-07-06
   calqueSense: рутинний підсилювач під рос. действительно («я дійсно не бачив»)
   authenticSense: дійсний/дійсно — про чинність, реальність (дійсний квиток)
-  notes: насправді correction dropped — not a manifest article yet; дійсний→справжній pair DEFERRED (справжній
-    absent)
+  notes: насправді correction dropped — not a manifest article yet; дійсний→справжній pair DEFERRED (справжній absent)
   frames:
   - sentence_with_slot: Я ___ не знав про зміни.
     answer_form: справді
@@ -846,8 +851,7 @@ pairs:
   corrections:
   - розташований
   - бути
-  rationale: 'Антоненко: «Знаходитися, знайтися, бути, перебувати, пробувати» — про розташування кажуть
-    розташований/міститься'
+  rationale: 'Антоненко: «Знаходитися, знайтися, бути, перебувати, пробувати» — про розташування кажуть розташований/міститься'
   citations:
   - antonenko:Знаходитися, знайтися, бути, перебувати
   - ua-gec merged n=5 docs=5
@@ -1162,6 +1166,9 @@ pairs:
     calque_form: неділю
     origin: authored-codex-2026-07-06
     disambiguated: true
+  rationaleUk: В українській мові слово "неділя" означає лише сьомий день тижня (недільний день, неділя). Його вживання для
+    позначення семиденного проміжку часу (тижня) є калькою з російської мови (рос. неделя); у цьому значенні слід використовувати
+    слово "тиждень".
 - calqueLabel: но
   calqueSurfaces:
   - но
@@ -1344,8 +1351,7 @@ pairs:
   kind: lexical
   corrections:
   - панівний
-  rationale: 'Антоненко: між пануючий і панівний немає значеннєвої різниці — пануючий суперечить духові
-    мови, завжди панівний'
+  rationale: 'Антоненко: між пануючий і панівний немає значеннєвої різниці — пануючий суперечить духові мови, завжди панівний'
   citations:
   - antonenko:190 Пануючий чи панівний
   sourceFamily: antonenko
@@ -1647,8 +1653,7 @@ pairs:
   curator: fable-2026-07-06
   calqueSense: приймати участь (рос. принимать участие)
   authenticSense: приймати гостей, приймати рішення
-  notes: GEC correction was вживати(ліки); canonical flagship form = брати участь; needs authored frames
-    both
+  notes: GEC correction was вживати(ліки); canonical flagship form = брати участь; needs authored frames both
   frames:
   - sentence_with_slot: Я хочу ___ участь у конкурсі.
     answer_form: брати
@@ -1837,6 +1842,9 @@ pairs:
     answer_form: наступну
     calque_form: слідуючу
     origin: authored-codex-2026-07-06
+  rationaleUk: Слова "слідуючий" немає в нормативній українській мові; це суржикова форма або пряме калькування російського
+    прикметника "следующий". У значенні "наступний по черзі" слід уживати "наступний" (наступний крок, наступний урок), а
+    перед переліком або поясненням — займенник "такий" (такі слова, такий висновок).
 - calqueLabel: справа
   calqueSurfaces:
   - справа
@@ -1912,8 +1920,7 @@ pairs:
   - ua-gec
   cefrAvailability: a2
   curator: fable-2026-07-06
-  notes: native lemma normalized from GEC surface склянку; rationale softened per agy review (SUM attests
-    стакан as рідко)
+  notes: native lemma normalized from GEC surface склянку; rationale softened per agy review (SUM attests стакан as рідко)
   frames:
   - sentence_with_slot: Налий води в ___.
     answer_form: склянку
