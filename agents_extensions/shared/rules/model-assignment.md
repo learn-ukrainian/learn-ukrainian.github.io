@@ -46,14 +46,16 @@ several models are reachable through more than one. Know both axes before routin
 | Harness | What it adds to ANY model it hosts | Models reachable through it | Entry points¹ |
 |---|---|---|---|
 | **hermes** (v0.18.x — full agent platform, NOT a thin wrapper) | SOUL.md project persona · `sources` MCP (30+ UK tools) auto-attached · 16 built-in toolsets (web, browser, terminal, code-exec, files, delegation, cron, session-search…) · session store w/ FTS5 search · agent loop up to 90 turns | deepseek (API key) · gpt-5.5 (codex OAuth) · grok (xai OAuth) · zai/GLM (API key — ⚠️ same China-egress LOCAL-ONLY rule as opencode glm) · OpenRouter catalog (qwen², gemma, …) — probe `hermes auth list` | `ab ask-hermes --model <m>` (one-shot Q&A/review) · `delegate.py dispatch --agent deepseek\|grok\|qwen² --mode danger --worktree` (execution — worktree MANDATORY per delegate-must-use-worktree) · V7 `--writer/--reviewer grok-tools\|deepseek-tools\|qwen-tools` (all hermes-backed) |
-| **opencode** (multi-provider router) | lightpanda MCP configured (`~/.config/opencode/opencode.jsonc`) → **live web browsing/fact-check is a HARNESS property here**, available to tool-capable hosted models (kubedojo-verified for pool·glm·deepseek routes; verify before relying on a new route) | pool (poolside laguna-m.1, free) · glm (⚠️ LOCAL-ONLY) · gemma · deepseek · any OpenRouter model | `ab ask-pool` / `ask-glm` / `ask-gemma` (named) · `ab ask-opencode <model>` (generic) |
+| **opencode** (multi-provider router) | lightpanda MCP configured (`~/.config/opencode/opencode.jsonc`) → **live web browsing/fact-check is a HARNESS property here**, available to tool-capable hosted models (kubedojo-verified for pool·glm·deepseek routes; verify before relying on a new route) | pool (poolside laguna-m.1, free) · glm (⚠️ LOCAL-ONLY) · gemma · deepseek-direct (first-party `api.deepseek.com`; #4358/#4626 QG bakeoff default) · OpenRouter deepseek/gemma baselines · any OpenRouter model | `ab ask-pool` / `ask-glm` / `ask-gemma` (named) · `ab ask-opencode <model>` (generic) |
 | **native CLIs** (codex, cursor, agy, grok-build, claude) | each CLI's own tool loop + repo context; capabilities differ per CLI. grok-build = the NATIVE grok CLI lane; plain `--agent grok` routes via hermes (row above) | one primary family each | `ab ask-codex` / `ask-cursor` / `ask-agy` / `ask-grok-build` / `ask-claude` · `delegate.py dispatch --agent <a> --mode danger --worktree` |
 
 ¹ `ab` = the user's shell alias for `.venv/bin/python scripts/ai_agent_bridge/__main__.py`.
 In scripts, docs meant for copy-paste, and anything automated, ALWAYS write the full path —
 bare `ab` resolves to ApacheBench (`/usr/sbin/ab`) outside the user's shell (AGENTS.md rule).
-There is NO `ask-deepseek`: one-shot deepseek = `ask-hermes --model <deepseek-model>` or
-`ask-opencode <deepseek-model>`; execution = `delegate.py dispatch --agent deepseek`.
+There is NO `ask-deepseek`: one-shot deepseek = `ask-hermes --model <deepseek-model>` (first-party
+as attributed on 2026-07-07) or `ask-opencode deepseek-direct/<deepseek-model>`; execution =
+`delegate.py dispatch --agent deepseek`. Use `ask-opencode openrouter/deepseek/...` only for the
+OpenRouter comparison baseline.
 ² qwen is reachable but EXCLUDED from routine routing (cost, user 2026-05-29) — reachable ≠ routable.
 
 Consequences:

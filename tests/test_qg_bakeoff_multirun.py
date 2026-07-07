@@ -215,6 +215,7 @@ def test_multirun_matrix_resume_retry_and_narrower_runs_leave_r3(
 def test_cell_artifact_path_round_trips_all_arms_and_mismatch_fails(tmp_path: Path) -> None:
     fixture = _fixture()
     route = qg_bakeoff.bakeoff_route_for_model(PIN)
+    direct = qg_bakeoff.bakeoff_route_for_model(qg_bakeoff.DEEPSEEK_DIRECT_FLASH_PIN)
     subscription = qg_bakeoff.route_for_matrix_pin(qg_bakeoff.GPT_SUBSCRIPTION_BARE_MODEL_ID, arm=qg_bakeoff.BARE_ARM)
 
     assert qg_bakeoff.default_output_dir(date(2026, 7, 6), multi_run=True).name == "2026-07-06-qg-bakeoff-multirun"
@@ -226,6 +227,12 @@ def test_cell_artifact_path_round_trips_all_arms_and_mismatch_fails(tmp_path: Pa
     )
     assert qg_bakeoff._cell_artifact_path(tmp_path, route, fixture, qg_bakeoff.BARE_ARM, 3).name == (
         "openrouter-google-gemma-4-31b-it__vesnianky__bare__opencode__r3.json"
+    )
+    assert qg_bakeoff._cell_artifact_path(tmp_path, direct, fixture, qg_bakeoff.TOOLED_ARM).name == (
+        "deepseek-direct-deepseek-v4-flash__vesnianky.json"
+    )
+    assert qg_bakeoff._cell_artifact_path(tmp_path, direct, fixture, qg_bakeoff.BARE_ARM, 3).name == (
+        "deepseek-direct-deepseek-v4-flash__vesnianky__bare__opencode__r3.json"
     )
     assert qg_bakeoff._cell_artifact_path(tmp_path, subscription, fixture, qg_bakeoff.BARE_ARM, 2).name == (
         "gpt-5-5__vesnianky__bare__runtime-codex__r2.json"

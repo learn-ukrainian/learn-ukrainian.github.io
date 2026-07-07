@@ -26,6 +26,14 @@ def _no_override(monkeypatch: pytest.MonkeyPatch):
         "openrouter/openai/gpt-5.5",
         "openrouter/google/gemini-3.1-pro-preview",
         "OPENROUTER/ANTHROPIC/CLAUDE-OPUS-4.8",
+        "deepseek-direct/qwen/qwen3.6-plus",
+        "deepseek-direct/qwen3.6-plus",
+        "deepseek-direct/openai/gpt-5.5",
+        "deepseek-direct/gpt-5.5",
+        "deepseek-direct/anthropic/claude-sonnet-5",
+        "deepseek-direct/claude-sonnet-5",
+        "deepseek-direct/google/gemini-3.1-pro-preview",
+        "deepseek-direct/gemini-3.1-pro-preview",
     ],
 )
 def test_forbidden_models_refused(model: str) -> None:
@@ -39,6 +47,8 @@ def test_forbidden_models_refused(model: str) -> None:
         "openrouter/google/gemma-4-31b-it",  # google/ but NOT gemini — no subscription lane
         "openrouter/deepseek/deepseek-v4-flash",
         "openrouter/deepseek/deepseek-v4-pro",
+        "deepseek-direct/deepseek-v4-flash",
+        "deepseek-direct/deepseek-v4-pro",
         "gemini-3.1-pro-high",  # agy NATIVE lane (no openrouter/ prefix) is the subscription path
         "claude-opus-4.8",  # native Anthropic lane
         "gpt-5.5",  # native codex lane
@@ -108,12 +118,11 @@ def test_delegate_help_does_not_advertise_qwen() -> None:
     so both argparse choices AND help prose are covered (codex re-review of
     #4500: the first source-check missed a prose mention)."""
     import subprocess
-    import sys
     from pathlib import Path
 
     repo_root = Path(__file__).resolve().parent.parent
     result = subprocess.run(
-        [sys.executable, str(repo_root / "scripts" / "delegate.py"), "dispatch", "--help"],
+        [str(repo_root / ".venv" / "bin" / "python"), str(repo_root / "scripts" / "delegate.py"), "dispatch", "--help"],
         capture_output=True,
         text=True,
         cwd=repo_root,
@@ -128,13 +137,12 @@ def test_delegate_dispatch_dry_run_rejects_guarded_model(tmp_path) -> None:
     exit 2 with the guard message BEFORE the dry-run task_id prints — proving
     cmd_dispatch actually reaches the guard (late import included)."""
     import subprocess
-    import sys
     from pathlib import Path
 
     repo_root = Path(__file__).resolve().parent.parent
     result = subprocess.run(
         [
-            sys.executable,
+            str(repo_root / ".venv" / "bin" / "python"),
             str(repo_root / "scripts" / "delegate.py"),
             "dispatch",
             "--agent",

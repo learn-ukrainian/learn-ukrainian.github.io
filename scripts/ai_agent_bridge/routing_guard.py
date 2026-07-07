@@ -29,6 +29,10 @@ _QWEN_RE = re.compile(r"(?:^|[/:_-])qwen", re.IGNORECASE)
 _SUBSCRIPTION_VIA_OPENROUTER_RE = re.compile(
     r"openrouter/(?:anthropic/|openai/|google/gemini)", re.IGNORECASE
 )
+_SUBSCRIPTION_VIA_DEEPSEEK_DIRECT_RE = re.compile(
+    r"deepseek-direct/(?:anthropic/|openai/|google/gemini|claude|gpt-|gemini)",
+    re.IGNORECASE,
+)
 _OVERRIDE_ENV = "LU_ROUTING_GUARD_OVERRIDE"
 
 
@@ -59,6 +63,14 @@ def assert_model_routing_allowed(model: str | None, *, context: str) -> None:
             f"2026-07-05 (subscription already paid; metered spend is waste). "
             f"Use the native subscription lane instead. Set {_OVERRIDE_ENV}=1 "
             f"only with explicit user authorization."
+        )
+    if _SUBSCRIPTION_VIA_DEEPSEEK_DIRECT_RE.search(text):
+        raise RoutingGuardError(
+            f"{context}: {text!r} routes a SUBSCRIPTION family (anthropic/"
+            f"openai/gemini) through the DeepSeek first-party provider. "
+            "deepseek-direct may only run DeepSeek-family pins. Use the "
+            "native subscription lane instead. "
+            f"Set {_OVERRIDE_ENV}=1 only with explicit user authorization."
         )
 
 

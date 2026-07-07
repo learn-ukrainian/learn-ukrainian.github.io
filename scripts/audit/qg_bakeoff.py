@@ -59,6 +59,12 @@ _ARM_CHOICES = (TOOLED_ARM, BARE_ARM, BOTH_ARM)
 OPENCODE_TRANSPORT = "opencode"
 OPENCODE_ENTRYPOINT = "qg_bakeoff_opencode"
 OPENCODE_MEASUREMENT_TIER = "opencode_bare_or_tooled"
+DEEPSEEK_DIRECT_FLASH_PIN = "deepseek-direct/deepseek-v4-flash"
+DEEPSEEK_DIRECT_PRO_PIN = "deepseek-direct/deepseek-v4-pro"
+DEEPSEEK_DIRECT_PINS = (DEEPSEEK_DIRECT_FLASH_PIN, DEEPSEEK_DIRECT_PRO_PIN)
+DEEPSEEK_OPENROUTER_FLASH_PIN = "openrouter/deepseek/deepseek-v4-flash"
+DEEPSEEK_OPENROUTER_PRO_PIN = "openrouter/deepseek/deepseek-v4-pro"
+DEEPSEEK_OPENROUTER_PINS = (DEEPSEEK_OPENROUTER_FLASH_PIN, DEEPSEEK_OPENROUTER_PRO_PIN)
 BARE_RUNTIME_ENTRYPOINT = "qg_bakeoff_runtime"
 SUBSCRIPTION_RUNTIME_BARE_TIER = "subscription_runtime_bare"
 SUBSCRIPTION_BARE_BANNER = (
@@ -115,11 +121,14 @@ class CandidateModel:
     unresolved: bool = False
 
 
-# TODO(#2156): resolve exact OpenRouter pins at run time via ``--models`` after
-# checking the currently served opencode/OpenRouter model list. Do not guess.
+# TODO(#2156): resolve exact subscription-family pins at run time via
+# ``--models`` after checking the currently served native CLI/model list. Do not
+# guess. DeepSeek defaults are first-party direct pins; OpenRouter DeepSeek pins
+# remain available through ``DEEPSEEK_OPENROUTER_PINS`` as comparison baselines.
 DEFAULT_CANDIDATE_MODELS: tuple[CandidateModel, ...] = (
     CandidateModel("gemma-4-31b", "openrouter/google/gemma-4-31b-it"),
-    CandidateModel("deepseek-v4", "TODO_OPENROUTER_DEEPSEEK_V4_PIN", unresolved=True),
+    CandidateModel("deepseek-v4-flash-direct", DEEPSEEK_DIRECT_FLASH_PIN),
+    CandidateModel("deepseek-v4-pro-direct", DEEPSEEK_DIRECT_PRO_PIN),
     CandidateModel("claude-frontier-openrouter-unreachable", "TODO_OPENROUTER_ANTHROPIC_FRONTIER_PIN", unresolved=True),
     CandidateModel("gpt-frontier-openrouter-unreachable", "TODO_OPENROUTER_OPENAI_FRONTIER_PIN", unresolved=True),
     CandidateModel("gemini-frontier-openrouter-unreachable", "TODO_OPENROUTER_GOOGLE_GEMINI_FRONTIER_PIN", unresolved=True),
@@ -2076,7 +2085,8 @@ def main(argv: Sequence[str] | None = None) -> int:
         "--models",
         action="append",
         help=(
-            "Comma-separated or repeated model pins. OpenRouter/opencode pins work for tooled/bare; "
+            "Comma-separated or repeated model pins. opencode provider/model pins "
+            "(including deepseek-direct/... and OpenRouter baselines) work for tooled/bare; "
             "subscription native pins (claude-opus-4-8,gpt-5.5,gemini-3.1-pro-high) are --arm bare only. "
             "LU_ROUTING_GUARD_OVERRIDE=1 is invalid for published scorecards."
         ),
