@@ -274,6 +274,33 @@ def test_bakeoff_deepseek_route_stays_unregistered_while_live_policy_rejects_dee
         llm_reviewer_dispatch.assert_route_allowed(hermes_route)
 
 
+def test_deepseek_direct_bakeoff_pins_use_opencode_identity_and_guard_allowed() -> None:
+    from scripts.ai_agent_bridge.routing_guard import assert_model_routing_allowed
+
+    for pin in qg_bakeoff.DEEPSEEK_DIRECT_PINS:
+        route = qg_bakeoff.bakeoff_route_for_model(pin)
+        identity = qg_bakeoff._route_identity(route)
+
+        assert route.bridge_command == ("ask-opencode", "--model", pin)
+        assert route.reviewer_family == "deepseek"
+        assert identity.transport == qg_bakeoff.OPENCODE_TRANSPORT
+        assert identity.entrypoint == qg_bakeoff.OPENCODE_ENTRYPOINT
+        assert identity.resolved_model == pin
+        assert_model_routing_allowed(pin, context="test")
+
+    for pin in qg_bakeoff.DEEPSEEK_OPENROUTER_PINS:
+        assert_model_routing_allowed(pin, context="test")
+
+
+def test_default_deepseek_candidates_use_first_party_direct_pins() -> None:
+    deepseek_candidates = [
+        candidate for candidate in qg_bakeoff.DEFAULT_CANDIDATE_MODELS if "deepseek" in candidate.label
+    ]
+
+    assert [candidate.pin for candidate in deepseek_candidates] == list(qg_bakeoff.DEEPSEEK_DIRECT_PINS)
+    assert all(not candidate.unresolved for candidate in deepseek_candidates)
+
+
 def test_scoring_counts_missing_claim_and_preserves_model_judgment_on_downgrade() -> None:
     payload = {
         "fact_checks": [

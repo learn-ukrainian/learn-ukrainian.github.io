@@ -29,6 +29,14 @@ _QWEN_RE = re.compile(r"(?:^|[/:_-])qwen", re.IGNORECASE)
 _SUBSCRIPTION_VIA_OPENROUTER_RE = re.compile(
     r"openrouter/(?:anthropic/|openai/|google/gemini)", re.IGNORECASE
 )
+# deepseek-direct is a POSITIVE allowlist, not a family blocklist: the grok-build
+# adversarial review of #4730 produced working bypasses for every blocklist
+# formulation tried (anthropic-claude, openai-gpt, google-gemini, ../claude,
+# some-claude-model — hyphen/underscore/embedding variants). Fail closed
+# instead: a deepseek-direct pin is valid ONLY if its model segment is
+# DeepSeek-family. Underscore spelling normalizes to the same rule.
+_DEEPSEEK_DIRECT_PREFIX_RE = re.compile(r"^deepseek[-_]direct/", re.IGNORECASE)
+_DEEPSEEK_FAMILY_MODEL_RE = re.compile(r"^deepseek", re.IGNORECASE)
 _OVERRIDE_ENV = "LU_ROUTING_GUARD_OVERRIDE"
 
 
@@ -59,6 +67,15 @@ def assert_model_routing_allowed(model: str | None, *, context: str) -> None:
             f"2026-07-05 (subscription already paid; metered spend is waste). "
             f"Use the native subscription lane instead. Set {_OVERRIDE_ENV}=1 "
             f"only with explicit user authorization."
+        )
+    direct_prefix = _DEEPSEEK_DIRECT_PREFIX_RE.match(text)
+    if direct_prefix and not _DEEPSEEK_FAMILY_MODEL_RE.match(text[direct_prefix.end() :]):
+        raise RoutingGuardError(
+            f"{context}: {text!r} routes a non-DeepSeek model through the "
+            "DeepSeek first-party provider. deepseek-direct accepts ONLY "
+            "DeepSeek-family model ids (fail-closed allowlist; subscription "
+            "families use their native lanes). "
+            f"Set {_OVERRIDE_ENV}=1 only with explicit user authorization."
         )
 
 
