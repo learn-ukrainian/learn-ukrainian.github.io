@@ -420,3 +420,9 @@ docs/outreach/
 # published as the `atlas-open-dataset` Release asset (#3449).
 /data/lexicon-dataset/
 /data/lexicon-open-dataset.json.gz
+
+# llm_qg runtime telemetry (DB + circuit-breaker sidecar) — machine state,
+# minted by scripts/audit/llm_qg_store.py defaults; never a source artifact
+# (a stray circuit file was swept into PR #4743 by git add -A).
+data/telemetry/*
+!data/telemetry/.gitkeep
