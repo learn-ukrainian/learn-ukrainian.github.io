@@ -14,6 +14,7 @@ interface MatchPair {
    * @ukrainianText true
    */
   right: string;
+  lemmaId?: string;
 }
 
 interface MatchUpProps {
@@ -33,7 +34,9 @@ interface MatchUpProps {
    */
   isUkrainian?: boolean;
   onComplete?: () => void;
+  onMatch?: (pairIndex: number, rating: 'again' | 'hard' | 'good') => void;
 }
+
 
 const MATCH_PAIR_HUES = [
   199, 32, 262, 174, 239, 92, 286, 151, 215, 49,
@@ -51,11 +54,23 @@ const getMatchedPairStyle = (index: number, isMatched: boolean): MatchPairStyle 
   return { '--match-pair-hue': String(MATCH_PAIR_HUES[index % MATCH_PAIR_COLOR_COUNT]) };
 };
 
-export default function MatchUp({ pairs, instruction, isUkrainian, onComplete }: MatchUpProps) {
+export default function MatchUp({ pairs, instruction, isUkrainian, onComplete, onMatch }: MatchUpProps) {
   const [selectedLeft, setSelectedLeft] = useState<number | null>(null);
   const [matched, setMatched] = useState<Set<number>>(new Set());
+  const matchedRef = useRef<Set<number>>(new Set());
   const [wrongPair, setWrongPair] = useState<{ left: number; right: number } | null>(null);
+  const [misses, setMisses] = useState<Record<number, number>>({});
   const completedRef = useRef(false);
+
+  // Reset state when pairs change (attempt counting resets between boards)
+  useEffect(() => {
+    setSelectedLeft(null);
+    setMatched(new Set());
+    matchedRef.current = new Set();
+    setWrongPair(null);
+    setMisses({});
+    completedRef.current = false;
+  }, [pairs]);
 
   // Shuffle right side (deterministic — seeded by content)
   const shuffledRight = useMemo(() => {
@@ -64,20 +79,29 @@ export default function MatchUp({ pairs, instruction, isUkrainian, onComplete }:
   }, [pairs]);
 
   const handleLeftClick = (index: number) => {
-    if (matched.has(index)) return;
+    if (matchedRef.current.has(index) || wrongPair) return;
     setSelectedLeft(index);
     setWrongPair(null);
   };
 
   const handleRightClick = (originalIndex: number) => {
-    if (selectedLeft === null || matched.has(originalIndex)) return;
+    if (selectedLeft === null || matchedRef.current.has(originalIndex) || wrongPair) return;
 
     if (selectedLeft === originalIndex) {
       // Correct match
-      setMatched(new Set([...matched, originalIndex]));
+      matchedRef.current.add(originalIndex);
+      const currentMisses = misses[selectedLeft] || 0;
+      const rating = currentMisses === 0 ? 'good' : currentMisses === 1 ? 'hard' : 'again';
+      onMatch?.(selectedLeft, rating);
+
+      setMatched(new Set(matchedRef.current));
       setSelectedLeft(null);
     } else {
       // Wrong match
+      setMisses((prev) => ({
+        ...prev,
+        [selectedLeft]: (prev[selectedLeft] || 0) + 1,
+      }));
       setWrongPair({ left: selectedLeft, right: originalIndex });
       setTimeout(() => {
         setWrongPair(null);
@@ -85,6 +109,7 @@ export default function MatchUp({ pairs, instruction, isUkrainian, onComplete }:
       }, 800);
     }
   };
+
 
   const allMatched = matched.size === pairs.length;
 
