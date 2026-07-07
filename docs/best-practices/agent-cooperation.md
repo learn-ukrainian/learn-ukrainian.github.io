@@ -70,12 +70,16 @@ does not micromanage that track.
 | State | `docs/session-state/codex-orchestrator-handoff.md` and router | Track handoff (gitignored local), e.g. `.claude/bio-epic/CLAUDE-DRIVER-HANDOFF.md` — not in git/PRs |
 | Work selection | Repo-wide priorities, A1 spine, tooling, infra, tech debt, issues | Track backlog, batches, reviews, content quality |
 | Agent dispatch | Cross-track/tooling agents | Track-local writers/reviewers, including headless Codex |
-| Merge authority | Final reconcile and merge decision | Open PRs and route track feedback, never merge |
+| Merge authority | Final reconcile on cross-track/contested merges; sweep backstop for out-of-lane PRs sitting green >1h (#4703) | Open PRs, route track feedback; self-merge own-track PRs after cross-family review + green CI (#M-12 grant, user 2026-06-16); arm `gh pr merge --auto --squash --delete-branch` at review-gate-pass |
 
 **Boundary rule:** if a track orchestrator exists, the main orchestrator treats
 that track's PRs and delegates as awareness-only unless the track orchestrator
 asks for help. This keeps one owner per workstream and prevents duplicate
-triage.
+triage. The only exception is the merge-sweep backstop (user directive
+2026-07-07, #4703): an out-of-lane PR that has sat GREEN (CI passing + review
+gate passed) idle for more than 1 hour may be picked up by any orchestrator
+sweep. Fresh out-of-lane PRs are hands-off — do not shepherd, review-route, or
+arm auto-merge on them before that threshold.
 
 ### Track ↔ main communication protocol
 

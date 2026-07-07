@@ -305,6 +305,20 @@ branch/worktree needs cleanup. If a PR remains open, the final response must say
 exactly why and what action is required. Leaving PRs in review hell wastes CI,
 agent, and human attention.
 
+**Arm auto-merge at review-gate-pass (#4703, user directive 2026-07-07).** The repo
+setting `allow_auto_merge` is enabled. The moment a PR's review gate passes
+(cross-family review evidence, no requested changes), the responsible
+orchestrator/reviewer runs `gh pr merge <N> --auto --squash --delete-branch` —
+GitHub merges when CI settles, nobody babysits. Dispatched agents do NOT
+self-enable auto-merge (the review gate comes first — unchanged). `--auto` waits
+for green and never bypasses blocking checks.
+
+**Out-of-lane pickup threshold (user directive 2026-07-07).** A PR belonging to
+another lane/track is hands-off for every other orchestrator — no shepherding,
+review-routing, or auto-merge arming — unless it has sat GREEN (CI passing +
+review gate passed) idle for MORE THAN 1 HOUR. Only then does the orchestrator
+sweep backstop pick it up. Fresh out-of-lane PRs belong to their lane.
+
 ---
 
 ## Economical Multi-Agent Delegation
