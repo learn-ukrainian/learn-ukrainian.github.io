@@ -472,3 +472,103 @@ def test_check_assets_accepts_tatoeba_attributed_cloze(tmp_path: Path) -> None:
 
     assert summary["ok"] is True
     assert summary["total_cloze"] == 1
+
+
+def _retarget_level_lexeme(practice_dir: Path, *, level: str, lemma_id: str, lemma: str) -> None:
+    """Point a level's lexeme + index shards at a different lemma so the default
+    fixture lemma ('dim') is NOT present at that level."""
+    lexemes_path = practice_dir / f"practice-lexemes.{level}.json"
+    payload = json.loads(lexemes_path.read_text(encoding="utf-8"))
+    payload["lexemes"][0]["lemmaId"] = lemma_id
+    payload["lexemes"][0]["lemma"] = lemma
+    payload["lexemes"][0]["lemmaPlain"] = lemma
+    _write_json(lexemes_path, payload)
+
+    index_path = practice_dir / f"practice-index.{level}.json"
+    index_payload = json.loads(index_path.read_text(encoding="utf-8"))
+    index_payload["items"][0]["lemmaId"] = lemma_id
+    index_payload["items"][0]["lemma"] = lemma
+    _write_json(index_path, index_payload)
+
+
+_VALID_HERITAGE_OPTIONS: list[dict[str, object]] = [
+    {"label": "дім"},
+    {"label": "дом"},
+    {"label": "сад"},
+    {"label": "ліс"},
+]
+
+
+def test_heritage_lemma_from_lower_level_shard_is_allowed(tmp_path: Path) -> None:
+    """#4720 availability floor: a heritage item floored to A2 may reference a native
+    lexeme that lives in the A1 shard — the client loads lexeme shards cumulatively."""
+    daily_pool, practice_dir, reviewed_sources = _fixture_paths(tmp_path)  # A1: lemma 'dim'
+    _write_level(practice_dir, level="A2")
+    _retarget_level_lexeme(practice_dir, level="A2", lemma_id="slovo", lemma="слово")
+    # Heritage item at A2 referencing 'dim' (present only in the A1 lexeme shard).
+    _add_heritage_item(practice_dir, options=_VALID_HERITAGE_OPTIONS, level="A2")
+
+    summary = check_assets(
+        daily_pool=daily_pool,
+        practice_dir=practice_dir,
+        reviewed_sources=reviewed_sources,
+        levels=("A1", "A2"),
+        min_daily_pool_size=2,
+        min_practice_lexemes_per_level=1,
+    )
+
+    assert summary["ok"] is True, summary["errors"]
+
+
+def test_heritage_lemma_unknown_at_or_below_level_still_fails(tmp_path: Path) -> None:
+    daily_pool, practice_dir, reviewed_sources = _fixture_paths(tmp_path)
+    _write_level(practice_dir, level="A2")
+    _retarget_level_lexeme(practice_dir, level="A2", lemma_id="slovo", lemma="слово")
+    _add_heritage_item(practice_dir, options=_VALID_HERITAGE_OPTIONS, level="A2")
+
+    heritage_path = practice_dir / "practice-heritage.A2.json"
+    payload = json.loads(heritage_path.read_text(encoding="utf-8"))
+    payload["heritage"][0]["lemmaId"] = "ghost"
+    _write_json(heritage_path, payload)
+
+    summary = check_assets(
+        daily_pool=daily_pool,
+        practice_dir=practice_dir,
+        reviewed_sources=reviewed_sources,
+        levels=("A1", "A2"),
+        min_daily_pool_size=2,
+        min_practice_lexemes_per_level=1,
+    )
+
+    assert summary["ok"] is False
+    assert any("missing from lexeme shards at or below A2" in error for error in summary["errors"])
+
+
+def test_non_heritage_modes_stay_strictly_same_level(tmp_path: Path) -> None:
+    """The cumulative carve-out is heritage-only: a stress item referencing a
+    lower-level lexeme must still fail."""
+    daily_pool, practice_dir, reviewed_sources = _fixture_paths(tmp_path)
+    _write_level(practice_dir, level="A2")
+    _retarget_level_lexeme(practice_dir, level="A2", lemma_id="slovo", lemma="слово")
+
+    stress_path = practice_dir / "practice-stress.A2.json"
+    payload = json.loads(stress_path.read_text(encoding="utf-8"))
+    payload["stress"] = [{"lemmaId": "dim"}]
+    _write_json(stress_path, payload)
+    index_path = practice_dir / "practice-index.A2.json"
+    index_payload = json.loads(index_path.read_text(encoding="utf-8"))
+    index_payload["counts"]["modeCounts"]["stress"] = 1
+    index_payload["counts"]["modeCoverage"]["stress"] = 1.0
+    _write_json(index_path, index_payload)
+
+    summary = check_assets(
+        daily_pool=daily_pool,
+        practice_dir=practice_dir,
+        reviewed_sources=reviewed_sources,
+        levels=("A1", "A2"),
+        min_daily_pool_size=2,
+        min_practice_lexemes_per_level=1,
+    )
+
+    assert summary["ok"] is False
+    assert any("lemmaId 'dim' missing from A2 lexeme shard" in error for error in summary["errors"])

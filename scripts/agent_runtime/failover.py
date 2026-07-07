@@ -357,7 +357,9 @@ def classify_failover_trigger(
         return "overloaded"
     if _TRANSPORT_RE.search(text):
         return "transport"
-    if kill_reason in {"stdout_silence_timeout", "initial_response_timeout"}:
+    if kill_reason == "initial_response_timeout":
+        return "transport"
+    if kill_reason == "stdout_silence_timeout" and not (stdout_text or "").strip():
         return "transport"
     if _EMPTY_RESPONSE_RE.search(text):
         return "empty_response"

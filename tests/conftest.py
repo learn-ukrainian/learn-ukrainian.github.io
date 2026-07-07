@@ -13,6 +13,21 @@ import pytest
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 
+@pytest.fixture(autouse=True)
+def _isolate_llm_qg_runtime_stores(tmp_path, monkeypatch):
+    """Every test writes llm_qg runtime state (DB + circuit sidecar) to tmp_path.
+
+    Root cause (2026-07-07): llm_qg_store resolves its stores via env-var-or-
+    PROJECT_ROOT-default; tests exercising qg_workflow/store paths without
+    overriding the env minted data/telemetry/llm_qg_live_circuit.json in every
+    checkout/worktree they ran in — one such stray got swept into PR #4743 by
+    git add -A. Hermetic by default; tests that need a specific path still
+    monkeypatch their own.
+    """
+    monkeypatch.setenv("LEARN_UKRAINIAN_LLM_QG_DB", str(tmp_path / "llm_qg.db"))
+    monkeypatch.setenv("LEARN_UKRAINIAN_LLM_QG_CIRCUIT", str(tmp_path / "llm_qg_live_circuit.json"))
+
+
 # =============================================================================
 # MODULE TEMPLATES
 # =============================================================================

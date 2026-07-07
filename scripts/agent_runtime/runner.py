@@ -1286,11 +1286,15 @@ def _raise_for_kill_reason(
     stall_timeout: int,
     hard_timeout: int,
     event_sink: Callable[..., None] | None = None,
+    substitution: dict[str, Any] | None = None,
 ) -> None:
     """Map watchdog kill reasons to typed runtime errors + usage records."""
     if not kill_reason:
         return
     parse = execution.parse
+    record_substitution = (
+        substitution if substitution is not None else parse.substitution
+    )
     if kill_reason == "hard_timeout" and parse.ok:
         return
     if kill_reason == "stdout_silence_timeout":
@@ -1311,7 +1315,7 @@ def _raise_for_kill_reason(
             stalled=True,
             stderr_excerpt=parse.stderr_excerpt or execution.stderr_text[:500],
             tokens=None,  # TODO(#3153 PR2): extract tokens for this result path.
-            substitution=parse.substitution,
+            substitution=record_substitution,
         )
         _emit_substitution_event(
             agent_name=agent_name,
@@ -1319,7 +1323,7 @@ def _raise_for_kill_reason(
             task_id=task_id,
             cwd=cwd,
             model=model,
-            substitution=parse.substitution,
+            substitution=record_substitution,
             event_sink=event_sink,
         )
         write_record(record)
@@ -1328,6 +1332,7 @@ def _raise_for_kill_reason(
             stdout_silence_timeout or stall_timeout,
             execution.duration_s,
             kind="stdout_silence_timeout",
+            substitution=record_substitution,
         )
 
     if kill_reason == "initial_response_timeout":
@@ -1356,7 +1361,7 @@ def _raise_for_kill_reason(
                 )
             ),
             tokens=None,  # TODO(#3153 PR2): extract tokens for this result path.
-            substitution=parse.substitution,
+            substitution=record_substitution,
         )
         _emit_substitution_event(
             agent_name=agent_name,
@@ -1364,7 +1369,7 @@ def _raise_for_kill_reason(
             task_id=task_id,
             cwd=cwd,
             model=model,
-            substitution=parse.substitution,
+            substitution=record_substitution,
             event_sink=event_sink,
         )
         write_record(record)
@@ -1373,6 +1378,7 @@ def _raise_for_kill_reason(
             initial_response_timeout or stall_timeout,
             execution.duration_s,
             kind="initial_response_timeout",
+            substitution=record_substitution,
         )
 
     if kill_reason == "hard_timeout" and not parse.ok:
@@ -1397,7 +1403,7 @@ def _raise_for_kill_reason(
                 or tail_liveness_file_for_debug(execution.liveness_paths)[:500]
             ),
             tokens=None,  # TODO(#3153 PR2): extract tokens for this result path.
-            substitution=parse.substitution,
+            substitution=record_substitution,
         )
         _emit_substitution_event(
             agent_name=agent_name,
@@ -1405,11 +1411,15 @@ def _raise_for_kill_reason(
             task_id=task_id,
             cwd=cwd,
             model=model,
-            substitution=parse.substitution,
+            substitution=record_substitution,
             event_sink=event_sink,
         )
         write_record(record)
-        raise AgentTimeoutError(agent_name, hard_timeout)
+        raise AgentTimeoutError(
+            agent_name,
+            hard_timeout,
+            substitution=record_substitution,
+        )
 
 
 def _invoke_gemini_with_fallback(
@@ -1980,6 +1990,21 @@ def _invoke_with_runner_failover(
                 continue
 
         if execution.kill_reason:
+            source_trigger = trigger or last_trigger
+            if route != requested_route and source_trigger == "requested":
+                source_trigger = "cooldown"
+            timeout_substitution = None
+            if route != requested_route or parse.substitution:
+                timeout_substitution = _route_substitution_for_attempt(
+                    requested_route=requested_route,
+                    actual_route=route,
+                    source_trigger=source_trigger,
+                    adapter_substitution=parse.substitution,
+                )
+                emit_runner_substitution_marker(
+                    timeout_substitution,
+                    logger=_logger,
+                )
             _raise_for_kill_reason(
                 agent_name=agent_name,
                 kill_reason=execution.kill_reason,
@@ -1996,6 +2021,7 @@ def _invoke_with_runner_failover(
                 stall_timeout=stall_timeout,
                 hard_timeout=hard_timeout,
                 event_sink=event_sink,
+                substitution=timeout_substitution,
             )
 
         if parse.rate_limited:

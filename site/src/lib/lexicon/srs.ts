@@ -1631,6 +1631,41 @@ export function combinePracticeShards(
   };
 }
 
+/**
+ * Extend a base deck (initially the selected level only) with lower-level decks.
+ * Produces a new deck object so WeakMap selector caches (#4656) key off the new identity.
+ */
+export function extendWithLowerDecks(base: PracticeDeckData, lowers: PracticeDeckData[]): PracticeDeckData {
+  if (!lowers.length) return base;
+  return {
+    deckVersion: base.deckVersion || lowers[0]?.deckVersion || `cumulative-${base.level}`,
+    level: base.level,
+    index: [...base.index, ...lowers.flatMap((d) => d.index)],
+    lexemes: [...base.lexemes, ...lowers.flatMap((d) => d.lexemes)],
+    cloze: [...(base.cloze ?? []), ...lowers.flatMap((d) => d.cloze ?? [])],
+    stress: [...(base.stress ?? []), ...lowers.flatMap((d) => d.stress ?? [])],
+    classify: [...(base.classify ?? []), ...lowers.flatMap((d) => d.classify ?? [])],
+    paradigm: [...(base.paradigm ?? []), ...lowers.flatMap((d) => d.paradigm ?? [])],
+    synonym: [...(base.synonym ?? []), ...lowers.flatMap((d) => d.synonym ?? [])],
+    heritage: [...(base.heritage ?? []), ...lowers.flatMap((d) => d.heritage ?? [])],
+    fixtureNote: base.fixtureNote ?? lowers.find((d) => d.fixtureNote)?.fixtureNote,
+  };
+}
+
+/** Returns whether an itemId built from a prior selection is still present after a live pool merge. */
+export function itemIdPresentInDeck(deck: PracticeDeckData, itemId: string): boolean {
+  if (!itemId) return false;
+  const parts = itemId.split(':');
+  const lemmaId = parts[0];
+  const mode = parts[1] as PracticeMode | undefined;
+  const idxItem = deck.index.find((i) => i.lemmaId === lemmaId);
+  if (!idxItem || !mode) return false;
+  if (mode === 'cloze') {
+    return !!idxItem.hasCloze || (idxItem.clozeIds?.length ?? 0) > 0;
+  }
+  return idxItem.modes.includes(mode);
+}
+
 export function isPracticeNewCard(card: CardState | null | undefined): boolean {
   if (!card) return true;
   return card.reps === 0 && card.state === State.New;

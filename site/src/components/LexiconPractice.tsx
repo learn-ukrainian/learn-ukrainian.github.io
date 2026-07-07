@@ -8,6 +8,8 @@ import {
   PUBLISHED_PRACTICE_LEVELS,
   buildSessionPoolConstraintState,
   combinePracticeShards,
+  extendWithLowerDecks,
+  itemIdPresentInDeck,
   computeSessionScope,
   computeTodayRingDenominator,
   countDueReviewCards,
@@ -791,18 +793,29 @@ function levelsUpTo(level: CefrLevel): CefrLevel[] {
 
 /** Concatenate per-level decks into one cumulative deck (CEFR shards are disjoint). */
 function mergeDecks(decks: PracticeDeckData[], level: CefrLevel): PracticeDeckData {
-  return {
-    deckVersion: decks[0]?.deckVersion ?? `cumulative-${level}`,
-    level,
-    index: decks.flatMap((deck) => deck.index),
-    lexemes: decks.flatMap((deck) => deck.lexemes),
-    cloze: decks.flatMap((deck) => deck.cloze),
-    stress: decks.flatMap((deck) => deck.stress ?? []),
-    classify: decks.flatMap((deck) => deck.classify ?? []),
-    paradigm: decks.flatMap((deck) => deck.paradigm ?? []),
-    synonym: decks.flatMap((deck) => deck.synonym ?? []),
-    heritage: decks.flatMap((deck) => deck.heritage ?? []),
-  };
+  if (decks.length === 0) throw new Error('mergeDecks called with no decks');
+  // Delegate to the shared extend for consistency (new deck identity for selector cache).
+  const [first, ...rest] = decks;
+  const base = { ...first, level };
+  return extendWithLowerDecks(base, rest);
+}
+
+/** Deduped fetch for a practice shard JSON by URL. Concurrent or repeated callers share the promise. */
+async function getShardJson<T>(url: string, cache: Map<string, Promise<unknown>>): Promise<T> {
+  let p = cache.get(url) as Promise<T> | undefined;
+  if (!p) {
+    p = fetch(url).then((res) => {
+      if (!res.ok) throw new Error(`Shard fetch failed: ${url}`);
+      return res.json() as Promise<T>;
+    });
+    // On failure allow retry next time
+    p = p.catch((err) => {
+      cache.delete(url);
+      throw err;
+    });
+    cache.set(url, p);
+  }
+  return p;
 }
 
 export default function LexiconPractice(props: LexiconPracticeProps) {
@@ -886,6 +899,13 @@ function LexiconPracticeIsland({
   // double-advance (double-Enter, or Enter+click) before React re-renders resolves to
   // exactly ONE `completeSelection` — the second call reads a null ref and no-ops.
   const pendingOutcomeRef = useRef<CompletionOutcome | null>(null);
+  // Selection ref used to stabilize the in-flight item across live deck merges (pool growth from
+  // background lower-level shards). While history length is unchanged we keep returning the
+  // prior selection object so a B1 card is not yanked when an A1/A2 shard lands mid-item.
+  const committedSelectionRef = useRef<{ selection: PracticeSelection; historyLen: number } | null>(null);
+  // Deduping cache for shard JSON fetches (by full URL) so index shards fetched by the eager
+  // due-count effect are not re-fetched by ensure, and no shard is fetched twice.
+  const shardJsonCacheRef = useRef(new Map<string, Promise<unknown>>());
   const showEnglishSubtitles = learnerLevel === 'A1';
 
   // Reset all per-item feedback/lock state. Shared by the selection-change effect and
@@ -1018,10 +1038,13 @@ function LexiconPracticeIsland({
       try {
         const batches = await Promise.all(
           levelsUpTo(learnerLevel).map(async (shardLevel) => {
-            const response = await fetch(`${shardBaseUrl}/practice-index.${shardLevel}.json`);
-            if (!response.ok) return [];
-            const shard = (await response.json()) as PracticeIndexShard;
-            return shard.items ?? [];
+            const url = `${shardBaseUrl}/practice-index.${shardLevel}.json`;
+            try {
+              const shard = await getShardJson<PracticeIndexShard>(url, shardJsonCacheRef.current);
+              return shard.items ?? [];
+            } catch {
+              return [];
+            }
           }),
         );
         if (!cancelled) setDueIndex(batches.flat());
@@ -1065,18 +1088,36 @@ function LexiconPracticeIsland({
 
   const selection = useMemo(() => {
     if (!deck || sessionPhase !== 'active') return null;
-    return selectNextPracticeItem(deck, {
+    const fresh = selectNextPracticeItem(deck, {
       history,
       modeFilter: mode,
       now: new Date(),
       sessionSeed,
       poolFilter: sessionPhase === 'active' ? poolFilter : undefined,
     });
+    // Stabilize in-flight selection across live merges from background lower-level shards.
+    // The selector cache (per deck identity) produces a new pool, but we keep the exact
+    // prior selection object (for same history length) so the user is not yanked mid-item
+    // and #4740/#4744 flows are unperturbed. Once history advances on complete, fresh pick
+    // uses the grown pool.
+    const committed = committedSelectionRef.current;
+    if (
+      committed &&
+      committed.historyLen === history.length &&
+      fresh &&
+      fresh.itemId !== committed.selection.itemId &&
+      itemIdPresentInDeck(deck, committed.selection.itemId)
+    ) {
+      return committed.selection;
+    }
+    return fresh;
   }, [deck, history, mode, poolFilter, revision, sessionPhase, sessionSeed]);
 
   useEffect(() => {
     resetItemFeedback();
     if (selection) {
+      // Record for stabilization across future deck swaps (bg merges).
+      committedSelectionRef.current = { selection, historyLen: history.length };
       window.setTimeout(() => stageRef.current?.focus(), 0);
     }
   }, [selection?.itemId, resetItemFeedback]);
@@ -1117,81 +1158,145 @@ function LexiconPracticeIsland({
       let nextDeck = current;
       let nextClozeLoaded = clozeLoaded;
       const levels = levelsUpTo(level);
+      const targetLevel = level;
+      const lowerLevels = levels.slice(0, -1);
+      const needDrills = includeCloze && (force || !clozeLoaded);
+
       if (!nextDeck) {
-        // Load every CEFR shard at or below the learner level and merge them, so an
-        // A1 learner only ever practices A1 words while a B1 learner gets A1+A2+B1.
-        const perLevel = await Promise.all(
-          levels.map(async (shardLevel) => {
-            const [indexResponse, lexemeResponse] = await Promise.all([
-              fetch(`${shardBaseUrl}/practice-index.${shardLevel}.json`),
-              fetch(`${shardBaseUrl}/practice-lexemes.${shardLevel}.json`),
-            ]);
-            // A level shard may not be published yet (e.g. C2); skip it gracefully.
-            if (!indexResponse.ok || !lexemeResponse.ok) return null;
-            const indexShard = (await indexResponse.json()) as PracticeIndexShard;
-            const lexemeShard = (await lexemeResponse.json()) as PracticeLexemeShard;
-            return combinePracticeShards(indexShard, lexemeShard);
-          }),
-        );
-        const loaded = perLevel.filter((entry): entry is PracticeDeckData => entry !== null);
-        if (loaded.length === 0) {
-          throw new Error('Practice shard request failed');
+        // PROGRESSIVE: Load the SELECTED level's core shards (index + lexemes) FIRST.
+        // The session can start on this deck immediately; lower levels are backgrounded.
+        // This eliminates the 21-shard/8.9MB wait for B1 (and general multi-level).
+        // A1 is unaffected (no lower levels).
+        const indexUrl = `${shardBaseUrl}/practice-index.${targetLevel}.json`;
+        const lexUrl = `${shardBaseUrl}/practice-lexemes.${targetLevel}.json`;
+        const [indexShard, lexemeShard] = await Promise.all([
+          getShardJson<PracticeIndexShard>(indexUrl, shardJsonCacheRef.current),
+          getShardJson<PracticeLexemeShard>(lexUrl, shardJsonCacheRef.current),
+        ]);
+        nextDeck = combinePracticeShards(indexShard, lexemeShard);
+        // Set early so that beginSession proceeds and first item can render from the
+        // selected level alone.
+        if (deckRequestId.current === requestId) {
+          setDeck(nextDeck);
         }
-        nextDeck = mergeDecks(loaded, level);
+
+        // Fire-and-forget background load of lower-level *cores*. Merge into live pool
+        // as they arrive; selector cache per deck identity (#4656) receives the new deck
+        // object and recomputes candidates for the grown pool on next select (stabilized
+        // for in-flight item).
+        if (lowerLevels.length > 0) {
+          void (async () => {
+            const bgId = deckRequestId.current;
+            const lowerCores = (
+              await Promise.all(
+                lowerLevels.map(async (lv) => {
+                  try {
+                    const iUrl = `${shardBaseUrl}/practice-index.${lv}.json`;
+                    const lUrl = `${shardBaseUrl}/practice-lexemes.${lv}.json`;
+                    const [i, l] = await Promise.all([
+                      getShardJson<PracticeIndexShard>(iUrl, shardJsonCacheRef.current),
+                      getShardJson<PracticeLexemeShard>(lUrl, shardJsonCacheRef.current),
+                    ]);
+                    return combinePracticeShards(i, l);
+                  } catch {
+                    // Failed background shard degrades gracefully; session continues.
+                    return null;
+                  }
+                }),
+              )
+            ).filter((d): d is PracticeDeckData => d !== null);
+            if (deckRequestId.current !== bgId || lowerCores.length === 0) return;
+            setDeck((prev) => {
+              if (!prev) return mergeDecks(lowerCores, level);
+              return extendWithLowerDecks(prev, lowerCores);
+            });
+          })();
+        }
       }
-      if (includeCloze && (force || !clozeLoaded)) {
-        const shardBatches = await Promise.all(
-          levels.map(async (shardLevel) => {
-            const [
-              clozeResponse,
-              stressResponse,
-              classifyResponse,
-              paradigmResponse,
-              synonymResponse,
-              heritageResponse,
-            ] = await Promise.all([
-              fetch(`${shardBaseUrl}/practice-cloze.${shardLevel}.json`),
-              fetch(`${shardBaseUrl}/practice-stress.${shardLevel}.json`),
-              fetch(`${shardBaseUrl}/practice-classify.${shardLevel}.json`),
-              fetch(`${shardBaseUrl}/practice-paradigm.${shardLevel}.json`),
-              fetch(`${shardBaseUrl}/practice-synonym.${shardLevel}.json`),
-              fetch(`${shardBaseUrl}/practice-heritage.${shardLevel}.json`),
-            ]);
-            const [clozeShard, stressShard, classifyShard, paradigmShard, synonymShard, heritageShard] =
-              await Promise.all([
-                clozeResponse.ok ? clozeResponse.json() : Promise.resolve({ cloze: [] }),
-                stressResponse.ok ? stressResponse.json() : Promise.resolve({ stress: [] }),
-                classifyResponse.ok ? classifyResponse.json() : Promise.resolve({ classify: [] }),
-                paradigmResponse.ok ? paradigmResponse.json() : Promise.resolve({ paradigm: [] }),
-                synonymResponse.ok ? synonymResponse.json() : Promise.resolve({ synonym: [] }),
-                heritageResponse.ok ? heritageResponse.json() : Promise.resolve({ heritage: [] }),
-              ]);
-            return {
-              cloze: (clozeShard as { cloze?: PracticeClozeItem[] }).cloze ?? [],
-              stress: (stressShard as PracticeDeckData).stress ?? [],
-              classify: (classifyShard as PracticeDeckData).classify ?? [],
-              paradigm: (paradigmShard as PracticeDeckData).paradigm ?? [],
-              synonym: (synonymShard as PracticeDeckData).synonym ?? [],
-              heritage: (heritageShard as PracticeHeritageShard).heritage ?? [],
-            };
-          }),
+
+      if (needDrills) {
+        // Load drill shards for the *selected* level (may block this call if mode requires
+        // them, e.g. initialMode=cloze or mixed). Lower drill shards are always background.
+        // This also defers drill-kind shards for basic modes (flashcards etc) until a
+        // drill mode surfaces (optional path kept clean).
+        const drillUrls = [
+          `${shardBaseUrl}/practice-cloze.${targetLevel}.json`,
+          `${shardBaseUrl}/practice-stress.${targetLevel}.json`,
+          `${shardBaseUrl}/practice-classify.${targetLevel}.json`,
+          `${shardBaseUrl}/practice-paradigm.${targetLevel}.json`,
+          `${shardBaseUrl}/practice-synonym.${targetLevel}.json`,
+          `${shardBaseUrl}/practice-heritage.${targetLevel}.json`,
+        ];
+        const drillResults = await Promise.all(
+          drillUrls.map((u) =>
+            getShardJson<any>(u, shardJsonCacheRef.current).catch(() => ({})),
+          ),
         );
+        const [clozeR, stressR, classifyR, paradigmR, synonymR, heritageR] = drillResults;
         nextDeck = {
-          ...nextDeck,
-          cloze: shardBatches.flatMap((batch) => batch.cloze),
-          stress: shardBatches.flatMap((batch) => batch.stress),
-          classify: shardBatches.flatMap((batch) => batch.classify),
-          paradigm: shardBatches.flatMap((batch) => batch.paradigm),
-          synonym: shardBatches.flatMap((batch) => batch.synonym),
-          heritage: shardBatches.flatMap((batch) => batch.heritage),
+          ...nextDeck!,
+          cloze: [...(nextDeck!.cloze ?? []), ...((clozeR as { cloze?: PracticeClozeItem[] }).cloze ?? [])],
+          stress: [...(nextDeck!.stress ?? []), ...((stressR as { stress?: any[] }).stress ?? [])],
+          classify: [...(nextDeck!.classify ?? []), ...((classifyR as { classify?: any[] }).classify ?? [])],
+          paradigm: [...(nextDeck!.paradigm ?? []), ...((paradigmR as { paradigm?: any[] }).paradigm ?? [])],
+          synonym: [...(nextDeck!.synonym ?? []), ...((synonymR as { synonym?: any[] }).synonym ?? [])],
+          heritage: [...(nextDeck!.heritage ?? []), ...((heritageR as { heritage?: any[] }).heritage ?? [])],
         };
         nextClozeLoaded = true;
+        if (deckRequestId.current === requestId) {
+          setDeck(nextDeck);
+          setClozeLoaded(true);
+        }
+
+        // Background lower drills (merge live when they land).
+        if (lowerLevels.length > 0) {
+          void (async () => {
+            const bgId = deckRequestId.current;
+            const lowerDrillBatches = await Promise.all(
+              lowerLevels.map(async (lv) => {
+                const urls = [
+                  `${shardBaseUrl}/practice-cloze.${lv}.json`,
+                  `${shardBaseUrl}/practice-stress.${lv}.json`,
+                  `${shardBaseUrl}/practice-classify.${lv}.json`,
+                  `${shardBaseUrl}/practice-paradigm.${lv}.json`,
+                  `${shardBaseUrl}/practice-synonym.${lv}.json`,
+                  `${shardBaseUrl}/practice-heritage.${lv}.json`,
+                ];
+                const rs = await Promise.all(
+                  urls.map((u) => getShardJson<any>(u, shardJsonCacheRef.current).catch(() => ({}))),
+                );
+                return {
+                  cloze: (rs[0] as { cloze?: PracticeClozeItem[] }).cloze ?? [],
+                  stress: (rs[1] as { stress?: any[] }).stress ?? [],
+                  classify: (rs[2] as { classify?: any[] }).classify ?? [],
+                  paradigm: (rs[3] as { paradigm?: any[] }).paradigm ?? [],
+                  synonym: (rs[4] as { synonym?: any[] }).synonym ?? [],
+                  heritage: (rs[5] as { heritage?: any[] }).heritage ?? [],
+                };
+              }),
+            );
+            if (deckRequestId.current !== bgId) return;
+            setDeck((prev) => {
+              if (!prev) return prev;
+              return {
+                ...prev,
+                cloze: [...(prev.cloze ?? []), ...lowerDrillBatches.flatMap((b) => b.cloze)],
+                stress: [...(prev.stress ?? []), ...lowerDrillBatches.flatMap((b) => b.stress)],
+                classify: [...(prev.classify ?? []), ...lowerDrillBatches.flatMap((b) => b.classify)],
+                paradigm: [...(prev.paradigm ?? []), ...lowerDrillBatches.flatMap((b) => b.paradigm)],
+                synonym: [...(prev.synonym ?? []), ...lowerDrillBatches.flatMap((b) => b.synonym)],
+                heritage: [...(prev.heritage ?? []), ...lowerDrillBatches.flatMap((b) => b.heritage)],
+              };
+            });
+          })();
+        }
       }
+
       // Ignore the result if a newer fetch (e.g. a later level switch) has superseded this one.
-      if (deckRequestId.current !== requestId) return nextDeck;
-      setDeck(nextDeck);
+      if (deckRequestId.current !== requestId) return nextDeck!;
+      setDeck(nextDeck!);
       setClozeLoaded(nextClozeLoaded);
-      return nextDeck;
+      return nextDeck!;
     } catch {
       if (deckRequestId.current === requestId) {
         setError('Не вдалося завантажити колоду для практики.');
@@ -1386,6 +1491,7 @@ function LexiconPracticeIsland({
     setFocusWeakness(null);
     setDeck(null);
     setDueIndex(null);
+    committedSelectionRef.current = null;
     writePracticeSessionSnapshot(null);
     setResumeSnapshot(null);
     setSessionPhase('idle');
@@ -1397,6 +1503,7 @@ function LexiconPracticeIsland({
     writeLearnerLevel(nextLevel);
     setClozeLoaded(false);
     setHistory([]);
+    committedSelectionRef.current = null;
     writePracticeSessionSnapshot(null);
     setResumeSnapshot(null);
     if (sessionPhase === 'active') {
