@@ -33,17 +33,47 @@ HEADERS = {
 
 class TitleGuardError(Exception):
     """Raised when the fetched page's title does not match selection criteria."""
+
     pass
 
 
 def transliterate_ua(text: str) -> str:
     """Transliterate Ukrainian Cyrillic characters to Latin equivalents."""
     rules = {
-        'а': 'a', 'б': 'b', 'в': 'v', 'г': 'h', 'ґ': 'g', 'д': 'd', 'е': 'e', 'є': 'ye',
-        'ж': 'zh', 'з': 'z', 'и': 'y', 'і': 'i', 'ї': 'yi', 'й': 'y', 'к': 'k', 'л': 'l',
-        'м': 'm', 'н': 'n', 'о': 'o', 'п': 'p', 'р': 'r', 'с': 's', 'т': 't', 'у': 'u',
-        'ф': 'f', 'х': 'kh', 'ц': 'ts', 'ч': 'ch', 'ш': 'sh', 'щ': 'shch', 'ь': '',
-        'ю': 'yu', 'я': 'ya', "'": ""
+        "а": "a",
+        "б": "b",
+        "в": "v",
+        "г": "h",
+        "ґ": "g",
+        "д": "d",
+        "е": "e",
+        "є": "ye",
+        "ж": "zh",
+        "з": "z",
+        "и": "y",
+        "і": "i",
+        "ї": "yi",
+        "й": "y",
+        "к": "k",
+        "л": "l",
+        "м": "m",
+        "н": "n",
+        "о": "o",
+        "п": "p",
+        "р": "r",
+        "с": "s",
+        "т": "t",
+        "у": "u",
+        "ф": "f",
+        "х": "kh",
+        "ц": "ts",
+        "ч": "ch",
+        "ш": "sh",
+        "щ": "shch",
+        "ь": "",
+        "ю": "yu",
+        "я": "ya",
+        "'": "",
     }
     res = []
     for char in text.lower():
@@ -54,7 +84,7 @@ def transliterate_ua(text: str) -> str:
 def share_substring(s1: str, s2: str, min_len: int = 4) -> bool:
     """Check if s1 and s2 share a common substring of length >= min_len."""
     for i in range(len(s1) - min_len + 1):
-        sub = s1[i:i+min_len]
+        sub = s1[i : i + min_len]
         if sub in s2:
             return True
     return False
@@ -138,7 +168,9 @@ def check_filename_overlap(filename: str, subject: str, author: str) -> bool:
             reasons.append("subject")
         if not author_match:
             reasons.append("author")
-        print(f"  WARNING: PDF filename '{filename}' lacks overlap with {' and '.join(reasons)} (subject: '{subject}', author: '{author}')")
+        print(
+            f"  WARNING: PDF filename '{filename}' lacks overlap with {' and '.join(reasons)} (subject: '{subject}', author: '{author}')"
+        )
         return False
 
     return True
@@ -149,6 +181,11 @@ def load_selection() -> list[dict]:
     with open(SELECTION_FILE) as f:
         data = yaml.safe_load(f)
     return data["books"]
+
+
+def normalize_whitespace(text: str) -> str:
+    """Normalize and collapse all whitespace (including NBSP) to single spaces in lowercase."""
+    return " ".join(text.replace("\xa0", " ").split()).lower()
 
 
 def extract_pdf_links(slug: str, author: str, grade: int, target_year: int | None = None) -> list[dict]:
@@ -169,13 +206,16 @@ def extract_pdf_links(slug: str, author: str, grade: int, target_year: int | Non
     # Title guard (hard)
     title_tag = soup.find("title")
     title_text = title_tag.get_text(strip=True) if title_tag else ""
-    author_lower = author.strip().lower()
-    grade_class = f"{grade} клас"
-    if author_lower not in title_text.lower() or grade_class not in title_text.lower():
+
+    title_norm = normalize_whitespace(title_text)
+    author_norm = normalize_whitespace(author)
+    grade_class_norm = normalize_whitespace(f"{grade} клас")
+
+    if author_norm not in title_norm or grade_class_norm not in title_norm:
         print(f"  Title Guard Mismatch for slug '{slug}':")
-        print(f"    Expected author '{author}' and '{grade_class}' in title")
+        print(f"    Expected author '{author}' and '{grade} клас' in title")
         print(f"    Actual title: '{title_text}'")
-        raise TitleGuardError(f"Expected author '{author}' and '{grade_class}' in title. Got '{title_text}'")
+        raise TitleGuardError(f"Expected author '{author}' and '{grade} клас' in title. Got '{title_text}'")
 
     all_pdfs = []
     # 1. Search for normal pdf links
@@ -196,12 +236,14 @@ def extract_pdf_links(slug: str, author: str, grade: int, target_year: int | Non
                 match = re.search(r"id=([a-zA-Z0-9_-]+)", src)
             if match:
                 drive_id = match.group(1)
-                all_pdfs.append({
-                    "url": f"https://docs.google.com/uc?export=download&id={drive_id}",
-                    "label": "Google Drive iframe",
-                    "filename": f"{drive_id}.pdf",
-                    "gdrive_id": drive_id
-                })
+                all_pdfs.append(
+                    {
+                        "url": f"https://docs.google.com/uc?export=download&id={drive_id}",
+                        "label": "Google Drive iframe",
+                        "filename": f"{drive_id}.pdf",
+                        "gdrive_id": drive_id,
+                    }
+                )
 
     if not target_year or not all_pdfs:
         return all_pdfs
@@ -284,36 +326,108 @@ def download_from_gdrive(drive_id: str, dest: Path, dry_run: bool = False) -> bo
     resp.raise_for_status()
 
     # Check if we got the confirmation page
-    token = None
+    confirm_token = None
+    uuid_token = None
     content_type = resp.headers.get("Content-Type", "")
     if "text/html" in content_type:
         html_content = resp.text
-        match = re.search(r'confirm=([^&"\']+)', html_content)
-        if match:
-            token = match.group(1)
-        else:
-            # Try cookie backup
+
+        # 1. Parse HTML using BeautifulSoup
+        soup = BeautifulSoup(html_content, "html.parser")
+
+        # Look for input fields
+        confirm_input = soup.find("input", {"name": "confirm"})
+        if confirm_input:
+            confirm_token = confirm_input.get("value")
+        uuid_input = soup.find("input", {"name": "uuid"})
+        if uuid_input:
+            uuid_token = uuid_input.get("value")
+
+        # 2. Look in form actions or links
+        if not confirm_token or not uuid_token:
+            urls_to_check = []
+            form = soup.find("form")
+            if form and form.get("action"):
+                urls_to_check.append(form.get("action"))
+            for a in soup.find_all("a", href=True):
+                urls_to_check.append(a["href"])
+
+            for u in urls_to_check:
+                confirm_match = re.search(r"[?&]confirm=([^&\"'\s>]+)", u)
+                uuid_match = re.search(r"[?&]uuid=([^&\"'\s>]+)", u)
+                if confirm_match and not confirm_token:
+                    confirm_token = confirm_match.group(1)
+                if uuid_match and not uuid_token:
+                    uuid_token = uuid_match.group(1)
+
+        # 3. Raw regex fallback
+        if not confirm_token:
+            match = re.search(r'confirm=([^&"\']+)', html_content)
+            if match:
+                confirm_token = match.group(1)
+        if not uuid_token:
+            match = re.search(r'uuid=([^&"\']+)', html_content)
+            if match:
+                uuid_token = match.group(1)
+
+        # 4. Try cookie backup if confirm_token still not found
+        if not confirm_token:
             for key, value in session.cookies.items():
                 if key.startswith("download_warning"):
-                    token = value
+                    confirm_token = value
                     break
 
     # Step 2: Request again with token
-    if token:
-        print(f"  Confirming large file download (token: {token})...")
-        resp = session.get(
-            url,
-            params={"export": "download", "id": drive_id, "confirm": token},
-            stream=True,
-            timeout=120
-        )
+    if confirm_token:
+        if uuid_token:
+            print(f"  Confirming large file download (confirm: {confirm_token}, uuid: {uuid_token})...")
+        else:
+            print(f"  Confirming large file download (token: {confirm_token})...")
+        params = {"export": "download", "id": drive_id, "confirm": confirm_token}
+        if uuid_token:
+            params["uuid"] = uuid_token
+        resp = session.get(url, params=params, stream=True, timeout=120)
         resp.raise_for_status()
 
     # Step 3: Write response content to file
     dest.parent.mkdir(parents=True, exist_ok=True)
+
+    # We inspect the first chunk of the response to ensure it's a PDF
+    chunks_iter = resp.iter_content(chunk_size=8192)
+    try:
+        first_chunk = next(chunks_iter)
+    except StopIteration:
+        first_chunk = b""
+
+    # A real PDF starts with %PDF- magic bytes
+    if not first_chunk.startswith(b"%PDF-"):
+        # Not a PDF. Let's read the rest of the chunks to get the full HTML content.
+        html_bytes = first_chunk
+        for chunk in chunks_iter:
+            if chunk:
+                html_bytes += chunk
+
+        # Parse title from HTML
+        html_text = html_bytes.decode("utf-8", errors="ignore")
+        soup = BeautifulSoup(html_text, "html.parser")
+        title = soup.title.string.strip() if (soup.title and soup.title.string) else "No Title Found"
+        title = " ".join(title.split())
+
+        print(f"  Google Drive returned non-PDF page. HTML Title: {title}")
+
+        # Ensure no dest file remains
+        if dest.exists():
+            dest.unlink()
+
+        raise ValueError(f"Downloaded payload is not a PDF. HTML Title: {title}")
+
+    # It's a valid PDF. Write first chunk and stream the rest.
     total = 0
     with open(dest, "wb") as f:
-        for chunk in resp.iter_content(chunk_size=8192):
+        if first_chunk:
+            f.write(first_chunk)
+            total += len(first_chunk)
+        for chunk in chunks_iter:
             if chunk:
                 f.write(chunk)
                 total += len(chunk)
@@ -352,9 +466,9 @@ def main():
         slug = book["slug"]
         author = book["author"]
 
-        print(f"\n{'='*60}")
+        print(f"\n{'=' * 60}")
         print(f"[{book_id}] Grade {grade} — {author}")
-        print(f"{'='*60}")
+        print(f"{'=' * 60}")
 
         if book.get("status") == "needs_manual_pdf" and not (book.get("slug") or book.get("gdrive_id")):
             print("  SKIP — needs manual PDF link (not yet available)")
@@ -366,10 +480,7 @@ def main():
         gdrive_id = book.get("gdrive_id")
 
         if override_pdfs:
-            pdfs = [
-                {"url": url, "label": url.split("/")[-1], "filename": url.split("/")[-1]}
-                for url in override_pdfs
-            ]
+            pdfs = [{"url": url, "label": url.split("/")[-1], "filename": url.split("/")[-1]} for url in override_pdfs]
             print(f"  Using {len(pdfs)} override PDF(s)")
         elif gdrive_id and not slug:
             pdfs = [
@@ -377,7 +488,7 @@ def main():
                     "url": f"https://docs.google.com/uc?export=download&id={gdrive_id}",
                     "label": "Google Drive (Registry)",
                     "filename": f"{gdrive_id}.pdf",
-                    "gdrive_id": gdrive_id
+                    "gdrive_id": gdrive_id,
                 }
             ]
             print("  Using registry Google Drive ID")
@@ -403,7 +514,7 @@ def main():
                             "url": f"https://docs.google.com/uc?export=download&id={gdrive_id}",
                             "label": "Google Drive (Registry Fallback)",
                             "filename": f"{gdrive_id}.pdf",
-                            "gdrive_id": gdrive_id
+                            "gdrive_id": gdrive_id,
                         }
                     ]
                     print("  No PDFs on page, falling back to registry Google Drive ID")
@@ -425,7 +536,7 @@ def main():
             check_filename_overlap(pdf_info["filename"], book["subject"], author)
 
             # Canonical naming
-            filename = f"{slug}.pdf" if len(pdfs) == 1 else f"{slug}-{i+1}.pdf"
+            filename = f"{slug}.pdf" if len(pdfs) == 1 else f"{slug}-{i + 1}.pdf"
             dest = grade_dir / filename
 
             try:
@@ -446,9 +557,9 @@ def main():
 
         time.sleep(CRAWL_DELAY)
 
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print("SUMMARY")
-    print(f"{'='*60}")
+    print(f"{'=' * 60}")
     print(f"Downloaded: {total_downloaded}")
     print(f"Skipped (exist): {total_skipped}")
     print(f"Failed: {total_failed}")
