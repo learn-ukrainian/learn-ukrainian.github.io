@@ -1399,6 +1399,36 @@ def mark_deep_read_attempted(payload: Mapping[str, Any]) -> dict[str, Any]:
     return out
 
 
+def repair_grounding_from_tool_events(
+    grounding: Mapping[str, Any],
+    events: Sequence[Mapping[str, Any]],
+) -> dict[str, Any]:
+    """Fill missing or mismatched tool/query on a grounding excerpt from captured events.
+
+    Bakeoff/harness repair for frontier models that emit a verbatim ``evidence_excerpt``
+    (or flat ``grounding_excerpt`` already hoisted) without the tool/query pair that
+    actually produced the substring. Searches captured outputs in file order and pins
+    the first event whose output contains the excerpt.
+    """
+    excerpt = str(grounding.get("evidence_excerpt") or "").strip()
+    if not excerpt or not events:
+        return dict(grounding)
+    if _grounding_matches_events(grounding, events):
+        return dict(grounding)
+    for event in events:
+        output = _event_output_text(event)
+        if output is None or not _output_contains_excerpt(output, excerpt):
+            continue
+        repaired = dict(grounding)
+        repaired["tool"] = str(event.get("tool") or "")
+        candidates = _tool_query_candidates(event)
+        if candidates:
+            repaired["query"] = candidates[0]
+        repaired.setdefault("tool_call_id", "advisory-inferred")
+        return repaired
+    return dict(grounding)
+
+
 def enforce_grounding_against_tool_events(
     payload: Mapping[str, Any],
     dispatch_meta: Mapping[str, Any],

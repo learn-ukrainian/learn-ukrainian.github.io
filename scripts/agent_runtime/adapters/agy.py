@@ -537,8 +537,8 @@ def _pair_transcript_by_step_index(
     for call, result_text in zip(paired_intents, mcp_results, strict=False):
         calls.append(_attach_tool_result(call, result_text))
 
-    for call in paired_intents[len(mcp_results) :]:
-        calls.append(dict(call))
+    # Unpaired planner intents have no captured MCP output — omit them so
+    # tool_call_count and grounding telemetry reflect completed calls only.
     return calls
 
 

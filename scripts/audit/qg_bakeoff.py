@@ -1019,8 +1019,23 @@ _SUBSCRIPTION_TOOLED_JSON_FOOTER = (
     "Each `fact_checks[]` row MUST use the field name `verdict` (never `status`) with "
     "exactly one of: CONFIRMED | REFUTED_BY_CONTRADICTION | UNATTESTED_AFTER_SEARCH | "
     "CONTESTED | UNVERIFIED_INSUFFICIENT_SEARCH.\n"
-    "CONFIRMED / REFUTED_BY_CONTRADICTION / CONTESTED require a `grounding` object "
-    "(`tool`, `query`, `evidence_excerpt` as a verbatim substring from captured tool output).\n"
+    "CONFIRMED / REFUTED_BY_CONTRADICTION / CONTESTED require a nested `grounding` object "
+    "with `tool`, `query`, and `evidence_excerpt` (verbatim substring from that tool result).\n"
+    "Do NOT use top-level `grounding_excerpt`, `grounding_source`, or `evidence`.\n"
+    "\n"
+    "Example fact_check row:\n"
+    '{"claim": "…", "verdict": "CONFIRMED", "grounding": {"tool": '
+    '"mcp__sources__query_wikipedia", "query": "Колядки", "evidence_excerpt": '
+    '"Коля́дки — величальні календарно-обрядові пісні зимового циклу"}}\n'
+    "\n"
+    "### Verdict selection (binding)\n"
+    "Use CONFIRMED when retrieved evidence supports the passage claim; "
+    "REFUTED_BY_CONTRADICTION when retrieved evidence contradicts it. "
+    "Reserve UNATTESTED_AFTER_SEARCH only when you searched but found no evidence "
+    "to support or refute the claim — not when you already hold a supporting or "
+    "contradicting verbatim excerpt.\n"
+    "Hard tool budget: at most 40 tool calls per review; after the cap, stop searching "
+    "and score remaining claims with UNVERIFIED_INSUFFICIENT_SEARCH.\n"
     "\n"
     "### Grounding excerpt rule (binding)\n"
     "`evidence_excerpt` MUST be copied character-for-character from the tool result — "
@@ -1036,6 +1051,45 @@ def _has_usable_grounding(grounding: Any) -> bool:
     return bool(str(grounding.get("evidence_excerpt") or "").strip())
 
 
+def _coerce_claim_aliases(fact_check: Mapping[str, Any]) -> dict[str, Any]:
+    """Map frontier claim field aliases onto the bakeoff ``claim`` key."""
+    item = dict(fact_check)
+    claim = item.get("claim")
+    if not isinstance(claim, str) or not claim.strip():
+        for key in ("claim_text", "claim_span", "passage_claim", "text"):
+            alt = item.get(key)
+            if isinstance(alt, str) and alt.strip():
+                item["claim"] = alt.strip()
+                break
+    return item
+
+
+def _coerce_flat_grounding_fields(fact_check: Mapping[str, Any]) -> dict[str, Any]:
+    """Hoist frontier flat grounding aliases into the nested ``grounding`` object."""
+    item = _coerce_claim_aliases(fact_check)
+    grounding = item.get("grounding")
+    excerpt = ""
+    if isinstance(grounding, Mapping):
+        excerpt = str(grounding.get("evidence_excerpt") or "").strip()
+    if not excerpt:
+        for key in ("grounding_excerpt", "evidence_excerpt", "evidence", "citation"):
+            value = item.get(key)
+            if isinstance(value, str) and value.strip():
+                excerpt = value.strip()
+                break
+    if excerpt:
+        rebuilt: dict[str, Any] = dict(grounding) if isinstance(grounding, Mapping) else {}
+        rebuilt["evidence_excerpt"] = excerpt
+        for key in ("tool", "query"):
+            value = item.get(key)
+            if isinstance(value, str) and value.strip():
+                rebuilt[key] = value.strip()
+        item["grounding"] = rebuilt
+    for key in ("grounding_excerpt", "grounding_source", "evidence", "citation"):
+        item.pop(key, None)
+    return item
+
+
 def _coerce_fact_check_verdict_aliases(
     fact_check: Mapping[str, Any],
     *,
@@ -1048,7 +1102,7 @@ def _coerce_fact_check_verdict_aliases(
     path only), grounding-required verdicts without structured ``grounding`` become
     ``UNATTESTED_AFTER_SEARCH`` so the cell remains scorable.
     """
-    item = dict(fact_check)
+    item = _coerce_flat_grounding_fields(fact_check)
     verdict = item.get("verdict")
     if not isinstance(verdict, str) or not verdict.strip():
         for alt_key in ("status", "judgment", "result", "verdict_label"):
@@ -1121,13 +1175,21 @@ def _validate_bare_fact_checks(fact_checks: Any) -> None:
             raise ValueError(f"unsupported fact_check.verdict: {verdict!r}")
 
 
-def _normalize_bakeoff_tooled_payload(payload: Mapping[str, Any]) -> tuple[dict[str, Any], bool]:
+def _normalize_bakeoff_tooled_payload(
+    payload: Mapping[str, Any],
+    *,
+    tool_events: Sequence[Mapping[str, Any]] | None = None,
+) -> tuple[dict[str, Any], bool]:
     """Best-effort bakeoff-only cleanup so fact-check measurement survives contract noise.
+
+    When ``tool_events`` are supplied, grounding objects are repaired from captured
+    telemetry *before* schema validation so frontier flat aliases can still pass the
+    live grounding contract.
 
     Returns ``(normalized_payload, findings_schema_invalid)``.
     """
     out = dict(payload)
-    out = _coerce_payload_fact_check_verdicts(out, downgrade_missing_grounding=True)
+    out = _coerce_payload_fact_check_verdicts(out, downgrade_missing_grounding=False)
     findings_schema_invalid = False
     kept_findings: list[dict[str, Any]] = []
     for finding in out.get("findings") or []:
@@ -1148,6 +1210,12 @@ def _normalize_bakeoff_tooled_payload(payload: Mapping[str, Any]) -> tuple[dict[
             continue
         item = dict(fact_check)
         grounding = item.get("grounding")
+        if isinstance(grounding, Mapping) and tool_events:
+            item["grounding"] = llm_reviewer_dispatch.repair_grounding_from_tool_events(
+                grounding,
+                tool_events,
+            )
+            grounding = item["grounding"]
         if isinstance(grounding, Mapping):
             normalized = dict(grounding)
             if not str(normalized.get("evidence_excerpt") or "").strip():
@@ -1159,9 +1227,17 @@ def _normalize_bakeoff_tooled_payload(payload: Mapping[str, Any]) -> tuple[dict[
                 # break the opencode case where events keep the bare sources_* form.
                 if not str(normalized.get("tool_call_id") or "").strip():
                     normalized["tool_call_id"] = "advisory-missing"
-                item["grounding"] = normalized
+                missing_required = any(
+                    not str(normalized.get(key) or "").strip()
+                    for key in ("tool", "query", "evidence_excerpt")
+                )
+                if missing_required:
+                    item["grounding"] = None
+                else:
+                    item["grounding"] = normalized
         normalized_fact_checks.append(item)
     out["fact_checks"] = normalized_fact_checks
+    out = _coerce_payload_fact_check_verdicts(out, downgrade_missing_grounding=True)
     return out, findings_schema_invalid
 
 
@@ -2512,7 +2588,11 @@ def _invoke_and_gate(
         # count the defect (`findings_schema_invalid`), keep gating fact_checks
         # strictly. The LIVE pipeline stays strict (SCHEMA_FAILURE) — unchanged.
         findings_schema_invalid = False
-        payload, findings_schema_invalid = _normalize_bakeoff_tooled_payload(payload)
+        tool_events = llm_reviewer_dispatch.tool_events_from_dispatch_meta(dispatch)
+        payload, findings_schema_invalid = _normalize_bakeoff_tooled_payload(
+            payload,
+            tool_events=tool_events,
+        )
         try:
             llm_reviewer.validate_reviewer_payload(payload, BAKEOFF_POLICY_FAMILY)
         except ValueError as exc:

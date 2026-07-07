@@ -1422,12 +1422,10 @@ def test_coerce_verified_status_aliases_to_bakeoff_verdicts() -> None:
             {
                 "claim": "True claim.",
                 "status": "VERIFIED_TRUE",
-                "evidence": "wiki says true",
             },
             {
                 "claim": "False claim.",
                 "status": "VERIFIED_FALSE",
-                "evidence": "wiki contradicts",
             },
         ]
     }
@@ -1452,6 +1450,87 @@ def test_coerce_preserves_confirmed_when_grounding_present() -> None:
     }
     normalized, _invalid = qg_bakeoff._normalize_bakeoff_tooled_payload(payload)
     assert normalized["fact_checks"][0]["verdict"] == "CONFIRMED"
+
+
+def test_coerce_flat_grounding_excerpt_to_nested_object() -> None:
+    events = [
+        {
+            "tool": "mcp__sources__query_wikipedia",
+            "input": {"query": "Колядки"},
+            "output": "Коля́дки — величальні календарно-обрядові пісні",
+            "status": "completed",
+        }
+    ]
+    payload = {
+        "fact_checks": [
+            {
+                "claim": "Колядки — зимовий цикл.",
+                "verdict": "CONFIRMED",
+                "grounding_excerpt": "Коля́дки — величальні календарно-обрядові пісні",
+                "grounding_source": "wave7-entsyklopediia-ukrainoznavstva_c0514",
+            }
+        ]
+    }
+    normalized, _invalid = qg_bakeoff._normalize_bakeoff_tooled_payload(
+        payload,
+        tool_events=events,
+    )
+    row = normalized["fact_checks"][0]
+    assert "grounding_excerpt" not in row
+    assert row["grounding"]["evidence_excerpt"].startswith("Коля́дки")
+    assert row["verdict"] == "CONFIRMED"
+
+
+def test_repair_grounding_infers_tool_query_from_events() -> None:
+    events = [
+        {
+            "tool": "mcp__sources__query_wikipedia",
+            "input": {"query": "Колядки"},
+            "output": "Коля́дки — величальні календарно-обрядові пісні зимового циклу",
+            "status": "completed",
+        }
+    ]
+    grounding = {"evidence_excerpt": "величальні календарно-обрядові пісні"}
+    repaired = llm_reviewer_dispatch.repair_grounding_from_tool_events(grounding, events)
+    assert repaired["tool"] == "mcp__sources__query_wikipedia"
+    assert repaired["query"] == "Колядки"
+    assert llm_reviewer_dispatch._grounding_matches_events(repaired, events)
+
+
+def test_coerce_claim_text_and_flat_evidence_excerpt_with_tool_events() -> None:
+    events = [
+        {
+            "tool": "mcp__sources__query_wikipedia",
+            "input": {"query": "Володимир"},
+            "output": "Володимир — позашлюбний син київського князя",
+            "status": "completed",
+        }
+    ]
+    payload = {
+        "fact_checks": [
+            {
+                "claim_text": "Володимир — позашлюбний син.",
+                "verdict": "CONFIRMED",
+                "evidence_excerpt": "позашлюбний син київського князя",
+            }
+        ]
+    }
+    normalized, _invalid = qg_bakeoff._normalize_bakeoff_tooled_payload(
+        payload,
+        tool_events=events,
+    )
+    row = normalized["fact_checks"][0]
+    assert row["claim"].startswith("Володимир")
+    assert row["verdict"] == "CONFIRMED"
+    assert row["grounding"]["tool"] == "mcp__sources__query_wikipedia"
+    assert row["grounding"]["query"] == "Володимир"
+
+
+def test_subscription_tooled_prompt_forbids_flat_grounding_fields() -> None:
+    route = qg_bakeoff.route_for_matrix_pin("gemini-3.1-pro-high", arm=qg_bakeoff.TOOLED_ARM)
+    footer = qg_bakeoff._subscription_tooled_prompt_supplement(route)
+    assert "Do NOT use top-level `grounding_excerpt`" in footer
+    assert "REFUTED_BY_CONTRADICTION when retrieved evidence contradicts" in footer
 
 
 def test_subscription_tooled_prompt_includes_json_contract_footer() -> None:
