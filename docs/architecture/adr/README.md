@@ -28,9 +28,9 @@ The threshold for writing an ADR: **would a new engineer need to know this to un
 | [ADR-005](adr-005-wiki-knowledge-base.md) | Wiki knowledge base — pre-compiled articles replace live RAG for seminar writes | Accepted |
 | [ADR-006](adr-006-compile-layer-retrieval.md) | Multi-tier compile-layer retrieval architecture | Accepted |
 | [ADR-007](adr-007-no-hard-grade-filter-for-cefr-retrieval.md) | No hard grade filter for CEFR-track retrieval | Accepted |
-| [ADR-008](adr-008-uk-native-track-destination.md) | Draft — UK-Native Track Destination & Naming | DRAFT — awaiting Krisztian decision 2026-04-21 |
+| [ADR-008](adr-008-uk-native-track-destination.md) | UK-Native Track Destination & Naming | Deferred — Krisztian decision 2026-07-07: revisit when the l2-uk-direct |
 | [ADR-009](adr-009-dispatch-timeout-unification-and-liveness.md) | Dispatch `hard_timeout` is a leak guard, not a productivity heuristic | Accepted |
-| [ADR-010](adr-010-mcp-verification-phase3.md) | MCP verification layer — Phase 3 architectural redesign | PROPOSED |
+| [ADR-010](adr-010-mcp-verification-phase3.md) | MCP verification layer — Phase 3 architectural redesign | Deferred — Krisztian decision 2026-07-07: Phase 2 tools (verify_quote, |
 <!-- ADR-INDEX-END -->
 
 ## Template
