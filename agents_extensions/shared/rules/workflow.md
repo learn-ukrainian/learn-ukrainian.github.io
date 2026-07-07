@@ -46,6 +46,16 @@ scrolling back) at ≥50% of the active model's window and before any handoff. R
 evidence is PER-MODEL (Claude lane rotates: Opus 4.8 verified, Fable 5 improvised
 10/10 @ ~500K, Sonnet 5 pending) — on a not-yet-canaried model this is mandatory.
 
+## Merge policy — ready PRs must not sit (user directive 2026-07-07, #4703)
+
+The repo setting `allow_auto_merge` is ENABLED (was the root cause of ready PRs sitting for
+hours). Every lane: the moment a PR's review gate passes (cross-family review evidence, no
+requested changes), run `gh pr merge <N> --auto --squash --delete-branch` — GitHub merges it
+when CI settles, nobody babysits. Dispatched agents still do NOT self-enable auto-merge
+(review gate first — unchanged). `--auto` waits for green and never bypasses blocking checks
+(#M-0.5 semantics unchanged). Orchestrator session sweeps remain the backstop for anything
+green+reviewed+idle.
+
 ## Two-tier handoffs (epic #1865 item #1, shipped 2026-05-11)
 
 Thread rollover handoffs are separate from durable session records. When a
