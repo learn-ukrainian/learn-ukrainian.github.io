@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import sys
+
 import pytest
 
 from scripts.ai_agent_bridge.routing_guard import (
@@ -34,6 +36,19 @@ def _no_override(monkeypatch: pytest.MonkeyPatch):
         "deepseek-direct/claude-sonnet-5",
         "deepseek-direct/google/gemini-3.1-pro-preview",
         "deepseek-direct/gemini-3.1-pro-preview",
+        # grok-build adversarial corpus (review-4730-guard): blocklist bypass
+        # variants that motivated the positive fail-closed allowlist.
+        "deepseek-direct/anthropic-claude-sonnet-5",
+        "deepseek-direct/anthropic_claude-sonnet-5",
+        "deepseek-direct/openai-gpt-5.5",
+        "deepseek-direct/google-gemini-3.1-pro",
+        "deepseek-direct/../claude-opus-4-8",
+        "deepseek-direct/some-claude-model",
+        "deepseek-direct/someqwenmodel",
+        "deepseek_direct/claude-sonnet-5",
+        # non-subscription but non-DeepSeek: refused by the allowlist too
+        "deepseek-direct/mistral-large",
+        "deepseek-direct/",
     ],
 )
 def test_forbidden_models_refused(model: str) -> None:
@@ -122,7 +137,7 @@ def test_delegate_help_does_not_advertise_qwen() -> None:
 
     repo_root = Path(__file__).resolve().parent.parent
     result = subprocess.run(
-        [str(repo_root / ".venv" / "bin" / "python"), str(repo_root / "scripts" / "delegate.py"), "dispatch", "--help"],
+        [sys.executable, str(repo_root / "scripts" / "delegate.py"), "dispatch", "--help"],
         capture_output=True,
         text=True,
         cwd=repo_root,
@@ -142,7 +157,7 @@ def test_delegate_dispatch_dry_run_rejects_guarded_model(tmp_path) -> None:
     repo_root = Path(__file__).resolve().parent.parent
     result = subprocess.run(
         [
-            str(repo_root / ".venv" / "bin" / "python"),
+            sys.executable,
             str(repo_root / "scripts" / "delegate.py"),
             "dispatch",
             "--agent",
