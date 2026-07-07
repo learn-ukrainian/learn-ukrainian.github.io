@@ -49,6 +49,31 @@ def _sha256(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
 
+def compute_deck_inputs_fingerprint(
+    entries: list[dict[str, Any]] | None,
+    heritage_pairs: list[dict[str, Any]] | None,
+    synonym_verdicts: dict[str, Any] | None,
+    cloze_sources: list[dict[str, Any]] | None,
+    schema_version: int,
+) -> str:
+    """Canonical hash of the deck DATA inputs only (no builder version).
+
+    Seeds deterministic generation randomness: identical inputs must produce
+    identical rolls regardless of code revision, so builder-version bumps
+    never reshuffle seeded content (and seed-sensitive fixture tests stay
+    stable across semantics releases).
+    """
+    payload = {
+        "schema_version": schema_version,
+        "entries": entries or [],
+        "heritage_pairs": heritage_pairs or [],
+        "synonym_verdicts": synonym_verdicts or {},
+        "cloze_sources": cloze_sources or [],
+    }
+    canonical = json.dumps(payload, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+    return hashlib.sha256(canonical.encode("utf-8")).hexdigest()[:16]
+
+
 def compute_deck_version(
     entries: list[dict[str, Any]] | None,
     heritage_pairs: list[dict[str, Any]] | None,
