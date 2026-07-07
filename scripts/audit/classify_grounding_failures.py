@@ -68,12 +68,12 @@ def _query_matched_events(
     events: Sequence[Mapping[str, Any]],
 ) -> tuple[Mapping[str, Any], ...]:
     query = str(grounding.get("query") or "").strip()
-    tool = str(grounding.get("tool") or "").strip()
+    tool = llm_reviewer_dispatch._canonical_tool_name(grounding.get("tool"))
     if not query:
         return ()
     matches: list[Mapping[str, Any]] = []
     for event in events:
-        if tool and str(event.get("tool") or "").strip() != tool:
+        if tool and llm_reviewer_dispatch._canonical_tool_name(event.get("tool")) != tool:
             continue
         if llm_reviewer_dispatch._event_input_matches_query(event, query):
             matches.append(event)

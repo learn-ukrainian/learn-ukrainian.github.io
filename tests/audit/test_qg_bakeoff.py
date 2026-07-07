@@ -1313,11 +1313,107 @@ def test_subscription_native_pins_are_refused_for_tooled_or_both() -> None:
             qg_bakeoff.GPT_SUBSCRIPTION_BARE_MODEL_ID,
             arm=qg_bakeoff.TOOLED_ARM,
         )
-    with pytest.raises(qg_bakeoff.BakeoffConfigError, match="bare-only"):
+    with pytest.raises(qg_bakeoff.BakeoffConfigError, match="do not support --arm both"):
         qg_bakeoff.route_for_matrix_pin(
             qg_bakeoff.GEMINI_SUBSCRIPTION_BARE_MODEL_ID,
             arm=qg_bakeoff.BOTH_ARM,
         )
+
+
+def test_subscription_runtime_tooled_gemini_route_resolves() -> None:
+    route = qg_bakeoff.route_for_matrix_pin(
+        qg_bakeoff.GEMINI_SUBSCRIPTION_BARE_MODEL_ID,
+        arm=qg_bakeoff.TOOLED_ARM,
+    )
+    assert route.route_name == "tooled_runtime_gemini"
+    identity = qg_bakeoff._route_identity(route)
+    assert identity.transport == "runtime-agy"
+    assert identity.entrypoint == qg_bakeoff.TOOLED_RUNTIME_ENTRYPOINT
+    assert identity.measurement_tier == qg_bakeoff.SUBSCRIPTION_RUNTIME_TOOLED_TIER
+
+
+def test_subscription_runtime_tooled_invokes_agent_runtime_with_mcp(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    route = qg_bakeoff.route_for_matrix_pin(
+        qg_bakeoff.GEMINI_SUBSCRIPTION_BARE_MODEL_ID,
+        arm=qg_bakeoff.TOOLED_ARM,
+    )
+    calls: list[dict[str, Any]] = []
+
+    def fake_tool_config(runtime_agent: str) -> dict[str, Any]:
+        assert runtime_agent == "agy"
+        return {"mcp_server_names": ["sources"]}
+
+    def fake_invoke(agent_name: str, prompt: str, **kwargs: Any) -> SimpleNamespace:
+        calls.append({"agent_name": agent_name, "prompt": prompt, **kwargs})
+        return SimpleNamespace(
+            ok=True,
+            response=json.dumps({"fact_checks": [], "findings": []}),
+            rate_limited=False,
+            returncode=0,
+            stderr_excerpt=None,
+            usage_record={"model": "gemini-resolved"},
+            cli_version="agy 1.0",
+            agent=agent_name,
+            model="gemini-resolved",
+            tool_calls=[
+                {
+                    "name": "mcp__sources__query_wikipedia",
+                    "arguments": {"query": "Веснянки"},
+                    "result": [{"type": "text", "text": "Веснянки — обрядові пісні"}],
+                }
+            ],
+            tool_calls_total=1,
+        )
+
+    monkeypatch.setattr(qg_bakeoff, "_subscription_tooled_tool_config", fake_tool_config)
+    monkeypatch.setattr("scripts.agent_runtime.runner.invoke", fake_invoke)
+
+    result = qg_bakeoff.invoke_subscription_tooled_route(route, "tooled prompt", "task-1")
+
+    assert result.response_text == json.dumps({"fact_checks": [], "findings": []})
+    assert calls[0]["agent_name"] == "agy"
+    assert calls[0]["mode"] == "danger"
+    assert calls[0]["entrypoint"] == qg_bakeoff.TOOLED_RUNTIME_ENTRYPOINT
+    assert calls[0]["tool_config"] == {"mcp_server_names": ["sources"]}
+    assert result.tool_events[0]["tool"] == "mcp__sources__query_wikipedia"
+    assert "обрядові" in str(result.tool_events[0]["output"])
+
+
+def test_runtime_tool_events_fixture_passes_grounding_gate() -> None:
+    from scripts.audit.runtime_tool_events import map_runtime_tool_calls
+
+    excerpt = "Веснянки — назва старовинних слов'янських обрядових пісень"
+    events = map_runtime_tool_calls(
+        [
+            {
+                "name": "mcp__sources__query_wikipedia",
+                "arguments": {"query": "Веснянки"},
+                "result": [{"type": "text", "text": excerpt}],
+            }
+        ]
+    )
+    payload = {
+        "findings": [],
+        "fact_checks": [
+            {
+                "claim": "genre",
+                "verdict": "CONFIRMED",
+                "grounding": {
+                    "tool": "mcp__sources__query_wikipedia",
+                    "query": "Веснянки",
+                    "evidence_excerpt": excerpt,
+                },
+            }
+        ],
+    }
+    gate = llm_reviewer_dispatch.enforce_grounding_against_tool_events(
+        payload,
+        {"tool_events": [dict(event) for event in events]},
+        policy_family=qg_bakeoff.BAKEOFF_POLICY_FAMILY,
+    )
+    assert gate.invalid_fact_checks == 0
 
 
 def test_bare_transport_retry_once_and_records_attempts(tmp_path: Path) -> None:

@@ -34,6 +34,7 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from scripts.audit import llm_reviewer, llm_reviewer_dispatch, qg_factcheck_scoring, qg_schema
+from scripts.audit.runtime_tool_events import map_runtime_tool_calls
 
 FIXTURE_DIR = PROJECT_ROOT / "tests" / "fixtures" / "qg_bakeoff"
 DEFAULT_OUTPUT_ROOT = PROJECT_ROOT / "audit"
@@ -66,9 +67,14 @@ DEEPSEEK_OPENROUTER_FLASH_PIN = "openrouter/deepseek/deepseek-v4-flash"
 DEEPSEEK_OPENROUTER_PRO_PIN = "openrouter/deepseek/deepseek-v4-pro"
 DEEPSEEK_OPENROUTER_PINS = (DEEPSEEK_OPENROUTER_FLASH_PIN, DEEPSEEK_OPENROUTER_PRO_PIN)
 BARE_RUNTIME_ENTRYPOINT = "qg_bakeoff_runtime"
+TOOLED_RUNTIME_ENTRYPOINT = "qg_bakeoff_runtime_tooled"
 SUBSCRIPTION_RUNTIME_BARE_TIER = "subscription_runtime_bare"
+SUBSCRIPTION_RUNTIME_TOOLED_TIER = "subscription_runtime_tooled"
 SUBSCRIPTION_BARE_BANNER = (
     "subscription-runtime bare — not raw completion; do not compare to opencode bare rows or external leaderboards."
+)
+SUBSCRIPTION_TOOLED_BANNER = (
+    "subscription-runtime tooled — separate transport row from opencode tooled; do not blend with open-weight bakeoff rows."
 )
 FAILURE_CLASS_TRANSPORT = "transport"
 FAILURE_CLASS_OPS_QUOTA = "ops_quota"
@@ -231,14 +237,14 @@ _SUBSCRIPTION_PRICING_BASIS = (
 )
 
 
-def _runtime_bridge_command(agent: str, model: str) -> tuple[str, ...]:
+def _runtime_bridge_command(agent: str, model: str, *, entrypoint: str = BARE_RUNTIME_ENTRYPOINT) -> tuple[str, ...]:
     """Return the audited runtime call shape, not an ask-* bridge wrapper."""
     if agent == "claude":
         return (
             "agent_runtime.invoke",
             "claude",
             "--entrypoint",
-            BARE_RUNTIME_ENTRYPOINT,
+            entrypoint,
             "--model",
             model,
             "--hard-timeout",
@@ -257,7 +263,7 @@ def _runtime_bridge_command(agent: str, model: str) -> tuple[str, ...]:
             "agent_runtime.invoke",
             "codex",
             "--entrypoint",
-            BARE_RUNTIME_ENTRYPOINT,
+            entrypoint,
             "--model",
             model,
             "--hard-timeout",
@@ -268,7 +274,7 @@ def _runtime_bridge_command(agent: str, model: str) -> tuple[str, ...]:
             "agent_runtime.invoke",
             "agy",
             "--entrypoint",
-            BARE_RUNTIME_ENTRYPOINT,
+            entrypoint,
             "--model",
             model,
             "--hard-timeout",
@@ -313,6 +319,40 @@ SUBSCRIPTION_BARE_ROUTES: tuple[llm_reviewer_dispatch.ReviewerRoute, ...] = (
 _SUBSCRIPTION_BARE_ROUTES_BY_PIN = {
     route.reviewer_model_id: route for route in SUBSCRIPTION_BARE_ROUTES
 }
+
+
+def _subscription_tooled_tool_config(runtime_agent: str) -> dict[str, Any]:
+    from scripts.agent_runtime.tool_config import build_mcp_tool_config
+
+    if runtime_agent == "agy":
+        config, diagnostics = build_mcp_tool_config("agy", mcp_servers=["sources"])
+    else:
+        raise BakeoffConfigError(f"subscription tooled runtime not wired for agent {runtime_agent!r}")
+    if config is None:
+        raise BakeoffConfigError(f"subscription tooled MCP config unavailable: {diagnostics}")
+    return dict(config)
+
+
+SUBSCRIPTION_TOOLED_ROUTES: tuple[llm_reviewer_dispatch.ReviewerRoute, ...] = (
+    llm_reviewer_dispatch.ReviewerRoute(
+        route_name="tooled_runtime_gemini",
+        bridge_command=_runtime_bridge_command(
+            "agy",
+            GEMINI_SUBSCRIPTION_BARE_MODEL_ID,
+            entrypoint=TOOLED_RUNTIME_ENTRYPOINT,
+        ),
+        reviewer_model_id=GEMINI_SUBSCRIPTION_BARE_MODEL_ID,
+        reviewer_family="google",
+        purpose="Subscription-runtime tooled fact-check via Agy/Gemini (#4761)",
+        input_usd_per_mtok=0.0,
+        output_usd_per_mtok=0.0,
+        requires_mcp=True,
+    ),
+)
+
+_SUBSCRIPTION_TOOLED_ROUTES_BY_PIN = {
+    route.reviewer_model_id: route for route in SUBSCRIPTION_TOOLED_ROUTES
+}
 _SUBSCRIPTION_BARE_IDENTITIES: dict[str, RouteIdentity] = {
     "bare_runtime_claude": RouteIdentity(
         transport="runtime-claude",
@@ -339,6 +379,18 @@ _SUBSCRIPTION_BARE_IDENTITIES: dict[str, RouteIdentity] = {
         entrypoint=BARE_RUNTIME_ENTRYPOINT,
         session_policy="fresh",
         measurement_tier=SUBSCRIPTION_RUNTIME_BARE_TIER,
+        pricing_basis=_SUBSCRIPTION_PRICING_BASIS,
+        resolved_model=GEMINI_SUBSCRIPTION_BARE_MODEL_ID,
+        runtime_agent="agy",
+        tool_config=None,
+    ),
+}
+_SUBSCRIPTION_TOOLED_IDENTITIES: dict[str, RouteIdentity] = {
+    "tooled_runtime_gemini": RouteIdentity(
+        transport="runtime-agy",
+        entrypoint=TOOLED_RUNTIME_ENTRYPOINT,
+        session_policy="fresh",
+        measurement_tier=SUBSCRIPTION_RUNTIME_TOOLED_TIER,
         pricing_basis=_SUBSCRIPTION_PRICING_BASIS,
         resolved_model=GEMINI_SUBSCRIPTION_BARE_MODEL_ID,
         runtime_agent="agy",
@@ -468,20 +520,32 @@ def bakeoff_route_for_model(pin: str) -> llm_reviewer_dispatch.ReviewerRoute:
 
 def route_for_matrix_pin(pin: str, *, arm: str) -> llm_reviewer_dispatch.ReviewerRoute:
     """Resolve a requested pin to the only route allowed for the requested arm."""
-    subscription_route = _SUBSCRIPTION_BARE_ROUTES_BY_PIN.get(pin)
-    if subscription_route is not None:
-        if arm != BARE_ARM:
+    if arm == BARE_ARM:
+        subscription_route = _SUBSCRIPTION_BARE_ROUTES_BY_PIN.get(pin)
+        if subscription_route is not None:
+            return subscription_route
+    elif arm == TOOLED_ARM:
+        subscription_route = _SUBSCRIPTION_TOOLED_ROUTES_BY_PIN.get(pin)
+        if subscription_route is not None:
+            return subscription_route
+        if pin in _SUBSCRIPTION_BARE_ROUTES_BY_PIN:
             raise BakeoffConfigError(
-                "subscription-runtime native pins are bare-only; "
+                "subscription-runtime native pin is bare-only for this seat; "
                 f"pin={pin!r} was requested with --arm {arm!r}"
             )
-        return subscription_route
+    elif pin in _SUBSCRIPTION_BARE_ROUTES_BY_PIN or pin in _SUBSCRIPTION_TOOLED_ROUTES_BY_PIN:
+        raise BakeoffConfigError(
+            "subscription-runtime native pins do not support --arm both yet; "
+            f"pin={pin!r} was requested with --arm {arm!r}"
+        )
     return bakeoff_route_for_model(pin)
 
 
 def _route_identity(route: llm_reviewer_dispatch.ReviewerRoute) -> RouteIdentity:
     if route.route_name in _SUBSCRIPTION_BARE_IDENTITIES:
         return _SUBSCRIPTION_BARE_IDENTITIES[route.route_name]
+    if route.route_name in _SUBSCRIPTION_TOOLED_IDENTITIES:
+        return _SUBSCRIPTION_TOOLED_IDENTITIES[route.route_name]
     return RouteIdentity(
         transport=OPENCODE_TRANSPORT,
         entrypoint=OPENCODE_ENTRYPOINT,
@@ -570,10 +634,14 @@ def _is_subscription_bare_route(route: llm_reviewer_dispatch.ReviewerRoute) -> b
     return route.route_name in _SUBSCRIPTION_BARE_IDENTITIES
 
 
+def _is_subscription_tooled_route(route: llm_reviewer_dispatch.ReviewerRoute) -> bool:
+    return route.route_name in _SUBSCRIPTION_TOOLED_IDENTITIES
+
+
 def _subscription_identity(route: llm_reviewer_dispatch.ReviewerRoute) -> RouteIdentity:
-    identity = _SUBSCRIPTION_BARE_IDENTITIES.get(route.route_name)
-    if identity is None or not identity.runtime_agent:
-        raise BakeoffConfigError(f"route is not a subscription-runtime bare route: {route.route_name!r}")
+    identity = _route_identity(route)
+    if not identity.runtime_agent:
+        raise BakeoffConfigError(f"route is not a subscription-runtime route: {route.route_name!r}")
     return identity
 
 
@@ -582,11 +650,9 @@ def invoke_bakeoff_route(
     prompt: str,
     task_id: str,
 ) -> llm_reviewer_dispatch.DispatchResult:
-    """Invoke an experiment route over the same opencode transport.
-
-    ``invoke_bridge_route`` is live-policy-owned and only accepts registered
-    route names, so bakeoff routes use its opencode backend directly.
-    """
+    """Invoke an experiment route over opencode or subscription runtime."""
+    if _is_subscription_tooled_route(route):
+        return invoke_subscription_tooled_route(route, prompt, task_id)
     del task_id
     return llm_reviewer_dispatch._invoke_opencode_reviewer(
         prompt,
@@ -794,7 +860,99 @@ def invoke_subscription_bare_route(
             for call in result.tool_calls
             if isinstance(call, Mapping) and (call.get("name") or call.get("tool"))
         ),
-        tool_events=tuple(dict(call) for call in result.tool_calls if isinstance(call, Mapping)),
+        tool_events=map_runtime_tool_calls(
+            [call for call in result.tool_calls if isinstance(call, Mapping)]
+        ),
+    )
+
+
+def invoke_subscription_tooled_route(
+    route: llm_reviewer_dispatch.ReviewerRoute,
+    prompt: str,
+    task_id: str,
+) -> llm_reviewer_dispatch.DispatchResult:
+    """Invoke a subscription tooled route through ``agent_runtime.invoke``."""
+    identity = _subscription_identity(route)
+    runtime_agent = identity.runtime_agent or ""
+    tool_config = _subscription_tooled_tool_config(runtime_agent)
+    mode = "danger" if runtime_agent == "agy" else "workspace-write"
+    try:
+        from scripts.agent_runtime import runner as agent_runner
+        from scripts.agent_runtime.errors import (
+            AgentStalledError,
+            AgentTimeoutError,
+            AgentUnavailableError,
+            RateLimitedError,
+        )
+
+        result = agent_runner.invoke(
+            runtime_agent,
+            prompt,
+            mode=mode,
+            cwd=_neutral_runtime_cwd(),
+            model=route.reviewer_model_id,
+            task_id=task_id,
+            session_id=None,
+            tool_config=tool_config,
+            entrypoint=TOOLED_RUNTIME_ENTRYPOINT,
+            hard_timeout=1800,
+            stall_timeout=600,
+        )
+    except RateLimitedError as exc:
+        raise BakeoffOpsQuotaError(str(exc)) from exc
+    except AgentTimeoutError as exc:
+        raise BakeoffTransportError(str(exc), timed_out=True) from exc
+    except AgentStalledError as exc:
+        raise BakeoffTransportError(str(exc), timed_out=False) from exc
+    except AgentUnavailableError as exc:
+        raise BakeoffTransportError(str(exc), timed_out=False) from exc
+    except OSError as exc:
+        raise BakeoffTransportError(str(exc), timed_out=False) from exc
+    except Exception as exc:
+        raise BakeoffTransportError(str(exc), timed_out=False) from exc
+
+    usage = dict(result.usage_record or {})
+    usage.update(
+        {
+            "agent": result.agent,
+            "entrypoint": TOOLED_RUNTIME_ENTRYPOINT,
+            "cli_version": result.cli_version,
+            "resolved_model": result.model,
+            "returncode": result.returncode,
+            "cwd_policy": "neutral-tmp",
+        }
+    )
+    if result.rate_limited:
+        raise BakeoffOpsQuotaError(result.stderr_excerpt or "runtime reported rate limit")
+    if result.returncode not in (0, None) and not result.ok:
+        raise BakeoffTransportError(
+            result.stderr_excerpt or f"runtime returned non-zero exit {result.returncode}",
+            returncode=result.returncode,
+        )
+    if not result.ok:
+        raise BakeoffModelFailure(result.stderr_excerpt or "runtime returned no usable response")
+    response = (result.response or "").strip()
+    if not response:
+        raise BakeoffModelFailure("runtime returned empty response")
+    mapped_events = map_runtime_tool_calls(
+        [call for call in result.tool_calls if isinstance(call, Mapping)]
+    )
+    return llm_reviewer_dispatch.DispatchResult(
+        response_text=response,
+        reviewer_model_id=route.reviewer_model_id,
+        reviewer_family=route.reviewer_family,
+        route_name=route.route_name,
+        observed_prompt_tokens=llm_reviewer_dispatch.estimate_tokens(prompt),
+        observed_completion_tokens=llm_reviewer_dispatch.estimate_tokens(response),
+        observed_cost_usd=0.0,
+        usage=usage,
+        tool_call_count=max(int(result.tool_calls_total or 0), len(mapped_events)),
+        tools_used=tuple(
+            str(event.get("tool") or "")
+            for event in mapped_events
+            if str(event.get("tool") or "").strip()
+        ),
+        tool_events=mapped_events,
     )
 
 
@@ -863,6 +1021,49 @@ def _validate_bare_fact_checks(fact_checks: Any) -> None:
         verdict = fact_check.get("verdict")
         if not isinstance(verdict, str) or verdict not in qg_schema.FACT_CHECK_VERDICTS:
             raise ValueError(f"unsupported fact_check.verdict: {verdict!r}")
+
+
+def _normalize_bakeoff_tooled_payload(payload: Mapping[str, Any]) -> tuple[dict[str, Any], bool]:
+    """Best-effort bakeoff-only cleanup so fact-check measurement survives contract noise.
+
+    Returns ``(normalized_payload, findings_schema_invalid)``.
+    """
+    out = dict(payload)
+    findings_schema_invalid = False
+    kept_findings: list[dict[str, Any]] = []
+    for finding in out.get("findings") or []:
+        if not isinstance(finding, Mapping):
+            findings_schema_invalid = True
+            continue
+        try:
+            qg_schema.validate_grounded_finding(finding, BAKEOFF_POLICY_FAMILY)
+        except ValueError:
+            findings_schema_invalid = True
+            continue
+        kept_findings.append(dict(finding))
+    out["findings"] = kept_findings
+
+    normalized_fact_checks: list[dict[str, Any]] = []
+    for fact_check in out.get("fact_checks") or []:
+        if not isinstance(fact_check, Mapping):
+            continue
+        item = dict(fact_check)
+        grounding = item.get("grounding")
+        if isinstance(grounding, Mapping):
+            normalized = dict(grounding)
+            if not str(normalized.get("evidence_excerpt") or "").strip():
+                item["grounding"] = None
+            else:
+                # tool_call_id is advisory (see _grounding_matches_events). Tool-name
+                # spelling (sources_* vs mcp__sources__*) is reconciled by the gate's
+                # canonical comparison, so no rename here — a one-sided rename would
+                # break the opencode case where events keep the bare sources_* form.
+                if not str(normalized.get("tool_call_id") or "").strip():
+                    normalized["tool_call_id"] = "advisory-missing"
+                item["grounding"] = normalized
+        normalized_fact_checks.append(item)
+    out["fact_checks"] = normalized_fact_checks
+    return out, findings_schema_invalid
 
 
 def _validate_bare_payload_shape(payload: Mapping[str, Any]) -> None:
@@ -1562,9 +1763,11 @@ def write_scorecard(path: Path, artifacts: Sequence[Mapping[str, Any]]) -> None:
         lines.extend(
             [
                 "",
-                "## Subscription Runtime Bare Rows",
+                "## Subscription Runtime Rows",
                 "",
                 SUBSCRIPTION_BARE_BANNER,
+                "",
+                SUBSCRIPTION_TOOLED_BANNER,
                 "",
             ]
         )
@@ -2208,18 +2411,11 @@ def _invoke_and_gate(
         # count the defect (`findings_schema_invalid`), keep gating fact_checks
         # strictly. The LIVE pipeline stays strict (SCHEMA_FAILURE) — unchanged.
         findings_schema_invalid = False
+        payload, findings_schema_invalid = _normalize_bakeoff_tooled_payload(payload)
         try:
             llm_reviewer.validate_reviewer_payload(payload, BAKEOFF_POLICY_FAMILY)
         except ValueError as exc:
-            stripped = dict(payload)
-            stripped["findings"] = []
-            try:
-                llm_reviewer.validate_reviewer_payload(stripped, BAKEOFF_POLICY_FAMILY)
-            except ValueError:
-                # fact_checks/evidence_gaps themselves are invalid → real error cell.
-                raise BakeoffCellError(str(exc), response_head=result.response_text[:2000]) from exc
-            findings_schema_invalid = True
-            payload = stripped
+            raise BakeoffCellError(str(exc), response_head=result.response_text[:2000]) from exc
         attempt = {
             "attempt": attempt_count,
             "tool_call_count": dispatch.get("tool_call_count"),
@@ -3155,7 +3351,8 @@ def _artifact_measurement_tier(artifact: Mapping[str, Any]) -> str:
 
 
 def _is_subscription_runtime_artifact(artifact: Mapping[str, Any]) -> bool:
-    return _artifact_measurement_tier(artifact) == SUBSCRIPTION_RUNTIME_BARE_TIER
+    tier = _artifact_measurement_tier(artifact)
+    return tier in (SUBSCRIPTION_RUNTIME_BARE_TIER, SUBSCRIPTION_RUNTIME_TOOLED_TIER)
 
 
 def _is_ops_quota_artifact(artifact: Mapping[str, Any]) -> bool:
