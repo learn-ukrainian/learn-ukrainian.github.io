@@ -110,6 +110,10 @@ _TASKS_DIR = _REPO_ROOT / "batch_state" / "tasks"
 _BASH_SECRETS_PATH = Path.home() / ".bash_secrets"
 _GH_TOKEN_AGENTS = {"codex", "claude", "bridge"}
 _FALLBACK_SUBS_PATH = _REPO_ROOT / "scripts" / "config" / "agent_fallback_substitutions.yaml"
+# Single source for dispatchable agents: argparse choices AND the hard-sub
+# validation in _resolve_agent_with_budget_guard (a yaml typo must never
+# dispatch a nonexistent adapter).
+_DISPATCH_AGENT_CHOICES = ("codex", "gemini", "claude", "grok", "grok-build", "deepseek", "agy", "cursor")
 _MONITOR_API_BASE_URL = "http://localhost:8765"
 _logger = logging.getLogger(__name__)
 
@@ -2044,7 +2048,8 @@ def _resolve_agent_with_budget_guard(agent: str) -> str:
 
     if is_stale:
         print("⚠ ROUTING CHECK ADVISORY (stale snapshot, generatedAt/data age >15min) — verify manually; no hard sub", file=sys.stderr)
-        # still allow the rec warning if any, but no hard
+        # Rec warning deliberately suppressed on stale: a recommendation from
+        # stale numbers is worse than none (same rationale as the empty case).
     else:
         # advisory rec mismatch still emitted (for info)
         recommended = rec.get("primary_agent_for_code")
@@ -2068,9 +2073,16 @@ def _resolve_agent_with_budget_guard(agent: str) -> str:
     if status == "near_cap" and not is_stale and records_loaded > 0:
         fallbacks = _load_dispatch_fallbacks()
         sub = fallbacks.get(requested)
-        if not sub and requested == "claude":
-            # fallback inference for claude etc from prose in yaml
-            sub = "codex"
+        # The yaml `dispatch_fallbacks` map is the ONLY source for hard subs —
+        # no inferred/hardcoded mappings (a deleted config entry must mean
+        # "no hard sub", not silently resurrect an old route).
+        if sub and sub not in _DISPATCH_AGENT_CHOICES:
+            print(
+                f"⚠ ROUTING: dispatch_fallbacks maps {requested} → {sub}, "
+                "not a known dispatch agent — ignoring hard sub.",
+                file=sys.stderr,
+            )
+            sub = None
         if sub and sub != requested:
             note = (
                 f"🔄 HARD AUTO-SUBSTITUTE: --agent {requested} → {sub} "
@@ -2371,7 +2383,7 @@ def build_parser() -> argparse.ArgumentParser:
         formatter_class=_dispatch_help_formatter,
     )
     d.add_argument("--agent", required=True,
-                   choices=["codex", "gemini", "claude", "grok", "grok-build", "deepseek", "agy", "cursor"],
+                   choices=list(_DISPATCH_AGENT_CHOICES),
                    # "qwen" removed from choices (banned agent): advertising it in --help
                    # while the routing guard rejects it at dispatch is a UX trap. The
                    # guard still catches programmatic Namespace bypass.

@@ -257,3 +257,39 @@ def test_check_budget_no_sub_on_empty_snapshot(monkeypatch, tmp_path, capsys):
     err = capsys.readouterr().err
     assert "empty snapshot" in err.lower()
     assert "HARD AUTO-SUBSTITUTE" not in err
+
+
+def test_check_budget_no_hard_sub_without_yaml_mapping(monkeypatch, tmp_path, capsys):
+    """Removed hardcode regression: yaml mapping absent → NO hard sub, even near_cap fresh."""
+    _patch_spawn(monkeypatch, tmp_path)
+    monkeypatch.setattr(delegate.time, "sleep", lambda _s: None)
+    monkeypatch.setattr(delegate, "_load_dispatch_fallbacks", lambda: {})
+    monkeypatch.setattr(
+        delegate.urllib.request,
+        "urlopen",
+        lambda *_a, **_k: _FakeBudgetResponse("codex", status_for_agent="claude", burn_for_agent=95.0, records_loaded=10, stale=False),
+    )
+
+    rc = delegate.cmd_dispatch(_dispatch_args("--check-budget"))
+
+    assert rc == 0
+    assert "HARD AUTO-SUBSTITUTE" not in capsys.readouterr().err
+
+
+def test_check_budget_hard_sub_ignores_unknown_fallback_target(monkeypatch, tmp_path, capsys):
+    """A yaml typo must never dispatch a nonexistent adapter: unknown target → warn + no sub."""
+    _patch_spawn(monkeypatch, tmp_path)
+    monkeypatch.setattr(delegate.time, "sleep", lambda _s: None)
+    monkeypatch.setattr(delegate, "_load_dispatch_fallbacks", lambda: {"claude": "gemeni"})
+    monkeypatch.setattr(
+        delegate.urllib.request,
+        "urlopen",
+        lambda *_a, **_k: _FakeBudgetResponse("codex", status_for_agent="claude", burn_for_agent=95.0, records_loaded=10, stale=False),
+    )
+
+    rc = delegate.cmd_dispatch(_dispatch_args("--check-budget"))
+
+    assert rc == 0
+    err = capsys.readouterr().err
+    assert "not a known dispatch agent" in err
+    assert "HARD AUTO-SUBSTITUTE" not in err
