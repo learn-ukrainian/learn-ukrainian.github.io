@@ -372,13 +372,12 @@ def _parse_transcript_tool_calls(plan: InvocationPlan | None) -> list[dict[str, 
     if transcript_path is None or not transcript_path.exists():
         return []
 
-    calls: list[dict[str, Any]] = []
-    pending: list[dict[str, Any]] = []
     try:
         lines = transcript_path.read_text(encoding="utf-8").splitlines()
     except OSError:
         return []
 
+    events: list[dict[str, Any]] = []
     for raw_line in lines:
         if not raw_line.strip():
             continue
@@ -386,26 +385,178 @@ def _parse_transcript_tool_calls(plan: InvocationPlan | None) -> list[dict[str, 
             event = json.loads(raw_line)
         except json.JSONDecodeError:
             continue
-        if not isinstance(event, dict):
+        if isinstance(event, dict):
+            events.append(event)
+
+    if not events:
+        return []
+
+    has_step_index = any(_event_step_index(event) is not None for event in events)
+    if has_step_index:
+        return _pair_transcript_by_step_index(events, transcript_path=transcript_path)
+    return _pair_transcript_fifo(events, transcript_path=transcript_path)
+
+
+def _event_step_index(event: Mapping[str, Any]) -> int | None:
+    raw = event.get("step_index")
+    if raw is None:
+        return None
+    if isinstance(raw, bool):
+        return None
+    if isinstance(raw, int):
+        return raw
+    if isinstance(raw, float) and raw.is_integer():
+        return int(raw)
+    if isinstance(raw, str) and raw.strip().isdigit():
+        return int(raw.strip())
+    return None
+
+
+def _canonical_tool_arguments(args: Mapping[str, Any]) -> dict[str, Any]:
+    canonical: dict[str, Any] = {}
+    for raw_key, raw_value in args.items():
+        key = str(raw_key)
+        value = raw_value
+        if isinstance(value, bool):
+            canonical[key] = value
             continue
+        if isinstance(value, float) and value.is_integer():
+            value = int(value)
+        if isinstance(value, int):
+            canonical[key] = str(value)
+            continue
+        if isinstance(value, str):
+            canonical[key] = value
+            continue
+        if isinstance(value, Mapping):
+            canonical[key] = _canonical_tool_arguments(value)
+            continue
+        if isinstance(value, list):
+            canonical[key] = [
+                str(item) if isinstance(item, (int, float)) and not isinstance(item, bool) else item
+                for item in value
+            ]
+            continue
+        canonical[key] = value
+    return canonical
 
+
+def _intent_dedupe_key(call: Mapping[str, Any]) -> str:
+    args = call.get("arguments")
+    if not isinstance(args, Mapping):
+        args = {}
+    return json.dumps(
+        [str(call.get("name") or ""), _canonical_tool_arguments(args)],
+        sort_keys=True,
+        ensure_ascii=False,
+    )
+
+
+def _attach_tool_result(call: dict[str, Any], result_text: str) -> dict[str, Any]:
+    result = [{"type": "text", "text": result_text}]
+    call["output_summary"] = summarize_tool_output(result)
+    call["result"] = result
+    return call
+
+
+def _mcp_result_text(event: Mapping[str, Any], *, transcript_path: Path) -> str:
+    result_text = _strip_agy_task_metadata(str(event.get("content") or ""))
+    return _inline_saved_tool_result_pointer(
+        result_text,
+        transcript_path=transcript_path,
+    )
+
+
+def _pair_transcript_fifo(
+    events: list[dict[str, Any]],
+    *,
+    transcript_path: Path,
+) -> list[dict[str, Any]]:
+    """Legacy pairing: file order FIFO between planner intents and MCP results."""
+    calls: list[dict[str, Any]] = []
+    pending: list[dict[str, Any]] = []
+    for event in events:
         pending.extend(_extract_transcript_tool_calls(event))
-
         if event.get("type") != "MCP_TOOL" or not pending:
             continue
         call = pending.pop(0)
-        result_text = _strip_agy_task_metadata(str(event.get("content") or ""))
-        result_text = _inline_saved_tool_result_pointer(
-            result_text,
-            transcript_path=transcript_path,
+        calls.append(
+            _attach_tool_result(
+                call,
+                _mcp_result_text(event, transcript_path=transcript_path),
+            )
         )
-        result = [{"type": "text", "text": result_text}]
-        call["output_summary"] = summarize_tool_output(result)
-        call["result"] = result
-        calls.append(call)
-
-    # Preserve telemetry for calls whose result event did not make it to disk.
     calls.extend(pending)
+    return calls
+
+
+def _result_only_call() -> dict[str, Any]:
+    """Placeholder for an MCP result with no captured planner intent.
+
+    agy occasionally executes a tool whose planner intent failed to serialize
+    (``ToolName: null``, filtered by ``_extract_transcript_tool_calls``). The tool
+    still ran and returned output, so we keep the result under an empty tool name:
+    ``tool_call_count`` stays truthful (a real call happened) while the grounding
+    gate's canonical tool comparison never credits an empty name, so no grounding is
+    falsely admitted (#4761).
+    """
+    return {"name": "", "arguments": {}, "output_summary": "", "timestamp": ""}
+
+
+def _pair_transcript_by_step_index(
+    events: list[dict[str, Any]],
+    *,
+    transcript_path: Path,
+) -> list[dict[str, Any]]:
+    """Pair planner intents with MCP results in ``step_index`` (FIFO) order.
+
+    agy re-emits still-pending planner intents on every turn, so an intent is
+    deduped ONLY against calls not yet resolved by an MCP result: a re-listed
+    pending intent is ignored, while an identical call issued again AFTER its result
+    already landed opens a fresh pending intent (a genuine repeat). Each MCP result
+    pops the oldest pending intent. A result with no pending intent is preserved as a
+    result-only call so a real tool output is never dropped — the previous
+    dedupe-then-zip collapsed genuine repeats and silently discarded surplus results,
+    undercounting ``tool_call_count`` (#4761, Finding 3).
+    """
+    ordered = sorted(
+        enumerate(events),
+        key=lambda item: (
+            _event_step_index(item[1]) if _event_step_index(item[1]) is not None else 10**9,
+            item[0],
+        ),
+    )
+
+    calls: list[dict[str, Any]] = []
+    pending: list[dict[str, Any]] = []
+    pending_keys: set[str] = set()
+    orphan_results = 0
+    for _, event in ordered:
+        for call in _extract_transcript_tool_calls(event):
+            key = _intent_dedupe_key(call)
+            if key in pending_keys:
+                continue
+            pending.append(dict(call))
+            pending_keys.add(key)
+        if event.get("type") != "MCP_TOOL":
+            continue
+        result_text = _mcp_result_text(event, transcript_path=transcript_path)
+        if pending:
+            call = pending.pop(0)
+            pending_keys.discard(_intent_dedupe_key(call))
+            calls.append(_attach_tool_result(call, result_text))
+        else:
+            orphan_results += 1
+            calls.append(_attach_tool_result(_result_only_call(), result_text))
+
+    if orphan_results:
+        _logger.warning(
+            "agy transcript: %s MCP result(s) had no matching planner intent; "
+            "preserved as result-only tool calls",
+            orphan_results,
+        )
+    # Planner intents still pending at end (re-emitted but never producing an MCP
+    # result) are omitted: they have no captured output to ground against.
     return calls
 
 

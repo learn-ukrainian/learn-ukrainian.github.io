@@ -172,6 +172,132 @@ def test_parse_response_inlines_safe_saved_tool_result_pointer(tmp_path: Path) -
     )
 
 
+def test_parse_response_pairs_duplicate_planner_intents_by_step_index(
+    tmp_path: Path,
+) -> None:
+    conversation_id = "fbfc8314-a4b6-4d64-9dec-5c9b6f6684bb"
+    app_data = tmp_path / "antigravity-cli"
+    log_file = tmp_path / "agy.log"
+    log_file.write_text(
+        f"I0521 printmode.go:130] Print mode: conversation={conversation_id}, sending message\n",
+        encoding="utf-8",
+    )
+    transcript = (
+        app_data
+        / "brain"
+        / conversation_id
+        / ".system_generated"
+        / "logs"
+        / "transcript.jsonl"
+    )
+    transcript.parent.mkdir(parents=True)
+    transcript.write_text(
+        (FIXTURES / "duplicate_intents_transcript.jsonl").read_text(encoding="utf-8"),
+        encoding="utf-8",
+    )
+
+    result = AgyAdapter().parse_response(
+        stdout="Final response.",
+        stderr="",
+        returncode=0,
+        output_file=None,
+        plan=_plan(tmp_path, log_file=log_file, app_data=app_data),
+    )
+
+    assert [call["name"] for call in result.tool_calls] == [
+        "mcp__sources__query_wikipedia",
+        "mcp__sources__query_wikipedia",
+        "mcp__sources__search_text",
+        "mcp__sources__query_wikipedia",
+        "mcp__sources__query_wikipedia",
+        "mcp__sources__search_grinchenko_1907",
+        "mcp__sources__search_literary",
+    ]
+    assert [call["result"][0]["text"] for call in result.tool_calls] == [
+        "wiki-section-error",
+        "wiki-sections-output",
+        "search-text-output",
+        "wiki-section-1-output",
+        "wiki-section-2-output",
+        "grinchenko-output",
+        "literary-output",
+    ]
+
+
+def _planner_intent(tool: str, query: str, *, step_index: int) -> dict[str, object]:
+    return {
+        "step_index": step_index,
+        "type": "PLANNER_RESPONSE",
+        "tool_calls": [
+            {
+                "name": "call_mcp_tool",
+                "args": {
+                    "Arguments": f'{{"query":"{query}"}}',
+                    "ServerName": '"sources"',
+                    "ToolName": f'"{tool}"',
+                },
+            }
+        ],
+    }
+
+
+def _mcp_result(content: str, *, step_index: int) -> dict[str, object]:
+    return {"step_index": step_index, "type": "MCP_TOOL", "content": content}
+
+
+def test_pairing_preserves_orphan_mcp_result_without_planner_intent(
+    tmp_path: Path,
+) -> None:
+    # #4761 Finding 3: an MCP result with no captured planner intent (e.g. a tool
+    # whose ToolName failed to serialize) must be preserved as a result-only call,
+    # never dropped — otherwise tool_call_count undercounts real executions.
+    events = [
+        _planner_intent("query_wikipedia", "Колядки", step_index=1),
+        _mcp_result("out-A", step_index=2),
+        _mcp_result("orphan-out", step_index=3),
+    ]
+    calls = agy_module._pair_transcript_by_step_index(
+        events, transcript_path=tmp_path / "transcript.jsonl"
+    )
+    assert [call["name"] for call in calls] == ["mcp__sources__query_wikipedia", ""]
+    assert [call["result"][0]["text"] for call in calls] == ["out-A", "orphan-out"]
+
+
+def test_pairing_keeps_genuine_repeat_calls_distinct(tmp_path: Path) -> None:
+    # #4761 Finding 3: the same tool+args issued AGAIN after its first result landed
+    # is a genuine second execution — both results must be kept, not collapsed by a
+    # global (tool, args) dedupe.
+    events = [
+        _planner_intent("query_wikipedia", "Колядки", step_index=1),
+        _mcp_result("out-1", step_index=2),
+        _planner_intent("query_wikipedia", "Колядки", step_index=3),
+        _mcp_result("out-2", step_index=4),
+    ]
+    calls = agy_module._pair_transcript_by_step_index(
+        events, transcript_path=tmp_path / "transcript.jsonl"
+    )
+    assert [call["name"] for call in calls] == [
+        "mcp__sources__query_wikipedia",
+        "mcp__sources__query_wikipedia",
+    ]
+    assert [call["result"][0]["text"] for call in calls] == ["out-1", "out-2"]
+
+
+def test_pairing_dedupes_reemitted_pending_intent(tmp_path: Path) -> None:
+    # A still-pending intent re-listed on a later planner turn (agy re-emission) is
+    # NOT a new call: one intent, one result.
+    events = [
+        _planner_intent("query_wikipedia", "Колядки", step_index=1),
+        _planner_intent("query_wikipedia", "Колядки", step_index=2),  # re-emit, still pending
+        _mcp_result("out-1", step_index=3),
+    ]
+    calls = agy_module._pair_transcript_by_step_index(
+        events, transcript_path=tmp_path / "transcript.jsonl"
+    )
+    assert [call["name"] for call in calls] == ["mcp__sources__query_wikipedia"]
+    assert [call["result"][0]["text"] for call in calls] == ["out-1"]
+
+
 def test_saved_tool_result_pointer_requires_prefix(tmp_path: Path) -> None:
     text = "bare pointer file:///etc/hosts"
     transcript = tmp_path / "transcript.jsonl"

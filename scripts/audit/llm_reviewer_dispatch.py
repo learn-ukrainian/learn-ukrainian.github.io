@@ -1436,6 +1436,12 @@ def enforce_grounding_against_tool_events(
         grounding = item.get("grounding")
         if isinstance(grounding, Mapping) and not _grounding_matches_events(grounding, events):
             invalid_fact_checks += 1
+            # Diagnostic tag: this grounding is not backed by a matching
+            # (tool, query, excerpt) event in this run. The verdict is left
+            # untouched here so the live pipeline's semantics are unchanged;
+            # the bakeoff scorer reads this tag to strip the row from the
+            # live-admissible column (STRICT grounding, #4761).
+            item["grounding_admissible"] = False
         elif item.get("deep_read_attempted") is True and _positive_verdict_summary_only(item, events):
             original_verdict = str(item.get("verdict") or "")
             item["original_verdict"] = original_verdict
@@ -1602,6 +1608,30 @@ def _grounding_matches_events(
     return bool(_grounding_matching_events(grounding, events))
 
 
+def _canonical_tool_name(name: Any) -> str:
+    """Canonicalize an MCP tool name so grounding vs event comparison is transport-agnostic.
+
+    Different harnesses spell the same tool differently: opencode emits
+    ``sources_query_wikipedia``, the agent-runtime adapters emit
+    ``mcp__sources__query_wikipedia``, and models sometimes emit the bare
+    ``query_wikipedia``. All three refer to the same tool; the grounding gate must
+    not fail on the spelling. Strips the ``mcp__``/``mcp_`` wrapper and the
+    ``sources__``/``sources_`` server prefix, then casefolds.
+    """
+    canonical = str(name or "").strip()
+    if not canonical:
+        return ""
+    for prefix in ("mcp__", "mcp_"):
+        if canonical.startswith(prefix):
+            canonical = canonical[len(prefix):]
+            break
+    for prefix in ("sources__", "sources_"):
+        if canonical.startswith(prefix):
+            canonical = canonical[len(prefix):]
+            break
+    return canonical.casefold()
+
+
 def _grounding_matching_events(
     grounding: Mapping[str, Any],
     events: Sequence[Mapping[str, Any]],
@@ -1611,10 +1641,10 @@ def _grounding_matching_events(
     excerpt = str(grounding.get("evidence_excerpt") or "").strip()
     if not query or not excerpt:
         return ()
-    tool = str(grounding.get("tool") or "").strip()
+    tool = _canonical_tool_name(grounding.get("tool"))
     matches: list[Mapping[str, Any]] = []
     for event in events:
-        if tool and str(event.get("tool") or "").strip() != tool:
+        if tool and _canonical_tool_name(event.get("tool")) != tool:
             continue
         if not _event_input_matches_query(event, query):
             continue

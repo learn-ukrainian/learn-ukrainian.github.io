@@ -1313,11 +1313,347 @@ def test_subscription_native_pins_are_refused_for_tooled_or_both() -> None:
             qg_bakeoff.GPT_SUBSCRIPTION_BARE_MODEL_ID,
             arm=qg_bakeoff.TOOLED_ARM,
         )
-    with pytest.raises(qg_bakeoff.BakeoffConfigError, match="bare-only"):
+    with pytest.raises(qg_bakeoff.BakeoffConfigError, match="do not support --arm both"):
         qg_bakeoff.route_for_matrix_pin(
             qg_bakeoff.GEMINI_SUBSCRIPTION_BARE_MODEL_ID,
             arm=qg_bakeoff.BOTH_ARM,
         )
+
+
+def test_subscription_runtime_tooled_gemini_route_resolves() -> None:
+    route = qg_bakeoff.route_for_matrix_pin(
+        qg_bakeoff.GEMINI_SUBSCRIPTION_BARE_MODEL_ID,
+        arm=qg_bakeoff.TOOLED_ARM,
+    )
+    assert route.route_name == "tooled_runtime_gemini"
+    identity = qg_bakeoff._route_identity(route)
+    assert identity.transport == "runtime-agy"
+    assert identity.entrypoint == qg_bakeoff.TOOLED_RUNTIME_ENTRYPOINT
+    assert identity.measurement_tier == qg_bakeoff.SUBSCRIPTION_RUNTIME_TOOLED_TIER
+
+
+def test_subscription_runtime_tooled_invokes_agent_runtime_with_mcp(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    route = qg_bakeoff.route_for_matrix_pin(
+        qg_bakeoff.GEMINI_SUBSCRIPTION_BARE_MODEL_ID,
+        arm=qg_bakeoff.TOOLED_ARM,
+    )
+    calls: list[dict[str, Any]] = []
+
+    def fake_tool_config(runtime_agent: str) -> dict[str, Any]:
+        assert runtime_agent == "agy"
+        return {"mcp_server_names": ["sources"]}
+
+    def fake_invoke(agent_name: str, prompt: str, **kwargs: Any) -> SimpleNamespace:
+        calls.append({"agent_name": agent_name, "prompt": prompt, **kwargs})
+        return SimpleNamespace(
+            ok=True,
+            response=json.dumps({"fact_checks": [], "findings": []}),
+            rate_limited=False,
+            returncode=0,
+            stderr_excerpt=None,
+            usage_record={"model": "gemini-resolved"},
+            cli_version="agy 1.0",
+            agent=agent_name,
+            model="gemini-resolved",
+            tool_calls=[
+                {
+                    "name": "mcp__sources__query_wikipedia",
+                    "arguments": {"query": "Веснянки"},
+                    "result": [{"type": "text", "text": "Веснянки — обрядові пісні"}],
+                }
+            ],
+            tool_calls_total=1,
+        )
+
+    monkeypatch.setattr(qg_bakeoff, "_subscription_tooled_tool_config", fake_tool_config)
+    monkeypatch.setattr("scripts.agent_runtime.runner.invoke", fake_invoke)
+
+    result = qg_bakeoff.invoke_subscription_tooled_route(route, "tooled prompt", "task-1")
+
+    assert result.response_text == json.dumps({"fact_checks": [], "findings": []})
+    assert calls[0]["agent_name"] == "agy"
+    assert calls[0]["mode"] == "danger"
+    assert calls[0]["entrypoint"] == qg_bakeoff.TOOLED_RUNTIME_ENTRYPOINT
+    assert calls[0]["tool_config"] == {"mcp_server_names": ["sources"]}
+    assert result.tool_events[0]["tool"] == "mcp__sources__query_wikipedia"
+    assert "обрядові" in str(result.tool_events[0]["output"])
+
+
+def test_runtime_tool_events_fixture_passes_grounding_gate() -> None:
+    from scripts.audit.runtime_tool_events import map_runtime_tool_calls
+
+    excerpt = "Веснянки — назва старовинних слов'янських обрядових пісень"
+    events = map_runtime_tool_calls(
+        [
+            {
+                "name": "mcp__sources__query_wikipedia",
+                "arguments": {"query": "Веснянки"},
+                "result": [{"type": "text", "text": excerpt}],
+            }
+        ]
+    )
+    payload = {
+        "findings": [],
+        "fact_checks": [
+            {
+                "claim": "genre",
+                "verdict": "CONFIRMED",
+                "grounding": {
+                    "tool": "mcp__sources__query_wikipedia",
+                    "query": "Веснянки",
+                    "evidence_excerpt": excerpt,
+                },
+            }
+        ],
+    }
+    gate = llm_reviewer_dispatch.enforce_grounding_against_tool_events(
+        payload,
+        {"tool_events": [dict(event) for event in events]},
+        policy_family=qg_bakeoff.BAKEOFF_POLICY_FAMILY,
+    )
+    assert gate.invalid_fact_checks == 0
+
+
+def test_coerce_verified_status_aliases_to_bakeoff_verdicts() -> None:
+    payload = {
+        "fact_checks": [
+            {
+                "claim": "True claim.",
+                "status": "VERIFIED_TRUE",
+            },
+            {
+                "claim": "False claim.",
+                "status": "VERIFIED_FALSE",
+            },
+        ]
+    }
+    normalized, _invalid = qg_bakeoff._normalize_bakeoff_tooled_payload(payload)
+    # STRICT (#4761): the status alias maps to a positive verdict, but with no
+    # grounding the positive verdict is admissibly downgraded — the raw verdict is
+    # preserved in original_verdict (kept for the model_judgment column) while the
+    # live verdict becomes UNVERIFIED so live_admissible earns nothing.
+    first, second = normalized["fact_checks"]
+    assert first["verdict"] == "UNVERIFIED_INSUFFICIENT_SEARCH"
+    assert first["original_verdict"] == "CONFIRMED"
+    assert first["admissibility_downgraded"] is True
+    assert first["grounding"] is None
+    assert second["verdict"] == "UNVERIFIED_INSUFFICIENT_SEARCH"
+    assert second["original_verdict"] == "REFUTED_BY_CONTRADICTION"
+    assert second["admissibility_downgraded"] is True
+
+
+def test_coerce_preserves_confirmed_when_grounding_present() -> None:
+    payload = {
+        "fact_checks": [
+            {
+                "claim": "True claim.",
+                "status": "VERIFIED_TRUE",
+                "grounding": {
+                    "tool": "sources_query_wikipedia",
+                    "query": "True claim",
+                    "evidence_excerpt": "True claim.",
+                },
+            }
+        ]
+    }
+    normalized, _invalid = qg_bakeoff._normalize_bakeoff_tooled_payload(payload)
+    assert normalized["fact_checks"][0]["verdict"] == "CONFIRMED"
+
+
+def test_flat_grounding_with_tool_and_query_is_hoisted_and_kept() -> None:
+    # Flat aliases that DO carry a self-cited tool + query hoist into a usable
+    # nested grounding, so the positive verdict survives under STRICT.
+    payload = {
+        "fact_checks": [
+            {
+                "claim": "Колядки — зимовий цикл.",
+                "verdict": "CONFIRMED",
+                "tool": "sources_query_wikipedia",
+                "query": "Колядки",
+                "grounding_excerpt": "Коля́дки — величальні календарно-обрядові пісні",
+                "grounding_source": "wave7-entsyklopediia-ukrainoznavstva_c0514",
+            }
+        ]
+    }
+    normalized, _invalid = qg_bakeoff._normalize_bakeoff_tooled_payload(payload)
+    row = normalized["fact_checks"][0]
+    assert "grounding_excerpt" not in row
+    assert row["grounding"]["evidence_excerpt"].startswith("Коля́дки")
+    assert row["grounding"]["tool"] == "sources_query_wikipedia"
+    assert row["grounding"]["query"] == "Колядки"
+    assert row["verdict"] == "CONFIRMED"
+
+
+def test_flat_excerpt_without_tool_or_query_is_downgraded_not_repaired() -> None:
+    # STRICT (#4761): a verbatim excerpt with NO self-cited tool/query is NOT
+    # rescued from telemetry. The excerpt is dropped and the positive verdict is
+    # admissibly downgraded — raw judgment kept in original_verdict, live verdict
+    # neutralized. This is the koliadky flat-alias case: model reached the verdict
+    # but never grounded it, so it earns model_judgment credit but no live credit.
+    payload = {
+        "fact_checks": [
+            {
+                "claim": "Колядки — зимовий цикл.",
+                "verdict": "CONFIRMED",
+                "grounding_excerpt": "Коля́дки — величальні календарно-обрядові пісні",
+                "grounding_source": "wave7-entsyklopediia-ukrainoznavstva_c0514",
+            }
+        ]
+    }
+    normalized, _invalid = qg_bakeoff._normalize_bakeoff_tooled_payload(payload)
+    row = normalized["fact_checks"][0]
+    assert "grounding_excerpt" not in row
+    assert row["grounding"] is None
+    assert row["verdict"] == "UNVERIFIED_INSUFFICIENT_SEARCH"
+    assert row["original_verdict"] == "CONFIRMED"
+    assert row["admissibility_downgraded"] is True
+
+
+def test_coerce_claim_text_alias_survives_downgrade() -> None:
+    # claim_text alias is mapped even when the positive verdict is downgraded for
+    # lack of a self-cited tool/query.
+    payload = {
+        "fact_checks": [
+            {
+                "claim_text": "Володимир — позашлюбний син.",
+                "verdict": "CONFIRMED",
+                "evidence_excerpt": "позашлюбний син київського князя",
+            }
+        ]
+    }
+    normalized, _invalid = qg_bakeoff._normalize_bakeoff_tooled_payload(payload)
+    row = normalized["fact_checks"][0]
+    assert row["claim"].startswith("Володимир")
+    assert row["grounding"] is None
+    assert row["verdict"] == "UNVERIFIED_INSUFFICIENT_SEARCH"
+    assert row["original_verdict"] == "CONFIRMED"
+    assert row["admissibility_downgraded"] is True
+
+
+def _single_claim_fixture(claim_text: str, *, is_true: bool) -> qg_bakeoff.BakeoffFixture:
+    return qg_bakeoff.BakeoffFixture(
+        slug="strict-probe",
+        title="STRICT probe",
+        passage_md=claim_text,
+        claims=(
+            qg_bakeoff.FixtureClaim(
+                claim_id="c1",
+                claim=claim_text,
+                is_true=is_true,
+                fabrication_class=None if is_true else "M",
+            ),
+        ),
+    )
+
+
+def test_gate_tagged_grounding_neutralizes_live_but_keeps_model_judgment() -> None:
+    # ADVERSARIAL (#4761 blocker): a CONFIRMED whose grounding cites a tool/query
+    # NOT present in this run's events must earn NO live-admissible credit, while
+    # its raw judgment still scores in the model_judgment column.
+    claim_text = "Колядки співають узимку."
+    events = [
+        {
+            "tool": "mcp__sources__query_wikipedia",
+            "input": {"query": "Колядки"},
+            "output": "Коля́дки — величальні пісні зимового циклу.",
+            "status": "completed",
+        }
+    ]
+    payload = {
+        "fact_checks": [
+            {
+                "claim": claim_text,
+                "verdict": "CONFIRMED",
+                "grounding": {
+                    # tool/query the model never actually called in this run
+                    "tool": "mcp__sources__search_literary",
+                    "query": "щедрівки",
+                    "evidence_excerpt": "Коля́дки — величальні пісні зимового циклу.",
+                },
+            }
+        ]
+    }
+    gate = llm_reviewer_dispatch.enforce_grounding_against_tool_events(
+        payload,
+        {"tool_events": [dict(event) for event in events]},
+        policy_family=qg_bakeoff.BAKEOFF_POLICY_FAMILY,
+    )
+    assert gate.invalid_fact_checks == 1
+    row = gate.payload["fact_checks"][0]
+    assert row.get("grounding_admissible") is False
+    # verdict itself is untouched by the gate (live-pipeline parity)
+    assert row["verdict"] == "CONFIRMED"
+
+    score = qg_bakeoff.score_payload(gate.payload, _single_claim_fixture(claim_text, is_true=True))
+    per_claim = score["claims"][0]
+    assert per_claim["model_judgment_points"] > 0  # raw CONFIRMED credited
+    assert per_claim["live_admissible_points"] <= 0  # neutralized: no live credit
+    assert per_claim["live_admissible_neutralized"] is True
+    assert score["model_judgment_score"] > score["live_admissible_score"]
+
+
+def test_gate_does_not_rescue_excerpt_from_a_different_claims_tool_output() -> None:
+    # STRICT: no cross-claim rescue. An excerpt that happens to appear in SOME
+    # event output does not become admissible unless the row's OWN cited tool+query
+    # match the event that produced it.
+    events = [
+        {
+            "tool": "mcp__sources__query_wikipedia",
+            "input": {"query": "Колядки"},
+            "output": "Коля́дки — величальні пісні зимового циклу.",
+            "status": "completed",
+        }
+    ]
+    payload = {
+        "fact_checks": [
+            {
+                "claim": "Веснянки співають навесні.",
+                "verdict": "CONFIRMED",
+                "grounding": {
+                    "tool": "mcp__sources__query_wikipedia",
+                    "query": "Веснянки",  # never queried in this run
+                    "evidence_excerpt": "Коля́дки — величальні пісні зимового циклу.",
+                },
+            }
+        ]
+    }
+    gate = llm_reviewer_dispatch.enforce_grounding_against_tool_events(
+        payload,
+        {"tool_events": [dict(event) for event in events]},
+        policy_family=qg_bakeoff.BAKEOFF_POLICY_FAMILY,
+    )
+    assert gate.invalid_fact_checks == 1
+    assert gate.payload["fact_checks"][0].get("grounding_admissible") is False
+
+
+def test_bare_style_row_is_never_neutralized_model_equals_live() -> None:
+    # #4761 Finding 5: a bare row is stripped to {claim, verdict} and carries no
+    # gate tag, so STRICT neutralization can never fire on it. A bare CONFIRMED must
+    # score identically in model_judgment and live_admissible (the two columns only
+    # diverge on the tooled arm, where grounding discipline is measurable).
+    claim_text = "Колядки співають узимку."
+    payload = {"fact_checks": [{"claim": claim_text, "verdict": "CONFIRMED"}]}
+    score = qg_bakeoff.score_payload(payload, _single_claim_fixture(claim_text, is_true=True))
+    per_claim = score["claims"][0]
+    assert per_claim["live_admissible_neutralized"] is False
+    assert per_claim["model_judgment_points"] == per_claim["live_admissible_points"]
+    assert score["model_judgment_score"] == score["live_admissible_score"]
+
+
+def test_subscription_tooled_prompt_forbids_flat_grounding_fields() -> None:
+    route = qg_bakeoff.route_for_matrix_pin("gemini-3.1-pro-high", arm=qg_bakeoff.TOOLED_ARM)
+    footer = qg_bakeoff._subscription_tooled_prompt_supplement(route)
+    assert "Do NOT use top-level `grounding_excerpt`" in footer
+    assert "REFUTED_BY_CONTRADICTION when retrieved evidence contradicts" in footer
+
+
+def test_subscription_tooled_prompt_includes_json_contract_footer() -> None:
+    route = qg_bakeoff.route_for_matrix_pin("gemini-3.1-pro-high", arm=qg_bakeoff.TOOLED_ARM)
+    footer = qg_bakeoff._subscription_tooled_prompt_supplement(route)
+    assert "field name `verdict`" in footer
+    assert "character-for-character" in footer
 
 
 def test_bare_transport_retry_once_and_records_attempts(tmp_path: Path) -> None:
