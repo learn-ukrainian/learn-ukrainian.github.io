@@ -279,13 +279,13 @@ run-aware aggregation + Run Variance + Domain Totals from the #4613 multi-run ha
 ### Findings (what replicates, what breaks, what's confounded)
 
 1. **The gemma lift REPLICATES and strengthens.** Per-run bare totals [20..280] vs tooled
-   [1580..1870] are disjoint by >1,300 points across all three runs; per-passage lift +92.9
+   [1580..1870] are disjoint by ~1,300 points across all three runs; per-passage lift +92.9
    exceeds the 4-passage estimate (+77.5). Stability classifier: gemma 0.84 bare / 0.77 tooled —
    best in class, 1 error-flagged cell in 102.
 2. **The deepseek lifts shrink into noise — but the measurement is transport-confounded.**
-   ds-flash: 4 error-flagged tooled passages + 62.7 missing-claims/run mean; cell error rates on
-   the opencode→OpenRouter chain measured ~21% (flash) / ~18% (pro) vs gemma 9% on the identical
-   chain. Error/partial cells score as failures and drag the tooled arm. Deepseek lift judgment
+   ds-flash: 4 error-flagged tooled passages + 62.7 missing-claims/run mean; error-flagged tooled passages on
+   the opencode→OpenRouter chain: flash 4/17 (23.5%) / pro 3/17 (17.6%) vs gemma 1/17 (5.9%)
+   on the identical chain. Error/partial cells score as failures and drag the tooled arm. Deepseek lift judgment
    is DEFERRED to the first-party rerun (#4358 deepseek-direct); the frozen matrix runs deepseek
    on the direct profile.
 3. **Retire the cross-model "best bare < worst tooled" phrasing.** At 17 passages it no longer
