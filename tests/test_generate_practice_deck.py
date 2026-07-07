@@ -26,11 +26,13 @@ from scripts.audit.generate_practice_deck import (
     read_cloze_sources,
     read_heritage_pairs,
     read_manifest,
+    read_paronym_pairs,
     validate_classify_item,
     validate_heritage_item,
     validate_heritage_pair,
     validate_option_set,
     validate_paradigm_item,
+    validate_paronym_item,
     validate_paronym_pair,
     validate_synonym_item,
 )
@@ -41,6 +43,7 @@ ALLOWLIST = FIXTURES / "lexicon-practice-reviewed-allowlist.json"
 VESUM = FIXTURES / "lexicon-practice-vesum.json"
 CLOZE_SOURCES = FIXTURES / "lexicon-practice-cloze-sources.json"
 HERITAGE_PAIRS = FIXTURES / "lexicon-practice-heritage-pairs.yaml"
+PARONYM_PAIRS = FIXTURES / "lexicon-practice-paronym-pairs.yaml"
 
 
 def test_default_target_preserves_committed_practice_surface() -> None:
@@ -53,7 +56,7 @@ def _build(config: BuildConfig | None = None, cloze_sources_path: Path | None = 
     allowlist = ReviewedSourceAllowlist.from_path(ALLOWLIST)
     verifier = JsonVesumVerifier.from_path(VESUM)
     cloze_sources = read_cloze_sources(cloze_sources_path) if cloze_sources_path else []
-    return build_practice_shards(entries, allowlist, verifier, cloze_sources, config or BuildConfig())
+    return build_practice_shards(entries, allowlist, verifier, cloze_sources, config or BuildConfig(), heritage_pairs=[], paronym_pairs=[])
 
 
 def _fixture_lexemes() -> list[dict[str, object]]:
@@ -131,6 +134,7 @@ def test_deck_version_changes_when_any_deck_input_changes() -> None:
     entries = read_manifest(MANIFEST)
     cloze_sources = read_cloze_sources(CLOZE_SOURCES)
     heritage_pairs = read_heritage_pairs(HERITAGE_PAIRS)
+    paronym_pairs = read_paronym_pairs(PARONYM_PAIRS)
     synonym_verdicts = {"approved": [], "rejected": []}
     allowlist = ReviewedSourceAllowlist.from_path(ALLOWLIST)
     verifier = JsonVesumVerifier.from_path(VESUM)
@@ -140,6 +144,7 @@ def test_deck_version_changes_when_any_deck_input_changes() -> None:
         entries_override: list[dict[str, object]] | None = None,
         cloze_sources_override: list[dict[str, object]] | None = None,
         heritage_pairs_override: list[dict[str, object]] | None = None,
+        paronym_pairs_override: list[dict[str, object]] | None = None,
         synonym_verdicts_override: dict[str, object] | None = None,
     ) -> str:
         shards = build_practice_shards(
@@ -149,6 +154,7 @@ def test_deck_version_changes_when_any_deck_input_changes() -> None:
             cloze_sources_override or cloze_sources,
             BuildConfig(),
             heritage_pairs=heritage_pairs_override or heritage_pairs,
+            paronym_pairs=paronym_pairs_override or paronym_pairs,
             synonym_verdicts=synonym_verdicts_override or synonym_verdicts,
         )
         return _single_deck_version(shards)
@@ -160,6 +166,9 @@ def test_deck_version_changes_when_any_deck_input_changes() -> None:
     changed_cloze_sources[0]["sentence"] = "Змінене речення з ___."
     changed_heritage_pairs = json.loads(json.dumps(heritage_pairs))
     changed_heritage_pairs[0]["rationale"] = "changed rationale"
+    changed_paronym_pairs = json.loads(json.dumps(paronym_pairs)) if paronym_pairs else []
+    if changed_paronym_pairs:
+        changed_paronym_pairs[0]["distinction_gloss_uk"] = "changed distinction for fingerprint test"
     changed_synonym_verdicts = {
         "approved": [{"a": "кіт", "b": "пес", "polarity": "synonym"}],
         "rejected": [],
@@ -168,6 +177,7 @@ def test_deck_version_changes_when_any_deck_input_changes() -> None:
     assert version_for(entries_override=changed_entries) != base_version
     assert version_for(cloze_sources_override=changed_cloze_sources) != base_version
     assert version_for(heritage_pairs_override=changed_heritage_pairs) != base_version
+    assert version_for(paronym_pairs_override=changed_paronym_pairs) != base_version
     assert version_for(synonym_verdicts_override=changed_synonym_verdicts) != base_version
 
 
@@ -175,6 +185,7 @@ def test_deck_version_stable_across_double_regen_with_identical_inputs() -> None
     entries = read_manifest(MANIFEST)
     cloze_sources = read_cloze_sources(CLOZE_SOURCES)
     heritage_pairs = read_heritage_pairs(HERITAGE_PAIRS)
+    paronym_pairs = read_paronym_pairs(PARONYM_PAIRS)
     synonym_verdicts = {"approved": [], "rejected": []}
     allowlist = ReviewedSourceAllowlist.from_path(ALLOWLIST)
     verifier = JsonVesumVerifier.from_path(VESUM)
@@ -186,6 +197,7 @@ def test_deck_version_stable_across_double_regen_with_identical_inputs() -> None
         json.loads(json.dumps(cloze_sources)),
         BuildConfig(),
         heritage_pairs=json.loads(json.dumps(heritage_pairs)),
+        paronym_pairs=json.loads(json.dumps(paronym_pairs)),
         synonym_verdicts=json.loads(json.dumps(synonym_verdicts)),
     )
     second = build_practice_shards(
@@ -195,6 +207,7 @@ def test_deck_version_stable_across_double_regen_with_identical_inputs() -> None
         json.loads(json.dumps(cloze_sources)),
         BuildConfig(),
         heritage_pairs=json.loads(json.dumps(heritage_pairs)),
+        paronym_pairs=json.loads(json.dumps(paronym_pairs)),
         synonym_verdicts=json.loads(json.dumps(synonym_verdicts)),
     )
 
@@ -1031,3 +1044,58 @@ def test_heritage_curated_distractors_allow_items_without_peers() -> None:
     assert len(items) == 1
     assert items[0]["lemmaId"] == "treba"
     assert {opt["label"] for opt in items[0]["options"] if opt["kind"] == "distractor"} == {"можна", "варто"}
+
+
+def test_paronym_pairs_emit_items_both_directions_and_validate(capsys: pytest.CaptureFixture[str]) -> None:
+    # Use real fixture with valid slugs that exist in manifest subset for this test
+    # Fallback to synthetic entries + pairs when direct lexeme match needed.
+    entries = [
+        {"lemmaId": "адресант", "lemma": "адресант", "gloss": "sender", "pos": "noun", "cefr": "B2", "url_slug": "адресант", "primary_source": "course_vocab", "course_usage": [{"track": "b2"}]},
+        {"lemmaId": "адресат", "lemma": "адресат", "gloss": "addressee", "pos": "noun", "cefr": "B1", "url_slug": "адресат", "primary_source": "course_vocab", "course_usage": [{"track": "b2"}]},
+    ]
+    pair = {
+        "slugA": "адресант",
+        "slugB": "адресат",
+        "distinction_gloss_uk": "Адресант надсилає; адресат отримує.",
+        "citations": ["fixture-test"],
+        "frames": [
+            {"sentence_with_slot": "___ надіслав лист.", "answer_form": "Адресант", "confusable_form": "Адресат", "origin": "t"},
+            {"sentence_with_slot": "Лист для ___.", "answer_form": "адресата", "confusable_form": "адресанта", "origin": "t2"},
+        ],
+    }
+    allowlist = ReviewedSourceAllowlist.from_payload([])
+    verifier = JsonVesumVerifier({})
+    shards = build_practice_shards(entries, allowlist, verifier, [], BuildConfig(target=10), paronym_pairs=[pair])
+    b1_items = shards.get("B1", {}).get("paronym", {}).get("paronym", [])
+    b2_items = shards.get("B2", {}).get("paronym", {}).get("paronym", [])
+    # At least one direction emits
+    total = len(b1_items) + len(b2_items)
+    assert total >= 1, "paronym should emit at least one item"
+    # Validate
+    assert validate_paronym_pair(pair) == []
+    for it in b1_items + b2_items:
+        assert validate_paronym_item(it) == []
+
+
+def test_paronym_missing_slug_skips_with_warn(capsys: pytest.CaptureFixture[str]) -> None:
+    entries = [{"lemmaId": "foo", "lemma": "foo", "gloss": "x", "pos": "noun", "cefr": "B1", "url_slug": "foo", "primary_source": "course_vocab", "course_usage": [{"track": "b1"}]}]
+    pair = {"slugA": "missingA", "slugB": "missingB", "distinction_gloss_uk": "x", "citations": ["t"], "frames": [{"sentence_with_slot": "X ___ .", "answer_form": "x", "confusable_form": "y", "origin": "o"}]}
+    allowlist = ReviewedSourceAllowlist.from_payload([])
+    verifier = JsonVesumVerifier({})
+    shards = build_practice_shards(entries, allowlist, verifier, [], BuildConfig(), paronym_pairs=[pair])
+    assert shards["B1"]["paronym"]["paronym"] == []
+    err = capsys.readouterr().err
+    assert "not in practice lexemes; emitted 0 items" in err
+
+
+def test_paronym_empty_file_emits_empty_fail_closed(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    p = tmp_path / "empty-par.yaml"
+    p.write_text("schema_version: 1\npairs: []\n", encoding="utf-8")
+    rows = read_paronym_pairs(p)
+    assert rows == []
+    err = capsys.readouterr().err
+    assert "curated paronym pairs empty" in err
+    # build with [] yields no paronym items (fail-closed)
+    entries = [{"lemmaId": "a", "lemma": "a", "gloss": "g", "pos": "n", "cefr": "B1", "url_slug": "a", "primary_source": "c", "course_usage": [{}]}]
+    shards = build_practice_shards(entries, ReviewedSourceAllowlist.from_payload([]), JsonVesumVerifier({}), [], BuildConfig(), paronym_pairs=[])
+    assert shards["B1"]["paronym"]["paronym"] == []

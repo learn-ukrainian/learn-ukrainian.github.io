@@ -52,6 +52,7 @@ def _sha256(data: bytes) -> str:
 def compute_deck_inputs_fingerprint(
     entries: list[dict[str, Any]] | None,
     heritage_pairs: list[dict[str, Any]] | None,
+    paronym_pairs: list[dict[str, Any]] | None,
     synonym_verdicts: dict[str, Any] | None,
     cloze_sources: list[dict[str, Any]] | None,
     schema_version: int,
@@ -67,6 +68,7 @@ def compute_deck_inputs_fingerprint(
         "schema_version": schema_version,
         "entries": entries or [],
         "heritage_pairs": heritage_pairs or [],
+        "paronym_pairs": paronym_pairs or [],
         "synonym_verdicts": synonym_verdicts or {},
         "cloze_sources": cloze_sources or [],
     }
@@ -77,6 +79,7 @@ def compute_deck_inputs_fingerprint(
 def compute_deck_version(
     entries: list[dict[str, Any]] | None,
     heritage_pairs: list[dict[str, Any]] | None,
+    paronym_pairs: list[dict[str, Any]] | None,
     synonym_verdicts: dict[str, Any] | None,
     cloze_sources: list[dict[str, Any]] | None,
     schema_version: int,
@@ -86,6 +89,7 @@ def compute_deck_version(
         "schema_version": schema_version,
         "entries": entries or [],
         "heritage_pairs": heritage_pairs or [],
+        "paronym_pairs": paronym_pairs or [],
         "synonym_verdicts": synonym_verdicts or {},
         "cloze_sources": cloze_sources or [],
     }
