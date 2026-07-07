@@ -359,6 +359,8 @@ def classify_failover_trigger(
         return "transport"
     if kill_reason == "initial_response_timeout":
         return "transport"
+    if kill_reason == "stdout_silence_timeout" and not (stdout_text or "").strip():
+        return "transport"
     if _EMPTY_RESPONSE_RE.search(text):
         return "empty_response"
     if (

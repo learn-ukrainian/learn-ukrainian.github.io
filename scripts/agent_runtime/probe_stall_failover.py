@@ -7,14 +7,21 @@ throwaway config/cooldown DB, and spawns real subprocesses:
   response timeout should cool it and rotate to the fallback route.
 - ``streaming-silence``: primary route emits one line, then sleeps; this is a
   mid-stream silence timeout and must not rotate.
+- ``delegate-hermes-stdout-silence``: a real ``delegate.py`` worker routes
+  through the Hermes DeepSeek adapter, with ``hermes`` replaced by a temp shim.
+  The primary route emits no output and trips ``stdout_silence_timeout`` while
+  the fallback route succeeds.
 """
 from __future__ import annotations
 
 import argparse
+import contextlib
 import json
 import os
+import subprocess
 import sys
 import tempfile
+import time
 from collections.abc import Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -40,6 +47,7 @@ FALLBACK_MODEL = "fallback-ok"
 PRIMARY_PROVIDER = "primary-provider"
 FALLBACK_PROVIDER = "fallback-provider"
 SUCCESS_TEXT = "stall failover ok"
+DELEGATE_HERMES_CASE = "delegate-hermes-stdout-silence"
 
 
 class ProbeError(RuntimeError):
@@ -122,7 +130,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     parser.add_argument(
         "--case",
-        choices=("no-first-byte", "streaming-silence"),
+        choices=("no-first-byte", "streaming-silence", DELEGATE_HERMES_CASE),
         default="no-first-byte",
         help="Probe case to run. Default: no-first-byte.",
     )
@@ -141,7 +149,7 @@ def build_parser() -> argparse.ArgumentParser:
         "--stdout-silence-timeout",
         type=int,
         default=1,
-        help="Composite silence timeout seconds for streaming-silence. Default: 1.",
+        help="Composite silence timeout seconds for silence cases. Default: 1.",
     )
     parser.add_argument(
         "--hard-timeout",
@@ -179,6 +187,87 @@ def _write_probe_config(path: Path) -> Path:
     return config_path
 
 
+def _write_delegate_hermes_config(path: Path) -> Path:
+    config_path = path / "agent_runtime_failover.yaml"
+    config_path.write_text(
+        "\n".join(
+            [
+                "chains:",
+                "  deepseek:",
+                "    cooldown_ttl_s: 60",
+                "    routes:",
+                "      - provider: deepseek",
+                "        model: deepseek-v4-flash",
+                "      - provider: openrouter",
+                "        model: deepseek/deepseek-v4-flash",
+                "",
+            ]
+        ),
+        encoding="utf-8",
+    )
+    return config_path
+
+
+def _write_fake_hermes(bin_dir: Path, attempts_log: Path) -> Path:
+    hermes = bin_dir / "hermes"
+    hermes.write_text(
+        "\n".join(
+            [
+                "#!/bin/sh",
+                "model=''",
+                "provider=''",
+                "while [ \"$#\" -gt 0 ]; do",
+                "  case \"$1\" in",
+                "    --version|-V|version)",
+                "      printf '%s\\n' 'Hermes Agent vprobe'",
+                "      exit 0",
+                "      ;;",
+                "    -m|--model)",
+                "      shift",
+                "      model=\"$1\"",
+                "      ;;",
+                "    --provider)",
+                "      shift",
+                "      provider=\"$1\"",
+                "      ;;",
+                "  esac",
+                "  shift",
+                "done",
+                f"printf '%s/%s\\n' \"$provider\" \"$model\" >> {str(attempts_log)!r}",
+                "if [ \"$provider\" = 'openrouter' ]; then",
+                f"  printf '%s\\n' {SUCCESS_TEXT!r}",
+                "  exit 0",
+                "fi",
+                "sleep 60",
+                "",
+            ]
+        ),
+        encoding="utf-8",
+    )
+    hermes.chmod(0o700)
+    return hermes
+
+
+def _delegate_state_path(task_id: str) -> Path:
+    safe = task_id.replace("/", "_").replace("\\", "_")
+    return REPO_ROOT / "batch_state" / "tasks" / f"{safe}.json"
+
+
+def _cleanup_delegate_task(task_id: str, state: dict[str, Any] | None) -> None:
+    state_path = _delegate_state_path(task_id)
+    log_dir = state_path.parent / "logs"
+    paths = [
+        state_path,
+        log_dir / f"{task_id}.stdout.log",
+        log_dir / f"{task_id}.stderr.log",
+    ]
+    if isinstance(state, dict) and state.get("result_file"):
+        paths.append(Path(str(state["result_file"])))
+    for path in paths:
+        with contextlib.suppress(OSError):
+            path.unlink()
+
+
 def _patch_runtime(adapter: _ProbeAdapter, events: list[dict[str, Any]]) -> None:
     def fake_has_headroom(_agent: str, _model: str) -> tuple[bool, str]:
         return True, ""
@@ -199,7 +288,174 @@ def _patch_runtime(adapter: _ProbeAdapter, events: list[dict[str, Any]]) -> None
     runner_mod.resolve_invocation_telemetry = fake_resolve_invocation_telemetry
 
 
+def _run_delegate_hermes_probe(args: argparse.Namespace) -> dict[str, Any]:
+    temp_dir = tempfile.TemporaryDirectory(prefix="agent-runtime-delegate-hermes-")
+    root = Path(temp_dir.name)
+    task_id = f"stall-probe-delegate-hermes-{os.getpid()}-{int(time.time() * 1000)}"
+    state: dict[str, Any] | None = None
+    try:
+        fake_bin = root / "bin"
+        fake_bin.mkdir()
+        hermes_home = root / "hermes-home"
+        (hermes_home / "logs").mkdir(parents=True)
+        (hermes_home / "config.yaml").write_text(
+            "\n".join(
+                [
+                    "model:",
+                    "  provider: deepseek",
+                    "  default: deepseek-v4-flash",
+                    "mcp_servers:",
+                    "  sources:",
+                    "    enabled: true",
+                    "    url: http://127.0.0.1:9",
+                    "",
+                ]
+            ),
+            encoding="utf-8",
+        )
+        attempts_log = root / "attempts.log"
+        _write_fake_hermes(fake_bin, attempts_log)
+        config_path = _write_delegate_hermes_config(root)
+        cooldown_db = root / "cooldowns.sqlite3"
+
+        env = os.environ.copy()
+        env[FAILOVER_CONFIG_ENV] = str(config_path)
+        env[FAILOVER_COOLDOWN_DB_ENV] = str(cooldown_db)
+        env["HERMES_HOME"] = str(hermes_home)
+        env["LU_BYPASS_RATE_LIMIT"] = "1"
+        env["PATH"] = f"{fake_bin}{os.pathsep}{env.get('PATH', '')}"
+
+        python_bin = REPO_ROOT / ".venv" / "bin" / "python"
+        delegate_py = REPO_ROOT / "scripts" / "delegate.py"
+        dispatch = subprocess.run(
+            [
+                str(python_bin),
+                str(delegate_py),
+                "dispatch",
+                "--agent",
+                "deepseek",
+                "--task-id",
+                task_id,
+                "--prompt",
+                "probe",
+                "--mode",
+                "read-only",
+                "--cwd",
+                str(args.cwd.expanduser().resolve()),
+                "--model",
+                "deepseek-v4-flash",
+                "--hard-timeout",
+                str(args.hard_timeout),
+                "--silence-timeout",
+                str(args.stdout_silence_timeout),
+                "--initial-response-timeout",
+                "0",
+                "--force-agent",
+            ],
+            cwd=REPO_ROOT,
+            env=env,
+            text=True,
+            capture_output=True,
+            timeout=10,
+        )
+        if dispatch.returncode != 0:
+            raise ProbeError(
+                "delegate dispatch failed: "
+                f"rc={dispatch.returncode} stderr={dispatch.stderr.strip()!r}"
+            )
+
+        wait_timeout = max(10, int(args.stdout_silence_timeout) * 4 + 10)
+        waited = subprocess.run(
+            [
+                str(python_bin),
+                str(delegate_py),
+                "wait",
+                task_id,
+                "--timeout",
+                str(wait_timeout),
+                "--poll-interval",
+                "0.5",
+            ],
+            cwd=REPO_ROOT,
+            env=env,
+            text=True,
+            capture_output=True,
+            timeout=wait_timeout + 5,
+        )
+        try:
+            state = json.loads(waited.stdout)
+        except json.JSONDecodeError as exc:
+            raise ProbeError(
+                "delegate wait did not return task JSON: "
+                f"rc={waited.returncode} stdout={waited.stdout!r} "
+                f"stderr={waited.stderr.strip()!r}"
+            ) from exc
+        if waited.returncode != 0 or state.get("status") != "done":
+            raise ProbeError(
+                "delegate hermes probe did not finish cleanly: "
+                f"rc={waited.returncode} state={state!r} "
+                f"stderr={waited.stderr.strip()!r}"
+            )
+
+        substitution = state.get("substitution")
+        if not isinstance(substitution, dict) or not substitution.get("substituted"):
+            raise ProbeError(
+                f"delegate state did not surface substitution: {substitution!r}"
+            )
+        if substitution.get("source") != "agent-runtime-failover:transport":
+            raise ProbeError(f"unexpected substitution source: {substitution!r}")
+
+        attempts = (
+            attempts_log.read_text(encoding="utf-8").splitlines()
+            if attempts_log.exists()
+            else []
+        )
+        expected_attempts = [
+            "deepseek/deepseek-v4-flash",
+            "openrouter/deepseek/deepseek-v4-flash",
+        ]
+        if attempts != expected_attempts:
+            raise ProbeError(f"unexpected hermes attempts: {attempts!r}")
+
+        return {
+            "ok": True,
+            "case": args.case,
+            "attempts": attempts,
+            "cooldown_db": str(cooldown_db),
+            "rotated": True,
+            "state_status": state.get("status"),
+            "stdout_silence_timeout": args.stdout_silence_timeout,
+            "initial_response_timeout": 0,
+            "substitution": substitution,
+        }
+    finally:
+        state_path = _delegate_state_path(task_id)
+        if state is None and state_path.exists():
+            with contextlib.suppress(Exception):
+                state = json.loads(state_path.read_text(encoding="utf-8"))
+        if isinstance(state, dict) and state.get("status") in {"running", "spawning"}:
+            with contextlib.suppress(Exception):
+                subprocess.run(
+                    [
+                        str(REPO_ROOT / ".venv" / "bin" / "python"),
+                        str(REPO_ROOT / "scripts" / "delegate.py"),
+                        "cancel",
+                        task_id,
+                    ],
+                    cwd=REPO_ROOT,
+                    env=os.environ.copy(),
+                    text=True,
+                    capture_output=True,
+                    timeout=5,
+                )
+        _cleanup_delegate_task(task_id, state)
+        temp_dir.cleanup()
+
+
 def run_probe(args: argparse.Namespace) -> dict[str, Any]:
+    if args.case == DELEGATE_HERMES_CASE:
+        return _run_delegate_hermes_probe(args)
+
     temp_dir = tempfile.TemporaryDirectory(prefix="agent-runtime-stall-probe-")
     root = Path(temp_dir.name)
     if args.cooldown_db is None:

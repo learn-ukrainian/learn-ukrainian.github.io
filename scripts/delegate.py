@@ -1389,6 +1389,7 @@ def _run_worker(
     rate_limited = False
     timed_out = False
     result = None
+    substitution: dict[str, Any] | None = None
 
     cancelled = False
     try:
@@ -1421,6 +1422,7 @@ def _run_worker(
         stderr_excerpt = result.stderr_excerpt
         returncode = result.returncode
         rate_limited = result.rate_limited
+        substitution = getattr(result, "substitution", None)
     except KeyboardInterrupt as exc:
         # Raised by our SIGTERM handler (or by Ctrl+C in manual runs).
         # The runtime's finally block has already killed the CLI
@@ -1433,6 +1435,7 @@ def _run_worker(
         stderr_excerpt = str(exc)[:500]
     except AgentStalledError as exc:
         timed_out = True
+        substitution = getattr(exc, "substitution", None)
         prefix = (
             "initial_response_timeout"
             if getattr(exc, "kind", "stall") == "initial_response_timeout"
@@ -1440,6 +1443,7 @@ def _run_worker(
         )
         stderr_excerpt = f"{prefix}: {exc}"[:500]
     except AgentTimeoutError as exc:
+        substitution = getattr(exc, "substitution", None)
         stderr_excerpt = f"hard_timeout: {exc}"[:500]
     except AgentRuntimeError as exc:
         stderr_excerpt = f"runtime error: {type(exc).__name__}: {exc}"[:500]
@@ -1521,7 +1525,9 @@ def _run_worker(
         worktree_reap = _reap_finished_worktree(Path(worktree_path))
 
     usage_record = getattr(result, "usage_record", None)
-    substitution = getattr(result, "substitution", None)
+    result_substitution = getattr(result, "substitution", None)
+    if result_substitution is not None:
+        substitution = result_substitution
     if substitution is None and isinstance(usage_record, dict):
         substitution = usage_record.get("substitution")
 

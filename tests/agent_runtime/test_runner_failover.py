@@ -224,6 +224,16 @@ _TRIGGER_CASES = [
         },
     ),
     (
+        "transport",
+        {
+            "parse": ParseResult(ok=False, response="", stderr_excerpt=None),
+            "returncode": -9,
+            "kill_reason": "stdout_silence_timeout",
+            "stdout_text": "",
+            "stderr_text": "",
+        },
+    ),
+    (
         "empty_response",
         {
             "parse": ParseResult(ok=False, response="", stderr_excerpt=None),
@@ -341,6 +351,47 @@ def test_runner_failover_does_not_switch_for_streaming_silence_timeout(
     assert adapter.attempts == ["primary-model"]
     assert records[0]["outcome"] == "stalled"
     assert "substitution" not in records[0]
+
+
+def test_runner_failover_surfaces_substitution_when_final_route_times_out(
+    tmp_path,
+    monkeypatch,
+    capsys,
+):
+    adapter, records, emitted_events = _install_fake_runtime(
+        monkeypatch,
+        tmp_path,
+        {
+            "primary-model": {
+                "parse": ParseResult(ok=False, response="", stderr_excerpt=None),
+                "returncode": -9,
+                "kill_reason": "initial_response_timeout",
+                "stdout_text": "",
+                "stderr_text": "",
+            },
+            "fallback-model": {
+                "parse": ParseResult(ok=False, response="", stderr_excerpt=None),
+                "returncode": -9,
+                "kill_reason": "initial_response_timeout",
+                "stdout_text": "",
+                "stderr_text": "",
+            },
+        },
+    )
+
+    with pytest.raises(AgentStalledError) as exc_info:
+        runner_mod.invoke("failover-test", "hello", mode="read-only", cwd=tmp_path)
+
+    assert exc_info.value.kind == "initial_response_timeout"
+    assert adapter.attempts == ["primary-model", "fallback-model"]
+    assert exc_info.value.substitution is not None
+    assert exc_info.value.substitution["requested_provider"] == "primary-provider"
+    assert exc_info.value.substitution["actual_provider"] == "fallback-provider"
+    assert exc_info.value.substitution["source"] == "agent-runtime-failover:transport"
+    assert records[0]["outcome"] == "stalled"
+    assert records[0]["substitution"]["substituted"] is True
+    assert emitted_events[0][0] == "agent_runtime_substitution"
+    assert RUNNER_FAILOVER_MARKER in capsys.readouterr().err
 
 
 def test_runner_failover_cooldown_routes_next_dispatch_directly_to_fallback(

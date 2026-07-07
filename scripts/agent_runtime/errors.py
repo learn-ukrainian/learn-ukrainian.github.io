@@ -8,6 +8,8 @@ Issue: #1184
 """
 from __future__ import annotations
 
+from typing import Any
+
 
 class AgentRuntimeError(Exception):
     """Base class for all errors raised by the agent runtime."""
@@ -49,9 +51,16 @@ class AgentTimeoutError(AgentRuntimeError):
     that legitimately need more than 30 minutes should request it per-call.
     """
 
-    def __init__(self, agent: str, hard_timeout: int):
+    def __init__(
+        self,
+        agent: str,
+        hard_timeout: int,
+        *,
+        substitution: dict[str, Any] | None = None,
+    ):
         self.agent = agent
         self.hard_timeout = hard_timeout
+        self.substitution = substitution
         super().__init__(
             f"{agent} exceeded hard_timeout={hard_timeout}s"
         )
@@ -78,11 +87,13 @@ class AgentStalledError(AgentRuntimeError):
         last_activity_age: float,
         *,
         kind: str = "stall",
+        substitution: dict[str, Any] | None = None,
     ):
         self.agent = agent
         self.stall_timeout = stall_timeout
         self.last_activity_age = last_activity_age
         self.kind = kind
+        self.substitution = substitution
         super().__init__(
             f"{agent} stalled: {last_activity_age:.0f}s since last activity "
             f"(stall_timeout={stall_timeout}s)"
