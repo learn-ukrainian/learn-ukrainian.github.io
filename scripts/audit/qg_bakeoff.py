@@ -123,8 +123,10 @@ class CandidateModel:
 
 # TODO(#2156): resolve exact subscription-family pins at run time via
 # ``--models`` after checking the currently served native CLI/model list. Do not
-# guess. DeepSeek defaults are first-party direct pins; OpenRouter DeepSeek pins
-# remain available through ``DEEPSEEK_OPENROUTER_PINS`` as comparison baselines.
+# guess. DeepSeek runs FIRST-PARTY ONLY (user order 2026-07-07; openrouter/deepseek
+# is guard-refused after the account drain). ``DEEPSEEK_OPENROUTER_PINS`` name the
+# historical baseline pins for artifact/scorecard readers; running them requires
+# LU_ROUTING_GUARD_OVERRIDE=1 with explicit user authorization.
 DEFAULT_CANDIDATE_MODELS: tuple[CandidateModel, ...] = (
     CandidateModel("gemma-4-31b", "openrouter/google/gemma-4-31b-it"),
     CandidateModel("deepseek-v4-flash-direct", DEEPSEEK_DIRECT_FLASH_PIN),
