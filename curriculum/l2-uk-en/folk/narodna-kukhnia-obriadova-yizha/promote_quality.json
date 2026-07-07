@@ -1,0 +1,69 @@
+{
+  "assembled_mdx_sha256": null,
+  "content_hash": {
+    "algorithm": "sha256",
+    "basis": "lesson_sources_v2",
+    "digest": "77c2f4e180771392435c406a3a299205b1eb021efd9bf9e0983b0bfe8bb9513b",
+    "files": [
+      {
+        "path": "curriculum/l2-uk-en/plans/folk/narodna-kukhnia-obriadova-yizha.yaml",
+        "sha256": "bd2d17eb0f442948bce638e80bc20ef150aaa462f0e8fef9ad20ae85c999db55"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/narodna-kukhnia-obriadova-yizha/module.md",
+        "sha256": "6eaf776e4f89687d021be566e816be5c0302f59c5b116902553f402a51e1416c"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/narodna-kukhnia-obriadova-yizha/activities.yaml",
+        "sha256": "3485922225162fe969d7a180aae6b82c7b8ed3783096abf2d8c8342aaf805a02"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/narodna-kukhnia-obriadova-yizha/vocabulary.yaml",
+        "sha256": "3b82d07df9a0bf85b2ff8eca22a572e0bf79e93f8a6884eede1f0ca6af6f5039"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/narodna-kukhnia-obriadova-yizha/resources.yaml",
+        "sha256": "aa6aedf2f9e9c739a96b2b6530d2bd056eb13bc47329b3b0d9dd384bbd07f53f"
+      }
+    ]
+  },
+  "evidence": {
+    "decolonization": "Borscht framed as Ukrainian UNESCO urgent-safeguarding heritage without exclusive ownership claims; Soviet/common-kitchen erasure and tourist reduction explicitly corrected.",
+    "pedagogy": "Reading sequence now asks learners to compare social contract, ritual address, and calendar-meal ordering through source excerpts rather than isolated sayings.",
+    "reading": "Four on-site structured readings in generated MDX: substantial public-domain Hrushevsky excerpts for bread as marriage foundation, bread exchange, korovai as sacred ritual object, and Sviatvechir food order; one-line Zynoviyiv sayings were removed from structured PrimaryReading blocks.",
+    "review": "Claude Opus 4.8 bridge review task review-folk-m38-reading-fix returned PASS with no blockers and independently verified all four Hrushevsky excerpts through sources.verify_quote."
+  },
+  "floors": {
+    "beauty": 8.5,
+    "decolonization": 9.0,
+    "engagement": 8.5,
+    "naturalness": 8.5,
+    "pedagogical": 8.5,
+    "tone": 8.5
+  },
+  "profile": "folk_promote_v1",
+  "review_artifact": null,
+  "reviewer": {
+    "agent": "claude",
+    "family": "anthropic",
+    "model": "claude-opus-4-8"
+  },
+  "schema_version": 1,
+  "scored_at": "2026-07-07T01:43:11Z",
+  "scores": {
+    "beauty": 9.0,
+    "decolonization": 9.4,
+    "engagement": 8.9,
+    "naturalness": 9.0,
+    "pedagogical": 9.1,
+    "tone": 9.0
+  },
+  "slug": "narodna-kukhnia-obriadova-yizha",
+  "track": "folk",
+  "verdict": "PASS",
+  "writer": {
+    "agent": "codex",
+    "family": "openai",
+    "model": "gpt-5"
+  }
+}

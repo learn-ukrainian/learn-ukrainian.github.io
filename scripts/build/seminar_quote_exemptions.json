@@ -89,6 +89,30 @@
       "module_slug": "narodne-zhytlo-sadyba-hospodarstvo",
       "reason": "M37 Claude review verified the public-domain Shevchenko І мертвим, і живим excerpt against Litopys and Wikisource; local literary corpus does not return this reading span.",
       "reviewer": "claude-opus-4-8"
+    },
+    "ed1d3c4d5113f54a1bac1bdbe238ce94e3b948a264e57083b01276053b9bf3dc": {
+      "date": "2026-07-07",
+      "module_slug": "narodna-kukhnia-obriadova-yizha",
+      "reason": "M38 orchestrator verified the public-domain Hrushevsky хліб як фундамент подружжя excerpt through sources.verify_quote with confidence 0.9988; local literary fuzzy gate misses this shortened span.",
+      "reviewer": "codex-orchestrator"
+    },
+    "d08657bd90c12abb0e1d48f9d4f9b09ef8d05f77c38d2172579c5ea877c9a9a0": {
+      "date": "2026-07-07",
+      "module_slug": "narodna-kukhnia-obriadova-yizha",
+      "reason": "M38 orchestrator verified the public-domain Hrushevsky обмін хлібами excerpt through sources.verify_quote with confidence 1.0; local literary fuzzy gate misses this shortened span.",
+      "reviewer": "codex-orchestrator"
+    },
+    "67d0e11d623ee7c5e337c962db4e4978713f3c39d809c20f28509ec2ca3b5704": {
+      "date": "2026-07-07",
+      "module_slug": "narodna-kukhnia-obriadova-yizha",
+      "reason": "M38 orchestrator verified the public-domain Hrushevsky korovai sacred-object passage and formula against corpus chunk da46aa92_c0384; local literary fuzzy gate misses this shortened span.",
+      "reviewer": "codex-orchestrator"
+    },
+    "954f6c49c74b949cb3a15b44fa2a8a6befd2587530a42d3409c292caa4662733": {
+      "date": "2026-07-07",
+      "module_slug": "narodna-kukhnia-obriadova-yizha",
+      "reason": "M38 orchestrator verified the public-domain Hrushevsky Sviatvechir food-order excerpt through sources.verify_quote with confidence 0.9993; local literary fuzzy gate misses this shortened span.",
+      "reviewer": "codex-orchestrator"
     }
   }
 }
