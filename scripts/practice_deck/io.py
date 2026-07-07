@@ -33,7 +33,7 @@ REQUIRED_POINTER_KEYS = (
 )
 DOWNLOAD_ATTEMPTS = 3
 ALLOWED_RELEASE_PATH_PREFIX = "/learn-ukrainian/learn-ukrainian.github.io/releases/download/"
-PRACTICE_DECK_BUILDER_VERSION = 2
+PRACTICE_DECK_BUILDER_VERSION = 3
 STALE_POINTER_HINT = (
     "If your branch predates the latest practice deck publish, its committed pointer is stale — "
     "update the branch from origin/main (gh pr update-branch <N> / git merge origin/main). "
