@@ -45,6 +45,12 @@ _DEEPSEEK_VIA_OPENROUTER_RE = re.compile(r"openrouter/deepseek", re.IGNORECASE)
 # DeepSeek-family. Underscore spelling normalizes to the same rule.
 _DEEPSEEK_DIRECT_PREFIX_RE = re.compile(r"^deepseek[-_]direct/", re.IGNORECASE)
 _DEEPSEEK_FAMILY_MODEL_RE = re.compile(r"^deepseek", re.IGNORECASE)
+# google-ais is the SAME fail-closed shape: the provider's key lives on a
+# POSTPAY Cloud project, so a Gemini model routed through it WOULD bill.
+# Gemma has no paid SKU on the Gemini API (pricing verified 2026-07-07) —
+# gemma-family ids are the only zero-cost ids this provider may carry.
+_GOOGLE_AIS_PREFIX_RE = re.compile(r"^google[-_]ais/", re.IGNORECASE)
+_GEMMA_FAMILY_MODEL_RE = re.compile(r"^gemma", re.IGNORECASE)
 _OVERRIDE_ENV = "LU_ROUTING_GUARD_OVERRIDE"
 
 
@@ -92,6 +98,17 @@ def assert_model_routing_allowed(model: str | None, *, context: str) -> None:
             "DeepSeek first-party provider. deepseek-direct accepts ONLY "
             "DeepSeek-family model ids (fail-closed allowlist; subscription "
             "families use their native lanes). "
+            f"Set {_OVERRIDE_ENV}=1 only with explicit user authorization."
+        )
+    ais_prefix = _GOOGLE_AIS_PREFIX_RE.match(text)
+    if ais_prefix and not _GEMMA_FAMILY_MODEL_RE.match(text[ais_prefix.end() :]):
+        raise RoutingGuardError(
+            f"{context}: {text!r} routes a non-Gemma model through the "
+            "google-ais provider. That key's Cloud project is POSTPAY — "
+            "Gemini models through it WOULD bill; Gemma has no paid SKU "
+            "(free of charge, verified 2026-07-07). google-ais accepts ONLY "
+            "gemma-family model ids (fail-closed allowlist; Gemini work uses "
+            "the agy subscription seat). "
             f"Set {_OVERRIDE_ENV}=1 only with explicit user authorization."
         )
 

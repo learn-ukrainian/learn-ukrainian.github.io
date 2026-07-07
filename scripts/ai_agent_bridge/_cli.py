@@ -691,7 +691,7 @@ def _build_parser() -> argparse.ArgumentParser:
     ask_gemma_parser.add_argument("--type", default="query", help="Message type")
     ask_gemma_parser.add_argument("--data", help="Path to data file to attach")
     ask_gemma_parser.add_argument("--model", default=None,
-                                  help=f"Override Gemma model (default {GEMMA_MODEL}; e.g. openrouter/google/gemma-4-26b-a4b-it, or the $0 openrouter/google/gemma-4-31b-it:free)")
+                                  help=f"Override Gemma model (default {GEMMA_MODEL} — $0 via Google AI Studio direct; e.g. google-ais/gemma-4-26b-a4b-it, or the PAID openrouter/google/gemma-4-31b-it fallback)")
     ask_gemma_parser.add_argument("--from", dest="from_llm", help="Sender agent family")
     ask_gemma_parser.add_argument("--from-model", dest="from_model", help="Exact sender model")
     ask_gemma_parser.add_argument("--no-timeout", dest="no_timeout", action="store_true")

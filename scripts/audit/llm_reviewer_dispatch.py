@@ -32,6 +32,12 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_DAILY_SPEND_PATH = PROJECT_ROOT / "data" / "telemetry" / "llm_reviewer_spend.jsonl"
 CANARY_SCHEMA_VERSION = "llm_reviewer_dispatch_canary.v1"
 
+# DELIBERATELY still the OpenRouter endpoint (NOT the 2026-07-07 $0
+# `google-ais/gemma-4-31b-it` bridge default, #4767): this calibration layer's
+# MeasuredCostProfile rows + step-1 validation were measured ON this transport,
+# and its runs are deliberate, spend-tracked cells (fractions of a cent).
+# Migrating the seat to AIS-direct requires re-measuring the profile in a
+# bakeoff cell first — do NOT silently swap the transport under measured data.
 GEMMA_MODEL_ID = "openrouter/google/gemma-4-31b-it"
 FRONTIER_MODEL_ID = "gemini-3.1-pro-high"
 # TODO(#2156 step-3 bakeoff): pin `openrouter/google/gemini-3.1-pro` once it is

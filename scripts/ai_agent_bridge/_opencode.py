@@ -31,6 +31,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import shutil
 import subprocess
 from dataclasses import dataclass
@@ -39,9 +40,12 @@ from pathlib import Path
 from ._messaging import acknowledge, send_message
 
 # Default was qwen3.7-max (EXPENSIVE) until 2026-07-05 — a silent money trap
-# for every ask-opencode call without --model. gemma-4-31b-it is the cheap
-# documented surface lane and passes the routing guard.
-OPENCODE_DEFAULT_MODEL = "openrouter/google/gemma-4-31b-it"
+# for every ask-opencode call without --model. Since 2026-07-07 (user order:
+# "we will use the free gemma for some time"; OR balance is a deliberate ~$2
+# buffer until things stabilize) the default is Gemma via Google AI Studio
+# DIRECT — $0 (Gemma has no paid SKU on the Gemini API; opencode reports
+# cost:0). The OR paid `-it` endpoint stays reachable via explicit --model.
+OPENCODE_DEFAULT_MODEL = "google-ais/gemma-4-31b-it"
 OPENCODE_DEFAULT_TIMEOUT_S = 900
 
 # poolside.ai fleet member. Use the NATIVE poolside provider path — it browses
@@ -68,17 +72,23 @@ GLM_DEFAULT_TIMEOUT_S = 1800
 # China-egress constraint forbids invoking GLM.
 _CI_ENV_VARS = ("CI", "GITHUB_ACTIONS", "GITLAB_CI", "BUILDKITE", "JENKINS_URL")
 
-# Google Gemma 4 fleet member (Apr 2026, Apache-2.0), reached via the OpenRouter
-# provider under opencode. Default pin = the 31B dense PAID endpoint.
-# Western-hosted + permissively licensed → NO egress guard (unlike GLM).
+# Google Gemma 4 fleet member (Apr 2026, Apache-2.0). Default pin since
+# 2026-07-07 = Google AI Studio DIRECT (`google-ais` opencode provider, user
+# key at ~/.secret/google-ais.key; user order: "we will use the free gemma
+# for some time"). Western-hosted + permissively licensed → NO egress guard
+# (unlike GLM).
 #
-# COST (OpenRouter, verified 2026-07-05): the pinned ``-it`` endpoint is PAID but
-# negligible — ~$0.12 / $0.35 per MILLION prompt / completion tokens (a module
-# review is fractions of a cent). A genuinely-$0 ``:free`` endpoint also exists
-# (``openrouter/google/gemma-4-31b-it:free``) but free-tier endpoints are
-# rate-limited (per-min + per-day caps) and less stable → prefer it only via
-# ``--model`` for high-volume / non-critical bursts, NOT as the default. (Do not
-# call this lane "free" — the default pin costs money, just very little.)
+# COST — $0, triple-verified 2026-07-07:
+#   1. ai.google.dev pricing: Gemma 4 free tier "Free of charge", paid tier
+#      "Not available" — there IS no paid SKU, no key tier can bill it.
+#   2. opencode per-run accounting reports ``cost: 0``.
+#   3. The `google-ais` provider block declares ONLY gemma models, and
+#      routing_guard refuses `google-ais/` non-gemma ids (the underlying
+#      Cloud project is postpay — Gemini models through this key WOULD bill).
+# The PAID OpenRouter ``-it`` endpoint (~$0.12/$0.35 per M tok) stays
+# reachable via explicit ``--model`` as a fallback — note the spend. The OR
+# ``:free`` route is pool-starved (2×300s dead-air, 2026-07-07) — avoid.
+# MUST run toolless (agent="chat"): gemma is not a tool-calling model.
 #
 # ROLE (user probes 2026-07-05, docs/projects/ua-eval-harness/model-evidence.md):
 # a cheap Google-family lane to OFFLOAD from the metered lanes (Claude / Codex).
@@ -94,7 +104,7 @@ _CI_ENV_VARS = ("CI", "GITHUB_ACTIONS", "GITLAB_CI", "BUILDKITE", "JENKINS_URL")
 #   • a SOLE factual reviewer — not trustworthy on factual accuracy yet.
 # For seminar / factual content, gate it behind a NON-Gemma source/factual check.
 # Google-family → not a clean cross-family reviewer of agy / Gemini work.
-GEMMA_MODEL = "openrouter/google/gemma-4-31b-it"
+GEMMA_MODEL = "google-ais/gemma-4-31b-it"
 GEMMA_DEFAULT_TIMEOUT_S = 900  # chat model (no browsing); MoE variants can be slow
 
 
@@ -306,12 +316,18 @@ def ask_gemma(
 ) -> int:
     """Send a message AND invoke Google Gemma 4 (31B-it) one-shot via opencode.
 
-    ``gemma`` is a cheap Google-family lane (OpenRouter-hosted, Apache-2.0) to
-    OFFLOAD from the metered lanes (Claude / Codex). The pinned ``-it`` endpoint
-    is PAID but negligible (~$0.12/$0.35 per M tok); a genuinely-$0 ``:free``
-    endpoint exists but is rate-limited / less stable → pass it via ``model``
-    only for high-volume bursts. Ukrainian is fluent + surface-clean (VESUM-valid,
-    0 russicisms). Cross-family to OpenAI / Anthropic / DeepSeek.
+    ``gemma`` is the $0 Google-family lane (Apache-2.0) to OFFLOAD from the
+    metered lanes (Claude / Codex). Default = Google AI Studio DIRECT
+    (``google-ais/gemma-4-31b-it``, user key minted 2026-07-07): Gemma has NO
+    paid SKU on the Gemini API (pricing verified 2026-07-07 — free tier "Free
+    of charge", paid tier "Not available"), and opencode's own accounting
+    reports ``cost: 0`` per run. Runs TOOLLESS via the ``chat`` opencode agent
+    (gemma is not a tool-calling model; the tool bundle made it flail). The
+    OpenRouter paid ``-it`` route stays reachable via ``model`` as a fallback
+    (~$0.12/$0.35 per M tok — note the spend); OR ``:free`` is pool-starved
+    (2×300s dead-air probes 2026-07-07), avoid. Ukrainian is fluent +
+    surface-clean (VESUM-valid, 0 russicisms). Cross-family to OpenAI /
+    Anthropic / DeepSeek.
 
     USE IT FOR (user probes 2026-07-05, model-evidence.md):
     - cheap SURFACE review — reliably flags russicisms / calques, Latin-letter
@@ -325,10 +341,11 @@ def ask_gemma(
     factual check. Being Google-family, it is NOT a clean reviewer of agy / Gemini
     work.
 
-    ``model`` overrides the pinned ``GEMMA_MODEL`` — e.g. the 26B-A4B MoE
-    (``openrouter/google/gemma-4-26b-a4b-it``, #1 on the lang-uk leaderboard) or
-    the free ``openrouter/google/gemma-4-31b-it:free`` endpoint — while tags
-    drift (see the "examples not constants" note in model-assignment.md).
+    ``model`` overrides the pinned ``GEMMA_MODEL`` (default = AIS-direct
+    ``google-ais/gemma-4-31b-it``, $0) — e.g. ``google-ais/gemma-4-26b-a4b-it``
+    (also $0; the MoE is #1 on the lang-uk leaderboard) or the PAID
+    ``openrouter/google/gemma-4-31b-it`` fallback — while tags drift (see the
+    "examples not constants" note in model-assignment.md).
     """
     effective_model = model or GEMMA_MODEL
     msg_id = send_message(
@@ -349,7 +366,14 @@ def ask_gemma(
         data=data,
         no_timeout=no_timeout,
         default_timeout_s=GEMMA_DEFAULT_TIMEOUT_S,
+        agent="chat",
     )
+    # Gemma 4 streams its reasoning in a leading <thought>...</thought> block;
+    # the seat's consumers want only the answer. Per-run variance: the model
+    # sometimes closes the run INSIDE the thought block — never deliver an
+    # empty reply, fall back to the unstripped text (live burn 2026-07-07:
+    # the first e2e reply arrived blank).
+    response = _strip_gemma_thought(response)
 
     reply_id = send_message(
         content=response,
@@ -363,6 +387,17 @@ def ask_gemma(
     acknowledge(reply_id)
 
     return msg_id
+
+
+def _strip_gemma_thought(text: str) -> str:
+    """Drop a leading Gemma ``<thought>...</thought>`` block, never to empty.
+
+    If the model closed the run inside the thought block (observed live
+    2026-07-07), stripping would deliver a blank reply — in that case return
+    the original text so the content survives, thought scaffolding and all.
+    """
+    stripped = re.sub(r"^\s*<thought>.*?</thought>\s*", "", text, flags=re.DOTALL)
+    return stripped if stripped.strip() else text
 
 
 @dataclass(frozen=True, slots=True)
@@ -391,6 +426,7 @@ def _run_opencode(
     no_timeout: bool = False,
     default_timeout_s: int = OPENCODE_DEFAULT_TIMEOUT_S,
     cwd: Path | None = None,
+    agent: str | None = None,
 ) -> str:
     """Run one ``opencode run`` subprocess and return its raw stdout.
 
@@ -417,6 +453,13 @@ def _run_opencode(
         raise SystemExit("ask-opencode: opencode CLI not found in PATH")
 
     argv = [opencode_bin, "run", "--model", model, "--format", output_format]
+    if agent:
+        # Named opencode agent (e.g. "chat" — the TOOLLESS seat). Chat-only
+        # models (gemma) must run toolless: the aggregate tool bundle adds
+        # ~30K prompt tokens and non-tool-calling models flail in the loop;
+        # Google-native upstreams additionally hard-reject one malformed
+        # builtin/lightpanda tool schema (2026-07-07 probes).
+        argv.extend(["--agent", agent])
     if variant:
         argv.extend(["--variant", variant])
     if data:
@@ -457,6 +500,7 @@ def _invoke_opencode(
     data: str | None = None,
     no_timeout: bool = False,
     default_timeout_s: int = OPENCODE_DEFAULT_TIMEOUT_S,
+    agent: str | None = None,
 ) -> str:
     stdout = _run_opencode(
         content,
@@ -466,6 +510,7 @@ def _invoke_opencode(
         data=data,
         no_timeout=no_timeout,
         default_timeout_s=default_timeout_s,
+        agent=agent,
     )
     if output_format == "json":
         return _parse_opencode_ndjson(stdout)

@@ -54,6 +54,16 @@ def _no_override(monkeypatch: pytest.MonkeyPatch):
         "openrouter/deepseek/deepseek-v4-flash",
         "openrouter/deepseek/deepseek-v4-pro",
         "OPENROUTER/DEEPSEEK/DEEPSEEK-V4-PRO",
+        # google-ais fail-closed allowlist (2026-07-07): the AIS key's Cloud
+        # project is POSTPAY — Gemini through it WOULD bill; only Gemma (no
+        # paid SKU) may ride this provider.
+        "google-ais/gemini-3.1-pro-preview",
+        "google-ais/gemini-2.5-flash",
+        "google-ais/google/gemini-3.1-pro",
+        "google-ais/claude-sonnet-5",
+        "google-ais/",
+        "GOOGLE-AIS/GEMINI-3.1-PRO",
+        "google_ais/gemini-3.1-pro",
     ],
 )
 def test_forbidden_models_refused(model: str) -> None:
@@ -65,6 +75,9 @@ def test_forbidden_models_refused(model: str) -> None:
     "model",
     [
         "openrouter/google/gemma-4-31b-it",  # google/ but NOT gemini — no subscription lane
+        "google-ais/gemma-4-31b-it",  # $0 default lane (Gemma has no paid SKU)
+        "google-ais/gemma-4-26b-a4b-it",
+        "GOOGLE-AIS/GEMMA-4-31B-IT",
         "deepseek-direct/deepseek-v4-flash",
         "deepseek-direct/deepseek-v4-pro",
         "gemini-3.1-pro-high",  # agy NATIVE lane (no openrouter/ prefix) is the subscription path
