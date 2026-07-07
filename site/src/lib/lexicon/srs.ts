@@ -314,6 +314,20 @@ export interface ReviewLogEntry {
   scheduled_days: number;
   learning_steps: number;
   review: number;
+  /**
+   * §6b weak-area telemetry. Optional, mode-scoped: `blankCase` is the grammatical
+   * case of a cloze blank (e.g. `genitive`); `heritageKind` is the heritage-item kind
+   * (e.g. `lexical`). Absent for modes that carry no such dimension. Persisted so the
+   * client can compute per-case / per-heritage-kind lapse rates without a server.
+   */
+  blankCase?: string;
+  heritageKind?: string;
+}
+
+/** Optional per-review dimension metadata threaded from the active selection. */
+export interface ReviewMeta {
+  blankCase?: string;
+  heritageKind?: string;
 }
 
 export interface SrsSettings {
@@ -679,6 +693,8 @@ function normalizeReview(raw: unknown): ReviewLogEntry | null {
     scheduled_days: finiteNumber(source.scheduled_days, 0),
     learning_steps: finiteNumber(source.learning_steps, 0),
     review,
+    ...(typeof source.blankCase === 'string' ? { blankCase: source.blankCase } : {}),
+    ...(typeof source.heritageKind === 'string' ? { heritageKind: source.heritageKind } : {}),
   };
 }
 
@@ -912,6 +928,7 @@ function serializeReview(
   mode: PracticeMode,
   rating: PracticeRating,
   record: RecordLogItem,
+  meta?: ReviewMeta,
 ): ReviewLogEntry {
   return {
     cardKey: key,
@@ -927,6 +944,8 @@ function serializeReview(
     scheduled_days: record.log.scheduled_days,
     learning_steps: record.log.learning_steps,
     review: record.log.review.getTime(),
+    ...(meta?.blankCase ? { blankCase: meta.blankCase } : {}),
+    ...(meta?.heritageKind ? { heritageKind: meta.heritageKind } : {}),
   };
 }
 
@@ -944,12 +963,14 @@ export function rateCard(
   mode: PracticeMode,
   rating: PracticeRating,
   reviewDate?: Date | number,
+  meta?: ReviewMeta,
 ): CardState;
 export function rateCard(
   lemmaId: string,
   modeOrRating: PracticeMode | PracticeRating,
   ratingOrDate?: PracticeRating | Date | number,
   maybeDate?: Date | number,
+  meta?: ReviewMeta,
 ): CardState {
   const mode = isPracticeRating(modeOrRating) ? 'flashcards' : modeOrRating;
   const rating = isPracticeRating(modeOrRating) ? modeOrRating : ratingOrDate;
@@ -966,7 +987,7 @@ export function rateCard(
   const record = scheduler.next(fsrsCard, reviewDate, RATING_TO_FSRS[rating]);
   const next = stateFromFsrsCard(record.card);
   state.cards.set(key, next);
-  state.reviews.push(serializeReview(key, lemmaId, mode, rating, record));
+  state.reviews.push(serializeReview(key, lemmaId, mode, rating, record, meta));
   saveState(state, resolveStorage(), reviewDate.getTime());
   return next;
 }
