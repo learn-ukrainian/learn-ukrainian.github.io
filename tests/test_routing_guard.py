@@ -49,6 +49,11 @@ def _no_override(monkeypatch: pytest.MonkeyPatch):
         # non-subscription but non-DeepSeek: refused by the allowlist too
         "deepseek-direct/mistral-large",
         "deepseek-direct/",
+        # user order 2026-07-07: deepseek NEVER via OpenRouter (account drained
+        # by bakeoff cells; first-party credit is paid + markup-free)
+        "openrouter/deepseek/deepseek-v4-flash",
+        "openrouter/deepseek/deepseek-v4-pro",
+        "OPENROUTER/DEEPSEEK/DEEPSEEK-V4-PRO",
     ],
 )
 def test_forbidden_models_refused(model: str) -> None:
@@ -60,8 +65,6 @@ def test_forbidden_models_refused(model: str) -> None:
     "model",
     [
         "openrouter/google/gemma-4-31b-it",  # google/ but NOT gemini — no subscription lane
-        "openrouter/deepseek/deepseek-v4-flash",
-        "openrouter/deepseek/deepseek-v4-pro",
         "deepseek-direct/deepseek-v4-flash",
         "deepseek-direct/deepseek-v4-pro",
         "gemini-3.1-pro-high",  # agy NATIVE lane (no openrouter/ prefix) is the subscription path

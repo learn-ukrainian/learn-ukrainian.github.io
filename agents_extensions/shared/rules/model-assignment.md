@@ -54,8 +54,10 @@ In scripts, docs meant for copy-paste, and anything automated, ALWAYS write the 
 bare `ab` resolves to ApacheBench (`/usr/sbin/ab`) outside the user's shell (AGENTS.md rule).
 There is NO `ask-deepseek`: one-shot deepseek = `ask-hermes --model <deepseek-model>` (first-party
 as attributed on 2026-07-07) or `ask-opencode deepseek-direct/<deepseek-model>`; execution =
-`delegate.py dispatch --agent deepseek`. Use `ask-opencode openrouter/deepseek/...` only for the
-OpenRouter comparison baseline.
+`delegate.py dispatch --agent deepseek`. `openrouter/deepseek/*` is **guard-REFUSED** (user order
+2026-07-07 — the OR account was drained by deepseek bakeoff cells; deepseek runs FIRST-PARTY only.
+The user's OR BYOK now bills deepseek underneath, so transport-comparison runs (#4321/#4358) are
+billing-safe behind `LU_ROUTING_GUARD_OVERRIDE=1` — deliberate, user-authorized only).
 ² qwen is reachable but EXCLUDED from routine routing (cost, user 2026-05-29) — reachable ≠ routable.
 
 Consequences:

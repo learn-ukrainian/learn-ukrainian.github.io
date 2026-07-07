@@ -288,8 +288,14 @@ def test_deepseek_direct_bakeoff_pins_use_opencode_identity_and_guard_allowed() 
         assert identity.resolved_model == pin
         assert_model_routing_allowed(pin, context="test")
 
+    # user order 2026-07-07: OpenRouter deepseek pins are guard-REFUSED by
+    # default (historical baselines; transport-comparison runs use the
+    # override env — billing-safe under the user's OR BYOK).
+    from scripts.ai_agent_bridge.routing_guard import RoutingGuardError
+
     for pin in qg_bakeoff.DEEPSEEK_OPENROUTER_PINS:
-        assert_model_routing_allowed(pin, context="test")
+        with pytest.raises(RoutingGuardError):
+            assert_model_routing_allowed(pin, context="test")
 
 
 def test_default_deepseek_candidates_use_first_party_direct_pins() -> None:
