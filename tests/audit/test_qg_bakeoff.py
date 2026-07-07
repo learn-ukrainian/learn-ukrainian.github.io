@@ -2129,6 +2129,220 @@ def test_rescore_refuses_frozen_reference_scorecard_without_escape(tmp_path: Pat
     assert qg_bakeoff.rescore_artifacts(out, unsafe_allow_frozen=True, manifest_path=manifest) == 0
 
 
+def test_regate_neutralizes_live_admissible_from_stored_tool_events(tmp_path: Path) -> None:
+    """Offline --regate drops live_admissible for invalid groundings; model_judgment unchanged."""
+    claim_text = "Колядки співають узимку."
+    fixture = qg_bakeoff.BakeoffFixture(
+        slug="koliadky",
+        title="Колядки",
+        passage_md=claim_text,
+        claims=(
+            qg_bakeoff.FixtureClaim(claim_id="c1", claim=claim_text, is_true=True),
+        ),
+    )
+    fixtures_dir = tmp_path / "fx"
+    fixtures_dir.mkdir()
+    (fixtures_dir / "koliadky.json").write_text(
+        json.dumps(
+            {
+                "slug": fixture.slug,
+                "title": fixture.title,
+                "passage_md": fixture.passage_md,
+                "claims": [{"claim_id": "c1", "claim": claim_text, "is_true": True}],
+            },
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+    events = [
+        {
+            "tool": "mcp__sources__query_wikipedia",
+            "input": {"query": "Колядки"},
+            "output": "Коля́дки — величальні пісні зимового циклу.",
+            "status": "completed",
+        }
+    ]
+    artifact = {
+        "schema_version": qg_bakeoff.RUN_SCHEMA_VERSION,
+        "arm": "tooled",
+        "fixture": {"slug": fixture.slug, "title": fixture.title, "claim_count": 1},
+        "model": {"pin": "openrouter/test/m"},
+        "dispatch": {"tool_events": events},
+        "gate_outcomes": {"grounding": {"invalid_fact_checks": 0, "inadmissible_positive_verdicts": 0}},
+        "payload": {
+            "fact_checks": [
+                {
+                    "claim": claim_text,
+                    "verdict": "CONFIRMED",
+                    "grounding": {
+                        "tool": "mcp__sources__search_literary",
+                        "query": "щедрівки",
+                        "evidence_excerpt": "Коля́дки — величальні пісні зимового циклу.",
+                    },
+                }
+            ]
+        },
+        "score": {"model_judgment_score": 999, "live_admissible_score": 999},
+    }
+    out = tmp_path / "out"
+    out.mkdir()
+    (out / "m__koliadky.json").write_text(json.dumps(artifact, ensure_ascii=False), encoding="utf-8")
+
+    n = qg_bakeoff.regate_artifacts(out, fixtures_dir)
+
+    assert n == 1
+    updated = json.loads((out / "m__koliadky.json").read_text(encoding="utf-8"))
+    assert updated["grounding_strict"] is True
+    assert updated["score_semantics"] == qg_bakeoff.GROUNDING_STRICT_SCORE_SEMANTICS
+    assert "regated_at" in updated
+    assert updated["score"]["model_judgment_score"] == 20
+    assert updated["score"]["live_admissible_score"] == -10
+    assert updated["score"]["invalid_fact_checks"] == 1
+    assert updated["payload"]["fact_checks"][0]["grounding_admissible"] is False
+    strict_card = (out / qg_bakeoff.SCORECARD_STRICT_NAME).read_text(encoding="utf-8")
+    assert "STRICT grounding" in strict_card
+    assert not (out / qg_bakeoff.SCORECARD_NAME).exists()
+
+
+def test_regate_parity_matches_live_gate_and_score() -> None:
+    """Regression guard: offline regate == live enforce_grounding + score_payload."""
+    claim_text = "Колядки співають узимку."
+    fixture = qg_bakeoff.BakeoffFixture(
+        slug="strict-probe",
+        title="STRICT probe",
+        passage_md=claim_text,
+        claims=(qg_bakeoff.FixtureClaim(claim_id="c1", claim=claim_text, is_true=True),),
+    )
+    events = [
+        {
+            "tool": "mcp__sources__query_wikipedia",
+            "input": {"query": "Колядки"},
+            "output": "Коля́дки — величальні пісні зимового циклу.",
+            "status": "completed",
+        }
+    ]
+    payload = {
+        "fact_checks": [
+            {
+                "claim": claim_text,
+                "verdict": "CONFIRMED",
+                "grounding": {
+                    "tool": "mcp__sources__search_literary",
+                    "query": "щедрівки",
+                    "evidence_excerpt": "Коля́дки — величальні пісні зимового циклу.",
+                },
+            }
+        ]
+    }
+    dispatch = {"tool_events": events}
+    gate = llm_reviewer_dispatch.enforce_grounding_against_tool_events(
+        payload,
+        dispatch,
+        policy_family=qg_bakeoff.BAKEOFF_POLICY_FAMILY,
+    )
+    live_score = qg_bakeoff.score_payload(gate.payload, fixture)
+    live_score["invalid_fact_checks"] = gate.invalid_fact_checks
+    live_score["inadmissible_positive_verdicts"] = gate.inadmissible_positive_verdicts
+
+    regated = qg_bakeoff.regate_one_artifact(
+        {"payload": payload, "dispatch": dispatch, "gate_outcomes": {}},
+        fixture,
+        arm=qg_bakeoff.TOOLED_ARM,
+    )
+
+    assert regated["payload"] == gate.payload
+    assert regated["score"]["model_judgment_score"] == live_score["model_judgment_score"]
+    assert regated["score"]["live_admissible_score"] == live_score["live_admissible_score"]
+    assert regated["score"]["invalid_fact_checks"] == live_score["invalid_fact_checks"]
+    assert regated["score"]["inadmissible_positive_verdicts"] == live_score["inadmissible_positive_verdicts"]
+
+
+def test_regate_bare_arm_rescores_without_grounding_tags(tmp_path: Path) -> None:
+    fixture = _fixture()
+    fixtures_dir = tmp_path / "fx"
+    fixtures_dir.mkdir()
+    (fixtures_dir / f"{fixture.slug}.json").write_text(
+        json.dumps(
+            {
+                "slug": fixture.slug,
+                "title": fixture.title,
+                "passage_md": fixture.passage_md,
+                "claims": [
+                    {
+                        "claim_id": c.claim_id,
+                        "claim": c.claim,
+                        "is_true": c.is_true,
+                        "fabrication_class": c.fabrication_class,
+                        "distractor_evidence": c.distractor_evidence,
+                    }
+                    for c in fixture.claims
+                ],
+            },
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+    out = tmp_path / "out"
+    out.mkdir()
+    (out / "m__sample__bare.json").write_text(
+        json.dumps(
+            {
+                "schema_version": qg_bakeoff.RUN_SCHEMA_VERSION,
+                "arm": "bare",
+                "fixture": {"slug": fixture.slug, "title": fixture.title, "claim_count": 2},
+                "model": {"pin": "openrouter/test/m"},
+                "payload": {
+                    "fact_checks": [
+                        {"claim": "True claim.", "verdict": "CONFIRMED"},
+                        {"claim": "Fabricated claim.", "verdict": "CONFIRMED"},
+                    ]
+                },
+                "score": {"model_judgment_score": -999},
+            },
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+
+    n = qg_bakeoff.regate_artifacts(out, fixtures_dir)
+
+    assert n == 1
+    bare = json.loads((out / "m__sample__bare.json").read_text(encoding="utf-8"))
+    assert bare["score"]["model_judgment_score"] == -80
+    assert bare["score"]["model_judgment_score"] == bare["score"]["live_admissible_score"]
+
+
+def test_regate_refuses_frozen_reference_scorecard_without_escape(tmp_path: Path) -> None:
+    out = tmp_path / "frozen"
+    out.mkdir()
+    scorecard = out / qg_bakeoff.SCORECARD_NAME
+    scorecard.write_text("# frozen scorecard\n", encoding="utf-8")
+    manifest = tmp_path / "MANIFEST.json"
+    manifest.write_text(
+        json.dumps(
+            {
+                "benchmark_version": "1.0.0",
+                "reference_result": {
+                    "path": "audit/frozen/SCORECARD.md",
+                    "sha256": hashlib.sha256(scorecard.read_bytes()).hexdigest(),
+                },
+            },
+            indent=2,
+            sort_keys=True,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(qg_bakeoff.BakeoffConfigError, match="unsafe-allow-frozen"):
+        qg_bakeoff.regate_artifacts(out, manifest_path=manifest)
+
+
+def test_main_rejects_rescore_and_regate_together() -> None:
+    rc = qg_bakeoff.main(["--rescore", "--regate", "--out-dir", "/tmp/x"])
+    assert rc == 2
+
+
 def test_load_all_artifacts_skips_foreign_json(tmp_path: Path) -> None:
     """The run_matrix scorecard path must apply the same foreign-JSON filter.
 
