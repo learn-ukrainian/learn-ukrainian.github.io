@@ -96,9 +96,11 @@ def test_deploy_lock_step_lists_include_contract() -> None:
     shared = (REPO / "scripts/deploy_orphan_paths.sh").read_text(encoding="utf-8")
     deploy = (REPO / "scripts/deploy_prompts.sh").read_text(encoding="utf-8")
     checker = (REPO / "scripts/check_rules_deployment.sh").read_text(encoding="utf-8")
+    session_setup = (REPO / "agents_extensions/shared/hooks/session-setup.sh").read_text(encoding="utf-8")
     assert 'rules/operator-expectations.md' in shared, "shared autoload-exclude missing"
     assert "deploy_orphan_paths.sh" in deploy, "deploy does not source the shared lists"
     assert "deploy_orphan_paths.sh" in checker, "drift-checker does not source the shared lists"
+    assert "deploy_orphan_paths.sh" in session_setup, "session-setup hook does not source the shared lists"
 
 
 def test_offline_fallback_lists_contract() -> None:
