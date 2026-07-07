@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest';
+import { State } from 'ts-fsrs';
 import { act, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import LexiconPractice from '@site/src/components/LexiconPractice';
@@ -11,6 +12,8 @@ import {
   type PracticeHeritageItem,
   type PracticeLexeme,
   type PracticeMode,
+  type PracticeRating,
+  type ReviewLogEntry,
 } from '@site/src/lib/lexicon/srs';
 import { LEARNER_LEVEL_STORAGE_KEY, type CefrLevel } from '@site/src/lib/lexicon/levels';
 
@@ -357,6 +360,32 @@ function seedRecognitionMastery(lemmaId: string) {
     lapses: 0,
     state: 2,
   });
+  saveState(state, localStorage, NOW.getTime());
+}
+
+/** Seed the SRS review log with `total` cloze reviews of `caseKey`, `misses` failed. */
+function seedWeakCaseLog(caseKey: string, total: number, misses: number) {
+  const state = loadState(localStorage, NOW);
+  for (let index = 0; index < total; index += 1) {
+    const rating: PracticeRating = index < misses ? 'again' : 'good';
+    const review: ReviewLogEntry = {
+      cardKey: cardKey(`${caseKey}-${index}`, 'cloze'),
+      lemmaId: `${caseKey}-${index}`,
+      mode: 'cloze',
+      rating,
+      state: State.Review,
+      due: NOW.getTime() + index * 1000,
+      stability: 4,
+      difficulty: 5,
+      elapsed_days: 1,
+      last_elapsed_days: 1,
+      scheduled_days: 1,
+      learning_steps: 0,
+      review: NOW.getTime() + index * 1000,
+      blankCase: caseKey,
+    };
+    state.reviews.push(review);
+  }
   saveState(state, localStorage, NOW.getTime());
 }
 
@@ -1004,6 +1033,45 @@ describe('LexiconPractice', () => {
     expect(screen.getByLabelText('Відповідь у знахідний')).toHaveValue('');
     expect(screen.getByRole('button', { name: 'книгу' })).not.toBeDisabled();
     expect(screen.queryByText('✗ Не те слово')).not.toBeInTheDocument();
+  });
+
+  test('weak-area chips: renders a UA case chip from a weak review log', async () => {
+    // 24 accusative cloze reviews, 15 failed (0.63 miss) → a clear weak case.
+    seedWeakCaseLog('accusative', 24, 15);
+    render(<LexiconPractice initialDeck={sampleDeck()} />);
+
+    await waitFor(() =>
+      expect(screen.getByTestId('practice-weak-areas')).toBeInTheDocument(),
+    );
+    expect(screen.getByText('Ваші слабкі відмінки')).toBeInTheDocument();
+    // Chips use Ukrainian case names only — знахідний for accusative.
+    expect(screen.getByTestId('practice-weak-chip-accusative')).toHaveTextContent('знахідний');
+  });
+
+  test('weak-area chips: hidden below the minimum-data threshold', async () => {
+    // Only 6 reviews — far below the threshold; no chips for a new learner.
+    seedWeakCaseLog('accusative', 6, 6);
+    render(<LexiconPractice initialDeck={sampleDeck()} />);
+
+    await waitFor(() => expect(screen.getByTestId('practice-start-session')).toBeInTheDocument());
+    expect(screen.queryByTestId('practice-weak-areas')).not.toBeInTheDocument();
+  });
+
+  test('weak-area chip tap starts a focus session filtered to that weakness', async () => {
+    // The only cloze in sampleDeck() is knyha/accusative; seed an accusative weakness so
+    // the tapped focus session's pool resolves to exactly that matching cloze item.
+    seedWeakCaseLog('accusative', 24, 15);
+    seedRecognitionMastery('knyha');
+    const user = userEvent.setup();
+    render(<LexiconPractice initialDeck={sampleDeck()} />);
+
+    const chip = await screen.findByTestId('practice-weak-chip-accusative');
+    await user.click(chip);
+
+    // Focus session is active and serving the accusative cloze — no other case leaks in.
+    const cloze = await screen.findByTestId('practice-cloze');
+    expect(cloze).toBeInTheDocument();
+    expect(screen.getByLabelText('Відповідь у знахідний')).toBeInTheDocument();
   });
 
   test('double-Enter during dwell advances exactly once (no double completion)', async () => {

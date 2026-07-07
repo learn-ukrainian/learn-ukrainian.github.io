@@ -1091,12 +1091,37 @@ const frontmatter = {
     font-weight: 700;
   }
 
-  :global(.lexicon-focus-practice h3) {
+  :global(.lexicon-focus-practice h3),
+  :global(.lexicon-weak-areas h3) {
     margin: 0 0 0.65rem;
     font-size: 1rem;
     font-weight: 900;
     text-transform: uppercase;
     letter-spacing: 0.04em;
+  }
+
+  :global(.lexicon-weak-chips) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  :global(.lexicon-weak-chip) {
+    min-height: 40px;
+    padding: 0.35rem 0.85rem;
+    border: 1px solid var(--lu-orange, #c2410c);
+    border-radius: 999px;
+    background: var(--lu-surface);
+    color: var(--lu-text);
+    font-size: 0.95rem;
+    font-weight: 800;
+    cursor: pointer;
+  }
+
+  :global(.lexicon-weak-chip:hover),
+  :global(.lexicon-weak-chip:focus-visible) {
+    background: var(--lu-orange, #c2410c);
+    color: #fff;
   }
 
   :global(.mode-grid-focus) {

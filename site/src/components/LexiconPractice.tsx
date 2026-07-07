@@ -44,11 +44,18 @@ import {
   type PracticeRating,
   type PracticeSelection,
   type PracticeSessionSnapshot,
+  type ReviewLogEntry,
   type SelectionHistoryItem,
   type SessionBudget,
   type SessionScopeStats,
   type PracticeClassifySet,
 } from '../lib/lexicon/srs';
+import {
+  focusModeForWeakness,
+  matchesWeakness,
+  weakCaseChips,
+  type WeakArea,
+} from '../lib/lexicon/weak-areas';
 import {
   CEFR_LEVELS,
   LEARNER_LEVEL_STORAGE_KEY,
@@ -840,6 +847,9 @@ function LexiconPracticeIsland({
     readLearnerLevel(normalizeCefrLevel(deckLevel)),
   );
   const [focusedLemmaId, setFocusedLemmaId] = useState<string | null>(null);
+  // §6b weak-area focus: when set, the session poolFilter is narrowed to this weakness.
+  const [focusWeakness, setFocusWeakness] = useState<WeakArea | null>(null);
+  const [reviewLog, setReviewLog] = useState<ReviewLogEntry[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [feedback, setFeedback] = useState('');
@@ -900,6 +910,7 @@ function LexiconPracticeIsland({
     setStreak(readStreak());
     setMastered(masteredCount(MASTERED_THRESHOLD));
     setDailyNewCount(readNewCardsDailyState().count);
+    setReviewLog([...state.reviews]);
 
     if (state.flags.corrupt || state.flags.migrationFailed) {
       setStorageWarning('Прогрес призупинено, доки сховище браузера не стане доступним.');
@@ -1030,9 +1041,17 @@ function LexiconPracticeIsland({
   );
 
   const poolFilter = useCallback(
-    (candidate: PracticeSelection) => sessionPoolAllowsCandidate(candidate, sessionPoolConstraints),
-    [sessionPoolConstraints],
+    (candidate: PracticeSelection) => {
+      if (!sessionPoolAllowsCandidate(candidate, sessionPoolConstraints)) return false;
+      // A weak-area focus session narrows the pool to items matching the tapped
+      // weakness on top of the normal §6b session constraints (no parallel path).
+      if (focusWeakness && !matchesWeakness(candidate, focusWeakness)) return false;
+      return true;
+    },
+    [focusWeakness, sessionPoolConstraints],
   );
+
+  const weakChips = useMemo(() => weakCaseChips(reviewLog), [reviewLog]);
 
   const selection = useMemo(() => {
     if (!deck || sessionPhase !== 'active') return null;
@@ -1300,15 +1319,28 @@ function LexiconPracticeIsland({
 
   async function resumeSession() {
     if (!resumeSnapshot) return;
+    setFocusWeakness(null);
     await beginSession(resumeSnapshot.modeFilter, resumeSnapshot.budget, resumeSnapshot);
   }
 
   async function startFocusMode(nextMode: PracticeModeFilter) {
+    setFocusWeakness(null);
     await startSession(sessionBudget, nextMode);
+  }
+
+  /**
+   * §6b: tapping a weak-area chip starts a focus session filtered to that weakness.
+   * Reuses `startSession` + the `poolFilter` hook — `focusWeakness` is read by the
+   * composed poolFilter, so no separate session-start path is introduced.
+   */
+  async function startWeakAreaFocus(weakness: WeakArea) {
+    setFocusWeakness(weakness);
+    await startSession(sessionBudget, focusModeForWeakness(weakness));
   }
 
   function clearFocus() {
     setFocusedLemmaId(null);
+    setFocusWeakness(null);
     setDeck(null);
     setDueIndex(null);
     writePracticeSessionSnapshot(null);
@@ -1335,6 +1367,7 @@ function LexiconPracticeIsland({
   function refreshProgress() {
     const state = loadState();
     setMastered(masteredCount(MASTERED_THRESHOLD));
+    setReviewLog([...state.reviews]);
     if (state.flags.corrupt || state.flags.migrationFailed) {
       setStorageWarning('Прогрес призупинено, доки сховище браузера не стане доступним.');
     }
@@ -1349,7 +1382,10 @@ function LexiconPracticeIsland({
     const nextUnresolved = new Set(unresolvedCardKeys);
     let nextDeferred = [...deferredLemmas];
     try {
-      rateCard(reviewLemmaId(current), current.mode, rating, new Date());
+      rateCard(reviewLemmaId(current), current.mode, rating, new Date(), {
+        blankCase: current.cloze?.blankCase,
+        heritageKind: current.heritage?.kind,
+      });
       setStreak(recordStreak());
       if (rating === 'good' || rating === 'easy') {
         setSessionCorrect((value) => value + 1);
@@ -1568,6 +1604,7 @@ function LexiconPracticeIsland({
 
   function finishPractice() {
     setSessionPhase('idle');
+    setFocusWeakness(null);
     setHistory([]);
     setDeck(null);
     setClozeLoaded(false);
@@ -1697,7 +1734,10 @@ function LexiconPracticeIsland({
               type="button"
               className="btn btn-accent lexicon-session-primary"
               data-testid="practice-start-session"
-              onClick={() => void startSession(sessionBudget, 'mixed')}
+              onClick={() => {
+                setFocusWeakness(null);
+                void startSession(sessionBudget, 'mixed');
+              }}
             >
               Почати сесію
               {showEnglishSubtitles ? (
@@ -1748,6 +1788,29 @@ function LexiconPracticeIsland({
               Практика обмежена вашим рівнем і нижчими (накопичувально).
             </p>
           </div>
+
+          {weakChips.length > 0 ? (
+            <div className="lexicon-weak-areas" data-testid="practice-weak-areas">
+              <h3>Ваші слабкі відмінки</h3>
+              <div
+                className="lexicon-weak-chips"
+                role="group"
+                aria-label="Ваші слабкі відмінки — почати фокусне тренування"
+              >
+                {weakChips.map((weakness) => (
+                  <button
+                    type="button"
+                    key={`${weakness.dimension}:${weakness.key}`}
+                    className="lexicon-weak-chip"
+                    data-testid={`practice-weak-chip-${weakness.key}`}
+                    onClick={() => void startWeakAreaFocus(weakness)}
+                  >
+                    {weakness.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          ) : null}
 
           <div className="lexicon-focus-practice">
             <h3>
@@ -1804,7 +1867,10 @@ function LexiconPracticeIsland({
         <PracticeSessionSummary
           stats={summaryStats}
           showEnglishSubtitles={showEnglishSubtitles}
-          onAnotherSession={() => void startSession(sessionBudget, mode)}
+          onAnotherSession={() => {
+            setFocusWeakness(null);
+            void startSession(sessionBudget, mode);
+          }}
           onDone={finishPractice}
         />
       )}
