@@ -1,5 +1,5 @@
 ---
-import LexiconPractice from "../../components/LexiconPractice";
+import LexiconPracticeMount from "./LexiconPracticeMount.astro";
 import CourseLayout from "../../layouts/CourseLayout.astro";
 
 const frontmatter = {
@@ -27,7 +27,7 @@ const frontmatter = {
       </p>
     </section>
 
-    <LexiconPractice client:only="react" />
+    <LexiconPracticeMount />
   </main>
 </CourseLayout>
 
@@ -1159,14 +1159,5 @@ const frontmatter = {
     display: flex;
     flex-wrap: wrap;
     gap: 0.65rem;
-  }
-
-  :global(.lexicon-practice-fallback) {
-    display: grid;
-    gap: 0.75rem;
-    padding: 1rem;
-    border: 1px solid var(--lu-border);
-    border-radius: 12px;
-    background: var(--lu-surface-raised);
   }
 </style>
