@@ -57,6 +57,7 @@ const getMatchedPairStyle = (index: number, isMatched: boolean): MatchPairStyle 
 export default function MatchUp({ pairs, instruction, isUkrainian, onComplete, onMatch }: MatchUpProps) {
   const [selectedLeft, setSelectedLeft] = useState<number | null>(null);
   const [matched, setMatched] = useState<Set<number>>(new Set());
+  const matchedRef = useRef<Set<number>>(new Set());
   const [wrongPair, setWrongPair] = useState<{ left: number; right: number } | null>(null);
   const [misses, setMisses] = useState<Record<number, number>>({});
   const completedRef = useRef(false);
@@ -65,6 +66,7 @@ export default function MatchUp({ pairs, instruction, isUkrainian, onComplete, o
   useEffect(() => {
     setSelectedLeft(null);
     setMatched(new Set());
+    matchedRef.current = new Set();
     setWrongPair(null);
     setMisses({});
     completedRef.current = false;
@@ -77,21 +79,22 @@ export default function MatchUp({ pairs, instruction, isUkrainian, onComplete, o
   }, [pairs]);
 
   const handleLeftClick = (index: number) => {
-    if (matched.has(index) || wrongPair) return;
+    if (matchedRef.current.has(index) || wrongPair) return;
     setSelectedLeft(index);
     setWrongPair(null);
   };
 
   const handleRightClick = (originalIndex: number) => {
-    if (selectedLeft === null || matched.has(originalIndex) || wrongPair) return;
+    if (selectedLeft === null || matchedRef.current.has(originalIndex) || wrongPair) return;
 
     if (selectedLeft === originalIndex) {
       // Correct match
+      matchedRef.current.add(originalIndex);
       const currentMisses = misses[selectedLeft] || 0;
       const rating = currentMisses === 0 ? 'good' : currentMisses === 1 ? 'hard' : 'again';
       onMatch?.(selectedLeft, rating);
 
-      setMatched(new Set([...matched, originalIndex]));
+      setMatched(new Set(matchedRef.current));
       setSelectedLeft(null);
     } else {
       // Wrong match

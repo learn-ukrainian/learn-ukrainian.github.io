@@ -963,6 +963,14 @@ function LexiconPracticeIsland({
   }, []);
 
   useEffect(() => {
+    const normalized = normalizeInitialDeck(initialDeck);
+    if (normalized) {
+      setDeck(normalized);
+      setClozeLoaded(hasLoadedDrillShards(normalized));
+    }
+  }, [initialDeck]);
+
+  useEffect(() => {
     const isAutoStartTrigger = autoStart || Boolean(focusedLemmaId);
     if (!isAutoStartTrigger || !deck || plannedTotal > 0) return;
 
@@ -1117,6 +1125,19 @@ function LexiconPracticeIsland({
     return fresh;
   }, [deck, history, mode, poolFilter, revision, sessionPhase, sessionSeed]);
 
+  // Pin the board for the life of the selection to avoid mid-board changes.
+  const pairsRef = useRef<{ itemId: string; pairs: ReturnType<typeof matchingPairs> } | null>(null);
+  const pairs = useMemo(() => {
+    if (!selection || selection.mode !== 'matching' || !deck) return [];
+    if (pairsRef.current && pairsRef.current.itemId === selection.itemId) {
+      return pairsRef.current.pairs;
+    }
+    const computed = matchingPairs(selection, deck);
+    pairsRef.current = { itemId: selection.itemId, pairs: computed };
+    return computed;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selection?.itemId]);
+
   useEffect(() => {
     resetItemFeedback();
     if (selection) {
@@ -1151,8 +1172,6 @@ function LexiconPracticeIsland({
   }, [selection]);
 
   const handleMatchingMatch = useCallback((pairIndex: number, rating: PracticeRating) => {
-    if (!selection || !deck) return;
-    const pairs = matchingPairs(selection, deck);
     const pair = pairs[pairIndex];
     if (!pair || !pair.lemmaId) return;
 
@@ -1165,7 +1184,7 @@ function LexiconPracticeIsland({
         setStorageWarning('Прогрес призупинено, доки сховище браузера не стане доступним.');
       }
     }
-  }, [selection, deck]);
+  }, [pairs]);
 
   // While a wrong answer dwells, Enter is a second way to advance (alongside the
   // «Далі →» button) — the disabled option buttons blur to <body>, so we listen at
@@ -2094,6 +2113,7 @@ function LexiconPracticeIsland({
                   <PracticeItem
                     selection={selection}
                     deck={deck}
+                    pairs={pairs}
                     sessionSeed={sessionSeed}
                     answerLocked={answerLocked}
                     clozeInput={clozeInput}
@@ -2154,6 +2174,7 @@ function formatNextDueLabel(nextDue: Date | null): string | null {
 function PracticeItem({
   selection,
   deck,
+  pairs,
   sessionSeed,
   answerLocked,
   clozeInput,
@@ -2168,6 +2189,7 @@ function PracticeItem({
 }: {
   selection: PracticeSelection;
   deck: PracticeDeckData;
+  pairs: ReturnType<typeof matchingPairs>;
   sessionSeed: number;
   answerLocked: boolean;
   clozeInput: string;
@@ -2247,7 +2269,6 @@ function PracticeItem({
   }
 
   if (selection.mode === 'matching') {
-    const pairs = matchingPairs(selection, deck);
     if (!pairs.length) {
       return <p className="lexicon-practice-muted">Зараз немає карток для добору пар.</p>;
     }
