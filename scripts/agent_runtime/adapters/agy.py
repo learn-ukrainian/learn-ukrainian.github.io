@@ -490,16 +490,34 @@ def _pair_transcript_fifo(
     return calls
 
 
+def _result_only_call() -> dict[str, Any]:
+    """Placeholder for an MCP result with no captured planner intent.
+
+    agy occasionally executes a tool whose planner intent failed to serialize
+    (``ToolName: null``, filtered by ``_extract_transcript_tool_calls``). The tool
+    still ran and returned output, so we keep the result under an empty tool name:
+    ``tool_call_count`` stays truthful (a real call happened) while the grounding
+    gate's canonical tool comparison never credits an empty name, so no grounding is
+    falsely admitted (#4761).
+    """
+    return {"name": "", "arguments": {}, "output_summary": "", "timestamp": ""}
+
+
 def _pair_transcript_by_step_index(
     events: list[dict[str, Any]],
     *,
     transcript_path: Path,
 ) -> list[dict[str, Any]]:
-    """Pair planner intents with MCP results sorted by ``step_index``.
+    """Pair planner intents with MCP results in ``step_index`` (FIFO) order.
 
-    agy may emit duplicate planner intents across turns; dedupe by
-    ``(tool, arguments)`` keeping the last occurrence before zipping with MCP
-    results in chronological step order.
+    agy re-emits still-pending planner intents on every turn, so an intent is
+    deduped ONLY against calls not yet resolved by an MCP result: a re-listed
+    pending intent is ignored, while an identical call issued again AFTER its result
+    already landed opens a fresh pending intent (a genuine repeat). Each MCP result
+    pops the oldest pending intent. A result with no pending intent is preserved as a
+    result-only call so a real tool output is never dropped — the previous
+    dedupe-then-zip collapsed genuine repeats and silently discarded surplus results,
+    undercounting ``tool_call_count`` (#4761, Finding 3).
     """
     ordered = sorted(
         enumerate(events),
@@ -509,36 +527,36 @@ def _pair_transcript_by_step_index(
         ),
     )
 
-    intent_keys: list[str] = []
-    intents: dict[str, dict[str, Any]] = {}
+    calls: list[dict[str, Any]] = []
+    pending: list[dict[str, Any]] = []
+    pending_keys: set[str] = set()
+    orphan_results = 0
     for _, event in ordered:
         for call in _extract_transcript_tool_calls(event):
             key = _intent_dedupe_key(call)
-            if key in intents:
-                intent_keys.remove(key)
-            intents[key] = dict(call)
-            intent_keys.append(key)
-
-    mcp_results: list[str] = []
-    for _, event in ordered:
+            if key in pending_keys:
+                continue
+            pending.append(dict(call))
+            pending_keys.add(key)
         if event.get("type") != "MCP_TOOL":
             continue
-        mcp_results.append(_mcp_result_text(event, transcript_path=transcript_path))
+        result_text = _mcp_result_text(event, transcript_path=transcript_path)
+        if pending:
+            call = pending.pop(0)
+            pending_keys.discard(_intent_dedupe_key(call))
+            calls.append(_attach_tool_result(call, result_text))
+        else:
+            orphan_results += 1
+            calls.append(_attach_tool_result(_result_only_call(), result_text))
 
-    paired_intents = [intents[key] for key in intent_keys]
-    if len(paired_intents) != len(mcp_results):
+    if orphan_results:
         _logger.warning(
-            "agy transcript tool pairing mismatch: %s intents vs %s MCP results",
-            len(paired_intents),
-            len(mcp_results),
+            "agy transcript: %s MCP result(s) had no matching planner intent; "
+            "preserved as result-only tool calls",
+            orphan_results,
         )
-
-    calls: list[dict[str, Any]] = []
-    for call, result_text in zip(paired_intents, mcp_results, strict=False):
-        calls.append(_attach_tool_result(call, result_text))
-
-    # Unpaired planner intents have no captured MCP output — omit them so
-    # tool_call_count and grounding telemetry reflect completed calls only.
+    # Planner intents still pending at end (re-emitted but never producing an MCP
+    # result) are omitted: they have no captured output to ground against.
     return calls
 
 

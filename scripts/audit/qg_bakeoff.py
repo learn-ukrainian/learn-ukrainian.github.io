@@ -1045,10 +1045,24 @@ _SUBSCRIPTION_TOOLED_JSON_FOOTER = (
 )
 
 
-def _has_usable_grounding(grounding: Any) -> bool:
-    if not isinstance(grounding, Mapping):
-        return False
-    return bool(str(grounding.get("evidence_excerpt") or "").strip())
+def _admissibly_downgrade(fact_check: Mapping[str, Any]) -> dict[str, Any]:
+    """Downgrade a positive verdict to UNVERIFIED for live-admissible scoring.
+
+    Preserves the raw model verdict in ``original_verdict`` and sets
+    ``admissibility_downgraded`` so ``_judgment_verdict`` keeps crediting the raw
+    judgment in the ``model_judgment`` column while ``live_admissible`` (which reads
+    ``verdict``) sees the downgrade. Mirrors the deep-read summary-only downgrade in
+    ``llm_reviewer_dispatch.enforce_grounding_against_tool_events`` so both admissibility
+    paths behave identically. Idempotent: an already-downgraded row is returned as-is.
+    """
+    item = dict(fact_check)
+    if item.get("admissibility_downgraded") is True:
+        return item
+    item["original_verdict"] = str(item.get("verdict") or "")
+    item["verdict"] = "UNVERIFIED_INSUFFICIENT_SEARCH"
+    item["admissibility_downgraded"] = True
+    item["grounding"] = None
+    return item
 
 
 def _coerce_claim_aliases(fact_check: Mapping[str, Any]) -> dict[str, Any]:
@@ -1090,17 +1104,16 @@ def _coerce_flat_grounding_fields(fact_check: Mapping[str, Any]) -> dict[str, An
     return item
 
 
-def _coerce_fact_check_verdict_aliases(
-    fact_check: Mapping[str, Any],
-    *,
-    downgrade_missing_grounding: bool,
-) -> dict[str, Any]:
+def _coerce_fact_check_verdict_aliases(fact_check: Mapping[str, Any]) -> dict[str, Any]:
     """Bakeoff-only verdict normalization for frontier models that alias the contract.
 
     Maps common alternate field names (`status`) and verdict tokens (`VERIFIED_TRUE`)
-    to the bakeoff taxonomy. When ``downgrade_missing_grounding`` is true (tooled
-    path only), grounding-required verdicts without structured ``grounding`` become
-    ``UNATTESTED_AFTER_SEARCH`` so the cell remains scorable.
+    to the bakeoff taxonomy, and hoists flat grounding aliases into the nested
+    ``grounding`` object. This is a pure token/shape remap — it never changes the
+    verdict a model actually reached. Grounding admissibility (and any downgrade of
+    an ungrounded positive verdict) is decided later, in
+    ``_normalize_bakeoff_tooled_payload`` and the grounding gate, so the raw model
+    judgment stays intact for the ``model_judgment`` scoring column.
     """
     item = _coerce_flat_grounding_fields(fact_check)
     verdict = item.get("verdict")
@@ -1113,32 +1126,16 @@ def _coerce_fact_check_verdict_aliases(
     if isinstance(verdict, str):
         normalized = verdict.strip().upper().replace("-", "_").replace(" ", "_")
         item["verdict"] = _VERDICT_ALIAS_MAP.get(normalized, verdict.strip())
-    if (
-        downgrade_missing_grounding
-        and item.get("verdict") in _GROUNDING_REQUIRED_VERDICTS
-        and not _has_usable_grounding(item.get("grounding"))
-    ):
-        item["verdict"] = "UNATTESTED_AFTER_SEARCH"
-        item.pop("grounding", None)
     return item
 
 
-def _coerce_payload_fact_check_verdicts(
-    payload: Mapping[str, Any],
-    *,
-    downgrade_missing_grounding: bool,
-) -> dict[str, Any]:
+def _coerce_payload_fact_check_verdicts(payload: Mapping[str, Any]) -> dict[str, Any]:
     out = dict(payload)
     coerced: list[dict[str, Any]] = []
     for fact_check in out.get("fact_checks") or []:
         if not isinstance(fact_check, Mapping):
             continue
-        coerced.append(
-            _coerce_fact_check_verdict_aliases(
-                fact_check,
-                downgrade_missing_grounding=downgrade_missing_grounding,
-            )
-        )
+        coerced.append(_coerce_fact_check_verdict_aliases(fact_check))
     out["fact_checks"] = coerced
     return out
 
@@ -1177,19 +1174,23 @@ def _validate_bare_fact_checks(fact_checks: Any) -> None:
 
 def _normalize_bakeoff_tooled_payload(
     payload: Mapping[str, Any],
-    *,
-    tool_events: Sequence[Mapping[str, Any]] | None = None,
 ) -> tuple[dict[str, Any], bool]:
     """Best-effort bakeoff-only cleanup so fact-check measurement survives contract noise.
 
-    When ``tool_events`` are supplied, grounding objects are repaired from captured
-    telemetry *before* schema validation so frontier flat aliases can still pass the
-    live grounding contract.
+    STRICT grounding (#4761): frontier alias tokens/fields are remapped, but a
+    grounding is accepted only when the model itself supplied a usable
+    ``(tool, query, evidence_excerpt)`` triple. There is NO repair from captured
+    telemetry — the harness never invents the tool/query a model failed to cite, so
+    ``live_admissible`` credits only self-grounded verdicts. A positive verdict whose
+    grounding is unusable is *admissibly downgraded* (``verdict`` → UNVERIFIED,
+    ``original_verdict`` preserved, ``admissibility_downgraded`` set): the raw model
+    judgment still scores in ``model_judgment`` via ``_judgment_verdict`` while
+    ``live_admissible`` sees the downgrade and the cell stays schema-valid.
 
     Returns ``(normalized_payload, findings_schema_invalid)``.
     """
     out = dict(payload)
-    out = _coerce_payload_fact_check_verdicts(out, downgrade_missing_grounding=False)
+    out = _coerce_payload_fact_check_verdicts(out)
     findings_schema_invalid = False
     kept_findings: list[dict[str, Any]] = []
     for finding in out.get("findings") or []:
@@ -1210,34 +1211,26 @@ def _normalize_bakeoff_tooled_payload(
             continue
         item = dict(fact_check)
         grounding = item.get("grounding")
-        if isinstance(grounding, Mapping) and tool_events:
-            item["grounding"] = llm_reviewer_dispatch.repair_grounding_from_tool_events(
-                grounding,
-                tool_events,
-            )
-            grounding = item["grounding"]
+        usable_grounding: dict[str, Any] | None = None
         if isinstance(grounding, Mapping):
             normalized = dict(grounding)
-            if not str(normalized.get("evidence_excerpt") or "").strip():
-                item["grounding"] = None
-            else:
-                # tool_call_id is advisory (see _grounding_matches_events). Tool-name
-                # spelling (sources_* vs mcp__sources__*) is reconciled by the gate's
-                # canonical comparison, so no rename here — a one-sided rename would
-                # break the opencode case where events keep the bare sources_* form.
-                if not str(normalized.get("tool_call_id") or "").strip():
-                    normalized["tool_call_id"] = "advisory-missing"
-                missing_required = any(
-                    not str(normalized.get(key) or "").strip()
-                    for key in ("tool", "query", "evidence_excerpt")
-                )
-                if missing_required:
-                    item["grounding"] = None
-                else:
-                    item["grounding"] = normalized
+            # tool_call_id is advisory (see _grounding_matches_events). Tool-name
+            # spelling (sources_* vs mcp__sources__*) is reconciled by the gate's
+            # canonical comparison, so no rename here — a one-sided rename would
+            # break the opencode case where events keep the bare sources_* form.
+            if not str(normalized.get("tool_call_id") or "").strip():
+                normalized["tool_call_id"] = "advisory-missing"
+            missing_required = any(
+                not str(normalized.get(key) or "").strip()
+                for key in ("tool", "query", "evidence_excerpt")
+            )
+            if not missing_required:
+                usable_grounding = normalized
+        item["grounding"] = usable_grounding
+        if usable_grounding is None and item.get("verdict") in _GROUNDING_REQUIRED_VERDICTS:
+            item = _admissibly_downgrade(item)
         normalized_fact_checks.append(item)
     out["fact_checks"] = normalized_fact_checks
-    out = _coerce_payload_fact_check_verdicts(out, downgrade_missing_grounding=True)
     return out, findings_schema_invalid
 
 
@@ -1276,7 +1269,7 @@ def _parse_bare_payload(response_text: str) -> tuple[dict[str, Any], bool, bool]
         payload = dict(lenient)
         response_parse_lenient = True
 
-    payload = _coerce_payload_fact_check_verdicts(payload, downgrade_missing_grounding=False)
+    payload = _coerce_payload_fact_check_verdicts(payload)
     findings_schema_invalid = False
     try:
         _validate_bare_payload_shape(payload)
@@ -1589,6 +1582,10 @@ def run_one(
         "dispatch": dispatch,
         "gate_outcomes": gate_outcomes,
         "payload": gate_result["payload"],
+        # Raw model response is persisted alongside dispatch.tool_events so a
+        # future normalization/scoring change can be replayed OFFLINE from disk
+        # (no model re-run, no subscription quota burned). See docs note in #4761.
+        "raw_response": gate_result.get("raw_response_text"),
         "score": score,
         "tool_call_count": int(dispatch.get("tool_call_count") or 0),
         "wall_seconds": wall_seconds,
@@ -1728,6 +1725,7 @@ def run_one_bare(
         "dispatch": dispatch,
         "gate_outcomes": {},
         "payload": payload,
+        "raw_response": result.response_text,
         "score": score,
         "tool_call_count": int(dispatch.get("tool_call_count") or 0),
         "wall_seconds": wall_seconds,
@@ -1864,8 +1862,20 @@ def score_payload(payload: Mapping[str, Any], fixture: BakeoffFixture) -> dict[s
         scoring_row["verdict"] = judgment_verdict
         scoring_rows.append(scoring_row)
         live_verdict = str(row.get("verdict") or "")
+        # STRICT live-admissible (#4761): a positive verdict whose grounding the
+        # gate tagged inadmissible (present but not backed by a matching tool
+        # event) earns NO live credit. Its raw judgment is still scored in
+        # model_judgment via judgment_verdict. Verdicts downgraded upstream
+        # (admissibility_downgraded) already carry UNVERIFIED in `verdict`, so
+        # this only handles the gate-tag path.
+        live_scoring_verdict = live_verdict
+        if (
+            row.get("grounding_admissible") is False
+            and live_verdict.strip().upper() in _GROUNDING_REQUIRED_VERDICTS
+        ):
+            live_scoring_verdict = "UNVERIFIED_INSUFFICIENT_SEARCH"
         model_points = qg_factcheck_scoring.score_verdict(judgment_verdict, claim_is_true=claim.is_true)
-        live_points = qg_factcheck_scoring.score_verdict(live_verdict, claim_is_true=claim.is_true)
+        live_points = qg_factcheck_scoring.score_verdict(live_scoring_verdict, claim_is_true=claim.is_true)
         live_score += live_points
         if claim.fabrication_class == "U":
             class_u_total += 1
@@ -1890,6 +1900,7 @@ def score_payload(payload: Mapping[str, Any], fixture: BakeoffFixture) -> dict[s
                 "model_judgment_verdict": judgment_verdict,
                 "model_judgment_points": model_points,
                 "live_admissible_points": live_points,
+                "live_admissible_neutralized": live_scoring_verdict != live_verdict,
             }
         )
 
@@ -2588,11 +2599,8 @@ def _invoke_and_gate(
         # count the defect (`findings_schema_invalid`), keep gating fact_checks
         # strictly. The LIVE pipeline stays strict (SCHEMA_FAILURE) — unchanged.
         findings_schema_invalid = False
-        tool_events = llm_reviewer_dispatch.tool_events_from_dispatch_meta(dispatch)
-        payload, findings_schema_invalid = _normalize_bakeoff_tooled_payload(
-            payload,
-            tool_events=tool_events,
-        )
+        raw_response_text = result.response_text
+        payload, findings_schema_invalid = _normalize_bakeoff_tooled_payload(payload)
         try:
             llm_reviewer.validate_reviewer_payload(payload, BAKEOFF_POLICY_FAMILY)
         except ValueError as exc:
@@ -2624,6 +2632,7 @@ def _invoke_and_gate(
                 "attempt_count": attempt_count,
                 "dispatch": dispatch,
                 "payload": payload,
+                "raw_response_text": raw_response_text,
                 "gate_outcomes": {
                     "attempts": attempts,
                     "theatre": theatre,
@@ -2682,6 +2691,7 @@ def _invoke_and_gate(
             "attempt_count": attempt_count,
             "dispatch": dispatch,
             "payload": payload,
+            "raw_response_text": raw_response_text,
             "findings_schema_invalid": findings_schema_invalid,
             "response_parse_lenient": response_parse_lenient,
             "gate_outcomes": {
