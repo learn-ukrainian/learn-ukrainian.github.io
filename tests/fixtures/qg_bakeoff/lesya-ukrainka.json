@@ -10,7 +10,7 @@
       "is_true": true,
       "fabrication_class": null,
       "distractor_evidence": null,
-      "verified_by": "wave7-popovych-narys-kultury 68ba0555_c0833: «Лариса Петрівна Косач, за чоловіком — Квітка (1871 — 1913 рр.)»; uk.wikipedia summary corroborates the article identity."
+      "verified_by": "POINTER: wave7-popovych-narys-kultury 68ba0555_c0833 supports claim les-t1: Лариса Петрівна Косач, за чоловіком — Квітка, прожила 1871—1913 роки. Paraphrase note: uk.wikipedia summary corroborates the article identity. No verbatim source quote redistributed."
     },
     {
       "claim_id": "les-t2",
@@ -18,7 +18,7 @@
       "is_true": true,
       "fabrication_class": null,
       "distractor_evidence": null,
-      "verified_by": "wave7-popovych-narys-kultury 68ba0555_c0833: «Вона була племінницею, вихованкою і однодумцем Михайла Драгоманова»; uk.wikipedia §Життєпис confirms Drahomanov's formative role."
+      "verified_by": "POINTER: wave7-popovych-narys-kultury 68ba0555_c0833 supports claim les-t2: була племінницею, вихованкою і однодумницею Михайла Драгоманова. Paraphrase note: uk.wikipedia §Життєпис confirms Drahomanov's formative role. No verbatim source quote redistributed."
     },
     {
       "claim_id": "les-t3",
@@ -26,14 +26,14 @@
       "is_true": true,
       "fabrication_class": null,
       "distractor_evidence": null,
-      "verified_by": "wave7-popovych-narys-kultury 68ba0555_c0833: «Свій внесок в культуру України зробили мати Лесі Українки Ольга Петрівна Косач... письменниця („Олена Пчілка“)»."
+      "verified_by": "POINTER: wave7-popovych-narys-kultury 68ba0555_c0833 supports claim les-t3: Ольга Петрівна Косач, відома як Олена Пчілка, зробила власний внесок у культуру України. No verbatim source quote redistributed."
     },
     {
       "claim_id": "les-m1",
       "claim": "Драгоманов помер у Києві після її повернення з Софії",
       "is_true": false,
       "fabrication_class": "M",
-      "distractor_evidence": "wave7-popovych-narys-kultury 68ba0555_c0833 — the REAL passage: «Драгоманов і помер на її руках — дізнавшись про діагноз лікарів, Леся Українка терміново виїхала до Софії й прожила там цілий рік». The death/Sofia frame is real; the Kyiv-after-return twist is fabricated.",
+      "distractor_evidence": "POINTER: wave7-popovych-narys-kultury 68ba0555_c0833 anchors the refutation of claim les-m1: Драгоманов помер у Києві після її повернення з Софії. Paraphrase note: The death/Sofia frame is real; the Kyiv-after-return twist is fabricated. No verbatim source quote redistributed.",
       "verified_by": "Real: Drahomanov died on her hands in Sofia, not in Kyiv after her return (68ba0555_c0833)."
     },
     {
@@ -49,7 +49,7 @@
       "claim": "1903 року Леся Українка написала відповідь Сергію Єфремову на статтю «Політика і етика»",
       "is_true": false,
       "fabrication_class": "M",
-      "distractor_evidence": "wave7-popovych-narys-kultury 68ba0555_c0834 — the REAL passage: «1903 р. Леся Українка написала відповідь М. Ганкевичу, який у статті „Політика і етика“ твердив...». Сергій Єфремов is genuinely discussed nearby in the same chunk, but the addressee of the 1903 response was Микола Ганкевич.",
+      "distractor_evidence": "POINTER: wave7-popovych-narys-kultury 68ba0555_c0834 anchors the refutation of claim les-m2: 1903 року Леся Українка написала відповідь Сергію Єфремову на статтю 'Політика і етика'. Paraphrase note: Сергій Єфремов is genuinely discussed nearby in the same chunk, but the addressee of the 1903 response was Микола Ганкевич. No verbatim source quote redistributed.",
       "verified_by": "Real: response to M. Hankevych, not Serhii Yefremov (68ba0555_c0834)."
     },
     {

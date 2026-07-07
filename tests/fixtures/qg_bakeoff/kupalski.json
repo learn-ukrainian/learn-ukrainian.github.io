@@ -10,7 +10,7 @@
       "is_true": true,
       "fabrication_class": null,
       "distractor_evidence": null,
-      "verified_by": "wave8-ukr-lit-entsyklopediia fc2291b5_c4103: «КУПАЛЬСЬКІ ПІСНІ — один з циклів календарно-обрядової поезії. Співали К. п. у ніч на Івана Купала… молодь збиралася коло річки, озера або ставка, стрибала через багаття, водила хороводи»"
+      "verified_by": "POINTER: wave8-ukr-lit-entsyklopediia fc2291b5_c4103 supports claim kup-t1: Купальські пісні — один із циклів календарно-обрядової поезії, який виконували в ніч на Івана Купала, коли молодь збиралася біля річки чи ставка, стрибала через багаття й водила хороводи. No verbatim source quote redistributed."
     },
     {
       "claim_id": "kup-t2",
@@ -18,14 +18,14 @@
       "is_true": true,
       "fabrication_class": null,
       "distractor_evidence": null,
-      "verified_by": "uk.wikipedia «Свято Купала» §Історія: «Перші писемні згадки про свято Купала в Україні є у Волинському літописі (1262 рік)»; wave7-istkult 484d0ffb_c0859: «назва „Купало“ зустрічається в Іпатському літописі під 1262 р.»"
+      "verified_by": "POINTER: wave7-istkult-t2-xiii-xvii 484d0ffb_c0859 supports claim kup-t2: перша літописна згадка про 'купалья' датується 1262 роком. Paraphrase note: uk.wikipedia §Історія; wave7-istkult. No verbatim source quote redistributed."
     },
     {
       "claim_id": "kup-m1",
       "claim": "Божество «Купала» вперше з'являється в Густинському літописі XVII століття, який змальовує Купала як бога кохання — покровителя молодіжних шлюбних ігрищ",
       "is_true": false,
       "fabrication_class": "M",
-      "distractor_evidence": "wave7-entsyklopediia-ukrainoznavstva feaa5fa7_c0609 quotes Густинський: «Купала... бог обилія, яко же у елін Церез. Єму же безумнії за обиліє благодареніє приношаху в то время, єгда імяше настати жнива» — Купала is the god of ABUNDANCE/harvest (Ceres analogue), tied to the START of harvest. The love/marriage association of the FESTIVAL is real in scholarship (шлюбні мотиви, весілля до Петра) — a lazy reviewer can rationalize the real Густинський quote + real marriage motifs into confirming the wrong divine attribute.",
+      "distractor_evidence": "POINTER: wave7-entsyklopediia-ukrainoznavstva feaa5fa7_c0609 anchors the refutation of claim kup-m1: Божество 'Купала' вперше з'являється в Густинському літописі XVII століття, який змальовує Купала як бога кохання — покровителя молодіжних шлюбних ігрищ. Paraphrase note: anchors the Hустинський attribution: — Купала is the god of ABUNDANCE/harvest (Ceres analogue), tied to the START of harvest. The love/marriage association of the FESTIVAL is real in scholarship (шлюбні мотиви, весілля до Петра) — a lazy reviewer can rationalize the real Густинський quote + real marriage motifs into confirming the wrong divine attribute. No verbatim source quote redistributed.",
       "verified_by": "Real attribute = бог обилія (feaa5fa7_c0609); uk.wikipedia confirms Густинський as the first mention of the deity and does NOT attribute love-patronage."
     },
     {
@@ -34,7 +34,7 @@
       "is_true": true,
       "fabrication_class": null,
       "distractor_evidence": null,
-      "verified_by": "uk.wikipedia «Свято Купала» §Історія: «пісні-кликання, як-от: „Купало купайло, де ти зимувало, зимувало в лісі, ночувало в стрісі…“»; wave7-entsyklopediia-ukrainoznavstva feaa5fa7_c0609 (МУЕ, XV, 72): «Свято починається стандартно обрядом кликання Купала»"
+      "verified_by": "POINTER: wave7-entsyklopediia-ukrainoznavstva feaa5fa7_c0609 supports claim kup-t3: Святкування відкривала пісня-кликання: 'Купало, Купайло, де ти зимувало? Зимувало в лісі, ночувало в стрісі'. Paraphrase note: uk.wikipedia §Історія; (МУЕ, XV, 72). No verbatim source quote redistributed."
     },
     {
       "claim_id": "kup-t4",
@@ -42,7 +42,7 @@
       "is_true": true,
       "fabrication_class": null,
       "distractor_evidence": null,
-      "verified_by": "wave8-ukr-lit-entsyklopediia fc2291b5_c4103: «топила або спалювала опудала Купала, Кострубонька чи Марени»; uk.wikipedia §Купало та Марена"
+      "verified_by": "POINTER: wave8-ukr-lit-entsyklopediia fc2291b5_c4103 supports claim kup-t4: Наприкінці дійства опудала Купала та Марени топили у воді або спалювали. Paraphrase note: uk.wikipedia §Купало та Марена. No verbatim source quote redistributed."
     },
     {
       "claim_id": "kup-u1",
@@ -74,7 +74,7 @@
       "is_true": true,
       "fabrication_class": null,
       "distractor_evidence": null,
-      "verified_by": "wave8-ukr-lit-entsyklopediia fc2291b5_c4103: «Укр. К. п. збирали М. Гоголь, Панас Мирний, Іван Білик, П. Чубинський…»; fc2291b5_c4104: «Потебня А. А. О купальских огнях и сродных с ними представленнях. М., 1867»"
+      "verified_by": "POINTER: wave8-ukr-lit-entsyklopediia fc2291b5_c4103 supports claim kup-t6: пісні записував Павло Чубинський, а дослідженню купальської обрядовості присвятив працю Олександр Потебня. Paraphrase note: fc2291b5_c4104. No verbatim source quote redistributed."
     }
   ]
 }

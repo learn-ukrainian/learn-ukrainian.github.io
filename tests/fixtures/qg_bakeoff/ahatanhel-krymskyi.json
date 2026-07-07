@@ -10,7 +10,7 @@
       "is_true": true,
       "fabrication_class": null,
       "distractor_evidence": null,
-      "verified_by": "wave8-ukr-lit-entsyklopediia fc2291b5_c3942: «3(15).І 1871, м. Володимир-Волинський... — 25.I 1942, Кустанай»; uk.wikipedia «Кримський Агатангел Юхимович» §Життєпис corroborates."
+      "verified_by": "POINTER: wave8-ukr-lit-entsyklopediia fc2291b5_c3942 supports claim kry-t1: Агатангел Кримський народився 3 (15) січня 1871 року у Володимирі-Волинському. Paraphrase note: uk.wikipedia §Життєпис corroborates. No verbatim source quote redistributed."
     },
     {
       "claim_id": "kry-t2",
@@ -18,7 +18,7 @@
       "is_true": true,
       "fabrication_class": null,
       "distractor_evidence": null,
-      "verified_by": "wave4-ukrainska-mova-encyclopedia 1af78606_c0008: «Закін. 1889 Колегію Павла Ґалаґана в Києві»; fc2291b5_c3942 gives the same college sequence."
+      "verified_by": "POINTER: wave4-ukrainska-mova-encyclopedia 1af78606_c0008 supports claim kry-t2: закінчив Колегію Павла Ґалаґана 1889 року. Paraphrase note: fc2291b5_c3942 gives the same college sequence. No verbatim source quote redistributed."
     },
     {
       "claim_id": "kry-t3",
@@ -26,7 +26,7 @@
       "is_true": true,
       "fabrication_class": null,
       "distractor_evidence": null,
-      "verified_by": "wave8-ukr-lit-entsyklopediia fc2291b5_c3942: «Закін. 1892 Лазарев. ін-т сх. мов (Москва)»; 1af78606_c0008 corroborates."
+      "verified_by": "POINTER: wave8-ukr-lit-entsyklopediia fc2291b5_c3942 supports claim kry-t3: 1892 року закінчив Лазаревський інститут східних мов. Paraphrase note: 1af78606_c0008 corroborates. No verbatim source quote redistributed."
     },
     {
       "claim_id": "kry-t4",
@@ -34,14 +34,14 @@
       "is_true": true,
       "fabrication_class": null,
       "distractor_evidence": null,
-      "verified_by": "wave8-ukr-lit-entsyklopediia fc2291b5_c3942: «і 1896 — Моск. ун-т»; wave4-ukrainska-mova-encyclopedia 1af78606_c0008 corroborates."
+      "verified_by": "POINTER: wave8-ukr-lit-entsyklopediia fc2291b5_c3942 supports claim kry-t4: 1896 року закінчив Московський університет. Paraphrase note: wave4-ukrainska-mova-encyclopedia 1af78606_c0008 corroborates. No verbatim source quote redistributed."
     },
     {
       "claim_id": "kry-m1",
       "claim": "У 1896—1898 роках перебував у науковому відрядженні в Єгипті та Марокко",
       "is_true": false,
       "fabrication_class": "M",
-      "distractor_evidence": "wave8-ukr-lit-entsyklopediia fc2291b5_c3942 — the REAL passage: «У 1896 — 98 перебував у наук. відрядженні в Сирії та Лівані». wave4-ukrainska-mova-encyclopedia 1af78606_c0008 repeats «у Лівані та Сирії». The dates and travel-frame are real; the Egypt/Morocco destinations are fabricated.",
+      "distractor_evidence": "POINTER: wave8-ukr-lit-entsyklopediia fc2291b5_c3942 anchors the refutation of claim kry-m1: У 1896—1898 роках перебував у науковому відрядженні в Єгипті та Марокко. Paraphrase note: wave4-ukrainska-mova-encyclopedia 1af78606_c0008 repeats. The dates and travel-frame are real; the Egypt/Morocco destinations are fabricated. No verbatim source quote redistributed.",
       "verified_by": "Real destinations = Syria and Lebanon (fc2291b5_c3942; 1af78606_c0008). Egypt/Morocco are a wrong-place inversion."
     },
     {
@@ -50,14 +50,14 @@
       "is_true": true,
       "fabrication_class": null,
       "distractor_evidence": null,
-      "verified_by": "wave8-ukr-lit-entsyklopediia fc2291b5_c3942: «У 1898 — 1918 працював у Лазарев. ін-ті сх. мов (з 1900 — професор)»."
+      "verified_by": "POINTER: wave8-ukr-lit-entsyklopediia fc2291b5_c3942 supports claim kry-t5: з 1900 року був професором Лазаревського інституту східних мов. No verbatim source quote redistributed."
     },
     {
       "claim_id": "kry-m2",
       "claim": "1918 року переїхав до Львова, де став неодмінним секретарем Наукового товариства імені Шевченка",
       "is_true": false,
       "fabrication_class": "M",
-      "distractor_evidence": "wave4-ukrainska-mova-encyclopedia 1af78606_c0008 — the REAL passage: «1918 переїхав до Києва, де взяв діяльну участь в організації УАН (1918). До 1928 — її неодмінний секретар». The move-to-city and secretary role are real, but they belong to Kyiv/UAN, not Lviv/NTSH.",
+      "distractor_evidence": "POINTER: wave4-ukrainska-mova-encyclopedia 1af78606_c0008 anchors the refutation of claim kry-m2: 1918 року переїхав до Львова, де став неодмінним секретарем Наукового товариства імені Шевченка. Paraphrase note: The move-to-city and secretary role are real, but they belong to Kyiv/UAN, not Lviv/NTSH. No verbatim source quote redistributed.",
       "verified_by": "Real: Kyiv and Ukrainian Academy of Sciences secretary (1af78606_c0008; fc2291b5_c3942; uk.wikipedia §Життєпис). Lviv/NTSH is fabricated."
     },
     {
@@ -66,7 +66,7 @@
       "is_true": true,
       "fabrication_class": null,
       "distractor_evidence": null,
-      "verified_by": "wave8-ukr-lit-entsyklopediia fc2291b5_c3942: «У 1921 — 29 — директор Ін-ту укр. наук. мови»; 1af78606_c0008 corroborates."
+      "verified_by": "POINTER: wave8-ukr-lit-entsyklopediia fc2291b5_c3942 supports claim kry-t6: протягом 1921—1929 років був директором Інституту української наукової мови. Paraphrase note: 1af78606_c0008 corroborates. No verbatim source quote redistributed."
     },
     {
       "claim_id": "kry-u1",
