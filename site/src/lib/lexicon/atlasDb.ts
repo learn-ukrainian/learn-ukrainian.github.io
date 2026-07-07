@@ -1,5 +1,5 @@
 import Database from 'better-sqlite3';
-import { existsSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
 export interface CourseUsage {
@@ -107,4 +107,38 @@ export function getAtlasPayloadCache(): AtlasPayloadCache {
 
 export function getLexiconEntryBySlug(slug: string): LexiconEntry | undefined {
   return getAtlasPayloadCache().bySlug.get(slug);
+}
+
+let _practiceLemmasCache: Set<string> | null = null;
+
+export function getPracticeLemmas(): Set<string> {
+  if (_practiceLemmasCache) return _practiceLemmasCache;
+  const lemmas = new Set<string>();
+  const levels = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
+  for (const level of levels) {
+    const paths = [
+      resolve(process.cwd(), `public/lexicon/practice-index.${level}.json`),
+      resolve(process.cwd(), `public/api/lexicon/practice-index.${level}.json`),
+      resolve(process.cwd(), `../site/public/lexicon/practice-index.${level}.json`),
+    ];
+    for (const p of paths) {
+      if (existsSync(p)) {
+        try {
+          const content = JSON.parse(readFileSync(p, 'utf-8'));
+          if (content && Array.isArray(content.items)) {
+            for (const item of content.items) {
+              if (item.lemmaId) {
+                lemmas.add(item.lemmaId);
+              }
+            }
+          }
+          break;
+        } catch (e) {
+          // ignore parsing/reading errors
+        }
+      }
+    }
+  }
+  _practiceLemmasCache = lemmas;
+  return lemmas;
 }

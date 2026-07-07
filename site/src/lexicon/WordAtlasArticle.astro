@@ -4,6 +4,7 @@ import {
   resolveHeritageBoxes,
   type WarningSeverity,
 } from "../lib/lexicon/heritage-severity";
+import { getPracticeLemmas } from "../lib/lexicon/atlasDb";
 
 interface CourseUsage {
   track: string;
@@ -191,6 +192,9 @@ const shouldShowEditorialWarning = Boolean(heritageBoxes.red);
 const shouldShowHeritageDefense = Boolean(heritageBoxes.green);
 const styleNotes = buildStyleNotes();
 const articleOverview = buildArticleOverview();
+
+const practiceLemmas = getPracticeLemmas();
+const hasPractice = practiceLemmas.has(entry.url_slug) || practiceLemmas.has(entry.lemma);
 
 const CASE_ROWS = [
   { key: "називний", label: "Називний" },
@@ -526,6 +530,15 @@ function groupExternalMaterials(items: NonNullable<Enrichment["external_material
           {statusBadges.map((badge) => (
             <span class={`status-badge ${badge.className}`} title={badge.title}>{badge.label}</span>
           ))}
+          {hasPractice && (
+            <a
+              href={`/words-of-the-day/practice/?lemmaId=${entry.url_slug}`}
+              class="practice-link-hero"
+              style="margin-left: 0.75rem; display: inline-flex; align-items: center; color: var(--lu-primary, #146e78); font-weight: 800; font-size: 0.9rem; text-decoration: underline;"
+            >
+              Практикувати це слово →
+            </a>
+          )}
         </div>
       </div>
     </div>

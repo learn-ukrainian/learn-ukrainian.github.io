@@ -2204,12 +2204,37 @@ def _merge_slovnyk_warning(status: dict[str, Any], warning: dict[str, Any] | Non
     return status
 
 
+_HERITAGE_PAIRS_CACHE = None
+
+
+def _get_heritage_pairs_rationale_uk() -> dict[str, str]:
+    global _HERITAGE_PAIRS_CACHE
+    if _HERITAGE_PAIRS_CACHE is not None:
+        return _HERITAGE_PAIRS_CACHE
+    import yaml
+    path = ROOT / "data" / "lexicon" / "heritage_pairs.yaml"
+    _HERITAGE_PAIRS_CACHE = {}
+    if path.exists():
+        try:
+            data = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+            pairs = data.get("pairs", [])
+            for p in pairs:
+                label = p.get("calqueLabel")
+                rat_uk = p.get("rationaleUk")
+                if label and rat_uk:
+                    _HERITAGE_PAIRS_CACHE[label] = rat_uk
+        except Exception as e:
+            print(f"WARN: Failed to load heritage_pairs.yaml for rationaleUk: {e}", file=sys.stderr)
+    return _HERITAGE_PAIRS_CACHE
+
+
 def _curated_calque(lemma: str, base: str) -> dict[str, Any] | None:
     """Curated §6 calque card from exact dataset lookups only."""
+    rationale_uk_map = _get_heritage_pairs_rationale_uk()
     for key in (lemma, base):
         if key in CURATED_CALQUES:
             row = CURATED_CALQUES[key]
-            return {
+            res = {
                 "kind": str(row.get("kind", "participle")),
                 "corrections": list(row["corrections"]),
                 "note": str(row["note"]),
@@ -2217,11 +2242,15 @@ def _curated_calque(lemma: str, base: str) -> dict[str, Any] | None:
                 "evidence": list(row.get("evidence", [])),
                 "heritage_guard": str(row.get("heritage_guard", "")),
             }
+            rat_uk = rationale_uk_map.get(key)
+            if rat_uk:
+                res["noteUk"] = rat_uk
+            return res
 
     for key in (lemma, base):
         if key in SENSE_RESTRICTED_CALQUES:
             row = SENSE_RESTRICTED_CALQUES[key]
-            return {
+            res = {
                 "kind": "sense_restricted",
                 "corrections": list(row["corrections"]),
                 "calque_sense": str(row["calque_sense"]),
@@ -2231,10 +2260,14 @@ def _curated_calque(lemma: str, base: str) -> dict[str, Any] | None:
                 "evidence": list(row.get("evidence", [])),
                 "heritage_guard": str(row.get("heritage_guard", "")),
             }
+            rat_uk = rationale_uk_map.get(key)
+            if rat_uk:
+                res["noteUk"] = rat_uk
+            return res
 
     if lemma in PHRASAL_CALQUES:
         row = PHRASAL_CALQUES[lemma]
-        return {
+        res = {
             "kind": "phrasal",
             "corrections": list(row["corrections"]),
             "note": str(row["note"]),
@@ -2242,6 +2275,10 @@ def _curated_calque(lemma: str, base: str) -> dict[str, Any] | None:
             "evidence": list(row.get("evidence", [])),
             "heritage_guard": str(row.get("heritage_guard", "")),
         }
+        rat_uk = rationale_uk_map.get(lemma)
+        if rat_uk:
+            res["noteUk"] = rat_uk
+        return res
 
     return None
 
@@ -2249,6 +2286,7 @@ def _curated_calque(lemma: str, base: str) -> dict[str, Any] | None:
 def _reverse_calques(lemma: str, base: str) -> list[dict[str, Any]] | None:
     """Find calques where this lemma is the recommended correction."""
     results: list[dict[str, Any]] = []
+    rationale_uk_map = _get_heritage_pairs_rationale_uk()
 
     for calque_dict in (CURATED_CALQUES, SENSE_RESTRICTED_CALQUES, PHRASAL_CALQUES):
         for calque, row in calque_dict.items():
@@ -2268,6 +2306,11 @@ def _reverse_calques(lemma: str, base: str) -> list[dict[str, Any]] | None:
                 }
                 if "calque_sense" in row:
                     result["calque_sense"] = str(row["calque_sense"])
+
+                rat_uk = rationale_uk_map.get(calque)
+                if rat_uk:
+                    result["noteUk"] = rat_uk
+
                 results.append(result)
 
     return results if results else None
@@ -4000,12 +4043,15 @@ def enrich_entry(entry, conn, kaikki_lookup, *, has_sum11_flags) -> bool:
         # §6 decolonization moat note (PR1: active-present-participle calques only)
         # Emits native replacement(s) + source citation (Antonenko davydov/p145 + heritage guard)
         # for Atlas page §6 stylistic warning layer. See calque_corrections + issue #3098.
-        entry["heritage_status"]["§6_note"] = {
+        note_dict = {
             "corrections": list(curated_calque.get("corrections", [])),
             "note": str(curated_calque.get("note", "")),
             "source": list(curated_calque.get("source", [])),
             "citation": "Антоненко-Давидович «Як ми говоримо» (davydov via MCP query_slovnyk_me + p145 prose via get_chunk_context; search_heritage guard applied)",
         }
+        if "noteUk" in curated_calque:
+            note_dict["noteUk"] = curated_calque["noteUk"]
+        entry["heritage_status"]["§6_note"] = note_dict
 
     reverse_calques = _reverse_calques(lemma, base)
     if reverse_calques:

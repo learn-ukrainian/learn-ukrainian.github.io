@@ -218,6 +218,7 @@ function heritagePracticeItem(): PracticeHeritageItem {
       { label: 'місто' },
     ],
     rationale: 'у цьому значенні потрібне питоме слово',
+    rationaleUk: 'у цьому значенні потрібне питоме слово',
     citations: ['Антоненко-Давидович: fixture'],
     corrections: ['дім'],
     sourceFamily: 'fixture',

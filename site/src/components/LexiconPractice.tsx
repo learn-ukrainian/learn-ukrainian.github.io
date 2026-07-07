@@ -669,7 +669,7 @@ function heritageFeedbackFor(item: PracticeHeritageItem, option: ChoiceOption): 
   if (option.kind === 'calque') {
     return {
       kind: 'calque',
-      text: `⚠️ калька; ${item.rationale}`,
+      text: item.rationaleUk ? `⚠️ калька; ${item.rationaleUk}` : '⚠️ калька',
       citations: item.citations,
     };
   }
@@ -833,6 +833,7 @@ function LexiconPracticeIsland({
   const [learnerLevel, setLearnerLevel] = useState<CefrLevel>(() =>
     readLearnerLevel(normalizeCefrLevel(deckLevel)),
   );
+  const [focusedLemmaId, setFocusedLemmaId] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [feedback, setFeedback] = useState('');
@@ -927,7 +928,22 @@ function LexiconPracticeIsland({
     };
   }, [deck, learnerLevel, shardBaseUrl]);
 
-  const indexForStats = deck?.index ?? dueIndex ?? [];
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const target = params.get('lemmaId');
+      if (target) {
+        setFocusedLemmaId(target);
+        writePracticeSessionSnapshot(null);
+        setResumeSnapshot(null);
+        void startSession(10, 'mixed');
+      }
+    }
+  }, []);
+
+  const indexForStats = (deck?.index ?? dueIndex ?? []).filter(
+    (item) => !focusedLemmaId || item.lemmaId === focusedLemmaId
+  );
 
   const sessionPoolConstraints = useMemo(
     () =>
@@ -1140,8 +1156,15 @@ function LexiconPracticeIsland({
     setMode(nextMode);
     setSessionBudget(budget);
     setError(null);
-    const loadedDeck = await ensureDeck(shouldLoadCloze(nextMode));
+    let loadedDeck = await ensureDeck(shouldLoadCloze(nextMode));
     if (!loadedDeck) return;
+    if (focusedLemmaId) {
+      loadedDeck = {
+        ...loadedDeck,
+        index: loadedDeck.index.filter((item) => item.lemmaId === focusedLemmaId),
+      };
+      setDeck(loadedDeck);
+    }
     const index = sessionScopeIndexForMode(loadedDeck.index, nextMode);
     const plan = computeSessionScope(index, budget, { dailyNewCount });
     const nextSeed = resume?.sessionSeed ?? makePracticeSessionSeed();
@@ -1199,6 +1222,15 @@ function LexiconPracticeIsland({
 
   async function startFocusMode(nextMode: PracticeModeFilter) {
     await startSession(sessionBudget, nextMode);
+  }
+
+  function clearFocus() {
+    setFocusedLemmaId(null);
+    setDeck(null);
+    setDueIndex(null);
+    writePracticeSessionSnapshot(null);
+    setResumeSnapshot(null);
+    setSessionPhase('idle');
   }
 
   async function changeLevel(nextLevel: CefrLevel) {
@@ -1455,6 +1487,44 @@ function LexiconPracticeIsland({
 
       {sessionPhase === 'idle' && (
         <div className="lexicon-practice-home">
+          {focusedLemmaId && (
+            <div
+              className="focused-lemma-banner"
+              style={{
+                background: 'var(--lu-surface-raised)',
+                border: '1px solid var(--lu-teal, #146e78)',
+                padding: '0.75rem 1rem',
+                borderRadius: '8px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                color: 'var(--lu-text)',
+                marginBottom: '0.5rem'
+              }}
+            >
+              <span>
+                🎯 <strong>Фокусне тренування:</strong> «{focusedLemmaId}»
+              </span>
+              <button
+                type="button"
+                onClick={clearFocus}
+                style={{
+                  minHeight: '24px',
+                  height: '24px',
+                  lineHeight: '24px',
+                  padding: '0 8px',
+                  fontSize: '0.8rem',
+                  border: '1px solid var(--lu-border)',
+                  borderRadius: '4px',
+                  background: 'var(--lu-surface)',
+                  color: 'var(--lu-text-muted)',
+                  cursor: 'pointer'
+                }}
+              >
+                Скинути фокус ×
+              </button>
+            </div>
+          )}
           <div className="lexicon-practice-progress" role="group" aria-label="Сьогоднішній прогрес">
             <div
               className="pstat streak"
@@ -1884,6 +1954,16 @@ function PracticeHeritage({
           {feedback.kind === 'calque' && feedback.citations?.length ? (
             <p className="heritage-citation">Джерело: {feedback.citations.join('; ')}</p>
           ) : null}
+          <div style={{ marginTop: '0.4rem' }}>
+            <a
+              href={`/lexicon/${item.lemmaId}/`}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ fontSize: '0.85rem', textDecoration: 'underline', color: 'inherit', fontWeight: 'bold' }}
+            >
+              Відкрити в Атласі →
+            </a>
+          </div>
         </div>
       ) : null}
     </div>
@@ -1981,13 +2061,25 @@ function PracticeCloze({
         </>
       )}
       {feedback && (
-        <p
-          className={`lexicon-cloze-feedback ${feedback.kind}`}
-          role={feedback.kind === 'wrong-word' ? 'alert' : 'status'}
-          aria-live="polite"
-        >
-          {feedback.text}
-        </p>
+        <div>
+          <p
+            className={`lexicon-cloze-feedback ${feedback.kind}`}
+            role={feedback.kind === 'wrong-word' ? 'alert' : 'status'}
+            aria-live="polite"
+          >
+            {feedback.text}
+          </p>
+          <div style={{ marginTop: '0.4rem' }}>
+            <a
+              href={`/lexicon/${selection.lemma.lemmaId}/`}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ fontSize: '0.85rem', textDecoration: 'underline', color: 'inherit', fontWeight: 'bold' }}
+            >
+              Відкрити в Атласі →
+            </a>
+          </div>
+        </div>
       )}
     </div>
   );

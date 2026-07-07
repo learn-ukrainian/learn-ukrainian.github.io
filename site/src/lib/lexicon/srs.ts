@@ -218,6 +218,7 @@ export interface PracticeHeritageItem {
   cefr: string;
   options: PracticeHeritageOption[];
   rationale: string;
+  rationaleUk?: string;
   citations: string[];
   corrections: string[];
   sourceFamily?: string;
