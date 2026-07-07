@@ -13,7 +13,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 
 from agent_runtime import runner as runner_mod
 from agent_runtime.adapters.base import InvocationPlan
-from agent_runtime.errors import RateLimitedError
+from agent_runtime.errors import AgentStalledError, RateLimitedError
 from agent_runtime.failover import (
     FAILOVER_CONFIG_ENV,
     FAILOVER_COOLDOWN_DB_ENV,
@@ -214,6 +214,16 @@ _TRIGGER_CASES = [
         },
     ),
     (
+        "transport",
+        {
+            "parse": ParseResult(ok=False, response="", stderr_excerpt=None),
+            "returncode": -9,
+            "kill_reason": "initial_response_timeout",
+            "stdout_text": "",
+            "stderr_text": "",
+        },
+    ),
+    (
         "empty_response",
         {
             "parse": ParseResult(ok=False, response="", stderr_excerpt=None),
@@ -300,6 +310,37 @@ def test_runner_failover_does_not_switch_for_content_policy(
     assert records[0]["outcome"] == "error"
     assert "substitution" not in records[0]
     assert RUNNER_FAILOVER_MARKER not in capsys.readouterr().err
+
+
+def test_runner_failover_does_not_switch_for_streaming_silence_timeout(
+    tmp_path,
+    monkeypatch,
+):
+    adapter, records, _emitted_events = _install_fake_runtime(
+        monkeypatch,
+        tmp_path,
+        {
+            "primary-model": {
+                "parse": ParseResult(ok=False, response="", stderr_excerpt=None),
+                "returncode": -9,
+                "kill_reason": "stdout_silence_timeout",
+                "stdout_text": "partial output\n",
+                "stderr_text": "",
+            },
+            "fallback-model": {
+                "parse": ParseResult(ok=True, response="fallback ok"),
+                "returncode": 0,
+            },
+        },
+    )
+
+    with pytest.raises(AgentStalledError) as exc_info:
+        runner_mod.invoke("failover-test", "hello", mode="read-only", cwd=tmp_path)
+
+    assert exc_info.value.kind == "stdout_silence_timeout"
+    assert adapter.attempts == ["primary-model"]
+    assert records[0]["outcome"] == "stalled"
+    assert "substitution" not in records[0]
 
 
 def test_runner_failover_cooldown_routes_next_dispatch_directly_to_fallback(
@@ -487,6 +528,34 @@ def test_classifier_refuses_to_rotate_on_inband_400():
         returncode=0,
         kill_reason=None,
         stdout_text="",
+        stderr_text="",
+    )
+
+    assert trigger is None
+
+
+def test_classifier_routes_initial_response_timeout_to_transport():
+    from agent_runtime.failover import classify_failover_trigger
+
+    trigger = classify_failover_trigger(
+        parse=ParseResult(ok=False, response="", stderr_excerpt=None),
+        returncode=-9,
+        kill_reason="initial_response_timeout",
+        stdout_text="",
+        stderr_text="",
+    )
+
+    assert trigger == "transport"
+
+
+def test_classifier_refuses_to_rotate_on_streaming_silence_timeout():
+    from agent_runtime.failover import classify_failover_trigger
+
+    trigger = classify_failover_trigger(
+        parse=ParseResult(ok=False, response="", stderr_excerpt=None),
+        returncode=-9,
+        kill_reason="stdout_silence_timeout",
+        stdout_text="partial output\n",
         stderr_text="",
     )
 
