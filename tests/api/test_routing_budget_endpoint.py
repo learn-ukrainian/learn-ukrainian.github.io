@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
 from fastapi import FastAPI
@@ -163,3 +163,71 @@ def test_promo_through_uses_promo_cap_until_expiry(monkeypatch, tmp_path):
     assert before_data["agents"]["claude"]["interactive"]["burn_pct_7d"] == 50.0
     assert after_data["agents"]["claude"]["interactive"]["weekly_cap_usd"] == 460.0
     assert after_data["agents"]["claude"]["interactive"]["burn_pct_7d"] == 75.0
+
+
+def test_empty_snapshot_marks_unknown_and_suppresses_rec(monkeypatch, tmp_path):
+    """AC: empty/absent snapshot → status unknown (not cool), primary=None, no confident rec."""
+    now = datetime(2026, 5, 13, 20, 30, tzinfo=UTC)
+    _configure(monkeypatch, tmp_path, [])  # empty records
+
+    data = state_router.compute_routing_budget(now)
+
+    assert data["diagnostics"]["records_loaded"] == 0
+    assert data["recommendation"]["primary_agent_for_code"] is None
+    assert "empty" in (data["recommendation"].get("rationale") or "").lower() or any("empty" in w for w in data["recommendation"].get("warnings", []))
+    for lane in ("claude", "codex", "gemini"):
+        st = data["agents"][lane].get("status") or data["agents"][lane].get("interactive", {}).get("status")
+        assert st == "unknown", f"{lane} should be unknown on empty"
+    # ranked includes subs + api unknown
+    ranked = data.get("ranked_by_headroom", [])
+    assert any(r["lane"] == "deepseek" and r["status"] == "unknown" and r["type"] == "api" for r in ranked)
+    assert any(r["lane"] == "codex" and r["type"] == "subscription" for r in ranked)
+
+
+def test_stale_snapshot_downgrades_to_advisory_no_hard(monkeypatch, tmp_path):
+    """AC: generated/data >15min → stale=true, advisory in warnings; never hard block."""
+    now = datetime(2026, 5, 13, 20, 30, tzinfo=UTC)
+    old = now - timedelta(minutes=20)
+    recs = [_record("codex (gpt-5.5)", 100.0, old)]
+    _configure(monkeypatch, tmp_path, recs)
+
+    data = state_router.compute_routing_budget(now)
+
+    assert data["diagnostics"]["stale"] is True
+    assert data["diagnostics"]["data_age_s"] and data["diagnostics"]["data_age_s"] > 900
+    assert any("stale" in w.lower() for w in data.get("recommendation", {}).get("warnings", []))
+    # still computes status from old data, but marked
+    assert "codex" in data["agents"]
+
+
+def test_ranked_by_headroom_orders_by_remaining_and_includes_api_unknown(monkeypatch, tmp_path):
+    """AC: load-spread ranked view; subs by headroom (low burn first), api=unknown."""
+    now = datetime(2026, 5, 13, 20, 30, tzinfo=UTC)
+    _configure(
+        monkeypatch,
+        tmp_path,
+        [
+            _record("claude (sonnet)", 100.0, now),
+            _record("codex (gpt-5.5)", 50.0, now),
+            _record("gemini (pro)", 400.0, now),
+        ],
+    )
+    data = state_router.compute_routing_budget(now)
+    ranked = data.get("ranked_by_headroom", [])
+    # codex lowest burn should sort before higher
+    codex_idx = next(i for i, r in enumerate(ranked) if r["lane"] == "codex")
+    gemini_idx = next(i for i, r in enumerate(ranked) if r["lane"] == "gemini")
+    assert codex_idx < gemini_idx
+    api_entry = next((r for r in ranked if r["type"] == "api"), None)
+    assert api_entry and api_entry["status"] == "unknown"
+    assert "resets_at" in ranked[0]
+
+
+def test_resets_at_and_reset_aware_present(monkeypatch, tmp_path):
+    now = datetime(2026, 5, 13, 20, 30, tzinfo=UTC)
+    _configure(monkeypatch, tmp_path, [_record("codex (gpt-5.5)", 10.0, now)])
+    data = state_router.compute_routing_budget(now)
+    assert "resets_at" in data["agents"]["codex"]
+    assert data["diagnostics"].get("reset_imminent_hours") == 6
+    # ranked carries it
+    assert any("resets_at" in r for r in data.get("ranked_by_headroom", []))
