@@ -615,6 +615,7 @@ function matchingPairs(selection: PracticeSelection, deck: PracticeDeckData) {
   return [selection.lemma, ...distractors].map((entry) => ({
     left: entry.lemma,
     right: glossLabel(entry),
+    lemmaId: entry.lemmaId,
   }));
 }
 
@@ -908,6 +909,8 @@ function LexiconPracticeIsland({
   const shardJsonCacheRef = useRef(new Map<string, Promise<unknown>>());
   const showEnglishSubtitles = learnerLevel === 'A1';
 
+  const matchedSelectedRatingRef = useRef<PracticeRating | null>(null);
+
   // Reset all per-item feedback/lock state. Shared by the selection-change effect and
   // `advancePending` so a wrong answer that re-surfaces the SAME item (a lapsed card the
   // selector picks again — same `itemId`, so the effect does not re-fire) still starts
@@ -920,6 +923,7 @@ function LexiconPracticeIsland({
     setHeritageFeedback(null);
     setPendingOutcome(null);
     pendingOutcomeRef.current = null;
+    matchedSelectedRatingRef.current = null;
   }, []);
 
   useEffect(() => {
@@ -957,6 +961,14 @@ function LexiconPracticeIsland({
       }
     }
   }, []);
+
+  useEffect(() => {
+    const normalized = normalizeInitialDeck(initialDeck);
+    if (normalized) {
+      setDeck(normalized);
+      setClozeLoaded(hasLoadedDrillShards(normalized));
+    }
+  }, [initialDeck]);
 
   useEffect(() => {
     const isAutoStartTrigger = autoStart || Boolean(focusedLemmaId);
@@ -1113,6 +1125,19 @@ function LexiconPracticeIsland({
     return fresh;
   }, [deck, history, mode, poolFilter, revision, sessionPhase, sessionSeed]);
 
+  // Pin the board for the life of the selection to avoid mid-board changes.
+  const pairsRef = useRef<{ itemId: string; pairs: ReturnType<typeof matchingPairs> } | null>(null);
+  const pairs = useMemo(() => {
+    if (!selection || selection.mode !== 'matching' || !deck) return [];
+    if (pairsRef.current && pairsRef.current.itemId === selection.itemId) {
+      return pairsRef.current.pairs;
+    }
+    const computed = matchingPairs(selection, deck);
+    pairsRef.current = { itemId: selection.itemId, pairs: computed };
+    return computed;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selection?.itemId]);
+
   useEffect(() => {
     resetItemFeedback();
     if (selection) {
@@ -1121,6 +1146,45 @@ function LexiconPracticeIsland({
       window.setTimeout(() => stageRef.current?.focus(), 0);
     }
   }, [selection?.itemId, resetItemFeedback]);
+
+  // Rate the selected lemma if matched but never completed (due to session abort/unmount)
+  useEffect(() => {
+    const prevSelection = selection;
+    return () => {
+      if (matchedSelectedRatingRef.current && prevSelection) {
+        try {
+          rateCard(
+            prevSelection.lemma.lemmaId,
+            prevSelection.mode,
+            matchedSelectedRatingRef.current,
+            new Date(),
+            {
+              blankCase: prevSelection.cloze?.blankCase,
+              heritageKind: prevSelection.heritage?.kind,
+            }
+          );
+        } catch (e) {
+          // ignore or handle storage warning
+        }
+        matchedSelectedRatingRef.current = null;
+      }
+    };
+  }, [selection]);
+
+  const handleMatchingMatch = useCallback((pairIndex: number, rating: PracticeRating) => {
+    const pair = pairs[pairIndex];
+    if (!pair || !pair.lemmaId) return;
+
+    if (pairIndex === 0) {
+      matchedSelectedRatingRef.current = rating;
+    } else {
+      try {
+        rateCard(pair.lemmaId, 'matching', rating, new Date());
+      } catch (e) {
+        setStorageWarning('Прогрес призупинено, доки сховище браузера не стане доступним.');
+      }
+    }
+  }, [pairs]);
 
   // While a wrong answer dwells, Enter is a second way to advance (alongside the
   // «Далі →» button) — the disabled option buttons blur to <body>, so we listen at
@@ -2049,6 +2113,7 @@ function LexiconPracticeIsland({
                   <PracticeItem
                     selection={selection}
                     deck={deck}
+                    pairs={pairs}
                     sessionSeed={sessionSeed}
                     answerLocked={answerLocked}
                     clozeInput={clozeInput}
@@ -2057,7 +2122,12 @@ function LexiconPracticeIsland({
                     onClozeInput={setClozeInput}
                     onFlashcardRating={(rating) => rateAndComplete(selection, rating)}
                     onChoice={handleChoice}
-                    onMatchingComplete={() => rateAndComplete(selection, 'good')}
+                    onMatchingComplete={() => {
+                      const rating = matchedSelectedRatingRef.current || 'good';
+                      matchedSelectedRatingRef.current = null;
+                      rateAndComplete(selection, rating);
+                    }}
+                    onMatchingMatch={handleMatchingMatch}
                     onClozeSubmit={submitCloze}
                   />
                   {pendingOutcome ? (
@@ -2104,6 +2174,7 @@ function formatNextDueLabel(nextDue: Date | null): string | null {
 function PracticeItem({
   selection,
   deck,
+  pairs,
   sessionSeed,
   answerLocked,
   clozeInput,
@@ -2113,10 +2184,12 @@ function PracticeItem({
   onFlashcardRating,
   onChoice,
   onMatchingComplete,
+  onMatchingMatch,
   onClozeSubmit,
 }: {
   selection: PracticeSelection;
   deck: PracticeDeckData;
+  pairs: ReturnType<typeof matchingPairs>;
   sessionSeed: number;
   answerLocked: boolean;
   clozeInput: string;
@@ -2126,6 +2199,7 @@ function PracticeItem({
   onFlashcardRating(rating: PracticeRating): void;
   onChoice(option: ChoiceOption): void;
   onMatchingComplete(): void;
+  onMatchingMatch?: (pairIndex: number, rating: PracticeRating) => void;
   onClozeSubmit(value: string, source: 'typed' | 'chip'): void;
 }) {
   if (selection.mode === 'flashcards') {
@@ -2195,16 +2269,17 @@ function PracticeItem({
   }
 
   if (selection.mode === 'matching') {
-    const pairs = matchingPairs(selection, deck);
     if (!pairs.length) {
       return <p className="lexicon-practice-muted">Зараз немає карток для добору пар.</p>;
     }
     return (
       <div data-testid="practice-matching">
         <MatchUp
+          key={selection.cardKey}
           pairs={pairs}
           instruction={`Доберіть пару для «${selection.lemma.lemma}»`}
           onComplete={onMatchingComplete}
+          onMatch={onMatchingMatch}
         />
       </div>
     );

@@ -245,7 +245,7 @@ seeded/deterministic build (§1), FSRS card unit = `lemmaId + mode` (§1).
 |---|---|---|---|---|
 | `paradigm` — declension/conjugation | `enrichment.morphology.paradigm` (VESUM) | **Phase 1 (local)** | `is_paradigm_eligible` | A2 (chips) · B1+ (typed) |
 | `stress` — stress placement | `enrichment.stress` | **Phase 1 (local)** | `is_stress_eligible` | A1+ |
-| `synonym` — synonym/antonym match | `sections.synonyms` / `sections.antonyms` | **available NOW** ⟦v5 probe 2026-07-05: 796 prompts / 1,224 in-vocab pairs⟧ · slovnyk Phase 2 grows it | `is_synonym_eligible` | B1+ |
+| `synonym` — synonym/antonym match | `sections.synonyms` / `sections.antonyms` | **available NOW** ⟦v5 probe 2026-07-05: 796 prompts / 1,224 in-vocab pairs⟧ · slovnyk Phase 2 grows it | `is_synonym_eligible` | B1+ (curated A2 exceptions) |
 | `idiom` — idiom→meaning match | `sections.idioms` / phraseologism articles | Phase 1 + Phase 2 | `is_idiom_eligible` | B1+ (curated A2 exceptions) |
 | `heritage` — decolonization pick | `heritage_status.curated_calque` + §6_note corrections | **Phase 1 (curated)** ⟦v5 probe: 5 pairs — ships thin, fail-closed, until calque curation⟧ | `is_heritage_eligible` | B1+ (curated A2 exceptions) |
 | `classify` (v5, §9.8) — category sort | VESUM tags already in `enrichment.morphology` + `pos` | **available NOW** ⟦v5 probe: 2,214 nouns · 1,069 verbs · 598 adj⟧ | `is_classify_eligible` | A1+ (gender) · A2+ (aspect/declension) |
@@ -305,6 +305,12 @@ seeded/deterministic build (§1), FSRS card unit = `lemmaId + mode` (§1).
   answer); pairs whose glosses are near-identical to a distractor's are skipped (validator).
 - **Coverage honesty**: synonyms are slovnyk-sourced → deck grows with fill **Phase 2**; build reports
   coverage, never pads (§9.7).
+- ⟦agy v4⟧ **Availability**: default **B1+** (synonym discrimination before core vocab is solid);
+  **A2 only for curator-flagged pairs whose prompt AND target are both A2 vocabulary** — the
+  high-frequency synonym pairs learners actually meet at A2, not the long tail.
+  ⟦v5.1 — #4698 curation lane⟧ the mechanical both-leg-A2 filter (approved pair + both lemmas at A2
+  + constructible distractors) only **NOMINATES**; the pair ships A2 only with the curator flag
+  (`a2Exception: true` + `curator` on the approved verdict record in `synonym_pair_verdicts.yaml`).
 - **SRS**: `lemmaId+synonym` on the PROMPT lemma.
 
 ### 9.4 `idiom` — idiom → meaning

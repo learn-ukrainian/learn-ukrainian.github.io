@@ -13,6 +13,11 @@ export interface LexiconEntry {
   lemma: string;
   url_slug: string;
   gloss: string | null;
+  // entry_type is the article-record kind from `articles.entry_type`
+  // (lemma | expression | phraseologism | proverb | multiword_term | proper_name).
+  // Payloads themselves do not carry it, so it is joined on read from the
+  // `articles` table. `form_of` alias routes have no article row → null.
+  entry_type?: string | null;
   form_of?: { lemma: string; url_slug: string } | null;
   pos?: string | null;
   ipa?: string | null;
@@ -28,6 +33,7 @@ export interface LexiconEntry {
 interface PayloadRow {
   slug: string;
   payload_json: string;
+  entry_type: string | null;
 }
 
 interface MetadataRow {
@@ -62,6 +68,97 @@ export function resetAtlasPayloadCacheForTests(): void {
   _practiceLemmasCache = null;
 }
 
+type BetterSqliteDatabase = InstanceType<typeof Database>;
+
+export interface EntryModelGateCounts {
+  reviewedEntries: number;
+  publicRoutes: number;
+  formOfRoutes: number;
+  aliasRecords: number;
+}
+
+/**
+ * Site-build assertions for the two DB-enforced entry-model gates
+ * (`docs/runbooks/word-atlas-entry-model.md` § Acceptance Gates). These mirror
+ * the DB builder's checks (`scripts/atlas/atlas_db.py`) so a bad `atlas.db`
+ * fails the Astro build loudly instead of silently shipping inflated counts or
+ * dangling aliases. Wording is kept identical to the deterministic gates.
+ *
+ * - `article_vs_alias_count`: `form_of` and alias records do not increment
+ *   reviewed entry totals.
+ * - `alias_target_integrity`: every public alias `target_slug` resolves to an
+ *   approved public article.
+ */
+export function runEntryModelGates(db: BetterSqliteDatabase): EntryModelGateCounts {
+  const scalar = (sql: string): number => (db.prepare(sql).get() as { n: number }).n;
+
+  // article_vs_alias_count — reviewed entries are the approved+public `articles`
+  // rows only. `form_of` alias routes (no `articles` row) and `aliases` records
+  // must be excluded, so the reviewed total must equal the public routes minus
+  // the form_of routes, and must equal the routes that join an approved+public
+  // article. Any drift means an alias/form_of record has leaked into the totals.
+  const reviewedEntries = scalar(
+    `SELECT COUNT(*) AS n FROM articles WHERE review_state = 'approved' AND visibility = 'public'`,
+  );
+  const publicRoutes = scalar(`SELECT COUNT(*) AS n FROM article_payloads WHERE is_public_route = 1`);
+  const formOfRoutes = scalar(
+    `SELECT COUNT(*) AS n FROM article_payloads ap
+     LEFT JOIN articles a ON a.slug = ap.slug
+     WHERE ap.is_public_route = 1 AND a.slug IS NULL`,
+  );
+  const routedReviewed = scalar(
+    `SELECT COUNT(*) AS n FROM article_payloads ap
+     JOIN articles a ON a.slug = ap.slug
+     WHERE ap.is_public_route = 1 AND a.review_state = 'approved' AND a.visibility = 'public'`,
+  );
+  const aliasRecords = scalar(`SELECT COUNT(*) AS n FROM aliases`);
+
+  if (reviewedEntries !== publicRoutes - formOfRoutes || reviewedEntries !== routedReviewed) {
+    throw new Error(
+      `article_vs_alias_count failure: form_of and alias records must not increment reviewed entry totals — ` +
+        `reviewed entries=${reviewedEntries}, public routes=${publicRoutes}, form_of routes=${formOfRoutes} ` +
+        `(public - form_of = ${publicRoutes - formOfRoutes}), routed approved-public articles=${routedReviewed}`,
+    );
+  }
+
+  // alias_target_integrity — mirrors scripts/atlas/atlas_db.py::validate_alias_targets.
+  const failures = db
+    .prepare(
+      `SELECT al.alias AS alias, al.kind AS kind, al.target_slug AS target_slug,
+              a.review_state AS review_state, a.visibility AS visibility
+       FROM aliases al
+       LEFT JOIN articles a ON a.slug = al.target_slug
+       WHERE al.visibility = 'public'
+         AND (a.slug IS NULL OR a.review_state != 'approved' OR a.visibility != 'public')
+       ORDER BY al.target_slug, al.kind, al.alias`,
+    )
+    .all() as Array<{
+    alias: string;
+    kind: string;
+    target_slug: string;
+    review_state: string | null;
+    visibility: string | null;
+  }>;
+
+  if (failures.length > 0) {
+    for (const row of failures) {
+      const reason =
+        row.review_state === null
+          ? 'missing target article'
+          : row.review_state !== 'approved'
+            ? `target review_state=${JSON.stringify(row.review_state)}`
+            : `target visibility=${JSON.stringify(row.visibility)}`;
+      console.error(
+        `alias_target_integrity failure: alias=${JSON.stringify(row.alias)} ` +
+          `kind=${JSON.stringify(row.kind)} target_slug=${JSON.stringify(row.target_slug)} reason=${reason}`,
+      );
+    }
+    throw new Error(`${failures.length} alias target(s) are not approved public articles`);
+  }
+
+  return { reviewedEntries, publicRoutes, formOfRoutes, aliasRecords };
+}
+
 export function getAtlasPayloadCache(): AtlasPayloadCache {
   if (cachedAtlasPayloads) return cachedAtlasPayloads;
 
@@ -75,12 +172,16 @@ export function getAtlasPayloadCache(): AtlasPayloadCache {
 
   const db = new Database(dbPath, { readonly: true, fileMustExist: true });
   try {
+    // Fail the build loudly on entry-model gate violations before reading rows.
+    runEntryModelGates(db);
+
     const payloadRows = db
       .prepare(
-        `SELECT slug, payload_json
-         FROM article_payloads
-         WHERE is_public_route = 1
-         ORDER BY route_order`,
+        `SELECT ap.slug AS slug, ap.payload_json AS payload_json, a.entry_type AS entry_type
+         FROM article_payloads ap
+         LEFT JOIN articles a ON a.slug = ap.slug
+         WHERE ap.is_public_route = 1
+         ORDER BY ap.route_order`,
       )
       .all() as PayloadRow[];
     const metadataRows = db
@@ -90,7 +191,13 @@ export function getAtlasPayloadCache(): AtlasPayloadCache {
          WHERE key IN ('generated_at', 'version')`,
       )
       .all() as MetadataRow[];
-    const entries = payloadRows.map((row) => JSON.parse(row.payload_json) as LexiconEntry);
+    const entries = payloadRows.map((row) => {
+      const entry = JSON.parse(row.payload_json) as LexiconEntry;
+      // entry_type is authoritative from the `articles` table (SSOT), not the
+      // payload JSON. `form_of` alias routes have no article row → null.
+      entry.entry_type = row.entry_type ?? null;
+      return entry;
+    });
     const bySlug = new Map<string, LexiconEntry>();
     for (const entry of entries) {
       bySlug.set(entry.url_slug, entry);
