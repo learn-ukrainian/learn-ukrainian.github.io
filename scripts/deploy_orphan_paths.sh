@@ -57,7 +57,13 @@ ORPHAN_PATHS_CLAUDE="scheduled_tasks.lock worktrees *-epic settings.local.json"
 #          (e.g. 4497-runner-failover.md). The dispatch-*.md FILE glob does not match a
 #          directory, so without this entry the first collected brief aborts every
 #          deploy — the #3456 failure class again, one level down.
-ORPHAN_PATHS_AGENT="wake cache prompts tmp *-thread-bootstrap.md *-handoff.md *-thread-lease.json *-brief.md dispatch-*.md dispatch-briefs settings.local.json"
+# canary-*.json — context-rot canary probes minted at cold-start
+#          (scripts/context_canary.py mint --out .agent/canary-<stamp>.json; mandated
+#          cold-start step 7 since 2026-07-07, #4701). Per-session runtime state,
+#          machine-local, NOT source-tracked. Without this glob the FIRST session that
+#          mints a canary aborts every subsequent deploy — the #3456/#4721 failure
+#          class with a new runtime file type.
+ORPHAN_PATHS_AGENT="wake cache prompts tmp *-thread-bootstrap.md *-handoff.md *-thread-lease.json *-brief.md dispatch-*.md dispatch-briefs canary-*.json settings.local.json"
 
 # --- shared/skills → .agents/skills ---
 ORPHAN_PATHS_AGENTS=""
