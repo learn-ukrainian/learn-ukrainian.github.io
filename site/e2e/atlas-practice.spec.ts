@@ -85,3 +85,21 @@ for (const path of ['/lexicon/', '/words-of-the-day/', '/lexicon/browse/']) {
     expect(consoleErrors).toEqual([]);
   });
 }
+
+test('practice page shows UA fallback when LexiconPractice island chunk fails to load (#4694)', async ({ page }) => {
+  // Route-abort the island's dynamic chunk (identified by stem in filename, stable across
+  // builds) to simulate the exact astro-island pre-React failure mode:
+  // "Failed to fetch dynamically imported module". This fires the 'astro:hydration-error'
+  // event (and/or watchdog) before any React code or its error boundary can run.
+  await page.route('**/*LexiconPractice*.js', (route) => route.abort());
+
+  await page.goto('/words-of-the-day/practice/');
+
+  // Expect the static UA fallback (error listener path is fast; no reliance on 10s timeout).
+  await expect(page.getByText('Не вдалося завантажити практику')).toBeVisible({ timeout: 8000 });
+  const retryBtn = page.getByRole('button', { name: 'Спробувати ще раз' });
+  await expect(retryBtn).toBeVisible();
+
+  // Mount wrapper is hidden on failure; fallback is swapped in.
+  await expect(page.locator('#lexicon-practice-mount')).toHaveAttribute('hidden', '');
+});

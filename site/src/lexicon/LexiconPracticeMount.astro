@@ -1,0 +1,141 @@
+---
+import LexiconPractice from '../components/LexiconPractice';
+---
+
+<div id="lexicon-practice-mount" data-lexicon-practice-island>
+  <LexiconPractice client:only="react" />
+</div>
+
+<div id="lexicon-practice-fallback" class="lexicon-practice-fallback" hidden>
+  <p>Не вдалося завантажити практику.</p>
+  <button type="button" onclick="location.reload()">Спробувати ще раз</button>
+</div>
+
+<script is:inline>
+(() => {
+  const MOUNT_SEL = '#lexicon-practice-mount';
+  const FALLBACK_ID = 'lexicon-practice-fallback';
+  const SUCCESS_SEL = '.lexicon-practice';
+  const TIMEOUT_MS = 10000;
+  let done = false;
+
+  function showFallback() {
+    if (done) return;
+    done = true;
+    const mount = document.querySelector(MOUNT_SEL);
+    const fb = document.getElementById(FALLBACK_ID);
+    if (mount) mount.setAttribute('hidden', '');
+    if (fb) {
+      fb.removeAttribute('hidden');
+    }
+  }
+
+  function markSuccess() {
+    if (done) return;
+    done = true;
+  }
+
+  function isOurIsland(target) {
+    if (!target) return false;
+    if (target.closest && target.closest(MOUNT_SEL)) return true;
+    return false;
+  }
+
+  // Listen for astro-island hydration error events (dispatched by Astro runtime on import/hydrate fail)
+  document.addEventListener('astro:hydration-error', (ev) => {
+    const d = (ev && ev.detail) || {};
+    const url = String(d.componentUrl || '');
+    if (url.includes('LexiconPractice') || isOurIsland(ev.target)) {
+      showFallback();
+    }
+  });
+
+  // Listen for successful hydration
+  document.addEventListener('astro:hydrate', (ev) => {
+    if (isOurIsland(ev.target)) {
+      markSuccess();
+    }
+  }, true);
+
+  function setupObservers() {
+    const mount = document.querySelector(MOUNT_SEL);
+    if (!mount) return;
+
+    // MutationObserver catches content render quickly on success path
+    const mo = new MutationObserver(() => {
+      if (mount.querySelector(SUCCESS_SEL)) {
+        markSuccess();
+        mo.disconnect();
+      }
+    });
+    mo.observe(mount, { childList: true, subtree: true });
+
+    // Direct listeners on the island element if already in DOM
+    const island = mount.querySelector('astro-island');
+    if (island) {
+      island.addEventListener('astro:hydrate', markSuccess, { once: true });
+      island.addEventListener('astro:hydration-error', showFallback, { once: true });
+    }
+
+    // If content already present (race or fast path)
+    if (mount.querySelector(SUCCESS_SEL)) {
+      markSuccess();
+    }
+  }
+
+  // Watchdog: ~10s; does not fire if success marker seen; re-checks content before declaring failure
+  const watchdog = setTimeout(() => {
+    if (done) return;
+    const mount = document.querySelector(MOUNT_SEL);
+    if (mount && mount.querySelector(SUCCESS_SEL)) {
+      markSuccess();
+      return;
+    }
+    showFallback();
+  }, TIMEOUT_MS);
+
+  function init() {
+    setupObservers();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init, { once: true });
+  } else {
+    init();
+  }
+})();
+</script>
+
+<style is:global>
+.lexicon-practice-fallback {
+  display: grid;
+  gap: 0.75rem;
+  padding: 1rem;
+  border: 1px solid var(--lu-border);
+  border-radius: 12px;
+  background: var(--lu-surface-raised);
+}
+.lexicon-practice-fallback p {
+  margin: 0 0 0.5rem;
+  color: var(--lu-text);
+  line-height: 1.5;
+}
+.lexicon-practice-fallback button {
+  justify-self: start;
+  min-height: 44px;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--lu-border);
+  border-radius: 6px;
+  background: var(--lu-surface);
+  color: var(--lu-text);
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+.lexicon-practice-fallback button:hover,
+.lexicon-practice-fallback button:focus-visible {
+  border-color: var(--lu-primary);
+  outline: 2px solid var(--lu-primary);
+  outline-offset: 2px;
+}
+</style>
