@@ -135,6 +135,7 @@ interface LexiconEntry {
   lemma: string;
   url_slug: string;
   gloss: string | null;
+  entry_type?: string | null;
   form_of?: { lemma: string; url_slug: string } | null;
   pos: string | null;
   ipa: string | null;
@@ -174,6 +175,20 @@ const cefrLevel = enrichment?.cefr?.level ?? null;
 const paradigm = enrichment?.morphology?.paradigm ?? null;
 const nounParadigm = paradigm?.kind === "noun" ? paradigm : null;
 const verbParadigm = paradigm?.kind === "verb" ? paradigm : null;
+// entry_type-branched rendering (GH #4385): non-lemma article types are not
+// single inflecting heads, so they must NOT be forced through the lemma
+// paradigm/morphology template. A multiword_term / expression / phraseologism /
+// proverb page renders headword, gloss, usage, citations and heritage banners,
+// but never a «Парадигма»/case table — even when the migrated payload happens to
+// carry stray morphology (e.g. aspect-pair rows). Lemma and proper_name keep the
+// full paradigm view unchanged (zero visual regression).
+const MORPHOLOGY_SUPPRESSED_TYPES = new Set([
+  "multiword_term",
+  "expression",
+  "phraseologism",
+  "proverb",
+]);
+const suppressMorphology = MORPHOLOGY_SUPPRESSED_TYPES.has(entry.entry_type ?? "");
 const posLabel = formatPos(entry.pos, enrichment?.morphology?.pos);
 const headwordIpa = formatIpa(entry.pronunciation?.ipa ?? entry.ipa);
 const heritageBoxes = resolveHeritageBoxes(entry);
@@ -364,7 +379,7 @@ function buildArticleOverview() {
   const idiomCount = sections?.idioms?.items.length ?? 0;
   const externalCount = externalGroups.reduce((total, group) => total + group.materials.length, 0);
   const definitionCount = definitionCards.length + (enrichment?.meaning ? 1 : 0) + (phraseHasGloss ? 1 : 0);
-  return [
+  const cards = [
     {
       label: "Значення",
       ready: definitionCount > 0,
@@ -421,6 +436,8 @@ function buildArticleOverview() {
       detail: externalCount > 0 ? `${externalCount} матеріалів` : "очікує добірку",
     },
   ];
+  // Non-lemma entries never surface a morphology card (no paradigm to await).
+  return suppressMorphology ? cards.filter((card) => card.label !== "Морфологія") : cards;
 }
 
 function sourceHost(url: string) {
@@ -688,7 +705,7 @@ function groupExternalMaterials(items: NonNullable<Enrichment["external_material
         </section>
       )}
 
-      {enrichment?.morphology && (
+      {enrichment?.morphology && !suppressMorphology && (
         <section class="atlas-section">
           <h2>Морфологія</h2>
           <p class="atlas-muted">

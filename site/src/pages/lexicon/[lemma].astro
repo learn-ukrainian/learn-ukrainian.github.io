@@ -1,6 +1,14 @@
 ---
 /**
- * Атлас слів (Лексикон) — per-lemma detail route.
+ * Атлас слів (Лексикон) — article detail route.
+ *
+ * Route semantics (GH #4385): the `[lemma]` param is an ENTRY slug, not a lemma
+ * parameter. The value is always `entry.url_slug`, so multiword-term slugs
+ * (e.g. `брати-взяти`, `іі-відміна`) resolve exactly like single-lemma slugs.
+ * The Astro filename stays `[lemma].astro` (a later PR handles the rename); the
+ * `entry_type` carried on each entry drives per-type rendering in the article
+ * component. The DB-enforced entry-model gates run when `getAtlasPayloadCache()`
+ * loads, failing the build loudly on violations.
  */
 import CourseLayout from "../../layouts/CourseLayout.astro";
 import WordAtlasArticle from "../../lexicon/WordAtlasArticle.astro";

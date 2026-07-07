@@ -139,11 +139,16 @@ describe('Atlas DB SSG read parity', () => {
       const dbEntry = cache.bySlug.get(slug);
       expect(manifestEntry, `manifest fixture missing: ${slug}`).toBeDefined();
       expect(dbEntry, `DB fixture missing: ${slug}`).toBeDefined();
-      expect(dbEntry).toEqual(manifestEntry);
+      // entry_type is a DB-only field (the manifest predates the entry model).
+      // Align the manifest fixture with the DB's entry_type so this parity check
+      // isolates payload-projection fidelity from entry_type branching, which is
+      // covered by atlas-entry-type-templates.test.ts.
+      const alignedManifestEntry = { ...manifestEntry!, entry_type: dbEntry!.entry_type };
+      expect(dbEntry).toEqual(alignedManifestEntry);
 
       const manifestHtml = await container.renderToString(WordAtlasArticle, {
         props: {
-          entry: manifestEntry,
+          entry: alignedManifestEntry,
           allEntries: manifestEntries,
           generatedAt: data.generated_at,
           manifestVersion: data.version,
