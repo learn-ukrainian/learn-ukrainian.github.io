@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 from pathlib import Path
 from types import SimpleNamespace
@@ -135,6 +136,100 @@ def test_fixture_validation_rejects_class_m_without_distractor(tmp_path: Path) -
     )
 
     with pytest.raises(qg_bakeoff.BakeoffConfigError, match="class-M claims require distractor_evidence"):
+        qg_bakeoff.load_fixture(path)
+
+
+def test_fixture_loader_accepts_non_overlapping_canary_suffix(tmp_path: Path) -> None:
+    path = tmp_path / "canary.json"
+    canary_sentence = "Контрольний маркер для зовнішньої перевірки відтворення."
+    path.write_text(
+        json.dumps(
+            {
+                "slug": "canary",
+                "title": "Canary",
+                "passage_md": f"True claim. Fabricated claim.\n\n{canary_sentence}",
+                "canary_sentence": canary_sentence,
+                "claims": [
+                    {"claim_id": "true", "claim": "True claim.", "is_true": True},
+                    {
+                        "claim_id": "false",
+                        "claim": "Fabricated claim.",
+                        "is_true": False,
+                        "fabrication_class": "U",
+                    },
+                ],
+            },
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+
+    fixture = qg_bakeoff.load_fixture(path)
+
+    assert fixture.canary_sentence == canary_sentence
+
+
+def test_fixture_loader_rejects_canary_not_at_passage_suffix(tmp_path: Path) -> None:
+    path = tmp_path / "bad-canary.json"
+    path.write_text(
+        json.dumps(
+            {
+                "slug": "bad-canary",
+                "title": "Bad Canary",
+                "passage_md": "Canary marker. True claim.",
+                "canary_sentence": "Canary marker.",
+                "claims": [{"claim_id": "true", "claim": "True claim.", "is_true": True}],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(qg_bakeoff.BakeoffConfigError, match="suffix"):
+        qg_bakeoff.load_fixture(path)
+
+
+@pytest.mark.parametrize("canary_sentence", ["", "   ", 42])
+def test_fixture_loader_rejects_empty_or_non_string_canary_sentence(
+    tmp_path: Path,
+    canary_sentence: object,
+) -> None:
+    path = tmp_path / "bad-canary.json"
+    path.write_text(
+        json.dumps(
+            {
+                "slug": "bad-canary",
+                "title": "Bad Canary",
+                "passage_md": "True claim.",
+                "canary_sentence": canary_sentence,
+                "claims": [{"claim_id": "true", "claim": "True claim.", "is_true": True}],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(qg_bakeoff.BakeoffConfigError, match="canary_sentence must be a non-empty string"):
+        qg_bakeoff.load_fixture(path)
+
+
+def test_fixture_loader_rejects_claim_overlapping_canary_sentence(tmp_path: Path) -> None:
+    path = tmp_path / "bad-canary.json"
+    path.write_text(
+        json.dumps(
+            {
+                "slug": "bad-canary",
+                "title": "Bad Canary",
+                "passage_md": "True claim. Canary marker.",
+                "canary_sentence": "Canary marker.",
+                "claims": [
+                    {"claim_id": "true", "claim": "True claim.", "is_true": True},
+                    {"claim_id": "canary", "claim": "Canary marker.", "is_true": True},
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(qg_bakeoff.BakeoffConfigError, match="overlap canary_sentence"):
         qg_bakeoff.load_fixture(path)
 
 
@@ -1635,6 +1730,34 @@ def test_rescore_covers_both_arms_and_backfills_arm(tmp_path: Path) -> None:
     assert "| unknown [" not in scorecard  # foreign JSON never becomes a model row
     verdict_after = json.loads((out / "tier2-canary-verdict.json").read_text(encoding="utf-8"))
     assert "rescored_at" not in verdict_after  # untouched, not rewritten
+
+
+def test_rescore_refuses_frozen_reference_scorecard_without_escape(tmp_path: Path) -> None:
+    out = tmp_path / "frozen"
+    out.mkdir()
+    scorecard = out / qg_bakeoff.SCORECARD_NAME
+    scorecard.write_text("# frozen scorecard\n", encoding="utf-8")
+    manifest = tmp_path / "MANIFEST.json"
+    manifest.write_text(
+        json.dumps(
+            {
+                "benchmark_version": "1.0.0",
+                "reference_result": {
+                    "path": "audit/frozen/SCORECARD.md",
+                    "sha256": hashlib.sha256(scorecard.read_bytes()).hexdigest(),
+                },
+            },
+            indent=2,
+            sort_keys=True,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(qg_bakeoff.BakeoffConfigError, match="unsafe-allow-frozen"):
+        qg_bakeoff.rescore_artifacts(out, manifest_path=manifest)
+
+    assert qg_bakeoff.rescore_artifacts(out, unsafe_allow_frozen=True, manifest_path=manifest) == 0
 
 
 def test_load_all_artifacts_skips_foreign_json(tmp_path: Path) -> None:

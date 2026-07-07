@@ -115,7 +115,9 @@ zhnyvarski), NOT to every fixture in `tests/fixtures/qg_bakeoff/` — that direc
 corpus for the #4312 paper (e.g. the #4539 history-domain passages), and extra passages must not move
 the 7/4 denominators or the required-artifact set. Expanding the pinned set is a DELIBERATE
 re-calibration (bump denominators + thresholds in one reviewed commit), never a side effect of adding
-a bakeoff fixture. PASS requires ALL, per the STRICT live path (bakeoff-orthogonal stripping does NOT
+a bakeoff fixture. The checker consumes only single-run calibration directories; multi-run bakeoff
+reference directories are deliberately refused and must not be used as E3 inputs. PASS requires ALL,
+per the STRICT live path (bakeoff-orthogonal stripping does NOT
 apply to production):
 - (a) every cell: `status=ran`, `invalid_fact_checks=0`, `required_ungrounded_findings=0`,
   `findings_schema_invalid=false`, no parse/provider failure. NOTE (codex, verified): today's
