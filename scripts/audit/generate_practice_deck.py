@@ -93,6 +93,7 @@ NO_PAIR_PROBABILITY = {
 }
 HERITAGE_KINDS = frozenset({"lexical", "sense_restricted"})
 HERITAGE_DEFAULT_AVAILABILITY = "B1"
+SYNONYM_DEFAULT_AVAILABILITY = "B1"
 HERITAGE_OPTION_LEAK_PATTERN = re.compile(
     r"(?:⚠|кальк|calque|русизм|russianism|суржик|рос\.)",
     re.IGNORECASE,
@@ -1481,6 +1482,61 @@ def _section_items(entry: dict[str, Any], section_name: str) -> list[str]:
     return cleaned
 
 
+def _synonym_pair_key(a: str, b: str, polarity: str) -> tuple[str, str, str]:
+    a_plain = _plain(a)
+    b_plain = _plain(b)
+    if a_plain > b_plain:
+        a_plain, b_plain = b_plain, a_plain
+    return (a_plain, b_plain, polarity)
+
+
+def validate_synonym_verdict_record(record: dict[str, Any]) -> list[str]:
+    errors: list[str] = []
+    for field in ("a", "b", "polarity"):
+        if not _clean_text(record.get(field)):
+            errors.append(f"synonym verdict missing {field}")
+    a2_exception = record.get("a2Exception")
+    curator = _clean_text(record.get("curator"))
+    if a2_exception is True and not curator:
+        errors.append("synonym verdict a2Exception requires curator")
+    if a2_exception not in (None, False, True):
+        errors.append("synonym verdict a2Exception must be boolean")
+    if curator and a2_exception is not True:
+        errors.append("synonym verdict curator requires a2Exception: true")
+    return errors
+
+
+def build_synonym_verdict_sets(
+    synonym_verdicts: dict[str, Any] | None,
+) -> tuple[set[tuple[str, str, str]], set[tuple[str, str, str]], set[tuple[str, str, str]]]:
+    approved_set: set[tuple[str, str, str]] = set()
+    rejected_set: set[tuple[str, str, str]] = set()
+    a2_exception_set: set[tuple[str, str, str]] = set()
+    if not synonym_verdicts:
+        return approved_set, rejected_set, a2_exception_set
+    for item in synonym_verdicts.get("approved", []):
+        if not isinstance(item, dict):
+            continue
+        errors = validate_synonym_verdict_record(item)
+        if errors:
+            print(f"WARN: synonym verdict dropped: {'; '.join(errors)}", file=sys.stderr)
+            continue
+        key = _synonym_pair_key(str(item["a"]), str(item["b"]), str(item["polarity"]))
+        approved_set.add(key)
+        if item.get("a2Exception") is True:
+            a2_exception_set.add(key)
+    for item in synonym_verdicts.get("rejected", []):
+        if not isinstance(item, dict):
+            continue
+        errors = validate_synonym_verdict_record(item)
+        if errors:
+            print(f"WARN: synonym verdict dropped: {'; '.join(errors)}", file=sys.stderr)
+            continue
+        key = _synonym_pair_key(str(item["a"]), str(item["b"]), str(item["polarity"]))
+        rejected_set.add(key)
+    return approved_set, rejected_set, a2_exception_set
+
+
 def _synonym_option(
     label: str,
     lemma_id: str,
@@ -1517,6 +1573,93 @@ def _valid_synonym_distractors(
     )
 
 
+def _lexeme_lists_synonym_target(entry: dict[str, Any], target_plain: str, polarity: str) -> bool:
+    section_name = "synonyms" if polarity == "synonym" else "antonyms"
+    return any(_plain(label) == target_plain for label in _section_items(entry, section_name))
+
+
+def nominate_a2_synonym_pairs(
+    entries: list[dict[str, Any]],
+    synonym_verdicts: dict[str, Any] | None,
+    all_lexemes: list[dict[str, Any]],
+    by_plain_lemma: dict[str, dict[str, Any]],
+) -> list[dict[str, Any]]:
+    """Report approved both-leg-A2 synonym pairs for curator a2Exception review (#4698)."""
+    approved_set, _, _a2_exception_set = build_synonym_verdict_sets(synonym_verdicts)
+    entry_by_lemma_id = {
+        _stable_lemma_id(entry): entry
+        for entry in entries
+        if _stable_lemma_id(entry)
+    }
+    nominations: list[dict[str, Any]] = []
+    for item in (synonym_verdicts or {}).get("approved", []):
+        if not isinstance(item, dict):
+            continue
+        if item.get("a2Exception") is True:
+            continue
+        key = _synonym_pair_key(str(item["a"]), str(item["b"]), str(item["polarity"]))
+        if key not in approved_set:
+            continue
+        lexeme_a = by_plain_lemma.get(key[0])
+        lexeme_b = by_plain_lemma.get(key[1])
+        if not lexeme_a or not lexeme_b:
+            continue
+        if lexeme_a["cefr"] != "A2" or lexeme_b["cefr"] != "A2":
+            continue
+        entry_a = entry_by_lemma_id.get(lexeme_a["lemmaId"])
+        entry_b = entry_by_lemma_id.get(lexeme_b["lemmaId"])
+        if not entry_a or not entry_b:
+            continue
+        polarity = str(item["polarity"])
+        linked = (
+            _lexeme_lists_synonym_target(entry_a, key[1], polarity)
+            or _lexeme_lists_synonym_target(entry_b, key[0], polarity)
+        )
+        if not linked:
+            continue
+        distractors_ab = len(_valid_synonym_distractors(lexeme_b, lexeme_a, all_lexemes))
+        distractors_ba = len(_valid_synonym_distractors(lexeme_a, lexeme_b, all_lexemes))
+        if max(distractors_ab, distractors_ba) < 3:
+            continue
+        nominations.append(
+            {
+                "a": lexeme_a["lemma"],
+                "b": lexeme_b["lemma"],
+                "polarity": polarity,
+                "sources": sorted(set(item.get("sources") or [])),
+                "prompt_cefr": lexeme_a["cefr"],
+                "target_cefr": lexeme_b["cefr"],
+                "distractors_ab": distractors_ab,
+                "distractors_ba": distractors_ba,
+                "pair_key": key,
+            }
+        )
+    nominations.sort(key=lambda row: (row["pair_key"], row["a"], row["b"]))
+    return nominations
+
+
+def format_a2_synonym_nomination_report(rows: list[dict[str, Any]]) -> str:
+    header = "a\tb\tpolarity\tsources\tprompt_cefr\ttarget_cefr\tdistractors_ab\tdistractors_ba"
+    lines = [header, f"total\t{len(rows)}"]
+    for row in rows:
+        sources = ",".join(row.get("sources") or [])
+        lines.append(
+            "\t".join(
+                (
+                    str(row["a"]),
+                    str(row["b"]),
+                    str(row["polarity"]),
+                    sources,
+                    str(row["prompt_cefr"]),
+                    str(row["target_cefr"]),
+                    str(row["distractors_ab"]),
+                    str(row["distractors_ba"]),
+                )
+            )
+        )
+    return "\n".join(lines) + "\n"
+
+
 def _build_synonym_items(
     entry: dict[str, Any],
     lexeme: dict[str, Any],
@@ -1525,6 +1668,7 @@ def _build_synonym_items(
     deck_version: str,
     approved_set: set[tuple[str, str, str]],
     rejected_set: set[tuple[str, str, str]],
+    a2_exception_set: set[tuple[str, str, str]],
     synonym_verdicts_loaded: bool,
     encountered_pairs: dict[str, dict[str, set[tuple[str, str, str]]]],
 ) -> list[dict[str, Any]]:
@@ -1534,7 +1678,9 @@ def _build_synonym_items(
             target = by_plain_lemma.get(_plain(target_label))
             if not target:
                 continue
-            if CEFR_RANK[lexeme["cefr"]] < CEFR_RANK["B1"]:
+            pair_key = _synonym_pair_key(lexeme["lemma"], target["lemma"], polarity)
+            a2_exception = pair_key in a2_exception_set
+            if CEFR_RANK[lexeme["cefr"]] < CEFR_RANK["B1"] and not a2_exception:
                 continue
             if CEFR_RANK[target["cefr"]] > CEFR_RANK[lexeme["cefr"]]:
                 continue
@@ -1542,12 +1688,15 @@ def _build_synonym_items(
             if len(distractors) < 3:
                 continue
 
-            l_plain = _plain(lexeme["lemma"])
-            t_plain = _plain(target["lemma"])
-            p1, p2 = (l_plain, t_plain) if l_plain <= t_plain else (t_plain, l_plain)
-            pair_key = (p1, p2, polarity)
-
             level = lexeme["cefr"]
+            if a2_exception and (
+                CEFR_RANK[level] > CEFR_RANK["A2"] or CEFR_RANK[target["cefr"]] > CEFR_RANK["A2"]
+            ):
+                print(
+                    f"WARN: synonym pair {pair_key!r} a2Exception dropped: both legs must be A2 vocabulary",
+                    file=sys.stderr,
+                )
+                continue
 
             if not synonym_verdicts_loaded:
                 encountered_pairs[level]["awaiting"].add(pair_key)
@@ -2107,6 +2256,36 @@ def _level_payload(
     return payload
 
 
+def _select_practice_lexemes(
+    entries: list[dict[str, Any]],
+    verifier: VesumVerifier,
+    config: BuildConfig,
+) -> tuple[list[tuple[dict[str, Any], dict[str, Any]]], list[dict[str, Any]], dict[str, dict[str, Any]], dict[str, dict[str, Any]]]:
+    eligible = [entry for entry in entries if is_practice_eligible(entry)]
+    course_entries = [entry for entry in eligible if _course_usage(entry)]
+    fill_entries = [entry for entry in eligible if not _course_usage(entry)]
+    course_entries.sort(key=_course_key)
+    fill_entries.sort(
+        key=lambda entry: (CEFR_RANK.get(_cefr_level(entry) or "", len(CEFR_RANK)), _stable_lemma_id(entry))
+    )
+    selected = list(course_entries)
+    if len(selected) < config.target:
+        selected.extend(fill_entries[: config.target - len(selected)])
+
+    lexemes_by_entry: list[tuple[dict[str, Any], dict[str, Any]]] = []
+    for entry in selected[: config.target]:
+        lexeme = _build_lexeme(entry, verifier)
+        if lexeme:
+            lexemes_by_entry.append((entry, lexeme))
+
+    all_lexemes = [lexeme for _, lexeme in lexemes_by_entry]
+    lexemes_by_id = {lexeme["lemmaId"]: lexeme for lexeme in all_lexemes}
+    by_plain_lemma: dict[str, dict[str, Any]] = {}
+    for lexeme in all_lexemes:
+        by_plain_lemma.setdefault(_plain(lexeme["lemma"]), lexeme)
+    return lexemes_by_entry, all_lexemes, by_plain_lemma, lexemes_by_id
+
+
 def build_practice_shards(
     entries: list[dict[str, Any]],
     allowlist: ReviewedSourceAllowlist,
@@ -2132,21 +2311,7 @@ def build_practice_shards(
         synonym_verdicts_loaded = synonym_verdicts is not None
     else:
         synonym_verdicts_loaded = True
-    approved_set = set()
-    rejected_set = set()
-    if synonym_verdicts:
-        for item in synonym_verdicts.get("approved", []):
-            a_p = _plain(item["a"])
-            b_p = _plain(item["b"])
-            if a_p > b_p:
-                a_p, b_p = b_p, a_p
-            approved_set.add((a_p, b_p, item["polarity"]))
-        for item in synonym_verdicts.get("rejected", []):
-            a_p = _plain(item["a"])
-            b_p = _plain(item["b"])
-            if a_p > b_p:
-                a_p, b_p = b_p, a_p
-            rejected_set.add((a_p, b_p, item["polarity"]))
+    approved_set, rejected_set, a2_exception_set = build_synonym_verdict_sets(synonym_verdicts)
 
     encountered_pairs: dict[str, dict[str, set[tuple[str, str, str]]]] = {
         level: {"approved": set(), "rejected": set(), "awaiting": set()}
@@ -2167,28 +2332,11 @@ def build_practice_shards(
     )
     rng_seed = int(hashlib.sha256(inputs_fingerprint.encode("utf-8")).hexdigest()[:16], 16)
     rng = random.Random(rng_seed)
-    eligible = [entry for entry in entries if is_practice_eligible(entry)]
-    course_entries = [entry for entry in eligible if _course_usage(entry)]
-    fill_entries = [entry for entry in eligible if not _course_usage(entry)]
-    course_entries.sort(key=_course_key)
-    fill_entries.sort(
-        key=lambda entry: (CEFR_RANK.get(_cefr_level(entry) or "", len(CEFR_RANK)), _stable_lemma_id(entry))
+    lexemes_by_entry, all_lexemes, by_plain_lemma, lexemes_by_id = _select_practice_lexemes(
+        entries,
+        verifier,
+        config,
     )
-    selected = list(course_entries)
-    if len(selected) < config.target:
-        selected.extend(fill_entries[: config.target - len(selected)])
-
-    lexemes_by_entry: list[tuple[dict[str, Any], dict[str, Any]]] = []
-    for entry in selected[: config.target]:
-        lexeme = _build_lexeme(entry, verifier)
-        if lexeme:
-            lexemes_by_entry.append((entry, lexeme))
-
-    all_lexemes = [lexeme for _, lexeme in lexemes_by_entry]
-    lexemes_by_id = {lexeme["lemmaId"]: lexeme for lexeme in all_lexemes}
-    by_plain_lemma: dict[str, dict[str, Any]] = {}
-    for lexeme in all_lexemes:
-        by_plain_lemma.setdefault(_plain(lexeme["lemma"]), lexeme)
     cloze_sources = cloze_sources or []
     cloze_by_lemma_id: dict[str, list[dict[str, Any]]] = {}
     cloze_by_lemma: dict[str, list[dict[str, Any]]] = {}
@@ -2255,6 +2403,7 @@ def build_practice_shards(
             deck_version,
             approved_set,
             rejected_set,
+            a2_exception_set,
             synonym_verdicts_loaded,
             encountered_pairs,
         )
@@ -2726,6 +2875,11 @@ def main(argv: list[str] | None = None) -> int:
         action="store_true",
         help="Run deliberately broken mode-validator fixtures and exit nonzero when validators catch them.",
     )
+    parser.add_argument(
+        "--nominate-a2",
+        action="store_true",
+        help="Report approved both-leg-A2 synonym pairs for curator a2Exception review; does not auto-flag.",
+    )
     args = parser.parse_args(argv)
 
     if args.broken_validator_fixtures:
@@ -2736,6 +2890,25 @@ def main(argv: list[str] | None = None) -> int:
     cloze_sources = read_cloze_sources(args.cloze_sources)
     heritage_pairs = read_heritage_pairs(args.heritage_pairs)
     synonym_verdicts = read_synonym_verdicts(args.synonym_verdicts)
+
+    if args.nominate_a2:
+        if not synonym_verdicts:
+            print("ERROR: synonym verdicts required for --nominate-a2", file=sys.stderr)
+            return 1
+        verifier = (
+            JsonVesumVerifier.from_path(args.vesum_fixture)
+            if args.vesum_fixture
+            else RealVesumVerifier()
+        )
+        _lexemes_by_entry, all_lexemes, by_plain_lemma, _lexemes_by_id = _select_practice_lexemes(
+            entries,
+            verifier,
+            BuildConfig(target=args.target),
+        )
+        nominations = nominate_a2_synonym_pairs(entries, synonym_verdicts, all_lexemes, by_plain_lemma)
+        print(format_a2_synonym_nomination_report(nominations), end="")
+        return 0
+
     verifier: VesumVerifier = (
         JsonVesumVerifier.from_path(args.vesum_fixture)
         if args.vesum_fixture

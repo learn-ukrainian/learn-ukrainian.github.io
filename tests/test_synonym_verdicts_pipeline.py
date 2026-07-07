@@ -18,6 +18,9 @@ from scripts.audit.generate_practice_deck import (
     JsonVesumVerifier,
     ReviewedSourceAllowlist,
     build_practice_shards,
+    format_a2_synonym_nomination_report,
+    nominate_a2_synonym_pairs,
+    validate_synonym_verdict_record,
 )
 from scripts.lexicon.build_synonym_verdicts_yaml import main as run_converter
 from scripts.lexicon.verify_synonym_pairs import main as run_verify_script
@@ -54,6 +57,44 @@ def make_mock_manifest_entry(lemma: str, url_slug: str, gloss: str, synonyms: li
             }
         }
     return entry
+
+
+def make_a2_mock_manifest_entry(
+    lemma: str,
+    url_slug: str,
+    gloss: str,
+    synonyms: list[str] | None = None,
+) -> dict[str, Any]:
+    entry = make_mock_manifest_entry(lemma, url_slug, gloss, synonyms)
+    entry["course_usage"] = [{"track": "a2", "slug": "a2-synonyms"}]
+    entry["enrichment"]["cefr"]["level"] = "A2"
+    return entry
+
+
+def _a2_synonym_fixture_verifier() -> JsonVesumVerifier:
+    return JsonVesumVerifier(
+        {
+            "друг": [{"lemma": "друг", "pos": "noun"}],
+            "товариш": [{"lemma": "товариш", "pos": "noun"}],
+            "книга": [{"lemma": "книга", "pos": "noun"}],
+            "том": [{"lemma": "том", "pos": "noun"}],
+            "зошит": [{"lemma": "зошит", "pos": "noun"}],
+            "папір": [{"lemma": "папір", "pos": "noun"}],
+            "ручка": [{"lemma": "ручка", "pos": "noun"}],
+        }
+    )
+
+
+def _a2_synonym_fixture_manifest() -> list[dict[str, Any]]:
+    return [
+        make_a2_mock_manifest_entry("друг", "druh", "friend", ["товариш"]),
+        make_a2_mock_manifest_entry("товариш", "tovarysh", "comrade", ["друг"]),
+        make_a2_mock_manifest_entry("книга", "knyha", "book"),
+        make_a2_mock_manifest_entry("том", "tom", "volume"),
+        make_a2_mock_manifest_entry("зошит", "zoshyt", "notebook"),
+        make_a2_mock_manifest_entry("папір", "papir", "paper"),
+        make_a2_mock_manifest_entry("ручка", "ruchka", "pen"),
+    ]
 
 
 def test_converter_round_trip(tmp_path: Path) -> None:
@@ -261,3 +302,140 @@ def test_verify_script_new_pair_detection(tmp_path: Path) -> None:
     assert new_pair["a"] in ("слово", "термін")
     assert new_pair["b"] in ("слово", "термін")
     assert new_pair["polarity"] == "synonym"
+
+
+def test_synonym_verdict_a2_exception_requires_curator() -> None:
+    assert "curator" in " ".join(
+        validate_synonym_verdict_record(
+            {"a": "друг", "b": "товариш", "polarity": "synonym", "a2Exception": True}
+        )
+    )
+
+
+def test_flagged_a2_synonym_pair_emits_at_a2() -> None:
+    manifest = _a2_synonym_fixture_manifest()
+    verifier = _a2_synonym_fixture_verifier()
+    verdicts = {
+        "approved": [
+            {
+                "a": "друг",
+                "b": "товариш",
+                "polarity": "synonym",
+                "sources": ["synonyms"],
+                "a2Exception": True,
+                "curator": "fixture-2026-07-07",
+            }
+        ],
+        "rejected": [],
+    }
+    shards = build_practice_shards(
+        manifest,
+        ReviewedSourceAllowlist.from_payload([]),
+        verifier,
+        cloze_sources=None,
+        config=BuildConfig(target=20),
+        synonym_verdicts=verdicts,
+    )
+    a2_synonyms = shards["A2"]["synonym"]["synonym"]
+    assert len(a2_synonyms) >= 1
+    prompts = {item["prompt"] for item in a2_synonyms}
+    assert "друг" in prompts or "товариш" in prompts
+    assert all(item["answer"] in {"друг", "товариш"} for item in a2_synonyms)
+    assert shards.get("B1", {}).get("synonym", {}).get("synonym", []) == []
+
+
+def test_unflagged_both_leg_a2_synonym_pair_does_not_emit_at_a2() -> None:
+    manifest = _a2_synonym_fixture_manifest()
+    verifier = _a2_synonym_fixture_verifier()
+    verdicts = {
+        "approved": [
+            {
+                "a": "друг",
+                "b": "товариш",
+                "polarity": "synonym",
+                "sources": ["synonyms"],
+            }
+        ],
+        "rejected": [],
+    }
+    shards = build_practice_shards(
+        manifest,
+        ReviewedSourceAllowlist.from_payload([]),
+        verifier,
+        cloze_sources=None,
+        config=BuildConfig(target=20),
+        synonym_verdicts=verdicts,
+    )
+    assert shards["A2"]["synonym"]["synonym"] == []
+    assert shards.get("B1", {}).get("synonym", {}).get("synonym", []) == []
+
+
+def test_b1_synonym_behavior_unchanged_with_a2_exception_mechanism() -> None:
+    mock_manifest = [
+        make_mock_manifest_entry("слово", "slovo", "word", ["термін"]),
+        make_mock_manifest_entry("термін", "termin", "term", ["слово"]),
+        make_mock_manifest_entry("мова", "mova", "language"),
+        make_mock_manifest_entry("книга", "knyha", "book"),
+        make_mock_manifest_entry("звук", "zvuk", "sound"),
+    ]
+    verifier = JsonVesumVerifier(
+        {
+            "слово": [{"lemma": "слово", "pos": "noun"}],
+            "термін": [{"lemma": "термін", "pos": "noun"}],
+            "мова": [{"lemma": "мова", "pos": "noun"}],
+            "книга": [{"lemma": "книга", "pos": "noun"}],
+            "звук": [{"lemma": "звук", "pos": "noun"}],
+        }
+    )
+    verdicts = {
+        "approved": [
+            {
+                "a": "слово",
+                "b": "термін",
+                "polarity": "synonym",
+                "sources": ["synonyms"],
+            }
+        ],
+        "rejected": [],
+    }
+    shards = build_practice_shards(
+        mock_manifest,
+        ReviewedSourceAllowlist.from_payload([]),
+        verifier,
+        cloze_sources=None,
+        config=BuildConfig(target=10),
+        synonym_verdicts=verdicts,
+    )
+    b1_synonyms = shards["B1"]["synonym"]["synonym"]
+    assert len(b1_synonyms) >= 1
+    assert any(item["prompt"] == "слово" and item["answer"] == "термін" for item in b1_synonyms)
+    assert shards.get("A2", {}).get("synonym", {}).get("synonym", []) == []
+
+
+def test_nominate_a2_synonym_report_lists_fixture_candidates() -> None:
+    from scripts.audit.generate_practice_deck import _select_practice_lexemes
+
+    manifest = _a2_synonym_fixture_manifest()
+    verifier = _a2_synonym_fixture_verifier()
+    verdicts = {
+        "approved": [
+            {
+                "a": "друг",
+                "b": "товариш",
+                "polarity": "synonym",
+                "sources": ["synonyms", "wiktionary"],
+            }
+        ],
+        "rejected": [],
+    }
+    _lexemes_by_entry, all_lexemes, by_plain_lemma, _lexemes_by_id = _select_practice_lexemes(
+        manifest,
+        verifier,
+        BuildConfig(target=20),
+    )
+    nominations = nominate_a2_synonym_pairs(manifest, verdicts, all_lexemes, by_plain_lemma)
+    report = format_a2_synonym_nomination_report(nominations)
+    assert "друг\tтовариш\tsynonym\tsynonyms,wiktionary\tA2\tA2" in report
+    assert nominations[0]["a"] == "друг"
+    assert nominations[0]["b"] == "товариш"
+    assert "total\t1" in report
