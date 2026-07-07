@@ -204,7 +204,7 @@ decisions:
       the F3 freeze + #4541 packaging. Epic #4639 stays open as the parking
       record. Un-parking is a resume, not a rebuild — freeze spec, rights
       resolver (0 UNKNOWN), and multirun scorecard all survive on main.
-    evidence: "User directive 2026-07-07; docs/decisions/2026-07-07-benchmark-public-release-parked.md; epic #4639"
+    evidence: "User directive 2026-07-07; docs/decisions/2026-07-07-benchmark-public-release-parked.md; epic #4639; #4541 packaging parked; Class C shipped #4751"
     alternatives:
       - option: "Release anyway on current evidence"
         rejected_because: "No demonstrated audience; capacity is scarce (claude 2.5x/codex 2.1x weekly pace) and deploy-first is user-priority"

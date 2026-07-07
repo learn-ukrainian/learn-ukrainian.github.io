@@ -64,4 +64,4 @@ rebuild.
   triggers are plausible (Hramatka shipping is itself the strongest release
   argument); keep the epic as the parking record.
 
-Refs: #4639 #4638 #4632 #4647 #4312 #4742 #2156. Journal entry: dec-009.
+Refs: #4639 #4638 #4632 #4647 #4312 #4742 #4541 #4751 #2156. Journal entry: dec-009.
