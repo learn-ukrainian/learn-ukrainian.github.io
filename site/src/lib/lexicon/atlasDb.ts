@@ -1,6 +1,6 @@
 import Database from 'better-sqlite3';
 import { existsSync, readFileSync } from 'node:fs';
-import { resolve } from 'node:path';
+import { resolve, dirname } from 'node:path';
 
 export interface CourseUsage {
   track: string;
@@ -59,6 +59,7 @@ function parseMetadata(rows: MetadataRow[]): { generatedAt: string; manifestVers
 
 export function resetAtlasPayloadCacheForTests(): void {
   cachedAtlasPayloads = null;
+  _practiceLemmasCache = null;
 }
 
 export function getAtlasPayloadCache(): AtlasPayloadCache {
@@ -115,11 +116,13 @@ export function getPracticeLemmas(): Set<string> {
   if (_practiceLemmasCache) return _practiceLemmasCache;
   const lemmas = new Set<string>();
   const levels = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
+  const dbDir = dirname(atlasDbPath());
+  let resolvedAny = false;
+
   for (const level of levels) {
     const paths = [
-      resolve(process.cwd(), `public/lexicon/practice-index.${level}.json`),
-      resolve(process.cwd(), `public/api/lexicon/practice-index.${level}.json`),
-      resolve(process.cwd(), `../site/public/lexicon/practice-index.${level}.json`),
+      resolve(dbDir, `../site/public/api/lexicon/practice-index.${level}.json`),
+      resolve(dbDir, `../site/public/lexicon/practice-index.${level}.json`),
     ];
     for (const p of paths) {
       if (existsSync(p)) {
@@ -132,6 +135,7 @@ export function getPracticeLemmas(): Set<string> {
               }
             }
           }
+          resolvedAny = true;
           break;
         } catch (e) {
           // ignore parsing/reading errors
@@ -139,6 +143,11 @@ export function getPracticeLemmas(): Set<string> {
       }
     }
   }
+
+  if (!resolvedAny) {
+    console.warn(`Warning: getPracticeLemmas failed to resolve any practice-index files. Checked paths relative to ${dbDir}`);
+  }
+
   _practiceLemmasCache = lemmas;
   return lemmas;
 }

@@ -3,14 +3,38 @@
 import Database from 'better-sqlite3';
 import reactRenderer from '@astrojs/react/server.js';
 import { experimental_AstroContainer as AstroContainer } from 'astro/container';
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test, vi, afterEach, beforeEach } from 'vitest';
 import { resolve } from 'node:path';
+import * as fs from 'node:fs';
 import manifest from '@site/src/data/lexicon-manifest.json';
 import {
   getAtlasPayloadCache,
   resetAtlasPayloadCacheForTests,
+  getPracticeLemmas,
   type LexiconEntry,
 } from '@site/src/lib/lexicon/atlasDb';
+
+let mockExistsSync = (p: string): boolean => true;
+let mockReadFileSync = (p: string, encoding: any): string => '';
+
+vi.mock('node:fs', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('node:fs')>();
+  return {
+    ...actual,
+    existsSync: (p: any) => {
+      if (typeof p === 'string' && p.includes('practice-index')) {
+        return mockExistsSync(p);
+      }
+      return actual.existsSync(p);
+    },
+    readFileSync: (p: any, options: any) => {
+      if (typeof p === 'string' && p.includes('practice-index')) {
+        return mockReadFileSync(p, options);
+      }
+      return actual.readFileSync(p, options);
+    },
+  };
+});
 
 interface LexiconManifest {
   version: string;
@@ -142,5 +166,49 @@ describe('Atlas DB SSG read parity', () => {
 
     process.stdout.write(`atlas render parity golden diff: fixtures=${fixtureSlugs.length} differing=${differing}\n`);
     expect(differing).toBe(0);
+  });
+});
+
+describe('getPracticeLemmas', () => {
+  beforeEach(() => {
+    resetAtlasPayloadCacheForTests();
+    mockExistsSync = () => true;
+    mockReadFileSync = () => '';
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  test('returns the expected lemma set from a fixture practice-index file', () => {
+    mockExistsSync = (p) => String(p).includes('practice-index.A1.json');
+    mockReadFileSync = (p) => {
+      if (String(p).includes('practice-index.A1.json')) {
+        return JSON.stringify({
+          items: [
+            { lemmaId: 'prapor' },
+            { lemmaId: 'fainyi' },
+            { lemmaId: '' },
+          ],
+        });
+      }
+      throw new Error('Not found');
+    };
+
+    const lemmas = getPracticeLemmas();
+    expect(lemmas).toBeInstanceOf(Set);
+    expect(lemmas.has('prapor')).toBe(true);
+    expect(lemmas.has('fainyi')).toBe(true);
+    expect(lemmas.size).toBe(2);
+  });
+
+  test('returns empty set and warns when no path resolves', () => {
+    mockExistsSync = () => false;
+    const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
+
+    const lemmas = getPracticeLemmas();
+    expect(lemmas.size).toBe(0);
+    expect(warnSpy).toHaveBeenCalledTimes(1);
+    expect(warnSpy.mock.calls[0][0]).toContain('failed to resolve any practice-index files');
   });
 });

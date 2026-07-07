@@ -860,29 +860,85 @@ function LexiconPracticeIsland({
   const stageRef = useRef<HTMLDivElement | null>(null);
   const deckRequestId = useRef(0);
   const sessionStartedAtRef = useRef(Date.now());
+  const didInitRef = useRef(false);
   const showEnglishSubtitles = learnerLevel === 'A1';
 
   useEffect(() => {
+    if (didInitRef.current) return;
+    didInitRef.current = true;
+
     const state = loadState();
     setStreak(readStreak());
     setMastered(masteredCount(MASTERED_THRESHOLD));
     setDailyNewCount(readNewCardsDailyState().count);
-    const snapshot = readPracticeSessionSnapshot();
-    setResumeSnapshot(isPracticeSessionResumable(snapshot) ? snapshot : null);
+    
     if (state.flags.corrupt || state.flags.migrationFailed) {
       setStorageWarning('Прогрес призупинено, доки сховище браузера не стане доступним.');
     } else if (state.flags.clockJump) {
       setStorageWarning('Час повторення може бути неточним: змінився годинник пристрою.');
     }
+
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const target = params.get('lemmaId');
+      if (target) {
+        // Clear snapshot and resume state
+        writePracticeSessionSnapshot(null);
+        setResumeSnapshot(null);
+
+        setFocusedLemmaId(target);
+        setMode('mixed');
+        setSessionBudget(10);
+        setSessionPhase('active');
+        void ensureDeck(shouldLoadCloze('mixed'));
+      } else {
+        const snapshot = readPracticeSessionSnapshot();
+        setResumeSnapshot(isPracticeSessionResumable(snapshot) ? snapshot : null);
+      }
+    }
   }, []);
 
   useEffect(() => {
-    if (!autoStart || !deck || plannedTotal > 0) return;
+    const isAutoStartTrigger = autoStart || Boolean(focusedLemmaId);
+    if (!isAutoStartTrigger || !deck || plannedTotal > 0) return;
+
+    if (focusedLemmaId && deck.index.some((item) => item.lemmaId !== focusedLemmaId)) {
+      const filtered = {
+        ...deck,
+        index: deck.index.filter((item) => item.lemmaId === focusedLemmaId),
+      };
+      setDeck(filtered);
+      return;
+    }
+
     const plan = computeSessionScope(sessionScopeIndexForMode(deck.index, mode), sessionBudget, {
       dailyNewCount,
     });
     resetSessionTracking(plan, sessionBudget);
-  }, [autoStart, dailyNewCount, deck, mode, plannedTotal, sessionBudget]);
+
+    // Persist an initial snapshot for this newly started session so it is resumable.
+    const nextSeed = makePracticeSessionSeed();
+    setSessionSeed(nextSeed);
+    sessionStartedAtRef.current = Date.now();
+    setHistory([]);
+    const reviewSlots = sessionBudget === 'until-zero' ? plan.dueReviews : Math.min(plan.dueReviews, sessionBudget);
+    writePracticeSessionSnapshot({
+      sessionSeed: nextSeed,
+      history: [],
+      budget: sessionBudget,
+      completed: 0,
+      modeFilter: mode,
+      level: learnerLevel,
+      startedAt: sessionStartedAtRef.current,
+      extensionUsed: 0,
+      sessionNewIntroduced: 0,
+      plannedReviews: reviewSlots,
+      plannedNew: plan.plannedNew,
+      plannedTotal: plan.plannedTotal,
+      reviewsCompleted: 0,
+      unresolvedCardKeys: [],
+    });
+  }, [autoStart, focusedLemmaId, dailyNewCount, deck, mode, plannedTotal, sessionBudget, learnerLevel]);
 
   useEffect(() => {
     const page = document.querySelector('.lexicon-practice-page');
@@ -928,18 +984,6 @@ function LexiconPracticeIsland({
     };
   }, [deck, learnerLevel, shardBaseUrl]);
 
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const params = new URLSearchParams(window.location.search);
-      const target = params.get('lemmaId');
-      if (target) {
-        setFocusedLemmaId(target);
-        writePracticeSessionSnapshot(null);
-        setResumeSnapshot(null);
-        void startSession(10, 'mixed');
-      }
-    }
-  }, []);
 
   const indexForStats = (deck?.index ?? dueIndex ?? []).filter(
     (item) => !focusedLemmaId || item.lemmaId === focusedLemmaId
