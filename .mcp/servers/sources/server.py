@@ -183,7 +183,11 @@ async def list_tools() -> list[Tool]:
                     },
                     "subject": {
                         "type": "string",
-                        "description": "Filter by subject (e.g., 'bukvar', 'ukrainska-mova'). Optional."
+                        "description": (
+                            "Optional canonical textbook subject slug. "
+                            "Examples: 'ukrmova', 'ukrlit', 'istoriya', 'bukvar'."
+                        ),
+                        "enum": list(CANONICAL_TEXTBOOK_SUBJECTS),
                     },
                     "limit": {
                         "type": "integer",
