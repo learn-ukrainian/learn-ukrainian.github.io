@@ -11,6 +11,10 @@ node_modules
 .DS_Store
 Thumbs.db
 
+# Machine-local agent settings (public repo — carries local absolute paths; user order 2026-07-07)
+agents_extensions/shared/settings.local.json
+settings.local.json
+
 # Environment files
 .env
 .env.local
