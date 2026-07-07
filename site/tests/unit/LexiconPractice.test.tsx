@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest';
-import { render, screen, waitFor, within } from '@testing-library/react';
+import { act, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import LexiconPractice from '@site/src/components/LexiconPractice';
 import {
@@ -763,5 +763,159 @@ describe('LexiconPractice', () => {
     await user.click(container.querySelector('[data-activity="flashcard"]')!);
     const good = container.querySelector('[data-rate="good"] .ri');
     expect(good?.textContent).toMatch(/‹.+›/);
+  });
+
+  test('wrong answer dwells: feedback stays and it never auto-advances past 650ms', async () => {
+    const user = userEvent.setup();
+    // Default 650ms auto-advance window; a wrong answer must ignore it entirely.
+    render(<LexiconPractice initialDeck={heritageDeck()} autoStart initialMode="heritage" />);
+
+    await user.click(
+      within(screen.getByTestId('practice-heritage')).getByRole('button', { name: /дом/ }),
+    );
+
+    // A wrong (calque) pick parks in a dwell state with an explicit advance control.
+    expect(screen.getByTestId('practice-advance-button')).toBeInTheDocument();
+    expect(screen.getByTestId('practice-heritage-feedback')).toHaveTextContent('калька');
+
+    // Wait well past the 650ms correct-answer window — the item must still be here.
+    await new Promise((resolve) => setTimeout(resolve, 750));
+    expect(screen.getByTestId('practice-advance-button')).toBeInTheDocument();
+    expect(screen.getByTestId('practice-heritage-feedback')).toHaveTextContent('калька');
+  });
+
+  test('wrong answer advances on «Далі» click and on Enter', async () => {
+    const clickUser = userEvent.setup();
+    const clicked = render(
+      <LexiconPractice initialDeck={heritageDeck()} autoStart initialMode="heritage" advanceDelayMs={20} />,
+    );
+    await clickUser.click(
+      within(screen.getByTestId('practice-heritage')).getByRole('button', { name: /дом/ }),
+    );
+    expect(screen.getByTestId('practice-advance-button')).toBeInTheDocument();
+    await clickUser.click(screen.getByTestId('practice-advance-button'));
+    await waitFor(() =>
+      expect(screen.queryByTestId('practice-advance-button')).not.toBeInTheDocument(),
+    );
+    clicked.unmount();
+
+    const enterUser = userEvent.setup();
+    render(
+      <LexiconPractice initialDeck={heritageDeck()} autoStart initialMode="heritage" advanceDelayMs={20} />,
+    );
+    await enterUser.click(
+      within(screen.getByTestId('practice-heritage')).getByRole('button', { name: /дом/ }),
+    );
+    expect(screen.getByTestId('practice-advance-button')).toBeInTheDocument();
+    await enterUser.keyboard('{Enter}');
+    await waitFor(() =>
+      expect(screen.queryByTestId('practice-advance-button')).not.toBeInTheDocument(),
+    );
+  });
+
+  test('correct answer still auto-advances (never enters dwell)', async () => {
+    const user = userEvent.setup();
+    render(<LexiconPractice initialDeck={heritageDeck()} autoStart initialMode="heritage" advanceDelayMs={20} />);
+
+    await user.click(
+      within(screen.getByTestId('practice-heritage')).getByRole('button', { name: 'дім' }),
+    );
+
+    // Correct answers keep the snappy auto-advance: no dwell control ever appears.
+    expect(screen.queryByTestId('practice-advance-button')).not.toBeInTheDocument();
+    expect(screen.getByTestId('practice-heritage-feedback')).toHaveTextContent('Правильно');
+
+    // The snappy timer fires and moves off the item on its own — no «Далі» needed.
+    await waitFor(() =>
+      expect(screen.queryByTestId('practice-heritage-feedback')).not.toBeInTheDocument(),
+    );
+  });
+
+  test('heritage calque citation stays visible until «Далі»', async () => {
+    const user = userEvent.setup();
+    // Tiny auto-advance window — the cited correction must still outlast it.
+    render(<LexiconPractice initialDeck={heritageDeck()} autoStart initialMode="heritage" advanceDelayMs={20} />);
+
+    await user.click(
+      within(screen.getByTestId('practice-heritage')).getByRole('button', { name: /дом/ }),
+    );
+
+    expect(screen.getByTestId('practice-heritage-feedback')).toHaveTextContent(
+      'Джерело: Антоненко-Давидович: fixture',
+    );
+
+    // The cited §9.5 correction is the teaching moment — the 20ms timer must not erase it.
+    await new Promise((resolve) => setTimeout(resolve, 200));
+    expect(screen.getByTestId('practice-heritage-feedback')).toHaveTextContent(
+      'Джерело: Антоненко-Давидович: fixture',
+    );
+
+    await user.click(screen.getByTestId('practice-advance-button'));
+    await waitFor(() =>
+      expect(screen.queryByTestId('practice-advance-button')).not.toBeInTheDocument(),
+    );
+  });
+
+  test('cloze wrong chip dwells (no auto-advance past 650ms) and «Далі» resets to a clean item', async () => {
+    seedRecognitionMastery('knyha');
+    const user = userEvent.setup();
+    // Default 650ms auto-advance window; a wrong chip pick must ignore it entirely.
+    render(<LexiconPractice initialDeck={sampleDeck()} autoStart initialMode="cloze" />);
+
+    expect(screen.getByTestId('practice-cloze')).toBeInTheDocument();
+
+    // A wrong CHIP pick (a different lemma — not a case-miss, not correct) parks in a
+    // dwell state with an explicit advance control instead of auto-advancing.
+    await user.click(screen.getByRole('button', { name: 'робота' }));
+    expect(screen.getByTestId('practice-advance-button')).toBeInTheDocument();
+    expect(screen.getByText('✗ Не те слово')).toBeInTheDocument();
+
+    // Wait well past the 650ms correct-answer window — the wrong chip must still dwell.
+    await new Promise((resolve) => setTimeout(resolve, 750));
+    expect(screen.getByTestId('practice-advance-button')).toBeInTheDocument();
+    expect(screen.getByText('✗ Не те слово')).toBeInTheDocument();
+
+    // «Далі» advances. The lapsed card re-surfaces with the SAME itemId (so the
+    // selection-change effect does not re-fire) — it must still start clean: unlocked
+    // chips, empty input, no stale wrong-word feedback.
+    await user.click(screen.getByTestId('practice-advance-button'));
+    await waitFor(() =>
+      expect(screen.queryByTestId('practice-advance-button')).not.toBeInTheDocument(),
+    );
+    expect(screen.getByTestId('practice-cloze')).toBeInTheDocument();
+    expect(screen.getByLabelText('Відповідь у знахідний')).toHaveValue('');
+    expect(screen.getByRole('button', { name: 'книгу' })).not.toBeDisabled();
+    expect(screen.queryByText('✗ Не те слово')).not.toBeInTheDocument();
+  });
+
+  test('double-Enter during dwell advances exactly once (no double completion)', async () => {
+    const { fn } = mockShardFetch({});
+    vi.spyOn(globalThis, 'fetch').mockImplementation(fn);
+    const user = userEvent.setup();
+    render(<LexiconPractice initialDeck={heritageDeck()} autoStart initialMode="heritage" advanceDelayMs={20} />);
+
+    // Wrong (calque) pick parks in a dwell state with an explicit advance control.
+    await user.click(
+      within(screen.getByTestId('practice-heritage')).getByRole('button', { name: /дом/ }),
+    );
+    expect(screen.getByTestId('practice-advance-button')).toBeInTheDocument();
+
+    // Fire TWO Enter keydowns within a single tick, before React re-renders — the real
+    // double-advance race. Only the first may consume the parked outcome; the second must
+    // no-op. A single completion increments the today counter by exactly one.
+    act(() => {
+      window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+      window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+    });
+
+    await waitFor(() =>
+      expect(screen.queryByTestId('practice-advance-button')).not.toBeInTheDocument(),
+    );
+
+    // Return home to read the today counter (only surfaced on the idle home ring).
+    await user.click(screen.getByRole('button', { name: /Додому/ }));
+    const ring = await screen.findByTestId('practice-today-ring');
+    // Exactly one completion — a double-advance would have recorded two.
+    expect(Number(ring.textContent?.split('/')[0])).toBe(1);
   });
 });
