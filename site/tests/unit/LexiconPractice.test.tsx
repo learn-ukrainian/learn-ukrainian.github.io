@@ -410,7 +410,7 @@ function wordToMeaningDeck(): PracticeDeckData {
   };
 }
 
-function storedState() {
+function storedState(): { reviews: ReviewLogEntry[]; cards: Record<string, any> } {
   return JSON.parse(localStorage.getItem(SRS_STORAGE_KEY) ?? '{}');
 }
 
@@ -1329,5 +1329,316 @@ describe('LexiconPractice', () => {
     // A1 bg failed but session on B1 continues (no error banner, item visible)
     expect(screen.queryByText(/Не вдалося завантажити/)).not.toBeInTheDocument();
     expect(container.querySelector('[data-activity="flashcard"]')).toBeInTheDocument();
+  });
+
+  function matchingDeck(): PracticeDeckData {
+    const lexemes = [
+      lexeme('knyha', 'книга', 'book', { nominative: 'книга', accusative: 'книгу', locative: 'книзі' }),
+      lexeme('robota', 'робота', 'work', { nominative: 'робота', accusative: 'роботу', locative: 'роботі' }),
+      lexeme('misto', 'місто', 'city', { nominative: 'місто', accusative: 'місто', locative: 'місті' }),
+      lexeme('shkola', 'школа', 'school', { nominative: 'школа', accusative: 'школу', locative: 'школі' }),
+      lexeme('sady', 'сад', 'garden', { nominative: 'сад', accusative: 'сад', locative: 'саду' }),
+      lexeme('dimy', 'дім', 'house', { nominative: 'дім', accusative: 'дім', locative: 'домі' }),
+    ];
+    return {
+      deckVersion: 'test-matching',
+      level: 'A1',
+      lexemes,
+      index: lexemes.map((entry, index) => ({
+        lemmaId: entry.lemmaId,
+        lemma: entry.lemma,
+        cefr: 'A1',
+        modes: ['matching'],
+        hasCloze: false,
+        clozeIds: [],
+        newOrder: index,
+      })),
+      cloze: [],
+    };
+  }
+
+  test('matching mode rates every matched pair with proper ratings', async () => {
+    const user = userEvent.setup();
+    const deck = matchingDeck();
+    const { container } = render(<LexiconPractice initialDeck={deck} autoStart initialMode="matching" />);
+
+    expect(screen.getByTestId('practice-matching')).toBeInTheDocument();
+
+    const leftCol = container.querySelector('[data-activity="match-left-column"]');
+    const rightCol = container.querySelector('[data-activity="match-right-column"]');
+    expect(leftCol).toBeInTheDocument();
+    expect(rightCol).toBeInTheDocument();
+
+    const findLeft = (text: string) => {
+      const btn = within(leftCol as HTMLElement).getAllByRole('button').find(b => b.textContent?.trim() === text);
+      if (!btn) throw new Error(`Left tile "${text}" not found`);
+      return btn;
+    };
+    const findRight = (text: string) => {
+      const btn = within(rightCol as HTMLElement).getAllByRole('button').find(b => b.textContent?.trim() === text);
+      if (!btn) throw new Error(`Right tile "${text}" not found`);
+      return btn;
+    };
+
+    const instructionText = screen.getByText(/Доберіть пару для/).textContent ?? '';
+    const match = instructionText.match(/«([^»]+)»/);
+    const selectedLemmaText = match ? match[1] : '';
+
+    const textToLemmaId: Record<string, string> = {
+      'книга': 'knyha',
+      'робота': 'robota',
+      'місто': 'misto',
+      'школа': 'shkola',
+      'сад': 'sady',
+      'дім': 'dimy',
+    };
+    const textToGloss: Record<string, string> = {
+      'книга': 'book',
+      'робота': 'work',
+      'місто': 'city',
+      'школа': 'school',
+      'сад': 'garden',
+      'дім': 'house',
+    };
+
+    const selectedLemmaId = textToLemmaId[selectedLemmaText];
+    const selectedGloss = textToGloss[selectedLemmaText];
+    const distractorWords = Object.keys(textToLemmaId).filter(w => w !== selectedLemmaText);
+
+    // 1. Clean match for the first distractor -> good rating
+    const dist0 = distractorWords[0];
+    await user.click(findLeft(dist0));
+    await user.click(findRight(textToGloss[dist0]));
+    await waitFor(() => {
+      const state = storedState();
+      expect(state.reviews?.some(r => r.lemmaId === textToLemmaId[dist0] && r.rating === 'good')).toBe(true);
+    });
+
+    // 2. Match the second distractor with 1 miss -> hard rating
+    const dist1 = distractorWords[1];
+    await user.click(findLeft(dist1));
+    await user.click(findRight(selectedGloss)); // wrong
+    await new Promise(resolve => setTimeout(resolve, 900));
+    await user.click(findLeft(dist1));
+    await user.click(findRight(textToGloss[dist1]));
+    await waitFor(() => {
+      const state = storedState();
+      expect(state.reviews?.some(r => r.lemmaId === textToLemmaId[dist1] && r.rating === 'hard')).toBe(true);
+    });
+
+    // 3. Match the third distractor with 2 misses -> again rating
+    const dist2 = distractorWords[2];
+    await user.click(findLeft(dist2));
+    await user.click(findRight(textToGloss[distractorWords[3]])); // wrong 1
+    await new Promise(resolve => setTimeout(resolve, 900));
+    await user.click(findLeft(dist2));
+    await user.click(findRight(textToGloss[distractorWords[4]])); // wrong 2
+    await new Promise(resolve => setTimeout(resolve, 900));
+    await user.click(findLeft(dist2));
+    await user.click(findRight(textToGloss[dist2]));
+    await waitFor(() => {
+      const state = storedState();
+      expect(state.reviews?.some(r => r.lemmaId === textToLemmaId[dist2] && r.rating === 'again')).toBe(true);
+    });
+
+    // Complete the remaining pairs cleanly
+    const dist3 = distractorWords[3];
+    await user.click(findLeft(dist3));
+    await user.click(findRight(textToGloss[dist3]));
+    await waitFor(() => {
+      const state = storedState();
+      expect(state.reviews?.some(r => r.lemmaId === textToLemmaId[dist3] && r.rating === 'good')).toBe(true);
+    });
+
+    const dist4 = distractorWords[4];
+    await user.click(findLeft(dist4));
+    await user.click(findRight(textToGloss[dist4]));
+    await waitFor(() => {
+      const state = storedState();
+      expect(state.reviews?.some(r => r.lemmaId === textToLemmaId[dist4] && r.rating === 'good')).toBe(true);
+    });
+
+    // Finally, match the selected lemma cleanly
+    await user.click(findLeft(selectedLemmaText));
+    await user.click(findRight(selectedGloss));
+
+    await waitFor(() => {
+      const state = storedState();
+      expect(state.reviews?.some(r => r.lemmaId === selectedLemmaId && r.rating === 'good')).toBe(true);
+    });
+
+    const state = storedState();
+    expect(state.reviews?.length).toBe(6);
+  });
+
+  test('abort after 2 matches rates exactly those 2', async () => {
+    const user = userEvent.setup();
+    const deck = matchingDeck();
+    const { container, unmount } = render(<LexiconPractice initialDeck={deck} autoStart initialMode="matching" />);
+
+    const leftCol = container.querySelector('[data-activity="match-left-column"]');
+    const rightCol = container.querySelector('[data-activity="match-right-column"]');
+    expect(leftCol).toBeInTheDocument();
+    expect(rightCol).toBeInTheDocument();
+
+    const findLeft = (text: string) => {
+      const btn = within(leftCol as HTMLElement).getAllByRole('button').find(b => b.textContent?.trim() === text);
+      if (!btn) throw new Error(`Left tile "${text}" not found`);
+      return btn;
+    };
+    const findRight = (text: string) => {
+      const btn = within(rightCol as HTMLElement).getAllByRole('button').find(b => b.textContent?.trim() === text);
+      if (!btn) throw new Error(`Right tile "${text}" not found`);
+      return btn;
+    };
+
+    const instructionText = screen.getByText(/Доберіть пару для/).textContent ?? '';
+    const match = instructionText.match(/«([^»]+)»/);
+    const selectedLemmaText = match ? match[1] : '';
+
+    const textToLemmaId: Record<string, string> = {
+      'книга': 'knyha',
+      'робота': 'robota',
+      'місто': 'misto',
+      'школа': 'shkola',
+      'сад': 'sady',
+      'дім': 'dimy',
+    };
+    const textToGloss: Record<string, string> = {
+      'книга': 'book',
+      'робота': 'work',
+      'місто': 'city',
+      'школа': 'school',
+      'сад': 'garden',
+      'дім': 'house',
+    };
+
+    const selectedLemmaId = textToLemmaId[selectedLemmaText];
+    const selectedGloss = textToGloss[selectedLemmaText];
+    const distractorWords = Object.keys(textToLemmaId).filter(w => w !== selectedLemmaText);
+
+    // Match 1 distractor cleanly
+    const dist0 = distractorWords[0];
+    await user.click(findLeft(dist0));
+    await user.click(findRight(textToGloss[dist0]));
+    await waitFor(() => {
+      const state = storedState();
+      expect(state.reviews?.some(r => r.lemmaId === textToLemmaId[dist0] && r.rating === 'good')).toBe(true);
+    });
+
+    // Match selected lemma cleanly
+    await user.click(findLeft(selectedLemmaText));
+    await user.click(findRight(selectedGloss));
+    {
+      const state = storedState();
+      expect(state.reviews?.some(r => r.lemmaId === selectedLemmaId)).toBe(false);
+    }
+
+    // Abort by unmounting
+    unmount();
+
+    const state = storedState();
+    expect(state.reviews?.length).toBe(2);
+    expect(state.reviews?.some(r => r.lemmaId === textToLemmaId[dist0] && r.rating === 'good')).toBe(true);
+    expect(state.reviews?.some(r => r.lemmaId === selectedLemmaId && r.rating === 'good')).toBe(true);
+  });
+
+  test('attempt counting resets between boards', async () => {
+    const user = userEvent.setup();
+    const deck = matchingDeck();
+    const { container } = render(<LexiconPractice initialDeck={deck} autoStart initialMode="matching" />);
+
+    const leftCol = container.querySelector('[data-activity="match-left-column"]');
+    const rightCol = container.querySelector('[data-activity="match-right-column"]');
+    expect(leftCol).toBeInTheDocument();
+    expect(rightCol).toBeInTheDocument();
+
+    const findLeft = (text: string) => {
+      const btn = within(leftCol as HTMLElement).getAllByRole('button').find(b => b.textContent?.trim() === text);
+      if (!btn) throw new Error(`Left tile "${text}" not found`);
+      return btn;
+    };
+    const findRight = (text: string) => {
+      const btn = within(rightCol as HTMLElement).getAllByRole('button').find(b => b.textContent?.trim() === text);
+      if (!btn) throw new Error(`Right tile "${text}" not found`);
+      return btn;
+    };
+
+    const instructionText = screen.getByText(/Доберіть пару для/).textContent ?? '';
+    const match = instructionText.match(/«([^»]+)»/);
+    const selectedLemmaText = match ? match[1] : '';
+
+    const textToLemmaId: Record<string, string> = {
+      'книга': 'knyha',
+      'робота': 'robota',
+      'місто': 'misto',
+      'школа': 'shkola',
+      'сад': 'sady',
+      'дім': 'dimy',
+    };
+    const textToGloss: Record<string, string> = {
+      'книга': 'book',
+      'робота': 'work',
+      'місто': 'city',
+      'школа': 'school',
+      'сад': 'garden',
+      'дім': 'house',
+    };
+
+    const selectedLemmaId = textToLemmaId[selectedLemmaText];
+    const selectedGloss = textToGloss[selectedLemmaText];
+    const distractorWords = Object.keys(textToLemmaId).filter(w => w !== selectedLemmaText);
+
+    // Miss on the first distractor
+    const dist0 = distractorWords[0];
+    await user.click(findLeft(dist0));
+    await user.click(findRight(selectedGloss)); // wrong
+    await new Promise(resolve => setTimeout(resolve, 900));
+
+    // Complete that distractor -> hard
+    await user.click(findLeft(dist0));
+    await user.click(findRight(textToGloss[dist0]));
+    await waitFor(() => {
+      expect(storedState().reviews?.some(r => r.lemmaId === textToLemmaId[dist0] && r.rating === 'hard')).toBe(true);
+    });
+
+    // Complete all other matches cleanly
+    for (const dist of distractorWords.slice(1)) {
+      await user.click(findLeft(dist));
+      await user.click(findRight(textToGloss[dist]));
+    }
+    await user.click(findLeft(selectedLemmaText));
+    await user.click(findRight(selectedGloss));
+
+    await waitFor(() => {
+      expect(storedState().reviews?.length).toBe(6);
+    });
+
+    // Clean match on next board for that same distractor (should start with 0 misses, rate as good)
+    const newLeftCol = container.querySelector('[data-activity="match-left-column"]');
+    const newRightCol = container.querySelector('[data-activity="match-right-column"]');
+    const findNewLeft = (text: string) => {
+      const btn = within(newLeftCol as HTMLElement).getAllByRole('button').find(b => b.textContent?.trim() === text);
+      if (!btn) throw new Error(`Left tile "${text}" not found`);
+      return btn;
+    };
+    const findNewRight = (text: string) => {
+      const btn = within(newRightCol as HTMLElement).getAllByRole('button').find(b => b.textContent?.trim() === text);
+      if (!btn) throw new Error(`Right tile "${text}" not found`);
+      return btn;
+    };
+
+    await user.click(findNewLeft(dist0));
+    await user.click(findNewRight(textToGloss[dist0]));
+
+    await waitFor(() => {
+      const state = storedState();
+      expect(state.reviews?.length).toBe(7);
+      expect(state.reviews?.[6]).toMatchObject({
+        lemmaId: textToLemmaId[dist0],
+        mode: 'matching',
+        rating: 'good',
+      });
+    });
   });
 });
