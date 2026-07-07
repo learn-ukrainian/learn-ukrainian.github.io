@@ -1613,6 +1613,14 @@ def _heritage_frame_errors(frame: Any, kind: str) -> list[str]:
             errors.append(f"heritage_pair frame missing {field}")
     if kind == "sense_restricted" and frame.get("disambiguated") is not True:
         errors.append("sense_restricted heritage_pair frames require disambiguated: true")
+    distractors = frame.get("distractors")
+    if distractors is not None:
+        if not isinstance(distractors, list):
+            errors.append("heritage_pair frame distractors must be a list")
+        else:
+            for i, d in enumerate(distractors):
+                if not isinstance(d, str) or not d.strip():
+                    errors.append(f"heritage_pair frame distractors[{i}] must be a non-empty string")
     return errors
 
 
@@ -1658,6 +1666,7 @@ def _valid_heritage_distractors(
     pair: dict[str, Any],
     lexemes: list[dict[str, Any]],
     level: str,
+    verifier: VesumVerifier | None = None,
 ) -> list[dict[str, Any]]:
     answer_form = _clean_text(frame.get("answer_form")) or answer["lemma"]
     calque_form = _clean_text(frame.get("calque_form")) or ""
@@ -1669,6 +1678,48 @@ def _valid_heritage_distractors(
         *{_plain(value) for value in _clean_text_list(pair.get("corrections"))},
         *{_plain(value) for value in _clean_text_list(pair.get("calqueSurfaces"))},
     }
+
+    curated_distractors = frame.get("distractors")
+    if curated_distractors is not None:
+        resolved_distractors = []
+        for dist_lemma in curated_distractors:
+            dist_lemma_clean = _clean_text(dist_lemma)
+            if not dist_lemma_clean:
+                continue
+
+            # Find matching lexeme in all_lexemes (lexemes) first
+            matching_lexeme = next((l for l in lexemes if _plain(l["lemma"]) == _plain(dist_lemma_clean)), None)
+            if matching_lexeme:
+                resolved_distractors.append({
+                    **matching_lexeme,
+                    "pos": answer.get("pos")
+                })
+            else:
+                # Verify against VESUM
+                if verifier is not None:
+                    plain_dist = _plain(dist_lemma_clean)
+                    matches = verifier.verify_words([plain_dist]).get(plain_dist, [])
+                    if not matches:
+                        matches = verifier.verify_words([dist_lemma_clean]).get(dist_lemma_clean, [])
+
+                    if matches:
+                        resolved_distractors.append({
+                            "lemmaId": f"cur_{_plain(dist_lemma_clean)}",
+                            "lemma": dist_lemma_clean,
+                            "lemmaPlain": _plain(dist_lemma_clean),
+                            "pos": answer.get("pos"),
+                            "cefr": level,
+                        })
+                else:
+                    resolved_distractors.append({
+                        "lemmaId": f"cur_{_plain(dist_lemma_clean)}",
+                        "lemma": dist_lemma_clean,
+                        "lemmaPlain": _plain(dist_lemma_clean),
+                        "pos": answer.get("pos"),
+                        "cefr": level,
+                    })
+        return resolved_distractors
+
     candidates = []
     base_labels = [answer_form, calque_form]
     for lexeme in lexemes:
@@ -1728,6 +1779,7 @@ def _build_heritage_items(
     all_lexemes: list[dict[str, Any]],
     deck_version: str,
     *,
+    verifier: VesumVerifier | None = None,
     public_options: bool = True,
 ) -> list[dict[str, Any]]:
     frames = _valid_heritage_frames(pair)
@@ -1762,7 +1814,7 @@ def _build_heritage_items(
                 file=sys.stderr,
             )
             continue
-        distractors = _valid_heritage_distractors(lexeme, frame, pair, all_lexemes, level)
+        distractors = _valid_heritage_distractors(lexeme, frame, pair, all_lexemes, level, verifier=verifier)
         if len(distractors) < 2:
             print(
                 f"WARN: heritage_pair {pair_label!r} frame {index} dropped: "
@@ -2238,6 +2290,7 @@ def build_practice_shards(
             native_lexeme,
             all_lexemes,
             deck_version,
+            verifier=verifier,
             public_options=False,
         ):
             level = str(item.get("cefr") or "")

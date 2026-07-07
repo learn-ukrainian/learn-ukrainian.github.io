@@ -337,8 +337,7 @@ seeded/deterministic build (§1), FSRS card unit = `lemmaId + mode` (§1).
   store is `data/lexicon/heritage_pairs.yaml`. On top of the v4 five-field minimum each record adds:
   **`kind: lexical | sense_restricted`** — sense-restricted pairs (the неділя/задача class: the word
   is standard Ukrainian, ONE sense is the calque) additionally REQUIRE `calqueSense` +
-  `authenticSense`; a bare lexical pair may not model them. **`frames[]` (optional per record,
-  mirroring §9.9)** — `{sentence_with_slot, answer_form, calque_form, origin, disambiguated}`.
+  `authenticSense`; a bare lexical pair may not model them.  **`frames[]` (optional per record, mirroring §9.9)** — `{sentence_with_slot, answer_form, calque_form, origin, disambiguated, distractors: [..] (optional list of curated distractor lemmas to override pool mining)}`.
   **Item emission is fail-closed at the ITEM level**: a record without ≥1 frame validates as a
   RECORD but emits NO items (reported as frame-coverage debt, never a degraded word-level fallback
   item — sentence context is the pedagogy, not an optional garnish). For `sense_restricted` pairs
