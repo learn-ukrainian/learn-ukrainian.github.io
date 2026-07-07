@@ -1179,13 +1179,26 @@ def _invoke_opencode_reviewer(
         _assert_sources_mcp_available()
     from scripts.ai_agent_bridge._opencode import _invoke_opencode_detailed
 
+    # #4642 second leak path: the reviewer is a TOOL-USING model with default
+    # write/edit tools, and opencode resolves both its project root and any
+    # relative tool-write against the subprocess cwd. Run it from an out-of-repo
+    # temp dir so a stray model write (e.g. the observed
+    # curriculum/l2-uk-en/<level>/status/<slug>-review.json) lands in the
+    # throwaway dir, never the checkout. Mirrors the neutral-cwd firewall the
+    # subscription bare routes already use (qg_bakeoff._neutral_runtime_cwd).
+    # The reviewer needs no repo files: module content is in the prompt and the
+    # sources MCP is a remote endpoint from the global opencode config. Our own
+    # deterministic persistence (persist_reviewer_module_review) uses absolute
+    # PROJECT_ROOT paths, so it is unaffected by the subprocess cwd.
     try:
-        parse = _invoke_opencode_detailed(
-            prompt,
-            route.reviewer_model_id,
-            output_format="json",
-            default_timeout_s=default_timeout_s,
-        )
+        with tempfile.TemporaryDirectory(prefix="llm-reviewer-cwd-") as reviewer_cwd:
+            parse = _invoke_opencode_detailed(
+                prompt,
+                route.reviewer_model_id,
+                output_format="json",
+                default_timeout_s=default_timeout_s,
+                cwd=Path(reviewer_cwd),
+            )
     except SystemExit as exc:
         raise ReviewerProviderError(str(exc)) from exc
     result = _result_from_stream(prompt, parse, route)

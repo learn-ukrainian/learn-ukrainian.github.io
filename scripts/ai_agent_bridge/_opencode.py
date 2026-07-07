@@ -390,12 +390,19 @@ def _run_opencode(
     data: str | None = None,
     no_timeout: bool = False,
     default_timeout_s: int = OPENCODE_DEFAULT_TIMEOUT_S,
+    cwd: Path | None = None,
 ) -> str:
     """Run one ``opencode run`` subprocess and return its raw stdout.
 
     Shared subprocess core for both :func:`_invoke_opencode` (text-only) and
     :func:`_invoke_opencode_detailed` (text + tool telemetry) so the argv
     construction, timeout, and error handling live in exactly one place.
+
+    ``cwd`` sets the subprocess working directory. It defaults to ``None``
+    (inherit the parent process cwd) so writer/bridge lanes that legitimately
+    edit the repo are unaffected. Read-only lanes (the reviewer transport)
+    pass an out-of-repo directory so a tool-using model's stray relative
+    writes land outside the checkout (#4642 second leak path).
     """
     # Relative import: script-path invocation (python scripts/ai_agent_bridge/
     # __main__.py, the documented form) puts scripts/ on sys.path, so the
@@ -430,6 +437,7 @@ def _run_opencode(
             capture_output=True,
             text=True,
             timeout=timeout,
+            cwd=str(cwd) if cwd is not None else None,
         )
     except subprocess.TimeoutExpired as exc:
         raise SystemExit(f"ask-opencode: opencode timed out after {timeout}s") from exc
@@ -477,6 +485,7 @@ def _invoke_opencode_detailed(
     data: str | None = None,
     no_timeout: bool = False,
     default_timeout_s: int = OPENCODE_DEFAULT_TIMEOUT_S,
+    cwd: Path | None = None,
 ) -> OpencodeStreamParse:
     """Invoke opencode and return assistant text **plus** tool telemetry.
 
@@ -484,6 +493,9 @@ def _invoke_opencode_detailed(
     using :func:`_invoke_opencode` (``-> str``). Tool events only exist in the
     NDJSON stream, so this defaults ``output_format="json"``; a ``default``
     format run yields no tool events.
+
+    ``cwd`` is forwarded to :func:`_run_opencode`; the reviewer transport
+    passes an out-of-repo directory to firewall stray model writes (#4642).
     """
     stdout = _run_opencode(
         content,
@@ -493,6 +505,7 @@ def _invoke_opencode_detailed(
         data=data,
         no_timeout=no_timeout,
         default_timeout_s=default_timeout_s,
+        cwd=cwd,
     )
     if output_format == "json":
         return _parse_opencode_stream(stdout)
