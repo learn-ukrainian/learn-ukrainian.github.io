@@ -162,8 +162,10 @@ primary is not re-probed immediately.
 
 Eligible trigger classes are deliberately narrow: 401/403 auth failure,
 429/quota exhaustion, 5xx/overloaded, transport failures such as connection
-refused/reset/read timeout, and parsed-but-empty responses. Content-policy
-refusals and 4xx request-format errors do not fail over.
+refused/reset/read timeout, initial-response timeout with no observed output,
+stdout-silence timeout before first stdout, and parsed-but-empty responses.
+Content-policy refusals, 4xx request-format errors, and mid-stream silence
+timeouts after partial output do not fail over.
 
 Every runner-level switch emits the same substitution-shaped payload used by
 Hermes fallback surfacing: `requested_provider`, `requested_model`,
