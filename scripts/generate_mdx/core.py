@@ -335,7 +335,7 @@ def _inline_primary_readings_for_mdx(body: str, existing_slugs: set[str]) -> lis
             {
                 "title": _reading_title_from_primary_block(match.group("body"), slug, attrs),
                 "href": href,
-                "detail": "уривок у цьому модулі" if href.startswith("#") else "хрестоматія",
+                "detail": "уривок на сторінці" if href.startswith("#") else "хрестоматія",
             }
         )
     return readings

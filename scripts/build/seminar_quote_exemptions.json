@@ -77,6 +77,18 @@
       "module_slug": "narodni-remesla-ta-khudozhni-promysly",
       "reason": "Batch F verified public-domain Franko Домашній промисл excerpt from Ukrlib; local literary corpus does not return this public source page.",
       "reviewer": "claude-opus-4-8"
+    },
+    "6f614d3abf9b18d78ae6b4c7244fefdb73222c3d7f53d2274609265d981f1a21": {
+      "date": "2026-07-07",
+      "module_slug": "narodne-zhytlo-sadyba-hospodarstvo",
+      "reason": "M37 Claude review verified the public-domain Shevchenko Садок вишневий коло хати excerpt against Litopys and Wikisource; local literary corpus does not return this reading span.",
+      "reviewer": "claude-opus-4-8"
+    },
+    "f7ef0db7e08c3301dc898afaf9f32109df96f460894aa8bae3601fa580607b76": {
+      "date": "2026-07-07",
+      "module_slug": "narodne-zhytlo-sadyba-hospodarstvo",
+      "reason": "M37 Claude review verified the public-domain Shevchenko І мертвим, і живим excerpt against Litopys and Wikisource; local literary corpus does not return this reading span.",
+      "reviewer": "claude-opus-4-8"
     }
   }
 }

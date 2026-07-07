@@ -208,7 +208,7 @@ def test_plan_readings_block_falls_back_to_structured_inline_readings(monkeypatc
     assert "**Тексти для читання**" in out
     assert (
         "- [Кривого танця йдемо](#reading-kryvyi-tanets-kintsia-ne-znaidemo-fragment) "
-        "— уривок у цьому модулі"
+        "— уривок на сторінці"
     ) in out
 
 
