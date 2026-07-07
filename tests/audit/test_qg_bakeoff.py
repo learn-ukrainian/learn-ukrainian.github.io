@@ -1416,6 +1416,51 @@ def test_runtime_tool_events_fixture_passes_grounding_gate() -> None:
     assert gate.invalid_fact_checks == 0
 
 
+def test_coerce_verified_status_aliases_to_bakeoff_verdicts() -> None:
+    payload = {
+        "fact_checks": [
+            {
+                "claim": "True claim.",
+                "status": "VERIFIED_TRUE",
+                "evidence": "wiki says true",
+            },
+            {
+                "claim": "False claim.",
+                "status": "VERIFIED_FALSE",
+                "evidence": "wiki contradicts",
+            },
+        ]
+    }
+    normalized, _invalid = qg_bakeoff._normalize_bakeoff_tooled_payload(payload)
+    assert normalized["fact_checks"][0]["verdict"] == "UNATTESTED_AFTER_SEARCH"
+    assert normalized["fact_checks"][1]["verdict"] == "UNATTESTED_AFTER_SEARCH"
+
+
+def test_coerce_preserves_confirmed_when_grounding_present() -> None:
+    payload = {
+        "fact_checks": [
+            {
+                "claim": "True claim.",
+                "status": "VERIFIED_TRUE",
+                "grounding": {
+                    "tool": "sources_query_wikipedia",
+                    "query": "True claim",
+                    "evidence_excerpt": "True claim.",
+                },
+            }
+        ]
+    }
+    normalized, _invalid = qg_bakeoff._normalize_bakeoff_tooled_payload(payload)
+    assert normalized["fact_checks"][0]["verdict"] == "CONFIRMED"
+
+
+def test_subscription_tooled_prompt_includes_json_contract_footer() -> None:
+    route = qg_bakeoff.route_for_matrix_pin("gemini-3.1-pro-high", arm=qg_bakeoff.TOOLED_ARM)
+    footer = qg_bakeoff._subscription_tooled_prompt_supplement(route)
+    assert "field name `verdict`" in footer
+    assert "VERIFIED_TRUE" not in footer
+
+
 def test_bare_transport_retry_once_and_records_attempts(tmp_path: Path) -> None:
     fixture = _fixture()
     route = qg_bakeoff.bakeoff_route_for_model("openrouter/test/flaky-transport")

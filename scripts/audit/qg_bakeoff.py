@@ -997,6 +997,98 @@ def preflight_subscription_bare_routes(routes: Sequence[llm_reviewer_dispatch.Re
     return {"status": "passed", "routes": checked}
 
 
+_VERDICT_ALIAS_MAP: dict[str, str] = {
+    "VERIFIED_TRUE": "CONFIRMED",
+    "VERIFIED_FALSE": "REFUTED_BY_CONTRADICTION",
+    "VERIFIED": "CONFIRMED",
+    "TRUE": "CONFIRMED",
+    "FALSE": "REFUTED_BY_CONTRADICTION",
+    "REFUTED": "REFUTED_BY_CONTRADICTION",
+    "UNVERIFIED": "UNVERIFIED_INSUFFICIENT_SEARCH",
+    "UNATTESTED": "UNATTESTED_AFTER_SEARCH",
+    "INSUFFICIENT_SEARCH": "UNVERIFIED_INSUFFICIENT_SEARCH",
+}
+
+_GROUNDING_REQUIRED_VERDICTS = frozenset(
+    {"CONFIRMED", "REFUTED_BY_CONTRADICTION", "CONTESTED"}
+)
+
+_SUBSCRIPTION_TOOLED_JSON_FOOTER = (
+    "\n\n### JSON output contract (binding for this bakeoff)\n"
+    "Respond with ONE JSON object only — no markdown fences, no prose before or after.\n"
+    "Each `fact_checks[]` row MUST use the field name `verdict` (never `status`) with "
+    "exactly one of: CONFIRMED | REFUTED_BY_CONTRADICTION | UNATTESTED_AFTER_SEARCH | "
+    "CONTESTED | UNVERIFIED_INSUFFICIENT_SEARCH.\n"
+    "CONFIRMED / REFUTED_BY_CONTRADICTION / CONTESTED require a `grounding` object "
+    "(`tool`, `query`, `evidence_excerpt` as a verbatim substring from captured tool output).\n"
+)
+
+
+def _has_usable_grounding(grounding: Any) -> bool:
+    if not isinstance(grounding, Mapping):
+        return False
+    return bool(str(grounding.get("evidence_excerpt") or "").strip())
+
+
+def _coerce_fact_check_verdict_aliases(
+    fact_check: Mapping[str, Any],
+    *,
+    downgrade_missing_grounding: bool,
+) -> dict[str, Any]:
+    """Bakeoff-only verdict normalization for frontier models that alias the contract.
+
+    Maps common alternate field names (`status`) and verdict tokens (`VERIFIED_TRUE`)
+    to the bakeoff taxonomy. When ``downgrade_missing_grounding`` is true (tooled
+    path only), grounding-required verdicts without structured ``grounding`` become
+    ``UNATTESTED_AFTER_SEARCH`` so the cell remains scorable.
+    """
+    item = dict(fact_check)
+    verdict = item.get("verdict")
+    if not isinstance(verdict, str) or not verdict.strip():
+        for alt_key in ("status", "judgment", "result", "verdict_label"):
+            alt_val = item.get(alt_key)
+            if isinstance(alt_val, str) and alt_val.strip():
+                verdict = alt_val
+                break
+    if isinstance(verdict, str):
+        normalized = verdict.strip().upper().replace("-", "_").replace(" ", "_")
+        item["verdict"] = _VERDICT_ALIAS_MAP.get(normalized, verdict.strip())
+    if (
+        downgrade_missing_grounding
+        and item.get("verdict") in _GROUNDING_REQUIRED_VERDICTS
+        and not _has_usable_grounding(item.get("grounding"))
+    ):
+        item["verdict"] = "UNATTESTED_AFTER_SEARCH"
+        item.pop("grounding", None)
+    return item
+
+
+def _coerce_payload_fact_check_verdicts(
+    payload: Mapping[str, Any],
+    *,
+    downgrade_missing_grounding: bool,
+) -> dict[str, Any]:
+    out = dict(payload)
+    coerced: list[dict[str, Any]] = []
+    for fact_check in out.get("fact_checks") or []:
+        if not isinstance(fact_check, Mapping):
+            continue
+        coerced.append(
+            _coerce_fact_check_verdict_aliases(
+                fact_check,
+                downgrade_missing_grounding=downgrade_missing_grounding,
+            )
+        )
+    out["fact_checks"] = coerced
+    return out
+
+
+def _subscription_tooled_prompt_supplement(route: llm_reviewer_dispatch.ReviewerRoute) -> str:
+    if not _is_subscription_tooled_route(route):
+        return ""
+    return _SUBSCRIPTION_TOOLED_JSON_FOOTER
+
+
 def _validate_bare_fact_checks(fact_checks: Any) -> None:
     """Validate ONLY the fact_checks shape — claim + verdict, NO grounding.
 
@@ -1029,6 +1121,7 @@ def _normalize_bakeoff_tooled_payload(payload: Mapping[str, Any]) -> tuple[dict[
     Returns ``(normalized_payload, findings_schema_invalid)``.
     """
     out = dict(payload)
+    out = _coerce_payload_fact_check_verdicts(out, downgrade_missing_grounding=True)
     findings_schema_invalid = False
     kept_findings: list[dict[str, Any]] = []
     for finding in out.get("findings") or []:
@@ -1101,6 +1194,7 @@ def _parse_bare_payload(response_text: str) -> tuple[dict[str, Any], bool, bool]
         payload = dict(lenient)
         response_parse_lenient = True
 
+    payload = _coerce_payload_fact_check_verdicts(payload, downgrade_missing_grounding=False)
     findings_schema_invalid = False
     try:
         _validate_bare_payload_shape(payload)
@@ -1370,6 +1464,7 @@ def run_one(
     # ``folk`` is the track level; it maps to the seminar policy family in
     # content_surface_gates. There is no literal ``seminar`` level.
     prompt = llm_reviewer.build_reviewer_prompt(BAKEOFF_LEVEL, f"bakeoff-{fixture.slug}", fixture.passage_md)
+    prompt += _subscription_tooled_prompt_supplement(route)
     task_id = f"qg-bakeoff-{pin_slug(route.reviewer_model_id)}-{fixture.slug}"
     if run_index > 1:
         task_id = f"{task_id}-r{run_index}"
