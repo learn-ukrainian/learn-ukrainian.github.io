@@ -234,7 +234,7 @@ def test_codex_hooks_json_is_managed_source_not_orphan() -> None:
     assert (REPO_ROOT / "agents_extensions" / "codex" / "hooks.json").exists()
     assert (
         'ORPHAN_PATHS_CODEX="agents/curriculum-orchestrator.toml '
-        'agents/curriculum-writer.toml config.toml"'
+        'agents/curriculum-writer.toml config.toml settings.local.json"'
     ) in shared
     assert 'CODEX_OVERLAY_PATHS="hooks.json memory"' in shared
     assert "$CODEX_OVERLAY_PATHS" in check
