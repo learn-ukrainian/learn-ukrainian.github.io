@@ -10,7 +10,7 @@
       "is_true": true,
       "fabrication_class": null,
       "distractor_evidence": null,
-      "verified_by": "wave7-entsyklopediia-ukrainoznavstva feaa5fa7_c1959: «члени „руської трійці“ Маркіян Шашкевич (1811 — 43), Іван Вагилевич (1811 — 66), Яків Головацький (1814 — 88)»; wave4-chyzhevsky-istoriia-lit fbf8bdff_c0899 corroborates."
+      "verified_by": "POINTER: wave7-entsyklopediia-ukrainoznavstva feaa5fa7_c1959 supports claim rus-t1: гурток 'Руська трійця', до якого належали Маркіян Шашкевич, Іван Вагилевич та Яків Головацький. Paraphrase note: wave4-chyzhevsky-istoriia-lit fbf8bdff_c0899 corroborates. No verbatim source quote redistributed."
     },
     {
       "claim_id": "rus-t2",
@@ -18,7 +18,7 @@
       "is_true": true,
       "fabrication_class": null,
       "distractor_evidence": null,
-      "verified_by": "wave4-chyzhevsky-istoriia-lit fbf8bdff_c0899: «1835 р. Шашкевич видав' оду „Голос Галичан“ народною мовою»"
+      "verified_by": "POINTER: wave4-chyzhevsky-istoriia-lit fbf8bdff_c0899 supports claim rus-t2: 1835 року Шашкевич видав оду 'Голос Галичан' народною мовою. No verbatim source quote redistributed."
     },
     {
       "claim_id": "rus-t3",
@@ -26,7 +26,7 @@
       "is_true": true,
       "fabrication_class": null,
       "distractor_evidence": null,
-      "verified_by": "wave9-rusanivsky-ist-lit-movy 7808b51b_c0299: «на широких творчих зв'язках із чеськими і словацькими будителями — П. Шафариком, В. Ганкою, Я. Колларом, Ф. Палацьким»"
+      "verified_by": "POINTER: wave9-rusanivsky-ist-lit-movy 7808b51b_c0299 supports claim rus-t3: Члени гуртка підтримували творчі зв'язки з чеськими і словацькими будителями — Шафариком, Ганкою, Колларом і Палацьким. No verbatim source quote redistributed."
     },
     {
       "claim_id": "rus-u1",
@@ -42,7 +42,7 @@
       "is_true": true,
       "fabrication_class": null,
       "distractor_evidence": null,
-      "verified_by": "wave7-entsyklopediia-ukrainoznavstva feaa5fa7_c1959: «що видали 1836 р. з датою 1837 р. збірник „Русалка Дністровая“»; wave7-krypyakevych-istkult 48346587_c0459: «видав Шашкевич у 1836 р. (з датою 1837 р.)»"
+      "verified_by": "POINTER: wave7-entsyklopediia-ukrainoznavstva feaa5fa7_c1959 supports claim rus-t4: 1836 року, з датою 1837, вони видали збірник 'Русалка Дністрова'. Paraphrase note: wave7-krypyakevych-istkult 48346587_c0459. No verbatim source quote redistributed."
     },
     {
       "claim_id": "rus-t5",
@@ -50,14 +50,14 @@
       "is_true": true,
       "fabrication_class": null,
       "distractor_evidence": null,
-      "verified_by": "wave7-krypyakevych-istkult 48346587_c0459: «видав Шашкевич у 1836 р. (з датою 1837 р.) у Будапешті альманах „Русалка Дністрова“» (Будим — стара назва Буди/Будапешта)."
+      "verified_by": "POINTER: wave7-krypyakevych-istkult 48346587_c0459 supports claim rus-t5: Альманах був надрукований у Будапешті. Paraphrase note: (Будим — стара назва Буди/Будапешта). No verbatim source quote redistributed."
     },
     {
       "claim_id": "rus-m1",
       "claim": "Збірник надруковано церковнослов'янською мовою за етимологічним правописом",
       "is_true": false,
       "fabrication_class": "M",
-      "distractor_evidence": "wave7-krypyakevych-istkult 48346587_c0459 — the REAL passage: «видав… альманах „Русалка Дністрова“ в живій народній мові і за фонетичним правописом». wave9-rusanivsky-ist-lit-movy 7808b51b_c0299 states the principle «Пиши, як чуєш, а читай, як видиш» (Вука Караджича). The almanac used the LIVE VERNACULAR and a PHONETIC orthography — the exact opposite of Church Slavonic + etymological spelling. Keyword lure: мова, правопис.",
+      "distractor_evidence": "POINTER: wave7-krypyakevych-istkult 48346587_c0459 anchors the refutation of claim rus-m1: Збірник надруковано церковнослов'янською мовою за етимологічним правописом. Paraphrase note: wave9-rusanivsky-ist-lit-movy 7808b51b_c0299 states the principle (Вука Караджича). The almanac used the LIVE VERNACULAR and a PHONETIC orthography — the exact opposite of Church Slavonic + etymological spelling. Keyword lure: мова, правопис. No verbatim source quote redistributed.",
       "verified_by": "Real: жива народна мова + фонетичний правопис (48346587_c0459; 7808b51b_c0299). The Church-Slavonic/etymological claim is fabricated."
     },
     {
@@ -66,15 +66,15 @@
       "is_true": true,
       "fabrication_class": null,
       "distractor_evidence": null,
-      "verified_by": "wave7-krypyakevych-istkult 48346587_c0459: «Альманах складається з чотирьох частин, із яких першу займає збірка українських народних пісень»"
+      "verified_by": "POINTER: wave7-krypyakevych-istkult 48346587_c0459 supports claim rus-t6: Альманах складається з чотирьох частин, першу з яких займає збірка українських народних пісень. No verbatim source quote redistributed."
     },
     {
       "claim_id": "rus-m2",
       "claim": "Щойно вийшовши, «Русалка Дністрова» вільно розійшлася Галичиною й одразу здобула прихильність духовної цензури",
       "is_true": false,
       "fabrication_class": "M",
-      "distractor_evidence": "wave9-rusanivsky-ist-lit-movy 7808b51b_c0299 — the REAL passage: «У зв'язку з протестом реакційних клерикалів видана у Пешті 1837 р. „Русалка Дністровая“ пролежала без руху до 1848 р.». wave9-ohiyenko-ist-lit-movy 0988b006_c0222: «своя духовна й урядова цензури видати його не дозволили». The almanac was BANNED by the church/state censorship and lay unavailable until 1848 — it did NOT circulate freely or win censors' favour. Keyword lure: Русалка Дністрова, Галичина, цензура.",
-      "verified_by": "Real: banned by censorship, «пролежала без руху до 1848 р.» (7808b51b_c0299; 0988b006_c0222). The free-circulation claim is fabricated."
+      "distractor_evidence": "POINTER: wave9-rusanivsky-ist-lit-movy 7808b51b_c0299 anchors the refutation of claim rus-m2: Щойно вийшовши, 'Русалка Дністрова' вільно розійшлася Галичиною й одразу здобула прихильність духовної цензури. Paraphrase note: wave9-ohiyenko-ist-lit-movy 0988b006_c0222. The almanac was BANNED by the church/state censorship and lay unavailable until 1848 — it did NOT circulate freely or win censors' favour. Keyword lure: Русалка Дністрова, Галичина, цензура. No verbatim source quote redistributed.",
+      "verified_by": "POINTER: wave9-rusanivsky-ist-lit-movy 7808b51b_c0299 anchors the verification/refutation note for claim rus-m2: Щойно вийшовши, 'Русалка Дністрова' вільно розійшлася Галичиною й одразу здобула прихильність духовної цензури. Paraphrase note: Real: banned by censorship, (; 0988b006_c0222). The free-circulation claim is fabricated. No verbatim source quote redistributed."
     }
   ]
 }

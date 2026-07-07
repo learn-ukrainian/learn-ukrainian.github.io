@@ -10,7 +10,7 @@
       "is_true": true,
       "fabrication_class": null,
       "distractor_evidence": null,
-      "verified_by": "wave7-istkult-t1-kyivska-rus 294b54e7_c0074: «Ярослав Мудрий розпочав велике оборонне та церковне будівництво у Києві та інших містах Русі»"
+      "verified_by": "POINTER: wave7-istkult-t1-kyivska-rus 294b54e7_c0074 supports claim yar-t1: Ярослав Мудрий розпочав велике оборонне та церковне будівництво у Києві. No verbatim source quote redistributed."
     },
     {
       "claim_id": "yar-t2",
@@ -18,14 +18,14 @@
       "is_true": true,
       "fabrication_class": null,
       "distractor_evidence": null,
-      "verified_by": "wave7-istkult-t1-kyivska-rus 294b54e7_c0074: «в його центрі наказав у 1017—1037 рр. збудувати величний кам'яний Софійський собор — Руську митрополію»"
+      "verified_by": "POINTER: wave7-istkult-t1-kyivska-rus 294b54e7_c0074 supports claim yar-t2: він наказав збудувати величний кам'яний Софійський собор — Руську митрополію. No verbatim source quote redistributed."
     },
     {
       "claim_id": "yar-m1",
       "claim": "Собор мав п'ять нефів і був вивершений п'ятьма золоченими главами",
       "is_true": false,
       "fabrication_class": "M",
-      "distractor_evidence": "wave7-dzyuba-pavlenko-litopys-kultury e0892426_c0023 — the REAL passage: «Побудований за типом хрестово-купольних храмів з п'ятьма нефами й апсидами, оточений відкритими галереями і вивершений тринадцятьма главами». The собor has FIVE nave-aisles but THIRTEEN cupolas; the claim mis-copies the «five» from нефи onto the глави. Keyword lure: п'ять, нефи, глави all present in the real passage.",
+      "distractor_evidence": "POINTER: wave7-dzyuba-pavlenko-litopys-kultury e0892426_c0023 anchors the refutation of claim yar-m1: Собор мав п'ять нефів і був вивершений п'ятьма золоченими главами. Paraphrase note: The собor has FIVE nave-aisles but THIRTEEN cupolas; the claim mis-copies the from нефи onto the глави. Keyword lure: п'ять, нефи, глави all present in the real passage. No verbatim source quote redistributed.",
       "verified_by": "Real: п'ять нефів but ТРИНАДЦЯТЬ глав (e0892426_c0023). «П'ять глав» is fabricated."
     },
     {
@@ -34,7 +34,7 @@
       "is_true": true,
       "fabrication_class": null,
       "distractor_evidence": null,
-      "verified_by": "wave8-ukr-lit-entsyklopediia fc2291b5_c0580: «Бібліотека Ярослава Мудрого — перша на Русі бібліотека, засн. 1037 при Софійському соборі в Києві князем Ярославом Мудрим»"
+      "verified_by": "POINTER: wave8-ukr-lit-entsyklopediia fc2291b5_c0580 supports claim yar-t3: у 1037 році при Софійському соборі було створено першу на Русі бібліотеку. No verbatim source quote redistributed."
     },
     {
       "claim_id": "yar-t4",
@@ -42,7 +42,7 @@
       "is_true": true,
       "fabrication_class": null,
       "distractor_evidence": null,
-      "verified_by": "wave8-ukr-lit-entsyklopediia fc2291b5_c0580: «Тут же була майстерня-скрипторій, де книги переписувались і перекладались з грец. на слов'ян. мову»; wave7-istkult-t1-kyivska-rus 294b54e7_c0074 corroborates."
+      "verified_by": "POINTER: wave8-ukr-lit-entsyklopediia fc2291b5_c0580 supports claim yar-t4: діяла майстерня-скрипторій, де переписувалися й перекладалися з грецької мови книги. Paraphrase note: wave7-istkult-t1-kyivska-rus 294b54e7_c0074 corroborates. No verbatim source quote redistributed."
     },
     {
       "claim_id": "yar-t5",
@@ -50,7 +50,7 @@
       "is_true": true,
       "fabrication_class": null,
       "distractor_evidence": null,
-      "verified_by": "wave8-ukr-lit-entsyklopediia fc2291b5_c0580: «У б-ці… складено перший збірник законів Київ. Русі — „Руська правда“»"
+      "verified_by": "POINTER: wave8-ukr-lit-entsyklopediia fc2291b5_c0580 supports claim yar-t5: складено й перший збірник законів Київської Русі — 'Руська правда'. No verbatim source quote redistributed."
     },
     {
       "claim_id": "yar-t6",
@@ -58,14 +58,14 @@
       "is_true": true,
       "fabrication_class": null,
       "distractor_evidence": null,
-      "verified_by": "wave7-dzyuba-pavlenko-litopys-kultury e0892426_c0023: «Спорудження навколо Києва укріплень, будівництво Золотих воріт, увінчаних одноверхою Благовіщенською церквою»"
+      "verified_by": "POINTER: wave7-dzyuba-pavlenko-litopys-kultury e0892426_c0023 supports claim yar-t6: Ярослав спорудив також довкола Києва нові укріплення та Золоті ворота, увінчані Благовіщенською церквою. No verbatim source quote redistributed."
     },
     {
       "claim_id": "yar-m2",
       "claim": "Перший оригінальний церковно-літературний твір «Слово про закон і благодать» написав літописець Нестор",
       "is_true": false,
       "fabrication_class": "M",
-      "distractor_evidence": "wave7-istkult-t1-kyivska-rus 294b54e7_c0074 — the REAL passage: «Написано перший ориґінальний літературно-церковний твір „Слово про закон і благодать“, автором якого був Іларіон». The claim mis-attributes the work to the chronicler Нестор — a strong lure because Іларіон is named in the immediately preceding sentence of the passage. wave8-ukr-lit-entsyklopediia fc2291b5_c0580 also credits «„Слово о законЂ и благодати“ митрополита Іларіона».",
+      "distractor_evidence": "POINTER: wave7-istkult-t1-kyivska-rus 294b54e7_c0074 anchors the refutation of claim yar-m2: Перший оригінальний церковно-літературний твір 'Слово про закон і благодать' написав літописець Нестор. Paraphrase note: The claim mis-attributes the work to the chronicler Нестор — a strong lure because Іларіон is named in the immediately preceding sentence of the passage. wave8-ukr-lit-entsyklopediia fc2291b5_c0580 also credits. No verbatim source quote redistributed.",
       "verified_by": "Real author = Іларіон (294b54e7_c0074; fc2291b5_c0580). Нестор is fabricated."
     },
     {

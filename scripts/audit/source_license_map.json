@@ -7,7 +7,7 @@
       "license": "CC-BY-SA-4.0",
       "verdict": "SHIP",
       "basis_url": "https://creativecommons.org/licenses/by-sa/4.0/",
-      "basis_note": "LICENSE-CONTENT.md, Wikipedia section: Ukrainian Wikipedia context is CC BY-SA 4.0."
+      "license_basis": "LICENSE-CONTENT.md, Wikipedia section: Ukrainian Wikipedia context is CC BY-SA 4.0; rights.json preserves the source URL and license basis for attribution."
     },
     {
       "table": "ukrainian_wiki",
@@ -15,7 +15,7 @@
       "license": "CC-BY-SA-4.0",
       "verdict": "SHIP",
       "basis_url": "https://creativecommons.org/licenses/by-sa/4.0/",
-      "basis_note": "LICENSE-CONTENT.md covers project-authored wiki/**/*.md content under CC BY-SA 4.0."
+      "license_basis": "LICENSE-CONTENT.md covers project-authored wiki/**/*.md content under CC BY-SA 4.0; rights.json preserves the source URL and license basis for attribution."
     },
     {
       "table": "grinchenko",
@@ -23,7 +23,7 @@
       "license": "PUBLIC_DOMAIN",
       "verdict": "SHIP",
       "basis_url": "https://uk.wikipedia.org/wiki/Словарь_української_мови",
-      "basis_note": "LICENSE-CONTENT.md, Dictionaries section: Грінченко 1907 is public domain."
+      "license_basis": "LICENSE-CONTENT.md, Dictionaries section: Грінченко 1907 is public domain."
     },
     {
       "table": "sum11",
@@ -31,7 +31,7 @@
       "license": "PUBLIC_DOMAIN",
       "verdict": "SHIP",
       "basis_url": "https://sum.in.ua/",
-      "basis_note": "LICENSE-CONTENT.md, Dictionaries section: СУМ-11 is marked public domain, with sovietization caveat."
+      "license_basis": "LICENSE-CONTENT.md, Dictionaries section: СУМ-11 is marked public domain, with sovietization caveat."
     },
     {
       "table": "wiktionary",
@@ -39,7 +39,7 @@
       "license": "CC-BY-SA-3.0",
       "verdict": "SHIP",
       "basis_url": "https://creativecommons.org/licenses/by-sa/3.0/",
-      "basis_note": "LICENSE-CONTENT.md, Dictionaries section: English Wiktionary / Kaikki fallback is CC BY-SA 3.0."
+      "license_basis": "LICENSE-CONTENT.md, Dictionaries section: English Wiktionary / Kaikki fallback is CC BY-SA 3.0."
     },
     {
       "table": "forms",
@@ -47,7 +47,7 @@
       "license": "VESUM-MIT-ish",
       "verdict": "SHIP",
       "basis_url": "https://github.com/brown-uk/dict_uk",
-      "basis_note": "LICENSE-CONTENT.md, Dictionaries section: VESUM is listed as an open-source morphological database."
+      "license_basis": "LICENSE-CONTENT.md, Dictionaries section: VESUM is listed as an open-source morphological database."
     },
     {
       "table": "literary_texts",
@@ -55,7 +55,7 @@
       "license": "PUBLIC_DOMAIN",
       "verdict": "SHIP",
       "basis_url": "https://uk.wikipedia.org/wiki/Іван_Франко",
-      "basis_note": "data/authors_rights.yaml lists Іван Франко death_year 1916; LICENSE-CONTENT.md marks Franko public domain."
+      "license_basis": "data/authors_rights.yaml lists Іван Франко death_year 1916; LICENSE-CONTENT.md marks Franko public domain."
     },
     {
       "table": "literary_texts",
@@ -63,7 +63,7 @@
       "license": "PUBLIC_DOMAIN",
       "verdict": "SHIP",
       "basis_url": "https://uk.wikipedia.org/wiki/Іван_Котляревський",
-      "basis_note": "data/authors_rights.yaml lists Іван Котляревський death_year 1838; LICENSE-CONTENT.md marks pre-1924 literary sources public domain."
+      "license_basis": "data/authors_rights.yaml lists Іван Котляревський death_year 1838; LICENSE-CONTENT.md marks pre-1924 literary sources public domain."
     },
     {
       "table": "literary_texts",
@@ -71,7 +71,79 @@
       "license": "PUBLIC_DOMAIN",
       "verdict": "SHIP",
       "basis_url": "https://uk.wikipedia.org/wiki/Григорій_Сковорода",
-      "basis_note": "Hryhorii Skovoroda died in 1794; LICENSE-CONTENT.md marks public-domain primary literary sources as quotable."
+      "license_basis": "Григорій Сковорода died in 1794; LICENSE-CONTENT.md marks public-domain primary literary sources as quotable."
+    },
+    {
+      "table": "literary_texts",
+      "source_file_pattern": "wave5-skovoroda-tvory",
+      "license": "PUBLIC_DOMAIN",
+      "verdict": "SHIP",
+      "basis_url": "https://uk.wikipedia.org/wiki/Григорій_Сковорода",
+      "license_basis": "Григорій Сковорода died in 1794; primary-text quotation is public domain under the author-death-plus-70 policy, with text-not-edition caveat."
+    },
+    {
+      "table": "literary_texts",
+      "source_file_pattern": "wave10-shevchenko-tvory-t1",
+      "license": "PUBLIC_DOMAIN",
+      "verdict": "SHIP",
+      "basis_url": "https://uk.wikipedia.org/wiki/Тарас_Шевченко",
+      "license_basis": "Тарас Шевченко died in 1861; primary-text quotation is public domain under the author-death-plus-70 policy, with text-not-edition caveat."
+    },
+    {
+      "table": "literary_texts",
+      "source_file_pattern": "ukrlib-shevchenko",
+      "license": "PUBLIC_DOMAIN",
+      "verdict": "SHIP",
+      "basis_url": "https://uk.wikipedia.org/wiki/Тарас_Шевченко",
+      "license_basis": "Тарас Шевченко died in 1861; primary-text quotation is public domain under the author-death-plus-70 policy, with text-not-edition caveat."
+    },
+    {
+      "table": "literary_texts",
+      "source_file_pattern": "wave10-konysky-shevchenko-khronika",
+      "license": "PUBLIC_DOMAIN",
+      "verdict": "SHIP",
+      "basis_url": "https://uk.wikipedia.org/wiki/Олександр_Кониський",
+      "license_basis": "Олександр Кониський died in 1900; primary-text quotation is public domain under the author-death-plus-70 policy, with text-not-edition caveat."
+    },
+    {
+      "table": "literary_texts",
+      "source_file_pattern": "wave6-synopsis-1674",
+      "license": "PUBLIC_DOMAIN",
+      "verdict": "SHIP",
+      "basis_url": "https://en.wikipedia.org/wiki/Kievan_Synopsis",
+      "license_basis": "Kievan Synopsis was first published in Kyiv in 1674; source text is public domain, with text-not-edition caveat."
+    },
+    {
+      "table": "literary_texts",
+      "source_file_pattern": "wave1-galytsko-volynskyi",
+      "license": "PUBLIC_DOMAIN",
+      "verdict": "SHIP",
+      "basis_url": "https://en.wikipedia.org/wiki/Galician–Volhynian_Chronicle",
+      "license_basis": "Galician-Volhynian Chronicle is a 1201-1292 Old Ruthenian historiographical work; source text is public domain, with text-not-edition caveat."
+    },
+    {
+      "table": "literary_texts",
+      "source_file_pattern": "wave7-kostomarov-slovyanska-mifolohiia",
+      "license": "PUBLIC_DOMAIN",
+      "verdict": "SHIP",
+      "basis_url": "https://uk.wikipedia.org/wiki/Костомаров_Микола_Іванович",
+      "license_basis": "Микола Костомаров died in 1885; primary-text quotation is public domain under the author-death-plus-70 policy, with text-not-edition caveat."
+    },
+    {
+      "table": "literary_texts",
+      "source_file_pattern": "wave11-hrushevsky-iur-t6",
+      "license": "PUBLIC_DOMAIN",
+      "verdict": "SHIP",
+      "basis_url": "https://uk.wikipedia.org/wiki/Грушевський_Михайло_Сергійович",
+      "license_basis": "Михайло Грушевський died in 1934; public domain from 2005 under the author-death-plus-70 policy, with text-not-edition caveat."
+    },
+    {
+      "table": "literary_texts",
+      "source_file_pattern": "wave12-hrushevsky-iu-odnotom",
+      "license": "PUBLIC_DOMAIN",
+      "verdict": "SHIP",
+      "basis_url": "https://uk.wikipedia.org/wiki/Грушевський_Михайло_Сергійович",
+      "license_basis": "Михайло Грушевський died in 1934; public domain from 2005 under the author-death-plus-70 policy, with text-not-edition caveat."
     }
   ]
 }
