@@ -310,6 +310,8 @@ def _check_level(
     min_lexemes: int,
     reviewed: set[tuple[str, str]],
     errors: list[str],
+    *,
+    lower_lexeme_ids: set[str] | None = None,
 ) -> dict[str, Any]:
     paths = {
         "index": practice_dir / f"practice-index.{level}.json",
@@ -428,7 +430,20 @@ def _check_level(
             if not _has_text(lemma_id):
                 errors.append(f"{prefix} missing lemmaId")
             elif str(lemma_id) not in lexeme_by_id:
-                errors.append(f"{prefix} lemmaId {lemma_id!r} missing from {level} lexeme shard")
+                # Heritage items sit at max(lexeme cefr, curator availability floor)
+                # (#4719/#4720), so their native lexeme may live in a LOWER-level
+                # shard. The static client loads lexeme shards cumulatively, keeping
+                # that join resolvable (generate_practice_deck.py, heritage placement
+                # note) — mirror that here for heritage ONLY; all other drill kinds
+                # remain strictly same-level.
+                if kind == "heritage" and str(lemma_id) in (lower_lexeme_ids or set()):
+                    pass
+                elif kind == "heritage":
+                    errors.append(
+                        f"{prefix} lemmaId {lemma_id!r} missing from lexeme shards at or below {level}"
+                    )
+                else:
+                    errors.append(f"{prefix} lemmaId {lemma_id!r} missing from {level} lexeme shard")
         if kind == "classify":
             classify_rows = [item for item in rows if isinstance(item, dict)]
             for index, item in enumerate(classify_rows):
@@ -502,6 +517,7 @@ def _check_level(
         "cloze": len(cloze_items),
         **{kind: len(rows) for kind, rows in mode_items.items() if isinstance(rows, list)},
         "deck_versions": sorted(versions),
+        "lexeme_ids": frozenset(lexeme_by_id),
     }
 
 
@@ -520,10 +536,21 @@ def check_assets(
     errors: list[str] = []
     daily = _check_daily_pool(daily_pool, min_daily_pool_size, errors)
     reviewed = _reviewed_source_keys(reviewed_sources, errors)
-    practice = {
-        level: _check_level(practice_dir, level, min_practice_lexemes_per_level, reviewed, errors)
-        for level in levels
-    }
+    practice: dict[str, dict[str, Any]] = {}
+    # Levels are ordered (A1..C1); heritage items may reference native lexemes from
+    # any LOWER level (availability floor, #4720) — accumulate ids as we ascend.
+    seen_lexeme_ids: set[str] = set()
+    for level in levels:
+        row = _check_level(
+            practice_dir,
+            level,
+            min_practice_lexemes_per_level,
+            reviewed,
+            errors,
+            lower_lexeme_ids=seen_lexeme_ids,
+        )
+        seen_lexeme_ids |= set(row.pop("lexeme_ids", None) or ())
+        practice[level] = row
 
     deck_versions = {
         version
