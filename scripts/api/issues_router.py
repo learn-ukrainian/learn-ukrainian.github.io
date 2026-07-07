@@ -180,3 +180,43 @@ async def issues_map(
     Reviewer Codex-6 / #1313: makes queue management less manual.
     """
     return await asyncio.to_thread(_fetch_issues, limit)
+
+
+@router.get("/streams")
+async def issues_streams(
+    fresh: bool = Query(False, description="Re-run the auditor instead of serving the cache."),
+):
+    """Issue-stream hygiene report (#4708) — orphans, multi-homed, pending links.
+
+    Serves ``batch_state/issue_stream_audit.json`` written by
+    ``scripts/orchestration/issue_stream_audit.py``; ``?fresh=true`` re-runs the
+    auditor (network: several ``gh`` calls). Registry:
+    ``scripts/config/issue_streams.yaml``. Degrades to ``{"error": ...}``.
+    """
+
+    def _load() -> dict[str, Any]:
+        from scripts.orchestration import issue_stream_audit as audit
+
+        try:
+            if fresh:
+                return audit.run_audit()
+            # Default path is CACHE-ONLY (codex F3): a live audit is many gh
+            # calls and must never block a cold-start consumer. Serve a stale
+            # cache with a flag, or report no-cache + kick a background refresh.
+            report = audit.read_cache(max_age_s=3600)
+            if report is not None:
+                return report
+            stale = audit.read_cache(max_age_s=7 * 24 * 3600)
+            subprocess.Popen(
+                [str(PROJECT_ROOT / ".venv" / "bin" / "python"),
+                 "-m", "scripts.orchestration.issue_stream_audit", "--json"],
+                cwd=PROJECT_ROOT,
+                stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+            )
+            if stale is not None:
+                return {**stale, "stale": True, "refreshing": True}
+            return {"status": "no-cache", "refreshing": True, "ok": None}
+        except Exception as exc:  # degrade, never 500 a state endpoint
+            return {"error": str(exc)[:300], "ok": False}
+
+    return await asyncio.to_thread(_load)
