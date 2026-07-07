@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 from pathlib import Path
 from types import SimpleNamespace
@@ -8,6 +9,8 @@ from typing import Any
 import pytest
 
 from scripts.audit import llm_reviewer_dispatch, qg_bakeoff, qg_factcheck_scoring, qg_schema
+
+_DISPATCH = "scripts.audit.llm_reviewer_dispatch"
 
 
 def _fixture() -> qg_bakeoff.BakeoffFixture:
@@ -133,6 +136,100 @@ def test_fixture_validation_rejects_class_m_without_distractor(tmp_path: Path) -
     )
 
     with pytest.raises(qg_bakeoff.BakeoffConfigError, match="class-M claims require distractor_evidence"):
+        qg_bakeoff.load_fixture(path)
+
+
+def test_fixture_loader_accepts_non_overlapping_canary_suffix(tmp_path: Path) -> None:
+    path = tmp_path / "canary.json"
+    canary_sentence = "Контрольний маркер для зовнішньої перевірки відтворення."
+    path.write_text(
+        json.dumps(
+            {
+                "slug": "canary",
+                "title": "Canary",
+                "passage_md": f"True claim. Fabricated claim.\n\n{canary_sentence}",
+                "canary_sentence": canary_sentence,
+                "claims": [
+                    {"claim_id": "true", "claim": "True claim.", "is_true": True},
+                    {
+                        "claim_id": "false",
+                        "claim": "Fabricated claim.",
+                        "is_true": False,
+                        "fabrication_class": "U",
+                    },
+                ],
+            },
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+
+    fixture = qg_bakeoff.load_fixture(path)
+
+    assert fixture.canary_sentence == canary_sentence
+
+
+def test_fixture_loader_rejects_canary_not_at_passage_suffix(tmp_path: Path) -> None:
+    path = tmp_path / "bad-canary.json"
+    path.write_text(
+        json.dumps(
+            {
+                "slug": "bad-canary",
+                "title": "Bad Canary",
+                "passage_md": "Canary marker. True claim.",
+                "canary_sentence": "Canary marker.",
+                "claims": [{"claim_id": "true", "claim": "True claim.", "is_true": True}],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(qg_bakeoff.BakeoffConfigError, match="suffix"):
+        qg_bakeoff.load_fixture(path)
+
+
+@pytest.mark.parametrize("canary_sentence", ["", "   ", 42])
+def test_fixture_loader_rejects_empty_or_non_string_canary_sentence(
+    tmp_path: Path,
+    canary_sentence: object,
+) -> None:
+    path = tmp_path / "bad-canary.json"
+    path.write_text(
+        json.dumps(
+            {
+                "slug": "bad-canary",
+                "title": "Bad Canary",
+                "passage_md": "True claim.",
+                "canary_sentence": canary_sentence,
+                "claims": [{"claim_id": "true", "claim": "True claim.", "is_true": True}],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(qg_bakeoff.BakeoffConfigError, match="canary_sentence must be a non-empty string"):
+        qg_bakeoff.load_fixture(path)
+
+
+def test_fixture_loader_rejects_claim_overlapping_canary_sentence(tmp_path: Path) -> None:
+    path = tmp_path / "bad-canary.json"
+    path.write_text(
+        json.dumps(
+            {
+                "slug": "bad-canary",
+                "title": "Bad Canary",
+                "passage_md": "True claim. Canary marker.",
+                "canary_sentence": "Canary marker.",
+                "claims": [
+                    {"claim_id": "true", "claim": "True claim.", "is_true": True},
+                    {"claim_id": "canary", "claim": "Canary marker.", "is_true": True},
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    with pytest.raises(qg_bakeoff.BakeoffConfigError, match="overlap canary_sentence"):
         qg_bakeoff.load_fixture(path)
 
 
@@ -1635,6 +1732,34 @@ def test_rescore_covers_both_arms_and_backfills_arm(tmp_path: Path) -> None:
     assert "rescored_at" not in verdict_after  # untouched, not rewritten
 
 
+def test_rescore_refuses_frozen_reference_scorecard_without_escape(tmp_path: Path) -> None:
+    out = tmp_path / "frozen"
+    out.mkdir()
+    scorecard = out / qg_bakeoff.SCORECARD_NAME
+    scorecard.write_text("# frozen scorecard\n", encoding="utf-8")
+    manifest = tmp_path / "MANIFEST.json"
+    manifest.write_text(
+        json.dumps(
+            {
+                "benchmark_version": "1.0.0",
+                "reference_result": {
+                    "path": "audit/frozen/SCORECARD.md",
+                    "sha256": hashlib.sha256(scorecard.read_bytes()).hexdigest(),
+                },
+            },
+            indent=2,
+            sort_keys=True,
+        )
+        + "\n",
+        encoding="utf-8",
+    )
+
+    with pytest.raises(qg_bakeoff.BakeoffConfigError, match="unsafe-allow-frozen"):
+        qg_bakeoff.rescore_artifacts(out, manifest_path=manifest)
+
+    assert qg_bakeoff.rescore_artifacts(out, unsafe_allow_frozen=True, manifest_path=manifest) == 0
+
+
 def test_load_all_artifacts_skips_foreign_json(tmp_path: Path) -> None:
     """The run_matrix scorecard path must apply the same foreign-JSON filter.
 
@@ -1697,3 +1822,56 @@ def test_default_fixture_corpus_loads_with_uniform_shape() -> None:
             assert (len(true_claims), len(m_claims), len(u_claims)) == (6, 2, 1), fixture.slug
         if fixture.slug not in legacy_pre_floor:
             assert len(fixture.passage_md.split()) >= 150, fixture.slug
+
+
+def _snapshot_files(root: Path) -> set[Path]:
+    if not root.exists():
+        return set()
+    return {path for path in root.rglob("*") if path.is_file()}
+
+
+def test_offline_bakeoff_tooled_run_writes_zero_paths_outside_out_dir(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """#4642: bakeoff cells must not persist reviewer markdown under curriculum/."""
+    from unittest.mock import patch
+
+    from scripts.ai_agent_bridge._opencode import OpencodeStreamParse
+
+    repo = tmp_path / "repo"
+    (repo / "curriculum" / "l2-uk-en" / "folk").mkdir(parents=True)
+    monkeypatch.setattr(llm_reviewer_dispatch, "PROJECT_ROOT", repo)
+    monkeypatch.setattr(qg_bakeoff, "PROJECT_ROOT", repo)
+    monkeypatch.delenv("CI", raising=False)
+    monkeypatch.setenv("QG_BAKEOFF", "1")
+
+    fixture = _fixture()
+    route = qg_bakeoff.bakeoff_route_for_model("openrouter/google/gemma-4-31b-it")
+    out_dir = tmp_path / "bakeoff-out"
+    out_dir.mkdir(parents=True)
+    parse = OpencodeStreamParse(
+        text=json.dumps(_TOOLED_GRODED_PAYLOAD),
+        tool_events=(_event(),),
+    )
+
+    before = _snapshot_files(repo)
+    with (
+        patch(f"{_DISPATCH}._assert_sources_mcp_available"),
+        patch(
+            "scripts.ai_agent_bridge._opencode._invoke_opencode_detailed",
+            return_value=parse,
+        ),
+    ):
+        run = qg_bakeoff.run_one(
+            fixture=fixture,
+            route=route,
+            output_dir=out_dir,
+            runner=qg_bakeoff.invoke_bakeoff_route,
+            force=True,
+        )
+    after = _snapshot_files(repo)
+
+    assert after == before
+    assert run.artifact_path.is_file()
+    assert run.artifact_path.parent == out_dir

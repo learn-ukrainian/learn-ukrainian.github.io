@@ -38,6 +38,24 @@ only as the offline fallback above.
 After a write that needs to be immediately visible (just-committed
 change, just-filed issue), pass `?fresh=true` to `/api/orient`.
 
+**Canary mint (orchestrator sessions, user go 2026-07-07):** after orientation,
+freeze 8-10 anchors from the facts just gathered (origin/main SHA, open-PR numbers,
+queue/corpus counts): `.venv/bin/python scripts/context_canary.py mint --facts
+'<json {id,q,a} list>' --out .agent/canary-<stamp>.json`. Score FROM MEMORY (no
+scrolling back) at ≥50% of the active model's window and before any handoff. Rot
+evidence is PER-MODEL (Claude lane rotates: Opus 4.8 verified, Fable 5 improvised
+10/10 @ ~500K, Sonnet 5 pending) — on a not-yet-canaried model this is mandatory.
+
+## Merge policy — ready PRs must not sit (user directive 2026-07-07, #4703)
+
+The repo setting `allow_auto_merge` is ENABLED (was the root cause of ready PRs sitting for
+hours). Every lane: the moment a PR's review gate passes (cross-family review evidence, no
+requested changes), run `gh pr merge <N> --auto --squash --delete-branch` — GitHub merges it
+when CI settles, nobody babysits. Dispatched agents still do NOT self-enable auto-merge
+(review gate first — unchanged). `--auto` waits for green and never bypasses blocking checks
+(#M-0.5 semantics unchanged). Orchestrator session sweeps remain the backstop for anything
+green+reviewed+idle.
+
 ## Two-tier handoffs (epic #1865 item #1, shipped 2026-05-11)
 
 Thread rollover handoffs are separate from durable session records. When a
@@ -48,10 +66,12 @@ and continue from `.agent/<name>-thread-bootstrap.md` plus
 Do **not** write `docs/session-state/current.md` or any other git-tracked
 handoff file just to survive compaction.
 
-Every new session handoff ships as a **PAIR**:
+Every new durable session handoff ships as **MD brief only** (user decision 2026-07-07 —
+the HTML halves were not being read):
 
-- **`docs/session-state/<date>-<slug>-brief.md`** (~2-5KB) — machine-readable, cold-start entry point. YAML frontmatter + bullet-list body. Agents read THIS.
-- **`docs/session-state/<date>-<slug>.html`** (~20-40KB) — rich human-readable. Narrative, tables, KPIs, callouts. Humans read THIS. Agents only open it if the brief flags something they need narrative for.
+- **`docs/session-state/<date>-<slug>-brief.md`** (~2-5KB) — machine-readable, cold-start
+  entry point. YAML frontmatter + bullet-list body. Agents AND the human read THIS.
+- HTML companion ONLY on explicit request or for major milestone arcs — never by default.
 
 **Cold-start rule:** after the Monitor API bootstrap above, use the agent-specific
 session endpoint when you know your role:
@@ -175,11 +195,30 @@ use `/api/worktrees`. `claude agents` does not replace any of these.
 
 ---
 
+## Work intake — stream epics (#4708, binding for ALL orchestrators incl. Codex UI)
+
+Every OPEN issue belongs to **exactly one stream epic**. The registry is
+`scripts/config/issue_streams.yaml` (streams → epic numbers; mirrored in
+`docs/WORKSTREAMS.md` § Streams). This is how orchestrators stay on track and schedule:
+
+- **Cold start**: your queue = YOUR stream's epic checklist/sub-issues, not the global
+  issue list. Check `/api/issues/streams` (or the session-setup 11b warning) for drift.
+- **Creating an issue**: link it to its stream epic AT CREATION — native sub-issue
+  (preferred) or a `#N` checklist line in the epic body. An unlinked issue is an ORPHAN
+  and gets flagged at every agent's cold start until adopted.
+- **Closing**: when a PR fixes an issue, CLOSE it with evidence (auto-close keywords are
+  fine, but verify — `Fixes #N` closes the whole issue even when scope remains; split
+  remainders into a new linked issue FIRST).
+- **New stream?** Only with a new epic + a registry entry in the same PR — streams are
+  deliberate, not emergent.
+- Auditor: `.venv/bin/python -m scripts.orchestration.issue_stream_audit` (`--check` for
+  gates, `--migrate` to convert body references into native sub-issues).
+
 ## Mandatory task workflow
 
 Every task follows this workflow. No exceptions for non-trivial changes.
 
-1. **Create GH issue** — describe the problem, draft a plan
+1. **Create GH issue** — describe the problem, draft a plan, **link it to its stream epic** (see Work intake above)
 2. **Adversarial review of plan** — send to Gemini, incorporate feedback
 3. **Finalize ACs** — update issue with concrete acceptance criteria
 4. **Implement** — work through ACs one by one

@@ -2,6 +2,7 @@
 
 **Status**: Accepted
 **Date**: 2026-03-24 (first implemented) / 2026-04-11 (recorded)
+**Deciders**: Krisztian (project owner) — recorded retroactively 2026-07-07; ADR predates the Deciders convention
 **Related**: #1185 (self-healing repair), #1161 (compile prompts), `dec-001` (decision journal entry "V6 uses reviewer-as-fixer")
 
 ## Context

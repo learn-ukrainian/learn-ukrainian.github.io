@@ -744,3 +744,42 @@ b2 93 3149 2266 200 169 0.845 49 0.245 вкладене запитання, кі
 bio 1 24 24 24 19 0.792 1 0.042 радянський контекст, співаність, інституційна кар'єра, пісенний канон, велика форма
 folk 36 944 753 200 165 0.825 24 0.120 склодувна трубка, вірш без сталої строфи, екзотизація, топонімічний переказ, таємна мова, кінь-вісник, восковий резерв, галицький запис
 ```
+
+## Post-batch-3 re-run — gap closure verified (2026-07-07, #4593)
+
+Re-ran the headline queries after the batch-3 ingest (47 books / 15,544 chunks, PRs
+#4667/#4671/#4675). Deterministic, `mode=ro`, live `data/sources.db`:
+
+### Content-corpus row counts
+
+| corpus | chunks (2026-07-06 audit) | chunks (2026-07-07) |
+|---|---:|---:|
+| textbooks | 35,389 | **50,933** |
+| literary_texts | 137,723 | 137,723 |
+| external_articles | 1,205 | 1,205 |
+| ukrainian_wiki | 22,385 | 22,385 |
+| wikipedia | 1,026 | 1,026 |
+
+### STEM / applied-register cell (the audit's headline "0-chunk" finding)
+
+STEM-pattern chunks (query §"STEM presence", extended with algebra/heometr/fizik/himi
+translit stems): 0 (pre-wave-1) → 5,334 (post-wave-1) → **14,400** (post-batch-3).
+
+### Authoritative subject census (subject column, 25 subjects, 0 UNMAPPED)
+
+zarlit 2,348 · heohrafiya 2,340 · informatyka 2,009 · fizyka 1,964 · vsesvitnia 1,678 ·
+algebra 1,564 · mystetstvo 1,532 · matematyka 1,430 · biolohiya 1,408 · khimiya 1,387 ·
+heometriya 1,223 · zakhyst 1,126 · pravoznavstvo 1,104 · ekonomika 961 · zdorovia 910 ·
+pryroda 764 · hromadianska 656 · etyka 384 · finansova 226 · astronomiya 205
+(core: ukrmova 10,940 · ukrlit 6,323 · istoriya 6,120 · lexicon 1,937 · bukvar 394).
+
+**Register balance shift:** subject-register Ukrainian now exceeds core-language chunks
+(31,339 vs 19,594) — the diversification this audit's ranking called for is delivered.
+Consumers unblocked at the new scale: Atlas grounding (fresh reconciler baseline 15,880
+missing lemmas / 416 files, attestable against the widened corpus), reviewer grounding,
+practice decks, benchmark domain coverage.
+
+**Cells still open:** grade-9 2026 pryroda/zdorovia/finansova/pravoznavstvo (view-only
+Drive, wave-3b watch) · wave-1b scans (4 books) · wave-2 10-11 scanned leftovers ·
+geography stretch (#4594-gated) · press/conversational registers (parked per ranking §
+"Final acquisition ranking").

@@ -3,6 +3,7 @@ from __future__ import annotations
 from collections import Counter
 from pathlib import Path
 
+import pytest
 import yaml
 
 from scripts.wiki.textbook_subjects import (
@@ -231,3 +232,141 @@ def test_author_map_single_source_and_batch2_authors_present() -> None:
     for slug in list(WAVE1_SLUGS) + list(BATCH2_SOURCE_FILES):
         author = slug.split("-")[-2]
         assert author in AUTHOR_UK_BY_TRANSLIT, slug
+
+
+def test_new_subjects_normalize() -> None:
+    for subject in ("vsesvitnia", "zarlit", "pryroda", "zdorovia", "etyka", "finansova"):
+        assert normalize_subject_slug(subject) == subject
+
+
+def test_vsesvitnia_ordering_precedence() -> None:
+    stems = [
+        "7-klas-istoria-vsesvitnia-ladychenko-2024",
+        "11-klas-istoriya-vsesvit-schupak-2024",
+        "10-klas-vsesvitnia-istoriia-vasylkiv-2023-stand",
+    ]
+    for stem in stems:
+        assert subject_for_source_file(stem) == "vsesvitnia"
+
+
+@pytest.mark.parametrize(
+    ("stem", "expected_subject"),
+    [
+        ("10-klas-algebra-ister-2018", "algebra"),
+        ("10-klas-biologija-i-ekologija-zadorozhnij-2018-stand", "biolohiya"),
+        ("10-klas-fizyka-barjakhtar-2018", "fizyka"),
+        ("10-klas-geografija-bojko-2018", "heohrafiya"),
+        ("10-klas-geometrija-ister-2018", "heometriya"),
+        ("10-klas-informatika-rudenko-2018-stand", "informatyka"),
+        ("10-klas-himija-grygorovych-2018", "khimiya"),
+        ("10-klas-matematika-merzljak-2018", "matematyka"),
+        ("10-klas-vsesvitnia-istoriia-vasylkiv-2023-stand", "vsesvitnia"),
+        ("10-klas-zarubizhna-literatura-voloshhuk-2018", "zarlit"),
+        ("11-klas-algebra-ister-2019-prof", "algebra"),
+        ("11-klas-biologiia-i-ekologia-shalamov-2019", "biolohiya"),
+        ("11-klas-ekonomika-homiak-2019", "ekonomika"),
+        ("11-klas-fizika-astronomiia-zasekina-2019-standart", "fizyka"),
+        ("11-klas-geografija-pestushko-2019", "heohrafiya"),
+        ("11-klas-geometria-ister-2019-prof", "heometriya"),
+        ("11-klas-informatyka-rudenko-2019", "informatyka"),
+        ("11-klas-himia-grygorovych-2019", "khimiya"),
+        ("11-klas-matematyka-nelin-2019", "matematyka"),
+        ("10-11-klas-mystectvo-nazarenko-2018", "mystetstvo"),
+        ("11-klas-istoriya-vsesvit-schupak-2024", "vsesvitnia"),
+        ("11-klas-zakhist-vitchizni-gudima-2019-med", "zakhyst"),
+        ("11-klas-zarubizhna-literatura-voloshhuk-2019", "zarlit"),
+        ("5-klas-etyka-meleshchenko-2022", "etyka"),
+        ("5-klas-mystetstvo-rublia-2022", "mystetstvo"),
+        ("5-klas-piznaiemo-pryrodu-korshevniuk-2022", "pryroda"),
+        ("5-klas-zarubizhna-literatura-voloshchuk-2022", "zarlit"),
+        ("5-klas-zdorovia-vorontsova-2022", "zdorovia"),
+        ("6-klas-piznaemo-pryrodu-korshevniuk-2023", "pryroda"),
+        ("6-klas-mystetstvo-masol-2023", "mystetstvo"),
+        ("6-klas-etyka-davydiuk-2023", "etyka"),
+        ("6-klas-zdorovia-vorontsova-2023", "zdorovia"),
+        ("7-klas-matematyka-ister-2024-1", "matematyka"),
+        ("7-klas-matematyka-ister-2024-2", "matematyka"),
+        ("7-klas-mystetstvo-masol-2024", "mystetstvo"),
+        ("7-klas-istoria-vsesvitnia-ladychenko-2024", "vsesvitnia"),
+        ("7-klas-zarlit-voloschuk-2024", "zarlit"),
+        ("7-klas-zdorovia-guschyna-2024", "zdorovia"),
+        ("8-klas-finans-plastun-2025", "finansova"),
+        ("8-klas-hromadianska-osvita-pometun-2025", "hromadianska"),
+        ("8-klas-pryrodnychi-nauky-mandrenko-2025", "pryroda"),
+        ("8-klas-istoria-vsesvitnia-ladychenko-2025", "vsesvitnia"),
+        ("8-klas-zarlit-voloschuk-2025", "zarlit"),
+        ("8-klas-zdorovia-voroncova-2025", "zdorovia"),
+        ("9-klas-vsesvitnia-istoriia-pometun-2026", "vsesvitnia"),
+        ("9-klas-zarubizhna-literatura-kovbasenko-2026", "zarlit"),
+        ("9-klas-geografiia-boiko-2026", "heohrafiya"),
+        ("9-klas-hromadianska-osvita-pometun-2026", "hromadianska"),
+        # scan-fallback edition switches — the stems actually on disk (2026-07-07)
+        ("6-klas-mystetstvo-rublia-2023", "mystetstvo"),
+        ("6-klas-etyka-martyniuk-2023", "etyka"),
+        ("8-klas-zdorovia-vasylenko-2025", "zdorovia"),
+        ("8-klas-hromadianska-osvita-vasylkiv-2025", "hromadianska"),
+        ("10-klas-vsesvitnia-istoriia-gisem-2018-stand", "vsesvitnia"),
+    ],
+)
+def test_batch3_source_files_map_correctly(stem: str, expected_subject: str) -> None:
+    assert subject_for_source_file(stem) == expected_subject
+
+
+def test_integrated_fizyka_astronomiia_is_physics_but_pure_astronomy_stays() -> None:
+    # Integrated «Фізика і астрономія» carries both tokens → fizyka (order-dependent);
+    # a pure astronomy stem has no fizyk/fizik token → astronomiya.
+    assert subject_for_source_file("11-klas-fizika-astronomiia-zasekina-2019-standart") == "fizyka"
+    assert subject_for_source_file("11-klas-astronomiya-pryshliak-2019") == "astronomiya"
+
+
+def test_batch3_author_translits_resolve_to_cyrillic() -> None:
+    expected = {
+        "voloshhuk": "Волощук",
+        "guschyna": "Гущина",
+        "gudima": "Гудима",
+        "homiak": "Криховець-Хом'як",
+        "bojko": "Бойко",
+        "barjakhtar": "Бар'яхтар",
+        "merzljak": "Мерзляк",
+        "zadorozhnij": "Задорожний",
+        "zasekina": "Засєкіна",
+        "kovbasenko": "Ковбасенко",
+        "ladychenko": "Ладиченко",
+    }
+    from scripts.wiki.textbook_subjects import AUTHOR_UK_BY_TRANSLIT
+
+    for translit, cyrillic in expected.items():
+        assert AUTHOR_UK_BY_TRANSLIT[translit] == cyrillic
+
+
+def test_known_source_file_subjects_regression() -> None:
+    for filename, expected_subject in KNOWN_SOURCE_FILE_SUBJECTS.items():
+        assert subject_for_source_file(filename) == expected_subject
+
+
+def test_new_authors_mapping_sample() -> None:
+    from scripts.wiki.textbook_subjects import AUTHOR_UK_BY_TRANSLIT
+    samples = {
+        "voloshchuk": "Волощук",
+        "ladychenko": "Ладиченко",
+        "korshevniuk": "Коршевнюк",
+        "meleshchenko": "Мелещенко",
+        "rublia": "Рубля",
+        "davydiuk": "Давидюк",
+        "mandrenko": "Мандренко",
+        "hushchyna": "Гущина",
+        "gilberg": "Гільберг",
+        "vasylkiv": "Васильків",
+        "nelin": "Нелін",
+        "shalamov": "Шаламов",
+        "zasekina": "Засєкіна",
+        "homiak": "Криховець-Хом'як",
+        "gudyma": "Гудима",
+        "vorontsova": "Воронцова",
+        "boiko": "Бойко",
+        "merzlyak": "Мерзляк",
+        "grygorovych": "Григорович",
+        "zadorozhnyj": "Задорожний",
+    }
+    for translit, expected_uk in samples.items():
+        assert AUTHOR_UK_BY_TRANSLIT[translit] == expected_uk

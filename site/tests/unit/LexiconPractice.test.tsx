@@ -8,6 +8,7 @@ import {
   loadState,
   saveState,
   type PracticeDeckData,
+  type PracticeHeritageItem,
   type PracticeLexeme,
   type PracticeMode,
 } from '@site/src/lib/lexicon/srs';
@@ -29,13 +30,23 @@ function mockShardFetch(counts: Partial<Record<CefrLevel, number>>) {
   const fn = vi.fn(async (input: RequestInfo | URL) => {
     const url = String(input);
     requested.push(url);
-    const match = url.match(/practice-(index|lexemes|cloze)\.([ABC][12])\.json/);
+    const match = url.match(
+      /practice-(index|lexemes|cloze|stress|classify|paradigm|synonym|heritage)\.([ABC][12])\.json/,
+    );
     if (!match) return notFoundResponse();
-    const kind = match[1] as 'index' | 'lexemes' | 'cloze';
+    const kind = match[1] as
+      | 'index'
+      | 'lexemes'
+      | 'cloze'
+      | 'stress'
+      | 'classify'
+      | 'paradigm'
+      | 'synonym'
+      | 'heritage';
     const level = match[2] as CefrLevel;
     const n = counts[level];
     if (n === undefined) return notFoundResponse(); // shard not published (e.g. C2)
-    if (kind === 'cloze') return okJson({ cloze: [] });
+    if (kind !== 'index' && kind !== 'lexemes') return okJson({ [kind]: [] });
     const lexemes = Array.from({ length: n }, (_unused, i) =>
       lexeme(
         `${level}-${i}`,
@@ -185,6 +196,70 @@ function sampleDeck(): PracticeDeckData {
   };
 }
 
+function heritagePracticeItem(): PracticeHeritageItem {
+  return {
+    heritageId: 'her-dim-fixture',
+    lemmaId: 'dim',
+    srsKey: cardKey('dim', 'heritage'),
+    lemma: 'дім',
+    nativeLemma: 'дім',
+    calqueLabel: 'дом',
+    kind: 'lexical',
+    prompt: 'Я бачу ___ щодня.',
+    answer: 'дім',
+    calque: 'дом',
+    origin: 'fixture',
+    frameIndex: 1,
+    cefr: 'A2',
+    options: [
+      { label: 'дім' },
+      { label: 'дом' },
+      { label: 'хата' },
+      { label: 'місто' },
+    ],
+    rationale: 'у цьому значенні потрібне питоме слово',
+    citations: ['Антоненко-Давидович: fixture'],
+    corrections: ['дім'],
+    sourceFamily: 'fixture',
+  };
+}
+
+function heritageDeck({ includeItems = true } = {}): PracticeDeckData {
+  const entry = lexeme(
+    'dim',
+    'дім',
+    'home',
+    {
+      nominative: 'дім',
+      accusative: 'дім',
+      locative: 'домі',
+    },
+    { cefr: 'A2', heritage: 'native' },
+  );
+  return {
+    deckVersion: 'test-heritage',
+    level: 'A2',
+    lexemes: [entry],
+    index: [
+      {
+        lemmaId: entry.lemmaId,
+        lemma: entry.lemma,
+        cefr: 'A2',
+        modes: ['heritage'],
+        hasCloze: false,
+        clozeIds: [],
+        newOrder: 0,
+      },
+    ],
+    cloze: [],
+    stress: [],
+    classify: [],
+    paradigm: [],
+    synonym: [],
+    heritage: includeItems ? [heritagePracticeItem()] : [],
+  };
+}
+
 function sampleDeckWithOnlyMode(lemmaId: string, mode: PracticeMode): PracticeDeckData {
   const baseDeck = sampleDeck();
   return {
@@ -307,16 +382,27 @@ describe('LexiconPractice', () => {
     expect(requested.some((u) => u.includes('practice-cloze'))).toBe(false);
   });
 
-  test('shows the real SRS due-count on the home before any mode starts', async () => {
+  test('shows due review count on the home before any session starts', async () => {
     const { fn } = mockShardFetch({ A1: 3 });
     vi.spyOn(globalThis, 'fetch').mockImplementation(fn);
+    const state = loadState(localStorage, NOW);
+    state.cards.set(cardKey('A1-0', 'flashcards'), {
+      due: NOW.getTime() - 60_000,
+      stability: 4,
+      difficulty: 4,
+      elapsed_days: 1,
+      scheduled_days: 1,
+      learning_steps: 0,
+      reps: 2,
+      lapses: 0,
+      state: 2,
+    });
+    saveState(state, localStorage, NOW.getTime());
 
     render(<LexiconPractice />);
 
-    // Three never-reviewed A1 cards are all due → the «До повторення» tile shows 3
-    // on mount (not the placeholder '—'), without entering a mode first.
     await waitFor(() =>
-      expect(screen.getByLabelText('3 до повторення')).toBeInTheDocument(),
+      expect(screen.getByLabelText('1 до повторення')).toBeInTheDocument(),
     );
   });
 
@@ -325,9 +411,8 @@ describe('LexiconPractice', () => {
     const { fn, requested } = mockShardFetch({ A1: 2, A2: 1, B1: 3, B2: 5, C1: 4 });
     vi.spyOn(globalThis, 'fetch').mockImplementation(fn);
     const user = userEvent.setup();
-    const { container } = render(<LexiconPractice initialMode="flashcards" />);
+    const { container } = render(<LexiconPractice />);
 
-    // Start = clicking a mode card (the redesign has no separate "Start Practice" button).
     await user.click(container.querySelector<HTMLButtonElement>('[data-mode="flashcards"]')!);
 
     // A1+A2+B1 load (cumulative); B2/C1 are above the learner level and must never be fetched.
@@ -346,13 +431,11 @@ describe('LexiconPractice', () => {
     const { fn, requested } = mockShardFetch({ A1: 2, A2: 1, B1: 3 });
     vi.spyOn(globalThis, 'fetch').mockImplementation(fn);
     const user = userEvent.setup();
-    const { container } = render(<LexiconPractice initialMode="flashcards" />);
+    const { container } = render(<LexiconPractice />);
 
-    // The level chips live on the practice home; raising the level persists the shared key.
     await user.click(screen.getByRole('button', { name: 'B1' }));
     expect(localStorage.getItem(LEARNER_LEVEL_STORAGE_KEY)).toBe('B1');
 
-    // Starting now loads the cumulative B1 pool (A1+A2+B1); B2 is above the level and never loads.
     await user.click(container.querySelector<HTMLButtonElement>('[data-mode="flashcards"]')!);
     await waitFor(() =>
       expect(requested.some((u) => u.includes('practice-index.B1'))).toBe(true),
@@ -370,11 +453,14 @@ describe('LexiconPractice', () => {
 
     const flashcard = container.querySelector<HTMLElement>('[data-activity="flashcard"]');
     expect(flashcard).toBeInTheDocument();
+    const goodButton = container.querySelector<HTMLButtonElement>('[data-rate="good"]')!;
+    expect(goodButton).toBeDisabled();
+
     await user.click(flashcard!);
     expect(flashcard).toHaveAttribute('data-flipped', 'true');
+    expect(goodButton).not.toBeDisabled();
 
-    // Rating buttons carry a "1-4" key span; target the stable data-rate hook.
-    await user.click(container.querySelector<HTMLButtonElement>('[data-rate="good"]')!);
+    await user.click(goodButton);
 
     await waitFor(() => {
       expect(storedState().cards[cardKey('knyha', 'flashcards')]).toBeTruthy();
@@ -440,7 +526,7 @@ describe('LexiconPractice', () => {
         lemmaId: entry.lemmaId,
         lemma: entry.lemma,
         cefr: 'A1',
-        modes: ['flashcards', 'matching', 'choice'],
+        modes: entry.lemmaId === 'bachyty' ? ['choice'] : ['flashcards'],
         hasCloze: false,
         clozeIds: [],
         newOrder: index,
@@ -452,11 +538,125 @@ describe('LexiconPractice', () => {
     const labels = within(choice)
       .getAllByRole('button')
       .map((button) => button.querySelector('span:not(.mc-key)')?.textContent ?? '');
-    // First card is the small-POS verb (newOrder 0). Without cross-POS backfill it
+    // The only selectable choice card is the small-POS verb. Without cross-POS backfill it
     // would starve (<3 distractors) and not render; it must show a full 4-option set.
     expect(labels).toHaveLength(4);
     // The verb answer is present whichever polarity the selector picked.
     expect(labels.some((label) => label === 'бачити' || label === 'to see')).toBe(true);
+  });
+
+  test('heritage renders in mixed sessions and heritage focus mode', async () => {
+    const user = userEvent.setup();
+    const mixedRender = render(
+      <LexiconPractice
+        initialDeck={heritageDeck()}
+        autoStart
+        initialMode="mixed"
+        advanceDelayMs={10_000}
+      />,
+    );
+
+    expect(screen.getByTestId('practice-heritage')).toBeInTheDocument();
+    expect(screen.getByText('Оберіть питоме українське слово.')).toBeInTheDocument();
+    expect(screen.getByText(/Я бачу/)).toBeInTheDocument();
+
+    mixedRender.unmount();
+    const { container } = render(<LexiconPractice initialDeck={heritageDeck()} advanceDelayMs={10_000} />);
+    expect(screen.getByText('Спадщина')).toBeInTheDocument();
+
+    await user.click(container.querySelector<HTMLButtonElement>('[data-mode="heritage"]')!);
+
+    expect(await screen.findByTestId('practice-heritage')).toBeInTheDocument();
+  });
+
+  test('heritage calque miss scores again and shows cited correction', async () => {
+    const user = userEvent.setup();
+    render(
+      <LexiconPractice
+        initialDeck={heritageDeck()}
+        autoStart
+        initialMode="heritage"
+        advanceDelayMs={10_000}
+      />,
+    );
+
+    await user.click(
+      within(screen.getByTestId('practice-heritage')).getByRole('button', { name: /дом/ }),
+    );
+
+    const feedback = screen.getByTestId('practice-heritage-feedback');
+    expect(feedback).toHaveTextContent('⚠️ калька; у цьому значенні потрібне питоме слово');
+    expect(feedback).toHaveTextContent('Джерело: Антоненко-Давидович: fixture');
+    await waitFor(() => {
+      expect(storedState().reviews[0]).toMatchObject({
+        lemmaId: 'dim',
+        mode: 'heritage',
+        rating: 'again',
+        cardKey: cardKey('dim', 'heritage'),
+      });
+    });
+  });
+
+  test('heritage plain distractor miss does not leak calque correction feedback', async () => {
+    const user = userEvent.setup();
+    render(
+      <LexiconPractice
+        initialDeck={heritageDeck()}
+        autoStart
+        initialMode="heritage"
+        advanceDelayMs={10_000}
+      />,
+    );
+
+    await user.click(
+      within(screen.getByTestId('practice-heritage')).getByRole('button', { name: /місто/ }),
+    );
+
+    const feedback = screen.getByTestId('practice-heritage-feedback');
+    expect(feedback).toHaveTextContent('Ще раз');
+    expect(feedback).not.toHaveTextContent('калька');
+    expect(feedback).not.toHaveTextContent('у цьому значенні потрібне питоме слово');
+    expect(feedback).not.toHaveTextContent('Антоненко-Давидович');
+    await waitFor(() => {
+      expect(storedState().reviews[0]).toMatchObject({
+        lemmaId: 'dim',
+        mode: 'heritage',
+        rating: 'again',
+      });
+    });
+  });
+
+  test('heritage correct answer scores good', async () => {
+    const user = userEvent.setup();
+    render(
+      <LexiconPractice
+        initialDeck={heritageDeck()}
+        autoStart
+        initialMode="heritage"
+        advanceDelayMs={10_000}
+      />,
+    );
+
+    await user.click(
+      within(screen.getByTestId('practice-heritage')).getByRole('button', { name: /дім/ }),
+    );
+
+    expect(screen.getByTestId('practice-heritage-feedback')).toHaveTextContent('Правильно');
+    await waitFor(() => {
+      expect(storedState().reviews[0]).toMatchObject({
+        lemmaId: 'dim',
+        mode: 'heritage',
+        rating: 'good',
+        cardKey: cardKey('dim', 'heritage'),
+      });
+    });
+  });
+
+  test('hides heritage mode card when the loaded deck has no heritage items', () => {
+    render(<LexiconPractice initialDeck={heritageDeck({ includeItems: false })} />);
+
+    expect(screen.queryByText('Спадщина')).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /Спадщина/ })).not.toBeInTheDocument();
   });
 
   test('cloze wrong-case answer records one case miss and leaves blank open', async () => {
@@ -511,5 +711,57 @@ describe('LexiconPractice', () => {
     );
     expect(screen.getByText(/uk-author/)).toHaveTextContent('en-author');
     expect(screen.getByText(/CC-BY 2.0 FR/)).toBeInTheDocument();
+  });
+
+  test('today ring uses review + capped-new denominator, not whole deck', async () => {
+    const { fn } = mockShardFetch({ A1: 1150 });
+    vi.spyOn(globalThis, 'fetch').mockImplementation(fn);
+    render(<LexiconPractice />);
+    await waitFor(() => expect(screen.getByTestId('practice-today-ring')).toBeInTheDocument());
+    const ring = screen.getByTestId('practice-today-ring');
+    expect(ring.textContent).toMatch(/0\/\d+/);
+    const denominator = Number(ring.textContent?.split('/')[1]);
+    expect(denominator).toBeLessThan(1150);
+  });
+
+  test('A1 renders English subtitles on session labels; A2 does not', async () => {
+    localStorage.setItem(LEARNER_LEVEL_STORAGE_KEY, 'A1');
+    const { unmount } = render(<LexiconPractice />);
+    expect(screen.getByText('Start session')).toBeInTheDocument();
+    unmount();
+
+    localStorage.setItem(LEARNER_LEVEL_STORAGE_KEY, 'A2');
+    render(<LexiconPractice />);
+    expect(screen.queryByText('Start session')).not.toBeInTheDocument();
+  });
+
+  test('unpublished C2 level button is disabled with «скоро»', () => {
+    render(<LexiconPractice />);
+    const c2 = screen.getByRole('button', { name: /C2/ });
+    expect(c2).toBeDisabled();
+    expect(c2).toHaveTextContent('скоро');
+  });
+
+  test('flashcard rating keys are inert before reveal', async () => {
+    const user = userEvent.setup();
+    render(
+      <LexiconPractice initialDeck={sampleDeckWithOnlyMode('knyha', 'flashcards')} autoStart initialMode="flashcards" />,
+    );
+    await user.keyboard('3');
+    expect(storedState().reviews ?? []).toHaveLength(0);
+    const flashcard = document.querySelector('[data-activity="flashcard"]')!;
+    await user.click(flashcard);
+    await user.keyboard('3');
+    await waitFor(() => expect(storedState().reviews?.length).toBe(1));
+  });
+
+  test('post-flip rating buttons show FSRS interval previews', async () => {
+    const user = userEvent.setup();
+    const { container } = render(
+      <LexiconPractice initialDeck={sampleDeckWithOnlyMode('knyha', 'flashcards')} autoStart initialMode="flashcards" />,
+    );
+    await user.click(container.querySelector('[data-activity="flashcard"]')!);
+    const good = container.querySelector('[data-rate="good"] .ri');
+    expect(good?.textContent).toMatch(/‹.+›/);
   });
 });

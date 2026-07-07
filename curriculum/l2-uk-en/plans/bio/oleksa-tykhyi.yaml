@@ -111,6 +111,28 @@ persona:
     Донбасу.
   voice: Human Rights Historian
 phase: BIO
+readings:
+- language: uk
+  hosting: reading-needed
+  notes: Біографічна довідка правозахисника та засновника УГГ.
+  role: reading-needed
+  source: 'reading-needed: oleksa-tykhyi-khpg-profile'
+  source_name: Віртуальний музей дисидентського руху (ХПГ)
+  title: Тихий Олексій Іванович
+- language: uk
+  hosting: reading-needed
+  notes: Енциклопедична стаття про життя та діяльність.
+  role: reading-needed
+  source: 'reading-needed: oleksa-tykhyi-esu-profile'
+  source_name: Енциклопедія сучасної України (ЕСУ)
+  title: Тихий Олекса Іванович
+- language: uk
+  hosting: reading-needed
+  notes: Есе про мовні права Донбасу (1972). Потребує надійного українського онлайн-джерела.
+  role: reading-needed
+  source: 'reading-needed: dumky-pro-ridnyi-donetskyi-krai'
+  source_name: Самвидав
+  title: Думки про рідний донецький край
 references:
 - note: Профіль у музеї-архіві дисидентського руху (англ.).
   title: TYKHY Oleksa (Oleskiy Ivanovych) (Дисидентський рух в Україні)
@@ -134,7 +156,7 @@ sequence: 265
 slug: oleksa-tykhyi
 subtitle: Teacher, Language-Rights Activist, and UHG Co-Founder Who Died in Custody
 title: 'Олекса Тихий: мова, Донбас і ціна правозахисництва'
-version: '1.0'
+version: '1.2'
 vocabulary_hints:
 - definition: людина, яка захищає права людини в умовах переслідування
   pos: ч.

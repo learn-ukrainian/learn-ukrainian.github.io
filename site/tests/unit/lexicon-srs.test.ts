@@ -19,6 +19,7 @@ import {
   validateClozeOptions,
   type PracticeClozeItem,
   type PracticeDeckData,
+  type PracticeHeritageItem,
   type PracticeLexeme,
   type PracticeMode,
   type PracticeSelection,
@@ -115,6 +116,34 @@ function cloze(
         case: blankCase,
       },
     ],
+  };
+}
+
+function heritageItem(lemmaId: string, heritageId = `${lemmaId}:heritage:1`): PracticeHeritageItem {
+  return {
+    heritageId,
+    lemmaId,
+    srsKey: cardKey(lemmaId, 'heritage'),
+    lemma: lemmaId,
+    nativeLemma: lemmaId,
+    calqueLabel: `${lemmaId}-calque`,
+    kind: 'lexical',
+    prompt: 'Я бачу ___ щодня.',
+    answer: lemmaId,
+    calque: `${lemmaId}-calque`,
+    origin: 'fixture',
+    frameIndex: 1,
+    cefr: 'A1',
+    options: [
+      { label: lemmaId },
+      { label: `${lemmaId}-calque` },
+      { label: `${lemmaId}-d1` },
+      { label: `${lemmaId}-d2` },
+    ],
+    rationale: 'fixture rationale',
+    citations: ['fixture citation'],
+    corrections: [lemmaId],
+    sourceFamily: 'fixture',
   };
 }
 
@@ -225,6 +254,9 @@ function modeDeck(rows: { id: string; modes: PracticeMode[] }[]): PracticeDeckDa
           { label: `${row.id}-d3`, lemmaId: `${row.id}-d3`, kind: 'distractor' },
         ],
       })),
+    heritage: rows
+      .filter((row) => row.modes.includes('heritage'))
+      .map((row) => heritageItem(row.id)),
     index: rows.map((row, index) => ({
       lemmaId: row.id,
       lemma: row.id,
@@ -252,6 +284,7 @@ function flashcardDeck(
     classify: [],
     paradigm: [],
     synonym: [],
+    heritage: [],
     index: lexemes.map((entry, index) => ({
       lemmaId: entry.lemmaId,
       lemma: entry.lemma,
@@ -320,13 +353,27 @@ describe('lexicon SRS facade', () => {
       });
     }
 
-    for (const mode of ['paradigm', 'stress', 'classify', 'synonym'] as const) {
+    for (const mode of ['paradigm', 'stress', 'classify', 'synonym', 'heritage'] as const) {
       const selection = selectNextPracticeItem(modeDeck([{ id: `${mode}-alpha`, modes: [mode] }]), {
         now: NOW,
       });
       expect(selection?.mode).toBe(mode);
     }
-    expect(selectNextPracticeItem(modeDeck([{ id: 'heritage-alpha', modes: ['heritage'] }]), { now: NOW })).toBeNull();
+    expect(selectNextPracticeItem(modeDeck([{ id: 'paronym-alpha', modes: ['paronym'] }]), { now: NOW })).toBeNull();
+  });
+
+  test('emits heritage candidates from published items in mixed and focus modes', () => {
+    const testDeck = modeDeck([{ id: 'heritage-alpha', modes: ['heritage'] }]);
+
+    const mixed = selectNextPracticeItem(testDeck, { now: NOW, modeFilter: 'mixed' });
+    const focused = selectNextPracticeItem(testDeck, { now: NOW, modeFilter: 'heritage' });
+
+    expect(mixed?.mode).toBe('heritage');
+    expect(mixed?.heritage?.heritageId).toBe('heritage-alpha:heritage:1');
+    expect(mixed?.cardKey).toBe(cardKey('heritage-alpha', 'heritage'));
+    expect(focused?.mode).toBe('heritage');
+    expect(focused?.heritage?.heritageId).toBe('heritage-alpha:heritage:1');
+    expect(focused?.cardKey).toBe(cardKey('heritage-alpha', 'heritage'));
   });
 
   test('classify rotates outcome sets while keeping one SRS card key', () => {

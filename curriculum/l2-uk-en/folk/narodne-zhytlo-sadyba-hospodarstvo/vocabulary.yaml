@@ -1,0 +1,160 @@
+- lemma: хата
+  translation: traditional house, cottage
+  pos: іменник
+  usage: Хата є житловим центром садиби, але не вичерпує всього обійстя.
+- lemma: садиба
+  translation: homestead
+  pos: іменник
+  usage: Садиба включає хату, двір, господарські будівлі, сад, город і воду.
+- lemma: обійстя
+  translation: homestead yard, household enclosure
+  pos: іменник
+  usage: Обійстя треба читати як малу господарську систему, а не як порожній двір.
+- lemma: сіни
+  translation: entry hall, vestibule
+  pos: іменник
+  usage: Сіни переводять людину між вулицею, холодом і житловою частиною хати.
+- lemma: комора
+  translation: storage room, granary room
+  pos: іменник
+  usage: Комора береже харчі, зерно, тканину, одяг, посаг і цінні речі.
+- lemma: піч
+  translation: stove, masonry oven
+  pos: іменник
+  usage: Піч варить, пече, гріє, сушить і формує щоденний ритм дому.
+- lemma: покуть
+  translation: honored corner
+  pos: іменник
+  usage: Покуть збирає образи, рушники, стіл, гостей, старших і святкову пам'ять.
+- lemma: покуття
+  translation: honored corner
+  pos: іменник
+  usage: Покуття не є звичайним кутом, бо має релігійну й соціальну вагу.
+- lemma: сволок
+  translation: ceiling beam
+  pos: іменник
+  usage: Сволок тримає стелю і може зберігати дату, знак або пам'ять майстра.
+- lemma: мисник
+  translation: dish shelf, cupboard
+  pos: іменник
+  usage: Мисник організує посуд, чистоту і видимий порядок хати.
+- lemma: призьба
+  translation: earthen bench along a house wall
+  pos: іменник
+  usage: Призьба робить фасад місцем сидіння, розмови й доглянутої межі.
+- lemma: поріг
+  translation: threshold
+  pos: іменник
+  usage: Поріг є межею між двором і хатою, тому навколо нього діють правила переходу.
+- lemma: зруб
+  translation: log construction
+  pos: іменник
+  usage: Зрубна хата потребує лісу, якісної деревини і теслярської вправності.
+- lemma: мазанка
+  translation: clay-plastered house
+  pos: іменник
+  usage: Мазанка є складною глиняно-каркасною технологією, а не нижчим типом житла.
+- lemma: ґражда
+  translation: Hutsul enclosed homestead
+  pos: іменник
+  usage: Ґражда поєднує житло й господарські споруди довкола внутрішнього двору.
+- lemma: оседок
+  translation: homestead complex
+  pos: іменник
+  usage: Гуцульський оседок треба пояснювати через ландшафт, худобу й господарську безпеку.
+- lemma: клуня
+  translation: barn for sheaves and threshing
+  pos: іменник
+  usage: Клуня пов'язана зі снопами, зерном, молотьбою і врожаєм.
+- lemma: стодола
+  translation: barn
+  pos: іменник
+  usage: Стодола показує зернову й сезонну сторону селянського господарства.
+- lemma: погріб
+  translation: cellar
+  pos: іменник
+  usage: Погріб тримає холод і дає змогу зберігати їжу довше.
+- lemma: хлів
+  translation: cowshed, livestock shed
+  pos: іменник
+  usage: Хлів організує догляд за худобою і робить двір частиною живої економіки.
+- lemma: стайня
+  translation: stable
+  pos: іменник
+  usage: Стайня пов'язана з кіньми, транспортом і господарською мобільністю.
+- lemma: саж
+  translation: pigsty
+  pos: іменник
+  usage: Саж називає окреме місце для свиней у господарському дворі.
+- lemma: криниця
+  translation: well
+  pos: іменник
+  usage: Криниця дає воду і водночас створює соціальний вузол садиби.
+- lemma: журавель
+  translation: well sweep
+  pos: іменник
+  usage: Журавель біля криниці є інженерним пристроєм і сильним образом села.
+- lemma: город
+  translation: vegetable garden
+  pos: іменник
+  usage: Город не є декором, бо він забезпечує їжу і сезонну працю родини.
+- lemma: сад
+  translation: orchard, garden
+  pos: іменник
+  usage: Сад біля хати може бути поетичним образом і реальною харчовою опорою.
+- lemma: брама
+  translation: gate
+  pos: іменник
+  usage: Брама організує вхід до садиби й першу межу між вулицею та своїм простором.
+- lemma: перелаз
+  translation: stile, fence crossing
+  pos: іменник
+  usage: Перелаз показує, що межа двору може бути керованим місцем переходу.
+- lemma: закладини
+  translation: foundation-laying rite
+  pos: іменник
+  usage: Закладини треба описувати як послідовність дій, не вигадуючи обрядових слів.
+- lemma: новосілля
+  translation: housewarming, entry into a new home
+  pos: іменник
+  usage: Новосілля впорядковує вхід у новий дім через вогонь, хліб, воду, речі й гостей.
+- lemma: відкуп
+  translation: symbolic offering, compensatory payment
+  pos: іменник
+  usage: Відкуп у будівельному контексті треба пояснювати обережно, без сенсаційності.
+- lemma: домовик
+  translation: household spirit
+  pos: іменник
+  usage: Домовик належить до нижчої домашньої міфології, а не до готової схеми пантеону.
+- lemma: хованець
+  translation: hidden household spirit
+  pos: іменник
+  usage: Хованець може уявлятися помічником або небезпечним мешканцем господарства.
+- lemma: годованець
+  translation: fed household spirit
+  pos: іменник
+  usage: Годованець показує, що домашня демонологія пов'язана з доглядом і страхом перед шкодою.
+- lemma: підкова
+  translation: horseshoe
+  pos: іменник
+  usage: Підкову можна згадувати як популярний обереговий знак, але не як універсальну норму.
+- lemma: оберіг
+  translation: protective sign or object
+  pos: іменник
+  usage: Оберіг треба читати через джерело, місце, дію і межу узагальнення.
+- lemma: скансен
+  translation: open-air museum
+  pos: іменник
+  usage: Скансен зберігає й пояснює будівлі, але не є прямим замінником живого села.
+- lemma: побілка
+  translation: whitewashing
+  pos: іменник
+  usage: Побілка поєднує догляд, світло, гігієну і репрезентативний вигляд хати.
+- lemma: долівка
+  translation: earthen floor
+  pos: іменник
+  usage: Долівка потребує догляду і показує матеріальну близькість хати до землі.
+- lemma: реманент
+  translation: tools and implements
+  pos: іменник
+  usage: Реманент зберігається в господарських спорудах і показує робочу сторону двору.

@@ -12,11 +12,20 @@ import {
 export const SRS_STORAGE_KEY = 'lu-lexicon-srs';
 export const SRS_SETTINGS_KEY = 'lu-lexicon-srs-settings';
 export const SRS_BACKUP_KEY = 'lu-lexicon-srs.backup';
+export const PRACTICE_NEW_CARDS_KEY = 'lu-practice-newcards';
+export const PRACTICE_SESSION_STORAGE_KEY = 'lu-practice-session';
+export const DEFAULT_NEW_PER_SESSION = 8;
+export const DEFAULT_NEW_PER_DAY = 20;
+export const SESSION_CLOSURE_EXTENSION_MAX = 5;
+export const SESSION_ITEM_ESTIMATE_SEC = 20;
+/** Levels with published practice shards (C2 ships «скоро» until deck exists). */
+export const PUBLISHED_PRACTICE_LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1'] as const;
 
 const CURRENT_VERSION = 3;
 const SETTINGS_VERSION = 1;
 const HOUR_MS = 60 * 60 * 1000;
 const DAY_MS = 24 * 60 * 60 * 1000;
+export const SESSION_RESUME_MAX_MS = 6 * HOUR_MS;
 const WIDENED_DUE_WINDOW_MS = 6 * HOUR_MS;
 const MIN_WORD_REPEAT_WINDOW = 8;
 const DEFAULT_RECOGNITION_STABILITY = 3;
@@ -189,6 +198,33 @@ export interface PracticeSynonymItem {
   source: string;
 }
 
+export interface PracticeHeritageOption {
+  label: string;
+}
+
+export interface PracticeHeritageItem {
+  heritageId: string;
+  lemmaId: string;
+  srsKey: string;
+  lemma?: string;
+  nativeLemma?: string;
+  calqueLabel?: string;
+  kind: 'lexical' | 'sense_restricted' | string;
+  prompt: string;
+  answer: string;
+  calque: string;
+  origin?: string;
+  frameIndex?: number;
+  cefr: string;
+  options: PracticeHeritageOption[];
+  rationale: string;
+  citations: string[];
+  corrections: string[];
+  sourceFamily?: string;
+  calqueSense?: string;
+  authenticSense?: string;
+}
+
 export interface PracticeShardMeta {
   schema: string;
   schemaVersion: number;
@@ -232,6 +268,10 @@ export interface PracticeSynonymShard extends PracticeShardMeta {
   synonym: PracticeSynonymItem[];
 }
 
+export interface PracticeHeritageShard extends PracticeShardMeta {
+  heritage: PracticeHeritageItem[];
+}
+
 export interface PracticeDeckData {
   deckVersion: string;
   level: string;
@@ -242,6 +282,7 @@ export interface PracticeDeckData {
   classify?: PracticeClassifyItem[];
   paradigm?: PracticeParadigmItem[];
   synonym?: PracticeSynonymItem[];
+  heritage?: PracticeHeritageItem[];
   fixtureNote?: string;
 }
 
@@ -310,6 +351,7 @@ export interface SelectionHistoryItem {
   sentenceFrameId?: string;
   blankCase?: string;
   classifySetId?: string;
+  heritageId?: string;
   recallDirection?: RecallDirection;
   choicePolarity?: ChoicePolarity;
   lapsed?: boolean;
@@ -330,8 +372,48 @@ export interface PracticeSelection {
   classifySetId?: string;
   paradigm?: PracticeParadigmItem;
   synonym?: PracticeSynonymItem;
+  heritage?: PracticeHeritageItem;
   recallDirection: RecallDirection;
   choicePolarity: ChoicePolarity;
+}
+
+export type SessionBudget = number | 'until-zero';
+
+export interface PracticeSessionSnapshot {
+  sessionSeed: number;
+  history: SelectionHistoryItem[];
+  budget: SessionBudget;
+  completed: number;
+  modeFilter: PracticeModeFilter;
+  level: string;
+  startedAt: number;
+  /** Resume helpers — not part of selector state; safe to persist for closure rule. */
+  extensionUsed?: number;
+  sessionNewIntroduced?: number;
+  plannedReviews?: number;
+  plannedNew?: number;
+  plannedTotal?: number;
+  reviewsCompleted?: number;
+  unresolvedCardKeys?: string[];
+}
+
+export interface NewCardsDailyState {
+  date: string;
+  count: number;
+}
+
+export interface SessionScopeStats {
+  dueReviews: number;
+  plannedNew: number;
+  plannedTotal: number;
+  estimatedMinutes: number;
+}
+
+export interface SessionPoolConstraintState {
+  allowNewInPool: boolean;
+  newRemainingSession: number;
+  newRemainingDaily: number;
+  sessionNewIntroduced: number;
 }
 
 export interface SelectPracticeOptions {
@@ -343,6 +425,8 @@ export interface SelectPracticeOptions {
   dueWindowMs?: number;
   wordRepeatWindow?: number;
   sessionSeed?: number;
+  /** §6b session pool constraint — eligibility filter only; ordering unchanged. */
+  poolFilter?: (candidate: PracticeSelection) => boolean;
 }
 
 interface PersistedSrsSchemaV3 {
@@ -931,6 +1015,7 @@ interface DeckMaps {
   classify: Map<string, PracticeClassifyItem>;
   paradigm: Map<string, PracticeParadigmItem[]>;
   synonym: Map<string, PracticeSynonymItem[]>;
+  heritage: Map<string, PracticeHeritageItem[]>;
 }
 
 const deckMapsCache = new WeakMap<PracticeDeckData, DeckMaps>();
@@ -955,6 +1040,7 @@ function deckMaps(deck: PracticeDeckData): DeckMaps {
     classify: new Map((deck.classify ?? []).map((item) => [item.lemmaId, item])),
     paradigm: groupByLemma(deck.paradigm),
     synonym: groupByLemma(deck.synonym),
+    heritage: groupByLemma(deck.heritage),
   };
   deckMapsCache.set(deck, maps);
   return maps;
@@ -1115,6 +1201,14 @@ function levelMatchBias(candidate: PracticeSelection, deckLevel: string): number
   return candidate.indexItem.cefr === deckLevel ? 0 : 1;
 }
 
+function applyPoolFilter(
+  pool: PracticeSelection[],
+  poolFilter?: (candidate: PracticeSelection) => boolean,
+): PracticeSelection[] {
+  if (!poolFilter) return pool;
+  return pool.filter(poolFilter);
+}
+
 function rankCandidates(
   pool: PracticeSelection[],
   history: SelectionHistoryItem[],
@@ -1264,7 +1358,23 @@ function buildStaticCandidates(deck: PracticeDeckData, modeFilter: PracticeModeF
         }
         continue;
       }
-      if (mode === 'heritage' || mode === 'paronym') {
+      if (mode === 'heritage') {
+        const items = maps.heritage.get(indexItem.lemmaId) ?? [];
+        for (const heritage of items) {
+          candidates.push(
+            cachedSelection({
+              itemId: makeItemId(indexItem.lemmaId, mode, heritage.heritageId),
+              lemma,
+              indexItem,
+              mode,
+              cardKey: heritage.srsKey,
+              heritage,
+            }),
+          );
+        }
+        continue;
+      }
+      if (mode === 'paronym') {
         continue;
       }
       const key = cardKey(indexItem.lemmaId, mode);
@@ -1355,18 +1465,25 @@ export function selectNextPracticeItem(
     nowTime,
   );
 
-  const overduePool = candidates.filter((candidate) => candidate.due <= nowTime);
-  const windowPool = candidates.filter(
-    (candidate) => candidate.due <= nowTime + Math.max(dueWindowMs, WIDENED_DUE_WINDOW_MS),
+  const overduePool = applyPoolFilter(
+    candidates.filter((candidate) => candidate.due <= nowTime),
+    options.poolFilter,
+  );
+  const windowPool = applyPoolFilter(
+    candidates.filter((candidate) => candidate.due <= nowTime + Math.max(dueWindowMs, WIDENED_DUE_WINDOW_MS)),
+    options.poolFilter,
   );
   let scheduledPool = overduePool.length ? overduePool : windowPool;
   scheduledPool = applySpacingFilters(scheduledPool, history, wordRepeatWindow);
   if (!scheduledPool.length && windowPool.length) scheduledPool = windowPool;
   if (!scheduledPool.length) {
-    const borrowedPool = candidates
-      .filter((candidate) => candidate.due > nowTime)
-      .sort((left, right) => left.due - right.due)
-      .slice(0, Math.max(1, Math.min(4, candidates.length)));
+    const borrowedPool = applyPoolFilter(
+      candidates
+        .filter((candidate) => candidate.due > nowTime)
+        .sort((left, right) => left.due - right.due)
+        .slice(0, Math.max(1, Math.min(4, candidates.length))),
+      options.poolFilter,
+    );
     scheduledPool = applySpacingFilters(borrowedPool, history, wordRepeatWindow);
     if (!scheduledPool.length) scheduledPool = borrowedPool;
   }
@@ -1474,6 +1591,7 @@ export function combinePracticeShards(
     classify?: PracticeClassifyShard;
     paradigm?: PracticeParadigmShard;
     synonym?: PracticeSynonymShard;
+    heritage?: PracticeHeritageShard;
   } = {},
 ): PracticeDeckData {
   return {
@@ -1486,6 +1604,289 @@ export function combinePracticeShards(
     classify: modeShards.classify?.classify ?? [],
     paradigm: modeShards.paradigm?.paradigm ?? [],
     synonym: modeShards.synonym?.synonym ?? [],
+    heritage: modeShards.heritage?.heritage ?? [],
     fixtureNote: indexShard.fixtureNote,
   };
+}
+
+export function isPracticeNewCard(card: CardState | null | undefined): boolean {
+  if (!card) return true;
+  return card.reps === 0 && card.state === State.New;
+}
+
+export function isDueReviewCard(card: CardState | null | undefined, nowTime: number): boolean {
+  if (!card || isPracticeNewCard(card)) return false;
+  return card.due <= nowTime;
+}
+
+export function countDueReviewCards(
+  index: PracticeIndexItem[],
+  now: Date | number = Date.now(),
+): number {
+  const state = currentState();
+  const nowTime = toTime(now) ?? Date.now();
+  let count = 0;
+  for (const item of index) {
+    for (const mode of item.modes) {
+      if (!isPracticeMode(mode)) continue;
+      const card = state.cards.get(cardKey(item.lemmaId, mode));
+      if (isDueReviewCard(card, nowTime)) count += 1;
+    }
+  }
+  return count;
+}
+
+export function countAvailableNewCards(
+  index: PracticeIndexItem[],
+  now: Date | number = Date.now(),
+): number {
+  const state = currentState();
+  const nowTime = toTime(now) ?? Date.now();
+  let count = 0;
+  for (const item of index) {
+    for (const mode of item.modes) {
+      if (!isPracticeMode(mode)) continue;
+      const card = state.cards.get(cardKey(item.lemmaId, mode));
+      if (isPracticeNewCard(card) && (!card || card.due <= nowTime)) count += 1;
+    }
+  }
+  return count;
+}
+
+export function readNewCardsDailyState(
+  storage: StorageLike = resolveStorage(),
+  dateKey = todayDateKey(),
+): NewCardsDailyState {
+  try {
+    const raw = storage.getItem(PRACTICE_NEW_CARDS_KEY);
+    if (!raw) return { date: dateKey, count: 0 };
+    const parsed = JSON.parse(raw) as Partial<NewCardsDailyState>;
+    if (parsed.date !== dateKey || typeof parsed.count !== 'number') {
+      return { date: dateKey, count: 0 };
+    }
+    return { date: dateKey, count: parsed.count };
+  } catch {
+    return { date: dateKey, count: 0 };
+  }
+}
+
+export function writeNewCardsDailyState(
+  state: NewCardsDailyState,
+  storage: StorageLike = resolveStorage(),
+): void {
+  try {
+    storage.setItem(PRACTICE_NEW_CARDS_KEY, JSON.stringify(state));
+  } catch {
+    // Best-effort persistence.
+  }
+}
+
+function todayDateKey(date = new Date()): string {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
+export function computeSessionScope(
+  index: PracticeIndexItem[],
+  budget: SessionBudget,
+  options: {
+    now?: Date | number;
+    newPerSession?: number;
+    newPerDay?: number;
+    dailyNewCount?: number;
+  } = {},
+): SessionScopeStats {
+  const now = options.now ?? Date.now();
+  const newPerSession = options.newPerSession ?? DEFAULT_NEW_PER_SESSION;
+  const newPerDay = options.newPerDay ?? DEFAULT_NEW_PER_DAY;
+  const dailyNewCount = options.dailyNewCount ?? readNewCardsDailyState(resolveStorage(), todayDateKey(new Date(now))).count;
+  const dueReviews = countDueReviewCards(index, now);
+  const availableNew = countAvailableNewCards(index, now);
+  const remainingDailyNew = Math.max(0, newPerDay - dailyNewCount);
+  const maxNew = Math.min(newPerSession, remainingDailyNew, availableNew);
+  if (budget === 'until-zero') {
+    const plannedTotal = dueReviews + maxNew;
+    return {
+      dueReviews,
+      plannedNew: maxNew,
+      plannedTotal,
+      estimatedMinutes: Math.max(1, Math.ceil((plannedTotal * SESSION_ITEM_ESTIMATE_SEC) / 60)),
+    };
+  }
+  const reviewSlots = Math.min(dueReviews, budget);
+  const newSlots = Math.min(maxNew, Math.max(0, budget - reviewSlots));
+  const plannedTotal = reviewSlots + newSlots;
+  return {
+    dueReviews,
+    plannedNew: newSlots,
+    plannedTotal,
+    estimatedMinutes: Math.max(1, Math.ceil((plannedTotal * SESSION_ITEM_ESTIMATE_SEC) / 60)),
+  };
+}
+
+export function computeTodayRingDenominator(
+  index: PracticeIndexItem[],
+  options: {
+    now?: Date | number;
+    newPerDay?: number;
+    dailyNewCount?: number;
+  } = {},
+): number {
+  const now = options.now ?? Date.now();
+  const newPerDay = options.newPerDay ?? DEFAULT_NEW_PER_DAY;
+  const dailyNewCount = options.dailyNewCount ?? readNewCardsDailyState(resolveStorage(), todayDateKey(new Date(now))).count;
+  const dueReviews = countDueReviewCards(index, now);
+  const availableNew = countAvailableNewCards(index, now);
+  const remainingDailyNew = Math.max(0, newPerDay - dailyNewCount);
+  return dueReviews + Math.min(remainingDailyNew, availableNew);
+}
+
+export function buildSessionPoolConstraintState(options: {
+  plannedReviews: number;
+  reviewsCompleted: number;
+  sessionNewIntroduced: number;
+  newPerSession?: number;
+  newPerDay?: number;
+  dailyNewCount?: number;
+}): SessionPoolConstraintState {
+  const newPerSession = options.newPerSession ?? DEFAULT_NEW_PER_SESSION;
+  const newPerDay = options.newPerDay ?? DEFAULT_NEW_PER_DAY;
+  const dailyNewCount = options.dailyNewCount ?? 0;
+  const newRemainingSession = Math.max(0, newPerSession - options.sessionNewIntroduced);
+  const newRemainingDaily = Math.max(0, newPerDay - dailyNewCount);
+  const reviewsSatisfied =
+    options.plannedReviews <= 0 || options.reviewsCompleted >= options.plannedReviews;
+  return {
+    allowNewInPool: reviewsSatisfied && newRemainingSession > 0 && newRemainingDaily > 0,
+    newRemainingSession,
+    newRemainingDaily,
+    sessionNewIntroduced: options.sessionNewIntroduced,
+  };
+}
+
+export function sessionPoolAllowsCandidate(
+  candidate: PracticeSelection,
+  constraints: SessionPoolConstraintState,
+): boolean {
+  if (!isPracticeNewCard(candidate.cardState)) return true;
+  if (!constraints.allowNewInPool) return false;
+  if (constraints.newRemainingDaily <= 0) return false;
+  if (constraints.newRemainingSession <= 0) return false;
+  return true;
+}
+
+export function formatFsrsIntervalUk(from: Date, to: Date): string {
+  const deltaMs = Math.max(0, to.getTime() - from.getTime());
+  const minutes = Math.max(1, Math.round(deltaMs / (60 * 1000)));
+  if (minutes < 60) return `${minutes} хв`;
+  const days = Math.max(1, Math.round(deltaMs / DAY_MS));
+  if (days < 30) return `${days} д`;
+  const months = Math.max(1, Math.round(days / 30));
+  return `${months} міс`;
+}
+
+const FSRS_RATING_ORDER: PracticeRating[] = ['again', 'hard', 'good', 'easy'];
+
+export function previewRatingIntervals(
+  lemmaId: string,
+  mode: PracticeMode,
+  now: Date | number = Date.now(),
+): Record<PracticeRating, string> {
+  const reviewDate = now instanceof Date ? now : new Date(now);
+  const state = currentState();
+  const scheduler = fsrs(state.settings.params);
+  const existing = state.cards.get(cardKey(lemmaId, mode));
+  const fsrsCard = existing ? fsrsCardFromState(existing) : createEmptyCard(reviewDate);
+  const records = scheduler.repeat(fsrsCard, reviewDate);
+  const previews = {} as Record<PracticeRating, string>;
+  for (const rating of FSRS_RATING_ORDER) {
+    const grade = RATING_TO_FSRS[rating];
+    const record = records[grade];
+    previews[rating] = formatFsrsIntervalUk(reviewDate, record.card.due);
+  }
+  return previews;
+}
+
+export function readPracticeSessionSnapshot(
+  storage: StorageLike = resolveStorage(),
+): PracticeSessionSnapshot | null {
+  try {
+    const raw = storage.getItem(PRACTICE_SESSION_STORAGE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as Partial<PracticeSessionSnapshot>;
+    if (
+      typeof parsed.sessionSeed !== 'number' ||
+      !Array.isArray(parsed.history) ||
+      (typeof parsed.budget !== 'number' && parsed.budget !== 'until-zero') ||
+      typeof parsed.completed !== 'number' ||
+      typeof parsed.modeFilter !== 'string' ||
+      typeof parsed.level !== 'string' ||
+      typeof parsed.startedAt !== 'number'
+    ) {
+      return null;
+    }
+    return parsed as PracticeSessionSnapshot;
+  } catch {
+    return null;
+  }
+}
+
+export function writePracticeSessionSnapshot(
+  snapshot: PracticeSessionSnapshot | null,
+  storage: StorageLike = resolveStorage(),
+): void {
+  try {
+    if (!snapshot) {
+      storage.removeItem(PRACTICE_SESSION_STORAGE_KEY);
+      return;
+    }
+    storage.setItem(PRACTICE_SESSION_STORAGE_KEY, JSON.stringify(snapshot));
+  } catch {
+    // Best-effort persistence.
+  }
+}
+
+export function isPracticeSessionResumable(
+  snapshot: PracticeSessionSnapshot | null,
+  now: Date | number = Date.now(),
+): boolean {
+  if (!snapshot) return false;
+  const nowTime = toTime(now) ?? Date.now();
+  if (nowTime - snapshot.startedAt >= SESSION_RESUME_MAX_MS) return false;
+  const plannedTotal = snapshot.plannedTotal ?? snapshot.budget;
+  if (typeof plannedTotal === 'number' && snapshot.completed >= plannedTotal) {
+    const unresolved = snapshot.unresolvedCardKeys?.length ?? 0;
+    if (unresolved === 0) return false;
+  }
+  return true;
+}
+
+export function nextDuePreviewTime(now: Date | number = Date.now()): Date | null {
+  const state = currentState();
+  const nowTime = toTime(now) ?? Date.now();
+  let nextDue: number | null = null;
+  for (const card of state.cards.values()) {
+    if (card.due <= nowTime) continue;
+    if (nextDue === null || card.due < nextDue) nextDue = card.due;
+  }
+  return nextDue === null ? null : new Date(nextDue);
+}
+
+export type SessionCompletionDecision = 'continue' | 'extend' | 'summary' | 'summary-with-deferred';
+
+export function resolveSessionCompletion(options: {
+  completed: number;
+  plannedTotal: number;
+  extensionUsed: number;
+  unresolvedCount: number;
+  maxExtension?: number;
+}): SessionCompletionDecision {
+  const maxExtension = options.maxExtension ?? SESSION_CLOSURE_EXTENSION_MAX;
+  const target = options.plannedTotal + options.extensionUsed;
+  if (options.completed < target) return 'continue';
+  if (options.unresolvedCount > 0 && options.extensionUsed < maxExtension) return 'extend';
+  if (options.unresolvedCount > 0) return 'summary-with-deferred';
+  return 'summary';
 }

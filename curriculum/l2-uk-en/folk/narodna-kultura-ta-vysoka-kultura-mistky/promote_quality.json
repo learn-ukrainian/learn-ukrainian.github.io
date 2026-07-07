@@ -1,0 +1,69 @@
+{
+  "assembled_mdx_sha256": "6433a958518df54a2bd24889b594e32d063dbe65e0ee1e71ad704502635a11ed",
+  "content_hash": {
+    "algorithm": "sha256",
+    "basis": "lesson_sources_v2",
+    "digest": "47e5961493b00bd1b1eb3f991333606920398d738ca624998a3f531ec621e1bf",
+    "files": [
+      {
+        "path": "curriculum/l2-uk-en/plans/folk/narodna-kultura-ta-vysoka-kultura-mistky.yaml",
+        "sha256": "f13ca4572a3c070e52d7f2ebfd6cb0c2c1a360f9a7c01f2bd4436107e281523f"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/narodna-kultura-ta-vysoka-kultura-mistky/module.md",
+        "sha256": "c8a2f224093d1a3b4f2d8a3c990d2d62fbb36726cc6db83166783797887ba392"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/narodna-kultura-ta-vysoka-kultura-mistky/activities.yaml",
+        "sha256": "6e8e34f6c07ab74c1c82f3bef576a90ce1c1e794660000a8daba4c2866025fb2"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/narodna-kultura-ta-vysoka-kultura-mistky/vocabulary.yaml",
+        "sha256": "6ca1096fb53e2c8768cb51cf9868ac447d53c07a31c187977f118e5b4a5915a4"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/narodna-kultura-ta-vysoka-kultura-mistky/resources.yaml",
+        "sha256": "a54cce9d684ff971d35f751007b0e108c0d4feb09633c9a16e1075a2a6c6b3d8"
+      }
+    ]
+  },
+  "evidence": {
+    "pedagogy": "Final FOLK synthesis module uses bridge framing across literature, song, drama, and public reception without flattening folk forms into raw material.",
+    "reading_content": "The ## \u0427\u0438\u0442\u0430\u043d\u043d\u044f section contains four substantial on-site PrimaryReading excerpts directly in the learner-visible reading section, with external full links supplementary only.",
+    "review": "Claude was attempted first but failed at the CLI layer before findings; AGY/Gemini fallback found activity/source/English-target issues, all fixed; final follow-up returned PASS.",
+    "source_policy": "Shevchenko, \u0429\u0435\u0434\u0440\u0438\u043a, Klymovsky, and Lesya excerpts were checked against sources/corpus; source and rights attributions are explicit and public-domain."
+  },
+  "floors": {
+    "beauty": 8.5,
+    "decolonization": 9.0,
+    "engagement": 8.5,
+    "naturalness": 8.5,
+    "pedagogical": 8.5,
+    "tone": 8.5
+  },
+  "profile": "folk_promote_v1",
+  "review_artifact": null,
+  "reviewer": {
+    "agent": "agy",
+    "family": "google",
+    "model": "gemini-3.1-pro-high"
+  },
+  "schema_version": 1,
+  "scored_at": "2026-07-07T04:00:28Z",
+  "scores": {
+    "beauty": 8.8,
+    "decolonization": 9.3,
+    "engagement": 8.9,
+    "naturalness": 8.8,
+    "pedagogical": 9.0,
+    "tone": 8.9
+  },
+  "slug": "narodna-kultura-ta-vysoka-kultura-mistky",
+  "track": "folk",
+  "verdict": "PASS",
+  "writer": {
+    "agent": "codex",
+    "family": "openai",
+    "model": "gpt-5"
+  }
+}

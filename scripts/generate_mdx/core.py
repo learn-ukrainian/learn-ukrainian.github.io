@@ -24,7 +24,7 @@ from .converters import (
     resolve_slug_links,
     yaml_activities_to_jsx,
 )
-from .reading_links import reading_href_for
+from .reading_links import reading_href_for, reading_title_for
 from .resources import (
     embed_youtube_video_links,
     format_resources_for_mdx,
@@ -170,6 +170,13 @@ def _activity_plans_to_jsx(plans: list[dict]) -> str:
 _INJECT_ACTIVITY_RE = re.compile(r'<!--\s*INJECT_ACTIVITY:\s*([A-Za-z0-9_-]+)\s*-->')
 _INLINE_SECTION_HEADING_RE = re.compile(r'^#{2,3}\s+(.+?)\s*#*\s*$')
 _READING_SECTION_RE = re.compile(r'^(##\s+(?:Читання|Reading)[^\n]*\n)', re.MULTILINE)
+_PRIMARY_READING_DIRECTIVE_RE = re.compile(
+    r"^:::primary-reading(?P<attrs>[^\n]*)\n(?P<body>.*?)\n:::\s*$",
+    re.MULTILINE | re.DOTALL,
+)
+_DIRECTIVE_ATTR_RE = re.compile(r'([A-Za-z_][\w-]*)\s*=\s*"([^"]*)"')
+_PRIMARY_READING_ATTRIBUTION_RE = re.compile(r"^—[^\n]*[«\"“](?P<title>[^»\"”]+)[»\"”]", re.MULTILINE)
+_PRIMARY_READING_QUOTED_LINE_RE = re.compile(r"^>\s*(?P<line>\S.*?)\s*$", re.MULTILINE)
 
 
 def _activity_id(activity: Activity | dict) -> str:
@@ -273,32 +280,108 @@ def _inject_inline_activities(
     )
 
 
-def _format_plan_readings_for_mdx(readings: object) -> str:
+def _directive_attrs(raw: str) -> dict[str, str]:
+    raw = raw.strip()
+    if not raw.startswith("{") or not raw.endswith("}"):
+        return {}
+    return {match.group(1): match.group(2).strip() for match in _DIRECTIVE_ATTR_RE.finditer(raw[1:-1])}
+
+
+def _clean_reading_title(title: str) -> str:
+    return " ".join(title.split()).strip(" ,.;:")
+
+
+_INLINE_READING_TITLE_OVERRIDES = {
+    "zaporozka-vdacha-nevydymi-kraiovi-voiny": "Запорозька вдача",
+    "franko-farbovanyi-lys-strakh-lisa-fragment": "Фарбований Лис: страх лиса",
+    "hnatiuk-nai-pan-znaie-hryts-uzhyvav": "Хай пан знає, що Гриць уживав",
+    "pro-zorianyi-viz-shchyrist-doshch-fragment": "Про Зоряний віз",
+    "kin-z-chorta-zrobyvsia-fragment": "Кінь з чорта зробився",
+    "chumatska-pisnia-idut-voly-iz-za-hory": "Ідуть воли із-за гори",
+    "vertep-markevych-smert-herod-fragment": "Ірод і Смерть",
+}
+
+
+def _reading_title_from_primary_block(body: str, slug: str, attrs: dict[str, str]) -> str:
+    hosted_title = reading_title_for(slug)
+    if hosted_title:
+        return _clean_reading_title(hosted_title)
+    explicit_title = attrs.get("title", "")
+    if explicit_title:
+        return _clean_reading_title(explicit_title)
+    override_title = _INLINE_READING_TITLE_OVERRIDES.get(slug)
+    if override_title:
+        return override_title
+    first_line = _PRIMARY_READING_QUOTED_LINE_RE.search(body)
+    if first_line:
+        return _clean_reading_title(first_line.group("line"))
+    matches = list(_PRIMARY_READING_ATTRIBUTION_RE.finditer(body))
+    if matches:
+        return _clean_reading_title(matches[-1].group("title"))
+    return _clean_reading_title(slug.replace("-", " "))
+
+
+def _inline_primary_readings_for_mdx(body: str, existing_slugs: set[str]) -> list[dict[str, str]]:
+    readings: list[dict[str, str]] = []
+    seen = set(existing_slugs)
+    for match in _PRIMARY_READING_DIRECTIVE_RE.finditer(body):
+        attrs = _directive_attrs(match.group("attrs"))
+        slug = attrs.get("reading", "").strip()
+        if not slug or slug in seen:
+            continue
+        seen.add(slug)
+        href = reading_href_for(slug) or f"#reading-{slug}"
+        readings.append(
+            {
+                "title": _reading_title_from_primary_block(match.group("body"), slug, attrs),
+                "href": href,
+                "detail": "уривок на сторінці" if href.startswith("#") else "хрестоматія",
+            }
+        )
+    return readings
+
+
+def _format_plan_readings_for_mdx(readings: object, body: str = "", *, include_inline: bool = False) -> str:
     """Render the plan-level reading assignment as an integrity-gated MDX list."""
-    if not isinstance(readings, list):
+    entries: list[dict[str, str]] = []
+    existing_slugs: set[str] = set()
+
+    if isinstance(readings, list):
+        for item in readings:
+            if not isinstance(item, dict):
+                continue
+            title = str(item.get("title") or "").strip()
+            slug = str(item.get("reading_slug") or "").strip()
+            if not title or not slug:
+                continue
+            href = reading_href_for(slug)
+            if not href:
+                continue
+            existing_slugs.add(slug)
+            entries.append(
+                {
+                    "title": title,
+                    "href": href,
+                    "detail": str(item.get("genre") or "").strip(),
+                }
+            )
+
+    if include_inline:
+        entries.extend(_inline_primary_readings_for_mdx(body, existing_slugs))
+
+    if not entries:
         return ""
 
     lines = ["**Тексти для читання**", ""]
-    for item in readings:
-        if not isinstance(item, dict):
-            continue
-        title = str(item.get("title") or "").strip()
-        slug = str(item.get("reading_slug") or "").strip()
-        if not title or not slug:
-            continue
-        href = reading_href_for(slug)
-        if not href:
-            continue
-        genre = str(item.get("genre") or "").strip()
-        detail = genre
-        suffix = f" — {detail}" if detail else ""
-        lines.append(f"- [{title}]({href}){suffix}")
+    for item in entries:
+        suffix = f" — {item['detail']}" if item["detail"] else ""
+        lines.append(f"- [{item['title']}]({item['href']}){suffix}")
 
     return "\n".join(lines) if len(lines) > 2 else ""
 
 
-def _insert_plan_readings_block(body: str, readings: object) -> str:
-    block = _format_plan_readings_for_mdx(readings)
+def _insert_plan_readings_block(body: str, readings: object, *, include_inline: bool = False) -> str:
+    block = _format_plan_readings_for_mdx(readings, body, include_inline=include_inline)
     if not block:
         return body
 
@@ -436,7 +519,11 @@ sidebar:
 
     # --- TAB 1: Lesson (prose only) ---
     lesson_content = body
-    lesson_content = _insert_plan_readings_block(lesson_content, fm.get("readings"))
+    lesson_content = _insert_plan_readings_block(
+        lesson_content,
+        fm.get("readings"),
+        include_inline=level.lower() == "folk",
+    )
     lesson_content = embed_youtube_video_links(lesson_content)
     (
         lesson_content,
@@ -850,11 +937,17 @@ def main():
 
         # Detect pipeline version and build status
         pv, bs = detect_pipeline_info(level_dir, mod.slug)
+        output_file = output_dir / f'{mod.slug}.mdx'
+        if output_file.exists() and (pv is None or bs is None):
+            existing_fm, _ = parse_frontmatter(output_file.read_text(encoding='utf-8'))
+            if pv is None and isinstance(existing_fm.get("pipeline"), str):
+                pv = existing_fm["pipeline"]
+            if bs is None and isinstance(existing_fm.get("build_status"), str):
+                bs = existing_fm["build_status"]
 
         mdx_content = generate_mdx(md_content, mod.local_num, yaml_activities, meta_data, vocab_items, module_resources, mod.level, pipeline_version=pv, build_status=bs, activity_plans=loaded_activity_plans)
 
         # Write output
-        output_file = output_dir / f'{mod.slug}.mdx'
         output_file.write_text(mdx_content, encoding='utf-8')  # codeql[py/clear-text-storage-sensitive-data] - .mdx curriculum content, never sensitive data
 
     print('\n\u2705 MDX generation complete!')

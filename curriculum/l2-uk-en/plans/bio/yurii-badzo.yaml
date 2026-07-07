@@ -83,7 +83,22 @@ sequence: 264
 slug: yurii-badzo
 subtitle: The Literary Scholar and the Manuscript the State Feared
 title: 'Юрій Бадзьо: право жити'
-version: '1.0'
+readings:
+- title: "Бадзьо Юрій Васильович"
+  source_name: "Енциклопедія Сучасної України"
+  source_url: "https://esu.com.ua/article-38777"
+  language: "uk"
+  role: "reference"
+  hosting: "link-only"
+  rights_note: "Open-access encyclopedic biography entry."
+- title: "Бадзьо Юрій Васильович"
+  source_name: "КХПГ Музей"
+  source_url: "https://museum.khpg.org/1113843475"
+  language: "uk"
+  role: "historical-archive"
+  hosting: "link-only"
+  rights_note: "Museum-hosted biographical and historical archive page."
+version: '1.1'
 vocabulary_hints:
 - word: манускрипт
   pos: ч.

@@ -143,7 +143,10 @@ def test_primary_reading_prefers_explicit_reading_attr(monkeypatch):
     )
 
     assert calls == ["shchedrivka-oi-syvaia-ta-i-zozulechka"]
-    assert '<PrimaryReading href="/readings/shchedrivka-oi-syvaia-ta-i-zozulechka/">' in out
+    assert (
+        '<PrimaryReading id="reading-shchedrivka-oi-syvaia-ta-i-zozulechka" '
+        'href="/readings/shchedrivka-oi-syvaia-ta-i-zozulechka/">'
+    ) in out
 
 
 def test_primary_reading_omits_missing_link(monkeypatch):
@@ -187,3 +190,156 @@ def test_plan_readings_block_is_integrity_gated(monkeypatch):
     assert "Колядка" in out
     assert "When world had no beginning" not in out
     assert "Broken" not in out
+
+
+def test_plan_readings_block_falls_back_to_structured_inline_readings(monkeypatch):
+    monkeypatch.setattr(core, "reading_href_for", lambda slug: None)
+    monkeypatch.setattr(core, "reading_title_for", lambda slug: None)
+
+    out = core._format_plan_readings_for_mdx(
+        [],
+        ':::primary-reading{reading="kryvyi-tanets-kintsia-ne-znaidemo-fragment"}\n'
+        "> Кривого танця йдемо,\n\n"
+        "— Михайло Грушевський, «Кривого танця йдемо»; права: суспільне надбання.\n"
+        ":::\n",
+        include_inline=True,
+    )
+
+    assert "**Тексти для читання**" in out
+    assert (
+        "- [Кривого танця йдемо](#reading-kryvyi-tanets-kintsia-ne-znaidemo-fragment) "
+        "— уривок на сторінці"
+    ) in out
+
+
+def test_plan_readings_block_uses_first_quoted_line_when_attribution_has_no_title(monkeypatch):
+    monkeypatch.setattr(core, "reading_href_for", lambda slug: None)
+    monkeypatch.setattr(core, "reading_title_for", lambda slug: None)
+
+    out = core._format_plan_readings_for_mdx(
+        [],
+        ':::primary-reading{reading="pysanky-velykodnii-dar-fragment"}\n'
+        "> Христос воскрес, о тім\n"
+        "> знайте\n\n"
+        "— Антологія давньої української літератури; права: суспільне надбання.\n"
+        ":::\n",
+        include_inline=True,
+    )
+
+    assert "[Христос воскрес, о тім](#reading-pysanky-velykodnii-dar-fragment)" in out
+    assert "pysanky velykodnii dar fragment" not in out
+
+
+def test_plan_readings_block_uses_hosted_reading_title(monkeypatch):
+    monkeypatch.setattr(
+        core,
+        "reading_href_for",
+        lambda slug: f"/readings/{slug}/" if slug == "hnatiuk-kolomyiky-variantni-pryklady" else None,
+    )
+    monkeypatch.setattr(
+        core,
+        "reading_title_for",
+        lambda slug: "Приклади коломийкового співу у Володимира Гнатюка"
+        if slug == "hnatiuk-kolomyiky-variantni-pryklady"
+        else None,
+    )
+
+    out = core._format_plan_readings_for_mdx(
+        [],
+        ':::primary-reading{reading="hnatiuk-kolomyiky-variantni-pryklady"}\n'
+        "Скорочений уривок із друкованого джерела відкрито в хрестоматії.\n\n"
+        "— Народна творчість; приклади з видання \"Коломийки. Том I\"; права: public domain.\n"
+        ":::\n",
+        include_inline=True,
+    )
+
+    assert (
+        "[Приклади коломийкового співу у Володимира Гнатюка]"
+        "(/readings/hnatiuk-kolomyiky-variantni-pryklady/)"
+    ) in out
+    assert "hnatiuk kolomyiky variantni pryklady" not in out
+
+
+def test_plan_readings_block_accepts_explicit_inline_title(monkeypatch):
+    monkeypatch.setattr(core, "reading_href_for", lambda slug: None)
+    monkeypatch.setattr(core, "reading_title_for", lambda slug: None)
+
+    out = core._format_plan_readings_for_mdx(
+        [],
+        ':::primary-reading{reading="hnatiuk-nai-pan-znaie-hryts-uzhyvav" title="Хай пан знає, що Гриць уживав"}\n'
+        "> Вкрав Гриць пацюка в дворі і зарізав і тримав го дома.\n\n"
+        "— В. Гнатюк, «Етнографічний\\nзбірник»; права: суспільне надбання.\n"
+        ":::\n",
+        include_inline=True,
+    )
+
+    assert (
+        "[Хай пан знає, що Гриць уживав](#reading-hnatiuk-nai-pan-znaie-hryts-uzhyvav)"
+        in out
+    )
+    assert "Етнографічний" not in out
+
+
+def test_plan_readings_block_uses_inline_title_override(monkeypatch):
+    monkeypatch.setattr(core, "reading_href_for", lambda slug: None)
+    monkeypatch.setattr(core, "reading_title_for", lambda slug: None)
+
+    out = core._format_plan_readings_for_mdx(
+        [],
+        ':::primary-reading{reading="hnatiuk-nai-pan-znaie-hryts-uzhyvav"}\n'
+        "> Вкрав Гриць пацюка в дворі і зарізав і тримав го дома.\n\n"
+        "— В. Гнатюк, «Етнографічний\\nзбірник»; права: суспільне надбання.\n"
+        ":::\n",
+        include_inline=True,
+    )
+
+    assert (
+        "[Хай пан знає, що Гриць уживав](#reading-hnatiuk-nai-pan-znaie-hryts-uzhyvav)"
+        in out
+    )
+    assert "Етнографічний" not in out
+
+
+def test_plan_readings_block_uses_plain_text_inline_title_override(monkeypatch):
+    monkeypatch.setattr(core, "reading_href_for", lambda slug: None)
+    monkeypatch.setattr(core, "reading_title_for", lambda slug: None)
+
+    out = core._format_plan_readings_for_mdx(
+        [],
+        ':::primary-reading{reading="chumatska-pisnia-idut-voly-iz-za-hory"}\n'
+        "Ідуть воли із-за гори та все половії,\n"
+        "А ярема попереду, та й поганяє.\n\n"
+        "— Народна творчість; права: суспільне надбання.\n"
+        ":::\n",
+        include_inline=True,
+    )
+
+    assert "[Ідуть воли із-за гори](#reading-chumatska-pisnia-idut-voly-iz-za-hory)" in out
+    assert "chumatska pisnia" not in out
+
+
+def test_plan_readings_block_deduplicates_plan_and_inline_readings(monkeypatch):
+    monkeypatch.setattr(
+        core,
+        "reading_href_for",
+        lambda slug: f"/readings/{slug}/" if slug == "shared-reading" else None,
+    )
+    monkeypatch.setattr(core, "reading_title_for", lambda slug: None)
+
+    out = core._format_plan_readings_for_mdx(
+        [
+            {
+                "title": "«Плановий текст»",
+                "genre": "Пісня",
+                "reading_slug": "shared-reading",
+            }
+        ],
+        ':::primary-reading{reading="shared-reading"}\n'
+        "> Рядок.\n\n"
+        "— Народна творчість, «Інша назва»; права: суспільне надбання.\n"
+        ":::\n",
+        include_inline=True,
+    )
+
+    assert out.count("shared-reading") == 1
+    assert "Інша назва" not in out

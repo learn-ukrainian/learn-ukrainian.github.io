@@ -44,6 +44,11 @@ CLAUDE_SPOT_AUDIT_MODEL_ID = "claude-opus-4.6"
 # The sources MCP endpoint opencode reviewer routes ground against (mirrors the
 # `sources` entry in ~/.config/opencode/opencode.jsonc).
 SOURCES_MCP_URL = "http://127.0.0.1:8766/mcp"
+REVIEWER_MODULE_REVIEW_NAME = "review-review.md"
+_PROMPT_LEVEL_SLUG_RE = re.compile(
+    r"^Level:\s*(?P<level>[^\n]+)\s*\nSlug:\s*(?P<slug>[^\n]+)",
+    re.MULTILINE,
+)
 MAX_REVIEWER_TOOLS = 40
 INVALID_TOOL_THEATRE = "INVALID_TOOL_THEATRE"
 RETRY_EXHAUSTED = "RETRY_EXHAUSTED"
@@ -659,7 +664,15 @@ class LiveReviewerDispatcher:
         )
         validate_cross_family(route, lineage)
         task_id = f"llm-qg-{target.level}-{target.slug}-{uuid4().hex[:8]}"
-        raw = self.runner(route, prompt, task_id)
+        if self.runner is invoke_bridge_route:
+            raw = invoke_bridge_route(
+                route,
+                prompt,
+                task_id,
+                module_dir=Path(target.module_dir),
+            )
+        else:
+            raw = self.runner(route, prompt, task_id)
         if isinstance(raw, DispatchResult):
             result = raw
         else:
@@ -681,7 +694,15 @@ class LiveReviewerDispatcher:
         return result
 
 
-def invoke_bridge_route(route: ReviewerRoute, prompt: str, task_id: str) -> DispatchResult:
+def invoke_bridge_route(
+    route: ReviewerRoute,
+    prompt: str,
+    task_id: str,
+    *,
+    no_module_persistence: bool = False,
+    artifacts_dir: Path | None = None,
+    module_dir: Path | None = None,
+) -> DispatchResult:
     """Invoke the route's approved backend and return response text.
 
     Gemma uses the same opencode helper behind ``ask-gemma`` because that bridge
@@ -693,7 +714,15 @@ def invoke_bridge_route(route: ReviewerRoute, prompt: str, task_id: str) -> Disp
     assert_route_allowed(route)
     if route.route_name == GEMMA_SURFACE_ROUTE.route_name:
         # Surface/register review is prompt-only per design D1 — no MCP gate.
-        return _invoke_opencode_reviewer(prompt, route, default_timeout_s=900, require_mcp=False)
+        return _invoke_opencode_reviewer(
+            prompt,
+            route,
+            default_timeout_s=900,
+            require_mcp=False,
+            no_module_persistence=no_module_persistence,
+            artifacts_dir=artifacts_dir,
+            module_dir=module_dir,
+        )
     if route.route_name == FRONTIER_OPENCODE_ROUTE.route_name:
         # Seminar/factual review MUST be grounded — fail-fast if the sources MCP
         # is not configured + reachable (design D0; step-1 lesson). Browsing +
@@ -705,6 +734,9 @@ def invoke_bridge_route(route: ReviewerRoute, prompt: str, task_id: str) -> Disp
             route,
             default_timeout_s=1800,
             require_mcp=route.requires_mcp,
+            no_module_persistence=no_module_persistence,
+            artifacts_dir=artifacts_dir,
+            module_dir=module_dir,
         )
     if route.route_name == FRONTIER_FACTUAL_ROUTE.route_name:
         return _invoke_output_path_bridge(
@@ -1076,12 +1108,55 @@ def _result_from_text(prompt: str, response: str, route: ReviewerRoute) -> Dispa
     )
 
 
+def reviewer_prompt_metadata(prompt: str) -> tuple[str, str] | None:
+    """Return (level, slug) from the calibrated reviewer prompt metadata block."""
+    match = _PROMPT_LEVEL_SLUG_RE.search(prompt)
+    if match is None:
+        return None
+    return match.group("level").strip().lower(), match.group("slug").strip()
+
+
+def module_dir_for_review(level: str, slug: str, *, module_dir: Path | None = None) -> Path:
+    """Resolve the module directory used for reviewer markdown persistence."""
+    if module_dir is not None:
+        return module_dir
+    return PROJECT_ROOT / "curriculum" / "l2-uk-en" / level.strip().lower() / slug.strip()
+
+
+def persist_reviewer_module_review(
+    *,
+    level: str,
+    slug: str,
+    response_text: str,
+    module_dir: Path | None = None,
+    artifacts_dir: Path | None = None,
+) -> Path:
+    """Persist raw reviewer output for module-keyed workflows.
+
+    Default layout: ``curriculum/l2-uk-en/{level}/{slug}/review-review.md``.
+    When ``artifacts_dir`` is set, writes under that directory instead.
+    """
+    if artifacts_dir is not None:
+        path = artifacts_dir / f"{slug.strip()}-review.raw.md"
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(response_text, encoding="utf-8")
+        return path
+    target_dir = module_dir_for_review(level, slug, module_dir=module_dir)
+    path = target_dir / REVIEWER_MODULE_REVIEW_NAME
+    target_dir.mkdir(parents=True, exist_ok=True)
+    path.write_text(response_text, encoding="utf-8")
+    return path
+
+
 def _invoke_opencode_reviewer(
     prompt: str,
     route: ReviewerRoute,
     *,
     default_timeout_s: int,
     require_mcp: bool,
+    no_module_persistence: bool = False,
+    artifacts_dir: Path | None = None,
+    module_dir: Path | None = None,
 ) -> DispatchResult:
     """Run a reviewer route over opencode, capturing tool telemetry.
 
@@ -1113,7 +1188,19 @@ def _invoke_opencode_reviewer(
         )
     except SystemExit as exc:
         raise ReviewerProviderError(str(exc)) from exc
-    return _result_from_stream(prompt, parse, route)
+    result = _result_from_stream(prompt, parse, route)
+    if not no_module_persistence:
+        meta = reviewer_prompt_metadata(prompt)
+        if meta is not None:
+            level, slug = meta
+            persist_reviewer_module_review(
+                level=level,
+                slug=slug,
+                response_text=result.response_text,
+                module_dir=module_dir,
+                artifacts_dir=artifacts_dir,
+            )
+    return result
 
 
 def _result_from_stream(prompt: str, parse: Any, route: ReviewerRoute) -> DispatchResult:

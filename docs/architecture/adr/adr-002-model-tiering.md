@@ -2,6 +2,7 @@
 
 **Status**: Accepted
 **Date**: 2026-04-01 (first implemented) / 2026-04-11 (recorded)
+**Deciders**: Krisztian (project owner) — recorded retroactively 2026-07-07; ADR predates the Deciders convention
 **Related**: `scripts/build/batch_gemini_config.py`, `scripts/build/dispatch.py`, `dec-005` (decision journal entry on Gemini model choice)
 
 ## Context

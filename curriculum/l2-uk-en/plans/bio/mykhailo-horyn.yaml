@@ -139,6 +139,13 @@ persona:
     репресій.
   voice: Human Rights Historian
 phase: BIO
+readings:
+- hosting: link-only
+  language: uk
+  notes: Біографічна стаття.
+  role: primary
+  source: Енциклопедія Сучасної України (ЕСУ)
+  url: https://esu.com.ua/article-31261
 references:
 - note: Біографічна стаття.
   path: https://esu.com.ua/article-31261
@@ -160,7 +167,7 @@ sequence: 276
 slug: mykhailo-horyn
 subtitle: From Psychologist to Organizer of Resistance
 title: 'Михайло Горинь: Психолог, що став організатором спротиву'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: людина, яка відкрито не погоджується з панівною ідеологією й політикою держави
   pos: ч.

@@ -165,11 +165,17 @@ references:
   path: https://uk.wikipedia.org/wiki/Горинь_Богдан_Миколайович
   title: Горинь Богдан Миколайович (Вікіпедія)
   type: reference
+readings:
+- hosting: link-only
+  language: uk
+  role: Основна біографічна довідка про Богдана Гориня.
+  source: Харківська правозахисна група (ХПГ)
+  url: https://museum.khpg.org/1113894082
 sequence: 277
 slug: bohdan-horyn
 subtitle: The Witness Who Outlived the System
 title: 'Богдан Горинь: Свідок, що пережив систему'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: фахівець з історії та теорії мистецтва
   pos: ч.

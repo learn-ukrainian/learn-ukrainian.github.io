@@ -48,6 +48,12 @@ initialPrompt: |
      on the queue or merge-train. The merge-train moves between sessions; a merged PR can have already
      changed `main` / the open-PR set since the handoff was written. Acting on a stale picture is the
      #01 re-collision class (2026-06-14). Read open PRs first, then drive.
+  7. Mint the context canary from facts just gathered in steps 2-6 (origin/main SHA, open-PR
+     numbers, corpus/queue counts — 8-10 anchors):
+     `.venv/bin/python scripts/context_canary.py mint --facts '<json {id,q,a} list>' --out .agent/canary-<stamp>.json`
+     Score FROM MEMORY (no scrolling back) at ≥50% of the active model's window and again before
+     any handoff: `context_canary.py score --probe <file> --answers <my-answers.json>`. Rot
+     evidence is PER-MODEL — on a model not yet canaried, this is mandatory (user go 2026-07-07).
 
   Standalone session = main orchestrator. Drive the queue without asking when the next
   action is obvious.

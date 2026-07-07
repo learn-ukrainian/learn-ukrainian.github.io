@@ -83,7 +83,22 @@ sequence: 262
 slug: stefaniia-shabatura
 subtitle: The Tapestry Artist, Political Prisoner, and Helsinki Monitor
 title: 'Стефанія Шабатура: гобелен і протест'
-version: '1.0'
+readings:
+- title: "Шабатура Стефанія Михайлівна"
+  source_name: "КХПГ Музей / Музей шістдесятництва"
+  source_url: "https://museum.khpg.org/1314388686"
+  language: "uk"
+  role: "primary"
+  hosting: "link-only"
+  rights_note: "Museum source with documented interview and archival context in Ukrainian."
+- title: "Шабатура Стефанія Михайлівна (документи)"
+  source_name: "reading-needed"
+  source_url: "reading-needed"
+  language: "uk"
+  role: "reading-needed"
+  hosting: "reading-needed"
+  rights_note: "reading-needed: verify open, stable rights-cleared source for workshop-ready primary excerpts."
+version: '1.1'
 vocabulary_hints:
 - word: гобелен
   pos: ч.

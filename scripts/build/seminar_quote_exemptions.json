@@ -77,6 +77,54 @@
       "module_slug": "narodni-remesla-ta-khudozhni-promysly",
       "reason": "Batch F verified public-domain Franko Домашній промисл excerpt from Ukrlib; local literary corpus does not return this public source page.",
       "reviewer": "claude-opus-4-8"
+    },
+    "6f614d3abf9b18d78ae6b4c7244fefdb73222c3d7f53d2274609265d981f1a21": {
+      "date": "2026-07-07",
+      "module_slug": "narodne-zhytlo-sadyba-hospodarstvo",
+      "reason": "M37 Claude review verified the public-domain Shevchenko Садок вишневий коло хати excerpt against Litopys and Wikisource; local literary corpus does not return this reading span.",
+      "reviewer": "claude-opus-4-8"
+    },
+    "f7ef0db7e08c3301dc898afaf9f32109df96f460894aa8bae3601fa580607b76": {
+      "date": "2026-07-07",
+      "module_slug": "narodne-zhytlo-sadyba-hospodarstvo",
+      "reason": "M37 Claude review verified the public-domain Shevchenko І мертвим, і живим excerpt against Litopys and Wikisource; local literary corpus does not return this reading span.",
+      "reviewer": "claude-opus-4-8"
+    },
+    "ed1d3c4d5113f54a1bac1bdbe238ce94e3b948a264e57083b01276053b9bf3dc": {
+      "date": "2026-07-07",
+      "module_slug": "narodna-kukhnia-obriadova-yizha",
+      "reason": "M38 orchestrator verified the public-domain Hrushevsky хліб як фундамент подружжя excerpt through sources.verify_quote with confidence 0.9988; local literary fuzzy gate misses this shortened span.",
+      "reviewer": "codex-orchestrator"
+    },
+    "d08657bd90c12abb0e1d48f9d4f9b09ef8d05f77c38d2172579c5ea877c9a9a0": {
+      "date": "2026-07-07",
+      "module_slug": "narodna-kukhnia-obriadova-yizha",
+      "reason": "M38 orchestrator verified the public-domain Hrushevsky обмін хлібами excerpt through sources.verify_quote with confidence 1.0; local literary fuzzy gate misses this shortened span.",
+      "reviewer": "codex-orchestrator"
+    },
+    "67d0e11d623ee7c5e337c962db4e4978713f3c39d809c20f28509ec2ca3b5704": {
+      "date": "2026-07-07",
+      "module_slug": "narodna-kukhnia-obriadova-yizha",
+      "reason": "M38 orchestrator verified the public-domain Hrushevsky korovai sacred-object passage and formula against corpus chunk da46aa92_c0384; local literary fuzzy gate misses this shortened span.",
+      "reviewer": "codex-orchestrator"
+    },
+    "954f6c49c74b949cb3a15b44fa2a8a6befd2587530a42d3409c292caa4662733": {
+      "date": "2026-07-07",
+      "module_slug": "narodna-kukhnia-obriadova-yizha",
+      "reason": "M38 orchestrator verified the public-domain Hrushevsky Sviatvechir food-order excerpt through sources.verify_quote with confidence 0.9993; local literary fuzzy gate misses this shortened span.",
+      "reviewer": "codex-orchestrator"
+    },
+    "673127854b7d87cac9be8cbd2e440fef6f278e8149ced3ab8a28f21eb28e10fb": {
+      "date": "2026-07-07",
+      "module_slug": "rehionalni-etnokulturni-tradytsii",
+      "reason": "M39 orchestrator verified the public-domain Hnatiuk 1905 Kolomyiky preface excerpt against the Internet Archive scan; local literary corpus resolves only a modern kolomyika textbook chunk.",
+      "reviewer": "codex-orchestrator"
+    },
+    "887a209fa409b7c4c22ec35915df28626e26adc8aa2f570165b0f163c93a389e": {
+      "date": "2026-07-07",
+      "module_slug": "rehionalni-etnokulturni-tradytsii",
+      "reason": "M39 orchestrator verified the public-domain Hnatiuk 1905 Kolomyiky form/performance excerpt against the Internet Archive scan; local literary corpus resolves only a modern kolomyika textbook chunk.",
+      "reviewer": "codex-orchestrator"
     }
   }
 }

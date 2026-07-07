@@ -108,11 +108,17 @@ references:
   title: Світло людей
   type: primary
   work: Світло людей
+readings:
+- hosting: link-only
+  language: uk
+  role: Основна біографічна довідка про Василя Овсієнка.
+  source: Харківська правозахисна група (ХПГ)
+  url: https://museum.khpg.org/1321393033
 sequence: 282
 slug: vasyl-ovsiienko
 subtitle: The Samvydav Distributor and Chronicler of the Dissident Movement
 title: "Василь Овсієнко: Світло людей та право на пам'ять"
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: неофіційне копіювання та розповсюдження літератури, забороненої в СРСР
   pos: ч.

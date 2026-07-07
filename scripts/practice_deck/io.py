@@ -33,6 +33,7 @@ REQUIRED_POINTER_KEYS = (
 )
 DOWNLOAD_ATTEMPTS = 3
 ALLOWED_RELEASE_PATH_PREFIX = "/learn-ukrainian/learn-ukrainian.github.io/releases/download/"
+PRACTICE_DECK_BUILDER_VERSION = 2
 STALE_POINTER_HINT = (
     "If your branch predates the latest practice deck publish, its committed pointer is stale — "
     "update the branch from origin/main (gh pr update-branch <N> / git merge origin/main). "
@@ -46,6 +47,26 @@ class PracticeDeckHydrationError(RuntimeError):
 
 def _sha256(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
+
+
+def compute_deck_version(
+    entries: list[dict[str, Any]] | None,
+    heritage_pairs: list[dict[str, Any]] | None,
+    synonym_verdicts: dict[str, Any] | None,
+    cloze_sources: list[dict[str, Any]] | None,
+    schema_version: int,
+) -> str:
+    payload = {
+        "builder_version": PRACTICE_DECK_BUILDER_VERSION,
+        "schema_version": schema_version,
+        "entries": entries or [],
+        "heritage_pairs": heritage_pairs or [],
+        "synonym_verdicts": synonym_verdicts or {},
+        "cloze_sources": cloze_sources or [],
+    }
+    canonical = json.dumps(payload, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+    fingerprint = hashlib.sha256(canonical.encode("utf-8")).hexdigest()[:16]
+    return f"atlas-practice-v{schema_version}-{fingerprint}"
 
 
 def _read_json(path: Path) -> dict[str, Any]:

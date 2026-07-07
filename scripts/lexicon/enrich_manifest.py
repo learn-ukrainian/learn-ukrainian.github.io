@@ -1425,6 +1425,10 @@ def _extract_qualifier(text: str) -> str | None:
         return "розм."
     if re.search(r"\bзаст\b\.?|\bз\.", lower_text):
         return "заст."
+    if re.search(r"\bрідше\b\.?", lower_text):
+        return "рідше"
+    if re.search(r"\bрідко\b\.?", lower_text):
+        return "рідко"
     return None
 
 

@@ -1,21 +1,41 @@
-import { type CSSProperties, useEffect, useMemo, useRef, useState } from 'react';
-import FlashcardDeck from './FlashcardDeck';
+import { type CSSProperties, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import MatchUp from './MatchUp';
+import PracticeErrorBoundary from './PracticeErrorBoundary';
+import PracticeFlashcard from './PracticeFlashcard';
+import PracticeSessionSummary, { type SessionSummaryStats } from './PracticeSessionSummary';
 import {
+  DEFAULT_NEW_PER_DAY,
+  PUBLISHED_PRACTICE_LEVELS,
+  buildSessionPoolConstraintState,
   combinePracticeShards,
+  computeSessionScope,
+  computeTodayRingDenominator,
+  countDueReviewCards,
   czNorm,
-  getDueQueue,
+  isPracticeNewCard,
+  isPracticeSessionResumable,
   isWrongCaseAnswer,
   loadState,
   masteredCount,
+  nextDuePreviewTime,
+  parseCardKey,
+  previewRatingIntervals,
   rateCard,
+  resolveSessionCompletion,
+  readNewCardsDailyState,
+  readPracticeSessionSnapshot,
   selectNextPracticeItem,
   seededAnswerIndex,
+  sessionPoolAllowsCandidate,
   uaPlural,
   validateClozeOptions,
+  writeNewCardsDailyState,
+  writePracticeSessionSnapshot,
   type ChoicePolarity,
   type PracticeClozeItem,
   type PracticeDeckData,
+  type PracticeHeritageItem,
+  type PracticeHeritageShard,
   type PracticeIndexItem,
   type PracticeIndexShard,
   type PracticeLexeme,
@@ -23,7 +43,10 @@ import {
   type PracticeModeFilter,
   type PracticeRating,
   type PracticeSelection,
+  type PracticeSessionSnapshot,
   type SelectionHistoryItem,
+  type SessionBudget,
+  type SessionScopeStats,
   type PracticeClassifySet,
 } from '../lib/lexicon/srs';
 import {
@@ -51,6 +74,13 @@ interface StreakState {
 interface ChoiceOption {
   label: string;
   correct: boolean;
+  kind?: 'answer' | 'calque' | 'distractor';
+}
+
+interface HeritageFeedback {
+  kind: 'correct' | 'calque' | 'wrong';
+  text: string;
+  citations?: string[];
 }
 
 interface ClozeFeedback {
@@ -60,6 +90,18 @@ interface ClozeFeedback {
 
 const STREAK_KEY = 'lu-lexicon-practice-streak';
 const MASTERED_THRESHOLD = 21;
+type SessionPhase = 'idle' | 'active' | 'summary';
+
+const SESSION_LABELS_A1: Record<string, string> = {
+  startSession: 'Start session',
+  continueSession: 'Continue session',
+  focusPractice: 'Focus practice',
+  budget10: 'Quick (10)',
+  budget20: 'Standard (20)',
+  budgetZero: 'Until clear',
+  newToday: 'New today',
+  dueReviews: 'Due for review',
+};
 
 function makePracticeSessionSeed(): number {
   return (Date.now() ^ Math.floor(Math.random() * 4294967296)) >>> 0;
@@ -83,6 +125,7 @@ type VisiblePracticeModeFilter = Extract<
   | 'classify'
   | 'paradigm'
   | 'synonym'
+  | 'heritage'
 >;
 
 const MODE_LABELS: Record<VisiblePracticeModeFilter, string> = {
@@ -95,6 +138,7 @@ const MODE_LABELS: Record<VisiblePracticeModeFilter, string> = {
   classify: 'Classify',
   paradigm: 'Paradigm',
   synonym: 'Synonym',
+  heritage: 'Спадщина',
 };
 
 const MODE_CARD_ORDER: VisiblePracticeModeFilter[] = [
@@ -107,6 +151,7 @@ const MODE_CARD_ORDER: VisiblePracticeModeFilter[] = [
   'classify',
   'paradigm',
   'synonym',
+  'heritage',
 ];
 
 const MODE_META: Record<
@@ -181,6 +226,13 @@ const MODE_META: Record<
     description: 'Доберіть синонім або антонім до українського слова.',
     step: 'Лексика',
     accent: 'orange',
+  },
+  heritage: {
+    title: 'Спадщина',
+    en: 'Heritage',
+    description: 'Оберіть питоме українське слово.',
+    step: 'Питома лексика',
+    accent: 'teal',
   },
 };
 
@@ -373,6 +425,15 @@ function ModeIcon({ mode }: { mode: VisiblePracticeModeFilter }) {
     );
   }
 
+  if (mode === 'heritage') {
+    return (
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+        <path d="M12 4 5 7.5v5.2c0 3.9 2.6 6.2 7 7.3 4.4-1.1 7-3.4 7-7.3V7.5L12 4Z" />
+        <path d="M9 12.2 11.1 14l4-4.6" />
+      </svg>
+    );
+  }
+
   if (mode === 'mixed') {
     return (
       <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
@@ -390,6 +451,18 @@ function ModeIcon({ mode }: { mode: VisiblePracticeModeFilter }) {
       <path d="M9 9h6" />
       <path d="M9 13h4" />
     </svg>
+  );
+}
+
+function hasLoadedDrillShards(deck: PracticeDeckData | null): boolean {
+  return Boolean(
+    deck &&
+      (deck.cloze.length > 0 ||
+        (deck.stress?.length ?? 0) > 0 ||
+        (deck.classify?.length ?? 0) > 0 ||
+        (deck.paradigm?.length ?? 0) > 0 ||
+        (deck.synonym?.length ?? 0) > 0 ||
+        (deck.heritage?.length ?? 0) > 0),
   );
 }
 
@@ -441,10 +514,17 @@ function historyFromSelection(selection: PracticeSelection): SelectionHistoryIte
     sentenceFrameId: selection.cloze?.sentenceFrameId,
     blankCase: selection.cloze?.blankCase,
     classifySetId: selection.classifySetId,
+    heritageId: selection.heritage?.heritageId,
     recallDirection: selection.recallDirection,
     choicePolarity: selection.choicePolarity,
     lapsed: selection.lapsed,
   };
+}
+
+function reviewLemmaId(selection: PracticeSelection): string {
+  const parsed = parseCardKey(selection.cardKey);
+  if (!parsed.quarantined && parsed.mode === selection.mode) return parsed.lemmaId;
+  return selection.lemma.lemmaId;
 }
 
 function orderedChoiceOptions(
@@ -565,6 +645,40 @@ function drillChoiceOptions(selection: PracticeSelection): ChoiceOption[] | null
   return null;
 }
 
+function heritageOptions(item: PracticeHeritageItem): ChoiceOption[] {
+  const answer = czNorm(item.answer);
+  const calque = czNorm(item.calque);
+  return item.options.map((option) => {
+    const label = czNorm(option.label);
+    const correct = label === answer;
+    return {
+      label: option.label,
+      correct,
+      kind: correct ? 'answer' : label === calque ? 'calque' : 'distractor',
+    };
+  });
+}
+
+function heritageFeedbackFor(item: PracticeHeritageItem, option: ChoiceOption): HeritageFeedback {
+  if (option.correct) {
+    return {
+      kind: 'correct',
+      text: 'Правильно',
+    };
+  }
+  if (option.kind === 'calque') {
+    return {
+      kind: 'calque',
+      text: `⚠️ калька; ${item.rationale}`,
+      citations: item.citations,
+    };
+  }
+  return {
+    kind: 'wrong',
+    text: 'Ще раз',
+  };
+}
+
 function drillChoicePrompt(selection: PracticeSelection): { prompt: string; subtitle: string } | null {
   if (selection.stress) {
     return {
@@ -608,8 +722,33 @@ function clozeParts(item: PracticeClozeItem): [string, string] {
   return [before, after.join('___')];
 }
 
+function slotPromptParts(prompt: string): [string, string] {
+  const [before, ...after] = prompt.split('___');
+  return [before, after.join('___')];
+}
+
 function shouldLoadCloze(mode: PracticeModeFilter): boolean {
-  return ['mixed', 'cloze', 'stress', 'classify', 'paradigm', 'synonym'].includes(mode);
+  return ['mixed', 'cloze', 'stress', 'classify', 'paradigm', 'synonym', 'heritage'].includes(mode);
+}
+
+function sessionScopeIndexForMode(
+  index: PracticeIndexItem[],
+  modeFilter: PracticeModeFilter,
+): PracticeIndexItem[] {
+  if (modeFilter === 'mixed') return index;
+  return index
+    .filter((item) => item.modes.includes(modeFilter))
+    .map((item) => ({ ...item, modes: [modeFilter] }));
+}
+
+function shouldShowFocusModeCard(
+  practiceMode: VisiblePracticeModeFilter,
+  deck: PracticeDeckData | null,
+  indexForStats: PracticeIndexItem[],
+): boolean {
+  if (practiceMode !== 'heritage') return true;
+  if (deck) return (deck.heritage?.length ?? 0) > 0;
+  return indexForStats.some((item) => item.modes.includes('heritage'));
 }
 
 /** Learner level persisted in the shared `lu-learner-level` key (also used by Words of the Day). */
@@ -649,10 +788,19 @@ function mergeDecks(decks: PracticeDeckData[], level: CefrLevel): PracticeDeckDa
     classify: decks.flatMap((deck) => deck.classify ?? []),
     paradigm: decks.flatMap((deck) => deck.paradigm ?? []),
     synonym: decks.flatMap((deck) => deck.synonym ?? []),
+    heritage: decks.flatMap((deck) => deck.heritage ?? []),
   };
 }
 
-export default function LexiconPractice({
+export default function LexiconPractice(props: LexiconPracticeProps) {
+  return (
+    <PracticeErrorBoundary>
+      <LexiconPracticeIsland {...props} />
+    </PracticeErrorBoundary>
+  );
+}
+
+function LexiconPracticeIsland({
   deckLevel = 'A1',
   shardBaseUrl = '/lexicon',
   initialDeck,
@@ -663,11 +811,25 @@ export default function LexiconPractice({
   const [deck, setDeck] = useState<PracticeDeckData | null>(() => normalizeInitialDeck(initialDeck));
   const [clozeLoaded, setClozeLoaded] = useState(() => {
     const normalized = normalizeInitialDeck(initialDeck);
-    return Boolean(normalized && normalized.cloze.length > 0);
+    return hasLoadedDrillShards(normalized);
   });
-  const [started, setStarted] = useState(autoStart);
+  const [sessionPhase, setSessionPhase] = useState<SessionPhase>(autoStart ? 'active' : 'idle');
   const [sessionSeed, setSessionSeed] = useState(() => makePracticeSessionSeed());
   const [mode, setMode] = useState<PracticeModeFilter>(initialMode);
+  const [sessionBudget, setSessionBudget] = useState<SessionBudget>(20);
+  const [sessionPlan, setSessionPlan] = useState<SessionScopeStats | null>(null);
+  const [plannedReviews, setPlannedReviews] = useState(0);
+  const [plannedTotal, setPlannedTotal] = useState(0);
+  const [sessionCompleted, setSessionCompleted] = useState(0);
+  const [reviewsCompleted, setReviewsCompleted] = useState(0);
+  const [sessionNewIntroduced, setSessionNewIntroduced] = useState(0);
+  const [extensionUsed, setExtensionUsed] = useState(0);
+  const [unresolvedCardKeys, setUnresolvedCardKeys] = useState<Set<string>>(() => new Set());
+  const [deferredLemmas, setDeferredLemmas] = useState<PracticeLexeme[]>([]);
+  const [sessionCorrect, setSessionCorrect] = useState(0);
+  const [sessionLapsed, setSessionLapsed] = useState(0);
+  const [advancedToReview, setAdvancedToReview] = useState<string[]>([]);
+  const [resumeSnapshot, setResumeSnapshot] = useState<PracticeSessionSnapshot | null>(null);
   const [learnerLevel, setLearnerLevel] = useState<CefrLevel>(() =>
     readLearnerLevel(normalizeCefrLevel(deckLevel)),
   );
@@ -682,29 +844,55 @@ export default function LexiconPractice({
     current: 0,
     lastPracticeDate: null,
   });
-  const [mastered, setMastered] = useState(0);
-  const [correctToday, setCorrectToday] = useState(0);
+  const [, setMastered] = useState(0);
+  const [completedToday, setCompletedToday] = useState(0);
+  const [dailyNewCount, setDailyNewCount] = useState(0);
   const [storageWarning, setStorageWarning] = useState<string | null>(null);
   const [clozeInput, setClozeInput] = useState('');
   const [clozeFeedback, setClozeFeedback] = useState<ClozeFeedback | null>(null);
   const [clozeAttemptRecorded, setClozeAttemptRecorded] = useState(false);
-  // Lightweight per-level index used to show the due-count on the home BEFORE a mode
-  // is started. Superseded by `deck.index` once a full deck loads.
+  const [heritageFeedback, setHeritageFeedback] = useState<HeritageFeedback | null>(null);
   const [dueIndex, setDueIndex] = useState<PracticeIndexItem[] | null>(null);
+  const [publishedLevels] = useState<Set<CefrLevel>>(
+    () => new Set(PUBLISHED_PRACTICE_LEVELS as unknown as CefrLevel[]),
+  );
   const stageRef = useRef<HTMLDivElement | null>(null);
-  // Monotonic id so a slow earlier deck fetch can't overwrite a newer one (rapid level switches).
   const deckRequestId = useRef(0);
+  const sessionStartedAtRef = useRef(Date.now());
+  const showEnglishSubtitles = learnerLevel === 'A1';
 
   useEffect(() => {
     const state = loadState();
     setStreak(readStreak());
     setMastered(masteredCount(MASTERED_THRESHOLD));
+    setDailyNewCount(readNewCardsDailyState().count);
+    const snapshot = readPracticeSessionSnapshot();
+    setResumeSnapshot(isPracticeSessionResumable(snapshot) ? snapshot : null);
     if (state.flags.corrupt || state.flags.migrationFailed) {
       setStorageWarning('Прогрес призупинено, доки сховище браузера не стане доступним.');
     } else if (state.flags.clockJump) {
       setStorageWarning('Час повторення може бути неточним: змінився годинник пристрою.');
     }
   }, []);
+
+  useEffect(() => {
+    if (!autoStart || !deck || plannedTotal > 0) return;
+    const plan = computeSessionScope(sessionScopeIndexForMode(deck.index, mode), sessionBudget, {
+      dailyNewCount,
+    });
+    resetSessionTracking(plan, sessionBudget);
+  }, [autoStart, dailyNewCount, deck, mode, plannedTotal, sessionBudget]);
+
+  useEffect(() => {
+    const page = document.querySelector('.lexicon-practice-page');
+    if (!page) return undefined;
+    if (sessionPhase === 'active') {
+      page.setAttribute('data-in-session', 'true');
+    } else {
+      page.removeAttribute('data-in-session');
+    }
+    return () => page.removeAttribute('data-in-session');
+  }, [sessionPhase]);
 
   // Eager-load ONLY the lightweight per-level index shards on mount (and on a
   // pre-session level change) so the «До повторення» tile + today ring reflect the
@@ -739,30 +927,50 @@ export default function LexiconPractice({
     };
   }, [deck, learnerLevel, shardBaseUrl]);
 
+  const indexForStats = deck?.index ?? dueIndex ?? [];
+
+  const sessionPoolConstraints = useMemo(
+    () =>
+      buildSessionPoolConstraintState({
+        plannedReviews,
+        reviewsCompleted,
+        sessionNewIntroduced,
+        dailyNewCount,
+      }),
+    [dailyNewCount, plannedReviews, reviewsCompleted, sessionNewIntroduced],
+  );
+
+  const poolFilter = useCallback(
+    (candidate: PracticeSelection) => sessionPoolAllowsCandidate(candidate, sessionPoolConstraints),
+    [sessionPoolConstraints],
+  );
+
   const selection = useMemo(() => {
-    if (!deck) return null;
+    if (!deck || sessionPhase !== 'active') return null;
     return selectNextPracticeItem(deck, {
       history,
       modeFilter: mode,
       now: new Date(),
       sessionSeed,
+      poolFilter: sessionPhase === 'active' ? poolFilter : undefined,
     });
-  }, [deck, history, mode, revision, sessionSeed]);
+  }, [deck, history, mode, poolFilter, revision, sessionPhase, sessionSeed]);
 
   useEffect(() => {
     setAnswerLocked(false);
     setClozeInput('');
     setClozeFeedback(null);
     setClozeAttemptRecorded(false);
+    setHeritageFeedback(null);
     if (selection) {
       window.setTimeout(() => stageRef.current?.focus(), 0);
     }
   }, [selection?.itemId]);
 
   useEffect(() => {
-    if (!started) return;
+    if (sessionPhase !== 'active') return;
     document.title = `${MODE_LABELS[visiblePracticeMode(mode)]} Practice - Words of the Day`;
-  }, [mode, started]);
+  }, [mode, sessionPhase]);
 
   async function ensureDeck(
     includeCloze = shouldLoadCloze(mode),
@@ -812,20 +1020,23 @@ export default function LexiconPractice({
               classifyResponse,
               paradigmResponse,
               synonymResponse,
+              heritageResponse,
             ] = await Promise.all([
               fetch(`${shardBaseUrl}/practice-cloze.${shardLevel}.json`),
               fetch(`${shardBaseUrl}/practice-stress.${shardLevel}.json`),
               fetch(`${shardBaseUrl}/practice-classify.${shardLevel}.json`),
               fetch(`${shardBaseUrl}/practice-paradigm.${shardLevel}.json`),
               fetch(`${shardBaseUrl}/practice-synonym.${shardLevel}.json`),
+              fetch(`${shardBaseUrl}/practice-heritage.${shardLevel}.json`),
             ]);
-            const [clozeShard, stressShard, classifyShard, paradigmShard, synonymShard] =
+            const [clozeShard, stressShard, classifyShard, paradigmShard, synonymShard, heritageShard] =
               await Promise.all([
                 clozeResponse.ok ? clozeResponse.json() : Promise.resolve({ cloze: [] }),
                 stressResponse.ok ? stressResponse.json() : Promise.resolve({ stress: [] }),
                 classifyResponse.ok ? classifyResponse.json() : Promise.resolve({ classify: [] }),
                 paradigmResponse.ok ? paradigmResponse.json() : Promise.resolve({ paradigm: [] }),
                 synonymResponse.ok ? synonymResponse.json() : Promise.resolve({ synonym: [] }),
+                heritageResponse.ok ? heritageResponse.json() : Promise.resolve({ heritage: [] }),
               ]);
             return {
               cloze: (clozeShard as { cloze?: PracticeClozeItem[] }).cloze ?? [],
@@ -833,6 +1044,7 @@ export default function LexiconPractice({
               classify: (classifyShard as PracticeDeckData).classify ?? [],
               paradigm: (paradigmShard as PracticeDeckData).paradigm ?? [],
               synonym: (synonymShard as PracticeDeckData).synonym ?? [],
+              heritage: (heritageShard as PracticeHeritageShard).heritage ?? [],
             };
           }),
         );
@@ -843,6 +1055,7 @@ export default function LexiconPractice({
           classify: shardBatches.flatMap((batch) => batch.classify),
           paradigm: shardBatches.flatMap((batch) => batch.paradigm),
           synonym: shardBatches.flatMap((batch) => batch.synonym),
+          heritage: shardBatches.flatMap((batch) => batch.heritage),
         };
         nextClozeLoaded = true;
       }
@@ -852,32 +1065,155 @@ export default function LexiconPractice({
       setClozeLoaded(nextClozeLoaded);
       return nextDeck;
     } catch {
-      if (deckRequestId.current === requestId) setError('Не вдалося завантажити колоду для практики.');
+      if (deckRequestId.current === requestId) {
+        setError('Не вдалося завантажити колоду для практики.');
+      }
       return null;
     } finally {
       if (deckRequestId.current === requestId) setLoading(false);
     }
   }
 
-  async function start(nextMode: PracticeModeFilter = mode) {
+  function resetSessionTracking(plan: SessionScopeStats, budget: SessionBudget) {
+    const reviewSlots =
+      budget === 'until-zero' ? plan.dueReviews : Math.min(plan.dueReviews, budget);
+    setSessionPlan(plan);
+    setPlannedReviews(reviewSlots);
+    setPlannedTotal(plan.plannedTotal);
+    setSessionCompleted(0);
+    setReviewsCompleted(0);
+    setSessionNewIntroduced(0);
+    setExtensionUsed(0);
+    setUnresolvedCardKeys(new Set());
+    setDeferredLemmas([]);
+    setSessionCorrect(0);
+    setSessionLapsed(0);
+    setAdvancedToReview([]);
+  }
+
+  function buildSessionSnapshot(
+    overrides: Partial<PracticeSessionSnapshot> = {},
+  ): PracticeSessionSnapshot {
+    return {
+      sessionSeed,
+      history,
+      budget: sessionBudget,
+      completed: sessionCompleted,
+      modeFilter: mode,
+      level: learnerLevel,
+      startedAt: sessionStartedAtRef.current,
+      extensionUsed,
+      sessionNewIntroduced,
+      plannedReviews,
+      plannedNew: sessionPlan?.plannedNew ?? 0,
+      plannedTotal,
+      reviewsCompleted,
+      unresolvedCardKeys: [...unresolvedCardKeys],
+      ...overrides,
+    };
+  }
+
+  function persistSessionSnapshot(
+    overrides: Partial<PracticeSessionSnapshot> = {},
+    options: { force?: boolean } = {},
+  ) {
+    if (!options.force && sessionPhase !== 'active') return;
+    writePracticeSessionSnapshot(buildSessionSnapshot(overrides));
+  }
+
+  function effectiveSessionTarget(): number {
+    return plannedTotal + extensionUsed;
+  }
+
+  function openSummary(deferred: PracticeLexeme[] = deferredLemmas) {
+    if (deferred.length) setDeferredLemmas(deferred);
+    writePracticeSessionSnapshot(null);
+    setResumeSnapshot(null);
+    setSessionPhase('summary');
+  }
+
+  async function beginSession(
+    nextMode: PracticeModeFilter = 'mixed',
+    budget: SessionBudget = sessionBudget,
+    resume?: PracticeSessionSnapshot,
+  ) {
     setMode(nextMode);
-    setStarted(true);
-    setSessionSeed(makePracticeSessionSeed());
-    await ensureDeck(shouldLoadCloze(nextMode));
+    setSessionBudget(budget);
+    setError(null);
+    const loadedDeck = await ensureDeck(shouldLoadCloze(nextMode));
+    if (!loadedDeck) return;
+    const index = sessionScopeIndexForMode(loadedDeck.index, nextMode);
+    const plan = computeSessionScope(index, budget, { dailyNewCount });
+    const nextSeed = resume?.sessionSeed ?? makePracticeSessionSeed();
+    if (resume) {
+      sessionStartedAtRef.current = resume.startedAt;
+      setSessionSeed(nextSeed);
+      setHistory(resume.history);
+      setSessionCompleted(resume.completed);
+      setPlannedReviews(resume.plannedReviews ?? plan.dueReviews);
+      setPlannedTotal(resume.plannedTotal ?? plan.plannedTotal);
+      setReviewsCompleted(resume.reviewsCompleted ?? 0);
+      setSessionNewIntroduced(resume.sessionNewIntroduced ?? 0);
+      setExtensionUsed(resume.extensionUsed ?? 0);
+      setUnresolvedCardKeys(new Set(resume.unresolvedCardKeys ?? []));
+      setSessionPlan(plan);
+    } else {
+      sessionStartedAtRef.current = Date.now();
+      setSessionSeed(nextSeed);
+      setHistory([]);
+      resetSessionTracking(plan, budget);
+    }
+    setSessionPhase('active');
+    const reviewSlots = budget === 'until-zero' ? plan.dueReviews : Math.min(plan.dueReviews, budget);
+    writePracticeSessionSnapshot({
+      sessionSeed: nextSeed,
+      history: resume?.history ?? [],
+      budget,
+      completed: resume?.completed ?? 0,
+      modeFilter: nextMode,
+      level: learnerLevel,
+      startedAt: sessionStartedAtRef.current,
+      extensionUsed: resume?.extensionUsed ?? 0,
+      sessionNewIntroduced: resume?.sessionNewIntroduced ?? 0,
+      plannedReviews: resume?.plannedReviews ?? reviewSlots,
+      plannedNew: plan.plannedNew,
+      plannedTotal: resume?.plannedTotal ?? plan.plannedTotal,
+      reviewsCompleted: resume?.reviewsCompleted ?? 0,
+      unresolvedCardKeys: resume?.unresolvedCardKeys ?? [],
+    });
+  }
+
+  async function startSession(
+    budget: SessionBudget = 20,
+    nextMode: PracticeModeFilter = 'mixed',
+  ) {
+    writePracticeSessionSnapshot(null);
+    setResumeSnapshot(null);
+    await beginSession(nextMode, budget);
+  }
+
+  async function resumeSession() {
+    if (!resumeSnapshot) return;
+    await beginSession(resumeSnapshot.modeFilter, resumeSnapshot.budget, resumeSnapshot);
+  }
+
+  async function startFocusMode(nextMode: PracticeModeFilter) {
+    await startSession(sessionBudget, nextMode);
   }
 
   async function changeLevel(nextLevel: CefrLevel) {
-    if (nextLevel === learnerLevel) return;
+    if (nextLevel === learnerLevel || !publishedLevels.has(nextLevel)) return;
     setLearnerLevel(nextLevel);
     writeLearnerLevel(nextLevel);
-    // The pool changed: drop the loaded deck + per-session history and, if a session is
-    // already running, immediately reload the cumulative pool for the new level.
     setClozeLoaded(false);
     setHistory([]);
-    if (started) {
+    writePracticeSessionSnapshot(null);
+    setResumeSnapshot(null);
+    if (sessionPhase === 'active') {
       await ensureDeck(shouldLoadCloze(mode), { level: nextLevel, force: true });
     } else {
       setDeck(null);
+      setSessionPhase('idle');
     }
   }
 
@@ -890,63 +1226,104 @@ export default function LexiconPractice({
     setRevision((value) => value + 1);
   }
 
-  function completeSelection(current: PracticeSelection) {
-    setHistory((items) => [...items.slice(-49), historyFromSelection(current)]);
-    refreshProgress();
-  }
-
-  function recordReview(current: PracticeSelection, rating: PracticeRating) {
+  function recordReview(
+    current: PracticeSelection,
+    rating: PracticeRating,
+  ): { nextUnresolved: Set<string>; nextDeferred: PracticeLexeme[] } {
+    const wasNew = isPracticeNewCard(current.cardState);
+    const nextUnresolved = new Set(unresolvedCardKeys);
+    let nextDeferred = [...deferredLemmas];
     try {
-      rateCard(current.lemma.lemmaId, current.mode, rating, new Date());
+      rateCard(reviewLemmaId(current), current.mode, rating, new Date());
       setStreak(recordStreak());
       if (rating === 'good' || rating === 'easy') {
-        setCorrectToday((value) => value + 1);
+        setSessionCorrect((value) => value + 1);
       }
+      if (rating === 'again') {
+        setSessionLapsed((value) => value + 1);
+      }
+      if (wasNew && rating !== 'again') {
+        const daily = readNewCardsDailyState();
+        const nextDaily = { date: daily.date, count: daily.count + 1 };
+        writeNewCardsDailyState(nextDaily);
+        setDailyNewCount(nextDaily.count);
+        setSessionNewIntroduced((value) => value + 1);
+      }
+      if (!wasNew) {
+        setReviewsCompleted((value) => value + 1);
+      }
+      if (wasNew && (rating === 'good' || rating === 'easy')) {
+        setAdvancedToReview((items) =>
+          items.includes(current.lemma.lemma) ? items : [...items, current.lemma.lemma],
+        );
+      }
+      if (rating === 'again') {
+        nextUnresolved.add(current.cardKey);
+        if (!nextDeferred.some((entry) => entry.lemmaId === current.lemma.lemmaId)) {
+          nextDeferred = [...nextDeferred, current.lemma];
+        }
+      } else if (rating === 'good' || rating === 'easy') {
+        if (nextUnresolved.delete(current.cardKey)) {
+          nextDeferred = nextDeferred.filter((entry) => entry.lemmaId !== current.lemma.lemmaId);
+        }
+      }
+      setUnresolvedCardKeys(nextUnresolved);
+      setDeferredLemmas(nextDeferred);
       setFeedback(`${current.lemma.lemma}: ${RATING_LABELS[rating]}`);
     } catch {
       setStorageWarning('Прогрес призупинено, доки сховище браузера не стане доступним.');
     }
+    return { nextUnresolved, nextDeferred };
+  }
+
+  function completeSelection(
+    current: PracticeSelection,
+    outcome: { nextUnresolved: Set<string>; nextDeferred: PracticeLexeme[] },
+  ) {
+    setHistory((items) => [...items.slice(-49), historyFromSelection(current)]);
+    const nextCompleted = sessionCompleted + 1;
+    setSessionCompleted(nextCompleted);
+    setCompletedToday((value) => value + 1);
+    refreshProgress();
+    persistSessionSnapshot({ completed: nextCompleted });
+    const decision = resolveSessionCompletion({
+      completed: nextCompleted,
+      plannedTotal,
+      extensionUsed,
+      unresolvedCount: outcome.nextUnresolved.size,
+    });
+    if (decision === 'continue') return;
+    if (decision === 'extend') {
+      setExtensionUsed((value) => value + 1);
+      return;
+    }
+    if (decision === 'summary-with-deferred') {
+      openSummary(outcome.nextDeferred);
+      return;
+    }
+    openSummary();
   }
 
   function rateAndComplete(current: PracticeSelection, rating: PracticeRating) {
-    recordReview(current, rating);
-    completeSelection(current);
+    const outcome = recordReview(current, rating);
+    completeSelection(current, outcome);
   }
-
-  useEffect(() => {
-    if (!started || !selection || selection.mode !== 'flashcards') return undefined;
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.altKey || event.ctrlKey || event.metaKey) return;
-      const key = event.key.toLowerCase();
-      const rating =
-        key === 'a' || key === '1'
-          ? 'again'
-          : key === 'h' || key === '2'
-            ? 'hard'
-            : key === 'g' || key === '3'
-              ? 'good'
-              : key === 'e' || key === '4'
-                ? 'easy'
-                : null;
-      if (!rating) return;
-      event.preventDefault();
-      rateAndComplete(selection, rating);
-    };
-    window.addEventListener('keydown', onKeyDown);
-    return () => window.removeEventListener('keydown', onKeyDown);
-  }, [started, selection]);
 
   function handleChoice(option: ChoiceOption) {
     if (!selection || answerLocked) return;
     const rating = option.correct ? 'good' : 'again';
-    recordReview(selection, rating);
+    const outcome = recordReview(selection, rating);
+    const nextHeritageFeedback = selection.heritage
+      ? heritageFeedbackFor(selection.heritage, option)
+      : null;
     setAnswerLocked(true);
+    setHeritageFeedback(nextHeritageFeedback);
     setFeedback(
       option.correct ? `${selection.lemma.lemma}: Правильно` : `${selection.lemma.lemma}: Ще раз`,
     );
     window.setTimeout(() => {
       setAnswerLocked(false);
-      completeSelection(selection);
+      completeSelection(selection, outcome);
     }, advanceDelayMs);
   }
 
@@ -959,9 +1336,9 @@ export default function LexiconPractice({
     const caseMiss = isWrongCaseAnswer(answer, selection.lemma, cloze);
 
     if (correct) {
-      if (!clozeAttemptRecorded) {
-        recordReview(selection, 'good');
-      }
+      const outcome = clozeAttemptRecorded
+        ? { nextUnresolved: new Set(unresolvedCardKeys), nextDeferred: [...deferredLemmas] }
+        : recordReview(selection, 'good');
       setClozeFeedback({
         kind: 'correct',
         text: `✓ ${cloze.form} (${cloze.caseRule.caseLabel})`,
@@ -969,7 +1346,7 @@ export default function LexiconPractice({
       setAnswerLocked(true);
       window.setTimeout(() => {
         setAnswerLocked(false);
-        completeSelection(selection);
+        completeSelection(selection, outcome);
       }, advanceDelayMs);
       return;
     }
@@ -988,28 +1365,56 @@ export default function LexiconPractice({
     }
 
     if (!clozeAttemptRecorded) {
-      recordReview(selection, 'again');
+      const outcome = recordReview(selection, 'again');
       setClozeAttemptRecorded(true);
+      setClozeFeedback({ kind: 'wrong-word', text: '✗ Не те слово' });
+      if (source === 'chip') {
+        setAnswerLocked(true);
+        window.setTimeout(() => {
+          setAnswerLocked(false);
+          completeSelection(selection, outcome);
+        }, advanceDelayMs);
+      }
+      return;
     }
+
     setClozeFeedback({ kind: 'wrong-word', text: '✗ Не те слово' });
     if (source === 'chip') {
       setAnswerLocked(true);
       window.setTimeout(() => {
         setAnswerLocked(false);
-        completeSelection(selection);
+        completeSelection(selection, {
+          nextUnresolved: new Set(unresolvedCardKeys),
+          nextDeferred: [...deferredLemmas],
+        });
       }, advanceDelayMs);
     }
   }
 
-  // Prefer the full deck's index once loaded; otherwise fall back to the eager
-  // index so the due-count is live on the home before any mode starts.
-  const dueNow = useMemo(() => {
-    const entries = deck ? deck.index : dueIndex;
-    return entries ? getDueQueue(entries, new Date()).length : 0;
-  }, [correctToday, deck, dueIndex, revision]);
-  const todayWorkload = correctToday + dueNow;
+  const dueReviews = useMemo(
+    () => (indexForStats.length ? countDueReviewCards(indexForStats, new Date()) : 0),
+    [completedToday, dailyNewCount, indexForStats, revision],
+  );
+  const homeScope = useMemo(
+    () =>
+      indexForStats.length
+        ? computeSessionScope(indexForStats, sessionBudget, { dailyNewCount })
+        : null,
+    [dailyNewCount, indexForStats, sessionBudget],
+  );
+  const todayDenominator = useMemo(
+    () =>
+      indexForStats.length
+        ? computeTodayRingDenominator(indexForStats, { dailyNewCount })
+        : 0,
+    [completedToday, dailyNewCount, indexForStats, revision],
+  );
   const todayPct =
-    todayWorkload > 0 ? Math.min(100, (correctToday / todayWorkload) * 100) : correctToday > 0 ? 100 : 0;
+    todayDenominator > 0
+      ? Math.min(100, (completedToday / todayDenominator) * 100)
+      : completedToday > 0
+        ? 100
+        : 0;
   const todayRingStyle = { '--pct': String(todayPct) } as CSSProperties;
   const stageMode: PracticeModeFilter = selection?.mode ?? mode;
   const visibleStageMode = visiblePracticeMode(stageMode);
@@ -1017,17 +1422,38 @@ export default function LexiconPractice({
     mode === 'mixed' && selection && visibleStageMode !== 'mixed'
       ? `Мікс · ${MODE_META[visibleStageMode].title}`
       : MODE_META[visibleStageMode].title;
-  const correctLabel = `${correctToday} ${uaPlural(correctToday)}`;
+  const progressLabel = `${sessionCompleted}/${effectiveSessionTarget()}`;
+  const summaryStats: SessionSummaryStats = {
+    correct: sessionCorrect,
+    lapsed: sessionLapsed,
+    advancedToReview,
+    streak: streak.current,
+    nextDueLabel: formatNextDueLabel(nextDuePreviewTime()),
+    deferredLemmas,
+  };
+
+  function finishPractice() {
+    setSessionPhase('idle');
+    setHistory([]);
+    setDeck(null);
+    setClozeLoaded(false);
+    writePracticeSessionSnapshot(null);
+  }
 
   return (
     <section className="lexicon-practice" aria-label="Практика слів дня">
       <p className="lexicon-practice-status" aria-live="polite">
-        {feedback || (started ? 'Готово до вправи' : 'Оберіть режим практики')}
+        {feedback ||
+          (sessionPhase === 'active'
+            ? `Сесія ${progressLabel}`
+            : sessionPhase === 'summary'
+              ? 'Сесію завершено'
+              : 'Оберіть сесію практики')}
       </p>
 
       {storageWarning && <p className="lexicon-practice-warning">{storageWarning}</p>}
 
-      {!started && (
+      {sessionPhase === 'idle' && (
         <div className="lexicon-practice-home">
           <div className="lexicon-practice-progress" role="group" aria-label="Сьогоднішній прогрес">
             <div
@@ -1041,29 +1467,84 @@ export default function LexiconPractice({
               <span className="val">🔥 {streak.current}</span>
               <span className="lab">Днів поспіль</span>
             </div>
-            <div className="pstat" aria-label={`${dueNow} до повторення`}>
-              <span className="val">{deck || dueIndex ? dueNow : '—'}</span>
+            <div className="pstat" aria-label={`${dueReviews} до повторення`}>
+              <span className="val">{indexForStats.length ? dueReviews : '—'}</span>
               <span className="lab">До повторення</span>
+              {showEnglishSubtitles ? (
+                <span className="lab-sub">{SESSION_LABELS_A1.dueReviews}</span>
+              ) : null}
             </div>
-            <div className="pstat" aria-label={`${mastered} опановано`}>
-              <span className="val">{mastered}</span>
-              <span className="lab">Опановано</span>
+            <div className="pstat" aria-label={`Нові сьогодні ${dailyNewCount}/${DEFAULT_NEW_PER_DAY}`}>
+              <span className="val">
+                {dailyNewCount}/{DEFAULT_NEW_PER_DAY}
+              </span>
+              <span className="lab">Нові сьогодні</span>
+              {showEnglishSubtitles ? (
+                <span className="lab-sub">{SESSION_LABELS_A1.newToday}</span>
+              ) : null}
             </div>
             <div className="pstat today">
               <div
                 className="ring"
                 role="img"
-                aria-label={`Сьогодні виконано ${correctToday} із ${todayWorkload}`}
+                aria-label={`Сьогодні виконано ${completedToday} із ${todayDenominator}`}
                 style={todayRingStyle}
+                data-testid="practice-today-ring"
               >
                 <b>
-                  {correctToday}/{todayWorkload}
+                  {completedToday}/{todayDenominator}
                 </b>
               </div>
               <div>
                 <span className="lab">Сьогодні</span>
               </div>
             </div>
+          </div>
+
+          <div className="lexicon-practice-session-start">
+            {homeScope ? (
+              <p className="lexicon-session-scope" data-testid="practice-session-scope">
+                {homeScope.dueReviews} до повторення + {homeScope.plannedNew} нових ≈{' '}
+                {homeScope.estimatedMinutes} хв
+              </p>
+            ) : null}
+            <div className="lexicon-session-budgets" role="group" aria-label="Розмір сесії">
+              {([10, 20, 'until-zero'] as const).map((budget) => (
+                <button
+                  key={String(budget)}
+                  type="button"
+                  className={sessionBudget === budget ? 'active' : ''}
+                  aria-pressed={sessionBudget === budget}
+                  onClick={() => setSessionBudget(budget)}
+                >
+                  {budget === 10 ? '10' : budget === 20 ? '20' : 'до нуля'}
+                </button>
+              ))}
+            </div>
+            <button
+              type="button"
+              className="btn btn-accent lexicon-session-primary"
+              data-testid="practice-start-session"
+              onClick={() => void startSession(sessionBudget, 'mixed')}
+            >
+              Почати сесію
+              {showEnglishSubtitles ? (
+                <span className="btn-sub">{SESSION_LABELS_A1.startSession}</span>
+              ) : null}
+            </button>
+            {resumeSnapshot ? (
+              <button
+                type="button"
+                className="btn lexicon-session-resume"
+                data-testid="practice-resume-session"
+                onClick={() => void resumeSession()}
+              >
+                Продовжити сесію ({resumeSnapshot.completed}/{resumeSnapshot.plannedTotal ?? resumeSnapshot.budget})
+                {showEnglishSubtitles ? (
+                  <span className="btn-sub">{SESSION_LABELS_A1.continueSession}</span>
+                ) : null}
+              </button>
+            ) : null}
           </div>
 
           <div className="lexicon-practice-levels">
@@ -1073,70 +1554,98 @@ export default function LexiconPractice({
               aria-label="Рівень учня — практика охоплює цей рівень і нижчі"
             >
               <span className="lexicon-practice-levels-label">Рівень</span>
-              {CEFR_LEVELS.map((level) => (
-                <button
-                  type="button"
-                  key={level}
-                  className={learnerLevel === level ? 'active' : ''}
-                  aria-pressed={learnerLevel === level}
-                  onClick={() => void changeLevel(level)}
-                >
-                  {level}
-                </button>
-              ))}
+              {CEFR_LEVELS.map((level) => {
+                const published = publishedLevels.has(level);
+                return (
+                  <button
+                    type="button"
+                    key={level}
+                    className={learnerLevel === level ? 'active' : ''}
+                    aria-pressed={learnerLevel === level}
+                    disabled={!published}
+                    title={published ? undefined : 'скоро'}
+                    onClick={() => void changeLevel(level)}
+                  >
+                    {level}
+                    {!published ? <span className="level-soon">скоро</span> : null}
+                  </button>
+                );
+              })}
             </div>
             <p className="lexicon-practice-muted lexicon-practice-levels-hint">
               Практика обмежена вашим рівнем і нижчими (накопичувально).
             </p>
           </div>
 
-          <div className="mode-grid">
-            {MODE_CARD_ORDER.map((practiceMode) => {
-              const meta = MODE_META[practiceMode];
-              return (
-                <button
-                  type="button"
-                  key={practiceMode}
-                  className="mode-card"
-                  data-mode={practiceMode}
-                  data-accent={meta.accent}
-                  aria-pressed={mode === practiceMode}
-                  onClick={() => void start(practiceMode)}
-                >
-                  <div className="mc-top">
-                    <span className="mc-ico">
-                      <ModeIcon mode={practiceMode} />
-                    </span>
-                    <span>
-                      <span className="mc-title">{meta.title}</span>
-                      <span className="mc-en">{meta.en}</span>
-                    </span>
-                  </div>
-                  <span className="mc-desc">{meta.description}</span>
-                  <span className="mc-meta">
-                    <span className="mc-step">{meta.step}</span>
-                    <span className="mc-arrow" aria-hidden="true">
-                      →
-                    </span>
-                  </span>
-                </button>
-              );
-            })}
+          <div className="lexicon-focus-practice">
+            <h3>
+              Фокус-практика
+              {showEnglishSubtitles ? (
+                <span className="heading-sub">{SESSION_LABELS_A1.focusPractice}</span>
+              ) : null}
+            </h3>
+            <div className="mode-grid mode-grid-focus">
+              {MODE_CARD_ORDER.filter(
+                (practiceMode) =>
+                  practiceMode !== 'mixed' &&
+                  shouldShowFocusModeCard(practiceMode, deck, indexForStats),
+              ).map((practiceMode) => {
+                const meta = MODE_META[practiceMode];
+                return (
+                  <button
+                    type="button"
+                    key={practiceMode}
+                    className="mode-card"
+                    data-mode={practiceMode}
+                    data-accent={meta.accent}
+                    onClick={() => void startFocusMode(practiceMode)}
+                  >
+                    <div className="mc-top">
+                      <span className="mc-ico">
+                        <ModeIcon mode={practiceMode} />
+                      </span>
+                      <span>
+                        <span className="mc-title">{meta.title}</span>
+                        {showEnglishSubtitles ? <span className="mc-en">{meta.en}</span> : null}
+                      </span>
+                    </div>
+                    <span className="mc-desc">{meta.description}</span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </div>
       )}
 
       {loading && <p className="lexicon-practice-muted">Завантажуємо…</p>}
-      {error && <p className="lexicon-practice-warning">{error}</p>}
-      {started && (
+      {error && (
+        <div className="lexicon-practice-fallback" data-testid="practice-fetch-error">
+          <p className="lexicon-practice-warning">{error}</p>
+          <button type="button" className="btn btn-accent" onClick={() => window.location.reload()}>
+            Спробувати ще раз
+          </button>
+        </div>
+      )}
+
+      {sessionPhase === 'summary' && (
+        <PracticeSessionSummary
+          stats={summaryStats}
+          showEnglishSubtitles={showEnglishSubtitles}
+          onAnotherSession={() => void startSession(sessionBudget, mode)}
+          onDone={finishPractice}
+        />
+      )}
+
+      {sessionPhase === 'active' && (
         <div className="lexicon-practice-stage-shell">
           <div className="lexicon-practice-stage-bar">
-            <button type="button" className="stage-back" onClick={() => setStarted(false)}>
-              ← Режими
+            <button type="button" className="stage-back" onClick={finishPractice}>
+              ← Додому
             </button>
             <h2>{stageTitle}</h2>
-            <span className="queue-pill" aria-label={correctLabel}>
-              {correctLabel}
+            <span className="queue-pill" aria-label={`Прогрес ${progressLabel}`} data-testid="practice-session-progress">
+              {progressLabel}
             </span>
           </div>
 
@@ -1145,35 +1654,48 @@ export default function LexiconPractice({
           )}
 
           {deck && deck.index.length > 0 && (
-        <div className="lexicon-practice-stage" ref={stageRef} tabIndex={-1}>
-          {selection ? (
-            <PracticeItem
-              selection={selection}
-              deck={deck}
-              sessionSeed={sessionSeed}
-              answerLocked={answerLocked}
-              clozeInput={clozeInput}
-              clozeFeedback={clozeFeedback}
-                onClozeInput={setClozeInput}
-                onFlashcardRating={(rating) => rateAndComplete(selection, rating)}
-                onChoice={handleChoice}
-                onMatchingComplete={() => rateAndComplete(selection, 'good')}
-                onClozeSubmit={submitCloze}
-              />
-          ) : mode === 'cloze' && deck.cloze.length === 0 ? (
-              // Cloze is fail-closed until reviewed sentences are authored (#3797).
-              <p className="lexicon-practice-muted" data-testid="practice-cloze-empty">
-                Вправи з пропусками для цього рівня ще готуються. Спробуйте флешкартки, добір пар або вибір.
-              </p>
-            ) : (
-              <p className="lexicon-practice-muted">Усі картки на зараз повторено.</p>
-            )}
-          </div>
+            <div className="lexicon-practice-stage" ref={stageRef} tabIndex={-1}>
+              {selection ? (
+                <PracticeItem
+                  selection={selection}
+                  deck={deck}
+                  sessionSeed={sessionSeed}
+                  answerLocked={answerLocked}
+                  clozeInput={clozeInput}
+                  clozeFeedback={clozeFeedback}
+                  heritageFeedback={heritageFeedback}
+                  onClozeInput={setClozeInput}
+                  onFlashcardRating={(rating) => rateAndComplete(selection, rating)}
+                  onChoice={handleChoice}
+                  onMatchingComplete={() => rateAndComplete(selection, 'good')}
+                  onClozeSubmit={submitCloze}
+                />
+              ) : mode === 'cloze' && deck.cloze.length === 0 ? (
+                <p className="lexicon-practice-muted" data-testid="practice-cloze-empty">
+                  Вправи з пропусками для цього рівня ще готуються. Спробуйте флешкартки, добір пар або вибір.
+                </p>
+              ) : mode === 'heritage' && (deck.heritage?.length ?? 0) === 0 ? (
+                <p className="lexicon-practice-muted" data-testid="practice-heritage-empty">
+                  Вправи зі спадщини для цього рівня ще готуються.
+                </p>
+              ) : (
+                <p className="lexicon-practice-muted">Усі картки на зараз повторено.</p>
+              )}
+            </div>
           )}
         </div>
       )}
     </section>
   );
+}
+
+function formatNextDueLabel(nextDue: Date | null): string | null {
+  if (!nextDue) return null;
+  const hours = nextDue.getHours().toString().padStart(2, '0');
+  const minutes = nextDue.getMinutes().toString().padStart(2, '0');
+  const remainingMs = nextDue.getTime() - Date.now();
+  const remaining = Math.max(1, Math.ceil(remainingMs / (60 * 60 * 1000)));
+  return `ще ${remaining} о ${hours}:${minutes}`;
 }
 
 function PracticeItem({
@@ -1183,6 +1705,7 @@ function PracticeItem({
   answerLocked,
   clozeInput,
   clozeFeedback,
+  heritageFeedback,
   onClozeInput,
   onFlashcardRating,
   onChoice,
@@ -1195,6 +1718,7 @@ function PracticeItem({
   answerLocked: boolean;
   clozeInput: string;
   clozeFeedback: ClozeFeedback | null;
+  heritageFeedback: HeritageFeedback | null;
   onClozeInput(value: string): void;
   onFlashcardRating(rating: PracticeRating): void;
   onChoice(option: ChoiceOption): void;
@@ -1202,25 +1726,18 @@ function PracticeItem({
   onClozeSubmit(value: string, source: 'typed' | 'chip'): void;
 }) {
   if (selection.mode === 'flashcards') {
+    const intervalPreviews = previewRatingIntervals(
+      selection.lemma.lemmaId,
+      selection.mode,
+      new Date(),
+    );
     return (
-      <>
-        <FlashcardDeck key={selection.itemId} cards={[cardData(selection.lemma)]} />
-        <div className="lexicon-rating-bar rating-bar" role="group" aria-label="Оцініть, наскільки легко згадалось">
-        {(['again', 'hard', 'good', 'easy'] as const).map((rating, index) => (
-          <button
-            type="button"
-            key={rating}
-            className="rate-btn"
-            data-rate={rating}
-            aria-keyshortcuts={String(index + 1)}
-            onClick={() => onFlashcardRating(rating)}
-          >
-            <span className="rk">{index + 1}</span>
-            <span className="rt">{RATING_LABELS[rating]}</span>
-          </button>
-        ))}
-        </div>
-      </>
+      <PracticeFlashcard
+        card={cardData(selection.lemma)}
+        ratingLabels={RATING_LABELS}
+        intervalPreviews={intervalPreviews}
+        onRate={onFlashcardRating}
+      />
     );
   }
 
@@ -1233,6 +1750,17 @@ function PracticeItem({
         answerLocked={answerLocked}
         onInput={onClozeInput}
         onSubmit={onClozeSubmit}
+      />
+    );
+  }
+
+  if (selection.mode === 'heritage' && selection.heritage) {
+    return (
+      <PracticeHeritage
+        item={selection.heritage}
+        feedback={heritageFeedback}
+        answerLocked={answerLocked}
+        onChoice={onChoice}
       />
     );
   }
@@ -1303,6 +1831,61 @@ function PracticeItem({
           </li>
         ))}
       </ul>
+    </div>
+  );
+}
+
+function PracticeHeritage({
+  item,
+  feedback,
+  answerLocked,
+  onChoice,
+}: {
+  item: PracticeHeritageItem;
+  feedback: HeritageFeedback | null;
+  answerLocked: boolean;
+  onChoice(option: ChoiceOption): void;
+}) {
+  const [before, after] = slotPromptParts(item.prompt);
+  const options = heritageOptions(item);
+  const slotText = feedback?.kind === 'correct' ? item.answer : '___';
+  return (
+    <div className="lexicon-heritage" data-testid="practice-heritage">
+      <p className="heritage-task">Оберіть питоме українське слово.</p>
+      <p className="heritage-sentence">
+        <span>{before}</span>
+        <span className={feedback?.kind === 'correct' ? 'heritage-slot filled' : 'heritage-slot'}>
+          {slotText}
+        </span>
+        <span>{after}</span>
+      </p>
+      <ul className="lexicon-option-list mc-options">
+        {options.map((option, index) => (
+          <li key={`${option.label}-${index}`}>
+            <button
+              className={`mc-opt${answerLocked && option.correct ? ' correct' : ''}`}
+              type="button"
+              disabled={answerLocked}
+              onClick={() => onChoice(option)}
+            >
+              <span>{option.label}</span>
+            </button>
+          </li>
+        ))}
+      </ul>
+      {feedback ? (
+        <div
+          className={`heritage-feedback ${feedback.kind}`}
+          role={feedback.kind === 'wrong' ? 'alert' : 'status'}
+          aria-live="polite"
+          data-testid="practice-heritage-feedback"
+        >
+          <p>{feedback.text}</p>
+          {feedback.kind === 'calque' && feedback.citations?.length ? (
+            <p className="heritage-citation">Джерело: {feedback.citations.join('; ')}</p>
+          ) : null}
+        </div>
+      ) : null}
     </div>
   );
 }

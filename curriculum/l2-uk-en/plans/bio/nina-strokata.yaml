@@ -137,6 +137,13 @@ persona:
     Україні.
   voice: Human Rights Historian
 phase: BIO
+readings:
+- hosting: link-only
+  language: uk
+  notes: Енциклопедична стаття про наукову кар'єру, арешт, табір, УГГ і публікації.
+  role: primary
+  source: Енциклопедія Сучасної України (ЕСУ)
+  url: https://esu.com.ua/article-886523
 references:
 - note: Енциклопедична стаття про наукову кар'єру, арешт, табір, УГГ і публікації.
   path: https://esu.com.ua/article-886523
@@ -164,7 +171,7 @@ sequence: 271
 slug: nina-strokata
 subtitle: Scientist, Human-Rights Defender, and Founding Helsinki Voice
 title: 'Ніна Строката: наука, право і голос українських жінок'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: наука про мікроорганізми; фахова сфера Строкатої до політичного переслідування
   pos: ж.

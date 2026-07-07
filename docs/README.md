@@ -64,7 +64,7 @@ When in doubt: V7 doc overrides → V6 doc fills in → V5 doc fills in.
 
 - `agents_extensions/shared/rules/*.md` — shared source (canonical). `.claude/`, `.agent/`, `.codex/`, `.gemini/` are deploy targets.
 - `agents_extensions/codex/` — Codex-owned overlays such as durable memory.
-- `agents_extensions/shared/rules/goal-driven-runs.md` — `/goal` convention (#1884)
+- `docs/archive/2026-07-goal-driven-runs.md` — `/goal` convention (#1884; ARCHIVED 2026-07-07, dormant)
 - `agents_extensions/shared/rules/mcp-sources-and-dictionaries.md` — MCP tool inventory
 - `agents_extensions/shared/rules/critical-rules.md` (loaded via Monitor API, see `_load-via-api.md`)
 

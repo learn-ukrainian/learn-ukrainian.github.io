@@ -1,0 +1,69 @@
+{
+  "assembled_mdx_sha256": "03814f07ad29ae559290291fef558c6be578e33903b3acb27b1f8e0d966330dd",
+  "content_hash": {
+    "algorithm": "sha256",
+    "basis": "lesson_sources_v2",
+    "digest": "7ce1a87836eb96e82faacfd82f9542f6cc64de070e750c62fb9924061109356f",
+    "files": [
+      {
+        "path": "curriculum/l2-uk-en/plans/folk/rehionalni-etnokulturni-tradytsii.yaml",
+        "sha256": "58e007549cc9980c44034f3e4109cbe4a52f98dff11ac6f527390a1c849035c2"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/rehionalni-etnokulturni-tradytsii/module.md",
+        "sha256": "9ac578687862bb04fa138bb6e2c0b341b4a7a6d16b4384f13cce960849d031e1"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/rehionalni-etnokulturni-tradytsii/activities.yaml",
+        "sha256": "afab261315c134d0030802479b90d22fe604ac7956b25cb8c4970fb7fbebd8c7"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/rehionalni-etnokulturni-tradytsii/vocabulary.yaml",
+        "sha256": "ba5493d1cbd472140c5369187de42290ebaef951bf722af20d528f3b5bfa09ce"
+      },
+      {
+        "path": "curriculum/l2-uk-en/folk/rehionalni-etnokulturni-tradytsii/resources.yaml",
+        "sha256": "4c5114463632c16b7e38245b2e170e37a9e8e955f39b9535d509b84a93e6f056"
+      }
+    ]
+  },
+  "evidence": {
+    "pedagogy": "C1 FOLK synthesis module frames regional tradition through source, place, material, action, and proof boundary without tourist or imperial shortcuts.",
+    "reading_content": "Four substantial on-site primary readings render as top reading anchors plus full PrimaryReading boxes; Claude verified no stubs and no missing excerpt content.",
+    "review": "Claude Opus 4.8 bridge message #2 PASS; no blockers; DeepSeek not used.",
+    "source_policy": "Hnatiuk 1905 excerpts are public-domain, learner-visible on-site, and covered by exact quote-hash exemptions because local corpus lacks the scan page; ukrlib and Hrushevsky readings corpus-match."
+  },
+  "floors": {
+    "beauty": 8.5,
+    "decolonization": 9.0,
+    "engagement": 8.5,
+    "naturalness": 8.5,
+    "pedagogical": 8.5,
+    "tone": 8.5
+  },
+  "profile": "folk_promote_v1",
+  "review_artifact": null,
+  "reviewer": {
+    "agent": "claude",
+    "family": "anthropic",
+    "model": "claude-opus-4-8"
+  },
+  "schema_version": 1,
+  "scored_at": "2026-07-07T02:48:17Z",
+  "scores": {
+    "beauty": 8.9,
+    "decolonization": 9.2,
+    "engagement": 8.8,
+    "naturalness": 8.9,
+    "pedagogical": 9.0,
+    "tone": 8.9
+  },
+  "slug": "rehionalni-etnokulturni-tradytsii",
+  "track": "folk",
+  "verdict": "PASS",
+  "writer": {
+    "agent": "codex",
+    "family": "openai",
+    "model": "gpt-5"
+  }
+}

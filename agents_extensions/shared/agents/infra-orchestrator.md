@@ -47,6 +47,10 @@ initialPrompt: |
      `./start-claude.sh --agent infra-orchestrator` (the launcher exports `SESSION_HANDOFF_AGENT=claude-infra`
      so cold-start routes to your own slot).
   6. Check `docs/decisions/pending/`; pending decisions block only their declared Scope.
+  7. Mint the context canary from facts just gathered (origin/main SHA, open-PR numbers, queue
+     counts — 8-10 anchors): `.venv/bin/python scripts/context_canary.py mint --facts '<json {id,q,a} list>'
+     --out .agent/canary-<stamp>.json`. Score FROM MEMORY at ≥50% of the active model's window and
+     before any handoff. Rot evidence is PER-MODEL — on a model not yet canaried, mandatory (user go 2026-07-07).
 
   Standalone session = you drive the infra/code queue without asking when the next action is obvious.
   Folk/seminar content (agent `claude`) and per-track content (Codex = B1) are other lanes — awareness-only

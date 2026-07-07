@@ -714,9 +714,86 @@ const frontmatter = {
   }
 
   :global(.lexicon-choice),
-  :global(.lexicon-cloze) {
+  :global(.lexicon-cloze),
+  :global(.lexicon-heritage) {
     display: grid;
     gap: 1rem;
+  }
+
+  :global(.heritage-task) {
+    margin: 0 0 -0.1rem;
+    color: var(--lu-teal);
+    font-size: 0.92rem;
+    font-weight: 900;
+  }
+
+  :global(.heritage-sentence) {
+    margin: 0;
+    padding: 1.4rem 1.5rem;
+    border: 1px solid var(--lu-border);
+    border-left: 4px solid var(--lu-teal);
+    border-radius: 14px;
+    background: var(--lu-surface-raised);
+    box-shadow: var(--lu-shadow);
+    color: var(--lu-text);
+    font-size: 1.45rem;
+    font-weight: 700;
+    line-height: 1.6;
+  }
+
+  :global(.heritage-slot) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 96px;
+    padding: 0 10px;
+    margin: 0 4px;
+    border-bottom: 3px solid var(--lu-teal);
+    color: var(--lu-teal);
+    font-weight: 900;
+  }
+
+  :global(.heritage-slot.filled) {
+    border-bottom-color: var(--lu-green);
+    color: var(--lu-state-correct-fg);
+  }
+
+  :global(.heritage-feedback) {
+    margin: 0;
+    padding: 0.85rem 0.95rem;
+    border-radius: 8px;
+    font-weight: 800;
+    line-height: 1.45;
+  }
+
+  :global(.heritage-feedback p) {
+    margin: 0;
+  }
+
+  :global(.heritage-feedback p + p) {
+    margin-top: 0.35rem;
+  }
+
+  :global(.heritage-feedback.correct) {
+    background: var(--lu-state-correct-bg);
+    color: var(--lu-state-correct-fg);
+  }
+
+  :global(.heritage-feedback.calque) {
+    border: 1px solid color-mix(in srgb, var(--lu-orange) 40%, transparent);
+    background: var(--lu-orange-light);
+    color: var(--lu-orange);
+  }
+
+  :global(.heritage-feedback.wrong) {
+    background: var(--lu-state-wrong-bg);
+    color: var(--lu-state-wrong-fg);
+  }
+
+  :global(.heritage-citation) {
+    color: var(--lu-text-muted);
+    font-size: 0.86rem;
+    font-weight: 700;
   }
 
   :global(.mc-q) {
@@ -962,5 +1039,134 @@ const frontmatter = {
     :global(.cz-input-row .btn) {
       width: 100%;
     }
+  }
+
+  .lexicon-practice-page[data-in-session="true"] .lexicon-practice-intro {
+    max-height: 0;
+    margin: 0;
+    overflow: hidden;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .lexicon-practice-page[data-in-session="true"] {
+    padding-top: 1.25rem;
+  }
+
+  :global(.lexicon-practice-session-start) {
+    display: grid;
+    gap: 0.85rem;
+    padding: 1.2rem 1.25rem;
+    border: 1px solid var(--lu-border);
+    border-radius: 14px;
+    background: var(--lu-surface-raised);
+    box-shadow: var(--lu-shadow);
+  }
+
+  :global(.lexicon-session-scope) {
+    margin: 0;
+    color: var(--lu-text);
+    font-size: 1.05rem;
+    font-weight: 800;
+  }
+
+  :global(.lexicon-session-budgets) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  :global(.lexicon-session-primary) {
+    min-height: 52px;
+    font-size: 1.05rem;
+  }
+
+  :global(.btn-sub),
+  :global(.lab-sub),
+  :global(.heading-sub) {
+    display: block;
+    margin-top: 0.15rem;
+    color: var(--lu-text-muted);
+    font-size: 0.78rem;
+    font-weight: 700;
+  }
+
+  :global(.lexicon-focus-practice h3) {
+    margin: 0 0 0.65rem;
+    font-size: 1rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  :global(.mode-grid-focus) {
+    margin-top: 0;
+  }
+
+  :global(.level-soon) {
+    display: block;
+    font-size: 0.62rem;
+    font-weight: 800;
+    text-transform: lowercase;
+  }
+
+  :global(.lexicon-practice-stage) {
+    min-height: 420px;
+  }
+
+  :global(.rate-btn .ri) {
+    color: var(--lu-text-muted);
+    font-size: 0.72rem;
+    font-weight: 800;
+  }
+
+  :global(.rate-btn:disabled) {
+    opacity: 0.45;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  :global(.lexicon-session-summary) {
+    display: grid;
+    gap: 1rem;
+    padding: 1.25rem;
+    border: 1px solid var(--lu-border);
+    border-radius: 14px;
+    background: var(--lu-surface-raised);
+  }
+
+  :global(.lexicon-session-summary-stats) {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.75rem;
+    margin: 0;
+  }
+
+  :global(.lexicon-session-summary-stats dt) {
+    color: var(--lu-text-muted);
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+  }
+
+  :global(.lexicon-session-summary-stats dd) {
+    margin: 0.15rem 0 0;
+    font-size: 1.35rem;
+    font-weight: 900;
+  }
+
+  :global(.lexicon-session-summary-actions) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+  }
+
+  :global(.lexicon-practice-fallback) {
+    display: grid;
+    gap: 0.75rem;
+    padding: 1rem;
+    border: 1px solid var(--lu-border);
+    border-radius: 12px;
+    background: var(--lu-surface-raised);
   }
 </style>

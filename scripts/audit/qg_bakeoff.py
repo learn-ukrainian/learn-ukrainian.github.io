@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import argparse
 import contextlib
+import hashlib
 import json
 import os
 import re
@@ -36,6 +37,7 @@ from scripts.audit import llm_reviewer, llm_reviewer_dispatch, qg_factcheck_scor
 
 FIXTURE_DIR = PROJECT_ROOT / "tests" / "fixtures" / "qg_bakeoff"
 DEFAULT_OUTPUT_ROOT = PROJECT_ROOT / "audit"
+BENCHMARK_V1_MANIFEST = PROJECT_ROOT / "benchmarks" / "v1" / "MANIFEST.json"
 RUN_SCHEMA_VERSION = "qg_bakeoff_run.v2"
 SCORECARD_NAME = "SCORECARD.md"
 ANCHOR_SLUG = "vesnianky"
@@ -139,6 +141,7 @@ class BakeoffFixture:
     title: str
     passage_md: str
     claims: tuple[FixtureClaim, ...]
+    canary_sentence: str | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -374,6 +377,7 @@ def load_fixture(path: Path) -> BakeoffFixture:
     slug = _required_str(raw, "slug", path)
     title = _required_str(raw, "title", path)
     passage_md = _required_str(raw, "passage_md", path)
+    canary_sentence = _optional_canary_sentence(raw, passage_md, path)
     claims_raw = raw.get("claims")
     if not isinstance(claims_raw, list) or not claims_raw:
         raise BakeoffConfigError(f"{path}: claims must be a non-empty list")
@@ -411,6 +415,7 @@ def load_fixture(path: Path) -> BakeoffFixture:
                 f"{path}: {claim_id}: claim text must be a literal sub-span of passage_md "
                 f"(loose-normalized) — paraphrases break claim matching"
             )
+        _assert_claim_not_canary_overlap(path, claim_id, claim, canary_sentence)
         claims.append(
             FixtureClaim(
                 claim_id=claim_id,
@@ -420,7 +425,13 @@ def load_fixture(path: Path) -> BakeoffFixture:
                 distractor_evidence=distractor,
             )
         )
-    return BakeoffFixture(slug=slug, title=title, passage_md=passage_md, claims=tuple(claims))
+    return BakeoffFixture(
+        slug=slug,
+        title=title,
+        passage_md=passage_md,
+        claims=tuple(claims),
+        canary_sentence=canary_sentence,
+    )
 
 
 def load_fixtures(fixtures_dir: Path = FIXTURE_DIR, slugs: Sequence[str] | None = None) -> list[BakeoffFixture]:
@@ -571,6 +582,7 @@ def invoke_bakeoff_route(
         route,
         default_timeout_s=1800,
         require_mcp=True,
+        no_module_persistence=True,
     )
 
 
@@ -657,6 +669,7 @@ def invoke_bakeoff_route_bare(
         route,
         default_timeout_s=1800,
         require_mcp=False,
+        no_module_persistence=True,
     )
 
 
@@ -1675,13 +1688,21 @@ def pin_slug(pin: str) -> str:
     return slug or "model"
 
 
-def rescore_artifacts(output_dir: Path, fixtures_dir: Path = FIXTURE_DIR) -> int:
+def rescore_artifacts(
+    output_dir: Path,
+    fixtures_dir: Path = FIXTURE_DIR,
+    *,
+    unsafe_allow_frozen: bool = False,
+    manifest_path: Path = BENCHMARK_V1_MANIFEST,
+) -> int:
     """Recompute scores for existing artifacts from their STORED payloads.
 
     Zero model invocations — pure offline rescoring, for matcher/scoring
     changes (e.g. the containment matcher). Rewrites each artifact's score
     block and the scorecard.
     """
+    if not unsafe_allow_frozen:
+        _refuse_frozen_reference_rescore(output_dir, manifest_path)
     fixtures = {f.slug: f for f in load_fixtures(fixtures_dir)}
     artifacts: list[dict[str, Any]] = []
     count = 0
@@ -1713,6 +1734,34 @@ def rescore_artifacts(output_dir: Path, fixtures_dir: Path = FIXTURE_DIR) -> int
         count += 1
     write_scorecard(output_dir / SCORECARD_NAME, artifacts)
     return count
+
+
+def _refuse_frozen_reference_rescore(output_dir: Path, manifest_path: Path) -> None:
+    if not manifest_path.exists():
+        return
+    scorecard_path = output_dir / SCORECARD_NAME
+    if not scorecard_path.exists():
+        return
+    try:
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        raise BakeoffConfigError(f"{manifest_path}: invalid benchmark manifest JSON: {exc}") from exc
+    if not isinstance(manifest, Mapping):
+        raise BakeoffConfigError(f"{manifest_path}: benchmark manifest must be a JSON object")
+    reference = manifest.get("reference_result")
+    if not isinstance(reference, Mapping):
+        return
+    expected_sha = reference.get("sha256")
+    if not isinstance(expected_sha, str) or not expected_sha:
+        return
+    if _sha256_file(scorecard_path) != expected_sha:
+        return
+    reference_path = reference.get("path") or SCORECARD_NAME
+    raise BakeoffConfigError(
+        f"{output_dir}: refuses to rescore frozen benchmark reference artifacts because "
+        f"{scorecard_path.name} matches {manifest_path} reference_result ({reference_path}); "
+        "copy the directory for explicit re-analysis or pass --unsafe-allow-frozen"
+    )
 
 
 def emit_lm_eval_results_from_dir(output_dir: Path, emit_dir: Path) -> list[Path]:
@@ -2058,6 +2107,14 @@ def main(argv: Sequence[str] | None = None) -> int:
         help="Recompute scores for EXISTING artifacts from stored payloads (no model calls)",
     )
     parser.add_argument(
+        "--unsafe-allow-frozen",
+        action="store_true",
+        help=(
+            "Allow --rescore to rewrite an out-dir whose SCORECARD.md matches the benchmark-v1 "
+            "frozen reference. Use only on explicit re-analysis copies."
+        ),
+    )
+    parser.add_argument(
         "--emit-lm-eval",
         type=Path,
         default=None,
@@ -2069,7 +2126,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     try:
         if args.rescore:
             output_dir = args.out_dir or default_output_dir()
-            n = rescore_artifacts(output_dir, args.fixtures_dir)
+            n = rescore_artifacts(output_dir, args.fixtures_dir, unsafe_allow_frozen=args.unsafe_allow_frozen)
             emitted = emit_lm_eval_results_from_dir(output_dir, args.emit_lm_eval) if args.emit_lm_eval else []
             print(f"rescored {n} artifacts under {output_dir}")
             print(f"scorecard: {output_dir / SCORECARD_NAME}")
@@ -2289,6 +2346,35 @@ def _required_str(data: Mapping[str, Any], key: str, path: Path) -> str:
     if not isinstance(value, str) or not value.strip():
         raise BakeoffConfigError(f"{path}: {key} must be a non-empty string")
     return value
+
+
+def _optional_canary_sentence(data: Mapping[str, Any], passage_md: str, path: Path) -> str | None:
+    value = data.get("canary_sentence")
+    if value is None:
+        return None
+    if not isinstance(value, str) or not value.strip():
+        raise BakeoffConfigError(f"{path}: canary_sentence must be a non-empty string when present")
+    canary_sentence = value.strip()
+    if not passage_md.rstrip().endswith(canary_sentence):
+        raise BakeoffConfigError(f"{path}: canary_sentence must be a suffix of passage_md")
+    return canary_sentence
+
+
+def _assert_claim_not_canary_overlap(
+    path: Path,
+    claim_id: str,
+    claim: str,
+    canary_sentence: str | None,
+) -> None:
+    if canary_sentence is None:
+        return
+    claim_norm = _normalize_claim_loose(claim)
+    canary_norm = _normalize_claim_loose(canary_sentence)
+    if claim_norm and canary_norm and (claim_norm in canary_norm or canary_norm in claim_norm):
+        raise BakeoffConfigError(
+            f"{path}: {claim_id}: claim text must not overlap canary_sentence "
+            "(loose-normalized, both directions)"
+        )
 
 
 def _normalize_claim_text(text: str) -> str:
@@ -3089,6 +3175,14 @@ def _empty_grounding() -> dict[str, int]:
         "invalid_fact_checks": 0,
         "inadmissible_positive_verdicts": 0,
     }
+
+
+def _sha256_file(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
 
 
 def _now_z() -> str:

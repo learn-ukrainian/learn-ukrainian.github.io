@@ -17,6 +17,7 @@
   {
     "lemma": "місто",
     "lemmaId": "misto",
+    "clozeId": "misto:fixture:1",
     "sentence": "Я живу у ___.",
     "blankCase": "locative",
     "form": "місті",

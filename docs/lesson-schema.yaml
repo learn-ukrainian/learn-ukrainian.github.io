@@ -2,7 +2,7 @@ schema_version: "1.0"
 generator_version: "1.0.0"
 generated_from:
   components_dir: site/src/components/{*.tsx, *.astro}
-  components_sha256: 7906551b36edb49559e7956c6a73b7de240b601aa9de6af9102d17a9207b39bd
+  components_sha256: 0eb0d9a8d5bbcba8e9dd798c7190f1d07530b06c62238cac60d4c8850b145d4d
   config_tables_sha256: 00ac63a789f8f4a8d347ec407a03d6103f53d23a40205f74309ff438c1547a1c
   lesson_contract_sha256: 917ee4abd1a74c5df17f9d19e743f23c376f43d8f1b9a68e12fb30ad6b535024
 components:
@@ -1567,6 +1567,118 @@ components:
       instruction: Приклад
     deprecated: false
     deprecation_reason: null
+  PracticeErrorBoundary:
+    tab: lesson
+    level_scope: *id001
+    activity_type: null
+    placement: n/a
+    props:
+      required:
+      - name: children
+        type: ReactNode
+        description: children prop.
+        ukrainian_text: 'false'
+      optional: []
+    nested_types: {}
+    example:
+      children: <ReactNode>
+    deprecated: false
+    deprecation_reason: null
+  PracticeFlashcard:
+    tab: lesson
+    level_scope: *id001
+    activity_type: null
+    placement: n/a
+    props:
+      required:
+      - name: card
+        type: PracticeFlashcardData
+        description: card prop.
+        ukrainian_text: 'false'
+      - name: ratingLabels
+        type: Record<PracticeRating, string>
+        description: ratingLabels prop.
+        ukrainian_text: 'false'
+      - name: intervalPreviews
+        type: Record<PracticeRating, string>
+        description: intervalPreviews prop.
+        ukrainian_text: 'false'
+      optional: []
+    nested_types:
+      PracticeFlashcardData:
+      - name: front
+        type: string
+        description: front prop.
+        ukrainian_text: 'false'
+      - name: back
+        type: string
+        description: back prop.
+        ukrainian_text: 'false'
+      - name: subtitle
+        type: string
+        description: subtitle prop.
+        ukrainian_text: 'false'
+      - name: tag
+        type: string
+        description: tag prop.
+        ukrainian_text: 'false'
+      - name: tagColor
+        type: string
+        description: tagColor prop.
+        ukrainian_text: 'false'
+    example:
+      card: <PracticeFlashcardData>
+      ratingLabels: <Record<PracticeRating, string>>
+      intervalPreviews: <Record<PracticeRating, string>>
+    deprecated: false
+    deprecation_reason: null
+  PracticeSessionSummary:
+    tab: lesson
+    level_scope: *id001
+    activity_type: null
+    placement: n/a
+    props:
+      required:
+      - name: stats
+        type: SessionSummaryStats
+        description: stats prop.
+        ukrainian_text: 'false'
+      - name: showEnglishSubtitles
+        type: boolean
+        description: showEnglishSubtitles prop.
+        ukrainian_text: 'false'
+      optional: []
+    nested_types:
+      SessionSummaryStats:
+      - name: correct
+        type: number
+        description: correct prop.
+        ukrainian_text: 'false'
+      - name: lapsed
+        type: number
+        description: lapsed prop.
+        ukrainian_text: 'false'
+      - name: advancedToReview
+        type: string[]
+        description: advancedToReview prop.
+        ukrainian_text: 'false'
+      - name: streak
+        type: number
+        description: streak prop.
+        ukrainian_text: 'false'
+      - name: nextDueLabel
+        type: string | null
+        description: nextDueLabel prop.
+        ukrainian_text: 'false'
+      - name: deferredLemmas
+        type: PracticeLexeme[]
+        description: deferredLemmas prop.
+        ukrainian_text: 'false'
+    example:
+      stats: <SessionSummaryStats>
+      showEnglishSubtitles: false
+    deprecated: false
+    deprecation_reason: null
   PrimaryReading:
     tab: lesson
     level_scope: *id001
@@ -1582,6 +1694,10 @@ components:
       - name: href
         type: string
         description: href prop.
+        ukrainian_text: 'false'
+      - name: id
+        type: string
+        description: id prop.
         ukrainian_text: 'false'
       - name: mode
         type: '''verse'' | ''prose'''

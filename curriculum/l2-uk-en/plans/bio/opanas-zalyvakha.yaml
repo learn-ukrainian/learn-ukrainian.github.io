@@ -81,7 +81,22 @@ sequence: 261
 slug: opanas-zalyvakha
 subtitle: The Painter from Exhibition Closure to Political Imprisonment
 title: 'Опанас Заливаха: вітраж і табір'
-version: '1.0'
+readings:
+- title: "Заливаха Опанас Іванович"
+  source_name: "Енциклопедія Сучасної України"
+  source_url: "https://esu.com.ua/article-14749"
+  language: "uk"
+  role: "reference"
+  hosting: "link-only"
+  rights_note: "Open-access Ukrainian biography entry."
+- title: "ЗАЛИВАХА ОПАНАС ІВАНОВИЧ"
+  source_name: "КХПГ Музей"
+  source_url: "https://museum.khpg.org/1113910802"
+  language: "uk"
+  role: "historical-archive"
+  hosting: "link-only"
+  rights_note: "Museum-hosted Ukrainian-language oral-history and documentation page."
+version: '1.1'
 vocabulary_hints:
 - word: вітраж
   pos: ч.
