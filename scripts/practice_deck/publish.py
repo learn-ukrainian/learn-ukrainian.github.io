@@ -28,6 +28,7 @@ DEFAULT_GZIP = ROOT / "site" / "src" / "data" / "lexicon-practice-deck.json.gz"
 DEFAULT_ATLAS_DB = ROOT / "data" / "atlas.db"
 DEFAULT_CLOZE_SOURCES = ROOT / "site" / "src" / "data" / "lexicon-practice-cloze-sources.json"
 DEFAULT_HERITAGE_PAIRS = ROOT / "data" / "lexicon" / "heritage_pairs.yaml"
+DEFAULT_PARONYM_PAIRS = ROOT / "data" / "lexicon" / "paronym_pairs.yaml"
 DEFAULT_SYNONYM_VERDICTS = ROOT / "data" / "lexicon" / "synonym_pair_verdicts.yaml"
 DEFAULT_RELEASE_TAG = "atlas-practice-deck"
 DEFAULT_REPO = "learn-ukrainian/learn-ukrainian.github.io"
@@ -66,6 +67,7 @@ def expected_deck_version(
     atlas_db_path: Path = DEFAULT_ATLAS_DB,
     *,
     heritage_pairs_path: Path | None = DEFAULT_HERITAGE_PAIRS,
+    paronym_pairs_path: Path | None = DEFAULT_PARONYM_PAIRS,
     synonym_verdicts_path: Path | None = DEFAULT_SYNONYM_VERDICTS,
     cloze_sources_path: Path | None = DEFAULT_CLOZE_SOURCES,
 ) -> str:
@@ -80,17 +82,20 @@ def expected_deck_version(
             read_atlas_db,
             read_cloze_sources,
             read_heritage_pairs,
+            read_paronym_pairs,
             read_synonym_verdicts,
         )
         from scripts.practice_deck.io import compute_deck_version
 
         entries = read_atlas_db(atlas_db_path)
         heritage_pairs = read_heritage_pairs(heritage_pairs_path)
+        paronym_pairs = read_paronym_pairs(paronym_pairs_path)
         synonym_verdicts = read_synonym_verdicts(synonym_verdicts_path)
         cloze_sources = read_cloze_sources(cloze_sources_path)
         return compute_deck_version(
             entries,
             heritage_pairs,
+            paronym_pairs,
             synonym_verdicts,
             cloze_sources,
             SCHEMA_VERSION,
@@ -341,6 +346,7 @@ def publish_practice_deck(
     pointer_path: Path = DEFAULT_POINTER,
     atlas_db_path: Path = DEFAULT_ATLAS_DB,
     heritage_pairs_path: Path | None = DEFAULT_HERITAGE_PAIRS,
+    paronym_pairs_path: Path | None = DEFAULT_PARONYM_PAIRS,
     synonym_verdicts_path: Path | None = DEFAULT_SYNONYM_VERDICTS,
     cloze_sources_path: Path | None = DEFAULT_CLOZE_SOURCES,
     release_tag: str = DEFAULT_RELEASE_TAG,
@@ -351,6 +357,7 @@ def publish_practice_deck(
     expected_version = expected_deck_version(
         atlas_db_path,
         heritage_pairs_path=heritage_pairs_path,
+        paronym_pairs_path=paronym_pairs_path,
         synonym_verdicts_path=synonym_verdicts_path,
         cloze_sources_path=cloze_sources_path,
     )
@@ -387,6 +394,7 @@ def main() -> int:
     parser.add_argument("--atlas-db", type=Path, default=DEFAULT_ATLAS_DB)
     parser.add_argument("--cloze-sources", type=Path, default=DEFAULT_CLOZE_SOURCES)
     parser.add_argument("--heritage-pairs", type=Path, default=DEFAULT_HERITAGE_PAIRS)
+    parser.add_argument("--paronym-pairs", type=Path, default=DEFAULT_PARONYM_PAIRS)
     parser.add_argument("--synonym-verdicts", type=Path, default=DEFAULT_SYNONYM_VERDICTS)
     parser.add_argument("--release-tag", default=DEFAULT_RELEASE_TAG)
     parser.add_argument("--repo", default=DEFAULT_REPO)
@@ -398,6 +406,7 @@ def main() -> int:
         pointer_path=args.pointer,
         atlas_db_path=args.atlas_db,
         heritage_pairs_path=args.heritage_pairs,
+        paronym_pairs_path=args.paronym_pairs,
         synonym_verdicts_path=args.synonym_verdicts,
         cloze_sources_path=args.cloze_sources,
         release_tag=args.release_tag,

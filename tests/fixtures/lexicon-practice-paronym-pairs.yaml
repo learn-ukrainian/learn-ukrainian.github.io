@@ -1,0 +1,16 @@
+schema_version: 1
+pairs:
+  - slugA: knyha
+    slugB: tom
+    distinction_gloss_uk: "Фіктивна пара для тестів: knyha vs tom."
+    citations:
+      - fixture:paronym
+    frames:
+      - sentence_with_slot: Я читаю ___.
+        answer_form: книгу
+        confusable_form: том
+        origin: fixture-frame
+      - sentence_with_slot: Він тримає ___.
+        answer_form: том
+        confusable_form: книгу
+        origin: fixture-frame-2

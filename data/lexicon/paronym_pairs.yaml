@@ -1,0 +1,105 @@
+schema_version: 1
+description: "Curated paronym pairs for the §9.9 confusable-pair drill (#4506). 6 driver-adjudicated seeds from module contrast_pair activities. Frames authored fresh for morpho congruency (anti-gaming §5) and both-direction balance. Learner-facing text Ukrainian only. distinction_gloss_uk natural Ukrainian. Citations trace to adjudication and source module seeds. Fail-closed: curated only, no pool mining."
+pairs:
+- slugA: адресант
+  slugB: адресат
+  distinction_gloss_uk: "Адресант — той, хто надсилає кореспонденцію чи документ; адресат — той, кому її адресовано і хто її отримує."
+  citations:
+  - "driver-adjudicated contrast_pair seeds from modules (#4506, 2026-07-06)"
+  - "§9.9 PRACTICE-HUB-SPEC"
+  curator: grok-build-2026-07-07
+  notes: "both directions; dat forms for congruency"
+  frames:
+  - sentence_with_slot: "___ надіслав важливий пакет до офісу."
+    answer_form: "Адресант"
+    confusable_form: "Адресат"
+    origin: authored-grok-build-2026-07-07
+  - sentence_with_slot: "Пакунок прибув до ___ вчасно."
+    answer_form: "адресата"
+    confusable_form: "адресанта"
+    origin: authored-grok-build-2026-07-07
+- slugA: біліти
+  slugB: білити
+  distinction_gloss_uk: "Біліти — ставати білим (самостійно, з часом); білити — робити щось білим (фарбувати, вибілювати)."
+  citations:
+  - "driver-adjudicated contrast_pair seeds from modules (#4506, 2026-07-06)"
+  - "§9.9 PRACTICE-HUB-SPEC"
+  curator: grok-build-2026-07-07
+  notes: "intrans vs trans distinction; present forms"
+  frames:
+  - sentence_with_slot: "Стіна ___ від часу й сонця."
+    answer_form: "біліє"
+    confusable_form: "білить"
+    origin: authored-grok-build-2026-07-07  # curator fix: singular subject — plural стіни excluded білить by agreement alone (gameable)
+  - sentence_with_slot: "Маляр ___ стіни новою фарбою."
+    answer_form: "білить"
+    confusable_form: "біліє"
+    origin: authored-grok-build-2026-07-07
+- slugA: недооцінити
+  slugB: переоцінити
+  distinction_gloss_uk: "Недооцінити — приписати меншу вартість чи здатність, ніж є насправді; переоцінити — приписати більшу, ніж є."
+  citations:
+  - "driver-adjudicated contrast_pair seeds from modules (#4506, 2026-07-06)"
+  - "§9.9 PRACTICE-HUB-SPEC"
+  curator: grok-build-2026-07-07
+  notes: "perf past for concrete judgment"
+  frames:
+  - sentence_with_slot: "Експерти ___ ризики проєкту."
+    answer_form: "недооцінили"
+    confusable_form: "переоцінили"
+    origin: authored-grok-build-2026-07-07
+  - sentence_with_slot: "Вони ___ свої сили й програли."
+    answer_form: "переоцінили"
+    confusable_form: "недооцінили"
+    origin: authored-grok-build-2026-07-07
+- slugA: бігти
+  slugB: бігати
+  distinction_gloss_uk: "Бігти — рухатися швидко в одному напрямку (конкретна дія); бігати — займатися бігом регулярно, у різних напрямках або для вправи."
+  citations:
+  - "driver-adjudicated contrast_pair seeds from modules (#4506, 2026-07-06)"
+  - "§9.9 PRACTICE-HUB-SPEC"
+  curator: grok-build-2026-07-07
+  notes: "motion verb distinction accepted as paronym per driver"
+  frames:
+  - sentence_with_slot: "Щоб встигнути на потяг, треба швидко ___ ."
+    answer_form: "бігти"
+    confusable_form: "бігати"
+    origin: authored-grok-build-2026-07-07
+  - sentence_with_slot: "Вранці він ___ у парку для здоров'я."
+    answer_form: "бігає"
+    confusable_form: "біжить"
+    origin: authored-grok-build-2026-07-07
+- slugA: нести
+  slugB: носити
+  distinction_gloss_uk: "Нести — переміщати щось у конкретному напрямку зараз; носити — регулярно переносити, тримати при собі або вдягати."
+  citations:
+  - "driver-adjudicated contrast_pair seeds from modules (#4506, 2026-07-06)"
+  - "§9.9 PRACTICE-HUB-SPEC"
+  curator: grok-build-2026-07-07
+  notes: "motion/carry distinction accepted per driver"
+  frames:
+  - sentence_with_slot: "Вона ___ важку сумку додому."
+    answer_form: "несе"
+    confusable_form: "носить"
+    origin: authored-grok-build-2026-07-07
+  - sentence_with_slot: "Він ___ окуляри щодня на роботу."
+    answer_form: "носить"
+    confusable_form: "несе"
+    origin: authored-grok-build-2026-07-07
+- slugA: підпис
+  slugB: підписання
+  distinction_gloss_uk: "Підпис — власноручний знак під документом; підписання — процес або акт скріплення документа підписом."
+  citations:
+  - "driver-adjudicated contrast_pair seeds from modules (#4506, 2026-07-06)"
+  - "§9.9 PRACTICE-HUB-SPEC"
+  curator: grok-build-2026-07-07
+  notes: "noun vs deverbal noun; instrumental and nom contexts"
+  frames:
+  - sentence_with_slot: "Він поставив ___ під договором."
+    answer_form: "підпис"
+    confusable_form: "підписання"
+    origin: authored-grok-build-2026-07-07  # curator fix: dropped «свій» — masc agreement excluded neuter підписання by grammar alone
+  - sentence_with_slot: "___ угоди заплановано на наступний тиждень."
+    answer_form: "Підписання"
+    confusable_form: "Підпис"
+    origin: authored-grok-build-2026-07-07  # curator fix: impersonal заплановано — «відбулося» (neuter) excluded masc підпис by agreement alone

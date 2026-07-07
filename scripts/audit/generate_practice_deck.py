@@ -42,6 +42,7 @@ DEFAULT_OUT_DIR = Path("site/public/lexicon")
 DEFAULT_ALLOWLIST = Path("site/src/data/lexicon-practice-reviewed-sources.json")
 DEFAULT_CLOZE_SOURCES = Path("site/src/data/lexicon-practice-cloze-sources.json")
 DEFAULT_HERITAGE_PAIRS = Path("data/lexicon/heritage_pairs.yaml")
+DEFAULT_PARONYM_PAIRS = Path("data/lexicon/paronym_pairs.yaml")
 DEFAULT_SYNONYM_VERDICTS = Path("data/lexicon/synonym_pair_verdicts.yaml")
 # Keep the default above the current all-eligible deck size. A lower default
 # silently contracts the committed practice surface during routine cloze regen.
@@ -2041,6 +2042,101 @@ def _build_heritage_items(
     return items
 
 
+def _strip_paronym_option_metadata(item: dict[str, Any]) -> dict[str, Any]:
+    stripped = {**item}
+    stripped["options"] = [
+        {"label": str(option.get("label") or "")}
+        for option in item.get("options", [])
+        if isinstance(option, dict)
+    ]
+    return stripped
+
+
+def _build_paronym_items(
+    pair: dict[str, Any],
+    lex_a: dict[str, Any],
+    lex_b: dict[str, Any],
+    deck_version: str,
+    *,
+    verifier: VesumVerifier | None = None,
+    public_options: bool = True,
+) -> list[dict[str, Any]]:
+    frames = _valid_paronym_frames(pair)
+    if not frames:
+        return []
+    distinction = _clean_text(pair.get("distinction_gloss_uk")) or ""
+    citations = _clean_text_list(pair.get("citations"))
+    if not citations:
+        return []
+    items: list[dict[str, Any]] = []
+    lex_by_lemma = {
+        _clean_text(lex_a.get("lemma")): lex_a,
+        _clean_text(lex_b.get("lemma")): lex_b,
+    }
+    slugs = (_clean_text(pair.get("slugA")), _clean_text(pair.get("slugB")))
+    for index, frame in enumerate(frames, start=1):
+        sentence = _clean_text(frame.get("sentence_with_slot"))
+        answer_form = _clean_text(frame.get("answer_form"))
+        confusable_form = _clean_text(frame.get("confusable_form"))
+        origin = _clean_text(frame.get("origin"))
+        if not all((sentence, answer_form, confusable_form, origin)):
+            print(
+                f"WARN: paronym_pair {slugs} frame {index} dropped: missing required field",
+                file=sys.stderr,
+            )
+            continue
+        # Resolve target lexeme by lemma of the answer form (via VESUM)
+        target_lex: dict[str, Any] | None = None
+        ans_matches: list[dict[str, Any]] = []
+        if verifier:
+            try:
+                vres = verifier.verify_words([answer_form])
+                ans_matches = vres.get(answer_form, []) or []
+            except Exception:
+                ans_matches = []
+        if ans_matches:
+            ans_lemma = _clean_text(ans_matches[0].get("lemma"))
+            if ans_lemma and ans_lemma in lex_by_lemma:
+                target_lex = lex_by_lemma[ans_lemma]
+        if target_lex is None:
+            # Fallback: try direct lemma match on stored lemmas (for fixture paths)
+            for cand in (lex_a, lex_b):
+                if _clean_text(cand.get("lemma")) and answer_form.lower().startswith(_clean_text(cand.get("lemma")).lower()[:3]):
+                    target_lex = cand
+                    break
+        if target_lex is None:
+            print(
+                f"WARN: paronym_pair {slugs} frame {index} dropped: could not resolve lemma for answer_form {answer_form!r}",
+                file=sys.stderr,
+            )
+            continue
+        key = "\x1f".join((deck_version, target_lex["lemmaId"], sentence, answer_form, confusable_form))
+        paronym_id = "par_" + hashlib.sha1(key.encode("utf-8")).hexdigest()[:12]
+        options = [
+            {"label": answer_form, "kind": "answer", "lemmaId": target_lex["lemmaId"]},
+            {"label": confusable_form, "kind": "confusable"},
+        ]
+        item: dict[str, Any] = {
+            "paronymId": paronym_id,
+            "lemmaId": target_lex["lemmaId"],
+            "srsKey": f"{target_lex['lemmaId']}::paronym",
+            "lemma": target_lex.get("lemma"),
+            "prompt": sentence,
+            "answer": answer_form,
+            "confusable": confusable_form,
+            "frameIndex": index,
+            "cefr": target_lex.get("cefr") or "B1",
+            "options": options,
+            "distinction_gloss_uk": distinction,
+            "citations": citations,
+            "origin": origin,
+        }
+        # simple shuffle using deck seed if possible; fall back to list as-is
+        # (real shuffle happens via rng in caller path for determinism; here keep order stable)
+        items.append(_strip_paronym_option_metadata(item) if public_options else item)
+    return items
+
+
 def validate_classify_item(item: dict[str, Any]) -> list[str]:
     errors: list[str] = []
     sets = item.get("sets")
@@ -2239,6 +2335,52 @@ def validate_paronym_pair(pair: dict[str, Any]) -> list[str]:
     return errors
 
 
+def _paronym_frame_errors(frame: Any) -> list[str]:
+    errors: list[str] = []
+    if not isinstance(frame, dict):
+        return ["paronym_pair frame must be an object"]
+    sentence = _clean_text(frame.get("sentence_with_slot"))
+    if not sentence:
+        errors.append("paronym_pair frame missing sentence_with_slot")
+    elif sentence.count("___") != 1:
+        errors.append("paronym_pair frame sentence_with_slot must contain exactly one ___ slot")
+    for field in ("answer_form", "confusable_form", "origin"):
+        if not _clean_text(frame.get(field)):
+            errors.append(f"paronym_pair frame missing {field}")
+    return errors
+
+
+def _valid_paronym_frames(pair: dict[str, Any]) -> list[dict[str, Any]]:
+    frames = pair.get("frames")
+    if not isinstance(frames, list):
+        return []
+    return [frame for frame in frames if isinstance(frame, dict) and not _paronym_frame_errors(frame)]
+
+
+def validate_paronym_item(item: dict[str, Any], *, internal_options: bool = False) -> list[str]:
+    errors: list[str] = []
+    for field in ("paronymId", "lemmaId", "srsKey", "prompt", "answer", "confusable", "distinction_gloss_uk"):
+        if not _clean_text(item.get(field)):
+            errors.append(f"paronym item missing {field}")
+    prompt = _clean_text(item.get("prompt"))
+    if prompt and prompt.count("___") != 1:
+        errors.append("paronym prompt must contain exactly one ___ slot")
+    citations = item.get("citations")
+    if not _clean_text_list(citations):
+        errors.append("paronym citations must be a nonempty list")
+    options = item.get("options")
+    if not isinstance(options, list) or len(options) < 2:
+        errors.append("paronym option set must contain at least two options (answer + confusable)")
+    if not internal_options:
+        # public items carry only labels (mirrors heritage public strip)
+        for option in (options or []):
+            if isinstance(option, dict):
+                leaked = sorted(set(option.keys()) - {"label"})
+                if leaked:
+                    errors.append(f"paronym public option must contain only label (leaked {leaked})")
+    return errors
+
+
 def validate_mode_items(mode: str, items: list[dict[str, Any]]) -> list[str]:
     errors: list[str] = []
     if mode == "classify":
@@ -2254,6 +2396,9 @@ def validate_mode_items(mode: str, items: list[dict[str, Any]]) -> list[str]:
     elif mode == "paradigm":
         for index, item in enumerate(items):
             errors.extend(f"paradigm[{index}]: {error}" for error in validate_paradigm_item(item))
+    elif mode == "paronym":
+        for index, item in enumerate(items):
+            errors.extend(f"paronym[{index}]: {error}" for error in validate_paronym_item(item))
     return errors
 
 
@@ -2322,6 +2467,7 @@ def build_practice_shards(
     cloze_sources: list[dict[str, Any]] | None = None,
     config: BuildConfig | None = None,
     heritage_pairs: list[dict[str, Any]] | None = None,
+    paronym_pairs: list[dict[str, Any]] | None = None,
     synonym_verdicts: dict[str, Any] | None = None,
 ) -> dict[str, dict[str, dict[str, Any]]]:
     if isinstance(cloze_sources, BuildConfig) and config is None:
@@ -2350,6 +2496,7 @@ def build_practice_shards(
     deck_version = compute_deck_version(
         entries,
         heritage_pairs,
+        paronym_pairs,
         synonym_verdicts,
         cloze_sources,
         SCHEMA_VERSION,
@@ -2357,7 +2504,7 @@ def build_practice_shards(
     # Seed from the DATA-ONLY fingerprint, not deck_version: builder-version
     # bumps mint new asset names but must not reshuffle seeded content.
     inputs_fingerprint = compute_deck_inputs_fingerprint(
-        entries, heritage_pairs, synonym_verdicts, cloze_sources, SCHEMA_VERSION
+        entries, heritage_pairs, paronym_pairs, synonym_verdicts, cloze_sources, SCHEMA_VERSION
     )
     rng_seed = int(hashlib.sha256(inputs_fingerprint.encode("utf-8")).hexdigest()[:16], 16)
     rng = random.Random(rng_seed)
@@ -2366,6 +2513,14 @@ def build_practice_shards(
         verifier,
         config,
     )
+    # Paronym emit resolves adjudicated pair slugs against the selected pool
+    # (main's _select_practice_lexemes refactor supplies the pool; this map is
+    # the branch's paronym-specific addition kept through the merge).
+    slug_to_lex: dict[str, dict[str, Any]] = {}
+    for lexeme in all_lexemes:
+        s = _clean_text(lexeme.get("url_slug")) or _clean_text(lexeme.get("slug")) or lexeme.get("lemmaId")
+        if s:
+            slug_to_lex[s] = lexeme
     cloze_sources = cloze_sources or []
     cloze_by_lemma_id: dict[str, list[dict[str, Any]]] = {}
     cloze_by_lemma: dict[str, list[dict[str, Any]]] = {}
@@ -2507,6 +2662,67 @@ def build_practice_shards(
             file=sys.stderr,
         )
 
+    paronym_frame_debt = 0
+    for index, pair in enumerate(paronym_pairs or []):
+        pair_errors = validate_paronym_pair(pair)
+        if pair_errors:
+            print(
+                f"WARN: paronym_pair[{index}] dropped: {'; '.join(pair_errors)}",
+                file=sys.stderr,
+            )
+            continue
+        frames = _valid_paronym_frames(pair)
+        if not frames:
+            paronym_frame_debt += 1
+            continue
+        slug_a = _clean_text(pair.get("slugA"))
+        slug_b = _clean_text(pair.get("slugB"))
+        lex_a = slug_to_lex.get(slug_a) or lexemes_by_id.get(slug_a)
+        lex_b = slug_to_lex.get(slug_b) or lexemes_by_id.get(slug_b)
+        if not lex_a or not lex_b:
+            print(
+                f"WARN: paronym_pair[{index}] {slug_a}/{slug_b} not in practice lexemes; emitted 0 items",
+                file=sys.stderr,
+            )
+            continue
+        for item in _build_paronym_items(
+            pair,
+            lex_a,
+            lex_b,
+            deck_version,
+            verifier=verifier,
+            public_options=False,
+        ):
+            level = _normalize_cefr(item.get("cefr")) or "B1"
+            if level not in mode_by_level:
+                print(
+                    f"WARN: paronym_pair[{index}] unavailable CEFR level {level!r}; emitted 0 items",
+                    file=sys.stderr,
+                )
+                continue
+            item_errors = validate_paronym_item(item, internal_options=True)
+            if item_errors:
+                print(
+                    f"WARN: paronym_pair[{index}] item dropped: {'; '.join(item_errors)}",
+                    file=sys.stderr,
+                )
+                continue
+            public_item = _strip_paronym_option_metadata(item)
+            public_errors = validate_paronym_item(public_item)
+            if public_errors:
+                print(
+                    f"WARN: paronym_pair[{index}] item dropped: {'; '.join(public_errors)}",
+                    file=sys.stderr,
+                )
+                continue
+            mode_by_level[level]["paronym"].append(public_item)
+            mode_lemma_ids[level]["paronym"].add(item.get("lemmaId") or lex_a.get("lemmaId") or lex_b.get("lemmaId"))
+    if paronym_frame_debt:
+        print(
+            f"paronym frame coverage: {paronym_frame_debt} records without frames — emitted 0 items for them",
+            file=sys.stderr,
+        )
+
     global_awaiting = set()
     for level in CEFR_ORDER:
         global_awaiting.update(encountered_pairs[level]["awaiting"])
@@ -2518,7 +2734,7 @@ def build_practice_shards(
         if not level_lexemes:
             continue
         level_cloze = cloze_by_level[level]
-        for mode in ("classify", "paradigm", "synonym", "heritage"):
+        for mode in ("classify", "paradigm", "synonym", "heritage", "paronym"):
             _validate_mode_or_raise(level, mode, mode_by_level[level][mode])
         option_set_errors = validate_option_sets(level_cloze)
         if option_set_errors:
@@ -2694,6 +2910,22 @@ def read_heritage_pairs(path: Path | None) -> list[dict[str, Any]]:
     return rows
 
 
+def read_paronym_pairs(path: Path | None) -> list[dict[str, Any]]:
+    if path is None or not path.exists():
+        print("WARN: no curated paronym pairs found; emitting empty paronym deck", file=sys.stderr)
+        return []
+    import yaml
+
+    payload = yaml.safe_load(path.read_text(encoding="utf-8")) or []
+    pairs = payload.get("pairs") if isinstance(payload, dict) else payload
+    if not isinstance(pairs, list):
+        raise ValueError("paronym pairs must be a list or an object with pairs list")
+    rows = [row for row in pairs if isinstance(row, dict)]
+    if not rows:
+        print("WARN: curated paronym pairs empty; emitting empty paronym deck", file=sys.stderr)
+    return rows
+
+
 def read_synonym_verdicts(path: Path | None) -> dict[str, Any] | None:
     if path is None or not path.exists():
         print("WARN: synonym verdicts file not found; emitting no synonym items", file=sys.stderr)
@@ -2769,7 +3001,7 @@ def run_broken_validator_fixtures() -> int:
             }
         ),
         "paronym_pair": validate_paronym_pair(
-            {"slugA": "адрес", "slugB": "адреса", "frames": [], "citations": []}
+            {"slugA": "адресант", "slugB": "адресат", "frames": [], "citations": []}
         ),
     }
     print("Broken validator fixtures:")
@@ -2893,6 +3125,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--reviewed-allowlist", type=Path, default=DEFAULT_ALLOWLIST)
     parser.add_argument("--cloze-sources", type=Path, default=DEFAULT_CLOZE_SOURCES)
     parser.add_argument("--heritage-pairs", type=Path, default=DEFAULT_HERITAGE_PAIRS)
+    parser.add_argument("--paronym-pairs", type=Path, default=DEFAULT_PARONYM_PAIRS)
     parser.add_argument("--synonym-verdicts", type=Path, default=DEFAULT_SYNONYM_VERDICTS)
     parser.add_argument("--vesum-fixture", type=Path)
     parser.add_argument("--target", type=int, default=DEFAULT_TARGET)
@@ -2918,6 +3151,7 @@ def main(argv: list[str] | None = None) -> int:
     allowlist = ReviewedSourceAllowlist.from_path(args.reviewed_allowlist)
     cloze_sources = read_cloze_sources(args.cloze_sources)
     heritage_pairs = read_heritage_pairs(args.heritage_pairs)
+    paronym_pairs = read_paronym_pairs(args.paronym_pairs)
     synonym_verdicts = read_synonym_verdicts(args.synonym_verdicts)
 
     if args.nominate_a2:
@@ -2957,6 +3191,7 @@ def main(argv: list[str] | None = None) -> int:
         cloze_sources,
         config,
         heritage_pairs=heritage_pairs,
+        paronym_pairs=paronym_pairs,
         synonym_verdicts=synonym_verdicts,
     )
     apply_size_budgets(shards, config.raw_limit, config.gzip_limit)

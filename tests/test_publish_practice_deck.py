@@ -16,6 +16,7 @@ from scripts.audit.generate_practice_deck import (
     read_cloze_sources,
     read_heritage_pairs,
     read_manifest,
+    read_paronym_pairs,
     write_shards,
 )
 from scripts.practice_deck import publish as publish_module
@@ -33,6 +34,7 @@ ALLOWLIST = FIXTURES / "lexicon-practice-reviewed-allowlist.json"
 VESUM = FIXTURES / "lexicon-practice-vesum.json"
 CLOZE_SOURCES = FIXTURES / "lexicon-practice-cloze-sources.json"
 HERITAGE_PAIRS = FIXTURES / "lexicon-practice-heritage-pairs.yaml"
+PARONYM_PAIRS = FIXTURES / "lexicon-practice-paronym-pairs.yaml"
 
 
 def _write_json(path: Path, payload: object) -> None:
@@ -81,6 +83,7 @@ def _write_publish_inputs(
     *,
     entries: list[dict[str, object]] | None = None,
     heritage_pairs: list[dict[str, object]] | None = None,
+    paronym_pairs: list[dict[str, object]] | None = None,
     synonym_verdicts: dict[str, object] | None = None,
     cloze_sources: list[dict[str, object]] | None = None,
     public_flags: list[bool] | None = None,
@@ -88,12 +91,15 @@ def _write_publish_inputs(
     paths = {
         "atlas_db_path": base_dir / "atlas.db",
         "heritage_pairs_path": base_dir / "heritage_pairs.yaml",
+        "paronym_pairs_path": base_dir / "paronym_pairs.yaml",
         "synonym_verdicts_path": base_dir / "synonym_pair_verdicts.yaml",
         "cloze_sources_path": base_dir / "lexicon-practice-cloze-sources.json",
     }
     _write_atlas_db(paths["atlas_db_path"], entries or [], public_flags=public_flags)
     if heritage_pairs is not None:
         _write_json(paths["heritage_pairs_path"], {"pairs": heritage_pairs})
+    if paronym_pairs is not None:
+        _write_json(paths["paronym_pairs_path"], {"pairs": paronym_pairs})
     if synonym_verdicts is not None:
         _write_json(paths["synonym_verdicts_path"], synonym_verdicts)
     if cloze_sources is not None:
@@ -309,7 +315,10 @@ def test_expected_deck_version_uses_public_atlas_db_projection(tmp_path: Path) -
     assert expected_deck_version(**with_private_paths) == expected_deck_version(**public_only_paths)
 
 
-@pytest.mark.parametrize("stale_input", ["entries", "heritage_pairs", "synonym_verdicts", "cloze_sources"])
+@pytest.mark.parametrize(
+    "stale_input",
+    ["entries", "heritage_pairs", "paronym_pairs", "synonym_verdicts", "cloze_sources"],
+)
 def test_publish_guard_passes_fresh_regen_and_fails_stale_shards(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
@@ -321,11 +330,13 @@ def test_publish_guard_passes_fresh_regen_and_fails_stale_shards(
     entries = read_manifest(MANIFEST)
     cloze_sources = read_cloze_sources(CLOZE_SOURCES)
     heritage_pairs = read_heritage_pairs(HERITAGE_PAIRS)
+    paronym_pairs = read_paronym_pairs(PARONYM_PAIRS)
     synonym_verdicts = {"approved": [], "rejected": []}
     input_paths = _write_publish_inputs(
         tmp_path / "inputs",
         entries=entries,
         heritage_pairs=heritage_pairs,
+        paronym_pairs=paronym_pairs,
         synonym_verdicts=synonym_verdicts,
         cloze_sources=cloze_sources,
     )
@@ -336,6 +347,7 @@ def test_publish_guard_passes_fresh_regen_and_fails_stale_shards(
         cloze_sources,
         BuildConfig(),
         heritage_pairs=heritage_pairs,
+        paronym_pairs=paronym_pairs,
         synonym_verdicts=synonym_verdicts,
     )
     write_shards(shards, practice_dir)
@@ -360,6 +372,10 @@ def test_publish_guard_passes_fresh_regen_and_fails_stale_shards(
         stale_heritage_pairs = json.loads(json.dumps(heritage_pairs))
         stale_heritage_pairs[0]["rationale"] = "changed stale rationale"
         _write_json(input_paths["heritage_pairs_path"], {"pairs": stale_heritage_pairs})
+    elif stale_input == "paronym_pairs":
+        stale_paronym_pairs = json.loads(json.dumps(paronym_pairs))
+        stale_paronym_pairs[0]["distinction_gloss_uk"] = "змінене розрізнення для тесту"
+        _write_json(input_paths["paronym_pairs_path"], {"pairs": stale_paronym_pairs})
     elif stale_input == "synonym_verdicts":
         stale_synonym_verdicts = {
             "approved": [{"a": "кіт", "b": "пес", "polarity": "synonym"}],
