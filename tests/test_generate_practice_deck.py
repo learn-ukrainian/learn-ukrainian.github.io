@@ -945,3 +945,89 @@ def test_tatoeba_cloze_without_attribution_metadata_fails_closed() -> None:
     )
 
     assert shards["A1"]["cloze"]["cloze"] == []
+
+
+def test_heritage_curated_distractors_win() -> None:
+    pair = {
+        "nativeSlug": "knyha",
+        "nativeLemma": "книга",
+        "calqueLabel": "кніга",
+        "calqueSurfaces": ["кніга"],
+        "kind": "lexical",
+        "corrections": ["книга"],
+        "rationale": "test rationale",
+        "citations": ["test:heritage"],
+        "sourceFamily": "test",
+        "cefrAvailability": "a2",
+        "frames": [
+            {
+                "sentence_with_slot": "Я читаю ___.",
+                "answer_form": "книгу",
+                "calque_form": "кнігу",
+                "origin": "test-frame",
+                "distractors": ["місто", "яблуко"],
+            }
+        ],
+    }
+
+    lexemes = _fixture_lexemes()
+    filtered_lexemes = [l for l in lexemes if l["lemmaId"] != "yabluko"]
+
+    verifier = JsonVesumVerifier.from_path(VESUM)
+    items = _build_heritage_items(pair, lexemes[0], filtered_lexemes, "deck-v1", verifier=verifier, public_options=False)
+
+    assert len(items) == 1
+    options = items[0]["options"]
+    distractor_options = [opt for opt in options if opt["kind"] == "distractor"]
+    assert len(distractor_options) == 2
+
+    distractor_labels = {opt["label"] for opt in distractor_options}
+    assert distractor_labels == {"місто", "яблуко"}
+
+    yabluko_opt = next(opt for opt in distractor_options if opt["label"] == "яблуко")
+    assert yabluko_opt["lemmaId"].startswith("cur_")
+    assert yabluko_opt["pos"] == lexemes[0]["pos"]
+
+
+def test_heritage_curated_distractors_allow_items_without_peers() -> None:
+    pair = {
+        "nativeSlug": "treba",
+        "nativeLemma": "треба",
+        "calqueLabel": "надо",
+        "calqueSurfaces": ["надо"],
+        "kind": "lexical",
+        "corrections": ["треба"],
+        "rationale": "test rationale",
+        "citations": ["test:heritage"],
+        "sourceFamily": "test",
+        "cefrAvailability": "a2",
+        "frames": [
+            {
+                "sentence_with_slot": "На завтра ___ підготувати текст.",
+                "answer_form": "треба",
+                "calque_form": "надо",
+                "origin": "test-frame",
+                "distractors": ["можна", "варто"],
+            }
+        ],
+    }
+
+    lexeme = {
+        "lemmaId": "treba",
+        "lemma": "треба",
+        "lemmaPlain": "треба",
+        "pos": "modal word",
+        "cefr": "A2",
+    }
+
+    all_lexemes = [lexeme]
+    verifier = JsonVesumVerifier({
+        "можна": [{"lemma": "можна", "pos": "noninfl"}],
+        "варто": [{"lemma": "варто", "pos": "noninfl"}],
+    })
+
+    items = _build_heritage_items(pair, lexeme, all_lexemes, "deck-v1", verifier=verifier, public_options=False)
+
+    assert len(items) == 1
+    assert items[0]["lemmaId"] == "treba"
+    assert {opt["label"] for opt in items[0]["options"] if opt["kind"] == "distractor"} == {"можна", "варто"}

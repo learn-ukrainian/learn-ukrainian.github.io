@@ -715,11 +715,17 @@ pairs:
     calque_form: другий
     origin: authored-codex-2026-07-06
     disambiguated: true
+    distractors:
+    - кожний
+    - всякий
   - sentence_with_slot: На цю дату немає місць, оберімо ___ день.
     answer_form: інший
     calque_form: другий
     origin: authored-codex-2026-07-06
     disambiguated: true
+    distractors:
+    - кожний
+    - всякий
   rationaleUk: Згідно з Антоненком-Давидовичем, у сучасній українській мові слово "другий" слід уживати тільки як порядковий
     числівник. Коли мовиться про відмінність, а не про порядок (рос. другой), нормативним є займенник "інший" (наприклад,
     "інші засоби", "інший день").
@@ -869,11 +875,17 @@ pairs:
     calque_form: знаходиться
     origin: authored-codex-2026-07-06
     disambiguated: true
+    distractors:
+    - побудований
+    - зачинений
   - sentence_with_slot: Школа ___ поруч із вокзалом.
     answer_form: розташована
     calque_form: знаходиться
     origin: authored-codex-2026-07-06
     disambiguated: true
+    distractors:
+    - побудований
+    - зачинений
 - calqueLabel: значить
   calqueSurfaces:
   - значить
@@ -986,11 +998,17 @@ pairs:
     calque_form: любий
     origin: authored-codex-2026-07-06
     disambiguated: true
+    distractors:
+    - кожний
+    - якийсь
   - sentence_with_slot: Можеш прийти в ___ день цього тижня.
     answer_form: будь-який
     calque_form: любий
     origin: authored-codex-2026-07-06
     disambiguated: true
+    distractors:
+    - кожний
+    - якийсь
 - calqueLabel: масло
   calqueSurfaces:
   - масла
@@ -1072,10 +1090,16 @@ pairs:
     answer_form: треба
     calque_form: надо
     origin: authored-codex-2026-07-06
+    distractors:
+    - можна
+    - варто
   - sentence_with_slot: Перед дорогою ___ купити воду.
     answer_form: треба
     calque_form: надо
     origin: authored-codex-2026-07-06
+    distractors:
+    - можна
+    - варто
 - calqueLabel: назад
   calqueSurfaces:
   - назад
