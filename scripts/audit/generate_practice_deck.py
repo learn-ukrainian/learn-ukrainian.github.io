@@ -1490,20 +1490,31 @@ def _synonym_pair_key(a: str, b: str, polarity: str) -> tuple[str, str, str]:
     return (a_plain, b_plain, polarity)
 
 
-def validate_synonym_verdict_record(record: dict[str, Any]) -> list[str]:
+def _synonym_core_errors(record: dict[str, Any]) -> list[str]:
+    """Errors that make a record unusable — the pair key cannot be formed."""
     errors: list[str] = []
     for field in ("a", "b", "polarity"):
         if not _clean_text(record.get(field)):
             errors.append(f"synonym verdict missing {field}")
+    return errors
+
+
+def _synonym_exception_flag_errors(record: dict[str, Any]) -> list[str]:
+    """Errors specific to the additive a2Exception flag (curator gate, type)."""
+    errors: list[str] = []
     a2_exception = record.get("a2Exception")
     curator = _clean_text(record.get("curator"))
-    if a2_exception is True and not curator:
-        errors.append("synonym verdict a2Exception requires curator")
     if a2_exception not in (None, False, True):
         errors.append("synonym verdict a2Exception must be boolean")
+    if a2_exception is True and not curator:
+        errors.append("synonym verdict a2Exception requires curator")
     if curator and a2_exception is not True:
         errors.append("synonym verdict curator requires a2Exception: true")
     return errors
+
+
+def validate_synonym_verdict_record(record: dict[str, Any]) -> list[str]:
+    return _synonym_core_errors(record) + _synonym_exception_flag_errors(record)
 
 
 def build_synonym_verdict_sets(
@@ -1517,20 +1528,30 @@ def build_synonym_verdict_sets(
     for item in synonym_verdicts.get("approved", []):
         if not isinstance(item, dict):
             continue
-        errors = validate_synonym_verdict_record(item)
-        if errors:
-            print(f"WARN: synonym verdict dropped: {'; '.join(errors)}", file=sys.stderr)
+        core_errors = _synonym_core_errors(item)
+        if core_errors:
+            print(f"WARN: synonym verdict dropped: {'; '.join(core_errors)}", file=sys.stderr)
             continue
         key = _synonym_pair_key(str(item["a"]), str(item["b"]), str(item["polarity"]))
         approved_set.add(key)
-        if item.get("a2Exception") is True:
+        flag_errors = _synonym_exception_flag_errors(item)
+        if flag_errors:
+            # The a2Exception flag is additive: if it fails validation, drop only the
+            # flag (the pair stays approved at the B1+ default) instead of suppressing
+            # the whole approved pair.
+            print(
+                "WARN: synonym verdict a2Exception flag dropped (pair stays B1+): "
+                + "; ".join(flag_errors),
+                file=sys.stderr,
+            )
+        elif item.get("a2Exception") is True:
             a2_exception_set.add(key)
     for item in synonym_verdicts.get("rejected", []):
         if not isinstance(item, dict):
             continue
-        errors = validate_synonym_verdict_record(item)
-        if errors:
-            print(f"WARN: synonym verdict dropped: {'; '.join(errors)}", file=sys.stderr)
+        core_errors = _synonym_core_errors(item)
+        if core_errors:
+            print(f"WARN: synonym verdict dropped: {'; '.join(core_errors)}", file=sys.stderr)
             continue
         key = _synonym_pair_key(str(item["a"]), str(item["b"]), str(item["polarity"]))
         rejected_set.add(key)
@@ -1679,8 +1700,24 @@ def _build_synonym_items(
             if not target:
                 continue
             pair_key = _synonym_pair_key(lexeme["lemma"], target["lemma"], polarity)
-            a2_exception = pair_key in a2_exception_set
-            if CEFR_RANK[lexeme["cefr"]] < CEFR_RANK["B1"] and not a2_exception:
+            # An a2Exception lowers availability to A2 ONLY when both legs are exactly
+            # A2 vocabulary. A flagged pair with any non-A2 leg has its flag ignored
+            # (loudly) and stays at the default B1+ floor — it must never make items
+            # available at A1.
+            flagged_a2_exception = pair_key in a2_exception_set
+            both_legs_a2 = lexeme["cefr"] == "A2" and target["cefr"] == "A2"
+            if flagged_a2_exception and not both_legs_a2:
+                print(
+                    f"WARN: synonym pair {pair_key!r} a2Exception ignored: "
+                    "both legs must be A2 vocabulary; staying B1+",
+                    file=sys.stderr,
+                )
+            a2_exception = flagged_a2_exception and both_legs_a2
+
+            if (
+                CEFR_RANK[lexeme["cefr"]] < CEFR_RANK[SYNONYM_DEFAULT_AVAILABILITY]
+                and not a2_exception
+            ):
                 continue
             if CEFR_RANK[target["cefr"]] > CEFR_RANK[lexeme["cefr"]]:
                 continue
@@ -1689,14 +1726,6 @@ def _build_synonym_items(
                 continue
 
             level = lexeme["cefr"]
-            if a2_exception and (
-                CEFR_RANK[level] > CEFR_RANK["A2"] or CEFR_RANK[target["cefr"]] > CEFR_RANK["A2"]
-            ):
-                print(
-                    f"WARN: synonym pair {pair_key!r} a2Exception dropped: both legs must be A2 vocabulary",
-                    file=sys.stderr,
-                )
-                continue
 
             if not synonym_verdicts_loaded:
                 encountered_pairs[level]["awaiting"].add(pair_key)
