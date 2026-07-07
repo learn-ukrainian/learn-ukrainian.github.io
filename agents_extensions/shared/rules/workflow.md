@@ -38,6 +38,14 @@ only as the offline fallback above.
 After a write that needs to be immediately visible (just-committed
 change, just-filed issue), pass `?fresh=true` to `/api/orient`.
 
+**Canary mint (orchestrator sessions, user go 2026-07-07):** after orientation,
+freeze 8-10 anchors from the facts just gathered (origin/main SHA, open-PR numbers,
+queue/corpus counts): `.venv/bin/python scripts/context_canary.py mint --facts
+'<json {id,q,a} list>' --out .agent/canary-<stamp>.json`. Score FROM MEMORY (no
+scrolling back) at ≥50% of the active model's window and before any handoff. Rot
+evidence is PER-MODEL (Claude lane rotates: Opus 4.8 verified, Fable 5 improvised
+10/10 @ ~500K, Sonnet 5 pending) — on a not-yet-canaried model this is mandatory.
+
 ## Two-tier handoffs (epic #1865 item #1, shipped 2026-05-11)
 
 Thread rollover handoffs are separate from durable session records. When a
