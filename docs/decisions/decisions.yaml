@@ -187,3 +187,28 @@ decisions:
         rejected_because: "Live users need stable lessons; workbook enrichment can ship incrementally"
     superseded_by: null
     depends_on: []
+
+  - id: dec-009
+    status: active
+    date: "2026-07-07"
+    expires: "2026-10-05"
+    scope: benchmark-2156
+    title: "Public benchmark release (epic #4639) parked; deploy-first"
+    reasoning: >
+      User decision 2026-07-07: the community release of the factuality
+      benchmark has no demonstrated audience yet; effort moves to deploy-first
+      (tooled QG gate over built modules #4764 after the #4761-#4763 engine
+      measurement, plus Hramatka v1 homework-first #4542). Release-only work
+      parked: #4638 outreach, #4632 native-expert validation, #4647 OpenCode
+      Go transport, #4312 UNLP-2027 track, #4742 classes A/B/D re-authoring,
+      the F3 freeze + #4541 packaging. Epic #4639 stays open as the parking
+      record. Un-parking is a resume, not a rebuild — freeze spec, rights
+      resolver (0 UNKNOWN), and multirun scorecard all survive on main.
+    evidence: "User directive 2026-07-07; docs/decisions/2026-07-07-benchmark-public-release-parked.md; epic #4639"
+    alternatives:
+      - option: "Release anyway on current evidence"
+        rejected_because: "No demonstrated audience; capacity is scarce (claude 2.5x/codex 2.1x weekly pace) and deploy-first is user-priority"
+      - option: "Kill the release track outright (close epic #4639)"
+        rejected_because: "Revisit triggers are plausible (Hramatka shipping / community signal); the epic is the parking record"
+    superseded_by: null
+    depends_on: []
