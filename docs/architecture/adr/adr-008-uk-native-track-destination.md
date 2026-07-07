@@ -1,6 +1,7 @@
-# ADR-008 — Draft — UK-Native Track Destination & Naming
+# ADR-008 — UK-Native Track Destination & Naming
 
-> **Status:** DRAFT — awaiting Krisztian decision 2026-04-21
+> **Status:** Deferred — Krisztian decision 2026-07-07: revisit when the l2-uk-direct
+> track has BUILT modules (no forcing function until that track produces content)
 > **Date:** 2026-04-21
 > **Deciders:** Krisztian, Claude, Codex
 > **Related:** EPIC #1365, `docs/session-state/2026-04-21-evening-strategic-audit.md`, `docs/plans/jiggly-soaring-forest.md`
