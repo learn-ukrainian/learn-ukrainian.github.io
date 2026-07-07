@@ -491,13 +491,14 @@ def test_runner_failover_rejects_forbidden_glm_target(tmp_path, monkeypatch):
         runner_mod.invoke("failover-test", "hello", mode="read-only", cwd=tmp_path)
 
 
-def test_shipped_deepseek_chain_is_deepseek_family_only():
-    """Pin the shipped config: deepseek lane fails over inside its own family.
-
-    Guards the two banned drift directions for fallback targets: qwen
-    (cost-excluded) and zai/GLM (LOCAL-ONLY; the loader raises on it anyway).
-    Route 0 must inherit the dispatch-requested model so both pro and flash
-    dispatches keep their primary identity.
+def test_shipped_config_declares_no_deepseek_chain():
+    """Pin the shipped config: deepseek runs FIRST-PARTY ONLY (user order
+    2026-07-07) — NO failover chain exists for it. `openrouter/deepseek/*`
+    is guard-REFUSED for direct routing, and the old OR fallback routes in
+    this chain BYPASSED the guard and leeched a fresh OpenRouter top-up
+    (2026-07-07 burn). A deepseek fault is rerouted BY SEAT by the
+    orchestrator (grok-build/codex), never by burning API credit. Any future
+    chain must be explicitly user-approved and must not contain openrouter.
     """
     from agent_runtime.failover import (
         default_failover_config_path,
@@ -510,19 +511,12 @@ def test_shipped_deepseek_chain_is_deepseek_family_only():
         path=default_failover_config_path(),
     )
 
-    assert chain is not None, "shipped config must define the deepseek chain"
-    assert [route.provider for route in chain.routes] == [
-        "deepseek",
-        "openrouter",
-        "openrouter",
-    ]
-    assert chain.routes[0].model == "deepseek-v4-flash"
-    for route in chain.routes[1:]:
-        assert route.model.startswith("deepseek/"), (
-            f"fallback route {route.index} left the deepseek family: "
-            f"{route.provider}/{route.model}"
-        )
-    assert chain.cooldown_ttl_s == 300
+    assert chain is None, (
+        "deepseek must have NO failover chain (first-party only, user order "
+        f"2026-07-07); got routes: {[r.provider for r in chain.routes]}"
+        if chain is not None
+        else ""
+    )
 
 
 def test_classifier_routes_hermes_credential_startup_failure_to_auth():
@@ -639,9 +633,12 @@ def test_chain_route_missing_model_after_index_zero_warns_and_drops(
     assert any("deepseek[1] dropped" in rec.getMessage() for rec in caplog.records)
 
 
-def test_shipped_grok_chain_is_grok_family_only():
-    """#4583: grok lane fails over inside the x-ai family via openrouter.
-    Route 0 inherits the dispatch-requested model (xai subscription seat)."""
+def test_shipped_config_declares_no_grok_chain():
+    """Pin the shipped config: grok has NO failover chain (user order
+    2026-07-07 — grok work belongs on the grok-build native-app seat;
+    grok-4.* via OpenRouter has no measured niche and 402-drained the OR
+    balance). Supersedes the #4583 in-family-via-openrouter pin. The hermes
+    xai seat stays reachable as a plain single route without a chain."""
     from agent_runtime.failover import (
         default_failover_config_path,
         load_failover_chain,
@@ -653,10 +650,9 @@ def test_shipped_grok_chain_is_grok_family_only():
         path=default_failover_config_path(),
     )
 
-    assert chain is not None, "shipped config must define the grok chain"
-    assert [route.provider for route in chain.routes] == ["xai", "openrouter"]
-    assert chain.routes[0].model == "grok-4.3"
-    assert chain.routes[1].model.startswith("x-ai/"), (
-        f"fallback left the grok family: {chain.routes[1].model}"
+    assert chain is None, (
+        "grok must have NO failover chain (grok-build is the seat, user "
+        f"order 2026-07-07); got routes: {[r.provider for r in chain.routes]}"
+        if chain is not None
+        else ""
     )
-    assert chain.cooldown_ttl_s == 300
