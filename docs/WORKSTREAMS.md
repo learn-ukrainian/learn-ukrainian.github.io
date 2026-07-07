@@ -18,6 +18,30 @@
 
 ---
 
+## Streams = GitHub Epics (#4708 — supersedes hand-maintained tier rows for scheduling)
+
+Scheduling now lives in GitHub stream epics; this doc keeps the framework and pillars.
+The registry `scripts/config/issue_streams.yaml` is the single source of truth (auditor:
+`scripts/orchestration/issue_stream_audit.py`; live view: `GET /api/issues/streams`).
+
+| Stream | Epic(s) | Scope |
+|---|---|---|
+| atlas-practice | #4387 → #4700 | Word Atlas + Practice Hub product & UX |
+| atlas-intake | #4220, #4378 | Full-corpus intake into the Atlas |
+| corpus-channels | #4706 | Acquisition & ingestion (textbooks · ZNO · Ohoiko-media · press · academic) |
+| infra-harness | #4707 | Fleet, hooks, deps, routing, CI reliability |
+| benchmark-2156 | #4639 | UA LLM factuality benchmark community release |
+| core-quality | #4274 | Deterministic track audits + remediation (A1–B2) |
+| seminars-folk | #2836 | FOLK re-research + rebuild |
+| seminars-bio | #4431, #4215 | BIO readiness + builds |
+| seminars-cross | #3120, #3079 | Cross-seminar gates |
+| hramatka | #4542 | Teacher lesson service (user-gated) |
+
+Rules for every orchestrator (Claude, Codex UI, agy, cursor): work from your stream epic;
+link new issues to a stream at creation; orphans get flagged at every cold start.
+
+---
+
 ## Three Quality Pillars
 
 Every shipped module must pass all three:

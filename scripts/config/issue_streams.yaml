@@ -1,0 +1,41 @@
+# Issue-stream registry — single source of truth for "which epic defines which stream".
+# Consumed by scripts/orchestration/issue_stream_audit.py, the session-setup hook, and
+# /api/state/issues-health. docs/WORKSTREAMS.md § Streams mirrors this table.
+#
+# Rules (binding, served via /api/rules → workflow.md § Work intake):
+# - Every OPEN issue must be a member of EXACTLY ONE stream (native sub-issue of a stream
+#   epic, or a #N reference in the epic body while migration is pending).
+# - New issues link their stream epic at creation time.
+# - Epics themselves (and their child drive boards) are exempt from membership.
+schema_version: 1
+streams:
+  atlas-practice:
+    title: "Word Atlas + Practice Hub product"
+    epics: [4387, 4700]        # umbrella + UX-quality-wave child board
+  atlas-intake:
+    title: "Word Atlas full-corpus intake"
+    epics: [4220, 4378]        # intake epic + entry-model DB epic
+  corpus-channels:
+    title: "Corpus channels — acquisition & ingestion"
+    epics: [4706]
+  infra-harness:
+    title: "Infra & harness reliability"
+    epics: [4707]
+  benchmark-2156:
+    title: "Ukrainian LLM factuality benchmark — community release"
+    epics: [4639]
+  core-quality:
+    title: "Core-track deterministic quality"
+    epics: [4274]
+  seminars-folk:
+    title: "FOLK track re-research + rebuild"
+    epics: [2836]
+  seminars-bio:
+    title: "BIO track readiness + builds"
+    epics: [4431, 4215]
+  seminars-cross:
+    title: "Cross-seminar gates (reading links, self-convergence)"
+    epics: [3120, 3079]
+  hramatka:
+    title: "Hramatka teacher lesson service (user-gated)"
+    epics: [4542]

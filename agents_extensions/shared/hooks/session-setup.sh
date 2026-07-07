@@ -219,6 +219,32 @@ $ISSUE_LIST")
   fi
 fi
 
+# 11b. Issue-stream hygiene (#4708) — cached, never blocks session start.
+# Fresh cache (<1h): surface orphans as ISSUES so every cold-starting agent
+# (Claude, Codex, agy, cursor) sees stream drift. Stale/no cache: kick a
+# background refresh so the NEXT start is covered.
+STREAM_AUDIT_CACHE="$PROJECT_DIR/batch_state/issue_stream_audit.json"
+if [ -f "$PROJECT_DIR/scripts/orchestration/issue_stream_audit.py" ]; then
+  STREAM_FRESH=0
+  if [ -f "$STREAM_AUDIT_CACHE" ]; then
+    STREAM_AGE=$(( $(date +%s) - $(jq -r '.generated_at // 0' "$STREAM_AUDIT_CACHE" 2>/dev/null || echo 0) ))
+    [ "$STREAM_AGE" -lt 3600 ] && STREAM_FRESH=1
+  fi
+  if [ "$STREAM_FRESH" -eq 1 ]; then
+    ORPHAN_COUNT=$(jq -r '.orphans | length' "$STREAM_AUDIT_CACHE" 2>/dev/null || echo 0)
+    if [ "$ORPHAN_COUNT" -gt 0 ]; then
+      ORPHAN_LIST=$(jq -r '.orphans[:5][] | "  #\(.number): \(.title)"' "$STREAM_AUDIT_CACHE" 2>/dev/null)
+      ISSUES+=("$ORPHAN_COUNT issue(s) in NO stream epic (link them — registry: scripts/config/issue_streams.yaml):
+$ORPHAN_LIST")
+    fi
+    MISSING_EPICS=$(jq -r '.closed_or_missing_epics | join(", ")' "$STREAM_AUDIT_CACHE" 2>/dev/null)
+    [ -n "$MISSING_EPICS" ] && ISSUES+=("Stream epic(s) closed/missing: #$MISSING_EPICS — fix scripts/config/issue_streams.yaml or reopen")
+  elif command -v gh >/dev/null 2>&1; then
+    (cd "$PROJECT_DIR" && nohup "$PROJECT_DIR/.venv/bin/python" -m scripts.orchestration.issue_stream_audit --json >/dev/null 2>&1 &)
+    INFO+=("issue-stream audit cache stale — background refresh started (#4708)")
+  fi
+fi
+
 # 12. Git hygiene — warn if too many dirty files accumulated.
 # See docs/best-practices/git-hygiene.md for policy.
 # Exempt paths (wiki/**, data/corpus_audit/draft_tickets/) can be legitimately

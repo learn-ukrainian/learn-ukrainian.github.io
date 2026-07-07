@@ -185,11 +185,30 @@ use `/api/worktrees`. `claude agents` does not replace any of these.
 
 ---
 
+## Work intake — stream epics (#4708, binding for ALL orchestrators incl. Codex UI)
+
+Every OPEN issue belongs to **exactly one stream epic**. The registry is
+`scripts/config/issue_streams.yaml` (streams → epic numbers; mirrored in
+`docs/WORKSTREAMS.md` § Streams). This is how orchestrators stay on track and schedule:
+
+- **Cold start**: your queue = YOUR stream's epic checklist/sub-issues, not the global
+  issue list. Check `/api/issues/streams` (or the session-setup 11b warning) for drift.
+- **Creating an issue**: link it to its stream epic AT CREATION — native sub-issue
+  (preferred) or a `#N` checklist line in the epic body. An unlinked issue is an ORPHAN
+  and gets flagged at every agent's cold start until adopted.
+- **Closing**: when a PR fixes an issue, CLOSE it with evidence (auto-close keywords are
+  fine, but verify — `Fixes #N` closes the whole issue even when scope remains; split
+  remainders into a new linked issue FIRST).
+- **New stream?** Only with a new epic + a registry entry in the same PR — streams are
+  deliberate, not emergent.
+- Auditor: `.venv/bin/python -m scripts.orchestration.issue_stream_audit` (`--check` for
+  gates, `--migrate` to convert body references into native sub-issues).
+
 ## Mandatory task workflow
 
 Every task follows this workflow. No exceptions for non-trivial changes.
 
-1. **Create GH issue** — describe the problem, draft a plan
+1. **Create GH issue** — describe the problem, draft a plan, **link it to its stream epic** (see Work intake above)
 2. **Adversarial review of plan** — send to Gemini, incorporate feedback
 3. **Finalize ACs** — update issue with concrete acceptance criteria
 4. **Implement** — work through ACs one by one

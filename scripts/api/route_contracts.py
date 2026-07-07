@@ -428,6 +428,16 @@ ROUTE_CONTRACTS: tuple[RouteContract, ...] = (
         "keep best-effort",
     ),
     RouteContract(
+        "/api/issues/streams", "exact", "http",
+        "Issue-stream hygiene report (#4708): orphans without a stream epic, multi-homed, pending native links.",
+        "batch_state/issue_stream_audit.json auditor cache; ?fresh=true reruns the auditor.",
+        "Cache TTL 3600s; session-setup hook 11b refreshes in background when stale.",
+        ("agents", "issue hygiene", "orchestrators"),
+        "Complements /api/issues/map (label categories) with stream-epic membership.",
+        "low — degrades to {error:...} without gh",
+        "keep best-effort",
+    ),
+    RouteContract(
         "/api/rules", "exact", "http",
         "Condensed agent rule set for cold start.",
         "Deployed rule/source markdown files.",

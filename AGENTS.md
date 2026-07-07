@@ -27,6 +27,20 @@ bind as part of this contract.
 
 ---
 
+## Work Intake — Stream Epics (binding for ALL orchestrators; #4708)
+
+Every open GH issue belongs to **exactly one stream epic** — registry:
+`scripts/config/issue_streams.yaml` (streams → epic numbers). Your work queue is YOUR
+stream's epic, not the global issue list. Codex UI track drivers: your curriculum-track
+work hangs off its stream epic (seminars-folk #2836, seminars-bio #4431, core-quality
+#4274, …) — pick up from there, and link every issue you create to its stream epic at
+creation (native sub-issue preferred; `#N` checklist line in the epic body accepted).
+Unlinked issues are flagged as ORPHANS at every agent's cold start (session-setup 11b)
+and at `GET /api/issues/streams`. When a PR fixes an issue, close it with evidence —
+and if scope remains, split it into a new linked issue BEFORE the auto-close keyword
+eats it. Full protocol: `agents_extensions/shared/rules/workflow.md` § Work intake
+(served at `/api/rules`).
+
 ## Global Codex Operating Rules
 
 - Start every task at the repository root and run `git status --short --branch` before editing. **This is a read-only preflight/orientation step only.** Do not use this as permission to implement from the primary checkout.
