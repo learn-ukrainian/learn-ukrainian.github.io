@@ -1458,7 +1458,7 @@ def test_subscription_tooled_prompt_includes_json_contract_footer() -> None:
     route = qg_bakeoff.route_for_matrix_pin("gemini-3.1-pro-high", arm=qg_bakeoff.TOOLED_ARM)
     footer = qg_bakeoff._subscription_tooled_prompt_supplement(route)
     assert "field name `verdict`" in footer
-    assert "VERIFIED_TRUE" not in footer
+    assert "character-for-character" in footer
 
 
 def test_bare_transport_retry_once_and_records_attempts(tmp_path: Path) -> None:

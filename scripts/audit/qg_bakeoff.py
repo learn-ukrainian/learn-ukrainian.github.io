@@ -1021,6 +1021,12 @@ _SUBSCRIPTION_TOOLED_JSON_FOOTER = (
     "CONTESTED | UNVERIFIED_INSUFFICIENT_SEARCH.\n"
     "CONFIRMED / REFUTED_BY_CONTRADICTION / CONTESTED require a `grounding` object "
     "(`tool`, `query`, `evidence_excerpt` as a verbatim substring from captured tool output).\n"
+    "\n"
+    "### Grounding excerpt rule (binding)\n"
+    "`evidence_excerpt` MUST be copied character-for-character from the tool result — "
+    "no paraphrase, no stitched spans joined by `...`, no case changes. If you cannot "
+    "quote a contiguous verbatim substring, use UNATTESTED_AFTER_SEARCH instead of "
+    "CONFIRMED or REFUTED_BY_CONTRADICTION.\n"
 )
 
 
