@@ -1,8 +1,10 @@
 # ADR-010: MCP verification layer — Phase 3 architectural redesign
 
-**Status**: PROPOSED
+**Status**: Deferred — Krisztian decision 2026-07-07: Phase 2 tools (verify_quote,
+verify_source_attribution) shipped and cover current reviewer needs; revisit when a
+reviewer/gate concretely needs the unified verdict envelope (build ahead of demand rejected)
 **Date**: 2026-05-11
-**Deciders**: Krisztian (pending), Claude (Opus 4.7 xhigh, this draft)
+**Deciders**: Krisztian (deferred 2026-07-07), Claude (Opus 4.7 xhigh, original draft)
 **Related**:
 - #1657 (parent EPIC — "MCP verification-layer improvements, 3-phase plan")
 - #1877, #1878 (Phase 2 remaining sub-issues — `verify_quote`, `verify_source_attribution`)
