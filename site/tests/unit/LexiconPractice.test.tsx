@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, test, vi } from 'vitest';
-import { render, screen, waitFor, within } from '@testing-library/react';
+import { act, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import LexiconPractice from '@site/src/components/LexiconPractice';
 import {
@@ -854,5 +854,68 @@ describe('LexiconPractice', () => {
     await waitFor(() =>
       expect(screen.queryByTestId('practice-advance-button')).not.toBeInTheDocument(),
     );
+  });
+
+  test('cloze wrong chip dwells (no auto-advance past 650ms) and «Далі» resets to a clean item', async () => {
+    seedRecognitionMastery('knyha');
+    const user = userEvent.setup();
+    // Default 650ms auto-advance window; a wrong chip pick must ignore it entirely.
+    render(<LexiconPractice initialDeck={sampleDeck()} autoStart initialMode="cloze" />);
+
+    expect(screen.getByTestId('practice-cloze')).toBeInTheDocument();
+
+    // A wrong CHIP pick (a different lemma — not a case-miss, not correct) parks in a
+    // dwell state with an explicit advance control instead of auto-advancing.
+    await user.click(screen.getByRole('button', { name: 'робота' }));
+    expect(screen.getByTestId('practice-advance-button')).toBeInTheDocument();
+    expect(screen.getByText('✗ Не те слово')).toBeInTheDocument();
+
+    // Wait well past the 650ms correct-answer window — the wrong chip must still dwell.
+    await new Promise((resolve) => setTimeout(resolve, 750));
+    expect(screen.getByTestId('practice-advance-button')).toBeInTheDocument();
+    expect(screen.getByText('✗ Не те слово')).toBeInTheDocument();
+
+    // «Далі» advances. The lapsed card re-surfaces with the SAME itemId (so the
+    // selection-change effect does not re-fire) — it must still start clean: unlocked
+    // chips, empty input, no stale wrong-word feedback.
+    await user.click(screen.getByTestId('practice-advance-button'));
+    await waitFor(() =>
+      expect(screen.queryByTestId('practice-advance-button')).not.toBeInTheDocument(),
+    );
+    expect(screen.getByTestId('practice-cloze')).toBeInTheDocument();
+    expect(screen.getByLabelText('Відповідь у знахідний')).toHaveValue('');
+    expect(screen.getByRole('button', { name: 'книгу' })).not.toBeDisabled();
+    expect(screen.queryByText('✗ Не те слово')).not.toBeInTheDocument();
+  });
+
+  test('double-Enter during dwell advances exactly once (no double completion)', async () => {
+    const { fn } = mockShardFetch({});
+    vi.spyOn(globalThis, 'fetch').mockImplementation(fn);
+    const user = userEvent.setup();
+    render(<LexiconPractice initialDeck={heritageDeck()} autoStart initialMode="heritage" advanceDelayMs={20} />);
+
+    // Wrong (calque) pick parks in a dwell state with an explicit advance control.
+    await user.click(
+      within(screen.getByTestId('practice-heritage')).getByRole('button', { name: /дом/ }),
+    );
+    expect(screen.getByTestId('practice-advance-button')).toBeInTheDocument();
+
+    // Fire TWO Enter keydowns within a single tick, before React re-renders — the real
+    // double-advance race. Only the first may consume the parked outcome; the second must
+    // no-op. A single completion increments the today counter by exactly one.
+    act(() => {
+      window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+      window.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' }));
+    });
+
+    await waitFor(() =>
+      expect(screen.queryByTestId('practice-advance-button')).not.toBeInTheDocument(),
+    );
+
+    // Return home to read the today counter (only surfaced on the idle home ring).
+    await user.click(screen.getByRole('button', { name: /Додому/ }));
+    const ring = await screen.findByTestId('practice-today-ring');
+    // Exactly one completion — a double-advance would have recorded two.
+    expect(Number(ring.textContent?.split('/')[0])).toBe(1);
   });
 });

@@ -869,7 +869,26 @@ function LexiconPracticeIsland({
   const stageRef = useRef<HTMLDivElement | null>(null);
   const deckRequestId = useRef(0);
   const sessionStartedAtRef = useRef(Date.now());
+  // Consumption source of truth for the parked wrong-answer outcome. `advancePending`
+  // claims it via this ref (not the closed-over `pendingOutcome` state) so a rapid
+  // double-advance (double-Enter, or Enter+click) before React re-renders resolves to
+  // exactly ONE `completeSelection` — the second call reads a null ref and no-ops.
+  const pendingOutcomeRef = useRef<CompletionOutcome | null>(null);
   const showEnglishSubtitles = learnerLevel === 'A1';
+
+  // Reset all per-item feedback/lock state. Shared by the selection-change effect and
+  // `advancePending` so a wrong answer that re-surfaces the SAME item (a lapsed card the
+  // selector picks again — same `itemId`, so the effect does not re-fire) still starts
+  // clean: no stale lock, cloze input/feedback, or parked outcome.
+  const resetItemFeedback = useCallback(() => {
+    setAnswerLocked(false);
+    setClozeInput('');
+    setClozeFeedback(null);
+    setClozeAttemptRecorded(false);
+    setHeritageFeedback(null);
+    setPendingOutcome(null);
+    pendingOutcomeRef.current = null;
+  }, []);
 
   useEffect(() => {
     const state = loadState();
@@ -967,16 +986,11 @@ function LexiconPracticeIsland({
   }, [deck, history, mode, poolFilter, revision, sessionPhase, sessionSeed]);
 
   useEffect(() => {
-    setAnswerLocked(false);
-    setClozeInput('');
-    setClozeFeedback(null);
-    setClozeAttemptRecorded(false);
-    setHeritageFeedback(null);
-    setPendingOutcome(null);
+    resetItemFeedback();
     if (selection) {
       window.setTimeout(() => stageRef.current?.focus(), 0);
     }
-  }, [selection?.itemId]);
+  }, [selection?.itemId, resetItemFeedback]);
 
   // While a wrong answer dwells, Enter is a second way to advance (alongside the
   // «Далі →» button) — the disabled option buttons blur to <body>, so we listen at
@@ -1336,10 +1350,13 @@ function LexiconPracticeIsland({
 
   /** Complete the parked (wrong-answer) selection once the learner chooses to advance. */
   function advancePending() {
-    if (!selection || !pendingOutcome) return;
-    const outcome = pendingOutcome;
-    setPendingOutcome(null);
-    setAnswerLocked(false);
+    // Claim the outcome via the ref FIRST so a second synchronous invocation (a rapid
+    // double-Enter, or Enter racing a «Далі» click) reads null and no-ops — the closed-over
+    // `pendingOutcome` state is stale within the same tick and cannot guard against this.
+    const outcome = pendingOutcomeRef.current;
+    if (!outcome || !selection) return;
+    pendingOutcomeRef.current = null;
+    resetItemFeedback();
     completeSelection(selection, outcome);
   }
 
@@ -1363,7 +1380,9 @@ function LexiconPracticeIsland({
       return;
     }
     // WRONG answer: dwell so the cited correction stays readable; the learner
-    // advances explicitly via «Далі →» / Enter (see advancePending).
+    // advances explicitly via «Далі →» / Enter (see advancePending). The ref mirrors
+    // the state so advancePending can claim the outcome race-free.
+    pendingOutcomeRef.current = outcome;
     setPendingOutcome(outcome);
   }
 
@@ -1412,6 +1431,7 @@ function LexiconPracticeIsland({
         // Wrong chip pick is a wrong answer: dwell rather than auto-advance so the
         // learner can read the correction before «Далі →» / Enter.
         setAnswerLocked(true);
+        pendingOutcomeRef.current = outcome;
         setPendingOutcome(outcome);
       }
       return;
@@ -1420,10 +1440,12 @@ function LexiconPracticeIsland({
     setClozeFeedback({ kind: 'wrong-word', text: '✗ Не те слово' });
     if (source === 'chip') {
       setAnswerLocked(true);
-      setPendingOutcome({
+      const outcome = {
         nextUnresolved: new Set(unresolvedCardKeys),
         nextDeferred: [...deferredLemmas],
-      });
+      };
+      pendingOutcomeRef.current = outcome;
+      setPendingOutcome(outcome);
     }
   }
 
