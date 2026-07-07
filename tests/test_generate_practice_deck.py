@@ -100,6 +100,8 @@ def test_fixture_build_emits_sharded_schema() -> None:
     assert lexeme["paradigm"]["cases"]["accusative"]["singular"] == "книгу"
     assert lexeme["heritage"] == "inherited"
     assert lexeme["severity"] == "standard"
+    misto_cloze = next(item for item in a1["cloze"]["cloze"] if item["lemmaId"] == "misto")
+    assert misto_cloze["clozeId"] == "misto:fixture:1"
 
 
 def test_reviewed_allowlist_and_vesum_ambiguity_fail_closed() -> None:
@@ -319,6 +321,37 @@ def test_heritage_items_wire_mode_counts_and_index_modes() -> None:
     assert all(set(option) == {"label"} for option in heritage[0]["options"])
     assert a2["index"]["counts"]["modeCounts"]["heritage"] == 1
     assert a2["index"]["counts"]["modeCoverage"]["heritage"] == 0.1429
+    assert "heritage" in index_item["modes"]
+
+
+def test_heritage_items_follow_native_cefr_when_availability_differs() -> None:
+    entries = json.loads(json.dumps(read_manifest(MANIFEST)))
+    for entry in entries:
+        entry["enrichment"]["cefr"]["level"] = "A2"
+        entry["course_usage"][0]["track"] = "a2"
+    entries[-1]["enrichment"]["cefr"]["level"] = "B1"
+    entries[-1]["course_usage"][0]["track"] = "b1"
+    entries[3]["pos"] = "verb"
+    entries[4]["pos"] = "adjective"
+    pair = json.loads(json.dumps(_fixture_heritage_pair()))
+    pair["cefrAvailability"] = "b1"
+
+    shards = build_practice_shards(
+        entries,
+        ReviewedSourceAllowlist.from_path(ALLOWLIST),
+        JsonVesumVerifier.from_path(VESUM),
+        read_cloze_sources(CLOZE_SOURCES),
+        BuildConfig(),
+        [pair],
+    )
+    a2 = shards["A2"]
+    a2_heritage = a2["heritage"]["heritage"]
+    b1_heritage = shards["B1"]["heritage"]["heritage"]
+    index_item = next(item for item in a2["index"]["items"] if item["lemmaId"] == "knyha")
+
+    assert len(a2_heritage) == 1
+    assert a2_heritage[0]["lemmaId"] == "knyha"
+    assert not any(item["lemmaId"] == "knyha" for item in b1_heritage)
     assert "heritage" in index_item["modes"]
 
 
