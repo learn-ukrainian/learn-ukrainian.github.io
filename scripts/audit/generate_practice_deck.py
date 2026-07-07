@@ -30,7 +30,7 @@ if str(AUDIT_DIR) not in sys.path:
 
 from lexeme_filter import SURFACE_CLOZE, is_practice_eligible, is_surface_admitted
 
-from scripts.practice_deck.io import compute_deck_version
+from scripts.practice_deck.io import compute_deck_inputs_fingerprint, compute_deck_version
 
 DEFAULT_MANIFEST = Path("site/src/data/lexicon-manifest.json")
 DEFAULT_ATLAS_DB = Path("data/atlas.db")
@@ -1004,7 +1004,12 @@ def validate_option_sets(cloze_items: list[dict[str, Any]]) -> list[str]:
             if isinstance(option, dict) and _plain(str(option.get("label") or "")) == normalized_answer:
                 positions.append(index)
                 break
-    if len(positions) > 1 and len(set(positions)) == 1:
+    # Variance is only statistically meaningful with enough items: on tiny
+    # decks (fixtures, thin levels) 2-3 seeded placements can legitimately
+    # collide, and failing here wipes the LEVEL'S ENTIRE CLOZE with a WARN
+    # (#4722: a seed change flipped fixture tests this way). Require variance
+    # only from 4 items up, where a collision is a real anti-gaming signal.
+    if len(positions) >= 4 and len(set(positions)) == 1:
         return ["answer position must vary across the deck"]
     return []
 
@@ -2100,7 +2105,12 @@ def build_practice_shards(
         cloze_sources,
         SCHEMA_VERSION,
     )
-    rng_seed = int(hashlib.sha256(deck_version.encode("utf-8")).hexdigest()[:16], 16)
+    # Seed from the DATA-ONLY fingerprint, not deck_version: builder-version
+    # bumps mint new asset names but must not reshuffle seeded content.
+    inputs_fingerprint = compute_deck_inputs_fingerprint(
+        entries, heritage_pairs, synonym_verdicts, cloze_sources, SCHEMA_VERSION
+    )
+    rng_seed = int(hashlib.sha256(inputs_fingerprint.encode("utf-8")).hexdigest()[:16], 16)
     rng = random.Random(rng_seed)
     eligible = [entry for entry in entries if is_practice_eligible(entry)]
     course_entries = [entry for entry in eligible if _course_usage(entry)]
