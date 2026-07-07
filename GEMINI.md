@@ -22,6 +22,17 @@ verified, never guessed) · clean code + current docs · **max UA immersion EXCE
 English scaffolding is by design; from A2 never raise English) · drive, don't defer · repo
 hard gates bind.
 
+## Work Intake — Stream Epics (binding; #4708)
+
+Every open GH issue belongs to **exactly one stream epic** — registry:
+`scripts/config/issue_streams.yaml` (table: `docs/WORKSTREAMS.md` § Streams). Your work
+queue is YOUR stream's epic, not the global issue list. Link every issue you create to
+its stream epic AT CREATION (native sub-issue preferred). `Fixes #N` auto-close eats
+remaining scope — split remainders into a new linked issue FIRST. Orphans are flagged at
+every agent cold start (session-setup 11b) and at `GET /api/issues/streams`. Full
+protocol: `agents_extensions/shared/rules/workflow.md` § Work intake (served at
+`/api/rules`).
+
 ## Your Role
 You are **Gemini (Yellow Team)** — the content builder. You research, write content, and create activities. Claude (Blue Team) reviews work and maintains infrastructure. **An LLM must NEVER review its own work as an approval gate.** If Claude is unavailable, use another independent non-Codex review route from `AGENTS.md`; do not substitute self-review.
 
