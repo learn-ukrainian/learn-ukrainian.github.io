@@ -56,10 +56,12 @@ and continue from `.agent/<name>-thread-bootstrap.md` plus
 Do **not** write `docs/session-state/current.md` or any other git-tracked
 handoff file just to survive compaction.
 
-Every new session handoff ships as a **PAIR**:
+Every new durable session handoff ships as **MD brief only** (user decision 2026-07-07 —
+the HTML halves were not being read):
 
-- **`docs/session-state/<date>-<slug>-brief.md`** (~2-5KB) — machine-readable, cold-start entry point. YAML frontmatter + bullet-list body. Agents read THIS.
-- **`docs/session-state/<date>-<slug>.html`** (~20-40KB) — rich human-readable. Narrative, tables, KPIs, callouts. Humans read THIS. Agents only open it if the brief flags something they need narrative for.
+- **`docs/session-state/<date>-<slug>-brief.md`** (~2-5KB) — machine-readable, cold-start
+  entry point. YAML frontmatter + bullet-list body. Agents AND the human read THIS.
+- HTML companion ONLY on explicit request or for major milestone arcs — never by default.
 
 **Cold-start rule:** after the Monitor API bootstrap above, use the agent-specific
 session endpoint when you know your role:

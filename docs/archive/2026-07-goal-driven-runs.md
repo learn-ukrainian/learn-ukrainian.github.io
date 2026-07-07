@@ -1,6 +1,11 @@
-# Goal-Driven Runs
+# Goal-Driven Runs — ARCHIVED 2026-07-07
 
-<critical>
+> **ARCHIVED (user decision, 2026-07-07 memory interview): the `/goal` machinery is dormant —
+> no headless `claude -p "/goal ..."` batch runs in recent workflow. Moved out of the
+> always-load rule set to reclaim per-session context. The status-line grammar
+> (`GOAL_STATUS`/`GOAL_DONE`/`GOAL_ABORT`/`GOAL_WAIT`), `scripts/goal_driver/`, and the
+> `goal-driver-stop.sh` hook remain intact — revive by moving this file back to
+> `agents_extensions/shared/rules/` when headless batch runs return.
 
 How to use `/goal` (bounded autonomous batch) vs `ScheduleWakeup`+`/loop` (cadence/polling). Encodes the kubedojo Option B convergence (2026-05-07 consult) + Claude Code 2.1.139 native `/goal` deltas (released 2026-05-11). Pinned by #1884.
 
