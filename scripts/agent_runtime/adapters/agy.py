@@ -372,13 +372,12 @@ def _parse_transcript_tool_calls(plan: InvocationPlan | None) -> list[dict[str, 
     if transcript_path is None or not transcript_path.exists():
         return []
 
-    calls: list[dict[str, Any]] = []
-    pending: list[dict[str, Any]] = []
     try:
         lines = transcript_path.read_text(encoding="utf-8").splitlines()
     except OSError:
         return []
 
+    events: list[dict[str, Any]] = []
     for raw_line in lines:
         if not raw_line.strip():
             continue
@@ -386,26 +385,160 @@ def _parse_transcript_tool_calls(plan: InvocationPlan | None) -> list[dict[str, 
             event = json.loads(raw_line)
         except json.JSONDecodeError:
             continue
-        if not isinstance(event, dict):
+        if isinstance(event, dict):
+            events.append(event)
+
+    if not events:
+        return []
+
+    has_step_index = any(_event_step_index(event) is not None for event in events)
+    if has_step_index:
+        return _pair_transcript_by_step_index(events, transcript_path=transcript_path)
+    return _pair_transcript_fifo(events, transcript_path=transcript_path)
+
+
+def _event_step_index(event: Mapping[str, Any]) -> int | None:
+    raw = event.get("step_index")
+    if raw is None:
+        return None
+    if isinstance(raw, bool):
+        return None
+    if isinstance(raw, int):
+        return raw
+    if isinstance(raw, float) and raw.is_integer():
+        return int(raw)
+    if isinstance(raw, str) and raw.strip().isdigit():
+        return int(raw.strip())
+    return None
+
+
+def _canonical_tool_arguments(args: Mapping[str, Any]) -> dict[str, Any]:
+    canonical: dict[str, Any] = {}
+    for raw_key, raw_value in args.items():
+        key = str(raw_key)
+        value = raw_value
+        if isinstance(value, bool):
+            canonical[key] = value
             continue
+        if isinstance(value, float) and value.is_integer():
+            value = int(value)
+        if isinstance(value, int):
+            canonical[key] = str(value)
+            continue
+        if isinstance(value, str):
+            canonical[key] = value
+            continue
+        if isinstance(value, Mapping):
+            canonical[key] = _canonical_tool_arguments(value)
+            continue
+        if isinstance(value, list):
+            canonical[key] = [
+                str(item) if isinstance(item, (int, float)) and not isinstance(item, bool) else item
+                for item in value
+            ]
+            continue
+        canonical[key] = value
+    return canonical
 
+
+def _intent_dedupe_key(call: Mapping[str, Any]) -> str:
+    args = call.get("arguments")
+    if not isinstance(args, Mapping):
+        args = {}
+    return json.dumps(
+        [str(call.get("name") or ""), _canonical_tool_arguments(args)],
+        sort_keys=True,
+        ensure_ascii=False,
+    )
+
+
+def _attach_tool_result(call: dict[str, Any], result_text: str) -> dict[str, Any]:
+    result = [{"type": "text", "text": result_text}]
+    call["output_summary"] = summarize_tool_output(result)
+    call["result"] = result
+    return call
+
+
+def _mcp_result_text(event: Mapping[str, Any], *, transcript_path: Path) -> str:
+    result_text = _strip_agy_task_metadata(str(event.get("content") or ""))
+    return _inline_saved_tool_result_pointer(
+        result_text,
+        transcript_path=transcript_path,
+    )
+
+
+def _pair_transcript_fifo(
+    events: list[dict[str, Any]],
+    *,
+    transcript_path: Path,
+) -> list[dict[str, Any]]:
+    """Legacy pairing: file order FIFO between planner intents and MCP results."""
+    calls: list[dict[str, Any]] = []
+    pending: list[dict[str, Any]] = []
+    for event in events:
         pending.extend(_extract_transcript_tool_calls(event))
-
         if event.get("type") != "MCP_TOOL" or not pending:
             continue
         call = pending.pop(0)
-        result_text = _strip_agy_task_metadata(str(event.get("content") or ""))
-        result_text = _inline_saved_tool_result_pointer(
-            result_text,
-            transcript_path=transcript_path,
+        calls.append(
+            _attach_tool_result(
+                call,
+                _mcp_result_text(event, transcript_path=transcript_path),
+            )
         )
-        result = [{"type": "text", "text": result_text}]
-        call["output_summary"] = summarize_tool_output(result)
-        call["result"] = result
-        calls.append(call)
-
-    # Preserve telemetry for calls whose result event did not make it to disk.
     calls.extend(pending)
+    return calls
+
+
+def _pair_transcript_by_step_index(
+    events: list[dict[str, Any]],
+    *,
+    transcript_path: Path,
+) -> list[dict[str, Any]]:
+    """Pair planner intents with MCP results sorted by ``step_index``.
+
+    agy may emit duplicate planner intents across turns; dedupe by
+    ``(tool, arguments)`` keeping the last occurrence before zipping with MCP
+    results in chronological step order.
+    """
+    ordered = sorted(
+        enumerate(events),
+        key=lambda item: (
+            _event_step_index(item[1]) if _event_step_index(item[1]) is not None else 10**9,
+            item[0],
+        ),
+    )
+
+    intent_keys: list[str] = []
+    intents: dict[str, dict[str, Any]] = {}
+    for _, event in ordered:
+        for call in _extract_transcript_tool_calls(event):
+            key = _intent_dedupe_key(call)
+            if key in intents:
+                intent_keys.remove(key)
+            intents[key] = dict(call)
+            intent_keys.append(key)
+
+    mcp_results: list[str] = []
+    for _, event in ordered:
+        if event.get("type") != "MCP_TOOL":
+            continue
+        mcp_results.append(_mcp_result_text(event, transcript_path=transcript_path))
+
+    paired_intents = [intents[key] for key in intent_keys]
+    if len(paired_intents) != len(mcp_results):
+        _logger.warning(
+            "agy transcript tool pairing mismatch: %s intents vs %s MCP results",
+            len(paired_intents),
+            len(mcp_results),
+        )
+
+    calls: list[dict[str, Any]] = []
+    for call, result_text in zip(paired_intents, mcp_results, strict=False):
+        calls.append(_attach_tool_result(call, result_text))
+
+    for call in paired_intents[len(mcp_results) :]:
+        calls.append(dict(call))
     return calls
 
 

@@ -172,6 +172,58 @@ def test_parse_response_inlines_safe_saved_tool_result_pointer(tmp_path: Path) -
     )
 
 
+def test_parse_response_pairs_duplicate_planner_intents_by_step_index(
+    tmp_path: Path,
+) -> None:
+    conversation_id = "fbfc8314-a4b6-4d64-9dec-5c9b6f6684bb"
+    app_data = tmp_path / "antigravity-cli"
+    log_file = tmp_path / "agy.log"
+    log_file.write_text(
+        f"I0521 printmode.go:130] Print mode: conversation={conversation_id}, sending message\n",
+        encoding="utf-8",
+    )
+    transcript = (
+        app_data
+        / "brain"
+        / conversation_id
+        / ".system_generated"
+        / "logs"
+        / "transcript.jsonl"
+    )
+    transcript.parent.mkdir(parents=True)
+    transcript.write_text(
+        (FIXTURES / "duplicate_intents_transcript.jsonl").read_text(encoding="utf-8"),
+        encoding="utf-8",
+    )
+
+    result = AgyAdapter().parse_response(
+        stdout="Final response.",
+        stderr="",
+        returncode=0,
+        output_file=None,
+        plan=_plan(tmp_path, log_file=log_file, app_data=app_data),
+    )
+
+    assert [call["name"] for call in result.tool_calls] == [
+        "mcp__sources__query_wikipedia",
+        "mcp__sources__query_wikipedia",
+        "mcp__sources__search_text",
+        "mcp__sources__query_wikipedia",
+        "mcp__sources__query_wikipedia",
+        "mcp__sources__search_grinchenko_1907",
+        "mcp__sources__search_literary",
+    ]
+    assert [call["result"][0]["text"] for call in result.tool_calls] == [
+        "wiki-section-error",
+        "wiki-sections-output",
+        "search-text-output",
+        "wiki-section-1-output",
+        "wiki-section-2-output",
+        "grinchenko-output",
+        "literary-output",
+    ]
+
+
 def test_saved_tool_result_pointer_requires_prefix(tmp_path: Path) -> None:
     text = "bare pointer file:///etc/hosts"
     transcript = tmp_path / "transcript.jsonl"
