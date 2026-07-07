@@ -140,10 +140,15 @@ if [ -d "$PROJECT_DIR/agents_extensions/shared" ] && [ -d "$PROJECT_DIR/.claude"
   if [ -f "$ORPHAN_PATHS_SH" ]; then
     # shellcheck disable=SC1090
     source "$ORPHAN_PATHS_SH"
+    # set -f: ORPHAN_PATHS_CLAUDE carries glob patterns (*-epic) that must reach
+    # diff --exclude LITERALLY; without noglob the unquoted expansion would match
+    # against the hook's cwd if a *-epic entry ever appears there.
+    set -f
     # shellcheck disable=SC2086
     for item in $ORPHAN_PATHS_CLAUDE; do
       DIFF_EXCLUDES+=("$item")
     done
+    set +f
     for path in "${CLAUDE_RULE_AUTOLOAD_EXCLUDES[@]}"; do
       DIFF_EXCLUDES+=("$(basename "$path")")
     done
