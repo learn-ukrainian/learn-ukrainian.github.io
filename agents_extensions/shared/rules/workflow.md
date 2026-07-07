@@ -53,8 +53,10 @@ hours). Every lane: the moment a PR's review gate passes (cross-family review ev
 requested changes), run `gh pr merge <N> --auto --squash --delete-branch` — GitHub merges it
 when CI settles, nobody babysits. Dispatched agents still do NOT self-enable auto-merge
 (review gate first — unchanged). `--auto` waits for green and never bypasses blocking checks
-(#M-0.5 semantics unchanged). Orchestrator session sweeps remain the backstop for anything
-green+reviewed+idle.
+(#M-0.5 semantics unchanged). Orchestrator session sweeps remain the backstop — but ONLY for
+out-of-lane PRs that have sat green (CI passing + review gate passed) idle for MORE THAN
+1 HOUR (user directive 2026-07-07): a fresh PR belongs to its lane. Do not shepherd,
+review-route, or arm auto-merge on another lane's PR before that threshold.
 
 ## Two-tier handoffs (epic #1865 item #1, shipped 2026-05-11)
 
