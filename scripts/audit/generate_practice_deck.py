@@ -1729,9 +1729,19 @@ def _build_heritage_items(
     if not frames:
         return []
     # Heritage SRS identity is the native lemma, and the static client reaches
-    # drill items through the same-level index/lexeme shards. Emit the item in
-    # the native lexeme's CEFR shard so every heritage card is reachable.
-    level = _normalize_cefr(lexeme.get("cefr")) or _heritage_availability_level(pair)
+    # drill items through the same-level index/lexeme shards — so the item must
+    # sit AT OR ABOVE the lexeme's shard (cumulative loading pulls lower-level
+    # lexeme shards in, keeping the join resolvable). But the curator
+    # availability floor (§9.5, agy-reviewed: B1+ default, A2 only by curator
+    # flag) is a hard pedagogy gate — level-local placement must never drop
+    # BELOW it (#4719: b1-flagged calque drills were served at A1).
+    lexeme_level = _normalize_cefr(lexeme.get("cefr"))
+    floor = _heritage_availability_level(pair)
+    level = max(
+        (lvl for lvl in (lexeme_level, floor) if lvl),
+        key=lambda lvl: CEFR_RANK[lvl],
+        default=floor,
+    )
     items: list[dict[str, Any]] = []
     for index, frame in enumerate(frames, start=1):
         answer_form = _clean_text(frame.get("answer_form"))
@@ -2240,7 +2250,13 @@ def build_practice_shards(
                 )
                 continue
             mode_by_level[level]["heritage"].append(public_item)
-            mode_lemma_ids[level]["heritage"].add(native_lexeme["lemmaId"])
+            # Tag the heritage mode on the NATIVE LEXEME's own index entry (its
+            # shard), not the item's floor level — index entries only exist at
+            # the lexeme's level. A learner below the floor loads the tag but
+            # not the item shard; the client skips missing items (same pattern
+            # as stress/classify). At/above the floor, cumulative loading has
+            # both → reachable AND pedagogy-gated (#4719).
+            mode_lemma_ids[native_lexeme["cefr"]]["heritage"].add(native_lexeme["lemmaId"])
     if heritage_frame_debt:
         print(
             f"heritage frame coverage: {heritage_frame_debt} records without frames — emitted 0 items for them",

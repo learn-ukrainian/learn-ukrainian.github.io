@@ -324,7 +324,7 @@ def test_heritage_items_wire_mode_counts_and_index_modes() -> None:
     assert "heritage" in index_item["modes"]
 
 
-def test_heritage_items_follow_native_cefr_when_availability_differs() -> None:
+def test_heritage_availability_floor_wins_over_native_cefr() -> None:
     entries = json.loads(json.dumps(read_manifest(MANIFEST)))
     for entry in entries:
         entry["enrichment"]["cefr"]["level"] = "A2"
@@ -349,9 +349,15 @@ def test_heritage_items_follow_native_cefr_when_availability_differs() -> None:
     b1_heritage = shards["B1"]["heritage"]["heritage"]
     index_item = next(item for item in a2["index"]["items"] if item["lemmaId"] == "knyha")
 
-    assert len(a2_heritage) == 1
-    assert a2_heritage[0]["lemmaId"] == "knyha"
-    assert not any(item["lemmaId"] == "knyha" for item in b1_heritage)
+    # #4719: the curator availability floor (b1) WINS over the native lexeme's
+    # level (A2) for ITEM placement — B1-flagged calque drills must never reach
+    # learners below the floor. Reachability is preserved via the index-mode
+    # tag on the lexeme's own (A2) entry: at/above the floor, cumulative
+    # loading has both the tag and the B1 item shard.
+    assert a2_heritage == []
+    assert len(b1_heritage) == 1
+    assert b1_heritage[0]["lemmaId"] == "knyha"
+    assert b1_heritage[0]["cefr"] == "B1"
     assert "heritage" in index_item["modes"]
 
 
