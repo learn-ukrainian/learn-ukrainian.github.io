@@ -1,0 +1,81 @@
+{
+  "slug": "vertep",
+  "title": "Вертеп: український народний ляльковий театр",
+  "verification_log": "FOLK domain. All claims tool-verified 2026-07-06 by claude/4539-fixtures-wave4-public via sources MCP. Source: query_wikipedia('Вертеп', §6 Архітектоніка) — two-tier «небо»/«земля» house of wood or cardboard open to the viewer; upper tier = діва Марія з немовлям, lower = трон царя Ірода; вертепник водив ляльку по прорізах у підлозі; мechanized Смерть/Козак; ляльок могло бути до 40; канти = church music from a late-16th-c. reform; Куп'янська скриня reconstructed in the Soviet era. Class-M m1 swaps the tiers (real: Марія top, Ірод bottom); m2 inflates the doll count (real: до 40, not до ста). Class-U «Батуринська вертепна скриня»: zero attestation verified 2026-07-06 — query_wikipedia(search) → 'No Wikipedia results'; verify_source_attribution(literary) → discusses=false (evidence only generic vertep discussion + Mazepa's Batyryn palace, no named vertep box). All licensing: uk.wikipedia (CC BY-SA), quotes ≤25 words.",
+  "canary_sentence": "Ці різьблені ляльки й сьогодні викликають щиру усмішку в глядачів.",
+  "passage_md": "Вертеп — це традиційний український народний ляльковий театр різдвяної драми. За будовою вертеп нагадує невеликий будиночок, що має два поверхи, які за християнською традицією трактувалися як «небо» і «земля». Виготовлений із дерева або картону, відкритий з боку глядача, він легко переносився від хати до хати під час різдвяних свят. На верхньому поверсі стояв трон царя Ірода, а на нижньому — фігура Богородиці з немовлям. Вертепник, стоячи позаду скрині, водив ляльку по прорізах у підлозі й говорив за всіх персонажів. Частина вертепних ляльок мали певну механізацію: Смерть замахувалася косою, Козак танцював, присідаючи. Ляльок у виставі могло бути до ста. У першій, урочистій частині звучали народні колядки і канти — вид церковної музики, що виник внаслідок реформи наприкінці XVI сторіччя. Серед збережених пам'яток Куп'янська скриня була реконструйована за радянської доби. Найдавнішою з-поміж них дослідники називають так звану «Батуринську вертепну скриню», нібито вивезену з гетьманської столиці. Ці різьблені ляльки й сьогодні викликають щиру усмішку в глядачів.",
+  "claims": [
+    {
+      "claim_id": "vertep-t1",
+      "claim": "будиночок, що має два поверхи, які за християнською традицією трактувалися як «небо» і «земля»",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "query_wikipedia('Вертеп', §6): «Вертеп схожий на будиночок, що має два поверхи, які за християнською традицією трактувалися як «небо» і «земля»»."
+    },
+    {
+      "claim_id": "vertep-t2",
+      "claim": "Виготовлений із дерева або картону, відкритий з боку глядача",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "query_wikipedia('Вертеп', §6): «Виготовлений із дерева або картону, відкритий з боку глядача, будиночок міг бути різного розміру»."
+    },
+    {
+      "claim_id": "vertep-m1",
+      "claim": "На верхньому поверсі стояв трон царя Ірода, а на нижньому — фігура Богородиці з немовлям",
+      "is_true": false,
+      "fabrication_class": "M",
+      "distractor_evidence": "query_wikipedia('Вертеп', §6) — the REAL passage: «На верхньому поверсі вертепу знаходилася нерухома фігура діви Марії з немовлям, а на нижньому — трон царя Ірода». The tiers are SWAPPED: Богородиця belongs on the upper («небо») level and Ірод's throne on the lower («земля»). Keyword lure: верхній/нижній поверх, трон Ірода, Богородиця all sit in the real описание.",
+      "verified_by": "Real: Марія on top, Ірод below (uk.wikipedia §Архітектоніка). The swapped assignment is fabricated."
+    },
+    {
+      "claim_id": "vertep-t3",
+      "claim": "Вертепник, стоячи позаду скрині, водив ляльку по прорізах у підлозі",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "query_wikipedia('Вертеп', §6): «Вертепник, який стояв позаду скрині, водив ляльку по прорізах у підлозі, спостерігаючи за дією у спеціальні віконечка»."
+    },
+    {
+      "claim_id": "vertep-t4",
+      "claim": "Частина вертепних ляльок мали певну механізацію: Смерть замахувалася косою, Козак танцював, присідаючи",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "query_wikipedia('Вертеп', §6): «частина вертепних ляльок мали певну механізацію: Смерть замахувалася косою, Козак танцював, присідаючи, у царя Ірода голова злітала з плечей»."
+    },
+    {
+      "claim_id": "vertep-m2",
+      "claim": "Ляльок у виставі могло бути до ста",
+      "is_true": false,
+      "fabrication_class": "M",
+      "distractor_evidence": "query_wikipedia('Вертеп', §6) — the REAL passage: «Ляльок у вертепах могло бути до 40». The count is inflated from до 40 to до ста. Keyword lure: «Ляльок у... могло бути до» matches the real sentence verbatim except for the number.",
+      "verified_by": "Real: up to 40 puppets (uk.wikipedia §Архітектоніка); «до ста» is fabricated."
+    },
+    {
+      "claim_id": "vertep-t5",
+      "claim": "канти — вид церковної музики, що виник внаслідок реформи наприкінці XVI сторіччя",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "query_wikipedia('Вертеп', §6): «звучали народні колядки і канти (вид церковної музики, що виник внаслідок реформи наприкінці XVI сторіччя)»."
+    },
+    {
+      "claim_id": "vertep-t6",
+      "claim": "Куп'янська скриня була реконструйована за радянської доби",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "query_wikipedia('Вертеп', §6 Куп'янська скриня): «Куп'янська скриня була реконструйована за радянської доби»."
+    },
+    {
+      "claim_id": "vertep-u1",
+      "claim": "Найдавнішою з-поміж них дослідники називають так звану «Батуринську вертепну скриню»",
+      "is_true": false,
+      "fabrication_class": "U",
+      "distractor_evidence": null,
+      "verified_by": "INVENTED named relic. Zero attestation verified 2026-07-06: query_wikipedia(search, «Батуринська вертепна скриня») → 'No Wikipedia results'; verify_source_attribution(literary, «Батуринська вертепна скриня») → discusses=false (evidence is only generic vertep drama discussion and Mazepa's Batyryn palace, no named vertep box). Real named boxes are Куп'янська/Галаганівська/Славутинська/Сокиринська; a «Батуринська вертепна скриня» does not exist, mirroring the anchor «золоте перевесло» pattern."
+    }
+  ]
+}

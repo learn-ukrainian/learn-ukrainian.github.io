@@ -1,0 +1,81 @@
+{
+  "slug": "kotliarevskyi-ivan",
+  "title": "Іван Котляревський: життєпис",
+  "verification_log": "BIO domain. All claims tool-verified 2026-07-06 by claude/4539-fixtures-wave4-public via sources MCP. Source: query_wikipedia('Котляревський Іван Петрович', §1 Життєпис) — born in Poltava into a cancelaryst-noble family of the Ohonczyk arms; Poltava seminary 1789–1793; military service in the Siverskyi Carabinier regiment 1796–1808; from 1810 overseer of the 'House for raising children of poor gentry'; 1812 formed the 5th Poltava Cossack regiment; DIRECTOR of the POLTAVA free theatre 1816–1821; 1822 helped buy the actor Mykhailo SHCHEPKIN out of serfdom; died 29 Oct (10 Nov) 1838, buried in Poltava. Class-M m1 twists the theatre city (real: Полтавського, not Київського); m2 twists the freed serf (real: Михайла Щепкіна, not Шевченка — Shevchenko was freed in 1838 by Bryullov/Zhukovsky). Class-U «Полтавський зшиток козацьких приказок»: zero attestation verified 2026-07-06 — query_wikipedia(search) → 'No Wikipedia results'; verify_source_attribution(literary) → discusses=false (evidence only the real Котляревський museum/«Енеїда»/«Москаль-чарівник», no such зшиток). Licensing: uk.wikipedia (CC BY-SA), quotes ≤25 words.",
+  "canary_sentence": "Його теплий гумор і нині знаходить вдячних читачів.",
+  "passage_md": "Іван Котляревський — зачинатель нової української літератури, що заговорила живою народною мовою. Іван Котляревський народився в Полтаві у сім'ї канцеляриста — шляхтича герба Огоньчик. Після навчання в Полтавській духовній семінарії (1789—1793) він працював канцеляристом і домашнім учителем. У 1796—1808 роках перебував на військовій службі в Сіверському карабінерському полку. У 1806—1807 роках у військовому званні штабскапітана брав участь у Російсько-турецькій війні та в облозі Ізмаїлу. З 1810 року працював наглядачем «Дому для виховання дітей бідних дворян». Під час війни 1812 року сформував 5-й Полтавський козачий полк малоросійського козачого війська. У 1816—1821 роках Котляревський був директором Київського вільного театру. У 1822 році Котляревський сприяв викупові з кріпацтва Тараса Шевченка. У пізніших переказах йому приписують втрачений «Полтавський зшиток козацьких приказок», нібито збірку його ранніх фольклорних записів. Найвідомішою його працею стала поема «Енеїда» — перший твір нової української літератури. Він ніколи не був одружений. Помер 29 жовтня (10 листопада) 1838 року й похований у Полтаві. Його теплий гумор і нині знаходить вдячних читачів.",
+  "claims": [
+    {
+      "claim_id": "kot-t1",
+      "claim": "Іван Котляревський народився в Полтаві у сім'ї канцеляриста — шляхтича герба Огоньчик",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "query_wikipedia('Котляревський Іван Петрович', §1): «Іван Котляревський народився в Полтаві... у сім'ї канцеляриста — шляхтича герба Огоньчик»."
+    },
+    {
+      "claim_id": "kot-t2",
+      "claim": "Після навчання в Полтавській духовній семінарії (1789—1793)",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "query_wikipedia('Котляревський Іван Петрович', §1): «Після навчання в Полтавській духовній семінарії (1789—1793) працював канцеляристом»."
+    },
+    {
+      "claim_id": "kot-t3",
+      "claim": "У 1796—1808 роках перебував на військовій службі в Сіверському карабінерському полку",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "query_wikipedia('Котляревський Іван Петрович', §1): «У 1796—1808 роках перебував на військовій службі в Сіверському карабінерському полку»."
+    },
+    {
+      "claim_id": "kot-t4",
+      "claim": "З 1810 року працював наглядачем «Дому для виховання дітей бідних дворян»",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "query_wikipedia('Котляревський Іван Петрович', §1): «З 1810 року працював наглядачем «Дому для виховання дітей бідних дворян»»."
+    },
+    {
+      "claim_id": "kot-t5",
+      "claim": "Під час війни 1812 року сформував 5-й Полтавський козачий полк малоросійського козачого війська",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "query_wikipedia('Котляревський Іван Петрович', §1): у 1812 «сформував у містечку Горошині... 5-й Полтавський козачий полк малоросійського козачого війська»."
+    },
+    {
+      "claim_id": "kot-m1",
+      "claim": "У 1816—1821 роках Котляревський був директором Київського вільного театру",
+      "is_true": false,
+      "fabrication_class": "M",
+      "distractor_evidence": "query_wikipedia('Котляревський Іван Петрович', §1) — the REAL passage: «У 1816—1821 роках — директор Полтавського вільного театру». The CITY is fabricated: the theatre was in Полтава, not Київ. Keyword lure: «1816—1821... директор... вільного театру» is verbatim-real; only the city differs.",
+      "verified_by": "Real: director of the POLTAVA free theatre (uk.wikipedia §Життєпис); «Київського» is fabricated."
+    },
+    {
+      "claim_id": "kot-m2",
+      "claim": "У 1822 році Котляревський сприяв викупові з кріпацтва Тараса Шевченка",
+      "is_true": false,
+      "fabrication_class": "M",
+      "distractor_evidence": "query_wikipedia('Котляревський Іван Петрович', §1) — the REAL passage: «У 1822 році Котляревський сприяв викупові з кріпацтва українського і російського актора Михайла Щепкіна». The freed person is fabricated: it was the actor Михайло ЩЕПКІН, not Шевченко (Shevchenko was bought out of serfdom only in 1838, by Bryullov and Zhukovsky). Keyword lure: «1822... сприяв викупові з кріпацтва» is verbatim-real.",
+      "verified_by": "Real: helped free the actor Mykhailo Shchepkin in 1822 (uk.wikipedia §Життєпис); «Тараса Шевченка» is fabricated."
+    },
+    {
+      "claim_id": "kot-u1",
+      "claim": "У пізніших переказах йому приписують втрачений «Полтавський зшиток козацьких приказок»",
+      "is_true": false,
+      "fabrication_class": "U",
+      "distractor_evidence": null,
+      "verified_by": "INVENTED named manuscript. Zero attestation verified 2026-07-06: query_wikipedia(search, «Полтавський зшиток козацьких приказок Котляревський») → 'No Wikipedia results'; verify_source_attribution(literary, «Полтавський зшиток козацьких приказок Котляревського») → discusses=false (evidence only the real Котляревський museum, «Енеїда», «Москаль-чарівник»). His real works are «Енеїда», «Наталка Полтавка», «Москаль-чарівник»; no «Полтавський зшиток козацьких приказок» exists."
+    },
+    {
+      "claim_id": "kot-t6",
+      "claim": "Помер 29 жовтня (10 листопада) 1838 року й похований у Полтаві",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "query_wikipedia('Котляревський Іван Петрович', §1): «Помер 29 жовтня (10 листопада) 1838 року... Похований у Полтаві»."
+    }
+  ]
+}

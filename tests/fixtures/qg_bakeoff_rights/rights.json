@@ -1628,6 +1628,230 @@
     }
   },
   {
+    "fixture": "kotliarevskyi-ivan",
+    "claim_id": "root_vlog",
+    "quote_or_ref": "BIO domain. All claims tool-verified 2026-07-06 by claude/4539-fixtures-wave4-public via sources MCP. Source: query_wikipedia('Котляревський Іван Петрович', §1 Життєпис) — born in Poltava into a cancelaryst-noble family of the Ohonczyk arms; Poltava seminary 1789–1793; military service in the Siverskyi Carabinier regiment 1796–1808; from 1810 overseer of the 'House for raising children of poor gentry'; 1812 formed the 5th Poltava Cossack regiment; DIRECTOR of the POLTAVA free theatre 1816–1821; 1822 helped buy the actor Mykhailo SHCHEPKIN out of serfdom; died 29 Oct (10 Nov) 1838, buried in Poltava. Class-M m1 twists the theatre city (real: Полтавського, not Київського); m2 twists the freed serf (real: Михайла Щепкіна, not Шевченка — Shevchenko was freed in 1838 by Bryullov/Zhukovsky). Class-U «Полтавський зшиток козацьких приказок»: zero attestation verified 2026-07-06 — query_wikipedia(search) → 'No Wikipedia results'; verify_source_attribution(literary) → discusses=false (evidence only the real Котляревський museum/«Енеїда»/«Москаль-чарівник», no such зшиток). Licensing: uk.wikipedia (CC BY-SA), quotes ≤25 words.",
+    "classification": "POINTER",
+    "matched_table": null,
+    "source_file": null,
+    "chunk_id": null,
+    "license": "N/A",
+    "verdict": "SHIP",
+    "evidence": {
+      "match_method": "pointer-only provenance row; no source text redistributed",
+      "similarity": null,
+      "quote": null,
+      "license_basis": "No license lookup needed for pointer-only provenance.",
+      "license_basis_url": null
+    }
+  },
+  {
+    "fixture": "kotliarevskyi-ivan",
+    "claim_id": "kot-t1_verified",
+    "quote_or_ref": "query_wikipedia('Котляревський Іван Петрович', §1): «Іван Котляревський народився в Полтаві... у сім'ї канцеляриста — шляхтича герба Огоньчик».",
+    "classification": "QUOTED_TEXT",
+    "matched_table": null,
+    "source_file": null,
+    "chunk_id": null,
+    "license": "UNKNOWN",
+    "verdict": "UNKNOWN",
+    "evidence": {
+      "match_method": "no matching source row found",
+      "similarity": null,
+      "quote": null,
+      "license_basis": "Fail-closed: unmatched quoted evidence is UNKNOWN.",
+      "license_basis_url": null
+    }
+  },
+  {
+    "fixture": "kotliarevskyi-ivan",
+    "claim_id": "kot-t2_verified",
+    "quote_or_ref": "query_wikipedia('Котляревський Іван Петрович', §1): «Після навчання в Полтавській духовній семінарії (1789—1793) працював канцеляристом».",
+    "classification": "QUOTED_TEXT",
+    "matched_table": null,
+    "source_file": null,
+    "chunk_id": null,
+    "license": "UNKNOWN",
+    "verdict": "UNKNOWN",
+    "evidence": {
+      "match_method": "no matching source row found",
+      "similarity": null,
+      "quote": null,
+      "license_basis": "Fail-closed: unmatched quoted evidence is UNKNOWN.",
+      "license_basis_url": null
+    }
+  },
+  {
+    "fixture": "kotliarevskyi-ivan",
+    "claim_id": "kot-t3_verified",
+    "quote_or_ref": "query_wikipedia('Котляревський Іван Петрович', §1): «У 1796—1808 роках перебував на військовій службі в Сіверському карабінерському полку».",
+    "classification": "QUOTED_TEXT",
+    "matched_table": null,
+    "source_file": null,
+    "chunk_id": null,
+    "license": "UNKNOWN",
+    "verdict": "UNKNOWN",
+    "evidence": {
+      "match_method": "no matching source row found",
+      "similarity": null,
+      "quote": null,
+      "license_basis": "Fail-closed: unmatched quoted evidence is UNKNOWN.",
+      "license_basis_url": null
+    }
+  },
+  {
+    "fixture": "kotliarevskyi-ivan",
+    "claim_id": "kot-t4_verified",
+    "quote_or_ref": "query_wikipedia('Котляревський Іван Петрович', §1): «З 1810 року працював наглядачем «Дому для виховання дітей бідних дворян»».",
+    "classification": "QUOTED_TEXT",
+    "matched_table": null,
+    "source_file": null,
+    "chunk_id": null,
+    "license": "UNKNOWN",
+    "verdict": "UNKNOWN",
+    "evidence": {
+      "match_method": "no matching source row found",
+      "similarity": null,
+      "quote": null,
+      "license_basis": "Fail-closed: unmatched quoted evidence is UNKNOWN.",
+      "license_basis_url": null
+    }
+  },
+  {
+    "fixture": "kotliarevskyi-ivan",
+    "claim_id": "kot-t5_verified",
+    "quote_or_ref": "query_wikipedia('Котляревський Іван Петрович', §1): у 1812 «сформував у містечку Горошині... 5-й Полтавський козачий полк малоросійського козачого війська».",
+    "classification": "QUOTED_TEXT",
+    "matched_table": null,
+    "source_file": null,
+    "chunk_id": null,
+    "license": "UNKNOWN",
+    "verdict": "UNKNOWN",
+    "evidence": {
+      "match_method": "no matching source row found",
+      "similarity": null,
+      "quote": null,
+      "license_basis": "Fail-closed: unmatched quoted evidence is UNKNOWN.",
+      "license_basis_url": null
+    }
+  },
+  {
+    "fixture": "kotliarevskyi-ivan",
+    "claim_id": "kot-m1_distractor",
+    "quote_or_ref": "query_wikipedia('Котляревський Іван Петрович', §1) — the REAL passage: «У 1816—1821 роках — директор Полтавського вільного театру». The CITY is fabricated: the theatre was in Полтава, not Київ. Keyword lure: «1816—1821... директор... вільного театру» is verbatim-real; only the city differs.",
+    "classification": "QUOTED_TEXT",
+    "matched_table": "literary_texts",
+    "source_file": "wave10-konysky-shevchenko-khronika",
+    "chunk_id": "4524f5ee_c0891",
+    "license": "UNKNOWN",
+    "verdict": "UNKNOWN",
+    "evidence": {
+      "match_method": "fts:ellipsis-substring",
+      "similarity": 1.0,
+      "quote": "1816—1821... директор... вільного театру",
+      "matched_fragment": "директор",
+      "source_snippet": "Озеров Владислав Олександрович (1769 — 1816) — російський драматург-класицист. — 82. Олдрідж Айра-Фредерік (1807 — 1867) — негритянський актор-трагік; /673/ гастролював у Петербур...",
+      "license_basis": "Fail-closed: matched source has no committed source_license_map.json entry.",
+      "license_basis_url": null
+    }
+  },
+  {
+    "fixture": "kotliarevskyi-ivan",
+    "claim_id": "kot-m1_verified",
+    "quote_or_ref": "Real: director of the POLTAVA free theatre (uk.wikipedia §Життєпис); «Київського» is fabricated.",
+    "classification": "QUOTED_TEXT",
+    "matched_table": "external_articles",
+    "source_file": "imtgsh",
+    "chunk_id": "ext-imtgsh-4",
+    "license": "UNKNOWN",
+    "verdict": "UNKNOWN",
+    "evidence": {
+      "match_method": "fts:substring",
+      "similarity": 1.0,
+      "quote": "Київського",
+      "matched_fragment": "Київського",
+      "source_snippet": "Італійська мафія виникла всередині X століття на Сицилії і практично одночасно з нею українці Російської імперії створили власну мафію українську. Сицилійці називали свою мафію Ко...",
+      "license_basis": "Fail-closed: matched source has no committed source_license_map.json entry.",
+      "license_basis_url": null
+    }
+  },
+  {
+    "fixture": "kotliarevskyi-ivan",
+    "claim_id": "kot-m2_distractor",
+    "quote_or_ref": "query_wikipedia('Котляревський Іван Петрович', §1) — the REAL passage: «У 1822 році Котляревський сприяв викупові з кріпацтва українського і російського актора Михайла Щепкіна». The freed person is fabricated: it was the actor Михайло ЩЕПКІН, not Шевченко (Shevchenko was bought out of serfdom only in 1838, by Bryullov and Zhukovsky). Keyword lure: «1822... сприяв викупові з кріпацтва» is verbatim-real.",
+    "classification": "QUOTED_TEXT",
+    "matched_table": null,
+    "source_file": null,
+    "chunk_id": null,
+    "license": "UNKNOWN",
+    "verdict": "UNKNOWN",
+    "evidence": {
+      "match_method": "no matching source row found",
+      "similarity": null,
+      "quote": null,
+      "license_basis": "Fail-closed: unmatched quoted evidence is UNKNOWN.",
+      "license_basis_url": null
+    }
+  },
+  {
+    "fixture": "kotliarevskyi-ivan",
+    "claim_id": "kot-m2_verified",
+    "quote_or_ref": "Real: helped free the actor Mykhailo Shchepkin in 1822 (uk.wikipedia §Життєпис); «Тараса Шевченка» is fabricated.",
+    "classification": "QUOTED_TEXT",
+    "matched_table": "external_articles",
+    "source_file": "imtgsh",
+    "chunk_id": "ext-imtgsh-4",
+    "license": "UNKNOWN",
+    "verdict": "UNKNOWN",
+    "evidence": {
+      "match_method": "fts:substring",
+      "similarity": 1.0,
+      "quote": "Тараса Шевченка",
+      "matched_fragment": "Тараса Шевченка",
+      "source_snippet": "Італійська мафія виникла всередині X століття на Сицилії і практично одночасно з нею українці Російської імперії створили власну мафію українську. Сицилійці називали свою мафію Ко...",
+      "license_basis": "Fail-closed: matched source has no committed source_license_map.json entry.",
+      "license_basis_url": null
+    }
+  },
+  {
+    "fixture": "kotliarevskyi-ivan",
+    "claim_id": "kot-u1_verified",
+    "quote_or_ref": "INVENTED named manuscript. Zero attestation verified 2026-07-06: query_wikipedia(search, «Полтавський зшиток козацьких приказок Котляревський») → 'No Wikipedia results'; verify_source_attribution(literary, «Полтавський зшиток козацьких приказок Котляревського») → discusses=false (evidence only the real Котляревський museum, «Енеїда», «Москаль-чарівник»). His real works are «Енеїда», «Наталка Полтавка», «Москаль-чарівник»; no «Полтавський зшиток козацьких приказок» exists.",
+    "classification": "QUOTED_TEXT",
+    "matched_table": "external_articles",
+    "source_file": "ulp_youtube",
+    "chunk_id": "ext-ulp_youtube-7",
+    "license": "UNKNOWN",
+    "verdict": "UNKNOWN",
+    "evidence": {
+      "match_method": "fts:substring",
+      "similarity": 1.0,
+      "quote": "Наталка Полтавка",
+      "matched_fragment": "Наталка Полтавка",
+      "source_snippet": "ви слухаєте ukraini lessens podcast це епізод 233 Іван Котляревський зачинатель нової української літератури Привіт ви слухаєте подкаст Ukrainian Lens podcast це Анна огойко засно...",
+      "license_basis": "Fail-closed: matched source has no committed source_license_map.json entry.",
+      "license_basis_url": null
+    }
+  },
+  {
+    "fixture": "kotliarevskyi-ivan",
+    "claim_id": "kot-t6_verified",
+    "quote_or_ref": "query_wikipedia('Котляревський Іван Петрович', §1): «Помер 29 жовтня (10 листопада) 1838 року... Похований у Полтаві».",
+    "classification": "QUOTED_TEXT",
+    "matched_table": null,
+    "source_file": null,
+    "chunk_id": null,
+    "license": "UNKNOWN",
+    "verdict": "UNKNOWN",
+    "evidence": {
+      "match_method": "no matching source row found",
+      "similarity": null,
+      "quote": null,
+      "license_basis": "Fail-closed: unmatched quoted evidence is UNKNOWN.",
+      "license_basis_url": null
+    }
+  },
+  {
     "fixture": "kupalski",
     "claim_id": "root_vlog",
     "quote_or_ref": "All claims tool-verified 2026-07-05 by claude-infra driver. Sources: uk.wikipedia «Свято Купала» (extract); sources.db literary: wave8-ukr-lit-entsyklopediia chunk fc2291b5_c4103/c4104 (КУПАЛЬСЬКІ ПІСНІ entry), wave7-entsyklopediia-ukrainoznavstva chunk feaa5fa7_c0609 (Густинський quote), wave7-istkult-t2-xiii-xvii chunk 484d0ffb_c0859 (1262 Іпатський). Class-U «затопянки»: zero hits in search_literary + search_heritage + wikipedia search (verified 2026-07-05).",
@@ -1860,6 +2084,244 @@
     }
   },
   {
+    "fixture": "kyrylo-metodiivske-tovarystvo",
+    "claim_id": "root_vlog",
+    "quote_or_ref": "HISTORY domain. All claims tool-verified 2026-07-06 by claude/4539-fixtures-wave4-public via sources MCP. Source: query_wikipedia('Кирило-Мефодіївське товариство', §1 Створення + §6 Донос і розгром) — founded late 1845–early 1846 in KYIV; named for Cyril and Methodius; ring «Св. Кирило і Мефодій, січень 1846»; founders Білозерський, Гулак, Костомаров, Куліш, Маркович; Shevchenko joined April 1846; 12 members by autumn 1846; exposed March 1847 by informer Олексій Петров; «Закон Божий» a key charge document. Class-M m1 twists the city (real: Києві, not Харкові); m2 twists the ring inscription (real: «Св. Кирило і Мефодій, січень 1846», not a nationalist slogan). Class-U «Київський кодекс братолюбія»: zero attestation verified 2026-07-06 — query_wikipedia(search) → 'No Wikipedia results'; verify_source_attribution(literary) → discusses=false (evidence only the real «Закон Божий»/«Три літа» списки and the unrelated 1748 legal кодекс). Licensing: uk.wikipedia (CC BY-SA), quotes ≤25 words.",
+    "classification": "POINTER",
+    "matched_table": null,
+    "source_file": null,
+    "chunk_id": null,
+    "license": "N/A",
+    "verdict": "SHIP",
+    "evidence": {
+      "match_method": "pointer-only provenance row; no source text redistributed",
+      "similarity": null,
+      "quote": null,
+      "license_basis": "No license lookup needed for pointer-only provenance.",
+      "license_basis_url": null
+    }
+  },
+  {
+    "fixture": "kyrylo-metodiivske-tovarystvo",
+    "claim_id": "kmt-m1_distractor",
+    "quote_or_ref": "query_wikipedia('Кирило-Мефодіївське товариство', §1) — the REAL passage: «Україно-Слов'янське товариство (Кирило-Мефодіївське братство) було створене наприкінці 1845 — на початку 1846 року в Києві». The founding CITY is fabricated: Київ, not Харків. Keyword lure: the date span and org name are verbatim-real; only the city is swapped.",
+    "classification": "QUOTED_TEXT",
+    "matched_table": "wikipedia",
+    "source_file": "https://uk.wikipedia.org/wiki/%D0%9A%D0%B8%D1%80%D0%B8%D0%BB%D0%BE-%D0%9C%D0%B5%D1%84%D0%BE%D0%B4%D1%96%D1%97%D0%B2%D1%81%D1%8C%D0%BA%D0%B5%20%D1%82%D0%BE%D0%B2%D0%B0%D1%80%D0%B8%D1%81%D1%82%D0%B2%D0%BE",
+    "chunk_id": "wikipedia:216",
+    "license": "CC-BY-SA-4.0",
+    "verdict": "SHIP",
+    "evidence": {
+      "match_method": "fts:substring",
+      "similarity": 1.0,
+      "quote": "Україно-Слов'янське товариство (Кирило-Мефодіївське братство) було створене наприкінці 1845 — на початку 1846 року в Києві",
+      "matched_fragment": "Україно-Слов'янське товариство (Кирило-Мефодіївське братство) було створене наприкінці 1845 — на початку 1846 року в Києві",
+      "source_snippet": "Кири́ло-Мефо́діївське товариство, Укра́їно-слов'я́нське товари́ство, також Кири́ло-Мето́діївське бра́тство — перша українська таємна політична організація, що виникла в Києві напр...",
+      "license_basis": "LICENSE-CONTENT.md, Wikipedia section: Ukrainian Wikipedia context is CC BY-SA 4.0.",
+      "license_basis_url": "https://creativecommons.org/licenses/by-sa/4.0/"
+    }
+  },
+  {
+    "fixture": "kyrylo-metodiivske-tovarystvo",
+    "claim_id": "kmt-m1_verified",
+    "quote_or_ref": "Real: founded in Kyiv (uk.wikipedia §Створення); «в Харкові» is fabricated.",
+    "classification": "QUOTED_TEXT",
+    "matched_table": "external_articles",
+    "source_file": "komik_istoryk",
+    "chunk_id": "ext-komik_istoryk-4",
+    "license": "UNKNOWN",
+    "verdict": "UNKNOWN",
+    "evidence": {
+      "match_method": "fts:substring",
+      "similarity": 1.0,
+      "quote": "в Харкові",
+      "matched_fragment": "в Харкові",
+      "source_snippet": "Смажи картоплю, блін. Нам ще випуск знімать. Ти сознание потеряєш. Все, я дунув. Ми можемо починати. Владимир или Член? Владимир Ленін. Він же Ульянов його справжнє прізвище, бо Л...",
+      "license_basis": "Fail-closed: matched source has no committed source_license_map.json entry.",
+      "license_basis_url": null
+    }
+  },
+  {
+    "fixture": "kyrylo-metodiivske-tovarystvo",
+    "claim_id": "kmt-t1_verified",
+    "quote_or_ref": "query_wikipedia('Кирило-Мефодіївське товариство', §1): «Організація була названа іменами відомих слов'янських просвітників Кирила і Мефодія».",
+    "classification": "QUOTED_TEXT",
+    "matched_table": "wikipedia",
+    "source_file": "https://uk.wikipedia.org/wiki/%D0%9A%D0%B8%D1%80%D0%B8%D0%BB%D0%BE-%D0%9C%D0%B5%D1%84%D0%BE%D0%B4%D1%96%D1%97%D0%B2%D1%81%D1%8C%D0%BA%D0%B5%20%D1%82%D0%BE%D0%B2%D0%B0%D1%80%D0%B8%D1%81%D1%82%D0%B2%D0%BE",
+    "chunk_id": "wikipedia:216",
+    "license": "CC-BY-SA-4.0",
+    "verdict": "SHIP",
+    "evidence": {
+      "match_method": "fts:substring",
+      "similarity": 1.0,
+      "quote": "Організація була названа іменами відомих слов'янських просвітників Кирила і Мефодія",
+      "matched_fragment": "Організація була названа іменами відомих слов'янських просвітників Кирила і Мефодія",
+      "source_snippet": "Кири́ло-Мефо́діївське товариство, Укра́їно-слов'я́нське товари́ство, також Кири́ло-Мето́діївське бра́тство — перша українська таємна політична організація, що виникла в Києві напр...",
+      "license_basis": "LICENSE-CONTENT.md, Wikipedia section: Ukrainian Wikipedia context is CC BY-SA 4.0.",
+      "license_basis_url": "https://creativecommons.org/licenses/by-sa/4.0/"
+    }
+  },
+  {
+    "fixture": "kyrylo-metodiivske-tovarystvo",
+    "claim_id": "kmt-t2_verified",
+    "quote_or_ref": "query_wikipedia('Кирило-Мефодіївське товариство', §1): «Ініціаторами створення братства і його засновниками виступили Василь Білозерський, Микола Гулак, Микола Костомаров, Пантелеймон Куліш, Опанас Маркович».",
+    "classification": "QUOTED_TEXT",
+    "matched_table": "wikipedia",
+    "source_file": "https://uk.wikipedia.org/wiki/%D0%9A%D0%B8%D1%80%D0%B8%D0%BB%D0%BE-%D0%9C%D0%B5%D1%84%D0%BE%D0%B4%D1%96%D1%97%D0%B2%D1%81%D1%8C%D0%BA%D0%B5%20%D1%82%D0%BE%D0%B2%D0%B0%D1%80%D0%B8%D1%81%D1%82%D0%B2%D0%BE",
+    "chunk_id": "wikipedia:216",
+    "license": "CC-BY-SA-4.0",
+    "verdict": "SHIP",
+    "evidence": {
+      "match_method": "fts:substring",
+      "similarity": 1.0,
+      "quote": "Ініціаторами створення братства і його засновниками виступили Василь Білозерський, Микола Гулак, Микола Костомаров, Пантелеймон Куліш, Опанас Маркович",
+      "matched_fragment": "Ініціаторами створення братства і його засновниками виступили Василь Білозерський, Микола Гулак, Микола Костомаров, Пантелеймон Куліш, Опанас Маркович",
+      "source_snippet": "Кири́ло-Мефо́діївське товариство, Укра́їно-слов'я́нське товари́ство, також Кири́ло-Мето́діївське бра́тство — перша українська таємна політична організація, що виникла в Києві напр...",
+      "license_basis": "LICENSE-CONTENT.md, Wikipedia section: Ukrainian Wikipedia context is CC BY-SA 4.0.",
+      "license_basis_url": "https://creativecommons.org/licenses/by-sa/4.0/"
+    }
+  },
+  {
+    "fixture": "kyrylo-metodiivske-tovarystvo",
+    "claim_id": "kmt-t3_verified",
+    "quote_or_ref": "query_wikipedia('Кирило-Мефодіївське товариство', §1): «У квітні 1846 року в братство вступив Тарас Шевченко».",
+    "classification": "QUOTED_TEXT",
+    "matched_table": "wikipedia",
+    "source_file": "https://uk.wikipedia.org/wiki/%D0%9A%D0%B8%D1%80%D0%B8%D0%BB%D0%BE-%D0%9C%D0%B5%D1%84%D0%BE%D0%B4%D1%96%D1%97%D0%B2%D1%81%D1%8C%D0%BA%D0%B5%20%D1%82%D0%BE%D0%B2%D0%B0%D1%80%D0%B8%D1%81%D1%82%D0%B2%D0%BE",
+    "chunk_id": "wikipedia:216",
+    "license": "CC-BY-SA-4.0",
+    "verdict": "SHIP",
+    "evidence": {
+      "match_method": "fts:substring",
+      "similarity": 1.0,
+      "quote": "У квітні 1846 року в братство вступив Тарас Шевченко",
+      "matched_fragment": "У квітні 1846 року в братство вступив Тарас Шевченко",
+      "source_snippet": "Кири́ло-Мефо́діївське товариство, Укра́їно-слов'я́нське товари́ство, також Кири́ло-Мето́діївське бра́тство — перша українська таємна політична організація, що виникла в Києві напр...",
+      "license_basis": "LICENSE-CONTENT.md, Wikipedia section: Ukrainian Wikipedia context is CC BY-SA 4.0.",
+      "license_basis_url": "https://creativecommons.org/licenses/by-sa/4.0/"
+    }
+  },
+  {
+    "fixture": "kyrylo-metodiivske-tovarystvo",
+    "claim_id": "kmt-m2_distractor",
+    "quote_or_ref": "query_wikipedia('Кирило-Мефодіївське товариство', §1) — the REAL passage: «Знаком братства став перстень з написом «Св. Кирило і Мефодій, січень 1846»». The inscription is fabricated: it was a religious dedication to Cyril and Methodius, not a nationalist slogan «За волю України». §6 corroborates the ring: «каблучка, на внутрішньому боці якої були слова: «В ім'я св. Кирила і Мефодія»».",
+    "classification": "QUOTED_TEXT",
+    "matched_table": "textbooks",
+    "source_file": "5-klas-istoriya-schupak-2022",
+    "chunk_id": "5-klas-istoriya-schupak-2022_s0103",
+    "license": "UNKNOWN",
+    "verdict": "UNKNOWN",
+    "evidence": {
+      "match_method": "fts:substring",
+      "similarity": 1.0,
+      "quote": "За волю України",
+      "matched_fragment": "За волю України",
+      "source_snippet": "Історична наука та історична пам’ять 105 шого президента незалежної України. Варто зазначити, що слі- ди цього міфу можна знайти навіть на сайтах наукових установ. Факт чи фейк? Ч...",
+      "license_basis": "Fail-closed: matched source has no committed source_license_map.json entry.",
+      "license_basis_url": null
+    }
+  },
+  {
+    "fixture": "kyrylo-metodiivske-tovarystvo",
+    "claim_id": "kmt-m2_verified",
+    "quote_or_ref": "Real inscription «Св. Кирило і Мефодій, січень 1846» (uk.wikipedia §Створення, §Донос); «За волю України» is fabricated.",
+    "classification": "QUOTED_TEXT",
+    "matched_table": "textbooks",
+    "source_file": "9-klas-istorija-ukrajini-gisem-2017",
+    "chunk_id": "9-klas-istorija-ukrajini-gisem-2017_s0060",
+    "license": "UNKNOWN",
+    "verdict": "UNKNOWN",
+    "evidence": {
+      "match_method": "fts:substring",
+      "similarity": 1.0,
+      "quote": "Св. Кирило і Мефодій, січень 1846",
+      "matched_fragment": "Св. Кирило і Мефодій, січень 1846",
+      "source_snippet": "37 § 5. Початок українського національного відродження пісні здобули багато прихильників серед місцевої еліти. У 1831— 1845 рр. тут перебував також Тарас Шевченко. У 1840 р. в Пет...",
+      "license_basis": "Fail-closed: matched source has no committed source_license_map.json entry.",
+      "license_basis_url": null
+    }
+  },
+  {
+    "fixture": "kyrylo-metodiivske-tovarystvo",
+    "claim_id": "kmt-t4_verified",
+    "quote_or_ref": "query_wikipedia('Кирило-Мефодіївське товариство', §1): «Восени 1846 загальна кількість членів братства, за даними слідства, становила 12 осіб».",
+    "classification": "QUOTED_TEXT",
+    "matched_table": "wikipedia",
+    "source_file": "https://uk.wikipedia.org/wiki/%D0%9A%D0%B8%D1%80%D0%B8%D0%BB%D0%BE-%D0%9C%D0%B5%D1%84%D0%BE%D0%B4%D1%96%D1%97%D0%B2%D1%81%D1%8C%D0%BA%D0%B5%20%D1%82%D0%BE%D0%B2%D0%B0%D1%80%D0%B8%D1%81%D1%82%D0%B2%D0%BE",
+    "chunk_id": "wikipedia:216",
+    "license": "CC-BY-SA-4.0",
+    "verdict": "SHIP",
+    "evidence": {
+      "match_method": "fts:substring",
+      "similarity": 1.0,
+      "quote": "Восени 1846 загальна кількість членів братства, за даними слідства, становила 12 осіб",
+      "matched_fragment": "Восени 1846 загальна кількість членів братства, за даними слідства, становила 12 осіб",
+      "source_snippet": "Кири́ло-Мефо́діївське товариство, Укра́їно-слов'я́нське товари́ство, також Кири́ло-Мето́діївське бра́тство — перша українська таємна політична організація, що виникла в Києві напр...",
+      "license_basis": "LICENSE-CONTENT.md, Wikipedia section: Ukrainian Wikipedia context is CC BY-SA 4.0.",
+      "license_basis_url": "https://creativecommons.org/licenses/by-sa/4.0/"
+    }
+  },
+  {
+    "fixture": "kyrylo-metodiivske-tovarystvo",
+    "claim_id": "kmt-u1_verified",
+    "quote_or_ref": "INVENTED named manuscript. Zero attestation verified 2026-07-06: query_wikipedia(search, «Київський кодекс братолюбія») → 'No Wikipedia results'; verify_source_attribution(literary, «Київський кодекс братолюбія кирило-мефодіївців») → discusses=false (evidence only the real «Закон Божий»/«Сон»/«Три літа» списки circulated among the кирило-мефодіївці and the unrelated 1748 «Права, по которым судится малороссийский народ» кодекс). The real programmatic text was «Закон Божий» / «Книга буття українського народу»; a «Київський кодекс братолюбія» does not exist.",
+    "classification": "QUOTED_TEXT",
+    "matched_table": "external_articles",
+    "source_file": "istoria_movy",
+    "chunk_id": "ext-istoria_movy-52",
+    "license": "UNKNOWN",
+    "verdict": "UNKNOWN",
+    "evidence": {
+      "match_method": "fts:substring",
+      "similarity": 1.0,
+      "quote": "Три літа",
+      "matched_fragment": "Три літа",
+      "source_snippet": "Мої вам вітання. На ідею цього відео мене навели коментарі людей. І, до речі, як завжди, висловлюю спочатку вдячність своїм всім підписникам і спонсорам, які мене підтримують фіна...",
+      "license_basis": "Fail-closed: matched source has no committed source_license_map.json entry.",
+      "license_basis_url": null
+    }
+  },
+  {
+    "fixture": "kyrylo-metodiivske-tovarystvo",
+    "claim_id": "kmt-t5_verified",
+    "quote_or_ref": "query_wikipedia('Кирило-Мефодіївське товариство', §6): «У березні 1847 року за доносом провокатора Олексія Петрова діяльність братства була викрита, а члени заарештовані».",
+    "classification": "QUOTED_TEXT",
+    "matched_table": "wikipedia",
+    "source_file": "https://uk.wikipedia.org/wiki/%D0%9A%D0%B8%D1%80%D0%B8%D0%BB%D0%BE-%D0%9C%D0%B5%D1%84%D0%BE%D0%B4%D1%96%D1%97%D0%B2%D1%81%D1%8C%D0%BA%D0%B5%20%D1%82%D0%BE%D0%B2%D0%B0%D1%80%D0%B8%D1%81%D1%82%D0%B2%D0%BE",
+    "chunk_id": "wikipedia:216",
+    "license": "CC-BY-SA-4.0",
+    "verdict": "SHIP",
+    "evidence": {
+      "match_method": "fts:substring",
+      "similarity": 1.0,
+      "quote": "У березні 1847 року за доносом провокатора Олексія Петрова діяльність братства була викрита, а члени заарештовані",
+      "matched_fragment": "У березні 1847 року за доносом провокатора Олексія Петрова діяльність братства була викрита, а члени заарештовані",
+      "source_snippet": "Кири́ло-Мефо́діївське товариство, Укра́їно-слов'я́нське товари́ство, також Кири́ло-Мето́діївське бра́тство — перша українська таємна політична організація, що виникла в Києві напр...",
+      "license_basis": "LICENSE-CONTENT.md, Wikipedia section: Ukrainian Wikipedia context is CC BY-SA 4.0.",
+      "license_basis_url": "https://creativecommons.org/licenses/by-sa/4.0/"
+    }
+  },
+  {
+    "fixture": "kyrylo-metodiivske-tovarystvo",
+    "claim_id": "kmt-t6_verified",
+    "quote_or_ref": "query_wikipedia('Кирило-Мефодіївське товариство', §6): Гулак «прочитав «Закон Божий» і навіть дозволив його переписати. Згодом цей документ став одним з основних доказів обвинувачення».",
+    "classification": "QUOTED_TEXT",
+    "matched_table": "wikipedia",
+    "source_file": "https://uk.wikipedia.org/wiki/%D0%9A%D0%B8%D1%80%D0%B8%D0%BB%D0%BE-%D0%9C%D0%B5%D1%84%D0%BE%D0%B4%D1%96%D1%97%D0%B2%D1%81%D1%8C%D0%BA%D0%B5%20%D1%82%D0%BE%D0%B2%D0%B0%D1%80%D0%B8%D1%81%D1%82%D0%B2%D0%BE",
+    "chunk_id": "wikipedia:216",
+    "license": "CC-BY-SA-4.0",
+    "verdict": "SHIP",
+    "evidence": {
+      "match_method": "fts:substring",
+      "similarity": 1.0,
+      "quote": "прочитав «Закон Божий",
+      "matched_fragment": "прочитав «Закон Божий",
+      "source_snippet": "Кири́ло-Мефо́діївське товариство, Укра́їно-слов'я́нське товари́ство, також Кири́ло-Мето́діївське бра́тство — перша українська таємна політична організація, що виникла в Києві напр...",
+      "license_basis": "LICENSE-CONTENT.md, Wikipedia section: Ukrainian Wikipedia context is CC BY-SA 4.0.",
+      "license_basis_url": "https://creativecommons.org/licenses/by-sa/4.0/"
+    }
+  },
+  {
     "fixture": "lesya-ukrainka",
     "claim_id": "root_vlog",
     "quote_or_ref": "BIO domain. All claims tool-verified 2026-07-06 by codex/4539-fixtures-bio-w3 via sources MCP. Sources: query_wikipedia('Леся Українка', summary/sections/section 1); search_literary('Леся Українка біографія') -> wave7-popovych-narys-kultury 68ba0555_c0833; search_literary('Леся Українка Ганкевич Політика і етика 1903') -> 68ba0555_c0834; search_literary('Леся Українка Драгоманов Софія помер на її руках') -> 68ba0555_c0833. Class-U «Софійський зошит Плеяди»: zero exact manuscript attestation verified by query_wikipedia search -> no results; verify_source_attribution(literary) -> discusses=false; search_literary returned only generic Софійський/Плеяда component noise, no named manuscript.",
@@ -2088,6 +2550,230 @@
       "similarity": null,
       "quote": null,
       "license_basis": "No license lookup needed for pointer-only provenance.",
+      "license_basis_url": null
+    }
+  },
+  {
+    "fixture": "lysenko-mykola",
+    "claim_id": "root_vlog",
+    "quote_or_ref": "BIO domain. All claims tool-verified 2026-07-06 by claude/4539-fixtures-wave4-public via sources MCP. Source: query_wikipedia('Лисенко Микола Віталійович', §4 Лейпциг, Київ, Петербург) — 1865–1867 justice-of-the-peace mediator in Tarashcha after Kyiv University; from 1867 studied at the LEIPZIG conservatory; 28 Dec 1867 successful Prague concert; summer 1868 married Olha O'Connor; 1869 finished a 4-year course in two years; first Shevchenko settings «Заповіт», «Ой одна я, одна», «Туман, туман долиною»; 5(17) Dec 1872 premiere of his opera «Чорноморці»; 1874–1875 studied in Petersburg under Rimsky-Korsakov. Class-M m1 twists the conservatory (real: Лейпцизькій, not Віденській); m2 twists the Petersburg mentor (real: Миколи Римського-Корсакова, not Петра Чайковського). Class-U Таращанська кантата «Голос предків»: zero attestation verified 2026-07-06 — query_wikipedia(search) → 'No Wikipedia results'; verify_source_attribution(literary) → discusses=false (evidence only real Lysenko cantatas «Радуйся, ниво неполитая», «Іван Гус», «Б'ють пороги», no «Голос предків»). Licensing: uk.wikipedia (CC BY-SA), quotes ≤25 words.",
+    "classification": "POINTER",
+    "matched_table": null,
+    "source_file": null,
+    "chunk_id": null,
+    "license": "N/A",
+    "verdict": "SHIP",
+    "evidence": {
+      "match_method": "pointer-only provenance row; no source text redistributed",
+      "similarity": null,
+      "quote": null,
+      "license_basis": "No license lookup needed for pointer-only provenance.",
+      "license_basis_url": null
+    }
+  },
+  {
+    "fixture": "lysenko-mykola",
+    "claim_id": "lys-t1_verified",
+    "quote_or_ref": "query_wikipedia('Лисенко Микола Віталійович', §4): «У 1865—1867 роках, одразу після закінчення Київського університету, працював у Таращі на посаді мирового посередника».",
+    "classification": "QUOTED_TEXT",
+    "matched_table": null,
+    "source_file": null,
+    "chunk_id": null,
+    "license": "UNKNOWN",
+    "verdict": "UNKNOWN",
+    "evidence": {
+      "match_method": "no matching source row found",
+      "similarity": null,
+      "quote": null,
+      "license_basis": "Fail-closed: unmatched quoted evidence is UNKNOWN.",
+      "license_basis_url": null
+    }
+  },
+  {
+    "fixture": "lysenko-mykola",
+    "claim_id": "lys-m1_distractor",
+    "quote_or_ref": "query_wikipedia('Лисенко Микола Віталійович', §4) — the REAL passage: «З 1867 року навчався у Лейпцизькій консерваторії, де вчився як піаніст». The conservatory is fabricated: Лейпциг, not Відень. Keyword lure: «З 1867 року навчався у... консерваторії» is verbatim-real; only the city differs.",
+    "classification": "QUOTED_TEXT",
+    "matched_table": null,
+    "source_file": null,
+    "chunk_id": null,
+    "license": "UNKNOWN",
+    "verdict": "UNKNOWN",
+    "evidence": {
+      "match_method": "no matching source row found",
+      "similarity": null,
+      "quote": null,
+      "license_basis": "Fail-closed: unmatched quoted evidence is UNKNOWN.",
+      "license_basis_url": null
+    }
+  },
+  {
+    "fixture": "lysenko-mykola",
+    "claim_id": "lys-m1_verified",
+    "quote_or_ref": "Real: studied at the LEIPZIG conservatory from 1867 (uk.wikipedia §Лейпциг, Київ, Петербург); «Віденській» is fabricated.",
+    "classification": "QUOTED_TEXT",
+    "matched_table": "external_articles",
+    "source_file": "komik_istoryk",
+    "chunk_id": "ext-komik_istoryk-16",
+    "license": "UNKNOWN",
+    "verdict": "UNKNOWN",
+    "evidence": {
+      "match_method": "fts:substring",
+      "similarity": 1.0,
+      "quote": "Віденській",
+      "matched_fragment": "Віденській",
+      "source_snippet": "за часів Русі, коли приводилися до певного миру, перемир'я і так далі, то треба було цілувати Христа і ти клянешся, що ну це от навіки вічні вирогувати не будете. Ну, як зазвичай...",
+      "license_basis": "Fail-closed: matched source has no committed source_license_map.json entry.",
+      "license_basis_url": null
+    }
+  },
+  {
+    "fixture": "lysenko-mykola",
+    "claim_id": "lys-t2_verified",
+    "quote_or_ref": "query_wikipedia('Лисенко Микола Віталійович', §4): «28 грудня 1867 року в Празі відбувся успішний концерт Лисенка, де він виконав багато українських пісень».",
+    "classification": "QUOTED_TEXT",
+    "matched_table": null,
+    "source_file": null,
+    "chunk_id": null,
+    "license": "UNKNOWN",
+    "verdict": "UNKNOWN",
+    "evidence": {
+      "match_method": "no matching source row found",
+      "similarity": null,
+      "quote": null,
+      "license_basis": "Fail-closed: unmatched quoted evidence is UNKNOWN.",
+      "license_basis_url": null
+    }
+  },
+  {
+    "fixture": "lysenko-mykola",
+    "claim_id": "lys-t3_verified",
+    "quote_or_ref": "query_wikipedia('Лисенко Микола Віталійович', §4): «Влітку 1868 року одружився з Ольгою О'Коннор, яку він узяв з собою до Лейпцига».",
+    "classification": "QUOTED_TEXT",
+    "matched_table": null,
+    "source_file": null,
+    "chunk_id": null,
+    "license": "UNKNOWN",
+    "verdict": "UNKNOWN",
+    "evidence": {
+      "match_method": "no matching source row found",
+      "similarity": null,
+      "quote": null,
+      "license_basis": "Fail-closed: unmatched quoted evidence is UNKNOWN.",
+      "license_basis_url": null
+    }
+  },
+  {
+    "fixture": "lysenko-mykola",
+    "claim_id": "lys-t4_verified",
+    "quote_or_ref": "query_wikipedia('Лисенко Микола Віталійович', §4): «1869 року завершив навчання у консерваторії, пройшовши 4-річний курс навчання усього за два роки».",
+    "classification": "QUOTED_TEXT",
+    "matched_table": null,
+    "source_file": null,
+    "chunk_id": null,
+    "license": "UNKNOWN",
+    "verdict": "UNKNOWN",
+    "evidence": {
+      "match_method": "no matching source row found",
+      "similarity": null,
+      "quote": null,
+      "license_basis": "Fail-closed: unmatched quoted evidence is UNKNOWN.",
+      "license_basis_url": null
+    }
+  },
+  {
+    "fixture": "lysenko-mykola",
+    "claim_id": "lys-t5_verified",
+    "quote_or_ref": "query_wikipedia('Лисенко Микола Віталійович', §4): «Лисенко написав і свої перші твори на слова Тараса Шевченка: «Заповіт», «Ой одна я, одна», «Туман, туман долиною»».",
+    "classification": "QUOTED_TEXT",
+    "matched_table": "literary_texts",
+    "source_file": "ukrlib-shevchenko",
+    "chunk_id": "d1b5c8a6_c0001",
+    "license": "UNKNOWN",
+    "verdict": "UNKNOWN",
+    "evidence": {
+      "match_method": "fts:substring",
+      "similarity": 1.0,
+      "quote": "Туман, туман долиною",
+      "matched_fragment": "Туман, туман долиною",
+      "source_snippet": "Полякам (\"Ще як булими козаками…\") Чернець \"Один у другого питаєм…\" \"Самому чудно. А де ж дітись?\" \"Ой, стрічечка до стрічечки…\" Хустина А. О. Козачковському Москалева криниця (По...",
+      "license_basis": "Fail-closed: matched source has no committed source_license_map.json entry.",
+      "license_basis_url": null
+    }
+  },
+  {
+    "fixture": "lysenko-mykola",
+    "claim_id": "lys-t6_verified",
+    "quote_or_ref": "query_wikipedia('Лисенко Микола Віталійович', §4): «5 (17) грудня 1872 року... відбулася перша вистава українського музичного театру в Києві — опера «Чорноморці», автором якої був Микола Лисенко».",
+    "classification": "QUOTED_TEXT",
+    "matched_table": null,
+    "source_file": null,
+    "chunk_id": null,
+    "license": "UNKNOWN",
+    "verdict": "UNKNOWN",
+    "evidence": {
+      "match_method": "no matching source row found",
+      "similarity": null,
+      "quote": null,
+      "license_basis": "Fail-closed: unmatched quoted evidence is UNKNOWN.",
+      "license_basis_url": null
+    }
+  },
+  {
+    "fixture": "lysenko-mykola",
+    "claim_id": "lys-m2_distractor",
+    "quote_or_ref": "query_wikipedia('Лисенко Микола Віталійович', §4) — the REAL passage: «У 1874—1875 роках вдосконалював майстерність у Петербурзі в Миколи Римського-Корсакова». The mentor is fabricated: it was Rimsky-Korsakov, not Tchaikovsky. Keyword lure: «У 1874—1875 роках вдосконалював майстерність у Петербурзі в» is verbatim-real; only the teacher's name differs.",
+    "classification": "QUOTED_TEXT",
+    "matched_table": null,
+    "source_file": null,
+    "chunk_id": null,
+    "license": "UNKNOWN",
+    "verdict": "UNKNOWN",
+    "evidence": {
+      "match_method": "no matching source row found",
+      "similarity": null,
+      "quote": null,
+      "license_basis": "Fail-closed: unmatched quoted evidence is UNKNOWN.",
+      "license_basis_url": null
+    }
+  },
+  {
+    "fixture": "lysenko-mykola",
+    "claim_id": "lys-m2_verified",
+    "quote_or_ref": "Real: studied under Rimsky-Korsakov in Petersburg 1874–1875 (uk.wikipedia §Лейпциг, Київ, Петербург); «Петра Чайковського» is fabricated.",
+    "classification": "QUOTED_TEXT",
+    "matched_table": "textbooks",
+    "source_file": "4-klas-ukrayinska-mova-varzatska-2021-1",
+    "chunk_id": "4-klas-ukrayinska-mova-varzatska-2021-1_s0005",
+    "license": "UNKNOWN",
+    "verdict": "UNKNOWN",
+    "evidence": {
+      "match_method": "fts:substring",
+      "similarity": 1.0,
+      "quote": "Петра Чайковського",
+      "matched_fragment": "Петра Чайковського",
+      "source_snippet": "7 ТЕКСТ § 2. Заголовок. Найважливіші в тексті слова Я поцілую мальву у щоку Ліна Костенко 8. 1. Послухайте музику Петра Чайковського «Вальс квітів». Прочитайте вірш. Який настрій...",
+      "license_basis": "Fail-closed: matched source has no committed source_license_map.json entry.",
+      "license_basis_url": null
+    }
+  },
+  {
+    "fixture": "lysenko-mykola",
+    "claim_id": "lys-u1_verified",
+    "quote_or_ref": "INVENTED named work. Zero attestation verified 2026-07-06: query_wikipedia(search, «Таращанська кантата Голос предків Лисенко») → 'No Wikipedia results'; verify_source_attribution(literary, «Таращанська кантата Голос предків Лисенка») → discusses=false (evidence lists real Lysenko cantatas «Радуйся, ниво неполитая», «Іван Гус», «Б'ють пороги», never «Голос предків»). No «Таращанська кантата «Голос предків»» exists.",
+    "classification": "QUOTED_TEXT",
+    "matched_table": "external_articles",
+    "source_file": "komik_istoryk",
+    "chunk_id": "ext-komik_istoryk-93",
+    "license": "UNKNOWN",
+    "verdict": "UNKNOWN",
+    "evidence": {
+      "match_method": "fts:substring",
+      "similarity": 1.0,
+      "quote": "Б'ють пороги",
+      "matched_fragment": "Б'ють пороги",
+      "source_snippet": "для мене тепер ясно що Галичани з їх симпатіями до Москви самі загинуть і нам дихнуть не дадуть Та годі їх переконати в противному як нас у тому що було б добре з Москвою оце от щ...",
+      "license_basis": "Fail-closed: matched source has no committed source_license_map.json entry.",
       "license_basis_url": null
     }
   },
@@ -2790,6 +3476,222 @@
       "matched_fragment": "сродна праця",
       "source_snippet": "ви слухаєте Ukrainian lessons podcast це епізод 155 Григорій Сковорода мандрівний філософ Привіт Це Анна огойко і мій подкаст уроки української або Ukrainian Lessons podcast це че...",
       "license_basis": "Fail-closed: matched source has no committed source_license_map.json entry.",
+      "license_basis_url": null
+    }
+  },
+  {
+    "fixture": "vertep",
+    "claim_id": "root_vlog",
+    "quote_or_ref": "FOLK domain. All claims tool-verified 2026-07-06 by claude/4539-fixtures-wave4-public via sources MCP. Source: query_wikipedia('Вертеп', §6 Архітектоніка) — two-tier «небо»/«земля» house of wood or cardboard open to the viewer; upper tier = діва Марія з немовлям, lower = трон царя Ірода; вертепник водив ляльку по прорізах у підлозі; мechanized Смерть/Козак; ляльок могло бути до 40; канти = church music from a late-16th-c. reform; Куп'янська скриня reconstructed in the Soviet era. Class-M m1 swaps the tiers (real: Марія top, Ірод bottom); m2 inflates the doll count (real: до 40, not до ста). Class-U «Батуринська вертепна скриня»: zero attestation verified 2026-07-06 — query_wikipedia(search) → 'No Wikipedia results'; verify_source_attribution(literary) → discusses=false (evidence only generic vertep discussion + Mazepa's Batyryn palace, no named vertep box). All licensing: uk.wikipedia (CC BY-SA), quotes ≤25 words.",
+    "classification": "POINTER",
+    "matched_table": null,
+    "source_file": null,
+    "chunk_id": null,
+    "license": "N/A",
+    "verdict": "SHIP",
+    "evidence": {
+      "match_method": "pointer-only provenance row; no source text redistributed",
+      "similarity": null,
+      "quote": null,
+      "license_basis": "No license lookup needed for pointer-only provenance.",
+      "license_basis_url": null
+    }
+  },
+  {
+    "fixture": "vertep",
+    "claim_id": "vertep-t1_verified",
+    "quote_or_ref": "query_wikipedia('Вертеп', §6): «Вертеп схожий на будиночок, що має два поверхи, які за християнською традицією трактувалися як «небо» і «земля»».",
+    "classification": "QUOTED_TEXT",
+    "matched_table": null,
+    "source_file": null,
+    "chunk_id": null,
+    "license": "UNKNOWN",
+    "verdict": "UNKNOWN",
+    "evidence": {
+      "match_method": "no matching source row found",
+      "similarity": null,
+      "quote": null,
+      "license_basis": "Fail-closed: unmatched quoted evidence is UNKNOWN.",
+      "license_basis_url": null
+    }
+  },
+  {
+    "fixture": "vertep",
+    "claim_id": "vertep-t2_verified",
+    "quote_or_ref": "query_wikipedia('Вертеп', §6): «Виготовлений із дерева або картону, відкритий з боку глядача, будиночок міг бути різного розміру».",
+    "classification": "QUOTED_TEXT",
+    "matched_table": null,
+    "source_file": null,
+    "chunk_id": null,
+    "license": "UNKNOWN",
+    "verdict": "UNKNOWN",
+    "evidence": {
+      "match_method": "no matching source row found",
+      "similarity": null,
+      "quote": null,
+      "license_basis": "Fail-closed: unmatched quoted evidence is UNKNOWN.",
+      "license_basis_url": null
+    }
+  },
+  {
+    "fixture": "vertep",
+    "claim_id": "vertep-m1_distractor",
+    "quote_or_ref": "query_wikipedia('Вертеп', §6) — the REAL passage: «На верхньому поверсі вертепу знаходилася нерухома фігура діви Марії з немовлям, а на нижньому — трон царя Ірода». The tiers are SWAPPED: Богородиця belongs on the upper («небо») level and Ірод's throne on the lower («земля»). Keyword lure: верхній/нижній поверх, трон Ірода, Богородиця all sit in the real описание.",
+    "classification": "QUOTED_TEXT",
+    "matched_table": null,
+    "source_file": null,
+    "chunk_id": null,
+    "license": "UNKNOWN",
+    "verdict": "UNKNOWN",
+    "evidence": {
+      "match_method": "no matching source row found",
+      "similarity": null,
+      "quote": null,
+      "license_basis": "Fail-closed: unmatched quoted evidence is UNKNOWN.",
+      "license_basis_url": null
+    }
+  },
+  {
+    "fixture": "vertep",
+    "claim_id": "vertep-m1_verified",
+    "quote_or_ref": "Real: Марія on top, Ірод below (uk.wikipedia §Архітектоніка). The swapped assignment is fabricated.",
+    "classification": "POINTER",
+    "matched_table": null,
+    "source_file": null,
+    "chunk_id": null,
+    "license": "N/A",
+    "verdict": "SHIP",
+    "evidence": {
+      "match_method": "pointer-only provenance row; no source text redistributed",
+      "similarity": null,
+      "quote": null,
+      "license_basis": "No license lookup needed for pointer-only provenance.",
+      "license_basis_url": null
+    }
+  },
+  {
+    "fixture": "vertep",
+    "claim_id": "vertep-t3_verified",
+    "quote_or_ref": "query_wikipedia('Вертеп', §6): «Вертепник, який стояв позаду скрині, водив ляльку по прорізах у підлозі, спостерігаючи за дією у спеціальні віконечка».",
+    "classification": "QUOTED_TEXT",
+    "matched_table": null,
+    "source_file": null,
+    "chunk_id": null,
+    "license": "UNKNOWN",
+    "verdict": "UNKNOWN",
+    "evidence": {
+      "match_method": "no matching source row found",
+      "similarity": null,
+      "quote": null,
+      "license_basis": "Fail-closed: unmatched quoted evidence is UNKNOWN.",
+      "license_basis_url": null
+    }
+  },
+  {
+    "fixture": "vertep",
+    "claim_id": "vertep-t4_verified",
+    "quote_or_ref": "query_wikipedia('Вертеп', §6): «частина вертепних ляльок мали певну механізацію: Смерть замахувалася косою, Козак танцював, присідаючи, у царя Ірода голова злітала з плечей».",
+    "classification": "QUOTED_TEXT",
+    "matched_table": null,
+    "source_file": null,
+    "chunk_id": null,
+    "license": "UNKNOWN",
+    "verdict": "UNKNOWN",
+    "evidence": {
+      "match_method": "no matching source row found",
+      "similarity": null,
+      "quote": null,
+      "license_basis": "Fail-closed: unmatched quoted evidence is UNKNOWN.",
+      "license_basis_url": null
+    }
+  },
+  {
+    "fixture": "vertep",
+    "claim_id": "vertep-m2_distractor",
+    "quote_or_ref": "query_wikipedia('Вертеп', §6) — the REAL passage: «Ляльок у вертепах могло бути до 40». The count is inflated from до 40 to до ста. Keyword lure: «Ляльок у... могло бути до» matches the real sentence verbatim except for the number.",
+    "classification": "QUOTED_TEXT",
+    "matched_table": null,
+    "source_file": null,
+    "chunk_id": null,
+    "license": "UNKNOWN",
+    "verdict": "UNKNOWN",
+    "evidence": {
+      "match_method": "no matching source row found",
+      "similarity": null,
+      "quote": null,
+      "license_basis": "Fail-closed: unmatched quoted evidence is UNKNOWN.",
+      "license_basis_url": null
+    }
+  },
+  {
+    "fixture": "vertep",
+    "claim_id": "vertep-m2_verified",
+    "quote_or_ref": "Real: up to 40 puppets (uk.wikipedia §Архітектоніка); «до ста» is fabricated.",
+    "classification": "POINTER",
+    "matched_table": null,
+    "source_file": null,
+    "chunk_id": null,
+    "license": "N/A",
+    "verdict": "SHIP",
+    "evidence": {
+      "match_method": "pointer-only provenance row; no source text redistributed",
+      "similarity": null,
+      "quote": null,
+      "license_basis": "No license lookup needed for pointer-only provenance.",
+      "license_basis_url": null
+    }
+  },
+  {
+    "fixture": "vertep",
+    "claim_id": "vertep-t5_verified",
+    "quote_or_ref": "query_wikipedia('Вертеп', §6): «звучали народні колядки і канти (вид церковної музики, що виник внаслідок реформи наприкінці XVI сторіччя)».",
+    "classification": "QUOTED_TEXT",
+    "matched_table": null,
+    "source_file": null,
+    "chunk_id": null,
+    "license": "UNKNOWN",
+    "verdict": "UNKNOWN",
+    "evidence": {
+      "match_method": "no matching source row found",
+      "similarity": null,
+      "quote": null,
+      "license_basis": "Fail-closed: unmatched quoted evidence is UNKNOWN.",
+      "license_basis_url": null
+    }
+  },
+  {
+    "fixture": "vertep",
+    "claim_id": "vertep-t6_verified",
+    "quote_or_ref": "query_wikipedia('Вертеп', §6 Куп'янська скриня): «Куп'янська скриня була реконструйована за радянської доби».",
+    "classification": "QUOTED_TEXT",
+    "matched_table": null,
+    "source_file": null,
+    "chunk_id": null,
+    "license": "UNKNOWN",
+    "verdict": "UNKNOWN",
+    "evidence": {
+      "match_method": "no matching source row found",
+      "similarity": null,
+      "quote": null,
+      "license_basis": "Fail-closed: unmatched quoted evidence is UNKNOWN.",
+      "license_basis_url": null
+    }
+  },
+  {
+    "fixture": "vertep",
+    "claim_id": "vertep-u1_verified",
+    "quote_or_ref": "INVENTED named relic. Zero attestation verified 2026-07-06: query_wikipedia(search, «Батуринська вертепна скриня») → 'No Wikipedia results'; verify_source_attribution(literary, «Батуринська вертепна скриня») → discusses=false (evidence is only generic vertep drama discussion and Mazepa's Batyryn palace, no named vertep box). Real named boxes are Куп'янська/Галаганівська/Славутинська/Сокиринська; a «Батуринська вертепна скриня» does not exist, mirroring the anchor «золоте перевесло» pattern.",
+    "classification": "QUOTED_TEXT",
+    "matched_table": null,
+    "source_file": null,
+    "chunk_id": null,
+    "license": "UNKNOWN",
+    "verdict": "UNKNOWN",
+    "evidence": {
+      "match_method": "no matching source row found",
+      "similarity": null,
+      "quote": null,
+      "license_basis": "Fail-closed: unmatched quoted evidence is UNKNOWN.",
       "license_basis_url": null
     }
   },

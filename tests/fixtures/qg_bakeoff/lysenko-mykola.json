@@ -1,0 +1,81 @@
+{
+  "slug": "lysenko-mykola",
+  "title": "Микола Лисенко: становлення композитора",
+  "verification_log": "BIO domain. All claims tool-verified 2026-07-06 by claude/4539-fixtures-wave4-public via sources MCP. Source: query_wikipedia('Лисенко Микола Віталійович', §4 Лейпциг, Київ, Петербург) — 1865–1867 justice-of-the-peace mediator in Tarashcha after Kyiv University; from 1867 studied at the LEIPZIG conservatory; 28 Dec 1867 successful Prague concert; summer 1868 married Olha O'Connor; 1869 finished a 4-year course in two years; first Shevchenko settings «Заповіт», «Ой одна я, одна», «Туман, туман долиною»; 5(17) Dec 1872 premiere of his opera «Чорноморці»; 1874–1875 studied in Petersburg under Rimsky-Korsakov. Class-M m1 twists the conservatory (real: Лейпцизькій, not Віденській); m2 twists the Petersburg mentor (real: Миколи Римського-Корсакова, not Петра Чайковського). Class-U Таращанська кантата «Голос предків»: zero attestation verified 2026-07-06 — query_wikipedia(search) → 'No Wikipedia results'; verify_source_attribution(literary) → discusses=false (evidence only real Lysenko cantatas «Радуйся, ниво неполитая», «Іван Гус», «Б'ють пороги», no «Голос предків»). Licensing: uk.wikipedia (CC BY-SA), quotes ≤25 words.",
+  "canary_sentence": "Ці мелодії й досі лунають на святкових концертах.",
+  "passage_md": "Микола Лисенко — основоположник української класичної музики. У 1865—1867 роках, після закінчення Київського університету, працював у Таращі на посаді мирового посередника. У ці роки Лисенки активно збирали народний пісенний фольклор. З 1867 року навчався у Віденській консерваторії, де вивчав фортепіано й теорію музики. 28 грудня 1867 року в Празі відбувся успішний концерт Лисенка. Влітку 1868 року одружився з Ольгою О'Коннор. 1869 року завершив навчання у консерваторії, пройшовши 4-річний курс навчання усього за два роки. Тоді ж написав свої перші твори на слова Тараса Шевченка: «Заповіт», «Ой одна я, одна», «Туман, туман долиною». 5 (17) грудня 1872 року відбулася перша вистава опери «Чорноморці», автором якої був Микола Лисенко. Постановником опери став його троюрідний брат Михайло Старицький. У 1874—1875 роках вдосконалював майстерність у Петербурзі в Петра Чайковського. Згодом композитор багато гастролював містами України, пропагуючи рідну музику. До ранніх спроб дослідники відносять загублену Таращанську кантату «Голос предків». Ці мелодії й досі лунають на святкових концертах.",
+  "claims": [
+    {
+      "claim_id": "lys-t1",
+      "claim": "У 1865—1867 роках, після закінчення Київського університету, працював у Таращі на посаді мирового посередника",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "query_wikipedia('Лисенко Микола Віталійович', §4): «У 1865—1867 роках, одразу після закінчення Київського університету, працював у Таращі на посаді мирового посередника»."
+    },
+    {
+      "claim_id": "lys-m1",
+      "claim": "З 1867 року навчався у Віденській консерваторії",
+      "is_true": false,
+      "fabrication_class": "M",
+      "distractor_evidence": "query_wikipedia('Лисенко Микола Віталійович', §4) — the REAL passage: «З 1867 року навчався у Лейпцизькій консерваторії, де вчився як піаніст». The conservatory is fabricated: Лейпциг, not Відень. Keyword lure: «З 1867 року навчався у... консерваторії» is verbatim-real; only the city differs.",
+      "verified_by": "Real: studied at the LEIPZIG conservatory from 1867 (uk.wikipedia §Лейпциг, Київ, Петербург); «Віденській» is fabricated."
+    },
+    {
+      "claim_id": "lys-t2",
+      "claim": "28 грудня 1867 року в Празі відбувся успішний концерт Лисенка",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "query_wikipedia('Лисенко Микола Віталійович', §4): «28 грудня 1867 року в Празі відбувся успішний концерт Лисенка, де він виконав багато українських пісень»."
+    },
+    {
+      "claim_id": "lys-t3",
+      "claim": "Влітку 1868 року одружився з Ольгою О'Коннор",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "query_wikipedia('Лисенко Микола Віталійович', §4): «Влітку 1868 року одружився з Ольгою О'Коннор, яку він узяв з собою до Лейпцига»."
+    },
+    {
+      "claim_id": "lys-t4",
+      "claim": "1869 року завершив навчання у консерваторії, пройшовши 4-річний курс навчання усього за два роки",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "query_wikipedia('Лисенко Микола Віталійович', §4): «1869 року завершив навчання у консерваторії, пройшовши 4-річний курс навчання усього за два роки»."
+    },
+    {
+      "claim_id": "lys-t5",
+      "claim": "написав свої перші твори на слова Тараса Шевченка: «Заповіт», «Ой одна я, одна», «Туман, туман долиною»",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "query_wikipedia('Лисенко Микола Віталійович', §4): «Лисенко написав і свої перші твори на слова Тараса Шевченка: «Заповіт», «Ой одна я, одна», «Туман, туман долиною»»."
+    },
+    {
+      "claim_id": "lys-t6",
+      "claim": "5 (17) грудня 1872 року відбулася перша вистава опери «Чорноморці», автором якої був Микола Лисенко",
+      "is_true": true,
+      "fabrication_class": null,
+      "distractor_evidence": null,
+      "verified_by": "query_wikipedia('Лисенко Микола Віталійович', §4): «5 (17) грудня 1872 року... відбулася перша вистава українського музичного театру в Києві — опера «Чорноморці», автором якої був Микола Лисенко»."
+    },
+    {
+      "claim_id": "lys-m2",
+      "claim": "У 1874—1875 роках вдосконалював майстерність у Петербурзі в Петра Чайковського",
+      "is_true": false,
+      "fabrication_class": "M",
+      "distractor_evidence": "query_wikipedia('Лисенко Микола Віталійович', §4) — the REAL passage: «У 1874—1875 роках вдосконалював майстерність у Петербурзі в Миколи Римського-Корсакова». The mentor is fabricated: it was Rimsky-Korsakov, not Tchaikovsky. Keyword lure: «У 1874—1875 роках вдосконалював майстерність у Петербурзі в» is verbatim-real; only the teacher's name differs.",
+      "verified_by": "Real: studied under Rimsky-Korsakov in Petersburg 1874–1875 (uk.wikipedia §Лейпциг, Київ, Петербург); «Петра Чайковського» is fabricated."
+    },
+    {
+      "claim_id": "lys-u1",
+      "claim": "До ранніх спроб дослідники відносять загублену Таращанську кантату «Голос предків»",
+      "is_true": false,
+      "fabrication_class": "U",
+      "distractor_evidence": null,
+      "verified_by": "INVENTED named work. Zero attestation verified 2026-07-06: query_wikipedia(search, «Таращанська кантата Голос предків Лисенко») → 'No Wikipedia results'; verify_source_attribution(literary, «Таращанська кантата Голос предків Лисенка») → discusses=false (evidence lists real Lysenko cantatas «Радуйся, ниво неполитая», «Іван Гус», «Б'ють пороги», never «Голос предків»). No «Таращанська кантата «Голос предків»» exists."
+    }
+  ]
+}

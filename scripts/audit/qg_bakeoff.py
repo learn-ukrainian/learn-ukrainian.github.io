@@ -89,6 +89,7 @@ DOMAIN_BY_SLUG: Mapping[str, str] = MappingProxyType(
         "rusalii": "folk",
         "vesilnyi-obriad": "folk",
         "andriivski-vechornytsi": "folk",
+        "vertep": "folk",
         "khmelnytskyi-1648": "history",
         "khreshchennia-rusi": "history",
         "yaroslav-sofiya": "history",
@@ -96,10 +97,13 @@ DOMAIN_BY_SLUG: Mapping[str, str] = MappingProxyType(
         # The almanac fixture is routed to history because the measurement
         # target is publication context and cultural-national movement history.
         "rusalka-dnistrova": "history",
+        "kyrylo-metodiivske-tovarystvo": "history",
         "ahatanhel-krymskyi": "bio",
         "franko-ivan": "bio",
         "lesya-ukrainka": "bio",
         "skovoroda-hryhorii": "bio",
+        "kotliarevskyi-ivan": "bio",
+        "lysenko-mykola": "bio",
     }
 )
 
