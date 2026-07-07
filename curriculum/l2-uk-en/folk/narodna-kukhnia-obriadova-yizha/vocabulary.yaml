@@ -1,0 +1,160 @@
+- lemma: обрядова їжа
+  translation: ritual food
+  pos: словосполука
+  usage: Обрядова їжа змінює статус через час, дію, слово й коло учасників.
+- lemma: харчова практика
+  translation: food practice
+  pos: словосполука
+  usage: Харчова практика охоплює не лише рецепт, а й спосіб подавання та пам'ять.
+- lemma: кутя
+  translation: kutia, ritual grain dish
+  pos: іменник
+  usage: Кутя відкриває різдвяну вечерю і може повертатися в інших календарних моментах.
+- lemma: коливо
+  translation: memorial grain dish
+  pos: іменник
+  usage: Коливо на поминках скеровує спільну трапезу до пам'яті про померлого.
+- lemma: коровай
+  translation: wedding ritual bread
+  pos: іменник
+  usage: Коровай входить у весільну дію через коровайниць, піч, пісню і поділ.
+- lemma: коровайниця
+  translation: woman who prepares wedding korovai
+  pos: іменник
+  usage: Коровайниця має ритуальну й соціальну роль у весільній підготовці.
+- lemma: калач
+  translation: ring-shaped festive bread
+  pos: іменник
+  usage: Калач може бути знаком гостинності, родинного свята або обрядового дару.
+- lemma: паска
+  translation: Easter bread
+  pos: іменник
+  usage: Паска належить до великоднього кошика, освячення і родинного столу.
+- lemma: крашанка
+  translation: dyed Easter egg
+  pos: іменник
+  usage: Крашанка працює як великодній дар, знак обміну, гра або пам'ять.
+- lemma: узвар
+  translation: dried fruit drink
+  pos: іменник
+  usage: Узвар стоїть поруч із кутею у зимовому календарному столі.
+- lemma: хлібосольність
+  translation: generous hospitality with bread and salt
+  pos: іменник
+  usage: Хлібосольність означає гідно прийняти гостя і поділити стіл.
+- lemma: зарука
+  translation: pledge, betrothal assurance
+  pos: іменник
+  usage: Зарука в джерельному уривку пов'язана з обміном хліба між родами.
+- lemma: благословення
+  translation: blessing
+  pos: іменник
+  usage: Благословення переводить хліб або коровай із побутового предмета в обрядову дію.
+- lemma: поминання
+  translation: commemoration of the dead
+  pos: іменник
+  usage: Поминання впорядковує трапезу довкола пам'яті про померлого.
+- lemma: поминальний
+  translation: memorial
+  pos: прикметник
+  usage: Поминальний обід починається не з насичення, а з пам'яті.
+- lemma: Святвечір
+  translation: Christmas Eve
+  pos: іменник
+  usage: Святвечір задає час, у якому кутя стає центральною стравою.
+- lemma: голодна кутя
+  translation: Epiphany Eve kutia
+  pos: словосполука
+  usage: Голодна кутя повторює зернову страву в іншому моменті зимового циклу.
+- lemma: свячене
+  translation: blessed Easter food
+  pos: іменник
+  usage: Свячене повертається з церкви до родинного столу як благословенна їжа.
+- lemma: гостина
+  translation: feast, hosted meal
+  pos: іменник
+  usage: Гостина показує, як дім приймає людей і розподіляє честь.
+- lemma: частувати
+  translation: to treat, to offer food
+  pos: дієслово
+  usage: Частувати означає не лише нагодувати, а й включити людину в коло столу.
+- lemma: краяти
+  translation: to cut ceremonially
+  pos: дієслово
+  usage: Коровай крають у зв'язку з ролями, гостями й благословенням молодих.
+- lemma: бгати
+  translation: to knead, to shape dough
+  pos: дієслово
+  usage: Коровай бгають у колі учасниць і весільних пісень.
+- lemma: подавати
+  translation: to serve
+  pos: дієслово
+  usage: Подавати обрядову страву означає поставити її в правильний момент послідовності.
+- lemma: обмінюватися
+  translation: to exchange
+  pos: дієслово
+  usage: Обмінюватися крашанками або хлібом означає підтвердити зв'язок між людьми.
+- lemma: освячення
+  translation: consecration, blessing
+  pos: іменник
+  usage: Освячення великоднього кошика змінює статус їжі в родинному столі.
+- lemma: межовий час
+  translation: threshold time
+  pos: словосполука
+  usage: Межовий час року робить вечерю особливо уважною до порядку й пам'яті.
+- lemma: послідовність
+  translation: sequence
+  pos: іменник
+  usage: Послідовність показує, де страва входить у обряд і що після цього змінюється.
+- lemma: варіантність
+  translation: variation
+  pos: іменник
+  usage: Варіантність святвечірнього столу не дозволяє вчити одне число страв як закон.
+- lemma: регіональна варіація
+  translation: regional variation
+  pos: словосполука
+  usage: Регіональна варіація потребує джерельної опори, а не туристичного ярлика.
+- lemma: спадщина
+  translation: heritage
+  pos: іменник
+  usage: Спадщина борщу означає живу практику носіїв, а не лише назву страви.
+- lemma: нематеріальна спадщина
+  translation: intangible heritage
+  pos: словосполука
+  usage: Нематеріальна спадщина охороняє практику, знання, передачу і спільноту.
+- lemma: уніфікація
+  translation: standardization
+  pos: іменник
+  usage: Уніфікація радянської кухні могла стирати локальну мову й обряд.
+- lemma: редукція
+  translation: reduction, oversimplification
+  pos: іменник
+  usage: Редукція кухні до двох страв зменшує календарний і родинний шар.
+- lemma: екзотизація
+  translation: exoticization
+  pos: іменник
+  usage: Екзотизація робить регіон яскравою декорацією замість джерельної конкретності.
+- lemma: джерельна межа
+  translation: evidentiary boundary
+  pos: словосполука
+  usage: Джерельна межа не дозволяє цитувати популярну формулу без перевіреного запису.
+- lemma: рецептура
+  translation: recipe pattern
+  pos: іменник
+  usage: Рецептура борщу змінюється за регіоном, родиною, сезоном і доступними продуктами.
+- lemma: буряковий квас
+  translation: beet kvass
+  pos: словосполука
+  usage: Буряковий квас допомагає пояснити історичну кислу основу борщу.
+- lemma: родинна пам'ять
+  translation: family memory
+  pos: словосполука
+  usage: Родинна пам'ять зберігає не тільки рецепт, а й порядок дій.
+- lemma: святковий кошик
+  translation: festive Easter basket
+  pos: словосполука
+  usage: Святковий кошик поєднує паску, яйця, інші страви й освячення.
+- lemma: культурна видимість
+  translation: cultural visibility
+  pos: словосполука
+  usage: Культурна видимість потрібна, щоб українська практика не зникала в безіменній спільності.
