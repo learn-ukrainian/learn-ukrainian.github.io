@@ -1,0 +1,50 @@
+---
+# Source registry for wiki/figures/platon-maiboroda.md
+# Referenced inline as [S1], [S2], ...
+sources:
+  - id: S1
+    file: https://esu.com.ua/article-60475
+    tier: T1
+    title: Майборода Платон Іларіонович — Енциклопедія Сучасної України
+    type: external
+    url: https://esu.com.ua/article-60475
+  - id: S2
+    file: https://composersukraine.org/index.php?id=2405
+    tier: T2
+    title: Майборода Платон Іларіонович — Національна спілка композиторів України
+    type: external
+    notes: Інституційна довідка про діяльність і роль у Спілці композиторів.
+    url: https://composersukraine.org/index.php?id=2405
+  - id: S3
+    file: https://uk.wikipedia.org/wiki/Платон_Майборода
+    tier: T3
+    title: Платон Майборода — Українська Вікіпедія
+    type: wikipedia
+    url: https://uk.wikipedia.org/wiki/Платон_Майборода
+  - id: S4
+    file: https://en.wikipedia.org/wiki/Platon_Mayboroda
+    tier: T3
+    title: Platon Mayboroda — English Wikipedia
+    type: wikipedia
+    url: https://en.wikipedia.org/wiki/Platon_Mayboroda
+  - id: S5
+    file: https://www.nbuv.gov.ua/node/4474
+    tier: T2
+    title: Майборода Платон Іларіонович — НБУВ (список праці та біографічні довідки)
+    type: external
+    notes: Інституційна довідкова сторінка української наукової бібліотеки.
+    url: https://www.nbuv.gov.ua/node/4474
+  - id: S6
+    file: https://dovzhenkocentre.org/event/shahtarski-kinopokazy/
+    tier: T5
+    title: Шахтарські кінопокази — Довженко-Центр
+    type: external
+    notes: Культурно-кіношний контекст першого широкого звучання пісні у фільмі «Літа молодії».
+    url: https://dovzhenkocentre.org/event/shahtarski-kinopokazy/
+  - id: S7
+    file: https://uk.wikipedia.org/wiki/Пісня_про_рушник
+    tier: T5
+    title: Пісня про рушник — Українська Вікіпедія
+    type: wikipedia
+    notes: Додаткова довідка про жанрові шляхи поширення пісні.
+    url: https://uk.wikipedia.org/wiki/Пісня_про_рушник
