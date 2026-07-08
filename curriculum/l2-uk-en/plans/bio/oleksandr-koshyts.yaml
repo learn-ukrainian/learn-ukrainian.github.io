@@ -123,11 +123,64 @@ references:
   path: https://nte.etnolog.org.ua/uploads/2004/4/publications/80.pdf
   title: Кошиць та місія Капели (НТЕ)
   type: reference
+readings:
+- title: Кошиць Олександр Антонович
+  language: uk
+  genre: Енциклопедична стаття / біографічна довідка
+  source_type: reference
+  role: orientation
+  source: Енциклопедія Сучасної України
+  source_url: https://esu.com.ua/article-1728
+  license: copyrighted
+  rights_note: Використовувати як link-only довідку; не хостити повний текст або фото.
+  hosting: link-only
+  cefr_min: C1
+  learner_task: >-
+    Виписати етапи хорової, етнографічної та еміграційної біографії Кошиця,
+    відокремлюючи факти від пізнішої меморіальної рамки.
+  caveats: >-
+    Довідка не замінює читання мемуарного джерела про місію Капели.
+- title: З піснею через світ
+  language: uk
+  genre: Мемуари / щоденникові записи
+  source_type: primary
+  role: close-reading
+  source: Diasporiana
+  source_url: https://diasporiana.org.ua/wp-content/uploads/books/21538/file.pdf
+  license: unknown
+  rights_note: >-
+    Використовувати як link-only PDF; не хостити повний текст або довгі уривки
+    без правової перевірки діаспорного видання.
+  hosting: link-only
+  cefr_min: C1
+  learner_task: >-
+    Проаналізувати короткий уривок про місію Капели та визначити, як Кошиць
+    описує хор як доказ української культурної суб'єктності.
+  caveats: >-
+    Мемуар треба зіставляти з державними документами й рецензіями; він не є
+    єдиним описом дипломатичної місії.
+- title: Кошиць та місія Капели
+  language: uk
+  genre: Наукова стаття / історія музичної дипломатії
+  source_type: reference
+  role: supplementary
+  source: Народна творчість та етнологія
+  source_url: https://nte.etnolog.org.ua/uploads/2004/4/publications/80.pdf
+  license: copyrighted
+  rights_note: Використовувати як link-only статтю; не переносити повний PDF у UI.
+  hosting: link-only
+  cefr_min: C1
+  learner_task: >-
+    Порівняти, як наукова стаття пояснює репрезентаційну функцію Капели, з
+    мемуарним голосом Кошиця.
+  caveats: >-
+    Для завдань слід розрізняти мемуар, дослідницький коментар і рецепцію
+    концертів.
 sequence: 313
 slug: oleksandr-koshyts
 subtitle: The Cultural Diplomat of the Ukrainian Republic in Exile
 title: 'Олександр Кошиць: Дипломатія хору та вимушена еміграція'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: використання культури, мистецтва та освіти для просування інтересів держави на міжнародній арені
   pos: ж.
