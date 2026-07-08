@@ -109,11 +109,38 @@ references:
   path: https://www.ukrinform.ua/
   title: Розстріляним росіянами бійцем є Олександр Мацієвський - ТрО Північ (Укрінформ)
   type: reference
+readings:
+- title: Указ Президента України №146/2023
+  language: uk
+  genre: Офіційний документ
+  source_type: primary
+  role: orientation
+  source: Президент України
+  source_url: https://www.president.gov.ua/documents/1462023-46089
+  license: public-domain
+  rights_note: Офіційний нормативний акт можна посилати як джерело державного визнання; достатньо link-only.
+  hosting: link-only
+  cefr_min: C1
+  learner_task: Визначити, як офіційний документ формулює підставу для звання Героя України.
+  caveats: Документ не містить повної біографії й має читатися разом з довідковими джерелами.
+- title: Мацієвський Олександр Ігорович
+  language: uk
+  genre: Енциклопедична стаття / біографічна довідка
+  source_type: reference
+  role: supplementary-reading
+  source: Енциклопедія Сучасної України
+  source_url: https://esu.com.ua/article-877833
+  license: copyrighted
+  rights_note: Використовувати як link-only довідку; не хостити повний текст.
+  hosting: link-only
+  cefr_min: C1
+  learner_task: Виписати факти про життя, службу, верифікацію особи та державне вшанування.
+  caveats: Не використовувати відео страти як навчальний матеріал; працювати з юридичним і меморіальним контекстом.
 sequence: 288
 slug: oleksandr-matsiievskyi
 subtitle: The POW Executed for "Slava Ukraini"
 title: 'Олександр Мацієвський: Свідчення гідності'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: особа, яка під час збройного конфлікту потрапила під владу ворожої сторони
   pos: ч.

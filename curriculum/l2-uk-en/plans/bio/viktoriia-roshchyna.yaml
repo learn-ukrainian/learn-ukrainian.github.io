@@ -14,7 +14,8 @@ activity_hints:
   placement: workbook
   type: debate
 - focus: >-
-    Аналіз цитати — "Я кричала, що я журналістка і мене будуть шукати" (професійна ідентичність проти свавільного затримання)
+    Аналіз цитати — "Я кричала, що я журналістка і мене будуть шукати"
+    (професійна ідентичність проти свавільного затримання)
   placement: workbook
   type: critical-analysis
 - focus: Есе-рефлексія — небезпека документування злочинів тоталітарної системи та феномен "насильницьких зникнень"
@@ -112,11 +113,47 @@ references:
   title: Тиждень у полоні окупантів. Як я вибралася з рук ФСБ, «кадирівців» і дагестанців (Hromadske)
   type: primary
   work: Тиждень у полоні окупантів
+readings:
+- title: Тиждень у полоні окупантів
+  language: uk
+  genre: Репортаж від першої особи / свідчення
+  source_type: primary
+  role: reading-needed
+  source: 'reading-needed: viktoriia-roshchyna-hromadske-captivity-report'
+  source_url: 'reading-needed'
+  license: unknown
+  rights_note: >-
+    reading-needed: знайти стабільний URL Hromadske для українського репортажу
+    Вікторії Рощиної та використовувати як link-only джерело.
+  hosting: reading-needed
+  cefr_min: C1
+  learner_task: >-
+    Прочитати свідчення про перше затримання і виписати форми тиску, допиту та
+    професійної самоідентифікації журналістки.
+  caveats: Не хостити повний текст; працювати з короткими цитатами і правозахисним контекстом.
+- title: Український матеріал про загибель Вікторії Рощиної в російському полоні
+  language: uk
+  genre: Розслідування / правозахисний матеріал
+  source_type: reference
+  role: reading-needed
+  source: 'reading-needed: viktoriia-roshchyna-ukrainian-investigation'
+  source_url: 'reading-needed'
+  license: unknown
+  rights_note: >-
+    reading-needed: знайти стабільний український матеріал Суспільного,
+    Слідства.Інфо або іншого перевіреного медіа про обставини утримання і
+    смерті.
+  hosting: reading-needed
+  cefr_min: C1
+  learner_task: Зіставити документовані факти з поняттям примусового зникнення та свободою преси під окупацією.
+  caveats: >-
+    Англомовні правозахисні матеріали можуть бути джерелами для автора модуля,
+    але learner reading має бути українською або мати явний виняток.
 sequence: 292
 slug: viktoriia-roshchyna
 subtitle: The Frontline Journalist who Died in Russian Captivity
 title: 'Вікторія Рощина: Свідчення з окупації'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: позбавлення волі, взяття у заручники військовими або бойовиками
   pos: ч.

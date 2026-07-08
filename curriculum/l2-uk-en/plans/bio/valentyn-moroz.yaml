@@ -123,11 +123,42 @@ references:
   title: 'Репортаж із заповідника імені Берія'
   type: primary
   work: 'Репортаж із заповідника імені Берія'
+readings:
+- title: Мороз Валентин Якович
+  language: uk
+  genre: Біографічна довідка / правозахисний архів
+  source_type: reference
+  role: orientation
+  source: Харківська правозахисна група
+  source_url: https://museum.khpg.org/1113917542
+  license: copyrighted
+  rights_note: Використовувати як link-only українську довідку; не хостити повний текст.
+  hosting: link-only
+  cefr_min: C1
+  learner_task: >-
+    Виписати етапи арештів, ув'язнення, голодувань і еміграції та зіставити їх
+    із темою внутрішніх конфліктів у дисидентському русі.
+  caveats: Архівна довідка містить політично чутливі оцінки; читати разом з академічною енциклопедичною статтею.
+- title: Репортаж із заповідника імені Берія
+  language: uk
+  genre: Самвидавний есей / табірне свідчення
+  source_type: primary
+  role: reading-needed
+  source: 'reading-needed: valentyn-moroz-reportazh'
+  source_url: 'reading-needed'
+  license: unknown
+  rights_note: >-
+    reading-needed: знайти стабільний український правомірний доступ до
+    самвидавного есею або зафіксувати link-only виняток.
+  hosting: reading-needed
+  cefr_min: C1
+  learner_task: Підготувати фрагмент для аналізу мови табірного свідчення та критики радянської каральної системи.
+  caveats: Не хостити повний текст без перевірки прав і джерела.
 sequence: 283
 slug: valentyn-moroz
 subtitle: The Radical Essayist and Prisoner of Vladimir Prison
 title: "Валентин Мороз: Радикальний спротив та 'Репортаж із заповідника імені Берія'"
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: територія, що перебуває під охороною; у творі Мороза — саркастична метафора радянської табірної системи
   pos: ч.

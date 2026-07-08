@@ -14,7 +14,8 @@ activity_hints:
   placement: workbook
   type: debate
 - focus: >-
-    Аналіз цитати — "Будьте гідними подвигів наших героїв, не журіться, будьте сміливими!" (імператив громадянської відповідальності у час втрат)
+    Аналіз цитати — "Будьте гідними подвигів наших героїв, не журіться, будьте
+    сміливими!" (імператив громадянської відповідальності у час втрат)
   placement: workbook
   type: critical-analysis
 - focus: Есе-рефлексія — "Свобода — це найбільша цінність" як практичний, а не абстрактний вибір
@@ -117,11 +118,40 @@ references:
   path: https://www.president.gov.ua/documents/7502023-48905
   title: Указ Президента України №750/2023
   type: primary
+readings:
+- title: На війні загинула журналістка Суспільного та парамедикиня Ірина Цибух
+  language: uk
+  genre: Новинний життєпис / некролог
+  source_type: reference
+  role: orientation
+  source: Суспільне
+  source_url: https://suspilne.media/757281-na-vijni-zaginula-zurnalistka-suspilnogo-ta-paramedikina-irina-cibuh/
+  license: copyrighted
+  rights_note: Використовувати як link-only український матеріал; не хостити повний текст або фото.
+  hosting: link-only
+  cefr_min: C1
+  learner_task: Виписати етапи медійної роботи, волонтерства, служби в "Госпітальєрах" і обставини загибелі.
+  caveats: Матеріал має меморіальний тон; модуль має уникати абстрактного героїзування.
+- title: Посмертний лист Ірини Цибух
+  language: uk
+  genre: Лист / особисте свідчення
+  source_type: primary
+  role: reading-needed
+  source: 'reading-needed: iryna-tsybukh-posthumous-letter'
+  source_url: 'reading-needed'
+  license: unknown
+  rights_note: >-
+    reading-needed: знайти стабільну українську публікацію листа з дозволеним
+    link-only використанням; не хостити повний текст.
+  hosting: reading-needed
+  cefr_min: C1
+  learner_task: Проаналізувати, як лист формулює свободу, сміливість і відповідальність живих.
+  caveats: Працювати з короткими цитатами і етичним контекстом пам'яті.
 sequence: 291
 slug: iryna-tsybukh
 subtitle: The Journalist and Hospitallers Combat Medic
 title: 'Ірина Цибух: Свобода як найвища цінність'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: парамедик-жінка; людина без вищої медичної освіти, яка надає домедичну допомогу на фронті
   pos: ж.

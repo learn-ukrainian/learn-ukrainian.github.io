@@ -15,7 +15,8 @@ activity_hints:
   placement: workbook
   type: debate
 - focus: >-
-    Аналіз цитати — "Кожен український фотограф мріє зробити фото, яке зупинить війну" (мистецтво і медіа як інструмент миру)
+    Аналіз цитати — "Кожен український фотограф мріє зробити фото, яке зупинить
+    війну" (мистецтво і медіа як інструмент миру)
   placement: workbook
   type: critical-analysis
 - focus: Есе-рефлексія — значення візуальних свідчень у документуванні воєнних злочинів Росії
@@ -112,11 +113,45 @@ references:
   path: https://pen.org.ua/maks-levin
   title: Maks Levin (PEN Ukraine)
   type: reference
+readings:
+- title: Макс Левін
+  language: uk
+  genre: Біографічний нарис / меморіальний профіль
+  source_type: reference
+  role: orientation
+  source: PEN Ukraine
+  source_url: https://pen.org.ua/maks-levin
+  license: copyrighted
+  rights_note: Використовувати як link-only біографічний профіль; не хостити повний текст або фотографії.
+  hosting: link-only
+  cefr_min: C1
+  learner_task: >-
+    Виписати біографічні факти, цитати і теми, які пояснюють гуманістичний фокус
+    фотодокументалістики Левіна.
+  caveats: Фотографії мають окремі права; не переносити зображення без перевірки ліцензій.
+- title: Український матеріал про розслідування вбивства Макса Левіна
+  language: uk
+  genre: Розслідування / правозахисний матеріал
+  source_type: reference
+  role: reading-needed
+  source: 'reading-needed: maks-levin-ukrainian-investigation'
+  source_url: 'reading-needed'
+  license: unknown
+  rights_note: >-
+    reading-needed: знайти стабільний український матеріал про висновки RSF або
+    українське розслідування без використання англомовного тексту як learner
+    reading.
+  hosting: reading-needed
+  cefr_min: C1
+  learner_task: Порівняти факти розслідування з етичними питаннями документування воєнних злочинів.
+  caveats: >-
+    Англомовний звіт RSF може бути джерелом для автора модуля, але learner
+    reading має бути українською або мати explicit exception.
 sequence: 290
 slug: maks-levin
 subtitle: The Photojournalist Executed by Russian Forces
 title: 'Макс Левін: Документалістика як зброя'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: галузь кіно та фотографії, що фіксує реальні події та людей
   pos: ж.

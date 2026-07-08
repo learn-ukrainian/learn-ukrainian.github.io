@@ -105,7 +105,7 @@ references:
   title: Указ Президента України №42/2017
   type: primary
 - note: Історичний календар Українського інституту національної пам'яті.
-  path: https://uinp.gov.ua/istorychnyy-kalendar/gruden/20/1974-narodyvsya-solist-paryzkoyi-nacionalnoyi-opery-dobrovolec-duk-ps-vasyl-slipak
+  path: https://uinp.gov.ua/istorychnyy-kalendar/gruden/20/1974-narodyvsya-solist-paryzkoyi-nacionalnoyi-opery-dobrovolec-duk-ps-vasyl-slipak  # yamllint disable-line rule:line-length
   title: 1974 — народився Василь Сліпак (УІНП)
   type: reference
 - note: Стаття про загибель та життєвий шлях.
@@ -113,14 +113,48 @@ references:
   title: В зоні АТО загинув оперний співак, боєць з позивним "Міф" (Громадське Радіо)
   type: reference
 - note: Подкаст та біографічний нарис.
-  path: https://hromadske.radio/podcasts/persona/poperedu-n-oho-zavzhdy-yshov-holos-vasyl-slipak-mif-iakyy-stav-lehendoiu
+  path: https://hromadske.radio/podcasts/persona/poperedu-n-oho-zavzhdy-yshov-holos-vasyl-slipak-mif-iakyy-stav-lehendoiu  # yamllint disable-line rule:line-length
   title: 'Попереду нього завжди йшов голос: Василь Сліпак (Громадське Радіо)'
   type: reference
+readings:
+- title: Указ Президента України №42/2017
+  language: uk
+  genre: Офіційний документ
+  source_type: primary
+  role: orientation
+  source: Президент України
+  source_url: https://www.president.gov.ua/documents/422017-21314
+  license: public-domain
+  rights_note: >-
+    Офіційний нормативний акт можна посилати як джерело державного визнання;
+    достатньо link-only.
+  hosting: link-only
+  cefr_min: C1
+  learner_task: >-
+    Визначити юридичну формулу державного визнання та зіставити її з
+    біографічним наративом про громадянський вибір.
+  caveats: Офіційний документ не замінює біографічного джерела про життя Сліпака.
+- title: 1974 — народився Василь Сліпак
+  language: uk
+  genre: Історичний календар / біографічний нарис
+  source_type: reference
+  role: supplementary-reading
+  source: Український інститут національної пам'яті
+  source_url: >-
+    https://uinp.gov.ua/istorychnyy-kalendar/gruden/20/1974-narodyvsya-solist-paryzkoyi-nacionalnoyi-opery-dobrovolec-duk-ps-vasyl-slipak
+  license: copyrighted
+  rights_note: Використовувати як link-only український довідковий матеріал.
+  hosting: link-only
+  cefr_min: C1
+  learner_task: >-
+    Скласти часову лінію від музичної освіти й оперної кар'єри до волонтерства
+    та фронту.
+  caveats: Меморіальний текст потребує обережного тону без романтизації війни.
 sequence: 287
 slug: vasyl-slipak
 subtitle: The Paris Opera Voice Silenced by Russian War
 title: 'Василь Сліпак: Міф, голос та обов''язок'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: особа, яка за власним бажанням бере участь у збройному захисті країни
   pos: ч.
