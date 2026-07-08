@@ -1545,3 +1545,87 @@ def test_ellipsized_evidence_mass_boundary_twelve_nonspace_chars() -> None:
     assert llm_reviewer_dispatch._output_contains_excerpt(output, "абвгд…клмнопр") is True
     # 5 + 6 = 11 nonspace chars → evidence-mass guard fails closed.
     assert llm_reviewer_dispatch._output_contains_excerpt(output, "абвгд…клмноп") is False
+
+
+def test_canonical_tool_name_handles_all_transport_forms() -> None:
+    """Regression for dot-form MCP tool names (gpt-5.5 / codex QG) vs __ / bare.
+
+    All of these must canonicalize to the bare tool name so grounding gate admits
+    legitimate citations (previously dot-form `sources.query_*` produced 0 confirms
+    even when excerpt was present in captured output).
+    """
+    canonical = llm_reviewer_dispatch._canonical_tool_name
+
+    # The six primary forms cited in the bug
+    assert canonical("mcp__sources__query_wikipedia") == "query_wikipedia"
+    assert canonical("mcp__sources.query_wikipedia") == "query_wikipedia"
+    assert canonical("sources_query_wikipedia") == "query_wikipedia"
+    assert canonical("sources__query_wikipedia") == "query_wikipedia"
+    assert canonical("mcp__query_wikipedia") == "query_wikipedia"
+    assert canonical("query_wikipedia") == "query_wikipedia"
+
+    # Tool names containing underscores + digits must preserve them (no generic _ strip)
+    assert canonical("mcp__sources.search_grinchenko_1907") == "search_grinchenko_1907"
+    assert canonical("sources_search_grinchenko_1907") == "search_grinchenko_1907"
+    assert canonical("mcp__sources__search_grinchenko_1907") == "search_grinchenko_1907"
+
+    # Case folding still applies
+    assert canonical("MCP__Sources.Query_Wikipedia") == "query_wikipedia"
+
+    # Edge cases
+    assert canonical(None) == ""
+    assert canonical("") == ""
+    assert canonical("   ") == ""
+    assert canonical("unknown.tool") == "tool"
+
+    # Malformed dot forms MUST fail closed, not collapse to "" (an empty canonical
+    # would be treated as "no tool" by the gate and wildcard past the tool filter).
+    # They are left non-empty so they simply never match a real event.
+    assert canonical("mcp__sources.") == "sources."
+    assert canonical(".query_wikipedia") == ".query_wikipedia"
+    assert canonical("mcp__sources.") != ""
+    assert canonical(".query_wikipedia") != ""
+
+
+def test_grounding_matches_events_across_dot_and_underscore_tool_forms() -> None:
+    """End-to-end match: grounding with dot-form tool name must match __-form event.
+
+    This was False before the canonicalizer fix → every codex/gpt dot-cited grounding
+    was rejected even when the excerpt was verifiably in the captured tool output.
+    Example from koliadky QG sweep: 0/14 → 14/14 after fix.
+    """
+    # Event captured with double-underscore form (typical of adapter/runtime)
+    event = _sources_event(
+        tool="mcp__sources__query_wikipedia",
+        query="koliadky",
+        output=(
+            "Колядки — традиційні українські обрядові пісні, "
+            "що виконуються на Різдво та в інші зимові свята. "
+            "Містять побажання щастя, здоров'я та доброго врожаю."
+        ),
+    )
+
+    # Grounding emitted by model using dot form (gpt-5.5 / recent codex)
+    grounding = {
+        "tool": "mcp__sources.query_wikipedia",
+        "query": "koliadky",
+        "evidence_excerpt": "Колядки — традиційні українські обрядові пісні, що виконуються на Різдво",
+        "tool_call_id": "call_0",
+    }
+    assert llm_reviewer_dispatch._grounding_matches_events(grounding, (event,)) is True
+
+    # Mixed other dot/underscore forms also match the same event
+    for variant in ("sources.query_wikipedia", "sources__query_wikipedia", "query_wikipedia"):
+        g = dict(grounding, tool=variant)
+        assert llm_reviewer_dispatch._grounding_matches_events(g, (event,)) is True, variant
+
+    # Wrong tool (different canonical name) must not match even if query/excerpt overlap
+    bad = dict(grounding, tool="mcp__sources.search_grinchenko_1907")
+    assert llm_reviewer_dispatch._grounding_matches_events(bad, (event,)) is False
+
+    # Malformed dot-form tool names must NOT wildcard past the tool filter
+    # (regression: an empty canonical would bypass `if tool and ...` and match
+    # any event with the same query/excerpt). These must fail closed.
+    for malformed in ("mcp__sources.", "sources.", ".query_wikipedia"):
+        g = dict(grounding, tool=malformed)
+        assert llm_reviewer_dispatch._grounding_matches_events(g, (event,)) is False, malformed
