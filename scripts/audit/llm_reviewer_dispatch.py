@@ -1619,7 +1619,9 @@ def _canonical_tool_name(name: Any) -> str:
     All refer to the same tool; the grounding gate must not fail on spelling.
     Strips the ``mcp__``/``mcp_`` wrapper. Then:
     - if a ``.`` is present, takes everything after the FIRST dot (``server.tool`` form;
-      dot never appears inside a tool name)
+      dot never appears inside a tool name) — but ONLY when both the server and tool
+      segments are non-empty; a malformed ``sources.`` / ``.tool`` is left unchanged so
+      the gate fails closed rather than collapsing to "" (which would wildcard the filter)
     - else strips the ``sources__``/``sources_`` server prefix (underscore forms)
 
     Then casefolds. Internal underscores/digits in tool names (e.g. ``search_grinchenko_1907``)
@@ -1633,7 +1635,15 @@ def _canonical_tool_name(name: Any) -> str:
             canonical = canonical[len(prefix):]
             break
     if "." in canonical:
-        canonical = canonical.split(".", 1)[1]  # server.tool → tool
+        server, _, tool = canonical.partition(".")  # server.tool → tool
+        # Only strip when BOTH segments are non-empty. A malformed dot form
+        # (``sources.`` or ``.query_wikipedia``) must NOT collapse to "" — an
+        # empty canonical is treated as "no tool" by _grounding_matching_events
+        # (``if tool and ...``), which would turn a malformed citation into a
+        # wildcard that bypasses the tool filter. Leave it unchanged so the
+        # gate fails closed (non-empty, never matches a real event).
+        if server and tool:
+            canonical = tool
     else:
         for prefix in ("sources__", "sources_"):
             if canonical.startswith(prefix):

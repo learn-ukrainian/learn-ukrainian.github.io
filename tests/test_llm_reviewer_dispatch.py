@@ -1578,6 +1578,14 @@ def test_canonical_tool_name_handles_all_transport_forms() -> None:
     assert canonical("   ") == ""
     assert canonical("unknown.tool") == "tool"
 
+    # Malformed dot forms MUST fail closed, not collapse to "" (an empty canonical
+    # would be treated as "no tool" by the gate and wildcard past the tool filter).
+    # They are left non-empty so they simply never match a real event.
+    assert canonical("mcp__sources.") == "sources."
+    assert canonical(".query_wikipedia") == ".query_wikipedia"
+    assert canonical("mcp__sources.") != ""
+    assert canonical(".query_wikipedia") != ""
+
 
 def test_grounding_matches_events_across_dot_and_underscore_tool_forms() -> None:
     """End-to-end match: grounding with dot-form tool name must match __-form event.
@@ -1614,3 +1622,10 @@ def test_grounding_matches_events_across_dot_and_underscore_tool_forms() -> None
     # Wrong tool (different canonical name) must not match even if query/excerpt overlap
     bad = dict(grounding, tool="mcp__sources.search_grinchenko_1907")
     assert llm_reviewer_dispatch._grounding_matches_events(bad, (event,)) is False
+
+    # Malformed dot-form tool names must NOT wildcard past the tool filter
+    # (regression: an empty canonical would bypass `if tool and ...` and match
+    # any event with the same query/excerpt). These must fail closed.
+    for malformed in ("mcp__sources.", "sources.", ".query_wikipedia"):
+        g = dict(grounding, tool=malformed)
+        assert llm_reviewer_dispatch._grounding_matches_events(g, (event,)) is False, malformed
