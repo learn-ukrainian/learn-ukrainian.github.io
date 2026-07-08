@@ -1,6 +1,6 @@
 # Codex tool-call capture — recurring measurement artifacts
 
-**Category:** codex-tool-capture · **Severity:** build-breaking (HARD-fail) · **Recurrences:** 3
+**Category:** codex-tool-capture · **Severity:** build-breaking (HARD-fail) · **Recurrences:** 4
 
 ## Symptom
 (Identical each time.) A codex-tools V7 build HARD-fails the writer phase with
@@ -19,7 +19,7 @@ captured → the `tools_writer_runtime_gate` reads "0 calls" as "writer used no
 tools" and HARD-fails. **The gate conflates a measurement failure (we couldn't
 see the calls) with a behavior failure (the writer made none).**
 
-## The three recurrences
+## The four recurrences
 1. **#1907 (2026-05-13) — rollout matcher.** `_rollout_matches_plan` rejected
    fresh rollouts (encoding/whitespace mismatch on the stdin-payload byte
    compare) → adapter discarded the rollout → 0 calls. Earlier triggered the
@@ -38,6 +38,7 @@ see the calls) with a behavior failure (the writer made none).**
    (verify_words×8, get_chunk_context×2, check_russian_shadow×2,
    search_style_guide×2, search_images×1) — all misclassified as 0.
    Fix: normalize the join to exactly one `__`.
+4. **(this, 2026-07-08) — codex dual-id mismatch.** Codex MCP tool payloads carry both `id` (`fc_...`) and `call_id` (`call_...`), but the companion result event (`mcp_tool_call_end`) only carries `call_id`. `_tool_call_id()` registered the call under `id` because it was first in order, causing the result lookup on `call_id` to miss. Resolved by implementing id-set registration under all available correlation IDs.
 
 ## Prevention
 1. **Distinguish measurement-failure from behavior-failure in the gate.** Before
@@ -64,5 +65,5 @@ silently degrading when the upstream format changes), applied to telemetry.
 ## Links
 
 - Issue: #2407 (prior recurrences #1907, #2403)
-- Fix: `00dd5f18de` — fix(codex-adapter): normalize namespace/name join for
-  codex 0.135.0 (no trailing `__`) (#2407)
+- Fix (namespace join): `00dd5f18de` — fix(codex-adapter): normalize namespace/name join for codex 0.135.0 (no trailing `__`) (#2407)
+- Fix (dual-id mismatch): fix(agent-runtime): correlate codex MCP tool outputs by call_id (id-set registration)
