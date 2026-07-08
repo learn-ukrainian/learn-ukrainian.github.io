@@ -372,3 +372,37 @@ over-confirming where distractors bite (vesnianky). Next steps (panel consensus)
 Evidence: fixes #4791/#4792; re-gate proof (koliadky 0→14/14, LIVE −80→+70); fleet thread
 `qg-harness-forensics`. Original `audit/2026-07-08-{gpt,claude,gemini}-multirun-1x` retained, but the gpt
 cells there are now known artifacts (pre-fix).
+
+### Update — the matcher brittleness is SYSTEMIC, not per-model (#4795, 2026-07-08)
+
+Follow-up probing (which seats besides gpt failed? did deepseek/gemma?) revealed the defects above are one
+root disease: **the grounding gate demanded the model reproduce captured telemetry VERBATIM**, silently
+rejecting real grounding across four axes — tool_call_id (relaxed earlier), tool-name spelling (#4792),
+**query string (#4795)**, and excerpt ellipsis (still open). A THIRD fix landed:
+
+- **#4795 — query match by PREFIX-BOUNDARY, not exact equality.** Models decorate the cited query with
+  params (`"Сковорода Григорій Савич mode=section 3 (…)"`); the gate required byte-exact equality → rejected
+  legitimate grounded confirms. claude was under-measured nearly as badly as gpt: **tooled LIVE 410 → 880
+  (+470)** after re-gate; several fixtures flip negative→positive (ahatanhel −50→+120, lesya −30→+30,
+  skovoroda −30→+30). claude's real grounded-confirm rate is ~94% (119/126), not the 67% first reported.
+
+**Total matcher error (the panel's #1 risk, now measured)** — the gate silently discards a large fraction of
+legitimately-grounded confirms on EVERY seat and model, subscription frontier AND cheap opencode:
+
+| seat | confirms | credited as-shipped | if matcher sound | matcher error |
+| --- | ---: | ---: | ---: | ---: |
+| claude (sub) | 126 | 85 | 124 | +39 (31%) |
+| gemini (sub) | 70 | 52 | 62 | +10 (14%) |
+| gemma (opencode) | 301 | 150 | 233 | +83 (28%) |
+| ds-flash (opencode) | 288 | 118 | 216 | +98 (34%) |
+| ds-pro (opencode) | 295 | 142 | 234 | +92 (31%) |
+
+("Sound" = canonical tool match + excerpt genuinely present in that tool's captured output — a generous
+upper bound, corroborated by exact per-axis recoveries, e.g. claude +34 from the query axis alone.)
+
+**Consequence:** point-fixing each axis (#4791/#4792/#4795) recovers a slice, but ~30% is multi-dimensional.
+The verbatim-substring matcher is the wrong instrument. Priority pivots to panel **part (d): replace it with
+an entailment gate** ("model proposes evidence span → deterministic gate decides entailment against the
+captured output"), collapsing all brittleness axes into one semantically-correct check. The new decision
+metric (converged spec, thread `qg-harness-forensics`) must be built on the SOUND gate — measuring gate
+error on a broken matcher yields confident-but-garbage rates (the panel's exact warning).
