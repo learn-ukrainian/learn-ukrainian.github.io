@@ -124,11 +124,66 @@ references:
   path: https://www.s-bilokin.name/Culture/Bojchuk/Paris.html
   title: У Парижі (Білокін)
   type: reference
+readings:
+- title: Boichuk Mykhaylo
+  language: uk
+  genre: Музейно-дослідницька сторінка / контекст бойчукізму
+  source_type: reference
+  role: orientation
+  source: UA View
+  source_url: https://uaview.ui.org.ua/ua/artist/Boichuk-Mykhaylo
+  license: copyrighted
+  rights_note: Використовувати як link-only матеріал; не хостити зображення творів або повний текст.
+  hosting: link-only
+  cefr_min: C1
+  learner_task: >-
+    Знайти фрагмент про майстерню Бойчука й пояснити, чому дисципліна школи не
+    означала копіювання індивідуальності Седляра.
+  caveats: >-
+    Сторінка дає контекст бойчукізму, але не замінює окремого source edition
+    творів Седляра.
+- title: У Парижі
+  language: uk
+  genre: Мистецтвознавча стаття / цитування Седляра
+  source_type: reference
+  role: close-reading
+  source: Сергій Білокін
+  source_url: https://www.s-bilokin.name/Culture/Bojchuk/Paris.html
+  license: copyrighted
+  rights_note: Використовувати як link-only статтю; не хостити повний текст або репродукції.
+  hosting: link-only
+  cefr_min: C1
+  learner_task: >-
+    Проаналізувати короткий уривок із цитуванням статті Седляра 1934 року й
+    визначити, як мистецька лексика працює в радянському журналі.
+  caveats: >-
+    Це цитування через дослідницьку статтю, а не повна публікація журналу
+    "Образотворче мистецтво"; довгі уривки не переносити.
+- title: Page-stable читання з "Кобзаря" 1931 року або статті Седляра
+  language: uk
+  genre: Ілюстрована книжка / мистецтвознавча публіцистика
+  source_type: primary
+  role: reading-needed
+  source: 'reading-needed: vasyl-sedliar-kobzar-or-1934-article-source'
+  source_url: 'reading-needed'
+  license: unknown
+  rights_note: >-
+    reading-needed: знайти стабільний і правово безпечний доступ до ілюстрацій
+    "Кобзаря" 1931 року або статті Седляра; не хостити репродукції чи повні
+    журнальні сторінки без підтверджених прав.
+  hosting: reading-needed
+  cefr_min: C1
+  learner_task: >-
+    Порівняти короткий текстовий або візуальний фрагмент із темою культурного
+    стирання бойчукістів.
+  caveats: >-
+    Візуальні джерела є rights-sensitive; до перевірки вони мають лишатися
+    link-only або позначені як reading-needed.
 sequence: 317
 slug: vasyl-sedliar
 subtitle: The Master Illustrator Erased by the State
 title: 'Василь Седляр: Знищені фрески та заборонений Кобзар'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: живопис фарбами, що розводяться водою та емульсією
   pos: ж.

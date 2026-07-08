@@ -127,11 +127,66 @@ references:
   path: https://museum.lib.kherson.ua/ukrainskiy-hudozhnik-ivan-padalka.htm
   title: Український художник Іван Падалка (Музей книги, Херсон)
   type: reference
+readings:
+- title: Український художник Іван Падалка
+  language: uk
+  genre: Музейна стаття / біографічний нарис
+  source_type: reference
+  role: orientation
+  source: Музей книги, Херсонська обласна бібліотека
+  source_url: https://museum.lib.kherson.ua/ukrainskiy-hudozhnik-ivan-padalka.htm
+  license: copyrighted
+  rights_note: Використовувати як link-only музейний матеріал; не хостити повний текст або репродукції.
+  hosting: link-only
+  cefr_min: C1
+  learner_task: >-
+    Виписати освіту, бойчукістське середовище, графічні роботи й репресивний
+    фінал Падалки.
+  caveats: >-
+    Музейний нарис треба звіряти з документальними матеріалами про арешт і
+    справу; не переносити зображення без прав.
+- title: Реабілітовані історією. Харківська область, книга 2
+  language: uk
+  genre: Документальна публікація / реабілітаційний корпус
+  source_type: reference
+  role: close-reading
+  source: Реабілітовані історією
+  source_url: https://www.reabit.org.ua/files/store/Kharkiv_2.pdf
+  license: copyrighted
+  rights_note: Використовувати як link-only PDF; не хостити повний корпус або довгі документи справи.
+  hosting: link-only
+  cefr_min: C1
+  learner_task: >-
+    Прочитати короткий документальний фрагмент про АРМУ, арешт або архівні
+    посилання й відрізнити мову джерела від радянських звинувачень.
+  caveats: >-
+    Репресивні формули треба маркувати як мову слідства; не приймати їх за
+    нейтральний опис Падалки.
+- title: Page-stable українське читання з голосом Падалки
+  language: uk
+  genre: Інтерв'ю / мистецька публіцистика
+  source_type: primary
+  role: reading-needed
+  source: 'reading-needed: ivan-padalka-interview-or-armu-source'
+  source_url: 'reading-needed'
+  license: unknown
+  rights_note: >-
+    reading-needed: зафіксувати правово безпечне українське джерело для
+    короткого уривка з інтерв'ю або тексту Падалки про АРМУ; не хостити
+    журнальні репродукції чи ілюстрації без прав.
+  hosting: reading-needed
+  cefr_min: C1
+  learner_task: >-
+    Проаналізувати власний голос Падалки про мистецький плюралізм або навчання
+    в Бойчука, не зводячи його до "учня" без самостійності.
+  caveats: >-
+    Досьє має цитати через вторинні access copies; для build потрібен
+    page-stable source або явне link-only обмеження.
 sequence: 316
 slug: ivan-padalka
 subtitle: The Muralist and Printmaker Executed in the Terror
 title: 'Іван Падалка: Лінії та долі розстріляного авангарду'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: стиль українського монументального мистецтва, заснований Михайлом Бойчуком
   pos: ч.
