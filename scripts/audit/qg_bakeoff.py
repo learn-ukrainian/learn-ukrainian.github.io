@@ -337,6 +337,20 @@ def _subscription_tooled_tool_config(runtime_agent: str) -> dict[str, Any]:
 
     if runtime_agent == "agy":
         config, diagnostics = build_mcp_tool_config("agy", mcp_servers=["sources"])
+    elif runtime_agent == "claude":
+        config, diagnostics = build_mcp_tool_config(
+            "claude",
+            mcp_servers=["sources"],
+            allowed_tools="mcp__sources__*",
+        )
+        if config is not None:
+            config = {
+                **config,
+                "output_format": "stream-json",
+                "use_bare": False,
+            }
+    elif runtime_agent == "codex":
+        config, diagnostics = build_mcp_tool_config("codex", mcp_servers=["sources"])
     else:
         raise BakeoffConfigError(f"subscription tooled runtime not wired for agent {runtime_agent!r}")
     if config is None:
@@ -345,6 +359,34 @@ def _subscription_tooled_tool_config(runtime_agent: str) -> dict[str, Any]:
 
 
 SUBSCRIPTION_TOOLED_ROUTES: tuple[llm_reviewer_dispatch.ReviewerRoute, ...] = (
+    llm_reviewer_dispatch.ReviewerRoute(
+        route_name="tooled_runtime_claude",
+        bridge_command=_runtime_bridge_command(
+            "claude",
+            CLAUDE_SUBSCRIPTION_BARE_MODEL_ID,
+            entrypoint=TOOLED_RUNTIME_ENTRYPOINT,
+        ),
+        reviewer_model_id=CLAUDE_SUBSCRIPTION_BARE_MODEL_ID,
+        reviewer_family="anthropic",
+        purpose="Subscription-runtime tooled fact-check via Claude Code (#4763)",
+        input_usd_per_mtok=0.0,
+        output_usd_per_mtok=0.0,
+        requires_mcp=True,
+    ),
+    llm_reviewer_dispatch.ReviewerRoute(
+        route_name="tooled_runtime_gpt",
+        bridge_command=_runtime_bridge_command(
+            "codex",
+            GPT_SUBSCRIPTION_BARE_MODEL_ID,
+            entrypoint=TOOLED_RUNTIME_ENTRYPOINT,
+        ),
+        reviewer_model_id=GPT_SUBSCRIPTION_BARE_MODEL_ID,
+        reviewer_family="openai",
+        purpose="Subscription-runtime tooled fact-check via Codex exec (#4762)",
+        input_usd_per_mtok=0.0,
+        output_usd_per_mtok=0.0,
+        requires_mcp=True,
+    ),
     llm_reviewer_dispatch.ReviewerRoute(
         route_name="tooled_runtime_gemini",
         bridge_command=_runtime_bridge_command(
@@ -397,6 +439,26 @@ _SUBSCRIPTION_BARE_IDENTITIES: dict[str, RouteIdentity] = {
     ),
 }
 _SUBSCRIPTION_TOOLED_IDENTITIES: dict[str, RouteIdentity] = {
+    "tooled_runtime_claude": RouteIdentity(
+        transport="runtime-claude",
+        entrypoint=TOOLED_RUNTIME_ENTRYPOINT,
+        session_policy="fresh",
+        measurement_tier=SUBSCRIPTION_RUNTIME_TOOLED_TIER,
+        pricing_basis=_SUBSCRIPTION_PRICING_BASIS,
+        resolved_model=CLAUDE_SUBSCRIPTION_BARE_MODEL_ID,
+        runtime_agent="claude",
+        tool_config=None,
+    ),
+    "tooled_runtime_gpt": RouteIdentity(
+        transport="runtime-codex",
+        entrypoint=TOOLED_RUNTIME_ENTRYPOINT,
+        session_policy="fresh",
+        measurement_tier=SUBSCRIPTION_RUNTIME_TOOLED_TIER,
+        pricing_basis=_SUBSCRIPTION_PRICING_BASIS,
+        resolved_model=GPT_SUBSCRIPTION_BARE_MODEL_ID,
+        runtime_agent="codex",
+        tool_config=None,
+    ),
     "tooled_runtime_gemini": RouteIdentity(
         transport="runtime-agy",
         entrypoint=TOOLED_RUNTIME_ENTRYPOINT,
@@ -411,12 +473,15 @@ _SUBSCRIPTION_TOOLED_IDENTITIES: dict[str, RouteIdentity] = {
 
 
 def _lenient_first_json_object(response_text: str) -> Mapping[str, Any] | None:
-    """Parse the FIRST JSON object from a response with trailing garbage.
+    """Parse the FIRST JSON object from a response with leading/trailing garbage.
 
     Measured live (deepseek-v4-flash): a valid payload followed by extra text
     ("Extra data: char 7498"). JSON hygiene is a contract defect worth
-    counting, not a reason to void the fact-check measurement. Returns None
-    when no leading object parses.
+    counting, not a reason to void the fact-check measurement.
+
+    Measured live (claude-opus tooled, 2026-07-08): prose preamble before the
+    JSON object ("I've completed the required search protocol..."). Returns None
+    when no object parses.
     """
     text = response_text.strip()
     if "```json" in text:
@@ -424,11 +489,16 @@ def _lenient_first_json_object(response_text: str) -> Mapping[str, Any] | None:
     elif text.startswith("```"):
         text = text.split("```", 1)[1]
     text = text.lstrip()
-    try:
-        payload, _end = json.JSONDecoder().raw_decode(text)
-    except json.JSONDecodeError:
-        return None
-    return payload if isinstance(payload, Mapping) else None
+    for candidate in (text, text[text.find("{") :] if "{" in text else ""):
+        if not candidate or not candidate.lstrip().startswith("{"):
+            continue
+        try:
+            payload, _end = json.JSONDecoder().raw_decode(candidate.lstrip())
+        except json.JSONDecodeError:
+            continue
+        if isinstance(payload, Mapping):
+            return payload
+    return None
 
 
 def require_offline_opt_in() -> None:
@@ -908,6 +978,7 @@ def invoke_subscription_tooled_route(
             entrypoint=TOOLED_RUNTIME_ENTRYPOINT,
             hard_timeout=1800,
             stall_timeout=600,
+            effort="xhigh" if runtime_agent == "claude" else None,
         )
     except RateLimitedError as exc:
         raise BakeoffOpsQuotaError(str(exc)) from exc

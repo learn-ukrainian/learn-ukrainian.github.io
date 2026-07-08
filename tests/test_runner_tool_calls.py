@@ -5,6 +5,8 @@ import sys
 from datetime import UTC, datetime
 from pathlib import Path
 
+import pytest
+
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 from agent_runtime.adapters.base import InvocationPlan
@@ -69,6 +71,55 @@ def test_claude_stream_json_without_text_fails_loudly() -> None:
     assert result.ok is False
     assert result.response == ""
     assert result.tool_calls[0]["name"] == "mcp__sources__verify_words"
+
+
+def test_claude_adapter_recovers_tool_calls_from_session_jsonl(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setenv("HOME", str(tmp_path))
+    cwd = tmp_path / "work"
+    cwd.mkdir()
+    session_id = "abc-123"
+    slug = str(cwd.resolve()).replace("/", "-")
+    session_dir = tmp_path / ".claude" / "projects" / slug
+    session_dir.mkdir(parents=True)
+    session_file = session_dir / f"{session_id}.jsonl"
+    session_file.write_text(
+        "\n".join([
+            (
+                '{"type":"assistant","message":{"content":['
+                '{"type":"tool_use","id":"u1","name":"mcp__sources__verify_word",'
+                '"input":{"word":"тест"}}]}}'
+            ),
+            (
+                '{"type":"user","message":{"content":['
+                '{"type":"tool_result","tool_use_id":"u1","content":"ok"}]}}'
+            ),
+        ])
+        + "\n",
+        encoding="utf-8",
+    )
+    stdout = (
+        '{"type":"result","subtype":"success","result":"Done.","session_id":"abc-123"}'
+    )
+    plan = InvocationPlan(
+        cmd=["claude"],
+        cwd=cwd,
+        stdin_payload="",
+        output_file=None,
+        env_overrides={},
+    )
+    result = ClaudeAdapter().parse_response(
+        stdout=stdout,
+        stderr="",
+        returncode=0,
+        output_file=None,
+        plan=plan,
+    )
+    assert result.ok is True
+    assert len(result.tool_calls) == 1
+    assert result.tool_calls[0]["name"] == "mcp__sources__verify_word"
+    assert result.tool_calls[0]["output_summary"] == "ok"
 
 
 def test_claude_stream_json_invocation_adds_verbose(tmp_path: Path) -> None:
