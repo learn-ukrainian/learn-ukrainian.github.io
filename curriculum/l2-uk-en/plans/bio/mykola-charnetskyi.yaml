@@ -80,11 +80,30 @@ references:
   path: https://synod.ugcc.ua/data/chudo-staetsya-ne-prosto-tak-shcho-varto-znaty-pro-vladyku-mykolaya-charnetskogo-7627/
   title: Чудо стається не просто так...
   type: reference
+readings:
+- title: Page-stable читання про життя і місію владики
+  language: uk
+  genre: Біографічний нарис / спогади
+  source_type: reference
+  role: reading-needed
+  source: 'reading-needed: mykola-charnetskyi-source'
+  source_url: 'reading-needed'
+  license: unknown
+  rights_note: >-
+    reading-needed: знайти стабільний і правово безпечний доступ до україномовних 
+    спогадів або нарисів про місіонерську працю та заслання М. Чарнецького.
+  hosting: reading-needed
+  cefr_min: C1
+  learner_task: >-
+    Прочитати фрагмент спогадів про таборовий досвід єпископа й проаналізувати 
+    пастирську присутність в умовах ГУЛАГу.
+  caveats: >-
+    Не драматизувати сцени тортур понад задокументоване свідчення; акцент на стійкості.
 sequence: 321
 slug: mykola-charnetskyi
 subtitle: The Apostolic Visitor and Confessor of the Faith in the Gulag
 title: 'Миколай Чарнецький: Місіонер і в''язень сумління'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: чернечий орден Католицької церкви, який зосереджується на місіонерстві
   pos: ч.

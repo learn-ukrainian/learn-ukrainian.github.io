@@ -120,11 +120,31 @@ references:
   path: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CK%5CH%5CKhasevychNil.htm
   title: Khasevych, Nil (IEU)
   type: reference
+readings:
+- title: Page-stable читання про життя і творчість Ніла Хасевича
+  language: uk
+  genre: Мистецтвознавча стаття / архівний документ
+  source_type: reference
+  role: reading-needed
+  source: 'reading-needed: nil-khasevych-source'
+  source_url: 'reading-needed'
+  license: unknown
+  rights_note: >-
+    reading-needed: знайти стабільний і правово безпечний доступ до україномовного
+    джерела про дереворити УПА; не хостити зображення творів або повні документи без підтверджених прав.
+  hosting: reading-needed
+  cefr_min: C1
+  learner_task: >-
+    Проаналізувати текстовий фрагмент або опис деревориту, звернувши увагу на використання
+    візуальної комунікації як політичної зброї.
+  caveats: >-
+    Обережно з первинними джерелами (листи, документи МДБ); вони потребують перевірки,
+    а візуальні матеріали є rights-sensitive.
 sequence: 318
 slug: nil-khasevych
 subtitle: The Underground Graphic Artist of the UPA
 title: 'Ніл Хасевич: Різець проти імперії'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: книжковий знак власника бібліотеки
   pos: ч.
