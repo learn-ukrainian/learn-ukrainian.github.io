@@ -81,11 +81,30 @@ references:
   path: https://synod.ugcc.ua/data/1-chervnya-1903-roku-narodyvsya-svyashchmch-vasyliy-velychkovskyy-9231/
   title: 1 червня 1903 року народився...
   type: reference
+readings:
+- title: Page-stable читання про катакомбну УГКЦ
+  language: uk
+  genre: Біографічний нарис / історична довідка
+  source_type: reference
+  role: reading-needed
+  source: 'reading-needed: vasyl-velychkovskyi-source'
+  source_url: 'reading-needed'
+  license: unknown
+  rights_note: >-
+    reading-needed: знайти стабільний і правово безпечний доступ до текстів 
+    про підпільну діяльність єпископа та збереження інституційної спадкоємності.
+  hosting: reading-needed
+  cefr_min: C1
+  learner_task: >-
+    Проаналізувати опис методів роботи радянських каральних органів проти 
+    підпільної церкви.
+  caveats: >-
+    Уникати використання неперевірених джерел; фокус на безперервності інституції.
 sequence: 322
 slug: vasyl-velychkovskyi
 subtitle: The Locum Tenens of the Catacomb Church
 title: 'Василь Величковський: Настоятель підпілля'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: тимчасовий виконувач обов'язків очільника церкви; заступник заарештованого митрополита
   pos: ч.

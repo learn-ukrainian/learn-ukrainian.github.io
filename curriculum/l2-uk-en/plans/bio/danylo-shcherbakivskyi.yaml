@@ -124,11 +124,31 @@ references:
   path: https://nibu.kyiv.ua/projects/nepovtorni_rysi_knig/Shcherbakivskyi_Danylo/
   title: Неповторні риси книг — Щербаківський Данило (НІБУ)
   type: reference
+readings:
+- title: Page-stable читання про пам'яткоохоронну діяльність
+  language: uk
+  genre: Стаття / наукова праця
+  source_type: reference
+  role: reading-needed
+  source: 'reading-needed: danylo-shcherbakivskyi-source'
+  source_url: 'reading-needed'
+  license: unknown
+  rights_note: >-
+    reading-needed: знайти стабільний і правово безпечний доступ до праць Щербаківського
+    (напр. "Культурні цінності в небезпеці!") або аналітичних статей про нього; не хостити тексти без прав.
+  hosting: reading-needed
+  cefr_min: C1
+  learner_task: >-
+    Прочитати фрагмент про збереження української старовини й пояснити, чому музейна
+    робота ставала об'єктом репресій.
+  caveats: >-
+    Спиратися на задокументовані факти цькування, уникати непідтверджених деталей 
+    останніх днів життя.
 sequence: 319
 slug: danylo-shcherbakivskyi
 subtitle: The Museum Scholar Driven to Despair by the Regime
 title: 'Данило Щербаківський: Збереження пам''яті ціною життя'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: тканий виріб для прикрашання стін або підлоги
   pos: ч.

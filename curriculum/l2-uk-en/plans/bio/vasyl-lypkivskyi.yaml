@@ -86,11 +86,30 @@ references:
   title: 'Проповідь на неділю шосту по Трійці: митрополит Липківський про прощення гріхів'
   type: primary
   work: Проповіді
+readings:
+- title: Page-stable читання з проповідей або листів митрополита
+  language: uk
+  genre: Проповідь / історичний документ
+  source_type: primary
+  role: reading-needed
+  source: 'reading-needed: vasyl-lypkivskyi-source'
+  source_url: 'reading-needed'
+  license: unknown
+  rights_note: >-
+    reading-needed: знайти стабільний і правово безпечний доступ до текстів 
+    богослужінь чи проповідей В. Липківського українською мовою.
+  hosting: reading-needed
+  cefr_min: C1
+  learner_task: >-
+    Проаналізувати мову проповіді як акт духовної деколонізації та збереження
+    питомої традиції.
+  caveats: >-
+    Використовувати автентичні тексти, зважаючи на специфіку церковної лексики початку XX ст.
 sequence: 320
 slug: vasyl-lypkivskyi
 subtitle: The Creator and First Metropolitan of the UAOC under Soviet Terror
 title: 'Василь Липківський: Перший митрополит відродженої УАПЦ'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: статус помісної церкви як незалежної та самостійної
   pos: ж.
