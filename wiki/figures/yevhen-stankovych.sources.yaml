@@ -1,0 +1,45 @@
+---
+# Source registry for wiki/figures/yevhen-stankovych.md
+# Referenced inline as [S1], [S2], ...
+sources:
+  - id: S1
+    file: https://www.history.org.ua/?termin=Stankovych_Y
+    tier: T1
+    title: Станкович Євген Федорович — Енциклопедія історії України
+    type: external
+    url: https://www.history.org.ua/?termin=Stankovych_Y
+  - id: S2
+    file: https://composersukraine.org/index.php?id=675
+    tier: T2
+    title: Станкович Євген Федорович — Національна спілка композиторів України
+    type: external
+    notes: Інституційна біографія й перелік творчих напрямів.
+    url: https://composersukraine.org/index.php?id=675
+  - id: S3
+    file: https://knpu.gov.ua/winners/stankovych-ievhen-fedorovych/
+    tier: T2
+    title: Станкович Євген Федорович — Комітет з Національної премії України імені Тараса Шевченка
+    type: external
+    notes: Офіційна сторінка лауреата Шевченківської премії.
+    url: https://knpu.gov.ua/winners/stankovych-ievhen-fedorovych/
+  - id: S4
+    file: https://academyart.org.ua/academicians/stankovych-yevhen
+    tier: T2
+    title: Євген Федорович Станкович — Національна академія мистецтв України
+    type: external
+    notes: Профіль академіка з оглядом жанрів, інституційних ролей і сучасного статусу.
+    url: https://academyart.org.ua/academicians/stankovych-yevhen
+  - id: S5
+    file: https://doi.org/10.32461/2226-0285.2.2019.190597
+    tier: T4
+    title: "«Коли цвіте папороть» Є. Станковича: міфологема національного театру"
+    type: external
+    notes: Фахова стаття про сценічну й міфологічну рамку фольк-опери.
+    url: https://doi.org/10.32461/2226-0285.2.2019.190597
+  - id: S6
+    file: https://ukrainianlive.org/stankovych-yevhen
+    tier: T5
+    title: Yevhen Stankovych / Євген Станкович — Ukrainian Live Classic
+    type: external
+    notes: Публічна музична довідка й слухацька навігація; не використовувати як єдине джерело біографічних фактів.
+    url: https://ukrainianlive.org/stankovych-yevhen

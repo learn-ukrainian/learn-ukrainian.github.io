@@ -1,0 +1,47 @@
+---
+# Source registry for wiki/figures/raisa-kyrychenko.md
+# Referenced inline as [S1], [S2], ...
+sources:
+  - id: S1
+    file: https://esu.com.ua/article-6435
+    tier: T1
+    title: Кириченко Раїса Панасівна — Енциклопедія Сучасної України
+    type: external
+    url: https://esu.com.ua/article-6435
+  - id: S2
+    file: https://www.history.org.ua/?termin=Kyrychenko_R
+    tier: T1
+    title: Кириченко Раїса Опанасівна — Енциклопедія історії України
+    type: external
+    notes: Фіксує альтернативну патроніміку й біографічний контекст.
+    url: https://www.history.org.ua/?termin=Kyrychenko_R
+  - id: S3
+    file: https://knpu.gov.ua/winners/kyrychenko-raisa-panasivna/
+    tier: T2
+    title: Кириченко Раїса Панасівна — Комітет з Національної премії України імені Тараса Шевченка
+    type: external
+    notes: Офіційна сторінка лауреатки; корисна для визнання, репертуару та кар'єри.
+    url: https://knpu.gov.ua/winners/kyrychenko-raisa-panasivna/
+  - id: S4
+    file: >-
+      https://armyinform.com.ua/2020/10/15/ne-spivaj-pisni-yaki-ni-pro-shho-vybyraj-ti-shho-zapadayut-v-lyudsku-dushu/
+    tier: T3
+    title: «Не співай пісні, які ні про що...» — АрміяInform
+    type: external
+    notes: Публічна рецепція й пам'ять про репертуар; не використовувати як єдине джерело біографічних дат.
+    url: >-
+      https://armyinform.com.ua/2020/10/15/ne-spivaj-pisni-yaki-ni-pro-shho-vybyraj-ti-shho-zapadayut-v-lyudsku-dushu/
+  - id: S5
+    file: https://filarmonia-poltava.org.ua/partitions/collectives/koncertniy-ansambl-churayivna
+    tier: T2
+    title: Концертний ансамбль «Чураївна» — Полтавська обласна філармонія
+    type: external
+    notes: Жива інституційна рамка полтавської пісенної сцени.
+    url: https://filarmonia-poltava.org.ua/partitions/collectives/koncertniy-ansambl-churayivna
+  - id: S6
+    file: https://libgonchar.org/index.php?catid=49&id=88%3Aq-----q&lang=uk&option=com_content&view=article
+    tier: T3
+    title: «Пісня, що в серці з дитинства» — Полтавська обласна бібліотека для юнацтва ім. Олеся Гончара
+    type: external
+    notes: Бібліографічний і пам'ятевий матеріал; не використовувати як єдине джерело біографічних дат.
+    url: https://libgonchar.org/index.php?catid=49&id=88%3Aq-----q&lang=uk&option=com_content&view=article
