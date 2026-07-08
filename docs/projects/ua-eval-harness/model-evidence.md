@@ -306,3 +306,69 @@ run-aware aggregation + Run Variance + Domain Totals from the #4613 multi-run ha
    clean-dir frozen matrix per spec F3. 9 residual error cells get one more optional
    `--retry-failures` pass first (queued behind the frontier bare ×3 run currently writing
    into the same dir).
+
+## Subscription-runtime 1×17 STRICT sweep — CORRECTED (2026-07-08, #4761 / #4791 / #4792)
+
+A first pass at the subscription 1×17 STRICT sweep (three seats: gemini-3.1-pro-high / claude-opus-4-8 /
+gpt-5.5) concluded **DEFER_ALL** — "transport OK; no engine viable; negative lift = model discipline
+failure." An independent infra-panel review (`ab discuss qg-harness-forensics`: codex + agy/gemini-3.1-pro
++ grok-build, 2 rounds) plus end-to-end re-verification against the raw artifacts **overturned that
+conclusion.** It rested on THREE stacked harness defects, not on model behavior. This section is the
+corrected record; the earlier DEFER_ALL writeup (PR #4788) is superseded.
+
+### Three stacked defects (two fixed, one is the redesign)
+1. **Metric asymmetry.** The bare arm is scored grounding-FREE (grounding tax +0); the tooled arm is
+   scored grounding-STRICT (tax −530 claude / −700 gemini / −1680 gpt). `lift = strict_tooled − free_bare`
+   is structurally ≤0 for any model — DEFER is baked into the arithmetic. (The stored scorecard's `lift`
+   column is `tooled_MJ − bare_MJ`; the STRICT asymmetry lives in the decision framing, per codex.)
+2. **Codex adapter dropped 100% of MCP tool OUTPUTS** (#4791, FIXED). `normalize_tool_calls` registered
+   codex tool-use calls under the item `id` (`fc_…`) while `mcp_tool_call_end` results correlate on
+   `call_id` (`call_…`) → 0/291 tool events carried output → 0/208 gpt confirms were creditable. Fixed by
+   id-set registration. (claude 177/177, gemini 307/307 adapters were always healthy.)
+3. **Grounding-gate tool-name canonicalization** (#4792, FIXED). gpt-5.5 cites tools with a DOT
+   (`mcp__sources.query_wikipedia`); `_canonical_tool_name` reconciled only underscore forms
+   (`sources__`/`sources_`) → the tool filter rejected every grounding even after outputs were captured.
+   Fixed by handling the `server.tool` dot form (fail-closed on malformed dots).
+
+### Proof the defects — not the models — drove the result
+Re-gating the captured gpt cells with BOTH fixes (zero model cost, `qg_bakeoff --regate`):
+
+| fixture | buggy LIVE | fixed LIVE | confirms credited |
+| --- | ---: | ---: | ---: |
+| koliadky | −80 | **+70** | **14/14** |
+| vesnianky | −80 | −80 | 10/10 |
+| khreshchennia-rusi | −90 | −80 | 5/10 |
+
+koliadky flips −80 → **+70**; all 14 confirm excerpts are verifiably present in the captured tool
+outputs — **gpt grounded every confirmation correctly.** The prior "0/17, −140, worst seat" for gpt was a
+pure artifact of defects #2+#3.
+
+### Corrected fabrication behavior (real `_fabrication_success` scorer)
+An earlier "tools reduce fabrication-catch" claim (F3) was WRONG — it counted `UNVERIFIED` hedges as
+catches, inflating the bare baseline. Under the real scorer, bare → tooled catch rate on planted false
+claims:
+
+| seat | U-class (pure fabrication) | M-class (misattribution) | true-claim kept |
+| --- | --- | --- | --- |
+| gpt | 0% → **18%** | 64% → 48% | 63% → 39% |
+| claude | 0% → **29%** | 79% → 64% | 67% → 53% |
+| gemini | 18% → **82%** | 85% → 88% | 83% → 60% |
+
+Tools **help** catch pure fabrications (U) and cost true-claim precision — a precision/recall trade, not
+"rubber-stamping." vesnianky's fixed −80 with 10/10 confirms credited is the genuine failure mode: gpt
+grounds its confirmations but over-confirms on distractor evidence (real, now-measurable behavior).
+
+### Verdict (revised from DEFER_ALL)
+gpt is **fixture-dependent, not uniformly "not viable"** — strong on clean evidence (koliadky +70),
+over-confirming where distractors bite (vesnianky). Next steps (panel consensus):
+- (a) codex adapter output capture — **DONE** (#4791). (b) dot-canonicalization — **DONE** (#4792).
+- (c) **Metric redesign:** replace tooled−bare aggregate lift with fabrication recall (U/M) + true-claim
+  precision (FP-rate) under identical rules; bare = ablation, not the go/no-go subtractor.
+- (d) **Prototype "model proposes → deterministic gate decides"** (fleet-review the gate first: panel flags
+  fuzzy substring as too brittle for entailment; measure matcher error-rate on existing artifacts).
+- Full 17-fixture + bare re-sweep still pending for a complete viability number (partial 3-cell proof
+  above; the sweep exceeds one background window).
+
+Evidence: fixes #4791/#4792; re-gate proof (koliadky 0→14/14, LIVE −80→+70); fleet thread
+`qg-harness-forensics`. Original `audit/2026-07-08-{gpt,claude,gemini}-multirun-1x` retained, but the gpt
+cells there are now known artifacts (pre-fix).
