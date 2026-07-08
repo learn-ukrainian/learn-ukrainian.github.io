@@ -114,14 +114,55 @@ references:
   title: Beatifications during the Pastoral Visit of His Holiness John Paul II in Ukraine
   type: reference
 - note: Стаття Синоду УГКЦ до 121-ї річниці від дня народження.
-  path: https://synod.ugcc.ua/data/26-grudnya-mynae-121-rik-vid-dnya-narodzhennya-svyashchennomuchenyka-ivana-zyatyka-4837/
+  path: >-
+    https://synod.ugcc.ua/data/26-grudnya-mynae-121-rik-vid-dnya-narodzhennya-svyashchennomuchenyka-ivana-zyatyka-4837/
   title: 26 грудня минає 121 рік від дня народження священномученика Івана Зятика
   type: reference
+readings:
+- title: Іван Зятик
+  language: uk
+  genre: Біографічна енциклопедична стаття
+  source_type: reference
+  role: primary_bio
+  source: Синод Єпископів Української греко-католицької церкви
+  source_url: >-
+    https://synod.ugcc.ua/data/26-grudnya-mynae-121-rik-vid-dnya-narodzhennya-svyashchennomuchenyka-ivana-zyatyka-4837/
+  license: copyrighted
+  rights_note: >-
+    Стаття є церковною довідкою; повний обіг внутрішніх свідчень у ній не дублюється у
+    форматі відкритого повного тексту.
+  hosting: link-only
+  cefr_min: C1
+  learner_task: >-
+    Розкласти події арешту, засудження й смерті на часовий ряд і пояснити роль
+    редемптористського лідерства у репресивній кампанії.
+  caveats: >-
+    Для роботи з мовою свідчень потрібні додаткові джерела; синодальна довідка має
+    переважно фактологічний рівень.
+- title: Свідчення про відмову підписати перехід у православʼя
+  language: uk
+  genre: Свідчення очевидця
+  source_type: primary
+  role: reading-needed
+  source: Свідчення Ярослава Юрчака (збірники Синоду УГКЦ)
+  source_url: reading-needed
+  license: unknown
+  rights_note: >-
+    Вичерпного відкритого тексту цих свідчень не верифіковано у доступних джерелах; треба
+    знайти підтверджену публікацію з чітким правовим статусом.
+  hosting: reading-needed
+  cefr_min: C1
+  learner_task: >-
+    Після отримання автентичного тексту відібрати уривки для аналізу риторики стійкості
+    та розрізнення свідчення і офіційного протоколу.
+  caveats: >-
+    Доки не буде стабільного джерела свідчень, урок повинен спиратися на біографічні
+    тексти і не інтерпретувати непрямі перекази як дослівні протоколи.
 sequence: 327
 slug: ivan-ziatyk
 subtitle: The Redemptorist Professor in the Gulag
 title: 'Іван Зятик: Догматика віри та табори Озерлагу'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: чернечий орден католицької церкви, зосереджений на місіонерській праці
   pos: ч.

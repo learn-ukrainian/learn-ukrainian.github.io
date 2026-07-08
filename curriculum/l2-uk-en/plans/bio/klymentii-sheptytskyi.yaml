@@ -128,11 +128,51 @@ references:
   title: Листи братів Шептицьких
   type: primary
   work: Листування
+readings:
+- title: Климентій Шептицький
+  language: uk
+  genre: Біографічна енциклопедична стаття
+  source_type: reference
+  role: primary_bio
+  source: Синод Єпископів Української греко-католицької церкви
+  source_url: >-
+    https://synod.ugcc.ua/data/u-tsey-den-151-rik-tomu-narodyvsya-blazhennyy-svyashchmch-klymentiy-sheptytskyy-4472/
+  license: copyrighted
+  rights_note: >-
+    Сторінка з церковною довідкою має правові обмеження на повторне публічне
+    відтворення повного тексту; тут подається як посилання для фактології.
+  hosting: link-only
+  cefr_min: C1
+  learner_task: >-
+    Виписати велику часову вісь його служіння й опору (відступ від політики до
+    монашої праці та ув'язнення) за підказками джерела.
+  caveats: >-
+    Джерело дає в основному біографічний огляд; вивчення листування вимагає окремого
+    доступу до публічного корпусу.
+- title: Листи братів Шептицьких
+  language: uk
+  genre: Листування
+  source_type: primary
+  role: reading-needed
+  source: Листи братів Шептицьких (збірник/факсиміле)
+  source_url: reading-needed
+  license: unknown
+  rights_note: >-
+    Повний і стабільний український доступ до листування не виявлено в поточному пулі
+    джерел; додаткова верифікація в архівному або церковному сховищі обов’язкова.
+  hosting: reading-needed
+  cefr_min: C1
+  learner_task: >-
+    Знайти верифікований український текст листування та відібрати епізоди для
+    роботи з аргументацією та монашою риторикою.
+  caveats: >-
+    Без доступного тексту листування активне читання обмежується біографічною довідкою та
+    оглядовими матеріалами.
 sequence: 326
 slug: klymentii-sheptytskyi
 subtitle: The Archimandrite and Rescuer Silenced in Vladimir Central
 title: 'Климентій Шептицький: Монаша келія та опір тоталітаризмам'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: настоятель великого православного або греко-католицького монастиря
   pos: ч.
