@@ -120,11 +120,58 @@ references:
   path: Wikipedia (UA)
   title: Бабич Гліб Валерійович (Вікіпедія)
   type: reference
+readings:
+- title: Гліб Бабіч загинув на Харківщині
+  language: uk
+  genre: Меморіальний життєпис
+  source_type: reference
+  role: orientation
+  source: Платформа пам'яті Меморіал
+  source_url: https://memorial.ua/obituaries/militaries/babich-hlib-2711
+  license: copyrighted
+  rights_note: Використовувати як link-only меморіальний профіль; не хостити повний текст або фото.
+  hosting: link-only
+  cefr_min: C1
+  learner_task: >-
+    Виписати факти про поетичну, ветеранську, волонтерську і військову діяльність
+    Бабича.
+  caveats: Меморіальний тон потребує балансу між пошаною і критичним аналізом джерел.
+- title: Бабіч Гліб Валерійович
+  language: uk
+  genre: Енциклопедична стаття / біографічна довідка
+  source_type: reference
+  role: supplementary-reading
+  source: Вікіпедія
+  source_url: https://uk.wikipedia.org/wiki/Бабіч_Гліб_Валерійович
+  license: CC BY-SA 4.0
+  rights_note: Link-only достатньо; при використанні тексту потрібна атрибуція CC BY-SA.
+  hosting: link-only
+  cefr_min: C1
+  learner_task: >-
+    Зіставити біографічні факти, службу, громадську діяльність і посмертне
+    видання поезії.
+  caveats: Перевіряти факти про твори й службу за додатковими джерелами на етапі source packet.
+- title: Уривки з пісень і поезії Гліба Бабича
+  language: uk
+  genre: Поезія / пісенна лірика
+  source_type: primary
+  role: reading-needed
+  source: 'reading-needed: hlib-babich-poetry-song-excerpts'
+  source_url: 'reading-needed'
+  license: unknown
+  rights_note: >-
+    reading-needed: знайти легальний link-only або ліцензований спосіб працювати
+    з короткими уривками; не хостити повні тексти віршів чи пісень.
+  hosting: reading-needed
+  cefr_min: C1
+  learner_task: >-
+    Проаналізувати, як військовий досвід переходить у поетичний і пісенний образ.
+  caveats: Пісенна лірика має суворі авторські права; використовувати тільки короткі дозволені цитати.
 sequence: 297
 slug: hlib-babich
 subtitle: The Frontline Poet Who Wrote the Anthems of Resistance
 title: 'Гліб Бабич: Поезія війни та камуфляжна Мадонна'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: земляний насип на зовнішньому боці траншеї для захисту від куль і снарядів
   pos: ч.

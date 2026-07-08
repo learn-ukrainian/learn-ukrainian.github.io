@@ -117,11 +117,41 @@ references:
   path: https://esu.com.ua/article/hurnyak_viktor_petrovych
   title: Гурняк Віктор Петрович (ЕСУ)
   type: reference
+readings:
+- title: Указ Президента України №450/2021
+  language: uk
+  genre: Офіційний документ
+  source_type: primary
+  role: orientation
+  source: Президент України
+  source_url: https://www.president.gov.ua/documents/4502021-39965
+  license: public-domain
+  rights_note: Офіційний нормативний акт використовувати link-only як джерело державного визнання.
+  hosting: link-only
+  cefr_min: C1
+  learner_task: >-
+    Визначити, як документ описує підставу для посмертного звання Героя України.
+  caveats: Указ не замінює біографічного матеріалу про журналістську й військову діяльність.
+- title: Гурняк Віктор Петрович
+  language: uk
+  genre: Енциклопедична стаття / біографічна довідка
+  source_type: reference
+  role: supplementary-reading
+  source: Енциклопедія Сучасної України
+  source_url: https://esu.com.ua/article/hurnyak_viktor_petrovych
+  license: copyrighted
+  rights_note: Використовувати як link-only довідку; не хостити повний текст.
+  hosting: link-only
+  cefr_min: C1
+  learner_task: >-
+    Скласти часову лінію від "Пласту" і фотожурналістики до служби, евакуації
+    поранених і загибелі.
+  caveats: Фотоархів і зображення мають окремі права; не переносити їх без ліцензійної перевірки.
 sequence: 296
 slug: viktor-hurniak
 subtitle: The Photojournalist Who Traded His Camera for the Frontline
 title: 'Віктор Гурняк: Фокус на війні та свободі'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: людина, яка добровільно й безоплатно займається суспільно корисною діяльністю, зокрема допомогою армії
   pos: ч.
