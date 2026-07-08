@@ -448,8 +448,9 @@ def test_find_best_window_performance():
     t1 = time.perf_counter()
     duration = t1 - t0
     assert duration < 0.2
-    assert score > 0.9
-    assert span == (0, 32)
+    assert score == 0.0
+    assert span is None
+
 
 
 def test_verified_probes_layer_a():
@@ -534,7 +535,8 @@ def test_large_pathological_output_performance():
     t1 = time.perf_counter()
     duration = t1 - t0
     assert duration < 0.5
-    assert res.anchored is True
+    assert res.anchored is False
+    assert res.reason == "candidate_truncated"
 
 
 def test_grounding_gate_v2_repetitive_performance():
@@ -548,8 +550,8 @@ def test_grounding_gate_v2_repetitive_performance():
     t1 = time.perf_counter()
     duration1 = t1 - t0
     assert duration1 < 0.5, f"Case 1 took {duration1:.3f}s"
-    assert score > 0.9
-    assert span is not None
+    assert score == 0.0
+    assert span is None
 
     # Case 2: Full gate on excerpt "Марко 1722" vs output "Марко 1722 "*5000
     events2 = [_make_event(output="Марко 1722 " * 5000)]
@@ -564,7 +566,8 @@ def test_grounding_gate_v2_repetitive_performance():
     duration2 = t1 - t0
     assert duration2 < 0.5, f"Case 2 took {duration2:.3f}s"
     assert res2.anchored is False
-    assert res2.reason == "insufficient_mass"
+    assert res2.reason == "candidate_truncated"
+
 
     # Case 3: Excerpt "а"*5000 vs "а"*50000
     excerpt3 = "а" * 5000
@@ -588,3 +591,15 @@ def test_grounding_gate_v2_repetitive_performance():
     assert duration3_gate < 0.5, f"Case 3 full gate took {duration3_gate:.3f}s"
     assert res3.anchored is False
     assert res3.reason == "no_salient_anchor"
+
+
+def test_truncated_candidate_search_fails_closed():
+    events = [_make_event(output="Марко помер у 1900 році. " * 200 + "Петро народився у 1900 році.")]
+    grounding = {
+        "tool": "query_wikipedia",
+        "query": "Григорій Сковорода",
+        "evidence_excerpt": "Марко народився у 1900 році"
+    }
+    res = grounding_gate_v2.anchor_evidence_to_events(grounding, events)
+    assert res.anchored is False
+    assert res.reason == "candidate_truncated"

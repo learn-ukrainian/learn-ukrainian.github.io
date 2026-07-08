@@ -179,13 +179,16 @@ def _find_best_window(
     if salient_tokens is None:
         salient_tokens = find_salient_tokens(normalized_excerpt, normalized_excerpt)
 
-    if not salient_tokens:
-        # Fallback anchor: if there are no salient tokens, pick a substring of the excerpt as a fallback anchor
+    # Filter out short proper-noun tokens (length < 4) to avoid anchoring on common prepositions/words
+    filtered_salient = [t for t in salient_tokens if t.get("is_digit") or len(t["norm"]) >= 4]
+
+    if not filtered_salient:
+        # Fallback anchor: if there are no distinctive salient tokens, pick a prefix of the excerpt
         # to ensure that we still bound SequenceMatcher on generic repetitive inputs.
         fallback_len = min(12, len(normalized_excerpt))
         if fallback_len > 0:
             fallback_sub = normalized_excerpt[:fallback_len]
-            salient_tokens = [{
+            filtered_salient = [{
                 "norm": fallback_sub,
                 "start": 0,
                 "end": fallback_len,
@@ -194,27 +197,27 @@ def _find_best_window(
         else:
             return _find_best_window_original(normalized_excerpt, normalized_output, factor)
 
-    # 1. Identify distinctive anchors from salient tokens (longest digit run, and longest proper-noun)
-    digit_tokens = [t for t in salient_tokens if t.get("is_digit")]
-    proper_noun_tokens = [t for t in salient_tokens if not t.get("is_digit")]
+    # 1. Identify the single most distinctive salient anchor
+    # "the RAREST/longest salient token (prefer the longest proper-noun token; tiebreak the longest digit run), NOT a common one."
+    def anchor_key(t: dict[str, Any]) -> tuple[int, int, int]:
+        sub = t["norm"]
+        count = normalized_output.count(sub)
+        is_proper = not t.get("is_digit", False)
+        length = len(sub)
+        return (count, 0 if is_proper else 1, -length)
 
-    distinctive_anchors = []
-    if digit_tokens:
-        distinctive_anchors.append(max(digit_tokens, key=lambda t: len(t["norm"])))
-    if proper_noun_tokens:
-        distinctive_anchors.append(max(proper_noun_tokens, key=lambda t: len(t["norm"])))
+    best_anchor = min(filtered_salient, key=anchor_key)
 
-    # 2. Locate candidate window START positions by fast exact str.find of distinctive anchors
+    # 2. Locate candidate window START positions by fast exact str.find of the chosen distinctive anchor
     candidate_starts = []
-    for anchor in distinctive_anchors:
-        sub = anchor["norm"]
-        start_in_excerpt = anchor["start"]
+    sub = best_anchor["norm"]
+    start_in_excerpt = best_anchor["start"]
 
-        pos = normalized_output.find(sub)
-        while pos != -1:
-            win_start = max(0, pos - start_in_excerpt - 32)
-            candidate_starts.append(win_start)
-            pos = normalized_output.find(sub, pos + len(sub))
+    pos = normalized_output.find(sub)
+    while pos != -1:
+        win_start = max(0, pos - start_in_excerpt - 32)
+        candidate_starts.append(win_start)
+        pos = normalized_output.find(sub, pos + len(sub))
 
     if not candidate_starts:
         # If the excerpt has NO salient anchor present in the output at all -> reject.
@@ -237,7 +240,7 @@ def _find_best_window(
         logging.getLogger("grounding_gate_v2").warning(
             f"Truncated candidate windows from {total_candidates} to {MAX_CANDIDATES} for excerpt length {len(normalized_excerpt)}"
         )
-        unique_starts = unique_starts[:MAX_CANDIDATES]
+        return 0.0, None, 0
 
     best_score = -1.0
     best_span = None
@@ -496,6 +499,16 @@ def anchor_evidence_to_events(
                 "mass_ok": mass_ok,
                 "sim_ok": sim_ok,
             })
+
+    if _last_search_truncated:
+        return AnchorResult(
+            anchored=False,
+            abstained=False,
+            similarity=0.0,
+            source_index=None,
+            span=None,
+            reason="candidate_truncated",
+        )
 
     # Filter to candidates that pass all guards
     valid_candidates = []
