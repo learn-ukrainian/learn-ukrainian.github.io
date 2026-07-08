@@ -100,7 +100,9 @@ content_outline:
   section: 'Підсумок: Педагог, президент, жертва імперії'
   words: 1000
 focus: >-
-  Августин Волошин як педагог, державотворець та президент Карпатської України. Аналіз його освітньої діяльності, складної геополітики 1939 року та знищення радянськими спецслужбами.
+  Августин Волошин як педагог, державотворець та президент Карпатської України.
+  Аналіз його освітньої діяльності, складної геополітики 1939 року та знищення
+  радянськими спецслужбами.
 level: BIO
 module: bio-304
 objectives:
@@ -124,11 +126,49 @@ references:
   path: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CV%5CO%5CVoloshynAvhustyn.htm
   title: Voloshyn, Avhustyn (IEU)
   type: reference
+readings:
+- title: Волошин Августин Іванович
+  language: uk
+  genre: Енциклопедична стаття / біографічна довідка
+  source_type: reference
+  role: orientation
+  source: Енциклопедія Сучасної України
+  source_url: https://esu.com.ua/article-27856
+  license: copyrighted
+  rights_note: Використовувати як link-only довідку; не хостити повний текст або портрет.
+  hosting: link-only
+  cefr_min: C1
+  learner_task: >-
+    Виписати освітні, церковні та державницькі ролі Волошина, розмежовуючи
+    педагогічну працю, Карпатську Україну і радянський арешт.
+  caveats: >-
+    Енциклопедична довідка не закриває регіональні, єврейські й угорські
+    перспективи Закарпаття 1938-1939 років.
+- title: Педагогічний текст Августина Волошина з page-stable видання
+  language: uk
+  genre: Педагогічна публіцистика / уривок із вибраних творів
+  source_type: primary
+  role: reading-needed
+  source: 'reading-needed: avhustyn-voloshyn-vybrani-tvory-page-stable'
+  source_url: 'reading-needed'
+  license: unknown
+  rights_note: >-
+    reading-needed: перевірити друковане або цифрове видання "Вибраних творів"
+    Волошина перед learner-facing цитуванням; локальні RAG-цитати не дають
+    достатнього page-control для хостингу.
+  hosting: reading-needed
+  cefr_min: C1
+  learner_task: >-
+    Проаналізувати, як Волошин пов'язує школу, свободу культурної праці та
+    майбутню українську державу.
+  caveats: >-
+    До перевірки сторінок використовувати лише короткі цитати вчительського
+    планування, не переносити повний текст у модуль або UI.
 sequence: 304
 slug: avhustyn-voloshyn
 subtitle: The Educator and President of Carpatho-Ukraine Imprisoned by the Soviets
 title: 'Августин Волошин: Педагог, президент, жертва імперії'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: самостійне або відносно самостійне територіально-політичне утворення (як Карпатська Україна)
   pos: ж.

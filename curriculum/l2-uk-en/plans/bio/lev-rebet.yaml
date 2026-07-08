@@ -98,7 +98,9 @@ content_outline:
   section: 'Підсумок: Ідеологія нації та отрута КДБ'
   words: 1000
 focus: >-
-  Лев Ребет як діяч ОУН, теоретик демократичного націоналізму в еміграції та жертва політичного вбивства КДБ. Аналіз його політичної еволюції та механізмів радянського екстериторіального терору.
+  Лев Ребет як діяч ОУН, теоретик демократичного націоналізму в еміграції та
+  жертва політичного вбивства КДБ. Аналіз його політичної еволюції та механізмів
+  радянського екстериторіального терору.
 level: BIO
 module: bio-305
 objectives:
@@ -122,11 +124,33 @@ references:
   path: https://www.icj.org/wp-content/uploads/2013/07/ICJ-Bulletin-15-1963-eng.pdf
   title: ICJ Bulletin no. 15 (1963)
   type: reference
+readings:
+- title: Українське читання про Лева Ребета, ОУН-з і вбивство КДБ
+  language: uk
+  genre: Наукова стаття / історіографічний або правозахисний коментар
+  source_type: reference
+  role: reading-needed
+  source: 'reading-needed: lev-rebet-ukrainian-source-on-ounz-and-stashynsky'
+  source_url: 'reading-needed'
+  license: unknown
+  rights_note: >-
+    reading-needed: знайти стабільний український або перекладний матеріал про
+    політичну еволюцію Ребета, ОУН-закордонну і процес Сташинського; англомовний
+    ICJ Bulletin лишається джерелом для source packet, але не є україномовним
+    learner reading.
+  hosting: reading-needed
+  cefr_min: C1
+  learner_task: >-
+    Розрізнити ранній контекст ОУН, пізніший демократичний націоналізм Ребета і
+    доказовий ланцюг радянського екстериторіального вбивства.
+  caveats: >-
+    Досьє не містить page-stable цитат із власних праць Ребета; без українського
+    читання модуль ризикує покладатися на англомовну правову довідку.
 sequence: 305
 slug: lev-rebet
 subtitle: The Nationalist Theorist Assassinated by the KGB
 title: 'Лев Ребет: Ідеологія нації та отрута КДБ'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: радянська спецслужба (Комітет державної безпеки), що організовувала політичні вбивства за кордоном
   pos: ч.
