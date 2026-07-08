@@ -44,6 +44,7 @@ Issue: #1184
 """
 from __future__ import annotations
 
+import json
 import logging
 import os
 import re
@@ -338,18 +339,32 @@ class ClaudeAdapter:
         Claude Code writes the response to stdout. On success, stdout is
         the clean output; on failure, stderr carries the diagnostic.
         """
-        # plan / call_start_time unused — Claude doesn't need session-file
-        # recovery because the Claude CLI flushes stdout before exit.
-        # Kept in the signature to match the uniform protocol (see
-        # adapters/base.py).
         _ = output_file  # Unused — Claude doesn't use -o file
-        _ = plan
         _ = call_start_time
 
         events = parse_json_events(stdout, source="claude", logger=_logger)
         tool_calls = normalize_tool_calls(events)
         stream_response = _extract_stream_json_response(events)
         effective_stdout = stream_response if events else stdout.strip()
+
+        session_id: str | None = None
+        sid_match = _SESSION_ID_RE.search(stdout or "")
+        if sid_match:
+            session_id = sid_match.group(1)
+        for event in events:
+            sid = event.get("session_id") or event.get("sessionId")
+            if isinstance(sid, str) and sid:
+                session_id = sid
+                break
+
+        # Session JSONL is authoritative when stream-json stdout drops tool rows
+        # (measured: subscription tooled bakeoff cells with MCP, 2026-07-08).
+        if plan is not None and plan.cwd is not None and session_id:
+            session_path = _claude_session_jsonl_path(plan.cwd, session_id)
+            if session_path is not None:
+                recovered = _tool_calls_from_claude_session_jsonl(session_path)
+                if len(recovered) > len(tool_calls):
+                    tool_calls = recovered
 
         # Claude Code 2.1.117 does not document a dedicated rate-limit exit
         # code in `claude --help`. The safest remaining signal is a
@@ -369,17 +384,6 @@ class ClaudeAdapter:
         if not ok:
             excerpt_source = stderr.strip() or effective_stdout or stdout.strip() or ""
             stderr_excerpt = excerpt_source[:500] or None
-
-        # Session ID extraction (rare — caller usually passes it IN)
-        session_id: str | None = None
-        sid_match = _SESSION_ID_RE.search(stdout or "")
-        if sid_match:
-            session_id = sid_match.group(1)
-        for event in events:
-            sid = event.get("session_id") or event.get("sessionId")
-            if isinstance(sid, str) and sid:
-                session_id = sid
-                break
 
         return ParseResult(
             ok=ok,
@@ -430,6 +434,32 @@ class ClaudeAdapter:
             except OSError:
                 pass
         return ()
+
+
+def _claude_project_slug(cwd: Path) -> str:
+    return str(cwd.resolve()).replace("/", "-")
+
+
+def _claude_session_jsonl_path(cwd: Path, session_id: str) -> Path | None:
+    candidate = (
+        Path.home() / ".claude" / "projects" / _claude_project_slug(cwd) / f"{session_id}.jsonl"
+    )
+    return candidate if candidate.is_file() else None
+
+
+def _tool_calls_from_claude_session_jsonl(path: Path) -> list[dict[str, Any]]:
+    events: list[dict[str, Any]] = []
+    for raw_line in path.read_text(encoding="utf-8", errors="replace").splitlines():
+        line = raw_line.strip()
+        if not line:
+            continue
+        try:
+            event = json.loads(line)
+        except json.JSONDecodeError:
+            continue
+        if isinstance(event, dict):
+            events.append(event)
+    return normalize_tool_calls(events)
 
 
 def _extract_stream_json_response(events: list[dict[str, Any]]) -> str:

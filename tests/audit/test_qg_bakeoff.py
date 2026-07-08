@@ -1307,17 +1307,41 @@ def test_subscription_runtime_bare_artifact_identity_and_filename(tmp_path: Path
     assert all(not str(part).startswith("ask-") for part in model["bridge_command"])
 
 
-def test_subscription_native_pins_are_refused_for_tooled_or_both() -> None:
-    with pytest.raises(qg_bakeoff.BakeoffConfigError, match="bare-only"):
-        qg_bakeoff.route_for_matrix_pin(
-            qg_bakeoff.GPT_SUBSCRIPTION_BARE_MODEL_ID,
-            arm=qg_bakeoff.TOOLED_ARM,
-        )
+def test_subscription_native_pins_are_refused_for_both_arm() -> None:
     with pytest.raises(qg_bakeoff.BakeoffConfigError, match="do not support --arm both"):
         qg_bakeoff.route_for_matrix_pin(
             qg_bakeoff.GEMINI_SUBSCRIPTION_BARE_MODEL_ID,
             arm=qg_bakeoff.BOTH_ARM,
         )
+    with pytest.raises(qg_bakeoff.BakeoffConfigError, match="do not support --arm both"):
+        qg_bakeoff.route_for_matrix_pin(
+            qg_bakeoff.CLAUDE_SUBSCRIPTION_BARE_MODEL_ID,
+            arm=qg_bakeoff.BOTH_ARM,
+        )
+
+
+def test_subscription_runtime_tooled_claude_route_resolves() -> None:
+    route = qg_bakeoff.route_for_matrix_pin(
+        qg_bakeoff.CLAUDE_SUBSCRIPTION_BARE_MODEL_ID,
+        arm=qg_bakeoff.TOOLED_ARM,
+    )
+    assert route.route_name == "tooled_runtime_claude"
+    identity = qg_bakeoff._route_identity(route)
+    assert identity.transport == "runtime-claude"
+    assert identity.entrypoint == qg_bakeoff.TOOLED_RUNTIME_ENTRYPOINT
+    assert identity.measurement_tier == qg_bakeoff.SUBSCRIPTION_RUNTIME_TOOLED_TIER
+
+
+def test_subscription_runtime_tooled_gpt_route_resolves() -> None:
+    route = qg_bakeoff.route_for_matrix_pin(
+        qg_bakeoff.GPT_SUBSCRIPTION_BARE_MODEL_ID,
+        arm=qg_bakeoff.TOOLED_ARM,
+    )
+    assert route.route_name == "tooled_runtime_gpt"
+    identity = qg_bakeoff._route_identity(route)
+    assert identity.transport == "runtime-codex"
+    assert identity.entrypoint == qg_bakeoff.TOOLED_RUNTIME_ENTRYPOINT
+    assert identity.measurement_tier == qg_bakeoff.SUBSCRIPTION_RUNTIME_TOOLED_TIER
 
 
 def test_subscription_runtime_tooled_gemini_route_resolves() -> None:
@@ -2535,3 +2559,18 @@ def test_offline_bakeoff_tooled_run_firewalls_stray_reviewer_write(
     assert not list(repo.rglob("*-review.json"))
     assert not (repo / "curriculum" / "l2-uk-en" / "folk" / "status").exists()
     assert run.artifact_path.parent == out_dir
+
+
+def test_lenient_first_json_object_skips_leading_prose() -> None:
+    payload = {"fact_checks": [{"claim": "x", "verdict": "CONFIRMED"}]}
+    text = (
+        "I've completed the required search protocol and here is the JSON.\n\n"
+        + json.dumps(payload)
+        + "\n\nLet me know if you need anything else."
+    )
+    parsed = qg_bakeoff._lenient_first_json_object(text)
+    assert parsed == payload
+
+
+def test_lenient_first_json_object_returns_none_without_object() -> None:
+    assert qg_bakeoff._lenient_first_json_object("no json here") is None
