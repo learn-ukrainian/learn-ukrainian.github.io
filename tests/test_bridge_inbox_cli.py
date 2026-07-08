@@ -575,6 +575,7 @@ def test_sync_all_iterates_known_agents(monkeypatch, capsys):
     # via #2107, cursor via Phase 2 PR), this list tracks the registry —
     # the test guards the iteration order, not a frozen subset.
     cli_agents = [
+        "agy",
         "claude",
         "gemini",
         "codex",

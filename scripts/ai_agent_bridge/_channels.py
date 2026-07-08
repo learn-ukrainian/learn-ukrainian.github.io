@@ -71,6 +71,7 @@ class StaleClaimError(Exception):
 # ── Constants ──────────────────────────────────────────────────────────
 
 VALID_AGENTS = (
+    "agy",
     "claude",
     "gemini",
     "codex",

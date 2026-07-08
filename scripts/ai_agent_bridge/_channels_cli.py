@@ -70,6 +70,7 @@ def _cli_available_agent(agent: str) -> bool:
         from agent_runtime.registry import get_agent_entry
     except ImportError:
         return agent in {
+            "agy",
             "claude",
             "codex",
             "gemini",
