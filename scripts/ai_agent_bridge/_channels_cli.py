@@ -26,7 +26,7 @@ ab inbox ack <delivery_id> [--error NOTE]
 ab reconcile [--dry-run]
 ab sync <agent> | ab sync --all
 
-ab discuss <channel> <body> --with A,B [--max-rounds N]   # B.4, stub for now
+ab discuss <channel> <body> --with A,B [--max-rounds N] [--models agy:gemini-3.1-pro-high]
 ```
 
 All commands use the storage primitives in ``_channels``. They do NOT
@@ -70,6 +70,7 @@ def _cli_available_agent(agent: str) -> bool:
         from agent_runtime.registry import get_agent_entry
     except ImportError:
         return agent in {
+            "agy",
             "claude",
             "codex",
             "gemini",
@@ -575,6 +576,14 @@ def register_channel_commands(subparsers: Any) -> None:
         "--review", action="store_true",
         help="Prepend docs/review-protocol.md before channel context",
     )
+    discuss_parser.add_argument(
+        "--models",
+        default=None,
+        help=(
+            "Optional per-participant model overrides as agent:model pairs "
+            "(comma-separated), e.g. agy:gemini-3.1-pro-high"
+        ),
+    )
 
 
 # ── dispatch ──────────────────────────────────────────────────────────
@@ -651,6 +660,25 @@ def _resolve_body(body_arg: str) -> str:
 
 def _parse_csv(s: str) -> list[str]:
     return [item.strip() for item in s.split(",") if item.strip()]
+
+
+def _parse_agent_models(s: str) -> dict[str, str]:
+    """Parse ``agent:model`` pairs from a comma-separated discuss ``--models`` value."""
+    models: dict[str, str] = {}
+    for item in _parse_csv(s):
+        if ":" not in item:
+            raise ValueError(
+                f"invalid --models entry {item!r}: expected agent:model (e.g. agy:gemini-3.1-pro-high)"
+            )
+        agent, model = item.split(":", 1)
+        agent = agent.strip()
+        model = model.strip()
+        if not agent or not model:
+            raise ValueError(
+                f"invalid --models entry {item!r}: agent and model must both be non-empty"
+            )
+        models[agent] = model
+    return models
 
 
 def _now_utc() -> datetime:
@@ -1349,6 +1377,22 @@ def _handle_discuss(args) -> int:
         )
         return 1
 
+    agent_models: dict[str, str] = {}
+    if getattr(args, "models", None):
+        try:
+            agent_models = _parse_agent_models(args.models)
+        except ValueError as exc:
+            print(f"❌ {exc}", file=sys.stderr)
+            return 1
+        unknown_models = [a for a in agent_models if a not in with_agents]
+        if unknown_models:
+            print(
+                "❌ --models names agent(s) not in --with: "
+                f"{', '.join(unknown_models)}",
+                file=sys.stderr,
+            )
+            return 1
+
     MAX_ROUNDS_CAP = 4
     max_rounds = min(max(1, args.max_rounds), MAX_ROUNDS_CAP)
     if args.max_rounds > MAX_ROUNDS_CAP:
@@ -1431,6 +1475,7 @@ def _handle_discuss(args) -> int:
                 prompt_text,
                 mode="read-only",
                 cwd=REPO_ROOT,
+                model=agent_models.get(agent_name),
                 task_id=f"discuss-{correlation_id[:8]}-r{round_idx}-{agent_name}",
                 # TODO(#1701): keep this flag in the sanitized child-env
                 # allowlist when the runner switches to build_agent_env().
