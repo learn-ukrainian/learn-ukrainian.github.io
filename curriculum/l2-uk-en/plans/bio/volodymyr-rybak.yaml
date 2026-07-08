@@ -14,7 +14,8 @@ activity_hints:
   placement: workbook
   type: debate
 - focus: >-
-    Аналіз документальної цитати — "Хлопці, ведіть його, його треба запакувати й вивезти." (докази цілеспрямованого викрадення)
+    Аналіз документальної цитати — "Хлопці, ведіть його, його треба запакувати
+    й вивезти." (докази цілеспрямованого викрадення)
   placement: workbook
   type: critical-analysis
 - focus: Есе-рефлексія — український прапор як символ опору на окупованих територіях
@@ -110,11 +111,38 @@ references:
   path: https://zakon.rada.gov.ua/laws/show/94/2015
   title: Указ Президента України №94/2015. Про присвоєння звання Герой України
   type: primary
+readings:
+- title: Рибак Володимир Іванович
+  language: uk
+  genre: Енциклопедична стаття / біографічна довідка
+  source_type: reference
+  role: orientation
+  source: Енциклопедія Сучасної України
+  source_url: https://esu.com.ua/article-77597
+  license: copyrighted
+  rights_note: Використовувати як link-only українську довідку; не хостити повний текст.
+  hosting: link-only
+  cefr_min: C1
+  learner_task: Виписати основні факти про місцеву політичну діяльність, викрадення, вбивство і вшанування.
+  caveats: Довідкова стаття потребує доповнення документальними свідченнями про окупаційний терор.
+- title: Указ Президента України №94/2015
+  language: uk
+  genre: Офіційний документ
+  source_type: primary
+  role: supplementary-reading
+  source: Законодавство України
+  source_url: https://zakon.rada.gov.ua/laws/show/94/2015
+  license: public-domain
+  rights_note: Офіційний нормативний акт можна посилати як джерело державного визнання; достатньо link-only.
+  hosting: link-only
+  cefr_min: C1
+  learner_task: Проаналізувати офіційну мову вшанування та порівняти її з локальною історією спротиву в Горлівці.
+  caveats: Офіційний документ не є джерелом усіх обставин викрадення та вбивства.
 sequence: 289
 slug: volodymyr-rybak
 subtitle: A Local Deputy and the First Stage of Donbas Occupation
 title: 'Володимир Рибак: Синьо-жовтий стяг і ціна спротиву'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: місцева рада, представницький орган місцевого самоврядування (скорочено від "міська рада")
   pos: ж.
