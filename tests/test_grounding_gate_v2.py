@@ -42,16 +42,16 @@ def test_fuzzy_near_miss():
 
 
 def test_fabricated_excerpt():
-    # 2. fabricated excerpt (in NO output) -> anchored=False, reason="below_tau"
+    # 2. fabricated excerpt (in NO output) -> anchored=False, reason="digit_absent"
     events = [_make_event()]
     grounding = {
         "tool": "query_wikipedia",
         "query": "Григорій Сковорода",
-        "evidence_excerpt": "Сковорода Григорій Савич народився у місті Парижі в 1900 році"  # Sufficient mass, but below tau
+        "evidence_excerpt": "Сковорода Григорій Савич народився у місті Парижі в 1900 році"
     }
-    res = grounding_gate_v2.anchor_evidence_to_events(grounding, events, tau=0.9)
+    res = grounding_gate_v2.anchor_evidence_to_events(grounding, events)
     assert res.anchored is False
-    assert res.reason == "below_tau"
+    assert res.reason == "digit_absent"
 
 
 def test_boilerplate_abstain():
@@ -289,3 +289,164 @@ def test_shadow_compare_harness(tmp_path):
     assert md_out.exists()
     md_text = md_out.read_text(encoding="utf-8")
     assert "# Grounding Gate Shadow Compare Report" in md_text
+
+
+def test_near_copy_number_swap_rejected_at_default_tau():
+    events = [_make_event(output="Сковорода народився у 1722 році")]
+    grounding = {
+        "tool": "query_wikipedia",
+        "query": "Григорій Сковорода",
+        "evidence_excerpt": "Сковорода народився у 1900 році"
+    }
+    res = grounding_gate_v2.anchor_evidence_to_events(grounding, events)
+    assert res.anchored is False
+    assert res.reason == "digit_absent"
+
+
+def test_name_swap_rejected_at_default_tau():
+    events = [_make_event(output="Шевченко народився у 1722 році")]
+    grounding = {
+        "tool": "query_wikipedia",
+        "query": "Григорій Сковорода",
+        "evidence_excerpt": "Сковорода народився у 1722 році"
+    }
+    res = grounding_gate_v2.anchor_evidence_to_events(grounding, events)
+    assert res.anchored is False
+    assert res.reason == "salient_token_absent"
+
+
+def test_inflection_tolerance_at_default_tau():
+    events = [_make_event(output="Григорій Сковорода народився у Львові")]
+    grounding = {
+        "tool": "query_wikipedia",
+        "query": "Григорій Сковорода",
+        "evidence_excerpt": "Сковородою народився у Львова"
+    }
+    res = grounding_gate_v2.anchor_evidence_to_events(grounding, events)
+    assert res.anchored is True
+
+
+def test_single_shared_name_only():
+    events = [_make_event(output="Сковорода було було було було")]
+    # Excerpt has "Сковорода було було було було і Париж" where "Париж" is a second anchor, but it's not in the output
+    grounding = {
+        "tool": "query_wikipedia",
+        "query": "Григорій Сковорода",
+        "evidence_excerpt": "Сковорода було було було було і Париж"
+    }
+    res = grounding_gate_v2.anchor_evidence_to_events(grounding, events)
+    assert res.anchored is False
+    assert res.reason == "single_anchor"
+
+    # But if the excerpt genuinely has only 1 anchor, we accept but set low-confidence
+    grounding_single = {
+        "tool": "query_wikipedia",
+        "query": "Григорій Сковорода",
+        "evidence_excerpt": "Сковорода було було"
+    }
+    res = grounding_gate_v2.anchor_evidence_to_events(grounding_single, events)
+    assert res.anchored is True
+    assert res.anchor_low_signal_reason == "no_digits,single_anchor"
+
+
+def test_ellipsis_mass_12_to_14_still_anchors():
+    events = [_make_event(output="Сковорода народився у 1722 році")]
+    grounding = {
+        "tool": "query_wikipedia",
+        "query": "Григорій Сковорода",
+        "evidence_excerpt": "народився [...] 1722"
+    }
+    res = grounding_gate_v2.anchor_evidence_to_events(grounding, events)
+    assert res.anchored is True
+    assert res.similarity == 1.0
+
+
+def test_shadow_compare_harness_fp_counter(tmp_path):
+    # Feeds a gold-FALSE claim which v2 anchors and asserts the FP counter reports it (NOT 0/0)
+    cell_payload = {
+        "schema_version": "qg_bakeoff_run.v1",
+        "seat": "test-seat",
+        "arm": "tooled",
+        "fixture": {"slug": "vesnianky"},
+        "payload": {
+            "fact_checks": [
+                {
+                    "claim": "Веснянки — це шкідливі пісні.",
+                    "grounding": {
+                        "tool": "query_wikipedia",
+                        "query": "Веснянки",
+                        "evidence_excerpt": "Веснянки — це шкідливі пісні."
+                    }
+                }
+            ]
+        },
+        "dispatch": {
+            "tool_events": [
+                {
+                    "tool": "query_wikipedia",
+                    "input": {"query": "Веснянки"},
+                    "output": "Веснянки — це шкідливі пісні.",
+                    "tool_call_id": "call-1",
+                    "status": "completed"
+                }
+            ]
+        }
+    }
+
+    cell_path = tmp_path / "cell_2.json"
+    cell_path.write_text(json.dumps(cell_payload, ensure_ascii=False), encoding="utf-8")
+
+    out_prefix = tmp_path / "shadow_report2"
+
+    fixtures_dir = tmp_path / "fixtures"
+    if not fixtures_dir.exists():
+        fixtures_dir.mkdir()
+    # Write a dummy fixture matching vesnianky but where the claim is False
+    dummy_fixture = {
+        "slug": "vesnianky",
+        "title": "Веснянки",
+        "passage_md": "Веснянки — це особливий жанр обрядових пісень. Веснянки — це шкідливі пісні.",
+        "claims": [
+            {
+                "claim": "Веснянки — це шкідливі пісні.",
+                "claim_id": "vesnianky-02",
+                "is_true": False,
+                "fabrication_class": "U"
+            }
+        ]
+    }
+    (fixtures_dir / "vesnianky.json").write_text(json.dumps(dummy_fixture, ensure_ascii=False), encoding="utf-8")
+
+    with patch("argparse.ArgumentParser.parse_args") as mock_args:
+        mock_args.return_value = argparse.Namespace(
+            artifacts_dir=tmp_path,
+            tau=0.75,
+            out=out_prefix,
+            fixtures_dir=fixtures_dir,
+        )
+        rc = grounding_shadow_compare.main()
+        assert rc == 0
+
+    # Verify JSON output
+    json_out = Path(str(out_prefix) + ".json")
+    assert json_out.exists()
+    report = json.loads(json_out.read_text(encoding="utf-8"))
+
+    # Assert FP counter reports it (NOT 0/0)
+    assert report["summary"]["false_positives_on_fabricated"]["total_fabricated_checked"] == 1
+    assert report["summary"]["false_positives_on_fabricated"]["v2_false_accepts"] == 1
+
+
+def test_find_best_window_performance():
+    # Make sure _find_best_window runs in well under a second for large input
+    large_output = "Сковорода народився у 1722 році. " * 500
+    large_excerpt = "Сковорода народився у 1722 році."
+    import time
+    t0 = time.perf_counter()
+    score, span, _ = grounding_gate_v2._find_best_window(large_excerpt, large_output)
+    t1 = time.perf_counter()
+    duration = t1 - t0
+    assert duration < 0.2
+    assert score > 0.9
+    assert span == (0, 32)
+

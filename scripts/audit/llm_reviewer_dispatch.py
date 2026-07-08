@@ -1453,6 +1453,8 @@ def enforce_grounding_against_tool_events(
                 item["anchor_similarity"] = res.similarity
                 item["anchor_abstained"] = res.abstained
                 item["grounding_gate_version"] = "v2"
+                if res.anchor_low_signal_reason is not None:
+                    item["anchor_low_signal_reason"] = res.anchor_low_signal_reason
             else:
                 is_matched = _grounding_matches_events(grounding, events)
 

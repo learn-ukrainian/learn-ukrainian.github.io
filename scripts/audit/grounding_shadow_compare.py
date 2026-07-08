@@ -114,13 +114,17 @@ def main() -> int:
         if not isinstance(fact_checks, list):
             fact_checks = []
 
-        row_to_claim = {}
+        row_to_claim_idx = {}
         if fixture is not None:
-            matched, _ = _match_rows_to_claims([dict(fc) for fc in fact_checks], fixture)
+            fc_list = [dict(fc) for fc in fact_checks]
+            matched, _ = _match_rows_to_claims(fc_list, fixture)
             for claim_id, row in matched.items():
-                row_to_claim[id(row)] = claim_id
+                for idx, orig_row in enumerate(fc_list):
+                    if orig_row is row:
+                        row_to_claim_idx[idx] = claim_id
+                        break
 
-        for fc in fact_checks:
+        for idx, fc in enumerate(fact_checks):
             if not isinstance(fc, Mapping):
                 continue
             grounding = fc.get("grounding")
@@ -151,7 +155,7 @@ def main() -> int:
                     best_span_preview = norm_out[res_v2.span[0]:res_v2.span[1]][:160]
 
             gold_is_true = None
-            if (claim_id := row_to_claim.get(id(fc))) and fixture is not None:
+            if (claim_id := row_to_claim_idx.get(idx)) and fixture is not None:
                 claim_obj = next((c for c in fixture.claims if c.claim_id == claim_id), None)
                 if claim_obj is not None:
                     gold_is_true = claim_obj.is_true
@@ -177,6 +181,10 @@ def main() -> int:
     recovered = sum(1 for r in records if not r["v1_admissible"] and r["v2_anchored"])
     regressions = sum(1 for r in records if r["v1_admissible"] and not r["v2_anchored"])
     abstains = sum(1 for r in records if r["v2_abstained"])
+
+    recovered_gold_true = sum(1 for r in records if not r["v1_admissible"] and r["v2_anchored"] and r["gold_is_true"] is True)
+    recovered_gold_false = sum(1 for r in records if not r["v1_admissible"] and r["v2_anchored"] and r["gold_is_true"] is False)
+    recovered_unlabeled = sum(1 for r in records if not r["v1_admissible"] and r["v2_anchored"] and r["gold_is_true"] is None)
 
     fp_total = sum(1 for r in records if r["gold_is_true"] is False)
     fp_count = sum(1 for r in records if r["gold_is_true"] is False and r["v2_anchored"])
@@ -234,6 +242,9 @@ def main() -> int:
             "v1_admissible": v1_count,
             "v2_anchored": v2_count,
             "recovered_legit": recovered,
+            "recovered_gold_true": recovered_gold_true,
+            "recovered_gold_false": recovered_gold_false,
+            "recovered_unlabeled": recovered_unlabeled,
             "regressions": regressions,
             "abstains": abstains,
             "false_positives_on_fabricated": {
@@ -256,6 +267,9 @@ def main() -> int:
     v1_pct = (v1_count / total * 100) if total > 0 else 0.0
     v2_pct = (v2_count / total * 100) if total > 0 else 0.0
     rec_pct = (recovered / total * 100) if total > 0 else 0.0
+    rec_gt_pct = (recovered_gold_true / total * 100) if total > 0 else 0.0
+    rec_gf_pct = (recovered_gold_false / total * 100) if total > 0 else 0.0
+    rec_un_pct = (recovered_unlabeled / total * 100) if total > 0 else 0.0
     reg_pct = (regressions / total * 100) if total > 0 else 0.0
     abs_pct = (abstains / total * 100) if total > 0 else 0.0
     fp_pct = (fp_count / fp_total * 100) if fp_total > 0 else 0.0
@@ -293,6 +307,9 @@ def main() -> int:
 | v1 Admissible | {v1_count} | {v1_pct:.2f}% |
 | v2 Anchored | {v2_count} | {v2_pct:.2f}% |
 | Recovered Legit (v1 Reject ∧ v2 Anchor) | {recovered} | {rec_pct:.2f}% |
+|   - Gold-True Recovered (Good) | {recovered_gold_true} | {rec_gt_pct:.2f}% |
+|   - Gold-False Newly-Accepted (FP, Bad) | {recovered_gold_false} | {rec_gf_pct:.2f}% |
+|   - Unlabeled Recovered (needs human review) | {recovered_unlabeled} | {rec_un_pct:.2f}% |
 | Regressions (v1 Accept ∧ v2 Reject) | {regressions} | {reg_pct:.2f}% |
 | Abstains | {abstains} | {abs_pct:.2f}% |
 | New FP Rate (on Labeled False Claims) | {fp_count}/{fp_total} | {fp_pct:.2f}% |
