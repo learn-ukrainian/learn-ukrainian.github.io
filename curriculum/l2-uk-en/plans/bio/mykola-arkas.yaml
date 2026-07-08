@@ -125,7 +125,94 @@ sequence: 352
 slug: mykola-arkas
 subtitle: 'Mykola Arkas: Opera, Popular History, and the Mykolaiv Prosvita'
 title: 'Микола Аркас: «Катерина», «Історія України-Русі» й миколаївська «Просвіта»'
-version: '4.1'
+readings:
+  - title: Микола Аркас (ЕСУ)
+    language: uk
+    genre: біографічна довідка
+    source_type: reference
+    role: Біографічний каркас для подальшого аналізу опери «Катерина»
+    source: ЕСУ
+    source_url: https://esu.com.ua/article-43245
+    license: Proprietary © Енциклопедія Сучасної України
+    rights_note: Окремі репертуарні статті подаються без повних лібрето/текстів.
+    hosting: Encyclopedia of Modern Ukraine
+    cefr_min: B2
+    learner_task: >-
+      Випишіть ключові етапи діяльності Аркаса як композитора-аматора,
+      історика та громадського діяча; визначте, як ці ролі впливають на
+      сприйняття «Катерини».
+    caveats: >-
+      Стислий енциклопедичний формат не розкриває всіх редакційних суперечок
+      щодо дат і пізнішої рецепції опери.
+  - title: Микола Аркас (ЕІУ)
+    language: uk
+    genre: академічна енциклопедія
+    source_type: reference
+    role: Історико-інституційний контекст культурної діяльності
+    source: ЕІУ
+    source_url: https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&I21DBN=EIu&P21DBN=EIU&S21CNR=20&S21COLORTERMS=0&S21FMT=eiu_all&S21P01=0&S21P02=0&S21P03=TRN%3D&S21REF=10&S21STN=1&S21STR=Arkas_M&Z21ID=
+    license: Copyright © Інститут історії України
+    rights_note: Науково-енциклопедичний матеріал, без великих творчих текстів.
+    hosting: Інститут історії України
+    cefr_min: B2
+    learner_task: >-
+      Проаналізуйте, які аспекти політичного та суспільного контексту найбільш
+      релевантні для розуміння пізнішої рецепції Аркаса у музиці та краєзнавстві.
+    caveats: >-
+      Частина іменних та подієвих деталей може відрізнятись від інших
+      енциклопедичних публікацій; потребує звірки з додатковими джерелами.
+  - title: Encyclopedia of Ukraine
+    language: en
+    genre: біографічна довідка
+    source_type: reference
+    role: Англомовна енциклопедична анотація
+    source: IEU
+    source_url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CA%5CR%5CArkasMykola.htm
+    license: Proprietary © Internet Encyclopedia of Ukraine
+    rights_note: Авторські матеріали мають окремі права; використовувати як довідкову рамку без повних цитат.
+    hosting: Internet Encyclopedia of Ukraine
+    cefr_min: B2
+    learner_task: >-
+      Порівняйте англомовну біографічну розповідь із україномовними джерелами,
+      особливо щодо зміни акцентів на «аматорство» й культурний спадок.
+    caveats: >-
+      Англомовна довідка є стислою; критично перевіряйте спірні формулювання
+      за україномовними академічними джерелами.
+  - title: Микола Аркас (укр. вікіпедія)
+    language: uk
+    genre: біографічна довідка
+    source_type: reference
+    role: Український контекст біографії, роботи й громадського становлення
+    source: Українська Вікіпедія
+    source_url: https://uk.wikipedia.org/wiki/Микола_Аркас
+    license: CC-BY-SA-4.0
+    rights_note: Повторне використання можливе за вказаною ліцензією з коректним атрибутом.
+    hosting: Wikimedia Foundation
+    cefr_min: B2
+    learner_task: >-
+      Виявіть, як у статті описується роль Миколи Аркаса у формуванні локальної
+      культурної пам'яті, і зіставте це з модульними тезами про цензуру.
+    caveats: >-
+      Публічна стаття може містити застарілі посилання на джерела; оновлюйте їх
+      за потреби.
+  - title: Рукописна пам'ять і історіографія Миколи Аркаса
+    language: uk
+    genre: дослідницькі матеріали
+    source_type: reading-needed
+    role: Метадані про доступність творів і ризики цитування
+    source: Internal dossier
+    source_url: docs/research/bio/mykola-arkas.md
+    license: Internal use
+    rights_note: Посилання веде на внутрішній огляд правової та фактчекерної підготовки.
+    hosting: Repository documentation
+    cefr_min: B2
+    learner_task: >-
+      Підготуйте короткий список фактчекінгу для елементів, що стосуються
+      «Катерини», цензури та історичних оцінок Аркаса перед модульною публікацією.
+    caveats: >-
+      Локальний документ потребує узгодження з поточним етапом модуля;
+      окремі ремарки можуть бути робочими.
+version: '4.2'
 vocabulary_hints:
 - definition: автор музики без професійної консерваторської освіти; статус Аркаса за ЕСУ й IEU
   pos: ч.
