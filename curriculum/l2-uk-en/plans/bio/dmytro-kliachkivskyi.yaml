@@ -103,7 +103,9 @@ objectives:
 - Аналізувати роль Дмитра Клячківського як командира УПА-Північ у подіях 1943-1945 років.
 - Досліджувати відповідальність командування УПА за масове насильство проти польського цивільного населення на Волині.
 - Розуміти історичні обставини загибелі Клячківського внаслідок радянської контрповстанської операції.
-- Оцінювати складні аспекти історичної пам'яті, уникаючи як заперечення фактів, так і російської пропагандистської риторики.
+- >-
+  Оцінювати складні аспекти історичної пам'яті, уникаючи як заперечення фактів,
+  так і російської пропагандистської риторики.
 pedagogy: CBI
 persona:
   role: >-
@@ -128,11 +130,60 @@ references:
   path: The Causes of Ukrainian-Polish Ethnic Cleansing 1943
   title: Timothy Snyder. "The Causes of Ukrainian-Polish Ethnic Cleansing 1943"
   type: reference
+readings:
+- title: Клячківський Дмитро-Роман Семенович
+  language: uk
+  genre: Енциклопедична стаття / біографічна довідка
+  source_type: reference
+  role: orientation
+  source: Енциклопедія Сучасної України
+  source_url: https://esu.com.ua/article-8656
+  license: copyrighted
+  rights_note: Використовувати як link-only довідку; не хостити повний текст.
+  hosting: link-only
+  cefr_min: C1
+  learner_task: >-
+    Виписати біографічні факти, псевдоніми, командні ролі в УПА-Північ і
+    обставини загибелі.
+  caveats: Довідка має бути доповнена критичним джерелом про Волинь 1943 року.
+- title: Дмитро Клячківський — "Клим Савур"
+  language: uk
+  genre: Регіональний біографічний матеріал
+  source_type: reference
+  role: supplementary-reading
+  source: Рівненська обласна універсальна наукова бібліотека
+  source_url: https://libr.rv.ua/ua/virt/221
+  license: copyrighted
+  rights_note: Використовувати як link-only регіональний матеріал; не хостити повний текст або зображення.
+  hosting: link-only
+  cefr_min: C1
+  learner_task: >-
+    Зіставити регіональний меморіальний наратив із нейтральною енциклопедичною
+    довідкою.
+  caveats: Меморіальний матеріал не закриває питання відповідальності за антипольське насильство.
+- title: Критичне українське читання про Волинь 1943 року і командування УПА-Північ
+  language: uk
+  genre: Наукова стаття / історіографічний огляд
+  source_type: reference
+  role: reading-needed
+  source: 'reading-needed: dmytro-kliachkivskyi-volyn-critical-ukrainian-source'
+  source_url: 'reading-needed'
+  license: unknown
+  rights_note: >-
+    reading-needed: знайти український або перекладний науковий матеріал про
+    Волинь 1943 року, командну роль УПА-Північ і відповідальність за цивільне
+    насильство.
+  hosting: reading-needed
+  cefr_min: C1
+  learner_task: >-
+    Проаналізувати, як історики формулюють відповідальність командування і як
+    відрізняють це від радянської чи російської пропагандистської мови.
+  caveats: Без такого читання модуль не готовий до build через високий ризик спрощення Волині.
 sequence: 302
 slug: dmytro-kliachkivskyi
 subtitle: The UPA-North Commander, Anti-Polish Violence, and the Soviet Counterinsurgency
 title: 'Дмитро Клячківський: Командування УПА-Північ та трагедія Волині'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: збройний підрозділ, військова одиниця в армії чи повстанських силах
   pos: ж.

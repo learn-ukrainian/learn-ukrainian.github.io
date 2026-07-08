@@ -119,7 +119,8 @@ references:
   title: Melnyk, Andrii (IEU)
   type: reference
 - note: Стаття про ОУН.
-  path: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CO%5CR%5COrganizationofUkrainianNationalists.htm
+  path: >-
+    https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CO%5CR%5COrganizationofUkrainianNationalists.htm
   title: Organization of Ukrainian Nationalists (IEU)
   type: reference
 - note: Дослідження інтегрального націоналізму та авторитарних тенденцій ОУН.
@@ -130,11 +131,45 @@ references:
   path: Stepan Bandera
   title: Grzegorz Rossolinski-Liebe. "Stepan Bandera"
   type: reference
+readings:
+- title: Мельник Андрій Атанасович
+  language: uk
+  genre: Енциклопедична стаття / біографічна довідка
+  source_type: reference
+  role: orientation
+  source: Енциклопедія Сучасної України
+  source_url: https://esu.com.ua/article-66256
+  license: copyrighted
+  rights_note: Використовувати як link-only довідку; не хостити повний текст.
+  hosting: link-only
+  cefr_min: C1
+  learner_task: >-
+    Простежити шлях від УСС і Армії УНР до УВО, ОУН(м), Заксенгаузена та
+    еміграції.
+  caveats: Довідка має бути доповнена джерелом про ідеологію ОУН(м) і розкол ОУН.
+- title: Українське читання про ОУН(м), розкол ОУН і авторитарну ідеологію
+  language: uk
+  genre: Наукова стаття / історіографічний огляд
+  source_type: reference
+  role: reading-needed
+  source: 'reading-needed: andrii-melnyk-ounm-critical-ukrainian-source'
+  source_url: 'reading-needed'
+  license: unknown
+  rights_note: >-
+    reading-needed: знайти стабільний український науковий або перекладний
+    матеріал про ОУН(м), розкол ОУН та авторитарний словник інтегрального
+    націоналізму.
+  hosting: reading-needed
+  cefr_min: C1
+  learner_task: >-
+    Пояснити різницю між мельниківським і бандерівським крилами без перенесення
+    відповідальності однієї фракції на іншу.
+  caveats: Без такого читання модуль ризикує спростити структуру ОУН до одного табору.
 sequence: 301
 slug: andrii-melnyk
 subtitle: The OUN-M Leader, UNR Army Veteran, and Factional Division
 title: 'Андрій Мельник: ОУН(м) та авторитарний націоналізм'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: ідеологічний напрям, що ставить інтереси нації вище за класові чи особисті інтереси
   pos: ч.

@@ -83,8 +83,9 @@ content_outline:
     [!epistemic-humility] Раптова смерть у Києві (6 вересня 2023 року). Трансформація
     пережитого досвіду у концептуальну філософську спадщину.
   - >-
-    Посмертна книга-діалог "Вільний у полоні" (2025), укладена з його інтерв'ю, лекцій і публічних виступів (не завершена ним особисто): систематизація етичного словника
-    та свідчення про збереження свободи всупереч фізичним ґратам.
+    Посмертна книга-діалог "Вільний у полоні" (2025), укладена з його інтерв'ю,
+    лекцій і публічних виступів (не завершена ним особисто): систематизація
+    етичного словника та свідчення про збереження свободи всупереч фізичним ґратам.
   section: 'Підсумок: Вільний повітрям і духом'
   words: 1200
 focus: >-
@@ -118,11 +119,60 @@ references:
   path: Suspilne
   title: Я читав лекції щурам, щоб чути голос... (Суспільне)
   type: reference
+readings:
+- title: Козловський Ігор Анатолійович
+  language: uk
+  genre: Енциклопедична стаття / біографічна довідка
+  source_type: reference
+  role: orientation
+  source: Енциклопедія Сучасної України
+  source_url: https://esu.com.ua/article-882085
+  license: copyrighted
+  rights_note: Використовувати як link-only довідку; не хостити повний текст.
+  hosting: link-only
+  cefr_min: C1
+  learner_task: >-
+    Виписати наукові, громадські та правозахисні ролі Козловського до і після
+    полону.
+  caveats: Довідка не замінює свідчення про катівні та досвід внутрішньої свободи.
+- title: >-
+    "Я читав лекції щурам, щоб чути голос": спогади Ігоря Козловського про
+    полон та катівні у Донецьку
+  language: uk
+  genre: Спогади / інтерв'ю
+  source_type: primary
+  role: close-reading
+  source: Суспільне Донбас
+  source_url: >-
+    https://suspilne.media/donbas/568407-a-citav-lekcii-suram-sob-cuti-golos-spogadi-igora-kozlovskogo-pro-polon-ta-kativni-u-donecku/
+  license: copyrighted
+  rights_note: Використовувати як link-only свідчення; не переносити повний текст.
+  hosting: link-only
+  cefr_min: C1
+  learner_task: >-
+    Проаналізувати, як Козловський описує внутрішню свободу, гідність і
+    психологічний спротив у полоні.
+  caveats: Травматичний матеріал потребує коротких цитат і обережного обговорення.
+- title: Гідність, а не жертва. Розмова з Ігорем Козловським
+  language: uk
+  genre: Розмова / філософське інтерв'ю
+  source_type: primary
+  role: supplementary-reading
+  source: PEN Ukraine
+  source_url: https://pen.org.ua/hidnist-a-ne-zhertva-rozmova-anny-hruver-z-ihorem-kozlovskym
+  license: copyrighted
+  rights_note: Використовувати як link-only розмову; не хостити повний текст або фото.
+  hosting: link-only
+  cefr_min: C1
+  learner_task: >-
+    Визначити, як у розмові працюють поняття гідності, символу, відповідальності
+    та свободи.
+  caveats: Матеріал слід поєднувати з біографічною довідкою, а не читати як повну біографію.
 sequence: 298
 slug: ihor-kozlovskyi
 subtitle: The Religious Scholar Who Taught Freedom in Captivity
 title: 'Ігор Козловський: Вільний у полоні'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: наука, що комплексно вивчає релігію, її історію, сутність та вплив на суспільство
   pos: с.
