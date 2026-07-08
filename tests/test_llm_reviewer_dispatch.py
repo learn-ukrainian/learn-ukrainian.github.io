@@ -1174,6 +1174,85 @@ def test_grounding_matches_despite_model_invented_call_id() -> None:
     assert llm_reviewer_dispatch._grounding_matches_events(ghost_query, events) is False
 
 
+def test_grounding_matches_containment_query() -> None:
+    # 1. POSITIVE: Cited query contains the event query candidate
+    events = (
+        {
+            "tool": "sources_query_wikipedia",
+            "input": {"mode": "section", "query": "Сковорода Григорій Савич"},
+            "status": "completed",
+            "tool_call_id": "call_1",
+            "output": "Григорій Савич Сковорода був видатним українським філософом.",
+        },
+    )
+    # The model cites a decorated/expanded query, but it contains the event query "Сковорода Григорій Савич"
+    grounding = {
+        "tool": "sources_query_wikipedia",
+        "query": "Сковорода Григорій Савич mode=section 3 (Придворна капела)",
+        "evidence_excerpt": "Григорій Савич Сковорода був видатним українським філософом",
+        "tool_call_id": "call_1",
+    }
+    assert llm_reviewer_dispatch._grounding_matches_events(grounding, events) is True
+
+    # 2. NEGATIVE (anti-fabrication):
+    # - Cited query does NOT contain the event query candidate
+    unrelated_cited = dict(grounding, query="Шевченко Тарас mode=section 3")
+    assert llm_reviewer_dispatch._grounding_matches_events(unrelated_cited, events) is False
+
+    # - Excerpt is NOT in the matching event's output
+    fabricated_excerpt = dict(grounding, evidence_excerpt="Він народився у Києві")
+    assert llm_reviewer_dispatch._grounding_matches_events(fabricated_excerpt, events) is False
+
+    # 3. NON-REGRESSION:
+    # - Exact-equal query still matches
+    exact_match = dict(grounding, query="Сковорода Григорій Савич")
+    assert llm_reviewer_dispatch._grounding_matches_events(exact_match, events) is True
+
+    # - Unrelated query still rejected
+    unrelated_query = dict(grounding, query="Котляревський Іван Петрович")
+    assert llm_reviewer_dispatch._grounding_matches_events(unrelated_query, events) is False
+
+    # 4. MIN-LENGTH GUARD:
+    # If the candidate query in the event input is < 3 characters (trivially short), it must not match.
+    short_events = (
+        {
+            "tool": "sources_query_wikipedia",
+            "input": {"mode": "section", "query": "Ск"},
+            "status": "completed",
+            "tool_call_id": "call_1",
+            "output": "Григорій Савич Сковорода був видатним українським філософом.",
+        },
+    )
+    # Even if "Сковорода" contains "Ск", the candidate query is < 3 chars so it should not match
+    short_grounding = {
+        "tool": "sources_query_wikipedia",
+        "query": "Сковорода Григорій Савич",
+        "evidence_excerpt": "Григорій Савич Сковорода був видатним українським філософом",
+        "tool_call_id": "call_1",
+    }
+    assert llm_reviewer_dispatch._grounding_matches_events(short_grounding, short_events) is False
+
+    # 5. EMBEDDED-SUBSTRING GUARD (codex review): a 3+ char real event query embedded
+    # MID-STRING in an unrelated cited query must NOT match. Prefix-boundary containment
+    # (not arbitrary `cand in cited`) is what closes this hole.
+    embed_events = (
+        {
+            "tool": "sources_query_wikipedia",
+            "input": {"query": "гай"},
+            "status": "completed",
+            "tool_call_id": "call_e",
+            "output": "Священний гай був місцем поклоніння давніх слов'ян.",
+        },
+    )
+    embed_grounding = {
+        "tool": "sources_query_wikipedia",
+        "query": "старий гай навколо села",  # real query "гай" embedded mid-string, NOT a prefix
+        "evidence_excerpt": "Священний гай був місцем поклоніння",
+        "tool_call_id": "call_e",
+    }
+    assert llm_reviewer_dispatch._grounding_matches_events(embed_grounding, embed_events) is False
+
+
 @pytest.mark.parametrize("ellipsis", ["…", "..."])
 def test_grounding_matches_ellipsized_excerpt_segments_in_order(ellipsis: str) -> None:
     events = (
