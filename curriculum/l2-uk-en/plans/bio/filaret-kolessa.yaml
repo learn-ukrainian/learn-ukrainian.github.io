@@ -119,11 +119,111 @@ references:
   path: docs/research/bio/filaret-kolessa.md
   title: Філарет Михайлович Колесса — Research Dossier
   type: research
+readings:
+- title: Колесса Філарет Михайлович
+  language: uk
+  genre: Енциклопедична стаття / біографічна довідка
+  source_type: reference
+  role: primary_bio
+  source: Енциклопедія Сучасної України
+  source_url: https://esu.com.ua/article-5631
+  license: copyrighted
+  rights_note: >-
+    ЕСУ є авторитетним референсом; користуватися як фактологічним ядром, без
+    розширення формулювань правового контексту без додаткових джерел.
+  hosting: link-only
+  cefr_min: C1
+  learner_task: >-
+    Зіставити основні дати, університети, посади й ключові праці Колесси, а
+    потім перевірити, де довідка узагальнює складні інтерпретації.
+  caveats: >-
+    Довідка не замінює первинних текстових джерел з експедицій, партитур і
+    листування.
+- title: Kolessa, Filaret
+  language: en
+  genre: Encyclopaedia entry / biography
+  source_type: reference
+  role: supplementary-reading
+  source: Internet Encyclopedia of Ukraine
+  source_url: >-
+    https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CK%5CO%5CKolessaFilaret.htm
+  license: copyrighted
+  rights_note: >-
+    Важливо звіряти українсько-українську термінологію з ЕСУ та ЕІУ; стаття є
+    синтетичною і не дає повного опису джерельного корпусу.
+  hosting: link-only
+  cefr_min: C1
+  learner_task: >-
+    Порівняти англомовний огляд із українськими довідками; скласти список
+    пунктів, що розходяться за датуванням або термінологією.
+  caveats: >-
+    IEU дає стислу рамку; для методологічних деталей потрібні інші академічні
+    матеріали.
+- title: Колесса Філарет Михайлович
+  language: uk
+  genre: Енциклопедична стаття / історична довідка
+  source_type: reference
+  role: supplementary-reading
+  source: Енциклопедія історії України
+  source_url: >-
+    https://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN%3D&S21COLORTERMS=0&S21STR=Kolessa_F
+  license: copyrighted
+  rights_note: >-
+    ЕІУ містить стабільні ідентифікатори й базову хронологію; використовувати
+    для звіряння дат та інституційних фактів.
+  hosting: link-only
+  cefr_min: C1
+  learner_task: >-
+    Визначити, які факти ЕІУ подає в односторінковій рамці, а які потребують
+    перевірки в дослідницьких та музично-джерельних матеріалах.
+  caveats: >-
+    Розкриття політичного контексту колекційного періоду потребує додаткової
+    контекстної літератури.
+- title: Колесса Філарет Михайлович
+  language: uk
+  genre: Історико-джерельний календар
+  source_type: reference
+  role: institutional-context
+  source: Український інститут національної пам'яті
+  source_url: >-
+    https://uinp.gov.ua/istorychnyy-kalendar/lypen/17/1871-narodyvsya-filaret-kolessa-ukrayinskyy-muzykoznavec-kompozytor-folkloryst
+  license: copyrighted
+  rights_note: >-
+    UINP надає базову біографічну рамку; вона корисна для дат, але не замінює
+    джерельний аналіз творів.
+  hosting: link-only
+  cefr_min: C1
+  learner_task: >-
+    Використати як коротку перевірку дат і посад, а потім уточнити кожен факт
+    через ЕСУ, ЕІУ та наукові джерела.
+  caveats: >-
+    Не містить повної дискусії про авторські методи і суперечки навколо
+    етнографічних публікацій.
+- title: «Українські народні думи» (джерельний корпус)
+  language: uk
+  genre: Первинний нотний корпус / епічна традиція
+  source_type: primary
+  role: primary-work
+  source: Колесса Філарет Михайлович
+  source_url: reading-needed
+  license: reading-needed
+  rights_note: >-
+    Повні видання/фотофаксиміле нотних збірок і поліфонічних фрагментів
+    потребують окремого правового доступу до конкретних інституційних
+    екземплярів.
+  hosting: reading-needed
+  cefr_min: C1
+  learner_task: >-
+    Підготувати таблицю для верифікації: назва публікації, рік видання,
+    редактор/виконавець, архівне зберігання, наявні правові умови доступу.
+  caveats: >-
+    Без читання корпусу є ризик змішати сучасні перевидання з першими
+    редакціями; зафіксувати цей ризик у модульному коментарі.
 sequence: 359
 slug: filaret-kolessa
 subtitle: 'Filaret Kolessa: Ethnomusicology and the Rhythm of Folk Song'
 title: 'Філарет Колесса: етномузикологія й ритміка народної пісні'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: наука про народну музику; Колесса — один із її основоположників в українській традиції
   pos: ж.

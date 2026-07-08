@@ -207,11 +207,108 @@ references:
     path: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CR%5CE%5CRevutskyLev.htm
     type: reference
     work: Internet Encyclopedia of Ukraine
+readings:
+  - title: Revutsky, Lev
+    language: en
+    genre: Encyclopaedia entry / biography
+    source_type: reference
+    role: primary_bio
+    source: Internet Encyclopedia of Ukraine
+    source_url: >-
+      https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CR%5CE%5CRevutskyLev.htm
+    license: copyrighted
+    rights_note: >-
+      IEU подає англомовний біографічний огляд; для навчального модуля потрібна
+      верифікація ключових тез через українські джерела.
+    hosting: link-only
+    cefr_min: C1
+    learner_task: >-
+      Зіставити англомовний опис із українськими джерелами щодо ролі Ревуцького
+      як «зберігача лисенківської лінії» та механізмів інституційного
+      співіснування.
+    caveats: >-
+      IEU подає узагальнення; деталізація радянських репресивних механізмів
+      потребує додаткових першоджерел.
+  - title: Ревуцький Лев Миколайович
+    language: uk
+    genre: Енциклопедична стаття / історична довідка
+    source_type: reference
+    role: supplementary-reading
+    source: Енциклопедія історії України
+    source_url: https://history.org.ua/index.php?termin=Revutskyj_L
+    license: copyrighted
+    rights_note: >-
+      ЕІУ використовується для звірки базової дати, посад і ключових подій;
+      пізніші оцінки радянського періоду треба звіряти додатково.
+    hosting: link-only
+    cefr_min: C1
+    learner_task: >-
+      Зробити виписку з акцентом на датах арешту, нагляду, педагогічної
+      діяльності та публікаційної історії й відмітити невизначені пункти.
+    caveats: >-
+      ЕІУ рідко розкриває повну джерельну структуру творів і програм редакцій.
+  - title: Levko Revutskyi
+    language: en
+    genre: Reference page
+    source_type: reference
+    role: supplementary-reading
+    source: Wikipedia
+    source_url: https://en.wikipedia.org/wiki/Levko_Revutsky
+    license: CC-BY-SA-4.0
+    rights_note: >-
+      Вікіпедія дає вхідний огляд за ліцензією CC-BY-SA-4.0, але потребує
+      перехресної перевірки за рахунок енциклопедій і інституційних довідок.
+    hosting: link-only
+    cefr_min: C1
+    learner_task: >-
+      Виписати тезу про творчі періоди Ревуцького з українськими джерелами та
+      перевірити відмінності між англомовною й українською подачею.
+    caveats: >-
+      Краудсорсинг не гарантує наукової виваженості; критично перевіряти
+      посилання на конкретні архівні джерела.
+  - title: Levko Revutskyi — Research Dossier
+    language: uk
+    genre: Internal research dossier / risk notes
+    source_type: secondary
+    role: critical-supplement
+    source: Документ дослідницького блоку
+    source_url: docs/research/bio/levko-revutskyi.md
+    license: unknown
+    rights_note: >-
+      Досьє надає структуровані ризики, але його зміст не підміняє первинних
+      документів чи виданих партитур.
+    hosting: link-only
+    cefr_min: C1
+    learner_task: >-
+      Перевірити, які твердження досьє потребують підкріплення з оригінальних
+      публікацій або архівних матеріалів.
+    caveats: >-
+      Локальне дослідницьке зведення не є єдиним доказовим джерелом для
+      цитування у фінальному навчальному модулі.
+  - title: «Друга симфонія» та фортепіанний концерт фа мажор (фрагменти)
+    language: uk
+    genre: Первинний музичний твір / нотний матеріал
+    source_type: primary
+    role: primary-work
+    source: Левко Ревуцький
+    source_url: reading-needed
+    license: reading-needed
+    rights_note: >-
+      Нотні джерела можуть мати різні редакції та інституційні умови доступу;
+      публікацію повних версій слід погоджувати після перевірки прав.
+    hosting: reading-needed
+    cefr_min: C1
+    learner_task: >-
+      Підготувати робочу схему порівняння симфонії та концерту з довідковими
+      описами (датування, структура, інституційне виконання).
+    caveats: >-
+      Без надійного доступу до нотних або архівних примірників ризик змішати
+      авторські редакції та реконструкції.
 sequence: 369
 slug: levko-revutskyi
 subtitle: Lysenko-Line Continuity Through Soviet Institutions
 title: 'Левко Ревуцький: Хранитель лисенківської лінії'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
   - definition: монументальний, зазвичай чотиричастинний, твір для симфонічного оркестру
     pos: ж.
