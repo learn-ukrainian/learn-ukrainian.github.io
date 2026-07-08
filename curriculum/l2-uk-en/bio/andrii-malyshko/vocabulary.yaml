@@ -1,0 +1,97 @@
+---
+- lemma: пісенна пам'ять
+  translation: song memory
+  pos: noun phrase
+  usage: Пісенна пам'ять пояснює, чому текст живе в голосах кількох поколінь.
+- lemma: рушник
+  translation: embroidered ritual towel
+  pos: noun
+  usage: Рушник у пісні є знаком дому, дороги і материнського благословення.
+- lemma: стежина
+  translation: path
+  pos: noun
+  usage: Стежина допомагає говорити про повернення до витоків.
+- lemma: офіційність
+  translation: official status
+  pos: noun
+  usage: Офіційність Малишка треба називати, але не робити єдиним поясненням.
+- lemma: кооптація
+  translation: co-optation
+  pos: noun
+  usage: Кооптація означає включення митця в систему з обмеженням автономії.
+- lemma: інституційна рамка
+  translation: institutional frame
+  pos: noun phrase
+  usage: Інституційна рамка визначала, де і як звучало публічне слово.
+- lemma: фольклоризм
+  translation: folklorism
+  pos: noun
+  usage: Фольклоризм у Малишка не дорівнює простоті або наївності.
+- lemma: початок пісні
+  translation: song opening
+  pos: noun phrase
+  usage: Короткий початок пісні може відкрити ключовий образ без довгої цитати.
+- lemma: канонізація
+  translation: canonization
+  pos: noun
+  usage: Канонізація може допомогти пам'яті, але іноді робить читання гладким.
+- lemma: сентиментальність
+  translation: sentimentality
+  pos: noun
+  usage: Сентиментальність зводить складний образ до готової емоції.
+- lemma: фронтова преса
+  translation: front-line press
+  pos: noun phrase
+  usage: Фронтова преса вплинула на воєнну інтонацію поета.
+- lemma: редакторська праця
+  translation: editorial work
+  pos: noun phrase
+  usage: Редакторська праця показує Малишка як публічного літературного діяча.
+- lemma: депутатська діяльність
+  translation: deputy activity
+  pos: noun phrase
+  usage: Депутатська діяльність належить до офіційного контексту біографії.
+- lemma: мовна тяглість
+  translation: linguistic continuity
+  pos: noun phrase
+  usage: Мовна тяглість робить пісню частиною української пам'яті.
+- lemma: співавторство
+  translation: co-authorship
+  pos: noun
+  usage: Співавторство Малишка і Майбороди поєднало слово й мелодію.
+- lemma: народнопісенна інтонація
+  translation: folk-song intonation
+  pos: noun phrase
+  usage: Народнопісенна інтонація допомагає рядку природно звучати.
+- lemma: культурна інфраструктура
+  translation: cultural infrastructure
+  pos: noun phrase
+  usage: Кіно, радіо і школа стали культурною інфраструктурою пісні.
+- lemma: публічна сцена
+  translation: public stage
+  pos: noun phrase
+  usage: Публічна сцена відкривала доступ до слухача і водночас мала правила.
+- lemma: межа доказу
+  translation: limit of evidence
+  pos: noun phrase
+  usage: Межа доказу не дозволяє вигадувати архівну драму.
+- lemma: редукція
+  translation: reduction
+  pos: noun
+  usage: Редукція зменшує складну постать до одного ярлика.
+- lemma: виконавська традиція
+  translation: performance tradition
+  pos: noun phrase
+  usage: Виконавська традиція змінює пісню між поколіннями.
+- lemma: родинне повторення
+  translation: family repetition
+  pos: noun phrase
+  usage: Родинне повторення переносить пісню за межі концертної сцени.
+- lemma: урбаністична лірика
+  translation: urban lyric poetry
+  pos: noun phrase
+  usage: Урбаністична лірика Малишка дозволяє співати Київ як український простір.
+- lemma: деколонізаційне читання
+  translation: decolonial reading
+  pos: noun phrase
+  usage: Деколонізаційне читання не дає радянській рамці поглинути українську мову.
