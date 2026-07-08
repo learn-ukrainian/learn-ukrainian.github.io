@@ -5,6 +5,10 @@ This module replaces the v1 exact substring match gate with a fuzzy provenance
 anchoring algorithm using SequenceMatcher. It checks if evidence excerpts are
 confidently backed by real captured tool events without enforcing brittle
 exact matches on transport IDs, spelling, query decorations, or formatting.
+
+Note: Layer B entailment MUST run against the RAW tool output, never the
+extracted excerpt (the fail-closed handoff depends on it). Layer B itself
+is a later chunk.
 """
 
 from __future__ import annotations
@@ -43,67 +47,55 @@ class AnchorResult:
     anchor_low_signal_reason: str | None = None  # diagnostic: e.g. "no_digits", "single_anchor"
 
 
-UK_STOPWORDS = {
-    # Pronouns
-    "котрий", "котра", "котре", "котрі", "котрого", "котрій", "котрих", "котрими",
-    "стільки", "деякий", "деяка", "деяке", "деякі", "деякого", "деяких",
-    "ніякий", "ніяка", "ніяке", "ніякі", "ніякого", "ніяких",
-    "якийсь", "якась", "якесь", "якісь", "якогось", "якихось",
-    "хтось", "щось", "чийсь", "чиясь", "чиєсь", "чиїсь",
-    "увесь", "усякий", "усяка", "усяке", "усякі", "усього", "усьому",
-    "ввесь", "всякий", "всяка", "всяке", "всякі", "всього", "всьому",
-    "кожен", "кожна", "кожне", "кожні", "кожного", "кожнім", "кожних",
-    "жоден", "жодна", "жодне", "жодні", "жодного", "жодних",
-    "інший", "інша", "інше", "інші", "іншого", "інших", "іншому",
-    "собою", "соби",
-    # Prepositions
-    "перед", "через", "серед", "проти", "окрім", "округ", "заради", "вдовж",
-    "опріч", "поміж", "понад", "поруч", "позаду",
-    # Conjunctions
-    "оскільки", "нібито", "неначе", "немовби", "немовбито", "причому", "начебто",
-    # Particles & adverbs (commonly used as fillers/conjunctions)
-    "тільки", "навіть", "мабуть", "невже", "нехай", "майже", "також", "знову",
-    "просто", "ніби", "наче", "мовби",
-    # English equivalents/function words of length >= 5
-    "which", "about", "their", "there", "these", "those", "would", "could",
-    "should", "under", "after", "before", "while", "where", "since", "until",
-    "unless", "though", "although", "either", "neither", "other", "another",
-    "every", "yours", "herself", "himself", "itself", "myself", "yourself",
-    "themselves", "ourselves"
-}
+def find_salient_tokens(excerpt: str, E_norm: str) -> list[dict[str, Any]]:
+    """Extract salient tokens from excerpt and locate their spans in E_norm.
 
+    Salient token: a token containing a digit, OR whose original (pre-casefold)
+    form begins with an uppercase Cyrillic letter (proper-noun-like).
+    """
+    raw_matches = list(_TOKEN_RE.finditer(excerpt))
+    salient_tokens = []
 
-def levenshtein_distance(s1: str, s2: str) -> int:
-    """Compute the Levenshtein distance between two strings using standard DP."""
-    if len(s1) < len(s2):
-        return levenshtein_distance(s2, s1)
-    if not s2:
-        return len(s1)
-
-    previous_row = list(range(len(s2) + 1))
-    for i, c1 in enumerate(s1):
-        current_row = [i + 1]
-        for j, c2 in enumerate(s2):
-            insertions = previous_row[j + 1] + 1
-            deletions = current_row[j] + 1
-            substitutions = previous_row[j] + (0 if c1 == c2 else 1)
-            current_row.append(min(insertions, deletions, substitutions))
-        previous_row = current_row
-
-    return previous_row[-1]
-
-
-def is_salient_token(token: str) -> bool:
-    """Determine if a token is salient (length >= 5, Cyrillic capitalized or content word)."""
-    if len(token) < 5:
-        return False
-    # Check if alphabetic (letters plus internal apostrophe/hyphen)
-    if not all(c.isalpha() or c in "'’ʼ-" for c in token):
-        return False
+    # We will search sequentially in E_norm
+    cursor = 0
     cyrillic_upper = "АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЮЯ"
-    if token[0] in cyrillic_upper:
-        return True
-    return token.casefold() not in UK_STOPWORDS
+
+    for match in raw_matches:
+        original = match.group()
+        # Check if it is salient
+        is_digit = any(c.isdigit() for c in original)
+        is_proper = len(original) > 0 and original[0] in cyrillic_upper
+
+        if not (is_digit or is_proper):
+            # Advance cursor for non-salient tokens to maintain sequential tracking
+            norm_tok = _normalize_for_match(original)
+            if norm_tok:
+                pos = E_norm.find(norm_tok, cursor)
+                if pos != -1:
+                    cursor = pos + len(norm_tok)
+            continue
+
+        norm_tok = _normalize_for_match(original)
+        if not norm_tok:
+            continue
+
+        pos = E_norm.find(norm_tok, cursor)
+        if pos == -1:
+            # Fallback: search from beginning if sequence got slightly out of alignment
+            pos = E_norm.find(norm_tok, 0)
+
+        if pos != -1:
+            start = pos
+            end = pos + len(norm_tok)
+            cursor = end
+            salient_tokens.append({
+                "original": original,
+                "norm": norm_tok,
+                "start": start,
+                "end": end,
+                "is_digit": is_digit
+            })
+    return salient_tokens
 
 
 def _find_best_window(
@@ -252,38 +244,20 @@ def anchor_evidence_to_events(
     normalized_excerpt = _normalize_for_match(excerpt)
     has_ellipsis = bool(_ELLIPSIS_RE.search(excerpt))
 
-    # Extract anchors from the excerpt
-    excerpt_digits = re.findall(r'\d+', normalized_excerpt)
-    excerpt_digit_counts = Counter(excerpt_digits)
-    raw_tokens = _TOKEN_RE.findall(excerpt)
-    excerpt_salient_tokens = [t for t in raw_tokens if is_salient_token(t)]
+    # Extract salient tokens
+    salient_tokens = find_salient_tokens(excerpt, normalized_excerpt)
+    if not salient_tokens:
+        return AnchorResult(
+            anchored=False,
+            abstained=False,
+            similarity=0.0,
+            source_index=None,
+            span=None,
+            reason="no_salient_anchor",
+        )
 
-    # Group proper nouns that are adjacent to form a single name/proper-noun anchor
-    cyrillic_upper = "АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЮЯ"
-    proper_noun_anchors = []
-    current_name = []
-    for t in raw_tokens:
-        if len(t) >= 5 and all(c.isalpha() or c in "'’ʼ-" for c in t) and t[0] in cyrillic_upper:
-            current_name.append(t.casefold())
-        else:
-            if current_name:
-                proper_noun_anchors.append(" ".join(current_name))
-                current_name = []
-    if current_name:
-        proper_noun_anchors.append(" ".join(current_name))
-
-    # Other salient tokens that are not part of proper nouns
-    other_salient = []
-    for t in raw_tokens:
-        if (
-            len(t) >= 5
-            and all(c.isalpha() or c in "'’ʼ-" for c in t)
-            and t[0] not in cyrillic_upper
-            and t.casefold() not in UK_STOPWORDS
-        ):
-            other_salient.append(t.casefold())
-
-    excerpt_content_anchors = set(excerpt_digits) | set(proper_noun_anchors) | set(other_salient)
+    # Max length of output to process to guard against pathological performance issues
+    MAX_SCANNED_OUTPUT_CHARS = 50000
 
     # Evaluate matching for each event
     event_results = []
@@ -293,11 +267,15 @@ def anchor_evidence_to_events(
         if output_text is None:
             continue
 
+        # Cap scanned output chars
+        if len(output_text) > MAX_SCANNED_OUTPUT_CHARS:
+            output_text = output_text[:MAX_SCANNED_OUTPUT_CHARS]
+
         normalized_output = _normalize_for_match(output_text)
         tool_query_matched = _tool_query_match(grounding, event)
 
         if has_ellipsis:
-            # Ellipsis path
+            # Ellipsis path: delegate provenance to v1 helper first
             if not _output_contains_excerpt(output_text, excerpt):
                 continue
             raw_sim, span, matched_mass = _match_ellipsis_excerpt(excerpt, normalized_output)
@@ -307,78 +285,66 @@ def anchor_evidence_to_events(
             max_window_len = max(len(normalized_excerpt) * 2.0, len(normalized_excerpt) + 50)
             span_locality_ok = (span[1] - span[0] <= max_window_len)
 
-            # Check digit-completeness
-            matched_span_text = normalized_output[span[0]:span[1]]
-            span_digits = re.findall(r'\d+', matched_span_text)
-            span_counts = Counter(span_digits)
-            digit_ok = True
-            for d, count in excerpt_digit_counts.items():
-                if span_counts[d] < count:
-                    digit_ok = False
-                    break
+            W_norm = normalized_output[span[0]:span[1]]
+            matcher = difflib.SequenceMatcher(None, normalized_excerpt, W_norm, autojunk=False)
+            ops = matcher.get_opcodes()
+
+            digit_aligned = True
+            salient_aligned = True
+            for t in salient_tokens:
+                aligned = any(
+                    op == "equal" and i1 <= t["start"] and t["end"] <= i2
+                    for op, i1, i2, j1, j2 in ops
+                )
+                # TODO(#4797): optional VESUM lemma tightening when db present
+                if not aligned:
+                    if t["is_digit"]:
+                        digit_aligned = False
+                    else:
+                        salient_aligned = False
 
             event_results.append({
                 "index": idx,
-                "raw_sim": raw_sim,
+                "raw_sim": raw_sim,  # Keep similarity = 1.0 for backwards compatibility
                 "span": span,
                 "matched_mass": matched_mass,
                 "span_locality_ok": span_locality_ok,
-                "digit_ok": digit_ok,
+                "digit_aligned": digit_aligned,
+                "salient_aligned": salient_aligned,
                 "tool_query_matched": tool_query_matched,
                 "normalized_output": normalized_output,
                 "mass_ok": True,
                 "sim_ok": True,
-                "content_ok": True,
-                "salient_ok": True,
-                "anchor_ok": True,
             })
         else:
             # Non-ellipsis path
-            raw_sim, span, matched_mass = _find_best_window(normalized_excerpt, normalized_output)
-            if span is None or raw_sim <= 0.0:
+            # Search best window span
+            _, span, matched_mass = _find_best_window(normalized_excerpt, normalized_output)
+            if span is None:
                 continue
+
+            W_norm = normalized_output[span[0]:span[1]]
+            matcher = difflib.SequenceMatcher(None, normalized_excerpt, W_norm, autojunk=False)
+            raw_sim = matcher.ratio()
 
             required_threshold = (tau - 0.05) if tool_query_matched else tau
             sim_ok = (raw_sim >= required_threshold)
             mass_ok = (matched_mass >= 12)
 
-            matched_span_text = normalized_output[span[0]:span[1]]
-
-            # Check digit-completeness
-            span_digits = re.findall(r'\d+', matched_span_text)
-            span_counts = Counter(span_digits)
-            digit_ok = True
-            for d, count in excerpt_digit_counts.items():
-                if span_counts[d] < count:
-                    digit_ok = False
-                    break
-
-            # Check salient-token presence
-            span_tokens = _TOKEN_RE.findall(matched_span_text)
-            salient_ok = True
-            for t in excerpt_salient_tokens:
-                if not any(levenshtein_distance(t.casefold(), st.casefold()) <= 2 for st in span_tokens):
-                    salient_ok = False
-                    break
-
-            # Check content anchors
-            matched_anchors = set()
-            for d in excerpt_digits:
-                if span_counts[d] > 0:
-                    matched_anchors.add(d)
-            for name in proper_noun_anchors:
-                # all words in the proper noun must be matched
-                if all(any(levenshtein_distance(w, st.casefold()) <= 2 for st in span_tokens) for w in name.split()):
-                    matched_anchors.add(name)
-            for w in other_salient:
-                if any(levenshtein_distance(w, st.casefold()) <= 2 for st in span_tokens):
-                    matched_anchors.add(w)
-
-            num_excerpt_anchors = len(excerpt_content_anchors)
-            num_matched_anchors = len(matched_anchors)
-            anchor_ok = True
-            if num_excerpt_anchors >= 2 and num_matched_anchors < 2:
-                anchor_ok = False
+            ops = matcher.get_opcodes()
+            digit_aligned = True
+            salient_aligned = True
+            for t in salient_tokens:
+                aligned = any(
+                    op == "equal" and i1 <= t["start"] and t["end"] <= i2
+                    for op, i1, i2, j1, j2 in ops
+                )
+                # TODO(#4797): optional VESUM lemma tightening when db present
+                if not aligned:
+                    if t["is_digit"]:
+                        digit_aligned = False
+                    else:
+                        salient_aligned = False
 
             event_results.append({
                 "index": idx,
@@ -386,31 +352,25 @@ def anchor_evidence_to_events(
                 "span": span,
                 "matched_mass": matched_mass,
                 "span_locality_ok": True,
-                "digit_ok": digit_ok,
+                "digit_aligned": digit_aligned,
+                "salient_aligned": salient_aligned,
                 "tool_query_matched": tool_query_matched,
                 "normalized_output": normalized_output,
                 "mass_ok": mass_ok,
                 "sim_ok": sim_ok,
-                "content_ok": True,
-                "salient_ok": salient_ok,
-                "anchor_ok": anchor_ok,
             })
 
     # Filter to candidates that pass all guards
     valid_candidates = []
     for res in event_results:
-        if has_ellipsis:
-            if res["span_locality_ok"] and res["digit_ok"]:
-                valid_candidates.append(res)
-        else:
-            if (
-                res["sim_ok"]
-                and res["mass_ok"]
-                and res["digit_ok"]
-                and res["salient_ok"]
-                and res["anchor_ok"]
-            ):
-                valid_candidates.append(res)
+        if (
+            res["sim_ok"]
+            and res["mass_ok"]
+            and res["span_locality_ok"]
+            and res["digit_aligned"]
+            and res["salient_aligned"]
+        ):
+            valid_candidates.append(res)
 
     if valid_candidates:
         # Sort valid candidates: primary key raw_sim descending, secondary tool_query_matched descending
@@ -439,9 +399,9 @@ def anchor_evidence_to_events(
 
         # Compute low signal reasons
         low_signal_reasons = []
-        if not excerpt_digits:
+        if not any(c.isdigit() for c in normalized_excerpt):
             low_signal_reasons.append("no_digits")
-        if len(excerpt_content_anchors) <= 1:
+        if len(salient_tokens) <= 1:
             low_signal_reasons.append("single_anchor")
         anchor_low_signal_reason = ",".join(low_signal_reasons) if low_signal_reasons else None
 
@@ -473,8 +433,10 @@ def anchor_evidence_to_events(
     if has_ellipsis:
         if not best_attempt["span_locality_ok"]:
             reason = "below_tau"
-        elif not best_attempt["digit_ok"]:
-            reason = "digit_absent"
+        elif not best_attempt["digit_aligned"]:
+            reason = "digit_not_aligned"
+        elif not best_attempt["salient_aligned"]:
+            reason = "salient_not_aligned"
         else:
             reason = "below_tau"
     else:
@@ -482,12 +444,10 @@ def anchor_evidence_to_events(
             reason = "below_tau"
         elif not best_attempt["mass_ok"]:
             reason = "insufficient_mass"
-        elif not best_attempt["digit_ok"]:
-            reason = "digit_absent"
-        elif not best_attempt["anchor_ok"]:
-            reason = "single_anchor"
-        elif not best_attempt["salient_ok"]:
-            reason = "salient_token_absent"
+        elif not best_attempt["digit_aligned"]:
+            reason = "digit_not_aligned"
+        elif not best_attempt["salient_aligned"]:
+            reason = "salient_not_aligned"
         else:
             reason = "below_tau"
 
@@ -499,4 +459,3 @@ def anchor_evidence_to_events(
         span=None,
         reason=reason,
     )
-
