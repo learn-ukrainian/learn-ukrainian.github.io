@@ -1,0 +1,49 @@
+---
+# Source registry for wiki/figures/andrii-malyshko.md
+# Referenced inline as [S1], [S2], ...
+sources:
+  - id: S1
+    file: https://esu.com.ua/article-63095
+    tier: T1
+    title: Малишко Андрій Самійлович — Енциклопедія Сучасної України
+    type: external
+    url: https://esu.com.ua/article-63095
+  - id: S2
+    file: https://resource.history.org.ua/cgi-bin/eiu/history.exe?S21STR=Malyshko_A_S
+    tier: T1
+    title: Малишко Андрій Самійлович — Енциклопедія історії України
+    type: external
+    url: https://resource.history.org.ua/cgi-bin/eiu/history.exe?S21STR=Malyshko_A_S
+  - id: S3
+    file: https://uk.wikipedia.org/wiki/Андрій_Малишко
+    tier: T3
+    title: Андрій Малишко — Українська Вікіпедія
+    type: wikipedia
+    url: https://uk.wikipedia.org/wiki/Андрій_Малишко
+  - id: S4
+    file: https://en.wikipedia.org/wiki/Andriy_Malyshko
+    tier: T3
+    title: Andriy Malyshko — English Wikipedia
+    type: wikipedia
+    url: https://en.wikipedia.org/wiki/Andriy_Malyshko
+  - id: S5
+    file: https://uinp.gov.ua/istorychnyy-kalendar/lystopad/14/1912-narodyvsya-andriy-malyshko-poet
+    tier: T2
+    title: 1912 — Народився Андрій Малишко — Український інститут національної пам’яті
+    type: external
+    notes: Датована інституційна довідка календарного формату.
+    url: https://uinp.gov.ua/istorychnyy-kalendar/lystopad/14/1912-narodyvsya-andriy-malyshko-poet
+  - id: S6
+    file: https://dovzhenkocentre.org/event/shahtarski-kinopokazy/
+    tier: T5
+    title: Шахтарські кінопокази — Довженко-Центр
+    type: external
+    notes: Культурно-кіношний контекст першого широкого звучання пісні у фільмі «Літа молодії».
+    url: https://dovzhenkocentre.org/event/shahtarski-kinopokazy/
+  - id: S7
+    file: https://uk.wikipedia.org/wiki/Пісня_про_рушник
+    tier: T5
+    title: Пісня про рушник — Українська Вікіпедія
+    type: wikipedia
+    notes: Додаткова довідка про жанрові шляхи поширення пісні.
+    url: https://uk.wikipedia.org/wiki/Пісня_про_рушник
