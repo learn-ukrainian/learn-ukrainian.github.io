@@ -4,6 +4,7 @@ The normalized records are intentionally small and PII-bearing. Arguments are
 kept because downstream honesty checks need them, but raw tool output is never
 stored: only a capped summary is retained.
 """
+
 from __future__ import annotations
 
 import json
@@ -78,7 +79,7 @@ def parse_json_events(text: str, *, source: str, logger: logging.Logger) -> list
                         lineno,
                     )
                 continue
-            candidate = candidate[start:end + 1]
+            candidate = candidate[start : end + 1]
         try:
             event = json.loads(candidate)
         except json.JSONDecodeError as exc:
@@ -119,15 +120,11 @@ def normalize_tool_calls(events: Iterable[Mapping[str, Any]]) -> list[dict[str, 
             if output is not None:
                 call["result"] = output
             calls.append(call)
-            call_id = _tool_call_id(payload)
-            if call_id:
-                by_id[call_id] = call
+            # Guard note: codex's dual-id (id vs call_id) events need id-set registration.
+            for cid in _tool_call_ids(payload):
+                by_id[cid] = call
 
-        result_payloads = [
-            payload
-            for payload in _candidate_payloads(event)
-            if _is_tool_result_payload(payload)
-        ]
+        result_payloads = [payload for payload in _candidate_payloads(event) if _is_tool_result_payload(payload)]
         for payload in result_payloads:
             call_id = _tool_result_id(payload)
             if call_id and call_id in by_id:
@@ -185,6 +182,7 @@ def _candidate_payloads(event: Mapping[str, Any]) -> list[Mapping[str, Any]]:
     visit(event)
     return payloads
 
+
 def _payload_type(payload: Mapping[str, Any]) -> str:
     raw = payload.get("type") or payload.get("event") or payload.get("kind") or ""
     return str(raw).strip().lower()
@@ -193,7 +191,8 @@ def _payload_type(payload: Mapping[str, Any]) -> str:
 def _is_tool_use_payload(payload: Mapping[str, Any]) -> bool:
     payload_type = _payload_type(payload)
     return (
-        payload_type in {
+        payload_type
+        in {
             "tool_use",
             "tool_call",
             "function_call",
@@ -338,10 +337,7 @@ def _sanitize_argument_value(value: Any) -> Any:
         return sanitized
     if isinstance(value, list | tuple | set):
         items = list(value)
-        sanitized_items = [
-            _sanitize_argument_value(item)
-            for item in items[:ARGUMENT_ITEM_LIMIT]
-        ]
+        sanitized_items = [_sanitize_argument_value(item) for item in items[:ARGUMENT_ITEM_LIMIT]]
         if len(items) > ARGUMENT_ITEM_LIMIT:
             sanitized_items.append({"_truncated_items": len(items) - ARGUMENT_ITEM_LIMIT})
         return sanitized_items
@@ -358,6 +354,16 @@ def _tool_call_id(payload: Mapping[str, Any]) -> str:
         if isinstance(value, str) and value:
             return value
     return ""
+
+
+def _tool_call_ids(payload: Mapping[str, Any]) -> list[str]:
+    # Guard note: codex's dual-id (id vs call_id) events need id-set registration
+    ids: list[str] = []
+    for key in ("id", "tool_call_id", "toolUseId", "call_id"):
+        value = payload.get(key)
+        if isinstance(value, str) and value and value not in ids:
+            ids.append(value)
+    return ids
 
 
 def _tool_result_id(payload: Mapping[str, Any]) -> str:

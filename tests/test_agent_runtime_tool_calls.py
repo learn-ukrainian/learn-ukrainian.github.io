@@ -40,9 +40,7 @@ def test_normalize_tool_calls_concatenates_codex_namespace_and_name() -> None:
                 "type": "function_call",
                 "name": "search_text",
                 "namespace": "mcp__sources__",
-                "arguments": (
-                    '{"query":"Захарійчук 24","grade":1,"limit":10}'
-                ),
+                "arguments": ('{"query":"Захарійчук 24","grade":1,"limit":10}'),
                 "call_id": "call_EW63246HqmzrZDz6wqavBene",
             },
         },
@@ -183,10 +181,7 @@ def test_normalize_tool_calls_correlates_codex_function_call_output() -> None:
             "payload": {
                 "type": "function_call_output",
                 "call_id": "call_ujhILo8Q08B3NwugWTPbXbOm",
-                "output": (
-                    'Wall time: 0.0212 seconds\nOutput:\n'
-                    '[{"type":"text","text":"Found 10 results"}]'
-                ),
+                "output": ('Wall time: 0.0212 seconds\nOutput:\n[{"type":"text","text":"Found 10 results"}]'),
             },
         },
     ]
@@ -197,3 +192,63 @@ def test_normalize_tool_calls_correlates_codex_function_call_output() -> None:
     assert calls[0]["name"] == "mcp__sources__search_text"
     assert calls[0]["result"] == [{"type": "text", "text": "Found 10 results"}]
     assert "Found 10 results" in calls[0]["output_summary"]
+
+
+def test_normalize_tool_calls_correlates_codex_mcp_output_by_call_id() -> None:
+    # A function_call event: {"type":"function_call","id":"fc_ABC…","call_id":"call_XYZ…","namespace":"mcp__sources","name":"search_literary","arguments":"{\"query\":\"колядки\"}"}
+    # A mcp_tool_call_end event: {"type":"mcp_tool_call_end","call_id":"call_XYZ…","result":"…Класичною величальною поезією укр. народу є колядки, щедрівки…"}
+    events = [
+        {
+            "type": "function_call",
+            "id": "fc_ABC123",
+            "call_id": "call_XYZ789",
+            "namespace": "mcp__sources",
+            "name": "search_literary",
+            "arguments": '{"query":"колядки"}',
+        },
+        {
+            "type": "mcp_tool_call_end",
+            "call_id": "call_XYZ789",
+            "result": "…Класичною величальною поезією укр. народу є колядки, щедрівки…",
+        },
+    ]
+
+    calls = normalize_tool_calls(events)
+
+    # Assert normalize_tool_calls([...]) yields exactly one call with name == "mcp__sources__search_literary"
+    # AND a non-empty result (and output_summary).
+    assert len(calls) == 1
+    call = calls[0]
+    assert call["name"] == "mcp__sources__search_literary"
+    assert call["result"] == "…Класичною величальною поезією укр. народу є колядки, щедрівки…"
+    assert "колядки" in call["output_summary"]
+
+    # Add a second assertion through scripts.audit.runtime_tool_events.map_runtime_tool_calls([...]):
+    # the gate-facing event has non-null output containing the excerpt substring.
+    from scripts.audit.runtime_tool_events import map_runtime_tool_calls
+
+    gate_events = map_runtime_tool_calls(calls)
+    assert len(gate_events) == 1
+    assert gate_events[0]["tool"] == "mcp__sources__search_literary"
+    assert gate_events[0]["output"] == "…Класичною величальною поезією укр. народу є колядки, щедрівки…"
+
+    # Include a NON-regression assertion: a function_call + function_call_output
+    # (shell, correlates on call_id only, no separate item id) still correlates — so the change is a superset.
+    shell_events = [
+        {
+            "type": "function_call",
+            "name": "exec_command",
+            "arguments": '{"cmd":"pwd"}',
+            "call_id": "call_shell_123",
+        },
+        {
+            "type": "function_call_output",
+            "call_id": "call_shell_123",
+            "output": "/Users/krisztiankoos/projects/learn-ukrainian",
+        },
+    ]
+    shell_calls = normalize_tool_calls(shell_events)
+    assert len(shell_calls) == 1
+    assert shell_calls[0]["name"] == "exec_command"
+    assert shell_calls[0]["result"] == "/Users/krisztiankoos/projects/learn-ukrainian"
+    assert "/Users/krisztiankoos/projects/learn-ukrainian" in shell_calls[0]["output_summary"]
