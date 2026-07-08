@@ -1404,8 +1404,11 @@ def enforce_grounding_against_tool_events(
     dispatch_meta: Mapping[str, Any],
     *,
     policy_family: str,
+    gate_version: str | None = None,
 ) -> GroundingGateResult:
     """Drop findings whose claimed grounding is not present in this run's tools."""
+    resolved_version = gate_version or os.environ.get("QG_GROUNDING_GATE_VERSION", "v1")
+
     events = tool_events_from_dispatch_meta(dispatch_meta)
     if not events:
         return GroundingGateResult(payload=dict(payload))
@@ -1418,11 +1421,19 @@ def enforce_grounding_against_tool_events(
             continue
         item = dict(finding)
         grounding = item.get("grounding")
-        if isinstance(grounding, Mapping) and not _grounding_matches_events(grounding, events):
-            ungrounded += 1
-            if qg_schema.finding_requires_grounding(item, policy_family):
-                required_ungrounded += 1
-            continue
+        if isinstance(grounding, Mapping):
+            if resolved_version == "v2":
+                from scripts.audit import grounding_gate_v2
+                res = grounding_gate_v2.anchor_evidence_to_events(grounding, events)
+                is_matched = res.anchored
+            else:
+                is_matched = _grounding_matches_events(grounding, events)
+
+            if not is_matched:
+                ungrounded += 1
+                if qg_schema.finding_requires_grounding(item, policy_family):
+                    required_ungrounded += 1
+                continue
         kept_findings.append(item)
 
     invalid_fact_checks = 0
@@ -1434,20 +1445,33 @@ def enforce_grounding_against_tool_events(
             continue
         item = dict(fact_check)
         grounding = item.get("grounding")
-        if isinstance(grounding, Mapping) and not _grounding_matches_events(grounding, events):
-            invalid_fact_checks += 1
-            # Diagnostic tag: this grounding is not backed by a matching
-            # (tool, query, excerpt) event in this run. The verdict is left
-            # untouched here so the live pipeline's semantics are unchanged;
-            # the bakeoff scorer reads this tag to strip the row from the
-            # live-admissible column (STRICT grounding, #4761).
-            item["grounding_admissible"] = False
-        elif item.get("deep_read_attempted") is True and _positive_verdict_summary_only(item, events):
-            original_verdict = str(item.get("verdict") or "")
-            item["original_verdict"] = original_verdict
-            item["verdict"] = "UNVERIFIED_INSUFFICIENT_SEARCH"
-            item["admissibility_downgraded"] = True
-            inadmissible_positive_verdicts += 1
+        if isinstance(grounding, Mapping):
+            if resolved_version == "v2":
+                from scripts.audit import grounding_gate_v2
+                res = grounding_gate_v2.anchor_evidence_to_events(grounding, events)
+                is_matched = res.anchored
+                item["anchor_similarity"] = res.similarity
+                item["anchor_abstained"] = res.abstained
+                item["grounding_gate_version"] = "v2"
+                if res.anchor_low_signal_reason is not None:
+                    item["anchor_low_signal_reason"] = res.anchor_low_signal_reason
+            else:
+                is_matched = _grounding_matches_events(grounding, events)
+
+            if not is_matched:
+                invalid_fact_checks += 1
+                # Diagnostic tag: this grounding is not backed by a matching
+                # (tool, query, excerpt) event in this run. The verdict is left
+                # untouched here so the live pipeline's semantics are unchanged;
+                # the bakeoff scorer reads this tag to strip the row from the
+                # live-admissible column (STRICT grounding, #4761).
+                item["grounding_admissible"] = False
+            elif item.get("deep_read_attempted") is True and _positive_verdict_summary_only(item, events):
+                original_verdict = str(item.get("verdict") or "")
+                item["original_verdict"] = original_verdict
+                item["verdict"] = "UNVERIFIED_INSUFFICIENT_SEARCH"
+                item["admissibility_downgraded"] = True
+                inadmissible_positive_verdicts += 1
         checked_fact_checks.append(item)
 
     out = dict(payload)
