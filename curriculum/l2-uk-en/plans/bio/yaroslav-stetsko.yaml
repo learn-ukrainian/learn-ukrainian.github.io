@@ -104,7 +104,9 @@ module: bio-300
 objectives:
 - Аналізувати політичний та ідеологічний доробок Ярослава Стецька.
 - Розуміти історичні обставини проголошення Акта 30 червня 1941 року та його наслідки.
-- Досліджувати складні аспекти ідеології ОУН(б), включаючи елементи авторитаризму та антисемітизму в текстах 1939-1941 років.
+- >-
+  Досліджувати складні аспекти ідеології ОУН(б), включаючи елементи авторитаризму
+  та антисемітизму в текстах 1939-1941 років.
 - Оцінювати роль Стецька як лідера Антибільшовицького блоку народів у повоєнний час.
 pedagogy: CBI
 persona:
@@ -124,17 +126,68 @@ references:
   type: reference
 - note: Дослідження ставлення ОУН до євреїв через аналіз життєпису Стецька.
   path: Harvard Ukrainian Studies 23
-  title: Karel Berkhoff and Marco Carynnyk. "The Organization of Ukrainian Nationalists and Its Attitude toward Germans and Jews"
+  title: >-
+    Karel Berkhoff and Marco Carynnyk. "The Organization of Ukrainian
+    Nationalists and Its Attitude toward Germans and Jews"
   type: reference
 - note: Комплексне дослідження складних питань Голокосту та українського націоналізму.
   path: Ukrainian Nationalists and the Holocaust
   title: John-Paul Himka. "Ukrainian Nationalists and the Holocaust"
   type: reference
+readings:
+- title: Стецько Ярослав Семенович
+  language: uk
+  genre: Енциклопедична стаття / біографічна довідка
+  source_type: reference
+  role: orientation
+  source: Енциклопедія Сучасної України
+  source_url: https://esu.com.ua/article-884618
+  license: copyrighted
+  rights_note: Використовувати як link-only довідку; не хостити повний текст.
+  hosting: link-only
+  cefr_min: C1
+  learner_task: >-
+    Виписати етапи підпільної діяльності, Акта 30 червня, ув'язнення та
+    повоєнної роботи в еміграції.
+  caveats: Довідка не закриває контроверсійні тексти 1941 року й потребує критичного читання.
+- title: 1941 — проголошення відновлення Української держави
+  language: uk
+  genre: Історичний календар / документальний контекст
+  source_type: reference
+  role: supplementary-reading
+  source: Український інститут національної пам'яті
+  source_url: https://uinp.gov.ua/istorychnyy-kalendar/cherven/30/1941-progoloshennya-vidnovlennya-ukrayinskoyi-derzhavy
+  license: copyrighted
+  rights_note: Використовувати як link-only матеріал; не хостити повний текст або зображення.
+  hosting: link-only
+  cefr_min: C1
+  learner_task: >-
+    З'ясувати політичний контекст Акта 30 червня і наслідки його невизнання
+    нацистською владою.
+  caveats: Меморіальний матеріал потребує зіставлення з критичною історіографією.
+- title: Критичне українське читання про тексти Стецька 1941 року
+  language: uk
+  genre: Наукова стаття / історіографічний огляд
+  source_type: reference
+  role: reading-needed
+  source: 'reading-needed: yaroslav-stetsko-1941-critical-ukrainian-source'
+  source_url: 'reading-needed'
+  license: unknown
+  rights_note: >-
+    reading-needed: знайти український або перекладний науковий матеріал про
+    антисемітські твердження й авторитарні елементи у текстах Стецька; не
+    використовувати англомовну статтю як learner reading без винятку.
+  hosting: reading-needed
+  cefr_min: C1
+  learner_task: >-
+    Розрізнити державницький жест Акта, тактичну співпрацю, антисемітські
+    твердження та пізнішу антикомуністичну риторику.
+  caveats: Без критичного україномовного джерела модуль не готовий до build.
 sequence: 300
 slug: yaroslav-stetsko
 subtitle: The 1941 Proclamation, Ideology, and Exile Leadership
 title: 'Ярослав Стецько: Акт 30 червня та ідеологія ОУН(б)'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: ідеологічний напрям, що ставить інтереси нації вище за класові чи особисті інтереси
   pos: ч.

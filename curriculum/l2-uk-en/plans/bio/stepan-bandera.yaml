@@ -140,11 +140,60 @@ references:
   path: https://ratinggroup.ua/
   title: Rating Group. "The Tenth National Survey" (2022)
   type: reference
+readings:
+- title: Бандера Степан Андрійович
+  language: uk
+  genre: Енциклопедична стаття / біографічна довідка
+  source_type: reference
+  role: orientation
+  source: Енциклопедія Сучасної України
+  source_url: https://esu.com.ua/article-40247
+  license: copyrighted
+  rights_note: Використовувати як link-only довідку; не хостити повний текст.
+  hosting: link-only
+  cefr_min: C1
+  learner_task: >-
+    Скласти хронологію політичної діяльності, польського ув'язнення,
+    Заксенгаузена, еміграції та вбивства КДБ.
+  caveats: Енциклопедична довідка має доповнюватися критичною історіографією про ОУН(б).
+- title: 1909 — народився лідер ОУН Степан Бандера
+  language: uk
+  genre: Історичний календар / меморіальний нарис
+  source_type: reference
+  role: supplementary-reading
+  source: Український інститут національної пам'яті
+  source_url: https://uinp.gov.ua/istorychnyy-kalendar/sichen/1/1909-narodyvsya-lider-oun-stepan-bandera
+  license: copyrighted
+  rights_note: Використовувати як link-only матеріал; не хостити повний текст або зображення.
+  hosting: link-only
+  cefr_min: C1
+  learner_task: >-
+    Відокремити факти про арешти, Акт 30 червня та Заксенгаузен від мови
+    сучасної політики пам'яті.
+  caveats: Матеріал УІНП має меморіальний кут зору; модуль повинен зберігати критичну дистанцію.
+- title: Критичне українське читання про ОУН(б), Волинь і Голокост
+  language: uk
+  genre: Наукова стаття / історіографічний огляд
+  source_type: reference
+  role: reading-needed
+  source: 'reading-needed: stepan-bandera-critical-ukrainian-historiography'
+  source_url: 'reading-needed'
+  license: unknown
+  rights_note: >-
+    reading-needed: знайти стабільний український науковий або перекладний
+    матеріал про політичне насильство ОУН(б), Волинь і Голокост; не замінювати
+    його англомовними джерелами для learner reading.
+  hosting: reading-needed
+  cefr_min: C1
+  learner_task: >-
+    Порівняти міфологізований образ Бандери з критичним аналізом відповідальності
+    руху та меж особистого контролю.
+  caveats: Без такого читання модуль не готовий до build через високоризикову тему пам'яті.
 sequence: 299
 slug: stepan-bandera
 subtitle: The OUN-B Leader, Political Violence, and the KGB Assassination
 title: 'Степан Бандера: Ідеолог ОУН(б) та міфи навколо нього'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: ідеологічний напрям, що ставить інтереси нації вище за класові чи особисті інтереси
   pos: ч.
