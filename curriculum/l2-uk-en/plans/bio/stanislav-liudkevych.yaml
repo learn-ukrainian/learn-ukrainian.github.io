@@ -109,11 +109,109 @@ references:
   path: docs/research/bio/stanislav-liudkevych.md
   title: Stanislav Liudkevych — Research Dossier
   type: research
+readings:
+- title: Людкевич Станіслав Пилипович
+  language: uk
+  genre: Енциклопедична стаття / біографічна довідка
+  source_type: reference
+  role: primary_bio
+  source: Енциклопедія Сучасної України
+  source_url: https://esu.com.ua/article-59909
+  license: copyrighted
+  rights_note: >-
+    ЕСУ забезпечує базову довідкову рамку; для навчального модуля її треба
+    доповнювати роботою з творами та інституційними матеріалами.
+  hosting: link-only
+  cefr_min: C1
+  learner_task: >-
+    Виписати ключові віхи життя, освіти, інституційної праці й основні твори, а
+    потім перевірити, що з цих тез має джерельні підтвердження.
+  caveats: >-
+    Біографія стисло подає рамку і не розкриває повного контексту радянських
+    репресивних практик.
+- title: Liudkevych, Stanyslav
+  language: en
+  genre: Encyclopaedia entry / biography
+  source_type: reference
+  role: supplementary-reading
+  source: Internet Encyclopedia of Ukraine
+  source_url: >-
+    https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CL%5CI%5CLiudkevychStanyslav.htm
+  license: copyrighted
+  rights_note: >-
+    Англомовний огляд слугує орієнтиром для дат і жанрів; для складних тем
+    (інституційна спадщина, репресивний контекст) потрібні локальні джерела.
+  hosting: link-only
+  cefr_min: C1
+  learner_task: >-
+    Порівняти біографічні акценти з ЕСУ й ЕІУ та окреслити, де англомовний текст
+    обмежує деталізацію.
+  caveats: >-
+    Не підміняти аналіз музикології цією статтею; її завдання — базова
+    орієнтація.
+- title: Людкевич Станіслав Пилипович
+  language: uk
+  genre: Енциклопедична стаття / історична довідка
+  source_type: reference
+  role: supplementary-reading
+  source: Енциклопедія історії України
+  source_url: >-
+    https://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Lyudkevych_S_P
+  license: copyrighted
+  rights_note: >-
+    ЕІУ дає стабільну кадрово-посадову основу; для спорів про гестапо-арешт і
+    захист Барвінського потрібні додаткові підтвердження.
+  hosting: link-only
+  cefr_min: C1
+  learner_task: >-
+    Виписати з ЕІУ дані про основні ролі й періоди служби, а потім зіставити їх
+    із фрагментами творів у курсі.
+  caveats: >-
+    Працюючи з юридичною лексикою («полон», «арешт», «захист Барвінського»),
+    уникати тверджень без верифікації першоджерел.
+- title: Українське джерело для перевірки тексту «Кавказ»
+  language: uk
+  genre: Первинний текстовий матеріал / джерельний фрагмент
+  source_type: primary
+  role: supplementary-reading
+  source: Оригінальний текст «Борітеся — поборете!» на Українському текстовому корпусі
+  source_url: reading-needed
+  license: reading-needed
+  rights_note: >-
+    Потрібна первинна перевірка повного тексту/партитурного супроводу; на цьому
+    етапі безпечніше працювати з оглядами та посиланнями.
+  hosting: reading-needed
+  cefr_min: C1
+  learner_task: >-
+    Підготувати порівняння: які строфи тексту входять у кантату і як змінюються
+    акценти між поезією та музичною обробкою.
+  caveats: >-
+    Без оригінального текстового та нотного пакета будь-яка інтерпретація цитат
+    про деталі є частковою.
+- title: Liudkevych, Stanislav — Research Dossier
+  language: uk
+  genre: Internal research dossier / risk synthesis
+  source_type: secondary
+  role: critical-supplement
+  source: Документ дослідницького блоку
+  source_url: docs/research/bio/stanislav-liudkevych.md
+  license: unknown
+  rights_note: >-
+    Досьє агрегує відомі ризикові зони (дати смерті, політичний контекст), але
+    не замінює пряму роботу з епохальними джерелами.
+  hosting: link-only
+  cefr_min: C1
+  learner_task: >-
+    Перевірити ризикові пункти з досьє та визначити, які з них слід підкріпити
+    додатковими епізодичними довідками або фрагментами творів.
+  caveats: >-
+    Локальний пакет не є публічною енциклопедичною довідкою; його роль —
+    підготовка контролю ризиків.
 sequence: 367
 slug: stanislav-liudkevych
 subtitle: 'Stanislav Liudkevych: Galician National Music, Continuity, and Survival Across Regimes'
 title: 'Станіслав Людкевич: Галицька професійна музика крізь імперії'
-version: '4.0'
+version: '4.1'
 vocabulary_hints:
 - definition: великий жанр для хору й оркестру; форма «Кавказу» Людкевича
   pos: ж.

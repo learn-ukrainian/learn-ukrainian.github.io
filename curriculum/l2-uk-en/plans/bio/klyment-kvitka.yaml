@@ -119,11 +119,110 @@ references:
   path: docs/research/bio/klyment-kvitka.md
   title: Климент Васильович Квітка — Research Dossier
   type: research
+readings:
+- title: Квітка Климент Васильович
+  language: uk
+  genre: Енциклопедична стаття / біографічна довідка
+  source_type: reference
+  role: primary_bio
+  source: Енциклопедія Сучасної України
+  source_url: https://esu.com.ua/article-11614
+  license: copyrighted
+  rights_note: >-
+    ЕСУ подає базову біографічну рамку й ключові дати; для модульного матеріалу
+    її слід поєднувати з ЕІУ та архівними або дослідницькими джерелами.
+  hosting: link-only
+  cefr_min: C1
+  learner_task: >-
+    Виписати основні біографічні вузли (народження, правнича освіта, шлюб,
+    ВУАН, репресивний контекст) та позначити, де потрібні зовнішні джерела.
+  caveats: >-
+    Біографічна стаття стисло подає суперечливі правові сюжети; деталі справи
+    не слід домислювати.
+- title: Klyment Kvitka
+  language: en
+  genre: Encyclopaedia entry / biography
+  source_type: reference
+  role: supplementary-reading
+  source: Internet Encyclopedia of Ukraine
+  source_url: >-
+    https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CK%5CV%5CKvitkaKlyment.htm
+  license: copyrighted
+  rights_note: >-
+    IEU дає англомовний огляд; при роботі з термінами (ВУАН, кабінет,
+    фонографічні праці) перевіряти український контекст.
+  hosting: link-only
+  cefr_min: C1
+  learner_task: >-
+    Підготувати порівняльну таблицю українських та англомовних біографічних
+    формулювань: що збігається, а що редукується.
+  caveats: >-
+    Англомовний текст узагальнює наукові спори; не замінює методичних деталей
+    інституційної праці Квітки.
+- title: Квітка Климентій Васильович
+  language: uk
+  genre: Енциклопедична стаття / довідка
+  source_type: reference
+  role: supplementary-reading
+  source: Енциклопедія історії України
+  source_url: >-
+    https://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN%3D&S21COLORTERMS=0&S21STR=Kvitka_K
+  license: copyrighted
+  rights_note: >-
+    ЕІУ корисна для перевірки дат, посад, назв праць і етапів інституційної
+    діяльності; статус мови та правових застережень дивитись окремо.
+  hosting: link-only
+  cefr_min: C1
+  learner_task: >-
+    Зіставити ідентифікацію перехідних моментів (від права до музики, ВУАН,
+    репресивні роки) з іншими джерелами та вказати розбіжності.
+  caveats: >-
+    ЕІУ не деталізує метод роботи з фонограмами й репресивною траєкторією до
+    рівня джерельної реконструкції.
+- title: Квітка Климентій Васильович
+  language: uk
+  genre: Історико-архівна довідка / біографічний календар
+  source_type: reference
+  role: institutional-context
+  source: Український інститут національної пам'яті
+  source_url: >-
+    https://uinp.gov.ua/istorychnyy-kalendar/lyutyy/4/1880-narodyvsya-klyment-kvitka
+  license: copyrighted
+  rights_note: >-
+    Календар дає базові віхи, але потребує верифікації методологічних деталей у
+    наукових та архівних матеріалах.
+  hosting: link-only
+  cefr_min: C1
+  learner_task: >-
+    Використати цю довідку для звірки дат і місць, а не для висновків про метод
+    і роль Квітки в транскрипції.
+  caveats: >-
+    Коротка форма календаря може замовчувати часову послідовність публікацій та
+    дискусійні деталі.
+- title: «Народні мелодії. З голосу Лесі Українки» (первинний корпус)
+  language: uk
+  genre: Первинний збірник / нотна методика
+  source_type: primary
+  role: primary-work
+  source: Квітка Климент Васильович
+  source_url: reading-needed
+  license: reading-needed
+  rights_note: >-
+    Для повної роботи з текстом збірки потрібен доступ до конкретного архівного
+    або бібліотечного примірника; без перевірки прав не хостити повну версію.
+  hosting: reading-needed
+  cefr_min: C1
+  learner_task: >-
+    Підготувати чекліст для верифікації збірки (технічні дані видання, редакція,
+    джерела запису, інформація про виконання), не підміняючи її вторинними резюме.
+  caveats: >-
+    Не всі томи й редакції доступні відкрито; ризик змішати публікації різних
+    років і редакцій.
 sequence: 360
 slug: klyment-kvitka
 subtitle: 'Klyment Kvitka: Musical Ethnography and Its Method'
 title: 'Климент Квітка: музична етнографія та її метод'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: наука про народну музику; Квітка будував її як метод і інституцію у ВУАН
   pos: ж.
