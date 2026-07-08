@@ -535,3 +535,56 @@ def test_large_pathological_output_performance():
     duration = t1 - t0
     assert duration < 0.5
     assert res.anchored is True
+
+
+def test_grounding_gate_v2_repetitive_performance():
+    import time
+
+    # Case 1: _find_best_window on repetitive excerpt and output
+    excerpt1 = "Сковорода1722" * 100
+    output1 = ("Сковорода1722" * 100 + " ") * 400
+    t0 = time.perf_counter()
+    score, span, _ = grounding_gate_v2._find_best_window(excerpt1, output1)
+    t1 = time.perf_counter()
+    duration1 = t1 - t0
+    assert duration1 < 0.5, f"Case 1 took {duration1:.3f}s"
+    assert score > 0.9
+    assert span is not None
+
+    # Case 2: Full gate on excerpt "Марко 1722" vs output "Марко 1722 "*5000
+    events2 = [_make_event(output="Марко 1722 " * 5000)]
+    grounding2 = {
+        "tool": "query_wikipedia",
+        "query": "Марко 1722",
+        "evidence_excerpt": "Марко 1722"
+    }
+    t0 = time.perf_counter()
+    res2 = grounding_gate_v2.anchor_evidence_to_events(grounding2, events2)
+    t1 = time.perf_counter()
+    duration2 = t1 - t0
+    assert duration2 < 0.5, f"Case 2 took {duration2:.3f}s"
+    assert res2.anchored is False
+    assert res2.reason == "insufficient_mass"
+
+    # Case 3: Excerpt "а"*5000 vs "а"*50000
+    excerpt3 = "а" * 5000
+    output3 = "а" * 50000
+    t0 = time.perf_counter()
+    _, _, _ = grounding_gate_v2._find_best_window(excerpt3, output3)
+    t1 = time.perf_counter()
+    duration3_window = t1 - t0
+    assert duration3_window < 0.5, f"Case 3 _find_best_window took {duration3_window:.3f}s"
+
+    events3 = [_make_event(output=output3)]
+    grounding3 = {
+        "tool": "query_wikipedia",
+        "query": "а",
+        "evidence_excerpt": excerpt3
+    }
+    t0 = time.perf_counter()
+    res3 = grounding_gate_v2.anchor_evidence_to_events(grounding3, events3)
+    t1 = time.perf_counter()
+    duration3_gate = t1 - t0
+    assert duration3_gate < 0.5, f"Case 3 full gate took {duration3_gate:.3f}s"
+    assert res3.anchored is False
+    assert res3.reason == "no_salient_anchor"

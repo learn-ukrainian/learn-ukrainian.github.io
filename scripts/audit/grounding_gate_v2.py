@@ -14,6 +14,7 @@ is a later chunk.
 from __future__ import annotations
 
 import difflib
+import logging
 import os
 import re
 from collections import Counter
@@ -98,7 +99,10 @@ def find_salient_tokens(excerpt: str, E_norm: str) -> list[dict[str, Any]]:
     return salient_tokens
 
 
-def _find_best_window(
+_last_search_truncated = False
+
+
+def _find_best_window_original(
     normalized_excerpt: str,
     normalized_output: str,
     factor: float = 2.0,
@@ -111,7 +115,14 @@ def _find_best_window(
     if not normalized_excerpt or not normalized_output:
         return 0.0, None, 0
 
-    s = difflib.SequenceMatcher(None, normalized_excerpt, normalized_output, autojunk=False)
+    # Hard defensive guard: never pass > 4*len(excerpt)+256 chars to a single SequenceMatcher call
+    max_matcher_len = 4 * len(normalized_excerpt) + 256
+    matcher_output = normalized_output
+    if len(normalized_output) > max_matcher_len:
+        matcher_output = normalized_output[:max_matcher_len]
+
+    autojunk = (len(normalized_excerpt) > 500 or len(matcher_output) > 1000)
+    s = difflib.SequenceMatcher(None, normalized_excerpt, matcher_output, autojunk=autojunk)
     blocks = [b for b in s.get_matching_blocks() if b.size > 0]
     if not blocks:
         return 0.0, None, 0
@@ -146,6 +157,115 @@ def _find_best_window(
                 best_score = score
                 best_span = (blocks[k].b, b_end)
                 best_mass = sum_non_space
+
+    return best_score, best_span, best_mass
+
+
+def _find_best_window(
+    normalized_excerpt: str,
+    normalized_output: str,
+    factor: float = 2.0,
+    salient_tokens: list[dict[str, Any]] | None = None,
+) -> tuple[float, tuple[int, int] | None, int]:
+    """Find the best contiguous window in normalized_output matching normalized_excerpt.
+
+    Uses anchor-pre-scan to bound SequenceMatcher calls for correctness and speed.
+    """
+    global _last_search_truncated
+
+    if not normalized_excerpt or not normalized_output:
+        return 0.0, None, 0
+
+    if salient_tokens is None:
+        salient_tokens = find_salient_tokens(normalized_excerpt, normalized_excerpt)
+
+    if not salient_tokens:
+        # Fallback anchor: if there are no salient tokens, pick a substring of the excerpt as a fallback anchor
+        # to ensure that we still bound SequenceMatcher on generic repetitive inputs.
+        fallback_len = min(12, len(normalized_excerpt))
+        if fallback_len > 0:
+            fallback_sub = normalized_excerpt[:fallback_len]
+            salient_tokens = [{
+                "norm": fallback_sub,
+                "start": 0,
+                "end": fallback_len,
+                "is_digit": False,
+            }]
+        else:
+            return _find_best_window_original(normalized_excerpt, normalized_output, factor)
+
+    # 1. Identify distinctive anchors from salient tokens (longest digit run, and longest proper-noun)
+    digit_tokens = [t for t in salient_tokens if t.get("is_digit")]
+    proper_noun_tokens = [t for t in salient_tokens if not t.get("is_digit")]
+
+    distinctive_anchors = []
+    if digit_tokens:
+        distinctive_anchors.append(max(digit_tokens, key=lambda t: len(t["norm"])))
+    if proper_noun_tokens:
+        distinctive_anchors.append(max(proper_noun_tokens, key=lambda t: len(t["norm"])))
+
+    # 2. Locate candidate window START positions by fast exact str.find of distinctive anchors
+    candidate_starts = []
+    for anchor in distinctive_anchors:
+        sub = anchor["norm"]
+        start_in_excerpt = anchor["start"]
+
+        pos = normalized_output.find(sub)
+        while pos != -1:
+            win_start = max(0, pos - start_in_excerpt - 32)
+            candidate_starts.append(win_start)
+            pos = normalized_output.find(sub, pos + len(sub))
+
+    if not candidate_starts:
+        # If the excerpt has NO salient anchor present in the output at all -> reject.
+        # Fall back to original SequenceMatcher if output is small to maintain exact behavior/reasons.
+        if len(normalized_output) < 1000:
+            return _find_best_window_original(normalized_excerpt, normalized_output, factor)
+        return 0.0, None, 0
+
+    # Deduplicate/merge candidate start positions that are very close to each other
+    unique_starts = []
+    for start in sorted(candidate_starts):
+        if not unique_starts or start - unique_starts[-1] >= len(normalized_excerpt):
+            unique_starts.append(start)
+
+    # 4. Cap the number of candidate windows evaluated (e.g. first 64)
+    MAX_CANDIDATES = 64
+    total_candidates = len(unique_starts)
+    if total_candidates > MAX_CANDIDATES:
+        _last_search_truncated = True
+        logging.getLogger("grounding_gate_v2").warning(
+            f"Truncated candidate windows from {total_candidates} to {MAX_CANDIDATES} for excerpt length {len(normalized_excerpt)}"
+        )
+        unique_starts = unique_starts[:MAX_CANDIDATES]
+
+    best_score = -1.0
+    best_span = None
+    best_mass = 0
+
+    evaluated_w_norms = set()
+
+    # 3. For each candidate occurrence, run SequenceMatcher ONLY on a bounded window
+    for win_start in unique_starts:
+        win_len = 3 * len(normalized_excerpt) + 64
+        # 5. Keep a hard defensive guard: never pass > 4*len(excerpt)+256 chars to a single SequenceMatcher call
+        hard_guard_len = 4 * len(normalized_excerpt) + 256
+        win_len = min(win_len, hard_guard_len)
+
+        win_end = min(len(normalized_output), win_start + win_len)
+        W_norm = normalized_output[win_start:win_end]
+
+        if W_norm in evaluated_w_norms:
+            continue
+        evaluated_w_norms.add(W_norm)
+
+        sub_score, sub_span, sub_mass = _find_best_window_original(normalized_excerpt, W_norm, factor)
+        if sub_span is not None:
+            mapped_span = (win_start + sub_span[0], win_start + sub_span[1])
+            if sub_score > best_score:
+                best_score = sub_score
+                best_span = mapped_span
+                best_mass = sub_mass
 
     return best_score, best_span, best_mass
 
@@ -203,6 +323,9 @@ def anchor_evidence_to_events(
     Returns:
         AnchorResult indicating the status and metadata of the anchoring match.
     """
+    global _last_search_truncated
+    _last_search_truncated = False
+
     if tau is None:
         env_tau = os.environ.get("QG_GROUNDING_GATE_V2_TAU")
         if env_tau is not None:
@@ -286,7 +409,12 @@ def anchor_evidence_to_events(
             span_locality_ok = (span[1] - span[0] <= max_window_len)
 
             W_norm = normalized_output[span[0]:span[1]]
-            matcher = difflib.SequenceMatcher(None, normalized_excerpt, W_norm, autojunk=False)
+            # Hard defensive guard: never pass > 4*len(excerpt)+256 chars to a single SequenceMatcher call
+            hard_guard_len = 4 * len(normalized_excerpt) + 256
+            if len(W_norm) > hard_guard_len:
+                W_norm = W_norm[:hard_guard_len]
+            autojunk = (len(normalized_excerpt) > 500 or len(W_norm) > 1000)
+            matcher = difflib.SequenceMatcher(None, normalized_excerpt, W_norm, autojunk=autojunk)
             ops = matcher.get_opcodes()
 
             digit_aligned = True
@@ -319,12 +447,21 @@ def anchor_evidence_to_events(
         else:
             # Non-ellipsis path
             # Search best window span
-            _, span, matched_mass = _find_best_window(normalized_excerpt, normalized_output)
+            _, span, matched_mass = _find_best_window(
+                normalized_excerpt,
+                normalized_output,
+                salient_tokens=salient_tokens,
+            )
             if span is None:
                 continue
 
             W_norm = normalized_output[span[0]:span[1]]
-            matcher = difflib.SequenceMatcher(None, normalized_excerpt, W_norm, autojunk=False)
+            # Hard defensive guard: never pass > 4*len(excerpt)+256 chars to a single SequenceMatcher call
+            hard_guard_len = 4 * len(normalized_excerpt) + 256
+            if len(W_norm) > hard_guard_len:
+                W_norm = W_norm[:hard_guard_len]
+            autojunk = (len(normalized_excerpt) > 500 or len(W_norm) > 1000)
+            matcher = difflib.SequenceMatcher(None, normalized_excerpt, W_norm, autojunk=autojunk)
             raw_sim = matcher.ratio()
 
             required_threshold = (tau - 0.05) if tool_query_matched else tau
@@ -403,6 +540,8 @@ def anchor_evidence_to_events(
             low_signal_reasons.append("no_digits")
         if len(salient_tokens) <= 1:
             low_signal_reasons.append("single_anchor")
+        if _last_search_truncated:
+            low_signal_reasons.append("candidate_truncated")
         anchor_low_signal_reason = ",".join(low_signal_reasons) if low_signal_reasons else None
 
         return AnchorResult(
