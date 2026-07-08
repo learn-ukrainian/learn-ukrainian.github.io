@@ -1611,12 +1611,19 @@ def _grounding_matches_events(
 def _canonical_tool_name(name: Any) -> str:
     """Canonicalize an MCP tool name so grounding vs event comparison is transport-agnostic.
 
-    Different harnesses spell the same tool differently: opencode emits
-    ``sources_query_wikipedia``, the agent-runtime adapters emit
-    ``mcp__sources__query_wikipedia``, and models sometimes emit the bare
-    ``query_wikipedia``. All three refer to the same tool; the grounding gate must
-    not fail on the spelling. Strips the ``mcp__``/``mcp_`` wrapper and the
-    ``sources__``/``sources_`` server prefix, then casefolds.
+    Different harnesses and models spell the same tool differently:
+    - opencode / bare: ``sources_query_wikipedia``, ``query_wikipedia``
+    - agent-runtime adapters: ``mcp__sources__query_wikipedia``, ``mcp__sources_query_wikipedia``
+    - codex/gpt-5.5 etc (dot form): ``mcp__sources.query_wikipedia``, ``sources.query_wikipedia``
+
+    All refer to the same tool; the grounding gate must not fail on spelling.
+    Strips the ``mcp__``/``mcp_`` wrapper. Then:
+    - if a ``.`` is present, takes everything after the FIRST dot (``server.tool`` form;
+      dot never appears inside a tool name)
+    - else strips the ``sources__``/``sources_`` server prefix (underscore forms)
+
+    Then casefolds. Internal underscores/digits in tool names (e.g. ``search_grinchenko_1907``)
+    are preserved; generic single-underscore stripping is intentionally avoided.
     """
     canonical = str(name or "").strip()
     if not canonical:
@@ -1625,10 +1632,13 @@ def _canonical_tool_name(name: Any) -> str:
         if canonical.startswith(prefix):
             canonical = canonical[len(prefix):]
             break
-    for prefix in ("sources__", "sources_"):
-        if canonical.startswith(prefix):
-            canonical = canonical[len(prefix):]
-            break
+    if "." in canonical:
+        canonical = canonical.split(".", 1)[1]  # server.tool → tool
+    else:
+        for prefix in ("sources__", "sources_"):
+            if canonical.startswith(prefix):
+                canonical = canonical[len(prefix):]
+                break
     return canonical.casefold()
 
 
