@@ -5,6 +5,7 @@ One-liner per bug. Grep for symptoms or categories to find relevant detail files
 <!-- INDEX-START -->
 | Date | Issue | Category | Summary |
 |------|-------|----------|---------|
+| 2026-07-09 | #4797 | gate-false-accept | QG grounding gate v2 false-accepted near-copy fabrications (real «1722» → fabricated «1900» anchored at default τ=0.75) despite green CI + 153 tests + solo review. Fuzzy char-similarity + `any()` guard can't ground swapped factual tokens; a test pinned τ=0.9 masking the shipped behavior; edit-distance can't separate UK inflection (Львова/Львів dist 2) from name-swap (Мирко/Марко dist 1) — only lemma can; a perf-cap then introduced a truncation false-accept. Fixed via positional opcode-`equal` alignment of salient tokens (dep-free) + truncation-fails-closed. 5 cross-family review rounds. Detail in `qg-grounding-gate-fuzzy-false-accept.md`. |
 | 2026-04-05 | #1150 | score-parsing | Wiki review loop stuck at 8/10 — regex `(\d+)` can't match decimal scores like `8.8/10` |
 | 2026-04-08 | — | mdx-parse | `re.sub` unescapes `\n` in JSX replacement strings → acorn parse failure on 39 A2 MDX files |
 | 2026-04-08 | — | mdx-parse | Missing blank lines before HTML blocks → MDX parses `<div>` as inline, breaks `<TabItem>` nesting |
