@@ -114,11 +114,61 @@ references:
   title: В ізоляції
   type: primary
   work: В ізоляції
+readings:
+- title: Асєєв Станіслав
+  language: uk
+  genre: Біографічний профіль / довідка
+  source_type: reference
+  role: orientation
+  source: PEN Ukraine
+  source_url: https://pen.org.ua/members/asyeyev-stanislav
+  license: copyrighted
+  rights_note: Використовувати як link-only профіль; не хостити повний текст або фото.
+  hosting: link-only
+  cefr_min: C1
+  learner_task: >-
+    Виписати ключові етапи журналістської, письменницької та правозахисної
+    біографії Асєєва.
+  caveats: Профіль дає рамку, але не замінює читання про катівню "Ізоляція".
+- title: >-
+    Станіслав Асєєв: Всі окуповані території Донбасу — один великий концтабір
+    "Ізоляція"
+  language: uk
+  genre: Інтерв'ю / свідчення
+  source_type: primary
+  role: close-reading
+  source: Українська правда
+  source_url: https://www.pravda.com.ua/articles/2020/12/29/7278243/
+  license: copyrighted
+  rights_note: Використовувати як link-only інтерв'ю; не переносити повний текст.
+  hosting: link-only
+  cefr_min: C1
+  learner_task: >-
+    Визначити, як Асєєв описує "Ізоляцію" як систему окупаційного терору, а не
+    лише окрему тюрму.
+  caveats: Працювати з короткими цитатами і травма-інформованим контекстом.
+- title: Уривки з книжок "В ізоляції" та "Світлий шлях"
+  language: uk
+  genre: Документальна проза / свідчення
+  source_type: primary
+  role: reading-needed
+  source: 'reading-needed: stanislav-asieiev-primary-excerpts'
+  source_url: 'reading-needed'
+  license: unknown
+  rights_note: >-
+    reading-needed: знайти легальний link-only або ліцензований спосіб працювати
+    з короткими уривками; не хостити повні тексти книжок.
+  hosting: reading-needed
+  cefr_min: C1
+  learner_task: >-
+    Порівняти репортажний голос у "В ізоляції" зі свідченням про катівню у
+    "Світлому шляху".
+  caveats: Авторські права і травматичний матеріал потребують обережного добору уривків.
 sequence: 293
 slug: stanislav-asieiev
 subtitle: The Journalist Who Documented the Occupation from Inside
 title: 'Станіслав Асєєв: Світлий шлях та голос з ізоляції'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: незаконне захоплення та контроль над частиною території іншої держави
   pos: ж.

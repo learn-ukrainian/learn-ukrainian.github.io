@@ -107,11 +107,42 @@ references:
   path: https://www.president.gov.ua/documents/7412025-56717
   title: Указ Президента України №741/2025
   type: reference
+readings:
+- title: Афанасьєв Геннадій Сергійович
+  language: uk
+  genre: Енциклопедична стаття / біографічна довідка
+  source_type: reference
+  role: orientation
+  source: Енциклопедія Сучасної України
+  source_url: https://esu.com.ua/article-891170
+  license: copyrighted
+  rights_note: Використовувати як link-only довідку; не хостити повний текст.
+  hosting: link-only
+  cefr_min: C1
+  learner_task: >-
+    Виписати етапи кримського спротиву, полону, правозахисної діяльності,
+    військової служби та вшанування.
+  caveats: Довідка має доповнюватися контекстом сфабрикованої справи Сенцова-Кольченка.
+- title: Указ Президента України №741/2025
+  language: uk
+  genre: Офіційний документ
+  source_type: primary
+  role: supplementary-reading
+  source: Президент України
+  source_url: https://www.president.gov.ua/documents/7412025-56717
+  license: public-domain
+  rights_note: Офіційний нормативний акт використовувати link-only як джерело державного визнання.
+  hosting: link-only
+  cefr_min: C1
+  learner_task: >-
+    Визначити, як офіційний документ формулює підставу для посмертного звання
+    Героя України.
+  caveats: Документ не є повною біографією і потребує читання разом з довідкою.
 sequence: 295
 slug: hennadii-afanasiev
 subtitle: The Prisoner Who Broke the Russian Case and Fell for Ukraine
 title: 'Геннадій Афанасьєв: Від кримського в''язня до Героя України'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: особа, засуджена або ув'язнена через свої політичні погляди чи діяльність
   pos: ч.
