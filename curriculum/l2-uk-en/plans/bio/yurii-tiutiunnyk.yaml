@@ -101,7 +101,9 @@ content_outline:
   section: 'Підсумок: Трагедія генерала УНР'
   words: 1000
 focus: >-
-  Юрій Тютюнник як генерал-хорунжий Армії УНР та жертва чекістських спецслужб. Аналіз його ролі в Зимових походах та використання його образу в радянській пропаганді перед розстрілом.
+  Юрій Тютюнник як генерал-хорунжий Армії УНР та жертва чекістських спецслужб.
+  Аналіз його ролі в Зимових походах та використання його образу в радянській
+  пропаганді перед розстрілом.
 level: BIO
 module: bio-303
 objectives:
@@ -121,11 +123,35 @@ references:
   path: https://www.encyclopediaofukraine.com/display.asp?linkPath=pages%5CT%5CI%5CTiutiunnykYurii.htm
   title: Tiutiunnyk, Yurii (IEU)
   type: reference
+readings:
+- title: Українське джерельне читання про Юрія Тютюнника і Зимові походи
+  language: uk
+  genre: Джерельна публікація / історіографічний коментар
+  source_type: primary
+  role: reading-needed
+  source: 'reading-needed: yurii-tiutiunnyk-winter-campaign-source-edition'
+  source_url: 'reading-needed'
+  license: unknown
+  rights_note: >-
+    reading-needed: знайти стабільне українське джерельне видання або
+    інституційний матеріал УІНП/ЕІУ з page-stable фрагментом про Зимові походи,
+    повстанський штаб і пастку ДПУ; не використовувати радянський фільм "П.К.П."
+    як голос Тютюнника без контексту примусу.
+  hosting: reading-needed
+  cefr_min: C1
+  learner_task: >-
+    Порівняти військово-операційне джерело, радянський пропагандистський
+    артефакт і пізнішу історичну довідку, визначаючи, хто контролював умови
+    створення кожного тексту.
+  caveats: >-
+    Досьє прямо фіксує відсутність page-stable цитат із власних мемуарів; модуль
+    не готовий до build, якщо радянські контрольовані тексти подаються як вільна
+    позиція Тютюнника.
 sequence: 303
 slug: yurii-tiutiunnyk
 subtitle: The UNR General Lured and Destroyed by Soviet State Security
 title: 'Юрій Тютюнник: Від Зимових походів до пастки ДПУ'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: військове звання в Армії УНР, еквівалент генерала
   pos: ч.

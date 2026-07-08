@@ -96,7 +96,9 @@ content_outline:
   section: 'Підсумок: Підпілля, ідеологія та Володимирський централ'
   words: 1000
 focus: >-
-  Катерина Зарицька як організаторка Українського Червоного Хреста в УПА, політична публіцистка та довголітня політична в'язень. Аналіз жіночого лідерства в підпіллі та радянської репресивної географії.
+  Катерина Зарицька як організаторка Українського Червоного Хреста в УПА,
+  політична публіцистка та довголітня політична в'язень. Аналіз жіночого
+  лідерства в підпіллі та радянської репресивної географії.
 level: BIO
 module: bio-306
 objectives:
@@ -120,11 +122,49 @@ references:
   path: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CZ%5CA%5CZarytskaKateryna.htm
   title: Zarytska, Kateryna (IEU)
   type: reference
+readings:
+- title: Зарицька Катерина Миронівна
+  language: uk
+  genre: Енциклопедична стаття / біографічна довідка
+  source_type: reference
+  role: orientation
+  source: Енциклопедія Сучасної України
+  source_url: https://esu.com.ua/article-15538
+  license: copyrighted
+  rights_note: Використовувати як link-only довідку; не хостити повний текст або портрет.
+  hosting: link-only
+  cefr_min: C1
+  learner_task: >-
+    Виписати ролі Зарицької як організаторки, політичної авторки і політичної
+    в'язень, не зводячи її до родинних зв'язків.
+  caveats: >-
+    Довідка має доповнюватися критичним контекстом ОУН/УПА; не переносити
+    відповідальність ширшого руху на неї без джерела.
+- title: Українське джерельне читання з політичних текстів Катерини Зарицької
+  language: uk
+  genre: Підпільна політична публіцистика / джерельна публікація
+  source_type: primary
+  role: reading-needed
+  source: 'reading-needed: kateryna-zarytska-underground-essays-page-stable'
+  source_url: 'reading-needed'
+  license: unknown
+  rights_note: >-
+    reading-needed: знайти page-stable видання або архівну публікацію її текстів
+    1946 року про російський імперіалізм, національне питання чи діалектичний
+    матеріалізм; не хостити повний текст без правової перевірки.
+  hosting: reading-needed
+  cefr_min: C1
+  learner_task: >-
+    Проаналізувати, як Зарицька поєднує гуманітарну мережу підпілля з
+    антиімперською політичною аргументацією.
+  caveats: >-
+    Без джерельного тексту модуль може говорити про її авторство лише через
+    назви праць, а не через повноцінне close reading.
 sequence: 306
 slug: kateryna-zarytska
 subtitle: The UPA Red Cross Head and Enduring Political Prisoner
 title: 'Катерина Зарицька: Підпілля, ідеологія та Володимирський централ'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: підпільна медично-гуманітарна служба, створена для потреб УПА (не тотожна міжнародній організації)
   pos: ч.
