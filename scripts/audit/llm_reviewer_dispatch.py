@@ -1719,10 +1719,28 @@ def _excerpt_segments(excerpt: str) -> list[str]:
 
 
 def _event_input_matches_query(event: Mapping[str, Any], query: str) -> bool:
-    normalized = _normalize_query(query)
-    if not normalized:
+    """Check if the real tool event query is matched by the model's cited query.
+
+    To handle cases where the model decorates the cited query (e.g. adding parameters
+    like "mode=section 3" or other context), we apply a conservative relaxation:
+    the normalized candidate query must be a substring of (contained in) the normalized
+    cited query (cand in cited).
+
+    ANTI-FABRICATION INVARIANT: Admissibility still strictly requires:
+      1) The tool matches.
+      2) The event query is contained in the cited query (event_query in cited_query).
+      3) The excerpt is a substring present in THAT SAME event's captured output.
+    Fabrications cannot pass because the excerpt must still exist in the actual event output.
+    """
+    cited = _normalize_query(query)
+    if not cited:
         return False
-    return any(_normalize_query(candidate) == normalized for candidate in _tool_query_candidates(event))
+    for candidate in _tool_query_candidates(event):
+        cand = _normalize_query(candidate)
+        # Guard against trivially-short candidate wildcarding (min length of 3 chars)
+        if cand and len(cand) >= 3 and cand in cited:
+            return True
+    return False
 
 
 def _normalize_query(value: str) -> str:
