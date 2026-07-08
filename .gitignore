@@ -55,6 +55,10 @@ curriculum/l2-uk-direct/_orchestration/
 # The trailing * also covers the -multirun out-dirs the #4539 harness derives
 # (audit/<date>-qg-bakeoff-multirun/) — see default_output_dir(multi_run=True).
 audit/*-qg-bakeoff*/*.json
+# QG bakeoff #4761 measurement trees written on main checkout (GLM sweeps).
+# Full JSON + sweep logs stay local; copy conclusions to docs/projects/ua-eval-harness/.
+audit/2026-07-07-*/
+audit/2026-07-08-*/
 
 
 # Python
