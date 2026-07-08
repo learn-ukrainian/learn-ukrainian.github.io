@@ -101,9 +101,11 @@ def test_ab_discuss_accepts_agy_in_with_list(
     _channels.create_channel("agy-topic", exist_ok=True)
 
     invoked: list[str] = []
+    invoke_kwargs: list[dict] = []
 
     def fake_invoke(agent_name: str, prompt: str, **kwargs):
         invoked.append(agent_name)
+        invoke_kwargs.append(kwargs)
         return SimpleNamespace(
             ok=True,
             response="[AGREE] agy first take",
@@ -119,7 +121,57 @@ def test_ab_discuss_accepts_agy_in_with_list(
         with_agents="agy",
         max_rounds=1,
         review=False,
+        models=None,
     )
 
     assert _channels_cli._handle_discuss(args) == 0
     assert invoked == ["agy"]
+    assert invoke_kwargs[0].get("model") is None
+
+
+def test_ab_discuss_passes_agy_pro_model_override(tmp_path, monkeypatch):
+    """``--models agy:gemini-3.1-pro-high`` reaches runtime_invoke as model=."""
+    from types import SimpleNamespace
+
+    scripts_dir = str(_REPO_ROOT / "scripts")
+    if scripts_dir not in sys.path:
+        sys.path.insert(0, scripts_dir)
+
+    from ai_agent_bridge import _channels, _channels_cli, _db
+
+    monkeypatch.setattr(_db, "DB_PATH", tmp_path / "bridge.db")
+    monkeypatch.setattr(_channels, "fetch_monitor_state", lambda: None)
+    monkeypatch.setattr(_channels, "context_sha256", lambda path: "")
+    monkeypatch.setattr(
+        _channels,
+        "load_channel_context",
+        lambda channel: {"body": "", "revs": {}, "missing": []},
+    )
+
+    _channels.create_channel("shared", exist_ok=True)
+    _channels.create_channel("agy-topic", exist_ok=True)
+
+    invoke_kwargs: list[dict] = []
+
+    def fake_invoke(agent_name: str, prompt: str, **kwargs):
+        invoke_kwargs.append(kwargs)
+        return SimpleNamespace(
+            ok=True,
+            response="[AGREE] pro take",
+            stderr_excerpt="",
+            session_id="agy-session-pro",
+        )
+
+    monkeypatch.setattr("agent_runtime.runner.invoke", fake_invoke)
+
+    args = SimpleNamespace(
+        channel="agy-topic",
+        body="STRICT bakeoff fairness?",
+        with_agents="agy",
+        max_rounds=1,
+        review=False,
+        models="agy:gemini-3.1-pro-high",
+    )
+
+    assert _channels_cli._handle_discuss(args) == 0
+    assert invoke_kwargs[0]["model"] == "gemini-3.1-pro-high"
