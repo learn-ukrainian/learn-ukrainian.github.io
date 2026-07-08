@@ -41,6 +41,17 @@ DEFAULT_OUTPUT_ROOT = PROJECT_ROOT / "audit"
 BENCHMARK_V1_MANIFEST = PROJECT_ROOT / "benchmarks" / "v1" / "MANIFEST.json"
 RUN_SCHEMA_VERSION = "qg_bakeoff_run.v2"
 SCORECARD_NAME = "SCORECARD.md"
+SCORECARD_STRICT_NAME = "SCORECARD-STRICT.md"
+# Provenance tag for offline ``--regate`` rescoring: live_admissible uses STRICT
+# grounding (gate tag + scorer neutralization); model_judgment is unchanged.
+GROUNDING_STRICT_SCORE_SEMANTICS = "grounding_strict.v1"
+_GROUNDING_STRICT_BANNER = (
+    "Scores in this scorecard use **STRICT grounding** (`grounding_strict.v1`): "
+    "`live_admissible` credits only self-grounded positive verdicts; "
+    "`model_judgment` keeps the raw engine verdict. "
+    "Regenerated offline via `--regate` — no model calls. "
+    "Compare to `SCORECARD.md` only when that file was produced under the same semantics."
+)
 ANCHOR_SLUG = "vesnianky"
 MISSING_CLAIM_PENALTY = -10
 BAKEOFF_LEVEL = "folk"
@@ -1920,7 +1931,13 @@ def score_payload(payload: Mapping[str, Any], fixture: BakeoffFixture) -> dict[s
     }
 
 
-def write_scorecard(path: Path, artifacts: Sequence[Mapping[str, Any]]) -> None:
+def write_scorecard(
+    path: Path,
+    artifacts: Sequence[Mapping[str, Any]],
+    *,
+    title: str = "QG Bakeoff Scorecard",
+    banner_lines: Sequence[str] = (),
+) -> None:
     """Write a markdown scorecard for the current artifact set."""
     regular_artifacts = [a for a in artifacts if not _is_subscription_runtime_artifact(a)]
     subscription_artifacts = [a for a in artifacts if _is_subscription_runtime_artifact(a)]
@@ -1928,13 +1945,19 @@ def write_scorecard(path: Path, artifacts: Sequence[Mapping[str, Any]]) -> None:
     all_judgment_artifacts = [a for a in artifacts if not _is_ops_quota_artifact(a)]
     multi_run = _max_run_index(artifacts) > 1
     lines = [
-        "# QG Bakeoff Scorecard",
+        f"# {title}",
         "",
         f"Generated: {_now_z()}",
         "",
-        "Fractions are exact. `low-N` marks denominators below 10.",
-        "",
     ]
+    for banner in banner_lines:
+        lines.extend([banner, ""])
+    lines.extend(
+        [
+            "Fractions are exact. `low-N` marks denominators below 10.",
+            "",
+        ]
+    )
     lines.extend(_runs_table_section("Runs", regular_artifacts, show_run=multi_run))
     lines.extend(_ops_quota_section(regular_artifacts))
     lines.extend(_totals_and_lift_section("With Anchor", judgment_artifacts))
@@ -2090,6 +2113,115 @@ def pin_slug(pin: str) -> str:
     return slug or "model"
 
 
+def _artifact_arm_from_path(path: Path, artifact: Mapping[str, Any]) -> str:
+    """Resolve arm from artifact field or legacy filename convention."""
+    arm = artifact.get("arm")
+    if isinstance(arm, str) and arm in _ARM_CHOICES:
+        return arm
+    return BARE_ARM if "__bare" in path.stem else TOOLED_ARM
+
+
+def _strict_regate_payload(
+    payload: Mapping[str, Any],
+    dispatch: Mapping[str, Any],
+) -> llm_reviewer_dispatch.GroundingGateResult:
+    """Re-run the STRICT grounding gate offline from a stored payload + dispatch."""
+    return llm_reviewer_dispatch.enforce_grounding_against_tool_events(
+        payload,
+        dispatch,
+        policy_family=BAKEOFF_POLICY_FAMILY,
+    )
+
+
+def regate_one_artifact(
+    artifact: Mapping[str, Any],
+    fixture: BakeoffFixture,
+    arm: str,
+) -> dict[str, Any]:
+    """Apply STRICT offline regate + score to one in-memory bakeoff cell.
+
+    Tooled cells re-run ``enforce_grounding_against_tool_events`` against stored
+    ``dispatch.tool_events``, persist the gated payload (including
+    ``grounding_admissible`` tags), then score. Bare cells only re-score — they
+    carry no grounding telemetry and are unaffected by STRICT semantics.
+    """
+    out = dict(artifact)
+    payload = dict(out.get("payload") or {})
+    dispatch = out.get("dispatch") if isinstance(out.get("dispatch"), Mapping) else {}
+
+    if arm == TOOLED_ARM:
+        gate = _strict_regate_payload(payload, dispatch)
+        payload = gate.payload
+        out["payload"] = payload
+        gate_outcomes = dict(out.get("gate_outcomes") or {})
+        gate_outcomes["grounding"] = {
+            "ungrounded_findings": gate.ungrounded_findings,
+            "required_ungrounded_findings": gate.required_ungrounded_findings,
+            "invalid_fact_checks": gate.invalid_fact_checks,
+            "inadmissible_positive_verdicts": gate.inadmissible_positive_verdicts,
+        }
+        gate_outcomes["grounding_strict"] = True
+        out["gate_outcomes"] = gate_outcomes
+        score = score_payload(payload, fixture)
+        score["invalid_fact_checks"] = gate.invalid_fact_checks
+        score["inadmissible_positive_verdicts"] = gate.inadmissible_positive_verdicts
+    else:
+        score = score_payload(payload, fixture)
+        score["invalid_fact_checks"] = 0
+        score["inadmissible_positive_verdicts"] = 0
+
+    out["score"] = score
+    out["arm"] = arm
+    out["grounding_strict"] = True
+    out["score_semantics"] = GROUNDING_STRICT_SCORE_SEMANTICS
+    out["regated_at"] = _now_z()
+    return out
+
+
+def _offline_rewrite_artifacts(
+    output_dir: Path,
+    fixtures_dir: Path,
+    *,
+    rewrite: Callable[[dict[str, Any], BakeoffFixture, str], dict[str, Any]],
+    scorecard_name: str,
+    scorecard_title: str,
+    scorecard_banner: Sequence[str] = (),
+    unsafe_allow_frozen: bool = False,
+    manifest_path: Path = BENCHMARK_V1_MANIFEST,
+) -> int:
+    """Shared iterator for offline ``--rescore`` / ``--regate`` artifact rewrites."""
+    if not unsafe_allow_frozen:
+        _refuse_frozen_reference_offline_rewrite(output_dir, manifest_path)
+    fixtures = {f.slug: f for f in load_fixtures(fixtures_dir)}
+    artifacts: list[dict[str, Any]] = []
+    count = 0
+    for path in sorted(output_dir.glob("*.json")):
+        artifact = json.loads(path.read_text(encoding="utf-8"))
+        if not _is_bakeoff_cell(artifact):
+            continue
+        _assert_artifact_filename_matches_run_index(path, artifact)
+        arm = _artifact_arm_from_path(path, artifact)
+        slug = (artifact.get("fixture") or {}).get("slug")
+        fixture = fixtures.get(slug) if isinstance(slug, str) else None
+        if fixture is None:
+            artifacts.append(artifact)
+            continue
+        updated = rewrite(artifact, fixture, arm)
+        path.write_text(
+            json.dumps(updated, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
+            encoding="utf-8",
+        )
+        artifacts.append(updated)
+        count += 1
+    write_scorecard(
+        output_dir / scorecard_name,
+        artifacts,
+        title=scorecard_title,
+        banner_lines=scorecard_banner,
+    )
+    return count
+
+
 def rescore_artifacts(
     output_dir: Path,
     fixtures_dir: Path = FIXTURE_DIR,
@@ -2100,45 +2232,61 @@ def rescore_artifacts(
     """Recompute scores for existing artifacts from their STORED payloads.
 
     Zero model invocations — pure offline rescoring, for matcher/scoring
-    changes (e.g. the containment matcher). Rewrites each artifact's score
-    block and the scorecard.
+    changes (e.g. the containment matcher). Does NOT re-run the grounding
+    gate; use ``regate_artifacts`` when ``live_admissible`` semantics change.
+    Rewrites each artifact's score block and ``SCORECARD.md``.
     """
-    if not unsafe_allow_frozen:
-        _refuse_frozen_reference_rescore(output_dir, manifest_path)
-    fixtures = {f.slug: f for f in load_fixtures(fixtures_dir)}
-    artifacts: list[dict[str, Any]] = []
-    count = 0
-    for path in sorted(output_dir.glob("*.json")):
-        artifact = json.loads(path.read_text(encoding="utf-8"))
-        if not _is_bakeoff_cell(artifact):
-            # See _is_bakeoff_cell — foreign JSONs (canary verdicts etc.)
-            # must never be rescored or rendered as cells.
-            continue
-        _assert_artifact_filename_matches_run_index(path, artifact)
-        # Backfill ``arm`` for backward compat: pre-arm tooled artifacts have no
-        # field (→ "tooled"); a ``__bare`` filename identifies a bare artifact even
-        # if it somehow lacks the field. Rescore covers BOTH arms — the bare grounding
-        # counters resolve to 0 because a bare artifact carries no gate_outcomes.
-        artifact["arm"] = artifact.get("arm") or (BARE_ARM if "__bare" in path.stem else TOOLED_ARM)
-        slug = (artifact.get("fixture") or {}).get("slug")
-        fixture = fixtures.get(slug)
-        if fixture is None:
-            artifacts.append(artifact)
-            continue
-        score = score_payload(artifact.get("payload") or {}, fixture)
-        grounding = (artifact.get("gate_outcomes") or {}).get("grounding") or {}
+
+    def _rescore_one(artifact: dict[str, Any], fixture: BakeoffFixture, arm: str) -> dict[str, Any]:
+        out = dict(artifact)
+        out["arm"] = arm
+        score = score_payload(out.get("payload") or {}, fixture)
+        grounding = (out.get("gate_outcomes") or {}).get("grounding") or {}
         score["invalid_fact_checks"] = int(grounding.get("invalid_fact_checks") or 0)
         score["inadmissible_positive_verdicts"] = int(grounding.get("inadmissible_positive_verdicts") or 0)
-        artifact["score"] = score
-        artifact["rescored_at"] = _now_z()
-        path.write_text(json.dumps(artifact, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8")
-        artifacts.append(artifact)
-        count += 1
-    write_scorecard(output_dir / SCORECARD_NAME, artifacts)
-    return count
+        out["score"] = score
+        out["rescored_at"] = _now_z()
+        return out
+
+    return _offline_rewrite_artifacts(
+        output_dir,
+        fixtures_dir,
+        rewrite=_rescore_one,
+        scorecard_name=SCORECARD_NAME,
+        scorecard_title="QG Bakeoff Scorecard",
+        unsafe_allow_frozen=unsafe_allow_frozen,
+        manifest_path=manifest_path,
+    )
 
 
-def _refuse_frozen_reference_rescore(output_dir: Path, manifest_path: Path) -> None:
+def regate_artifacts(
+    output_dir: Path,
+    fixtures_dir: Path = FIXTURE_DIR,
+    *,
+    unsafe_allow_frozen: bool = False,
+    manifest_path: Path = BENCHMARK_V1_MANIFEST,
+) -> int:
+    """Re-run STRICT grounding + score offline from stored payloads and tool_events.
+
+    Zero model invocations. Tooled cells re-apply ``enforce_grounding_against_tool_events``
+    so ``live_admissible`` reflects STRICT semantics; bare cells are re-scored only.
+    Tags each artifact with ``grounding_strict`` / ``score_semantics`` and writes
+    ``SCORECARD-STRICT.md`` (leaves legacy ``SCORECARD.md`` untouched unless you
+    also run ``--rescore``).
+    """
+    return _offline_rewrite_artifacts(
+        output_dir,
+        fixtures_dir,
+        rewrite=regate_one_artifact,
+        scorecard_name=SCORECARD_STRICT_NAME,
+        scorecard_title="QG Bakeoff Scorecard (STRICT grounding)",
+        scorecard_banner=(_GROUNDING_STRICT_BANNER,),
+        unsafe_allow_frozen=unsafe_allow_frozen,
+        manifest_path=manifest_path,
+    )
+
+
+def _refuse_frozen_reference_offline_rewrite(output_dir: Path, manifest_path: Path) -> None:
     if not manifest_path.exists():
         return
     scorecard_path = output_dir / SCORECARD_NAME
@@ -2160,10 +2308,15 @@ def _refuse_frozen_reference_rescore(output_dir: Path, manifest_path: Path) -> N
         return
     reference_path = reference.get("path") or SCORECARD_NAME
     raise BakeoffConfigError(
-        f"{output_dir}: refuses to rescore frozen benchmark reference artifacts because "
+        f"{output_dir}: refuses to rewrite frozen benchmark reference artifacts because "
         f"{scorecard_path.name} matches {manifest_path} reference_result ({reference_path}); "
         "copy the directory for explicit re-analysis or pass --unsafe-allow-frozen"
     )
+
+
+def _refuse_frozen_reference_rescore(output_dir: Path, manifest_path: Path) -> None:
+    """Backward-compatible alias for frozen-reference guard."""
+    _refuse_frozen_reference_offline_rewrite(output_dir, manifest_path)
 
 
 def emit_lm_eval_results_from_dir(output_dir: Path, emit_dir: Path) -> list[Path]:
@@ -2510,11 +2663,20 @@ def main(argv: Sequence[str] | None = None) -> int:
         help="Recompute scores for EXISTING artifacts from stored payloads (no model calls)",
     )
     parser.add_argument(
+        "--regate",
+        action="store_true",
+        help=(
+            "Offline STRICT grounding: re-run the grounding gate from stored payload + "
+            "dispatch.tool_events, then score (no model calls). Tags artifacts "
+            f"``{GROUNDING_STRICT_SCORE_SEMANTICS}`` and writes {SCORECARD_STRICT_NAME}."
+        ),
+    )
+    parser.add_argument(
         "--unsafe-allow-frozen",
         action="store_true",
         help=(
-            "Allow --rescore to rewrite an out-dir whose SCORECARD.md matches the benchmark-v1 "
-            "frozen reference. Use only on explicit re-analysis copies."
+            "Allow --rescore or --regate to rewrite an out-dir whose SCORECARD.md matches "
+            "the benchmark-v1 frozen reference. Use only on explicit re-analysis copies."
         ),
     )
     parser.add_argument(
@@ -2527,12 +2689,24 @@ def main(argv: Sequence[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     try:
+        if args.rescore and args.regate:
+            raise BakeoffConfigError("--rescore and --regate are mutually exclusive")
         if args.rescore:
             output_dir = args.out_dir or default_output_dir()
             n = rescore_artifacts(output_dir, args.fixtures_dir, unsafe_allow_frozen=args.unsafe_allow_frozen)
             emitted = emit_lm_eval_results_from_dir(output_dir, args.emit_lm_eval) if args.emit_lm_eval else []
             print(f"rescored {n} artifacts under {output_dir}")
             print(f"scorecard: {output_dir / SCORECARD_NAME}")
+            if args.emit_lm_eval:
+                print(f"lm-eval results: {len(emitted)} files under {args.emit_lm_eval}")
+            return 0
+        if args.regate:
+            output_dir = args.out_dir or default_output_dir()
+            n = regate_artifacts(output_dir, args.fixtures_dir, unsafe_allow_frozen=args.unsafe_allow_frozen)
+            emitted = emit_lm_eval_results_from_dir(output_dir, args.emit_lm_eval) if args.emit_lm_eval else []
+            print(f"regated {n} artifacts under {output_dir}")
+            print(f"scorecard: {output_dir / SCORECARD_STRICT_NAME}")
+            print(f"score_semantics: {GROUNDING_STRICT_SCORE_SEMANTICS}")
             if args.emit_lm_eval:
                 print(f"lm-eval results: {len(emitted)} files under {args.emit_lm_eval}")
             return 0
