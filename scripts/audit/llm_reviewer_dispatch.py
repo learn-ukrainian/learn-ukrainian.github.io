@@ -1721,14 +1721,19 @@ def _excerpt_segments(excerpt: str) -> list[str]:
 def _event_input_matches_query(event: Mapping[str, Any], query: str) -> bool:
     """Check if the real tool event query is matched by the model's cited query.
 
-    To handle cases where the model decorates the cited query (e.g. adding parameters
-    like "mode=section 3" or other context), we apply a conservative relaxation:
-    the normalized candidate query must be a substring of (contained in) the normalized
-    cited query (cand in cited).
+    Models decorate the cited query by APPENDING params/context to the real query
+    (e.g. "Сковорода Григорій Савич mode=section 3 (Придворна капела)"). So we accept
+    a PREFIX-BOUNDARY match: the real event query equals the cited query, or the cited
+    query starts with the real query followed by a space. This is deliberately NOT
+    arbitrary substring containment (`cand in cited`): a short real query (e.g. "сон",
+    "гай") embedded mid-string in an unrelated cited query would wildcard the gate.
+    Prefix-boundary recovers 100% of the observed decoration cases (claude 85→119,
+    ds-flash 118→154) with no signal loss vs arbitrary containment, and closes the hole.
 
     ANTI-FABRICATION INVARIANT: Admissibility still strictly requires:
       1) The tool matches.
-      2) The event query is contained in the cited query (event_query in cited_query).
+      2) The cited query prefix-matches the real event query (event_query is a bounded
+         prefix of cited_query).
       3) The excerpt is a substring present in THAT SAME event's captured output.
     Fabrications cannot pass because the excerpt must still exist in the actual event output.
     """
@@ -1737,8 +1742,10 @@ def _event_input_matches_query(event: Mapping[str, Any], query: str) -> bool:
         return False
     for candidate in _tool_query_candidates(event):
         cand = _normalize_query(candidate)
-        # Guard against trivially-short candidate wildcarding (min length of 3 chars)
-        if cand and len(cand) >= 3 and cand in cited:
+        if not cand:
+            continue
+        # Prefix-boundary containment: exact, or real query + space-delimited decoration.
+        if cited == cand or cited.startswith(cand + " "):
             return True
     return False
 

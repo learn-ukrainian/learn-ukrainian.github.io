@@ -1232,6 +1232,26 @@ def test_grounding_matches_containment_query() -> None:
     }
     assert llm_reviewer_dispatch._grounding_matches_events(short_grounding, short_events) is False
 
+    # 5. EMBEDDED-SUBSTRING GUARD (codex review): a 3+ char real event query embedded
+    # MID-STRING in an unrelated cited query must NOT match. Prefix-boundary containment
+    # (not arbitrary `cand in cited`) is what closes this hole.
+    embed_events = (
+        {
+            "tool": "sources_query_wikipedia",
+            "input": {"query": "гай"},
+            "status": "completed",
+            "tool_call_id": "call_e",
+            "output": "Священний гай був місцем поклоніння давніх слов'ян.",
+        },
+    )
+    embed_grounding = {
+        "tool": "sources_query_wikipedia",
+        "query": "старий гай навколо села",  # real query "гай" embedded mid-string, NOT a prefix
+        "evidence_excerpt": "Священний гай був місцем поклоніння",
+        "tool_call_id": "call_e",
+    }
+    assert llm_reviewer_dispatch._grounding_matches_events(embed_grounding, embed_events) is False
+
 
 @pytest.mark.parametrize("ellipsis", ["…", "..."])
 def test_grounding_matches_ellipsized_excerpt_segments_in_order(ellipsis: str) -> None:
