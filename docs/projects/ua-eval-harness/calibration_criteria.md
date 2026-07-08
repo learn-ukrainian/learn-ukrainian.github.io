@@ -101,10 +101,18 @@ on a real-but-irrelevant excerpt in both — claim↔evidence alignment is model
 quote-abridgment debt is CLOSED (#4416/#4429, segment-wise normalized matching, `qg_workflow.v3`).
 
 ### E2 — Bare control measured ✅ + no-bare-fallback is BINDING
-Harness lift +180…+310 (§step-3): bare models CONFIRM fabrications. Consequences: (a) Tier-2 has NO
-tool-less fallback — provider failure = PROVIDER_FAILURE/INCOMPLETE, never parametric judgment;
-(b) build item: `assert require_mcp` on the seminar live path + a lint that no production entrypoint
-constructs a bare-arm invocation (bare exists only under `QG_BAKEOFF=1`).
+Harness lift +180…+310 (§step-3) was measured on **`model_judgment`** and early lenient
+`live_admissible` (MJ ≈ live). **Production arming uses STRICT `live_admissible` only**
+(`grounding_strict.v1`, #4768). Offline `--regate` on the #4539 17×3 matrix shows cheap seats
+also lose most STRICT live lift (gemma aggregate live +104 vs MJ +1480; deepseek-flash live
+total flips negative). Treat E2's numeric lift as historical MJ evidence, not the Tier-2 bar.
+Consequences unchanged: (a) Tier-2 has NO tool-less fallback; (b) `require_mcp` on seminar path.
+
+### E2b — Subscription engine selection CLOSED (2026-07-08, #4761)
+1×17 greenfield STRICT sweeps on gemini/claude/gpt subscription runtimes: all negative mean live
+lift; fleet `DEFER_ALL`. **No 3×17 subscription reruns** (#4762/#4763 cancelled). Engine pin
+stays `llm-reviewer-disabled-until-4370` until E3 canary passes on a pin that clears STRICT live
+metrics — not MJ-only green.
 
 ### E3 — Minimum regression canary ⏳ (the operational switch)
 Run the 4-fixture tooled matrix on the PRODUCTION pin (`--arm tooled --force`, fresh out-dir), then

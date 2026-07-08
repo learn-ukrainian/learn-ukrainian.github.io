@@ -306,3 +306,76 @@ run-aware aggregation + Run Variance + Domain Totals from the #4613 multi-run ha
    clean-dir frozen matrix per spec F3. 9 residual error cells get one more optional
    `--retry-failures` pass first (queued behind the frontier bare ×3 run currently writing
    into the same dir).
+
+## Subscription-runtime 1×17 STRICT sweeps + fleet deliberation (2026-07-08, #4761)
+
+Full 17-fixture × (tooled + bare) **greenfield** sweeps on the three subscription QG seats,
+scored offline with `grounding_strict.v1` (`live_admissible` only credits grounded CONFIRM;
+ungrounded positives neutralized; no repair-from-tools). Harness health verified on every cell:
+tooled `tool_call_count>0`, non-null `raw_response`, 0 subprocess errors.
+
+| seat | transport | mean STRICT **live** lift | MJ lift (same cells) | positive live-lift fixtures | verdict |
+| --- | --- | ---: | ---: | ---: | --- |
+| gemini-3.1-pro-high | runtime-agy | **−96.5** | mixed (wide MJ/live gaps) | 4/17 | not viable |
+| claude-opus-4-8 | runtime-claude | **−76**/passage | −45/passage avg | 4/17 | not viable |
+| gpt-5.5 | runtime-codex | **−140.0** | −41.2/passage avg | **0/17** | not viable |
+
+Reports: `audit/2026-07-08-gemini-multirun-1x/REPORT.md`,
+`audit/2026-07-08-claude-multirun-1x/REPORT.md`,
+`audit/2026-07-08-gpt-multirun-1x/REPORT.md`.
+
+**Fleet deliberation** (`ab discuss qg-bakeoff-engine-selection`, thread `6549a8805d8d`, claude +
+agy-pro + codex, 2 rounds): unanimous **DEFER_ALL** — no production pin under STRICT. Summary:
+`audit/2026-07-08-qg-bakeoff-discuss/DISCUSS-SUMMARY.md`.
+
+**Cancelled follow-ups:** no subscription **3×17** reruns (#4761 original scope, #4762, #4763).
+1×17 greenfield per seat is sufficient — all three lanes negative under STRICT; repetition would
+not change the defer decision. Cheap-model **3×17** opencode matrix (#4539) remains valid paper
+evidence but must be read under STRICT semantics (below).
+
+### Harness diagnosis — is the harness broken? (2026-07-08)
+
+**Short answer: transport/gates are working; the old “harness lifts cheap models” story was mostly
+a `model_judgment` / lenient-`live_admissible` artifact. Under the production STRICT contract,
+cheap opencode seats also lose most or all of their lift when scored honestly.**
+
+| What we observed | Interpretation |
+| --- | --- |
+| Tooled cells call tools (`tool_call_count>0`), persist `raw_response`, gates fire (`ungrounded_findings` not `error`) | Harness **transport + telemetry + gate plumbing OK** |
+| `model_judgment` high, `live_admissible` collapsed (e.g. gpt-5.5 koliadky: MJ **+40**, live **−80**, 4 neutralized claims, 28 tools) | Models **confirm without verbatim grounding**; STRICT correctly strips credit |
+| Frontier subscription mean live lift −96…−140 | **Model discipline** failure at production bar, not “harness forgot to wire MCP” |
+| Cheap 4-passage bakeoff quoted +310/+250/+180 lift | Those were **`model_judgment` lifts** on a tiny matrix while `live_admissible` still tracked MJ (pre-#4768 lenient path) |
+| Same cheap 17×3 artifacts offline `--regate` (`audit/2026-07-06-qg-bakeoff-multirun/SCORECARD-STRICT.md`) | **STRICT live totals flip or shrink:** gemma 213→317 aggregate live (+104, not +1480 MJ); ds-flash 897→**−40**; ds-pro 1403→397 |
+
+**What is fishy (and what is not):**
+
+1. **Not fishy:** STRICT penalizing fluent CONFIRMED verdicts that lack tool substring grounding —
+   that is the intended production gate (#4768).
+2. **Fishy / needs follow-up:** comparing frontier **subscription-runtime** 1×17 against cheap
+   **opencode** 3×17 without holding **scoring semantics** constant — early docs emphasized MJ lift
+   and lenient live; subscription sweeps were always scored STRICT.
+3. **Fishy / measurement asymmetry:** subscription bare greenfield arms score much higher than cheap
+   bare (claude bare aggregate live **1700** vs gemma bare **213** on the regated multirun), so
+   paired **live lift** punishes frontiers harder even when tooled arms behave similarly in MJ.
+4. **Improve harness?** Yes, but **not by lowering STRICT** or re-enabling repair-from-tools:
+   - **Prompt/verdict contract:** force cite-or-withhold; penalize theatre in prompt not just scorer.
+   - **Grounding UX:** claim↔evidence alignment coaching (D6 residual).
+   - **Bare-arm parity experiment:** same fixtures, same STRICT, compare opencode vs subscription bare.
+   - **Calibration rerun:** gemma 1×17 greenfield under opencode + STRICT regate (recommended next).
+
+### Recommended calibration — gemma 1×17 STRICT (parity probe)
+
+Hold scoring constant with frontier sweeps; isolate transport + model tier:
+
+```bash
+QG_BAKEOFF=1 .venv/bin/python -m scripts.audit.qg_bakeoff \
+  --models gemma-4-31b-it \
+  --out-dir audit/2026-07-08-gemma-strict-1x17 \
+  --arm both
+# then: .venv/bin/python -m scripts.audit.qg_bakeoff --regate --out-dir audit/2026-07-08-gemma-strict-1x17
+```
+
+**Decision:** Tier-2 reviewer remains **DEFER_ALL**; no subscription engine pin. Next evidence is
+gemma (or deepseek-direct #4358) **1×17 STRICT** on opencode — if that also goes negative on live
+lift, the harness is fine and the product work is model+prompt grounding; if gemma stays positive
+under STRICT, the frontier gap is transport/discipline-specific, not “tools don't help.”
