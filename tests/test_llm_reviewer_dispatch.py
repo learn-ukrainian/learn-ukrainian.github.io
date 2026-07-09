@@ -1708,3 +1708,96 @@ def test_grounding_matches_events_across_dot_and_underscore_tool_forms() -> None
     for malformed in ("mcp__sources.", "sources.", ".query_wikipedia"):
         g = dict(grounding, tool=malformed)
         assert llm_reviewer_dispatch._grounding_matches_events(g, (event,)) is False, malformed
+
+
+# --- Guard 3 abstain-recovery (task guard3-abstain; fleet-reviewed codex/agy/cursor) ---
+# The v2 gate ABSTAINS (anchored=False) when an excerpt is verbatim-present in >=2 DIFFERENT
+# tool outputs — provenance is satisfied, source is ambiguous. Enforcement previously mapped that
+# to a hard reject, over-rejecting ~117 gold-true groundings. Enforcement now recovers only the
+# EXACT-match (sim==1.0) multi-output abstains; fuzzy near-tie abstains stay fail-closed, and the
+# hardened gate is untouched (its fail-closed probes still assert on grounding_gate_v2 directly).
+
+
+def _stub_anchor(monkeypatch, *, anchored: bool, abstained: bool, similarity: float) -> None:
+    from scripts.audit import grounding_gate_v2
+
+    def fake(grounding, events, *, tau=None):
+        return grounding_gate_v2.AnchorResult(
+            anchored=anchored,
+            abstained=abstained,
+            similarity=similarity,
+            source_index=None,
+            span=None,
+            reason="stub",
+        )
+
+    monkeypatch.setattr(grounding_gate_v2, "anchor_evidence_to_events", fake)
+
+
+def _enforce_v2(payload):
+    return llm_reviewer_dispatch.enforce_grounding_against_tool_events(
+        payload,
+        {"tool_events": [_sources_event()]},
+        policy_family="seminar",
+        gate_version="v2",
+    )
+
+
+def test_v2_enforcement_recovers_exact_multi_output_abstain(monkeypatch) -> None:
+    _stub_anchor(monkeypatch, anchored=False, abstained=True, similarity=1.0)
+    result = _enforce_v2(json.loads(_fact_response()))
+    assert result.invalid_fact_checks == 0  # recovered as provenance-passed, not dropped
+    fc = result.payload["fact_checks"][0]
+    assert fc["anchor_recovered_ambiguous"] is True
+    assert fc["anchor_abstained"] is True
+
+
+def test_v2_enforcement_fuzzy_abstain_stays_fail_closed(monkeypatch) -> None:
+    _stub_anchor(monkeypatch, anchored=False, abstained=True, similarity=0.9)
+    result = _enforce_v2(json.loads(_fact_response()))
+    assert result.invalid_fact_checks == 1  # below the exact-match recovery threshold → rejected
+    assert result.payload["fact_checks"][0]["anchor_recovered_ambiguous"] is False
+
+
+def test_v2_enforcement_non_anchor_non_abstain_rejected(monkeypatch) -> None:
+    _stub_anchor(monkeypatch, anchored=False, abstained=False, similarity=0.5)
+    result = _enforce_v2(json.loads(_fact_response()))
+    assert result.invalid_fact_checks == 1  # ordinary below-tau miss → rejected (fabrication path intact)
+
+
+def test_v2_enforcement_real_multi_output_verbatim_recovered() -> None:
+    # Real gate: excerpt with a salient token, verbatim in TWO different outputs → abstain → recovered.
+    excerpt = "Сковорода народився у 1722 році"
+    payload = json.loads(_fact_response(evidence_excerpt=excerpt, grounding_query="Сковорода"))
+    events = [
+        _sources_event(
+            query="Сковорода",
+            output="Григорій Сковорода народився у 1722 році. Він був філософом.",
+            call_id="call_1",
+        ),
+        _sources_event(
+            query="Сковорода",
+            output="Сковорода народився у 1722 році згідно з джерелами.",
+            call_id="call_2",
+        ),
+    ]
+    result = llm_reviewer_dispatch.enforce_grounding_against_tool_events(
+        payload, {"tool_events": events}, policy_family="seminar", gate_version="v2"
+    )
+    fc = result.payload["fact_checks"][0]
+    assert result.invalid_fact_checks == 0
+    assert fc["anchor_abstained"] is True
+    assert fc["anchor_recovered_ambiguous"] is True
+
+
+def test_v2_enforcement_real_number_swap_still_rejected() -> None:
+    # Fabrication defense must be intact: a swapped year is not verbatim-present → digit_not_aligned reject.
+    payload = json.loads(
+        _fact_response(evidence_excerpt="Сковорода народився у 1900 році", grounding_query="Сковорода")
+    )
+    events = [_sources_event(query="Сковорода", output="Сковорода народився у 1722 році.", call_id="call_1")]
+    result = llm_reviewer_dispatch.enforce_grounding_against_tool_events(
+        payload, {"tool_events": events}, policy_family="seminar", gate_version="v2"
+    )
+    assert result.invalid_fact_checks == 1
+    assert result.payload["fact_checks"][0]["anchor_recovered_ambiguous"] is False

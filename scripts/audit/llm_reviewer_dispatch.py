@@ -1399,6 +1399,12 @@ def mark_deep_read_attempted(payload: Mapping[str, Any]) -> dict[str, Any]:
     return out
 
 
+# Guard 3 abstain-recovery threshold (task guard3-abstain). Only exact-match (verbatim)
+# multi-output abstains are recovered as provenance-passed; fuzzy near-tie abstains stay
+# fail-closed until audited. SequenceMatcher.ratio() of a normalized verbatim window is 1.0.
+_V2_ABSTAIN_RECOVERY_MIN_SIM = 1.0
+
+
 def enforce_grounding_against_tool_events(
     payload: Mapping[str, Any],
     dispatch_meta: Mapping[str, Any],
@@ -1449,9 +1455,22 @@ def enforce_grounding_against_tool_events(
             if resolved_version == "v2":
                 from scripts.audit import grounding_gate_v2
                 res = grounding_gate_v2.anchor_evidence_to_events(grounding, events)
-                is_matched = res.anchored
+                # Guard 3 abstain-recovery (fleet-reviewed, task guard3-abstain; unanimous
+                # codex/agy/cursor). res.abstained means the excerpt is verbatim-present in >=2
+                # DIFFERENT captured tool outputs — Layer A provenance SATISFIED, source ambiguous.
+                # The gate returns anchored=False for that ambiguity; enforcement previously mapped it
+                # to a hard REJECT, over-rejecting ~117 gold-true groundings. Provenance is Layer A's
+                # job; "which of the real sources" is attribution (Layer B, not yet built). Recover
+                # only EXACT-match (sim==1.0) multi-output abstains; leave fuzzy near-tie abstains
+                # fail-closed until audited (codex caution). source_index stays None + anchor_abstained
+                # is recorded so a future Layer B must still entail the excerpt against the RAW output
+                # (the excerpt must not self-prove attribution). Boilerplate with no salient tokens
+                # never reaches this path — the gate rejects it as no_salient_anchor before Guard 3.
+                recovered_abstain = res.abstained and res.similarity >= _V2_ABSTAIN_RECOVERY_MIN_SIM
+                is_matched = res.anchored or recovered_abstain
                 item["anchor_similarity"] = res.similarity
                 item["anchor_abstained"] = res.abstained
+                item["anchor_recovered_ambiguous"] = bool(recovered_abstain)
                 item["grounding_gate_version"] = "v2"
                 if res.anchor_low_signal_reason is not None:
                     item["anchor_low_signal_reason"] = res.anchor_low_signal_reason
