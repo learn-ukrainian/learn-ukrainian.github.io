@@ -292,8 +292,14 @@ def test_routing_budget_surfaces_deficit_warnings(monkeypatch):
     assert res["agents"]["claude"]["status"] == "hot"
     assert res["agents"]["codex"]["status"] == "cool"
 
-    # Check that deficit warning was generated for claude
-    assert any("lane claude is in deficit" in w for w in res["recommendation"]["warnings"])
+    # Check that deficit warning was generated for claude, and that it quotes
+    # BOTH windows: the weekly-pace deficit AND the 5h reserve (weekly-only
+    # wording misled toward over-restriction — user correction 2026-07-09).
+    deficit_warnings = [w for w in res["recommendation"]["warnings"] if "lane claude is in deficit" in w]
+    assert deficit_warnings
+    assert "5h window 10% used" in deficit_warnings[0]
+    assert "90% reserve" in deficit_warnings[0]
+    assert "weekly-pace signal" in deficit_warnings[0]
 
 
 def test_monthly_window_only_does_not_mislabel_weekly_used_pct():
