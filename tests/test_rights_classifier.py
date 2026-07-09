@@ -53,8 +53,7 @@ def test_shevchenko_initial_and_name_order_variants_use_author_table(
     ],
 )
 def test_unpersecuted_recent_author_no_free_source_is_in_copyright(author: str) -> None:
-    # Recent authors who were NOT persecuted and whose text carries no free-source signal
-    # fall to the conservative life+70 path. (With a ukrlib/textbook source they are hosted.)
+    # Recent authors who were NOT persecuted fall to the conservative life+70 path.
     verdict = classify_rights(author, "Твір", None, "", "", current_year=CURRENT_YEAR)
 
     assert verdict["rights_class"] == "in_copyright"
@@ -78,23 +77,56 @@ def test_repressed_rehabilitated_authors_are_hosted_heritage(author: str) -> Non
     assert "repressed" in verdict["basis"]
 
 
-@pytest.mark.parametrize(
-    "source_file",
-    [
-        "ukrlib-stus",
-        "ukrlib-kostenko",
-        "ukrlib-shevchenko",
-        "textbook-10-klas-ukrlit",
-    ],
-)
-def test_ukrlib_or_textbook_source_is_hosted(source_file: str) -> None:
-    # Absolute rule: anything on ukrlib / in textbooks is hosted in full, regardless of
-    # the author's copyright status (incl. living authors like Ліна Костенко).
+def test_established_source_basis_is_hosted() -> None:
     verdict = classify_rights(
-        "Будь-який Автор", "Твір", None, source_file, "", current_year=CURRENT_YEAR
+        "Будь-який Автор", "Твір", None, "textbook-10-klas-ukrlit", "", current_year=CURRENT_YEAR
     )
 
     assert verdict["rights_class"] == "public_domain"
+
+
+def test_ukrlib_rylskyi_is_retrieval_only_under_existing_rights_gate() -> None:
+    verdict = classify_rights(
+        "Максим Рильський",
+        "Молюсь і вірю",
+        None,
+        "ukrlib-rylsky",
+        "modern",
+        current_year=CURRENT_YEAR,
+    )
+
+    assert verdict["rights_class"] == "in_copyright"
+    assert "death_year 1964" in verdict["basis"]
+
+
+@pytest.mark.parametrize(
+    ("current_year", "expected_rights_class"),
+    [(2034, "in_copyright"), (2035, "public_domain")],
+)
+def test_rylskyi_life_plus_70_boundary(
+    current_year: int,
+    expected_rights_class: str,
+) -> None:
+    verdict = classify_rights(
+        "Максим Рильський", "Молюсь і вірю", None, "ukrlib-rylsky", "modern", current_year=current_year
+    )
+
+    assert verdict["rights_class"] == expected_rights_class
+
+
+@pytest.mark.parametrize(
+    ("current_year", "expected_rights_class"),
+    [(2012, "in_copyright"), (2013, "public_domain")],
+)
+def test_teliha_life_plus_70_boundary(
+    current_year: int,
+    expected_rights_class: str,
+) -> None:
+    verdict = classify_rights(
+        "Олена Теліга", "Сучасникам", None, "ukrlib-teliha", "modern", current_year=current_year
+    )
+
+    assert verdict["rights_class"] == expected_rights_class
 
 
 def test_folk_author_is_public_domain() -> None:
@@ -251,6 +283,20 @@ def test_generate_readings_gate_delegates_to_classifier() -> None:
         text="",
     )
     assert is_public_domain(hosted, current_year=CURRENT_YEAR) is True
+
+    retrieval_only = CorpusText(
+        chunk_id="rylsky",
+        author="Максим Рильський",
+        work="Молюсь і вірю",
+        work_id="rylsky",
+        year=1895,
+        genre="poetry",
+        language_period="modern",
+        source_file="ukrlib-rylsky",
+        source_url="https://www.ukrlib.com.ua/books/printit.php?tid=6176",
+        text="",
+    )
+    assert is_public_domain(retrieval_only, current_year=CURRENT_YEAR) is False
 
     # Delegation also returns False for a genuinely-unknown modern author with no
     # free-source signal (the light legal backstop).
