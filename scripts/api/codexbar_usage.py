@@ -12,6 +12,10 @@ import time
 from datetime import UTC, datetime, timedelta
 from typing import Any, Optional
 
+WEEKLY_WINDOW_MINUTES = 10080
+# Reject monthly/long windows when no exact weekly window exists (e.g. 43200 min).
+WEEKLY_WINDOW_TOLERANCE_MINUTES = 5040
+
 PROVIDER_TO_LANE = {
     "codex": "codex",
     "claude": "claude",
@@ -106,17 +110,23 @@ def _normalize_provider_data(provider: str, data: dict[str, Any]) -> dict[str, A
 
     for cand in limit_candidates:
         win_mins = cand.get("windowMinutes")
-        if win_mins is not None and win_mins == 10080:
+        if win_mins is not None and win_mins == WEEKLY_WINDOW_MINUTES:
             weekly_win = cand
             break
 
-    # Fallback weekly if a monthly or longer limit is present
+    # Nearest-to-weekly fallback; reject monthly/long windows far from 7d.
     if not weekly_win:
+        best_dist: int | None = None
         for cand in limit_candidates:
             win_mins = cand.get("windowMinutes")
-            if win_mins is not None and win_mins > 300:
+            if win_mins is None or win_mins <= 300:
+                continue
+            dist = abs(int(win_mins) - WEEKLY_WINDOW_MINUTES)
+            if dist > WEEKLY_WINDOW_TOLERANCE_MINUTES:
+                continue
+            if best_dist is None or dist < best_dist:
                 weekly_win = cand
-                break
+                best_dist = dist
 
     # Absolute fallback
     if not primary_win:

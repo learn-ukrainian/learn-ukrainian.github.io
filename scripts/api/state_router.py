@@ -258,13 +258,18 @@ def _next_weekly_reset(current_time: datetime) -> str:
     return _isoformat_z(reset_dt)
 
 
-def _snapshot_is_stale(current_time: datetime, records: list[CostRecord], threshold_s: float = 900.0) -> tuple[bool, float | None]:
+def _snapshot_is_stale(
+    current_time: datetime, records: list[CostRecord], threshold_s: float = 900.0
+) -> tuple[bool, float | None]:
     """Return (is_stale, age_s) based on most recent record mtime vs now.
     15min=900s default per AC. If no records, not 'stale' but 'empty' handled separately.
     """
     if not records:
         return False, None
-    latest = max((getattr(r, "mtime", datetime.min.replace(tzinfo=UTC)) or datetime.min.replace(tzinfo=UTC) for r in records), default=None)
+    latest = max(
+        (getattr(r, "mtime", datetime.min.replace(tzinfo=UTC)) or datetime.min.replace(tzinfo=UTC) for r in records),
+        default=None,
+    )
     if latest is None:
         return False, None
     age = (current_time - latest).total_seconds()
@@ -366,7 +371,9 @@ def _recommend_agent(
             except Exception:
                 pass
     if imminent:
-        warnings.append(f"lanes resetting soon (within {reset_imminent_hours}h): {', '.join(imminent)} — defer large batches on these if possible")
+        warnings.append(
+            f"lanes resetting soon (within {reset_imminent_hours}h): {', '.join(imminent)} — defer large batches on these if possible"
+        )
     if "near_cap" in status_by_agent.values():
         candidates = [agent for agent, st in status_by_agent.items() if st == "cool"]
         if not candidates:
@@ -447,12 +454,35 @@ def compute_routing_budget(now: datetime | None = None) -> dict[str, Any]:
         for lane in SUBSCRIPTION_LANES:
             if lane == "claude":
                 agents[lane] = {
-                    "interactive": {"spent_7d_usd": None, "weekly_cap_usd": None, "burn_pct_7d": None, "promo_active": False, "status": "unknown"},
-                    "agentic_pool": {"spent_cycle_usd": None, "monthly_cap_usd": None, "burn_pct_cycle": None, "active": False, "starts_on": None, "status": "unknown"},
-                    "spent_7d_usd": None, "weekly_cap_usd": None, "burn_pct_7d": None, "status": "unknown", "resets_at": resets_at,
+                    "interactive": {
+                        "spent_7d_usd": None,
+                        "weekly_cap_usd": None,
+                        "burn_pct_7d": None,
+                        "promo_active": False,
+                        "status": "unknown",
+                    },
+                    "agentic_pool": {
+                        "spent_cycle_usd": None,
+                        "monthly_cap_usd": None,
+                        "burn_pct_cycle": None,
+                        "active": False,
+                        "starts_on": None,
+                        "status": "unknown",
+                    },
+                    "spent_7d_usd": None,
+                    "weekly_cap_usd": None,
+                    "burn_pct_7d": None,
+                    "status": "unknown",
+                    "resets_at": resets_at,
                 }
             else:
-                agents[lane] = {"spent_7d_usd": None, "weekly_cap_usd": None, "burn_pct_7d": None, "status": "unknown", "resets_at": resets_at}
+                agents[lane] = {
+                    "spent_7d_usd": None,
+                    "weekly_cap_usd": None,
+                    "burn_pct_7d": None,
+                    "status": "unknown",
+                    "resets_at": resets_at,
+                }
         rec = {
             "primary_agent_for_code": None,
             "rationale": "Budget config absent; recommendation suppressed (empty snapshot).",
@@ -471,14 +501,34 @@ def compute_routing_budget(now: datetime | None = None) -> dict[str, Any]:
                 "data_age_s": None,
                 "stale_threshold_s": 900,
             },
-            "ranked_by_headroom": [{"lane": lane, "type": "subscription", "status": "unknown", "burn_pct_7d": None, "remaining_pct": None, "resets_at": resets_at} for lane in SUBSCRIPTION_LANES] +
-                                 [{"lane": lane, "type": "api", "status": "unknown", "burn_pct_7d": None, "remaining_pct": None, "resets_at": None} for lane in API_LANES],
+            "ranked_by_headroom": [
+                {
+                    "lane": lane,
+                    "type": "subscription",
+                    "status": "unknown",
+                    "burn_pct_7d": None,
+                    "remaining_pct": None,
+                    "resets_at": resets_at,
+                }
+                for lane in SUBSCRIPTION_LANES
+            ]
+            + [
+                {
+                    "lane": lane,
+                    "type": "api",
+                    "status": "unknown",
+                    "burn_pct_7d": None,
+                    "remaining_pct": None,
+                    "resets_at": None,
+                }
+                for lane in API_LANES
+            ],
         }
 
     records = load_cost_records()
-    is_stale, data_age_s = _snapshot_is_stale(current_time, records)
-    if is_stale:
-        warnings.append("generatedAt/data age >15min — advisory downgraded to stale, verify manually (never hard block)")
+    ledger_stale, ledger_age_s = _snapshot_is_stale(current_time, records)
+    is_stale = ledger_stale
+    data_age_s = ledger_age_s
 
     agents: dict[str, Any] = {}
     missing_cost_records = 0
@@ -488,9 +538,7 @@ def compute_routing_budget(now: datetime | None = None) -> dict[str, Any]:
     agentic_config = claude_config.get("agentic_pool") if isinstance(claude_config.get("agentic_pool"), dict) else {}
     promo_through = _parse_iso_date(interactive_config.get("promo_through"))
     promo_active = bool(promo_through and today <= promo_through)
-    claude_cap = float(
-        interactive_config.get("promo_weekly_cap_usd" if promo_active else "weekly_cap_usd") or 0.0
-    )
+    claude_cap = float(interactive_config.get("promo_weekly_cap_usd" if promo_active else "weekly_cap_usd") or 0.0)
     claude_spent, missing = _sum_agent_spend(records, agent="claude", since=window_start)
     missing_cost_records += missing
     claude_burn = _burn_pct(claude_spent, claude_cap)
@@ -512,7 +560,7 @@ def compute_routing_budget(now: datetime | None = None) -> dict[str, Any]:
 
     claude_status = _status_from_burn(claude_burn, has_cap=claude_has_cap)
     # empty snapshot special: force unknown (per AC, not cool when records_loaded==0)
-    force_unknown = (len(records) == 0)
+    force_unknown = len(records) == 0
     if force_unknown:
         claude_status = "unknown"
         claude_burn = None
@@ -573,9 +621,11 @@ def compute_routing_budget(now: datetime | None = None) -> dict[str, Any]:
             weekly_used = cb_data["weekly_used_pct"]
 
             # Determine status using deficit signal
-            is_in_deficit = (cb_data.get("will_last_to_reset") is False) or \
-                            (cb_data.get("weekly_pace_delta_pct") is not None and cb_data["weekly_pace_delta_pct"] > 0) or \
-                            (weekly_used >= 90.0)
+            is_in_deficit = (
+                (cb_data.get("will_last_to_reset") is False)
+                or (cb_data.get("weekly_pace_delta_pct") is not None and cb_data["weekly_pace_delta_pct"] > 0)
+                or (weekly_used >= 90.0)
+            )
 
             if weekly_used >= 90.0:
                 cb_status = "near_cap"
@@ -611,7 +661,9 @@ def compute_routing_budget(now: datetime | None = None) -> dict[str, Any]:
             if lane == "claude":
                 agents[lane]["interactive"]["burn_pct_7d"] = weekly_used
                 agents[lane]["interactive"]["status"] = cb_status
-                agents[lane]["interactive"]["spent_7d_usd"] = _round_money((weekly_used / 100.0) * claude_cap) if claude_cap else None
+                agents[lane]["interactive"]["spent_7d_usd"] = (
+                    _round_money((weekly_used / 100.0) * claude_cap) if claude_cap else None
+                )
                 agents[lane]["burn_pct_7d"] = weekly_used
                 agents[lane]["status"] = cb_status
                 agents[lane]["spent_7d_usd"] = agents[lane]["interactive"]["spent_7d_usd"]
@@ -641,17 +693,22 @@ def compute_routing_budget(now: datetime | None = None) -> dict[str, Any]:
     if cb_sourced_any:
         is_stale = cb_stale
         data_age_s = cb_max_age_s
-        if is_stale:
-            warnings.append("generatedAt/data age >15min — advisory downgraded to stale, verify manually (never hard block)")
+
+    if is_stale:
+        warnings.append(
+            "generatedAt/data age >15min — advisory downgraded to stale, verify manually (never hard block)"
+        )
 
     # Build warnings for any lane in deficit (authoritative or fallback)
     for lane in SUBSCRIPTION_LANES:
         if lane in agents:
             cb = agents[lane].get("codexbar")
             if cb:
-                is_in_deficit = (cb.get("will_last_to_reset") is False) or \
-                                 (cb.get("weekly_pace_delta_pct") is not None and cb.get("weekly_pace_delta_pct") > 0) or \
-                                 (cb.get("weekly_used_pct") is not None and cb.get("weekly_used_pct") >= 90.0)
+                is_in_deficit = (
+                    (cb.get("will_last_to_reset") is False)
+                    or (cb.get("weekly_pace_delta_pct") is not None and cb.get("weekly_pace_delta_pct") > 0)
+                    or (cb.get("weekly_used_pct") is not None and cb.get("weekly_used_pct") >= 90.0)
+                )
                 pace_sum = cb.get("pace_summary") or f"{cb.get('weekly_used_pct')}% used"
             else:
                 # Fallback to local ledger logic
@@ -681,7 +738,8 @@ def compute_routing_budget(now: datetime | None = None) -> dict[str, Any]:
         )
 
     rec = _recommend_agent(
-        agents, warnings,
+        agents,
+        warnings,
         current_time=current_time,
         reset_imminent_hours=reset_hours,
         is_stale=is_stale,
@@ -699,19 +757,29 @@ def compute_routing_budget(now: datetime | None = None) -> dict[str, Any]:
     ranked_subs = []
     for lane in SUBSCRIPTION_LANES:
         a = agents.get(lane, {})
-        ranked_subs.append({
-            "lane": lane,
-            "type": "subscription",
-            "status": a.get("status", "unknown"),
-            "burn_pct_7d": a.get("burn_pct_7d"),
-            "remaining_pct": a.get("remaining_pct"),
-            "resets_at": a.get("resets_at"),
-            "in_flight": _in_flight_by_agent().get(lane, 0),
-        })
+        ranked_subs.append(
+            {
+                "lane": lane,
+                "type": "subscription",
+                "status": a.get("status", "unknown"),
+                "burn_pct_7d": a.get("burn_pct_7d"),
+                "remaining_pct": a.get("remaining_pct"),
+                "resets_at": a.get("resets_at"),
+                "in_flight": _in_flight_by_agent().get(lane, 0),
+            }
+        )
     ranked_subs.sort(key=lambda x: (x["status"] == "unknown", x.get("burn_pct_7d") or 999.0))
 
     ranked_apis = [
-        {"lane": lane, "type": "api", "status": "unknown", "burn_pct_7d": None, "remaining_pct": None, "resets_at": None, "in_flight": 0}
+        {
+            "lane": lane,
+            "type": "api",
+            "status": "unknown",
+            "burn_pct_7d": None,
+            "remaining_pct": None,
+            "resets_at": None,
+            "in_flight": 0,
+        }
         for lane in API_LANES
     ]
     # per one design note treat absent as full, but AC requires status unknown NOT cool for ranked view
@@ -804,6 +872,7 @@ async def pipeline_track(track_id: str, fresh: bool = Query(False)):
 @router.get("/pipeline-versions")
 async def pipeline_versions(track: str | None = Query(None), fresh: bool = Query(False)):
     """All modules grouped by pipeline version."""
+
     def _compute():
         counts = {"v6": 0, "v5": 0, "v3": 0, "unbuilt": 0}
         by_version: dict[str, list] = {"v6": [], "v5": [], "v3": [], "unbuilt": []}
@@ -838,7 +907,8 @@ async def pipeline_versions(track: str | None = Query(None), fresh: bool = Query
         rebuild_backlog = legacy_builds + unbuilt_modules
         built = current_builds + counts["v5"]
         return {
-            "total": total, "counts": counts,
+            "total": total,
+            "counts": counts,
             "pct_v6": round(counts["v6"] / total * 100) if total else 0,
             "pct_v5": round(counts["v5"] / total * 100) if total else 0,
             "pct_current": round(current_builds / total * 100) if total else 0,
@@ -887,6 +957,7 @@ async def pipeline_versions(track: str | None = Query(None), fresh: bool = Query
 @router.get("/ready-to-build")
 async def ready_to_build(track: str | None = Query(None)):
     """Modules where Phase A is complete but Phase B hasn't started."""
+
     def _compute():
         ready = []
         level_cfgs = [l for l in LEVELS if l["id"] == track] if track else LEVELS
@@ -903,12 +974,16 @@ async def ready_to_build(track: str | None = Query(None)):
                 if is_research_done(state, track_dir, slug) and not is_content_done(state):
                     version = detect_pipeline_version(orch_dir)
                     research_phase = state.get("phases", {}).get("research", {})
-                    ready.append({
-                        "track": track_id, "num": num, "slug": slug,
-                        "pipeline_version": version,
-                        "phase_a_ts": research_phase.get("ts"),
-                        "phase_a_mode": research_phase.get("mode"),
-                    })
+                    ready.append(
+                        {
+                            "track": track_id,
+                            "num": num,
+                            "slug": slug,
+                            "pipeline_version": version,
+                            "phase_a_ts": research_phase.get("ts"),
+                            "phase_a_mode": research_phase.get("mode"),
+                        }
+                    )
         return {"count": len(ready), "modules": ready}
 
     return await asyncio.to_thread(_compute)
@@ -956,13 +1031,19 @@ async def weak_points(
                 if issues:
                     orch_dir = safe_join(track_dir / "orchestration", slug)
                     version = detect_pipeline_version(orch_dir)
-                    weak.append({
-                        "track": track_id, "num": num, "slug": slug,
-                        "audit_status": audit["status"],
-                        "word_count": word_count, "word_target": word_target,
-                        "research_score": research_score,
-                        "pipeline_version": version, "issues": issues,
-                    })
+                    weak.append(
+                        {
+                            "track": track_id,
+                            "num": num,
+                            "slug": slug,
+                            "audit_status": audit["status"],
+                            "word_count": word_count,
+                            "word_target": word_target,
+                            "research_score": research_score,
+                            "pipeline_version": version,
+                            "issues": issues,
+                        }
+                    )
 
         weak.sort(key=severity_key)
         return {"count": len(weak), "modules": weak[:limit]}
@@ -975,6 +1056,7 @@ async def weak_points(
 @router.get("/failing")
 async def failing_modules(track: str | None = Query(None)):
     """All modules with audit failures or phase failures."""
+
     def _compute():
         failing = []
         level_cfgs = [l for l in LEVELS if l["id"] == track] if track else LEVELS
@@ -992,26 +1074,31 @@ async def failing_modules(track: str | None = Query(None)):
                 if version in ("v6", "v5"):
                     phases = read_v2_state(orch_dir).get("phases", {})
                     failed_phases = [
-                        k for k, v in phases.items()
-                        if isinstance(v, dict) and v.get("status") == "failed"
+                        k for k, v in phases.items() if isinstance(v, dict) and v.get("status") == "failed"
                     ]
                 elif version == "v3":
                     v3 = read_v3_state(orch_dir)
                     phases = v3.get("phases", {})
                     failed_phases = [
-                        k.replace("v3-", "") for k, v in phases.items()
+                        k.replace("v3-", "")
+                        for k, v in phases.items()
                         if isinstance(v, dict) and v.get("status") == "failed"
                     ]
                 else:
                     failed_phases = []
 
                 if audit["status"] == "fail" or failed_phases:
-                    failing.append({
-                        "track": track_id, "num": num, "slug": slug,
-                        "pipeline_version": version, "audit_status": audit["status"],
-                        "failed_phases": failed_phases,
-                        "blocking_issues": audit.get("blocking_issues", []),
-                    })
+                    failing.append(
+                        {
+                            "track": track_id,
+                            "num": num,
+                            "slug": slug,
+                            "pipeline_version": version,
+                            "audit_status": audit["status"],
+                            "failed_phases": failed_phases,
+                            "blocking_issues": audit.get("blocking_issues", []),
+                        }
+                    )
 
         return {"count": len(failing), "modules": failing}
 
@@ -1089,15 +1176,13 @@ async def module_scores(track: str):
     ``.dimensions``) plus the audit status cache. Always fresh (small reads, no
     cache) so polling during a build reflects the latest round.
     """
+
     def _compute() -> dict[str, Any] | None:
         level_cfg = next((l for l in LEVELS if l["id"] == track), None)
         if not level_cfg:
             return None
         track_dir = CURRICULUM_ROOT / level_cfg["path"]
-        modules = [
-            _module_score_record(track, track_dir, num, slug)
-            for num, slug in get_plan_slugs(track)
-        ]
+        modules = [_module_score_record(track, track_dir, num, slug) for num, slug in get_plan_slugs(track)]
         scored = sum(1 for m in modules if m["scored"])
         return {"track": track, "count": len(modules), "scored": scored, "modules": modules}
 
@@ -1110,6 +1195,7 @@ async def module_scores(track: str):
 @router.get("/scores/{track}/{slug}")
 async def module_scores_one(track: str, slug: str):
     """One module's status + LLM-QG aggregate + per-dimension scores."""
+
     def _compute() -> dict[str, Any] | None:
         level_cfg = next((l for l in LEVELS if l["id"] == track), None)
         if not level_cfg:
@@ -1125,9 +1211,7 @@ async def module_scores_one(track: str, slug: str):
     if result is None:
         return JSONResponse(status_code=404, content={"error": f"Track '{track}' not found"})
     if result.get("__not_found__"):
-        return JSONResponse(
-            status_code=404, content={"error": f"Module '{slug}' not found in track '{track}'"}
-        )
+        return JSONResponse(status_code=404, content={"error": f"Module '{slug}' not found in track '{track}'"})
     return _with_state_meta(result, source="fs:llm_qg+status", stale_after_s=0.0, cache="miss", age_s=0.0)
 
 
@@ -1292,6 +1376,7 @@ async def llm_qg_track(
 async def build_stats_all():
     """V6 build stats aggregated across all tracks."""
     from .state_build import compute_build_stats_all
+
     return await asyncio.to_thread(compute_build_stats_all)
 
 
@@ -1518,7 +1603,8 @@ async def range_status(
             return {"error": "pipeline_track returned non-list"}
 
         sliced = [
-            m for m in modules
+            m
+            for m in modules
             if isinstance(m, dict)
             and isinstance(m.get("num"), int)
             and m["num"] >= start
@@ -1570,30 +1656,29 @@ async def range_status(
                     gate = first.get("gate") or first.get("type")
                     blocker = f"gate:{gate}" if gate else "audit_issue"
 
-            compact.append({
-                "num": m["num"],
-                "slug": m.get("slug"),
-                "phase": phase_now,
-                "phase_status": (
-                    phases.get(phase_now, {}).get("status")
-                    if isinstance(phases.get(phase_now), dict) else None
-                ),
-                "worker": (
-                    phases.get(phase_now, {}).get("executor", {}).get("agent")
-                    if isinstance(phases.get(phase_now), dict)
-                    and isinstance(phases.get(phase_now, {}).get("executor"), dict)
-                    else None
-                ),
-                "audit": audit,
-                "review_score": (
-                    review.get("score") if isinstance(review, dict) else None
-                ),
-                "words": m.get("words"),
-                "word_target": m.get("word_target"),
-                "blocker": blocker,
-                "pipeline_version": m.get("pipeline_version"),
-                "needs_rebuild": m.get("needs_rebuild"),
-            })
+            compact.append(
+                {
+                    "num": m["num"],
+                    "slug": m.get("slug"),
+                    "phase": phase_now,
+                    "phase_status": (
+                        phases.get(phase_now, {}).get("status") if isinstance(phases.get(phase_now), dict) else None
+                    ),
+                    "worker": (
+                        phases.get(phase_now, {}).get("executor", {}).get("agent")
+                        if isinstance(phases.get(phase_now), dict)
+                        and isinstance(phases.get(phase_now, {}).get("executor"), dict)
+                        else None
+                    ),
+                    "audit": audit,
+                    "review_score": (review.get("score") if isinstance(review, dict) else None),
+                    "words": m.get("words"),
+                    "word_target": m.get("word_target"),
+                    "blocker": blocker,
+                    "pipeline_version": m.get("pipeline_version"),
+                    "needs_rebuild": m.get("needs_rebuild"),
+                }
+            )
 
         return {
             "track": track_id,
@@ -1647,31 +1732,33 @@ async def manifest():
     from .session_router import session_hash
     from .telemetry.response import add_json_telemetry
 
-    return add_json_telemetry({
-        "generated_at": _dt.now(UTC).isoformat().replace("+00:00", "Z"),
-        "rules": {
-            "hash": rules_hash(),
-            "url": "/api/rules?format=markdown",
-            "format": "markdown",
-            "note": "Condensed critical + non-negotiable + workflow rules. Drop straight into a system prompt.",
-        },
-        "session": {
-            "hash": session_hash(),
-            "url": "/api/session/current?agent=orchestrator&format=markdown",
-            "format": "markdown",
-            "note": "Current.md + recent session-state handoff filenames.",
-        },
-        "orient": {
-            "url": "/api/orient",
-            "fresh_param": "?fresh=true",
-            "note": "Per-section TTL cache + meta. Most agents only need the sections whose TTL has elapsed.",
-        },
-        "inbox": {
-            "url_template": "/api/comms/inbox?agent={name}",
-            "note": "Read-only view of unread channel deliveries for one agent.",
-        },
-        "activity": {
-            "url": "/api/comms/agent-activity",
-            "note": "Compact channel delivery/event snapshot for orchestration.",
-        },
-    })
+    return add_json_telemetry(
+        {
+            "generated_at": _dt.now(UTC).isoformat().replace("+00:00", "Z"),
+            "rules": {
+                "hash": rules_hash(),
+                "url": "/api/rules?format=markdown",
+                "format": "markdown",
+                "note": "Condensed critical + non-negotiable + workflow rules. Drop straight into a system prompt.",
+            },
+            "session": {
+                "hash": session_hash(),
+                "url": "/api/session/current?agent=orchestrator&format=markdown",
+                "format": "markdown",
+                "note": "Current.md + recent session-state handoff filenames.",
+            },
+            "orient": {
+                "url": "/api/orient",
+                "fresh_param": "?fresh=true",
+                "note": "Per-section TTL cache + meta. Most agents only need the sections whose TTL has elapsed.",
+            },
+            "inbox": {
+                "url_template": "/api/comms/inbox?agent={name}",
+                "note": "Read-only view of unread channel deliveries for one agent.",
+            },
+            "activity": {
+                "url": "/api/comms/agent-activity",
+                "note": "Compact channel delivery/event snapshot for orchestration.",
+            },
+        }
+    )
