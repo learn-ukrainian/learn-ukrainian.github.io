@@ -20,6 +20,10 @@
 # pipeline already globs ``*.write.jsonl`` (linear_pipeline.py:6882-6883)
 # so no pipeline-side changes are needed.
 #
+# #4390 infra fix: added cwd validation to avoid writing to project root
+# (pollution from -z one-shots / bridge runs where payload.cwd == toplevel)
+# and non-module paths. Skips gracefully; lanes should ensure module cwd.
+#
 # Schema written
 # --------------
 # Each line is a single JSON object with the fields the gate expects:
@@ -69,6 +73,20 @@ esac
 
 cwd="$(printf '%s' "$payload" | jq -r '.cwd // empty' 2>/dev/null || true)"
 [[ -z "$cwd" || ! -d "$cwd" ]] && exit 0
+
+# Infra fix for #4390: prevent accumulation in main checkout root (common
+# for hermes -z one-shots and bridge/ad-hoc runs where payload.cwd resolves
+# to project root instead of a module dir).
+# V7 builds set cwd to the module dir; non-V7 may not.
+# Skip writes that would pollute the root or non-module paths.
+project_root="$(git -C "$cwd" rev-parse --show-toplevel 2>/dev/null || echo "")"
+if [[ -z "$project_root" ]] || [[ "$cwd" == "$project_root" ]] || \
+   [[ "$cwd" != */curriculum/* && "$cwd" != */plans/* && "$cwd" != */wiki/* ]]; then
+  # Likely root pollution or unexpected cwd for writer telemetry.
+  # Lanes should ensure proper cwd (e.g. via module dir) or route scratch
+  # under .agent/tmp/. Do not write here.
+  exit 0
+fi
 
 log_path="$cwd/hermes.write.jsonl"
 
