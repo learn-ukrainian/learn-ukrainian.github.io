@@ -2,15 +2,38 @@
 
 Base: `http://localhost:8765` | Docs: `/docs`
 
-## At Session Start
+## At Session Start (Cold-Start Sequence — efficient, use manifest first)
 
 ```bash
-# Full project snapshot (replaces 5 scripts)
-curl -s http://localhost:8765/api/state/summary | python3 -m json.tool
+# 1. Tiny hashes (decide what to fetch; ETag/304 friendly)
+curl -s http://localhost:8765/api/state/manifest
 
-# What's active right now
-curl -s http://localhost:8765/api/batch/active
+# 2. Only if hashes changed
+curl -s http://localhost:8765/api/rules?format=markdown
+curl -s 'http://localhost:8765/api/session/current?agent=orchestrator'
+
+# 3. Full orient snapshot (git + delegate + runtime + health + pipeline)
+curl -s http://localhost:8765/api/orient          # or ?fresh=true
+curl -s http://localhost:8765/api/state/summary   # tracks overview (published_mdx, audit etc.)
 ```
+
+## What's active right now
+
+```bash
+curl -s http://localhost:8765/api/delegate/active
+curl -s http://localhost:8765/api/runtime/agents
+```
+
+**Start server:** `npm run api` (or `npm run api:bg`). Serves http://localhost:8765 + all dashboards.
+
+**Usage / limits view (project side; see also external CodexBar.app for 5h/weekly/monthly bars):**
+- `.../ai_agent_bridge/__main__.py codex-usage`
+- `.venv/bin/python scripts/analytics/cost_report.py --all --markdown`
+- Dashboards: cost.html, runtime.html
+- API: /api/health (resilience), /api/runtime/recent
+
+## Fleet note (for context)
+Bridge for comms/discuss: `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-*` / `discuss`. Delegate for work: `scripts/delegate.py dispatch --agent ... --worktree`. See shared/memory/MEMORY.md for full details. (CodexBar CLI example: `/Applications/CodexBar.app/Contents/Helpers/CodexBarCLI`)
 
 ## Before Building
 

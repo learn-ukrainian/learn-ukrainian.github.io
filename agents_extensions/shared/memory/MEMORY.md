@@ -140,6 +140,40 @@ NOT "pivot," NOT "L1-UK" (user corrected 4+ times). Read `memory/l1-uk-corpus-bo
 - **DIALOGUES:** From textbooks, not invented (#A2 genitive interrogation 2026-03-24).
 - **WORD TARGETS:** 1.5× overshoot (4000 → 5500-6000). Easier to trim than expand.
 
+## Fleet Comms + Delegation + CodexBar + Local API Cold-Start (2026-07-09)
+**Fleet lanes (from activity-matrix + guardrails):** Claude (Opus 4.8 primary for arch/review), Codex (gpt-5.5, top orchestrator), AGY (Antigravity/Gemini replacement), Grok (grok-build dispatch + Hermes), DeepSeek (cheap review), Cursor, pool, glm. Caps ~2 per top lane. Use full fleet for parallel work.
+
+**Communicate / ask / discuss (analysis, no FS writes):** Always `.venv/bin/python scripts/ai_agent_bridge/__main__.py` (bare `ab` = ApacheBench).
+- One-shot: `ask-codex - --task-id foo <prompt.md` (also ask-claude, ask-agy [--to-model ...], ask-grok-build, ask-hermes, ask-opencode, ask-pool, ask-cursor, ask-glm...)
+- Multi-agent discuss: `discuss <chan> "topic-or-stdin" --with codex,claude,agy --max-rounds 3 [--review]`
+- Broker: inbox / send / post / channel / converse / process-*
+
+**Delegate real work (edits, builds — ALWAYS --worktree):** `scripts/delegate.py dispatch --agent codex --task-id bar --brief docs/dispatch-briefs/xx.md --worktree --mode workspace-write` (or read-only). Agents: codex/claude/agy/cursor/grok-build/etc. Follow with `status`, `wait`, `list`.
+
+**CodexBar.app (local Mac app on this machine):** Visual for 5h / weekly / monthly limits + consumption across agents + self. (CodexBar CLI example: `/Applications/CodexBar.app/Contents/Helpers/CodexBarCLI`)
+
+Project-side:
+- `... ai_agent_bridge/__main__.py codex-usage`
+- `.venv/bin/python scripts/analytics/cost_report.py --all --markdown`
+- Dashboards: `dashboards/cost.html`, `runtime.html`, `delegate.html`
+- Raw: `batch_state/api_usage/*.jsonl`
+- API: `/api/health` (shows resilience/slows), `/api/runtime/agents`, `/api/runtime/recent`
+
+**Local Monitor API (cold-start + full project status) http://localhost:8765**
+- Start (if down): `npm run api` (fg) or `npm run api:bg`; logs `npm run api:logs`. Also serves dashboards.
+- Efficient cold-start sequence (per docs/MONITOR-API.md + #0C):
+  1. `curl -s /api/state/manifest` (tiny hashes → decide fetches; supports ETag/304)
+  2. Conditional: `/api/rules?format=markdown`, `/api/session/current?agent=orchestrator`
+  3. `/api/orient` (git, issues, delegate, runtime, health, pipeline) or `?fresh=true`
+- Key status: `/api/state/summary` (tracks: total/published_mdx/audit_passing/etc.), `/api/state/track-health/{a1,a2,...}`, `/api/state/pipeline/{track}`, `/api/orient`, `/api/delegate/active`, `/api/runtime/agents`, `/api/health`
+- Full contract: `/api/contracts/routes`
+
+**gh + MCP:** `gh` CLI installed and ready (pr list/view/diff/comment/merge). Also github MCP (search_tool first for schema, then use_tool github__*).
+
+**Dependabot:** `.github/dependabot.yml` (weekly Mon, 7d cooldown, groups + targeted ignores for pins like pydantic-core, lxml, starlette...). Triage via `gh pr list --search dependabot`, view #N, verify (only lock changes common), merge if CI green + safe. Security-audit.yml for visibility.
+
+See: `docs/guardrails/agent-fleet-tooling.md`, `docs/MONITOR-API.md`, `agents_extensions/shared/quick-ref/monitor-api.md`, `docs/best-practices/agent-activity-matrix.md`, `docs/best-practices/agent-cooperation.md`
+
 ## See Also (topic files in `memory/`)
 - `gpt-5.5-rollout.md`, `agent-debug.md`, `data-inventory.md`, `cooperation-tooling.md`, `l1-uk-corpus-bootstrap.md`
 - `textbook-research.md`, `textbook-exercises.md`, `reference_ukrainian_dictionaries_online.md`, `reference_awesome_ukrainian_nlp.md`
