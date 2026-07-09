@@ -1,0 +1,33 @@
+---
+# Sparse, reviewed manual evidence for the live BIO promotion ledger.
+# Absence is deliberately reported as unknown; do not copy structural checks here.
+version: 1
+entries:
+  andrii-malyshko:
+    corpus_hammer:
+      status: pass
+      reviewer_family: mixed
+      date: 2026-07-09
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4836#issuecomment-4929585737
+  oleksandr-bilash:
+    corpus_hammer:
+      status: pass
+      reviewer_family: claude
+      date: 2026-07-09
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4836#issuecomment-4929529011
+    independent_content_review:
+      status: pass
+      reviewer_family: claude
+      date: 2026-07-09
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4836#issuecomment-4929529011
+  platon-maiboroda:
+    corpus_hammer:
+      status: pass
+      reviewer_family: claude
+      date: 2026-07-09
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4836#issuecomment-4929658808
+    independent_content_review:
+      status: pass
+      reviewer_family: claude
+      date: 2026-07-09
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4836#issuecomment-4929658808

@@ -4,10 +4,10 @@
 
 **Target length:** ~1500 words (range: 1200–2000 acceptable).
 **File location:** `docs/research/bio/{slug}.md`
-**SSOT for module ordering / slugs:** `curriculum/l2-uk-en/curriculum.yaml` (`levels.bio.modules`, 387 slugs total).
+**SSOT for module ordering / slugs:** `curriculum/l2-uk-en/curriculum.yaml` (`levels.bio.modules`; derive the live slug count from the manifest rather than hard-coding it).
 **Slug source (by roster):**
 - Original roster: the 130-figure appendix in `docs/audits/bio-track-gap-audit-2026-05-26.md` (per #2313).
-- +77 expansion roster (`modules[310:387]`): `docs/audits/bio-ukrainian-expansion-research-2026-06-29.md` and the readiness inventory `docs/audits/bio-readiness-matrix-2026-06-29.md`. Do NOT look for an expansion slug in the 130-figure appendix — it is not there.
+- The dated expansion roster: `docs/audits/bio-ukrainian-expansion-research-2026-06-29.md` and the readiness inventory `docs/audits/bio-readiness-matrix-2026-06-29.md`. Do NOT use their historical totals as the live SSOT.
 
 > **No-module-writing gate (#2535 / #4006 prompt gate before #4005).** A dossier is the FIRST base-prep artifact. Writing a dossier is permitted only after the slug is promoted out of the readiness gate; do NOT write the plan YAML, site doc, or wiki packet from the same pass. Promotion order is fixed: dossier → `plans/bio/{slug}.yaml` → site/wiki. For the +77, honor the canonicity-over-currency and HIST-alignment constraints recorded in the expansion memo (see §6 and §7 below).
 
