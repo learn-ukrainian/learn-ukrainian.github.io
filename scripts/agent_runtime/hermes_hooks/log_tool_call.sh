@@ -24,6 +24,10 @@
 # (pollution from -z one-shots / bridge runs where payload.cwd == toplevel)
 # and non-module paths. Skips gracefully; lanes should ensure module cwd.
 #
+# Note: heuristic (root detection + curriculum/ allowlist). Addresses
+# accumulation symptom. Root-cause positive signal (env/sentinel) suggested
+# in review for follow-up.
+#
 # Schema written
 # --------------
 # Each line is a single JSON object with the fields the gate expects:
@@ -84,8 +88,12 @@ if [ -f "$cwd/AGENTS.md" ] && [ -d "$cwd/scripts/agent_runtime/hermes_hooks" ]; 
   # This cwd is the project root.
   exit 0
 fi
-if [[ "$cwd" != */curriculum/* && "$cwd" != */plans/* && "$cwd" != */wiki/* ]]; then
-  # Not a typical module or content dir; skip to avoid pollution.
+# Heuristic allowlist scoped to V7 writer module dirs (under curriculum/).
+# Note (per cross-family review): this is a symptom-level guard, not root-cause
+# (positive env/sentinel from v7_build.py would be more robust). Plans/wiki
+# not documented V7-writer cwds; kept minimal to curriculum for now.
+if [[ "$cwd" != */curriculum/* ]]; then
+  # Not a V7 module writer dir; skip to avoid pollution.
   # Lanes should ensure proper cwd or use .agent/tmp/ for scratch.
   exit 0
 fi
