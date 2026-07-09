@@ -41,6 +41,8 @@ service-account*.json
 # Cursor IDE local state — keep project-level mcp.json committed (parallel to .mcp.json)
 .cursor/*
 !.cursor/mcp.json
+!.cursor/rules/
+!.cursor/rules/**
 
 # Stale build-orchestration scratchpad — load-bearing artifacts auto-commit to build/<level>/<slug>-<stamp> branches per #M-10 (PR #1952). Anything lingering in main worktree is pre-#1952 leftover state.
 curriculum/l2-uk-en/_orchestration/

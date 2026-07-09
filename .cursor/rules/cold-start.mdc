@@ -1,0 +1,31 @@
+---
+description: 200k-context cold start — Monitor API live state only; skip duplicate rules
+alwaysApply: true
+---
+
+# Cold start (Cursor · 200k)
+
+**At session start, before other work:**
+
+```bash
+.venv/bin/python scripts/cursor_cold_start.py
+```
+
+## Do not fetch at boot
+
+- `/api/rules` — `AGENTS.md` + `CLAUDE.md` already in workspace rules (~50k tokens)
+- `/api/session/current?agent=orchestrator` — wrong agent lane
+- `context_canary.py mint` — 1M orchestrator only
+- `Read` on `CLAUDE.md`, `AGENTS.md`, `memory/MEMORY.md`
+
+## Fetch on demand
+
+| Need | Call |
+| --- | --- |
+| Fleet inbox | `/api/comms/inbox?agent=cursor` |
+| Dispatches | `/api/delegate/active` |
+| Track state | `/api/state/summary` |
+| One module | `/api/state/module/{track}/slug/{slug}` |
+| After commit | `/api/orient?fresh=true` |
+
+Protocol: `agents_extensions/cursor/rules/cold-start.md`
