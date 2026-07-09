@@ -74,7 +74,7 @@ def test_discuss_detects_post_round_write_and_marks_violation(
     capsys: pytest.CaptureFixture[str],
 ) -> None:
     def fake_invoke(agent_name: str, prompt: str, **kwargs):
-        assert agent_name == "gemini"
+        assert agent_name == "claude"
         assert kwargs["mode"] == "read-only"
         assert kwargs["tool_config"]["discussion_readonly"] is True
         (isolated_bridge / "agent-write.txt").write_text("bad\n", encoding="utf-8")
@@ -84,23 +84,23 @@ def test_discuss_detects_post_round_write_and_marks_violation(
     args = SimpleNamespace(
         channel="architecture",
         body="Discuss without editing files.",
-        with_agents="gemini",
+        with_agents="claude",
         max_rounds=1,
         review=False,
     )
 
     assert _channels_cli._handle_discuss(args) == 1
     captured = capsys.readouterr()
-    assert "READ_ONLY_VIOLATION: gemini" in captured.err
-    assert "READ_ONLY_VIOLATION: gemini" in captured.out
+    assert "READ_ONLY_VIOLATION: claude" in captured.err
+    assert "READ_ONLY_VIOLATION: claude" in captured.out
     assert "agent-write.txt" in captured.err
 
     messages = _channels.read("architecture", tail=10)
     warning = messages[-1]
     assert warning["kind"] == "system"
     assert warning["body"].startswith("⚠️ READ-ONLY DISCUSSION VIOLATION")
-    assert "READ_ONLY_VIOLATION: gemini" in warning["body"]
-    assert not any(message["from_agent"] == "gemini" for message in messages)
+    assert "READ_ONLY_VIOLATION: claude" in warning["body"]
+    assert not any(message["from_agent"] == "claude" for message in messages)
 
 
 def test_discuss_posts_normal_reply_when_worktree_is_unchanged(

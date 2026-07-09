@@ -19,12 +19,17 @@ from agent_runtime.telemetry import (
 from agent_runtime.usage import _reset_rate_limit_cache_for_tests
 
 
-def test_resolve_dispatch_start_telemetry_uses_codex_config(tmp_path, monkeypatch):
+def test_resolve_dispatch_start_telemetry_codex_model_from_registry_effort_from_config(tmp_path, monkeypatch):
+    """Model must record what the adapter actually sends (registry default),
+    NOT the user's config.toml — the adapter always passes an explicit ``-m``.
+    Effort genuinely falls through to config.toml, so it stays config-sourced.
+    Regression: 2026-07-09 state files recorded config.toml's gpt-5.6-sol while
+    the CLI ran -m gpt-5.6-terra."""
     home = tmp_path / "home"
     codex_dir = home / ".codex"
     codex_dir.mkdir(parents=True)
     (codex_dir / "config.toml").write_text(
-        'model = "gpt-5.5"\nmodel_reasoning_effort = "high"\n',
+        'model = "gpt-5.6-sol"\nmodel_reasoning_effort = "high"\n',
         encoding="utf-8",
     )
     monkeypatch.setattr("agent_runtime.telemetry.Path.home", lambda: home)
@@ -36,9 +41,29 @@ def test_resolve_dispatch_start_telemetry_uses_codex_config(tmp_path, monkeypatc
             requested_effort=None,
         )
 
-    assert telemetry.model == "gpt-5.5"
-    assert telemetry.effort == "high"
+    from agent_runtime.registry import AGENTS
+
+    assert telemetry.model == AGENTS["codex"]["default_model"]  # what -m actually sends
+    assert telemetry.model != "gpt-5.6-sol"  # never the config.toml value
+    assert telemetry.effort == "high"  # effort DOES fall through to config.toml
     assert telemetry.cli_version == "0.123.0"
+
+
+def test_resolve_dispatch_start_telemetry_codex_explicit_model_wins(tmp_path, monkeypatch):
+    home = tmp_path / "home"
+    (home / ".codex").mkdir(parents=True)
+    (home / ".codex" / "config.toml").write_text('model = "gpt-5.6-sol"\n', encoding="utf-8")
+    monkeypatch.setattr("agent_runtime.telemetry.Path.home", lambda: home)
+
+    with patch("agent_runtime.telemetry.codex_cli_version", return_value="0.123.0"):
+        telemetry = resolve_dispatch_start_telemetry(
+            agent_name="codex",
+            requested_model="gpt-5.6-luna",
+            requested_effort="medium",
+        )
+
+    assert telemetry.model == "gpt-5.6-luna"
+    assert telemetry.effort == "medium"
 
 
 def test_resolve_invocation_telemetry_reads_claude_plan_flags():
@@ -94,21 +119,29 @@ def test_runner_invoke_returns_resolved_telemetry(tmp_path):
     fake_proc.returncode = 0
     fake_proc.stdin = None
 
-    with patch("agent_runtime.runner._load_adapter", return_value=spy_adapter), patch(
-        "agent_runtime.runner.has_headroom",
-        return_value=(True, ""),
-    ), patch("agent_runtime.runner.write_record"), patch(
-        "agent_runtime.runner.subprocess.Popen",
-        return_value=fake_proc,
-    ), patch(
-        "agent_runtime.runner.start_watchdog",
-        return_value=(MagicMock(stdout_lines=[], stderr_lines=[]), []),
-    ), patch("agent_runtime.runner.stop_watchdog"), patch(
-        "agent_runtime.runner.resolve_invocation_telemetry",
-        return_value=runner_mod.InvocationTelemetry(
-            model="gpt-5.5",
-            effort="high",
-            cli_version="0.123.0",
+    with (
+        patch("agent_runtime.runner._load_adapter", return_value=spy_adapter),
+        patch(
+            "agent_runtime.runner.has_headroom",
+            return_value=(True, ""),
+        ),
+        patch("agent_runtime.runner.write_record"),
+        patch(
+            "agent_runtime.runner.subprocess.Popen",
+            return_value=fake_proc,
+        ),
+        patch(
+            "agent_runtime.runner.start_watchdog",
+            return_value=(MagicMock(stdout_lines=[], stderr_lines=[]), []),
+        ),
+        patch("agent_runtime.runner.stop_watchdog"),
+        patch(
+            "agent_runtime.runner.resolve_invocation_telemetry",
+            return_value=runner_mod.InvocationTelemetry(
+                model="gpt-5.5",
+                effort="high",
+                cli_version="0.123.0",
+            ),
         ),
     ):
         result = invoke(
@@ -164,21 +197,29 @@ def test_runner_usage_record_includes_correlation_ids_without_prompt_change(
         captured_env.update(kwargs.get("env") or {})
         return fake_proc
 
-    with patch("agent_runtime.runner._load_adapter", return_value=spy_adapter), patch(
-        "agent_runtime.runner.has_headroom",
-        return_value=(True, ""),
-    ), patch("agent_runtime.runner.write_record", side_effect=captured_records.append), patch(
-        "agent_runtime.runner.subprocess.Popen",
-        side_effect=fake_popen,
-    ), patch(
-        "agent_runtime.runner.start_watchdog",
-        return_value=(MagicMock(stdout_lines=[], stderr_lines=[]), []),
-    ), patch("agent_runtime.runner.stop_watchdog"), patch(
-        "agent_runtime.runner.resolve_invocation_telemetry",
-        return_value=runner_mod.InvocationTelemetry(
-            model="gpt-5.5",
-            effort="high",
-            cli_version="0.123.0",
+    with (
+        patch("agent_runtime.runner._load_adapter", return_value=spy_adapter),
+        patch(
+            "agent_runtime.runner.has_headroom",
+            return_value=(True, ""),
+        ),
+        patch("agent_runtime.runner.write_record", side_effect=captured_records.append),
+        patch(
+            "agent_runtime.runner.subprocess.Popen",
+            side_effect=fake_popen,
+        ),
+        patch(
+            "agent_runtime.runner.start_watchdog",
+            return_value=(MagicMock(stdout_lines=[], stderr_lines=[]), []),
+        ),
+        patch("agent_runtime.runner.stop_watchdog"),
+        patch(
+            "agent_runtime.runner.resolve_invocation_telemetry",
+            return_value=runner_mod.InvocationTelemetry(
+                model="gpt-5.5",
+                effort="high",
+                cli_version="0.123.0",
+            ),
         ),
     ):
         result = invoke(

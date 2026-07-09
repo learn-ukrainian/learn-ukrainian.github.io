@@ -58,6 +58,10 @@ from ._opencode import (
 )
 
 _CALLER_IDENTITY_ENV_HINTS = (
+    # Order mirrors _detect_caller_identity_from_env; SESSION_HANDOFF_AGENT is
+    # checked FIRST there — omitting it here left the "Cannot infer sender"
+    # hint incomplete and let launcher-exported identity leak into tests.
+    "SESSION_HANDOFF_AGENT",
     "CLAUDE_AGENT_NAME",
     "CODEX_SESSION",
     "CLAUDE_PROJECT_DIR",
@@ -79,6 +83,13 @@ def _map_legacy_gemini_model_to_agy(model: str | None) -> str | None:
 
 def _detect_caller_identity_from_env() -> str | None:
     """Infer the sending agent for legacy ask-* commands from wrapper env."""
+    from ._channels import VALID_AGENTS
+
+    handoff_agent = os.environ.get("SESSION_HANDOFF_AGENT")
+    if handoff_agent:
+        normalized = handoff_agent.strip().lower()
+        if normalized in VALID_AGENTS:
+            return normalized
     claude_name = os.environ.get("CLAUDE_AGENT_NAME")
     if claude_name:
         return claude_name.strip().lower()

@@ -36,6 +36,7 @@ from .rules_router import _matches_etag  # shared ETag parser
 from .telemetry.response import (
     add_json_telemetry,
     append_telemetry_footer,
+    session_id_from_request,
     telemetry_footer_enabled,
 )
 
@@ -87,10 +88,7 @@ def _read_session_file(session_path: str) -> str:
     if not path.is_file():
         raise HTTPException(
             status_code=404,
-            detail=(
-                f"Session state file not found at {session_path}. "
-                "Create it with the current task's context."
-            ),
+            detail=(f"Session state file not found at {session_path}. Create it with the current task's context."),
         )
     try:
         return path.read_text(encoding="utf-8")
@@ -149,9 +147,7 @@ def _resolve_session_path(agent: str) -> str:
         # serve Codex UI the durable orchestrator state directly. Thread
         # bootstrap prompts separately name the current.orchestrator.md pointer
         # because that is the stable local file agents should read first.
-        ORCHESTRATOR_HANDOFF_PATH
-        if agent == "codex"
-        else f"docs/session-state/current.{agent}.md"
+        ORCHESTRATOR_HANDOFF_PATH if agent == "codex" else f"docs/session-state/current.{agent}.md"
     )
     if not router_path.is_file():
         return agent_default
@@ -209,15 +205,9 @@ def _assemble_session(agent: str = DEFAULT_SESSION_AGENT) -> tuple[str, dict, st
     handoffs = _recent_handoff_paths()
 
     if handoffs:
-        handoff_block = "\n".join(
-            f"- `{rel}`" for rel in handoffs
-        )
+        handoff_block = "\n".join(f"- `{rel}`" for rel in handoffs)
         markdown = (
-            current_md
-            + "\n---\n\n"
-            + "## Recent session-state files (for deeper context)\n\n"
-            + handoff_block
-            + "\n"
+            current_md + "\n---\n\n" + "## Recent session-state files (for deeper context)\n\n" + handoff_block + "\n"
         )
     else:
         markdown = current_md
@@ -252,6 +242,7 @@ def session_current(
     """
     markdown, sections, digest = _assemble_session(agent)
     etag = f'"{digest}"'
+    session_id = session_id_from_request(request)
 
     if not telemetry_footer_enabled() and _matches_etag(request.headers.get("If-None-Match"), digest):
         return Response(
@@ -261,17 +252,20 @@ def session_current(
 
     if format == "json":
         return JSONResponse(
-            content=add_json_telemetry({
-                "hash": digest,
-                "bytes": len(markdown.encode("utf-8")),
-                "sections": sections,
-                "markdown": markdown,
-            }),
+            content=add_json_telemetry(
+                {
+                    "hash": digest,
+                    "bytes": len(markdown.encode("utf-8")),
+                    "sections": sections,
+                    "markdown": markdown,
+                },
+                session_id=session_id,
+            ),
             headers=_cache_headers(etag, digest),
         )
 
     return PlainTextResponse(
-        content=append_telemetry_footer(markdown),
+        content=append_telemetry_footer(markdown, session_id),
         media_type="text/markdown; charset=utf-8",
         headers=_cache_headers(etag, digest),
     )

@@ -22,7 +22,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-from fastapi import FastAPI, HTTPException, Request, WebSocket, WebSocketDisconnect
+from fastapi import FastAPI, HTTPException, Query, Request, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
 
@@ -76,7 +76,7 @@ from .session_router import router as session_router
 from .site_router import router as site_router
 from .state_helpers import cache_get, cache_invalidate, cache_set
 from .state_router import router as state_router
-from .telemetry.response import add_json_telemetry
+from .telemetry.response import add_json_telemetry, session_id_from_request
 from .telemetry_router import router as telemetry_router
 from .wiki_router import router as wiki_router
 from .worktrees_router import router as worktrees_router
@@ -236,6 +236,8 @@ ORIENT_SECTION_SOURCES: dict[str, str] = {
 
 ORIENT_SECTION_HARD_TIMEOUT_S = 5.0
 
+ORIENT_SECTION_KEYS: tuple[str, ...] = tuple(ORIENT_SECTION_TTLS.keys())
+
 # Orient sync collectors use a dedicated executor instead of the loop's
 # shared default pool. This isolates cheap orient reads from unrelated
 # ``asyncio.to_thread()`` backlog elsewhere in the process, which was
@@ -354,7 +356,7 @@ def _collect_issues_orient_data() -> dict:
         ],
         # /api/orient is part of dashboard cold load. Issue details are useful,
         # but not important enough to let a slow gh/network path dominate it.
-        timeout=0.25,
+        timeout=5.0,
     )
 
     if proc.returncode != 0:
@@ -371,12 +373,14 @@ def _collect_issues_orient_data() -> dict:
     for item in payload:
         created = _parse_iso_datetime(item.get("createdAt"))
         labels = item.get("labels") or []
-        issues.append({
-            "number": item.get("number"),
-            "title": item.get("title"),
-            "labels": [label.get("name") for label in labels if isinstance(label, dict) and label.get("name")],
-            "age_days": max(0, (now.date() - created.date()).days) if created else None,
-        })
+        issues.append(
+            {
+                "number": item.get("number"),
+                "title": item.get("title"),
+                "labels": [label.get("name") for label in labels if isinstance(label, dict) and label.get("name")],
+                "age_days": max(0, (now.date() - created.date()).days) if created else None,
+            }
+        )
     return {"issues": issues}
 
 
@@ -449,10 +453,7 @@ def _collect_wiki_orient_data() -> dict:
             # Mirror _resolve_article: prefer domain-matching candidates,
             # fall back to any candidate. Take the lexicographically-first
             # path within the chosen group, then check it actually exists.
-            domain_matches = [
-                c for c in slug_cands
-                if wiki_api._matches_track_domain(track, c["path"])
-            ]
+            domain_matches = [c for c in slug_cands if wiki_api._matches_track_domain(track, c["path"])]
             chosen = sorted(
                 domain_matches or slug_cands,
                 key=lambda item: item["path"],
@@ -565,14 +566,17 @@ def _collect_session_hints_orient_data() -> list[dict]:
         return []
     hints = []
     for path in sorted(SESSION_STATE_DIR.glob("*.md"), reverse=True)[:10]:
-        hints.append({
-            "file": str(path.relative_to(PROJECT_ROOT)),
-            "first_line": _first_non_empty_line(path),
-        })
+        hints.append(
+            {
+                "file": str(path.relative_to(PROJECT_ROOT)),
+                "first_line": _first_non_empty_line(path),
+            }
+        )
     return hints
 
 
 # ==================== SHARED ENDPOINTS ====================
+
 
 @app.get("/api/health")
 async def health_check():
@@ -668,54 +672,34 @@ async def _cached_orient_section(
     return value, meta
 
 
-@app.get("/api/orient")
-async def orient(fresh: bool = False):
-    """One-shot agent orientation.
+def _parse_orient_sections(sections_param: str | None) -> list[str]:
+    """Validate and expand the optional ``sections`` query param."""
+    if sections_param is None:
+        return list(ORIENT_SECTION_KEYS)
+    keys = [part.strip() for part in sections_param.split(",") if part.strip()]
+    if not keys:
+        return list(ORIENT_SECTION_KEYS)
+    unknown = [key for key in keys if key not in ORIENT_SECTION_TTLS]
+    if unknown:
+        valid = ", ".join(ORIENT_SECTION_KEYS)
+        raise HTTPException(
+            status_code=400,
+            detail=f"Unknown orient section(s): {', '.join(unknown)}. Valid keys: {valid}",
+        )
+    return keys
 
-    Query params:
-        fresh: if true, invalidate every ``orient_*`` cache entry before
-            gathering. Use it when an agent just committed, renamed a
-            file, or otherwise needs to see a change it made moments
-            ago without waiting for the longest section TTL (up to
-            120 s for ``issues``/``wiki``). Reviewer BLOCKER B3 / #1309.
-    """
-    if fresh:
-        cache_invalidate("orient_")
 
-    (
-        (git_info, git_meta),
-        (issues_info, issues_meta),
-        (pipeline_info, pipeline_meta),
-        (runtime_info, runtime_meta),
-        (delegate_info, delegate_meta),
-        (bridge_pending_info, bridge_pending_meta),
-        (wiki_info, wiki_meta),
-        (governance_info, governance_meta),
-        (health_info, health_meta),
-        (session_hints, session_hints_meta),
-    ) = await asyncio.gather(
-        _cached_orient_section("git", _collect_git_orient_data, {}),
-        _cached_orient_section("issues", _collect_issues_orient_data, {"issues": []}),
-        _cached_orient_section(
-            "pipeline",
-            _collect_pipeline_orient_data,
-            {"summary": {}},
-            is_async=True,
-        ),
-        _cached_orient_section("runtime", _collect_runtime_orient_data, {}),
-        _cached_orient_section(
-            "delegate",
-            _collect_delegate_orient_data,
-            {"active_count": 0, "recent": []},
-        ),
-        _cached_orient_section(
-            "bridge_pending",
-            _collect_bridge_pending_orient_data,
-            {},
-        ),
-        _cached_orient_section("wiki", _collect_wiki_orient_data, {"by_track": {}}),
-        _cached_orient_section(
-            "governance",
+def _orient_section_specs() -> dict[str, tuple[Callable[..., Any], Any, bool]]:
+    """Return orient collector specs using live module attributes (test-friendly)."""
+    return {
+        "git": (_collect_git_orient_data, {}, False),
+        "issues": (_collect_issues_orient_data, {"issues": []}, False),
+        "pipeline": (_collect_pipeline_orient_data, {"summary": {}}, True),
+        "runtime": (_collect_runtime_orient_data, {}, False),
+        "delegate": (_collect_delegate_orient_data, {"active_count": 0, "recent": []}, False),
+        "bridge_pending": (_collect_bridge_pending_orient_data, {}, False),
+        "wiki": (_collect_wiki_orient_data, {"by_track": {}}, False),
+        "governance": (
             _collect_governance_orient_data,
             {
                 "decisions_total": 0,
@@ -725,63 +709,96 @@ async def orient(fresh: bool = False):
                 "adrs_warnings": 0,
                 "adrs_errors": 0,
             },
+            False,
         ),
-        _cached_orient_section("health", _collect_health_orient_data, {"api": True}),
-        _cached_orient_section("session_hints", _collect_session_hints_orient_data, []),
-    )
-
-    section_metas = {
-        "git": git_meta,
-        "issues": issues_meta,
-        "pipeline": pipeline_meta,
-        "runtime": runtime_meta,
-        "delegate": delegate_meta,
-        "bridge_pending": bridge_pending_meta,
-        "wiki": wiki_meta,
-        "governance": {**governance_meta, **governance_info},
-        "health": health_meta,
-        "session_hints": session_hints_meta,
+        "health": (_collect_health_orient_data, {"api": True}, False),
+        "session_hints": (_collect_session_hints_orient_data, [], False),
     }
 
-    # Top-level ``generated_at`` is the FLOOR across sections, not the
-    # request time. On a full cache hit it reflects the oldest piece of
-    # data the caller is looking at; on an all-miss it equals the
-    # collector timestamp (which is also "now"). Reviewer CONCERN C1 /
-    # #1309: request-time was misleading consumers into thinking a
-    # 119-s-old payload was fresh.
-    generated_candidates: list[str] = [
-        ts for m in section_metas.values()
-        if isinstance(ts := m.get("generated_at"), str)
-    ]
-    top_generated_at = (
-        min(generated_candidates) if generated_candidates
-        else _isoformat_z(datetime.now(UTC))
+
+@app.get("/api/orient")
+async def orient(
+    request: Request,
+    fresh: bool = False,
+    sections: str | None = Query(
+        None,
+        description="Comma-separated subset of orient sections to collect.",
+    ),
+):
+    """One-shot agent orientation.
+
+    Query params:
+        fresh: if true, invalidate every ``orient_*`` cache entry before
+            gathering. Use it when an agent just committed, renamed a
+            file, or otherwise needs to see a change it made moments
+            ago without waiting for the longest section TTL (up to
+            120 s for ``issues``/``wiki``). Reviewer BLOCKER B3 / #1309.
+        sections: comma-separated list of section keys to collect. Unknown
+            keys return 400. Omitted = full payload (back-compat).
+    """
+    if fresh:
+        cache_invalidate("orient_")
+
+    selected = _parse_orient_sections(sections)
+    section_specs = _orient_section_specs()
+    gather_results = await asyncio.gather(
+        *[
+            _cached_orient_section(
+                key,
+                collector,
+                fallback,
+                is_async=is_async,
+            )
+            for key, (collector, fallback, is_async) in section_specs.items()
+            if key in selected
+        ]
     )
+
+    section_data: dict[str, Any] = {}
+    section_metas: dict[str, dict[str, Any]] = {}
+    for key, (value, meta) in zip(selected, gather_results, strict=True):
+        section_data[key] = value
+        section_metas[key] = meta
+
+    generated_candidates: list[str] = [
+        ts for m in section_metas.values() if isinstance(ts := m.get("generated_at"), str)
+    ]
+    top_generated_at = min(generated_candidates) if generated_candidates else _isoformat_z(datetime.now(UTC))
 
     response: dict[str, Any] = {
         "generated_at": top_generated_at,
-        "git": git_info,
-        "issues": issues_info.get("issues", []) if isinstance(issues_info, dict) else [],
-        "pipeline": pipeline_info,
-        "runtime": runtime_info,
-        "delegate": delegate_info,
-        "bridge_pending": bridge_pending_info,
-        "wiki": wiki_info,
-        "governance": governance_info,
-        "health": health_info,
-        "session_hints": session_hints,
         "meta": section_metas,
     }
 
-    # ``_collect_issues_orient_data`` raises on failure now. The error
-    # branch of ``_cached_orient_section`` writes the short
-    # ``str(exc)`` form into the fallback payload and the richer
-    # ``TypeName: msg`` form into meta. Keep the top-level
-    # ``issues_error`` key on the short form for back-compat with
-    # clients that were reading it before per-section meta existed.
-    if isinstance(issues_info, dict) and issues_info.get("error"):
-        response["issues_error"] = issues_info["error"]
-    return add_json_telemetry(response)
+    if "git" in section_data:
+        response["git"] = section_data["git"]
+    if "issues" in section_data:
+        issues_info = section_data["issues"]
+        response["issues"] = issues_info.get("issues", []) if isinstance(issues_info, dict) else []
+    if "pipeline" in section_data:
+        response["pipeline"] = section_data["pipeline"]
+    if "runtime" in section_data:
+        response["runtime"] = section_data["runtime"]
+    if "delegate" in section_data:
+        response["delegate"] = section_data["delegate"]
+    if "bridge_pending" in section_data:
+        response["bridge_pending"] = section_data["bridge_pending"]
+    if "wiki" in section_data:
+        response["wiki"] = section_data["wiki"]
+    if "governance" in section_data:
+        governance_info = section_data["governance"]
+        response["governance"] = governance_info
+        section_metas["governance"] = {**section_metas["governance"], **governance_info}
+    if "health" in section_data:
+        response["health"] = section_data["health"]
+    if "session_hints" in section_data:
+        response["session_hints"] = section_data["session_hints"]
+
+    if "issues" in section_data:
+        issues_info = section_data["issues"]
+        if isinstance(issues_info, dict) and issues_info.get("error"):
+            response["issues_error"] = issues_info["error"]
+    return add_json_telemetry(response, session_id=session_id_from_request(request))
 
 
 @app.get("/api/config")
@@ -789,6 +806,7 @@ async def get_config():
     # Import pipeline phase config — single source of truth
     try:
         from scripts.build.phase_constants import PHASE_LABELS, PHASES
+
         pipeline_info = {"phases": PHASES, "phase_labels": PHASE_LABELS}
     except ImportError:
         pipeline_info = {}
@@ -821,11 +839,13 @@ async def get_active_orchestration():
                 if f.is_file():
                     latest_mtime = max(latest_mtime, f.stat().st_mtime)
             if (datetime.now().timestamp() - latest_mtime) < 900:
-                active.append({
-                    "slug": module_dir.name,
-                    "track": track_dir.name,
-                    "seconds_ago": int(datetime.now().timestamp() - latest_mtime),
-                })
+                active.append(
+                    {
+                        "slug": module_dir.name,
+                        "track": track_dir.name,
+                        "seconds_ago": int(datetime.now().timestamp() - latest_mtime),
+                    }
+                )
     return active
 
 
@@ -896,6 +916,7 @@ async def get_dispatcher_logs(lines: int = 50):
 
 # ==================== WEBSOCKET ====================
 
+
 @app.websocket("/ws/batch")
 async def batch_websocket(websocket: WebSocket):
     await websocket.accept()
@@ -944,6 +965,7 @@ async def serve_image(path: str):
 
 
 # ==================== STATIC FILES (MUST BE LAST) ====================
+
 
 @app.get("/{path:path}")
 async def serve_static(path: str):

@@ -68,11 +68,13 @@ from ._prompts import review_protocol_prefix
 class StaleClaimError(Exception):
     """Raised when updating a delivery fails due to mismatched attempt count or status."""
 
+
 # ── Constants ──────────────────────────────────────────────────────────
 
 VALID_AGENTS = (
     "agy",
     "claude",
+    "claude-infra",
     "gemini",
     "codex",
     "grok",
@@ -116,12 +118,8 @@ SHARED_CHANNEL = "shared"
 # Root directory for channel context files. In-repo, git-tracked,
 # reviewable — context drift becomes a first-class commit history.
 # Each channel gets its own subdirectory: docs/agent-channels/{channel}/
-CONTEXT_ROOT = Path(
-    os.environ.get("AB_CONTEXT_DIR", str(REPO_ROOT / "docs" / "agent-channels"))
-)
-WAKE_ROOT = Path(
-    os.environ.get("AB_WAKE_DIR", str(REPO_ROOT / ".agent" / "wake"))
-)
+CONTEXT_ROOT = Path(os.environ.get("AB_CONTEXT_DIR", str(REPO_ROOT / "docs" / "agent-channels")))
+WAKE_ROOT = Path(os.environ.get("AB_WAKE_DIR", str(REPO_ROOT / ".agent" / "wake")))
 
 # Monitor API endpoint for dynamic project state.
 # See docs/MONITOR-API.md. Short timeout because the API is on the same
@@ -130,9 +128,7 @@ WAKE_ROOT = Path(
 # works without env setup. Projects without a Monitor API get a graceful
 # 2-second timeout + None return (fetch_monitor_state already handles this).
 # Override with AB_MONITOR_URL="" to disable explicitly.
-MONITOR_API_URL = os.environ.get(
-    "AB_MONITOR_URL", "http://localhost:8765/api/state/summary"
-)
+MONITOR_API_URL = os.environ.get("AB_MONITOR_URL", "http://localhost:8765/api/state/summary")
 MONITOR_FETCH_TIMEOUT_S = 2.0
 
 # Character budget for message history when building an agent prompt.
@@ -188,39 +184,27 @@ def context_sha256(path: Path) -> str:
 
 def _validate_agent(agent: str) -> None:
     if agent not in VALID_AGENTS:
-        raise ValueError(
-            f"Unknown agent '{agent}'. Expected one of {VALID_AGENTS}."
-        )
+        raise ValueError(f"Unknown agent '{agent}'. Expected one of {VALID_AGENTS}.")
 
 
 def _validate_post_agent(agent: str) -> None:
     if agent not in VALID_POST_AGENTS:
-        raise ValueError(
-            f"Unknown agent '{agent}'. Expected one of {VALID_POST_AGENTS}."
-        )
+        raise ValueError(f"Unknown agent '{agent}'. Expected one of {VALID_POST_AGENTS}.")
 
 
 def _validate_recipient_agent(agent: str) -> None:
     if agent not in VALID_RECIPIENT_AGENTS:
-        raise ValueError(
-            f"Unknown delivery target '{agent}'. "
-            f"Expected one of {VALID_RECIPIENT_AGENTS}."
-        )
+        raise ValueError(f"Unknown delivery target '{agent}'. Expected one of {VALID_RECIPIENT_AGENTS}.")
 
 
 def _validate_kind(kind: str) -> None:
     if kind not in VALID_KINDS:
-        raise ValueError(
-            f"Unknown kind '{kind}'. Expected one of {VALID_KINDS}."
-        )
+        raise ValueError(f"Unknown kind '{kind}'. Expected one of {VALID_KINDS}.")
 
 
 def _validate_error_kind(error_kind: str) -> None:
     if error_kind not in VALID_DELIVERY_ERROR_KINDS:
-        raise ValueError(
-            f"Unknown delivery error kind '{error_kind}'. "
-            f"Expected one of {VALID_DELIVERY_ERROR_KINDS}."
-        )
+        raise ValueError(f"Unknown delivery error kind '{error_kind}'. Expected one of {VALID_DELIVERY_ERROR_KINDS}.")
 
 
 def _touch_wake_file(agent: str) -> None:
@@ -354,9 +338,7 @@ def load_channel_context(
     try:
         own_body = ctx_path.read_text("utf-8")
         if own_body.strip():
-            parts.append(
-                f"--- context: {channel} (sha256: {rev[:12]}) ---\n{own_body.rstrip()}\n"
-            )
+            parts.append(f"--- context: {channel} (sha256: {rev[:12]}) ---\n{own_body.rstrip()}\n")
     except (OSError, FileNotFoundError):
         missing.append(channel)
 
@@ -520,9 +502,7 @@ def build_agent_prompt(
         history_label = f"thread {thread_id[:12]}"
     else:
         raw_history = read(channel, tail=history_tail)
-        kept, dropped = truncate_history_by_budget(
-            raw_history, max_chars=max_history_chars
-        )
+        kept, dropped = truncate_history_by_budget(raw_history, max_chars=max_history_chars)
         history_label = f"last {len(kept)} messages in {channel}"
     history_text = ""
     if kept:
@@ -530,10 +510,7 @@ def build_agent_prompt(
         if dropped:
             lines.append(f"... [{dropped} older messages omitted] ...")
         for msg in kept:
-            lines.append(
-                f"[{msg['created_at'][:19]}] {msg['from_agent']} "
-                f"(round {msg['round_index']}): {msg['body']}"
-            )
+            lines.append(f"[{msg['created_at'][:19]}] {msg['from_agent']} (round {msg['round_index']}): {msg['body']}")
         history_text = "\n".join(lines) + "\n"
 
     # 4. The new post body
@@ -580,11 +557,7 @@ def build_agent_prompt(
                 monitor_state = None
             else:
                 # Drop monitor + pinned context, keep history + body.
-                prompt_thread_only = "\n".join(
-                    s
-                    for s in [review_text, history_text, body_text]
-                    if s.strip()
-                )
+                prompt_thread_only = "\n".join(s for s in [review_text, history_text, body_text] if s.strip())
                 if len(prompt_thread_only) <= max_prompt_chars:
                     prompt = prompt_thread_only
                     monitor_state = None
@@ -626,11 +599,7 @@ def build_agent_prompt(
             # budget, that's a caller error — raise.
             body_len = len(body_text)
             if body_len + len(review_text) > max_prompt_chars:
-                size_label = (
-                    "review prefix + post body"
-                    if review_text
-                    else "post body alone"
-                )
+                size_label = "review prefix + post body" if review_text else "post body alone"
                 raise ValueError(
                     f"{size_label} is {body_len + len(review_text)} chars, "
                     f"exceeds max_prompt_chars={max_prompt_chars}. "
@@ -704,9 +673,7 @@ def create_channel(
     if not name or not name.strip():
         raise ValueError("channel name cannot be empty")
     if name != name.strip().lower().replace(" ", "-"):
-        raise ValueError(
-            f"channel name must be lowercase-kebab-case; got '{name}'"
-        )
+        raise ValueError(f"channel name must be lowercase-kebab-case; got '{name}'")
 
     include = include or []
     subscribers = subscribers or []
@@ -716,8 +683,7 @@ def create_channel(
     conn = get_db()
     try:
         existing = conn.execute(
-            "SELECT name, description, include, subscribers, created_at, max_age_hours "
-            "FROM channels WHERE name = ?",
+            "SELECT name, description, include, subscribers, created_at, max_age_hours FROM channels WHERE name = ?",
             (name,),
         ).fetchone()
         if existing:
@@ -755,8 +721,7 @@ def get_channel(name: str) -> dict[str, Any] | None:
     conn = get_db()
     try:
         row = conn.execute(
-            "SELECT name, description, include, subscribers, created_at, max_age_hours "
-            "FROM channels WHERE name = ?",
+            "SELECT name, description, include, subscribers, created_at, max_age_hours FROM channels WHERE name = ?",
             (name,),
         ).fetchone()
         return _row_to_channel(row) if row else None
@@ -897,14 +862,13 @@ def post(
     if verify_citations and kind in {"post", "reply"}:
         try:
             from . import _citation_check
+
             check = _citation_check.check_and_annotate(body)
             body = check.annotated_body
             if check.has_unverified:
                 import sys as _sys
-                names = ", ".join(
-                    f"{v.citation.source_label}({v.citation.headword or '?'})"
-                    for v in check.unverified
-                )
+
+                names = ", ".join(f"{v.citation.source_label}({v.citation.headword or '?'})" for v in check.unverified)
                 print(
                     f"⚠️  channel-bridge: {len(check.unverified)} "
                     f"unverified citation(s) from {from_agent} → "
@@ -915,6 +879,7 @@ def post(
             # Never fail a post because the verifier broke. Log and
             # continue with the un-annotated body.
             import sys as _sys
+
             print(
                 f"⚠️  channel-bridge: citation-check raised {type(exc).__name__}: "
                 f"{exc} — committing post without annotation",
@@ -935,6 +900,7 @@ def post(
             # non-blocker #1 in the B.1 review (task bridge-b1-review).
             if not context_rev_shared and channel != SHARED_CHANNEL:
                 import sys as _sys
+
                 print(
                     f"⚠️  channel-bridge: shared context file is missing at "
                     f"{shared_path} — agent will post without project-wide "
@@ -942,9 +908,7 @@ def post(
                     file=_sys.stderr,
                 )
         if context_rev_channel is None:
-            context_rev_channel = context_sha256(
-                channel_context_path(channel)
-            )
+            context_rev_channel = context_sha256(channel_context_path(channel))
         if monitor_state_snapshot is None:
             # Best-effort — returns None on any failure, which is fine.
             monitor_state_snapshot = fetch_monitor_state()
@@ -957,9 +921,7 @@ def post(
     message_id = _new_id()
     created_at = _now_iso()
     attachments_json = json.dumps(attachments) if attachments else None
-    monitor_json = (
-        json.dumps(monitor_state_snapshot) if monitor_state_snapshot else None
-    )
+    monitor_json = json.dumps(monitor_state_snapshot) if monitor_state_snapshot else None
 
     conn = get_db()
     try:
@@ -975,9 +937,7 @@ def post(
 
         # Verify the channel exists before inserting — the FK would
         # catch it, but an explicit check gives a better error message.
-        ch = conn.execute(
-            "SELECT name FROM channels WHERE name = ?", (channel,)
-        ).fetchone()
+        ch = conn.execute("SELECT name FROM channels WHERE name = ?", (channel,)).fetchone()
         if not ch:
             raise ValueError(f"channel '{channel}' does not exist")
 
@@ -1012,10 +972,21 @@ def post(
             ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
             (
-                message_id, channel, thread_id, parent_id, correlation_id,
-                round_index, from_agent, from_model, kind, body,
-                attachments_json, context_rev_shared, context_rev_channel,
-                monitor_json, created_at,
+                message_id,
+                channel,
+                thread_id,
+                parent_id,
+                correlation_id,
+                round_index,
+                from_agent,
+                from_model,
+                kind,
+                body,
+                attachments_json,
+                context_rev_shared,
+                context_rev_channel,
+                monitor_json,
+                created_at,
             ),
         )
 
@@ -1155,17 +1126,11 @@ def _row_to_message(row) -> dict[str, Any]:
         "from_model": row["from_model"],
         "kind": row["kind"],
         "body": redact_text(row["body"]) or "",
-        "attachments": (
-            redact_value(json.loads(row["attachments"]))
-            if row["attachments"]
-            else None
-        ),
+        "attachments": (redact_value(json.loads(row["attachments"])) if row["attachments"] else None),
         "context_rev_shared": row["context_rev_shared"],
         "context_rev_channel": row["context_rev_channel"],
         "monitor_state_snapshot": (
-            redact_value(json.loads(row["monitor_state_snapshot"]))
-            if row["monitor_state_snapshot"]
-            else None
+            redact_value(json.loads(row["monitor_state_snapshot"])) if row["monitor_state_snapshot"] else None
         ),
         "created_at": row["created_at"],
     }
@@ -1183,10 +1148,7 @@ def mark_delivery(
 ) -> None:
     """Update a delivery's status (outbound state machine)."""
     if status not in VALID_DELIVERY_STATUSES:
-        raise ValueError(
-            f"invalid delivery status '{status}'. "
-            f"Expected one of {VALID_DELIVERY_STATUSES}."
-        )
+        raise ValueError(f"invalid delivery status '{status}'. Expected one of {VALID_DELIVERY_STATUSES}.")
 
     now = _now_iso()
     conn = get_db()
@@ -1313,7 +1275,9 @@ def mark_delivery_delivered(
             raise ValueError(f"delivery '{delivery_id}' not found")
         if row["status"] in {"delivered", "failed", "expired"}:
             if row["attempt_count"] != expected_attempt_count:
-                raise StaleClaimError(f"Stale claim for delivery {delivery_id}: expected attempt {expected_attempt_count}")
+                raise StaleClaimError(
+                    f"Stale claim for delivery {delivery_id}: expected attempt {expected_attempt_count}"
+                )
             conn.commit()
             return
 
@@ -1368,7 +1332,9 @@ def mark_delivery_failed(
             raise ValueError(f"delivery '{delivery_id}' not found")
         if row["status"] in {"delivered", "failed", "expired"}:
             if row["attempt_count"] != expected_attempt_count:
-                raise StaleClaimError(f"Stale claim for delivery {delivery_id}: expected attempt {expected_attempt_count}")
+                raise StaleClaimError(
+                    f"Stale claim for delivery {delivery_id}: expected attempt {expected_attempt_count}"
+                )
             conn.commit()
             return
 

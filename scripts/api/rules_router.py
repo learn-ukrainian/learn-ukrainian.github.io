@@ -31,6 +31,7 @@ from .config import PROJECT_ROOT
 from .telemetry.response import (
     add_json_telemetry,
     append_telemetry_footer,
+    session_id_from_request,
     telemetry_footer_enabled,
 )
 
@@ -57,6 +58,7 @@ def _matches_etag(if_none_match: str | None, digest: str) -> bool:
         if tok == digest:
             return True
     return False
+
 
 # Order matters: critical rules first, then hard-limit non-negotiables,
 # then the mandatory workflow and remaining always-load rules. Changing
@@ -108,10 +110,7 @@ def _assemble_rules() -> tuple[str, list[str], str]:
     if not parts:
         raise HTTPException(
             status_code=500,
-            detail=(
-                "No rule sources readable under "
-                f"{', '.join(RULE_SOURCES)}. Is the repo checked out?"
-            ),
+            detail=(f"No rule sources readable under {', '.join(RULE_SOURCES)}. Is the repo checked out?"),
         )
     markdown = _FILE_SEP.join(parts).rstrip() + "\n"
     digest = hashlib.sha256(markdown.encode("utf-8")).hexdigest()
@@ -141,6 +140,7 @@ def get_rules(
     """
     markdown, sources, digest = _assemble_rules()
     etag = f'"{digest}"'
+    session_id = session_id_from_request(request)
 
     if not telemetry_footer_enabled() and _matches_etag(request.headers.get("If-None-Match"), digest):
         return Response(
@@ -149,7 +149,7 @@ def get_rules(
         )
 
     if format == "json":
-        return _rules_json_response(markdown, sources, digest, etag)
+        return _rules_json_response(markdown, sources, digest, etag, session_id)
 
     # Raw Markdown path. FastAPI's default str response is
     # application/json, which would JSON-encode the whole blob — wrong
@@ -157,22 +157,31 @@ def get_rules(
     from fastapi.responses import PlainTextResponse
 
     return PlainTextResponse(
-        content=append_telemetry_footer(markdown),
+        content=append_telemetry_footer(markdown, session_id),
         media_type="text/markdown; charset=utf-8",
         headers=_cache_headers(etag, digest, "X-Rules-Hash"),
     )
 
 
-def _rules_json_response(markdown: str, sources, digest: str, etag: str):
+def _rules_json_response(
+    markdown: str,
+    sources,
+    digest: str,
+    etag: str,
+    session_id: str | None,
+):
     from fastapi.responses import JSONResponse
 
     return JSONResponse(
-        content=add_json_telemetry({
-            "hash": digest,
-            "bytes": len(markdown.encode("utf-8")),
-            "sources": sources,
-            "markdown": markdown,
-        }),
+        content=add_json_telemetry(
+            {
+                "hash": digest,
+                "bytes": len(markdown.encode("utf-8")),
+                "sources": sources,
+                "markdown": markdown,
+            },
+            session_id=session_id,
+        ),
         headers=_cache_headers(etag, digest, "X-Rules-Hash"),
     )
 
@@ -204,7 +213,4 @@ def rules_source_paths() -> list[str]:
     Mirrors ``_read_rule_files()`` but without reading the bodies, for
     the manifest to advertise what the current concat covers.
     """
-    return [
-        rel for rel in RULE_SOURCES
-        if (PROJECT_ROOT / rel).is_file()
-    ]
+    return [rel for rel in RULE_SOURCES if (PROJECT_ROOT / rel).is_file()]
