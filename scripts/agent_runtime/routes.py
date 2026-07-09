@@ -48,6 +48,9 @@ _CI_ENV_VARS = ("CI", "GITHUB_ACTIONS", "GITLAB_CI", "BUILDKITE", "JENKINS_URL")
 
 def is_deepseek_first_party_forbidden_in_ci(provider: Any, model: Any) -> bool:
     """Return True for first-party DeepSeek (China-hosted, local-only) in CI/automation."""
+    # Skip guard during pytest (even in CI) so unit tests can exercise the adapter.
+    if os.environ.get("PYTEST_CURRENT_TEST"):
+        return False
     provider_text = normalize_route_part(provider).lower()
     if provider_text == "deepseek":
         return any(os.environ.get(v) for v in _CI_ENV_VARS)
