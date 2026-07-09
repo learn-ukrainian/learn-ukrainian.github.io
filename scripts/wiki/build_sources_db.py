@@ -59,13 +59,13 @@ if __package__ in {None, ""}:
     from wiki.config import GDRIVE_DATA
     from wiki.extract_sections import DEFAULT_REPORT_PATH, extract_sections
     from wiki.sources import build_literary_row
-    from wiki.textbook_subjects import subject_for_source_file
+    from wiki.textbook_subjects import AUTHOR_UK_BY_TRANSLIT, subject_for_source_file
     from wiki.ukrainian_wiki_corpus import ensure_ukrainian_wiki_manifest, ensure_ukrainian_wiki_schema
 else:
     from .config import GDRIVE_DATA
     from .extract_sections import DEFAULT_REPORT_PATH, extract_sections
     from .sources import build_literary_row
-    from .textbook_subjects import subject_for_source_file
+    from .textbook_subjects import AUTHOR_UK_BY_TRANSLIT, subject_for_source_file
     from .ukrainian_wiki_corpus import ensure_ukrainian_wiki_manifest, ensure_ukrainian_wiki_schema
 
 SCHEMA = """
@@ -277,6 +277,21 @@ CREATE TABLE IF NOT EXISTS wikipedia_negative_cache (
 
 def _normalize_url(url: str) -> str:
     return url.replace("://www.", "://")
+
+
+def _enrich_author_uk(entry: dict, *, slug: str) -> dict:
+    """Fill author_uk from the canonical mapping when extraction left it null."""
+    author = str(entry.get("author") or "").strip()
+    if author and not str(entry.get("author_uk") or "").strip():
+        uk = AUTHOR_UK_BY_TRANSLIT.get(author.lower())
+        if uk is None:
+            from ingest.incremental_textbook_ingest import IngestError
+            raise IngestError(
+                f"{slug}: author {author!r} has no canonical Cyrillic form in "
+                "AUTHOR_UK — add it (title-probed, never guessed) before ingest."
+            )
+        entry = {**entry, "author_uk": uk}
+    return entry
 
 
 def _build_textbook_row(
@@ -655,6 +670,7 @@ def build(db_path: Path | None = None,
                         if not line:
                             continue
                         entry = json.loads(line)
+                        entry = _enrich_author_uk(entry, slug=source_file)
                         batch.append(_build_textbook_row(
                             entry,
                             source_file=source_file,

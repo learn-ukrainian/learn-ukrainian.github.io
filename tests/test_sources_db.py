@@ -398,3 +398,151 @@ def test_search_external_track_reranks_hist_sources(external_search_db):
     assert hist[0]["channel_id"] in {"realna_istoria", "imtgsh"}
     hist_positions = {row["channel_id"]: index for index, row in enumerate(hist)}
     assert hist_positions["realna_istoria"] < hist_positions["ulp_youtube"]
+
+
+def test_rebuild_author_uk_enrichment_regression(tmp_path, monkeypatch):
+    import wiki.build_sources_db as bdb
+    from wiki.build_sources_db import build
+
+    # Create temporary report path so we don't overwrite actual docs
+    monkeypatch.setattr(bdb, "PROJECT_ROOT", tmp_path)
+    monkeypatch.setattr(bdb, "DEFAULT_REPORT_PATH", tmp_path / "textbook_sections_audit.md")
+
+    # Set up a minimal textbooks structure
+    tb_dir = tmp_path / "textbooks" / "grade-05"
+    tb_dir.mkdir(parents=True)
+
+    # Row with author set and author_uk null
+    chunk = {
+        "chunk_id": "5-klas-test_s001",
+        "section_title": "Іменник",
+        "text": "Приклад тексту.",
+        "grade": "5",
+        "author": "avramenko",
+        "author_uk": None,
+        "token_count": 5
+    }
+
+    jsonl_path = tb_dir / "5-klas-ukrmova-avramenko-2022.jsonl"
+    with open(jsonl_path, "w", encoding="utf-8") as f:
+        f.write(json.dumps(chunk, ensure_ascii=False) + "\n")
+
+    # Fake empty directories for external, gdrive
+    ext_dir = tmp_path / "external"
+    ext_dir.mkdir()
+    gdrive = tmp_path / "gdrive"
+    gdrive.mkdir()
+
+    db_path = tmp_path / "rebuild_test.db"
+    build(
+        db_path=db_path,
+        external_dir=ext_dir,
+        textbook_dir=tmp_path / "textbooks",
+        gdrive_dir=gdrive,
+        force=True,
+    )
+
+    # Verify that the textbook chunk was ingested and author_uk was populated from mapping
+    conn = sqlite3.connect(str(db_path))
+    row = conn.execute("SELECT author, author_uk FROM textbooks").fetchone()
+    conn.close()
+    assert row is not None
+    assert row[0] == "avramenko"
+    assert row[1] == "Авраменко"
+
+
+def test_rebuild_author_absent_edge(tmp_path, monkeypatch):
+    import wiki.build_sources_db as bdb
+    from wiki.build_sources_db import build
+
+    # Create temporary report path so we don't overwrite actual docs
+    monkeypatch.setattr(bdb, "PROJECT_ROOT", tmp_path)
+    monkeypatch.setattr(bdb, "DEFAULT_REPORT_PATH", tmp_path / "textbook_sections_audit.md")
+
+    # Set up a minimal textbooks structure
+    tb_dir = tmp_path / "textbooks" / "grade-05"
+    tb_dir.mkdir(parents=True)
+
+    # Row with no author info (or empty author)
+    chunk = {
+        "chunk_id": "5-klas-test_s001",
+        "section_title": "Іменник",
+        "text": "Приклад тексту.",
+        "grade": "5",
+        "token_count": 5
+    }
+
+    jsonl_path = tb_dir / "5-klas-ukrmova-avramenko-2022.jsonl"
+    with open(jsonl_path, "w", encoding="utf-8") as f:
+        f.write(json.dumps(chunk, ensure_ascii=False) + "\n")
+
+    # Fake empty directories for external, gdrive
+    ext_dir = tmp_path / "external"
+    ext_dir.mkdir()
+    gdrive = tmp_path / "gdrive"
+    gdrive.mkdir()
+
+    db_path = tmp_path / "rebuild_test.db"
+    build(
+        db_path=db_path,
+        external_dir=ext_dir,
+        textbook_dir=tmp_path / "textbooks",
+        gdrive_dir=gdrive,
+        force=True,
+    )
+
+    # Verify that the textbook chunk was ingested and author/author_uk are empty/default
+    conn = sqlite3.connect(str(db_path))
+    row = conn.execute("SELECT author, author_uk FROM textbooks").fetchone()
+    conn.close()
+    assert row is not None
+    assert row[0] == ""
+    assert row[1] == ""
+
+
+def test_rebuild_author_unmapped_edge(tmp_path, monkeypatch):
+    import wiki.build_sources_db as bdb
+    from ingest.incremental_textbook_ingest import IngestError
+    from wiki.build_sources_db import build
+
+    # Create temporary report path so we don't overwrite actual docs
+    monkeypatch.setattr(bdb, "PROJECT_ROOT", tmp_path)
+    monkeypatch.setattr(bdb, "DEFAULT_REPORT_PATH", tmp_path / "textbook_sections_audit.md")
+
+    # Set up a minimal textbooks structure
+    tb_dir = tmp_path / "textbooks" / "grade-05"
+    tb_dir.mkdir(parents=True)
+
+    # Row with author set to an unmapped transliteration and author_uk null
+    chunk = {
+        "chunk_id": "5-klas-test_s001",
+        "section_title": "Іменник",
+        "text": "Приклад тексту.",
+        "grade": "5",
+        "author": "unknown_author_name",
+        "author_uk": None,
+        "token_count": 5
+    }
+
+    jsonl_path = tb_dir / "5-klas-ukrmova-avramenko-2022.jsonl"
+    with open(jsonl_path, "w", encoding="utf-8") as f:
+        f.write(json.dumps(chunk, ensure_ascii=False) + "\n")
+
+    # Fake empty directories for external, gdrive
+    ext_dir = tmp_path / "external"
+    ext_dir.mkdir()
+    gdrive = tmp_path / "gdrive"
+    gdrive.mkdir()
+
+    db_path = tmp_path / "rebuild_test.db"
+
+    # Expect IngestError parity with incremental-ingest
+    with pytest.raises(IngestError) as exc_info:
+        build(
+            db_path=db_path,
+            external_dir=ext_dir,
+            textbook_dir=tmp_path / "textbooks",
+            gdrive_dir=gdrive,
+            force=True,
+        )
+    assert "has no canonical Cyrillic form in AUTHOR_UK" in str(exc_info.value)
