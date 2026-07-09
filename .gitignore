@@ -98,6 +98,7 @@ tmp/
 temp/
 *.tmp
 *.pid
+.pids/
 *.yaml.bak
 *.yml.bak
 *.yaml.orig
