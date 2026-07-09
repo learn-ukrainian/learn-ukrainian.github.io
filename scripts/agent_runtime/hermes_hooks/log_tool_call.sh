@@ -20,6 +20,14 @@
 # pipeline already globs ``*.write.jsonl`` (linear_pipeline.py:6882-6883)
 # so no pipeline-side changes are needed.
 #
+# #4390 infra fix: added cwd validation to avoid writing to project root
+# (pollution from -z one-shots / bridge runs where payload.cwd == toplevel)
+# and non-module paths. Skips gracefully; lanes should ensure module cwd.
+#
+# Note: heuristic (root detection + curriculum/ allowlist). Addresses
+# accumulation symptom. Root-cause positive signal (env/sentinel) suggested
+# in review for follow-up.
+#
 # Schema written
 # --------------
 # Each line is a single JSON object with the fields the gate expects:
@@ -69,6 +77,26 @@ esac
 
 cwd="$(printf '%s' "$payload" | jq -r '.cwd // empty' 2>/dev/null || true)"
 [[ -z "$cwd" || ! -d "$cwd" ]] && exit 0
+
+# Infra fix for #4390: prevent accumulation in main checkout root (common
+# for hermes -z one-shots and bridge/ad-hoc runs where payload.cwd resolves
+# to project root instead of a module dir).
+# V7 builds set cwd to the module dir; non-V7 may not.
+# Skip writes that would pollute the root or non-module paths.
+# Improved detection: use file presence (works even if cwd has no .git).
+if [ -f "$cwd/AGENTS.md" ] && [ -d "$cwd/scripts/agent_runtime/hermes_hooks" ]; then
+  # This cwd is the project root.
+  exit 0
+fi
+# Heuristic allowlist scoped to V7 writer module dirs (under curriculum/).
+# Note (per cross-family review): this is a symptom-level guard, not root-cause
+# (positive env/sentinel from v7_build.py would be more robust). Plans/wiki
+# not documented V7-writer cwds; kept minimal to curriculum for now.
+if [[ "$cwd" != */curriculum/* ]]; then
+  # Not a V7 module writer dir; skip to avoid pollution.
+  # Lanes should ensure proper cwd or use .agent/tmp/ for scratch.
+  exit 0
+fi
 
 log_path="$cwd/hermes.write.jsonl"
 
