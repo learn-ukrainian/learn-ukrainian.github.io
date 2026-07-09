@@ -1,30 +1,45 @@
-# Source registry for wiki/figures/hnat-khotkevych.md
-# Referenced inline as [S1], [S2], ...
+---
+# Reviewed source registry; inline citations resolve by stable source id.
 sources:
 - id: S1
-  file: ukrainian_wiki/hnat-khotkevych_Біографія-Гнат-Хоткевич-Людина-оркестр-Деколонізаційна-перспектива
-  type: ukrainian_wiki
-  title: 'Біографія: Гнат Хоткевич: Людина-оркестр'
-  section_path: 'Біографія: Гнат Хоткевич: Людина-оркестр > Деколонізаційна перспектива'
+  file: https://www.history.org.ua/?termin=Khotkevych_H
+  type: external
+  title: Хоткевич Гнат Мартинович — Енциклопедія історії України
+  url: https://www.history.org.ua/?termin=Khotkevych_H
 - id: S2
-  file: ukrainian_wiki/hnat-khotkevych_Біографія-Гнат-Хоткевич-Людина-оркестр-Короткий-зміст
-  type: ukrainian_wiki
-  title: 'Біографія: Гнат Хоткевич: Людина-оркестр'
-  section_path: 'Біографія: Гнат Хоткевич: Людина-оркестр > Короткий зміст'
+  file: https://www.encyclopediaofukraine.com/display.asp?linkpath=pagesKHKhotkevychHnat
+  type: external
+  title: Khotkevych, Hnat — Internet Encyclopedia of Ukraine
+  url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pagesKHKhotkevychHnat
 - id: S3
-  file: ukrainian_wiki/hnat-khotkevych_Біографія-Гнат-Хоткевич-Людина-оркестр-Основний-зміст-Музикознавча-діяльність-та-відродження-бандури
-  type: ukrainian_wiki
-  title: 'Біографія: Гнат Хоткевич: Людина-оркестр'
-  section_path: 'Біографія: Гнат Хоткевич: Людина-оркестр > Основний зміст > Музикознавча
-    діяльність та відродження бандури'
+  file: c5e05b63_c0000
+  type: literary
+  title: Гнат Хоткевич. Життєпис
+  author: Хоткевич Г.
 - id: S4
-  file: ukrainian_wiki/hnat-khotkevych_Біографія-Гнат-Хоткевич-Людина-оркестр-Основний-зміст-Феномен-багатогранності-від-інженерії-до-мистецтва
-  type: ukrainian_wiki
-  title: 'Біографія: Гнат Хоткевич: Людина-оркестр'
-  section_path: 'Біографія: Гнат Хоткевич: Людина-оркестр > Основний зміст > Феномен
-    багатогранності: від інженерії до мистецтва'
+  file: https://archives.kh.gov.ua/?page_id=27449
+  type: external
+  title: Архівна довідка про дату народження Гната Хоткевича
+  url: https://archives.kh.gov.ua/?page_id=27449
 - id: S5
   file: wikipedia/Хоткевич Гнат Мартинович
   type: wikipedia
   title: Хоткевич Гнат Мартинович
-  url: https://uk.wikipedia.org/wiki/%D0%A5%D0%BE%D1%82%D0%BA%D0%B5%D0%B2%D0%B8%D1%87%20%D0%93%D0%BD%D0%B0%D1%82%20%D0%9C%D0%B0%D1%80%D1%82%D0%B8%D0%BD%D0%BE%D0%B2%D0%B8%D1%87
+  url: https://uk.wikipedia.org/wiki/Хоткевич_Гнат_Мартинович
+- id: S6
+  file: 06704c7b_c0038
+  type: literary
+  title: Камінна душа
+  author: Хоткевич Г.
+- id: S7
+  file: 8a6de40c_c0081
+  type: literary
+  title: Проза Гната Хоткевича — купальський фрагмент
+  author: Хоткевич Г.
+- id: S8
+  file: "https://texty.org.ua/fragments/104706/banduryst-teroryst-dokumenty-zi-spravy-\
+    represovanoho-muzykanta-gnata-hotkevycha-dostupni-onlajn/"
+  type: external
+  title: Документи зі справи репресованого Гната Хоткевича
+  url: "https://texty.org.ua/fragments/104706/banduryst-teroryst-dokumenty-zi-spravy-\
+    represovanoho-muzykanta-gnata-hotkevycha-dostupni-onlajn/"

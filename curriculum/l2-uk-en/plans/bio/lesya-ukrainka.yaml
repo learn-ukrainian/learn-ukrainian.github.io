@@ -121,7 +121,7 @@ sequence: 94
 slug: lesya-ukrainka
 subtitle: 'Lesya Ukrainka: Prometheus of Ukrainian Literature'
 title: 'Леся Українка: Прометей української літератури'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: непохитність, стійкість духу в найважчих обставинах, нездатність бути скореним
   pos: ж.
@@ -154,3 +154,10 @@ vocabulary_hints:
   pos: ч.
   word: туберкульоз
 word_target: 5000
+portrait:
+  url: "https://commons.wikimedia.org/wiki/File:Lesya_Ukrainka_by_Trush.jpg"
+  license: "PD-old-80-expired"
+  attribution: "Ivan Trush / Wikimedia Commons"
+  caption_uk: "Портрет Лесі Українки пензля Івана Труша"
+  caption_en: "Portrait of Lesya Ukrainka by Ivan Trush"
+  verified_on: "2026-07-10"

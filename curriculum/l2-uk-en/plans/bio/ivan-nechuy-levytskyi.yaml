@@ -83,7 +83,7 @@ phase: BIO.3
 references:
 - title: Ivan Nechuy Levytskyi
   note: Compiled research on biography, works, linguistic debates, and legacy
-  path: wiki/bio/ivan-nechuy-levytskyi.md
+  path: wiki/figures/ivan-nechuy-levytskyi.md
   type: wiki
 - title: Кайдашева сім'я
   author: Нечуй-Левицький І.
@@ -117,12 +117,12 @@ readings:
   task: "Ознайомлення з біографічними відомостями та творчим доробком"
   title: "Нечуй-Левицький Іван Семенович"
   type: encyclopedia
-version: '4.2'
+version: '4.3'
 vocabulary_hints:
 - definition: літературний напрям, що ставить за мету правдиве, об'єктивне зображення дійсності
   pos: ч.
   word: реалізм
-- definition: той, хто веде розповідь у творі; в контексті Нечуя — майстерний рассказчик
+- definition: той, хто веде розповідь у творі; у контексті Нечуя — майстерний оповідач
   pos: ч.
   word: оповідач
 - definition: система правових норм, що встановлювала особисту залежність селянина від пана
@@ -147,3 +147,14 @@ vocabulary_hints:
   pos: ч.
   word: пуризм
 word_target: 5200
+portrait_fallback:
+  type: "book-cover"
+  url: "https://commons.wikimedia.org/wiki/File:Іван_Нечуй-Левицький._Кайдашева_сім'я._1879.pdf"
+  license: "PD-old-100"
+  attribution: "Ivan Nechui-Levytskyi, 1879 first edition / Wikimedia Commons"
+  caption_uk: "Перше видання повісті «Кайдашева сім'я», 1879"
+  caption_en: "First edition of The Kaidash Family, 1879"
+  reason: >-
+    The reviewed portrait candidates had incomplete provenance; this authorial
+    first-edition scan is public domain in the source country and the United States.
+  verified_on: "2026-07-10"
