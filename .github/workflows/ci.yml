@@ -956,3 +956,53 @@ jobs:
       - uses: trufflesecurity/trufflehog@f446421baf832d6356c42c1743d99abff52ff334 # v3.95.7
         with:
           extra_args: --results=verified,unknown --exclude-paths=.trufflehogignore
+
+  # Aggregation gate (#4803). The deterministic CI jobs above are CONDITIONAL
+  # (path-filtered via dorny/paths-filter), so none can be a branch-protection
+  # required check directly: on a PR that doesn't trigger it, the context never
+  # reports and the PR blocks forever ("Expected — waiting for status"). The
+  # team already hit this for the single required check and solved it narrowly
+  # (Test (pytest) uses `if: !cancelled()`, see #1644). This job generalizes
+  # that fix: it always runs, `needs:` every deterministic gate, and fails iff
+  # any non-skipped dependency failed. Make THIS job (`CI Gate`) the sole
+  # required status check so the whole set becomes load-bearing without the
+  # conditional-required-check footgun.
+  #
+  # Semantics: skipped -> pass (path-filtered out, nothing to check);
+  #            failure/cancelled -> block.
+  # `changes` is in `needs` so a broken paths-filter router fails the gate
+  # rather than silently letting every routed job report skipped.
+  # `frontend-e2e` (playwright) is intentionally EXCLUDED — flaky, stays
+  # advisory to protect fleet merge velocity. `frontend` (build + vitest) IS
+  # included: it is deterministic and a broken frontend build must not merge.
+  # Fleet-reviewed by codex/agy/cursor on #4803.
+  ci-gate:
+    name: CI Gate
+    runs-on: ubuntu-latest
+    if: always()
+    needs:
+      - changes
+      - test                  # Test (pytest)
+      - lint                  # Lint (ruff)
+      - quality-gates         # Quality Gates (radon)
+      - lint-prompts          # Lint Prompts
+      - lesson-schema-drift   # Lesson Schema Drift
+      - mdx-source-parity     # MDX Source Parity
+      - mdx-generation-drift  # MDX Generation Drift
+      - postmortem-hygiene    # Postmortem Hygiene
+      - agent-config          # Agent Config
+      - scripts-root-guard    # No new root scripts
+      - secret-scan           # Secret Scanning (gitleaks)
+      - atlas-freshness       # Atlas Manifest Freshness
+      - frontend              # Frontend (build + vitest)
+    steps:
+      - name: Report required-job results
+        env:
+          RESULTS: ${{ join(needs.*.result, ',') }}
+        run: |
+          echo "required job results: $RESULTS"
+      - name: Fail if any required job failed or was cancelled
+        if: ${{ contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled') }}
+        run: |
+          echo "::error::A required CI job failed or was cancelled — see 'Report required-job results' for the per-job breakdown."
+          exit 1
