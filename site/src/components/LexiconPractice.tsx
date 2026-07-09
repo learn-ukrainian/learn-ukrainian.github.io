@@ -910,6 +910,7 @@ function LexiconPracticeIsland({
   const showEnglishSubtitles = learnerLevel === 'A1';
 
   const matchedSelectedRatingRef = useRef<PracticeRating | null>(null);
+  const matchingTargetOutcomeRef = useRef<CompletionOutcome | null>(null);
 
   // Reset all per-item feedback/lock state. Shared by the selection-change effect and
   // `advancePending` so a wrong answer that re-surfaces the SAME item (a lapsed card the
@@ -924,6 +925,7 @@ function LexiconPracticeIsland({
     setPendingOutcome(null);
     pendingOutcomeRef.current = null;
     matchedSelectedRatingRef.current = null;
+    matchingTargetOutcomeRef.current = null;
   }, []);
 
   useEffect(() => {
@@ -1176,7 +1178,14 @@ function LexiconPracticeIsland({
     if (!pair || !pair.lemmaId) return;
 
     if (pairIndex === 0) {
-      matchedSelectedRatingRef.current = rating;
+      if (sessionCompleted === 0) {
+        matchedSelectedRatingRef.current = rating;
+      } else {
+        if (selection) {
+          const outcome = recordReview(selection, rating);
+          matchingTargetOutcomeRef.current = outcome;
+        }
+      }
     } else {
       try {
         rateCard(pair.lemmaId, 'matching', rating, new Date());
@@ -1184,7 +1193,7 @@ function LexiconPracticeIsland({
         setStorageWarning('Прогрес призупинено, доки сховище браузера не стане доступним.');
       }
     }
-  }, [pairs]);
+  }, [pairs, selection, sessionCompleted]);
 
   // While a wrong answer dwells, Enter is a second way to advance (alongside the
   // «Далі →» button) — the disabled option buttons blur to <body>, so we listen at
@@ -2123,9 +2132,15 @@ function LexiconPracticeIsland({
                     onFlashcardRating={(rating) => rateAndComplete(selection, rating)}
                     onChoice={handleChoice}
                     onMatchingComplete={() => {
-                      const rating = matchedSelectedRatingRef.current || 'good';
-                      matchedSelectedRatingRef.current = null;
-                      rateAndComplete(selection, rating);
+                      if (sessionCompleted === 0) {
+                        const rating = matchedSelectedRatingRef.current || 'good';
+                        matchedSelectedRatingRef.current = null;
+                        rateAndComplete(selection, rating);
+                      } else {
+                        const outcome = matchingTargetOutcomeRef.current || recordReview(selection, 'good');
+                        matchingTargetOutcomeRef.current = null;
+                        completeSelection(selection, outcome);
+                      }
                     }}
                     onMatchingMatch={handleMatchingMatch}
                     onClozeSubmit={submitCloze}
