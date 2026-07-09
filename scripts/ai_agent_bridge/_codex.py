@@ -17,6 +17,7 @@ from agent_runtime.errors import (
     RateLimitedError,
 )
 
+from ._ask_lifecycle import launch_background_ask, record_ask_failure, record_ask_reply, register_ask
 from ._config import REPO_ROOT
 from ._db import get_db, set_session
 from ._messaging import acknowledge, send_message
@@ -101,12 +102,21 @@ def ask_codex(
     to_model: str | None = None,
     no_timeout: bool = False,
     review: bool = False,
+    background: bool = False,
 ):
     """Send message to Codex AND invoke Codex to process it."""
     from_llm = _resolve_codex_from_llm(from_llm)
     msg_id = send_message(
         content, task_id, msg_type, data, from_llm=from_llm, to_llm="codex", from_model=from_model, to_model=to_model
     )
+    register_ask(msg_id)
+    if background:
+        launch_background_ask(
+            msg_id,
+            "codex",
+            {"new_session": new_session, "no_timeout": no_timeout, "review": review},
+        )
+        return msg_id
     print(f"\n🚀 Invoking Codex to process message #{msg_id}...")
     process_for_codex(msg_id, new_session, no_timeout, review=review)
     return msg_id
@@ -123,6 +133,7 @@ def ask_codex_chain(
     to_model: str | None = None,
     no_timeout: bool = False,
     review: bool = False,
+    background: bool = False,
 ) -> list[int]:
     """Dispatch a sequence of issue-targeted Codex tasks one at a time."""
     from_llm = _resolve_codex_from_llm(from_llm)
@@ -146,6 +157,7 @@ def ask_codex_chain(
             to_model,
             no_timeout,
             review=review,
+            background=background,
         )
         message_ids.append(msg_id)
 
@@ -293,6 +305,7 @@ def process_for_codex(message_id: int, new_session: bool = False, no_timeout: bo
     )
     acknowledge(message_id)
     acknowledge(reply_id)
+    record_ask_reply(message_id, reply_id)
 
 
 def _fetch_codex_message(message_id: int) -> dict | None:
@@ -351,6 +364,11 @@ def _handle_codex_error(msg: dict, message_id: int, error_msg: str) -> None:
     )
     acknowledge(message_id)
     acknowledge(err_id)
+    record_ask_failure(
+        message_id,
+        error_msg,
+        timed_out="timeout" in error_msg.lower() or "stalled" in error_msg.lower(),
+    )
 
 
 def _handle_codex_rate_limited(msg: dict, message_id: int, reason: str) -> None:
@@ -372,6 +390,7 @@ def _handle_codex_rate_limited(msg: dict, message_id: int, reason: str) -> None:
         from_model="codex-bridge-rate-limited",
     )
     acknowledge(err_id)
+    record_ask_failure(message_id, reason)
 
 
 def process_all_codex(new_session: bool = False):

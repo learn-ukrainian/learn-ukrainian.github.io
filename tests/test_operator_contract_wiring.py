@@ -84,6 +84,20 @@ def test_agy_bridge_prompt_injects_contract_digest() -> None:
     assert "EXCEPT A1" in out
 
 
+def test_agy_bridge_prompt_permits_narrow_repo_reads_but_forbids_writes() -> None:
+    """#4837: bridge Q&A may inspect named files without becoming a coding task."""
+    import sys
+
+    sys.path.insert(0, str(REPO / "scripts"))
+    from ai_agent_bridge._prompts import build_agy_prompt
+
+    out = build_agy_prompt(
+        {"from": "claude", "task_id": "t", "type": "query", "content": "x", "data": None}
+    )
+    assert "MAY read the specific repository file(s)" in out
+    assert "Do NOT create, modify, move, or delete files" in out
+
+
 def test_deploy_lock_step_lists_include_contract() -> None:
     """deploy excludes x drift-checker x idempotency fixtures must move
     together (learned the hard way in #4412 round 3).

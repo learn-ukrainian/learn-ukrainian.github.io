@@ -37,6 +37,15 @@ import subprocess
 from dataclasses import dataclass
 from pathlib import Path
 
+from ._ask_lifecycle import (
+    ask_attachment,
+    ask_sender_model,
+    ask_target_model,
+    fetch_ask_message,
+    launch_background_ask,
+    record_ask_reply,
+    register_ask,
+)
 from ._messaging import acknowledge, send_message
 
 # Default was qwen3.7-max (EXPENSIVE) until 2026-07-05 — a silent money trap
@@ -118,6 +127,7 @@ def ask_opencode(
     from_model: str | None = None,
     to_model: str | None = None,
     no_timeout: bool = False,
+    background: bool = False,
 ) -> int:
     """Generic one-shot opencode call to an arbitrary opencode-reachable model.
 
@@ -136,9 +146,12 @@ def ask_opencode(
         from_model=from_model,
         to_model=to_model or effective_model,
     )
+    register_ask(msg_id)
+    if background:
+        launch_background_ask(msg_id, "opencode", {"no_timeout": no_timeout})
+        return msg_id
     print(f"\n🚀 Invoking opencode ({effective_model}) to process message #{msg_id}...")
     response = _invoke_opencode(content, effective_model, data=data, no_timeout=no_timeout)
-
     reply_id = send_message(
         content=response,
         task_id=task_id,
@@ -149,7 +162,7 @@ def ask_opencode(
     )
     acknowledge(msg_id)
     acknowledge(reply_id)
-
+    record_ask_reply(msg_id, reply_id)
     return msg_id
 
 
@@ -163,6 +176,7 @@ def ask_pool(
     from_llm: str = "claude",
     from_model: str | None = None,
     no_timeout: bool = False,
+    background: bool = False,
 ) -> int:
     """Send a message AND invoke poolside.ai (laguna-m.1) one-shot via opencode.
 
@@ -195,6 +209,14 @@ def ask_pool(
         from_model=from_model,
         to_model=effective_model,
     )
+    register_ask(msg_id)
+    if background:
+        launch_background_ask(
+            msg_id,
+            "pool",
+            {"no_timeout": no_timeout, "variant": effective_variant},
+        )
+        return msg_id
     print(f"\n🚀 Invoking pool ({effective_model}, variant={effective_variant}) to process message #{msg_id}...")
     response = _invoke_opencode(
         content,
@@ -205,7 +227,6 @@ def ask_pool(
         no_timeout=no_timeout,
         default_timeout_s=POOL_DEFAULT_TIMEOUT_S,
     )
-
     reply_id = send_message(
         content=response,
         task_id=task_id,
@@ -216,7 +237,7 @@ def ask_pool(
     )
     acknowledge(msg_id)
     acknowledge(reply_id)
-
+    record_ask_reply(msg_id, reply_id)
     return msg_id
 
 
@@ -247,6 +268,7 @@ def ask_glm(
     from_llm: str = "claude",
     from_model: str | None = None,
     no_timeout: bool = False,
+    background: bool = False,
 ) -> int:
     """Send a message AND invoke Zhipu GLM (glm-5.2) one-shot via opencode.
 
@@ -278,6 +300,10 @@ def ask_glm(
         from_model=from_model,
         to_model=effective_model,
     )
+    register_ask(msg_id)
+    if background:
+        launch_background_ask(msg_id, "glm", {"no_timeout": no_timeout})
+        return msg_id
     print(
         f"\n🚀 Invoking glm ({effective_model}) to process message #{msg_id}... [LOCAL-ONLY — data egresses to China]"
     )
@@ -289,7 +315,6 @@ def ask_glm(
         no_timeout=no_timeout,
         default_timeout_s=GLM_DEFAULT_TIMEOUT_S,
     )
-
     reply_id = send_message(
         content=response,
         task_id=task_id,
@@ -300,7 +325,7 @@ def ask_glm(
     )
     acknowledge(msg_id)
     acknowledge(reply_id)
-
+    record_ask_reply(msg_id, reply_id)
     return msg_id
 
 
@@ -313,6 +338,7 @@ def ask_gemma(
     from_llm: str = "claude",
     from_model: str | None = None,
     no_timeout: bool = False,
+    background: bool = False,
 ) -> int:
     """Send a message AND invoke Google Gemma 4 (31B-it) one-shot via opencode.
 
@@ -358,23 +384,22 @@ def ask_gemma(
         from_model=from_model,
         to_model=effective_model,
     )
+    register_ask(msg_id)
+    if background:
+        launch_background_ask(msg_id, "gemma", {"no_timeout": no_timeout})
+        return msg_id
     print(f"\n🚀 Invoking gemma ({effective_model}) to process message #{msg_id}...")
-    response = _invoke_opencode(
-        content,
-        effective_model,
-        output_format="json",
-        data=data,
-        no_timeout=no_timeout,
-        default_timeout_s=GEMMA_DEFAULT_TIMEOUT_S,
-        agent="chat",
+    response = _strip_gemma_thought(
+        _invoke_opencode(
+            content,
+            effective_model,
+            output_format="json",
+            data=data,
+            no_timeout=no_timeout,
+            default_timeout_s=GEMMA_DEFAULT_TIMEOUT_S,
+            agent="chat",
+        )
     )
-    # Gemma 4 streams its reasoning in a leading <thought>...</thought> block;
-    # the seat's consumers want only the answer. Per-run variance: the model
-    # sometimes closes the run INSIDE the thought block — never deliver an
-    # empty reply, fall back to the unstripped text (live burn 2026-07-07:
-    # the first e2e reply arrived blank).
-    response = _strip_gemma_thought(response)
-
     reply_id = send_message(
         content=response,
         task_id=task_id,
@@ -385,8 +410,71 @@ def ask_gemma(
     )
     acknowledge(msg_id)
     acknowledge(reply_id)
-
+    record_ask_reply(msg_id, reply_id)
     return msg_id
+
+
+def process_for_opencode(
+    message_id: int,
+    *,
+    target: str,
+    no_timeout: bool = False,
+    variant: str | None = None,
+) -> None:
+    """Process an existing opencode-routed ask for sync and detached paths."""
+    msg = fetch_ask_message(message_id, target)
+    if not msg:
+        return
+    model = ask_target_model(msg)
+    if not model:
+        raise ValueError(f"ask #{message_id} has no target model")
+
+    kwargs: dict[str, object] = {"data": ask_attachment(msg), "no_timeout": no_timeout}
+    if target == "opencode":
+        response = _invoke_opencode(msg["content"], model, **kwargs)
+    elif target == "pool":
+        response = _invoke_opencode(
+            msg["content"],
+            model,
+            variant=variant or POOL_DEFAULT_VARIANT,
+            output_format="json",
+            default_timeout_s=POOL_DEFAULT_TIMEOUT_S,
+            **kwargs,
+        )
+    elif target == "glm":
+        _assert_glm_egress_allowed("process background ask-glm")
+        response = _invoke_opencode(
+            msg["content"],
+            model,
+            output_format="json",
+            default_timeout_s=GLM_DEFAULT_TIMEOUT_S,
+            **kwargs,
+        )
+    elif target == "gemma":
+        response = _strip_gemma_thought(
+            _invoke_opencode(
+                msg["content"],
+                model,
+                output_format="json",
+                default_timeout_s=GEMMA_DEFAULT_TIMEOUT_S,
+                agent="chat",
+                **kwargs,
+            )
+        )
+    else:
+        raise ValueError(f"unsupported opencode ask target {target!r}")
+
+    reply_id = send_message(
+        content=response,
+        task_id=msg["task_id"],
+        msg_type="response",
+        from_llm=target,
+        to_llm=msg["from"],
+        to_model=ask_sender_model(msg),
+    )
+    acknowledge(message_id)
+    acknowledge(reply_id)
+    record_ask_reply(message_id, reply_id)
 
 
 def _strip_gemma_thought(text: str) -> str:

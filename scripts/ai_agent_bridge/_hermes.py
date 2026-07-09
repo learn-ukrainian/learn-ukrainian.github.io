@@ -19,6 +19,15 @@ import shutil
 import subprocess
 from pathlib import Path
 
+from ._ask_lifecycle import (
+    ask_attachment,
+    ask_sender_model,
+    ask_target_model,
+    fetch_ask_message,
+    launch_background_ask,
+    record_ask_reply,
+    register_ask,
+)
 from ._messaging import acknowledge, send_message
 from .routing_guard import assert_model_routing_allowed
 
@@ -40,6 +49,7 @@ def ask_hermes(
     from_model: str | None = None,
     to_model: str | None = None,
     no_timeout: bool = False,
+    background: bool = False,
 ) -> int:
     """Send message to Hermes AND invoke Hermes one-shot to process it."""
     effective_model = model or HERMES_DEFAULT_MODEL
@@ -57,9 +67,12 @@ def ask_hermes(
         from_model=from_model,
         to_model=to_model or effective_model,
     )
+    register_ask(msg_id)
+    if background:
+        launch_background_ask(msg_id, "hermes", {"no_timeout": no_timeout})
+        return msg_id
     print(f"\n🚀 Invoking Hermes ({effective_model}) to process message #{msg_id}...")
     response = _invoke_hermes(content, effective_model, data=data, no_timeout=no_timeout)
-
     reply_id = send_message(
         content=response,
         task_id=task_id,
@@ -70,8 +83,28 @@ def ask_hermes(
     )
     acknowledge(msg_id)
     acknowledge(reply_id)
-
+    record_ask_reply(msg_id, reply_id)
     return msg_id
+
+
+def process_for_hermes(message_id: int, *, no_timeout: bool = False) -> None:
+    """Process an existing Hermes ask, shared by sync and detached paths."""
+    msg = fetch_ask_message(message_id, "hermes")
+    if not msg:
+        return
+    model = ask_target_model(msg) or HERMES_DEFAULT_MODEL
+    response = _invoke_hermes(msg["content"], model, data=ask_attachment(msg), no_timeout=no_timeout)
+    reply_id = send_message(
+        content=response,
+        task_id=msg["task_id"],
+        msg_type="response",
+        from_llm="hermes",
+        to_llm=msg["from"],
+        to_model=ask_sender_model(msg),
+    )
+    acknowledge(message_id)
+    acknowledge(reply_id)
+    record_ask_reply(message_id, reply_id)
 
 
 def _invoke_hermes(

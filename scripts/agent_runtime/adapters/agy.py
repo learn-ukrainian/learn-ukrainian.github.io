@@ -187,10 +187,13 @@ class AgyAdapter:
         # `--dangerously-skip-permissions` is unconditional: any tool-using
         # prompt (file read, shell call) triggers an interactive permission
         # prompt that would hang a headless dispatch waiting for human input.
-        # The `mode` field is retained for runtime accounting + adapter-API
-        # parity, but agy has no finer-grained permission model than this
-        # single flag. Callers (delegate.py/dispatch_smart.py) should force
-        # mode=danger for --agent agy to avoid accidental routes around this.
+        # AGY exposes only an opt-in ``--sandbox`` flag (no ``--no-sandbox``
+        # counterpart), so callers that need repository reads intentionally
+        # omit it. The `mode` field is retained for runtime accounting +
+        # adapter-API parity; bridge calls use ``danger`` to report that
+        # unsandboxed state honestly. Callers (delegate.py/dispatch_smart.py)
+        # should force mode=danger for --agent agy to avoid accidental routes
+        # around this.
         cmd: list[str] = [
             agy_bin,
             "-p",
@@ -208,6 +211,15 @@ class AgyAdapter:
 
         if session_id:
             cmd.append(f"--conversation={session_id}")
+
+        # ``--add-dir`` is AGY's documented way to include a directory in its
+        # workspace.  A bridge invocation receives the repository root here
+        # so precise file-reading questions can be answered without relying
+        # on whatever project AGY last selected interactively.  Permission
+        # scope remains AGY's full-trust headless mode, therefore the bridge
+        # prompt supplies the no-write guard.
+        if (tool_config or {}).get("bridge_repo_read"):
+            cmd += ["--add-dir", str(cwd)]
 
         # agy reads MCP servers from its global Antigravity config. There is
         # no per-invocation MCP CLI flag to pass here; tool_config is retained

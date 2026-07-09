@@ -29,6 +29,7 @@ from agent_runtime.errors import (
 from agent_runtime.runner import invoke as runtime_invoke
 from secret_redactor import redact_text
 
+from ._ask_lifecycle import launch_background_ask, record_ask_failure, record_ask_reply, register_ask
 from ._broker import _is_task_locked, _remove_pid_file, _write_pid_file
 from ._config import _PARENT_ENV, CLAUDE_CMD, REPO_ROOT
 from ._db import get_db, get_session, set_session
@@ -41,10 +42,19 @@ VENV_PYTHON = REPO_ROOT / ".venv" / "bin" / "python"
 def ask_claude(content: str, task_id: str | None = None, msg_type: str = "query",
                data: str | None = None, new_session: bool = False,
                from_llm: str = "gemini", from_model: str | None = None,
-               to_model: str | None = None, review: bool = False):
+               to_model: str | None = None, review: bool = False,
+               background: bool = False):
     """Send message to Claude AND invoke Claude to process it."""
     msg_id = send_message(content, task_id, msg_type, data, from_llm=from_llm,
                           to_llm="claude", from_model=from_model, to_model=to_model)
+    register_ask(msg_id)
+    if background:
+        launch_background_ask(
+            msg_id,
+            "claude",
+            {"new_session": new_session, "no_timeout": False, "review": review},
+        )
+        return msg_id
     print(f"\n🚀 Invoking Claude to process message #{msg_id}...")
     process_for_claude(msg_id, new_session, review=review)
     return msg_id
@@ -175,6 +185,7 @@ def _run_claude_sync_via_runtime(
 
         acknowledge(message_id)
         acknowledge(reply_id)
+        record_ask_reply(message_id, reply_id)
 
     except RateLimitedError as exc:
         print(f"\n⏳ Claude rate limited: {exc}")
@@ -187,6 +198,7 @@ def _run_claude_sync_via_runtime(
         _response_sent = True
         acknowledge(message_id)
         acknowledge(err_id)
+        record_ask_failure(message_id, str(exc))
     except (AgentStalledError, AgentTimeoutError) as exc:
         timeout_mins = timeout_val // 60
         print(f"\n❌ Claude CLI timed out ({timeout_mins} min sync limit): {exc}")
@@ -202,6 +214,7 @@ def _run_claude_sync_via_runtime(
         _response_sent = True
         acknowledge(message_id)
         acknowledge(err_id)
+        record_ask_failure(message_id, str(exc), timed_out=True)
     except AgentUnavailableError:
         print("❌ claude CLI not found. Is it installed?")
         err_id = send_message(
@@ -213,6 +226,7 @@ def _run_claude_sync_via_runtime(
         _response_sent = True
         acknowledge(message_id)  # Must ack incoming msg to prevent stuck queue
         acknowledge(err_id)
+        record_ask_failure(message_id, "Claude CLI not found")
     finally:
         if not _response_sent:
             _send_claude_fallback_error(msg, message_id)
@@ -345,6 +359,7 @@ def _handle_claude_error(msg, message_id, stderr):
     )
     acknowledge(message_id)
     acknowledge(err_id)
+    record_ask_failure(message_id, error_msg)
     return True
 
 
@@ -358,5 +373,6 @@ def _send_claude_fallback_error(msg, message_id):
         )
         acknowledge(message_id)
         acknowledge(err_id)
+        record_ask_failure(message_id, "Claude process failed unexpectedly")
     except Exception:
         pass

@@ -22,6 +22,7 @@ from agent_runtime.errors import (
     RateLimitedError,
 )
 
+from ._ask_lifecycle import launch_background_ask, record_ask_failure, record_ask_reply, register_ask
 from ._config import REPO_ROOT
 from ._db import get_db, set_session
 from ._messaging import acknowledge, send_message
@@ -70,6 +71,7 @@ def ask_grok_build(
     no_timeout: bool = False,
     review: bool = False,
     model: str | None = None,
+    background: bool = False,
 ) -> int:
     """Send message to native Grok Build and invoke it to process the message."""
     effective_model = to_model or model or GROK_BUILD_DEFAULT_MODEL
@@ -83,6 +85,14 @@ def ask_grok_build(
         from_model=from_model,
         to_model=effective_model,
     )
+    register_ask(msg_id)
+    if background:
+        launch_background_ask(
+            msg_id,
+            "grok-build",
+            {"new_session": new_session, "no_timeout": no_timeout, "review": review},
+        )
+        return msg_id
     print(f"\nInvoking grok-build ({effective_model}) to process message #{msg_id}...")
     process_for_grok_build(
         msg_id,
@@ -176,6 +186,7 @@ def process_for_grok_build(
     )
     acknowledge(message_id)
     acknowledge(reply_id)
+    record_ask_reply(message_id, reply_id)
 
 
 def _fetch_grok_build_message(message_id: int) -> dict | None:
@@ -265,3 +276,8 @@ def _handle_grok_build_error(msg: dict, message_id: int, reason: str) -> None:
     )
     acknowledge(message_id)
     acknowledge(reply_id)
+    record_ask_failure(
+        message_id,
+        reason,
+        timed_out="timeout" in reason.lower() or "stalled" in reason.lower(),
+    )

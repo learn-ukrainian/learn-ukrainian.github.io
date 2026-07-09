@@ -19,6 +19,7 @@ from agent_runtime.errors import (
     RateLimitedError,
 )
 
+from ._ask_lifecycle import launch_background_ask, record_ask_failure, record_ask_reply, register_ask
 from ._config import REPO_ROOT
 from ._db import get_db, set_session
 from ._messaging import acknowledge, send_message
@@ -73,8 +74,11 @@ def ask_agy(
     review: bool = False,
     stdout_only: bool = False,
     output_path: str | None = None,
+    background: bool = False,
 ):
     """Send message to Agy AND invoke Agy to process it (one-shot)."""
+    if background and (stdout_only or output_path):
+        raise ValueError("ask-agy --background cannot be combined with --stdout-only or --output-path")
     msg_id = send_message(
         content,
         task_id,
@@ -85,6 +89,14 @@ def ask_agy(
         from_model=from_model,
         to_model=to_model,
     )
+    register_ask(msg_id)
+    if background:
+        launch_background_ask(
+            msg_id,
+            "agy",
+            {"new_session": new_session, "no_timeout": no_timeout, "review": review},
+        )
+        return msg_id
     if not stdout_only:
         print(f"\n🚀 Invoking Agy to process message #{msg_id}...")
     response = process_for_agy(
@@ -141,12 +153,17 @@ def process_for_agy(
         result = agent_runner.invoke(
             "agy",
             prompt,
-            mode="read-only",  # Bridge Q&A is read-only by default.
+            # AGY's only sandbox switch is the opt-in ``--sandbox`` flag;
+            # there is no ``--no-sandbox`` counterpart.  Bridge Q&A must run
+            # without that sandbox so it can read the repository named by the
+            # caller.  The prompt remains explicitly read-only because AGY's
+            # headless permission bypass is otherwise full-trust.
+            mode="danger",
             cwd=REPO_ROOT,
             model=model,
             task_id=msg["task_id"],
             session_id=None,
-            tool_config=None,
+            tool_config={"bridge_repo_read": True},
             entrypoint="bridge",
             hard_timeout=timeout_val,
             stall_timeout=min(600, timeout_val),
@@ -198,6 +215,7 @@ def process_for_agy(
     )
     acknowledge(message_id)
     acknowledge(reply_id)
+    record_ask_reply(message_id, reply_id)
     return response
 
 
@@ -268,3 +286,8 @@ def _handle_agy_error(msg: dict, message_id: int, reason: str) -> None:
     )
     acknowledge(message_id)
     acknowledge(reply_id)
+    record_ask_failure(
+        message_id,
+        reason,
+        timed_out="timeout" in reason.lower() or "stalled" in reason.lower(),
+    )
