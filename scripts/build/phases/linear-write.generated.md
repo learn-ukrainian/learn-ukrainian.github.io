@@ -30,13 +30,25 @@ RAG chunks.
   self-counted `wc -w` runs ~15% high. Do NOT calibrate length down because the
   topic feels simple — write to the depth the directives below demand.
 
-## Section Word Budgets — hard first-draft requirements
+## Module Size Policy — dossier/evidence-led expansion control (#4801)
+
+{SIZE_POLICY}
+
+This policy does not lower the plan floor on its own. It controls expansion
+permission: never invent depth to satisfy a fixed word count, and never treat
+old 150% multiplier thinking as a target. If the policy reports
+`plan_policy_review_required` or `blocked_until_research_dossier`, complete the
+verifiable coverage and emit the required `SIZE_POLICY_MISMATCH` marker instead
+of padding.
+
+## Section Word Budgets — policy-aware first-draft requirements
 
 The first draft must meet or exceed `{WORD_TARGET}` and must hit every section
-`words:` budget below. If the first draft is short, the pipeline immediately
-re-prompts for targeted expansion before Python QG continues. Each planned
-section must reach its own budget with substantive exposition, examples,
-close-reading, source comparison, and cultural/grammar analysis.
+`words:` budget below when the size policy permits source-backed expansion. If
+the first draft is short, the pipeline may request targeted expansion before
+Python QG continues; that expansion is allowed only with substantive, cited
+exposition, examples, close-reading, source comparison, and cultural/grammar
+analysis.
 `:::primary-reading` quoted text is excluded from counted words; surrounding
 explanation must carry the budget.
 

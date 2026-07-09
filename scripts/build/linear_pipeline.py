@@ -58,6 +58,12 @@ from scripts.build.citation_matcher import (
     fold_citation_author,
     normalize_citation_ref,
 )
+from scripts.build.module_size_policy import (
+    build_size_policy_for_plan,
+    render_writer_size_policy,
+    size_policy_allows_auto_expansion,
+    size_policy_summary,
+)
 from scripts.build.prompt_builder import DOWNSTREAM_TOKENS, TOKEN_RE, render_prompt
 from scripts.common.review_loop import (
     aggregate_min as review_loop_aggregate_min,
@@ -2341,6 +2347,7 @@ def render_writer_prompt(
     plan: Mapping[str, Any],
     plan_content: str,
     knowledge_packet: str,
+    plan_path: Path | None = None,
     wiki_manifest: str | Mapping[str, Any] | None = None,
     implementation_map: Mapping[str, Any] | None = None,
     writer: str = "claude-tools",
@@ -2355,6 +2362,7 @@ def render_writer_prompt(
             plan_content,
             knowledge_packet,
             wiki_manifest,
+            plan_path=plan_path,
             implementation_map=implementation_map,
             writer=writer,
             use_generator=use_generator,
@@ -3531,6 +3539,7 @@ def writer_context(
     knowledge_packet: str,
     wiki_manifest: str | Mapping[str, Any] | None = None,
     *,
+    plan_path: Path | None = None,
     implementation_map: Mapping[str, Any] | None = None,
     writer: str | None = None,
     use_generator: bool = False,
@@ -3568,6 +3577,9 @@ def writer_context(
         "TOPIC_TITLE": str(plan["title"]),
         "PHASE": str(plan.get("phase", "")),
         "WORD_TARGET": str(plan["word_target"]),
+        "SIZE_POLICY": render_writer_size_policy(
+            build_size_policy_for_plan(plan, plan_path=plan_path)
+        ),
         "SECTION_WORD_BUDGETS": _render_section_word_budgets(plan),
         "WRITER_SPECIFIC_DIRECTIVES": _writer_specific_directives(writer),
         "PLAN_CONTENT": plan_content,
@@ -10356,10 +10368,16 @@ def writer_draft_length_report(
     plan: Mapping[str, Any],
     module_text: str,
     *,
+    plan_path: Path | None = None,
     section_floor_ratio: float = _WRITER_DRAFT_SECTION_FLOOR_RATIO,
 ) -> dict[str, Any]:
     target = int(plan["word_target"])
     count = _writer_draft_countable_words(module_text)
+    size_policy = build_size_policy_for_plan(
+        plan,
+        plan_path=plan_path,
+        actual_words=count,
+    )
     section_reports = _writer_draft_section_length_report(
         plan,
         module_text,
@@ -10375,6 +10393,7 @@ def writer_draft_length_report(
         "section_floor_ratio": section_floor_ratio,
         "sections": section_reports,
         "short_sections": short_sections,
+        "size_policy": size_policy_summary(size_policy),
     }
 
 
@@ -10404,9 +10423,15 @@ def render_writer_draft_length_expansion_prompt(
     plan: Mapping[str, Any],
     module_text: str,
     length_report: Mapping[str, Any],
+    plan_path: Path | None = None,
 ) -> str:
     shortfall_lines = "\n".join(_writer_draft_shortfall_lines(length_report))
     diagnostic = _yaml_inline(length_report)
+    size_policy = build_size_policy_for_plan(
+        plan,
+        plan_path=plan_path,
+        actual_words=int(length_report.get("count") or 0),
+    )
     return "\n".join(
         [
             "# Writer Draft Length Pre-check",
@@ -10414,10 +10439,13 @@ def render_writer_draft_length_expansion_prompt(
             "The deterministic first-draft length pre-check failed before the full Python QG loop.",
             "Gate-counted words exclude markdown comments and `:::primary-reading` blocks.",
             "",
+            "## Size policy",
+            render_writer_size_policy(size_policy),
+            "",
             "## Required expansion",
             shortfall_lines,
             "",
-            "Expand the named short sections with real analytic/textual substance: deeper close-reading, richer source comparison, more cultural context from the provided material, and clearer explanation of examples.",
+            "Expand the named short sections only with source-backed analytic/textual substance: deeper close-reading, richer source comparison, more cultural context from the provided material, and clearer explanation of examples.",
             "Do NOT add padding, filler transitions, meta-narration, invented citations, or new uncited claims.",
             "Keep ALL existing content, citations, headings, activities, vocabulary, resources, and `:::primary-reading` blocks verbatim.",
             "Do not edit text inside any `:::primary-reading` block. Add explanatory prose around those blocks instead.",
@@ -10455,7 +10483,7 @@ def run_writer_draft_length_precheck(
     """Run one targeted writer expansion before the full Python QG loop."""
     module_path = module_dir / "module.md"
     before_text = _read_required(module_path)
-    before = writer_draft_length_report(plan, before_text)
+    before = writer_draft_length_report(plan, before_text, plan_path=plan_path)
     if before.get("passed") is True:
         _emit(
             event_sink,
@@ -10467,8 +10495,34 @@ def run_writer_draft_length_precheck(
         )
         return {"applied": False, "before": before, "after": before}
 
+    size_policy = build_size_policy_for_plan(
+        plan,
+        plan_path=plan_path,
+        actual_words=int(before["count"]),
+    )
+    if not size_policy_allows_auto_expansion(size_policy):
+        _emit(
+            event_sink,
+            "writer_draft_length_precheck",
+            status="policy_mismatch",
+            count=before["count"],
+            target=before["target"],
+            short_section_count=len(before["short_sections"]),
+            size_policy_status=size_policy.status,
+        )
+        return {
+            "applied": False,
+            "kind": "writer_draft_length_precheck",
+            "patch_status": "policy_mismatch",
+            "policy_mismatch": True,
+            "before": before,
+            "after": before,
+            "size_policy": size_policy_summary(size_policy),
+        }
+
     prompt = render_writer_draft_length_expansion_prompt(
         plan=plan,
+        plan_path=plan_path,
         module_text=before_text,
         length_report=before,
     )
@@ -10501,7 +10555,7 @@ def run_writer_draft_length_precheck(
             applied = "module_patch"
 
     after_text = _read_required(module_path)
-    after = writer_draft_length_report(plan, after_text)
+    after = writer_draft_length_report(plan, after_text, plan_path=plan_path)
     _emit(
         event_sink,
         "writer_draft_length_precheck",

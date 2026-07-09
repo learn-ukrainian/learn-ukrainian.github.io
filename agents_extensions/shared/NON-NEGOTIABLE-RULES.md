@@ -8,8 +8,8 @@ All rules are hard requirements. Partial compliance = failure.
 
 | When... | Do this |
 |---|---|
-| Building content | Check `config.py` target_words FIRST — never hardcode from memory |
-| Module under word target | Expand content to meet target. Never lower the target |
+| Building content | Check the rendered Module Size Policy first; use `config.py` as the fallback floor source — never hardcode from memory |
+| Module under word target | Expand only with source-backed, pedagogically useful material. If policy says plan/policy mismatch, stop and report it. Never silently lower the target |
 | Audit gate shows ❌ | Fix it. ALL gates must be GREEN or the module fails |
 | Fixing a module | Reviewer provides `<fixes>` — apply deterministically (rule 4) |
 | Reviewing content | Cite SPECIFIC examples from the text, or the review is invalid (rule 6) |
@@ -21,17 +21,20 @@ All rules are hard requirements. Partial compliance = failure.
 
 ---
 
-## 1. Word Count Targets (Source of Truth: `config.py`)
+## 1. Word Count Targets And Size Policy
 
 <critical>
 
-Expand content to meet targets. Never lower targets to match content.
+The plan `word_target` is the current floor unless an explicit plan/policy
+revision changes it. The Module Size Policy controls whether expansion above
+complete coverage is justified. Never lower targets to match content, and never
+invent depth to satisfy a fixed word count.
 
-**Always read config.py** before generating content_outline or word budgets: `.venv/bin/python -c "import sys; sys.path.insert(0,'scripts'); from audit.config import LEVEL_CONFIG; print(LEVEL_CONFIG['{LEVEL}']['target_words'])"`
+**Fallback floor source:** read `config.py` before generating content_outline or word budgets when no effective size policy is present: `.venv/bin/python -c "import sys; sys.path.insert(0,'scripts'); from audit.config import LEVEL_CONFIG; print(LEVEL_CONFIG['{LEVEL}']['target_words'])"`
 
 **Word targets:** A1=1200, A1-cp=1000, A2=2000, A2-cp=1500, B1/B1-cp/B2/B2-cp/B2-cap/C1/C1-cp/C2-cp=4000, C2=5000, HIST/ISTORIO/BIO/LIT/OES/RUTH=5000. If stale, re-read `scripts/audit/config.py`.
 
-**Lesson learned:** Jan 2026 — 270 ISTORIO plans generated at 3500 instead of 4000 because agent hardcoded from memory instead of reading config.py.
+**Lesson learned:** Jan 2026 — 270 ISTORIO plans generated at 3500 instead of 4000 because agent hardcoded from memory instead of reading config.py. #4801 adds the second failure mode: padding source-thin modules to satisfy a scalar target is also a quality failure.
 
 </critical>
 
