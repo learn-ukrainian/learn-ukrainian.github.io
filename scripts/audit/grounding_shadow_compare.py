@@ -15,7 +15,7 @@ import os
 import sys
 from collections import defaultdict
 from collections.abc import Mapping
-from datetime import datetime
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -186,8 +186,23 @@ def main() -> int:
     recovered_gold_false = sum(1 for r in records if not r["v1_admissible"] and r["v2_anchored"] and r["gold_is_true"] is False)
     recovered_unlabeled = sum(1 for r in records if not r["v1_admissible"] and r["v2_anchored"] and r["gold_is_true"] is None)
 
-    fp_total = sum(1 for r in records if r["gold_is_true"] is False)
-    fp_count = sum(1 for r in records if r["gold_is_true"] is False and r["v2_anchored"])
+    # Cutover headline metric (fleet-reviewed, task qg-metric-reframe / #4764).
+    # We deliberately do NOT report a "false-positive rate on fabricated/labeled-false
+    # claims". That conflated CLAIM truth (`gold_is_true`, a Layer B / entailment concern)
+    # with excerpt PROVENANCE (`v2_anchored`, Layer A). A gold-FALSE claim can carry a
+    # genuine verbatim excerpt that Layer A CORRECTLY anchors and hands to Layer B, so
+    # counting it as a false accept is wrong and inflates v2's apparent error.
+    #
+    # A true Layer A false-accept = v2 anchors an excerpt NOT present in the tool output.
+    # Claim-truth labels cannot measure that; it is covered by the fail-closed unit tests in
+    # tests/test_grounding_gate_v2.py and (future) an excerpt-provenance-labeled fixture set.
+    # => True Layer A FP rate is UNMEASURED by this harness. Do not infer it from the numbers.
+    v1_gold_true = sum(1 for r in records if r["v1_admissible"] and r["gold_is_true"] is True)
+    v2_gold_true = sum(1 for r in records if r["v2_anchored"] and r["gold_is_true"] is True)
+    net_gold_true_recall = v2_gold_true - v1_gold_true
+    # Pessimistic UPPER BOUND on new Layer A risk vs v1 (per fleet review): v2-incremental
+    # anchors on gold-false claims (== recovered_gold_false). Audit candidates, NOT an FP rate.
+    audit_candidates_gold_false = recovered_gold_false
 
     # Breakdown by seat_arm
     seat_stats = defaultdict(lambda: {"total": 0, "v1": 0, "v2": 0, "rec": 0, "reg": 0, "abs": 0})
@@ -233,7 +248,7 @@ def main() -> int:
     # Save JSON report
     report_data = {
         "metadata": {
-            "generated_at": datetime.utcnow().isoformat() + "Z",
+            "generated_at": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
             "tau": tau,
             "artifacts_dir": str(args.artifacts_dir),
             "total_groundings_checked": total,
@@ -247,11 +262,17 @@ def main() -> int:
             "recovered_unlabeled": recovered_unlabeled,
             "regressions": regressions,
             "abstains": abstains,
-            "false_positives_on_fabricated": {
-                "total_fabricated_checked": fp_total,
-                "v2_false_accepts": fp_count,
-                "rate": fp_count / fp_total if fp_total > 0 else 0.0
-            }
+            "cutover_headline": {
+                "_what": "Net gold-TRUE recall gain drives the v1->v2 cutover. NO Layer A "
+                         "false-positive rate is reported: claim-truth labels do not measure "
+                         "excerpt provenance (Layer A). True Layer A false-accepts are covered "
+                         "by fail-closed unit tests + a future excerpt-provenance fixture set.",
+                "v1_gold_true_anchored": v1_gold_true,
+                "v2_gold_true_anchored": v2_gold_true,
+                "net_gold_true_recall": net_gold_true_recall,
+                "regressions_need_audit": regressions,
+                "audit_candidates_gold_false_incremental": audit_candidates_gold_false,
+            },
         },
         "breakdown": {
             "by_seat_arm": dict(seat_stats),
@@ -272,7 +293,6 @@ def main() -> int:
     rec_un_pct = (recovered_unlabeled / total * 100) if total > 0 else 0.0
     reg_pct = (regressions / total * 100) if total > 0 else 0.0
     abs_pct = (abstains / total * 100) if total > 0 else 0.0
-    fp_pct = (fp_count / fp_total * 100) if fp_total > 0 else 0.0
 
     regression_records = [r for r in records if r["v1_admissible"] and not r["v2_anchored"]]
     regressions_list_content = ""
@@ -295,7 +315,7 @@ def main() -> int:
 
     md_content = f"""# Grounding Gate Shadow Compare Report (v1 vs v2)
 
-- **Date:** {datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S UTC')}
+- **Date:** {datetime.now(UTC).strftime('%Y-%m-%d %H:%M:%S UTC')}
 - **Tau (τ):** {tau}
 - **Artifacts Directory:** `{args.artifacts_dir}`
 
@@ -308,11 +328,28 @@ def main() -> int:
 | v2 Anchored | {v2_count} | {v2_pct:.2f}% |
 | Recovered Legit (v1 Reject ∧ v2 Anchor) | {recovered} | {rec_pct:.2f}% |
 |   - Gold-True Recovered (Good) | {recovered_gold_true} | {rec_gt_pct:.2f}% |
-|   - Gold-False Newly-Accepted (FP, Bad) | {recovered_gold_false} | {rec_gf_pct:.2f}% |
+|   - Gold-False v2-incremental anchors (AUDIT candidates, NOT an FP — see note) | {recovered_gold_false} | {rec_gf_pct:.2f}% |
 |   - Unlabeled Recovered (needs human review) | {recovered_unlabeled} | {rec_un_pct:.2f}% |
-| Regressions (v1 Accept ∧ v2 Reject) | {regressions} | {reg_pct:.2f}% |
+| Regressions (v1 Accept ∧ v2 Reject) — audit per-item | {regressions} | {reg_pct:.2f}% |
 | Abstains | {abstains} | {abs_pct:.2f}% |
-| New FP Rate (on Labeled False Claims) | {fp_count}/{fp_total} | {fp_pct:.2f}% |
+
+## Cutover Headline (v1 → v2)
+
+| Metric | Value |
+| :--- | :--- |
+| Gold-true claims v1 anchored | {v1_gold_true} |
+| Gold-true claims v2 anchored | {v2_gold_true} |
+| **Net gold-true recall gain (v2 − v1)** | **{net_gold_true_recall:+d}** |
+| Regressions to audit (v1 accept ∧ v2 reject) | {regressions} |
+| Audit candidates: v2-incremental anchors on gold-false claims (upper bound on new Layer A risk) | {audit_candidates_gold_false} |
+
+> **No Layer A false-positive rate is reported.** A gold-FALSE claim can carry a genuine verbatim
+> excerpt that Layer A *correctly* anchors and hands to Layer B — counting it as a false accept
+> conflates CLAIM truth (Layer B / entailment) with excerpt PROVENANCE (Layer A). A true Layer A
+> false-accept (v2 anchors an excerpt **not present** in the tool output) is **UNMEASURED** by
+> claim-truth labels; it is covered by the fail-closed unit tests in `tests/test_grounding_gate_v2.py`
+> and a future excerpt-provenance-labeled fixture set. Drive the cutover on **net gold-true recall
+> gain** with every regression audited (real-loss vs correct-tightening), not on a claim-truth "FP".
 
 ## Seat/Arm Breakdown
 

@@ -362,8 +362,13 @@ def test_ellipsis_mass_12_to_14_still_anchors():
     assert res.similarity == 1.0
 
 
-def test_shadow_compare_harness_fp_counter(tmp_path):
-    # Feeds a gold-FALSE claim which v2 anchors and asserts the FP counter reports it (NOT 0/0)
+def test_shadow_compare_gold_false_verbatim_excerpt_is_not_an_fp(tmp_path):
+    # Regression guard for the qg-metric-reframe conflation fix.
+    # A gold-FALSE claim whose evidence_excerpt is VERBATIM present in the tool output:
+    # Layer A (v2) MUST anchor it (provenance is satisfied) and hand it to Layer B; v1
+    # (exact substring) anchors it too. Claim falsity is a Layer B / entailment concern,
+    # NOT a Layer A false-accept. The harness must NOT report this as a "false positive" —
+    # the old `false_positives_on_fabricated` metric conflated claim-truth with provenance.
     cell_payload = {
         "schema_version": "qg_bakeoff_run.v1",
         "seat": "test-seat",
@@ -433,9 +438,25 @@ def test_shadow_compare_harness_fp_counter(tmp_path):
     assert json_out.exists()
     report = json.loads(json_out.read_text(encoding="utf-8"))
 
-    # Assert FP counter reports it (NOT 0/0)
-    assert report["summary"]["false_positives_on_fabricated"]["total_fabricated_checked"] == 1
-    assert report["summary"]["false_positives_on_fabricated"]["v2_false_accepts"] == 1
+    summary = report["summary"]
+    # The misleading claim-truth "FP" metric is GONE (deleted, per fleet review — a reframed
+    # name would still invite re-conflation).
+    assert "false_positives_on_fabricated" not in summary
+    # Cutover is driven by net gold-true recall, not a claim-truth FP.
+    assert "cutover_headline" in summary
+    ch = summary["cutover_headline"]
+
+    # The verbatim excerpt is present → BOTH gates anchor. That is CORRECT Layer A behavior.
+    rec = report["records"][0]
+    assert rec["v1_admissible"] is True
+    assert rec["v2_anchored"] is True
+    assert rec["gold_is_true"] is False
+
+    # Gold-false, so it is NOT a gold-true recovery; and since v1 also anchored it, it is not
+    # a v2-incremental audit candidate. It is counted as neither a recovery nor an FP.
+    assert ch["net_gold_true_recall"] == 0
+    assert ch["audit_candidates_gold_false_incremental"] == 0
+    assert summary["recovered_gold_false"] == 0
 
 
 def test_find_best_window_performance():
