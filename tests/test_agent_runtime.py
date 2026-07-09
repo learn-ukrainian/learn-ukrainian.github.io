@@ -261,7 +261,29 @@ def test_load_adapter_cursor():
 
 
 def test_agy_bridge_repo_read_adds_workspace_without_opt_in_sandbox(tmp_path):
-    """#4837: AGY exposes ``--sandbox`` but no ``--no-sandbox`` flag."""
+    """#4837: AGY exposes ``--sandbox`` but no ``--no-sandbox`` flag.
+
+    ``--add-dir`` comes from the explicit ``repo_read_root``, NOT from cwd:
+    bridge asks spawn from an out-of-tree scratch cwd so the worktree
+    containment guard (#4444) passes (post-#4841 regression fix).
+    """
+    plan = AgyAdapter().build_invocation(
+        prompt="read one file",
+        mode="danger",
+        cwd=tmp_path,
+        model=None,
+        task_id="bridge-read",
+        session_id=None,
+        tool_config={"bridge_repo_read": True, "repo_read_root": "/some/repo/root"},
+    )
+
+    assert "--sandbox" not in plan.cmd
+    assert "--dangerously-skip-permissions" in plan.cmd
+    assert plan.cmd[plan.cmd.index("--add-dir") + 1] == "/some/repo/root"
+
+
+def test_agy_bridge_repo_read_falls_back_to_cwd_without_explicit_root(tmp_path):
+    """Without ``repo_read_root``, ``--add-dir`` degrades to cwd (old shape)."""
     plan = AgyAdapter().build_invocation(
         prompt="read one file",
         mode="danger",
@@ -272,8 +294,6 @@ def test_agy_bridge_repo_read_adds_workspace_without_opt_in_sandbox(tmp_path):
         tool_config={"bridge_repo_read": True},
     )
 
-    assert "--sandbox" not in plan.cmd
-    assert "--dangerously-skip-permissions" in plan.cmd
     assert plan.cmd[plan.cmd.index("--add-dir") + 1] == str(tmp_path)
 
 
