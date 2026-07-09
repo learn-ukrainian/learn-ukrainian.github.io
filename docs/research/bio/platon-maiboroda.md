@@ -22,7 +22,7 @@ Core identity for BIO: Ukrainian composer and song-canon builder whose most dura
 ## 2. Oppression mechanism
 
 - **What happened:** Not a direct repression-primary biography. No reviewed Tier 1/Tier 2 source documents arrest, imprisonment, exile, execution, or a security-service case against Platon Maiboroda himself. The dossier should instead name two historical pressures: family trauma under Stalinist repression and Soviet institutional co-optation of Ukrainian music.
-- **When (specific dates):** НСКУ states that after young Platon went to Kyiv in summer 1936, his father was arrested and executed as an "enemy of the people." ЕСУ documents wartime rupture: in June 1941 Platon and Heorhii joined the people's militia, were captured, escaped in 1942, were interned in Katowice in 1943, and later ended the war with the First Ukrainian Front.
+- **When (specific dates):** Sources conflict on the father's arrest: НСКУ places it after young Platon moved to Kyiv in summer 1936, while a Zaporizhzhia Regional Universal Scientific Library article, citing archival materials, dates it to 9 March 1938. Future writers must not assert a precise year without archival resolution. ЕСУ documents wartime rupture: in June 1941 Platon and Heorhii joined the people's militia, were captured, escaped in 1942, were interned in Katowice in 1943, and later ended the war with the First Ukrainian Front.
 - **By whom:** For the father episode, reviewed sources do not provide a case file or agency name, so do not name NKVD unless a future archival source proves it. For the composer himself, the relevant actor is the Soviet cultural-state apparatus: unions, awards, film and radio infrastructure, and official repertory systems.
 - **Document references:** No case number, security archive citation, court decision, or rehabilitation document found in this pass. ЦДАМЛМ identifies Platon Maiboroda's personal fond no. 855, with 191 storage units dated 1914-1998; this is the first archive target for any future document-level claim.
 - **Mechanism specifics:** Maiboroda received Stalin and Soviet-state honours, served in official unions, and worked in state-managed musical media. Those facts must not be hidden. But reducing him to a "Soviet composer" also misses why Ukrainian audiences kept these songs: they organized Ukrainian-language memory through mother, path, school, Kyiv, chestnut, and landscape images.
@@ -108,6 +108,7 @@ Per `docs/best-practices/bio-naming-canonical.md` (#2313):
 - Центральний державний архів-музей літератури і мистецтва України. "Георгій і Платон Майбороди..." https://csamm.archives.gov.ua/2023/12/01/георгій-і-платон-майбороди/. Accessed 2026-06-30.
 - Національна бібліотека України імені В. І. Вернадського. "Народився Платон Майборода, український композитор, педагог, фольклорист." https://www.nbuv.gov.ua/node/4474. Accessed 2026-06-30.
 - NBUV Україніка. "Майборода Платон Іларіонович." https://irbis-nbuv.gov.ua/ulib/item/REF0005551. Accessed 2026-06-30.
+- Запорізька обласна універсальна наукова бібліотека. "Ця мовчазна богиня Кліо." https://zounb.zp.ua/resourse/zaporizkyy-kray/iz-dorobku-zaporizhciv/vitalij-shevchenko/cya-movchazna-boginya-klio. Accessed 2026-07-09.
 
 **Tier 3 (encyclopedic):**
 
