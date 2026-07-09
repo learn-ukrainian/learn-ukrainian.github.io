@@ -52,12 +52,13 @@ if git rev-parse --git-dir > /dev/null 2>&1; then
     fi
 fi
 
-# Deploy Claude skills (always run to ensure up-to-date)
-if [ -f "package.json" ] && grep -q "claude:deploy" package.json 2>/dev/null; then
-    echo "Checking Claude skills..."
-    npm run claude:deploy --silent 2>/dev/null || true
-    echo "Skills deployed"
-fi
+# Deploy agent extensions (always run to ensure up-to-date). Fail-honest: a
+# failing deploy prints a loud banner + the real output instead of the old
+# silent `|| true` that claimed "Skills deployed" over a stale .claude/.
+# shellcheck source=scripts/lib/deploy_extensions.sh
+source "$PROJECT_DIR/scripts/lib/deploy_extensions.sh"
+deploy_agent_extensions "$PROJECT_DIR" agents:deploy \
+    || echo "Continuing launch despite deploy failure (see banner above)."
 
 # Show project status
 echo ""
