@@ -140,7 +140,7 @@ NOT "pivot," NOT "L1-UK" (user corrected 4+ times). Read `memory/l1-uk-corpus-bo
 - **DIALOGUES:** From textbooks, not invented (#A2 genitive interrogation 2026-03-24).
 - **WORD TARGETS:** 1.5× overshoot (4000 → 5500-6000). Easier to trim than expand.
 
-## Fleet Comms + Delegation + CodaxBar + Local API Cold-Start (2026-07-09)
+## Fleet Comms + Delegation + CodexBar + Local API Cold-Start (2026-07-09)
 **Fleet lanes (from activity-matrix + guardrails):** Claude (Opus 4.8 primary for arch/review), Codex (gpt-5.5, top orchestrator), AGY (Antigravity/Gemini replacement), Grok (grok-build dispatch + Hermes), DeepSeek (cheap review), Cursor, pool, glm. Caps ~2 per top lane. Use full fleet for parallel work.
 
 **Communicate / ask / discuss (analysis, no FS writes):** Always `.venv/bin/python scripts/ai_agent_bridge/__main__.py` (bare `ab` = ApacheBench).
@@ -150,7 +150,9 @@ NOT "pivot," NOT "L1-UK" (user corrected 4+ times). Read `memory/l1-uk-corpus-bo
 
 **Delegate real work (edits, builds — ALWAYS --worktree):** `scripts/delegate.py dispatch --agent codex --task-id bar --brief docs/dispatch-briefs/xx.md --worktree --mode workspace-write` (or read-only). Agents: codex/claude/agy/cursor/grok-build/etc. Follow with `status`, `wait`, `list`.
 
-**CodaxBar.app (local Mac app on this machine):** Visual for 5h / weekly / monthly limits + consumption across agents + self. Project-side:
+**CodexBar.app (local Mac app on this machine):** Visual for 5h / weekly / monthly limits + consumption across agents + self. (CodexBar CLI example: `/Applications/CodexBar.app/Contents/Helpers/CodexBarCLI`)
+
+Project-side:
 - `... ai_agent_bridge/__main__.py codex-usage`
 - `.venv/bin/python scripts/analytics/cost_report.py --all --markdown`
 - Dashboards: `dashboards/cost.html`, `runtime.html`, `delegate.html`

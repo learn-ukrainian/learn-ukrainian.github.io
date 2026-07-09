@@ -17,21 +17,23 @@ curl -s http://localhost:8765/api/orient          # or ?fresh=true
 curl -s http://localhost:8765/api/state/summary   # tracks overview (published_mdx, audit etc.)
 ```
 
-# What's active right now
+## What's active right now
+
+```bash
 curl -s http://localhost:8765/api/delegate/active
 curl -s http://localhost:8765/api/runtime/agents
 ```
 
 **Start server:** `npm run api` (or `npm run api:bg`). Serves http://localhost:8765 + all dashboards.
 
-**Usage / limits view (project side; see also external CodaxBar.app for 5h/weekly/monthly bars):**
+**Usage / limits view (project side; see also external CodexBar.app for 5h/weekly/monthly bars):**
 - `.../ai_agent_bridge/__main__.py codex-usage`
 - `.venv/bin/python scripts/analytics/cost_report.py --all --markdown`
 - Dashboards: cost.html, runtime.html
 - API: /api/health (resilience), /api/runtime/recent
 
 ## Fleet note (for context)
-Bridge for comms/discuss: `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-*` / `discuss`. Delegate for work: `scripts/delegate.py dispatch --agent ... --worktree`. See shared/memory/MEMORY.md for full details.
+Bridge for comms/discuss: `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-*` / `discuss`. Delegate for work: `scripts/delegate.py dispatch --agent ... --worktree`. See shared/memory/MEMORY.md for full details. (CodexBar CLI example: `/Applications/CodexBar.app/Contents/Helpers/CodexBarCLI`)
 
 ## Before Building
 
