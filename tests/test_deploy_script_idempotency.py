@@ -194,7 +194,8 @@ def test_orphan_allowlist_single_sourced_no_inline_literals() -> None:
     assert '"hooks.json" \\' not in check
 
     sets = _bash_orphan_sets()
-    assert "dispatch-briefs" in sets["AGENT"]
+    # .agent/ is preserve-by-default (#4741); no runtime orphan tokens.
+    assert sets["AGENT"] == frozenset()
     assert sets["CODEX"] >= {"hooks.json", "memory"}
     assert sets["CLAUDE"] >= {"scheduled_tasks.lock", "worktrees", "*-epic"}
     assert sets["CLAUDE"] >= {f"rules/{name}" for name in UNSCOPED_RULE_FILES}
@@ -204,8 +205,9 @@ def test_drift_checker_orphan_globs_match_deploy_script() -> None:
     """The post-deploy drift checker must mirror deploy orphan globs."""
     sets = _bash_orphan_sets()
     assert "*-epic" in sets["CLAUDE"]
-    assert "*-handoff.md" in sets["AGENT"]
-    assert "dispatch-briefs" in sets["AGENT"]
+    # .agent/ runtime state (handoffs, dispatch-briefs, etc.) is preserve-by-default
+    # and no longer appears in the AGENT orphan set (#4741).
+    assert sets["AGENT"] == frozenset()
 
 
 def test_second_deploy_is_noop_for_codex_target(tmp_path: Path) -> None:
