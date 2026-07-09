@@ -151,14 +151,13 @@ fi
 
 # Deploy shared agent extensions into ignored runtime dirs for the checkout
 # Codex will actually use. This keeps .codex/.agents generated while
-# agents_extensions/ remains the tracked source of truth.
-if command -v npm >/dev/null 2>&1 \
-    && [ -f "$TARGET_DIR/package.json" ] \
-    && grep -q '"agents:deploy"' "$TARGET_DIR/package.json" 2>/dev/null; then
-    echo "Checking agent extensions..."
-    (cd "$TARGET_DIR" && npm run agents:deploy --silent >/dev/null 2>&1) || true
-    echo "Agent extensions deployed"
-fi
+# agents_extensions/ remains the tracked source of truth. Fail-honest: a
+# failing deploy prints a loud banner + the real output instead of the old
+# silent `|| true` that claimed success over stale deploy targets.
+# shellcheck source=scripts/lib/deploy_extensions.sh
+source "$PROJECT_DIR/scripts/lib/deploy_extensions.sh"
+deploy_agent_extensions "$TARGET_DIR" agents:deploy \
+    || echo "Continuing launch despite deploy failure (see banner above)."
 
 echo ""
 echo "LEARN UKRAINIAN - Ukrainian Language Learning"
