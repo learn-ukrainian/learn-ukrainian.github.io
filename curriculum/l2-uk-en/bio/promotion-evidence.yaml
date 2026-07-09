@@ -9,6 +9,11 @@ entries:
       reviewer_family: mixed
       date: 2026-07-09
       evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4836#issuecomment-4929585737
+    independent_content_review:
+      status: pass
+      reviewer_family: claude
+      date: 2026-07-09
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/4845#issuecomment-4929913303
   oleksandr-bilash:
     corpus_hammer:
       status: pass
@@ -31,3 +36,25 @@ entries:
       reviewer_family: claude
       date: 2026-07-09
       evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4836#issuecomment-4929658808
+  raisa-kyrychenko:
+    corpus_hammer:
+      status: pass
+      reviewer_family: mixed
+      date: 2026-07-09
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/4845#issuecomment-4929913303
+    independent_content_review:
+      status: pass
+      reviewer_family: mixed
+      date: 2026-07-09
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/4845#issuecomment-4929913303
+  yevhen-stankovych:
+    corpus_hammer:
+      status: pass
+      reviewer_family: mixed
+      date: 2026-07-09
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/4845#issuecomment-4929913303
+    independent_content_review:
+      status: pass
+      reviewer_family: mixed
+      date: 2026-07-09
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/4845#issuecomment-4929913303

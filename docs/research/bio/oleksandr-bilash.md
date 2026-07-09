@@ -21,7 +21,7 @@
   buried at Байкове кладовище [T1: ВУЕ] [T3: uk.wikipedia].
 - **Family / education key facts:** Born into a musical family in Poltava
   region; studied at Житомирське музичне училище ім. В. С. Косенка and at the
-  Kyiv Conservatory in Mykhailo Vilinskyi's composition class [T1: ЕСУ]
+  Kyiv Conservatory in Mykola Vilinskyi's composition class [T1: ЕСУ]
   [T3: uk.wikipedia]. Core roles: Ukrainian composer, songwriter, author of
   romances, operas, symphonic and film music, poet, and public cultural figure
   [T1: ЕСУ] [T1: ВУЕ]. Honours include Shevchenko Prize, People's Artist of
