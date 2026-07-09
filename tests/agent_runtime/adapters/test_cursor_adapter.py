@@ -142,12 +142,13 @@ def test_cursor_adapter_build_invocation_danger(adapter, tmp_path, monkeypatch):
     # Danger mode: no --mode flag (cursor-agent default allows edits;
     # --mode plan blocks edits, --mode ask is read-only Q&A).
     assert "--mode" not in plan.cmd
-    # MCP discipline + sandbox kept on; --yolo deliberately omitted per Phase 2 spec.
+    # --force for shell/git/gh approval + --sandbox disabled for parity with
+    # other adapters' danger mode (worktree is the isolation boundary). #4750
     assert "--approve-mcps" in plan.cmd
+    assert "--force" in plan.cmd
     assert "--sandbox" in plan.cmd
-    assert "enabled" in plan.cmd
+    assert "disabled" in plan.cmd
     assert "--yolo" not in plan.cmd
-    assert "--force" not in plan.cmd
 
 
 def test_cursor_adapter_no_literal_dash_argument_anywhere(adapter, tmp_path, monkeypatch):
