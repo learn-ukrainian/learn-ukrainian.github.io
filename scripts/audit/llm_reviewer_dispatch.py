@@ -1399,6 +1399,34 @@ def mark_deep_read_attempted(payload: Mapping[str, Any]) -> dict[str, Any]:
     return out
 
 
+# Guard 3 abstain-recovery threshold (task guard3-abstain). Only exact-match (verbatim)
+# multi-output abstains are recovered as provenance-passed; fuzzy near-tie abstains stay
+# fail-closed until audited. SequenceMatcher.ratio() of a normalized verbatim window is 1.0.
+_V2_ABSTAIN_RECOVERY_MIN_SIM = 1.0
+
+
+def _v2_abstain_recovered(res) -> bool:
+    """Guard 3 abstain-recovery (task guard3-abstain; fleet-reviewed codex/agy/cursor).
+
+    ``res.abstained`` means the excerpt is verbatim-present in >=2 DIFFERENT captured tool
+    outputs — Layer A provenance SATISFIED, source ambiguous. "Which of the real sources" is
+    attribution (Layer B, not yet built), NOT a Layer A fabrication. The gate returns
+    ``anchored=False`` for that ambiguity; enforcement previously mapped abstain to a hard
+    REJECT, over-rejecting ~117 gold-true groundings (all sim=1.0). Recover ONLY exact-match
+    (``similarity == 1.0``) multi-output abstains; fuzzy near-tie abstains (``similarity < 1.0``)
+    stay fail-closed until audited (codex caution). The 5-round-hardened gate is untouched;
+    it keeps ``source_index=None`` on abstain and callers record ``anchor_abstained`` so a future
+    Layer B must still entail the excerpt against the RAW output (no self-proving).
+
+    Excerpts with no salient tokens are rejected (``no_salient_anchor``) before Guard 3, but
+    boilerplate WITH salient tokens (e.g. an error string) can reach abstain and recover here —
+    that is a Layer B substance concern, not a Layer A fabrication (panel-accepted; matches v1's
+    exact-substring behavior). Near-copy fabrication (digit/name swap, truncation) never reaches
+    ``abstained=True`` — it fails the per-window salient-token opcode alignment first.
+    """
+    return res.abstained and res.similarity >= _V2_ABSTAIN_RECOVERY_MIN_SIM
+
+
 def enforce_grounding_against_tool_events(
     payload: Mapping[str, Any],
     dispatch_meta: Mapping[str, Any],
@@ -1425,7 +1453,9 @@ def enforce_grounding_against_tool_events(
             if resolved_version == "v2":
                 from scripts.audit import grounding_gate_v2
                 res = grounding_gate_v2.anchor_evidence_to_events(grounding, events)
-                is_matched = res.anchored
+                recovered_abstain = _v2_abstain_recovered(res)
+                is_matched = res.anchored or recovered_abstain
+                item["anchor_recovered_ambiguous"] = bool(recovered_abstain)
             else:
                 is_matched = _grounding_matches_events(grounding, events)
 
@@ -1449,9 +1479,11 @@ def enforce_grounding_against_tool_events(
             if resolved_version == "v2":
                 from scripts.audit import grounding_gate_v2
                 res = grounding_gate_v2.anchor_evidence_to_events(grounding, events)
-                is_matched = res.anchored
+                recovered_abstain = _v2_abstain_recovered(res)
+                is_matched = res.anchored or recovered_abstain
                 item["anchor_similarity"] = res.similarity
                 item["anchor_abstained"] = res.abstained
+                item["anchor_recovered_ambiguous"] = bool(recovered_abstain)
                 item["grounding_gate_version"] = "v2"
                 if res.anchor_low_signal_reason is not None:
                     item["anchor_low_signal_reason"] = res.anchor_low_signal_reason
