@@ -14,6 +14,7 @@ agents_extensions/
 ├── README.md
 ├── shared/          # Agent-agnostic previous extension source/
 └── codex/           # Codex-owned durable rules, memory, and overlays
+└── cursor/          # Cursor IDE rules (deploy to .cursor/rules/)
 ```
 
 Deploy extensions with:
