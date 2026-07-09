@@ -82,6 +82,7 @@ Design notes:
 
 Issue: #1184.
 """
+
 from __future__ import annotations
 
 import argparse
@@ -147,11 +148,7 @@ def _read_github_token_from_bash_secrets(path: Path | None = None) -> str | None
 
 def _resolve_github_token() -> str | None:
     """Resolve the GitHub token used for GH_TOKEN pass-through."""
-    return (
-        os.environ.get("GITHUB_TOKEN")
-        or _read_github_token_from_bash_secrets()
-        or os.environ.get("GH_TOKEN")
-    )
+    return os.environ.get("GITHUB_TOKEN") or _read_github_token_from_bash_secrets() or os.environ.get("GH_TOKEN")
 
 
 def _inject_gh_token_for_agent(worker_env: dict[str, str], agent: str) -> None:
@@ -200,7 +197,7 @@ def _main_checkout_root(repo_root: Path = _REPO_ROOT) -> Path:
     if not first_line.startswith(prefix):
         return repo_root
 
-    git_dir = Path(first_line[len(prefix):].strip())
+    git_dir = Path(first_line[len(prefix) :].strip())
     if not git_dir.is_absolute():
         git_dir = repo_root / git_dir
     git_dir = git_dir.resolve()
@@ -215,6 +212,7 @@ def _main_checkout_root(repo_root: Path = _REPO_ROOT) -> Path:
 # ---------------------------------------------------------------------------
 # State file helpers
 # ---------------------------------------------------------------------------
+
 
 def _state_path(task_id: str) -> Path:
     _TASKS_DIR.mkdir(parents=True, exist_ok=True)
@@ -317,6 +315,7 @@ def _normalize_worktree_path(raw_path: str) -> Path:
 # remediation command in its message so operators can unblock without
 # digging.
 
+
 class WorktreeBranchMismatch(RuntimeError):
     """Existing worktree is on a branch other than the expected dispatch branch."""
 
@@ -339,7 +338,7 @@ def _normalize_task_id(agent: str, task_id: str) -> str:
     """
     for prefix in (f"{agent}-", f"{agent}/"):
         if task_id.startswith(prefix):
-            return task_id[len(prefix):]
+            return task_id[len(prefix) :]
     return task_id
 
 
@@ -414,6 +413,7 @@ def _load_worktree_containment():
     if str(_REPO_ROOT) not in sys.path:
         sys.path.insert(0, str(_REPO_ROOT))
     from scripts.guardrails import worktree_containment
+
     return worktree_containment
 
 
@@ -454,7 +454,10 @@ def _is_verified_added_worktree(path: Path) -> bool:
 
 
 def _resolve_write_cwd_error(
-    *, mode: str, worktree_arg: str | None, cwd_arg: str | None,
+    *,
+    mode: str,
+    worktree_arg: str | None,
+    cwd_arg: str | None,
 ) -> str | None:
     """Reject a write-capable dispatch that would run outside a verified worktree.
 
@@ -705,11 +708,7 @@ def _auto_finalize_changed_files(worktree: Path) -> tuple[str, ...]:
     )
     if tracked.returncode != 0 or untracked.returncode != 0:
         return ()
-    changed = {
-        path.strip()
-        for path in (*tracked.stdout.splitlines(), *untracked.stdout.splitlines())
-        if path.strip()
-    }
+    changed = {path.strip() for path in (*tracked.stdout.splitlines(), *untracked.stdout.splitlines()) if path.strip()}
     return tuple(sorted(changed))
 
 
@@ -913,10 +912,7 @@ def _auto_finalize_dirty_worktree(
                 error = f"{error}; git reset failed: {reset_exc}"
             else:
                 if reset_proc.returncode != 0:
-                    error = (
-                        f"{error}; git reset failed: "
-                        f"{_format_process_failure(reset_proc)}"
-                    )
+                    error = f"{error}; git reset failed: {_format_process_failure(reset_proc)}"
                 else:
                     commit_sha = None
         return AutoFinalizeResult(
@@ -975,7 +971,10 @@ def _reap_finished_worktree(worktree: Path) -> dict[str, Any]:
 
 
 def _validate_existing_worktree(
-    *, path: Path, expected_branch: str, base: str,
+    *,
+    path: Path,
+    expected_branch: str,
+    base: str,
 ) -> bool:
     """Validate a reused worktree. Returns True if a rebase occurred.
 
@@ -1048,8 +1047,7 @@ def _validate_existing_worktree(
         return False
 
     print(
-        f"⚠️  worktree {path} is {behind} commit(s) behind {origin_ref}; "
-        f"attempting fast-forward rebase",
+        f"⚠️  worktree {path} is {behind} commit(s) behind {origin_ref}; attempting fast-forward rebase",
         file=sys.stderr,
     )
     rebase_proc = subprocess.run(
@@ -1063,7 +1061,10 @@ def _validate_existing_worktree(
         # Clean up so the worktree isn't left mid-rebase.
         subprocess.run(
             ["git", "rebase", "--abort"],
-            cwd=path, capture_output=True, text=True, check=False,
+            cwd=path,
+            capture_output=True,
+            text=True,
+            check=False,
         )
         raise WorktreeStaleBase(
             f"worktree at {path} is {behind} commit(s) behind {origin_ref} "
@@ -1128,8 +1129,7 @@ def _provision_data_symlinks(worktree_path: Path, main_repo_root: Path) -> None:
 
         if target.parent.exists() and not target.parent.is_dir():
             print(
-                f"⚠️  skipping worktree link because {target.parent} "
-                "is not a directory",
+                f"⚠️  skipping worktree link because {target.parent} is not a directory",
                 file=sys.stderr,
             )
             continue
@@ -1171,7 +1171,9 @@ def _ensure_worktree(
             raise ValueError(f"worktree path exists but is not a directory: {worktree_path}")
         telemetry["reused"] = True
         telemetry["rebased"] = _validate_existing_worktree(
-            path=worktree_path, expected_branch=branch, base=base,
+            path=worktree_path,
+            expected_branch=branch,
+            base=base,
         )
         telemetry["base_sha"] = _resolve_sha(worktree_path)
         # Reused worktrees may predate this provisioning hook; the helper is
@@ -1231,6 +1233,7 @@ def _augment_prompt_with_worktree(prompt: str, worktree_path: Path | None) -> st
 # ---------------------------------------------------------------------------
 # Worker entrypoint — runs inside the detached subprocess
 # ---------------------------------------------------------------------------
+
 
 def _worker_sigterm_handler(_signum, _frame):
     """SIGTERM handler for the worker process.
@@ -1403,9 +1406,7 @@ def _run_worker(
     cancelled = False
     try:
         stdout_silence_timeout = silence_timeout if silence_timeout > 0 else None
-        initial_probe = (
-            initial_response_timeout if initial_response_timeout > 0 else None
-        )
+        initial_probe = initial_response_timeout if initial_response_timeout > 0 else None
         tool_config: dict[str, Any] = {}
         if max_budget_usd is not None:
             tool_config["max_budget_usd"] = max_budget_usd
@@ -1541,35 +1542,37 @@ def _run_worker(
     if substitution is None and isinstance(usage_record, dict):
         substitution = usage_record.get("substitution")
 
-    final_state.update({
-        "model": getattr(result, "model", final_state.get("model")),
-        "effort": getattr(result, "effort", final_state.get("effort")),
-        "cli_version": getattr(result, "cli_version", final_state.get("cli_version")),
-        "substitution": substitution,
-        "status": final_status,
-        "finished_at": datetime.now(UTC).isoformat(),
-        "duration_s": round(duration_s, 3),
-        "response_chars": len(response),
-        "result_file": result_file,
-        "stderr_excerpt": stderr_excerpt,
-        "returncode": returncode,
-        "worktree_dirty_on_exit": dirty_on_exit,
-        "commits_ahead": commits_ahead,
-        "needs_finalize": needs_finalize,
-        "keep_worktree": keep_worktree,
-        "worktree_reap": worktree_reap,
-        "auto_finalize": (
-            {
-                "ok": auto_finalize.ok,
-                "commit_sha": auto_finalize.commit_sha,
-                "pr_url": auto_finalize.pr_url,
-                "error": auto_finalize.error,
-                "changed_files": list(auto_finalize.changed_files),
-            }
-            if auto_finalize is not None
-            else None
-        ),
-    })
+    final_state.update(
+        {
+            "model": getattr(result, "model", final_state.get("model")),
+            "effort": getattr(result, "effort", final_state.get("effort")),
+            "cli_version": getattr(result, "cli_version", final_state.get("cli_version")),
+            "substitution": substitution,
+            "status": final_status,
+            "finished_at": datetime.now(UTC).isoformat(),
+            "duration_s": round(duration_s, 3),
+            "response_chars": len(response),
+            "result_file": result_file,
+            "stderr_excerpt": stderr_excerpt,
+            "returncode": returncode,
+            "worktree_dirty_on_exit": dirty_on_exit,
+            "commits_ahead": commits_ahead,
+            "needs_finalize": needs_finalize,
+            "keep_worktree": keep_worktree,
+            "worktree_reap": worktree_reap,
+            "auto_finalize": (
+                {
+                    "ok": auto_finalize.ok,
+                    "commit_sha": auto_finalize.commit_sha,
+                    "pr_url": auto_finalize.pr_url,
+                    "error": auto_finalize.error,
+                    "changed_files": list(auto_finalize.changed_files),
+                }
+                if auto_finalize is not None
+                else None
+            ),
+        }
+    )
     _write_state_atomic(state_path, final_state)
     _emit_terminal_dispatch_event(
         task_id=task_id,
@@ -1603,6 +1606,7 @@ def _run_worker(
 # Dispatch command — spawn detached worker
 # ---------------------------------------------------------------------------
 
+
 def cmd_dispatch(args: argparse.Namespace) -> int:
     """Spawn a detached worker and return immediately with the task-id."""
     sys.path.insert(0, str(_REPO_ROOT / "scripts"))
@@ -1622,8 +1626,7 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
 
     if args.cwd and worktree_arg:
         print(
-            "❌ --cwd and --worktree are mutually exclusive. Use --worktree for "
-            "delegated write isolation.",
+            "❌ --cwd and --worktree are mutually exclusive. Use --worktree for delegated write isolation.",
             file=sys.stderr,
         )
         return 2
@@ -1726,11 +1729,7 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         # Fix 4 (#1476): the sentinel ``auto`` (from bare ``--worktree``)
         # resolves to ``.worktrees/dispatch/{agent}/{task}/``. Explicit
         # paths remain unchanged for back-compat with in-flight dispatches.
-        resolved_raw = (
-            str(_auto_worktree_path(dispatch_agent, task_id))
-            if worktree_arg == "auto"
-            else worktree_arg
-        )
+        resolved_raw = str(_auto_worktree_path(dispatch_agent, task_id)) if worktree_arg == "auto" else worktree_arg
         try:
             worktree_path, worktree_branch, worktree_telemetry = _ensure_worktree(
                 agent=dispatch_agent,
@@ -1820,13 +1819,20 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         python_bin,
         str(Path(__file__).resolve()),
         "_worker",
-        "--task-id", task_id,
-        "--agent", dispatch_agent,
-        "--mode", args.mode,
-        "--cwd", cwd,
-        "--hard-timeout", str(args.hard_timeout),
-        "--silence-timeout", str(silence_timeout),
-        "--initial-response-timeout", str(initial_response_timeout),
+        "--task-id",
+        task_id,
+        "--agent",
+        dispatch_agent,
+        "--mode",
+        args.mode,
+        "--cwd",
+        cwd,
+        "--hard-timeout",
+        str(args.hard_timeout),
+        "--silence-timeout",
+        str(silence_timeout),
+        "--initial-response-timeout",
+        str(initial_response_timeout),
     ]
     if keep_worktree:
         cmd.append("--keep-worktree")
@@ -1875,18 +1881,17 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
             # (because zombie detection is gated on `pid and not alive`).
             # Codex 2026-04-10 audit finding.
             failed_state = _read_state(state_path) or initial_state
-            failed_state.update({
-                "status": "failed",
-                "finished_at": datetime.now(UTC).isoformat(),
-                "stderr_excerpt": (
-                    f"Popen failed: {type(exc).__name__}: {exc}"
-                )[:500],
-                "returncode": None,
-            })
+            failed_state.update(
+                {
+                    "status": "failed",
+                    "finished_at": datetime.now(UTC).isoformat(),
+                    "stderr_excerpt": (f"Popen failed: {type(exc).__name__}: {exc}")[:500],
+                    "returncode": None,
+                }
+            )
             _write_state_atomic(state_path, failed_state)
             print(
-                f"❌ failed to spawn worker for {task_id!r}: "
-                f"{type(exc).__name__}: {exc}",
+                f"❌ failed to spawn worker for {task_id!r}: {type(exc).__name__}: {exc}",
                 file=sys.stderr,
             )
             return 1
@@ -1925,6 +1930,7 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
 # Status command — read state + detect zombies
 # ---------------------------------------------------------------------------
 
+
 def cmd_status(args: argparse.Namespace) -> int:
     state_path = _state_path(args.task_id)
     state = _read_state(state_path)
@@ -1945,19 +1951,17 @@ def cmd_status(args: argparse.Namespace) -> int:
             state["status"] = "crashed"
             state["finished_at"] = datetime.now(UTC).isoformat()
             state["stderr_excerpt"] = (
-                f"worker pid {pid} is not alive but state said "
-                f"{prior_status!r}; marked crashed by status probe"
+                f"worker pid {pid} is not alive but state said {prior_status!r}; marked crashed by status probe"
             )
             _write_state_atomic(state_path, state)
 
     # Elapsed time for still-running tasks
     if state.get("status") == "running" and state.get("started_at"):
         try:
-            started = datetime.fromisoformat(
-                str(state["started_at"]).replace("Z", "+00:00")
-            )
+            started = datetime.fromisoformat(str(state["started_at"]).replace("Z", "+00:00"))
             state["elapsed_s"] = round(
-                (datetime.now(UTC) - started).total_seconds(), 1,
+                (datetime.now(UTC) - started).total_seconds(),
+                1,
             )
         except (ValueError, TypeError):
             pass
@@ -2014,9 +2018,9 @@ def _fetch_monitor_task(task_id: str) -> dict[str, Any] | None:
 
 
 def _fetch_routing_budget() -> dict[str, Any]:
-    url = f"{_monitor_api_base_url()}/api/state/routing-budget"
+    url = f"{_monitor_api_base_url()}/api/state/routing-budget?fresh_codexbar=true"
     try:
-        with urllib.request.urlopen(url, timeout=3) as response:
+        with urllib.request.urlopen(url, timeout=8) as response:
             payload = json.loads(response.read().decode("utf-8"))
     except (OSError, TimeoutError, urllib.error.URLError, json.JSONDecodeError) as exc:
         raise MonitorApiUnavailable(str(exc)) from exc
@@ -2051,14 +2055,28 @@ def _resolve_agent_with_budget_guard(agent: str) -> str:
     agents = payload.get("agents") or {}
     records_loaded = int(diags.get("records_loaded", 0) or 0)
     is_stale = bool(diags.get("stale", False))
+    codexbar_data_available = bool(diags.get("codexbar_data_available", False))
 
-    # empty or no data: suppress hard action + rec warning per constraint (a)
-    if records_loaded == 0 or not agents:
-        print("⚠ ROUTING CHECK: empty snapshot (records_loaded=0) — no primary rec, no hard sub (per design)", file=sys.stderr)
+    # An empty ledger is only unknown when the explicit CodexBar refresh also
+    # yielded no authoritative weekly data. Never quietly fail open here.
+    if not agents or (records_loaded == 0 and not codexbar_data_available):
+        print(
+            "⚠ ROUTING CHECK UNKNOWN: budget UNKNOWN — could not verify CodexBar data; "
+            "lanes may be in deficit; no hard sub.",
+            file=sys.stderr,
+        )
         return requested
 
+    if records_loaded == 0:
+        for warning in rec.get("warnings") or []:
+            if "is in deficit" in str(warning):
+                print(f"⚠ ROUTING CHECK: {warning}; no hard sub (ledger empty).", file=sys.stderr)
+
     if is_stale:
-        print("⚠ ROUTING CHECK ADVISORY (stale snapshot, generatedAt/data age >15min) — verify manually; no hard sub", file=sys.stderr)
+        print(
+            "⚠ ROUTING CHECK ADVISORY (stale snapshot, generatedAt/data age >15min) — verify manually; no hard sub",
+            file=sys.stderr,
+        )
         # Rec warning deliberately suppressed on stale: a recommendation from
         # stale numbers is worse than none (same rationale as the empty case).
     else:
@@ -2079,7 +2097,11 @@ def _resolve_agent_with_budget_guard(agent: str) -> str:
         status = (agent_info.get("interactive") or {}).get("status") or agent_info.get("status")
     else:
         status = agent_info.get("status")
-    burn = agent_info.get("burn_pct_7d") if requested != "claude" else (agent_info.get("interactive") or {}).get("burn_pct_7d") or agent_info.get("burn_pct_7d")
+    burn = (
+        agent_info.get("burn_pct_7d")
+        if requested != "claude"
+        else (agent_info.get("interactive") or {}).get("burn_pct_7d") or agent_info.get("burn_pct_7d")
+    )
 
     if status == "near_cap" and not is_stale and records_loaded > 0:
         fallbacks = _load_dispatch_fallbacks()
@@ -2141,8 +2163,7 @@ def cmd_status_or_fail(args: argparse.Namespace) -> int:
         return 0
 
     print(
-        f"task {args.task_id} is not running "
-        f"(status={status['status']}, age={status['age_s']}s)",
+        f"task {args.task_id} is not running (status={status['status']}, age={status['age_s']}s)",
         file=sys.stderr,
     )
     return 1
@@ -2152,9 +2173,7 @@ def cmd_status_or_fail(args: argparse.Namespace) -> int:
 # Wait command — poll until terminal state or timeout
 # ---------------------------------------------------------------------------
 
-_TERMINAL_STATUSES = frozenset(
-    {"done", "failed", "timeout", "rate_limited", "crashed", "cancelled"}
-)
+_TERMINAL_STATUSES = frozenset({"done", "failed", "timeout", "rate_limited", "crashed", "cancelled"})
 
 
 def cmd_wait(args: argparse.Namespace) -> int:
@@ -2178,8 +2197,7 @@ def cmd_wait(args: argparse.Namespace) -> int:
                 state["status"] = "crashed"
                 state["finished_at"] = datetime.now(UTC).isoformat()
                 state["stderr_excerpt"] = (
-                    f"worker pid {pid} is not alive but state said "
-                    f"{prior_status!r}; marked crashed by wait probe"
+                    f"worker pid {pid} is not alive but state said {prior_status!r}; marked crashed by wait probe"
                 )
                 _write_state_atomic(state_path, state)
 
@@ -2212,6 +2230,7 @@ def cmd_wait(args: argparse.Namespace) -> int:
 # Cancel command — signal the worker
 # ---------------------------------------------------------------------------
 
+
 def cmd_cancel(args: argparse.Namespace) -> int:
     """Send SIGTERM to the worker's PID. Lets the runtime unwind cleanly.
 
@@ -2238,8 +2257,7 @@ def cmd_cancel(args: argparse.Namespace) -> int:
 
     if status not in ("running", "spawning"):
         print(
-            f"❌ task {args.task_id!r} has unexpected status {status!r}; "
-            f"refusing to cancel.",
+            f"❌ task {args.task_id!r} has unexpected status {status!r}; refusing to cancel.",
             file=sys.stderr,
         )
         return 1
@@ -2269,6 +2287,7 @@ def cmd_cancel(args: argparse.Namespace) -> int:
 # ---------------------------------------------------------------------------
 # List command — show all tasks (for operators)
 # ---------------------------------------------------------------------------
+
 
 def cmd_list(args: argparse.Namespace) -> int:
     _TASKS_DIR.mkdir(parents=True, exist_ok=True)
@@ -2310,9 +2329,7 @@ def cmd_list(args: argparse.Namespace) -> int:
     if flat_tasks:
         print(
             f"⚠️  {len(flat_tasks)} task(s) use the DEPRECATED flat worktree "
-            f"layout: {flat_tasks[:5]}"
-            + (" …" if len(flat_tasks) > 5 else "")
-            + ". New dispatches should use "
+            f"layout: {flat_tasks[:5]}" + (" …" if len(flat_tasks) > 5 else "") + ". New dispatches should use "
             "`.worktrees/dispatch/{agent}/{task}/`.",
             file=sys.stderr,
         )
@@ -2322,6 +2339,7 @@ def cmd_list(args: argparse.Namespace) -> int:
 # ---------------------------------------------------------------------------
 # _worker command — internal, called by cmd_dispatch's spawned process
 # ---------------------------------------------------------------------------
+
 
 def cmd_worker(args: argparse.Namespace) -> int:
     """Internal entrypoint for the detached worker subprocess."""
@@ -2350,6 +2368,7 @@ def cmd_worker(args: argparse.Namespace) -> int:
 # ---------------------------------------------------------------------------
 # CLI glue
 # ---------------------------------------------------------------------------
+
 
 def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(
@@ -2394,29 +2413,36 @@ def build_parser() -> argparse.ArgumentParser:
         help="Fire a task, return immediately",
         formatter_class=_dispatch_help_formatter,
     )
-    d.add_argument("--agent", required=True,
-                   choices=list(_DISPATCH_AGENT_CHOICES),
-                   # "qwen" removed from choices (banned agent): advertising it in --help
-                   # while the routing guard rejects it at dispatch is a UX trap. The
-                   # guard still catches programmatic Namespace bypass.
-                   help="Agent to run for the task: codex, gemini, claude, grok (Hermes), "
-                        "grok-build (native grok CLI), deepseek, agy, or cursor.")
-    d.add_argument("--task-id", required=True,
-                   help="Stable task identifier used for state/log files, e.g. review-123.")
+    d.add_argument(
+        "--agent",
+        required=True,
+        choices=list(_DISPATCH_AGENT_CHOICES),
+        # "qwen" removed from choices (banned agent): advertising it in --help
+        # while the routing guard rejects it at dispatch is a UX trap. The
+        # guard still catches programmatic Namespace bypass.
+        help="Agent to run for the task: codex, gemini, claude, grok (Hermes), "
+        "grok-build (native grok CLI), deepseek, agy, or cursor.",
+    )
+    d.add_argument("--task-id", required=True, help="Stable task identifier used for state/log files, e.g. review-123.")
     d.add_argument("--prompt", help="Prompt text, or '-' to read the prompt from stdin.")
     d.add_argument("--prompt-file", help="Read the prompt body from this file path.")
-    d.add_argument("--mode", default="read-only",
-                   choices=["read-only", "workspace-write", "danger"],
-                   help="Runtime mode (default: read-only). workspace-write and danger "
-                        "require a verified dispatch worktree (bare --worktree, or --cwd "
-                        "pointing at an existing added worktree); read-only may run from repo root.")
-    d.add_argument("--model", default=None,
-                   help="Optional model override, e.g. gpt-5.5 or gemini-3.1-pro-preview.")
-    d.add_argument("--provider", default=None,
-                   choices=["openrouter"],
-                   help="Opt-in provider for Hermes-routed agents (e.g. deepseek). "
-                        "Default for DeepSeek is first-party (local-only). "
-                        "Use --provider openrouter for US-residency pinned path.")
+    d.add_argument(
+        "--mode",
+        default="read-only",
+        choices=["read-only", "workspace-write", "danger"],
+        help="Runtime mode (default: read-only). workspace-write and danger "
+        "require a verified dispatch worktree (bare --worktree, or --cwd "
+        "pointing at an existing added worktree); read-only may run from repo root.",
+    )
+    d.add_argument("--model", default=None, help="Optional model override, e.g. gpt-5.5 or gemini-3.1-pro-preview.")
+    d.add_argument(
+        "--provider",
+        default=None,
+        choices=["openrouter"],
+        help="Opt-in provider for Hermes-routed agents (e.g. deepseek). "
+        "Default for DeepSeek is first-party (local-only). "
+        "Use --provider openrouter for US-residency pinned path.",
+    )
     d.add_argument(
         "--effort",
         default=None,
@@ -2431,10 +2457,13 @@ def build_parser() -> argparse.ArgumentParser:
             "See #1396."
         ),
     )
-    d.add_argument("--cwd", default=None,
-                   help="Working directory for the worker (default: repo root). "
-                        "For workspace-write/danger it must be a verified added "
-                        "worktree, never the primary checkout — prefer --worktree.")
+    d.add_argument(
+        "--cwd",
+        default=None,
+        help="Working directory for the worker (default: repo root). "
+        "For workspace-write/danger it must be a verified added "
+        "worktree, never the primary checkout — prefer --worktree.",
+    )
     d.add_argument(
         "--worktree",
         nargs="?",
@@ -2583,10 +2612,8 @@ def build_parser() -> argparse.ArgumentParser:
     # wait
     w = sub.add_parser("wait", help="Block until task reaches terminal state")
     w.add_argument("task_id", help="Task ID to wait for, e.g. review-123.")
-    w.add_argument("--timeout", type=float, default=0,
-                   help="Max wait seconds (0 = forever)")
-    w.add_argument("--poll-interval", type=float, default=2.0,
-                   help="Poll interval seconds (default: 2.0)")
+    w.add_argument("--timeout", type=float, default=0, help="Max wait seconds (0 = forever)")
+    w.add_argument("--poll-interval", type=float, default=2.0, help="Poll interval seconds (default: 2.0)")
     w.set_defaults(func=cmd_wait)
 
     # cancel
@@ -2596,11 +2623,22 @@ def build_parser() -> argparse.ArgumentParser:
 
     # list
     l = sub.add_parser("list", help="List tasks (with optional status filter)")
-    l.add_argument("--status", default=None,
-                   choices=["spawning", "running", "done", "failed",
-                            "timeout", "rate_limited", "crashed", "cancelled",
-                            "needs_finalize"],
-                   help="Optional status filter, e.g. running or failed.")
+    l.add_argument(
+        "--status",
+        default=None,
+        choices=[
+            "spawning",
+            "running",
+            "done",
+            "failed",
+            "timeout",
+            "rate_limited",
+            "crashed",
+            "cancelled",
+            "needs_finalize",
+        ],
+        help="Optional status filter, e.g. running or failed.",
+    )
     l.set_defaults(func=cmd_list)
 
     # _worker (hidden — internal)

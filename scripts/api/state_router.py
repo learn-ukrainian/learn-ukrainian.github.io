@@ -48,7 +48,7 @@ except ImportError:
     from ..path_safety import safe_join  # scripts.api package import (production)
 
 from . import delegate_router as delegate_api
-from .codexbar_usage import get_provider_usage_data
+from .codexbar_usage import get_provider_usage_data, refresh_provider_usage_data
 from .config import CURRICULUM_ROOT, LEVELS
 from .state_build import (
     compute_build_stats,
@@ -299,16 +299,19 @@ def _recommend_agent(
     reset_imminent_hours: int = 6,
     is_stale: bool = False,
     records_loaded: int = 0,
+    authoritative_data_available: bool = False,
 ) -> dict[str, Any]:
     """Generalized recommendation over subscription lanes + reset-aware + empty/stale guards.
 
-    Per design: when records_loaded==0 or empty snapshot, suppress primary rec (no confident pick from absent data).
+    When both the ledger and CodexBar are empty, suppress the primary rec. A
+    fresh CodexBar overlay is authoritative even when the local USD ledger is
+    empty.
     Reset-aware: if top pick resets within N hours, note deferral warning (N configurable).
     """
     if is_stale:
         warnings.append("snapshot stale (>15min old data) — advisory only, verify manually before trusting numbers")
 
-    if records_loaded == 0:
+    if records_loaded == 0 and not authoritative_data_available:
         return {
             "primary_agent_for_code": None,
             "rationale": "Budget snapshot empty/absent (records_loaded=0); confident primary-lane recommendation suppressed per pinned design constraint. Use model-assignment.md + /api/orient runtime.headroom instead.",
@@ -439,7 +442,7 @@ def _recommend_agent(
     return {"primary_agent_for_code": None, "rationale": "insufficient data", "warnings": warnings}
 
 
-def compute_routing_budget(now: datetime | None = None) -> dict[str, Any]:
+def compute_routing_budget(now: datetime | None = None, *, fresh_codexbar: bool = False) -> dict[str, Any]:
     current_time = (now or datetime.now(UTC)).astimezone(UTC)
     today = current_time.date()
     window_start = current_time - timedelta(days=7)
@@ -613,9 +616,10 @@ def compute_routing_budget(now: datetime | None = None) -> dict[str, Any]:
     cb_sourced_any = False
     cb_stale = False
     cb_max_age_s = None
+    refreshed_codexbar = refresh_provider_usage_data(SUBSCRIPTION_LANES) if fresh_codexbar else {}
 
     for lane in SUBSCRIPTION_LANES:
-        cb_data = get_provider_usage_data(lane)
+        cb_data = refreshed_codexbar.get(lane) or get_provider_usage_data(lane)
         if cb_data and cb_data.get("weekly_used_pct") is not None:
             cb_sourced_any = True
             weekly_used = cb_data["weekly_used_pct"]
@@ -744,6 +748,7 @@ def compute_routing_budget(now: datetime | None = None) -> dict[str, Any]:
         reset_imminent_hours=reset_hours,
         is_stale=is_stale,
         records_loaded=len(records),
+        authoritative_data_available=cb_sourced_any,
     )
 
     # Build ranked view: subscription by remaining headroom (low burn = high remaining first), API always unknown
@@ -798,6 +803,8 @@ def compute_routing_budget(now: datetime | None = None) -> dict[str, Any]:
             "data_age_s": data_age_s,
             "stale_threshold_s": 900,
             "reset_imminent_hours": reset_hours,
+            "codexbar_data_available": cb_sourced_any,
+            "fresh_codexbar_requested": fresh_codexbar,
         },
         "ranked_by_headroom": ranked,
     }
@@ -807,9 +814,9 @@ def compute_routing_budget(now: datetime | None = None) -> dict[str, Any]:
 
 
 @router.get("/routing-budget")
-async def routing_budget():
+async def routing_budget(fresh_codexbar: bool = Query(False)):
     """Per-agent soft-cap burn and routing recommendation for dispatch planning."""
-    return await asyncio.to_thread(compute_routing_budget)
+    return await asyncio.to_thread(compute_routing_budget, fresh_codexbar=fresh_codexbar)
 
 
 @router.get("/summary")
