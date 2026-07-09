@@ -18,6 +18,7 @@ Resume policy is data-driven (see docs/design/agent-runtime.md § 6.3):
 
 Issue: #1184
 """
+
 from __future__ import annotations
 
 from typing import NotRequired, TypedDict
@@ -26,13 +27,13 @@ from typing import NotRequired, TypedDict
 class AgentEntry(TypedDict):
     """Registry row shape."""
 
-    adapter: str               # fully-qualified "module:ClassName" import path
+    adapter: str  # fully-qualified "module:ClassName" import path
     default_model: str | None
     default_effort: NotRequired[str | None]
-    cost_tier: str             # "low" | "medium" | "high" | "unknown"
+    cost_tier: str  # "low" | "medium" | "high" | "unknown"
     capabilities: frozenset[str]
     cli_available: bool
-    resume_policy: str         # "bridge_only" | "never"
+    resume_policy: str  # "bridge_only" | "never"
 
 
 AGENTS: dict[str, AgentEntry] = {
@@ -40,12 +41,14 @@ AGENTS: dict[str, AgentEntry] = {
         "adapter": "scripts.agent_runtime.adapters.codex:CodexAdapter",
         "default_model": "gpt-5.5",
         "cost_tier": "medium",
-        "capabilities": frozenset({
-            "code_writing",
-            "code_review",
-            "debugging",
-            "adversarial_review",
-        }),
+        "capabilities": frozenset(
+            {
+                "code_writing",
+                "code_review",
+                "debugging",
+                "adversarial_review",
+            }
+        ),
         "cli_available": True,
         "resume_policy": "bridge_only",
     },
@@ -53,12 +56,14 @@ AGENTS: dict[str, AgentEntry] = {
         "adapter": "scripts.agent_runtime.adapters.codex:CodexAdapter",
         "default_model": "gpt-5.5",
         "cost_tier": "high",
-        "capabilities": frozenset({
-            "frontend_design",
-            "ui_review",
-            "multimodal",
-            "visual_inspection",
-        }),
+        "capabilities": frozenset(
+            {
+                "frontend_design",
+                "ui_review",
+                "multimodal",
+                "visual_inspection",
+            }
+        ),
         "cli_available": False,
         "resume_policy": "never",
     },
@@ -66,12 +71,14 @@ AGENTS: dict[str, AgentEntry] = {
         "adapter": "scripts.agent_runtime.adapters.claude:ClaudeAdapter",
         "default_model": "claude-opus-4-8",
         "cost_tier": "high",
-        "capabilities": frozenset({
-            "architecture",
-            "review",
-            "content_a1",
-            "planning",
-        }),
+        "capabilities": frozenset(
+            {
+                "architecture",
+                "review",
+                "content_a1",
+                "planning",
+            }
+        ),
         "cli_available": True,
         "resume_policy": "bridge_only",
     },
@@ -79,12 +86,28 @@ AGENTS: dict[str, AgentEntry] = {
         "adapter": "scripts.agent_runtime.adapters.claude:ClaudeAdapter",
         "default_model": "claude-opus-4-8",
         "cost_tier": "high",
-        "capabilities": frozenset({
-            "frontend_design",
-            "ui_review",
-            "multimodal",
-            "visual_inspection",
-        }),
+        "capabilities": frozenset(
+            {
+                "frontend_design",
+                "ui_review",
+                "multimodal",
+                "visual_inspection",
+            }
+        ),
+        "cli_available": False,
+        "resume_policy": "never",
+    },
+    "claude-infra": {
+        "adapter": "scripts.agent_runtime.adapters.claude:ClaudeAdapter",
+        "default_model": "claude-opus-4-8",
+        "cost_tier": "high",
+        "capabilities": frozenset(
+            {
+                "architecture",
+                "review",
+                "planning",
+            }
+        ),
         "cli_available": False,
         "resume_policy": "never",
     },
@@ -92,12 +115,15 @@ AGENTS: dict[str, AgentEntry] = {
         "adapter": "scripts.agent_runtime.adapters.gemini:GeminiAdapter",
         "default_model": "gemini-3.1-pro-preview",
         "cost_tier": "low",
-        "capabilities": frozenset({
-            "content_writing",
-            "content_review",
-            "adversarial_review",
-        }),
-        "cli_available": True,
+        "capabilities": frozenset(
+            {
+                "content_writing",
+                "content_review",
+                "adversarial_review",
+            }
+        ),
+        # gemini-cli retired — gemini-family routes via agy (model-assignment.md)
+        "cli_available": False,
         "resume_policy": "bridge_only",
     },
     "grok": {
@@ -106,11 +132,13 @@ AGENTS: dict[str, AgentEntry] = {
         "adapter": "scripts.agent_runtime.adapters.hermes_grok:HermesGrokAdapter",
         "default_model": "grok-4.3",
         "cost_tier": "low",
-        "capabilities": frozenset({
-            "content_writing",
-            "content_review",
-            "adversarial_review",
-        }),
+        "capabilities": frozenset(
+            {
+                "content_writing",
+                "content_review",
+                "adversarial_review",
+            }
+        ),
         "cli_available": True,
         "resume_policy": "never",
     },
@@ -123,11 +151,13 @@ AGENTS: dict[str, AgentEntry] = {
         "default_model": "grok-build",
         "default_effort": "high",
         "cost_tier": "medium",
-        "capabilities": frozenset({
-            "code_writing",
-            "code_review",
-            "debugging",
-        }),
+        "capabilities": frozenset(
+            {
+                "code_writing",
+                "code_review",
+                "debugging",
+            }
+        ),
         "cli_available": True,
         "resume_policy": "never",
     },
@@ -135,13 +165,15 @@ AGENTS: dict[str, AgentEntry] = {
         "adapter": "scripts.agent_runtime.adapters.hermes_deepseek:HermesDeepSeekAdapter",
         "default_model": "deepseek-v4-pro",
         "cost_tier": "low",
-        "capabilities": frozenset({
-            "code_writing",
-            "code_review",
-            "content_writing",
-            "content_review",
-            "adversarial_review",
-        }),
+        "capabilities": frozenset(
+            {
+                "code_writing",
+                "code_review",
+                "content_writing",
+                "content_review",
+                "adversarial_review",
+            }
+        ),
         "cli_available": True,
         "resume_policy": "never",
     },
@@ -149,11 +181,13 @@ AGENTS: dict[str, AgentEntry] = {
         "adapter": "scripts.agent_runtime.adapters.hermes_qwen:HermesQwenAdapter",
         "default_model": "qwen/qwen3.6-plus",
         "cost_tier": "low",
-        "capabilities": frozenset({
-            "content_writing",
-            "content_review",
-            "adversarial_review",
-        }),
+        "capabilities": frozenset(
+            {
+                "content_writing",
+                "content_review",
+                "adversarial_review",
+            }
+        ),
         "cli_available": True,
         "resume_policy": "never",
     },
@@ -161,11 +195,13 @@ AGENTS: dict[str, AgentEntry] = {
         "adapter": "scripts.agent_runtime.adapters.cursor:CursorAdapter",
         "default_model": "auto",
         "cost_tier": "low",
-        "capabilities": frozenset({
-            "content_writing",
-            "content_review",
-            "adversarial_review",
-        }),
+        "capabilities": frozenset(
+            {
+                "content_writing",
+                "content_review",
+                "adversarial_review",
+            }
+        ),
         "cli_available": True,
         "resume_policy": "bridge_only",
     },
@@ -179,10 +215,12 @@ AGENTS: dict[str, AgentEntry] = {
         "adapter": "scripts.agent_runtime.adapters.agy:AgyAdapter",
         "default_model": "gemini-3.5-flash-high",
         "cost_tier": "low",
-        "capabilities": frozenset({
-            "content_writing",
-            "content_review",
-        }),
+        "capabilities": frozenset(
+            {
+                "content_writing",
+                "content_review",
+            }
+        ),
         "cli_available": True,
         "resume_policy": "bridge_only",
     },

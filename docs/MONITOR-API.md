@@ -34,7 +34,19 @@ Text responses append a tail footer:
 ```
 
 JSON responses add a top-level `_telemetry` object instead of changing
-the response text:
+the response text. Pass `?session=<uuid>` or header `X-Session-Id`
+(query wins) on telemetry-bearing endpoints (`/api/orient`, `/api/rules`,
+`/api/session/current`, `/api/state/manifest`).
+
+- Session hit → `_telemetry.ctx` reflects that session's transcript;
+  `caller_match: true`.
+- No session param → `_telemetry.ctx` is `null`; consult
+  `_telemetry.newest_transcript` for the newest checkout transcript
+  (may not be the caller's session).
+- Session miss → `reason: "session-transcript-not-found"`.
+
+`LEARN_UKRAINIAN_TRANSCRIPT_PATH` / `CLAUDE_TRANSCRIPT_PATH` remain a
+server-global test hook for the no-session newest-transcript path only.
 
 ```json
 {
@@ -1434,6 +1446,18 @@ Modules with recent dispatch activity and unfinished publish state.
 
 One-call agent orientation: git, issues, pipeline, runtime, delegate, wiki, health, and session hints.
 
+Query params:
+
+- `fresh=true` — invalidate orient-layer caches before gathering (see below).
+- `sections=git,runtime` — comma-separated subset of section keys to
+  collect. Valid keys: `git`, `issues`, `pipeline`, `runtime`,
+  `delegate`, `bridge_pending`, `wiki`, `governance`, `health`,
+  `session_hints`. Unknown keys return `400`. Omitted = full payload
+  (back-compat). Skipped sections are not collected and are omitted
+  from both the top-level payload and `meta`.
+- `session=<uuid>` or header `X-Session-Id` — per-session context
+  telemetry when `LEARN_UKRAINIAN_TELEMETRY_FOOTER=1` (query wins).
+
 ```json
 {
   "generated_at": "2026-04-11T00:15:00Z",
@@ -1523,7 +1547,7 @@ Real protection is collector-specific:
 | Collector | Inner timeout | Notes |
 |---|---|---|
 | `git` | 2 s `_run_command` subprocess timeout | hardened |
-| `issues` | 2 s `_run_command` subprocess timeout | hardened |
+| `issues` | 5 s `_run_command` subprocess timeout | hardened |
 | `pipeline` | async — `asyncio.wait_for` works | hardened |
 | `runtime` | none — pure Python / filesystem | fast in practice; an NFS stall could wedge a thread past the 5 s ceiling |
 | `delegate` | none — filesystem read of a small JSON | same caveat |

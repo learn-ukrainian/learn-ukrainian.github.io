@@ -47,13 +47,27 @@ def _patch_orient_sources(monkeypatch) -> None:
     monkeypatch.setattr(
         api_main,
         "_collect_runtime_orient_data",
-        lambda: {"agents": ["codex"], "recent_outcomes": {"ok": 1, "error": 0, "rate_limited": 0}, "headroom": {"codex": True}},
+        lambda: {
+            "agents": ["codex"],
+            "recent_outcomes": {"ok": 1, "error": 0, "rate_limited": 0},
+            "headroom": {"codex": True},
+        },
     )
     monkeypatch.setattr(api_main, "_collect_delegate_orient_data", lambda: {"active_count": 0, "recent": []})
     monkeypatch.setattr(api_main, "_collect_bridge_pending_orient_data", lambda: {})
-    monkeypatch.setattr(api_main, "_collect_wiki_orient_data", lambda: {"by_track": {"hist": {"compiled": 1, "total": 2, "pct": 50.0}}})
-    monkeypatch.setattr(api_main, "_collect_health_orient_data", lambda: {"api": True, "mcp_rag": False, "sources_db": True, "message_broker": True})
-    monkeypatch.setattr(api_main, "_collect_session_hints_orient_data", lambda: [{"file": "docs/session-state/example.md", "first_line": "# Example"}])
+    monkeypatch.setattr(
+        api_main, "_collect_wiki_orient_data", lambda: {"by_track": {"hist": {"compiled": 1, "total": 2, "pct": 50.0}}}
+    )
+    monkeypatch.setattr(
+        api_main,
+        "_collect_health_orient_data",
+        lambda: {"api": True, "mcp_rag": False, "sources_db": True, "message_broker": True},
+    )
+    monkeypatch.setattr(
+        api_main,
+        "_collect_session_hints_orient_data",
+        lambda: [{"file": "docs/session-state/example.md", "first_line": "# Example"}],
+    )
 
 
 def _clean_git_env() -> dict[str, str]:
@@ -129,9 +143,7 @@ def test_orient_git_exposes_primary_checkout_dirty_signal(monkeypatch, tmp_path)
     assert git_info["primary_checkout_dirty"] is True
     assert git_info["primary_checkout"]["checked_cwd"] == str(repo)
     assert git_info["primary_checkout"]["tracked_dirty_count"] == 1
-    assert git_info["primary_checkout"]["entries"] == [
-        {"xy": " M", "path": "tracked.txt", "kind": "tracked"}
-    ]
+    assert git_info["primary_checkout"]["entries"] == [{"xy": " M", "path": "tracked.txt", "kind": "tracked"}]
 
 
 def test_orient_git_survives_primary_checkout_probe_failure(monkeypatch, tmp_path):
@@ -199,9 +211,7 @@ def test_orient_includes_bridge_pending_field(monkeypatch):
 
     assert response.status_code == 200
     data = response.json()
-    assert data["bridge_pending"] == {
-        "claude": {"count": 1, "oldest_hours": 6.5}
-    }
+    assert data["bridge_pending"] == {"claude": {"count": 1, "oldest_hours": 6.5}}
     assert "bridge_pending" in data["meta"]
 
 
@@ -458,9 +468,7 @@ def test_orient_pipeline_section_skips_orient_layer_cache(monkeypatch):
     client.get("/api/orient")
     client.get("/api/orient")
 
-    assert calls["pipeline"] == 3, (
-        "pipeline collector must run on every orient call (TTL=0)"
-    )
+    assert calls["pipeline"] == 3, "pipeline collector must run on every orient call (TTL=0)"
     # And the meta must always say miss, never hit.
     data = client.get("/api/orient").json()
     assert data["meta"]["pipeline"]["cache"] == "miss"
@@ -482,9 +490,89 @@ def test_orient_generated_at_floor_reflects_oldest_section(monkeypatch):
     time.sleep(0.05)  # ensure measurable delta on the second call
     second = client.get("/api/orient").json()
 
-    section_timestamps = [
-        m["generated_at"] for m in second["meta"].values() if m.get("generated_at")
-    ]
+    section_timestamps = [m["generated_at"] for m in second["meta"].values() if m.get("generated_at")]
     assert section_timestamps, "every section should have generated_at"
     # Top-level must equal the minimum — NOT be the newest "now" stamp.
     assert second["generated_at"] == min(section_timestamps)
+
+
+def test_orient_sections_subset_runs_only_selected_collectors(monkeypatch):
+    """``?sections=`` must skip uncalled collectors entirely."""
+    _patch_orient_sources(monkeypatch)
+    calls: dict[str, int] = {"git": 0, "runtime": 0, "wiki": 0}
+
+    def counting_git():
+        calls["git"] += 1
+        return {"branch": "main", "head": "abc123"}
+
+    def counting_runtime():
+        calls["runtime"] += 1
+        return {
+            "agents": ["codex"],
+            "recent_outcomes": {"ok": 1, "error": 0, "rate_limited": 0},
+            "headroom": {"codex": True},
+        }
+
+    def counting_wiki():
+        calls["wiki"] += 1
+        return {"by_track": {}}
+
+    monkeypatch.setattr(api_main, "_collect_git_orient_data", counting_git)
+    monkeypatch.setattr(api_main, "_collect_runtime_orient_data", counting_runtime)
+    monkeypatch.setattr(api_main, "_collect_wiki_orient_data", counting_wiki)
+
+    response = client.get("/api/orient?sections=git,runtime&fresh=true")
+
+    assert response.status_code == 200
+    data = response.json()
+    assert set(data) == {"generated_at", "git", "runtime", "meta"}
+    assert calls == {"git": 1, "runtime": 1, "wiki": 0}
+
+
+def test_orient_unknown_section_returns_400(monkeypatch):
+    _patch_orient_sources(monkeypatch)
+
+    response = client.get("/api/orient?sections=git,not-a-section")
+
+    assert response.status_code == 400
+    assert "not-a-section" in response.json()["detail"]
+    for key in api_main.ORIENT_SECTION_KEYS:
+        assert key in response.json()["detail"]
+
+
+def test_orient_default_sections_remain_full_payload(monkeypatch):
+    _patch_orient_sources(monkeypatch)
+
+    response = client.get("/api/orient?fresh=true")
+
+    assert response.status_code == 200
+    data = response.json()
+    assert {
+        "generated_at",
+        "git",
+        "issues",
+        "pipeline",
+        "runtime",
+        "delegate",
+        "bridge_pending",
+        "wiki",
+        "governance",
+        "health",
+        "session_hints",
+        "meta",
+    } <= set(data)
+
+
+def test_orient_issues_collector_uses_five_second_subprocess_timeout(monkeypatch):
+    captured: dict[str, float] = {}
+
+    def fake_run_command(args, *, timeout: float = 2.0):
+        captured["timeout"] = timeout
+        raise RuntimeError("gh unavailable for timeout assertion")
+
+    monkeypatch.setattr(api_main, "_run_command", fake_run_command)
+
+    with pytest.raises(RuntimeError, match="gh unavailable"):
+        api_main._collect_issues_orient_data()
+
+    assert captured["timeout"] == 5.0

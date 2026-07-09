@@ -63,7 +63,8 @@ def test_rules_json_includes_hash_and_sources(monkeypatch, tmp_path):
     b.write_text("B body\n", encoding="utf-8")
     monkeypatch.setattr(rules_router, "PROJECT_ROOT", tmp_path)
     monkeypatch.setattr(
-        rules_router, "RULE_SOURCES",
+        rules_router,
+        "RULE_SOURCES",
         ("a.md", "b.md", "does-not-exist.md"),
     )
 
@@ -105,9 +106,7 @@ def session_fixture(tmp_path, monkeypatch):
     (session_dir / "codex-orchestrator-handoff.md").write_text(
         "# Current task\n\nWorking on #1309.\n\nCodex-specific handoff.\n", encoding="utf-8"
     )
-    (session_dir / "current.orchestrator.md").write_text(
-        "# Pointer\n\nSee durable state.\n", encoding="utf-8"
-    )
+    (session_dir / "current.orchestrator.md").write_text("# Pointer\n\nSee durable state.\n", encoding="utf-8")
     (session_dir / "2026-04-01-old.md").write_text("old handoff\n", encoding="utf-8")
     (session_dir / "2026-04-17-newest.md").write_text("new handoff\n", encoding="utf-8")
 
@@ -159,9 +158,7 @@ def test_session_current_legacy_orchestrator_mapping_uses_durable_handoff(tmp_pa
         "- orchestrator: docs/session-state/current.orchestrator.md\n",
         encoding="utf-8",
     )
-    (session_dir / "current.orchestrator.md").write_text(
-        "# Pointer\n\nSee durable state.\n", encoding="utf-8"
-    )
+    (session_dir / "current.orchestrator.md").write_text("# Pointer\n\nSee durable state.\n", encoding="utf-8")
     (session_dir / "codex-orchestrator-handoff.md").write_text(
         "# Durable task\n\nDurable orchestrator state.\n", encoding="utf-8"
     )
@@ -179,9 +176,7 @@ def test_session_current_codex_without_router_uses_durable_handoff(tmp_path, mon
     project_root = tmp_path
     session_dir = project_root / "docs" / "session-state"
     session_dir.mkdir(parents=True)
-    (session_dir / "codex-orchestrator-handoff.md").write_text(
-        "# Durable task\n\nCodex UI state.\n", encoding="utf-8"
-    )
+    (session_dir / "codex-orchestrator-handoff.md").write_text("# Durable task\n\nCodex UI state.\n", encoding="utf-8")
     monkeypatch.setattr(session_router, "PROJECT_ROOT", project_root)
 
     resp = client.get("/api/session/current?agent=codex&format=json")
@@ -196,12 +191,8 @@ def test_session_current_codex_empty_router_uses_router_body(tmp_path, monkeypat
     project_root = tmp_path
     session_dir = project_root / "docs" / "session-state"
     session_dir.mkdir(parents=True)
-    (session_dir / "current.md").write_text(
-        "# Legacy current body\n\nNo agent router yet.\n", encoding="utf-8"
-    )
-    (session_dir / "codex-orchestrator-handoff.md").write_text(
-        "# Durable task\n\nCodex UI state.\n", encoding="utf-8"
-    )
+    (session_dir / "current.md").write_text("# Legacy current body\n\nNo agent router yet.\n", encoding="utf-8")
+    (session_dir / "codex-orchestrator-handoff.md").write_text("# Durable task\n\nCodex UI state.\n", encoding="utf-8")
     monkeypatch.setattr(session_router, "PROJECT_ROOT", project_root)
 
     resp = client.get("/api/session/current?agent=codex&format=json")
@@ -213,16 +204,12 @@ def test_session_current_codex_empty_router_uses_router_body(tmp_path, monkeypat
     assert body["sections"]["current"] == "docs/session-state/current.md"
 
 
-def test_session_current_legacy_pointer_remap_is_codex_or_orchestrator_only(
-    tmp_path, monkeypatch
-):
+def test_session_current_legacy_pointer_remap_is_codex_or_orchestrator_only(tmp_path, monkeypatch):
     project_root = tmp_path
     session_dir = project_root / "docs" / "session-state"
     session_dir.mkdir(parents=True)
     (session_dir / "current.md").write_text(
-        "# Current Session Router\n\n"
-        "Agent-Handoff:\n"
-        "- claude: docs/session-state/current.orchestrator.md\n",
+        "# Current Session Router\n\nAgent-Handoff:\n- claude: docs/session-state/current.orchestrator.md\n",
         encoding="utf-8",
     )
     (session_dir / "current.orchestrator.md").write_text(
@@ -293,8 +280,7 @@ def test_manifest_stays_small():
     resp = client.get("/api/state/manifest")
     assert resp.status_code == 200
     assert len(resp.content) < 2048, (
-        f"manifest grew to {len(resp.content)} bytes; keep it lean or "
-        "agents will stop using it"
+        f"manifest grew to {len(resp.content)} bytes; keep it lean or agents will stop using it"
     )
 
 
@@ -368,6 +354,19 @@ def test_inbox_respects_limit_and_marks_truncated(monkeypatch):
     assert body["count"] == 5
     assert body["truncated"] is True
     assert len(body["deliveries"]) == 2
+
+
+def test_inbox_claude_infra_returns_empty_when_no_pending(monkeypatch):
+    from scripts.ai_agent_bridge import _channels
+
+    monkeypatch.setattr(_channels, "pending_deliveries_for", lambda agent: [])
+
+    resp = client.get("/api/comms/inbox?agent=claude-infra")
+    assert resp.status_code == 200
+    body = resp.json()
+    assert body["agent"] == "claude-infra"
+    assert body["count"] == 0
+    assert body["deliveries"] == []
 
 
 def test_inbox_400_on_invalid_agent(monkeypatch):
@@ -458,8 +457,20 @@ def test_agent_activity_summarizes_deliveries_and_events(monkeypatch, tmp_path):
         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """,
         (
-            "m1", "reviews", "t1", None, None, 0, "claude", None, "post",
-            "please handle this bridge item", None, "", "", None,
+            "m1",
+            "reviews",
+            "t1",
+            None,
+            None,
+            0,
+            "claude",
+            None,
+            "post",
+            "please handle this bridge item",
+            None,
+            "",
+            "",
+            None,
             "2026-05-31T10:01:00Z",
         ),
     )
@@ -477,13 +488,11 @@ def test_agent_activity_summarizes_deliveries_and_events(monkeypatch, tmp_path):
         ],
     )
     conn.execute(
-        "INSERT INTO channel_events (delivery_id, thread_id, event, payload_json, ts) "
-        "VALUES (?, ?, ?, ?, ?)",
+        "INSERT INTO channel_events (delivery_id, thread_id, event, payload_json, ts) VALUES (?, ?, ?, ?, ?)",
         (None, "t1", "reply_started", '{"agent": "codex"}', "2026-05-31T10:02:00Z"),
     )
     conn.execute(
-        "INSERT INTO channel_events (delivery_id, thread_id, event, payload_json, ts) "
-        "VALUES (?, ?, ?, ?, ?)",
+        "INSERT INTO channel_events (delivery_id, thread_id, event, payload_json, ts) VALUES (?, ?, ?, ?, ?)",
         ("d2", "t1", "heartbeat", '{"elapsed_s": 60}', "2026-05-31T10:03:00Z"),
     )
     conn.commit()
@@ -502,7 +511,4 @@ def test_agent_activity_summarizes_deliveries_and_events(monkeypatch, tmp_path):
     assert body["agents"]["codex"]["next_actions"][0]["kind"] == "drain_inbox"
     assert body["agents"]["gemini"]["processing"] == 1
     assert body["agents"]["gemini"]["recent_deliveries"][0]["thread_id"] == "t1"
-    assert any(
-        action["kind"] == "watch_thread"
-        for action in body["agents"]["gemini"]["next_actions"]
-    )
+    assert any(action["kind"] == "watch_thread" for action in body["agents"]["gemini"]["next_actions"])

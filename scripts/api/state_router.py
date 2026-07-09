@@ -33,7 +33,7 @@ from pathlib import Path
 from typing import Any
 
 import yaml
-from fastapi import APIRouter, Query
+from fastapi import APIRouter, Query, Request
 from fastapi.responses import JSONResponse
 
 from scripts.analytics.cost_report import CostRecord, load_cost_records
@@ -1702,7 +1702,7 @@ async def range_status(
 
 
 @router.get("/manifest")
-async def manifest():
+async def manifest(request: Request):
     """Tiny JSON index for agent cold-start coordination.
 
     Target size < 2 KB. Returns a hash + URL for every consolidated
@@ -1737,8 +1737,9 @@ async def manifest():
 
     from .rules_router import rules_hash
     from .session_router import session_hash
-    from .telemetry.response import add_json_telemetry
+    from .telemetry.response import add_json_telemetry, session_id_from_request
 
+    session_id = session_id_from_request(request)
     return add_json_telemetry(
         {
             "generated_at": _dt.now(UTC).isoformat().replace("+00:00", "Z"),
@@ -1767,5 +1768,6 @@ async def manifest():
                 "url": "/api/comms/agent-activity",
                 "note": "Compact channel delivery/event snapshot for orchestration.",
             },
-        }
+        },
+        session_id=session_id,
     )
