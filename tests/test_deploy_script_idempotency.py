@@ -14,7 +14,7 @@ CHECK_SCRIPT = Path("scripts/check_rules_deployment.sh")
 ORPHAN_PATHS_FILE = Path("scripts/deploy_orphan_paths.sh")
 ORPHAN_PATH_VARS = (
     "ORPHAN_PATHS_CLAUDE",
-    "ORPHAN_PATHS_AGENT",
+    "ORPHAN_PATHS_AGENT",  # kept for compat (empty; .agent/ preserve-by-default)
     "ORPHAN_PATHS_AGENTS",
     "ORPHAN_PATHS_CODEX",
     "ORPHAN_PATHS_GEMINI",
@@ -276,10 +276,9 @@ def test_codex_orphan_is_caught(tmp_path: Path) -> None:
 def test_agent_transient_briefs_are_preserved(tmp_path: Path) -> None:
     """In-flight dispatch briefs in .agent/ must neither abort the deploy nor be wiped.
 
-    Regression for #3456: a single undeclared brief aborted the whole deploy, so
-    committed source prompt fixes silently never reached the runtime targets. The
-    *-brief.md / dispatch-*.md patterns are declared in ORPHAN_PATHS_AGENT, so the
-    preflight guard ignores them and rsync --delete preserves them.
+    Regression for #3456/#4741: .agent/ is preserve-by-default (rsync without
+    --delete, no orphan preflight). Runtime briefs are always kept; no
+    ORPHAN_PATHS_AGENT declaration needed anymore.
     """
     repo = _init_checkout(tmp_path)
     agent_dir = repo / ".agent"
@@ -288,9 +287,8 @@ def test_agent_transient_briefs_are_preserved(tmp_path: Path) -> None:
     brief.write_text("transient dispatch brief\n", encoding="utf-8")
     dispatch = agent_dir / "dispatch-3098-slice3.md"
     dispatch.write_text("transient dispatch prompt\n", encoding="utf-8")
-    # Regression (2026-07-05): briefs now also collect under the dispatch-briefs/
-    # DIRECTORY, which the dispatch-*.md FILE glob does not match — an undeclared
-    # dir aborted every deploy until declared in ORPHAN_PATHS_AGENT.
+    # Regression (2026-07-05 / #4741): briefs under dispatch-briefs/ are
+    # preserved because .agent/ no longer has --delete (no glob needed).
     collected = agent_dir / "dispatch-briefs" / "4497-runner-failover.md"
     collected.parent.mkdir(parents=True)
     collected.write_text("collected dispatch brief\n", encoding="utf-8")
@@ -300,10 +298,10 @@ def test_agent_transient_briefs_are_preserved(tmp_path: Path) -> None:
         "deploy aborted with an in-flight brief present:\n"
         f"stdout: {deploy_result.stdout}\nstderr: {deploy_result.stderr}"
     )
-    # rsync --delete must preserve the declared transient scratch.
-    assert brief.exists(), "atlas-3150-brief.md was wiped by rsync --delete"
-    assert dispatch.exists(), "dispatch-3098-slice3.md was wiped by rsync --delete"
-    assert collected.exists(), "dispatch-briefs/ brief was wiped by rsync --delete"
+    # No --delete on .agent/ (preserve-by-default); briefs must survive.
+    assert brief.exists(), "atlas-3150-brief.md was wiped"
+    assert dispatch.exists(), "dispatch-3098-slice3.md was wiped"
+    assert collected.exists(), "dispatch-briefs/ brief was wiped"
 
 
 def test_claude_epic_dirs_are_preserved(tmp_path: Path) -> None:

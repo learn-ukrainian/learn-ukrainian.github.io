@@ -32,8 +32,9 @@ ORPHAN_PATHS_CLAUDE="scheduled_tasks.lock worktrees *-epic settings.local.json"
 # is never deleted by deploy rsync. The previous ORPHAN_PATHS_AGENT list and
 # --delete handling have been removed; only source content (if any) from
 # agents_extensions/shared is overlaid on top.
-# (Old list retained below as comment for reference in other scripts/history.)
-# ORPHAN_PATHS_AGENT="wake cache prompts tmp *-thread-bootstrap.md *-handoff.md *-thread-lease.json *-brief.md dispatch-*.md dispatch-briefs canary-*.json settings.local.json"
+# (Old list retained for test/docs compatibility; .agent/ no longer uses it.)
+ORPHAN_PATHS_AGENT=""  # .agent/ is preserve-by-default (#4741); see deploy_prompts.sh
+# (historical) ORPHAN_PATHS_AGENT="wake cache prompts tmp *-thread-bootstrap.md *-handoff.md *-thread-lease.json *-brief.md dispatch-*.md dispatch-briefs canary-*.json settings.local.json"
 
 # --- shared/skills → .agents/skills ---
 ORPHAN_PATHS_AGENTS=""
