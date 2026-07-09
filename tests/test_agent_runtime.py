@@ -174,6 +174,7 @@ def test_registry_has_known_agents():
         "codex-desktop",
         "claude",
         "claude-desktop",
+        "claude-infra",
         "gemini",
         "grok",
         "grok-build",

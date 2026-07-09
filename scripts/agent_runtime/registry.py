@@ -33,6 +33,7 @@ class AgentEntry(TypedDict):
     cost_tier: str  # "low" | "medium" | "high" | "unknown"
     capabilities: frozenset[str]
     cli_available: bool
+    bridge_spawnable: NotRequired[bool]
     resume_policy: str  # "bridge_only" | "never"
 
 
@@ -122,8 +123,10 @@ AGENTS: dict[str, AgentEntry] = {
                 "adversarial_review",
             }
         ),
-        # gemini-cli retired — gemini-family routes via agy (model-assignment.md)
-        "cli_available": False,
+        # V7 batch runner still invokes gemini-tools via runner; bridge discuss/inbox
+        # routes gemini-family work through agy (model-assignment.md).
+        "cli_available": True,
+        "bridge_spawnable": False,
         "resume_policy": "bridge_only",
     },
     "grok": {
