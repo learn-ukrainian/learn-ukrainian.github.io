@@ -41,7 +41,7 @@ def test_deepseek_adapter_invokes_hermes_z_with_correct_argv_pro(tmp_path, monke
 
     plan = _build("Write the module.", tmp_path, model="deepseek-v4-pro")
 
-    assert plan.cmd == ["hermes", "-z", "Write the module.", "-m", "deepseek-v4-pro"]
+    assert plan.cmd == ["hermes", "-z", "Write the module.", "-m", "deepseek-v4-pro", "--provider", "deepseek"]
     assert plan.cwd == tmp_path
     assert plan.stdin_payload == ""
 
@@ -52,7 +52,7 @@ def test_deepseek_adapter_invokes_hermes_z_with_correct_argv_flash(tmp_path, mon
 
     plan = _build("Review this code.", tmp_path, model="deepseek-v4-flash")
 
-    assert plan.cmd == ["hermes", "-z", "Review this code.", "-m", "deepseek-v4-flash"]
+    assert plan.cmd == ["hermes", "-z", "Review this code.", "-m", "deepseek-v4-flash", "--provider", "deepseek"]
 
 
 def test_deepseek_adapter_translates_mcp_prefix_for_hermes(tmp_path, monkeypatch):
@@ -107,7 +107,9 @@ def test_deepseek_adapter_default_model_is_pro(tmp_path, monkeypatch):
         effort=None,
     )
 
-    assert plan.cmd[-1] == "deepseek-v4-pro"
+    # Inspect the -m value rather than cmd[-1] (provider flag may be appended after)
+    m_idx = plan.cmd.index("-m")
+    assert plan.cmd[m_idx + 1] == "deepseek-v4-pro"
 
 
 def test_deepseek_adapter_returns_stdout_as_response():

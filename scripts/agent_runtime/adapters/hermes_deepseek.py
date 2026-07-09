@@ -31,6 +31,10 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from ..result import ParseResult
+from ..routes import (
+    deepseek_first_party_error,
+    is_deepseek_first_party_forbidden_in_ci,
+)
 from .base import InvocationPlan
 from .hermes_common import (
     build_hermes_invocation_context,
@@ -99,6 +103,7 @@ class HermesDeepSeekAdapter:
             tool_config=tool_config,
             default_provider="deepseek",
             requested_model=requested_model,
+            provider_forced=True,  # default to first-party DeepSeek (see #4358)
         )
         context = build_hermes_invocation_context(
             tool_config=tool_config,
@@ -127,6 +132,15 @@ class HermesDeepSeekAdapter:
             _logger.warning(
                 "Hermes DeepSeek did not find enabled mcp_servers.sources in "
                 "~/.hermes/config.yaml; MCP tool availability depends on Hermes config"
+            )
+
+        if is_deepseek_first_party_forbidden_in_ci(requested_provider, requested_model):
+            raise ValueError(
+                deepseek_first_party_error(
+                    provider=requested_provider,
+                    model=requested_model,
+                    source="hermes_deepseek adapter",
+                )
             )
 
         hermes_bin = shutil.which("hermes") or "hermes"

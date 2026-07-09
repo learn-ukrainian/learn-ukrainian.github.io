@@ -103,6 +103,7 @@ from pathlib import Path
 from typing import Any
 
 import yaml
+from agent_runtime.routes import RUNTIME_ROUTE_TOOL_CONFIG_KEY
 
 # Resolve repo root from this file's location so we work from any cwd.
 _REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -1342,6 +1343,7 @@ def _run_worker(
     max_budget_usd: float | None = None,
     initial_response_timeout: int = DEFAULT_INITIAL_RESPONSE_TIMEOUT_S,
     keep_worktree: bool = False,
+    provider: str | None = None,
 ) -> int:
     """Worker main loop. Invokes the runtime, updates the state file.
 
@@ -1404,11 +1406,12 @@ def _run_worker(
         initial_probe = (
             initial_response_timeout if initial_response_timeout > 0 else None
         )
-        tool_config = (
-            {"max_budget_usd": max_budget_usd}
-            if max_budget_usd is not None
-            else None
-        )
+        tool_config: dict[str, Any] = {}
+        if max_budget_usd is not None:
+            tool_config["max_budget_usd"] = max_budget_usd
+        if provider is not None:
+            tool_config[RUNTIME_ROUTE_TOOL_CONFIG_KEY] = {"provider": provider}
+        tool_config = tool_config or None
         result = runtime_invoke(
             agent,
             prompt,
@@ -1831,6 +1834,8 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         cmd.extend(["--max-budget-usd", str(max_budget_usd)])
     if args.model:
         cmd.extend(["--model", args.model])
+    if getattr(args, "provider", None):
+        cmd.extend(["--provider", args.provider])
     effort = getattr(args, "effort", None)
     if effort:
         cmd.extend(["--effort", effort])
@@ -2329,6 +2334,7 @@ def cmd_worker(args: argparse.Namespace) -> int:
         cwd_str=args.cwd,
         model=args.model,
         hard_timeout=args.hard_timeout,
+        provider=getattr(args, "provider", None),
         silence_timeout=args.silence_timeout,
         max_budget_usd=getattr(args, "max_budget_usd", None),
         effort=args.effort,
@@ -2406,6 +2412,11 @@ def build_parser() -> argparse.ArgumentParser:
                         "pointing at an existing added worktree); read-only may run from repo root.")
     d.add_argument("--model", default=None,
                    help="Optional model override, e.g. gpt-5.5 or gemini-3.1-pro-preview.")
+    d.add_argument("--provider", default=None,
+                   choices=["openrouter"],
+                   help="Opt-in provider for Hermes-routed agents (e.g. deepseek). "
+                        "Default for DeepSeek is first-party (local-only). "
+                        "Use --provider openrouter for US-residency pinned path.")
     d.add_argument(
         "--effort",
         default=None,
@@ -2599,6 +2610,7 @@ def build_parser() -> argparse.ArgumentParser:
     wk.add_argument("--mode", required=True)
     wk.add_argument("--cwd", required=True)
     wk.add_argument("--model", default=None)
+    wk.add_argument("--provider", default=None)
     wk.add_argument(
         "--effort",
         default=None,
