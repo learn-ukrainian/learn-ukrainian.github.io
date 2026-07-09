@@ -16,6 +16,7 @@ used by ``delegate.py dispatch`` so the task state file already contains the
 fields while the task is still spawning/running. The worker backfills the
 runtime-resolved values on completion.
 """
+
 from __future__ import annotations
 
 import contextlib
@@ -179,6 +180,16 @@ def _resolve_model_from_defaults(agent_name: str, requested_model: str | None) -
     if requested_model:
         return requested_model
     if agent_name == "codex":
+        # The codex adapter ALWAYS passes an explicit ``-m {registry default}``
+        # when no override is given (adapters/codex.py::build_invocation), so
+        # the registry — not ~/.codex/config.toml — is what actually runs.
+        # Recording the user's config.toml model here mislabeled dispatches
+        # (observed 2026-07-09: state file said gpt-5.6-sol while the CLI ran
+        # -m gpt-5.6-terra). config.toml remains correct for EFFORT, where the
+        # adapter genuinely falls through.
+        registry_default = _default_model_for(agent_name)
+        if registry_default:
+            return registry_default
         value = _codex_config().get("model")
         return str(value).strip() if isinstance(value, str) and str(value).strip() else None
     if agent_name == "gemini":
