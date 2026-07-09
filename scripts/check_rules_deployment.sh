@@ -95,11 +95,7 @@ check_pair \
     ".claude" \
     $ORPHAN_PATHS_CLAUDE \
     $CLAUDE_RULE_AUTOLOAD_EXCLUDE_PATHS || drift=1
-# shellcheck disable=SC2086
-check_pair \
-    "agents_extensions/shared" \
-    ".agent" \
-    $ORPHAN_PATHS_AGENT || drift=1
+# .agent/ is preserve-by-default (#4741) — no orphan check or ORPHAN_PATHS_AGENT
 # shellcheck disable=SC2086
 check_pair \
     "agents_extensions/shared" \
