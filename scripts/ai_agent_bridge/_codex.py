@@ -30,11 +30,7 @@ _NO_TIMEOUT_CODEX_BRIDGE_TIMEOUT_SECONDS = 24 * 60 * 60
 
 def _codex_bridge_mode() -> str:
     """Resolve Codex sandbox mode for ai_agent_bridge calls."""
-    requested = (
-        os.environ.get("CODEX_BRIDGE_MODE")
-        or os.environ.get("CODEX_CLI_MODE")
-        or "safe"
-    ).strip().lower()
+    requested = (os.environ.get("CODEX_BRIDGE_MODE") or os.environ.get("CODEX_CLI_MODE") or "safe").strip().lower()
     if requested in _CODEX_MODES:
         return "workspace-write" if requested == "full-auto" else requested
     print(f"⚠️  Invalid CODEX_BRIDGE_MODE='{requested}' — falling back to safe")
@@ -75,10 +71,7 @@ def _resolve_codex_bridge_timeout(no_timeout: bool = False) -> int:
     try:
         timeout = int(value)
     except ValueError:
-        print(
-            f"⚠️  Invalid CODEX_BRIDGE_TIMEOUT={raw!r} "
-            f"— falling back to {_DEFAULT_CODEX_BRIDGE_TIMEOUT_SECONDS}s"
-        )
+        print(f"⚠️  Invalid CODEX_BRIDGE_TIMEOUT={raw!r} — falling back to {_DEFAULT_CODEX_BRIDGE_TIMEOUT_SECONDS}s")
         return _DEFAULT_CODEX_BRIDGE_TIMEOUT_SECONDS
 
     if timeout <= 0:
@@ -86,24 +79,39 @@ def _resolve_codex_bridge_timeout(no_timeout: bool = False) -> int:
     return timeout
 
 
-def ask_codex(content: str, task_id: str | None = None, msg_type: str = "query",
-              data: str | None = None, new_session: bool = False,
-              from_llm: str = "gemini", from_model: str | None = None,
-              to_model: str | None = None, no_timeout: bool = False,
-              review: bool = False):
+def ask_codex(
+    content: str,
+    task_id: str | None = None,
+    msg_type: str = "query",
+    data: str | None = None,
+    new_session: bool = False,
+    from_llm: str = "gemini",
+    from_model: str | None = None,
+    to_model: str | None = None,
+    no_timeout: bool = False,
+    review: bool = False,
+):
     """Send message to Codex AND invoke Codex to process it."""
-    msg_id = send_message(content, task_id, msg_type, data, from_llm=from_llm,
-                          to_llm="codex", from_model=from_model, to_model=to_model)
+    msg_id = send_message(
+        content, task_id, msg_type, data, from_llm=from_llm, to_llm="codex", from_model=from_model, to_model=to_model
+    )
     print(f"\n🚀 Invoking Codex to process message #{msg_id}...")
     process_for_codex(msg_id, new_session, no_timeout, review=review)
     return msg_id
 
 
-def ask_codex_chain(content_template: str, issue_refs: list[str], msg_type: str = "query",
-                    data: str | None = None, new_session: bool = False,
-                    from_llm: str = "gemini", from_model: str | None = None,
-                    to_model: str | None = None, no_timeout: bool = False,
-                    review: bool = False) -> list[int]:
+def ask_codex_chain(
+    content_template: str,
+    issue_refs: list[str],
+    msg_type: str = "query",
+    data: str | None = None,
+    new_session: bool = False,
+    from_llm: str = "gemini",
+    from_model: str | None = None,
+    to_model: str | None = None,
+    no_timeout: bool = False,
+    review: bool = False,
+) -> list[int]:
     """Dispatch a sequence of issue-targeted Codex tasks one at a time."""
     issues = _normalize_codex_chain_issues(issue_refs)
     message_ids: list[int] = []
@@ -135,7 +143,7 @@ def has_codex_headroom(model: str | None = None) -> tuple[bool, str]:
     """Return whether Codex has quota headroom for a new bridge call."""
     from agent_runtime.usage import has_headroom
 
-    effective_model = model or "gpt-5.5"
+    effective_model = model or "gpt-5.6-terra"
     return has_headroom("codex", effective_model)
 
 
@@ -152,10 +160,7 @@ def _normalize_codex_chain_issues(issue_refs: list[str]) -> list[int]:
 
             match = _CHAIN_ISSUE_REF_RE.fullmatch(ref)
             if not match:
-                raise ValueError(
-                    f"Invalid --chain issue reference {ref!r}; "
-                    "use 1234, #1234, issue-1234, or gh-1234"
-                )
+                raise ValueError(f"Invalid --chain issue reference {ref!r}; use 1234, #1234, issue-1234, or gh-1234")
 
             issue_num = int(match.group("num"))
             if issue_num in seen:
@@ -173,8 +178,7 @@ def _normalize_codex_chain_issues(issue_refs: list[str]) -> list[int]:
 def _render_codex_chain_content(content_template: str, issue_num: int, task_id: str) -> str:
     """Inject issue-specific context into a chain prompt template."""
     rendered = (
-        content_template
-        .replace("{issue}", str(issue_num))
+        content_template.replace("{issue}", str(issue_num))
         .replace("{issue_ref}", f"#{issue_num}")
         .replace("{task_id}", task_id)
     )
@@ -184,8 +188,7 @@ def _render_codex_chain_content(content_template: str, issue_num: int, task_id: 
     return f"GitHub issue #{issue_num} ({task_id}).\n\n{content_template}"
 
 
-def process_for_codex(message_id: int, new_session: bool = False,
-                      no_timeout: bool = False, review: bool = False):
+def process_for_codex(message_id: int, new_session: bool = False, no_timeout: bool = False, review: bool = False):
     """Read message addressed to Codex, invoke via agent_runtime, send response.
 
     Phase 4: routes through scripts.agent_runtime.runner.invoke(). Resume
@@ -283,11 +286,14 @@ def _fetch_codex_message(message_id: int) -> dict | None:
     """Fetch a message addressed to Codex from the database."""
     conn = get_db()
     cursor = conn.cursor()
-    cursor.execute("""
+    cursor.execute(
+        """
         SELECT id, task_id, from_llm, to_llm, message_type, content, data, timestamp
         FROM messages
         WHERE id = ? AND to_llm = 'codex'
-    """, (message_id,))
+    """,
+        (message_id,),
+    )
     row = cursor.fetchone()
     conn.close()
 

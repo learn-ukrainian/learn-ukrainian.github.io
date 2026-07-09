@@ -138,7 +138,7 @@ class CodexAdapter:
     """Adapter for ``codex exec`` (OpenAI ChatGPT Codex CLI)."""
 
     name: str = "codex"
-    default_model: str = "gpt-5.5"
+    default_model: str = "gpt-5.6-terra"
     supported_modes: frozenset[str] = frozenset({"read-only", "workspace-write", "danger"})
 
     # Per-invocation scoped $CODEX_HOME path. Set by ``build_invocation``
@@ -563,9 +563,7 @@ class CodexAdapter:
         # Guard 3: mtime gate — quick stat instead of a full file scan.
         try:
             rollouts = [
-                rollout
-                for directory in self._candidate_rollout_dirs()
-                for rollout in directory.glob("rollout-*.jsonl")
+                rollout for directory in self._candidate_rollout_dirs() for rollout in directory.glob("rollout-*.jsonl")
             ]
             if not rollouts:
                 return False
@@ -832,8 +830,7 @@ class CodexAdapter:
                         event.get("type") == "event_msg"
                         and payload.get("type") == "user_message"
                         and isinstance(payload.get("message"), str)
-                        and _normalize_payload_for_rollout_match(payload["message"])
-                        == expected
+                        and _normalize_payload_for_rollout_match(payload["message"]) == expected
                     ):
                         return True
 

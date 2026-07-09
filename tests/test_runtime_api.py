@@ -33,7 +33,7 @@ def test_agents_endpoint_returns_known_adapters():
     assert {"claude", "gemini", "codex"} <= names
     codex = next(agent for agent in agents if agent["name"] == "codex")
     assert codex["binary"] == "codex"
-    assert codex["default_model"] == "gpt-5.5"
+    assert codex["default_model"] == "gpt-5.6-terra"
 
 
 def test_usage_aggregates_by_agent(tmp_path, monkeypatch):

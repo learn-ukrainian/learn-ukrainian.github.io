@@ -1,4 +1,5 @@
 """Codex fallback wrapper for wiki compilation."""
+
 from __future__ import annotations
 
 from collections.abc import Callable, Mapping
@@ -7,14 +8,14 @@ from pathlib import Path
 from ai_llm.agent_runtime_call import call_agent_with_fallback
 from ai_llm.fallback import CallResult
 
-CODEX_MODEL_LADDER = ("gpt-5.5", "gpt-5.4", "gpt-5.4-mini")
+CODEX_MODEL_LADDER = ("gpt-5.6-terra", "gpt-5.5", "gpt-5.4")
 
 
 def call_codex_with_fallback(
     prompt: str,
     *,
     task_name: str,
-    preferred_model: str = "gpt-5.5",
+    preferred_model: str = "gpt-5.6-terra",
     effort: str | None = "high",
     per_rung_timeout_s: int | None = None,
     overall_timeout_s: int | None = None,

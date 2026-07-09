@@ -83,10 +83,7 @@ def _detect_caller_identity_from_env() -> str | None:
         return claude_name.strip().lower()
     if os.environ.get("CODEX_SESSION"):
         return "codex"
-    if (
-        os.environ.get("CLAUDE_PROJECT_DIR")
-        or os.environ.get("CLAUDE_CODE_FILE_READ_MAX_OUTPUT_TOKENS")
-    ):
+    if os.environ.get("CLAUDE_PROJECT_DIR") or os.environ.get("CLAUDE_CODE_FILE_READ_MAX_OUTPUT_TOKENS"):
         return "claude"
     if os.environ.get("GEMINI_SESSION"):
         return "gemini"
@@ -182,7 +179,7 @@ def process_all_gemini(model: str = GEMINI_DEFAULT_MODEL):
 
     for row in rows:
         msg_id, _task_id, from_llm, _msg_type, preview = row
-        preview = preview.replace('\n', ' ')[:40]
+        preview = preview.replace("\n", " ")[:40]
         print(f"━━━ Processing [{msg_id}] from {from_llm}: {preview}...")
 
         try:
@@ -223,7 +220,7 @@ def process_all_claude(new_session: bool = False):
 
     for row in rows:
         msg_id, _task_id, from_llm, _msg_type, preview = row
-        preview = preview.replace('\n', ' ')[:40]
+        preview = preview.replace("\n", " ")[:40]
         print(f"━━━ Processing [{msg_id}] from {from_llm}: {preview}...")
 
         try:
@@ -276,9 +273,7 @@ def _iter_codex_usage_records(window: str, entrypoint: str):
                     if not ts_str:
                         continue
                     try:
-                        record_ts = datetime.fromisoformat(
-                            str(ts_str).replace("Z", "+00:00")
-                        ).timestamp()
+                        record_ts = datetime.fromisoformat(str(ts_str).replace("Z", "+00:00")).timestamp()
                     except (TypeError, ValueError):
                         continue
                     if record_ts < cutoff_ts:
@@ -325,12 +320,10 @@ def _build_codex_usage_report(window: str, entrypoint: str) -> dict:
             {"count": 0, "total_duration_s": 0.0, "recent_events": []},
         )
         count = int(bucket["count"])
-        bucket["avg_duration_s"] = round(
-            float(bucket["total_duration_s"]) / count, 1
-        ) if count else 0.0
+        bucket["avg_duration_s"] = round(float(bucket["total_duration_s"]) / count, 1) if count else 0.0
         bucket["total_duration_s"] = round(float(bucket["total_duration_s"]), 1)
 
-    has_room, headroom_reason = has_codex_headroom("gpt-5.5")
+    has_room, headroom_reason = has_codex_headroom("gpt-5.6-terra")
     return {
         "window": window,
         "entrypoint": entrypoint,
@@ -340,7 +333,7 @@ def _build_codex_usage_report(window: str, entrypoint: str) -> dict:
         "by_entrypoint": dict(sorted(by_entrypoint.items())),
         "recent_rate_limits": sorted(recent_rate_limits),
         "headroom": {
-            "model": "gpt-5.5",
+            "model": "gpt-5.6-terra",
             "has_headroom": has_room,
             "reason": headroom_reason,
         },
@@ -349,10 +342,7 @@ def _build_codex_usage_report(window: str, entrypoint: str) -> dict:
 
 def _print_codex_usage_report(report: dict) -> None:
     """Render a human-readable Codex usage report."""
-    print(
-        f"Codex usage report - window: {report['window']}, "
-        f"entrypoint: {report['entrypoint']}"
-    )
+    print(f"Codex usage report - window: {report['window']}, entrypoint: {report['entrypoint']}")
     print("-" * 48)
     print(f"Total calls: {report['total_calls']}")
     print(f"Total duration: {report['total_duration_s']:.1f}s")
@@ -384,10 +374,7 @@ def _print_codex_usage_report(report: dict) -> None:
 
     headroom = report["headroom"]
     symbol = "✓" if headroom["has_headroom"] else "✗"
-    line = (
-        f"\nHeadroom check: {headroom['model']} - "
-        f"has headroom {symbol}"
-    )
+    line = f"\nHeadroom check: {headroom['model']} - has headroom {symbol}"
     if not headroom["has_headroom"] and headroom["reason"]:
         line += f" ({headroom['reason']})"
     print(line)
@@ -429,8 +416,13 @@ def _build_parser() -> argparse.ArgumentParser:
 
     # inbox
     inbox_parser = subparsers.add_parser("inbox", help="Check inbox for messages")
-    inbox_parser.add_argument("--for", dest="for_llm", default="gemini", choices=['gemini', 'claude', 'codex'],
-                             help="Check inbox for which agent (default: gemini)")
+    inbox_parser.add_argument(
+        "--for",
+        dest="for_llm",
+        default="gemini",
+        choices=["gemini", "claude", "codex"],
+        help="Check inbox for which agent (default: gemini)",
+    )
 
     # read
     read_parser = subparsers.add_parser("read", help="Read a specific message")
@@ -439,10 +431,14 @@ def _build_parser() -> argparse.ArgumentParser:
     # send
     send_parser = subparsers.add_parser("send", help="Send message to another agent")
     send_parser.add_argument("content", help="Message content")
-    send_parser.add_argument("--to", dest="to_llm", default="claude", choices=['claude', 'gemini', 'codex'],
-                            help="Target agent (default: claude)")
-    send_parser.add_argument("--from", dest="from_llm", default="gemini",
-                            help="Sender agent name (default: gemini)")
+    send_parser.add_argument(
+        "--to",
+        dest="to_llm",
+        default="claude",
+        choices=["claude", "gemini", "codex"],
+        help="Target agent (default: claude)",
+    )
+    send_parser.add_argument("--from", dest="from_llm", default="gemini", help="Sender agent name (default: gemini)")
     send_parser.add_argument("--task-id", help="Task ID for grouping")
     send_parser.add_argument("--type", default="response", help="Message type")
     send_parser.add_argument("--data", help="Path to data file to attach")
@@ -451,11 +447,11 @@ def _build_parser() -> argparse.ArgumentParser:
 
     # ack
     ack_parser = subparsers.add_parser("ack", help="Acknowledge message(s)")
-    ack_parser.add_argument("message_ids", type=int, nargs='+', help="Message ID(s) to acknowledge")
+    ack_parser.add_argument("message_ids", type=int, nargs="+", help="Message ID(s) to acknowledge")
 
     # ack-all
     ack_all_parser = subparsers.add_parser("ack-all", help="Acknowledge ALL unread messages for an agent")
-    ack_all_parser.add_argument("agent", choices=['claude', 'gemini', 'codex'], help="Agent whose inbox to clear")
+    ack_all_parser.add_argument("agent", choices=["claude", "gemini", "codex"], help="Agent whose inbox to clear")
 
     # conversation
     conv_parser = subparsers.add_parser("conversation", help="Get conversation history")
@@ -464,29 +460,42 @@ def _build_parser() -> argparse.ArgumentParser:
     # process (for Gemini)
     proc_parser = subparsers.add_parser("process", help="Process message with Gemini and respond")
     proc_parser.add_argument("message_id", type=int, help="Message ID to process")
+    proc_parser.add_argument("--model", default=GEMINI_DEFAULT_MODEL, help="Gemini model")
     proc_parser.add_argument(
-        "--model", default=GEMINI_DEFAULT_MODEL, help="Gemini model"
+        "--no-timeout",
+        dest="no_timeout",
+        action="store_true",
+        help="Run sync without timeout (used internally by fire-and-forget)",
     )
-    proc_parser.add_argument("--no-timeout", dest="no_timeout", action="store_true",
-                             help="Run sync without timeout (used internally by fire-and-forget)")
 
     # process-claude
     proc_claude_parser = subparsers.add_parser("process-claude", help="Process message with Claude CLI (headless)")
     proc_claude_parser.add_argument("message_id", type=int, help="Message ID for Claude to process")
-    proc_claude_parser.add_argument("--new-session", dest="new_session", action="store_true",
-                                    help="Force new session even if one exists for this task")
-    proc_claude_parser.add_argument("--async", dest="fire_and_forget", action="store_true",
-                                    help="Launch Claude in background (no timeout).")
-    proc_claude_parser.add_argument("--no-timeout", dest="no_timeout", action="store_true",
-                                    help="Run sync without timeout (used internally by fire-and-forget)")
+    proc_claude_parser.add_argument(
+        "--new-session",
+        dest="new_session",
+        action="store_true",
+        help="Force new session even if one exists for this task",
+    )
+    proc_claude_parser.add_argument(
+        "--async", dest="fire_and_forget", action="store_true", help="Launch Claude in background (no timeout)."
+    )
+    proc_claude_parser.add_argument(
+        "--no-timeout",
+        dest="no_timeout",
+        action="store_true",
+        help="Run sync without timeout (used internally by fire-and-forget)",
+    )
 
     # process-codex
     proc_codex_parser = subparsers.add_parser("process-codex", help="Process message with Codex CLI (headless)")
     proc_codex_parser.add_argument("message_id", type=int, help="Message ID for Codex to process")
-    proc_codex_parser.add_argument("--new-session", dest="new_session", action="store_true",
-                                   help="Force new session even if one exists")
-    proc_codex_parser.add_argument("--no-timeout", dest="no_timeout", action="store_true",
-                                   help="Run sync without timeout")
+    proc_codex_parser.add_argument(
+        "--new-session", dest="new_session", action="store_true", help="Force new session even if one exists"
+    )
+    proc_codex_parser.add_argument(
+        "--no-timeout", dest="no_timeout", action="store_true", help="Run sync without timeout"
+    )
 
     # process-grok-build
     proc_grok_build_parser = subparsers.add_parser(
@@ -494,12 +503,16 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Process message with native Grok Build CLI (headless)",
     )
     proc_grok_build_parser.add_argument("message_id", type=int, help="Message ID for Grok Build to process")
-    proc_grok_build_parser.add_argument("--new-session", dest="new_session", action="store_true",
-                                        help="Accepted for parity; grok-build always starts fresh")
-    proc_grok_build_parser.add_argument("--no-timeout", dest="no_timeout", action="store_true",
-                                        help="Run sync without timeout")
-    proc_grok_build_parser.add_argument("--review", action="store_true",
-                                        help="Prepend docs/review-protocol.md")
+    proc_grok_build_parser.add_argument(
+        "--new-session",
+        dest="new_session",
+        action="store_true",
+        help="Accepted for parity; grok-build always starts fresh",
+    )
+    proc_grok_build_parser.add_argument(
+        "--no-timeout", dest="no_timeout", action="store_true", help="Run sync without timeout"
+    )
+    proc_grok_build_parser.add_argument("--review", action="store_true", help="Prepend docs/review-protocol.md")
 
     # ask-claude
     ask_claude_parser = subparsers.add_parser("ask-claude", help="Send message AND invoke Claude (one-step)")
@@ -507,37 +520,42 @@ def _build_parser() -> argparse.ArgumentParser:
     ask_claude_parser.add_argument("--task-id", required=True, help="Task ID (required for session tracking)")
     ask_claude_parser.add_argument("--type", default="query", help="Message type (default: query)")
     ask_claude_parser.add_argument("--data", help="Path to data file to attach")
-    ask_claude_parser.add_argument("--new-session", dest="new_session", action="store_true",
-                                   help="Force new session even if one exists")
-    ask_claude_parser.add_argument("--from", dest="from_llm",
-                                   help="Sender agent family. Default: inferred from environment")
-    ask_claude_parser.add_argument("--from-model", dest="from_model",
-                                   help="Exact sender model ID")
-    ask_claude_parser.add_argument("--to-model", dest="to_model",
-                                   help="Target model ID")
-    ask_claude_parser.add_argument("--review", action="store_true",
-                                   help="Prepend docs/review-protocol.md")
+    ask_claude_parser.add_argument(
+        "--new-session", dest="new_session", action="store_true", help="Force new session even if one exists"
+    )
+    ask_claude_parser.add_argument(
+        "--from", dest="from_llm", help="Sender agent family. Default: inferred from environment"
+    )
+    ask_claude_parser.add_argument("--from-model", dest="from_model", help="Exact sender model ID")
+    ask_claude_parser.add_argument("--to-model", dest="to_model", help="Target model ID")
+    ask_claude_parser.add_argument("--review", action="store_true", help="Prepend docs/review-protocol.md")
 
     # ask-codex
-    ask_codex_parser = subparsers.add_parser("ask-codex", help="Send message AND invoke Codex (one-step; use '-' to read from stdin)")
+    ask_codex_parser = subparsers.add_parser(
+        "ask-codex", help="Send message AND invoke Codex (one-step; use '-' to read from stdin)"
+    )
     ask_codex_parser.add_argument("content", help="Message content (use '-' to read from stdin)")
     ask_codex_parser.add_argument("--task-id", help="Task ID (required unless --chain is used)")
     ask_codex_parser.add_argument("--type", default="query", help="Message type (default: query)")
     ask_codex_parser.add_argument("--data", help="Path to data file to attach")
-    ask_codex_parser.add_argument("--new-session", dest="new_session", action="store_true",
-                                  help="Force new session even if one exists")
-    ask_codex_parser.add_argument("--from", dest="from_llm",
-                                  help="Sender agent family. Default: inferred from environment")
-    ask_codex_parser.add_argument("--from-model", dest="from_model",
-                                  help="Exact sender model ID")
-    ask_codex_parser.add_argument("--to-model", dest="to_model",
-                                  help="Target model ID")
-    ask_codex_parser.add_argument("--no-timeout", dest="no_timeout", action="store_true",
-                                  help="Run sync without timeout")
-    ask_codex_parser.add_argument("--chain", nargs="+", metavar="ISSUE",
-                                  help="Dispatch multiple GitHub issues sequentially (e.g. 1212 #1213 issue-1214)")
-    ask_codex_parser.add_argument("--review", action="store_true",
-                                  help="Prepend docs/review-protocol.md")
+    ask_codex_parser.add_argument(
+        "--new-session", dest="new_session", action="store_true", help="Force new session even if one exists"
+    )
+    ask_codex_parser.add_argument(
+        "--from", dest="from_llm", help="Sender agent family. Default: inferred from environment"
+    )
+    ask_codex_parser.add_argument("--from-model", dest="from_model", help="Exact sender model ID")
+    ask_codex_parser.add_argument("--to-model", dest="to_model", help="Target model ID")
+    ask_codex_parser.add_argument(
+        "--no-timeout", dest="no_timeout", action="store_true", help="Run sync without timeout"
+    )
+    ask_codex_parser.add_argument(
+        "--chain",
+        nargs="+",
+        metavar="ISSUE",
+        help="Dispatch multiple GitHub issues sequentially (e.g. 1212 #1213 issue-1214)",
+    )
+    ask_codex_parser.add_argument("--review", action="store_true", help="Prepend docs/review-protocol.md")
 
     # ask-gemini legacy compatibility shim
     ask_gemini_parser = subparsers.add_parser(
@@ -549,42 +567,54 @@ def _build_parser() -> argparse.ArgumentParser:
     ask_gemini_parser.add_argument("--type", default="query", help="Message type (default: query)")
     ask_gemini_parser.add_argument("--data", help="Path to data file to attach")
     ask_gemini_parser.add_argument(
-        "--model", default=GEMINI_DEFAULT_MODEL,
-        help="Legacy Gemini model slug; mapped to AGY where needed"
+        "--model", default=GEMINI_DEFAULT_MODEL, help="Legacy Gemini model slug; mapped to AGY where needed"
     )
-    ask_gemini_parser.add_argument("--from-model", dest="from_model",
-                                   help="Exact sender model ID")
-    ask_gemini_parser.add_argument("--from", dest="from_llm",
-                                   help="Sender agent family. Default: inferred from environment")
-    ask_gemini_parser.add_argument("--async", dest="async_mode", action="store_true",
-                                   help="Queue only; legacy no-op for AGY shim")
-    ask_gemini_parser.add_argument("--stdout-only", dest="stdout_only", action="store_true",
-                                   help="Print AGY response body to stdout for the "
-                                        "caller to parse; a thin summary still goes to the "
-                                        "broker so the thread stays consistent. Suppresses "
-                                        "all bridge progress logging on stdout.")
-    ask_gemini_parser.add_argument("--output-path", dest="output_path",
-                                   help="Gemini writes output to this file.")
-    ask_gemini_parser.add_argument("--extract", nargs="*", metavar="TAG",
-                                   help="Extract delimited content from output.")
-    ask_gemini_parser.add_argument("--skip-model-check", dest="skip_model_check", action="store_true",
-                                   help="Skip the model availability pre-flight check.")
-    ask_gemini_parser.add_argument("--allow-write", dest="allow_write", action="store_true",
-                                   help="Grant Gemini full bash + write access.")
-    ask_gemini_parser.add_argument("--delimiters", dest="delimiters",
-                                   help="Comma-separated delimiter names for --allow-write mode.")
-    ask_gemini_parser.add_argument("--no-github", dest="no_github", action="store_true",
-                                   help="Skip auto-posting review to GitHub issue")
+    ask_gemini_parser.add_argument("--from-model", dest="from_model", help="Exact sender model ID")
+    ask_gemini_parser.add_argument(
+        "--from", dest="from_llm", help="Sender agent family. Default: inferred from environment"
+    )
+    ask_gemini_parser.add_argument(
+        "--async", dest="async_mode", action="store_true", help="Queue only; legacy no-op for AGY shim"
+    )
+    ask_gemini_parser.add_argument(
+        "--stdout-only",
+        dest="stdout_only",
+        action="store_true",
+        help="Print AGY response body to stdout for the "
+        "caller to parse; a thin summary still goes to the "
+        "broker so the thread stays consistent. Suppresses "
+        "all bridge progress logging on stdout.",
+    )
+    ask_gemini_parser.add_argument("--output-path", dest="output_path", help="Gemini writes output to this file.")
+    ask_gemini_parser.add_argument("--extract", nargs="*", metavar="TAG", help="Extract delimited content from output.")
+    ask_gemini_parser.add_argument(
+        "--skip-model-check",
+        dest="skip_model_check",
+        action="store_true",
+        help="Skip the model availability pre-flight check.",
+    )
+    ask_gemini_parser.add_argument(
+        "--allow-write", dest="allow_write", action="store_true", help="Grant Gemini full bash + write access."
+    )
+    ask_gemini_parser.add_argument(
+        "--delimiters", dest="delimiters", help="Comma-separated delimiter names for --allow-write mode."
+    )
+    ask_gemini_parser.add_argument(
+        "--no-github", dest="no_github", action="store_true", help="Skip auto-posting review to GitHub issue"
+    )
     # `--auth` mirrors the option on `inbox run` / `sync` (defined in
     # _channels_cli.py, value space ["auto", "subscription", "api-key",
     # "api"]). Wired through ask_gemini() → process_and_respond() →
     # runtime_invoke() as tool_config.auth_mode. Default None lets the
     # runtime fall back to its environment-driven detection.
-    ask_gemini_parser.add_argument("--auth", dest="auth", default=None,
-                                   choices=["auto", "subscription", "api-key", "api"],
-                                   help="Gemini auth mode override for this invocation")
-    ask_gemini_parser.add_argument("--review", action="store_true",
-                                   help="Prepend docs/review-protocol.md")
+    ask_gemini_parser.add_argument(
+        "--auth",
+        dest="auth",
+        default=None,
+        choices=["auto", "subscription", "api-key", "api"],
+        help="Gemini auth mode override for this invocation",
+    )
+    ask_gemini_parser.add_argument("--review", action="store_true", help="Prepend docs/review-protocol.md")
 
     # ask-agy
     ask_agy_parser = subparsers.add_parser(
@@ -595,22 +625,25 @@ def _build_parser() -> argparse.ArgumentParser:
     ask_agy_parser.add_argument("--task-id", help="Task ID for session tracking")
     ask_agy_parser.add_argument("--type", default="query", help="Message type (default: query)")
     ask_agy_parser.add_argument("--data", help="Path to data file to attach")
-    ask_agy_parser.add_argument("--new-session", dest="new_session", action="store_true",
-                                help="Force new session (no-op today; reserved)")
-    ask_agy_parser.add_argument("--from", dest="from_llm",
-                                help="Sender agent family. Default: inferred from environment")
-    ask_agy_parser.add_argument("--from-model", dest="from_model",
-                                help="Exact sender model ID")
-    ask_agy_parser.add_argument("--to-model", dest="to_model",
-                                help="Target Agy model ID (default: gemini-3.5-flash-high)")
-    ask_agy_parser.add_argument("--stdout-only", dest="stdout_only", action="store_true",
-                                help="Print Agy response body to stdout for caller parsing")
-    ask_agy_parser.add_argument("--output-path", dest="output_path",
-                                help="Write Agy response body to a file")
-    ask_agy_parser.add_argument("--no-timeout", dest="no_timeout", action="store_true",
-                                help="Run sync without timeout")
-    ask_agy_parser.add_argument("--review", action="store_true",
-                                help="Prepend docs/review-protocol.md")
+    ask_agy_parser.add_argument(
+        "--new-session", dest="new_session", action="store_true", help="Force new session (no-op today; reserved)"
+    )
+    ask_agy_parser.add_argument(
+        "--from", dest="from_llm", help="Sender agent family. Default: inferred from environment"
+    )
+    ask_agy_parser.add_argument("--from-model", dest="from_model", help="Exact sender model ID")
+    ask_agy_parser.add_argument(
+        "--to-model", dest="to_model", help="Target Agy model ID (default: gemini-3.5-flash-high)"
+    )
+    ask_agy_parser.add_argument(
+        "--stdout-only",
+        dest="stdout_only",
+        action="store_true",
+        help="Print Agy response body to stdout for caller parsing",
+    )
+    ask_agy_parser.add_argument("--output-path", dest="output_path", help="Write Agy response body to a file")
+    ask_agy_parser.add_argument("--no-timeout", dest="no_timeout", action="store_true", help="Run sync without timeout")
+    ask_agy_parser.add_argument("--review", action="store_true", help="Prepend docs/review-protocol.md")
 
     # ask-hermes
     ask_hermes_parser = subparsers.add_parser(
@@ -659,8 +692,12 @@ def _build_parser() -> argparse.ArgumentParser:
     ask_pool_parser.add_argument("--task-id", required=True, help="Task ID")
     ask_pool_parser.add_argument("--type", default="query", help="Message type")
     ask_pool_parser.add_argument("--data", help="Path to data file to attach")
-    ask_pool_parser.add_argument("--variant", default=POOL_DEFAULT_VARIANT, choices=["minimal", "high", "max"],
-                                 help=f"Reasoning effort (default {POOL_DEFAULT_VARIANT}; use high/max for harder tasks)")
+    ask_pool_parser.add_argument(
+        "--variant",
+        default=POOL_DEFAULT_VARIANT,
+        choices=["minimal", "high", "max"],
+        help=f"Reasoning effort (default {POOL_DEFAULT_VARIANT}; use high/max for harder tasks)",
+    )
     ask_pool_parser.add_argument("--model", default=None, help=f"Override model (default {POOL_MODEL})")
     ask_pool_parser.add_argument("--from", dest="from_llm", help="Sender agent family")
     ask_pool_parser.add_argument("--from-model", dest="from_model", help="Exact sender model")
@@ -675,8 +712,9 @@ def _build_parser() -> argparse.ArgumentParser:
     ask_glm_parser.add_argument("--task-id", required=True, help="Task ID")
     ask_glm_parser.add_argument("--type", default="query", help="Message type")
     ask_glm_parser.add_argument("--data", help="Path to data file to attach")
-    ask_glm_parser.add_argument("--model", default=None,
-                                help=f"Override GLM model (default {GLM_MODEL}; e.g. openrouter/z-ai/glm-5.2)")
+    ask_glm_parser.add_argument(
+        "--model", default=None, help=f"Override GLM model (default {GLM_MODEL}; e.g. openrouter/z-ai/glm-5.2)"
+    )
     ask_glm_parser.add_argument("--from", dest="from_llm", help="Sender agent family")
     ask_glm_parser.add_argument("--from-model", dest="from_model", help="Exact sender model")
     ask_glm_parser.add_argument("--no-timeout", dest="no_timeout", action="store_true")
@@ -690,8 +728,11 @@ def _build_parser() -> argparse.ArgumentParser:
     ask_gemma_parser.add_argument("--task-id", required=True, help="Task ID")
     ask_gemma_parser.add_argument("--type", default="query", help="Message type")
     ask_gemma_parser.add_argument("--data", help="Path to data file to attach")
-    ask_gemma_parser.add_argument("--model", default=None,
-                                  help=f"Override Gemma model (default {GEMMA_MODEL} — $0 via Google AI Studio direct; e.g. google-ais/gemma-4-26b-a4b-it, or the PAID openrouter/google/gemma-4-31b-it fallback)")
+    ask_gemma_parser.add_argument(
+        "--model",
+        default=None,
+        help=f"Override Gemma model (default {GEMMA_MODEL} — $0 via Google AI Studio direct; e.g. google-ais/gemma-4-26b-a4b-it, or the PAID openrouter/google/gemma-4-31b-it fallback)",
+    )
     ask_gemma_parser.add_argument("--from", dest="from_llm", help="Sender agent family")
     ask_gemma_parser.add_argument("--from-model", dest="from_model", help="Exact sender model")
     ask_gemma_parser.add_argument("--no-timeout", dest="no_timeout", action="store_true")
@@ -724,8 +765,12 @@ def _build_parser() -> argparse.ArgumentParser:
     ask_grok_build_parser.add_argument("--task-id", required=True, help="Task ID")
     ask_grok_build_parser.add_argument("--type", default="query", help="Message type")
     ask_grok_build_parser.add_argument("--data", help="Path to data file to attach")
-    ask_grok_build_parser.add_argument("--new-session", dest="new_session", action="store_true",
-                                       help="Accepted for parity; grok-build always starts fresh")
+    ask_grok_build_parser.add_argument(
+        "--new-session",
+        dest="new_session",
+        action="store_true",
+        help="Accepted for parity; grok-build always starts fresh",
+    )
     ask_grok_build_parser.add_argument(
         "--model",
         default=GROK_BUILD_DEFAULT_MODEL,
@@ -735,32 +780,32 @@ def _build_parser() -> argparse.ArgumentParser:
     ask_grok_build_parser.add_argument("--from-model", dest="from_model", help="Exact sender model")
     ask_grok_build_parser.add_argument("--to-model", dest="to_model", help="Target model ID")
     ask_grok_build_parser.add_argument("--no-timeout", dest="no_timeout", action="store_true")
-    ask_grok_build_parser.add_argument("--review", action="store_true",
-                                       help="Prepend docs/review-protocol.md")
+    ask_grok_build_parser.add_argument("--review", action="store_true", help="Prepend docs/review-protocol.md")
 
     # converse — multi-turn conversation with Gemini
     converse_parser = subparsers.add_parser("converse", help="Multi-turn conversation with Gemini (includes history)")
     converse_parser.add_argument("content", help="Message content (use '-' to read from stdin)")
     converse_parser.add_argument("--task-id", required=True, help="Conversation thread ID (e.g., 'a1-1-planning')")
     converse_parser.add_argument("--model", default="gemini-3.1-pro-preview", help="Gemini model")
-    converse_parser.add_argument("--no-github", dest="no_github", action="store_true",
-                                 help="Skip auto-posting to GitHub")
+    converse_parser.add_argument(
+        "--no-github", dest="no_github", action="store_true", help="Skip auto-posting to GitHub"
+    )
 
     # process-all
     proc_all_parser = subparsers.add_parser("process-all", help="Process ALL unread messages with Gemini")
-    proc_all_parser.add_argument(
-        "--model", default=GEMINI_DEFAULT_MODEL, help="Gemini model"
-    )
+    proc_all_parser.add_argument("--model", default=GEMINI_DEFAULT_MODEL, help="Gemini model")
 
     # process-claude-all
     proc_claude_all_parser = subparsers.add_parser("process-claude-all", help="Process ALL unread messages with Claude")
-    proc_claude_all_parser.add_argument("--new-session", dest="new_session", action="store_true",
-                                        help="Force new sessions for each message")
+    proc_claude_all_parser.add_argument(
+        "--new-session", dest="new_session", action="store_true", help="Force new sessions for each message"
+    )
 
     # process-codex-all
     proc_codex_all_parser = subparsers.add_parser("process-codex-all", help="Process ALL unread messages with Codex")
-    proc_codex_all_parser.add_argument("--new-session", dest="new_session", action="store_true",
-                                       help="Force new sessions for each message")
+    proc_codex_all_parser.add_argument(
+        "--new-session", dest="new_session", action="store_true", help="Force new sessions for each message"
+    )
 
     # codex-usage
     codex_usage_parser = subparsers.add_parser(
@@ -985,6 +1030,7 @@ def _build_parser() -> argparse.ArgumentParser:
 
     # Channel bridge commands (#1190) — registered in _channels_cli
     from ._channels_cli import register_channel_commands
+
     register_channel_commands(subparsers)
 
     return parser
@@ -1010,6 +1056,7 @@ def _dispatch_command(args):
     elif args.command == "inbox":
         if getattr(args, "inbox_command", None):
             from ._channels_cli import dispatch_channel_command
+
             rc = dispatch_channel_command(args)
             sys.exit(rc)
         check_inbox(args.for_llm)
@@ -1019,8 +1066,9 @@ def _dispatch_command(args):
         data = None
         if args.data:
             data = Path(args.data).read_text()
-        send_message(args.content, args.task_id, args.type, data,
-                     args.from_llm, args.to_llm, args.from_model, args.to_model)
+        send_message(
+            args.content, args.task_id, args.type, data, args.from_llm, args.to_llm, args.from_model, args.to_model
+        )
     elif args.command == "ack":
         acknowledge(args.message_ids)
     elif args.command == "ack-all":
@@ -1059,8 +1107,7 @@ def _dispatch_command(args):
         _handle_ask_grok_build(args)
     elif args.command == "converse":
         content = sys.stdin.read() if args.content == "-" else args.content
-        converse_gemini(content, args.task_id, args.model,
-                        getattr(args, 'no_github', False))
+        converse_gemini(content, args.task_id, args.model, getattr(args, "no_github", False))
     elif args.command == "process-all":
         process_all_gemini(args.model)
     elif args.command == "process-claude-all":
@@ -1092,6 +1139,7 @@ def _dispatch_command(args):
         interactive_mode()
     elif args.command == "send-codex-ui":
         from ._ui_codex import cli_main as _ui_codex_cli_main
+
         argv: list[str] = ["--thread", args.thread]
         if args.bridge_id:
             argv += ["--bridge-id", args.bridge_id]
@@ -1109,6 +1157,7 @@ def _dispatch_command(args):
         sys.exit(rc)
     elif args.command == "send-agy-ui":
         from ._ui_agy import cli_main as _ui_agy_cli_main
+
         argv = []
         if args.thread:
             argv += ["--thread", args.thread]
@@ -1129,6 +1178,7 @@ def _dispatch_command(args):
     elif args.command in ("channel", "post", "p", "reconcile", "sync", "discuss"):
         # Channel bridge commands (#1190)
         from ._channels_cli import dispatch_channel_command
+
         rc = dispatch_channel_command(args)
         sys.exit(rc)
     else:
@@ -1143,9 +1193,17 @@ def _handle_ask_claude(args):
         data = Path(args.data).read_text()
     kwargs = {"review": True} if getattr(args, "review", False) else {}
     from_llm = _resolve_from_llm(args)
-    ask_claude(args.content, args.task_id, args.type, data,
-               args.new_session, from_llm, args.from_model, args.to_model,
-               **kwargs)
+    ask_claude(
+        args.content,
+        args.task_id,
+        args.type,
+        data,
+        args.new_session,
+        from_llm,
+        args.from_model,
+        args.to_model,
+        **kwargs,
+    )
 
 
 def _handle_ask_codex(args):
@@ -1160,9 +1218,18 @@ def _handle_ask_codex(args):
         try:
             kwargs = {"review": True} if getattr(args, "review", False) else {}
             from_llm = _resolve_from_llm(args)
-            ask_codex_chain(content, args.chain, args.type, data,
-                            args.new_session, from_llm, args.from_model,
-                            args.to_model, args.no_timeout, **kwargs)
+            ask_codex_chain(
+                content,
+                args.chain,
+                args.type,
+                data,
+                args.new_session,
+                from_llm,
+                args.from_model,
+                args.to_model,
+                args.no_timeout,
+                **kwargs,
+            )
         except ValueError as exc:
             raise SystemExit(str(exc)) from exc
         return
@@ -1170,9 +1237,18 @@ def _handle_ask_codex(args):
         raise SystemExit("ask-codex requires --task-id unless --chain is used")
     kwargs = {"review": True} if getattr(args, "review", False) else {}
     from_llm = _resolve_from_llm(args)
-    ask_codex(content, args.task_id, args.type, data,
-              args.new_session, from_llm, args.from_model,
-              args.to_model, args.no_timeout, **kwargs)
+    ask_codex(
+        content,
+        args.task_id,
+        args.type,
+        data,
+        args.new_session,
+        from_llm,
+        args.from_model,
+        args.to_model,
+        args.no_timeout,
+        **kwargs,
+    )
 
 
 def _handle_ask_agy(args):
@@ -1183,12 +1259,20 @@ def _handle_ask_agy(args):
     content = sys.stdin.read() if args.content == "-" else args.content
     kwargs = {"review": True} if getattr(args, "review", False) else {}
     from_llm = _resolve_from_llm(args)
-    ask_agy(content, args.task_id, args.type, data,
-            args.new_session, from_llm, args.from_model,
-            args.to_model, args.no_timeout,
-            stdout_only=getattr(args, "stdout_only", False),
-            output_path=getattr(args, "output_path", None),
-            **kwargs)
+    ask_agy(
+        content,
+        args.task_id,
+        args.type,
+        data,
+        args.new_session,
+        from_llm,
+        args.from_model,
+        args.to_model,
+        args.no_timeout,
+        stdout_only=getattr(args, "stdout_only", False),
+        output_path=getattr(args, "output_path", None),
+        **kwargs,
+    )
 
 
 def _handle_ask_hermes(args):
@@ -1345,6 +1429,7 @@ def main():
     args = parser.parse_args()
     if args.command is not None:
         from ._channels_cli import _maybe_print_backlog_warnings
+
         _maybe_print_backlog_warnings()
     if not _dispatch_command(args):
         parser.print_help()
