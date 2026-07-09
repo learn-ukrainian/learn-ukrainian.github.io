@@ -722,7 +722,18 @@ def compute_routing_budget(now: datetime | None = None, *, fresh_codexbar: bool 
                 pace_sum = f"burn pct {burn_pct}%" if burn_pct is not None else "unknown"
 
             if is_in_deficit:
-                warnings.append(f"lane {lane} is in deficit ({pace_sum})")
+                # Deficit is a WEEKLY-pace signal. Quote the 5h window too:
+                # a lane can be week-deficit yet have full 5h reserve for
+                # normal work now — weekly-only wording misled toward
+                # over-restriction (user correction 2026-07-09).
+                five_h_pct = cb.get("primary_used_pct") if cb else None
+                if five_h_pct is not None:
+                    warnings.append(
+                        f"lane {lane} is in deficit ({pace_sum}; weekly-pace signal — "
+                        f"5h window {five_h_pct:.0f}% used, {100 - five_h_pct:.0f}% reserve)"
+                    )
+                else:
+                    warnings.append(f"lane {lane} is in deficit ({pace_sum})")
 
     # Legacy Claude Interactive warning
     if "claude" in agents:
