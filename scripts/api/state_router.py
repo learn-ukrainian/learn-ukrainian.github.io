@@ -48,6 +48,7 @@ except ImportError:
     from ..path_safety import safe_join  # scripts.api package import (production)
 
 from . import delegate_router as delegate_api
+from .codexbar_usage import get_provider_usage_data
 from .config import CURRICULUM_ROOT, LEVELS
 from .state_build import (
     compute_build_stats,
@@ -366,9 +367,10 @@ def _recommend_agent(
                 pass
     if imminent:
         warnings.append(f"lanes resetting soon (within {reset_imminent_hours}h): {', '.join(imminent)} — defer large batches on these if possible")
-
     if "near_cap" in status_by_agent.values():
-        candidates = [agent for agent, st in status_by_agent.items() if st in {"cool", "warm"}]
+        candidates = [agent for agent, st in status_by_agent.items() if st == "cool"]
+        if not candidates:
+            candidates = [agent for agent, st in status_by_agent.items() if st == "warm"]
         if candidates:
             # prefer non-imminent if possible
             non_imm = [c for c in candidates if c not in imminent] or candidates
@@ -392,18 +394,25 @@ def _recommend_agent(
                 "warnings": warnings,
             }
 
-    cool_warm = [a for a, s in status_by_agent.items() if s in {"cool", "warm"}]
-    if cool_warm:
-        # pick lowest burn, skip imminent if alternatives
-        pool = [c for c in cool_warm if c not in imminent] or cool_warm
+    cool_lanes = [a for a, s in status_by_agent.items() if s == "cool"]
+    if cool_lanes:
+        pool = [c for c in cool_lanes if c not in imminent] or cool_lanes
         recommended = min(pool, key=lambda agent: burn_by_agent.get(agent) or 0.0)
-        if recommended == "codex" or len(cool_warm) == len(status_by_agent):
-            rationale = (
-                "All agents cool or warm; default split applies. "
-                f"{recommended} 7d burn is {_format_pct(burn_by_agent.get(recommended))}%. "
-            )
-        else:
-            rationale = f"Mixed; {recommended} has lowest 7d burn ({_format_pct(burn_by_agent.get(recommended))}%)."
+        rationale = (
+            "All agents cool or warm; default split applies. "
+            f"{recommended} 7d burn is {_format_pct(burn_by_agent.get(recommended))}%. "
+        )
+        return {
+            "primary_agent_for_code": recommended,
+            "rationale": rationale,
+            "warnings": warnings,
+        }
+
+    warm_lanes = [a for a, s in status_by_agent.items() if s == "warm"]
+    if warm_lanes:
+        pool = [c for c in warm_lanes if c not in imminent] or warm_lanes
+        recommended = min(pool, key=lambda agent: burn_by_agent.get(agent) or 0.0)
+        rationale = f"Mixed; {recommended} has lowest 7d burn ({_format_pct(burn_by_agent.get(recommended))}%)."
         return {
             "primary_agent_for_code": recommended,
             "rationale": rationale,
@@ -552,12 +561,116 @@ def compute_routing_budget(now: datetime | None = None) -> dict[str, Any]:
             "remaining_pct": (100.0 - burn) if burn is not None else None,
         }
 
-    # warnings for claude etc (only if not force_unknown)
-    claude_burn_pct = agents["claude"]["interactive"]["burn_pct_7d"]
-    if not force_unknown and agents["claude"]["interactive"]["status"] in {"hot", "near_cap"}:
-        warnings.append(
-            f"claude.interactive at {_format_pct(claude_burn_pct)}% — consider --agent codex for next mechanical fix"
-        )
+    # Overlay codexbar data as authoritative
+    cb_sourced_any = False
+    cb_stale = False
+    cb_max_age_s = None
+
+    for lane in SUBSCRIPTION_LANES:
+        cb_data = get_provider_usage_data(lane)
+        if cb_data and cb_data.get("weekly_used_pct") is not None:
+            cb_sourced_any = True
+            weekly_used = cb_data["weekly_used_pct"]
+
+            # Determine status using deficit signal
+            is_in_deficit = (cb_data.get("will_last_to_reset") is False) or \
+                            (cb_data.get("weekly_pace_delta_pct") is not None and cb_data["weekly_pace_delta_pct"] > 0) or \
+                            (weekly_used >= 90.0)
+
+            if weekly_used >= 90.0:
+                cb_status = "near_cap"
+            elif is_in_deficit:
+                cb_status = "hot"
+            elif weekly_used < 50.0:
+                cb_status = "cool"
+            else:
+                cb_status = "warm"
+
+            # Check if stale
+            if cb_data.get("stale"):
+                cb_stale = True
+            age = cb_data.get("age_s")
+            if age is not None and (cb_max_age_s is None or age > cb_max_age_s):
+                cb_max_age_s = age
+
+            # Build codexbar metadata dict
+            agents[lane]["codexbar"] = {
+                "primary_used_pct": cb_data.get("primary_used_pct"),
+                "weekly_used_pct": cb_data.get("weekly_used_pct"),
+                "monthly_cap_usd": cb_data.get("monthly_cap_usd"),
+                "monthly_used_usd": cb_data.get("monthly_used_usd"),
+                "weekly_resets_at": cb_data.get("weekly_resets_at"),
+                "weekly_pace_delta_pct": cb_data.get("weekly_pace_delta_pct"),
+                "will_last_to_reset": cb_data.get("will_last_to_reset"),
+                "pace_summary": cb_data.get("pace_summary"),
+                "stale": cb_data.get("stale", False),
+                "fetched_at": cb_data.get("fetched_at"),
+            }
+
+            # Update authoritative keys in agents
+            if lane == "claude":
+                agents[lane]["interactive"]["burn_pct_7d"] = weekly_used
+                agents[lane]["interactive"]["status"] = cb_status
+                agents[lane]["interactive"]["spent_7d_usd"] = _round_money((weekly_used / 100.0) * claude_cap) if claude_cap else None
+                agents[lane]["burn_pct_7d"] = weekly_used
+                agents[lane]["status"] = cb_status
+                agents[lane]["spent_7d_usd"] = agents[lane]["interactive"]["spent_7d_usd"]
+                agents[lane]["remaining_pct"] = 100.0 - weekly_used
+                if cb_data.get("weekly_resets_at"):
+                    agents[lane]["resets_at"] = cb_data["weekly_resets_at"]
+
+                # Check agentic pool overlay
+                m_cap = cb_data.get("monthly_cap_usd")
+                m_used = cb_data.get("monthly_used_usd")
+                if m_cap is not None and m_used is not None:
+                    agents[lane]["agentic_pool"]["monthly_cap_usd"] = m_cap
+                    agents[lane]["agentic_pool"]["spent_cycle_usd"] = m_used
+                    pool_burn = _burn_pct(m_used, m_cap)
+                    agents[lane]["agentic_pool"]["burn_pct_cycle"] = pool_burn
+                    agents[lane]["agentic_pool"]["status"] = _status_from_burn(pool_burn, has_cap=(m_cap > 0))
+            else:
+                agent_config = budgets.get(lane) if isinstance(budgets.get(lane), dict) else {}
+                cap = float(agent_config.get("weekly_cap_usd") or 0.0) if agent_config else 0.0
+                agents[lane]["burn_pct_7d"] = weekly_used
+                agents[lane]["status"] = cb_status
+                agents[lane]["spent_7d_usd"] = _round_money((weekly_used / 100.0) * cap) if cap else None
+                agents[lane]["remaining_pct"] = 100.0 - weekly_used
+                if cb_data.get("weekly_resets_at"):
+                    agents[lane]["resets_at"] = cb_data["weekly_resets_at"]
+
+    if cb_sourced_any:
+        is_stale = cb_stale
+        data_age_s = cb_max_age_s
+        if is_stale:
+            warnings.append("generatedAt/data age >15min — advisory downgraded to stale, verify manually (never hard block)")
+
+    # Build warnings for any lane in deficit (authoritative or fallback)
+    for lane in SUBSCRIPTION_LANES:
+        if lane in agents:
+            cb = agents[lane].get("codexbar")
+            if cb:
+                is_in_deficit = (cb.get("will_last_to_reset") is False) or \
+                                 (cb.get("weekly_pace_delta_pct") is not None and cb.get("weekly_pace_delta_pct") > 0) or \
+                                 (cb.get("weekly_used_pct") is not None and cb.get("weekly_used_pct") >= 90.0)
+                pace_sum = cb.get("pace_summary") or f"{cb.get('weekly_used_pct')}% used"
+            else:
+                # Fallback to local ledger logic
+                status = agents[lane].get("status") or agents[lane].get("interactive", {}).get("status")
+                is_in_deficit = status in {"hot", "near_cap"}
+                burn_pct = agents[lane].get("burn_pct_7d") or agents[lane].get("interactive", {}).get("burn_pct_7d")
+                pace_sum = f"burn pct {burn_pct}%" if burn_pct is not None else "unknown"
+
+            if is_in_deficit:
+                warnings.append(f"lane {lane} is in deficit ({pace_sum})")
+
+    # Legacy Claude Interactive warning
+    if "claude" in agents:
+        claude_burn_pct = agents["claude"]["interactive"]["burn_pct_7d"]
+        if not force_unknown and agents["claude"]["interactive"]["status"] in {"hot", "near_cap"}:
+            warnings.append(
+                f"claude.interactive at {_format_pct(claude_burn_pct)}% — consider --agent codex for next mechanical fix"
+            )
+
     starts_in_days = _days_until(today, starts_on)
     if starts_in_days is not None and 0 <= starts_in_days <= 14:
         warnings.append(f"agentic_pool launches in {starts_in_days} days")
