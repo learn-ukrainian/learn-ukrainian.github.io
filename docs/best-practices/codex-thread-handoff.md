@@ -43,6 +43,9 @@ prompt, scoped by agent name:
 - Thread rollover packet: `.agent/<agent>-thread-handoff.md` (gitignored)
 - Durable Codex orchestrator handoff:
   `docs/session-state/codex-orchestrator-handoff.md`
+- Codex role handoff pointer:
+  `docs/session-state/current.orchestrator.md` (thin pointer to the durable
+  orchestrator handoff above)
 - Other durable agent handoffs: `docs/session-state/current.<agent>.md`
 - Compatibility router: `docs/session-state/current.md` (git-tracked; not used
   for normal thread rollover)
@@ -106,6 +109,16 @@ The generated prompt is the exact replacement-thread bootstrap. If the Codex
 app `create_thread` tool is available to the current agent, use it with that
 prompt. If it is not available, create one new Codex UI thread manually and
 paste the generated prompt. That is the only unavoidable UI action.
+
+The bootstrap starts with a checklist that is deliberately hard to skip:
+
+- repo root + `git status --short --branch`
+- local `.agent/<agent>-thread-handoff.md`
+- `/api/orient?fresh=true`
+- `.venv/bin/python scripts/orchestration/issue_stream_audit.py --json` when
+  the GitHub issue subsection errors or times out
+- open PR list
+- current worktree hygiene via `git worktree list`
 
 The generated bootstrap also tells the replacement thread to read the
 orchestrator worker inbox:

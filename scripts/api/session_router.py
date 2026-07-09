@@ -144,7 +144,15 @@ def _resolve_session_path(agent: str) -> str:
         return SESSION_ROUTER_PATH
 
     router_path = PROJECT_ROOT / SESSION_ROUTER_PATH
-    agent_default = f"docs/session-state/current.{agent}.md"
+    agent_default = (
+        # If the small compatibility router is absent, the API should still
+        # serve Codex UI the durable orchestrator state directly. Thread
+        # bootstrap prompts separately name the current.orchestrator.md pointer
+        # because that is the stable local file agents should read first.
+        ORCHESTRATOR_HANDOFF_PATH
+        if agent == "codex"
+        else f"docs/session-state/current.{agent}.md"
+    )
     if not router_path.is_file():
         return agent_default
 
@@ -153,7 +161,7 @@ def _resolve_session_path(agent: str) -> str:
     if agent in handoffs:
         handoff_path = handoffs[agent]
         if (
-            agent == DEFAULT_SESSION_AGENT
+            agent in {DEFAULT_SESSION_AGENT, "codex"}
             and handoff_path == LEGACY_ORCHESTRATOR_HANDOFF_PATH
             and (PROJECT_ROOT / ORCHESTRATOR_HANDOFF_PATH).is_file()
         ):
@@ -162,7 +170,7 @@ def _resolve_session_path(agent: str) -> str:
 
     # Backward compatibility for older current.md files that still contained
     # the detailed orchestrator handoff rather than an Agent-Handoff router.
-    if agent == DEFAULT_SESSION_AGENT and not handoffs:
+    if agent in {DEFAULT_SESSION_AGENT, "codex"} and not handoffs:
         return SESSION_ROUTER_PATH
     return agent_default
 

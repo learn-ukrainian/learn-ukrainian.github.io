@@ -84,6 +84,10 @@ def default_thread_handoff_path(agent: str) -> Path:
 def default_handoff_path(agent: str) -> Path:
     if agent == DEFAULT_AGENT:
         return ORCHESTRATOR_HANDOFF_PATH
+    if agent == "codex":
+        # Codex UI rollovers read the orchestrator compatibility pointer. There
+        # is no separate Codex-specific durable handoff file in this repo.
+        return Path("docs/session-state/current.orchestrator.md")
     return Path(f"docs/session-state/current.{agent}.md")
 
 
@@ -503,6 +507,24 @@ def context_line(context_percent: float | None, threshold: float) -> str:
     return f"Context estimate: {context_percent:.1f}% ({state}; threshold {threshold:.1f}%)."
 
 
+def first_turn_checklist_lines(
+    *,
+    repo_root: str,
+    thread_handoff_text: str,
+    role_handoff_text: str,
+) -> list[str]:
+    return [
+        "First-turn checklist:",
+        f"1. `cd {repo_root}`",
+        "2. `git status --short --branch`",
+        f"3. Read `{thread_handoff_text}` and `{role_handoff_text}`.",
+        "4. Check `/api/orient?fresh=true` from the local monitor.",
+        "5. If `/api/orient` returns an `issues_error` or the GitHub issue subsection times out, run `.venv/bin/python scripts/orchestration/issue_stream_audit.py --json`.",
+        "6. `gh pr list --state open --json number,title,headRefName,mergeStateStatus,statusCheckRollup,url,updatedAt,isDraft,reviewDecision --limit 20`",
+        "7. `git worktree list` and verify the active worktree is the one you intend to edit.",
+    ]
+
+
 def render_bootstrap_prompt(
     snapshot: dict[str, Any],
     state: dict[str, Any],
@@ -552,13 +574,16 @@ def render_bootstrap_prompt(
         "- Do not write docs/session-state/current.md for thread rollover.",
         "- Do not delete or migrate the old heartbeat automation until the confirm-started command below has succeeded.",
         "",
-        "Start by orienting from the local monitor and PR state:",
+        *first_turn_checklist_lines(
+            repo_root=str(git.get("repo_root")),
+            thread_handoff_text=thread_handoff_text,
+            role_handoff_text=handoff_text,
+        ),
+        "",
+        "Local monitor follow-up:",
         "```bash",
-        "cd " + str(git.get("repo_root")),
-        "curl -sS http://127.0.0.1:8765/api/orient",
         "curl -sS http://127.0.0.1:8765/api/delegate/active",
         "curl -sS http://127.0.0.1:8765/api/worktrees",
-        "gh pr list --state open --json number,title,headRefName,mergeStateStatus,statusCheckRollup,url,updatedAt,isDraft,reviewDecision --limit 20",
         ".venv/bin/python scripts/orchestration/orchestrator_control.py inbox --recent 20 --include-results",
         "```",
         "",
@@ -594,6 +619,7 @@ def render_current_markdown(
     cleanup = state.get("cleanup") or {}
     handoff = state.get("last_handoff") or {}
     prompt_path = replacement.get("bootstrap_prompt_path") or default_bootstrap_path(agent).as_posix()
+    thread_handoff_text = default_thread_handoff_path(agent).as_posix()
     role_handoff = (role_handoff_path or default_handoff_path(agent)).as_posix()
     title_agent = "Orchestrator" if agent == "orchestrator" else agent.title()
 
@@ -661,14 +687,19 @@ def render_current_markdown(
         "",
         f"- Count: `{(monitor.get('worktrees') or {}).get('count', 'unknown') if isinstance(monitor.get('worktrees'), dict) else 'unknown'}`",
         "",
-        "## Next Commands",
+        "## First-Turn Checklist",
+        "",
+        *first_turn_checklist_lines(
+            repo_root=str(git.get("repo_root")),
+            thread_handoff_text=thread_handoff_text,
+            role_handoff_text=role_handoff,
+        ),
+        "",
+        "## Local Monitor Follow-Up",
         "",
         "```bash",
-        "cd " + str(git.get("repo_root")),
-        "curl -sS http://127.0.0.1:8765/api/orient",
         "curl -sS http://127.0.0.1:8765/api/delegate/active",
         "curl -sS http://127.0.0.1:8765/api/worktrees",
-        "gh pr list --state open --json number,title,headRefName,mergeStateStatus,statusCheckRollup,url,updatedAt,isDraft,reviewDecision --limit 20",
         ".venv/bin/python scripts/orchestration/orchestrator_control.py inbox --recent 20 --include-results",
         "```",
         "",

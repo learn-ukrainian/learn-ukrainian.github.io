@@ -99,14 +99,14 @@ def session_fixture(tmp_path, monkeypatch):
         "Latest-Brief: docs/session-state/codex-orchestrator-handoff.md\n\n"
         "Agent-Handoff:\n"
         "- orchestrator: docs/session-state/codex-orchestrator-handoff.md\n"
-        "- codex: docs/session-state/current.codex.md\n",
+        "- codex: docs/session-state/current.orchestrator.md\n",
         encoding="utf-8",
     )
     (session_dir / "codex-orchestrator-handoff.md").write_text(
-        "# Current task\n\nWorking on #1309.\n", encoding="utf-8"
+        "# Current task\n\nWorking on #1309.\n\nCodex-specific handoff.\n", encoding="utf-8"
     )
-    (session_dir / "current.codex.md").write_text(
-        "# Codex task\n\nCodex-specific handoff.\n", encoding="utf-8"
+    (session_dir / "current.orchestrator.md").write_text(
+        "# Pointer\n\nSee durable state.\n", encoding="utf-8"
     )
     (session_dir / "2026-04-01-old.md").write_text("old handoff\n", encoding="utf-8")
     (session_dir / "2026-04-17-newest.md").write_text("new handoff\n", encoding="utf-8")
@@ -144,7 +144,8 @@ def test_session_current_agent_query(session_fixture):
     resp = client.get("/api/session/current?agent=codex")
     assert resp.status_code == 200
     assert "Codex-specific handoff." in resp.text
-    assert "Working on #1309." not in resp.text
+    assert "Working on #1309." in resp.text
+    assert "See durable state." not in resp.text
 
 
 def test_session_current_legacy_orchestrator_mapping_uses_durable_handoff(tmp_path, monkeypatch):
@@ -172,6 +173,73 @@ def test_session_current_legacy_orchestrator_mapping_uses_durable_handoff(tmp_pa
     body = resp.json()
     assert "Durable orchestrator state." in body["markdown"]
     assert body["sections"]["current"] == "docs/session-state/codex-orchestrator-handoff.md"
+
+
+def test_session_current_codex_without_router_uses_durable_handoff(tmp_path, monkeypatch):
+    project_root = tmp_path
+    session_dir = project_root / "docs" / "session-state"
+    session_dir.mkdir(parents=True)
+    (session_dir / "codex-orchestrator-handoff.md").write_text(
+        "# Durable task\n\nCodex UI state.\n", encoding="utf-8"
+    )
+    monkeypatch.setattr(session_router, "PROJECT_ROOT", project_root)
+
+    resp = client.get("/api/session/current?agent=codex&format=json")
+
+    assert resp.status_code == 200
+    body = resp.json()
+    assert "Codex UI state." in body["markdown"]
+    assert body["sections"]["current"] == "docs/session-state/codex-orchestrator-handoff.md"
+
+
+def test_session_current_codex_empty_router_uses_router_body(tmp_path, monkeypatch):
+    project_root = tmp_path
+    session_dir = project_root / "docs" / "session-state"
+    session_dir.mkdir(parents=True)
+    (session_dir / "current.md").write_text(
+        "# Legacy current body\n\nNo agent router yet.\n", encoding="utf-8"
+    )
+    (session_dir / "codex-orchestrator-handoff.md").write_text(
+        "# Durable task\n\nCodex UI state.\n", encoding="utf-8"
+    )
+    monkeypatch.setattr(session_router, "PROJECT_ROOT", project_root)
+
+    resp = client.get("/api/session/current?agent=codex&format=json")
+
+    assert resp.status_code == 200
+    body = resp.json()
+    assert "No agent router yet." in body["markdown"]
+    assert "Codex UI state." not in body["markdown"]
+    assert body["sections"]["current"] == "docs/session-state/current.md"
+
+
+def test_session_current_legacy_pointer_remap_is_codex_or_orchestrator_only(
+    tmp_path, monkeypatch
+):
+    project_root = tmp_path
+    session_dir = project_root / "docs" / "session-state"
+    session_dir.mkdir(parents=True)
+    (session_dir / "current.md").write_text(
+        "# Current Session Router\n\n"
+        "Agent-Handoff:\n"
+        "- claude: docs/session-state/current.orchestrator.md\n",
+        encoding="utf-8",
+    )
+    (session_dir / "current.orchestrator.md").write_text(
+        "# Pointer\n\nClaude was mapped here deliberately.\n", encoding="utf-8"
+    )
+    (session_dir / "codex-orchestrator-handoff.md").write_text(
+        "# Durable task\n\nDurable orchestrator state.\n", encoding="utf-8"
+    )
+    monkeypatch.setattr(session_router, "PROJECT_ROOT", project_root)
+
+    resp = client.get("/api/session/current?agent=claude&format=json")
+
+    assert resp.status_code == 200
+    body = resp.json()
+    assert "Claude was mapped here deliberately." in body["markdown"]
+    assert "Durable orchestrator state." not in body["markdown"]
+    assert body["sections"]["current"] == "docs/session-state/current.orchestrator.md"
 
 
 def test_session_current_router_query(session_fixture):

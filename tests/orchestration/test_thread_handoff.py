@@ -112,6 +112,9 @@ def test_render_bootstrap_prompt_contains_guardrails(tmp_path: Path):
     assert "Thread handoff: .agent/orchestrator-thread-handoff.md" in prompt
     assert "Global router:" not in prompt
     assert "Do not write docs/session-state/current.md for thread rollover." in prompt
+    assert "git status --short --branch" in prompt
+    assert "issue_stream_audit.py --json" in prompt
+    assert "git worktree list" in prompt
     assert "confirm-started --agent orchestrator --new-thread-id <replacement-thread-id>" in prompt
     assert "Only after that command reports old_automation_ready_to_delete=true" in prompt
     assert "Context estimate: 90.0% (ROLL OVER NOW; threshold 82.0%)." in prompt
@@ -137,10 +140,61 @@ def test_render_current_markdown_includes_required_handoff_sections(tmp_path: Pa
     assert "### Modified Files" in rendered
     assert "## Open PRs" in rendered
     assert "## Delegated Tasks" in rendered
-    assert "## Next Commands" in rendered
+    assert "## First-Turn Checklist" in rendered
+    assert "issue_stream_audit.py --json" in rendered
     assert "confirm-started --agent orchestrator --new-thread-id <replacement-thread-id>" in rendered
     assert "orchestrator_control.py inbox --recent 20 --include-results" in rendered
     assert "Durable role handoff: `docs/session-state/codex-orchestrator-handoff.md`" in rendered
+
+
+def test_render_bootstrap_prompt_for_codex_uses_orchestrator_pointer(tmp_path: Path):
+    now = datetime(2026, 5, 30, 8, 0, tzinfo=UTC)
+    state = th.prepare_state(
+        {},
+        agent="codex",
+        now=now,
+        active_thread_id="old-thread",
+        active_automation_id="old-auto",
+        bootstrap_path=Path(".agent/bootstrap.md"),
+        context_percent=90.0,
+        force_new_replacement=False,
+    )
+    prompt = th.render_bootstrap_prompt(
+        sample_snapshot(tmp_path),
+        state,
+        agent="codex",
+        context_threshold=82.0,
+    )
+
+    assert "You are the replacement codex thread." in prompt
+    assert "Role handoff: docs/session-state/current.orchestrator.md" in prompt
+    assert "Thread handoff: .agent/codex-thread-handoff.md" in prompt
+    assert "issue_stream_audit.py --json" in prompt
+    assert "git worktree list" in prompt
+
+
+def test_render_current_markdown_for_codex_uses_orchestrator_pointer(tmp_path: Path):
+    now = datetime(2026, 5, 30, 8, 0, tzinfo=UTC)
+    state = th.prepare_state(
+        {},
+        agent="codex",
+        now=now,
+        active_thread_id="old-thread",
+        active_automation_id=None,
+        bootstrap_path=Path(".agent/bootstrap.md"),
+        context_percent=None,
+        force_new_replacement=False,
+    )
+    rendered = th.render_current_markdown(
+        sample_snapshot(tmp_path),
+        state,
+        agent="codex",
+        context_threshold=82.0,
+    )
+
+    assert "## First-Turn Checklist" in rendered
+    assert "Durable role handoff: `docs/session-state/current.orchestrator.md`" in rendered
+    assert "confirm-started --agent codex --new-thread-id <replacement-thread-id>" in rendered
 
 
 def test_render_router_markdown_contains_parseable_markers():
@@ -153,7 +207,7 @@ def test_render_router_markdown_contains_parseable_markers():
     assert "Latest-Brief: docs/session-state/codex-orchestrator-handoff.md" in rendered
     assert "Agent-Handoff:" in rendered
     assert "- orchestrator: docs/session-state/codex-orchestrator-handoff.md" in rendered
-    assert "- codex: docs/session-state/current.codex.md" in rendered
+    assert "- codex: docs/session-state/current.orchestrator.md" in rendered
     assert len(rendered.encode("utf-8")) < 1200
 
 
@@ -162,6 +216,7 @@ def test_default_agent_paths_are_agent_specific():
     assert th.default_bootstrap_path("claude") == Path(".agent/claude-thread-bootstrap.md")
     assert th.default_thread_handoff_path("claude") == Path(".agent/claude-thread-handoff.md")
     assert th.default_handoff_path("orchestrator") == Path("docs/session-state/codex-orchestrator-handoff.md")
+    assert th.default_handoff_path("codex") == Path("docs/session-state/current.orchestrator.md")
     assert th.default_handoff_path("claude") == Path("docs/session-state/current.claude.md")
 
 
