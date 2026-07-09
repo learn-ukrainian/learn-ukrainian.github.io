@@ -72,6 +72,7 @@ def test_call_writer_routes_gpt55_to_call_codex():
 
     assert result.response_text == "ok"
     call.assert_called_once()
+    assert call.call_args[1].get("preferred_model") == "gpt-5.5"
 
 
 def test_call_writer_rejects_unknown_writer():

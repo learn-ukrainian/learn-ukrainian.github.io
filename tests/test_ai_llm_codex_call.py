@@ -91,3 +91,10 @@ def test_respects_max_retries(tmp_path):
         "retryable_error",
         "success",
     ]
+
+
+def test_codex_model_ladder_contains_gpt_5_6_terra_and_gpt_5_5():
+    from ai_llm.codex_call import CODEX_MODEL_LADDER
+
+    assert CODEX_MODEL_LADDER[0] == "gpt-5.6-terra"
+    assert "gpt-5.5" in CODEX_MODEL_LADDER

@@ -80,14 +80,15 @@ Cross-phase average of `directives_covered / directives_total`. List the top 5 m
 
 ### 4. Context window headroom
 
-For each phase, compute `prompt_chars / model_context_chars`. Model context windows (as of 2026-04):
+For each phase, compute `prompt_chars / model_context_chars`. Model context windows (as of 2026-07):
 
 | Model | Context (chars, 4 chars/token approx) |
 | --- | --- |
 | `gemini-3.1-pro-preview` | 4,000,000 (1M tokens) |
 | `gemini-3-flash` | 4,000,000 |
-| `claude-opus-4-6` | 800,000 (200K tokens) |
-| `gpt-5.5` (Codex) | 1,000,000 |
+| `claude-fable-5` / `claude-opus-4-8` / `claude-sonnet-5` | 4,000,000 (1M tokens) |
+| `gpt-5.6-sol` / `-terra` / `-luna` | 1,488,000 (372K tokens; ~353K usable before context-mgmt margin) |
+| `gpt-5.5` (Codex, legacy pinned) | 1,088,000 (272K tokens) |
 
 Flag any phase where prompt_chars exceeds 50% of the model's window — that's a hard rule for this skill. (For all current pipelines, this is ~500K+ chars, which should NEVER happen for a single v6 phase. If it does, something is badly wrong.)
 

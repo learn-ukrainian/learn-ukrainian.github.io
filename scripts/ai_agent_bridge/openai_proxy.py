@@ -207,7 +207,7 @@ def _hermes_python_argv() -> list[str]:
 
 def _codex_backend(model: str, messages: list[Message], **kwargs: Any) -> CompletionResponse:
     prompt = str(kwargs.get("prompt") or _flatten_messages(messages))
-    codex_model = os.environ.get("BRIDGE_PROXY_CODEX_MODEL", "gpt-5.5")
+    codex_model = os.environ.get("BRIDGE_PROXY_CODEX_MODEL", "gpt-5.6-terra")
 
     with tempfile.NamedTemporaryFile(prefix="openai-proxy-codex-", suffix=".txt", delete=False) as handle:
         output_path = Path(handle.name)
@@ -253,6 +253,7 @@ def _gemini_backend(model: str, messages: list[Message], **kwargs: Any) -> Compl
     # Import here to avoid circulars at module load.
     try:
         from agent_runtime.adapters.agy import _AGY_MODEL_BY_NORMALIZED, _normalize_model
+
         agy_model = _AGY_MODEL_BY_NORMALIZED.get(_normalize_model(model), model)
     except Exception:
         agy_model = model
@@ -305,8 +306,12 @@ def _hermes_backend(model: str, messages: list[Message], **kwargs: Any) -> Compl
 # the backend can pass correct --model to agy. Legacy public names are resolved inside _gemini_backend.
 _ROUTABLE_MODELS: dict[str, ModelRoute] = {
     "codex": ModelRoute(family="openai-codex", backend=_codex_backend),
-    "gemini-3.0-flash-preview": ModelRoute(family="google-gemini", backend=_gemini_backend, cli_model_name="Gemini 3.5 Flash (High)"),
-    "gemini-3.1-pro-preview": ModelRoute(family="google-gemini", backend=_gemini_backend, cli_model_name="Gemini 3.1 Pro (High)"),
+    "gemini-3.0-flash-preview": ModelRoute(
+        family="google-gemini", backend=_gemini_backend, cli_model_name="Gemini 3.5 Flash (High)"
+    ),
+    "gemini-3.1-pro-preview": ModelRoute(
+        family="google-gemini", backend=_gemini_backend, cli_model_name="Gemini 3.1 Pro (High)"
+    ),
     "claude-opus-4-8": ModelRoute(family="anthropic", backend=_claude_backend),
     "claude-opus-4-7": ModelRoute(family="anthropic", backend=_claude_backend),
     "claude-sonnet-4-7": ModelRoute(family="anthropic", backend=_claude_backend),
@@ -436,13 +441,8 @@ def healthz() -> dict[str, object]:
                     names_to_probe.append(name)
 
         if names_to_probe:
-            with concurrent.futures.ThreadPoolExecutor(
-                max_workers=min(len(names_to_probe), 4)
-            ) as executor:
-                future_map = {
-                    executor.submit(_BACKEND_PROBES[name]): name
-                    for name in names_to_probe
-                }
+            with concurrent.futures.ThreadPoolExecutor(max_workers=min(len(names_to_probe), 4)) as executor:
+                future_map = {executor.submit(_BACKEND_PROBES[name]): name for name in names_to_probe}
                 for future in concurrent.futures.as_completed(future_map):
                     probe_name = future_map[future]
                     try:
