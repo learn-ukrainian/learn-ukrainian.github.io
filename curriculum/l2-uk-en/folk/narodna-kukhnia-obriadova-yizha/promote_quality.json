@@ -1,9 +1,9 @@
 {
-  "assembled_mdx_sha256": null,
+  "assembled_mdx_sha256": "f6e2d116783a23ccbc0893d22bc2c8594234fec6fdb8a206f0f81e7b4442c1b8",
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "77c2f4e180771392435c406a3a299205b1eb021efd9bf9e0983b0bfe8bb9513b",
+    "digest": "0be3611436fc44d13ee984299defdc6d2342a9d1adfaff2f37251878e3d4548f",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/narodna-kukhnia-obriadova-yizha.yaml",
@@ -15,7 +15,7 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/narodna-kukhnia-obriadova-yizha/activities.yaml",
-        "sha256": "3485922225162fe969d7a180aae6b82c7b8ed3783096abf2d8c8342aaf805a02"
+        "sha256": "42237d4e0a987fafdb320ea95325ab2947067757604580da89196101cada874e"
       },
       {
         "path": "curriculum/l2-uk-en/folk/narodna-kukhnia-obriadova-yizha/vocabulary.yaml",

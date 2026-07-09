@@ -1,9 +1,9 @@
 {
-  "assembled_mdx_sha256": "03814f07ad29ae559290291fef558c6be578e33903b3acb27b1f8e0d966330dd",
+  "assembled_mdx_sha256": "6aad14a6cdbeb72556ff4454619670d0f580bd4e030a4ff06d9e9ac988e80bfa",
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "7ce1a87836eb96e82faacfd82f9542f6cc64de070e750c62fb9924061109356f",
+    "digest": "24bf3ba82c4a04e91d1de6a858f99adb81f395ef8ccefe190a803a997e0f33f9",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/rehionalni-etnokulturni-tradytsii.yaml",
@@ -15,7 +15,7 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/rehionalni-etnokulturni-tradytsii/activities.yaml",
-        "sha256": "afab261315c134d0030802479b90d22fe604ac7956b25cb8c4970fb7fbebd8c7"
+        "sha256": "fce53019a8560772c9c4e01d1b98eeb9b05f49efc5b611c76ba943de2538911d"
       },
       {
         "path": "curriculum/l2-uk-en/folk/rehionalni-etnokulturni-tradytsii/vocabulary.yaml",

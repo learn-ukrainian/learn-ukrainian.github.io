@@ -1,9 +1,9 @@
 {
-  "assembled_mdx_sha256": "078b5faa4385406076b0fd15c2cf893518b0807c0b75592538b46d803e9b1062",
+  "assembled_mdx_sha256": "bddbb3f06713b0b8122bc6f6839aeb0e78a11033de8898ec1ce4500894e327b1",
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "765eac211c4022eafd99a6633e7be49b38d157d6177597024bfb31f538a53cde",
+    "digest": "ae9ff7da7100c641de60d8d1b56ed19ca34267341b01fbb75a879065fec0e7bd",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/charivni-kazky.yaml",
@@ -15,7 +15,7 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/charivni-kazky/activities.yaml",
-        "sha256": "2deda20b5607b50865505005d56e1af33c1726e1ab4357d4b3a663fab0b28864"
+        "sha256": "ecb2e53ad66ecb41a0389cba43e1c11ee29fb0247f72c89febc8a9540138a53f"
       },
       {
         "path": "curriculum/l2-uk-en/folk/charivni-kazky/vocabulary.yaml",

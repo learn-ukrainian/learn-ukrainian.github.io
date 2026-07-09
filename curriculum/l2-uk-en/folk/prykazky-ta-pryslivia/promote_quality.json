@@ -1,9 +1,9 @@
 {
-  "assembled_mdx_sha256": "b143190cd842dee56c8665c42336d92572be5381a4be11aa4c5833529f6da897",
+  "assembled_mdx_sha256": "3525b255bcf040001825143da3629adb9fca8b7c2b7da76b896129cfee1cab65",
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "0d160b6d9eb569ab1fb9d11ff2193d4a3a4f7199ae92dddd80c0d8e181251e1d",
+    "digest": "799695a1cfa67eb26b5ea747ab1d316eecd87542a21b5f036d2bdaea0684f9bf",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/prykazky-ta-pryslivia.yaml",
@@ -15,7 +15,7 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/prykazky-ta-pryslivia/activities.yaml",
-        "sha256": "26221ef112001315c53c493f281472d71cbc6e7e6a7e5737b6fa1e906cc0eef6"
+        "sha256": "df93017a470985024aa7d4947f9f6f1e8be8055ed21971ec6e9b36287747b093"
       },
       {
         "path": "curriculum/l2-uk-en/folk/prykazky-ta-pryslivia/vocabulary.yaml",

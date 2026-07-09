@@ -1,9 +1,9 @@
 {
-  "assembled_mdx_sha256": "82f5a0176eab4e761ebeb0f9a9d8e3fe8455d861259fc1838e5f0fd316f6d1dc",
+  "assembled_mdx_sha256": "a57bb20746d369ab2113cc0374379c9411f6a09860f3d2589d673c7c311da2fc",
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "18b8fc33b1d7769c3e6b1d6143b0bb443faf82f5bfc9ae0ea0a1e1fcd2c78771",
+    "digest": "d253f6dd91ce9b461a10f5923125fcc00954b7d20cc61f3f54d9428c3df37e1b",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/dumy-nevilnytski-lytsarski.yaml",
@@ -15,7 +15,7 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/dumy-nevilnytski-lytsarski/activities.yaml",
-        "sha256": "24dee6be71c00f524eab857863187808d0e901dd663f8d70488fd9545783c4a4"
+        "sha256": "8a2ff15c31dfabaea903c124601acc1d4c70d092357547dc633cc2d56b4de036"
       },
       {
         "path": "curriculum/l2-uk-en/folk/dumy-nevilnytski-lytsarski/vocabulary.yaml",

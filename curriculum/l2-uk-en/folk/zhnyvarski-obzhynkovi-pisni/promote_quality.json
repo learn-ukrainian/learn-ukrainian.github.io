@@ -1,9 +1,9 @@
 {
-  "assembled_mdx_sha256": "1ae0b05e75bcd440f51f97ded26f10036e36b1dc09316fee417d1c1aaa8b2fcd",
+  "assembled_mdx_sha256": "5afd5a9ee959b9edb010e2f5dddb4d02cd8aa117b3f22a0cf34efafeae7e4f29",
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "f8b5e99d929203cb3e9af4cef926e9de58578bfaf2974c07a3fc4cfb7edf5feb",
+    "digest": "1334d65c5cc055b69c295fdab08c9be130b58372a351f064176a0a761dd0a34d",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/zhnyvarski-obzhynkovi-pisni.yaml",
@@ -15,7 +15,7 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/zhnyvarski-obzhynkovi-pisni/activities.yaml",
-        "sha256": "4b6955be6203bcf5ed8aa615e3ea50e3e2c90bca6e423cf4e41b47727e92cd26"
+        "sha256": "739bb81da4a81f2c4f12e8914b03e4042303a18e6aa477eb79b06331aacde7c3"
       },
       {
         "path": "curriculum/l2-uk-en/folk/zhnyvarski-obzhynkovi-pisni/vocabulary.yaml",

@@ -1,9 +1,9 @@
 {
-  "assembled_mdx_sha256": "2bd448a5db0b3de68cd425c136e653995612e4103a4289f2905c10bdced9833b",
+  "assembled_mdx_sha256": "732fc347c1374286c87313f05c0ca049d723ec1abeef5e9575b4514f95b591ec",
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "a9806fc4461b4f8a7184e4a1edca448d0012e1f1a4e8a11607b50cd7dc02a245",
+    "digest": "9edcd1e42a47f869963e2356619800bc9e7ae90f4db5dc322e2aaf34f29c7b9c",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/istorychni-pisni.yaml",
@@ -15,7 +15,7 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/istorychni-pisni/activities.yaml",
-        "sha256": "781711fc42663d565b5a7de64e4d6a256ffd304903f6948a9226209f82f4270c"
+        "sha256": "8005cb9b4734feee03e5ff870463a973c91d2bdf4bf117e185584ac56e8196b6"
       },
       {
         "path": "curriculum/l2-uk-en/folk/istorychni-pisni/vocabulary.yaml",

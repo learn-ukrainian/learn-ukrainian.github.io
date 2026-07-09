@@ -1,9 +1,9 @@
 {
-  "assembled_mdx_sha256": "8ad4be900b1875374b92bc12b58e4cc4cd0bb04d51238a670b9d0e67ebbaf1fe",
+  "assembled_mdx_sha256": "4bd3f346ce02843c9e0fb574ff1b4263a9a9ce5be2395be10dc959be582ab22b",
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "5d2145a84254c00227fab7ca16241ff06eea83d83e5f4fa6e590ac79fb2f319e",
+    "digest": "3bd61e90a0d96c5d96e680b6c713c37a528ea4d96cc948755e3cd3bfcbab3dd6",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/kalendarna-obriadovist-zvychai.yaml",
@@ -15,7 +15,7 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/kalendarna-obriadovist-zvychai/activities.yaml",
-        "sha256": "7c584331773532b47c61230117a6fe5baee7cce2ae5c73306f35d1e087e9bf73"
+        "sha256": "9cb3d4409ea9a7f4d11ad5cc9c24f8b4f04e88433638ec5fd24d2893333c5f87"
       },
       {
         "path": "curriculum/l2-uk-en/folk/kalendarna-obriadovist-zvychai/vocabulary.yaml",
