@@ -1,0 +1,106 @@
+---
+version: 1
+kind: atlas_source_inventory
+sources:
+  - id: ohoiko-june-a1-p068-m24-keywords
+    source_family: ohoiko
+    extraction_mode: curated_key_word
+    title: Anna Ohoiko - June A1 book (preview), page 68 / module 24, possessive pronouns
+    path: docs/references/private/ohoiko-june-a1-book/notes/page-068-module-24-possessive-pronouns.md
+    locator: module 24 sub-sections 24.1-24.4 (page 68 preview)
+    notes: >-
+      Words-only extraction per the 2026-07-10 IP boundary (issues #4851/#4223):
+      the words Anna teaches are recorded; none of her sentences, explanations,
+      or photo descriptions are copied. Every lemma batch-verified against VESUM
+      (22/22 found, 2026-07-10). VESUM tags Ukrainian possessive pronouns as
+      adj (adjectival pronouns); pos below follows VESUM. The invariant
+      possessives ЙОГО and ЇЇ are genitive forms of ВІН/ВОНО and ВОНА -
+      recorded with their VESUM lemmas. ДІТИ is the plural of ДИТИНА (no
+      separate lemma). Diminutive ДОНЕЧКА appears on-page alongside ДОНЬКА.
+    headwords:
+      # Module target paradigm - possessive pronouns
+      - lemma: мій
+        pos: adj
+        locator: m24 paradigm (24.2)
+        context: "target paradigm word; declines by gender/number"
+      - lemma: твій
+        pos: adj
+        locator: m24 paradigm (24.2) + register block (24.3)
+        context: "target paradigm word; informal-register possessive"
+      - lemma: наш
+        pos: adj
+        locator: m24 paradigm (24.2)
+        context: "target paradigm word"
+      - lemma: ваш
+        pos: adj
+        locator: m24 paradigm (24.2) + register block (24.3)
+        context: "target paradigm word; formal/plural-register possessive"
+      - lemma: їхній
+        pos: adj
+        locator: m24 paradigm (24.2)
+        context: "target paradigm word"
+      - lemma: його
+        pos: pron_form
+        locator: m24 concept block + paradigm (24.2)
+        context: "invariant possessive; VESUM lemma він/воно (gen.); module names the non-declining exception explicitly"
+      - lemma: її
+        pos: pron_form
+        locator: m24 concept block + paradigm (24.2)
+        context: "invariant possessive; VESUM lemma вона (gen.); non-declining exception"
+      - lemma: чий
+        pos: adj
+        locator: m24 question paradigm (24.4)
+        context: "question word of the module; 4-way gender/number paradigm"
+      # Example nouns used in the module's scenes and tables
+      - lemma: син
+        pos: noun
+        locator: m24 dialogue (24.1) + paradigm (24.2)
+        context: "family-scene example noun (masculine slot)"
+      - lemma: дружина
+        pos: noun
+        locator: m24 dialogue (24.1)
+        context: "family-scene example noun"
+      - lemma: донька
+        pos: noun
+        locator: m24 dialogue (24.1) + paradigm (24.2)
+        context: "family-scene example noun (feminine slot); on-page diminutive донечка"
+      - lemma: донечка
+        pos: noun
+        locator: m24 dialogue (24.1)
+        context: "diminutive of донька as used on-page"
+      - lemma: кошеня
+        pos: noun
+        locator: m24 dialogue (24.1) + paradigm (24.2)
+        context: "family-scene example noun (neuter slot)"
+      - lemma: дитина
+        pos: noun
+        locator: m24 question paradigm (24.4); plural діти in paradigm (24.2)
+        context: "example noun; plural slot uses діти (same lemma)"
+      - lemma: дівчина
+        pos: noun
+        locator: m24 register block (24.3)
+        context: "peer-register scene example noun"
+      - lemma: презентація
+        pos: noun
+        locator: m24 register block (24.3)
+        context: "formal work-register scene example noun"
+      - lemma: завдання
+        pos: noun
+        locator: m24 register block (24.3)
+        context: "classroom-register scene example noun (collocate: домашнє завдання)"
+      - lemma: домашній
+        pos: adj
+        locator: m24 register block (24.3)
+        context: "adjective in the collocation домашнє завдання"
+      - lemma: рюкзак
+        pos: noun
+        locator: m24 question paradigm (24.4)
+        context: "question-answer example noun (masculine)"
+      - lemma: цуценя
+        pos: noun
+        locator: m24 question paradigm (24.4)
+        context: "question-answer example noun (neuter)"
+      - lemma: ключ
+        pos: noun
+        locator: m24 question paradigm (24.4)
+        context: "question-answer example noun (plural ключі on-page)"
