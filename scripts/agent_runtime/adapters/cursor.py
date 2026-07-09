@@ -10,8 +10,9 @@ Key design points:
   shell-limit issues with large prompts.
 - **JSONL event stream.** Parses stdout using ``parse_json_events`` to
   extract tool-call telemetry and the final assistant response.
-- **Security boundaries.** Explicitly avoids ``--yolo`` and ``--force``
-  flags. Uses ``--mode plan`` for workspace-write by default.
+- **Security boundaries.** read-only and workspace-write use sandboxed
+  profiles. Danger mode (inside verified dispatch worktree) uses ``--force``
+  + sandbox disabled for full finalize parity with other lanes (#4750).
 - **Per-invocation workspace.** Caller can specify ``cursor_workspace`` in
   ``tool_config`` to scope the agent to a specific directory.
 
@@ -156,17 +157,17 @@ class CursorAdapter:
         elif mode == "danger":
             # Danger mode: no --mode flag (cursor-agent default allows edits;
             # --mode plan blocks edits, --mode ask is read-only Q&A — neither
-            # matches "danger" intent). Sandbox + approve-mcps kept on for
-            # MCP discipline + shell-side guard; --yolo deliberately omitted
-            # so shell tools still need explicit approval (matches the
-            # "no --yolo in any path" Phase 2 spec §2 boundary).
+            # matches "danger" intent).
             #
-            # Use sparingly — most delegate calls should use workspace-write
-            # (which blocks edits via --mode plan).
+            # Emit --force (command approval grant) + --sandbox disabled so
+            # that git commit (pre-commit hooks: pytest/ruff), git push, and
+            # gh pr create can run unattended inside the dispatch worktree.
+            # This aligns cursor danger with the contract used by codex/agy/
+            # grok-build. The verified dispatch worktree (not the in-process
+            # sandbox) is the isolation boundary. Fixes #4750.
             if self._should_approve_mcps(config, default=True):
                 cmd.append("--approve-mcps")
-            sandbox = config.get("sandbox", "enabled")
-            cmd.extend(["--sandbox", sandbox])
+            cmd.extend(["--force", "--sandbox", "disabled"])
 
         return InvocationPlan(
             cmd=cmd,
