@@ -16,6 +16,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "scripts"))
 
 from agent_runtime.result import Result
 from ai_agent_bridge._agy import _extract_target_model, process_for_agy
+from ai_agent_bridge._config import REPO_ROOT
 
 
 def test_pro_slug_round_trips_from_data_blob():
@@ -87,4 +88,17 @@ def test_agy_bridge_records_unsandboxed_repo_read_mode(monkeypatch):
 
     assert process_for_agy(8, stdout_only=True) == "reply"
     assert captured["mode"] == "danger"
-    assert captured["tool_config"] == {"bridge_repo_read": True}
+    assert captured["tool_config"] == {
+        "bridge_repo_read": True,
+        "repo_read_root": str(REPO_ROOT),
+    }
+    # Regression (post-#4841): a danger-mode spawn whose cwd is the primary
+    # checkout is refused by the worktree containment guard (#4444), which
+    # broke every `ask-agy` run from repo root. The bridge must spawn from an
+    # out-of-tree scratch cwd and grant repo READ access via repo_read_root
+    # (--add-dir) instead.
+    spawn_cwd = Path(str(captured["cwd"])).resolve()
+    repo_root = Path(str(REPO_ROOT)).resolve()
+    assert spawn_cwd != repo_root
+    assert not spawn_cwd.is_relative_to(repo_root)
+    assert spawn_cwd.is_dir()

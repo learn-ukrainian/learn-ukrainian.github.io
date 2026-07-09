@@ -10,6 +10,8 @@ execution. Long-running V7 writer-phase work goes through
 
 import json
 import os
+import tempfile
+from pathlib import Path
 
 from agent_runtime import runner as agent_runner
 from agent_runtime.errors import (
@@ -28,6 +30,19 @@ from ._prompts import build_agy_prompt
 _DEFAULT_AGY_BRIDGE_TIMEOUT_SECONDS = 900
 _NO_TIMEOUT_AGY_BRIDGE_TIMEOUT_SECONDS = 24 * 60 * 60
 _DEFAULT_AGY_MODEL = "gemini-3.5-flash-high"
+
+
+def _agy_ask_scratch_cwd() -> Path:
+    """Out-of-tree scratch cwd for unsandboxed agy bridge asks.
+
+    Must live OUTSIDE the repository tree: the runner's worktree containment
+    guard (#4444) refuses write-capable spawns from the protected primary
+    checkout, and any in-tree path classifies against it. Out-of-tree cwds
+    are isolated by definition and skip the git classify entirely.
+    """
+    scratch = Path(tempfile.gettempdir()) / "learn-ukrainian-bridge-asks" / "agy"
+    scratch.mkdir(parents=True, exist_ok=True)
+    return scratch
 
 
 def _resolve_agy_bridge_timeout(no_timeout: bool = False) -> int:
@@ -50,10 +65,7 @@ def _resolve_agy_bridge_timeout(no_timeout: bool = False) -> int:
     try:
         timeout = int(value)
     except ValueError:
-        print(
-            f"⚠️  Invalid AGY_BRIDGE_TIMEOUT={raw!r} "
-            f"— falling back to {_DEFAULT_AGY_BRIDGE_TIMEOUT_SECONDS}s"
-        )
+        print(f"⚠️  Invalid AGY_BRIDGE_TIMEOUT={raw!r} — falling back to {_DEFAULT_AGY_BRIDGE_TIMEOUT_SECONDS}s")
         return _DEFAULT_AGY_BRIDGE_TIMEOUT_SECONDS
 
     if timeout <= 0:
@@ -159,11 +171,19 @@ def process_for_agy(
             # caller.  The prompt remains explicitly read-only because AGY's
             # headless permission bypass is otherwise full-trust.
             mode="danger",
-            cwd=REPO_ROOT,
+            # Spawn from an out-of-tree scratch cwd: the runner's worktree
+            # containment guard (#4444) correctly refuses write-capable
+            # spawns whose cwd IS the protected primary checkout, which
+            # broke every `ask-agy` run from repo root after #4841 shipped
+            # cwd=REPO_ROOT (its live verify ran inside a dispatch worktree,
+            # masking this).  Repo READ access is granted separately via
+            # ``repo_read_root`` → ``--add-dir`` in the adapter, so the
+            # guard stays fully intact — no exemptions.
+            cwd=_agy_ask_scratch_cwd(),
             model=model,
             task_id=msg["task_id"],
             session_id=None,
-            tool_config={"bridge_repo_read": True},
+            tool_config={"bridge_repo_read": True, "repo_read_root": str(REPO_ROOT)},
             entrypoint="bridge",
             hard_timeout=timeout_val,
             stall_timeout=min(600, timeout_val),

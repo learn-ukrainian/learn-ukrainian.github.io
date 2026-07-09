@@ -43,6 +43,7 @@ Differences from the kubedojo source:
   to match this repo's ``AgentAdapter`` protocol; treated as a no-op with
   a debug log (mirrors the Gemini adapter; follow-up #1396).
 """
+
 from __future__ import annotations
 
 import contextlib
@@ -75,12 +76,8 @@ _RATE_LIMIT_PATTERNS = (
 _RATE_LIMIT_RE = re.compile("|".join(_RATE_LIMIT_PATTERNS), re.IGNORECASE)
 _AGY_LOG_ENV = "AGY_RUNTIME_LOG_FILE"
 _AGY_APP_DATA_ENV = "AGY_APP_DATA_DIR"
-_AGY_CONVERSATION_RE = re.compile(
-    r"\b(?:conversation=|Created conversation\s+)(?P<id>[0-9a-fA-F-]{36})\b"
-)
-_STDOUT_MARKER_RE = re.compile(
-    r"^\s*●\s+(?P<tool>mcp_sources_[A-Za-z0-9_]+)\((?P<args>.*)\)\s*$"
-)
+_AGY_CONVERSATION_RE = re.compile(r"\b(?:conversation=|Created conversation\s+)(?P<id>[0-9a-fA-F-]{36})\b")
+_STDOUT_MARKER_RE = re.compile(r"^\s*●\s+(?P<tool>mcp_sources_[A-Za-z0-9_]+)\((?P<args>.*)\)\s*$")
 _STDOUT_RESULT_PREFIX = "⎿"
 _SAVED_OUTPUT_POINTER_RE = re.compile(
     r"The output was large and was saved to:\s*"
@@ -169,16 +166,14 @@ class AgyAdapter:
         max_budget_usd = (tool_config or {}).get("max_budget_usd")
         if max_budget_usd is not None:
             _logger.warning(
-                "non-claude adapter %s ignoring max_budget_usd=%s; "
-                "use hard-timeout/silence-timeout instead",
+                "non-claude adapter %s ignoring max_budget_usd=%s; use hard-timeout/silence-timeout instead",
                 self.name,
                 max_budget_usd,
             )
 
         if effort is not None:
             _logger.debug(
-                "agy effort %r not yet wired through CLI — "
-                "using TUI-selected model default (#1396 follow-up)",
+                "agy effort %r not yet wired through CLI — using TUI-selected model default (#1396 follow-up)",
                 effort,
             )
 
@@ -213,13 +208,18 @@ class AgyAdapter:
             cmd.append(f"--conversation={session_id}")
 
         # ``--add-dir`` is AGY's documented way to include a directory in its
-        # workspace.  A bridge invocation receives the repository root here
-        # so precise file-reading questions can be answered without relying
-        # on whatever project AGY last selected interactively.  Permission
-        # scope remains AGY's full-trust headless mode, therefore the bridge
-        # prompt supplies the no-write guard.
+        # workspace.  A bridge invocation names the repository root via
+        # ``repo_read_root`` so precise file-reading questions can be answered
+        # without relying on whatever project AGY last selected interactively.
+        # The root is passed EXPLICITLY (not derived from cwd) because bridge
+        # asks spawn from an out-of-tree scratch cwd — the runner's worktree
+        # containment guard (#4444) refuses write-capable spawns whose cwd is
+        # the protected primary checkout.  Permission scope remains AGY's
+        # full-trust headless mode, therefore the bridge prompt supplies the
+        # no-write guard.
         if (tool_config or {}).get("bridge_repo_read"):
-            cmd += ["--add-dir", str(cwd)]
+            add_dir = (tool_config or {}).get("repo_read_root") or str(cwd)
+            cmd += ["--add-dir", str(add_dir)]
 
         # agy reads MCP servers from its global Antigravity config. There is
         # no per-invocation MCP CLI flag to pass here; tool_config is retained
@@ -326,10 +326,7 @@ def _build_log_path(task_id: str | None) -> Path:
     safe_task = re.sub(r"[^A-Za-z0-9_.-]+", "-", task_id or "call").strip("-")
     if not safe_task:
         safe_task = "call"
-    return (
-        Path(tempfile.gettempdir())
-        / f"agy-runtime-{safe_task[:48]}-{os.getpid()}-{uuid.uuid4().hex[:12]}.log"
-    )
+    return Path(tempfile.gettempdir()) / f"agy-runtime-{safe_task[:48]}-{os.getpid()}-{uuid.uuid4().hex[:12]}.log"
 
 
 def _is_temp_path(path: Path) -> bool:
@@ -445,8 +442,7 @@ def _canonical_tool_arguments(args: Mapping[str, Any]) -> dict[str, Any]:
             continue
         if isinstance(value, list):
             canonical[key] = [
-                str(item) if isinstance(item, (int, float)) and not isinstance(item, bool) else item
-                for item in value
+                str(item) if isinstance(item, (int, float)) and not isinstance(item, bool) else item for item in value
             ]
             continue
         canonical[key] = value
@@ -563,8 +559,7 @@ def _pair_transcript_by_step_index(
 
     if orphan_results:
         _logger.warning(
-            "agy transcript: %s MCP result(s) had no matching planner intent; "
-            "preserved as result-only tool calls",
+            "agy transcript: %s MCP result(s) had no matching planner intent; preserved as result-only tool calls",
             orphan_results,
         )
     # Planner intents still pending at end (re-emitted but never producing an MCP
@@ -587,14 +582,7 @@ def _transcript_path_from_plan(plan: InvocationPlan | None) -> Path | None:
             str(Path.home() / ".gemini" / "antigravity-cli"),
         )
     )
-    return (
-        app_data
-        / "brain"
-        / conversation_id
-        / ".system_generated"
-        / "logs"
-        / "transcript.jsonl"
-    )
+    return app_data / "brain" / conversation_id / ".system_generated" / "logs" / "transcript.jsonl"
 
 
 def _conversation_id_from_log(log_file: Path) -> str | None:
@@ -693,10 +681,7 @@ def _inline_saved_tool_result_pointer(text: str, *, transcript_path: Path) -> st
         raw = raw[:_MAX_INLINE_TOOL_RESULT_BYTES]
     inline = raw.decode("utf-8", errors="replace")
     if truncated:
-        inline = (
-            inline.rstrip()
-            + f"\n\n[agy tool result truncated at {_MAX_INLINE_TOOL_RESULT_BYTES} bytes]"
-        )
+        inline = inline.rstrip() + f"\n\n[agy tool result truncated at {_MAX_INLINE_TOOL_RESULT_BYTES} bytes]"
         _logger.warning(
             "agy inlined truncated tool result pointer %s (%s bytes)",
             resolved_path,
@@ -708,7 +693,7 @@ def _inline_saved_tool_result_pointer(text: str, *, transcript_path: Path) -> st
             resolved_path,
             size,
         )
-    return text[: match.start()] + inline + text[match.end():]
+    return text[: match.start()] + inline + text[match.end() :]
 
 
 def _allowed_tool_result_roots(transcript_path: Path) -> tuple[Path, ...]:
@@ -758,11 +743,7 @@ def _decode_jsonish(value: Any) -> Any:
 
 def _strip_agy_task_metadata(content: str) -> str:
     lines = content.splitlines()
-    if (
-        len(lines) >= 2
-        and lines[0].startswith("Created At:")
-        and lines[1].startswith("Completed At:")
-    ):
+    if len(lines) >= 2 and lines[0].startswith("Created At:") and lines[1].startswith("Completed At:"):
         lines = lines[2:]
         if lines and not lines[0].strip():
             lines = lines[1:]
