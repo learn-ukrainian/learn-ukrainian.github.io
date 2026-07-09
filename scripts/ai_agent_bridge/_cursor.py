@@ -21,6 +21,15 @@ import shutil
 import subprocess
 from pathlib import Path
 
+from ._ask_lifecycle import (
+    ask_attachment,
+    ask_sender_model,
+    ask_target_model,
+    fetch_ask_message,
+    launch_background_ask,
+    record_ask_reply,
+    register_ask,
+)
 from ._messaging import acknowledge, send_message
 
 CURSOR_DEFAULT_MODEL = "auto"
@@ -37,6 +46,7 @@ def ask_cursor(
     from_model: str | None = None,
     to_model: str | None = None,
     no_timeout: bool = False,
+    background: bool = False,
 ) -> int:
     """Send message to Cursor Agent AND invoke Cursor one-shot to process it."""
     effective_model = model or CURSOR_DEFAULT_MODEL
@@ -50,9 +60,12 @@ def ask_cursor(
         from_model=from_model,
         to_model=to_model or effective_model,
     )
+    register_ask(msg_id)
+    if background:
+        launch_background_ask(msg_id, "cursor", {"no_timeout": no_timeout})
+        return msg_id
     print(f"\n🚀 Invoking cursor ({effective_model}) to process message #{msg_id}...")
     response = _invoke_cursor(content, effective_model, data=data, no_timeout=no_timeout)
-
     reply_id = send_message(
         content=response,
         task_id=task_id,
@@ -63,8 +76,28 @@ def ask_cursor(
     )
     acknowledge(msg_id)
     acknowledge(reply_id)
-
+    record_ask_reply(msg_id, reply_id)
     return msg_id
+
+
+def process_for_cursor(message_id: int, *, no_timeout: bool = False) -> None:
+    """Process an existing Cursor ask, shared by sync and detached paths."""
+    msg = fetch_ask_message(message_id, "cursor")
+    if not msg:
+        return
+    model = ask_target_model(msg) or CURSOR_DEFAULT_MODEL
+    response = _invoke_cursor(msg["content"], model, data=ask_attachment(msg), no_timeout=no_timeout)
+    reply_id = send_message(
+        content=response,
+        task_id=msg["task_id"],
+        msg_type="response",
+        from_llm="cursor",
+        to_llm=msg["from"],
+        to_model=ask_sender_model(msg),
+    )
+    acknowledge(message_id)
+    acknowledge(reply_id)
+    record_ask_reply(message_id, reply_id)
 
 
 def _invoke_cursor(

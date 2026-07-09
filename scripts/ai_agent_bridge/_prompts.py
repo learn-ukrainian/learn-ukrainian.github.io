@@ -249,8 +249,9 @@ def build_agy_prompt(msg: dict, review: bool = False) -> str:
     Mirrors the codex prompt shape — minimal context, directive framing,
     no investigation side-paths. Agy has shown a tendency in 2026-05-21
     probes to grep through scripts/, query sqlite directly, and write
-    throwaway scripts when asked introspection-style questions. The
-    standing rules here explicitly forbid those routes for bridge Q&A.
+    throwaway scripts when asked introspection-style questions. Bridge Q&A
+    may read the precise repository files needed to answer, but must not
+    broaden that into an exploratory or write-capable task.
     """
     prompt = f"""You are Agy (Antigravity CLI, Gemini-3.5-Flash-High), receiving a message from {msg['from'].title()} via the message broker.
 
@@ -276,9 +277,12 @@ Attached data:
 Standing rules for bridge Q&A:
 - Respond directly. Be concise. This bridge is for quick questioning
   and short coordination, not long-running task execution.
-- Do NOT investigate the codebase to answer (no `grep` across scripts/,
-  no `sqlite3` against data/, no throwaway Python scripts). If you need
-  more context, ASK in your reply — don't go fetch it.
+- You MAY read the specific repository file(s) needed to answer the
+  caller's question. Do not broaden this into codebase exploration (no
+  `grep` across scripts/, no `sqlite3` against data/, no throwaway Python
+  scripts).
+- This is read-only Q&A. Do NOT create, modify, move, or delete files, and
+  do NOT run commands that change repository or system state.
 - Do NOT use broker or MCP messaging tools to send your response —
   output your response directly.
 - If the message references MCP tools (mcp_sources_*), prefer calling

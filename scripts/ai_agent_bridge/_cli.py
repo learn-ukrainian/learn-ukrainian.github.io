@@ -10,6 +10,7 @@ from pathlib import Path
 from agent_runtime import usage as runtime_usage
 
 from ._agy import ask_agy
+from ._ask_lifecycle import maybe_print_timeout_notice, print_asks, process_background_ask
 from ._broker import bridge_status, broker_cleanup
 from ._claude import ask_claude, process_for_claude
 from ._codex import (
@@ -514,6 +515,14 @@ def _build_parser() -> argparse.ArgumentParser:
     )
     proc_grok_build_parser.add_argument("--review", action="store_true", help="Prepend docs/review-protocol.md")
 
+    # process-ask is the detached-worker re-entry point for ``ask-* --background``.
+    proc_ask_parser = subparsers.add_parser("process-ask", help=argparse.SUPPRESS)
+    proc_ask_parser.add_argument("message_id", type=int)
+    proc_ask_parser.add_argument("target")
+
+    asks_parser = subparsers.add_parser("asks", help="List tracked one-shot ask lifecycle states")
+    asks_parser.add_argument("--task-id", help="Only show asks for this task ID")
+
     # ask-claude
     ask_claude_parser = subparsers.add_parser("ask-claude", help="Send message AND invoke Claude (one-step)")
     ask_claude_parser.add_argument("content", help="Message content")
@@ -781,6 +790,25 @@ def _build_parser() -> argparse.ArgumentParser:
     ask_grok_build_parser.add_argument("--to-model", dest="to_model", help="Target model ID")
     ask_grok_build_parser.add_argument("--no-timeout", dest="no_timeout", action="store_true")
     ask_grok_build_parser.add_argument("--review", action="store_true", help="Prepend docs/review-protocol.md")
+
+    for ask_parser in (
+        ask_claude_parser,
+        ask_codex_parser,
+        ask_gemini_parser,
+        ask_agy_parser,
+        ask_hermes_parser,
+        ask_opencode_parser,
+        ask_pool_parser,
+        ask_glm_parser,
+        ask_gemma_parser,
+        ask_cursor_parser,
+        ask_grok_build_parser,
+    ):
+        ask_parser.add_argument(
+            "--background",
+            action="store_true",
+            help="Send immediately and process in a detached worker; print the message ID.",
+        )
 
     # converse — multi-turn conversation with Gemini
     converse_parser = subparsers.add_parser("converse", help="Multi-turn conversation with Gemini (includes history)")
@@ -1083,6 +1111,10 @@ def _dispatch_command(args):
         process_for_codex(args.message_id, args.new_session, args.no_timeout)
     elif args.command == "process-grok-build":
         process_for_grok_build(args.message_id, args.new_session, args.no_timeout, args.review)
+    elif args.command == "process-ask":
+        process_background_ask(args.message_id, args.target)
+    elif args.command == "asks":
+        print_asks(args.task_id)
     elif args.command == "ask-claude":
         _handle_ask_claude(args)
     elif args.command == "ask-codex":
@@ -1186,6 +1218,11 @@ def _dispatch_command(args):
     return True
 
 
+def _background_kwargs(args) -> dict[str, bool]:
+    """Only pass the new option when requested to preserve compatibility shims."""
+    return {"background": True} if getattr(args, "background", False) else {}
+
+
 def _handle_ask_claude(args):
     """Handle ask-claude subcommand."""
     data = None
@@ -1203,6 +1240,7 @@ def _handle_ask_claude(args):
         args.from_model,
         args.to_model,
         **kwargs,
+        **_background_kwargs(args),
     )
 
 
@@ -1229,6 +1267,7 @@ def _handle_ask_codex(args):
                 args.to_model,
                 args.no_timeout,
                 **kwargs,
+                **_background_kwargs(args),
             )
         except ValueError as exc:
             raise SystemExit(str(exc)) from exc
@@ -1248,6 +1287,7 @@ def _handle_ask_codex(args):
         args.to_model,
         args.no_timeout,
         **kwargs,
+        **_background_kwargs(args),
     )
 
 
@@ -1272,6 +1312,7 @@ def _handle_ask_agy(args):
         stdout_only=getattr(args, "stdout_only", False),
         output_path=getattr(args, "output_path", None),
         **kwargs,
+        **_background_kwargs(args),
     )
 
 
@@ -1289,6 +1330,7 @@ def _handle_ask_hermes(args):
         from_model=args.from_model,
         to_model=args.to_model,
         no_timeout=args.no_timeout,
+        **_background_kwargs(args),
     )
 
 
@@ -1306,6 +1348,7 @@ def _handle_ask_opencode(args):
         from_model=args.from_model,
         to_model=args.to_model,
         no_timeout=args.no_timeout,
+        **_background_kwargs(args),
     )
 
 
@@ -1323,6 +1366,7 @@ def _handle_ask_pool(args):
         from_llm=from_llm,
         from_model=args.from_model,
         no_timeout=args.no_timeout,
+        **_background_kwargs(args),
     )
 
 
@@ -1339,6 +1383,7 @@ def _handle_ask_glm(args):
         from_llm=from_llm,
         from_model=args.from_model,
         no_timeout=args.no_timeout,
+        **_background_kwargs(args),
     )
 
 
@@ -1355,6 +1400,7 @@ def _handle_ask_gemma(args):
         from_llm=from_llm,
         from_model=args.from_model,
         no_timeout=args.no_timeout,
+        **_background_kwargs(args),
     )
 
 
@@ -1372,6 +1418,7 @@ def _handle_ask_cursor(args):
         from_model=args.from_model,
         to_model=args.to_model,
         no_timeout=args.no_timeout,
+        **_background_kwargs(args),
     )
 
 
@@ -1394,6 +1441,7 @@ def _handle_ask_grok_build(args):
         no_timeout=args.no_timeout,
         review=args.review,
         model=args.model,
+        **_background_kwargs(args),
     )
 
 
@@ -1420,6 +1468,7 @@ def _handle_ask_gemini(args):
         stdout_only=getattr(args, "stdout_only", False),
         output_path=getattr(args, "output_path", None),
         **kwargs,
+        **_background_kwargs(args),
     )
 
 
@@ -1431,5 +1480,6 @@ def main():
         from ._channels_cli import _maybe_print_backlog_warnings
 
         _maybe_print_backlog_warnings()
+        maybe_print_timeout_notice()
     if not _dispatch_command(args):
         parser.print_help()

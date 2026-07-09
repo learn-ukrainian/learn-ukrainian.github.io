@@ -101,6 +101,7 @@ _TEST_PYTHON = _resolve_test_python()
 via :func:`_resolve_test_python`. See that helper's docstring for the
 full resolution order and rationale (#1685)."""
 
+from agent_runtime.adapters.agy import AgyAdapter
 from agent_runtime.adapters.base import InvocationPlan
 from agent_runtime.adapters.claude import ClaudeAdapter
 from agent_runtime.adapters.codex import CodexAdapter
@@ -256,6 +257,23 @@ def test_load_adapter_cursor():
     assert adapter.name == "cursor"
     assert adapter.default_model == "auto"
     assert adapter.supported_modes == frozenset({"read-only", "workspace-write", "danger"})
+
+
+def test_agy_bridge_repo_read_adds_workspace_without_opt_in_sandbox(tmp_path):
+    """#4837: AGY exposes ``--sandbox`` but no ``--no-sandbox`` flag."""
+    plan = AgyAdapter().build_invocation(
+        prompt="read one file",
+        mode="danger",
+        cwd=tmp_path,
+        model=None,
+        task_id="bridge-read",
+        session_id=None,
+        tool_config={"bridge_repo_read": True},
+    )
+
+    assert "--sandbox" not in plan.cmd
+    assert "--dangerously-skip-permissions" in plan.cmd
+    assert plan.cmd[plan.cmd.index("--add-dir") + 1] == str(tmp_path)
 
 
 def test_load_adapter_unknown_raises():
