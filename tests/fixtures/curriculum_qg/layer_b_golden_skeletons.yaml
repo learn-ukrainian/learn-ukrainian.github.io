@@ -1,0 +1,54 @@
+---
+schema_version: qg-layer-b-golden-skeletons.v1
+dataset_id: qg-layer-b-phase-0-golden-skeletons
+qualification_eligible: false
+qualification_blockers:
+  - Complete candidate records, raw outputs, and adjudicated support spans are not yet labeled.
+  - These skeletons do not represent the required label-union population or Phase 1 qualification evidence.
+cases:
+  - case_id: franko-1893-vienna
+    fixture_id: franko-ivan
+    purpose: Positive ordered multi-span provenance probe.
+    expected_layer_a_decision: ANCHOR
+    expected_layer_a_reason: ANCHORED_ORDERED_SEGMENTS
+    required_candidate_shape: One complete same-output ordered-segment candidate record.
+    expected_layer_b_outcome: Adjudicate source relation against the captured raw output.
+    annotation_status: SKELETON
+
+  - case_id: lesya-1871-1913
+    fixture_id: lesya-ukrainka
+    purpose: Positive ordered multi-span provenance probe.
+    expected_layer_a_decision: ANCHOR
+    expected_layer_a_reason: ANCHORED_ORDERED_SEGMENTS
+    required_candidate_shape: One complete same-output ordered-segment candidate record.
+    expected_layer_b_outcome: Adjudicate source relation against the captured raw output.
+    annotation_status: SKELETON
+
+  - case_id: zhnyvarski-boroda
+    fixture_id: zhnyvarski
+    purpose: Positive ordered multi-span provenance probe.
+    expected_layer_a_decision: ANCHOR
+    expected_layer_a_reason: ANCHORED_ORDERED_SEGMENTS
+    required_candidate_shape: One complete same-output ordered-segment candidate record.
+    expected_layer_b_outcome: Adjudicate source relation against the captured raw output.
+    annotation_status: SKELETON
+
+  - case_id: adversarial-cross-event-join
+    fixture_id: adversarial-cross-event-join
+    purpose: Fragments are available only by joining different event outputs.
+    expected_layer_a_decision: REJECT
+    expected_layer_a_reason: CROSS_EVENT_STITCH_FORBIDDEN
+    required_candidate_shape: No stitched candidate; preserve the separate event outputs for audit evidence.
+    expected_layer_b_outcome: Not run because provenance must not anchor.
+    annotation_status: SKELETON
+
+  - case_id: lexical-variation-row
+    fixture_id: lexical-variation-row
+    purpose: Ellipsized excerpt with claim-side lexical variation.
+    expected_layer_a_decision: ANCHOR
+    expected_layer_a_reason: ANCHORED_ORDERED_SEGMENTS
+    required_candidate_shape: Exact same-output ordered-segment provenance without synonym substitution.
+    expected_layer_b_outcome: >-
+      Adjudicate the claim against raw output; do not treat lexical variation as
+      quotation equivalence.
+    annotation_status: SKELETON
