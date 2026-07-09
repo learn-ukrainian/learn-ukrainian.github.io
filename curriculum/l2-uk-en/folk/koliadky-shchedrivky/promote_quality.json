@@ -1,9 +1,9 @@
 {
-  "assembled_mdx_sha256": "22e9ccc1ae53c871157959e32a63f87b5f35268e41a1b9199bbc649416116503",
+  "assembled_mdx_sha256": "32cac38d6fb29478ca1d46e98b78e49467f91920979218aa532656b9876d6f51",
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "06b5921004e1642cab626278b4ffbd0e46f0d94436bcbd4fb9ebd1ff8718e75a",
+    "digest": "06bf1626af9600ffc9bd36ae019b641b6fdc79f3b67f6f74e80fe08df5506795",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/koliadky-shchedrivky.yaml",
@@ -15,7 +15,7 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/koliadky-shchedrivky/activities.yaml",
-        "sha256": "b7256d4532a7b9ee72a1df799aa4a220007ffdf13921391d80f6778d183feaaf"
+        "sha256": "ce533d70b2e6bb28052645c3ff7ff6e32f0279e5d61c278c13d8f0ebd4b7b40d"
       },
       {
         "path": "curriculum/l2-uk-en/folk/koliadky-shchedrivky/vocabulary.yaml",

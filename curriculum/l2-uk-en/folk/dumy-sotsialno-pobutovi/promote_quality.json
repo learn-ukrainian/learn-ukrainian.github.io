@@ -1,9 +1,9 @@
 {
-  "assembled_mdx_sha256": "03f03a5db09fb28d0065afd1173616bf0808d988c1f9848b345a98e1f9f63006",
+  "assembled_mdx_sha256": "a775e00b5a1e4adbed0fa5d54a7043ff3851f98eaae7dd4d41026fef9a50a994",
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "18995144f34864f9821e75a600f626ef00c67d011deb34a181e58ae2563302a8",
+    "digest": "843a3a9b26f2dcb5214a98599d29599e8cedcdb80105078ac1db823ce98e2579",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/dumy-sotsialno-pobutovi.yaml",
@@ -15,7 +15,7 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/dumy-sotsialno-pobutovi/activities.yaml",
-        "sha256": "592de15371497a9905e118d228266ac510f4bc92938efc81b77d31d30b18bf43"
+        "sha256": "9f20ef7ad483118250e41eb46a4494e2722c91aa85b6d04b612a2b494557bb6f"
       },
       {
         "path": "curriculum/l2-uk-en/folk/dumy-sotsialno-pobutovi/vocabulary.yaml",

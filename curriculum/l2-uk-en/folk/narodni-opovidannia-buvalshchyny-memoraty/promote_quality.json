@@ -1,9 +1,9 @@
 {
-  "assembled_mdx_sha256": "f1202533d3af7f4d9e55cbce35fb44d74cb2648bc322bea1dee78e077babf11a",
+  "assembled_mdx_sha256": "ec99b5028553a9f8d5154435258a97696d637756028ecc7d834f8be87da8e853",
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "a58d3ff0d4ef888c9012e0715df7b30b58bce09fd84f11adde5a5e08045e4d22",
+    "digest": "ca76f7c05361bf316fb4a0be09e84bef7cbe6b0ebbcc88d9a30d37e5105aa791",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/narodni-opovidannia-buvalshchyny-memoraty.yaml",
@@ -15,7 +15,7 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/narodni-opovidannia-buvalshchyny-memoraty/activities.yaml",
-        "sha256": "cee23948f9773fb1b7ec866bf3c1851c50724c9e8e3a40e7a438b6b8fe0ad5f7"
+        "sha256": "989c52dad3cfd84fe38b34cc5241ca948aea89fde5b0b17602cc388a52867cb0"
       },
       {
         "path": "curriculum/l2-uk-en/folk/narodni-opovidannia-buvalshchyny-memoraty/vocabulary.yaml",

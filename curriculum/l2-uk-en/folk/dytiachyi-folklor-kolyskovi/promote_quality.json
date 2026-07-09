@@ -1,9 +1,9 @@
 {
-  "assembled_mdx_sha256": "ec6dae439850d2a18e5ec0d82f36cdc96bc5c7475a09b0399bc927ccba84030c",
+  "assembled_mdx_sha256": "fc253bf3985d53417303fc63b69dded8be67e5bf0545d2cc5121a26663ec68f1",
   "content_hash": {
     "algorithm": "sha256",
     "basis": "lesson_sources_v2",
-    "digest": "d6a4846bdb4377b8f439e89ba8bdb7398302f7261bef1a209f8dfaa7ac3a0f4a",
+    "digest": "a93c97df9cf76d8cf5a298fccc07908bb6d85ef9afb67c46c58cc05dd563b68a",
     "files": [
       {
         "path": "curriculum/l2-uk-en/plans/folk/dytiachyi-folklor-kolyskovi.yaml",
@@ -15,7 +15,7 @@
       },
       {
         "path": "curriculum/l2-uk-en/folk/dytiachyi-folklor-kolyskovi/activities.yaml",
-        "sha256": "eb1b58425b6938ea63c77d1929b17a272083fa055e8bc7602deed0d117684724"
+        "sha256": "c9fdbc78ada18763c437a89f62b70f93a11681e8f9e7c7703a594ca2574bdf20"
       },
       {
         "path": "curriculum/l2-uk-en/folk/dytiachyi-folklor-kolyskovi/vocabulary.yaml",
