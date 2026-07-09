@@ -26,7 +26,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, ConfigDict, Field
 
-from ._config import _PARENT_ENV, AGY_CLI, CLAUDE_CMD, CODEX_CLI, GEMINI_CLI, REPO_ROOT
+from ._config import _PARENT_ENV, AGY_CLI, CLAUDE_CMD, CODEX_CLI, REPO_ROOT
 
 _DEFAULT_BACKEND_TIMEOUT_S = 120
 _HERMES_STDIN_MODULE = "scripts.ai_agent_bridge._hermes_stdin"
@@ -129,10 +129,11 @@ def _run_backend_command(
     *,
     prompt: str | None = None,
     cwd: Path = REPO_ROOT,
+    env: dict[str, str] | None = None,
 ) -> subprocess.CompletedProcess[str]:
-    env = dict(_PARENT_ENV)
-    env["TERM"] = "xterm-256color"
-    env["COLORTERM"] = "truecolor"
+    env = dict(env) if env is not None else dict(_PARENT_ENV)
+    env.setdefault("TERM", "xterm-256color")
+    env.setdefault("COLORTERM", "truecolor")
     result = subprocess.run(
         argv,
         input=prompt,
@@ -241,15 +242,34 @@ def _codex_backend(model: str, messages: list[Message], **kwargs: Any) -> Comple
 
 
 def _gemini_backend(model: str, messages: list[Message], **kwargs: Any) -> CompletionResponse:
+    """Gemini-family completions via AGY (migrated from retired gemini CLI, #4609).
+
+    Uses AGY display labels (via existing mapping) and passes prompt via stdin ("-")
+    to support large prompts without hitting argv size limits (see test_openai_proxy_arg_max).
+    """
     prompt = str(kwargs.get("prompt") or _flatten_messages(messages))
-    argv = [
-        GEMINI_CLI,
-        "-m",
-        model,
-        "--approval-mode",
-        "plan",
+
+    # Resolve legacy gemini public name (e.g. gemini-3.1-pro-preview) to AGY display label.
+    # Import here to avoid circulars at module load.
+    try:
+        from agent_runtime.adapters.agy import _AGY_MODEL_BY_NORMALIZED, _normalize_model
+        agy_model = _AGY_MODEL_BY_NORMALIZED.get(_normalize_model(model), model)
+    except Exception:
+        agy_model = model
+
+    agy_bin = AGY_CLI
+    # Use "-" as prompt placeholder so large prompts go via stdin (not argv).
+    cmd = [
+        agy_bin,
+        "-p",
+        "-",
+        "--dangerously-skip-permissions",
+        "--model",
+        agy_model,
     ]
-    result = _run_backend_command("gemini", argv, prompt=prompt)
+
+    env = dict(_PARENT_ENV)
+    result = _run_backend_command("agy", cmd, prompt=prompt, env=env)
     return CompletionResponse(content=result.stdout.strip())
 
 
@@ -281,12 +301,12 @@ def _hermes_backend(model: str, messages: list[Message], **kwargs: Any) -> Compl
 
 
 # Alias Mapping Table:
-# - gemini-3.0-flash-preview: Remapped to cli_model_name="gemini-2.5-flash" because the local Gemini CLI
-#   does not recognize the 3.0-flash-preview alias, but 2.5-flash is supported and functional (Issue #2022).
+# gemini-* now routed via AGY per #4609. Use AGY display labels in cli_model_name so
+# the backend can pass correct --model to agy. Legacy public names are resolved inside _gemini_backend.
 _ROUTABLE_MODELS: dict[str, ModelRoute] = {
     "codex": ModelRoute(family="openai-codex", backend=_codex_backend),
-    "gemini-3.0-flash-preview": ModelRoute(family="google-gemini", backend=_gemini_backend, cli_model_name="gemini-2.5-flash"),
-    "gemini-3.1-pro-preview": ModelRoute(family="google-gemini", backend=_gemini_backend),
+    "gemini-3.0-flash-preview": ModelRoute(family="google-gemini", backend=_gemini_backend, cli_model_name="Gemini 3.5 Flash (High)"),
+    "gemini-3.1-pro-preview": ModelRoute(family="google-gemini", backend=_gemini_backend, cli_model_name="Gemini 3.1 Pro (High)"),
     "claude-opus-4-8": ModelRoute(family="anthropic", backend=_claude_backend),
     "claude-opus-4-7": ModelRoute(family="anthropic", backend=_claude_backend),
     "claude-sonnet-4-7": ModelRoute(family="anthropic", backend=_claude_backend),

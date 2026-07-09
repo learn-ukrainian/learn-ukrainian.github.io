@@ -75,8 +75,8 @@ def test_chat_completions_gemini_round_trip(monkeypatch):
     model_id = "gemini-3.0-flash-preview"
 
     def backend(model, messages, **kwargs):
-        # Assert the alias is resolved to the underlying CLI model
-        assert model == "gemini-2.5-flash"
+        # After AGY migration, the model passed is the AGY display label
+        assert model == "Gemini 3.5 Flash (High)"
         return proxy.CompletionResponse(content="hello from gemini")
 
     monkeypatch.setitem(proxy._ROUTABLE_MODELS, model_id, _route_with_backend(model_id, backend))
@@ -97,8 +97,8 @@ def test_chat_completions_gemini_pro_round_trip(monkeypatch):
     model_id = "gemini-3.1-pro-preview"
 
     def backend(model, messages, **kwargs):
-        # Assert no remapping occurs for the pro model
-        assert model == "gemini-3.1-pro-preview"
+        # After AGY migration, pro uses the high AGY label (no legacy remap)
+        assert model == "Gemini 3.1 Pro (High)"
         return proxy.CompletionResponse(content="hello from gemini pro")
 
     monkeypatch.setitem(proxy._ROUTABLE_MODELS, model_id, _route_with_backend(model_id, backend))
