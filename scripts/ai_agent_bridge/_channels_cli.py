@@ -82,9 +82,12 @@ def _cli_available_agent(agent: str) -> bool:
         }
 
     try:
-        return bool(get_agent_entry(agent)["cli_available"])
+        entry = get_agent_entry(agent)
     except KeyError:
         return False
+    if not entry["cli_available"]:
+        return False
+    return bool(entry.get("bridge_spawnable", True))
 
 
 def _cursor_session_id_from_result(result: Any) -> str | None:

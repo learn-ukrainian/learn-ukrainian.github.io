@@ -21,9 +21,11 @@ class TranscriptTelemetry:
 
 def usage_input_tokens(usage: dict[str, Any]) -> int:
     """Return the statusline-compatible input-token sum for one usage block."""
-    return int(usage.get("input_tokens") or 0) + int(
-        usage.get("cache_read_input_tokens") or 0
-    ) + int(usage.get("cache_creation_input_tokens") or 0)
+    return (
+        int(usage.get("input_tokens") or 0)
+        + int(usage.get("cache_read_input_tokens") or 0)
+        + int(usage.get("cache_creation_input_tokens") or 0)
+    )
 
 
 def parse_transcript_tokens(path: Path) -> TranscriptTelemetry | None:
@@ -77,11 +79,22 @@ def _newest_jsonl(paths: list[Path]) -> Path | None:
     return max(candidates, key=lambda p: (p.stat().st_mtime, str(p)))
 
 
-def resolve_transcript_paths(project_root: Path) -> list[Path]:
-    """Resolve candidate Claude transcript paths for this checkout, newest first."""
-    explicit = os.environ.get("LEARN_UKRAINIAN_TRANSCRIPT_PATH") or os.environ.get(
-        "CLAUDE_TRANSCRIPT_PATH"
-    )
+def resolve_transcript_paths(project_root: Path, *, session: str | None = None) -> list[Path]:
+    """Resolve candidate Claude transcript paths for this checkout.
+
+    When ``session`` is given, resolve EXACTLY
+    ``~/.claude/projects/<flat-root>/<session>.jsonl`` with no fallback
+    globs and no cross-checkout scan.
+
+    When ``session`` is omitted, honour ``LEARN_UKRAINIAN_TRANSCRIPT_PATH`` /
+    ``CLAUDE_TRANSCRIPT_PATH`` (server-global test hook) then scan the
+    checkout's project dir and legacy ``*learn-ukrainian*`` fallbacks.
+    """
+    if session:
+        exact = Path.home() / ".claude" / "projects" / _claude_project_dir_name(project_root) / f"{session}.jsonl"
+        return [exact] if exact.is_file() else []
+
+    explicit = os.environ.get("LEARN_UKRAINIAN_TRANSCRIPT_PATH") or os.environ.get("CLAUDE_TRANSCRIPT_PATH")
     if explicit:
         path = Path(explicit).expanduser()
         return [path] if path.is_file() else []
@@ -105,9 +118,25 @@ def resolve_transcript_paths(project_root: Path) -> list[Path]:
     )
 
 
-def resolve_transcript_path(project_root: Path) -> Path | None:
+def resolve_transcript_path(
+    project_root: Path,
+    *,
+    session: str | None = None,
+) -> Path | None:
     """Resolve the newest Claude transcript path for this checkout."""
-    return _newest_jsonl(resolve_transcript_paths(project_root))
+    return _newest_jsonl(resolve_transcript_paths(project_root, session=session))
+
+
+def session_context_telemetry(
+    project_root: Path,
+    session: str,
+) -> TranscriptTelemetry | None:
+    """Resolve and parse telemetry for one explicit session transcript."""
+    for path in resolve_transcript_paths(project_root, session=session):
+        telemetry = parse_transcript_tokens(path)
+        if telemetry is not None:
+            return telemetry
+    return None
 
 
 def current_context_telemetry(project_root: Path) -> TranscriptTelemetry | None:

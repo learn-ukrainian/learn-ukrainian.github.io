@@ -79,19 +79,31 @@ def _resolve_codex_bridge_timeout(no_timeout: bool = False) -> int:
     return timeout
 
 
+def _resolve_codex_from_llm(from_llm: str | None) -> str:
+    if from_llm:
+        return from_llm
+    from ._cli import _detect_caller_identity_from_env
+
+    detected = _detect_caller_identity_from_env()
+    if detected:
+        return detected
+    return "claude"
+
+
 def ask_codex(
     content: str,
     task_id: str | None = None,
     msg_type: str = "query",
     data: str | None = None,
     new_session: bool = False,
-    from_llm: str = "gemini",
+    from_llm: str | None = None,
     from_model: str | None = None,
     to_model: str | None = None,
     no_timeout: bool = False,
     review: bool = False,
 ):
     """Send message to Codex AND invoke Codex to process it."""
+    from_llm = _resolve_codex_from_llm(from_llm)
     msg_id = send_message(
         content, task_id, msg_type, data, from_llm=from_llm, to_llm="codex", from_model=from_model, to_model=to_model
     )
@@ -106,13 +118,14 @@ def ask_codex_chain(
     msg_type: str = "query",
     data: str | None = None,
     new_session: bool = False,
-    from_llm: str = "gemini",
+    from_llm: str | None = None,
     from_model: str | None = None,
     to_model: str | None = None,
     no_timeout: bool = False,
     review: bool = False,
 ) -> list[int]:
     """Dispatch a sequence of issue-targeted Codex tasks one at a time."""
+    from_llm = _resolve_codex_from_llm(from_llm)
     issues = _normalize_codex_chain_issues(issue_refs)
     message_ids: list[int] = []
     total = len(issues)

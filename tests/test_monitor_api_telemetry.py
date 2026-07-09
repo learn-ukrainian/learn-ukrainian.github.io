@@ -55,9 +55,7 @@ def test_rules_markdown_appends_footer_when_enabled(tmp_path, monkeypatch) -> No
     response = TestClient(app).get("/api/rules?format=markdown")
 
     assert response.status_code == 200
-    assert response.text.endswith(
-        "\n\n[ctx: 187K (+62K this turn), tier: base, 13K to premium, turn: 2]\n"
-    )
+    assert response.text.endswith("\n\n[ctx: 187K (+62K this turn), tier: base, 13K to premium, turn: 2]\n")
     assert response.headers["X-Rules-Hash"]
     assert "etag" not in response.headers
 
@@ -73,12 +71,17 @@ def test_manifest_json_adds_structured_telemetry_when_enabled(tmp_path, monkeypa
 
     assert response.status_code == 200
     assert response.json()["_telemetry"] == {
-        "ctx": 187_000,
-        "prev_ctx": 125_000,
-        "delta": 62_000,
-        "tier": "base",
-        "distance_tokens": 13_000,
-        "distance_label": "to premium",
-        "turn": 2,
-        "source": "transcript-jsonl",
+        "ctx": None,
+        "prev_ctx": None,
+        "turn": None,
+        "caller_match": False,
+        "reason": "no-session-param",
+        "hint": "pass ?session=<uuid> or X-Session-Id",
+        "newest_transcript": {
+            "ctx": 187_000,
+            "prev_ctx": 125_000,
+            "turn": 2,
+            "transcript": "session.jsonl",
+            "caveat": "newest transcript in checkout — may not be the caller's session",
+        },
     }

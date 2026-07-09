@@ -33,6 +33,7 @@ class AgentEntry(TypedDict):
     cost_tier: str  # "low" | "medium" | "high" | "unknown"
     capabilities: frozenset[str]
     cli_available: bool
+    bridge_spawnable: NotRequired[bool]
     resume_policy: str  # "bridge_only" | "never"
 
 
@@ -97,6 +98,20 @@ AGENTS: dict[str, AgentEntry] = {
         "cli_available": False,
         "resume_policy": "never",
     },
+    "claude-infra": {
+        "adapter": "scripts.agent_runtime.adapters.claude:ClaudeAdapter",
+        "default_model": "claude-opus-4-8",
+        "cost_tier": "high",
+        "capabilities": frozenset(
+            {
+                "architecture",
+                "review",
+                "planning",
+            }
+        ),
+        "cli_available": False,
+        "resume_policy": "never",
+    },
     "gemini": {
         "adapter": "scripts.agent_runtime.adapters.gemini:GeminiAdapter",
         "default_model": "gemini-3.1-pro-preview",
@@ -108,7 +123,10 @@ AGENTS: dict[str, AgentEntry] = {
                 "adversarial_review",
             }
         ),
+        # V7 batch runner still invokes gemini-tools via runner; bridge discuss/inbox
+        # routes gemini-family work through agy (model-assignment.md).
         "cli_available": True,
+        "bridge_spawnable": False,
         "resume_policy": "bridge_only",
     },
     "grok": {

@@ -41,7 +41,7 @@ def _successful_result(agent: str) -> MagicMock:
 
 
 def test_discuss_passes_session_id_for_resumable_agents(monkeypatch):
-    """Claude/Gemini get named IDs; Codex reuses the CLI-generated ID."""
+    """Claude/AGY get named IDs; Codex reuses the CLI-generated ID."""
     _channels.create_channel("shared")
     monkeypatch.setattr(_channels, "fetch_monitor_state", lambda: None)
     captured_invokes = []
@@ -61,19 +61,19 @@ def test_discuss_passes_session_id_for_resumable_agents(monkeypatch):
             "shared",
             "topic",
             "--with",
-            "claude,gemini,codex",
+            "claude,agy,codex",
             "--max-rounds",
             "2",
         ]
     )
 
     assert exit_code == 0
-    by_agent = {agent: [] for agent in ("claude", "gemini", "codex")}
+    by_agent = {agent: [] for agent in ("claude", "agy", "codex")}
     for agent, kwargs in captured_invokes:
         by_agent[agent].append(kwargs)
 
     assert all(len(calls) == 2 for calls in by_agent.values())
-    for agent in ("claude", "gemini"):
+    for agent in ("claude", "agy"):
         first, second = by_agent[agent]
         assert first["session_id"] is not None
         assert second["session_id"] == first["session_id"]

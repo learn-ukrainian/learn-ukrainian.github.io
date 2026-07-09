@@ -21,8 +21,7 @@ def test_post_preflight_warns_for_large_body():
     warning = _channels_cli._post_preflight_warning(body="x" * 8001, mode="workspace-write")
 
     assert warning == (
-        "[PREFLIGHT] brief looks large (8001 chars, 0 files mentioned). "
-        "Consider --deadline 1800 or splitting."
+        "[PREFLIGHT] brief looks large (8001 chars, 0 files mentioned). Consider --deadline 1800 or splitting."
     )
 
 
@@ -40,8 +39,7 @@ def test_post_preflight_warns_for_many_file_mentions():
     warning = _channels_cli._post_preflight_warning(body=body, mode="workspace-write")
 
     assert warning == (
-        f"[PREFLIGHT] brief looks large ({len(body)} chars, 5 files mentioned). "
-        "Consider --deadline 1800 or splitting."
+        f"[PREFLIGHT] brief looks large ({len(body)} chars, 5 files mentioned). Consider --deadline 1800 or splitting."
     )
 
 
@@ -50,8 +48,7 @@ def test_post_preflight_warns_for_multi_step_markers():
     warning = _channels_cli._post_preflight_warning(body=body, mode="workspace-write")
 
     assert warning == (
-        f"[PREFLIGHT] brief looks large ({len(body)} chars, 0 files mentioned). "
-        "Consider --deadline 1800 or splitting."
+        f"[PREFLIGHT] brief looks large ({len(body)} chars, 0 files mentioned). Consider --deadline 1800 or splitting."
     )
 
 
@@ -67,8 +64,7 @@ def test_post_preflight_skips_non_workspace_write_mode():
 @pytest.fixture(autouse=True)
 def isolate_db(tmp_path):
     db_file = tmp_path / "messages.db"
-    with patch("ai_agent_bridge._config.DB_PATH", db_file), \
-         patch("ai_agent_bridge._db.DB_PATH", db_file):
+    with patch("ai_agent_bridge._config.DB_PATH", db_file), patch("ai_agent_bridge._db.DB_PATH", db_file):
         _db.init_db()
         yield db_file
 
@@ -232,9 +228,7 @@ def test_inbox_show_accepts_codex_desktop(capsys):
 
 def test_inbox_ack_marks_delivery_delivered(capsys):
     thread = _make_thread("claude", count=1)
-    delivery_id = _channels.deliveries_for_message(str(thread[0]["message_id"]))[0][
-        "delivery_id"
-    ]
+    delivery_id = _channels.deliveries_for_message(str(thread[0]["message_id"]))[0]["delivery_id"]
 
     exit_code = _run_cli(
         [
@@ -267,9 +261,7 @@ def test_inbox_ack_unknown_delivery_id_errors(capsys):
 
 def test_inbox_ack_already_delivered_is_noop(capsys):
     thread = _make_thread("claude", count=1)
-    delivery_id = _channels.deliveries_for_message(str(thread[0]["message_id"]))[0][
-        "delivery_id"
-    ]
+    delivery_id = _channels.deliveries_for_message(str(thread[0]["message_id"]))[0]["delivery_id"]
     assert _run_cli(["inbox", "ack", delivery_id]) == 0
     capsys.readouterr()
 
@@ -322,9 +314,7 @@ def test_post_to_codex_desktop_routes_delivery(capsys):
     captured = capsys.readouterr()
     assert captured.err == ""
     assert "→ codex-desktop  (1 deliveries)" in captured.out
-    delivery = _channels.deliveries_for_message(
-        _channels.read("topic")[0]["message_id"]
-    )[0]
+    delivery = _channels.deliveries_for_message(_channels.read("topic")[0]["message_id"])[0]
     assert delivery["to_agent"] == "codex-desktop"
 
 
@@ -389,9 +379,7 @@ def test_discuss_replies_create_delivered_reply_deliveries(mock_invoke, monkeypa
     # assent). Convergence requires ≥ round 2, so use --max-rounds 2 here.
     # Pre-protocol-fix this test passed with --max-rounds 1; updated 2026-05-05
     # to match the round-1 short-circuit block (commit 872d8791).
-    exit_code = _run_cli(
-        ["discuss", "shared", "topic", "--with", "claude,codex", "--max-rounds", "2"]
-    )
+    exit_code = _run_cli(["discuss", "shared", "topic", "--with", "claude,codex", "--max-rounds", "2"])
 
     assert exit_code == 0
     captured = capsys.readouterr()
@@ -403,10 +391,7 @@ def test_discuss_replies_create_delivered_reply_deliveries(mock_invoke, monkeypa
     assert len(reply_deliveries) == 4
     # Set collapses duplicates across rounds — still just 2 distinct
     # (from, to, status) tuples for the 2-agent case.
-    assert {
-        (row["from_agent"], row["to_agent"], row["status"])
-        for row in reply_deliveries
-    } == {
+    assert {(row["from_agent"], row["to_agent"], row["status"]) for row in reply_deliveries} == {
         ("claude", "codex", "delivered"),
         ("codex", "claude", "delivered"),
     }
@@ -479,9 +464,7 @@ def test_discuss_fails_and_warns_when_agent_writes_worktree(
 
     mock_invoke.side_effect = _write_attempt
 
-    exit_code = _run_cli(
-        ["discuss", "shared", "topic", "--with", "claude", "--max-rounds", "1"]
-    )
+    exit_code = _run_cli(["discuss", "shared", "topic", "--with", "claude", "--max-rounds", "1"])
 
     assert exit_code == 1
     captured = capsys.readouterr()
@@ -577,7 +560,6 @@ def test_sync_all_iterates_known_agents(monkeypatch, capsys):
     cli_agents = [
         "agy",
         "claude",
-        "gemini",
         "codex",
         "grok",
         "grok-build",
@@ -608,9 +590,7 @@ def test_sync_all_iterates_known_agents(monkeypatch, capsys):
     captured = capsys.readouterr()
     assert captured.err == ""
     assert [call[0] for call in calls] == cli_agents
-    assert captured.out.count("processed: 1 deliveries | 1 threads | 0 failed | duration:") == len(
-        cli_agents
-    )
+    assert captured.out.count("processed: 1 deliveries | 1 threads | 0 failed | duration:") == len(cli_agents)
 
 
 def test_inbox_run_rejects_codex_desktop(capsys):
@@ -703,8 +683,7 @@ def test_post_workspace_write_large_body_preflight_warns_to_stderr_and_still_pos
     captured = capsys.readouterr()
     assert "✅ posted to #topic" in captured.out
     assert (
-        "[PREFLIGHT] brief looks large (8001 chars, 0 files mentioned). "
-        "Consider --deadline 1800 or splitting."
+        "[PREFLIGHT] brief looks large (8001 chars, 0 files mentioned). Consider --deadline 1800 or splitting."
     ) in captured.err
     assert _channels.read("topic")[0]["body"] == body
 
@@ -789,9 +768,7 @@ def test_post_deadline_flag_stores_delivery_override_and_worker_uses_it(monkeypa
 def test_deadline_whitelist_accepts_1800(capsys):
     _channels.create_channel("topic")
 
-    exit_code = _run_cli(
-        ["post", "topic", "hello", "--to", "claude", "--deadline", "1800", "--no-snapshot"]
-    )
+    exit_code = _run_cli(["post", "topic", "hello", "--to", "claude", "--deadline", "1800", "--no-snapshot"])
 
     assert exit_code == 0
     captured = capsys.readouterr()
@@ -829,3 +806,21 @@ def test_help_includes_model_and_deadline_flags(capsys):
         parser.parse_args(["ask-gemini", "--help"])
     ask_gemini_help = capsys.readouterr()
     assert "--auth" in ask_gemini_help.out
+
+
+def test_detect_caller_identity_honors_session_handoff_agent(monkeypatch):
+    monkeypatch.setenv("SESSION_HANDOFF_AGENT", "claude-infra")
+    monkeypatch.setenv("CLAUDE_PROJECT_DIR", "/tmp/claude-project")
+
+    assert _cli._detect_caller_identity_from_env() == "claude-infra"
+
+
+def test_detect_caller_identity_unknown_handoff_falls_through(monkeypatch):
+    monkeypatch.setenv("SESSION_HANDOFF_AGENT", "not-a-real-agent")
+    monkeypatch.setenv("CLAUDE_PROJECT_DIR", "/tmp/claude-project")
+
+    assert _cli._detect_caller_identity_from_env() == "claude"
+
+
+def test_claude_infra_is_valid_agent():
+    assert "claude-infra" in _channels.VALID_AGENTS

@@ -170,23 +170,25 @@ def _append_delivery_snapshot(activity: dict[str, dict], row, limit: int) -> Non
     if agent not in activity or len(activity[agent]["recent_deliveries"]) >= limit:
         return
     body = row["body"] or ""
-    activity[agent]["recent_deliveries"].append({
-        "delivery_id": row["delivery_id"],
-        "message_id": row["message_id"],
-        "channel": row["channel"],
-        "thread_id": row["thread_id"],
-        "from_agent": row["from_agent"],
-        "to_model": row["to_model"],
-        "status": row["status"],
-        "attempt_count": row["attempt_count"],
-        "retry_after": row["retry_after"],
-        "lease_until": row["lease_until"],
-        "created_at": row["created_at"],
-        "dispatched_at": row["dispatched_at"],
-        "delivered_at": row["delivered_at"],
-        "error": row["error"],
-        "preview": body[:160] + ("..." if len(body) > 160 else ""),
-    })
+    activity[agent]["recent_deliveries"].append(
+        {
+            "delivery_id": row["delivery_id"],
+            "message_id": row["message_id"],
+            "channel": row["channel"],
+            "thread_id": row["thread_id"],
+            "from_agent": row["from_agent"],
+            "to_model": row["to_model"],
+            "status": row["status"],
+            "attempt_count": row["attempt_count"],
+            "retry_after": row["retry_after"],
+            "lease_until": row["lease_until"],
+            "created_at": row["created_at"],
+            "dispatched_at": row["dispatched_at"],
+            "delivered_at": row["delivered_at"],
+            "error": row["error"],
+            "preview": body[:160] + ("..." if len(body) > 160 else ""),
+        }
+    )
 
 
 def _append_event_snapshot(activity: dict[str, dict], row, limit: int) -> None:
@@ -196,49 +198,48 @@ def _append_event_snapshot(activity: dict[str, dict], row, limit: int) -> None:
             payload = json.loads(row["payload_json"])
         except json.JSONDecodeError:
             payload = {}
-    event_agents = {
-        agent
-        for agent in (row["to_agent"], payload.get("agent"))
-        if agent in activity
-    }
+    event_agents = {agent for agent in (row["to_agent"], payload.get("agent")) if agent in activity}
     for agent in event_agents:
         if len(activity[agent]["recent_events"]) >= limit:
             continue
-        activity[agent]["recent_events"].append({
-            "event_id": row["event_id"],
-            "event": row["event"],
-            "thread_id": row["thread_id"],
-            "delivery_id": row["delivery_id"],
-            "channel": row["channel"],
-            "ts": row["ts"],
-            "payload": payload,
-        })
+        activity[agent]["recent_events"].append(
+            {
+                "event_id": row["event_id"],
+                "event": row["event"],
+                "thread_id": row["thread_id"],
+                "delivery_id": row["delivery_id"],
+                "channel": row["channel"],
+                "ts": row["ts"],
+                "payload": payload,
+            }
+        )
 
 
 def _add_agent_activity_actions(activity: dict[str, dict]) -> None:
     for agent, snapshot in activity.items():
         if snapshot["pending"]:
-            snapshot["next_actions"].append({
-                "kind": "drain_inbox",
-                "command": (
-                    ".venv/bin/python scripts/ai_agent_bridge/__main__.py "
-                    f"inbox run {agent} --until-idle"
-                ),
-            })
+            snapshot["next_actions"].append(
+                {
+                    "kind": "drain_inbox",
+                    "command": (f".venv/bin/python scripts/ai_agent_bridge/__main__.py inbox run {agent} --until-idle"),
+                }
+            )
         processing_threads = {
             row["thread_id"]
             for row in snapshot["recent_deliveries"]
             if row["status"] == "processing" and row["thread_id"]
         }
         for thread_id in sorted(processing_threads):
-            snapshot["next_actions"].append({
-                "kind": "watch_thread",
-                "thread_id": thread_id,
-                "command": (
-                    ".venv/bin/python scripts/ai_agent_bridge/__main__.py "
-                    f"channel watch {thread_id} --follow --event-stream"
-                ),
-            })
+            snapshot["next_actions"].append(
+                {
+                    "kind": "watch_thread",
+                    "thread_id": thread_id,
+                    "command": (
+                        ".venv/bin/python scripts/ai_agent_bridge/__main__.py "
+                        f"channel watch {thread_id} --follow --event-stream"
+                    ),
+                }
+            )
 
 
 # ==================== MESSAGES (legacy broker) ====================
@@ -336,7 +337,8 @@ async def list_conversations(limit: int = Query(50, ge=1, le=200)):
     if not conn:
         return {"conversations": []}
 
-    rows = conn.execute("""
+    rows = conn.execute(
+        """
         SELECT task_id,
                COUNT(*) as msg_count,
                COUNT(CASE WHEN acknowledged = 0 THEN 1 END) as unacked,
@@ -349,7 +351,9 @@ async def list_conversations(limit: int = Query(50, ge=1, le=200)):
         GROUP BY task_id
         ORDER BY MAX(id) DESC
         LIMIT ?
-    """, (limit,)).fetchall()
+    """,
+        (limit,),
+    ).fetchall()
     conn.close()
 
     return {"conversations": [dict(r) for r in rows]}
@@ -444,17 +448,19 @@ async def active_processes():
                 except (ValueError, TypeError):
                     pass
 
-            processes.append({
-                "file": pf.name,
-                "pid": pid,
-                "alive": alive,
-                "agent": data.get("agent", ""),
-                "task_id": data.get("task_id", ""),
-                "model": data.get("model", ""),
-                "mode": data.get("mode", ""),
-                "started": started,
-                "age_minutes": round(age_min, 1),
-            })
+            processes.append(
+                {
+                    "file": pf.name,
+                    "pid": pid,
+                    "alive": alive,
+                    "agent": data.get("agent", ""),
+                    "task_id": data.get("task_id", ""),
+                    "model": data.get("model", ""),
+                    "mode": data.get("mode", ""),
+                    "started": started,
+                    "age_minutes": round(age_min, 1),
+                }
+            )
         except Exception:
             processes.append({"file": pf.name, "error": "corrupt"})
 
@@ -488,21 +494,24 @@ async def detect_zombies(
                 ts = datetime.fromisoformat(r["timestamp"].replace("Z", "+00:00"))
                 age_h = (now - ts).total_seconds() / 3600
                 if age_h > stale_hours:
-                    zombies.append({
-                        "type": "stale_message",
-                        "severity": "warning" if age_h < stale_hours * 2 else "critical",
-                        "message_id": r["id"],
-                        "task_id": r["task_id"],
-                        "from": r["from_llm"],
-                        "to": r["to_llm"],
-                        "age_hours": round(age_h, 1),
-                        "preview": r["preview"],
-                    })
+                    zombies.append(
+                        {
+                            "type": "stale_message",
+                            "severity": "warning" if age_h < stale_hours * 2 else "critical",
+                            "message_id": r["id"],
+                            "task_id": r["task_id"],
+                            "from": r["from_llm"],
+                            "to": r["to_llm"],
+                            "age_hours": round(age_h, 1),
+                            "preview": r["preview"],
+                        }
+                    )
             except (ValueError, TypeError):
                 pass
 
         # 2. Ping-pong detection (rapid back-and-forth)
-        task_rows = conn.execute("""
+        task_rows = conn.execute(
+            """
             SELECT task_id, COUNT(*) as cnt,
                    MIN(timestamp) as first_ts, MAX(timestamp) as last_ts
             FROM messages
@@ -510,17 +519,21 @@ async def detect_zombies(
               AND timestamp > datetime('now', '-1 hour')
             GROUP BY task_id
             HAVING COUNT(*) >= ?
-        """, (pingpong_threshold,)).fetchall()
+        """,
+            (pingpong_threshold,),
+        ).fetchall()
 
         for r in task_rows:
-            zombies.append({
-                "type": "pingpong",
-                "severity": "warning",
-                "task_id": r["task_id"],
-                "message_count_1h": r["cnt"],
-                "first_ts": r["first_ts"],
-                "last_ts": r["last_ts"],
-            })
+            zombies.append(
+                {
+                    "type": "pingpong",
+                    "severity": "warning",
+                    "task_id": r["task_id"],
+                    "message_count_1h": r["cnt"],
+                    "first_ts": r["first_ts"],
+                    "last_ts": r["last_ts"],
+                }
+            )
 
         # 3. Error loops (3+ consecutive errors on same task)
         error_rows = conn.execute("""
@@ -533,12 +546,14 @@ async def detect_zombies(
         """).fetchall()
 
         for r in error_rows:
-            zombies.append({
-                "type": "error_loop",
-                "severity": "critical",
-                "task_id": r["task_id"],
-                "error_count": r["err_count"],
-            })
+            zombies.append(
+                {
+                    "type": "error_loop",
+                    "severity": "critical",
+                    "task_id": r["task_id"],
+                    "error_count": r["err_count"],
+                }
+            )
 
         conn.close()
 
@@ -551,13 +566,15 @@ async def detect_zombies(
                 try:
                     os.kill(pid, 0)
                 except (ProcessLookupError, PermissionError):
-                    zombies.append({
-                        "type": "orphan_pid",
-                        "severity": "warning",
-                        "file": pf.name,
-                        "pid": pid,
-                        "task_id": data.get("task_id", ""),
-                    })
+                    zombies.append(
+                        {
+                            "type": "orphan_pid",
+                            "severity": "warning",
+                            "file": pf.name,
+                            "pid": pid,
+                            "task_id": data.get("task_id", ""),
+                        }
+                    )
             except Exception:
                 zombies.append({"type": "corrupt_pid", "severity": "warning", "file": pf.name})
 
@@ -580,29 +597,21 @@ async def comms_stats():
 
     # Per-agent counts
     agent_stats = {}
-    for row in conn.execute(
-        "SELECT from_llm, COUNT(*) as sent FROM messages GROUP BY from_llm"
-    ).fetchall():
+    for row in conn.execute("SELECT from_llm, COUNT(*) as sent FROM messages GROUP BY from_llm").fetchall():
         agent_stats[row["from_llm"]] = {"sent": row["sent"]}
-    for row in conn.execute(
-        "SELECT to_llm, COUNT(*) as received FROM messages GROUP BY to_llm"
-    ).fetchall():
+    for row in conn.execute("SELECT to_llm, COUNT(*) as received FROM messages GROUP BY to_llm").fetchall():
         agent_stats.setdefault(row["to_llm"], {})["received"] = row["received"]
 
     # Messages in last hour
-    last_hour = conn.execute(
-        "SELECT COUNT(*) FROM messages WHERE timestamp > datetime('now', '-1 hour')"
-    ).fetchone()[0]
+    last_hour = conn.execute("SELECT COUNT(*) FROM messages WHERE timestamp > datetime('now', '-1 hour')").fetchone()[0]
 
     # Messages in last 24h
-    last_24h = conn.execute(
-        "SELECT COUNT(*) FROM messages WHERE timestamp > datetime('now', '-24 hours')"
-    ).fetchone()[0]
+    last_24h = conn.execute("SELECT COUNT(*) FROM messages WHERE timestamp > datetime('now', '-24 hours')").fetchone()[
+        0
+    ]
 
     # Task count
-    tasks = conn.execute(
-        "SELECT COUNT(DISTINCT task_id) FROM messages WHERE task_id IS NOT NULL"
-    ).fetchone()[0]
+    tasks = conn.execute("SELECT COUNT(DISTINCT task_id) FROM messages WHERE task_id IS NOT NULL").fetchone()[0]
 
     conn.close()
 
@@ -639,9 +648,7 @@ async def broker_health():
             conn = connect_sqlite(str(MESSAGE_DB))
             conn.execute("SELECT 1")
             health["db_writable"] = True
-            health["queue_depth"] = conn.execute(
-                "SELECT COUNT(*) FROM messages WHERE acknowledged = 0"
-            ).fetchone()[0]
+            health["queue_depth"] = conn.execute("SELECT COUNT(*) FROM messages WHERE acknowledged = 0").fetchone()[0]
             conn.close()
         except Exception:
             pass
@@ -707,18 +714,20 @@ def _scan_preseed_logs() -> list[dict]:
         batch_match = re.search(r"Passed:\s+(\d+)", text)
         int(batch_match.group(1)) if batch_match else passed
 
-        results.append({
-            "track": track,
-            "log_file": lf.name,
-            "log_size_kb": round(stat.st_size / 1024, 1),
-            "last_modified": datetime.fromtimestamp(stat.st_mtime, tz=UTC).isoformat(),
-            "age_seconds": int(time.time() - stat.st_mtime),
-            "passed": passed,
-            "failed": failed,
-            "complete": batch_complete,
-            "last_line": last_line,
-            "truncated": truncated,
-        })
+        results.append(
+            {
+                "track": track,
+                "log_file": lf.name,
+                "log_size_kb": round(stat.st_size / 1024, 1),
+                "last_modified": datetime.fromtimestamp(stat.st_mtime, tz=UTC).isoformat(),
+                "age_seconds": int(time.time() - stat.st_mtime),
+                "passed": passed,
+                "failed": failed,
+                "complete": batch_complete,
+                "last_line": last_line,
+                "truncated": truncated,
+            }
+        )
 
     return sorted(results, key=lambda r: r["track"])
 
@@ -742,15 +751,18 @@ def _scan_track_progress(track: str) -> dict:
     research_files = []
     if research_dir.exists():
         for rf in research_dir.glob("*-research.md"):
-            research_files.append({
-                "slug": rf.stem.replace("-research", ""),
-                "mtime": rf.stat().st_mtime,
-            })
+            research_files.append(
+                {
+                    "slug": rf.stem.replace("-research", ""),
+                    "mtime": rf.stat().st_mtime,
+                }
+            )
 
     # Count total expected from curriculum.yaml
     total_expected = 0
     try:
         import yaml
+
         curriculum_yaml = CURRICULUM_ROOT / "curriculum.yaml"
         if curriculum_yaml.exists():
             data = yaml.safe_load(curriculum_yaml.read_text()) or {}
@@ -789,10 +801,13 @@ def _scan_track_progress(track: str) -> dict:
 def _check_build_processes() -> list[dict]:
     """Find running legacy build_module.py processes."""
     import subprocess
+
     try:
         result = subprocess.run(
             ["ps", "aux"],
-            capture_output=True, text=True, timeout=5,
+            capture_output=True,
+            text=True,
+            timeout=5,
         )
         procs = []
         for line in result.stdout.splitlines():
@@ -802,12 +817,14 @@ def _check_build_processes() -> list[dict]:
                 # Extract track from command line
                 track_match = re.search(r"build_module\.py\s+(\S+)", line)
                 track = track_match.group(1) if track_match else "unknown"
-                procs.append({
-                    "pid": pid,
-                    "track": track,
-                    "version": "legacy",
-                    "cmd": " ".join(parts[10:])[:200],
-                })
+                procs.append(
+                    {
+                        "pid": pid,
+                        "track": track,
+                        "version": "legacy",
+                        "cmd": " ".join(parts[10:])[:200],
+                    }
+                )
         return procs
     except Exception:
         return []
@@ -892,12 +909,14 @@ async def batch_progress_track(track: str):
         files = sorted(research_dir.glob("*-research.md"), key=lambda f: f.stat().st_mtime, reverse=True)
         now = time.time()
         for rf in files[:20]:
-            timeline.append({
-                "slug": rf.stem.replace("-research", ""),
-                "created_ago_seconds": int(now - rf.stat().st_mtime),
-                "created_at": datetime.fromtimestamp(rf.stat().st_mtime, tz=UTC).isoformat(),
-                "size_kb": round(rf.stat().st_size / 1024, 1),
-            })
+            timeline.append(
+                {
+                    "slug": rf.stem.replace("-research", ""),
+                    "created_ago_seconds": int(now - rf.stat().st_mtime),
+                    "created_at": datetime.fromtimestamp(rf.stat().st_mtime, tz=UTC).isoformat(),
+                    "size_kb": round(rf.stat().st_size / 1024, 1),
+                }
+            )
 
     return {**tp, "recent_files": timeline}
 
@@ -969,17 +988,19 @@ def _scan_live_activity(minutes: int = 15) -> list[dict]:
                 if f.is_file() and f.stat().st_mtime > cutoff:
                     recent_files.append(f.name)
 
-            activities.append({
-                "track": track,
-                "slug": slug,
-                "phase": latest_phase.replace("v3-", "Phase "),
-                "phase_status": phase_status,
-                "timestamp": latest_ts,
-                "seconds_ago": int(now - recent_mtime),
-                "task_id": phase_data.get("task_id", ""),
-                "mode": phase_data.get("mode", ""),
-                "recent_files": recent_files,
-            })
+            activities.append(
+                {
+                    "track": track,
+                    "slug": slug,
+                    "phase": latest_phase.replace("v3-", "Phase "),
+                    "phase_status": phase_status,
+                    "timestamp": latest_ts,
+                    "seconds_ago": int(now - recent_mtime),
+                    "task_id": phase_data.get("task_id", ""),
+                    "mode": phase_data.get("mode", ""),
+                    "recent_files": recent_files,
+                }
+            )
 
     # Sort by most recent first
     activities.sort(key=lambda a: a["seconds_ago"])
@@ -1003,14 +1024,16 @@ def _scan_recent_completions(minutes: int = 60) -> list[dict]:
             mtime = rf.stat().st_mtime
             if mtime < cutoff:
                 continue
-            completions.append({
-                "track": track,
-                "slug": rf.stem.replace("-research", ""),
-                "type": "research",
-                "seconds_ago": int(now - mtime),
-                "size_kb": round(rf.stat().st_size / 1024, 1),
-                "timestamp": datetime.fromtimestamp(mtime, tz=UTC).isoformat(),
-            })
+            completions.append(
+                {
+                    "track": track,
+                    "slug": rf.stem.replace("-research", ""),
+                    "type": "research",
+                    "seconds_ago": int(now - mtime),
+                    "size_kb": round(rf.stat().st_size / 1024, 1),
+                    "timestamp": datetime.fromtimestamp(mtime, tz=UTC).isoformat(),
+                }
+            )
 
     completions.sort(key=lambda c: c["seconds_ago"])
     return completions
@@ -1042,8 +1065,7 @@ async def live_activity(
     response.headers["X-Deprecated"] = "true"
     response.headers["X-Deprecated-Use"] = "/api/state/build-status"
     response.headers["Warning"] = (
-        '299 - "This endpoint is deprecated; migrate to /api/state/build-status '
-        '+ /api/build/events (#1309)"'
+        '299 - "This endpoint is deprecated; migrate to /api/state/build-status + /api/build/events (#1309)"'
     )
 
     import asyncio
@@ -1067,14 +1089,17 @@ async def live_activity(
             conditions.append("id < ?")
             params.append(cursor)
         where = f"WHERE {' AND '.join(conditions)}" if conditions else ""
-        rows = conn.execute(f"""
+        rows = conn.execute(
+            f"""
             SELECT id, task_id, from_llm, to_llm, message_type,
                    substr(content, 1, 200) as preview, timestamp
             FROM messages
             {where}
             ORDER BY id DESC
             LIMIT ?
-        """, [*params, limit]).fetchall()
+        """,
+            [*params, limit],
+        ).fetchall()
         conn.close()
         now_ts = datetime.now(UTC)
         for r in rows:
@@ -1083,15 +1108,17 @@ async def live_activity(
                 age = (now_ts - ts).total_seconds()
             except (ValueError, TypeError):
                 age = 0
-            dispatches.append({
-                "id": r["id"],
-                "task_id": r["task_id"],
-                "from": r["from_llm"],
-                "to": r["to_llm"],
-                "type": r["message_type"],
-                "preview": r["preview"],
-                "seconds_ago": int(age),
-            })
+            dispatches.append(
+                {
+                    "id": r["id"],
+                    "task_id": r["task_id"],
+                    "from": r["from_llm"],
+                    "to": r["to_llm"],
+                    "type": r["message_type"],
+                    "preview": r["preview"],
+                    "seconds_ago": int(age),
+                }
+            )
 
     return {
         "generated_at": datetime.now(UTC).isoformat(),
@@ -1114,9 +1141,7 @@ async def cleanup_zombies(max_age_hours: float = Query(24.0)):
     # 1. Force-ack old unacked messages
     conn = _get_rw_db()
     if conn:
-        cursor = conn.execute(
-            "SELECT id, timestamp FROM messages WHERE acknowledged = 0"
-        )
+        cursor = conn.execute("SELECT id, timestamp FROM messages WHERE acknowledged = 0")
         now = datetime.now(UTC)
         for row in cursor.fetchall():
             try:
@@ -1240,6 +1265,7 @@ def _require_localhost(request: Request) -> JSONResponse | None:
 
 class ChannelPostRequest(BaseModel):
     """Pydantic body for POST /channels/{name}/post."""
+
     body: str
     to_agents: list[str] = []
     parent_id: str | None = None
@@ -1260,14 +1286,12 @@ async def list_channels_endpoint():
 
     try:
         channel_rows = conn.execute(
-            "SELECT name, description, include, subscribers, created_at "
-            "FROM channels ORDER BY created_at ASC"
+            "SELECT name, description, include, subscribers, created_at FROM channels ORDER BY created_at ASC"
         ).fetchall()
         msg_counts = {}
         latest = {}
         for r in conn.execute(
-            "SELECT channel, COUNT(*) AS n, MAX(created_at) AS latest "
-            "FROM channel_messages GROUP BY channel"
+            "SELECT channel, COUNT(*) AS n, MAX(created_at) AS latest FROM channel_messages GROUP BY channel"
         ).fetchall():
             msg_counts[r["channel"]] = r["n"]
             latest[r["channel"]] = r["latest"]
@@ -1286,16 +1310,18 @@ async def list_channels_endpoint():
     channels = []
     for r in channel_rows:
         name = r["name"]
-        channels.append({
-            "name": name,
-            "description": r["description"] or "",
-            "include": [s for s in (r["include"] or "").split(",") if s],
-            "subscribers": [s for s in (r["subscribers"] or "").split(",") if s],
-            "created_at": r["created_at"],
-            "message_count": msg_counts.get(name, 0),
-            "last_activity": latest.get(name),
-            "pending_deliveries": pending_counts.get(name, 0),
-        })
+        channels.append(
+            {
+                "name": name,
+                "description": r["description"] or "",
+                "include": [s for s in (r["include"] or "").split(",") if s],
+                "subscribers": [s for s in (r["subscribers"] or "").split(",") if s],
+                "created_at": r["created_at"],
+                "message_count": msg_counts.get(name, 0),
+                "last_activity": latest.get(name),
+                "pending_deliveries": pending_counts.get(name, 0),
+            }
+        )
     return {"channels": channels, "count": len(channels)}
 
 
@@ -1304,24 +1330,17 @@ async def get_channel_endpoint(name: str):
     """Channel metadata + context preview + pending delivery count."""
     conn = _get_db()
     if not conn:
-        return JSONResponse(
-            status_code=500, content={"error": "Broker DB not found"}
-        )
+        return JSONResponse(status_code=500, content={"error": "Broker DB not found"})
 
     try:
         row = conn.execute(
-            "SELECT name, description, include, subscribers, created_at "
-            "FROM channels WHERE name = ?",
+            "SELECT name, description, include, subscribers, created_at FROM channels WHERE name = ?",
             (name,),
         ).fetchone()
         if not row:
-            return JSONResponse(
-                status_code=404, content={"error": f"channel '{name}' not found"}
-            )
+            return JSONResponse(status_code=404, content={"error": f"channel '{name}' not found"})
 
-        msg_count = conn.execute(
-            "SELECT COUNT(*) FROM channel_messages WHERE channel = ?", (name,)
-        ).fetchone()[0]
+        msg_count = conn.execute("SELECT COUNT(*) FROM channel_messages WHERE channel = ?", (name,)).fetchone()[0]
         pending = conn.execute(
             "SELECT COUNT(*) FROM deliveries d "
             "JOIN channel_messages cm ON cm.message_id = d.message_id "
@@ -1336,6 +1355,7 @@ async def get_channel_endpoint(name: str):
     context_sha = ""
     try:
         from ai_agent_bridge import _channels as _ch
+
         ctx_path = _ch.channel_context_path(name)
         if ctx_path.exists():
             context_preview = ctx_path.read_text("utf-8")[:2000]
@@ -1364,18 +1384,12 @@ async def list_channel_messages(
     """Most recent messages in a channel, ordered oldest-first."""
     conn = _get_db()
     if not conn:
-        return JSONResponse(
-            status_code=500, content={"error": "Broker DB not found"}
-        )
+        return JSONResponse(status_code=500, content={"error": "Broker DB not found"})
     try:
         # Verify the channel exists first
-        ch = conn.execute(
-            "SELECT name FROM channels WHERE name = ?", (name,)
-        ).fetchone()
+        ch = conn.execute("SELECT name FROM channels WHERE name = ?", (name,)).fetchone()
         if not ch:
-            return JSONResponse(
-                status_code=404, content={"error": f"channel '{name}' not found"}
-            )
+            return JSONResponse(status_code=404, content={"error": f"channel '{name}' not found"})
 
         rows = conn.execute(
             """
@@ -1398,24 +1412,24 @@ async def list_channel_messages(
 
     messages = []
     for r in rows:
-        messages.append({
-            "message_id": r["message_id"],
-            "channel": r["channel"],
-            "thread_id": r["thread_id"],
-            "parent_id": r["parent_id"],
-            "correlation_id": r["correlation_id"],
-            "round_index": r["round_index"],
-            "from_agent": r["from_agent"],
-            "from_model": r["from_model"],
-            "kind": r["kind"],
-            "body": r["body"],
-            "attachments": (
-                json.loads(r["attachments"]) if r["attachments"] else None
-            ),
-            "context_rev_shared": r["context_rev_shared"],
-            "context_rev_channel": r["context_rev_channel"],
-            "created_at": r["created_at"],
-        })
+        messages.append(
+            {
+                "message_id": r["message_id"],
+                "channel": r["channel"],
+                "thread_id": r["thread_id"],
+                "parent_id": r["parent_id"],
+                "correlation_id": r["correlation_id"],
+                "round_index": r["round_index"],
+                "from_agent": r["from_agent"],
+                "from_model": r["from_model"],
+                "kind": r["kind"],
+                "body": r["body"],
+                "attachments": (json.loads(r["attachments"]) if r["attachments"] else None),
+                "context_rev_shared": r["context_rev_shared"],
+                "context_rev_channel": r["context_rev_channel"],
+                "created_at": r["created_at"],
+            }
+        )
     return {"channel": name, "count": len(messages), "messages": messages}
 
 
@@ -1424,9 +1438,7 @@ async def get_thread(name: str, thread_id: str):
     """All messages in a thread, ordered by round_index then created_at."""
     conn = _get_db()
     if not conn:
-        return JSONResponse(
-            status_code=500, content={"error": "Broker DB not found"}
-        )
+        return JSONResponse(status_code=500, content={"error": "Broker DB not found"})
     try:
         rows = conn.execute(
             """
@@ -1451,18 +1463,20 @@ async def get_thread(name: str, thread_id: str):
 
     messages = []
     for r in rows:
-        messages.append({
-            "message_id": r["message_id"],
-            "thread_id": r["thread_id"],
-            "parent_id": r["parent_id"],
-            "correlation_id": r["correlation_id"],
-            "round_index": r["round_index"],
-            "from_agent": r["from_agent"],
-            "from_model": r["from_model"],
-            "kind": r["kind"],
-            "body": r["body"],
-            "created_at": r["created_at"],
-        })
+        messages.append(
+            {
+                "message_id": r["message_id"],
+                "thread_id": r["thread_id"],
+                "parent_id": r["parent_id"],
+                "correlation_id": r["correlation_id"],
+                "round_index": r["round_index"],
+                "from_agent": r["from_agent"],
+                "from_model": r["from_model"],
+                "kind": r["kind"],
+                "body": r["body"],
+                "created_at": r["created_at"],
+            }
+        )
     return {
         "channel": name,
         "thread_id": thread_id,
@@ -1480,9 +1494,7 @@ async def channel_deliveries(
     """Delivery status for messages in a channel."""
     conn = _get_db()
     if not conn:
-        return JSONResponse(
-            status_code=500, content={"error": "Broker DB not found"}
-        )
+        return JSONResponse(status_code=500, content={"error": "Broker DB not found"})
 
     try:
         where = ["cm.channel = ?"]
@@ -1498,7 +1510,7 @@ async def channel_deliveries(
                    cm.body, cm.from_agent AS cm_from_agent, cm.created_at
             FROM deliveries d
             JOIN channel_messages cm ON cm.message_id = d.message_id
-            WHERE {' AND '.join(where)}
+            WHERE {" AND ".join(where)}
             ORDER BY cm.created_at DESC
             LIMIT ?
             """,
@@ -1510,19 +1522,21 @@ async def channel_deliveries(
     deliveries = []
     for r in rows:
         body = r["body"] or ""
-        deliveries.append({
-            "delivery_id": r["delivery_id"],
-            "message_id": r["message_id"],
-            "to_agent": r["to_agent"],
-            "to_model": r["to_model"],
-            "status": r["status"],
-            "dispatched_at": r["dispatched_at"],
-            "delivered_at": r["delivered_at"],
-            "error": r["error"],
-            "preview": body[:200] + ("..." if len(body) > 200 else ""),
-            "from_agent": r["cm_from_agent"],
-            "created_at": r["created_at"],
-        })
+        deliveries.append(
+            {
+                "delivery_id": r["delivery_id"],
+                "message_id": r["message_id"],
+                "to_agent": r["to_agent"],
+                "to_model": r["to_model"],
+                "status": r["status"],
+                "dispatched_at": r["dispatched_at"],
+                "delivered_at": r["delivered_at"],
+                "error": r["error"],
+                "preview": body[:200] + ("..." if len(body) > 200 else ""),
+                "from_agent": r["cm_from_agent"],
+                "created_at": r["created_at"],
+            }
+        )
     return {"channel": name, "count": len(deliveries), "deliveries": deliveries}
 
 
@@ -1567,9 +1581,7 @@ async def post_to_channel(name: str, req: ChannelPostRequest, request: Request):
         logger.warning(f"Validation error in channel post [{error_id}]: {exc}", exc_info=True)
         return JSONResponse(status_code=400, content={"error": "invalid request", "error_id": error_id})
     except Exception:
-        return JSONResponse(
-            status_code=500, content={"error": "post failed"}
-        )
+        return JSONResponse(status_code=500, content={"error": "post failed"})
 
     return {
         "message_id": result["message_id"],
@@ -1600,17 +1612,19 @@ async def messages_by_module(track: str, slug: str, limit: int = 30):
     messages = []
     for r in rows:
         content = r["content"] or ""
-        messages.append({
-            "id": r["id"],
-            "task_id": r["task_id"],
-            "from": r["from_llm"],
-            "to": r["to_llm"],
-            "type": r["message_type"],
-            "preview": content[:300] + ("..." if len(content) > 300 else ""),
-            "full_length": len(content),
-            "timestamp": r["timestamp"],
-            "acknowledged": bool(r["acknowledged"]),
-        })
+        messages.append(
+            {
+                "id": r["id"],
+                "task_id": r["task_id"],
+                "from": r["from_llm"],
+                "to": r["to_llm"],
+                "type": r["message_type"],
+                "preview": content[:300] + ("..." if len(content) > 300 else ""),
+                "full_length": len(content),
+                "timestamp": r["timestamp"],
+                "acknowledged": bool(r["acknowledged"]),
+            }
+        )
 
     # Group by task_id for easy reading
     task_groups = {}
@@ -1656,10 +1670,7 @@ def agent_activity(
     totals = {"pending": 0, "processing": 0, "failed": 0}
 
     try:
-        if not all(
-            _table_exists(conn, table)
-            for table in ("deliveries", "channel_messages")
-        ):
+        if not all(_table_exists(conn, table) for table in ("deliveries", "channel_messages")):
             response = _empty_agent_activity_response(
                 selected_agents,
                 error="Channel bridge tables not found",
@@ -1739,7 +1750,7 @@ def agent_activity(
 
 @router.get("/inbox")
 def comms_inbox(
-    agent: str = Query(..., description="Target agent name: 'claude', 'gemini', or 'codex'."),
+    agent: str = Query(..., description="Target agent name (e.g. 'claude', 'claude-infra', 'codex')."),
     limit: int = Query(10, ge=1, le=50, description="Max deliveries to return."),
 ):
     """Per-agent unread channel deliveries, oldest first.
@@ -1802,16 +1813,18 @@ def comms_inbox(
     for row in all_pending[:limit]:
         body = str(row.get("body") or "")
         preview = body[:160] + ("..." if len(body) > 160 else "")
-        deliveries_out.append({
-            "delivery_id": row.get("delivery_id"),
-            "message_id": row.get("message_id"),
-            "channel": row.get("cm_channel"),
-            "from_agent": row.get("cm_from_agent"),
-            "preview": preview,
-            "body_length": len(body),
-            "dispatched_at": row.get("dispatched_at"),
-            "attempt_count": row.get("attempt_count"),
-        })
+        deliveries_out.append(
+            {
+                "delivery_id": row.get("delivery_id"),
+                "message_id": row.get("message_id"),
+                "channel": row.get("cm_channel"),
+                "from_agent": row.get("cm_from_agent"),
+                "preview": preview,
+                "body_length": len(body),
+                "dispatched_at": row.get("dispatched_at"),
+                "attempt_count": row.get("attempt_count"),
+            }
+        )
 
     return {
         "agent": agent,
