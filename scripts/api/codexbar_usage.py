@@ -9,6 +9,8 @@ import json
 import subprocess
 import threading
 import time
+from collections.abc import Iterable
+from concurrent.futures import ThreadPoolExecutor
 from datetime import UTC, datetime, timedelta
 from typing import Any, Optional
 
@@ -29,6 +31,38 @@ PROVIDER_TO_LANE = {
 _last_good_data: dict[str, tuple[float, dict[str, Any]]] = {}
 _refresh_lock = threading.Lock()
 _refresh_thread: threading.Thread | None = None
+
+
+def refresh_provider_usage_data(providers: Iterable[str], *, timeout_s: float = 2.0) -> dict[str, dict[str, Any]]:
+    """Synchronously refresh selected providers in parallel for an explicit caller.
+
+    The regular API path intentionally remains cache-only and non-blocking. This
+    helper is reserved for callers, such as the dispatch budget guard, which
+    explicitly need a bounded fresh verdict before acting.
+    """
+    from scripts.api.state_helpers import cache_set
+
+    unique_providers = tuple(dict.fromkeys(providers))
+    if not unique_providers:
+        return {}
+
+    refreshed: dict[str, dict[str, Any]] = {}
+    with ThreadPoolExecutor(max_workers=len(unique_providers)) as executor:
+        futures = {
+            provider: executor.submit(fetch_codexbar_usage, provider, timeout_s=timeout_s)
+            for provider in unique_providers
+        }
+        for provider, future in futures.items():
+            try:
+                data = future.result()
+            except Exception:
+                data = None
+            if data is None:
+                continue
+            cache_set(f"codexbar_usage:{provider}", data)
+            _last_good_data[provider] = (time.monotonic(), data)
+            refreshed[provider] = data
+    return refreshed
 
 
 def fetch_codexbar_usage(provider: str, *, timeout_s: float = 45.0) -> dict[str, Any] | None:

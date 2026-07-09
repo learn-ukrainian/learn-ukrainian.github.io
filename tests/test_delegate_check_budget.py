@@ -211,7 +211,9 @@ def test_check_budget_hard_sub_on_near_cap_fresh(monkeypatch, tmp_path, capsys):
     monkeypatch.setattr(
         delegate.urllib.request,
         "urlopen",
-        lambda *_a, **_k: _FakeBudgetResponse("codex", status_for_agent="claude", burn_for_agent=95.0, records_loaded=10, stale=False),
+        lambda *_a, **_k: _FakeBudgetResponse(
+            "codex", status_for_agent="claude", burn_for_agent=95.0, records_loaded=10, stale=False
+        ),
     )
 
     rc = delegate.cmd_dispatch(_dispatch_args("--check-budget"))
@@ -230,7 +232,9 @@ def test_check_budget_no_hard_sub_on_stale(monkeypatch, tmp_path, capsys):
     monkeypatch.setattr(
         delegate.urllib.request,
         "urlopen",
-        lambda *_a, **_k: _FakeBudgetResponse("codex", status_for_agent="claude", burn_for_agent=95.0, records_loaded=3, stale=True),
+        lambda *_a, **_k: _FakeBudgetResponse(
+            "codex", status_for_agent="claude", burn_for_agent=95.0, records_loaded=3, stale=True
+        ),
     )
 
     rc = delegate.cmd_dispatch(_dispatch_args("--check-budget"))
@@ -241,21 +245,61 @@ def test_check_budget_no_hard_sub_on_stale(monkeypatch, tmp_path, capsys):
     assert "HARD AUTO-SUBSTITUTE" not in err
 
 
-def test_check_budget_no_sub_on_empty_snapshot(monkeypatch, tmp_path, capsys):
-    """Empty → no sub, suppressed."""
+def test_check_budget_reports_deficit_from_empty_ledger_codexbar(monkeypatch, tmp_path, capsys):
+    """Empty ledger plus authoritative CodexBar must show the live deficit."""
     _patch_spawn(monkeypatch, tmp_path)
     monkeypatch.setattr(delegate.time, "sleep", lambda _s: None)
     monkeypatch.setattr(
-        delegate.urllib.request,
-        "urlopen",
-        lambda *_a, **_k: _FakeBudgetResponse("codex", empty=True),
+        delegate,
+        "_fetch_routing_budget",
+        lambda: {
+            "recommendation": {
+                "primary_agent_for_code": "codex",
+                "rationale": "Codex has live headroom.",
+                "warnings": ["lane claude is in deficit (27% in deficit)"],
+            },
+            "agents": {"claude": {"status": "hot", "burn_pct_7d": 74.0}},
+            "diagnostics": {
+                "records_loaded": 0,
+                "stale": False,
+                "codexbar_data_available": True,
+            },
+        },
     )
 
     rc = delegate.cmd_dispatch(_dispatch_args("--check-budget"))
 
     assert rc == 0
     err = capsys.readouterr().err
-    assert "empty snapshot" in err.lower()
+    assert "lane claude is in deficit (27% in deficit)" in err
+    assert "budget UNKNOWN" not in err
+    assert "HARD AUTO-SUBSTITUTE" not in err
+
+
+def test_check_budget_reports_unknown_when_empty_ledger_codexbar_unavailable(monkeypatch, tmp_path, capsys):
+    """A failed guard refresh must be explicit rather than using the old silent empty design."""
+    _patch_spawn(monkeypatch, tmp_path)
+    monkeypatch.setattr(delegate.time, "sleep", lambda _s: None)
+    monkeypatch.setattr(
+        delegate,
+        "_fetch_routing_budget",
+        lambda: {
+            "recommendation": {"primary_agent_for_code": None, "warnings": []},
+            "agents": {"claude": {"status": "unknown", "burn_pct_7d": None}},
+            "diagnostics": {
+                "records_loaded": 0,
+                "stale": False,
+                "codexbar_data_available": False,
+            },
+        },
+    )
+
+    rc = delegate.cmd_dispatch(_dispatch_args("--check-budget"))
+
+    assert rc == 0
+    err = capsys.readouterr().err
+    assert "budget UNKNOWN — could not verify CodexBar data; lanes may be in deficit" in err
+    assert "per design" not in err
     assert "HARD AUTO-SUBSTITUTE" not in err
 
 
@@ -267,7 +311,9 @@ def test_check_budget_no_hard_sub_without_yaml_mapping(monkeypatch, tmp_path, ca
     monkeypatch.setattr(
         delegate.urllib.request,
         "urlopen",
-        lambda *_a, **_k: _FakeBudgetResponse("codex", status_for_agent="claude", burn_for_agent=95.0, records_loaded=10, stale=False),
+        lambda *_a, **_k: _FakeBudgetResponse(
+            "codex", status_for_agent="claude", burn_for_agent=95.0, records_loaded=10, stale=False
+        ),
     )
 
     rc = delegate.cmd_dispatch(_dispatch_args("--check-budget"))
@@ -284,7 +330,9 @@ def test_check_budget_hard_sub_ignores_unknown_fallback_target(monkeypatch, tmp_
     monkeypatch.setattr(
         delegate.urllib.request,
         "urlopen",
-        lambda *_a, **_k: _FakeBudgetResponse("codex", status_for_agent="claude", burn_for_agent=95.0, records_loaded=10, stale=False),
+        lambda *_a, **_k: _FakeBudgetResponse(
+            "codex", status_for_agent="claude", burn_for_agent=95.0, records_loaded=10, stale=False
+        ),
     )
 
     rc = delegate.cmd_dispatch(_dispatch_args("--check-budget"))
