@@ -79,6 +79,35 @@
           }
         }
       }
+    },
+    {
+      "if": {
+        "properties": {
+          "qualification_eligible": {
+            "const": true
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "cases": {
+            "items": {
+              "properties": {
+                "adjudication": {
+                  "properties": {
+                    "status": {
+                      "enum": [
+                        "AGREED",
+                        "ADJUDICATED"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   ],
   "$defs": {

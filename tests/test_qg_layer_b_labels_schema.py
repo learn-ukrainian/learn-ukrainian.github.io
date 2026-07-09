@@ -463,3 +463,23 @@ def test_14_rejects_unknown_decision_reason_relation_and_status_enums() -> None:
             target = _only_candidate(invalid)
         target[field] = "UNKNOWN_ENUM"
         assert _schema_errors(invalid), f"unknown {field} must be rejected"
+
+
+def test_15_unresolved_cases_block_qualification() -> None:
+    """Design §7: 'UNRESOLVED cases remain qualification blockers.'
+
+    A document must not claim qualification eligibility while any case's
+    adjudication is UNRESOLVED — found live by an adversarial review probe
+    on the initial Phase 0 PR (#4860): eligible=true + empty blockers +
+    one UNRESOLVED case validated cleanly before this rule existed.
+    """
+    document, _ = _valid_document()
+    document["qualification_eligible"] = True
+    document["qualification_blockers"] = []
+    document["cases"][0]["adjudication"]["status"] = "UNRESOLVED"
+    document["cases"][0]["adjudication"]["adjudicator"] = None
+
+    errors = _schema_errors(document)
+
+    assert errors
+    assert any("UNRESOLVED" in error or "AGREED" in error for error in errors)
