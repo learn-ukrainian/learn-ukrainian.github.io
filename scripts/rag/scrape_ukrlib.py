@@ -35,6 +35,7 @@ Usage:
 
 import argparse
 import hashlib
+import html
 import json
 import re
 import subprocess
@@ -44,9 +45,12 @@ from html.parser import HTMLParser
 from pathlib import Path
 from typing import ClassVar
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+if __package__:
+    from .config import CHUNK_MAX_TOKENS, CHUNK_MIN_TOKENS, LITERARY_DIR
+else:
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from rag.config import CHUNK_MAX_TOKENS, CHUNK_MIN_TOKENS, LITERARY_DIR
+    from rag.config import CHUNK_MAX_TOKENS, CHUNK_MIN_TOKENS, LITERARY_DIR
 
 BASE_URL = "https://www.ukrlib.com.ua"
 DELAY_BETWEEN_PAGES = 0.3  # seconds
@@ -57,8 +61,9 @@ DELAY_BETWEEN_WORKS = 0.5
 #
 # BLACKLISTED IDs — ukrlib database serves wrong works for these author pages.
 # The correct data comes from reattributed files (scripts/rag/reattribute_ukrlib.py).
-# See #807.
-BLACKLISTED_IDS = {8, 9, 10, 13, 15, 16, 38, 65}
+# See #807. Рильський (13) is deliberately not listed: its per-work source
+# identity guard below rejects any page whose declared author/title is wrong.
+BLACKLISTED_IDS = {8, 9, 10, 15, 16, 38, 65}
 
 # Priority 1: Core school canon (most referenced in curriculum)
 P1_AUTHORS = {
@@ -112,7 +117,15 @@ P2_AUTHORS = {
     # nechuy (id=16) REMOVED — broken ukrlib mapping, data from reattributed files
     # myrny (id=15) REMOVED — broken ukrlib mapping, data from reattributed files
     # tychyna (id=9) REMOVED — broken ukrlib mapping, data from reattributed files
-    # rylsky (id=13) REMOVED — broken ukrlib mapping, data from reattributed files
+    "rylsky": {
+        "id": 13,
+        "name": "Рильський М.",
+        "full_name": "Максим Рильський",
+        "source_author": "Рильський Максим",
+        "years": "1895-1964",
+        "genre_default": "poetry",
+        "period": "modern",
+    },
     "karpenko_karyi": {
         "id": 14,
         "name": "Карпенко-Карий І.",
@@ -316,6 +329,15 @@ P3_AUTHORS = {
         "full_name": "Григір Тютюнник",
         "years": "1931-1980",
         "genre_default": "prose",
+        "period": "modern",
+    },
+    "teliha": {
+        "id": 107,
+        "name": "Теліга О.",
+        "full_name": "Олена Теліга",
+        "source_author": "Теліга Олена",
+        "years": "1906-1942",
+        "genre_default": "poetry",
         "period": "modern",
     },
     # New curriculum-referenced authors (verified on ukrlib 2026-03-08)
@@ -650,6 +672,62 @@ class AuthorPageParser(HTMLParser):
             self._link_text += data
 
 
+class SourceContentError(ValueError):
+    """Raised when a fetched source page is not the declared author/work."""
+
+
+class SourceTextParser(HTMLParser):
+    """Collect rendered document text while excluding executable and style blocks."""
+
+    def __init__(self):
+        super().__init__()
+        self.parts: list[str] = []
+        self._skip_depth = 0
+
+    def handle_starttag(self, tag, attrs):
+        if tag.casefold() in {"script", "style", "noscript"}:
+            self._skip_depth += 1
+
+    def handle_endtag(self, tag):
+        if tag.casefold() in {"script", "style", "noscript"} and self._skip_depth:
+            self._skip_depth -= 1
+
+    def handle_data(self, data):
+        if not self._skip_depth:
+            self.parts.append(data)
+
+    def text(self) -> str:
+        return re.sub(r"\s+", " ", html.unescape(" ".join(self.parts))).strip()
+
+
+def verify_source_content(
+    page_html: str,
+    *,
+    expected_author: str,
+    expected_title: str,
+    source_url: str,
+) -> None:
+    """Require the declared author and title to be present in the fetched document.
+
+    A resolving URL is not evidence that it identifies the intended literary
+    work. This guard runs before any text from newly added author recipes is
+    chunked or written to local JSONL.
+    """
+    parser = SourceTextParser()
+    parser.feed(page_html)
+    document_text = parser.text().casefold()
+    missing = [
+        value
+        for value in (expected_author, expected_title)
+        if value.casefold() not in document_text
+    ]
+    if missing:
+        raise SourceContentError(
+            f"{source_url}: source content is missing declared "
+            f"{' and '.join(missing)!r}"
+        )
+
+
 # ── Fetching ─────────────────────────────────────────────────────────
 
 def fetch_page(url: str, retries: int = 3) -> str:
@@ -719,7 +797,14 @@ def get_author_works(author_id: int) -> tuple[list[dict], list[dict]]:
     return dedup(all_works), dedup(all_bios)
 
 
-def scrape_work_text(tid: int, max_pages: int = 50, is_bio: bool = False) -> tuple[str, str]:
+def scrape_work_text(
+    tid: int,
+    max_pages: int = 50,
+    is_bio: bool = False,
+    *,
+    expected_author: str = "",
+    expected_title: str = "",
+) -> tuple[str, str]:
     """Scrape the full text of a work or bio. Returns (text, source_url)."""
     path_prefix = "bio" if is_bio else "books"
     all_text = ""
@@ -729,6 +814,13 @@ def scrape_work_text(tid: int, max_pages: int = 50, is_bio: bool = False) -> tup
     while page <= max_pages:
         url = f"{BASE_URL}/{path_prefix}/printit.php?tid={tid}&page={page}"
         html = fetch_page(url)
+        if page == 1 and expected_author and expected_title:
+            verify_source_content(
+                html,
+                expected_author=expected_author,
+                expected_title=expected_title,
+                source_url=source_url,
+            )
 
         extractor = UkrlibTextExtractor()
         extractor.feed(html)
@@ -975,6 +1067,7 @@ def scrape_author(slug: str, author_info: dict, dry_run: bool = False,
         print(f"\n[{slug}] SKIPPED — author id={author_id} is blacklisted (broken ukrlib mapping)")
         return 0
     author_name = author_info["name"]
+    source_author = author_info.get("source_author", "")
     genre_default = author_info["genre_default"]
     period = author_info["period"]
 
@@ -1036,7 +1129,12 @@ def scrape_author(slug: str, author_info: dict, dry_run: bool = False,
             label = "[BIO] " if is_bio else ""
             print(f"\n  [{i}/{len(total_items)}] {label}{title} (tid={tid}, genre={genre})")
             try:
-                text, source_url = scrape_work_text(tid, is_bio=is_bio)
+                text, source_url = scrape_work_text(
+                    tid,
+                    is_bio=is_bio,
+                    expected_author=source_author,
+                    expected_title=title,
+                )
             except Exception as e:
                 print(f"    ERROR: {e}")
                 continue

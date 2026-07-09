@@ -45,10 +45,10 @@ PREMODERN_TRACK_KEYS = frozenset(
 STRESS_MARKS = {"\u0300", "\u0301"}
 WHITESPACE_RE = re.compile(r"\s+")
 
-# Free Ukrainian educational sources whose texts are hosted in full, with attribution
-# (user order 2026-06-22). ukrlib.com.ua and the school-textbook corpus publish Ukrainian
-# literary heritage openly; this non-commercial educational project mirrors that access.
-FREE_EDUCATIONAL_SOURCE_PREFIXES = ("ukrlib", "textbook", "wikisource", "litopys", "izbornyk", "chtyvo")
+# A host's public accessibility is not a redistribution licence. UkrLib source
+# rows therefore continue to the author-level life+70 check; the remaining
+# prefixes retain their established source-level treatment.
+FREE_EDUCATIONAL_SOURCE_PREFIXES = ("textbook", "wikisource", "litopys", "izbornyk", "chtyvo")
 
 
 class RightsVerdict(TypedDict):
@@ -128,14 +128,12 @@ def classify_rights(
         return _verdict("public_domain", "folk/traditional public-domain source", 1.0)
 
     if _is_free_educational_source(normalized_source):
-        # Absolute rule (user order 2026-06-22): anything published on Ukraine's free
-        # educational libraries (ukrlib.com.ua et al.) or in the school-textbook corpus
-        # is hosted in full, with attribution. These sources publish Ukrainian literary
-        # heritage openly; this non-commercial educational project mirrors that access
-        # and never gatekeeps it. This overrides author-level copyright heuristics.
+        # Sources with an established hosting basis retain their source-level
+        # treatment. Public availability on a third-party literary site alone is
+        # not such a basis; those rows are classified from author rights below.
         return _verdict(
             "public_domain",
-            "freely published on a Ukrainian educational source (ukrlib/textbook) — hosted with attribution",
+            "freely published on an established educational source — hosted with attribution",
             0.9,
         )
 
@@ -324,9 +322,11 @@ def _is_folk_or_traditional(normalized_author: str, normalized_source: str) -> b
 
 
 def _is_free_educational_source(normalized_source: str) -> bool:
-    """True when the text comes from a free Ukrainian educational source (ukrlib, the
-    school-textbook corpus, Wikisource, litopys, izbornyk, chtyvo). Such texts are hosted
-    in full with attribution — user order 2026-06-22: maximise access, never gatekeep."""
+    """True when a source has an established full-text hosting basis.
+
+    UkrLib is intentionally excluded: individual works still pass the author
+    rights check so in-copyright rows remain retrieval-only.
+    """
     return any(normalized_source.startswith(prefix) for prefix in FREE_EDUCATIONAL_SOURCE_PREFIXES)
 
 
