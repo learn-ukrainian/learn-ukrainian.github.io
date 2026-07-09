@@ -26,7 +26,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, ConfigDict, Field
 
-from ._config import _PARENT_ENV, AGY_CLI, CLAUDE_CMD, CODEX_CLI, GEMINI_CLI, REPO_ROOT
+from ._config import _PARENT_ENV, AGY_CLI, CLAUDE_CMD, CODEX_CLI, REPO_ROOT
 
 _DEFAULT_BACKEND_TIMEOUT_S = 120
 _HERMES_STDIN_MODULE = "scripts.ai_agent_bridge._hermes_stdin"
@@ -129,10 +129,11 @@ def _run_backend_command(
     *,
     prompt: str | None = None,
     cwd: Path = REPO_ROOT,
+    env: dict[str, str] | None = None,
 ) -> subprocess.CompletedProcess[str]:
-    env = dict(_PARENT_ENV)
-    env["TERM"] = "xterm-256color"
-    env["COLORTERM"] = "truecolor"
+    env = dict(env) if env is not None else dict(_PARENT_ENV)
+    env.setdefault("TERM", "xterm-256color")
+    env.setdefault("COLORTERM", "truecolor")
     result = subprocess.run(
         argv,
         input=prompt,
@@ -241,15 +242,26 @@ def _codex_backend(model: str, messages: list[Message], **kwargs: Any) -> Comple
 
 
 def _gemini_backend(model: str, messages: list[Message], **kwargs: Any) -> CompletionResponse:
+    """Gemini-family completions via AGY (migrated from retired gemini CLI, #4609)."""
     prompt = str(kwargs.get("prompt") or _flatten_messages(messages))
-    argv = [
-        GEMINI_CLI,
-        "-m",
-        model,
-        "--approval-mode",
-        "plan",
-    ]
-    result = _run_backend_command("gemini", argv, prompt=prompt)
+    from agent_runtime.adapters.agy import AgyAdapter
+
+    adapter = AgyAdapter()
+    plan = adapter.build_invocation(
+        prompt=prompt,
+        mode="danger",
+        cwd=REPO_ROOT,
+        model=model,
+        task_id="proxy-gemini",
+        session_id=None,
+        tool_config=None,
+    )
+    env = dict(_PARENT_ENV)
+    if plan.env_overrides:
+        env.update(plan.env_overrides)
+    # Use the plan's cmd (agy -p ...) and run via existing helper.
+    # The helper expects the binary name prefix for logging.
+    result = _run_backend_command("agy", plan.cmd, prompt=prompt, env=env)
     return CompletionResponse(content=result.stdout.strip())
 
 
@@ -281,8 +293,8 @@ def _hermes_backend(model: str, messages: list[Message], **kwargs: Any) -> Compl
 
 
 # Alias Mapping Table:
-# - gemini-3.0-flash-preview: Remapped to cli_model_name="gemini-2.5-flash" because the local Gemini CLI
-#   does not recognize the 3.0-flash-preview alias, but 2.5-flash is supported and functional (Issue #2022).
+# - gemini-* now routed via AGY (Antigravity) per #4609 (retired gemini CLI removed from completions path).
+#   Probe already used AGY. AGY adapter handles model mapping and invocation.
 _ROUTABLE_MODELS: dict[str, ModelRoute] = {
     "codex": ModelRoute(family="openai-codex", backend=_codex_backend),
     "gemini-3.0-flash-preview": ModelRoute(family="google-gemini", backend=_gemini_backend, cli_model_name="gemini-2.5-flash"),
