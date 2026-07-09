@@ -1,0 +1,736 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/qg-layer-b-labels.v2.schema.json",
+  "title": "QG Layer B labels v2",
+  "description": "Versioned sidecar labels for QG Layer B Phase 0. This schema validates the normative shape in docs/projects/ua-eval-harness/layerb-entailment-gate-design.md §7; it does not change Layer A or Layer B runtime behavior.",
+  "$comment": "JSON Schema cannot compare sibling offsets, verify UTF-8 SHA-256 digests, derive stable identities, validate normalized-to-raw mappings, or inspect source bytes. tests/test_qg_layer_b_labels_schema.py validates those cross-field invariants against supplied immutable reference outputs: non-empty half-open spans; ordered, non-overlapping segments; one event-output per candidate; recorded hash integrity; normalized-to-raw round trips; source_index exclusion from stable identity; and canonical-source identity consistency. The helper is test-only and is not a runtime gate.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "dataset_id",
+    "source_artifacts",
+    "qualification_eligible",
+    "qualification_blockers",
+    "cases"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "qg-layer-b-labels.v2"
+    },
+    "dataset_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_artifacts": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/sourceArtifact"
+      }
+    },
+    "qualification_eligible": {
+      "type": "boolean"
+    },
+    "qualification_blockers": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "cases": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/case"
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "qualification_eligible": {
+            "const": false
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "qualification_blockers": {
+            "minItems": 1
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "qualification_eligible": {
+            "const": true
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "qualification_blockers": {
+            "maxItems": 0
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "qualification_eligible": {
+            "const": true
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "cases": {
+            "items": {
+              "properties": {
+                "adjudication": {
+                  "properties": {
+                    "status": {
+                      "enum": [
+                        "AGREED",
+                        "ADJUDICATED"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "sourceArtifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "artifact_sha256",
+        "fixture_set_sha256"
+      ],
+      "properties": {
+        "artifact_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "fixture_set_sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    },
+    "case": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "case_id",
+        "artifact_sha256",
+        "fixture_id",
+        "fact_check_id",
+        "fact_check_index",
+        "claim",
+        "evidence_excerpt",
+        "claim_is_true",
+        "expected_reviewer_verdict",
+        "expected_layer_a_decision",
+        "expected_layer_a_reason",
+        "anchor_scan_complete",
+        "candidate_set_complete",
+        "candidates_by_event_output_id",
+        "expected_aggregate_relation",
+        "expected_fact_check_decision",
+        "context_sufficient",
+        "failure_class",
+        "corpus_verification_status",
+        "annotators",
+        "adjudication"
+      ],
+      "properties": {
+        "case_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "artifact_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "fixture_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "fact_check_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "fact_check_index": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "claim": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidence_excerpt": {
+          "type": "string",
+          "minLength": 1
+        },
+        "claim_is_true": {
+          "type": "boolean"
+        },
+        "expected_reviewer_verdict": {
+          "enum": [
+            "CONFIRMED",
+            "REFUTED_BY_CONTRADICTION",
+            "UNATTESTED_AFTER_SEARCH",
+            "CONTESTED",
+            "UNVERIFIED_INSUFFICIENT_SEARCH"
+          ]
+        },
+        "expected_layer_a_decision": {
+          "enum": [
+            "ANCHOR",
+            "REJECT",
+            "AUDIT"
+          ]
+        },
+        "expected_layer_a_reason": {
+          "enum": [
+            "ANCHORED_CONTIGUOUS",
+            "ANCHORED_ORDERED_SEGMENTS",
+            "PRESENT_MULTI",
+            "ABSENT",
+            "FUZZY_AMBIGUOUS",
+            "OUTSIDE_SCAN",
+            "RAW_MAPPING_AMBIGUOUS",
+            "CROSS_EVENT_STITCH_FORBIDDEN",
+            "INCOMPLETE_CAPTURE",
+            "INCOMPLETE_CANDIDATE_SET",
+            "TOOL_ERROR",
+            "INSUFFICIENT_MASS",
+            "BELOW_TAU",
+            "DIGIT_NOT_ALIGNED",
+            "SALIENT_NOT_ALIGNED"
+          ]
+        },
+        "anchor_scan_complete": {
+          "type": "boolean"
+        },
+        "candidate_set_complete": {
+          "type": "boolean"
+        },
+        "candidates_by_event_output_id": {
+          "type": "object",
+          "patternProperties": {
+            "^[a-f0-9]{64}$": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "$ref": "#/$defs/candidate"
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        "expected_aggregate_relation": {
+          "enum": [
+            "ENTAILS",
+            "CONTRADICTS",
+            "EXPLICITLY_UNCERTAIN",
+            "NO_RELATION",
+            "MIXED",
+            "INSUFFICIENT_CONTEXT",
+            "TOOL_ERROR",
+            "ABSTAIN"
+          ]
+        },
+        "expected_fact_check_decision": {
+          "enum": [
+            "ACCEPT",
+            "REJECT",
+            "AUDIT"
+          ]
+        },
+        "context_sufficient": {
+          "type": "boolean"
+        },
+        "failure_class": {
+          "enum": [
+            "FABRICATED_EXCERPT_VALUE",
+            "ALTERED_CLAIM_VALUE",
+            "MEANING_INVERSION",
+            "ATTRIBUTION_OR_ROLE_SWAP",
+            "OVER_GENERALIZATION",
+            "ELLIPSIZED_GENUINE_EXCERPT",
+            "CROSS_EVENT_JOIN",
+            "LEXICAL_VARIANT",
+            "TOOL_ERROR_AS_EVIDENCE",
+            "MISSING_CONTRADICTORY_CANDIDATE",
+            "WRONG_NORMALIZED_RAW_MAPPING",
+            "CANONICAL_IDENTITY_FAILURE",
+            "PROMPT_INJECTION",
+            "IRRELEVANT_SUPPORT_OFFSET",
+            "JUDGE_TIMEOUT_OR_MALFORMED_RESULT",
+            "SEARCH_ONLY_WITHOUT_COVERAGE_PROOF"
+          ]
+        },
+        "corpus_verification_status": {
+          "enum": [
+            "VERIFIED",
+            "FIXTURE_ATTESTED",
+            "UNVERIFIED",
+            "NOT_APPLICABLE"
+          ]
+        },
+        "annotators": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "adjudication": {
+          "$ref": "#/$defs/adjudication"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "expected_layer_a_decision": {
+                "const": "ANCHOR"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "candidate_set_complete": {
+                "const": true
+              },
+              "candidates_by_event_output_id": {
+                "minProperties": 1
+              }
+            }
+          }
+        }
+      ]
+    },
+    "candidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "candidate_id",
+        "canonical_source_id",
+        "source_index",
+        "tool_identity",
+        "query_identity",
+        "raw_output_sha256",
+        "normalized_output_sha256",
+        "output_capture_complete",
+        "anchor_scan_complete",
+        "match_type",
+        "similarity",
+        "eligibility",
+        "error_status",
+        "ordered_segment_spans",
+        "expected_source_relation",
+        "expected_support_spans"
+      ],
+      "properties": {
+        "candidate_id": {
+          "$ref": "#/$defs/sha256"
+        },
+        "canonical_source_id": {
+          "$ref": "#/$defs/sha256"
+        },
+        "source_index": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Diagnostic only; stable identities must not include source_index."
+        },
+        "tool_identity": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "raw_name",
+            "canonical_name"
+          ],
+          "properties": {
+            "raw_name": {
+              "type": "string",
+              "minLength": 1
+            },
+            "canonical_name": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "query_identity": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "canonical_json",
+            "sha256"
+          ],
+          "properties": {
+            "canonical_json": {
+              "type": "string",
+              "minLength": 1
+            },
+            "sha256": {
+              "$ref": "#/$defs/sha256"
+            }
+          }
+        },
+        "raw_output_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "normalized_output_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "output_capture_complete": {
+          "type": "boolean"
+        },
+        "anchor_scan_complete": {
+          "type": "boolean"
+        },
+        "match_type": {
+          "enum": [
+            "EXACT_CONTIGUOUS",
+            "FUZZY_CONTIGUOUS",
+            "ORDERED_EXACT_SEGMENTS"
+          ]
+        },
+        "similarity": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "eligibility": {
+          "enum": [
+            "ELIGIBLE",
+            "INADMISSIBLE_SOURCE",
+            "TOOL_ERROR",
+            "AMBIGUOUS_ERROR",
+            "INCOMPLETE_CAPTURE"
+          ]
+        },
+        "error_status": {
+          "enum": [
+            "NONE",
+            "STRUCTURED_ERROR",
+            "AMBIGUOUS_STRING_ERROR",
+            "TRANSPORT_ERROR",
+            "TRUNCATED_OUTPUT"
+          ]
+        },
+        "ordered_segment_spans": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/segment"
+          }
+        },
+        "expected_source_relation": {
+          "enum": [
+            "ENTAILS",
+            "CONTRADICTS",
+            "EXPLICITLY_UNCERTAIN",
+            "NO_RELATION",
+            "MIXED",
+            "TOOL_ERROR",
+            "INSUFFICIENT_CONTEXT"
+          ]
+        },
+        "expected_support_spans": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/supportSpan"
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "expected_source_relation": {
+                "const": "ENTAILS"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "expected_support_spans": {
+                "minItems": 1,
+                "contains": {
+                  "properties": {
+                    "role": {
+                      "const": "SUPPORTS"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "expected_source_relation": {
+                "const": "CONTRADICTS"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "expected_support_spans": {
+                "minItems": 1,
+                "contains": {
+                  "properties": {
+                    "role": {
+                      "const": "CONTRADICTS"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "expected_source_relation": {
+                "const": "EXPLICITLY_UNCERTAIN"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "expected_support_spans": {
+                "minItems": 1,
+                "contains": {
+                  "properties": {
+                    "role": {
+                      "const": "UNCERTAINTY"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "expected_source_relation": {
+                "const": "MIXED"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "expected_support_spans": {
+                "minItems": 2,
+                "allOf": [
+                  {
+                    "contains": {
+                      "properties": {
+                        "role": {
+                          "const": "SUPPORTS"
+                        }
+                      }
+                    }
+                  },
+                  {
+                    "contains": {
+                      "properties": {
+                        "role": {
+                          "enum": [
+                            "CONTRADICTS",
+                            "UNCERTAINTY"
+                          ]
+                        }
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "expected_source_relation": {
+                "enum": [
+                  "NO_RELATION",
+                  "INSUFFICIENT_CONTEXT",
+                  "TOOL_ERROR"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "expected_support_spans": {
+                "maxItems": 0
+              }
+            }
+          }
+        }
+      ]
+    },
+    "segment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "segment_index",
+        "excerpt_normalized_start",
+        "excerpt_normalized_end",
+        "output_normalized_start",
+        "output_normalized_end",
+        "output_raw_start",
+        "output_raw_end",
+        "normalized_segment_sha256",
+        "raw_segment_sha256"
+      ],
+      "properties": {
+        "segment_index": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "excerpt_normalized_start": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "excerpt_normalized_end": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "output_normalized_start": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "output_normalized_end": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "output_raw_start": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "output_raw_end": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "normalized_segment_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "raw_segment_sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    },
+    "supportSpan": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "start",
+        "end",
+        "role"
+      ],
+      "properties": {
+        "start": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "end": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "role": {
+          "enum": [
+            "SUPPORTS",
+            "CONTRADICTS",
+            "UNCERTAINTY"
+          ]
+        }
+      }
+    },
+    "adjudication": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "adjudicator",
+        "note"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "AGREED",
+            "ADJUDICATED",
+            "UNRESOLVED"
+          ]
+        },
+        "adjudicator": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "note": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "AGREED"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "adjudicator": {
+                "type": "null"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "ADJUDICATED"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "adjudicator": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}
