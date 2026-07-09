@@ -170,11 +170,33 @@ def test_empty_snapshot_marks_unknown_and_suppresses_rec(monkeypatch, tmp_path):
     now = datetime(2026, 5, 13, 20, 30, tzinfo=UTC)
     _configure(monkeypatch, tmp_path, [])  # empty records
 
+    def _no_codexbar(provider: str) -> dict:
+        return {
+            "lane": provider,
+            "primary_used_pct": None,
+            "weekly_used_pct": None,
+            "monthly_cap_usd": None,
+            "monthly_used_usd": None,
+            "weekly_resets_at": None,
+            "weekly_pace_delta_pct": None,
+            "will_last_to_reset": None,
+            "pace_summary": None,
+            "source": "codexbar",
+            "fetched_at": None,
+            "stale": False,
+            "age_s": None,
+            "status": "unknown",
+        }
+
+    monkeypatch.setattr(state_router, "get_provider_usage_data", _no_codexbar)
+
     data = state_router.compute_routing_budget(now)
 
     assert data["diagnostics"]["records_loaded"] == 0
     assert data["recommendation"]["primary_agent_for_code"] is None
-    assert "empty" in (data["recommendation"].get("rationale") or "").lower() or any("empty" in w for w in data["recommendation"].get("warnings", []))
+    assert "empty" in (data["recommendation"].get("rationale") or "").lower() or any(
+        "empty" in w for w in data["recommendation"].get("warnings", [])
+    )
     for lane in ("claude", "codex", "gemini"):
         st = data["agents"][lane].get("status") or data["agents"][lane].get("interactive", {}).get("status")
         assert st == "unknown", f"{lane} should be unknown on empty"
@@ -190,6 +212,26 @@ def test_stale_snapshot_downgrades_to_advisory_no_hard(monkeypatch, tmp_path):
     old = now - timedelta(minutes=20)
     recs = [_record("codex (gpt-5.5)", 100.0, old)]
     _configure(monkeypatch, tmp_path, recs)
+
+    def _no_codexbar(provider: str) -> dict:
+        return {
+            "lane": provider,
+            "primary_used_pct": None,
+            "weekly_used_pct": None,
+            "monthly_cap_usd": None,
+            "monthly_used_usd": None,
+            "weekly_resets_at": None,
+            "weekly_pace_delta_pct": None,
+            "will_last_to_reset": None,
+            "pace_summary": None,
+            "source": "codexbar",
+            "fetched_at": None,
+            "stale": False,
+            "age_s": None,
+            "status": "unknown",
+        }
+
+    monkeypatch.setattr(state_router, "get_provider_usage_data", _no_codexbar)
 
     data = state_router.compute_routing_budget(now)
 
@@ -231,3 +273,52 @@ def test_resets_at_and_reset_aware_present(monkeypatch, tmp_path):
     assert data["diagnostics"].get("reset_imminent_hours") == 6
     # ranked carries it
     assert any("resets_at" in r for r in data.get("ranked_by_headroom", []))
+
+
+def test_fresh_codexbar_overlay_omits_ledger_stale_warning(monkeypatch, tmp_path):
+    """Fresh codexbar overlay must not leave ledger-stale warnings when diagnostics.stale=false."""
+    now = datetime(2026, 5, 13, 20, 30, tzinfo=UTC)
+    old = now - timedelta(minutes=20)
+    recs = [_record("codex (gpt-5.5)", 100.0, old)]
+    _configure(monkeypatch, tmp_path, recs)
+
+    def _fresh_codexbar(provider: str) -> dict:
+        if provider == "codex":
+            return {
+                "lane": "codex",
+                "primary_used_pct": 5.0,
+                "weekly_used_pct": 20.0,
+                "monthly_cap_usd": None,
+                "monthly_used_usd": None,
+                "weekly_resets_at": "2026-07-12T19:26:49Z",
+                "weekly_pace_delta_pct": -30.0,
+                "will_last_to_reset": True,
+                "pace_summary": "30% in reserve",
+                "source": "codexbar",
+                "fetched_at": "2026-07-09T14:13:52Z",
+                "stale": False,
+                "age_s": 10.0,
+            }
+        return {
+            "lane": provider,
+            "primary_used_pct": None,
+            "weekly_used_pct": None,
+            "monthly_cap_usd": None,
+            "monthly_used_usd": None,
+            "weekly_resets_at": None,
+            "weekly_pace_delta_pct": None,
+            "will_last_to_reset": None,
+            "pace_summary": None,
+            "source": "codexbar",
+            "fetched_at": None,
+            "stale": False,
+            "age_s": None,
+            "status": "unknown",
+        }
+
+    monkeypatch.setattr(state_router, "get_provider_usage_data", _fresh_codexbar)
+
+    data = state_router.compute_routing_budget(now)
+
+    assert data["diagnostics"]["stale"] is False
+    assert not any(">15min" in w or "stale" in w.lower() for w in data["recommendation"]["warnings"])

@@ -199,9 +199,11 @@ def test_deficit_signal_states():
     # Simulate routing budget calculation state mapping
     def get_status(cb_data):
         weekly_used = cb_data["weekly_used_pct"]
-        is_in_deficit = (cb_data.get("will_last_to_reset") is False) or \
-                        (cb_data.get("weekly_pace_delta_pct") is not None and cb_data["weekly_pace_delta_pct"] > 0) or \
-                        (weekly_used >= 90.0)
+        is_in_deficit = (
+            (cb_data.get("will_last_to_reset") is False)
+            or (cb_data.get("weekly_pace_delta_pct") is not None and cb_data["weekly_pace_delta_pct"] > 0)
+            or (weekly_used >= 90.0)
+        )
         if weekly_used >= 90.0:
             return "near_cap"
         elif is_in_deficit:
@@ -257,7 +259,7 @@ def test_routing_budget_surfaces_deficit_warnings(monkeypatch):
             "fetched_at": "2026-07-09T14:13:52Z",
             "stale": False,
             "age_s": 10.0,
-        }
+        },
     }
 
     def mock_usage(provider):
@@ -292,3 +294,28 @@ def test_routing_budget_surfaces_deficit_warnings(monkeypatch):
 
     # Check that deficit warning was generated for claude
     assert any("lane claude is in deficit" in w for w in res["recommendation"]["warnings"])
+
+
+def test_monthly_window_only_does_not_mislabel_weekly_used_pct():
+    """Monthly-only limit windows must not populate weekly_used_pct via first-over-300 fallback."""
+    payload = {
+        "usage": {
+            "primary": {
+                "windowMinutes": 300,
+                "usedPercent": 10,
+                "resetsAt": "2026-07-09T16:09:59Z",
+            },
+            "tertiary": {
+                "windowMinutes": 43200,
+                "usedPercent": 75,
+                "resetsAt": "2026-08-08T06:59:59Z",
+            },
+        },
+        "openaiDashboard": {},
+    }
+
+    res = _normalize_provider_data("codex", payload)
+
+    assert res["primary_used_pct"] == 10.0
+    assert res["weekly_used_pct"] != 75.0
+    assert res["weekly_used_pct"] == 10.0
