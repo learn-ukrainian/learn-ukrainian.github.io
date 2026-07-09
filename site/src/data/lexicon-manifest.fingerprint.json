@@ -1,5 +1,5 @@
 {
-  "fingerprint": "22ce0d049ba2edb71201831eaff3bc5076d681cc71ca4551e9c320c77b8495f4",
+  "fingerprint": "c424dc955e0aed545a3c89665465766b014dff6cc13f71d9240fb9a4f87a4551",
   "inputs": {
     "lexicon_code": [
       {
@@ -57,6 +57,10 @@
       {
         "path": "scripts/lexicon/export_open_dataset.py",
         "sha256": "0ceb0d6373e301c92611c239bb8bcd616f71af8ebb938d0e48b2b85346e6d065"
+      },
+      {
+        "path": "scripts/lexicon/extract_book_headword_inventory.py",
+        "sha256": "1cfb88507ea8792d81b7ab539110cf014317ca4c5197dc15102fe32eb8a1de1d"
       },
       {
         "path": "scripts/lexicon/fill_from_content.py",
@@ -123,6 +127,6 @@
   "schema_version": 1,
   "scope": "lexicon code only; excludes module vocabulary and dictionary DB/cache state",
   "stats": {
-    "lexicon_code_files": 29
+    "lexicon_code_files": 30
   }
 }
