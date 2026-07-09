@@ -95,11 +95,11 @@ check_pair \
     ".claude" \
     $ORPHAN_PATHS_CLAUDE \
     $CLAUDE_RULE_AUTOLOAD_EXCLUDE_PATHS || drift=1
+# .agent/ is preserve-by-default (#4741): skip orphan/delete for runtime state
+# (handoffs, briefs, canaries, tmp/ etc.), but still verify any source-managed
+# overlay from agents_extensions/shared into .agent/.
 # shellcheck disable=SC2086
-check_pair \
-    "agents_extensions/shared" \
-    ".agent" \
-    $ORPHAN_PATHS_AGENT || drift=1
+check_overlay "agents_extensions/shared" ".agent" || drift=1
 # shellcheck disable=SC2086
 check_pair \
     "agents_extensions/shared" \

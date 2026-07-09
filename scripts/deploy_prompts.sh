@@ -9,17 +9,14 @@
 # source extensions/ dirs. rsync --delete would wipe them on every
 # deploy, so we exclude them explicitly.
 #
-# Known orphan today:
-#   .gemini/docs/{LINGUISTICS,TOOLS,WORKFLOW}.md — context files that
-#   GEMINI.md tells Gemini to always read. They're tracked in git under
-#   .gemini/docs/ and restored via `fix(bridge): restore .gemini/docs/
-#   context files (#1127)`. They are NOT in gemini_extensions/ because
-#   moving them would require a git mv + consumer path updates that
-#   we haven't done yet.
+# .agent/ is special (preserve-by-default since #4741): runtime scratch
+# written by agents (handoffs, dispatch-briefs, canaries, tmp/, etc.)
+# must never be deleted by deploy. We rsync WITHOUT --delete for .agent/
+# so the preflight orphan check and ORPHAN_PATHS_AGENT no longer apply to it.
+# Source content (if any) from agents_extensions/shared is overlaid.
 #
-# If you add another destination-only path, add it to ORPHAN_PATHS_<TARGET>
-# in scripts/deploy_orphan_paths.sh. The preflight assertion in step 0 will
-# warn you if a new orphan appears without being declared.
+# For other targets, if you add a destination-only path, add it to
+# ORPHAN_PATHS_<TARGET> in scripts/deploy_orphan_paths.sh.
 set -euo pipefail
 
 PROJECT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -88,7 +85,9 @@ check_orphans() {
 echo "=== Preflight (orphan-path guard) ==="
 orphan_fail=false
 check_orphans "$SHARED_EXTENSIONS" ".claude" "$ORPHAN_PATHS_CLAUDE" "$SHARED_EXTENSIONS → .claude" || orphan_fail=true
-check_orphans "$SHARED_EXTENSIONS" ".agent" "$ORPHAN_PATHS_AGENT" "$SHARED_EXTENSIONS → .agent" || orphan_fail=true
+# .agent/ is preserve-by-default (runtime state written by agents/lanes).
+# No orphan check or --delete here — see #4741. Shared source (if any)
+# is overlaid; everything else in .agent/ is left alone.
 check_orphans "$SHARED_EXTENSIONS/skills" ".agents/skills" "$ORPHAN_PATHS_AGENTS" "$SHARED_EXTENSIONS/skills → .agents/skills" || orphan_fail=true
 check_orphans "$SHARED_EXTENSIONS" ".codex" "$ORPHAN_PATHS_CODEX $CODEX_OVERLAY_PATHS" "$SHARED_EXTENSIONS → .codex" || orphan_fail=true
 check_orphans "gemini_extensions" ".gemini" "$ORPHAN_PATHS_GEMINI" "gemini_extensions → .gemini" || orphan_fail=true
@@ -188,7 +187,8 @@ diff_dirs \
     ".claude" \
     "$SHARED_EXTENSIONS → .claude" \
     "$ORPHAN_PATHS_CLAUDE $CLAUDE_RULE_AUTOLOAD_EXCLUDE_PATHS"
-diff_dirs "$SHARED_EXTENSIONS" ".agent" "$SHARED_EXTENSIONS → .agent" "$ORPHAN_PATHS_AGENT"
+# .agent/ diff is best-effort (no declared orphans, preserve-by-default)
+diff_dirs "$SHARED_EXTENSIONS" ".agent" "$SHARED_EXTENSIONS → .agent" ""
 diff_dirs "$SHARED_EXTENSIONS/skills" ".agents/skills" "$SHARED_EXTENSIONS/skills → .agents/skills" "$ORPHAN_PATHS_AGENTS"
 diff_dirs "$SHARED_EXTENSIONS" ".codex" "$SHARED_EXTENSIONS → .codex" "$ORPHAN_PATHS_CODEX $CODEX_OVERLAY_PATHS"
 if [[ -d "$CODEX_EXTENSIONS" ]]; then
@@ -212,8 +212,10 @@ fi
 echo "=== Syncing ==="
 # shellcheck disable=SC2046  # intentional word-splitting of build_excludes output
 rsync -av --delete $(build_excludes "$ORPHAN_PATHS_CLAUDE $CLAUDE_RULE_AUTOLOAD_EXCLUDE_PATHS") "$SHARED_EXTENSIONS/" .claude/
-# shellcheck disable=SC2046
-rsync -av --delete $(build_excludes "$ORPHAN_PATHS_AGENT") "$SHARED_EXTENSIONS/" .agent/
+# .agent/ uses plain rsync (no --delete) — runtime scratch is preserve-by-default.
+# Source files from agents_extensions/shared are overlaid if present; agent-written
+# files (dispatch briefs, canaries, handoffs, tmp/, etc.) are never deleted. #4741
+rsync -av "$SHARED_EXTENSIONS/" .agent/
 # shellcheck disable=SC2046
 rsync -av --delete $(build_excludes "$ORPHAN_PATHS_CODEX $CODEX_OVERLAY_PATHS") "$SHARED_EXTENSIONS/" .codex/
 if [[ -d "$CODEX_EXTENSIONS" ]]; then
