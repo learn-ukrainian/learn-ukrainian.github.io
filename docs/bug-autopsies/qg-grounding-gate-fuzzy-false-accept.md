@@ -12,7 +12,10 @@ fact — at the DEFAULT threshold, e.g. real output «Сковорода нар�
 skeptical read. It took **5 cross-family review rounds** (codex reviewing agy's builds) + 2 fleet design
 panels to harden.
 
-## Why (root causes, one per round)
+## Root cause
+
+Four interacting bugs, one surfaced per review round:
+
 1. **Fuzzy char-similarity + `any()` content guard.** Acceptance was `SequenceMatcher(excerpt, window).ratio()
    ≥ τ` plus `any(content_token in matched_span)`. A near-copy is ~95% similar (only the year differs), and
    the shared proper noun satisfied `any(...)` while the swapped digit «1900» (absent — real span has «1722»)
@@ -42,7 +45,10 @@ anchors). Semantic correctness (verb/claim, entity attribution) is explicitly La
 MUST entail against the RAW tool output, never the excerpt. VESUM lemma tightening is an OPTIONAL follow-up,
 never part of the fail-closed guarantee.
 
-## Prevention (the transferable lessons)
+## Prevention
+
+The transferable lessons:
+
 1. **A fail-closed gate's adversarial tests must run at the DEFAULT threshold.** A stricter override in a
    test that hides the shipped behavior is worse than no test — it manufactures false confidence.
 2. **Fuzzy string similarity cannot ground factual tokens.** Require positional/structural alignment
