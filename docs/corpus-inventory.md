@@ -4,7 +4,7 @@
 > verify_quote, RAG grounding, or deciding whether to scrape something new). Sessions
 > kept re-discovering the corpus from scratch — this doc is the durable, current answer.
 >
-> **Last refreshed: 2026-06-15** (by querying `data/sources.db` directly — see
+> **Last refreshed: 2026-07-10** (by querying `data/sources.db` directly — see
 > [§ Refreshing this doc](#refreshing-this-doc)). When the corpus grows, update this file
 > AND `docs/best-practices/v7-design-and-corpus.md` §2 (the #M-11 SSOT cross-links here).
 
@@ -15,8 +15,8 @@
 - The live store is **`data/sources.db`** — a **1.6 GB SQLite + FTS5** database. The MCP
   `sources` server (port 8766) reads it; every `mcp__sources__*` tool, `verify_quote`,
   `search_literary`, etc. hit this file.
-- It holds **~137.7K literary chunks + 25.7K textbook chunks + ~1M dictionary rows +
-  22.4K wiki + Wikipedia** across ~25 content/dictionary tables.
+- It holds **~137.7K literary chunks + 50.9K textbook chunks + ~1M dictionary rows +
+  22.4K wiki + Wikipedia** across ~27 content/dictionary tables.
 - It is **BUILT from a Google Drive mount**, not local `data/`. That split is the #1
   gotcha — see [§ Architecture](#architecture).
 - **What we have a LOT of:** chronicles (litopys/izbornyk), Грушевський, encyclopedias,
@@ -67,14 +67,16 @@ Used 2026-06-15 to land the expanded folk corpus (#3193) without a `--force`:
 
 ---
 
-## Table inventory (`data/sources.db`, 2026-06-15)
+## Table inventory (`data/sources.db`, 2026-07-10)
 
 ### Content corpora
 | Table | Rows | MCP tool | What it is |
 |---|---:|---|---|
 | `literary_texts` / `literary_fts` | **137,723** | `search_literary` | Primary sources: chronicles, encyclopedias, authored literature, scholarly works, **folk primaries (35)**. See [breakdown](#literary_texts-breakdown). |
-| `textbooks` / `textbooks_fts` | **25,714** | `search_text` | School textbooks, grades 1–11 (Заболотний, Авраменко, Большакова, Вашуленко…). |
+| `textbooks` / `textbooks_fts` | **50,933** (168 `source_file`s) | `search_text` | School textbooks, grades 1–11 (Заболотний, Авраменко, Большакова, Вашуленко…), plus **8 private ULP/Ohoiko refs** — see [§ Private reference sources](#private-reference-sources-textbooks). |
 | `textbook_sections` | 7,250 | (internal) | Section hierarchy for textbook chunks. |
+| `zno_documents` | **33** | (direct SQL) | ZNO/NMT booklet metadata (2010–2025, Ukrainian language). Ingest: `scripts/ingest/zno_ingest.py`. |
+| `zno_tasks` / `zno_tasks_fts` | **366** | (direct SQL) | Parsed ZNO tasks from zno.osvita.ua; FTS on `stem`, `options_json`, `topic_tag`. **2019–2021** task coverage: 116 / 116 / 134. Consumer: #4506 paronym/stress worksheets. |
 | `ukrainian_wiki` / `_fts` | 22,385 | `search_sources` | Our OWN compiled wiki pedagogy (`wiki/**`), keyed by article slug + track. |
 | `external_articles` / `external_fts` | 1,205 | `search_external` | Curated external articles + YouTube/blog transcripts (register/decolonization tagged). |
 | `wikipedia` / `_fts` | 1,026 | `query_wikipedia` | Cached Ukrainian Wikipedia articles (+ `wikipedia_negative_cache` 243). |
@@ -96,6 +98,19 @@ Used 2026-06-15 to land the expanded folk corpus (#3193) without a `--force`:
 | `style_guide` | 342 | `search_style_guide` | Антоненко-Давидович structured entries (Russianism/calque authority). |
 | `grinchenko`/`goroh_etymology` | 41 | — | Горох etymology stubs (small). |
 | `paronyms_cache` | 6 | — | Paronym pair cache. |
+
+### Private reference sources (`textbooks`)
+
+Eight ingested sources live in the `textbooks` table but are **not** redistributable
+school textbooks. Source `.txt` files are gitignored under `docs/references/private/`;
+they are local-only references for RAG grounding and must **never** be quoted verbatim
+in pipeline outputs.
+
+| `source_file` | `author` | Chunks | What it is |
+|---|---|---:|---|
+| `ulp-1-00-lesson-notes` … `ulp-6-00-lesson-notes` | Ukrainian Lessons Podcast | 40 each (240 total) | ULP Seasons 1–6 lesson-note books. Ingest: `scripts/ingest/ulp_lesson_notes_ingest.py`. |
+| `anna-ohoiko-1000-words-2nd-ed` | Anna Ohoiko | 1,000 | «1000 Most Useful Ukrainian Words» (2nd ed.). Ingest: `scripts/ingest/ohoiko_books_ingest.py`. |
+| `anna-ohoiko-500-verbs` | Anna Ohoiko | 500 | «500+ Ukrainian Verbs». Ingest: `scripts/ingest/ohoiko_verbs_ingest.py`. |
 
 > Also available separately (not in `sources.db`): **VESUM** morphological dict at `data/vesum.db`
 > (409K lemmas / 6.7M forms) via `verify_word`/`verify_words`/`verify_lemma`; **stress dict** (2.7M
