@@ -2,6 +2,8 @@
 
 {LESSON_CONTRACT}
 
+Shared module contract path: `scripts/build/contracts/module-contract.md`.
+
 # Phase 4 Linear Writer Prompt
 
 Write the A1 module using the plan and contract below. Produce exactly four

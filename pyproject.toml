@@ -63,9 +63,9 @@ exclude = [
     "starlight/",
     "node_modules/",
 ]
-# Gradual adoption: target active v6 entry points and shared runtime modules.
+# Gradual adoption: target active build entry points and shared runtime modules.
 files = [
-    "scripts/build/v6_build.py",
+    "scripts/build/v7_build.py",
     "scripts/build/dispatch.py",
     "scripts/build/enrich.py",
     "scripts/build/activity_repair.py",

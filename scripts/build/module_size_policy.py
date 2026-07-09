@@ -118,10 +118,44 @@ def size_policy_allows_auto_expansion(record: audit.SizePolicyRecord) -> bool:
     return record.status not in {PLAN_REVIEW_NEEDED, MISSING_DOSSIER}
 
 
+def size_policy_padding_diagnostic(record: audit.SizePolicyRecord) -> dict[str, Any]:
+    """Return the advisory density-vs-padding review signal for diagnostics."""
+    diagnostic: dict[str, Any] = {
+        "status": "not_evaluated",
+        "review_action": "no_count_available",
+        "over_advisory_ceiling_words": 0,
+    }
+    if record.actual_words is None:
+        return diagnostic
+
+    if record.actual_words < (record.plan_floor or 0):
+        diagnostic["status"] = "below_plan_floor"
+        diagnostic["review_action"] = "do_not_pad; check whether plan floor exceeds sourced evidence"
+        return diagnostic
+
+    if record.advisory_ceiling is None:
+        diagnostic["status"] = "no_advisory_ceiling"
+        diagnostic["review_action"] = "exceptional_or_floor_only; require explicit source-backed justification for very long modules"
+        return diagnostic
+
+    over_by = max(0, record.actual_words - record.advisory_ceiling)
+    diagnostic["over_advisory_ceiling_words"] = over_by
+    if over_by:
+        diagnostic["status"] = "over_advisory_ceiling"
+        diagnostic["review_action"] = (
+            "advisory_review_only; distinguish source-backed density from filler/padding"
+        )
+    else:
+        diagnostic["status"] = "within_advisory_ceiling"
+        diagnostic["review_action"] = "no_size_padding_signal; review pedagogy and source use normally"
+    return diagnostic
+
+
 def size_policy_summary(record: audit.SizePolicyRecord) -> dict[str, Any]:
     """Return a stable small summary suitable for JSON/YAML diagnostics."""
     data = _record_to_dict(record)
     data["auto_expand_allowed"] = size_policy_allows_auto_expansion(record)
+    data["padding_diagnostic"] = size_policy_padding_diagnostic(record)
     if record.status == PLAN_REVIEW_NEEDED:
         data["expansion_permission"] = "plan_policy_review_required"
     elif record.status == MISSING_DOSSIER:
@@ -159,5 +193,24 @@ def render_writer_size_policy(record: audit.SizePolicyRecord) -> str:
             "- Rule: do not add repeated framing, generic exposition, uncited interpretation, or filler to chase old fixed multipliers.",
             "Notes:",
             note_lines,
+        ]
+    )
+
+
+def render_reviewer_size_policy(record: audit.SizePolicyRecord) -> str:
+    """Render the effective size policy for LLM reviewer prompts."""
+    summary = size_policy_summary(record)
+    padding = summary["padding_diagnostic"]
+    base = render_writer_size_policy(record)
+    return "\n".join(
+        [
+            base,
+            "- Reviewer rule: do not fail or pass a module on word count alone; deterministic gates handled the floor.",
+            "- Reviewer rule: if the padding diagnostic is `over_advisory_ceiling`, inspect whether the extra length is source-backed density, necessary pedagogy, or filler/padding.",
+            "- Reviewer rule: source-backed density is acceptable evidence; repeated framing, generic exposition, uncited interpretation, and inflated transitions are padding evidence.",
+            "Padding diagnostic:",
+            f"- Status: {padding['status']}",
+            f"- Over advisory ceiling words: {padding['over_advisory_ceiling_words']}",
+            f"- Review action: {padding['review_action']}",
         ]
     )

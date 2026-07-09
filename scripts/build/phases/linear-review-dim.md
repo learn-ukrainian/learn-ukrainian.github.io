@@ -7,6 +7,8 @@ JSON object.
 
 {LESSON_CONTRACT}
 
+Shared module contract path: `scripts/build/contracts/module-contract.md`.
+
 # Phase 4 Linear Per-Dimension Reviewer Prompt
 
 Review only the assigned dimension. Cite concrete evidence from the generated
@@ -483,6 +485,16 @@ them to know what to fix on retry.
 - Module: {MODULE_NUM}
 - Slug: {MODULE_SLUG}
 - Word target: {WORD_TARGET}
+
+## Module Size Policy — dossier/evidence-led advisory context (#4801)
+
+{SIZE_POLICY}
+
+Use this as review context, not as a mechanical word-count gate. If the module
+is over the advisory ceiling, decide whether the extra length is source-backed
+density and necessary pedagogy, or filler/padding. Source-backed density is not
+a defect; repeated framing, generic exposition, uncited interpretation, and
+inflated transitions are defects when they affect `{DIM}`.
 
 ## Immersion Rule
 
