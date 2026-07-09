@@ -32,7 +32,6 @@ from pathlib import Path
 
 from ..result import ParseResult
 from ..routes import (
-    DEEPSEEK_FIRST_PARTY_FORBIDDEN_MARKER,
     deepseek_first_party_error,
     is_deepseek_first_party_forbidden_in_ci,
 )
