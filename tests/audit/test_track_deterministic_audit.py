@@ -56,7 +56,6 @@ def patch_roots(monkeypatch, root: Path) -> None:
     monkeypatch.setattr(audit, "CURRICULUM_ROOT", root / "curriculum" / "l2-uk-en")
     monkeypatch.setattr(audit, "SITE_DOCS_ROOT", root / "site" / "src" / "content" / "docs")
     monkeypatch.setattr(audit, "SITE_READINGS_ROOT", root / "site" / "src" / "content" / "readings")
-    monkeypatch.setattr(audit, "WIKI_GRAMMAR_ROOT", root / "wiki" / "grammar")
     monkeypatch.setattr(
         audit,
         "get_modules_for_level",
@@ -181,11 +180,29 @@ def test_module_paths_wiki_resolution() -> None:
     assert "wiki/grammar/b1/aspect.md" in b1_paths.wiki.as_posix()
     assert "wiki/grammar/b1/aspect.sources.yaml" in b1_paths.wiki_sources.as_posix()
 
-    # 3. Unmapped track should fall back to grammar/track
+    # 3. Seminar tracks should use the compiler's track-aware write domains
+    bio_module = DummyModule("oleksandr-bilash", "Oleksandr Bilash", "bio", 1)
+    bio_paths = audit.module_paths("bio", bio_module)
+    assert "wiki/figures/oleksandr-bilash.md" in bio_paths.wiki.as_posix()
+    assert "wiki/figures/oleksandr-bilash.sources.yaml" in bio_paths.wiki_sources.as_posix()
+    assert "wiki/grammar/bio" not in bio_paths.wiki.as_posix()
+    assert "wiki/grammar/bio" not in bio_paths.wiki_sources.as_posix()
+
+    hist_module = DummyModule("kyivan-rus", "Kyivan Rus", "hist", 1)
+    hist_paths = audit.module_paths("hist", hist_module)
+    assert "wiki/periods/kyivan-rus.md" in hist_paths.wiki.as_posix()
+    assert "wiki/periods/kyivan-rus.sources.yaml" in hist_paths.wiki_sources.as_posix()
+
+    folk_module = DummyModule("koliadky-shchedrivky", "Koliadky", "folk", 1)
+    folk_paths = audit.module_paths("folk", folk_module)
+    assert "wiki/folk/ritual/koliadky-shchedrivky.md" in folk_paths.wiki.as_posix()
+    assert "wiki/folk/ritual/koliadky-shchedrivky.sources.yaml" in folk_paths.wiki_sources.as_posix()
+
+    # 4. Unknown tracks preserve the compiler fallback domain.
     unmapped_module = DummyModule("topic", "Topic", "unknown-track", 1)
     unmapped_paths = audit.module_paths("unknown-track", unmapped_module)
-    assert "wiki/grammar/unknown-track/topic.md" in unmapped_paths.wiki.as_posix()
-    assert "wiki/grammar/unknown-track/topic.sources.yaml" in unmapped_paths.wiki_sources.as_posix()
+    assert "wiki/unknown-track/topic.md" in unmapped_paths.wiki.as_posix()
+    assert "wiki/unknown-track/topic.sources.yaml" in unmapped_paths.wiki_sources.as_posix()
 
 
 def test_a1_config_requires_wiki_like_b2() -> None:

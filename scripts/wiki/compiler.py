@@ -53,12 +53,8 @@ GEMINI_CLI = shutil.which("gemini") or "gemini"
 _PARENT_ENV = os.environ.copy()
 _PARENT_ENV["GEMINI_SESSION"] = "1"
 WIKI_META_RE = re.compile(r"<!--\s*wiki-meta\b(?P<body>.*?)-->", re.DOTALL)
-DOSSIER_CHUNK_ID_RE = re.compile(
-    r"(?<![0-9A-Za-z_-])(?P<chunk_id>[0-9A-Za-z][0-9A-Za-z_-]*_c\d{4,})(?![0-9A-Za-z_-])"
-)
-_MCP_WARNING_PREFIX_RE = re.compile(
-    r"^MCP issues detected\. Run /mcp list for status\."
-)
+DOSSIER_CHUNK_ID_RE = re.compile(r"(?<![0-9A-Za-z_-])(?P<chunk_id>[0-9A-Za-z][0-9A-Za-z_-]*_c\d{4,})(?![0-9A-Za-z_-])")
+_MCP_WARNING_PREFIX_RE = re.compile(r"^MCP issues detected\. Run /mcp list for status\.")
 WRITER_CHOICES = ("agy", "gemini", "claude", "gpt-5.5")
 
 
@@ -143,16 +139,8 @@ def compile_article(
     # Call writer
     print(f"  🤖 Compiling {article_key} ({len(sources)} sources)...")
     call_result = _call_writer(prompt, writer=writer)
-    response = (
-        call_result.response_text
-        if isinstance(call_result, CallResult)
-        else call_result
-    )
-    model_used = (
-        call_result.model_used
-        if isinstance(call_result, CallResult)
-        else None
-    )
+    response = call_result.response_text if isinstance(call_result, CallResult) else call_result
+    model_used = call_result.model_used if isinstance(call_result, CallResult) else None
     if not response:
         print(f"  ❌ {writer} returned empty response for {article_key}")
         return None
@@ -205,10 +193,16 @@ def compile_article(
     return article_path
 
 
-def _build_prompt(*, topic: str, slug: str, domain: str,
-                  sources: list[dict], track: str = "",
-                  generated_by_model: str = "unknown",
-                  dossier_text: str | None = None) -> str:
+def _build_prompt(
+    *,
+    topic: str,
+    slug: str,
+    domain: str,
+    sources: list[dict],
+    track: str = "",
+    generated_by_model: str = "unknown",
+    dossier_text: str | None = None,
+) -> str:
     """Build the Gemini prompt from template + source material.
 
     Uses track-specific prompt when available (A1 pedagogy, A2-B2 grammar,
@@ -233,6 +227,7 @@ def _build_prompt(*, topic: str, slug: str, domain: str,
 
     # Format current date
     from datetime import UTC, datetime
+
     date = datetime.now(UTC).strftime("%Y-%m-%d")
 
     # Build source ID list
@@ -255,12 +250,11 @@ def _build_prompt(*, topic: str, slug: str, domain: str,
         render_canonical_anchors_for_writer,
         render_citation_discipline_block,
     )
+
     citation_discipline = render_citation_discipline_block(len(sources))
     canonical_anchors = render_canonical_anchors_for_writer()
     dossier_section = _format_dossier_section(dossier_text)
-    prepend_dossier_section = bool(
-        dossier_section and "{dossier_section}" not in template
-    )
+    prepend_dossier_section = bool(dossier_section and "{dossier_section}" not in template)
 
     prompt = template
     prompt = prompt.replace("{topic}", topic)
@@ -329,13 +323,9 @@ def _seed_sources_from_dossier(sources: list[dict], dossier_text: str | None) ->
         return sources
 
     seen_chunk_ids = {
-        str(source.get("chunk_id") or "").strip()
-        for source in sources
-        if str(source.get("chunk_id") or "").strip()
+        str(source.get("chunk_id") or "").strip() for source in sources if str(source.get("chunk_id") or "").strip()
     }
-    missing_chunk_ids = [
-        chunk_id for chunk_id in cited_chunk_ids if chunk_id not in seen_chunk_ids
-    ]
+    missing_chunk_ids = [chunk_id for chunk_id in cited_chunk_ids if chunk_id not in seen_chunk_ids]
     if not missing_chunk_ids:
         return sources
 
@@ -567,10 +557,7 @@ def _fetchone_dict(
         return None
     if isinstance(row, sqlite3.Row):
         return dict(row)
-    return {
-        str(column[0]): value
-        for column, value in zip(cursor.description or (), row, strict=False)
-    }
+    return {str(column[0]): value for column, value in zip(cursor.description or (), row, strict=False)}
 
 
 def _normalize_generated_by_model(model_used: str | None) -> str:
@@ -585,7 +572,7 @@ def _strip_known_output_noise(article_text: str) -> tuple[str, set[str]]:
 
     for line in article_text.splitlines(keepends=True):
         line_body = line.rstrip("\r\n")
-        line_ending = line[len(line_body):]
+        line_ending = line[len(line_body) :]
         candidate = line_body.lstrip()
         match = _MCP_WARNING_PREFIX_RE.match(candidate)
         if not match:
@@ -593,7 +580,7 @@ def _strip_known_output_noise(article_text: str) -> tuple[str, set[str]]:
             continue
 
         stripped_labels.add("MCP-warning")
-        remainder = candidate[match.end():].lstrip()
+        remainder = candidate[match.end() :].lstrip()
         if remainder:
             cleaned.append(remainder + line_ending)
 
@@ -624,7 +611,7 @@ def _inject_generated_by_model(article_text: str, *, model_used: str | None) -> 
         updated.append(f"generated_by_model: {model}")
 
     rendered = "<!-- wiki-meta\n" + "\n".join(updated) + "\n-->"
-    return article_text[:match.start()] + rendered + article_text[match.end():]
+    return article_text[: match.start()] + rendered + article_text[match.end() :]
 
 
 def _format_sources(sources: list[dict]) -> str:
@@ -675,15 +662,11 @@ def _format_sources(sources: list[dict]) -> str:
         text = _clean_chunk_text(chunk)
         # Strip the textbook S-prefix so the internal chunk reference cannot
         # be mistaken for the [S1]..[SN] source citation format in prose.
-        display_ref = (
-            chunk_id.removeprefix("S")
-            if str(chunk.get("source_type")) == "textbook"
-            else chunk_id
-        )
+        display_ref = chunk_id.removeprefix("S") if str(chunk.get("source_type")) == "textbook" else chunk_id
 
-        parts.append(f"### Source {i}: {header}\n"
-                     f"(internal ref: `{display_ref}` — cite this source as `[S{i}]`)\n\n"
-                     f"{text}")
+        parts.append(
+            f"### Source {i}: {header}\n(internal ref: `{display_ref}` — cite this source as `[S{i}]`)\n\n{text}"
+        )
 
     return "\n\n---\n\n".join(parts)
 
@@ -706,11 +689,7 @@ def _dedup_sources_by_attribution(sources: list[dict]) -> list[dict]:
     for source in sources:
         corpus = str(source.get("corpus") or source.get("source_type") or "").strip()
         chunk_id = str(
-            source.get("chunk_id")
-            or source.get("title")
-            or source.get("parent_key")
-            or source.get("source_file")
-            or ""
+            source.get("chunk_id") or source.get("title") or source.get("parent_key") or source.get("source_file") or ""
         ).strip()
         attribution = resolve_chunk_attribution(chunk_id, corpus)
         file_name = normalize_source_filename(str(attribution.get("file", "")))
@@ -754,11 +733,7 @@ def _build_sources_registry(
         # that path.
         corpus = str(source.get("corpus") or source.get("source_type") or "").strip()
         chunk_id = str(
-            source.get("chunk_id")
-            or source.get("title")
-            or source.get("parent_key")
-            or source.get("source_file")
-            or ""
+            source.get("chunk_id") or source.get("title") or source.get("parent_key") or source.get("source_file") or ""
         ).strip()
         attribution = resolve_chunk_attribution(chunk_id, corpus)
         file_name = normalize_source_filename(str(attribution.get("file", "")))
@@ -771,11 +746,7 @@ def _build_sources_registry(
         return None
 
     registry_path = registry_path_for(article_path)
-    existing_registry = (
-        WikiSourcesRegistry(sources=[])
-        if force
-        else load_sources_registry(registry_path)
-    )
+    existing_registry = WikiSourcesRegistry(sources=[]) if force else load_sources_registry(registry_path)
     assigned_registry = assign_source_ids(
         [str(source["file"]) for source in attributed_sources],
         existing=existing_registry,
@@ -804,9 +775,7 @@ def _build_sources_registry(
     )
     cited_ids = set(extract_short_citation_ids(article_text))
     if cited_ids:
-        registry = WikiSourcesRegistry(
-            sources=[entry for entry in registry.sources if entry.id in cited_ids]
-        )
+        registry = WikiSourcesRegistry(sources=[entry for entry in registry.sources if entry.id in cited_ids])
 
     if not registry.sources:
         return None
@@ -921,17 +890,19 @@ def _clean_chunk_text(chunk: dict) -> str:
     lines = text.splitlines()
     while lines:
         head = lines[0].strip()
-        if head.startswith((
-            "External article:",
-            "External pedagogical article:",
-            "External pedagogical reference:",
-            "External video reference:",
-            "Wikipedia:",
-            "Source:",
-            "Channel:",
-            "URL:",
-            "Note:",
-        )):
+        if head.startswith(
+            (
+                "External article:",
+                "External pedagogical article:",
+                "External pedagogical reference:",
+                "External video reference:",
+                "Wikipedia:",
+                "Source:",
+                "Channel:",
+                "URL:",
+                "Note:",
+            )
+        ):
             lines.pop(0)
             continue
         break
@@ -1088,9 +1059,11 @@ def _call_writer(prompt: str, *, writer: str, max_retries: int = 3) -> CallResul
             sleep_fn=_visible_sleep,
         )
     if writer == "gpt-5.5":
+        # pinned workflow: flip to 5.6-terra only after post-reset spot-check (model-assignment.md)
         return call_codex_with_fallback(
             prompt,
             task_name="wiki compiler",
+            preferred_model="gpt-5.5",
             max_retries=max_retries,
             cwd=Path(__file__).resolve().parents[2],
             base_env=_PARENT_ENV,

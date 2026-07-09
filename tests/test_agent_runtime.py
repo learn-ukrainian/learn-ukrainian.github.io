@@ -15,6 +15,7 @@ Does NOT cover:
 
 Issue: #1184
 """
+
 from __future__ import annotations
 
 import logging
@@ -136,12 +137,14 @@ def _isolate_usage_log(tmp_path):
     with patch("agent_runtime.usage._usage_dir", return_value=tmp_path / "api_usage"):
         yield
 
+
 @pytest.fixture(autouse=True)
 def _clear_state():
     """Reset runtime in-process caches before every test."""
     _reset_rate_limit_cache_for_tests()
     # Clear adapter cache by reaching into runner module
     from agent_runtime import runner
+
     runner._ADAPTER_CACHE.clear()
     yield
     runner._ADAPTER_CACHE.clear()
@@ -167,6 +170,7 @@ def _stub_claude_cli_version_gate(monkeypatch, request):
 # ---------------------------------------------------------------------------
 # Registry + adapter loading
 # ---------------------------------------------------------------------------
+
 
 def test_registry_has_known_agents():
     assert set(AGENTS.keys()) == {
@@ -223,13 +227,11 @@ def test_codex_entry_has_bridge_only_resume_policy():
 def test_codex_desktop_entry_is_human_invoked():
     entry = get_agent_entry("codex-desktop")
     assert entry["adapter"] == "scripts.agent_runtime.adapters.codex:CodexAdapter"
-    assert entry["default_model"] == "gpt-5.5"
+    assert entry["default_model"] == "gpt-5.6-terra"
     assert entry["cost_tier"] == "high"
     assert entry["cli_available"] is False
     assert entry["resume_policy"] == "never"
-    assert {"frontend_design", "ui_review", "multimodal", "visual_inspection"} <= entry[
-        "capabilities"
-    ]
+    assert {"frontend_design", "ui_review", "multimodal", "visual_inspection"} <= entry["capabilities"]
 
 
 def test_claude_desktop_entry_is_human_invoked():
@@ -246,7 +248,7 @@ def test_claude_entry_has_bridge_only_resume_policy():
 def test_load_adapter_codex():
     adapter = _load_adapter("codex")
     assert adapter.name == "codex"
-    assert adapter.default_model == "gpt-5.5"
+    assert adapter.default_model == "gpt-5.6-terra"
     assert adapter.supported_modes == frozenset({"read-only", "workspace-write", "danger"})
 
 
@@ -298,7 +300,6 @@ def test_load_adapter_grok():
     assert adapter.default_model == "grok-4.3"
 
 
-
 def test_load_adapter_cached():
     first = _load_adapter("codex")
     second = _load_adapter("codex")
@@ -335,6 +336,7 @@ def test_resume_policy_bridge_only_rejects_delegate():
 # ---------------------------------------------------------------------------
 # CodexAdapter — flag building per mode
 # ---------------------------------------------------------------------------
+
 
 def test_codex_adapter_mode_flags_read_only():
     assert CodexAdapter._mode_flags("read-only") == ["-s", "read-only"]
@@ -501,11 +503,7 @@ def test_codex_adapter_mcp_tool_config_multiple(tmp_path):
             },
         },
     )
-    config_values = [
-        plan.cmd[index + 1]
-        for index, token in enumerate(plan.cmd[:-1])
-        if token == "-c"
-    ]
+    config_values = [plan.cmd[index + 1] for index, token in enumerate(plan.cmd[:-1]) if token == "-c"]
     assert 'mcp_servers.sources.url="http://127.0.0.1:8766/sse"' in config_values
     assert 'mcp_servers.other.url="http://127.0.0.1:9001/sse"' in config_values
     assert "mcp_servers.other.enabled=true" in config_values
@@ -537,11 +535,7 @@ def test_codex_adapter_disable_features_emits_flags(tmp_path):
     disable_idx = plan.cmd.index("--disable")
     assert plan.cmd[disable_idx + 1] == "shell_tool"
     # Both flags coexist with MCP override.
-    config_values = [
-        plan.cmd[index + 1]
-        for index, token in enumerate(plan.cmd[:-1])
-        if token == "-c"
-    ]
+    config_values = [plan.cmd[index + 1] for index, token in enumerate(plan.cmd[:-1]) if token == "-c"]
     assert 'mcp_servers.sources.url="http://127.0.0.1:8766/sse"' in config_values
 
 
@@ -559,11 +553,7 @@ def test_codex_adapter_disable_features_multiple(tmp_path):
             "disable_features": ["shell_tool", "browser_use"],
         },
     )
-    disable_pairs = [
-        plan.cmd[index + 1]
-        for index, token in enumerate(plan.cmd[:-1])
-        if token == "--disable"
-    ]
+    disable_pairs = [plan.cmd[index + 1] for index, token in enumerate(plan.cmd[:-1]) if token == "--disable"]
     assert disable_pairs == ["shell_tool", "browser_use"]
 
 
@@ -581,11 +571,7 @@ def test_codex_adapter_disable_features_ignores_non_string_entries(tmp_path):
             "disable_features": ["shell_tool", None, 0, "", "browser_use"],
         },
     )
-    disable_pairs = [
-        plan.cmd[index + 1]
-        for index, token in enumerate(plan.cmd[:-1])
-        if token == "--disable"
-    ]
+    disable_pairs = [plan.cmd[index + 1] for index, token in enumerate(plan.cmd[:-1]) if token == "--disable"]
     assert disable_pairs == ["shell_tool", "browser_use"]
 
 
@@ -606,11 +592,7 @@ def test_codex_adapter_ignores_unknown_tool_config_keys(tmp_path):
             "some_future_field": "value",
         },
     )
-    config_values = [
-        plan.cmd[index + 1]
-        for index, token in enumerate(plan.cmd[:-1])
-        if token == "-c"
-    ]
+    config_values = [plan.cmd[index + 1] for index, token in enumerate(plan.cmd[:-1]) if token == "-c"]
     assert 'mcp_servers.sources.url="http://127.0.0.1:8766/sse"' in config_values
     cmd_str = " ".join(plan.cmd)
     assert "some_future_field" not in cmd_str
@@ -630,10 +612,7 @@ def test_codex_adapter_ignores_max_budget_usd_tool_config(tmp_path, caplog):
         )
 
     assert "--max-budget-usd" not in plan.cmd
-    assert any(
-        "non-claude adapter codex ignoring max_budget_usd=0.5" in rec.message
-        for rec in caplog.records
-    )
+    assert any("non-claude adapter codex ignoring max_budget_usd=0.5" in rec.message for rec in caplog.records)
 
 
 def test_codex_adapter_omits_max_budget_usd_by_default(tmp_path):
@@ -654,6 +633,7 @@ def test_codex_adapter_omits_max_budget_usd_by_default(tmp_path):
 # ---------------------------------------------------------------------------
 # CodexAdapter — parse_response
 # ---------------------------------------------------------------------------
+
 
 def test_codex_parse_response_success(tmp_path):
     adapter = CodexAdapter()
@@ -771,11 +751,9 @@ def test_codex_liveness_paths_exclude_rollout_files(tmp_path, monkeypatch):
     monkeypatch.setenv("HOME", str(fake_home))
 
     from datetime import UTC, datetime
+
     today = datetime.now(UTC)
-    sessions_today = (
-        fake_home / ".codex" / "sessions"
-        / f"{today.year:04d}" / f"{today.month:02d}" / f"{today.day:02d}"
-    )
+    sessions_today = fake_home / ".codex" / "sessions" / f"{today.year:04d}" / f"{today.month:02d}" / f"{today.day:02d}"
     sessions_today.mkdir(parents=True)
 
     # Prior run's rollout file — must NOT appear in liveness paths
@@ -800,9 +778,7 @@ def test_codex_liveness_paths_exclude_rollout_files(tmp_path, monkeypatch):
     )
     # But the sessions directory itself MUST be there — its mtime
     # bumps when the new run creates its rollout file at startup.
-    assert sessions_today in paths, (
-        f"sessions/today dir missing from liveness paths: {paths}"
-    )
+    assert sessions_today in paths, f"sessions/today dir missing from liveness paths: {paths}"
 
 
 def test_codex_parse_response_signaled_exit_is_never_rate_limit(tmp_path):
@@ -846,15 +822,12 @@ def test_codex_parse_response_signaled_exit_is_never_rate_limit(tmp_path):
     # Signal-killed → can NEVER be classified as rate_limited,
     # regardless of what stderr contains.
     assert result.rate_limited is False, (
-        "signal-killed call must never be classified as rate_limited, "
-        f"stderr_excerpt={result.stderr_excerpt!r}"
+        f"signal-killed call must never be classified as rate_limited, stderr_excerpt={result.stderr_excerpt!r}"
     )
     assert result.ok is False
 
 
-def test_codex_check_early_reap_fires_when_task_complete_present(
-    tmp_path, monkeypatch
-):
+def test_codex_check_early_reap_fires_when_task_complete_present(tmp_path, monkeypatch):
     """Regression pin (2026-04-10): check_early_reap must return True
     as soon as a task_complete event appears in a NEW rollout file
     (one created after build_invocation). Without this, the runner
@@ -876,10 +849,7 @@ def test_codex_check_early_reap_fires_when_task_complete_present(
     monkeypatch.setenv("HOME", str(fake_home))
 
     today = datetime.now(UTC)
-    sessions_today = (
-        fake_home / ".codex" / "sessions"
-        / f"{today.year:04d}" / f"{today.month:02d}" / f"{today.day:02d}"
-    )
+    sessions_today = fake_home / ".codex" / "sessions" / f"{today.year:04d}" / f"{today.month:02d}" / f"{today.day:02d}"
     sessions_today.mkdir(parents=True)
 
     # build_invocation takes the snapshot of pre-existing rollouts.
@@ -901,22 +871,27 @@ def test_codex_check_early_reap_fires_when_task_complete_present(
     rollout.write_text(
         "\n".join(
             [
-                _json.dumps({
-                    "type": "event_msg",
-                    "payload": {
-                        "type": "user_message",
-                        "message": "x",
-                    },
-                }),
-                _json.dumps({
-                    "type": "event_msg",
-                    "payload": {
-                        "type": "task_complete",
-                        "last_agent_message": "Here is the full audit...",
-                    },
-                }),
+                _json.dumps(
+                    {
+                        "type": "event_msg",
+                        "payload": {
+                            "type": "user_message",
+                            "message": "x",
+                        },
+                    }
+                ),
+                _json.dumps(
+                    {
+                        "type": "event_msg",
+                        "payload": {
+                            "type": "task_complete",
+                            "last_agent_message": "Here is the full audit...",
+                        },
+                    }
+                ),
             ]
-        ) + "\n"
+        )
+        + "\n"
     )
 
     # call_start_time 10s in the past so the "has been running long
@@ -925,9 +900,7 @@ def test_codex_check_early_reap_fires_when_task_complete_present(
     assert adapter.check_early_reap(plan, call_start_time=call_start) is True
 
 
-def test_codex_check_early_reap_ignores_preexisting_rollouts(
-    tmp_path, monkeypatch
-):
+def test_codex_check_early_reap_ignores_preexisting_rollouts(tmp_path, monkeypatch):
     """Regression pin for the cross-contamination fix (Codex 2026-04-10
     audit): a rollout file that existed BEFORE our build_invocation must
     NOT trigger early-reap, because it belongs to a previous or
@@ -944,22 +917,24 @@ def test_codex_check_early_reap_ignores_preexisting_rollouts(
     monkeypatch.setenv("HOME", str(fake_home))
 
     today = datetime.now(UTC)
-    sessions_today = (
-        fake_home / ".codex" / "sessions"
-        / f"{today.year:04d}" / f"{today.month:02d}" / f"{today.day:02d}"
-    )
+    sessions_today = fake_home / ".codex" / "sessions" / f"{today.year:04d}" / f"{today.month:02d}" / f"{today.day:02d}"
     sessions_today.mkdir(parents=True)
 
     # Plant a stale rollout BEFORE build_invocation — it belongs to
     # a previous call. The snapshot should capture it as pre-existing.
     stale = sessions_today / "rollout-stale-from-other-run.jsonl"
-    stale.write_text(_json.dumps({
-        "type": "event_msg",
-        "payload": {
-            "type": "task_complete",
-            "last_agent_message": "OTHER TASK'S ANSWER",
-        },
-    }) + "\n")
+    stale.write_text(
+        _json.dumps(
+            {
+                "type": "event_msg",
+                "payload": {
+                    "type": "task_complete",
+                    "last_agent_message": "OTHER TASK'S ANSWER",
+                },
+            }
+        )
+        + "\n"
+    )
 
     # build_invocation snapshots all pre-existing rollouts.
     plan = adapter.build_invocation(
@@ -978,9 +953,7 @@ def test_codex_check_early_reap_ignores_preexisting_rollouts(
     assert adapter.check_early_reap(plan, call_start_time=call_start) is False
 
 
-def test_codex_candidate_rollout_dirs_honors_codex_home_override(
-    tmp_path, monkeypatch
-):
+def test_codex_candidate_rollout_dirs_honors_codex_home_override(tmp_path, monkeypatch):
     """Regression pin: the V7 writer's scoped CODEX_HOME (passed via
     ``tool_config["codex_home_override"]``) must be honored for
     rollout discovery. Without this, the adapter scans
@@ -1000,25 +973,14 @@ def test_codex_candidate_rollout_dirs_honors_codex_home_override(
     monkeypatch.setenv("HOME", str(fake_user_home))
     today = datetime.now(UTC)
     user_sessions = (
-        fake_user_home
-        / ".codex"
-        / "sessions"
-        / f"{today.year:04d}"
-        / f"{today.month:02d}"
-        / f"{today.day:02d}"
+        fake_user_home / ".codex" / "sessions" / f"{today.year:04d}" / f"{today.month:02d}" / f"{today.day:02d}"
     )
     user_sessions.mkdir(parents=True)
     (user_sessions / "rollout-user-home.jsonl").write_text("{}\n")
 
     # Scoped CODEX_HOME (per linear_pipeline._ensure_codex_writer_home).
     scoped_home = tmp_path / "scoped_codex_home"
-    scoped_sessions = (
-        scoped_home
-        / "sessions"
-        / f"{today.year:04d}"
-        / f"{today.month:02d}"
-        / f"{today.day:02d}"
-    )
+    scoped_sessions = scoped_home / "sessions" / f"{today.year:04d}" / f"{today.month:02d}" / f"{today.day:02d}"
     scoped_sessions.mkdir(parents=True)
     (scoped_sessions / "rollout-scoped.jsonl").write_text("{}\n")
 
@@ -1052,30 +1014,33 @@ def test_codex_check_early_reap_skips_within_warmup_window(tmp_path, monkeypatch
     monkeypatch.setenv("HOME", str(fake_home))
 
     today = datetime.now(UTC)
-    sessions_today = (
-        fake_home / ".codex" / "sessions"
-        / f"{today.year:04d}" / f"{today.month:02d}" / f"{today.day:02d}"
-    )
+    sessions_today = fake_home / ".codex" / "sessions" / f"{today.year:04d}" / f"{today.month:02d}" / f"{today.day:02d}"
     sessions_today.mkdir(parents=True)
-    (sessions_today / "rollout-old.jsonl").write_text(_json.dumps({
-        "type": "event_msg",
-        "payload": {"type": "task_complete", "last_agent_message": "old"},
-    }) + "\n")
+    (sessions_today / "rollout-old.jsonl").write_text(
+        _json.dumps(
+            {
+                "type": "event_msg",
+                "payload": {"type": "task_complete", "last_agent_message": "old"},
+            }
+        )
+        + "\n"
+    )
 
     plan = adapter.build_invocation(
-        prompt="x", mode="read-only", cwd=tmp_path,
-        model=None, task_id="warmup", session_id=None, tool_config=None,
+        prompt="x",
+        mode="read-only",
+        cwd=tmp_path,
+        model=None,
+        task_id="warmup",
+        session_id=None,
+        tool_config=None,
     )
 
     # call_start_time = now (0s elapsed) — within warmup window
-    assert adapter.check_early_reap(
-        plan, call_start_time=_time.monotonic()
-    ) is False
+    assert adapter.check_early_reap(plan, call_start_time=_time.monotonic()) is False
 
 
-def test_codex_check_early_reap_returns_false_when_no_task_complete(
-    tmp_path, monkeypatch
-):
+def test_codex_check_early_reap_returns_false_when_no_task_complete(tmp_path, monkeypatch):
     """If there's NO task_complete event yet in the rollout, return False
     so the runner keeps polling normally.
     """
@@ -1089,29 +1054,28 @@ def test_codex_check_early_reap_returns_false_when_no_task_complete(
     monkeypatch.setenv("HOME", str(fake_home))
 
     today = datetime.now(UTC)
-    sessions_today = (
-        fake_home / ".codex" / "sessions"
-        / f"{today.year:04d}" / f"{today.month:02d}" / f"{today.day:02d}"
-    )
+    sessions_today = fake_home / ".codex" / "sessions" / f"{today.year:04d}" / f"{today.month:02d}" / f"{today.day:02d}"
     sessions_today.mkdir(parents=True)
     # A rollout file with only reasoning deltas, no task_complete
     (sessions_today / "rollout-inprogress.jsonl").write_text(
-        _json.dumps({"type": "response_item",
-                     "payload": {"type": "reasoning_delta"}}) + "\n"
+        _json.dumps({"type": "response_item", "payload": {"type": "reasoning_delta"}}) + "\n"
     )
 
     plan = adapter.build_invocation(
-        prompt="x", mode="read-only", cwd=tmp_path,
-        model=None, task_id=None, session_id=None, tool_config=None,
+        prompt="x",
+        mode="read-only",
+        cwd=tmp_path,
+        model=None,
+        task_id=None,
+        session_id=None,
+        tool_config=None,
     )
 
     call_start = _time.monotonic() - 10.0
     assert adapter.check_early_reap(plan, call_start_time=call_start) is False
 
 
-def test_codex_parse_response_recovers_from_rollout_task_complete(
-    tmp_path, monkeypatch
-):
+def test_codex_parse_response_recovers_from_rollout_task_complete(tmp_path, monkeypatch):
     """Regression (2026-04-10 production incident): codex-cli 0.118
     has a post-completion hang bug where the CLI writes task_complete
     to rollout-*.jsonl, then hangs at 0% CPU without flushing -o <file>
@@ -1134,10 +1098,7 @@ def test_codex_parse_response_recovers_from_rollout_task_complete(
 
     # Build today's sessions dir EMPTY — no pre-existing rollouts
     today = datetime.now(UTC)
-    sessions_today = (
-        fake_home / ".codex" / "sessions"
-        / f"{today.year:04d}" / f"{today.month:02d}" / f"{today.day:02d}"
-    )
+    sessions_today = fake_home / ".codex" / "sessions" / f"{today.year:04d}" / f"{today.month:02d}" / f"{today.day:02d}"
     sessions_today.mkdir(parents=True)
 
     # Empty -o file (the hang: Codex never flushed it)
@@ -1159,18 +1120,22 @@ def test_codex_parse_response_recovers_from_rollout_task_complete(
     # creating its own rollout during the call.
     rollout = sessions_today / "rollout-2026-04-10T21-35-20-test.jsonl"
     events = [
-        {"timestamp": "2026-04-10T21:35:21Z", "type": "event_msg",
-         "payload": {"type": "session_start"}},
-        {"timestamp": "2026-04-10T21:35:22Z", "type": "event_msg",
-         "payload": {"type": "user_message", "message": "Write a BST"}},
-        {"timestamp": "2026-04-10T21:36:00Z", "type": "response_item",
-         "payload": {"type": "reasoning_delta"}},
-        {"timestamp": "2026-04-10T21:40:02Z", "type": "event_msg",
-         "payload": {
-             "type": "task_complete",
-             "turn_id": "abc-123",
-             "last_agent_message": "Here is the binary search tree implementation...",
-         }},
+        {"timestamp": "2026-04-10T21:35:21Z", "type": "event_msg", "payload": {"type": "session_start"}},
+        {
+            "timestamp": "2026-04-10T21:35:22Z",
+            "type": "event_msg",
+            "payload": {"type": "user_message", "message": "Write a BST"},
+        },
+        {"timestamp": "2026-04-10T21:36:00Z", "type": "response_item", "payload": {"type": "reasoning_delta"}},
+        {
+            "timestamp": "2026-04-10T21:40:02Z",
+            "type": "event_msg",
+            "payload": {
+                "type": "task_complete",
+                "turn_id": "abc-123",
+                "last_agent_message": "Here is the binary search tree implementation...",
+            },
+        },
     ]
     rollout.write_text("\n".join(_json.dumps(e) for e in events) + "\n")
 
@@ -1183,19 +1148,14 @@ def test_codex_parse_response_recovers_from_rollout_task_complete(
         plan=plan,
     )
 
-    assert result.ok is True, (
-        f"expected rollout recovery to succeed, got stderr_excerpt="
-        f"{result.stderr_excerpt!r}"
-    )
+    assert result.ok is True, f"expected rollout recovery to succeed, got stderr_excerpt={result.stderr_excerpt!r}"
     assert "binary search tree implementation" in result.response
     assert "recovered" in (result.stderr_excerpt or "")
     assert "rollout" in (result.stderr_excerpt or "")
     assert result.rate_limited is False
 
 
-def test_codex_parse_response_rollout_recovery_skipped_on_happy_path(
-    tmp_path, monkeypatch
-):
+def test_codex_parse_response_rollout_recovery_skipped_on_happy_path(tmp_path, monkeypatch):
     """When -o <file> has content, skip the rollout scan entirely.
     Happy path must stay fast (no JSON parsing on every success)."""
     import json as _json
@@ -1208,20 +1168,21 @@ def test_codex_parse_response_rollout_recovery_skipped_on_happy_path(
     monkeypatch.setenv("HOME", str(fake_home))
 
     today = datetime.now(UTC)
-    sessions_today = (
-        fake_home / ".codex" / "sessions"
-        / f"{today.year:04d}" / f"{today.month:02d}" / f"{today.day:02d}"
-    )
+    sessions_today = fake_home / ".codex" / "sessions" / f"{today.year:04d}" / f"{today.month:02d}" / f"{today.day:02d}"
     sessions_today.mkdir(parents=True)
 
     # Plant a rollout with DIFFERENT content so we'd notice if the
     # adapter accidentally read from it on the happy path.
     rollout = sessions_today / "rollout-test.jsonl"
-    rollout.write_text(_json.dumps({
-        "type": "event_msg",
-        "payload": {"type": "task_complete",
-                    "last_agent_message": "STALE rollout content"},
-    }) + "\n")
+    rollout.write_text(
+        _json.dumps(
+            {
+                "type": "event_msg",
+                "payload": {"type": "task_complete", "last_agent_message": "STALE rollout content"},
+            }
+        )
+        + "\n"
+    )
 
     output_file = tmp_path / "codex-out.txt"
     output_file.write_text("Fresh -o file response")
@@ -1248,9 +1209,7 @@ def test_codex_parse_response_rollout_recovery_skipped_on_happy_path(
     assert "STALE" not in result.response
 
 
-def test_codex_parse_response_ignores_unrelated_new_rollout(
-    tmp_path, monkeypatch
-):
+def test_codex_parse_response_ignores_unrelated_new_rollout(tmp_path, monkeypatch):
     """Do not recover durable output from a new rollout whose prompt does not
     match this invocation.
 
@@ -1269,10 +1228,7 @@ def test_codex_parse_response_ignores_unrelated_new_rollout(
     monkeypatch.setenv("HOME", str(fake_home))
 
     today = datetime.now(UTC)
-    sessions_today = (
-        fake_home / ".codex" / "sessions"
-        / f"{today.year:04d}" / f"{today.month:02d}" / f"{today.day:02d}"
-    )
+    sessions_today = fake_home / ".codex" / "sessions" / f"{today.year:04d}" / f"{today.month:02d}" / f"{today.day:02d}"
     sessions_today.mkdir(parents=True)
 
     output_file = tmp_path / "codex-out.txt"
@@ -1292,22 +1248,27 @@ def test_codex_parse_response_ignores_unrelated_new_rollout(
     unrelated_rollout.write_text(
         "\n".join(
             [
-                _json.dumps({
-                    "type": "event_msg",
-                    "payload": {
-                        "type": "user_message",
-                        "message": "Completely different task in another repo",
-                    },
-                }),
-                _json.dumps({
-                    "type": "event_msg",
-                    "payload": {
-                        "type": "task_complete",
-                        "last_agent_message": "UNRELATED durable output",
-                    },
-                }),
+                _json.dumps(
+                    {
+                        "type": "event_msg",
+                        "payload": {
+                            "type": "user_message",
+                            "message": "Completely different task in another repo",
+                        },
+                    }
+                ),
+                _json.dumps(
+                    {
+                        "type": "event_msg",
+                        "payload": {
+                            "type": "task_complete",
+                            "last_agent_message": "UNRELATED durable output",
+                        },
+                    }
+                ),
             ]
-        ) + "\n",
+        )
+        + "\n",
         "utf-8",
     )
 
@@ -1339,10 +1300,7 @@ def test_codex_rollout_matches_response_item_prompt_after_envelope(tmp_path):
     adapter = CodexAdapter()
     rollout = tmp_path / "rollout-envelope-then-prompt.jsonl"
     prompt = "Run the actual task\nwith the requested context."
-    envelope = (
-        "# AGENTS.md instructions\n\n"
-        "<environment_context><cwd>/repo</cwd></environment_context>"
-    )
+    envelope = "# AGENTS.md instructions\n\n<environment_context><cwd>/repo</cwd></environment_context>"
     events = [
         {
             "type": "response_item",
@@ -1363,9 +1321,13 @@ def test_codex_rollout_matches_response_item_prompt_after_envelope(tmp_path):
     ]
     rollout.write_text("\n".join(_json.dumps(e) for e in events) + "\n")
 
-    assert adapter._rollout_matches_plan(
-        rollout, _rollout_match_plan(tmp_path, prompt),
-    ) is True
+    assert (
+        adapter._rollout_matches_plan(
+            rollout,
+            _rollout_match_plan(tmp_path, prompt),
+        )
+        is True
+    )
 
 
 def test_codex_rollout_does_not_match_envelope_without_prompt(tmp_path):
@@ -1384,9 +1346,7 @@ def test_codex_rollout_does_not_match_envelope_without_prompt(tmp_path):
                     {
                         "type": "input_text",
                         "text": (
-                            "# AGENTS.md instructions\n\n"
-                            "<environment_context><cwd>/repo</cwd>"
-                            "</environment_context>"
+                            "# AGENTS.md instructions\n\n<environment_context><cwd>/repo</cwd></environment_context>"
                         ),
                     },
                 ],
@@ -1402,9 +1362,13 @@ def test_codex_rollout_does_not_match_envelope_without_prompt(tmp_path):
     ]
     rollout.write_text("\n".join(_json.dumps(e) for e in events) + "\n")
 
-    assert adapter._rollout_matches_plan(
-        rollout, _rollout_match_plan(tmp_path, prompt),
-    ) is False
+    assert (
+        adapter._rollout_matches_plan(
+            rollout,
+            _rollout_match_plan(tmp_path, prompt),
+        )
+        is False
+    )
 
 
 def test_codex_parse_response_nested_divider_in_prompt_not_rate_limit(tmp_path):
@@ -1549,8 +1513,7 @@ def test_codex_parse_response_prompt_echo_is_not_rate_limit(tmp_path):
     # Call succeeded (rc=0, output file has content), therefore CANNOT
     # be rate-limited regardless of what pattern text appears in stderr.
     assert result.rate_limited is False, (
-        f"False rate-limit classification on successful call. "
-        f"stderr_excerpt={result.stderr_excerpt!r}"
+        f"False rate-limit classification on successful call. stderr_excerpt={result.stderr_excerpt!r}"
     )
     assert result.ok is True
     assert result.response == "PONG"
@@ -1559,6 +1522,7 @@ def test_codex_parse_response_prompt_echo_is_not_rate_limit(tmp_path):
 # ---------------------------------------------------------------------------
 # invoke() — high-level runner
 # ---------------------------------------------------------------------------
+
 
 def test_invoke_rejects_unsupported_mode(tmp_path):
     with pytest.raises(ValueError, match="does not support mode"):
@@ -1584,14 +1548,25 @@ def test_invoke_requires_cwd_for_danger_mode():
 # in-tree pre-filter (``_RUNNER_REPO_TREE``) at that repo so the guard actually
 # classifies it instead of short-circuiting on "not this checkout".
 
+
 def _git_wt(repo, *args):
-    env = {k: v for k, v in os.environ.items()
-           if k not in {"GIT_DIR", "GIT_WORK_TREE", "GIT_INDEX_FILE",
-                        "GIT_OBJECT_DIRECTORY", "GIT_ALTERNATE_OBJECT_DIRECTORIES",
-                        "GIT_NAMESPACE", "GIT_CEILING_DIRECTORIES",
-                        "GIT_DISCOVERY_ACROSS_FILESYSTEM", "GIT_COMMON_DIR"}}
-    return subprocess.run(["git", "-C", str(repo), *args],
-                          check=True, capture_output=True, text=True, env=env)
+    env = {
+        k: v
+        for k, v in os.environ.items()
+        if k
+        not in {
+            "GIT_DIR",
+            "GIT_WORK_TREE",
+            "GIT_INDEX_FILE",
+            "GIT_OBJECT_DIRECTORY",
+            "GIT_ALTERNATE_OBJECT_DIRECTORIES",
+            "GIT_NAMESPACE",
+            "GIT_CEILING_DIRECTORIES",
+            "GIT_DISCOVERY_ACROSS_FILESYSTEM",
+            "GIT_COMMON_DIR",
+        }
+    }
+    return subprocess.run(["git", "-C", str(repo), *args], check=True, capture_output=True, text=True, env=env)
 
 
 @pytest.fixture
@@ -1612,6 +1587,7 @@ def write_guard_repo(tmp_path, monkeypatch):
     _git_wt(main, "worktree", "add", "-q", "-b", "codex/task-1", str(dispatch_wt))
 
     from agent_runtime import runner as runner_mod
+
     monkeypatch.setattr(runner_mod, "_RUNNER_REPO_TREE", main.resolve())
     return SimpleNamespace(main=main.resolve(), dispatch_wt=dispatch_wt.resolve())
 
@@ -1624,18 +1600,14 @@ def test_write_guard_rejects_primary_checkout_on_protected_branch(write_guard_re
 
 def test_write_guard_allows_dispatch_worktree(write_guard_repo):
     # Must not raise: an isolated dispatch worktree is the sanctioned location.
-    _ensure_write_cwd_isolated(
-        write_guard_repo.dispatch_wt, mode="danger", agent_name="codex"
-    )
+    _ensure_write_cwd_isolated(write_guard_repo.dispatch_wt, mode="danger", agent_name="codex")
 
 
 def test_write_guard_allows_primary_checkout_on_feature_branch(write_guard_repo):
     # Branch-scoped like #4448/#4449/#4450: a deliberately-checked-out feature
     # branch in the primary checkout is a developer workspace, not a hazard.
     _git_wt(write_guard_repo.main, "checkout", "-q", "-b", "feature/x")
-    _ensure_write_cwd_isolated(
-        write_guard_repo.main, mode="workspace-write", agent_name="codex"
-    )
+    _ensure_write_cwd_isolated(write_guard_repo.main, mode="workspace-write", agent_name="codex")
 
 
 def test_write_guard_allows_out_of_tree_cwd(tmp_path):
@@ -1648,6 +1620,7 @@ def test_write_guard_allows_out_of_tree_cwd(tmp_path):
 
 def test_write_guard_fails_closed_when_containment_unavailable(tmp_path, monkeypatch):
     from agent_runtime import runner as runner_mod
+
     monkeypatch.setattr(runner_mod, "_load_worktree_containment", lambda: None)
     with pytest.raises(ValueError, match="failed to import"):
         _ensure_write_cwd_isolated(tmp_path, mode="danger", agent_name="codex")
@@ -1671,13 +1644,16 @@ def test_invoke_codex_write_lane_spawns_in_dispatch_worktree(write_guard_repo):
     passes the guard and the spawn receives that worktree as cwd (never the main
     checkout)."""
     from agent_runtime.errors import AgentUnavailableError
-    with patch("agent_runtime.runner.has_headroom", return_value=(True, "")), \
-         patch("agent_runtime.runner.write_record"), \
-         patch(
-             "agent_runtime.runner._spawn_subprocess",
-             side_effect=FileNotFoundError("no codex binary"),
-         ) as mock_spawn, \
-         pytest.raises(AgentUnavailableError):
+
+    with (
+        patch("agent_runtime.runner.has_headroom", return_value=(True, "")),
+        patch("agent_runtime.runner.write_record"),
+        patch(
+            "agent_runtime.runner._spawn_subprocess",
+            side_effect=FileNotFoundError("no codex binary"),
+        ) as mock_spawn,
+        pytest.raises(AgentUnavailableError),
+    ):
         invoke("codex", "hello", mode="workspace-write", cwd=write_guard_repo.dispatch_wt)
     mock_spawn.assert_called_once()
     spawn_cwd = Path(mock_spawn.call_args.kwargs["cwd"]).resolve()
@@ -1705,14 +1681,19 @@ def test_invoke_rate_limit_short_circuit(tmp_path):
     # Patch write_record to prevent the short-circuit path from writing
     # rate_limited records to the REAL batch_state/api_usage/ directory
     # during test runs (would poison has_headroom for subsequent real calls).
-    with patch(
-        "agent_runtime.runner.has_headroom",
-        return_value=(False, "cached rate limit"),
-    ), patch(
-        "agent_runtime.runner.write_record",
-    ), patch(
-        "agent_runtime.runner.subprocess.Popen",
-    ) as mock_popen, pytest.raises(RateLimitedError, match="cached rate limit"):
+    with (
+        patch(
+            "agent_runtime.runner.has_headroom",
+            return_value=(False, "cached rate limit"),
+        ),
+        patch(
+            "agent_runtime.runner.write_record",
+        ),
+        patch(
+            "agent_runtime.runner.subprocess.Popen",
+        ) as mock_popen,
+        pytest.raises(RateLimitedError, match="cached rate limit"),
+    ):
         invoke("codex", "hello", mode="read-only", cwd=tmp_path)
     mock_popen.assert_not_called()
 
@@ -1728,20 +1709,24 @@ def test_invoke_popen_missing_binary_raises_agent_unavailable(tmp_path):
 
     # Patch Popen to raise FileNotFoundError as if the codex binary
     # is missing. Also patch has_headroom so we reach Popen.
-    with patch(
-        "agent_runtime.runner.has_headroom", return_value=(True, ""),
-    ), patch(
-        "agent_runtime.runner.write_record",
-    ) as mock_write, patch(
-        "agent_runtime.runner.subprocess.Popen",
-        side_effect=FileNotFoundError("[Errno 2] No such file: 'codex'"),
-    ), pytest.raises(AgentUnavailableError, match="Popen failed"):
+    with (
+        patch(
+            "agent_runtime.runner.has_headroom",
+            return_value=(True, ""),
+        ),
+        patch(
+            "agent_runtime.runner.write_record",
+        ) as mock_write,
+        patch(
+            "agent_runtime.runner.subprocess.Popen",
+            side_effect=FileNotFoundError("[Errno 2] No such file: 'codex'"),
+        ),
+        pytest.raises(AgentUnavailableError, match="Popen failed"),
+    ):
         invoke("codex", "hello", mode="read-only", cwd=tmp_path)
 
     # A usage record must have been written.
-    assert mock_write.called, (
-        "runner must write a usage record even on Popen failure"
-    )
+    assert mock_write.called, "runner must write a usage record even on Popen failure"
     written = mock_write.call_args.args[0]
     assert written.get("outcome") == "error"
     assert "Popen failed" in (written.get("stderr_excerpt") or "")
@@ -1772,10 +1757,7 @@ def test_invoke_early_reap_fires_and_recovers_response(tmp_path, monkeypatch):
     fake_home.mkdir()
     monkeypatch.setenv("HOME", str(fake_home))
     today = datetime.now(UTC)
-    sessions_today = (
-        fake_home / ".codex" / "sessions"
-        / f"{today.year:04d}" / f"{today.month:02d}" / f"{today.day:02d}"
-    )
+    sessions_today = fake_home / ".codex" / "sessions" / f"{today.year:04d}" / f"{today.month:02d}" / f"{today.day:02d}"
     sessions_today.mkdir(parents=True)
 
     rollout = sessions_today / "rollout-reap-test.jsonl"
@@ -1783,37 +1765,46 @@ def test_invoke_early_reap_fires_and_recovers_response(tmp_path, monkeypatch):
     # _rollout_matches_plan can match on plan.stdin_payload) AND a
     # task_complete event (so the early-reap detector finds a result).
     rollout_payload = (
-        _json.dumps({
-            "type": "response_item",
-            "payload": {
-                "type": "message",
-                "role": "user",
-                "content": [
-                    {
-                        "type": "input_text",
-                        "text": (
-                            "# AGENTS.md instructions\n\n"
-                            "<environment_context><cwd>/repo</cwd>"
-                            "</environment_context>"
-                        ),
-                    },
-                ],
-            },
-        }) + "\n"
-        + _json.dumps({
-            "type": "event_msg",
-            "payload": {
-                "type": "user_message",
-                "message": "do the audit",
-            },
-        }) + "\n"
-        + _json.dumps({
-            "type": "event_msg",
-            "payload": {
-                "type": "task_complete",
-                "last_agent_message": "The complete audit response is here.",
-            },
-        }) + "\n"
+        _json.dumps(
+            {
+                "type": "response_item",
+                "payload": {
+                    "type": "message",
+                    "role": "user",
+                    "content": [
+                        {
+                            "type": "input_text",
+                            "text": (
+                                "# AGENTS.md instructions\n\n"
+                                "<environment_context><cwd>/repo</cwd>"
+                                "</environment_context>"
+                            ),
+                        },
+                    ],
+                },
+            }
+        )
+        + "\n"
+        + _json.dumps(
+            {
+                "type": "event_msg",
+                "payload": {
+                    "type": "user_message",
+                    "message": "do the audit",
+                },
+            }
+        )
+        + "\n"
+        + _json.dumps(
+            {
+                "type": "event_msg",
+                "payload": {
+                    "type": "task_complete",
+                    "last_agent_message": "The complete audit response is here.",
+                },
+            }
+        )
+        + "\n"
     )
 
     # Mock Popen: poll() returns None (running) before kill, -9 after.
@@ -1822,15 +1813,19 @@ def test_invoke_early_reap_fires_and_recovers_response(tmp_path, monkeypatch):
     # poll iteration, which is what happens in production.
     mock_proc = MagicMock()
     state = {"killed": False, "planted": False}
+
     def fake_poll():
         if not state["planted"]:
             rollout.write_text(rollout_payload)
             state["planted"] = True
         return -9 if state["killed"] else None
+
     mock_proc.poll = MagicMock(side_effect=fake_poll)
     mock_proc.returncode = -9
+
     def fake_kill():
         state["killed"] = True
+
     mock_proc.kill = MagicMock(side_effect=fake_kill)
     mock_proc.wait = MagicMock()
     mock_proc.stdin = MagicMock()
@@ -1854,32 +1849,51 @@ def test_invoke_early_reap_fires_and_recovers_response(tmp_path, monkeypatch):
     import time as _time
 
     base_time = _time.monotonic()
-    monotonic_values = iter([
-        base_time,       # start_time capture in runner
-        base_time + 10,  # poll loop first check_early_reap
-        base_time + 11, base_time + 12, base_time + 13, base_time + 14,
-    ])
+    monotonic_values = iter(
+        [
+            base_time,  # start_time capture in runner
+            base_time + 10,  # poll loop first check_early_reap
+            base_time + 11,
+            base_time + 12,
+            base_time + 13,
+            base_time + 14,
+        ]
+    )
+
     def fake_monotonic():
         try:
             return next(monotonic_values)
         except StopIteration:
             return base_time + 20
 
-    with patch(
-        "agent_runtime.runner.has_headroom", return_value=(True, ""),
-    ), patch(
-        "agent_runtime.runner.write_record",
-    ), patch(
-        "agent_runtime.runner.subprocess.Popen", return_value=mock_proc,
-    ), patch(
-        "agent_runtime.runner._POLL_INTERVAL_S", 0.01,
-    ), patch(
-        "agent_runtime.runner.time.monotonic", side_effect=fake_monotonic,
-    ), patch(
-        "agent_runtime.runner._kill_process_tree", mock_kill_tree,
+    with (
+        patch(
+            "agent_runtime.runner.has_headroom",
+            return_value=(True, ""),
+        ),
+        patch(
+            "agent_runtime.runner.write_record",
+        ),
+        patch(
+            "agent_runtime.runner.subprocess.Popen",
+            return_value=mock_proc,
+        ),
+        patch(
+            "agent_runtime.runner._POLL_INTERVAL_S",
+            0.01,
+        ),
+        patch(
+            "agent_runtime.runner.time.monotonic",
+            side_effect=fake_monotonic,
+        ),
+        patch(
+            "agent_runtime.runner._kill_process_tree",
+            mock_kill_tree,
+        ),
     ):
         result = invoke(
-            "codex", "do the audit",
+            "codex",
+            "do the audit",
             mode="read-only",
             cwd=tmp_path,
             task_id="reap-integration",
@@ -1891,8 +1905,7 @@ def test_invoke_early_reap_fires_and_recovers_response(tmp_path, monkeypatch):
     mock_kill_tree.assert_called_once()
     # And returned a successful Result with the recovered response
     assert result.ok is True, (
-        f"early-reap recovery should produce ok=True, "
-        f"got stderr_excerpt={result.stderr_excerpt!r}"
+        f"early-reap recovery should produce ok=True, got stderr_excerpt={result.stderr_excerpt!r}"
     )
     assert "complete audit response" in result.response
     assert "rollout" in (result.stderr_excerpt or "")
@@ -1956,33 +1969,46 @@ def test_invoke_hard_timeout_recovers_from_session_file(tmp_path, monkeypatch):
     mock_kill_tree = MagicMock()
 
     def _popen_after_session_start(*args, **kwargs):
-        (chats_dir / "session-latest.json").write_text(_json.dumps({
-            "sessionId": "x",
-            "messages": [
-                {"type": "user", "content": [{"text": "write a module"}]},
-                {"type": "gemini",
-                 "content": "### Skeleton\n\n## Section 1\n...full response..."},
-            ],
-        }), "utf-8")
+        (chats_dir / "session-latest.json").write_text(
+            _json.dumps(
+                {
+                    "sessionId": "x",
+                    "messages": [
+                        {"type": "user", "content": [{"text": "write a module"}]},
+                        {"type": "gemini", "content": "### Skeleton\n\n## Section 1\n...full response..."},
+                    ],
+                }
+            ),
+            "utf-8",
+        )
         return mock_proc
 
     # has_headroom mock: always OK.
     # should_kill mock: fire hard_timeout on every call.
-    with patch(
-        "agent_runtime.runner.has_headroom",
-        return_value=(True, ""),
-    ), patch(
-        "agent_runtime.runner.write_record",
-    ), patch(
-        "agent_runtime.runner.subprocess.Popen",
-        side_effect=_popen_after_session_start,
-    ), patch(
-        "agent_runtime.runner.should_kill",
-        side_effect=lambda *a, **kw: "hard_timeout",
-    ), patch(
-        "agent_runtime.runner._POLL_INTERVAL_S", 0.01,
-    ), patch(
-        "agent_runtime.runner._kill_process_tree", mock_kill_tree,
+    with (
+        patch(
+            "agent_runtime.runner.has_headroom",
+            return_value=(True, ""),
+        ),
+        patch(
+            "agent_runtime.runner.write_record",
+        ),
+        patch(
+            "agent_runtime.runner.subprocess.Popen",
+            side_effect=_popen_after_session_start,
+        ),
+        patch(
+            "agent_runtime.runner.should_kill",
+            side_effect=lambda *a, **kw: "hard_timeout",
+        ),
+        patch(
+            "agent_runtime.runner._POLL_INTERVAL_S",
+            0.01,
+        ),
+        patch(
+            "agent_runtime.runner._kill_process_tree",
+            mock_kill_tree,
+        ),
     ):
         result = invoke(
             "gemini",
@@ -1996,8 +2022,7 @@ def test_invoke_hard_timeout_recovers_from_session_file(tmp_path, monkeypatch):
     # invoke() RETURNED a Result (did NOT raise AgentTimeoutError)
     # because the adapter recovered the response from the session file.
     assert result.ok is True, (
-        f"expected recovery from session file after hard_timeout, "
-        f"got stderr_excerpt={result.stderr_excerpt!r}"
+        f"expected recovery from session file after hard_timeout, got stderr_excerpt={result.stderr_excerpt!r}"
     )
     assert "Skeleton" in result.response
     assert "Section 1" in result.response
@@ -2028,39 +2053,47 @@ def test_invoke_gemini_runtime_falls_through_to_subscription_rung(tmp_path):
     oauth_proc.stderr.readline = MagicMock(return_value="")
     oauth_proc.stderr.close = MagicMock()
     oauth_proc.stdout = MagicMock()
-    oauth_proc.stdout.readline = MagicMock(
-        side_effect=["Recovered on subscription rung\n", ""]
-    )
+    oauth_proc.stdout.readline = MagicMock(side_effect=["Recovered on subscription rung\n", ""])
     oauth_proc.stdout.close = MagicMock()
     oauth_proc.pid = 20202
 
     mock_popen = MagicMock(side_effect=[api_proc, oauth_proc])
 
-    with patch.dict(
-        "os.environ",
-        {
-            "GEMINI_API_KEY": "secret-key",
-            "LU_GEMINI_COOLDOWN_PATH": str(tmp_path / "gemini-cooldown.json"),
-            # This test mocks subprocess.Popen with fake procs that
-            # expose proc.stderr.readline (a pipe-mode contract).
-            # PTY-mode reads from a master fd that the mock never
-            # writes to, so opt out for ladder-logic tests. The PTY
-            # path is exercised end-to-end in
-            # tests/agent_runtime/test_pty_subprocess_wrap.py (#2071).
-            "DELEGATE_DISABLE_PTY": "1",
-        },
-        clear=False,
-    ), patch(
-        "agent_runtime.runner.has_headroom", return_value=(True, ""),
-    ), patch(
-        "agent_runtime.runner.write_record",
-    ), patch(
-        "agent_runtime.runner.subprocess.Popen", mock_popen,
-    ), patch(
-        "agent_runtime.runner._resolve_gemini_ladder_auth_modes",
-        return_value=("api", "oauth"),
-    ), patch(
-        "agent_runtime.runner._POLL_INTERVAL_S", 0.01,
+    with (
+        patch.dict(
+            "os.environ",
+            {
+                "GEMINI_API_KEY": "secret-key",
+                "LU_GEMINI_COOLDOWN_PATH": str(tmp_path / "gemini-cooldown.json"),
+                # This test mocks subprocess.Popen with fake procs that
+                # expose proc.stderr.readline (a pipe-mode contract).
+                # PTY-mode reads from a master fd that the mock never
+                # writes to, so opt out for ladder-logic tests. The PTY
+                # path is exercised end-to-end in
+                # tests/agent_runtime/test_pty_subprocess_wrap.py (#2071).
+                "DELEGATE_DISABLE_PTY": "1",
+            },
+            clear=False,
+        ),
+        patch(
+            "agent_runtime.runner.has_headroom",
+            return_value=(True, ""),
+        ),
+        patch(
+            "agent_runtime.runner.write_record",
+        ),
+        patch(
+            "agent_runtime.runner.subprocess.Popen",
+            mock_popen,
+        ),
+        patch(
+            "agent_runtime.runner._resolve_gemini_ladder_auth_modes",
+            return_value=("api", "oauth"),
+        ),
+        patch(
+            "agent_runtime.runner._POLL_INTERVAL_S",
+            0.01,
+        ),
     ):
         result = invoke(
             "gemini",
@@ -2111,24 +2144,33 @@ def test_invoke_gemini_runtime_reports_actual_fallback_model(tmp_path):
 
     mock_popen = MagicMock(side_effect=[primary_proc, flash_proc])
 
-    with patch.dict(
-        "os.environ",
-        {
-            "GEMINI_AUTH_MODE": "api",
-            "GEMINI_API_KEY": "secret-key",
-            "LU_GEMINI_COOLDOWN_PATH": str(tmp_path / "gemini-cooldown.json"),
-            # Pipe-mode mocks (see ladder-fallback test above). #2071.
-            "DELEGATE_DISABLE_PTY": "1",
-        },
-        clear=False,
-    ), patch(
-        "agent_runtime.runner.has_headroom", return_value=(True, ""),
-    ), patch(
-        "agent_runtime.runner.write_record",
-    ), patch(
-        "agent_runtime.runner.subprocess.Popen", mock_popen,
-    ), patch(
-        "agent_runtime.runner._POLL_INTERVAL_S", 0.01,
+    with (
+        patch.dict(
+            "os.environ",
+            {
+                "GEMINI_AUTH_MODE": "api",
+                "GEMINI_API_KEY": "secret-key",
+                "LU_GEMINI_COOLDOWN_PATH": str(tmp_path / "gemini-cooldown.json"),
+                # Pipe-mode mocks (see ladder-fallback test above). #2071.
+                "DELEGATE_DISABLE_PTY": "1",
+            },
+            clear=False,
+        ),
+        patch(
+            "agent_runtime.runner.has_headroom",
+            return_value=(True, ""),
+        ),
+        patch(
+            "agent_runtime.runner.write_record",
+        ),
+        patch(
+            "agent_runtime.runner.subprocess.Popen",
+            mock_popen,
+        ),
+        patch(
+            "agent_runtime.runner._POLL_INTERVAL_S",
+            0.01,
+        ),
     ):
         result = invoke(
             "gemini",
@@ -2172,25 +2214,35 @@ def test_invoke_gemini_runtime_all_rate_limited_raises(tmp_path):
         ]
     )
 
-    with patch.dict(
-        "os.environ",
-        {
-            "GEMINI_AUTH_MODE": "api",
-            "GEMINI_API_KEY": "secret-key",
-            "LU_GEMINI_COOLDOWN_PATH": str(tmp_path / "gemini-cooldown.json"),
-            # Pipe-mode mocks (see ladder-fallback tests above). #2071.
-            "DELEGATE_DISABLE_PTY": "1",
-        },
-        clear=False,
-    ), patch(
-        "agent_runtime.runner.has_headroom", return_value=(True, ""),
-    ), patch(
-        "agent_runtime.runner.write_record",
-    ) as mock_write, patch(
-        "agent_runtime.runner.subprocess.Popen", mock_popen,
-    ), patch(
-        "agent_runtime.runner._POLL_INTERVAL_S", 0.01,
-    ), pytest.raises(RateLimitedError):
+    with (
+        patch.dict(
+            "os.environ",
+            {
+                "GEMINI_AUTH_MODE": "api",
+                "GEMINI_API_KEY": "secret-key",
+                "LU_GEMINI_COOLDOWN_PATH": str(tmp_path / "gemini-cooldown.json"),
+                # Pipe-mode mocks (see ladder-fallback tests above). #2071.
+                "DELEGATE_DISABLE_PTY": "1",
+            },
+            clear=False,
+        ),
+        patch(
+            "agent_runtime.runner.has_headroom",
+            return_value=(True, ""),
+        ),
+        patch(
+            "agent_runtime.runner.write_record",
+        ) as mock_write,
+        patch(
+            "agent_runtime.runner.subprocess.Popen",
+            mock_popen,
+        ),
+        patch(
+            "agent_runtime.runner._POLL_INTERVAL_S",
+            0.01,
+        ),
+        pytest.raises(RateLimitedError),
+    ):
         invoke(
             "gemini",
             "hello",
@@ -2222,28 +2274,40 @@ def test_invoke_gemini_runtime_timeout_ladder_raises_timeout(tmp_path):
     timed_out_proc.stdout.close = MagicMock()
     timed_out_proc.pid = 60606
 
-    with patch.dict(
-        "os.environ",
-        {
-            "GEMINI_AUTH_MODE": "api",
-            "GEMINI_API_KEY": "secret-key",
-            "LU_GEMINI_COOLDOWN_PATH": str(tmp_path / "gemini-cooldown.json"),
-        },
-        clear=False,
-    ), patch(
-        "agent_runtime.runner.has_headroom", return_value=(True, ""),
-    ), patch(
-        "agent_runtime.runner.write_record",
-    ) as mock_write, patch(
-        "agent_runtime.runner.subprocess.Popen", return_value=timed_out_proc,
-    ), patch(
-        "agent_runtime.runner.should_kill",
-        side_effect=lambda *a, **kw: "hard_timeout",
-    ), patch(
-        "agent_runtime.runner._POLL_INTERVAL_S", 0.01,
-    ), patch(
-        "agent_runtime.runner._kill_process_tree",
-    ), pytest.raises(AgentTimeoutError):
+    with (
+        patch.dict(
+            "os.environ",
+            {
+                "GEMINI_AUTH_MODE": "api",
+                "GEMINI_API_KEY": "secret-key",
+                "LU_GEMINI_COOLDOWN_PATH": str(tmp_path / "gemini-cooldown.json"),
+            },
+            clear=False,
+        ),
+        patch(
+            "agent_runtime.runner.has_headroom",
+            return_value=(True, ""),
+        ),
+        patch(
+            "agent_runtime.runner.write_record",
+        ) as mock_write,
+        patch(
+            "agent_runtime.runner.subprocess.Popen",
+            return_value=timed_out_proc,
+        ),
+        patch(
+            "agent_runtime.runner.should_kill",
+            side_effect=lambda *a, **kw: "hard_timeout",
+        ),
+        patch(
+            "agent_runtime.runner._POLL_INTERVAL_S",
+            0.01,
+        ),
+        patch(
+            "agent_runtime.runner._kill_process_tree",
+        ),
+        pytest.raises(AgentTimeoutError),
+    ):
         invoke(
             "gemini",
             "hello",
@@ -2262,6 +2326,7 @@ def test_invoke_gemini_runtime_timeout_ladder_raises_timeout(tmp_path):
 # ---------------------------------------------------------------------------
 # Watchdog
 # ---------------------------------------------------------------------------
+
 
 def test_should_kill_returns_none_when_healthy():
     now = time.monotonic()
@@ -2364,14 +2429,8 @@ def test_process_tree_has_activity_tracks_descendant_cpu(monkeypatch):
     io_baselines: dict[int, tuple[int, int, int, int]] = {}
     proc = SimpleNamespace(pid=123)
 
-    assert (
-        _process_tree_has_activity(proc, primed_pids, cpu_baselines, io_baselines)
-        is False
-    )
-    assert (
-        _process_tree_has_activity(proc, primed_pids, cpu_baselines, io_baselines)
-        is True
-    )
+    assert _process_tree_has_activity(proc, primed_pids, cpu_baselines, io_baselines) is False
+    assert _process_tree_has_activity(proc, primed_pids, cpu_baselines, io_baselines) is True
 
 
 def test_tail_liveness_skips_binary_sqlite(tmp_path):
@@ -2389,14 +2448,13 @@ def test_tail_liveness_skips_binary_sqlite(tmp_path):
     # Force the text file to be older than the binary (the binary is
     # newest, which is what would trigger the bug).
     import os as _os
+
     _os.utime(text, (text.stat().st_mtime - 60, text.stat().st_mtime - 60))
 
     result = tail_liveness_file_for_debug([binary, text])
     # The binary must be filtered out; the text file should be chosen.
     assert "real error" in result
-    assert "\ufffd" not in result, (
-        f"UTF-8 replacement char leaked from binary file tail: {result!r}"
-    )
+    assert "\ufffd" not in result, f"UTF-8 replacement char leaked from binary file tail: {result!r}"
 
 
 def test_tail_liveness_skips_directories(tmp_path):
@@ -2410,6 +2468,7 @@ def test_tail_liveness_skips_directories(tmp_path):
     text = tmp_path / "history.log"
     text.write_text("fallback content\n")
     import os as _os
+
     _os.utime(text, (text.stat().st_mtime - 60, text.stat().st_mtime - 60))
 
     result = tail_liveness_file_for_debug([sessions_dir, text])
@@ -2470,8 +2529,7 @@ def test_stderr_streamer_drains_large_volume_without_hanging():
         # expected. If we drop a few at shutdown that's fine; anything
         # less than 1500 would indicate draining didn't work.
         assert len(state.stderr_lines) >= 1500, (
-            f"stderr streamer should have captured most of 2000 lines; "
-            f"got {len(state.stderr_lines)}"
+            f"stderr streamer should have captured most of 2000 lines; got {len(state.stderr_lines)}"
         )
     finally:
         if proc.poll() is None:
@@ -2546,6 +2604,7 @@ def test_should_kill_hard_timeout_is_the_only_killer():
 # GeminiAdapter
 # ---------------------------------------------------------------------------
 
+
 def test_gemini_adapter_attributes():
     adapter = GeminiAdapter()
     assert adapter.name == "gemini"
@@ -2608,7 +2667,8 @@ def test_gemini_adapter_workspace_write_yolo(tmp_path):
 
 @patch.dict("os.environ", {}, clear=True)
 def test_resolve_gemini_auth_mode_defaults_to_subscription_without_api_key(
-    tmp_path, monkeypatch,
+    tmp_path,
+    monkeypatch,
 ):
     # API-first policy (2026-05-05, #1710): auto mode uses subscription only
     # when no API key is available.
@@ -2653,7 +2713,8 @@ def test_gemini_adapter_api_mode_preserves_api_key_env(tmp_path):
 
 @patch.dict("os.environ", {"GEMINI_AUTH_MODE": "auto"}, clear=True)
 def test_gemini_adapter_auto_mode_prefers_api_when_api_key_exists(
-    tmp_path, monkeypatch,
+    tmp_path,
+    monkeypatch,
 ):
     (tmp_path / ".gemini").mkdir(parents=True)
     (tmp_path / ".gemini" / "oauth_creds.json").write_text("{}", encoding="utf-8")
@@ -2829,10 +2890,7 @@ def test_gemini_parse_response_extracts_session_uuid_from_resume_hint():
     adapter = GeminiAdapter()
     session_id = "2c8337b6-35da-415d-806d-91d10b5b1381"
     result = adapter.parse_response(
-        stdout=(
-            "Done.\n\n"
-            f"To resume this session: gemini --resume {session_id}\n"
-        ),
+        stdout=(f"Done.\n\nTo resume this session: gemini --resume {session_id}\n"),
         stderr="",
         returncode=0,
         output_file=None,
@@ -2950,7 +3008,8 @@ def test_gemini_parse_response_recovers_from_session_file(tmp_path, monkeypatch)
         ],
     }
     (chats_dir / "session-2026-04-10T20-00-abcdef.json").write_text(
-        _json.dumps(session_data), "utf-8",
+        _json.dumps(session_data),
+        "utf-8",
     )
 
     # Simulate a hard-timeout kill: stdout empty, returncode -9 (SIGKILL).
@@ -2962,9 +3021,7 @@ def test_gemini_parse_response_recovers_from_session_file(tmp_path, monkeypatch)
         plan=plan,
     )
 
-    assert result.ok is True, (
-        f"expected recovery to succeed, got {result.stderr_excerpt!r}"
-    )
+    assert result.ok is True, f"expected recovery to succeed, got {result.stderr_excerpt!r}"
     assert "Shall I compare thee" in result.response
     assert "Tool call thoughts" in result.response  # both gemini msgs joined
     assert "recovered" in (result.stderr_excerpt or "")
@@ -2990,11 +3047,13 @@ def test_gemini_parse_response_skips_recovery_on_fast_path(tmp_path, monkeypatch
     chats_dir = fake_home / ".gemini" / "tmp" / "learn-ukrainian" / "chats"
     chats_dir.mkdir(parents=True)
     (chats_dir / "session-old.json").write_text(
-        _json.dumps({
-            "messages": [
-                {"type": "gemini", "content": "STALE content from old session"},
-            ],
-        }),
+        _json.dumps(
+            {
+                "messages": [
+                    {"type": "gemini", "content": "STALE content from old session"},
+                ],
+            }
+        ),
         "utf-8",
     )
 
@@ -3091,6 +3150,7 @@ def test_gemini_liveness_paths_missing_dir_returns_empty(tmp_path, monkeypatch):
 # ---------------------------------------------------------------------------
 # ClaudeAdapter
 # ---------------------------------------------------------------------------
+
 
 def test_claude_adapter_attributes():
     adapter = ClaudeAdapter()
@@ -3344,16 +3404,13 @@ def test_claude_adapter_default_prefix_prefers_npx_over_local_binary(tmp_path, m
 
     # First two argv tokens MUST be the npx invocation, not the local binary.
     assert plan.cmd[0:2] == ["npx", "@anthropic-ai/claude-code@latest"], (
-        f"Default cmd_prefix should be npx@latest (matches start-claude.sh:120). "
-        f"Got: {plan.cmd[0:2]}"
+        f"Default cmd_prefix should be npx@latest (matches start-claude.sh:120). Got: {plan.cmd[0:2]}"
     )
     # And specifically: must NOT be the local claude binary path.
     assert "/Users/test/.local/bin/claude" not in plan.cmd
 
 
-def test_claude_adapter_default_prefix_falls_back_to_local_when_npx_missing(
-    tmp_path, monkeypatch
-):
+def test_claude_adapter_default_prefix_falls_back_to_local_when_npx_missing(tmp_path, monkeypatch):
     """When npx is unavailable (e.g. air-gapped CI), the local `claude` binary
     is the documented last-resort fallback. #1684."""
     from agent_runtime.adapters import claude as claude_adapter_mod
@@ -3378,16 +3435,12 @@ def test_claude_adapter_default_prefix_falls_back_to_local_when_npx_missing(
     assert "npx" not in plan.cmd
 
 
-def test_claude_adapter_default_prefix_raises_when_neither_present(
-    tmp_path, monkeypatch
-):
+def test_claude_adapter_default_prefix_raises_when_neither_present(tmp_path, monkeypatch):
     """If neither npx nor claude is on PATH, fail loudly with a clear error
     instead of silently producing an empty/broken cmd. #1684."""
     from agent_runtime.adapters import claude as claude_adapter_mod
 
-    monkeypatch.setattr(
-        claude_adapter_mod.shutil, "which", lambda _name: None
-    )
+    monkeypatch.setattr(claude_adapter_mod.shutil, "which", lambda _name: None)
 
     adapter = ClaudeAdapter()
     with pytest.raises(RuntimeError, match=r"neither `npx` nor a `claude` binary"):
@@ -3409,9 +3462,7 @@ def test_claude_adapter_explicit_cmd_prefix_override_unchanged(tmp_path, monkeyp
     from agent_runtime.adapters import claude as claude_adapter_mod
 
     # Even if shutil.which would return npx, an explicit override wins.
-    monkeypatch.setattr(
-        claude_adapter_mod.shutil, "which", lambda _name: "/usr/local/bin/npx"
-    )
+    monkeypatch.setattr(claude_adapter_mod.shutil, "which", lambda _name: "/usr/local/bin/npx")
 
     adapter = ClaudeAdapter()
     plan = adapter.build_invocation(
@@ -3477,8 +3528,7 @@ def test_kill_process_tree_kills_group_when_leader():
     proc = MagicMock()
     proc.pid = 12345
 
-    with patch.object(_os, "getpgid", return_value=12345), \
-         patch.object(_os, "killpg") as mock_killpg:
+    with patch.object(_os, "getpgid", return_value=12345), patch.object(_os, "killpg") as mock_killpg:
         proc.wait = MagicMock()
         _kill_process_tree(proc)
 
@@ -3522,6 +3572,7 @@ def test_kill_process_tree_handles_already_dead_process():
 def test_is_temp_file_matches_system_temp_dir(tmp_path):
     """_is_temp_file must recognise files under the system temp directory."""
     import tempfile as _tf
+
     tmpdir = _tf.gettempdir()
     assert _is_temp_file(Path(tmpdir) / "codex-out-12345.txt") is True
 
@@ -3573,17 +3624,26 @@ def test_popen_uses_start_new_session():
 
     mock_popen = MagicMock(return_value=mock_proc)
 
-    with patch(
-        "agent_runtime.runner.has_headroom", return_value=(True, ""),
-    ), patch(
-        "agent_runtime.runner.write_record",
-    ), patch(
-        "agent_runtime.runner.subprocess.Popen", mock_popen,
-    ), patch(
-        "agent_runtime.runner._POLL_INTERVAL_S", 0.01,
+    with (
+        patch(
+            "agent_runtime.runner.has_headroom",
+            return_value=(True, ""),
+        ),
+        patch(
+            "agent_runtime.runner.write_record",
+        ),
+        patch(
+            "agent_runtime.runner.subprocess.Popen",
+            mock_popen,
+        ),
+        patch(
+            "agent_runtime.runner._POLL_INTERVAL_S",
+            0.01,
+        ),
     ):
         invoke(
-            "codex", "hello",
+            "codex",
+            "hello",
             mode="read-only",
             cwd=Path("/tmp"),
             task_id="popen-test",
@@ -3615,22 +3675,31 @@ def test_invoke_applies_env_unsets_to_subprocess(tmp_path):
 
     mock_popen = MagicMock(return_value=mock_proc)
 
-    with patch.dict(
-        "os.environ",
-        {
-            "GEMINI_AUTH_MODE": "subscription",
-            "GEMINI_API_KEY": "secret-key",
-            "GOOGLE_API_KEY": "secret-google-key",
-        },
-        clear=False,
-    ), patch(
-        "agent_runtime.runner.has_headroom", return_value=(True, ""),
-    ), patch(
-        "agent_runtime.runner.write_record",
-    ), patch(
-        "agent_runtime.runner.subprocess.Popen", mock_popen,
-    ), patch(
-        "agent_runtime.runner._POLL_INTERVAL_S", 0.01,
+    with (
+        patch.dict(
+            "os.environ",
+            {
+                "GEMINI_AUTH_MODE": "subscription",
+                "GEMINI_API_KEY": "secret-key",
+                "GOOGLE_API_KEY": "secret-google-key",
+            },
+            clear=False,
+        ),
+        patch(
+            "agent_runtime.runner.has_headroom",
+            return_value=(True, ""),
+        ),
+        patch(
+            "agent_runtime.runner.write_record",
+        ),
+        patch(
+            "agent_runtime.runner.subprocess.Popen",
+            mock_popen,
+        ),
+        patch(
+            "agent_runtime.runner._POLL_INTERVAL_S",
+            0.01,
+        ),
     ):
         invoke(
             "gemini",
@@ -3669,14 +3738,22 @@ def test_invoke_danger_wraps_path_with_merge_shims(tmp_path):
 
     mock_popen = MagicMock(return_value=mock_proc)
 
-    with patch(
-        "agent_runtime.runner.has_headroom", return_value=(True, ""),
-    ), patch(
-        "agent_runtime.runner.write_record",
-    ), patch(
-        "agent_runtime.runner.subprocess.Popen", mock_popen,
-    ), patch(
-        "agent_runtime.runner._POLL_INTERVAL_S", 0.01,
+    with (
+        patch(
+            "agent_runtime.runner.has_headroom",
+            return_value=(True, ""),
+        ),
+        patch(
+            "agent_runtime.runner.write_record",
+        ),
+        patch(
+            "agent_runtime.runner.subprocess.Popen",
+            mock_popen,
+        ),
+        patch(
+            "agent_runtime.runner._POLL_INTERVAL_S",
+            0.01,
+        ),
     ):
         invoke(
             "codex",
@@ -3741,14 +3818,23 @@ def test_invoke_danger_respects_agent_allow_merge_opt_in(tmp_path):
 
     mock_popen = MagicMock(return_value=mock_proc)
 
-    with patch.dict("os.environ", {"AGENT_ALLOW_MERGE": "1"}, clear=False), patch(
-        "agent_runtime.runner.has_headroom", return_value=(True, ""),
-    ), patch(
-        "agent_runtime.runner.write_record",
-    ), patch(
-        "agent_runtime.runner.subprocess.Popen", mock_popen,
-    ), patch(
-        "agent_runtime.runner._POLL_INTERVAL_S", 0.01,
+    with (
+        patch.dict("os.environ", {"AGENT_ALLOW_MERGE": "1"}, clear=False),
+        patch(
+            "agent_runtime.runner.has_headroom",
+            return_value=(True, ""),
+        ),
+        patch(
+            "agent_runtime.runner.write_record",
+        ),
+        patch(
+            "agent_runtime.runner.subprocess.Popen",
+            mock_popen,
+        ),
+        patch(
+            "agent_runtime.runner._POLL_INTERVAL_S",
+            0.01,
+        ),
     ):
         invoke(
             "codex",

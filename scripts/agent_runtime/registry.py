@@ -40,7 +40,7 @@ class AgentEntry(TypedDict):
 AGENTS: dict[str, AgentEntry] = {
     "codex": {
         "adapter": "scripts.agent_runtime.adapters.codex:CodexAdapter",
-        "default_model": "gpt-5.5",
+        "default_model": "gpt-5.6-terra",
         "cost_tier": "medium",
         "capabilities": frozenset(
             {
@@ -55,7 +55,7 @@ AGENTS: dict[str, AgentEntry] = {
     },
     "codex-desktop": {
         "adapter": "scripts.agent_runtime.adapters.codex:CodexAdapter",
-        "default_model": "gpt-5.5",
+        "default_model": "gpt-5.6-terra",
         "cost_tier": "high",
         "capabilities": frozenset(
             {

@@ -78,6 +78,7 @@ def _ts() -> str:
 from validate.check_wiki_verify_markers import find_verify_markers_text
 from wiki.compiler import WRITER_CHOICES, compile_article, update_index
 from wiki.config import ALL_TRACKS, CURRICULUM_DIR, TRACK_DOMAINS, WIKI_DIR
+from wiki.domains import resolve_write_domain
 from wiki.enrichment import enrich_sources
 from wiki.sources import (
     gather_discovery_sources,
@@ -93,55 +94,6 @@ from wiki.sources_schema import (
     validate_sources_registry,
 )
 from wiki.state import log_event, read_log
-
-# ── Domain mapping: how to group discovery slugs into wiki articles ──
-
-# For FOLK, each discovery slug maps directly to a wiki article
-# For other tracks, we may want to group multiple slugs into one article
-FOLK_DOMAIN_MAP: dict[str, str] = {
-    "narodna-kultura-yak-systema": "folk/overview",
-    # narodni-viruvannia-mifolohiia-demonolohiia + zamovliannia-zaklynannia-prymovky CUT 2026-06-25
-    # (folk reset — demonology/occult/spell-craft framing, no school-canon basis; FOLK-FRAMING-STANDARD.md)
-    "kalendarna-obriadovist-zvychai": "folk/ritual",
-    "koliadky-shchedrivky": "folk/ritual",
-    "vesnianky-hayivky": "folk/ritual",
-    "kupalski-rusalni-pisni": "folk/ritual",
-    "zhnyvarski-obzhynkovi-pisni": "folk/ritual",
-    "rodynna-obriadovist-zvychai": "folk/ritual",
-    "vesilni-pisni": "folk/ritual",
-    "holosinnya": "folk/ritual",
-    "dumy-nevilnytski-lytsarski": "folk/genres",
-    "bylyny-kyivskoho-tsyklu": "folk/genres",
-    "dumy-sotsialno-pobutovi": "folk/genres",
-    "kobzarstvo-lirnytstvo": "folk/genres",
-    "istorychni-pisni": "folk/historical",
-    "striletski-povstanski-pisni": "folk/historical",
-    "rodynno-pobutovi-pisni": "folk/lyric",
-    "kolomyiky": "folk/lyric",
-    "suspilno-pobutovi-pisni": "folk/lyric",
-    "narodni-balady": "folk/lyric",
-    "pisni-literaturnoho-pokhodzhennia": "folk/lyric",
-    "charivni-kazky": "folk/prose",
-    "kazky-pro-tvaryn": "folk/prose",
-    "sotsialno-pobutovi-kazky": "folk/prose",
-    "narodni-lehendy": "folk/prose",
-    "istorychni-perekazy": "folk/prose",
-    "narodni-opovidannia-buvalshchyny-memoraty": "folk/prose",
-    "prykazky-ta-pryslivia": "folk/short-forms",
-    "zahadky": "folk/short-forms",
-    "narodni-anekdoty": "folk/short-forms",
-    "dytiachyi-folklor-kolyskovi": "folk/short-forms",
-    "vertep-narodna-drama": "folk/performance",
-    "narodni-muzychni-instrumenty": "folk/performance",
-    "narodni-tantsi": "folk/performance",
-    "pysankarstvo": "folk/material",
-    "narodna-vyshyvka-rushnyk-strii": "folk/material",
-    "narodni-remesla-ta-khudozhni-promysly": "folk/material",
-    "narodne-zhytlo-sadyba-hospodarstvo": "folk/material",
-    "narodna-kukhnia-obriadova-yizha": "folk/material",
-    "rehionalni-etnokulturni-tradytsii": "folk/synthesis",
-    "narodna-kultura-ta-vysoka-kultura-mistky": "folk/synthesis",
-}
 
 
 def cmd_log(*, track: str | None = None) -> None:
@@ -808,35 +760,7 @@ def cmd_compile_all(track: str, *, limit: int | None = None,
 
 def _get_domain(track: str, slug: str) -> str:
     """Get the wiki domain path for a module slug."""
-    from wiki.config import TRACK_WRITE_DOMAIN
-
-    # Core levels have a direct mapping
-    if track in TRACK_WRITE_DOMAIN:
-        return TRACK_WRITE_DOMAIN[track]
-
-    # FOLK has per-slug subdomain mapping
-    if track == "folk":
-        return FOLK_DOMAIN_MAP.get(slug, "folk")
-
-    # Seminar tracks
-    domain_map = {
-        "hist": "periods",
-        "bio": "figures",
-        "istorio": "historiography",
-        "lit": "literature/works",
-        "lit-essay": "literature/works",
-        "lit-war": "literature/works",
-        "lit-hist-fic": "literature/works",
-        "lit-youth": "literature/works",
-        "lit-fantastika": "literature/works",
-        "lit-humor": "literature/works",
-        "lit-drama": "literature/works",
-        # lit-doc and lit-crimea were merged into other lit-* tracks; no longer
-        # exist in curriculum.yaml. Removed from compile config 2026-04-27.
-        "oes": "linguistics/oes",
-        "ruth": "linguistics/ruthenian",
-    }
-    return domain_map.get(track, track)
+    return resolve_write_domain(track, slug)
 
 
 def _existing_article_paths(track: str, *, slug: str | None = None) -> list[Path]:

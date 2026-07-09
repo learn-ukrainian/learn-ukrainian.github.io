@@ -330,7 +330,7 @@ def _build_codex_usage_report(window: str, entrypoint: str) -> dict:
         bucket["avg_duration_s"] = round(float(bucket["total_duration_s"]) / count, 1) if count else 0.0
         bucket["total_duration_s"] = round(float(bucket["total_duration_s"]), 1)
 
-    has_room, headroom_reason = has_codex_headroom("gpt-5.5")
+    has_room, headroom_reason = has_codex_headroom("gpt-5.6-terra")
     return {
         "window": window,
         "entrypoint": entrypoint,
@@ -340,7 +340,7 @@ def _build_codex_usage_report(window: str, entrypoint: str) -> dict:
         "by_entrypoint": dict(sorted(by_entrypoint.items())),
         "recent_rate_limits": sorted(recent_rate_limits),
         "headroom": {
-            "model": "gpt-5.5",
+            "model": "gpt-5.6-terra",
             "has_headroom": has_room,
             "reason": headroom_reason,
         },
