@@ -6,7 +6,7 @@ Last reviewed: 2026-07-04
 ## Source Assumptions
 
 - BIO is a seminar biography track, not C1 core. It uses source-tier dossiers, decolonization review, portrait/image-rights rules, politically charged biography framing, and human-centered narrative prose.
-- **SSOT module ordering / slugs:** `curriculum/l2-uk-en/curriculum.yaml` (`levels.bio.modules`, 387 slugs). The 2026-06-29 expansion appended **+77 new slugs** (`modules[310:387]`) in six groups; roster framing lives in `docs/audits/bio-ukrainian-expansion-research-2026-06-29.md`, surface inventory in `docs/audits/bio-readiness-matrix-2026-06-29.md`.
+- **SSOT module ordering / slugs:** `curriculum/l2-uk-en/curriculum.yaml` (`levels.bio.modules`; derive the live count from the manifest). The 2026-06-29 expansion is historical context only; roster framing lives in `docs/audits/bio-ukrainian-expansion-research-2026-06-29.md`, surface inventory in `docs/audits/bio-readiness-matrix-2026-06-29.md`.
 - The 130/180-figure appendix in `docs/audits/bio-track-gap-audit-2026-05-26.md` covers the original roster only; do not treat it as the SSOT for +77.
 - Current source surfaces include `curriculum/l2-uk-en/plans/bio/*.yaml`, `docs/research/bio/*.md`, `wiki/figures/*.md`, `wiki/figures/*.sources.yaml`, `curriculum/l2-uk-en/bio/<slug>/`, generated site BIO pages, BIO audits, and BIO best-practice docs.
 - Every production module needs primary-voice readings where available: autobiographical writing, letters, poems, speeches, memoir passages, court statements, diaries, interviews, archival documents, or reliable contemporaneous documents by/about the figure.
@@ -41,7 +41,9 @@ Use these states in issue comments, worker prompts, and monitor handoffs:
   leads and image-rights decisions recorded. This is the earliest state where a
   writer may build `curriculum/l2-uk-en/bio/<slug>/`.
 - `module-built`: module, activities, vocabulary, resources, generated MDX, and
-  permitted readings exist and pass deterministic gates.
+  permitted readings exist and pass deterministic gates. This is an observed
+  artifact state: a legacy pilot may be `module-built` while still blocked from
+  promotion by missing manual evidence.
 - `qg-current`: the built module has current persisted LLM-QG state in the local
   LLM-QG store or a current module-local `llm_qg.json`; generated QG artifacts
   and telemetry DBs stay out of PR diffs.
@@ -50,6 +52,19 @@ Use these states in issue comments, worker prompts, and monitor handoffs:
 If a slug is missing one or more prep surfaces, dispatch base-prep workers before
 module writers. If a slug is built but lacks current LLM-QG, route QG closure
 before claiming it shipped.
+
+Use `.venv/bin/python scripts/audit/bio_readiness_ledger.py --format summary`
+for the live roster. The ledger keeps fail-closed promotion milestones separate
+from observed `artifact_state` and `release_state`; an existing build with no
+current QG must remain visibly `qg-pending`. In a worktree, point
+`LEARN_UKRAINIAN_LLM_QG_DB` or `--llm-qg-db` at the operator's read-only store.
+If that store is unavailable, report QG as unknown rather than claiming zero
+current results.
+
+For `independent_content_review`, reviewer independence is evaluated against
+the module author/model family and recorded in the linked evidence. One
+cross-family review may supply both corpus-hammer and content-review evidence
+when it explicitly performs both checks; the ledger never infers either pass.
 
 ## Readiness Gate And Stage Sequencing
 
