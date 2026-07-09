@@ -206,6 +206,62 @@ def test_empty_snapshot_marks_unknown_and_suppresses_rec(monkeypatch, tmp_path):
     assert any(r["lane"] == "codex" and r["type"] == "subscription" for r in ranked)
 
 
+def test_empty_ledger_uses_fresh_codexbar_for_deficit_verdict(monkeypatch, tmp_path):
+    """A guard refresh must retain authoritative deficit data without ledger records."""
+    now = datetime(2026, 7, 9, 16, 13, tzinfo=UTC)
+    _configure(monkeypatch, tmp_path, [])
+    refreshed = {
+        "claude": {
+            "lane": "claude",
+            "primary_used_pct": 10.0,
+            "weekly_used_pct": 74.0,
+            "monthly_cap_usd": None,
+            "monthly_used_usd": None,
+            "weekly_resets_at": "2026-07-13T06:59:59Z",
+            "weekly_pace_delta_pct": 27.0,
+            "will_last_to_reset": False,
+            "pace_summary": "27% in deficit",
+            "source": "codexbar",
+            "fetched_at": "2026-07-09T16:13:00Z",
+            "stale": False,
+            "age_s": 0.0,
+        },
+        "codex": {
+            "lane": "codex",
+            "primary_used_pct": 5.0,
+            "weekly_used_pct": 20.0,
+            "monthly_cap_usd": None,
+            "monthly_used_usd": None,
+            "weekly_resets_at": "2026-07-12T19:26:49Z",
+            "weekly_pace_delta_pct": -30.0,
+            "will_last_to_reset": True,
+            "pace_summary": "30% in reserve",
+            "source": "codexbar",
+            "fetched_at": "2026-07-09T16:13:00Z",
+            "stale": False,
+            "age_s": 0.0,
+        },
+    }
+    monkeypatch.setattr(
+        state_router,
+        "refresh_provider_usage_data",
+        lambda providers: refreshed,
+    )
+    monkeypatch.setattr(
+        state_router,
+        "get_provider_usage_data",
+        lambda provider: {"lane": provider, "weekly_used_pct": None},
+    )
+
+    data = state_router.compute_routing_budget(now, fresh_codexbar=True)
+
+    assert data["diagnostics"]["records_loaded"] == 0
+    assert data["diagnostics"]["codexbar_data_available"] is True
+    assert data["agents"]["claude"]["status"] == "hot"
+    assert data["recommendation"]["primary_agent_for_code"] is not None
+    assert any("lane claude is in deficit" in warning for warning in data["recommendation"]["warnings"])
+
+
 def test_stale_snapshot_downgrades_to_advisory_no_hard(monkeypatch, tmp_path):
     """AC: generated/data >15min → stale=true, advisory in warnings; never hard block."""
     now = datetime(2026, 5, 13, 20, 30, tzinfo=UTC)
