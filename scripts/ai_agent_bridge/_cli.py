@@ -57,6 +57,10 @@ from ._opencode import (
 )
 
 _CALLER_IDENTITY_ENV_HINTS = (
+    # Order mirrors _detect_caller_identity_from_env; SESSION_HANDOFF_AGENT is
+    # checked FIRST there — omitting it here left the "Cannot infer sender"
+    # hint incomplete and let launcher-exported identity leak into tests.
+    "SESSION_HANDOFF_AGENT",
     "CLAUDE_AGENT_NAME",
     "CODEX_SESSION",
     "CLAUDE_PROJECT_DIR",
