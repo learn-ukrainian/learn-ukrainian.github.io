@@ -1801,3 +1801,32 @@ def test_v2_enforcement_real_number_swap_still_rejected() -> None:
     )
     assert result.invalid_fact_checks == 1
     assert result.payload["fact_checks"][0]["anchor_recovered_ambiguous"] is False
+
+
+def test_v2_enforcement_findings_path_recovers_exact_abstain(monkeypatch) -> None:
+    # The findings loop must recover abstains the same way the fact_checks loop does (sibling path).
+    _stub_anchor(monkeypatch, anchored=False, abstained=True, similarity=1.0)
+    payload = {
+        "findings": [
+            {
+                "issue_id": "SEMINAR_FACTUAL_DETAIL",
+                "issue_class": "other",
+                "dimension": "seminar_sensitivity",
+                "severity": "warning",
+                "excerpt": "весняні обрядові пісні",
+                "message": "grounded finding",
+                "grounding": {
+                    "tool": "sources_query_wikipedia",
+                    "query": "Веснянки",
+                    "evidence_excerpt": "весняні обрядові пісні",
+                    "tool_call_id": "call_1",
+                },
+            }
+        ]
+    }
+    result = llm_reviewer_dispatch.enforce_grounding_against_tool_events(
+        payload, {"tool_events": [_sources_event()]}, policy_family="seminar", gate_version="v2"
+    )
+    kept = result.payload.get("findings", [])
+    assert len(kept) == 1  # recovered as provenance-passed, not dropped as ungrounded
+    assert kept[0]["anchor_recovered_ambiguous"] is True
