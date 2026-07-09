@@ -1543,6 +1543,12 @@ still populates. A single wedged collector never takes down the
 whole response — this fixed the incident logged in the first entry
 of `docs/monitor-api/cold-start-baseline.md`.
 
+If the `issues` collector returns `issues_error` or the GitHub
+subsection times out, run
+`.venv/bin/python scripts/orchestration/issue_stream_audit.py --json`
+to refresh the issue-stream hygiene cache instead of retrying the full
+orient bundle blindly.
+
 ---
 
 ## Cold-Start Consolidation — `/api/state/manifest`, `/api/rules`, `/api/session/current`, `/api/comms/inbox` (#1309)
@@ -1598,7 +1604,9 @@ filenames (newest first). The default agent is `orchestrator`; use
 `agent=codex`, `agent=claude`, or `agent=gemini` to read that agent's
 mapped handoff file. The Codex orchestrator handoff lives at
 `docs/session-state/codex-orchestrator-handoff.md`; other durable agent
-handoffs normally use `docs/session-state/current.<agent>.md`. Pass
+handoffs normally use `docs/session-state/current.<agent>.md`. Codex UI
+rollovers read `docs/session-state/current.orchestrator.md`, which is a
+thin pointer to the durable orchestrator handoff above. Pass
 `agent=router` only when you need the small compatibility router at
 `docs/session-state/current.md`.
 

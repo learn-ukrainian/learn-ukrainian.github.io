@@ -114,7 +114,7 @@ constraints are clear. Until then, workers write via the local CLI.
 - Workers report through the ledger, their Codex thread, and their owned
   GitHub issue or PR.
 - Workers must not write `docs/session-state/current.md`,
-  `docs/session-state/current.codex.md`, or any shared session-state file.
+  `docs/session-state/current.orchestrator.md`, or any shared session-state file.
 - The orchestrator remains responsible for review routing, merge decisions,
   issue hygiene, PR queue hygiene, and final summaries.
 - Independent review remains mandatory before merge.

@@ -131,7 +131,7 @@ Durable role handoffs and thread rollover packets are separate:
 | Agent | Durable role handoff |
 |---|---|
 | orchestrator | `docs/session-state/codex-orchestrator-handoff.md` |
-| codex | `docs/session-state/current.codex.md` |
+| codex | `docs/session-state/current.orchestrator.md` → `docs/session-state/codex-orchestrator-handoff.md` |
 | claude | `docs/session-state/current.claude.md` |
 | gemini | `docs/session-state/current.gemini.md` |
 
@@ -144,6 +144,9 @@ state file.
 For compatibility, `docs/session-state/current.orchestrator.md` remains a thin
 pointer to `docs/session-state/codex-orchestrator-handoff.md` while older
 routers and cold-start hooks still reference it.
+
+Codex UI cold-starts should read the orchestrator pointer above instead of a
+missing Codex-specific handoff file.
 
 Use `/api/session/current?agent=<name>` or read the matching
 durable role handoff directly. Only the orchestrator updates the router by
