@@ -79,7 +79,9 @@ for launcher in start-claude.sh start-codex.sh; do
     || fail "$launcher no longer sources deploy_extensions.sh"
   grep -q 'deploy_agent_extensions' "$REPO_ROOT/$launcher" \
     || fail "$launcher no longer calls deploy_agent_extensions"
-  if grep -E 'npm run [a-z:]*deploy.*(\|\| true|2>/dev/null)' "$REPO_ROOT/$launcher" >/dev/null; then
+  # ^[^#]* keeps the guard from false-positiving on comments that merely
+  # describe the old pattern (deepseek review recommendation, PR #4843).
+  if grep -E '^[^#]*npm run [a-z:]*deploy.*(\|\| true|2>/dev/null)' "$REPO_ROOT/$launcher" >/dev/null; then
     fail "$launcher reintroduced a fail-silent npm deploy"
   fi
 done
