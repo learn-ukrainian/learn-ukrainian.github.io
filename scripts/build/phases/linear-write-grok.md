@@ -328,6 +328,12 @@ The deterministic wiki-coverage gate hard-fails when any phonetic_rule has
 - Phase: {PHASE}
 - Word target: {WORD_TARGET}
 
+## Module Size Policy — dossier/evidence-led expansion control (#4801)
+
+{SIZE_POLICY}
+
+The plan floor still binds, but expansion above complete coverage must be source-backed and pedagogically useful. If the policy reports `plan_policy_review_required` or `blocked_until_research_dossier`, do not pad; complete verifiable coverage and emit `<!-- SIZE_POLICY_MISMATCH: plan floor exceeds sourced evidence -->`.
+
 ## Learner State
 
 Words and grammar listed in **Cumulative vocabulary** / **Grammar already taught** are the floor of what this module's prose may assume. Do not re-explain already-taught grammar; do not introduce vocabulary that is not in the cumulative list or in this module's declared `vocabulary.yaml` (any unknown UK lemma in body prose without inline gloss is a HARD audit failure from m04 onward; WARN m01-m03).

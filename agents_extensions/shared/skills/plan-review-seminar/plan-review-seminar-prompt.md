@@ -27,19 +27,31 @@ You have THREE authority sources. Use ALL of them:
 
 Read the plan YAML file, then systematically check every item below.
 
-## Word Targets (from config.py)
+## Size Policy (#4801)
 
-**NEVER lower these. If the plan has a different value, flag as CRITICAL.**
+Do not review seminar plans with a single fixed target table. The plan
+`word_target` is the current floor until an explicit plan/policy revision
+changes it, and dossier/source density controls justified expansion above that
+floor.
 
-| Track | target_words |
-|-------|-------------|
-| FOLK | 4000 |
-| HIST | 5000 |
-| ISTORIO | 5000 |
-| BIO | 5000 |
-| LIT (all subtracks) | 5000 |
-| OES | 5000 |
-| RUTH | 5000 |
+Review size in three parts:
+
+1. `word_target` must be numeric and must not be silently lowered from the
+   existing locked plan.
+2. Section budgets must align with the plan floor unless the plan carries an
+   explicit size-policy rationale.
+3. Expansion above coverage must be source-backed and pedagogically useful; if
+   the dossier is thin, flag research incompleteness or plan/policy mismatch
+   instead of demanding filler.
+
+Typical advisory ranges:
+
+| Band | Advisory range |
+|------|----------------|
+| Sparse dossier | 3800-5000 |
+| Normal dossier | 5000-6500 |
+| Dense dossier | 6500-8000 |
+| Exceptional dossier | 8000+ only with explicit justification |
 
 ---
 
@@ -49,7 +61,7 @@ Read the plan YAML file, then systematically check every item below.
 
 Flag as **CRITICAL**.
 
-- [ ] **word_target matches config** — Must be 5000 for all seminar tracks.
+- [ ] **word_target has policy authority** — Numeric floor is present and either matches the locked plan/default or carries an explicit size-policy rationale. Do not auto-fail FOLK solely for being 4000 or 5000; flag unresolved plan/policy mismatch instead.
 - [ ] **Section budgets sum correctly** — Sum all section `words:` values. Must be within +/-10% of `word_target`.
 - [ ] **No section >10% under its budget** — Each section's word count should not be more than 10% below its stated target.
 - [ ] **Required fields present** — module, level, sequence, slug, version, title, focus, pedagogy, word_target, objectives, content_outline, vocabulary_hints, activity_hints, persona.
@@ -161,7 +173,7 @@ For every word in `vocabulary_hints.required` and `vocabulary_hints.recommended`
 ## Rule Compliance
 | Check | Status | Details |
 |-------|--------|---------|
-| word_target | PASS/FAIL | Plan: X, Config: track target |
+| word_target | PASS/FAIL | Plan floor: X; size-policy status/rationale |
 | section_budgets | PASS/FAIL | Sum = X vs track target (+/-Z%) |
 | required_fields | PASS/FAIL | Missing: ... |
 | version_string | PASS/FAIL | ... |

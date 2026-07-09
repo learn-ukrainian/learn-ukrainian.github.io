@@ -208,9 +208,15 @@ Non-plan vocabulary must pass `query_cefr_level`, frequency, or ULP coverage for
 - Phase: {PHASE}
 - Word **minimum**: {WORD_TARGET} — this is a FLOOR. The gate hard-rejects below 92% of this number. Plan section budgets around **~1.20× the minimum** because the strict gate tokenization excludes markdown comments, JSX tag/attribute syntax, punctuation tokens, numbers, and page refs; self-counted `wc -w` usually runs 15-16% high.
 
-## Section Word Budgets — hard first-draft requirements
+## Module Size Policy — dossier/evidence-led expansion control (#4801)
 
-The first draft must meet or exceed `{WORD_TARGET}` and must hit every section `words:` budget below. If the first draft is short, the pipeline immediately re-prompts for targeted expansion before Python QG continues. Each planned section must reach its own budget with substantive exposition, examples, close-reading, source comparison, and cultural/grammar analysis. `:::primary-reading` quoted text is excluded from counted words; surrounding explanation must carry the budget.
+{SIZE_POLICY}
+
+This policy does not lower the plan floor on its own. It controls expansion permission: never invent depth to satisfy a fixed word count, and never treat old 150% multiplier thinking as a target. If the policy reports `plan_policy_review_required` or `blocked_until_research_dossier`, complete the verifiable coverage and emit the required `SIZE_POLICY_MISMATCH` marker instead of padding.
+
+## Section Word Budgets — policy-aware first-draft requirements
+
+The first draft must meet or exceed `{WORD_TARGET}` and must hit every section `words:` budget below when the size policy permits source-backed expansion. If the first draft is short, the pipeline may request targeted expansion before Python QG continues; that expansion is allowed only with substantive, cited exposition, examples, close-reading, source comparison, and cultural/grammar analysis. `:::primary-reading` quoted text is excluded from counted words; surrounding explanation must carry the budget.
 
 {SECTION_WORD_BUDGETS}
 

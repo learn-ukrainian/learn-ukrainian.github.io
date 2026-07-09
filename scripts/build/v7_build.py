@@ -878,11 +878,13 @@ def _writer_prompt(
     wiki_manifest: str | Mapping[str, Any],
     implementation_map: Mapping[str, Any],
     writer: str,
+    plan_path: Path | None = None,
     use_generator: bool = False,
     obligation_checklist: Mapping[str, Any] | None = None,
 ) -> str:
     return linear_pipeline.render_writer_prompt(
         plan=plan,
+        plan_path=plan_path,
         plan_content=plan_content,
         knowledge_packet=knowledge_packet,
         wiki_manifest=wiki_manifest,
@@ -1883,6 +1885,7 @@ def _run(args: argparse.Namespace) -> int:
             )
             prompt = _writer_prompt(
                 plan=plan,
+                plan_path=plan_path,
                 plan_content=plan_content,
                 knowledge_packet=knowledge_packet,
                 wiki_manifest=wiki_manifest,
