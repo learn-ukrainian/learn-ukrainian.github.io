@@ -242,26 +242,34 @@ def _codex_backend(model: str, messages: list[Message], **kwargs: Any) -> Comple
 
 
 def _gemini_backend(model: str, messages: list[Message], **kwargs: Any) -> CompletionResponse:
-    """Gemini-family completions via AGY (migrated from retired gemini CLI, #4609)."""
-    prompt = str(kwargs.get("prompt") or _flatten_messages(messages))
-    from agent_runtime.adapters.agy import AgyAdapter
+    """Gemini-family completions via AGY (migrated from retired gemini CLI, #4609).
 
-    adapter = AgyAdapter()
-    plan = adapter.build_invocation(
-        prompt=prompt,
-        mode="danger",
-        cwd=REPO_ROOT,
-        model=model,
-        task_id="proxy-gemini",
-        session_id=None,
-        tool_config=None,
-    )
+    Uses AGY display labels (via existing mapping) and passes prompt via stdin ("-")
+    to support large prompts without hitting argv size limits (see test_openai_proxy_arg_max).
+    """
+    prompt = str(kwargs.get("prompt") or _flatten_messages(messages))
+
+    # Resolve legacy gemini public name (e.g. gemini-3.1-pro-preview) to AGY display label.
+    # Import here to avoid circulars at module load.
+    try:
+        from agent_runtime.adapters.agy import _AGY_MODEL_BY_NORMALIZED, _normalize_model
+        agy_model = _AGY_MODEL_BY_NORMALIZED.get(_normalize_model(model), model)
+    except Exception:
+        agy_model = model
+
+    agy_bin = AGY_CLI
+    # Use "-" as prompt placeholder so large prompts go via stdin (not argv).
+    cmd = [
+        agy_bin,
+        "-p",
+        "-",
+        "--dangerously-skip-permissions",
+        "--model",
+        agy_model,
+    ]
+
     env = dict(_PARENT_ENV)
-    if plan.env_overrides:
-        env.update(plan.env_overrides)
-    # Use the plan's cmd (agy -p ...) and run via existing helper.
-    # The helper expects the binary name prefix for logging.
-    result = _run_backend_command("agy", plan.cmd, prompt=prompt, env=env)
+    result = _run_backend_command("agy", cmd, prompt=prompt, env=env)
     return CompletionResponse(content=result.stdout.strip())
 
 
@@ -293,12 +301,12 @@ def _hermes_backend(model: str, messages: list[Message], **kwargs: Any) -> Compl
 
 
 # Alias Mapping Table:
-# - gemini-* now routed via AGY (Antigravity) per #4609 (retired gemini CLI removed from completions path).
-#   Probe already used AGY. AGY adapter handles model mapping and invocation.
+# gemini-* now routed via AGY per #4609. Use AGY display labels in cli_model_name so
+# the backend can pass correct --model to agy. Legacy public names are resolved inside _gemini_backend.
 _ROUTABLE_MODELS: dict[str, ModelRoute] = {
     "codex": ModelRoute(family="openai-codex", backend=_codex_backend),
-    "gemini-3.0-flash-preview": ModelRoute(family="google-gemini", backend=_gemini_backend, cli_model_name="gemini-2.5-flash"),
-    "gemini-3.1-pro-preview": ModelRoute(family="google-gemini", backend=_gemini_backend),
+    "gemini-3.0-flash-preview": ModelRoute(family="google-gemini", backend=_gemini_backend, cli_model_name="Gemini 3.5 Flash (High)"),
+    "gemini-3.1-pro-preview": ModelRoute(family="google-gemini", backend=_gemini_backend, cli_model_name="Gemini 3.1 Pro (High)"),
     "claude-opus-4-8": ModelRoute(family="anthropic", backend=_claude_backend),
     "claude-opus-4-7": ModelRoute(family="anthropic", backend=_claude_backend),
     "claude-sonnet-4-7": ModelRoute(family="anthropic", backend=_claude_backend),
