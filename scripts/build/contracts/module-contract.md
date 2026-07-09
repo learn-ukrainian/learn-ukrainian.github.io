@@ -189,7 +189,8 @@ Example BANNED: "You have learned a lot in this section. Great job!"
 
 ## §5 Honesty contract — VERIFY is a positive signal
 
-**Authority:** `scripts/build/phases/v6-write.md` Rule #11.
+**Authority:** `scripts/build/phases/linear-write.md` and
+`scripts/build/phases/linear-write-grok.md` writer honesty rules.
 
 The writer MUST flag uncertain claims with `<!-- VERIFY: {claim} -->`.
 This is a positive honesty signal — the reviewer scores its presence
@@ -223,7 +224,8 @@ taught). A marker placed AFTER is PASS.
 ## §7 Forbidden-words contract
 
 **Authority:** `scripts/build/quick_verify.py` `SEVERE_RUSSIANISMS` +
-`scripts/build/phases/v6-write.md` forbidden-word table.
+the writer charter embedded in `scripts/build/phases/linear-write.md` and
+`scripts/build/phases/linear-write-grok.md`.
 
 The following Russian tokens are hard-banned — the post-write toxic
 token scanner fails the build on any hit, even inside dialogue, even
@@ -334,9 +336,9 @@ supersedes templates.
 
 `tests/test_contract_reference_sync.py` asserts at CI time that:
 
-- `scripts/build/phases/v6-write.md` references this document by path
-- every `scripts/build/phases/v6-review/v6-review-*.md` references
-  this document by path
+- `scripts/build/phases/linear-write.md` and
+  `scripts/build/phases/linear-write-grok.md` reference this document by path
+- `scripts/build/phases/linear-review-dim.md` references this document by path
 - the Naturalness reviewer carries the §4 allow-list literal
 - the per-dim reviewer templates carry `{IMMERSION_RULE}` or its
   calibration clause from §1

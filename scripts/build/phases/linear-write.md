@@ -1,6 +1,7 @@
 # Writer Charter (write-time subset)
 
 This is the actionable subset of `docs/north-star.md` for the writer phase.
+Shared module contract path: `scripts/build/contracts/module-contract.md`.
 
 <!-- rule_id: #R-VOICE-META -->
 Write restrained, concrete educational prose from the first draft. Reject decorative pathos, hagiography, elegiac/heroizing framing, symbolic abstractions, and thesis-sounding sentences that feel impressive but vague. Every sentence must do one concrete job: name a source-grounded fact, show a Ukrainian form in use, explain a language pattern, or direct a learner action. If it cannot, replace it with concrete content or cut it; never pad, and never drop below the contract word floor. For BIO and cultural modules, keep biography, reception, and context factual and natural; do not turn the person or topic into a legend or moral emblem, and do not reach for melodramatic Soviet/post-Soviet pathos. State repression, censorship, russification, institutional pressure, and decolonization facts plainly when the plan or sources require them.

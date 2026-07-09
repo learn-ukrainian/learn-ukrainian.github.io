@@ -60,6 +60,7 @@ from scripts.build.citation_matcher import (
 )
 from scripts.build.module_size_policy import (
     build_size_policy_for_plan,
+    render_reviewer_size_policy,
     render_writer_size_policy,
     size_policy_allows_auto_expansion,
     size_policy_summary,
@@ -4558,6 +4559,12 @@ def review_context(
         "MODULE_NUM": str(sequence),
         "MODULE_SLUG": str(plan["slug"]),
         "WORD_TARGET": str(plan["word_target"]),
+        "SIZE_POLICY": render_reviewer_size_policy(
+            build_size_policy_for_plan(
+                plan,
+                actual_words=_writer_draft_countable_words(generated_content),
+            )
+        ),
         "LEARNER_STATE": format_learner_state(learner_state),
         "IMMERSION_RULE": get_immersion_rule(
             level.lower(),

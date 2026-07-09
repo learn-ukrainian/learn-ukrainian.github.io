@@ -9,8 +9,10 @@ from scripts.audit import module_size_policy_audit as audit
 from scripts.build import linear_pipeline
 from scripts.build.module_size_policy import (
     build_size_policy_for_plan,
+    render_reviewer_size_policy,
     render_writer_size_policy,
     size_policy_allows_auto_expansion,
+    size_policy_padding_diagnostic,
 )
 from scripts.build.phases.implementation_map import seed_implementation_map
 
@@ -105,6 +107,32 @@ def test_size_policy_blocks_auto_expansion_when_plan_floor_exceeds_sparse_ceilin
     assert size_policy_allows_auto_expansion(record) is False
     block = render_writer_size_policy(record)
     assert "Expansion permission: plan_policy_review_required" in block
+
+
+def test_size_policy_reports_advisory_padding_diagnostic(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _patch_size_policy_roots(monkeypatch, tmp_path)
+    plan = {
+        "level": "BIO",
+        "slug": "dense-person",
+        "word_target": 5000,
+        "content_outline": [{"section": "Огляд", "words": 5000}],
+        "references": [{"type": "dossier", "path": "docs/research/bio/dense-person.md"}],
+    }
+    _write_dossier(tmp_path, "bio", "dense-person", 900)
+
+    record = build_size_policy_for_plan(plan, actual_words=5600)
+    diagnostic = size_policy_padding_diagnostic(record)
+
+    assert record.status == "over_advisory_ceiling"
+    assert diagnostic["status"] == "over_advisory_ceiling"
+    assert diagnostic["over_advisory_ceiling_words"] == 600
+    assert "source-backed density from filler/padding" in diagnostic["review_action"]
+    reviewer_block = render_reviewer_size_policy(record)
+    assert "do not fail or pass a module on word count alone" in reviewer_block
+    assert "source-backed density" in reviewer_block
 
 
 def test_size_policy_uses_plan_path_slug_when_plan_has_no_slug(

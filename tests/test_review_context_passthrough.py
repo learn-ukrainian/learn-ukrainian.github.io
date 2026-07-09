@@ -31,3 +31,6 @@ def test_per_dim_reviewer_prompt_receives_manifest_and_implementation_map() -> N
     assert "Manifest obligations:" in prompt
     assert "obligation_id: step-5" in prompt
     assert "treatment_template:" in prompt
+    assert "## Module Size Policy" in prompt
+    assert "Expansion permission:" in prompt
+    assert "Padding diagnostic:" in prompt
