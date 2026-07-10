@@ -11,6 +11,7 @@ import {
   morphologyFormCountLabel,
   registerBadgeLabel,
 } from "../lib/lexicon/register-markers";
+import { normalize as normalizeAtlasSearchText } from "../lib/lexicon/search";
 
 interface CourseUsage {
   track: string;
@@ -166,11 +167,18 @@ interface LexiconEntry {
 interface Props {
   entry: LexiconEntry;
   allEntries: LexiconEntry[];
+  componentLinkTargets?: Map<string, string>;
   generatedAt: string;
   manifestVersion: string;
 }
 
-const { entry, allEntries, generatedAt, manifestVersion } = Astro.props as Props;
+const {
+  entry,
+  allEntries,
+  componentLinkTargets = new Map<string, string>(),
+  generatedAt,
+  manifestVersion,
+} = Astro.props as Props;
 const enrichment = entry.enrichment ?? null;
 const sections = entry.sections ?? null;
 const heritage = entry.heritage_status ?? null;
@@ -216,7 +224,9 @@ const MORPHOLOGY_SUPPRESSED_TYPES = new Set([
   "phraseologism",
   "proverb",
 ]);
-const suppressMorphology = MORPHOLOGY_SUPPRESSED_TYPES.has(entry.entry_type ?? "");
+const isExpressionLikeEntry = MORPHOLOGY_SUPPRESSED_TYPES.has(entry.entry_type ?? "");
+const suppressMorphology = isExpressionLikeEntry;
+const entryTypeLabel = expressionLikeEntryTypeLabel(entry.entry_type);
 const posLabel = formatPos(entry.pos, enrichment?.morphology?.pos);
 const headwordIpa = formatIpa(entry.pronunciation?.ipa ?? entry.ipa);
 const heritageBoxes = resolveHeritageBoxes(entry);
@@ -228,7 +238,7 @@ const courseUsage = entry.course_usage.slice().sort((a, b) => {
 });
 const textbookItems = enrichment?.textbooks ?? [];
 const externalGroups = groupExternalMaterials(enrichment?.external_materials ?? []);
-const componentLinks = buildComponentLinks(entry, allEntries);
+const componentLinks = buildComponentLinks(entry, allEntries, componentLinkTargets);
 const sourceList = buildSourceList();
 const phraseHasGloss = Boolean(entry.gloss && definitionCards.length === 0 && !enrichment?.meaning);
 const shouldShowEditorialWarning = Boolean(heritageBoxes.red);
@@ -299,6 +309,16 @@ function formatPos(pos: string | null | undefined, morphologyPos: string | undef
     interjection: "вигук",
   };
   return morphologyPos ?? (pos ? labels[pos] ?? pos : null);
+}
+
+function expressionLikeEntryTypeLabel(entryType: string | null | undefined) {
+  const labels: Record<string, string> = {
+    expression: "вираз",
+    phraseologism: "фразеологізм",
+    proverb: "прислів'я",
+    multiword_term: "термін",
+  };
+  return entryType ? labels[entryType] ?? null : null;
 }
 
 function isSum11DefinitionCard(card: DefinitionCard) {
@@ -484,18 +504,25 @@ function sourceHost(url: string) {
   }
 }
 
-function buildComponentLinks(current: LexiconEntry, entries: LexiconEntry[]) {
-  if (current.pos !== "phrase") return [];
-  const normalize = (value: string) =>
-    value
-      .toLocaleLowerCase("uk")
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .replace(/[^\p{L}'’]+/gu, "");
-  const byLemma = new Map(entries.map((item) => [normalize(item.lemma), item]));
-  return Array.from(new Set(current.lemma.split(/\s+/).map(normalize)))
-    .map((word) => byLemma.get(word))
-    .filter((item): item is LexiconEntry => Boolean(item) && item.url_slug !== current.url_slug);
+function buildComponentLinks(
+  current: LexiconEntry,
+  entries: LexiconEntry[],
+  componentLinkTargets: Map<string, string>,
+) {
+  if (!MORPHOLOGY_SUPPRESSED_TYPES.has(current.entry_type ?? "")) return [];
+  const entriesBySlug = new Map(entries.map((item) => [item.url_slug, item]));
+  const tokens = current.lemma.match(/[\p{L}\p{M}]+(?:['’][\p{L}\p{M}]+)*/gu) ?? [];
+  return tokens.map((text) => {
+    const targetSlug = componentLinkTargets.get(normalizeAtlasSearchText(text));
+    const target = targetSlug ? entriesBySlug.get(targetSlug) : undefined;
+    return {
+      text,
+      target:
+        target && target.entry_type === "lemma" && target.url_slug !== current.url_slug
+          ? target
+          : null,
+    };
+  });
 }
 
 function buildSourceList() {
@@ -571,7 +598,7 @@ function groupExternalMaterials(items: NonNullable<Enrichment["external_material
       <>
         <div class="word-hero">
       <div class="word-hero-inner">
-        <span class="lexicon-badge">Лексикон · A-Я · {letter}</span>
+        <span class="lexicon-badge">{entryTypeLabel ? `Лексикон · ${entryTypeLabel}` : `Лексикон · A-Я · ${letter}`}</span>
         <h1 class="word-title">
           {entry.lemma}
           {headerStress && <span class="word-stress">[{headerStress}]</span>}
@@ -665,6 +692,23 @@ function groupExternalMaterials(items: NonNullable<Enrichment["external_material
         </div>
       </section>
 
+      {isExpressionLikeEntry && componentLinks.length > 0 && (
+        <section class="atlas-section expression-detail" data-expression-detail={entry.entry_type}>
+          <div class="component-links">
+            <div class="chip-label">Складники:</div>
+            <div class="chip-row">
+              {componentLinks.map((component) => (
+                component.target ? (
+                  <a class="chip" href={`/lexicon/${component.target.url_slug}/`}>{component.text}</a>
+                ) : (
+                  <span class="chip">{component.text}</span>
+                )
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
+
       {(definitionCards.length > 0 || enrichment?.meaning || phraseHasGloss) && (
         <section class="atlas-section">
           <h2>Значення</h2>
@@ -706,16 +750,6 @@ function groupExternalMaterials(items: NonNullable<Enrichment["external_material
               </div>
               <div class="def-text">
                 <p>{entry.gloss}</p>
-              </div>
-            </div>
-          )}
-          {componentLinks.length > 0 && (
-            <div class="component-links">
-              <div class="chip-label">Складники:</div>
-              <div class="chip-row">
-                {componentLinks.map((item) => (
-                  <a class="chip" href={`/lexicon/${item.url_slug}/`}>{item.lemma}</a>
-                ))}
               </div>
             </div>
           )}

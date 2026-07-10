@@ -9,6 +9,7 @@ import {
   getAtlasPayloadCache,
   resetAtlasPayloadCacheForTests,
   runEntryModelGates,
+  buildComponentLinkTargets,
   type AtlasPayloadCache,
   type LexiconEntry,
 } from '@site/src/lib/lexicon/atlasDb';
@@ -18,7 +19,9 @@ interface AstroComponentModule {
   default: AstroComponent;
 }
 
-const atlasDbPath = resolve(process.cwd(), '../data/atlas.db');
+const atlasDbPath = resolve(
+  process.env.ATLAS_DB_PATH ?? resolve(process.cwd(), '../data/atlas.db'),
+);
 
 // Fixtures live in the real atlas.db:
 //  - брати-взяти is a multiword_term whose migrated payload STILL carries a verb
@@ -26,6 +29,52 @@ const atlasDbPath = resolve(process.cwd(), '../data/atlas.db');
 //  - вода is a plain lemma with a noun paradigm — proving lemma pages are unchanged.
 const MULTIWORD_FIXTURE = 'брати-взяти';
 const LEMMA_FIXTURE = 'вода';
+
+const COMPONENT_LINK_TARGETS = new Map([
+  ['домі', 'dim'],
+  ['бити', 'byty'],
+  ['праці', 'pratsia'],
+  ['називний', 'nazyvnyi'],
+  ['відмінок', 'vidminok'],
+]);
+
+const COMPONENT_LEMMAS: LexiconEntry[] = [
+  ['дім', 'dim'],
+  ['бити', 'byty'],
+  ['праця', 'pratsia'],
+  ['називний', 'nazyvnyi'],
+  ['відмінок', 'vidminok'],
+].map(([lemma, url_slug]) => ({
+  lemma,
+  url_slug,
+  gloss: null,
+  entry_type: 'lemma',
+  pos: null,
+  ipa: null,
+  primary_source: 'fixture',
+  course_usage: [],
+}));
+
+function makeExpressionLikeFixture(entry_type: string, lemma: string): LexiconEntry {
+  return {
+    lemma,
+    url_slug: `fixture-${entry_type}`,
+    gloss: 'fixture gloss',
+    entry_type,
+    pos: 'phrase',
+    ipa: null,
+    primary_source: 'fixture',
+    course_usage: [
+      { track: 'a1', module_num: 1, slug: 'fixture-usage', context: 'built_vocabulary' },
+    ],
+    enrichment: {
+      meaning: { definitions: ['fixture meaning'], source: 'fixture-meaning' },
+      sources: ['fixture-citation'],
+      // Deliberately present: expression-like templates must suppress it.
+      morphology: { pos: 'noun', form_count: 1, forms: [], source: 'fixture-morphology' },
+    },
+  };
+}
 
 /** Minimal in-memory atlas.db shaped like the entry-model schema for gate tests. */
 function makeFixtureDb(): InstanceType<typeof Database> {
@@ -72,6 +121,21 @@ describe('entry_type-branched article rendering (#4385)', () => {
     });
   }
 
+  function renderFixture(
+    entry: LexiconEntry,
+    componentLinkTargets = COMPONENT_LINK_TARGETS,
+  ): Promise<string> {
+    return container.renderToString(WordAtlasArticle, {
+      props: {
+        entry,
+        allEntries: COMPONENT_LEMMAS,
+        componentLinkTargets,
+        generatedAt: 'test',
+        manifestVersion: 'test',
+      },
+    });
+  }
+
   test('entry_type is joined onto payloads from the articles table', () => {
     expect(cache.bySlug.get(MULTIWORD_FIXTURE)?.entry_type).toBe('multiword_term');
     expect(cache.bySlug.get(LEMMA_FIXTURE)?.entry_type).toBe('lemma');
@@ -103,6 +167,70 @@ describe('entry_type-branched article rendering (#4385)', () => {
     const html = await render(cache.bySlug.get(LEMMA_FIXTURE), LEMMA_FIXTURE);
     expect(html).toContain('paradigm-table');
     expect(html).toContain('Морфологія');
+  });
+
+  test.each([
+    ['expression', 'у до́мі', 'вираз', 'до́мі', 'dim', 'у'],
+    ['phraseologism', 'бити байдики', 'фразеологізм', 'бити', 'byty', 'байдики'],
+    ['proverb', 'без праці нема калача', "прислів'я", 'праці', 'pratsia', 'без'],
+    ['multiword_term', 'називний відмінок', 'термін', 'називний', 'nazyvnyi', null],
+  ])(
+    'renders %s as a detail page with safe component backlinks',
+    async (entryType, lemma, entryTypeLabel, linkedComponent, linkedSlug, unresolvedComponent) => {
+      const html = await renderFixture(makeExpressionLikeFixture(entryType, lemma));
+
+      expect(html.replace(/&#39;/g, "'")).toContain(`Лексикон · ${entryTypeLabel}`);
+      expect(html).toContain(`data-expression-detail="${entryType}"`);
+      expect(html).toContain('Складники:');
+      expect(html).toContain('fixture meaning');
+      expect(html).toContain('fixture-citation');
+      expect(html).toContain('fixture-usage');
+      expect(html).toContain(`href="/lexicon/${linkedSlug}/"`);
+      expect(html).toMatch(
+        new RegExp(`>${linkedComponent.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}</a>`),
+      );
+      if (unresolvedComponent) {
+        expect(html).toContain(`<span class="chip">${unresolvedComponent}</span>`);
+      }
+      expect(html).not.toContain('paradigm-table');
+      expect(html).not.toContain('Морфологія');
+    },
+  );
+
+  test('component_cross_links resolves a stress-marked alias and never emits a broken target', async () => {
+    const html = await renderFixture(makeExpressionLikeFixture('expression', 'у до́мі'));
+
+    expect(html).toContain('href="/lexicon/dim/"');
+    expect(html).not.toContain('href="/lexicon/у/"');
+    expect(html).not.toContain('href="/lexicon/до́мі/"');
+  });
+
+  test('lemma baseline remains byte-identical before and after entry-type branching', async () => {
+    const entry = makeExpressionLikeFixture('lemma', 'дім');
+    const { entry_type: _entryType, ...preEntryModelEntry } = entry;
+
+    const before = await renderFixture(preEntryModelEntry);
+    const after = await renderFixture(entry);
+
+    expect(after).toBe(before);
+  });
+});
+
+describe('component-link target resolution (#4385)', () => {
+  test('prefers direct approved article heads, uses unique aliases, and suppresses ambiguity', () => {
+    const targets = buildComponentLinkTargets(
+      [{ lookup_text: 'дім', target_slug: 'dim' }],
+      [
+        { lookup_text: 'дім', target_slug: 'other-dim' },
+        { lookup_text: 'домі', target_slug: 'dim' },
+        { lookup_text: 'спірний', target_slug: 'one' },
+        { lookup_text: 'спірний', target_slug: 'two' },
+      ],
+    );
+
+    expect(targets.get('дім')).toBe('dim');
+    expect(targets.get('домі')).toBe('dim');
+    expect(targets.has('спірний')).toBe(false);
   });
 });
 

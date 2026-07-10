@@ -18,16 +18,16 @@ is kept as a short compatibility stub for existing links.
 The route map predates the finalized entry model in
 [`docs/runbooks/word-atlas-entry-model.md`](../../runbooks/word-atlas-entry-model.md).
 Implementation must treat `/lexicon/{slug}` as an Atlas entry route, not as a
-lemma-only route. The current POC covers lemma-style articles only; the next
-design pass must add at least one expression-like detail view before shipping
-first-class `expression`, `phraseologism`, `proverb`, or `multiword_term`
-article support.
+lemma-only route. The current POC covers lemma-style articles and the
+implemented expression-like detail variant in `WordAtlasArticle.astro`. The
+route keeps the shared `/lexicon/{slug}` entry semantics for `expression`,
+`phraseologism`, `proverb`, and `multiword_term` records.
 
-Required future POC coverage:
+Implemented POC coverage:
 
-| Missing design source | Route | Entry model surface |
-| --- | --- | --- |
-| `expression-detail.html` or equivalent | `/lexicon/{slug}` | Fixed formula, idiom/proverb, or multiword term article with component lemma backlinks |
+| Design source | Route | Entry model surface | Status |
+| --- | --- | --- | --- |
+| `WordAtlasArticle.astro` expression-like branch | `/lexicon/{slug}` | Fixed formula, idiom/proverb, or multiword term article with labelled component lemma backlinks; unresolved components stay plain text | Implemented in entry-model PR-4 (#4385) |
 
 ## Drift Prevention
 
