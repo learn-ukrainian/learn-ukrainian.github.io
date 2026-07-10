@@ -22,8 +22,18 @@ except ImportError:
 from .config import BATCH_STATE_DIR, CURRICULUM_ROOT, LEVELS, PROJECT_ROOT
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from audit.checks.activity_validation import (
+    check_fill_in_answer_in_options,
+    check_mark_the_words_answers_in_text,
+    check_quiz_single_correct,
+    check_select_min_correct,
+    check_translate_single_correct,
+    check_unjumble_out_of_scope_dative,
+    check_unjumble_runon_answer,
+)
 from audit.status_cache import get_source_paths, read_status
 from slug_utils import to_bare_slug
+from yaml_activities import ActivityParser
 
 router = APIRouter(tags=["blue"])
 
@@ -246,16 +256,6 @@ async def get_activity_errors(track_id: str, slug: str):
         return {"track": track_id, "slug": slug, "error": "No activities file found", "violations": []}
 
     try:
-        from audit.checks.activity_validation import (
-            check_fill_in_answer_in_options,
-            check_mark_the_words_answers_in_text,
-            check_quiz_single_correct,
-            check_select_min_correct,
-            check_translate_single_correct,
-            check_unjumble_out_of_scope_dative,
-            check_unjumble_runon_answer,
-        )
-        from yaml_activities import ActivityParser
         parser = ActivityParser()
         activities = parser.parse(activities_path)
 
@@ -328,7 +328,6 @@ async def get_final_review_summary(track_id: str, slug: str):
             }
             if data.get("last_audit"):
                 try:
-                    from datetime import datetime
                     last = datetime.fromisoformat(data["last_audit"].replace("Z", "+00:00"))
                     audit_age_seconds = max(0, int((datetime.now(UTC) - last).total_seconds()))
                 except Exception:
@@ -352,16 +351,6 @@ async def get_final_review_summary(track_id: str, slug: str):
     activities_path = safe_join(track_dir, "activities", f"{bare}.yaml")
     if activities_path.exists():
         try:
-            from audit.checks.activity_validation import (
-                check_fill_in_answer_in_options,
-                check_mark_the_words_answers_in_text,
-                check_quiz_single_correct,
-                check_select_min_correct,
-                check_translate_single_correct,
-                check_unjumble_out_of_scope_dative,
-                check_unjumble_runon_answer,
-            )
-            from yaml_activities import ActivityParser
             activities = ActivityParser().parse(activities_path)
             violations = (
                 check_select_min_correct(activities)

@@ -13,6 +13,7 @@ import re
 from datetime import UTC, datetime
 from pathlib import Path
 
+import yaml
 from fastapi import APIRouter, HTTPException, Query, Request
 from fastapi.responses import FileResponse
 
@@ -173,8 +174,6 @@ def _extract_md_frontmatter(path: Path) -> dict[str, str]:
 
     yaml_str = head[4:end_idx]  # Skip opening "---\n"
     try:
-        import yaml
-
         data = yaml.safe_load(yaml_str)
         if isinstance(data, dict):
             for key, value in data.items():

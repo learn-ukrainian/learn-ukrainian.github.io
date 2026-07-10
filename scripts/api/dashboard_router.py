@@ -15,6 +15,7 @@ from fastapi import APIRouter, HTTPException
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
+from audit.config import ACTIVITY_COMPLEXITY, ACTIVITY_RESTRICTIONS, LEVEL_CONFIG, VALID_ACTIVITY_TYPES
 from common.thresholds import REVIEW_PASS_FLOOR
 
 from .config import CURRICULUM_ROOT, LEVELS, SEMINAR_TRACK_IDS
@@ -344,13 +345,6 @@ async def pipeline_status():
 @router.get("/activity-config")
 async def activity_config():
     """Activity type reference: types, min items per level, forbidden types."""
-    from audit.config import (
-        ACTIVITY_COMPLEXITY,
-        ACTIVITY_RESTRICTIONS,
-        LEVEL_CONFIG,
-        VALID_ACTIVITY_TYPES,
-    )
-
     types = []
     for act_type in VALID_ACTIVITY_TYPES:
         complexity = ACTIVITY_COMPLEXITY.get(act_type, {})

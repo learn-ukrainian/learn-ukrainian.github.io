@@ -16,6 +16,7 @@ Endpoints:
 from __future__ import annotations
 
 import asyncio
+import re
 import shutil
 import sys
 from collections import Counter
@@ -181,7 +182,6 @@ def _resolve_template_path(file_field: str) -> Path | None:
 
 def _normalize_ws(text: str) -> str:
     """Collapse all whitespace to single spaces for fuzzy matching."""
-    import re
     return re.sub(r"\s+", " ", text).strip()
 
 

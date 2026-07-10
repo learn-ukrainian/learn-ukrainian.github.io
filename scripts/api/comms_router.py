@@ -17,6 +17,7 @@ Endpoints:
   POST /api/comms/acknowledge/{id}     Ack single message
 """
 
+import asyncio
 import json
 import logging
 import os
@@ -27,6 +28,8 @@ import time
 import uuid
 from datetime import UTC, datetime
 from importlib import util as importlib_util
+
+import yaml
 
 logger = logging.getLogger(__name__)
 
@@ -194,8 +197,8 @@ def _maybe_run_delivery_expiry_sweep() -> None:
 
 def _run_delivery_expiry_sweep(message_db: "os.PathLike[str]") -> None:
     try:
-        from ai_agent_bridge import _channels as _ch
-        from ai_agent_bridge import _db as _ch_db
+        from ai_agent_bridge import _channels as _ch  # noqa: PLC0415 — optional broker bridge
+        from ai_agent_bridge import _db as _ch_db  # noqa: PLC0415 — optional broker bridge
     except Exception:
         logger.exception("bridge delivery-expiry sweep: ai_agent_bridge not importable")
         return
@@ -862,8 +865,6 @@ def _scan_track_progress(track: str) -> dict:
     # Count total expected from curriculum.yaml
     total_expected = 0
     try:
-        import yaml
-
         curriculum_yaml = CURRICULUM_ROOT / "curriculum.yaml"
         if curriculum_yaml.exists():
             data = yaml.safe_load(curriculum_yaml.read_text()) or {}
@@ -901,8 +902,6 @@ def _scan_track_progress(track: str) -> dict:
 
 def _check_build_processes() -> list[dict]:
     """Find running legacy build_module.py processes."""
-    import subprocess
-
     try:
         result = subprocess.run(
             ["ps", "aux"],
@@ -937,8 +936,6 @@ async def batch_progress():
 
     This is the main endpoint for monitoring overnight/background builds.
     """
-    import asyncio
-
     cache_key = f"comms_batch_progress_{LOG_DIR}_{PID_DIR}"
     cached = cache_get(cache_key, ttl=10.0)
     if cached is not None:
@@ -996,8 +993,6 @@ async def batch_progress():
 @router.get("/batch-progress/{track}")
 async def batch_progress_track(track: str):
     """Detailed progress for one track."""
-    import asyncio
-
     tp = await asyncio.to_thread(_scan_track_progress, track)
 
     # Get research file timeline (last 20 files)
@@ -1168,8 +1163,6 @@ async def live_activity(
     response.headers["Warning"] = (
         '299 - "This endpoint is deprecated; migrate to /api/state/build-status + /api/build/events (#1309)"'
     )
-
-    import asyncio
 
     acts, completions = await asyncio.gather(
         asyncio.to_thread(_scan_live_activity, minutes),
@@ -1455,7 +1448,7 @@ async def get_channel_endpoint(name: str):
     context_preview = ""
     context_sha = ""
     try:
-        from ai_agent_bridge import _channels as _ch
+        from ai_agent_bridge import _channels as _ch  # noqa: PLC0415 — optional broker bridge
 
         ctx_path = _ch.channel_context_path(name)
         if ctx_path.exists():
@@ -1660,7 +1653,7 @@ async def post_to_channel(name: str, req: ChannelPostRequest, request: Request):
     try:
         # Import inside handler so the bridge package isn't a hard
         # dependency for the rest of the API server startup.
-        from ai_agent_bridge import _channels as _ch
+        from ai_agent_bridge import _channels as _ch  # noqa: PLC0415 — optional broker bridge
     except ImportError:
         return JSONResponse(
             status_code=500,
@@ -1890,7 +1883,7 @@ def comms_inbox(
     ``ai_agent_bridge`` to actually drain messages.
     """
     try:
-        from scripts.ai_agent_bridge._channels import pending_deliveries_for
+        from scripts.ai_agent_bridge._channels import pending_deliveries_for  # noqa: PLC0415 — optional broker bridge
     except ImportError:
         return JSONResponse(
             status_code=500,

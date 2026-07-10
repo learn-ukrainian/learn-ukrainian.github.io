@@ -18,6 +18,8 @@ import re
 import sys
 from pathlib import Path
 
+import yaml
+
 PROJECT_ROOT = Path(__file__).parent.parent.parent
 CURRICULUM_ROOT = PROJECT_ROOT / "curriculum" / "l2-uk-en"
 
@@ -34,8 +36,6 @@ except ImportError:
 
 def _load_curriculum_order(level: str) -> list[str]:
     """Load module slugs in curriculum order from curriculum.yaml."""
-    import yaml
-
     manifest = CURRICULUM_ROOT / "curriculum.yaml"
     if not manifest.exists():
         return []
@@ -78,8 +78,6 @@ def _count_frictions(level: str, slug: str) -> tuple[int, int]:
     if not path.exists():
         return (0, 0)
     try:
-        import yaml
-
         data = yaml.safe_load(path.read_text())
         frictions = data.get("frictions", []) if data else []
         active = sum(1 for f in frictions if f.get("status") == "active")

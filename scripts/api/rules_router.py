@@ -26,6 +26,7 @@ import hashlib
 from typing import Literal
 
 from fastapi import APIRouter, HTTPException, Query, Request, Response
+from fastapi.responses import JSONResponse, PlainTextResponse
 
 from .config import PROJECT_ROOT
 from .telemetry.response import (
@@ -154,8 +155,6 @@ def get_rules(
     # Raw Markdown path. FastAPI's default str response is
     # application/json, which would JSON-encode the whole blob — wrong
     # for an agent trying to drop it straight into a prompt.
-    from fastapi.responses import PlainTextResponse
-
     return PlainTextResponse(
         content=append_telemetry_footer(markdown, session_id),
         media_type="text/markdown; charset=utf-8",
@@ -170,8 +169,6 @@ def _rules_json_response(
     etag: str,
     session_id: str | None,
 ):
-    from fastapi.responses import JSONResponse
-
     return JSONResponse(
         content=add_json_telemetry(
             {

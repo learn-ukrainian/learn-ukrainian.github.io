@@ -5,6 +5,7 @@ from __future__ import annotations
 import importlib
 import logging
 import time
+from importlib import util as importlib_util
 from pathlib import Path
 
 logger = logging.getLogger("api.preload")
@@ -104,7 +105,6 @@ def _load_migration_strategy() -> tuple[int, int, list[str]]:
     migration_path = api_dir.parent / "migrations" / "2026-05-06-broker-indexes.py"
     if migration_path.exists():
         try:
-            from importlib import util as importlib_util
             spec = importlib_util.spec_from_file_location("broker_indexes_20260506", migration_path)
             if spec is not None and spec.loader is not None:
                 module = importlib_util.module_from_spec(spec)
