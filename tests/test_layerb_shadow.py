@@ -140,6 +140,7 @@ def test_normalize_lineage_family_uses_conservative_vendor_families() -> None:
         ({"family": "openai", "pin": "gpt-5.6-terra"}, "gpt"),
         ({"family": "anthropic", "pin": "claude-opus-4-6"}, "claude"),
         ({"family": "cursor", "pin": "grok-4"}, "grok-cursor"),
+        ("adversarial-fixture", "fixture"),
         ({"family": "google", "pin": "openrouter/deepseek/deepseek-v4-pro"}, None),
         ({"family": "unmapped", "pin": "local/mystery-model"}, None),
     )
@@ -166,6 +167,15 @@ def test_route_selection_ignores_fixture_writer_sentinel() -> None:
     assert route == gemini
 
 
+def test_route_selection_ignores_adversarial_fixture_reviewer_marker() -> None:
+    gemini = JudgeRoute("gemini", "gemini-3.1-pro")
+    claude = JudgeRoute("claude", "claude-opus-4-6")
+
+    route = _select_route((gemini, claude), writer_family="fixture", reviewer_family="fixture")
+
+    assert route == gemini
+
+
 @pytest.mark.parametrize(
     ("artifact_overrides", "expected"),
     (
@@ -177,6 +187,10 @@ def test_route_selection_ignores_fixture_writer_sentinel() -> None:
         (
             {"writer_seat": {"family": "anthropic", "pin": "claude-opus-4-6"}},
             ("claude", "google"),
+        ),
+        (
+            {"dispatch": {"reviewer_family": "adversarial-fixture"}},
+            ("fixture", "fixture"),
         ),
         (
             {
