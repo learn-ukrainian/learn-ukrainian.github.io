@@ -1,5 +1,5 @@
 schema_version: 1
-description: "Curated paronym pairs for the §9.9 confusable-pair drill (#4506). 6 driver-adjudicated seeds from module contrast_pair activities. Frames authored fresh for morpho congruency (anti-gaming §5) and both-direction balance. Learner-facing text Ukrainian only. distinction_gloss_uk natural Ukrainian. Citations trace to adjudication and source module seeds. Fail-closed: curated only, no pool mining."
+description: "Curated paronym pairs for the §9.9 confusable-pair drill (#4506). 7 driver-adjudicated pairs: 6 seeds from module contrast_pair activities + вистава//виставка from the #4884 textbook-vein worksheet (Заболотний-10 §7). Frames authored fresh for morpho congruency (anti-gaming §5) and both-direction balance. Learner-facing text Ukrainian only. distinction_gloss_uk natural Ukrainian. Citations trace to adjudication and source module seeds. Fail-closed: curated only, no pool mining."
 pairs:
 - slugA: адресант
   slugB: адресат
@@ -103,3 +103,21 @@ pairs:
     answer_form: "Підписання"
     confusable_form: "Підпис"
     origin: authored-grok-build-2026-07-07  # curator fix: impersonal заплановано — «відбулося» (neuter) excluded masc підпис by agreement alone
+- slugA: вистава
+  slugB: виставка
+  distinction_gloss_uk: "Вистава — театральне видовище, яке глядачі дивляться в театрі; виставка — показ предметів (картин, книжок), які люди оглядають."
+  citations:
+  - "textbook: 10-klas-ukrmova-zabolotnyi-2018 §7 Пароніми — «вистава (спектакль) – виставка (показ картин, книжок, квітів тощо)» (chunk s0043)"
+  - "driver-adjudicated from worksheet #4884 (#4506, 2026-07-10); cross-family verified grok-build review-4883-4884-r2 (congruency + VESUM)"
+  - "§9.9 PRACTICE-HUB-SPEC"
+  curator: claude-driver-2026-07-10
+  notes: "both approved public articles (gate verified 2026-07-10); acc.sg and nom.sg congruent frames; forms VESUM-verified independently by worker and driver"
+  frames:
+  - sentence_with_slot: "Актори показали глядачам нову ___ на сцені театру."
+    answer_form: "виставу"
+    confusable_form: "виставку"
+    origin: authored-claude-2026-07-10
+  - sentence_with_slot: "У галереї відкрилася ___ сучасного живопису."
+    answer_form: "виставка"
+    confusable_form: "вистава"
+    origin: authored-claude-2026-07-10
