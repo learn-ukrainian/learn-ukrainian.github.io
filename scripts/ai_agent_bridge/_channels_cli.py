@@ -17,14 +17,17 @@ ab channel context <name> [--edit] [--show]
 ab channel tail <name> [--n N] [--thread TID]
 ab channel watch <thread_id> [--follow] [--event-stream]
 
-ab post <channel> <body> [--to A,...] [--parent ID] [--corr ID] [--model MODEL]
-ab p <channel> <agent> <body>                    # shorthand
+ab post <channel> <body> [--to A,...] [--broadcast] [--priority fyi|action-required]
+                          [--parent ID] [--corr ID] [--model MODEL]
+ab p <channel> <agent[,agent2,...]> <body>       # shorthand, multi-recipient
+ab p <channel> --broadcast <body>                # shorthand, all live seats
 
 ab inbox run <agent> [--once] [--max-messages N] [--stop-after-seconds N] [--deadline SECONDS]
 ab inbox show <agent>
 ab inbox ack <delivery_id> [--error NOTE]
 ab reconcile [--dry-run]
 ab sync <agent> | ab sync --all
+ab cleanup --expire [--dry-run]                  # channel-delivery TTL + dead-lane sweep (#4837)
 
 ab discuss <channel> <body> --with A,B [--max-rounds N] [--models agy:gemini-3.1-pro-high]
 ```
@@ -386,6 +389,23 @@ def register_channel_commands(subparsers: Any) -> None:
         help="Comma-separated list of recipient agents (default: channel subscribers)",
     )
     post_parser.add_argument(
+        "--broadcast", action="store_true",
+        help=(
+            "Send to all live seats from the registry (channel subscribers, "
+            "or all VALID_AGENTS if the channel has none), excluding dead "
+            "lanes (AB_DEAD_LANES). Mutually exclusive with --to (#4837)."
+        ),
+    )
+    post_parser.add_argument(
+        "--priority", default=None, choices=["fyi", "action-required"],
+        help=(
+            "Delivery TTL policy (#4837): 'fyi' expires fast off the channel "
+            "TTL (default). 'action-required' lingers longer and escalates "
+            "instead of silently expiring. Defaults to 'action-required' "
+            "when --review is set, else 'fyi'."
+        ),
+    )
+    post_parser.add_argument(
         "--parent", default=None,
         help="parent message_id — marks this as a reply",
     )
@@ -426,15 +446,20 @@ def register_channel_commands(subparsers: Any) -> None:
     # ── top-level: p (shortcut) ───────────────────────────────────
     p_parser = subparsers.add_parser(
         "p",
-        help="Quick post: ab p <channel> <agent> <body>",
+        help="Quick post: ab p <channel> <agent[,agent2,...]|--broadcast> <body>",
     )
     p_parser.add_argument("channel", help="Channel name")
     p_parser.add_argument(
         "agent",
-        choices=list(_channels.VALID_AGENTS),
-        help="Single recipient agent",
+        nargs="?",
+        default=None,
+        help="Recipient agent, or comma-separated agents (omit when using --broadcast)",
     )
     p_parser.add_argument("body", help="Message body (use '-' for stdin)")
+    p_parser.add_argument(
+        "--broadcast", action="store_true",
+        help="Send to all live seats from the registry, excluding dead lanes (#4837)",
+    )
     p_parser.add_argument(
         "--review", action="store_true",
         help="Prepend docs/review-protocol.md for channel deliveries",
@@ -848,7 +873,17 @@ def _pending_backlog_rows() -> list[dict[str, Any]]:
 
 
 def _maybe_print_backlog_warnings() -> None:
-    """Emit one stderr warning per agent with stale pending deliveries."""
+    """Emit one stderr warning per agent with stale pending deliveries.
+
+    Intentionally read-only — see ``run_delivery_expiry_cleanup`` (``ab
+    cleanup --expire``) and the Monitor API server's periodic sweep
+    (``scripts/api/comms_router.py``) for where the TTL policy actually
+    mutates rows (#4837 item 4). This function only warns; a print-a-
+    warning helper mutating the DB on every single CLI invocation —
+    including e.g. ``ab cleanup --dry-run`` — would be a surprising,
+    hard-to-predict side effect and would break dry-run's no-mutation
+    contract.
+    """
     threshold = timedelta(hours=_parse_backlog_warn_hours())
     now = _now_utc()
     for row in _pending_backlog_rows():
@@ -1087,6 +1122,26 @@ def _handle_channel_watch(args) -> int:
         return 1
 
 
+def _normalize_priority(raw: str | None, *, review: bool) -> str:
+    """Resolve the CLI-facing priority flag to the internal DB value.
+
+    Explicit ``--priority`` always wins. Otherwise ``--review`` implies
+    action-required (a review request is exactly the "asks, review
+    requests" case item 4 calls out), else fyi (#4837).
+    """
+    if raw is not None:
+        return raw.replace("-", "_")
+    return _channels.PRIORITY_ACTION_REQUIRED if review else _channels.PRIORITY_FYI
+
+
+def _broadcast_recipients(channel: dict[str, Any]) -> list[str]:
+    """All live seats for a channel — its subscribers, or every valid agent
+    if the channel has none configured — minus current dead lanes (#4837)."""
+    live = set(_channels.live_agents())
+    base = channel["subscribers"] or list(_channels.VALID_AGENTS)
+    return [a for a in base if a in live]
+
+
 def _handle_post(args) -> int:
     body = _resolve_body(args.body)
     if not body.strip():
@@ -1098,8 +1153,16 @@ def _handle_post(args) -> int:
         print(f"❌ channel '{args.channel}' does not exist", file=sys.stderr)
         return 1
 
-    # Default recipients = channel subscribers
-    to_agents = _parse_csv(args.to) if args.to else ch["subscribers"]
+    broadcast = getattr(args, "broadcast", False)
+    if broadcast and args.to:
+        print("❌ --broadcast cannot be combined with --to", file=sys.stderr)
+        return 1
+
+    # Default recipients = channel subscribers; --broadcast overrides with
+    # all live seats (subscribers or every valid agent, minus dead lanes).
+    to_agents = _broadcast_recipients(ch) if broadcast else (_parse_csv(args.to) if args.to else ch["subscribers"])
+    priority = _normalize_priority(getattr(args, "priority", None), review=args.review)
+
     model = getattr(args, "model", None)
     deadline = getattr(args, "deadline", None)
 
@@ -1124,6 +1187,7 @@ def _handle_post(args) -> int:
             args.from_agent,
             body,
             to_agents=to_agents,
+            priority=priority,
             attachments=[{"kind": "review_protocol"}] if args.review else None,
             parent_id=args.parent,
             correlation_id=args.corr,
@@ -1137,21 +1201,34 @@ def _handle_post(args) -> int:
         print(f"❌ {e}", file=sys.stderr)
         return 1
 
-    print(f"✅ posted to #{args.channel}")
+    print(f"✅ posted to #{args.channel} (priority={priority})")
     print(f"   message_id: {result['message_id']}")
     print(f"   thread_id:  {result['thread_id']}")
     if to_agents:
-        print(f"   → {', '.join(to_agents)}  ({len(result['delivery_ids'])} deliveries)")
+        label = "📢 broadcast" if broadcast else "→"
+        print(f"   {label} {', '.join(to_agents)}  ({len(result['delivery_ids'])} deliveries)")
+    if broadcast:
+        excluded = sorted((set(ch["subscribers"] or _channels.VALID_AGENTS)) & _channels.dead_lane_agents())
+        if excluded:
+            print(f"   excluded dead lanes: {', '.join(excluded)}")
     return 0
 
 
 def _handle_p(args) -> int:
-    """Shortcut: ab p <channel> <agent> <body>."""
+    """Shortcut: ab p <channel> <agent[,agent2,...]|--broadcast> <body>."""
+    if args.broadcast and args.agent:
+        print("❌ pass either an agent (or comma-separated agents) or --broadcast, not both", file=sys.stderr)
+        return 2
+    if not args.broadcast and not args.agent:
+        print("❌ missing recipient: pass an agent (or agents) or --broadcast", file=sys.stderr)
+        return 2
+
     # Rewrite to _handle_post's args shape
     class _Args:
         channel = args.channel
         body = args.body
-        to = args.agent
+        to = "" if args.broadcast else args.agent
+        broadcast = args.broadcast
         parent = None
         corr = None
         from_agent = "user"
@@ -1159,6 +1236,7 @@ def _handle_p(args) -> int:
         model = None
         deadline = None
         review = args.review
+        priority = None
 
     return _handle_post(_Args())
 
@@ -1253,6 +1331,51 @@ def _handle_inbox_ack(args) -> int:
         f"(to={row['to_agent']}, message={row['message_id']})"
     )
     return 0
+
+
+def run_delivery_expiry_cleanup(*, dry_run: bool = False) -> None:
+    """Channel-delivery TTL auto-expire + dead-lane bulk-expire (#4837 item 4).
+
+    Called from ``ab cleanup --expire`` and the Monitor API server's
+    periodic background sweep (``scripts/api/comms_router.py``). Always
+    logs what it expired (or would expire, in dry-run) so the sweep is
+    auditable from cron/API logs as well as an interactive terminal.
+    """
+    dead = _channels.dead_lane_agents()
+
+    if dry_run:
+        stale = _channels.preview_stale_deliveries()
+        stale_ids = {row["delivery_id"] for row in stale}
+        # Dedupe against `stale`: a real run's age-based sweep runs first, so
+        # a dead-lane row already past its TTL is only expired once, not twice.
+        dead_rows = [r for r in _channels.preview_dead_lane_deliveries(dead) if r["delivery_id"] not in stale_ids]
+        dead_counts: dict[str, int] = {}
+        for row in dead_rows:
+            dead_counts[row["to_agent"]] = dead_counts.get(row["to_agent"], 0) + 1
+
+        for row in stale:
+            marker = "ESCALATION " if row["priority"] == "action_required" else ""
+            print(
+                f"  would expire {marker}delivery {row['delivery_id']} → {row['to_agent']} "
+                f"(#{row['channel']}, priority={row['priority']}, "
+                f"{row['age_hours']:.1f}h pending)"
+            )
+        for agent, count in sorted(dead_counts.items()):
+            print(f"  would expire {count} pending deliveries for dead lane '{agent}'")
+        total = len(stale) + len(dead_rows)
+        print(f"🧹 cleanup --expire (DRY RUN): {total} deliveries would expire")
+        return
+
+    released = _channels.release_expired_leases()
+    expired = _channels.expire_stale_deliveries()
+    dead_counts = _channels.bulk_expire_dead_lanes(dead)
+    for agent, count in sorted(dead_counts.items()):
+        print(f"🧹 dead-lane expire: {count} pending deliveries for '{agent}'")
+    total_dead = sum(dead_counts.values())
+    print(
+        f"🧹 cleanup --expire: {released} leases released, "
+        f"{expired} deliveries auto-expired, {total_dead} dead-lane deliveries expired"
+    )
 
 
 def _handle_reconcile(args) -> int:

@@ -22,6 +22,7 @@ import logging
 import os
 import re
 import sqlite3
+import threading
 import time
 import uuid
 from datetime import UTC, datetime
@@ -123,6 +124,106 @@ def _table_exists(conn: sqlite3.Connection, table: str) -> bool:
         (table,),
     ).fetchone()
     return row is not None
+
+
+def _column_exists(conn: sqlite3.Connection, table: str, column: str) -> bool:
+    return any(row["name"] == column for row in conn.execute(f"PRAGMA table_info({table})"))
+
+
+# ── Delivery-expiry background sweep (#4837 item 4) ────────────────────
+#
+# Precedent: codexbar_usage.trigger_background_refresh() (this package) —
+# a lazy, cache-miss-triggered background thread rather than a true cron.
+# Dead lanes (e.g. a retired CLI) never call `ab inbox run`, so nothing
+# else in the process ever runs the expire sweep for them; hooking it to
+# a frequently-polled dashboard endpoint means it fires on a real cadence
+# without needing a separate scheduler process.
+
+_EXPIRE_SWEEP_INTERVAL_S = 900.0  # 15 minutes
+_expire_sweep_lock = threading.Lock()
+_expire_sweep_thread: threading.Thread | None = None
+
+
+def _maybe_run_delivery_expiry_sweep() -> None:
+    """Lazily trigger the channel-delivery TTL + dead-lane expire sweep.
+
+    Non-blocking: the sweep runs in a daemon thread so a slow SQLite
+    write never delays the caller's response. At most one sweep thread
+    runs at a time and at most once per ``_EXPIRE_SWEEP_INTERVAL_S``.
+    Skips entirely if this router's broker DB doesn't exist yet, the
+    channel-bridge tables aren't there yet, or the schema predates the TTL
+    columns (``channels.max_age_hours`` / ``channel_messages.priority``) —
+    the sweep must never be what triggers ``ai_agent_bridge``'s own schema
+    auto-migration (adding those columns) as a side effect of a dashboard
+    poll. That migration is safe when the bridge CLI runs it deliberately,
+    but silently altering + then expiring rows in some OTHER schema this
+    router's DB happens to resemble (e.g. an older/synthetic fixture) is
+    not — it must look exactly like a current, real broker DB first.
+    """
+    if not MESSAGE_DB.exists():
+        return
+    if cache_get("bridge_expire_sweep", ttl=_EXPIRE_SWEEP_INTERVAL_S) is not None:
+        return
+
+    conn = _get_db()
+    if conn is None:
+        return
+    try:
+        if not all(_table_exists(conn, table) for table in ("channels", "deliveries", "channel_messages")):
+            return
+        if not _column_exists(conn, "channels", "max_age_hours"):
+            return
+        if not _column_exists(conn, "channel_messages", "priority"):
+            return
+    finally:
+        conn.close()
+
+    cache_set("bridge_expire_sweep", True)
+
+    global _expire_sweep_thread
+    with _expire_sweep_lock:
+        if _expire_sweep_thread is not None and _expire_sweep_thread.is_alive():
+            return
+        # Snapshot MESSAGE_DB on the request thread (respects test patches of
+        # this module's MESSAGE_DB) and hand it to the sweep explicitly.
+        _expire_sweep_thread = threading.Thread(
+            target=_run_delivery_expiry_sweep, args=(MESSAGE_DB,), daemon=True
+        )
+        _expire_sweep_thread.start()
+
+
+def _run_delivery_expiry_sweep(message_db: "os.PathLike[str]") -> None:
+    try:
+        from ai_agent_bridge import _channels as _ch
+        from ai_agent_bridge import _db as _ch_db
+    except Exception:
+        logger.exception("bridge delivery-expiry sweep: ai_agent_bridge not importable")
+        return
+
+    # `_db.get_db()` reads its own module-level DB_PATH, bound once from
+    # AB_DB_PATH at first import — it does not track this router's
+    # MESSAGE_DB. Point it at the exact same broker DB this router already
+    # resolved so the sweep can never land on a different file (this is
+    # also what makes the sweep respect test patches of MESSAGE_DB).
+    previous_db_path = _ch_db.DB_PATH
+    _ch_db.DB_PATH = message_db
+    try:
+        released = _ch.release_expired_leases()
+        expired = _ch.expire_stale_deliveries()
+        dead_counts = _ch.bulk_expire_dead_lanes()
+        total_dead = sum(dead_counts.values())
+        if released or expired or total_dead:
+            logger.info(
+                "bridge delivery-expiry sweep: released=%d expired=%d dead_lane_expired=%d (%s)",
+                released,
+                expired,
+                total_dead,
+                dead_counts,
+            )
+    except Exception:
+        logger.exception("bridge delivery-expiry sweep failed")
+    finally:
+        _ch_db.DB_PATH = previous_db_path
 
 
 def _parse_agent_csv(raw: str | None) -> list[str]:
@@ -1657,7 +1758,12 @@ def agent_activity(
     This complements `/api/comms/inbox`: inbox answers "what is waiting
     for one agent?", while this endpoint answers "what should the
     orchestrator watch or drain next?" in one cheap API call.
+
+    Also lazily triggers the delivery-expiry background sweep (#4837
+    item 4) — this is the endpoint dashboards poll to see per-agent
+    pending counts, so it doubles as the sweep's periodic trigger.
     """
+    _maybe_run_delivery_expiry_sweep()
     selected_agents = _parse_agent_csv(agents)
     conn = _get_db()
     if not conn:

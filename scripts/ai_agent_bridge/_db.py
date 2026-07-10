@@ -99,6 +99,7 @@ CREATE TABLE IF NOT EXISTS channel_messages (
     from_agent TEXT NOT NULL,             -- claude/gemini/codex/user
     from_model TEXT,                      -- exact model ID
     kind TEXT DEFAULT 'post',             -- post/reply/system/fanout_start/fanout_end
+    priority TEXT DEFAULT 'fyi',          -- fyi/action_required — drives delivery TTL (#4837)
     body TEXT NOT NULL,
     attachments TEXT,                     -- JSON array
     context_rev_shared TEXT,              -- sha256 hex of shared/context.md at post-time
@@ -316,6 +317,17 @@ def get_db():
                 conn.execute(
                     "ALTER TABLE channels ADD COLUMN max_age_hours INTEGER DEFAULT 24"
                 )
+
+            cursor.execute(
+                "SELECT name FROM sqlite_master WHERE type='table' AND name='channel_messages'"
+            )
+            if cursor.fetchone():
+                cursor.execute("PRAGMA table_info(channel_messages)")
+                channel_message_columns = [row[1] for row in cursor.fetchall()]
+                if "priority" not in channel_message_columns:
+                    conn.execute(
+                        "ALTER TABLE channel_messages ADD COLUMN priority TEXT DEFAULT 'fyi'"
+                    )
 
             cursor.execute(
                 "SELECT name FROM sqlite_master WHERE type='table' AND name='deliveries'"

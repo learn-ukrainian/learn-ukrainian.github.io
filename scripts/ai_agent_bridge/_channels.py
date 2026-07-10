@@ -108,6 +108,27 @@ DEFAULT_DELIVERY_LEASE_SECONDS = 600
 DEFAULT_MAX_DELIVERY_ATTEMPTS = 3
 DEFAULT_RATE_LIMIT_RETRY_SECONDS = 300
 
+# ── Delivery TTL policy (#4837 item 4) ─────────────────────────────────
+#
+# FYI/broadcast messages use the channel's configured ``max_age_hours``
+# (default 24h, see ``channels.max_age_hours`` / ``ab channel set-ttl``).
+# action_required messages (asks, review requests) get a fixed, longer
+# TTL regardless of the channel setting — a slow reviewer's thread should
+# not vanish before it's picked up. Expiring one is annotated as an
+# escalation rather than a routine drop (see ``expire_stale_deliveries``).
+PRIORITY_FYI = "fyi"
+PRIORITY_ACTION_REQUIRED = "action_required"
+VALID_MESSAGE_PRIORITIES = (PRIORITY_FYI, PRIORITY_ACTION_REQUIRED)
+DEFAULT_ACTION_REQUIRED_TTL_HOURS = 24 * 7
+
+# Lanes currently known to be retired/unstaffed — e.g. "gemini-cli retired
+# -> agy" (agents_extensions/shared/rules/model-assignment.md). A lane
+# absent from ``live_agents()`` is "dead" for broadcast recipient
+# selection and dead-lane bulk-expire (#4837 items 3-4). Override with
+# AB_DEAD_LANES (comma-separated) for local testing or when a lane's
+# status changes without a code deploy.
+DEFAULT_DEAD_LANE_AGENTS = frozenset({"gemini"})
+
 # Default channel that every other channel includes unless overridden.
 # Holds project-wide pinned context that agents need on every message
 # (coding conventions, current sprint summary, etc.).
@@ -195,6 +216,29 @@ def _validate_post_agent(agent: str) -> None:
 def _validate_recipient_agent(agent: str) -> None:
     if agent not in VALID_RECIPIENT_AGENTS:
         raise ValueError(f"Unknown delivery target '{agent}'. Expected one of {VALID_RECIPIENT_AGENTS}.")
+
+
+def _validate_priority(priority: str) -> None:
+    if priority not in VALID_MESSAGE_PRIORITIES:
+        raise ValueError(f"Unknown priority '{priority}'. Expected one of {VALID_MESSAGE_PRIORITIES}.")
+
+
+def dead_lane_agents() -> frozenset[str]:
+    """Return the set of agents currently treated as dead lanes.
+
+    Reads ``AB_DEAD_LANES`` (comma-separated) when set, so a lane's status
+    can change without a code deploy; falls back to ``DEFAULT_DEAD_LANE_AGENTS``.
+    """
+    raw = os.environ.get("AB_DEAD_LANES")
+    if raw is None:
+        return DEFAULT_DEAD_LANE_AGENTS
+    return frozenset(a.strip() for a in raw.split(",") if a.strip())
+
+
+def live_agents() -> list[str]:
+    """Return ``VALID_AGENTS`` minus current dead lanes, registry order preserved."""
+    dead = dead_lane_agents()
+    return [a for a in VALID_AGENTS if a not in dead]
 
 
 def _validate_kind(kind: str) -> None:
@@ -801,6 +845,7 @@ def post(
     parent_id: str | None = None,
     correlation_id: str | None = None,
     kind: str = "post",
+    priority: str = PRIORITY_FYI,
     from_model: str | None = None,
     to_model: str | None = None,
     attachments: list[dict[str, Any]] | None = None,
@@ -850,6 +895,7 @@ def post(
     """
     _validate_post_agent(from_agent)
     _validate_kind(kind)
+    _validate_priority(priority)
     for agent in to_agents or []:
         _validate_recipient_agent(agent)
     body = redact_text(body) or ""
@@ -966,10 +1012,10 @@ def post(
             """
             INSERT INTO channel_messages (
                 message_id, channel, thread_id, parent_id, correlation_id,
-                round_index, from_agent, from_model, kind, body,
+                round_index, from_agent, from_model, kind, priority, body,
                 attachments, context_rev_shared, context_rev_channel,
                 monitor_state_snapshot, created_at
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
             (
                 message_id,
@@ -981,6 +1027,7 @@ def post(
                 from_agent,
                 from_model,
                 kind,
+                priority,
                 body,
                 attachments_json,
                 context_rev_shared,
@@ -1082,7 +1129,7 @@ def read(
             rows = conn.execute(
                 """
                 SELECT message_id, channel, thread_id, parent_id, correlation_id,
-                       round_index, from_agent, from_model, kind, body,
+                       round_index, from_agent, from_model, kind, priority, body,
                        attachments, context_rev_shared, context_rev_channel,
                        monitor_state_snapshot, created_at
                 FROM channel_messages
@@ -1095,7 +1142,7 @@ def read(
             rows = conn.execute(
                 """
                 SELECT message_id, channel, thread_id, parent_id, correlation_id,
-                       round_index, from_agent, from_model, kind, body,
+                       round_index, from_agent, from_model, kind, priority, body,
                        attachments, context_rev_shared, context_rev_channel,
                        monitor_state_snapshot, created_at
                 FROM (
@@ -1125,6 +1172,7 @@ def _row_to_message(row) -> dict[str, Any]:
         "from_agent": row["from_agent"],
         "from_model": row["from_model"],
         "kind": row["kind"],
+        "priority": row["priority"],
         "body": redact_text(row["body"]) or "",
         "attachments": (redact_value(json.loads(row["attachments"])) if row["attachments"] else None),
         "context_rev_shared": row["context_rev_shared"],
@@ -1405,19 +1453,47 @@ def release_expired_leases(now: str | None = None) -> int:
         conn.close()
 
 
+def _effective_ttl_hours_sql() -> str:
+    """SQL fragment computing effective TTL hours from a joined cm/c row.
+
+    action_required messages get the fixed escalation TTL regardless of the
+    channel's configured ``max_age_hours``; everything else (fyi/broadcast)
+    keeps using the per-channel setting (default 24h) — see the module-level
+    TTL policy comment above ``PRIORITY_FYI``.
+    """
+    return (
+        "CASE WHEN cm.priority = 'action_required' THEN :action_ttl "
+        "ELSE COALESCE(c.max_age_hours, 24) END"
+    )
+
+
 def expire_stale_deliveries(now: str | None = None) -> int:
-    """Mark pending deliveries older than their channel TTL as expired."""
+    """Mark pending deliveries older than their effective TTL as expired.
+
+    fyi/broadcast messages use the channel's configured TTL (unchanged
+    behavior). action_required messages (asks, review requests) use
+    ``DEFAULT_ACTION_REQUIRED_TTL_HOURS`` instead, and their expiry error
+    is tagged ``ESCALATION`` so a stalled review request stands out from
+    routine drops (#4837 item 4) instead of silently disappearing.
+    """
     now = now or _now_iso()
     conn = get_db()
     try:
         conn.execute("BEGIN IMMEDIATE")
         cursor = conn.execute(
-            """
+            f"""
             UPDATE deliveries
             SET status = 'expired',
                 error = (
-                    SELECT 'auto-expired (>' || COALESCE(c.max_age_hours, 24)
-                           || 'h pending, channel=' || cm.channel || ')'
+                    SELECT CASE
+                        WHEN cm.priority = 'action_required' THEN
+                            'auto-expired ESCALATION (action-required, >' || :action_ttl
+                            || 'h pending, channel=' || cm.channel
+                            || ', thread=' || cm.thread_id || ')'
+                        ELSE
+                            'auto-expired (>' || COALESCE(c.max_age_hours, 24)
+                            || 'h pending, channel=' || cm.channel || ')'
+                    END
                     FROM channel_messages cm
                     JOIN channels c ON c.name = cm.channel
                     WHERE cm.message_id = deliveries.message_id
@@ -1432,17 +1508,125 @@ def expire_stale_deliveries(now: str | None = None) -> int:
                     JOIN channels c ON c.name = cm.channel
                     WHERE cm.message_id = deliveries.message_id
                       AND (
-                            julianday(?) - julianday(cm.created_at)
-                          ) * 24.0 > COALESCE(c.max_age_hours, 24)
+                            julianday(:now) - julianday(cm.created_at)
+                          ) * 24.0 > {_effective_ttl_hours_sql()}
               )
             """,
-            (now,),
+            {"now": now, "action_ttl": DEFAULT_ACTION_REQUIRED_TTL_HOURS},
         )
         conn.commit()
         return cursor.rowcount
     except Exception:
         conn.rollback()
         raise
+    finally:
+        conn.close()
+
+
+def preview_stale_deliveries(now: str | None = None) -> list[dict[str, Any]]:
+    """Read-only preview of what ``expire_stale_deliveries()`` would change.
+
+    Used by ``ab cleanup --expire --dry-run`` — never mutates the DB.
+    """
+    now = now or _now_iso()
+    conn = get_db()
+    try:
+        rows = conn.execute(
+            f"""
+            SELECT d.delivery_id, d.to_agent, cm.channel, cm.thread_id, cm.priority,
+                   cm.created_at,
+                   (julianday(:now) - julianday(cm.created_at)) * 24.0 AS age_hours
+            FROM deliveries d
+            JOIN channel_messages cm ON cm.message_id = d.message_id
+            JOIN channels c ON c.name = cm.channel
+            WHERE d.status = 'pending'
+              AND (
+                    julianday(:now) - julianday(cm.created_at)
+                  ) * 24.0 > {_effective_ttl_hours_sql()}
+            ORDER BY cm.created_at ASC
+            """,
+            {"now": now, "action_ttl": DEFAULT_ACTION_REQUIRED_TTL_HOURS},
+        ).fetchall()
+        return [
+            {
+                "delivery_id": r["delivery_id"],
+                "to_agent": r["to_agent"],
+                "channel": r["channel"],
+                "thread_id": r["thread_id"],
+                "priority": r["priority"],
+                "age_hours": r["age_hours"],
+            }
+            for r in rows
+        ]
+    finally:
+        conn.close()
+
+
+def bulk_expire_dead_lanes(dead_lanes: frozenset[str] | None = None) -> dict[str, int]:
+    """Force-expire ALL pending deliveries for lanes absent from the live registry.
+
+    A dead lane (e.g. a retired CLI) never runs ``ab inbox run <agent>``, so
+    the routine ``expire_stale_deliveries()`` sweep — which only fires from
+    that agent's own inbox drain — would otherwise never touch its queue,
+    letting it accumulate forever regardless of TTL (#4837 item 4). Returns
+    a per-agent count of rows expired (agents with 0 pending are omitted).
+    """
+    dead = dead_lanes if dead_lanes is not None else dead_lane_agents()
+    if not dead:
+        return {}
+    conn = get_db()
+    try:
+        conn.execute("BEGIN IMMEDIATE")
+        counts: dict[str, int] = {}
+        for agent in sorted(dead):
+            cursor = conn.execute(
+                """
+                UPDATE deliveries
+                SET status = 'expired',
+                    error = 'auto-expired (dead lane: ' || ? || ')',
+                    lease_until = NULL,
+                    retry_after = NULL,
+                    last_error_kind = NULL
+                WHERE status = 'pending' AND to_agent = ?
+                """,
+                (agent, agent),
+            )
+            if cursor.rowcount:
+                counts[agent] = cursor.rowcount
+        conn.commit()
+        return counts
+    except Exception:
+        conn.rollback()
+        raise
+    finally:
+        conn.close()
+
+
+def preview_dead_lane_deliveries(dead_lanes: frozenset[str] | None = None) -> list[dict[str, Any]]:
+    """Read-only, delivery-level preview of what ``bulk_expire_dead_lanes()`` would change.
+
+    Row-level (not pre-aggregated) so a caller combining this with
+    ``preview_stale_deliveries()`` can dedupe by ``delivery_id`` — a dead-lane
+    row already past its TTL would otherwise be double-counted by both
+    previews even though a real run only expires it once (the age-based
+    sweep runs first).
+    """
+    dead = dead_lanes if dead_lanes is not None else dead_lane_agents()
+    if not dead:
+        return []
+    conn = get_db()
+    try:
+        placeholders = ",".join("?" for _ in dead)
+        rows = conn.execute(
+            f"""
+            SELECT delivery_id, to_agent
+            FROM deliveries
+            WHERE status = 'pending' AND to_agent IN ({placeholders})
+            ORDER BY to_agent ASC
+            """,
+            tuple(sorted(dead)),
+        ).fetchall()
+        return [{"delivery_id": r["delivery_id"], "to_agent": r["to_agent"]} for r in rows]
     finally:
         conn.close()
 

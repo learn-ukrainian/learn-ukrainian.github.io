@@ -42,6 +42,7 @@ from ._messaging import (
     check_inbox,
     get_conversation,
     read_message,
+    resolve_thread,
     send_message,
 )
 from ._model import check_model
@@ -468,6 +469,14 @@ def _build_parser() -> argparse.ArgumentParser:
     # conversation
     conv_parser = subparsers.add_parser("conversation", help="Get conversation history")
     conv_parser.add_argument("task_id", help="Task ID")
+
+    # thread — unified retrieval (#4837 item 5): accepts either identifier
+    # `conversation` wants (task-id) or `read` wants (numeric message id).
+    thread_parser = subparsers.add_parser(
+        "thread",
+        help="Show the full thread for a task ID or a numeric message ID",
+    )
+    thread_parser.add_argument("identifier", help="Task ID or numeric message ID")
 
     # process (for Gemini)
     proc_parser = subparsers.add_parser("process", help="Process message with Gemini and respond")
@@ -951,6 +960,13 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Delete acknowledged/terminal broker rows older than this age (default: 30d)",
     )
     cleanup_parser.add_argument("--dry-run", action="store_true", help="Report what would be cleaned")
+    cleanup_parser.add_argument(
+        "--expire", action="store_true",
+        help=(
+            "Also run the channel-delivery TTL auto-expire + dead-lane "
+            "bulk-expire sweep (#4837 item 4). Honors --dry-run."
+        ),
+    )
 
     # status
     subparsers.add_parser("status", help="Show running bridge processes")
@@ -1114,6 +1130,8 @@ def _dispatch_command(args):
         acknowledge_all(args.agent)
     elif args.command == "conversation":
         get_conversation(args.task_id)
+    elif args.command == "thread":
+        resolve_thread(args.identifier)
     elif args.command == "process":
         process_and_respond(args.message_id, args.model, no_timeout=args.no_timeout)
     elif args.command == "process-claude":
@@ -1168,6 +1186,10 @@ def _dispatch_command(args):
         sys.exit(0 if ok else 1)
     elif args.command == "cleanup":
         broker_cleanup(args.max_age, args.dry_run, args.older_than)
+        if args.expire:
+            from ._channels_cli import run_delivery_expiry_cleanup
+
+            run_delivery_expiry_cleanup(dry_run=args.dry_run)
     elif args.command == "status":
         bridge_status()
     elif args.command == "serve":
