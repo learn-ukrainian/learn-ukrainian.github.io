@@ -20,23 +20,31 @@ import yaml
 
 READINGS_CONTRACT_VERSION = 2
 HOSTING_VALUES = frozenset({"link-only", "excerpt-only", "hosted"})
-CONTENT_RIGHTS_BASES = frozenset(
-    {"public-domain", "cc-by", "cc-by-sa", "permission", "licensed-excerpt", "fair-use"}
-)
-EXCERPT_RIGHTS_BASES = CONTENT_RIGHTS_BASES
+HOSTED_RIGHTS_BASES = frozenset({"public-domain", "open-license", "permission"})
+EXCERPT_RIGHTS_BASES = HOSTED_RIGHTS_BASES | frozenset({"approved-exception"})
 _PLACEHOLDER_VALUES = frozenset(
     {
         "n/a",
         "none",
+        "not applicable",
+        "not-applicable",
         "tbd",
         "todo",
+        "pending",
+        "reading-needed",
+        "reading needed",
+        "unresolved",
         "unknown",
+        "потрібно уточнити",
         "підлягає уточненню",
+        "потрібен матеріал",
         "не визначено",
         "невідомо",
     }
 )
 _READING_SLUG_RE = re.compile(r"[a-z0-9]+(?:-[a-z0-9]+)*\Z")
+_PLACEHOLDER_SEPARATOR_RE = re.compile(r"[\s_\-‐‑‒–—―]+")
+_MISSING = object()
 
 
 def _is_nonempty_string(value: object) -> bool:
@@ -51,7 +59,17 @@ def _is_http_url(value: object) -> bool:
 
 
 def _is_placeholder(value: object) -> bool:
-    return _is_nonempty_string(value) and " ".join(value.split()).casefold() in _PLACEHOLDER_VALUES
+    if not _is_nonempty_string(value):
+        return False
+    normalized = _PLACEHOLDER_SEPARATOR_RE.sub(" ", value.strip()).casefold()
+    return normalized in _PLACEHOLDER_VALUES
+
+
+def _normalized_title(value: object) -> str | None:
+    """Return the conservative normalization used for hosted title matching."""
+    if not _is_nonempty_string(value):
+        return None
+    return " ".join(value.split()).casefold()
 
 
 def _diagnostic(
@@ -137,29 +155,29 @@ def normalize_legacy_entry(entry: Mapping[str, object]) -> dict[str, object]:
     return {"entry": normalized, "diagnostics": diagnostics}
 
 
-def _public_reading_page_exists(reading_slug: str, readings_dir: Path) -> bool:
-    """Return whether ``reading_slug`` resolves to an enabled public reading page."""
+def _public_reading_page_frontmatter(reading_slug: str, readings_dir: Path) -> Mapping[str, object] | None:
+    """Return frontmatter for an enabled public reading page, else ``None``."""
     if not _READING_SLUG_RE.fullmatch(reading_slug):
-        return False
+        return None
     path = readings_dir / f"{reading_slug}.mdx"
     try:
         text = path.read_text(encoding="utf-8")
     except OSError:
-        return False
+        return None
     if not text.startswith("---\n"):
-        return False
+        return None
     end = text.find("\n---", 4)
     if end == -1:
-        return False
+        return None
     try:
         frontmatter = yaml.safe_load(text[4:end]) or {}
     except yaml.YAMLError:
-        return False
-    return (
-        isinstance(frontmatter, Mapping)
-        and frontmatter.get("published", True) is not False
-        and frontmatter.get("canonical", True) is not False
-    )
+        return None
+    if not isinstance(frontmatter, Mapping):
+        return None
+    if frontmatter.get("published", True) is False or frontmatter.get("canonical", True) is False:
+        return None
+    return frontmatter
 
 
 def _validate_entry(
@@ -218,6 +236,11 @@ def _validate_entry(
             diagnostics.append(_diagnostic("RDR_LINK_RIGHTS_BASIS", entry=entry_number, field="rights.basis"))
         if _is_http_url(source_url) and rights_evidence_url != source_url:
             diagnostics.append(_diagnostic("RDR_LINK_EVIDENCE_MISMATCH", entry=entry_number, field="rights.evidence_url"))
+        if "reading_slug" in normalized:
+            diagnostics.append(_diagnostic("RDR_LINK_READING_SLUG", entry=entry_number, field="reading_slug"))
+        for field in ("locator", "excerpt_locator"):
+            if field in normalized:
+                diagnostics.append(_diagnostic("RDR_LINK_LOCATOR", entry=entry_number, field=field))
     elif hosting == "excerpt-only":
         locator = normalized.get("locator")
         if not _is_nonempty_string(locator) or _is_placeholder(locator):
@@ -228,9 +251,13 @@ def _validate_entry(
         reading_slug = normalized.get("reading_slug")
         if not _is_nonempty_string(reading_slug) or not _READING_SLUG_RE.fullmatch(reading_slug):
             diagnostics.append(_diagnostic("RDR_HOSTED_READING_SLUG", entry=entry_number, field="reading_slug"))
-        elif not _public_reading_page_exists(reading_slug, readings_dir):
-            diagnostics.append(_diagnostic("RDR_HOSTED_READING_PAGE", entry=entry_number, field="reading_slug"))
-        if rights_basis not in CONTENT_RIGHTS_BASES:
+        else:
+            reading_frontmatter = _public_reading_page_frontmatter(reading_slug, readings_dir)
+            if reading_frontmatter is None:
+                diagnostics.append(_diagnostic("RDR_HOSTED_READING_PAGE", entry=entry_number, field="reading_slug"))
+            elif _normalized_title(reading_frontmatter.get("title")) != _normalized_title(normalized.get("title")):
+                diagnostics.append(_diagnostic("RDR_HOSTED_READING_TITLE", entry=entry_number, field="title"))
+        if rights_basis not in HOSTED_RIGHTS_BASES:
             diagnostics.append(_diagnostic("RDR_HOSTED_RIGHTS_BASIS", entry=entry_number, field="rights.basis"))
 
     unmigrated = bool(normalization["diagnostics"]) or not version_is_final
@@ -254,10 +281,35 @@ def validate_readings_contract(
     elif version != READINGS_CONTRACT_VERSION:
         diagnostics.append(_diagnostic("RDR_VERSION_UNSUPPORTED", field="readings_contract_version"))
 
+    readings_present = "readings" in plan
     raw_readings = plan.get("readings")
-    if not isinstance(raw_readings, list):
+    reading_disposition = plan.get("reading_disposition", _MISSING)
+    if not readings_present:
+        if reading_disposition is _MISSING:
+            diagnostics.append(_diagnostic("RDR_READINGS_TYPE", field="readings"))
+        elif not isinstance(reading_disposition, Mapping):
+            diagnostics.append(_diagnostic("RDR_READING_DISPOSITION_TYPE", field="reading_disposition"))
+        else:
+            status = reading_disposition.get("status")
+            if status != "not-applicable":
+                diagnostics.append(_diagnostic("RDR_READING_DISPOSITION_STATUS", field="reading_disposition.status"))
+            reason = reading_disposition.get("reason")
+            if not _is_nonempty_string(reason) or _is_placeholder(reason):
+                diagnostics.append(_diagnostic("RDR_READING_DISPOSITION_REASON", field="reading_disposition.reason"))
+            evidence_url = reading_disposition.get("evidence_url")
+            if not _is_http_url(evidence_url):
+                diagnostics.append(
+                    _diagnostic("RDR_READING_DISPOSITION_EVIDENCE_URL", field="reading_disposition.evidence_url")
+                )
+        raw_readings = []
+    elif not isinstance(raw_readings, list):
         diagnostics.append(_diagnostic("RDR_READINGS_TYPE", field="readings"))
         raw_readings = []
+    else:
+        if not raw_readings:
+            diagnostics.append(_diagnostic("RDR_READINGS_EMPTY", field="readings"))
+        if reading_disposition is not _MISSING:
+            diagnostics.append(_diagnostic("RDR_READING_DISPOSITION_CONFLICT", field="reading_disposition"))
 
     entries = [
         _validate_entry(
