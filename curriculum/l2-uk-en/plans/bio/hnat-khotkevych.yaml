@@ -104,20 +104,20 @@ references:
 - title: Хоткевич Гнат Мартинович
   author: Wikipedia
   note: Comprehensive biography of the writer, bandura player and ethnographer
-  type: primary
+  type: encyclopedia
   url: https://uk.wikipedia.org/wiki/Хоткевич_Гнат_Мартинович
   work: Хоткевич Гнат Мартинович
 - title: Гнат Хоткевич — життя геніального бандуриста
   author: uain.press
   note: Detailed biographical article with focus on bandura legacy
-  type: primary
+  type: secondary
   url: https://uain.press/blogs/gnat-hotkevich-zhittya-genialnogo-bandurista-646242
   work: Гнат Хоткевич — життя геніального бандуриста
 sequence: 100
 slug: hnat-khotkevych
 subtitle: 'Hnat Khotkevych: The One-Man Orchestra Silenced by the Executed Renaissance'
 title: 'Гнат Хоткевич: Людина-оркестр'
-version: '4.2'
+version: '4.3'
 vocabulary_hints:
 - definition: музикант, що грає на бандурі
   pos: ч.
