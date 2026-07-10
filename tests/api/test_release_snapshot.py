@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import os
+import shutil
 import socket
 import subprocess
 import sys
@@ -88,9 +89,25 @@ def _free_port() -> int:
         return int(server.getsockname()[1])
 
 
-def _read_json(url: str) -> dict:
-    with urllib.request.urlopen(url, timeout=0.5) as response:
+def _read_json(url: str, *, timeout: float = 0.5) -> dict:
+    with urllib.request.urlopen(url, timeout=timeout) as response:
         return json.loads(response.read().decode("utf-8"))
+
+
+def _read_text(url: str) -> str:
+    with urllib.request.urlopen(url, timeout=0.5) as response:
+        return response.read().decode("utf-8")
+
+
+def _provision_missing_live_data_roots(repo_root: Path) -> list[Path]:
+    """Create ignored live-data directories absent from a clean worktree."""
+    created: list[Path] = []
+    for relative_name in release_snapshot.LIVE_DATA_PATHS:
+        path = repo_root / relative_name
+        if not path.exists():
+            path.mkdir(parents=True)
+            created.append(path)
+    return created
 
 
 def test_atomic_publish_keeps_previous_current_on_crash(tmp_path: Path) -> None:
@@ -314,3 +331,71 @@ def test_pruning_rechecks_current_release_before_each_deletion(tmp_path: Path) -
     assert not release_dirs[0].exists()
     assert shas[0] in result.removed
     assert shas[1] not in result.removed
+
+
+def test_real_release_serves_live_data_routers_with_logical_paths(tmp_path: Path) -> None:
+    """Boot a snapshot of this worktree and exercise each live-data route class."""
+    created_live_roots = _provision_missing_live_data_roots(PROJECT_ROOT)
+    try:
+        sha = _run_git(PROJECT_ROOT, "rev-parse", "HEAD")
+        release_dir, _ = release_snapshot.build_release(PROJECT_ROOT, sha)
+        port = _free_port()
+        log_path = tmp_path / "release-api.log"
+        environment = sanitized_git_env() | {
+            "LEARN_UK_REPO_ROOT": str(PROJECT_ROOT),
+            "GIT_DIR": _run_git(PROJECT_ROOT, "rev-parse", "--absolute-git-dir"),
+            "GIT_WORK_TREE": str(PROJECT_ROOT),
+            "PYTHONPATH": str(release_dir),
+        }
+
+        with log_path.open("w", encoding="utf-8") as log_file:
+            process = subprocess.Popen(
+                [
+                    str(VENV_PYTHON),
+                    "-m",
+                    "uvicorn",
+                    "scripts.api.main:app",
+                    "--host",
+                    "127.0.0.1",
+                    "--port",
+                    str(port),
+                ],
+                cwd=release_dir,
+                env=environment,
+                stdout=log_file,
+                stderr=subprocess.STDOUT,
+            )
+            agent_url = f"http://127.0.0.1:{port}/api/agent/module/a1/people-around-me"
+            try:
+                deadline = time.monotonic() + 15
+                while True:
+                    try:
+                        agent_payload = _read_json(agent_url)
+                        if agent_payload.get("key_paths"):
+                            break
+                    except (urllib.error.URLError, TimeoutError):
+                        pass
+                    if time.monotonic() >= deadline:
+                        pytest.fail(f"release API did not become ready:\n{log_path.read_text(encoding='utf-8')}")
+                    time.sleep(0.05)
+
+                curriculum_payload = _read_json(f"http://127.0.0.1:{port}/api/blue/live-status")
+                artifact_payload = _read_json(f"http://127.0.0.1:{port}/api/artifacts/html", timeout=10)
+                docs_text = _read_text(
+                    "http://127.0.0.1:"
+                    f"{port}/files/docs/research/2026-06-12-atlas-synonym-sense-fix-report.md"
+                )
+            finally:
+                process.terminate()
+                process.wait(timeout=5)
+
+        key_paths = agent_payload["key_paths"]
+        assert curriculum_payload["a1"]["module_count"] >= 0
+        assert key_paths["orchestration_dir"].startswith("curriculum/l2-uk-en/")
+        assert not key_paths["orchestration_dir"].startswith(str(release_dir))
+        assert artifact_payload["artifacts"]
+        assert all(not item["path"].startswith(str(release_dir)) for item in artifact_payload["artifacts"])
+        assert docs_text.startswith("# Word Atlas Synonym Sense Fix Report")
+    finally:
+        for path in reversed(created_live_roots):
+            shutil.rmtree(path)
