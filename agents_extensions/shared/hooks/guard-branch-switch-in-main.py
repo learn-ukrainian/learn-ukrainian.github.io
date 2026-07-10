@@ -90,34 +90,101 @@ def _in_main_worktree(project_root: Path) -> bool:
     return abs_gd == abs_cd
 
 
-def _segments(command: str) -> list[list[str]]:
-    """Tokenize the command line, split on shell command separators.
+# --- Command segmentation hardened against glued shell operators (#4876). ---
+# Pattern lifted from guard-secret-print.py (the reference parser among the
+# Bash guards). Hooks are standalone by design, so the helpers are copied,
+# not imported. Keep the three copies in guard-branch-switch-in-main.py,
+# guard-admin-merge.py, and guard-push-pytest.py in sync.
 
-    Returns a list of argv-style segments. Each segment is the token list
-    for one logical sub-command (everything between `&&`, `||`, `;`, `|`).
-    `shlex.split` respects single/double quotes, so a `git commit -m
-    "git checkout -b foo"` collapses to a single segment whose tokens
-    are `['git', 'commit', '-m', 'git checkout -b foo']` — the dangerous
-    substring is INSIDE a single argv element, not a separate command.
-    """
+
+def _strip_quotes(token: str) -> str:
+    if len(token) >= 2 and token[0] == token[-1] and token[0] in {"'", '"'}:
+        return token[1:-1]
+    return token
+
+
+def _heredoc_delimiters(line: str) -> list[tuple[str, bool]]:
     try:
-        tokens = shlex.split(command, posix=True)
+        lexer = shlex.shlex(line, posix=False, punctuation_chars=True)
+        lexer.whitespace_split = True
+        lexer.commenters = ""
+        tokens = list(lexer)
     except ValueError:
-        # Unbalanced quotes — fall back to a degenerate split. We err on
-        # the safe side: if we can't parse, allow (the user will see the
-        # malformed command fail anyway).
         return []
+
+    delimiters: list[tuple[str, bool]] = []
+    i = 0
+    while i < len(tokens):
+        if tokens[i] != "<<":
+            i += 1
+            continue
+        strip_tabs = False
+        j = i + 1
+        if j < len(tokens) and tokens[j] == "-":
+            strip_tabs = True
+            j += 1
+        if j < len(tokens):
+            delimiter = _strip_quotes(tokens[j])
+            if delimiter:
+                delimiters.append((delimiter, strip_tabs))
+        i = j + 1
+    return delimiters
+
+
+def _strip_heredoc_bodies(command: str) -> str:
+    """Drop heredoc BODY lines — document text is data, not commands."""
+    if "<<" not in command:
+        return command
+
+    kept: list[str] = []
+    pending: list[tuple[str, bool]] = []
+    for line in command.splitlines():
+        if pending:
+            delimiter, strip_tabs = pending[0]
+            candidate = line.lstrip("\t") if strip_tabs else line
+            if candidate == delimiter:
+                pending.pop(0)
+            continue
+        kept.append(line)
+        pending.extend(_heredoc_delimiters(line))
+    return "\n".join(kept)
+
+
+def _segments(command: str) -> list[list[str]]:
+    """Tokenize the command, split on shell command separators.
+
+    Returns argv-style segments (one per logical sub-command). Robust to
+    the #4876 evasion class: `punctuation_chars` makes shlex emit operator
+    runs (`;`, `|`, `&`, `(`, `)`, `<`, `>`) as their OWN tokens even when
+    glued to a neighbour (`head -1; git …` no longer hides the `;` inside
+    the `-1;` token), each line is parsed separately (a newline separates
+    commands), and heredoc bodies are stripped first (document text must
+    not be parsed as commands). Quoting still collapses `git commit -m
+    "git checkout -b foo"` into a single argv element — no false block.
+    Default shlex comment handling drops `# …` trailers, matching shell
+    semantics: commented-out text can neither trigger nor hide a verb.
+    """
     segments: list[list[str]] = []
-    current: list[str] = []
-    for tok in tokens:
-        if tok in ("&&", "||", ";", "|"):
-            if current:
-                segments.append(current)
-                current = []
-        else:
-            current.append(tok)
-    if current:
-        segments.append(current)
+    for line in _strip_heredoc_bodies(command).splitlines():
+        try:
+            lexer = shlex.shlex(line, posix=True, punctuation_chars=True)
+            lexer.whitespace_split = True
+            tokens = list(lexer)
+        except ValueError:
+            # Unparseable line (unbalanced quotes) — skip just this line;
+            # the shell will fail the malformed command anyway. Other
+            # lines in the same command are still inspected.
+            continue
+        current: list[str] = []
+        for tok in tokens:
+            if tok and all(c in ";|&()<>" for c in tok):
+                if current:
+                    segments.append(current)
+                    current = []
+            else:
+                current.append(tok)
+        if current:
+            segments.append(current)
     return segments
 
 

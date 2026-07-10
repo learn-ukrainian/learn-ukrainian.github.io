@@ -40,23 +40,91 @@ def _command(payload: dict) -> str:
     return ((payload.get("tool_input") or {}).get("command") or "").strip()
 
 
-def _segments(command: str) -> list[list[str]]:
-    """Quote-aware tokenization split on common shell separators."""
+# --- Command segmentation hardened against glued shell operators (#4876). ---
+# Pattern lifted from guard-secret-print.py. Hooks are standalone by design,
+# so the helpers are copied, not imported. Keep the three copies in
+# guard-branch-switch-in-main.py, guard-admin-merge.py, and
+# guard-push-pytest.py in sync.
+
+
+def _strip_quotes(token: str) -> str:
+    if len(token) >= 2 and token[0] == token[-1] and token[0] in {"'", '"'}:
+        return token[1:-1]
+    return token
+
+
+def _heredoc_delimiters(line: str) -> list[tuple[str, bool]]:
     try:
-        tokens = shlex.split(command, posix=True)
+        lexer = shlex.shlex(line, posix=False, punctuation_chars=True)
+        lexer.whitespace_split = True
+        lexer.commenters = ""
+        tokens = list(lexer)
     except ValueError:
         return []
+
+    delimiters: list[tuple[str, bool]] = []
+    i = 0
+    while i < len(tokens):
+        if tokens[i] != "<<":
+            i += 1
+            continue
+        strip_tabs = False
+        j = i + 1
+        if j < len(tokens) and tokens[j] == "-":
+            strip_tabs = True
+            j += 1
+        if j < len(tokens):
+            delimiter = _strip_quotes(tokens[j])
+            if delimiter:
+                delimiters.append((delimiter, strip_tabs))
+        i = j + 1
+    return delimiters
+
+
+def _strip_heredoc_bodies(command: str) -> str:
+    """Drop heredoc BODY lines — document text is data, not commands."""
+    if "<<" not in command:
+        return command
+
+    kept: list[str] = []
+    pending: list[tuple[str, bool]] = []
+    for line in command.splitlines():
+        if pending:
+            delimiter, strip_tabs = pending[0]
+            candidate = line.lstrip("\t") if strip_tabs else line
+            if candidate == delimiter:
+                pending.pop(0)
+            continue
+        kept.append(line)
+        pending.extend(_heredoc_delimiters(line))
+    return "\n".join(kept)
+
+
+def _segments(command: str) -> list[list[str]]:
+    """Quote-aware argv segments, robust to glued shell operators (#4876).
+
+    Operator runs (`;`, `|`, `&`, `(`, `)`, `<`, `>`) become their own
+    tokens even when glued to a neighbour, lines parse separately, and
+    heredoc bodies are stripped before parsing.
+    """
     segments: list[list[str]] = []
-    current: list[str] = []
-    for tok in tokens:
-        if tok in ("&&", "||", ";", "|"):
-            if current:
-                segments.append(current)
-                current = []
-        else:
-            current.append(tok)
-    if current:
-        segments.append(current)
+    for line in _strip_heredoc_bodies(command).splitlines():
+        try:
+            lexer = shlex.shlex(line, posix=True, punctuation_chars=True)
+            lexer.whitespace_split = True
+            tokens = list(lexer)
+        except ValueError:
+            continue
+        current: list[str] = []
+        for tok in tokens:
+            if tok and all(c in ";|&()<>" for c in tok):
+                if current:
+                    segments.append(current)
+                    current = []
+            else:
+                current.append(tok)
+        if current:
+            segments.append(current)
     return segments
 
 

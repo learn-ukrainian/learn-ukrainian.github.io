@@ -270,3 +270,39 @@ def test_bash_write_from_worktree_targeting_main_blocked(repo: Path):
     }
     result = _run(repo, payload)
     assert result.returncode == 2, result.stderr
+
+
+# --- #4538 / #4855: heredoc bodies carry no write targets -------------------
+
+
+@pytest.mark.parametrize(
+    "command, expected",
+    [
+        # Body text with `>N` (previously misread as a redirect to '15%').
+        (
+            "cat > /tmp/brief.md <<'EOF'\n"
+            "... if >15% of the last 30 consecutive live passages ...\n"
+            "EOF",
+            ["/tmp/brief.md"],
+        ),
+        # Body text with markdown backtick code spans (#4855 live repro).
+        (
+            "cat > /tmp/brief.md <<'EOF'\n"
+            "run `.venv/bin/python scripts/x.py` then check\n"
+            "EOF",
+            ["/tmp/brief.md"],
+        ),
+        # Tab-indented body with <<- and a redirect-looking line.
+        (
+            "cat > /tmp/t.md <<-'DOC'\n\tdata 2>&1 goes here\n\tDOC",
+            ["/tmp/t.md"],
+        ),
+        # A real write AFTER the heredoc closes is still seen.
+        (
+            "cat > /tmp/a.md <<'EOF'\nbody\nEOF\necho x > out.txt",
+            ["/tmp/a.md", "out.txt"],
+        ),
+    ],
+)
+def test_heredoc_body_not_write_targets(command, expected):
+    assert hook.bash_write_targets(command) == expected

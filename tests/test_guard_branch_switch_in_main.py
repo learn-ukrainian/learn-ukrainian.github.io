@@ -150,3 +150,50 @@ def test_branch_force_reason_unit():
     assert guard._branch_force_reason(["-m", "old", "new"]) is None
     assert guard._branch_force_reason(["feature"]) is None
     assert guard._branch_force_reason([]) is None
+
+
+# --- #4876: glued-operator evasion class ------------------------------------
+# Live shapes from 2026-07-10: five `git branch -D` calls rode through the
+# guard because `;`/`|`/newlines glued to neighbouring tokens never became
+# separator tokens, collapsing the whole line into one segment.
+
+
+@pytest.mark.parametrize(
+    "cmd",
+    [
+        "true 2>&1 | head -1; git branch -D victim",
+        "gh pr view 9 --json s --jq '{state, mergedAt}'; git branch -D victim",
+        "cmd1\ngit branch -D victim",
+        (
+            "git worktree remove --force .worktrees/x 2>&1 | head -1; "
+            "git branch -D victim 2>/dev/null | head -1"
+        ),
+        "true;git checkout -b feature",
+        "true&&git switch -c feature",
+    ],
+)
+def test_glued_operator_evasion_blocked(cmd):
+    assert _dangerous(cmd) is not None
+
+
+@pytest.mark.parametrize(
+    "cmd",
+    [
+        # Heredoc bodies are data — a dangerous-looking line inside one must
+        # not trigger…
+        "cat > /tmp/x.md <<'EOF'\ngit branch -D fake\nEOF",
+        # …quoting still protects commit messages…
+        'git commit -m "git branch -D notreal"',
+        # …and safe ops with glued separators stay allowed.
+        "git branch -d merged-ok; echo done",
+        # Commented-out danger is dead text.
+        "echo hi # git branch -D victim",
+    ],
+)
+def test_hardened_segments_no_false_positive(cmd):
+    assert _dangerous(cmd) is None
+
+
+def test_heredoc_body_does_not_mask_following_command():
+    cmd = "cat > /tmp/x.md <<'EOF'\nbody text\nEOF\ngit branch -D victim"
+    assert _dangerous(cmd) is not None

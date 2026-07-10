@@ -140,3 +140,24 @@ def test_stamp_pytest_bash_smoke(tmp_path):
 
     assert detached_result.returncode == 0
     assert not list(tmp_path.glob("learn-uk-pytest*.stamp"))
+
+
+# --- #4876: glued-operator evasion class ------------------------------------
+
+
+@pytest.mark.parametrize(
+    "cmd",
+    [
+        "true 2>&1 | head -1; git push origin main",
+        "echo done\ngit push origin main",
+        "true;git push origin main",
+        "git add -A && git commit -m 'x'; git push",
+    ],
+)
+def test_glued_operator_push_detected(cmd):
+    assert guard._contains_git_push(cmd)
+
+
+def test_heredoc_push_mention_not_detected():
+    cmd = "cat > /tmp/n.md <<'EOF'\nthen git push origin main\nEOF"
+    assert not guard._contains_git_push(cmd)

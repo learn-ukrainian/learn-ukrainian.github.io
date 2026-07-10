@@ -200,16 +200,78 @@ _CONTROL_OPS = frozenset({"&&", "||", ";", "|", "&", "(", ")", "\n"})
 _FILE_REDIRECTS = frozenset({">", ">>", ">|", "&>", "&>>"})
 
 
+def _strip_quotes_for_heredoc(token: str) -> str:
+    if len(token) >= 2 and token[0] == token[-1] and token[0] in {"'", '"'}:
+        return token[1:-1]
+    return token
+
+
+def _heredoc_delimiters(line: str) -> list[tuple[str, bool]]:
+    try:
+        lexer = shlex.shlex(line, posix=False, punctuation_chars=True)
+        lexer.whitespace_split = True
+        lexer.commenters = ""
+        tokens = list(lexer)
+    except ValueError:
+        return []
+
+    delimiters: list[tuple[str, bool]] = []
+    i = 0
+    while i < len(tokens):
+        if tokens[i] != "<<":
+            i += 1
+            continue
+        strip_tabs = False
+        j = i + 1
+        if j < len(tokens) and tokens[j] == "-":
+            strip_tabs = True
+            j += 1
+        if j < len(tokens):
+            delimiter = _strip_quotes_for_heredoc(tokens[j])
+            if delimiter:
+                delimiters.append((delimiter, strip_tabs))
+        i = j + 1
+    return delimiters
+
+
+def _strip_heredoc_bodies(command: str) -> str:
+    """Drop heredoc BODY lines before tokenizing (#4538 / #4855).
+
+    Content between ``<<'MARKER'`` and ``MARKER`` is document DATA, not shell
+    syntax. Without this, body text like ``>15%`` or markdown backtick spans
+    is tokenized as redirects and misread as write targets — the recurring
+    false-positive class. Pattern shared with guard-secret-print.py.
+    """
+    if "<<" not in command:
+        return command
+
+    kept: list[str] = []
+    pending: list[tuple[str, bool]] = []
+    for line in command.splitlines():
+        if pending:
+            delimiter, strip_tabs = pending[0]
+            candidate = line.lstrip("\t") if strip_tabs else line
+            if candidate == delimiter:
+                pending.pop(0)
+            continue
+        kept.append(line)
+        pending.extend(_heredoc_delimiters(line))
+    return "\n".join(kept)
+
+
 def _tokenize(command: str) -> list[str]:
     """Quote-aware tokens with redirection/control operators kept separate.
 
     ``punctuation_chars`` makes shlex split ``();<>|&`` runs into their own
     tokens while still respecting quotes, so ``echo a>b`` yields
     ``['echo','a','>','b']`` but ``echo "a>b"`` keeps ``a>b`` intact — the whole
-    reason this is Python and not a grep.
+    reason this is Python and not a grep. Heredoc bodies are stripped first:
+    document text carries no write targets (#4538).
     """
     try:
-        lexer = shlex.shlex(command, posix=True, punctuation_chars=True)
+        lexer = shlex.shlex(
+            _strip_heredoc_bodies(command), posix=True, punctuation_chars=True
+        )
         lexer.whitespace_split = True
         return list(lexer)
     except ValueError:
