@@ -93,7 +93,7 @@ The BIO plan lists **«Ой, виорю нивку широкую» (2003)** as 
 - **Existing C1 plans (VERIFIED present):**
   - `curriculum/l2-uk-en/plans/c1/ritual-songs.yaml` — obрядовий спів context (plan `connects_to`)
 - **Existing FOLK plans (VERIFIED present):**
-  - `curriculum/l2-uk-en/plans/folk/kobzarstvo-fenomen.yaml` — parallel «authentic voice vs institution» axis
+  - `curriculum/l2-uk-en/plans/folk/kobzarstvo-lirnytstvo.yaml` — parallel «authentic voice vs institution» axis
 - **Existing BIO plans (related figures, VERIFIED present):**
   - `curriculum/l2-uk-en/plans/bio/mykola-lysenko.yaml` — academic Ukrainian music lineage (contrast: composer vs folk performer institution)
 - **Candidate cross-track connections (Phase 2+, NOT existing files):**

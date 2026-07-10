@@ -63,12 +63,11 @@ A second contested point is disciplinary naming. ESU calls her an ethnosociologi
   - `curriculum/l2-uk-en/plans/lit/ethnography.yaml`
 - **Existing HIST modules (VERIFIED present via `test -e`):**
   - `curriculum/l2-uk-en/plans/hist/hrushevskyi.yaml`
-- **Existing FOLK modules (VERIFIED present via `test -e`):**
-  - `curriculum/l2-uk-en/plans/folk/pokhodzhennia-dum.yaml`
-  - `curriculum/l2-uk-en/plans/folk/dumy-lytsarski.yaml`
-  - `curriculum/l2-uk-en/plans/folk/dumy-nevilnytski.yaml`
+- **Existing FOLK plans (VERIFIED present via `test -e`):**
+  - `curriculum/l2-uk-en/plans/folk/pisni-literaturnoho-pokhodzhennia.yaml`
+  - `curriculum/l2-uk-en/plans/folk/dumy-nevilnytski-lytsarski.yaml` — this combined plan covers both nevilnytski and lytsarski dumy tracks
   - `curriculum/l2-uk-en/plans/folk/dumy-sotsialno-pobutovi.yaml`
-  - `curriculum/l2-uk-en/plans/folk/kobzarstvo-fenomen.yaml`
+  - `curriculum/l2-uk-en/plans/folk/kobzarstvo-lirnytstvo.yaml`
 - **Candidate cross-track connections (to create/verify in Phase 2+ — NOT existing files):**
   - Bio plan linking Kateryna Hrushevska to VUAN women's scholarship and the repression of family archives.
   - Activity on reading a short preface from *Українські народні думи* as scholarly Ukrainian.
