@@ -1,30 +1,153 @@
+---
 discovered_at: '2026-04-14T10:42:41.430294+00:00'
-error: null
 query_keywords:
 - 'Іван Франко: Каменяр'
-- Розминка
-- 'Конфліктна карта: Соціаліст чи Націоналіст?'
-- 'Формування: Від сільської кузні до львівських салонів'
-- 'Діяльність: Титан праці'
-- 'Тінь: Ціна титанізму'
-- 'Дискусія та підсумок: Спадщина'
-- Аналізувати ключові етапи життя та творчості Івана Франка, виходячи за межі агіографічного
-  образу «Каменяра»
-- Критично оцінювати внесок Франка в українську культуру, розглядаючи його в контексті
-  ідеологічних дебатів епохи (соціалізм vs націоналізм)
-- '{''Визначати та аналізувати «тіньові» аспекти біографії Франка'': ''політичні невдачі,
-  особисті трагедії та складні стосунки з сучасниками''}'
-- Формулювати власну аргументовану позицію щодо спадщини Франка та його актуальності
-  в XXI столітті
-- каменяр
-- титан
-- позитивізм
-- народництво
-- Галичина
-- громадський діяч
-- агіографія
-- полеміка
-- спадщина
-rag_chunks: []
-rag_literary: []
-warning: Auto-generated from plan
+- Іван Франко життєпис Нагуєвичі Львів Відень
+- Іван Франко Русько-українська радикальна партія
+- Іван Франко соціалізм національна демократія
+- Іван Франко радянська цензура «Що таке поступ?»
+- Іван Франко «Каменярі» «Гімн» «Не пора» «Мойсей»
+- Іван Франко докторська дисертація «Варлаам і Йоасаф»
+- Іван Франко літературна мова і діалекти
+- Іван Франко політичні вибори 1895 1897 1898
+error: null
+warning: >-
+  Manually restored and pruned after source-readiness review on 2026-07-10;
+  generated plan echoes and off-topic retrieval hits removed.
+videos: []
+blogs:
+- url: https://www.history.org.ua/?termin=Franko_I
+  title: Франко Іван Якович — Енциклопедія історії України
+  source: history.org.ua
+  relevance_score: 1.0
+  topics:
+  - життєпис
+  - політична діяльність
+  - творчість
+  - радянська цензура
+  content_type: encyclopedia
+- url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CF%5CR%5CFrankoIvan.htm
+  title: Franko, Ivan — Internet Encyclopedia of Ukraine
+  source: encyclopediaofukraine.com
+  relevance_score: 1.0
+  topics:
+  - життєпис
+  - творчість
+  - радянська рецепція
+  content_type: encyclopedia
+- url: https://uk.wikipedia.org/wiki/Франко_Іван_Якович
+  title: Франко Іван Якович — Українська Вікіпедія
+  source: uk.wikipedia.org
+  relevance_score: 0.8
+  topics:
+  - хронологія
+  - освіта
+  - особисте життя
+  content_type: encyclopedia
+- url: https://www.nobelprize.org/nomination/archive/show_people.php?id=3183
+  title: Ivan Franko — Nobel Prize Nomination Archive
+  source: nobelprize.org
+  relevance_score: 1.0
+  topics:
+  - Нобелівська номінація 1916 року
+  content_type: official_archive
+- url: https://uk.wikisource.org/wiki/Що_таке_поступ%3F
+  title: Що таке поступ? — Вікіджерела
+  source: uk.wikisource.org
+  relevance_score: 1.0
+  topics:
+  - першоджерело
+  - поступ
+  - критика державного соціалізму
+  content_type: primary_source
+rag_chunks:
+- chunk_id: 10-klas-ukrlit-borzenko-2018-prof_s0140
+  text: |-
+    Іван Якович Франко народився 27 серпня 1856 року в селі Нагуєвичі.
+    Навчався у Дрогобичі, Львівському та Чернівецькому університетах;
+    після успішного захисту докторської дисертації не дістав посади у
+    Львівському університеті.
+  section_title: Сторінка 76
+  grade: 10
+  author: borzenko
+  page: 76
+  trust_tier: 2
+- chunk_id: 10-klas-ukrlit-borzenko-2018-prof_s0141
+  text: |-
+    Франко брав активну участь у громадському й політичному русі,
+    балотувався до Галицького сейму та австрійського парламенту від
+    Русько-української радикальної партії. Помер 28 травня 1916 року;
+    похований на Личаківському цвинтарі у Львові.
+  section_title: Сторінка 76
+  grade: 10
+  author: borzenko
+  page: 76
+  trust_tier: 2
+rag_images: []
+rag_literary:
+- chunk_id: 479cf43d_c0174
+  text: |-
+    Біобібліографічний словник характеризує центральну для Франка проблему
+    «особистість і загал» та наводить його формулу національного ідеалу й
+    заклик наближуватися до нього розумом, почуттям і волею.
+  work: Філософська думка в Україні — біобібліографічний словник
+  author: Колектив
+  genre: encyclopedia
+  language_period: modern
+  source_url: http://izbornyk.org.ua/fdm/fdm.htm
+- chunk_id: 68ba0555_c0794
+  text: |-
+    Мирослав Попович пов'язує статтю «Поза межами можливого» з переглядом
+    Франком економічного фаталізму та з формулюванням ідеалу вільного життя
+    й розвитку нації.
+  work: Нарис історії культури України
+  author: Попович М.
+  year: 1998
+  genre: scholarly
+  language_period: modern
+- chunk_id: 68ba0555_c0795
+  text: |-
+    Попович цитує «Поза межами можливого»: ідеал треба почувати серцем,
+    усвідомлювати розумом і наближати дією; інакше матеріальні відносини
+    «потопчуть і роздавлять нас як сліпа машина».
+  work: Нарис історії культури України
+  author: Попович М.
+  year: 1998
+  genre: scholarly
+  language_period: modern
+- chunk_id: b207d95d_c0012
+  confidence: 1.0
+  text: |-
+    «Лупайте сю скалу! Нехай ні жар, ні холод / Не спинить вас!»
+  work: Каменярі
+  author: Франко І.
+  genre: poetry
+  language_period: modern
+  verification: verify_quote
+- chunk_id: b207d95d_c0001
+  confidence: 0.9778
+  text: |-
+    «Вічний революціонер — / Дух, що тіло рве до бою».
+  work: Гімн
+  author: Франко І.
+  genre: poetry
+  language_period: modern
+  verification: verify_quote
+- chunk_id: 1b630920_c0000
+  confidence: 1.0
+  text: |-
+    «Не пора, не пора, не пора / Москалеві й ляхові служить!»
+  work: Не пора
+  author: Франко І.
+  genre: poetry
+  language_period: modern
+  verification: verify_quote
+- chunk_id: 4069caa9_c0000
+  confidence: 1.0
+  text: |-
+    «Народе мій, замучений, розбитий, / Мов паралітик той на роздорожжу».
+  work: Мойсей — Пролог
+  author: Франко І.
+  genre: poetry
+  language_period: modern
+  verification: verify_quote

@@ -1,56 +1,54 @@
-# Source registry for wiki/figures/borys-hrinchenko.md
-# Referenced inline as [S1], [S2], ...
+---
+# Reviewed source registry; inline citations resolve by stable source id.
 sources:
 - id: S1
-  file: ukrainian_wiki/borys-hrinchenko_Українська-література-Борис-Грінченко-Вартовий-рідного-слова-Деколонізаційна-перспектива
-  type: ukrainian_wiki
-  title: 'Українська література: Борис Грінченко: Вартовий рідного слова'
-  section_path: 'Українська література: Борис Грінченко: Вартовий рідного слова >
-    Деколонізаційна перспектива'
+  file: https://www.history.org.ua/?termin=Grinchenko_B
+  type: external
+  title: Грінченко Борис Дмитрович — Енциклопедія історії України
+  url: https://www.history.org.ua/?termin=Grinchenko_B
 - id: S2
-  file: ukrainian_wiki/borys-hrinchenko_Українська-література-Борис-Грінченко-Вартовий-рідного-слова-Короткий-зміст
-  type: ukrainian_wiki
-  title: 'Українська література: Борис Грінченко: Вартовий рідного слова'
-  section_path: 'Українська література: Борис Грінченко: Вартовий рідного слова >
-    Короткий зміст'
+  file: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CH%5CR%5CHrinchenkoBorys.htm
+  type: external
+  title: Hrinchenko, Borys — Internet Encyclopedia of Ukraine
+  url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CH%5CR%5CHrinchenkoBorys.htm
 - id: S3
-  file: wave9-ohiyenko-ist-lit-movy_c0207
-  type: literary
-  title: Огієнко — Історія української літературної мови (1949)
-  author: Огієнко І.
-- id: S4
-  file: ukrainian_wiki/franko-lesia-hrinchenko_Історія-України-Франко-Леся-Грінченко-Основний-зміст-Мовознавча-та-лексикографічна-праця-Бориса-Грінченка
-  type: ukrainian_wiki
-  title: 'Історія України: Франко, Леся, Грінченко'
-  section_path: 'Історія України: Франко, Леся, Грінченко > Основний зміст > Мовознавча
-    та лексикографічна праця Бориса Грінченка'
-- id: S5
-  file: ukrainian_wiki/borys-hrinchenko_Українська-література-Борис-Грінченко-Вартовий-рідного-слова-Основний-зміст-5-Громадський-провідник-та-організатор-нації
-  type: ukrainian_wiki
-  title: 'Українська література: Борис Грінченко: Вартовий рідного слова'
-  section_path: 'Українська література: Борис Грінченко: Вартовий рідного слова >
-    Основний зміст > 5. Громадський провідник та організатор нації'
-- id: S6
-  file: ukrainian_wiki/borys-hrinchenko_Українська-література-Борис-Грінченко-Вартовий-рідного-слова-Основний-зміст-2-Епохальний-здобуток-Словарь-української-мови
-  type: ukrainian_wiki
-  title: 'Українська література: Борис Грінченко: Вартовий рідного слова'
-  section_path: 'Українська література: Борис Грінченко: Вартовий рідного слова >
-    Основний зміст > 2. Епохальний здобуток: «Словарь української мови»'
-- id: S7
-  file: ukrainian_wiki/borys-hrinchenko_Українська-література-Борис-Грінченко-Вартовий-рідного-слова-Основний-зміст-4-Охорона-мовних-кордонів-полеміка-з-Галичиною
-  type: ukrainian_wiki
-  title: 'Українська література: Борис Грінченко: Вартовий рідного слова'
-  section_path: 'Українська література: Борис Грінченко: Вартовий рідного слова >
-    Основний зміст > 4. Охорона мовних кордонів: полеміка з Галичиною'
-- id: S8
-  file: 11-klas-ukrajinska-mova-voron-2019_s1245
+  file: 10-klas-ukrlit-borzenko-2018-prof_s0121
   type: textbook
-  title: На початку ХІХ ст. в Галичині Іван Могильницький створив
-  page: 23
-  grade: 11
+  title: Борис Грінченко — життєвий і творчий шлях
+  page: 65
+  grade: 10
+- id: S4
+  file: fc2291b5_c1670
+  type: literary
+  title: Українська літературна енциклопедія — Борис Грінченко
+  author: Колектив
+- id: S5
+  file: 7808b51b_c0327
+  type: literary
+  title: Русанівський — Історія української літературної мови
+  author: Русанівський В.
+- id: S6
+  file: 36bac857_c0000
+  type: literary
+  title: Український марш
+  author: Грінченко Б.
+- id: S7
+  file: 5554668f_c0024
+  type: literary
+  title: Листи з України Наддніпрянської — уривок у дослідженні полеміки з Драгомановим
+  author: Грінченко Б.; Жуковський А.
+- id: S8
+  file: https://dl.kubg.edu.ua/collections/show/8
+  type: external
+  title: Словарь української мови 1907–1909 — Цифрова бібліотека Бориса Грінченка
+  url: https://dl.kubg.edu.ua/collections/show/8
 - id: S9
-  file: ukrainian_wiki/borys-hrinchenko_Українська-література-Борис-Грінченко-Вартовий-рідного-слова-Мовні-зразки
-  type: ukrainian_wiki
-  title: 'Українська література: Борис Грінченко: Вартовий рідного слова'
-  section_path: 'Українська література: Борис Грінченко: Вартовий рідного слова >
-    Мовні зразки'
+  file: d77902e2_c0487
+  type: literary
+  title: Шевченківський словник — стаття про Бориса Грінченка
+  author: Колектив
+- id: S10
+  file: https://commons.wikimedia.org/wiki/File:Грінченко_Б._Тяжким_шляхом_(1912).pdf
+  type: external
+  title: Тяжким шляхом (Про українську пресу), 1912 — public-domain scan
+  url: https://commons.wikimedia.org/wiki/File:Грінченко_Б._Тяжким_шляхом_(1912).pdf

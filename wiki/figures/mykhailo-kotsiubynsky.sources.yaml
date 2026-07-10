@@ -1,63 +1,77 @@
-# Source registry for wiki/figures/mykhailo-kotsiubynsky.md
-# Referenced inline as [S1], [S2], ...
+---
+# Reviewed source registry; inline citations resolve by stable source id.
 sources:
 - id: S1
-  file: ukrainian_wiki/mykhailo-kotsiubynsky_Біографія-Михайло-Коцюбинський-Імпресіоніст-українського-слова-Короткий-зміст
-  type: ukrainian_wiki
-  title: 'Біографія: Михайло Коцюбинський: Імпресіоніст українського слова'
-  section_path: 'Біографія: Михайло Коцюбинський: Імпресіоніст українського слова
-    > Короткий зміст'
+  file: https://esu.com.ua/article-1182
+  type: external
+  title: Коцюбинський Михайло Михайлович — Енциклопедія Сучасної України
+  url: https://esu.com.ua/article-1182
 - id: S2
-  file: ukrainian_wiki/mykhailo-kotsiubynsky_Біографія-Михайло-Коцюбинський-Імпресіоніст-українського-слова-Деколонізаційна-перспектива
-  type: ukrainian_wiki
-  title: 'Біографія: Михайло Коцюбинський: Імпресіоніст українського слова'
-  section_path: 'Біографія: Михайло Коцюбинський: Імпресіоніст українського слова
-    > Деколонізаційна перспектива'
+  file: https://www.encyclopediaofukraine.com/display.asp?linkpath=pagesKOKotsiubynskyMykhailo.htm
+  type: external
+  title: Kotsiubynsky, Mykhailo — Internet Encyclopedia of Ukraine
+  url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pagesKOKotsiubynskyMykhailo.htm
 - id: S3
-  file: ukrainian_wiki/mykhailo-kotsiubynsky_Біографія-Михайло-Коцюбинський-Імпресіоніст-українського-слова-Основний-зміст-4-Історіографічні-та-критичні-дискусії-щодо-українського-модернізму
-  type: ukrainian_wiki
-  title: 'Біографія: Михайло Коцюбинський: Імпресіоніст українського слова'
-  section_path: 'Біографія: Михайло Коцюбинський: Імпресіоніст українського слова
-    > Основний зміст > 4. Історіографічні та критичні дискусії щодо українського модернізму'
+  file: wikipedia/Коцюбинський Михайло Михайлович
+  type: wikipedia
+  title: Коцюбинський Михайло Михайлович
+  url: https://uk.wikipedia.org/wiki/Коцюбинський_Михайло_Михайлович
 - id: S4
-  file: ukrainian_wiki/mykhailo-kotsiubynsky_Біографія-Михайло-Коцюбинський-Імпресіоніст-українського-слова-Основний-зміст-5-Рецепція-пам-ять-та-дослідження-спадщини
-  type: ukrainian_wiki
-  title: 'Біографія: Михайло Коцюбинський: Імпресіоніст українського слова'
-  section_path: 'Біографія: Михайло Коцюбинський: Імпресіоніст українського слова
-    > Основний зміст > 5. Рецепція, пам''ять та дослідження спадщини'
+  file: https://kotsubinsky.org/
+  type: external
+  title: Чернігівський літературно-меморіальний музей-заповідник М. Коцюбинського
+  url: https://kotsubinsky.org/
 - id: S5
-  file: 10-klas-ukrlit-borzenko-2018-prof_s0438
+  file: 10-klas-ukrlit-borzenko-2018-prof_s0239
   type: textbook
-  title: Михайло Коцюбинський  131
-  page: 131
+  title: Модернізм
+  page: 128
   grade: 10
 - id: S6
-  file: ukrainian_wiki/kotsiubynsky-intermezzo_Українська-література-Михайло-Коцюбинський-Intermezzo-Основний-зміст-Український-модернізм-у-світовому-контексті
-  type: ukrainian_wiki
-  title: 'Українська література: Михайло Коцюбинський: «Intermezzo»'
-  section_path: 'Українська література: Михайло Коцюбинський: «Intermezzo» > Основний
-    зміст > Український модернізм у світовому контексті'
-- id: S7
-  file: ukrainian_wiki/mykhailo-kotsiubynsky_Біографія-Михайло-Коцюбинський-Імпресіоніст-українського-слова-Основний-зміст-3-Творча-еволюція-та-синкретизм-Михайла-Коцюбинського
-  type: ukrainian_wiki
-  title: 'Біографія: Михайло Коцюбинський: Імпресіоніст українського слова'
-  section_path: 'Біографія: Михайло Коцюбинський: Імпресіоніст українського слова
-    > Основний зміст > 3. Творча еволюція та синкретизм Михайла Коцюбинського'
-- id: S8
-  file: ukrainian_wiki/mykhailo-kotsiubynsky_Біографія-Михайло-Коцюбинський-Імпресіоніст-українського-слова-Основний-зміст-2-Естетика-імпресіонізму-в-українському-контексті
-  type: ukrainian_wiki
-  title: 'Біографія: Михайло Коцюбинський: Імпресіоніст українського слова'
-  section_path: 'Біографія: Михайло Коцюбинський: Імпресіоніст українського слова
-    > Основний зміст > 2. Естетика імпресіонізму в українському контексті'
-- id: S9
-  file: ukrainian_wiki/kotsiubynsky-intermezzo_Українська-література-Михайло-Коцюбинський-Intermezzo-Деколонізаційна-перспектива
-  type: ukrainian_wiki
-  title: 'Українська література: Михайло Коцюбинський: «Intermezzo»'
-  section_path: 'Українська література: Михайло Коцюбинський: «Intermezzo» > Деколонізаційна
-    перспектива'
-- id: S10
-  file: 10-klas-ukrlit-borzenko-2018-prof_s0436
+  file: 10-klas-ukrlit-borzenko-2018-prof_s0244
   type: textbook
-  title: Іван Франко. Драма на народній основі «Украдене щастя»  127
-  page: 127
+  title: Від реалізму до модернізму
+  page: 132
   grade: 10
+- id: S7
+  file: 10-klas-ukrlit-borzenko-2018-prof_s0246
+  type: textbook
+  title: Intermezzo — особливості стилю і жанру
+  page: 133
+  grade: 10
+- id: S8
+  file: 10-klas-ukrlit-borzenko-2018-prof_s0250
+  type: textbook
+  title: Intermezzo — художня організація і фінал
+  page: 135
+  grade: 10
+- id: S9
+  file: 25ea8a3b_c0000
+  type: literary
+  title: Тіні забутих предків
+  author: Коцюбинський М.
+- id: S10
+  file: f351c63c_c0012
+  type: literary
+  title: Intermezzo
+  author: Коцюбинський М.
+- id: S11
+  file: babf0a87_c0030
+  type: literary
+  title: Fata Morgana
+  author: Коцюбинський М.
+- id: S12
+  file: 59bbf782_c0002
+  type: literary
+  title: Листи до Олександри Аплаксіної
+  author: Коцюбинський М.
+- id: S13
+  file: wikipedia/Коцюбинська Михайлина Хомівна
+  type: wikipedia
+  title: Коцюбинська Михайлина Хомівна
+  url: https://uk.wikipedia.org/wiki/Коцюбинська_Михайлина_Хомівна
+- id: S14
+  file: wikipedia/Тіні забутих предків (фільм)
+  type: wikipedia
+  title: Тіні забутих предків (фільм)
+  url: https://uk.wikipedia.org/wiki/Тіні_забутих_предків_(фільм)
