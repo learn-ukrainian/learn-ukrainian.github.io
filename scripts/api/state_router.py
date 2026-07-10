@@ -50,6 +50,7 @@ except ImportError:
 from . import delegate_router as delegate_api
 from .codexbar_usage import get_provider_usage_data, refresh_provider_usage_data
 from .config import CURRICULUM_ROOT, LEVELS
+from .lane_health import compute_lane_health
 from .state_build import (
     compute_build_stats,
     compute_build_status_all,
@@ -497,7 +498,6 @@ def compute_routing_budget(now: datetime | None = None, *, fresh_codexbar: bool 
     reset_hours = extras["reset_imminent_hours"]
     resets_at = _next_weekly_reset(current_time)
 
-    from .lane_health import compute_lane_health
     health_records = {}
     try:
         health_records = compute_lane_health(
