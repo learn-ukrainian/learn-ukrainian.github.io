@@ -157,6 +157,56 @@ def test_route_selection_treats_gemma_writer_and_gemini_judge_as_same_family() -
     assert route == claude
 
 
+def test_route_selection_ignores_fixture_writer_sentinel() -> None:
+    gemini = JudgeRoute("gemini", "gemini-3.1-pro")
+    claude = JudgeRoute("claude", "claude-opus-4-6")
+
+    route = _select_route((gemini, claude), writer_family="fixture", reviewer_family="deepseek")
+
+    assert route == gemini
+
+
+@pytest.mark.parametrize(
+    ("artifact_overrides", "expected"),
+    (
+        ({}, ("fixture", "google")),
+        (
+            {"writer_family": "openai", "dispatch": {"reviewer_family": "deepseek"}},
+            ("gpt", "deepseek"),
+        ),
+        (
+            {"writer_seat": {"family": "anthropic", "pin": "claude-opus-4-6"}},
+            ("claude", "google"),
+        ),
+        (
+            {
+                "fixture": None,
+                "seat_arm": {"family": "google", "pin": "synthetic-google-qg"},
+                "seat": {"family": "google", "pin": "synthetic-google-qg"},
+                "model": {"family": "google", "pin": "synthetic-google-qg"},
+            },
+            (None, "google"),
+        ),
+        (
+            {
+                "fixture": None,
+                "dispatch": {},
+                "model": {"family": "deepseek", "pin": "deepseek-v4"},
+            },
+            (None, "deepseek"),
+        ),
+    ),
+)
+def test_extract_lineages_preserves_writer_and_reviewer_semantics(
+    artifact_overrides: dict[str, Any], expected: tuple[str | None, str | None]
+) -> None:
+    artifact = _artifact([_fact_check("fc-lineage")], writer_family=None)
+    artifact.update(artifact_overrides)
+    fact_check = artifact["payload"]["fact_checks"][0]
+
+    assert _extract_lineages(artifact, fact_check, fact_check["grounding"]) == expected
+
+
 def test_relation_verdict_table_is_exhaustive_and_defaults_to_audit() -> None:
     relations = (
         "ENTAILS",
@@ -238,6 +288,7 @@ def test_runner_executes_b0_to_b4_with_fake_judge_and_emits_all_stat_groups(tmp_
 
 def test_unknown_writer_lineage_and_prompt_injection_are_audited_without_judge(tmp_path: Path) -> None:
     unknown_artifact = _artifact([_fact_check("fc-unknown")], writer_family=None)
+    unknown_artifact.pop("fixture")
     unknown_artifact["seat_arm"] = {"family": "unmapped", "pin": "local/mystery-model"}
     unknown_artifact["model"] = {"family": "unmapped", "pin": "local/mystery-model"}
     unknown_artifacts = _write_artifacts(tmp_path / "unknown", unknown_artifact)
@@ -272,6 +323,7 @@ def test_judged_replay_refuses_artifact_with_unknown_lineage(
     tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:
     artifact = _artifact([_fact_check("fc-unknown")], writer_family=None)
+    artifact.pop("fixture")
     artifact["seat_arm"] = {"family": "unmapped", "pin": "local/mystery-model"}
     artifact["model"] = {"family": "unmapped", "pin": "local/mystery-model"}
     artifacts = _write_artifacts(tmp_path / "unknown", artifact)
@@ -315,13 +367,13 @@ def test_stored_corpus_lineage_resolves_all_groundings_when_available() -> None:
         if isinstance(fact_check, dict) and isinstance(fact_check.get("grounding"), dict)
     ]
     lineages = [
-        _extract_lineages(artifact, fact_check, fact_check["grounding"], artifact_path=path)
-        for path, artifact, fact_check in rows
+        _extract_lineages(artifact, fact_check, fact_check["grounding"]) for _path, artifact, fact_check in rows
     ]
 
     assert len(rows) == 1310
     assert all(writer is not None and reviewer is not None for writer, reviewer in lineages)
-    assert Counter(writer for writer, _reviewer in lineages) == {"deepseek": 892, "google": 418}
+    assert Counter(writer for writer, _reviewer in lineages) == {"fixture": 1310}
+    assert Counter(reviewer for _writer, reviewer in lineages) == {"deepseek": 892, "google": 418}
 
 
 def test_b2_rejects_incompatible_claim_number_without_deterministic_entailment(tmp_path: Path) -> None:

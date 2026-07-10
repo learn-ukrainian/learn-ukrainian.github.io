@@ -313,10 +313,20 @@ def _extract_lineages(
     artifact: Mapping[str, Any],
     fact_check: Mapping[str, Any],
     grounding: Mapping[str, Any],
-    *,
-    artifact_path: Path | None = None,
 ) -> tuple[str | None, str | None]:
-    """Materialize normalized writer and QG-reviewer lineage without mutation."""
+    """Materialize normalized writer and QG-reviewer lineage without mutation.
+
+    Writer lineage never derives from a QG-reviewer seat, arm, model, or
+    artifact filename: those fields identify the reviewer under test, not the
+    model that wrote the content being evaluated.  A recorded writer-specific
+    field is authoritative.  Otherwise, a mapping-valued ``fixture`` marks
+    synthetic or ``source_module_dir`` fixture content, whose manifest records
+    no model writer; its writer family is the non-model sentinel ``fixture``.
+    The sentinel excludes no judge family because the third-family constraint
+    protects against model self-preference, which human/synthetic fixtures do
+    not have.  A non-fixture artifact without an explicit writer remains
+    unknown and fails closed.
+    """
 
     payload = artifact.get("payload") if isinstance(artifact.get("payload"), Mapping) else {}
     dispatch = artifact.get("dispatch") if isinstance(artifact.get("dispatch"), Mapping) else {}
@@ -337,25 +347,19 @@ def _extract_lineages(
         grounding.get("writer"),
         fact_check.get("writer"),
         artifact.get("writer"),
-        artifact.get("seat_arm"),
-        artifact.get("seat"),
-        model,
     )
-    writer_family = (
-        normalize_lineage_family(explicit_writer)
-        if explicit_writer is not None
-        else normalize_lineage_family(writer_metadata)
-    )
-    if writer_family is None and explicit_writer is None and writer_metadata is None and artifact_path is not None:
-        writer_family = normalize_lineage_family(artifact_path.name)
+    writer_source = _first_present(explicit_writer, writer_metadata)
+    writer_family = normalize_lineage_family(writer_source) if writer_source is not None else None
+    if writer_source is None and isinstance(artifact.get("fixture"), Mapping):
+        writer_family = "fixture"
 
-    explicit_reviewer = _first_present(
+    reviewer_metadata = _first_present(
+        dispatch.get("reviewer_family"),
+        dispatch.get("reviewer_model_id"),
         grounding.get("qg_reviewer_family"),
         fact_check.get("qg_reviewer_family"),
         artifact.get("qg_reviewer_family"),
         payload.get("qg_reviewer_family"),
-    )
-    reviewer_metadata = _first_present(
         grounding.get("qg_reviewer_seat"),
         fact_check.get("qg_reviewer_seat"),
         artifact.get("qg_reviewer_seat"),
@@ -364,16 +368,10 @@ def _extract_lineages(
         fact_check.get("qg_reviewer"),
         artifact.get("qg_reviewer"),
         payload.get("qg_reviewer"),
-        dispatch.get("reviewer_family"),
-        dispatch.get("reviewer_model_id"),
         artifact.get("reviewer"),
         model,
     )
-    qg_reviewer_family = (
-        normalize_lineage_family(explicit_reviewer)
-        if explicit_reviewer is not None
-        else normalize_lineage_family(reviewer_metadata)
-    )
+    qg_reviewer_family = normalize_lineage_family(reviewer_metadata)
     return writer_family, qg_reviewer_family
 
 
@@ -646,7 +644,7 @@ def _select_route(
 ) -> JudgeRoute | None:
     if writer_family is None or reviewer_family is None:
         return None
-    excluded = {writer_family, reviewer_family}
+    excluded = {family for family in (writer_family, reviewer_family) if family != "fixture"}
     return next(
         (
             route
@@ -950,7 +948,7 @@ class ShadowRunner:
         reviewer_verdict = str(fact_check.get("reviewer_verdict") or fact_check.get("verdict") or "UNKNOWN")
         key = _stable_grounding_key(path, fact_index, fact_check)
         label = self.labels.get(key) or self.labels.get(str(fact_check.get("fact_check_id") or ""))
-        writer_family, reviewer_family = _extract_lineages(artifact, fact_check, grounding, artifact_path=path)
+        writer_family, reviewer_family = _extract_lineages(artifact, fact_check, grounding)
         record: dict[str, Any] = {
             "grounding_key": key,
             "artifact": path.name,
@@ -1283,7 +1281,7 @@ class ShadowRunner:
         unresolved_by_artifact: Counter[str] = Counter()
         for path, artifact, _index, fact_check in groundings:
             grounding = fact_check["grounding"]
-            writer_family, reviewer_family = _extract_lineages(artifact, fact_check, grounding, artifact_path=path)
+            writer_family, reviewer_family = _extract_lineages(artifact, fact_check, grounding)
             if writer_family is None or reviewer_family is None:
                 unresolved_by_artifact[path.name] += 1
         if unresolved_by_artifact:
