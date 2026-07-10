@@ -87,6 +87,52 @@ def test_rendered_sections_ignores_empty_placeholder_blocks() -> None:
     assert rendered_sections(entry) == set()
 
 
+def test_rendered_sections_counts_marked_forms_only_morphology() -> None:
+    entry = _entry(
+        enrichment={
+            "definition_cards": [
+                {"id": "vts-main", "source": "ВТС", "definitions": ["Тест."]}
+            ],
+            "morphology": {
+                "pos": "noun",
+                "form_count": 0,
+                "marked_form_count": 2,
+                "forms": [],
+                "marked_forms": [
+                    {"form": "слово́", "label": "називний", "style": "arch"},
+                    {"form": "слова́", "label": "родовий", "style": "arch"},
+                ],
+                "source": "VESUM",
+            },
+            "translation": {"en": ["word"], "source": "test"},
+        },
+    )
+
+    assert "morphology" in rendered_sections(entry)
+
+
+def test_rendered_sections_ignores_empty_morphology_without_paradigm() -> None:
+    entry = _entry(
+        gloss=None,
+        enrichment={
+            "morphology": {
+                "forms": [],
+                "marked_forms": [],
+                "source": "VESUM",
+            },
+            "translation": {"en": [], "source": "test"},
+        },
+    )
+
+    assert "morphology" not in rendered_sections(entry)
+
+
+def test_rendered_sections_plain_forms_morphology_unchanged() -> None:
+    entry = _entry()
+
+    assert "morphology" in rendered_sections(entry)
+
+
 def test_audit_cli_runs_as_direct_script(tmp_path) -> None:
     manifest_path = tmp_path / "manifest.json"
     manifest_path.write_text(
