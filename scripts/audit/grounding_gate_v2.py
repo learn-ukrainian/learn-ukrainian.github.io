@@ -13,90 +13,47 @@ is a later chunk.
 
 from __future__ import annotations
 
-import difflib
 import logging
 import os
-import re
-from collections import Counter
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from typing import Any
 
-# Reuse existing normalization and tool event helpers from v1 gate
-from scripts.audit.llm_reviewer_dispatch import (
-    _ELLIPSIS_RE,
-    _TOKEN_RE,
-    _canonical_tool_name,
-    _event_input_matches_query,
-    _event_output_text,
-    _excerpt_segments,
-    _normalize_for_match,
-    _output_contains_excerpt,
-)
+from scripts.audit import anchor_primitives
 
 DEFAULT_TAU = 0.75
+
+# Legacy private names remain import-compatible while delegating to the public,
+# stateless primitives.  Gate state and AnchorResult composition stay here.
+_ELLIPSIS_RE = anchor_primitives.ELLIPSIS_RE
+_event_output_text = anchor_primitives.event_output_text
+_normalize_for_match = anchor_primitives.normalize_for_match
+_output_contains_excerpt = anchor_primitives.output_contains_excerpt
 
 
 @dataclass(frozen=True)
 class AnchorResult:
-    anchored: bool          # True only when confidently anchored to one real output
-    abstained: bool         # True when ambiguous (excerpt matches multiple unrelated outputs)
-    similarity: float       # best score in [0,1]
-    source_index: int | None   # index of the anchored event, or None
+    anchored: bool  # True only when confidently anchored to one real output
+    abstained: bool  # True when ambiguous (excerpt matches multiple unrelated outputs)
+    similarity: float  # best score in [0,1]
+    source_index: int | None  # index of the anchored event, or None
     span: tuple[int, int] | None  # (start,end) char window in that event's normalized output
-    reason: str             # short machine tag
+    reason: str  # short machine tag
     anchor_low_signal_reason: str | None = None  # diagnostic: e.g. "no_digits", "single_anchor"
 
 
-def find_salient_tokens(excerpt: str, E_norm: str) -> list[dict[str, Any]]:
-    """Extract salient tokens from excerpt and locate their spans in E_norm.
-
-    Salient token: a token containing a digit, OR whose original (pre-casefold)
-    form begins with an uppercase Cyrillic letter (proper-noun-like).
-    """
-    raw_matches = list(_TOKEN_RE.finditer(excerpt))
-    salient_tokens = []
-
-    # We will search sequentially in E_norm
-    cursor = 0
-    cyrillic_upper = "АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЮЯ"
-
-    for match in raw_matches:
-        original = match.group()
-        # Check if it is salient
-        is_digit = any(c.isdigit() for c in original)
-        is_proper = len(original) > 0 and original[0] in cyrillic_upper
-
-        if not (is_digit or is_proper):
-            # Advance cursor for non-salient tokens to maintain sequential tracking
-            norm_tok = _normalize_for_match(original)
-            if norm_tok:
-                pos = E_norm.find(norm_tok, cursor)
-                if pos != -1:
-                    cursor = pos + len(norm_tok)
-            continue
-
-        norm_tok = _normalize_for_match(original)
-        if not norm_tok:
-            continue
-
-        pos = E_norm.find(norm_tok, cursor)
-        if pos == -1:
-            # Fallback: search from beginning if sequence got slightly out of alignment
-            pos = E_norm.find(norm_tok, 0)
-
-        if pos != -1:
-            start = pos
-            end = pos + len(norm_tok)
-            cursor = end
-            salient_tokens.append({
-                "original": original,
-                "norm": norm_tok,
-                "start": start,
-                "end": end,
-                "is_digit": is_digit
-            })
-    return salient_tokens
+def find_salient_tokens(excerpt: str, normalized_excerpt: str) -> list[dict[str, Any]]:
+    """Compatibility projection of the pure primitive's public token records."""
+    return [
+        {
+            "original": token.original,
+            "norm": token.norm,
+            "start": token.start,
+            "end": token.end,
+            "is_digit": token.is_digit,
+        }
+        for token in anchor_primitives.find_salient_tokens(excerpt, normalized_excerpt)
+    ]
 
 
 _last_search_truncated = False
@@ -107,58 +64,13 @@ def _find_best_window_original(
     normalized_output: str,
     factor: float = 2.0,
 ) -> tuple[float, tuple[int, int] | None, int]:
-    """Find the best contiguous window in normalized_output matching normalized_excerpt in O(blocks) time.
-
-    Returns:
-        (best_score, best_span, matched_non_space_mass)
-    """
-    if not normalized_excerpt or not normalized_output:
-        return 0.0, None, 0
-
-    # Hard defensive guard: never pass > 4*len(excerpt)+256 chars to a single SequenceMatcher call
-    max_matcher_len = 4 * len(normalized_excerpt) + 256
-    matcher_output = normalized_output
-    if len(normalized_output) > max_matcher_len:
-        matcher_output = normalized_output[:max_matcher_len]
-
-    autojunk = (len(normalized_excerpt) > 500 or len(matcher_output) > 1000)
-    s = difflib.SequenceMatcher(None, normalized_excerpt, matcher_output, autojunk=autojunk)
-    blocks = [b for b in s.get_matching_blocks() if b.size > 0]
-    if not blocks:
-        return 0.0, None, 0
-
-    # Guard 1: Span-locality window limit
-    max_window_len = max(len(normalized_excerpt) * factor, len(normalized_excerpt) + 50)
-
-    # Precompute prefix sums of block sizes and non-space masses
-    n_blocks = len(blocks)
-    P_size = [0] * (n_blocks + 1)
-    P_mass = [0] * (n_blocks + 1)
-    for i, b in enumerate(blocks):
-        P_size[i + 1] = P_size[i] + b.size
-        matched_str = normalized_excerpt[b.a : b.a + b.size]
-        block_mass = len(matched_str.replace(" ", ""))
-        P_mass[i + 1] = P_mass[i] + block_mass
-
-    best_score = -1.0
-    best_span = None
-    best_mass = 0
-
-    k = 0
-    for m in range(n_blocks):
-        b_end = blocks[m].b + blocks[m].size
-        while k <= m and b_end - blocks[k].b > max_window_len:
-            k += 1
-        if k <= m:
-            sum_sizes = P_size[m + 1] - P_size[k]
-            score = sum_sizes / len(normalized_excerpt)
-            sum_non_space = P_mass[m + 1] - P_mass[k]
-            if score > best_score:
-                best_score = score
-                best_span = (blocks[k].b, b_end)
-                best_mass = sum_non_space
-
-    return best_score, best_span, best_mass
+    """Delegate legacy tuple API to the stateless primitive."""
+    result = anchor_primitives.find_best_window_original(
+        normalized_excerpt,
+        normalized_output,
+        factor=factor,
+    )
+    return result.score, result.span, result.matched_non_space_mass
 
 
 def _find_best_window(
@@ -167,147 +79,54 @@ def _find_best_window(
     factor: float = 2.0,
     salient_tokens: list[dict[str, Any]] | None = None,
 ) -> tuple[float, tuple[int, int] | None, int]:
-    """Find the best contiguous window in normalized_output matching normalized_excerpt.
-
-    Uses anchor-pre-scan to bound SequenceMatcher calls for correctness and speed.
-    """
+    """Delegate legacy tuple API to the stateless primitive."""
     global _last_search_truncated
-
-    if not normalized_excerpt or not normalized_output:
-        return 0.0, None, 0
-
-    if salient_tokens is None:
-        salient_tokens = find_salient_tokens(normalized_excerpt, normalized_excerpt)
-
-    # Filter out short proper-noun tokens (length < 4) to avoid anchoring on common prepositions/words
-    filtered_salient = [t for t in salient_tokens if t.get("is_digit") or len(t["norm"]) >= 4]
-
-    if not filtered_salient:
-        # Fallback anchor: if there are no distinctive salient tokens, pick a prefix of the excerpt
-        # to ensure that we still bound SequenceMatcher on generic repetitive inputs.
-        fallback_len = min(12, len(normalized_excerpt))
-        if fallback_len > 0:
-            fallback_sub = normalized_excerpt[:fallback_len]
-            filtered_salient = [{
-                "norm": fallback_sub,
-                "start": 0,
-                "end": fallback_len,
-                "is_digit": False,
-            }]
-        else:
-            return _find_best_window_original(normalized_excerpt, normalized_output, factor)
-
-    # 1. Identify the single most distinctive salient anchor
-    # "the RAREST/longest salient token (prefer the longest proper-noun token; tiebreak the longest digit run), NOT a common one."
-    def anchor_key(t: dict[str, Any]) -> tuple[int, int, int]:
-        sub = t["norm"]
-        count = normalized_output.count(sub)
-        is_proper = not t.get("is_digit", False)
-        length = len(sub)
-        return (count, 0 if is_proper else 1, -length)
-
-    best_anchor = min(filtered_salient, key=anchor_key)
-
-    # 2. Locate candidate window START positions by fast exact str.find of the chosen distinctive anchor
-    candidate_starts = []
-    sub = best_anchor["norm"]
-    start_in_excerpt = best_anchor["start"]
-
-    pos = normalized_output.find(sub)
-    while pos != -1:
-        win_start = max(0, pos - start_in_excerpt - 32)
-        candidate_starts.append(win_start)
-        pos = normalized_output.find(sub, pos + len(sub))
-
-    if not candidate_starts:
-        # If the excerpt has NO salient anchor present in the output at all -> reject.
-        # Fall back to original SequenceMatcher if output is small to maintain exact behavior/reasons.
-        if len(normalized_output) < 1000:
-            return _find_best_window_original(normalized_excerpt, normalized_output, factor)
-        return 0.0, None, 0
-
-    # Deduplicate/merge candidate start positions that are very close to each other
-    unique_starts = []
-    for start in sorted(candidate_starts):
-        if not unique_starts or start - unique_starts[-1] >= len(normalized_excerpt):
-            unique_starts.append(start)
-
-    # 4. Cap the number of candidate windows evaluated (e.g. first 64)
-    MAX_CANDIDATES = 64
-    total_candidates = len(unique_starts)
-    if total_candidates > MAX_CANDIDATES:
+    primitive_tokens = None
+    if salient_tokens is not None:
+        primitive_tokens = tuple(
+            anchor_primitives.SalientToken(
+                str(token.get("original") or ""),
+                str(token.get("norm") or ""),
+                int(token.get("start") or 0),
+                int(token.get("end") or 0),
+                bool(token.get("is_digit")),
+            )
+            for token in salient_tokens
+        )
+    result = anchor_primitives.find_best_window(
+        normalized_excerpt,
+        normalized_output,
+        factor=factor,
+        salient_tokens=primitive_tokens,
+    )
+    if result.truncated:
         _last_search_truncated = True
         logging.getLogger("grounding_gate_v2").warning(
-            f"Truncated candidate windows from {total_candidates} to {MAX_CANDIDATES} for excerpt length {len(normalized_excerpt)}"
+            f"Truncated candidate windows from {result.candidate_count} to 64 for excerpt length {len(normalized_excerpt)}"
         )
         return 0.0, None, 0
-
-    best_score = -1.0
-    best_span = None
-    best_mass = 0
-
-    evaluated_w_norms = set()
-
-    # 3. For each candidate occurrence, run SequenceMatcher ONLY on a bounded window
-    for win_start in unique_starts:
-        win_len = 3 * len(normalized_excerpt) + 64
-        # 5. Keep a hard defensive guard: never pass > 4*len(excerpt)+256 chars to a single SequenceMatcher call
-        hard_guard_len = 4 * len(normalized_excerpt) + 256
-        win_len = min(win_len, hard_guard_len)
-
-        win_end = min(len(normalized_output), win_start + win_len)
-        W_norm = normalized_output[win_start:win_end]
-
-        if W_norm in evaluated_w_norms:
-            continue
-        evaluated_w_norms.add(W_norm)
-
-        sub_score, sub_span, sub_mass = _find_best_window_original(normalized_excerpt, W_norm, factor)
-        if sub_span is not None:
-            mapped_span = (win_start + sub_span[0], win_start + sub_span[1])
-            if sub_score > best_score:
-                best_score = sub_score
-                best_span = mapped_span
-                best_mass = sub_mass
-
-    return best_score, best_span, best_mass
+    best = result.best
+    return best.score, best.span, best.matched_non_space_mass
 
 
 def _match_ellipsis_excerpt(
     excerpt: str,
     normalized_output: str,
 ) -> tuple[float, tuple[int, int] | None, int]:
-    """Ordered segment matching for excerpts with ellipsis."""
-    segments = [segment for segment in _excerpt_segments(excerpt) if len(segment) >= 4]
-    if not segments:
-        return 0.0, None, 0
-
-    evidence_mass = sum(len(segment.replace(" ", "")) for segment in segments)
-
-    cursor = 0
-    first_start = None
-    last_end = None
-    for segment in segments:
-        index = normalized_output.find(segment, cursor)
-        if index == -1:
-            return 0.0, None, 0
-        if first_start is None:
-            first_start = index
-        last_end = index + len(segment)
-        cursor = last_end
-
-    return 1.0, (first_start, last_end), evidence_mass
+    """Delegate legacy enclosing-span diagnostics to ordered segment records."""
+    result = anchor_primitives.match_ellipsis_excerpt(excerpt, normalized_output)
+    return result.similarity, result.enclosing_span, result.matched_non_space_mass
 
 
 def _tool_query_match(grounding: Mapping[str, Any], event: Mapping[str, Any]) -> bool:
     """Check if the event matches the grounding tool/query canonical signature."""
-    tool = _canonical_tool_name(grounding.get("tool"))
-    if tool and _canonical_tool_name(event.get("tool")) != tool:
+    tool = anchor_primitives.canonical_tool_name(grounding.get("tool"))
+    if tool and anchor_primitives.canonical_tool_name(event.get("tool")) != tool:
         return False
     query = str(grounding.get("query") or "").strip()
     if not query:
         return False
-    return _event_input_matches_query(event, query)
+    return anchor_primitives.event_input_matches_query(event, query)
 
 
 def anchor_evidence_to_events(
@@ -409,44 +228,33 @@ def anchor_evidence_to_events(
                 continue
 
             max_window_len = max(len(normalized_excerpt) * 2.0, len(normalized_excerpt) + 50)
-            span_locality_ok = (span[1] - span[0] <= max_window_len)
+            span_locality_ok = span[1] - span[0] <= max_window_len
 
-            W_norm = normalized_output[span[0]:span[1]]
-            # Hard defensive guard: never pass > 4*len(excerpt)+256 chars to a single SequenceMatcher call
-            hard_guard_len = 4 * len(normalized_excerpt) + 256
-            if len(W_norm) > hard_guard_len:
-                W_norm = W_norm[:hard_guard_len]
-            autojunk = (len(normalized_excerpt) > 500 or len(W_norm) > 1000)
-            matcher = difflib.SequenceMatcher(None, normalized_excerpt, W_norm, autojunk=autojunk)
-            ops = matcher.get_opcodes()
+            W_norm = normalized_output[span[0] : span[1]]
+            assessment = anchor_primitives.assess_window(
+                normalized_excerpt,
+                W_norm,
+                tuple(
+                    anchor_primitives.SalientToken(t["original"], t["norm"], t["start"], t["end"], t["is_digit"])
+                    for t in salient_tokens
+                ),
+            )
 
-            digit_aligned = True
-            salient_aligned = True
-            for t in salient_tokens:
-                aligned = any(
-                    op == "equal" and i1 <= t["start"] and t["end"] <= i2
-                    for op, i1, i2, j1, j2 in ops
-                )
-                # TODO(#4797): optional VESUM lemma tightening when db present
-                if not aligned:
-                    if t["is_digit"]:
-                        digit_aligned = False
-                    else:
-                        salient_aligned = False
-
-            event_results.append({
-                "index": idx,
-                "raw_sim": raw_sim,  # Keep similarity = 1.0 for backwards compatibility
-                "span": span,
-                "matched_mass": matched_mass,
-                "span_locality_ok": span_locality_ok,
-                "digit_aligned": digit_aligned,
-                "salient_aligned": salient_aligned,
-                "tool_query_matched": tool_query_matched,
-                "normalized_output": normalized_output,
-                "mass_ok": True,
-                "sim_ok": True,
-            })
+            event_results.append(
+                {
+                    "index": idx,
+                    "raw_sim": raw_sim,  # Keep similarity = 1.0 for backwards compatibility
+                    "span": span,
+                    "matched_mass": matched_mass,
+                    "span_locality_ok": span_locality_ok,
+                    "digit_aligned": assessment.digit_aligned,
+                    "salient_aligned": assessment.salient_aligned,
+                    "tool_query_matched": tool_query_matched,
+                    "normalized_output": normalized_output,
+                    "mass_ok": True,
+                    "sim_ok": True,
+                }
+            )
         else:
             # Non-ellipsis path
             # Search best window span
@@ -458,47 +266,36 @@ def anchor_evidence_to_events(
             if span is None:
                 continue
 
-            W_norm = normalized_output[span[0]:span[1]]
-            # Hard defensive guard: never pass > 4*len(excerpt)+256 chars to a single SequenceMatcher call
-            hard_guard_len = 4 * len(normalized_excerpt) + 256
-            if len(W_norm) > hard_guard_len:
-                W_norm = W_norm[:hard_guard_len]
-            autojunk = (len(normalized_excerpt) > 500 or len(W_norm) > 1000)
-            matcher = difflib.SequenceMatcher(None, normalized_excerpt, W_norm, autojunk=autojunk)
-            raw_sim = matcher.ratio()
+            W_norm = normalized_output[span[0] : span[1]]
+            assessment = anchor_primitives.assess_window(
+                normalized_excerpt,
+                W_norm,
+                tuple(
+                    anchor_primitives.SalientToken(t["original"], t["norm"], t["start"], t["end"], t["is_digit"])
+                    for t in salient_tokens
+                ),
+            )
+            raw_sim = assessment.similarity
 
             required_threshold = (tau - 0.05) if tool_query_matched else tau
-            sim_ok = (raw_sim >= required_threshold)
-            mass_ok = (matched_mass >= 12)
+            sim_ok = raw_sim >= required_threshold
+            mass_ok = matched_mass >= 12
 
-            ops = matcher.get_opcodes()
-            digit_aligned = True
-            salient_aligned = True
-            for t in salient_tokens:
-                aligned = any(
-                    op == "equal" and i1 <= t["start"] and t["end"] <= i2
-                    for op, i1, i2, j1, j2 in ops
-                )
-                # TODO(#4797): optional VESUM lemma tightening when db present
-                if not aligned:
-                    if t["is_digit"]:
-                        digit_aligned = False
-                    else:
-                        salient_aligned = False
-
-            event_results.append({
-                "index": idx,
-                "raw_sim": raw_sim,
-                "span": span,
-                "matched_mass": matched_mass,
-                "span_locality_ok": True,
-                "digit_aligned": digit_aligned,
-                "salient_aligned": salient_aligned,
-                "tool_query_matched": tool_query_matched,
-                "normalized_output": normalized_output,
-                "mass_ok": mass_ok,
-                "sim_ok": sim_ok,
-            })
+            event_results.append(
+                {
+                    "index": idx,
+                    "raw_sim": raw_sim,
+                    "span": span,
+                    "matched_mass": matched_mass,
+                    "span_locality_ok": True,
+                    "digit_aligned": assessment.digit_aligned,
+                    "salient_aligned": assessment.salient_aligned,
+                    "tool_query_matched": tool_query_matched,
+                    "normalized_output": normalized_output,
+                    "mass_ok": mass_ok,
+                    "sim_ok": sim_ok,
+                }
+            )
 
     if _last_search_truncated:
         return AnchorResult(

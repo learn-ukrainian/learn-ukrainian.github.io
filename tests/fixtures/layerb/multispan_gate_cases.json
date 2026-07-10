@@ -1,0 +1,97 @@
+{
+  "schema_version": "qg-layerb-gate-cases.v1",
+  "cases": [
+    {
+      "key": "franko-1893-vienna",
+      "grounding": {
+        "tool": "query_wikipedia",
+        "query": "Іван Франко",
+        "evidence_excerpt": "Іван Франко навчався у Віденському університеті. ... У 1893 році він захистив дисертацію."
+      },
+      "events": [
+        {
+          "tool": "query_wikipedia",
+          "input": {"query": "Іван Франко"},
+          "output": "Іван Франко навчався у Віденському університеті. Згодом він працював над науковими студіями. У 1893 році він захистив дисертацію.",
+          "status": "completed",
+          "tool_call_id": "franko-1"
+        }
+      ]
+    },
+    {
+      "key": "lesya-1871-1913",
+      "grounding": {
+        "tool": "query_wikipedia",
+        "query": "Леся Українка",
+        "evidence_excerpt": "Леся Українка народилася 1871 року. [...] Померла вона 1913 року"
+      },
+      "events": [
+        {
+          "tool": "query_wikipedia",
+          "input": {"query": "Леся Українка"},
+          "output": "Леся Українка народилася 1871 року. Вона жила в Новограді-Волинському. Померла вона 1913 року в Сурамі.",
+          "status": "completed",
+          "tool_call_id": "lesya-1"
+        }
+      ]
+    },
+    {
+      "key": "zhnyvarski-boroda",
+      "grounding": {
+        "tool": "query_wikipedia",
+        "query": "Жниварські пісні",
+        "evidence_excerpt": "Жниварські пісні співали під час жнив. … Борода символізувала завершення роботи."
+      },
+      "events": [
+        {
+          "tool": "query_wikipedia",
+          "input": {"query": "Жниварські пісні"},
+          "output": "Жниварські пісні співали під час жнив. У них звучали побажання врожаю. Борода символізувала завершення роботи.",
+          "status": "completed",
+          "tool_call_id": "zhny-1"
+        }
+      ]
+    },
+    {
+      "key": "adversarial-cross-event-join",
+      "grounding": {
+        "tool": "query_wikipedia",
+        "query": "козацька рада",
+        "evidence_excerpt": "Козаки зібралися на майдані. ... Осавул виніс клейноди."
+      },
+      "events": [
+        {
+          "tool": "query_wikipedia",
+          "input": {"query": "козацька рада"},
+          "output": "Козаки зібралися на майдані.",
+          "status": "completed",
+          "tool_call_id": "join-1"
+        },
+        {
+          "tool": "query_wikipedia",
+          "input": {"query": "козацька рада"},
+          "output": "Осавул виніс клейноди.",
+          "status": "completed",
+          "tool_call_id": "join-2"
+        }
+      ]
+    },
+    {
+      "key": "lexical-variation-row",
+      "grounding": {
+        "tool": "query_wikipedia",
+        "query": "народна традиція",
+        "evidence_excerpt": "У громаді зберігали давній звичай. ... Обряд передавали наступним поколінням."
+      },
+      "events": [
+        {
+          "tool": "query_wikipedia",
+          "input": {"query": "народна традиція"},
+          "output": "У громаді зберігали давній звичай. Його пояснювали дітям. Обряд передавали наступним поколінням.",
+          "status": "completed",
+          "tool_call_id": "lexical-1"
+        }
+      ]
+    }
+  ]
+}
