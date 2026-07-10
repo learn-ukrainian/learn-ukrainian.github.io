@@ -95,40 +95,50 @@ references:
   note: Загальна біографія, дати, ключові події.
   type: external
   url: https://uk.wikipedia.org/wiki/Володимир_Святославич
+readings_contract_version: 2
 readings:
-- title: "Володимир Святославич Святий"
+- title: "ВОЛОДИМИР СВЯТОСЛАВИЧ СВЯТИЙ"
   language: uk
   genre: encyclopedia
   source_type: reference
   role: context
-  source: "Енциклопедія історії України (history.org.ua)"
+  source_name: "Енциклопедія історії України"
   source_url: "https://history.org.ua/?termin=Volodymyr_Sv"
-  license: copyright
   hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: "https://history.org.ua/?termin=Volodymyr_Sv"
+    note: "Зовнішнє посилання; текст не відтворюється в курсі."
   cefr_min: C1
   learner_task: "Ознайомитися з офіційною академічною біографією князя, його реформами та процесом хрещення Русі."
   caveats: "Академічний стиль."
-- title: "Повість минулих літ (уривки про вибір віри та хрещення)"
+- title: "Повість врем’яних літ. ПовЂсть времяньныхъ лЂтъ"
   language: uk
   genre: chronicle
   source_type: primary
   role: primary
-  source: "Ізборник (izbornyk.org.ua)"
+  source_name: "Ізборник"
   source_url: "http://izbornyk.org.ua/pvlyar/yar04.htm"
-  license: public_domain
-  hosting: excerpt-only
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: "http://izbornyk.org.ua/pvlyar/yar04.htm"
+    note: "Зовнішнє посилання; текст не відтворюється в курсі."
   cefr_min: C1
   learner_task: "Проаналізувати літописну легенду про вибір релігії Володимиром та її ідеологічне значення."
   caveats: "Давньоруський текст потребує глосарію; літописна ідеалізація."
-- title: "Златники та срібляники Володимира Великого"
+- title: "Златник Володимира Святославича (копія) та срібляники. Кінець Х – початок ХІ ст."
   language: uk
   genre: article
   source_type: reference
   role: context
-  source: "Національний музей історії України (nmiu.org)"
+  source_name: "Національний музей історії України"
   source_url: "https://nmiu.org/qr-codes/1952-zlatnik-volodimira-svyatoslavicha-kop-ya-ta-sr-blyaniki-k-nets-kh-pochatok-kh-st"
-  license: copyright
   hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: "https://nmiu.org/qr-codes/1952-zlatnik-volodimira-svyatoslavicha-kop-ya-ta-sr-blyaniki-k-nets-kh-pochatok-kh-st"
+    note: "Зовнішнє посилання; текст не відтворюється в курсі."
   cefr_min: C1
   learner_task: "Ознайомитися з першими монетами Русі як символом державного суверенітету."
   caveats: "Специфічна нумізматична термінологія."
@@ -136,7 +146,7 @@ sequence: 3
 slug: volodymyr-velykii
 subtitle: 'Volodymyr the Great: Saint, Sinner, Architect'
 title: 'Володимир Великий: Святий, грішник, архітектор'
-version: '4.2'
+version: '4.3'
 vocabulary_hints:
 - definition: внутрішній розбрат, збройна боротьба за владу між членами однієї династії чи народу
   pos: ж.

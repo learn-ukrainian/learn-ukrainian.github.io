@@ -95,40 +95,50 @@ references:
   note: Context for Khazar campaign and its geopolitical consequences
   type: reference
   work: Хозарський каганат
+readings_contract_version: 2
 readings:
-- title: "Святослав Ігорович"
+- title: "СВЯТОСЛАВ ІГОРЕВИЧ"
   language: uk
   genre: encyclopedia
   source_type: reference
   role: context
-  source: "Енциклопедія історії України (history.org.ua)"
+  source_name: "Енциклопедія історії України"
   source_url: "https://history.org.ua/?termin=Sviatoslav_I"
-  license: copyright
   hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: "https://history.org.ua/?termin=Sviatoslav_I"
+    note: "Зовнішнє посилання; текст не відтворюється в курсі."
   cefr_min: C1
   learner_task: "Ознайомитися з діяльністю Святослава як полководця та державного діяча."
   caveats: "Академічний стиль."
-- title: "Повість минулих літ (уривки про походи Святослава)"
+- title: "Повість врем’яних літ. ПовЂсть времяньныхъ лЂтъ"
   language: uk
   genre: chronicle
   source_type: primary
   role: primary
-  source: "Ізборник (izbornyk.org.ua)"
+  source_name: "Ізборник"
   source_url: "http://izbornyk.org.ua/pvlyar/yar02.htm"
-  license: public_domain
-  hosting: excerpt-only
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: "http://izbornyk.org.ua/pvlyar/yar02.htm"
+    note: "Зовнішнє посилання; текст не відтворюється в курсі."
   cefr_min: C1
   learner_task: "Проаналізувати образ князя-воїна та його знаменитий вислів «Іду на ви!»."
   caveats: "Давньоруський текст потребує глосарію."
-- title: "Хозарський каганат"
+- title: "ХОЗАРСЬКИЙ КАГАНАТ"
   language: uk
   genre: encyclopedia
   source_type: reference
   role: context
-  source: "Енциклопедія історії України (history.org.ua)"
+  source_name: "Енциклопедія історії України"
   source_url: "https://history.org.ua/?termin=Khozarskyj_kahanat"
-  license: copyright
   hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: "https://history.org.ua/?termin=Khozarskyj_kahanat"
+    note: "Зовнішнє посилання; текст не відтворюється в курсі."
   cefr_min: C1
   learner_task: "Зрозуміти геополітичний контекст східних походів Святослава."
   caveats: "Складна термінологія."
@@ -136,7 +146,7 @@ sequence: 2
 slug: kniaz-sviatoslav
 subtitle: 'Prince Sviatoslav: The Warrior Conqueror'
 title: 'Князь Святослав: Воїн-завойовник'
-version: '4.2'
+version: '4.3'
 vocabulary_hints:
 - definition: 'у давньоруському контексті: постійне військо князя, його найближчі соратники та радники'
   pos: ж.

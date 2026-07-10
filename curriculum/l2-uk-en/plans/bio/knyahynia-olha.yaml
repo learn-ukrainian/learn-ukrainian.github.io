@@ -105,40 +105,50 @@ references:
   note: Опис прийому Ольги в Константинополі, джерело для реконструкції дипломатичних відносин
   type: primary
   work: De Ceremoniis
+readings_contract_version: 2
 readings:
-- title: "Ольга, велика княгиня київська"
+- title: "ОЛЬГА"
   language: uk
   genre: encyclopedia
   source_type: reference
   role: context
-  source: "Енциклопедія історії України (history.org.ua)"
+  source_name: "Енциклопедія історії України"
   source_url: "https://history.org.ua/?termin=Olha"
-  license: copyright
   hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: "https://history.org.ua/?termin=Olha"
+    note: "Зовнішнє посилання; текст не відтворюється в курсі."
   cefr_min: C1
   learner_task: "Ознайомитися з академічною біографією княгині Ольги, її державними та адміністративними реформами."
   caveats: "Академічний стиль, складна термінологія."
-- title: "Повість минулих літ (уривки про помсту та хрещення Ольги)"
+- title: "Повість врем’яних літ. ПовЂсть времяньныхъ лЂтъ"
   language: uk
   genre: chronicle
   source_type: primary
   role: primary
-  source: "Ізборник (izbornyk.org.ua)"
+  source_name: "Ізборник"
   source_url: "http://izbornyk.org.ua/pvlyar/yar02.htm"
-  license: public_domain
-  hosting: excerpt-only
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: "http://izbornyk.org.ua/pvlyar/yar02.htm"
+    note: "Зовнішнє посилання; текст не відтворюється в курсі."
   cefr_min: C1
   learner_task: "Проаналізувати легендарний образ княгині, її помсту древлянам та візит до Константинополя."
   caveats: "Адаптований або оригінальний давньоруський текст потребує глосарію."
-- title: "Княгиня Ольга в статті «Київ» (ЕСУ)"
+- title: "Київ"
   language: uk
   genre: encyclopedia
   source_type: reference
   role: context
-  source: "Енциклопедія сучасної України: Київ"
+  source_name: "Енциклопедія сучасної України"
   source_url: "https://esu.com.ua/article-11194"
-  license: copyright
   hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: "https://esu.com.ua/article-11194"
+    note: "Зовнішнє посилання; текст не відтворюється в курсі."
   cefr_min: C1
   learner_task: "Знайти фрагмент про княжу добу Києва й пояснити, як дипломатія Ольги вписана в історію міста."
   caveats: "Контекстна довідка про Київ, не самостійна біографія Ольги; використовувати лише як додатковий міський контекст."
@@ -146,7 +156,7 @@ sequence: 1
 slug: knyahynia-olha
 subtitle: 'Princess Olha: Architect of a State'
 title: 'Княгиня Ольга: Архітекторка держави'
-version: '4.3'
+version: '4.4'
 vocabulary_hints:
 - definition: архаїчна система збору данини шляхом об'їзду князем та дружиною підвладних територій; буквально «ходіння по людях»
   pos: с.

@@ -92,40 +92,50 @@ references:
   note: Систематизована довідка з фактів, дат, імен; hyvä для швидкої перевірки.
   path: wiki/history/kyivan-rus/yaroslav-the-wise.md
   type: wiki
+readings_contract_version: 2
 readings:
-- title: "Ярослав Мудрий"
+- title: "ЯРОСЛАВ МУДРИЙ, ЯРОСЛАВ-ГЕОРГІЙ ВОЛОДИМИРОВИЧ"
   language: uk
   genre: encyclopedia
   source_type: reference
   role: context
-  source: "Енциклопедія історії України (history.org.ua)"
+  source_name: "Енциклопедія історії України"
   source_url: "https://history.org.ua/?termin=Yaroslav_M"
-  license: copyright
   hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: "https://history.org.ua/?termin=Yaroslav_M"
+    note: "Зовнішнє посилання; текст не відтворюється в курсі."
   cefr_min: C1
   learner_task: "Ознайомитися з діяльністю Ярослава Мудрого як державного будівничого та законодавця."
   caveats: "Академічний стиль."
-- title: "Руська правда (уривки)"
+- title: "Руська Правда та Литовський Статут. ЕУ-II."
   language: uk
   genre: legal
   source_type: primary
   role: primary
-  source: "Ізборник (izbornyk.org.ua)"
+  source_name: "Ізборник"
   source_url: "http://izbornyk.org.ua/rizne/pravdstat.htm"
-  license: public_domain
-  hosting: excerpt-only
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: "http://izbornyk.org.ua/rizne/pravdstat.htm"
+    note: "Зовнішнє посилання; текст не відтворюється в курсі."
   cefr_min: C1
   learner_task: "Проаналізувати статті першого збірника законів: заміну кровної помсти на систему штрафів («віру»)."
   caveats: "Давньоруський текст потребує глосарію; специфічна юридична лексика."
-- title: "Місто Ярослава (ЕСУ)"
+- title: "Місто Ярослава"
   language: uk
   genre: encyclopedia
   source_type: reference
   role: context
-  source: "Енциклопедія сучасної України: Місто Ярослава"
+  source_name: "Енциклопедія сучасної України"
   source_url: "https://esu.com.ua/article-67932"
-  license: copyright
   hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: "https://esu.com.ua/article-67932"
+    note: "Зовнішнє посилання; текст не відтворюється в курсі."
   cefr_min: C1
   learner_task: "Ознайомитися з міським і сакральним контекстом будівничої програми Ярослава, зокрема роллю Софійського собору."
   caveats: "Контекстна стаття про міський простір, не самостійна біографія князя; використовувати для архітектурного тла."
@@ -133,7 +143,7 @@ sequence: 4
 slug: kniaz-yaroslav-mudryi
 subtitle: 'The Lawgiver Prince: Yaroslav the Wise'
 title: 'Князь Ярослав Мудрий: Законодавець'
-version: '4.2'
+version: '4.3'
 vocabulary_hints:
 - definition: внутрішній збройний конфлікт, війна між членами однієї династії або соціальної групи за владу
   pos: ж.
