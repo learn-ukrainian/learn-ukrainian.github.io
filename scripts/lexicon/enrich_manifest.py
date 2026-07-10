@@ -48,6 +48,7 @@ import sqlite3
 import sys
 import time
 import unicodedata
+from collections.abc import Callable
 from functools import lru_cache
 from html.parser import HTMLParser
 from pathlib import Path
@@ -2786,6 +2787,131 @@ def _definition_body(
     return _truncate_text(body, limit) if body else ""
 
 
+# --- «див.» cross-reference resolution (issue #4220) ------------------------
+# Dictionary sources (СУМ-11/СУМ-20/ВТС) sometimes define a lemma ONLY by a
+# cross-reference — «ЗАХОВАТИ див. заховувати» — so the atlas card ships with no
+# usable meaning (58 grow rows deferred as flag:gloss-unresolved in the #4888
+# ledger). When a built card's body reduces to a bare «див. X», resolve it ONE
+# level deep: fetch X's card from the SAME source and ship X's verbatim body with
+# an honest provenance prefix. Fail-closed — chains, missing targets, and any real
+# inline text are left untouched (no invented glosses).
+_DEFINITION_XREF_RE = re.compile(
+    r"^(?P<pre>.*?)\bдив\.\s+(?P<targets>.+?)\s*\.?\s*$",
+    flags=re.IGNORECASE | re.DOTALL,
+)
+# Grammar abbreviations that may sit between the headword echo and «див.» in a
+# cross-reference-only entry (e.g. «ЗАХОВАТИ, док. див. заховувати»); any other
+# word before «див.» means the card carries real definitional text → not xref-only.
+_XREF_STOPWORDS = frozenset(
+    {"док", "докон", "недок", "перех", "неперех", "безос", "розм", "заст", "діал", "і", "й", "та", "чи"}
+)
+# A genuine cross-reference lists at most a few target lemmas; more word-tokens
+# after «див.» means a real definition that merely mentions «див.» → leave it.
+_XREF_MAX_TARGETS = 3
+
+
+def _xref_target_lemmas(body: str, lemma: str) -> list[str]:
+    """Return the target lemma(s) when ``body`` is ONLY a «див. X» cross-reference.
+
+    A cross-reference-only body is the headword echo (optionally with a grammar
+    tag), the literal «див.», then one or more target lemmas — and nothing else.
+    Targets come back destressed + casefolded, in source order. Any real
+    definitional text before or after «див.» yields ``[]`` (fail-closed)."""
+    norm = _strip_stress(str(body or "")).strip()
+    if not norm:
+        return []
+    match = _DEFINITION_XREF_RE.match(norm)
+    if not match:
+        return []
+    pre = re.sub(r"[.,;()«»\"'’ʼ\s]+", " ", match.group("pre")).strip().casefold()
+    allowed_echo = {
+        _strip_stress(lemma).strip().casefold(),
+        _strip_stress(_slovnyk_lookup_word(lemma)).strip().casefold(),
+    }
+    for token in pre.split():
+        if token in allowed_echo or token.rstrip(".") in _XREF_STOPWORDS:
+            continue
+        return []
+    targets: list[str] = []
+    seen: set[str] = set()
+    for raw in re.split(r"[,\s;/]+", match.group("targets")):
+        token = re.sub(r"[^А-Яа-яЄєІіЇїҐґ'’ʼ\-]", "", _strip_stress(raw)).strip("-'’ʼ").casefold()
+        if not token or token.rstrip(".") in _XREF_STOPWORDS or token in seen:
+            continue
+        seen.add(token)
+        targets.append(token)
+    return targets if 0 < len(targets) <= _XREF_MAX_TARGETS else []
+
+
+def _verb_aspect(word: str) -> str | None:
+    """Return ``'perf'`` / ``'imperf'`` when VESUM verb analyses of ``word`` agree
+    on one aspect, else ``None`` (non-verb, ambiguous, or unknown)."""
+    try:
+        rows = verify_word(word)
+    except Exception:
+        return None
+    aspects: set[str] = set()
+    for row in rows:
+        if str(row.get("pos") or "") != "verb":
+            continue
+        tags = set(str(row.get("tags") or "").split(":"))
+        if "imperf" in tags:
+            aspects.add("imperf")
+        elif "perf" in tags:
+            aspects.add("perf")
+    return next(iter(aspects)) if len(aspects) == 1 else None
+
+
+def _xref_provenance_prefix(lemma: str, target: str) -> str:
+    """Honest provenance note prefixed to a resolved «див.» card body. Keeps the
+    cross-reference visible; for an aspect pair renders the standard «докон./недок.
+    до X» form (the dominant class — perfective lemmas glossed by their
+    imperfective)."""
+    lemma_aspect = _verb_aspect(lemma)
+    target_aspect = _verb_aspect(target)
+    if lemma_aspect and target_aspect and lemma_aspect != target_aspect:
+        label = "докон." if lemma_aspect == "perf" else "недок."
+        return f"({label} до {target} / див. {target}) "
+    return f"(див. {target}) "
+
+
+def _resolve_definition_xref(
+    card: dict[str, Any],
+    lemma: str,
+    fetch_target: Callable[[str], dict[str, Any] | None],
+) -> dict[str, Any] | None:
+    """One-level «див.» resolution for a built definition card.
+
+    When ``card``'s body is only a «див. X» cross-reference, fetch X's card in the
+    SAME source via ``fetch_target`` (which MUST itself skip resolution — that is
+    what keeps this exactly one level deep) and return a resolved copy: X's
+    verbatim body prefixed with a provenance note. Returns ``None`` — leaving the
+    caller's original card in place — when the body is not a bare cross-reference,
+    or the target is missing / empty / itself a «див.» (chain). Never invents text."""
+    definitions = card.get("definitions") or []
+    body = str(definitions[0]) if definitions else ""
+    targets = _xref_target_lemmas(body, lemma)
+    if not targets:
+        return None
+    for target in targets:
+        resolved_lemma = _vesum_base_lemma(target) or target
+        target_card = fetch_target(resolved_lemma)
+        if not target_card:
+            continue
+        target_defs = target_card.get("definitions") or []
+        target_body = str(target_defs[0]).strip() if target_defs else ""
+        if not target_body or _xref_target_lemmas(target_body, resolved_lemma):
+            continue  # target missing/empty or itself a «див.» → refuse the chain
+        resolved = dict(card)
+        resolved["definitions"] = [f"{_xref_provenance_prefix(lemma, resolved_lemma)}{target_body}"]
+        resolved["cross_reference"] = {
+            "raw": re.sub(r"\s+", " ", _strip_stress(body)).strip(),
+            "target": resolved_lemma,
+        }
+        return resolved
+    return None
+
+
 def _sum20_in_coverage(lemma: str) -> bool:
     lookup = _slovnyk_lookup_word(lemma)
     if not lookup or _has_whitespace(lookup):
@@ -2796,6 +2922,8 @@ def _sum20_in_coverage(lemma: str) -> bool:
 def _sum20_definition_card(
     lemma: str,
     cache: dict[str, Any] | None = None,
+    *,
+    resolve_xref: bool = True,
 ) -> dict[str, Any] | None:
     if not _sum20_in_coverage(lemma):
         return None
@@ -2825,7 +2953,7 @@ def _sum20_definition_card(
     )
     if not text:
         return None
-    return {
+    card = {
         "id": "sum20",
         "source": "СУМ-20",
         "source_pill": "СУМ-20",
@@ -2833,11 +2961,22 @@ def _sum20_definition_card(
         "definitions": [text],
         "source_url": str(row.get("source_url") or ""),
     }
+    if resolve_xref:
+        resolved = _resolve_definition_xref(
+            card,
+            lemma,
+            lambda target: _sum20_definition_card(target, resolve_xref=False),
+        )
+        if resolved is not None:
+            return resolved
+    return card
 
 
 def _vts_definition_card(
     lemma: str,
     cache: dict[str, Any] | None = None,
+    *,
+    resolve_xref: bool = True,
 ) -> dict[str, Any] | None:
     """Великий тлумачний словник (VTS) — a modern, Ukrainian-only explanatory
     dictionary on slovnyk.me, fetched live (cached per lookup word). Shown as the
@@ -2872,7 +3011,7 @@ def _vts_definition_card(
     )
     if not text:
         return None
-    return {
+    card = {
         "id": "vts",
         "source": "ВТС",
         "source_pill": "ВТС",
@@ -2880,6 +3019,15 @@ def _vts_definition_card(
         "definitions": [text],
         "source_url": str(row.get("source_url") or ""),
     }
+    if resolve_xref:
+        resolved = _resolve_definition_xref(
+            card,
+            lemma,
+            lambda target: _vts_definition_card(target, resolve_xref=False),
+        )
+        if resolved is not None:
+            return resolved
+    return card
 
 
 def _sum11_definition_card(
@@ -2887,6 +3035,7 @@ def _sum11_definition_card(
     lemma: str,
     *,
     has_sum11_flags: bool,
+    resolve_xref: bool = True,
 ) -> dict[str, Any] | None:
     sum11_fields = "definition, text"
     if has_sum11_flags:
@@ -2915,6 +3064,16 @@ def _sum11_definition_card(
             card["flag_note"] = "⚠ СУМ-11 — радянське видання; подаємо обережно, перевага СУМ-20/Вікісловнику"
         elif risk > 0:
             card["flag_note"] = "⚠ СУМ-11 — радянське видання; подаємо обережно, перевага СУМ-20/Вікісловнику"
+        if resolve_xref:
+            resolved = _resolve_definition_xref(
+                card,
+                lemma,
+                lambda target: _sum11_definition_card(
+                    conn, target, has_sum11_flags=has_sum11_flags, resolve_xref=False
+                ),
+            )
+            if resolved is not None:
+                return resolved
         return card
     return None
 

@@ -39,14 +39,20 @@ from scripts.lexicon.enrich_manifest import (
     _parse_translations,
     _prepare_cefr_estimates,
     _proper_noun_wikipedia_meaning,
+    _resolve_definition_xref,
     _sense_correct_synonyms,
     _slovnyk_cache,
     _SlovnykTransientError,
     _style_markers_in_tag,
+    _sum11_definition_card,
     _surface_gloss_hints,
     _synonyms_slovnyk,
     _translation,
+    _verb_aspect,
+    _vts_definition_card,
     _warning_slovnyk,
+    _xref_provenance_prefix,
+    _xref_target_lemmas,
     clean_gloss,
     clean_html_entities,
 )
@@ -2464,3 +2470,157 @@ def test_wiki_reference_caches_missing_results(monkeypatch, tmp_path) -> None:
     monkeypatch.setattr(enrich_manifest_module, "query_wikipedia", fail_query)
 
     assert enrich_manifest_module._wiki_reference("варити") is None
+
+
+# --- «див.» cross-reference resolution (issue #4220) ------------------------
+
+
+def _sum11_conn(rows: dict[str, str]) -> sqlite3.Connection:
+    """In-memory conn whose sum11 table holds {word: definition} — deterministic,
+    no network, for exercising _sum11_definition_card's xref resolution."""
+    conn = _conn()
+    conn.executemany(
+        "INSERT INTO sum11(word, definition) VALUES(?, ?)",
+        list(rows.items()),
+    )
+    return conn
+
+
+def test_xref_target_lemmas_detects_cross_reference_only() -> None:
+    # Bare «див. X» (with a stressed headword echo) → the target lemma, destressed.
+    assert _xref_target_lemmas("захова́ти див. заховувати .", "заховати") == ["заховувати"]
+    # Uppercase headword echo + stressed target (СУМ-20 shape).
+    assert _xref_target_lemmas("ВБЛАГА́ТИ див. ублага́ти .", "вблагати") == ["ублагати"]
+    # No headword echo at all.
+    assert _xref_target_lemmas("див. святий .", "свят") == ["святий"]
+    # Multiple comma-separated targets, in order.
+    assert _xref_target_lemmas("x див. заховувати, ховати .", "x") == ["заховувати", "ховати"]
+
+
+def test_xref_target_lemmas_fail_closed_on_real_definitions() -> None:
+    # A genuine definition that merely starts with the headword is NOT a xref.
+    assert _xref_target_lemmas("ХОВА́ТИ 1. Класти що-небудь у таємному місці.", "ховати") == []
+    # «пор.» (compare) is a different marker — not a definition substitute.
+    assert _xref_target_lemmas("порівняй заховувати", "заховати") == []
+    # A sentence trailing «див.» exceeds the target cap → left alone (fail-closed).
+    assert _xref_target_lemmas("див. класти що-небудь у певне таємне місце", "x") == []
+    # Real text BEFORE «див.» (unexpected token in the pre-region) → not xref-only.
+    assert _xref_target_lemmas("щось інше зовсім див. заховувати", "заховати") == []
+    assert _xref_target_lemmas("", "заховати") == []
+
+
+def test_verb_aspect_reads_vesum_tags() -> None:
+    # VESUM-backed: perfective vs imperfective infinitives (data/vesum.db).
+    assert _verb_aspect("заховати") == "perf"
+    assert _verb_aspect("заховувати") == "imperf"
+    assert _verb_aspect("підбігти") == "perf"
+    assert _verb_aspect("підбігати") == "imperf"
+    # Non-verb / unknown → None (no aspect claim).
+    assert _verb_aspect("святий") is None
+    assert _verb_aspect("щqz-not-a-word") is None
+
+
+def test_xref_provenance_prefix_renders_aspect_pair() -> None:
+    # Perfective lemma glossed by its imperfective → standard «докон. до X» form.
+    assert _xref_provenance_prefix("заховати", "заховувати") == "(докон. до заховувати / див. заховувати) "
+    # Imperfective → perfective would render «недок. до X».
+    assert _xref_provenance_prefix("заховувати", "заховати") == "(недок. до заховати / див. заховати) "
+    # No aspect pair (non-verb cross-ref) → keep only the visible cross-reference.
+    assert _xref_provenance_prefix("свят", "святий") == "(див. святий) "
+
+
+def test_sum11_definition_card_resolves_cross_reference_one_level() -> None:
+    target_def = "Класти що-небудь у таємному місці, щоб ніхто не міг знайти."
+    conn = _sum11_conn({"заховати": "заховати див. заховувати", "заховувати": target_def})
+    card = _sum11_definition_card(conn, "заховати", has_sum11_flags=True)
+    assert card is not None
+    # Verbatim target body, prefixed with the honest aspect+cross-ref provenance note.
+    assert card["definitions"] == [f"(докон. до заховувати / див. заховувати) {target_def}"]
+    assert card["cross_reference"] == {"raw": "заховати див. заховувати", "target": "заховувати"}
+
+
+def test_sum11_definition_card_resolves_inflected_target() -> None:
+    # Cross-ref points at an inflected form (ховаєш) → VESUM-lemmatize to ховати.
+    target_def = "Класти що-небудь у таємному місці."
+    conn = _sum11_conn({"назахову": "назахову див. ховаєш", "ховати": target_def})
+    card = _sum11_definition_card(conn, "назахову", has_sum11_flags=True)
+    assert card is not None
+    assert card["cross_reference"]["target"] == "ховати"
+    assert card["definitions"][0].endswith(target_def)
+
+
+def test_sum11_definition_card_refuses_cross_reference_chain() -> None:
+    # target ужалити is ITSELF a «див.» → one level only, refuse the chain.
+    conn = _sum11_conn({"вжалити": "вжалити див. ужалити", "ужалити": "ужалити див. жалити"})
+    card = _sum11_definition_card(conn, "вжалити", has_sum11_flags=True)
+    assert card is not None
+    assert card["definitions"] == ["вжалити див. ужалити"]
+    assert "cross_reference" not in card
+
+
+def test_sum11_definition_card_leaves_absent_target_unresolved() -> None:
+    # Target ублагати not in the source → fail-closed, no invented gloss.
+    conn = _sum11_conn({"вблагати": "вблагати див. ублагати"})
+    card = _sum11_definition_card(conn, "вблагати", has_sum11_flags=True)
+    assert card is not None
+    assert card["definitions"] == ["вблагати див. ублагати"]
+    assert "cross_reference" not in card
+
+
+def test_sum11_definition_card_ordinary_lemma_byte_identical() -> None:
+    # Regression: a normal, non-«див.» card is untouched — resolve on/off identical.
+    conn = _sum11_conn({"ховати": "Класти що-небудь у таємному місці."})
+    resolved = _sum11_definition_card(conn, "ховати", has_sum11_flags=True)
+    plain = _sum11_definition_card(conn, "ховати", has_sum11_flags=True, resolve_xref=False)
+    assert resolved == plain
+    assert "cross_reference" not in resolved
+
+
+def test_resolve_definition_xref_uses_same_source_fetcher() -> None:
+    # The fetcher must be called with the (lemmatized) target and only once here.
+    calls: list[str] = []
+
+    def fetch_target(target: str):
+        calls.append(target)
+        return {"source": "ВТС", "definitions": ["Реальне тлумачення слова."]}
+
+    card = {"source": "ВТС", "definitions": ["захова́ти див. заховувати ."]}
+    resolved = _resolve_definition_xref(card, "заховати", fetch_target)
+    assert calls == ["заховувати"]
+    assert resolved is not None
+    assert resolved["definitions"][0].endswith("Реальне тлумачення слова.")
+    # A non-cross-reference card yields None and never calls the fetcher.
+    calls.clear()
+    assert _resolve_definition_xref({"source": "ВТС", "definitions": ["1. Справжнє тлумачення."]}, "х", fetch_target) is None
+    assert calls == []
+
+
+def test_vts_definition_card_resolves_cross_reference_live_shape(monkeypatch) -> None:
+    # Exercise the real shipping path (_vts_definition_card) with a stubbed
+    # slovnyk fetch: source card is «див. X», target card is a real definition.
+    rows = {
+        "заховати": {
+            "word": "заховати",
+            "text": "заховати захова́ти див. заховувати . Джерело: Великий тлумачний словник",
+            "source_url": "https://slovnyk.me/dict/vts/заховати",
+        },
+        "заховувати": {
+            "word": "заховувати",
+            "text": "заховувати захо́вувати -ую, -уєш, недок. Класти що-небудь у невідоме місце.",
+            "source_url": "https://slovnyk.me/dict/vts/заховувати",
+        },
+    }
+
+    def fake_fetch(lemma: str, lookup_word: str, slug: str):
+        assert slug == "vts"
+        return rows.get(lemma)
+
+    monkeypatch.setattr(enrich_manifest_module, "_fetch_slovnyk_entry", fake_fetch)
+    monkeypatch.setattr(enrich_manifest_module, "_slovnyk_base_row", lambda base, slug: None)
+
+    card = _vts_definition_card("заховати")
+    assert card is not None
+    assert card["source"] == "ВТС"
+    assert card["definitions"][0].startswith("(докон. до заховувати / див. заховувати) ")
+    assert card["definitions"][0].endswith("Класти що-небудь у невідоме місце.")
+    assert card["cross_reference"]["target"] == "заховувати"
