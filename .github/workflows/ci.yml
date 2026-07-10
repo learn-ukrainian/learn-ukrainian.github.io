@@ -123,6 +123,11 @@ jobs:
               # python filter was false, pytest skipped, 4 tests broke on main).
               - 'curriculum/l2-uk-en/**'
               - 'site/src/content/**'
+              # Schema-validated committed data: pytest validates every file in
+              # this directory (test_source_inventory_review_decisions). A
+              # data-only PR here skipped pytest and turned main red for every
+              # subsequent code PR (2026-07-10, #4888 — same class as #3873).
+              - 'data/lexicon/source-inventory-review-decisions/**'
             frontend:
               - '.github/workflows/ci.yml'
               - 'site/**'
