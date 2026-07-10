@@ -6,6 +6,7 @@ Staleness check: `.venv/bin/python scripts/check_decisions.py`
 
 | ID | Date | Expires | Scope | Status | Title |
 |----|------|---------|-------|--------|-------|
+| dec-010 | 2026-07-10 | 2026-10-08 | harness | active | Grammar + word-choice gate priority; finetuning parked |
 | dec-009 | 2026-07-07 | 2026-10-05 | benchmark-2156 | active | Public benchmark release (epic #4639) parked; deploy-first |
 | dec-008 | 2026-06-14 | 2026-09-12 | content | active | A1/A2 live maintenance favors workbook enrichment over rebuilds |
 | dec-007 | 2026-04-24 | 2027-04-23 | pipeline | active | Enforce dec-001 at code level — no LLM regeneration during review (ADR-007) |

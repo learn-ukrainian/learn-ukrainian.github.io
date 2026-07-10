@@ -212,3 +212,31 @@ decisions:
         rejected_because: "Revisit triggers are plausible (Hramatka shipping / community signal); the epic is the parking record"
     superseded_by: null
     depends_on: []
+  - id: dec-010
+    status: active
+    date: "2026-07-10"
+    expires: "2026-10-08"
+    scope: harness
+    title: "Grammar + word-choice gate is priority harness track; finetuning parked"
+    reasoning: >
+      User decision 2026-07-10: evaluation priority is grammar/morphology
+      (VESUM+pravopys, deterministic) plus lexical naturalness (GRAC
+      attestation, UA-GEC F/Calque+F/Collocation, Antonenko, Balla sense-fan)
+      - corpus-independent checks that apply to any generated sentence.
+      Fact-checking stays scoped to anti-fabrication over our closed-world
+      corpus (Layer A/B substrate, #4853/#4860). Fine-tuning/retraining
+      (e.g. Gemma 4) parked: no training HW for iteration, frontier rotation
+      outpaces finetune cycles, and the labeled data we build IS the
+      training set if ever un-parked - option stays open at zero cost.
+      Trigger case: native speaker observed free-tier AI producing
+      EN-sense-blind word choices (translation quality) with valid grammar.
+    evidence: "User discussion 2026-07-10; docs/decisions/2026-07-10-grammar-wordchoice-priority-finetuning-parked.md; UA-GEC F/Calque+F/Collocation ingested; query_grac MCP live; 23/23 multi-span audit"
+    alternatives:
+      - option: "Finetune Gemma 4 for Ukrainian now"
+        rejected_because: "No training HW; depreciates against weekly frontier rotation; measurement+routing achieves the learner-facing goal without weights"
+      - option: "Fact-checking as primary harness track"
+        rejected_because: "Closed-world corpus cannot cover arbitrary generated content; grammar/word-choice checks can"
+      - option: "Treat nativeness/style as a hard gate"
+        rejected_because: "Judgment-shaped, not binary - scored/advisory dimension; only calque/collocation patterns with UA-GEC/Antonenko evidence gate"
+    superseded_by: null
+    depends_on: []
