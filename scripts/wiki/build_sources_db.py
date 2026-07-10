@@ -34,8 +34,10 @@ API rate-limits). Pass --no-preserve-wiki to opt out of the preservation.
 import argparse
 import contextlib
 import json
+import os
 import sqlite3
 import sys
+import tempfile
 from datetime import datetime
 from pathlib import Path
 
@@ -532,6 +534,40 @@ def _restore_wikipedia_snapshot(conn: sqlite3.Connection,
         )
 
 
+class BuildValidationError(RuntimeError):
+    """Raised when a freshly-built temp DB fails validation before swap.
+
+    Any raise of this (or anything else) during the build must leave the
+    live DB untouched — see the temp-DB + atomic-swap design in
+    ``build()`` (#4859).
+    """
+
+
+def _validate_build(conn: sqlite3.Connection, expected_counts: dict[str, int]) -> None:
+    """Validate a freshly-built temp DB before it is allowed to replace the live one.
+
+    Checks (#4859 acceptance criteria):
+    - Row counts for every table we just populated match what the
+      ingestion loop actually counted.
+    - ``PRAGMA integrity_check`` passes.
+    - Every FTS5 content-linked table's shadow index matches its source
+      table (the ``integrity-check`` command — raises on mismatch).
+    """
+    for table, expected in expected_counts.items():
+        actual = conn.execute(f"SELECT COUNT(*) FROM {table}").fetchone()[0]
+        if actual != expected:
+            raise BuildValidationError(
+                f"{table} has {actual} rows, expected {expected} from ingestion"
+            )
+
+    integrity = conn.execute("PRAGMA integrity_check").fetchone()[0]
+    if integrity != "ok":
+        raise BuildValidationError(f"PRAGMA integrity_check returned {integrity!r}")
+
+    for fts_table in ("textbooks_fts", "external_fts", "literary_fts", "wikipedia_fts"):
+        conn.execute(f"INSERT INTO {fts_table}({fts_table}) VALUES ('integrity-check')")
+
+
 def format_literary_validation_report(conn: sqlite3.Connection) -> str:
     """Return the AC5 literary metadata validation report."""
     period_counts = dict(
@@ -582,6 +618,15 @@ def build(db_path: Path | None = None,
       wikipedia_negative_cache tables before dropping the DB and re-inserts
       them into the fresh schema — wikipedia API data is expensive to
       refetch.
+
+    Failure-atomicity (#4859): the rebuild is ingested and validated in a
+    sibling temp file next to `db_path` (same filesystem, so the final
+    swap is a single atomic `Path.replace()`). The live `db_path` is never
+    unlinked, truncated, or otherwise touched until that temp file has
+    passed validation — any exception raised while ingesting, extracting
+    sections, or validating leaves the pre-existing `db_path` (and its
+    WAL/SHM sidecars, if any) exactly as it was; only the temp file and
+    its own sidecars are discarded.
     """
     db = db_path or DB_PATH
     ext_dir = external_dir or EXTERNAL_DIR
@@ -613,7 +658,9 @@ def build(db_path: Path | None = None,
         print(f"     preserve wikipedia: {preserve_wiki}")
         return db
 
-    # Snapshot wikipedia data BEFORE destroying the DB
+    # Snapshot wikipedia data BEFORE touching anything on disk. `db` is
+    # not modified until the validated atomic swap at the end, so this
+    # read against the live file is always safe.
     wiki_rows: list[tuple] = []
     neg_rows: list[tuple] = []
     if preserve_wiki:
@@ -622,138 +669,209 @@ def build(db_path: Path | None = None,
             print(f"  💾 Preserving wikipedia snapshot: "
                   f"{len(wiki_rows)} articles, {len(neg_rows)} negative-cache entries")
 
-    if db.exists():
-        db.unlink()
-        # Also drop stale WAL/SHM sidecars that can cause SQLite I/O errors
-        # on the freshly-created DB (seen in practice: rebuilding right
-        # after a restore would fail at executescript() with 'disk I/O
-        # error' because the old .db-wal was still present).
-        for sidecar in (db.parent / f"{db.name}-wal", db.parent / f"{db.name}-shm"):
-            if sidecar.exists():
-                sidecar.unlink()
-        print(f"  🗑️  Removed existing {db.name} (+ WAL/SHM sidecars)")
-
     db.parent.mkdir(parents=True, exist_ok=True)
-    conn = sqlite3.connect(str(db))
-    conn.execute("PRAGMA journal_mode=WAL")
-    conn.execute("PRAGMA synchronous=OFF")
-    conn.executescript(SCHEMA)
-    ensure_ukrainian_wiki_schema(conn)
 
-    if preserve_wiki and (wiki_rows or neg_rows):
-        _restore_wikipedia_snapshot(conn, wiki_rows, neg_rows)
-        conn.commit()
-        print(f"  ✅ Restored {len(wiki_rows)} wikipedia articles + "
-              f"{len(neg_rows)} negative-cache entries")
+    # Build + validate into a sibling temp file on the same filesystem as
+    # `db` so the final swap is one atomic rename (#4859). Nothing below
+    # this point may touch `db` itself until validation passes.
+    tmp_fd, tmp_name = tempfile.mkstemp(dir=db.parent, prefix=f".{db.name}.", suffix=".building")
+    os.close(tmp_fd)
+    tmp_db = Path(tmp_name)
 
-    total = 0
+    def _cleanup_tmp() -> None:
+        for path in (tmp_db, tmp_db.parent / f"{tmp_db.name}-wal", tmp_db.parent / f"{tmp_db.name}-shm"):
+            if path.exists():
+                path.unlink()
 
-    # --- External articles ---
-    print("\n📰 External articles")
-    total += _ingest_external_articles(conn, ext_dir)
+    conn: sqlite3.Connection | None = None
+    try:
+        conn = sqlite3.connect(str(tmp_db))
+        conn.execute("PRAGMA journal_mode=WAL")
+        conn.execute("PRAGMA synchronous=OFF")
+        # No FOREIGN KEY constraints exist in SCHEMA or UKRAINIAN_WIKI_SCHEMA
+        # today (#4859 audit), so this is currently a no-op — set anyway so
+        # any FK added later is enforced by default rather than silently
+        # ignored (SQLite defaults foreign_keys OFF per-connection).
+        conn.execute("PRAGMA foreign_keys=ON")
+        conn.executescript(SCHEMA)
+        ensure_ukrainian_wiki_schema(conn)
 
-    # --- Textbook chunks ---
-    print("\n📖 Textbooks")
-    tb_sql = """INSERT INTO textbooks
-                (chunk_id, title, text, source_file, subject, grade, author,
-                 author_uk, char_count)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"""
-    if tb_dir.exists():
-        for grade_dir in sorted(tb_dir.glob("grade-*")):
-            grade = grade_dir.name
-            for jsonl_path in sorted(grade_dir.glob("*.jsonl")):
+        expected_counts: dict[str, int] = {
+            "wikipedia": len(wiki_rows),
+            "wikipedia_negative_cache": len(neg_rows),
+        }
+        if preserve_wiki and (wiki_rows or neg_rows):
+            _restore_wikipedia_snapshot(conn, wiki_rows, neg_rows)
+            conn.commit()
+            print(f"  ✅ Restored {len(wiki_rows)} wikipedia articles + "
+                  f"{len(neg_rows)} negative-cache entries")
+
+        total = 0
+
+        # --- External articles ---
+        print("\n📰 External articles")
+        expected_counts["external_articles"] = _ingest_external_articles(conn, ext_dir)
+        total += expected_counts["external_articles"]
+
+        # --- Textbook chunks ---
+        print("\n📖 Textbooks")
+        tb_sql = """INSERT INTO textbooks
+                    (chunk_id, title, text, source_file, subject, grade, author,
+                     author_uk, char_count)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"""
+        tb_total = 0
+        if tb_dir.exists():
+            for grade_dir in sorted(tb_dir.glob("grade-*")):
+                grade = grade_dir.name
+                for jsonl_path in sorted(grade_dir.glob("*.jsonl")):
+                    source_file = jsonl_path.stem
+                    batch = []
+                    with open(jsonl_path, encoding="utf-8") as f:
+                        for line in f:
+                            line = line.strip()
+                            if not line:
+                                continue
+                            entry = json.loads(line)
+                            entry = _enrich_author_uk(entry, slug=source_file)
+                            batch.append(_build_textbook_row(
+                                entry,
+                                source_file=source_file,
+                                grade=grade,
+                                chunk_index=len(batch),
+                            ))
+                    if batch:
+                        conn.executemany(tb_sql, batch)
+                    tb_total += len(batch)
+                    print(f"  📖 {grade}/{source_file}: {len(batch)} chunks")
+        expected_counts["textbooks"] = tb_total
+        total += tb_total
+
+        # --- Literary texts ---
+        print("\n📚 Literary texts")
+        lit_dir = gd / "literary_texts"
+        lit_sql = """INSERT INTO literary_texts
+                     (chunk_id, title, text, source_file, source_url, author, work, work_id,
+                      year, genre, language_period, char_count)
+                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"""
+        lit_total = 0
+        if lit_dir.exists():
+            for jsonl_path in sorted(lit_dir.glob("*.jsonl")):
                 source_file = jsonl_path.stem
-                batch = []
+                batch: list[tuple] = []
                 with open(jsonl_path, encoding="utf-8") as f:
                     for line in f:
                         line = line.strip()
                         if not line:
                             continue
                         entry = json.loads(line)
-                        entry = _enrich_author_uk(entry, slug=source_file)
-                        batch.append(_build_textbook_row(
-                            entry,
-                            source_file=source_file,
-                            grade=grade,
-                            chunk_index=len(batch),
-                        ))
-                if batch:
-                    conn.executemany(tb_sql, batch)
-                total += len(batch)
-                print(f"  📖 {grade}/{source_file}: {len(batch)} chunks")
-
-    # --- Literary texts ---
-    print("\n📚 Literary texts")
-    lit_dir = gd / "literary_texts"
-    lit_sql = """INSERT INTO literary_texts
-                 (chunk_id, title, text, source_file, source_url, author, work, work_id,
-                  year, genre, language_period, char_count)
-                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"""
-    if lit_dir.exists():
-        for jsonl_path in sorted(lit_dir.glob("*.jsonl")):
-            source_file = jsonl_path.stem
-            batch: list[tuple] = []
-            with open(jsonl_path, encoding="utf-8") as f:
-                for line in f:
-                    line = line.strip()
-                    if not line:
-                        continue
-                    entry = json.loads(line)
-                    batch.append(
-                        build_literary_row(
-                            entry,
-                            source_file=source_file,
-                            chunk_index=len(batch),
-                            warn=print,
+                        batch.append(
+                            build_literary_row(
+                                entry,
+                                source_file=source_file,
+                                chunk_index=len(batch),
+                                warn=print,
+                            )
                         )
-                    )
-            if batch:
-                conn.executemany(lit_sql, batch)
-            total += len(batch)
-            print(f"  📚 {source_file}: {len(batch)} chunks")
+                if batch:
+                    conn.executemany(lit_sql, batch)
+                lit_total += len(batch)
+                print(f"  📚 {source_file}: {len(batch)} chunks")
+        expected_counts["literary_texts"] = lit_total
+        total += lit_total
 
-    # --- Dictionaries ---
-    print("\n📕 Dictionaries")
-    total += _ingest_jsonl(conn, "sum11", gd / "sum11" / "chunks.jsonl",
-                           ["word", "definition", "text", "source"], "СУМ-11")
-    total += _ingest_jsonl(conn, "grinchenko", gd / "grinchenko" / "chunks.jsonl",
-                           ["word", "definition", "source"], "Грінченко")
-    total += _ingest_jsonl(conn, "balla_en_uk", gd / "balla-en-uk" / "chunks.jsonl",
-                           ["word", "definition", "text", "source"], "Балла EN→UK")
-    total += _ingest_jsonl(conn, "dmklinger_uk_en", gd / "dmklinger-uk-en" / "chunks.jsonl",
-                           ["word", "pos", "translations", "text", "source"], "DMKlinger UK→EN")
-    total += _ingest_jsonl(conn, "ukrajinet", gd / "ukrajinet" / "chunks.jsonl",
-                           ["synset_id", "words", "text", "source"], "Ukrajinet WordNet")
-    total += _ingest_jsonl(conn, "wiktionary", gd / "wiktionary" / "chunks.jsonl",
-                           ["word", "definitions", "synonyms", "antonyms", "text", "source"],
-                           "Wiktionary UK")
-    total += _ingest_jsonl(conn, "frazeolohichnyi", gd / "frazeolohichnyi" / "chunks.jsonl",
-                           ["word", "definition", "text", "source"], "Фразеологічний")
-    total += _ingest_jsonl(conn, "style_guide", gd / "antonenko-davydovych" / "chunks.jsonl",
-                           ["word", "section", "text", "source"], "Антоненко-Давидович")
+        # --- Dictionaries ---
+        print("\n📕 Dictionaries")
+        expected_counts["sum11"] = _ingest_jsonl(
+            conn, "sum11", gd / "sum11" / "chunks.jsonl",
+            ["word", "definition", "text", "source"], "СУМ-11")
+        expected_counts["grinchenko"] = _ingest_jsonl(
+            conn, "grinchenko", gd / "grinchenko" / "chunks.jsonl",
+            ["word", "definition", "source"], "Грінченко")
+        expected_counts["balla_en_uk"] = _ingest_jsonl(
+            conn, "balla_en_uk", gd / "balla-en-uk" / "chunks.jsonl",
+            ["word", "definition", "text", "source"], "Балла EN→UK")
+        expected_counts["dmklinger_uk_en"] = _ingest_jsonl(
+            conn, "dmklinger_uk_en", gd / "dmklinger-uk-en" / "chunks.jsonl",
+            ["word", "pos", "translations", "text", "source"], "DMKlinger UK→EN")
+        expected_counts["ukrajinet"] = _ingest_jsonl(
+            conn, "ukrajinet", gd / "ukrajinet" / "chunks.jsonl",
+            ["synset_id", "words", "text", "source"], "Ukrajinet WordNet")
+        expected_counts["wiktionary"] = _ingest_jsonl(
+            conn, "wiktionary", gd / "wiktionary" / "chunks.jsonl",
+            ["word", "definitions", "synonyms", "antonyms", "text", "source"],
+            "Wiktionary UK")
+        expected_counts["frazeolohichnyi"] = _ingest_jsonl(
+            conn, "frazeolohichnyi", gd / "frazeolohichnyi" / "chunks.jsonl",
+            ["word", "definition", "text", "source"], "Фразеологічний")
+        expected_counts["style_guide"] = _ingest_jsonl(
+            conn, "style_guide", gd / "antonenko-davydovych" / "chunks.jsonl",
+            ["word", "section", "text", "source"], "Антоненко-Давидович")
 
-    # --- CEFR vocabulary (local) ---
-    total += _ingest_jsonl(conn, "puls_cefr", PROJECT_ROOT / "data" / "puls" / "entries.jsonl",
-                           ["word", "guideword", "level", "pos", "type", "text", "source"],
-                           "PULS CEFR")
+        # --- CEFR vocabulary (local) ---
+        expected_counts["puls_cefr"] = _ingest_jsonl(
+            conn, "puls_cefr", PROJECT_ROOT / "data" / "puls" / "entries.jsonl",
+            ["word", "guideword", "level", "pos", "type", "text", "source"],
+            "PULS CEFR")
 
-    conn.commit()
-    literary_report = format_literary_validation_report(conn)
-    report_path = write_literary_validation_report(literary_report)
-    print(f"\n{literary_report}")
-    print(f"\n  📝 Validation report: {report_path}")
-    conn.execute("PRAGMA optimize")
-    conn.close()
+        for key in ("sum11", "grinchenko", "balla_en_uk", "dmklinger_uk_en",
+                    "ukrajinet", "wiktionary", "frazeolohichnyi", "style_guide",
+                    "puls_cefr"):
+            total += expected_counts[key]
 
-    section_report = extract_sections(db, report_path=DEFAULT_REPORT_PATH)
-    print("\n🧩 Textbook section extraction")
-    print(
-        "  ✅ Extracted "
-        f"{len(section_report.sections)} sections from {section_report.total_chunks:,} chunks; "
-        f"assigned {section_report.assigned_chunks:,} ({section_report.assigned_rate:.2%}), "
-        f"unassigned {section_report.unassigned_chunks:,} ({section_report.unassigned_rate:.2%})"
-    )
-    print(f"  📝 Validation report: {DEFAULT_REPORT_PATH}")
+        conn.commit()
+        literary_report = format_literary_validation_report(conn)
+        report_path = write_literary_validation_report(literary_report)
+        print(f"\n{literary_report}")
+        print(f"\n  📝 Validation report: {report_path}")
+
+        # Row-count + schema + FTS integrity validation BEFORE this temp
+        # DB is allowed anywhere near the live path (#4859 acceptance).
+        _validate_build(conn, expected_counts)
+        # The FTS integrity-check command is syntactically an INSERT, so
+        # Python's sqlite3 module opened an implicit transaction for it —
+        # commit before switching journal mode (SQLite refuses to change
+        # out of WAL mode from within an open transaction).
+        conn.commit()
+
+        # Fold the WAL back into the main file and drop back to DELETE
+        # journal mode so the temp DB is a single self-contained file with
+        # no sidecars to carry across the swap.
+        conn.execute("PRAGMA journal_mode=DELETE")
+        conn.execute("PRAGMA optimize")
+        conn.close()
+        conn = None
+
+        section_report = extract_sections(tmp_db, report_path=DEFAULT_REPORT_PATH)
+        print("\n🧩 Textbook section extraction")
+        print(
+            "  ✅ Extracted "
+            f"{len(section_report.sections)} sections from {section_report.total_chunks:,} chunks; "
+            f"assigned {section_report.assigned_chunks:,} ({section_report.assigned_rate:.2%}), "
+            f"unassigned {section_report.unassigned_chunks:,} ({section_report.unassigned_rate:.2%})"
+        )
+        print(f"  📝 Validation report: {DEFAULT_REPORT_PATH}")
+    except BaseException:
+        if conn is not None:
+            with contextlib.suppress(sqlite3.Error):
+                conn.close()
+        _cleanup_tmp()
+        raise
+
+    # Validated — atomically replace the live DB. `db` and its sidecars
+    # are untouched up to this point; the old sidecars are dropped only
+    # now, immediately before the rename, so a crash here can at worst
+    # leave a stray `.building` temp file (harmless — never mistaken for
+    # a live DB, and cleaned up by the next successful build) rather than
+    # a half-written live DB.
+    try:
+        for sidecar in (db.parent / f"{db.name}-wal", db.parent / f"{db.name}-shm"):
+            if sidecar.exists():
+                sidecar.unlink()
+        tmp_db.replace(db)
+    except BaseException:
+        _cleanup_tmp()
+        raise
+    print(f"  🔁 Atomically replaced {db.name} with the validated rebuild")
 
     db_size = db.stat().st_size / 1024 / 1024
     ensure_ukrainian_wiki_manifest(PROJECT_ROOT / "data" / "embeddings" / "manifest.db")

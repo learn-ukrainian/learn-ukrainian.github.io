@@ -546,3 +546,86 @@ def test_rebuild_author_unmapped_edge(tmp_path, monkeypatch):
             force=True,
         )
     assert "has no canonical Cyrillic form in AUTHOR_UK" in str(exc_info.value)
+
+
+class TestForcedRebuildAtomicity:
+    """#4859: build(force=True) must be failure-atomic.
+
+    The pre-#4859 bug: build(force=True) unlinked the live sources.db
+    (+ WAL/SHM) BEFORE parsing or validating any input, so any raise
+    mid-rebuild (malformed JSONL, an unmapped-author IngestError, a
+    validation failure) left NO usable sources.db. These tests populate a
+    real DB first, then force a genuine rebuild — the case the pre-fix
+    "rebuilds cleanly" test (see TestBuildSourcesDb above) never covered.
+    """
+
+    def test_force_rebuild_failure_leaves_original_db_intact(self, sample_data, monkeypatch):
+        import wiki.build_sources_db as bdb
+        from ingest.incremental_textbook_ingest import IngestError
+        from wiki.build_sources_db import build
+
+        monkeypatch.setattr(bdb, "PROJECT_ROOT", sample_data["project_root"])
+        db_path = sample_data["db_path"]
+
+        # First build: a real, populated DB with a readable sentinel row.
+        build(db_path, sample_data["ext_dir"], sample_data["tb_dir"], sample_data["gdrive"])
+        assert db_path.exists()
+        original_bytes = db_path.read_bytes()
+        original_mtime_ns = db_path.stat().st_mtime_ns
+
+        # Inject a failure into the SECOND (forced) rebuild: a textbook
+        # chunk whose author has no canonical Cyrillic form.
+        bad_dir = sample_data["tb_dir"] / "grade-05"
+        with open(bad_dir / "zzz-unmapped.jsonl", "w", encoding="utf-8") as f:
+            f.write(json.dumps({
+                "chunk_id": "bad-1", "section_title": "Зламаний",
+                "text": "Текст без відповідного автора у мапі.",
+                "grade": "5", "author": "totally_unmapped_author",
+                "author_uk": None, "token_count": 5,
+            }, ensure_ascii=False) + "\n")
+
+        with pytest.raises(IngestError):
+            build(db_path, sample_data["ext_dir"], sample_data["tb_dir"],
+                  sample_data["gdrive"], force=True)
+
+        # The pre-existing DB must be untouched — never unlinked, never
+        # partially overwritten.
+        assert db_path.exists()
+        assert db_path.stat().st_mtime_ns == original_mtime_ns
+        assert db_path.read_bytes() == original_bytes
+
+        conn = sqlite3.connect(str(db_path))
+        assert conn.execute("SELECT COUNT(*) FROM sum11").fetchone()[0] == 1
+        assert conn.execute("SELECT word FROM sum11").fetchone()[0] == "слово"
+        conn.close()
+
+        # The failed rebuild must not leak its temp-build artifacts either.
+        leftovers = list(db_path.parent.glob(f".{db_path.name}.*"))
+        assert leftovers == [], f"temp build artifacts leaked: {leftovers}"
+
+    def test_force_rebuild_success_swaps_atomically(self, sample_data, monkeypatch, capsys):
+        import wiki.build_sources_db as bdb
+        from wiki.build_sources_db import build
+
+        monkeypatch.setattr(bdb, "PROJECT_ROOT", sample_data["project_root"])
+        db_path = sample_data["db_path"]
+
+        build(db_path, sample_data["ext_dir"], sample_data["tb_dir"], sample_data["gdrive"])
+        first_inode = db_path.stat().st_ino
+
+        build(db_path, sample_data["ext_dir"], sample_data["tb_dir"],
+              sample_data["gdrive"], force=True)
+
+        out = capsys.readouterr().out
+        assert "Atomically replaced" in out
+
+        # A real swap happened (new inode) — not an in-place rewrite of
+        # the live file.
+        assert db_path.stat().st_ino != first_inode
+
+        conn = sqlite3.connect(str(db_path))
+        assert conn.execute("SELECT COUNT(*) FROM sum11").fetchone()[0] == 1
+        conn.close()
+
+        leftovers = list(db_path.parent.glob(f".{db_path.name}.*"))
+        assert leftovers == [], f"temp build artifacts leaked: {leftovers}"
