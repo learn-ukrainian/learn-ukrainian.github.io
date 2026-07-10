@@ -1,0 +1,25 @@
+{
+  "name": "@learn-ukrainian/activity-kit",
+  "version": "0.1.0",
+  "description": "Versioned React activity player and schemas for Learn Ukrainian.",
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    },
+    "./schema": "./src/lu.activity.v1.schema.json",
+    "./fixtures": "./src/fixtures/lu.activity.v1.fixtures.json",
+    "./styles.css": "./src/components/Activities.module.css"
+  },
+  "files": [
+    "src"
+  ],
+  "peerDependencies": {
+    "react": ">=18",
+    "react-dom": ">=18"
+  },
+  "scripts": {
+    "generate:types": "node scripts/generate-types.mjs"
+  }
+}

@@ -82,6 +82,9 @@
   "author": "",
   "license": "ISC",
   "type": "commonjs",
+  "workspaces": [
+    "packages/*"
+  ],
   "bugs": {
     "url": "https://github.com/krisztiankoos/learn-ukrainian/issues"
   },

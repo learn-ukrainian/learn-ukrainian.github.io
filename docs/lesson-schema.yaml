@@ -2,7 +2,7 @@ schema_version: "1.0"
 generator_version: "1.0.0"
 generated_from:
   components_dir: site/src/components/{*.tsx, *.astro}
-  components_sha256: 4981b3812406e17eee040b1f2166800e12cb7ebffa740982a0cab152ecd95607
+  components_sha256: bd41ad7aa3b2d8978e4ea83e0550d4426b35aeb4cf07c066509c352484b2ff9f
   config_tables_sha256: 00ac63a789f8f4a8d347ec407a03d6103f53d23a40205f74309ff438c1547a1c
   lesson_contract_sha256: 917ee4abd1a74c5df17f9d19e743f23c376f43d8f1b9a68e12fb30ad6b535024
 components:
@@ -171,6 +171,10 @@ components:
         description: UI language flag for Ukrainian labels and feedback.
         ukrainian_text: 'false'
         default: false
+      - name: onComplete
+        type: () => void
+        description: onComplete prop.
+        ukrainian_text: 'false'
     nested_types:
       ClozeBlank:
       - name: index
@@ -2256,6 +2260,10 @@ components:
         description: UI language flag for Ukrainian labels and feedback.
         ukrainian_text: 'false'
         default: false
+      - name: onComplete
+        type: () => void
+        description: onComplete prop.
+        ukrainian_text: 'false'
     nested_types:
       TrueFalseItem:
       - name: statement
