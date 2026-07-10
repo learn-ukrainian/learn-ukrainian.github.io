@@ -39,13 +39,14 @@ class TestConfig:
     def test_cli_paths_are_correct_types(self):
         from scripts.ai_agent_bridge._config import AGY_CLI, CLAUDE_CMD, GEMINI_CLI
         assert isinstance(CLAUDE_CMD, list)
-        # Import-time resolution contract (#4875/#4880): native `claude`
-        # binary when present, else the npx fallback. Machine-dependent
-        # (green in CI, red on any dev machine with a native install if
-        # pinned to one shape) — so accept exactly these two shapes.
-        assert CLAUDE_CMD[0].endswith("claude") or (
-            CLAUDE_CMD[0] == "npx" and "@anthropic-ai/claude-code" in CLAUDE_CMD[1]
-        )
+        # #4875: prefers a native `claude` binary on PATH (single-element
+        # command) and only falls back to the npx shim when none is found —
+        # both are correct depending on the machine running the test.
+        if CLAUDE_CMD[0] == "npx":
+            assert "@anthropic-ai/claude-code" in CLAUDE_CMD[1]
+        else:
+            assert len(CLAUDE_CMD) == 1
+            assert CLAUDE_CMD[0].endswith("claude")
         assert isinstance(AGY_CLI, str)
         assert isinstance(GEMINI_CLI, str)
 
@@ -609,6 +610,47 @@ class TestMessaging:
     def test_get_conversation_not_found(self, msg_db, capsys):
         from scripts.ai_agent_bridge._messaging import get_conversation
         get_conversation("no-such-task")
+        assert "No messages found" in capsys.readouterr().out
+
+    # -- resolve_thread (#4837 item 5: unified `ab thread <task-id|msg-id>`) --
+
+    def test_resolve_thread_by_task_id(self, msg_db, capsys):
+        from scripts.ai_agent_bridge._messaging import resolve_thread
+        self._insert(msg_db, "t1", "claude", "gemini", "msg1")
+        resolve_thread("t1")
+        out = capsys.readouterr().out
+        assert "Conversation: t1" in out
+        assert "msg1" in out
+
+    def test_resolve_thread_by_numeric_id_resolves_full_task_thread(self, msg_db, capsys):
+        """A numeric message ID expands to the FULL conversation for its task,
+        not just that one row — this is the whole point of unifying `read`
+        (numeric-id-only) with `conversation` (task-id-only)."""
+        from scripts.ai_agent_bridge._messaging import resolve_thread
+        self._insert(msg_db, "t1", "claude", "gemini", "ask body")
+        self._insert(msg_db, "t1", "gemini", "claude", "reply body")
+        resolve_thread("1")
+        out = capsys.readouterr().out
+        assert "Conversation: t1 (2 messages)" in out
+        assert "ask body" in out
+        assert "reply body" in out
+
+    def test_resolve_thread_by_numeric_id_without_task_shows_single_message(self, msg_db, capsys):
+        from scripts.ai_agent_bridge._messaging import resolve_thread
+        self._insert(msg_db, None, "claude", "gemini", "solo message")
+        resolve_thread("1")
+        out = capsys.readouterr().out
+        assert "Message #1" in out
+        assert "solo message" in out
+
+    def test_resolve_thread_unknown_numeric_id_reports_not_found(self, msg_db, capsys):
+        from scripts.ai_agent_bridge._messaging import resolve_thread
+        resolve_thread("999")
+        assert "not found" in capsys.readouterr().out
+
+    def test_resolve_thread_unknown_task_id_reports_not_found(self, msg_db, capsys):
+        from scripts.ai_agent_bridge._messaging import resolve_thread
+        resolve_thread("no-such-task")
         assert "No messages found" in capsys.readouterr().out
 
 

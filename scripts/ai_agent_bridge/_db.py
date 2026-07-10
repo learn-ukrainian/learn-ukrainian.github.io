@@ -99,6 +99,7 @@ CREATE TABLE IF NOT EXISTS channel_messages (
     from_agent TEXT NOT NULL,             -- claude/gemini/codex/user
     from_model TEXT,                      -- exact model ID
     kind TEXT DEFAULT 'post',             -- post/reply/system/fanout_start/fanout_end
+    priority TEXT DEFAULT 'fyi',          -- fyi/action_required — drives delivery TTL (#4837)
     body TEXT NOT NULL,
     attachments TEXT,                     -- JSON array
     context_rev_shared TEXT,              -- sha256 hex of shared/context.md at post-time
@@ -257,6 +258,24 @@ def _ensure_legacy_indexes(conn: sqlite3.Connection) -> None:
     """)
 
 
+def _add_column_racesafe(conn: sqlite3.Connection, ddl: str) -> None:
+    """Run an ``ALTER TABLE ... ADD COLUMN``, tolerating the concurrent-
+    migration race (review-4897 F1).
+
+    ``get_db()`` runs its migration block on every bridge operation, and
+    multiple agent CLIs regularly open the same messages.db within the
+    same second. Two processes can both observe a column as missing and
+    both issue the ALTER; SQLite raises ``duplicate column name`` in the
+    loser. That outcome means the column now exists — the migration's
+    goal — so it is swallowed. Every other OperationalError re-raises.
+    """
+    try:
+        conn.execute(ddl)
+    except sqlite3.OperationalError as exc:
+        if "duplicate column name" not in str(exc):
+            raise
+
+
 def get_db():
     """Get database connection with auto-migration (#604, #1190)."""
     if not DB_PATH.exists():
@@ -275,7 +294,7 @@ def get_db():
             conn.executescript(_LEGACY_SCHEMA)
         elif "status" not in columns:
             print("🔧 Migrating database: adding 'status' column to 'messages' table")
-            conn.execute("ALTER TABLE messages ADD COLUMN status TEXT DEFAULT 'pending'")
+            _add_column_racesafe(conn, "ALTER TABLE messages ADD COLUMN status TEXT DEFAULT 'pending'")
         _ensure_legacy_indexes(conn)
 
         # --- Sessions table migration (#604) ---
@@ -293,7 +312,7 @@ def get_db():
         session_columns = [row[1] for row in cursor.fetchall()]
         if "codex_session_id" not in session_columns:
             print("🔧 Migrating database: adding 'codex_session_id' column to 'sessions' table")
-            conn.execute("ALTER TABLE sessions ADD COLUMN codex_session_id TEXT")
+            _add_column_racesafe(conn, "ALTER TABLE sessions ADD COLUMN codex_session_id TEXT")
 
         # --- Channel bridge tables (#1190) ---
         # GATED by table-existence check. Running executescript() on
@@ -313,9 +332,20 @@ def get_db():
             cursor.execute("PRAGMA table_info(channels)")
             channel_columns = [row[1] for row in cursor.fetchall()]
             if "max_age_hours" not in channel_columns:
-                conn.execute(
-                    "ALTER TABLE channels ADD COLUMN max_age_hours INTEGER DEFAULT 24"
+                _add_column_racesafe(
+                    conn, "ALTER TABLE channels ADD COLUMN max_age_hours INTEGER DEFAULT 24"
                 )
+
+            cursor.execute(
+                "SELECT name FROM sqlite_master WHERE type='table' AND name='channel_messages'"
+            )
+            if cursor.fetchone():
+                cursor.execute("PRAGMA table_info(channel_messages)")
+                channel_message_columns = [row[1] for row in cursor.fetchall()]
+                if "priority" not in channel_message_columns:
+                    _add_column_racesafe(
+                        conn, "ALTER TABLE channel_messages ADD COLUMN priority TEXT DEFAULT 'fyi'"
+                    )
 
             cursor.execute(
                 "SELECT name FROM sqlite_master WHERE type='table' AND name='deliveries'"
@@ -325,20 +355,20 @@ def get_db():
                 delivery_columns = [row[1] for row in cursor.fetchall()]
 
                 if "lease_until" not in delivery_columns:
-                    conn.execute("ALTER TABLE deliveries ADD COLUMN lease_until TEXT")
+                    _add_column_racesafe(conn, "ALTER TABLE deliveries ADD COLUMN lease_until TEXT")
                 if "attempt_count" not in delivery_columns:
-                    conn.execute(
-                        "ALTER TABLE deliveries ADD COLUMN attempt_count INTEGER NOT NULL DEFAULT 0"
+                    _add_column_racesafe(
+                        conn, "ALTER TABLE deliveries ADD COLUMN attempt_count INTEGER NOT NULL DEFAULT 0"
                     )
                 if "retry_after" not in delivery_columns:
-                    conn.execute("ALTER TABLE deliveries ADD COLUMN retry_after TEXT")
+                    _add_column_racesafe(conn, "ALTER TABLE deliveries ADD COLUMN retry_after TEXT")
                 if "last_error_kind" not in delivery_columns:
-                    conn.execute(
-                        "ALTER TABLE deliveries ADD COLUMN last_error_kind TEXT"
+                    _add_column_racesafe(
+                        conn, "ALTER TABLE deliveries ADD COLUMN last_error_kind TEXT"
                     )
                 if "deadline_seconds" not in delivery_columns:
-                    conn.execute(
-                        "ALTER TABLE deliveries ADD COLUMN deadline_seconds INTEGER"
+                    _add_column_racesafe(
+                        conn, "ALTER TABLE deliveries ADD COLUMN deadline_seconds INTEGER"
                     )
 
                 cursor.execute(

@@ -556,6 +556,160 @@ def test_expire_stale_deliveries_skips_already_delivered():
     assert expired == 0
     assert _delivery_row(delivery_id)["status"] == "delivered"
 
+
+# 5b. Message priority + TTL policy (#4837 item 4)
+
+
+def test_post_default_priority_is_fyi():
+    _channels.create_channel("topic")
+    res = _channels.post("topic", "user", "hi", to_agents=["claude"], auto_snapshot=False)
+    msgs = _channels.read("topic", tail=1)
+    assert msgs[0]["message_id"] == res["message_id"]
+    assert msgs[0]["priority"] == "fyi"
+
+
+def test_post_explicit_action_required_priority_roundtrips():
+    _channels.create_channel("topic")
+    _channels.post(
+        "topic", "user", "please review", to_agents=["claude"],
+        priority=_channels.PRIORITY_ACTION_REQUIRED, auto_snapshot=False,
+    )
+    msgs = _channels.read("topic", tail=1)
+    assert msgs[0]["priority"] == "action_required"
+
+
+def test_post_invalid_priority_raises():
+    _channels.create_channel("topic")
+    with pytest.raises(ValueError, match="Unknown priority"):
+        _channels.post("topic", "user", "hi", to_agents=["claude"], priority="urgent", auto_snapshot=False)
+
+
+def test_expire_stale_deliveries_action_required_lingers_past_channel_ttl():
+    """action_required survives the channel's short fyi-oriented TTL."""
+    _channels.create_channel("topic")
+    _channels.set_channel_ttl("topic", 2)
+    res = _channels.post(
+        "topic", "user", "review this", to_agents=["claude"],
+        priority=_channels.PRIORITY_ACTION_REQUIRED, auto_snapshot=False,
+    )
+    _set_message_created_at(str(res["message_id"]), _iso_at(0))
+
+    # Well past the channel's 2h TTL, but nowhere near the 168h action-required TTL.
+    expired = _channels.expire_stale_deliveries(now=_iso_at(24 * 3600))
+
+    assert expired == 0
+    assert _delivery_row(str(res["delivery_ids"][0]))["status"] == "pending"
+
+
+def test_expire_stale_deliveries_action_required_expires_as_escalation():
+    _channels.create_channel("topic")
+    res = _channels.post(
+        "topic", "user", "review this", to_agents=["claude"],
+        priority=_channels.PRIORITY_ACTION_REQUIRED, auto_snapshot=False,
+    )
+    _set_message_created_at(str(res["message_id"]), _iso_at(0))
+
+    past_action_ttl = (_channels.DEFAULT_ACTION_REQUIRED_TTL_HOURS + 1) * 3600
+    expired = _channels.expire_stale_deliveries(now=_iso_at(past_action_ttl))
+
+    assert expired == 1
+    row = _delivery_row(str(res["delivery_ids"][0]))
+    assert row["status"] == "expired"
+    assert "ESCALATION" in row["error"]
+    assert "action-required" in row["error"]
+
+
+def test_preview_stale_deliveries_matches_expire_without_mutating():
+    _channels.create_channel("topic")
+    res = _channels.post("topic", "user", "stale", to_agents=["claude"], auto_snapshot=False)
+    _set_message_created_at(str(res["message_id"]), _iso_at(0))
+
+    now = _iso_at(25 * 3600)
+    preview = _channels.preview_stale_deliveries(now=now)
+
+    assert len(preview) == 1
+    assert preview[0]["delivery_id"] == res["delivery_ids"][0]
+    assert preview[0]["priority"] == "fyi"
+    # Preview must not mutate — the row is still pending afterward.
+    assert _delivery_row(str(res["delivery_ids"][0]))["status"] == "pending"
+
+    expired = _channels.expire_stale_deliveries(now=now)
+    assert expired == len(preview)
+
+
+# 5c. Dead-lane registry + bulk-expire (#4837 items 3-4)
+
+
+def test_dead_lane_agents_defaults_to_gemini(monkeypatch):
+    monkeypatch.delenv("AB_DEAD_LANES", raising=False)
+    assert _channels.dead_lane_agents() == frozenset({"gemini"})
+
+
+def test_dead_lane_agents_env_override(monkeypatch):
+    monkeypatch.setenv("AB_DEAD_LANES", "gemini, qwen")
+    assert _channels.dead_lane_agents() == frozenset({"gemini", "qwen"})
+
+
+def test_dead_lane_agents_env_override_can_be_empty(monkeypatch):
+    monkeypatch.setenv("AB_DEAD_LANES", "")
+    assert _channels.dead_lane_agents() == frozenset()
+
+
+def test_live_agents_excludes_dead_lanes(monkeypatch):
+    monkeypatch.setenv("AB_DEAD_LANES", "gemini")
+    live = _channels.live_agents()
+    assert "gemini" not in live
+    assert "claude" in live
+    assert "codex" in live
+
+
+def test_bulk_expire_dead_lanes_expires_fresh_pending_regardless_of_age():
+    """A dead lane never comes back to drain its inbox — bulk-expire must
+    not wait for the message to age past any TTL."""
+    _channels.create_channel("topic")
+    res = _channels.post("topic", "user", "hi", to_agents=["gemini"], auto_snapshot=False)
+    # Freshly created — well within any TTL.
+
+    counts = _channels.bulk_expire_dead_lanes(frozenset({"gemini"}))
+
+    assert counts == {"gemini": 1}
+    row = _delivery_row(str(res["delivery_ids"][0]))
+    assert row["status"] == "expired"
+    assert "dead lane" in row["error"]
+    assert "gemini" in row["error"]
+
+
+def test_bulk_expire_dead_lanes_skips_non_pending():
+    _channels.create_channel("topic")
+    res = _channels.post("topic", "user", "hi", to_agents=["gemini"], auto_snapshot=False)
+    _channels.mark_delivery(str(res["delivery_ids"][0]), "delivered")
+
+    counts = _channels.bulk_expire_dead_lanes(frozenset({"gemini"}))
+
+    assert counts == {}
+    assert _delivery_row(str(res["delivery_ids"][0]))["status"] == "delivered"
+
+
+def test_bulk_expire_dead_lanes_empty_dead_set_is_noop():
+    _channels.create_channel("topic")
+    res = _channels.post("topic", "user", "hi", to_agents=["gemini"], auto_snapshot=False)
+
+    counts = _channels.bulk_expire_dead_lanes(frozenset())
+
+    assert counts == {}
+    assert _delivery_row(str(res["delivery_ids"][0]))["status"] == "pending"
+
+
+def test_preview_dead_lane_deliveries_matches_bulk_without_mutating():
+    _channels.create_channel("topic")
+    res = _channels.post("topic", "user", "hi", to_agents=["gemini"], auto_snapshot=False)
+
+    preview = _channels.preview_dead_lane_deliveries(frozenset({"gemini"}))
+
+    assert preview == [{"delivery_id": res["delivery_ids"][0], "to_agent": "gemini"}]
+    assert _delivery_row(str(res["delivery_ids"][0]))["status"] == "pending"
+
+
 # 6. Concurrency
 
 def test_concurrent_post_no_data_loss(isolate_db):
@@ -1308,3 +1462,47 @@ class TestDeliveryLeasing:
         second = _channels.claim_next_delivery("claude", now=_iso_at(1))
         assert second is not None
         assert _delivery_row(delivery_id)["attempt_count"] == 2
+
+
+def test_bulk_expire_dead_lanes_tags_action_required_as_escalation():
+    """Dead-lane expiry of an action_required delivery must carry the
+    ESCALATION tag just like age-based expiry — a stalled review request
+    stands out in the expiry log regardless of WHY it expired
+    (review-4897 F3)."""
+    _channels.create_channel("topic")
+    res = _channels.post(
+        "topic", "user", "review this", to_agents=["gemini"],
+        priority=_channels.PRIORITY_ACTION_REQUIRED, auto_snapshot=False,
+    )
+
+    counts = _channels.bulk_expire_dead_lanes(frozenset({"gemini"}))
+
+    assert counts == {"gemini": 1}
+    row = _delivery_row(str(res["delivery_ids"][0]))
+    assert row["status"] == "expired"
+    assert "ESCALATION" in row["error"]
+    assert "action-required" in row["error"]
+    assert "dead lane" in row["error"]
+
+
+def test_add_column_racesafe_swallows_duplicate_and_reraises_others(tmp_path):
+    """Two processes can both see a column as missing and both ALTER —
+    the loser gets 'duplicate column name', which must be swallowed
+    (the column exists = migration goal). Any other OperationalError
+    must re-raise. (review-4897 F1 — concurrent migration race.)"""
+    import sqlite3
+
+    from ai_agent_bridge._db import _add_column_racesafe
+
+    conn = sqlite3.connect(str(tmp_path / "race.db"))
+    conn.execute("CREATE TABLE t (id INTEGER PRIMARY KEY)")
+
+    ddl = "ALTER TABLE t ADD COLUMN priority TEXT DEFAULT 'fyi'"
+    _add_column_racesafe(conn, ddl)          # first ALTER: applies
+    _add_column_racesafe(conn, ddl)          # loser's ALTER: swallowed
+    cols = [r[1] for r in conn.execute("PRAGMA table_info(t)").fetchall()]
+    assert cols.count("priority") == 1
+
+    with pytest.raises(sqlite3.OperationalError):
+        _add_column_racesafe(conn, "ALTER TABLE nonexistent ADD COLUMN x TEXT")
+    conn.close()

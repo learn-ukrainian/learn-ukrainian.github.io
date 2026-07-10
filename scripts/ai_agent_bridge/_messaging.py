@@ -300,6 +300,28 @@ def get_conversation_context(task_id: str, max_chars: int = 30000) -> tuple[str,
     return "\n\n".join(kept), len(rows)
 
 
+def resolve_thread(identifier: str) -> None:
+    """Show the full thread for either a numeric message ID or a task ID.
+
+    Unifies ``conversation`` (wants a task ID) and ``read`` (wants a
+    numeric message ID) — with only a message ID in hand (e.g. from
+    ``ab asks``), a caller previously had to fetch the message just to
+    learn its task_id before running ``conversation`` (#4837 item 5).
+    """
+    if identifier.isdigit():
+        msg = read_message(int(identifier), quiet=True)
+        if msg is None:
+            print(f"❌ Message {identifier} not found")
+            return
+        if msg["task_id"]:
+            get_conversation(msg["task_id"])
+        else:
+            # No task grouping to expand — show the single message.
+            read_message(int(identifier))
+    else:
+        get_conversation(identifier)
+
+
 def _extract_issue_number(task_id: str) -> int | None:
     """Extract GH issue number from task_id. Returns None if no issue pattern."""
     if not task_id:
