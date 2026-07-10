@@ -30,6 +30,7 @@ The registry `scripts/config/issue_streams.yaml` is the single source of truth (
 | atlas-intake | #4220, #4378 | Full-corpus intake into the Atlas |
 | corpus-channels | #4706 | Acquisition & ingestion (textbooks · ZNO · Ohoiko-media · press · academic) |
 | infra-harness | #4707 | Fleet, hooks, deps, routing, CI reliability |
+| eval-harness | #4913 | UA eval harness: QG grounding/entailment gates, grammar-lexical gate, annotation, bakeoffs, cutovers |
 | benchmark-2156 | #4639 | UA LLM factuality benchmark community release |
 | core-quality | #4274 | Deterministic track audits + remediation (A1–B2) |
 | seminars-folk | #2836 | FOLK re-research + rebuild |
