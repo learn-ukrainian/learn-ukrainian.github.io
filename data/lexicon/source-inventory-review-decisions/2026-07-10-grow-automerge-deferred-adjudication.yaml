@@ -1,0 +1,839 @@
+# Driver adjudication of the 115 deferred grow auto_merge rows (#4220). NOT consumed by any script yet —
+# input to the registry/inventory step. Policy holds need user confirmation (3 questions in header).
+version: 1
+kind: atlas_grow_automerge_deferred_adjudication
+batch_id: grow-automerge-deferred-adjudication-2026-07-10
+adjudicator: claude-driver-2026-07-10 (atlas track, curator seat)
+source_ledger: 'data/lexicon/source-inventory-review-decisions/2026-07-10-first-grow-automerge-ledger-batch.yaml
+  (PR #4888, grok-build APPROVE)'
+scope: the 115 deferred rows only; the 2,893 ledger approves are unchanged
+summary_counts:
+  approve: 26
+  alias-to-parent: 17
+  hold:re-enrich-homograph: 4
+  hold:gloss-resolution: 58
+  hold:policy-acronym: 4
+  hold:policy-archaic: 5
+  hold:policy-variant: 1
+  total: 115
+publish_set_effect: 2,893 ledger approves + 26 adjudicated = 2,919 headwords eligible for the registry/inventory
+  step
+open_policy_questions_for_user:
+- 'acronym/proper-noun inclusion (4 held: СРСР ВООЗ НКВС УНІАН) — recommendation in rows'
+- 'archaism/dialect inclusion (5 held: горі мід най обі яково) — recommendation in rows'
+- 'orthography-variant handling (1 held: катедра)'
+rows:
+- lemma: активний
+  pos: adj
+  bucket: flag:heritage
+  adjudication: approve
+  class: approve-heritage
+  reason: 'driver clears heritage flag: calque_yellow is a soft native-alternative note / classifier mis-tag; word
+    is core modern standard Ukrainian'
+- lemma: безкоштовний
+  pos: adj
+  bucket: flag:heritage
+  adjudication: approve
+  class: approve-heritage
+  reason: 'driver clears heritage flag: calque_yellow is a soft native-alternative note / classifier mis-tag; word
+    is core modern standard Ukrainian'
+- lemma: безкоштовно
+  pos: adv
+  bucket: flag:heritage
+  adjudication: approve
+  class: approve-heritage
+  reason: 'driver clears heritage flag: calque_yellow is a soft native-alternative note / classifier mis-tag; word
+    is core modern standard Ukrainian'
+- lemma: біда
+  pos: noun
+  bucket: flag:heritage
+  adjudication: approve
+  class: approve-heritage
+  reason: 'driver clears heritage flag: calque_yellow is a soft native-alternative note / classifier mis-tag; word
+    is core modern standard Ukrainian'
+- lemma: врешті-решт
+  pos: adv
+  bucket: flag:heritage
+  adjudication: approve
+  class: approve-heritage
+  reason: 'driver clears heritage flag: calque_yellow is a soft native-alternative note / classifier mis-tag; word
+    is core modern standard Ukrainian'
+- lemma: відволікати
+  pos: verb
+  bucket: flag:heritage
+  adjudication: approve
+  class: approve-heritage
+  reason: 'driver clears heritage flag: calque_yellow is a soft native-alternative note / classifier mis-tag; word
+    is core modern standard Ukrainian'
+- lemma: відволікти
+  pos: verb
+  bucket: flag:heritage
+  adjudication: approve
+  class: approve-heritage
+  reason: 'driver clears heritage flag: calque_yellow is a soft native-alternative note / classifier mis-tag; word
+    is core modern standard Ukrainian'
+- lemma: захід
+  pos: noun
+  bucket: flag:heritage
+  adjudication: approve
+  class: approve-heritage
+  reason: 'driver clears heritage flag: calque_yellow is a soft native-alternative note / classifier mis-tag; word
+    is core modern standard Ukrainian'
+- lemma: зловити
+  pos: verb
+  bucket: flag:heritage
+  adjudication: approve
+  class: approve-heritage
+  reason: 'driver clears heritage flag: calque_yellow is a soft native-alternative note / classifier mis-tag; word
+    is core modern standard Ukrainian'
+- lemma: кожний
+  pos: noun
+  bucket: flag:heritage
+  adjudication: approve
+  class: approve-heritage
+  reason: 'driver clears heritage flag: calque_yellow is a soft native-alternative note / classifier mis-tag; word
+    is core modern standard Ukrainian'
+- lemma: лютувати
+  pos: verb
+  bucket: flag:heritage
+  adjudication: approve
+  class: approve-heritage
+  reason: 'driver clears heritage flag: calque_yellow is a soft native-alternative note / classifier mis-tag; word
+    is core modern standard Ukrainian'
+- lemma: молодий
+  pos: noun
+  bucket: flag:heritage
+  adjudication: approve
+  class: approve-heritage
+  reason: 'driver clears heritage flag: calque_yellow is a soft native-alternative note / classifier mis-tag; word
+    is core modern standard Ukrainian'
+- lemma: насправді
+  pos: adv
+  bucket: flag:heritage
+  adjudication: approve
+  class: approve-heritage
+  reason: 'driver clears heritage flag: calque_yellow is a soft native-alternative note / classifier mis-tag; word
+    is core modern standard Ukrainian'
+- lemma: основний
+  pos: adj
+  bucket: flag:heritage
+  adjudication: approve
+  class: approve-heritage
+  reason: 'driver clears heritage flag: calque_yellow is a soft native-alternative note / classifier mis-tag; word
+    is core modern standard Ukrainian'
+- lemma: поворот
+  pos: noun
+  bucket: flag:heritage
+  adjudication: approve
+  class: approve-heritage
+  reason: 'driver clears heritage flag: calque_yellow is a soft native-alternative note / classifier mis-tag; word
+    is core modern standard Ukrainian'
+- lemma: пільга
+  pos: noun
+  bucket: flag:heritage
+  adjudication: approve
+  class: approve-heritage
+  reason: 'driver clears heritage flag: calque_yellow is a soft native-alternative note / classifier mis-tag; word
+    is core modern standard Ukrainian'
+- lemma: різнокольоровий
+  pos: adj
+  bucket: flag:heritage
+  adjudication: approve
+  class: approve-heritage
+  reason: 'driver clears heritage flag: calque_yellow is a soft native-alternative note / classifier mis-tag; word
+    is core modern standard Ukrainian'
+- lemma: ріст
+  pos: noun
+  bucket: flag:heritage
+  adjudication: approve
+  class: approve-heritage
+  reason: 'driver clears heritage flag: calque_yellow is a soft native-alternative note / classifier mis-tag; word
+    is core modern standard Ukrainian'
+- lemma: справжній
+  pos: adj
+  bucket: flag:heritage
+  adjudication: approve
+  class: approve-heritage
+  reason: 'driver clears heritage flag: calque_yellow is a soft native-alternative note / classifier mis-tag; word
+    is core modern standard Ukrainian'
+- lemma: тим
+  pos: adv
+  bucket: flag:heritage
+  adjudication: approve
+  class: approve-heritage
+  reason: 'driver clears heritage flag: calque_yellow is a soft native-alternative note / classifier mis-tag; word
+    is core modern standard Ukrainian'
+- lemma: уряд
+  pos: noun
+  bucket: flag:heritage
+  adjudication: approve
+  class: approve-heritage
+  reason: 'driver clears heritage flag: calque_yellow is a soft native-alternative note / classifier mis-tag; word
+    is core modern standard Ukrainian'
+- lemma: фактор
+  pos: noun
+  bucket: flag:heritage
+  adjudication: approve
+  class: approve-heritage
+  reason: 'driver clears heritage flag: calque_yellow is a soft native-alternative note / classifier mis-tag; word
+    is core modern standard Ukrainian'
+- lemma: малесенький
+  pos: adj
+  bucket: flag:formof
+  adjudication: approve
+  class: approve-formof
+  reason: 'distinct VESUM lemma, not an inflection: diminutive/emphatic/superlative formations are standalone lexemes
+    with pedagogical value'
+- lemma: соловейко
+  pos: noun
+  bucket: flag:formof
+  adjudication: approve
+  class: approve-formof
+  reason: 'distinct VESUM lemma, not an inflection: diminutive/emphatic/superlative formations are standalone lexemes
+    with pedagogical value'
+- lemma: увесь
+  pos: adj
+  bucket: flag:formof
+  adjudication: approve
+  class: approve-formof
+  reason: 'distinct VESUM lemma, not an inflection: diminutive/emphatic/superlative formations are standalone lexemes
+    with pedagogical value'
+- lemma: якнайкраще
+  pos: adv
+  bucket: flag:formof
+  adjudication: approve
+  class: approve-formof
+  reason: 'distinct VESUM lemma, not an inflection: diminutive/emphatic/superlative formations are standalone lexemes
+    with pedagogical value'
+- lemma: алігаторів
+  pos: adj
+  bucket: flag:formof
+  adjudication: alias-to-parent
+  class: alias
+  reason: 'no standalone article: possessive -ів adjective (resolve to parent noun as alias) or mis-lemma (франка
+    → франк)'
+- lemma: апостолів
+  pos: adj
+  bucket: flag:formof
+  adjudication: alias-to-parent
+  class: alias
+  reason: 'no standalone article: possessive -ів adjective (resolve to parent noun as alias) or mis-lemma (франка
+    → франк)'
+- lemma: господарів
+  pos: adj
+  bucket: flag:formof
+  adjudication: alias-to-parent
+  class: alias
+  reason: 'no standalone article: possessive -ів adjective (resolve to parent noun as alias) or mis-lemma (франка
+    → франк)'
+- lemma: клієнтів
+  pos: adj
+  bucket: flag:formof
+  adjudication: alias-to-parent
+  class: alias
+  reason: 'no standalone article: possessive -ів adjective (resolve to parent noun as alias) or mis-lemma (франка
+    → франк)'
+- lemma: комарів
+  pos: adj
+  bucket: flag:formof
+  adjudication: alias-to-parent
+  class: alias
+  reason: 'no standalone article: possessive -ів adjective (resolve to parent noun as alias) or mis-lemma (франка
+    → франк)'
+- lemma: лікарів
+  pos: adj
+  bucket: flag:formof
+  adjudication: alias-to-parent
+  class: alias
+  reason: 'no standalone article: possessive -ів adjective (resolve to parent noun as alias) or mis-lemma (франка
+    → франк)'
+- lemma: москалів
+  pos: adj
+  bucket: flag:formof
+  adjudication: alias-to-parent
+  class: alias
+  reason: 'no standalone article: possessive -ів adjective (resolve to parent noun as alias) or mis-lemma (франка
+    → франк)'
+- lemma: місяців
+  pos: adj
+  bucket: flag:formof
+  adjudication: alias-to-parent
+  class: alias
+  reason: 'no standalone article: possessive -ів adjective (resolve to parent noun as alias) or mis-lemma (франка
+    → франк)'
+- lemma: офіцерів
+  pos: adj
+  bucket: flag:formof
+  adjudication: alias-to-parent
+  class: alias
+  reason: 'no standalone article: possessive -ів adjective (resolve to parent noun as alias) or mis-lemma (франка
+    → франк)'
+- lemma: предків
+  pos: adj
+  bucket: flag:formof
+  adjudication: alias-to-parent
+  class: alias
+  reason: 'no standalone article: possessive -ів adjective (resolve to parent noun as alias) or mis-lemma (франка
+    → франк)'
+- lemma: равликів
+  pos: adj
+  bucket: flag:formof
+  adjudication: alias-to-parent
+  class: alias
+  reason: 'no standalone article: possessive -ів adjective (resolve to parent noun as alias) or mis-lemma (франка
+    → франк)'
+- lemma: хлопців
+  pos: adj
+  bucket: flag:formof
+  adjudication: alias-to-parent
+  class: alias
+  reason: 'no standalone article: possessive -ів adjective (resolve to parent noun as alias) or mis-lemma (франка
+    → франк)'
+- lemma: хлопчиків
+  pos: adj
+  bucket: flag:formof
+  adjudication: alias-to-parent
+  class: alias
+  reason: 'no standalone article: possessive -ів adjective (resolve to parent noun as alias) or mis-lemma (франка
+    → франк)'
+- lemma: художників
+  pos: adj
+  bucket: flag:formof
+  adjudication: alias-to-parent
+  class: alias
+  reason: 'no standalone article: possessive -ів adjective (resolve to parent noun as alias) or mis-lemma (франка
+    → франк)'
+- lemma: чоловіків
+  pos: adj
+  bucket: flag:formof
+  adjudication: alias-to-parent
+  class: alias
+  reason: 'no standalone article: possessive -ів adjective (resolve to parent noun as alias) or mis-lemma (франка
+    → франк)'
+- lemma: богів
+  pos: adj
+  bucket: flag:heritage
+  adjudication: alias-to-parent
+  class: alias
+  reason: 'no standalone article: possessive -ів adjective (resolve to parent noun as alias) or mis-lemma (франка
+    → франк)'
+- lemma: франка
+  pos: noninfl
+  bucket: flag:formof
+  adjudication: alias-to-parent
+  class: alias
+  reason: 'no standalone article: possessive -ів adjective (resolve to parent noun as alias) or mis-lemma (франка
+    → франк)'
+- lemma: віра
+  pos: noun
+  bucket: flag:form-anomaly
+  adjudication: hold
+  class: reenrich-homograph
+  reason: enrichment attached the wrong homograph morphology (noun vs interjection/noninfl) — re-enrich with homograph
+    selection before publish
+- lemma: гай
+  pos: noun
+  bucket: flag:form-anomaly
+  adjudication: hold
+  class: reenrich-homograph
+  reason: enrichment attached the wrong homograph morphology (noun vs interjection/noninfl) — re-enrich with homograph
+    selection before publish
+- lemma: слід
+  pos: noun
+  bucket: flag:form-anomaly
+  adjudication: hold
+  class: reenrich-homograph
+  reason: enrichment attached the wrong homograph morphology (noun vs interjection/noninfl) — re-enrich with homograph
+    selection before publish
+- lemma: стоп
+  pos: noun
+  bucket: flag:form-anomaly
+  adjudication: hold
+  class: reenrich-homograph
+  reason: enrichment attached the wrong homograph morphology (noun vs interjection/noninfl) — re-enrich with homograph
+    selection before publish
+- lemma: СРСР
+  pos: noun
+  bucket: flag:form-anomaly
+  adjudication: hold
+  class: policy-acronym
+  reason: 'HOLD pending acronym/proper-noun inclusion policy (first acronyms to reach the atlas would set precedent).
+    Driver recommendation: include modern civic acronyms (ВООЗ, УНІАН) as B2 vocabulary; СРСР/НКВС via історизм
+    treatment; needs user scope confirmation'
+- lemma: ВООЗ
+  pos: noun
+  bucket: flag:heritage
+  adjudication: hold
+  class: policy-acronym
+  reason: 'HOLD pending acronym/proper-noun inclusion policy (first acronyms to reach the atlas would set precedent).
+    Driver recommendation: include modern civic acronyms (ВООЗ, УНІАН) as B2 vocabulary; СРСР/НКВС via історизм
+    treatment; needs user scope confirmation'
+- lemma: НКВС
+  pos: noun
+  bucket: flag:heritage
+  adjudication: hold
+  class: policy-acronym
+  reason: 'HOLD pending acronym/proper-noun inclusion policy (first acronyms to reach the atlas would set precedent).
+    Driver recommendation: include modern civic acronyms (ВООЗ, УНІАН) as B2 vocabulary; СРСР/НКВС via історизм
+    treatment; needs user scope confirmation'
+- lemma: УНІАН
+  pos: noun
+  bucket: flag:heritage
+  adjudication: hold
+  class: policy-acronym
+  reason: 'HOLD pending acronym/proper-noun inclusion policy (first acronyms to reach the atlas would set precedent).
+    Driver recommendation: include modern civic acronyms (ВООЗ, УНІАН) as B2 vocabulary; СРСР/НКВС via історизм
+    treatment; needs user scope confirmation'
+- lemma: горі
+  pos: adv
+  bucket: flag:heritage
+  adjudication: hold
+  class: policy-archaic
+  reason: 'HOLD pending archaism/dialect inclusion policy. Driver recommendation: living dialectisms (мід, най)
+    IN with діал. marker per heritage mission; dead archaisms (горі — also corrupted gloss, обі, яково) OUT per
+    the no-Old-Ukrainian scope order; needs user confirmation'
+- lemma: мід
+  pos: noun
+  bucket: flag:heritage
+  adjudication: hold
+  class: policy-archaic
+  reason: 'HOLD pending archaism/dialect inclusion policy. Driver recommendation: living dialectisms (мід, най)
+    IN with діал. marker per heritage mission; dead archaisms (горі — also corrupted gloss, обі, яково) OUT per
+    the no-Old-Ukrainian scope order; needs user confirmation'
+- lemma: най
+  pos: part
+  bucket: flag:heritage
+  adjudication: hold
+  class: policy-archaic
+  reason: 'HOLD pending archaism/dialect inclusion policy. Driver recommendation: living dialectisms (мід, най)
+    IN with діал. marker per heritage mission; dead archaisms (горі — also corrupted gloss, обі, яково) OUT per
+    the no-Old-Ukrainian scope order; needs user confirmation'
+- lemma: обі
+  pos: numr
+  bucket: flag:heritage
+  adjudication: hold
+  class: policy-archaic
+  reason: 'HOLD pending archaism/dialect inclusion policy. Driver recommendation: living dialectisms (мід, най)
+    IN with діал. marker per heritage mission; dead archaisms (горі — also corrupted gloss, обі, яково) OUT per
+    the no-Old-Ukrainian scope order; needs user confirmation'
+- lemma: яково
+  pos: adv
+  bucket: flag:heritage
+  adjudication: hold
+  class: policy-archaic
+  reason: 'HOLD pending archaism/dialect inclusion policy. Driver recommendation: living dialectisms (мід, най)
+    IN with діал. marker per heritage mission; dead archaisms (горі — also corrupted gloss, обі, яково) OUT per
+    the no-Old-Ukrainian scope order; needs user confirmation'
+- lemma: катедра
+  pos: noun
+  bucket: flag:formof
+  adjudication: hold
+  class: policy-variant
+  reason: 'HOLD: 1928–1933 Kharkiv-orthography variant of кафедра — variant-alias with orthography note is the likely
+    shape (skrypnykivka awareness is mission-relevant) but variant policy undecided'
+- lemma: вблагати
+  pos: verb
+  bucket: flag:gloss-unresolved
+  adjudication: hold
+  class: gloss-resolution
+  reason: «див.»-only cross-reference gloss — resolve the referenced lemma's gloss (+ aspect note where perfective)
+    via scripted enrichment before publish; common useful verbs, high recovery value
+- lemma: вжалити
+  pos: verb
+  bucket: flag:gloss-unresolved
+  adjudication: hold
+  class: gloss-resolution
+  reason: «див.»-only cross-reference gloss — resolve the referenced lemma's gloss (+ aspect note where perfective)
+    via scripted enrichment before publish; common useful verbs, high recovery value
+- lemma: вигуляти
+  pos: verb
+  bucket: flag:gloss-unresolved
+  adjudication: hold
+  class: gloss-resolution
+  reason: «див.»-only cross-reference gloss — resolve the referenced lemma's gloss (+ aspect note where perfective)
+    via scripted enrichment before publish; common useful verbs, high recovery value
+- lemma: вистрибнути
+  pos: verb
+  bucket: flag:gloss-unresolved
+  adjudication: hold
+  class: gloss-resolution
+  reason: «див.»-only cross-reference gloss — resolve the referenced lemma's gloss (+ aspect note where perfective)
+    via scripted enrichment before publish; common useful verbs, high recovery value
+- lemma: вкритися
+  pos: verb
+  bucket: flag:gloss-unresolved
+  adjudication: hold
+  class: gloss-resolution
+  reason: «див.»-only cross-reference gloss — resolve the referenced lemma's gloss (+ aspect note where perfective)
+    via scripted enrichment before publish; common useful verbs, high recovery value
+- lemma: вмитися
+  pos: verb
+  bucket: flag:gloss-unresolved
+  adjudication: hold
+  class: gloss-resolution
+  reason: «див.»-only cross-reference gloss — resolve the referenced lemma's gloss (+ aspect note where perfective)
+    via scripted enrichment before publish; common useful verbs, high recovery value
+- lemma: вплутати
+  pos: verb
+  bucket: flag:gloss-unresolved
+  adjudication: hold
+  class: gloss-resolution
+  reason: «див.»-only cross-reference gloss — resolve the referenced lemma's gloss (+ aspect note where perfective)
+    via scripted enrichment before publish; common useful verbs, high recovery value
+- lemma: вподобати
+  pos: verb
+  bucket: flag:gloss-unresolved
+  adjudication: hold
+  class: gloss-resolution
+  reason: «див.»-only cross-reference gloss — resolve the referenced lemma's gloss (+ aspect note where perfective)
+    via scripted enrichment before publish; common useful verbs, high recovery value
+- lemma: вполювати
+  pos: verb
+  bucket: flag:gloss-unresolved
+  adjudication: hold
+  class: gloss-resolution
+  reason: «див.»-only cross-reference gloss — resolve the referenced lemma's gloss (+ aspect note where perfective)
+    via scripted enrichment before publish; common useful verbs, high recovery value
+- lemma: втупитися
+  pos: verb
+  bucket: flag:gloss-unresolved
+  adjudication: hold
+  class: gloss-resolution
+  reason: «див.»-only cross-reference gloss — resolve the referenced lemma's gloss (+ aspect note where perfective)
+    via scripted enrichment before publish; common useful verbs, high recovery value
+- lemma: віддалитися
+  pos: verb
+  bucket: flag:gloss-unresolved
+  adjudication: hold
+  class: gloss-resolution
+  reason: «див.»-only cross-reference gloss — resolve the referenced lemma's gloss (+ aspect note where perfective)
+    via scripted enrichment before publish; common useful verbs, high recovery value
+- lemma: відписатися
+  pos: verb
+  bucket: flag:gloss-unresolved
+  adjudication: hold
+  class: gloss-resolution
+  reason: «див.»-only cross-reference gloss — resolve the referenced lemma's gloss (+ aspect note where perfective)
+    via scripted enrichment before publish; common useful verbs, high recovery value
+- lemma: відсидіти
+  pos: verb
+  bucket: flag:gloss-unresolved
+  adjudication: hold
+  class: gloss-resolution
+  reason: «див.»-only cross-reference gloss — resolve the referenced lemma's gloss (+ aspect note where perfective)
+    via scripted enrichment before publish; common useful verbs, high recovery value
+- lemma: відімкнути
+  pos: verb
+  bucket: flag:gloss-unresolved
+  adjudication: hold
+  class: gloss-resolution
+  reason: «див.»-only cross-reference gloss — resolve the referenced lemma's gloss (+ aspect note where perfective)
+    via scripted enrichment before publish; common useful verbs, high recovery value
+- lemma: завісити
+  pos: verb
+  bucket: flag:gloss-unresolved
+  adjudication: hold
+  class: gloss-resolution
+  reason: «див.»-only cross-reference gloss — resolve the referenced lemma's gloss (+ aspect note where perfective)
+    via scripted enrichment before publish; common useful verbs, high recovery value
+- lemma: загадати
+  pos: verb
+  bucket: flag:gloss-unresolved
+  adjudication: hold
+  class: gloss-resolution
+  reason: «див.»-only cross-reference gloss — resolve the referenced lemma's gloss (+ aspect note where perfective)
+    via scripted enrichment before publish; common useful verbs, high recovery value
+- lemma: загартуватися
+  pos: verb
+  bucket: flag:gloss-unresolved
+  adjudication: hold
+  class: gloss-resolution
+  reason: «див.»-only cross-reference gloss — resolve the referenced lemma's gloss (+ aspect note where perfective)
+    via scripted enrichment before publish; common useful verbs, high recovery value
+- lemma: заговорити
+  pos: verb
+  bucket: flag:gloss-unresolved
+  adjudication: hold
+  class: gloss-resolution
+  reason: «див.»-only cross-reference gloss — resolve the referenced lemma's gloss (+ aspect note where perfective)
+    via scripted enrichment before publish; common useful verbs, high recovery value
+- lemma: загорнутися
+  pos: verb
+  bucket: flag:gloss-unresolved
+  adjudication: hold
+  class: gloss-resolution
+  reason: «див.»-only cross-reference gloss — resolve the referenced lemma's gloss (+ aspect note where perfective)
+    via scripted enrichment before publish; common useful verbs, high recovery value
+- lemma: заковтнути
+  pos: verb
+  bucket: flag:gloss-unresolved
+  adjudication: hold
+  class: gloss-resolution
+  reason: «див.»-only cross-reference gloss — resolve the referenced lemma's gloss (+ aspect note where perfective)
+    via scripted enrichment before publish; common useful verbs, high recovery value
+- lemma: замучити
+  pos: verb
+  bucket: flag:gloss-unresolved
+  adjudication: hold
+  class: gloss-resolution
+  reason: «див.»-only cross-reference gloss — resolve the referenced lemma's gloss (+ aspect note where perfective)
+    via scripted enrichment before publish; common useful verbs, high recovery value
+- lemma: замісити
+  pos: verb
+  bucket: flag:gloss-unresolved
+  adjudication: hold
+  class: gloss-resolution
+  reason: «див.»-only cross-reference gloss — resolve the referenced lemma's gloss (+ aspect note where perfective)
+    via scripted enrichment before publish; common useful verbs, high recovery value
+- lemma: запинитися
+  pos: verb
+  bucket: flag:gloss-unresolved
+  adjudication: hold
+  class: gloss-resolution
+  reason: «див.»-only cross-reference gloss — resolve the referenced lemma's gloss (+ aspect note where perfective)
+    via scripted enrichment before publish; common useful verbs, high recovery value
+- lemma: зарахувати
+  pos: verb
+  bucket: flag:gloss-unresolved
+  adjudication: hold
+  class: gloss-resolution
+  reason: «див.»-only cross-reference gloss — resolve the referenced lemma's gloss (+ aspect note where perfective)
+    via scripted enrichment before publish; common useful verbs, high recovery value
+- lemma: засмагнути
+  pos: verb
+  bucket: flag:gloss-unresolved
+  adjudication: hold
+  class: gloss-resolution
+  reason: «див.»-only cross-reference gloss — resolve the referenced lemma's gloss (+ aspect note where perfective)
+    via scripted enrichment before publish; common useful verbs, high recovery value
+- lemma: застебнути
+  pos: verb
+  bucket: flag:gloss-unresolved
+  adjudication: hold
+  class: gloss-resolution
+  reason: «див.»-only cross-reference gloss — resolve the referenced lemma's gloss (+ aspect note where perfective)
+    via scripted enrichment before publish; common useful verbs, high recovery value
+- lemma: застрахуватися
+  pos: verb
+  bucket: flag:gloss-unresolved
+  adjudication: hold
+  class: gloss-resolution
+  reason: «див.»-only cross-reference gloss — resolve the referenced lemma's gloss (+ aspect note where perfective)
+    via scripted enrichment before publish; common useful verbs, high recovery value
+- lemma: застрибнути
+  pos: verb
+  bucket: flag:gloss-unresolved
+  adjudication: hold
+  class: gloss-resolution
+  reason: «див.»-only cross-reference gloss — resolve the referenced lemma's gloss (+ aspect note where perfective)
+    via scripted enrichment before publish; common useful verbs, high recovery value
+- lemma: заховати
+  pos: verb
+  bucket: flag:gloss-unresolved
+  adjudication: hold
+  class: gloss-resolution
+  reason: «див.»-only cross-reference gloss — resolve the referenced lemma's gloss (+ aspect note where perfective)
+    via scripted enrichment before publish; common useful verbs, high recovery value
+- lemma: згнити
+  pos: verb
+  bucket: flag:gloss-unresolved
+  adjudication: hold
+  class: gloss-resolution
+  reason: «див.»-only cross-reference gloss — resolve the referenced lemma's gloss (+ aspect note where perfective)
+    via scripted enrichment before publish; common useful verbs, high recovery value
+- lemma: злизати
+  pos: verb
+  bucket: flag:gloss-unresolved
+  adjudication: hold
+  class: gloss-resolution
+  reason: «див.»-only cross-reference gloss — resolve the referenced lemma's gloss (+ aspect note where perfective)
+    via scripted enrichment before publish; common useful verbs, high recovery value
+- lemma: зомліти
+  pos: verb
+  bucket: flag:gloss-unresolved
+  adjudication: hold
+  class: gloss-resolution
+  reason: «див.»-only cross-reference gloss — resolve the referenced lemma's gloss (+ aspect note where perfective)
+    via scripted enrichment before publish; common useful verbs, high recovery value
+- lemma: зігрітися
+  pos: verb
+  bucket: flag:gloss-unresolved
+  adjudication: hold
+  class: gloss-resolution
+  reason: «див.»-only cross-reference gloss — resolve the referenced lemma's gloss (+ aspect note where perfective)
+    via scripted enrichment before publish; common useful verbs, high recovery value
+- lemma: зіштовхнути
+  pos: verb
+  bucket: flag:gloss-unresolved
+  adjudication: hold
+  class: gloss-resolution
+  reason: «див.»-only cross-reference gloss — resolve the referenced lemma's gloss (+ aspect note where perfective)
+    via scripted enrichment before publish; common useful verbs, high recovery value
+- lemma: налетіти
+  pos: verb
+  bucket: flag:gloss-unresolved
+  adjudication: hold
+  class: gloss-resolution
+  reason: «див.»-only cross-reference gloss — resolve the referenced lemma's gloss (+ aspect note where perfective)
+    via scripted enrichment before publish; common useful verbs, high recovery value
+- lemma: обморозити
+  pos: verb
+  bucket: flag:gloss-unresolved
+  adjudication: hold
+  class: gloss-resolution
+  reason: «див.»-only cross-reference gloss — resolve the referenced lemma's gloss (+ aspect note where perfective)
+    via scripted enrichment before publish; common useful verbs, high recovery value
+- lemma: отруїтися
+  pos: verb
+  bucket: flag:gloss-unresolved
+  adjudication: hold
+  class: gloss-resolution
+  reason: «див.»-only cross-reference gloss — resolve the referenced lemma's gloss (+ aspect note where perfective)
+    via scripted enrichment before publish; common useful verbs, high recovery value
+- lemma: перебудуватися
+  pos: verb
+  bucket: flag:gloss-unresolved
+  adjudication: hold
+  class: gloss-resolution
+  reason: «див.»-only cross-reference gloss — resolve the referenced lemma's gloss (+ aspect note where perfective)
+    via scripted enrichment before publish; common useful verbs, high recovery value
+- lemma: перегоріти
+  pos: verb
+  bucket: flag:gloss-unresolved
+  adjudication: hold
+  class: gloss-resolution
+  reason: «див.»-only cross-reference gloss — resolve the referenced lemma's gloss (+ aspect note where perfective)
+    via scripted enrichment before publish; common useful verbs, high recovery value
+- lemma: передатися
+  pos: verb
+  bucket: flag:gloss-unresolved
+  adjudication: hold
+  class: gloss-resolution
+  reason: «див.»-only cross-reference gloss — resolve the referenced lemma's gloss (+ aspect note where perfective)
+    via scripted enrichment before publish; common useful verbs, high recovery value
+- lemma: пережувати
+  pos: verb
+  bucket: flag:gloss-unresolved
+  adjudication: hold
+  class: gloss-resolution
+  reason: «див.»-only cross-reference gloss — resolve the referenced lemma's gloss (+ aspect note where perfective)
+    via scripted enrichment before publish; common useful verbs, high recovery value
+- lemma: пересадити
+  pos: verb
+  bucket: flag:gloss-unresolved
+  adjudication: hold
+  class: gloss-resolution
+  reason: «див.»-only cross-reference gloss — resolve the referenced lemma's gloss (+ aspect note where perfective)
+    via scripted enrichment before publish; common useful verbs, high recovery value
+- lemma: переслухати
+  pos: verb
+  bucket: flag:gloss-unresolved
+  adjudication: hold
+  class: gloss-resolution
+  reason: «див.»-only cross-reference gloss — resolve the referenced lemma's gloss (+ aspect note where perfective)
+    via scripted enrichment before publish; common useful verbs, high recovery value
+- lemma: понизити
+  pos: verb
+  bucket: flag:gloss-unresolved
+  adjudication: hold
+  class: gloss-resolution
+  reason: «див.»-only cross-reference gloss — resolve the referenced lemma's gloss (+ aspect note where perfective)
+    via scripted enrichment before publish; common useful verbs, high recovery value
+- lemma: присягтися
+  pos: verb
+  bucket: flag:gloss-unresolved
+  adjudication: hold
+  class: gloss-resolution
+  reason: «див.»-only cross-reference gloss — resolve the referenced lemma's gloss (+ aspect note where perfective)
+    via scripted enrichment before publish; common useful verbs, high recovery value
+- lemma: провчити
+  pos: verb
+  bucket: flag:gloss-unresolved
+  adjudication: hold
+  class: gloss-resolution
+  reason: «див.»-only cross-reference gloss — resolve the referenced lemma's gloss (+ aspect note where perfective)
+    via scripted enrichment before publish; common useful verbs, high recovery value
+- lemma: протиснутися
+  pos: verb
+  bucket: flag:gloss-unresolved
+  adjudication: hold
+  class: gloss-resolution
+  reason: «див.»-only cross-reference gloss — resolve the referenced lemma's gloss (+ aspect note where perfective)
+    via scripted enrichment before publish; common useful verbs, high recovery value
+- lemma: пукнути
+  pos: verb
+  bucket: flag:gloss-unresolved
+  adjudication: hold
+  class: gloss-resolution
+  reason: «див.»-only cross-reference gloss — resolve the referenced lemma's gloss (+ aspect note where perfective)
+    via scripted enrichment before publish; common useful verbs, high recovery value
+- lemma: підбігти
+  pos: verb
+  bucket: flag:gloss-unresolved
+  adjudication: hold
+  class: gloss-resolution
+  reason: «див.»-only cross-reference gloss — resolve the referenced lemma's gloss (+ aspect note where perfective)
+    via scripted enrichment before publish; common useful verbs, high recovery value
+- lemma: підвернути
+  pos: verb
+  bucket: flag:gloss-unresolved
+  adjudication: hold
+  class: gloss-resolution
+  reason: «див.»-only cross-reference gloss — resolve the referenced lemma's gloss (+ aspect note where perfective)
+    via scripted enrichment before publish; common useful verbs, high recovery value
+- lemma: підлікувати
+  pos: verb
+  bucket: flag:gloss-unresolved
+  adjudication: hold
+  class: gloss-resolution
+  reason: «див.»-only cross-reference gloss — resolve the referenced lemma's gloss (+ aspect note where perfective)
+    via scripted enrichment before publish; common useful verbs, high recovery value
+- lemma: свят
+  pos: intj
+  bucket: flag:gloss-unresolved
+  adjudication: hold
+  class: gloss-resolution
+  reason: «див.»-only cross-reference gloss — resolve the referenced lemma's gloss (+ aspect note where perfective)
+    via scripted enrichment before publish; common useful verbs, high recovery value
+- lemma: скавчати
+  pos: verb
+  bucket: flag:gloss-unresolved
+  adjudication: hold
+  class: gloss-resolution
+  reason: «див.»-only cross-reference gloss — resolve the referenced lemma's gloss (+ aspect note where perfective)
+    via scripted enrichment before publish; common useful verbs, high recovery value
+- lemma: скоювати
+  pos: verb
+  bucket: flag:gloss-unresolved
+  adjudication: hold
+  class: gloss-resolution
+  reason: «див.»-only cross-reference gloss — resolve the referenced lemma's gloss (+ aspect note where perfective)
+    via scripted enrichment before publish; common useful verbs, high recovery value
+- lemma: струсити
+  pos: verb
+  bucket: flag:gloss-unresolved
+  adjudication: hold
+  class: gloss-resolution
+  reason: «див.»-only cross-reference gloss — resolve the referenced lemma's gloss (+ aspect note where perfective)
+    via scripted enrichment before publish; common useful verbs, high recovery value
+- lemma: схилитися
+  pos: verb
+  bucket: flag:gloss-unresolved
+  adjudication: hold
+  class: gloss-resolution
+  reason: «див.»-only cross-reference gloss — resolve the referenced lemma's gloss (+ aspect note where perfective)
+    via scripted enrichment before publish; common useful verbs, high recovery value
+- lemma: урватися
+  pos: verb
+  bucket: flag:gloss-unresolved
+  adjudication: hold
+  class: gloss-resolution
+  reason: «див.»-only cross-reference gloss — resolve the referenced lemma's gloss (+ aspect note where perfective)
+    via scripted enrichment before publish; common useful verbs, high recovery value
+- lemma: усього
+  pos: adv
+  bucket: flag:gloss-unresolved
+  adjudication: hold
+  class: gloss-resolution
+  reason: «див.»-only cross-reference gloss — resolve the referenced lemma's gloss (+ aspect note where perfective)
+    via scripted enrichment before publish; common useful verbs, high recovery value
