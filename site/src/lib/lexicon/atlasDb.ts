@@ -77,6 +77,24 @@ export interface EntryModelGateCounts {
   aliasRecords: number;
 }
 
+export const ATLAS_ENTRY_TYPES = [
+  "lemma",
+  "expression",
+  "phraseologism",
+  "proverb",
+  "multiword_term",
+  "proper_name",
+] as const;
+
+export interface AtlasEntryModelCounts {
+  reviewed_entries_by_type: Record<(typeof ATLAS_ENTRY_TYPES)[number], number>;
+  total_reviewed_entries: number;
+  alias_records: number;
+  candidate_evidence_count: number;
+  candidate_evidence_by_bucket: Record<string, number>;
+  noise_rejected: number;
+}
+
 /**
  * Site-build assertions for the two DB-enforced entry-model gates
  * (`docs/runbooks/word-atlas-entry-model.md` § Acceptance Gates). These mirror
@@ -157,6 +175,49 @@ export function runEntryModelGates(db: BetterSqliteDatabase): EntryModelGateCoun
   }
 
   return { reviewedEntries, publicRoutes, formOfRoutes, aliasRecords };
+}
+
+/** Return public-safe entry-model aggregates from the Atlas database. */
+export function getAtlasEntryModelCounts(): AtlasEntryModelCounts {
+  const dbPath = atlasDbPath();
+  if (!existsSync(dbPath)) {
+    throw new Error(`Atlas DB not found at ${dbPath}; site status cannot be generated.`);
+  }
+
+  const db = new Database(dbPath, { readonly: true, fileMustExist: true });
+  try {
+    const gates = runEntryModelGates(db);
+    const counts = Object.fromEntries(
+      ATLAS_ENTRY_TYPES.map((entryType) => [entryType, 0]),
+    ) as AtlasEntryModelCounts["reviewed_entries_by_type"];
+    const rows = db
+      .prepare(
+        `SELECT entry_type, COUNT(*) AS n
+         FROM articles
+         WHERE review_state = 'approved' AND visibility = 'public'
+         GROUP BY entry_type`,
+      )
+      .all() as Array<{ entry_type: (typeof ATLAS_ENTRY_TYPES)[number]; n: number }>;
+    for (const row of rows) counts[row.entry_type] = row.n;
+
+    const aliasRecords = (
+      db.prepare(`SELECT COUNT(*) AS n FROM aliases WHERE visibility = 'public'`).get() as { n: number }
+    ).n;
+
+    // v1 persists only approved articles and approved aliases. Candidate
+    // evidence has no normalized table yet, so publish an explicit empty
+    // aggregate rather than mislabelling legacy manifest routes as evidence.
+    return {
+      reviewed_entries_by_type: counts,
+      total_reviewed_entries: gates.reviewedEntries,
+      alias_records: aliasRecords,
+      candidate_evidence_count: 0,
+      candidate_evidence_by_bucket: {},
+      noise_rejected: 0,
+    };
+  } finally {
+    db.close();
+  }
 }
 
 export function getAtlasPayloadCache(): AtlasPayloadCache {

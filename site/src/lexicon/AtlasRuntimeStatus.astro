@@ -71,20 +71,20 @@ const statusUrl = "/api/lexicon/status.json";
   }
 
   function renderRuntimeStatus(root, status) {
-    setRuntimeText(root, "publicAtlas", formatCount(status.publicAtlas.searchEntries));
+    setRuntimeText(root, "publicAtlas", formatCount(status.entryModel.total_reviewed_entries));
     setRuntimeDetail(
       root,
       "publicAtlas",
-      `${formatCount(status.publicAtlas.browseEntries)} перегляд · ${status.publicAtlas.searchShards} пошук-шардів`,
+      `${formatCount(status.entryModel.alias_records)} форм пошуку · ${status.publicAtlas.searchShards} пошук-шардів`,
     );
 
-    setRuntimeText(root, "manifest", formatCount(status.manifest.entries));
+    setRuntimeText(root, "manifest", formatCount(status.manifest.records));
     setRuntimeDetail(
       root,
       "manifest",
       status.manifest.hydrated
-        ? `${formatCount(status.manifest.publicLexemes)} публічних · ${formatCount(
-            status.manifest.grammarTermRows,
+        ? `${formatCount(status.manifest.publicLexemeRecords)} публічних записів · ${formatCount(
+            status.manifest.grammarTermRecords,
           )} внутрішніх`
         : `${formatBytes(status.manifest.jsonBytes)} pinned`,
     );

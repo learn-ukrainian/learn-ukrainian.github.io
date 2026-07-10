@@ -3,10 +3,12 @@ import {
   highlight,
   normalize,
   rankMatches,
+  rankSearchResults,
   searchShardForQuery,
   searchShardKeysForRow,
   searchShardPrefix,
   type SearchRow,
+  type SearchAlias,
   type SearchShardManifest,
 } from '@site/src/lib/lexicon/search';
 
@@ -16,6 +18,12 @@ const rows: SearchRow[] = [
   { l: 'офісний', s: 'ofisnyi', g: 'work-related', r: 'ofisnyi', k: 'vyv' },
   { l: 'офіціант', s: 'ofitsiant', g: 'waiter', r: 'ofitsiant', k: 'vyv' },
   { l: 'пошта', s: 'poshta', g: 'office', r: 'poshta', k: 'other' },
+];
+
+const aliases: SearchAlias[] = [
+  { a: 'Іване', k: 'inflected_form', s: 'іван', h: 'Іван' },
+  { a: 'бачу', k: 'inflected_form', s: 'бачити', h: 'бачити' },
+  { a: 'автобусом', k: 'inflected_form', s: 'автобус', h: 'автобус' },
 ];
 
 describe('lexicon search helpers', () => {
@@ -59,6 +67,39 @@ describe('lexicon search helpers', () => {
       'офіс',
       'офісний',
       'заофісний',
+    ]);
+  });
+
+  test('resolves aliases to their approved article heads and slugs', () => {
+    const articles: SearchRow[] = [
+      { l: 'Іван', s: 'іван', g: 'Ivan' },
+      { l: 'бачити', s: 'бачити', g: 'to see' },
+      { l: 'автобус', s: 'автобус', g: 'bus' },
+    ];
+
+    for (const [query, slug, head] of [
+      ['Іване', 'іван', 'Іван'],
+      ['бачу', 'бачити', 'бачити'],
+      ['автобусом', 'автобус', 'автобус'],
+    ]) {
+      expect(rankSearchResults(articles, aliases, query)).toEqual([
+        {
+          article: { l: head, s: slug, g: null },
+          matchedAlias: query,
+          aliasKind: 'inflected_form',
+        },
+      ]);
+    }
+  });
+
+  test('prefers a direct article hit and suppresses its duplicate alias resolution', () => {
+    const articles: SearchRow[] = [{ l: 'Іван', s: 'іван', g: 'Ivan' }];
+    const duplicateAlias: SearchAlias[] = [
+      { a: 'Іван', k: 'canonical', s: 'іван', h: 'Іван' },
+    ];
+
+    expect(rankSearchResults(articles, duplicateAlias, 'Іван')).toEqual([
+      { article: articles[0] },
     ]);
   });
 

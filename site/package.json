@@ -4,9 +4,10 @@
   "version": "0.0.1",
   "scripts": {
     "atlas:build-db": "cd .. && .venv/bin/python -m scripts.atlas.atlas_db --db data/atlas.db",
+    "atlas:build-search": "cd .. && .venv/bin/python -m scripts.audit.generate_search_index --db data/atlas.db",
     "atlas:perf": "node ./scripts/benchmark-atlas-db.mjs",
     "atlas:validate-aliases": "cd .. && .venv/bin/python -m scripts.atlas.atlas_db --db data/atlas.db --validate-aliases-only",
-    "hydrate": "node ./scripts/hydrate-manifest.mjs && npm run atlas:build-db && node ./scripts/hydrate-practice-deck.mjs && node --experimental-strip-types ./scripts/hydrate-lexicon-api-shards.ts",
+    "hydrate": "node ./scripts/hydrate-manifest.mjs && npm run atlas:build-db && npm run atlas:build-search && node ./scripts/hydrate-practice-deck.mjs && node --experimental-strip-types ./scripts/hydrate-lexicon-api-shards.ts",
     "hydrate:manifest": "node ./scripts/hydrate-manifest.mjs && npm run atlas:build-db",
     "hydrate:practice": "node ./scripts/hydrate-practice-deck.mjs",
     "dev": "npm run hydrate && astro dev",
@@ -56,5 +57,9 @@
     "vite": ">=8.0.13",
     "js-yaml": ">=4.2.0",
     "markdown-it": ">=14.2.0"
+  },
+  "allowScripts": {
+    "better-sqlite3@12.11.1": true,
+    "esbuild@0.28.1": true
   }
 }

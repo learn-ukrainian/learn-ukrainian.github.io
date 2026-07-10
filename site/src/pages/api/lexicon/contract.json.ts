@@ -8,6 +8,7 @@ import {
   buildLexiconRuntimeStatus,
   type PracticeLevel,
 } from "../../../lib/lexicon/runtime-contract";
+import { getAtlasEntryModelCounts } from "../../../lib/lexicon/atlasDb";
 
 export const prerender = true;
 
@@ -35,8 +36,10 @@ export const GET: APIRoute = () => {
     manifest: readOptionalJson("src/data/lexicon-manifest.json"),
     manifestPointer: readJson("src/data/lexicon-manifest.pointer.json"),
     searchIndex: readJson("src/data/lexicon-search-index.json"),
+    searchAliases: readJson("src/data/lexicon-search-aliases.json"),
     searchShards: readJson("src/data/lexicon-search-shards.json"),
     browseMeta: readJson("src/data/lexicon-browse-meta.json"),
+    entryModel: getAtlasEntryModelCounts(),
     dailyPool: readJson("src/data/lexicon-daily-pool.json"),
     practiceIndexes,
     clozeSources: readJson("src/data/lexicon-practice-cloze-sources.json"),

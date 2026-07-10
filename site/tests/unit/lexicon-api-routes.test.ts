@@ -11,6 +11,7 @@ import {
   searchShardResponse,
 } from "@site/src/lib/lexicon/search-api-shard";
 import { GET as getSearchIndex } from "@site/src/pages/api/lexicon/search-index.json";
+import { GET as getSearchAliases } from "@site/src/pages/lexicon/search-aliases.json";
 import { GET as getStatus } from "@site/src/pages/api/lexicon/status.json";
 import { PRACTICE_LEVELS } from "@site/src/lib/lexicon/runtime-contract";
 
@@ -49,13 +50,21 @@ describe("lexicon static API routes", () => {
     const status = await routeJson<{
       schema: string;
       status: string;
-      publicAtlas: { searchEntries: number; browseEntries: number };
+      publicAtlas: { searchArticleEntries: number; searchAliasRows: number; browseRecords: number };
+      entryModel: {
+        reviewed_entries_by_type: Record<string, number>;
+        total_reviewed_entries: number;
+        alias_records: number;
+        candidate_evidence_count: number;
+        candidate_evidence_by_bucket: Record<string, number>;
+      };
       daily: { poolEntries: number };
       practice: { totalLexemes: number };
-      checks: { searchMatchesBrowse: boolean; singlePracticeDeckVersion: boolean };
+      checks: { searchMatchesReviewedEntries: boolean; singlePracticeDeckVersion: boolean };
       endpoints: {
         contract: string;
         searchIndex: string;
+        searchAliases: string;
         searchShards: string;
       dailyPool: string;
       practiceIndexTemplate: string;
@@ -66,14 +75,22 @@ describe("lexicon static API routes", () => {
 
     expect(status.schema).toBe("atlas-runtime-status");
     expect(status.status).toBe("ok");
-    expect(status.publicAtlas.searchEntries).toBe(search.length);
-    expect(status.publicAtlas.searchEntries).toBe(status.publicAtlas.browseEntries);
+    expect(status.publicAtlas.searchArticleEntries).toBe(search.length);
+    expect(status.publicAtlas.searchArticleEntries).toBe(status.entryModel.total_reviewed_entries);
+    expect(Object.values(status.entryModel.reviewed_entries_by_type).reduce((sum, count) => sum + count, 0)).toBe(
+      status.entryModel.total_reviewed_entries,
+    );
+    expect(status.publicAtlas.searchAliasRows).toBeGreaterThan(0);
+    expect(status.entryModel.alias_records).toBeGreaterThanOrEqual(status.publicAtlas.searchAliasRows);
+    expect(status.entryModel.candidate_evidence_count).toBe(0);
+    expect(status.entryModel.candidate_evidence_by_bucket).toEqual({});
     expect(status.daily.poolEntries).toBe(daily.length);
     expect(status.practice.totalLexemes).toBeGreaterThan(0);
-    expect(status.checks.searchMatchesBrowse).toBe(true);
+    expect(status.checks.searchMatchesReviewedEntries).toBe(true);
     expect(status.checks.singlePracticeDeckVersion).toBe(true);
     expect(status.endpoints.contract).toBe("/api/lexicon/contract.json");
     expect(status.endpoints.searchIndex).toBe("/api/lexicon/search-index.json");
+    expect(status.endpoints.searchAliases).toBe("/lexicon/search-aliases.json");
   expect(status.endpoints.searchShards).toBe("/lexicon/search-shards.json");
   expect(status.endpoints.dailyPool).toBe("/api/lexicon/daily-pool.json");
     expect(status.endpoints.practiceIndexTemplate).toBe(
@@ -92,7 +109,14 @@ describe("lexicon static API routes", () => {
       schema: string;
       staticOnly: boolean;
       surfaces: {
-        atlas: { entries: number; searchShards: number; browseEntries: number };
+        atlas: {
+          totalReviewedEntries: number;
+          reviewedEntriesByType: Record<string, number>;
+          aliasRecords: number;
+          candidateEvidenceCount: number;
+          searchShards: number;
+          browseRecords: number;
+        };
         dailyWord: { poolEntries: number; endpoint: string };
         practice: { totalLexemes: number; levels: string[] };
         cloze: { totalItems: number; reviewedSourceRows: number };
@@ -103,8 +127,13 @@ describe("lexicon static API routes", () => {
     expect(contract.schema).toBe("atlas-api-contract");
     expect(contract.staticOnly).toBe(true);
     expect(contract.endpoints.contract).toBe("/api/lexicon/contract.json");
-    expect(contract.surfaces.atlas.entries).toBeGreaterThan(5000);
-    expect(contract.surfaces.atlas.entries).toBe(contract.surfaces.atlas.browseEntries);
+    expect(contract.surfaces.atlas.totalReviewedEntries).toBeGreaterThan(5000);
+    expect(contract.surfaces.atlas.reviewedEntriesByType.lemma).toBeGreaterThan(4000);
+    expect(contract.surfaces.atlas.aliasRecords).toBeGreaterThan(5000);
+    expect(contract.surfaces.atlas.candidateEvidenceCount).toBe(0);
+    expect(contract.surfaces.atlas.browseRecords).toBeGreaterThanOrEqual(
+      contract.surfaces.atlas.totalReviewedEntries,
+    );
     expect(contract.surfaces.atlas.searchShards).toBeGreaterThan(1);
     expect(contract.surfaces.dailyWord.poolEntries).toBeGreaterThanOrEqual(250);
     expect(contract.surfaces.dailyWord.endpoint).toBe(contract.endpoints.dailyPool);
@@ -117,11 +146,14 @@ describe("lexicon static API routes", () => {
     );
   });
 
-  test("aliases search and Daily Word data under /api/lexicon", async () => {
+  test("publishes separate article and alias search artifacts under /api/lexicon", async () => {
     const search = await routeJson<unknown[]>(getSearchIndex);
+    const aliases = await routeJson<Array<{ a: string; s: string; h: string }>>(getSearchAliases);
     const daily = await routeJson<unknown[]>(getDailyPool);
 
     expect(search.length).toBeGreaterThan(5000);
+    expect(aliases.length).toBeGreaterThan(5000);
+    expect(aliases).toContainEqual(expect.objectContaining({ a: "Іване", s: "іван", h: "Іван" }));
     expect(daily.length).toBeGreaterThanOrEqual(250);
   });
 

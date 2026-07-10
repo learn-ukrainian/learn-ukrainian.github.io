@@ -1,3 +1,5 @@
+import type { AtlasEntryModelCounts } from "./atlasDb";
+
 // Matches the committed static practice shard set and
 // scripts/audit/check_static_practice_assets.py::DEFAULT_LEVELS.
 export const PRACTICE_LEVELS = ["A1", "A2", "B1", "B2", "C1"] as const;
@@ -15,6 +17,7 @@ export interface LexiconRuntimeStatus {
     contract: string;
     status: string;
     searchIndex: string;
+    searchAliases: string;
     searchShards: string;
     dailyPool: string;
     browseShardTemplate: string;
@@ -24,9 +27,9 @@ export interface LexiconRuntimeStatus {
   };
   manifest: {
     hydrated: boolean;
-    entries: number | null;
-    publicLexemes: number | null;
-    grammarTermRows: number | null;
+    records: number | null;
+    publicLexemeRecords: number | null;
+    grammarTermRecords: number | null;
     version: string | null;
     releaseTag: string | null;
     generatedAt: string | null;
@@ -34,13 +37,15 @@ export interface LexiconRuntimeStatus {
     jsonSha256: string | null;
   };
   publicAtlas: {
-    searchEntries: number;
+    searchArticleEntries: number;
+    searchAliasRows: number;
     searchShards: number;
     searchShardPrefixes: number;
-    browseEntries: number;
+    browseRecords: number;
     browseShards: number;
     browseLetters: number;
   };
+  entryModel: AtlasEntryModelCounts;
   daily: {
     poolEntries: number;
   };
@@ -61,8 +66,7 @@ export interface LexiconRuntimeStatus {
     clozeAdmitted: number | null;
   };
   checks: {
-    searchMatchesBrowse: boolean;
-    manifestCoversPublic: boolean | null;
+    searchMatchesReviewedEntries: boolean;
     singlePracticeDeckVersion: boolean;
   };
 }
@@ -76,12 +80,16 @@ export interface LexiconApiContract {
   endpoints: LexiconRuntimeStatus["endpoints"];
   surfaces: {
     atlas: {
-      entries: number;
+      totalReviewedEntries: number;
+      reviewedEntriesByType: AtlasEntryModelCounts["reviewed_entries_by_type"];
+      aliasRecords: number;
+      candidateEvidenceCount: number;
       searchShards: number;
-      browseEntries: number;
+      browseRecords: number;
       browseShards: number;
       endpoints: {
         searchIndex: string;
+        searchAliases: string;
         searchShards: string;
         browseShardTemplate: string;
       };
@@ -123,8 +131,10 @@ interface BuildRuntimeStatusInput {
   manifest?: unknown;
   manifestPointer?: unknown;
   searchIndex?: unknown;
+  searchAliases?: unknown;
   searchShards?: unknown;
   browseMeta?: unknown;
+  entryModel?: AtlasEntryModelCounts;
   dailyPool?: unknown;
   practiceIndexes?: Partial<Record<PracticeLevel, unknown>>;
   clozeSources?: unknown;
@@ -187,13 +197,14 @@ export function buildLexiconRuntimeStatus(input: BuildRuntimeStatusInput): Lexic
   const entries = manifestEntries(input.manifest);
   const manifest = asObject(input.manifest);
   const pointer = asObject(input.manifestPointer);
-  const searchEntries = asArray(input.searchIndex).length;
+  const searchArticleEntries = asArray(input.searchIndex).length;
+  const searchAliasRows = asArray(input.searchAliases).length;
   const searchShards = asObject(input.searchShards);
   const searchShardMeta = asObject(searchShards.shards);
   const searchPrefixMap = asObject(searchShards.prefixMap);
   const browseMeta = asObject(input.browseMeta);
   const letterCounts = asObject(browseMeta.letterCounts);
-  const browseEntries = asNumber(browseMeta.total);
+  const browseRecords = asNumber(browseMeta.total);
   const browseLetters = Object.keys(letterCounts).length;
   const browseShards = Object.values(letterCounts).filter((count) => asNumber(count) > 0).length;
   const dailyPoolEntries = asArray(input.dailyPool).length;
@@ -212,19 +223,32 @@ export function buildLexiconRuntimeStatus(input: BuildRuntimeStatusInput): Lexic
     0,
   );
   const totalCloze = Object.values(practiceLevels).reduce((sum, row) => sum + row.cloze, 0);
-  const publicLexemes = entries
+  const publicLexemeRecords = entries
     ? entries.filter((entry) => entry.pos !== "grammar term").length
     : null;
   const sourceInventoryRows = entries
     ? entries.filter((entry) => entry.primary_source === "source_inventory_grow")
     : null;
-  const searchMatchesBrowse = searchEntries === browseEntries;
-  const manifestCoversPublic =
-    publicLexemes === null ? null : publicLexemes === searchEntries && publicLexemes === browseEntries;
+  const entryModel: AtlasEntryModelCounts = input.entryModel ?? {
+    reviewed_entries_by_type: {
+      lemma: 0,
+      expression: 0,
+      phraseologism: 0,
+      proverb: 0,
+      multiword_term: 0,
+      proper_name: 0,
+    },
+    total_reviewed_entries: 0,
+    alias_records: 0,
+    candidate_evidence_count: 0,
+    candidate_evidence_by_bucket: {},
+    noise_rejected: 0,
+  };
+  const searchMatchesReviewedEntries =
+    searchArticleEntries === entryModel.total_reviewed_entries;
   const singlePracticeDeckVersion = deckVersions.size <= 1;
   const status =
-    searchMatchesBrowse &&
-    (manifestCoversPublic ?? true) &&
+    searchMatchesReviewedEntries &&
     singlePracticeDeckVersion &&
     dailyPoolEntries > 0 &&
     totalPracticeLexemes > 0
@@ -240,6 +264,7 @@ export function buildLexiconRuntimeStatus(input: BuildRuntimeStatusInput): Lexic
       contract: "/api/lexicon/contract.json",
       status: "/api/lexicon/status.json",
       searchIndex: "/api/lexicon/search-index.json",
+      searchAliases: "/lexicon/search-aliases.json",
       searchShards: "/lexicon/search-shards.json",
       dailyPool: "/api/lexicon/daily-pool.json",
       browseShardTemplate: "/lexicon/browse/{letter}.json",
@@ -249,23 +274,26 @@ export function buildLexiconRuntimeStatus(input: BuildRuntimeStatusInput): Lexic
     },
     manifest: {
       hydrated: entries !== null,
-      entries: entries?.length ?? null,
-      publicLexemes,
-      grammarTermRows: entries && publicLexemes !== null ? entries.length - publicLexemes : null,
+      records: entries?.length ?? null,
+      publicLexemeRecords,
+      grammarTermRecords:
+        entries && publicLexemeRecords !== null ? entries.length - publicLexemeRecords : null,
       version: asString(manifest.version) ?? asString(pointer.manifest_version),
       releaseTag: asString(pointer.release_tag),
       generatedAt: asString(manifest.generated_at) ?? asString(pointer.generated_at),
       jsonBytes: asOptionalNumber(pointer.json_bytes),
       jsonSha256: asString(pointer.json_sha256),
     },
-      publicAtlas: {
-        searchEntries,
-        searchShards: Object.keys(searchShardMeta).length,
-        searchShardPrefixes: Object.keys(searchPrefixMap).length,
-        browseEntries,
+    publicAtlas: {
+      searchArticleEntries,
+      searchAliasRows,
+      searchShards: Object.keys(searchShardMeta).length,
+      searchShardPrefixes: Object.keys(searchPrefixMap).length,
+      browseRecords,
       browseShards,
       browseLetters,
     },
+    entryModel,
     daily: {
       poolEntries: dailyPoolEntries,
     },
@@ -287,8 +315,7 @@ export function buildLexiconRuntimeStatus(input: BuildRuntimeStatusInput): Lexic
       clozeAdmitted: sourceInventoryRows?.filter((entry) => surfaceAdmission(entry, "cloze")).length ?? null,
     },
     checks: {
-      searchMatchesBrowse,
-      manifestCoversPublic,
+      searchMatchesReviewedEntries,
       singlePracticeDeckVersion,
     },
   };
@@ -304,12 +331,16 @@ export function buildLexiconApiContract(status: LexiconRuntimeStatus): LexiconAp
     endpoints: status.endpoints,
     surfaces: {
       atlas: {
-        entries: status.publicAtlas.searchEntries,
+        totalReviewedEntries: status.entryModel.total_reviewed_entries,
+        reviewedEntriesByType: status.entryModel.reviewed_entries_by_type,
+        aliasRecords: status.entryModel.alias_records,
+        candidateEvidenceCount: status.entryModel.candidate_evidence_count,
         searchShards: status.publicAtlas.searchShards,
-        browseEntries: status.publicAtlas.browseEntries,
+        browseRecords: status.publicAtlas.browseRecords,
         browseShards: status.publicAtlas.browseShards,
         endpoints: {
           searchIndex: status.endpoints.searchIndex,
+          searchAliases: status.endpoints.searchAliases,
           searchShards: status.endpoints.searchShards,
           browseShardTemplate: status.endpoints.browseShardTemplate,
         },

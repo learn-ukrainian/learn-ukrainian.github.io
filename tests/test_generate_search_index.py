@@ -1,13 +1,18 @@
 from __future__ import annotations
 
 import json
+import sqlite3
 from pathlib import Path
 
+import pytest
+
+from scripts.atlas import atlas_db
 from scripts.audit.generate_search_index import (
     DEFAULT_BROWSE_DIR,
     DEFAULT_BROWSE_META_OUT,
     DEFAULT_SEARCH_OUT,
     UKRAINIAN_ALPHABET,
+    build_atlas_db_search_artifacts,
     build_browse_outputs,
     build_index,
     classification_code,
@@ -59,6 +64,64 @@ def fixture_entries() -> list[dict[str, object]]:
         {"lemma": "", "url_slug": "empty", "gloss": "skip"},
         {"lemma": "нема", "url_slug": "", "gloss": "skip"},
     ]
+
+
+def atlas_db_fixture(tmp_path: Path) -> Path:
+    manifest = tmp_path / "manifest.json"
+    manifest.write_text(
+        json.dumps(
+            {
+                "entries": [
+                    entry("Іван", slug="іван", gloss="Ivan"),
+                    entry("автобус", gloss="bus"),
+                    {"lemma": "Іване", "url_slug": "іване", "form_of": {"url_slug": "іван"}},
+                    {"lemma": "автобусом", "url_slug": "автобусом", "form_of": {"url_slug": "автобус"}},
+                ]
+            },
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+    db = tmp_path / "atlas.db"
+    atlas_db.migrate_manifest(manifest, db)
+    return db
+
+
+def test_db_artifacts_keep_articles_and_aliases_separate_and_deduplicate(tmp_path: Path) -> None:
+    db = atlas_db_fixture(tmp_path)
+    conn = sqlite3.connect(db)
+    conn.execute(
+        "INSERT INTO aliases(alias, kind, source, target_slug, visibility) VALUES (?,?,?,?,?)",
+        ("Іване", "spelling_variant", "test", "іван", "public"),
+    )
+    conn.commit()
+    conn.close()
+
+    articles, aliases, counts = build_atlas_db_search_artifacts(db)
+
+    assert [row["s"] for row in articles] == ["автобус", "іван"]
+    assert all(row["t"] == "lemma" for row in articles)
+    assert {row["a"]: (row["s"], row["h"]) for row in aliases}["Іване"] == ("іван", "Іван")
+    assert {row["a"]: row["s"] for row in aliases}["автобусом"] == "автобус"
+    assert len([row for row in aliases if row["a"] == "Іване" and row["s"] == "іван"]) == 1
+    assert counts["reviewed_entries"] == 2
+    assert counts["public_alias_records"] == 6
+    assert counts["emitted_aliases"] == 5
+    assert counts["deduplicated_aliases"] == 1
+
+
+def test_db_artifact_build_fails_on_the_site_build_entry_model_gates(tmp_path: Path) -> None:
+    db = atlas_db_fixture(tmp_path)
+    conn = sqlite3.connect(db)
+    conn.execute(
+        "INSERT INTO aliases(alias, kind, source, target_slug, visibility) VALUES (?,?,?,?,?)",
+        ("привид", "spelling_variant", "test", "missing", "public"),
+    )
+    conn.commit()
+    conn.close()
+
+    with pytest.raises(ValueError, match="alias_target_integrity failure"):
+        build_atlas_db_search_artifacts(db)
 
 
 def test_build_index_schema_sorting_filters_and_kind_buckets() -> None:
@@ -285,13 +348,17 @@ def test_main_writes_search_meta_and_per_letter_shards(tmp_path: Path) -> None:
     ]
 
 
-def test_committed_browse_counts_match_search_index() -> None:
+def test_committed_browse_records_remain_distinct_from_article_search_entries() -> None:
     search_rows = json.loads((PROJECT_ROOT / DEFAULT_SEARCH_OUT).read_text(encoding="utf-8"))
     meta = json.loads((PROJECT_ROOT / DEFAULT_BROWSE_META_OUT).read_text(encoding="utf-8"))
     letter_counts = meta["letterCounts"]
 
     assert set(letter_counts) == set(UKRAINIAN_ALPHABET)
-    assert meta["total"] == len(search_rows)
+    # Browse keeps legacy route records for compatibility; the DB-derived
+    # search index contains reviewed articles only and is the only surface
+    # whose count is an entry total.
+    assert all("t" in row for row in search_rows)
+    assert meta["total"] >= len(search_rows)
 
     shard_total = 0
     for letter in UKRAINIAN_ALPHABET:
@@ -300,4 +367,4 @@ def test_committed_browse_counts_match_search_index() -> None:
         assert len(rows) == letter_counts[letter]
         shard_total += len(rows)
 
-    assert shard_total == len(search_rows)
+    assert shard_total == meta["total"]

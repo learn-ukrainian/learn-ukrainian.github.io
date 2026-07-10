@@ -7,6 +7,7 @@ import hashlib
 import importlib.util
 import json
 import re
+import sqlite3
 import sys
 import unicodedata
 from collections import defaultdict
@@ -22,6 +23,7 @@ from scripts.etymology.transliterate import transliterate
 
 DEFAULT_MANIFEST = Path("site/src/data/lexicon-manifest.json")
 DEFAULT_SEARCH_OUT = Path("site/src/data/lexicon-search-index.json")
+DEFAULT_SEARCH_ALIASES_OUT = Path("site/src/data/lexicon-search-aliases.json")
 DEFAULT_SEARCH_SHARDS_OUT = Path("site/src/data/lexicon-search-shards.json")
 DEFAULT_SEARCH_SHARD_DIR: Path | None = None
 DEFAULT_BROWSE_META_OUT = Path("site/src/data/lexicon-browse-meta.json")
@@ -32,6 +34,14 @@ CEFR_LEVELS = {"A1", "A2", "B1", "B2", "C1", "C2"}
 UKRAINIAN_ALPHABET = tuple("АБВГҐДЕЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЬЮЯ")
 UKRAINIAN_LETTER_SET = set(UKRAINIAN_ALPHABET)
 CLASSIFICATION_CODES = ("avoid", "rus", "calq", "arch", "dial", "hist", "borr")
+ENTRY_TYPES = (
+    "lemma",
+    "expression",
+    "phraseologism",
+    "proverb",
+    "multiword_term",
+    "proper_name",
+)
 AUTHENTIC_RUSSIANISM_EXEMPTIONS = {
     "authentic-archaism",
     "dialect",
@@ -275,6 +285,154 @@ def build_index(entries: list[dict[str, Any]]) -> list[dict[str, Any]]:
     return sorted(visible, key=lambda row: _uk_sort_key(row["l"]))
 
 
+def _site_build_entry_model_gates(conn: sqlite3.Connection) -> None:
+    """Fail the site artifact build on the entry-model's count/target gates.
+
+    ``atlas_db`` runs the same checks while materializing the database. Repeating
+    them here makes both gates part of the site build, so a stale or hand-edited
+    database cannot reach a public search artifact without an explicit failure.
+    """
+
+    reviewed_entries = conn.execute(
+        "SELECT COUNT(*) FROM articles WHERE review_state = 'approved' AND visibility = 'public'"
+    ).fetchone()[0]
+    public_routes = conn.execute(
+        "SELECT COUNT(*) FROM article_payloads WHERE is_public_route = 1"
+    ).fetchone()[0]
+    form_alias_routes = conn.execute(
+        """SELECT COUNT(*)
+           FROM article_payloads AS payload
+           LEFT JOIN articles AS article ON article.slug = payload.slug
+           WHERE payload.is_public_route = 1 AND article.slug IS NULL"""
+    ).fetchone()[0]
+    routed_reviewed = conn.execute(
+        """SELECT COUNT(*)
+           FROM article_payloads AS payload
+           JOIN articles AS article ON article.slug = payload.slug
+           WHERE payload.is_public_route = 1
+             AND article.review_state = 'approved'
+             AND article.visibility = 'public'"""
+    ).fetchone()[0]
+    if reviewed_entries != public_routes - form_alias_routes or reviewed_entries != routed_reviewed:
+        raise ValueError(
+            "article_vs_alias_count failure: form_of and alias records must not increment "
+            "reviewed entry totals — "
+            f"reviewed entries={reviewed_entries}, public routes={public_routes}, "
+            f"form_of routes={form_alias_routes}, routed approved-public articles={routed_reviewed}"
+        )
+
+    invalid_aliases = conn.execute(
+        """SELECT alias.alias, alias.kind, alias.target_slug
+           FROM aliases AS alias
+           LEFT JOIN articles AS article ON article.slug = alias.target_slug
+           WHERE alias.visibility = 'public'
+             AND (
+                 article.slug IS NULL
+                 OR article.review_state != 'approved'
+                 OR article.visibility != 'public'
+             )
+           ORDER BY alias.target_slug, alias.kind, alias.alias"""
+    ).fetchall()
+    if invalid_aliases:
+        details = "; ".join(
+            f"alias={alias!r} kind={kind!r} target_slug={target!r}"
+            for alias, kind, target in invalid_aliases[:5]
+        )
+        raise ValueError(
+            "alias_target_integrity failure: public aliases must resolve to approved public "
+            f"articles ({len(invalid_aliases)} invalid): {details}"
+        )
+
+
+def build_atlas_db_search_artifacts(
+    db_path: Path,
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]], dict[str, int]]:
+    """Build public article and alias search artifacts from ``atlas.db`` only.
+
+    Article records are the only rows counted as Atlas entries. Alias records
+    retain their own artifact and resolve to an article slug at query time; they
+    are deliberately never copied into the article index.
+    """
+
+    conn = sqlite3.connect(db_path)
+    try:
+        _site_build_entry_model_gates(conn)
+        article_rows = conn.execute(
+            """SELECT slug, display_head, gloss, entry_type, cefr
+               FROM articles
+               WHERE review_state = 'approved' AND visibility = 'public'
+               ORDER BY display_head COLLATE NOCASE, slug"""
+        ).fetchall()
+        articles: list[dict[str, Any]] = []
+        for slug, display_head, gloss, entry_type, cefr in article_rows:
+            row: dict[str, Any] = {
+                "l": display_head,
+                "s": slug,
+                "g": _clean_text(gloss),
+                "r": transliterate(display_head),
+                "t": entry_type,
+            }
+            level = _clean_text(cefr)
+            if level:
+                row["c"] = level
+            articles.append(row)
+        articles.sort(key=lambda row: _uk_sort_key(row["l"]))
+
+        # The schema permits the same approved alias for a target through
+        # different kinds. Public search needs one resolver row per normalized
+        # alias+target pair, with deterministic kind selection.
+        alias_rows = conn.execute(
+            """SELECT alias.alias, alias.kind, alias.target_slug, article.display_head
+               FROM aliases AS alias
+               JOIN articles AS article ON article.slug = alias.target_slug
+               WHERE alias.visibility = 'public'
+                 AND article.review_state = 'approved'
+                 AND article.visibility = 'public'
+               ORDER BY alias.alias COLLATE NOCASE, alias.target_slug, alias.kind"""
+        ).fetchall()
+        aliases: list[dict[str, Any]] = []
+        seen_alias_targets: set[tuple[str, str]] = set()
+        for alias, kind, target_slug, target_head in alias_rows:
+            key = (_normalized_search_text(alias), target_slug)
+            if not key[0] or key in seen_alias_targets:
+                continue
+            seen_alias_targets.add(key)
+            aliases.append(
+                {
+                    "a": alias,
+                    "k": kind,
+                    "s": target_slug,
+                    "h": target_head,
+                }
+            )
+        aliases.sort(key=lambda row: (_uk_sort_key(row["a"]), row["s"], row["k"]))
+
+        by_type = {entry_type: 0 for entry_type in ENTRY_TYPES}
+        by_type.update(
+            {
+                entry_type: count
+                for entry_type, count in conn.execute(
+                    """SELECT entry_type, COUNT(*)
+                       FROM articles
+                       WHERE review_state = 'approved' AND visibility = 'public'
+                       GROUP BY entry_type"""
+                )
+            }
+        )
+        public_alias_records = conn.execute(
+            "SELECT COUNT(*) FROM aliases WHERE visibility = 'public'"
+        ).fetchone()[0]
+        return articles, aliases, {
+            "reviewed_entries": len(articles),
+            "public_alias_records": public_alias_records,
+            "emitted_aliases": len(aliases),
+            "deduplicated_aliases": public_alias_records - len(aliases),
+            **{f"entry_type_{entry_type}": count for entry_type, count in by_type.items()},
+        }
+    finally:
+        conn.close()
+
+
 def build_search_shards(rows: list[dict[str, Any]]) -> tuple[dict[str, Any], dict[str, list[dict[str, Any]]]]:
     shard_rows: dict[str, dict[str, dict[str, Any]]] = defaultdict(dict)
     prefix_map: dict[str, str] = {}
@@ -381,6 +539,11 @@ def write_index(rows: list[dict[str, Any]], out_path: Path) -> None:
     out_path.write_bytes(_json_bytes(rows))
 
 
+def write_aliases(rows: list[dict[str, Any]], out_path: Path) -> None:
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    out_path.write_bytes(_json_bytes(rows))
+
+
 def write_search_shards(
     payload: Mapping[str, Any],
     shards: Mapping[str, list[dict[str, Any]]],
@@ -422,13 +585,39 @@ def write_browse_outputs(
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--manifest", type=Path, default=DEFAULT_MANIFEST)
+    parser.add_argument(
+        "--db",
+        type=Path,
+        help="Build public search artifacts from atlas.db instead of the legacy manifest.",
+    )
     parser.add_argument("--out", type=Path, default=DEFAULT_SEARCH_OUT)
+    parser.add_argument("--aliases-out", type=Path, default=DEFAULT_SEARCH_ALIASES_OUT)
     parser.add_argument("--search-shards-out", type=Path, default=DEFAULT_SEARCH_SHARDS_OUT)
     parser.add_argument("--search-shard-dir", type=Path, default=DEFAULT_SEARCH_SHARD_DIR)
     parser.add_argument("--browse-meta-out", type=Path, default=DEFAULT_BROWSE_META_OUT)
     parser.add_argument("--browse-flagged-out", type=Path, default=DEFAULT_BROWSE_FLAGGED_OUT)
     parser.add_argument("--browse-dir", type=Path, default=DEFAULT_BROWSE_DIR)
     args = parser.parse_args(argv)
+
+    if args.db is not None:
+        rows, aliases, counts = build_atlas_db_search_artifacts(args.db)
+        search_shards, search_shard_rows = build_search_shards(rows)
+        write_index(rows, args.out)
+        write_aliases(aliases, args.aliases_out)
+        write_search_shards(
+            search_shards,
+            search_shard_rows,
+            args.search_shards_out,
+            args.search_shard_dir,
+        )
+        print(
+            "atlas search artifacts: "
+            f"reviewed_articles={counts['reviewed_entries']} "
+            f"public_alias_records={counts['public_alias_records']} "
+            f"emitted_aliases={counts['emitted_aliases']} "
+            f"alias_deduplication={counts['deduplicated_aliases']}"
+        )
+        return 0
 
     manifest = json.loads(args.manifest.read_text(encoding="utf-8"))
     entries = manifest.get("entries", [])
