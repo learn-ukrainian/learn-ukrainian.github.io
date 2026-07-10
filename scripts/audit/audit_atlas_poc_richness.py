@@ -105,7 +105,11 @@ def rendered_sections(entry: dict[str, Any]) -> set[str]:
         sections.add("etymology")
 
     morphology = enrichment.get("morphology") if isinstance(enrichment.get("morphology"), dict) else {}
-    if _nonempty_items(morphology.get("forms")) or isinstance(morphology.get("paradigm"), dict):
+    if (
+        _nonempty_items(morphology.get("forms"))
+        or _nonempty_items(morphology.get("marked_forms"))
+        or isinstance(morphology.get("paradigm"), dict)
+    ):
         sections.add("morphology")
 
     synonyms = extra_sections.get("synonyms") if isinstance(extra_sections.get("synonyms"), dict) else {}
