@@ -1,0 +1,27 @@
+# Source registry for wiki/figures/anatolii-kos-anatolskyi.md
+# Referenced inline as [S1], [S2], ...
+sources:
+  - id: S1
+    file: https://esu.com.ua/article-5473
+    type: external
+    title: Кос-Анатольський Анатолій Йосипович — Енциклопедія Сучасної України
+    url: https://esu.com.ua/article-5473
+    notes: T1; live 200 on 2026-07-10; core dates, education, genres, and institutional work.
+  - id: S2
+    file: https://www.history.org.ua/?termin=Kos_Anatolskii_A
+    type: external
+    title: Кос-Анатольський Анатолій Йосипович — Енциклопедія історії України
+    url: https://www.history.org.ua/?termin=Kos_Anatolskii_A
+    notes: T1; live 200 on 2026-07-10; civic letters and the unresolved law-faculty date.
+  - id: S3
+    file: https://knpu.gov.ua/winners/kos-anatolskyj-anatolij-josypovych/
+    type: external
+    title: Кос-Анатольський Анатолій Йосипович — Комітет Шевченківської премії
+    url: https://knpu.gov.ua/winners/kos-anatolskyj-anatolij-josypovych/
+    notes: T2; live 200 on 2026-07-10; 1980 prize and vocal-work framing.
+  - id: S4
+    file: https://lib.knmau.com.ua/анатолій-йосипович-кос-анатольський/
+    type: external
+    title: Анатолій Йосипович Кос-Анатольський — бібліотека НМАУ
+    url: https://lib.knmau.com.ua/анатолій-йосипович-кос-анатольський/
+    notes: T2; live 200 on 2026-07-10; score holdings for Заграва, Орися, and Сойчине крило.

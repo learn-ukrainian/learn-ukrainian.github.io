@@ -1,0 +1,35 @@
+# Source registry for wiki/figures/myroslav-skoryk.md
+# Referenced inline as [S1], [S2], ...
+sources:
+  - id: S1
+    file: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CS%5CK%5CSkorykMyroslav.htm
+    tier: T1
+    title: Skoryk, Myroslav — Internet Encyclopedia of Ukraine
+    type: external
+    url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CS%5CK%5CSkorykMyroslav.htm
+    notes: Tier-1 biographical entry; supports exile, education, works, the Paradzhanov-film link, and named students.
+  - id: S2
+    file: https://www.history.org.ua/?termin=Skoryk
+    tier: T1
+    title: СКОРИК Мирослав Михайлович — Енциклопедія історії України
+    type: external
+    url: https://www.history.org.ua/?termin=Skoryk
+    notes: >-
+      Tier-1 biographical entry; supports institutional roles, education, style
+      framing, and its stated death-place record.
+  - id: S3
+    file: https://composersukraine.org/index.php?id=1371
+    tier: T2
+    title: СКОРИК Мирослав Михайлович — Національна спілка композиторів України
+    type: external
+    url: https://composersukraine.org/index.php?id=1371
+    notes: >-
+      Tier-2 institutional biography; supports Ukrainian institutional work,
+      major works, and its stated death-place record.
+  - id: S4
+    file: https://knpu.gov.ua/winners/skoryk-myroslav-mykhajlovych/
+    tier: T2
+    title: Скорик Мирослав Михайлович — Комітет з Національної премії України імені Тараса Шевченка
+    type: external
+    url: https://knpu.gov.ua/winners/skoryk-myroslav-mykhajlovych/
+    notes: Tier-2 institutional profile; supports awards and a major-works inventory.

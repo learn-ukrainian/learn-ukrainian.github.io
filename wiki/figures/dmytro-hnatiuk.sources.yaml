@@ -1,0 +1,27 @@
+# Source registry for wiki/figures/dmytro-hnatiuk.md
+# Referenced inline as [S1], [S2], ...
+sources:
+  - id: S1
+    file: https://esu.com.ua/article-30632
+    type: external
+    title: Гнатюк Дмитро Михайлович — Енциклопедія Сучасної України
+    url: https://esu.com.ua/article-30632
+    notes: T1; live 200 on 2026-07-10; biography, repertoire, pedagogy, and directing.
+  - id: S2
+    file: https://www.history.org.ua/?termin=Gnatyuk_D
+    type: external
+    title: Гнатюк Дмитро Михайлович — Енциклопедія історії України
+    url: https://www.history.org.ua/?termin=Gnatyuk_D
+    notes: T1; live 200 on 2026-07-10; career arc, directing, and public roles.
+  - id: S3
+    file: https://knpu.gov.ua/lehenda-ukrainskoho-opernoho-spivu/
+    type: external
+    title: Легенда українського оперного співу — Комітет Шевченківської премії
+    url: https://knpu.gov.ua/lehenda-ukrainskoho-opernoho-spivu/
+    notes: T2; live 200 on 2026-07-10; institutional reception and birthplace wording.
+  - id: S4
+    file: https://opera.com.ua/persons/gnatyuk-dmitro
+    type: external
+    title: Гнатюк Дмитро — Національна опера України
+    url: https://opera.com.ua/persons/gnatyuk-dmitro
+    notes: T2; live 200 on 2026-07-10; institutional role and repertoire memory.

@@ -1,0 +1,37 @@
+# Source registry for wiki/figures/anatolii-solovianenko.md
+# Referenced inline as [S1], [S2], ...
+sources:
+  - id: S1
+    file: https://www.history.org.ua/?termin=Solovianenko_A
+    tier: T1
+    title: СОЛОВ'ЯНЕНКО Анатолій Борисович — Енциклопедія історії України
+    type: external
+    url: https://www.history.org.ua/?termin=Solovianenko_A
+    notes: >-
+      Tier-1 biographical entry; supports life dates, formation, international
+      career, and its limited wording on the 1996 dismissal.
+  - id: S2
+    file: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CS%5CO%5CSolovianenkoAnatolii.htm
+    tier: T1
+    title: Solovianenko, Anatolii — Internet Encyclopedia of Ukraine
+    type: external
+    url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CS%5CO%5CSolovianenkoAnatolii.htm
+    notes: >-
+      Tier-1 biographical entry; supports education, repertoire, and a cautious
+      international-career frame without role-level claims.
+  - id: S3
+    file: https://knpu.gov.ua/winners/solov-ianenko-anatolij-borysovych/
+    tier: T2
+    title: Солов'яненко Анатолій Борисович — Комітет з Національної премії України імені Тараса Шевченка
+    type: external
+    url: https://knpu.gov.ua/winners/solov-ianenko-anatolij-borysovych/
+    notes: Tier-2 institutional profile; supports the 1997 Shevchenko Prize and emphasis on Ukrainian opera roles.
+  - id: S4
+    file: https://opera.com.ua/persons/koryfeyi/solovyanenko-anatoliy
+    tier: T2
+    title: СОЛОВ'ЯНЕНКО Анатолій — Національна опера України
+    type: external
+    url: https://opera.com.ua/persons/koryfeyi/solovyanenko-anatoliy
+    notes: >-
+      Tier-2 institutional profile; supports the National Opera soloist period,
+      repertoire, touring, and recordings context.
