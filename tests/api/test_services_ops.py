@@ -153,6 +153,12 @@ def cleanup_pids_and_logs():
     elif api_start_file.exists():
         api_start_file.unlink()
 
+@pytest.mark.skipif(
+    sys.platform != "darwin",
+    reason="services.sh is macOS-targeted local-ops tooling; its process-lifecycle "
+    "behavior diverges on Linux CI (issue #4930 tracks the divergence). The "
+    "platform-neutral logic tests (preload, guards, missing-lsof) run everywhere.",
+)
 def test_pid_reconciliation(temp_services_sh, mock_lsof_env):
     """Test stale pid file / listener interactions hermetically."""
     script_path, port = temp_services_sh
@@ -307,6 +313,12 @@ def test_log_rotation(temp_services_sh, mock_lsof_env):
         if len(orig_content) > 0:
             api_log_file.write_bytes(orig_content)
 
+@pytest.mark.skipif(
+    sys.platform != "darwin",
+    reason="services.sh is macOS-targeted local-ops tooling; its process-lifecycle "
+    "behavior diverges on Linux CI (issue #4930 tracks the divergence). The "
+    "platform-neutral logic tests (preload, guards, missing-lsof) run everywhere.",
+)
 def test_crashloop_backoff_clean_vs_crash(temp_services_sh, mock_lsof_env):
     """Verify stop-then-start within 60s does NOT trip backoff, but start-after-crash within 60s DOES."""
     script_path, port = temp_services_sh
