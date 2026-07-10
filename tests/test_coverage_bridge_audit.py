@@ -39,8 +39,13 @@ class TestConfig:
     def test_cli_paths_are_correct_types(self):
         from scripts.ai_agent_bridge._config import AGY_CLI, CLAUDE_CMD, GEMINI_CLI
         assert isinstance(CLAUDE_CMD, list)
-        assert CLAUDE_CMD[0] == "npx"
-        assert "@anthropic-ai/claude-code" in CLAUDE_CMD[1]
+        # Import-time resolution contract (#4875/#4880): native `claude`
+        # binary when present, else the npx fallback. Machine-dependent
+        # (green in CI, red on any dev machine with a native install if
+        # pinned to one shape) — so accept exactly these two shapes.
+        assert CLAUDE_CMD[0].endswith("claude") or (
+            CLAUDE_CMD[0] == "npx" and "@anthropic-ai/claude-code" in CLAUDE_CMD[1]
+        )
         assert isinstance(AGY_CLI, str)
         assert isinstance(GEMINI_CLI, str)
 

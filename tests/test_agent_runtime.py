@@ -3458,6 +3458,9 @@ def test_claude_adapter_default_prefix_falls_back_to_npx_when_local_missing(tmp_
         return {"npx": "/usr/local/bin/npx"}.get(name)
 
     monkeypatch.setattr(claude_adapter_mod.shutil, "which", _which)
+    # Hermetic: the dev machine may have a real ~/.local/bin/claude that the
+    # resolver's second probe would otherwise find.
+    monkeypatch.setattr(claude_adapter_mod.Path, "home", staticmethod(lambda: tmp_path))
 
     adapter = ClaudeAdapter()
     plan = adapter.build_invocation(
@@ -3479,6 +3482,8 @@ def test_claude_adapter_default_prefix_raises_when_neither_present(tmp_path, mon
     from agent_runtime.adapters import claude as claude_adapter_mod
 
     monkeypatch.setattr(claude_adapter_mod.shutil, "which", lambda _name: None)
+    # Hermetic: the dev machine may have a real ~/.local/bin/claude.
+    monkeypatch.setattr(claude_adapter_mod.Path, "home", staticmethod(lambda: tmp_path))
 
     adapter = ClaudeAdapter()
     with pytest.raises(RuntimeError, match=r"neither a `claude` binary nor `npx`"):
@@ -3491,6 +3496,26 @@ def test_claude_adapter_default_prefix_raises_when_neither_present(tmp_path, mon
             session_id=None,
             tool_config=None,
         )
+
+
+def test_claude_adapter_default_bin_probes_home_install_dir(tmp_path, monkeypatch):
+    """The resolver's second probe: when PATH misses, the default native
+    install target ``~/.local/bin/claude`` is used if present (mirrors
+    ai_agent_bridge._config + start-claude.sh:33). Reviewer follow-up on
+    #4875 (review-4881)."""
+    from agent_runtime.adapters import claude as claude_adapter_mod
+
+    monkeypatch.setattr(claude_adapter_mod.shutil, "which", lambda _name: None)
+    monkeypatch.setattr(claude_adapter_mod.Path, "home", staticmethod(lambda: tmp_path))
+
+    # No file at the install target -> no native binary resolved.
+    assert claude_adapter_mod._default_claude_bin() is None
+
+    install_dir = tmp_path / ".local/bin"
+    install_dir.mkdir(parents=True)
+    (install_dir / "claude").write_text("#!/bin/sh\n")
+
+    assert claude_adapter_mod._default_claude_bin() == str(install_dir / "claude")
 
 
 def test_claude_adapter_explicit_cmd_prefix_override_unchanged(tmp_path, monkeypatch):

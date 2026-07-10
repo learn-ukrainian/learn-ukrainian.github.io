@@ -124,9 +124,25 @@ def _ensure_supported_claude_cli_version(cmd_prefix: tuple[str, ...]) -> tuple[i
         raise RuntimeError(
             "Claude CLI < 2.1.116 inherits known quality regressions fixed "
             f"on 2026-04-23 (see {_POSTMORTEM_URL}). Upgrade with: "
-            "npm install -g @anthropic-ai/claude-cli@latest"
+            "`claude update` (native install) or "
+            "`npm install -g @anthropic-ai/claude-code@latest`"
         )
     return version
+
+
+def _default_claude_bin() -> str | None:
+    """Resolve the native ``claude`` binary: PATH first, then the default
+    install target ``~/.local/bin/claude`` (present even when the caller's
+    PATH omits it — mirrors ai_agent_bridge._config and start-claude.sh:33).
+    Returns None when no native install exists. (deepseek review-4881
+    follow-up on #4875.)"""
+    found = shutil.which("claude")
+    if found:
+        return found
+    default = Path.home() / ".local/bin/claude"
+    if default.is_file():
+        return str(default)
+    return None
 
 
 class ClaudeAdapter:
@@ -198,7 +214,7 @@ class ClaudeAdapter:
         if cmd_prefix:
             cmd = [cmd_prefix] if isinstance(cmd_prefix, str) else list(cmd_prefix)
         else:
-            claude_bin = shutil.which("claude")
+            claude_bin = _default_claude_bin()
             if claude_bin:
                 cmd = [claude_bin]
             elif shutil.which("npx"):

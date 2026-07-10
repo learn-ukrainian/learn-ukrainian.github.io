@@ -30,7 +30,13 @@ PID_DIR = Path(
 # native-installer shim — `npx @latest` exits rc=1 with "Error: claude native
 # binary not installed" and empty stdout, killing every bridge Claude call at
 # spawn). npx stays as the fallback for machines without a native install.
-_CLAUDE_BIN = shutil.which("claude")
+# Second probe: the default native install target ~/.local/bin/claude covers
+# callers whose PATH omits it (mirrors start-claude.sh:33; review-4881).
+_CLAUDE_BIN = shutil.which("claude") or (
+    str(Path.home() / ".local/bin/claude")
+    if (Path.home() / ".local/bin/claude").is_file()
+    else None
+)
 CLAUDE_CMD = [_CLAUDE_BIN] if _CLAUDE_BIN else ["npx", "@anthropic-ai/claude-code@latest"]
 AGY_CLI = shutil.which("agy") or str(Path.home() / ".local/bin/agy")
 GEMINI_CLI = shutil.which("gemini") or "gemini"
