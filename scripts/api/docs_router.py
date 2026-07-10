@@ -222,7 +222,7 @@ def _assert_under_root(full_path: Path, root_path: Path) -> None:
 
 
 def _directory_listing(path: str, root_key: str, root_path: Path, remainder: str) -> dict:
-    full_path = safe_join(root_path, remainder) if remainder else root_path.resolve()
+    full_path = safe_join(root_path, remainder) if remainder else safe_join(root_path)
     _assert_under_root(full_path, root_path)
     items = []
     for entry in sorted(full_path.iterdir()):
@@ -412,7 +412,7 @@ async def serve_artifact(
     if _is_hidden_path(remainder):
         raise HTTPException(status_code=403, detail="Hidden files are not served as documentation artifacts")
     try:
-        full_path = safe_join(root_path, remainder) if remainder else root_path.resolve()
+        full_path = safe_join(root_path, remainder) if remainder else safe_join(root_path)
     except ValueError as e:
         raise HTTPException(status_code=403, detail=str(e)) from e
     _assert_under_root(full_path, root_path)

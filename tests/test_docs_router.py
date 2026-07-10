@@ -213,6 +213,30 @@ def test_docs_router_directory_listing_includes_file_metadata(client: TestClient
     assert any({"name", "size", "mtime"} <= set(item) for item in body["items"])
 
 
+def test_docs_router_root_listing_retains_logical_symlink_path(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+):
+    live_root = tmp_path / "live" / "docs"
+    logical_root = tmp_path / ".runtime" / "api" / "releases" / ("a" * 40) / "docs"
+    live_root.mkdir(parents=True)
+    (live_root / "report.md").write_text("# Report\n", encoding="utf-8")
+    logical_root.parent.mkdir(parents=True)
+    logical_root.symlink_to(live_root, target_is_directory=True)
+    asserted_paths: list[Path] = []
+
+    def record_assertion(full_path: Path, _root_path: Path) -> None:
+        asserted_paths.append(full_path)
+
+    monkeypatch.setattr(docs_router, "_assert_under_root", record_assertion)
+
+    listing = docs_router._directory_listing("safe", "safe", logical_root, "")
+
+    assert listing["items_count"] == 1
+    assert asserted_paths[0] == logical_root
+    assert asserted_paths[0] != logical_root.resolve()
+
+
 @pytest.mark.parametrize(
     "path",
     [

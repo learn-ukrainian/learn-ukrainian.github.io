@@ -18,6 +18,7 @@ import pytest
 from scripts.api import release_snapshot
 from scripts.git_context import sanitized_git_env
 from scripts.path_safety import safe_join
+from scripts.release_layout import MANIFEST_NAME, is_release_root
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 # Prefer the repo venv when present; fall back to the running interpreter so
@@ -279,6 +280,22 @@ def test_safe_join_allows_declared_live_data_and_preserves_logical_path(tmp_path
     assert path.resolve() == repo_root / "curriculum" / "l2-uk-en" / "a1"
 
 
+def test_release_root_attestation_requires_release_layout(tmp_path: Path) -> None:
+    repo_root, sha = _create_snapshot_repo(tmp_path)
+    release_dir, _ = release_snapshot.build_release(repo_root, sha)
+    fake_root = tmp_path / sha
+    outside = tmp_path / "outside"
+    fake_root.mkdir()
+    outside.mkdir()
+    (fake_root / MANIFEST_NAME).write_text("{}\n", encoding="utf-8")
+    (fake_root / "curriculum").symlink_to(outside, target_is_directory=True)
+
+    assert is_release_root(release_dir)
+    assert not is_release_root(fake_root)
+    with pytest.raises(ValueError, match="escapes"):
+        safe_join(fake_root, "curriculum", "secret.txt")
+
+
 def test_safe_join_rejects_nested_undeclared_symlink_from_live_data(tmp_path: Path) -> None:
     repo_root, sha = _create_snapshot_repo(tmp_path)
     outside = tmp_path / "outside"
@@ -288,6 +305,20 @@ def test_safe_join_rejects_nested_undeclared_symlink_from_live_data(tmp_path: Pa
 
     with pytest.raises(ValueError, match="escapes"):
         safe_join(release_dir, "curriculum", "escape", "secret.txt")
+
+
+def test_safe_join_rejects_planted_manifest_live_data_escape(tmp_path: Path) -> None:
+    repo_root, sha = _create_snapshot_repo(tmp_path)
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    planted = repo_root / "curriculum" / "planted"
+    planted.mkdir()
+    (planted / MANIFEST_NAME).write_text("{}\n", encoding="utf-8")
+    (planted / "curriculum").symlink_to(outside, target_is_directory=True)
+    release_dir, _ = release_snapshot.build_release(repo_root, sha)
+
+    with pytest.raises(ValueError, match="escapes"):
+        safe_join(release_dir, "curriculum", "planted", "curriculum", "secret.txt")
 
 
 def test_safe_join_rejects_declared_live_data_parent_traversal(tmp_path: Path) -> None:

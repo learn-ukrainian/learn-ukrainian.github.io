@@ -12,7 +12,6 @@ import argparse
 import hashlib
 import json
 import os
-import re
 import shutil
 import subprocess
 import tarfile
@@ -22,32 +21,14 @@ from pathlib import Path
 from typing import Any
 
 from scripts.git_context import sanitized_git_env
-
-RELEASE_SHA_RE = re.compile(r"^[0-9a-f]{40}$")
-RELEASES_RELATIVE_PATH = Path(".runtime") / "api" / "releases"
-MANIFEST_NAME = ".release-manifest.json"
-ARCHIVE_PATHS: tuple[str, ...] = ("scripts", "schemas")
-
-# ``scripts/`` and ``schemas/`` are immutable code inputs. Everything here is
-# intentionally a live-data symlink; add entries only after auditing an API
-# path access. ``tests/fixtures`` is nested because tests exercise a release
-# directory without making the complete test suite part of each snapshot.
-LIVE_DATA_PATHS: tuple[str, ...] = (
-    "curriculum",
-    "data",
-    "audit",
-    "batch_state",
-    "docs",
-    "wiki",
-    "logs",
-    "site",
-    "tests/fixtures",
-    "dashboards",
-    ".mcp",
-    "agents_extensions",
-    "plans",
-    ".pids",
+from scripts.release_layout import (
+    LIVE_DATA_PATHS,
+    MANIFEST_NAME,
+    RELEASE_SHA_RE,
+    RELEASES_RELATIVE_PATH,
 )
+
+ARCHIVE_PATHS: tuple[str, ...] = ("scripts", "schemas")
 
 
 class ReleaseSnapshotError(RuntimeError):

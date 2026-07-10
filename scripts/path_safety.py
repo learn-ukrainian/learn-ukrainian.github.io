@@ -5,7 +5,7 @@ from __future__ import annotations
 import os
 from pathlib import Path
 
-from scripts.api.release_snapshot import LIVE_DATA_PATHS, MANIFEST_NAME
+from scripts.release_layout import LIVE_DATA_PATHS, MANIFEST_NAME, is_release_root
 
 
 def _validate_component(value: str) -> None:
@@ -25,25 +25,32 @@ def _is_within(root: Path, target: Path) -> bool:
     return common == str(root)
 
 
-def _declared_live_data_roots(logical_target: Path) -> tuple[Path, ...]:
+def _declared_live_data_roots(logical_base: Path) -> tuple[Path, ...]:
     """Return the resolved, explicitly approved release data targets.
 
-    ``LIVE_DATA_PATHS`` is the release layout's single source of truth.  A
-    manifest marks the ancestor as a completed release, preventing an
-    unrelated symlink merely named ``curriculum`` or ``docs`` from acquiring
-    this exception. The logical paths remain snapshot-relative while their
-    declared symlink targets are the only additional resolved locations that
-    ``safe_join`` may accept.
+    ``LIVE_DATA_PATHS`` is the release layout's single source of truth. Only
+    the closest manifest-bearing release root above the trusted base may grant
+    this exception. This keeps a manifest or symlink planted below a requested
+    target from acquiring a live-data exception. The logical paths remain
+    snapshot-relative while their declared symlink targets are the only
+    additional resolved locations that ``safe_join`` may accept.
     """
-    roots: list[Path] = []
-    for ancestor in logical_target.parents:
-        if not (ancestor / MANIFEST_NAME).is_file():
-            continue
-        for relative_name in LIVE_DATA_PATHS:
-            live_root = ancestor / relative_name
-            if live_root.is_symlink():
-                roots.append(live_root.resolve())
-    return tuple(roots)
+    release_root = next(
+        (
+            ancestor
+            for ancestor in (logical_base, *logical_base.parents)
+            if is_release_root(ancestor) and (ancestor / MANIFEST_NAME).is_file()
+        ),
+        None,
+    )
+    if release_root is None:
+        return ()
+
+    return tuple(
+        live_root.resolve()
+        for relative_name in LIVE_DATA_PATHS
+        if (live_root := release_root / relative_name).is_symlink()
+    )
 
 
 def safe_join(base: Path, *parts: str | Path) -> Path:
@@ -89,7 +96,7 @@ def safe_join(base: Path, *parts: str | Path) -> Path:
     # A release has a deliberately small set of live-data symlinks.  A target
     # may be under the resolved base or one of those declared destinations;
     # every other resolved symlink escape remains forbidden.
-    allowed_roots = (resolved_base, *_declared_live_data_roots(logical_target))
+    allowed_roots = (resolved_base, *_declared_live_data_roots(logical_base))
     if not any(_is_within(root, resolved_target) for root in allowed_roots):
         raise ValueError("Path escapes the configured root")
 
