@@ -27,6 +27,8 @@ from typing import Any
 
 from fastapi import APIRouter, Query
 
+from scripts.orchestration import issue_stream_audit as audit
+
 from .config import PROJECT_ROOT
 
 router = APIRouter(tags=["issues"])
@@ -195,8 +197,6 @@ async def issues_streams(
     """
 
     def _load() -> dict[str, Any]:
-        from scripts.orchestration import issue_stream_audit as audit
-
         try:
             if fresh:
                 return audit.run_audit()

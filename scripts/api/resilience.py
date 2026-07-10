@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import asyncio
 import inspect
 import logging
 import os
@@ -175,8 +176,6 @@ async def resilience_middleware(request: Request, call_next):
 
     start = time.perf_counter()
     try:
-        import asyncio
-
         response = await asyncio.wait_for(call_next(request), timeout=request_timeout_s())
     except TimeoutError:
         elapsed_ms = (time.perf_counter() - start) * 1000

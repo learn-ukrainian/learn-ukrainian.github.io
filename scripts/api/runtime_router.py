@@ -19,6 +19,7 @@ from .config import BATCH_STATE_DIR
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
+from agent_runtime.adapters.gemini import has_gemini_oauth_credentials, resolve_gemini_auth_mode
 from agent_runtime.usage import has_headroom
 
 router = APIRouter(tags=["runtime"])
@@ -306,16 +307,8 @@ async def runtime_auth():
     All information is derived from env + filesystem — no subprocess,
     no network call. Cheap and safe to poll.
     """
-    from datetime import UTC, datetime
-    from pathlib import Path as _Path
-
-    from agent_runtime.adapters.gemini import (
-        has_gemini_oauth_credentials,
-        resolve_gemini_auth_mode,
-    )
-
     env = os.environ
-    home = _Path.home()
+    home = Path.home()
 
     # Sanitize GEMINI_AUTH_MODE rather than echo it raw. Reviewer
     # Codex BLOCKER on #1312 pre-merge: this endpoint's contract says

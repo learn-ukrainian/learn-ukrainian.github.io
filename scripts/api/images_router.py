@@ -171,7 +171,7 @@ class _PDFPool:
                 self._pool.move_to_end(pdf_path)
                 return self._pool[pdf_path]
 
-            import pymupdf
+            import pymupdf  # noqa: PLC0415 — optional PDF rendering dependency
             doc = pymupdf.open(pdf_path)
 
             if len(self._pool) >= self._max_size:
@@ -216,7 +216,7 @@ def _read_pdf_page_count(pdf_path: str) -> int:
         return cached[2]
 
     try:
-        import pymupdf
+        import pymupdf  # noqa: PLC0415 — optional PDF rendering dependency
 
         doc = pymupdf.open(pdf_path)
         try:
@@ -329,7 +329,11 @@ async def get_page_context(pdf_stem: str, page_num: int):
         raise HTTPException(400, f"Page {page_num} out of range (1-{len(doc)})")
 
     def _extract(doc, page_num):
-        from rag.poc_pair_page import SCALE, extract_images, extract_text_blocks
+        from rag.poc_pair_page import (  # noqa: PLC0415  — optional RAG dependency
+            SCALE,
+            extract_images,
+            extract_text_blocks,
+        )
         page = doc[page_num - 1]
         text_blocks = extract_text_blocks(page)
         images = extract_images(page)
@@ -398,7 +402,7 @@ async def render_page_png(pdf_stem: str, page_num: int):
         raise HTTPException(400, f"Page {page_num} out of range (1-{len(doc)})")
 
     def _render(doc, page_num):
-        from rag.poc_pair_page import RENDER_DPI
+        from rag.poc_pair_page import RENDER_DPI  # noqa: PLC0415  — optional RAG dependency
         page = doc[page_num - 1]
         pix = page.get_pixmap(dpi=RENDER_DPI)
         return pix.tobytes("png")

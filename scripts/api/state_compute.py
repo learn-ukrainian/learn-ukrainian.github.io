@@ -16,6 +16,13 @@ import yaml
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from common.thresholds import REVIEW_PASS_FLOOR
+from research_quality import (
+    DIMENSION_SHORT_LABELS,
+    assess_research_compat,
+    find_research_path,
+    get_dimensions,
+    get_rubric,
+)
 
 from scripts.audit.llm_qg_store import (
     current_payload_for_module,
@@ -65,14 +72,6 @@ def severity_key(m: dict) -> int:
 
 def compute_research_detail(track_id: str, level_cfg: dict, min_score: int) -> dict:
     """Compute per-module research quality for a track."""
-    from research_quality import (
-        DIMENSION_SHORT_LABELS,
-        assess_research_compat,
-        find_research_path,
-        get_dimensions,
-        get_rubric,
-    )
-
     track_dir = CURRICULUM_ROOT / level_cfg["path"]
     plan_slugs = get_plan_slugs(track_id)
     rubric_name = get_rubric(track_id)
@@ -157,7 +156,6 @@ def _get_friction_data(orch_dir: Path) -> dict:
     if not friction_path.exists():
         return {"active": 0, "resolved": 0, "items": []}
     try:
-        import yaml
         data = yaml.safe_load(friction_path.read_text("utf-8"))
         frictions = data.get("frictions", []) if data else []
         active = [f for f in frictions if f.get("status") == "active"]
@@ -210,7 +208,6 @@ def _get_stress_issues(orch_dir: Path) -> dict:
     if not screen_path.exists():
         return {"mismatches": 0, "unknown": 0, "details": []}
     try:
-        import json
         data = json.loads(screen_path.read_text("utf-8"))
         issues = data.get("deterministic_issues", [])
         stress = [i for i in issues if i.get("type", "").startswith("STRESS_")]
@@ -231,7 +228,6 @@ def _get_quick_verify(orch_dir: Path) -> dict:
     if not qv_path.exists():
         return {}
     try:
-        import json
         return json.loads(qv_path.read_text("utf-8"))
     except Exception:
         return {}
@@ -431,7 +427,7 @@ def compute_module_detail(track_id: str, num: int, level_cfg: dict) -> dict:
 def get_phases_for_version(orch_dir, version, *, state_data: dict | None = None):
     """Get phase status dict appropriate for the pipeline version."""
     if version == "v6":
-        from .state_build import V6_PHASE_ORDER
+        from .state_build import V6_PHASE_ORDER  # noqa: PLC0415 — breaks state-build import cycle
         v6 = state_data if state_data is not None else read_v2_state(orch_dir)
         phases = v6.get("phases", {})
         return {

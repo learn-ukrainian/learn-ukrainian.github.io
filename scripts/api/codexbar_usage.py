@@ -14,6 +14,8 @@ from concurrent.futures import ThreadPoolExecutor
 from datetime import UTC, datetime, timedelta
 from typing import Any, Optional
 
+from scripts.api.state_helpers import cache_get_with_age, cache_set
+
 WEEKLY_WINDOW_MINUTES = 10080
 # Reject monthly/long windows when no exact weekly window exists (e.g. 43200 min).
 WEEKLY_WINDOW_TOLERANCE_MINUTES = 5040
@@ -40,8 +42,6 @@ def refresh_provider_usage_data(providers: Iterable[str], *, timeout_s: float = 
     helper is reserved for callers, such as the dispatch budget guard, which
     explicitly need a bounded fresh verdict before acting.
     """
-    from scripts.api.state_helpers import cache_set
-
     unique_providers = tuple(dict.fromkeys(providers))
     if not unique_providers:
         return {}
@@ -262,8 +262,6 @@ def trigger_background_refresh() -> None:
 
 
 def _run_all_refreshes() -> None:
-    from scripts.api.state_helpers import cache_set
-
     # List of unique providers to refresh
     providers = ["claude", "codex", "cursor", "gemini", "grok"]
     for provider in providers:
@@ -283,8 +281,6 @@ def get_provider_usage_data(provider: str) -> dict[str, Any]:
     Triggers a background refresh on cache miss/expiration.
     Returns a normalized record indicating stale/unknown state.
     """
-    from scripts.api.state_helpers import cache_get_with_age
-
     cache_key = f"codexbar_usage:{provider}"
     cached = cache_get_with_age(cache_key, ttl=300.0)
 

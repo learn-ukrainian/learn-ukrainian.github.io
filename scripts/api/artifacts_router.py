@@ -21,6 +21,7 @@ checks. Codex flagged that mixing these would muddy the contract.
 from __future__ import annotations
 
 import asyncio
+import json
 import re
 from pathlib import Path
 from typing import Any
@@ -35,6 +36,7 @@ except ImportError:
 
 from .config import CURRICULUM_ROOT, LEVELS, PROJECT_ROOT
 from .docs_router import collect_html_artifacts
+from .review_parsing import count_review_issues, extract_review_score, extract_review_verdict
 from .state_compute import _compute_shippable, _get_review_score
 from .state_helpers import (
     find_content_file,
@@ -626,12 +628,6 @@ def _read_review_file(path: Path) -> dict[str, Any] | None:
     except OSError:
         return None
 
-    from .review_parsing import (
-        count_review_issues,
-        extract_review_score,
-        extract_review_verdict,
-    )
-
     score = extract_review_score(text)
     verdict = extract_review_verdict(text)
     findings = count_review_issues(text)
@@ -765,8 +761,6 @@ def _state_drift_check(track: str, slug: str) -> dict[str, Any]:
     state_phases: dict[str, Any] = {}
     if state_path and state_path.is_file():
         try:
-            import json
-
             state_phases = (json.loads(state_path.read_text("utf-8")) or {}).get("phases") or {}
         except Exception:
             drifts.append(
