@@ -1,4 +1,8 @@
-"""Generate compact Word Atlas search and browse indexes."""
+"""Generate compact Word Atlas search and browse indexes.
+
+The database-backed command is deliberately executable as a file with the
+system interpreter used by the frontend CI jobs. Keep that path stdlib-only.
+"""
 
 from __future__ import annotations
 
@@ -8,7 +12,6 @@ import importlib.util
 import json
 import re
 import sqlite3
-import sys
 import unicodedata
 from collections import defaultdict
 from collections.abc import Mapping
@@ -16,10 +19,6 @@ from pathlib import Path
 from typing import Any
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-if str(PROJECT_ROOT) not in sys.path:
-    sys.path.insert(0, str(PROJECT_ROOT))
-
-from scripts.etymology.transliterate import transliterate
 
 DEFAULT_MANIFEST = Path("site/src/data/lexicon-manifest.json")
 DEFAULT_SEARCH_OUT = Path("site/src/data/lexicon-search-index.json")
@@ -59,6 +58,12 @@ def _load_helper_module(name: str, path: Path) -> Any:
     spec.loader.exec_module(module)
     return module
 
+
+_TRANSLITERATE = _load_helper_module(
+    "_atlas_transliterate",
+    PROJECT_ROOT / "scripts" / "etymology" / "transliterate.py",
+)
+transliterate = _TRANSLITERATE.transliterate
 
 _LEXEME_FILTER = _load_helper_module(
     "_atlas_lexeme_filter",
