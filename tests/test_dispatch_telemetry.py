@@ -154,7 +154,7 @@ def test_unexpected_version_probe_failure_still_warns(caplog):
     ) in caplog.text
 
 
-def test_runner_invoke_returns_resolved_telemetry(tmp_path):
+def test_runner_invoke_preserves_observed_terminal_returncode_and_telemetry(tmp_path):
     from agent_runtime import runner as runner_mod
 
     spy_adapter = MagicMock()
