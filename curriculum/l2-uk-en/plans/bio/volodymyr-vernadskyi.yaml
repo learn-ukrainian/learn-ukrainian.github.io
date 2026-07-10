@@ -80,20 +80,28 @@ phase: BIO
 readings:
 - title: Вернадський Володимир Іванович
   language: uk
-  source: Енциклопедія історії України (ЕІУ)
-  url: https://history.org.ua/?termin=Vernadsky_V
+  source_name: Енциклопедія історії України (ЕІУ)
+  source_url: https://history.org.ua/?termin=Vernadsky_V
   type: encyclopedia
   role: reference
   hosting: link-only
-  task: Ознайомитися з фактами біографії та проаналізувати його діяльність в УАН.
+  rights:
+    basis: external-link
+    evidence_url: https://history.org.ua/?termin=Vernadsky_V
+    note: "Зовнішнє посилання; текст не відтворюється в курсі."
+  learner_task: Ознайомитися з фактами біографії та проаналізувати його діяльність в УАН.
 - title: 1917 рік у щоденникових записах В. І. Вернадського
   language: uk
-  source: Наукова періодика України (НБУВ)
-  url: https://nbuv.gov.ua/UJRN/Uxxs_2013_18_12
+  source_name: Наукова періодика України (НБУВ)
+  source_url: https://nbuv.gov.ua/UJRN/Uxxs_2013_18_12
   type: article
   role: reflection
   hosting: link-only
-  task: Проаналізувати щоденникові записи про 1917 рік та наукові компроміси.
+  rights:
+    basis: external-link
+    evidence_url: https://nbuv.gov.ua/UJRN/Uxxs_2013_18_12
+    note: "Зовнішнє посилання; текст не відтворюється в курсі."
+  learner_task: Проаналізувати щоденникові записи про 1917 рік та наукові компроміси.
 references:
 - title: Volodymyr Vernadskyi
   note: Compiled research notes, key debates, and primary source excerpts.
@@ -114,7 +122,8 @@ sequence: 80
 slug: volodymyr-vernadskyi
 subtitle: 'Volodymyr Vernadsky: The Noosphere and Compromise'
 title: 'Володимир Вернадський: Ноосфера та компроміс'
-version: '4.3'
+version: '4.4'
+readings_contract_version: 2
 vocabulary_hints:
 - definition: сукупність частин земної оболонки (літо-, гідро- й атмосфери), яка заселена живими організмами та перетворена ними
   pos: ж.

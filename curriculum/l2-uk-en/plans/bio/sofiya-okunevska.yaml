@@ -98,25 +98,34 @@ references:
 readings:
 - title: Морачевська-Окуневська Софія Атанасівна
   language: uk
-  source: Енциклопедія Сучасної України
-  url: https://esu.com.ua/article-69227
+  source_name: Енциклопедія Сучасної України
+  source_url: https://esu.com.ua/article-69227
   type: encyclopedia
   role: primary-bio
   hosting: link-only
-  task: Проаналізувати життєвий шлях першої лікарки Австро-Угорщини Софії Окуневської та її внесок у боротьбу за права жінок на освіту.
+  rights:
+    basis: external-link
+    evidence_url: https://esu.com.ua/article-69227
+    note: "Зовнішнє посилання; текст не відтворюється в курсі."
+  learner_task: Проаналізувати життєвий шлях першої лікарки Австро-Угорщини Софії Окуневської та її внесок у боротьбу за права жінок на освіту.
 - title: 1865 – народилася Софія Окуневська-Морачевська
   language: uk
-  source: Український інститут національної пам'яті
-  url: https://uinp.gov.ua/istorychnyy-kalendar/traven/12/1865-narodylasya-sofiya-okunevska-morachevska-persha-zhinka-likar-v-avstro-ugorshchyni
+  source_name: Український інститут національної пам'яті
+  source_url: https://uinp.gov.ua/istorychnyy-kalendar/traven/12/1865-narodylasya-sofiya-okunevska-morachevska-persha-zhinka-likar-v-avstro-ugorshchyni
   type: article
   role: context
   hosting: link-only
-  task: Визначити, як УІНП пов'язує медичну освіту, жіночий рух і громадську діяльність Окуневської.
+  rights:
+    basis: external-link
+    evidence_url: https://uinp.gov.ua/istorychnyy-kalendar/traven/12/1865-narodylasya-sofiya-okunevska-morachevska-persha-zhinka-likar-v-avstro-ugorshchyni
+    note: "Зовнішнє посилання; текст не відтворюється в курсі."
+  learner_task: Визначити, як УІНП пов'язує медичну освіту, жіночий рух і громадську діяльність Окуневської.
 sequence: 86
 slug: sofiya-okunevska
 subtitle: 'The Price of Being First: Medicine, Feminism, and the Costs of a Trailblazing Career'
 title: 'Софія Окуневська: Перша жінка-лікар'
-version: '4.2'
+version: '4.3'
+readings_contract_version: 2
 vocabulary_hints:
 - definition: жінка, яка першою прокладає шлях у якійсь новій, невідомій галузі діяльності
   pos: ж.

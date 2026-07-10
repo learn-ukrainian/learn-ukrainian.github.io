@@ -91,6 +91,10 @@ readings:
   cefr_min: C1
   license: copyrighted
   hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://esu.com.ua/article-13545
+    note: "Зовнішнє посилання; текст не відтворюється в курсі."
   learner_task: 'Виписати освіту, музичні твори, інституційне визнання та обережні формулювання щодо смерті; порівняти енциклопедичну рамку з популярними міфами про Івасюка.'
   caveats: 'ЕСУ стисло подає біографію і творчий доробок; питання обставин смерті не можна розв''язувати без окремо перевірених архівних або слідчих джерел.'
 - title: Сторінки пам'яті Володимира Івасюка
@@ -103,6 +107,10 @@ readings:
   cefr_min: B2
   license: unknown
   hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://ivasyuk.org.ua/
+    note: "Зовнішнє посилання; текст не відтворюється в курсі."
   learner_task: 'Знайти матеріали про пісні, фестивальну пам''ять і рецепцію Івасюка; позначити, де сайт працює як меморіальний архів, а де як некритична пам''ятна рамка.'
   caveats: 'Меморіальний ресурс корисний для орієнтації й добору текстів, але має пам''ятний тон; фактичні твердження потрібно звіряти з ЕСУ або архівними джерелами.'
 references:
@@ -126,7 +134,8 @@ sequence: 171
 slug: volodymyr-ivasyuk
 subtitle: The Man Who Wrote a Nation's Anthem
 title: 'Володимир Івасюк: Автор Червоної рути'
-version: '4.2'
+version: '4.3'
+readings_contract_version: 2
 vocabulary_hints:
 - definition: жанр популярної розважальної музики; сцена для таких виступів
   pos: ж.

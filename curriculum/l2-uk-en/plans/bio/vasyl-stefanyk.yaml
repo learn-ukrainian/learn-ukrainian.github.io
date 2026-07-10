@@ -82,21 +82,29 @@ persona:
 phase: BIO.4
 readings:
 - title: "Василь Стефаник: Біографія"
-  source: "УкрЛіб"
-  url: "https://www.ukrlib.com.ua/bio/printit.php?tid=1719"
+  source_name: "УкрЛіб"
+  source_url: "https://www.ukrlib.com.ua/bio/printit.php?tid=1719"
   language: uk
   type: article
   role: "Огляд життя і творчості новеліста"
   hosting: link-only
-  task: "Прочитайте біографію та зверніть увагу на його суспільну діяльність."
+  rights:
+    basis: external-link
+    evidence_url: https://www.ukrlib.com.ua/bio/printit.php?tid=1719
+    note: "Зовнішнє посилання; текст не відтворюється в курсі."
+  learner_task: "Прочитайте біографію та зверніть увагу на його суспільну діяльність."
 - title: "Стефаник Василь Семенович (Вікіпедія)"
-  source: "Вікіпедія"
-  url: "https://uk.wikipedia.org/wiki/%D0%A1%D1%82%D0%B5%D1%84%D0%B0%D0%BD%D0%B8%D0%BA_%D0%92%D0%B0%D1%81%D0%B8%D0%BB%D1%8C_%D0%A1%D0%B5%D0%BC%D0%B5%D0%BD%D0%BE%D0%B2%D0%B8%D1%87"
+  source_name: "Вікіпедія"
+  source_url: "https://uk.wikipedia.org/wiki/%D0%A1%D1%82%D0%B5%D1%84%D0%B0%D0%BD%D0%B8%D0%BA_%D0%92%D0%B0%D1%81%D0%B8%D0%BB%D1%8C_%D0%A1%D0%B5%D0%BC%D0%B5%D0%BD%D0%BE%D0%B2%D0%B8%D1%87"
   language: uk
   type: encyclopedia
   role: "Загальний енциклопедичний контекст"
   hosting: link-only
-  task: "Ознайомтеся з ключовими фактами з життя письменника."
+  rights:
+    basis: external-link
+    evidence_url: https://uk.wikipedia.org/wiki/%D0%A1%D1%82%D0%B5%D1%84%D0%B0%D0%BD%D0%B8%D0%BA_%D0%92%D0%B0%D1%81%D0%B8%D0%BB%D1%8C_%D0%A1%D0%B5%D0%BC%D0%B5%D0%BD%D0%BE%D0%B2%D0%B8%D1%87
+    note: "Зовнішнє посилання; текст не відтворюється в курсі."
+  learner_task: "Ознайомтеся з ключовими фактами з життя письменника."
 references:
 - title: Vasyl Stefanyk
   note: Compiled from primary and secondary sources on Stefanyk's life and work.
@@ -118,7 +126,8 @@ sequence: 95
 slug: vasyl-stefanyk
 subtitle: 'Vasyl Stefanyk: A Word Like a Scream of the Soul'
 title: 'Василь Стефаник: Слово як крик душі'
-version: '4.1'
+version: '4.2'
+readings_contract_version: 2
 vocabulary_hints:
 - definition: письменник, що створює новели, короткі оповідні твори про незвичайну життєву подію
   pos: ч.

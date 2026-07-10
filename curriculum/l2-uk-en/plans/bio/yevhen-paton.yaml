@@ -85,21 +85,29 @@ persona:
 phase: BIO.2
 readings:
 - hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://paton.org.ua/institut/istoriya/pro-zasnovnika/
+    note: "Зовнішнє посилання; текст не відтворюється в курсі."
   language: uk
   role: Офіційна біографічна довідка про засновника інституту.
-  source: Інститут електрозварювання ім. Є. О. Патона НАН України
-  task: Ознайомтеся з офіційним нарисом про засновника інституту.
+  source_name: Інститут електрозварювання ім. Є. О. Патона НАН України
+  learner_task: Ознайомтеся з офіційним нарисом про засновника інституту.
   title: 'Засновник: Євген Оскарович Патон'
   type: article
-  url: https://paton.org.ua/institut/istoriya/pro-zasnovnika/
+  source_url: https://paton.org.ua/institut/istoriya/pro-zasnovnika/
 - hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://paton.org.ua/institut/istoriya/
+    note: "Зовнішнє посилання; текст не відтворюється в курсі."
   language: uk
   role: Історія інституції, яку заснував і очолював Патон.
-  source: Інститут електрозварювання ім. Є. О. Патона НАН України
-  task: Прочитайте про створення та розвиток Інституту електрозварювання.
+  source_name: Інститут електрозварювання ім. Є. О. Патона НАН України
+  learner_task: Прочитайте про створення та розвиток Інституту електрозварювання.
   title: Історія Інституту електрозварювання ім. Є. О. Патона
   type: article
-  url: https://paton.org.ua/institut/istoriya/
+  source_url: https://paton.org.ua/institut/istoriya/
 references:
 - title: Патон Євген Оскарович
   note: Загальна біографія, дати, ключові досягнення
@@ -117,7 +125,8 @@ sequence: 91
 slug: yevhen-paton
 subtitle: 'Yevhen Paton: The Engineer Who United Ukraine'
 title: 'Євген Патон: Інженер, що з''єднав Україну'
-version: '4.3'
+version: '4.4'
+readings_contract_version: 2
 vocabulary_hints:
 - definition: галузь інженерії, що займається проектуванням, будівництвом та експлуатацією мостів
   pos: с.

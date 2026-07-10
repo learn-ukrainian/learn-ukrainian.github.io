@@ -81,26 +81,38 @@ persona:
 phase: BIO
 readings:
 - title: "Острянин Яків"
-  source: "Енциклопедія історії України"
-  url: "https://www.history.org.ua/?termin=Ostrianyn_Y"
+  source_name: "Енциклопедія історії України"
+  source_url: "https://www.history.org.ua/?termin=Ostrianyn_Y"
   language: uk
   type: encyclopedia
   hosting: link-only
-  task: "Прочитайте біографічну статтю. Як пояснюється рішення Острянина перейти на територію Московського царства?"
+  rights:
+    basis: external-link
+    evidence_url: https://www.history.org.ua/?termin=Ostrianyn_Y
+    note: "Зовнішнє посилання; текст не відтворюється в курсі."
+  learner_task: "Прочитайте біографічну статтю. Як пояснюється рішення Острянина перейти на територію Московського царства?"
 - title: "Говтва, битва 1638"
-  source: "Енциклопедія історії України"
-  url: "https://www.history.org.ua/?termin=Govtva_bytva_1638"
+  source_name: "Енциклопедія історії України"
+  source_url: "https://www.history.org.ua/?termin=Govtva_bytva_1638"
   language: uk
   type: encyclopedia
   hosting: link-only
-  task: "Проаналізуйте тактику козаків під Говтвою. Як вони використали рельєф місцевості?"
+  rights:
+    basis: external-link
+    evidence_url: https://www.history.org.ua/?termin=Govtva_bytva_1638
+    note: "Зовнішнє посилання; текст не відтворюється в курсі."
+  learner_task: "Проаналізуйте тактику козаків під Говтвою. Як вони використали рельєф місцевості?"
 - title: "Жовнинська битва 1638"
-  source: "Енциклопедія історії України"
-  url: "https://www.history.org.ua/?termin=Zhovnynska_bytva_1638"
+  source_name: "Енциклопедія історії України"
+  source_url: "https://www.history.org.ua/?termin=Zhovnynska_bytva_1638"
   language: uk
   type: encyclopedia
   hosting: link-only
-  task: "Ознайомтеся з подіями Жовнинської битви. Оцініть наслідки відступу Острянина для загального перебігу повстання."
+  rights:
+    basis: external-link
+    evidence_url: https://www.history.org.ua/?termin=Zhovnynska_bytva_1638
+    note: "Зовнішнє посилання; текст не відтворюється в курсі."
+  learner_task: "Ознайомтеся з подіями Жовнинської битви. Оцініть наслідки відступу Острянина для загального перебігу повстання."
 references:
 - note: 'Стаття ЕІУ (В. Щербак): реєстровий полковник 1633 року, гетьман 1638 року, Говтва, Жовнин, Чугуїв'
   path: https://www.history.org.ua/?termin=Ostrianyn_Y
@@ -127,7 +139,8 @@ sequence: 30
 slug: yakiv-ostrianyn
 subtitle: 'Yakiv Ostrianyn: A Won Battle and a Lost Campaign'
 title: 'Яків Острянин: Перемога під Говтвою і поразка кампанії'
-version: '4.2'
+version: '4.3'
+readings_contract_version: 2
 vocabulary_hints:
 - definition: командир козацького полку; Острянин почав як полковник реєстрового війська
   pos: ч.

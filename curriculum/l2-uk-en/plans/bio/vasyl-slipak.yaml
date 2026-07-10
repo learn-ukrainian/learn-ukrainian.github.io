@@ -122,13 +122,17 @@ readings:
   genre: Офіційний документ
   source_type: primary
   role: orientation
-  source: Президент України
+  source_name: Президент України
   source_url: https://www.president.gov.ua/documents/422017-21314
   license: public-domain
   rights_note: >-
     Офіційний нормативний акт можна посилати як джерело державного визнання;
     достатньо link-only.
   hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://www.president.gov.ua/documents/422017-21314
+    note: "Зовнішнє посилання; текст не відтворюється в курсі."
   cefr_min: C1
   learner_task: >-
     Визначити юридичну формулу державного визнання та зіставити її з
@@ -139,12 +143,16 @@ readings:
   genre: Історичний календар / біографічний нарис
   source_type: reference
   role: supplementary-reading
-  source: Український інститут національної пам'яті
+  source_name: Український інститут національної пам'яті
   source_url: >-
     https://uinp.gov.ua/istorychnyy-kalendar/gruden/20/1974-narodyvsya-solist-paryzkoyi-nacionalnoyi-opery-dobrovolec-duk-ps-vasyl-slipak
   license: copyrighted
   rights_note: Використовувати як link-only український довідковий матеріал.
   hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://uinp.gov.ua/istorychnyy-kalendar/gruden/20/1974-narodyvsya-solist-paryzkoyi-nacionalnoyi-opery-dobrovolec-duk-ps-vasyl-slipak
+    note: "Зовнішнє посилання; текст не відтворюється в курсі."
   cefr_min: C1
   learner_task: >-
     Скласти часову лінію від музичної освіти й оперної кар'єри до волонтерства
@@ -154,7 +162,8 @@ sequence: 287
 slug: vasyl-slipak
 subtitle: The Paris Opera Voice Silenced by Russian War
 title: 'Василь Сліпак: Міф, голос та обов''язок'
-version: '4.1'
+version: '4.2'
+readings_contract_version: 2
 vocabulary_hints:
 - definition: особа, яка за власним бажанням бере участь у збройному захисті країни
   pos: ч.

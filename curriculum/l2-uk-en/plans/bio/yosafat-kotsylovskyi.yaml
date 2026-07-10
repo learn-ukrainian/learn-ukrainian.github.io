@@ -124,13 +124,17 @@ readings:
   genre: Біографічна енциклопедична стаття
   source_type: reference
   role: primary_bio
-  source: Синод Єпископів Української греко-католицької церкви
+  source_name: Синод Єпископів Української греко-католицької церкви
   source_url: https://synod.ugcc.ua/data/vladyka-yosafat-kotsylovskyy-11192/
   license: copyrighted
   rights_note: >-
     Офіційна сторінка церковної інституції; текст використовуємо лише за посиланням
     як орієнтир для українсько-учнівського читання.
   hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://synod.ugcc.ua/data/vladyka-yosafat-kotsylovskyy-11192/
+    note: "Зовнішнє посилання; текст не відтворюється в курсі."
   cefr_min: C1
   learner_task: >-
     Звірити датування життя й карʼєри владики з темами репресій у модулі, виписати
@@ -142,7 +146,8 @@ sequence: 323
 slug: yosafat-kotsylovskyi
 subtitle: The Bishop of Przemysl Destroyed by Two Regimes
 title: 'Йосафат Коциловський: Вірність на порубіжжі'
-version: '4.2'
+version: '4.3'
+readings_contract_version: 2
 vocabulary_hints:
 - definition: територіальна одиниця управління у православній і католицькій церквах, якою керує єпископ
   pos: ж.

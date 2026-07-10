@@ -129,11 +129,15 @@ readings:
   genre: Енциклопедична стаття / біографічна довідка
   source_type: reference
   role: orientation
-  source: Енциклопедія Сучасної України
+  source_name: Енциклопедія Сучасної України
   source_url: https://esu.com.ua/article-40496
   license: copyrighted
   rights_note: Використовувати як link-only довідку; не хостити повний текст або фото.
   hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://esu.com.ua/article-40496
+    note: "Зовнішнє посилання; текст не відтворюється в курсі."
   cefr_min: C1
   learner_task: >-
     Виписати музичні жанри, інституційні ролі, репресії й відновлення спадщини,
@@ -145,13 +149,17 @@ readings:
   genre: Наукова стаття / джерельний коментар до листа
   source_type: reference
   role: close-reading
-  source: Українська музика
+  source_name: Українська музика
   source_url: https://journals.lnma.lviv.ua/index.php/ukrmuzyka/article/view/246
   license: copyrighted
   rights_note: >-
     Використовувати як link-only статтю; не хостити повний текст, лист або
     нотні матеріали, а в UI подавати лише короткі атрибутовані цитати.
   hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://journals.lnma.lviv.ua/index.php/ukrmuzyka/article/view/246
+    note: "Зовнішнє посилання; текст не відтворюється в курсі."
   cefr_min: C1
   learner_task: >-
     Проаналізувати, як лист 1963 року показує відповідальність Барвінського за
@@ -163,7 +171,8 @@ sequence: 312
 slug: vasyl-barvinskyi
 subtitle: The Composer Whose Scores They Tried to Burn
 title: 'Василь Барвінський: Інституційна пам''ять та знищені партитури'
-version: '4.2'
+version: '4.3'
+readings_contract_version: 2
 vocabulary_hints:
 - definition: вступна музична п'єса, яка часто передує іншому твору або циклу
   pos: ж.

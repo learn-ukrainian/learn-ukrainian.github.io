@@ -110,12 +110,16 @@ readings:
   genre: Авторський профіль / біографічна довідка
   source_type: reference
   role: orientation
-  source: Крим.Реалії
+  source_name: Крим.Реалії
   source_url: >-
     https://ua.krymr.com/author/%D0%B2%D0%BB%D0%B0%D0%B4%D0%B8%D1%81%D0%BB%D0%B0%D0%B2-%D1%94%D1%81%D0%B8%D0%BF%D0%B5%D0%BD%D0%BA%D0%BE/k-kuq_
   license: copyrighted
   rights_note: Використовувати як link-only профіль; не хостити повний текст або медіа.
   hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://ua.krymr.com/author/%D0%B2%D0%BB%D0%B0%D0%B4%D0%B8%D1%81%D0%BB%D0%B0%D0%B2-%D1%94%D1%81%D0%B8%D0%BF%D0%B5%D0%BD%D0%BA%D0%BE/k-kuq_
+    note: "Зовнішнє посилання; текст не відтворюється в курсі."
   cefr_min: C1
   learner_task: >-
     Виписати факти про журналістську роботу, арешт, тортури, вирок і звільнення
@@ -126,12 +130,16 @@ readings:
   genre: Біографічний матеріал / журналістський нарис
   source_type: reference
   role: supplementary-reading
-  source: Крим.Реалії
+  source_name: Крим.Реалії
   source_url: >-
     https://ua.krymr.com/a/ryzykuvav-ale-robyv-svoyu-robotu-istoriya-vladyslava-yesypenka/33451946.html
   license: copyrighted
   rights_note: Використовувати як link-only український матеріал; не переносити повний текст.
   hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://ua.krymr.com/a/ryzykuvav-ale-robyv-svoyu-robotu-istoriya-vladyslava-yesypenka/33451946.html
+    note: "Зовнішнє посилання; текст не відтворюється в курсі."
   cefr_min: C1
   learner_task: >-
     Простежити, як звичайна журналістська робота в окупованому Криму була
@@ -141,7 +149,8 @@ sequence: 294
 slug: vladyslav-yesypenko
 subtitle: The Crimean Journalist Who Survived FSB Captivity for the Truth
 title: 'Владислав Єсипенко: Журналістика та опір системі ФСБ'
-version: '4.2'
+version: '4.3'
+readings_contract_version: 2
 vocabulary_hints:
 - definition: неправдиве створення доказів чи обставин справи для незаконного звинувачення
   pos: ж.

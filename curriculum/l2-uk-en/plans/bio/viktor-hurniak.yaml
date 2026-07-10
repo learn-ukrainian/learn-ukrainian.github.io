@@ -123,11 +123,15 @@ readings:
   genre: Офіційний документ
   source_type: primary
   role: orientation
-  source: Президент України
+  source_name: Президент України
   source_url: https://www.president.gov.ua/documents/4502021-39965
   license: public-domain
   rights_note: Офіційний нормативний акт використовувати link-only як джерело державного визнання.
   hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://www.president.gov.ua/documents/4502021-39965
+    note: "Зовнішнє посилання; текст не відтворюється в курсі."
   cefr_min: C1
   learner_task: >-
     Визначити, як документ описує підставу для посмертного звання Героя України.
@@ -137,11 +141,15 @@ readings:
   genre: Енциклопедична стаття / біографічна довідка
   source_type: reference
   role: supplementary-reading
-  source: Енциклопедія Сучасної України
+  source_name: Енциклопедія Сучасної України
   source_url: https://esu.com.ua/article/hurnyak_viktor_petrovych
   license: copyrighted
   rights_note: Використовувати як link-only довідку; не хостити повний текст.
   hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://esu.com.ua/article/hurnyak_viktor_petrovych
+    note: "Зовнішнє посилання; текст не відтворюється в курсі."
   cefr_min: C1
   learner_task: >-
     Скласти часову лінію від "Пласту" і фотожурналістики до служби, евакуації
@@ -151,7 +159,8 @@ sequence: 296
 slug: viktor-hurniak
 subtitle: The Photojournalist Who Traded His Camera for the Frontline
 title: 'Віктор Гурняк: Фокус на війні та свободі'
-version: '4.1'
+version: '4.2'
+readings_contract_version: 2
 vocabulary_hints:
 - definition: людина, яка добровільно й безоплатно займається суспільно корисною діяльністю, зокрема допомогою армії
   pos: ч.

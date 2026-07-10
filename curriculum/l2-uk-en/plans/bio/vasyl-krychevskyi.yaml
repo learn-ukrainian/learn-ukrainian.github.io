@@ -134,11 +134,15 @@ readings:
   genre: Енциклопедична стаття / біографічна довідка
   source_type: reference
   role: orientation
-  source: Енциклопедія Сучасної України
+  source_name: Енциклопедія Сучасної України
   source_url: https://esu.com.ua/article-1645
   license: copyrighted
   rights_note: Використовувати як link-only довідку; не хостити повний текст або фото.
   hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://esu.com.ua/article-1645
+    note: "Зовнішнє посилання; текст не відтворюється в курсі."
   cefr_min: C1
   learner_task: >-
     Виписати архітектурні, графічні й еміграційні етапи біографії Кричевського
@@ -151,11 +155,15 @@ readings:
   genre: Музейний опис / каталог творів
   source_type: reference
   role: supplementary
-  source: Музейний фонд України
+  source_name: Музейний фонд України
   source_url: https://museum.mcsc.gov.ua/authors/krichevskiy-vasil-grigorovich-6872
   license: copyrighted
   rights_note: Використовувати як link-only музейний каталог; не хостити зображення творів.
   hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://museum.mcsc.gov.ua/authors/krichevskiy-vasil-grigorovich-6872
+    note: "Зовнішнє посилання; текст не відтворюється в курсі."
   cefr_min: B2
   learner_task: >-
     Знайти типи робіт Кричевського в музейному описі й пояснити, чому графіка,
@@ -167,13 +175,17 @@ readings:
   genre: Архітектурно-мистецтвознавчий уривок / цитування першоджерела
   source_type: reference
   role: close-reading
-  source: КНУБА, збірник "Архітектура та будівництво"
+  source_name: КНУБА, збірник "Архітектура та будівництво"
   source_url: https://library.knuba.edu.ua/books/zbirniki/01/2023/66_2023.pdf
   license: copyrighted
   rights_note: >-
     Використовувати як link-only PDF із цитуванням; не хостити повний збірник
     або репродукції творів.
   hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://library.knuba.edu.ua/books/zbirniki/01/2023/66_2023.pdf
+    note: "Зовнішнє посилання; текст не відтворюється в курсі."
   cefr_min: C1
   learner_task: >-
     Прочитати короткий уривок із цитуванням праці Кричевського й пояснити, як
@@ -185,7 +197,8 @@ sequence: 314
 slug: vasyl-krychevskyi
 subtitle: The Architect of the Trident and Ukrainian Modernism
 title: 'Василь Кричевський: Творець Тризуба та національного стилю'
-version: '4.2'
+version: '4.3'
+readings_contract_version: 2
 vocabulary_hints:
 - definition: >-
     стиль у мистецтві кінця XIX — початку XX ст., що характеризується відмовою

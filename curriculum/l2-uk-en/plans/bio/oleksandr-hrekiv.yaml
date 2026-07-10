@@ -81,21 +81,29 @@ persona:
 phase: BIO.2
 readings:
 - title: "Греків Олександр Петрович (Вікіпедія)"
-  source: "Вікіпедія"
-  url: "https://uk.wikipedia.org/wiki/%D0%93%D1%80%D0%B5%D0%BA%D1%96%D0%B2_%D0%9E%D0%BB%D0%B5%D0%BA%D1%81%D0%B0%D0%BD%D0%B4%D1%80_%D0%9F%D0%B5%D1%82%D1%80%D0%BE%D0%B2%D0%B8%D1%87"
+  source_name: "Вікіпедія"
+  source_url: "https://uk.wikipedia.org/wiki/%D0%93%D1%80%D0%B5%D0%BA%D1%96%D0%B2_%D0%9E%D0%BB%D0%B5%D0%BA%D1%81%D0%B0%D0%BD%D0%B4%D1%80_%D0%9F%D0%B5%D1%82%D1%80%D0%BE%D0%B2%D0%B8%D1%87"
   language: uk
   type: encyclopedia
   role: "Енциклопедичний огляд"
   hosting: link-only
-  task: "Ознайомтеся з військовою кар'єрою полководця."
+  rights:
+    basis: external-link
+    evidence_url: "https://uk.wikipedia.org/wiki/%D0%93%D1%80%D0%B5%D0%BA%D1%96%D0%B2_%D0%9E%D0%BB%D0%B5%D0%BA%D1%81%D0%B0%D0%BD%D0%B4%D1%80_%D0%9F%D0%B5%D1%82%D1%80%D0%BE%D0%B2%D0%B8%D1%87"
+    note: "Зовнішнє посилання; текст не відтворюється в курсі."
+  learner_task: "Ознайомтеся з військовою кар'єрою полководця."
 - title: "Олександр Греків: полководець"
-  source: "Енциклопедія історії України"
-  url: "https://resource.history.org.ua/cgi-bin/eiu/history.exe?Z21ID=&I21DBN=EIu&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Grekov_O"
+  source_name: "Енциклопедія історії України"
+  source_url: "https://resource.history.org.ua/cgi-bin/eiu/history.exe?Z21ID=&I21DBN=EIu&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Grekov_O"
   language: uk
   type: encyclopedia
   role: "Академічна довідка"
   hosting: link-only
-  task: "Прочитайте про роль Олександра Грекова в історії армії УНР."
+  rights:
+    basis: external-link
+    evidence_url: "https://resource.history.org.ua/cgi-bin/eiu/history.exe?Z21ID=&I21DBN=EIu&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Grekov_O"
+    note: "Зовнішнє посилання; текст не відтворюється в курсі."
+  learner_task: "Прочитайте про роль Олександра Грекова в історії армії УНР."
 references:
 - title: Oleksandr Hrekiv
   note: 'Олександр Греків (Wikipedia UA): Біографія, військова кар''єра, еміграція'
@@ -115,7 +123,8 @@ sequence: 98
 slug: oleksandr-hrekiv
 subtitle: The Commander Who Built an Army and Lost a War
 title: 'Олександр Греків: Полководець УНР'
-version: '4.2'
+version: '4.3'
+readings_contract_version: 2
 vocabulary_hints:
 - definition: досвідчений воєначальник, що майстерно керує великими військовими з''єднаннями
   pos: ч.

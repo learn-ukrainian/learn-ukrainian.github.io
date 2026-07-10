@@ -123,11 +123,15 @@ readings:
   genre: Історичний календар / біографічний нарис
   source_type: reference
   role: orientation
-  source: Український інститут національної пам'яті
+  source_name: Український інститут національної пам'яті
   source_url: https://uinp.gov.ua/istorychnyy-kalendar/lyutyy/8/1925-narodyvsya-viktor-zareckyy
   license: copyrighted
   rights_note: Використовувати як link-only український довідковий матеріал.
   hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://uinp.gov.ua/istorychnyy-kalendar/lyutyy/8/1925-narodyvsya-viktor-zareckyy
+    note: "Зовнішнє посилання; текст не відтворюється в курсі."
   cefr_min: C1
   learner_task: Визначити ключові етапи творчої еволюції Зарецького та його зв'язок із шістдесятниками.
   caveats: Календарний текст має меморіальний формат; мистецтвознавчі твердження звіряти з фондовими матеріалами.
@@ -136,11 +140,15 @@ readings:
   genre: Листи / нариси / спогади / мистецтвознавчі матеріали
   source_type: primary
   role: reading
-  source: ННДІУ
+  source_name: ННДІУ
   source_url: https://ndiu.knu.ua/images/elektr_bibl/zareck1.pdf
   license: copyrighted
   rights_note: PDF використовувати як link-only джерело; не хостити повний текст або репродукції без перевірки прав.
   hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://ndiu.knu.ua/images/elektr_bibl/zareck1.pdf
+    note: "Зовнішнє посилання; текст не відтворюється в курсі."
   cefr_min: C1
   learner_task: Обрати короткий уривок для аналізу педагогіки, коріння і пам'яті в мистецтві Зарецького.
   caveats: Уривки мають бути короткими і цитованими добросовісно; зображення творів мають окремі права.
@@ -148,7 +156,8 @@ sequence: 285
 slug: viktor-zaretskyi
 subtitle: The Modernist Painter and the Sixtiers' Defiance
 title: 'Віктор Зарецький: Модернізм, педагогіка та спротив'
-version: '4.1'
+version: '4.2'
+readings_contract_version: 2
 vocabulary_hints:
 - definition: представник покоління радянської інтелігенції 1960-х років, що прагнув оновлення культури
   pos: ч.

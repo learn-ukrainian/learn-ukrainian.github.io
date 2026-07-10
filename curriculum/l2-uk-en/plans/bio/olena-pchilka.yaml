@@ -82,12 +82,16 @@ persona:
 phase: BIO
 readings:
 - hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://vue.gov.ua/Пчілка,_Олена
+    note: "Зовнішнє посилання; текст не відтворюється в курсі."
   language: uk
-  source: Велика українська енциклопедія
-  task: Зверніть увагу на її етнографічну та видавничу діяльність.
+  source_name: Велика українська енциклопедія
+  learner_task: Зверніть увагу на її етнографічну та видавничу діяльність.
   title: Пчілка, Олена
   type: article
-  url: https://vue.gov.ua/Пчілка,_Олена
+  source_url: https://vue.gov.ua/Пчілка,_Олена
 references:
 - title: Olena Pchilka
   note: Зібрана біографія, основні дати, ключові твори та конфлікти
@@ -111,7 +115,8 @@ sequence: 72
 slug: olena-pchilka
 subtitle: 'Olena Pchilka: The Matriarch of Ukrainian Modernism'
 title: 'Олена Пчілка: Матріарх українського модернізму'
-version: '4.1'
+version: '4.2'
+readings_contract_version: 2
 vocabulary_hints:
 - definition: жінка, яка є головою роду, родини; шанована, впливова жінка
   pos: ч.
