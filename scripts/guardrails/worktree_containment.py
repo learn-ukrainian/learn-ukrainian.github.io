@@ -35,11 +35,12 @@ these helpers rather than re-deriving containment.
 
 from __future__ import annotations
 
-import os
 import subprocess
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Literal
+
+from scripts.git_context import GIT_REDIRECT_ENV_KEYS, sanitized_git_env
 
 __all__ = [
     "PROTECTED_BRANCHES",
@@ -79,22 +80,9 @@ PathClass = Literal[
 # "a protected branch"); containment classification itself is branch-agnostic.
 PROTECTED_BRANCHES: frozenset[str] = frozenset({"main", "master"})
 
-# Git env vars that redirect discovery away from ``-C <dir>``. Stripping them
-# lets a caller running inside a hook (which may export GIT_DIR/GIT_WORK_TREE)
-# still resolve the repo implied by the directory we pass. Mirrors
-# delegate.py::_GIT_ENV_DENYLIST.
-_GIT_ENV_DENYLIST = frozenset({
-    "GIT_DIR",
-    "GIT_WORK_TREE",
-    "GIT_INDEX_FILE",
-    "GIT_OBJECT_DIRECTORY",
-    "GIT_ALTERNATE_OBJECT_DIRECTORIES",
-    "GIT_NAMESPACE",
-    "GIT_CEILING_DIRECTORIES",
-    "GIT_DISCOVERY_ACROSS_FILESYSTEM",
-    "GIT_COMMON_DIR",
-})
-
+# Compatibility export for callers that construct isolated Git fixtures. The
+# canonical list and the production sanitizer both live in ``git_context``.
+_GIT_ENV_DENYLIST = frozenset(GIT_REDIRECT_ENV_KEYS)
 
 @dataclass(frozen=True)
 class WriteDecision:
@@ -115,11 +103,6 @@ class WriteDecision:
 # git helpers
 # ---------------------------------------------------------------------------
 
-def _sanitized_git_env() -> dict[str, str]:
-    """Drop repo-redirecting Git env so ``-C <dir>`` resolves that repo."""
-    return {k: v for k, v in os.environ.items() if k not in _GIT_ENV_DENYLIST}
-
-
 def _run_git(cwd: Path, *args: str) -> subprocess.CompletedProcess[str]:
     """Run a read-only git command scoped to ``cwd`` with sanitized env."""
     return subprocess.run(
@@ -127,7 +110,7 @@ def _run_git(cwd: Path, *args: str) -> subprocess.CompletedProcess[str]:
         capture_output=True,
         text=True,
         check=False,
-        env=_sanitized_git_env(),
+        env=sanitized_git_env(),
     )
 
 

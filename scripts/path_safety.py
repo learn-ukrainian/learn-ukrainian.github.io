@@ -22,8 +22,9 @@ def safe_join(base: Path, *parts: str | Path) -> Path:
     if not parts:
         return base.resolve()  # codeql[py/path-injection] - base is the trusted root passed by caller
 
-    # Ensure base is absolute and normalized
-    abs_base = os.path.abspath(str(base))
+    # Resolve the trusted base first. In a release snapshot it may itself be a
+    # symlink to live data, so containment must use that resolved destination.
+    resolved_base = Path(os.path.abspath(str(base))).resolve()
 
     # Join and normalize the target path
     # We still validate components individually to prevent embedded '..'
@@ -41,15 +42,17 @@ def safe_join(base: Path, *parts: str | Path) -> Path:
             _validate_component(component)
             clean_parts.append(component)
 
-    target = os.path.abspath(os.path.join(abs_base, *clean_parts))
+    # Resolve the candidate too: lexical normalization alone would accept a
+    # child symlink that points outside an otherwise trusted base directory.
+    resolved_target = Path(os.path.join(str(resolved_base), *clean_parts)).resolve()
 
     # Verification: target must be under abs_base
     try:
-        common = os.path.commonpath([abs_base, target])
+        common = os.path.commonpath([str(resolved_base), str(resolved_target)])
     except ValueError:
         raise ValueError("Path escapes the configured root (cross-drive)") from None
 
-    if common != abs_base:
+    if common != str(resolved_base):
         raise ValueError("Path escapes the configured root")
 
-    return Path(target)
+    return resolved_target

@@ -2,12 +2,15 @@
 
 from __future__ import annotations
 
+import contextlib
 import os
 import shutil
 import socket
 import subprocess
 import sys
 import time
+import urllib.error
+import urllib.request
 from pathlib import Path
 
 import pytest
@@ -16,6 +19,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 SERVICES_SH = PROJECT_ROOT / "services.sh"
 PIDS_DIR = PROJECT_ROOT / ".pids"
 LOGS_DIR = PROJECT_ROOT / "logs"
+VENV_PYTHON = PROJECT_ROOT / ".venv" / "bin" / "python"
 
 def find_free_port() -> int:
     """Find a free TCP port on localhost."""
@@ -60,10 +64,13 @@ def temp_services_sh():
     # Read and patch services.sh content
     content = SERVICES_SH.read_text(encoding="utf-8")
     content = content.replace("8765", str(port))
+    # This fixture exercises PID and log handling with a dummy command, not
+    # the release builder. Keep that scope hermetic and fast.
+    content = content.replace("API_LIVE_MODE=0", "API_LIVE_MODE=1")
 
     # Replace the real uvicorn start command with a python sleep command to avoid binding to real ports
     old_cmd = f'SVC_CMD[api]="$VENV/python -m uvicorn scripts.api.main:app --host 0.0.0.0 --port {port} --log-config scripts/api/logging.json --timeout-graceful-shutdown 8"'
-    dummy_cmd = f'SVC_CMD[api]="{sys.executable} -c \\"import time; time.sleep(30)\\" scripts.api.main:app --host 0.0.0.0 --port {port}"'
+    dummy_cmd = f'SVC_CMD[api]="{VENV_PYTHON} -c \\"import time; time.sleep(30)\\" scripts.api.main:app --host 0.0.0.0 --port {port}"'
 
     if old_cmd in content:
         content = content.replace(old_cmd, dummy_cmd)
@@ -167,7 +174,7 @@ def test_pid_reconciliation(temp_services_sh, mock_lsof_env):
 
     # Start a dummy sleep process to act as the listener process.
     proc = subprocess.Popen([
-        sys.executable, "-c", "import time; time.sleep(30)",
+        str(VENV_PYTHON), "-c", "import time; time.sleep(30)",
         "scripts.api.main:app", "--host", "0.0.0.0", "--port", str(port)
     ])
     try:
@@ -268,6 +275,45 @@ def test_crashloop_backoff(temp_services_sh, mock_lsof_env):
             pass
     subprocess.run([str(script_path), "stop", "api"], capture_output=True, cwd=str(PROJECT_ROOT), env=env)
 
+
+def test_live_fallback_starts_api_with_a_loud_warning(temp_services_sh_real, mock_lsof_env):
+    """``--live`` remains an explicit, visible escape hatch for API recovery."""
+    script_path, port = temp_services_sh_real
+    _, _, env = mock_lsof_env
+    result = subprocess.run(
+        [str(script_path), "start", "api", "--live", "--force"],
+        capture_output=True,
+        text=True,
+        cwd=str(PROJECT_ROOT),
+        env=env,
+    )
+    try:
+        assert result.returncode == 0, result.stderr
+        assert "WARNING: API live mode enabled" in result.stderr
+        deadline = time.monotonic() + 10
+        while True:
+            try:
+                with urllib.request.urlopen(f"http://127.0.0.1:{port}/api/health", timeout=0.5) as response:
+                    assert response.status == 200
+                    break
+            except (urllib.error.URLError, TimeoutError):
+                if time.monotonic() >= deadline:
+                    pytest.fail("live fallback did not boot the API")
+                time.sleep(0.05)
+    finally:
+        pid_file = PIDS_DIR / "api.pid"
+        if pid_file.exists():
+            pid = int(pid_file.read_text(encoding="utf-8").strip())
+            with contextlib.suppress(ProcessLookupError):
+                os.kill(pid, 15)
+            for _ in range(50):
+                try:
+                    os.kill(pid, 0)
+                except ProcessLookupError:
+                    break
+                time.sleep(0.1)
+            pid_file.unlink(missing_ok=True)
+
 def test_log_rotation(temp_services_sh, mock_lsof_env):
     """Test size-based log rotation for api log file."""
     script_path, _port = temp_services_sh
@@ -328,7 +374,7 @@ def test_crashloop_backoff_clean_vs_crash(temp_services_sh, mock_lsof_env):
 
     # Start a dummy sleep process
     proc = subprocess.Popen([
-        sys.executable, "-c", "import time; time.sleep(30)",
+        str(VENV_PYTHON), "-c", "import time; time.sleep(30)",
         "scripts.api.main:app", "--host", "0.0.0.0", "--port", str(port)
     ])
 
@@ -405,7 +451,7 @@ def test_pid_reconciliation_integration(temp_services_sh_real):
         f"time.sleep(30)"
     )
     proc = subprocess.Popen([
-        sys.executable, "-c", dummy_code,
+        str(VENV_PYTHON), "-c", dummy_code,
         "scripts.api.main:app", "--host", "0.0.0.0", "--port", str(port)
     ])
 

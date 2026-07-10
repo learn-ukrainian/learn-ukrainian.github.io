@@ -3,8 +3,26 @@
 import os
 from pathlib import Path
 
-# Project root
+# Project root is the immutable code snapshot when the API is release-served.
+# Mutable data remains reachable through the release's explicit symlinks.
 PROJECT_ROOT = Path(__file__).parent.parent.parent
+
+
+def _live_repo_root() -> Path:
+    """Return the checkout Git operations and child tools must target."""
+    configured = os.environ.get("LEARN_UK_REPO_ROOT")
+    if not configured:
+        return PROJECT_ROOT
+    supplied = Path(configured).expanduser()
+    if not supplied.is_absolute():
+        raise RuntimeError("LEARN_UK_REPO_ROOT must be an absolute path")
+    candidate = supplied.resolve()
+    if not candidate.is_dir() or not (candidate / ".git").exists():
+        raise RuntimeError(f"LEARN_UK_REPO_ROOT is not a Git checkout: {candidate}")
+    return candidate
+
+
+LIVE_REPO_ROOT = _live_repo_root()
 
 # Curriculum paths
 CURRICULUM_ROOT = PROJECT_ROOT / "curriculum" / "l2-uk-en"

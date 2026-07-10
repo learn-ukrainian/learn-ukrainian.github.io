@@ -87,6 +87,7 @@ output/json/
 
 # Logs
 logs/
+.runtime/
 *.log
 npm-debug.log*
 

@@ -23,7 +23,7 @@ from fastapi import APIRouter, HTTPException, Query
 
 from scripts.audit.decision_lineage import build_lineage_response
 
-from .config import PROJECT_ROOT
+from .config import LIVE_REPO_ROOT, PROJECT_ROOT
 
 router = APIRouter(tags=["decisions"])
 
@@ -78,7 +78,7 @@ def _load_lineage(decision_id: str | None = None) -> dict:
     if decision_id is None and _lineage_cache["data"] is not None and (now - _lineage_cache["ts"]) < _CACHE_TTL:
         return _lineage_cache["data"]
 
-    data = build_lineage_response(PROJECT_ROOT, decision_id=decision_id)
+    data = build_lineage_response(LIVE_REPO_ROOT, decision_id=decision_id)
     if decision_id is None:
         _lineage_cache["data"] = data
         _lineage_cache["ts"] = now

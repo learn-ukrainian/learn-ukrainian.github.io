@@ -27,7 +27,7 @@ from typing import Any
 
 from fastapi import APIRouter, Query
 
-from .config import PROJECT_ROOT
+from .config import LIVE_REPO_ROOT, PROJECT_ROOT
 
 router = APIRouter(tags=["issues"])
 
@@ -208,9 +208,9 @@ async def issues_streams(
                 return report
             stale = audit.read_cache(max_age_s=7 * 24 * 3600)
             subprocess.Popen(
-                [str(PROJECT_ROOT / ".venv" / "bin" / "python"),
+                [str(LIVE_REPO_ROOT / ".venv" / "bin" / "python"),
                  "-m", "scripts.orchestration.issue_stream_audit", "--json"],
-                cwd=PROJECT_ROOT,
+                cwd=LIVE_REPO_ROOT,
                 stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
             )
             if stale is not None:

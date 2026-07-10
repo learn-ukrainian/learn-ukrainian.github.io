@@ -112,6 +112,7 @@ def test_hygiene_endpoint_is_registered_and_uses_project_root(
 ) -> None:
     repo = _dirty_repo_with_all_buckets(tmp_path)
     monkeypatch.setattr(git_hygiene_router, "PROJECT_ROOT", repo)
+    monkeypatch.setattr(git_hygiene_router, "LIVE_REPO_ROOT", repo)
 
     response = client.get("/api/git/hygiene")
 
