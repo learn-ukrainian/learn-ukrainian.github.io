@@ -5,6 +5,12 @@ import {
   type WarningSeverity,
 } from "../lib/lexicon/heritage-severity";
 import { getPracticeLemmas } from "../lib/lexicon/atlasDb";
+import {
+  dominantMarkerLabel,
+  isFullyMarkedLemma,
+  morphologyFormCountLabel,
+  registerBadgeLabel,
+} from "../lib/lexicon/register-markers";
 
 interface CourseUsage {
   track: string;
@@ -192,6 +198,11 @@ for (const form of markedForms) {
   }
   group.forms.push(form);
 }
+const morphology = enrichment?.morphology ?? null;
+const isFullyMarked = isFullyMarkedLemma(morphology);
+const dominantRegisterLabel = isFullyMarked ? dominantMarkerLabel(markedForms) : null;
+const MARKED_LEARNER_NOTE =
+  "Це нестандартні або стилістично забарвлені форми, які трапляються в поезії, фольклорі та давніших текстах. Вони не належать до сучасної літературної норми.";
 // entry_type-branched rendering (GH #4385): non-lemma article types are not
 // single inflecting heads, so they must NOT be forced through the lemma
 // paradigm/morphology template. A multiword_term / expression / phraseologism /
@@ -354,6 +365,12 @@ function buildStatusBadges() {
   if (heritage?.classification === "dialect") {
     badges.push({ className: "dialect", label: "Регіонально-літературне" });
   }
+  if (isFullyMarked && dominantRegisterLabel) {
+    badges.push({
+      className: "register",
+      label: registerBadgeLabel(dominantRegisterLabel),
+    });
+  }
   return badges;
 }
 
@@ -410,7 +427,9 @@ function buildArticleOverview() {
     {
       label: "Морфологія",
       ready: Boolean(enrichment?.morphology),
-      detail: enrichment?.morphology ? `${enrichment.morphology.form_count} форм` : "очікує VESUM",
+      detail: enrichment?.morphology
+        ? morphologyFormCountLabel(enrichment.morphology, isFullyMarked)
+        : "очікує VESUM",
     },
     {
       label: "Стилістика",
@@ -726,7 +745,7 @@ function groupExternalMaterials(items: NonNullable<Enrichment["external_material
         <section class="atlas-section">
           <h2>Морфологія</h2>
           <p class="atlas-muted">
-            {enrichment.morphology.pos} · {enrichment.morphology.form_count} форм · {enrichment.morphology.source}
+            {enrichment.morphology.pos} · {morphologyFormCountLabel(enrichment.morphology, isFullyMarked)} · {enrichment.morphology.source}
           </p>
           {nounParadigm ? (
             <table class="paradigm-table">
@@ -758,39 +777,57 @@ function groupExternalMaterials(items: NonNullable<Enrichment["external_material
               ))}
             </>
           ) : (
-            <table class="paradigm-table">
-              <tr><th>Форма</th><th>Позначка</th></tr>
-              {enrichment.morphology.forms.slice(0, 24).map((form) => (
-                <tr>
-                  <td class="form">{form.stress ?? stressDisplay(form.form)}</td>
-                  <td class="case-name">{form.label}</td>
-                </tr>
-              ))}
-            </table>
+            !isFullyMarked && enrichment.morphology.forms.length > 0 && (
+              <table class="paradigm-table">
+                <tr><th>Форма</th><th>Позначка</th></tr>
+                {enrichment.morphology.forms.slice(0, 24).map((form) => (
+                  <tr>
+                    <td class="form">{form.stress ?? stressDisplay(form.form)}</td>
+                    <td class="case-name">{form.label}</td>
+                  </tr>
+                ))}
+              </table>
+            )
           )}
           {markedFormGroups.length > 0 && (
-            <details class="marked-forms">
-              <summary>Марковані форми (нестягнені, застарілі, розмовні)</summary>
-              <p class="atlas-muted marked-forms-note">
-                Це нестандартні або стилістично забарвлені форми, які трапляються в
-                поезії, фольклорі та давніших текстах. Вони не належать до сучасної
-                літературної норми.
-              </p>
-              {markedFormGroups.map((group) => (
-                <div class="marked-forms-group">
-                  <div class="marked-forms-label">{group.marker_label}</div>
-                  <table class="paradigm-table">
-                    <tr><th>Форма</th><th>Позначка</th></tr>
-                    {group.forms.map((form) => (
-                      <tr>
-                        <td class="form">{form.stress ?? stressDisplay(form.form)}</td>
-                        <td class="case-name">{form.label}</td>
-                      </tr>
-                    ))}
-                  </table>
-                </div>
-              ))}
-            </details>
+            isFullyMarked ? (
+              <div class="marked-forms marked-forms-primary">
+                <p class="atlas-muted marked-forms-note">{MARKED_LEARNER_NOTE}</p>
+                {markedFormGroups.map((group) => (
+                  <div class="marked-forms-group">
+                    <div class="marked-forms-label">{group.marker_label}</div>
+                    <table class="paradigm-table">
+                      <tr><th>Форма</th><th>Позначка</th></tr>
+                      {group.forms.map((form) => (
+                        <tr>
+                          <td class="form">{form.stress ?? stressDisplay(form.form)}</td>
+                          <td class="case-name">{form.label}</td>
+                        </tr>
+                      ))}
+                    </table>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <details class="marked-forms">
+                <summary>Марковані форми (нестягнені, застарілі, розмовні)</summary>
+                <p class="atlas-muted marked-forms-note">{MARKED_LEARNER_NOTE}</p>
+                {markedFormGroups.map((group) => (
+                  <div class="marked-forms-group">
+                    <div class="marked-forms-label">{group.marker_label}</div>
+                    <table class="paradigm-table">
+                      <tr><th>Форма</th><th>Позначка</th></tr>
+                      {group.forms.map((form) => (
+                        <tr>
+                          <td class="form">{form.stress ?? stressDisplay(form.form)}</td>
+                          <td class="case-name">{form.label}</td>
+                        </tr>
+                      ))}
+                    </table>
+                  </div>
+                ))}
+              </details>
+            )
           )}
         </section>
       )}
