@@ -24,7 +24,7 @@ activity_hints:
 cefr_min: C1
 connects_to:
 - bio-mykola-khvylovyi
-- hist-rozstriliane-vidrodzhennia
+- hist-rozstriliane-vidrodzennia
 content_outline:
 - points:
   - 'Провокація: Як одна людина за десятиліття перетворила український театр з етнографічного музею на епіцентр європейського авангарду — і заплатила за це життям?'
@@ -80,6 +80,13 @@ persona:
   role: Куратор виставки про театральний авангард, що показує Курбаса не як ікону, а як живу людину в центрі мистецьких і політичних бурь
   voice: Kurbas-Scholar
 phase: BIO
+portrait:
+  url: "https://commons.wikimedia.org/wiki/File:Curbas.jpg"
+  license: "PD-Ukraine"
+  attribution: "Автор невідомий (фотографія до 1933) / Wikimedia Commons"
+  caption_uk: "Лесь Курбас, фотопортрет (до 1933)"
+  caption_en: "Les Kurbas, photographic portrait (before 1933)"
+  verified_on: "2026-07-10"
 primary_annotations:
 - '[!anti-hagiography]'
 - '[!decolonization]'
@@ -93,14 +100,21 @@ readings:
   role: context
   hosting: link-only
   task: Ознайомлення з новаторством у театральному мистецтві та трагічною долею режисера.
-- title: "Березіль: Із творчої спадщини (маніфести та статті)"
-  source: Лесь Курбас (першоджерело)
+- title: "Лесь Курбас. Із творчої спадщини: статті, маніфести, лекції (уривки)"
+  source: Лесь Курбас (першоджерело, 1920-ті рр.)
   url: null
   language: uk
   type: primary
   role: primary
-  hosting: reading-needed
-  task: Аналіз театральної системи 'перетворення' та концепції 'актора-філософа'.
+  license: public-domain
+  hosting: excerpt-only
+  rights_note: >-
+    Тексти Леся Курбаса — суспільне надбання (автор помер 1937 р., реабілітований
+    1957 р.; підтверджено scripts/readings/rights_classifier.py). Вивіреного
+    повнотекстового правового джерела для хостингу наразі не встановлено, тому
+    опрацьовуються короткі уривки в межах аналізу, а повний текст не розміщується.
+    URL не вигадується.
+  task: Аналіз театральної системи «перетворення» та концепції «актора-філософа».
 references:
 - title: Лесь Курбас
   note: Основна біографія, театральна діяльність, репресії
@@ -111,15 +125,30 @@ references:
   note: Статті, лекції та виступи самого режисера, де він викладає свої теоретичні засади
   type: primary
   work: 'Березіль: Із творчої спадщини'
-- title: Rozstriliane Vidrodzhennia
+- title: Розстріляне відродження
   note: Контекст репресій проти української інтелігенції 1920-30-х років
-  path: wiki/events/rozstriliane-vidrodzhennia.md
+  path: wiki/periods/rozstriliane-vidrodzennia.md
   type: reference
+- title: 'Курбас Лесь — Енциклопедія історії України, т. 5, с. 514'
+  author: Герасимова Г. П.
+  note: Академічна біографія (репресії, «Березіль», Сандармох)
+  type: encyclopedia
+  url: http://history.org.ua/?termin=Kurbas_Les
+- title: 'Трагедійна доля митця. Справа № 3168'
+  author: Шудря М., Лабінський М.
+  note: 'Документальна публікація слідчої справи НКВС № 3168 (журнал «Україна», 1991, № 11–13)'
+  type: primary
+  work: 'Справа № 3168'
+- title: 'Лесь Курбас: репетиція майбутнього'
+  author: Корнієнко Н. М.
+  note: 'Монографія з театрознавства (Київ: Либідь, 2007)'
+  type: reference
+  work: 'Лесь Курбас: репетиція майбутнього'
 sequence: 111
 slug: les-kurbas
 subtitle: The Man Who Reinvented Ukrainian Theatre
 title: 'Лесь Курбас: Реформатор театру'
-version: '4.2'
+version: '4.3'
 vocabulary_hints:
 - definition: мистецький напрям, що характеризується розривом з традиціями та пошуком нових форм і засобів вираження
   pos: ч.

@@ -2,34 +2,46 @@
 # Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: ukrainian_wiki/les-kurbas_Біографія-Лесь-Курбас-Реформатор-театру-Короткий-зміст
-  type: ukrainian_wiki
-  title: 'Біографія: Лесь Курбас: Реформатор театру'
-  section_path: 'Біографія: Лесь Курбас: Реформатор театру > Короткий зміст'
+  file: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CK%5CU%5CKurbasLes.htm
+  type: external
+  tier: T1
+  title: 'Kurbas, Les — Internet Encyclopedia of Ukraine'
+  url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CK%5CU%5CKurbasLes.htm
 - id: S2
-  file: ukrainian_wiki/les-kurbas_Біографія-Лесь-Курбас-Реформатор-театру-Деколонізаційна-перспектива
-  type: ukrainian_wiki
-  title: 'Біографія: Лесь Курбас: Реформатор театру'
-  section_path: 'Біографія: Лесь Курбас: Реформатор театру > Деколонізаційна перспектива'
+  file: https://esu.com.ua/article-51798
+  type: external
+  tier: T1
+  title: 'Курбас Лесь — Енциклопедія Сучасної України (Н. М. Корнієнко)'
+  author: Корнієнко Н. М.
+  url: https://esu.com.ua/article-51798
 - id: S3
-  file: ukrainian_wiki/teatralne-mystetstvo-2_Академічна-C1-Театральне-мистецтво-II-Основний-зміст-2-Авангард-і-синтетичний-театр-Леся-Курбаса
-  type: ukrainian_wiki
-  title: 'Академічна C1: Театральне мистецтво II'
-  section_path: 'Академічна C1: Театральне мистецтво II > Основний зміст > 2. Авангард
-    і синтетичний театр Леся Курбаса'
-- id: S5
-  file: 9-klas-ukrajinska-mova-voron-2017_s5121
-  type: textbook
-  title: ФОНЕТИКА. ОРФОЕПІЯ. ГРАФІКА. ОРФОГРАФІЯ
-  page: 152
-  grade: 9
+  file: http://history.org.ua/?termin=Kurbas_Les
+  type: external
+  tier: T1
+  title: 'Курбас Лесь — Енциклопедія історії України, т. 5, с. 514 (Г. П. Герасимова)'
+  author: Герасимова Г. П.
+  url: http://history.org.ua/?termin=Kurbas_Les
 - id: S6
   file: wikipedia/Березіль
   type: wikipedia
+  tier: T3
   title: Березіль
   url: https://uk.wikipedia.org/wiki/%D0%91%D0%B5%D1%80%D0%B5%D0%B7%D1%96%D0%BB%D1%8C
 - id: S7
   file: wave7-entsyklopediia-ukrainoznavstva_c2206
   type: literary
+  tier: T1
   title: Енциклопедія українознавства
   author: Колектив
+- id: S8
+  file: wikipedia/Лесь Курбас
+  type: wikipedia
+  tier: T3
+  title: 'Лесь Курбас (життєпис, репресії, Справа № 3168)'
+  url: https://uk.wikipedia.org/wiki/%D0%9B%D0%B5%D1%81%D1%8C_%D0%9A%D1%83%D1%80%D0%B1%D0%B0%D1%81
+- id: S9
+  file: wikipedia/97 (п'єса)
+  type: wikipedia
+  tier: T3
+  title: "«97» (п'єса Миколи Куліша) — прем'єра, театр ім. Франка, тема голоду 1921–1922"
+  url: https://uk.wikipedia.org/wiki/97_(%D0%BF%27%D1%94%D1%81%D0%B0)
