@@ -629,6 +629,9 @@ approved:
   polarity: antonym
   sources:
   - wiktionary
+  a2Exception: true
+  curator: "claude-opus/4698-a2-curation"
+  a2Rationale: "Canonical spatial antonym (exit / entrance); both A2 in PULS; dominant senses map 1:1, unmistakable at A2."
 - a: виїжджати
   b: подаватися
   polarity: synonym
@@ -1533,6 +1536,9 @@ approved:
   polarity: antonym
   sources:
   - wiktionary
+  a2Exception: true
+  curator: "claude-opus/4698-a2-curation"
+  a2Rationale: "Cardinal-direction antonym (west / east); both A2 adjectives in PULS; core geography vocabulary, trivially fair at A2."
 - a: збереження
   b: охорона
   polarity: synonym
@@ -2031,6 +2037,9 @@ approved:
   polarity: synonym
   sources:
   - synonyms
+  a2Exception: true
+  curator: "claude-opus/4698-a2-curation"
+  a2Rationale: "Both neutral A2 epistemic-possibility adverbs in PULS (probably / maybe); same POS and register, no polysemy trap; confidence nuance is degree-only."
 - a: майбутній час
   b: минулий час
   polarity: antonym
@@ -2200,6 +2209,9 @@ approved:
   polarity: antonym
   sources:
   - wiktionary
+  a2Exception: true
+  curator: "claude-opus/4698-a2-curation"
+  a2Rationale: "Place-preposition antonym (over / under); both A2 in PULS; staple of A1-A2 prepositions-of-place lessons."
 - a: надсилати
   b: подавати
   polarity: synonym
@@ -2817,6 +2829,9 @@ approved:
   polarity: antonym
   sources:
   - wiktionary
+  a2Exception: true
+  curator: "claude-opus/4698-a2-curation"
+  a2Rationale: "Cardinal-direction antonym (south / north); both A2 adjectives in PULS; core geography vocabulary, trivially fair at A2."
 - a: підробка
   b: фальсифікат
   polarity: synonym
