@@ -5,6 +5,7 @@ from __future__ import annotations
 import copy
 import json
 import subprocess
+import sys
 from collections.abc import Mapping
 from hashlib import sha256
 from pathlib import Path
@@ -466,7 +467,7 @@ def test_rederive_cli_is_byte_identical_for_two_source_walks(tmp_path: Path) -> 
     first_path = tmp_path / "keyed-first.json"
     second_path = tmp_path / "keyed-second.json"
     command = [
-        str(REPO_ROOT / ".venv" / "bin" / "python"),
+        sys.executable,
         "scripts/audit/layerb_label_union.py",
         "rederive",
         "--derivation",
@@ -598,7 +599,7 @@ def test_label_tool_imports_do_not_load_runtime_reviewer_dispatch(module: str) -
         "raise SystemExit('scripts.audit.llm_reviewer_dispatch' in sys.modules)"
     )
     completed = subprocess.run(
-        [str(REPO_ROOT / ".venv" / "bin" / "python"), "-c", command],
+        [sys.executable, "-c", command],
         cwd=REPO_ROOT,
         check=False,
         capture_output=True,
