@@ -1,0 +1,581 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/ua-grammar-lexical-evidence.v2.schema.json",
+  "title": "Ukrainian grammar and lexical evidence v2",
+  "description": "Normative per-artifact evidence contract for the Ukrainian grammar and lexical gate. It implements the static shape in docs/projects/ua-eval-harness/grammar-lexical-gate-design.md §§3, 4, 7, and 9; it does not implement or enable gate runtime behavior.",
+  "$comment": "JSON Schema validates closed shapes, registered enums, and SHA-256 syntax. It cannot prove raw offset ordering or exhaustiveness, SHA-256 contents, detector-manifest equality, terminal candidate state, source lineage, candidate uniqueness, or coverage arithmetic. The Layer A reason, local-recognizer decision, and lexical-fusion registers are retained as explicit compatibility definitions because Dec-010 requires them but §9.1 does not add fields for them. tests/test_grammar_lexical_schemas.py keeps those Phase 0 checks test-only.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "artifact_kind",
+    "run_id",
+    "gate_version",
+    "target",
+    "source_snapshots",
+    "surface_regions",
+    "tokens",
+    "scan_units",
+    "detector_runs",
+    "candidates",
+    "evidence_bindings",
+    "findings",
+    "audits",
+    "coverage",
+    "metrics",
+    "result"
+  ],
+  "properties": {
+    "schema_version": {"const": "ua_grammar_lexical_evidence.v2"},
+    "artifact_kind": {"const": "gate_result"},
+    "run_id": {"$ref": "#/$defs/stableString"},
+    "gate_version": {"$ref": "#/$defs/stableString"},
+    "target": {"$ref": "#/$defs/target"},
+    "source_snapshots": {"$ref": "#/$defs/sourceSnapshots"},
+    "surface_regions": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/surfaceRegion"}
+    },
+    "tokens": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/surfaceToken"}
+    },
+    "scan_units": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/scanUnit"}
+    },
+    "detector_runs": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/detectorRun"}
+    },
+    "candidates": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/gateCandidate"}
+    },
+    "evidence_bindings": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/evidenceBinding"}
+    },
+    "findings": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/canonicalFinding"}
+    },
+    "audits": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/auditRecord"}
+    },
+    "coverage": {"$ref": "#/$defs/coverage"},
+    "metrics": {"$ref": "#/$defs/metrics"},
+    "result": {"enum": ["PASS", "FAIL_CONTENT", "NEEDS_AUDIT"]}
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "stableString": {
+      "type": "string",
+      "minLength": 1
+    },
+    "nonnegativeInteger": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "nullableString": {
+      "type": ["string", "null"]
+    },
+    "stringTuple": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/stableString"}
+    },
+    "nonemptyStringTuple": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/stableString"}
+    },
+    "rawSpan": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["start", "end"],
+      "properties": {
+        "start": {"$ref": "#/$defs/nonnegativeInteger"},
+        "end": {"$ref": "#/$defs/nonnegativeInteger"}
+      }
+    },
+    "target": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "artifact_id",
+        "artifact_type",
+        "content_sha256",
+        "level_policy",
+        "writer_model_id",
+        "writer_family"
+      ],
+      "properties": {
+        "artifact_id": {"$ref": "#/$defs/stableString"},
+        "artifact_type": {
+          "enum": ["module", "activity", "vocabulary", "atlas_entry", "eval_output"]
+        },
+        "content_sha256": {"$ref": "#/$defs/sha256"},
+        "level_policy": {"$ref": "#/$defs/nullableString"},
+        "writer_model_id": {"$ref": "#/$defs/nullableString"},
+        "writer_family": {"$ref": "#/$defs/nullableString"}
+      }
+    },
+    "sourceSnapshots": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["vesum", "pravopys_rules", "ua_gec", "antonenko", "grac", "balla", "heritage", "sum11"],
+      "properties": {
+        "vesum": {"$ref": "#/$defs/stableString"},
+        "pravopys_rules": {"$ref": "#/$defs/stableString"},
+        "ua_gec": {"$ref": "#/$defs/stableString"},
+        "antonenko": {"$ref": "#/$defs/stableString"},
+        "grac": {"$ref": "#/$defs/stableString"},
+        "balla": {"$ref": "#/$defs/stableString"},
+        "heritage": {"$ref": "#/$defs/stableString"},
+        "sum11": {"$ref": "#/$defs/stableString"}
+      }
+    },
+    "surfaceRegion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["region_id", "raw_start", "raw_end", "surface_kind", "role", "role_method", "raw_sha256"],
+      "properties": {
+        "region_id": {"$ref": "#/$defs/sha256"},
+        "raw_start": {"$ref": "#/$defs/nonnegativeInteger"},
+        "raw_end": {"$ref": "#/$defs/nonnegativeInteger"},
+        "surface_kind": {
+          "enum": [
+            "VOCABULARY_ROW",
+            "DIALOGUE_LINE",
+            "GRAMMAR_NOTE",
+            "LESSON_PROSE",
+            "ACTIVITY_FIELD",
+            "SOURCE_QUOTE",
+            "METADATA"
+          ]
+        },
+        "role": {
+          "enum": [
+            "UKRAINIAN_TARGET",
+            "ENGLISH_GLOSS",
+            "QUOTED_BAD_FORM",
+            "TEACHING_CONTRAST_BAD",
+            "TEACHING_CONTRAST_GOOD",
+            "SOURCE_QUOTE",
+            "PROPER_NAME_OR_CITATION",
+            "CODE_OR_METADATA",
+            "UNKNOWN_ROLE"
+          ]
+        },
+        "role_method": {
+          "enum": [
+            "STRUCTURED_FIELD",
+            "TABLE_COLUMN",
+            "EXPLICIT_LANGUAGE_TAG",
+            "EXPLICIT_BILINGUAL_SEPARATOR",
+            "INLINE_UKRAINIAN_RUN",
+            "QUOTATION_CONTRACT"
+          ]
+        },
+        "raw_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "surfaceToken": {
+      "description": "The design uses SurfaceToken identities and raw spans but does not prescribe a further token payload in §9.1.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["token_id", "region_id", "raw_start", "raw_end", "raw_sha256"],
+      "properties": {
+        "token_id": {"$ref": "#/$defs/sha256"},
+        "region_id": {"$ref": "#/$defs/sha256"},
+        "raw_start": {"$ref": "#/$defs/nonnegativeInteger"},
+        "raw_end": {"$ref": "#/$defs/nonnegativeInteger"},
+        "raw_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "scanUnit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["scan_unit_id", "unit_kind", "region_ids", "token_ids", "raw_start", "raw_end", "required_detector_ids"],
+      "properties": {
+        "scan_unit_id": {"$ref": "#/$defs/sha256"},
+        "unit_kind": {
+          "enum": ["TOKEN", "LEXICAL_USE", "PHRASE_WINDOW", "FINITE_CLAUSE", "LOCAL_SHAPE", "BILINGUAL_PAIR", "DISPOSITION"]
+        },
+        "region_ids": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/sha256"}
+        },
+        "token_ids": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/sha256"}
+        },
+        "raw_start": {"$ref": "#/$defs/nonnegativeInteger"},
+        "raw_end": {"$ref": "#/$defs/nonnegativeInteger"},
+        "required_detector_ids": {"$ref": "#/$defs/nonemptyStringTuple"}
+      }
+    },
+    "detectorRun": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "detector_run_id",
+        "scan_unit_id",
+        "detector_id",
+        "detector_version",
+        "applicability",
+        "outcome",
+        "candidate_ids",
+        "evidence_binding_ids",
+        "failure_reason"
+      ],
+      "properties": {
+        "detector_run_id": {"$ref": "#/$defs/sha256"},
+        "scan_unit_id": {"$ref": "#/$defs/sha256"},
+        "detector_id": {"$ref": "#/$defs/stableString"},
+        "detector_version": {"$ref": "#/$defs/stableString"},
+        "applicability": {"enum": ["APPLICABLE", "NOT_APPLICABLE"]},
+        "outcome": {
+          "enum": [
+            "CLEAN",
+            "CANDIDATE",
+            "EXCLUDED",
+            "UNCOVERED",
+            "UNCURATED_SENSE",
+            "BINDING_FAILED",
+            "SPARSE_EVIDENCE",
+            "FAILED"
+          ]
+        },
+        "candidate_ids": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/sha256"}
+        },
+        "evidence_binding_ids": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/sha256"}
+        },
+        "failure_reason": {"$ref": "#/$defs/nullableString"}
+      }
+    },
+    "relation": {
+      "enum": [
+        "ACCEPTABLE",
+        "AGREEMENT_ERROR",
+        "CASE_GOVERNMENT_ERROR",
+        "WORD_CHOICE_ERROR",
+        "COLLOCATION_ERROR",
+        "MIXED",
+        "INSUFFICIENT_CONTEXT",
+        "ABSTAIN"
+      ]
+    },
+    "gateDecision": {
+      "enum": ["ACCEPT", "ACCEPT_FORM_ONLY", "REJECT", "DEFER", "UNCOVERED", "AUDIT"]
+    },
+    "layerAReason": {
+      "enum": [
+        "ANCHORED_CONTIGUOUS",
+        "ANCHORED_ORDERED_SEGMENTS",
+        "PRESENT_MULTI",
+        "ABSENT",
+        "FUZZY_AMBIGUOUS",
+        "OUTSIDE_SCAN",
+        "RAW_MAPPING_AMBIGUOUS",
+        "CROSS_EVENT_STITCH_FORBIDDEN",
+        "INCOMPLETE_CAPTURE",
+        "INCOMPLETE_CANDIDATE_SET",
+        "TOOL_ERROR",
+        "INSUFFICIENT_MASS",
+        "BELOW_TAU",
+        "DIGIT_NOT_ALIGNED",
+        "SALIENT_NOT_ALIGNED"
+      ]
+    },
+    "gateCandidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "candidate_id",
+        "candidate_class",
+        "hypothesis",
+        "target_window",
+        "evidence_candidate_ids",
+        "allowed_relations",
+        "canonical_rule_family"
+      ],
+      "properties": {
+        "candidate_id": {"$ref": "#/$defs/sha256"},
+        "candidate_class": {
+          "enum": ["AGREEMENT", "CASE_GOVERNMENT", "SENSE_RESTRICTED_CALQUE", "WORD_SENSE_SELECTION", "COLLOCATION"]
+        },
+        "hypothesis": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["hypothesis_id", "type", "target_locus_spans", "involved_token_ids", "asserted_risk"],
+          "properties": {
+            "hypothesis_id": {"$ref": "#/$defs/sha256"},
+            "type": {"$ref": "#/$defs/stableString"},
+            "target_locus_spans": {
+              "type": "array",
+              "minItems": 1,
+              "items": {"$ref": "#/$defs/rawSpan"}
+            },
+            "involved_token_ids": {
+              "type": "array",
+              "minItems": 1,
+              "items": {"$ref": "#/$defs/sha256"}
+            },
+            "asserted_risk": {"$ref": "#/$defs/stableString"}
+          }
+        },
+        "target_window": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["candidate_id", "window_start", "window_end", "window_sha256", "logical_unit_complete"],
+          "properties": {
+            "candidate_id": {"$ref": "#/$defs/stableString"},
+            "window_start": {"$ref": "#/$defs/nonnegativeInteger"},
+            "window_end": {"$ref": "#/$defs/nonnegativeInteger"},
+            "window_sha256": {"$ref": "#/$defs/sha256"},
+            "logical_unit_complete": {"type": "boolean"}
+          }
+        },
+        "evidence_candidate_ids": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/sha256"}
+        },
+        "allowed_relations": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/relation"}
+        },
+        "canonical_rule_family": {"$ref": "#/$defs/stableString"}
+      }
+    },
+    "lexicalFusedClass": {
+      "enum": [
+        "EXACT_ANTONENKO_REJECT",
+        "EXACT_UA_GEC_REJECT",
+        "EXACT_RULE_PLUS_MODERN_CONTRARY",
+        "POSITIVE_EXACT_ALLOW",
+        "AUTHENTIC_HERITAGE_DEFENSE",
+        "HEURISTIC_OR_GRAC_ONLY",
+        "BALLA_OBSERVATION",
+        "NO_DECISIVE_EVIDENCE",
+        "LINEAGE_OR_SOURCE_FAILURE"
+      ]
+    },
+    "evidenceBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "evidence_binding_id",
+        "candidate_id",
+        "source_role",
+        "authority_class",
+        "target_span_ids",
+        "rule_or_pair_id",
+        "corpus_snapshot_id",
+        "ancestor_source_ids"
+      ],
+      "properties": {
+        "evidence_binding_id": {"$ref": "#/$defs/sha256"},
+        "candidate_id": {"$ref": "#/$defs/sha256"},
+        "source_role": {
+          "enum": [
+            "VESUM_ANALYSIS",
+            "PRAVOPYS_RULE",
+            "UA_GEC_PAIR",
+            "ANTONENKO_STRUCTURED",
+            "ANTONENKO_PROSE",
+            "GRAC_OBSERVATION",
+            "MODERN_ATTESTATION_CARD",
+            "BALLA_OBSERVATION",
+            "PHRASEOLOGICAL_ATTESTATION",
+            "HERITAGE_DEFENSE",
+            "SUM11_SUPPORT",
+            "RUSSIAN_SHADOW_SIGNAL"
+          ]
+        },
+        "authority_class": {
+          "enum": ["NORMATIVE", "CURATED_RULE", "ADJUDICATED_PAIR", "POSITIVE_DEFENSE", "OBSERVATIONAL", "HEURISTIC"]
+        },
+        "target_span_ids": {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/stableString"}
+        },
+        "rule_or_pair_id": {"$ref": "#/$defs/nullableString"},
+        "corpus_snapshot_id": {"$ref": "#/$defs/stableString"},
+        "ancestor_source_ids": {"$ref": "#/$defs/stringTuple"}
+      }
+    },
+    "canonicalFinding": {
+      "description": "Closed projection of the existing ua_contact_quality_evidence.v1 finding contract required unchanged by §3.2.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "finding_id",
+        "issue_id",
+        "issue_class",
+        "dimension",
+        "severity",
+        "contact_source_lang",
+        "source_lang",
+        "track_l1",
+        "ua_gec_tag",
+        "confidence",
+        "disposition",
+        "file",
+        "line",
+        "span",
+        "excerpt",
+        "message",
+        "suggested_replacement",
+        "detector",
+        "attribution"
+      ],
+      "properties": {
+        "finding_id": {"$ref": "#/$defs/stableString"},
+        "issue_id": {"$ref": "#/$defs/stableString"},
+        "issue_class": {
+          "enum": [
+            "calque",
+            "grammar",
+            "collocation",
+            "false_friend",
+            "register",
+            "leakage",
+            "pedagogy",
+            "fluency",
+            "mechanics",
+            "other"
+          ]
+        },
+        "dimension": {
+          "enum": ["contact_grammar", "contact_calque", "ukrainian_style", "mechanics", "naturalness", "level_policy"]
+        },
+        "severity": {"enum": ["critical", "warning", "info"]},
+        "contact_source_lang": {"enum": ["ru", "pl", "en", "unknown", "other"]},
+        "source_lang": {"enum": ["ru", "pl", "en", "unknown", "other"]},
+        "track_l1": {"enum": ["uk", "en", "pl", "ru", "unknown", "other"]},
+        "ua_gec_tag": {"$ref": "#/$defs/nullableString"},
+        "confidence": {"enum": ["deterministic", "lookup_heuristic", "llm_judgment"]},
+        "disposition": {
+          "enum": ["defect", "teaching_contrast", "quoted_bad_form", "heritage_allowed", "suppressed_fp"]
+        },
+        "file": {"$ref": "#/$defs/stableString"},
+        "line": {"type": ["integer", "null"], "minimum": 1},
+        "span": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["start", "end"],
+          "properties": {
+            "start": {"type": ["integer", "null"], "minimum": 0},
+            "end": {"type": ["integer", "null"], "minimum": 0}
+          }
+        },
+        "excerpt": {"type": "string", "minLength": 1, "maxLength": 160},
+        "message": {"$ref": "#/$defs/stableString"},
+        "suggested_replacement": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/stableString"}
+        },
+        "detector": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["adapter", "rule_id", "pattern_id"],
+          "properties": {
+            "adapter": {"$ref": "#/$defs/stableString"},
+            "rule_id": {"$ref": "#/$defs/stableString"},
+            "pattern_id": {"$ref": "#/$defs/stableString"}
+          }
+        },
+        "attribution": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["corpus", "license", "doc_id", "pair_id", "evidence"],
+          "properties": {
+            "corpus": {"$ref": "#/$defs/nullableString"},
+            "license": {"$ref": "#/$defs/nullableString"},
+            "doc_id": {"$ref": "#/$defs/nullableString"},
+            "pair_id": {"$ref": "#/$defs/nullableString"},
+            "evidence": {"$ref": "#/$defs/nullableString"}
+          }
+        }
+      }
+    },
+    "auditRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["audit_id", "reason"],
+      "properties": {
+        "audit_id": {"$ref": "#/$defs/sha256"},
+        "reason": {"$ref": "#/$defs/stableString"}
+      }
+    },
+    "coverage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "scan_units_total",
+        "scan_units_complete",
+        "coverage_missing",
+        "coverage_missing_by_reason",
+        "eligible_ukrainian_words",
+        "scored_ukrainian_words",
+        "coverage_missing_ukrainian_words"
+      ],
+      "properties": {
+        "scan_units_total": {"$ref": "#/$defs/nonnegativeInteger"},
+        "scan_units_complete": {"$ref": "#/$defs/nonnegativeInteger"},
+        "coverage_missing": {"$ref": "#/$defs/nonnegativeInteger"},
+        "coverage_missing_by_reason": {
+          "type": "object",
+          "additionalProperties": {"$ref": "#/$defs/nonnegativeInteger"}
+        },
+        "eligible_ukrainian_words": {"$ref": "#/$defs/nonnegativeInteger"},
+        "scored_ukrainian_words": {"$ref": "#/$defs/nonnegativeInteger"},
+        "coverage_missing_ukrainian_words": {"$ref": "#/$defs/nonnegativeInteger"}
+      }
+    },
+    "metrics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "confirmed_grammar_errors",
+        "confirmed_lexical_errors",
+        "unresolved_candidates",
+        "target_vocab_required",
+        "target_vocab_realized",
+        "target_vocab_coverage",
+        "content_lemma_tokens",
+        "mattr_window",
+        "mattr",
+        "reference_mattr",
+        "lexical_diversity_retention",
+        "flattening_flag"
+      ],
+      "properties": {
+        "confirmed_grammar_errors": {"$ref": "#/$defs/nonnegativeInteger"},
+        "confirmed_lexical_errors": {"$ref": "#/$defs/nonnegativeInteger"},
+        "unresolved_candidates": {"$ref": "#/$defs/nonnegativeInteger"},
+        "target_vocab_required": {"$ref": "#/$defs/nonnegativeInteger"},
+        "target_vocab_realized": {"$ref": "#/$defs/nonnegativeInteger"},
+        "target_vocab_coverage": {"type": ["number", "null"], "minimum": 0},
+        "content_lemma_tokens": {"$ref": "#/$defs/nonnegativeInteger"},
+        "mattr_window": {"type": ["integer", "null"], "minimum": 1},
+        "mattr": {"type": ["number", "null"], "minimum": 0},
+        "reference_mattr": {"type": ["number", "null"], "minimum": 0},
+        "lexical_diversity_retention": {"type": ["number", "null"], "minimum": 0},
+        "flattening_flag": {"type": "boolean"}
+      }
+    }
+  }
+}
