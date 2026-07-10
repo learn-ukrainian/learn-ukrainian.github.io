@@ -29,6 +29,7 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from scripts.audit import lint_bio_dossier_xref
+from scripts.audit.readings_contract import validate_readings_contract
 from scripts.audit.wiki_completeness_gate import check_wiki_completeness
 from scripts.build import linear_pipeline
 from scripts.validate import check_wiki_subject, lint_seminar_quality
@@ -325,6 +326,10 @@ def build_catalog_readiness(*, root: Path = PROJECT_ROOT, track: str = "bio") ->
             for name in ("wiki_quality", "wiki_completeness", "wiki_subject", "wiki_language", "source_registry"):
                 gates[name] = _gate(False, root=root, paths=[wiki_path, source_path])
 
+        reading_contract = validate_readings_contract(
+            raw_plan or {},
+            readings_dir=root / "site" / "src" / "content" / "readings",
+        )
         structural_complete = all(gates[name]["status"] == "pass" for name in CATALOG_GATES)
         rows.append(
             {
@@ -332,6 +337,16 @@ def build_catalog_readiness(*, root: Path = PROJECT_ROOT, track: str = "bio") ->
                 "gates": gates,
                 "catalog_source_structural_complete": structural_complete,
                 "blocker_codes": _blocker_codes(gates),
+                "reading_contract": reading_contract,
+                "reading_contract_gate": _gate(
+                    bool(reading_contract["passed"]),
+                    root=root,
+                    paths=[plan_path],
+                    detail=(
+                        f"{reading_contract['status']}: "
+                        f"{json.dumps(reading_contract['diagnostic_counts'], sort_keys=True)}"
+                    ),
+                ),
             }
         )
 
@@ -340,6 +355,17 @@ def build_catalog_readiness(*, root: Path = PROJECT_ROOT, track: str = "bio") ->
         name: sum(row["gates"][name]["status"] == "pass" for row in rows) for name in CATALOG_GATES
     }
     structural_complete_rows = sum(row["catalog_source_structural_complete"] for row in rows)
+    reading_contract_status_counts = Counter(row["reading_contract"]["status"] for row in rows)
+    reading_contract_entry_counts = {
+        status: sum(row["reading_contract"]["entry_counts"][status] for row in rows)
+        for status in ("pass", "unmigrated", "fail")
+    }
+    reading_contract_diagnostic_counts = Counter(
+        code
+        for row in rows
+        for code, count in row["reading_contract"]["diagnostic_counts"].items()
+        for _ in range(count)
+    )
     return {
         "summary": {
             "track": track,
@@ -348,6 +374,19 @@ def build_catalog_readiness(*, root: Path = PROJECT_ROOT, track: str = "bio") ->
             "catalog_source_structural_incomplete_rows": len(rows) - structural_complete_rows,
             "gate_pass_counts": gate_pass_counts,
             "blocker_counts": dict(sorted(blocker_counts.items())),
+            "reading_contract": {
+                "module_counts": {
+                    "pass": reading_contract_status_counts["pass"],
+                    "unmigrated": reading_contract_status_counts["unmigrated"],
+                    "fail": reading_contract_status_counts["fail"],
+                },
+                "entry_counts": {
+                    "pass": reading_contract_entry_counts["pass"],
+                    "unmigrated": reading_contract_entry_counts["unmigrated"],
+                    "fail": reading_contract_entry_counts["fail"],
+                },
+                "diagnostic_counts": dict(sorted(reading_contract_diagnostic_counts.items())),
+            },
         },
         "rows": rows,
     }
@@ -361,6 +400,7 @@ def _print_summary(report: Mapping[str, object]) -> None:
     )
     print("gate passes: " + json.dumps(summary["gate_pass_counts"], ensure_ascii=False, sort_keys=True))
     print("blockers: " + json.dumps(summary["blocker_counts"], ensure_ascii=False, sort_keys=True))
+    print("reading contract: " + json.dumps(summary["reading_contract"], ensure_ascii=False, sort_keys=True))
 
 
 def main(argv: list[str] | None = None) -> int:

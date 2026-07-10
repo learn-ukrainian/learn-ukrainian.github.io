@@ -113,6 +113,9 @@ def test_structurally_complete_row_uses_only_deterministic_artifact_gates(tmp_pa
     assert set(row["gates"]) == set(readiness.CATALOG_GATES)
     assert row["gates"]["source_registry"]["status"] == "pass"
     assert row["gates"]["dossier"]["evidence_paths"] == ["docs/research/bio/known.md"]
+    assert row["reading_contract"]["status"] == "unmigrated"
+    assert row["reading_contract_gate"]["status"] == "fail"
+    assert report["summary"]["reading_contract"]["module_counts"]["unmigrated"] == 1
 
 
 def test_missing_artifacts_are_explicit_fail_closed_blockers(tmp_path: Path) -> None:
@@ -201,3 +204,38 @@ def test_cli_json_emits_one_manifest_row(tmp_path: Path, monkeypatch: pytest.Mon
     report = json.loads(capsys.readouterr().out)
     assert report["summary"]["manifest_rows"] == 1
     assert [row["slug"] for row in report["rows"]] == ["known"]
+
+
+def test_reading_contract_is_separate_from_structural_completion(tmp_path: Path) -> None:
+    _write_complete_catalog(tmp_path)
+    plan_path = tmp_path / "curriculum" / "l2-uk-en" / "plans" / "bio" / "known.yaml"
+    plan = yaml.safe_load(plan_path.read_text(encoding="utf-8"))
+    plan["readings_contract_version"] = 2
+    plan["readings"] = [
+        {
+            "title": "Читання",
+            "source_name": "Перевірене джерело",
+            "source_url": "https://example.test/reading",
+            "language": "uk",
+            "hosting": "link-only",
+            "learner_task": "Прочитати матеріал і виписати головну тезу.",
+            "rights": {
+                "basis": "external-link",
+                "evidence_url": "https://example.test/reading",
+                "note": "Лише зовнішнє посилання.",
+            },
+        }
+    ]
+    plan_path.write_text(yaml.safe_dump(plan, allow_unicode=True, sort_keys=False), encoding="utf-8")
+
+    report = readiness.build_catalog_readiness(root=tmp_path)
+
+    row = report["rows"][0]
+    assert row["catalog_source_structural_complete"] is True
+    assert row["reading_contract_gate"]["status"] == "pass"
+    assert report["summary"]["catalog_source_structural_complete_rows"] == 1
+    assert report["summary"]["reading_contract"]["entry_counts"] == {
+        "pass": 1,
+        "unmigrated": 0,
+        "fail": 0,
+    }
