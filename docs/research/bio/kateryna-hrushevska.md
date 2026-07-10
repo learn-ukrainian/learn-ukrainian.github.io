@@ -64,7 +64,7 @@ A second contested point is disciplinary naming. ESU calls her an ethnosociologi
 - **Existing HIST modules (VERIFIED present via `test -e`):**
   - `curriculum/l2-uk-en/plans/hist/hrushevskyi.yaml`
 - **Existing FOLK plans (VERIFIED present via `test -e`):**
-  - `curriculum/l2-uk-en/plans/folk/pisni-literaturnoho-pokhodzhennia.yaml`
+  - `curriculum/l2-uk-en/plans/folk/kobzarstvo-lirnytstvo.yaml`
   - `curriculum/l2-uk-en/plans/folk/dumy-nevilnytski-lytsarski.yaml` — this combined plan covers both nevilnytski and lytsarski dumy tracks
   - `curriculum/l2-uk-en/plans/folk/dumy-sotsialno-pobutovi.yaml`
   - `curriculum/l2-uk-en/plans/folk/kobzarstvo-lirnytstvo.yaml`
