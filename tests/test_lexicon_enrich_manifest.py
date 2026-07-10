@@ -2509,8 +2509,38 @@ def test_xref_target_lemmas_fail_closed_on_real_definitions() -> None:
     assert _xref_target_lemmas("", "заховати") == []
 
 
-def test_verb_aspect_reads_vesum_tags() -> None:
-    # VESUM-backed: perfective vs imperfective infinitives (data/vesum.db).
+# Fixture-backed VESUM stubs for the xref tests. CI has no data/vesum.db (data/
+# is machine-local), so tests must never hit the real dictionary — the first CI
+# run of PR #4903 failed exactly here while local runs (with the DB symlinked)
+# were green. Patch the two module boundaries: verify_word (aspect reads) and
+# _vesum_word_analyses (inflected-form → base-lemma resolution).
+_FAKE_VESUM_ROWS: dict[str, list[dict[str, str]]] = {
+    "заховати": [{"word_form": "заховати", "lemma": "заховати", "pos": "verb", "tags": "verb:inf:perf"}],
+    "заховувати": [{"word_form": "заховувати", "lemma": "заховувати", "pos": "verb", "tags": "verb:inf:imperf"}],
+    "підбігти": [{"word_form": "підбігти", "lemma": "підбігти", "pos": "verb", "tags": "verb:inf:perf"}],
+    "підбігати": [{"word_form": "підбігати", "lemma": "підбігати", "pos": "verb", "tags": "verb:inf:imperf"}],
+    "святий": [{"word_form": "святий", "lemma": "святий", "pos": "adj", "tags": "adj:m:v_naz:compb"}],
+    "ховаєш": [{"word_form": "ховаєш", "lemma": "ховати", "pos": "verb", "tags": "verb:imperf:pres:s:2"}],
+    "ховати": [{"word_form": "ховати", "lemma": "ховати", "pos": "verb", "tags": "verb:inf:imperf"}],
+}
+
+
+def _patch_fake_vesum(monkeypatch) -> None:
+    monkeypatch.setattr(
+        enrich_manifest_module, "verify_word", lambda word: _FAKE_VESUM_ROWS.get(word, [])
+    )
+    monkeypatch.setattr(
+        enrich_manifest_module,
+        "_vesum_word_analyses",
+        lambda surface: [
+            (row["lemma"], row["pos"]) for row in _FAKE_VESUM_ROWS.get(surface, [])
+        ],
+    )
+
+
+def test_verb_aspect_reads_vesum_tags(monkeypatch) -> None:
+    # Fixture-backed (CI has no data/vesum.db): perfective vs imperfective infinitives.
+    _patch_fake_vesum(monkeypatch)
     assert _verb_aspect("заховати") == "perf"
     assert _verb_aspect("заховувати") == "imperf"
     assert _verb_aspect("підбігти") == "perf"
@@ -2520,7 +2550,8 @@ def test_verb_aspect_reads_vesum_tags() -> None:
     assert _verb_aspect("щqz-not-a-word") is None
 
 
-def test_xref_provenance_prefix_renders_aspect_pair() -> None:
+def test_xref_provenance_prefix_renders_aspect_pair(monkeypatch) -> None:
+    _patch_fake_vesum(monkeypatch)
     # Perfective lemma glossed by its imperfective → standard «докон. до X» form.
     assert _xref_provenance_prefix("заховати", "заховувати") == "(докон. до заховувати / див. заховувати) "
     # Imperfective → perfective would render «недок. до X».
@@ -2529,7 +2560,8 @@ def test_xref_provenance_prefix_renders_aspect_pair() -> None:
     assert _xref_provenance_prefix("свят", "святий") == "(див. святий) "
 
 
-def test_sum11_definition_card_resolves_cross_reference_one_level() -> None:
+def test_sum11_definition_card_resolves_cross_reference_one_level(monkeypatch) -> None:
+    _patch_fake_vesum(monkeypatch)
     target_def = "Класти що-небудь у таємному місці, щоб ніхто не міг знайти."
     conn = _sum11_conn({"заховати": "заховати див. заховувати", "заховувати": target_def})
     card = _sum11_definition_card(conn, "заховати", has_sum11_flags=True)
@@ -2539,7 +2571,8 @@ def test_sum11_definition_card_resolves_cross_reference_one_level() -> None:
     assert card["cross_reference"] == {"raw": "заховати див. заховувати", "target": "заховувати"}
 
 
-def test_sum11_definition_card_resolves_inflected_target() -> None:
+def test_sum11_definition_card_resolves_inflected_target(monkeypatch) -> None:
+    _patch_fake_vesum(monkeypatch)
     # Cross-ref points at an inflected form (ховаєш) → VESUM-lemmatize to ховати.
     target_def = "Класти що-небудь у таємному місці."
     conn = _sum11_conn({"назахову": "назахову див. ховаєш", "ховати": target_def})
@@ -2615,6 +2648,7 @@ def test_vts_definition_card_resolves_cross_reference_live_shape(monkeypatch) ->
         assert slug == "vts"
         return rows.get(lemma)
 
+    _patch_fake_vesum(monkeypatch)
     monkeypatch.setattr(enrich_manifest_module, "_fetch_slovnyk_entry", fake_fetch)
     monkeypatch.setattr(enrich_manifest_module, "_slovnyk_base_row", lambda base, slug: None)
 
