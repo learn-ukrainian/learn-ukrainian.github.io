@@ -262,6 +262,8 @@ def _case_from_row(
     grounding_key = row.get("grounding_key")
     if not isinstance(grounding_key, str) or grounding_key != shadow.get("grounding_key"):
         raise LabelJoinError(f"keyed row does not exactly resolve to a shadow grounding key: {grounding_key!r}")
+    if row.get("fact_check_index") != fact_check_index_from_key(grounding_key):
+        raise LabelJoinError(f"keyed row fact_check_index does not match grounding key: {grounding_key!r}")
     artifact_name = shadow.get("artifact")
     if not isinstance(artifact_name, str) or artifact_name not in corpus:
         raise LabelJoinError(f"shadow artifact is unavailable: {artifact_name!r}")

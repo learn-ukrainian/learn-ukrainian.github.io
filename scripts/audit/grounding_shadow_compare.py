@@ -19,20 +19,8 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
-from scripts.audit import grounding_gate_v2
-from scripts.audit.llm_reviewer_dispatch import (
-    _event_output_text,
-    _grounding_matches_events,
-    _normalize_for_match,
-    _v2_abstain_recovered,
-    tool_events_from_dispatch_meta,
-)
-from scripts.audit.qg_bakeoff import (
-    _artifact_arm_from_path,
-    _is_bakeoff_cell,
-    _match_rows_to_claims,
-    load_fixtures,
-)
+from scripts.audit.grounding_gate_v2 import DEFAULT_TAU
+from scripts.audit.layerb_derivation import derive_keyed_records
 
 
 def parse_args() -> argparse.Namespace:
@@ -158,112 +146,20 @@ def main() -> int:
             try:
                 tau = float(env_tau)
             except ValueError:
-                tau = grounding_gate_v2.DEFAULT_TAU
+                tau = DEFAULT_TAU
         else:
-            tau = grounding_gate_v2.DEFAULT_TAU
-
-    # Load fixtures
-    fixtures = {}
-    if args.fixtures_dir.is_dir():
-        fixtures = {f.slug: f for f in load_fixtures(args.fixtures_dir)}
-    else:
+            tau = DEFAULT_TAU
+    fixtures_dir = args.fixtures_dir if args.fixtures_dir.is_dir() else None
+    if fixtures_dir is None:
         print(
             f"Warning: Fixtures directory not found: {args.fixtures_dir}. False positive rates won't be calculated.",
             file=sys.stderr,
         )
-
-    records: list[dict[str, Any]] = []
-
-    # Find and process all bakeoff cell json files
-    for path in sorted(args.artifacts_dir.glob("*.json")):
-        try:
-            artifact = json.loads(path.read_text(encoding="utf-8"))
-        except Exception as exc:
-            print(f"Warning: Failed to parse {path.name}: {exc}", file=sys.stderr)
-            continue
-
-        if not _is_bakeoff_cell(artifact):
-            continue
-
-        payload = artifact.get("payload") or {}
-        dispatch_meta = artifact.get("dispatch") or {}
-        slug = (artifact.get("fixture") or {}).get("slug")
-        fixture = fixtures.get(slug) if isinstance(slug, str) else None
-        arm = _artifact_arm_from_path(path, artifact)
-        seat = artifact.get("seat") or artifact.get("model") or "unknown"
-
-        events = tool_events_from_dispatch_meta(dispatch_meta)
-
-        fact_checks = payload.get("fact_checks", [])
-        if not isinstance(fact_checks, list):
-            fact_checks = []
-
-        row_to_claim_idx = {}
-        if fixture is not None:
-            fc_list = [dict(fc) for fc in fact_checks]
-            matched, _ = _match_rows_to_claims(fc_list, fixture)
-            for claim_id, row in matched.items():
-                for idx, orig_row in enumerate(fc_list):
-                    if orig_row is row:
-                        row_to_claim_idx[idx] = claim_id
-                        break
-
-        for idx, fc in enumerate(fact_checks):
-            if not isinstance(fc, Mapping):
-                continue
-            grounding = fc.get("grounding")
-            if not isinstance(grounding, Mapping):
-                continue
-
-            claim_text = str(fc.get("claim") or "")
-            excerpt_text = str(grounding.get("evidence_excerpt") or "")
-
-            # Run v1
-            v1_admissible = _grounding_matches_events(grounding, events)
-
-            # Run v2
-            res_v2 = grounding_gate_v2.anchor_evidence_to_events(grounding, events, tau=tau)
-            v2_anchored = res_v2.anchored
-            v2_abstained = res_v2.abstained
-            similarity = res_v2.similarity
-
-            tool_query_matched = False
-            if res_v2.source_index is not None:
-                tool_query_matched = grounding_gate_v2._tool_query_match(grounding, events[res_v2.source_index])
-
-            best_span_preview = ""
-            if res_v2.span is not None and res_v2.source_index is not None:
-                out_text = _event_output_text(events[res_v2.source_index])
-                if out_text is not None:
-                    norm_out = _normalize_for_match(out_text)
-                    best_span_preview = norm_out[res_v2.span[0] : res_v2.span[1]][:160]
-
-            gold_is_true = None
-            if (claim_id := row_to_claim_idx.get(idx)) and fixture is not None:
-                claim_obj = next((c for c in fixture.claims if c.claim_id == claim_id), None)
-                if claim_obj is not None:
-                    gold_is_true = claim_obj.is_true
-
-            abstain_recovered = _v2_abstain_recovered(res_v2)
-            v2_effective = v2_anchored or abstain_recovered
-
-            records.append(
-                {
-                    "fixture": slug or "unknown",
-                    "seat_arm": f"{seat}/{arm}",
-                    "claim": claim_text,
-                    "excerpt": excerpt_text,
-                    "v1_admissible": v1_admissible,
-                    "v2_anchored": v2_anchored,
-                    "v2_abstained": v2_abstained,
-                    "similarity": similarity,
-                    "abstain_recovered": abstain_recovered,
-                    "v2_effective": v2_effective,
-                    "tool_query_matched": tool_query_matched,
-                    "best_span_preview": best_span_preview,
-                    "gold_is_true": gold_is_true,
-                }
-            )
+    source_records = derive_keyed_records(args.artifacts_dir, fixtures_dir=fixtures_dir, tau=tau)
+    records = [
+        {key: value for key, value in record.items() if key not in {"grounding_key", "fact_check_index"}}
+        for record in source_records
+    ]
 
     # Calculate statistics
     stats = compute_summary(records)

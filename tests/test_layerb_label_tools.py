@@ -13,6 +13,7 @@ from typing import Any
 import pytest
 from jsonschema import Draft202012Validator
 
+from scripts.audit.layerb_derivation import derive_keyed_records
 from scripts.audit.layerb_keys import _build_event_index, _stable_grounding_key
 from scripts.audit.layerb_label_common import LabelJoinError, sha256_text
 from scripts.audit.layerb_label_merge import merge_annotator_sidecars
@@ -23,7 +24,12 @@ from scripts.audit.layerb_label_scaffold import (
     validate_annotator_record,
     write_scaffold,
 )
-from scripts.audit.layerb_label_union import attach_keys, derive_union
+from scripts.audit.layerb_label_union import (
+    assert_no_drift,
+    attach_keys,
+    derive_union,
+    rederive_keyed_derivation,
+)
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 SCHEMA = json.loads((REPO_ROOT / "schemas" / "qg-layer-b-labels.v2.schema.json").read_text(encoding="utf-8"))
@@ -189,6 +195,106 @@ def _keyed_inputs(tmp_path: Path, count: int = 8) -> tuple[dict[str, Any], dict[
     return keyed, shadow, corpus_dir
 
 
+def _keyed_derivation(derivation: Mapping[str, Any], shadow: Mapping[str, Any]) -> dict[str, Any]:
+    """Build source-keyed synthetic derivations without using ``attach``."""
+    records: list[dict[str, Any]] = []
+    for index, row in enumerate(derivation["records"]):
+        keyed = dict(row)
+        grounding_key = _shadow_for_fact_index(shadow, index)["grounding_key"]
+        keyed["grounding_key"] = grounding_key
+        keyed["fact_check_index"] = index
+        records.append(keyed)
+    return {"kind": "qg-layer-b-keyed-union-derivation", "records": records, "total_rows": len(records)}
+
+
+def _frozen_category_union(keyed_derivation: Mapping[str, Any]) -> dict[str, Any]:
+    rows: list[dict[str, Any]] = []
+    for index, row in enumerate(keyed_derivation["records"]):
+        categories: list[str] = []
+        if row["v1_admissible"] is False and row["v2_effective"] is True:
+            categories.append("recovered")
+        if row["v1_admissible"] is True and row["v2_effective"] is False:
+            categories.append("regression")
+        if row["v2_abstained"] is True:
+            categories.append("abstain")
+        if not categories:
+            continue
+        frozen_row = {
+            key: value for key, value in row.items() if key not in {"grounding_key", "fact_check_index"}
+        }
+        frozen_row["source_index"] = index
+        frozen_row["union_categories"] = [
+            category for category in ("recovered", "regression", "abstain") if category in categories
+        ]
+        rows.append(frozen_row)
+    return {"kind": "qg-layer-b-label-union-input", "rows": rows, "total_rows": len(rows)}
+
+
+def _raw_rederive_inputs(tmp_path: Path) -> tuple[Path, Path, dict[str, Any]]:
+    corpus_dir = tmp_path / "raw-corpus"
+    fixtures_dir = tmp_path / "fixtures"
+    corpus_dir.mkdir()
+    fixtures_dir.mkdir()
+    claims = ["Synthetic source claim zero", "Synthetic source claim one"]
+    (fixtures_dir / "synthetic.json").write_text(
+        json.dumps(
+            {
+                "slug": "synthetic",
+                "title": "Synthetic",
+                "passage_md": " ".join(claims),
+                "claims": [
+                    {"claim_id": f"synthetic-{index}", "claim": claim, "is_true": True}
+                    for index, claim in enumerate(claims)
+                ],
+            },
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+    artifact = {
+        "schema_version": "qg_bakeoff_run.v1",
+        "arm": "tooled",
+        "seat": "synthetic-seat",
+        "fixture": {"slug": "synthetic"},
+        "payload": {
+            "fact_checks": [
+                {
+                    "fact_check_id": f"synthetic-{index}",
+                    "claim": claim,
+                    "verdict": "CONFIRMED",
+                    "grounding": {
+                        "evidence_excerpt": claim,
+                        "tool": "sources_query_wikipedia",
+                        "query": "synthetic",
+                    },
+                }
+                for index, claim in enumerate(claims)
+            ]
+        },
+        "dispatch": {
+            "tool_events": [
+                {
+                    "tool": "sources_query_wikipedia",
+                    "input": {"query": "synthetic"},
+                    "status": "completed",
+                    "output": " ".join(claims),
+                }
+            ]
+        },
+    }
+    (corpus_dir / "synthetic__synthetic.json").write_text(
+        json.dumps(artifact, ensure_ascii=False), encoding="utf-8"
+    )
+    records = derive_keyed_records(corpus_dir, fixtures_dir=fixtures_dir)
+    frozen = {
+        "records": [
+            {key: value for key, value in record.items() if key not in {"grounding_key", "fact_check_index"}}
+            for record in records
+        ]
+    }
+    return corpus_dir, fixtures_dir, frozen
+
+
 def _make_duplicate_structural_group(
     tmp_path: Path,
 ) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any], Path]:
@@ -296,18 +402,124 @@ def test_attached_keys_equal_shadow_helper_for_sampled_rows(tmp_path: Path) -> N
         )
 
 
-def test_mode_b_is_byte_identical_for_the_same_seed(tmp_path: Path) -> None:
-    union, derivation, shadow, corpus_dir = _inputs(tmp_path, count=8)
+def test_keyed_union_is_byte_identical_and_matches_frozen_category_fixture(tmp_path: Path) -> None:
+    union, derivation, shadow, _corpus_dir = _inputs(tmp_path, count=8)
     del union
+    keyed_derivation = _keyed_derivation(derivation, shadow)
+    frozen_union = _frozen_category_union(keyed_derivation)
 
-    first, first_report = derive_union(derivation, shadow, corpus_dir=corpus_dir, seed=4913, control_per_stratum=1)
-    second, second_report = derive_union(derivation, shadow, corpus_dir=corpus_dir, seed=4913, control_per_stratum=1)
+    first, first_report = derive_union(
+        keyed_derivation,
+        frozen_union_document=frozen_union,
+        seed=4913,
+        control_per_stratum=1,
+    )
+    second, second_report = derive_union(
+        keyed_derivation,
+        frozen_union_document=frozen_union,
+        seed=4913,
+        control_per_stratum=1,
+    )
 
     assert json.dumps(first, ensure_ascii=False, separators=(",", ":")) == json.dumps(
         second, ensure_ascii=False, separators=(",", ":")
     )
     assert first_report == second_report
+    assert first_report["category_membership"]["category_multiset_equal"] is True
+    assert first_report["control_resampled"] is True
     assert first_report["frozen_control_sample_reproduction_guaranteed"] is False
+
+
+def test_rederive_no_drift_positive_and_synthetic_drift_hard_fail(tmp_path: Path) -> None:
+    corpus_dir, fixtures_dir, frozen = _raw_rederive_inputs(tmp_path)
+    regenerated = derive_keyed_records(corpus_dir, fixtures_dir=fixtures_dir)
+
+    proof = assert_no_drift(regenerated, frozen)
+    document, rederive_report = rederive_keyed_derivation(
+        artifacts_dir=corpus_dir,
+        fixtures_dir=fixtures_dir,
+        frozen_derivation_document=frozen,
+        expected_rows=2,
+    )
+
+    assert proof["no_drift"] is True
+    assert document["total_rows"] == rederive_report["grounding_keys_unique"] == 2
+    drifted = copy.deepcopy(regenerated)
+    drifted[0]["claim"] = "Changed source claim"
+    with pytest.raises(LabelJoinError, match="symmetric_difference"):
+        assert_no_drift(drifted, frozen)
+
+
+def test_source_derivation_retains_comparison_only_no_fixture_fallback(tmp_path: Path) -> None:
+    corpus_dir, _fixtures_dir, _frozen = _raw_rederive_inputs(tmp_path)
+
+    records = derive_keyed_records(corpus_dir, fixtures_dir=None)
+
+    assert len(records) == 2
+    assert {record["gold_is_true"] for record in records} == {None}
+
+
+def test_rederive_cli_is_byte_identical_for_two_source_walks(tmp_path: Path) -> None:
+    corpus_dir, fixtures_dir, frozen = _raw_rederive_inputs(tmp_path)
+    frozen_path = tmp_path / "frozen-derivation.json"
+    frozen_path.write_text(json.dumps(frozen, ensure_ascii=False), encoding="utf-8")
+    first_path = tmp_path / "keyed-first.json"
+    second_path = tmp_path / "keyed-second.json"
+    command = [
+        str(REPO_ROOT / ".venv" / "bin" / "python"),
+        "scripts/audit/layerb_label_union.py",
+        "rederive",
+        "--derivation",
+        str(frozen_path),
+        "--artifacts-dir",
+        str(corpus_dir),
+        "--fixtures-dir",
+        str(fixtures_dir),
+        "--expected-rows",
+        "2",
+    ]
+    for output in (first_path, second_path):
+        completed = subprocess.run(
+            [*command, "--output", str(output)],
+            cwd=REPO_ROOT,
+            check=False,
+            capture_output=True,
+            text=True,
+        )
+        assert completed.returncode == 0, completed.stderr
+
+    assert first_path.read_bytes() == second_path.read_bytes()
+    keyed_document = json.loads(first_path.read_text(encoding="utf-8"))
+    assert keyed_document["keying"]["join_report"]["no_drift"] is True
+    assert [row["fact_check_index"] for row in keyed_document["records"]] == [0, 1]
+
+
+def test_scaffold_consumes_union_derived_from_keyed_source_records(tmp_path: Path) -> None:
+    union, derivation, shadow, corpus_dir = _inputs(tmp_path, count=8)
+    del union
+    keyed_derivation = _keyed_derivation(derivation, shadow)
+    keyed_union, union_report = derive_union(
+        keyed_derivation,
+        frozen_union_document=_frozen_category_union(keyed_derivation),
+        seed=4913,
+        control_per_stratum=1,
+    )
+    keyed_path = tmp_path / "keyed-union.json"
+    shadow_path = tmp_path / "phase1-shadow.json"
+    keyed_path.write_text(json.dumps(keyed_union, ensure_ascii=False), encoding="utf-8")
+    shadow_path.write_text(json.dumps(shadow, ensure_ascii=False), encoding="utf-8")
+
+    scaffold, manifest = write_scaffold(
+        keyed_path,
+        shadow_path,
+        corpus_dir=corpus_dir,
+        output_dir=tmp_path / "keyed-scaffold",
+        shard_count=2,
+    )
+
+    assert len(scaffold["cases"]) == keyed_union["total_rows"] == 5
+    assert manifest["counts"]["segment_verified_candidates"] == 5
+    assert union_report["category_membership"]["category_rows"] == 3
 
 
 def test_scaffold_null_judgments_hashes_windows_and_resume(tmp_path: Path) -> None:
@@ -372,6 +584,7 @@ def test_scaffold_hard_fails_when_a_shadow_segment_hash_does_not_match(tmp_path:
 @pytest.mark.parametrize(
     "module",
     (
+        "scripts.audit.layerb_derivation",
         "scripts.audit.layerb_label_common",
         "scripts.audit.layerb_label_union",
         "scripts.audit.layerb_label_scaffold",
