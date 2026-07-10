@@ -236,5 +236,7 @@ decisions:
         rejected_because: "No training HW; depreciates against weekly frontier rotation; measurement+routing achieves the learner-facing goal without weights"
       - option: "Fact-checking as primary harness track"
         rejected_because: "Closed-world corpus cannot cover arbitrary generated content; grammar/word-choice checks can"
+      - option: "Treat nativeness/style as a hard gate"
+        rejected_because: "Judgment-shaped, not binary - scored/advisory dimension; only calque/collocation patterns with UA-GEC/Antonenko evidence gate"
     superseded_by: null
     depends_on: []
