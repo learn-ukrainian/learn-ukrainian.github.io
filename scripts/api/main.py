@@ -66,6 +66,7 @@ from .governance_router import router as governance_router
 from .hermes_cron_router import router as hermes_cron_router
 from .images_router import router as images_router
 from .issues_router import router as issues_router
+from .preload import preload_all
 from .rag_router import router as rag_router
 from .resilience import get_resilience_snapshot, resilience_middleware
 from .reviewer_ghosts_router import router as reviewer_ghosts_router
@@ -89,6 +90,7 @@ async def _lifespan(_app: FastAPI):
     Without this, "Shutting down" lines in logs/api.log have no provenance.
     See scripts/api/_signal_log.py for the wrapper rationale.
     """
+    preload_all()
     install_signal_logging()
     ensure_broker_db_ready()
     yield

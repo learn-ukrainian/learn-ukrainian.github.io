@@ -2266,3 +2266,18 @@ Returns active local build/reviewer/writer processes relevant to the repo in a d
 
 ### `GET /api/agent/worktree`
 Returns git status, distinguishing source-code changes from generated artifact churn (e.g., orchestration, status jsons, audit files).
+
+---
+
+## Startup Import Pinning & Correctness Guarantee
+
+To prevent runtime crashes and version skew caused by git mutations (e.g., switching branches or pulling changes on the primary checkout while the API server is running), the Monitor API enforces **startup import pinning**.
+
+### Pinning Guarantee & Scope
+- **Post-Successful-Startup Guarantee:** Upon startup, the FastAPI lifespan (`preload_all()`) eagerly imports the entire static import closure of the API, along with all dynamic adapter modules (walked from `scripts/agent_runtime/adapters/`) and dynamic migration scripts. This ensures that all required Python modules are resident in `sys.modules` from the start.
+- **Parent Process Only:** The import pinning guarantee is strictly scoped to the parent API process.
+- **Subprocess Design Intent:** Subprocess children spawned by the API (such as git, gh, or agent dispatches) execute code from the current working tree by design, using standard loose text/JSON contracts.
+- **Guard Rails:** The guarantee is continuously verified via an AST-walking guard test (`tests/api/test_import_pinning.py`). The test asserts that all nested imports inside `scripts/api/` are registered in the preload lists (`PRELOAD_MODULES` or `OPTIONAL_MODULES`) or marked with an explicit inline comment: `# lazy-ok: <reason>`. Any unregistered dynamic imports or unregistered dynamic loaders will cause the test suite to fail.
+
+### PR-B Symlink & Snapshot Follow-Up
+In the follow-up PR-B release, this guarantee is reinforced by serving the API from immutable, release-dir code snapshots (with staging→rename symlink promotion), ensuring complete separation between running code and the live repository data.

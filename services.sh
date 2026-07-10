@@ -45,7 +45,7 @@ SVC_HEALTH[sources]="http://127.0.0.1:8766/health"
 SVC_HEALTH_ALT[sources]="http://localhost:8766/health"
 SVC_MATCH[sources]=".mcp/servers/sources/server.py --standalone"
 
-SVC_CMD[api]="$VENV/python -m uvicorn scripts.api.main:app --host 0.0.0.0 --port 8765 --log-config scripts/api/logging.json"
+SVC_CMD[api]="$VENV/python -m uvicorn scripts.api.main:app --host 0.0.0.0 --port 8765 --log-config scripts/api/logging.json --timeout-graceful-shutdown 8"
 SVC_PORT[api]=8765
 SVC_LOG[api]="$LOGS_DIR/api.log"
 SVC_DESC[api]="API Dashboard Server (FastAPI)"
@@ -300,6 +300,46 @@ _sync_pidfile() {
     fi
 }
 
+_reconcile_api_pid() {
+    local name="api"
+    local pidfile
+    pidfile="$(_pid_file "$name")"
+    local file_pid=""
+    if [[ -f "$pidfile" ]]; then
+        file_pid=$(cat "$pidfile" 2>/dev/null | tr -d '[:space:]' || true)
+    fi
+
+    # Find the actual listener PID using lsof -nP -iTCP:$port -sTCP:LISTEN
+    local listener_pid=""
+    if command -v lsof >/dev/null 2>&1; then
+        listener_pid=$(lsof -t -nP -iTCP:${SVC_PORT[api]} -sTCP:LISTEN 2>/dev/null | tr -d '[:space:]' || true)
+    fi
+
+    # Mismatch check
+    if [[ -n "$listener_pid" ]]; then
+        # Check if the listener matches SVC_MATCH
+        if ! _pid_matches_service "$name" "$listener_pid"; then
+            # The port is bound by a foreign process. Do not reconcile.
+            return 0
+        fi
+
+        if [[ "$file_pid" != "$listener_pid" ]]; then
+            if [[ -n "$file_pid" ]]; then
+                echo "  WARNING: pid file mismatch for $name (file: $file_pid, listener: $listener_pid); reconciling..." >&2
+            fi
+            # Rewrite the pid file
+            echo "$listener_pid" > "$pidfile"
+        fi
+    else
+        # No listener found on port. If the pid file has a pid, check if it's still running.
+        if [[ -n "$file_pid" ]]; then
+            if ! kill -0 "$file_pid" 2>/dev/null; then
+                rm -f "$pidfile"
+            fi
+        fi
+    fi
+}
+
 _service_state() {
     local name="$1"
     if _health_check "$name"; then
@@ -367,6 +407,42 @@ _start_service() {
         return 1
     fi
 
+    if [[ "$name" == "api" ]]; then
+        # Log rotation check: size > 10MB (10485760 bytes)
+        local log_file="${SVC_LOG[$name]}"
+        if [[ -f "$log_file" ]]; then
+            local size
+            size=$(wc -c < "$log_file" | tr -d '[:space:]')
+            if (( size > 10485760 )); then
+                echo "  api log exceeds 10MB; rotating..."
+                rm -f "${log_file}.3"
+                [[ -f "${log_file}.2" ]] && mv "${log_file}.2" "${log_file}.3"
+                [[ -f "${log_file}.1" ]] && mv "${log_file}.1" "${log_file}.2"
+                mv "$log_file" "${log_file}.1"
+            fi
+        fi
+
+        # Crashloop backoff check: start < 60s ago
+        local last_start_file="$PIDS_DIR/${name}.last_start"
+        local now
+        now=$(date +%s)
+        if [[ -f "$last_start_file" ]]; then
+            local last_start
+            last_start=$(cat "$last_start_file" 2>/dev/null || echo 0)
+            local diff=$((now - last_start))
+            if (( diff < 60 )) && [[ "$FORCE" -ne 1 ]]; then
+                echo "  ERROR: $name started less than 60s ago (diff: ${diff}s); potential crashloop!" >&2
+                echo "  Use --force to override this safety guard." >&2
+                if [[ -f "$log_file" ]]; then
+                    echo "  Last 20 log lines:" >&2
+                    tail -n 20 "$log_file" >&2
+                fi
+                return 1
+            fi
+        fi
+        echo "$now" > "$last_start_file"
+    fi
+
     echo "  Starting $name — ${SVC_DESC[$name]}..."
     cd "$PROJECT_ROOT"
 
@@ -412,11 +488,37 @@ _stop_service() {
         return 0
     fi
 
+    if [[ "$name" == "api" ]]; then
+        local is_valid=0
+        local listener_pid
+        listener_pid=$(lsof -t -nP -iTCP:${SVC_PORT[$name]} -sTCP:LISTEN 2>/dev/null || true)
+        if [[ -n "$listener_pid" && "$pid" == "$listener_pid" ]]; then
+            is_valid=1
+        fi
+        if _pid_matches_service "$name" "$pid"; then
+            is_valid=1
+        fi
+        local ppid
+        ppid=$(ps -o ppid= -p "$pid" 2>/dev/null | tr -d '[:space:]' || true)
+        if [[ -n "$ppid" && -n "$listener_pid" && "$ppid" == "$listener_pid" ]]; then
+            is_valid=1
+        fi
+        if [[ "$is_valid" -ne 1 ]]; then
+            echo "  ERROR: PID $pid is not verified as the listener or a child matching SVC_MATCH. Refusing to kill." >&2
+            return 1
+        fi
+    fi
+
     echo "  Stopping $name (PID $pid)..."
     kill "$pid" 2>/dev/null || true
 
-    # Wait up to 5 seconds for graceful shutdown
-    for _ in $(seq 1 10); do
+    # Wait for graceful shutdown (12s for api, 5s for others)
+    local wait_secs=5
+    if [[ "$name" == "api" ]]; then
+        wait_secs=12
+    fi
+    local iterations=$((wait_secs * 2))
+    for _ in $(seq 1 $iterations); do
         if ! kill -0 "$pid" 2>/dev/null; then
             break
         fi
@@ -559,7 +661,19 @@ _status() {
 # Parse arguments
 action="${1:-help}"
 shift || true
-services="${*:-$ALL_SERVICES}"
+
+# Extract --force if present
+FORCE=0
+remaining_args=()
+for arg in "$@"; do
+    if [[ "$arg" == "--force" ]]; then
+        FORCE=1
+    else
+        remaining_args+=("$arg")
+    fi
+done
+
+services="${remaining_args[*]:-$ALL_SERVICES}"
 # Rewrite legacy alias `rag` → `sources` so old muscle memory still works.
 if [[ -n "${services// /}" ]]; then
     # shellcheck disable=SC2086
@@ -586,6 +700,9 @@ case "$action" in
                 echo "  Unknown service: $svc"
                 continue
             fi
+            if [[ "$svc" == "api" ]]; then
+                _reconcile_api_pid
+            fi
             _stop_service "$svc"
         done
         echo ""
@@ -603,6 +720,9 @@ case "$action" in
             if [[ -z "${SVC_CMD[$svc]+x}" ]]; then
                 echo "  Unknown service: $svc"
                 continue
+            fi
+            if [[ "$svc" == "api" ]]; then
+                _reconcile_api_pid
             fi
             _stop_service "$svc"
             _start_service "$svc"
@@ -668,6 +788,7 @@ case "$action" in
         fi
         ;;
     status)
+        _reconcile_api_pid
         _status
         ;;
     *)
