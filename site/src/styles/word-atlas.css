@@ -836,6 +836,41 @@
   font-weight: 600;
 }
 
+/* #4891 — style/register-marked forms (нестягнені, застарілі, розмовні …) live in a
+   collapsed subsection, visually set apart from the modern paradigm with a warm
+   caution tone so learners never mistake them for the literary norm. */
+.marked-forms {
+  margin-top: 16px;
+  padding: 10px 14px;
+  border: 1px dashed var(--orange);
+  border-radius: var(--radius);
+  background: var(--orange-light);
+}
+
+.marked-forms > summary {
+  color: var(--orange);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.marked-forms-note {
+  margin: 10px 0 4px;
+}
+
+.marked-forms-group {
+  margin-top: 12px;
+}
+
+.marked-forms-label {
+  margin-bottom: 4px;
+  color: var(--gray-800);
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
 .source-box {
   margin: 14px 0;
   padding: 16px 22px;

@@ -10,6 +10,7 @@ from scripts.lexicon.enrich_manifest import (
     _BALLA_REVERSE_SOURCE,
     _DROP_ANTONYM_LEMMAS,
     _SLOVNYK_UKRENG_SOURCE,
+    _STYLE_MARKER_LABELS,
     _WRONG_ANTONYMS,
     _WRONG_SENSE_SYNONYMS,
     KAIKKI_SOURCE,
@@ -41,6 +42,7 @@ from scripts.lexicon.enrich_manifest import (
     _sense_correct_synonyms,
     _slovnyk_cache,
     _SlovnykTransientError,
+    _style_markers_in_tag,
     _surface_gloss_hints,
     _synonyms_slovnyk,
     _translation,
@@ -296,6 +298,165 @@ def test_morphology_can_use_base_form_from_pair_lemma(monkeypatch) -> None:
     assert morphology is not None
     assert morphology["pos"] == "дієслово"
     assert morphology["forms"][0] == {"form": "варити", "label": "інфінітив"}
+
+
+# --- #4891: style-marked forms segregated out of the modern paradigm ---
+
+
+def _korysnyi_vesum_rows() -> list[dict[str, str]]:
+    """Minimal VESUM fixture for корисний: the modern paradigm plus the :long
+    (нестягнені) forms that must be segregated. Mirrors data/vesum.db shape."""
+    return [
+        {"word_form": "корисний", "tags": "adj:m:v_naz:compb", "pos": "adj"},
+        {"word_form": "корисна", "tags": "adj:f:v_naz:compb", "pos": "adj"},
+        {"word_form": "корисне", "tags": "adj:n:v_naz:compb", "pos": "adj"},
+        {"word_form": "корисні", "tags": "adj:p:v_naz:compb", "pos": "adj"},
+        {"word_form": "корисная", "tags": "adj:f:v_naz:compb:long", "pos": "adj"},
+        {"word_form": "кориснеє", "tags": "adj:n:v_naz:compb:long", "pos": "adj"},
+        {"word_form": "кориснії", "tags": "adj:p:v_naz:compb:long", "pos": "adj"},
+    ]
+
+
+def test_style_markers_match_whole_tokens_only() -> None:
+    # A raw :long adjective tag surfaces the long marker …
+    assert _style_markers_in_tag("adj:f:v_naz:compb:long") == ["long"]
+    # … a plain modern-paradigm tag surfaces nothing …
+    assert _style_markers_in_tag("adj:f:v_naz:compb") == []
+    # … `ns` (pluralia tantum) is grammatical, NOT a style marker, so двері is clean.
+    assert _style_markers_in_tag("noun:inanim:p:v_naz:ns") == []
+    assert "ns" not in _STYLE_MARKER_LABELS
+
+
+def test_morphology_segregates_marked_forms_into_marked_group(monkeypatch) -> None:
+    monkeypatch.setattr(enrich_manifest_module, "verify_lemma", lambda lemma: _korysnyi_vesum_rows())
+    monkeypatch.setattr(enrich_manifest_module, "_stress_display_form", lambda form: "")
+
+    morphology = _morphology("корисний")
+
+    assert morphology is not None
+    # The modern paradigm carries only the 4 unmarked rows; the count matches.
+    modern_forms = {row["form"] for row in morphology["forms"]}
+    assert modern_forms == {"корисний", "корисна", "корисне", "корисні"}
+    assert morphology["form_count"] == 4
+    assert {"корисная", "кориснеє", "кориснії"}.isdisjoint(modern_forms)
+    # The :long forms are segregated with the doc-verified нестягнена label.
+    assert morphology["marked_form_count"] == 3
+    marked = morphology["marked_forms"]
+    assert [row["form"] for row in marked] == ["корисная", "кориснеє", "кориснії"]
+    assert all(row["marker"] == "long" for row in marked)
+    assert all(row["marker_label"] == "нестягнена форма" for row in marked)
+    # The grammatical label is preserved alongside the style label.
+    assert marked[0]["label"] == "жін., називний"
+
+
+def test_morphology_marked_form_stress_applies_like_modern_rows(monkeypatch) -> None:
+    monkeypatch.setattr(enrich_manifest_module, "verify_lemma", lambda lemma: _korysnyi_vesum_rows())
+    monkeypatch.setattr(
+        enrich_manifest_module,
+        "_stress_display_form",
+        lambda form: f"{form}́" if form == "корисная" else "",
+    )
+
+    morphology = _morphology("корисний")
+
+    assert morphology is not None
+    marked_by_form = {row["form"]: row for row in morphology["marked_forms"]}
+    assert marked_by_form["корисная"]["stress"] == "корисная́"
+    assert "stress" not in marked_by_form["кориснеє"]
+
+
+def test_unknown_grammatical_token_stays_in_modern_paradigm(monkeypatch) -> None:
+    # A token that is NOT a style marker (grammatical/unknown) must never be
+    # segregated — it stays inline, unchanged. `arch` IS a style marker, so it goes.
+    rows = [
+        {"word_form": "сад", "tags": "noun:inanim:m:v_naz", "pos": "noun"},
+        {"word_form": "садку", "tags": "noun:inanim:m:v_dav:xp1", "pos": "noun"},
+        {"word_form": "садовий", "tags": "noun:inanim:m:v_naz:arch", "pos": "noun"},
+    ]
+    monkeypatch.setattr(enrich_manifest_module, "verify_lemma", lambda lemma: rows)
+    monkeypatch.setattr(enrich_manifest_module, "_stress_display_form", lambda form: "")
+
+    morphology = _morphology("сад")
+
+    assert morphology is not None
+    modern_forms = {row["form"] for row in morphology["forms"]}
+    assert "садку" in modern_forms  # grammatical xp1 token → unchanged, stays modern
+    assert "садовий" not in modern_forms  # arch → segregated
+    assert [row["marker_label"] for row in morphology["marked_forms"]] == ["застаріла форма"]
+
+
+def test_segregated_but_unlabelled_marker_gets_generic_label(monkeypatch) -> None:
+    # If a future VESUM style flag is added to the segregation set before its Ukrainian
+    # label is authored, the form is still segregated but carries the honest generic
+    # label «інша маркована форма» — never a guessed description (#M-4).
+    monkeypatch.setattr(enrich_manifest_module, "_STYLE_MARKERS", frozenset({"long", "newmk"}))
+    rows = [
+        {"word_form": "новий", "tags": "adj:m:v_naz", "pos": "adj"},
+        {"word_form": "новомк", "tags": "adj:m:v_naz:newmk", "pos": "adj"},
+    ]
+    monkeypatch.setattr(enrich_manifest_module, "verify_lemma", lambda lemma: rows)
+    monkeypatch.setattr(enrich_manifest_module, "_stress_display_form", lambda form: "")
+
+    morphology = _morphology("новий")
+
+    assert morphology is not None
+    assert {row["form"] for row in morphology["forms"]} == {"новий"}
+    marked = morphology["marked_forms"]
+    assert marked[0]["marker"] == "newmk"
+    assert marked[0]["marker_label"] == enrich_manifest_module._GENERIC_STYLE_MARKER_LABEL
+    assert marked[0]["marker_label"] == "інша маркована форма"
+
+
+def test_morphology_pluralia_tantum_ns_stays_in_modern_paradigm(monkeypatch) -> None:
+    # двері carries :ns on every form; that is a grammatical class (pluralia tantum),
+    # not a style marker — the whole paradigm must remain modern, else A1 words empty out.
+    rows = [
+        {"word_form": "двері", "tags": "noun:inanim:p:v_naz:ns", "pos": "noun"},
+        {"word_form": "дверей", "tags": "noun:inanim:p:v_rod:ns", "pos": "noun"},
+        {"word_form": "дверям", "tags": "noun:inanim:p:v_dav:ns", "pos": "noun"},
+    ]
+    monkeypatch.setattr(enrich_manifest_module, "verify_lemma", lambda lemma: rows)
+    monkeypatch.setattr(enrich_manifest_module, "_stress_display_form", lambda form: "")
+
+    morphology = _morphology("двері")
+
+    assert morphology is not None
+    assert morphology["form_count"] == 3
+    assert "marked_forms" not in morphology
+    assert "marked_form_count" not in morphology
+
+
+def test_morphology_unmarked_lemma_omits_marked_keys(monkeypatch) -> None:
+    # A fully unmarked lemma produces the pre-#4891 shape: no marked_forms /
+    # marked_form_count keys, and form_count == len(forms).
+    rows = [
+        {"word_form": "робота", "tags": "noun:inanim:f:v_naz", "pos": "noun"},
+        {"word_form": "роботи", "tags": "noun:inanim:f:v_rod", "pos": "noun"},
+    ]
+    monkeypatch.setattr(enrich_manifest_module, "verify_lemma", lambda lemma: rows)
+    monkeypatch.setattr(enrich_manifest_module, "_stress_display_form", lambda form: "")
+
+    morphology = _morphology("робота")
+
+    assert morphology is not None
+    assert set(morphology) == {"pos", "form_count", "forms", "source"}
+    assert morphology["form_count"] == len(morphology["forms"]) == 2
+
+
+def test_morphology_form_count_matches_rendered_rows_after_cap(monkeypatch) -> None:
+    # form_count is reported AFTER the cap so it never disagrees with the rows shown
+    # (pre-#4891: «41 форм» beside 40 rows). 45 distinct unmarked rows → capped to 40.
+    rows = [
+        {"word_form": f"форма{i}", "tags": "noun:inanim:f:v_naz", "pos": "noun"} for i in range(45)
+    ]
+    monkeypatch.setattr(enrich_manifest_module, "verify_lemma", lambda lemma: rows)
+    monkeypatch.setattr(enrich_manifest_module, "_stress_display_form", lambda form: "")
+
+    morphology = _morphology("форма")
+
+    assert morphology is not None
+    assert len(morphology["forms"]) == enrich_manifest_module._MORPHOLOGY_FORM_CAP
+    assert morphology["form_count"] == len(morphology["forms"])
 
 
 def test_legacy_synonym_sources_drop_wordnet_and_ukrajinet_noise() -> None:
