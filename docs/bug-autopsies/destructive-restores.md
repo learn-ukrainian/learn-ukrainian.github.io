@@ -16,9 +16,11 @@ of the release, and it is also the window when parallel site builds are most lik
 (busy fleet). Classic destructive-restore: the tool destroys more data than it restores,
 silently, on its happy path.
 
-**Prevention (the category rule):** any restore/hydrate/sync tool that can overwrite
+**Prevention:** (the category rule) any restore/hydrate/sync tool that can overwrite
 local state must compare BEFORE writing and refuse when the local artifact is richer
 (more entries / newer generation), requiring an explicit force flag for intentional
 restores. Fixed for hydrate-manifest in the same PR (`ATLAS_MANIFEST_FORCE_HYDRATE=1`
-to force). Audit candidates for the same class: hydrate-practice-deck.mjs,
-hydrate-lexicon-api-shards.ts (both consume pointers the same way).
+to force). Audit candidate for the same class: `hydrate-practice-deck.mjs` (confirmed by review —
+downloads a release asset and unconditionally overwrites local deck state, no local-work
+guard). `hydrate-lexicon-api-shards.ts` is NOT this class: it is a local generator over
+already-hydrated data — no download, no pointer, no overwrite-from-remote.
