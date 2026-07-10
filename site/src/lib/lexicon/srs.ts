@@ -21,8 +21,12 @@ export const SESSION_ITEM_ESTIMATE_SEC = 20;
 /** Levels with published practice shards (C2 ships «скоро» until deck exists). */
 export const PUBLISHED_PRACTICE_LEVELS = ['A1', 'A2', 'B1', 'B2', 'C1'] as const;
 
-const CURRENT_VERSION = 3;
+const CURRENT_VERSION = 4;
 const SETTINGS_VERSION = 1;
+/** Bound synchronous localStorage writes while retaining recent fitting history. */
+export const MAX_RAW_REVIEW_LOG_ENTRIES = 2_000;
+const RECOVERY_RAW_REVIEW_LOG_ENTRIES = 0;
+export const SRS_STORAGE_FULL_WARNING = 'Прогрес не зберігається — сховище переповнене';
 const HOUR_MS = 60 * 60 * 1000;
 const DAY_MS = 24 * 60 * 60 * 1000;
 export const SESSION_RESUME_MAX_MS = 6 * HOUR_MS;
@@ -324,6 +328,17 @@ export interface ReviewLogEntry {
   heritageKind?: string;
 }
 
+/**
+ * Summary retained when raw review entries age out of the bounded fitting window.
+ * The key in `reviewAggregates` is the card key; the aggregate deliberately keeps
+ * the rating distribution and temporal span needed for future parameter fitting.
+ */
+export interface ReviewLogAggregate {
+  ratings: Record<PracticeRating, number>;
+  firstReview: number;
+  lastReview: number;
+}
+
 /** Optional per-review dimension metadata threaded from the active selection. */
 export interface ReviewMeta {
   blankCase?: string;
@@ -340,6 +355,8 @@ export interface SrsFlags {
   migrationFailed: boolean;
   migrated: boolean;
   backupWritten: boolean;
+  storageWriteFailed: boolean;
+  storageFull: boolean;
   settingsCorrupt: boolean;
   clockJump: ClockJump | null;
 }
@@ -353,6 +370,7 @@ export interface LoadedSrsState {
   version: typeof CURRENT_VERSION;
   cards: Map<string, CardState>;
   reviews: ReviewLogEntry[];
+  reviewAggregates: Record<string, ReviewLogAggregate>;
   settings: SrsSettings;
   flags: SrsFlags;
   raw: string | null;
@@ -444,10 +462,11 @@ export interface SelectPracticeOptions {
   poolFilter?: (candidate: PracticeSelection) => boolean;
 }
 
-interface PersistedSrsSchemaV3 {
+interface PersistedSrsSchemaV4 {
   version: typeof CURRENT_VERSION;
   cards: Record<string, CardState>;
   reviews?: ReviewLogEntry[];
+  reviewAggregates?: Record<string, ReviewLogAggregate>;
   lastSavedAt?: number;
 }
 
@@ -527,6 +546,7 @@ const memoryStorage: StorageLike = {
 };
 
 let activeState: LoadedSrsState | null = null;
+let activeStorage: StorageLike | null = null;
 
 function resolveStorage(): StorageLike {
   if (typeof window === 'undefined') return memoryStorage;
@@ -537,12 +557,18 @@ function resolveStorage(): StorageLike {
   }
 }
 
+function currentStorage(): StorageLike {
+  return activeStorage ?? resolveStorage();
+}
+
 function emptyFlags(clockJump: ClockJump | null = null): SrsFlags {
   return {
     corrupt: false,
     migrationFailed: false,
     migrated: false,
     backupWritten: false,
+    storageWriteFailed: false,
+    storageFull: false,
     settingsCorrupt: false,
     clockJump,
   };
@@ -710,44 +736,117 @@ function normalizeReviews(rawReviews: unknown): ReviewLogEntry[] | null {
   return reviews;
 }
 
+function emptyRatingCounts(): Record<PracticeRating, number> {
+  return { again: 0, hard: 0, good: 0, easy: 0 };
+}
+
+function normalizeReviewAggregate(raw: unknown): ReviewLogAggregate | null {
+  if (!raw || typeof raw !== 'object') return null;
+  const source = raw as Record<string, unknown>;
+  const ratings = source.ratings;
+  const firstReview = toTime(source.firstReview as Date | number | string | undefined);
+  const lastReview = toTime(source.lastReview as Date | number | string | undefined);
+  if (!ratings || typeof ratings !== 'object' || firstReview === null || lastReview === null) return null;
+  const sourceRatings = ratings as Record<string, unknown>;
+  const normalizedRatings = emptyRatingCounts();
+  for (const rating of Object.keys(normalizedRatings) as PracticeRating[]) {
+    const value = sourceRatings[rating];
+    if (typeof value !== 'number' || !Number.isSafeInteger(value) || value < 0) return null;
+    normalizedRatings[rating] = value;
+  }
+  return { ratings: normalizedRatings, firstReview, lastReview };
+}
+
+function normalizeReviewAggregates(raw: unknown): Record<string, ReviewLogAggregate> | null {
+  if (raw === undefined) return {};
+  if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return null;
+  const aggregates: Record<string, ReviewLogAggregate> = {};
+  for (const [key, value] of Object.entries(raw as Record<string, unknown>)) {
+    if (!key) return null;
+    const aggregate = normalizeReviewAggregate(value);
+    if (!aggregate) return null;
+    aggregates[key] = aggregate;
+  }
+  return aggregates;
+}
+
+function addReviewToAggregates(
+  review: ReviewLogEntry,
+  reviewAggregates: Record<string, ReviewLogAggregate>,
+): void {
+  const aggregate = reviewAggregates[review.cardKey];
+  if (aggregate) {
+    aggregate.ratings[review.rating] += 1;
+    aggregate.firstReview = Math.min(aggregate.firstReview, review.review);
+    aggregate.lastReview = Math.max(aggregate.lastReview, review.review);
+    return;
+  }
+  const ratings = emptyRatingCounts();
+  ratings[review.rating] = 1;
+  reviewAggregates[review.cardKey] = {
+    ratings,
+    firstReview: review.review,
+    lastReview: review.review,
+  };
+}
+
+function compactReviewHistory(
+  reviews: ReviewLogEntry[],
+  reviewAggregates: Record<string, ReviewLogAggregate>,
+  maximumRawEntries: number,
+): boolean {
+  const entriesToCompact = Math.max(0, reviews.length - maximumRawEntries);
+  if (entriesToCompact === 0) return false;
+  for (const review of reviews.splice(0, entriesToCompact)) {
+    addReviewToAggregates(review, reviewAggregates);
+  }
+  return true;
+}
+
 function hydrateStore(
-  store: PersistedSrsSchemaV3,
+  store: PersistedSrsSchemaV4,
   settings: SrsSettings,
   raw: string | null,
   flags: SrsFlags,
 ): LoadedSrsState | null {
   const cards = normalizeCards(store.cards);
   const reviews = normalizeReviews(store.reviews);
-  if (!cards || !reviews) return null;
+  const reviewAggregates = normalizeReviewAggregates(store.reviewAggregates);
+  if (!cards || !reviews || !reviewAggregates) return null;
   return {
     version: CURRENT_VERSION,
     cards,
     reviews,
+    reviewAggregates,
     settings,
     flags,
     raw,
   };
 }
 
-function migrateToCurrent(parsed: Record<string, unknown>): PersistedSrsSchemaV3 | null {
-  if (parsed.version === CURRENT_VERSION) return parsed as unknown as PersistedSrsSchemaV3;
-  if (parsed.version !== 1 && parsed.version !== 2) return null;
+function migrateToCurrent(parsed: Record<string, unknown>): PersistedSrsSchemaV4 | null {
+  if (parsed.version === CURRENT_VERSION) return parsed as unknown as PersistedSrsSchemaV4;
+  if (parsed.version !== 1 && parsed.version !== 2 && parsed.version !== 3) return null;
   const cards = normalizeCards(parsed.cards, true);
   const reviews = normalizeReviews(parsed.reviews);
-  if (!cards || !reviews) return null;
+  const reviewAggregates = normalizeReviewAggregates(parsed.reviewAggregates);
+  if (!cards || !reviews || !reviewAggregates) return null;
+  compactReviewHistory(reviews, reviewAggregates, MAX_RAW_REVIEW_LOG_ENTRIES);
   return {
     version: CURRENT_VERSION,
     cards: Object.fromEntries(cards),
     reviews,
+    reviewAggregates,
     lastSavedAt: Date.now(),
   };
 }
 
 function serializeState(state: LoadedSrsState, savedAt: number): string {
-  const store: PersistedSrsSchemaV3 = {
+  const store: PersistedSrsSchemaV4 = {
     version: CURRENT_VERSION,
     cards: Object.fromEntries(state.cards),
     reviews: state.reviews,
+    reviewAggregates: state.reviewAggregates,
     lastSavedAt: savedAt,
   };
   return JSON.stringify(store);
@@ -779,13 +878,23 @@ export function loadState(
   storage: StorageLike = resolveStorage(),
   now: Date | number = Date.now(),
 ): LoadedSrsState {
-  const { settings, corrupt: settingsCorrupt } = loadSettings(storage);
   const raw = storage.getItem(SRS_STORAGE_KEY);
+  if (
+    activeState?.flags.storageWriteFailed &&
+    activeStorage === storage &&
+    activeState.raw === raw
+  ) {
+    return activeState;
+  }
+
+  activeStorage = storage;
+  const { settings, corrupt: settingsCorrupt } = loadSettings(storage);
   if (!raw) {
     activeState = {
       version: CURRENT_VERSION,
       cards: new Map(),
       reviews: [],
+      reviewAggregates: {},
       settings,
       flags: { ...emptyFlags(), settingsCorrupt },
       raw: null,
@@ -801,6 +910,7 @@ export function loadState(
       version: CURRENT_VERSION,
       cards: new Map(),
       reviews: [],
+      reviewAggregates: {},
       settings,
       flags: { ...emptyFlags(), corrupt: true, settingsCorrupt },
       raw,
@@ -809,12 +919,15 @@ export function loadState(
   }
 
   if (parsed.version === CURRENT_VERSION) {
-    const state = hydrateStore(parsed as unknown as PersistedSrsSchemaV3, settings, raw, {
+    const state = hydrateStore(parsed as unknown as PersistedSrsSchemaV4, settings, raw, {
       ...emptyFlags(),
       settingsCorrupt,
-      clockJump: detectClockJump((parsed as unknown as PersistedSrsSchemaV3).lastSavedAt, now),
+      clockJump: detectClockJump((parsed as unknown as PersistedSrsSchemaV4).lastSavedAt, now),
     });
     if (state) {
+      if (compactReviewHistory(state.reviews, state.reviewAggregates, MAX_RAW_REVIEW_LOG_ENTRIES)) {
+        persistWithQuotaRecovery(state, storage, toTime(now) ?? Date.now());
+      }
       activeState = state;
       return state;
     }
@@ -822,6 +935,7 @@ export function loadState(
       version: CURRENT_VERSION,
       cards: new Map(),
       reviews: [],
+      reviewAggregates: {},
       settings,
       flags: { ...emptyFlags(), corrupt: true, settingsCorrupt },
       raw,
@@ -830,26 +944,24 @@ export function loadState(
   }
 
   try {
-    storage.setItem(SRS_BACKUP_KEY, raw);
     const migrated = migrateToCurrent(parsed);
     if (!migrated) throw new Error('unsupported SRS schema');
-    const nextRaw = JSON.stringify(migrated);
-    storage.setItem(SRS_STORAGE_KEY, nextRaw);
-    const state = hydrateStore(migrated, settings, nextRaw, {
+    const state = hydrateStore(migrated, settings, raw, {
       ...emptyFlags(),
       migrated: true,
-      backupWritten: true,
       settingsCorrupt,
       clockJump: detectClockJump(migrated.lastSavedAt, now),
     });
     if (!state) throw new Error('migrated SRS schema is invalid');
     activeState = state;
+    persistWithQuotaRecovery(state, storage, toTime(now) ?? Date.now());
     return state;
   } catch {
     activeState = {
       version: CURRENT_VERSION,
       cards: new Map(),
       reviews: [],
+      reviewAggregates: {},
       settings,
       flags: { ...emptyFlags(), migrationFailed: true, settingsCorrupt },
       raw,
@@ -878,18 +990,92 @@ export function saveState(
     return { ok: false, error };
   }
   try {
-    if (previousRaw && previousRaw !== nextRaw) {
-      storage.setItem(SRS_BACKUP_KEY, previousRaw);
-      state.flags.backupWritten = true;
-    }
     storage.setItem(SRS_STORAGE_KEY, nextRaw);
-    storage.setItem(SRS_SETTINGS_KEY, serializeSettings(state.settings));
-    state.raw = nextRaw;
-    activeState = state;
-    return { ok: true };
   } catch (error) {
     return { ok: false, error };
   }
+
+  state.raw = nextRaw;
+  activeState = state;
+  activeStorage = storage;
+  state.flags.backupWritten = false;
+
+  try {
+    storage.setItem(SRS_SETTINGS_KEY, serializeSettings(state.settings));
+  } catch {
+    // Scheduling state is already durable. Settings are unchanged during ratings and can retry later.
+  }
+
+  if (previousRaw && previousRaw !== nextRaw) {
+    try {
+      storage.setItem(SRS_BACKUP_KEY, previousRaw);
+      state.flags.backupWritten = true;
+    } catch {
+      // A backup must never turn a successful primary write into lost progress.
+    }
+  }
+  return { ok: true };
+}
+
+function isQuotaExceededError(error: unknown): boolean {
+  if (!error || typeof error !== 'object') return false;
+  const candidate = error as { name?: unknown; code?: unknown };
+  return (
+    candidate.name === 'QuotaExceededError' ||
+    candidate.name === 'NS_ERROR_DOM_QUOTA_REACHED' ||
+    candidate.code === 22 ||
+    candidate.code === 1014
+  );
+}
+
+function persistWithQuotaRecovery(
+  state: LoadedSrsState,
+  storage: StorageLike,
+  savedAt: number,
+): { ok: boolean; error?: unknown } {
+  let result = saveState(state, storage, savedAt);
+  if (result.ok) {
+    state.flags.storageWriteFailed = false;
+    state.flags.storageFull = false;
+    return result;
+  }
+  if (!isQuotaExceededError(result.error)) {
+    state.flags.storageWriteFailed = true;
+    activeState = state;
+    return result;
+  }
+
+  try {
+    storage.removeItem(SRS_BACKUP_KEY);
+  } catch {
+    // Continue to the retry; a storage implementation may allow writes despite a failed removal.
+  }
+  result = saveState(state, storage, savedAt);
+  if (result.ok) {
+    state.flags.storageWriteFailed = false;
+    state.flags.storageFull = false;
+    return result;
+  }
+  if (!isQuotaExceededError(result.error)) {
+    state.flags.storageWriteFailed = true;
+    activeState = state;
+    return result;
+  }
+
+  compactReviewHistory(state.reviews, state.reviewAggregates, RECOVERY_RAW_REVIEW_LOG_ENTRIES);
+  result = saveState(state, storage, savedAt);
+  if (result.ok) {
+    state.flags.storageWriteFailed = false;
+    state.flags.storageFull = false;
+    return result;
+  }
+
+  state.flags.storageWriteFailed = true;
+  if (isQuotaExceededError(result.error)) {
+    state.flags.storageFull = true;
+    activeState = state;
+  }
+  return result;
 }
 
 function fsrsCardFromState(card: CardState): FsrsCard {
@@ -988,7 +1174,8 @@ export function rateCard(
   const next = stateFromFsrsCard(record.card);
   state.cards.set(key, next);
   state.reviews.push(serializeReview(key, lemmaId, mode, rating, record, meta));
-  saveState(state, resolveStorage(), reviewDate.getTime());
+  compactReviewHistory(state.reviews, state.reviewAggregates, MAX_RAW_REVIEW_LOG_ENTRIES);
+  persistWithQuotaRecovery(state, currentStorage(), reviewDate.getTime());
   return next;
 }
 

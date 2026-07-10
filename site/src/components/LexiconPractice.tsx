@@ -6,6 +6,7 @@ import PracticeSessionSummary, { type SessionSummaryStats } from './PracticeSess
 import {
   DEFAULT_NEW_PER_DAY,
   PUBLISHED_PRACTICE_LEVELS,
+  SRS_STORAGE_FULL_WARNING,
   buildSessionPoolConstraintState,
   combinePracticeShards,
   extendWithLowerDecks,
@@ -938,7 +939,9 @@ function LexiconPracticeIsland({
     setDailyNewCount(readNewCardsDailyState().count);
     setReviewLog([...state.reviews]);
 
-    if (state.flags.corrupt || state.flags.migrationFailed) {
+    if (state.flags.storageFull) {
+      setStorageWarning(SRS_STORAGE_FULL_WARNING);
+    } else if (state.flags.storageWriteFailed || state.flags.corrupt || state.flags.migrationFailed) {
       setStorageWarning('Прогрес призупинено, доки сховище браузера не стане доступним.');
     } else if (state.flags.clockJump) {
       setStorageWarning('Час повторення може бути неточним: змінився годинник пристрою.');
@@ -1591,8 +1594,12 @@ function LexiconPracticeIsland({
     const state = loadState();
     setMastered(masteredCount(MASTERED_THRESHOLD));
     setReviewLog([...state.reviews]);
-    if (state.flags.corrupt || state.flags.migrationFailed) {
+    if (state.flags.storageFull) {
+      setStorageWarning(SRS_STORAGE_FULL_WARNING);
+    } else if (state.flags.storageWriteFailed || state.flags.corrupt || state.flags.migrationFailed) {
       setStorageWarning('Прогрес призупинено, доки сховище браузера не стане доступним.');
+    } else if (storageWarning === SRS_STORAGE_FULL_WARNING) {
+      setStorageWarning(null);
     }
     setRevision((value) => value + 1);
   }
