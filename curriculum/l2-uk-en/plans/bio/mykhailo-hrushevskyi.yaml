@@ -100,28 +100,37 @@ references:
   note: Сучасний погляд на місце Грушевського в українській історії
   type: reference
   work: 'Брама Європи: Історія України від скіфських воєн до незалежності'
+readings_contract_version: 2
 readings:
 - title: Грушевський Михайло Сергійович
   language: uk
-  source: Енциклопедія Сучасної України
-  url: https://esu.com.ua/article-32114
   type: encyclopedia
   role: primary-bio
   hosting: link-only
-  task: Ознайомитися з політичною та науковою діяльністю Михайла Грушевського.
+  source_name: Енциклопедія Сучасної України
+  source_url: https://esu.com.ua/article-32114
+  learner_task: Ознайомитися з політичною та науковою діяльністю Михайла Грушевського.
+  rights:
+    basis: external-link
+    evidence_url: https://esu.com.ua/article-32114
+    note: Зовнішнє посилання; текст не відтворюється в курсі.
 - title: Грушевський Михайло Сергійович (1866–1934)
   language: uk
-  source: е-Архів Михайла Грушевського
-  url: https://hrushevsky.history.org.ua/item/0005781
   type: archive-reference
   role: context
   hosting: link-only
-  task: Зіставити архівну довідку з енциклопедичною біографією і визначити, як поєднуються ролі історика, публіциста та політичного діяча.
+  source_name: е-Архів Михайла Грушевського
+  source_url: https://hrushevsky.history.org.ua/item/0005781
+  learner_task: Зіставити архівну довідку з енциклопедичною біографією і визначити, як поєднуються ролі історика, публіциста та політичного діяча.
+  rights:
+    basis: external-link
+    evidence_url: https://hrushevsky.history.org.ua/item/0005781
+    note: Зовнішнє посилання; текст не відтворюється в курсі.
 sequence: 87
 slug: mykhailo-hrushevskyi
 subtitle: The Historian Who Wrote a Nation into Existence
 title: 'Михайло Грушевський: Історик і президент'
-version: '4.2'
+version: '4.3'
 vocabulary_hints:
 - definition: наука, що вивчає розвиток історичних знань, методи та принципи історичного дослідження
   pos: ж.

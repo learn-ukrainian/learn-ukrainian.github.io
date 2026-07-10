@@ -104,13 +104,13 @@ references:
   title: Історія запорозьких козаків
   type: primary
   work: Історія запорозьких козаків
+readings_contract_version: 2
 readings:
 - title: Яворницький Дмитро Іванович
   language: uk
   genre: Енциклопедична стаття / біографічна довідка
   source_type: reference
   role: orientation
-  source: Енциклопедія історії України
   source_url: https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&I21DBN=EIU&P21DBN=EIU&S21FMT=eiu_all&S21STR=Yavornytskyj_D  # yamllint disable-line rule:line-length
   license: copyrighted
   rights_note: Використовувати як link-only довідку; не хостити повний текст.
@@ -122,12 +122,16 @@ readings:
   caveats: >-
     Енциклопедична стаття є орієнтаційною, а не повним джерельним корпусом для
     всіх тверджень про музейний конфлікт 1933 року.
+  source_name: Енциклопедія історії України
+  rights:
+    basis: external-link
+    evidence_url: https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&I21DBN=EIU&P21DBN=EIU&S21FMT=eiu_all&S21STR=Yavornytskyj_D
+    note: Зовнішнє посилання; текст не відтворюється в курсі.
 - title: 'Дмитро Яворницький: образ ученого в контексті минулого і сучасного'
   language: uk
   genre: Музейна стаття / історіографічний коментар
   source_type: reference
   role: supplementary
-  source: Дніпропетровський національний історичний музей
   source_url: https://www.museum.dp.ua/uk/article0444/
   license: copyrighted
   rights_note: Використовувати як link-only музейний матеріал; не хостити повний текст.
@@ -138,12 +142,16 @@ readings:
     музейна праця стала політично чутливою.
   caveats: >-
     Цитати з музейної статті мають бути короткими та атрибутованими.
+  source_name: Дніпропетровський національний історичний музей
+  rights:
+    basis: external-link
+    evidence_url: https://www.museum.dp.ua/uk/article0444/
+    note: Зовнішнє посилання; текст не відтворюється в курсі.
 - title: Дніпрові пороги
   language: uk
   genre: Краєзнавчий уривок / джерельне читання
   source_type: primary
   role: close-reading
-  source: Дніпро історичний
   source_url: https://gorod.dp.ua/history/article_ua.php?article=45
   license: unknown
   rights_note: >-
@@ -157,11 +165,16 @@ readings:
   caveats: >-
     Уривок не замінює повного source edition праць про Запорожжя; модуль має
     чітко позначати межі цього читання.
+  source_name: Дніпро історичний
+  rights:
+    basis: external-link
+    evidence_url: https://gorod.dp.ua/history/article_ua.php?article=45
+    note: Зовнішнє посилання; текст не відтворюється в курсі.
 sequence: 310
 slug: dmytro-yavornytskyi
 subtitle: The Historian of the Cossacks and Target of Ideological Purges
 title: 'Дмитро Яворницький: Козацька пам''ять під ударом'
-version: '4.2'
+version: '4.3'
 vocabulary_hints:
 - definition: >-
     установа, де зберігаються, вивчаються і виставляються для огляду пам'ятки

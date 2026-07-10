@@ -79,21 +79,30 @@ persona:
   role: Модератор семінару, що ставить під сумнів усталені міфи про «батька театру» і показує його як складну, авторитарну, але геніальну постать
   voice: Theatre-Historian-Realist
 phase: BIO.2
+readings_contract_version: 2
 readings:
 - title: "Кропивницький Марко Лукич"
-  source: "Енциклопедія історії України"
-  url: "https://www.history.org.ua/?termin=Kropyvnytsky_M"
   language: uk
   type: encyclopedia
   hosting: link-only
-  task: "Прочитайте статтю і зверніть увагу на організаційну роль Кропивницького у створенні професійного театру."
+  source_name: "Енциклопедія історії України"
+  source_url: "https://www.history.org.ua/?termin=Kropyvnytsky_M"
+  learner_task: "Прочитайте статтю і зверніть увагу на організаційну роль Кропивницького у створенні професійного театру."
+  rights:
+    basis: external-link
+    evidence_url: "https://www.history.org.ua/?termin=Kropyvnytsky_M"
+    note: Зовнішнє посилання; текст не відтворюється в курсі.
 - title: "Марко Кропивницький"
-  source: "Велика українська енциклопедія"
-  url: "https://vue.gov.ua/Кропивницький,_Марко_Лукич"
   language: uk
   type: encyclopedia
   hosting: link-only
-  task: "Знайдіть інформацію про режисерські новації Кропивницького та його роботу з акторами."
+  source_name: "Велика українська енциклопедія"
+  source_url: "https://vue.gov.ua/Кропивницький,_Марко_Лукич"
+  learner_task: "Знайдіть інформацію про режисерські новації Кропивницького та його роботу з акторами."
+  rights:
+    basis: external-link
+    evidence_url: "https://vue.gov.ua/Кропивницький,_Марко_Лукич"
+    note: Зовнішнє посилання; текст не відтворюється в курсі.
 references:
 - title: Marko Kropyvnytskyi
   note: Базова біографія, перелік творів, дані про Театр корифеїв. Зібрано з uk.wikipedia.org та академічних джерел.
@@ -113,7 +122,7 @@ sequence: 67
 slug: marko-kropyvnytskyi
 subtitle: The Man Who Was the Theatre
 title: 'Марко Кропивницький: Батько чи Диктатор Театру?'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: провідний діяч у певній галузі мистецтва або науки; засновник нового напряму
   pos: ч.

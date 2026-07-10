@@ -120,13 +120,13 @@ references:
   path: https://museum.khpg.org/1162537272
   title: Клуб творчої молоді (ХПГ)
   type: reference
+readings_contract_version: 2
 readings:
 - title: Танюк Лесь Степанович
   language: uk
   genre: Автобіографічний нарис / правозахисний архів
   source_type: primary
   role: reading
-  source: Харківська правозахисна група
   source_url: https://museum.khpg.org/1114000538
   license: copyrighted
   rights_note: Використовувати як link-only автобіографічний матеріал; не хостити повний текст.
@@ -136,12 +136,16 @@ readings:
     Виписати, як Танюк описує Клуб творчої молоді, театр і адміністративний
     тиск, та зіставити це з модульним розділом про КТМ.
   caveats: Автобіографічна перспектива потребує зіставлення з енциклопедичними джерелами.
+  source_name: Харківська правозахисна група
+  rights:
+    basis: external-link
+    evidence_url: https://museum.khpg.org/1114000538
+    note: Зовнішнє посилання; текст не відтворюється в курсі.
 - title: Клуб творчої молоді
   language: uk
   genre: Довідка / історія інституції
   source_type: reference
   role: supplementary-reading
-  source: Харківська правозахисна група
   source_url: https://museum.khpg.org/1162537272
   license: copyrighted
   rights_note: Link-only довідка про КТМ; не переносити повний текст у модуль.
@@ -149,11 +153,16 @@ readings:
   cefr_min: C1
   learner_task: Побудувати схему учасників, подій і культурних практик КТМ.
   caveats: Матеріал стислий; факти про окремі події треба звіряти з додатковими джерелами.
+  source_name: Харківська правозахисна група
+  rights:
+    basis: external-link
+    evidence_url: https://museum.khpg.org/1162537272
+    note: Зовнішнє посилання; текст не відтворюється в курсі.
 sequence: 284
 slug: les-taniuk
 subtitle: The Theatre Director Who Built the Infrastructure of the Sixtiers
 title: 'Лесь Танюк: Клуб творчої молоді та інфраструктура опору'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: >-
     сукупність організацій, закладів чи структур, які забезпечують діяльність

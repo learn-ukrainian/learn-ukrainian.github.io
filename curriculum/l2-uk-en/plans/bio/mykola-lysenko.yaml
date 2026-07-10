@@ -88,14 +88,19 @@ persona:
   role: Модератор дискусії про межі національного в мистецтві, що ставить під сумнів усталені епітети на кшталт "батько нації"
   voice: Critical-Musicologist
 phase: BIO.4
+readings_contract_version: 2
 readings:
 - hosting: link-only
   language: uk
-  source: Велика українська енциклопедія
-  task: Прочитайте біографічну статтю та зверніть увагу на його етнографічні експедиції.
   title: Лисенко, Микола Віталійович
   type: article
-  url: https://vue.gov.ua/Лисенко,_Микола_Віталійович
+  source_name: Велика українська енциклопедія
+  source_url: https://vue.gov.ua/Лисенко,_Микола_Віталійович
+  learner_task: Прочитайте біографічну статтю та зверніть увагу на його етнографічні експедиції.
+  rights:
+    basis: external-link
+    evidence_url: https://vue.gov.ua/Лисенко,_Микола_Віталійович
+    note: Зовнішнє посилання; текст не відтворюється в курсі.
 references:
 - title: Mykola Lysenko
   note: Біографія, музична та громадська діяльність, зведення з академічних джерел
@@ -119,7 +124,7 @@ sequence: 70
 slug: mykola-lysenko
 subtitle: 'Mykola Lysenko: The Father of Ukrainian Music'
 title: 'Микола Лисенко: Батько української музики'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: людина, що створює музику; автор музичних творів
   pos: ч.

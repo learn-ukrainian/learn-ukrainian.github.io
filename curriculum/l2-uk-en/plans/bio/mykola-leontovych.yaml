@@ -85,23 +85,32 @@ portrait:
   caption_uk: 'Микола Леонтович, український композитор і збирач музичного фольклору (світлина до 1921 р.)'
   caption_en: 'Mykola Leontovych, Ukrainian composer and collector of musical folklore (photograph, before 1921)'
   verified_on: '2026-07-10'
+readings_contract_version: 2
 readings:
 - title: "Леонтович Микола Дмитрович"
-  source: "Енциклопедія Сучасної України"
-  url: "https://esu.com.ua/article-54321"
   language: uk
   type: encyclopedia
   role: "Енциклопедичний огляд життя та творчості"
   hosting: link-only
-  task: "Ознайомтеся з біографією та значенням творчості композитора."
+  source_name: "Енциклопедія Сучасної України"
+  source_url: "https://esu.com.ua/article-54321"
+  learner_task: "Ознайомтеся з біографією та значенням творчості композитора."
+  rights:
+    basis: external-link
+    evidence_url: "https://esu.com.ua/article-54321"
+    note: Зовнішнє посилання; текст не відтворюється в курсі.
 - title: "Леонтович Микола Дмитрович (Вікіпедія)"
-  source: "Вікіпедія"
-  url: "https://uk.wikipedia.org/wiki/%D0%9B%D0%B5%D0%BE%D0%BD%D1%82%D0%BE%D0%B2%D0%B8%D1%87_%D0%9C%D0%B8%D0%BA%D0%BE%D0%BB%D0%B0_%D0%94%D0%BC%D0%B8%D1%82%D1%80%D0%BE%D0%B2%D0%B8%D1%87"
   language: uk
   type: encyclopedia
   role: "Додатковий біографічний огляд"
   hosting: link-only
-  task: "Прочитайте інформацію про трагічну долю автора «Щедрика»."
+  source_name: "Вікіпедія"
+  source_url: "https://uk.wikipedia.org/wiki/%D0%9B%D0%B5%D0%BE%D0%BD%D1%82%D0%BE%D0%B2%D0%B8%D1%87_%D0%9C%D0%B8%D0%BA%D0%BE%D0%BB%D0%B0_%D0%94%D0%BC%D0%B8%D1%82%D1%80%D0%BE%D0%B2%D0%B8%D1%87"
+  learner_task: "Прочитайте інформацію про трагічну долю автора «Щедрика»."
+  rights:
+    basis: external-link
+    evidence_url: "https://uk.wikipedia.org/wiki/%D0%9B%D0%B5%D0%BE%D0%BD%D1%82%D0%BE%D0%B2%D0%B8%D1%87_%D0%9C%D0%B8%D0%BA%D0%BE%D0%BB%D0%B0_%D0%94%D0%BC%D0%B8%D1%82%D1%80%D0%BE%D0%B2%D0%B8%D1%87"
+    note: Зовнішнє посилання; текст не відтворюється в курсі.
 references:
 - title: Микола Леонтович
   note: Основна біографія, перелік творів, деталі трагічної загибелі.
@@ -121,7 +130,7 @@ sequence: 99
 slug: mykola-leontovych
 subtitle: 'The Murder of "Shchedryk": How the world''s most famous carol lost its author'
 title: 'Микола Леонтович: Вбивство «Щедрика»'
-version: '4.2'
+version: '4.3'
 vocabulary_hints:
 - definition: українська обрядова пісня, що виконується напередодні Старого Нового року з побажаннями добробуту
   pos: ж.

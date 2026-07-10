@@ -115,13 +115,13 @@ references:
   title: Українські народні думи, т. 2
   type: primary
   work: Українські народні думи
+readings_contract_version: 2
 readings:
 - title: Грушевська Катерина Михайлівна
   language: uk
   genre: Енциклопедична стаття / біографічна довідка
   source_type: reference
   role: orientation
-  source: Енциклопедія Сучасної України
   source_url: https://esu.com.ua/article-32107
   license: copyrighted
   rights_note: Використовувати як link-only довідку; не хостити повний текст або фото.
@@ -133,12 +133,16 @@ readings:
   caveats: >-
     Довідка має бути доповнена джерельним читанням із корпусу дум для
     педагогічної роботи з текстом.
+  source_name: Енциклопедія Сучасної України
+  rights:
+    basis: external-link
+    evidence_url: https://esu.com.ua/article-32107
+    note: Зовнішнє посилання; текст не відтворюється в курсі.
 - title: Українські народні думи, т. 2
   language: uk
   genre: Фольклорний корпус / джерельне видання
   source_type: primary
   role: close-reading
-  source: Wikimedia Commons
   source_url: https://upload.wikimedia.org/wikipedia/commons/a/a9/Катерина_Грушевська._Українські_народні_думи._Том_2._1931.pdf  # yamllint disable-line rule:line-length
   license: public-domain-candidate
   rights_note: >-
@@ -153,11 +157,16 @@ readings:
   caveats: >-
     Самі думи можуть мати складну фольклорну мову; для learner UI потрібні
     короткі атрибутовані фрагменти, а не повне відтворення корпусу.
+  source_name: Wikimedia Commons
+  rights:
+    basis: external-link
+    evidence_url: https://upload.wikimedia.org/wikipedia/commons/a/a9/Катерина_Грушевська._Українські_народні_думи._Том_2._1931.pdf
+    note: Зовнішнє посилання; текст не відтворюється в курсі.
 sequence: 311
 slug: kateryna-hrushevska
 subtitle: The Ethnosociologist and Editor Lost to the Gulag
 title: 'Катерина Грушевська: Дослідниця українського епосу'
-version: '4.2'
+version: '4.3'
 vocabulary_hints:
 - definition: українська народна епічна пісня, що виконується речитативом у супроводі кобзи, бандури або ліри
   pos: ж.

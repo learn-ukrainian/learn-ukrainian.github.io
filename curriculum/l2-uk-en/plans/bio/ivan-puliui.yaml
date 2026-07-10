@@ -74,14 +74,19 @@ persona:
   role: Арбітр у науковому дебаті, що виважує докази пріоритету та реалії наукової політики XIX ст.
   voice: Science-Historian
 phase: BIO
+readings_contract_version: 2
 readings:
 - hosting: link-only
   language: uk
-  source: Велика українська енциклопедія
-  task: Ознайомтеся з біографією винахідника та його внеском у відкриття рентгенівських променів.
   title: Пулюй, Іван Павлович
   type: article
-  url: https://vue.gov.ua/Пулюй,_Іван_Павлович
+  source_name: Велика українська енциклопедія
+  source_url: https://vue.gov.ua/Пулюй,_Іван_Павлович
+  learner_task: Ознайомтеся з біографією винахідника та його внеском у відкриття рентгенівських променів.
+  rights:
+    basis: external-link
+    evidence_url: https://vue.gov.ua/Пулюй,_Іван_Павлович
+    note: Зовнішнє посилання; текст не відтворюється в курсі.
 references:
 - title: Ivan Puliui
   note: Compiled from Wikipedia, puliui.org.ua, historical physics journals
@@ -106,7 +111,7 @@ sequence: 71
 slug: ivan-puliui
 subtitle: The Physicist Who Saw the Invisible and Translated the Sacred
 title: 'Іван Пулюй: Світло і тінь першовідкривача'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: першість у якому-небудь відкритті, винаході; переважне право або значення
   pos: ч.

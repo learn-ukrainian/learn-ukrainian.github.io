@@ -105,47 +105,64 @@ references:
   note: Memorial museum dedicated to Kotsiubynsky's life and work
   type: reference
   url: https://kotsubinsky.org/
+readings_contract_version: 2
 readings:
 - title: Коцюбинський Михайло Михайлович
   language: uk
-  source: Енциклопедія Сучасної України
-  url: https://esu.com.ua/article-1182
   type: encyclopedia
   role: primary-bio
   hosting: link-only
-  task: Проаналізувати життєвий та творчий шлях Михайла Коцюбинського.
+  source_name: Енциклопедія Сучасної України
+  source_url: https://esu.com.ua/article-1182
+  learner_task: Проаналізувати життєвий та творчий шлях Михайла Коцюбинського.
+  rights:
+    basis: external-link
+    evidence_url: https://esu.com.ua/article-1182
+    note: Зовнішнє посилання; текст не відтворюється в курсі.
 - title: Тіні забутих предків
   language: uk
-  source: УкрЛіб
-  url: https://www.ukrlib.com.ua/books/printit.php?tid=1058
   type: primary-text
   role: literary-analysis
   hosting: link-only
-  task: Прочитати обраний фрагмент повісті для аналізу імпресіоністичного стилю та гуцульських фольклорних мотивів.
   caveats: Текст Коцюбинського є публічним надбанням, але зовнішній хостинг усе одно використовувати як посилання, не копіюючи повний твір у модуль.
+  source_name: УкрЛіб
+  source_url: https://www.ukrlib.com.ua/books/printit.php?tid=1058
+  learner_task: Прочитати обраний фрагмент повісті для аналізу імпресіоністичного стилю та гуцульських фольклорних мотивів.
+  rights:
+    basis: external-link
+    evidence_url: https://www.ukrlib.com.ua/books/printit.php?tid=1058
+    note: Зовнішнє посилання; текст не відтворюється в курсі.
 - title: Intermezzo
   language: uk
-  source: УкрЛіб
-  url: https://www.ukrlib.com.ua/books/printit.php?tid=1065
   type: primary-text
   role: literary-analysis
   hosting: link-only
-  task: Зіставити початок і фінал новели, простеживши повернення героя від утоми до готовності слухати людський біль.
   caveats: Текст 1908 року є публічним надбанням; зовнішній хостинг використовується як посилання.
+  source_name: УкрЛіб
+  source_url: https://www.ukrlib.com.ua/books/printit.php?tid=1065
+  learner_task: Зіставити початок і фінал новели, простеживши повернення героя від утоми до готовності слухати людський біль.
+  rights:
+    basis: external-link
+    evidence_url: https://www.ukrlib.com.ua/books/printit.php?tid=1065
+    note: Зовнішнє посилання; текст не відтворюється в курсі.
 - title: Fata Morgana
   language: uk
-  source: УкрЛіб
-  url: https://www.ukrlib.com.ua/books/printit.php?tid=1066
   type: primary-text
   role: comparative-reading
   hosting: link-only
-  task: Проаналізувати, як соціальна проблематика села поєднується з психологічною перспективою персонажів.
   caveats: Текст є публічним надбанням; для семінару добирати короткі уривки, а повний твір залишати за зовнішнім посиланням.
+  source_name: УкрЛіб
+  source_url: https://www.ukrlib.com.ua/books/printit.php?tid=1066
+  learner_task: Проаналізувати, як соціальна проблематика села поєднується з психологічною перспективою персонажів.
+  rights:
+    basis: external-link
+    evidence_url: https://www.ukrlib.com.ua/books/printit.php?tid=1066
+    note: Зовнішнє посилання; текст не відтворюється в курсі.
 sequence: 83
 slug: mykhailo-kotsiubynsky
 subtitle: 'Mykhailo Kotsiubynskyi: The Impressionist of the Ukrainian Word'
 title: 'Михайло Коцюбинський: Імпресіоніст українського слова'
-version: '4.3'
+version: '4.4'
 vocabulary_hints:
 - definition: напрям у мистецтві, що ставить за мету відтворити особисті враження та спостереження, мінливі відчуття та переживання
   pos: ч.

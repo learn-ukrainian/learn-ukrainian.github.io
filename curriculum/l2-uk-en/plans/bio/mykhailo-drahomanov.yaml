@@ -80,21 +80,30 @@ persona:
   role: Модератор семінару, який ставить під сумнів канонічний образ Драгоманова, змушуючи студентів бачити не ікону, а живу людину з її протиріччями та помилками.
   voice: Drahomanov-Skeptic
 phase: BIO
+readings_contract_version: 2
 readings:
 - title: "Драгоманов Михайло Петрович"
-  source: "Енциклопедія історії України"
-  url: "https://www.history.org.ua/?termin=Dragomanov_M"
   language: uk
   type: encyclopedia
   hosting: link-only
-  task: "Знайдіть інформацію про еміграційний період життя Драгоманова. Як він продовжував впливати на український рух із-за кордону?"
+  source_name: "Енциклопедія історії України"
+  source_url: "https://www.history.org.ua/?termin=Dragomanov_M"
+  learner_task: "Знайдіть інформацію про еміграційний період життя Драгоманова. Як він продовжував впливати на український рух із-за кордону?"
+  rights:
+    basis: external-link
+    evidence_url: "https://www.history.org.ua/?termin=Dragomanov_M"
+    note: Зовнішнє посилання; текст не відтворюється в курсі.
 - title: "Михайло Драгоманов"
-  source: "Велика українська енциклопедія"
-  url: "https://vue.gov.ua/Драгоманов,_Михайло_Петрович"
   language: uk
   type: encyclopedia
   hosting: link-only
-  task: "Прочитайте про основні політичні погляди мислителя. Що означала його концепція федералізму?"
+  source_name: "Велика українська енциклопедія"
+  source_url: "https://vue.gov.ua/Драгоманов,_Михайло_Петрович"
+  learner_task: "Прочитайте про основні політичні погляди мислителя. Що означала його концепція федералізму?"
+  rights:
+    basis: external-link
+    evidence_url: "https://vue.gov.ua/Драгоманов,_Михайло_Петрович"
+    note: Зовнішнє посилання; текст не відтворюється в курсі.
 references:
 - title: Mykhailo Drahomanov
   note: Біографія, політичні погляди, вплив на культуру, зібрані з відкритих джерел (Wikipedia, праці істориків).
@@ -114,7 +123,7 @@ sequence: 69
 slug: mykhailo-drahomanov
 subtitle: 'Mykhailo Drahomanov: Architect of a European Ukraine'
 title: 'Михайло Драгоманов: Архітектор європейської України'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: політична концепція, що обстоює об'єднання окремих державних утворень в єдину федеративну державу з високим ступенем їхньої самостійності
   pos: ч.

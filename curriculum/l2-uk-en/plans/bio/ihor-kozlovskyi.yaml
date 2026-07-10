@@ -119,13 +119,13 @@ references:
   path: Suspilne
   title: Я читав лекції щурам, щоб чути голос... (Суспільне)
   type: reference
+readings_contract_version: 2
 readings:
 - title: Козловський Ігор Анатолійович
   language: uk
   genre: Енциклопедична стаття / біографічна довідка
   source_type: reference
   role: orientation
-  source: Енциклопедія Сучасної України
   source_url: https://esu.com.ua/article-882085
   license: copyrighted
   rights_note: Використовувати як link-only довідку; не хостити повний текст.
@@ -135,6 +135,11 @@ readings:
     Виписати наукові, громадські та правозахисні ролі Козловського до і після
     полону.
   caveats: Довідка не замінює свідчення про катівні та досвід внутрішньої свободи.
+  source_name: Енциклопедія Сучасної України
+  rights:
+    basis: external-link
+    evidence_url: https://esu.com.ua/article-882085
+    note: Зовнішнє посилання; текст не відтворюється в курсі.
 - title: >-
     "Я читав лекції щурам, щоб чути голос": спогади Ігоря Козловського про
     полон та катівні у Донецьку
@@ -142,7 +147,6 @@ readings:
   genre: Спогади / інтерв'ю
   source_type: primary
   role: close-reading
-  source: Суспільне Донбас
   source_url: >-
     https://suspilne.media/donbas/568407-a-citav-lekcii-suram-sob-cuti-golos-spogadi-igora-kozlovskogo-pro-polon-ta-kativni-u-donecku/
   license: copyrighted
@@ -153,12 +157,17 @@ readings:
     Проаналізувати, як Козловський описує внутрішню свободу, гідність і
     психологічний спротив у полоні.
   caveats: Травматичний матеріал потребує коротких цитат і обережного обговорення.
+  source_name: Суспільне Донбас
+  rights:
+    basis: external-link
+    evidence_url: >-
+      https://suspilne.media/donbas/568407-a-citav-lekcii-suram-sob-cuti-golos-spogadi-igora-kozlovskogo-pro-polon-ta-kativni-u-donecku/
+    note: Зовнішнє посилання; текст не відтворюється в курсі.
 - title: Гідність, а не жертва. Розмова з Ігорем Козловським
   language: uk
   genre: Розмова / філософське інтерв'ю
   source_type: primary
   role: supplementary-reading
-  source: PEN Ukraine
   source_url: https://pen.org.ua/hidnist-a-ne-zhertva-rozmova-anny-hruver-z-ihorem-kozlovskym
   license: copyrighted
   rights_note: Використовувати як link-only розмову; не хостити повний текст або фото.
@@ -168,11 +177,16 @@ readings:
     Визначити, як у розмові працюють поняття гідності, символу, відповідальності
     та свободи.
   caveats: Матеріал слід поєднувати з біографічною довідкою, а не читати як повну біографію.
+  source_name: PEN Ukraine
+  rights:
+    basis: external-link
+    evidence_url: https://pen.org.ua/hidnist-a-ne-zhertva-rozmova-anny-hruver-z-ihorem-kozlovskym
+    note: Зовнішнє посилання; текст не відтворюється в курсі.
 sequence: 298
 slug: ihor-kozlovskyi
 subtitle: The Religious Scholar Who Taught Freedom in Captivity
 title: 'Ігор Козловський: Вільний у полоні'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: наука, що комплексно вивчає релігію, її історію, сутність та вплив на суспільство
   pos: с.

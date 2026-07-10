@@ -76,23 +76,32 @@ persona:
   role: Кураторка, що повертає Марію Вояківську з тіні чоловіка, показуючи її як самостійну перекладачку, освітянку й громадську діячку на тлі галицького жіночого руху
   voice: Feminist-Historian
 phase: BIO.4
+readings_contract_version: 2
 readings:
 - hosting: link-only
   language: uk
   role: Офіційна біографічна довідка про Марію Грушевську.
-  source: Енциклопедія історії української революції 1917–1921
-  task: Ознайомтеся з енциклопедичною статтею про життя діячки.
   title: Грушевська Марія Сильвестрівна
   type: encyclopedia
-  url: https://ukr-revolution.history.org.ua/termin/grushevska_marija
+  source_name: Енциклопедія історії української революції 1917–1921
+  source_url: https://ukr-revolution.history.org.ua/termin/grushevska_marija
+  learner_task: Ознайомтеся з енциклопедичною статтею про життя діячки.
+  rights:
+    basis: external-link
+    evidence_url: https://ukr-revolution.history.org.ua/termin/grushevska_marija
+    note: Зовнішнє посилання; текст не відтворюється в курсі.
 - hosting: link-only
   language: uk
   role: Додаткові відомості про її перекладацьку та громадську роботу.
-  source: Енциклопедія Сучасної України
-  task: Прочитайте статтю з Енциклопедії Сучасної України для ширшого контексту.
   title: Грушевська Марія Сильвестрівна
   type: encyclopedia
-  url: https://esu.com.ua/article-32108
+  source_name: Енциклопедія Сучасної України
+  source_url: https://esu.com.ua/article-32108
+  learner_task: Прочитайте статтю з Енциклопедії Сучасної України для ширшого контексту.
+  rights:
+    basis: external-link
+    evidence_url: https://esu.com.ua/article-32108
+    note: Зовнішнє посилання; текст не відтворюється в курсі.
 references:
 - author: Сергій Білокінь
   note: 'Енциклопедична біографія: походження з родини греко-католицького священика, освіта, громадська і перекладацька діяльність, доля родини.'
@@ -129,7 +138,7 @@ sequence: 90
 slug: mariia-voiakovska
 subtitle: The Galician Translator and Educator Beyond the Shadow of a Great Man
 title: 'Марія Вояківська-Грушевська: Більше, ніж тінь'
-version: '5.2'
+version: '5.3'
 vocabulary_hints:
 - definition: жінка, що професійно перекладає тексти з однієї мови на іншу
   pos: ж.

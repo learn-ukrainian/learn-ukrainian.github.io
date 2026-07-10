@@ -95,28 +95,37 @@ references:
   type: reference
   url: https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&I21DBN=DOP&P21DBN=EIU&S21CNR=20&S21COLORTERMS=0&S21FMT=eiu_all&S21P01=0&S21P02=0&S21P03=TRN%3D&S21REF=10&S21STN=1&S21STR=Braterstvo_Tarasivtsiv&Z21ID=
   work: Братство тарасівців
+readings_contract_version: 2
 readings:
 - title: Липа Іван Львович
   language: uk
-  source: Енциклопедія Сучасної України
-  url: https://esu.com.ua/article-54707
   type: encyclopedia
   role: primary-bio
   hosting: link-only
-  task: Ознайомитися з біографією лікаря та ідеолога Івана Липи.
+  source_name: Енциклопедія Сучасної України
+  source_url: https://esu.com.ua/article-54707
+  learner_task: Ознайомитися з біографією лікаря та ідеолога Івана Липи.
+  rights:
+    basis: external-link
+    evidence_url: https://esu.com.ua/article-54707
+    note: Зовнішнє посилання; текст не відтворюється в курсі.
 - title: Братство тарасівців
   language: uk
-  source: Енциклопедія історії України
-  url: https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&I21DBN=DOP&P21DBN=EIU&S21CNR=20&S21COLORTERMS=0&S21FMT=eiu_all&S21P01=0&S21P02=0&S21P03=TRN%3D&S21REF=10&S21STN=1&S21STR=Braterstvo_Tarasivtsiv&Z21ID=
   type: encyclopedia
   role: context
   hosting: link-only
-  task: Вивчити ідеологію та історію діяльності "Братства тарасівців".
+  source_name: Енциклопедія історії України
+  source_url: https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&I21DBN=DOP&P21DBN=EIU&S21CNR=20&S21COLORTERMS=0&S21FMT=eiu_all&S21P01=0&S21P02=0&S21P03=TRN%3D&S21REF=10&S21STN=1&S21STR=Braterstvo_Tarasivtsiv&Z21ID=
+  learner_task: Вивчити ідеологію та історію діяльності "Братства тарасівців".
+  rights:
+    basis: external-link
+    evidence_url: https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&I21DBN=DOP&P21DBN=EIU&S21CNR=20&S21COLORTERMS=0&S21FMT=eiu_all&S21P01=0&S21P02=0&S21P03=TRN%3D&S21REF=10&S21STN=1&S21STR=Braterstvo_Tarasivtsiv&Z21ID=
+    note: Зовнішнє посилання; текст не відтворюється в курсі.
 sequence: 85
 slug: ivan-lypa
 subtitle: 'Ivan Lypa: Doctor, Writer, and Ideologue'
 title: 'Іван Липа: Лікар і письменник'
-version: '4.2'
+version: '4.3'
 vocabulary_hints:
 - definition: політична незалежність, державний суверенітет
   pos: ж.

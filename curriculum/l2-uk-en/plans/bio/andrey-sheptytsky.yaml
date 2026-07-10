@@ -104,29 +104,38 @@ references:
   note: Ключовий документ, що засуджує політичне насильство та міжнаціональну ворожнечу.
   type: primary
   work: Пастирське послання "Не вбий"
+readings_contract_version: 2
 readings:
 - title: Шептицький Андрей
   language: uk
-  source: Енциклопедія історії України
-  url: https://history.org.ua/?termin=Sheptytskyj_A
   type: encyclopedia
   role: primary-bio
   hosting: link-only
-  task: Дослідити біографію митрополита Андрея Шептицького та його вплив на УГКЦ і українське суспільство.
+  source_name: Енциклопедія історії України
+  source_url: https://history.org.ua/?termin=Sheptytskyj_A
+  learner_task: Дослідити біографію митрополита Андрея Шептицького та його вплив на УГКЦ і українське суспільство.
+  rights:
+    basis: external-link
+    evidence_url: https://history.org.ua/?termin=Sheptytskyj_A
+    note: Зовнішнє посилання; текст не відтворюється в курсі.
 - title: Мудрий праведник у вогні світової війни
   language: uk
-  source: УГКЦ
-  url: https://archives.ugcc.ua/articles/mudriy_pravednik_u_vogn%D1%96_sv%D1%96tovoi_v%D1%96yni_74409.html
   type: article
   role: source-context
   hosting: link-only
-  task: Простежити, як у церковному коментарі подано послання «Не вбий» і моральну позицію Шептицького щодо політичного насильства.
   caveats: Це не повний текст пастирського послання, а український церковний коментар із цитатами й контекстом; не підміняти ним первинний документ.
+  source_name: УГКЦ
+  source_url: https://archives.ugcc.ua/articles/mudriy_pravednik_u_vogn%D1%96_sv%D1%96tovoi_v%D1%96yni_74409.html
+  learner_task: Простежити, як у церковному коментарі подано послання «Не вбий» і моральну позицію Шептицького щодо політичного насильства.
+  rights:
+    basis: external-link
+    evidence_url: https://archives.ugcc.ua/articles/mudriy_pravednik_u_vogn%D1%96_sv%D1%96tovoi_v%D1%96yni_74409.html
+    note: Зовнішнє посилання; текст не відтворюється в курсі.
 sequence: 84
 slug: andrey-sheptytsky
 subtitle: A Moral Compass in the Age of Extremes
 title: 'Митрополит Андрей Шептицький: Пастир і рятівник'
-version: '4.3'
+version: '4.4'
 vocabulary_hints:
 - definition: найвищий ієрарх у деяких християнських церквах, голова митрополії
   pos: ч.

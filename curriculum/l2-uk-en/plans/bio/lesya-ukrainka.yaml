@@ -85,23 +85,32 @@ primary_annotations:
 - '[!anti-hagiography]'
 - '[!decolonization]'
 - '[!biography]'
+readings_contract_version: 2
 readings:
 - title: "Леся Українка: Біографія"
-  source: "УкрЛіб"
-  url: "https://www.ukrlib.com.ua/bio/printit.php?tid=1672"
   language: uk
   type: article
   role: "Огляд життєвого шляху та творчості"
   hosting: link-only
-  task: "Прочитайте біографію та виділіть основні етапи творчості."
+  source_name: "УкрЛіб"
+  source_url: "https://www.ukrlib.com.ua/bio/printit.php?tid=1672"
+  learner_task: "Прочитайте біографію та виділіть основні етапи творчості."
+  rights:
+    basis: external-link
+    evidence_url: "https://www.ukrlib.com.ua/bio/printit.php?tid=1672"
+    note: Зовнішнє посилання; текст не відтворюється в курсі.
 - title: "Леся Українка (Вікіпедія)"
-  source: "Вікіпедія"
-  url: "https://uk.wikipedia.org/wiki/%D0%9B%D0%B5%D1%81%D1%8F_%D0%A3%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D0%BA%D0%B0"
   language: uk
   type: encyclopedia
   role: "Загальний енциклопедичний огляд"
   hosting: link-only
-  task: "Ознайомтеся з енциклопедичною статтею про життя письменниці."
+  source_name: "Вікіпедія"
+  source_url: "https://uk.wikipedia.org/wiki/%D0%9B%D0%B5%D1%81%D1%8F_%D0%A3%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D0%BA%D0%B0"
+  learner_task: "Ознайомтеся з енциклопедичною статтею про життя письменниці."
+  rights:
+    basis: external-link
+    evidence_url: "https://uk.wikipedia.org/wiki/%D0%9B%D0%B5%D1%81%D1%8F_%D0%A3%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D0%BA%D0%B0"
+    note: Зовнішнє посилання; текст не відтворюється в курсі.
 references:
 - title: Леся Українка
   note: Загальна біографія, перелік творів, хронологія життя. Використовувати як базову канву.
@@ -121,7 +130,7 @@ sequence: 94
 slug: lesya-ukrainka
 subtitle: 'Lesya Ukrainka: Prometheus of Ukrainian Literature'
 title: 'Леся Українка: Прометей української літератури'
-version: '4.2'
+version: '4.3'
 vocabulary_hints:
 - definition: непохитність, стійкість духу в найважчих обставинах, нездатність бути скореним
   pos: ж.

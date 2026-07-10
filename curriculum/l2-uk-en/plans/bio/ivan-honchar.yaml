@@ -118,13 +118,13 @@ references:
   path: https://kpi.ua/honchar
   title: Київ. Скарбниця народної культури (КПІ)
   type: reference
+readings_contract_version: 2
 readings:
 - title: Гончар Іван Макарович
   language: uk
   genre: Енциклопедична стаття / біографічна довідка
   source_type: reference
   role: orientation
-  source: Енциклопедія Сучасної України
   source_url: https://esu.com.ua/article-30815
   license: copyrighted
   rights_note: Використовувати як link-only довідку; не хостити повний текст або фото.
@@ -136,12 +136,16 @@ readings:
   caveats: >-
     Енциклопедична довідка не дає достатньо джерельного матеріалу про музейну
     практику й нагляд КДБ.
+  source_name: Енциклопедія Сучасної України
+  rights:
+    basis: external-link
+    evidence_url: https://esu.com.ua/article-30815
+    note: Зовнішнє посилання; текст не відтворюється в курсі.
 - title: Про Музей. Історія
   language: uk
   genre: Музейна історія / інституційний нарис
   source_type: reference
   role: close-reading
-  source: Національний центр народної культури "Музей Івана Гончара"
   source_url: https://honchar.org.ua/history-of-museum-and-building
   license: copyrighted
   rights_note: Використовувати як link-only музейний матеріал; не хостити повний текст або архівні фото.
@@ -152,12 +156,16 @@ readings:
     ризики для відвідувачів у радянські десятиліття.
   caveats: >-
     Номери справ КДБ не підтверджені; не вигадувати архівну конкретику.
+  source_name: Національний центр народної культури "Музей Івана Гончара"
+  rights:
+    basis: external-link
+    evidence_url: https://honchar.org.ua/history-of-museum-and-building
+    note: Зовнішнє посилання; текст не відтворюється в курсі.
 - title: Краєзнавча діяльність Івана Гончара
   language: uk
   genre: Музейна стаття / щоденниковий коментар
   source_type: reference
   role: supplementary
-  source: Музей Івана Гончара
   source_url: https://old.honchar.org.ua/p/krajeznavcha-diyalnist-ivana-honchar/
   license: copyrighted
   rights_note: Використовувати як link-only статтю; цитати зі щоденника подавати коротко й атрибутовано.
@@ -169,11 +177,16 @@ readings:
   caveats: >-
     Щоденникові уривки потребують короткого цитування й не мають переноситися в
     UI великими блоками.
+  source_name: Музей Івана Гончара
+  rights:
+    basis: external-link
+    evidence_url: https://old.honchar.org.ua/p/krajeznavcha-diyalnist-ivana-honchar/
+    note: Зовнішнє посилання; текст не відтворюється в курсі.
 sequence: 315
 slug: ivan-honchar
 subtitle: The Sculptor Who Built an Ark for Ukrainian Identity
 title: 'Іван Гончар: Хатній музей та збережена ідентичність'
-version: '4.2'
+version: '4.3'
 vocabulary_hints:
 - definition: традиційна кераміка та предмети вжитку; мистецтво виготовлення глиняних виробів
   pos: с.

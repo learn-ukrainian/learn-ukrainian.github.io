@@ -94,15 +94,20 @@ sequence: 63
 slug: hanna-barvinok
 subtitle: A Woman's Voice in the Shadow of an Icon
 title: 'Ганна Барвінок: Письменниця і етнографка'
+readings_contract_version: 2
 readings:
 - hosting: link-only
   language: uk
   source_name: "Енциклопедія історії України"
   source_url: "https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&I21DBN=DOP&P21DBN=EIU&S21CNR=20&S21COLORTERMS=0&S21FMT=eiu_all&S21P01=0&S21P02=0&S21P03=TRN%3D&S21REF=10&S21STN=1&S21STR=Barvinok_H&Z21ID="
-  task: "Аналіз ролі в збереженні спадщини П. Куліша та власної творчості"
   title: "Ганна Барвінок"
   type: encyclopedia
-version: '4.2'
+  learner_task: "Аналіз ролі в збереженні спадщини П. Куліша та власної творчості"
+  rights:
+    basis: external-link
+    evidence_url: "https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&I21DBN=DOP&P21DBN=EIU&S21CNR=20&S21COLORTERMS=0&S21FMT=eiu_all&S21P01=0&S21P02=0&S21P03=TRN%3D&S21REF=10&S21STN=1&S21STR=Barvinok_H&Z21ID="
+    note: Зовнішнє посилання; текст не відтворюється в курсі.
+version: '4.3'
 vocabulary_hints:
 - definition: жінка, що професійно займається літературною творчістю
   pos: ж.
