@@ -25,6 +25,7 @@
 set -euo pipefail
 
 PROJECT_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SVC_LSOF_BIN="${SVC_LSOF_BIN:-lsof}"
 LOGS_DIR="$PROJECT_ROOT/logs"
 PIDS_DIR="$PROJECT_ROOT/.pids"
 VENV="$PROJECT_ROOT/.venv/bin"
@@ -139,15 +140,15 @@ _pid_on_port() {
     local name="$1"
     local port="${SVC_PORT[$name]}"
     local host="${SVC_HOST[$name]-}"
-    if command -v lsof >/dev/null 2>&1; then
+    if command -v "$SVC_LSOF_BIN" >/dev/null 2>&1; then
         # `|| true` because lsof exits 1 when no listener is found, and with
         # `set -eo pipefail` upstream that bubbles up to the caller. We want
         # an empty-stdout, exit-0 contract so callers can distinguish "no
         # owner" from "lookup failed" purely by the captured value.
         if [[ -n "$host" ]]; then
-            lsof -tiTCP@"$host":"$port" -sTCP:LISTEN 2>/dev/null || true
+            "$SVC_LSOF_BIN" -tiTCP@"$host":"$port" -sTCP:LISTEN 2>/dev/null || true
         else
-            lsof -tiTCP:"$port" -sTCP:LISTEN 2>/dev/null || true
+            "$SVC_LSOF_BIN" -tiTCP:"$port" -sTCP:LISTEN 2>/dev/null || true
         fi
     fi
 }
@@ -311,7 +312,7 @@ _reconcile_api_pid() {
 
     # Find the actual listener PID using lsof -nP -iTCP:$port -sTCP:LISTEN
     local listener_pid=""
-    if command -v lsof >/dev/null 2>&1; then
+    if command -v "$SVC_LSOF_BIN" >/dev/null 2>&1; then
         while read -r lpid; do
             if [[ -n "$lpid" ]]; then
                 if _pid_matches_service "$name" "$lpid"; then
@@ -319,7 +320,7 @@ _reconcile_api_pid() {
                     break
                 fi
             fi
-        done < <(lsof -t -nP -iTCP:${SVC_PORT[api]} -sTCP:LISTEN 2>/dev/null || true)
+        done < <("$SVC_LSOF_BIN" -t -nP -iTCP:${SVC_PORT[api]} -sTCP:LISTEN 2>/dev/null || true)
     fi
 
     # Mismatch check
@@ -491,7 +492,7 @@ _stop_service() {
     if [[ "$name" == "api" ]]; then
         local is_valid=0
         local listener_pid=""
-        if command -v lsof >/dev/null 2>&1; then
+        if command -v "$SVC_LSOF_BIN" >/dev/null 2>&1; then
             while read -r lpid; do
                 if [[ -n "$lpid" ]]; then
                     if _pid_matches_service "$name" "$lpid"; then
@@ -499,7 +500,7 @@ _stop_service() {
                         break
                     fi
                 fi
-            done < <(lsof -t -nP -iTCP:${SVC_PORT[$name]} -sTCP:LISTEN 2>/dev/null || true)
+            done < <("$SVC_LSOF_BIN" -t -nP -iTCP:${SVC_PORT[$name]} -sTCP:LISTEN 2>/dev/null || true)
         fi
 
         if [[ -n "$listener_pid" && "$pid" == "$listener_pid" ]]; then

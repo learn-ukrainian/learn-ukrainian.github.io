@@ -87,29 +87,25 @@ def temp_services_sh():
 
 @pytest.fixture
 def mock_lsof_env(tmp_path):
-    """Create a mock lsof binary inside a directory prepended to PATH."""
+    """Create a mock lsof script and expose it via SVC_LSOF_BIN env var."""
     shim_dir = tmp_path / "mock_bin"
     shim_dir.mkdir()
-    lsof_script = shim_dir / "lsof"
+    lsof_script = shim_dir / "mock_lsof"
     mock_file = tmp_path / "lsof_mock_pids.txt"
 
-    # If the env var MOCK_LSOF_EMPTY is set to "1", we leave the PATH-shim dir empty.
-    is_empty = os.environ.get("MOCK_LSOF_EMPTY") == "1"
-
-    if not is_empty:
-        # Write the script. It filters PIDs to ensure they are still running.
-        lsof_script.write_text(
-            f"#!/bin/sh\n"
-            f"if [ -f '{mock_file}' ]; then\n"
-            f"  while read -r pid; do\n"
-            f"    if [ -n \"$pid\" ] && kill -0 \"$pid\" 2>/dev/null; then\n"
-            f"      echo \"$pid\"\n"
-            f"    fi\n"
-            f"  done < '{mock_file}'\n"
-            f"fi\n",
-            encoding="utf-8"
-        )
-        lsof_script.chmod(0o755)
+    # Write the script. It filters PIDs to ensure they are still running.
+    lsof_script.write_text(
+        f"#!/bin/sh\n"
+        f"if [ -f '{mock_file}' ]; then\n"
+        f"  while read -r pid; do\n"
+        f"    if [ -n \"$pid\" ] && kill -0 \"$pid\" 2>/dev/null; then\n"
+        f"      echo \"$pid\"\n"
+        f"    fi\n"
+        f"  done < '{mock_file}'\n"
+        f"fi\n",
+        encoding="utf-8"
+    )
+    lsof_script.chmod(0o755)
 
     def _set_pids(pids: list[int]):
         mock_file.write_text("\n".join(str(p) for p in pids) + "\n", encoding="utf-8")
@@ -118,16 +114,11 @@ def mock_lsof_env(tmp_path):
         if mock_file.exists():
             mock_file.unlink()
 
-    # Prepend shim_dir to PATH.
-    # To simulate missing lsof when shim_dir is empty, we must also ensure
-    # we filter out system /usr/sbin and /sbin containing system lsof.
     env = os.environ.copy()
-    if is_empty:
-        paths = env.get("PATH", "").split(os.pathsep)
-        filtered_paths = [p for p in paths if "usr/sbin" not in p and "/sbin" not in p]
-        env["PATH"] = os.pathsep.join([str(shim_dir), *filtered_paths])
+    if os.environ.get("MOCK_LSOF_EMPTY") == "1":
+        env["SVC_LSOF_BIN"] = "/nonexistent/lsof"
     else:
-        env["PATH"] = f"{shim_dir}:{env.get('PATH', '')}"
+        env["SVC_LSOF_BIN"] = str(lsof_script.resolve())
 
     return _set_pids, _clear_pids, env
 
@@ -190,7 +181,7 @@ def test_pid_reconciliation(temp_services_sh, mock_lsof_env):
             env=env
         )
 
-        assert "WARNING: pid file mismatch" in res.stderr or "WARNING: pid file mismatch" in res.stdout
+        assert "WARNING: pid file mismatch" in res.stderr or "WARNING: pid file mismatch" in res.stdout, f"mismatch check failed. returncode={res.returncode}\nstdout:\n{res.stdout}\nstderr:\n{res.stderr}"
         assert api_pid_file.exists()
         reconciled_pid = api_pid_file.read_text(encoding="utf-8").strip()
         assert reconciled_pid == str(proc.pid)
@@ -203,7 +194,7 @@ def test_pid_reconciliation(temp_services_sh, mock_lsof_env):
             cwd=str(PROJECT_ROOT),
             env=env
         )
-        assert res_stop.returncode == 0
+        assert res_stop.returncode == 0, f"stop failed. returncode={res_stop.returncode}\nstdout:\n{res_stop.stdout}\nstderr:\n{res_stop.stderr}"
         proc.wait(timeout=5)
         assert proc.returncode is not None
 
@@ -223,7 +214,7 @@ def test_pid_reconciliation(temp_services_sh, mock_lsof_env):
         cwd=str(PROJECT_ROOT),
         env=env
     )
-    assert "removing stale pid file" in res.stderr or "removing stale pid file" in res.stdout
+    assert "removing stale pid file" in res.stderr or "removing stale pid file" in res.stdout, f"stale pid check failed. returncode={res.returncode}\nstdout:\n{res.stdout}\nstderr:\n{res.stderr}"
     assert not api_pid_file.exists()
 
 def test_crashloop_backoff(temp_services_sh, mock_lsof_env):
@@ -245,9 +236,9 @@ def test_crashloop_backoff(temp_services_sh, mock_lsof_env):
         env=env
     )
 
-    assert res.returncode != 0
-    assert "ERROR: api started less than 60s ago" in res.stderr or "ERROR: api started less than 60s ago" in res.stdout
-    assert "Use --force to override" in res.stderr or "Use --force to override" in res.stdout
+    assert res.returncode != 0, f"expected crashloop backoff non-zero return code. returncode={res.returncode}\nstdout:\n{res.stdout}\nstderr:\n{res.stderr}"
+    assert "ERROR: api started less than 60s ago" in res.stderr or "ERROR: api started less than 60s ago" in res.stdout, f"crashloop error message missing. stdout:\n{res.stdout}\nstderr:\n{res.stderr}"
+    assert "Use --force to override" in res.stderr or "Use --force to override" in res.stdout, f"force warning message missing. stdout:\n{res.stdout}\nstderr:\n{res.stderr}"
 
     # Now run with --force and verify it bypasses the check (it should print starting)
     res_force = subprocess.run(
@@ -258,8 +249,8 @@ def test_crashloop_backoff(temp_services_sh, mock_lsof_env):
         env=env
     )
 
-    assert "potential crashloop" not in res_force.stderr
-    assert "potential crashloop" not in res_force.stdout
+    assert "potential crashloop" not in res_force.stderr, f"unexpected crashloop warning in stderr.\nstdout:\n{res_force.stdout}\nstderr:\n{res_force.stderr}"
+    assert "potential crashloop" not in res_force.stdout, f"unexpected crashloop warning in stdout.\nstdout:\n{res_force.stdout}\nstderr:\n{res_force.stderr}"
 
     # Clean up the started process if it actually launched
     api_pid_file = PIDS_DIR / "api.pid"
@@ -284,13 +275,14 @@ def test_log_rotation(temp_services_sh, mock_lsof_env):
         api_log_file.write_bytes(b"A" * large_size)
 
         # Run patched services.sh start api (rotation happens first)
-        subprocess.run(
+        res = subprocess.run(
             [str(script_path), "start", "api"],
             capture_output=True,
             text=True,
             cwd=str(PROJECT_ROOT),
             env=env
         )
+        assert res.returncode == 0, f"start failed in log rotation test. returncode={res.returncode}\nstdout:\n{res.stdout}\nstderr:\n{res.stderr}"
 
         # Verify rotation occurred: api.log.1 should exist and contain our "A"s
         rotated_file = LOGS_DIR / "api.log.1"
@@ -346,8 +338,8 @@ def test_crashloop_backoff_clean_vs_crash(temp_services_sh, mock_lsof_env):
             cwd=str(PROJECT_ROOT),
             env=env
         )
-        assert res_stop.returncode == 0
-        assert not api_start_file.exists(), "last_start file was not deleted on clean stop"
+        assert res_stop.returncode == 0, f"stop failed. returncode={res_stop.returncode}\nstdout:\n{res_stop.stdout}\nstderr:\n{res_stop.stderr}"
+        assert not api_start_file.exists(), f"last_start file was not deleted on clean stop\nstdout:\n{res_stop.stdout}\nstderr:\n{res_stop.stderr}"
 
         # Now run start. Since api.last_start was deleted, it should NOT trigger backoff.
         res_start = subprocess.run(
@@ -357,10 +349,10 @@ def test_crashloop_backoff_clean_vs_crash(temp_services_sh, mock_lsof_env):
             cwd=str(PROJECT_ROOT),
             env=env
         )
-        assert "potential crashloop" not in res_start.stderr
-        assert "potential crashloop" not in res_start.stdout
-        assert "ERROR: api started less than 60s ago" not in res_start.stderr
-        assert "ERROR: api started less than 60s ago" not in res_start.stdout
+        assert "potential crashloop" not in res_start.stderr, f"unexpected crashloop warning in stderr.\nstdout:\n{res_start.stdout}\nstderr:\n{res_start.stderr}"
+        assert "potential crashloop" not in res_start.stdout, f"unexpected crashloop warning in stdout.\nstdout:\n{res_start.stdout}\nstderr:\n{res_start.stderr}"
+        assert "ERROR: api started less than 60s ago" not in res_start.stderr, f"expected no crashloop error. stdout:\n{res_start.stdout}\nstderr:\n{res_start.stderr}"
+        assert "ERROR: api started less than 60s ago" not in res_start.stdout, f"expected no crashloop error. stdout:\n{res_start.stdout}\nstderr:\n{res_start.stderr}"
 
     finally:
         if proc.poll() is None:
@@ -379,8 +371,8 @@ def test_crashloop_backoff_clean_vs_crash(temp_services_sh, mock_lsof_env):
         cwd=str(PROJECT_ROOT),
         env=env
     )
-    assert res_crash_start.returncode != 0
-    assert "potential crashloop" in res_crash_start.stderr or "potential crashloop" in res_crash_start.stdout
+    assert res_crash_start.returncode != 0, f"expected crash start to fail. returncode={res_crash_start.returncode}\nstdout:\n{res_crash_start.stdout}\nstderr:\n{res_crash_start.stderr}"
+    assert "potential crashloop" in res_crash_start.stderr or "potential crashloop" in res_crash_start.stdout, f"expected crashloop warning. stdout:\n{res_crash_start.stdout}\nstderr:\n{res_crash_start.stderr}"
 
 @pytest.mark.skipif(
     shutil.which("lsof") is None or sys.platform != "darwin",
