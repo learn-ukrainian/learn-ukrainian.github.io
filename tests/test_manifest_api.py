@@ -18,6 +18,7 @@ from fastapi.testclient import TestClient
 import scripts.api.main as api_main
 import scripts.api.rules_router as rules_router
 import scripts.api.session_router as session_router
+import scripts.api.state_router as state_router
 
 client = TestClient(api_main.app, raise_server_exceptions=False)
 
@@ -257,9 +258,12 @@ def test_session_current_404_without_current_md(tmp_path, monkeypatch):
 
 def test_manifest_shape_and_hashes(monkeypatch, tmp_path):
     """Manifest exposes a hash + URL for rules + session; orient + inbox don't need hashes."""
-    # Stub rules + session so we get deterministic hashes.
-    monkeypatch.setattr(rules_router, "rules_hash", lambda: "r" * 64)
-    monkeypatch.setattr(session_router, "session_hash", lambda: "s" * 64)
+    # Stub rules + session so we get deterministic hashes. Patch the names
+    # where they are USED (state_router binds them at import time via
+    # top-level `from .rules_router import rules_hash` — patching the origin
+    # module would not affect the already-bound reference).
+    monkeypatch.setattr(state_router, "rules_hash", lambda: "r" * 64)
+    monkeypatch.setattr(state_router, "session_hash", lambda: "s" * 64)
 
     resp = client.get("/api/state/manifest")
     assert resp.status_code == 200
