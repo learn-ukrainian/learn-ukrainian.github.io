@@ -261,6 +261,12 @@ _LINEAGE_METADATA_FIELDS = (
     "writer_model_id",
 )
 
+# ``fixture`` identifies human-authored or synthetic fixture content that has
+# no model lineage.  The longer marker is retained in adversarial artifact
+# metadata so it cannot be mistaken for a real judge family, then normalizes
+# to the same non-model lineage domain used for route exclusion.
+_FIXTURE_LINEAGE_MARKERS = frozenset({"fixture", "adversarial-fixture"})
+
 
 def normalize_lineage_family(metadata: Any) -> str | None:
     """Map seat/pin metadata to a conservative Layer-B lineage family.
@@ -277,6 +283,8 @@ def normalize_lineage_family(metadata: Any) -> str | None:
         text = value.strip().casefold()
         if not text:
             return
+        if text in _FIXTURE_LINEAGE_MARKERS:
+            candidates.add("fixture")
         if re.search(r"(?:^|[^a-z0-9])(google|gemma|gemini)(?:$|[^a-z0-9])", text):
             candidates.add("google")
         if re.search(r"(?:^|[^a-z0-9])deepseek(?:$|[^a-z0-9])", text):

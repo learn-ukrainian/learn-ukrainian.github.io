@@ -14,6 +14,10 @@ cases:
     required_candidate_shape: One complete same-output ordered-segment candidate record.
     expected_layer_b_outcome: Adjudicate source relation against the captured raw output.
     annotation_status: SKELETON
+    materialized_as:
+      manifest: layer_b_adversarial/manifest.yaml
+      case_id: franko-1893-vienna
+      artifact: layer_b_adversarial/adversarial-layer-b-fixture.json
 
   - case_id: lesya-1871-1913
     fixture_id: lesya-ukrainka
@@ -23,6 +27,10 @@ cases:
     required_candidate_shape: One complete same-output ordered-segment candidate record.
     expected_layer_b_outcome: Adjudicate source relation against the captured raw output.
     annotation_status: SKELETON
+    materialized_as:
+      manifest: layer_b_adversarial/manifest.yaml
+      case_id: lesya-1871-1913
+      artifact: layer_b_adversarial/adversarial-layer-b-fixture.json
 
   - case_id: zhnyvarski-boroda
     fixture_id: zhnyvarski
@@ -32,6 +40,10 @@ cases:
     required_candidate_shape: One complete same-output ordered-segment candidate record.
     expected_layer_b_outcome: Adjudicate source relation against the captured raw output.
     annotation_status: SKELETON
+    materialized_as:
+      manifest: layer_b_adversarial/manifest.yaml
+      case_id: zhnyvarski-boroda
+      artifact: layer_b_adversarial/adversarial-layer-b-fixture.json
 
   - case_id: adversarial-cross-event-join
     fixture_id: adversarial-cross-event-join
@@ -41,6 +53,10 @@ cases:
     required_candidate_shape: No stitched candidate; preserve the separate event outputs for audit evidence.
     expected_layer_b_outcome: Not run because provenance must not anchor.
     annotation_status: SKELETON
+    materialized_as:
+      manifest: layer_b_adversarial/manifest.yaml
+      case_id: adversarial-cross-event-join
+      artifact: layer_b_adversarial/adversarial-layer-b-fixture.json
 
   - case_id: lexical-variation-row
     fixture_id: lexical-variation-row
@@ -52,3 +68,7 @@ cases:
       Adjudicate the claim against raw output; do not treat lexical variation as
       quotation equivalence.
     annotation_status: SKELETON
+    materialized_as:
+      manifest: layer_b_adversarial/manifest.yaml
+      case_id: lexical-variation-row
+      artifact: layer_b_adversarial/adversarial-layer-b-fixture.json
