@@ -96,40 +96,50 @@ references:
   note: Основне джерело відомостей про життя та діяльність князя.
   type: primary
   work: Літопис Руський
+readings_contract_version: 2
 readings:
-- title: "Володимир Мономах"
+- title: "ВОЛОДИМИР МОНОМАХ"
   language: uk
   genre: encyclopedia
   source_type: reference
   role: context
-  source: "Енциклопедія історії України (history.org.ua)"
+  source_name: "Енциклопедія історії України"
   source_url: "https://history.org.ua/?termin=Volodymyr_Mo"
-  license: copyright
   hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: "https://history.org.ua/?termin=Volodymyr_Mo"
+    note: "Зовнішнє посилання; текст не відтворюється в курсі."
   cefr_min: C1
   learner_task: "Ознайомитися з діяльністю Мономаха як політичного та військового лідера."
   caveats: "Академічний стиль."
-- title: "Повчання дітям (уривки)"
+- title: "Повчання Володимира Мономаха. Повість врем’яних літ. ПовЂсть времяньныхъ лЂтъ"
   language: uk
   genre: literature
   source_type: primary
   role: primary
-  source: "Ізборник (izbornyk.org.ua)"
+  source_name: "Ізборник"
   source_url: "http://izbornyk.org.ua/pvlyar/yar09.htm"
-  license: public_domain
-  hosting: excerpt-only
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: "http://izbornyk.org.ua/pvlyar/yar09.htm"
+    note: "Зовнішнє посилання; текст не відтворюється в курсі."
   cefr_min: C1
   learner_task: "Проаналізувати єдиний збережений світський політичний і моральний заповіт князя."
   caveats: "Давньоруський текст потребує глосарію."
-- title: "Літопис Руський (за Іпатським списком) (уривки)"
+- title: "Повість врем’яних літ. ПовЂсть времяньныхъ лЂтъ"
   language: uk
   genre: chronicle
   source_type: primary
   role: primary
-  source: "Ізборник (izbornyk.org.ua)"
+  source_name: "Ізборник"
   source_url: "http://izbornyk.org.ua/pvlyar/yar10.htm"
-  license: public_domain
-  hosting: excerpt-only
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: "http://izbornyk.org.ua/pvlyar/yar10.htm"
+    note: "Зовнішнє посилання; текст не відтворюється в курсі."
   cefr_min: C1
   learner_task: "Ознайомитися з літописною оцінкою діяльності князя та його боротьби з половцями."
   caveats: "Оригінальний або адаптований текст потребує мовної підтримки."
@@ -137,7 +147,7 @@ sequence: 6
 slug: volodymyr-monomakh
 subtitle: 'Volodymyr Monomakh: Strengthener of Rus'''
 title: 'Володимир Мономах: Укріплювач Русі'
-version: '4.4'
+version: '4.5'
 vocabulary_hints:
 - definition: історичний період ослаблення центральної влади в Київській Русі та зміцнення окремих князівств
   pos: ж.
