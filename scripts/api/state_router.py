@@ -50,6 +50,7 @@ except ImportError:
 from . import delegate_router as delegate_api
 from .codexbar_usage import get_provider_usage_data, refresh_provider_usage_data
 from .config import CURRICULUM_ROOT, LEVELS
+from .lane_health import compute_lane_health
 from .state_build import (
     compute_build_stats,
     compute_build_status_all,
@@ -101,6 +102,7 @@ _is_content_done = is_content_done
 router = APIRouter(tags=["state"])
 
 BUDGET_CONFIG_PATH = Path(__file__).resolve().parents[1] / "config" / "agent_budgets.yaml"
+TASKS_DIR = Path(__file__).resolve().parents[2] / "batch_state" / "tasks"
 SUBSCRIPTION_LANES = ("claude", "codex", "gemini", "grok", "cursor")
 API_LANES = ("deepseek",)  # representative; others via openrouter absent BY DESIGN
 AGENT_NAMES = SUBSCRIPTION_LANES  # only subscription lanes participate in CodexBar window checks
@@ -318,6 +320,15 @@ def _recommend_agent(
             "warnings": [*warnings, "empty snapshot — no recommendation emitted"],
         }
 
+    def is_healthy(lane_name: str) -> bool:
+        agent_data = agents.get(lane_name)
+        if not agent_data:
+            return True
+        h = agent_data.get("health")
+        if not h:
+            return True
+        return h.get("healthy", True)
+
     # Build status/burn for core code lanes (claude special interactive, others flat); include grok/cursor if present
     core = ["claude", "codex", "gemini"]
     status_by_agent: dict[str, str] = {}
@@ -377,69 +388,105 @@ def _recommend_agent(
         warnings.append(
             f"lanes resetting soon (within {reset_imminent_hours}h): {', '.join(imminent)} — defer large batches on these if possible"
         )
-    if "near_cap" in status_by_agent.values():
-        candidates = [agent for agent, st in status_by_agent.items() if st == "cool"]
-        if not candidates:
-            candidates = [agent for agent, st in status_by_agent.items() if st == "warm"]
-        if candidates:
-            # prefer non-imminent if possible
-            non_imm = [c for c in candidates if c not in imminent] or candidates
-            recommended = min(non_imm, key=lambda agent: burn_by_agent.get(agent) or 0.0)
+
+    def select_agent(agents_dict, status_map, burn_map, resets_map):
+        if "near_cap" in status_map.values():
+            candidates = [agent for agent, st in status_map.items() if st == "cool"]
+            if not candidates:
+                candidates = [agent for agent, st in status_map.items() if st == "warm"]
+            if candidates:
+                # prefer non-imminent if possible
+                non_imm = [c for c in candidates if c not in imminent] or candidates
+                recommended = min(non_imm, key=lambda agent: burn_map.get(agent) or 0.0)
+                return {
+                    "primary_agent_for_code": recommended,
+                    "rationale": (
+                        f"At least one agent is near cap; {recommended} has the lowest "
+                        f"available 7d burn ({_format_pct(burn_map.get(recommended))}%)."
+                    ),
+                }
+
+        # claude pool still special
+        if "claude" in agents_dict:
+            agentic_pool = agents_dict["claude"].get("agentic_pool", {})
+            if agentic_pool.get("active") and agentic_pool.get("status") == "cool":
+                return {
+                    "primary_agent_for_code": "claude",
+                    "rationale": "Claude agentic pool is active and cool; drain the separate monthly pool first.",
+                }
+
+        cool_lanes = [a for a, s in status_map.items() if s == "cool"]
+        if cool_lanes:
+            pool = [c for c in cool_lanes if c not in imminent] or cool_lanes
+            recommended = min(pool, key=lambda agent: burn_map.get(agent) or 0.0)
+            rationale = (
+                "All agents cool or warm; default split applies. "
+                f"{recommended} 7d burn is {_format_pct(burn_map.get(recommended))}%. "
+            )
             return {
                 "primary_agent_for_code": recommended,
-                "rationale": (
-                    f"At least one agent is near cap; {recommended} has the lowest "
-                    f"available 7d burn ({_format_pct(burn_by_agent.get(recommended))}%)."
-                ),
-                "warnings": warnings,
+                "rationale": rationale,
             }
 
-    # claude pool still special
-    if "claude" in agents:
-        agentic_pool = agents["claude"].get("agentic_pool", {})
-        if agentic_pool.get("active") and agentic_pool.get("status") == "cool":
+        warm_lanes = [a for a, s in status_map.items() if s == "warm"]
+        if warm_lanes:
+            pool = [c for c in warm_lanes if c not in imminent] or warm_lanes
+            recommended = min(pool, key=lambda agent: burn_map.get(agent) or 0.0)
+            rationale = f"Mixed; {recommended} has lowest 7d burn ({_format_pct(burn_map.get(recommended))}%)."
             return {
-                "primary_agent_for_code": "claude",
-                "rationale": "Claude agentic pool is active and cool; drain the separate monthly pool first.",
-                "warnings": warnings,
+                "primary_agent_for_code": recommended,
+                "rationale": rationale,
             }
 
-    cool_lanes = [a for a, s in status_by_agent.items() if s == "cool"]
-    if cool_lanes:
-        pool = [c for c in cool_lanes if c not in imminent] or cool_lanes
-        recommended = min(pool, key=lambda agent: burn_by_agent.get(agent) or 0.0)
-        rationale = (
-            "All agents cool or warm; default split applies. "
-            f"{recommended} 7d burn is {_format_pct(burn_by_agent.get(recommended))}%. "
-        )
-        return {
-            "primary_agent_for_code": recommended,
-            "rationale": rationale,
-            "warnings": warnings,
-        }
+        # fallback to lowest burn among known
+        known = list(status_map.keys())
+        if known:
+            recommended = min(known, key=lambda agent: burn_map.get(agent) or 0.0)
+            return {
+                "primary_agent_for_code": recommended,
+                "rationale": f"Mixed routing state; {recommended} currently has the lowest 7d burn ({_format_pct(burn_map.get(recommended))}%).",
+            }
 
-    warm_lanes = [a for a, s in status_by_agent.items() if s == "warm"]
-    if warm_lanes:
-        pool = [c for c in warm_lanes if c not in imminent] or warm_lanes
-        recommended = min(pool, key=lambda agent: burn_by_agent.get(agent) or 0.0)
-        rationale = f"Mixed; {recommended} has lowest 7d burn ({_format_pct(burn_by_agent.get(recommended))}%)."
-        return {
-            "primary_agent_for_code": recommended,
-            "rationale": rationale,
-            "warnings": warnings,
-        }
+        return {"primary_agent_for_code": None, "rationale": "insufficient data"}
 
-    # fallback to lowest burn among known
-    known = list(status_by_agent.keys())
-    if known:
-        recommended = min(known, key=lambda agent: burn_by_agent.get(agent) or 0.0)
-        return {
-            "primary_agent_for_code": recommended,
-            "rationale": f"Mixed routing state; {recommended} currently has the lowest 7d burn ({_format_pct(burn_by_agent.get(recommended))}%).",
-            "warnings": warnings,
-        }
+    # 1. Determine baseline budget-only recommendation (ignore health)
+    budget_only_res = select_agent(agents, status_by_agent, burn_by_agent, resets_by)
 
-    return {"primary_agent_for_code": None, "rationale": "insufficient data", "warnings": warnings}
+    # 2. Check health of candidate lanes
+    candidate_lanes = list(status_by_agent.keys())
+    unhealthy_candidates = [lane for lane in candidate_lanes if not is_healthy(lane)]
+
+    if not unhealthy_candidates:
+        res = budget_only_res
+    else:
+        all_unhealthy = len(unhealthy_candidates) == len(candidate_lanes)
+        if all_unhealthy:
+            # Fall back to budget-only pick + warning
+            res = budget_only_res
+            warnings.append("all lanes unhealthy — recommendation is budget-only")
+        else:
+            # At least one healthy candidate exists. Skip unhealthy lanes.
+            healthy_agents = {k: v for k, v in agents.items() if is_healthy(k)}
+            healthy_status = {k: v for k, v in status_by_agent.items() if is_healthy(k)}
+            healthy_burn = {k: v for k, v in burn_by_agent.items() if is_healthy(k)}
+            healthy_resets = {k: v for k, v in resets_by.items() if is_healthy(k)}
+
+            res = select_agent(healthy_agents, healthy_status, healthy_burn, healthy_resets)
+
+            # Append warning for each skipped unhealthy lane
+            for lane in unhealthy_candidates:
+                h = agents[lane].get("health", {})
+                cf = h.get("consecutive_failures", 0)
+                sm = h.get("span_minutes", 0)
+                warnings.append(
+                    f"lane {lane} skipped for recommendation: {cf} spawn failures in {sm}m"
+                )
+
+    return {
+        "primary_agent_for_code": res.get("primary_agent_for_code"),
+        "rationale": res.get("rationale", "insufficient data"),
+        "warnings": warnings,
+    }
 
 
 def compute_routing_budget(now: datetime | None = None, *, fresh_codexbar: bool = False) -> dict[str, Any]:
@@ -451,10 +498,21 @@ def compute_routing_budget(now: datetime | None = None, *, fresh_codexbar: bool 
     reset_hours = extras["reset_imminent_hours"]
     resets_at = _next_weekly_reset(current_time)
 
+    health_records = {}
+    try:
+        health_records = compute_lane_health(
+            TASKS_DIR,
+            now=current_time
+        )
+    except Exception as exc:
+        import logging
+        logging.getLogger("state_router").debug("Failed to compute lane health: %s", exc)
+
     # Empty config case: unknown statuses, suppressed rec (no confident pick from absent data)
     if not budgets:
         agents = {}
         for lane in SUBSCRIPTION_LANES:
+            lane_health = health_records.get(lane, {"healthy": True, "consecutive_failures": 0, "span_minutes": 0})
             if lane == "claude":
                 agents[lane] = {
                     "interactive": {
@@ -477,6 +535,7 @@ def compute_routing_budget(now: datetime | None = None, *, fresh_codexbar: bool 
                     "burn_pct_7d": None,
                     "status": "unknown",
                     "resets_at": resets_at,
+                    "health": lane_health,
                 }
             else:
                 agents[lane] = {
@@ -485,12 +544,44 @@ def compute_routing_budget(now: datetime | None = None, *, fresh_codexbar: bool 
                     "burn_pct_7d": None,
                     "status": "unknown",
                     "resets_at": resets_at,
+                    "health": lane_health,
                 }
         rec = {
             "primary_agent_for_code": None,
             "rationale": "Budget config absent; recommendation suppressed (empty snapshot).",
             "warnings": [*warnings, "empty snapshot — use model-assignment + /api/orient"],
         }
+
+        ranked_subs = [
+            {
+                "lane": lane,
+                "type": "subscription",
+                "status": "unknown",
+                "burn_pct_7d": None,
+                "remaining_pct": None,
+                "resets_at": resets_at,
+                "health": agents[lane]["health"],
+            }
+            for lane in SUBSCRIPTION_LANES
+        ]
+        ranked_apis = [
+            {
+                "lane": lane,
+                "type": "api",
+                "status": "unknown",
+                "burn_pct_7d": None,
+                "remaining_pct": None,
+                "resets_at": None,
+                "health": health_records.get(lane, {"healthy": True, "consecutive_failures": 0, "span_minutes": 0}),
+            }
+            for lane in API_LANES
+        ]
+        ranked = ranked_subs + ranked_apis
+
+        healthy_lanes = [x for x in ranked if x.get("health", {}).get("healthy", True)]
+        unhealthy_lanes = [x for x in ranked if not x.get("health", {}).get("healthy", True)]
+        ranked = healthy_lanes + unhealthy_lanes
+
         return {
             "generated_at": _isoformat_z(current_time),
             "agents": agents,
@@ -504,28 +595,7 @@ def compute_routing_budget(now: datetime | None = None, *, fresh_codexbar: bool 
                 "data_age_s": None,
                 "stale_threshold_s": 900,
             },
-            "ranked_by_headroom": [
-                {
-                    "lane": lane,
-                    "type": "subscription",
-                    "status": "unknown",
-                    "burn_pct_7d": None,
-                    "remaining_pct": None,
-                    "resets_at": resets_at,
-                }
-                for lane in SUBSCRIPTION_LANES
-            ]
-            + [
-                {
-                    "lane": lane,
-                    "type": "api",
-                    "status": "unknown",
-                    "burn_pct_7d": None,
-                    "remaining_pct": None,
-                    "resets_at": None,
-                }
-                for lane in API_LANES
-            ],
+            "ranked_by_headroom": ranked,
         }
 
     records = load_cost_records()
@@ -752,6 +822,11 @@ def compute_routing_budget(now: datetime | None = None, *, fresh_codexbar: bool 
             f"promo expires in {promo_days} days; +50% bonus capacity ends {promo_through.isoformat() if promo_through else ''}"
         )
 
+    # Map health information to all subscription lanes in the agents dict
+    for lane in SUBSCRIPTION_LANES:
+        lane_health = health_records.get(lane, {"healthy": True, "consecutive_failures": 0, "span_minutes": 0})
+        agents[lane]["health"] = lane_health
+
     rec = _recommend_agent(
         agents,
         warnings,
@@ -782,6 +857,7 @@ def compute_routing_budget(now: datetime | None = None, *, fresh_codexbar: bool 
                 "remaining_pct": a.get("remaining_pct"),
                 "resets_at": a.get("resets_at"),
                 "in_flight": _in_flight_by_agent().get(lane, 0),
+                "health": a.get("health", {"healthy": True, "consecutive_failures": 0, "span_minutes": 0}),
             }
         )
     ranked_subs.sort(key=lambda x: (x["status"] == "unknown", x.get("burn_pct_7d") or 999.0))
@@ -795,11 +871,17 @@ def compute_routing_budget(now: datetime | None = None, *, fresh_codexbar: bool 
             "remaining_pct": None,
             "resets_at": None,
             "in_flight": 0,
+            "health": health_records.get(lane, {"healthy": True, "consecutive_failures": 0, "span_minutes": 0}),
         }
         for lane in API_LANES
     ]
     # per one design note treat absent as full, but AC requires status unknown NOT cool for ranked view
     ranked = ranked_subs + ranked_apis
+
+    # Apply health demotion: unhealthy lanes are moved to the bottom of the list
+    healthy_lanes = [x for x in ranked if x.get("health", {}).get("healthy", True)]
+    unhealthy_lanes = [x for x in ranked if not x.get("health", {}).get("healthy", True)]
+    ranked = healthy_lanes + unhealthy_lanes
 
     return {
         "generated_at": _isoformat_z(current_time),
