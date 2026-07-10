@@ -67,6 +67,9 @@ export function ActivityPlayer({ activity, onComplete, isUkrainian }: ActivityPl
           onComplete={complete}
         />
       )}
+      {!['true-false', 'cloze', 'match-up'].includes(activity.type) && (
+        <p data-activity-placeholder={activity.type}>тип поки без віджета</p>
+      )}
     </section>
   );
 }

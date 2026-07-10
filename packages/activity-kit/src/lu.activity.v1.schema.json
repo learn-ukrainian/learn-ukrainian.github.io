@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "https://learn-ukrainian.github.io/packages/activity-kit/lu.activity.v1.schema.json",
   "title": "Learn Ukrainian Activity v1",
-  "description": "Public B1 activity envelope. Its payload deliberately reuses the public activity schemas instead of copying their per-type definitions.",
+  "description": "Public B1 activity envelope. Its payload discriminates the shipped widgets and the versionable lesson-document registry.",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -16,7 +16,22 @@
   ],
   "properties": {
     "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
-    "type": { "enum": ["true-false", "cloze", "match-up"] },
+    "type": {
+      "enum": [
+        "true-false",
+        "cloze",
+        "match-up",
+        "text-questions",
+        "multiple-choice",
+        "glossary",
+        "form-build",
+        "error-correction",
+        "paraphrase",
+        "continue-sentence",
+        "roleplay-dialog",
+        "short-writing"
+      ]
+    },
     "title": { "type": "string", "minLength": 1 },
     "level": {
       "const": "b1",
@@ -26,16 +41,19 @@
       "oneOf": [
         { "$ref": "#/$defs/trueFalsePayload" },
         { "$ref": "#/$defs/clozePayload" },
-        { "$ref": "#/$defs/matchUpPayload" }
+        { "$ref": "#/$defs/matchUpPayload" },
+        { "$ref": "#/$defs/textQuestionsPayload" },
+        { "$ref": "#/$defs/multipleChoicePayload" },
+        { "$ref": "#/$defs/glossaryPayload" },
+        { "$ref": "#/$defs/formBuildPayload" },
+        { "$ref": "#/$defs/errorCorrectionPayload" },
+        { "$ref": "#/$defs/paraphrasePayload" },
+        { "$ref": "#/$defs/continueSentencePayload" },
+        { "$ref": "#/$defs/roleplayDialogPayload" },
+        { "$ref": "#/$defs/shortWritingPayload" }
       ]
     },
-    "answer_key": {
-      "oneOf": [
-        { "$ref": "#/$defs/trueFalseAnswerKey" },
-        { "$ref": "#/$defs/clozeAnswerKey" },
-        { "$ref": "#/$defs/matchUpAnswerKey" }
-      ]
-    },
+    "answer_key": { "type": "object" },
     "provenance": {
       "type": "object",
       "additionalProperties": false,
@@ -77,6 +95,87 @@
           "answer_key": { "$ref": "#/$defs/matchUpAnswerKey" }
         }
       }
+    },
+    {
+      "if": { "properties": { "type": { "const": "text-questions" } } },
+      "then": {
+        "properties": {
+          "payload": { "$ref": "#/$defs/textQuestionsPayload" },
+          "answer_key": { "$ref": "#/$defs/teacherGuidanceAnswerKey" }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "type": { "const": "multiple-choice" } } },
+      "then": {
+        "properties": {
+          "payload": { "$ref": "#/$defs/multipleChoicePayload" },
+          "answer_key": { "$ref": "#/$defs/multipleChoiceAnswerKey" }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "type": { "const": "glossary" } } },
+      "then": {
+        "properties": {
+          "payload": { "$ref": "#/$defs/glossaryPayload" },
+          "answer_key": { "$ref": "#/$defs/teacherGuidanceAnswerKey" }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "type": { "const": "form-build" } } },
+      "then": {
+        "properties": {
+          "payload": { "$ref": "#/$defs/formBuildPayload" },
+          "answer_key": { "$ref": "#/$defs/itemsAnswerKey" }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "type": { "const": "error-correction" } } },
+      "then": {
+        "properties": {
+          "payload": { "$ref": "#/$defs/errorCorrectionPayload" },
+          "answer_key": { "$ref": "#/$defs/itemsAnswerKey" }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "type": { "const": "paraphrase" } } },
+      "then": {
+        "properties": {
+          "payload": { "$ref": "#/$defs/paraphrasePayload" },
+          "answer_key": { "$ref": "#/$defs/itemsAnswerKey" }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "type": { "const": "continue-sentence" } } },
+      "then": {
+        "properties": {
+          "payload": { "$ref": "#/$defs/continueSentencePayload" },
+          "answer_key": { "$ref": "#/$defs/teacherGuidanceAnswerKey" }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "type": { "const": "roleplay-dialog" } } },
+      "then": {
+        "properties": {
+          "payload": { "$ref": "#/$defs/roleplayDialogPayload" },
+          "answer_key": { "$ref": "#/$defs/teacherGuidanceAnswerKey" }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "type": { "const": "short-writing" } } },
+      "then": {
+        "properties": {
+          "payload": { "$ref": "#/$defs/shortWritingPayload" },
+          "answer_key": { "$ref": "#/$defs/teacherGuidanceAnswerKey" }
+        }
+      }
     }
   ],
   "$defs": {
@@ -93,6 +192,131 @@
     },
     "matchUpPayload": {
       "$ref": "https://learn-ukrainian.github.io/schemas/activity-v2.schema.json#/$defs/match-up"
+    },
+    "textQuestionsPayload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "instruction", "items"],
+      "properties": {
+        "type": { "const": "text-questions" },
+        "instruction": { "type": "string", "minLength": 1 },
+        "items": { "$ref": "#/$defs/stringItems" }
+      }
+    },
+    "multipleChoicePayload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "instruction", "items"],
+      "properties": {
+        "type": { "const": "multiple-choice" },
+        "instruction": { "type": "string", "minLength": 1 },
+        "items": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["prompt", "options"],
+            "properties": {
+              "prompt": { "type": "string", "minLength": 1 },
+              "options": {
+                "type": "array",
+                "minItems": 2,
+                "items": { "type": "string", "minLength": 1 }
+              }
+            }
+          }
+        }
+      }
+    },
+    "glossaryPayload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "instruction", "gloss_lang", "items"],
+      "properties": {
+        "type": { "const": "glossary" },
+        "instruction": { "type": "string", "minLength": 1 },
+        "gloss_lang": { "type": "string", "minLength": 1 },
+        "items": { "$ref": "#/$defs/termGlossItems" }
+      }
+    },
+    "formBuildPayload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "instruction", "items"],
+      "properties": {
+        "type": { "const": "form-build" },
+        "instruction": { "type": "string", "minLength": 1 },
+        "items": { "$ref": "#/$defs/stringItems" }
+      }
+    },
+    "errorCorrectionPayload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "instruction", "items"],
+      "properties": {
+        "type": { "const": "error-correction" },
+        "instruction": { "type": "string", "minLength": 1 },
+        "items": { "$ref": "#/$defs/stringItems" }
+      }
+    },
+    "paraphrasePayload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "instruction", "items"],
+      "properties": {
+        "type": { "const": "paraphrase" },
+        "instruction": { "type": "string", "minLength": 1 },
+        "items": { "$ref": "#/$defs/stringItems" }
+      }
+    },
+    "continueSentencePayload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "instruction", "items"],
+      "properties": {
+        "type": { "const": "continue-sentence" },
+        "instruction": { "type": "string", "minLength": 1 },
+        "items": { "$ref": "#/$defs/stringItems" }
+      }
+    },
+    "roleplayDialogPayload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "instruction", "scenario", "prompts"],
+      "properties": {
+        "type": { "const": "roleplay-dialog" },
+        "instruction": { "type": "string", "minLength": 1 },
+        "scenario": { "type": "string", "minLength": 1 },
+        "prompts": { "$ref": "#/$defs/stringItems" }
+      }
+    },
+    "shortWritingPayload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "prompt"],
+      "properties": {
+        "type": { "const": "short-writing" },
+        "prompt": { "type": "string", "minLength": 1 }
+      }
+    },
+    "stringItems": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "termGlossItems": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["term", "gloss"],
+        "properties": {
+          "term": { "type": "string", "minLength": 1 },
+          "gloss": { "type": "string", "minLength": 1 }
+        }
+      }
     },
     "trueFalseAnswerKey": {
       "type": "object",
@@ -153,6 +377,38 @@
           }
         }
       }
+    },
+    "multipleChoiceAnswerKey": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["items"],
+      "properties": {
+        "items": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["index", "correct"],
+            "properties": {
+              "index": { "type": "integer", "minimum": 0 },
+              "correct": { "type": "string", "minLength": 1 }
+            }
+          }
+        }
+      }
+    },
+    "itemsAnswerKey": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["items"],
+      "properties": { "items": { "$ref": "#/$defs/stringItems" } }
+    },
+    "teacherGuidanceAnswerKey": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["guidance"],
+      "properties": { "guidance": { "type": "string", "minLength": 1 } }
     }
   }
 }
