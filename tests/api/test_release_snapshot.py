@@ -6,6 +6,7 @@ import json
 import os
 import socket
 import subprocess
+import sys
 import time
 import urllib.error
 import urllib.request
@@ -18,7 +19,13 @@ from scripts.git_context import sanitized_git_env
 from scripts.path_safety import safe_join
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-VENV_PYTHON = PROJECT_ROOT / ".venv" / "bin" / "python"
+# Prefer the repo venv when present; fall back to the running interpreter so
+# bare review worktrees (no .venv symlink) stay testable (cf. #4918, #4926).
+VENV_PYTHON = (
+    PROJECT_ROOT / ".venv" / "bin" / "python"
+    if (PROJECT_ROOT / ".venv" / "bin" / "python").exists()
+    else Path(sys.executable)
+)
 
 
 def _run_git(repo_root: Path, *args: str) -> str:

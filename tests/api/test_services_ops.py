@@ -19,7 +19,13 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 SERVICES_SH = PROJECT_ROOT / "services.sh"
 PIDS_DIR = PROJECT_ROOT / ".pids"
 LOGS_DIR = PROJECT_ROOT / "logs"
-VENV_PYTHON = PROJECT_ROOT / ".venv" / "bin" / "python"
+# Prefer the repo venv when present; fall back to the running interpreter so
+# bare review worktrees (no .venv symlink) stay testable (cf. #4918, #4926).
+VENV_PYTHON = (
+    PROJECT_ROOT / ".venv" / "bin" / "python"
+    if (PROJECT_ROOT / ".venv" / "bin" / "python").exists()
+    else Path(sys.executable)
+)
 
 def find_free_port() -> int:
     """Find a free TCP port on localhost."""
@@ -276,6 +282,10 @@ def test_crashloop_backoff(temp_services_sh, mock_lsof_env):
     subprocess.run([str(script_path), "stop", "api"], capture_output=True, cwd=str(PROJECT_ROOT), env=env)
 
 
+@pytest.mark.skipif(
+    not (PROJECT_ROOT / ".venv" / "bin" / "python").exists(),
+    reason="boots the real services.sh, which requires the repo venv ($VENV/python)",
+)
 def test_live_fallback_starts_api_with_a_loud_warning(temp_services_sh_real, mock_lsof_env):
     """``--live`` remains an explicit, visible escape hatch for API recovery."""
     script_path, port = temp_services_sh_real
