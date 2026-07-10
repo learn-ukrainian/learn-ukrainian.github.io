@@ -8,7 +8,7 @@
 
 ## 1. Purpose
 
-`lu.activity.v1` (shipped, PR #4867) is the envelope for ONE activity. A lesson is not a
+`lu.activity.v1` (shipped, PR #4867; type keys are HYPHENATED — this registry follows that convention) is the envelope for ONE activity. A lesson is not a
 bag of activities — it is a **plan over an ordered block set**: phased, time-sized,
 non-destructively cuttable, with teacher-facing answer keys. This contract is consumed by
 the async bake API (build step 5) and the editor/player frontend (step 6).
@@ -20,12 +20,18 @@ the async bake API (build step 5) and the editor/player frontend (step 6).
   "schema": "lu.lesson.v1",
   "id": "uuid",
   "title": "string",                    // derived: first sentence of anchor, word-boundary cut ≤52
-  "level": "B1",                        // v1 pilot: B1 only
+  "level": "B1",                        // v1 pilot: B1 only — governs TASK language & types
+                                        // («grade the task, not the text»): the anchor may be
+                                        // authentic/harder; gates check task language level,
+                                        // they never reject the teacher's text for difficulty
   "method": "ttt",                      // v1: Тест→Навчання→Тест; phase set {1,2,3}
   "focus": "string|null",               // grammar focus, free text v1
   "anchor": { "text": "string", "source": "teacher-paste|teacher-url", "chars": 1456 },
   "duration": 45 | 60 | 90,             // minutes; the ONLY sizing input a teacher gives
-  "status": "draft|baking|ready",       // + accepted: bool (ready ∧ accepted = final sheet)
+  "version": 1,                          // integer, for data migration (schema string is not parsed)
+  "status": "draft|baking|ready|failed", // failed = bake crashed/timed out/produced garbage
+  "last_error": "string|null",           // human-readable, present when status=failed
+  "accepted": false,                     // teacher accepted a ready doc ⇒ final sheet
   "blocks": [ "Block, see §4" ],        // FULL ordered set (max plan), contiguous by phase
   "rejected": [ "RejectedDraft, §4" ],  // never silently dropped; reason required
   "created_at": "...", "updated_at": "..."
@@ -40,6 +46,8 @@ the async bake API (build step 5) and the editor/player frontend (step 6).
 | 60 | 9  | 3·4·2 | 15·25·15 |
 | 90 | 12 | 4·5·3 | 20·40·25 |
 
+- Phase minutes deliberately sum to duration−5: the unassigned 5 minutes are lesson
+  intro/wrap-up overhead, owned by the teacher, not by any phase.
 - The bake ALWAYS generates toward the 90-min maximum the anchor supports.
 - `duration` is a **view**, not a mutation: visible set = per-phase prefix of `blocks`;
   the remainder is the **reserve** («у запасі») — surfaced as homework candidates on the
@@ -74,6 +82,10 @@ the async bake API (build step 5) and the editor/player frontend (step 6).
   guidance instead (e.g. «вільна відповідь — перевірте форми порівняння»).
 - `external_options: true` ⇒ content not derivable from the anchor (e.g. MC distractors)
   ⇒ mandatory `warn` at generation time.
+- Provenance exists at TWO levels with distinct semantics: `activity.provenance`
+  (lu.activity.v1 — where the content came from) vs block `provenance` (how this block
+  entered the lesson). On teacher edit: `edited: true` and block `provenance.source`
+  becomes `"teacher"`; the activity-level provenance keeps its generation history.
 
 RejectedDraft: `{ "type", "activity", "reason" }` — reason classes include
 `not-verifiable-from-text`, `too-easy-for-level`, `gate-failed:<gate>`, `removed-by-teacher`.
@@ -84,18 +96,18 @@ Item counts are **minimums** (word-target policy applies). `mode` defaults shown
 
 | key | UA label | items (min) | mode | status | notes |
 |---|---|---|---|---|---|
-| true_false | Правда чи ні | 6 | усно | **shipped** (#4867 TrueFalse) | with «якщо неправда — виправте» |
+| true-false | Правда чи ні | 6 | усно | **shipped** (#4867 TrueFalse) | with «якщо неправда — виправте» |
 | cloze | Пропущене слово | 6 | письмово | **shipped** (Cloze) | word-bank form preferred at B1 |
-| match_up | Знайди пару | 5 | усно | **shipped** (MatchUp) | definitions flagged when not from anchor |
-| text_questions | Питання до тексту | 5 | усно | backlog | open comprehension Qs |
-| multiple_choice | Оберіть відповідь | 4 | усно | backlog | `external_options` honesty flag |
+| match-up | Знайди пару | 5 | усно | **shipped** (MatchUp) | definitions flagged when not from anchor |
+| text-questions | Питання до тексту | 5 | усно | backlog | open comprehension Qs |
+| multiple-choice | Оберіть відповідь | 4 | усно | backlog | `external_options` honesty flag |
 | glossary | Словничок | 8 | усно | backlog | gloss language = OPEN Q (§7) |
-| form_build | Утворіть форму | 6 | усно | backlog | grammar-focus driven |
-| error_hunt | Знайдіть помилку | 4 | письмово | backlog | prime surface for russianism/calque pedagogy |
+| form-build | Утворіть форму | 6 | усно | backlog | grammar-focus driven |
+| error-correction | Знайдіть помилку | 4 | письмово | backlog | prime surface for russianism/calque pedagogy |
 | paraphrase | Скажіть інакше | 5 | усно | backlog | find-in-text direction |
-| continue_sentence | Продовжте речення | 4 | усно | backlog | production, free answers |
-| roleplay_dialog | Розіграйте діалог | 1 scenario + 4 prompts | усно | backlog | 1-1: teacher plays the partner (stated in answer_key) |
-| short_writing | Коротке письмо | 1 prompt (7–8 речень) | вдома | backlog | natural homework candidate |
+| continue-sentence | Продовжте речення | 4 | усно | backlog | production, free answers |
+| roleplay-dialog | Розіграйте діалог | 1 scenario + 4 prompts | усно | backlog | 1-1: teacher plays the partner (stated in answer_key) |
+| short-writing | Коротке письмо | 1 prompt (7–8 речень) | вдома | backlog | natural homework candidate |
 
 Pedagogy constraints carried from #4542 taxonomy validation: ≤1 puzzle-type per B1 lesson;
 grammar-identify + highlight-morphemes join the registry when built; диктант deferred to the
@@ -126,3 +138,5 @@ TTS asset phase; MatchUp verification must be semantic, not just lexical (Sol de
   becomes **canonical fixture #1** for this schema.
 - Consumers: durable-jobs API (step 5: `lesson` is the artifact a job produces), editor
   frontend (step 6: the review screen IS this document), engine (private repo) emits it.
+- `id` doubles as the idempotency key for the bake API — step 5 must not invent a separate
+  mechanism.
