@@ -1,0 +1,158 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://learn-ukrainian.github.io/packages/activity-kit/lu.activity.v1.schema.json",
+  "title": "Learn Ukrainian Activity v1",
+  "description": "Public B1 activity envelope. Its payload deliberately reuses the public activity schemas instead of copying their per-type definitions.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "type",
+    "title",
+    "level",
+    "payload",
+    "answer_key",
+    "provenance"
+  ],
+  "properties": {
+    "id": { "type": "string", "pattern": "^[a-z0-9][a-z0-9-]*$" },
+    "type": { "enum": ["true-false", "cloze", "match-up"] },
+    "title": { "type": "string", "minLength": 1 },
+    "level": {
+      "const": "b1",
+      "description": "The public pilot contract is limited to the B1 scope."
+    },
+    "payload": {
+      "oneOf": [
+        { "$ref": "#/$defs/trueFalsePayload" },
+        { "$ref": "#/$defs/clozePayload" },
+        { "$ref": "#/$defs/matchUpPayload" }
+      ]
+    },
+    "answer_key": {
+      "oneOf": [
+        { "$ref": "#/$defs/trueFalseAnswerKey" },
+        { "$ref": "#/$defs/clozeAnswerKey" },
+        { "$ref": "#/$defs/matchUpAnswerKey" }
+      ]
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "generator", "gates"],
+      "properties": {
+        "source": { "type": "string", "minLength": 1 },
+        "generator": { "type": "string", "minLength": 1 },
+        "gates": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "type": { "const": "true-false" } } },
+      "then": {
+        "properties": {
+          "payload": { "$ref": "#/$defs/trueFalsePayload" },
+          "answer_key": { "$ref": "#/$defs/trueFalseAnswerKey" }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "type": { "const": "cloze" } } },
+      "then": {
+        "properties": {
+          "payload": { "$ref": "#/$defs/clozePayload" },
+          "answer_key": { "$ref": "#/$defs/clozeAnswerKey" }
+        }
+      }
+    },
+    {
+      "if": { "properties": { "type": { "const": "match-up" } } },
+      "then": {
+        "properties": {
+          "payload": { "$ref": "#/$defs/matchUpPayload" },
+          "answer_key": { "$ref": "#/$defs/matchUpAnswerKey" }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "trueFalsePayload": {
+      "$ref": "https://learn-ukrainian.github.io/schemas/activity-v2.schema.json#/$defs/true-false"
+    },
+    "clozePayload": {
+      "allOf": [
+        {
+          "$ref": "https://learn-ukrainian.github.io/schemas/activity-v2.schema.json#/$defs/cloze"
+        },
+        { "required": ["blanks"] }
+      ]
+    },
+    "matchUpPayload": {
+      "$ref": "https://learn-ukrainian.github.io/schemas/activity-v2.schema.json#/$defs/match-up"
+    },
+    "trueFalseAnswerKey": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["items"],
+      "properties": {
+        "items": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["index", "correct"],
+            "properties": {
+              "index": { "type": "integer", "minimum": 0 },
+              "correct": { "type": "boolean" }
+            }
+          }
+        }
+      }
+    },
+    "clozeAnswerKey": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["blanks"],
+      "properties": {
+        "blanks": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "answer"],
+            "properties": {
+              "id": { "type": "integer", "minimum": 1 },
+              "answer": { "type": "string", "minLength": 1 }
+            }
+          }
+        }
+      }
+    },
+    "matchUpAnswerKey": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pairs"],
+      "properties": {
+        "pairs": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["left_index", "right_index"],
+            "properties": {
+              "left_index": { "type": "integer", "minimum": 0 },
+              "right_index": { "type": "integer", "minimum": 0 }
+            }
+          }
+        }
+      }
+    }
+  }
+}

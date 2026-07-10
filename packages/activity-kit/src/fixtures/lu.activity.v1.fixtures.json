@@ -1,0 +1,164 @@
+[
+  {
+    "id": "true-false-claim",
+    "type": "true-false",
+    "title": "Перевірка тверджень",
+    "level": "b1",
+    "payload": {
+      "type": "true-false",
+      "instruction": "Прочитайте твердження й оберіть правильну відповідь.",
+      "items": [
+        {
+          "statement": "Це навчальне твердження позначено як правдиве.",
+          "correct": true,
+          "explanation": "У ключі для цього твердження вказано «правда»."
+        },
+        {
+          "statement": "Це навчальне твердження позначено як хибне.",
+          "correct": false,
+          "explanation": "У ключі для цього твердження вказано «неправда»."
+        }
+      ]
+    },
+    "answer_key": {
+      "items": [
+        { "index": 0, "correct": true },
+        { "index": 1, "correct": false }
+      ]
+    },
+    "provenance": {
+      "source": "https://learn-ukrainian.github.io/",
+      "generator": "handwritten-contract-fixture",
+      "gates": ["schema", "player-smoke"]
+    }
+  },
+  {
+    "id": "true-false-feedback",
+    "type": "true-false",
+    "title": "Зворотний зв'язок",
+    "level": "b1",
+    "payload": {
+      "type": "true-false",
+      "instruction": "Оберіть відповідь, а потім прочитайте пояснення.",
+      "items": [
+        {
+          "statement": "Пояснення з'являється після перевірки відповіді.",
+          "correct": true,
+          "explanation": "Компонент показує пояснення після перевірки."
+        }
+      ]
+    },
+    "answer_key": {
+      "items": [
+        { "index": 0, "correct": true }
+      ]
+    },
+    "provenance": {
+      "source": "https://learn-ukrainian.github.io/",
+      "generator": "handwritten-contract-fixture",
+      "gates": ["schema", "player-smoke"]
+    }
+  },
+  {
+    "id": "cloze-reading",
+    "type": "cloze",
+    "title": "Читання в контексті",
+    "level": "b1",
+    "payload": {
+      "type": "cloze",
+      "instruction": "Виберіть слова, що доповнюють речення.",
+      "text": "Уважне читання [___:1] зрозуміти зміст речення. Після відповіді учень [___:2] результат.",
+      "blanks": [
+        { "id": 1, "answer": "допомагає", "options": ["допомагає", "заважає"] },
+        { "id": 2, "answer": "перевіряє", "options": ["перевіряє", "забуває"] }
+      ]
+    },
+    "answer_key": {
+      "blanks": [
+        { "id": 1, "answer": "допомагає" },
+        { "id": 2, "answer": "перевіряє" }
+      ]
+    },
+    "provenance": {
+      "source": "https://learn-ukrainian.github.io/",
+      "generator": "handwritten-contract-fixture",
+      "gates": ["schema", "player-smoke"]
+    }
+  },
+  {
+    "id": "cloze-sequence",
+    "type": "cloze",
+    "title": "Послідовність дій",
+    "level": "b1",
+    "payload": {
+      "type": "cloze",
+      "instruction": "Доповніть коротку послідовність дій.",
+      "text": "Спочатку учень [___:1] завдання, а потім [___:2] відповідь.",
+      "blanks": [
+        { "id": 1, "answer": "читає", "options": ["читає", "пропускає"] },
+        { "id": 2, "answer": "обирає", "options": ["обирає", "ховає"] }
+      ]
+    },
+    "answer_key": {
+      "blanks": [
+        { "id": 1, "answer": "читає" },
+        { "id": 2, "answer": "обирає" }
+      ]
+    },
+    "provenance": {
+      "source": "https://learn-ukrainian.github.io/",
+      "generator": "handwritten-contract-fixture",
+      "gates": ["schema", "player-smoke"]
+    }
+  },
+  {
+    "id": "match-up-learning-terms",
+    "type": "match-up",
+    "title": "Навчальні поняття",
+    "level": "b1",
+    "payload": {
+      "type": "match-up",
+      "instruction": "З'єднайте поняття з відповідним описом.",
+      "pairs": [
+        { "left": "пояснення", "right": "додатковий коментар" },
+        { "left": "відповідь", "right": "реакція на запитання" }
+      ]
+    },
+    "answer_key": {
+      "pairs": [
+        { "left_index": 0, "right_index": 0 },
+        { "left_index": 1, "right_index": 1 }
+      ]
+    },
+    "provenance": {
+      "source": "https://learn-ukrainian.github.io/",
+      "generator": "handwritten-contract-fixture",
+      "gates": ["schema", "player-smoke"]
+    }
+  },
+  {
+    "id": "match-up-text-structure",
+    "type": "match-up",
+    "title": "Будова тексту",
+    "level": "b1",
+    "payload": {
+      "type": "match-up",
+      "instruction": "З'єднайте частини тексту з їхньою функцією.",
+      "pairs": [
+        { "left": "початок", "right": "вступ до теми" },
+        { "left": "завершення", "right": "підсумок думки" }
+      ]
+    },
+    "answer_key": {
+      "pairs": [
+        { "left_index": 0, "right_index": 0 },
+        { "left_index": 1, "right_index": 1 }
+      ]
+    },
+    "provenance": {
+      "source": "https://learn-ukrainian.github.io/",
+      "generator": "handwritten-contract-fixture",
+      "gates": ["schema", "player-smoke"]
+    }
+  }
+]
