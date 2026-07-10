@@ -1,0 +1,346 @@
+---
+schema_version: ua-grammar-lexical-golden-skeletons.v1
+dataset_id: ua-grammar-lexical-phase-0-golden-skeletons
+qualification_eligible: false
+qualification_blockers:
+  - No frozen source outputs, VESUM analyses, or evidence bindings are labeled.
+  - No complete detector manifests, raw offset records, or adjudications are labeled.
+  - Fixtures 23, 54-59, and 62 have no concrete input text in design §12 and are intentionally absent.
+  - >-
+    Fixture 24 reuses the design's UAБ control from fixture 25; fixtures 19,
+    50, and 61 reuse design input text from related probes.
+  - No Phase 1 qualification run or calibration metrics are included.
+cases:
+  - case_id: fixture-16-vocabulary-row
+    fixture_numbers: [16]
+    input_text: "hard | складний | Це складне завдання."
+    expected_surface_roles: [ENGLISH_GLOSS, UKRAINIAN_TARGET, UKRAINIAN_TARGET]
+    expected_detector_outcomes: [CLEAN]
+    expected_decision: null
+    expected_reason: null
+    annotation_status: SKELETON
+
+  - case_id: fixture-17-vocabulary-negative
+    fixture_numbers: [17]
+    input_text: "hard | складний | Це складний завдання."
+    expected_surface_roles: [ENGLISH_GLOSS, UKRAINIAN_TARGET, UKRAINIAN_TARGET]
+    expected_detector_outcomes: [CANDIDATE]
+    expected_decision: REJECT
+    expected_reason: LOCAL_RELATION_IMPOSSIBLE
+    annotation_status: SKELETON
+
+  - case_id: fixture-18-bilingual-dialogue
+    fixture_numbers: [18]
+    input_text: "Олена: Я беру участь у гуртку. — I take part in the club."
+    expected_surface_roles: [PROPER_NAME_OR_CITATION, UKRAINIAN_TARGET, ENGLISH_GLOSS]
+    expected_detector_outcomes: [CLEAN]
+    expected_decision: null
+    expected_reason: null
+    annotation_status: SKELETON
+
+  - case_id: fixture-19-undeclared-dash-separator
+    fixture_numbers: [19]
+    input_text: "Олена: Я беру участь у гуртку. — I take part in the club."
+    expected_surface_roles: [UNKNOWN_ROLE]
+    expected_detector_outcomes: [BINDING_FAILED]
+    expected_decision: AUDIT
+    expected_reason: UNKNOWN_ROLE
+    annotation_status: SKELETON
+
+  - case_id: fixture-20-mixed-grammar-note
+    fixture_numbers: [20]
+    input_text: "Use «Я беру участь у гуртку» for “I take part in the club.”"
+    expected_surface_roles: [ENGLISH_GLOSS, UKRAINIAN_TARGET, ENGLISH_GLOSS]
+    expected_detector_outcomes: [CLEAN]
+    expected_decision: null
+    expected_reason: null
+    annotation_status: SKELETON
+
+  - case_id: fixture-21-teaching-contrast
+    fixture_numbers: [21, 50]
+    input_text: "Кажемо «Я беру участь», а не *«Я приймаю участь»."
+    expected_surface_roles: [UKRAINIAN_TARGET, TEACHING_CONTRAST_BAD]
+    expected_detector_outcomes: [EXCLUDED]
+    expected_decision: ACCEPT
+    expected_reason: SUPPRESSED_FP
+    annotation_status: SKELETON
+
+  - case_id: fixture-22-a1-gloss
+    fixture_numbers: [22]
+    input_text: "hard — складний"
+    expected_surface_roles: [ENGLISH_GLOSS, UKRAINIAN_TARGET]
+    expected_detector_outcomes: [CLEAN]
+    expected_decision: null
+    expected_reason: null
+    annotation_status: SKELETON
+
+  - case_id: fixture-24-mixed-script
+    fixture_numbers: [24]
+    input_text: "UAБ"
+    expected_surface_roles: [UKRAINIAN_TARGET]
+    expected_detector_outcomes: [UNCOVERED]
+    expected_decision: AUDIT
+    expected_reason: INELIGIBLE_COVERAGE
+    annotation_status: SKELETON
+
+  - case_id: fixture-25-tokenizer
+    fixture_numbers: [25]
+    input_text: "Київ — 20-річний проєкт; будь-хто й п’ять, 2026, UAБ."
+    expected_surface_roles: [UKRAINIAN_TARGET]
+    expected_detector_outcomes: [UNCOVERED]
+    expected_decision: AUDIT
+    expected_reason: INELIGIBLE_COVERAGE
+    expected_eligible_ukrainian_words: 6
+    annotation_status: SKELETON
+
+  - case_id: fixture-34-modifier-compatible
+    fixture_numbers: [34]
+    input_text: "нова книжка"
+    expected_surface_roles: [UKRAINIAN_TARGET]
+    expected_detector_outcomes: [CLEAN]
+    expected_decision: ACCEPT
+    expected_reason: LOCAL_RELATION_COMPATIBLE
+    annotation_status: SKELETON
+
+  - case_id: fixture-35-modifier-impossible
+    fixture_numbers: [35]
+    input_text: "новий книжка"
+    expected_surface_roles: [UKRAINIAN_TARGET]
+    expected_detector_outcomes: [CANDIDATE]
+    expected_decision: REJECT
+    expected_reason: LOCAL_RELATION_IMPOSSIBLE
+    annotation_status: SKELETON
+
+  - case_id: fixture-36-modifier-coordination
+    fixture_numbers: [36]
+    input_text: "новий і цікавий підручник"
+    expected_surface_roles: [UKRAINIAN_TARGET]
+    expected_detector_outcomes: [UNCOVERED]
+    expected_decision: null
+    allowed_decisions: [DEFER, UNCOVERED]
+    expected_reason: SYNTAX_RESIDUE
+    annotation_status: SKELETON
+
+  - case_id: fixture-37-nominalized-adjective
+    fixture_numbers: [37]
+    input_text: "Черговий відповів."
+    expected_surface_roles: [UKRAINIAN_TARGET]
+    expected_detector_outcomes: [UNCOVERED]
+    expected_decision: null
+    allowed_decisions: [DEFER, UNCOVERED]
+    expected_reason: SYNTAX_RESIDUE
+    annotation_status: SKELETON
+
+  - case_id: fixture-38-dependent-tail
+    fixture_numbers: [38]
+    input_text: "нова школа мистецтв"
+    expected_surface_roles: [UKRAINIAN_TARGET]
+    expected_detector_outcomes: [UNCOVERED]
+    expected_decision: null
+    allowed_decisions: [DEFER, UNCOVERED]
+    expected_reason: SYNTAX_RESIDUE
+    annotation_status: SKELETON
+
+  - case_id: fixture-39-subject-verb-compatible
+    fixture_numbers: [39]
+    input_text: "Я читаю."
+    expected_surface_roles: [UKRAINIAN_TARGET]
+    expected_detector_outcomes: [CLEAN]
+    expected_decision: ACCEPT
+    expected_reason: LOCAL_RELATION_COMPATIBLE
+    annotation_status: SKELETON
+
+  - case_id: fixture-40-subject-verb-impossible
+    fixture_numbers: [40]
+    input_text: "Я читає."
+    expected_surface_roles: [UKRAINIAN_TARGET]
+    expected_detector_outcomes: [CANDIDATE]
+    expected_decision: REJECT
+    expected_reason: LOCAL_RELATION_IMPOSSIBLE
+    annotation_status: SKELETON
+
+  - case_id: fixture-41-object-not-subject
+    fixture_numbers: [41]
+    input_text: "Мене бачить Олена."
+    expected_surface_roles: [UKRAINIAN_TARGET]
+    expected_detector_outcomes: [UNCOVERED]
+    expected_decision: null
+    allowed_decisions: [DEFER, UNCOVERED]
+    expected_reason: SYNTAX_RESIDUE
+    annotation_status: SKELETON
+
+  - case_id: fixture-42-dative-experiencer
+    fixture_numbers: [42]
+    input_text: "Їй подобаються квіти."
+    expected_surface_roles: [UKRAINIAN_TARGET]
+    expected_detector_outcomes: [UNCOVERED]
+    expected_decision: null
+    allowed_decisions: [DEFER, UNCOVERED]
+    expected_reason: SYNTAX_RESIDUE
+    annotation_status: SKELETON
+
+  - case_id: fixture-43-government-compatible
+    fixture_numbers: [43]
+    input_text: "без цукру"
+    expected_surface_roles: [UKRAINIAN_TARGET]
+    expected_detector_outcomes: [CLEAN]
+    expected_decision: ACCEPT
+    expected_reason: LOCAL_RELATION_COMPATIBLE
+    annotation_status: SKELETON
+
+  - case_id: fixture-44-government-impossible
+    fixture_numbers: [44]
+    input_text: "без цукор"
+    expected_surface_roles: [UKRAINIAN_TARGET]
+    expected_detector_outcomes: [CANDIDATE]
+    expected_decision: REJECT
+    expected_reason: LOCAL_RELATION_IMPOSSIBLE
+    annotation_status: SKELETON
+
+  - case_id: fixture-45-no-closed-sense-card
+    fixture_numbers: [45]
+    input_text: "за столом"
+    expected_surface_roles: [UKRAINIAN_TARGET]
+    expected_detector_outcomes: [UNCOVERED]
+    expected_decision: null
+    allowed_decisions: [DEFER, UNCOVERED]
+    expected_reason: SYNTAX_RESIDUE
+    annotation_status: SKELETON
+
+  - case_id: fixture-46-government-coordination
+    fixture_numbers: [46]
+    input_text: "без цукру й молока"
+    expected_surface_roles: [UKRAINIAN_TARGET]
+    expected_detector_outcomes: [UNCOVERED]
+    expected_decision: null
+    allowed_decisions: [DEFER, UNCOVERED]
+    expected_reason: SYNTAX_RESIDUE
+    annotation_status: SKELETON
+
+  - case_id: fixture-47-missing-np-analysis
+    fixture_numbers: [47]
+    input_text: "без цукру"
+    expected_surface_roles: [UKRAINIAN_TARGET]
+    expected_detector_outcomes: [FAILED]
+    expected_decision: AUDIT
+    expected_reason: ANALYSIS_INCOMPLETE
+    annotation_status: SKELETON
+
+  - case_id: fixture-48-exact-curated-reject
+    fixture_numbers: [48]
+    input_text: "приймати участь"
+    expected_surface_roles: [UKRAINIAN_TARGET]
+    expected_detector_outcomes: [CANDIDATE]
+    expected_decision: REJECT
+    expected_reason: EXACT_ANTONENKO_REJECT
+    annotation_status: SKELETON
+
+  - case_id: fixture-49-positive-card
+    fixture_numbers: [49]
+    input_text: "брати участь"
+    expected_surface_roles: [UKRAINIAN_TARGET]
+    expected_detector_outcomes: [CLEAN]
+    expected_decision: ACCEPT
+    expected_reason: POSITIVE_EXACT_ALLOW
+    annotation_status: SKELETON
+
+  - case_id: fixture-51-heritage-rule-conflict
+    fixture_numbers: [51]
+    input_text: "приймати участь"
+    expected_surface_roles: [UKRAINIAN_TARGET]
+    expected_detector_outcomes: [CANDIDATE]
+    expected_decision: AUDIT
+    expected_reason: HERITAGE_RULE_CONFLICT
+    annotation_status: SKELETON
+
+  - case_id: fixture-52-modern-attestation-conflict
+    fixture_numbers: [52]
+    input_text: "приймати участь"
+    expected_surface_roles: [UKRAINIAN_TARGET]
+    expected_detector_outcomes: [CANDIDATE]
+    expected_decision: AUDIT
+    expected_reason: SOURCE_CONFLICT
+    annotation_status: SKELETON
+
+  - case_id: fixture-53-raw-grac-does-not-override
+    fixture_numbers: [53]
+    input_text: "приймати участь"
+    expected_surface_roles: [UKRAINIAN_TARGET]
+    expected_detector_outcomes: [CANDIDATE]
+    expected_decision: REJECT
+    expected_reason: EXACT_ANTONENKO_REJECT
+    annotation_status: SKELETON
+
+  - case_id: fixture-60-balla-ordering
+    fixture_numbers: [60]
+    input_text: "hard — твердий / складний / важкий"
+    expected_surface_roles: [ENGLISH_GLOSS, UKRAINIAN_TARGET]
+    expected_detector_outcomes: [CANDIDATE]
+    expected_decision: AUDIT
+    expected_reason: BALLA_UNQUALIFIED_V2
+    annotation_status: SKELETON
+
+  - case_id: fixture-61-balla-binding-failed
+    fixture_numbers: [61]
+    input_text: "hard — твердий / складний / важкий"
+    expected_surface_roles: [UNKNOWN_ROLE]
+    expected_detector_outcomes: [BINDING_FAILED]
+    expected_decision: AUDIT
+    expected_reason: BINDING_FAILED
+    annotation_status: SKELETON
+
+  - case_id: fixture-63-wordnet-provenance
+    fixture_numbers: [63]
+    input_text: "CuratedRuleCard.source -> intermediate-generated-list -> auto-translated-wordnet"
+    expected_surface_roles: [CODE_OR_METADATA]
+    expected_detector_outcomes: [FAILED]
+    expected_decision: REJECT
+    expected_reason: WORDNET_AUTO_TRANSLATED
+    annotation_status: SKELETON
+
+  - case_id: fixture-64-sum11-sole-authority
+    fixture_numbers: [64]
+    input_text: "target form: VESUM miss; evidence: SUM11_SUPPORT only"
+    expected_surface_roles: [CODE_OR_METADATA]
+    expected_detector_outcomes: [CANDIDATE]
+    expected_decision: AUDIT
+    expected_reason: SUM11_SOLE_AUTHORITY
+    annotation_status: SKELETON
+
+  - case_id: fixture-65-sum11-counter-evidence
+    fixture_numbers: [65]
+    input_text: "приймати участь"
+    expected_surface_roles: [UKRAINIAN_TARGET]
+    expected_detector_outcomes: [CANDIDATE]
+    expected_decision: REJECT
+    expected_reason: EXACT_ANTONENKO_REJECT
+    annotation_status: SKELETON
+
+  - case_id: fixture-66-heritage-lookup-normalization
+    fixture_numbers: [66]
+    input_text: "кобета"
+    expected_surface_roles: [UKRAINIAN_TARGET]
+    expected_detector_outcomes: [CANDIDATE]
+    expected_decision: ACCEPT
+    expected_reason: HERITAGE_ALLOWED
+    expected_lookup_alias: "кобіта"
+    annotation_status: SKELETON
+
+  - case_id: fixture-67-heritage-negative-control
+    fixture_numbers: [67]
+    input_text: "Коцюба стояла біля печі."
+    expected_surface_roles: [UKRAINIAN_TARGET]
+    expected_detector_outcomes: [CANDIDATE]
+    expected_decision: ACCEPT
+    expected_reason: HERITAGE_ALLOWED
+    annotation_status: SKELETON
+
+  - case_id: fixture-68-no-synonym-substitution
+    fixture_numbers: [68]
+    input_text: "коцюба"
+    expected_surface_roles: [UKRAINIAN_TARGET]
+    expected_detector_outcomes: [CANDIDATE]
+    expected_decision: REJECT
+    expected_reason: NON_AUTHORITATIVE_SUBSTITUTION
+    proposed_substitution: "кочерга"
+    annotation_status: SKELETON

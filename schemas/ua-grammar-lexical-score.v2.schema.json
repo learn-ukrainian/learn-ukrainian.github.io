@@ -1,0 +1,139 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/ua-grammar-lexical-score.v2.schema.json",
+  "title": "Ukrainian grammar and lexical scorecard v2",
+  "description": "Normative per-model scorecard contract from docs/projects/ua-eval-harness/grammar-lexical-gate-design.md §9.2. This schema defines data shape only and does not implement bakeoff aggregation or ranking.",
+  "$comment": "Output invariants from §9.2: outputs_total equals the sum of outputs_pass, outputs_fail_content, and outputs_needs_audit; outputs_total equals the count of unique output_artifact_ids; aggregate eligible/scored/error counts equal exact sums of unique per-artifact records. Duplicate IDs, absent artifacts, or sum mismatches produce INELIGIBLE_COVERAGE. Rates publish only when eligible and scored word counts are equal. JSON Schema cannot compute these cross-field totals; tests/test_grammar_lexical_schemas.py validates representative Phase 0 contract data without runtime aggregation.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "artifact_kind",
+    "evaluation_set_id",
+    "evaluation_set_sha256",
+    "prompt_set_sha256",
+    "generation_config_sha256",
+    "reference_set_sha256",
+    "model",
+    "gate_version",
+    "source_snapshot_ids",
+    "output_artifact_ids",
+    "counts",
+    "rates",
+    "reproducibility",
+    "rank_eligibility"
+  ],
+  "properties": {
+    "schema_version": {"const": "ua_grammar_lexical_score.v2"},
+    "artifact_kind": {"const": "model_scorecard"},
+    "evaluation_set_id": {"$ref": "#/$defs/stableString"},
+    "evaluation_set_sha256": {"$ref": "#/$defs/sha256"},
+    "prompt_set_sha256": {"$ref": "#/$defs/sha256"},
+    "generation_config_sha256": {"$ref": "#/$defs/sha256"},
+    "reference_set_sha256": {"$ref": "#/$defs/sha256"},
+    "model": {"$ref": "#/$defs/model"},
+    "gate_version": {"$ref": "#/$defs/stableString"},
+    "source_snapshot_ids": {
+      "type": "object",
+      "additionalProperties": {"$ref": "#/$defs/stableString"}
+    },
+    "output_artifact_ids": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/stableString"}
+    },
+    "counts": {"$ref": "#/$defs/counts"},
+    "rates": {"$ref": "#/$defs/rates"},
+    "reproducibility": {
+      "enum": ["DETERMINISTIC_NO_JUDGE", "DETERMINISTIC_CONDITIONAL_ON_FROZEN_GATE_OUTPUTS"]
+    },
+    "rank_eligibility": {
+      "enum": ["ELIGIBLE", "INELIGIBLE_AUDIT", "INELIGIBLE_COVERAGE", "INELIGIBLE_FLATTENING"]
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "stableString": {
+      "type": "string",
+      "minLength": 1
+    },
+    "nonnegativeInteger": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "nullableNumber": {
+      "type": ["number", "null"]
+    },
+    "model": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["provider", "model_id", "family", "revision"],
+      "properties": {
+        "provider": {"$ref": "#/$defs/stableString"},
+        "model_id": {"$ref": "#/$defs/stableString"},
+        "family": {"$ref": "#/$defs/stableString"},
+        "revision": {"type": ["string", "null"]}
+      }
+    },
+    "counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "outputs_total",
+        "outputs_pass",
+        "outputs_fail_content",
+        "outputs_needs_audit",
+        "eligible_ukrainian_words",
+        "scored_ukrainian_words",
+        "coverage_missing_ukrainian_words",
+        "coverage_missing",
+        "grammar_error_units",
+        "lexical_error_units",
+        "unresolved_candidates",
+        "target_vocab_required",
+        "target_vocab_realized",
+        "outputs_below_target_vocab",
+        "outputs_flattened"
+      ],
+      "properties": {
+        "outputs_total": {"$ref": "#/$defs/nonnegativeInteger"},
+        "outputs_pass": {"$ref": "#/$defs/nonnegativeInteger"},
+        "outputs_fail_content": {"$ref": "#/$defs/nonnegativeInteger"},
+        "outputs_needs_audit": {"$ref": "#/$defs/nonnegativeInteger"},
+        "eligible_ukrainian_words": {"$ref": "#/$defs/nonnegativeInteger"},
+        "scored_ukrainian_words": {"$ref": "#/$defs/nonnegativeInteger"},
+        "coverage_missing_ukrainian_words": {"$ref": "#/$defs/nonnegativeInteger"},
+        "coverage_missing": {"$ref": "#/$defs/nonnegativeInteger"},
+        "grammar_error_units": {"$ref": "#/$defs/nonnegativeInteger"},
+        "lexical_error_units": {"$ref": "#/$defs/nonnegativeInteger"},
+        "unresolved_candidates": {"$ref": "#/$defs/nonnegativeInteger"},
+        "target_vocab_required": {"$ref": "#/$defs/nonnegativeInteger"},
+        "target_vocab_realized": {"$ref": "#/$defs/nonnegativeInteger"},
+        "outputs_below_target_vocab": {"$ref": "#/$defs/nonnegativeInteger"},
+        "outputs_flattened": {"$ref": "#/$defs/nonnegativeInteger"}
+      }
+    },
+    "rates": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "grammar_errors_per_1000",
+        "lexical_errors_per_1000",
+        "target_vocab_coverage",
+        "aggregate_mattr",
+        "lexical_diversity_retention",
+        "flattening_trend_delta"
+      ],
+      "properties": {
+        "grammar_errors_per_1000": {"$ref": "#/$defs/nullableNumber"},
+        "lexical_errors_per_1000": {"$ref": "#/$defs/nullableNumber"},
+        "target_vocab_coverage": {"$ref": "#/$defs/nullableNumber"},
+        "aggregate_mattr": {"$ref": "#/$defs/nullableNumber"},
+        "lexical_diversity_retention": {"$ref": "#/$defs/nullableNumber"},
+        "flattening_trend_delta": {"$ref": "#/$defs/nullableNumber"}
+      }
+    }
+  }
+}
