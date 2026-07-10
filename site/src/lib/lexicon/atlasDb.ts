@@ -1,6 +1,7 @@
 import Database from 'better-sqlite3';
 import { existsSync, readFileSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
+import { normalize as normalizeAtlasSearchText } from './search';
 
 export interface CourseUsage {
   track: string;
@@ -41,9 +42,20 @@ interface MetadataRow {
   value_json: string;
 }
 
+interface ComponentTargetRow {
+  lookup_text: string;
+  target_slug: string;
+}
+
 export interface AtlasPayloadCache {
   entries: LexiconEntry[];
   bySlug: Map<string, LexiconEntry>;
+  /**
+   * Public component text (canonical article head or alias) to a unique,
+   * approved-public lemma route. Ambiguous component text is intentionally
+   * absent so article templates cannot emit a misleading backlink.
+   */
+  componentLinkTargets: Map<string, string>;
   generatedAt: string;
   manifestVersion: string;
 }
@@ -61,6 +73,41 @@ function parseMetadata(rows: MetadataRow[]): { generatedAt: string; manifestVers
     generatedAt: String(metadata.get('generated_at') ?? ''),
     manifestVersion: String(metadata.get('version') ?? ''),
   };
+}
+
+function uniqueTargets(rows: ComponentTargetRow[]): Map<string, Set<string>> {
+  const targets = new Map<string, Set<string>>();
+  for (const row of rows) {
+    const lookupText = normalizeAtlasSearchText(row.lookup_text);
+    if (!lookupText) continue;
+    const matchedTargets = targets.get(lookupText) ?? new Set<string>();
+    matchedTargets.add(row.target_slug);
+    targets.set(lookupText, matchedTargets);
+  }
+  return targets;
+}
+
+/**
+ * Resolve component text with the same precedence as Atlas search: a direct
+ * article-head hit wins; otherwise a public alias may resolve it. Only a
+ * single approved-public lemma target is safe for an inline backlink.
+ */
+export function buildComponentLinkTargets(
+  articleRows: ComponentTargetRow[],
+  aliasRows: ComponentTargetRow[],
+): Map<string, string> {
+  const articleTargets = uniqueTargets(articleRows);
+  const aliasTargets = uniqueTargets(aliasRows);
+  const targets = new Map<string, string>();
+
+  for (const [lookupText, matchedTargets] of articleTargets) {
+    if (matchedTargets.size === 1) targets.set(lookupText, [...matchedTargets][0]!);
+  }
+  for (const [lookupText, matchedTargets] of aliasTargets) {
+    if (articleTargets.has(lookupText) || matchedTargets.size !== 1) continue;
+    targets.set(lookupText, [...matchedTargets][0]!);
+  }
+  return targets;
 }
 
 export function resetAtlasPayloadCacheForTests(): void {
@@ -252,6 +299,29 @@ export function getAtlasPayloadCache(): AtlasPayloadCache {
          WHERE key IN ('generated_at', 'version')`,
       )
       .all() as MetadataRow[];
+    // Component backlinks deliberately resolve only to reviewed public lemma
+    // articles. The canonical article-head rows take precedence over aliases,
+    // matching the direct-article-first behavior in search.ts / PR-3.
+    const componentArticleRows = db
+      .prepare(
+        `SELECT display_head AS lookup_text, slug AS target_slug
+         FROM articles
+         WHERE review_state = 'approved' AND visibility = 'public' AND entry_type = 'lemma'
+         ORDER BY display_head COLLATE NOCASE, slug`,
+      )
+      .all() as ComponentTargetRow[];
+    const componentAliasRows = db
+      .prepare(
+        `SELECT al.alias AS lookup_text, al.target_slug AS target_slug
+         FROM aliases al
+         JOIN articles a ON a.slug = al.target_slug
+         WHERE al.visibility = 'public'
+           AND a.review_state = 'approved'
+           AND a.visibility = 'public'
+           AND a.entry_type = 'lemma'
+         ORDER BY al.alias COLLATE NOCASE, al.target_slug, al.kind`,
+      )
+      .all() as ComponentTargetRow[];
     const entries = payloadRows.map((row) => {
       const entry = JSON.parse(row.payload_json) as LexiconEntry;
       // entry_type is authoritative from the `articles` table (SSOT), not the
@@ -266,6 +336,7 @@ export function getAtlasPayloadCache(): AtlasPayloadCache {
     cachedAtlasPayloads = {
       entries,
       bySlug,
+      componentLinkTargets: buildComponentLinkTargets(componentArticleRows, componentAliasRows),
       ...parseMetadata(metadataRows),
     };
     return cachedAtlasPayloads;
