@@ -4,6 +4,7 @@ import json
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
+from scripts.analytics.cost_report import CostRecord
 from scripts.api import state_router
 from scripts.api.lane_health import (
     compute_lane_health,
@@ -207,3 +208,138 @@ def test_delegate_prints_warning(monkeypatch, capsys):
     # Capture outputs
     captured = capsys.readouterr()
     assert "lane claude demoted: 2 spawn failures in 45m" in captured.err
+
+
+def _mock_cost_record(agent: str, cost_usd: float, mtime: datetime) -> CostRecord:
+    return CostRecord(
+        path=Path("fixture-meta.json"),
+        level="a1",
+        slug="fixture",
+        phase="write",
+        agent=agent,
+        model="fixture-model",
+        model_source="stored",
+        ok=True,
+        timestamp=mtime.isoformat(),
+        mtime=mtime,
+        prompt_chars=1,
+        response_chars=1,
+        prompt_tokens_est=1,
+        response_tokens_est=1,
+        prompt_tokens_source="stored",
+        response_tokens_source="stored",
+        rate_model="fixture-model",
+        used_default_rate=False,
+        cost_usd_est=cost_usd,
+    )
+
+
+def _configure_test_budgets(monkeypatch, tmp_path: Path, records: list[CostRecord]) -> None:
+    budget_path = tmp_path / "agent_budgets.yaml"
+    budget_path.write_text(
+        """
+claude:
+  interactive:
+    weekly_cap_usd: 100
+codex:
+  weekly_cap_usd: 100
+gemini:
+  weekly_cap_usd: 100
+""".lstrip(),
+        encoding="utf-8",
+    )
+    monkeypatch.setattr(state_router, "BUDGET_CONFIG_PATH", budget_path)
+    monkeypatch.setattr(state_router, "TASKS_DIR", tmp_path)
+    monkeypatch.setattr(state_router, "load_cost_records", lambda: records)
+    monkeypatch.setattr(
+        state_router.delegate_api,
+        "list_delegate_tasks",
+        lambda **_kwargs: {"tasks": []},
+    )
+
+
+def test_recommendation_skips_unhealthy_lane(monkeypatch, tmp_path):
+    now = datetime(2026, 7, 10, 12, 0, 0, tzinfo=UTC)
+    records = [
+        _mock_cost_record("claude (interactive)", 10.0, now - timedelta(hours=1)),
+        _mock_cost_record("codex (gpt-5.5)", 20.0, now - timedelta(hours=1)),
+        _mock_cost_record("gemini (pro)", 30.0, now - timedelta(hours=1)),
+    ]
+    _configure_test_budgets(monkeypatch, tmp_path, records)
+
+    # Claude unhealthy (2 failures)
+    _write_task(tmp_path, "task-1", "claude", "failed", 1, 10.0, now - timedelta(minutes=45))
+    _write_task(tmp_path, "task-2", "claude", "failed", 1, 10.0, now - timedelta(minutes=15))
+
+    budget = state_router.compute_routing_budget(now)
+    rec = budget["recommendation"]
+
+    # Claude has lowest burn (10% vs Codex 20%), but since Claude is unhealthy,
+    # recommendation should skip to Codex.
+    assert rec["primary_agent_for_code"] == "codex"
+    assert any(
+        "lane claude skipped for recommendation: 2 spawn failures in 45m" in w
+        for w in rec["warnings"]
+    )
+
+
+def test_recommendation_all_unhealthy_fallback(monkeypatch, tmp_path):
+    now = datetime(2026, 7, 10, 12, 0, 0, tzinfo=UTC)
+    records = [
+        _mock_cost_record("claude (interactive)", 10.0, now - timedelta(hours=1)),
+        _mock_cost_record("codex (gpt-5.5)", 20.0, now - timedelta(hours=1)),
+        _mock_cost_record("gemini (pro)", 30.0, now - timedelta(hours=1)),
+    ]
+    _configure_test_budgets(monkeypatch, tmp_path, records)
+
+    # Claude, Codex, Gemini, Grok, Cursor all unhealthy (2 failures each)
+    for agent in ("claude", "codex", "gemini", "grok", "cursor"):
+        _write_task(tmp_path, f"task-{agent}-1", agent, "failed", 1, 10.0, now - timedelta(minutes=45))
+        _write_task(tmp_path, f"task-{agent}-2", agent, "failed", 1, 10.0, now - timedelta(minutes=15))
+
+    budget = state_router.compute_routing_budget(now)
+    rec = budget["recommendation"]
+
+    # Since all candidate lanes are unhealthy, should fallback to budget-only pick (claude)
+    assert rec["primary_agent_for_code"] == "claude"
+    assert any("all lanes unhealthy — recommendation is budget-only" in w for w in rec["warnings"])
+
+
+def test_recommendation_no_health_fields_anywhere(monkeypatch, tmp_path):
+    now = datetime(2026, 7, 10, 12, 0, 0, tzinfo=UTC)
+    records = [
+        _mock_cost_record("claude (interactive)", 10.0, now - timedelta(hours=1)),
+        _mock_cost_record("codex (gpt-5.5)", 20.0, now - timedelta(hours=1)),
+        _mock_cost_record("gemini (pro)", 30.0, now - timedelta(hours=1)),
+    ]
+    _configure_test_budgets(monkeypatch, tmp_path, records)
+
+    # No task failures written -> no health fields present on agents (mock health absent scenario)
+    # We can also call _recommend_agent directly with health removed to verify fail-open
+    agents = {
+        "claude": {
+            "spent_7d_usd": 10.0,
+            "weekly_cap_usd": 100.0,
+            "burn_pct_7d": 10.0,
+            "status": "cool",
+            "interactive": {"status": "cool", "burn_pct_7d": 10.0},
+        },
+        "codex": {
+            "spent_7d_usd": 20.0,
+            "weekly_cap_usd": 100.0,
+            "burn_pct_7d": 20.0,
+            "status": "cool",
+        },
+    }
+    warnings = []
+    rec = state_router._recommend_agent(
+        agents,
+        warnings,
+        current_time=now,
+        records_loaded=len(records),
+        authoritative_data_available=False,
+    )
+    # Claude has lowest burn and should be recommended as health is treated as healthy when absent
+    assert rec["primary_agent_for_code"] == "claude"
+    assert not any("skipped" in w for w in rec["warnings"])
+    assert not any("unhealthy" in w for w in rec["warnings"])
