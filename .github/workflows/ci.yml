@@ -132,6 +132,12 @@ jobs:
               # test_source_inventory_intake::test_committed_source_inventory_files_are_valid
               # globs every file here — data-only edits must run pytest too.
               - 'data/lexicon/source-inventory/**'
+              # Same class again (2026-07-10, #4936 — 3rd manifestation after
+              # #3873/#4888): test_atlas_conformance reads the committed Atlas
+              # manifest; a data(atlas) publish PR skipped pytest and turned
+              # main red for every subsequent code PR.
+              - 'site/src/data/lexicon-manifest.json'
+              - 'site/src/data/lexicon-manifest.fingerprint.json'
             frontend:
               - '.github/workflows/ci.yml'
               - 'site/**'

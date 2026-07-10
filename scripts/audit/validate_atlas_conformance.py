@@ -544,7 +544,16 @@ def _section_has_content(section_name: str, section: object) -> bool:
     if section_name == "meaning":
         return _definitions_have_content(section.get("definitions"))
     if section_name == "morphology":
-        return _list_has_content(section.get("forms")) or _mapping_has_content(section.get("paradigm"))
+        # marked_forms are renderable content: WordAtlasArticle.astro renders
+        # style/register-marked forms in their own subsection (#4891), so a
+        # marked-forms-only morphology (VESUM has no unmarked modern paradigm —
+        # slang/variant lemmas like «баг») is NOT an empty section. Gate went
+        # stale when #4891 added the renderer; detonated on the #4936 publish.
+        return (
+            _list_has_content(section.get("forms"))
+            or _mapping_has_content(section.get("paradigm"))
+            or _list_has_content(section.get("marked_forms"))
+        )
     if section_name == "definition_cards":
         return False
     if section_name == "etymology":
