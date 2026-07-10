@@ -16,9 +16,9 @@ from pathlib import Path
 import pytest
 
 from scripts.api import release_snapshot
+from scripts.common.release_layout import MANIFEST_NAME, is_release_root
 from scripts.git_context import sanitized_git_env
 from scripts.path_safety import safe_join
-from scripts.release_layout import MANIFEST_NAME, is_release_root
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 # Prefer the repo venv when present; fall back to the running interpreter so

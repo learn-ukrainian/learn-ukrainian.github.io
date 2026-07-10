@@ -5,7 +5,7 @@ from __future__ import annotations
 import os
 from pathlib import Path
 
-from scripts.release_layout import LIVE_DATA_PATHS, MANIFEST_NAME, is_release_root
+from scripts.common.release_layout import LIVE_DATA_PATHS, MANIFEST_NAME, is_release_root
 
 
 def _validate_component(value: str) -> None:
