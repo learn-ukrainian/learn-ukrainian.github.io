@@ -9,12 +9,12 @@
 
 **Acceptance self-check:**
 - [x] All 10 sections completed
-- [x] ≥3 Tier 1/Tier 2 sources cited (IEU, ЕСУ via wiki cross-check, uk.wikipedia cross-checked against IEU)
+- [x] ≥3 authoritative/reference sources cited (ЕІУ, IEU, Ukrainian Wikipedia)
 - [x] Oppression mechanism is specific (dated arrests + named censorship/appropriation mechanism)
 - [x] ≥2 primary-source quotes (4 corpus-verified quotes, confidence reported)
 - [x] Cross-track links: every "Existing" path verified with `test -e` on 2026-06-03
 - [x] Naming-canonical applied
-- [x] Image candidate(s) identified
+- [x] Exact rights-cleared image identified
 - [x] Decolonization checklist self-applied
 
 ---
@@ -23,26 +23,28 @@
 
 - **Full name (UA, canonical):** Іван Якович Франко. [T1: IEU — "Franko, Ivan"; T3: uk.wikipedia — "Франко Іван Якович", cross-checked against IEU]
 - **Pseudonyms / aliases:** **Джеджалик** (debut pseudonym, 1874), Мирон, Руслан, Non solus, та ін. Russian-imperial transliteration (forbidden in body text, listed only in §8): Иван Яковлевич Франко / "Ivan Franko" in Russified renderings of works.
-- **Born:** 27 August 1856 | село Нагуєвичі, Дрогобицький повіт, Королівство Галичини та Володимирії | the Австро-Угорщина (Habsburg monarchy) then held Галичина. [T1: IEU — "born 27 August 1856 in Nahuievychi, Drohobych county, Galicia"; T3: uk.wikipedia]
+- **Born:** 27 August 1856 | село Нагуєвичі, Дрогобицький повіт, Королівство Галичини та Володимирії | **Австрійська імперія** (the dual monarchy of Austria-Hungary was created only in 1867). [T1: ЕІУ; T1: IEU; T3: uk.wikipedia]
 - **Died:** 28 May 1916 (aged 59) | Львів | Австро-Угорщина | died after years of progressive illness (paralysis of the hands, chronic disease); buried **31 May 1916** at the **Личаківський цвинтар**, Lviv. [T1: IEU — "died 28 May 1916 in Lviv"; T3: uk.wikipedia — death 28 May 1916, burial 31 May, Личаківський цвинтар]
-- **Family / education key facts:** Son of a village blacksmith (коваль) Яків Франко and Марія (Кульчицька). Graduated the Дрогобицька гімназія in 1875; studied classical philology and Ukrainian language/literature at Львівський університет; defended his doctoral dissertation at the **Віденський університет on 1 July 1893**, on the medieval spiritual romance **«Варлаам і Йоасаф»**, under the Slavist **Ватрослав Яґич (Vatroslav Jagić)**; completed **habilitation in 1895**; appointed lecturer in Ukrainian literary history at Lviv University in 1894, but was **never granted the chair** because of political opposition. Дійсний член НТШ (1899); почесний доктор Харківського університету (1906). [T1: IEU; T3: uk.wikipedia — "1893 року у Віденському університеті під керівництвом… В. Яґича захистив дисертацію «Варлаам і Йоасаф…»"; "габілітація успішно відбулася 1895"]
+- **Family / education key facts:** Son of a village blacksmith (коваль) Яків Франко and Марія (Кульчицька). Graduated the Дрогобицька гімназія in 1875; studied classical philology and Ukrainian language/literature at Львівський університет; defended his doctoral dissertation at the **Віденський університет on 1 July 1893**, on the medieval spiritual romance **«Варлаам і Йоасаф»**, under the Slavist **Ватрослав Яґич (Vatroslav Jagić)**. The sources describe the next step differently: ЕІУ dates the positive university-commission decision to **1894** but states that political opposition prevented its approval; current Ukrainian Wikipedia records the habilitation as **1895**. Neither source supports saying that Franko received the chair. Дійсний член НТШ (1899); почесний доктор Харківського університету (1906). [T1: ЕІУ; T1: IEU; T3: uk.wikipedia]
 
-**Source disagreement / correction note (flagged, not smoothed):** The live wiki on the site **mis-dates the doctoral defense as 1895**. This conflates two distinct events: the **PhD defense (1 July 1893, Vienna, under Jagić)** and the **habilitation (Dr. habil., 1895)**. Both Tier 1 IEU and Tier 3 uk.wikipedia agree on **1893 for the doctorate** and **1895 for the habilitation** — the dossier records both as separate events so the wiki can be corrected against this ground truth. His **debut poems** are sometimes mis-titled "Народна пісня"; the verified titles are **«Моя пісня»** and **«Пісні народнії»**, published 1874 in the Lviv student journal **«Друг»** under the pseudonym **Джеджалик**. [T3: uk.wikipedia, verbatim; corroborated by IEU work-list]
+**Source disagreement / correction note (flagged, not smoothed):** The live project wiki **mis-dates the doctoral defense as 1895**. This conflates two distinct events: the **PhD defense (1 July 1893, Vienna, under Jagić)** and the later habilitation process. ЕІУ places the positive commission decision in 1894 but says it was not approved; current Ukrainian Wikipedia uses 1895 for the habilitation. His **debut poems** are sometimes mis-titled "Народна пісня"; the verified titles are **«Моя пісня»** and **«Пісні народнії»**, published in the student journal **«Друг»** under the pseudonym **Джеджалик**. [T1: ЕІУ; T3: uk.wikipedia]
 
 ## 2. Oppression mechanism
 
 This is the load-bearing section. Franko's case has **two distinct mechanisms**, and honesty about which empire did what is itself the decolonial discipline here.
 
-**(a) Lived imperial persecution — Habsburg gendarmerie + the Polish-dominated Galician establishment, with a Russian-imperial shadow.** Franko was **arrested three times** under Austria-Hungary:
-- **1877** — arrested for spreading socialist propaganda; imprisoned **eight months**. [T1: IEU — "First arrest in 1877… imprisoned eight months"]
+**(a) Lived imperial persecution — Habsburg gendarmerie + the Polish-dominated Galician establishment, with a Russian-imperial shadow.** ЕІУ and IEU structure the biography around **three arrests** under Austria-Hungary:
+- **1877** — arrested on a charge of belonging to a secret socialist organization. The duration differs by source: **eight months** in IEU, **nine months** in ЕІУ. [T1: IEU; T1: ЕІУ]
 - **1880** — arrested for "inciting peasants"; **three-month** term. [T1: IEU]
-- **1889** — arrested **because of his ties with Dnieper (Russian-ruled) Ukraine** — i.e. the suspicion fell on his contacts across the Russian-imperial border. [T1: IEU — "Third arrest in 1889 due to ties with Dnieper Ukraine"]
+- **1889** — arrested after contacts with a group of Kyiv students; ЕІУ dates the detention from 16 August to 20 October. [T1: ЕІУ; T1: IEU]
 
-The Russian Empire's hand reaches him indirectly but unmistakably: his works and his person were **barred from Russian-ruled Naddniprianshchyna** under the censorship regime of the **Валуєвський циркуляр (1863)** and **Емський указ (1876)**, which outlawed Ukrainian-language publishing in the empire; and the professional ceiling in Galicia (denial of the university chair) reflected the Polish administration's wariness of a radical Ukrainian. [T1: IEU; context: T3: uk.wikipedia]
+Current Ukrainian Wikipedia additionally lists an imprisonment in **1892**. Because the two encyclopedic traditions count the episodes differently, module prose must either follow ЕІУ's three-arrest chronology explicitly or explain the disagreement; it must not silently claim a universal count. [T1: ЕІУ; T3: uk.wikipedia]
 
-**(b) Posthumous Soviet appropriation-and-censorship — the load-bearing "Russia-oppressed" mechanism for this track.** After 1939 the USSR **canonised Franko as the "Каменяр" (Stonemason)** — a sanitised proletarian-revolutionary icon, cast in bronze across Soviet Ukraine (Lviv University renamed for him 1940; the city Станіслав renamed **Івано-Франківськ** 1962). The mechanism was **selective erasure**: his **nationalist verse** («Не пора», §4) was suppressed or footnoted away; his **religious-philosophical epic «Мойсей»** was de-emphasised; his **explicit critique of Marxism and of a future totalitarian "people's state"** (§6) was excised from school readers; and his complex socialism was flattened into regime-friendly "revolutionary democracy." The body survived in print precisely because it could be **detached from the author's actual politics** and re-attached to Soviet myth. This is censorship-by-appropriation, not physical liquidation — but it meets the section's specificity test: named mechanism (canonisation + selective censorship), named instruments (renamings of 1940/1962, expurgated Soviet editions), named decade (post-1939).
+The Russian imperial censorship regime affected the circulation of Ukrainian-language publications from Galicia, especially through the Ems Ukaz's restrictions on importing Ukrainian books into the Russian Empire. The reviewed sources do **not** establish a person-specific ban on Franko, so the dossier does not make that claim. The failed university appointment belongs instead to the documented Galician political context: ЕІУ names opposition from governor Kazimierz Badeni and conservative circles. [T1: ЕІУ]
 
-**What survived / what was distorted:** nearly the whole vast corpus survived physically (too canonical to destroy) but circulated for fifty years **stripped of his nationalism, his anti-Marxism, and his religiosity** — the inverse of Leontovych's case, where the work survived but the *author's fate* was hidden; here the work survived but the *author's mind* was hidden.
+**(b) Posthumous Soviet appropriation-and-censorship — the load-bearing "Russia-oppressed" mechanism for this track.** Soviet criticism presented Franko's thought one-sidedly as consistently socialist and pro-Russian. ЕІУ names prohibited philosophical and national-political works, including «Соціалізм і соціал-демократизм», «Народники і марксисти», «Ukraina irredenta» and the preface to «Мій Ізмарагд»; IEU names suppressed works including «Не пора» and records falsified or abridged publications, including «Що таке поступ?». These named examples support the appropriation-and-censorship analysis without requiring a blanket claim that all religious or nationalist writing disappeared. [T1: ЕІУ; T1: IEU]
+
+**What survived / what was distorted:** a large canonical corpus remained available, but named political and philosophical texts were suppressed, abridged or interpreted tendentiously. The source-backed contrast is therefore between preservation of a canonical author and selective restriction of inconvenient parts of his thought. [T1: ЕІУ; T1: IEU]
 
 ## 3. Major works
 
@@ -71,27 +73,27 @@ All four quotes below were checked with `verify_quote` against the `ukrlib-frank
 
 > «Лупайте сю скалу! Нехай ні жар, ні холод / Не спинить вас!»
 
-`verify_quote` → **matched, confidence 1.0** (`ukrlib-franko`). Pedagogically central: this is the very image the Soviet regime froze into a bronze monument — restoring its original meaning (collective, freely-chosen labour toward enlightenment, *not* obedience to a state) is the decolonial move. [Primary: corpus-verified]
+`verify_quote(author="Франко І.")` → **matched, confidence 1.0** (`b207d95d_c0012`; corroborating chunk `c650c68e_c0000`). Pedagogically central: the poem speaks in the plural about costly collective work; any political interpretation should begin from the complete poem rather than from the isolated epithet. [Primary: corpus-verified]
 
 **Quote 2 — «Гімн» / «Вічний революціонер» (1880):**
 
 > «Вічний революціонер — / Дух, що тіло рве до бою…»
 
-`verify_quote` → **matched, confidence 0.978** (`ukrlib-franko`). The "eternal revolutionary" is *spirit/мысль/наука*, not class violence — useful for contrasting Franko's actual idea against its Soviet reading. [Primary: corpus-verified]
+`verify_quote(author="Франко І.")` → **matched, confidence 0.978** (`b207d95d_c0001`). The "eternal revolutionary" is a spirit connected in the poem with thought, science and freedom, not a one-line authorization of state violence. [Primary: corpus-verified]
 
 **Quote 3 — «Не пора» (1880), the poem the USSR suppressed:**
 
 > «Не пора, не пора, не пора / Москалеві й ляхові служить!»
 
-`verify_quote` → **matched, confidence 1.0** (`ukrlib-franko`, dated 27 червня 1880 in the source). The explicit refusal to serve "Москаль" (the Russian imperial power) and "лях" is exactly why this text vanished from Soviet Franko editions. Pedagogically: a primary document of anti-imperial self-assertion. [Primary: corpus-verified]
+`verify_quote(author="Франко І.")` → **matched, confidence 1.0** (`1b630920_c0000`, dated 27 June 1880 in the indexed text). IEU independently lists «Не пора» among works suppressed in Soviet Ukraine. [Primary: corpus-verified; T1: IEU]
 
 **Quote 4 — prologue to «Мойсей» (1905):**
 
 > «Народе мій, замучений, розбитий, / Мов паралітик той на роздорожжу…»
 
-`verify_quote` → **matched, confidence 1.0** (`ukrlib-franko`). The prophet's address to a broken-but-not-finished nation; reads very differently after 1991 and after 2022 than in any Soviet gloss. [Primary: corpus-verified]
+`verify_quote(author="Франко І.")` → **matched, confidence 1.0** (`4069caa9_c0000`; corroborating chunk `b035396a_c0000`). The quotation is securely attributed to the prologue and can anchor analysis of the poem's nation-and-leader problem. [Primary: corpus-verified]
 
-**Bonus (flagged — character voice, not Franko's own credo):** the individualist monologue «Суспільність, держава, народ! Усе се подвійні кайдани…» is `verify_quote` **matched, confidence 1.0**, but it is spoken by a *character* in his prose (the corpus does not pin the work title); cite it as fictional-character speech, not as Franko's personal doctrine.
+The previously listed «Суспільність, держава, народ!» passage is removed from the approved quote set: the corpus attests the wording but does not expose a work title, so it is not source-ready for learner use.
 
 ## 5. Language register
 
@@ -105,8 +107,8 @@ All four quotes below were checked with `verify_quote` against the `ukrlib-frank
 - **"Two Frankos" — socialist vs nationalist.** Modern scholarship (Тамара Гундорова, Ярослав Грицак's *Пророк у своїй вітчизні*, 2006) reads Franko as a thinker who **moved from early Drahomanovite socialism toward a Ukrainian national-emancipatory position**, never a doctrinaire of either camp. The Soviet canon kept only the "socialist." [T4: Грицак, *Пророк у своїй вітчизні* — referenced; T3: uk.wikipedia]
 - **The «Каменяр» myth (anti-hagiography core).** "Каменяр" was a genuine Franko self-image (1878) that the USSR **inverted into a docile-labour icon**. De-mythologising it — restoring the *freely-chosen, enlightenment-directed* labour of the original — is the central decolonial task for any module. [self-analysis grounded in §2b, §4]
 - **His critique of Marxism.** In **«Що таке поступ?» (1903)** and the essay **«Поза межами можливого» (1900)** Franko warned that a Marxist "people's state" run by a party elite could become a new coercion over the individual — a strikingly prophetic anti-totalitarian argument. *(The exact verbatim "народна тюрма" passage frequently quoted online was **not corpus-verifiable in this pass** — `verify_quote` returned 0.48; the dossier therefore states the **idea** and its source works, and flags the popular verbatim as unverified rather than fabricating a score.)* [T3: uk.wikipedia work-list; T4: Грицак — referenced]
-- **Drahomanov relationship.** Franko was Drahomanov's correspondent and early follower, then grew critical of his "non-political" cultural Ukrainianism — a real intellectual break, not a clean teacher-pupil line. [T1: IEU — РУРП co-founded 1890 with Pavlyk and Drahomanov]
-- **Russian disinformation.** Russian framing alternately claims Franko as an "all-Russian" socialist or dismisses his nationalism as Austrian intrigue; both erase his explicit "Не пора… Москалеві… служить." [grounded in §4]
+- **Drahomanov relationship.** Franko was Drahomanov's correspondent and early follower, then grew critical of parts of his program. Drahomanov influenced the Galician radical circles from abroad but was not an RURP co-founder; current Ukrainian Wikipedia notes that he considered the party's founding premature. [T3: uk.wikipedia, «Українська радикальна партія (1890)»]
+- **Soviet reframing.** ЕІУ and IEU document the substitution of a one-sided socialist interpretation for Franko's changing political thought and name the works that were prohibited, falsified or abridged. [T1: ЕІУ; T1: IEU]
 - **His final illness.** Treat the 1908→1916 progressive paralysis/illness with clinical dignity; avoid the Soviet-tinged "madness of the genius" trope. [T3: uk.wikipedia]
 
 ## 7. Cross-track links
@@ -114,7 +116,7 @@ All four quotes below were checked with `verify_quote` against the `ukrlib-frank
 > Every path under **Existing** below was verified with `test -e` on 2026-06-03 and resolves under `curriculum/l2-uk-en/plans/`. Forward-looking ties are under **Candidate**.
 
 - **Existing BIO plans (VERIFIED present):**
-  - `curriculum/l2-uk-en/plans/bio/mykhailo-drahomanov.yaml` — Franko's mentor-then-foil; РУРП co-founder.
+  - `curriculum/l2-uk-en/plans/bio/mykhailo-drahomanov.yaml` — Franko's mentor-then-foil and an important influence on Galician radical circles.
   - `curriculum/l2-uk-en/plans/bio/lesya-ukrainka.yaml` — the next-generation modernist Franko championed; both shaped the "нова школа."
   - `curriculum/l2-uk-en/plans/bio/borys-hrinchenko.yaml` — fellow nation-builder across the imperial border.
   - `curriculum/l2-uk-en/plans/bio/mykhailo-kotsiubynsky.yaml` — contemporary modernist prose-master.
@@ -139,23 +141,19 @@ All four quotes below were checked with `verify_quote` against the `ukrlib-frank
 - **Aliases to track (`aliases:` YAML field):** Ivan Franko; Джеджалик (pseud.); Мирон (pseud.).
 - **Forbidden Russian-imperial / Russified forms (flag in body text — listed here only):** Иван Яковлевич Франко; any Russified transliteration of his titles.
 
-## 9. Image candidates
+## 9. Approved image
 
-- **Best PD portrait:** Wikimedia Commons category **"Ivan Franko"** holds early-20th-c. photographic portraits; he died 1916, so studio photos are public domain by age (author-life+70 / pre-1929 US). Use the individual **file page** for the final license proof, not the category page. [Commons category: `Ivan Franko`]
-- **Backup candidates:**
-  - The **20-hryvnia banknote** portrait of Franko (НБУ) — well-known but check banknote-image reuse rules before publishing.
-  - Укрпошта commemorative stamps marking his anniversaries — verify PD/stamp-rights status.
-  - The Franko family house-museum in Нагуєвичі / the Lviv Franko museum — context images (verify rights).
-- **Context image:** a facsimile page of «Друг» (1874) carrying his debut, or a title page of «З вершин і низин» (1887) — strong §3 illustration if a rights-clear scan is found.
+- **Exact portrait file:** Wikimedia Commons, `File:Ivan_Franko.svg` — a black-and-white vector portrait by Denys Potapov, released by its author under **CC0 1.0**. This exact file, not a category or search result, is the approved visual record: https://commons.wikimedia.org/wiki/File:Ivan_Franko.svg. Verified 2026-07-10.
 
 ## 10. Sources used
 
-**Tier 1 (authoritative):**
+**Tier 1 (authoritative/reference):**
 - *Internet Encyclopedia of Ukraine.* "Franko, Ivan." https://www.encyclopediaofukraine.com/display.asp?linkpath=pages\F\R\FrankoIvan.htm. Accessed 2026-06-03. (Birth/death, 1 July 1893 Vienna defense under Jagić on «Варлаам і Йоасаф», РУРП 1890, arrests 1877/1880/1889, work dates.)
-- *Енциклопедія Сучасної України (ЕСУ)* and *Енциклопедія історії України (ЕІУ)* — "Франко Іван Якович" (used as the authoritative UA encyclopedic baseline; the dossier's life-dates and РУРП framing match these standard entries; the IEU article above is the directly-fetched Tier 1 text this pass).
+- Якимович Б. З. «Франко Іван Якович» // *Енциклопедія історії України*, т. 10. https://www.history.org.ua/?termin=Franko_I. Accessed 2026-07-10. (Dates, three-arrest chronology, RURP program, doctorate, candidacies, political evolution, Soviet suppression.)
 
-**Tier 2 (institutional):**
-- Львівський національний університет імені Івана Франка / Інститут франкознавства — institutional Franko scholarship and the canonical biography apparatus (referenced as field-standard).
+**Tier 2 (institutional/official):**
+- Nobel Prize Nomination Archive. "Ivan Franko." https://www.nobelprize.org/nomination/archive/show_people.php?id=3183. Accessed 2026-07-10. (One Literature nomination, 1916.)
+- Wikimedia Commons. `File:Ivan_Franko.svg`. https://commons.wikimedia.org/wiki/File:Ivan_Franko.svg. Accessed 2026-07-10. (Denys Potapov; CC0 1.0.)
 
 **Tier 3 (encyclopedic — navigation, cross-checked against T1):**
 - Українська Вікіпедія. "Франко Іван Якович." https://uk.wikipedia.org/wiki/Франко_Іван_Якович. Accessed 2026-06-03. Verbatim source for: 1893 Vienna defense under Jagić + 1895 habilitation; debut poems «Моя пісня»/«Пісні народнії» (1874, «Друг», pseud. Джеджалик); death 28 May 1916, burial 31 May, Личаківський цвинтар. Cross-checked against IEU.
@@ -167,9 +165,10 @@ All four quotes below were checked with `verify_quote` against the `ukrlib-frank
 **Tier 5 (general web — used only with T1–T4 corroboration):** none relied upon for core claims this pass.
 
 **Primary-source documents accessed (in transcription):**
-- Corpus `ukrlib-franko` (project literary index): «Каменярі», «Гімн/Вічний революціонер», «Не пора» (27.06.1880), «Мойсей» (Пролог) — all `verify_quote`-confirmed (§4), confidences reported.
+- Corpus `ukrlib-franko` (project literary index): «Каменярі» (`b207d95d_c0012`), «Гімн/Вічний революціонер» (`b207d95d_c0001`), «Не пора» (`1b630920_c0000`), «Мойсей» (Пролог; `4069caa9_c0000`) — all `verify_quote(author="Франко І.")`-confirmed (§4), confidences reported.
+- «Що таке поступ?» (New York, 1917 scan): https://diasporiana.org.ua/ideologiya/12272-franko-i-shho-take-postup/; public transcription: https://uk.wikisource.org/wiki/Що_таке_поступ%3F.
 
-**Honest gaps:** The popular online "та держава народна сталась би величезною народною тюрмою" verbatim from «Що таке поступ?» was **not** corpus-verifiable here (`verify_quote` = 0.48); §6 states the *idea* and source works only. The directly-fetched authoritative text this pass was IEU (T1) + uk.wikipedia (T3); the ЕСУ/ЕІУ article pages were not separately opened, so they are cited as the standard UA baseline rather than as freshly-fetched URLs.
+**Honest gaps:** The popular online "та держава народна сталась би величезною народною тюрмою" wording remains outside the approved quote set because it was not corpus-verifiable. The arrest count and first-sentence duration differ among ЕІУ, IEU and current Ukrainian Wikipedia; the disagreement is preserved above rather than smoothed away.
 
 ---
 
