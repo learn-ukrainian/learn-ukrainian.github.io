@@ -48,21 +48,24 @@ const listId = `${id}-list`;
 <script>
   import {
     normalize,
-    rankMatches,
+    rankSearchResults,
     highlight,
     searchShardForQuery,
+    type SearchAlias,
+    type SearchResult,
     type SearchRow,
     type SearchShardManifest,
   } from "../lib/lexicon/search";
 
   const EMPTY_MESSAGE = "Нічого не знайдено — спробуйте українською, латиницею або англійською";
   const LOADING_MESSAGE = "Завантажуємо…";
-  const KIND_LABELS: Record<string, string> = {
-    vyv: "ВиВ",
-    obov: "обов.",
-    rek: "рек.",
-    avoid: "уникати",
-    other: "інше",
+  const ENTRY_TYPE_LABELS: Record<string, string> = {
+    lemma: "слово",
+    expression: "вираз",
+    phraseologism: "фразеологізм",
+    proverb: "прислів'я",
+    multiword_term: "термін",
+    proper_name: "власна назва",
   };
 
   const taEsc = (value: unknown): string =>
@@ -85,12 +88,13 @@ const listId = `${id}-list`;
     input.removeAttribute("aria-activedescendant");
   };
 
-  const kindPills = (row: SearchRow): string => {
-    const kind = row.k ?? "other";
-    const label = KIND_LABELS[kind] ?? KIND_LABELS.other;
-    const danger =
-      kind === "avoid" ? '<span class="ata-kind ata-kind-danger">остерігайтеся</span>' : "";
-    return `<span class="ata-kind" data-kind="${taEsc(kind)}">${taEsc(label)}</span>${danger}`;
+  const resultPills = (result: SearchResult): string => {
+    if (result.matchedAlias) {
+      return '<span class="ata-kind" data-kind="alias">форма</span>';
+    }
+    const entryType = result.article.t;
+    const label = entryType ? ENTRY_TYPE_LABELS[entryType] : "стаття";
+    return `<span class="ata-kind" data-kind="${taEsc(entryType ?? "article")}">${taEsc(label)}</span>`;
   };
 
   const initAtlasTypeahead = (ta: HTMLElement) => {
@@ -106,8 +110,10 @@ const listId = `${id}-list`;
     let taManifestLoading: Promise<SearchShardManifest> | null = null;
     let taFullIndex: SearchRow[] | null = null;
     let taFullLoading: Promise<SearchRow[]> | null = null;
+    let taAliases: SearchAlias[] | null = null;
+    let taAliasesLoading: Promise<SearchAlias[]> | null = null;
     const taShardCache = new Map<string, Promise<SearchRow[]>>();
-    let taItems: SearchRow[] = [];
+    let taItems: SearchResult[] = [];
     let taActive = -1;
     let taState: "loading" | "empty" | null = null;
     let taRequest = 0;
@@ -134,15 +140,19 @@ const listId = `${id}-list`;
 
       taList.innerHTML = taItems
         .map((item, i) => {
-          const gloss = item.g ? `<span class="ata-gloss">${highlight(item.g, taInput.value)}</span>` : "";
+          const article = item.article;
+          const gloss = article.g ? `<span class="ata-gloss">${highlight(article.g, taInput.value)}</span>` : "";
+          const headword = item.matchedAlias
+            ? `${highlight(item.matchedAlias, taInput.value)} <span class="ata-alias-arrow" aria-hidden="true">→</span> ${taEsc(article.l)}`
+            : highlight(article.l, taInput.value);
           return `<li role="option" id="${taEsc(taOptionId(i))}" class="atlas-typeahead-opt${
             i === taActive ? " active" : ""
-          }" data-slug="${taEsc(item.s)}" aria-selected="${i === taActive}">
+          }" data-slug="${taEsc(article.s)}" aria-selected="${i === taActive}">
             <span class="ata-main">
-              <span class="ata-lemma">${highlight(item.l, taInput.value)}</span>
+              <span class="ata-lemma">${headword}</span>
               ${gloss}
             </span>
-            <span class="ata-kinds">${kindPills(item)}</span>
+            <span class="ata-kinds">${resultPills(item)}</span>
           </li>`;
         })
         .join("");
@@ -191,6 +201,26 @@ const listId = `${id}-list`;
       return taFullLoading;
     };
 
+    const taLoadAliases = () => {
+      if (taAliases) return Promise.resolve(taAliases);
+      if (!taAliasesLoading) {
+        taAliasesLoading = fetch("/lexicon/search-aliases.json")
+          .then((response) => {
+            if (!response.ok) throw new Error(`search alias fetch failed: ${response.status}`);
+            return response.json();
+          })
+          .then((data) => {
+            taAliases = Array.isArray(data) ? (data as SearchAlias[]) : [];
+            return taAliases;
+          })
+          .catch(() => {
+            taAliases = [];
+            return taAliases;
+          });
+      }
+      return taAliasesLoading;
+    };
+
     const taLoadShardRows = async (q: string): Promise<{ rows: SearchRow[]; full: boolean }> => {
       try {
         const manifest = await taLoadManifest();
@@ -229,11 +259,11 @@ const listId = `${id}-list`;
       taState = "loading";
       taRender();
 
-      void taLoadShardRows(q).then(async ({ rows, full }) => {
+      void Promise.all([taLoadShardRows(q), taLoadAliases()]).then(async ([{ rows, full }, aliases]) => {
         if (request !== taRequest) return;
-        let matches = rankMatches(rows, q, 12);
+        let matches = rankSearchResults(rows, aliases, q, 12);
         if (!matches.length && !full) {
-          matches = rankMatches(await taLoadFull(), q, 12);
+          matches = rankSearchResults(await taLoadFull(), aliases, q, 12);
           if (request !== taRequest) return;
         }
         taItems = matches;
@@ -275,7 +305,7 @@ const listId = `${id}-list`;
       } else if (ev.key === "Enter") {
         if (taItems[taActive]) {
           ev.preventDefault();
-          taGo(taItems[taActive].s);
+          taGo(taItems[taActive].article.s);
         }
       } else if (ev.key === "Escape") {
         taInput.value = "";

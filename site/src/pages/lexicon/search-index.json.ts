@@ -4,10 +4,10 @@ import index from "../../data/lexicon-search-index.json";
 /**
  * Static client-side search index for Word Atlas typeahead.
  *
- * Emits one committed compact record per lemma: `l` (lemma), `s` (url_slug),
- * `g` (gloss), `r` (romanized lemma), `k` (source kind), and optional `c`
- * (CEFR level), so typeahead and browse can run without importing the full
- * manifest into site build.
+ * Emits one compact record per approved public article: `l` (display head),
+ * `s` (article slug), `g` (gloss), `r` (romanized head), `t` (entry type),
+ * and optional `c` (CEFR level). Alias resolvers live in the separate
+ * `/lexicon/search-aliases.json` artifact and never add to this entry total.
  */
 export const GET: APIRoute = () =>
   new Response(JSON.stringify(index), {

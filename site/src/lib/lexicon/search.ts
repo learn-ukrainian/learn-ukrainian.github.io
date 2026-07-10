@@ -6,6 +6,22 @@ export interface SearchRow {
   k?: string;
   c?: string;
   cls?: string;
+  t?: string;
+}
+
+/** A public-safe query form that resolves to an approved article record. */
+export interface SearchAlias {
+  a: string;
+  k: string;
+  s: string;
+  h: string;
+}
+
+/** A typeahead result always navigates to an article, never to an alias row. */
+export interface SearchResult {
+  article: SearchRow;
+  matchedAlias?: string;
+  aliasKind?: string;
 }
 
 export interface SearchShardMeta {
@@ -139,6 +155,60 @@ export function rankMatches(rows: SearchRow[], q: string, limit = 12): SearchRow
     .sort((a, b) => a.tier - b.tier || compareByLemma(a.row, b.row) || a.index - b.index)
     .slice(0, limit)
     .map((item) => item.row);
+}
+
+function aliasMatchTier(alias: SearchAlias, nq: string): number | null {
+  const text = normalize(alias.a);
+  if (text === nq) return 0;
+  if (text.startsWith(nq)) return 1;
+  if (text.includes(nq)) return 3;
+  return null;
+}
+
+function rankAliasMatches(aliases: SearchAlias[], q: string): SearchAlias[] {
+  const nq = normalize(q);
+  if (!nq) return [];
+
+  return aliases
+    .map((alias, index) => ({ alias, index, tier: aliasMatchTier(alias, nq) }))
+    .filter((item): item is { alias: SearchAlias; index: number; tier: number } => item.tier !== null)
+    .sort(
+      (a, b) =>
+        a.tier - b.tier ||
+        compareByLemma({ l: a.alias.a, s: a.alias.s, g: null }, { l: b.alias.a, s: b.alias.s, g: null }) ||
+        a.index - b.index,
+    )
+    .map((item) => item.alias);
+}
+
+/**
+ * Merge independently built article and alias artifacts for typeahead.
+ *
+ * Article matches always rank first. Alias rows can only add a target slug that
+ * is not already represented by a direct article match, so one learner query
+ * never renders a dead alias route or a duplicate result for the same article.
+ */
+export function rankSearchResults(
+  articles: SearchRow[],
+  aliases: SearchAlias[],
+  q: string,
+  limit = 12,
+): SearchResult[] {
+  if (!normalize(q) || limit <= 0) return [];
+
+  const results: SearchResult[] = rankMatches(articles, q, limit).map((article) => ({ article }));
+  const seenSlugs = new Set(results.map((result) => result.article.s));
+  for (const alias of rankAliasMatches(aliases, q)) {
+    if (seenSlugs.has(alias.s)) continue;
+    seenSlugs.add(alias.s);
+    results.push({
+      article: { l: alias.h, s: alias.s, g: null },
+      matchedAlias: alias.a,
+      aliasKind: alias.k,
+    });
+    if (results.length >= limit) break;
+  }
+  return results;
 }
 
 export function highlight(text: string, q: string): string {
