@@ -56,35 +56,150 @@ def _command(payload: dict) -> str:
     return ((payload.get("tool_input") or {}).get("command") or "").strip()
 
 
-def _segments(command: str) -> list[list[str]]:
-    """Quote-aware tokenization split on shell separators (mirrors guard-branch-switch).
+# --- Command segmentation hardened against glued shell operators (#4876). ---
+# Pattern lifted from guard-secret-print.py. Hooks are standalone by design,
+# so the helpers are copied, not imported. Keep the three copies in
+# guard-branch-switch-in-main.py, guard-admin-merge.py, and
+# guard-push-pytest.py in sync.
 
-    Ensures a `--admin` inside a quoted commit body (`git commit -m "... --admin ..."`)
-    is one argv element, not a separate command — no false block.
-    """
+
+def _strip_quotes(token: str) -> str:
+    if len(token) >= 2 and token[0] == token[-1] and token[0] in {"'", '"'}:
+        return token[1:-1]
+    return token
+
+
+def _heredoc_delimiters(line: str) -> list[tuple[str, bool]]:
+    """Return (delimiter, strip_tabs) per heredoc opener; handles spaced
+    ``<< EOF`` / ``<< - EOF`` and attached ``<<-EOF`` / ``<<-'EOF'`` (#4877)."""
     try:
-        tokens = shlex.split(command, posix=True)
+        lexer = shlex.shlex(line, posix=False, punctuation_chars=True)
+        lexer.whitespace_split = True
+        lexer.commenters = ""
+        tokens = list(lexer)
     except ValueError:
         return []
+
+    delimiters: list[tuple[str, bool]] = []
+    i = 0
+    while i < len(tokens):
+        if tokens[i] != "<<":
+            i += 1
+            continue
+        strip_tabs = False
+        j = i + 1
+        delim_tok = ""
+        if j < len(tokens):
+            nxt = tokens[j]
+            if nxt == "-":
+                strip_tabs = True
+                j += 1
+                if j < len(tokens):
+                    delim_tok = tokens[j]
+            elif nxt.startswith("-") and len(nxt) > 1:
+                strip_tabs = True
+                delim_tok = nxt[1:]
+            else:
+                delim_tok = nxt
+        delimiter = _strip_quotes(delim_tok)
+        if delimiter:
+            delimiters.append((delimiter, strip_tabs))
+        i = j + 1
+    return delimiters
+
+
+def _strip_heredoc_bodies(command: str) -> str:
+    """Drop heredoc BODY lines — document text is data, not commands.
+
+    Fail-CLOSED on an unclosed heredoc (#4877): a never-closing / mis-parsed
+    opener must not make trailing real `gh pr merge --admin` vanish. Only a
+    heredoc that actually closes has its body + closer dropped.
+    """
+    if "<<" not in command:
+        return command
+
+    lines = command.splitlines()
+    kept: list[str] = []
+    i = 0
+    n = len(lines)
+    while i < n:
+        kept.append(lines[i])
+        i += 1
+        pending = _heredoc_delimiters(lines[i - 1])
+        if not pending:
+            continue
+        body_start = i
+        while i < n and pending:
+            delimiter, strip_tabs = pending[0]
+            candidate = lines[i].lstrip("\t") if strip_tabs else lines[i]
+            if candidate == delimiter:
+                pending.pop(0)
+            i += 1
+        if pending:
+            kept.extend(lines[body_start:i])
+    return "\n".join(kept)
+
+
+def _join_line_continuations(text: str) -> str:
+    r"""Fold `\<newline>` into one logical line, as the shell does — so a
+    `\`-continued `gh pr merge --admin` is not split across physical lines
+    and missed. Over-folding a quoted literal `\` only merges argv text."""
+    return text.replace("\\\n", "")
+
+
+def _segments(command: str) -> list[list[str]]:
+    """Quote-aware argv segments, robust to glued shell operators (#4876).
+
+    A `--admin` inside a quoted commit body (`git commit -m "... --admin ..."`)
+    stays one argv element — no false block. A `; gh pr merge --admin` glued
+    to a preceding token (`…'; gh pr merge --admin`) is now split into its
+    own segment and inspected — no evasion. Heredoc bodies are stripped
+    (document text is not commands); `\\`-continuations are folded; each
+    logical line parses separately.
+    """
     segs: list[list[str]] = []
-    cur: list[str] = []
-    for tok in tokens:
-        if tok in ("&&", "||", ";", "|"):
-            if cur:
-                segs.append(cur)
-                cur = []
-        else:
-            cur.append(tok)
-    if cur:
-        segs.append(cur)
+    for line in _join_line_continuations(_strip_heredoc_bodies(command)).splitlines():
+        try:
+            lexer = shlex.shlex(line, posix=True, punctuation_chars=True)
+            lexer.whitespace_split = True
+            tokens = list(lexer)
+        except ValueError:
+            continue
+        cur: list[str] = []
+        for tok in tokens:
+            if tok and all(c in ";|&()<>" for c in tok):
+                if cur:
+                    segs.append(cur)
+                    cur = []
+            else:
+                cur.append(tok)
+        if cur:
+            segs.append(cur)
     return segs
+
+
+def _is_env_assignment(tok: str) -> bool:
+    return "=" in tok and not tok.startswith("-") and tok.split("=", 1)[0].isidentifier()
+
+
+def _skip_command_prefix(seg: list[str], i: int) -> int:
+    """Advance past wrappers / env-assignments / brace-group open so a
+    `env FOO=1 gh pr merge --admin` or `{ gh pr merge --admin; }` is not
+    missed (#4877)."""
+    while i < len(seg):
+        tok = seg[i]
+        if tok in {"sudo", "time", "env", "nohup", "command", "exec", "{"} or _is_env_assignment(
+            tok
+        ):
+            i += 1
+        else:
+            break
+    return i
 
 
 def _admin_merge_args(seg: list[str]) -> list[str] | None:
     """Return the args of a `gh pr merge ... --admin` segment, else None."""
-    i = 0
-    while i < len(seg) and seg[i] in {"sudo", "time", "env", "nohup"}:
-        i += 1
+    i = _skip_command_prefix(seg, 0)
     if seg[i : i + 3] != ["gh", "pr", "merge"]:
         return None
     args = seg[i + 3 :]

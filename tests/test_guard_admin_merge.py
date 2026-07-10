@@ -151,3 +151,53 @@ def test_failing_checks_advisory_only_is_empty(monkeypatch):
 def test_failing_checks_garbage_output_is_failclosed(monkeypatch):
     _fake_gh(monkeypatch, returncode=0, stdout="not json")
     assert guard._failing_blocking_checks("5") is None
+
+
+# --- #4876: glued-operator evasion class ------------------------------------
+
+
+def _any_admin(command: str) -> bool:
+    return any(
+        guard._admin_merge_args(s) is not None for s in guard._segments(command)
+    )
+
+
+@pytest.mark.parametrize(
+    "cmd",
+    [
+        "true 2>&1 | head -1; gh pr merge 5 --admin",
+        "gh pr view 5 --jq '{state}'; gh pr merge 5 --admin --squash",
+        "echo hi\ngh pr merge 5 --admin",
+        "true;gh pr merge 5 --admin",
+    ],
+)
+def test_glued_operator_admin_merge_detected(cmd):
+    assert _any_admin(cmd)
+
+
+def test_heredoc_admin_mention_not_detected():
+    cmd = "cat > /tmp/n.md <<'EOF'\nrun gh pr merge 5 --admin manually\nEOF"
+    assert not _any_admin(cmd)
+
+
+def test_backslash_continuation_admin_detected():
+    assert _any_admin("gh pr merge 5 \\\n  --admin --squash")
+
+
+# --- #4877 adversarial round (grok-build msg 2334) ---
+
+
+@pytest.mark.parametrize(
+    "cmd",
+    [
+        "env FOO=1 gh pr merge 5 --admin",
+        "FOO=1 gh pr merge 5 --admin",
+        "{ gh pr merge 5 --admin; }",
+    ],
+)
+def test_wrapper_assignment_brace_admin_detected(cmd):
+    assert _any_admin(cmd)
+
+
+def test_unclosed_heredoc_does_not_hide_admin():
+    assert _any_admin("cat <<'NOEND'\nnote\ngh pr merge 5 --admin")

@@ -200,16 +200,101 @@ _CONTROL_OPS = frozenset({"&&", "||", ";", "|", "&", "(", ")", "\n"})
 _FILE_REDIRECTS = frozenset({">", ">>", ">|", "&>", "&>>"})
 
 
+def _strip_quotes_for_heredoc(token: str) -> str:
+    if len(token) >= 2 and token[0] == token[-1] and token[0] in {"'", '"'}:
+        return token[1:-1]
+    return token
+
+
+def _heredoc_delimiters(line: str) -> list[tuple[str, bool]]:
+    try:
+        lexer = shlex.shlex(line, posix=False, punctuation_chars=True)
+        lexer.whitespace_split = True
+        lexer.commenters = ""
+        tokens = list(lexer)
+    except ValueError:
+        return []
+
+    delimiters: list[tuple[str, bool]] = []
+    i = 0
+    while i < len(tokens):
+        if tokens[i] != "<<":
+            i += 1
+            continue
+        strip_tabs = False
+        j = i + 1
+        delim_tok = ""
+        if j < len(tokens):
+            nxt = tokens[j]
+            if nxt == "-":  # spaced: << - DELIM
+                strip_tabs = True
+                j += 1
+                if j < len(tokens):
+                    delim_tok = tokens[j]
+            elif nxt.startswith("-") and len(nxt) > 1:  # attached: <<-DELIM
+                strip_tabs = True
+                delim_tok = nxt[1:]
+            else:
+                delim_tok = nxt
+        delimiter = _strip_quotes_for_heredoc(delim_tok)
+        if delimiter:
+            delimiters.append((delimiter, strip_tabs))
+        i = j + 1
+    return delimiters
+
+
+def _strip_heredoc_bodies(command: str) -> str:
+    """Drop heredoc BODY lines before tokenizing (#4538 / #4855).
+
+    Content between ``<<'MARKER'`` and ``MARKER`` is document DATA, not shell
+    syntax. Without this, body text like ``>15%`` or markdown backtick spans
+    is tokenized as redirects and misread as write targets — the recurring
+    false-positive class. Pattern shared with guard-secret-print.py.
+
+    Fail-CLOSED on an unclosed heredoc (#4877): if a delimiter never appears
+    before EOF, the buffered lines were NOT a real body — a crafted or
+    malformed opener must not make trailing REAL writes vanish from the
+    tokenized view. Those lines are kept; only a heredoc that actually
+    closes has its body + closer dropped.
+    """
+    if "<<" not in command:
+        return command
+
+    lines = command.splitlines()
+    kept: list[str] = []
+    i = 0
+    n = len(lines)
+    while i < n:
+        kept.append(lines[i])
+        i += 1
+        pending = _heredoc_delimiters(lines[i - 1])
+        if not pending:
+            continue
+        body_start = i
+        while i < n and pending:
+            delimiter, strip_tabs = pending[0]
+            candidate = lines[i].lstrip("\t") if strip_tabs else lines[i]
+            if candidate == delimiter:
+                pending.pop(0)
+            i += 1
+        if pending:
+            kept.extend(lines[body_start:i])
+    return "\n".join(kept)
+
+
 def _tokenize(command: str) -> list[str]:
     """Quote-aware tokens with redirection/control operators kept separate.
 
     ``punctuation_chars`` makes shlex split ``();<>|&`` runs into their own
     tokens while still respecting quotes, so ``echo a>b`` yields
     ``['echo','a','>','b']`` but ``echo "a>b"`` keeps ``a>b`` intact — the whole
-    reason this is Python and not a grep.
+    reason this is Python and not a grep. Heredoc bodies are stripped first:
+    document text carries no write targets (#4538).
     """
     try:
-        lexer = shlex.shlex(command, posix=True, punctuation_chars=True)
+        lexer = shlex.shlex(
+            _strip_heredoc_bodies(command), posix=True, punctuation_chars=True
+        )
         lexer.whitespace_split = True
         return list(lexer)
     except ValueError:

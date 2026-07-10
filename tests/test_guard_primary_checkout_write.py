@@ -270,3 +270,71 @@ def test_bash_write_from_worktree_targeting_main_blocked(repo: Path):
     }
     result = _run(repo, payload)
     assert result.returncode == 2, result.stderr
+
+
+# --- #4538 / #4855: heredoc bodies carry no write targets -------------------
+
+
+@pytest.mark.parametrize(
+    "command, expected",
+    [
+        # Body text with `>N` (previously misread as a redirect to '15%').
+        (
+            "cat > /tmp/brief.md <<'EOF'\n"
+            "... if >15% of the last 30 consecutive live passages ...\n"
+            "EOF",
+            ["/tmp/brief.md"],
+        ),
+        # Body text with markdown backtick code spans (#4855 live repro).
+        (
+            "cat > /tmp/brief.md <<'EOF'\n"
+            "run `.venv/bin/python scripts/x.py` then check\n"
+            "EOF",
+            ["/tmp/brief.md"],
+        ),
+        # Tab-indented body with <<- and a redirect-looking line.
+        (
+            "cat > /tmp/t.md <<-'DOC'\n\tdata 2>&1 goes here\n\tDOC",
+            ["/tmp/t.md"],
+        ),
+        # A real write AFTER the heredoc closes is still seen.
+        (
+            "cat > /tmp/a.md <<'EOF'\nbody\nEOF\necho x > out.txt",
+            ["/tmp/a.md", "out.txt"],
+        ),
+    ],
+)
+def test_heredoc_body_not_write_targets(command, expected):
+    assert hook.bash_write_targets(command) == expected
+
+
+# --- #4877 adversarial round (grok-build msg 2334): heredoc fail-open ---------
+
+
+@pytest.mark.parametrize(
+    "command, expected",
+    [
+        # Never-closing marker: the whole buffer is inspected (fail-closed).
+        # The security-critical target `curriculum/tracked.md` must NOT vanish;
+        # the would-be body line `> fake` is conservatively over-reported too,
+        # which is the safe direction (a malformed heredoc gets full scrutiny).
+        (
+            "cat <<'NOEND'\nbody > fake\necho tampered > curriculum/tracked.md",
+            ["fake", "curriculum/tracked.md"],
+        ),
+        # Attached `<<-E` whose closer never appears → unclosed → keep the
+        # trailing real write.
+        (
+            "cat <<-E\n\tbody\nreal > target.txt",
+            ["target.txt"],
+        ),
+        # Attached `<<-EOF` PROPERLY closed (tab + EOF): body dropped, no FP,
+        # and the opener's own redirect target is still seen.
+        (
+            "cat > /tmp/a.md <<-EOF\n\tbody 2>&1 here\n\tEOF",
+            ["/tmp/a.md"],
+        ),
+    ],
+)
+def test_heredoc_failclosed_on_unclosed(command, expected):
+    assert hook.bash_write_targets(command) == expected

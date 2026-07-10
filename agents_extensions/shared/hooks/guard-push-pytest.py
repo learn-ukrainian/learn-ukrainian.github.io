@@ -40,23 +40,121 @@ def _command(payload: dict) -> str:
     return ((payload.get("tool_input") or {}).get("command") or "").strip()
 
 
-def _segments(command: str) -> list[list[str]]:
-    """Quote-aware tokenization split on common shell separators."""
+# --- Command segmentation hardened against glued shell operators (#4876). ---
+# Pattern lifted from guard-secret-print.py. Hooks are standalone by design,
+# so the helpers are copied, not imported. Keep the three copies in
+# guard-branch-switch-in-main.py, guard-admin-merge.py, and
+# guard-push-pytest.py in sync.
+
+
+def _strip_quotes(token: str) -> str:
+    if len(token) >= 2 and token[0] == token[-1] and token[0] in {"'", '"'}:
+        return token[1:-1]
+    return token
+
+
+def _heredoc_delimiters(line: str) -> list[tuple[str, bool]]:
     try:
-        tokens = shlex.split(command, posix=True)
+        lexer = shlex.shlex(line, posix=False, punctuation_chars=True)
+        lexer.whitespace_split = True
+        lexer.commenters = ""
+        tokens = list(lexer)
     except ValueError:
         return []
+
+    delimiters: list[tuple[str, bool]] = []
+    i = 0
+    while i < len(tokens):
+        if tokens[i] != "<<":
+            i += 1
+            continue
+        strip_tabs = False
+        j = i + 1
+        delim_tok = ""
+        if j < len(tokens):
+            nxt = tokens[j]
+            if nxt == "-":  # spaced: << - DELIM
+                strip_tabs = True
+                j += 1
+                if j < len(tokens):
+                    delim_tok = tokens[j]
+            elif nxt.startswith("-") and len(nxt) > 1:  # attached: <<-DELIM
+                strip_tabs = True
+                delim_tok = nxt[1:]
+            else:
+                delim_tok = nxt
+        delimiter = _strip_quotes(delim_tok)
+        if delimiter:
+            delimiters.append((delimiter, strip_tabs))
+        i = j + 1
+    return delimiters
+
+
+def _strip_heredoc_bodies(command: str) -> str:
+    """Drop heredoc BODY lines — document text is data, not commands.
+
+    Fail-CLOSED on an unclosed heredoc (#4877): a never-closing / mis-parsed
+    opener must not make a trailing real `git push` vanish. Only a heredoc
+    that actually closes has its body + closer dropped.
+    """
+    if "<<" not in command:
+        return command
+
+    lines = command.splitlines()
+    kept: list[str] = []
+    i = 0
+    n = len(lines)
+    while i < n:
+        kept.append(lines[i])
+        i += 1
+        pending = _heredoc_delimiters(lines[i - 1])
+        if not pending:
+            continue
+        body_start = i
+        while i < n and pending:
+            delimiter, strip_tabs = pending[0]
+            candidate = lines[i].lstrip("\t") if strip_tabs else lines[i]
+            if candidate == delimiter:
+                pending.pop(0)
+            i += 1
+        if pending:
+            kept.extend(lines[body_start:i])
+    return "\n".join(kept)
+
+
+def _join_line_continuations(text: str) -> str:
+    r"""Fold `\<newline>` into one logical line, as the shell does — so a
+    `\`-continued `git push` is not split across physical lines and missed.
+    Over-folding a quoted literal `\` only merges argv text."""
+    return text.replace("\\\n", "")
+
+
+def _segments(command: str) -> list[list[str]]:
+    """Quote-aware argv segments, robust to glued shell operators (#4876).
+
+    Operator runs (`;`, `|`, `&`, `(`, `)`, `<`, `>`) become their own
+    tokens even when glued to a neighbour, `\\`-continuations are folded,
+    logical lines parse separately, and heredoc bodies are stripped before
+    parsing.
+    """
     segments: list[list[str]] = []
-    current: list[str] = []
-    for tok in tokens:
-        if tok in ("&&", "||", ";", "|"):
-            if current:
-                segments.append(current)
-                current = []
-        else:
-            current.append(tok)
-    if current:
-        segments.append(current)
+    for line in _join_line_continuations(_strip_heredoc_bodies(command)).splitlines():
+        try:
+            lexer = shlex.shlex(line, posix=True, punctuation_chars=True)
+            lexer.whitespace_split = True
+            tokens = list(lexer)
+        except ValueError:
+            continue
+        current: list[str] = []
+        for tok in tokens:
+            if tok and all(c in ";|&()<>" for c in tok):
+                if current:
+                    segments.append(current)
+                    current = []
+            else:
+                current.append(tok)
+        if current:
+            segments.append(current)
     return segments
 
 
@@ -85,10 +183,18 @@ def _push_is_help(args: list[str]) -> bool:
     return any(arg in {"-h", "--help"} for arg in args)
 
 
+def _is_env_assignment(tok: str) -> bool:
+    return "=" in tok and not tok.startswith("-") and tok.split("=", 1)[0].isidentifier()
+
+
 def _git_push_args(seg: list[str]) -> list[str] | None:
     """Return args for a real ``git push`` segment, else None."""
+    # Skip wrappers / env-assignments / brace-group open so `env X=1 git push`
+    # and `{ git push; }` are not missed (#4877).
     i = 0
-    while i < len(seg) and seg[i] in WRAPPERS:
+    while i < len(seg) and (
+        seg[i] in WRAPPERS or seg[i] in {"command", "exec", "{"} or _is_env_assignment(seg[i])
+    ):
         i += 1
     if i >= len(seg) or seg[i] != "git":
         return None
