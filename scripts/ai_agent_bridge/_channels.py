@@ -1579,17 +1579,30 @@ def bulk_expire_dead_lanes(dead_lanes: frozenset[str] | None = None) -> dict[str
         conn.execute("BEGIN IMMEDIATE")
         counts: dict[str, int] = {}
         for agent in sorted(dead):
+            # action_required rows keep the ESCALATION tag even on the
+            # dead-lane path (review-4897 F3): a stalled review request
+            # must stand out in the expiry log regardless of WHY it
+            # expired, so escalation greps catch both expiry paths.
             cursor = conn.execute(
                 """
                 UPDATE deliveries
                 SET status = 'expired',
-                    error = 'auto-expired (dead lane: ' || ? || ')',
+                    error = COALESCE((
+                        SELECT CASE
+                            WHEN cm.priority = 'action_required' THEN
+                                'auto-expired ESCALATION (action-required, dead lane: ' || ? || ')'
+                            ELSE
+                                'auto-expired (dead lane: ' || ? || ')'
+                        END
+                        FROM channel_messages cm
+                        WHERE cm.message_id = deliveries.message_id
+                    ), 'auto-expired (dead lane: ' || ? || ')'),
                     lease_until = NULL,
                     retry_after = NULL,
                     last_error_kind = NULL
                 WHERE status = 'pending' AND to_agent = ?
                 """,
-                (agent, agent),
+                (agent, agent, agent, agent),
             )
             if cursor.rowcount:
                 counts[agent] = cursor.rowcount

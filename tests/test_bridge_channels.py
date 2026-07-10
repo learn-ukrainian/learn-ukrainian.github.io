@@ -1462,3 +1462,47 @@ class TestDeliveryLeasing:
         second = _channels.claim_next_delivery("claude", now=_iso_at(1))
         assert second is not None
         assert _delivery_row(delivery_id)["attempt_count"] == 2
+
+
+def test_bulk_expire_dead_lanes_tags_action_required_as_escalation():
+    """Dead-lane expiry of an action_required delivery must carry the
+    ESCALATION tag just like age-based expiry — a stalled review request
+    stands out in the expiry log regardless of WHY it expired
+    (review-4897 F3)."""
+    _channels.create_channel("topic")
+    res = _channels.post(
+        "topic", "user", "review this", to_agents=["gemini"],
+        priority=_channels.PRIORITY_ACTION_REQUIRED, auto_snapshot=False,
+    )
+
+    counts = _channels.bulk_expire_dead_lanes(frozenset({"gemini"}))
+
+    assert counts == {"gemini": 1}
+    row = _delivery_row(str(res["delivery_ids"][0]))
+    assert row["status"] == "expired"
+    assert "ESCALATION" in row["error"]
+    assert "action-required" in row["error"]
+    assert "dead lane" in row["error"]
+
+
+def test_add_column_racesafe_swallows_duplicate_and_reraises_others(tmp_path):
+    """Two processes can both see a column as missing and both ALTER —
+    the loser gets 'duplicate column name', which must be swallowed
+    (the column exists = migration goal). Any other OperationalError
+    must re-raise. (review-4897 F1 — concurrent migration race.)"""
+    import sqlite3
+
+    from ai_agent_bridge._db import _add_column_racesafe
+
+    conn = sqlite3.connect(str(tmp_path / "race.db"))
+    conn.execute("CREATE TABLE t (id INTEGER PRIMARY KEY)")
+
+    ddl = "ALTER TABLE t ADD COLUMN priority TEXT DEFAULT 'fyi'"
+    _add_column_racesafe(conn, ddl)          # first ALTER: applies
+    _add_column_racesafe(conn, ddl)          # loser's ALTER: swallowed
+    cols = [r[1] for r in conn.execute("PRAGMA table_info(t)").fetchall()]
+    assert cols.count("priority") == 1
+
+    with pytest.raises(sqlite3.OperationalError):
+        _add_column_racesafe(conn, "ALTER TABLE nonexistent ADD COLUMN x TEXT")
+    conn.close()
