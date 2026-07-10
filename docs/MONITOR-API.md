@@ -1157,7 +1157,7 @@ Registered runtime adapters with default model and supported modes.
 ```json
 {
   "agents": [
-    {"name": "claude", "binary": "npx @anthropic-ai/claude-code@latest"},
+    {"name": "claude", "binary": "claude"},
     {"name": "gemini", "binary": "gemini"},
     {"name": "codex", "binary": "codex"}
   ]

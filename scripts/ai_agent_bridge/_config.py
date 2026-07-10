@@ -26,9 +26,12 @@ PID_DIR = Path(
 )
 
 # Resolve CLI paths at import time (before detached children lose PATH)
-# Use npx to run Claude Code — avoids bugs in the globally installed version.
-# Returns a list: ["npx", "@anthropic-ai/claude-code"] to use as cmd prefix.
-CLAUDE_CMD = ["npx", "@anthropic-ai/claude-code@latest"]
+# Prefer the local native `claude` binary (#4875: the npm package became a
+# native-installer shim — `npx @latest` exits rc=1 with "Error: claude native
+# binary not installed" and empty stdout, killing every bridge Claude call at
+# spawn). npx stays as the fallback for machines without a native install.
+_CLAUDE_BIN = shutil.which("claude")
+CLAUDE_CMD = [_CLAUDE_BIN] if _CLAUDE_BIN else ["npx", "@anthropic-ai/claude-code@latest"]
 AGY_CLI = shutil.which("agy") or str(Path.home() / ".local/bin/agy")
 GEMINI_CLI = shutil.which("gemini") or "gemini"
 CODEX_CLI = shutil.which("codex") or "codex"
