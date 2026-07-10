@@ -11,6 +11,7 @@ import urllib.error
 import urllib.parse
 import urllib.request
 from contextlib import suppress
+from datetime import datetime
 from pathlib import Path
 from typing import Any
 
@@ -35,6 +36,7 @@ REQUIRED_POINTER_KEYS = (
     "json_bytes",
 )
 DOWNLOAD_ATTEMPTS = 3
+FORCE_HYDRATE_ENV = "ATLAS_MANIFEST_FORCE_HYDRATE"
 
 
 def _sha256(data: bytes) -> str:
@@ -71,6 +73,54 @@ def _decode_manifest(data: bytes, source: Path | str) -> dict[str, Any]:
 
 def _read_local(path: Path) -> dict[str, Any]:
     return _decode_manifest(path.read_bytes(), path)
+
+
+def _entry_count(manifest: dict[str, Any]) -> int:
+    entries = manifest.get("entries")
+    return len(entries) if isinstance(entries, list) else 0
+
+
+def _generated_at(manifest: dict[str, Any]) -> tuple[str | None, datetime | None]:
+    value = manifest.get("generated_at")
+    if not isinstance(value, str):
+        return None, None
+    try:
+        return value, datetime.fromisoformat(value)
+    except ValueError:
+        return value, None
+
+
+def _refuse_richer_local(path: Path, release_manifest: dict[str, Any]) -> None:
+    """Refuse a release hydrate that would replace provably richer local work."""
+    if os.environ.get(FORCE_HYDRATE_ENV) == "1" or not path.exists():
+        return
+
+    try:
+        local_manifest = _read_local(path)
+    except (OSError, ValueError):
+        return
+
+    local_entries = _entry_count(local_manifest)
+    release_entries = _entry_count(release_manifest)
+    local_generated_at, local_timestamp = _generated_at(local_manifest)
+    release_generated_at, release_timestamp = _generated_at(release_manifest)
+    try:
+        local_is_newer = (
+            local_timestamp is not None
+            and release_timestamp is not None
+            and local_timestamp > release_timestamp
+        )
+    except TypeError:
+        local_is_newer = False
+
+    if local_entries > release_entries or local_is_newer:
+        raise ValueError(
+            f"refusing to hydrate {path}: local manifest has {local_entries} entries "
+            f"(generated_at={local_generated_at or '<missing>'}); release target has "
+            f"{release_entries} entries (generated_at={release_generated_at or '<missing>'}). "
+            "The local file looks like in-flight intake work. Publish it with make "
+            f"atlas-publish, or force the restore with {FORCE_HYDRATE_ENV}=1."
+        )
 
 
 def _write_atomic(path: Path, data: bytes) -> None:
@@ -167,6 +217,7 @@ def _hydrate(path: Path, pointer: dict[str, Any]) -> dict[str, Any]:
         )
 
     manifest = _decode_manifest(json_bytes, pointer["asset_url"])
+    _refuse_richer_local(path, manifest)
     _write_atomic(path, json_bytes)
     return manifest
 

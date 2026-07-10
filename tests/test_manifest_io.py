@@ -94,6 +94,118 @@ def test_load_manifest_fetches_decompresses_and_writes_when_absent(
     assert manifest_path.read_bytes() == json_bytes
 
 
+def test_load_manifest_refuses_to_clobber_richer_local_manifest(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    release_payload = {
+        "entries": [{"lemma": "слово"}],
+        "generated_at": "2026-07-05T17:13:27+00:00",
+    }
+    local_payload = {
+        "entries": [{"lemma": "слово"}, {"lemma": "вікно"}],
+        "generated_at": "2026-07-06T17:13:27+00:00",
+    }
+    json_bytes = _json_bytes(release_payload)
+    gz_bytes = gzip.compress(json_bytes)
+    manifest_path = tmp_path / "lexicon-manifest.json"
+    pointer_path = tmp_path / "lexicon-manifest.pointer.json"
+    local_bytes = _json_bytes(local_payload)
+    manifest_path.write_bytes(local_bytes)
+    _write_pointer(pointer_path, json_bytes=json_bytes, gz_bytes=gz_bytes)
+    _pin_defaults(monkeypatch, manifest_path, pointer_path)
+    monkeypatch.setattr(manifest_io.urllib.request, "urlopen", lambda *_args, **_kwargs: io.BytesIO(gz_bytes))
+
+    with pytest.raises(ValueError, match="refusing to hydrate") as excinfo:
+        manifest_io.load_manifest(path=manifest_path)
+
+    assert "2 entries" in str(excinfo.value)
+    assert "1 entries" in str(excinfo.value)
+    assert "2026-07-06T17:13:27+00:00" in str(excinfo.value)
+    assert "2026-07-05T17:13:27+00:00" in str(excinfo.value)
+    assert "ATLAS_MANIFEST_FORCE_HYDRATE=1" in str(excinfo.value)
+    assert manifest_path.read_bytes() == local_bytes
+
+
+def test_load_manifest_hydrates_stale_poorer_local_manifest(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    release_payload = {
+        "entries": [{"lemma": "слово"}, {"lemma": "вікно"}],
+        "generated_at": "2026-07-06T17:13:27+00:00",
+    }
+    local_payload = {
+        "entries": [{"lemma": "слово"}],
+        "generated_at": "2026-07-05T17:13:27+00:00",
+    }
+    json_bytes = _json_bytes(release_payload)
+    gz_bytes = gzip.compress(json_bytes)
+    manifest_path = tmp_path / "lexicon-manifest.json"
+    pointer_path = tmp_path / "lexicon-manifest.pointer.json"
+    manifest_path.write_bytes(_json_bytes(local_payload))
+    _write_pointer(pointer_path, json_bytes=json_bytes, gz_bytes=gz_bytes)
+    _pin_defaults(monkeypatch, manifest_path, pointer_path)
+    monkeypatch.setattr(manifest_io.urllib.request, "urlopen", lambda *_args, **_kwargs: io.BytesIO(gz_bytes))
+
+    assert manifest_io.load_manifest(path=manifest_path) == release_payload
+    assert manifest_path.read_bytes() == json_bytes
+
+
+def test_load_manifest_force_hydrates_richer_local_manifest(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    release_payload = {
+        "entries": [{"lemma": "слово"}],
+        "generated_at": "2026-07-05T17:13:27+00:00",
+    }
+    local_payload = {
+        "entries": [{"lemma": "слово"}, {"lemma": "вікно"}],
+        "generated_at": "2026-07-06T17:13:27+00:00",
+    }
+    json_bytes = _json_bytes(release_payload)
+    gz_bytes = gzip.compress(json_bytes)
+    manifest_path = tmp_path / "lexicon-manifest.json"
+    pointer_path = tmp_path / "lexicon-manifest.pointer.json"
+    manifest_path.write_bytes(_json_bytes(local_payload))
+    _write_pointer(pointer_path, json_bytes=json_bytes, gz_bytes=gz_bytes)
+    _pin_defaults(monkeypatch, manifest_path, pointer_path)
+    monkeypatch.setenv("ATLAS_MANIFEST_FORCE_HYDRATE", "1")
+    monkeypatch.setattr(manifest_io.urllib.request, "urlopen", lambda *_args, **_kwargs: io.BytesIO(gz_bytes))
+
+    assert manifest_io.load_manifest(path=manifest_path) == release_payload
+    assert manifest_path.read_bytes() == json_bytes
+
+
+def test_load_manifest_refuses_newer_local_manifest_with_equal_entry_count(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    release_payload = {
+        "entries": [{"lemma": "слово"}],
+        "generated_at": "2026-07-05T17:13:27+00:00",
+    }
+    local_payload = {
+        "entries": [{"lemma": "слово"}],
+        "generated_at": "2026-07-06T17:13:27+00:00",
+    }
+    json_bytes = _json_bytes(release_payload)
+    gz_bytes = gzip.compress(json_bytes)
+    manifest_path = tmp_path / "lexicon-manifest.json"
+    pointer_path = tmp_path / "lexicon-manifest.pointer.json"
+    local_bytes = _json_bytes(local_payload)
+    manifest_path.write_bytes(local_bytes)
+    _write_pointer(pointer_path, json_bytes=json_bytes, gz_bytes=gz_bytes)
+    _pin_defaults(monkeypatch, manifest_path, pointer_path)
+    monkeypatch.setattr(manifest_io.urllib.request, "urlopen", lambda *_args, **_kwargs: io.BytesIO(gz_bytes))
+
+    with pytest.raises(ValueError, match="refusing to hydrate"):
+        manifest_io.load_manifest(path=manifest_path)
+
+    assert manifest_path.read_bytes() == local_bytes
+
+
 def test_load_manifest_raises_on_gz_sha256_mismatch(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,

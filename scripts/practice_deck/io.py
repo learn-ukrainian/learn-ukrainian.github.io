@@ -32,6 +32,7 @@ REQUIRED_POINTER_KEYS = (
     "files",
 )
 DOWNLOAD_ATTEMPTS = 3
+FORCE_HYDRATE_ENV = "ATLAS_MANIFEST_FORCE_HYDRATE"
 ALLOWED_RELEASE_PATH_PREFIX = "/learn-ukrainian/learn-ukrainian.github.io/releases/download/"
 PRACTICE_DECK_BUILDER_VERSION = 4  # 3→4: #4691 rationaleUk passthrough into heritage deck items
 STALE_POINTER_HINT = (
@@ -241,6 +242,38 @@ def _already_hydrated(practice_dir: Path, pointer: dict[str, Any]) -> bool:
     return True
 
 
+def _refuse_richer_local(practice_dir: Path, pointer: dict[str, Any]) -> None:
+    if os.environ.get(FORCE_HYDRATE_ENV) == "1":
+        return
+
+    local_lexemes = 0
+    release_lexemes = 0
+    try:
+        for name, metadata in _pointer_file_map(pointer).items():
+            if metadata["kind"] != "index":
+                continue
+            release_count = metadata.get("counts", {}).get("lexemes")
+            local_count = _read_json(practice_dir / name).get("counts", {}).get("lexemes")
+            if (
+                not isinstance(release_count, int)
+                or isinstance(release_count, bool)
+                or not isinstance(local_count, int)
+                or isinstance(local_count, bool)
+            ):
+                return
+            release_lexemes += release_count
+            local_lexemes += local_count
+    except (OSError, ValueError):
+        return
+
+    if local_lexemes > release_lexemes:
+        raise PracticeDeckHydrationError(
+            f"refusing to overwrite local practice deck with {local_lexemes} lexemes using the "
+            f"published release with only {release_lexemes}. Publish it with make "
+            f"practice-deck-publish, or force the restore with {FORCE_HYDRATE_ENV}=1."
+        )
+
+
 def _package_files(package: dict[str, Any], pointer: dict[str, Any]) -> list[tuple[str, bytes]]:
     if package.get("schema") != "atlas-practice-deck-package":
         raise PracticeDeckHydrationError("practice deck package schema mismatch")
@@ -326,6 +359,7 @@ def ensure_practice_deck_hydrated(
         raise PracticeDeckHydrationError(f"gz size mismatch: expected {pointer['gz_bytes']}, got {len(gz_bytes)}")
     package_bytes = gzip.decompress(gz_bytes)
     files = _decode_package(package_bytes, pointer)
+    _refuse_richer_local(practice_dir, pointer)
     _write_files(practice_dir, files)
     return pointer
 
