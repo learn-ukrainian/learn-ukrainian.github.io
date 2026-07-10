@@ -344,3 +344,19 @@ cases:
     expected_reason: NON_AUTHORITATIVE_SUBSTITUTION
     proposed_substitution: "кочерга"
     annotation_status: SKELETON
+
+  # Design §6.7 rows AUTHENTIC_HERITAGE_DEFENSE × {A, N} → ACCEPT_FORM_ONLY:
+  # heritage evidence resolves ONLY the form-validity candidate; the containing
+  # LEXICAL_USE still requires contextual coverage (§6.7 line "resolves only a
+  # form-validity candidate"; §8.1). Added by committing reviewer — the enum
+  # value was missing from gateDecision, making these fusion cells
+  # unrepresentable.
+  - case_id: fusion-heritage-form-only
+    fixture_numbers: []
+    input_text: "кобіта"
+    expected_surface_roles: [UKRAINIAN_TARGET]
+    expected_detector_outcomes: [CANDIDATE]
+    expected_decision: ACCEPT_FORM_ONLY
+    expected_reason: HERITAGE_FORM_VALIDITY_ONLY
+    expected_lexical_use_coverage: OPEN
+    annotation_status: SKELETON

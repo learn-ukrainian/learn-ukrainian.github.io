@@ -276,7 +276,7 @@
       ]
     },
     "gateDecision": {
-      "enum": ["ACCEPT", "REJECT", "DEFER", "UNCOVERED", "AUDIT"]
+      "enum": ["ACCEPT", "ACCEPT_FORM_ONLY", "REJECT", "DEFER", "UNCOVERED", "AUDIT"]
     },
     "layerAReason": {
       "enum": [

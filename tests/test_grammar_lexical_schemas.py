@@ -364,6 +364,12 @@ def test_exposes_the_required_phase_zero_compatibility_registers() -> None:
     ]
     assert EVIDENCE_SCHEMA["$defs"]["gateDecision"]["enum"] == [
         "ACCEPT",
+        # Design §6.7: AUTHENTIC_HERITAGE_DEFENSE × {A, N} resolves ONLY the
+        # form-validity candidate; the containing LEXICAL_USE still requires
+        # contextual coverage (§8.1). Without this value those fusion cells
+        # are unrepresentable and implementations would round to ACCEPT
+        # (silently completing coverage) or AUDIT.
+        "ACCEPT_FORM_ONLY",
         "REJECT",
         "DEFER",
         "UNCOVERED",
