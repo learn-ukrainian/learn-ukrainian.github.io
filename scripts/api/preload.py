@@ -42,6 +42,8 @@ PRELOAD_MODULES = [
     "audit.check_self_symlinks",
     "scripts.build.phase_constants",
     "agent_runtime.adapters.gemini",
+    "research_quality",
+    "research.research_markdown_utils",
 ]
 
 # Heavy or optional dependencies (try/except ImportError, record skipped)
@@ -50,7 +52,6 @@ OPTIONAL_MODULES = [
     "fitz",
     "rag.poc_pair_page",
     "rag.query",
-    "research_quality",
     "ai_agent_bridge",
     "ai_agent_bridge._channels",
     "ai_agent_bridge._db",
@@ -62,12 +63,64 @@ DYNAMIC_LOADERS = {
     "scripts.api.runtime_router": {
         "description": "Loads agent runtime adapters dynamically from scripts/agent_runtime/adapters/",
         "strategy": "walk_adapters",
+        "calls": [
+            {"func": "import_module", "caller": "list_runtime_agents"}
+        ]
     },
     "scripts.api.comms_router": {
         "description": "Loads broker migration files dynamically using spec_from_file_location",
         "strategy": "load_migration",
+        "calls": [
+            {"func": "spec_from_file_location", "caller": "ensure_broker_db_ready"}
+        ]
     }
 }
+
+def _walk_adapters_strategy() -> tuple[int, int, list[str]]:
+    pinned = 0
+    skipped = 0
+    skipped_names = []
+    api_dir = Path(__file__).resolve().parent
+    adapters_dir = api_dir.parent / "agent_runtime" / "adapters"
+    if adapters_dir.exists():
+        for path in sorted(adapters_dir.glob("*.py")):
+            if path.stem in {"__init__", "base"} or path.stem.startswith("_"):
+                continue
+            module_name = f"agent_runtime.adapters.{path.stem}"
+            try:
+                importlib.import_module(module_name)
+                pinned += 1
+            except ImportError:
+                skipped += 1
+                skipped_names.append(module_name)
+    return pinned, skipped, skipped_names
+
+
+def _load_migration_strategy() -> tuple[int, int, list[str]]:
+    pinned = 0
+    skipped = 0
+    skipped_names = []
+    api_dir = Path(__file__).resolve().parent
+    migration_path = api_dir.parent / "migrations" / "2026-05-06-broker-indexes.py"
+    if migration_path.exists():
+        try:
+            from importlib import util as importlib_util
+            spec = importlib_util.spec_from_file_location("broker_indexes_20260506", migration_path)
+            if spec is not None and spec.loader is not None:
+                module = importlib_util.module_from_spec(spec)
+                spec.loader.exec_module(module)
+                pinned += 1
+        except Exception:
+            skipped += 1
+            skipped_names.append("broker_indexes_20260506")
+    return pinned, skipped, skipped_names
+
+
+STRATEGIES = {
+    "walk_adapters": _walk_adapters_strategy,
+    "load_migration": _load_migration_strategy,
+}
+
 
 def preload_all() -> None:
     """Preload all static and dynamic modules in the API import closure.
@@ -97,34 +150,17 @@ def preload_all() -> None:
             skipped_count += 1
             skipped_names.append(name)
 
-    # 3. Dynamic loaders: walk scripts/agent_runtime/adapters/
-    api_dir = Path(__file__).resolve().parent
-    adapters_dir = api_dir.parent / "agent_runtime" / "adapters"
-    if adapters_dir.exists():
-        for path in sorted(adapters_dir.glob("*.py")):
-            if path.stem in {"__init__", "base"} or path.stem.startswith("_"):
-                continue
-            module_name = f"agent_runtime.adapters.{path.stem}"
-            try:
-                importlib.import_module(module_name)
-                pinned_count += 1
-            except ImportError:
-                skipped_count += 1
-                skipped_names.append(module_name)
-
-    # 4. Cover comms_router's spec_from_file_location target file
-    migration_path = api_dir.parent / "migrations" / "2026-05-06-broker-indexes.py"
-    if migration_path.exists():
-        try:
-            from importlib import util as importlib_util
-            spec = importlib_util.spec_from_file_location("broker_indexes_20260506", migration_path)
-            if spec is not None and spec.loader is not None:
-                module = importlib_util.module_from_spec(spec)
-                spec.loader.exec_module(module)
-                pinned_count += 1
-        except Exception:
-            skipped_count += 1
-            skipped_names.append("broker_indexes_20260506")
+    # 3. Dynamic loaders: execute registered strategies
+    for mod_name, cfg in DYNAMIC_LOADERS.items():
+        strategy_name = cfg.get("strategy")
+        strategy_func = STRATEGIES.get(strategy_name)
+        if strategy_func:
+            pinned, skipped, names = strategy_func()
+            pinned_count += pinned
+            skipped_count += skipped
+            skipped_names.extend(names)
+        else:
+            logger.warning(f"Unknown dynamic preloader strategy '{strategy_name}' for module '{mod_name}'")
 
     elapsed_ms = (time.perf_counter() - start_time) * 1000
     log_msg = f"preload: {pinned_count} pinned, {skipped_count} optional-skipped, took {elapsed_ms:.1f} ms"

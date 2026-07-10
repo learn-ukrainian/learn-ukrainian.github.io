@@ -177,6 +177,15 @@ def test_crashloop_backoff(temp_services_sh):
     assert "potential crashloop" not in res_force.stdout
 
     # Clean up the started process if it actually launched
+    api_pid_file = PIDS_DIR / "api.pid"
+    if api_pid_file.exists():
+        try:
+            pid = int(api_pid_file.read_text(encoding="utf-8").strip())
+            import os
+            import signal
+            os.kill(pid, signal.SIGKILL)
+        except Exception:
+            pass
     subprocess.run([str(script_path), "stop", "api"], capture_output=True, cwd=str(PROJECT_ROOT))
 
 def test_log_rotation(temp_services_sh):
@@ -204,6 +213,17 @@ def test_log_rotation(temp_services_sh):
         assert rotated_file.stat().st_size == large_size
 
     finally:
+        # Clean up the started process if it actually launched
+        api_pid_file = PIDS_DIR / "api.pid"
+        if api_pid_file.exists():
+            try:
+                pid = int(api_pid_file.read_text(encoding="utf-8").strip())
+                import os
+                import signal
+                os.kill(pid, signal.SIGKILL)
+            except Exception:
+                pass
+        subprocess.run([str(script_path), "stop", "api"], capture_output=True, cwd=str(PROJECT_ROOT))
         # Restore original log
         if api_log_file.exists():
             api_log_file.unlink()
@@ -211,3 +231,80 @@ def test_log_rotation(temp_services_sh):
             (LOGS_DIR / "api.log.1").unlink()
         if len(orig_content) > 0:
             api_log_file.write_bytes(orig_content)
+
+
+def test_crashloop_backoff_clean_vs_crash(temp_services_sh):
+    """Verify stop-then-start within 60s does NOT trip backoff, but start-after-crash within 60s DOES."""
+    script_path, port = temp_services_sh
+    api_start_file = PIDS_DIR / "api.last_start"
+    api_pid_file = PIDS_DIR / "api.pid"
+
+    # Start a dummy listener process with the API signature configured for our dynamic port
+    dummy_code = (
+        f"import socket, time; "
+        f"s = socket.socket(); "
+        f"s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1); "
+        f"s.bind(('127.0.0.1', {port})); "
+        f"s.listen(1); "
+        f"time.sleep(30)"
+    )
+    proc = subprocess.Popen([
+        sys.executable, "-c", dummy_code,
+        "scripts.api.main:app", "--host", "0.0.0.0", "--port", str(port)
+    ])
+
+    try:
+        # Wait for dynamic port to bind
+        for _ in range(20):
+            if not is_port_free(port):
+                break
+            time.sleep(0.1)
+        assert not is_port_free(port), f"Dummy listener did not bind port {port}"
+
+        # Write the actual listener PID to the pid file to simulate a running state
+        api_pid_file.write_text(f"{proc.pid}\n", encoding="utf-8")
+
+        # Write a last start timestamp from 10 seconds ago
+        api_start_file.write_text(str(int(time.time()) - 10) + "\n", encoding="utf-8")
+
+        # Now run stop (operator-initiated clean stop). This should succeed, kill proc, and delete api.last_start.
+        res_stop = subprocess.run(
+            [str(script_path), "stop", "api"],
+            capture_output=True,
+            text=True,
+            cwd=str(PROJECT_ROOT)
+        )
+        assert res_stop.returncode == 0
+        assert not api_start_file.exists(), "last_start file was not deleted on clean stop"
+
+        # Now run start. Since api.last_start was deleted, it should NOT trigger backoff.
+        # It will try to start. We check that the output does NOT contain "potential crashloop" or "ERROR: api started less than 60s ago".
+        res_start = subprocess.run(
+            [str(script_path), "start", "api"],
+            capture_output=True,
+            text=True,
+            cwd=str(PROJECT_ROOT)
+        )
+        assert "potential crashloop" not in res_start.stderr
+        assert "potential crashloop" not in res_start.stdout
+        assert "ERROR: api started less than 60s ago" not in res_start.stderr
+        assert "ERROR: api started less than 60s ago" not in res_start.stdout
+
+    finally:
+        if proc.poll() is None:
+            proc.terminate()
+            proc.wait()
+        # Clean up any started background processes from the start command
+        subprocess.run([str(script_path), "stop", "api"], capture_output=True, cwd=str(PROJECT_ROOT))
+
+    # Case 2: Start-after-crash (no clean-stop marker) within 60s DOES trigger backoff.
+    api_start_file.write_text(str(int(time.time()) - 10) + "\n", encoding="utf-8")
+
+    res_crash_start = subprocess.run(
+        [str(script_path), "start", "api"],
+        capture_output=True,
+        text=True,
+        cwd=str(PROJECT_ROOT)
+    )
+    assert res_crash_start.returncode != 0
+    assert "potential crashloop" in res_crash_start.stderr or "potential crashloop" in res_crash_start.stdout

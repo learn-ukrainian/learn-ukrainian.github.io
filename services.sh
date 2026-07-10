@@ -312,17 +312,18 @@ _reconcile_api_pid() {
     # Find the actual listener PID using lsof -nP -iTCP:$port -sTCP:LISTEN
     local listener_pid=""
     if command -v lsof >/dev/null 2>&1; then
-        listener_pid=$(lsof -t -nP -iTCP:${SVC_PORT[api]} -sTCP:LISTEN 2>/dev/null | tr -d '[:space:]' || true)
+        while read -r lpid; do
+            if [[ -n "$lpid" ]]; then
+                if _pid_matches_service "$name" "$lpid"; then
+                    listener_pid="$lpid"
+                    break
+                fi
+            fi
+        done < <(lsof -t -nP -iTCP:${SVC_PORT[api]} -sTCP:LISTEN 2>/dev/null || true)
     fi
 
     # Mismatch check
     if [[ -n "$listener_pid" ]]; then
-        # Check if the listener matches SVC_MATCH
-        if ! _pid_matches_service "$name" "$listener_pid"; then
-            # The port is bound by a foreign process. Do not reconcile.
-            return 0
-        fi
-
         if [[ "$file_pid" != "$listener_pid" ]]; then
             if [[ -n "$file_pid" ]]; then
                 echo "  WARNING: pid file mismatch for $name (file: $file_pid, listener: $listener_pid); reconciling..." >&2
@@ -331,11 +332,10 @@ _reconcile_api_pid() {
             echo "$listener_pid" > "$pidfile"
         fi
     else
-        # No listener found on port. If the pid file has a pid, check if it's still running.
+        # No listener found on port. If the pid file has a pid, it is a mismatch (stopped/not listening)
         if [[ -n "$file_pid" ]]; then
-            if ! kill -0 "$file_pid" 2>/dev/null; then
-                rm -f "$pidfile"
-            fi
+            echo "  WARNING: pid file exists for $name (file: $file_pid) but no listener found on port; removing stale pid file..." >&2
+            rm -f "$pidfile"
         fi
     fi
 }
@@ -490,21 +490,37 @@ _stop_service() {
 
     if [[ "$name" == "api" ]]; then
         local is_valid=0
-        local listener_pid
-        listener_pid=$(lsof -t -nP -iTCP:${SVC_PORT[$name]} -sTCP:LISTEN 2>/dev/null || true)
+        local listener_pid=""
+        if command -v lsof >/dev/null 2>&1; then
+            while read -r lpid; do
+                if [[ -n "$lpid" ]]; then
+                    if _pid_matches_service "$name" "$lpid"; then
+                        listener_pid="$lpid"
+                        break
+                    fi
+                fi
+            done < <(lsof -t -nP -iTCP:${SVC_PORT[$name]} -sTCP:LISTEN 2>/dev/null || true)
+        fi
+
         if [[ -n "$listener_pid" && "$pid" == "$listener_pid" ]]; then
             is_valid=1
         fi
-        if _pid_matches_service "$name" "$pid"; then
-            is_valid=1
-        fi
-        local ppid
+
+        local ppid=""
         ppid=$(ps -o ppid= -p "$pid" 2>/dev/null | tr -d '[:space:]' || true)
         if [[ -n "$ppid" && -n "$listener_pid" && "$ppid" == "$listener_pid" ]]; then
             is_valid=1
         fi
+
         if [[ "$is_valid" -ne 1 ]]; then
-            echo "  ERROR: PID $pid is not verified as the listener or a child matching SVC_MATCH. Refusing to kill." >&2
+            echo "  ERROR: PID $pid is not verified as the listener or a direct child of the verified listener. Refusing to kill." >&2
+            if [[ -n "$listener_pid" ]]; then
+                echo "  Reconciling pid file to reflect reality (listener: $listener_pid)..." >&2
+                echo "$listener_pid" > "$pidfile"
+            else
+                echo "  Removing stale/invalid pid file..." >&2
+                rm -f "$pidfile"
+            fi
             return 1
         fi
     fi
@@ -551,6 +567,7 @@ _stop_service() {
         _astro_cleanup_cache
     fi
 
+    rm -f "$PIDS_DIR/${name}.last_start"
     echo "  $name stopped"
 }
 
