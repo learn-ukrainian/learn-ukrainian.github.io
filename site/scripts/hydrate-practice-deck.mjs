@@ -165,6 +165,37 @@ async function alreadyHydrated(pointer) {
   return true;
 }
 
+async function assertNotClobberingRicherLocal(pointer, localDir = practiceDir) {
+  if (process.env.ATLAS_MANIFEST_FORCE_HYDRATE === "1") return;
+
+  let localLexemeCount = 0;
+  let releaseLexemeCount = 0;
+  try {
+    for (const [name, metadata] of pointerFiles(pointer)) {
+      if (metadata.kind !== "index") continue;
+      const releaseCount = metadata.counts?.lexemes;
+      const local = JSON.parse(await readFile(resolve(localDir, name), "utf8"));
+      const localCount = local?.counts?.lexemes;
+      if (
+        !Number.isInteger(releaseCount) || releaseCount < 0 ||
+        !Number.isInteger(localCount) || localCount < 0
+      ) return;
+      releaseLexemeCount += releaseCount;
+      localLexemeCount += localCount;
+    }
+  } catch {
+    return; // missing or unreadable local shards may be replaced
+  }
+
+  if (localLexemeCount > releaseLexemeCount) {
+    throw new Error(
+      `refusing to overwrite local practice deck with ${localLexemeCount} lexemes using ` +
+        `the published release with only ${releaseLexemeCount}. Publish it with make ` +
+        `practice-deck-publish, or force the restore with ATLAS_MANIFEST_FORCE_HYDRATE=1.`,
+    );
+  }
+}
+
 function parsePackage(packageBytes, pointer) {
   if (packageBytes.length !== pointer.package_bytes) {
     throw new Error(`package size mismatch: expected ${pointer.package_bytes}, got ${packageBytes.length}`);
@@ -247,6 +278,7 @@ async function hydrate() {
   }
   const packageBytes = gunzipSync(gzBytes);
   const files = parsePackage(packageBytes, pointer);
+  await assertNotClobberingRicherLocal(pointer);
   await writeFiles(files);
   console.log(`✓ hydrated practice deck ${pointer.deck_version} from ${mb(gzBytes.length)} release asset`);
 }
@@ -258,4 +290,4 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
   });
 }
 
-export { assertAllowedDownloadUrl, downloadGzip, downloadUrl, parsePackage };
+export { assertAllowedDownloadUrl, assertNotClobberingRicherLocal, downloadGzip, downloadUrl, parsePackage };
