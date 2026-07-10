@@ -78,9 +78,10 @@ persona:
   role: Історик, що повертає Лободі власну суб'єктність — співпровідника з власною спільнотою й вибором, а не додаток до біографії Наливайка.
   voice: Critical-Historian
 phase: BIO
+readings_contract_version: 2
 readings:
-- title: Лобода Григорій
-  source: Енциклопедія історії України
+- title: ЛОБОДА ГРИГОРІЙ
+  source_name: Енциклопедія історії України
   source_url: http://history.org.ua/?termin=Loboda_G
   language: uk
   genre: encyclopedia
@@ -89,10 +90,14 @@ readings:
   cefr_min: C1
   license: copyright
   hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: http://history.org.ua/?termin=Loboda_G
+    note: Зовнішнє посилання; текст не відтворюється в курсі.
   learner_task: Відокремити біографічні факти Лободи від пізнішої Наливайкоцентричної пам'яті.
   caveats: Академічна стаття. Деконструює Наливайкоцентричну пам'ять і відновлює суб'єктність Лободи як командира антиосманських походів і «козацького присуду», а не просто «зрадника» чи «поміркованого».
-- title: Історія України-Руси, том 7, розділ IV
-  source: Ізборник
+- title: Том VII. Розділ IV. Стор. 5. Михайло Грушевський. Історія України-Руси.
+  source_name: Ізборник
   source_url: http://litopys.org.ua/hrushrus/iur70405.htm
   language: uk
   genre: historiography
@@ -100,7 +105,11 @@ readings:
   role: source-analysis
   cefr_min: C1
   license: public-domain
-  hosting: excerpt-only
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: http://litopys.org.ua/hrushrus/iur70405.htm
+    note: Зовнішнє посилання; текст не відтворюється в курсі.
   learner_task: Зіставити опис переговорів і смерті Лободи з ЕІУ, позначаючи, де історик працює з таборовими чутками та пізнішими оцінками.
   caveats: Грушевський є історіографічним джерелом початку XX ст.; читати як аргументовану реконструкцію, а не як безпосередній голос учасників Солоницького табору.
 references:
@@ -132,7 +141,7 @@ sequence: 21
 slug: hryhorii-loboda
 subtitle: 'Hryhorii Loboda: The Cossack Leader Executed by His Own Camp'
 title: 'Григорій Лобода: провідник, якого стратив власний табір'
-version: '4.3'
+version: '4.4'
 vocabulary_hints:
 - definition: командний прошарок козацького війська; козацька верхівка
   pos: ж.

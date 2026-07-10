@@ -78,9 +78,10 @@ persona:
   role: Модератор семінару, що аналізує Сагайдачного не як ікону, а як прагматичного політика в епоху криз
   voice: Realpolitik-Historian
 phase: BIO
+readings_contract_version: 2
 readings:
-- title: Конашевич-Сагайдачний Петро Кононович
-  source: Енциклопедія історії України
+- title: КОНАШЕВИЧ-САГАЙДАЧНИЙ ПЕТРО КОНОНОВИЧ
+  source_name: Енциклопедія історії України
   source_url: http://history.org.ua/?termin=Konashevich_Sagaidachny
   language: uk
   genre: encyclopedia
@@ -89,10 +90,14 @@ readings:
   cefr_min: C1
   license: copyright
   hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: http://history.org.ua/?termin=Konashevich_Sagaidachny
+    note: Зовнішнє посилання; текст не відтворюється в курсі.
   learner_task: Визначити, які дії Сагайдачного належать до військової, церковної та політичної стратегій.
   caveats: Академічна біографія. Аналізуючи походи (особливо на Москву) та угоди з урядом, важливо уникати як радянського таврування «найманцем», так і сучасного надмірного глорифікування, бачачи прагматичного державотворця.
-- title: Хотинська війна 1621
-  source: Енциклопедія історії України
+- title: ХОТИНСЬКА ВІЙНА 1621
+  source_name: Енциклопедія історії України
   source_url: http://history.org.ua/?termin=Khotynska_vijna_1621
   language: uk
   genre: encyclopedia
@@ -101,6 +106,10 @@ readings:
   cefr_min: C1
   license: copyright
   hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: http://history.org.ua/?termin=Khotynska_vijna_1621
+    note: Зовнішнє посилання; текст не відтворюється в курсі.
   learner_task: Пояснити, як участь козаків під Хотином змінює оцінку Сагайдачного як союзника Речі Посполитої і як українського політичного актора.
   caveats: Подієва стаття має доповнювати, а не замінювати аналіз козацьких інтересів; не перетворювати Сагайдачного на одновимірного «рятівника Європи».
 references:
@@ -121,7 +130,7 @@ sequence: 23
 slug: petro-sahaidachny
 subtitle: 'Petro Sahaidachny: The Statesman Hetman'
 title: 'Петро Сагайдачний: Гетьман-Державник'
-version: '4.2'
+version: '4.3'
 vocabulary_hints:
 - definition: офіційний список козаків, прийнятих на військову службу Речі Посполитої
   pos: ч.
