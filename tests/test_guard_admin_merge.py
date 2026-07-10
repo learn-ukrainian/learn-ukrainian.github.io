@@ -178,3 +178,7 @@ def test_glued_operator_admin_merge_detected(cmd):
 def test_heredoc_admin_mention_not_detected():
     cmd = "cat > /tmp/n.md <<'EOF'\nrun gh pr merge 5 --admin manually\nEOF"
     assert not _any_admin(cmd)
+
+
+def test_backslash_continuation_admin_detected():
+    assert _any_admin("gh pr merge 5 \\\n  --admin --squash")

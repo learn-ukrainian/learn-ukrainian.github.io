@@ -116,6 +116,13 @@ def _strip_heredoc_bodies(command: str) -> str:
     return "\n".join(kept)
 
 
+def _join_line_continuations(text: str) -> str:
+    r"""Fold `\<newline>` into one logical line, as the shell does — so a
+    `\`-continued `gh pr merge --admin` is not split across physical lines
+    and missed. Over-folding a quoted literal `\` only merges argv text."""
+    return text.replace("\\\n", "")
+
+
 def _segments(command: str) -> list[list[str]]:
     """Quote-aware argv segments, robust to glued shell operators (#4876).
 
@@ -123,10 +130,11 @@ def _segments(command: str) -> list[list[str]]:
     stays one argv element — no false block. A `; gh pr merge --admin` glued
     to a preceding token (`…'; gh pr merge --admin`) is now split into its
     own segment and inspected — no evasion. Heredoc bodies are stripped
-    (document text is not commands); each line parses separately.
+    (document text is not commands); `\\`-continuations are folded; each
+    logical line parses separately.
     """
     segs: list[list[str]] = []
-    for line in _strip_heredoc_bodies(command).splitlines():
+    for line in _join_line_continuations(_strip_heredoc_bodies(command)).splitlines():
         try:
             lexer = shlex.shlex(line, posix=True, punctuation_chars=True)
             lexer.whitespace_split = True

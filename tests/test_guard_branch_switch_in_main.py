@@ -197,3 +197,11 @@ def test_hardened_segments_no_false_positive(cmd):
 def test_heredoc_body_does_not_mask_following_command():
     cmd = "cat > /tmp/x.md <<'EOF'\nbody text\nEOF\ngit branch -D victim"
     assert _dangerous(cmd) is not None
+
+
+def test_backslash_line_continuation_still_inspected():
+    # `\`-continuation is ONE logical command; the folded line must still be
+    # scanned. Regression guard for the per-line refactor — the whole-command
+    # tokenizer this replaced folded continuations implicitly (#4876).
+    assert _dangerous("git branch -D victim \\\n  --force-ish") is not None
+    assert _dangerous("git status \\\n  && git branch -D victim") is not None

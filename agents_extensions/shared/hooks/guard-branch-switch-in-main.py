@@ -150,6 +150,19 @@ def _strip_heredoc_bodies(command: str) -> str:
     return "\n".join(kept)
 
 
+def _join_line_continuations(text: str) -> str:
+    r"""Fold `\<newline>` into a single logical line, as the shell does.
+
+    Without this, per-line parsing splits `git branch -D x \<newline>--extra`
+    into two physical lines; the first fails to tokenize (trailing escape)
+    and the dangerous verb rides through. The whole-command tokenizer this
+    replaced folded the continuation implicitly — preserve that. Over-folding
+    a literal `\` inside a quoted string can only merge argv text, never
+    create a false block (the guard matches specific verbs, not free text).
+    """
+    return text.replace("\\\n", "")
+
+
 def _segments(command: str) -> list[list[str]]:
     """Tokenize the command, split on shell command separators.
 
@@ -157,15 +170,16 @@ def _segments(command: str) -> list[list[str]]:
     the #4876 evasion class: `punctuation_chars` makes shlex emit operator
     runs (`;`, `|`, `&`, `(`, `)`, `<`, `>`) as their OWN tokens even when
     glued to a neighbour (`head -1; git …` no longer hides the `;` inside
-    the `-1;` token), each line is parsed separately (a newline separates
-    commands), and heredoc bodies are stripped first (document text must
-    not be parsed as commands). Quoting still collapses `git commit -m
-    "git checkout -b foo"` into a single argv element — no false block.
-    Default shlex comment handling drops `# …` trailers, matching shell
-    semantics: commented-out text can neither trigger nor hide a verb.
+    the `-1;` token), each logical line is parsed separately (a newline
+    separates commands; `\\`-continuations are folded first), and heredoc
+    bodies are stripped first (document text must not be parsed as
+    commands). Quoting still collapses `git commit -m "git checkout -b
+    foo"` into a single argv element — no false block. Default shlex
+    comment handling drops `# …` trailers, matching shell semantics:
+    commented-out text can neither trigger nor hide a verb.
     """
     segments: list[list[str]] = []
-    for line in _strip_heredoc_bodies(command).splitlines():
+    for line in _join_line_continuations(_strip_heredoc_bodies(command)).splitlines():
         try:
             lexer = shlex.shlex(line, posix=True, punctuation_chars=True)
             lexer.whitespace_split = True

@@ -100,15 +100,23 @@ def _strip_heredoc_bodies(command: str) -> str:
     return "\n".join(kept)
 
 
+def _join_line_continuations(text: str) -> str:
+    r"""Fold `\<newline>` into one logical line, as the shell does — so a
+    `\`-continued `git push` is not split across physical lines and missed.
+    Over-folding a quoted literal `\` only merges argv text."""
+    return text.replace("\\\n", "")
+
+
 def _segments(command: str) -> list[list[str]]:
     """Quote-aware argv segments, robust to glued shell operators (#4876).
 
     Operator runs (`;`, `|`, `&`, `(`, `)`, `<`, `>`) become their own
-    tokens even when glued to a neighbour, lines parse separately, and
-    heredoc bodies are stripped before parsing.
+    tokens even when glued to a neighbour, `\\`-continuations are folded,
+    logical lines parse separately, and heredoc bodies are stripped before
+    parsing.
     """
     segments: list[list[str]] = []
-    for line in _strip_heredoc_bodies(command).splitlines():
+    for line in _join_line_continuations(_strip_heredoc_bodies(command)).splitlines():
         try:
             lexer = shlex.shlex(line, posix=True, punctuation_chars=True)
             lexer.whitespace_split = True

@@ -161,3 +161,7 @@ def test_glued_operator_push_detected(cmd):
 def test_heredoc_push_mention_not_detected():
     cmd = "cat > /tmp/n.md <<'EOF'\nthen git push origin main\nEOF"
     assert not guard._contains_git_push(cmd)
+
+
+def test_backslash_continuation_push_detected():
+    assert guard._contains_git_push("git push \\\n  origin main")
