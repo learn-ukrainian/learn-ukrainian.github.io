@@ -250,3 +250,67 @@ def test_safe_join_rejects_a_symlink_escape(tmp_path: Path) -> None:
 
     with pytest.raises(ValueError, match="escapes"):
         safe_join(base, "escape", "secret.txt")
+
+
+def test_safe_join_allows_declared_live_data_and_preserves_logical_path(tmp_path: Path) -> None:
+    repo_root, sha = _create_snapshot_repo(tmp_path)
+    release_dir, _ = release_snapshot.build_release(repo_root, sha)
+
+    path = safe_join(release_dir, "curriculum", "l2-uk-en", "a1")
+
+    assert path == release_dir / "curriculum" / "l2-uk-en" / "a1"
+    assert path.resolve() == repo_root / "curriculum" / "l2-uk-en" / "a1"
+
+
+def test_safe_join_rejects_nested_undeclared_symlink_from_live_data(tmp_path: Path) -> None:
+    repo_root, sha = _create_snapshot_repo(tmp_path)
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    (repo_root / "curriculum" / "escape").symlink_to(outside, target_is_directory=True)
+    release_dir, _ = release_snapshot.build_release(repo_root, sha)
+
+    with pytest.raises(ValueError, match="escapes"):
+        safe_join(release_dir, "curriculum", "escape", "secret.txt")
+
+
+def test_safe_join_rejects_declared_live_data_parent_traversal(tmp_path: Path) -> None:
+    repo_root, sha = _create_snapshot_repo(tmp_path)
+    release_dir, _ = release_snapshot.build_release(repo_root, sha)
+
+    with pytest.raises(ValueError, match="Invalid path component"):
+        safe_join(release_dir, "curriculum", "..", "secret.txt")
+
+
+def test_pruning_rechecks_current_release_before_each_deletion(tmp_path: Path) -> None:
+    repo_root, _sha = _create_snapshot_repo(tmp_path)
+    releases_dir = release_snapshot.releases_root(repo_root)
+    releases_dir.mkdir(parents=True)
+    shas = [f"{index:040x}" for index in range(5)]
+    release_dirs = []
+    for index, sha in enumerate(shas):
+        path = releases_dir / sha
+        path.mkdir()
+        os.utime(path, ns=(index + 1, index + 1))
+        release_dirs.append(path)
+    current = releases_dir / "current"
+    current.symlink_to(shas[-1], target_is_directory=True)
+
+    calls = 0
+
+    def lsof_that_switches_current(*_args, **_kwargs) -> subprocess.CompletedProcess[str]:
+        nonlocal calls
+        calls += 1
+        # The fourth sorted release is the first old candidate. Changing
+        # current here verifies that prune reads it again before deleting.
+        if calls == 4:
+            current.unlink()
+            current.symlink_to(shas[1], target_is_directory=True)
+        return subprocess.CompletedProcess(args=["lsof"], returncode=0, stdout="", stderr="")
+
+    result = release_snapshot.prune_releases(repo_root, runner=lsof_that_switches_current)
+
+    assert calls == 5
+    assert release_dirs[1].exists(), "the freshly current release must not be deleted"
+    assert not release_dirs[0].exists()
+    assert shas[0] in result.removed
+    assert shas[1] not in result.removed

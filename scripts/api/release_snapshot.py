@@ -249,6 +249,11 @@ def build_release(
     ``before_publish`` exists for deterministic crash-boundary tests. A process
     killed at this point leaves only a staging directory; ``current`` still
     references the preceding release.
+
+    A crash after staging is renamed but before ``current`` is swapped can
+    leave an orphaned, complete release directory. It is safe: ``current``
+    still references the preceding release, and the next build for the same
+    SHA verifies, reuses, and publishes that complete directory.
     """
     repo_root = repo_root.resolve()
     sha = _validate_sha(sha)
@@ -340,33 +345,59 @@ def _live_release_shas(
     return live
 
 
+def _protected_release_shas(
+    releases_dir: Path,
+    *,
+    keep: int,
+    runner: Callable[..., subprocess.CompletedProcess[str]],
+) -> set[str] | None:
+    """Return the release SHAs protected at this instant, or ``None`` if unknown."""
+    releases = _release_directories(releases_dir)
+    live = _live_release_shas(releases_dir, runner=runner)
+    if live is None:
+        return None
+
+    protected = {path.name for path in releases[:keep]} | live
+    current_link = releases_dir / "current"
+    if current_link.is_symlink():
+        try:
+            current_relative = current_link.resolve().relative_to(releases_dir.resolve())
+        except (OSError, ValueError):
+            current_relative = Path()
+        if current_relative.parts and RELEASE_SHA_RE.fullmatch(current_relative.parts[0]):
+            protected.add(current_relative.parts[0])
+    return protected
+
+
 def prune_releases(
     repo_root: Path,
     *,
     keep: int = 3,
     runner: Callable[..., subprocess.CompletedProcess[str]] = subprocess.run,
 ) -> PruneResult:
-    """Remove only old, unowned releases while retaining the newest ``keep``."""
+    """Remove only old, unowned releases while retaining the newest ``keep``.
+
+    The current pointer and live process set are re-read immediately before
+    every deletion. This narrows the lsof TOCTOU window, but cannot remove it:
+    manual concurrent pruning or a process that changes cwd after the check can
+    still race deletion. ``services.sh`` stops the old API before starting the
+    replacement, which narrows the normal restart window further.
+    """
     if keep < 1:
         raise ValueError("keep must be at least one")
     directory = releases_root(repo_root)
     releases = _release_directories(directory)
-    live = _live_release_shas(directory, runner=runner)
-    if live is None:
-        return PruneResult((), tuple(path.name for path in releases), skipped=True, reason="lsof unavailable")
-
-    protected = set(path.name for path in releases[:keep]) | live
-    current_link = directory / "current"
-    if current_link.is_symlink():
-        try:
-            current_relative = current_link.resolve().relative_to(directory.resolve())
-        except (OSError, ValueError):
-            current_relative = Path()
-        if current_relative.parts and RELEASE_SHA_RE.fullmatch(current_relative.parts[0]):
-            protected.add(current_relative.parts[0])
 
     removed: list[str] = []
     for release in releases:
+        protected = _protected_release_shas(directory, keep=keep, runner=runner)
+        if protected is None:
+            return PruneResult(
+                removed=tuple(removed),
+                kept=tuple(path.name for path in _release_directories(directory)),
+                skipped=True,
+                reason="lsof unavailable",
+            )
         if release.name in protected:
             continue
         shutil.rmtree(release)

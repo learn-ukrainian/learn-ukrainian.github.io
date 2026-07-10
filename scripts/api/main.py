@@ -903,7 +903,7 @@ async def run_dispatcher_scan():
         "scan",
     ]
     # Use asyncio.to_thread to avoid blocking the event loop
-    result = await asyncio.to_thread(subprocess.run, cmd, cwd=PROJECT_ROOT)
+    result = await asyncio.to_thread(subprocess.run, cmd, cwd=LIVE_REPO_ROOT)
     if result.returncode != 0:
         raise HTTPException(status_code=500, detail="Dispatcher scan failed")
     return {"status": "ok"}
