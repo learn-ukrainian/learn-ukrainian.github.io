@@ -418,6 +418,96 @@ class TestWikipediaPreservation:
 
 
 # ──────────────────────────────────────────────────────────────────────
+# #4859 — build validation + failure-atomic forced rebuild
+# ──────────────────────────────────────────────────────────────────────
+
+
+class TestBuildValidation:
+    """Row-count + FTS integrity validation that must run BEFORE the
+    atomic swap (#4859 acceptance: "FTS + row-count validation runs
+    before swap")."""
+
+    def test_raises_on_row_count_mismatch(self, tmp_path):
+        db_path = tmp_path / "validate.db"
+        conn = sqlite3.connect(str(db_path))
+        conn.executescript(bs.SCHEMA)
+        conn.commit()
+        with pytest.raises(bs.BuildValidationError, match="textbooks"):
+            bs._validate_build(conn, {"textbooks": 5})
+        conn.close()
+
+    def test_passes_on_matching_empty_db(self, tmp_path):
+        db_path = tmp_path / "validate.db"
+        conn = sqlite3.connect(str(db_path))
+        conn.executescript(bs.SCHEMA)
+        conn.commit()
+        # Should not raise: 0 rows expected, 0 rows present, fresh FTS
+        # shadow tables are trivially consistent with empty content.
+        bs._validate_build(conn, {"textbooks": 0, "external_articles": 0})
+        conn.close()
+
+
+class TestForcedRebuildFailureAtomicity:
+    """#4859: any failure during a forced rebuild — including a
+    validation failure — must leave the pre-existing live DB untouched
+    and must not swap the temp file into place."""
+
+    def test_validation_failure_prevents_swap(self, tmp_path):
+        p = tmp_path / "populated.db"
+        _make_populated_db(p)
+        original_bytes = p.read_bytes()
+
+        empty_gd = tmp_path / "empty_gd"
+        (empty_gd / "textbook_chunks").mkdir(parents=True)
+        (empty_gd / "literary_texts").mkdir(parents=True)
+        empty_ext = tmp_path / "empty_ext"
+        empty_ext.mkdir()
+
+        def _boom(conn, expected_counts):
+            raise bs.BuildValidationError("synthetic validation failure for #4859 test")
+
+        with patch.object(bs, "_ingest_jsonl", return_value=0), \
+             patch.object(bs, "_validate_build", side_effect=_boom), \
+             patch.object(bs, "GDRIVE_DATA", empty_gd), \
+             patch.object(bs, "EXTERNAL_DIR", empty_ext):
+            with pytest.raises(bs.BuildValidationError):
+                bs.build(db_path=p, force=True)
+
+        # Live DB is byte-identical — the swap never happened.
+        assert p.read_bytes() == original_bytes
+
+        leftovers = list(tmp_path.glob(f".{p.name}.*"))
+        assert leftovers == [], f"temp build artifacts leaked: {leftovers}"
+
+    def test_ingest_failure_prevents_swap(self, tmp_path):
+        """A raise during ingestion (not just explicit validation) must
+        also leave the live DB untouched — atomicity covers the whole
+        build, not only the final validation call."""
+        p = tmp_path / "populated.db"
+        _make_populated_db(p)
+        original_bytes = p.read_bytes()
+
+        empty_gd = tmp_path / "empty_gd"
+        (empty_gd / "textbook_chunks").mkdir(parents=True)
+        (empty_gd / "literary_texts").mkdir(parents=True)
+        empty_ext = tmp_path / "empty_ext"
+        empty_ext.mkdir()
+
+        def _explode(*_args, **_kwargs):
+            raise ValueError("simulated malformed-JSONL failure mid-ingest")
+
+        with patch.object(bs, "_ingest_jsonl", side_effect=_explode), \
+             patch.object(bs, "GDRIVE_DATA", empty_gd), \
+             patch.object(bs, "EXTERNAL_DIR", empty_ext):
+            with pytest.raises(ValueError, match="simulated malformed-JSONL"):
+                bs.build(db_path=p, force=True)
+
+        assert p.read_bytes() == original_bytes
+        leftovers = list(tmp_path.glob(f".{p.name}.*"))
+        assert leftovers == [], f"temp build artifacts leaked: {leftovers}"
+
+
+# ──────────────────────────────────────────────────────────────────────
 # CLI argument parsing
 # ──────────────────────────────────────────────────────────────────────
 
