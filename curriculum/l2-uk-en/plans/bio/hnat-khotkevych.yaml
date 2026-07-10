@@ -82,7 +82,7 @@ phase: BIO.3
 readings:
 - title: "Хоткевич Гнат Мартинович"
   source: "Енциклопедія історії України (ЕІУ)"
-  url: "http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Khotkevych_H"
+  url: "https://www.history.org.ua/?termin=Khotkevych_H"
   language: uk
   type: article
   role: "Детальна історична довідка про різнобічного генія та його трагічну долю."
@@ -99,7 +99,7 @@ readings:
 references:
 - title: Hnat Khotkevych
   note: Compiled from primary sources and academic articles on Khotkevych's life, bandura revival, and the Executed Renaissance
-  path: wiki/bio/hnat-khotkevych.md
+  path: wiki/figures/hnat-khotkevych.md
   type: wiki
 - title: Хоткевич Гнат Мартинович
   author: Wikipedia
@@ -117,7 +117,7 @@ sequence: 100
 slug: hnat-khotkevych
 subtitle: 'Hnat Khotkevych: The One-Man Orchestra Silenced by the Executed Renaissance'
 title: 'Гнат Хоткевич: Людина-оркестр'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: музикант, що грає на бандурі
   pos: ч.
@@ -147,3 +147,14 @@ vocabulary_hints:
   pos: ж.
   word: методика
 word_target: 5200
+portrait_fallback:
+  type: "book-cover"
+  url: "https://commons.wikimedia.org/wiki/File:Хоткевич_Г._Твори._Т._4_(1929).djvu"
+  license: "PD-old-80-expired"
+  attribution: "Hnat Khotkevych, Works, volume IV (1929), ELIB NLU / Wikimedia Commons"
+  caption_uk: "Четвертий том творів Гната Хоткевича, 1929"
+  caption_en: "Hnat Khotkevych, Works, volume IV, 1929"
+  reason: >-
+    A public-domain NLU scan provides a fully documented visual anchor without
+    relying on a portrait with an incomplete source chain.
+  verified_on: "2026-07-10"

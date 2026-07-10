@@ -83,13 +83,13 @@ phase: BIO.2
 references:
 - title: Hryhoriy Skovoroda
   note: Compiled from Ушкалов, Чижевський, Попович — core biography, philosophical analysis
-  path: wiki/bio/hryhoriy-skovoroda.md
+  path: wiki/figures/hryhoriy-skovoroda.md
   type: wiki
 - title: Повне зібрання творів
   author: Григорій Сковорода
   note: Обов'язково для аналізу першоджерел — "Байки Харківські", "Сад божественних пісень", філософські діалоги.
   type: primary
-  url: http://izbornyk.org.ua/skovoroda/skovor.htm
+  url: https://izbornyk.org.ua/skovoroda/skovor.htm
   work: Повне зібрання творів
 - title: 'Ловитва невловного птаха: життя Григорія Сковороди'
   author: Леонід Ушкалов
@@ -104,14 +104,14 @@ references:
 readings:
 - title: "Григорій Сковорода: Біографія"
   source_name: "Енциклопедія історії України (ЕІУ)"
-  source_url: "http://resource.history.org.ua/cgi-bin/eiu/history.exe?Z21ID=&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Skovoroda_H"
+  source_url: "https://www.history.org.ua/?termin=Skovoroda_H"
   language: uk
   type: article
   hosting: link-only
   note: "Comprehensive academic overview of Skovoroda's life and philosophy. Highly reliable source for advanced learners."
 - title: "Твори Григорія Сковороди"
   source_name: "Ізборник"
-  source_url: "http://izbornyk.org.ua/skovoroda/skovor.htm"
+  source_url: "https://izbornyk.org.ua/skovoroda/skovor.htm"
   language: uk
   type: primary_source
   hosting: excerpt-only
@@ -120,7 +120,7 @@ sequence: 55
 slug: hryhoriy-skovoroda
 subtitle: 'Hryhoriy Skovoroda: The Wandering Philosopher'
 title: 'Григорій Сковорода: Мандрівний філософ'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: діяльність, що відповідає природним нахилам та покликанню людини; ключове поняття в філософії Сковороди
   pos: ж.
@@ -147,3 +147,10 @@ vocabulary_hints:
   pos: ж.
   word: епітафія
 word_target: 5200
+portrait:
+  url: "https://commons.wikimedia.org/wiki/File:Hryhoriy_Skovoroda.jpg"
+  license: "PD-old-100"
+  attribution: "Anonymous eighteenth-century artist / Wikimedia Commons"
+  caption_uk: "Григорій Сковорода, портрет невідомого автора XVIII століття"
+  caption_en: "Hryhorii Skovoroda, anonymous eighteenth-century portrait"
+  verified_on: "2026-07-10"

@@ -3,6 +3,208 @@
 # Absence is deliberately reported as unknown; do not copy structural checks here.
 version: 1
 entries:
+  borys-hrinchenko:
+    dossier_grounding:
+      status: pass
+      reviewer_family: claude
+      date: 2026-07-10
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4930446932
+    wiki_grounding:
+      status: fail
+      reviewer_family: claude
+      date: 2026-07-10
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4930446932
+    wiki_quote_verification:
+      status: fail
+      reviewer_family: claude
+      date: 2026-07-10
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4930446932
+    image_rights:
+      status: fail
+      reviewer_family: claude
+      date: 2026-07-10
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4930446932
+      disposition: not-approved
+    cohort_promotion:
+      status: fail
+      reviewer_family: claude
+      date: 2026-07-10
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4930446932
+  hnat-khotkevych:
+    dossier_grounding:
+      status: pass
+      reviewer_family: mixed
+      date: 2026-07-10
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4930446932
+    reading_rights:
+      status: pass
+      reviewer_family: mixed
+      date: 2026-07-10
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4930446932
+      disposition: link-only-approved
+    wiki_grounding:
+      status: pass
+      reviewer_family: mixed
+      date: 2026-07-10
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4930446932
+    wiki_quote_verification:
+      status: pass
+      reviewer_family: mixed
+      date: 2026-07-10
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4930446932
+    image_rights:
+      status: pass
+      reviewer_family: mixed
+      date: 2026-07-10
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4930446932
+      disposition: approved
+    cohort_promotion:
+      status: pass
+      reviewer_family: mixed
+      date: 2026-07-10
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4930446932
+  hryhoriy-skovoroda:
+    dossier_grounding:
+      status: pass
+      reviewer_family: mixed
+      date: 2026-07-10
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4930446932
+    reading_rights:
+      status: pass
+      reviewer_family: mixed
+      date: 2026-07-10
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4930446932
+      disposition: approved
+    wiki_grounding:
+      status: pass
+      reviewer_family: mixed
+      date: 2026-07-10
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4930446932
+    wiki_quote_verification:
+      status: pass
+      reviewer_family: mixed
+      date: 2026-07-10
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4930446932
+    image_rights:
+      status: pass
+      reviewer_family: mixed
+      date: 2026-07-10
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4930446932
+      disposition: approved
+    cohort_promotion:
+      status: pass
+      reviewer_family: mixed
+      date: 2026-07-10
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4930446932
+  ivan-franko:
+    dossier_grounding:
+      status: pass
+      reviewer_family: deepseek
+      date: 2026-07-10
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4930446932
+    reading_rights:
+      status: pass
+      reviewer_family: deepseek
+      date: 2026-07-10
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4930446932
+      disposition: link-only-approved
+    wiki_grounding:
+      status: fail
+      reviewer_family: deepseek
+      date: 2026-07-10
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4930446932
+    wiki_quote_verification:
+      status: fail
+      reviewer_family: deepseek
+      date: 2026-07-10
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4930446932
+    image_rights:
+      status: fail
+      reviewer_family: deepseek
+      date: 2026-07-10
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4930446932
+      disposition: not-approved
+    cohort_promotion:
+      status: fail
+      reviewer_family: deepseek
+      date: 2026-07-10
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4930446932
+  ivan-nechuy-levytskyi:
+    dossier_grounding:
+      status: pass
+      reviewer_family: mixed
+      date: 2026-07-10
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4930446932
+    reading_rights:
+      status: pass
+      reviewer_family: mixed
+      date: 2026-07-10
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4930446932
+      disposition: link-only-approved
+    wiki_grounding:
+      status: pass
+      reviewer_family: mixed
+      date: 2026-07-10
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4930446932
+    wiki_quote_verification:
+      status: pass
+      reviewer_family: mixed
+      date: 2026-07-10
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4930446932
+    image_rights:
+      status: pass
+      reviewer_family: mixed
+      date: 2026-07-10
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4930446932
+      disposition: approved
+    cohort_promotion:
+      status: pass
+      reviewer_family: mixed
+      date: 2026-07-10
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4930446932
+  lesya-ukrainka:
+    dossier_grounding:
+      status: pass
+      reviewer_family: mixed
+      date: 2026-07-10
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4930446932
+    reading_rights:
+      status: pass
+      reviewer_family: mixed
+      date: 2026-07-10
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4930446932
+      disposition: link-only-approved
+    wiki_grounding:
+      status: pass
+      reviewer_family: mixed
+      date: 2026-07-10
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4930446932
+    wiki_quote_verification:
+      status: pass
+      reviewer_family: mixed
+      date: 2026-07-10
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4930446932
+    image_rights:
+      status: pass
+      reviewer_family: mixed
+      date: 2026-07-10
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4930446932
+      disposition: approved
+    cohort_promotion:
+      status: pass
+      reviewer_family: mixed
+      date: 2026-07-10
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4930446932
+  mykhailo-kotsiubynsky:
+    hold:
+      status: pass
+      reviewer_family: mixed
+      date: 2026-07-09
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4835#issuecomment-4929627391
+      active: true
+      reason: >-
+        Source, discovery, wiki, quotation, factual-framing, and image-rights
+        evidence remains unreliable; promotion requires an explicit fresh review.
   andrii-malyshko:
     corpus_hammer:
       status: pass

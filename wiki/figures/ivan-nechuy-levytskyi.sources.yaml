@@ -1,61 +1,56 @@
-# Source registry for wiki/figures/ivan-nechuy-levytskyi.md
-# Referenced inline as [S1], [S2], ...
+---
+# Reviewed source registry; inline citations resolve by stable source id.
 sources:
 - id: S1
-  file: ukrainian_wiki/ivan-nechuy-levytskyi_Біографія-Іван-Нечуй-Левицький-Майстер-українського-реалізму-Короткий-зміст
-  type: ukrainian_wiki
-  title: 'Біографія: Іван Нечуй-Левицький: Майстер українського реалізму'
-  section_path: 'Біографія: Іван Нечуй-Левицький: Майстер українського реалізму >
-    Короткий зміст'
+  file: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CN%5CE%5CNechui6LevytskyIvan.htm
+  type: external
+  title: Nechui-Levytsky, Ivan — Internet Encyclopedia of Ukraine
+  url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CN%5CE%5CNechui6LevytskyIvan.htm
 - id: S2
-  file: ukrainian_wiki/ivan-nechuy-levytskyi_Біографія-Іван-Нечуй-Левицький-Майстер-українського-реалізму-Основний-зміст-Естетика-реалізму-формування-українського-роману
-  type: ukrainian_wiki
-  title: 'Біографія: Іван Нечуй-Левицький: Майстер українського реалізму'
-  section_path: 'Біографія: Іван Нечуй-Левицький: Майстер українського реалізму >
-    Основний зміст > Естетика реалізму: формування українського роману'
+  file: 10-klas-ukrlit-borzenko-2018-prof_s0385
+  type: textbook
+  title: Іван Нечуй-Левицький — життєвий і творчий шлях
+  page: 21
+  grade: 10
 - id: S3
-  file: ukrainian_wiki/ivan-nechuy-levytskyi_Біографія-Іван-Нечуй-Левицький-Майстер-українського-реалізму-Деколонізаційна-перспектива
-  type: ukrainian_wiki
-  title: 'Біографія: Іван Нечуй-Левицький: Майстер українського реалізму'
-  section_path: 'Біографія: Іван Нечуй-Левицький: Майстер українського реалізму >
-    Деколонізаційна перспектива'
+  file: 3f83f2d8_c0000
+  type: literary
+  title: Кайдашева сім'я
+  author: Нечуй-Левицький І.
 - id: S4
   file: 10-klas-ukrlit-borzenko-2018-prof_s0387
   type: textbook
-  title: Іван Нечуй-Левицький. Повість «Кайдашева сім’я»  25
+  title: Іван Нечуй-Левицький. Повість «Кайдашева сім’я»
   page: 25
   grade: 10
 - id: S5
-  file: ukrainian_wiki/language-of-realism_Українська-література-Мова-Реалізму-Стиль-Нечуя-Левицького-Основний-зміст-Дискусія-про-єдину-літературну-мову-та-опір-огаличаненню
-  type: ukrainian_wiki
-  title: 'Українська література: Мова Реалізму: Стиль Нечуя-Левицького'
-  section_path: 'Українська література: Мова Реалізму: Стиль Нечуя-Левицького > Основний
-    зміст > Дискусія про єдину літературну мову та опір «огаличаненню»'
+  file: wave9-ohiyenko-ist-lit-movy_c0203
+  type: literary
+  title: Огієнко — Історія української літературної мови
+  author: Огієнко І.
 - id: S6
-  file: ukrainian_wiki/language-of-realism_Українська-література-Мова-Реалізму-Стиль-Нечуя-Левицького-Основний-зміст-Естетика-народництва-та-мова-сільської-баби
-  type: ukrainian_wiki
-  title: 'Українська література: Мова Реалізму: Стиль Нечуя-Левицького'
-  section_path: 'Українська література: Мова Реалізму: Стиль Нечуя-Левицького > Основний
-    зміст > Естетика народництва та мова «сільської баби»'
+  file: wave9-rusanivsky-ist-lit-movy_c0368
+  type: literary
+  title: Русанівський — Історія української літературної мови
+  author: Русанівський В.
 - id: S7
   file: wave9-ohiyenko-ist-lit-movy_c0203
   type: literary
-  title: Огієнко — Історія української літературної мови (1949)
+  title: Огієнко — Історія української літературної мови
   author: Огієнко І.
 - id: S8
-  file: ukrainian_wiki/ivan-nechuy-levytskyi_Біографія-Іван-Нечуй-Левицький-Майстер-українського-реалізму-Основний-зміст-Мовознавча-публіцистична-та-наукова-візія
-  type: ukrainian_wiki
-  title: 'Біографія: Іван Нечуй-Левицький: Майстер українського реалізму'
-  section_path: 'Біографія: Іван Нечуй-Левицький: Майстер українського реалізму >
-    Основний зміст > Мовознавча, публіцистична та наукова візія'
+  file: https://vue.gov.ua/Нечуй-Левицький,_Іван_Семенович
+  type: external
+  title: Нечуй-Левицький Іван Семенович — Велика українська енциклопедія
+  url: https://vue.gov.ua/Нечуй-Левицький,_Іван_Семенович
 - id: S9
   file: 10-klas-ukrlit-borzenko-2018-prof_s0385
   type: textbook
-  title: Він заявив про себе як талановитий майстер реалістичної прози. Осно
+  title: Іван Нечуй-Левицький — життєвий і творчий шлях
   page: 21
   grade: 10
 - id: S10
   file: wave9-rusanivsky-ist-lit-movy_c0368
   type: literary
-  title: Русанівський — Історія укр. літ. мови
+  title: Русанівський — Історія української літературної мови
   author: Русанівський В.
