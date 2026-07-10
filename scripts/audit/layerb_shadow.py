@@ -248,41 +248,130 @@ def normalize_seat_key(seat_arm: Any) -> tuple[str, Mapping[str, Any]]:
     return f"seat-{_sha256_text(_canonical_json(metadata))[:16]}", metadata
 
 
-def _family(value: Any) -> str | None:
-    if not isinstance(value, str):
-        return None
-    normalized = value.strip().casefold()
-    return normalized or None
+_LINEAGE_METADATA_FIELDS = (
+    "family",
+    "vendor",
+    "provider",
+    "pin",
+    "pin_slug",
+    "resolved_model",
+    "model",
+    "model_id",
+    "reviewer_model_id",
+    "writer_model_id",
+)
 
 
-def _first_family(*values: Any) -> str | None:
+def normalize_lineage_family(metadata: Any) -> str | None:
+    """Map seat/pin metadata to a conservative Layer-B lineage family.
+
+    This intentionally differs from the live-reviewer dispatcher's broader
+    routing labels.  Layer B needs one stable equality domain: Google includes
+    Gemma and Gemini; GPT includes OpenAI and Codex; and Grok and Cursor share
+    one fleet-accounting family.  Values outside that domain are not guessed.
+    """
+
+    candidates: set[str] = set()
+
+    def add_text(value: str) -> None:
+        text = value.strip().casefold()
+        if not text:
+            return
+        if re.search(r"(?:^|[^a-z0-9])(google|gemma|gemini)(?:$|[^a-z0-9])", text):
+            candidates.add("google")
+        if re.search(r"(?:^|[^a-z0-9])deepseek(?:$|[^a-z0-9])", text):
+            candidates.add("deepseek")
+        if re.search(r"(?:^|[^a-z0-9])(openai|codex|gpt)(?:$|[^a-z0-9])", text):
+            candidates.add("gpt")
+        if re.search(r"(?:^|[^a-z0-9])(anthropic|claude)(?:$|[^a-z0-9])", text):
+            candidates.add("claude")
+        if re.search(r"(?:^|[^a-z0-9])(grok|cursor|xai)(?:$|[^a-z0-9])", text):
+            candidates.add("grok-cursor")
+
+    def visit(value: Any) -> None:
+        if isinstance(value, str):
+            add_text(value)
+        elif isinstance(value, Mapping):
+            for field in _LINEAGE_METADATA_FIELDS:
+                if field in value:
+                    visit(value[field])
+
+    visit(metadata)
+    return next(iter(candidates)) if len(candidates) == 1 else None
+
+
+def _first_present(*values: Any) -> Any | None:
     for value in values:
-        family = _family(value)
-        if family is not None:
-            return family
+        if isinstance(value, str) and value.strip():
+            return value
+        if isinstance(value, Mapping) and value:
+            return value
     return None
 
 
 def _extract_lineages(
-    artifact: Mapping[str, Any], fact_check: Mapping[str, Any], grounding: Mapping[str, Any]
+    artifact: Mapping[str, Any],
+    fact_check: Mapping[str, Any],
+    grounding: Mapping[str, Any],
 ) -> tuple[str | None, str | None]:
-    """Use only explicitly captured lineages; missing lineage is not inferred."""
+    """Materialize normalized writer and QG-reviewer lineage without mutation.
+
+    Writer lineage never derives from a QG-reviewer seat, arm, model, or
+    artifact filename: those fields identify the reviewer under test, not the
+    model that wrote the content being evaluated.  A recorded writer-specific
+    field is authoritative.  Otherwise, a mapping-valued ``fixture`` marks
+    synthetic or ``source_module_dir`` fixture content, whose manifest records
+    no model writer; its writer family is the non-model sentinel ``fixture``.
+    The sentinel excludes no judge family because the third-family constraint
+    protects against model self-preference, which human/synthetic fixtures do
+    not have.  A non-fixture artifact without an explicit writer remains
+    unknown and fails closed.
+    """
+
     payload = artifact.get("payload") if isinstance(artifact.get("payload"), Mapping) else {}
     dispatch = artifact.get("dispatch") if isinstance(artifact.get("dispatch"), Mapping) else {}
-    model = artifact.get("model") if isinstance(artifact.get("model"), Mapping) else {}
-    writer_family = _first_family(
+    model = artifact.get("model")
+    if not isinstance(model, (Mapping, str)):
+        model = {}
+
+    explicit_writer = _first_present(
         grounding.get("writer_family"),
         fact_check.get("writer_family"),
         artifact.get("writer_family"),
         payload.get("writer_family"),
     )
-    qg_reviewer_family = _first_family(
+    writer_metadata = _first_present(
+        grounding.get("writer_seat"),
+        fact_check.get("writer_seat"),
+        artifact.get("writer_seat"),
+        grounding.get("writer"),
+        fact_check.get("writer"),
+        artifact.get("writer"),
+    )
+    writer_source = _first_present(explicit_writer, writer_metadata)
+    writer_family = normalize_lineage_family(writer_source) if writer_source is not None else None
+    if writer_source is None and isinstance(artifact.get("fixture"), Mapping):
+        writer_family = "fixture"
+
+    reviewer_metadata = _first_present(
+        dispatch.get("reviewer_family"),
+        dispatch.get("reviewer_model_id"),
         grounding.get("qg_reviewer_family"),
         fact_check.get("qg_reviewer_family"),
+        artifact.get("qg_reviewer_family"),
         payload.get("qg_reviewer_family"),
-        dispatch.get("reviewer_family"),
-        model.get("family"),
+        grounding.get("qg_reviewer_seat"),
+        fact_check.get("qg_reviewer_seat"),
+        artifact.get("qg_reviewer_seat"),
+        payload.get("qg_reviewer_seat"),
+        grounding.get("qg_reviewer"),
+        fact_check.get("qg_reviewer"),
+        artifact.get("qg_reviewer"),
+        payload.get("qg_reviewer"),
+        artifact.get("reviewer"),
+        model,
     )
+    qg_reviewer_family = normalize_lineage_family(reviewer_metadata)
     return writer_family, qg_reviewer_family
 
 
@@ -555,8 +644,17 @@ def _select_route(
 ) -> JudgeRoute | None:
     if writer_family is None or reviewer_family is None:
         return None
-    excluded = {writer_family, reviewer_family}
-    return next((route for route in routes if route.qualified and _family(route.family) not in excluded), None)
+    excluded = {family for family in (writer_family, reviewer_family) if family != "fixture"}
+    return next(
+        (
+            route
+            for route in routes
+            if route.qualified
+            and (route_family := normalize_lineage_family(route.family)) is not None
+            and route_family not in excluded
+        ),
+        None,
+    )
 
 
 def _load_labels(path: Path | None) -> tuple[Mapping[str, Any], dict[str, Any]]:
@@ -850,6 +948,7 @@ class ShadowRunner:
         reviewer_verdict = str(fact_check.get("reviewer_verdict") or fact_check.get("verdict") or "UNKNOWN")
         key = _stable_grounding_key(path, fact_index, fact_check)
         label = self.labels.get(key) or self.labels.get(str(fact_check.get("fact_check_id") or ""))
+        writer_family, reviewer_family = _extract_lineages(artifact, fact_check, grounding)
         record: dict[str, Any] = {
             "grounding_key": key,
             "artifact": path.name,
@@ -864,6 +963,7 @@ class ShadowRunner:
             "candidate_details": [],
             "aggregate_relation": None,
             "final_decision": None,
+            "lineage": {"writer_family": writer_family, "qg_reviewer_family": reviewer_family},
             "labels": {
                 "present": isinstance(label, Mapping),
                 "outcome_only": not isinstance(label, Mapping),
@@ -938,8 +1038,6 @@ class ShadowRunner:
                 )
             return record
         record["b1"] = "ELIGIBLE"
-        writer_family, reviewer_family = _extract_lineages(artifact, fact_check, grounding)
-        record["lineage"] = {"writer_family": writer_family, "qg_reviewer_family": reviewer_family}
         event_index = _build_event_index(events)
         details = [
             self._route_candidate(
@@ -1162,16 +1260,39 @@ class ShadowRunner:
         _atomic_write_json(self.audit_dir / f"{stem}.json", report)
         (self.audit_dir / f"{stem}.md").write_text(_markdown_report(report), encoding="utf-8")
 
-    def run(self, *, resume: bool = False) -> dict[str, Any]:
+    def _artifacts_and_groundings(
+        self,
+    ) -> tuple[list[tuple[Path, Mapping[str, Any]]], list[tuple[Path, Mapping[str, Any], int, Mapping[str, Any]]]]:
         artifacts = _read_artifacts(self.artifacts_dir)
         if not artifacts:
             raise ValueError(f"No qg_bakeoff_run.* artifact JSON files in {self.artifacts_dir}")
-        all_groundings = [
+        groundings = [
             (path, artifact, index, fact_check)
             for path, artifact in artifacts
             for index, fact_check in enumerate(_artifact_fact_checks(artifact))
             if isinstance(fact_check, Mapping) and isinstance(fact_check.get("grounding"), Mapping)
         ]
+        return artifacts, groundings
+
+    def validate_judged_replay_lineage(self) -> None:
+        """Reject live judged replay unless every stored grounding has both lineages."""
+
+        _artifacts, groundings = self._artifacts_and_groundings()
+        unresolved_by_artifact: Counter[str] = Counter()
+        for path, artifact, _index, fact_check in groundings:
+            grounding = fact_check["grounding"]
+            writer_family, reviewer_family = _extract_lineages(artifact, fact_check, grounding)
+            if writer_family is None or reviewer_family is None:
+                unresolved_by_artifact[path.name] += 1
+        if unresolved_by_artifact:
+            details = ", ".join(f"{artifact}={count}" for artifact, count in sorted(unresolved_by_artifact.items()))
+            raise ValueError(
+                "judged replay requires known writer and qg reviewer lineage; "
+                f"unresolved grounding rows by artifact: {details}"
+            )
+
+    def run(self, *, resume: bool = False) -> dict[str, Any]:
+        artifacts, all_groundings = self._artifacts_and_groundings()
         input_identity = _artifact_input_identity(artifacts)
         state = self._load_state(input_identity, resume)
         processed = state.setdefault("processed", {})
@@ -1283,6 +1404,8 @@ def main(argv: Sequence[str] | None = None) -> int:
             dry_run=args.dry_run,
             baseline_path=args.baseline,
         )
+        if args.judge_command is not None:
+            runner.validate_judged_replay_lineage()
         previous_handlers = {
             kind: signal.signal(kind, lambda _signum, _frame: (_ for _ in ()).throw(KeyboardInterrupt()))
             for kind in (signal.SIGINT, signal.SIGTERM)

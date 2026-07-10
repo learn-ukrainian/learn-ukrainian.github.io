@@ -1,6 +1,8 @@
 from __future__ import annotations
 
 import json
+import subprocess
+from collections import Counter
 from dataclasses import replace
 from pathlib import Path
 from typing import Any
@@ -14,11 +16,17 @@ from scripts.audit.layerb_shadow import (
     JudgeRoute,
     ShadowRunner,
     _aggregate_relations,
+    _artifact_fact_checks,
     _build_event_index,
+    _extract_lineages,
     _judge_window,
+    _read_artifacts,
+    _select_route,
     _serialize_untrusted_window,
     _validate_judge_response,
     final_decision,
+    main,
+    normalize_lineage_family,
     normalize_seat_key,
 )
 
@@ -125,6 +133,80 @@ def test_seat_key_is_canonical_not_python_dict_order() -> None:
     assert first_metadata == second_metadata
 
 
+def test_normalize_lineage_family_uses_conservative_vendor_families() -> None:
+    cases = (
+        ({"family": "deepseek", "pin": "openrouter/deepseek/deepseek-v4-flash"}, "deepseek"),
+        ({"family": "google", "pin": "openrouter/google/gemma-4-31b-it"}, "google"),
+        ({"family": "openai", "pin": "gpt-5.6-terra"}, "gpt"),
+        ({"family": "anthropic", "pin": "claude-opus-4-6"}, "claude"),
+        ({"family": "cursor", "pin": "grok-4"}, "grok-cursor"),
+        ({"family": "google", "pin": "openrouter/deepseek/deepseek-v4-pro"}, None),
+        ({"family": "unmapped", "pin": "local/mystery-model"}, None),
+    )
+
+    for metadata, expected in cases:
+        assert normalize_lineage_family(metadata) == expected
+
+
+def test_route_selection_treats_gemma_writer_and_gemini_judge_as_same_family() -> None:
+    gemini = JudgeRoute("gemini", "gemini-3.1-pro")
+    claude = JudgeRoute("claude", "claude-opus-4-6")
+
+    route = _select_route((gemini, claude), writer_family="google", reviewer_family="gpt")
+
+    assert route == claude
+
+
+def test_route_selection_ignores_fixture_writer_sentinel() -> None:
+    gemini = JudgeRoute("gemini", "gemini-3.1-pro")
+    claude = JudgeRoute("claude", "claude-opus-4-6")
+
+    route = _select_route((gemini, claude), writer_family="fixture", reviewer_family="deepseek")
+
+    assert route == gemini
+
+
+@pytest.mark.parametrize(
+    ("artifact_overrides", "expected"),
+    (
+        ({}, ("fixture", "google")),
+        (
+            {"writer_family": "openai", "dispatch": {"reviewer_family": "deepseek"}},
+            ("gpt", "deepseek"),
+        ),
+        (
+            {"writer_seat": {"family": "anthropic", "pin": "claude-opus-4-6"}},
+            ("claude", "google"),
+        ),
+        (
+            {
+                "fixture": None,
+                "seat_arm": {"family": "google", "pin": "synthetic-google-qg"},
+                "seat": {"family": "google", "pin": "synthetic-google-qg"},
+                "model": {"family": "google", "pin": "synthetic-google-qg"},
+            },
+            (None, "google"),
+        ),
+        (
+            {
+                "fixture": None,
+                "dispatch": {},
+                "model": {"family": "deepseek", "pin": "deepseek-v4"},
+            },
+            (None, "deepseek"),
+        ),
+    ),
+)
+def test_extract_lineages_preserves_writer_and_reviewer_semantics(
+    artifact_overrides: dict[str, Any], expected: tuple[str | None, str | None]
+) -> None:
+    artifact = _artifact([_fact_check("fc-lineage")], writer_family=None)
+    artifact.update(artifact_overrides)
+    fact_check = artifact["payload"]["fact_checks"][0]
+
+    assert _extract_lineages(artifact, fact_check, fact_check["grounding"]) == expected
+
+
 def test_relation_verdict_table_is_exhaustive_and_defaults_to_audit() -> None:
     relations = (
         "ENTAILS",
@@ -205,9 +287,11 @@ def test_runner_executes_b0_to_b4_with_fake_judge_and_emits_all_stat_groups(tmp_
 
 
 def test_unknown_writer_lineage_and_prompt_injection_are_audited_without_judge(tmp_path: Path) -> None:
-    unknown_artifacts = _write_artifacts(
-        tmp_path / "unknown", _artifact([_fact_check("fc-unknown")], writer_family=None)
-    )
+    unknown_artifact = _artifact([_fact_check("fc-unknown")], writer_family=None)
+    unknown_artifact.pop("fixture")
+    unknown_artifact["seat_arm"] = {"family": "unmapped", "pin": "local/mystery-model"}
+    unknown_artifact["model"] = {"family": "unmapped", "pin": "local/mystery-model"}
+    unknown_artifacts = _write_artifacts(tmp_path / "unknown", unknown_artifact)
     unknown_report = _runner(unknown_artifacts, tmp_path / "unknown-audit").run()
     unknown_detail = unknown_report["records"][0]["candidate_details"][0]
     assert unknown_detail["relation"] == "AUDIT"
@@ -233,6 +317,63 @@ def test_unknown_writer_lineage_and_prompt_injection_are_audited_without_judge(t
     fake_delimiter_detail = fake_delimiter_report["records"][0]["candidate_details"][0]
     assert fake_delimiter_detail["relation"] == "AUDIT"
     assert fake_delimiter_detail["failure_class"] == "PROMPT_INJECTION"
+
+
+def test_judged_replay_refuses_artifact_with_unknown_lineage(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    artifact = _artifact([_fact_check("fc-unknown")], writer_family=None)
+    artifact.pop("fixture")
+    artifact["seat_arm"] = {"family": "unmapped", "pin": "local/mystery-model"}
+    artifact["model"] = {"family": "unmapped", "pin": "local/mystery-model"}
+    artifacts = _write_artifacts(tmp_path / "unknown", artifact)
+
+    exit_code = main(
+        [
+            "--artifacts-dir",
+            str(artifacts),
+            "--audit-dir",
+            str(tmp_path / "audit"),
+            "--judge-command",
+            "must-not-run",
+            "--judge-family",
+            "claude",
+            "--judge-model",
+            "test",
+        ]
+    )
+
+    assert exit_code == 2
+    assert "synthetic.json=1" in capsys.readouterr().err
+
+
+def test_stored_corpus_lineage_resolves_all_groundings_when_available() -> None:
+    worktree_root = Path(__file__).resolve().parents[1]
+    common_git_dir = subprocess.run(
+        ["git", "-C", str(worktree_root), "rev-parse", "--git-common-dir"],
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout.strip()
+    corpus_dir = Path(common_git_dir).resolve().parent / "audit" / "2026-07-06-qg-bakeoff-multirun"
+    artifacts = _read_artifacts(corpus_dir)
+    if not artifacts:
+        pytest.skip("the frozen, gitignored Layer-B corpus is unavailable in this checkout")
+
+    rows = [
+        (path, artifact, fact_check)
+        for path, artifact in artifacts
+        for fact_check in _artifact_fact_checks(artifact)
+        if isinstance(fact_check, dict) and isinstance(fact_check.get("grounding"), dict)
+    ]
+    lineages = [
+        _extract_lineages(artifact, fact_check, fact_check["grounding"]) for _path, artifact, fact_check in rows
+    ]
+
+    assert len(rows) == 1310
+    assert all(writer is not None and reviewer is not None for writer, reviewer in lineages)
+    assert Counter(writer for writer, _reviewer in lineages) == {"fixture": 1310}
+    assert Counter(reviewer for _writer, reviewer in lineages) == {"deepseek": 892, "google": 418}
 
 
 def test_b2_rejects_incompatible_claim_number_without_deterministic_entailment(tmp_path: Path) -> None:
