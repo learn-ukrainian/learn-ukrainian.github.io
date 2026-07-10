@@ -48,7 +48,8 @@ State files live at ``batch_state/tasks/<task-id>.json``. Format:
         "response_chars": int | null,
         "result_file": str | null,   # path to the full response text
         "stderr_excerpt": str | null,
-        "returncode": int | null
+        "returncode": int | null,
+        "returncode_reason": str | null
     }
 
 Design notes:
@@ -588,6 +589,83 @@ def _fetch_base(base: str) -> bool:
     return verify.returncode == 0
 
 
+def _validate_branch_reuse_name(branch: str) -> str:
+    """Reject unsafe or ambiguous ``--branch`` values before touching git."""
+    normalized = branch.strip()
+    if not normalized:
+        raise ValueError("--branch must name an existing non-protected branch")
+    if normalized.startswith(("origin/", "refs/")):
+        raise ValueError(
+            "--branch must be a local branch name without origin/ or refs/ prefixes: "
+            f"got {branch!r}"
+        )
+
+    containment = _load_worktree_containment()
+    if normalized in containment.PROTECTED_BRANCHES:
+        raise ValueError(
+            f"refusing --branch {normalized!r}: protected branches may not be "
+            "attached to a dispatch worktree"
+        )
+    return normalized
+
+
+def _fetch_existing_branch(branch: str) -> None:
+    """Fetch and verify the remote branch used by ``--branch`` reuse mode."""
+    proc = subprocess.run(
+        ["git", "fetch", "origin", branch],
+        cwd=_REPO_ROOT,
+        capture_output=True,
+        text=True,
+        check=False,
+        env=_sanitized_git_env(),
+    )
+    if proc.returncode != 0:
+        raise RuntimeError(
+            f"could not fetch existing branch {branch!r}: {_format_process_failure(proc)}"
+        )
+    verify = subprocess.run(
+        ["git", "rev-parse", "--verify", f"origin/{branch}"],
+        cwd=_REPO_ROOT,
+        capture_output=True,
+        text=True,
+        check=False,
+        env=_sanitized_git_env(),
+    )
+    if verify.returncode != 0:
+        raise RuntimeError(
+            f"origin/{branch} was not found after fetch; --branch requires an existing remote branch"
+        )
+
+
+def _branch_worktree_paths(branch: str) -> list[Path]:
+    """Return registered worktree roots currently attached to ``branch``."""
+    proc = subprocess.run(
+        ["git", "worktree", "list", "--porcelain"],
+        cwd=_REPO_ROOT,
+        capture_output=True,
+        text=True,
+        check=False,
+        env=_sanitized_git_env(),
+    )
+    if proc.returncode != 0:
+        raise RuntimeError(f"could not list git worktrees: {_format_process_failure(proc)}")
+
+    matches: list[Path] = []
+    current_path: Path | None = None
+    current_branch: str | None = None
+    for line in [*(proc.stdout or "").splitlines(), ""]:
+        if not line:
+            if current_path is not None and current_branch == branch:
+                matches.append(current_path.resolve())
+            current_path = None
+            current_branch = None
+        elif line.startswith("worktree "):
+            current_path = Path(line.removeprefix("worktree ").strip())
+        elif line.startswith("branch refs/heads/"):
+            current_branch = line.removeprefix("branch refs/heads/").strip()
+    return matches
+
+
 def _resolve_sha(path: Path, ref: str = "HEAD") -> str | None:
     """Return the commit SHA at ``ref`` in ``path``, or None if unresolvable."""
     proc = subprocess.run(
@@ -975,6 +1053,7 @@ def _validate_existing_worktree(
     path: Path,
     expected_branch: str,
     base: str,
+    allow_rebase: bool = True,
 ) -> bool:
     """Validate a reused worktree. Returns True if a rebase occurred.
 
@@ -1045,6 +1124,13 @@ def _validate_existing_worktree(
         behind = 0
     if behind == 0:
         return False
+
+    if not allow_rebase:
+        raise WorktreeStaleBase(
+            f"worktree at {path} is {behind} commit(s) behind {origin_ref}; "
+            "dry-run will not rebase it. Rerun without --dry-run after reviewing "
+            "the worktree."
+        )
 
     print(
         f"⚠️  worktree {path} is {behind} commit(s) behind {origin_ref}; attempting fast-forward rebase",
@@ -1144,6 +1230,8 @@ def _ensure_worktree(
     task_id: str,
     raw_path: str,
     base: str = "main",
+    branch: str | None = None,
+    dry_run: bool = False,
 ) -> tuple[Path, str, dict[str, Any]]:
     """Return a ready worktree path, creating or validating as needed.
 
@@ -1157,7 +1245,8 @@ def _ensure_worktree(
       than created.
     """
     worktree_path = _normalize_worktree_path(raw_path)
-    branch = _derive_worktree_branch(agent, task_id)
+    requested_branch = _validate_branch_reuse_name(branch) if branch else None
+    worktree_branch = requested_branch or _derive_worktree_branch(agent, task_id)
     layout = _classify_worktree_layout(worktree_path)
     telemetry: dict[str, Any] = {
         "base_sha": None,
@@ -1166,20 +1255,40 @@ def _ensure_worktree(
         "reused": False,
     }
 
+    if requested_branch:
+        _fetch_existing_branch(requested_branch)
+        occupied_paths = _branch_worktree_paths(requested_branch)
+        elsewhere = [path for path in occupied_paths if path != worktree_path]
+        if elsewhere:
+            locations = ", ".join(str(path) for path in elsewhere)
+            raise WorktreeBranchMismatch(
+                f"branch {requested_branch!r} is already checked out in {locations}; "
+                "refusing to attach it to another worktree"
+            )
+
     if worktree_path.exists():
         if not worktree_path.is_dir():
             raise ValueError(f"worktree path exists but is not a directory: {worktree_path}")
         telemetry["reused"] = True
         telemetry["rebased"] = _validate_existing_worktree(
             path=worktree_path,
-            expected_branch=branch,
+            expected_branch=worktree_branch,
             base=base,
+            allow_rebase=not dry_run,
         )
         telemetry["base_sha"] = _resolve_sha(worktree_path)
+        if dry_run:
+            return worktree_path, worktree_branch, telemetry
         # Reused worktrees may predate this provisioning hook; the helper is
         # idempotent and never clobbers existing files.
         _provision_data_symlinks(worktree_path, _main_checkout_root())
-        return worktree_path, branch, telemetry
+        return worktree_path, worktree_branch, telemetry
+
+    if dry_run:
+        raise ValueError(
+            f"branch reuse dry-run found no existing worktree at {worktree_path}; "
+            "rerun without --dry-run to create one"
+        )
 
     # Fix 1 (#1476): fetch origin/{base} and branch from the remote ref,
     # not the local one. Local `main` drifts the moment a PR merges while
@@ -1188,23 +1297,37 @@ def _ensure_worktree(
     # origin-prefixed ``base`` (``--base origin/main``, the mandated form)
     # fetches ``main`` and branches from ``origin/main`` — not the
     # unresolvable ``origin/origin/main``.
-    origin_ref = _origin_base_ref(base)
-    if _fetch_base(base):
-        worktree_base_ref = origin_ref
+    if requested_branch:
+        # Attach directly to the fetched PR/follow-up branch.  Never branch
+        # from origin/main here: that was the follow-up-dispatch footgun.
+        worktree_base_ref = requested_branch
     else:
-        print(
-            f"⚠️  `git fetch origin {_base_branch_name(base)}` failed or "
-            f"{origin_ref} is unresolvable; falling back to local {base}. "
-            f"This worktree may be branched from a stale tip.",
-            file=sys.stderr,
-        )
-        worktree_base_ref = base
+        origin_ref = _origin_base_ref(base)
+        if _fetch_base(base):
+            worktree_base_ref = origin_ref
+        else:
+            print(
+                f"⚠️  `git fetch origin {_base_branch_name(base)}` failed or "
+                f"{origin_ref} is unresolvable; falling back to local {base}. "
+                f"This worktree may be branched from a stale tip.",
+                file=sys.stderr,
+            )
+            worktree_base_ref = base
 
     # Ensure parent dirs exist for the dispatch/ subtree layout.
     worktree_path.parent.mkdir(parents=True, exist_ok=True)
 
+    add_command = ["git", "worktree", "add"]
+    if requested_branch and _resolve_sha(_REPO_ROOT, f"refs/heads/{requested_branch}"):
+        add_command.extend([str(worktree_path), requested_branch])
+    elif requested_branch:
+        add_command.extend(
+            ["--track", "-b", requested_branch, str(worktree_path), f"origin/{requested_branch}"]
+        )
+    else:
+        add_command.extend(["-b", worktree_branch, str(worktree_path), worktree_base_ref])
     proc = subprocess.run(
-        ["git", "worktree", "add", "-b", branch, str(worktree_path), worktree_base_ref],
+        add_command,
         cwd=_REPO_ROOT,
         capture_output=True,
         text=True,
@@ -1215,7 +1338,7 @@ def _ensure_worktree(
         raise RuntimeError(stderr)
     _provision_data_symlinks(worktree_path, _main_checkout_root())
     telemetry["base_sha"] = _resolve_sha(worktree_path)
-    return worktree_path, branch, telemetry
+    return worktree_path, worktree_branch, telemetry
 
 
 def _augment_prompt_with_worktree(prompt: str, worktree_path: Path | None) -> str:
@@ -1398,6 +1521,7 @@ def _run_worker(
     stderr_excerpt = None
     response = ""
     returncode: int | None = None
+    returncode_reason: str | None = None
     rate_limited = False
     timed_out = False
     result = None
@@ -1441,9 +1565,11 @@ def _run_worker(
         # this, so no extra cleanup is needed here. Mark as cancelled.
         cancelled = True
         stderr_excerpt = f"cancelled via SIGTERM or Ctrl+C: {exc}"[:500]
+        returncode_reason = "worker interrupted before a terminal subprocess returncode was available"
     except RateLimitedError as exc:
         rate_limited = True
         stderr_excerpt = str(exc)[:500]
+        returncode_reason = "runtime rejected the dispatch before a terminal subprocess returncode was available"
     except AgentStalledError as exc:
         timed_out = True
         substitution = getattr(exc, "substitution", None)
@@ -1453,16 +1579,20 @@ def _run_worker(
             else "stdout_silence_timeout"
         )
         stderr_excerpt = f"{prefix}: {exc}"[:500]
+        returncode_reason = "runtime timeout raised before a terminal subprocess returncode was available"
     except AgentTimeoutError as exc:
         substitution = getattr(exc, "substitution", None)
         stderr_excerpt = f"hard_timeout: {exc}"[:500]
+        returncode_reason = "runtime timeout raised before a terminal subprocess returncode was available"
     except AgentRuntimeError as exc:
         stderr_excerpt = f"runtime error: {type(exc).__name__}: {exc}"[:500]
+        returncode_reason = "runtime exception did not expose a terminal subprocess returncode"
     except Exception as exc:
         # Last-ditch: don't crash the worker on an unexpected bug — we
         # need to update the state file or the parent will see us as
         # "crashed" forever.
         stderr_excerpt = f"worker unexpected: {type(exc).__name__}: {exc}"[:500]
+        returncode_reason = "unexpected worker exception before a terminal subprocess returncode was available"
 
     duration_s = time.monotonic() - start
 
@@ -1482,6 +1612,18 @@ def _run_worker(
         ok_outcome=ok_outcome,
         timed_out=timed_out,
     )
+
+    # A successful runtime result must carry the completed child process's
+    # return code.  Refuse to persist a misleading ``done``/null combination
+    # if a future runner regression drops it; failures without a child code
+    # retain a precise reason instead of inventing a number (#4837).
+    if final_status == "done" and returncode is None:
+        final_status = "failed"
+        ok_outcome = False
+        returncode_reason = "runtime reported success without a terminal subprocess returncode"
+        stderr_excerpt = "runtime reported success without a terminal subprocess returncode"
+    elif returncode is None and returncode_reason is None:
+        returncode_reason = "no terminal subprocess returncode was available"
 
     final_state = _read_state(state_path) or {}
 
@@ -1555,6 +1697,7 @@ def _run_worker(
             "result_file": result_file,
             "stderr_excerpt": stderr_excerpt,
             "returncode": returncode,
+            "returncode_reason": returncode_reason,
             "worktree_dirty_on_exit": dirty_on_exit,
             "commits_ahead": commits_ahead,
             "needs_finalize": needs_finalize,
@@ -1615,6 +1758,7 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
     task_id = args.task_id
     state_path = _state_path(task_id)
     worktree_arg = getattr(args, "worktree", None)
+    requested_branch = getattr(args, "branch", None)
     silence_timeout = getattr(args, "silence_timeout", DEFAULT_SILENCE_TIMEOUT_S)
     initial_response_timeout = getattr(
         args,
@@ -1624,9 +1768,15 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
     max_budget_usd = getattr(args, "max_budget_usd", None)
     keep_worktree = bool(getattr(args, "keep_worktree", False))
 
+    # Branch reuse always needs an isolated worktree.  A bare --branch uses
+    # the normal dispatch subtree automatically; --cwd would otherwise make
+    # it unclear which checkout must be validated.
+    if requested_branch and not worktree_arg:
+        worktree_arg = "auto"
+
     if args.cwd and worktree_arg:
         print(
-            "❌ --cwd and --worktree are mutually exclusive. Use --worktree for delegated write isolation.",
+            "❌ --cwd cannot be combined with --worktree or --branch. Use --worktree for delegated write isolation.",
             file=sys.stderr,
         )
         return 2
@@ -1699,7 +1849,34 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
     else:
         dispatch_agent = args.agent
 
-    if getattr(args, "dry_run", False):
+    if getattr(args, "dry_run", False) and not requested_branch:
+        print(task_id)
+        return 0
+
+    if getattr(args, "dry_run", False) and requested_branch:
+        resolved_raw = (
+            str(_auto_worktree_path(dispatch_agent, task_id))
+            if worktree_arg == "auto"
+            else worktree_arg
+        )
+        assert resolved_raw is not None  # --branch above supplies the auto sentinel.
+        try:
+            worktree_path, worktree_branch, worktree_telemetry = _ensure_worktree(
+                agent=dispatch_agent,
+                task_id=task_id,
+                raw_path=resolved_raw,
+                base=getattr(args, "base", None) or "main",
+                branch=requested_branch,
+                dry_run=True,
+            )
+        except (ValueError, RuntimeError) as exc:
+            print(f"❌ failed to validate branch reuse for {task_id!r}: {exc}", file=sys.stderr)
+            return 1
+        print(
+            f"🌲 branch reuse validated: branch={worktree_branch} "
+            f"path={worktree_path} base_sha={worktree_telemetry.get('base_sha') or '?'} [reused]",
+            file=sys.stderr,
+        )
         print(task_id)
         return 0
 
@@ -1736,6 +1913,7 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
                 task_id=task_id,
                 raw_path=resolved_raw,
                 base=getattr(args, "base", None) or "main",
+                branch=requested_branch,
             )
         except (ValueError, RuntimeError) as exc:
             print(f"❌ failed to prepare worktree for {task_id!r}: {exc}", file=sys.stderr)
@@ -1784,6 +1962,7 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         "result_file": None,
         "stderr_excerpt": None,
         "returncode": None,
+        "returncode_reason": None,
         "substitution": None,
     }
     _write_state_atomic(state_path, initial_state)
@@ -1887,6 +2066,7 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
                     "finished_at": datetime.now(UTC).isoformat(),
                     "stderr_excerpt": (f"Popen failed: {type(exc).__name__}: {exc}")[:500],
                     "returncode": None,
+                    "returncode_reason": "worker process was not started",
                 }
             )
             _write_state_atomic(state_path, failed_state)
@@ -2477,6 +2657,18 @@ def build_parser() -> argparse.ArgumentParser:
             "alone (recommended) to auto-derive `.worktrees/dispatch/{agent}/"
             "{task}/`, or `--worktree PATH` to reuse a specific added worktree "
             "(validated against the expected dispatch branch before reuse)."
+        ),
+    )
+    d.add_argument(
+        "--branch",
+        default=None,
+        metavar="EXISTING",
+        help=(
+            "Attach the dispatch to this existing remote branch instead of creating "
+            "{agent}/{task}. Fetches and validates the branch, then creates/reuses "
+            "an isolated worktree on it (--branch implies --worktree). Refuses "
+            "protected branches (main/master) and branches checked out in another "
+            "worktree. --branch must omit origin/ and refs/ prefixes."
         ),
     )
     d.add_argument(

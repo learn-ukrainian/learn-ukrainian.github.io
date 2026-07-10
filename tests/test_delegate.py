@@ -543,6 +543,8 @@ def test_dispatch_popen_failure_marks_task_failed(tmp_tasks_dir, capsys):
     assert state["status"] == "failed"
     assert "Popen failed" in (state.get("stderr_excerpt") or "")
     assert "FileNotFoundError" in (state.get("stderr_excerpt") or "")
+    assert state["returncode"] is None
+    assert state["returncode_reason"] == "worker process was not started"
     captured = capsys.readouterr()
     assert "failed to spawn" in captured.err
 
@@ -934,6 +936,8 @@ def test_run_worker_persists_runtime_telemetry(tmp_tasks_dir, tmp_path):
     assert state["model"] == "claude-opus-4-6"
     assert state["effort"] == "xhigh"
     assert state["cli_version"] == "2.1.89"
+    assert state["returncode"] == 0
+    assert state["returncode_reason"] is None
 
 
 def test_run_worker_emits_one_terminal_dispatch_event_with_cost_fields(
@@ -1999,6 +2003,138 @@ def test_dispatch_uses_existing_worktree_without_git_add(tmp_tasks_dir, tmp_path
     assert state["worktree_reused"] is True
 
 
+def test_branch_reuse_creates_worktree_from_existing_remote_branch(tmp_tasks_dir, tmp_path, monkeypatch):
+    """--branch must attach to its fetched branch, never origin/main (#4837)."""
+    target = tmp_path / "branch-reuse"
+    branch = "cursor/follow-up"
+    calls, base_stub = _make_run_stub(rev_parse_head_sha="branch-head")
+
+    def fake_run(cmd, **kwargs):
+        # No local branch yet: creating the worktree must create a tracking
+        # branch from the fetched remote ref.
+        if cmd[:2] == ["git", "rev-parse"] and cmd[-1] == f"refs/heads/{branch}":
+            return subprocess.CompletedProcess(cmd, 1, "", "")
+        return base_stub(cmd, **kwargs)
+
+    monkeypatch.setattr(delegate.subprocess, "run", fake_run)
+
+    _, actual_branch, telemetry = delegate._ensure_worktree(
+        agent="cursor",
+        task_id="follow-up",
+        raw_path=str(target),
+        branch=branch,
+    )
+
+    assert actual_branch == branch
+    assert telemetry["reused"] is False
+    assert ["git", "fetch", "origin", branch] in calls
+    add_cmd = next(command for command in calls if command[:3] == ["git", "worktree", "add"])
+    assert add_cmd == [
+        "git",
+        "worktree",
+        "add",
+        "--track",
+        "-b",
+        branch,
+        str(target.resolve()),
+        f"origin/{branch}",
+    ]
+
+
+def test_branch_reuse_dry_run_validates_existing_worktree_without_adding(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+    capsys,
+):
+    """A branch-reuse dry run performs the safe reuse checks without mutation."""
+    import argparse
+
+    worktree = tmp_path / "existing-branch-worktree"
+    worktree.mkdir()
+    branch = "cursor/follow-up"
+    calls, base_stub = _make_run_stub(
+        abbrev_ref=branch,
+        status_porcelain="",
+        rev_list_count="0",
+        rev_parse_head_sha="branch-head",
+    )
+
+    def fake_run(cmd, **kwargs):
+        if cmd[:3] == ["git", "worktree", "add"]:
+            pytest.fail("branch-reuse dry-run must not add a worktree")
+        return base_stub(cmd, **kwargs)
+
+    monkeypatch.setattr(delegate.subprocess, "run", fake_run)
+    args = argparse.Namespace(
+        agent="cursor",
+        task_id="branch-reuse-dry-run",
+        prompt="validate only",
+        prompt_file=None,
+        mode="read-only",
+        model=None,
+        cwd=None,
+        worktree=str(worktree),
+        branch=branch,
+        base="main",
+        hard_timeout=3600,
+        dry_run=True,
+    )
+
+    assert delegate.cmd_dispatch(args) == 0
+    assert ["git", "fetch", "origin", branch] in calls
+    output = capsys.readouterr()
+    assert "branch reuse validated" in output.err
+    assert "[reused]" in output.err
+    assert output.out.strip() == "branch-reuse-dry-run"
+
+
+def test_branch_reuse_refuses_protected_branch_before_git_calls(tmp_path, monkeypatch):
+    calls: list[list[str]] = []
+
+    def fake_run(cmd, **kwargs):
+        calls.append(list(cmd))
+        return subprocess.CompletedProcess(cmd, 0, "", "")
+
+    monkeypatch.setattr(delegate.subprocess, "run", fake_run)
+
+    with pytest.raises(ValueError, match="protected"):
+        delegate._ensure_worktree(
+            agent="cursor",
+            task_id="unsafe",
+            raw_path=str(tmp_path / "unsafe"),
+            branch="main",
+        )
+    assert calls == []
+
+
+def test_branch_reuse_refuses_branch_checked_out_in_another_worktree(tmp_path, monkeypatch):
+    target = tmp_path / "target"
+    occupied = tmp_path / "occupied"
+    branch = "cursor/follow-up"
+    _, base_stub = _make_run_stub()
+
+    def fake_run(cmd, **kwargs):
+        if cmd[:3] == ["git", "worktree", "list"]:
+            return subprocess.CompletedProcess(
+                cmd,
+                0,
+                f"worktree {occupied}\nbranch refs/heads/{branch}\n\n",
+                "",
+            )
+        return base_stub(cmd, **kwargs)
+
+    monkeypatch.setattr(delegate.subprocess, "run", fake_run)
+
+    with pytest.raises(delegate.WorktreeBranchMismatch, match="already checked out"):
+        delegate._ensure_worktree(
+            agent="cursor",
+            task_id="follow-up",
+            raw_path=str(target),
+            branch=branch,
+        )
+
+
 # ---------------------------------------------------------------------------
 # cmd_list
 # ---------------------------------------------------------------------------
@@ -2730,13 +2866,25 @@ def test_dispatch_accepts_explicit_added_worktree(tmp_tasks_dir, tmp_path, monke
 def test_dispatch_help_omits_deprecated_cwd_dot_example():
     """Issue #4445: help/examples must not advertise `--cwd .` or a flat
     worktree layout for write-capable work."""
-    help_text = delegate.build_parser().format_help()
-    assert "--cwd ." not in help_text
-    assert "--mode workspace-write --cwd" not in help_text
+    parser = delegate.build_parser()
+    root_help = parser.format_help()
+    dispatch_parser = next(
+        action.choices["dispatch"]
+        for action in parser._actions
+        if action.dest == "command"
+    )
+    help_text = dispatch_parser.format_help()
+    assert "--cwd ." not in root_help
+    assert "--mode workspace-write --cwd" not in root_help
     # The flat `.worktrees/<agent>-<task>` example is gone; bare --worktree
     # is the advertised write-capable path.
-    assert ".worktrees/codex-pr-123" not in help_text
-    assert "--mode workspace-write --worktree" in help_text
+    assert ".worktrees/codex-pr-123" not in root_help
+    assert "--mode workspace-write --worktree" in root_help
+    assert "--branch EXISTING" in help_text
+    assert "protected branches" in help_text
+    assert "main/master" in help_text
+    assert "checked out" in help_text
+    assert "another" in help_text
 
 
 def test_list_and_status_walk_both_layouts(tmp_tasks_dir, tmp_path, capsys, monkeypatch):

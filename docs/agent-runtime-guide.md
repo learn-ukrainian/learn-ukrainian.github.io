@@ -224,6 +224,13 @@ When a worktree is reused, it is validated:
    behind, attempt `git rebase origin/<base>` and raise
    `WorktreeStaleBase` if that fails.
 
+For follow-up work on an existing PR, pass `--branch EXISTING` to
+`delegate.py dispatch`. Delegate fetches `origin/EXISTING`, attaches the
+worktree to that branch rather than `origin/main`, and applies the same clean
+tree / branch-match validation. It refuses `main`/`master` and a branch already
+checked out in another worktree. A branch-reuse `--dry-run` validates an
+existing worktree without creating or rebasing one.
+
 Offline fallback: if `git fetch` fails (no network, no remote), delegate
 warns on stderr and branches from the local ref. Pin the `--base` flag
 to override the default `main`.
@@ -252,6 +259,12 @@ The state file at `batch_state/tasks/<task-id>.json` now carries:
 
 `delegate.py list` surfaces `worktree_layout`; `delegate.py status`
 prints a deprecation notice for flat-layout tasks.
+
+Telemetry uses `not-exposed` when a CLI genuinely has no effort setting (for
+example Agy and Cursor), instead of printing an `unknown` warning on every
+dispatch. `unknown` remains reserved for an unexpected resolution failure.
+Every terminal state records a concrete subprocess `returncode`, or a
+`returncode_reason` when no child process ever yielded one.
 
 ## Common mistakes
 

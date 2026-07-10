@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import logging
 import sys
 from pathlib import Path
 from unittest.mock import MagicMock, patch
@@ -93,6 +94,66 @@ def test_resolve_invocation_telemetry_reads_claude_plan_flags():
     assert telemetry.cli_version == "2.1.89"
 
 
+def test_expected_effort_markers_and_version_probes_do_not_warn(tmp_path, monkeypatch, caplog):
+    """Known CLI limits are explicit metadata, not dispatch warnings (#4837)."""
+    hermes_home = tmp_path / "hermes"
+    hermes_home.mkdir()
+    (hermes_home / "config.yaml").write_text(
+        "agent:\n  reasoning_effort: xhigh\n",
+        encoding="utf-8",
+    )
+    monkeypatch.setenv("HERMES_HOME", str(hermes_home))
+
+    def probe(prefix: tuple[str, ...]) -> str | None:
+        return {
+            "agy": "1.1.1",
+            "cursor-agent": "2026.07.09",
+            "hermes": "0.18.0",
+        }.get(Path(prefix[0]).name)
+
+    caplog.set_level(logging.WARNING, logger="agent_runtime.telemetry")
+    with patch("agent_runtime.telemetry._probe_version", side_effect=probe):
+        agy = resolve_dispatch_start_telemetry(
+            agent_name="agy",
+            requested_model=None,
+            requested_effort=None,
+        )
+        cursor = resolve_invocation_telemetry(
+            agent_name="cursor",
+            plan=InvocationPlan(cmd=["cursor-agent", "-p"], cwd=tmp_path),
+            requested_model=None,
+            requested_effort=None,
+        )
+        deepseek = resolve_dispatch_start_telemetry(
+            agent_name="deepseek",
+            requested_model=None,
+            requested_effort=None,
+        )
+
+    assert (agy.effort, agy.cli_version) == ("not-exposed", "1.1.1")
+    assert (cursor.effort, cursor.cli_version) == ("not-exposed", "2026.07.09")
+    assert (deepseek.effort, deepseek.cli_version) == ("xhigh", "0.18.0")
+    assert "dispatch telemetry for" not in caplog.text
+
+
+def test_unexpected_version_probe_failure_still_warns(caplog):
+    """Only a genuine resolution failure may produce an unknown warning."""
+    caplog.set_level(logging.WARNING, logger="agent_runtime.telemetry")
+    with patch("agent_runtime.telemetry._probe_version", return_value=None):
+        telemetry = resolve_dispatch_start_telemetry(
+            agent_name="agy",
+            requested_model=None,
+            requested_effort=None,
+        )
+
+    assert telemetry.effort == "not-exposed"
+    assert telemetry.cli_version == "unknown"
+    assert (
+        "dispatch telemetry for agy could not resolve cli_version: version probe failed; "
+        "recording 'unknown'"
+    ) in caplog.text
+
+
 def test_runner_invoke_returns_resolved_telemetry(tmp_path):
     from agent_runtime import runner as runner_mod
 
@@ -116,7 +177,9 @@ def test_runner_invoke_returns_resolved_telemetry(tmp_path):
 
     fake_proc = MagicMock()
     fake_proc.poll.return_value = 0
-    fake_proc.returncode = 0
+    # The completed poll result is authoritative even when a Popen wrapper
+    # has not reflected it through ``.returncode`` yet (#4837).
+    fake_proc.returncode = None
     fake_proc.stdin = None
 
     with (
@@ -156,6 +219,8 @@ def test_runner_invoke_returns_resolved_telemetry(tmp_path):
     assert result.model == "gpt-5.5"
     assert result.effort == "high"
     assert result.cli_version == "0.123.0"
+    assert result.returncode == 0
+    assert result.usage_record["returncode"] == 0
 
 
 def test_runner_usage_record_includes_correlation_ids_without_prompt_change(

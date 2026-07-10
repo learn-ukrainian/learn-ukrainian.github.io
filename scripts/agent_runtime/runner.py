@@ -1100,6 +1100,7 @@ def _execute_invocation_plan(
 
         early_reap_check = getattr(adapter, "check_early_reap", None)
         kill_reason: str | None = None
+        returncode: int | None = None
         while True:
             if mcp_observer is not None:
                 observed_stdout_lines = mcp_observer.observe_lines(
@@ -1150,6 +1151,18 @@ def _execute_invocation_plan(
         duration_s = time.monotonic() - start_time
         assert watchdog_state is not None
 
+        # ``poll()`` is the authoritative completion observation.  Most
+        # CPython Popen objects also copy that value to ``.returncode``, but
+        # wrappers/adapters can expose the result first.  Do not discard a
+        # known terminal exit code while handing it to delegate state (#4837).
+        final_returncode = proc.returncode if proc.returncode is not None else returncode
+        if final_returncode is None:
+            try:
+                final_returncode = proc.wait(timeout=10.0)
+            except subprocess.TimeoutExpired:
+                _kill_process_tree(proc)
+                final_returncode = proc.returncode
+
         for thread in watchdog_threads:
             if "stdout" in thread.name or "stderr" in thread.name:
                 thread.join(timeout=5.0)
@@ -1185,14 +1198,14 @@ def _execute_invocation_plan(
         parse = adapter.parse_response(
             stdout=stdout_text,
             stderr=stderr_text,
-            returncode=proc.returncode if proc.returncode is not None else -1,
+            returncode=final_returncode if final_returncode is not None else -1,
             output_file=plan.output_file,
             plan=plan,
             call_start_time=start_time,
         )
         if (
             not parse.ok
-            and proc.returncode not in (None, 0)
+            and final_returncode not in (None, 0)
             and not parse.response
             and not (parse.stderr_excerpt or "").strip()
             and not stdout_text.strip()
@@ -1202,7 +1215,7 @@ def _execute_invocation_plan(
                 ok=False,
                 response="",
                 stderr_excerpt=(
-                    f"{agent_name} subprocess exited rc={proc.returncode} in "
+                    f"{agent_name} subprocess exited rc={final_returncode} in "
                     f"{duration_s:.2f}s with no captured stdout/stderr "
                     f"(stdin_bytes={len(plan.stdin_payload or '')})"
                 )[:500],
@@ -1215,7 +1228,7 @@ def _execute_invocation_plan(
         return _ExecutionOutcome(
             parse=parse,
             duration_s=duration_s,
-            returncode=proc.returncode,
+            returncode=final_returncode,
             kill_reason=kill_reason,
             stdout_text=stdout_text,
             stderr_text=stderr_text,
