@@ -84,6 +84,16 @@ def _write_atomic(path: Path, data: bytes) -> None:
             tmp_path.unlink()
 
 
+def serialize_manifest(manifest: dict[str, Any]) -> bytes:
+    """Return the canonical UTF-8 serialization for a lexicon manifest."""
+    return (json.dumps(manifest, ensure_ascii=False, indent=2) + "\n").encode("utf-8")
+
+
+def write_manifest(path: Path | str, manifest: dict[str, Any]) -> None:
+    """Atomically write a manifest using its canonical serialization."""
+    _write_atomic(_repo_path(path), serialize_manifest(manifest))
+
+
 def _download_url(pointer: dict[str, Any], attempt: int) -> str:
     asset_url = pointer["asset_url"]
     if attempt == 0:
