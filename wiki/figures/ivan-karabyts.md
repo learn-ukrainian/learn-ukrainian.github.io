@@ -4,6 +4,7 @@
 slug: ivan-karabyts
 domain: figures
 tracks: [bio]
+portrait: text-only
 compiled: 2026-07-10
 generated_by_model: codex
 note: Hand-authored BIO catalog-source base-prep packet. Text-only portrait disposition; no visual asset is supplied.
