@@ -14,8 +14,9 @@ sources:
 - id: S3
   file: c5e05b63_c0000
   type: literary
-  title: Гнат Хоткевич. Життєпис
-  author: Хоткевич Г.
+  title: Гнат Хоткевич — біографічна стаття (ukrlib)
+  notes: Third-person biographical article about Khotkevych from the ukrlib corpus;
+    not a work authored by the subject.
 - id: S4
   file: https://archives.kh.gov.ua/?page_id=27449
   type: external
