@@ -19,8 +19,11 @@ streams:
     title: "Corpus channels — acquisition & ingestion"
     epics: [4706]
   infra-harness:
-    title: "Infra & harness reliability"
+    title: "Infra & fleet reliability (hooks, deps, dispatch, routing)"
     epics: [4707]
+  eval-harness:
+    title: "UA eval harness — QG gates, grammar-lexical gate, annotation, bakeoffs"
+    epics: [4913]
   benchmark-2156:
     title: "Ukrainian LLM factuality benchmark — community release"
     epics: [4639]
