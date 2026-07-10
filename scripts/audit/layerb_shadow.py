@@ -48,6 +48,7 @@ if __package__ in {None, ""}:
     sys.path.insert(0, str(project_root / "scripts"))
 
 from scripts.audit import anchor_primitives, layerb_candidates
+from scripts.audit.layerb_keys import _build_event_index, _stable_grounding_key
 from scripts.audit.llm_reviewer_dispatch import tool_events_from_dispatch_meta
 
 REPORT_VERSION = "qg-layer-b-shadow-report.v1-draft"
@@ -285,15 +286,6 @@ def _extract_lineages(
     return writer_family, qg_reviewer_family
 
 
-def _stable_grounding_key(path: Path, fact_index: int, fact_check: Mapping[str, Any]) -> str:
-    explicit = fact_check.get("fact_check_id")
-    if isinstance(explicit, str) and explicit.strip():
-        suffix = explicit.strip()
-    else:
-        suffix = _sha256_text(_canonical_json(fact_check))[:16]
-    return f"{path.name}#fact_checks[{fact_index}]::{suffix}"
-
-
 def _read_artifacts(artifacts_dir: Path) -> list[tuple[Path, Mapping[str, Any]]]:
     artifacts: list[tuple[Path, Mapping[str, Any]]] = []
     for path in sorted(artifacts_dir.glob("*.json")):
@@ -317,51 +309,6 @@ def _artifact_fact_checks(artifact: Mapping[str, Any]) -> Sequence[Any]:
 def _artifact_input_identity(artifacts: Iterable[tuple[Path, Mapping[str, Any]]]) -> str:
     material = [{"path": path.name, "sha256": _sha256_text(_canonical_json(artifact))} for path, artifact in artifacts]
     return _sha256_text(_canonical_json(material))
-
-
-def _build_event_index(events: Sequence[Mapping[str, Any]]) -> dict[str, str]:
-    """Map only materializer-derived event IDs to raw captured output safely."""
-    index: dict[str, str] = {}
-    for event in events:
-        raw = anchor_primitives.event_output_text(event)
-        if raw is None:
-            continue
-        capture_complete = not any(
-            event.get(key) is True for key in ("output_truncated", "truncated", "capture_truncated")
-        )
-        capture_complete = capture_complete and event.get("output_capture_complete") is not False
-        # Candidate materialization owns the identity contract.  Reproduce the
-        # public contract here rather than using diagnostic source indexes.
-        raw_name = str(event.get("tool") or "")
-        canonical_name = anchor_primitives.canonical_tool_name(raw_name)
-        query = _canonical_json(event.get("input") if "input" in event else {})
-        stable_source: dict[str, Any] = {}
-        for container in (event, event.get("input")):
-            if isinstance(container, Mapping):
-                for key in ("document_id", "source_id", "url", "revision", "section_id", "item_id"):
-                    if container.get(key) not in (None, ""):
-                        stable_source[key] = container[key]
-        material = {
-            "version": layerb_candidates.EVENT_OUTPUT_IDENTITY_VERSION,
-            "tool": canonical_name,
-            "query": query,
-            "status_envelope": {
-                "status": event.get("status"),
-                "error": event.get("error"),
-                "errors": event.get("errors"),
-            },
-            "stable_source": stable_source,
-            "raw_output_sha256": _sha256_text(raw),
-            "output_capture_complete": capture_complete,
-        }
-        event_id = _sha256_text(_canonical_json(material))
-        previous = index.get(event_id)
-        if previous is not None and previous != raw:
-            # Integrity collision: no raw source can safely be selected.
-            index.pop(event_id, None)
-            continue
-        index[event_id] = raw
-    return index
 
 
 def _injection_screen(raw_window: str) -> bool:

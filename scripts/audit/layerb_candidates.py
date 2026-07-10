@@ -36,10 +36,10 @@ from hashlib import sha256
 from typing import Any
 
 from scripts.audit import anchor_primitives
+from scripts.audit.layerb_keys import EVENT_OUTPUT_IDENTITY_VERSION
 
 CANDIDATE_SCHEMA_VERSION = "qg-anchor-candidate.v1"
 ANCHOR_SET_SCHEMA_VERSION = "qg-anchor-set.v1"
-EVENT_OUTPUT_IDENTITY_VERSION = "qg-event-output.v1"
 CANONICAL_SOURCE_IDENTITY_VERSION = "qg-canonical-source.v1"
 MAX_SCANNED_OUTPUT_CHARS = 50_000
 MAX_CANDIDATE_WINDOWS = 64
