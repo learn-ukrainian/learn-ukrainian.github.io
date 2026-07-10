@@ -16,7 +16,7 @@ ARCHITECTURAL OVERVIEW (read this first):
         │  8. Return Result
         │
         ├── adapters/codex.py     → wraps `codex exec`
-        ├── adapters/claude.py    → wraps `npx @anthropic-ai/claude-code -p`
+        ├── adapters/claude.py    → wraps native `claude -p` (npx fallback)
         ├── adapters/gemini.py    → wraps `gemini -m ... -y`
         └── adapters/grok.py      → stub (CLI doesn't exist yet)
 
