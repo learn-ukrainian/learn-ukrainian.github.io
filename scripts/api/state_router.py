@@ -101,6 +101,7 @@ _is_content_done = is_content_done
 router = APIRouter(tags=["state"])
 
 BUDGET_CONFIG_PATH = Path(__file__).resolve().parents[1] / "config" / "agent_budgets.yaml"
+TASKS_DIR = Path(__file__).resolve().parents[2] / "batch_state" / "tasks"
 SUBSCRIPTION_LANES = ("claude", "codex", "gemini", "grok", "cursor")
 API_LANES = ("deepseek",)  # representative; others via openrouter absent BY DESIGN
 AGENT_NAMES = SUBSCRIPTION_LANES  # only subscription lanes participate in CodexBar window checks
@@ -451,10 +452,22 @@ def compute_routing_budget(now: datetime | None = None, *, fresh_codexbar: bool 
     reset_hours = extras["reset_imminent_hours"]
     resets_at = _next_weekly_reset(current_time)
 
+    from .lane_health import compute_lane_health
+    health_records = {}
+    try:
+        health_records = compute_lane_health(
+            TASKS_DIR,
+            now=current_time
+        )
+    except Exception as exc:
+        import logging
+        logging.getLogger("state_router").debug("Failed to compute lane health: %s", exc)
+
     # Empty config case: unknown statuses, suppressed rec (no confident pick from absent data)
     if not budgets:
         agents = {}
         for lane in SUBSCRIPTION_LANES:
+            lane_health = health_records.get(lane, {"healthy": True, "consecutive_failures": 0, "span_minutes": 0})
             if lane == "claude":
                 agents[lane] = {
                     "interactive": {
@@ -477,6 +490,7 @@ def compute_routing_budget(now: datetime | None = None, *, fresh_codexbar: bool 
                     "burn_pct_7d": None,
                     "status": "unknown",
                     "resets_at": resets_at,
+                    "health": lane_health,
                 }
             else:
                 agents[lane] = {
@@ -485,12 +499,44 @@ def compute_routing_budget(now: datetime | None = None, *, fresh_codexbar: bool 
                     "burn_pct_7d": None,
                     "status": "unknown",
                     "resets_at": resets_at,
+                    "health": lane_health,
                 }
         rec = {
             "primary_agent_for_code": None,
             "rationale": "Budget config absent; recommendation suppressed (empty snapshot).",
             "warnings": [*warnings, "empty snapshot — use model-assignment + /api/orient"],
         }
+
+        ranked_subs = [
+            {
+                "lane": lane,
+                "type": "subscription",
+                "status": "unknown",
+                "burn_pct_7d": None,
+                "remaining_pct": None,
+                "resets_at": resets_at,
+                "health": agents[lane]["health"],
+            }
+            for lane in SUBSCRIPTION_LANES
+        ]
+        ranked_apis = [
+            {
+                "lane": lane,
+                "type": "api",
+                "status": "unknown",
+                "burn_pct_7d": None,
+                "remaining_pct": None,
+                "resets_at": None,
+                "health": health_records.get(lane, {"healthy": True, "consecutive_failures": 0, "span_minutes": 0}),
+            }
+            for lane in API_LANES
+        ]
+        ranked = ranked_subs + ranked_apis
+
+        healthy_lanes = [x for x in ranked if x.get("health", {}).get("healthy", True)]
+        unhealthy_lanes = [x for x in ranked if not x.get("health", {}).get("healthy", True)]
+        ranked = healthy_lanes + unhealthy_lanes
+
         return {
             "generated_at": _isoformat_z(current_time),
             "agents": agents,
@@ -504,28 +550,7 @@ def compute_routing_budget(now: datetime | None = None, *, fresh_codexbar: bool 
                 "data_age_s": None,
                 "stale_threshold_s": 900,
             },
-            "ranked_by_headroom": [
-                {
-                    "lane": lane,
-                    "type": "subscription",
-                    "status": "unknown",
-                    "burn_pct_7d": None,
-                    "remaining_pct": None,
-                    "resets_at": resets_at,
-                }
-                for lane in SUBSCRIPTION_LANES
-            ]
-            + [
-                {
-                    "lane": lane,
-                    "type": "api",
-                    "status": "unknown",
-                    "burn_pct_7d": None,
-                    "remaining_pct": None,
-                    "resets_at": None,
-                }
-                for lane in API_LANES
-            ],
+            "ranked_by_headroom": ranked,
         }
 
     records = load_cost_records()
@@ -762,6 +787,11 @@ def compute_routing_budget(now: datetime | None = None, *, fresh_codexbar: bool 
         authoritative_data_available=cb_sourced_any,
     )
 
+    # Map health information to all subscription lanes in the agents dict
+    for lane in SUBSCRIPTION_LANES:
+        lane_health = health_records.get(lane, {"healthy": True, "consecutive_failures": 0, "span_minutes": 0})
+        agents[lane]["health"] = lane_health
+
     # Build ranked view: subscription by remaining headroom (low burn = high remaining first), API always unknown
     def _rank_key(lane: str) -> float:
         a = agents.get(lane, {})
@@ -782,6 +812,7 @@ def compute_routing_budget(now: datetime | None = None, *, fresh_codexbar: bool 
                 "remaining_pct": a.get("remaining_pct"),
                 "resets_at": a.get("resets_at"),
                 "in_flight": _in_flight_by_agent().get(lane, 0),
+                "health": a.get("health", {"healthy": True, "consecutive_failures": 0, "span_minutes": 0}),
             }
         )
     ranked_subs.sort(key=lambda x: (x["status"] == "unknown", x.get("burn_pct_7d") or 999.0))
@@ -795,11 +826,17 @@ def compute_routing_budget(now: datetime | None = None, *, fresh_codexbar: bool 
             "remaining_pct": None,
             "resets_at": None,
             "in_flight": 0,
+            "health": health_records.get(lane, {"healthy": True, "consecutive_failures": 0, "span_minutes": 0}),
         }
         for lane in API_LANES
     ]
     # per one design note treat absent as full, but AC requires status unknown NOT cool for ranked view
     ranked = ranked_subs + ranked_apis
+
+    # Apply health demotion: unhealthy lanes are moved to the bottom of the list
+    healthy_lanes = [x for x in ranked if x.get("health", {}).get("healthy", True)]
+    unhealthy_lanes = [x for x in ranked if not x.get("health", {}).get("healthy", True)]
+    ranked = healthy_lanes + unhealthy_lanes
 
     return {
         "generated_at": _isoformat_z(current_time),

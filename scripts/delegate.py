@@ -2253,6 +2253,15 @@ def _resolve_agent_with_budget_guard(agent: str) -> str:
         )
         return requested
 
+    # Check for demoted lanes and print warnings
+    for item in payload.get("ranked_by_headroom") or []:
+        h = item.get("health")
+        if h and not h.get("healthy", True):
+            lane = item.get("lane")
+            cf = h.get("consecutive_failures", 0)
+            sm = h.get("span_minutes", 0)
+            print(f"⚠ lane {lane} demoted: {cf} spawn failures in {sm}m", file=sys.stderr)
+
     if records_loaded == 0:
         for warning in rec.get("warnings") or []:
             if "is in deficit" in str(warning):
