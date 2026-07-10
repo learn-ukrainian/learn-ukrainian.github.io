@@ -56,6 +56,10 @@ interface Enrichment {
     paradigm?: MorphologyParadigm;
     stress?: { source: string; forms: Record<string, string> };
     source: string;
+    // Style/register-marked forms (нестягнені, застарілі, розмовні …) kept OUT of
+    // the modern paradigm above and rendered in a separate collapsed subsection (#4891).
+    marked_forms?: Array<{ form: string; label: string; marker: string; marker_label: string; stress?: string }>;
+    marked_form_count?: number;
   };
   meaning?: {
     definitions: string[];
@@ -175,6 +179,19 @@ const cefrLevel = enrichment?.cefr?.level ?? null;
 const paradigm = enrichment?.morphology?.paradigm ?? null;
 const nounParadigm = paradigm?.kind === "noun" ? paradigm : null;
 const verbParadigm = paradigm?.kind === "verb" ? paradigm : null;
+// Group style-marked forms (#4891) by their Ukrainian marker label so each stylistic
+// class (нестягнені, застарілі, розмовні …) gets its own labelled block. Preserves
+// first-seen order of both groups and rows.
+const markedForms = enrichment?.morphology?.marked_forms ?? [];
+const markedFormGroups: Array<{ marker_label: string; forms: typeof markedForms }> = [];
+for (const form of markedForms) {
+  let group = markedFormGroups.find((entry) => entry.marker_label === form.marker_label);
+  if (!group) {
+    group = { marker_label: form.marker_label, forms: [] };
+    markedFormGroups.push(group);
+  }
+  group.forms.push(form);
+}
 // entry_type-branched rendering (GH #4385): non-lemma article types are not
 // single inflecting heads, so they must NOT be forced through the lemma
 // paradigm/morphology template. A multiword_term / expression / phraseologism /
@@ -750,6 +767,30 @@ function groupExternalMaterials(items: NonNullable<Enrichment["external_material
                 </tr>
               ))}
             </table>
+          )}
+          {markedFormGroups.length > 0 && (
+            <details class="marked-forms">
+              <summary>Марковані форми (нестягнені, застарілі, розмовні)</summary>
+              <p class="atlas-muted marked-forms-note">
+                Це нестандартні або стилістично забарвлені форми, які трапляються в
+                поезії, фольклорі та давніших текстах. Вони не належать до сучасної
+                літературної норми.
+              </p>
+              {markedFormGroups.map((group) => (
+                <div class="marked-forms-group">
+                  <div class="marked-forms-label">{group.marker_label}</div>
+                  <table class="paradigm-table">
+                    <tr><th>Форма</th><th>Позначка</th></tr>
+                    {group.forms.map((form) => (
+                      <tr>
+                        <td class="form">{form.stress ?? stressDisplay(form.form)}</td>
+                        <td class="case-name">{form.label}</td>
+                      </tr>
+                    ))}
+                  </table>
+                </div>
+              ))}
+            </details>
           )}
         </section>
       )}

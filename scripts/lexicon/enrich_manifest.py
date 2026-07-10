@@ -562,6 +562,59 @@ _POS_LABELS: dict[str, str] = {
     "intj": "вигук",
 }
 
+# VESUM style/register markers → learner-facing Ukrainian label. Forms carrying any
+# of these are non-standard/stylistic and must NOT render inline with the modern
+# paradigm (#4891 — корисная «нестягнена» read as ordinary «жін., називний» beside
+# корисна). Marker semantics are quoted verbatim from the official dict_uk tagset
+# doc (``doc/tags.txt`` @ github.com/brown-uk/dict_uk), cross-checked against
+# ground-truth forms in ``data/vesum.db``:
+#   long  L40 "нестягнені форми прикметників" · L32 "наказові форми на -іте"
+#         · L61 "звортні дієприслівники на -ся"
+#   arch  L114 "застаріле/архаїчне/(інколи) діалектне"
+#   short L39 "короткі форми прикметників" · L31 "короткі форми дієслів 3-ї особи…"
+#   rare  L112 "другий зн. в. для істот (в президенти), плюс декілька рідкісних форм"
+#   slang L115 "сленг та (проф)жаргонізми"
+#   coll  L113 "розмовне слово/розмовна форма (наразі не генеруємо на виході)"
+#   obsc  L118 "обсценне"
+#   bad   L109 "покруч"
+#   alt   L116 "альтернативне написання (не за чинним правописом)"
+#   up19  L121 "за правописом 2019 (на виході вилучаємо)"
+#   up92  L120 "за правописом 1992 (на виході конвертуємо в alt)"
+# `ns` (L92 "множинний іменник") is DELIBERATELY EXCLUDED: it is a grammatical
+# sub-class (pluralia tantum — двері, окуляри, ножиці, гроші), whose plural forms
+# ARE the modern literary norm; segregating it would empty those paradigms.
+# `coll`/`bad` never appear in our VESUM build ("не генеруємо на виході") but are
+# mapped for completeness so any future dictionary refresh stays labelled.
+_STYLE_MARKER_LABELS: dict[str, str] = {
+    "long": "нестягнена форма",
+    "arch": "застаріла форма",
+    "short": "коротка форма",
+    "rare": "рідковживана форма",
+    "slang": "сленгова форма",
+    "coll": "розмовна форма",
+    "obsc": "обсценна форма",
+    "bad": "спотворена форма",
+    "alt": "альтернативне написання",
+    "up19": "форма за правописом 2019 року",
+    "up92": "форма за правописом 1992 року",
+}
+
+# Tokens that move a form out of the modern paradigm. Equal to the verified-label keys
+# today, kept as a distinct set so a future VESUM style flag can be segregated (falling
+# back to the generic label below) BEFORE its Ukrainian label is authored — without ever
+# silently reclassifying a grammatical token. Grammatical sub-tags (rev/adjp/pasv/actv/
+# comps/compc/impers/xp1/xp2/subst/nv/ns …) are deliberately absent.
+_STYLE_MARKERS: frozenset[str] = frozenset(_STYLE_MARKER_LABELS)
+
+# Never guess a description for a marker we have not verified (#M-4): an unlabelled but
+# segregated marker gets this honest generic label rather than a fabricated meaning.
+_GENERIC_STYLE_MARKER_LABEL = "інша маркована форма"
+
+# Cap on rows shipped per paradigm section. ``form_count`` is reported AFTER the cap
+# so it never disagrees with the rows actually rendered (pre-#4891 it reported the
+# uncapped total → «41 форм» beside 40 rows for корисний).
+_MORPHOLOGY_FORM_CAP = 40
+
 _NOUN_CASE_ORDER = (
     "називний",
     "родовий",
@@ -586,6 +639,15 @@ def _decode_tag(tag: str) -> str:
     seen: set[str] = set()
     out = [x for x in labels if not (x in seen or seen.add(x))]
     return ", ".join(out)
+
+
+def _style_markers_in_tag(tag: str) -> list[str]:
+    """Style/register markers present in a raw VESUM tag, in tag-token order.
+
+    Matches whole colon-delimited tokens (never substrings) so grammatical tokens
+    are never mistaken for a marker. Returns ``[]`` for a plain modern-paradigm tag.
+    """
+    return [token for token in tag.split(":") if token in _STYLE_MARKERS]
 
 
 def _split_label(label: str) -> list[str]:
@@ -2360,7 +2422,16 @@ def _is_slovnyk_warning_candidate(entry: dict[str, Any], status: dict[str, Any])
 
 
 def _morphology(lemma: str) -> dict | None:
-    """Full VESUM paradigm for a single-token lemma, decoded and de-duplicated."""
+    """Full VESUM paradigm for a single-token lemma, decoded and de-duplicated.
+
+    Style/register-marked forms (нестягнені, застарілі, розмовні … — any tag token
+    in ``_STYLE_MARKER_LABELS``) are partitioned into ``marked_forms`` so they never
+    render inline with the modern paradigm (#4891). The main ``forms``, ``form_count``
+    and ``paradigm`` describe the modern (unmarked) paradigm only; ``marked_forms``
+    carries ``{form, label, marker, marker_label, stress?}`` rows with the Ukrainian
+    style label, and ``marked_form_count`` its post-cap length. Both keys are omitted
+    when the lemma has no marked forms, so unmarked lemmas are unaffected.
+    """
     if " " in lemma.strip():
         return None  # phrases have no single-lemma paradigm
     try:
@@ -2371,12 +2442,35 @@ def _morphology(lemma: str) -> dict | None:
         return None
     pos_raw = forms[0].get("pos") or ""
     seen: set[tuple[str, str]] = set()
+    seen_marked: set[tuple[str, str, str]] = set()
     decoded: list[dict[str, str]] = []
+    marked: list[dict[str, str]] = []
     for row in forms:
         form = row.get("word_form") or ""
-        label = _decode_tag(row.get("tags") or "")
+        if not form:
+            continue
+        raw_tag = row.get("tags") or ""
+        label = _decode_tag(raw_tag)
+        markers = _style_markers_in_tag(raw_tag)
+        if markers:
+            marker = markers[0]
+            marked_key = (form, label, marker)
+            if marked_key in seen_marked:
+                continue
+            seen_marked.add(marked_key)
+            marked_row = {
+                "form": form,
+                "label": label,
+                "marker": marker,
+                "marker_label": _STYLE_MARKER_LABELS.get(marker, _GENERIC_STYLE_MARKER_LABEL),
+            }
+            stressed_form = _stress_display_form(form)
+            if stressed_form:
+                marked_row["stress"] = stressed_form
+            marked.append(marked_row)
+            continue
         key = (form, label)
-        if not form or key in seen:
+        if key in seen:
             continue
         seen.add(key)
         decoded_row = {"form": form, "label": label}
@@ -2384,12 +2478,13 @@ def _morphology(lemma: str) -> dict | None:
         if stressed_form:
             decoded_row["stress"] = stressed_form
         decoded.append(decoded_row)
-    if not decoded:
+    if not decoded and not marked:
         return None
+    forms_out = decoded[:_MORPHOLOGY_FORM_CAP]
     morphology = {
         "pos": _POS_LABELS.get(pos_raw, pos_raw),
-        "form_count": len(decoded),
-        "forms": decoded[:40],
+        "form_count": len(forms_out),
+        "forms": forms_out,
         "source": "VESUM",
     }
     paradigm = _build_paradigm(pos_raw, decoded)
@@ -2405,6 +2500,10 @@ def _morphology(lemma: str) -> dict | None:
                 stressed_forms[form] = stressed_form
     if stressed_forms:
         morphology["stress"] = {"source": _STRESS_SOURCE, "forms": stressed_forms}
+    if marked:
+        marked_out = marked[:_MORPHOLOGY_FORM_CAP]
+        morphology["marked_forms"] = marked_out
+        morphology["marked_form_count"] = len(marked_out)
     return morphology
 
 
