@@ -70,8 +70,15 @@ def _delivery_status(db_path: Path, delivery_id: str) -> str:
 def test_sweep_expires_stale_and_dead_lane_rows_in_the_routers_own_db(tmp_path):
     db_path = tmp_path / "messages.db"
     ids = _seed_channel_db(db_path)
-    assert not ab_config.DB_PATH.exists(), "real default DB must not exist before the sweep"
+    # Snapshot the default-path state instead of asserting global absence:
+    # other tests on the same pytest-xdist worker may legitimately have
+    # created the (conftest-patched) default DB before this one runs — this
+    # test only has to prove the sweep does not CREATE or MODIFY that file.
+    # (The absence precondition flaked in CI run 29085878896, 2026-07-10.)
     real_default_db_path = ab_config.DB_PATH
+    default_db_before = (
+        real_default_db_path.read_bytes() if real_default_db_path.exists() else None
+    )
 
     with patch.object(comms_router, "MESSAGE_DB", db_path):
         comms_router._maybe_run_delivery_expiry_sweep()
@@ -82,9 +89,13 @@ def test_sweep_expires_stale_and_dead_lane_rows_in_the_routers_own_db(tmp_path):
     assert _delivery_status(db_path, ids["stale_delivery_id"]) == "expired"
     assert _delivery_status(db_path, ids["dead_delivery_id"]) == "expired"
 
-    # The real ai_agent_bridge default DB path must remain untouched — no
-    # stray file created, and its module-level DB_PATH must be restored.
-    assert not real_default_db_path.exists()
+    # The real ai_agent_bridge default DB path must remain untouched by the
+    # sweep — not created, not modified — and the module-level DB_PATH must
+    # be restored.
+    if default_db_before is None:
+        assert not real_default_db_path.exists()
+    else:
+        assert real_default_db_path.read_bytes() == default_db_before
     assert real_default_db_path == ab_db.DB_PATH
     assert real_default_db_path == ab_config.DB_PATH
 
