@@ -22,6 +22,7 @@ if __package__ in {None, ""}:
     sys.path.insert(0, str(project_root / "scripts"))
 
 from scripts.audit import anchor_primitives
+from scripts.audit.layerb_keys import _build_event_index
 from scripts.audit.layerb_label_common import (
     LabelJoinError,
     atomic_write_json,
@@ -34,7 +35,6 @@ from scripts.audit.layerb_label_common import (
     shadow_rows,
     union_rows,
 )
-from scripts.audit.layerb_shadow import _build_event_index
 
 JUDGMENT_CASE_FIELDS = (
     "claim_is_true",
@@ -164,6 +164,61 @@ def _artifact_events(artifact: Mapping[str, Any]) -> list[Mapping[str, Any]]:
     return [event for event in events if isinstance(event, Mapping)]
 
 
+def verify_candidate_segments(
+    candidate: Mapping[str, Any], event_output_id: str, outputs: Mapping[str, str]
+) -> tuple[str, str]:
+    """Re-hash every recorded segment against the captured raw source bytes.
+
+    The shadow record is immutable input, not an authority for its own offsets
+    or hashes.  Every candidate copied into a scaffold therefore has to prove
+    its raw and normalized spans again at emission time.
+    """
+    raw_output = outputs.get(event_output_id)
+    if raw_output is None:
+        raise LabelJoinError(f"candidate event output is unavailable: {event_output_id}")
+    if sha256_text(raw_output) != candidate.get("raw_output_sha256"):
+        raise LabelJoinError(f"candidate raw-output hash mismatch: {event_output_id}")
+    normalized_output = anchor_primitives.normalize_for_match(raw_output)
+    if sha256_text(normalized_output) != candidate.get("normalized_output_sha256"):
+        raise LabelJoinError(f"candidate normalized-output hash mismatch: {event_output_id}")
+    segments = candidate.get("ordered_segment_spans")
+    if not isinstance(segments, list) or not segments:
+        raise LabelJoinError(f"candidate has no ordered segment spans: {event_output_id}")
+    previous_normalized_end = 0
+    previous_raw_end = 0
+    for expected_index, segment in enumerate(segments):
+        if not isinstance(segment, Mapping) or segment.get("segment_index") != expected_index:
+            raise LabelJoinError(f"candidate segment indices are not consecutive: {event_output_id}")
+        offsets = (
+            "output_normalized_start",
+            "output_normalized_end",
+            "output_raw_start",
+            "output_raw_end",
+        )
+        values = [segment.get(name) for name in offsets]
+        if not all(isinstance(value, int) and not isinstance(value, bool) for value in values):
+            raise LabelJoinError(f"candidate segment offsets are not integer values: {event_output_id}")
+        normalized_start, normalized_end, raw_start, raw_end = values
+        if not (
+            0 <= normalized_start < normalized_end <= len(normalized_output)
+            and 0 <= raw_start < raw_end <= len(raw_output)
+            and previous_normalized_end <= normalized_start
+            and previous_raw_end <= raw_start
+        ):
+            raise LabelJoinError(f"candidate segment spans are out of bounds or overlap: {event_output_id}")
+        normalized_segment = normalized_output[normalized_start:normalized_end]
+        raw_segment = raw_output[raw_start:raw_end]
+        if anchor_primitives.normalize_for_match(raw_segment) != normalized_segment:
+            raise LabelJoinError(f"candidate normalized-to-raw segment mapping does not round trip: {event_output_id}")
+        if sha256_text(normalized_segment) != segment.get("normalized_segment_sha256") or sha256_text(
+            raw_segment
+        ) != segment.get("raw_segment_sha256"):
+            raise LabelJoinError(f"candidate segment SHA-256 does not match captured output: {event_output_id}")
+        previous_normalized_end = normalized_end
+        previous_raw_end = raw_end
+    return raw_output, normalized_output
+
+
 def _schema_candidate(candidate: Mapping[str, Any]) -> tuple[str, dict[str, Any]]:
     event_output_id = candidate.get("event_output_id")
     if not isinstance(event_output_id, str) or not SHA_RE.fullmatch(event_output_id):
@@ -203,7 +258,7 @@ def _case_from_row(
     *,
     corpus_dir: Path,
     corpus: Mapping[str, Mapping[str, Any]],
-) -> tuple[dict[str, Any], dict[str, Any], str]:
+) -> tuple[dict[str, Any], dict[str, Any], str, int]:
     grounding_key = row.get("grounding_key")
     if not isinstance(grounding_key, str) or grounding_key != shadow.get("grounding_key"):
         raise LabelJoinError(f"keyed row does not exactly resolve to a shadow grounding key: {grounding_key!r}")
@@ -218,11 +273,15 @@ def _case_from_row(
     candidates = layer_a.get("candidates")
     if not isinstance(candidates, list):
         raise LabelJoinError(f"shadow {grounding_key} has malformed Layer A candidates")
+    event_outputs = _build_event_index(_artifact_events(artifact))
     grouped_candidates: dict[str, list[dict[str, Any]]] = {}
+    segment_verified_candidates = 0
     for candidate in candidates:
         if not isinstance(candidate, Mapping):
             raise LabelJoinError(f"shadow {grounding_key} includes a non-object candidate")
         event_output_id, shaped = _schema_candidate(candidate)
+        verify_candidate_segments(shaped, event_output_id, event_outputs)
+        segment_verified_candidates += 1
         grouped_candidates.setdefault(event_output_id, []).append(shaped)
     all_scans_complete = all(candidate.get("anchor_scan_complete") is True for candidate in candidates)
     case: dict[str, Any] = {
@@ -251,23 +310,15 @@ def _case_from_row(
     if not case["fixture_id"] or not case["claim"] or not case["evidence_excerpt"]:
         raise LabelJoinError(f"shadow {grounding_key} cannot produce a complete mechanical case identity")
     packet = _packet_case(case, row, artifact, corpus_dir=corpus_dir)
-    return case, packet, artifact_name
+    return case, packet, artifact_name, segment_verified_candidates
 
 
 def _candidate_navigation(
     candidate: Mapping[str, Any], event_output_id: str, outputs: Mapping[str, str]
 ) -> dict[str, Any]:
-    raw_output = outputs.get(event_output_id)
-    if raw_output is None:
-        raise LabelJoinError(f"candidate event output is unavailable: {event_output_id}")
-    if sha256_text(raw_output) != candidate.get("raw_output_sha256"):
-        raise LabelJoinError(f"candidate raw-output hash mismatch: {event_output_id}")
-    normalized_output = anchor_primitives.normalize_for_match(raw_output)
-    if sha256_text(normalized_output) != candidate.get("normalized_output_sha256"):
-        raise LabelJoinError(f"candidate normalized-output hash mismatch: {event_output_id}")
+    raw_output, normalized_output = verify_candidate_segments(candidate, event_output_id, outputs)
     segments = candidate.get("ordered_segment_spans")
-    if not isinstance(segments, list) or not segments:
-        raise LabelJoinError(f"candidate has no ordered segment spans: {event_output_id}")
+    assert isinstance(segments, list) and segments
     normalized_start = min(int(segment["output_normalized_start"]) for segment in segments)
     normalized_end = max(int(segment["output_normalized_end"]) for segment in segments)
     raw_start = min(int(segment["output_raw_start"]) for segment in segments)
@@ -370,18 +421,20 @@ def build_scaffold(
     packets: list[dict[str, Any]] = []
     used_artifacts: set[str] = set()
     seen_cases: set[str] = set()
+    segment_verified_candidates = 0
     for row in keyed_rows:
         key = row.get("grounding_key")
         shadow = shadow_by_key.get(str(key))
         if shadow is None:
             raise LabelJoinError(f"keyed union contains missing shadow grounding key: {key!r}")
-        case, packet, artifact_name = _case_from_row(row, shadow, corpus_dir=corpus_dir, corpus=corpus)
+        case, packet, artifact_name, verified_count = _case_from_row(row, shadow, corpus_dir=corpus_dir, corpus=corpus)
         if case["case_id"] in seen_cases:
             raise LabelJoinError(f"keyed union has duplicate case_id: {case['case_id']}")
         seen_cases.add(case["case_id"])
         cases.append(case)
         packets.append(packet)
         used_artifacts.add(artifact_name)
+        segment_verified_candidates += verified_count
     ordered_pairs = sorted(zip(cases, packets, strict=True), key=lambda pair: str(pair[0]["case_id"]))
     cases = [case for case, _packet in ordered_pairs]
     packets = [packet for _case, packet in ordered_pairs]
@@ -422,6 +475,7 @@ def build_scaffold(
         "cases": len(cases),
         "shards": sum(1 for shard in range(shard_count) if packets[shard * per_shard : (shard + 1) * per_shard]),
         "candidates": sum(len(group) for case in cases for group in case["candidates_by_event_output_id"].values()),
+        "segment_verified_candidates": segment_verified_candidates,
         "judgment_fields_prefilled": 0,
         "join_report": dict((keyed_document.get("keying") or {}).get("join_report") or {}),
     }

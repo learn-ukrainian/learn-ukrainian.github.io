@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Shared deterministic primitives for the offline Layer B label tools.
 
-This module intentionally contains only stdlib code plus the already-offline
-Layer B shadow helper.  It is not imported by the QG runtime.
+This module intentionally contains only stdlib code plus the pure Layer B
+identity helper.  It is not imported by the QG runtime.
 """
 
 from __future__ import annotations
@@ -16,7 +16,7 @@ from collections.abc import Iterable, Mapping, Sequence
 from pathlib import Path
 from typing import Any
 
-from scripts.audit.layerb_shadow import _stable_grounding_key
+from scripts.audit.layerb_keys import _stable_grounding_key
 
 
 class LabelJoinError(ValueError):
@@ -238,6 +238,120 @@ def render_key(key: Sequence[str]) -> str:
     return canonical_json(list(key))
 
 
+def _shadow_candidate_profile(shadow: Mapping[str, Any]) -> str:
+    """Canonicalize every Layer-A field that can change emitted candidates."""
+    layer_a = shadow.get("layer_a")
+    if not isinstance(layer_a, Mapping):
+        raise LabelJoinError(f"shadow record has no Layer A object: {shadow.get('grounding_key')!r}")
+    candidates = layer_a.get("candidates")
+    if not isinstance(candidates, list) or not all(isinstance(candidate, Mapping) for candidate in candidates):
+        raise LabelJoinError(f"shadow Layer A candidates are malformed: {shadow.get('grounding_key')!r}")
+    return canonical_json(
+        {
+            "decision": layer_a.get("decision"),
+            "reason": layer_a.get("reason"),
+            "candidate_set_complete": layer_a.get("candidate_set_complete"),
+            # Candidate IDs, source indexes, similarities, hashes, and spans
+            # are retained in full; sorting makes member order immaterial.
+            "candidates": sorted(canonical_json(dict(candidate)) for candidate in candidates),
+        }
+    )
+
+
+def _shadow_matches_derivation(
+    derivation: Mapping[str, Any], shadow: Mapping[str, Any], corpus: Mapping[str, Mapping[str, Any]]
+) -> bool:
+    """Check every derivation signal represented by the shadow evidence.
+
+    The source-index check is performed by :func:`resolve_derivation_indices`
+    before this join.  This function then verifies the fact-check structural
+    correspondence plus every per-fact Layer-A signal preserved by both
+    reports.  Fields not retained by the shadow report are deliberately not
+    invented as a matching heuristic.
+    """
+    _artifact_path, fact_check = artifact_fact_check(shadow, corpus)
+    if (
+        str(derivation.get("fixture") or "") != str(shadow.get("fixture") or "")
+        or str(derivation.get("claim") or "") != str(fact_check.get("claim") or "")
+        or str(derivation.get("excerpt") or "") != excerpt_from_fact_check(fact_check)
+    ):
+        return False
+    layer_a = shadow.get("layer_a")
+    if not isinstance(layer_a, Mapping):
+        return False
+    candidates = layer_a.get("candidates")
+    if not isinstance(candidates, list) or not all(isinstance(candidate, Mapping) for candidate in candidates):
+        return False
+
+    anchored = layer_a.get("decision") == "ANCHOR"
+    if isinstance(derivation.get("v2_anchored"), bool) and derivation["v2_anchored"] is not anchored:
+        return False
+    # A non-recovered effective result has the same meaning as the materialized
+    # Layer-A anchor.  Abstain recovery is not retained in the shadow record,
+    # so it cannot be used as a fabricated identity signal.
+    if (
+        derivation.get("abstain_recovered") is not True
+        and isinstance(derivation.get("v2_effective"), bool)
+        and derivation["v2_effective"] is not anchored
+    ):
+        return False
+    if (
+        isinstance(derivation.get("similarity"), (int, float))
+        and not isinstance(derivation.get("similarity"), bool)
+        and not any(candidate.get("similarity") == derivation["similarity"] for candidate in candidates)
+    ):
+        return False
+    return not (
+        isinstance(derivation.get("tool_query_matched"), bool)
+        and not any(candidate.get("tool_query_matched") is derivation["tool_query_matched"] for candidate in candidates)
+    )
+
+
+def _unrepresented_derivation_profile(row: Mapping[str, Any]) -> str:
+    """Return fields that cannot safely identify a particular shadow record.
+
+    A duplicate group may use per-row matching only when every field not
+    preserved by the shadow is uniform across the group.  Otherwise a unique
+    match on a subset would still silently assign a fact-check key across a
+    derivation distinction that the shadow cannot verify.
+    """
+    represented = {
+        "fixture",
+        "seat_arm",
+        "claim",
+        "excerpt",
+        "source_index",
+        "union_categories",
+        "v2_anchored",
+        "v2_effective",
+        "similarity",
+        "tool_query_matched",
+    }
+    return canonical_json({key: value for key, value in row.items() if key not in represented})
+
+
+def _unique_perfect_matching(edges: Sequence[Sequence[int]]) -> list[int] | None:
+    """Return the sole perfect matching, or ``None`` when it is absent/ambiguous."""
+    solutions: list[list[int]] = []
+
+    def search(row: int, used: set[int], selected: list[int]) -> None:
+        if len(solutions) > 1:
+            return
+        if row == len(edges):
+            solutions.append(list(selected))
+            return
+        for candidate in edges[row]:
+            if candidate not in used:
+                used.add(candidate)
+                selected.append(candidate)
+                search(row + 1, used, selected)
+                selected.pop()
+                used.remove(candidate)
+
+    search(0, set(), [])
+    return solutions[0] if len(solutions) == 1 else None
+
+
 def _derivation_comparable(row: Mapping[str, Any]) -> dict[str, Any]:
     """Discard only union membership metadata for an exact source-index check."""
     return {key: value for key, value in row.items() if key not in {"union_categories", "source_index"}}
@@ -291,27 +405,50 @@ def resolve_derivation_to_shadow(
     derivations: Sequence[Mapping[str, Any]],
     shadows: Sequence[Mapping[str, Any]],
     corpus: Mapping[str, Mapping[str, Any]],
-) -> dict[int, dict[str, Any]]:
-    """Create a total deterministic multiset bijection to unordered shadow rows.
+    *,
+    derivation_indexes: Sequence[int] | None = None,
+) -> tuple[dict[int, dict[str, Any]], dict[tuple[str, str, str, str], dict[str, Any]]]:
+    """Create a total derivation-to-shadow bijection without positional pairing.
 
-    Group membership is an exact tuple of seat metadata, fixture, claim, and
-    raw evidence excerpt.  Only ties *within that exact group* are ordered by
-    stable derivation index and immutable grounding key.  This never relies on
-    the (known-different) global iteration order of the two frozen reports.
+    A singleton structural key is self-identifying.  A duplicate group must
+    instead either have one evidence-backed perfect matching, or first prove
+    that every member has the same complete candidate-relevant Layer-A
+    profile.  There is intentionally no sort-and-zip fallback for a group
+    whose members might carry different grounding identities.
     """
+    if derivation_indexes is None:
+        selected_indexes = list(range(len(derivations)))
+        require_full_bijection = True
+    else:
+        selected_indexes = list(derivation_indexes)
+        require_full_bijection = False
+        if len(set(selected_indexes)) != len(selected_indexes) or any(
+            index < 0 or index >= len(derivations) for index in selected_indexes
+        ):
+            raise LabelJoinError("selected derivation indexes must be unique in-range integers")
+
     derivation_groups: dict[tuple[str, str, str, str], list[int]] = defaultdict(list)
     shadow_groups: dict[tuple[str, str, str, str], list[dict[str, Any]]] = defaultdict(list)
-    for index, row in enumerate(derivations):
+    for index in selected_indexes:
+        row = derivations[index]
         derivation_groups[structural_key_from_union(row)].append(index)
     for shadow in shadows:
         shadow_groups[structural_key_from_shadow(shadow, corpus)].append(dict(shadow))
 
     missing = sorted(render_key(key) for key in derivation_groups.keys() - shadow_groups.keys())
-    extra = sorted(render_key(key) for key in shadow_groups.keys() - derivation_groups.keys())
+    extra = (
+        sorted(render_key(key) for key in shadow_groups.keys() - derivation_groups.keys())
+        if require_full_bijection
+        else []
+    )
     count_mismatches = sorted(
         render_key(key)
         for key in derivation_groups.keys() & shadow_groups.keys()
-        if len(derivation_groups[key]) != len(shadow_groups[key])
+        if (
+            len(derivation_groups[key]) != len(shadow_groups[key])
+            if require_full_bijection
+            else len(derivation_groups[key]) > len(shadow_groups[key])
+        )
     )
     if missing or extra or count_mismatches:
         details: list[str] = []
@@ -324,19 +461,73 @@ def resolve_derivation_to_shadow(
         raise LabelJoinError("derivation-to-shadow bijection failed: " + "; ".join(details))
 
     mapped: dict[int, dict[str, Any]] = {}
+    resolutions: dict[tuple[str, str, str, str], dict[str, Any]] = {}
     seen_keys: set[str] = set()
     for key in sorted(derivation_groups):
         indexes = sorted(derivation_groups[key])
-        candidates = sorted(shadow_groups[key], key=lambda row: str(row.get("grounding_key") or ""))
-        for index, shadow in zip(indexes, candidates, strict=True):
+        candidates = list(shadow_groups[key])
+        if len(indexes) == 1 and len(candidates) == 1:
+            pairs = [(indexes[0], candidates[0])]
+            resolution_basis = "unique_structural_key"
+        else:
+            profiles = {_shadow_candidate_profile(candidate) for candidate in candidates}
+            if len(profiles) == 1:
+                # This order is used only after the complete candidate profile
+                # has proven that all pairings are harmless.
+                pairs = list(
+                    zip(indexes, sorted(candidates, key=lambda row: str(row.get("grounding_key") or "")), strict=True)
+                )
+                resolution_basis = "equivalence_class"
+            else:
+                unrepresented_profiles = {_unrepresented_derivation_profile(derivations[index]) for index in indexes}
+                if len(unrepresented_profiles) != 1:
+                    raise LabelJoinError(
+                        "duplicate structural-key group has differing derivation fields that are not preserved "
+                        f"by the shadow record: key={render_key(key)} derivation_indexes={indexes}"
+                    )
+                ordered_candidates = sorted(candidates, key=lambda row: str(row.get("grounding_key") or ""))
+                edges = [
+                    [
+                        candidate_index
+                        for candidate_index, shadow in enumerate(ordered_candidates)
+                        if _shadow_matches_derivation(derivations[index], shadow, corpus)
+                    ]
+                    for index in indexes
+                ]
+                matching = _unique_perfect_matching(edges)
+                if matching is None:
+                    edge_counts = [len(edge) for edge in edges]
+                    raise LabelJoinError(
+                        "duplicate structural-key group cannot be resolved by per-row identity or equivalence "
+                        f"class: key={render_key(key)} derivation_indexes={indexes} candidate_edge_counts={edge_counts}"
+                    )
+                pairs = [
+                    (index, ordered_candidates[candidate_index])
+                    for index, candidate_index in zip(indexes, matching, strict=True)
+                ]
+                resolution_basis = "per_row_identity"
+        for index, shadow in pairs:
             grounding_key = shadow.get("grounding_key")
             if not isinstance(grounding_key, str) or grounding_key in seen_keys:
                 raise LabelJoinError(f"shadow grounding keys are not unique: {grounding_key!r}")
             seen_keys.add(grounding_key)
             mapped[index] = shadow
-    if len(mapped) != len(derivations) or len(seen_keys) != len(shadows):
+        resolutions[key] = {
+            "resolution_basis": resolution_basis,
+            "derivation_indexes": indexes,
+            "identity_fields": [
+                "union source_index -> exact derivation row",
+                "fact-check fixture/claim/evidence excerpt",
+                "layer_a.decision <-> v2_anchored",
+                "candidate.similarity",
+                "candidate.tool_query_matched",
+                "all shadow-unrepresented derivation fields equal within group",
+                "complete candidate profile (equivalence only)",
+            ],
+        }
+    if len(mapped) != len(selected_indexes) or (require_full_bijection and len(seen_keys) != len(shadows)):
         raise LabelJoinError(
-            f"derivation-to-shadow mapping is not total/bijective: derivation={len(derivations)} "
-            f"mapped={len(mapped)} shadow={len(shadows)}"
+            f"derivation-to-shadow mapping is not total/bijective: derivation={len(selected_indexes)} "
+            f"mapped={len(mapped)} shadow={len(shadows)} full_bijection={require_full_bijection}"
         )
-    return mapped
+    return mapped, resolutions

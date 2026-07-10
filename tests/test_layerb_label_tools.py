@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import copy
 import json
+import subprocess
 from collections.abc import Mapping
 from hashlib import sha256
 from pathlib import Path
@@ -12,17 +13,17 @@ from typing import Any
 import pytest
 from jsonschema import Draft202012Validator
 
+from scripts.audit.layerb_keys import _build_event_index, _stable_grounding_key
 from scripts.audit.layerb_label_common import LabelJoinError, sha256_text
 from scripts.audit.layerb_label_merge import merge_annotator_sidecars
 from scripts.audit.layerb_label_scaffold import (
     JUDGMENT_CASE_FIELDS,
     _artifact_events,
-    _build_event_index,
     build_scaffold,
     validate_annotator_record,
+    write_scaffold,
 )
 from scripts.audit.layerb_label_union import attach_keys, derive_union
-from scripts.audit.layerb_shadow import _stable_grounding_key
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 SCHEMA = json.loads((REPO_ROOT / "schemas" / "qg-layer-b-labels.v2.schema.json").read_text(encoding="utf-8"))
@@ -188,6 +189,28 @@ def _keyed_inputs(tmp_path: Path, count: int = 8) -> tuple[dict[str, Any], dict[
     return keyed, shadow, corpus_dir
 
 
+def _make_duplicate_structural_group(
+    tmp_path: Path,
+) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any], Path]:
+    """Create two fact checks with one structural key and distinct stable keys."""
+    union, derivation, shadow, corpus_dir = _inputs(tmp_path, count=2)
+    artifact_path = next(corpus_dir.glob("*.json"))
+    artifact = json.loads(artifact_path.read_text(encoding="utf-8"))
+    shared_claim = artifact["payload"]["fact_checks"][0]["claim"]
+    artifact["payload"]["fact_checks"][1]["claim"] = shared_claim
+    artifact_path.write_text(json.dumps(artifact, ensure_ascii=False), encoding="utf-8")
+    for document in (union, derivation):
+        document["rows" if document is union else "records"][1]["claim"] = shared_claim
+    for record in shadow["records"]:
+        record["claim"] = shared_claim
+    return union, derivation, shadow, corpus_dir
+
+
+def _shadow_for_fact_index(shadow: Mapping[str, Any], index: int) -> dict[str, Any]:
+    marker = f"#fact_checks[{index}]"
+    return next(record for record in shadow["records"] if marker in record["grounding_key"])
+
+
 def test_attach_totality_bijection_and_original_row_preservation_for_535_rows(tmp_path: Path) -> None:
     union, derivation, shadow, corpus_dir = _inputs(tmp_path, count=535)
 
@@ -211,6 +234,54 @@ def test_attach_hard_fails_with_exact_ambiguous_key(tmp_path: Path) -> None:
     union["rows"] = [ambiguous]
 
     with pytest.raises(LabelJoinError, match=r"ambiguous keys=.*Synthetic claim 0"):
+        attach_keys(union, derivation, shadow, corpus_dir=corpus_dir)
+
+
+def test_attach_duplicate_group_uses_per_row_candidate_identity(tmp_path: Path) -> None:
+    union, derivation, shadow, corpus_dir = _make_duplicate_structural_group(tmp_path)
+    derivation["records"][0]["similarity"] = 0.91
+    derivation["records"][1]["similarity"] = 0.82
+    union["rows"][0]["similarity"] = 0.91
+    union["rows"][1]["similarity"] = 0.82
+    for document in (union, derivation):
+        records = document["rows" if document is union else "records"]
+        records[1]["v1_admissible"] = False
+        records[1]["v2_anchored"] = True
+        records[1]["v2_effective"] = True
+    for index, similarity in enumerate((0.91, 0.82)):
+        record = _shadow_for_fact_index(shadow, index)
+        record["layer_a"]["candidates"][0]["similarity"] = similarity
+        record["layer_a"]["candidates"][0]["source_index"] = index
+        record["candidate_details"][0]["candidate"]["similarity"] = similarity
+        record["candidate_details"][0]["candidate"]["source_index"] = index
+
+    keyed, report = attach_keys(union, derivation, shadow, corpus_dir=corpus_dir)
+
+    expected = {index: _shadow_for_fact_index(shadow, index)["grounding_key"] for index in range(2)}
+    assert [row["grounding_key"] for row in keyed["rows"]] == [expected[0], expected[1]]
+    assert report["duplicate_group_resolutions"][0]["resolution_basis"] == "per_row_identity"
+
+
+def test_attach_duplicate_group_records_equivalence_class_resolution(tmp_path: Path) -> None:
+    union, derivation, shadow, corpus_dir = _make_duplicate_structural_group(tmp_path)
+    first = _shadow_for_fact_index(shadow, 0)
+    second = _shadow_for_fact_index(shadow, 1)
+    second["layer_a"] = copy.deepcopy(first["layer_a"])
+
+    _keyed, report = attach_keys(union, derivation, shadow, corpus_dir=corpus_dir)
+
+    assert report["duplicate_group_resolutions"][0]["resolution_basis"] == "equivalence_class"
+
+
+def test_attach_duplicate_group_hard_fails_when_members_differ_without_identity(tmp_path: Path) -> None:
+    union, derivation, shadow, corpus_dir = _make_duplicate_structural_group(tmp_path)
+    for document in (union, derivation):
+        document["rows" if document is union else "records"][1]["v1_admissible"] = False
+    second = _shadow_for_fact_index(shadow, 1)
+    second["layer_a"]["candidates"][0]["similarity"] = 0.82
+    second["candidate_details"][0]["candidate"]["similarity"] = 0.82
+
+    with pytest.raises(LabelJoinError, match="duplicate structural-key group"):
         attach_keys(union, derivation, shadow, corpus_dir=corpus_dir)
 
 
@@ -248,6 +319,7 @@ def test_scaffold_null_judgments_hashes_windows_and_resume(tmp_path: Path) -> No
     scaffold, report = build_scaffold(keyed, shadow, corpus_dir=corpus_dir, output_dir=output_dir, shard_count=4)
 
     assert report["cases"] == 8
+    assert report["segment_verified_candidates"] == 8
     assert all(case[field] is None for case in scaffold["cases"] for field in JUDGMENT_CASE_FIELDS)
     packet_case_ids: list[str] = []
     for packet_path in sorted((output_dir / "packets").glob("shard-*.jsonl")):
@@ -275,6 +347,52 @@ def test_scaffold_null_judgments_hashes_windows_and_resume(tmp_path: Path) -> No
                 for segment in candidate["ordered_segment_spans"]:
                     raw = RAW_OUTPUT[segment["output_raw_start"] : segment["output_raw_end"]]
                     assert sha256_text(raw) == segment["raw_segment_sha256"]
+    keyed_path = tmp_path / "keyed-union.json"
+    shadow_path = tmp_path / "phase1-shadow.json"
+    keyed_path.write_text(json.dumps(keyed, ensure_ascii=False), encoding="utf-8")
+    shadow_path.write_text(json.dumps(shadow, ensure_ascii=False), encoding="utf-8")
+    _manifest_scaffold, manifest = write_scaffold(
+        keyed_path,
+        shadow_path,
+        corpus_dir=corpus_dir,
+        output_dir=tmp_path / "manifest-scaffold",
+    )
+    assert manifest["counts"]["segment_verified_candidates"] == 8
+
+
+def test_scaffold_hard_fails_when_a_shadow_segment_hash_does_not_match(tmp_path: Path) -> None:
+    keyed, shadow, corpus_dir = _keyed_inputs(tmp_path)
+    corrupt = copy.deepcopy(shadow)
+    corrupt["records"][0]["layer_a"]["candidates"][0]["ordered_segment_spans"][0]["raw_segment_sha256"] = "0" * 64
+
+    with pytest.raises(LabelJoinError, match="segment SHA-256 does not match captured output"):
+        build_scaffold(keyed, corrupt, corpus_dir=corpus_dir, output_dir=tmp_path / "scaffold")
+
+
+@pytest.mark.parametrize(
+    "module",
+    (
+        "scripts.audit.layerb_label_common",
+        "scripts.audit.layerb_label_union",
+        "scripts.audit.layerb_label_scaffold",
+        "scripts.audit.layerb_label_merge",
+    ),
+)
+def test_label_tool_imports_do_not_load_runtime_reviewer_dispatch(module: str) -> None:
+    command = (
+        "import importlib, sys; "
+        f"importlib.import_module({module!r}); "
+        "raise SystemExit('scripts.audit.llm_reviewer_dispatch' in sys.modules)"
+    )
+    completed = subprocess.run(
+        [str(REPO_ROOT / ".venv" / "bin" / "python"), "-c", command],
+        cwd=REPO_ROOT,
+        check=False,
+        capture_output=True,
+        text=True,
+    )
+
+    assert completed.returncode == 0, completed.stderr
 
 
 def test_validate_annotator_record_rejects_out_of_bounds_spans(tmp_path: Path) -> None:

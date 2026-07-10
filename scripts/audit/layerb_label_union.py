@@ -59,20 +59,30 @@ def _rows_document(
     return result
 
 
-def _duplicate_group_report(rows: Sequence[Mapping[str, Any]]) -> list[dict[str, Any]]:
+def _duplicate_group_report(
+    rows: Sequence[Mapping[str, Any]],
+    resolutions: Mapping[tuple[str, str, str, str], Mapping[str, Any]],
+) -> list[dict[str, Any]]:
     groups: dict[tuple[str, str, str, str], list[int]] = defaultdict(list)
     for index, row in enumerate(rows):
         groups[structural_key_from_union(row)].append(index)
-    return [
-        {
-            "key": list(key),
-            "count": len(indexes),
-            "row_indexes": indexes,
-            "resolution": "frozen source_index -> exact derivation row -> grouped shadow bijection",
-        }
-        for key, indexes in sorted(groups.items())
-        if len(indexes) > 1
-    ]
+    reports: list[dict[str, Any]] = []
+    for key, indexes in sorted(groups.items()):
+        if len(indexes) < 2:
+            continue
+        resolution = resolutions.get(key)
+        if resolution is None:
+            raise LabelJoinError(f"duplicate union group has no shadow resolution: {canonical_json(list(key))}")
+        reports.append(
+            {
+                "key": list(key),
+                "count": len(indexes),
+                "row_indexes": indexes,
+                "resolution_basis": resolution.get("resolution_basis"),
+                "identity_fields": list(resolution.get("identity_fields") or []),
+            }
+        )
+    return reports
 
 
 def attach_keys(
@@ -93,7 +103,12 @@ def attach_keys(
     shadows = shadow_rows(shadow_document)
     corpus = load_corpus(corpus_dir)
     selected_derivation_indexes = resolve_derivation_indices(selected, derivations)
-    derivation_to_shadow = resolve_derivation_to_shadow(derivations, shadows, corpus)
+    derivation_to_shadow, group_resolutions = resolve_derivation_to_shadow(
+        derivations,
+        shadows,
+        corpus,
+        derivation_indexes=selected_derivation_indexes,
+    )
 
     keyed_rows: list[dict[str, Any]] = []
     for row, derivation_index in zip(selected, selected_derivation_indexes, strict=True):
@@ -110,7 +125,7 @@ def attach_keys(
     if len(set(grounding_keys)) != len(grounding_keys):
         duplicates = sorted(key for key, count in Counter(grounding_keys).items() if count > 1)
         raise LabelJoinError("keyed union is not bijective; duplicate grounding keys=" + ", ".join(duplicates))
-    duplicate_groups = _duplicate_group_report(selected)
+    duplicate_groups = _duplicate_group_report(selected, group_resolutions)
     report: dict[str, Any] = {
         "mode": "attach",
         "union_rows": len(selected),
@@ -159,7 +174,7 @@ def derive_union(
     derivations = derivation_rows(derivation_document)
     shadows = shadow_rows(shadow_document)
     corpus = load_corpus(corpus_dir)
-    derivation_to_shadow = resolve_derivation_to_shadow(derivations, shadows, corpus)
+    derivation_to_shadow, _group_resolutions = resolve_derivation_to_shadow(derivations, shadows, corpus)
     selected_categories: dict[int, set[str]] = {
         index: _category_names(row) for index, row in enumerate(derivations) if _category_names(row)
     }
