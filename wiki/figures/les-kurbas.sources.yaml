@@ -33,12 +33,6 @@ sources:
   tier: T1
   title: Енциклопедія українознавства
   author: Колектив
-- id: S8
-  file: wikipedia/Лесь Курбас
-  type: wikipedia
-  tier: T3
-  title: 'Лесь Курбас (життєпис, репресії, Справа № 3168)'
-  url: https://uk.wikipedia.org/wiki/%D0%9B%D0%B5%D1%81%D1%8C_%D0%9A%D1%83%D1%80%D0%B1%D0%B0%D1%81
 - id: S9
   file: wikipedia/97 (п'єса)
   type: wikipedia
