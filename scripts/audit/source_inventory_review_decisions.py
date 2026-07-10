@@ -110,9 +110,15 @@ def validate_decision_file(
     source_index: Mapping[tuple[str, str, str], SourceInventoryRecord] | None = None,
 ) -> dict[str, Any]:
     payload = _read_yaml_mapping(path)
+    # Check `kind` BEFORE unknown-field rejection: a document of a different
+    # kind dropped into the decisions directory (2026-07-10 incident — grow
+    # triage ledgers, #4888/#4889) should fail with "this is the wrong kind
+    # of file for this directory", not a wall of unknown-field noise.
+    # Non-decision documents belong elsewhere (see
+    # data/lexicon/grow-triage-ledgers/README.md).
+    _require_equal(path, payload.get("kind"), DECISION_KIND, "kind")
     _reject_unknown_fields(path, payload, allowed=TOP_LEVEL_FIELDS, scope="top level")
     _require_equal(path, payload.get("version"), DECISION_VERSION, "version")
-    _require_equal(path, payload.get("kind"), DECISION_KIND, "kind")
     for field in ("batch_id", "batch_label", "reviewer", "reviewed_at"):
         _require_text(path, payload.get(field), field)
     if payload.get("production_outputs_updated") != []:
