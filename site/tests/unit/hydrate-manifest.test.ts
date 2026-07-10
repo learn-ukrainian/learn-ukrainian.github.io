@@ -3,6 +3,7 @@ import { gzipSync } from 'node:zlib';
 import { afterEach, describe, expect, test, vi } from 'vitest';
 import {
   assertAllowedDownloadUrl,
+  assertNotClobberingRicherLocal,
   assertPointerFresh,
   downloadGzip,
   downloadUrl,
@@ -197,5 +198,49 @@ describe('pointer freshness checks', () => {
     expect(warn).toHaveBeenCalledWith(
       'Atlas manifest pointer fingerprint old-fingerprint is stale; expected new-fingerprint. Run make atlas-publish.',
     );
+  });
+});
+
+describe('local-work guard (#4917: hydrate must not clobber richer local manifest)', () => {
+  const { mkdtempSync, writeFileSync, rmSync } = require('node:fs');
+  const { tmpdir } = require('node:os');
+  const { join } = require('node:path');
+
+  let dir: string;
+  afterEach(() => {
+    delete process.env.ATLAS_MANIFEST_FORCE_HYDRATE;
+    if (dir) rmSync(dir, { recursive: true, force: true });
+  });
+
+  function writeLocal(entries: number): string {
+    dir = mkdtempSync(join(tmpdir(), 'hydrate-guard-'));
+    const p = join(dir, 'lexicon-manifest.json');
+    writeFileSync(p, JSON.stringify({ entries: Array.from({ length: entries }, (_, i) => ({ lemma: `w${i}` })) }));
+    return p;
+  }
+
+  test('refuses when local has MORE entries than the download', async () => {
+    const p = writeLocal(5);
+    await expect(assertNotClobberingRicherLocal(3, p)).rejects.toThrow(/refusing to overwrite local manifest with 5 entries/);
+  });
+
+  test('proceeds when download is richer or equal', async () => {
+    const p = writeLocal(3);
+    await expect(assertNotClobberingRicherLocal(3, p)).resolves.toBeUndefined();
+    await expect(assertNotClobberingRicherLocal(10, p)).resolves.toBeUndefined();
+  });
+
+  test('ATLAS_MANIFEST_FORCE_HYDRATE=1 overrides the refusal (explicit restore)', async () => {
+    const p = writeLocal(5);
+    process.env.ATLAS_MANIFEST_FORCE_HYDRATE = '1';
+    await expect(assertNotClobberingRicherLocal(3, p)).resolves.toBeUndefined();
+  });
+
+  test('missing or corrupt local file never blocks', async () => {
+    await expect(assertNotClobberingRicherLocal(3, '/nonexistent/path.json')).resolves.toBeUndefined();
+    dir = mkdtempSync(join(tmpdir(), 'hydrate-guard-'));
+    const bad = join(dir, 'corrupt.json');
+    writeFileSync(bad, '{not json');
+    await expect(assertNotClobberingRicherLocal(3, bad)).resolves.toBeUndefined();
   });
 });
