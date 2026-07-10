@@ -1273,7 +1273,13 @@ def _ensure_worktree(
         telemetry["rebased"] = _validate_existing_worktree(
             path=worktree_path,
             expected_branch=worktree_branch,
-            base=base,
+            # For --branch reuse the staleness/fast-forward reference is the
+            # requested branch ITSELF (origin/<branch>), never origin/main: a
+            # follow-up worktree for an existing PR is almost always behind
+            # main (main moved since the PR branched), and validating against
+            # main would spuriously fail the dry-run or rebase a PR branch
+            # onto main as a validation side effect. (review-4905-grok)
+            base=requested_branch or base,
             allow_rebase=not dry_run,
         )
         telemetry["base_sha"] = _resolve_sha(worktree_path)

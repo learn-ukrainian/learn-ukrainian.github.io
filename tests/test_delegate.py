@@ -2942,3 +2942,68 @@ def test_status_warns_on_flat_layout(tmp_tasks_dir, capsys):
     state = json.loads(captured.out)
     assert state["worktree_layout"] == "flat"
     assert "flat" in captured.err.lower() or "deprecated" in captured.err.lower()
+
+
+def test_branch_reuse_validates_staleness_against_the_branch_not_main(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+    capsys,
+):
+    """--branch reuse validates the worktree against origin/<branch>, NOT
+    origin/main: a follow-up worktree for an existing PR is almost always
+    behind main (main moved since the PR branched), and that must neither
+    fail validation nor trigger a rebase-onto-main side effect.
+    (review-4905-grok blocking finding.)"""
+    import argparse
+
+    worktree = tmp_path / "existing-branch-worktree"
+    worktree.mkdir()
+    branch = "cursor/follow-up"
+    calls, base_stub = _make_run_stub(
+        abbrev_ref=branch,
+        status_porcelain="",
+        rev_list_count="0",
+        rev_parse_head_sha="branch-head",
+    )
+
+    def fake_run(cmd, **kwargs):
+        if cmd[:2] == ["git", "rev-list"]:
+            calls.append(list(cmd))
+            ref = cmd[-1]
+            if "origin/main" in ref:
+                # Way behind main — must be IRRELEVANT for branch reuse.
+                return subprocess.CompletedProcess(cmd, 0, "5", "")
+            return subprocess.CompletedProcess(cmd, 0, "0", "")
+        if cmd[:3] == ["git", "worktree", "add"]:
+            pytest.fail("branch-reuse dry-run must not add a worktree")
+        return base_stub(cmd, **kwargs)
+
+    monkeypatch.setattr(delegate.subprocess, "run", fake_run)
+    args = argparse.Namespace(
+        agent="cursor",
+        task_id="branch-reuse-stale-main",
+        prompt="validate only",
+        prompt_file=None,
+        mode="read-only",
+        model=None,
+        cwd=None,
+        worktree=str(worktree),
+        branch=branch,
+        base="main",
+        hard_timeout=3600,
+        dry_run=True,
+    )
+
+    assert delegate.cmd_dispatch(args) == 0
+
+    rev_list_calls = [c for c in calls if c[:2] == ["git", "rev-list"]]
+    assert rev_list_calls, "reuse validation must check staleness via rev-list"
+    for cmd in rev_list_calls:
+        assert cmd[-1] == f"HEAD..origin/{branch}", (
+            "staleness must be checked against the requested branch, "
+            f"got {cmd[-1]!r}"
+        )
+    assert not any(c[:2] == ["git", "rebase"] for c in calls), (
+        "branch-reuse dry-run must never rebase"
+    )
