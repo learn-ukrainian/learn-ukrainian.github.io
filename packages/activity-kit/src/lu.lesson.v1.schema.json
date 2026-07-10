@@ -1,0 +1,229 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://learn-ukrainian.github.io/packages/activity-kit/lu.lesson.v1.schema.json",
+  "title": "Learn Ukrainian Lesson v1",
+  "description": "B1 TTT lesson document composed from ordered lu.activity.v1 blocks.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "id",
+    "title",
+    "level",
+    "method",
+    "focus",
+    "anchor",
+    "duration",
+    "version",
+    "status",
+    "last_error",
+    "accepted",
+    "blocks",
+    "rejected",
+    "created_at",
+    "updated_at"
+  ],
+  "properties": {
+    "schema": { "const": "lu.lesson.v1" },
+    "id": { "type": "string", "format": "uuid" },
+    "title": { "type": "string", "minLength": 1, "maxLength": 52 },
+    "level": { "const": "B1" },
+    "method": { "const": "ttt" },
+    "focus": { "type": ["string", "null"] },
+    "anchor": { "$ref": "#/$defs/anchor" },
+    "duration": { "enum": [45, 60, 90] },
+    "version": { "const": 1 },
+    "status": { "enum": ["draft", "baking", "ready", "failed"] },
+    "last_error": { "type": ["string", "null"] },
+    "accepted": { "type": "boolean" },
+    "blocks": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/block" }
+    },
+    "rejected": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/rejectedDraft" }
+    },
+    "created_at": { "type": "string", "format": "date-time" },
+    "updated_at": { "type": "string", "format": "date-time" }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "status": { "const": "failed" } } },
+      "then": {
+        "required": ["last_error"],
+        "properties": { "last_error": { "type": "string", "minLength": 1 } }
+      }
+    }
+  ],
+  "$defs": {
+    "anchor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["text", "source", "chars"],
+      "properties": {
+        "text": { "type": "string", "minLength": 1 },
+        "source": { "enum": ["teacher-paste", "teacher-url"] },
+        "chars": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "block": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "phase",
+        "type",
+        "mode",
+        "activity",
+        "answer_key",
+        "mark",
+        "note",
+        "edited",
+        "provenance"
+      ],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "phase": { "enum": [1, 2, 3] },
+        "type": { "$ref": "#/$defs/activityType" },
+        "mode": { "enum": ["усно", "письмово", "вдома"] },
+        "activity": {
+          "$ref": "https://learn-ukrainian.github.io/packages/activity-kit/lu.activity.v1.schema.json"
+        },
+        "answer_key": { "type": ["string", "object", "array", "null"] },
+        "mark": { "enum": ["ok", "warn"] },
+        "note": { "type": ["string", "null"] },
+        "edited": { "type": "boolean" },
+        "provenance": { "$ref": "#/$defs/blockProvenance" }
+      },
+      "allOf": [
+        { "$ref": "#/$defs/autoCheckableAnswerKey" },
+        { "$ref": "#/$defs/externalOptionsRequireWarn" },
+        { "$ref": "#/$defs/typeMatchesActivity" }
+      ]
+    },
+    "rejectedDraft": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "activity", "reason"],
+      "properties": {
+        "type": { "$ref": "#/$defs/activityType" },
+        "activity": {
+          "$ref": "https://learn-ukrainian.github.io/packages/activity-kit/lu.activity.v1.schema.json"
+        },
+        "reason": { "type": "string", "minLength": 1 }
+      },
+      "allOf": [{ "$ref": "#/$defs/typeMatchesActivity" }]
+    },
+    "activityType": {
+      "enum": [
+        "true-false",
+        "cloze",
+        "match-up",
+        "text-questions",
+        "multiple-choice",
+        "glossary",
+        "form-build",
+        "error-correction",
+        "paraphrase",
+        "continue-sentence",
+        "roleplay-dialog",
+        "short-writing"
+      ]
+    },
+    "blockProvenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "generator", "gates", "external_options"],
+      "properties": {
+        "source": { "enum": ["anchor", "generated", "teacher"] },
+        "generator": { "type": "string", "minLength": 1 },
+        "gates": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "external_options": { "type": "boolean" }
+      }
+    },
+    "autoCheckableAnswerKey": {
+      "if": {
+        "properties": {
+          "type": {
+            "enum": [
+              "true-false",
+              "cloze",
+              "match-up",
+              "multiple-choice",
+              "form-build",
+              "error-correction",
+              "paraphrase"
+            ]
+          }
+        }
+      },
+      "then": { "required": ["answer_key"] }
+    },
+    "externalOptionsRequireWarn": {
+      "if": {
+        "properties": {
+          "provenance": {
+            "properties": { "external_options": { "const": true } }
+          }
+        }
+      },
+      "then": { "properties": { "mark": { "const": "warn" } } }
+    },
+    "typeMatchesActivity": {
+      "allOf": [
+        {
+          "if": { "properties": { "type": { "const": "true-false" } } },
+          "then": { "properties": { "activity": { "properties": { "type": { "const": "true-false" } } } } }
+        },
+        {
+          "if": { "properties": { "type": { "const": "cloze" } } },
+          "then": { "properties": { "activity": { "properties": { "type": { "const": "cloze" } } } } }
+        },
+        {
+          "if": { "properties": { "type": { "const": "match-up" } } },
+          "then": { "properties": { "activity": { "properties": { "type": { "const": "match-up" } } } } }
+        },
+        {
+          "if": { "properties": { "type": { "const": "text-questions" } } },
+          "then": { "properties": { "activity": { "properties": { "type": { "const": "text-questions" } } } } }
+        },
+        {
+          "if": { "properties": { "type": { "const": "multiple-choice" } } },
+          "then": { "properties": { "activity": { "properties": { "type": { "const": "multiple-choice" } } } } }
+        },
+        {
+          "if": { "properties": { "type": { "const": "glossary" } } },
+          "then": { "properties": { "activity": { "properties": { "type": { "const": "glossary" } } } } }
+        },
+        {
+          "if": { "properties": { "type": { "const": "form-build" } } },
+          "then": { "properties": { "activity": { "properties": { "type": { "const": "form-build" } } } } }
+        },
+        {
+          "if": { "properties": { "type": { "const": "error-correction" } } },
+          "then": { "properties": { "activity": { "properties": { "type": { "const": "error-correction" } } } } }
+        },
+        {
+          "if": { "properties": { "type": { "const": "paraphrase" } } },
+          "then": { "properties": { "activity": { "properties": { "type": { "const": "paraphrase" } } } } }
+        },
+        {
+          "if": { "properties": { "type": { "const": "continue-sentence" } } },
+          "then": { "properties": { "activity": { "properties": { "type": { "const": "continue-sentence" } } } } }
+        },
+        {
+          "if": { "properties": { "type": { "const": "roleplay-dialog" } } },
+          "then": { "properties": { "activity": { "properties": { "type": { "const": "roleplay-dialog" } } } } }
+        },
+        {
+          "if": { "properties": { "type": { "const": "short-writing" } } },
+          "then": { "properties": { "activity": { "properties": { "type": { "const": "short-writing" } } } } }
+        }
+      ]
+    }
+  }
+}

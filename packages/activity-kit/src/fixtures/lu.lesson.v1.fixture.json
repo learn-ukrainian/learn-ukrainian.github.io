@@ -1,0 +1,433 @@
+{
+  "schema": "lu.lesson.v1",
+  "id": "f269a2db-1367-48f0-99b5-7ed6ec5eaec5",
+  "title": "Як ми шукали квартиру у Львові",
+  "level": "B1",
+  "method": "ttt",
+  "focus": "вищий ступінь прикметників",
+  "anchor": {
+    "text": "Як ми шукали квартиру у Львові\n\nТорік восени ми з дружиною вирішили переїхати до Львова. Ми обоє працюємо з дому, тому нам була потрібна квартира з двома кімнатами: одна для роботи, друга для життя. Наш бюджет був невеликий, але й вимоги прості: тихий район, зупинка поруч і сусіди, які не співають уночі.\n\nПершу квартиру ми подивилися в центрі. Вона була красива, але дорога: власник хотів двадцять тисяч гривень на місяць. Друга квартира була дешевша за першу, проте темна й холодна: вікна виходили на стіну сусіднього будинку, а батареї ледве гріли. Третя була найдивніша з усіх — з рожевими стінами й дзеркалом на стелі. Ми ввічливо подякували й швидко пішли.\n\nЧерез два тижні пошуків ми вже майже втратили надію. Аж раптом подруга надіслала нам оголошення: «Здаємо світлу квартиру в тихому районі, поруч парк і зупинка трамвая. Ціна помірна». Ми зателефонували того ж вечора.\n\nВласниця, пані Оксана, виявилася привітною жінкою. Вона показала нам кухню з новою технікою, теплу спальню і навіть місце для велосипедів у дворі. Будинок цегляний, тому взимку в ньому тепліше, ніж у панельному. Єдиний мінус — четвертий поверх без ліфта. Але ми молоді, а сходи корисні для здоровʼя.\n\nМи погодилися одразу. Тепер щоранку я пʼю каву біля вікна й дивлюся на парк. Нова квартира менша, ніж наша стара, зате світліша, тепліша і вдвічі ближча до центру. Найважливіше ми зрозуміли за ці два тижні: ідеального житла не існує, але існує житло, у якому хочеться жити.",
+    "source": "teacher-paste",
+    "chars": 1456
+  },
+  "duration": 90,
+  "version": 1,
+  "status": "ready",
+  "last_error": null,
+  "accepted": false,
+  "blocks": [
+    {
+      "id": "rent-01-true-false",
+      "phase": 1,
+      "type": "true-false",
+      "mode": "усно",
+      "activity": {
+        "id": "rent-01-true-false",
+        "type": "true-false",
+        "title": "Правда чи ні",
+        "level": "b1",
+        "payload": {
+          "type": "true-false",
+          "instruction": "Перевірте за текстом. Якщо неправда — виправте.",
+          "items": [
+            { "statement": "Автор і його дружина працюють з дому.", "correct": true },
+            { "statement": "Вони шукали квартиру з трьома кімнатами.", "correct": false },
+            { "statement": "Перша квартира коштувала двадцять тисяч гривень на місяць.", "correct": true },
+            { "statement": "Друга квартира була світла й тепла.", "correct": false },
+            { "statement": "Оголошення їм надіслала подруга.", "correct": true },
+            { "statement": "У будинку пані Оксани є ліфт.", "correct": false },
+            { "statement": "Нова квартира більша за стару.", "correct": false }
+          ]
+        },
+        "answer_key": {
+          "items": [
+            { "index": 0, "correct": true },
+            { "index": 1, "correct": false },
+            { "index": 2, "correct": true },
+            { "index": 3, "correct": false },
+            { "index": 4, "correct": true },
+            { "index": 5, "correct": false },
+            { "index": 6, "correct": false }
+          ]
+        },
+        "provenance": { "source": "teacher-paste", "generator": "hramatka-poc-design", "gates": ["anchor-grounding"] }
+      },
+      "answer_key": "1 П · 2 Н (з двома) · 3 П · 4 Н (темна й холодна) · 5 П · 6 Н (без ліфта) · 7 Н (менша, зате світліша й тепліша)",
+      "mark": "ok",
+      "note": null,
+      "edited": false,
+      "provenance": { "source": "generated", "generator": "hramatka-poc-design", "gates": ["anchor-grounding"], "external_options": false }
+    },
+    {
+      "id": "rent-02-text-questions",
+      "phase": 1,
+      "type": "text-questions",
+      "mode": "усно",
+      "activity": {
+        "id": "rent-02-text-questions",
+        "type": "text-questions",
+        "title": "Питання до тексту",
+        "level": "b1",
+        "payload": {
+          "type": "text-questions",
+          "instruction": "Дайте відповіді за текстом.",
+          "items": [
+            "Чому їм потрібна була квартира з двома кімнатами?",
+            "Скільки коштувала перша квартира?",
+            "Що було не так із другою квартирою?",
+            "Хто надіслав їм оголошення?",
+            "Який єдиний мінус нової квартири?",
+            "Що автор зрозумів за два тижні пошуків?"
+          ]
+        },
+        "answer_key": { "guidance": "1 — одна кімната для роботи, друга для життя · 2 — 20 000 грн · 3 — темна й холодна, батареї ледве гріли · 4 — подруга · 5 — четвертий поверх без ліфта · 6 — ідеального житла не існує, але існує житло, у якому хочеться жити" },
+        "provenance": { "source": "teacher-paste", "generator": "hramatka-poc-design", "gates": ["anchor-grounding"] }
+      },
+      "answer_key": "1 — одна кімната для роботи, друга для життя · 2 — 20 000 грн · 3 — темна й холодна, батареї ледве гріли · 4 — подруга · 5 — четвертий поверх без ліфта · 6 — ідеального житла не існує, але існує житло, у якому хочеться жити",
+      "mark": "ok",
+      "note": null,
+      "edited": false,
+      "provenance": { "source": "generated", "generator": "hramatka-poc-design", "gates": ["anchor-grounding"], "external_options": false }
+    },
+    {
+      "id": "rent-03-match-up",
+      "phase": 1,
+      "type": "match-up",
+      "mode": "усно",
+      "activity": {
+        "id": "rent-03-match-up",
+        "type": "match-up",
+        "title": "Знайди пару",
+        "level": "b1",
+        "payload": {
+          "type": "match-up",
+          "instruction": "Знайдіть пару.",
+          "pairs": [
+            { "left": "помірна (ціна)", "right": "невисока" },
+            { "left": "привітна", "right": "добра до людей" },
+            { "left": "цегляний", "right": "з цегли" },
+            { "left": "власниця", "right": "жінка, якій належить квартира" },
+            { "left": "оголошення", "right": "текст про те, що здають чи продають" },
+            { "left": "зупинка", "right": "місце, де стає трамвай" }
+          ]
+        },
+        "answer_key": {
+          "pairs": [
+            { "left_index": 0, "right_index": 0 },
+            { "left_index": 1, "right_index": 1 },
+            { "left_index": 2, "right_index": 2 },
+            { "left_index": 3, "right_index": 3 },
+            { "left_index": 4, "right_index": 4 },
+            { "left_index": 5, "right_index": 5 }
+          ]
+        },
+        "provenance": { "source": "teacher-paste", "generator": "hramatka-poc-design", "gates": ["semantic-match-review"] }
+      },
+      "answer_key": "помірна↔невисока · привітна↔добра до людей · цегляний↔з цегли · власниця↔жінка, якій належить квартира · оголошення↔текст про те, що здають чи продають · зупинка↔місце, де стає трамвай",
+      "mark": "warn",
+      "note": "означення в правій колонці — наші, не з тексту; погляньте перед заняттям",
+      "edited": false,
+      "provenance": { "source": "generated", "generator": "hramatka-poc-design", "gates": ["semantic-match-review"], "external_options": false }
+    },
+    {
+      "id": "rent-04-multiple-choice",
+      "phase": 1,
+      "type": "multiple-choice",
+      "mode": "усно",
+      "activity": {
+        "id": "rent-04-multiple-choice",
+        "type": "multiple-choice",
+        "title": "Оберіть відповідь",
+        "level": "b1",
+        "payload": {
+          "type": "multiple-choice",
+          "instruction": "Оберіть відповідь.",
+          "items": [
+            { "prompt": "Де була перша квартира?", "options": ["а) у центрі", "б) біля парку", "в) за містом"] },
+            { "prompt": "Якою була третя квартира?", "options": ["а) темною", "б) найдивнішою", "в) найдорожчою"] },
+            { "prompt": "На якому поверсі квартира пані Оксани?", "options": ["а) на третьому", "б) на четвертому", "в) на пʼятому"] },
+            { "prompt": "Що автор робить щоранку?", "options": ["а) пʼє каву біля вікна", "б) їде на роботу трамваєм", "в) бігає в парку"] }
+          ]
+        },
+        "answer_key": {
+          "items": [
+            { "index": 0, "correct": "а" },
+            { "index": 1, "correct": "б" },
+            { "index": 2, "correct": "б" },
+            { "index": 3, "correct": "а" }
+          ]
+        },
+        "provenance": { "source": "teacher-paste", "generator": "hramatka-poc-design", "gates": ["anchor-grounding", "external-options"] }
+      },
+      "answer_key": "1 — а · 2 — б · 3 — б · 4 — а",
+      "mark": "warn",
+      "note": "частина варіантів — не з вашого тексту; перевірте, чи доречні",
+      "edited": false,
+      "provenance": { "source": "generated", "generator": "hramatka-poc-design", "gates": ["anchor-grounding", "external-options"], "external_options": true }
+    },
+    {
+      "id": "rent-05-glossary",
+      "phase": 2,
+      "type": "glossary",
+      "mode": "усно",
+      "activity": {
+        "id": "rent-05-glossary",
+        "type": "glossary",
+        "title": "Словничок",
+        "level": "b1",
+        "payload": {
+          "type": "glossary",
+          "instruction": "Прочитайте слова й пояснення.",
+          "gloss_lang": "uk-uk",
+          "items": [
+            { "term": "переїхати", "gloss": "почати жити в іншому місті чи домі" },
+            { "term": "вимоги", "gloss": "те, що для нас обовʼязкове" },
+            { "term": "надія", "gloss": "віра, що все буде добре" },
+            { "term": "помірний", "gloss": "не великий і не малий (про ціну)" },
+            { "term": "привітний", "gloss": "добрий і відкритий до людей" },
+            { "term": "зате", "gloss": "але натомість" },
+            { "term": "вдвічі", "gloss": "у два рази" },
+            { "term": "ледве", "gloss": "майже не" }
+          ]
+        },
+        "answer_key": { "guidance": "пояснення — наші, не з тексту; перегляньте перед заняттям" },
+        "provenance": { "source": "teacher-paste", "generator": "hramatka-poc-design", "gates": ["teacher-review"] }
+      },
+      "answer_key": null,
+      "mark": "warn",
+      "note": "пояснення — наші, не з тексту; перегляньте перед заняттям",
+      "edited": false,
+      "provenance": { "source": "generated", "generator": "hramatka-poc-design", "gates": ["teacher-review"], "external_options": false }
+    },
+    {
+      "id": "rent-06-cloze",
+      "phase": 2,
+      "type": "cloze",
+      "mode": "письмово",
+      "activity": {
+        "id": "rent-06-cloze",
+        "type": "cloze",
+        "title": "Пропущене слово",
+        "level": "b1",
+        "payload": {
+          "type": "cloze",
+          "instruction": "Вставте слова: дешевша · найдивніша · тепліше · менша · світліша · ближча",
+          "text": "1. Друга квартира була [___:1] за першу.\n2. Третя була [___:2] з усіх.\n3. Узимку в цегляному будинку [___:3], ніж у панельному.\n4. Нова квартира [___:4], ніж стара.\n5. Зате вона [___:5] і тепліша.\n6. Вона вдвічі [___:6] до центру.",
+          "blanks": [
+            { "id": 1, "answer": "дешевша", "options": ["дешевша", "найдивніша", "тепліше", "менша", "світліша", "ближча"] },
+            { "id": 2, "answer": "найдивніша", "options": ["дешевша", "найдивніша", "тепліше", "менша", "світліша", "ближча"] },
+            { "id": 3, "answer": "тепліше", "options": ["дешевша", "найдивніша", "тепліше", "менша", "світліша", "ближча"] },
+            { "id": 4, "answer": "менша", "options": ["дешевша", "найдивніша", "тепліше", "менша", "світліша", "ближча"] },
+            { "id": 5, "answer": "світліша", "options": ["дешевша", "найдивніша", "тепліше", "менша", "світліша", "ближча"] },
+            { "id": 6, "answer": "ближча", "options": ["дешевша", "найдивніша", "тепліше", "менша", "світліша", "ближча"] }
+          ]
+        },
+        "answer_key": {
+          "blanks": [
+            { "id": 1, "answer": "дешевша" },
+            { "id": 2, "answer": "найдивніша" },
+            { "id": 3, "answer": "тепліше" },
+            { "id": 4, "answer": "менша" },
+            { "id": 5, "answer": "світліша" },
+            { "id": 6, "answer": "ближча" }
+          ]
+        },
+        "provenance": { "source": "teacher-paste", "generator": "hramatka-poc-design", "gates": ["anchor-grounding"] }
+      },
+      "answer_key": "1 дешевша · 2 найдивніша · 3 тепліше · 4 менша · 5 світліша · 6 ближча",
+      "mark": "ok",
+      "note": null,
+      "edited": false,
+      "provenance": { "source": "generated", "generator": "hramatka-poc-design", "gates": ["anchor-grounding"], "external_options": false }
+    },
+    {
+      "id": "rent-07-form-build",
+      "phase": 2,
+      "type": "form-build",
+      "mode": "усно",
+      "activity": {
+        "id": "rent-07-form-build",
+        "type": "form-build",
+        "title": "Утворіть форму",
+        "level": "b1",
+        "payload": {
+          "type": "form-build",
+          "instruction": "Утворіть вищий ступінь (останнє — і найвищий):",
+          "items": ["теплий → ?", "дорогий → ?", "дешевий → ?", "світлий → ?", "близький → ?", "дивний → ? / най…?"]
+        },
+        "answer_key": { "items": ["тепліший", "дорожчий", "дешевший", "світліший", "ближчий", "дивніший (найдивніший)"] },
+        "provenance": { "source": "teacher-paste", "generator": "hramatka-poc-design", "gates": ["grammar-focus"] }
+      },
+      "answer_key": "тепліший · дорожчий · дешевший · світліший · ближчий · дивніший (найдивніший)",
+      "mark": "ok",
+      "note": null,
+      "edited": false,
+      "provenance": { "source": "generated", "generator": "hramatka-poc-design", "gates": ["grammar-focus"], "external_options": false }
+    },
+    {
+      "id": "rent-08-error-correction",
+      "phase": 2,
+      "type": "error-correction",
+      "mode": "письмово",
+      "activity": {
+        "id": "rent-08-error-correction",
+        "type": "error-correction",
+        "title": "Знайдіть помилку",
+        "level": "b1",
+        "payload": {
+          "type": "error-correction",
+          "instruction": "У кожному реченні — одна помилка. Виправте.",
+          "items": [
+            "Ця квартира дешевіша, чим попередня.",
+            "Нова квартира сама краща.",
+            "Взимку тут більш тепліше.",
+            "Ми живемо на четвертому поверху.",
+            "Дякуємо власницю за допомогу."
+          ]
+        },
+        "answer_key": { "items": ["дешевша, ніж попередня (або: за попередню)", "найкраща", "тепліше", "на четвертому поверсі", "дякуємо власниці"] },
+        "provenance": { "source": "teacher-paste", "generator": "hramatka-poc-design", "gates": ["grammar-focus"] }
+      },
+      "answer_key": "1 — дешевша, ніж попередня (або: за попередню) · 2 — найкраща · 3 — тепліше · 4 — на четвертому поверсі · 5 — дякуємо власниці",
+      "mark": "ok",
+      "note": null,
+      "edited": false,
+      "provenance": { "source": "generated", "generator": "hramatka-poc-design", "gates": ["grammar-focus"], "external_options": false }
+    },
+    {
+      "id": "rent-09-paraphrase",
+      "phase": 2,
+      "type": "paraphrase",
+      "mode": "усно",
+      "activity": {
+        "id": "rent-09-paraphrase",
+        "type": "paraphrase",
+        "title": "Скажіть інакше",
+        "level": "b1",
+        "payload": {
+          "type": "paraphrase",
+          "instruction": "Знайдіть у тексті слово чи вислів:",
+          "items": ["«невисока ціна» → ?", "«будинок із цегли» → ?", "«у два рази» → ?", "«майже не гріли» → ?", "«добра й відкрита до людей» → ?"]
+        },
+        "answer_key": { "items": ["помірна", "цегляний", "вдвічі", "ледве гріли", "привітна"] },
+        "provenance": { "source": "teacher-paste", "generator": "hramatka-poc-design", "gates": ["anchor-grounding"] }
+      },
+      "answer_key": "помірна · цегляний · вдвічі · ледве гріли · привітна",
+      "mark": "ok",
+      "note": null,
+      "edited": false,
+      "provenance": { "source": "generated", "generator": "hramatka-poc-design", "gates": ["anchor-grounding"], "external_options": false }
+    },
+    {
+      "id": "rent-10-continue-sentence",
+      "phase": 3,
+      "type": "continue-sentence",
+      "mode": "усно",
+      "activity": {
+        "id": "rent-10-continue-sentence",
+        "type": "continue-sentence",
+        "title": "Продовжте речення",
+        "level": "b1",
+        "payload": {
+          "type": "continue-sentence",
+          "instruction": "Продовжте речення.",
+          "items": ["Моя квартира менша, ніж …", "Узимку вдома тепліше, ніж …", "Мій район зручніший за …", "Ідеального житла не існує, але …"]
+        },
+        "answer_key": { "guidance": "вільні відповіді — перевірте форми порівняння (ніж… / за…)" },
+        "provenance": { "source": "teacher-paste", "generator": "hramatka-poc-design", "gates": ["grammar-focus"] }
+      },
+      "answer_key": "вільні відповіді — перевірте форми порівняння (ніж… / за…)",
+      "mark": "ok",
+      "note": null,
+      "edited": false,
+      "provenance": { "source": "generated", "generator": "hramatka-poc-design", "gates": ["grammar-focus"], "external_options": false }
+    },
+    {
+      "id": "rent-11-roleplay-dialog",
+      "phase": 3,
+      "type": "roleplay-dialog",
+      "mode": "усно",
+      "activity": {
+        "id": "rent-11-roleplay-dialog",
+        "type": "roleplay-dialog",
+        "title": "Розіграйте діалог",
+        "level": "b1",
+        "payload": {
+          "type": "roleplay-dialog",
+          "instruction": "Розіграйте діалог.",
+          "scenario": "Ви телефонуєте пані Оксані щодо оголошення. Домовтеся про огляд квартири:",
+          "prompts": ["запитайте про ціну й комунальні послуги;", "уточніть поверх і чи є ліфт;", "запитайте про сусідів;", "домовтеся про день і час огляду."]
+        },
+        "answer_key": { "guidance": "вільна відповідь (в 1-на-1 учитель — пані Оксана)" },
+        "provenance": { "source": "teacher-paste", "generator": "hramatka-poc-design", "gates": ["teacher-role"] }
+      },
+      "answer_key": "вільна відповідь (в 1-на-1 учитель — пані Оксана)",
+      "mark": "ok",
+      "note": null,
+      "edited": false,
+      "provenance": { "source": "generated", "generator": "hramatka-poc-design", "gates": ["teacher-role"], "external_options": false }
+    },
+    {
+      "id": "rent-12-short-writing",
+      "phase": 3,
+      "type": "short-writing",
+      "mode": "вдома",
+      "activity": {
+        "id": "rent-12-short-writing",
+        "type": "short-writing",
+        "title": "Коротке письмо",
+        "level": "b1",
+        "payload": {
+          "type": "short-writing",
+          "prompt": "Опишіть квартиру або будинок вашої мрії (7–8 речень). Ужийте щонайменше три порівняння («більший, ніж…», «зручніша за…», «най…») і два слова зі словничка."
+        },
+        "answer_key": { "guidance": "вільна відповідь — щонайменше три порівняння + два слова зі словничка" },
+        "provenance": { "source": "teacher-paste", "generator": "hramatka-poc-design", "gates": ["grammar-focus"] }
+      },
+      "answer_key": "вільна відповідь — щонайменше три порівняння + два слова зі словничка",
+      "mark": "ok",
+      "note": null,
+      "edited": false,
+      "provenance": { "source": "generated", "generator": "hramatka-poc-design", "gates": ["grammar-focus"], "external_options": false }
+    }
+  ],
+  "rejected": [
+    {
+      "type": "true-false",
+      "activity": {
+        "id": "rent-rejected-true-false",
+        "type": "true-false",
+        "title": "Правда чи ні",
+        "level": "b1",
+        "payload": {
+          "type": "true-false",
+          "instruction": "Оберіть: Правда / Неправда.",
+          "items": [{ "statement": "Пані Оксана співає вночі.", "correct": false }]
+        },
+        "answer_key": { "items": [{ "index": 0, "correct": false }] },
+        "provenance": { "source": "teacher-paste", "generator": "hramatka-poc-design", "gates": ["not-verifiable-from-text"] }
+      },
+      "reason": "не пройшло перевірку: у тексті про це не сказано — твердження неможливо перевірити"
+    },
+    {
+      "type": "cloze",
+      "activity": {
+        "id": "rent-rejected-cloze",
+        "type": "cloze",
+        "title": "Пропущене слово",
+        "level": "b1",
+        "payload": {
+          "type": "cloze",
+          "instruction": "Вставте слово.",
+          "text": "Ми зателефонували того ж [___:1].",
+          "blanks": [{ "id": 1, "answer": "вечора", "options": ["вечора", "ранку"] }]
+        },
+        "answer_key": { "blanks": [{ "id": 1, "answer": "вечора" }] },
+        "provenance": { "source": "teacher-paste", "generator": "hramatka-poc-design", "gates": ["too-easy-for-level"] }
+      },
+      "reason": "занадто просте: відповідь стоїть у тексті поруч"
+    }
+  ],
+  "created_at": "2026-07-10T14:20:00+03:00",
+  "updated_at": "2026-07-10T14:20:00+03:00"
+}
