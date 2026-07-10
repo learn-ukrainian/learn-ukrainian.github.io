@@ -227,9 +227,11 @@ When a worktree is reused, it is validated:
 For follow-up work on an existing PR, pass `--branch EXISTING` to
 `delegate.py dispatch`. Delegate fetches `origin/EXISTING`, attaches the
 worktree to that branch rather than `origin/main`, and applies the same clean
-tree / branch-match validation. It refuses `main`/`master` and a branch already
-checked out in another worktree. A branch-reuse `--dry-run` validates an
-existing worktree without creating or rebasing one.
+tree / branch-match validation. Staleness and fast-forward are validated
+against `origin/EXISTING` itself — never `origin/main`, since a follow-up
+worktree is almost always legitimately behind main. It refuses `main`/`master`
+and a branch already checked out in another worktree. A branch-reuse
+`--dry-run` validates an existing worktree without creating or rebasing one.
 
 Offline fallback: if `git fetch` fails (no network, no remote), delegate
 warns on stderr and branches from the local ref. Pin the `--base` flag
