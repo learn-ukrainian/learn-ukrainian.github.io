@@ -1,0 +1,21 @@
+# Source registry for wiki/figures/mykhailo-drai-khmara.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: https://esu.com.ua/article-21682
+  type: external
+  title: Драй-Хмара Михайло Опанасович — ЕСУ
+  url: https://esu.com.ua/article-21682
+  notes: Tier 1 biography; registry-ready (orchestrator liveness confirmed).
+- id: S2
+  file: https://www.history.org.ua/?termin=Dray_Khmara_M
+  type: external
+  title: Драй-Хмара Михайло Опанасович — ЕІУ
+  url: https://www.history.org.ua/?termin=Dray_Khmara_M
+  notes: Tier 1 biography; registry-ready (orchestrator liveness confirmed).
+- id: S3
+  file: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CD%5CR%5CDrai6KhmaraMykhailo.htm
+  type: external
+  title: Drai-Khmara, Mykhailo — Internet Encyclopedia of Ukraine
+  url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CD%5CR%5CDrai6KhmaraMykhailo.htm
+  notes: Tier 1 biography; registry-ready (orchestrator liveness confirmed).

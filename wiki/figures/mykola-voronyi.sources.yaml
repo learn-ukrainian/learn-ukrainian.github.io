@@ -1,0 +1,21 @@
+# Source registry for wiki/figures/mykola-voronyi.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: https://esu.com.ua/article-29783
+  type: external
+  title: Вороний Микола Кіндратович — ЕСУ
+  url: https://esu.com.ua/article-29783
+  notes: Tier 1 biography; registry-ready (orchestrator liveness confirmed).
+- id: S2
+  file: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CV%5CO%5CVoronyMykola.htm
+  type: external
+  title: Vorony, Mykola — Internet Encyclopedia of Ukraine
+  url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CV%5CO%5CVoronyMykola.htm
+  notes: Tier 1 biography; registry-ready (orchestrator liveness confirmed).
+- id: S3
+  file: https://www.uinp.gov.ua/istorychnyy-kalendar/gruden/6/narodyvsya-mykola-voronyy
+  type: external
+  title: Народився Микола Вороний — УІНП
+  url: https://www.uinp.gov.ua/istorychnyy-kalendar/gruden/6/narodyvsya-mykola-voronyy
+  notes: Tier 1 repression chronology cross-check; registry-ready (orchestrator liveness confirmed).

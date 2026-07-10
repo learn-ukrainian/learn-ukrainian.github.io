@@ -1,0 +1,21 @@
+# Source registry for wiki/figures/mykhail-semenko.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CS%5CE%5CSemenkoMykhailo.htm
+  type: external
+  title: Semenko, Mykhailo — Internet Encyclopedia of Ukraine
+  url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CS%5CE%5CSemenkoMykhailo.htm
+  notes: Tier 1 biography; registry-ready (orchestrator liveness confirmed).
+- id: S2
+  file: https://uinp.gov.ua/istorychnyy-kalendar/gruden/31/1892-narodyvsya-poet-myhayl-semenko
+  type: external
+  title: 1892 — народився поет Михайль Семенко (УІНП)
+  url: https://uinp.gov.ua/istorychnyy-kalendar/gruden/31/1892-narodyvsya-poet-myhayl-semenko
+  notes: Tier 1 birth anchor; registry-ready (orchestrator liveness confirmed).
+- id: S3
+  file: https://uinp.gov.ua/istorychnyy-kalendar/zhovten/24/1937-rozstrilyano-myhaylya-semenka-poeta
+  type: external
+  title: 1937 — розстріляно Михайля Семенка (УІНП)
+  url: https://uinp.gov.ua/istorychnyy-kalendar/zhovten/24/1937-rozstrilyano-myhaylya-semenka-poeta
+  notes: Tier 1 repression/execution anchor; registry-ready (orchestrator liveness confirmed). Soviet case wording is attributed only, never a factual organization claim.

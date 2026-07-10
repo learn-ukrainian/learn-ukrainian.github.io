@@ -1,0 +1,21 @@
+# Source registry for wiki/figures/mykhailo-yalovyi.md
+# Referenced inline as [S1], [S2], ...
+sources:
+- id: S1
+  file: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CY%5CA%5CYalovyMykhailo.htm
+  type: external
+  title: Yalovy, Mykhailo — Internet Encyclopedia of Ukraine
+  url: https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CY%5CA%5CYalovyMykhailo.htm
+  notes: Tier 1 biography; registry-ready (orchestrator liveness confirmed).
+- id: S2
+  file: https://www.nbuv.gov.ua/node/4119
+  type: external
+  title: Яловий Михайло Омелянович — НБУВ Розстріляне відродження
+  url: https://www.nbuv.gov.ua/node/4119
+  notes: Tier 1 institutional memorial; registry-ready (orchestrator liveness confirmed). Soviet case wording is attributed only, never a factual organization claim.
+- id: S3
+  file: https://uinp.gov.ua/pres-centr/novyny/sogodni-po-vsomu-sviti-chytayut-imena-zhertv-sandarmohu-spysok-rozstrilyanyh-ukrayinciv
+  type: external
+  title: Список розстріляних українців у Сандармоху — УІНП
+  url: https://uinp.gov.ua/pres-centr/novyny/sogodni-po-vsomu-sviti-chytayut-imena-zhertv-sandarmohu-spysok-rozstrilyanyh-ukrayinciv
+  notes: Tier 1 execution-list cross-check; registry-ready (orchestrator liveness confirmed).
