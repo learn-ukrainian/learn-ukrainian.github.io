@@ -1,0 +1,2454 @@
+# CURATION WORKSHEET — NOT consumed by the deck builder; driver adjudication pending (#4506)
+#
+# Paronym vein mined from OUR corpus (Гринчишин print dictionary unacquirable — #4506 comments):
+#   (a) zno_tasks (sources.db, 366 rows, ЗНО 2019–2021): topic_norm annotation pass over ALL rows;
+#       лексична-норма cloze/edit tasks carry the paronym items (no row says «паронім» explicitly).
+#   (b) ukrmova textbooks (sources.db `textbooks`, 91 chunks teach пароніми; dictionary-style
+#       glossed pair lists in Заболотний-10 §7 «Словник паронімів», Заболотний-5, Глазова-10,
+#       Караман-10, Літвінова-5, Avramenko-5/6, Golub-5).
+#
+# gate_status per pair = both-approved | partial | blocked, read live from data/atlas.db.
+# Both-approved pairs additionally carry a ready-to-adjudicate §9.9 draft under draft_records.
+# Fail-closed: this file is NOT wired to generate_practice_deck.py — the driver adjudicates,
+# authors/curates frames per the §9.9 congruency rule, and promotes into paronym_pairs.yaml.
+#
+# EXCLUDES pairs already live in paronym_pairs.yaml and pairs in the #4506 reject categories
+# (aspect/reflexive combos, adj↔adverb, masc↔fem demonyms, plain antonyms) — see filtered_out.
+
+schema_version: 1
+meta:
+  issue: '#4506'
+  epic: '#4387 (atlas/practice-hub); board #4700 wave 3'
+  produced_by: claude/4506-paronym-vein
+  produced_date: '2026-07-10'
+  gate_source: data/atlas.db article_payloads.is_public_route=1 (5777 approved slugs, read 2026-07-10)
+  quote_verification: 'every sources[]/candidate_frames[]/evidence_quote is a verbatim letter-normalised
+    substring of its cited sources.db chunk_id (textbooks) or zno_tasks.id — asserted at generation, #M-4'
+  vein_sizing:
+    zno_tasks_total: 366
+    zno_paronym_subtype_tasks: 5
+    ukrmova_paronym_chunks_matched: 91
+    ukrmova_glossed_pair_chunks_used: 16
+    candidate_pairs: 36
+    candidate_pairs_gate:
+      both-approved: 1
+      blocked: 24
+      partial: 11
+    draft_records_gate_ready: 1
+    filtered_out: 3
+  zno_topic_norm_distribution:
+    literature: 144
+    syntactic_norm: 56
+    morphological_norm: 43
+    text: 40
+    orthographic_norm: 31
+    lexical_norm: 25
+    phonetic: 6
+    orthoepic_norm: 6
+    other: 6
+    phraseology: 5
+    word_formation: 4
+  zno_task_subtype_distribution:
+    word_choice: 11
+    paronym: 5
+    synonym: 4
+    lexical_error: 3
+    antonym: 2
+zno_annotations:
+- id: 1
+  year: 2021
+  task_no: 1
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Усна народна творчість. «Дума про Марусю Богуславку»'
+- id: 2
+  year: 2021
+  task_no: 2
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Давня українська література. «Слово про похід Ігорів»'
+- id: 3
+  year: 2021
+  task_no: 3
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література кінця XVIII – початку XX ст. Іван Котляревський. «Наталка Полтавка»'
+- id: 4
+  year: 2021
+  task_no: 4
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література кінця XVIII – початку XX ст. Пантелеймон Куліш. «Чорна рада»'
+- id: 5
+  year: 2021
+  task_no: 5
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література кінця XVIII – початку XX ст. Іван Нечуй-Левицький. «Кайдашева сім’я»'
+- id: 6
+  year: 2021
+  task_no: 6
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література кінця XVIII – початку XX ст. Панас Мирний. «Хіба ревуть воли, як ясла
+    повні?»'
+- id: 7
+  year: 2021
+  task_no: 7
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література кінця XVIII – початку XX ст. Іван Франко. «Захар Беркут»'
+- id: 8
+  year: 2021
+  task_no: 8
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література XX ст. Ольга Кобилянська. «Valse melancolique»'
+- id: 9
+  year: 2021
+  task_no: 9
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література кінця XVIII – початку XX ст. Пантелеймон Куліш. «Чорна рада»'
+- id: 10
+  year: 2021
+  task_no: 10
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література XX ст. Микола Вороний. «Блакитна Панна»'
+- id: 11
+  year: 2021
+  task_no: 11
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література XX ст. Максим Рильський. «У теплі дні збирання винограду…»'
+- id: 12
+  year: 2021
+  task_no: 12
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література XX ст. Юрій Яновський. «Майстер корабля»'
+- id: 13
+  year: 2021
+  task_no: 13
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література кінця XVIII – початку XX ст. Тарас Шевченко. «Катерина»'
+- id: 14
+  year: 2021
+  task_no: 14
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література XX ст. Дмитро Павличко. «Два кольори»'
+- id: 15
+  year: 2021
+  task_no: 15
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Постмодернізм як літературне явище'
+- id: 16
+  year: 2021
+  task_no: 16
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Аналіз літературного твору'
+- id: 17
+  year: 2021
+  task_no: 17
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Аналіз літературного твору'
+- id: 18
+  year: 2021
+  task_no: 18
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Аналіз літературного твору'
+- id: 19
+  year: 2021
+  task_no: 19
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Аналіз літературного твору'
+- id: 20
+  year: 2021
+  task_no: 20
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Аналіз літературного твору'
+- id: 21
+  year: 2021
+  task_no: 21
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література XX ст.'
+- id: 22
+  year: 2021
+  task_no: 22
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література XX ст.'
+- id: 23
+  year: 2021
+  task_no: 23
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література кінця XVIII – початку XX ст. Література XX ст.'
+- id: 24
+  year: 2021
+  task_no: 24
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література кінця XVIII – початку XX ст. Література XX ст.'
+- id: 25
+  year: 2021
+  task_no: 25
+  topic_norm: phonetic
+  evidence_quote: 'ТЕМА: Фонетика. Зміни звуків.'
+- id: 26
+  year: 2021
+  task_no: 26
+  topic_norm: orthoepic_norm
+  stress_word: відгомін; колія; чорнозем; приморозок; бурштиновий; листопад; ознака; чарівний
+  evidence_quote: НЕПРАВИЛЬНО підкреслено букви на позначення наголошених голосних
+- id: 27
+  year: 2021
+  task_no: 27
+  topic_norm: orthographic_norm
+  evidence_quote: 'ТЕМА: Орфографія. Правопис літер, що позначають ненаголошені голосні [е], [и] в коренях
+    і суфіксах слів.'
+- id: 28
+  year: 2021
+  task_no: 28
+  topic_norm: orthographic_norm
+  evidence_quote: 'ТЕМА: Орфографія. Правила вживання м’якого знака'
+- id: 29
+  year: 2021
+  task_no: 29
+  topic_norm: orthographic_norm
+  evidence_quote: 'ТЕМА: Орфографія. Подвоєння букв на позначення подовжених м’яких приголосних.'
+- id: 30
+  year: 2021
+  task_no: 30
+  topic_norm: orthographic_norm
+  evidence_quote: 'ТЕМА: Орфографія. Правопис прислівників.'
+- id: 31
+  year: 2021
+  task_no: 31
+  topic_norm: orthographic_norm
+  evidence_quote: 'ТЕМА: Орфографія. Правопис великої літери.'
+- id: 32
+  year: 2021
+  task_no: 32
+  topic_norm: orthographic_norm
+  evidence_quote: 'ТЕМА: Орфографія.'
+- id: 33
+  year: 2021
+  task_no: 33
+  topic_norm: word_formation
+  evidence_quote: 'ТЕМА: Будова слова. Словотвір. Значущі частини слова: корінь, префікс, суфікс, закінчення'
+- id: 34
+  year: 2021
+  task_no: 34
+  topic_norm: lexical_norm
+  task_subtype: word_choice
+  evidence_quote: галузі
+- id: 35
+  year: 2021
+  task_no: 35
+  topic_norm: lexical_norm
+  task_subtype: paronym
+  paronym_pair: інформативний/інформаційний
+  evidence_quote: інформованих інформатичних інформативних інформаційних
+- id: 36
+  year: 2021
+  task_no: 36
+  topic_norm: lexical_norm
+  task_subtype: word_choice
+  evidence_quote: устаткування
+- id: 37
+  year: 2021
+  task_no: 37
+  topic_norm: lexical_norm
+  task_subtype: word_choice
+  evidence_quote: перетворив
+- id: 38
+  year: 2021
+  task_no: 38
+  topic_norm: lexical_norm
+  task_subtype: word_choice
+  evidence_quote: співставити
+- id: 39
+  year: 2021
+  task_no: 39
+  topic_norm: syntactic_norm
+  evidence_quote: 'ТЕМА: Синтаксис. Синонімія складнопідрядних речень та простих речень.'
+- id: 40
+  year: 2021
+  task_no: 40
+  topic_norm: morphological_norm
+  evidence_quote: 'ТЕМА: Морфологія. Дієприслівник . Дієприслівниковий зворот'
+- id: 41
+  year: 2021
+  task_no: 41
+  topic_norm: syntactic_norm
+  evidence_quote: 'ТЕМА: Синтаксис. Пряма мова. Розділові знаки при прямій мові.'
+- id: 42
+  year: 2021
+  task_no: 42
+  topic_norm: syntactic_norm
+  evidence_quote: 'ТЕМА: Синтаксис. Складне речення. Розділові знаки в складному реченні.'
+- id: 43
+  year: 2021
+  task_no: 43
+  topic_norm: morphological_norm
+  evidence_quote: 'ТЕМА: Морфологія. Відмінювання іменників, позначення часу.'
+- id: 44
+  year: 2021
+  task_no: 44
+  topic_norm: morphological_norm
+  evidence_quote: 'ТЕМА: Морфологія. Іменник. Рід іменників. Кличний відмінок'
+- id: 45
+  year: 2021
+  task_no: 45
+  topic_norm: morphological_norm
+  evidence_quote: 'ТЕМА: Форми ступенів порівняння якісних прикметників.'
+- id: 46
+  year: 2021
+  task_no: 46
+  topic_norm: morphological_norm
+  evidence_quote: 'ТЕМА: Морфологія. Відмінювання числівників.'
+- id: 47
+  year: 2021
+  task_no: 47
+  topic_norm: morphological_norm
+  evidence_quote: 'ТЕМА: Дієслово. Наказовий спосіб дієслів.'
+- id: 48
+  year: 2021
+  task_no: 48
+  topic_norm: text
+  evidence_quote: 'ТЕМА: Розвиток мовлення. Текст. Основні ознаки тексту. Логічна послідовність. Зв’язність
+    і точність мовлення.'
+- id: 49
+  year: 2021
+  task_no: 49
+  topic_norm: syntactic_norm
+  evidence_quote: 'ТЕМА: Синтаксис. Розділові знаки в ускладненому реченні. Вставні слова.'
+- id: 50
+  year: 2021
+  task_no: 50
+  topic_norm: syntactic_norm
+  evidence_quote: 'ТЕМА: Синтаксис. Розділові знаки в ускладненому реченні. Вставні слова.'
+- id: 51
+  year: 2021
+  task_no: 51
+  topic_norm: morphological_norm
+  evidence_quote: 'ТЕМА: Морфологія. Іменник. Відмінки іменників.'
+- id: 52
+  year: 2021
+  task_no: 52
+  topic_norm: syntactic_norm
+  evidence_quote: 'ТЕМА: Синтаксис. Будова складнопідрядного речення. Види підрядних речень.'
+- id: 53
+  year: 2021
+  task_no: 53
+  topic_norm: phraseology
+  evidence_quote: 'ТЕМА: Фразеологія. Фразеологізми. Значення фразеологізмів.'
+- id: 54
+  year: 2021
+  task_no: 54
+  topic_norm: morphological_norm
+  evidence_quote: 'ТЕМА: Морфологія. Частини мови.'
+- id: 55
+  year: 2021
+  task_no: 55
+  topic_norm: syntactic_norm
+  evidence_quote: 'ТЕМА: Синтаксис. Просте речення та складне речення.'
+- id: 56
+  year: 2021
+  task_no: 56
+  topic_norm: syntactic_norm
+  evidence_quote: 'ТЕМА: Синтаксис. Просте речення та складне речення.'
+- id: 57
+  year: 2021
+  task_no: 57
+  topic_norm: syntactic_norm
+  evidence_quote: 'ТЕМА: Синтаксис. Тире в різних видах речень.'
+- id: 58
+  year: 2021
+  task_no: 58
+  topic_norm: text
+  evidence_quote: 'ТЕМА: Розвиток мовлення. Зміст і будова тексту. Поділ тексту на абзаци, мікротеми.'
+- id: 59
+  year: 2021
+  task_no: 59
+  topic_norm: text
+  evidence_quote: 'ТЕМА: Розвиток мовлення. Зміст і будова тексту. Поділ тексту на абзаци, мікротеми.'
+- id: 60
+  year: 2021
+  task_no: 60
+  topic_norm: text
+  evidence_quote: 'ТЕМА: Розвиток мовлення. Зміст і будова тексту. Поділ тексту на абзаци, мікротеми.'
+- id: 61
+  year: 2021
+  task_no: 61
+  topic_norm: text
+  evidence_quote: 'ТЕМА: Розвиток мовлення. Зміст і будова тексту. Поділ тексту на абзаци, мікротеми.'
+- id: 62
+  year: 2021
+  task_no: 62
+  topic_norm: text
+  evidence_quote: 'ТЕМА: Розвиток мовлення. Зміст і будова тексту. Поділ тексту на абзаци, мікротеми.'
+- id: 63
+  year: 2021
+  task_no: 63
+  topic_norm: text
+  evidence_quote: 'ТЕМА: Розвиток мовлення. Зміст і будова тексту. Поділ тексту на абзаци, мікротеми.'
+- id: 64
+  year: 2021
+  task_no: 64
+  topic_norm: text
+  evidence_quote: 'ТЕМА: Розвиток мовлення. Зміст і будова тексту. Поділ тексту на абзаци, мікротеми.'
+- id: 65
+  year: 2021
+  task_no: 65
+  topic_norm: text
+  evidence_quote: 'ТЕМА: Розвиток мовлення. Зміст і будова тексту. Поділ тексту на абзаци, мікротеми.'
+- id: 66
+  year: 2021
+  task_no: 66
+  topic_norm: text
+  evidence_quote: 'ТЕМА: Розвиток мовлення. Зміст і будова тексту. Поділ тексту на абзаци, мікротеми.'
+- id: 67
+  year: 2021
+  task_no: 67
+  topic_norm: other
+  evidence_quote: Завдання 67 передбачає надання розгорнутої письмової відпові
+- id: 68
+  year: 2021
+  task_no: 1
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Усна народна творчість'
+- id: 69
+  year: 2021
+  task_no: 2
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Давня українська література. Григорій Сковорода. «Бджола та Шершень»'
+- id: 70
+  year: 2021
+  task_no: 3
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література кінця XVIII – початку XX ст. Іван Котляревський. «Енеїда»'
+- id: 71
+  year: 2021
+  task_no: 4
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література кінця XVIII – початку XX ст. Тарас Шевченко. «Катерина»'
+- id: 72
+  year: 2021
+  task_no: 5
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література кінця XVIII – початку XX ст. Пантелеймон Куліш. «Чорна рада»'
+- id: 73
+  year: 2021
+  task_no: 6
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література кінця XVIII – початку XX ст. Іван Нечуй-Левицький. «Кайдашева сім’я»'
+- id: 74
+  year: 2021
+  task_no: 7
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література кінця XVIII – початку XX ст. Іван Карпенко-Карий. «Мартин Боруля»'
+- id: 75
+  year: 2021
+  task_no: 8
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література кінця XVIII – початку XX ст. Іван Франко. «Захар Беркут»'
+- id: 76
+  year: 2021
+  task_no: 9
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література XX ст.'
+- id: 77
+  year: 2021
+  task_no: 10
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література XX ст. Микола Хвильовий. «Я (Романтика)»'
+- id: 78
+  year: 2021
+  task_no: 11
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література XX ст. Юрій Яновський. «Майстер корабля».'
+- id: 79
+  year: 2021
+  task_no: 12
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література XX ст. Микола Куліш «Мина Мазайло»'
+- id: 80
+  year: 2021
+  task_no: 13
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література XX ст. Павло Тичина. «О панно Інно…»'
+- id: 81
+  year: 2021
+  task_no: 14
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Твори українських письменників-емігрантів. Євген Маланюк. «Уривок з поеми»'
+- id: 82
+  year: 2021
+  task_no: 15
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Постмодернізм як літературне явище'
+- id: 83
+  year: 2021
+  task_no: 16
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Аналіз літературного твору'
+- id: 84
+  year: 2021
+  task_no: 17
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Аналіз літературного твору'
+- id: 85
+  year: 2021
+  task_no: 18
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Аналіз літературного твору'
+- id: 86
+  year: 2021
+  task_no: 19
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Аналіз літературного твору'
+- id: 87
+  year: 2021
+  task_no: 20
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Аналіз літературного твору'
+- id: 88
+  year: 2021
+  task_no: 21
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література XX ст.'
+- id: 89
+  year: 2021
+  task_no: 22
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література кінця XVIII – початку XX ст. Література XX ст.'
+- id: 90
+  year: 2021
+  task_no: 23
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література кінця XVIII – початку XX ст. Література XX ст.'
+- id: 91
+  year: 2021
+  task_no: 24
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література XX ст.'
+- id: 92
+  year: 2021
+  task_no: 25
+  topic_norm: phonetic
+  evidence_quote: 'ТЕМА: Фонетика. Зміни звуків'
+- id: 93
+  year: 2021
+  task_no: 26
+  topic_norm: orthoepic_norm
+  stress_word: підлітковий; уподобання; читання; довідник; фаховий; відомість; український; визвольний
+  evidence_quote: НЕПРАВИЛЬНО підкреслено букви на позначення наголошених голосних
+- id: 94
+  year: 2021
+  task_no: 27
+  topic_norm: orthographic_norm
+  evidence_quote: 'ТЕМА: Орфографія. Правопис літер, що позначають ненаголошені голосні [е], [и] в коренях
+    і суфіксах слів'
+- id: 95
+  year: 2021
+  task_no: 28
+  topic_norm: orthographic_norm
+  evidence_quote: 'ТЕМА: Орфографія. Апостроф'
+- id: 96
+  year: 2021
+  task_no: 29
+  topic_norm: orthographic_norm
+  evidence_quote: 'ТЕМА: Орфографія. Чергування та злиття приголосних'
+- id: 97
+  year: 2021
+  task_no: 30
+  topic_norm: orthographic_norm
+  evidence_quote: 'ТЕМА: Орфографія. Правопис прислівників'
+- id: 98
+  year: 2021
+  task_no: 31
+  topic_norm: orthographic_norm
+  evidence_quote: 'ТЕМА: Орфографія. Правопис ЙО та ЬО'
+- id: 99
+  year: 2021
+  task_no: 32
+  topic_norm: orthographic_norm
+  evidence_quote: 'ТЕМА: Орфографія'
+- id: 100
+  year: 2021
+  task_no: 33
+  topic_norm: morphological_norm
+  evidence_quote: 'ТЕМА: Морфологія. Змінні та незмінні частини мови. Словотвір'
+- id: 101
+  year: 2021
+  task_no: 34
+  topic_norm: lexical_norm
+  task_subtype: word_choice
+  evidence_quote: особову
+- id: 102
+  year: 2021
+  task_no: 35
+  topic_norm: lexical_norm
+  task_subtype: word_choice
+  evidence_quote: безконфліктного
+- id: 103
+  year: 2021
+  task_no: 36
+  topic_norm: lexical_norm
+  task_subtype: word_choice
+  evidence_quote: несприятливі
+- id: 104
+  year: 2021
+  task_no: 37
+  topic_norm: lexical_norm
+  task_subtype: word_choice
+  evidence_quote: взаємини
+- id: 105
+  year: 2021
+  task_no: 38
+  topic_norm: lexical_norm
+  task_subtype: word_choice
+  evidence_quote: оточенню
+- id: 106
+  year: 2021
+  task_no: 39
+  topic_norm: syntactic_norm
+  evidence_quote: 'ТЕМА: Синтаксис. Синонімія складнопідрядних речень та простих речень'
+- id: 107
+  year: 2021
+  task_no: 40
+  topic_norm: syntactic_norm
+  evidence_quote: 'ТЕМА: Синтаксис. Пряма мова. Розділові знаки при прямій мові'
+- id: 108
+  year: 2021
+  task_no: 41
+  topic_norm: syntactic_norm
+  evidence_quote: 'ТЕМА: Синтаксис. Складне речення. Розділові знаки в складному речення'
+- id: 109
+  year: 2021
+  task_no: 42
+  topic_norm: morphological_norm
+  evidence_quote: 'ТЕМА: Морфологія. Дієприслівник. Дієприслівниковий зворот'
+- id: 110
+  year: 2021
+  task_no: 43
+  topic_norm: morphological_norm
+  evidence_quote: 'ТЕМА: Форми ступенів порівняння якісних прикметників. Рід іменників'
+- id: 111
+  year: 2021
+  task_no: 44
+  topic_norm: morphological_norm
+  evidence_quote: 'ТЕМА: Морфологія. Іменник. Кличний відмінок. Дієслово. Дієвідміни'
+- id: 112
+  year: 2021
+  task_no: 45
+  topic_norm: morphological_norm
+  evidence_quote: 'ТЕМА: Морфологія. Відмінювання числівників. Прийменник'
+- id: 113
+  year: 2021
+  task_no: 46
+  topic_norm: morphological_norm
+  evidence_quote: 'ТЕМА: Морфологія. Відмінювання іменників. Дієприкметник'
+- id: 114
+  year: 2021
+  task_no: 47
+  topic_norm: morphological_norm
+  evidence_quote: 'ТЕМА: Рід іменників. Відмінювання іменників та прикметників.'
+- id: 115
+  year: 2021
+  task_no: 48
+  topic_norm: text
+  evidence_quote: 'ТЕМА: Розвиток мовлення. Текст. Основні ознаки тексту. Логічна послідовність. Зв’язність
+    і точність мовлення'
+- id: 116
+  year: 2021
+  task_no: 49
+  topic_norm: syntactic_norm
+  evidence_quote: 'ТЕМА: Синтаксис. Розділові знаки в ускладненому реченні. Вставні слова'
+- id: 117
+  year: 2021
+  task_no: 50
+  topic_norm: syntactic_norm
+  evidence_quote: 'ТЕМА: Синтаксис. Розділові знаки в ускладненому реченні'
+- id: 118
+  year: 2021
+  task_no: 51
+  topic_norm: syntactic_norm
+  evidence_quote: 'ТЕМА: Синтаксис. Просте і складне речення'
+- id: 119
+  year: 2021
+  task_no: 52
+  topic_norm: syntactic_norm
+  evidence_quote: 'ТЕМА: Синтаксис. Просте речення. Однорідні члени речення'
+- id: 120
+  year: 2021
+  task_no: 53
+  topic_norm: phraseology
+  evidence_quote: 'ТЕМА: Фразеологія. Фразеологізми. Значення фразеологізмів.'
+- id: 121
+  year: 2021
+  task_no: 54
+  topic_norm: morphological_norm
+  evidence_quote: 'ТЕМА: Морфологія. Частини мови.'
+- id: 122
+  year: 2021
+  task_no: 55
+  topic_norm: syntactic_norm
+  evidence_quote: 'ТЕМА: Синтаксис. Просте речення та складне речення.'
+- id: 123
+  year: 2021
+  task_no: 56
+  topic_norm: syntactic_norm
+  evidence_quote: 'ТЕМА: Синтаксис. Просте речення. Відокремлені члени речення.'
+- id: 124
+  year: 2021
+  task_no: 57
+  topic_norm: syntactic_norm
+  evidence_quote: 'ТЕМА: Синтаксис. Просте речення та складне речення.'
+- id: 125
+  year: 2021
+  task_no: 58
+  topic_norm: text
+  evidence_quote: 'ТЕМА: Розвиток мовлення. Зміст і будова тексту. Поділ тексту на абзаци, мікротеми.'
+- id: 126
+  year: 2021
+  task_no: 59
+  topic_norm: text
+  evidence_quote: 'ТЕМА: Розвиток мовлення. Зміст і будова тексту. Поділ тексту на абзаци, мікротеми.'
+- id: 127
+  year: 2021
+  task_no: 60
+  topic_norm: text
+  evidence_quote: 'ТЕМА: Розвиток мовлення. Зміст і будова тексту. Поділ тексту на абзаци, мікротеми.'
+- id: 128
+  year: 2021
+  task_no: 61
+  topic_norm: text
+  evidence_quote: 'ТЕМА: Розвиток мовлення. Зміст і будова тексту. Поділ тексту на абзаци, мікротеми.'
+- id: 129
+  year: 2021
+  task_no: 62
+  topic_norm: text
+  evidence_quote: 'ТЕМА: Розвиток мовлення. Зміст і будова тексту. Поділ тексту на абзаци, мікротеми.'
+- id: 130
+  year: 2021
+  task_no: 63
+  topic_norm: text
+  evidence_quote: 'ТЕМА: Розвиток мовлення. Зміст і будова тексту. Поділ тексту на абзаци, мікротеми.'
+- id: 131
+  year: 2021
+  task_no: 64
+  topic_norm: text
+  evidence_quote: 'ТЕМА: Розвиток мовлення. Зміст і будова тексту. Поділ тексту на абзаци, мікротеми.'
+- id: 132
+  year: 2021
+  task_no: 65
+  topic_norm: text
+  evidence_quote: 'ТЕМА: Розвиток мовлення. Зміст і будова тексту. Поділ тексту на абзаци, мікротеми.'
+- id: 133
+  year: 2021
+  task_no: 66
+  topic_norm: text
+  evidence_quote: 'ТЕМА: Розвиток мовлення. Зміст і будова тексту. Поділ тексту на абзаци, мікротеми.'
+- id: 134
+  year: 2021
+  task_no: 67
+  topic_norm: other
+  evidence_quote: Завдання 67 передбачає надання розгорнутої письмової відпові
+- id: 135
+  year: 2020
+  task_no: 1
+  topic_norm: orthographic_norm
+  evidence_quote: 'ТЕМА: Орфографія. Апостроф.'
+- id: 136
+  year: 2020
+  task_no: 2
+  topic_norm: lexical_norm
+  task_subtype: lexical_error
+  evidence_quote: виговор з попередженням
+- id: 137
+  year: 2020
+  task_no: 3
+  topic_norm: word_formation
+  evidence_quote: 'ТЕМА: Будова слова. Словотвір. Значущі частини слова: корінь, префікс, суфікс, закінчення'
+- id: 138
+  year: 2020
+  task_no: 4
+  topic_norm: lexical_norm
+  task_subtype: synonym
+  evidence_quote: Синонімами є всі слова в рядку
+- id: 139
+  year: 2020
+  task_no: 5
+  topic_norm: morphological_norm
+  evidence_quote: 'ТЕМА: Морфологія. Рід іменників.'
+- id: 140
+  year: 2020
+  task_no: 6
+  topic_norm: orthoepic_norm
+  stress_word: зручний
+  evidence_quote: На перший склад падає наголос у слові
+- id: 141
+  year: 2020
+  task_no: 7
+  topic_norm: lexical_norm
+  task_subtype: word_choice
+  evidence_quote: краху
+- id: 142
+  year: 2020
+  task_no: 8
+  topic_norm: syntactic_norm
+  evidence_quote: 'ТЕМА: Синтаксис. Розділові знаки в ускладненому реченні. Вставні слова.'
+- id: 143
+  year: 2020
+  task_no: 9
+  topic_norm: syntactic_norm
+  evidence_quote: 'ТЕМА: Синтаксис. Головні члени речення. Підмет.'
+- id: 144
+  year: 2020
+  task_no: 10
+  topic_norm: morphological_norm
+  evidence_quote: 'ТЕМА: Морфологія. Відмінювання числівників.'
+- id: 145
+  year: 2020
+  task_no: 11
+  topic_norm: phonetic
+  evidence_quote: 'ТЕМА: Фонетика. Зміни звуків.'
+- id: 146
+  year: 2020
+  task_no: 12
+  topic_norm: orthographic_norm
+  evidence_quote: 'ТЕМА: Орфографія. Правопис великої літери.'
+- id: 147
+  year: 2020
+  task_no: 13
+  topic_norm: orthographic_norm
+  evidence_quote: 'ТЕМА: Орфографія. Правопис складних слів.'
+- id: 148
+  year: 2020
+  task_no: 14
+  topic_norm: orthographic_norm
+  evidence_quote: 'ТЕМА: Орфографія. Подвоєння букв на позначення подовжених м’яких приголосних і збігу
+    однакових приголосних звуків.'
+- id: 149
+  year: 2020
+  task_no: 15
+  topic_norm: lexical_norm
+  task_subtype: paronym
+  paronym_pair: дипломант/дипломник; призводити/приводити
+  evidence_quote: частини, дипломантів, трапляються, приводить
+- id: 150
+  year: 2020
+  task_no: 16
+  topic_norm: morphological_norm
+  evidence_quote: 'ТЕМА: Морфологія. Поєднання іменників з числівниками'
+- id: 151
+  year: 2020
+  task_no: 17
+  topic_norm: morphological_norm
+  evidence_quote: 'ТЕМА: Морфологія. Дієприслівник . Дієприслівниковий зворот'
+- id: 152
+  year: 2020
+  task_no: 18
+  topic_norm: morphological_norm
+  evidence_quote: 'ТЕМА: Морфологія. Відмінювання іменників, поєднання іменників з числівниками.'
+- id: 153
+  year: 2020
+  task_no: 19
+  topic_norm: morphological_norm
+  evidence_quote: 'ТЕМА: Морфологія. Іменник. Особливості вживання та написання відмінкових форм. Кличний
+    відмінок.'
+- id: 154
+  year: 2020
+  task_no: 20
+  topic_norm: syntactic_norm
+  evidence_quote: 'ТЕМА: Синтаксис. Складносурядне речення.'
+- id: 155
+  year: 2020
+  task_no: 21
+  topic_norm: syntactic_norm
+  evidence_quote: 'ТЕМА: Синтаксис. Пряма й непряма мова. Речення з прямою мовою.'
+- id: 156
+  year: 2020
+  task_no: 22
+  topic_norm: syntactic_norm
+  evidence_quote: 'ТЕМА: Синтаксис. Складне речення. Безсполучникове складне речення. Розділові знаки
+    в складному безсполучниковому реченні.'
+- id: 157
+  year: 2020
+  task_no: 23
+  topic_norm: syntactic_norm
+  evidence_quote: 'ТЕМА: Синтаксис. Складне речення. Розділові знаки в складному речення.'
+- id: 158
+  year: 2020
+  task_no: 24
+  topic_norm: lexical_norm
+  task_subtype: antonym
+  evidence_quote: фразеологізм із його антонімом
+- id: 159
+  year: 2020
+  task_no: 25
+  topic_norm: syntactic_norm
+  evidence_quote: 'ТЕМА: Синтаксис. Складнопідрядне речення. Види підрядних речень.'
+- id: 160
+  year: 2020
+  task_no: 26
+  topic_norm: syntactic_norm
+  evidence_quote: 'ТЕМА: Синтаксис. Головні та другорядні члени речення.'
+- id: 161
+  year: 2020
+  task_no: 27
+  topic_norm: syntactic_norm
+  evidence_quote: 'ТЕМА: Синтаксис. Просте речення. Односкладні речення.'
+- id: 162
+  year: 2020
+  task_no: 28
+  topic_norm: morphological_norm
+  evidence_quote: 'ТЕМА: Морфологія. Частини мови.'
+- id: 163
+  year: 2020
+  task_no: 29
+  topic_norm: text
+  evidence_quote: 'ТЕМА: Розвиток мовлення. Зміст і будова тексту. Поділ тексту на абзаци, мікротеми.'
+- id: 164
+  year: 2020
+  task_no: 30
+  topic_norm: text
+  evidence_quote: 'ТЕМА: Розвиток мовлення. Зміст і будова тексту. Поділ тексту на абзаци, мікротеми.'
+- id: 165
+  year: 2020
+  task_no: 31
+  topic_norm: text
+  evidence_quote: 'ТЕМА: Розвиток мовлення. Зміст і будова тексту. Поділ тексту на абзаци, мікротеми.'
+- id: 166
+  year: 2020
+  task_no: 32
+  topic_norm: text
+  evidence_quote: 'ТЕМА: Розвиток мовлення. Зміст і будова тексту. Поділ тексту на абзаци, мікротеми.'
+- id: 167
+  year: 2020
+  task_no: 33
+  topic_norm: text
+  evidence_quote: 'ТЕМА: Розвиток мовлення. Зміст і будова тексту. Поділ тексту на абзаци, мікротеми.'
+- id: 168
+  year: 2020
+  task_no: 34
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Усна народна творчість. Історичні пісні. «Чи не той то Хміль»'
+- id: 169
+  year: 2020
+  task_no: 35
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Давня українська література. «Слово про похід Ігорів»'
+- id: 170
+  year: 2020
+  task_no: 36
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література кінця XVIII – початку XX ст. Тарас Шевченко. «Сон (У всякого своя
+    доля…)»'
+- id: 171
+  year: 2020
+  task_no: 37
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література кінця XVIII – початку XX ст. Пантелеймон Куліш. «Чорна рада»'
+- id: 172
+  year: 2020
+  task_no: 38
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Твори українських письменників-емігрантів. Євген Маланюк. «Уривок з поеми»'
+- id: 173
+  year: 2020
+  task_no: 39
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література XX ст. Михайло Коцюбинський. «Тіні забутих предків»'
+- id: 174
+  year: 2020
+  task_no: 40
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література кінця XVIII – початку XX ст. Література XX ст.'
+- id: 175
+  year: 2020
+  task_no: 41
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література кінця XVIII – початку XX ст. Іван Франко. «Захар Беркут»'
+- id: 176
+  year: 2020
+  task_no: 42
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література XX ст. Леся Українка. «Лісова пісня»'
+- id: 177
+  year: 2020
+  task_no: 43
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література XX ст. Максим Рильський. «У теплі дні збирання винограду…»'
+- id: 178
+  year: 2020
+  task_no: 44
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література XX ст. Микола Вороний. «Блакитна Панна»'
+- id: 179
+  year: 2020
+  task_no: 45
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література ХХ ст. Леся Українка. «Contra spem spero!»'
+- id: 180
+  year: 2020
+  task_no: 46
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література XX ст. Юрій Яновський. «Майстер корабля»'
+- id: 181
+  year: 2020
+  task_no: 47
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література XX ст. Василь Голобородько. «Наша мова»'
+- id: 182
+  year: 2020
+  task_no: 48
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Постмодернізм як літературне явище'
+- id: 183
+  year: 2020
+  task_no: 49
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Аналіз літературного твору'
+- id: 184
+  year: 2020
+  task_no: 50
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Аналіз літературного твору'
+- id: 185
+  year: 2020
+  task_no: 51
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Аналіз літературного твору'
+- id: 186
+  year: 2020
+  task_no: 52
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Аналіз літературного твору'
+- id: 187
+  year: 2020
+  task_no: 53
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Аналіз літературного твору'
+- id: 188
+  year: 2020
+  task_no: 54
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література XX ст.'
+- id: 189
+  year: 2020
+  task_no: 55
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література кінця XVIII – початку XX ст. Література XX ст.'
+- id: 190
+  year: 2020
+  task_no: 56
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література кінця XVIII – початку XX ст. Література XX ст.'
+- id: 191
+  year: 2020
+  task_no: 57
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література кінця XVIII – початку XX ст. Література XX ст.'
+- id: 192
+  year: 2020
+  task_no: 58
+  topic_norm: other
+  evidence_quote: 'Власне висловлення Прочитайте наведений текст. Соціологічне '
+- id: 193
+  year: 2020
+  task_no: 1
+  topic_norm: orthographic_norm
+  evidence_quote: 'ТЕМА: Орфографія. Правила вживання м’якого знака.'
+- id: 194
+  year: 2020
+  task_no: 2
+  topic_norm: lexical_norm
+  task_subtype: paronym
+  paronym_pair: змістовий/змістовний
+  evidence_quote: змістова доповідь
+- id: 195
+  year: 2020
+  task_no: 3
+  topic_norm: morphological_norm
+  evidence_quote: 'ТЕМА: Морфологія. Змінні та незмінні частини мови. Словотвір.'
+- id: 196
+  year: 2020
+  task_no: 4
+  topic_norm: morphological_norm
+  evidence_quote: 'ТЕМА: Морфологія. Дієприслівник . Дієприслівниковий зворот.'
+- id: 197
+  year: 2020
+  task_no: 5
+  topic_norm: syntactic_norm
+  evidence_quote: 'ТЕМА: Синтаксис. Складне речення.'
+- id: 198
+  year: 2020
+  task_no: 6
+  topic_norm: orthoepic_norm
+  stress_word: поняття
+  evidence_quote: На другий склад падає наголос у слові
+- id: 199
+  year: 2020
+  task_no: 7
+  topic_norm: syntactic_norm
+  evidence_quote: 'ТЕМА: Синтаксис. Другорядні члени речення.'
+- id: 200
+  year: 2020
+  task_no: 8
+  topic_norm: syntactic_norm
+  evidence_quote: 'ТЕМА: Синтаксис. Порівняльний зворот.'
+- id: 201
+  year: 2020
+  task_no: 9
+  topic_norm: orthographic_norm
+  evidence_quote: 'ТЕМА: Орфографія. Написання складних слів разом і через дефіс.'
+- id: 202
+  year: 2020
+  task_no: 10
+  topic_norm: lexical_norm
+  task_subtype: word_choice
+  evidence_quote: розіслався
+- id: 203
+  year: 2020
+  task_no: 11
+  topic_norm: phonetic
+  evidence_quote: 'ТЕМА: Фонетика. Зміни звуків.'
+- id: 204
+  year: 2020
+  task_no: 12
+  topic_norm: orthographic_norm
+  evidence_quote: 'ТЕМА: Орфографія. Правопис літер, що позначають ненаголошені голосні [е], [и] в коренях
+    і суфіксах слів.'
+- id: 205
+  year: 2020
+  task_no: 13
+  topic_norm: orthographic_norm
+  evidence_quote: 'ТЕМА: Орфографія. Правопис складних слів.'
+- id: 206
+  year: 2020
+  task_no: 14
+  topic_norm: orthographic_norm
+  evidence_quote: 'ТЕМА: Орфографія. Спрощення в групах приголосних.'
+- id: 207
+  year: 2020
+  task_no: 15
+  topic_norm: lexical_norm
+  task_subtype: paronym
+  paronym_pair: виняток/виключення
+  evidence_quote: успішно, розгорнути, винятках
+- id: 208
+  year: 2020
+  task_no: 16
+  topic_norm: morphological_norm
+  evidence_quote: 'ТЕМА: Морфологія. Числівник.'
+- id: 209
+  year: 2020
+  task_no: 17
+  topic_norm: syntactic_norm
+  evidence_quote: 'ТЕМА: Синтаксис. Однорідні члени речення.'
+- id: 210
+  year: 2020
+  task_no: 18
+  topic_norm: syntactic_norm
+  evidence_quote: 'ТЕМА: Синтаксис. Складне речення. Синонімія складних речень.'
+- id: 211
+  year: 2020
+  task_no: 19
+  topic_norm: orthographic_norm
+  evidence_quote: 'ТЕМА: Орфографія. Основні випадки чергування у-в.'
+- id: 212
+  year: 2020
+  task_no: 20
+  topic_norm: morphological_norm
+  evidence_quote: 'ТЕМА: Морфологія. Ступені порівняння прикметника. Поєднання іменника з числівником.
+    Відмінювання числівників.'
+- id: 213
+  year: 2020
+  task_no: 21
+  topic_norm: morphological_norm
+  evidence_quote: 'ТЕМА: Морфологія. Дієслово. Творення наказового способу дієслова.'
+- id: 214
+  year: 2020
+  task_no: 22
+  topic_norm: morphological_norm
+  evidence_quote: 'ТЕМА: Морфологія. Рід іменників.'
+- id: 215
+  year: 2020
+  task_no: 23
+  topic_norm: phraseology
+  evidence_quote: 'ТЕМА: Фразеологія. Фразеологізми.'
+- id: 216
+  year: 2020
+  task_no: 24
+  topic_norm: syntactic_norm
+  evidence_quote: 'ТЕМА: Синтаксис. Складне речення.'
+- id: 217
+  year: 2020
+  task_no: 25
+  topic_norm: syntactic_norm
+  evidence_quote: 'ТЕМА: Синтаксис. Складне речення.'
+- id: 218
+  year: 2020
+  task_no: 26
+  topic_norm: syntactic_norm
+  evidence_quote: 'ТЕМА: Синтаксис. Односкладні речення.'
+- id: 219
+  year: 2020
+  task_no: 27
+  topic_norm: syntactic_norm
+  evidence_quote: 'ТЕМА: Синтаксис. Тире в різних видах речень.'
+- id: 220
+  year: 2020
+  task_no: 28
+  topic_norm: morphological_norm
+  evidence_quote: 'ТЕМА: Морфологія. Частини мови.'
+- id: 221
+  year: 2020
+  task_no: 29
+  topic_norm: text
+  evidence_quote: 'ТЕМА: Розвиток мовлення. Зміст і будова тексту. Поділ тексту на абзаци, мікротеми.'
+- id: 222
+  year: 2020
+  task_no: 30
+  topic_norm: text
+  evidence_quote: 'ТЕМА: Розвиток мовлення. Зміст і будова тексту. Поділ тексту на абзаци, мікротеми.'
+- id: 223
+  year: 2020
+  task_no: 31
+  topic_norm: text
+  evidence_quote: 'ТЕМА: Розвиток мовлення. Зміст і будова тексту. Поділ тексту на абзаци, мікротеми.'
+- id: 224
+  year: 2020
+  task_no: 32
+  topic_norm: text
+  evidence_quote: 'ТЕМА: Розвиток мовлення. Зміст і будова тексту. Поділ тексту на абзаци, мікротеми.'
+- id: 225
+  year: 2020
+  task_no: 33
+  topic_norm: text
+  evidence_quote: 'ТЕМА: Розвиток мовлення. Зміст і будова тексту. Поділ тексту на абзаци, мікротеми.'
+- id: 226
+  year: 2020
+  task_no: 34
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Усна народна творчість. Балада «Ой летіла стріла»'
+- id: 227
+  year: 2020
+  task_no: 35
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Давня українська література. Григорій Сковорода. «De libertate»'
+- id: 228
+  year: 2020
+  task_no: 36
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література XX ст. Олесь Гончар. «Модри Камень»'
+- id: 229
+  year: 2020
+  task_no: 37
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література кінця XVIII – початку XX ст. Тарас Шевченко. «Кавказ»'
+- id: 230
+  year: 2020
+  task_no: 38
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література XX ст. Василь Стус. «Господи, гніву пречистого…»'
+- id: 231
+  year: 2020
+  task_no: 39
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література кінця XVIII – початку XX ст. Іван Нечуй-Левицький. «Кайдашева сім’я»'
+- id: 232
+  year: 2020
+  task_no: 40
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література кінця XVIII – початку XX ст. Панас Мирний. «Хіба ревуть воли, як ясла
+    повні?»'
+- id: 233
+  year: 2020
+  task_no: 41
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література XX ст. Юрій Яновський. «Майстер корабля». Олександр Довженко. «Зачарована
+    Десна»'
+- id: 234
+  year: 2020
+  task_no: 42
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література кінця XVIII – початку XX ст. Іван Франко. «Захар Беркут»'
+- id: 235
+  year: 2020
+  task_no: 43
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Твори українських письменників-емігрантів. Іван Багряний. «Тигролови»'
+- id: 236
+  year: 2020
+  task_no: 44
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література XX ст. Михайло Коцюбинський. «Тіні забутих предків»'
+- id: 237
+  year: 2020
+  task_no: 45
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література XX ст. Ольга Кобилянська. «Valse mélancolique»'
+- id: 238
+  year: 2020
+  task_no: 46
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література XX ст. Максим Рильський. «У теплі дні збирання винограду…»'
+- id: 239
+  year: 2020
+  task_no: 47
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література XX ст. Микола Хвильовий. «Я (Романтика)»'
+- id: 240
+  year: 2020
+  task_no: 48
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Постмодернізм як літературне явище'
+- id: 241
+  year: 2020
+  task_no: 49
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Аналіз літературного твору'
+- id: 242
+  year: 2020
+  task_no: 50
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Аналіз літературного твору'
+- id: 243
+  year: 2020
+  task_no: 51
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Аналіз літературного твору'
+- id: 244
+  year: 2020
+  task_no: 52
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Аналіз літературного твору'
+- id: 245
+  year: 2020
+  task_no: 53
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Аналіз літературного твору'
+- id: 246
+  year: 2020
+  task_no: 54
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література кінця XVIII – початку XX ст. Література XX ст.'
+- id: 247
+  year: 2020
+  task_no: 55
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література кінця XVIII – початку XX ст. Література XX ст.'
+- id: 248
+  year: 2020
+  task_no: 56
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література кінця XVIII – початку XX ст. Література XX ст.'
+- id: 249
+  year: 2020
+  task_no: 57
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література XX ст.'
+- id: 250
+  year: 2020
+  task_no: 58
+  topic_norm: other
+  evidence_quote: Власне висловлення Прочитайте наведений текст. У життєвих си
+- id: 251
+  year: 2019
+  task_no: 1
+  topic_norm: orthoepic_norm
+  stress_word: жалюзі
+  evidence_quote: На перший склад падає наголос у всіх словах, ОКРІМ
+- id: 252
+  year: 2019
+  task_no: 2
+  topic_norm: syntactic_norm
+  evidence_quote: 'ТЕМА: Синтаксис. Розділові знаки в ускладненому реченні. Вставні слова.'
+- id: 253
+  year: 2019
+  task_no: 3
+  topic_norm: lexical_norm
+  task_subtype: antonym
+  evidence_quote: Антонімами є слова в рядку
+- id: 254
+  year: 2019
+  task_no: 4
+  topic_norm: word_formation
+  evidence_quote: 'ТЕМА: Будова слова. Словотвір. Значущі частини слова: корінь, префікс, суфікс, закінчення'
+- id: 255
+  year: 2019
+  task_no: 5
+  topic_norm: morphological_norm
+  evidence_quote: 'ТЕМА: Морфологія. Рід іменників.'
+- id: 256
+  year: 2019
+  task_no: 6
+  topic_norm: orthographic_norm
+  evidence_quote: 'ТЕМА: Орфографія. Правила вживання м’якого знака.'
+- id: 257
+  year: 2019
+  task_no: 7
+  topic_norm: orthographic_norm
+  evidence_quote: 'ТЕМА: Орфографія. Написання слів разом та окремо.'
+- id: 258
+  year: 2019
+  task_no: 8
+  topic_norm: lexical_norm
+  task_subtype: synonym
+  evidence_quote: можна замінити всіма наведеними словами
+- id: 259
+  year: 2019
+  task_no: 9
+  topic_norm: syntactic_norm
+  evidence_quote: 'ТЕМА: Синтаксис. Розділові знаки в простому ускладненому реченні.'
+- id: 260
+  year: 2019
+  task_no: 10
+  topic_norm: morphological_norm
+  evidence_quote: 'ТЕМА: Морфологія. Іменник. Відмінки іменників'
+- id: 261
+  year: 2019
+  task_no: 11
+  topic_norm: phonetic
+  evidence_quote: 'ТЕМА: Фонетика. Зміни звуків.'
+- id: 262
+  year: 2019
+  task_no: 12
+  topic_norm: orthographic_norm
+  evidence_quote: 'ТЕМА: Орфографія. Основні випадки чергування у-в.'
+- id: 263
+  year: 2019
+  task_no: 13
+  topic_norm: orthographic_norm
+  evidence_quote: 'ТЕМА: Орфографія. Подвоєння приголосних за рахунок збігу. Подвоєння букв на позначення
+    подовжених м’яких приголосних.'
+- id: 264
+  year: 2019
+  task_no: 14
+  topic_norm: orthographic_norm
+  evidence_quote: 'ТЕМА: Орфографія. Правопис складних слів.'
+- id: 265
+  year: 2019
+  task_no: 15
+  topic_norm: morphological_norm
+  evidence_quote: 'ТЕМА: Морфологія. Типи відмінювання кількісних числівників. Поєднання числівника з
+    іменником.'
+- id: 266
+  year: 2019
+  task_no: 16
+  topic_norm: morphological_norm
+  evidence_quote: 'ТЕМА: Морфологія. Дієприслівник. Дієприслівниковий зворот'
+- id: 267
+  year: 2019
+  task_no: 17
+  topic_norm: syntactic_norm
+  evidence_quote: 'ТЕМА: Синтаксис. Розділові знаки в простому ускладненому реченні.'
+- id: 268
+  year: 2019
+  task_no: 18
+  topic_norm: lexical_norm
+  task_subtype: paronym
+  paronym_pair: тактовний/тактичний; численний/чисельний; дослід/дослідження
+  evidence_quote: як тактичніше вчинити
+- id: 269
+  year: 2019
+  task_no: 19
+  topic_norm: morphological_norm
+  evidence_quote: 'ТЕМА: Морфологія. Дієслово. Творення умовного та наказового способів дієслів.'
+- id: 270
+  year: 2019
+  task_no: 20
+  topic_norm: syntactic_norm
+  evidence_quote: 'ТЕМА: Синтаксис. Однорідні члени речення.'
+- id: 271
+  year: 2019
+  task_no: 21
+  topic_norm: syntactic_norm
+  evidence_quote: 'ТЕМА: Синтаксис. Пряма мова. Розділові знаки при прямій мові.'
+- id: 272
+  year: 2019
+  task_no: 22
+  topic_norm: syntactic_norm
+  evidence_quote: 'ТЕМА: Синтаксис. Складне речення. Розділові знаки в складному реченні.'
+- id: 273
+  year: 2019
+  task_no: 23
+  topic_norm: syntactic_norm
+  evidence_quote: 'ТЕМА: Синтаксис. Речення. Складнопідрядне речення, його будова. Основні види підрядних
+    речень'
+- id: 274
+  year: 2019
+  task_no: 24
+  topic_norm: phraseology
+  evidence_quote: 'ТЕМА: Фразеологія. Значення фразеологізмів.'
+- id: 275
+  year: 2019
+  task_no: 25
+  topic_norm: syntactic_norm
+  evidence_quote: 'ТЕМА: Синтаксис. Просте речення. Відокремлені члени речення.'
+- id: 276
+  year: 2019
+  task_no: 26
+  topic_norm: syntactic_norm
+  evidence_quote: 'ТЕМА: Синтаксис. Тире в різних видахречень.'
+- id: 277
+  year: 2019
+  task_no: 27
+  topic_norm: syntactic_norm
+  evidence_quote: 'ТЕМА: Синтаксис. Просте речення. Односкладні речення.'
+- id: 278
+  year: 2019
+  task_no: 28
+  topic_norm: morphological_norm
+  evidence_quote: 'ТЕМА: Морфологія. Частини мови.'
+- id: 279
+  year: 2019
+  task_no: 29
+  topic_norm: text
+  evidence_quote: 'ТЕМА: Розвиток мовлення. Зміст і будова тексту. Поділ тексту на абзаци, мікротеми.'
+- id: 280
+  year: 2019
+  task_no: 30
+  topic_norm: text
+  evidence_quote: 'ТЕМА: Розвиток мовлення. Зміст і будова тексту. Поділ тексту на абзаци, мікротеми.'
+- id: 281
+  year: 2019
+  task_no: 31
+  topic_norm: text
+  evidence_quote: 'ТЕМА: Розвиток мовлення. Зміст і будова тексту. Поділ тексту на абзаци, мікротеми.'
+- id: 282
+  year: 2019
+  task_no: 32
+  topic_norm: text
+  evidence_quote: 'ТЕМА: Розвиток мовлення. Зміст і будова тексту. Поділ тексту на абзаци, мікротеми.'
+- id: 283
+  year: 2019
+  task_no: 33
+  topic_norm: text
+  evidence_quote: 'ТЕМА: Розвиток мовлення. Зміст і будова тексту. Поділ тексту на абзаци, мікротеми.'
+- id: 284
+  year: 2019
+  task_no: 34
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Усна народна творчість. «Дума про Марусю Богуславку»'
+- id: 285
+  year: 2019
+  task_no: 35
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Давня українська література. «Слово про похід Ігорів»'
+- id: 286
+  year: 2019
+  task_no: 36
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література кінця XVIII – початку XX ст. Іван Котляревський. «Енеїда»'
+- id: 287
+  year: 2019
+  task_no: 37
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література кінця XVIII – початку XX ст. Григорій Квітка-Основ’яненко. «Маруся»'
+- id: 288
+  year: 2019
+  task_no: 38
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література кінця XVIII – початку XX ст. Тарас Шевченко. «І мертвим, і живим,
+    і ненарожденним…»'
+- id: 289
+  year: 2019
+  task_no: 39
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література кінця XVIII – початку XX ст. Пантелеймон Куліш. «Чорна рада»'
+- id: 290
+  year: 2019
+  task_no: 40
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література кінця XVIII – початку XX ст. Іван Нечуй-Левицький. «Кайдашева сім’я»'
+- id: 291
+  year: 2019
+  task_no: 41
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література кінця XVIII – початку XX ст. Панас Мирний. «Хіба ревуть воли, як ясла
+    повні?»'
+- id: 292
+  year: 2019
+  task_no: 42
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література кінця XVIII – початку XX ст. Іван Карпенко-Карий. «Мартин Боруля»'
+- id: 293
+  year: 2019
+  task_no: 43
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література кінця XVIII – початку XX ст. Іван Франко. «Гімн»'
+- id: 294
+  year: 2019
+  task_no: 44
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література XX ст. Михайло Коцюбинський. «Intermezzo»'
+- id: 295
+  year: 2019
+  task_no: 45
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література XX ст. Ольга Кобилянська. «Земля»'
+- id: 296
+  year: 2019
+  task_no: 46
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література XX ст. Леся Українка. «Лісова пісня»'
+- id: 297
+  year: 2019
+  task_no: 47
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література XX ст. Микола Зеров. «Київ – традиція»'
+- id: 298
+  year: 2019
+  task_no: 48
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література кінця XVIII – початку XX ст. Іван Котляревський. «Наталка Полтавка».
+    Література XX ст. Микола Куліш. «Мина Мазайло»'
+- id: 299
+  year: 2019
+  task_no: 49
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література XX ст. Максим Рильський. «Молюсь і вірю. Вітер грає…»'
+- id: 300
+  year: 2019
+  task_no: 50
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література XX ст. Валер’ян Підмогильний. «Місто»'
+- id: 301
+  year: 2019
+  task_no: 51
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: твори українських письменників-емігрантів. Євген Маланюк. «Стилет чи стилос?»'
+- id: 302
+  year: 2019
+  task_no: 52
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література XX ст. Ліна Костенко. «Українське альфреско»'
+- id: 303
+  year: 2019
+  task_no: 53
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Сучасний літературний процес. Постмодернізм як один із художніх напрямів мистецтва
+    90-х років, його риси'
+- id: 304
+  year: 2019
+  task_no: 54
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література кінця XVIII – початку XX ст.'
+- id: 305
+  year: 2019
+  task_no: 55
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література XX ст.'
+- id: 306
+  year: 2019
+  task_no: 56
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література XX ст.'
+- id: 307
+  year: 2019
+  task_no: 57
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література кінця XVIII – початку XX ст.'
+- id: 308
+  year: 2019
+  task_no: 58
+  topic_norm: other
+  evidence_quote: Власне висловлення Прочитайте наведений текст. Людям властив
+- id: 309
+  year: 2019
+  task_no: 1
+  topic_norm: orthoepic_norm
+  stress_word: підлітковий
+  evidence_quote: На перший склад падає наголос у слові
+- id: 310
+  year: 2019
+  task_no: 2
+  topic_norm: syntactic_norm
+  evidence_quote: 'ТЕМА: Синтаксис. Розділові знаки в простому ускладненому реченні.'
+- id: 311
+  year: 2019
+  task_no: 3
+  topic_norm: lexical_norm
+  task_subtype: synonym
+  evidence_quote: НЕ є синонімами
+- id: 312
+  year: 2019
+  task_no: 4
+  topic_norm: word_formation
+  evidence_quote: 'ТЕМА: Будова слова. Словотвір. Значущі частини слова: корінь, префікс, суфікс, закінчення.'
+- id: 313
+  year: 2019
+  task_no: 5
+  topic_norm: morphological_norm
+  evidence_quote: 'ТЕМА: Морфологія. Рід іменників.'
+- id: 314
+  year: 2019
+  task_no: 6
+  topic_norm: orthographic_norm
+  evidence_quote: 'ТЕМА: Орфографія. Чергування та злиття приголосних.'
+- id: 315
+  year: 2019
+  task_no: 7
+  topic_norm: syntactic_norm
+  evidence_quote: 'ТЕМА: Синтаксис. Розділові знаки в простому ускладненому реченні.'
+- id: 316
+  year: 2019
+  task_no: 8
+  topic_norm: orthographic_norm
+  evidence_quote: 'ТЕМА: Орфографія.'
+- id: 317
+  year: 2019
+  task_no: 9
+  topic_norm: morphological_norm
+  evidence_quote: 'ТЕМА: Морфологія. Іменник. Відмінки іменників'
+- id: 318
+  year: 2019
+  task_no: 10
+  topic_norm: lexical_norm
+  task_subtype: synonym
+  evidence_quote: можуть бути всі слова
+- id: 319
+  year: 2019
+  task_no: 11
+  topic_norm: phonetic
+  evidence_quote: 'ТЕМА: Фонетика. Зміни звуків.'
+- id: 320
+  year: 2019
+  task_no: 12
+  topic_norm: morphological_norm
+  evidence_quote: 'ТЕМА: Морфологія. Прикметник. Творення прикметників.'
+- id: 321
+  year: 2019
+  task_no: 13
+  topic_norm: orthographic_norm
+  evidence_quote: 'ТЕМА: Орфографія. Спрощення в групах приголосних.'
+- id: 322
+  year: 2019
+  task_no: 14
+  topic_norm: orthographic_norm
+  evidence_quote: 'ТЕМА: Орфографія. Правопис складних слів.'
+- id: 323
+  year: 2019
+  task_no: 15
+  topic_norm: morphological_norm
+  evidence_quote: 'ТЕМА: Морфологія. Дієслово. Дієслівні форми.'
+- id: 324
+  year: 2019
+  task_no: 16
+  topic_norm: syntactic_norm
+  evidence_quote: 'ТЕМА: Синтаксис. Розділові знаки в складному реченні.'
+- id: 325
+  year: 2019
+  task_no: 17
+  topic_norm: lexical_norm
+  task_subtype: lexical_error
+  evidence_quote: ціленаправлено
+- id: 326
+  year: 2019
+  task_no: 18
+  topic_norm: morphological_norm
+  evidence_quote: 'ТЕМА: Морфологія. Прийменник.'
+- id: 327
+  year: 2019
+  task_no: 19
+  topic_norm: morphological_norm
+  evidence_quote: 'ТЕМА: Морфологія. Відмінювання іменників. Поєднання числівника з іменником.'
+- id: 328
+  year: 2019
+  task_no: 20
+  topic_norm: syntactic_norm
+  evidence_quote: 'ТЕМА: Синтаксис. Складне речення.'
+- id: 329
+  year: 2019
+  task_no: 21
+  topic_norm: syntactic_norm
+  evidence_quote: 'ТЕМА: Синтаксис. Вставні слова.'
+- id: 330
+  year: 2019
+  task_no: 22
+  topic_norm: lexical_norm
+  task_subtype: lexical_error
+  evidence_quote: міроприємств
+- id: 331
+  year: 2019
+  task_no: 23
+  topic_norm: syntactic_norm
+  evidence_quote: 'ТЕМА: Синтаксис. Складне речення. Розділові знаки в складному реченні.'
+- id: 332
+  year: 2019
+  task_no: 24
+  topic_norm: phraseology
+  evidence_quote: 'ТЕМА: Фразеологія. Значення фразеологізмів.'
+- id: 333
+  year: 2019
+  task_no: 25
+  topic_norm: syntactic_norm
+  evidence_quote: 'ТЕМА: Синтаксис. Головні та другорядні члени речення.'
+- id: 334
+  year: 2019
+  task_no: 26
+  topic_norm: syntactic_norm
+  evidence_quote: 'ТЕМА: Синтаксис. Просте речення. Односкладні речення.'
+- id: 335
+  year: 2019
+  task_no: 27
+  topic_norm: syntactic_norm
+  evidence_quote: 'ТЕМА: Синтаксис. Просте речення та складне речення.'
+- id: 336
+  year: 2019
+  task_no: 28
+  topic_norm: morphological_norm
+  evidence_quote: 'ТЕМА: Морфологія. Частини мови.'
+- id: 337
+  year: 2019
+  task_no: 29
+  topic_norm: text
+  evidence_quote: 'ТЕМА: Розвиток мовлення. Зміст і будова тексту. Поділ тексту на абзаци, мікротеми.'
+- id: 338
+  year: 2019
+  task_no: 30
+  topic_norm: text
+  evidence_quote: 'ТЕМА: Розвиток мовлення. Зміст і будова тексту. Поділ тексту на абзаци, мікротеми.'
+- id: 339
+  year: 2019
+  task_no: 31
+  topic_norm: text
+  evidence_quote: 'ТЕМА: Розвиток мовлення. Зміст і будова тексту. Поділ тексту на абзаци, мікротеми.'
+- id: 340
+  year: 2019
+  task_no: 32
+  topic_norm: text
+  evidence_quote: 'ТЕМА: Розвиток мовлення. Зміст і будова тексту. Поділ тексту на абзаци, мікротеми.'
+- id: 341
+  year: 2019
+  task_no: 33
+  topic_norm: text
+  evidence_quote: 'ТЕМА: Розвиток мовлення. Зміст і будова тексту. Поділ тексту на абзаци, мікротеми.'
+- id: 342
+  year: 2019
+  task_no: 34
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Усна народна творчість'
+- id: 343
+  year: 2019
+  task_no: 35
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Давня українська література. «Повість минулих літ»'
+- id: 344
+  year: 2019
+  task_no: 36
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література кінця XVIII – початку XX ст. Іван Котляревський. «Енеїда»'
+- id: 345
+  year: 2019
+  task_no: 37
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література кінця XVIII – початку XX ст. Григорій Квітка-Основ’яненко. «Маруся»'
+- id: 346
+  year: 2019
+  task_no: 38
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література кінця XVIII – початку XX ст. Тарас Шевченко. «Гайдамаки»'
+- id: 347
+  year: 2019
+  task_no: 39
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література кінця XVIII – початку XX ст. Пантелеймон Куліш. «Чорна рада»'
+- id: 348
+  year: 2019
+  task_no: 40
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література кінця XVIII – початку XX ст. Іван Нечуй-Левицький. «Кайдашева сім’я»'
+- id: 349
+  year: 2019
+  task_no: 41
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література кінця XVIII – початку XX ст. Панас Мирний. «Хіба ревуть воли, як ясла
+    повні?»'
+- id: 350
+  year: 2019
+  task_no: 42
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література кінця XVIII – початку XX ст. Іван Карпенко-Карий. «Мартин Боруля»'
+- id: 351
+  year: 2019
+  task_no: 43
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література кінця XVIII – початку XX ст. Іван Франко. «Мойсей»'
+- id: 352
+  year: 2019
+  task_no: 44
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література XX ст. Михайло Коцюбинський. «Тіні забутих предків»'
+- id: 353
+  year: 2019
+  task_no: 45
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література XX ст. Юрій Яновський. «Дитинство»'
+- id: 354
+  year: 2019
+  task_no: 46
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література XX ст. Леся Українка. «Лісова пісня»'
+- id: 355
+  year: 2019
+  task_no: 47
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література XX ст. Андрій Малишко. «Пісня про рушник»'
+- id: 356
+  year: 2019
+  task_no: 48
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література XX ст. Микола Куліш. «Мина Мазайло»'
+- id: 357
+  year: 2019
+  task_no: 49
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література XX ст.'
+- id: 358
+  year: 2019
+  task_no: 50
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: твори українських письменників-емігрантів. Євген Маланюк. «Стилет чи стилос?»'
+- id: 359
+  year: 2019
+  task_no: 51
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література XX ст. Василь Симоненко. «Задивляюсь у твої зіниці…»'
+- id: 360
+  year: 2019
+  task_no: 52
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література XX ст. Олесь Гончар. «Залізний острів»'
+- id: 361
+  year: 2019
+  task_no: 53
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Сучасний літературний процес. Постмодернізм як один із художніх напрямів мистецтва
+    90-х років, його риси'
+- id: 362
+  year: 2019
+  task_no: 54
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література XX ст.'
+- id: 363
+  year: 2019
+  task_no: 55
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література кінця XVIII – початку XX ст.'
+- id: 364
+  year: 2019
+  task_no: 56
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література кінця XVIII – початку XX ст. Література XX ст.'
+- id: 365
+  year: 2019
+  task_no: 57
+  topic_norm: literature
+  evidence_quote: 'ТЕМА: Література XX ст.'
+- id: 366
+  year: 2019
+  task_no: 58
+  topic_norm: other
+  evidence_quote: Власне висловлення Прочитайте наведений текст. Часто, коли н
+candidate_pairs:
+- lemmaA: вистава
+  lemmaB: виставка
+  pos: noun
+  glossA_uk: театральне видовище, яке показують глядачам на сцені
+  glossB_uk: публічний показ зібраних предметів (картин, книжок, товарів) для огляду
+  gate_status: both-approved
+  sources:
+  - ref: 10-klas-ukrmova-zabolotnyi-2018_s0043
+    quote: вистава (спектакль) – виставка (показ картин, книжок, квітів
+  - ref: 10-klas-ukrmova-zabolotnyi-2018_s0046
+    quote: вистава // виставка
+  notes: spec §9.9 confusable class; both members are approved atlas articles
+- lemmaA: військовий
+  lemmaB: воєнний
+  pos: adj
+  glossA_uk: який стосується війська, армії
+  glossB_uk: який стосується війни
+  gate_status: blocked
+  sources:
+  - ref: 10-klas-ukrmova-zabolotnyi-2018_s0259
+    quote: Військовий – який стосується війська. Військовий лікар, військова техніка, форма. Воєнний –
+      який стосується війни. Воєнний час.
+  - ref: 5-klas-ukrmova-zabolotnyi-2023_s0237
+    quote: Військовий – який стосується війська
+  candidate_frames:
+  - ref: 10-klas-ukrmova-zabolotnyi-2018_s0044
+    quote: військова форма – воєнний час
+  notes: Антоненко sweep (blocked)
+- lemmaA: громадський
+  lemmaB: громадянський
+  pos: adj
+  glossA_uk: який стосується громади, суспільства; колективний
+  glossB_uk: який стосується громадянина, його прав і обов'язків; цивільний
+  gate_status: partial
+  sources:
+  - ref: 10-klas-ukrmova-zabolotnyi-2018_s0259
+    quote: Громадський – який стосується громади, пов’язаний із нею; колективний
+  - ref: 10-klas-ukrmova-zabolotnyi-2018_s0044
+    quote: Займайтеся громадською діяльністю та майте громадянську позицію
+  candidate_frames:
+  - ref: 10-klas-ukrmova-zabolotnyi-2018_s0044
+    quote: Займайтеся громадською діяльністю та майте громадянську позицію
+  notes: Антоненко sweep; громадський is approved, громадянський is not
+- lemmaA: дружний
+  lemmaB: дружній
+  pos: adj
+  glossA_uk: злагоджений, спільний, одностайний
+  glossB_uk: приязний, доброзичливий, оснований на дружбі
+  gate_status: blocked
+  sources:
+  - ref: 10-klas-ukrmova-zabolotnyi-2018_s0259
+    quote: Дружний – який відбувається одночасно, злагоджено, спільно
+  - ref: 5-klas-ukrmova-litvinova-2022_s0049
+    quote: дружний (згуртований) — дружній (доброзичливий)
+  candidate_frames:
+  - ref: 10-klas-ukrmova-zabolotnyi-2018_s0044
+    quote: дружний колектив – дружній погляд
+  notes: Антоненко sweep (blocked)
+- lemmaA: приводити
+  lemmaB: призводити
+  pos: verb
+  glossA_uk: спричиняти, зумовлювати (звичайно нейтральний чи позитивний наслідок)
+  glossB_uk: спричиняти негативний наслідок (до біди, аварії)
+  gate_status: blocked
+  sources:
+  - ref: 10-klas-ukrmova-zabolotnyi-2018_s0056
+    quote: Приводити і призводити – дієслова-пароніми, які потребують розрізнення
+  - ref: 6-klas-ukrmova-avramenko-2023_s0043
+    quote: Наполегливість приводить до успіху
+  - ref: zno:149
+    quote: частини, дипломантів, трапляються, приводить
+  candidate_frames:
+  - ref: 10-klas-ukrmova-zabolotnyi-2018_s0044
+    quote: Праця приводить до щастя, а лінощі приЗводять до нещастя
+  - ref: 6-klas-ukrmova-avramenko-2023_s0043
+    quote: Неуважність призводить до аварії
+  notes: Антоненко (перфектив привести/призвести); привести approved, приводити/призводити/призвести not
+- lemmaA: виборний
+  lemmaB: виборчий
+  pos: adj
+  glossA_uk: який обирають голосуванням (посада, орган)
+  glossB_uk: який стосується виборів, їх проведення (комісія, дільниця)
+  gate_status: blocked
+  sources:
+  - ref: 10-klas-ukrmova-zabolotnyi-2018_s0259
+    quote: Виборний – який обирається голосуванням. Виборна посада. Виборчий – який стосується виборів
+  candidate_frames:
+  - ref: 10-klas-ukrmova-zabolotnyi-2018_s0044
+    quote: виборча комісія – виборний орган
+  notes: attested школа+ЗНО program
+- lemmaA: компанія
+  lemmaB: кампанія
+  pos: noun
+  glossA_uk: група осіб; товариство; підприємство
+  glossB_uk: сукупність заходів для певної мети (виборча, посівна)
+  gate_status: partial
+  sources:
+  - ref: 10-klas-ukrmova-zabolotnyi-2018_s0259
+    quote: Компанія – група осіб, промислове об’єднання
+  - ref: 5-klas-ukrmova-litvinova-2022_s0049
+    quote: кампанія (сукупність заходів) — компанія (група осіб
+  candidate_frames:
+  - ref: 10-klas-ukrmova-zabolotnyi-2018_s0043
+    quote: Посівна кАмпанія // Страхова кОмпанія
+  notes: компанія approved, кампанія not
+- lemmaA: тактовний
+  lemmaB: тактичний
+  pos: adj
+  glossA_uk: який має такт, уміє чемно поводитися
+  glossB_uk: який стосується тактики, способів дій у спорті, політиці, на війні
+  gate_status: blocked
+  sources:
+  - ref: 10-klas-ukrmova-zabolotnyi-2018_s0043
+    quote: тактовний (який уміє правильно поводитися) – тактичний (який стосується тактики
+  - ref: zno:268
+    quote: як тактичніше вчинити
+  notes: spec §9.9 flagship example (тактовний≠тактичний class); Антоненко-adjacent
+- lemmaA: численний
+  lemmaB: чисельний
+  pos: adj
+  glossA_uk: який складається з великої кількості; багато
+  glossB_uk: який стосується числа, кількості; вимірюваний числом
+  gate_status: blocked
+  sources:
+  - ref: 10-klas-ukrmova-glazova-2018_s0068
+    quote: чисельний — численний
+  - ref: 10-klas-ukrmova-glazova-2018_s0070
+    quote: численні (не чисельні) виступи на зборах
+  - ref: zno:268
+    quote: На симпозіум поїде чисельна група науковців
+  candidate_frames:
+  - ref: 10-klas-ukrmova-glazova-2018_s0070
+    quote: численні (не чисельні) виступи на зборах
+  notes: cross-attested школа+ЗНО
+- lemmaA: ефективний
+  lemmaB: ефектний
+  pos: adj
+  glossA_uk: результативний, дієвий
+  glossB_uk: який справляє сильне враження, показний
+  gate_status: blocked
+  sources:
+  - ref: 5-klas-ukrmova-litvinova-2022_s0049
+    quote: ефективний (результативний) — ефектний (який звертає на себе увагу)
+  candidate_frames:
+  - ref: 10-klas-ukrmova-zabolotnyi-2018_s0046
+    quote: (ефективний, ефектний) феєрверк
+  notes: paronyms_cache seed (blocked)
+- lemmaA: абонемент
+  lemmaB: абонент
+  pos: noun
+  glossA_uk: право на користування чимось; документ на це право
+  glossB_uk: той, хто користується абонементом; користувач
+  gate_status: blocked
+  sources:
+  - ref: 10-klas-ukrmova-zabolotnyi-2018_s0259
+    quote: Абонемент – право на регулярне користування чимось
+  - ref: 5-klas-ukrmova-litvinova-2022_s0049
+    quote: абонент (користувач) — абонемент (право на користування)
+  notes: attested Заболотний-10 + Літвінова + Глазова
+- lemmaA: дослідний
+  lemmaB: дослідницький
+  pos: adj
+  glossA_uk: пов'язаний з дослідом, експериментальний
+  glossB_uk: який стосується дослідника, наукового пошуку
+  gate_status: blocked
+  sources:
+  - ref: 10-klas-ukrmova-zabolotnyi-2018_s0259
+    quote: Дослідний – який стосується досліду, пов’язаний з ним. Дослідні машини. Дослідницький – який
+      стосується дослідника
+  candidate_frames:
+  - ref: 10-klas-ukrmova-zabolotnyi-2018_s0044
+    quote: дослідна ділянка – дослідницький метод
+  notes: ''
+- lemmaA: зумовлювати
+  lemmaB: обумовлювати
+  pos: verb
+  glossA_uk: бути причиною чогось, спричиняти
+  glossB_uk: ставити в залежність від умов; визначати умови, терміни
+  gate_status: blocked
+  sources:
+  - ref: 10-klas-ukrmova-zabolotnyi-2018_s0259
+    quote: Зумовлювати – бути причиною чогось, викликати щось
+  notes: ''
+- lemmaA: інцидент
+  lemmaB: прецедент
+  pos: noun
+  glossA_uk: прикрий випадок, сутичка
+  glossB_uk: випадок, що став приводом чи прикладом для наступних
+  gate_status: partial
+  sources:
+  - ref: 10-klas-ukrmova-zabolotnyi-2018_s0259
+    quote: Інцидент – прикрий випадок, сутичка. Інцидент під час вистави. Прецедент – випадок, що став
+      приводом
+  notes: інцидент approved, прецедент not
+- lemmaA: людний
+  lemmaB: людяний
+  pos: adj
+  glossA_uk: багатолюдний
+  glossB_uk: гуманний, чуйний, доброзичливий
+  gate_status: blocked
+  sources:
+  - ref: 10-klas-ukrmova-zabolotnyi-2018_s0259
+    quote: Людний – багатолюдний. Людне місто, людний заклад. Людяний – гуманний, доброзичливий, чуйний
+      до інших
+  candidate_frames:
+  - ref: 10-klas-ukrmova-zabolotnyi-2018_s0044
+    quote: Будьте людяними в людних місцях
+  notes: Антоненко (людяний/людський variant)
+- lemmaA: економічний
+  lemmaB: економний
+  pos: adj
+  glossA_uk: який стосується економіки
+  glossB_uk: ощадливий, який бережливо витрачає гроші, сили
+  gate_status: blocked
+  sources:
+  - ref: 5-klas-ukrmova-zabolotnyi-2023_s0237
+    quote: Економічний – який стосується економіки. Економічний спад. Економний – ощадливий
+  candidate_frames:
+  - ref: 10-klas-ukrmova-zabolotnyi-2018_s0046
+    quote: (економна, економічна) людина
+  notes: ''
+- lemmaA: лікувати
+  lemmaB: лічити
+  pos: verb
+  glossA_uk: застосовувати ліки, зцілювати
+  glossB_uk: рахувати, називати числа в послідовному порядку
+  gate_status: partial
+  sources:
+  - ref: 5-klas-ukrmova-zabolotnyi-2023_s0237
+    quote: Лікувати – застосовувати ліки та інші засоби припинення болю
+  notes: лікувати approved, лічити not
+- lemmaA: музичний
+  lemmaB: музикальний
+  pos: adj
+  glossA_uk: який стосується музики як виду мистецтва
+  glossB_uk: обдарований чуттям музики; мелодійний
+  gate_status: blocked
+  sources:
+  - ref: 5-klas-ukrmova-zabolotnyi-2023_s0237
+    quote: Музикальний – обдарований здатністю тонко сприймати музику
+  - ref: 5-klas-ukrmova-litvinova-2022_s0049
+    quote: музикальний (здібний до музики; мелодійний) — музичний
+  candidate_frames:
+  - ref: 10-klas-ukrmova-zabolotnyi-2018_s0044
+    quote: музична школа – музикальний слух
+  notes: ''
+- lemmaA: освічений
+  lemmaB: освітлений
+  pos: adj
+  glossA_uk: який має освіту, знання
+  glossB_uk: на який падає світло, осяяний
+  gate_status: blocked
+  sources:
+  - ref: 5-klas-ukrmova-zabolotnyi-2023_s0237
+    quote: Освітлений – якого видно, бо на нього падає світло
+  - ref: 5-klas-ukrmova-litvinova-2022_s0049
+    quote: освічений (який має освіту) — освітлений (на який падає світло)
+  notes: ''
+- lemmaA: багатир
+  lemmaB: богатир
+  pos: noun
+  glossA_uk: багата людина, багатій
+  glossB_uk: оспіваний у фольклорі герой, хоробрий воїн; силач
+  gate_status: blocked
+  sources:
+  - ref: 5-klas-ukrmova-avramenko-2022_s0056
+    quote: 'Багатир — багата людина, багатій: сільський багатир. Богатир — оспіваний у фольклорі герой'
+  - ref: 5-klas-ukrmova-litvinova-2022_s0049
+    quote: багатир (багатий) — богатир (сильний)
+  notes: model dictionary entry printed in Avramenko-5
+- lemmaA: адрес
+  lemmaB: адреса
+  pos: noun
+  glossA_uk: письмове вітання з нагоди події
+  glossB_uk: місце проживання; напис на конверті
+  gate_status: partial
+  sources:
+  - ref: 5-klas-ukrmova-litvinova-2022_s0049
+    quote: адрес (письмове привітання) — адреса (місце мешкання)
+  notes: адреса approved, адрес not
+- lemmaA: досвідчений
+  lemmaB: освічений
+  pos: adj
+  glossA_uk: який має життєвий чи фаховий досвід
+  glossB_uk: який має освіту, знання
+  gate_status: blocked
+  sources:
+  - ref: 5-klas-ukrmova-litvinova-2022_s0049
+    quote: досвідчений (який має досвід) — освічений (який має освіту)
+  notes: ''
+- lemmaA: пам'ятка
+  lemmaB: пам'ятник
+  pos: noun
+  glossA_uk: предмет матеріальної культури, історична цінність
+  glossB_uk: архітектурна або скульптурна споруда на честь когось
+  gate_status: blocked
+  sources:
+  - ref: 5-klas-ukrmova-litvinova-2022_s0049
+    quote: пам’ятка (предмет матеріальної культури) — пам’ятник (архітектурна або скульптурна споруда)
+  notes: ''
+- lemmaA: вихідний
+  lemmaB: висхідний
+  pos: adj
+  glossA_uk: початковий, від якого ведуть облік
+  glossB_uk: який піднімається вгору, розвивається до вищого рівня
+  gate_status: partial
+  sources:
+  - ref: 10-klas-ukrmova-zabolotnyi-2018_s0056
+    quote: висхідний – той, що
+  - ref: 10-klas-ukrmova-zabolotnyi-2018_s0056
+    quote: 'розвивається до вищого рівня: висхідна інтонація'
+  notes: вихідний approved, висхідний not
+- lemmaA: поверхневий
+  lemmaB: поверховий
+  pos: adj
+  glossA_uk: розміщений на поверхні
+  glossB_uk: неглибокий, який не торкається суті справи
+  gate_status: partial
+  sources:
+  - ref: 10-klas-ukrmova-zabolotnyi-2018_s0045
+    quote: Який розміщується, відбувається на поверхні
+  - ref: 10-klas-ukrmova-zabolotnyi-2018_s0045
+    quote: поверхневий // поверховий
+  notes: поверхневий approved, поверховий not
+- lemmaA: пальний
+  lemmaB: паливний
+  pos: adj
+  glossA_uk: здатний горіти
+  glossB_uk: пов'язаний із паливом
+  gate_status: blocked
+  sources:
+  - ref: 5-klas-ukrmova-golub-2022_s0020
+    quote: пальний — здатний горіти, а паливний — пов’язаний із паливом
+  notes: ''
+- lemmaA: вдача
+  lemmaB: удача
+  pos: noun
+  glossA_uk: характер, натура, звичка людини
+  glossB_uk: успіх, щаслива нагода
+  gate_status: blocked
+  sources:
+  - ref: 5-klas-ukrmova-golub-2022_s0020
+    quote: Вдача — характер, нахил, звичка. Удача — успіх
+  notes: ''
+- lemmaA: знаменитий
+  lemmaB: знаменний
+  pos: adj
+  glossA_uk: усім відомий, прославлений
+  glossB_uk: важливий, значний (подія, дата)
+  gate_status: blocked
+  sources:
+  - ref: 10-klas-ukrmova-glazova-2018_s0068
+    quote: знаменитий — знаменний
+  - ref: 10-klas-ukrmova-zabolotnyi-2018_s0044
+    quote: знаменитий письменник – знаменна подія
+  candidate_frames:
+  - ref: 10-klas-ukrmova-zabolotnyi-2018_s0044
+    quote: знаменитий письменник – знаменна подія
+  notes: ''
+- lemmaA: сердечний
+  lemmaB: серцевий
+  pos: adj
+  glossA_uk: щирий, добрий, задушевний
+  glossB_uk: пов'язаний із серцем як органом
+  gate_status: partial
+  sources:
+  - ref: 10-klas-ukrmova-zabolotnyi-2018_s0044
+    quote: сердечна людина – серцевий ритм
+  - ref: 6-klas-ukrmova-avramenko-2023_s0066
+    quote: 'Серцевий — який пов’язаний із серцем як органом: серцевий м’яз, серцевий напад. Сердечний
+      — добрий, чулий, задушевний'
+  candidate_frames:
+  - ref: 10-klas-ukrmova-zabolotnyi-2018_s0044
+    quote: сердечна людина – серцевий ритм
+  notes: 3-way with сердешний (=бідолашний); сердечний approved, серцевий not
+- lemmaA: корисний
+  lemmaB: корисливий
+  pos: adj
+  glossA_uk: який дає користь, потрібний
+  glossB_uk: який дбає лише про власну вигоду, жадібний
+  gate_status: partial
+  sources:
+  - ref: 10-klas-ukrmova-zabolotnyi-2018_s0046
+    quote: корисний // корисливий
+  notes: корисний approved, корисливий not
+- lemmaA: виняток
+  lemmaB: виключення
+  pos: noun
+  glossA_uk: відхилення від загального правила
+  glossB_uk: усунення, вилучення (дія); росіянізм на місці «винятку»
+  gate_status: partial
+  sources:
+  - ref: zno:207
+    quote: успішно, розгорнути, винятках
+  - ref: 5-klas-ukrmova-avramenko-2022_s0056
+    quote: Треба знати всі виключення з правил
+  candidate_frames:
+  - ref: zno:207
+    quote: зосередившись на … з правил
+  notes: виняток approved, виключення not
+- lemmaA: дослід
+  lemmaB: дослідження
+  pos: noun
+  glossA_uk: експеримент, спроба
+  glossB_uk: наукове вивчення, дослідницька праця
+  gate_status: partial
+  sources:
+  - ref: zno:268
+    quote: які брали участь у досліді цієї теми
+  - ref: 5-klas-ukrmova-golub-2022_s0024
+    quote: досвід — дослід
+  notes: дослідження approved, дослід not; deverbal-noun contrast (cf. live підпис/підписання)
+- lemmaA: інформативний
+  lemmaB: інформаційний
+  pos: adj
+  glossA_uk: насичений корисними відомостями, змістовний
+  glossB_uk: який стосується інформації, її передавання
+  gate_status: blocked
+  sources:
+  - ref: zno:35
+    quote: інформованих інформатичних інформативних інформаційних
+  notes: ЗНО 2021 lexical-norm cloze cluster
+- lemmaA: обсяг
+  lemmaB: об'єм
+  pos: noun
+  glossA_uk: розмір, кількість, величина чогось (продажу, роботи)
+  glossB_uk: місткість, простір у кубічних одиницях (басейну)
+  gate_status: blocked
+  sources:
+  - ref: zno:194
+    quote: обсяг продажу
+  - ref: zno:194
+    quote: об’єм басейну
+  notes: ЗНО 2020 lexical-error item
+- lemmaA: змістовий
+  lemmaB: змістовний
+  pos: adj
+  glossA_uk: який стосується змісту (зв'язок, бік)
+  glossB_uk: багатий змістом, глибокий (доповідь)
+  gate_status: blocked
+  sources:
+  - ref: 10-klas-ukrmova-zabolotnyi-2018_s0044
+    quote: змістовна доповідь – змістовий зв’язок
+  - ref: 10-klas-ukrmova-glazova-2018_s0070
+    quote: Доповідь змістова (замість змістовна)
+  - ref: zno:194
+    quote: змістова доповідь
+  candidate_frames:
+  - ref: 10-klas-ukrmova-zabolotnyi-2018_s0044
+    quote: змістовна доповідь – змістовий зв’язок
+  notes: cross-attested школа+ЗНО
+- lemmaA: дипломант
+  lemmaB: дипломник
+  pos: noun
+  glossA_uk: переможець конкурсу, нагороджений дипломом
+  glossB_uk: студент, який готує дипломну роботу
+  gate_status: blocked
+  sources:
+  - ref: 10-klas-ukrmova-glazova-2018_s0067
+    quote: журналісти оточили (дипломантів, дипломників)
+  - ref: zno:149
+    quote: частини, дипломантів, трапляються, приводить
+  candidate_frames:
+  - ref: 10-klas-ukrmova-glazova-2018_s0067
+    quote: журналісти оточили (дипломантів, дипломників)
+  notes: cross-attested школа+ЗНО; also дипломат (distinct)
+filtered_out:
+- lemmaA: емігрант
+  lemmaB: іммігрант
+  reason: 'antonym-paronym (semantic opposites: leaves vs enters country) — excluded per #4506 adjudication
+    (plain antonyms)'
+  source:
+    ref: 10-klas-ukrmova-glazova-2018_s0067
+    quote: 'антонімами: емігрант — іммігрант'
+- lemmaA: важкий
+  lemmaB: тяжкий
+  reason: synonym-paronym (near-synonyms; no meaning to discriminate) — excluded (not a confusable-distinction
+    pair)
+  source:
+    ref: 10-klas-ukrmova-glazova-2018_s0067
+    quote: 'синонімами: важкий — тяжкий'
+- lemmaA: адресант
+  lemmaB: адресат
+  reason: already LIVE in paronym_pairs.yaml (seed pair) — excluded from candidates
+  source:
+    ref: 5-klas-ukrmova-litvinova-2022_s0049
+    quote: адресант (відправник) — адресат (отримувач)
+draft_records:
+- slugA: вистава
+  slugB: виставка
+  distinction_gloss_uk: Вистава — театральне видовище, яке глядачі дивляться в театрі; виставка — показ
+    предметів (картин, книжок), які люди оглядають.
+  citations:
+  - 'textbook: 10-klas-ukrmova-zabolotnyi-2018 §7 Пароніми — «вистава (спектакль) – виставка (показ картин,
+    книжок, квітів тощо)» (chunk s0043)'
+  - §9.9 PRACTICE-HUB-SPEC
+  curator: claude/4506-paronym-vein (worksheet draft — driver adjudication pending)
+  notes: both approved public articles (gate verified 2026-07-10); acc.sg and nom.sg congruent frames;
+    distinction_gloss_uk authored, all forms VESUM-verified
+  frames:
+  - sentence_with_slot: Актори показали глядачам нову ___ на сцені театру.
+    answer_form: виставу
+    confusable_form: виставку
+    origin: authored-claude-2026-07-10
+  - sentence_with_slot: У галереї відкрилася ___ сучасного живопису.
+    answer_form: виставка
+    confusable_form: вистава
+    origin: authored-claude-2026-07-10
