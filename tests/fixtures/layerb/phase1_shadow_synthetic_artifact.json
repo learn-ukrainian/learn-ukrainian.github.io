@@ -1,0 +1,54 @@
+{
+  "schema_version": "qg_bakeoff_run.v1",
+  "seat_arm": {
+    "entrypoint": "qg_bakeoff_synthetic",
+    "family": "google",
+    "pin": "synthetic-google-qg"
+  },
+  "fixture": {
+    "slug": "synthetic-franko"
+  },
+  "model": {
+    "family": "google",
+    "pin": "synthetic-google-qg"
+  },
+  "writer_family": "openai",
+  "payload": {
+    "fact_checks": [
+      {
+        "fact_check_id": "synthetic-fc-1",
+        "claim": "Іван Франко народився 1856 року.",
+        "reviewer_verdict": "CONFIRMED",
+        "grounding": {
+          "tool": "query_wikipedia",
+          "query": "Іван Франко",
+          "evidence_excerpt": "Іван Франко народився 1856 року."
+        }
+      },
+      {
+        "fact_check_id": "synthetic-fc-2",
+        "claim": "Іван Франко народився 1856 року.",
+        "reviewer_verdict": "CONFIRMED",
+        "grounding": {
+          "tool": "query_wikipedia",
+          "query": "Іван Франко",
+          "evidence_excerpt": "Іван Франко народився 1856 року."
+        }
+      }
+    ]
+  },
+  "dispatch": {
+    "reviewer_family": "google",
+    "tool_events": [
+      {
+        "tool": "query_wikipedia",
+        "input": {
+          "query": "Іван Франко"
+        },
+        "output": "Іван Франко народився 1856 року.",
+        "status": "completed",
+        "document_id": "synthetic-franko"
+      }
+    ]
+  }
+}
