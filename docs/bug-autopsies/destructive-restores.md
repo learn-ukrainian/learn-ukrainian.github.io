@@ -19,8 +19,9 @@ silently, on its happy path.
 **Prevention:** (the category rule) any restore/hydrate/sync tool that can overwrite
 local state must compare BEFORE writing and refuse when the local artifact is richer
 (more entries / newer generation), requiring an explicit force flag for intentional
-restores. Fixed for hydrate-manifest in the same PR (`ATLAS_MANIFEST_FORCE_HYDRATE=1`
-to force). Audit candidate for the same class: `hydrate-practice-deck.mjs` (confirmed by review —
-downloads a release asset and unconditionally overwrites local deck state, no local-work
-guard). `hydrate-lexicon-api-shards.ts` is NOT this class: it is a local generator over
+restores. Fixed for hydrate-manifest and both hydrate-practice-deck loaders in #4937
+(`ATLAS_MANIFEST_FORCE_HYDRATE=1` to force). `hydrate-lexicon-api-shards.ts` is NOT this
+class: it is a local generator over
 already-hydrated data — no download, no pointer, no overwrite-from-remote.
+
+Python twin fixed (#4937): `scripts/lexicon/manifest_io.py` now refuses a richer local default manifest unless `ATLAS_MANIFEST_FORCE_HYDRATE=1` is set.

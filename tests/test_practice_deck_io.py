@@ -27,7 +27,19 @@ def _write_pointer(
     gz_sha256: str | None = None,
     package_sha256: str | None = None,
     deck_version: str = "deck-v1",
+    shard_bytes: bytes = b"content-data",
+    lexeme_count: int | None = None,
 ) -> None:
+    shard = {
+        "path": "practice-index.A1.json",
+        "kind": "index",
+        "level": "A1",
+        "schema": "atlas-practice-index",
+        "bytes": len(shard_bytes),
+        "sha256": _sha256(shard_bytes),
+    }
+    if lexeme_count is not None:
+        shard["counts"] = {"lexemes": lexeme_count}
     pointer_path.write_text(
         json.dumps(
             {
@@ -40,16 +52,7 @@ def _write_pointer(
                 "gz_bytes": len(gz_bytes),
                 "package_bytes": len(package_bytes),
                 "file_count": 1,
-                "files": [
-                    {
-                        "path": "practice-index.A1.json",
-                        "kind": "index",
-                        "level": "A1",
-                        "schema": "atlas-practice-index",
-                        "bytes": len(b"content-data"),
-                        "sha256": _sha256(b"content-data"),
-                    }
-                ],
+                "files": [shard],
                 "note": "test pointer",
             }
         ),
@@ -191,6 +194,74 @@ def test_ensure_practice_deck_hydrated_fetches_decompresses_and_writes_when_abse
     shard_path = practice_dir / "practice-index.A1.json"
     assert shard_path.exists()
     assert shard_path.read_bytes() == b"content-data"
+
+
+def test_ensure_practice_deck_hydrated_refuses_to_clobber_richer_local_deck(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    practice_dir = tmp_path / "lexicon"
+    pointer_path = tmp_path / "lexicon-practice-deck.pointer.json"
+    release_content = _json_bytes({"counts": {"lexemes": 3}})
+    local_content = _json_bytes({"counts": {"lexemes": 5}})
+    package = {
+        "schema": "atlas-practice-deck-package",
+        "schemaVersion": 1,
+        "deckVersion": "deck-v1",
+        "files": [{"path": "practice-index.A1.json", "content": release_content.decode("utf-8")}],
+    }
+    package_bytes = _json_bytes(package)
+    gz_bytes = gzip.compress(package_bytes)
+    shard_path = practice_dir / "practice-index.A1.json"
+    shard_path.parent.mkdir(parents=True, exist_ok=True)
+    shard_path.write_bytes(local_content)
+    _write_pointer(
+        pointer_path,
+        package_bytes=package_bytes,
+        gz_bytes=gz_bytes,
+        shard_bytes=release_content,
+        lexeme_count=3,
+    )
+    _pin_defaults(monkeypatch, practice_dir, pointer_path)
+    monkeypatch.setattr(practice_deck_io.urllib.request, "urlopen", lambda *_args, **_kwargs: io.BytesIO(gz_bytes))
+
+    with pytest.raises(practice_deck_io.PracticeDeckHydrationError, match="refusing to overwrite"):
+        practice_deck_io.ensure_practice_deck_hydrated(practice_dir=practice_dir, pointer_path=pointer_path)
+
+    assert shard_path.read_bytes() == local_content
+
+
+def test_ensure_practice_deck_hydrated_force_restores_richer_local_deck(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    practice_dir = tmp_path / "lexicon"
+    pointer_path = tmp_path / "lexicon-practice-deck.pointer.json"
+    release_content = _json_bytes({"counts": {"lexemes": 3}})
+    package = {
+        "schema": "atlas-practice-deck-package",
+        "schemaVersion": 1,
+        "deckVersion": "deck-v1",
+        "files": [{"path": "practice-index.A1.json", "content": release_content.decode("utf-8")}],
+    }
+    package_bytes = _json_bytes(package)
+    gz_bytes = gzip.compress(package_bytes)
+    shard_path = practice_dir / "practice-index.A1.json"
+    shard_path.parent.mkdir(parents=True, exist_ok=True)
+    shard_path.write_bytes(_json_bytes({"counts": {"lexemes": 5}}))
+    _write_pointer(
+        pointer_path,
+        package_bytes=package_bytes,
+        gz_bytes=gz_bytes,
+        shard_bytes=release_content,
+        lexeme_count=3,
+    )
+    _pin_defaults(monkeypatch, practice_dir, pointer_path)
+    monkeypatch.setenv("ATLAS_MANIFEST_FORCE_HYDRATE", "1")
+    monkeypatch.setattr(practice_deck_io.urllib.request, "urlopen", lambda *_args, **_kwargs: io.BytesIO(gz_bytes))
+
+    assert practice_deck_io.ensure_practice_deck_hydrated(practice_dir=practice_dir, pointer_path=pointer_path)
+    assert shard_path.read_bytes() == release_content
 
 
 def test_ensure_practice_deck_hydrated_raises_on_gz_sha256_mismatch(

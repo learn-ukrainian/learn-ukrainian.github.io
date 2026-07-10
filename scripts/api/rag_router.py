@@ -28,7 +28,7 @@ async def search_text(
     trust_tier: int | None = Query(None, description="Trust tier"),
     limit: int = Query(5, ge=1, le=20),
 ):
-    from rag.query import search_text as _search_text
+    from rag.query import search_text as _search_text  # noqa: PLC0415 — optional RAG dependency
 
     return _search_text(q, grade=grade, subject=subject, trust_tier=trust_tier, limit=limit)
 
@@ -41,7 +41,7 @@ async def search_images(
     subject: str | None = Query(None, description="Filter by subject"),
     limit: int = Query(5, ge=1, le=20),
 ):
-    from rag.query import search_images as _search_images
+    from rag.query import search_images as _search_images  # noqa: PLC0415 — optional RAG dependency
 
     return _search_images(
         q,
@@ -60,14 +60,14 @@ async def search_literary(
     period: str | None = Query(None, description="Filter by language period"),
     limit: int = Query(5, ge=1, le=20),
 ):
-    from rag.query import search_literary as _search_literary
+    from rag.query import search_literary as _search_literary  # noqa: PLC0415 — optional RAG dependency
 
     return _search_literary(q, work=work, genre=genre, period=period, limit=limit)
 
 
 @router.get("/stats")
 async def collection_stats():
-    from rag.query import collection_stats as _collection_stats
+    from rag.query import collection_stats as _collection_stats  # noqa: PLC0415 — optional RAG dependency
 
     return _collection_stats()
 

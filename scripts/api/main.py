@@ -26,6 +26,8 @@ from fastapi import FastAPI, HTTPException, Query, Request, WebSocket, WebSocket
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
 
+from scripts.guardrails import worktree_containment
+
 try:
     from path_safety import safe_join  # scripts/ on sys.path (test sys.path-hack)
 except ImportError:
@@ -280,8 +282,6 @@ def _run_command(args: list[str], *, timeout: float = 2.0) -> subprocess.Complet
 
 
 def _collect_git_orient_data() -> dict:
-    from scripts.guardrails import worktree_containment
-
     branch_proc = _run_command(["git", "branch", "--show-current"])
     head_proc = _run_command(["git", "rev-parse", "--short=9", "HEAD"])
     ahead_proc = _run_command(["git", "rev-list", "--count", "origin/main..HEAD"])
@@ -420,7 +420,7 @@ def _collect_delegate_orient_data() -> dict:
 
 
 def _collect_bridge_pending_orient_data() -> dict:
-    from scripts.ai_agent_bridge import _channels
+    from scripts.ai_agent_bridge import _channels  # noqa: PLC0415 — optional broker bridge
 
     return _channels.bridge_pending_summary()
 
@@ -502,9 +502,9 @@ def _core_bare_canary() -> bool:
     the canary must not break health collection.
     """
     try:
-        from scripts.audit.check_core_bare import check_core_bare
+        from scripts.audit.check_core_bare import check_core_bare  # noqa: PLC0415 — script-path fallback
     except ImportError:  # path-flavoured import for test/script contexts
-        from audit.check_core_bare import check_core_bare
+        from audit.check_core_bare import check_core_bare  # noqa: PLC0415 — script-path fallback
     try:
         ok, message = check_core_bare(PROJECT_ROOT, fix=True)
     except Exception:
@@ -529,9 +529,9 @@ def _self_symlink_canary() -> bool:
     ``docs/bug-autopsies/node-modules-eloop-symlink.md``.
     """
     try:
-        from scripts.audit.check_self_symlinks import check_self_symlinks
+        from scripts.audit.check_self_symlinks import check_self_symlinks  # noqa: PLC0415 — script-path fallback
     except ImportError:  # path-flavoured import for test/script contexts
-        from audit.check_self_symlinks import check_self_symlinks
+        from audit.check_self_symlinks import check_self_symlinks  # noqa: PLC0415 — script-path fallback
     try:
         ok, message = check_self_symlinks(PROJECT_ROOT, fix=True)
     except Exception:
@@ -808,7 +808,7 @@ async def orient(
 async def get_config():
     # Import pipeline phase config — single source of truth
     try:
-        from scripts.build.phase_constants import PHASE_LABELS, PHASES
+        from scripts.build.phase_constants import PHASE_LABELS, PHASES  # noqa: PLC0415 — preserves endpoint fallback
 
         pipeline_info = {"phases": PHASES, "phase_labels": PHASE_LABELS}
     except ImportError:

@@ -1,5 +1,5 @@
 {
-  "fingerprint": "8022c1b962201f7627f0a84d692c377057bcc21422872edd9d44773232f50918",
+  "fingerprint": "91e486e12ce1ca825c622450f811d5442542ee69a2caebe407e3858bac47296b",
   "inputs": {
     "lexicon_code": [
       {
@@ -9,6 +9,10 @@
       {
         "path": "scripts/lexicon/assess_kaikki_fillability.py",
         "sha256": "406e7ad427f0b7ecfb60bd0de0ff5cc00899025bf75c5af2fc045d80426028b9"
+      },
+      {
+        "path": "scripts/lexicon/backfill_course_usage.py",
+        "sha256": "593f83da3295beed8008b98bcec77a8db392d6a5497eb26c581d4ff7c148f350"
       },
       {
         "path": "scripts/lexicon/build_data_manifest.py",
@@ -40,7 +44,7 @@
       },
       {
         "path": "scripts/lexicon/content_lexicon_reconciler.py",
-        "sha256": "8d88177afe906aa1ba78ac59307aac7485631a6d144dc6eb42465ce181b98120"
+        "sha256": "b2f1b2cab47fe23d34590355ba0c5c67a008bbb4e773852ce37c65aaf3d09a39"
       },
       {
         "path": "scripts/lexicon/derivational_morphology.py",
@@ -99,6 +103,10 @@
         "sha256": "4919c84c88b8cf0bc1508250e6da4c80860e8a33a4a4df49402c8aedef3e9e68"
       },
       {
+        "path": "scripts/lexicon/park_thin_entries.py",
+        "sha256": "634b8981c2b8233415191d6a69badf3aceaab39c47c3fbc50fb3cace5fd4511d"
+      },
+      {
         "path": "scripts/lexicon/promote_grow_candidates.py",
         "sha256": "27f4226414cc01739107b4ba25cf7311167b03e0a39403a877b8104a8a1b8cc5"
       },
@@ -127,6 +135,6 @@
   "schema_version": 1,
   "scope": "lexicon code only; excludes module vocabulary and dictionary DB/cache state",
   "stats": {
-    "lexicon_code_files": 30
+    "lexicon_code_files": 32
   }
 }

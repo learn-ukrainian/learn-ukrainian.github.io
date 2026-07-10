@@ -5,6 +5,7 @@ pipeline queue scanning, and dispatcher state.
 """
 
 import json
+import os
 import sqlite3
 
 from .config import BATCH_STATE_DIR, CURRICULUM_ROOT, MESSAGE_DB, PROJECT_ROOT
@@ -39,7 +40,6 @@ def get_broker_db():
 
 def is_watcher_running() -> dict:
     """Check watcher daemon health."""
-    import os
     pid = None
     running = False
     if WATCHER_PID_FILE.exists():

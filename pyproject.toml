@@ -38,6 +38,7 @@ select = [
     "B",     # flake8-bugbear (common bugs)
     "SIM",   # flake8-simplify
     "RUF",   # Ruff-specific rules
+    "PLC0415",  # import-outside-top-level (scripts/api only; advisory API import hygiene)
 ]
 ignore = [
     # Legitimate project-specific ignores (Ukrainian codebase)
@@ -50,6 +51,7 @@ ignore = [
 ]
 
 [tool.ruff.lint.per-file-ignores]
+"!scripts/api/**.py" = ["PLC0415"]  # advisory API import-hygiene scope
 "scripts/api/*.py" = ["B008"]  # function call in default arg (FastAPI Depends)
 "tests/*.py" = ["F841", "SIM117"]  # unused variables + nested with OK in tests
 "scripts/*.py" = ["F401", "F811", "E302", "F821"]  # stubs at root — redirect boilerplate

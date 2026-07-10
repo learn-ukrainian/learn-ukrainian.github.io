@@ -14,6 +14,7 @@ Pipeline version note (#1186, 2026-04-11):
 """
 
 import contextlib
+import hashlib
 import json
 import re
 import sqlite3
@@ -552,7 +553,6 @@ def is_review_stale(review_path: Path, content_path: Path | None) -> bool:
     if not content_path or not content_path.exists():
         return False
 
-    import hashlib
     review_hash = extract_content_hash(review_path)
     if review_hash:
         try:

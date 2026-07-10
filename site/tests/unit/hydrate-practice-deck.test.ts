@@ -1,8 +1,12 @@
 import { createHash } from 'node:crypto';
+import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { gzipSync } from 'node:zlib';
 import { afterEach, describe, expect, test, vi } from 'vitest';
 import {
   assertAllowedDownloadUrl,
+  assertNotClobberingRicherLocal,
   downloadGzip,
   downloadUrl,
   parsePackage,
@@ -131,5 +135,37 @@ describe('hydrate practice deck release download', () => {
     ['https://github.com/attacker/repo/releases/download/t/evil.gz', 'github.com different repo'],
   ])('rejects non-allowlisted asset URL: %s (%s)', (url) => {
     expect(() => assertAllowedDownloadUrl(url)).toThrow(/allowlisted|https/);
+  });
+});
+
+describe('practice deck local-work guard', () => {
+  let dir: string | undefined;
+
+  afterEach(() => {
+    vi.unstubAllEnvs();
+    if (dir) rmSync(dir, { recursive: true, force: true });
+  });
+
+  function richerLocalIndex(lexemes: number): string {
+    dir = mkdtempSync(join(tmpdir(), 'practice-deck-guard-'));
+    writeFileSync(join(dir, 'practice-index.A1.json'), JSON.stringify({ counts: { lexemes } }));
+    return dir;
+  }
+
+  function pointerWithIndexCount(lexemes: number) {
+    const { pointer } = packageFixture();
+    pointer.files[0].counts = { lexemes };
+    return pointer;
+  }
+
+  test('refuses to overwrite a richer local practice deck', async () => {
+    await expect(assertNotClobberingRicherLocal(pointerWithIndexCount(3), richerLocalIndex(5))).rejects.toThrow(
+      /local practice deck with 5 lexemes.*published release with only 3/,
+    );
+  });
+
+  test('force escape hatch permits an intentional practice deck restore', async () => {
+    vi.stubEnv('ATLAS_MANIFEST_FORCE_HYDRATE', '1');
+    await expect(assertNotClobberingRicherLocal(pointerWithIndexCount(3), richerLocalIndex(5))).resolves.toBeUndefined();
   });
 });

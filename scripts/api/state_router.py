@@ -28,6 +28,7 @@ Performance notes:
 
 import asyncio
 import json
+import logging
 from datetime import UTC, date, datetime, timedelta
 from pathlib import Path
 from typing import Any
@@ -51,8 +52,11 @@ from . import delegate_router as delegate_api
 from .codexbar_usage import get_provider_usage_data, refresh_provider_usage_data
 from .config import CURRICULUM_ROOT, LEVELS
 from .lane_health import compute_lane_health
+from .rules_router import rules_hash
+from .session_router import session_hash
 from .state_build import (
     compute_build_stats,
+    compute_build_stats_all,
     compute_build_status_all,
     compute_build_status_track,
     compute_enrichment_status,
@@ -93,6 +97,7 @@ from .state_issues import (
     compute_final_reviews,
     compute_issues,
 )
+from .telemetry.response import add_json_telemetry, session_id_from_request
 
 # Re-export symbols used by dashboard_router and tests (backward compat)
 _detect_pipeline_version = detect_pipeline_version
@@ -505,7 +510,6 @@ def compute_routing_budget(now: datetime | None = None, *, fresh_codexbar: bool 
             now=current_time
         )
     except Exception as exc:
-        import logging
         logging.getLogger("state_router").debug("Failed to compute lane health: %s", exc)
 
     # Empty config case: unknown statuses, suppressed rec (no confident pick from absent data)
@@ -1475,8 +1479,6 @@ async def llm_qg_track(
 @router.get("/build-stats")
 async def build_stats_all():
     """V6 build stats aggregated across all tracks."""
-    from .state_build import compute_build_stats_all
-
     return await asyncio.to_thread(compute_build_stats_all)
 
 
@@ -1825,17 +1827,10 @@ async def manifest(request: Request):
     session, every compaction. The manifest collapses the steady
     state to one tiny call.
     """
-    from datetime import UTC
-    from datetime import datetime as _dt
-
-    from .rules_router import rules_hash
-    from .session_router import session_hash
-    from .telemetry.response import add_json_telemetry, session_id_from_request
-
     session_id = session_id_from_request(request)
     return add_json_telemetry(
         {
-            "generated_at": _dt.now(UTC).isoformat().replace("+00:00", "Z"),
+            "generated_at": datetime.now(UTC).isoformat().replace("+00:00", "Z"),
             "rules": {
                 "hash": rules_hash(),
                 "url": "/api/rules?format=markdown",

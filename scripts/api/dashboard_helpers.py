@@ -200,8 +200,6 @@ def build_module_info(track_dir, plans_dir, track_id, slug, idx) -> dict:
     friction_path = _safe_join(orch_dir, "friction.yaml") if orch_exists else None
     if friction_path and friction_path.exists():
         try:
-            import yaml
-
             fdata = yaml.safe_load(friction_path.read_text("utf-8"))
             for f in fdata.get("frictions", []) if fdata else []:
                 if f.get("status") == "active":

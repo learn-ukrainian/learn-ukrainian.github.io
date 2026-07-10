@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Compare two Layer B annotation sidecars without silently resolving labels.
 
-Material comparison is strict: values, mapping key order, and list order all
+Material comparison is strict: values and list order
 matter unless the labeling contract expressly defines a canonical order.  A
 materially disagreeing draft intentionally omits ``adjudication`` for that
 case, so the full label schema refuses it until a named adjudicator resolves
@@ -72,8 +72,14 @@ SPAN_FIELDS = {"ordered_segment_spans", "expected_support_spans"}
 
 
 def _ordered_json(value: Any) -> str:
-    """Preserve mapping insertion order; only values are compacted for comparison."""
-    return json.dumps(value, ensure_ascii=False, sort_keys=False, separators=(",", ":"))
+    """Canonicalize mapping key order for comparison; list order stays material.
+
+    JSON object key order is a serialization artifact, not annotation data — the
+    guide's material-field list never includes it, and independent annotators
+    legitimately serialize in different orders (observed 2026-07-10: one sorted
+    keys alphabetically, drowning 535/535 cases in key-order noise).
+    """
+    return json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
 
 
 def _same(left: Any, right: Any) -> bool:
@@ -102,10 +108,6 @@ def _candidate_differences(left: Any, right: Any) -> list[dict[str, Any]]:
         if not _same(left, right):
             differences.append({"field": "candidates_by_event_output_id", "left": left, "right": right})
         return differences
-    if list(left) != list(right):
-        differences.append(
-            {"field": "candidates_by_event_output_id.object_key_order", "left": list(left), "right": list(right)}
-        )
     for event_output_id in list(dict.fromkeys([*left.keys(), *right.keys()])):
         left_candidates = left.get(event_output_id)
         right_candidates = right.get(event_output_id)
@@ -124,14 +126,6 @@ def _candidate_differences(left: Any, right: Any) -> list[dict[str, Any]]:
                 if not _same(left_candidate, right_candidate):
                     differences.append({"field": candidate_prefix, "left": left_candidate, "right": right_candidate})
                 continue
-            if list(left_candidate) != list(right_candidate):
-                differences.append(
-                    {
-                        "field": candidate_prefix + ".object_key_order",
-                        "left": list(left_candidate),
-                        "right": list(right_candidate),
-                    }
-                )
             for field in CANDIDATE_MATERIAL_FIELDS:
                 if not _same(left_candidate.get(field), right_candidate.get(field)):
                     differences.append(
@@ -146,8 +140,6 @@ def _candidate_differences(left: Any, right: Any) -> list[dict[str, Any]]:
 
 def _material_differences(left: Mapping[str, Any], right: Mapping[str, Any]) -> list[dict[str, Any]]:
     differences: list[dict[str, Any]] = []
-    if list(left) != list(right):
-        differences.append({"field": "case.object_key_order", "left": list(left), "right": list(right)})
     for field in CASE_MATERIAL_FIELDS:
         if field == "candidates_by_event_output_id":
             differences.extend(_candidate_differences(left.get(field), right.get(field)))
@@ -240,7 +232,7 @@ def merge_annotator_sidecars(
         "cases": report_cases,
         "comparison_contract": {
             "exact_deep_equality": True,
-            "object_key_order_material": True,
+            "object_key_order_material": False,
             "list_order_material": True,
             "unadjudicated_cases_omit_adjudication": True,
         },

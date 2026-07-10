@@ -37,7 +37,8 @@ CONTENT_ROOTS = (DOCS_ROOT, READINGS_ROOT)
 LEXICON_MANIFEST_PATH = PROJECT_ROOT / "site" / "src" / "data" / "lexicon-manifest.json"
 VERIFY_BATCH_SIZE = 500
 
-_FENCE_RE = re.compile(r"^\s*```")
+_FENCE_RE = re.compile(r"^\s*(?:```|~~~)")
+_HTML_COMMENT_RE = re.compile(r"<!--.*?-->", re.DOTALL)
 _IMPORT_EXPORT_RE = re.compile(r"^\s*(?:import|export)\b")
 _COMPONENT_LINE_RE = re.compile(r"^\s*</?[A-Z][A-Za-z0-9_.:-]*(?:\s|>|/>)")
 _INLINE_COMPONENT_RE = re.compile(r"</?[A-Z][A-Za-z0-9_.:-]*(?:\s+[^<>]*)?/?>")
@@ -105,7 +106,7 @@ class ReconciliationResult:
 
 def strip_mdx_to_prose(text: str) -> str:
     """Strip frontmatter, fenced code, imports, and MDX component syntax."""
-    text = _strip_frontmatter(text)
+    text = _HTML_COMMENT_RE.sub("", _strip_frontmatter(text))
     lines: list[str] = []
     in_fence = False
     in_multiline_component = False

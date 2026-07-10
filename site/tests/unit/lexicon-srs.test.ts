@@ -1,8 +1,11 @@
 import { beforeEach, describe, expect, test } from 'vitest';
+import { State } from 'ts-fsrs';
 import {
   PRACTICE_MODE_DECK_VERSION,
   PRACTICE_MODES,
+  MAX_RAW_REVIEW_LOG_ENTRIES,
   SRS_BACKUP_KEY,
+  SRS_SETTINGS_KEY,
   SRS_STORAGE_KEY,
   cardKey,
   detectClockJump,
@@ -23,6 +26,7 @@ import {
   type PracticeLexeme,
   type PracticeMode,
   type PracticeSelection,
+  type ReviewLogEntry,
   type SelectionHistoryItem,
 } from '@site/src/lib/lexicon/srs';
 
@@ -43,6 +47,67 @@ function stateCard(overrides: Partial<ReturnType<typeof rateCard>> = {}) {
     state: 2,
     ...overrides,
   };
+}
+
+function reviewEntry(index: number, card = 'alpha'): ReviewLogEntry {
+  const reviewedAt = NOW.getTime() + index * 60_000;
+  return {
+    cardKey: cardKey(card, 'flashcards'),
+    lemmaId: card,
+    mode: 'flashcards',
+    rating: index % 2 === 0 ? 'good' : 'again',
+    state: State.Review,
+    due: reviewedAt + DAY_MS,
+    stability: 5,
+    difficulty: 4,
+    elapsed_days: 1,
+    last_elapsed_days: 1,
+    scheduled_days: 1,
+    learning_steps: 0,
+    review: reviewedAt,
+  };
+}
+
+class SizeLimitedStorage {
+  readonly values = new Map<string, string>();
+  readonly writes: string[] = [];
+  readonly removals: string[] = [];
+
+  constructor(private readonly maximumBytes: number, seed: Record<string, string> = {}) {
+    for (const [key, value] of Object.entries(seed)) this.values.set(key, value);
+  }
+
+  getItem(key: string): string | null {
+    return this.values.get(key) ?? null;
+  }
+
+  setItem(key: string, value: string): void {
+    this.writes.push(key);
+    const previous = this.values.get(key)?.length ?? 0;
+    const nextTotal = [...this.values.values()].reduce((total, stored) => total + stored.length, 0) - previous + value.length;
+    if (nextTotal > this.maximumBytes) {
+      const error = new Error('storage quota exceeded');
+      error.name = 'QuotaExceededError';
+      throw error;
+    }
+    this.values.set(key, value);
+  }
+
+  removeItem(key: string): void {
+    this.removals.push(key);
+    this.values.delete(key);
+  }
+}
+
+class BackupFailingStorage extends SizeLimitedStorage {
+  setItem(key: string, value: string): void {
+    if (key === SRS_BACKUP_KEY) {
+      const error = new Error('backup unavailable');
+      error.name = 'QuotaExceededError';
+      throw error;
+    }
+    super.setItem(key, value);
+  }
 }
 
 function lexeme(
@@ -538,6 +603,130 @@ describe('lexicon SRS facade', () => {
     rateCard('alpha', 'hard', new Date('2026-06-23T12:10:00.000Z'));
 
     expect(localStorage.getItem(SRS_BACKUP_KEY)).toBe(before);
+  });
+
+  test('writes the primary state before the best-effort backup', () => {
+    const storage = new SizeLimitedStorage(Number.MAX_SAFE_INTEGER);
+    loadState(storage, NOW);
+    rateCard('alpha', 'good', NOW);
+    storage.writes.length = 0;
+
+    rateCard('alpha', 'hard', new Date('2026-06-23T12:10:00.000Z'));
+
+    expect(storage.writes.indexOf(SRS_STORAGE_KEY)).toBeLessThan(
+      storage.writes.indexOf(SRS_BACKUP_KEY),
+    );
+  });
+
+  test('keeps a successful primary state when the backup write fails', () => {
+    const storage = new BackupFailingStorage(Number.MAX_SAFE_INTEGER);
+    const state = loadState(storage, NOW);
+    rateCard('alpha', 'good', NOW);
+
+    rateCard('alpha', 'hard', new Date('2026-06-23T12:10:00.000Z'));
+
+    const persisted = JSON.parse(storage.getItem(SRS_STORAGE_KEY) ?? '{}');
+    expect(persisted.cards[cardKey('alpha', 'flashcards')].reps).toBe(2);
+    expect(state.flags.backupWritten).toBe(false);
+    expect(state.flags.storageWriteFailed).toBe(false);
+  });
+
+  test('recovers a rating by dropping the backup when it is the quota blocker', () => {
+    const seedStorage = new SizeLimitedStorage(Number.MAX_SAFE_INTEGER);
+    loadState(seedStorage, NOW);
+    rateCard('alpha', 'good', NOW);
+    const previousRaw = seedStorage.getItem(SRS_STORAGE_KEY);
+    const settingsRaw = seedStorage.getItem(SRS_SETTINGS_KEY);
+    if (!previousRaw) throw new Error('expected seeded SRS state');
+
+    const probeStorage = new SizeLimitedStorage(Number.MAX_SAFE_INTEGER, {
+      [SRS_STORAGE_KEY]: previousRaw,
+      ...(settingsRaw ? { [SRS_SETTINGS_KEY]: settingsRaw } : {}),
+    });
+    loadState(probeStorage, NOW);
+    rateCard('alpha', 'hard', new Date('2026-06-23T12:10:00.000Z'));
+    const nextRaw = probeStorage.getItem(SRS_STORAGE_KEY);
+    const nextSettingsRaw = probeStorage.getItem(SRS_SETTINGS_KEY);
+    if (!nextRaw || !nextSettingsRaw) throw new Error('expected next persisted SRS state');
+
+    const storage = new SizeLimitedStorage(nextRaw.length + nextSettingsRaw.length + 1, {
+      [SRS_STORAGE_KEY]: previousRaw,
+      [SRS_BACKUP_KEY]: previousRaw,
+      [SRS_SETTINGS_KEY]: nextSettingsRaw,
+    });
+    loadState(storage, NOW);
+
+    rateCard('alpha', 'hard', new Date('2026-06-23T12:10:00.000Z'));
+
+    const persisted = JSON.parse(storage.getItem(SRS_STORAGE_KEY) ?? '{}');
+    expect(persisted.cards[cardKey('alpha', 'flashcards')].reps).toBe(2);
+    expect(storage.removals).toContain(SRS_BACKUP_KEY);
+    expect(loadState(storage, NOW).flags.storageFull).toBe(false);
+  });
+
+  test('keeps the rating in memory and exposes a storage-full state after exhausted recovery', () => {
+    const storage = new SizeLimitedStorage(1);
+    loadState(storage, NOW);
+
+    const card = rateCard('alpha', 'good', NOW);
+    const state = loadState(storage, NOW);
+
+    expect(state.cards.get(cardKey('alpha', 'flashcards'))).toEqual(card);
+    expect(state.flags.storageFull).toBe(true);
+  });
+
+  test('migrates and compacts oversized review history without changing card schedules', () => {
+    const cards = {
+      [cardKey('alpha', 'flashcards')]: stateCard({ due: NOW.getTime() + DAY_MS, stability: 12 }),
+      [cardKey('beta', 'choice')]: stateCard({ due: NOW.getTime() + 2 * DAY_MS, stability: 24 }),
+    };
+    const reviews = Array.from({ length: MAX_RAW_REVIEW_LOG_ENTRIES + 3 }, (_unused, index) =>
+      reviewEntry(index, index % 2 === 0 ? 'alpha' : 'beta'),
+    );
+    const oldRaw = JSON.stringify({
+      version: 3,
+      cards,
+      reviews,
+      lastSavedAt: NOW.getTime(),
+    });
+    const storage = new SizeLimitedStorage(Number.MAX_SAFE_INTEGER, { [SRS_STORAGE_KEY]: oldRaw });
+
+    const state = loadState(storage, NOW);
+    const saved = JSON.parse(storage.getItem(SRS_STORAGE_KEY) ?? '{}');
+
+    expect(state.flags.migrated).toBe(true);
+    expect(JSON.stringify(saved.cards)).toBe(JSON.stringify(cards));
+    expect(saved.reviews).toEqual(reviews.slice(-MAX_RAW_REVIEW_LOG_ENTRIES));
+    expect(saved.reviewAggregates[cardKey('alpha', 'flashcards')]).toEqual({
+      ratings: { again: 0, hard: 0, good: 2, easy: 0 },
+      firstReview: reviews[0].review,
+      lastReview: reviews[2].review,
+    });
+    expect(saved.reviewAggregates[cardKey('beta', 'flashcards')]).toEqual({
+      ratings: { again: 1, hard: 0, good: 0, easy: 0 },
+      firstReview: reviews[1].review,
+      lastReview: reviews[1].review,
+    });
+  });
+
+  test('bounds persisted review-state size across simulated long-term sessions', () => {
+    const sessions = MAX_RAW_REVIEW_LOG_ENTRIES * 3;
+    const reviews = Array.from({ length: sessions }, (_unused, index) =>
+      reviewEntry(index, `card-${index % 4}`),
+    );
+    const oldRaw = JSON.stringify({ version: 3, cards: {}, reviews, lastSavedAt: NOW.getTime() });
+    const storage = new SizeLimitedStorage(Number.MAX_SAFE_INTEGER, { [SRS_STORAGE_KEY]: oldRaw });
+
+    const state = loadState(storage, NOW);
+    const savedRaw = storage.getItem(SRS_STORAGE_KEY) ?? '';
+    const aggregatedCount = Object.values(state.reviewAggregates).reduce(
+      (total, aggregate) => total + Object.values(aggregate.ratings).reduce((sum, count) => sum + count, 0),
+      0,
+    );
+
+    expect(state.reviews).toHaveLength(MAX_RAW_REVIEW_LOG_ENTRIES);
+    expect(aggregatedCount).toBe(sessions - MAX_RAW_REVIEW_LOG_ENTRIES);
+    expect(savedRaw.length).toBeLessThan(oldRaw.length / 2);
   });
 
   test('keeps corrupt storage and surfaces fallback flag', () => {

@@ -225,6 +225,51 @@ def test_section_omitted_not_empty_flags_empty_section():
     assert _gates_for(entry) == ["section_omitted_not_empty"]
 
 
+def test_morphology_marked_forms_only_is_renderable_content():
+    """#4891 renders marked_forms in their own subsection: a marked-forms-only
+    morphology (VESUM has no unmarked modern paradigm — slang/variant lemmas
+    like «баг») must NOT flag section_omitted_not_empty. Detonated on the
+    #4936 publish (29 lemmas, red main)."""
+    entry = _entry(
+        enrichment={
+            "morphology": {
+                "pos": "іменник",
+                "form_count": 0,
+                "forms": [],
+                "source": "VESUM",
+                "marked_forms": [
+                    {
+                        "form": "багові",
+                        "label": "чол., давальний",
+                        "marker": "slang",
+                        "marker_label": "сленгова форма",
+                    }
+                ],
+            }
+        }
+    )
+
+    assert _gates_for(entry) == []
+
+
+def test_morphology_all_form_containers_empty_still_flags():
+    """Truly empty morphology (forms, paradigm, AND marked_forms empty) keeps
+    failing the gate — the marked-forms allowance must not fail-open."""
+    entry = _entry(
+        enrichment={
+            "morphology": {
+                "pos": "іменник",
+                "form_count": 0,
+                "forms": [],
+                "marked_forms": [],
+                "source": "VESUM",
+            }
+        }
+    )
+
+    assert _gates_for(entry) == ["section_omitted_not_empty"]
+
+
 def test_synonyms_section_requires_source_and_items():
     entry = _entry(
         sections={
