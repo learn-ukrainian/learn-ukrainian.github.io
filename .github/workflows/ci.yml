@@ -128,6 +128,10 @@ jobs:
               # data-only PR here skipped pytest and turned main red for every
               # subsequent code PR (2026-07-10, #4888 — same class as #3873).
               - 'data/lexicon/source-inventory-review-decisions/**'
+              # Same class (#4894, review-4893 sibling sweep):
+              # test_source_inventory_intake::test_committed_source_inventory_files_are_valid
+              # globs every file here — data-only edits must run pytest too.
+              - 'data/lexicon/source-inventory/**'
             frontend:
               - '.github/workflows/ci.yml'
               - 'site/**'
