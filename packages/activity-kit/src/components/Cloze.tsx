@@ -216,22 +216,45 @@ export interface ClozeProps {
 function parsePassageWithEmbeddedOptions(passage: string): { text: string; blanks: ClozeBlank[] } {
   const blanks: ClozeBlank[] = [];
 
-  // Split into main text and options section
-  const parts = passage.split(/\n\n(?=\d+\.)/);
-  const text = parts[0];
+  const blocks = passage.split('\n\n');
+  const firstOptionBlock = blocks.findIndex((block) => {
+    const separatorIndex = block.indexOf('.');
+    const numberText = block.slice(0, separatorIndex);
+    return numberText.length > 0 && [...numberText].every((character) => {
+      const code = character.charCodeAt(0);
+      return code >= 48 && code <= 57;
+    });
+  });
+  const text = firstOptionBlock === -1 ? passage : blocks.slice(0, firstOptionBlock).join('\n\n');
+  const optionLines = blocks.slice(Math.max(firstOptionBlock, 0)).join('\n\n').split('\n');
 
-  // Parse numbered options (1. opt1 | opt2\n   > [!answer] correct)
-  const optionPattern = /(\d+)\.\s*([^\n]+)\n\s*>\s*\[!answer\]\s*(\S+)/g;
-  let match;
+  // Parse numbered options (1. opt1 | opt2\n   > [!answer] correct) without
+  // repeatedly applying a backtracking expression to untrusted lesson text.
+  for (let lineIndex = 0; lineIndex < optionLines.length - 1; lineIndex += 1) {
+    const optionLine = optionLines[lineIndex].trimStart();
+    const separatorIndex = optionLine.indexOf('.');
+    const numberText = optionLine.slice(0, separatorIndex);
+    const hasNumber = numberText.length > 0 && [...numberText].every((character) => {
+      const code = character.charCodeAt(0);
+      return code >= 48 && code <= 57;
+    });
 
-  const fullText = parts.join('\n\n');
-  while ((match = optionPattern.exec(fullText)) !== null) {
-    const index = parseInt(match[1], 10); // 1-based: [___:1] matches option block "1." (#1191)
-    const optionsStr = match[2];
-    const answer = match[3];
-    const options = optionsStr.split('|').map(o => o.trim());
+    if (!hasNumber) continue;
 
-    blanks.push({ index, options, answer });
+    const answerLine = optionLines[lineIndex + 1].trimStart();
+    if (!answerLine.startsWith('>')) continue;
+
+    const answerText = answerLine.slice(1).trimStart();
+    if (!answerText.startsWith('[!answer]')) continue;
+
+    const answerToken = answerText.slice('[!answer]'.length).trimStart();
+    const answerEnd = [...answerToken].findIndex((character) => character === ' ' || character === '\t');
+    const answer = answerEnd === -1 ? answerToken : answerToken.slice(0, answerEnd);
+    if (!answer) continue;
+
+    const options = optionLine.slice(separatorIndex + 1).trim().split('|').map((option) => option.trim());
+    blanks.push({ index: Number(numberText), options, answer });
+    lineIndex += 1;
   }
 
   return { text, blanks };

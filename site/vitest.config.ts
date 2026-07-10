@@ -10,9 +10,6 @@
 import { getViteConfig } from 'astro/config';
 import { fileURLToPath } from 'node:url';
 
-const starlightRoot = fileURLToPath(new URL('.', import.meta.url));
-const activityKitRoot = fileURLToPath(new URL('../packages/activity-kit', import.meta.url));
-
 export default getViteConfig({
   test: {
     environment: 'happy-dom',
@@ -34,11 +31,6 @@ export default getViteConfig({
   resolve: {
     alias: {
       '@site': fileURLToPath(new URL('.', import.meta.url)),
-    },
-  },
-  server: {
-    fs: {
-      allow: [starlightRoot, activityKitRoot],
     },
   },
 });
