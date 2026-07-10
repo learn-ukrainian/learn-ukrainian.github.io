@@ -78,6 +78,13 @@ persona:
   role: Дослідник, що розвінчує радянські міфи та розкриває політичний контекст за культурними явищами, повертаючи Україні її вкрадену історію.
   voice: Cultural-Historian-Debunker
 phase: BIO.1
+portrait:
+  url: 'https://commons.wikimedia.org/wiki/File:Mykola_Leontovych.jpg'
+  license: 'PD-Ukraine'
+  attribution: 'Unknown author / Wikimedia Commons (PD-Ukraine — published before 1 January 1956)'
+  caption_uk: 'Микола Леонтович, український композитор і збирач музичного фольклору (світлина до 1921 р.)'
+  caption_en: 'Mykola Leontovych, Ukrainian composer and collector of musical folklore (photograph, before 1921)'
+  verified_on: '2026-07-10'
 readings:
 - title: "Леонтович Микола Дмитрович"
   source: "Енциклопедія Сучасної України"
@@ -114,7 +121,7 @@ sequence: 99
 slug: mykola-leontovych
 subtitle: 'The Murder of "Shchedryk": How the world''s most famous carol lost its author'
 title: 'Микола Леонтович: Вбивство «Щедрика»'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: українська обрядова пісня, що виконується напередодні Старого Нового року з побажаннями добробуту
   pos: ж.
@@ -136,7 +143,7 @@ vocabulary_hints:
   word: партитура
 - definition: багаторазове повторення в музичному творі тієї самої мелодичної або ритмічної фігури
   pos: с.
-  word: остатінато
+  word: остинато
 - definition: музичний твір малої форми, зазвичай для одного інструмента або невеликого складу виконавців
   pos: ж.
   word: мініатюра
