@@ -201,6 +201,34 @@ async function alreadyHydrated(pointer) {
   return true;
 }
 
+// Local-work guard (#4917 incident, 2026-07-10): during an intake arc the local
+// manifest legitimately carries MORE entries than the latest published release
+// (promote/enrich run locally BEFORE `make atlas-publish` ships the new asset).
+// A site build running `npm run hydrate` in that window used to silently
+// overwrite the richer local manifest with the older published one — wiping an
+// in-flight promotion (2,919 promoted + enriched entries lost). Refuse by
+// default; force only via ATLAS_MANIFEST_FORCE_HYDRATE=1 (explicit restore).
+async function assertNotClobberingRicherLocal(downloadedEntryCount, localPath = manifestPath) {
+  if (process.env.ATLAS_MANIFEST_FORCE_HYDRATE === "1" || !existsSync(localPath)) return;
+
+  let localEntryCount = null;
+  try {
+    const local = JSON.parse(await readFile(localPath, "utf8"));
+    if (Array.isArray(local.entries)) localEntryCount = local.entries.length;
+  } catch {
+    return; // unreadable/corrupt local file → replacing it is an improvement
+  }
+
+  if (localEntryCount !== null && localEntryCount > downloadedEntryCount) {
+    throw new Error(
+      `refusing to overwrite local manifest with ${localEntryCount} entries using the ` +
+        `published release with only ${downloadedEntryCount} — the local file looks like ` +
+        `in-flight intake work (promote/enrich before publish). Publish it with ` +
+        `make atlas-publish, or force the restore with ATLAS_MANIFEST_FORCE_HYDRATE=1.`,
+    );
+  }
+}
+
 async function hydrate() {
   const [pointer, fingerprint] = await Promise.all([readJson(pointerPath), readJson(fingerprintPath)]);
   assertPointerFresh(pointer, fingerprint);
@@ -226,7 +254,9 @@ async function hydrate() {
     throw new Error(`json size mismatch: expected ${pointer.json_bytes}, got ${jsonBytes.length}`);
   }
 
-  parseManifest(jsonBytes, pointer, pointer.asset_url);
+  const downloaded = parseManifest(jsonBytes, pointer, pointer.asset_url);
+  const downloadedEntryCount = Array.isArray(downloaded.entries) ? downloaded.entries.length : 0;
+  await assertNotClobberingRicherLocal(downloadedEntryCount);
   await writeFile(tempPath, jsonBytes);
   await rename(tempPath, manifestPath);
   console.log(`✓ hydrated manifest ${mb(jsonBytes.length)} from ${mb(gzBytes.length)} release asset`);
@@ -240,4 +270,10 @@ if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) 
   });
 }
 
-export { assertAllowedDownloadUrl, assertPointerFresh, downloadGzip, downloadUrl };
+export {
+  assertAllowedDownloadUrl,
+  assertNotClobberingRicherLocal,
+  assertPointerFresh,
+  downloadGzip,
+  downloadUrl,
+};
