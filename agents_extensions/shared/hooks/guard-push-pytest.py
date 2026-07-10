@@ -70,33 +70,55 @@ def _heredoc_delimiters(line: str) -> list[tuple[str, bool]]:
             continue
         strip_tabs = False
         j = i + 1
-        if j < len(tokens) and tokens[j] == "-":
-            strip_tabs = True
-            j += 1
+        delim_tok = ""
         if j < len(tokens):
-            delimiter = _strip_quotes(tokens[j])
-            if delimiter:
-                delimiters.append((delimiter, strip_tabs))
+            nxt = tokens[j]
+            if nxt == "-":  # spaced: << - DELIM
+                strip_tabs = True
+                j += 1
+                if j < len(tokens):
+                    delim_tok = tokens[j]
+            elif nxt.startswith("-") and len(nxt) > 1:  # attached: <<-DELIM
+                strip_tabs = True
+                delim_tok = nxt[1:]
+            else:
+                delim_tok = nxt
+        delimiter = _strip_quotes(delim_tok)
+        if delimiter:
+            delimiters.append((delimiter, strip_tabs))
         i = j + 1
     return delimiters
 
 
 def _strip_heredoc_bodies(command: str) -> str:
-    """Drop heredoc BODY lines — document text is data, not commands."""
+    """Drop heredoc BODY lines — document text is data, not commands.
+
+    Fail-CLOSED on an unclosed heredoc (#4877): a never-closing / mis-parsed
+    opener must not make a trailing real `git push` vanish. Only a heredoc
+    that actually closes has its body + closer dropped.
+    """
     if "<<" not in command:
         return command
 
+    lines = command.splitlines()
     kept: list[str] = []
-    pending: list[tuple[str, bool]] = []
-    for line in command.splitlines():
-        if pending:
+    i = 0
+    n = len(lines)
+    while i < n:
+        kept.append(lines[i])
+        i += 1
+        pending = _heredoc_delimiters(lines[i - 1])
+        if not pending:
+            continue
+        body_start = i
+        while i < n and pending:
             delimiter, strip_tabs = pending[0]
-            candidate = line.lstrip("\t") if strip_tabs else line
+            candidate = lines[i].lstrip("\t") if strip_tabs else lines[i]
             if candidate == delimiter:
                 pending.pop(0)
-            continue
-        kept.append(line)
-        pending.extend(_heredoc_delimiters(line))
+            i += 1
+        if pending:
+            kept.extend(lines[body_start:i])
     return "\n".join(kept)
 
 
@@ -161,10 +183,18 @@ def _push_is_help(args: list[str]) -> bool:
     return any(arg in {"-h", "--help"} for arg in args)
 
 
+def _is_env_assignment(tok: str) -> bool:
+    return "=" in tok and not tok.startswith("-") and tok.split("=", 1)[0].isidentifier()
+
+
 def _git_push_args(seg: list[str]) -> list[str] | None:
     """Return args for a real ``git push`` segment, else None."""
+    # Skip wrappers / env-assignments / brace-group open so `env X=1 git push`
+    # and `{ git push; }` are not missed (#4877).
     i = 0
-    while i < len(seg) and seg[i] in WRAPPERS:
+    while i < len(seg) and (
+        seg[i] in WRAPPERS or seg[i] in {"command", "exec", "{"} or _is_env_assignment(seg[i])
+    ):
         i += 1
     if i >= len(seg) or seg[i] != "git":
         return None

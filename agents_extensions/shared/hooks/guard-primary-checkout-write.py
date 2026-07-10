@@ -223,13 +223,22 @@ def _heredoc_delimiters(line: str) -> list[tuple[str, bool]]:
             continue
         strip_tabs = False
         j = i + 1
-        if j < len(tokens) and tokens[j] == "-":
-            strip_tabs = True
-            j += 1
+        delim_tok = ""
         if j < len(tokens):
-            delimiter = _strip_quotes_for_heredoc(tokens[j])
-            if delimiter:
-                delimiters.append((delimiter, strip_tabs))
+            nxt = tokens[j]
+            if nxt == "-":  # spaced: << - DELIM
+                strip_tabs = True
+                j += 1
+                if j < len(tokens):
+                    delim_tok = tokens[j]
+            elif nxt.startswith("-") and len(nxt) > 1:  # attached: <<-DELIM
+                strip_tabs = True
+                delim_tok = nxt[1:]
+            else:
+                delim_tok = nxt
+        delimiter = _strip_quotes_for_heredoc(delim_tok)
+        if delimiter:
+            delimiters.append((delimiter, strip_tabs))
         i = j + 1
     return delimiters
 
@@ -241,21 +250,35 @@ def _strip_heredoc_bodies(command: str) -> str:
     syntax. Without this, body text like ``>15%`` or markdown backtick spans
     is tokenized as redirects and misread as write targets — the recurring
     false-positive class. Pattern shared with guard-secret-print.py.
+
+    Fail-CLOSED on an unclosed heredoc (#4877): if a delimiter never appears
+    before EOF, the buffered lines were NOT a real body — a crafted or
+    malformed opener must not make trailing REAL writes vanish from the
+    tokenized view. Those lines are kept; only a heredoc that actually
+    closes has its body + closer dropped.
     """
     if "<<" not in command:
         return command
 
+    lines = command.splitlines()
     kept: list[str] = []
-    pending: list[tuple[str, bool]] = []
-    for line in command.splitlines():
-        if pending:
+    i = 0
+    n = len(lines)
+    while i < n:
+        kept.append(lines[i])
+        i += 1
+        pending = _heredoc_delimiters(lines[i - 1])
+        if not pending:
+            continue
+        body_start = i
+        while i < n and pending:
             delimiter, strip_tabs = pending[0]
-            candidate = line.lstrip("\t") if strip_tabs else line
+            candidate = lines[i].lstrip("\t") if strip_tabs else lines[i]
             if candidate == delimiter:
                 pending.pop(0)
-            continue
-        kept.append(line)
-        pending.extend(_heredoc_delimiters(line))
+            i += 1
+        if pending:
+            kept.extend(lines[body_start:i])
     return "\n".join(kept)
 
 

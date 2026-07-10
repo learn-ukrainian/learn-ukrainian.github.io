@@ -306,3 +306,35 @@ def test_bash_write_from_worktree_targeting_main_blocked(repo: Path):
 )
 def test_heredoc_body_not_write_targets(command, expected):
     assert hook.bash_write_targets(command) == expected
+
+
+# --- #4877 adversarial round (grok-build msg 2334): heredoc fail-open ---------
+
+
+@pytest.mark.parametrize(
+    "command, expected",
+    [
+        # Never-closing marker: the whole buffer is inspected (fail-closed).
+        # The security-critical target `curriculum/tracked.md` must NOT vanish;
+        # the would-be body line `> fake` is conservatively over-reported too,
+        # which is the safe direction (a malformed heredoc gets full scrutiny).
+        (
+            "cat <<'NOEND'\nbody > fake\necho tampered > curriculum/tracked.md",
+            ["fake", "curriculum/tracked.md"],
+        ),
+        # Attached `<<-E` whose closer never appears → unclosed → keep the
+        # trailing real write.
+        (
+            "cat <<-E\n\tbody\nreal > target.txt",
+            ["target.txt"],
+        ),
+        # Attached `<<-EOF` PROPERLY closed (tab + EOF): body dropped, no FP,
+        # and the opener's own redirect target is still seen.
+        (
+            "cat > /tmp/a.md <<-EOF\n\tbody 2>&1 here\n\tEOF",
+            ["/tmp/a.md"],
+        ),
+    ],
+)
+def test_heredoc_failclosed_on_unclosed(command, expected):
+    assert hook.bash_write_targets(command) == expected

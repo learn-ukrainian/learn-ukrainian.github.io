@@ -182,3 +182,22 @@ def test_heredoc_admin_mention_not_detected():
 
 def test_backslash_continuation_admin_detected():
     assert _any_admin("gh pr merge 5 \\\n  --admin --squash")
+
+
+# --- #4877 adversarial round (grok-build msg 2334) ---
+
+
+@pytest.mark.parametrize(
+    "cmd",
+    [
+        "env FOO=1 gh pr merge 5 --admin",
+        "FOO=1 gh pr merge 5 --admin",
+        "{ gh pr merge 5 --admin; }",
+    ],
+)
+def test_wrapper_assignment_brace_admin_detected(cmd):
+    assert _any_admin(cmd)
+
+
+def test_unclosed_heredoc_does_not_hide_admin():
+    assert _any_admin("cat <<'NOEND'\nnote\ngh pr merge 5 --admin")

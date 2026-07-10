@@ -205,3 +205,59 @@ def test_backslash_line_continuation_still_inspected():
     # tokenizer this replaced folded continuations implicitly (#4876).
     assert _dangerous("git branch -D victim \\\n  --force-ish") is not None
     assert _dangerous("git status \\\n  && git branch -D victim") is not None
+
+
+# --- #4877 adversarial round (grok-build msg 2334): env/brace/heredoc holes ---
+
+
+@pytest.mark.parametrize(
+    "cmd",
+    [
+        "env FOO=1 git branch -D victim",  # env + assignment before verb
+        "FOO=1 git branch -D victim",  # bare leading assignment
+        "{ git branch -D victim; }",  # compact brace group
+        "{ git branch -D victim",  # unterminated brace group
+        "command git branch -D victim",  # `command` wrapper
+    ],
+)
+def test_wrapper_and_assignment_prefixes_still_inspected(cmd):
+    assert _dangerous(cmd) is not None
+
+
+def test_unclosed_heredoc_does_not_hide_trailing_danger():
+    # A never-closing marker must NOT drop the real command after it (#4877
+    # fail-open): the buffered lines were not a real heredoc body.
+    assert _dangerous("cat <<'NOEND'\nbody > fake\ngit branch -D victim") is not None
+
+
+def test_attached_dash_heredoc_closes_and_body_dropped():
+    # `<<-EOF` with a tab-indented closer is a REAL heredoc: body dropped
+    # (no false positive on body content), trailing command still scanned.
+    cmd = "cat <<-EOF\n\tgit branch -D fake\n\tEOF\ngit branch -D victim"
+    assert _dangerous(cmd) is not None  # the trailing real one
+    # body-only (properly closed) must not trip:
+    assert _dangerous("cat <<-EOF\n\tgit branch -D fake\n\tEOF") is None
+
+
+@pytest.mark.parametrize(
+    "cmd",
+    [
+        'bash -c "git branch -D x"',
+        'sh -c "git branch -D x"',
+        'eval "git branch -D x"',
+        "x=`git branch -D x`",  # backtick command substitution
+    ],
+)
+def test_known_boundary_verb_inside_string_or_backticks(cmd):
+    """DOCUMENTED LIMITATION (#4877, grok msg 2334): a verb hidden inside a
+    quoted string arg (`bash -c "…"`, `eval "…"`) or backticks is NOT
+    inspected — a segment guard cannot see it without becoming a recursive
+    shell parser (which would add false positives). The old whole-command
+    guard had the same blind spot. These guards are an honest-mistake safety
+    net, not an adversarial sandbox: an agent does not accidentally wrap a
+    destructive command in `bash -c`. This test PINS the boundary so any
+    future change to it is visible and deliberate. (Note: `$(…)` substitution
+    IS caught — see the dangerous-cases tests — because it leaks bare verb
+    tokens into a segment; only string-args and backticks are blind.)
+    """
+    assert _dangerous(cmd) is None

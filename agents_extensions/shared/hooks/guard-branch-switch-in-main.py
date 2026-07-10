@@ -104,6 +104,15 @@ def _strip_quotes(token: str) -> str:
 
 
 def _heredoc_delimiters(line: str) -> list[tuple[str, bool]]:
+    """Return (delimiter, strip_tabs) for each heredoc opener on `line`.
+
+    Handles all four operator/marker forms (#4877): spaced ``<< EOF`` /
+    ``<< - EOF`` and attached ``<<-EOF`` / ``<<-'EOF'`` — the attached ``-``
+    means ``<<-`` (strip leading tabs on the closer), NOT part of the
+    delimiter word. Getting this wrong left a real heredoc effectively
+    unclosed, which (with the old strip) silently dropped everything after
+    the opener.
+    """
     try:
         lexer = shlex.shlex(line, posix=False, punctuation_chars=True)
         lexer.whitespace_split = True
@@ -120,33 +129,61 @@ def _heredoc_delimiters(line: str) -> list[tuple[str, bool]]:
             continue
         strip_tabs = False
         j = i + 1
-        if j < len(tokens) and tokens[j] == "-":
-            strip_tabs = True
-            j += 1
+        delim_tok = ""
         if j < len(tokens):
-            delimiter = _strip_quotes(tokens[j])
-            if delimiter:
-                delimiters.append((delimiter, strip_tabs))
+            nxt = tokens[j]
+            if nxt == "-":  # spaced: << - DELIM
+                strip_tabs = True
+                j += 1
+                if j < len(tokens):
+                    delim_tok = tokens[j]
+            elif nxt.startswith("-") and len(nxt) > 1:  # attached: <<-DELIM
+                strip_tabs = True
+                delim_tok = nxt[1:]
+            else:
+                delim_tok = nxt
+        delimiter = _strip_quotes(delim_tok)
+        if delimiter:
+            delimiters.append((delimiter, strip_tabs))
         i = j + 1
     return delimiters
 
 
 def _strip_heredoc_bodies(command: str) -> str:
-    """Drop heredoc BODY lines — document text is data, not commands."""
+    """Drop heredoc BODY lines — document text is data, not commands.
+
+    Fail-CLOSED on an unclosed heredoc (#4877): if a delimiter never appears
+    before EOF, the buffered lines were NOT a real heredoc body — a crafted
+    or malformed opener (never-closing marker, mis-parsed ``<<-``) must not
+    make trailing REAL commands/writes vanish from the parsed view. Those
+    lines are kept and inspected; only a heredoc that actually closes has
+    its body + closer dropped.
+    """
     if "<<" not in command:
         return command
 
+    lines = command.splitlines()
     kept: list[str] = []
-    pending: list[tuple[str, bool]] = []
-    for line in command.splitlines():
-        if pending:
+    i = 0
+    n = len(lines)
+    while i < n:
+        line = lines[i]
+        kept.append(line)
+        i += 1
+        pending = _heredoc_delimiters(line)
+        if not pending:
+            continue
+        body_start = i
+        while i < n and pending:
             delimiter, strip_tabs = pending[0]
-            candidate = line.lstrip("\t") if strip_tabs else line
+            candidate = lines[i].lstrip("\t") if strip_tabs else lines[i]
             if candidate == delimiter:
                 pending.pop(0)
-            continue
-        kept.append(line)
-        pending.extend(_heredoc_delimiters(line))
+            i += 1
+        if pending:
+            # Unclosed at EOF → not a real body; keep the lines (fail-closed).
+            kept.extend(lines[body_start:i])
+        # else: closed — body and closer consumed and dropped.
     return "\n".join(kept)
 
 
@@ -227,13 +264,33 @@ def _branch_force_reason(args: list[str]) -> str | None:
     return None
 
 
+def _is_env_assignment(tok: str) -> bool:
+    """`VAR=val` prefix (as before `env` or a bare command). Mirrors the
+    reference idiom in guard-primary-checkout-write._command_word."""
+    return "=" in tok and not tok.startswith("-") and tok.split("=", 1)[0].isidentifier()
+
+
+def _skip_command_prefix(seg: list[str], i: int) -> int:
+    """Advance past transparent leading tokens so we land on the real command
+    word: wrappers (`sudo`/`time`/`env`/`nohup`/`command`/`exec`), env
+    assignments (`FOO=1`), and a brace-group opener (`{`). Without this a
+    `env FOO=1 git branch -D x` or `{ git branch -D x; }` hid the verb (#4877)."""
+    while i < len(seg):
+        tok = seg[i]
+        if tok in {"sudo", "time", "env", "nohup", "command", "exec", "{"} or _is_env_assignment(
+            tok
+        ):
+            i += 1
+        else:
+            break
+    return i
+
+
 def _segment_is_dangerous(seg: list[str]) -> str | None:
     """Return a human-readable reason string if seg is a dangerous git op,
     else None."""
-    # Find `git` token; allow common leading wrappers (`sudo`, `time`, `env`).
-    i = 0
-    while i < len(seg) and seg[i] in {"sudo", "time", "env", "nohup"}:
-        i += 1
+    # Land on the command word past wrappers / env-assignments / brace open.
+    i = _skip_command_prefix(seg, 0)
     if i >= len(seg) or seg[i] != "git":
         return None
     # Skip over `git -C <dir>` / `git -c k=v` flag pairs and other top-level

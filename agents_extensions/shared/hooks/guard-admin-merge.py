@@ -70,6 +70,8 @@ def _strip_quotes(token: str) -> str:
 
 
 def _heredoc_delimiters(line: str) -> list[tuple[str, bool]]:
+    """Return (delimiter, strip_tabs) per heredoc opener; handles spaced
+    ``<< EOF`` / ``<< - EOF`` and attached ``<<-EOF`` / ``<<-'EOF'`` (#4877)."""
     try:
         lexer = shlex.shlex(line, posix=False, punctuation_chars=True)
         lexer.whitespace_split = True
@@ -86,33 +88,55 @@ def _heredoc_delimiters(line: str) -> list[tuple[str, bool]]:
             continue
         strip_tabs = False
         j = i + 1
-        if j < len(tokens) and tokens[j] == "-":
-            strip_tabs = True
-            j += 1
+        delim_tok = ""
         if j < len(tokens):
-            delimiter = _strip_quotes(tokens[j])
-            if delimiter:
-                delimiters.append((delimiter, strip_tabs))
+            nxt = tokens[j]
+            if nxt == "-":
+                strip_tabs = True
+                j += 1
+                if j < len(tokens):
+                    delim_tok = tokens[j]
+            elif nxt.startswith("-") and len(nxt) > 1:
+                strip_tabs = True
+                delim_tok = nxt[1:]
+            else:
+                delim_tok = nxt
+        delimiter = _strip_quotes(delim_tok)
+        if delimiter:
+            delimiters.append((delimiter, strip_tabs))
         i = j + 1
     return delimiters
 
 
 def _strip_heredoc_bodies(command: str) -> str:
-    """Drop heredoc BODY lines — document text is data, not commands."""
+    """Drop heredoc BODY lines — document text is data, not commands.
+
+    Fail-CLOSED on an unclosed heredoc (#4877): a never-closing / mis-parsed
+    opener must not make trailing real `gh pr merge --admin` vanish. Only a
+    heredoc that actually closes has its body + closer dropped.
+    """
     if "<<" not in command:
         return command
 
+    lines = command.splitlines()
     kept: list[str] = []
-    pending: list[tuple[str, bool]] = []
-    for line in command.splitlines():
-        if pending:
+    i = 0
+    n = len(lines)
+    while i < n:
+        kept.append(lines[i])
+        i += 1
+        pending = _heredoc_delimiters(lines[i - 1])
+        if not pending:
+            continue
+        body_start = i
+        while i < n and pending:
             delimiter, strip_tabs = pending[0]
-            candidate = line.lstrip("\t") if strip_tabs else line
+            candidate = lines[i].lstrip("\t") if strip_tabs else lines[i]
             if candidate == delimiter:
                 pending.pop(0)
-            continue
-        kept.append(line)
-        pending.extend(_heredoc_delimiters(line))
+            i += 1
+        if pending:
+            kept.extend(lines[body_start:i])
     return "\n".join(kept)
 
 
@@ -154,11 +178,28 @@ def _segments(command: str) -> list[list[str]]:
     return segs
 
 
+def _is_env_assignment(tok: str) -> bool:
+    return "=" in tok and not tok.startswith("-") and tok.split("=", 1)[0].isidentifier()
+
+
+def _skip_command_prefix(seg: list[str], i: int) -> int:
+    """Advance past wrappers / env-assignments / brace-group open so a
+    `env FOO=1 gh pr merge --admin` or `{ gh pr merge --admin; }` is not
+    missed (#4877)."""
+    while i < len(seg):
+        tok = seg[i]
+        if tok in {"sudo", "time", "env", "nohup", "command", "exec", "{"} or _is_env_assignment(
+            tok
+        ):
+            i += 1
+        else:
+            break
+    return i
+
+
 def _admin_merge_args(seg: list[str]) -> list[str] | None:
     """Return the args of a `gh pr merge ... --admin` segment, else None."""
-    i = 0
-    while i < len(seg) and seg[i] in {"sudo", "time", "env", "nohup"}:
-        i += 1
+    i = _skip_command_prefix(seg, 0)
     if seg[i : i + 3] != ["gh", "pr", "merge"]:
         return None
     args = seg[i + 3 :]

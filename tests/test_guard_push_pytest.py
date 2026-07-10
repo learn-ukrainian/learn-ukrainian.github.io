@@ -165,3 +165,22 @@ def test_heredoc_push_mention_not_detected():
 
 def test_backslash_continuation_push_detected():
     assert guard._contains_git_push("git push \\\n  origin main")
+
+
+# --- #4877 adversarial round (grok-build msg 2334) ---
+
+
+@pytest.mark.parametrize(
+    "cmd",
+    [
+        "env FOO=1 git push origin main",
+        "FOO=1 git push origin main",
+        "{ git push origin main; }",
+    ],
+)
+def test_wrapper_assignment_brace_push_detected(cmd):
+    assert guard._contains_git_push(cmd)
+
+
+def test_unclosed_heredoc_does_not_hide_push():
+    assert guard._contains_git_push("cat <<'NOEND'\nnote\ngit push origin main")
