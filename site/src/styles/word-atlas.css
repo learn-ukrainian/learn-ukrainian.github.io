@@ -401,6 +401,12 @@
   border: 1px solid var(--brown);
 }
 
+.status-badge.register {
+  background: var(--orange-light);
+  color: var(--brown);
+  border: 1px solid var(--orange);
+}
+
 .content-area {
   max-width: var(--content-width);
   margin: 0 auto;
@@ -869,6 +875,15 @@
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.02em;
+}
+
+/* #4900 — fully-marked lemmas surface register-marked forms as the primary paradigm. */
+.marked-forms-primary {
+  margin-top: 0;
+}
+
+.marked-forms-primary > .marked-forms-note {
+  margin-top: 0;
 }
 
 .source-box {
