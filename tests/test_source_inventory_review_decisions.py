@@ -189,3 +189,21 @@ def test_decision_rejects_invalid_surface_admission(tmp_path: Path) -> None:
 
     with pytest.raises(SourceInventoryError, match=r"surface_admission\.practice must be boolean"):
         decisions.validate_committed_decision_files([path])
+
+
+def test_wrong_kind_document_fails_on_kind_not_field_noise(tmp_path):
+    """A non-decision document (e.g. a grow triage ledger, #4888) dropped
+    into the decisions directory must fail on `kind` — the actionable error
+    pointing at the directory contract — not on a wall of unknown-field
+    noise. Regression pin for the 2026-07-10 red-main incident."""
+    payload = {
+        "version": 1,
+        "kind": "atlas_grow_automerge_triage_ledger",
+        "batch_id": "grow-ledger-fixture",
+        "provenance": {"input_file": "/tmp/fixture.json"},
+        "decision_counts": {"approve": 1},
+    }
+    path = tmp_path / "2026-07-10-fixture-ledger.yaml"
+    _write_decision_file(path, payload)
+    with pytest.raises(SourceInventoryError, match=r"kind"):
+        decisions.validate_decision_file(path)
