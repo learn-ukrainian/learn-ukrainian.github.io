@@ -22,6 +22,7 @@ from __future__ import annotations
 import contextlib
 import json
 import logging
+import os
 import re
 import subprocess
 import tomllib
@@ -36,6 +37,7 @@ from .registry import AGENTS
 _logger = logging.getLogger(__name__)
 _SEMVER_RE = re.compile(r"(?<![\d.])v?(\d+(?:\.\d+){1,3})(?![\d.])")
 _UNKNOWN = "unknown"
+_NOT_EXPOSED = "not-exposed"
 _ORIGINAL_SUBPROCESS_POPEN = subprocess.Popen
 
 
@@ -155,6 +157,19 @@ def _default_effort_for(agent_name: str) -> str | None:
     return str(raw).strip() if isinstance(raw, str) and str(raw).strip() else None
 
 
+def _hermes_configured_effort() -> str | None:
+    """Return Hermes's configured reasoning effort without reading secrets.
+
+    Hermes-routed adapters deliberately use the shared configuration rather
+    than a per-invocation effort flag.  Keep dispatch telemetry aligned with
+    that actual runtime behavior.
+    """
+    from .adapters.hermes_common import read_hermes_config, top_level_agent_effort
+
+    home = Path(os.environ.get("HERMES_HOME", Path.home() / ".hermes"))
+    return top_level_agent_effort(read_hermes_config(home / "config.yaml"))
+
+
 def _resolve_model_from_plan(agent_name: str, plan: InvocationPlan) -> str | None:
     del agent_name
     return _arg_after(plan.cmd, "-m", "--model")
@@ -205,6 +220,13 @@ def _resolve_model_from_defaults(agent_name: str, requested_model: str | None) -
 
 
 def _resolve_effort_from_defaults(agent_name: str, requested_effort: str | None) -> str | None:
+    # These CLIs do not expose a per-invocation effort value.  A deliberate
+    # marker is observability, not an error: warning on every dispatch made
+    # routine task state look broken (#4837).
+    if agent_name in {"agy", "cursor", "gemini"}:
+        return _NOT_EXPOSED
+    if agent_name in {"grok", "deepseek", "qwen"}:
+        return _hermes_configured_effort() or _NOT_EXPOSED
     if requested_effort:
         return requested_effort
     if agent_name == "codex":
@@ -242,6 +264,18 @@ def _gemini_version_prefix(cmd: list[str]) -> tuple[str, ...]:
     if cmd:
         return (cmd[0],)
     return ("gemini",)
+
+
+def _agy_version_prefix(cmd: list[str]) -> tuple[str, ...]:
+    if cmd:
+        return (cmd[0],)
+    return ("agy",)
+
+
+def _cursor_version_prefix(cmd: list[str]) -> tuple[str, ...]:
+    if cmd:
+        return (cmd[0],)
+    return ("cursor-agent",)
 
 
 def _hermes_version_prefix(cmd: list[str]) -> tuple[str, ...]:
@@ -288,6 +322,16 @@ def claude_cli_version(prefix: tuple[str, ...] = ("claude",)) -> str | None:
     return _probe_version(prefix)
 
 
+@lru_cache(maxsize=1)
+def agy_cli_version(prefix: tuple[str, ...] = ("agy",)) -> str | None:
+    return _probe_version(prefix)
+
+
+@lru_cache(maxsize=1)
+def cursor_cli_version(prefix: tuple[str, ...] = ("cursor-agent",)) -> str | None:
+    return _probe_version(prefix)
+
+
 def _resolve_cli_version(agent_name: str, plan: InvocationPlan | None = None) -> str | None:
     if agent_name == "codex":
         prefix = _codex_version_prefix(plan.cmd) if plan is not None else ("codex",)
@@ -298,6 +342,12 @@ def _resolve_cli_version(agent_name: str, plan: InvocationPlan | None = None) ->
     if agent_name == "claude":
         prefix = _claude_version_prefix(plan.cmd) if plan is not None else ("claude",)
         return claude_cli_version(prefix)
+    if agent_name == "agy":
+        prefix = _agy_version_prefix(plan.cmd) if plan is not None else ("agy",)
+        return agy_cli_version(prefix)
+    if agent_name == "cursor":
+        prefix = _cursor_version_prefix(plan.cmd) if plan is not None else ("cursor-agent",)
+        return cursor_cli_version(prefix)
     if agent_name == "grok-build":
         # Native `grok` CLI (Grok Build) — NOT hermes-backed; probe it directly.
         return _probe_version(("grok",))
@@ -370,3 +420,5 @@ def _reset_version_cache_for_tests() -> None:
     codex_cli_version.cache_clear()
     gemini_cli_version.cache_clear()
     claude_cli_version.cache_clear()
+    agy_cli_version.cache_clear()
+    cursor_cli_version.cache_clear()
