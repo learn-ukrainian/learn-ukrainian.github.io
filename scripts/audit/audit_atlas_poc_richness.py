@@ -52,6 +52,20 @@ RICH_SECTION_ORDER = (
     "course_usage",
 )
 
+MULTIWORD_EXTRA_SECTIONS = frozenset(
+    {
+        "translation",
+        "idioms",
+        "literary_attestation",
+        "wikipedia",
+        "course_usage",
+    }
+)
+
+ENTRY_CLASS_FORM_STUB = "form_stub"
+ENTRY_CLASS_MULTIWORD = "multiword"
+ENTRY_CLASS_LEMMA_ARTICLE = "lemma_article"
+
 
 def _read_local_manifest(path: Path) -> dict[str, Any]:
     payload = json.loads(path.read_text(encoding="utf-8"))
@@ -176,11 +190,89 @@ def _entry_cefr(entry: dict[str, Any]) -> str | None:
     return None
 
 
-def _row(entry: dict[str, Any], sections: set[str]) -> dict[str, Any]:
+def _valid_form_of(value: object) -> dict[str, Any] | None:
+    if not isinstance(value, dict) or not value:
+        return None
+    return value
+
+
+def classify_entry(entry: dict[str, Any]) -> str:
+    """Classify a manifest entry by its Atlas page template."""
+    if _valid_form_of(entry.get("form_of")) is not None:
+        return ENTRY_CLASS_FORM_STUB
+    lemma = str(entry.get("lemma") or "").strip()
+    if " " in lemma:
+        return ENTRY_CLASS_MULTIWORD
+    return ENTRY_CLASS_LEMMA_ARTICLE
+
+
+def _manifest_lookup_sets(entries: list[dict[str, Any]]) -> tuple[set[str], set[str]]:
+    slugs: set[str] = set()
+    lemmas: set[str] = set()
+    for entry in entries:
+        if not isinstance(entry, dict):
+            continue
+        slug = entry.get("url_slug")
+        if _nonempty_string(slug):
+            slugs.add(str(slug))
+        lemma = entry.get("lemma")
+        if _nonempty_string(lemma):
+            lemmas.add(str(lemma).strip())
+    return slugs, lemmas
+
+
+def _form_stub_broken(
+    entry: dict[str, Any],
+    *,
+    manifest_slugs: set[str],
+    manifest_lemmas: set[str],
+) -> bool:
+    """Return True when a form_of stub fails its independent integrity gate."""
+    if "form_of" not in entry:
+        return False
+    form_of = _valid_form_of(entry.get("form_of"))
+    if form_of is None:
+        return True
+    target_slug = form_of.get("url_slug")
+    target_lemma = form_of.get("lemma")
+    target_exists = (
+        (_nonempty_string(target_slug) and str(target_slug) in manifest_slugs)
+        or (_nonempty_string(target_lemma) and str(target_lemma).strip() in manifest_lemmas)
+    )
+    if not target_exists:
+        return True
+    has_label = _nonempty_string(target_lemma)
+    return not _nonempty_string(entry.get("gloss")) and not has_label
+
+
+def _multiword_is_rich(entry: dict[str, Any], sections: set[str]) -> bool:
+    if "meaning" not in sections:
+        return False
+    if not has_learner_english_anchor(entry):
+        return False
+    return bool(sections & MULTIWORD_EXTRA_SECTIONS)
+
+
+def _entry_is_poc_thin(
+    entry: dict[str, Any],
+    sections: set[str],
+    *,
+    entry_class: str,
+    min_rich_sections: int,
+) -> bool:
+    if entry_class == ENTRY_CLASS_FORM_STUB:
+        return False
+    if entry_class == ENTRY_CLASS_MULTIWORD:
+        return not _multiword_is_rich(entry, sections)
+    return len(sections) < min_rich_sections
+
+
+def _row(entry: dict[str, Any], sections: set[str], *, entry_class: str) -> dict[str, Any]:
     return {
         "lemma": entry.get("lemma"),
         "url_slug": entry.get("url_slug"),
         "pos": entry.get("pos"),
+        "entry_class": entry_class,
         "cefr": _entry_cefr(entry) or "unknown",
         "primary_source": entry.get("primary_source"),
         "course_used": bool(entry.get("course_usage")),
@@ -198,26 +290,72 @@ def audit_manifest(
     sample_limit: int = 25,
 ) -> dict[str, Any]:
     entries = [entry for entry in manifest.get("entries", []) if isinstance(entry, dict)]
+    manifest_slugs, manifest_lemmas = _manifest_lookup_sets(entries)
     search_entries = [entry for entry in entries if _is_static_search_entry(entry)]
     old_enriched = [entry for entry in search_entries if old_gate_enriched(entry)]
 
     search_no_gloss: list[dict[str, Any]] = []
     old_gate_no_english: list[dict[str, Any]] = []
     poc_thin: list[dict[str, Any]] = []
+    poc_thin_lemma_article: list[dict[str, Any]] = []
+    poc_thin_multiword: list[dict[str, Any]] = []
+    form_stub_broken_rows: list[dict[str, Any]] = []
+    form_stub_broken_slugs: set[str] = set()
     rows_by_slug: dict[str, dict[str, Any]] = {}
     section_counts: Counter[int] = Counter()
+    form_stub_pages = 0
 
     for entry in old_enriched:
+        entry_class = classify_entry(entry)
         sections = rendered_sections(entry)
         section_counts[len(sections)] += 1
-        row = _row(entry, sections)
+        row = _row(entry, sections, entry_class=entry_class)
         rows_by_slug[str(entry.get("url_slug"))] = row
+        if entry_class == ENTRY_CLASS_FORM_STUB:
+            form_stub_pages += 1
+            if _form_stub_broken(
+                entry,
+                manifest_slugs=manifest_slugs,
+                manifest_lemmas=manifest_lemmas,
+            ):
+                slug = str(entry.get("url_slug"))
+                if slug not in form_stub_broken_slugs:
+                    form_stub_broken_slugs.add(slug)
+                    form_stub_broken_rows.append(row)
         if not row["search_has_gloss"]:
             search_no_gloss.append(row)
         if not row["has_english_anchor"]:
             old_gate_no_english.append(row)
-        if len(sections) < min_rich_sections:
+        if _entry_is_poc_thin(
+            entry,
+            sections,
+            entry_class=entry_class,
+            min_rich_sections=min_rich_sections,
+        ):
             poc_thin.append(row)
+            if entry_class == ENTRY_CLASS_LEMMA_ARTICLE:
+                poc_thin_lemma_article.append(row)
+            elif entry_class == ENTRY_CLASS_MULTIWORD:
+                poc_thin_multiword.append(row)
+
+    for entry in search_entries:
+        if "form_of" not in entry:
+            continue
+        if classify_entry(entry) == ENTRY_CLASS_FORM_STUB:
+            continue
+        if _form_stub_broken(
+            entry,
+            manifest_slugs=manifest_slugs,
+            manifest_lemmas=manifest_lemmas,
+        ):
+            slug = str(entry.get("url_slug"))
+            if slug in form_stub_broken_slugs:
+                continue
+            form_stub_broken_slugs.add(slug)
+            sections = rendered_sections(entry)
+            form_stub_broken_rows.append(
+                _row(entry, sections, entry_class=classify_entry(entry))
+            )
 
     priority = [
         row
@@ -233,6 +371,12 @@ def audit_manifest(
         "search_no_visible_gloss": len(search_no_gloss),
         "old_gate_no_english_anchor": len(old_gate_no_english),
         "poc_thin_pages": len(poc_thin),
+        "thin_by_class": {
+            ENTRY_CLASS_LEMMA_ARTICLE: len(poc_thin_lemma_article),
+            ENTRY_CLASS_MULTIWORD: len(poc_thin_multiword),
+        },
+        "form_stub_pages": form_stub_pages,
+        "form_stub_broken": len(form_stub_broken_rows),
         "priority_poc_thin_pages": len(priority),
         "section_count_histogram": {str(k): v for k, v in sorted(section_counts.items())},
         "poc_thin_by_source": dict(Counter(str(row["primary_source"]) for row in poc_thin).most_common()),
@@ -241,6 +385,9 @@ def audit_manifest(
             "search_no_visible_gloss": search_no_gloss[:sample_limit],
             "old_gate_no_english_anchor": old_gate_no_english[:sample_limit],
             "poc_thin_pages": poc_thin[:sample_limit],
+            f"poc_thin_{ENTRY_CLASS_LEMMA_ARTICLE}": poc_thin_lemma_article[:sample_limit],
+            f"poc_thin_{ENTRY_CLASS_MULTIWORD}": poc_thin_multiword[:sample_limit],
+            "form_stub_broken": form_stub_broken_rows[:sample_limit],
             "priority_poc_thin_pages": priority[:sample_limit],
         },
     }
@@ -250,8 +397,16 @@ def _print_summary(summary: dict[str, Any]) -> None:
     print(
         "Atlas POC richness audit: "
         f"{summary['poc_thin_pages']}/{summary['old_gate_enriched_search_entries']} "
-        f"old-gate search entries have fewer than {summary['min_rich_sections']} rich sections."
+        f"old-gate search entries are thin under their entry-class bar."
     )
+    thin_by_class = summary.get("thin_by_class", {})
+    print(
+        "Thin by class: "
+        f"lemma_article={thin_by_class.get('lemma_article', 0)}, "
+        f"multiword={thin_by_class.get('multiword', 0)}"
+    )
+    print(f"Form stubs (excluded from thin count): {summary.get('form_stub_pages', 0)}")
+    print(f"Broken form stubs: {summary.get('form_stub_broken', 0)}")
     print(f"Search suggestions without visible English gloss: {summary['search_no_visible_gloss']}")
     print(f"Old-gate entries without any English anchor: {summary['old_gate_no_english_anchor']}")
     print(f"Priority thin pages (course-used or A1/A2): {summary['priority_poc_thin_pages']}")
@@ -267,14 +422,18 @@ def _print_summary(summary: dict[str, Any]) -> None:
         for row in rows[:5]:
             print(
                 "    "
-                f"{row['lemma']} slug={row['url_slug']} sections={row['rich_section_count']} "
+                f"{row['lemma']} slug={row['url_slug']} class={row.get('entry_class')} "
+                f"sections={row['rich_section_count']} "
                 f"gloss={row['search_has_gloss']} english={row['has_english_anchor']} "
                 f"cefr={row['cefr']} source={row['primary_source']}"
             )
 
 
 def _print_tsv(summary: dict[str, Any]) -> None:
-    print("bucket\tlemma\turl_slug\tpos\tcefr\tsections\tsearch_gloss\tenglish_anchor\tprimary_source")
+    print(
+        "bucket\tlemma\turl_slug\tpos\tentry_class\tcefr\tsections\t"
+        "search_gloss\tenglish_anchor\tprimary_source"
+    )
     for bucket, rows in summary["samples"].items():
         for row in rows:
             print(
@@ -284,6 +443,7 @@ def _print_tsv(summary: dict[str, Any]) -> None:
                         str(row["lemma"]),
                         str(row["url_slug"]),
                         str(row["pos"] or ""),
+                        str(row.get("entry_class") or ""),
                         str(row["cefr"]),
                         str(row["rich_section_count"]),
                         str(row["search_has_gloss"]).lower(),

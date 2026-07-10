@@ -3,7 +3,11 @@ from __future__ import annotations
 import json
 import subprocess
 
-from scripts.audit.audit_atlas_poc_richness import audit_manifest, rendered_sections
+from scripts.audit.audit_atlas_poc_richness import (
+    audit_manifest,
+    classify_entry,
+    rendered_sections,
+)
 
 
 def _entry(**overrides: object) -> dict:
@@ -302,3 +306,178 @@ def test_audit_separates_search_gloss_and_poc_thin_failures() -> None:
     assert [row["lemma"] for row in summary["samples"]["search_no_visible_gloss"]] == [
         "тонкий"
     ]
+
+
+def test_classify_entry_trims_lemma_whitespace() -> None:
+    assert classify_entry(_entry(lemma="  слово  ")) == "lemma_article"
+
+
+def test_form_stub_excluded_from_poc_thin_pages() -> None:
+    target = _entry(
+        lemma="брат",
+        url_slug="брат",
+        enrichment={
+            "definition_cards": [
+                {"id": "vts-main", "source": "ВТС", "definitions": ["Родич чоловічої статі."]}
+            ],
+            "etymology": {"text": "Indo-European.", "source": "Kaikki"},
+            "morphology": {
+                "pos": "noun",
+                "form_count": 1,
+                "forms": [{"form": "брат", "label": "називний"}],
+                "source": "VESUM",
+            },
+            "literary_attestation": {"text": "Брате мій.", "source": "corpus"},
+            "translation": {"en": ["brother"], "source": "test"},
+        },
+        sections={"synonyms": {"items": ["сиб"], "source": "slovnyk"}},
+        wiki_reference={
+            "wikipedia": {
+                "title": "Брат",
+                "summary": "...",
+                "url": "https://example.test",
+            }
+        },
+    )
+    stub = _entry(
+        lemma="брата",
+        url_slug="брата",
+        gloss="brother (gen.)",
+        enrichment={"translation": {"en": ["brother"], "source": "test"}},
+        form_of={"lemma": "брат", "url_slug": "брат"},
+    )
+
+    summary = audit_manifest({"entries": [target, stub]}, min_rich_sections=5, sample_limit=10)
+
+    assert summary["form_stub_pages"] == 1
+    assert summary["form_stub_broken"] == 0
+    assert summary["poc_thin_pages"] == 0
+
+
+def test_form_stub_broken_when_target_missing() -> None:
+    stub = _entry(
+        lemma="брата",
+        url_slug="брата",
+        gloss="brother (gen.)",
+        enrichment={"translation": {"en": ["brother"], "source": "test"}},
+        form_of={"lemma": "брат", "url_slug": "брат"},
+    )
+
+    summary = audit_manifest({"entries": [stub]}, min_rich_sections=5, sample_limit=10)
+
+    assert summary["form_stub_pages"] == 1
+    assert summary["form_stub_broken"] == 1
+    assert summary["samples"]["form_stub_broken"][0]["lemma"] == "брата"
+
+
+def test_malformed_form_of_counts_as_broken_not_excluded_stub() -> None:
+    entry = _entry(
+        lemma="брата",
+        url_slug="брата",
+        gloss="brother (gen.)",
+        form_of="брат",
+    )
+
+    summary = audit_manifest({"entries": [entry]}, min_rich_sections=5, sample_limit=10)
+
+    assert summary["form_stub_pages"] == 0
+    assert summary["form_stub_broken"] == 1
+    assert summary["poc_thin_pages"] == 1
+
+
+def test_multiword_weak_page_stays_thin_without_meaning_bucket() -> None:
+    entry = _entry(
+        lemma="на вулиці",
+        url_slug="на-вулиці",
+        gloss="on the street",
+        enrichment={
+            "meaning": {"definitions": [], "source": "test"},
+        },
+        wiki_reference={
+            "wikipedia": {
+                "title": "Вулиця",
+                "summary": "...",
+                "url": "https://example.test",
+            }
+        },
+    )
+
+    summary = audit_manifest({"entries": [entry]}, min_rich_sections=5, sample_limit=10)
+
+    assert summary["thin_by_class"]["multiword"] == 1
+    assert summary["poc_thin_pages"] == 1
+
+
+def test_multiword_passes_with_meaning_anchor_and_extra_bucket() -> None:
+    entry = _entry(
+        lemma="на вулиці",
+        url_slug="на-вулиці",
+        gloss="on the street",
+        enrichment={
+            "definition_cards": [
+                {"id": "vts-main", "source": "ВТС", "definitions": ["На дорозі."]}
+            ],
+            "translation": {"en": ["on the street"], "source": "test"},
+        },
+        wiki_reference={
+            "wikipedia": {
+                "title": "Вулиця",
+                "summary": "...",
+                "url": "https://example.test",
+            }
+        },
+    )
+
+    summary = audit_manifest({"entries": [entry]}, min_rich_sections=5, sample_limit=10)
+
+    assert summary["thin_by_class"]["multiword"] == 0
+    assert summary["poc_thin_pages"] == 0
+
+
+def test_lemma_article_keeps_five_of_nine_bar() -> None:
+    rich = _entry(
+        enrichment={
+            "definition_cards": [
+                {"id": "vts-main", "source": "ВТС", "definitions": ["Абзац."]}
+            ],
+            "etymology": {"text": "Borrowed.", "source": "Kaikki"},
+            "morphology": {
+                "pos": "noun",
+                "form_count": 1,
+                "forms": [{"form": "слово", "label": "називний"}],
+                "source": "VESUM",
+            },
+            "literary_attestation": {"text": "Приклад.", "source": "corpus"},
+            "translation": {"en": ["word"], "source": "test"},
+        },
+        sections={"synonyms": {"items": ["вираз"], "source": "slovnyk"}},
+        wiki_reference={
+            "wikipedia": {
+                "title": "Слово",
+                "summary": "...",
+                "url": "https://example.test",
+            }
+        },
+    )
+    thin = _entry(
+        lemma="тонкий",
+        url_slug="тонкий",
+        gloss="thin",
+        enrichment={
+            "definition_cards": [
+                {"id": "vts-main", "source": "ВТС", "definitions": ["Без товщини."]}
+            ],
+            "morphology": {
+                "pos": "adjective",
+                "form_count": 1,
+                "forms": [{"form": "тонкий", "label": "прикметник"}],
+                "source": "VESUM",
+            },
+            "translation": {"en": ["thin"], "source": "test"},
+        },
+    )
+
+    summary = audit_manifest({"entries": [rich, thin]}, min_rich_sections=5, sample_limit=10)
+
+    assert summary["thin_by_class"]["lemma_article"] == 1
+    assert summary["poc_thin_pages"] == 1

@@ -300,6 +300,16 @@ def assert_manifest_richness_publishable(
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     summary = audit_manifest(manifest)
     thin = int(summary["poc_thin_pages"])
+    broken_stubs = int(summary.get("form_stub_broken", 0))
+    if broken_stubs > 0:
+        raise ManifestPublishError(
+            f"publish blocked (#4220): manifest at {manifest_path} has {broken_stubs} "
+            f"broken form_of stub page(s). Each stub must point at an existing manifest "
+            f"entry and expose a gloss or form_of lemma label. Repair the broken stubs "
+            f"(samples: scripts/audit/audit_atlas_poc_richness.py --format json "
+            f"--limit 2000, bucket form_stub_broken) before publishing. There is no "
+            f"publish-time override by design."
+        )
     if thin > cap:
         raise ManifestPublishError(
             f"publish blocked (#4515): manifest at {manifest_path} has {thin} thin "
