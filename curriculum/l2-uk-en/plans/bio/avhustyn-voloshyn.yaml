@@ -154,7 +154,7 @@ readings:
   license: unknown
   rights_note: >-
     reading-needed: перевірити друковане або цифрове видання "Вибраних творів"
-    Волошина перед learner-facing цитуванням; локальні RAG-цитати не дають
+    Волошина перед learner-facing цитуванням; локальні RAG цитати не дають
     достатнього page-control для хостингу.
   hosting: reading-needed
   cefr_min: C1
