@@ -152,32 +152,39 @@ references:
   title: Арії трьох П'єро
   type: primary
   work: Арії трьох П'єро
+readings_contract_version: 2
 readings:
-- language: uk
+- title: '1892 - народився поет Михайль Семенко'
+  language: uk
   source_type: reference
   role: orientation
   source_name: Український інститут національної пам'яті
   source_url: https://uinp.gov.ua/istorychnyy-kalendar/gruden/31/1892-narodyvsya-poet-myhayl-semenko
-  license: copyrighted
-  rights_note: Матеріал УІНП захищений авторським правом; використовувати як link-only джерело.
   hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://uinp.gov.ua/istorychnyy-kalendar/gruden/31/1892-narodyvsya-poet-myhayl-semenko
+    note: "Зовнішнє посилання; текст не відтворюється в курсі."
   learner_task: Зібрати біографічні факти про Семенка і визначити, як УІНП пов'язує його з Розстріляним відродженням.
   notes: Українська довідка УІНП про народження, футуризм і репресовану біографію Михайля Семенка.
-- language: uk
+- title: 'Чому Семенко палив Шевченків "Кобзар"?'
+  language: uk
   source_name: Локальна історія
   source_type: article
   role: reading
   source_url: https://localhistory.org.ua/texts/statti/chomu-semenko-paliv-shevchenkiv-kobzar/
-  license: copyrighted
-  rights_note: Матеріал "Локальної історії" захищений авторським правом; використовувати як link-only джерело.
   hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://localhistory.org.ua/texts/statti/chomu-semenko-paliv-shevchenkiv-kobzar/
+    note: "Зовнішнє посилання; текст не відтворюється в курсі."
   learner_task: Проаналізувати "спалення Кобзаря" як провокацію футуризму і порівняти її з деколоніальним читанням канону.
   notes: Українська стаття Ярини Цимбал про Семенка, футуризм, епатаж і повернення авангарду до літературної пам'яті.
 sequence: 203
 slug: mykhail-semenko
 subtitle: The Futurist Visionary Who Reimagined Ukrainian Poetry
 title: 'Михайль Семенко: Засновник українського авангарду'
-version: '4.2'
+version: '4.3'
 vocabulary_hints:
 - definition: >-
     авангардний напрям у мистецтві початку XX століття, що проголошував культ

@@ -96,32 +96,39 @@ references:
   note: Біографічне дослідження, що аналізує складні життєві вибори письменниці.
   type: primary
   work: Ірина Вільде. Штрихи до портрета
+readings_contract_version: 2
 readings:
-- language: uk
+- title: 'Вільде Ірина'
+  language: uk
   source_type: reference
   role: orientation
   source_name: Енциклопедія Сучасної України
   source_url: https://esu.com.ua/article-34550
-  license: copyrighted
-  rights_note: ЕСУ захищена авторським правом; використовувати як link-only джерело.
   hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://esu.com.ua/article-34550
+    note: "Зовнішнє посилання; текст не відтворюється в курсі."
   learner_task: Зібрати базову хронологію життя Ірини Вільде та позначити, які факти потрібні для розмови про виживання під різними режимами.
   notes: Академічна українська довідка про біографію, освіту, творчість і громадську діяльність письменниці.
-- language: uk
+- title: '«Сестри Річинські» як «Гра Престолів»: що спільного у Вільде і Мартіна'
+  language: uk
   source_type: article
   role: reading
   source_name: Читомо
   source_url: https://chytomo.com/sestry-richynski-iak-hra-prestoliv-shcho-spilnoho-u-vilde-i-martina/
-  license: copyrighted
-  rights_note: Матеріал Читомо захищений авторським правом; не копіювати повний текст.
   hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://chytomo.com/sestry-richynski-iak-hra-prestoliv-shcho-spilnoho-u-vilde-i-martina/
+    note: "Зовнішнє посилання; текст не відтворюється в курсі."
   learner_task: Прочитати як літературну рамку до "Сестер Річинських" і виписати, як авторка пояснює масштаб роману та родинної саги.
   notes: Українська стаття про роман "Сестри Річинські" як великий галицький родинний наратив.
 sequence: 199
 slug: iryna-vilde
 subtitle: 'Iryna Vilde: A Butterfly on Pins'
 title: 'Ірина Вільде: Метелик на шпильках'
-version: '4.2'
+version: '4.3'
 vocabulary_hints:
 - definition: жінка, яка професійно займається літературною творчістю
   pos: ж.

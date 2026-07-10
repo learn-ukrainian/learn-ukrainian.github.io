@@ -95,27 +95,34 @@ persona:
     Модератор семінару, який досліджує складну біографію письменника-комуніста без санітизації та без демонізації.
   voice: Intellectual Historian
 phase: BIO
+readings_contract_version: 2
 readings:
-- hosting: link-only
+- title: 'Епік Григорій Данилович'
+  hosting: link-only
   language: uk
   learner_task: >-
     Ознайомтеся зі статтею про Григорія Епіка. Простежте, як його письменницький шлях перетнувся зі сфабрикованою справою.
-  license: copyrighted
   notes: >-
     Енциклопедична стаття про життя та творчість прозаїка і сатирика з покоління Розстріляного відродження.
-  rights_note: Текст захищено авторським правом. Надається лише посилання на зовнішній ресурс.
+  rights:
+    basis: external-link
+    evidence_url: https://esu.com.ua/article-17936
+    note: "Зовнішнє посилання; текст не відтворюється в курсі."
   role: primary
   source_name: Енциклопедія сучасної України (ЕСУ)
   source_type: article
   source_url: https://esu.com.ua/article-17936
-- hosting: link-only
+- title: 'Григорій Епік. В снігах. оповідання'
+  hosting: link-only
   language: uk
   learner_task: >-
     Відкрийте запис електронної бібліотеки НЛУ про Григорія Епіка. Зіставте бібліографічний корпус із плановим питанням про сатиру й радянський регістр.
-  license: copyrighted
   notes: >-
     Бібліотечний запис дає учням україномовну точку входу до корпусу творів, а не лише до мартирологічного сюжету.
-  rights_note: Текст захищено авторським правом. Надається лише посилання на зовнішній ресурс.
+  rights:
+    basis: external-link
+    evidence_url: https://elib.nlu.org.ua/view.html?id=7931
+    note: "Зовнішнє посилання; текст не відтворюється в курсі."
   role: evidence
   source_name: Національна бібліотека України імені Ярослава Мудрого
   source_type: digital_library
@@ -151,7 +158,7 @@ sequence: 208
 slug: hryhorii-epik
 subtitle: The Communist Novelist Destroyed by the Same System
 title: 'Григорій Епік: сатира, боротьбист і Сандармох'
-version: '4.3'
+version: '4.4'
 vocabulary_hints:
 - definition: партія, до якої вступив Епік у 1919 році
   pos: ж.

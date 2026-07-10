@@ -97,32 +97,39 @@ references:
   note: Контекст премії, що підкреслює інтелектуальну мужність Фішбейна
   type: reference
   work: Премія імені Василя Стуса
+readings_contract_version: 2
 readings:
-- language: uk
+- title: 'Мойсей Фішбейн: "Чути в Мові Господню симфонію й нести цю симфонію іншим"'
+  language: uk
   source_type: interview
   role: reading
   source_name: Український ПЕН
   source_url: https://pen.org.ua/mojsej-fishbejn-chuty-v-movi-gospodnyu-symfoniyu-j-nesty-tsyu-symfoniyu-inshym
-  license: copyrighted
-  rights_note: Матеріал Українського ПЕН захищений авторським правом; використовувати як link-only джерело.
   hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://pen.org.ua/mojsej-fishbejn-chuty-v-movi-gospodnyu-symfoniyu-j-nesty-tsyu-symfoniyu-inshym
+    note: "Зовнішнє посилання; текст не відтворюється в курсі."
   learner_task: Прочитати розмову про українську мову Фішбейна і сформулювати, як він пов'язує переклад, віру та громадянську позицію.
   notes: Українська ПЕН-розмова з біографічним блоком про еміграцію, повернення і перекладацьку працю Фішбейна.
-- language: uk
+- title: '75-літній ювілей: Мойсей Фішбейн, УПА та українська мова'
+  language: uk
   source_type: article
   role: context
   source_name: Радіо Свобода
   source_url: https://www.radiosvoboda.org/a/moysey-fishbeyn-upa/31587500.html
-  license: copyrighted
-  rights_note: Матеріал Радіо Свобода захищений авторським правом; не хостити повний текст.
   hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://www.radiosvoboda.org/a/moysey-fishbeyn-upa/31587500.html
+    note: "Зовнішнє посилання; текст не відтворюється в курсі."
   learner_task: Виписати аргументи про поєднання єврейської ідентичності, української мови та політичної солідарності.
   notes: Українська стаття до 75-річчя поета про його український вибір, єврейське походження та ставлення до УПА.
 sequence: 200
 slug: moisei-fishbein
 subtitle: The Jewish Intellectual Who Chose the Ukrainian Language
 title: 'Мойсей Фішбейн: Пророк українською'
-version: '4.2'
+version: '4.3'
 vocabulary_hints:
 - definition: свідоме рішення особистості використовувати певну мову в житті та творчості, часто як політичний акт
   pos: ч.

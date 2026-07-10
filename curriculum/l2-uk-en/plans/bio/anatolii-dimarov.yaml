@@ -98,32 +98,39 @@ references:
   note: Контекстуалізація постаті Дімарова як одного з символів української стійкості.
   type: primary
   work: Проєкт «Незламні»
+readings_contract_version: 2
 readings:
-- language: uk
+- title: 'Дімаров Анатолій'
+  language: uk
   source_type: reference
   role: orientation
   source_name: Енциклопедія Сучасної України
   source_url: https://esu.com.ua/article-26462
-  license: copyrighted
-  rights_note: ЕСУ захищена авторським правом; використовувати як link-only джерело.
   hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://esu.com.ua/article-26462
+    note: "Зовнішнє посилання; текст не відтворюється в курсі."
   learner_task: Виписати основні факти біографії, творчі етапи й ознаки офіційного визнання Дімарова.
   notes: Академічна українська довідка про Анатолія Дімарова як письменника і громадського діяча.
-- language: uk
+- title: '“Нам дорікають, що герої ходять у чистенькому одязі”, – режисер серіалу “І будуть люди”'
+  language: uk
   source_type: interview
   role: context
   source_name: Локальна історія
   source_url: https://localhistory.org.ua/texts/interviu/nam-dorikaiut-shcho-geroyi-khodiat-u-chistenkomu-odiazi-rezhiser-serialu-i-budut-liudi/
-  license: copyrighted
-  rights_note: Матеріал "Локальної історії" захищений авторським правом; не копіювати повний текст.
   hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://localhistory.org.ua/texts/interviu/nam-dorikaiut-shcho-geroyi-khodiat-u-chistenkomu-odiazi-rezhiser-serialu-i-budut-liudi/
+    note: "Зовнішнє посилання; текст не відтворюється в курсі."
   learner_task: Прочитати про екранізацію "І будуть люди" і визначити, як адаптація повертає цензуровану історію родинної пам'яті.
   notes: Українське інтерв'ю про нове прочитання роману Дімарова та відновлення частин, вирізаних радянською цензурою.
 sequence: 202
 slug: anatolii-dimarov
 subtitle: A Chronicle of a Man Who Outlived Three Regimes
 title: 'Анатолій Дімаров: Прожити й розповісти'
-version: '4.2'
+version: '4.3'
 vocabulary_hints:
 - definition: насильницьке позбавлення селян власності та їх виселення радянською владою
   pos: с.
