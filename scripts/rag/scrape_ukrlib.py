@@ -34,12 +34,15 @@ Usage:
 """
 
 import argparse
+import contextlib
 import hashlib
 import html
 import json
+import os
 import re
 import subprocess
 import sys
+import tempfile
 import time
 from html.parser import HTMLParser
 from pathlib import Path
@@ -55,6 +58,99 @@ else:
 BASE_URL = "https://www.ukrlib.com.ua"
 DELAY_BETWEEN_PAGES = 0.3  # seconds
 DELAY_BETWEEN_WORKS = 0.5
+
+JSONL_REQUIRED_FIELDS = frozenset({
+    "chunk_id",
+    "text",
+    "source_url",
+    "work",
+    "author",
+    "year",
+    "genre",
+    "language_period",
+})
+
+
+class JsonlValidationError(RuntimeError):
+    """Raised when a staged JSONL artifact is unsafe to publish."""
+
+
+def _validate_staged_jsonl(path: Path) -> int:
+    """Validate a complete staged JSONL artifact before its atomic swap.
+
+    A scraper result is publishable only when it has at least one row, every
+    line is valid JSON, and every chunk has the fields consumed by downstream
+    literary ingestion. This deliberately validates the staged file rather
+    than the live artifact, which is not touched until validation succeeds.
+    """
+    row_count = 0
+    with path.open(encoding="utf-8") as f:
+        for line_no, line in enumerate(f, 1):
+            try:
+                chunk = json.loads(line)
+            except json.JSONDecodeError as exc:
+                raise JsonlValidationError(
+                    f"{path.name}: line {line_no} is not valid JSON"
+                ) from exc
+
+            if not isinstance(chunk, dict):
+                raise JsonlValidationError(
+                    f"{path.name}: line {line_no} is not a JSON object"
+                )
+
+            missing = JSONL_REQUIRED_FIELDS - set(chunk)
+            if missing:
+                raise JsonlValidationError(
+                    f"{path.name}: line {line_no} is missing required fields: "
+                    f"{', '.join(sorted(missing))}"
+                )
+            row_count += 1
+
+    if row_count == 0:
+        raise JsonlValidationError(f"{path.name}: staged JSONL has no rows")
+    return row_count
+
+
+@contextlib.contextmanager
+def staged_jsonl(output_path: Path):
+    """Yield a sibling staging path and atomically publish it after validation.
+
+    The sibling temp file guarantees that ``Path.replace()`` is a same-filesystem
+    atomic rename. Any failure, including ``KeyboardInterrupt``, removes only
+    the temp file and leaves the previous live artifact intact.
+    """
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    temp_fd, temp_name = tempfile.mkstemp(
+        dir=output_path.parent,
+        prefix=f".{output_path.name}.",
+        suffix=".building",
+    )
+    temp_path = Path(temp_name)
+
+    try:
+        os.close(temp_fd)
+        yield temp_path
+        _validate_staged_jsonl(temp_path)
+        temp_path.replace(output_path)
+    except BaseException:
+        temp_path.unlink(missing_ok=True)
+        raise
+
+
+def _copy_existing_jsonl(source: Path, destination: Path) -> None:
+    """Copy an existing resume artifact into the staged replacement file."""
+    if not source.exists():
+        return
+
+    with source.open(encoding="utf-8") as src, destination.open(
+        "a", encoding="utf-8"
+    ) as dst:
+        last_line = ""
+        for line in src:
+            dst.write(line)
+            last_line = line
+        if last_line and not last_line.endswith("\n"):
+            dst.write("\n")
 
 # ── Author/Work Definitions ─────────────────────────────────────────
 # All IDs verified against live ukrlib author.php pages (2026-03-08)
@@ -931,7 +1027,6 @@ def audit_jsonl(path: Path, author_info: dict | None = None) -> tuple[bool, list
     Returns (passed, list_of_errors).
     """
     errors = []
-    required_fields = {"chunk_id", "text", "source_url", "work", "author", "year", "genre", "language_period"}
     chunk_ids = set()
     total_chars = 0
     works = set()
@@ -950,7 +1045,7 @@ def audit_jsonl(path: Path, author_info: dict | None = None) -> tuple[bool, list
             chunk_id = chunk.get("chunk_id", f"line_{line_no}")
 
             # Check required fields
-            missing = required_fields - set(chunk.keys())
+            missing = JSONL_REQUIRED_FIELDS - set(chunk.keys())
             if missing:
                 errors.append(f"Chunk {chunk_id}: missing fields: {missing}")
 
@@ -1116,51 +1211,53 @@ def scrape_author(slug: str, author_info: dict, dry_run: bool = False,
         return existing
 
     new_chunks = 0
-    output_path.parent.mkdir(parents=True, exist_ok=True)
 
-    # Append mode for resume
-    with open(output_path, "a", encoding="utf-8") as f:
-        for i, work_info in enumerate(total_items, 1):
-            tid = work_info["tid"]
-            title = work_info["title"]
-            is_bio = work_info in pending_bios
-            genre = "biography" if is_bio else guess_genre(title, genre_default)
+    # Resume data and new chunks both go through a sibling staging file. The
+    # current output remains untouched until every newly acquired row validates.
+    with staged_jsonl(output_path) as staged_path:
+        _copy_existing_jsonl(output_path, staged_path)
+        with staged_path.open("a", encoding="utf-8") as f:
+            for i, work_info in enumerate(total_items, 1):
+                tid = work_info["tid"]
+                title = work_info["title"]
+                is_bio = work_info in pending_bios
+                genre = "biography" if is_bio else guess_genre(title, genre_default)
 
-            label = "[BIO] " if is_bio else ""
-            print(f"\n  [{i}/{len(total_items)}] {label}{title} (tid={tid}, genre={genre})")
-            try:
-                text, source_url = scrape_work_text(
-                    tid,
-                    is_bio=is_bio,
-                    expected_author=source_author,
-                    expected_title=title,
-                )
-            except Exception as e:
-                print(f"    ERROR: {e}")
-                continue
+                label = "[BIO] " if is_bio else ""
+                print(f"\n  [{i}/{len(total_items)}] {label}{title} (tid={tid}, genre={genre})")
+                try:
+                    text, source_url = scrape_work_text(
+                        tid,
+                        is_bio=is_bio,
+                        expected_author=source_author,
+                        expected_title=title,
+                    )
+                except Exception as e:
+                    print(f"    ERROR: {e}")
+                    continue
 
-            if not text or len(text) < 100:
-                print(f"    Skipped: too short ({len(text)} chars)")
-                continue
+                if not text or len(text) < 100:
+                    print(f"    Skipped: too short ({len(text)} chars)")
+                    continue
 
-            work_title = f"{author_info['full_name']}. {title}"
-            chunks = chunk_text(text, work_title, source_url)
+                work_title = f"{author_info['full_name']}. {title}"
+                chunks = chunk_text(text, work_title, source_url)
 
-            for chunk in chunks:
-                chunk.update({
-                    "work": work_title,
-                    "author": author_name,
-                    "year": int(author_info["years"].split("-")[0]),
-                    "genre": genre,
-                    "language_period": period,
-                })
-                f.write(json.dumps(chunk, ensure_ascii=False) + "\n")
+                for chunk in chunks:
+                    chunk.update({
+                        "work": work_title,
+                        "author": author_name,
+                        "year": int(author_info["years"].split("-")[0]),
+                        "genre": genre,
+                        "language_period": period,
+                    })
+                    f.write(json.dumps(chunk, ensure_ascii=False) + "\n")
 
-            print(f"    {len(text):,} chars → {len(chunks)} chunks")
-            new_chunks += len(chunks)
+                print(f"    {len(text):,} chars → {len(chunks)} chunks")
+                new_chunks += len(chunks)
 
-            if i < len(total_items):
-                time.sleep(DELAY_BETWEEN_WORKS)
+                if i < len(total_items):
+                    time.sleep(DELAY_BETWEEN_WORKS)
 
     # Count total chunks in file
     total_in_file = 0
@@ -1294,9 +1391,10 @@ def scrape_narod(dry_run: bool = False) -> int:
             print(f"    genre={w['genre_id']:>2} bookid={w['bookid']:>3}  [{w['genre']:<15}]  {w['title']}")
         return 0
 
-    output_path.parent.mkdir(parents=True, exist_ok=True)
     total_chunks = 0
-    with open(output_path, "w", encoding="utf-8") as f:
+    with staged_jsonl(output_path) as staged_path, staged_path.open(
+        "w", encoding="utf-8"
+    ) as f:
         for i, w in enumerate(worklist, 1):
             print(f"\n  [{i}/{n}] {w['title']} (genre={w['genre_id']}, bookid={w['bookid']})")
             try:
@@ -1419,8 +1517,9 @@ def main():
         slug = re.sub(r"[^\w\s-]", "", args.work.lower())
         slug = re.sub(r"[\s]+", "-", slug)[:60]
         output_path = LITERARY_DIR / f"ukrlib-single-{slug}.jsonl"
-        output_path.parent.mkdir(parents=True, exist_ok=True)
-        with open(output_path, "w", encoding="utf-8") as f:
+        with staged_jsonl(output_path) as staged_path, staged_path.open(
+            "w", encoding="utf-8"
+        ) as f:
             for chunk in chunks:
                 f.write(json.dumps(chunk, ensure_ascii=False) + "\n")
         print(f"\n{len(text):,} chars → {len(chunks)} chunks → {output_path.name}")
