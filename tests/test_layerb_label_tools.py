@@ -646,3 +646,22 @@ def test_merge_agreement_and_exact_span_disagreement(tmp_path: Path) -> None:
     assert report["cases"][0]["material_differences"][0]["field"].endswith("ordered_segment_spans")
     assert "adjudication" not in merged["cases"][0]
     assert list(VALIDATOR.iter_errors(merged))
+
+
+def test_merge_treats_object_key_order_as_non_material(tmp_path: Path) -> None:
+    """Serialization key order is not data: reordered-keys records must AGREE."""
+    keyed, shadow, corpus_dir = _keyed_inputs(tmp_path)
+    scaffold, _report = build_scaffold(keyed, shadow, corpus_dir=corpus_dir, output_dir=tmp_path / "scaffold")
+    left = {"cases": [_completed_case(scaffold["cases"][0])]}
+    # right: same data, every mapping's keys re-serialized in sorted order
+    def resort(value):
+        if isinstance(value, dict):
+            return {k: resort(value[k]) for k in sorted(value)}
+        if isinstance(value, list):
+            return [resort(v) for v in value]
+        return value
+    right = resort(copy.deepcopy(left))
+    from scripts.audit.layerb_label_merge import merge_annotator_sidecars
+    report, _merged = merge_annotator_sidecars(left, right)
+    assert report["counts"]["agreed"] == 1
+    assert report["counts"]["material_disagreements"] == 0
