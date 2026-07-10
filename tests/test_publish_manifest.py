@@ -211,6 +211,23 @@ def test_richness_gate_passes_at_cap_and_reports_summary(tmp_path: Path, monkeyp
     manifest_path = tmp_path / "lexicon-manifest.json"
     _write_json(manifest_path, {"version": "0.1", "entries": []})
 
-    monkeypatch.setattr(richness, "audit_manifest", lambda m: {"poc_thin_pages": 900})
+    monkeypatch.setattr(richness, "audit_manifest", lambda m: {"poc_thin_pages": 900, "form_stub_broken": 0})
     summary = assert_manifest_richness_publishable(manifest_path, max_poc_thin_pages=900)
     assert summary["poc_thin_pages"] == 900
+
+
+def test_richness_gate_blocks_publish_on_broken_form_stubs(tmp_path: Path, monkeypatch) -> None:
+    import scripts.audit.audit_atlas_poc_richness as richness
+    from scripts.lexicon.publish_manifest import assert_manifest_richness_publishable
+
+    manifest_path = tmp_path / "lexicon-manifest.json"
+    _write_json(manifest_path, {"version": "0.1", "entries": []})
+
+    monkeypatch.setattr(
+        richness,
+        "audit_manifest",
+        lambda m: {"poc_thin_pages": 0, "form_stub_broken": 2},
+    )
+
+    with pytest.raises(ManifestPublishError, match=r"publish blocked \(#4220\).*2"):
+        assert_manifest_richness_publishable(manifest_path, max_poc_thin_pages=900)
