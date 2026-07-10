@@ -79,9 +79,10 @@ persona:
   role: 'Прокурор і адвокат Наливайка водночас: ставить незручні питання, руйнує міфи, але визнає історичний масштаб постаті'
   voice: Critical-Historian
 phase: BIO
+readings_contract_version: 2
 readings:
-- title: Наливайко Семерій (Северин)
-  source: Енциклопедія історії України
+- title: НАЛИВАЙКО СЕМЕРІЙ
+  source_name: Енциклопедія історії України
   source_url: http://history.org.ua/?termin=Nalyvajko_S
   language: uk
   genre: encyclopedia
@@ -90,10 +91,14 @@ readings:
   cefr_min: C1
   license: copyright
   hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: http://history.org.ua/?termin=Nalyvajko_S
+    note: Зовнішнє посилання; текст не відтворюється в курсі.
   learner_task: Відокремити біографію Наливайка від пам'яті про повстання й пояснити, чому різні джерела називають його ватажком, бунтівником або героєм.
   caveats: Довідка ЕІУ. Читаючи про повстання, слід критично ставитися до термінології «бунту», що часто походить з польських урядових джерел того часу, і бачити в ньому спробу козацтва виступити політичною силою.
-- title: Повстання Наливайка
-  source: Енциклопедія історії України
+- title: НАЛИВАЙКА ПОВСТАННЯ (1594-1596)
+  source_name: Енциклопедія історії України
   source_url: http://history.org.ua/?termin=Nalyvajka_povstannia_1594
   language: uk
   genre: encyclopedia
@@ -102,6 +107,10 @@ readings:
   cefr_min: C1
   license: copyright
   hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: http://history.org.ua/?termin=Nalyvajka_povstannia_1594
+    note: Зовнішнє посилання; текст не відтворюється в курсі.
   learner_task: Простежити хронологію повстання й позначити, де опис подій залежить від урядових, козацьких або пізніших національних рамок.
   caveats: Подієва довідка не є голосом учасника; використовувати її як карту конфлікту перед роботою з уривками Грушевського або іншими джерельними реконструкціями.
 references:
@@ -122,7 +131,7 @@ sequence: 20
 slug: severyn-nalyvaiko
 subtitle: 'Severyn Nalyvaiko: The Cossack Rebel Leader'
 title: 'Северин Наливайко: Лідер козацького повстання'
-version: '4.3'
+version: '4.4'
 vocabulary_hints:
 - definition: масовий збройний виступ проти існуючої влади
   pos: с.

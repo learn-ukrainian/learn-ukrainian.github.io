@@ -78,21 +78,30 @@ persona:
   role: Історик, що простежує, як приватна земельна кривда стала претензією на те, хто командує, судить і збирає податки на прикордонні.
   voice: Critical-Historian
 phase: BIO
+readings_contract_version: 2
 readings:
-- title: "Косинський Криштоф"
-  source_name: "Енциклопедія історії України"
-  source_url: "https://www.history.org.ua/?termin=Kosinskii_K"
+- title: КОСИНСЬКИЙ КРИШТОФ
+  source_name: Енциклопедія історії України
+  source_url: https://www.history.org.ua/?termin=Kosinskii_K
   language: uk
-  type: "encyclopedia_entry"
-  clearance: "public_domain"
-  notes: "Огляд козацького старшини та причин і перебігу повстання під його проводом."
-- title: "Становлення ідеї козацької автономії в Речі Посполитій (фрагмент)"
-  source_name: "В. О. Щербак / Наукові записки НаУКМА"
-  source_url: "https://ekmair.ukma.edu.ua/server/api/core/bitstreams/a77e1a51-5439-45a9-bf24-9dd517e7e358/content"
+  type: encyclopedia_entry
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://www.history.org.ua/?termin=Kosinskii_K
+    note: Зовнішнє посилання; текст не відтворюється в курсі.
+  learner_task: Ознайомитися з причинами й перебігом повстання під проводом Криштофа Косинського.
+- title: Становлення ідеї козацької автономії в Речі Посполитій
+  source_name: В. О. Щербак / Наукові записки НаУКМА
+  source_url: https://ekmair.ukma.edu.ua/server/api/core/bitstreams/a77e1a51-5439-45a9-bf24-9dd517e7e358/content
   language: uk
-  type: "academic_article"
-  clearance: "hosting: reading-needed"
-  notes: "Потрібно підготувати адаптований уривок для аналізу еволюції повстання від приватної кривди до політичної акції."
+  type: academic_article
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://ekmair.ukma.edu.ua/server/api/core/bitstreams/a77e1a51-5439-45a9-bf24-9dd517e7e358/content
+    note: Зовнішнє посилання; текст не відтворюється в курсі.
+  learner_task: Проаналізувати еволюцію повстання від приватної кривди до політичної акції.
 references:
 - author: С. А. Леп'явко
   note: 'Базові факти: підляське шляхетське походження, 1586 старшинство, 1590 оборона Поділля й маєток Рокитне, привласнення земель Острозьким, повстання, поразка під П''яткою, смерть під Черкасами.'
@@ -121,7 +130,7 @@ sequence: 18
 slug: kryshtof-kosynsky
 subtitle: 'Kryshtof Kosynsky: From Private Grievance to the First Cossack Uprising'
 title: 'Криштоф Косинський: від кривди до першого козацького повстання'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: масовий збройний виступ проти наявної влади
   pos: с.
