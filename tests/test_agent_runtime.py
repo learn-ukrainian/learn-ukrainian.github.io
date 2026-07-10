@@ -3408,20 +3408,21 @@ def test_claude_adapter_rejects_old_cli_version(tmp_path):
     claude_adapter_mod._probe_claude_cli_version.cache_clear()
 
 
-def test_claude_adapter_default_prefix_prefers_npx_over_local_binary(tmp_path, monkeypatch):
-    """Regression for #1684: default cmd_prefix MUST be npx@latest, not local
-    `claude` binary.
+def test_claude_adapter_default_prefix_prefers_local_binary_over_npx(tmp_path, monkeypatch):
+    """Regression for #4875: default cmd_prefix MUST be the local `claude`
+    binary, not ``npx @anthropic-ai/claude-code@latest``.
 
-    Pre-#1684, ``shutil.which("claude")`` was preferred. Empirically this
-    let dispatched runs silently drift behind the launcher's npx-managed
-    version (observed 2026-05-05: ~/.local/bin/claude at 2.1.126 vs
-    ``npx @latest`` at 2.1.128). The fix flips the order to match
-    start-claude.sh:120's invariant.
+    The npm package became a thin shim around a native installer: ``npx
+    @latest`` exits rc=1 in ~8s with "Error: claude native binary not
+    installed" and EMPTY stdout — every dispatched claude run died at spawn
+    (lane dead since 2026-05-31, diagnosed 2026-07-10). The native binary
+    self-updates, so the #1684 version-drift rationale for npx-first no
+    longer applies; the min-version gate still rejects stale binaries.
     """
     from agent_runtime.adapters import claude as claude_adapter_mod
 
     def _which(name: str) -> str | None:
-        # Both npx and a local claude exist. The bug was preferring claude.
+        # Both npx and a local claude exist. The #4875 bug was preferring npx.
         return {
             "npx": "/usr/local/bin/npx",
             "claude": "/Users/test/.local/bin/claude",
@@ -3440,21 +3441,21 @@ def test_claude_adapter_default_prefix_prefers_npx_over_local_binary(tmp_path, m
         tool_config=None,
     )
 
-    # First two argv tokens MUST be the npx invocation, not the local binary.
-    assert plan.cmd[0:2] == ["npx", "@anthropic-ai/claude-code@latest"], (
-        f"Default cmd_prefix should be npx@latest (matches start-claude.sh:120). Got: {plan.cmd[0:2]}"
+    # First argv token MUST be the local binary, not the npx invocation.
+    assert plan.cmd[0] == "/Users/test/.local/bin/claude", (
+        f"Default cmd_prefix should be the local claude binary (#4875). Got: {plan.cmd[0:2]}"
     )
-    # And specifically: must NOT be the local claude binary path.
-    assert "/Users/test/.local/bin/claude" not in plan.cmd
+    assert "npx" not in plan.cmd
 
 
-def test_claude_adapter_default_prefix_falls_back_to_local_when_npx_missing(tmp_path, monkeypatch):
-    """When npx is unavailable (e.g. air-gapped CI), the local `claude` binary
-    is the documented last-resort fallback. #1684."""
+def test_claude_adapter_default_prefix_falls_back_to_npx_when_local_missing(tmp_path, monkeypatch):
+    """When no local `claude` binary is installed, ``npx @latest`` remains the
+    documented fallback (it works on machines where the npm package still
+    resolves to a runnable CLI). #4875."""
     from agent_runtime.adapters import claude as claude_adapter_mod
 
     def _which(name: str) -> str | None:
-        return {"claude": "/Users/test/.local/bin/claude"}.get(name)
+        return {"npx": "/usr/local/bin/npx"}.get(name)
 
     monkeypatch.setattr(claude_adapter_mod.shutil, "which", _which)
 
@@ -3469,19 +3470,18 @@ def test_claude_adapter_default_prefix_falls_back_to_local_when_npx_missing(tmp_
         tool_config=None,
     )
 
-    assert plan.cmd[0] == "/Users/test/.local/bin/claude"
-    assert "npx" not in plan.cmd
+    assert plan.cmd[0:2] == ["npx", "@anthropic-ai/claude-code@latest"]
 
 
 def test_claude_adapter_default_prefix_raises_when_neither_present(tmp_path, monkeypatch):
-    """If neither npx nor claude is on PATH, fail loudly with a clear error
-    instead of silently producing an empty/broken cmd. #1684."""
+    """If neither claude nor npx is on PATH, fail loudly with a clear error
+    instead of silently producing an empty/broken cmd. #1684/#4875."""
     from agent_runtime.adapters import claude as claude_adapter_mod
 
     monkeypatch.setattr(claude_adapter_mod.shutil, "which", lambda _name: None)
 
     adapter = ClaudeAdapter()
-    with pytest.raises(RuntimeError, match=r"neither `npx` nor a `claude` binary"):
+    with pytest.raises(RuntimeError, match=r"neither a `claude` binary nor `npx`"):
         adapter.build_invocation(
             prompt="hello",
             mode="read-only",

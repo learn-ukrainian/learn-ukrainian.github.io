@@ -142,7 +142,9 @@ def list_runtime_agents() -> list[dict[str, Any]]:
                 source = inspect.getsource(obj.build_invocation)
             except (OSError, TypeError):
                 source = ""
-            if "@anthropic-ai/claude-code@latest" in source:
+            if 'shutil.which("claude")' in source:
+                binary = "claude"
+            elif "@anthropic-ai/claude-code@latest" in source:
                 binary = "npx @anthropic-ai/claude-code@latest"
             elif 'shutil.which("gemini")' in source:
                 binary = "gemini"

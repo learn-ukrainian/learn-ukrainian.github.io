@@ -1,4 +1,4 @@
-"""ClaudeAdapter — wraps ``npx @anthropic-ai/claude-code@latest`` for the runtime.
+"""ClaudeAdapter — wraps the local ``claude`` CLI (npx fallback) for the runtime.
 
 Third production adapter. Phase 5 of #1184. Claude is the LAST adapter
 to land because it has the most special-case logic:
@@ -130,7 +130,7 @@ def _ensure_supported_claude_cli_version(cmd_prefix: tuple[str, ...]) -> tuple[i
 
 
 class ClaudeAdapter:
-    """Adapter for ``npx @anthropic-ai/claude-code@latest`` print mode."""
+    """Adapter for the ``claude`` CLI in print mode (local binary preferred)."""
 
     name: str = "claude"
     default_model: str = "claude-opus-4-8"
@@ -174,39 +174,42 @@ class ClaudeAdapter:
         if discussion_readonly and mode != "read-only":
             raise ValueError("AB_DISCUSS_READONLY requires mode='read-only'")
 
-        # Command prefix — match start-claude.sh:120's invariant: prefer
-        # ``npx @anthropic-ai/claude-code@latest`` so dispatched runs ride
-        # the same version as the interactive launcher and inherit npm's
-        # cache semantics (avoids stale-binary cache bugs and dropped
-        # prompt caching). The local ``claude`` binary on PATH is the
-        # last-resort fallback only — used when ``npx`` is unavailable
-        # (e.g. air-gapped CI without npm registry access).
+        # Command prefix — prefer the local native ``claude`` binary; ``npx``
+        # is the fallback for machines without a native install (#4875).
         #
-        # Pre-#1684 history: the order was inverted (local binary first,
-        # npx fallback). On 2026-05-05 that was empirically diagnosed —
-        # ``which claude`` resolved to ~/.local/bin/claude at 2.1.126
-        # while ``npx @latest`` resolved to 2.1.128, so every dispatched
-        # Claude run silently missed the 2.1.128 fixes (subagent
-        # prompt-cache reuse ~3× cache_creation reduction; 1M-context
-        # autocompact false-block fix; --bare >10MB stdin crash fix).
+        # History (both flips were empirically diagnosed — check before
+        # flipping again):
+        # - Pre-#1684: local binary first. On 2026-05-05 that let dispatched
+        #   runs silently drift behind the npx-managed version (local 2.1.126
+        #   vs npx 2.1.128), so #1684 flipped to npx-first.
+        # - #4875 (2026-07-10): the ``@anthropic-ai/claude-code`` npm package
+        #   became a thin shim around a NATIVE installer — ``npx @latest``
+        #   now exits rc=1 in ~8s with "Error: claude native binary not
+        #   installed" (stdout empty, no stderr diagnostic). Every dispatched
+        #   claude run died at spawn; last successful lane dispatch was
+        #   2026-05-31. The native binary on PATH self-updates, so the
+        #   #1684 version-drift concern no longer applies; the
+        #   ``_ensure_supported_claude_cli_version`` gate below still rejects
+        #   stale binaries (< 2.1.116) loudly.
         #
         # Callers can still override by passing
         # ``tool_config={"cmd_prefix": [...]}`` (preserved unchanged).
         cmd_prefix = tc.get("cmd_prefix")
         if cmd_prefix:
             cmd = [cmd_prefix] if isinstance(cmd_prefix, str) else list(cmd_prefix)
-        elif shutil.which("npx"):
-            cmd = ["npx", "@anthropic-ai/claude-code@latest"]
         else:
             claude_bin = shutil.which("claude")
-            if not claude_bin:
+            if claude_bin:
+                cmd = [claude_bin]
+            elif shutil.which("npx"):
+                cmd = ["npx", "@anthropic-ai/claude-code@latest"]
+            else:
                 raise RuntimeError(
-                    "Cannot dispatch Claude Code: neither `npx` nor a "
-                    "`claude` binary was found on PATH. Install Node.js "
-                    "(provides npx) or run "
-                    "`npm install -g @anthropic-ai/claude-code`."
+                    "Cannot dispatch Claude Code: neither a `claude` binary "
+                    "nor `npx` was found on PATH. Install the native Claude "
+                    "CLI (https://claude.com/claude-code) or Node.js "
+                    "(provides npx)."
                 )
-            cmd = [claude_bin]
 
         probe_prefix = tuple(cmd)
         cli_version = _ensure_supported_claude_cli_version(probe_prefix)
