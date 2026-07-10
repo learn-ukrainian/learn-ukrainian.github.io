@@ -665,3 +665,26 @@ def test_merge_treats_object_key_order_as_non_material(tmp_path: Path) -> None:
     report, _merged = merge_annotator_sidecars(left, right)
     assert report["counts"]["agreed"] == 1
     assert report["counts"]["material_disagreements"] == 0
+
+
+def test_merge_treats_list_order_as_material(tmp_path: Path) -> None:
+    """List order IS data (span order, segment order): reordered lists must DISAGREE."""
+    keyed, shadow, corpus_dir = _keyed_inputs(tmp_path)
+    scaffold, _report = build_scaffold(keyed, shadow, corpus_dir=corpus_dir, output_dir=tmp_path / "scaffold")
+    left = {"cases": [_completed_case(scaffold["cases"][0])]}
+    left_candidate = next(iter(left["cases"][0]["candidates_by_event_output_id"].values()))[0]
+    left_candidate["expected_support_spans"] = [
+        {"start": 0, "end": 10, "role": "SUPPORTS"},
+        {"start": 10, "end": 20, "role": "SUPPORTS"},
+    ]
+    right = copy.deepcopy(left)
+    right_candidate = next(iter(right["cases"][0]["candidates_by_event_output_id"].values()))[0]
+    right_candidate["expected_support_spans"] = list(reversed(right_candidate["expected_support_spans"]))
+    from scripts.audit.layerb_label_merge import merge_annotator_sidecars
+    report, _merged = merge_annotator_sidecars(left, right)
+    assert report["counts"]["agreed"] == 0
+    assert report["counts"]["material_disagreements"] == 1
+    assert any(
+        diff["field"].endswith("expected_support_spans")
+        for diff in report["cases"][0]["material_differences"]
+    )
