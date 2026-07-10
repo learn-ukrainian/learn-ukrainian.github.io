@@ -1,0 +1,249 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/qg-layer-a-candidates.v1.schema.json",
+  "title": "QG Layer A runtime candidate set v1",
+  "description": "Runtime candidate materialization contract for QG Layer B. It mirrors the Phase 0 label candidate shape, adds explicit event_output_id and runtime schema_version, and intentionally omits label-only expected_source_relation and expected_support_spans.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "decision",
+    "reason",
+    "candidate_set_complete",
+    "candidate_count_before_dedup",
+    "candidates"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "qg-anchor-set.v1"
+    },
+    "decision": {
+      "enum": ["ANCHOR", "REJECT", "AUDIT"]
+    },
+    "reason": {
+      "$ref": "#/$defs/reason"
+    },
+    "candidate_set_complete": {
+      "type": "boolean"
+    },
+    "candidate_count_before_dedup": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "candidates": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/candidate"
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "decision": {
+            "const": "ANCHOR"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "candidate_set_complete": {
+            "const": true
+          },
+          "candidates": {
+            "minItems": 1
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "reason": {
+      "enum": [
+        "ANCHORED_CONTIGUOUS",
+        "ANCHORED_ORDERED_SEGMENTS",
+        "PRESENT_MULTI",
+        "ABSENT",
+        "FUZZY_AMBIGUOUS",
+        "OUTSIDE_SCAN",
+        "RAW_MAPPING_AMBIGUOUS",
+        "CROSS_EVENT_STITCH_FORBIDDEN",
+        "INCOMPLETE_CAPTURE",
+        "INCOMPLETE_CANDIDATE_SET",
+        "TOOL_ERROR",
+        "INSUFFICIENT_MASS",
+        "BELOW_TAU",
+        "DIGIT_NOT_ALIGNED",
+        "SALIENT_NOT_ALIGNED"
+      ]
+    },
+    "toolIdentity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["raw_name", "canonical_name"],
+      "properties": {
+        "raw_name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "canonical_name": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "queryIdentity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["canonical_json", "sha256"],
+      "properties": {
+        "canonical_json": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    },
+    "segment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "segment_index",
+        "excerpt_normalized_start",
+        "excerpt_normalized_end",
+        "output_normalized_start",
+        "output_normalized_end",
+        "output_raw_start",
+        "output_raw_end",
+        "normalized_segment_sha256",
+        "raw_segment_sha256"
+      ],
+      "properties": {
+        "segment_index": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "excerpt_normalized_start": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "excerpt_normalized_end": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "output_normalized_start": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "output_normalized_end": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "output_raw_start": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "output_raw_end": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "normalized_segment_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "raw_segment_sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    },
+    "candidate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "candidate_id",
+        "event_output_id",
+        "canonical_source_id",
+        "source_index",
+        "tool_identity",
+        "query_identity",
+        "raw_output_sha256",
+        "normalized_output_sha256",
+        "output_capture_complete",
+        "anchor_scan_complete",
+        "match_type",
+        "similarity",
+        "tool_query_matched",
+        "eligibility",
+        "error_status",
+        "ordered_segment_spans"
+      ],
+      "properties": {
+        "schema_version": {
+          "const": "qg-anchor-candidate.v1"
+        },
+        "candidate_id": {
+          "$ref": "#/$defs/sha256"
+        },
+        "event_output_id": {
+          "$ref": "#/$defs/sha256"
+        },
+        "canonical_source_id": {
+          "$ref": "#/$defs/sha256"
+        },
+        "source_index": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "tool_identity": {
+          "$ref": "#/$defs/toolIdentity"
+        },
+        "query_identity": {
+          "$ref": "#/$defs/queryIdentity"
+        },
+        "raw_output_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "normalized_output_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "output_capture_complete": {
+          "type": "boolean"
+        },
+        "anchor_scan_complete": {
+          "type": "boolean"
+        },
+        "match_type": {
+          "enum": ["EXACT_CONTIGUOUS", "FUZZY_CONTIGUOUS", "ORDERED_EXACT_SEGMENTS"]
+        },
+        "similarity": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "tool_query_matched": {
+          "type": "boolean"
+        },
+        "eligibility": {
+          "enum": ["ELIGIBLE", "INADMISSIBLE_SOURCE", "TOOL_ERROR", "AMBIGUOUS_ERROR", "INCOMPLETE_CAPTURE"]
+        },
+        "error_status": {
+          "enum": ["NONE", "STRUCTURED_ERROR", "AMBIGUOUS_STRING_ERROR", "TRANSPORT_ERROR", "TRUNCATED_OUTPUT"]
+        },
+        "ordered_segment_spans": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/segment"
+          }
+        }
+      }
+    }
+  }
+}
