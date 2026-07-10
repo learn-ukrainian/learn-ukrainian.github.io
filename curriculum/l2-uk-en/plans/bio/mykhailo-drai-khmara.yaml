@@ -116,6 +116,7 @@ persona:
 phase: BIO
 readings:
 - hosting: link-only
+  title: Драй-Хмара Михайло Опанасович
   language: uk
   learner_task: >-
     Ознайомтеся з біографічною статтею про Михайла Драй-Хмару. Зверніть увагу на його науковий доробок та обставини знищення.
@@ -123,11 +124,16 @@ readings:
   notes: >-
     Енциклопедична стаття про життя та творчість видатного поета-неокласика.
   rights_note: Текст захищено авторським правом. Надається лише посилання на зовнішній ресурс.
+  rights:
+    basis: external-link
+    evidence_url: https://esu.com.ua/article-21682
+    note: "Зовнішнє посилання; текст не відтворюється в курсі."
   role: primary
   source_name: Енциклопедія сучасної України (ЕСУ)
   source_type: article
   source_url: https://esu.com.ua/article-21682
 - hosting: link-only
+  title: ДРАЙ-ХМАРА МИХАЙЛО ОПАНАСОВИЧ
   language: uk
   learner_task: >-
     Прочитайте статтю в Енциклопедії історії України, щоб зрозуміти ширший історичний та політичний контекст життя Драй-Хмари.
@@ -135,6 +141,10 @@ readings:
   notes: >-
     Академічна стаття про Михайла Драй-Хмару від Інституту історії України НАНУ.
   rights_note: Текст захищено авторським правом. Надається лише посилання на зовнішній ресурс.
+  rights:
+    basis: external-link
+    evidence_url: https://www.history.org.ua/?termin=Dray_Khmara_M
+    note: "Зовнішнє посилання; текст не відтворюється в курсі."
   role: secondary
   source_name: Енциклопедія історії України (ЕІУ)
   source_type: article
@@ -165,7 +175,8 @@ sequence: 205
 slug: mykhailo-drai-khmara
 subtitle: The Neoclassicist Poet and Scholar Consumed by the Terror
 title: 'Михайло Драй-Хмара: Ґроно п''ятірне та доля неокласика'
-version: '4.2'
+version: '4.3'
+readings_contract_version: 2
 vocabulary_hints:
 - definition: молодий пагін рослини; у назві збірки Драй-Хмари — метафора проростання нової поетичної мови
   pos: ч.

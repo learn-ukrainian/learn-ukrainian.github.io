@@ -128,6 +128,7 @@ persona:
 phase: BIO
 readings:
 - hosting: link-only
+  title: Вороний Микола Кіндратович
   language: uk
   learner_task: >-
     Ознайомтеся зі статтею про життя та творчий шлях Миколи Вороного. Зверніть увагу на його театральну та громадську діяльність.
@@ -135,11 +136,16 @@ readings:
   notes: >-
     Енциклопедична стаття про ключові етапи життя видатного письменника і перекладача.
   rights_note: Текст захищено авторським правом. Надається лише посилання на зовнішній ресурс.
+  rights:
+    basis: external-link
+    evidence_url: https://esu.com.ua/article-29783
+    note: "Зовнішнє посилання; текст не відтворюється в курсі."
   role: primary
   source_name: Енциклопедія сучасної України (ЕСУ)
   source_type: article
   source_url: https://esu.com.ua/article-29783
 - hosting: link-only
+  title: Народився Микола Вороний
   language: uk
   learner_task: >-
     Прочитайте меморіальну довідку УІНП. Випишіть, як у ній подано арешт, заслання, повторний арешт і вирок особливої трійки.
@@ -147,6 +153,10 @@ readings:
   notes: >-
     Меморіальний матеріал УІНП дає стислий україномовний контекст про репресії та повертає увагу до механізму державного терору.
   rights_note: Текст захищено авторським правом. Надається лише посилання на зовнішній ресурс.
+  rights:
+    basis: external-link
+    evidence_url: https://www.uinp.gov.ua/istorychnyy-kalendar/gruden/6/narodyvsya-mykola-voronyy
+    note: "Зовнішнє посилання; текст не відтворюється в курсі."
   role: context
   source_name: Український інститут національної пам'яті
   source_type: memorial_note
@@ -178,7 +188,8 @@ sequence: 206
 slug: mykola-voronyi
 subtitle: The Symbolist Poet Who Built a Bridge to Europe
 title: 'Микола Вороний: Символізм, театр і особлива трійка'
-version: '4.3'
+version: '4.4'
+readings_contract_version: 2
 vocabulary_hints:
 - definition: напрям у літературі кінця XIX — початку XX століття, що використовує символи, музичність і алегорії
   pos: ч.

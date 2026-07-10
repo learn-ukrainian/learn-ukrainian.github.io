@@ -100,7 +100,8 @@ references:
   type: primary
   work: 'Олег Ольжич і Олена Теліга: Нариси про життя і творчість'
 readings:
-- language: uk
+- title: Ольжич Олег
+  language: uk
   source_type: reference
   role: orientation
   source_name: Енциклопедія Сучасної України
@@ -108,9 +109,14 @@ readings:
   license: copyrighted
   rights_note: ЕСУ захищена авторським правом; використовувати як link-only джерело.
   hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://esu.com.ua/article-76571
+    note: "Зовнішнє посилання; текст не відтворюється в курсі."
   learner_task: Скласти коротку карту трьох імен Ольжича — наукового, літературного та підпільного.
   notes: Академічна українська довідка про Ольжича як поета, археолога, публіциста і діяча ОУН.
-- language: uk
+- title: '"Тільки єдиного Олега Ольжича замордували"'
+  language: uk
   source_type: article
   role: reading
   source_name: Локальна історія
@@ -118,13 +124,18 @@ readings:
   license: copyrighted
   rights_note: Матеріал "Локальної історії" захищений авторським правом; використовувати як link-only джерело.
   hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://localhistory.org.ua/texts/chitanka/tilki-iedinogo-olega-olzhicha-zamorduvali-dopovid-pro-zhittia-poeta/
+    note: "Зовнішнє посилання; текст не відтворюється в курсі."
   learner_task: Простежити, як текст описує арешт, Заксенгаузен і післявоєнну пам'ять без радянських замовчувань.
   notes: Український матеріал про останні місяці життя Ольжича, його арешт ґестапо і загибель у Заксенгаузені.
 sequence: 201
 slug: oleh-olzhych
 subtitle: 'Oleh Olzhych: A stone from God''s sling'
 title: 'Олег Ольжич: Камінь з Божої пращі'
-version: '4.2'
+version: '4.3'
+readings_contract_version: 2
 vocabulary_hints:
 - definition: учасник таємної організації, що бореться проти окупаційної влади
   pos: ч.

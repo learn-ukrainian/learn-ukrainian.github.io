@@ -124,6 +124,7 @@ persona:
 phase: BIO
 readings:
 - hosting: link-only
+  title: Влизько Олекса Федорович
   language: uk
   learner_task: >-
     Ознайомтеся з біографічною статтею про Олексу Влизька. Проаналізуйте, як морська та подорожня тематика відобразилася у його поезії.
@@ -131,11 +132,16 @@ readings:
   notes: >-
     Енциклопедична стаття про наймолодшого представника «Розстріляного відродження».
   rights_note: Текст захищено авторським правом. Надається лише посилання на зовнішній ресурс.
+  rights:
+    basis: external-link
+    evidence_url: https://esu.com.ua/article-35164
+    note: "Зовнішнє посилання; текст не відтворюється в курсі."
   role: primary
   source_name: Енциклопедія сучасної України (ЕСУ)
   source_type: article
   source_url: https://esu.com.ua/article-35164
 - hosting: link-only
+  title: Влизько Олекса Федорович
   language: uk
   learner_task: >-
     Ознайомтеся з виставковою сторінкою НІБУ про Олексу Влизька. Оберіть один твір або біографічний факт, який допомагає читати його як автора, а не лише як жертву.
@@ -143,6 +149,10 @@ readings:
   notes: >-
     Бібліотечна виставка дає україномовний контекст корпусу та пам'яті без опори на енциклопедичний переказ.
   rights_note: Текст захищено авторським правом. Надається лише посилання на зовнішній ресурс.
+  rights:
+    basis: external-link
+    evidence_url: https://nibu.kyiv.ua/exhibitions/627/
+    note: "Зовнішнє посилання; текст не відтворюється в курсі."
   role: context
   source_name: Національна історична бібліотека України
   source_type: exhibition
@@ -174,7 +184,8 @@ sequence: 210
 slug: oleksa-vlyzko
 subtitle: The Young Maritime Modernist Destroyed in the 1934 Terror Wave
 title: "Олекса Влизько: Морська модерність і прискорений терор"
-version: '4.3'
+version: '4.4'
+readings_contract_version: 2
 vocabulary_hints:
 - definition: втрата слуху; у біографії Влизька — факт дитячої хвороби, який не слід подавати як сентиментальну легенду
   pos: ж.
