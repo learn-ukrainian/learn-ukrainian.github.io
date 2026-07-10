@@ -10,7 +10,7 @@ silently wrong code and risk code loss.
 **What broke.** The primary checkout was found on branch `pr-4849` instead of `main`.
 Reflog: `checkout: moving from main to pr-4849` @ 00:35:04+02:00.
 
-**Why (root cause).** Task `review-4849` (deepseek-v4-pro) was dispatched with
+**Root cause.** Task `review-4849` (deepseek-v4-pro) was dispatched with
 `delegate.py --mode read-only`, which is allowed to run with `cwd = repo root`. The
 reviewer, asked to verify claims about PR-branch files, reached for `gh pr checkout
 4849` — in the primary checkout — then stalled and was killed
@@ -27,7 +27,7 @@ subprocesses.
 at 00:42. No commits lost (reflog verified nothing dangling). Blast radius this time:
 ~7 minutes of every repo-root reader seeing PR-branch code.
 
-**Prevention (layered — tracked in #4857, infra-harness #4707).**
+**Prevention.** Layered — tracked in #4857, infra-harness #4707:
 1. Review/read-only dispatches default into throwaway worktrees; repo-root requires an
    explicit opt-in flag.
 2. `delegate.py` finalize assertion: record primary branch+HEAD at spawn → on exit,
