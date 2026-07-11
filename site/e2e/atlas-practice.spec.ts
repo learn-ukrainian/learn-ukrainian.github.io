@@ -58,6 +58,18 @@ test('practice matching renders a real round (>=3 pairs) for a fresh learner', a
   await expect.poll(() => page.locator('[data-activity="match-left-tile"]').count()).toBeGreaterThanOrEqual(3);
 });
 
+for (const [path, label] of [
+  ['/words-of-the-day/practice/', 'plain practice page'],
+  ['/words-of-the-day/practice/?lemmaId=%D0%BA%D0%B0%D0%B2%D0%B0', 'deep-link practice page'],
+] as const) {
+  test(`${label} hides the static error fallback after practice loads (#4984, #4946)`, async ({ page }) => {
+    await page.goto(path);
+
+    await expect(page.locator('#lexicon-practice-mount .lexicon-practice')).toBeVisible();
+    await expect(page.locator('#lexicon-practice-fallback')).toBeHidden();
+  });
+}
+
 test('all СУМ-11 definition cards are hidden from word pages (Soviet dictionary)', async ({ page }) => {
   // прапор carries a *flagged* (sovietization_risk>0) СУМ-11 definition card. Assert
   // BOTH the flagged and clean СУМ-11 classes are absent, so a regression that rendered
@@ -96,7 +108,9 @@ test('practice page shows UA fallback when LexiconPractice island chunk fails to
   await page.goto('/words-of-the-day/practice/');
 
   // Expect the static UA fallback (error listener path is fast; no reliance on 10s timeout).
-  await expect(page.getByText('Не вдалося завантажити практику')).toBeVisible({ timeout: 8000 });
+  const fallback = page.locator('#lexicon-practice-fallback');
+  await expect(fallback).toBeVisible({ timeout: 8000 });
+  await expect(fallback).toContainText('Не вдалося завантажити практику');
   const retryBtn = page.getByRole('button', { name: 'Спробувати ще раз' });
   await expect(retryBtn).toBeVisible();
 
