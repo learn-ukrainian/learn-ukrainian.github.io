@@ -1,242 +1,249 @@
-# Decision Journal — architectural and design decisions with expiry tracking
-#
-# Budget: 50 decisions max, 500 lines max. Archive when full.
-# Schema: schemas/decision.schema.json
-# Staleness check: .venv/bin/python scripts/check_decisions.py
-#
-# Every decision MUST have an expiry date. No permanent decisions —
-# everything gets re-evaluated. Default: 90 days.
-#
-# Status lifecycle: active → superseded | expired | archived
-# Expired decisions get a GH issue auto-created by check_decisions.py.
-
 decisions:
-  - id: dec-001
-    status: superseded
-    date: "2026-03-24"
-    expires: "2026-06-24"
-    scope: pipeline
-    title: "V6 uses reviewer-as-fixer, not full rewrite"
-    superseded_note: >
-      2026-07-07 governance sweep: V6 pipeline retired (V7 only). The principle
-      SURVIVED — V7's reviewer emits exact <fixes> blocks applied deterministically
-      (linear_pipeline.py reviewer_fixes_* machinery); no full-rewrite path exists.
-      Empirical evidence (9.6→8.4 degradation) remains the canonical argument.
-    reasoning: >
-      Gemini proved FROM SCRATCH rewrites degrade content (9.6->9.2->8.4).
-      Reviewer outputs exact find/replace pairs in <fixes> block. Pipeline
-      applies them deterministically. No LLM regeneration, no rewriting.
-      Score should go UP across fix rounds, never down.
-    evidence: "#969, #1028, MEMORY.md session 2026-03-24"
-    alternatives:
-      - option: "Full LLM rewrite on REVISE"
-        rejected_because: "Empirical quality degradation (9.6→8.4 over 3 rounds)"
-      - option: "Human-in-loop editing"
-        rejected_because: "Does not scale past 5 modules/day"
-    superseded_by: null
-    depends_on: []
+- id: dec-001
+  status: superseded
+  date: '2026-03-24'
+  expires: '2026-06-24'
+  scope: pipeline
+  title: V6 uses reviewer-as-fixer, not full rewrite
+  superseded_note: '2026-07-07 governance sweep: V6 pipeline retired (V7 only). The principle SURVIVED
+    — V7''s reviewer emits exact <fixes> blocks applied deterministically (linear_pipeline.py reviewer_fixes_*
+    machinery); no full-rewrite path exists. Empirical evidence (9.6→8.4 degradation) remains the canonical
+    argument.
 
-  - id: dec-002
-    status: superseded
-    date: "2026-03-26"
-    expires: "2026-06-26"
-    scope: content
-    title: "A1 written by Claude, reviewed by Gemini"
-    reasoning: >
-      Claude produces better A1 content (pedagogically grounded, follows
-      Ukrainian textbook patterns). Gemini is an excellent adversarial
-      reviewer — strict, catches Russianisms, enforces structure. Cross-agent
-      review prevents self-review bias (writer != reviewer).
-    evidence: "#1125, memory/project_a1_build_roles.md"
-    alternatives:
-      - option: "Gemini writes, Claude reviews"
-        rejected_because: "Gemini A1 content was weaker on pedagogy (tested M01-M06)"
-      - option: "Same agent writes and reviews"
-        rejected_because: "Self-review bias — agents praise their own work (Anthropic documented)"
-    superseded_by: dec-008
-    depends_on: []
+    '
+  reasoning: 'Gemini proved FROM SCRATCH rewrites degrade content (9.6->9.2->8.4). Reviewer outputs exact
+    find/replace pairs in <fixes> block. Pipeline applies them deterministically. No LLM regeneration,
+    no rewriting. Score should go UP across fix rounds, never down.
 
-  - id: dec-003
-    status: superseded
-    date: "2026-04-03"
-    expires: "2026-07-03"
-    scope: pipeline
-    title: "Cap review fix rounds at 4 with degradation detection"
-    superseded_note: >
-      2026-07-07 governance sweep: V7 replaced the flat 4-round cap with per-level
-      budgets — LLM_QG_CORE_MAX_ROUNDS=2, LLM_QG_SEMINAR_MAX_ROUNDS=3
-      (scripts/build/linear_pipeline.py:486-487). Degradation-detection principle
-      carried into the V7 gate design.
-    reasoning: >
-      5 rounds caused unnecessary API churn on modules where Gemini's
-      severity gate was overly conservative (checkpoint-places: 8.9/10 for
-      4 rounds). 2 rounds was too few for legitimate fixes. 4 rounds gives
-      enough room. Score degradation detection stops immediately if fixes
-      make content worse. Score >= 9.0 accepts even if severity gate fails.
-    evidence: "#1125, checkpoint-places build log, food-and-drink build log"
-    alternatives:
-      - option: "5 rounds (original)"
-        rejected_because: "Gemini severity gate too conservative, burns API quota"
-      - option: "2 rounds"
-        rejected_because: "Insufficient for modules with real issues"
-      - option: "Dynamic based on score delta"
-        rejected_because: "Over-engineered — 4 with degradation detection is simpler"
-    superseded_by: null
-    depends_on:
-      - dec-001
+    '
+  evidence: '#969, #1028, MEMORY.md session 2026-03-24'
+  alternatives:
+  - option: Full LLM rewrite on REVISE
+    rejected_because: Empirical quality degradation (9.6→8.4 over 3 rounds)
+  - option: Human-in-loop editing
+    rejected_because: Does not scale past 5 modules/day
+  superseded_by: null
+  depends_on: []
+- id: dec-002
+  status: superseded
+  date: '2026-03-26'
+  expires: '2026-06-26'
+  scope: content
+  title: A1 written by Claude, reviewed by Gemini
+  reasoning: 'Claude produces better A1 content (pedagogically grounded, follows Ukrainian textbook patterns).
+    Gemini is an excellent adversarial reviewer — strict, catches Russianisms, enforces structure. Cross-agent
+    review prevents self-review bias (writer != reviewer).
 
-  - id: dec-004
-    status: active
-    date: "2026-03-28"
-    expires: "2027-07-07"
-    scope: architecture
-    title: "Bare slug filenames, no number prefixes"
-    renewal_note: >
-      2026-07-07 governance sweep: settled architecture — curriculum.yaml is the
-      ordering SSOT across the whole tree; zero rename cascades in 3+ months.
-      Renewed 12 months; candidate to fold into track-architecture.md and archive
-      at the next doc pass.
-    reasoning: >
-      Module ordering is defined in curriculum.yaml, not filenames.
-      Bare slugs (my-family.md) are stable across reordering. Numbered
-      prefixes (01-my-family.md) create rename cascades when modules
-      are inserted or moved.
-    evidence: "MEMORY.md, curriculum.yaml architecture"
-    alternatives:
-      - option: "Number-prefixed filenames (01-slug.md)"
-        rejected_because: "Rename cascades on reorder, breaks git history"
-    superseded_by: null
-    depends_on: []
+    '
+  evidence: '#1125, memory/project_a1_build_roles.md'
+  alternatives:
+  - option: Gemini writes, Claude reviews
+    rejected_because: Gemini A1 content was weaker on pedagogy (tested M01-M06)
+  - option: Same agent writes and reviews
+    rejected_because: Self-review bias — agents praise their own work (Anthropic documented)
+  superseded_by: dec-008
+  depends_on: []
+- id: dec-003
+  status: superseded
+  date: '2026-04-03'
+  expires: '2026-07-03'
+  scope: pipeline
+  title: Cap review fix rounds at 4 with degradation detection
+  superseded_note: '2026-07-07 governance sweep: V7 replaced the flat 4-round cap with per-level budgets
+    — LLM_QG_CORE_MAX_ROUNDS=2, LLM_QG_SEMINAR_MAX_ROUNDS=3 (scripts/build/linear_pipeline.py:486-487).
+    Degradation-detection principle carried into the V7 gate design.
 
-  - id: dec-005
-    status: superseded
-    date: "2026-04-03"
-    expires: "2026-07-03"
-    scope: tooling
-    title: "Keep gemini-cli, fix dispatch retry logic"
-    superseded_note: >
-      2026-07-07 governance sweep: gemini-cli RETIRED — Gemini-family work routes
-      through the AGY lane (model-assignment.md; session-setup reports gemini-cli
-      not found). The retry-logic half of the decision survived and evolved into
-      the agent-runtime failover chains (#4501/#4580, live in production 2026-07-06).
-    reasoning: >
-      Evaluated vibeproxy, Factory Droid, OpenCode as gemini-cli replacements.
-      Droid requires Factory API key (platform lock-in). VibeProxy/OpenCode
-      add complexity for marginal gain. The real problem was double-retry
-      (gemini-cli retries internally + pipeline retries) and insufficient
-      backoff on 429s. Fixed with rate limit detection, 3s inter-call pacing,
-      and 5-min backoff on rate limits in dispatch.py.
-    evidence: "#1125, dispatch.py refactor 2026-04-03"
-    alternatives:
-      - option: "VibeProxy + OpenCode"
-        rejected_because: "Adds moving parts, same Google quota limits apply"
-      - option: "VibeProxy + Factory Droid"
-        rejected_because: "Droid requires Factory API key — platform lock-in"
-      - option: "Google GenAI Python SDK"
-        rejected_because: "Requires API key, lower rate limits than Pro subscription"
-    superseded_by: null
-    depends_on: []
+    '
+  reasoning: '5 rounds caused unnecessary API churn on modules where Gemini''s severity gate was overly
+    conservative (checkpoint-places: 8.9/10 for 4 rounds). 2 rounds was too few for legitimate fixes.
+    4 rounds gives enough room. Score degradation detection stops immediately if fixes make content worse.
+    Score >= 9.0 accepts even if severity gate fails.
 
-  - id: dec-007
-    status: active
-    date: "2026-04-24"
-    expires: "2027-04-23"
-    scope: pipeline
-    title: "Enforce dec-001 at code level — no LLM regeneration during review"
-    reasoning: >
-      ADR-007 enforces dec-001 at the code level. All in-loop rewrite
-      mechanisms removed: tier strategies (section_rewrite, full_rewrite,
-      writer_swap), the reviewer-emitted <rewrite-block> protocol, the
-      WORD_BUDGET auto-heal, and ~400 LOC of rewrite-block infrastructure.
-      Convergence ladder collapses to two strategies — patch and
-      plan_revision_request terminal. Empirical re-validation: a1/colors
-      smoke (2026-04-23) reproduced the 9.6→8.4 degradation pattern that
-      drove dec-001, with full_rewrite reintroducing the same flag-color
-      hallucination the <fixes> block had already corrected. Longer expiry
-      (12 months) because the underlying policy has been re-validated twice
-      on independent evidence; reintroducing rewrites requires NEW empirical
-      evidence that FROM-SCRATCH rewrites do not degrade content.
-    evidence: "ADR-007 (docs/decisions/2026-04-23-rewrite-strategies-kill-or-revert.md), PR-A #1500, PR-B #1499, PR-C #1506, PR-D #1509, PR-F #1508, closer #1456, a1/colors smoke 2026-04-23"
-    alternatives:
-      - option: "REVERT — accept rewrites with documented constraints"
-        rejected_because: "No new empirical data in favour; 9.6→8.4 degradation re-demonstrated on a1/colors 2026-04-23"
-      - option: "Keep section_rewrite only (kill full_rewrite + writer_swap)"
-        rejected_because: "Same LLM-regeneration class; partial kill leaves drift surface intact"
-      - option: "Stub the rewrite tiers instead of deleting"
-        rejected_because: "Stubs invite revival; structural invariant test (PR-F #1508) needs hard absence"
-    superseded_by: null
-    depends_on:
-      - dec-001
+    '
+  evidence: '#1125, checkpoint-places build log, food-and-drink build log'
+  alternatives:
+  - option: 5 rounds (original)
+    rejected_because: Gemini severity gate too conservative, burns API quota
+  - option: 2 rounds
+    rejected_because: Insufficient for modules with real issues
+  - option: Dynamic based on score delta
+    rejected_because: Over-engineered — 4 with degradation detection is simpler
+  superseded_by: null
+  depends_on:
+  - dec-001
+- id: dec-004
+  status: active
+  date: '2026-03-28'
+  expires: '2027-07-07'
+  scope: architecture
+  title: Bare slug filenames, no number prefixes
+  renewal_note: '2026-07-07 governance sweep: settled architecture — curriculum.yaml is the ordering SSOT
+    across the whole tree; zero rename cascades in 3+ months. Renewed 12 months; candidate to fold into
+    track-architecture.md and archive at the next doc pass.
 
-  - id: dec-008
-    status: active
-    date: "2026-06-14"
-    expires: "2026-09-12"
-    scope: content
-    title: "A1/A2 live maintenance favors workbook enrichment over rebuilds"
-    reasoning: >
-      A1 and A2 initial builds are shipped and live. Future A1/A2 work should
-      preserve live stability: add workbook-tab practice and targeted fixes in
-      small module-scoped PRs, avoid whole-level rebuilds unless explicitly
-      requested, and validate activity schema/rendering before shipping.
-    evidence: "User direction 2026-06-14; docs/decisions/2026-06-14-a1-a2-live-maintenance-and-workbook-enrichment.md"
-    alternatives:
-      - option: "Keep old A1/A2 build-blocking decision cards pending"
-        rejected_because: "They describe the initial-build phase, which is now live and no longer the current operating model"
-      - option: "Rebuild A1/A2 wholesale before adding more exercises"
-        rejected_because: "Live users need stable lessons; workbook enrichment can ship incrementally"
-    superseded_by: null
-    depends_on: []
+    '
+  reasoning: 'Module ordering is defined in curriculum.yaml, not filenames. Bare slugs (my-family.md)
+    are stable across reordering. Numbered prefixes (01-my-family.md) create rename cascades when modules
+    are inserted or moved.
 
-  - id: dec-009
-    status: active
-    date: "2026-07-07"
-    expires: "2026-10-05"
-    scope: benchmark-2156
-    title: "Public benchmark release (epic #4639) parked; deploy-first"
-    reasoning: >
-      User decision 2026-07-07: the community release of the factuality
-      benchmark has no demonstrated audience yet; effort moves to deploy-first
-      (tooled QG gate over built modules #4764 after the #4761-#4763 engine
-      measurement, plus Hramatka v1 homework-first #4542). Release-only work
-      parked: #4638 outreach, #4632 native-expert validation, #4647 OpenCode
-      Go transport, #4312 UNLP-2027 track, #4742 classes A/B/D re-authoring,
-      the F3 freeze + #4541 packaging. Epic #4639 stays open as the parking
-      record. Un-parking is a resume, not a rebuild — freeze spec, rights
-      resolver (0 UNKNOWN), and multirun scorecard all survive on main.
-    evidence: "User directive 2026-07-07; docs/decisions/2026-07-07-benchmark-public-release-parked.md; epic #4639; #4541 packaging parked; Class C shipped #4751"
-    alternatives:
-      - option: "Release anyway on current evidence"
-        rejected_because: "No demonstrated audience; capacity is scarce (claude 2.5x/codex 2.1x weekly pace) and deploy-first is user-priority"
-      - option: "Kill the release track outright (close epic #4639)"
-        rejected_because: "Revisit triggers are plausible (Hramatka shipping / community signal); the epic is the parking record"
-    superseded_by: null
-    depends_on: []
-  - id: dec-010
-    status: active
-    date: "2026-07-10"
-    expires: "2026-10-08"
-    scope: harness
-    title: "Grammar + word-choice gate is priority harness track; finetuning parked"
-    reasoning: >
-      User decision 2026-07-10: evaluation priority is grammar/morphology
-      (VESUM+pravopys, deterministic) plus lexical naturalness (GRAC
-      attestation, UA-GEC F/Calque+F/Collocation, Antonenko, Balla sense-fan)
-      - corpus-independent checks that apply to any generated sentence.
-      Fact-checking stays scoped to anti-fabrication over our closed-world
-      corpus (Layer A/B substrate, #4853/#4860). Fine-tuning/retraining
-      (e.g. Gemma 4) parked: no training HW for iteration, frontier rotation
-      outpaces finetune cycles, and the labeled data we build IS the
-      training set if ever un-parked - option stays open at zero cost.
-      Trigger case: native speaker observed free-tier AI producing
-      EN-sense-blind word choices (translation quality) with valid grammar.
-    evidence: "User discussion 2026-07-10; docs/decisions/2026-07-10-grammar-wordchoice-priority-finetuning-parked.md; UA-GEC F/Calque+F/Collocation ingested; query_grac MCP live; 23/23 multi-span audit"
-    alternatives:
-      - option: "Finetune Gemma 4 for Ukrainian now"
-        rejected_because: "No training HW; depreciates against weekly frontier rotation; measurement+routing achieves the learner-facing goal without weights"
-      - option: "Fact-checking as primary harness track"
-        rejected_because: "Closed-world corpus cannot cover arbitrary generated content; grammar/word-choice checks can"
-      - option: "Treat nativeness/style as a hard gate"
-        rejected_because: "Judgment-shaped, not binary - scored/advisory dimension; only calque/collocation patterns with UA-GEC/Antonenko evidence gate"
-    superseded_by: null
-    depends_on: []
+    '
+  evidence: MEMORY.md, curriculum.yaml architecture
+  alternatives:
+  - option: Number-prefixed filenames (01-slug.md)
+    rejected_because: Rename cascades on reorder, breaks git history
+  superseded_by: null
+  depends_on: []
+- id: dec-005
+  status: superseded
+  date: '2026-04-03'
+  expires: '2026-07-03'
+  scope: tooling
+  title: Keep gemini-cli, fix dispatch retry logic
+  superseded_note: '2026-07-07 governance sweep: gemini-cli RETIRED — Gemini-family work routes through
+    the AGY lane (model-assignment.md; session-setup reports gemini-cli not found). The retry-logic half
+    of the decision survived and evolved into the agent-runtime failover chains (#4501/#4580, live in
+    production 2026-07-06).
+
+    '
+  reasoning: 'Evaluated vibeproxy, Factory Droid, OpenCode as gemini-cli replacements. Droid requires
+    Factory API key (platform lock-in). VibeProxy/OpenCode add complexity for marginal gain. The real
+    problem was double-retry (gemini-cli retries internally + pipeline retries) and insufficient backoff
+    on 429s. Fixed with rate limit detection, 3s inter-call pacing, and 5-min backoff on rate limits in
+    dispatch.py.
+
+    '
+  evidence: '#1125, dispatch.py refactor 2026-04-03'
+  alternatives:
+  - option: VibeProxy + OpenCode
+    rejected_because: Adds moving parts, same Google quota limits apply
+  - option: VibeProxy + Factory Droid
+    rejected_because: Droid requires Factory API key — platform lock-in
+  - option: Google GenAI Python SDK
+    rejected_because: Requires API key, lower rate limits than Pro subscription
+  superseded_by: null
+  depends_on: []
+- id: dec-007
+  status: active
+  date: '2026-04-24'
+  expires: '2027-04-23'
+  scope: pipeline
+  title: Enforce dec-001 at code level — no LLM regeneration during review
+  reasoning: 'ADR-007 enforces dec-001 at the code level. All in-loop rewrite mechanisms removed: tier
+    strategies (section_rewrite, full_rewrite, writer_swap), the reviewer-emitted <rewrite-block> protocol,
+    the WORD_BUDGET auto-heal, and ~400 LOC of rewrite-block infrastructure. Convergence ladder collapses
+    to two strategies — patch and plan_revision_request terminal. Empirical re-validation: a1/colors smoke
+    (2026-04-23) reproduced the 9.6→8.4 degradation pattern that drove dec-001, with full_rewrite reintroducing
+    the same flag-color hallucination the <fixes> block had already corrected. Longer expiry (12 months)
+    because the underlying policy has been re-validated twice on independent evidence; reintroducing rewrites
+    requires NEW empirical evidence that FROM-SCRATCH rewrites do not degrade content.
+
+    '
+  evidence: 'ADR-007 (docs/decisions/2026-04-23-rewrite-strategies-kill-or-revert.md), PR-A #1500, PR-B
+    #1499, PR-C #1506, PR-D #1509, PR-F #1508, closer #1456, a1/colors smoke 2026-04-23'
+  alternatives:
+  - option: REVERT — accept rewrites with documented constraints
+    rejected_because: No new empirical data in favour; 9.6→8.4 degradation re-demonstrated on a1/colors
+      2026-04-23
+  - option: Keep section_rewrite only (kill full_rewrite + writer_swap)
+    rejected_because: Same LLM-regeneration class; partial kill leaves drift surface intact
+  - option: Stub the rewrite tiers instead of deleting
+    rejected_because: 'Stubs invite revival; structural invariant test (PR-F #1508) needs hard absence'
+  superseded_by: null
+  depends_on:
+  - dec-001
+- id: dec-008
+  status: active
+  date: '2026-06-14'
+  expires: '2026-09-12'
+  scope: content
+  title: A1/A2 live maintenance favors workbook enrichment over rebuilds
+  reasoning: 'A1 and A2 initial builds are shipped and live. Future A1/A2 work should preserve live stability:
+    add workbook-tab practice and targeted fixes in small module-scoped PRs, avoid whole-level rebuilds
+    unless explicitly requested, and validate activity schema/rendering before shipping.
+
+    '
+  evidence: User direction 2026-06-14; docs/decisions/2026-06-14-a1-a2-live-maintenance-and-workbook-enrichment.md
+  alternatives:
+  - option: Keep old A1/A2 build-blocking decision cards pending
+    rejected_because: They describe the initial-build phase, which is now live and no longer the current
+      operating model
+  - option: Rebuild A1/A2 wholesale before adding more exercises
+    rejected_because: Live users need stable lessons; workbook enrichment can ship incrementally
+  superseded_by: null
+  depends_on: []
+- id: dec-009
+  status: active
+  date: '2026-07-07'
+  expires: '2026-10-05'
+  scope: benchmark-2156
+  title: 'Public benchmark release (epic #4639) parked; deploy-first'
+  reasoning: 'User decision 2026-07-07: the community release of the factuality benchmark has no demonstrated
+    audience yet; effort moves to deploy-first (tooled QG gate over built modules #4764 after the #4761-#4763
+    engine measurement, plus Hramatka v1 homework-first #4542). Release-only work parked: #4638 outreach,
+    #4632 native-expert validation, #4647 OpenCode Go transport, #4312 UNLP-2027 track, #4742 classes
+    A/B/D re-authoring, the F3 freeze + #4541 packaging. Epic #4639 stays open as the parking record.
+    Un-parking is a resume, not a rebuild — freeze spec, rights resolver (0 UNKNOWN), and multirun scorecard
+    all survive on main.
+
+    '
+  evidence: 'User directive 2026-07-07; docs/decisions/2026-07-07-benchmark-public-release-parked.md;
+    epic #4639; #4541 packaging parked; Class C shipped #4751'
+  alternatives:
+  - option: Release anyway on current evidence
+    rejected_because: No demonstrated audience; capacity is scarce (claude 2.5x/codex 2.1x weekly pace)
+      and deploy-first is user-priority
+  - option: 'Kill the release track outright (close epic #4639)'
+    rejected_because: Revisit triggers are plausible (Hramatka shipping / community signal); the epic
+      is the parking record
+  superseded_by: null
+  depends_on: []
+- id: dec-010
+  status: active
+  date: '2026-07-10'
+  expires: '2026-10-08'
+  scope: harness
+  title: Grammar + word-choice gate is priority harness track; finetuning parked
+  reasoning: 'User decision 2026-07-10: evaluation priority is grammar/morphology (VESUM+pravopys, deterministic)
+    plus lexical naturalness (GRAC attestation, UA-GEC F/Calque+F/Collocation, Antonenko, Balla sense-fan)
+    - corpus-independent checks that apply to any generated sentence. Fact-checking stays scoped to anti-fabrication
+    over our closed-world corpus (Layer A/B substrate, #4853/#4860). Fine-tuning/retraining (e.g. Gemma
+    4) parked: no training HW for iteration, frontier rotation outpaces finetune cycles, and the labeled
+    data we build IS the training set if ever un-parked - option stays open at zero cost. Trigger case:
+    native speaker observed free-tier AI producing EN-sense-blind word choices (translation quality) with
+    valid grammar.
+
+    '
+  evidence: User discussion 2026-07-10; docs/decisions/2026-07-10-grammar-wordchoice-priority-finetuning-parked.md;
+    UA-GEC F/Calque+F/Collocation ingested; query_grac MCP live; 23/23 multi-span audit
+  alternatives:
+  - option: Finetune Gemma 4 for Ukrainian now
+    rejected_because: No training HW; depreciates against weekly frontier rotation; measurement+routing
+      achieves the learner-facing goal without weights
+  - option: Fact-checking as primary harness track
+    rejected_because: Closed-world corpus cannot cover arbitrary generated content; grammar/word-choice
+      checks can
+  - option: Treat nativeness/style as a hard gate
+    rejected_because: Judgment-shaped, not binary - scored/advisory dimension; only calque/collocation
+      patterns with UA-GEC/Antonenko evidence gate
+  superseded_by: null
+  depends_on: []
+- id: dec-011
+  status: active
+  date: '2026-07-11'
+  expires: '2027-07-11'
+  scope: architecture
+  title: 'Static-first forever: github.io site is canonical; backend is progressive enhancement; serverless
+    stays the maintained fallback'
+  reasoning: 'User decision 2026-07-11 (continuity requirement: the site must keep working at github.io
+    even if the maintainer becomes unavailable). (1) The static GitHub Pages site is the CANONICAL product,
+    not a stopgap: every learner-facing feature must work fully serverless. (2) The backend phase (#4920)
+    is progressive enhancement only (accounts, cross-device sync, atlas-at-scale >20k serving); the frontend
+    must degrade transparently to static when the backend is absent. (3) The seam is the static API contract
+    (#4906): the backend implements the SAME JSON contract the static shards serve, so failover is a config
+    flip and the static path stays exercised on every deploy - developed in parallel, never a rotting
+    backup. (4) Atlas+practice repo split is APPROVED IN PRINCIPLE with a defined trigger: published-site
+    size >600MB (watched per #4966) or Phase C big-grow start, whichever first; new repo named ''lexicon''
+    to preserve all /lexicon/ URLs; practice path gets redirect stubs. Until the trigger, single repo
+    (298MB today, full build-out ~835MB projected). (5) The 250k atlas remains backend-only - never attempted
+    statically.'
+  review_signal: 'Revisit at backend design kickoff (#4920) or when the #4966 size report crosses 600MB.'
