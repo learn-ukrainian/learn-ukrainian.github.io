@@ -44,11 +44,15 @@ from scripts.lexicon.enrich_manifest import (
     _meaning,
     _merge_antonym_relations,
     _merge_homonym_relations,
+    _merge_paronym_relations,
     _merge_slovnyk_warning,
     _merge_synonym_relations,
     _morphology,
     _normalize_manifest_entries,
     _numbered_homonym_members,
+    _paronym_pair_members,
+    _paronym_relations,
+    _paronym_relations_by_headword,
     _parse_translations,
     _prepare_cefr_estimates,
     _proper_noun_wikipedia_meaning,
@@ -144,6 +148,24 @@ def _conn() -> sqlite3.Connection:
             content='literary_texts',
             content_rowid='id',
             tokenize='unicode61'
+        );
+        CREATE TABLE zno_documents (
+            id INTEGER PRIMARY KEY,
+            url TEXT NOT NULL DEFAULT ''
+        );
+        CREATE TABLE zno_tasks (
+            id INTEGER PRIMARY KEY,
+            document_id INTEGER,
+            year INTEGER NOT NULL,
+            task_no INTEGER NOT NULL,
+            task_subtype TEXT NOT NULL DEFAULT '',
+            paronym_pair TEXT NOT NULL DEFAULT ''
+        );
+        CREATE TABLE paronyms_cache (
+            id INTEGER PRIMARY KEY,
+            word_a TEXT NOT NULL,
+            word_b TEXT NOT NULL,
+            definition TEXT NOT NULL
         );
         """
     )
@@ -2909,6 +2931,154 @@ def test_homonym_fixture_samples_expand_from_zero(monkeypatch) -> None:
 
     assert before_counts == {lemma: 0 for lemma in fixtures}
     assert after_numbers == {lemma: expected_numbers for lemma, (_definition, expected_numbers) in fixtures.items()}
+
+
+def test_paronym_pair_members_accepts_only_semicolon_delimited_pairs() -> None:
+    assert _paronym_pair_members("адрес/адреса; ефективний/ефектний") == [
+        ("адрес", "адреса"),
+        ("ефективний", "ефектний"),
+    ]
+    assert _paronym_pair_members("адрес/адреса/адресант; не пара") == []
+
+
+def test_paronym_relations_require_both_vesum_lemmas_and_keep_exam_then_cache(monkeypatch) -> None:
+    conn = _conn()
+    conn.execute("INSERT INTO zno_documents(id, url) VALUES (?, ?)", (1, "https://example.invalid/zno-2021.pdf"))
+    conn.execute(
+        """
+        INSERT INTO zno_tasks(document_id, year, task_no, task_subtype, paronym_pair)
+        VALUES (?, ?, ?, ?, ?)
+        """,
+        (1, 2021, 35, "paronym", "ефективний/ефектний"),
+    )
+    conn.execute(
+        "INSERT INTO paronyms_cache(word_a, word_b, definition) VALUES (?, ?, ?)",
+        (
+            "ефективний",
+            "ефектний",
+            "Ефективний — який дає потрібний результат, дієвий. "
+            "Ефектний — який справляє сильне враження, яскравий.",
+        ),
+    )
+    _patch_synonym_vesum(monkeypatch, {"ефективний", "ефектний"})
+
+    relations = _paronym_relations(conn, "ефективний")
+
+    assert relations == [
+        {
+            "word": "ефектний",
+            "source": "ЗНО",
+            "pattern": "exam-tested paronym pair",
+            "vein": 1,
+            "exam_provenance": "ЗНО 2021, завдання №35",
+            "gate": {"vesum": "both valid"},
+            "source_url": "https://example.invalid/zno-2021.pdf",
+        },
+        {
+            "word": "ефектний",
+            "distinction": "який справляє сильне враження, яскравий.",
+            "source": "paronyms_cache",
+            "pattern": "cached paronym distinction",
+            "vein": 2,
+            "gate": {"vesum": "both valid"},
+        },
+    ]
+
+    _patch_synonym_vesum(monkeypatch, {"ефективний"})
+    assert _paronym_relations(conn, "ефективний") == []
+
+
+def test_paronym_relations_precompute_reciprocal_manifest_headwords(monkeypatch) -> None:
+    conn = _conn()
+    conn.execute(
+        "INSERT INTO paronyms_cache(word_a, word_b, definition) VALUES (?, ?, ?)",
+        (
+            "адрес",
+            "адреса",
+            "Адрес — урочисте письмове привітання. Адреса — місце проживання чи розташування.",
+        ),
+    )
+    _patch_synonym_vesum(monkeypatch, {"адрес", "адреса"})
+
+    relations = _paronym_relations_by_headword(
+        conn,
+        {"entries": [{"lemma": "адрес"}, {"lemma": "адреса"}]},
+    )
+
+    assert [item["word"] for item in relations["адрес"]] == ["адреса"]
+    assert [item["word"] for item in relations["адреса"]] == ["адрес"]
+
+
+def test_paronym_relation_merge_keeps_distinctions_and_exam_metadata_separate() -> None:
+    relations = [
+        {
+            "word": "змістовний",
+            "source": "ЗНО",
+            "pattern": "exam-tested paronym pair",
+            "vein": 1,
+            "exam_provenance": "ЗНО 2020, завдання №2",
+            "source_url": "https://example.invalid/zno-2020.pdf",
+        },
+        {
+            "word": "ефектний",
+            "distinction": "який справляє сильне враження, яскравий.",
+            "source": "paronyms_cache",
+            "pattern": "cached paronym distinction",
+            "vein": 2,
+        },
+        {
+            "word": "змістовний",
+            "distinction": "який має багато змісту.",
+            "source": "paronyms_cache",
+            "pattern": "cached paronym distinction",
+            "vein": 2,
+        },
+    ]
+
+    merged = _merge_paronym_relations(None, relations)
+
+    assert merged == {
+        "items": [
+            {
+                "word": "змістовний",
+                "distinction": "який має багато змісту.",
+                "exam_provenance": ["ЗНО 2020, завдання №2"],
+            },
+            {
+                "word": "ефектний",
+                "distinction": "який справляє сильне враження, яскравий.",
+            },
+        ],
+        "source": "ЗНО 2020, завдання №2 + paronyms_cache: cached paronym distinction",
+        "source_urls": ["https://example.invalid/zno-2020.pdf"],
+    }
+
+
+def test_paronym_fixture_samples_expand_from_zero(monkeypatch) -> None:
+    fixtures = {
+        "адрес": ("адреса", "Адрес — урочисте письмове привітання. Адреса — місце проживання."),
+        "ефективний": (
+            "ефектний",
+            "Ефективний — який дає потрібний результат. Ефектний — який справляє сильне враження.",
+        ),
+    }
+    _patch_synonym_vesum(
+        monkeypatch,
+        set(fixtures) | {target for target, _definition in fixtures.values()},
+    )
+    conn = _conn()
+    conn.executemany(
+        "INSERT INTO paronyms_cache(word_a, word_b, definition) VALUES (?, ?, ?)",
+        [(lemma, other, definition) for lemma, (other, definition) in fixtures.items()],
+    )
+
+    before_counts = {lemma: 0 for lemma in fixtures}
+    after_items = {
+        lemma: [relation["word"] for relation in _paronym_relations(conn, lemma)] for lemma in fixtures
+    }
+
+    assert before_counts == {lemma: 0 for lemma in fixtures}
+    assert after_items == {lemma: [other] for lemma, (other, _definition) in fixtures.items()}
 
 
 def test_definition_synonym_targets_extracts_stressed_same_as_target() -> None:
