@@ -105,12 +105,20 @@ persona:
     тоталітарній державі.
   voice: Art Historian
 phase: BIO
+readings_contract_version: 2
 readings:
-- author: Енциклопедія Сучасної України
-  description: Академічна біографія Анатоля Петрицького.
-  difficulty: B2
-  title: Петрицький Анатоль
-  url: https://esu.com.ua/article-884765
+- title: Петрицький Анатоль
+  source_name: Енциклопедія Сучасної України
+  source_url: https://esu.com.ua/article-884765
+  language: uk
+  type: encyclopedia
+  role: context
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://esu.com.ua/article-884765
+    note: Зовнішнє посилання; текст не відтворюється в курсі.
+  learner_task: Опрацювати академічну біографію Анатоля Петрицького та простежити його внесок у сценографію й український авангард.
 references:
 - note: Академічна біографія в Енциклопедії Сучасної України.
   path: https://esu.com.ua/article-884765
@@ -143,7 +151,7 @@ sequence: 125
 slug: anatol-petrytskyi
 subtitle: The Avant-Garde Genius, the Erased Gallery, and the Price of Survival
 title: 'Анатоль Петрицький: Авангард, знищена галерея і ціна виживання'
-version: '4.2'
+version: '4.3'
 vocabulary_hints:
 - definition: 'мистецтво художнього оформлення театральної вистави: декорації, костюми та простір сцени'
   pos: ж.

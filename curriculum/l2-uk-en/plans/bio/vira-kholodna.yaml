@@ -104,24 +104,33 @@ sequence: 123
 slug: vira-kholodna
 subtitle: 'Vira Kholodna: The Queen of Silent Cinema'
 title: 'Віра Холодна: Королева німого кіно'
-version: '4.1'
+version: '4.2'
+readings_contract_version: 2
 readings:
 - title: Холодна Віра Василівна
+  source_name: Енциклопедія історії України
+  source_url: https://history.org.ua/?termin=Kholodna_V
   language: uk
-  source: Енциклопедія історії України
-  url: https://history.org.ua/?termin=Kholodna_V
   type: encyclopedia
-  role: primary-bio
+  role: context
   hosting: link-only
-  task: Ознайомитися з біографією Віри Холодної та феноменом її шаленої популярності.
-- title: Спогади про Віру Холодну
+  rights:
+    basis: external-link
+    evidence_url: https://history.org.ua/?termin=Kholodna_V
+    note: Зовнішнє посилання; текст не відтворюється в курсі.
+  learner_task: Ознайомитися з біографією Віри Холодної та феноменом її шаленої популярності.
+- title: Народжені Україною. Віра Холодна
+  source_name: Державне агентство України з питань кіно
+  source_url: https://usfa.gov.ua/press-center/narodzheni-ukrainoyu-vira-kholodna-i12167
   language: uk
-  source: Мемуари
-  url: null
-  type: primary
+  type: institutional-profile
   role: source-context
-  hosting: reading-needed
-  task: Прочитати фрагменти спогадів сучасників або тогочасні рецензії на фільми за її участю.
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://usfa.gov.ua/press-center/narodzheni-ukrainoyu-vira-kholodna-i12167
+    note: Зовнішнє посилання на офіційний матеріал Держкіно; текст не відтворюється в курсі.
+  learner_task: Простежити документовані етапи кінокар'єри Віри Холодної та пояснити, як формувався феномен її популярності.
 vocabulary_hints:
 - definition: кінематограф до появи технології синхронного звуку, де діалоги передавалися через титри
   pos: с.

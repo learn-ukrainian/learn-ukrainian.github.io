@@ -79,12 +79,20 @@ persona:
   role: Куратор виставки, що ставить складні питання про ціну творчості в умовах диктатури, уникаючи простих оцінок «зрада/перемога».
   voice: Critical-Musicologist
 phase: BIO
+readings_contract_version: 2
 readings:
-- author: Енциклопедія Сучасної України
-  description: Академічна біографія Бориса Лятошинського.
-  difficulty: B2
-  title: Лятошинський Борис Миколайович
-  url: https://esu.com.ua/article-60072
+- title: Лятошинський Борис Миколайович
+  source_name: Енциклопедія Сучасної України
+  source_url: https://esu.com.ua/article-60072
+  language: uk
+  type: encyclopedia
+  role: context
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://esu.com.ua/article-60072
+    note: Зовнішнє посилання; текст не відтворюється в курсі.
+  learner_task: Опрацювати академічну біографію Бориса Лятошинського та визначити ключові етапи формування його композиторської мови.
 references:
 - title: Borys Liatoshynskyi
   note: Базова біографічна довідка, згенерована з Wikipedia та академічних джерел.
@@ -104,7 +112,7 @@ sequence: 126
 slug: borys-liatoshynskyi
 subtitle: Батько українського модернізму під тиском тоталітарної системи
 title: 'Борис Лятошинський: Симфоніст'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: монументальний, зазвичай чотиричастинний, твір для симфонічного оркестру
   pos: ж.
