@@ -24,7 +24,7 @@ Main at **`4f0fae3c0b`** — 7 PRs landed in the late-night session, all roadmap
 - ✅ CI clean
 - ✅ Gemini bridge unblocked (subscription always)
 - ⏳ A.8 canary measurement — **ready to run** (not yet executed; user runs builds per memory rule)
-- ⏳ Native reviewer engagement (A.7) — user-owned
+- ⏳ Native review step (A.7) — user-owned
 
 ## Active dispatches — overnight scale batch 1
 

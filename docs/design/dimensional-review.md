@@ -279,7 +279,7 @@ If user/the native reviewer bandwidth permits: have her mark errors independentl
 
 - Phase 1: ~50 calls total, ~1 day
 - Phase 2: 5 artifacts × 3 versions × 3 agents × 4 dims × 3 reruns ≈ 540 calls, bounded over 1-2 nights
-- the native reviewer validation: 3 artifacts, ~1 week real-world turnaround depending on her schedule
+- the native reviewer validation: 3 artifacts, ~1 week real-world turnaround depending on reviewer availability
 
 **Do not freeze agent assignments or thresholds before Phase 2 completes.**
 

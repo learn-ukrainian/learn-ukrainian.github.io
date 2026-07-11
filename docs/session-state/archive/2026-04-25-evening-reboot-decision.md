@@ -86,9 +86,8 @@ A published lesson has 4 tabs in this order:
 
 ## Sacred-name policy (security)
 
-User's two private contacts (the teachers): names stay in `memory/MEMORY.md`,
-NOT in any committed file. Fresh sessions inherit MY memory (so I know who
-they are without naming them in chat). Phase 1 sub-task includes scrubbing
+Reviewer contact details stay out of committed files (standing rule).
+Phase 1 sub-task includes scrubbing
 personal references across `curriculum/`, `wiki/`, `docs/` — distinguish
 PERSONAL references from generic dialogue uses (the names are also common
 Ukrainian first names; characters can still be called that).

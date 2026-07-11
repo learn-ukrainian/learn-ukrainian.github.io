@@ -66,7 +66,7 @@ Phase 3 lesson schema work.
 Checkpoint commits before user-initiated wiki rebuild:
 
 - `.gitignore` — added `data/*.db.bak-*`, `/*.diff`, `/*.patch`
-  patterns; renamed `data/alona-lessons/` → `data/native-reviewer-lessons/`
+  patterns; renamed the legacy personal-named lessons dir → `data/native-reviewer-lessons/`
   on disk to match existing role-anonymous gitignore pattern (privacy
   rule + saved 113 MB from accidental commit risk).
 - Wiki content snapshot — 1137 files / +83 K lines preserved as the
