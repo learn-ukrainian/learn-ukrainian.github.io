@@ -5,7 +5,13 @@ from __future__ import annotations
 import os
 from pathlib import Path
 
-from scripts.common.release_layout import LIVE_DATA_PATHS, MANIFEST_NAME, is_release_root
+# Dual-flavor import: several consumers load this module as top-level
+# ``path_safety`` with only ``scripts/`` on sys.path (test sys.path-hack,
+# build entrypoints) — a hard ``scripts.*`` import breaks that flavor.
+try:
+    from scripts.common.release_layout import LIVE_DATA_PATHS, MANIFEST_NAME, is_release_root
+except ImportError:  # scripts/ on sys.path (stripped flavor)
+    from common.release_layout import LIVE_DATA_PATHS, MANIFEST_NAME, is_release_root  # type: ignore[no-redef]
 
 
 def _validate_component(value: str) -> None:
