@@ -29,6 +29,7 @@ Usage
                           --context-tokens 500000 --model claude-opus-4-8 --log canary_log.csv
 
 `facts.json`   : [{"id": "...", "q": "...", "a": "..."}, ...]
+                 (`--facts` also accepts the JSON list inline, not just a file path)
 `answers.json` : {"<id>": "<answer-from-memory>", ...}
 
 Exit code: 0 if PASS, 2 if FAIL (hand off), 1 on usage error.
@@ -53,8 +54,30 @@ def _similarity(truth: str, got: str) -> float:
     return difflib.SequenceMatcher(None, _norm(truth), _norm(got)).ratio()
 
 
+def _load_facts_spec(spec: str) -> object:
+    """Load facts from EITHER an inline JSON list OR a path to a JSON file.
+
+    `--facts` accepts both forms: the documented `--facts facts.json` path AND an
+    inline `[{...}]` payload (the arg help advertises "JSON list of {id,q,a}").
+    A JSON list starts with '[' (an object with '{'); a filesystem path never
+    does — so the leading bracket unambiguously selects inline vs file. This keeps
+    the CLI help honest and avoids the opaque 'File name too long' OSError a caller
+    hit when passing inline JSON to the file-only reader.
+    """
+    if spec.lstrip()[:1] in ("[", "{"):
+        return json.loads(spec)
+    return json.loads(Path(spec).read_text(encoding="utf-8"))
+
+
 def cmd_mint(args: argparse.Namespace) -> int:
-    facts = json.loads(Path(args.facts).read_text(encoding="utf-8"))
+    try:
+        facts = _load_facts_spec(args.facts)
+    except FileNotFoundError:
+        print(f"error: --facts file not found: {args.facts}", file=sys.stderr)
+        return 1
+    except json.JSONDecodeError as exc:
+        print(f"error: --facts is not valid JSON: {exc}", file=sys.stderr)
+        return 1
     if not isinstance(facts, list) or not facts:
         print("error: --facts must be a non-empty JSON list of {id,q,a}", file=sys.stderr)
         return 1
@@ -116,7 +139,11 @@ def build_parser() -> argparse.ArgumentParser:
     sub = parser.add_subparsers(dest="cmd", required=True)
 
     mint = sub.add_parser("mint", help="Freeze ground-truth anchors into a probe file.")
-    mint.add_argument("--facts", required=True, help="JSON list of {id,q,a}")
+    mint.add_argument(
+        "--facts",
+        required=True,
+        help="Inline JSON list of {id,q,a}, or a path to a JSON file",
+    )
     mint.add_argument("--out", required=True, help="Probe output path")
     mint.set_defaults(func=cmd_mint)
 

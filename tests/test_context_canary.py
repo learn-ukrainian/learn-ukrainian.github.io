@@ -88,3 +88,31 @@ def test_mint_rejects_duplicate_ids(tmp_path: Path):
     facts.write_text(json.dumps([{"id": "x", "q": "q", "a": "a"}, {"id": "x", "q": "q2", "a": "a2"}]), encoding="utf-8")
     rc = context_canary.main(["mint", "--facts", str(facts), "--out", str(tmp_path / "p.json")])
     assert rc == 1
+
+
+def test_mint_accepts_inline_json(tmp_path: Path):
+    # The arg help advertises "Inline JSON list of {id,q,a}" — passing the list
+    # directly (not a file path) must work, not crash with 'File name too long'.
+    probe = tmp_path / "probe.json"
+    rc = context_canary.main(["mint", "--facts", json.dumps(FACTS), "--out", str(probe)])
+    assert rc == 0
+    data = json.loads(probe.read_text(encoding="utf-8"))
+    assert [a["id"] for a in data["anchors"]] == ["safe_env_sha", "agy_pr", "wiki_reason"]
+
+
+def test_mint_inline_and_file_produce_identical_probe(tmp_path: Path):
+    file_probe = _mint(tmp_path)
+    inline_probe = tmp_path / "inline_probe.json"
+    rc = context_canary.main(["mint", "--facts", json.dumps(FACTS), "--out", str(inline_probe)])
+    assert rc == 0
+    assert inline_probe.read_text(encoding="utf-8") == file_probe.read_text(encoding="utf-8")
+
+
+def test_mint_missing_file_is_clean_usage_error(tmp_path: Path):
+    rc = context_canary.main(["mint", "--facts", str(tmp_path / "nope.json"), "--out", str(tmp_path / "p.json")])
+    assert rc == 1  # not an uncaught traceback
+
+
+def test_mint_malformed_inline_json_is_clean_usage_error(tmp_path: Path):
+    rc = context_canary.main(["mint", "--facts", "[{bad json", "--out", str(tmp_path / "p.json")])
+    assert rc == 1  # JSONDecodeError caught, returns usage error
