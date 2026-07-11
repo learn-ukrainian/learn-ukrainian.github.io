@@ -1,8 +1,8 @@
 # ADR-011: Project Research Registry — bounded cold-start discovery and task-scoped adoption
 
-**Status**: Proposed
+**Status**: Accepted
 **Date**: 2026-07-11
-**Deciders**: Krisztian (project owner, accountable); Codex orchestrator (epic owner — scope/integration/disposition); Claude (architecture worker, this draft). Pending cross-family review gate (independent, non-authoring family) before Accepted.
+**Deciders**: Krisztian (project owner, accountable); Codex orchestrator (epic owner — scope/integration/disposition); Claude (architecture worker); Gemini 3.1 Pro High (independent cross-family review PASS, bridge #2458, 2026-07-11).
 **Related**: epic [#4969](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4969) (parent stream [#4707](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4707) — Infra & harness reliability); pilot consumer [#4952](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4952) (deterministic text-difficulty gate); [#4696](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4696) (TTS); [#4913](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4913) (harness); `docs/references/unlp-2025-2026-findings.md`; `docs/references/unlp-reading-notes.md`; ADR-005 (wiki knowledge base), ADR-006 (compile-layer retrieval — `sources.db` boundary).
 
 > **Scope note**: This ADR is longer than the project's one-page norm because epic #4969's P0 explicitly asks for "an ADR *or equivalent plan* covering schema, routing, budgets, cache invalidation, privacy, and failure behavior." It therefore doubles as the epic's P0 implementation plan (sections *Implementation plan* and *Pilot fixtures*). Implementation slices (P1–P6) each remain one-concern PRs behind their own review gate; this document freezes the *decision*, not the code.
