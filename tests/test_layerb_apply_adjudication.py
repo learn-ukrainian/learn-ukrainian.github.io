@@ -91,7 +91,10 @@ def _status_pin_documents() -> tuple[dict[str, object], list[dict[str, str]], li
     unresolved_ids = ["unresolved-0", "unresolved-1"]
     decisions = [_case_decision(case_id, "A") for case_id in adjudicated_ids]
     decisions.extend(_case_decision(case_id, "UNRESOLVED") for case_id in unresolved_ids)
-    digest = [{"case_id": decision["case_id"], "fields": {}} for decision in decisions]
+    digest = [
+        {"case_id": decision["case_id"], "fields": {"expected_aggregate_relation": {}}}
+        for decision in decisions
+    ]
     cases = [*agreed_cases]
     cases.extend({"case_id": case_id} for case_id in adjudicated_ids)
     cases.extend({"case_id": case_id} for case_id in unresolved_ids)
@@ -220,6 +223,27 @@ def test_apply_ruling_marks_unresolved_without_changing_a_values() -> None:
         "status": "UNRESOLVED",
         "adjudicator": ADJUDICATOR,
         "note": "Frozen rationale.",
+    }
+
+
+def test_apply_ruling_accepts_direct_agreed_ruling_with_null_adjudicator() -> None:
+    result = apply_ruling(
+        _case(),
+        _case(),
+        _case(),
+        {
+            "case_id": "case-1",
+            "ruling": "AGREED",
+            "rationale": "Independent annotations matched all material fields.",
+            "adjudicator": None,
+        },
+        _digest(),
+    )
+
+    assert result["adjudication"] == {
+        "status": "AGREED",
+        "adjudicator": None,
+        "note": "Independent annotations matched all material fields.",
     }
 
 
@@ -355,3 +379,46 @@ def test_apply_adjudications_preserves_round_one_counts_without_overlay_and_reso
     assert with_overlay["qualification_blockers"] == []
     resolved_case = next(case for case in with_overlay["cases"] if case["case_id"] == "unresolved-0")
     assert resolved_case["adjudication"]["adjudicator"] == ADJUDICATOR_R2
+
+
+def test_apply_adjudications_tolerates_cosmetic_only_merge_report_cases(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    material_case = _case()
+    cosmetic_case = {
+        "case_id": "cosmetic-case",
+        "adjudication": {
+            "status": "AGREED",
+            "adjudicator": None,
+            "note": "Only cosmetic differences were found.",
+        },
+    }
+    draft = {"cases": [material_case, cosmetic_case]}
+    merge_report_digest = {
+        "cases": [
+            {
+                "case_id": "case-1",
+                "material_differences": [{"field": "expected_aggregate_relation"}],
+            }
+        ],
+        "cosmetic_only_case_ids": ["cosmetic-case"],
+    }
+    monkeypatch.setattr(adjudication, "validate_annotator_record", lambda _case, _outputs: None)
+    monkeypatch.setattr(adjudication, "_validate_completed_case", lambda _case, _outputs: None)
+
+    final, summary = adjudication.apply_adjudications(
+        draft,
+        copy.deepcopy(draft),
+        copy.deepcopy(draft),
+        [_decision("A")],
+        merge_report_digest,
+        event_outputs={},
+    )
+
+    assert summary["adjudication_statuses"] == {"ADJUDICATED": 1, "AGREED": 1}
+    cosmetic_final_case = next(case for case in final["cases"] if case["case_id"] == "cosmetic-case")
+    assert cosmetic_final_case["adjudication"] == {
+        "status": "AGREED",
+        "adjudicator": None,
+        "note": "Only cosmetic differences were found.",
+    }

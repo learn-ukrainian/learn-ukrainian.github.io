@@ -333,7 +333,9 @@ def apply_ruling(
     ruling = decision.get("ruling")
     rationale = decision.get("rationale")
     adjudicator = decision.get("adjudicator")
-    if not isinstance(ruling, str) or not isinstance(rationale, str) or not isinstance(adjudicator, str):
+    if not isinstance(ruling, str) or not isinstance(rationale, str) or not isinstance(
+        adjudicator, (str, type(None))
+    ):
         raise LabelJoinError(f"malformed adjudication decision for {draft_case.get('case_id')!r}")
     fields = set((digest_entry.get("fields") or {}).keys())
     if ruling == "A":
@@ -446,7 +448,8 @@ def apply_adjudications(
     if decisions_r2 is not None:
         decision_cases = _overlay_round_two_decisions(decision_cases, decisions_r2)
     digest_cases = _digest_map(digest)
-    if set(decision_cases) != set(digest_cases):
+    material_in_digest = {case_id for case_id, entry in digest_cases.items() if entry["fields"]}
+    if set(decision_cases) != material_in_digest:
         raise LabelJoinError("decision and digest case IDs differ")
     if set(draft_cases) != set(a_cases) or set(draft_cases) != set(b_cases):
         raise LabelJoinError("draft and annotator case IDs differ")
