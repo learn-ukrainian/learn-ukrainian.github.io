@@ -79,23 +79,32 @@ persona:
   role: 'Модератор семінару, який постійно ставить незручне питання: "А хто за все це платить?"'
   voice: Pragmatic-Accountant
 phase: BIO
+readings_contract_version: 2
 readings:
 - title: Чикаленко Євген Харлампійович
   language: uk
-  source: Енциклопедія історії України (ЕІУ)
-  url: https://history.org.ua/?termin=Chykalenko_Y
+  source_name: Енциклопедія історії України (ЕІУ)
+  source_url: https://history.org.ua/?termin=Chykalenko_Y
   type: encyclopedia
   role: reference
   hosting: link-only
-  task: Дослідити внесок Чикаленка у розвиток українського руху та періодичної преси.
+  rights:
+    basis: external-link
+    evidence_url: https://history.org.ua/?termin=Chykalenko_Y
+    note: Зовнішнє посилання; текст не відтворюється в курсі.
+  learner_task: Дослідити внесок Чикаленка у розвиток українського руху та періодичної преси.
 - title: Спогади (1861-1907)
   language: uk
-  source: Діаспоріана
-  url: https://diasporiana.org.ua/memuari/1755-chikalenko-ye-spogadi-1861-1907/
+  source_name: Діаспоріана
+  source_url: https://diasporiana.org.ua/memuari/1755-chikalenko-ye-spogadi-1861-1907/
   type: primary
   role: reflection
-  hosting: excerpt-only
-  task: Ознайомитися з фрагментами спогадів для розуміння мотивації мецената.
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://diasporiana.org.ua/memuari/1755-chikalenko-ye-spogadi-1861-1907/
+    note: Зовнішнє посилання; текст не відтворюється в курсі.
+  learner_task: Ознайомитися з фрагментами спогадів для розуміння мотивації мецената.
 references:
 - title: Yevhen Chykalenko
   note: Compiled research notes on Chykalenko's publishing, patronage, and Ukrainian civic networks.

@@ -83,25 +83,32 @@ persona:
   role: Модератор семінару, що ставить під сумнів усталені міфи про «Вічного Каменяра» та шукає живу людину за пам'ятником
   voice: Критичний франкознавець
 phase: BIO
+readings_contract_version: 2
 readings:
 - title: Франко Іван Якович
   language: uk
-  source: Енциклопедія історії України (ЕІУ)
-  url: https://www.history.org.ua/?termin=Franko_I
+  source_name: Енциклопедія історії України (ЕІУ)
+  source_url: https://www.history.org.ua/?termin=Franko_I
   type: encyclopedia
   role: reference
   hosting: link-only
-  task: Ознайомитися з фактами біографії та проаналізувати його політичну та літературну діяльність.
+  rights:
+    basis: external-link
+    evidence_url: https://www.history.org.ua/?termin=Franko_I
+    note: Зовнішнє посилання; текст не відтворюється в курсі.
+  learner_task: Ознайомитися з фактами біографії та проаналізувати його політичну та літературну діяльність.
 - title: Що таке поступ?
   language: uk
-  source: Діаспоріана
-  url: https://diasporiana.org.ua/ideologiya/12272-franko-i-shho-take-postup/
+  source_name: Діаспоріана
+  source_url: https://diasporiana.org.ua/ideologiya/12272-franko-i-shho-take-postup/
   type: primary
   role: analysis
-  hosting: excerpt-only
-  rights_status: public-domain
-  rights_basis: Іван Франко помер 1916 року; пов'язане скановане видання опубліковане в Нью-Йорку 1917 року.
-  task: Прочитати фрагменти трактату та обговорити еволюцію поглядів Франка.
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://diasporiana.org.ua/ideologiya/12272-franko-i-shho-take-postup/
+    note: Зовнішнє посилання; текст не відтворюється в курсі.
+  learner_task: Прочитати фрагменти трактату та обговорити еволюцію поглядів Франка.
 references:
 - title: Ivan Franko
   note: Compiled research notes, primary source quotes, and critical interpretations for this module.
