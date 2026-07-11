@@ -52,7 +52,7 @@ Dispatch cap discipline: 2 codex + 2 agy + 2 claude in flight; check `/api/deleg
 Run several in parallel; the fleet has been idle.
 
 ## 📨 Open / awaiting-user
-- **Лепетун (ukr-mova.in.ua)** outreach draft ready: `docs/outreach/lepetun-collaboration-draft.md` (gitignored). **User to review/send** (assistant won't send). robots.txt permissive for content + sitemap. Read slovnyk/Лепетун `/policy` once before any pull. Use ULP-pattern (private gitignored reference, verify, re-express, never verbatim; link + attribute). Citation ≠ permission.
+- **Лепетун (ukr-mova.in.ua)** collaboration material prepared (local gitignored file, **user-owned next step**). robots.txt permissive for content + sitemap. Read slovnyk/Лепетун `/policy` once before any pull. Use ULP-pattern (private gitignored reference, verify, re-express, never verbatim; link + attribute). Citation ≠ permission.
 - Calibration kernel (#2156 lean) — fire as a parallel dispatch whenever a routing decision (#3087) needs evidence.
 
 ## ⚠️ Lessons this session

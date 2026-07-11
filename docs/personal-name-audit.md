@@ -47,7 +47,7 @@ calibrators, reviewers, or teaching-material owners.
 | `docs/wiki-rebuild-plan.md` | 228 | "hand articles to teacher {N1}" | "hand articles to a native-speaker reviewer" |
 | `docs/style-guide.md` | 121 | "Teacher {N1} or Teacher {N2} on the…" | "a native-speaker reviewer" |
 | `docs/session-state/2026-04-21-evening.md` | 10 hits | reviewer references | (session-state — historical record; consider just deleting the file post-reboot since V6 sessions are obsolete reference) |
-| `docs/session-state/2026-04-21-morning-handoff.md` | 2 hits | "Native teacher signed off (Alona...)" | "a native teacher" |
+| `docs/session-state/2026-04-21-morning-handoff.md` | 2 hits | "Native teacher signed off (name masked — see this audit's purpose)" | "a native teacher" |
 | `docs/session-state/2026-04-21-evening-strategic-audit.md` | 3 hits | various | scrub or delete file |
 | `docs/architecture/2026-04-21-pilot-readiness-audit.md` | 13 hits | reviewer authority references | "native reviewer" |
 | `docs/architecture/adr/adr-008-uk-native-track-destination.md` | 8 hits | "{N2} reviews it..." | "the native reviewer reviews it..." |
