@@ -4,7 +4,9 @@
 ``rederive`` is the authoritative path: it emits keys while walking the raw
 corpus, proves that the 1,310 non-key records have not drifted, and hands those
 keyed records to ``derive``.  ``derive`` selects the flag-derived union and
-fresh deterministic controls without any shadow-row join.
+fresh deterministic controls without any shadow-row join.  ``select-all`` is
+the separate, source-to-keyed-input path for a self-contained corpus whose
+annotation set deliberately includes every row.
 
 ``attach`` remains available solely for inputs whose duplicate groups resolve
 under its strict D2 invariant.  It is unsafe for ambiguous groups and is never
@@ -51,6 +53,7 @@ DEFAULT_REDERIVE_EXPECTED_ROWS = 1310
 KEY_FIELDS = frozenset({"grounding_key", "fact_check_index"})
 CATEGORY_NAMES = frozenset({"recovered", "regression", "abstain"})
 CATEGORY_ORDER = ("recovered", "regression", "abstain", "control_both_accept", "control_both_reject")
+SELECT_ALL_SOURCE_FIELDS = ("fixture", "claim", "excerpt", "grounding_key", "fact_check_index")
 
 
 def _rows_document(
@@ -179,6 +182,20 @@ def _ordered_categories(categories: set[str]) -> list[str]:
 def _stable_pool_order(row: Mapping[str, Any], index: int) -> tuple[str, str, str, str, int]:
     key = structural_key_from_union(row)
     return (*key, index)
+
+
+def _validate_keyed_derivation_rows(rows: Sequence[Mapping[str, Any]], *, operation: str) -> list[str]:
+    """Require source-emitted keys before any selection mode can proceed."""
+    for row in rows:
+        grounding_key = row.get("grounding_key")
+        if not isinstance(grounding_key, str) or not grounding_key:
+            raise LabelJoinError(f"{operation} requires source-keyed derivation records")
+        if row.get("fact_check_index") != fact_check_index_from_key(grounding_key):
+            raise LabelJoinError(f"keyed derivation fact_check_index is invalid: {grounding_key!r}")
+    grounding_keys = [str(row["grounding_key"]) for row in rows]
+    if len(grounding_keys) != len(set(grounding_keys)):
+        raise LabelJoinError("keyed derivation contains duplicate grounding keys")
+    return grounding_keys
 
 
 def _without_key_fields(row: Mapping[str, Any]) -> dict[str, Any]:
@@ -316,15 +333,7 @@ def derive_union(
     derivations = derivation_rows(derivation_document)
     if control_per_stratum < 1:
         raise LabelJoinError("control_per_stratum must be positive")
-    for row in derivations:
-        grounding_key = row.get("grounding_key")
-        if not isinstance(grounding_key, str) or not grounding_key:
-            raise LabelJoinError("derive requires source-keyed derivation records")
-        if row.get("fact_check_index") != fact_check_index_from_key(grounding_key):
-            raise LabelJoinError(f"keyed derivation fact_check_index is invalid: {grounding_key!r}")
-    grounding_keys = [str(row["grounding_key"]) for row in derivations]
-    if len(grounding_keys) != len(set(grounding_keys)):
-        raise LabelJoinError("keyed derivation contains duplicate grounding keys")
+    _validate_keyed_derivation_rows(derivations, operation="derive")
     selected_categories: dict[int, set[str]] = {
         index: _category_names(row) for index, row in enumerate(derivations) if _category_names(row)
     }
@@ -394,6 +403,56 @@ def derive_union(
     return document, report
 
 
+def select_all_corpus(artifacts_dir: Path, *, tau: float = DEFAULT_TAU) -> tuple[dict[str, Any], dict[str, Any]]:
+    """Build a minimal keyed input that selects every raw corpus fact check.
+
+    This intentionally does not accept a frozen derivation, flag categories,
+    control seed, or fixture truth lookup. It shares the normal raw source
+    walker so every grounding key is emitted by :mod:`layerb_keys` at the same
+    point as the phase-1 shadow runner.
+    """
+    derivations = derive_keyed_records(artifacts_dir, fixtures_dir=None, tau=tau)
+    grounding_keys = _validate_keyed_derivation_rows(derivations, operation="select-all")
+    keyed_rows: list[dict[str, Any]] = []
+    for index in sorted(range(len(derivations)), key=lambda value: (str(derivations[value]["grounding_key"]), value)):
+        source = derivations[index]
+        missing = [field for field in SELECT_ALL_SOURCE_FIELDS if field not in source or source[field] in (None, "")]
+        if missing:
+            raise LabelJoinError(f"select-all source row lacks required fields at index {index}: {', '.join(missing)}")
+        row = {field: source[field] for field in SELECT_ALL_SOURCE_FIELDS}
+        row["source_index"] = index
+        row["union_categories"] = []
+        keyed_rows.append(row)
+    report: dict[str, Any] = {
+        "mode": "select-all-from-source-artifacts",
+        "selection": "all-corpus-rows",
+        "artifacts_dir": str(artifacts_dir),
+        "tau": tau,
+        "keyed_derivation_rows": len(derivations),
+        "matched_rows": len(keyed_rows),
+        "grounding_keys_unique": len(set(grounding_keys)),
+        "source_keyed_derivation_required": True,
+        "fixture_truth_lookup_used": False,
+        "flag_categories_used": False,
+        "control_sampling_used": False,
+        "control_resampled": False,
+        "frozen_derivation_verified": False,
+        "projected_row_fields": [*SELECT_ALL_SOURCE_FIELDS, "source_index", "union_categories"],
+    }
+    document = {
+        "kind": "qg-layer-b-label-union-input",
+        "version": 3,
+        "total_rows": len(keyed_rows),
+        "rows": keyed_rows,
+        "keying": {
+            "mode": "select-all-from-source-artifacts",
+            "note": "Every source-keyed corpus row is selected; no flags, controls, or fixture truth labels are used.",
+            "join_report": report,
+        },
+    }
+    return document, report
+
+
 def _write_outputs(
     document: Mapping[str, Any], report: Mapping[str, Any], output: Path, report_path: Path | None
 ) -> None:
@@ -422,33 +481,41 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     rederive.add_argument("--fixtures-dir", type=Path, default=Path("tests/fixtures/qg_bakeoff"))
     rederive.add_argument("--tau", type=float, default=DEFAULT_TAU)
     rederive.add_argument("--expected-rows", type=int, default=DEFAULT_REDERIVE_EXPECTED_ROWS)
+    select_all = subparsers.add_parser("select-all")
+    select_all.add_argument("--artifacts-dir", type=Path, required=True)
+    select_all.add_argument("--output", type=Path, required=True)
+    select_all.add_argument("--report", type=Path)
+    select_all.add_argument("--tau", type=float, default=DEFAULT_TAU)
     return parser.parse_args(argv)
 
 
 def main(argv: Sequence[str] | None = None) -> int:
     args = parse_args(argv)
-    derivation_document = read_json(args.derivation)
-    if args.mode == "attach":
-        document, report = attach_keys(
-            read_json(args.union), derivation_document, read_json(args.shadow), corpus_dir=args.corpus_dir
-        )
-    elif args.mode == "derive":
-        document, report = derive_union(
-            derivation_document,
-            frozen_union_document=read_json(args.frozen_union),
-            seed=args.seed,
-            control_per_stratum=args.control_per_stratum,
-        )
+    if args.mode == "select-all":
+        document, report = select_all_corpus(args.artifacts_dir, tau=args.tau)
     else:
-        document, report = rederive_keyed_derivation(
-            artifacts_dir=args.artifacts_dir,
-            fixtures_dir=args.fixtures_dir,
-            frozen_derivation_document=derivation_document,
-            tau=args.tau,
-            expected_rows=args.expected_rows,
-        )
-        report["frozen_derivation"] = {"path": str(args.derivation), "sha256": sha256_file(args.derivation)}
-        document["metadata"]["frozen_derivation"] = dict(report["frozen_derivation"])
+        derivation_document = read_json(args.derivation)
+        if args.mode == "attach":
+            document, report = attach_keys(
+                read_json(args.union), derivation_document, read_json(args.shadow), corpus_dir=args.corpus_dir
+            )
+        elif args.mode == "derive":
+            document, report = derive_union(
+                derivation_document,
+                frozen_union_document=read_json(args.frozen_union),
+                seed=args.seed,
+                control_per_stratum=args.control_per_stratum,
+            )
+        else:
+            document, report = rederive_keyed_derivation(
+                artifacts_dir=args.artifacts_dir,
+                fixtures_dir=args.fixtures_dir,
+                frozen_derivation_document=derivation_document,
+                tau=args.tau,
+                expected_rows=args.expected_rows,
+            )
+            report["frozen_derivation"] = {"path": str(args.derivation), "sha256": sha256_file(args.derivation)}
+            document["metadata"]["frozen_derivation"] = dict(report["frozen_derivation"])
     _write_outputs(document, report, args.output, args.report)
     return 0
 
