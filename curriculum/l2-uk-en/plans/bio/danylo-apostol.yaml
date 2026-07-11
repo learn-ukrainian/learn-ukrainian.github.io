@@ -79,14 +79,20 @@ persona:
   role: Аналітик державних інституцій Гетьманщини, що оцінює спадщину Апостола через призму інституційної стійкості та компромісів.
   voice: Institutional-Historian
 phase: BIO.3
+readings_contract_version: 2
 readings:
 - hosting: link-only
   language: uk
+  learner_task: Виписати ключові факти про гетьманство Данила Апостола, його реформи та політичний курс.
   note: Біографічна довідка про гетьмана Данила Апостола, його реформи та політичний курс.
+  rights:
+    basis: external-link
+    evidence_url: https://www.history.org.ua/?termin=Apostol_D
+    note: Зовнішнє посилання; текст не відтворюється в курсі.
   source_name: Енциклопедія історії України (Інститут історії України НАНУ)
+  source_url: https://www.history.org.ua/?termin=Apostol_D
   source_type: encyclopedia
-  source_url: http://www.history.org.ua/?termin=Apostol_D
-  title: Апостол Данило Павлович
+  title: АПОСТОЛ ДАНИЛО ПАВЛОВИЧ
 references:
 - title: Danylo Apostol
   note: Compiled from Horobets, Smoliy — Apostol's reforms and legacy
@@ -106,7 +112,7 @@ sequence: 52
 slug: danylo-apostol
 subtitle: 'The Hetmanate''s Pragmatist: Reform and Compromise'
 title: 'Данило Апостол: Останній обраний гетьман'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: затверджений імператором Петром II документ, що регламентував становище Гетьманщини та повноваження гетьмана
   pos: ч. (мн.)

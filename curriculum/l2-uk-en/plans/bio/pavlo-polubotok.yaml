@@ -79,14 +79,20 @@ persona:
   role: Модератор історичного трибуналу, що розглядає "справу Полуботка". Його завдання — через провокативні питання та зіткнення позицій з'ясувати не хто правий, а де правда.
   voice: Legal-Historian-Skeptic
 phase: BIO
+readings_contract_version: 2
 readings:
 - hosting: link-only
   language: uk
+  learner_task: Виписати ключові факти про діяльність наказного гетьмана, його протистояння з Малоросійською колегією та ув'язнення.
   note: Енциклопедична біографія наказного гетьмана, його протистояння з Малоросійською колегією та ув'язнення.
+  rights:
+    basis: external-link
+    evidence_url: https://www.history.org.ua/?termin=Polubotok_P
+    note: Зовнішнє посилання; текст не відтворюється в курсі.
   source_name: Енциклопедія історії України (Інститут історії України НАНУ)
+  source_url: https://www.history.org.ua/?termin=Polubotok_P
   source_type: encyclopedia
-  source_url: http://www.history.org.ua/?termin=Polubotok_P
-  title: Полуботок Павло Леонтійович
+  title: ПОЛУБОТОК ПАВЛО ЛЕОНТІЙОВИЧ
 references:
 - title: Павло Полуботок (Wikipedia UA)
   name: Павло Полуботок (Wikipedia UA)
@@ -107,7 +113,7 @@ sequence: 51
 slug: pavlo-polubotok
 subtitle: Символ опору чи прагматичний провал?
 title: 'Павло Полуботок: Мученик за автономію'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: особа, що тимчасово виконує обов''язки гетьмана
   pos: ч.

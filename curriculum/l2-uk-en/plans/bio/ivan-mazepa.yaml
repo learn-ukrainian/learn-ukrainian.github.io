@@ -82,21 +82,32 @@ persona:
   role: Історик-ревізіоніст, що ставить під сумнів чорно-білі оцінки. Змушує бачити за політичними рішеннями людську драму, а за іконами — складних, неоднозначних людей.
   voice: Mazepa-Revisionist
 phase: BIO.3
+readings_contract_version: 2
 readings:
 - hosting: link-only
   language: uk
+  learner_task: "Зіставити імперський ярлик «зради» з фактами про службу Мазепи, автономні інтереси й наслідки вибору 1708-1709 років."
   rationale: "Біографічний якір для розбору Мазепи як гетьмана, дипломата й мецената: учень звіряє імперський ярлик «зради» з довгою службою, автономними інтересами й наслідками 1708-1709 років."
-  source: "Енциклопедія історії України"
-  title: "Мазепа Іван Степанович"
+  rights:
+    basis: external-link
+    evidence_url: "https://history.org.ua/?termin=Mazepa_I_S"
+    note: "Зовнішнє посилання; текст не відтворюється в курсі."
+  source_name: "Енциклопедія історії України"
+  source_url: "https://history.org.ua/?termin=Mazepa_I_S"
+  title: "МАЗЕПА ІВАН СТЕПАНОВИЧ"
   type: encyclopedia
-  url: "https://history.org.ua/?termin=Mazepa_I_S"
 - hosting: link-only
   language: uk
+  learner_task: "Пояснити, як знищення Батурина пов'язане з політичним терором після переходу Мазепи до шведського союзу."
   rationale: "Тематичне читання для ціни вибору 1708 року: учень пов'язує знищення Батурина з політичним терором після переходу Мазепи до шведського союзу."
-  source: "Енциклопедія історії України"
-  title: "Батурина облога і штурм 1708"
+  rights:
+    basis: external-link
+    evidence_url: "https://history.org.ua/?termin=baturyna_obloga_i_shturm_1708"
+    note: "Зовнішнє посилання; текст не відтворюється в курсі."
+  source_name: "Енциклопедія історії України"
+  source_url: "https://history.org.ua/?termin=baturyna_obloga_i_shturm_1708"
+  title: "БАТУРИНА ОБЛОГА І ШТУРМ 1708"
   type: encyclopedia
-  url: "https://history.org.ua/?termin=baturyna_obloga_i_shturm_1708"
 references:
 - title: Ivan Mazepa
   note: 'Compiled from: Субтельний, Плохій, ЕІУ. Біографія, гетьманат, Полтава, спадщина.'
@@ -121,7 +132,7 @@ sequence: 47
 slug: ivan-mazepa
 subtitle: 'Ivan Mazepa: Anatomy of a Choice'
 title: 'Іван Мазепа: Анатомія вибору'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: голова козацької держави, головнокомандувач війська
   pos: ч.
