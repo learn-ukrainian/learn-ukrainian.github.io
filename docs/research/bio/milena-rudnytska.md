@@ -11,7 +11,7 @@
 - [x] All 10 sections completed
 - [x] ≥3 Tier 1/Tier 2 sources cited (ЕІУ [T1]; ЕУ [T1]; ЦДІАЛ / *Статті. Листи. Документи*, ред. Богачевська-Хомяк [T2]; Українки в історії, Либідь [T2])
 - [x] Oppression mechanism specific (Polish ban of Союз українок; 1939 Soviet annexation → permanent exile; Soviet erasure)
-- [x] ≥2 primary-source documentary expressions (her own page-cited articles; League of Nations Holodomor action) — attestation level reported honestly
+- [x] No unverified quotation retained; direct epistolary reading identified
 - [x] Cross-track links verified with `git ls-tree`/`test -e` on 2026-06-04
 - [x] Naming-canonical applied
 - [x] Image candidate(s) identified
@@ -23,11 +23,12 @@
 
 - **Full name (UA, canonical):** Міле́на Іва́нівна Рудни́цька, married name **Лисяк**. [T1: ЕІУ — Дядюк М.С., "Рудницька Мілена", т. 9, с. 352; T3: uk.wikipedia — Рудницька Мілена Іванівна]
 - **Pseudonyms / aliases:** married surname Лисяк (used variously). Russian transliterations (forbidden in body text; §8 only): Милена Рудницкая, Milena Rudnitskaya.
-- **Born:** **1892** | **Зборів** (нині Тернопільська область) | тоді Королівство Галичини та Володимирії, Австро-Угорщина. Father **Іван Рудницький** (Ukrainian); mother **Іда Шпігель** (Jewish; took the name **Ольга** at baptism). [T1: ЕІУ; T3: uk.wikipedia]
+- **Born:** **15 липня 1892** | **Зборів** (нині Тернопільська область) | тоді Королівство Галичини та Володимирії, Австро-Угорщина. The date is independently given by the direct ESU and IEU entries. [T1: ESU; IEU]
 - **Died:** **29 березня 1976** (aged 83) | **Мюнхен**, Федеративна Республіка Німеччина | in emigration. **Reburied in 1993 in Lviv**, family vault, **Личаківський цвинтар, поле № 54.** [T3: uk.wikipedia]
 - **Family / education key facts:** after her father's death (1902) the family moved to **Львів**; Polish gymnasium; **philosophy faculty, Львівський and Віденський університети**; **доктор філософії (1917)** with a dissertation *«Математичні основи естетики Ренесансу»*. Mother of historian **Іван Лисяк-Рудницький**; sister of the literary critic Михайло Рудницький and journalist Іван Кедрин-Рудницький — a remarkable Galician intellectual family. [T1: ЕІУ; T3: uk.wikipedia]
 
-**Source disagreement note (flagged, not smoothed):** the uk.wikipedia **lead** gives the birth date as **15 липня 1892**, while its own **biography section** gives **15 червня 1892**. The **month is therefore unsettled in the popular record (June vs July 1892)**; the **year (1892) and place (Зборів) are stable**. Higher-tier ЕІУ/ЕУ entries should be consulted to resolve the month before publication.
+**Source correction:** a June date appearing in the popular record is not
+retained. The direct ESU and IEU biographies both give 15 July 1892.
 
 ## 2. Oppression mechanism
 
@@ -50,23 +51,14 @@ Rudnytska was not arrested or shot — her oppression took the **specific, docum
 - `1970` — *«Невидимі стигмати»* — on Patriarch **Йосиф Сліпий**. [T3: uk.wikipedia]
 - `posthumous` — *«Мілена Рудницька. Статті. Листи. Документи»* (Львів, 1998, 844 с.) — the standard corpus. [T2]
 
-## 4. Primary-source quotes (≥2 required)
+## 4. Primary-source quotes
 
-Rudnytska's publicism is **not indexed in the project literary corpus** (a literary-corpus search returns only Zabuzhko's unrelated fictional character "Мілена"), so `verify_quote` is **not applicable** to her texts. Her verbatim corpus lives in the page-numbered **«Статті. Листи. Документи» (Львів, 1998)**. Per anti-fabrication discipline, the items below are **honestly-framed documentary expressions** — her own published article-titles/positions and one tool-corroborated fact — not invented sentences.
-
-**Documentary expression 1 — economic independence as the core of women's emancipation:**
-
-> *«Економічна незалежність жінки»* — the title and thesis of her own programmatic article.
-
-A characteristic Rudnytska position: that women's emancipation rests first on economic self-standing, not merely formal rights. [T2: *Статті. Листи. Документи*, с. 132]
-
-**Documentary expression 2 — the fight for the truth about the Holodomor (tool-corroborated):**
-
-> *«Боротьба за правду про Великий Голод»* — her own framing of the 1933 international campaign.
-
-This is the campaign in which she is independently documented to have acted: a `verify_source_attribution(source="wikipedia", claim="Мілена Рудницька жіночий рух")` returned the evidence chunk — **«завдяки зв'язкам Рудницької з міжнародним жіночим рухом одна з комісій Ліги Націй порушила питання про голодомор»** — i.e. *through Rudnytska's ties to the international women's movement, a commission of the League of Nations raised the question of the Holodomor.* This is her single most historically weighty act and is reported here with the raw tool evidence. [T2: *Статті. Листи. Документи*, с. 145, 410; corroboration: `mcp__sources__verify_source_attribution` → uk.wikipedia, 2026-06-04]
-
-*(A third documented position — her insistence, against both Soviet hostility and conservative Galician suspicion, that feminism and national liberation are not opposed — is captured in her article «Непорозуміння з фемінізмом», *Статті. Листи. Документи*, с. 170–176. The verbatim sentences of these works were not captured from a Tier-1/2 transcription this pass and are therefore referenced with page citations rather than quoted as invented lines.)*
+No verbatim quotation is approved in this packet. Several strings previously
+presented as documentary expressions were article titles, not quotations.
+The direct Ukrainian Historical Journal publication of correspondence between
+Rudnytska and Ivan Lysiak-Rudnytskyi is the approved primary-text candidate:
+https://nasu-periodicals.org.ua/index.php/uhj/article/view/20706. Exact excerpts
+require a separate page-level verification before reuse.
 
 ## 5. Language register
 
@@ -116,16 +108,18 @@ This is the campaign in which she is independently documented to have acted: a `
 
 ## 9. Image candidates
 
-- **Best PD/CC portrait:** Wikimedia Commons holds interwar photographic portraits of Rudnytska (Sejm-deputy and Союз українок period, 1928–1939); verify the **file page** for PD-by-age / license status. [Commons: "Milena Rudnytska" / "Мілена Рудницька"]
-- **Backup candidates:**
-  - A masthead/cover of the biweekly **«Жінка»** (1935–1939) — illustrates §3.
-  - A photograph of the **1934 Український жіночий конгрес (Станиславів)** — illustrates the movement's peak (§2/§3).
-- **Context image:** a League of Nations / Geneva session photograph from the early 1930s — illustrates the §2/§4 Holodomor internationalisation.
-- **If no rights-clear portrait clears review:** fall back to the «Жінка» masthead or a Союз українок congress group photo.
+- **Approved candidate:** Wikimedia Commons `File:Milena_Rudnycka.jpg`, an
+  anonymous 1930 portrait from *Światowid*, marked PD-Poland and
+  PD-anon-70-EU on the individual file page:
+  https://commons.wikimedia.org/wiki/File:Milena_Rudnycka.jpg
 
 ## 10. Sources used
 
 **Tier 1 (authoritative):**
+- О. О. Сухобокова. «Рудницька Мілена Іванівна» // Енциклопедія
+  Сучасної України. https://esu.com.ua/article-883554
+- *Internet Encyclopedia of Ukraine.* «Rudnytska, Milena».
+  https://www.encyclopediaofukraine.com/display.asp?linkpath=pages%5CR%5CU%5CRudnytskaMilena.htm
 - *Енциклопедія історії України*, т. 9 (Прил–С). Дядюк М.С. "Рудницька Мілена." Київ: Наукова думка, 2012. С. 352.
 - *Енциклопедія українознавства: Словникова частина* / гол. ред. В. Кубійович — "Рудницька Мілена"; and the Союз українок entry (its rise, the 1938 ban, the «Дружина кн. Ольги»). Via literary corpus `wave7-entsyklopediia-ukrainoznavstva`, accessed 2026-06-04.
 
@@ -144,7 +138,9 @@ This is the campaign in which she is independently documented to have acted: a `
 - Her own articles in *Статті. Листи. Документи* — «Економічна незалежність жінки» (с. 132); «Непорозуміння з фемінізмом» (с. 170–176); «Українська дійсність і завдання жінки» (с. 187); «Боротьба за правду про Великий Голод» (с. 410); «Крізь перспективу одного місяця…» (с. 145).
 - League of Nations petitions on the pacification and the famine (1930–1933) — via the Ukrainian Parliamentary Representation.
 
-**Honest gaps:** the **birth month** (June vs July 1892) is an unresolved popular-record disagreement; the higher-tier ЕІУ/ЕУ entries should settle it. Her **verbatim quotations** were not captured from a Tier-1/2 transcription this pass — §4 therefore uses page-cited documentary expressions rather than invented sentences, and `verify_quote` is not applicable (her publicism is absent from the literary corpus). The **exact year of the Союз українок ban** is given as 1938 per the standard account; the ban itself is ЕУ-attested.
+**Honest gaps:** no verbatim quotation was captured from a page-level primary
+transcription, so none is retained. The exact year of the Союз українок ban
+is given as 1938 per the standard account; the ban itself is ЕУ-attested.
 
 ---
 

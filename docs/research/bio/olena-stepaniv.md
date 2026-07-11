@@ -11,7 +11,7 @@
 - [x] All 10 sections completed
 - [x] ≥3 Tier 1/Tier 2 sources cited (ЕСУ т.9; НТШ membership/publications; named T4 scholarship Шаблій/Вісьтак, Лазарович, Сварник)
 - [x] Oppression mechanism is specific (dated MGB arrest, charge articles, sentencing body, camp, labour, release)
-- [x] ≥2 primary-source quotes (1939 Вільде interview; 1944 refusal to emigrate — provenance flagged)
+- [x] No unverified quotation retained; direct institutional readings identified
 - [x] Cross-track links: every "Existing" path verified against `origin/main` plan inventory on 2026-06-04
 - [x] Naming-canonical applied
 - [x] Image candidate(s) identified
@@ -54,23 +54,13 @@ Author of ~73–75 works (about 50 published), spanning memoir, military history
 - `1943` — *Сучасний Львів* (Сучасне обличчя Львова), her major anthropogeographic study of Lviv; *Мандруймо по рідному краю*. [T3: uk.wikipedia]
 - `1943` — *Софія Галечко, в 25 річницю смерті*, on a fellow Sich-Riflewoman. [T3: uk.wikipedia]
 
-## 4. Primary-source quotes (≥2 required)
+## 4. Primary-source quotes
 
-> Stepaniv's documentary voice is in her memoirs and interviews. Both quotes are verbatim from her own recorded words, with provenance flagged. (The literary-corpus `verify_quote` check does not apply — she is a memoirist/scholar, not a belletrist.)
-
-**Quote 1 — on readjusting to "private life" after soldiering (interview with Ірина Вільде, *Жіноча доля*, 1939):**
-
-> «Привикла до спідниці, але повірте, зразу приходило мені це дуже тяжко. Почувала себе зовсім неповоротно в жіночому одязі. І знаєте — якось попросту не знала, що було зробити з особистою свободою… наче б заважала вона. Довгого-довгого часу потрібно було, щоб знову „тілом і душею" повернутися до нормального стану.»
-
-A rare first-person reflection on gender, military service, and the loss of the soldier's freedom on return to a woman's expected role — extraordinary for 1939, and the single richest Stepaniv text for a gender-and-statehood lesson. [Interview, *Жіноча доля*, 1939; via T3: uk.wikipedia transcription; flagged interview-transmitted]
-
-**Quote 2 — refusal to emigrate before the Red Army's return (1944):**
-
-> «Я залишаюся з своїм народом.»
-
-Said in 1944, when she chose to stay rather than flee west — knowing what Soviet rule would mean (and it meant the camps). Transmitted by her former pupil Ірина Книш to Stepaniv's son **Ярослав Дашкевич**, who added that she «ніколи не шкодувала свого рішення». Pedagogically it is the moral hinge of her life: belonging over safety. [1944; memoir-transmitted via Я. Дашкевич; flagged]
-
-**Honest gap (§4 + §10):** both quotations are reproduced from the uk.wikipedia transcription of, respectively, the 1939 *Жіноча доля* interview and Ya. Dashkevych's memoir; neither original was opened directly this pass. Labelled accordingly.
+No verbatim quotation is approved in this packet. The two former items were
+secondary transcriptions of an interview and a memoir, and neither immediate
+original was opened. The UINP profile and direct institutional biographies are
+approved for factual reading; exact first-person excerpts require a separate
+primary-document check.
 
 ## 5. Language register
 
@@ -120,16 +110,18 @@ Said in 1944, when she chose to stay rather than flee west — knowing what Sovi
 
 ## 9. Image candidates
 
-- **Best PD/CC portrait:** abundant **public-domain WWI-era photographs** exist (she was among the most-photographed УСС figures) — e.g. the 8 March 1915 Маківка officers' photo by Іван Іванець, and the 1916 УСС postcard series; **a 21 April 1915 postage stamp bore her portrait**. Most are PD-by-age; verify each **file page**. [Wikimedia Commons category: `Olena Stepaniv`]
-- **Backup candidates:**
-  - Osyp Kurylas's wartime portrait of her; УСС postcard series («Brown front»).
-  - Личаківський-cemetery memorial photograph — verify rights.
-- **Context image (use with care):** a PD УСС-era postcard with her in uniform would strongly illustrate §1 and §6 (the gender-and-soldiering theme).
-- **If no specific portrait clears review:** the 1915 stamp or the Іванець group photo are strong PD options.
+- **Approved candidate:** Osyp Kurylas's wartime portrait on Wikimedia
+  Commons, `File:Курилас_-_Портрет_Олени_Степанів.jpg`, marked public domain
+  in the country of origin and the United States on the individual file page:
+  https://commons.wikimedia.org/wiki/File:Курилас_-_Портрет_Олени_Степанів.jpg
 
 ## 10. Sources used
 
 **Tier 1 (authoritative — baseline):**
+- «Степанів Олена» // Енциклопедія Сучасної України.
+  https://esu.com.ua/article-887023
+- «Степанів-Дашкевич Олена Іванівна» // Енциклопедія історії України.
+  https://history.org.ua/?termin=Stepaniv_D
 - К. Науменко. «Степанів Олена Іванівна» // *Енциклопедія Сучасної України*, т. 9. — К.: Інститут енциклопедичних досліджень НАН України. (Cited as the standard UA encyclopedic baseline for identity/chronology; attributed via the article's own citation, not freshly fetched this pass — flagged.)
 
 **Tier 2 (institutional):**
@@ -144,7 +136,8 @@ Said in 1944, when she chose to stay rather than flee west — knowing what Sovi
 - Галина Сварник — on her РСУК cooperative work and overall significance.
 - Мирослава Влах. «Модальний вимір наукових текстів Олени Степанів…» (ЛНУ ім. І. Франка) — modern analysis of her scientific prose.
 
-**Primary-source documents accessed (in transcription only):** the 1939 *Жіноча доля* interview (§4 quote 1) and Ya. Dashkevych's memoir of his mother (§4 quote 2), via the uk.wikipedia transcription; the MGB case file and her own memoir editions were not opened this pass (honest gap).
+**Primary-source status:** no verbatim excerpt is approved; the MGB case file,
+1939 interview, and memoir editions were not opened directly in this pass.
 
 ---
 

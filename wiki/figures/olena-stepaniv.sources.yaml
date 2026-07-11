@@ -1,47 +1,27 @@
 # Source registry for wiki/figures/olena-stepaniv.md
-# Referenced inline as [S1], [S2], ...
 sources:
-- id: S1
-  file: 5-klas-istoriya-schupak-2022_s1937
-  type: textbook
-  title: § 16. Розтлумачте значення слів істо
-  page: 92
-  grade: 5
-- id: S2
-  file: 10-klas-istorija-ukrajiny-gisem-2018_s0067
-  type: textbook
-  title: § 3. Воєнні дії на території України в 1914—1915 рр. за Ужоцький перевал
-    прийняв бойове хрещення перший із підрозділів
-  page: 17
-  grade: 10
-- id: S3
-  file: https://www.youtube.com/watch?v=-fHQ9Yn3gq0
-  type: external
-  title: ЧИ СВЯТКУВАТИ 8 БЕРЕЗНЯ? Реальна історія з Акімом Галімовим
-  url: https://www.youtube.com/watch?v=-fHQ9Yn3gq0
-- id: S4
-  file: ukrainian_wiki/olena-stepaniv_Біографія-Олена-Степанів-Перша-жінка-офіцер-Основний-зміст-Обмеження-джерельної-бази
-  type: ukrainian_wiki
-  title: 'Біографія: Олена Степанів: Перша жінка-офіцер'
-  section_path: 'Біографія: Олена Степанів: Перша жінка-офіцер > Основний зміст >
-    Обмеження джерельної бази'
-- id: S5
-  file: ukrainian_wiki/olena-stepaniv_Біографія-Олена-Степанів-Перша-жінка-офіцер-Короткий-зміст
-  type: ukrainian_wiki
-  title: 'Біографія: Олена Степанів: Перша жінка-офіцер'
-  section_path: 'Біографія: Олена Степанів: Перша жінка-офіцер > Короткий зміст'
-- id: S6
-  file: ukrainian_wiki/olena-stepaniv_Біографія-Олена-Степанів-Перша-жінка-офіцер-Деколонізаційна-перспектива
-  type: ukrainian_wiki
-  title: 'Біографія: Олена Степанів: Перша жінка-офіцер'
-  section_path: 'Біографія: Олена Степанів: Перша жінка-офіцер > Деколонізаційна перспектива'
-- id: S7
-  file: wikipedia/Листи до братів-хліборобів
-  type: wikipedia
-  title: Листи до братів-хліборобів
-  url: https://uk.wikipedia.org/wiki/%D0%9B%D0%B8%D1%81%D1%82%D0%B8%20%D0%B4%D0%BE%20%D0%B1%D1%80%D0%B0%D1%82%D1%96%D0%B2-%D1%85%D0%BB%D1%96%D0%B1%D0%BE%D1%80%D0%BE%D0%B1%D1%96%D0%B2
-- id: S8
-  file: wikipedia/Постмодернізм в історичній науці
-  type: wikipedia
-  title: Постмодернізм в історичній науці
-  url: https://uk.wikipedia.org/wiki/%D0%9F%D0%BE%D1%81%D1%82%D0%BC%D0%BE%D0%B4%D0%B5%D1%80%D0%BD%D1%96%D0%B7%D0%BC%20%D0%B2%20%D1%96%D1%81%D1%82%D0%BE%D1%80%D0%B8%D1%87%D0%BD%D1%96%D0%B9%20%D0%BD%D0%B0%D1%83%D1%86%D1%96
+  - id: S1
+    file: https://esu.com.ua/article-887023
+    type: external
+    title: Степанів Олена
+    url: https://esu.com.ua/article-887023
+  - id: S2
+    file: https://history.org.ua/?termin=Stepaniv_D
+    type: external
+    title: Степанів-Дашкевич Олена Іванівна
+    url: https://history.org.ua/?termin=Stepaniv_D
+  - id: S3
+    file: https://uinp.gov.ua/elektronni-vydannya/kolekciya-pamyatok-do-pamyatnyh-dat-ukrayinskoyi-revolyuciyi-1917-1921-rokiv/zavantazhyty-pdf/kolekciya-pamyatok-do-pamyatnyh-dat-ukrayinskoyi-revolyuciyi-1917-1921-rokiv-144-dpi
+    type: external
+    title: Колекція пам'яток до пам'ятних дат Української революції 1917–1921 років
+    url: https://uinp.gov.ua/elektronni-vydannya/kolekciya-pamyatok-do-pamyatnyh-dat-ukrayinskoyi-revolyuciyi-1917-1921-rokiv/zavantazhyty-pdf/kolekciya-pamyatok-do-pamyatnyh-dat-ukrayinskoyi-revolyuciyi-1917-1921-rokiv-144-dpi
+  - id: S4
+    file: https://geography.lnu.edu.ua/vlakh-modalnyy-vymir-naukovykh-tekstiv-oleny-stepaniv-2022-st
+    type: external
+    title: Влах — Модальний вимір наукових текстів Олени Степанів
+    url: https://geography.lnu.edu.ua/vlakh-modalnyy-vymir-naukovykh-tekstiv-oleny-stepaniv-2022-st
+  - id: S5
+    file: https://commons.wikimedia.org/wiki/File:Курилас_-_Портрет_Олени_Степанів.jpg
+    type: external
+    title: Курилас — Портрет Олени Степанів — public domain
+    url: https://commons.wikimedia.org/wiki/File:Курилас_-_Портрет_Олени_Степанів.jpg

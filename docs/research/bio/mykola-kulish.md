@@ -13,7 +13,7 @@
 - [x] All 10 sections completed
 - [x] ≥3 Tier 1/Tier 2 sources cited (IEU T1; ЕІУ Герасимова T1; Русанівський & Попович scholarly histories held in the corpus)
 - [x] Oppression mechanism is specific (arrest Dec 1934; «Справа боротьбистів» March 1935; shot 3.11.1937 Сандармох per трійка постанова 9.10.1937)
-- [x] ≥2 primary-source quotes — «Мина Мазайло» (T1-sourced) + «Народний Малахій» (T1-sourced) + «Патетична соната» (labelled)
+- [x] No unverified quotation retained; direct primary text identified
 - [x] Cross-track links: every "Existing" path verified with `test -e` on 2026-06-03
 - [x] Naming-canonical applied (with Panteleimon disambiguation)
 - [x] Image candidate(s) identified
@@ -57,27 +57,14 @@ Roughly **15 plays in 1923–1934**; the founder of modern Ukrainian drama. [T3:
 
 **Suppression note:** «На рыбной ловле» and «Такі» were confiscated and lost; most plays were unstageable/unprintable for decades; the first posthumous edition appeared abroad (УВАН, Нью-Йорк, 1955) before any in Soviet Ukraine.
 
-## 4. Primary-source quotes (≥2 required)
+## 4. Primary-source quotes
 
-> Note on method: Kulish's play texts are **not** in the project's verify_quote literary corpus (a search on author "Микола Куліш" returned matched=false). The lines below are nonetheless **attested inside the corpus through Tier-1 scholarship** (Русанівський's history of the literary language; Попович's cultural history) and Wikiquote; each is sourced, and the verify-status is stated honestly.
-
-**Quote 1 — «Мина Мазайло» (1929), Мокій defending the Ukrainian word.** Quoted in В. Русанівський's *Історія української літературної мови* (corpus `wave9-rusanivsky-ist-lit-movy`):
-
-> «Мокій: — Або кажуть — думка бринить. Це треба так розуміти: тільки-тільки береться, вона ще неясна — бринить… (Рина:) Ти знаєш, як по-українському кажуть: "ночью при звьоздах не спітся"? — … — Зорію. Правда, прекрасно звучить?»
-
-This is the play's beating heart: the beauty and specificity of Ukrainian set against the Russifier's contempt — pedagogically perfect for the українізація theme. [T1-scholarly: Русанівський, in corpus; the play line itself]
-
-**Quote 2 — «Народний Малахій» (1927), the mania of remaking the human being.** М. Попович's *Нарис історії культури України* (corpus `wave7-popovych-narys-kultury`) frames the hero by his own obsession — "негайної реформи людини"; the play's refrain is:
-
-> «Бо головне ж тепер — реформа людини…»
-
-Малахій Стаканчик's doomed "голуба реформа" of humanity is the tragicomic indictment of utopian violence. [T1-scholarly: Попович, in corpus; line via Wikiquote — sourced, not corpus-verified verbatim]
-
-**Quote 3 (labelled, Wikiquote-sourced) — «Патетична соната» (1929):**
-
-> «Українче, спізнай самого себе!» … «Хочемо, щоб нація наша чужих чобіт не чистила. Пора! Вільними стати пора!»
-
-The line that the play could not say openly except through езопівська мова — and that helped get him killed. [T5: uk.wikiquote — sourced; not corpus-verified verbatim]
+No verbatim quotation is approved in this packet. The former second and third
+items depended on Wikiquote or mediated scholarship, and the first had not
+been rechecked against the play itself. The direct primary text of «Мина
+Мазайло» is available at https://uk.wikisource.org/wiki/Мина_Мазайло, while
+the plan links the official Institute of Pedagogy anthology. Any excerpt must
+be checked against one of those direct texts before learner-facing reuse.
 
 ## 5. Language register
 
@@ -129,14 +116,16 @@ The line that the play could not say openly except through езопівська 
 
 ## 9. Image candidates
 
-- **Best PD portrait:** Wikimedia Commons category **"Mykola Kulish"** (the playwright) holds 1920s–30s portraits; he died in 1937, so pre-1937 photographs are public domain by age in Ukraine and the US. Confirm on the individual **file page**, and make sure the file is the **playwright**, not Panteleimon. [Commons category: `Mykola Kulish`]
-- **Backup candidates:** a Березіль production still of «Народний Малахій» or «Мина Мазайло» (1928–29); the Херсонський музично-драматичний театр ім. М. Куліша façade.
-- **Context image:** the **Сандармох** memorial (the execution ground), or a 1934 congress photograph — strong §2 illustrations if rights-clear.
-- **If no rights-clear portrait clears review:** fall back to a PD title-page of a 1920s «97» or «Мина Мазайло» edition.
+- **Approved candidate:** Wikimedia Commons `File:Mykola_Kulish.jpg`, a
+  1920s portrait of the playwright by an unknown author, marked public domain
+  on the individual file page:
+  https://commons.wikimedia.org/wiki/File:Mykola_Kulish.jpg
 
 ## 10. Sources used
 
 **Tier 1 (authoritative):**
+- «Куліш Микола Гурович» // Енциклопедія Сучасної України.
+  https://esu.com.ua/article-51392
 - *Internet Encyclopedia of Ukraine.* "Kulish, Mykola." https://www.encyclopediaofukraine.com/display.asp?linkpath=pages\K\U\KulishMykola.htm — birth/death, arrest, Borotbist show-trial, Solovki, Sandarmokh. Accessed 2026-06-03 (opened and verified).
 - Герасимова Г. П. "Куліш Микола Гурович." *Енциклопедія історії України*, т. 5 (Кон–Кю). Київ: Наукова думка, 2009. С. 466. (cited via the article's джерела; ЕІУ т. 5).
 - Русанівський В. *Історія української літературної мови* — held in the corpus (`wave9-rusanivsky-ist-lit-movy`); source of the «Мина Мазайло» Мокій passage and the Лавріненко characterisation.

@@ -1,58 +1,27 @@
 # Source registry for wiki/figures/josyf-slipyj.md
-# Referenced inline as [S1], [S2], ...
 sources:
-- id: S1
-  file: ukrainian_wiki/josyf-slipyj_Біографія-Патріарх-Йосиф-Сліпий-Незламний-сповідник-віри-Короткий-зміст
-  type: ukrainian_wiki
-  title: 'Біографія: Патріарх Йосиф Сліпий: Незламний сповідник віри'
-  section_path: 'Біографія: Патріарх Йосиф Сліпий: Незламний сповідник віри > Короткий
-    зміст'
-- id: S2
-  file: ukrainian_wiki/josyf-slipyj_Біографія-Патріарх-Йосиф-Сліпий-Незламний-сповідник-віри-Деколонізаційна-перспектива
-  type: ukrainian_wiki
-  title: 'Біографія: Патріарх Йосиф Сліпий: Незламний сповідник віри'
-  section_path: 'Біографія: Патріарх Йосиф Сліпий: Незламний сповідник віри > Деколонізаційна
-    перспектива'
-- id: S3
-  file: ukrainian_wiki/josyf-slipyj_Біографія-Патріарх-Йосиф-Сліпий-Незламний-сповідник-віри-Основний-зміст-1-Інтелектуальне-та-духовне-становлення-1892-1944
-  type: ukrainian_wiki
-  title: 'Біографія: Патріарх Йосиф Сліпий: Незламний сповідник віри'
-  section_path: 'Біографія: Патріарх Йосиф Сліпий: Незламний сповідник віри > Основний
-    зміст > 1. Інтелектуальне та духовне становлення (1892–1944)'
-- id: S4
-  file: ukrainian_wiki/josyf-slipyj_Біографія-Патріарх-Йосиф-Сліпий-Незламний-сповідник-віри-Основний-зміст-4-Вісімнадцять-років-незламності-в-таборах-ГУЛАГу
-  type: ukrainian_wiki
-  title: 'Біографія: Патріарх Йосиф Сліпий: Незламний сповідник віри'
-  section_path: 'Біографія: Патріарх Йосиф Сліпий: Незламний сповідник віри > Основний
-    зміст > 4. Вісімнадцять років незламності в таборах ГУЛАГу'
-- id: S5
-  file: 11-klas-istoriya-ukr-galimov-2024_s0823
-  type: textbook
-  title: § 10. Культура та духовне життя в УРСР
-  page: 84
-  grade: 11
-- id: S6
-  file: 11-klas-istoriya-ukr-hlibovska-2024_s1007
-  type: textbook
-  title: 'Загинув у 1950 році. Девіз його життя: «Здобудеш Українську'
-  page: 40
-  grade: 11
-- id: S7
-  file: 11-klas-istoriya-ukr-gisem-2024_s0899
-  type: textbook
-  title: § 4. Політика радянізації («совєтізації») та репресії західних областей УРСР
-  page: 31
-  grade: 11
-- id: S8
-  file: ukrainian_wiki/josyf-slipyj_Біографія-Патріарх-Йосиф-Сліпий-Незламний-сповідник-віри-Основний-зміст-5-Тріумф-правди-звільнення-та-розбудова-патріархату-у-вільному-світі
-  type: ukrainian_wiki
-  title: 'Біографія: Патріарх Йосиф Сліпий: Незламний сповідник віри'
-  section_path: 'Біографія: Патріарх Йосиф Сліпий: Незламний сповідник віри > Основний
-    зміст > 5. Тріумф правди: звільнення та розбудова патріархату у вільному світі'
-- id: S9
-  file: 11-klas-istoriya-ukr-galimov-2024_s0805
-  type: textbook
-  title: § 4. Політика радянізації («совєтізації») та репресії в західних областях
-    УРСР
-  page: 33
-  grade: 11
+  - id: S1
+    file: https://ugcc.ua/en/church/history/patriarch-yosyf-slipy/
+    type: external
+    title: Patriarch Yosyf Slipy
+    url: https://ugcc.ua/en/church/history/patriarch-yosyf-slipy/
+  - id: S2
+    file: https://resource.history.org.ua/item/0014088
+    type: external
+    title: Спомини
+    url: https://resource.history.org.ua/item/0014088
+  - id: S3
+    file: https://esu.com.ua/article-59579
+    type: external
+    title: Львівська греко-католицька богословська академія
+    url: https://esu.com.ua/article-59579
+  - id: S4
+    file: https://ugcc.church/blog/zapovit-patriarha-josyfa-slipoho/
+    type: external
+    title: Заповіт Патріарха Йосифа Сліпого
+    url: https://ugcc.church/blog/zapovit-patriarha-josyfa-slipoho/
+  - id: S5
+    file: https://commons.wikimedia.org/wiki/File:Cardinal_Josyp_Slipyj.jpg
+    type: external
+    title: Cardinal Josyp Slipyj.jpg — CC BY-SA 3.0
+    url: https://commons.wikimedia.org/wiki/File:Cardinal_Josyp_Slipyj.jpg

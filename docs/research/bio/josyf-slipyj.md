@@ -51,20 +51,12 @@ returned the wording.
 
 ## 4. Primary-source quotes
 
-**Quote 1 — motto from pastoral-letter tradition:**
-
-> Великого бажайте!
-
-Tool status: verified by official UGCC material as a phrase from one of
-Slipyj's pastoral letters. [U3]
-
-**Quote 2 — reported first question after release:**
-
-> А чи стала вільною Церква?
-
-Tool status: verified in Synod UGCC material. Because the immediate primary
-document was not retrieved in this pass, treat this as a reported quote and
-not as a manuscript-verified quote. [U4]
+No verbatim quotation is approved for learner-facing reuse in this packet.
+`Великого бажайте!` is attested by official UGCC material as a reported phrase,
+and the release question is likewise secondary-reported, but neither was
+checked here against its immediate manuscript or printed primary source.
+Slipyj's open-access memoir record and the official Testament link are direct
+reading candidates; exact excerpts require a separate primary-text check.
 
 ## 5. Language register
 
@@ -123,14 +115,20 @@ not as a manuscript-verified quote. [U4]
 
 ## 9. Image candidates
 
-- **Best candidate:** official UGCC case photographs or Wikimedia portrait
-  only after license verification.
-- **Context image:** St. Sophia in Rome or St. George Cathedral crypt only
-  after license verification.
-- **Sensitivity note:** prison/case-file images should not be used as visual
-  spectacle; prefer dignity-preserving institutional context.
+- **Approved candidate:** Wikimedia Commons
+  `File:Cardinal_Josyp_Slipyj.jpg`, a 1968 photograph depicting Josyf Slipyj,
+  licensed CC BY-SA 3.0 (also GFDL) on the individual file page:
+  https://commons.wikimedia.org/wiki/File:Cardinal_Josyp_Slipyj.jpg
+- **Sensitivity note:** prefer this dignity-preserving portrait to prison or
+  case-file imagery.
 
 ## 10. Sources used / tool evidence ledger
+
+**H1 — direct memoir record, Institute of History of Ukraine:**
+URL: https://resource.history.org.ua/item/0014088
+
+**I1 — individually verified Commons portrait:**
+URL: https://commons.wikimedia.org/wiki/File:Cardinal_Josyp_Slipyj.jpg
 
 **W1 — `mcp__sources.query_wikipedia`, summary/extract, query `Йосиф Сліпий`:**
 raw output included `# Йосиф (Сліпий)`,

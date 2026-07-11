@@ -11,7 +11,7 @@
 - [x] All 10 sections completed
 - [x] ≥3 Tier 1/Tier 2 sources cited (IEU T1; Костюк/Смолоскип 5-volume T2; Мельників critical edition + ГДА СБУ formulary file)
 - [x] Oppression mechanism is specific (Stalin's 26.04.1926 letter; НКВС справа-формуляр С-183; suicide 13.05.1933, house «Слово»)
-- [x] ≥2 primary-source quotes — two verify_quote-confirmed pamphlet passages (1.0 and 0.84) + the transmitted suicide-note opening (labelled)
+- [x] No transmitted suicide-note quotation retained; direct pamphlet texts identified
 - [x] Cross-track links: every "Existing" path verified with `test -e` on 2026-06-03
 - [x] Naming-canonical applied
 - [x] Image candidate(s) identified
@@ -58,25 +58,14 @@ This is the load-bearing section. Хвильовий was not shot or sentenced; 
 
 **Suppression note:** «Україна чи Малоросія?» went unpublished for ~67 years; «Вальдшнепи» part 2 was destroyed/lost; the entire œuvre was banned until the late 1980s; the first full critical edition (**Повне зібрання у 5 томах**, упор. Ростислав Мельників) appeared only **2018–2023**.
 
-## 4. Primary-source quotes (≥2 required)
+## 4. Primary-source quotes
 
-**Quote 1 — the peroration of «Камо грядеши?» (1925).** `verify_quote` against the literary corpus (`ukrlib-khvylovy`) returned **matched=true, confidence 1.0**:
-
-> «Ми відкидаємо малоросійщину, просвітянщину та іншу безперспективну вузькість і кличемо до невідомих обріїв прекрасного азіатського ренесансу… Кажіть же, юнаки й юнки: — Камо грядеши?»
-
-Pedagogically central: the programmatic break with "малоросійщина" (provincial colonial self-image) and the call to a Ukrainian-led "азіатський ренесанс." [Primary: М. Хвильовий, «Камо грядеши?», 1925; verify_quote conf. 1.0, work `ukrlib-khvylovy`]
-
-**Quote 2 — on what "Європа" meant (the «психологічна Європа» argument).** `verify_quote` returned **matched=true, confidence 0.84**:
-
-> «…під "Європою" ми мали на увазі не тільки технічні досягнення, але й — головне — психологічну категорію, певний тип культурного фактора в історичному процесі, певний революційний метод.»
-
-This is the sentence behind the slogan «Дайош психологічну Європу» / «Геть від Москви!»: Хвильовий argues for Europe as an *orientation and method*, not a geography — useful for teaching that his "anti-Moscow" stance was cultural decolonisation, which the regime deliberately re-read as political treason. [Primary: М. Хвильовий, polemical cycle; verify_quote conf. 0.84, work `ukrlib-khvylovy`]
-
-**Quote 3 (transmitted document — labelled) — the suicide note to fellow writers, 13 May 1933.** The original was confiscated; the text below is the widely transmitted opening, **not** corpus-verifiable (a note is not a published literary work):
-
-> «Арешт Ялового — це розстріл цілої генерації… За що? За те, що ми були найщирішими комуністами?»
-
-The note famously ends "Хай живе комунізм. Хай живе соціалістичне будівництво. Хай живе комуністична партія." That a man hunted to death by the Party closed his life with "Long live the Communist Party" is the unsmoothed tragedy of national-communism (see §6) — do not edit it out. [T3: uk.wikipedia — «Самогубство Миколи Хвильового»; full text public only after late-1980s rehabilitation]
+No verbatim quotation is approved in this packet. Two pamphlet passages were
+previously matched in the literary corpus, but one match was only 0.84 and the
+transmitted suicide-note wording lacks an available original. The direct
+Wikisource texts and scans of «Камо грядеши» and «Україна чи Малоросія?» are
+the approved primary candidates; exact excerpts must be pinned to those texts
+before reuse.
 
 ## 5. Language register
 
@@ -127,14 +116,16 @@ The note famously ends "Хай живе комунізм. Хай живе соц
 
 ## 9. Image candidates
 
-- **Best PD portrait:** Wikimedia Commons category **"Mykola Khvylovy"** holds 1920s photographic portraits; the subject died in 1933 and the photos predate that, so they are public domain by age in Ukraine and the US (pre-1929 / author-life+70). Confirm on the individual **file page**, not the category. [Commons category: `Mykola Khvylovy`]
-- **Backup candidates:** a photograph of the **будинок «Слово»** in Харків (the site of his suicide and of the mass arrests); a scan of a 1920s «Сині етюди» / «Камо грядеши?» title page.
-- **Context image:** a facsimile page of the suppressed «Україна чи Малоросія?» (first printed 1993) — a strong §2/§3 illustration if a rights-clear scan is found.
-- **If no rights-clear portrait clears review:** fall back to the PD title-page of a 1920s edition.
+- **Approved candidate:** Wikimedia Commons `File:MykolaHvylovyukraine.jpg`,
+  a pre-1933 portrait by an unknown author, marked PD-Ukraine on the
+  individual file page with the combined Ukraine/United States rule:
+  https://commons.wikimedia.org/wiki/File:MykolaHvylovyukraine.jpg
 
 ## 10. Sources used
 
 **Tier 1 (authoritative):**
+- «Хвильовий Микола Григорович» // Енциклопедія історії України.
+  https://history.org.ua/?termin=Khvylovyj_M
 - *Internet Encyclopedia of Ukraine.* "Khvylovy, Mykola." https://www.encyclopediaofukraine.com/display.asp?linkpath=pages\K\H\KhvylovyMykola.htm — confirms birth/death, real surname Fitilev, suicide, the renounced "Away from Moscow" slogan. Accessed 2026-06-03 (page opened and verified).
 
 **Tier 2 (institutional):**
@@ -149,11 +140,18 @@ The note famously ends "Хай живе комунізм. Хай живе соц
 - Олег Ільницький. «Хвильовий-комуніст — це не Каганович» // Читомо (interview/essay on the national-communist reading). [T5 outlet, named author; used for §6 framing only]
 
 **Primary-source documents accessed (in transcription):**
+- М. Хвильовий. «Камо грядеши».
+  https://uk.wikisource.org/wiki/Камо_грядеши
+- М. Хвильовий. «Україна чи Малоросія?».
+  https://uk.wikisource.org/wiki/Україна_чи_Малоросія%3F
 - The two suicide notes of 13 May 1933 (to fellow writers; to stepdaughter Любов Уманцева) — confiscated 1933, public only after late-1980s rehabilitation; opening lines cited via T3.
 - Stalin's letter «Тов. Кагановичу та іншим членам ПБ ЦК ВКП(б)У», 26 April 1926 (cited via T3; the political signal that opened the campaign).
 - М. Хвильовий, pamphlet «Камо грядеши?» (1925) and the «психологічна Європа» polemic — accessed directly through the literary corpus (`ukrlib-khvylovy`) and verify_quote-confirmed (§4).
 
-**Honest gaps:** the ЕСУ and ЕІУ entries on Хвильовий exist but were not directly opened in this pass — IEU (T1) is the opened encyclopedic anchor, cross-checked against the very detailed Ukrainian Wikipedia. The exact wording of the suicide notes is **transmission-dependent** (originals confiscated) and is presented as such, not as a settled text. The fate of «Вальдшнепи» part 2 and the «Комсомольці» manuscript is genuinely unknown.
+**Honest gaps:** the exact wording of the suicide notes is
+transmission-dependent because the originals were confiscated, so it is not
+retained as verified quotation. The fate of «Вальдшнепи» part 2 and the
+«Комсомольці» manuscript is genuinely unknown.
 
 ---
 

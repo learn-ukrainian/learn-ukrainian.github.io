@@ -1,53 +1,22 @@
 # Source registry for wiki/figures/mykola-kulish.md
-# Referenced inline as [S1], [S2], ...
 sources:
-- id: S1
-  file: ukrainian_wiki/anatol-petrytskyi_Біографія-Микола-Куліш-Драматургія-мовного-вибору-та-абсурду-Короткий-зміст
-  type: ukrainian_wiki
-  title: 'Біографія: Микола Куліш: Драматургія мовного вибору та абсурду'
-  section_path: 'Біографія: Микола Куліш: Драматургія мовного вибору та абсурду >
-    Короткий зміст'
-- id: S2
-  file: ukrainian_wiki/mykola-zerov_Біографія-Микола-Куліш-Трагедія-автора-комедій-Короткий-зміст
-  type: ukrainian_wiki
-  title: 'Біографія: Микола Куліш: Трагедія автора комедій'
-  section_path: 'Біографія: Микола Куліш: Трагедія автора комедій > Короткий зміст'
-- id: S3
-  file: ukrainian_wiki/mykola-kulish_Біографія-Микола-Куліш-Геній-українського-театру-Короткий-зміст
-  type: ukrainian_wiki
-  title: 'Біографія: Микола Куліш: Геній українського театру'
-  section_path: 'Біографія: Микола Куліш: Геній українського театру > Короткий зміст'
-- id: S4
-  file: ukrainian_wiki/dmytro-falkivskyi_Біографія-Микола-Куліш-Модерніст-сатирик-мученик-Короткий-зміст
-  type: ukrainian_wiki
-  title: 'Біографія: Микола Куліш: Модерніст, сатирик, мученик'
-  section_path: 'Біографія: Микола Куліш: Модерніст, сатирик, мученик > Короткий зміст'
-- id: S5
-  file: ukrainian_wiki/oleksa-slisarenko_Біографія-Микола-Куліш-Трагедія-національного-драматурга-Деколонізаційна-перспектива
-  type: ukrainian_wiki
-  title: 'Біографія: Микола Куліш: Трагедія національного драматурга'
-  section_path: 'Біографія: Микола Куліш: Трагедія національного драматурга > Деколонізаційна
-    перспектива'
-- id: S6
-  file: ukrainian_wiki/yevhen-pluzhnyk_Біографія-Микола-Куліш-Трагедія-національного-драматурга-Короткий-зміст
-  type: ukrainian_wiki
-  title: 'Біографія: Микола Куліш: Трагедія національного драматурга'
-  section_path: 'Біографія: Микола Куліш: Трагедія національного драматурга > Короткий
-    зміст'
-- id: S7
-  file: 11-klas-ukrlit-borzenko-2019-prof_s1347
-  type: textbook
-  title: У грудні 1934 року М. Куліша заарештували й кинули до Соловецького
-  page: 118
-  grade: 11
-- id: S8
-  file: ukrainian_wiki/maik-yohansen_Біографія-Микола-Куліш-Драматург-на-межі-світів-Основний-зміст-Трагедія-українського-села-та-пророцтво-Голодомору
-  type: ukrainian_wiki
-  title: 'Біографія: Микола Куліш: Драматург на межі світів'
-  section_path: 'Біографія: Микола Куліш: Драматург на межі світів > Основний зміст
-    > Трагедія українського села та пророцтво Голодомору'
-- id: S9
-  file: wikipedia/Українофобія
-  type: wikipedia
-  title: Українофобія
-  url: https://uk.wikipedia.org/wiki/%D0%A3%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D0%BE%D1%84%D0%BE%D0%B1%D1%96%D1%8F
+  - id: S1
+    file: https://esu.com.ua/article-51392
+    type: external
+    title: Куліш Микола Гурович
+    url: https://esu.com.ua/article-51392
+  - id: S2
+    file: https://history.org.ua/?termin=Kulish_M_G
+    type: external
+    title: Куліш Микола Гурович
+    url: https://history.org.ua/?termin=Kulish_M_G
+  - id: S3
+    file: https://undip.org.ua/wp-content/uploads/2021/07/khrestomatyya_2020.pdf
+    type: external
+    title: Мина Мазайло — хрестоматія з української літератури
+    url: https://undip.org.ua/wp-content/uploads/2021/07/khrestomatyya_2020.pdf
+  - id: S4
+    file: https://commons.wikimedia.org/wiki/File:Mykola_Kulish.jpg
+    type: external
+    title: Mykola Kulish.jpg — public domain
+    url: https://commons.wikimedia.org/wiki/File:Mykola_Kulish.jpg
