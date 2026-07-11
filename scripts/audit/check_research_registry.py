@@ -90,6 +90,36 @@ class ProvenanceError(ValueError):
     """A provenance / digest-projection problem that invalidates a record."""
 
 
+def _load_atlas_intake_registry():
+    """Load ``scripts/audit/atlas_intake_registry.py`` by file path, bypassing
+    the ``scripts.audit`` package ``__init__``.
+
+    ``from scripts.audit import atlas_intake_registry`` would run
+    ``scripts/audit/__init__.py``, which imports ``scripts/audit/config.py``,
+    which does a bare ``from config import ...`` — resolved against
+    ``sys.path[0]``. When THIS file is invoked as a bare script
+    (``python scripts/audit/check_research_registry.py``, not ``-m``), Python
+    sets ``sys.path[0]`` to this file's own directory (``scripts/audit/``) —
+    so ``config`` self-shadows against ``scripts/audit/config.py`` instead of
+    the intended ``scripts/config.py``, crashing on a circular partial import.
+    Loading the sibling module directly by path sidesteps the whole package
+    init and is safe under both bare-script and ``-m``/import invocation.
+    """
+    import importlib.util
+
+    name = "check_research_registry._atlas_intake_registry"
+    if name in sys.modules:
+        return sys.modules[name]
+    path = Path(__file__).resolve().parent / "atlas_intake_registry.py"
+    spec = importlib.util.spec_from_file_location(name, path)
+    module = importlib.util.module_from_spec(spec)
+    # Register BEFORE exec: dataclasses' introspection looks the module up in
+    # sys.modules by ``cls.__module__`` while the class body is executing.
+    sys.modules[name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
 # --------------------------------------------------------------------------- #
 # Loading
 # --------------------------------------------------------------------------- #
@@ -803,6 +833,88 @@ def _reconcile_command(record_id: str) -> str:
     )
 
 
+def _run_strict_adoption(
+    data: dict[str, Any],
+    *,
+    project_root: Path,
+    max_age_s: int,
+    as_json: bool,
+    raw_text: str | None = None,
+) -> int:
+    """Strict adoption gate (ADR-011 P4).
+
+    Re-runs the full P1 contract, but with membership + issue resolvers injected
+    from a FRESH issue-stream audit cache so ``proposed`` records are gated on
+    exact one-effective-epic ownership and ``adopted``/issue consumers must
+    resolve to an open, uniquely-owned issue. The cache is produced by a
+    separate live auditor run — this path never touches the network. A
+    missing/stale/malformed/future-skewed cache **fails the gate closed** (exit
+    2) rather than silently passing unverifiable ownership. The ``corpus``
+    resolver is real and deterministic (the declared Atlas intake source-family
+    registry) and needs no cache — it is always injected, cache or no cache.
+    """
+    # Local import keeps offline --check free of the orchestration package. When
+    # the validator is run as a bare script (``python scripts/audit/...``) rather
+    # than imported, the repo root is not on sys.path yet — append it (never
+    # prepend: that could shadow the real ``scripts`` package with a same-named
+    # directory under a test project root).
+    if str(PROJECT_ROOT) not in sys.path:
+        sys.path.append(str(PROJECT_ROOT))
+    from scripts.orchestration import issue_stream_audit as isa
+
+    atlas_intake_registry = _load_atlas_intake_registry()
+
+    report = isa.read_membership_index(max_age_s)
+    if report is None:
+        message = (
+            "strict adoption gate: no fresh issue-stream membership cache "
+            f"(<= {max_age_s}s old). Refresh it first: "
+            ".venv/bin/python -m scripts.orchestration.issue_stream_audit --json"
+        )
+        if as_json:
+            print(json.dumps({"ok": False, "errors": [message], "cache": "missing"}, indent=2))
+        else:
+            print(f"STRICT ADOPTION GATE FAILED (fail-closed):\n  - {message}", file=sys.stderr)
+        return 2
+
+    result = validate_registry(
+        data,
+        project_root=project_root,
+        raw_text=raw_text,
+        membership_resolver=isa.make_membership_resolver(report),
+        issue_resolver=isa.make_issue_resolver(report),
+        # Real deterministic corpus resolver (ADR-011 P4, codex/gemini review):
+        # the declared intake registry is a static, offline, always-available
+        # source of truth — unlike issue/membership resolution it needs no live
+        # cache, so it is injected unconditionally, not gated on cache freshness.
+        corpus_resolver=atlas_intake_registry.is_registered_source_family,
+    )
+    if as_json:
+        print(
+            json.dumps(
+                {
+                    "ok": result.exit_code == 0,
+                    "errors": result.errors,
+                    "drift": result.drift,
+                    "cache": "fresh",
+                },
+                indent=2,
+            )
+        )
+        return result.exit_code
+    if result.errors:
+        print("STRICT ADOPTION GATE FAILED:", file=sys.stderr)
+        for err in result.errors:
+            print(f"  - {err}", file=sys.stderr)
+    if result.drift:
+        print("Research registry hash DRIFT (blocks adoption):", file=sys.stderr)
+        for rid in result.drift:
+            print(f"  - {rid}: {_reconcile_command(rid)}", file=sys.stderr)
+    if result.exit_code == 0:
+        print("Strict adoption gate: ownership + consumers verified against fresh cache.")
+    return result.exit_code
+
+
 def main(argv: list[str] | None = None, *, project_root: Path = PROJECT_ROOT) -> int:
     parser = argparse.ArgumentParser(
         description="Validate the ADR-011 Project Research Registry.",
@@ -819,6 +931,16 @@ def main(argv: list[str] | None = None, *, project_root: Path = PROJECT_ROOT) ->
         action="store_true",
         help="Recompute and rewrite drifted content_hash values (the only mutation path).",
     )
+    mode.add_argument(
+        "--strict-adoption",
+        action="store_true",
+        help=(
+            "Strict adoption gate (ADR-011 P4). Re-validates ownership and issue "
+            "consumers against a FRESH, offline issue-stream audit cache — never "
+            "the network. Fails closed if the cache is missing/stale. Distinct from "
+            "the default offline --check, which never verifies live membership."
+        ),
+    )
     parser.add_argument(
         "--id",
         action="append",
@@ -826,13 +948,40 @@ def main(argv: list[str] | None = None, *, project_root: Path = PROJECT_ROOT) ->
         dest="ids",
         help="Restrict --reconcile to the named record id(s). Repeatable.",
     )
+    parser.add_argument(
+        "--max-age",
+        type=int,
+        default=3600,
+        help="Strict-adoption: max age (seconds) of the issue-stream cache (default 3600).",
+    )
     parser.add_argument("--json", action="store_true", help="Machine-readable output.")
     parser.add_argument("--quiet", action="store_true", help="One-line summary only.")
     args = parser.parse_args(argv)
 
     registry_path = project_root / "docs" / "references" / "research-registry.yaml"
     raw_text, data = load_registry(registry_path)
-    result = validate_registry(data, project_root=project_root, raw_text=raw_text)
+
+    if args.strict_adoption:
+        return _run_strict_adoption(
+            data,
+            project_root=project_root,
+            max_age_s=args.max_age,
+            as_json=args.json,
+            raw_text=raw_text,
+        )
+
+    # The declared Atlas intake source-family registry is a static, offline,
+    # cache-free table (unlike issue/membership resolution) — ordinary --check
+    # can safely inject it without violating offline-ness or fail-closed intent
+    # (Gemini review, PR #4998: validate_registry's own corpus_resolver=None
+    # default still fails closed for any caller that omits it).
+    atlas_intake_registry = _load_atlas_intake_registry()
+    result = validate_registry(
+        data,
+        project_root=project_root,
+        raw_text=raw_text,
+        corpus_resolver=atlas_intake_registry.is_registered_source_family,
+    )
 
     if args.reconcile:
         if result.errors:
@@ -869,7 +1018,10 @@ def main(argv: list[str] | None = None, *, project_root: Path = PROJECT_ROOT) ->
         # every record we meant to fix no longer drifts in the candidate.
         candidate_data = yaml.safe_load(new_text)
         candidate_result = validate_registry(
-            candidate_data, project_root=project_root, raw_text=new_text
+            candidate_data,
+            project_root=project_root,
+            raw_text=new_text,
+            corpus_resolver=atlas_intake_registry.is_registered_source_family,
         )
         if candidate_result.errors:
             print(
