@@ -17,6 +17,8 @@ from typing import Any
 import pytest
 from jsonschema import Draft202012Validator
 
+from scripts.audit.anchor_primitives import normalize_for_match
+
 REPO_ROOT = Path(__file__).resolve().parents[1]
 SCHEMA_PATH = REPO_ROOT / "schemas/qg-layer-b-labels.v2.schema.json"
 LABEL_SCHEMA = json.loads(SCHEMA_PATH.read_text(encoding="utf-8"))
@@ -91,7 +93,7 @@ def _assert_label_data_invariants(document: dict[str, Any], references: dict[str
                         segment["output_normalized_start"] : segment["output_normalized_end"]
                     ]
                     raw_segment = reference.raw_output[segment["output_raw_start"] : segment["output_raw_end"]]
-                    if raw_segment != normalized_segment:
+                    if normalize_for_match(raw_segment) != normalized_segment:
                         raise AssertionError("normalized-to-raw round trip does not reproduce the segment")
                     if _sha256(normalized_segment) != segment["normalized_segment_sha256"]:
                         raise AssertionError("normalized segment SHA-256 does not match extracted text")
@@ -145,7 +147,7 @@ def _valid_document(*, ordered_segments: bool = False) -> tuple[dict[str, Any], 
     raw_output = "Іван Франко навчався у Віденському університеті. У 1893 році він захистив дисертацію."
     reference = OutputReference(
         raw_output=raw_output,
-        normalized_output=raw_output,
+        normalized_output=normalize_for_match(raw_output),
         canonical_identity_material="sources_query_wikipedia|Ivan_Franko|revision-1893|lead",
     )
     event_output_id = _sha256("event-output:franko-vienna")
@@ -381,7 +383,7 @@ def test_10_rejects_inconsistent_canonical_source_identity() -> None:
     second_event_output_id = _sha256("event-output:different-source")
     second_reference = OutputReference(
         raw_output="Окремий документ містить інший запис.",
-        normalized_output="Окремий документ містить інший запис.",
+        normalized_output=normalize_for_match("Окремий документ містить інший запис."),
         canonical_identity_material="sources_query_wikipedia|Different_document|revision-1|lead",
     )
     candidate["candidate_id"] = _sha256("candidate:different-source")
