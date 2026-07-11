@@ -81,21 +81,30 @@ persona:
   role: Історик-джерелознавець, що читає Пушкаря крізь ворожі й прихильні джерела й не робить із нього ні московського ставленика, ні бездоганного оборонця прав
   voice: Source-Critical Historian
 phase: BIO
+readings_contract_version: 2
 readings:
-- title: 'Пушкар Мартин'
-  source: 'Енциклопедія історії України'
-  url: 'https://www.history.org.ua/?termin=Pushkar_M'
+- title: 'ПУШКАР МАРТИН'
+  source_name: 'Енциклопедія історії України'
+  source_url: 'https://www.history.org.ua/?termin=Pushkar_M'
   type: reference
   language: uk
   hosting: link-only
-  note: 'Енциклопедична довідка про полтавського полковника.'
-- title: 'Пушкаря і Барабаша повстання 1658'
-  source: 'Енциклопедія історії України'
-  url: 'https://www.history.org.ua/?termin=Pushkaria_Barabasha_1657'
+  rights:
+    basis: external-link
+    evidence_url: 'https://www.history.org.ua/?termin=Pushkar_M'
+    note: 'Зовнішнє посилання; текст не відтворюється в курсі.'
+  learner_task: 'Визначити політичну роль полтавського полковника Мартина Пушкаря.'
+- title: 'ПУШКАРЯ І БАРАБАША ПОВСТАННЯ 1658'
+  source_name: 'Енциклопедія історії України'
+  source_url: 'https://www.history.org.ua/?termin=Pushkaria_Barabasha_1657'
   type: reference
   language: uk
   hosting: link-only
-  note: 'Детальний опис повстання та його наслідків.'
+  rights:
+    basis: external-link
+    evidence_url: 'https://www.history.org.ua/?termin=Pushkaria_Barabasha_1657'
+    note: 'Зовнішнє посилання; текст не відтворюється в курсі.'
+  learner_task: 'Пояснити причини, перебіг і наслідки повстання Пушкаря й Барабаша.'
 references:
 - note: 'Стаття ЕІУ (В. Горобець): невідомий рік народження, рід Пушкарів-Ресинських, полтавський полковник, наказне командування під Берестечком, підтримка Виговського і перехід в опозицію, смерть під Полтавою'
   path: https://www.history.org.ua/?termin=Pushkar_M
@@ -131,7 +140,7 @@ sequence: 34
 slug: martyn-pushkar
 subtitle: 'Martyn Pushkar: The Poltava Colonel and the First Rupture of the Ruin'
 title: 'Мартин Пушкар: Полтавський полковник і перший розкол Руїни'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: лівобережна військово-адміністративна одиниця Гетьманщини; полтавський полк Пушкар очолив 1648 року
   pos: ч.

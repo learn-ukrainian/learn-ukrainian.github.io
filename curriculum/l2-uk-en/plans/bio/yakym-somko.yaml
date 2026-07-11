@@ -118,7 +118,7 @@ sequence: 37
 slug: yakym-somko
 subtitle: 'Yakym Somko: Acting Hetman and the Black Council'
 title: 'Яким Сомко: Наказний гетьман і Чорна рада'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: тимчасовий/виконувач гетьманських обов'язків; титул Сомка на Лівобережжі у 1660–1663 роках
   pos: ч.
@@ -149,18 +149,27 @@ vocabulary_hints:
   word: зрада
 word_target: 5000
 
+readings_contract_version: 2
 readings:
-- hosting: reading-needed
+- hosting: link-only
   language: uk
-  rationale: "Фундаментальна академічна довідка про життєпис, походження та політичну кар'єру Якима Сомка на посаді наказного гетьмана."
-  source: "Енциклопедія історії України"
-  title: "Сомко Яким Семенович"
+  learner_task: "Виписати ключові етапи політичної кар'єри Якима Сомка як наказного гетьмана."
+  rights:
+    basis: external-link
+    evidence_url: "http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Somko_Y"
+    note: "Зовнішнє посилання; текст не відтворюється в курсі."
+  source_name: "Енциклопедія історії України"
+  source_url: "http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Somko_Y"
+  title: "СОМКО ЯКИМ СЕМЕНОВИЧ"
   type: encyclopedia
-  url: "http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Somko_Y"
-- hosting: reading-needed
+- hosting: link-only
   language: uk
-  rationale: "Детальний розбір механіки Ніжинської ради, обставин страти Сомка та впливу царської присутності на ці події."
-  source: "Енциклопедія історії України"
-  title: "Чорна рада 1663"
+  learner_task: "Проаналізувати механіку Ніжинської ради, обставини страти Сомка та вплив царської присутності."
+  rights:
+    basis: external-link
+    evidence_url: "http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Chorna_rada_1663"
+    note: "Зовнішнє посилання; текст не відтворюється в курсі."
+  source_name: "Енциклопедія історії України"
+  source_url: "http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Chorna_rada_1663"
+  title: "ЧОРНА РАДА 1663"
   type: encyclopedia
-  url: "http://resource.history.org.ua/cgi-bin/eiu/history.exe?&I21DBN=EIU&P21DBN=EIU&S21STN=1&S21REF=10&S21FMT=eiu_all&C21COM=S&S21CNR=20&S21P01=0&S21P02=0&S21P03=TRN=&S21COLORTERMS=0&S21STR=Chorna_rada_1663"

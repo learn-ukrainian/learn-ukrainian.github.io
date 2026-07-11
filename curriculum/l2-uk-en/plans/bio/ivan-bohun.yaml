@@ -79,21 +79,30 @@ persona:
   role: Історик-джерелознавець, що відрізняє джерельну біографію Богуна від героїчної легенди, тримаючи видимими і його опір, і його участь у фракційній війні
   voice: Source-Critical Historian
 phase: BIO
+readings_contract_version: 2
 readings:
-- title: 'Богун Іван'
-  source: 'Енциклопедія історії України'
-  url: 'https://www.history.org.ua/?termin=Bogun_I'
+- title: 'БОГУН ІВАН'
+  source_name: 'Енциклопедія історії України'
+  source_url: 'https://www.history.org.ua/?termin=Bogun_I'
   type: reference
   language: uk
   hosting: link-only
-  note: 'Енциклопедична довідка про життєвий шлях і військову діяльність Івана Богуна.'
-- title: 'Берестецька битва 1651 р.'
-  source: 'Енциклопедія історії України'
-  url: 'https://www.history.org.ua/?termin=Berestetska_bytva_1651'
+  rights:
+    basis: external-link
+    evidence_url: 'https://www.history.org.ua/?termin=Bogun_I'
+    note: 'Зовнішнє посилання; текст не відтворюється в курсі.'
+  learner_task: 'Виписати ключові етапи життєвого шляху й військової діяльності Івана Богуна.'
+- title: 'БЕРЕСТЕЦЬКА БИТВА 1651 Р.'
+  source_name: 'Енциклопедія історії України'
+  source_url: 'https://www.history.org.ua/?termin=Berestetska_bytva_1651'
   type: reference
   language: uk
   hosting: link-only
-  note: 'Стаття про битву під Берестечком та роль Богуна у виведенні козацьких сил.'
+  rights:
+    basis: external-link
+    evidence_url: 'https://www.history.org.ua/?termin=Berestetska_bytva_1651'
+    note: 'Зовнішнє посилання; текст не відтворюється в курсі.'
+  learner_task: 'Пояснити роль Богуна у виведенні козацьких сил під час Берестецької битви.'
 references:
 - note: 'Стаття ЕІУ (О. Гуржій): уряд полковника, Вінниця, Берестечко, Монастирище, відмова від присяги, страта 1664 року'
   path: https://www.history.org.ua/?termin=Bogun_I
@@ -120,7 +129,7 @@ sequence: 33
 slug: ivan-bohun
 subtitle: 'Ivan Bohun: Resistance and the Making of a Legend'
 title: 'Іван Богун: Опір і пам''ять'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: командир козацького полку; Богун очолював Кальницький (Вінницький) полк
   pos: ч.
