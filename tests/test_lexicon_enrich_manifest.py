@@ -20,6 +20,9 @@ from scripts.lexicon.enrich_manifest import (
     _cefr,
     _clean_synonym_candidate,
     _curated_calque,
+    _definition_antonym_relations,
+    _definition_antonym_relations_by_headword,
+    _definition_antonym_targets,
     _definition_cards,
     _definition_pointer_relations,
     _definition_pointer_relations_by_headword,
@@ -37,6 +40,7 @@ from scripts.lexicon.enrich_manifest import (
     _literary_attestation,
     _literary_excerpt,
     _meaning,
+    _merge_antonym_relations,
     _merge_slovnyk_warning,
     _merge_synonym_relations,
     _morphology,
@@ -69,6 +73,11 @@ def _patch_vesum_analyses(monkeypatch, pos_by_word: dict[str, str]) -> None:
         return ((word, pos),) if pos else ()
 
     monkeypatch.setattr(enrich_manifest_module, "_vesum_word_analyses", fake_analyses)
+    monkeypatch.setattr(
+        enrich_manifest_module,
+        "verify_word",
+        lambda word: [{"lemma": word, "pos": pos_by_word[word]}] if word in pos_by_word else [],
+    )
 
 
 def _conn() -> sqlite3.Connection:
@@ -969,7 +978,7 @@ def test_wiktionary_antonyms_filter_wrong_terms_keep_valid(monkeypatch) -> None:
     )
     _patch_vesum_analyses(
         monkeypatch,
-        {"син": "noun", "мати": "noun", "матка": "noun", "матуся": "noun"},
+        {"дочка": "noun", "син": "noun", "мати": "noun", "матка": "noun", "матуся": "noun"},
     )
 
     section = _antonyms_wiktionary(conn, "дочка", entry_pos="noun")
@@ -2076,11 +2085,7 @@ def test_enrich_populates_antonyms_phraseology_and_variant_etymology(monkeypatch
     monkeypatch.setattr(enrich_manifest_module, "_meaning", lambda *args, **kwargs: None)
     monkeypatch.setattr(enrich_manifest_module, "_literary_attestation", lambda *args, **kwargs: None)
     monkeypatch.setattr(enrich_manifest_module, "_translation", lambda *args, **kwargs: None)
-    monkeypatch.setattr(
-        enrich_manifest_module,
-        "_vesum_word_analyses",
-        lambda word: ((word, "noun"),) if word in {"воля", "ув'язнення"} else (),
-    )
+    _patch_vesum_analyses(monkeypatch, {"воля": "noun", "ув'язнення": "noun"})
 
     assert enrich_manifest_module.enrich() == (1, 1)
 
@@ -2529,6 +2534,176 @@ def _patch_synonym_vesum(monkeypatch, valid_terms: set[str], stems: dict[str, st
         "_vesum_word_analyses",
         lambda word: [(stems.get(word, word), "noun")] if word in valid_terms else [],
     )
+
+
+def test_definition_antonym_targets_extract_strict_sum_and_vts_pointers() -> None:
+    assert _definition_antonym_targets(
+        "ВЕЛИ́КИЙ, а, е. Значний розмірами; протилежне малий."
+    ) == [("малий", "протилежне")]
+    assert _definition_antonym_targets(
+        "висо́кий -а, -е. Значний за висотою; прот. низький."
+    ) == [("низький", "прот.")]
+    assert _definition_antonym_targets(
+        "СИ́ЛЬНИЙ, а, е. Міцний; протилежне слабкий, слабий."
+    ) == [("слабкий", "протилежне"), ("слабий", "протилежне")]
+    # Ordinary prose and a grammatical continuation are not dictionary pointers.
+    assert _definition_antonym_targets("Слова з протилежним значенням називають антонімами.") == []
+    assert _definition_antonym_targets("Напрям, протилежне до руху.") == []
+
+
+def test_definition_antonym_relations_keep_dictionary_provenance_and_vesum_gate(monkeypatch) -> None:
+    _patch_synonym_vesum(monkeypatch, {"великий", "малий"})
+    conn = _conn()
+    conn.execute(
+        "INSERT INTO sum11(word, definition) VALUES (?, ?)",
+        ("великий", "ВЕЛИ́КИЙ, а, е. Значний за розмірами; протилежне малий."),
+    )
+    cache = {
+        "lookups": {
+            "newsum": {
+                "word": "великий",
+                "text": "великий ВЕЛИ́КИЙ, а, е. Значний за розмірами; протилежне малий.",
+                "source_url": "https://example.invalid/sum20/velykyi",
+            },
+            "vts": {
+                "word": "великий",
+                "text": "великий вели́кий -а, -е. Значний за розмірами; прот. малий.",
+                "source_url": "https://example.invalid/vts/velykyi",
+            },
+        }
+    }
+
+    relations = _definition_antonym_relations(
+        conn, "великий", has_sum11_flags=True, cache=cache
+    )
+
+    assert [(row["item"], row["source"], row["pattern"]) for row in relations] == [
+        ("малий", "СУМ-20", "протилежне"),
+        ("малий", "ВТС", "прот."),
+        ("малий", "СУМ-11", "протилежне"),
+    ]
+    assert all(row["gate"] == {"vesum": "both valid"} for row in relations)
+    assert [row.get("source_url") for row in relations] == [
+        "https://example.invalid/sum20/velykyi",
+        "https://example.invalid/vts/velykyi",
+        None,
+    ]
+
+    _patch_synonym_vesum(monkeypatch, {"малий"})
+    assert _definition_antonym_relations(conn, "великий", has_sum11_flags=True, cache=cache) == []
+
+    monkeypatch.setattr(
+        enrich_manifest_module,
+        "verify_word",
+        lambda word: [{"lemma": "великий", "pos": "adj"}]
+        if word == "великий"
+        else [{"lemma": "малий", "pos": "adj"}]
+        if word == "малого"
+        else [],
+    )
+    inflected_cache = {
+        "lookups": {
+            "newsum": {
+                "word": "великий",
+                "text": "великий ВЕЛИ́КИЙ, а, е. Значний за розмірами; протилежне малого.",
+            }
+        }
+    }
+    assert _definition_antonym_relations(
+        conn, "великий", has_sum11_flags=True, cache=inflected_cache
+    ) == []
+
+
+def test_definition_antonym_relations_are_reciprocal_for_manifest_headwords(monkeypatch) -> None:
+    _patch_synonym_vesum(monkeypatch, {"великий", "малий"})
+    monkeypatch.setattr(enrich_manifest_module, "_read_cached_slovnyk_rows", lambda lemma: {})
+    conn = _conn()
+    conn.execute(
+        "INSERT INTO sum11(word, definition) VALUES (?, ?)",
+        ("великий", "ВЕЛИ́КИЙ, а, е. Значний за розмірами; протилежне малий."),
+    )
+    manifest = {"entries": [{"lemma": "великий"}, {"lemma": "малий"}]}
+
+    relations = _definition_antonym_relations_by_headword(
+        conn, manifest, has_sum11_flags=True
+    )
+
+    assert relations["великий"][0]["item"] == "малий"
+    assert relations["малий"][0]["item"] == "великий"
+    assert relations["малий"][0]["direction"] == "reciprocal"
+
+
+def test_antonym_relation_merge_preserves_rendered_schema_and_source_urls() -> None:
+    existing = {
+        "items": ["малий"],
+        "source": "Вікісловник: explicit antonym list",
+        "source_urls": ["https://example.invalid/wiktionary/velykyi"],
+    }
+    relations = [
+        {
+            "item": "малий",
+            "source": "СУМ-20",
+            "pattern": "протилежне",
+            "vein": 1,
+            "gate": {"vesum": "both valid"},
+            "source_url": "https://example.invalid/sum20/velykyi",
+        },
+        {
+            "item": "низький",
+            "source": "ВТС",
+            "pattern": "прот.",
+            "vein": 1,
+            "gate": {"vesum": "both valid"},
+            "source_url": "https://example.invalid/vts/velykyi",
+        },
+    ]
+
+    merged = _merge_antonym_relations(existing, relations)
+
+    assert merged == {
+        "items": ["малий", "низький"],
+        "source": (
+            "Вікісловник: explicit antonym list + СУМ-20: протилежне → малий + "
+            "ВТС: прот. → низький"
+        ),
+        "source_urls": [
+            "https://example.invalid/wiktionary/velykyi",
+            "https://example.invalid/sum20/velykyi",
+            "https://example.invalid/vts/velykyi",
+        ],
+    }
+
+
+def test_antonym_fixture_samples_expand_from_zero(monkeypatch) -> None:
+    pairs = {
+        "великий": "малий",
+        "день": "ніч",
+        "білий": "чорний",
+        "високий": "низький",
+    }
+    _patch_synonym_vesum(monkeypatch, set(pairs) | set(pairs.values()))
+    conn = _conn()
+    conn.executemany(
+        "INSERT INTO sum11(word, definition) VALUES (?, ?)",
+        [
+            (lemma, f"{lemma.upper()}. Тестова дефініція; протилежне {antonym}.")
+            for lemma, antonym in pairs.items()
+        ],
+    )
+
+    before_counts = {lemma: 0 for lemma in pairs}
+    after_items = {
+        lemma: [
+            relation["item"]
+            for relation in _definition_antonym_relations(
+                conn, lemma, has_sum11_flags=True, cache={}
+            )
+        ]
+        for lemma in pairs
+    }
+
+    assert before_counts == {lemma: 0 for lemma in pairs}
+    assert after_items == {lemma: [antonym] for lemma, antonym in pairs.items()}
 
 
 def test_definition_synonym_targets_extracts_stressed_same_as_target() -> None:

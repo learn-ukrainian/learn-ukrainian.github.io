@@ -1632,6 +1632,10 @@ def _antonyms_wiktionary(
     if not _wiktionary_has_antonyms_column(conn):
         return None
 
+    source_term = _canonical_synonym_term(lemma)
+    if not source_term or not _vesum_valid_synonym(source_term):
+        return None
+
     # #3197 — per-lemma pedagogy filter over the raw Вікісловник antonym column.
     base_key = _base_lemma(lemma).casefold().replace("’", "'").replace("ʼ", "'").replace("`", "'")
     if base_key in _DROP_ANTONYM_LEMMAS:
@@ -1656,7 +1660,7 @@ def _antonyms_wiktionary(
                 continue
             for candidate in candidates:
                 term = _clean_atlas_chip_candidate(str(candidate), lemma)
-                if not term or term in seen:
+                if not term or term in seen or not _vesum_valid_synonym(term):
                     continue
                 if wrong_terms:
                     normalized = term.replace("’", "'").replace("ʼ", "'").replace("`", "'")
@@ -2803,6 +2807,12 @@ _DEFINITION_SAME_AS_RE = re.compile(
     r"\bте\s+саме\s*,?\s+що\s+(?P<target>[А-Яа-яЄєІіЇїҐґ'’ʼ-]+)(?=\s*(?:[.;]|$))",
     flags=re.IGNORECASE,
 )
+_DEFINITION_ANTONYM_RE = re.compile(
+    r"(?:^|[.;])\s*(?P<marker>протилежне|прот\.)\s+(?!до\b)(?P<targets>"
+    r"[А-Яа-яЄєІіЇїҐґ'’ʼ-]+(?:\s*,\s*[А-Яа-яЄєІіЇїҐґ'’ʼ-]+){0,2})"
+    r"(?=\s*(?:[.;(]|$))",
+    flags=re.IGNORECASE,
+)
 # Grammar abbreviations that may sit between the headword echo and «див.» in a
 # cross-reference-only entry (e.g. «ЗАХОВАТИ, док. див. заховувати»); any other
 # word before «див.» means the card carries real definitional text → not xref-only.
@@ -2888,6 +2898,23 @@ def _definition_synonym_targets(body: str, lemma: str) -> list[tuple[str, str]]:
         same_as_targets = _normalise_xref_targets(match.group("target"))
         if len(same_as_targets) == 1:
             targets.append((same_as_targets[0], "Те саме, що"))
+    return list(dict.fromkeys(targets))
+
+
+def _definition_antonym_targets(body: str) -> list[tuple[str, str]]:
+    """Extract explicit ``протилежне`` / ``прот.`` lemma pointers.
+
+    СУМ-20 and СУМ-11 spell the relation as ``протилежне X``; VTS abbreviates
+    it as ``прот. X``. A target is accepted only when it ends at a definition
+    boundary, and ``протилежне до`` is deliberately excluded because it is
+    ordinary prose rather than a lexicographer's antonym pointer.
+    """
+    targets: list[tuple[str, str]] = []
+    for match in _DEFINITION_ANTONYM_RE.finditer(_strip_stress(body)):
+        marker = match.group("marker").casefold()
+        pattern = "прот." if marker == "прот." else "протилежне"
+        for target in _normalise_xref_targets(match.group("targets")):
+            targets.append((target, pattern))
     return list(dict.fromkeys(targets))
 
 
@@ -3143,6 +3170,7 @@ def _definition_cards(
 
 
 _SYNONYM_ADDITION_CAP = 8
+_ANTONYM_ADDITION_CAP = 8
 _COATTESTATION_SUM_OR_GRINCHENKO = frozenset({"СУМ-11", "СУМ-20", "Грінченко"})
 _CONTENT_STEM_STOPWORDS = frozenset(
     {
@@ -3259,9 +3287,10 @@ def _dictionary_definition_rows(
 
 
 def _vesum_valid_synonym(term: str) -> bool:
-    """Fail closed unless VESUM recognizes the emitted synonym form."""
+    """Fail closed unless VESUM recognizes the emitted term as its own lemma."""
     try:
-        return bool(verify_word(term))
+        term_key = _lookup_key(term)
+        return any(_lookup_key(str(row.get("lemma") or "")) == term_key for row in verify_word(term))
     except Exception:
         return False
 
@@ -3333,6 +3362,74 @@ def _definition_pointer_relations_by_headword(
         for relation in relations:
             target_key = str(relation["item"])
             if target_key not in headwords or not _vesum_valid_synonym(source_key):
+                continue
+            reciprocal = dict(relation)
+            reciprocal["item"] = headwords[source_key]
+            reciprocal["direction"] = "reciprocal"
+            by_headword.setdefault(target_key, []).append(reciprocal)
+    return by_headword
+
+
+def _definition_antonym_relations(
+    conn: sqlite3.Connection,
+    lemma: str,
+    *,
+    has_sum11_flags: bool,
+    cache: dict[str, Any] | None = None,
+) -> list[dict[str, Any]]:
+    """Lexicographer-authored antonym pointers, VESUM-gated at both ends."""
+    source_term = _canonical_synonym_term(lemma)
+    if not source_term or not _vesum_valid_synonym(source_term):
+        return []
+
+    relations: list[dict[str, Any]] = []
+    for row in _dictionary_definition_rows(
+        conn,
+        lemma,
+        has_sum11_flags=has_sum11_flags,
+        cache=cache,
+    ):
+        for target, pattern in _definition_antonym_targets(str(row["text"])):
+            item = _canonical_synonym_term(target)
+            if not item or item == source_term or not _vesum_valid_synonym(item):
+                continue
+            relation: dict[str, Any] = {
+                "item": item,
+                "source": row["source"],
+                "pattern": pattern,
+                "vein": 1,
+                "gate": {"vesum": "both valid"},
+            }
+            if row.get("source_url"):
+                relation["source_url"] = row["source_url"]
+            relations.append(relation)
+    return relations
+
+
+def _definition_antonym_relations_by_headword(
+    conn: sqlite3.Connection,
+    manifest: dict[str, Any],
+    *,
+    has_sum11_flags: bool,
+) -> dict[str, list[dict[str, Any]]]:
+    """Precompute explicit antonym pointers and symmetric manifest-headword pairs."""
+    headwords = _manifest_headwords(manifest)
+    by_headword: dict[str, list[dict[str, Any]]] = {}
+    for entry in manifest.get("entries", []):
+        lemma = str(entry.get("lemma") or "")
+        source_key = _canonical_synonym_term(lemma)
+        if not source_key:
+            continue
+        relations = _definition_antonym_relations(
+            conn,
+            lemma,
+            has_sum11_flags=has_sum11_flags,
+        )
+        if relations:
+            by_headword.setdefault(source_key, []).extend(relations)
+        for relation in relations:
+            target_key = str(relation["item"])
+            if target_key not in headwords:
                 continue
             reciprocal = dict(relation)
             reciprocal["item"] = headwords[source_key]
@@ -3560,6 +3657,54 @@ def _merge_synonym_relations(
         item_was_present = item in seen
         if not item_was_present:
             if additions >= _SYNONYM_ADDITION_CAP:
+                continue
+            seen.add(item)
+            items.append(item)
+            additions += 1
+        label = _relation_source_label(relation, item)
+        if label not in source_labels:
+            source_labels.append(label)
+        if relation.get("source_url") and relation["source_url"] not in source_urls:
+            source_urls.append(str(relation["source_url"]))
+
+    if not items:
+        return None
+    if source_labels:
+        original = str(merged.get("source") or "").strip()
+        merged["source"] = " + ".join(part for part in (original, *source_labels) if part)
+    elif not merged.get("source"):
+        merged["source"] = ""
+    merged["items"] = items
+    if source_urls:
+        merged["source_urls"] = list(dict.fromkeys(source_urls))
+    else:
+        merged.pop("source_urls", None)
+    return merged
+
+
+def _merge_antonym_relations(
+    existing: dict[str, Any] | None,
+    relations: list[dict[str, Any]],
+) -> dict[str, Any] | None:
+    """Merge VESUM-gated antonym pointers into the rendered section schema."""
+    merged = dict(existing or {})
+    items = [str(item) for item in merged.get("items", []) if str(item).strip()]
+    seen = {
+        key
+        for item in items
+        if (key := _canonical_synonym_term(_base_word(item))) is not None
+    }
+    source_urls = [str(url) for url in merged.get("source_urls", []) if str(url).strip()]
+    source_labels: list[str] = []
+    additions = 0
+
+    for relation in sorted(relations, key=lambda item: int(item.get("vein") or 99)):
+        item = _canonical_synonym_term(relation.get("item"))
+        if not item:
+            continue
+        item_was_present = item in seen
+        if not item_was_present:
+            if additions >= _ANTONYM_ADDITION_CAP:
                 continue
             seen.add(item)
             items.append(item)
@@ -4768,6 +4913,7 @@ def enrich_entry(
     *,
     has_sum11_flags,
     pointer_synonym_relations: list[dict[str, Any]] | None = None,
+    pointer_antonym_relations: list[dict[str, Any]] | None = None,
 ) -> bool:
     """Enrich a single manifest entry in place (dictionary-grounded).
     Returns True if any enrichment was attached. Extracted from enrich() so the
@@ -4851,6 +4997,17 @@ def enrich_entry(
         antonyms = _antonyms_wiktionary(conn, fallback_base, entry_pos=entry_pos)
         if antonyms:
             antonyms = _with_base_source_label(antonyms, fallback_base)
+    antonym_relations = (
+        pointer_antonym_relations
+        if pointer_antonym_relations is not None
+        else _definition_antonym_relations(
+            conn,
+            lemma,
+            has_sum11_flags=has_sum11_flags,
+            cache=slovnyk_cache,
+        )
+    )
+    antonyms = _merge_antonym_relations(antonyms, antonym_relations)
     if antonyms:
         sections["antonyms"] = antonyms
     idioms = _idioms(conn, lemma, slovnyk_cache)
@@ -4963,6 +5120,11 @@ def enrich() -> tuple[int, int]:
             manifest,
             has_sum11_flags=has_sum11_flags,
         )
+        pointer_antonym_relations = _definition_antonym_relations_by_headword(
+            conn,
+            manifest,
+            has_sum11_flags=has_sum11_flags,
+        )
         for entry in manifest["entries"]:
             entry_key = _canonical_synonym_term(str(entry.get("lemma") or ""))
             if enrich_entry(
@@ -4971,6 +5133,7 @@ def enrich() -> tuple[int, int]:
                 kaikki_lookup,
                 has_sum11_flags=has_sum11_flags,
                 pointer_synonym_relations=pointer_synonym_relations.get(entry_key or "", []),
+                pointer_antonym_relations=pointer_antonym_relations.get(entry_key or "", []),
             ):
                 enriched += 1
     finally:
