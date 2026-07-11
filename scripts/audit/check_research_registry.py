@@ -90,6 +90,36 @@ class ProvenanceError(ValueError):
     """A provenance / digest-projection problem that invalidates a record."""
 
 
+def _load_atlas_intake_registry():
+    """Load ``scripts/audit/atlas_intake_registry.py`` by file path, bypassing
+    the ``scripts.audit`` package ``__init__``.
+
+    ``from scripts.audit import atlas_intake_registry`` would run
+    ``scripts/audit/__init__.py``, which imports ``scripts/audit/config.py``,
+    which does a bare ``from config import ...`` — resolved against
+    ``sys.path[0]``. When THIS file is invoked as a bare script
+    (``python scripts/audit/check_research_registry.py``, not ``-m``), Python
+    sets ``sys.path[0]`` to this file's own directory (``scripts/audit/``) —
+    so ``config`` self-shadows against ``scripts/audit/config.py`` instead of
+    the intended ``scripts/config.py``, crashing on a circular partial import.
+    Loading the sibling module directly by path sidesteps the whole package
+    init and is safe under both bare-script and ``-m``/import invocation.
+    """
+    import importlib.util
+
+    name = "check_research_registry._atlas_intake_registry"
+    if name in sys.modules:
+        return sys.modules[name]
+    path = Path(__file__).resolve().parent / "atlas_intake_registry.py"
+    spec = importlib.util.spec_from_file_location(name, path)
+    module = importlib.util.module_from_spec(spec)
+    # Register BEFORE exec: dataclasses' introspection looks the module up in
+    # sys.modules by ``cls.__module__`` while the class body is executing.
+    sys.modules[name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
 # --------------------------------------------------------------------------- #
 # Loading
 # --------------------------------------------------------------------------- #
@@ -815,10 +845,13 @@ def _run_strict_adoption(
 
     Re-runs the full P1 contract, but with membership + issue resolvers injected
     from a FRESH issue-stream audit cache so ``proposed`` records are gated on
-    exact one-stream ownership and ``adopted``/issue consumers must resolve. The
-    cache is produced by a separate live auditor run — this path never touches the
-    network. A missing/stale/unreadable cache **fails the gate closed** (exit 2)
-    rather than silently passing unverifiable ownership.
+    exact one-effective-epic ownership and ``adopted``/issue consumers must
+    resolve to an open, uniquely-owned issue. The cache is produced by a
+    separate live auditor run — this path never touches the network. A
+    missing/stale/malformed/future-skewed cache **fails the gate closed** (exit
+    2) rather than silently passing unverifiable ownership. The ``corpus``
+    resolver is real and deterministic (the declared Atlas intake source-family
+    registry) and needs no cache — it is always injected, cache or no cache.
     """
     # Local import keeps offline --check free of the orchestration package. When
     # the validator is run as a bare script (``python scripts/audit/...``) rather
@@ -828,6 +861,8 @@ def _run_strict_adoption(
     if str(PROJECT_ROOT) not in sys.path:
         sys.path.append(str(PROJECT_ROOT))
     from scripts.orchestration import issue_stream_audit as isa
+
+    atlas_intake_registry = _load_atlas_intake_registry()
 
     report = isa.read_membership_index(max_age_s)
     if report is None:
@@ -848,6 +883,11 @@ def _run_strict_adoption(
         raw_text=raw_text,
         membership_resolver=isa.make_membership_resolver(report),
         issue_resolver=isa.make_issue_resolver(report),
+        # Real deterministic corpus resolver (ADR-011 P4, codex/gemini review):
+        # the declared intake registry is a static, offline, always-available
+        # source of truth — unlike issue/membership resolution it needs no live
+        # cache, so it is injected unconditionally, not gated on cache freshness.
+        corpus_resolver=atlas_intake_registry.is_registered_source_family,
     )
     if as_json:
         print(

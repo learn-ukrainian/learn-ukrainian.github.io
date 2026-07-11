@@ -82,13 +82,19 @@ def test_multi_homed_across_streams_flagged(registry):
     assert report["ok"] is False
 
 
-def test_same_stream_double_reference_is_not_multi_homed(registry):
+def test_same_stream_double_native_link_is_ambiguous(registry):
+    """Native membership in TWO epics of the SAME stream is still two owners —
+    exact membership means exactly one effective epic, not merely one stream
+    name (codex/gemini review, PR #4998; this assertion used to read
+    ``== []`` under the pre-fix bug where same-stream ambiguity was invisible)."""
     report = classify(
         _issues(100, 150, 200, 9),
         registry,
         {100: ({9}, set()), 150: ({9}, set()), 200: (set(), set())},
     )
-    assert report["multi_homed"] == []
+    assert [m["number"] for m in report["multi_homed"]] == [9]
+    assert report["multi_homed"][0]["streams"] == ["product"]
+    assert report["ok"] is False
 
 
 def test_closed_epic_surfaces(registry):
@@ -185,6 +191,43 @@ def test_issue_resolver_only_open_issues(registry):
     assert resolve("not-a-number") is False
 
 
+def test_issue_resolver_rejects_open_orphan_issue(registry):
+    """An open issue with NO stream ownership at all must not resolve as a
+    consumer — being in the open set alone is not proof of adoption."""
+    report = classify(_issues(100, 150, 200, 42), registry,
+                      {100: (set(), set()), 150: (set(), set()), 200: (set(), set())})
+    assert make_issue_resolver(report)("42") is False
+
+
+def test_issue_resolver_rejects_ambiguously_owned_issue(registry):
+    """An open issue that IS in the open set but is ambiguously multi-homed
+    (unique_stream False) must not resolve — same proof the ownership gate uses."""
+    report = classify(_issues(100, 150, 200, 8), registry,
+                      {100: ({8}, set()), 150: (set(), set()), 200: ({8}, set())})
+    assert make_issue_resolver(report)("8") is False
+
+
+def test_same_stream_two_epics_is_ambiguous_not_unique(registry):
+    """Native membership in TWO epics that share one stream is still ambiguous —
+    exact membership means exactly one EFFECTIVE EPIC, not merely one stream
+    name (codex/gemini review, PR #4998)."""
+    report = classify(
+        _issues(100, 150, 200, 77),
+        registry,
+        {100: ({77}, set()), 150: ({77}, set()), 200: (set(), set())},
+    )
+    entry = report["effective_membership"]["77"]
+    assert entry["epics"] == [100, 150]
+    assert entry["streams"] == ["product"]  # one stream name...
+    assert entry["unique_stream"] is False  # ...but NOT unique membership
+    # The general auditor must surface this as ambiguity too, not report "ok".
+    assert [m["number"] for m in report["multi_homed"]] == [77]
+    assert report["ok"] is False
+    resolve = make_membership_resolver(report)
+    assert resolve(77, 100) is False and resolve(77, 150) is False
+    assert make_issue_resolver(report)("77") is False
+
+
 def test_read_membership_index_freshness(tmp_path, registry):
     import json
     import time
@@ -204,4 +247,85 @@ def test_read_membership_index_freshness(tmp_path, registry):
     assert read_membership_index(3600, cache_path=tmp_path / "nope.json") is None
     # Pre-P4 cache without the index → None (can't verify → fail closed).
     cache.write_text(json.dumps({"generated_at": int(time.time())}), encoding="utf-8")
+    assert read_membership_index(3600, cache_path=cache) is None
+
+
+# --------------------------------------------------------------------------- #
+# ADR-011 P4 — cache authority hardening: malformed/future-skewed evidence
+# must fail closed, never raise (codex/gemini review, PR #4998)
+# --------------------------------------------------------------------------- #
+def _valid_report(now: float) -> dict:
+    return {
+        "generated_at": now,
+        "effective_membership": {
+            "42": {"epics": [100], "streams": ["product"], "via": "native", "unique_stream": True}
+        },
+        "open_issue_numbers": [42, 100, 150, 200],
+    }
+
+
+def test_read_membership_index_rejects_future_skewed_cache(tmp_path):
+    import json
+    import time
+
+    cache = tmp_path / "cache.json"
+    report = _valid_report(time.time() + 10_000)  # far in the future
+    cache.write_text(json.dumps(report), encoding="utf-8")
+    assert read_membership_index(3600, cache_path=cache) is None
+
+
+def test_read_membership_index_rejects_non_finite_generated_at(tmp_path):
+    import json
+    import time
+
+    cache = tmp_path / "cache.json"
+    now = time.time()
+    for bad in (float("nan"), float("inf"), True, "not-a-number", None):
+        report = _valid_report(now)
+        report["generated_at"] = bad
+        cache.write_text(json.dumps(report, allow_nan=True), encoding="utf-8")
+        assert read_membership_index(3600, cache_path=cache) is None  # never raises
+
+
+def test_read_membership_index_rejects_malformed_entries(tmp_path):
+    import json
+    import time
+
+    cache = tmp_path / "cache.json"
+    now = time.time()
+    bad_entries = [
+        {"epics": [100, 150], "streams": ["product"], "via": "native", "unique_stream": True},  # inconsistent
+        {"epics": [100], "streams": ["product"], "via": "native", "unique_stream": "true"},  # truthy string, not bool
+        {"epics": [100], "streams": ["product"], "via": "carrier-pigeon", "unique_stream": True},  # unknown via
+        {"epics": [-1], "streams": ["product"], "via": "native", "unique_stream": True},  # non-positive epic
+        {"epics": [100], "streams": [], "via": "native", "unique_stream": True},  # empty streams
+    ]
+    for entry in bad_entries:
+        report = _valid_report(now)
+        report["effective_membership"] = {"42": entry}
+        cache.write_text(json.dumps(report), encoding="utf-8")
+        assert read_membership_index(3600, cache_path=cache) is None, entry
+
+
+def test_read_membership_index_rejects_non_positive_int_key(tmp_path):
+    import json
+    import time
+
+    cache = tmp_path / "cache.json"
+    report = _valid_report(time.time())
+    report["effective_membership"] = {
+        "-5": {"epics": [100], "streams": ["product"], "via": "native", "unique_stream": True}
+    }
+    cache.write_text(json.dumps(report), encoding="utf-8")
+    assert read_membership_index(3600, cache_path=cache) is None
+
+
+def test_read_membership_index_rejects_malformed_open_numbers(tmp_path):
+    import json
+    import time
+
+    cache = tmp_path / "cache.json"
+    report = _valid_report(time.time())
+    report["open_issue_numbers"] = [42, "100", -1, True]
+    cache.write_text(json.dumps(report), encoding="utf-8")
     assert read_membership_index(3600, cache_path=cache) is None

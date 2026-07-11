@@ -42,7 +42,18 @@ setup_fixture() {
 
   rm -rf "$root"
   mkdir -p "$root/docs/session-state" "$root/.venv/bin" "$root/.mcp/servers/message-broker" "$TMP_ROOT/home"
-  printf '#!/usr/bin/env bash\nprintf "Python 3.12.8\\n"\n' > "$root/.venv/bin/python"
+  # Dispatching stub: most tests just need a python-version banner, but the
+  # strict-adoption-gate fixtures (below) need a controllable
+  # `check_research_registry.py --strict-adoption` response without a real
+  # venv or registry.
+  cat > "$root/.venv/bin/python" <<'PYEOF'
+#!/usr/bin/env bash
+if [[ "$*" == *"check_research_registry.py"* ]]; then
+  printf '%s\n' "$STRICT_GATE_FAKE_JSON"
+  exit "${STRICT_GATE_FAKE_EXIT:-0}"
+fi
+printf "Python 3.12.8\n"
+PYEOF
   printf 'fixture db\n' > "$root/.mcp/servers/message-broker/messages.db"
   chmod +x "$root/.venv/bin/python"
 }
@@ -185,6 +196,39 @@ assert_contains "$output" "Thread handoff: .agent/claude-infra-thread-handoff.md
 assert_contains "$output" "Bootstrap prompt: .agent/claude-infra-thread-bootstrap.md" "infra lane isolation"
 assert_not_contains "$output" "Thread handoff: .agent/claude-thread-handoff.md" "infra lane isolation"
 assert_not_contains "$output" "WARN:" "infra lane isolation"
+
+# 9. Research-registry strict-adoption gate (ADR-011 P4, PR #4998 review): a
+#    fresh stream-audit cache plus a failing gate must surface an ISSUES entry.
+#    Proves the gate is wired into a real cold-start path, not a dead CLI.
+setup_fixture "$fixture_root"
+mkdir -p "$fixture_root/scripts/audit" "$fixture_root/scripts/orchestration" "$fixture_root/docs/references" "$fixture_root/batch_state"
+printf '# stub\n' > "$fixture_root/scripts/audit/check_research_registry.py"
+printf '# stub\n' > "$fixture_root/scripts/orchestration/issue_stream_audit.py"
+printf 'records: []\n' > "$fixture_root/docs/references/research-registry.yaml"
+printf '{"generated_at": %s, "orphans": [], "closed_or_missing_epics": []}\n' \
+  "$(date +%s)" > "$fixture_root/batch_state/issue_stream_audit.json"
+export STRICT_GATE_FAKE_JSON='{"ok": false, "errors": ["demo-record: consumer issue 999 did not resolve"], "drift": [], "cache": "fresh"}'
+export STRICT_GATE_FAKE_EXIT=2
+output="$(run_hook "$fixture_root")"
+unset STRICT_GATE_FAKE_JSON STRICT_GATE_FAKE_EXIT
+assert_contains "$output" "Research registry strict-adoption gate FAILED" "strict gate wired"
+assert_contains "$output" "demo-record: consumer issue 999 did not resolve" "strict gate wired"
+
+# 10. A passing strict-adoption gate must NOT add an ISSUES entry (non-blocking,
+#     silent on success).
+setup_fixture "$fixture_root"
+mkdir -p "$fixture_root/scripts/audit" "$fixture_root/scripts/orchestration" "$fixture_root/docs/references" "$fixture_root/batch_state"
+printf '# stub\n' > "$fixture_root/scripts/audit/check_research_registry.py"
+printf '# stub\n' > "$fixture_root/scripts/orchestration/issue_stream_audit.py"
+printf 'records: []\n' > "$fixture_root/docs/references/research-registry.yaml"
+printf '{"generated_at": %s, "orphans": [], "closed_or_missing_epics": []}\n' \
+  "$(date +%s)" > "$fixture_root/batch_state/issue_stream_audit.json"
+export STRICT_GATE_FAKE_JSON='{"ok": true, "errors": [], "drift": [], "cache": "fresh"}'
+export STRICT_GATE_FAKE_EXIT=0
+output="$(run_hook "$fixture_root")"
+unset STRICT_GATE_FAKE_JSON STRICT_GATE_FAKE_EXIT
+assert_not_contains "$output" "strict-adoption gate FAILED" "strict gate passing"
+assert_not_contains "$output" "WARN:" "strict gate passing"
 
 printf 'marker_hit_stdout_bytes=%s\n' "$marker_bytes"
 printf 'fallback_warn_count=%s\n' "$fallback_warn_count"

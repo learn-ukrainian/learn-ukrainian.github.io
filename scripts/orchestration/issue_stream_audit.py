@@ -22,6 +22,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import re
 import subprocess
 import sys
@@ -119,37 +120,38 @@ def classify(
     epic_numbers = {e for epics in registry.values() for e in epics}
     stream_of_epic = {e: key for key, epics in registry.items() for e in epics}
 
-    native_streams: dict[int, set[str]] = {}
-    body_streams: dict[int, set[str]] = {}
-    native_linked: set[int] = set()
+    native_epics: dict[int, set[int]] = {}
+    body_epics: dict[int, set[int]] = {}
     for epic, (native, refs) in membership.items():
-        stream = stream_of_epic[epic]
         for n in native:
-            native_streams.setdefault(n, set()).add(stream)
+            native_epics.setdefault(n, set()).add(epic)
         for n in refs:
-            body_streams.setdefault(n, set()).add(stream)
-        native_linked |= native
+            body_epics.setdefault(n, set()).add(epic)
+    native_linked = set(native_epics)
     # Native sub-issue links are DELIBERATE membership; body refs are the
     # migration fallback. Once an issue has any native link, prose mentions in
-    # other epics' bodies must not multi-home it.
-    issue_streams: dict[int, set[str]] = {
-        n: (native_streams.get(n) or body_streams.get(n) or set())
-        for n in set(native_streams) | set(body_streams)
+    # other epics' bodies must not multi-home it. Ambiguity is judged on the
+    # EFFECTIVE EPIC set, not the distinct stream names it maps to — two native
+    # epics in the SAME stream are still two owners and must be ambiguous, not
+    # silently collapsed to "one stream, therefore fine" (codex/gemini review).
+    owning_epics: dict[int, set[int]] = {
+        n: (native_epics.get(n) or body_epics.get(n) or set())
+        for n in set(native_epics) | set(body_epics)
     }
 
     open_numbers = {i["number"] for i in open_issues}
     titles = {i["number"]: i["title"] for i in open_issues}
 
     orphans = sorted(
-        n for n in open_numbers if n not in epic_numbers and not issue_streams.get(n)
+        n for n in open_numbers if n not in epic_numbers and not owning_epics.get(n)
     )
     multi_homed = sorted(
         n for n in open_numbers
-        if n not in epic_numbers and len(issue_streams.get(n, ())) > 1
+        if n not in epic_numbers and len(owning_epics.get(n, ())) > 1
     )
     body_only = sorted(
         n for n in open_numbers
-        if n not in epic_numbers and issue_streams.get(n) and n not in native_linked
+        if n not in epic_numbers and owning_epics.get(n) and n not in native_linked
     )
     missing_epics = sorted(e for e in epic_numbers if e not in open_numbers)
 
@@ -159,18 +161,24 @@ def classify(
         "streams": {k: sorted(v) for k, v in registry.items()},
         "orphans": [{"number": n, "title": titles[n]} for n in orphans],
         "multi_homed": [
-            {"number": n, "title": titles[n], "streams": sorted(issue_streams[n])}
+            {
+                "number": n,
+                "title": titles[n],
+                "streams": sorted({stream_of_epic[e] for e in owning_epics[n]}),
+            }
             for n in multi_homed
         ],
         "pending_native_link": body_only,
         "closed_or_missing_epics": missing_epics,
-        # The invariant is EXACTLY ONE stream — multi-homed violates it (codex F1).
+        # The invariant is EXACTLY ONE EFFECTIVE EPIC — multi-homed violates it
+        # (codex F1), including two epics that happen to share one stream.
         "ok": not orphans and not missing_epics and not multi_homed,
         # ADR-011 P4 private index (stripped from the public API): the exact
         # effective issue→epic membership, native winning over body refs, plus the
         # bounded open-issue set. Carries enough state to reject closed (absent
-        # key), wrong (epic not in ``epics``), and multi-home (``unique_stream``
-        # false) ownership without any live network call.
+        # key), wrong (epic not in ``epics``), and ambiguous (``unique_stream``
+        # false — more than one effective epic, even within one stream) ownership
+        # without any live network call.
         "effective_membership": _effective_membership(
             open_numbers, epic_numbers, stream_of_epic, membership
         ),
@@ -185,7 +193,14 @@ def _effective_membership(
     membership: dict[int, tuple[set[int], set[int]]],
 ) -> dict[str, dict]:
     """Exact effective issue→epic index. Native links win over body refs; epics
-    and non-open issues are excluded. One entry per owned open issue."""
+    and non-open issues are excluded. One entry per owned open issue.
+
+    ``unique_stream`` means EXACT membership: exactly one effective epic — not
+    merely one distinct stream *name*. Two epics that happen to live in the same
+    stream are still two owners and must NOT resolve as unique (codex/gemini
+    review on PR #4998): a resolver built from this index must fail closed for
+    that case exactly as it does for a genuine cross-stream multi-home.
+    """
     native_epics: dict[int, set[int]] = {}
     body_epics: dict[int, set[int]] = {}
     for epic, (native, refs) in membership.items():
@@ -204,7 +219,7 @@ def _effective_membership(
             "epics": epics,
             "streams": streams,
             "via": via,
-            "unique_stream": len(streams) == 1,
+            "unique_stream": len(epics) == 1,
         }
     return index
 
@@ -236,14 +251,81 @@ def read_cache(max_age_s: int) -> dict | None:
 # --------------------------------------------------------------------------- #
 # ADR-011 P4 — strict adoption gate inputs (fresh cache only; never network)
 # --------------------------------------------------------------------------- #
+# Cache authority window: a membership cache is trusted for at most
+# ``max_age_s`` (default 3600s, matching the auditor's own session-setup
+# refresh cadence) AFTER ``generated_at``, and rejected outright if
+# ``generated_at`` is more than ``CACHE_FUTURE_SKEW_S`` ahead of wall-clock —
+# clock skew or a corrupted/hand-edited timestamp must not be read as "still
+# fresh forever" just because the age computes negative.
+CACHE_FUTURE_SKEW_S = 300
+
+_VALID_VIA = frozenset({"native", "body"})
+
+
+def _is_positive_int(value: object) -> bool:
+    """True for a JSON int that is a real positive integer — excludes bool
+    (``isinstance(True, int)`` is True in Python) and any non-int type."""
+    return isinstance(value, int) and not isinstance(value, bool) and value > 0
+
+
+def _valid_membership_entry(entry: object) -> bool:
+    """Structurally + semantically validate one ``effective_membership`` entry.
+
+    Every field is checked against the exact shape ``_effective_membership``
+    produces: a non-empty list of positive-int epics, a list of non-empty
+    stream-name strings, a known ``via``, and a ``unique_stream`` bool that is
+    internally consistent with the epic count (exactly one effective epic —
+    codex/gemini review). A cache that claims ``unique_stream: true`` for two
+    epics (or vice versa) is corrupted/adversarial and must fail closed.
+    """
+    if not isinstance(entry, dict):
+        return False
+    epics = entry.get("epics")
+    streams = entry.get("streams")
+    via = entry.get("via")
+    unique = entry.get("unique_stream")
+    if not isinstance(epics, list) or not epics or not all(_is_positive_int(e) for e in epics):
+        return False
+    if not isinstance(streams, list) or not streams or not all(
+        isinstance(s, str) and s for s in streams
+    ):
+        return False
+    if via not in _VALID_VIA:
+        return False
+    if not isinstance(unique, bool):
+        return False
+    return unique == (len(epics) == 1)
+
+
+def _valid_membership_index(index: object) -> bool:
+    if not isinstance(index, dict):
+        return False
+    for key, entry in index.items():
+        if not (isinstance(key, str) and key.isdigit() and int(key) > 0):
+            return False
+        if not _valid_membership_entry(entry):
+            return False
+    return True
+
+
+def _valid_open_numbers(value: object) -> bool:
+    return isinstance(value, list) and all(_is_positive_int(n) for n in value)
+
+
 def read_membership_index(max_age_s: int, *, cache_path: Path | None = None) -> dict | None:
     """Return the effective issue→epic membership index from a FRESH cache.
 
-    Fails **closed** to ``None`` when the cache is missing, stale (older than
-    ``max_age_s``), unreadable, malformed, or was written by a pre-P4 auditor that
-    lacks the index. This never reaches GitHub: the strict adoption gate consumes
-    a cache produced by a separate live auditor run, so discovery/gate paths stay
-    offline and non-mutating.
+    Fails **closed** to ``None`` — never raises, never returns a truthy-but-bogus
+    value — when the cache is missing, unreadable, not a mapping, stale (older
+    than ``max_age_s``), materially future-skewed (``generated_at`` more than
+    ``CACHE_FUTURE_SKEW_S`` ahead of wall-clock, or non-finite/non-numeric/bool),
+    was written by a pre-P4 auditor that lacks the index, or carries a
+    structurally/semantically malformed ``effective_membership`` or
+    ``open_issue_numbers`` (non-positive-int keys/values, unknown ``via``, a
+    ``unique_stream`` bool inconsistent with its epic count, etc.). This never
+    reaches GitHub: the strict adoption gate consumes a cache produced by a
+    separate live auditor run, so discovery/gate paths stay offline and
+    non-mutating.
     """
     path = cache_path if cache_path is not None else CACHE_PATH
     try:
@@ -252,10 +334,21 @@ def read_membership_index(max_age_s: int, *, cache_path: Path | None = None) -> 
         return None
     if not isinstance(report, dict):
         return None
-    if time.time() - report.get("generated_at", 0) > max_age_s:
+
+    generated_at = report.get("generated_at")
+    if isinstance(generated_at, bool) or not isinstance(generated_at, (int, float)):
         return None
+    if not math.isfinite(generated_at):
+        return None
+    age = time.time() - generated_at
+    if age > max_age_s or age < -CACHE_FUTURE_SKEW_S:
+        return None
+
     index = report.get("effective_membership")
-    if not isinstance(index, dict):
+    if not _valid_membership_index(index):
+        return None
+    open_numbers = report.get("open_issue_numbers")
+    if open_numbers is not None and not _valid_open_numbers(open_numbers):
         return None
     return report
 
@@ -264,9 +357,11 @@ def make_membership_resolver(report: dict) -> MembershipResolver:
     """Build a ``(issue, epic) → bool`` resolver over a fresh cache report.
 
     Returns ``True`` only when the issue is a live owned member (present in the
-    index), belongs to exactly one stream (``unique_stream``), and the requested
-    ``epic`` is one of its effective epics. Rejects closed/orphan (absent),
-    wrong-epic, and multi-home ownership — every failure mode fails closed.
+    index), belongs to exactly one EFFECTIVE EPIC (``unique_stream`` — exact
+    membership, not merely one stream name), and the requested ``epic`` is one of
+    its effective epics. Rejects closed/orphan (absent), wrong-epic, and
+    ambiguous (more than one effective epic, even within a single stream)
+    ownership — every failure mode fails closed.
     """
     index = report.get("effective_membership") or {}
 
@@ -280,12 +375,24 @@ def make_membership_resolver(report: dict) -> MembershipResolver:
 
 
 def make_issue_resolver(report: dict) -> Callable[[str], bool]:
-    """Build a consumer ``issue`` resolver: True iff the ref names an open issue in
-    the fresh cache's bounded open-issue set. Non-digit refs fail closed."""
+    """Build a consumer ``issue`` resolver.
+
+    ``True`` only when the ref names an OPEN issue that is ALSO uniquely owned
+    by exactly one effective epic/stream in the fresh membership index. Being in
+    the bounded open-issue set alone is not enough — an unowned (orphaned) or
+    ambiguously multi-homed open issue is not trustworthy "adopted" evidence
+    (codex/gemini review on PR #4998: adopted issue consumers must be open *and*
+    uniquely owned, the same proof the ownership gate itself uses). Non-digit
+    refs fail closed.
+    """
     open_set = {int(n) for n in (report.get("open_issue_numbers") or [])}
+    index = report.get("effective_membership") or {}
 
     def _resolve(ref: str) -> bool:
-        return ref.isdigit() and int(ref) in open_set
+        if not (ref.isdigit() and int(ref) in open_set):
+            return False
+        entry = index.get(ref)
+        return isinstance(entry, dict) and bool(entry.get("unique_stream"))
 
     return _resolve
 

@@ -252,6 +252,25 @@ $ORPHAN_LIST")
     fi
     MISSING_EPICS=$(jq -r '.closed_or_missing_epics | join(", ")' "$STREAM_AUDIT_CACHE" 2>/dev/null)
     [ -n "$MISSING_EPICS" ] && ISSUES+=("Stream epic(s) closed/missing: #$MISSING_EPICS — fix scripts/config/issue_streams.yaml or reopen")
+
+    # 11c. Research-registry strict adoption gate (ADR-011 P4, PR #4998 review):
+    # the fresh cache just confirmed above is exactly the input
+    # `--strict-adoption` needs — wire it in HERE so it is not a dead CLI.
+    # Offline (reads only the cache we already have), non-blocking (an ISSUES
+    # entry, never a session-start failure).
+    if [ -f "$PROJECT_DIR/scripts/audit/check_research_registry.py" ] && \
+       [ -f "$PROJECT_DIR/docs/references/research-registry.yaml" ] && \
+       [ -x "$PROJECT_DIR/.venv/bin/python" ]; then
+      STRICT_JSON=$(cd "$PROJECT_DIR" && "$PROJECT_DIR/.venv/bin/python" scripts/audit/check_research_registry.py --strict-adoption --json 2>/dev/null)
+      # NOTE: jq's `//` treats `false` as falsy too, so `.ok // empty` would
+      # silently discard a real `false` — read `.ok` directly instead.
+      STRICT_OK=$(echo "$STRICT_JSON" | jq -r '.ok' 2>/dev/null)
+      if [ "$STRICT_OK" = "false" ]; then
+        STRICT_ERRORS=$(echo "$STRICT_JSON" | jq -r '.errors[]? | "  - \(.)"' 2>/dev/null)
+        ISSUES+=("Research registry strict-adoption gate FAILED (ADR-011 P4 — ownership/consumer drift vs live GitHub, scripts/audit/check_research_registry.py --strict-adoption):
+$STRICT_ERRORS")
+      fi
+    fi
   elif command -v gh >/dev/null 2>&1; then
     (cd "$PROJECT_DIR" && nohup "$PROJECT_DIR/.venv/bin/python" -m scripts.orchestration.issue_stream_audit --json >/dev/null 2>&1 &)
     INFO+=("issue-stream audit cache stale — background refresh started (#4708)")

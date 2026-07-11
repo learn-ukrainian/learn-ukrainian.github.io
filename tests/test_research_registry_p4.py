@@ -229,13 +229,49 @@ def test_strict_gate_fails_closed_on_stale_cache(strict_root):
 
 
 def test_strict_gate_resolves_issue_consumer(strict_root):
+    """An adopted ``issue`` consumer must be open AND uniquely owned by exactly
+    one effective epic — being merely present in the open-issue set is not
+    enough (codex/gemini review, PR #4998)."""
     root, cache = strict_root
     rec = _make_record(root, "r1", state="adopted", consumer={"kind": "issue", "ref": "9001"})
     _write_registry(root, [rec])
+    owned_entry = {"9001": {"epics": [REAL_EPIC], "streams": ["core-quality"],
+                            "via": "native", "unique_stream": True}}
+    _write_cache(cache, owned_entry, open_numbers=[9001], is_file=True)
+    assert _run_strict(root) == 0  # open AND uniquely owned → resolves
+    # Same registry, issue open but NOT owned by any stream (orphan) → blocked.
     _write_cache(cache, {}, open_numbers=[9001], is_file=True)
-    assert _run_strict(root) == 0  # issue consumer resolves against the open set
-    # Same registry, issue not open → blocked (unverified issue consumer).
-    _write_cache(cache, {}, open_numbers=[1], is_file=True)
+    assert _run_strict(root) == 2
+    # Same registry, issue not open at all → blocked.
+    _write_cache(cache, owned_entry, open_numbers=[1], is_file=True)
+    assert _run_strict(root) == 2
+
+
+def test_strict_gate_rejects_ambiguously_owned_issue_consumer(strict_root):
+    """An adopted ``issue`` consumer that IS open but ambiguously multi-homed
+    (unique_stream False) must not resolve."""
+    root, cache = strict_root
+    rec = _make_record(root, "r1", state="adopted", consumer={"kind": "issue", "ref": "9001"})
+    _write_registry(root, [rec])
+    ambiguous_entry = {"9001": {"epics": [REAL_EPIC, 1234], "streams": ["core-quality", "other"],
+                                "via": "native", "unique_stream": False}}
+    _write_cache(cache, ambiguous_entry, open_numbers=[9001], is_file=True)
+    assert _run_strict(root) == 2
+
+
+def test_strict_gate_resolves_corpus_consumer_via_atlas_registry(strict_root):
+    """The corpus resolver is real: it resolves a genuinely declared Atlas
+    intake source family and rejects a dangling one — no cache required."""
+    root, cache = strict_root
+    _write_cache(cache, {}, is_file=True)
+    ok = _make_record(root, "ok", state="adopted", consumer={"kind": "corpus", "ref": "textbook"})
+    _write_registry(root, [ok])
+    assert _run_strict(root) == 0
+
+    dangling = _make_record(
+        root, "dangling", state="adopted", consumer={"kind": "corpus", "ref": "not-a-real-family"}
+    )
+    _write_registry(root, [dangling])
     assert _run_strict(root) == 2
 
 
@@ -291,15 +327,51 @@ def test_dead_consumer_detected(obs_env):
     assert m["adoption"]["effective_adopted"] == 0
 
 
-def test_issue_and_corpus_consumers_are_unverified_not_dead(obs_env):
+def test_issue_consumer_is_unverified_without_fresh_cache(obs_env):
+    """No fresh membership cache in the monitor's env → an issue consumer can be
+    neither proven nor disproven — it must land in unverified, never dead."""
     root = obs_env
     ri = _make_record(root, "ri", state="adopted", consumer={"kind": "issue", "ref": "4952"})
-    rc = _make_record(root, "rc", state="adopted", consumer={"kind": "corpus", "ref": "intake-x"})
-    _write_registry(root, [ri, rc])
+    _write_registry(root, [ri])
     m = _monitor(root)
-    assert m["dead_consumers"]["unverified"] == ["rc", "ri"]
+    assert m["dead_consumers"]["unverified"] == ["ri"]
     assert m["dead_consumers"]["dead"] == []
     assert m["adoption"]["effective_adopted"] == 0  # unverified never counts as effective
+
+
+def test_issue_consumer_resolved_alive_or_dead_with_fresh_cache(obs_env, monkeypatch):
+    """With a FRESH membership cache, the monitor must use the SAME resolver
+    proof the strict gate uses: open + uniquely owned → alive; closed/orphan/
+    ambiguous → dead. Record ownership and issue-consumer resolution are
+    validated independently (ADR-011 P4 review)."""
+    root = obs_env
+    cache = root / "cache.json"
+    monkeypatch.setattr(isa, "CACHE_PATH", cache)
+    _write_cache(cache, {"9001": {"epics": [REAL_EPIC], "streams": ["core-quality"],
+                                  "via": "native", "unique_stream": True}},
+                 open_numbers=[9001], is_file=True)
+    alive = _make_record(root, "alive", state="adopted", consumer={"kind": "issue", "ref": "9001"})
+    dead = _make_record(root, "dead", state="adopted", consumer={"kind": "issue", "ref": "5"})
+    _write_registry(root, [alive, dead])
+    m = _monitor(root)
+    assert m["dead_consumers"]["dead"] == ["dead"]
+    assert m["dead_consumers"]["unverified"] == []
+    assert m["adoption"]["effective_adopted"] == 1
+
+
+def test_corpus_consumer_resolved_via_real_atlas_registry(obs_env):
+    """The corpus resolver is real and offline (no cache needed): a genuinely
+    declared Atlas intake source family is alive, a dangling one is dead."""
+    root = obs_env
+    ok = _make_record(root, "ok", state="adopted", consumer={"kind": "corpus", "ref": "textbook"})
+    dangling = _make_record(
+        root, "dangling", state="adopted", consumer={"kind": "corpus", "ref": "not-a-real-family"}
+    )
+    _write_registry(root, [ok, dangling])
+    m = _monitor(root)
+    assert m["dead_consumers"]["dead"] == ["dangling"]
+    assert m["dead_consumers"]["unverified"] == []
+    assert m["adoption"]["effective_adopted"] == 1
 
 
 def test_effective_adoption_requires_alive_consumer_and_current_hash(obs_env):
@@ -389,6 +461,57 @@ def test_missing_registry_degrades_safely(obs_env):
     assert m["lifecycle"]["status"] == "missing"
     assert m["consumption"]["status"] in {"empty", "ok"}
     assert m["adoption"]["rate"] is None
+
+
+def test_broken_provenance_counts_invalid_never_effective_adoption(obs_env):
+    """Broken provenance (missing digest file) is semantic-invalid REGARDLESS of
+    the claimed lifecycle state: it must count as invalid, stay visible in
+    invalid_provenance, and never be misreported as merely current (not stale)
+    or count toward adopted/effective adoption (ADR-011 P4 review)."""
+    root = obs_env
+    _stub(root, "scripts/x.py")
+    broken = _make_record(root, "broken", state="adopted",
+                          consumer={"kind": "path", "ref": "scripts/x.py"}, write_digest=False)
+    healthy = _make_record(root, "healthy", state="adopted",
+                           consumer={"kind": "path", "ref": "scripts/x.py"})
+    _write_registry(root, [broken, healthy])
+    m = _monitor(root)
+    assert m["lifecycle"]["invalid_provenance"] == ["broken"]
+    assert m["lifecycle"]["counts"]["invalid"] == 1
+    assert m["lifecycle"]["counts"]["adopted"] == 1  # only "healthy" counted
+    assert m["lifecycle"]["stale"] == []  # never misreported as merely "current"/stale
+    assert m["adoption"]["adopted"] == 1
+    assert m["adoption"]["effective_adopted"] == 1
+    assert "broken" not in m["dead_consumers"]["dead"]
+    assert "broken" not in m["dead_consumers"]["unverified"]
+
+
+def test_invalid_raw_ids_counted_anonymously_never_echoed(obs_env):
+    """Only schema-valid slug ids may appear in the public monitor payload.
+    Missing/non-string/oversized/secret-like/non-slug raw ids — and non-dict
+    record entries — are dropped BEFORE lifecycle classification and folded
+    into an anonymous count; the raw value is never echoed (ADR-011 P4 review)."""
+    root = obs_env
+    good = _make_record(root, "good", state="deferred")
+    bad_id_dict = _make_record(root, "placeholder", state="deferred")
+    bad_id_dict["id"] = "SECRET-Key-ABCDEFG"  # not a valid slug (uppercase)
+    non_string_id = _make_record(root, "placeholder2", state="deferred")
+    non_string_id["id"] = 12345
+    empty_id = _make_record(root, "placeholder3", state="deferred")
+    empty_id["id"] = ""
+    records = [good, bad_id_dict, non_string_id, empty_id, "not-even-a-dict"]
+    refs = root / "docs" / "references"
+    refs.mkdir(parents=True, exist_ok=True)
+    doc = yaml.safe_dump({"schema_version": 1, "records": records}, sort_keys=False, allow_unicode=True)
+    (refs / "research-registry.yaml").write_text(doc, "utf-8")
+
+    m = _monitor(root)
+    assert m["lifecycle"]["counts"]["total"] == 1  # only "good" is schema-valid
+    assert m["lifecycle"]["invalid_ids"] == 4
+    blob = json.dumps(m)
+    assert "SECRET-Key-ABCDEFG" not in blob
+    assert "not-even-a-dict" not in blob
+    assert "placeholder2" not in blob and "placeholder3" not in blob
 
 
 # --------------------------------------------------------------------------- #
@@ -507,6 +630,78 @@ def test_empty_events_dir(obs_env):
     assert c["surfaced_never_consumed"] == 0
 
 
+def test_scan_is_newest_first_and_nulls_negative_under_partial_coverage(obs_env, monkeypatch):
+    """Byte cap must hide OLDER days, not newer ones — the most recent surface
+    survives — and a scan that skipped part of the window must never assert a
+    definitive ``surfaced_never_consumed`` (ADR-011 P4 review, item 8)."""
+    root = obs_env
+    _write_registry(root, [_make_record(root, "recent"), _make_record(root, "old")])
+    _surface(root, NOW - timedelta(minutes=5), "t-recent", "recent")  # today, within grace
+    # A large padding field inflates this day's line past the cap without
+    # affecting event-contract validity (task_id/research_id stay bounded).
+    _emit(root, NOW - timedelta(days=20), event_type=consumption.SURFACED_EVENT,
+          task_id="t-mid", research_id="recent", surface="dispatch",
+          ts=(NOW - timedelta(days=20)).isoformat(), padding="x" * 2000)
+    _surface(root, NOW - timedelta(days=40), "t-old", "old")  # oldest — must be skipped
+
+    monkeypatch.setattr(obs, "MAX_SCAN_BYTES", 500)
+    c = _consumption(root, window_days=45)
+
+    assert c["partial"] is True
+    assert c["cap_reason"] == "byte_cap"
+    assert c["files_skipped"] >= 1
+    assert c["files_in_window"] > c["files_scanned"]
+    assert c["surfaced_never_consumed"] is None  # partial coverage: no definitive negative
+    assert c["surfaced_never_consumed_observed"] == 0  # lower bound still reported
+    assert "recent" in c["per_record"]
+    assert c["per_record"]["recent"]["pending"] == 1  # today's event retained, not lost
+    assert "old" not in c["per_record"]  # oldest day never reached — silently a lower bound
+
+
+def test_oversized_line_is_malformed_and_does_not_desync_next_line(obs_env):
+    """A pathological multi-MB no-newline record must never be buffered whole —
+    it is marked malformed/partial and the reader resynchronizes on the next
+    real line boundary (ADR-011 P4 review, item 9)."""
+    root = obs_env
+    _write_registry(root, [_make_record(root, "r1")])
+    events_dir = root / "batch_state" / "telemetry" / "events"
+    events_dir.mkdir(parents=True, exist_ok=True)
+    path = events_dir / f"{NOW:%Y-%m-%d}.jsonl"
+    huge_line = json.dumps({
+        "event_type": consumption.SURFACED_EVENT, "task_id": "t1", "research_id": "r1",
+        "surface": "dispatch", "ts": NOW.isoformat(), "padding": "x" * 1_200_000,
+    })
+    good_line = json.dumps({
+        "event_type": consumption.SURFACED_EVENT, "task_id": "t2", "research_id": "r1",
+        "surface": "dispatch", "ts": (NOW - timedelta(hours=1)).isoformat(),
+    })
+    path.write_text(huge_line + "\n" + good_line + "\n", "utf-8")
+    c = _consumption(root)
+    assert c["oversized_lines"] == 1
+    assert c["partial"] is True
+    assert c["cap_reason"] == "oversized_line"
+    assert c["surfaced_pairs"] == 1  # the good line after the huge one still parsed
+
+
+def test_invalid_status_and_surface_are_malformed_not_counted(obs_env):
+    """A consumed event with an out-of-contract ``status`` and a surfaced event
+    carrying the consumption-reserved ``surface`` must both be rejected as
+    malformed and never affect any metric (ADR-011 P4 review, item 10)."""
+    root = obs_env
+    _write_registry(root, [_make_record(root, "r1")])
+    _surface(root, NOW - timedelta(hours=2), "task-a", "r1")
+    _emit(root, NOW - timedelta(hours=1), event_type=consumption.CONSUMED_EVENT,
+          task_id="task-a", research_id="r1", surface="record", status=500,  # not 200/304
+          ts=(NOW - timedelta(hours=1)).isoformat())
+    _emit(root, NOW - timedelta(minutes=30), event_type=consumption.SURFACED_EVENT,
+          task_id="task-b", research_id="r1", surface="record",  # reserved for consumption
+          ts=(NOW - timedelta(minutes=30)).isoformat())
+    c = _consumption(root)
+    assert c["malformed_lines"] == 2
+    assert c["consumed_pairs"] == 0
+    assert c["surfaced_pairs"] == 1  # only the one genuinely valid surfaced event
+
+
 # --------------------------------------------------------------------------- #
 # 4. Endpoint — ungated availability, fail-soft, privacy, validation
 # --------------------------------------------------------------------------- #
@@ -586,3 +781,93 @@ def test_issues_streams_strips_private_index(tmp_path, monkeypatch):
     assert "effective_membership" not in stripped
     assert "open_issue_numbers" not in stripped
     assert stripped["open_total"] == 3 and stripped["ok"] is True
+
+
+# --------------------------------------------------------------------------- #
+# 6. HTTP regression: /api/issues/streams strips private keys over the real
+#    endpoint for the fresh / cache-hit / stale+refresh paths (ADR-011 P4
+#    review, item 11 — the pure-function test above is not enough on its own).
+# --------------------------------------------------------------------------- #
+_LEAKY_REPORT = {
+    "generated_at": int(NOW.timestamp()),
+    "open_total": 3,
+    "ok": True,
+    "orphans": [],
+    "effective_membership": {"5": {"epics": [100], "streams": ["s"], "unique_stream": True}},
+    "open_issue_numbers": [5, 100],
+}
+
+
+def _assert_no_private_keys(body: dict[str, Any]) -> None:
+    assert "effective_membership" not in body
+    assert "open_issue_numbers" not in body
+    assert body["open_total"] == 3 and body["ok"] is True
+
+
+def test_issues_streams_endpoint_strips_private_keys_on_fresh(monkeypatch):
+    from scripts.api import issues_router
+
+    monkeypatch.setattr(issues_router.audit, "run_audit", lambda: dict(_LEAKY_REPORT))
+    resp = client.get("/api/issues/streams", params={"fresh": "true"})
+    assert resp.status_code == 200
+    _assert_no_private_keys(resp.json())
+
+
+def test_issues_streams_endpoint_strips_private_keys_on_cache_hit(monkeypatch):
+    from scripts.api import issues_router
+
+    monkeypatch.setattr(
+        issues_router.audit, "read_cache",
+        lambda max_age_s: dict(_LEAKY_REPORT) if max_age_s == 3600 else None,
+    )
+    resp = client.get("/api/issues/streams")
+    assert resp.status_code == 200
+    _assert_no_private_keys(resp.json())
+
+
+def test_strict_adoption_gate_runs_as_bare_script():
+    """Regression (ADR-011 P4 review, item 12): running this validator as a bare
+    script — ``python scripts/audit/check_research_registry.py``, exactly how
+    the session-setup cold-start hook and a human/CI invocation call it, NOT
+    ``-m`` — must never crash. Bare-script invocation sets ``sys.path[0]`` to
+    the file's own directory (``scripts/audit/``); a naive
+    ``from scripts.audit import atlas_intake_registry`` would run
+    ``scripts/audit/__init__.py``, which imports ``scripts/audit/config.py``,
+    whose bare ``from config import ...`` then self-shadows against
+    ``scripts/audit/config.py`` instead of the intended ``scripts/config.py``
+    and crashes on a circular partial import. This proves the gate is not a
+    dead CLI and stays runnable exactly as invoked in practice."""
+    import subprocess
+    import sys as _sys
+
+    repo_root = Path(__file__).resolve().parents[1]
+    script = repo_root / "scripts" / "audit" / "check_research_registry.py"
+    proc = subprocess.run(
+        [_sys.executable, str(script), "--strict-adoption", "--json"],
+        cwd=repo_root, capture_output=True, text=True, timeout=30,
+    )
+    assert "Traceback (most recent call last)" not in proc.stderr, proc.stderr
+    assert proc.returncode in (0, 1, 2)  # a gated result, never an uncaught crash
+    payload = json.loads(proc.stdout)
+    assert "ok" in payload
+
+
+def test_issues_streams_endpoint_strips_private_keys_on_stale_plus_refresh(monkeypatch):
+    from scripts.api import issues_router
+
+    def _fake_read_cache(max_age_s):
+        if max_age_s == 3600:
+            return None  # no fresh cache
+        return dict(_LEAKY_REPORT)  # stale fallback within the 7-day window
+
+    class _FakePopen:
+        def __init__(self, *a, **k):
+            pass  # never actually spawn a background refresh under test
+
+    monkeypatch.setattr(issues_router.audit, "read_cache", _fake_read_cache)
+    monkeypatch.setattr(issues_router.subprocess, "Popen", _FakePopen)
+    resp = client.get("/api/issues/streams")
+    assert resp.status_code == 200
+    body = resp.json()
+    assert body["stale"] is True and body["refreshing"] is True
+    _assert_no_private_keys(body)
