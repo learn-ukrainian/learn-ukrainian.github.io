@@ -478,14 +478,45 @@ BOOKLETS = [
     },
 ]
 
-# Mapping of Year + Session type to test IDs on zno.osvita.ua for 2019, 2020, 2021
+# Mapping of booklet metadata to the matching interactive test on zno.osvita.ua.
+#
+# Up to 2021, ``ukrainian`` hosted the combined Ukrainian language and literature
+# papers.  The standalone language catalogue, ``ukrmova``, is the authoritative
+# online source for the NMT papers from 2022 onward.  The source is keyed by the
+# complete booklet identity so that a second session cannot accidentally reuse
+# an otherwise similarly named test.
 ONLINE_TEST_MAPPING = {
-    (2019, "osnovna"): 347,
-    (2019, "dodatkova"): 363,
-    (2020, "osnovna"): 401,
-    (2020, "dodatkova"): 429,
-    (2021, "osnovna"): 471,  # maps to combined booklet mova-lit
-    (2021, "dodatkova"): 491,  # maps to combined booklet mova-lit
+    (2010, "sesiya-1", "mova-lit"): ("ukrainian", 15),
+    (2010, "sesiya-2", "mova-lit"): ("ukrainian", 16),
+    (2010, "sesiya-3", "mova-lit"): ("ukrainian", 17),
+    (2011, "sesiya-1", "mova-lit"): ("ukrainian", 13),
+    (2011, "sesiya-2", "mova-lit"): ("ukrainian", 14),
+    (2012, "sesiya-1", "mova-lit"): ("ukrainian", 11),
+    (2012, "sesiya-2", "mova-lit"): ("ukrainian", 12),
+    (2013, "sesiya-1", "mova-lit"): ("ukrainian", 6),
+    (2013, "sesiya-2", "mova-lit"): ("ukrainian", 10),
+    (2014, "sesiya-1", "mova-lit"): ("ukrainian", 132),
+    (2014, "sesiya-2", "mova-lit"): ("ukrainian", 133),
+    (2014, "dodatkova", "mova-lit"): ("ukrainian", 130),
+    (2015, "osnovna", "mova-lit"): ("ukrainian", 143),
+    (2016, "osnovna", "mova-lit"): ("ukrainian", 189),
+    (2017, "osnovna", "mova-lit"): ("ukrainian", 240),
+    (2017, "dodatkova", "mova-lit"): ("ukrainian", 254),
+    (2018, "osnovna", "mova-lit"): ("ukrainian", 299),
+    (2018, "dodatkova", "mova-lit"): ("ukrainian", 309),
+    (2019, "osnovna", "mova-lit"): ("ukrainian", 347),
+    (2019, "dodatkova", "mova-lit"): ("ukrainian", 363),
+    (2020, "osnovna", "mova-lit"): ("ukrainian", 401),
+    (2020, "dodatkova", "mova-lit"): ("ukrainian", 429),
+    (2021, "osnovna", "mova-lit"): ("ukrainian", 471),
+    (2021, "dodatkova", "mova-lit"): ("ukrainian", 491),
+    (2022, "osnovna", "mova"): ("ukrmova", 617),
+    (2023, "sesiya-1", "mova"): ("ukrmova", 619),
+    (2023, "sesiya-2", "mova"): ("ukrmova", 620),
+    (2024, "sesiya-1", "mova"): ("ukrmova", 622),
+    (2024, "sesiya-2", "mova"): ("ukrmova", 623),
+    (2025, "sesiya-1", "mova"): ("ukrmova", 667),
+    (2025, "sesiya-2", "mova"): ("ukrmova", 668),
 }
 
 
@@ -615,6 +646,7 @@ def ingest_documents(conn: sqlite3.Connection):
 
 # Simple global to track the time of the last HTTP request
 _last_request_time = 0.0
+FETCH_TIMEOUT_SECONDS = 30
 
 
 def fetch_page_with_rate_limit(url: str, cache_path: Path, rate_limit: float = 2.0) -> str:
@@ -633,7 +665,7 @@ def fetch_page_with_rate_limit(url: str, cache_path: Path, rate_limit: float = 2
 
     # Fetch page
     req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
-    with urllib.request.urlopen(req) as response:
+    with urllib.request.urlopen(req, timeout=FETCH_TIMEOUT_SECONDS) as response:
         html = response.read().decode("utf-8")
 
     _last_request_time = time.time()
@@ -643,6 +675,37 @@ def fetch_page_with_rate_limit(url: str, cache_path: Path, rate_limit: float = 2
     cache_path.write_text(html, encoding="utf-8")
 
     return html
+
+
+def derive_task_metadata(prompt: str, options_json: str, correct_json: str, task_format: str) -> tuple[str, str]:
+    """Derive only task metadata that is explicit in the source page.
+
+    Paronym pairs require a reviewed lexical analysis and are applied separately
+    with ``apply_zno_annotations.py``.  The source page itself unambiguously
+    identifies synonym, antonym, and lexical-error prompts, while a
+    single-choice наголос prompt identifies its target through the published
+    correct answer.
+    """
+    prompt_normalized = prompt.casefold()
+    task_subtype = ""
+    if "антонім" in prompt_normalized:
+        task_subtype = "antonym"
+    elif "синонім" in prompt_normalized:
+        task_subtype = "synonym"
+    elif "лексичн" in prompt_normalized and "помилк" in prompt_normalized:
+        task_subtype = "lexical_error"
+
+    stress_word = ""
+    if task_format == "single-choice" and "наголос" in prompt_normalized:
+        try:
+            options = json.loads(options_json)
+        except json.JSONDecodeError:
+            options = []
+        answer_index = {"А": 0, "Б": 1, "В": 2, "Г": 3, "Д": 4}.get(correct_json)
+        if isinstance(options, list) and answer_index is not None and answer_index < len(options):
+            stress_word = options[answer_index]
+
+    return task_subtype, stress_word
 
 
 def parse_and_insert_tasks(conn: sqlite3.Connection, html: str, doc_id: int, year: int, exam: str, session: str):
@@ -678,6 +741,8 @@ def parse_and_insert_tasks(conn: sqlite3.Connection, html: str, doc_id: int, yea
         # Stem
         q_div = card.find(class_="question")
         stem = q_div.get_text(separator="\n", strip=True) if q_div else ""
+        prompt_parts = q_div.find_all("p", recursive=False) if q_div else []
+        task_prompt = prompt_parts[-1].get_text(separator=" ", strip=True) if prompt_parts else stem
 
         # Topic tag verbatim
         exp = card.find(class_="explanation")
@@ -802,16 +867,45 @@ def parse_and_insert_tasks(conn: sqlite3.Connection, html: str, doc_id: int, yea
             options_json = "[]"
             correct_json = ""
 
-        # Insert or replace task
+        task_subtype, stress_word = derive_task_metadata(task_prompt, options_json, correct_json, task_format)
+
+        # Keep manually reviewed annotations on a refresh.  ``INSERT OR
+        # REPLACE`` deletes the previous row before inserting a new one, which
+        # silently clears topic_norm, task_subtype, paronym_pair, and
+        # stress_word.  An upsert updates parsed source fields in place instead.
         conn.execute(
             """
-            INSERT OR REPLACE INTO zno_tasks(
+            INSERT INTO zno_tasks(
                 document_id, year, exam, session, task_no, subject, task_format,
-                stem, options_json, correct_json, topic_tag
+                stem, options_json, correct_json, topic_tag, task_subtype, stress_word
             )
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ON CONFLICT(document_id, task_no) DO UPDATE SET
+                year=excluded.year,
+                exam=excluded.exam,
+                session=excluded.session,
+                subject=excluded.subject,
+                task_format=excluded.task_format,
+                stem=excluded.stem,
+                options_json=excluded.options_json,
+                correct_json=excluded.correct_json,
+                topic_tag=excluded.topic_tag
         """,
-            (doc_id, year, exam, session, task_no, subject, task_format, stem, options_json, correct_json, topic_tag),
+            (
+                doc_id,
+                year,
+                exam,
+                session,
+                task_no,
+                subject,
+                task_format,
+                stem,
+                options_json,
+                correct_json,
+                topic_tag,
+                task_subtype,
+                stress_word,
+            ),
         )
         inserted += 1
 
@@ -820,26 +914,21 @@ def parse_and_insert_tasks(conn: sqlite3.Connection, html: str, doc_id: int, yea
 
 def ingest_tasks(conn: sqlite3.Connection, cache_dir: Path):
     """
-    Extract and ingest tasks for years 2019, 2020, 2021 from zno.osvita.ua test pages.
+    Extract and ingest tasks from the matching zno.osvita.ua test pages.
     """
-    # Find the document IDs for the target years & sessions
+    # Find the document IDs that have a verified interactive source.
     cursor = conn.execute("SELECT id, year, exam, session, subject_scope FROM zno_documents")
     docs = cursor.fetchall()
 
     total_inserted = 0
     for doc_id, year, exam, session, subject_scope in docs:
-        if year not in [2019, 2020, 2021]:
-            continue
-        # We only crawl combined mova-lit sessions from the web (since there is no separate mova-only online page)
-        if subject_scope != "mova-lit":
+        source = ONLINE_TEST_MAPPING.get((year, session, subject_scope))
+        if not source:
             continue
 
-        test_id = ONLINE_TEST_MAPPING.get((year, session))
-        if not test_id:
-            continue
-
-        url = f"https://zno.osvita.ua/ukrainian/{test_id}/"
-        cache_path = cache_dir / f"{test_id}_main.html"
+        catalogue, test_id = source
+        url = f"https://zno.osvita.ua/{catalogue}/{test_id}/"
+        cache_path = cache_dir / f"{catalogue}_{test_id}.html"
 
         print(f"Fetching tasks for {year} {session} (test_id: {test_id}) from {url}...")
         html = fetch_page_with_rate_limit(url, cache_path)
