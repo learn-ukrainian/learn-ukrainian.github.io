@@ -21,9 +21,13 @@ from scripts.lexicon.enrich_manifest import (
     _clean_synonym_candidate,
     _curated_calque,
     _definition_cards,
+    _definition_pointer_relations,
+    _definition_pointer_relations_by_headword,
+    _definition_synonym_targets,
     _dmklinger_key,
     _etymology,
     _etymology_lookup_variants,
+    _gated_ukrajinet_relations,
     _idioms,
     _idioms_frazeolohichnyi,
     _idioms_slovnyk,
@@ -34,6 +38,7 @@ from scripts.lexicon.enrich_manifest import (
     _literary_excerpt,
     _meaning,
     _merge_slovnyk_warning,
+    _merge_synonym_relations,
     _morphology,
     _normalize_manifest_entries,
     _parse_translations,
@@ -2507,6 +2512,210 @@ def test_xref_target_lemmas_fail_closed_on_real_definitions() -> None:
     # Real text BEFORE «див.» (unexpected token in the pre-region) → not xref-only.
     assert _xref_target_lemmas("щось інше зовсім див. заховувати", "заховати") == []
     assert _xref_target_lemmas("", "заховати") == []
+
+
+def _patch_synonym_vesum(monkeypatch, valid_terms: set[str], stems: dict[str, str] | None = None) -> None:
+    """Fixture VESUM boundary for synonym candidates and definition stems."""
+    stems = stems or {}
+
+    def fake_verify(word: str) -> list[dict[str, str]]:
+        if word not in valid_terms:
+            return []
+        return [{"lemma": stems.get(word, word), "pos": "noun", "tags": "noun:inanim"}]
+
+    monkeypatch.setattr(enrich_manifest_module, "verify_word", fake_verify)
+    monkeypatch.setattr(
+        enrich_manifest_module,
+        "_vesum_word_analyses",
+        lambda word: [(stems.get(word, word), "noun")] if word in valid_terms else [],
+    )
+
+
+def test_definition_synonym_targets_extracts_stressed_same_as_target() -> None:
+    assert _definition_synonym_targets(
+        "КАФЕ́, невідм., с. Те саме, що кав'я́рня. Приклад уживання.", "кафе"
+    ) == [("кав'ярня", "Те саме, що")]
+
+
+def test_definition_synonym_targets_reuses_bare_div_parser() -> None:
+    assert _definition_synonym_targets("кафе див. кав'я́рня .", "кафе") == [("кав'ярня", "див.")]
+    assert _definition_synonym_targets(
+        "КАФЕ́, невідм., с. див. кав'ярня.", "кафе"
+    ) == [("кав'ярня", "див.")]
+
+
+def test_definition_pointer_relations_keep_each_dictionary_provenance(monkeypatch) -> None:
+    _patch_synonym_vesum(monkeypatch, {"кав'ярня"})
+    cache = {
+        "lookups": {
+            "newsum": {
+                "word": "кафе",
+                "text": "кафе Те саме, що кав'я́рня.",
+                "source_url": "https://example.invalid/sum20/cafe",
+            },
+            "vts": {
+                "word": "кафе",
+                "text": "кафе Те саме, що кав'ярня.",
+                "source_url": "https://example.invalid/vts/cafe",
+            },
+        }
+    }
+
+    relations = _definition_pointer_relations(
+        _conn(), "кафе", has_sum11_flags=True, cache=cache
+    )
+
+    assert [(row["item"], row["source"], row["pattern"]) for row in relations] == [
+        ("кав'ярня", "СУМ-20", "Те саме, що"),
+        ("кав'ярня", "ВТС", "Те саме, що"),
+    ]
+
+
+def test_definition_pointer_relations_emit_reciprocal_manifest_headword(monkeypatch) -> None:
+    _patch_synonym_vesum(monkeypatch, {"кафе", "кав'ярня"})
+    monkeypatch.setattr(enrich_manifest_module, "_read_cached_slovnyk_rows", lambda lemma: {})
+    conn = _conn()
+    conn.execute(
+        "INSERT INTO sum11(word, definition) VALUES (?, ?)",
+        ("кафе", "КАФЕ́, невідм., с. Те саме, що кав'ярня."),
+    )
+    manifest = {"entries": [{"lemma": "кафе"}, {"lemma": "кав'ярня"}]}
+
+    relations = _definition_pointer_relations_by_headword(
+        conn, manifest, has_sum11_flags=True
+    )
+
+    assert relations["кафе"][0]["item"] == "кав'ярня"
+    assert relations["кав'ярня"][0]["item"] == "кафе"
+    assert relations["кав'ярня"][0]["direction"] == "reciprocal"
+
+
+def test_gated_ukrajinet_pair_requires_direct_lexical_coattestation(monkeypatch) -> None:
+    _patch_synonym_vesum(monkeypatch, {"кафе", "кав'ярня"})
+    conn = _conn()
+    conn.execute(
+        "INSERT INTO ukrajinet(words, text) VALUES (?, ?)",
+        ('["кафе", "кав\'ярня"]', "fixture"),
+    )
+    conn.execute(
+        "INSERT INTO sum11(word, definition) VALUES (?, ?)",
+        ("кафе", "Заклад; те саме, що кав'ярня."),
+    )
+
+    relations = _gated_ukrajinet_relations(conn, "кафе", has_sum11_flags=True, cache={})
+
+    assert relations == [
+        {
+            "item": "кав'ярня",
+            "source": "Ukrajinet WordNet",
+            "pattern": "gated synset",
+            "vein": 2,
+            "gate": {
+                "vesum": "both valid",
+                "co_attestation": {
+                    "kind": "definition_mention",
+                    "dictionary": "СУМ-11",
+                    "direction": "lemma→candidate",
+                },
+                "synset_id": "",
+            },
+        }
+    ]
+
+
+def test_gated_ukrajinet_pair_can_use_shared_vesum_content_stem(monkeypatch) -> None:
+    valid = {"школа", "училище", "навчальний", "заклад", "для", "учнів", "навчання"}
+    _patch_synonym_vesum(monkeypatch, valid)
+    conn = _conn()
+    conn.execute(
+        "INSERT INTO ukrajinet(words, text) VALUES (?, ?)",
+        ('["школа", "училище"]', "fixture"),
+    )
+    conn.executemany(
+        "INSERT INTO sum11(word, definition) VALUES (?, ?)",
+        [
+            ("школа", "Навчальний заклад для учнів."),
+            ("училище", "Заклад для навчання."),
+        ],
+    )
+
+    relations = _gated_ukrajinet_relations(conn, "школа", has_sum11_flags=True, cache={})
+
+    assert relations[0]["item"] == "училище"
+    assert relations[0]["gate"]["co_attestation"] == {
+        "kind": "shared_content_stem",
+        "dictionaries": ["СУМ-11", "СУМ-11"],
+        "stem": "заклад",
+    }
+
+
+def test_gated_ukrajinet_pair_fails_closed_without_coattestation(monkeypatch) -> None:
+    _patch_synonym_vesum(monkeypatch, {"глина", "пісок"})
+    conn = _conn()
+    conn.execute(
+        "INSERT INTO ukrajinet(words, text) VALUES (?, ?)",
+        ('["глина", "пісок"]', "fixture"),
+    )
+    conn.executemany(
+        "INSERT INTO sum11(word, definition) VALUES (?, ?)",
+        [("глина", "Мінеральна порода."), ("пісок", "Сипучий матеріал.")],
+    )
+
+    assert _gated_ukrajinet_relations(conn, "глина", has_sum11_flags=True, cache={}) == []
+
+
+def test_sovietized_row_keeps_pointer_but_cannot_open_ukrajinet_gate(monkeypatch) -> None:
+    _patch_synonym_vesum(monkeypatch, {"кафе", "кав'ярня"})
+    conn = _conn()
+    conn.execute(
+        "INSERT INTO ukrajinet(words, text) VALUES (?, ?)",
+        ('["кафе", "кав\'ярня"]', "fixture"),
+    )
+    conn.execute(
+        "INSERT INTO sum11(word, definition, sovietization_risk) VALUES (?, ?, ?)",
+        ("кафе", "Те саме, що кав'ярня.", 2),
+    )
+
+    assert _definition_pointer_relations(conn, "кафе", has_sum11_flags=True, cache={})[0]["item"] == "кав'ярня"
+    assert _gated_ukrajinet_relations(conn, "кафе", has_sum11_flags=True, cache={}) == []
+
+
+def test_synonym_relation_merge_preserves_rendered_schema_deduplicates_and_caps() -> None:
+    existing = {
+        "items": ["база (рідше)"],
+        "source": "existing source",
+        "source_urls": ["https://example.invalid/existing"],
+    }
+    vein_two_first = {
+        "item": "дев'ятий",
+        "source": "Ukrajinet WordNet",
+        "pattern": "gated synset",
+        "vein": 2,
+        "gate": {
+            "vesum": "both valid",
+            "co_attestation": {
+                "kind": "definition_mention",
+                "dictionary": "СУМ-20",
+                "direction": "lemma→candidate",
+            },
+        },
+    }
+    pointer_items = ["перший", "другий", "третій", "четвертий", "п'ятий", "шостий", "сьомий", "восьмий", "десятий"]
+    vein_one = [
+        {"item": "база", "source": "СУМ-20", "pattern": "Те саме, що", "vein": 1},
+        *[
+            {"item": item, "source": "ВТС", "pattern": "див.", "vein": 1}
+            for item in pointer_items
+        ],
+    ]
+
+    merged = _merge_synonym_relations(existing, [vein_two_first, *vein_one])
+
+    assert merged is not None
+    assert set(merged) == {"items", "source", "source_urls"}
+    assert merged["items"] == ["база (рідше)", *pointer_items[:8]]
+    assert "СУМ-20: Те саме, що → база" in merged["source"]
+    assert "Ukrajinet WordNet" not in merged["source"]
 
 
 # Fixture-backed VESUM stubs for the xref tests. CI has no data/vesum.db (data/
