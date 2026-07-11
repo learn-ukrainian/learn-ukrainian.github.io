@@ -76,6 +76,28 @@ function makeExpressionLikeFixture(entry_type: string, lemma: string): LexiconEn
   };
 }
 
+function makeHomonymFixture(withHomonyms: boolean): LexiconEntry {
+  return {
+    ...makeExpressionLikeFixture('lemma', 'коса'),
+    sections: withHomonyms
+      ? {
+          homonyms: {
+            items: [
+              {
+                word: 'коса',
+                homonym_no: 2,
+                pos: 'ж.',
+                gloss: 'сільськогосподарське знаряддя для косіння трави',
+              },
+            ],
+            source: 'СУМ-20',
+            source_urls: ['https://slovnyk.me/dict/newsum/коса'],
+          },
+        }
+      : undefined,
+  };
+}
+
 /** Minimal in-memory atlas.db shaped like the entry-model schema for gate tests. */
 function makeFixtureDb(): InstanceType<typeof Database> {
   const db = new Database(':memory:');
@@ -203,6 +225,26 @@ describe('entry_type-branched article rendering (#4385)', () => {
     expect(html).toContain('href="/lexicon/dim/"');
     expect(html).not.toContain('href="/lexicon/у/"');
     expect(html).not.toContain('href="/lexicon/до́мі/"');
+  });
+
+  test('renders a numbered homonym with its gloss and source', async () => {
+    const html = await renderFixture(makeHomonymFixture(true));
+
+    expect(html).toContain('Омонім');
+    expect(html).toContain('<h2>Омоніми</h2>');
+    expect(html).toContain('коса<sup>2</sup>');
+    expect(html).toContain('сільськогосподарське знаряддя для косіння трави');
+    expect(html).toContain('Джерела омонімів:');
+    expect(html).toContain('href="https://slovnyk.me/dict/newsum/коса"');
+    expect(html).toContain('<span class="src">СУМ-20</span>');
+  });
+
+  test('keeps the homonym section absent when the entry has no homonym data', async () => {
+    const html = await renderFixture(makeHomonymFixture(false));
+
+    expect(html).toContain('Омонім');
+    expect(html).not.toContain('<h2>Омоніми</h2>');
+    expect(html).not.toContain('Джерела омонімів:');
   });
 
   test('lemma baseline remains byte-identical before and after entry-type branching', async () => {
