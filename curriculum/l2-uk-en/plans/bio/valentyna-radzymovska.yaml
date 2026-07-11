@@ -146,23 +146,32 @@ persona:
     переслідування й вигнання і прямо спростовує вигадану «страту», не драматизуючи долю.
   voice: History-of-Science Scholar
 phase: BIO
+readings_contract_version: 2
 readings:
-- title: "Радзимовська Валентина Василівна"
-  source: Енциклопедія історії України (ЕІУ)
-  url: http://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&S21STR=Radzymovska_Valentyna
+- title: Радзимовська Валентина Василівна
+  source_name: Енциклопедія історії України (ЕІУ)
+  source_url: https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&S21STR=Radzymovska_Valentyna
   language: uk
   type: biography
   role: context
   hosting: link-only
-  task: Ознайомлення з життєвим шляхом, науковою школою та спростування міфу про розстріл.
-- title: "Діти часів революції. Фізичний розвиток дітей України (уривки)"
-  source: Валентина Радзимовська (першоджерело)
-  url: null
+  rights:
+    basis: external-link
+    evidence_url: https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&S21STR=Radzymovska_Valentyna
+    note: Зовнішнє посилання; текст не відтворюється в курсі.
+  learner_task: Ознайомлення з життєвим шляхом, науковою школою та спростування міфу про розстріл.
+- title: Розгін І. Валентина Радзимовська
+  source_name: Diasporiana
+  source_url: https://diasporiana.org.ua/ukrainica/6476-rozgin-i-valentina-radzimovska/
   language: uk
-  type: primary
-  role: primary
-  hosting: reading-needed
-  task: Аналіз наукової мови та медичних досліджень дитячої фізіології.
+  type: biography
+  role: source-context
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://diasporiana.org.ua/ukrainica/6476-rozgin-i-valentina-radzimovska/
+    note: Зовнішнє посилання на скановану монографію; текст не відтворюється в курсі.
+  learner_task: Проаналізувати опис наукової школи та згадки про працю «Діти часів революції».
 references:
 - note: >-
     Авторитетна стаття (Малюта О. В.): по батькові, дати, арешт у справі СВУ та
@@ -190,7 +199,7 @@ sequence: 110
 slug: valentyna-radzymovska
 subtitle: 'Valentyna Radzymovska: Science, Persecution, and Exile'
 title: 'Валентина Радзимовська: Наука, переслідування і вигнання'
-version: '4.2'
+version: '4.3'
 vocabulary_hints:
 - definition: жінка-науковець, яка вивчає функції живих організмів
   pos: ж.

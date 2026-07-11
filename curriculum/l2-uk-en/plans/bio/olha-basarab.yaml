@@ -83,23 +83,32 @@ persona:
   role: Модератор семінару, що досліджує межу між історичною реальністю та створенням національного міфу
   voice: Senior-Biographer
 phase: BIO.4
+readings_contract_version: 2
 readings:
-- caveats: Академічна енциклопедична стаття.
-  hosting: external
-  language: uk
-  role: Контекст
+- title: Басараб Ольга Михайлівна
   source_name: Енциклопедія історії України
-  source_type: Енциклопедія
-  task: Ознайомитися з фактами біографії Ольги Басараб та її діяльністю в УВО.
-  title: Басараб Ольга Михайлівна
-  url: http://www.history.org.ua/?termin=Basarab_O
-- hosting: reading-needed
+  source_url: https://www.history.org.ua/?termin=Basarab_O
   language: uk
-  role: Контекст
-  source_type: Стаття
-  task: Знайти статтю про розвідувальну діяльність Басараб або деталі судової справи.
-  title: Стаття про розвідувальну діяльність Ольги Басараб
-  url: null
+  type: encyclopedia
+  role: context
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://www.history.org.ua/?termin=Basarab_O
+    note: Зовнішнє посилання; текст не відтворюється в курсі.
+  learner_task: Ознайомитися з фактами біографії Ольги Басараб та її діяльністю в УВО.
+- title: Матеріали Ольги Басараб — ще раз про розвідувальну діяльність УВО
+  source_name: Інституційний репозитарій Національного університету «Львівська політехніка»
+  source_url: https://ena.lpnu.ua/items/0e5708a2-bcdb-48a5-bad9-5d91464957e8
+  language: uk
+  type: research-article
+  role: source-context
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://ena.lpnu.ua/items/0e5708a2-bcdb-48a5-bad9-5d91464957e8
+    note: Зовнішнє посилання на інституційний запис; текст не відтворюється в курсі.
+  learner_task: Проаналізувати архівно обґрунтований опис розвідувальних матеріалів і діяльності УВО.
 references:
 - title: Olha Basarab
   note: Compiled research notes on Basarab's life, UVO activities, and the controversy surrounding her death.
@@ -121,7 +130,7 @@ sequence: 113
 slug: olha-basarab
 subtitle: 'Olha Basarab: Intelligence Agent and Martyr'
 title: 'Ольга Басараб: Розвідниця і мучениця'
-version: '4.2'
+version: '4.3'
 vocabulary_hints:
 - definition: жінка, яка таємно збирає відомості про супротивника
   pos: ж.

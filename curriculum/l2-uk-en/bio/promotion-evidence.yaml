@@ -201,6 +201,39 @@ entries:
       reviewer_family: mixed
       date: 2026-07-10
       evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4930446932
+  les-kurbas:
+    dossier_grounding:
+      status: pass
+      reviewer_family: codex
+      date: 2026-07-11
+      evidence_url: http://history.org.ua/?termin=Kurbas_Les
+    reading_rights:
+      status: pass
+      reviewer_family: codex
+      date: 2026-07-11
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/4909#issuecomment-4937797710
+      disposition: link-only-approved
+    wiki_grounding:
+      status: pass
+      reviewer_family: codex
+      date: 2026-07-11
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/4909#issuecomment-4937797710
+    wiki_quote_verification:
+      status: pass
+      reviewer_family: codex
+      date: 2026-07-11
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/4909#issuecomment-4937797710
+    image_rights:
+      status: pass
+      reviewer_family: codex
+      date: 2026-07-11
+      evidence_url: https://commons.wikimedia.org/wiki/File:Curbas.jpg
+      disposition: approved
+    cohort_promotion:
+      status: pass
+      reviewer_family: codex
+      date: 2026-07-11
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/pull/4909#issuecomment-4937797710
   mykhailo-kotsiubynsky:
     dossier_grounding:
       status: pass

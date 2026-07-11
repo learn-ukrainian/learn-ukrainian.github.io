@@ -80,6 +80,7 @@ persona:
   role: Куратор виставки про театральний авангард, що показує Курбаса не як ікону, а як живу людину в центрі мистецьких і політичних бурь
   voice: Kurbas-Scholar
 phase: BIO
+readings_contract_version: 2
 portrait:
   url: "https://commons.wikimedia.org/wiki/File:Curbas.jpg"
   license: "PD-Ukraine"
@@ -92,29 +93,30 @@ primary_annotations:
 - '[!decolonization]'
 - '[!biography]'
 readings:
-- title: "Курбас Лесь"
-  source: Енциклопедія Сучасної України (ЕСУ)
-  url: https://esu.com.ua/article-51798
+- title: Курбас Лесь
+  source_name: Енциклопедія Сучасної України (ЕСУ)
+  source_url: https://esu.com.ua/article-51798
   language: uk
   type: biography
   role: context
   hosting: link-only
-  task: Ознайомлення з новаторством у театральному мистецтві та трагічною долею режисера.
-- title: "Лесь Курбас. Із творчої спадщини: статті, маніфести, лекції (уривки)"
-  source: Лесь Курбас (першоджерело, 1920-ті рр.)
-  url: null
+  rights:
+    basis: external-link
+    evidence_url: https://esu.com.ua/article-51798
+    note: Зовнішнє посилання; текст не відтворюється в курсі.
+  learner_task: Ознайомлення з новаторством у театральному мистецтві та трагічною долею режисера.
+- title: Лесь Курбас. Березіль. Із творчої спадщини
+  source_name: Електронна бібліотека «Культура України» НБУ ім. Ярослава Мудрого
+  source_url: https://elib.nlu.org.ua/view.html?id=5601
   language: uk
   type: primary
   role: primary
-  license: public-domain
-  hosting: excerpt-only
-  rights_note: >-
-    Тексти Леся Курбаса — суспільне надбання (автор помер 1937 р., реабілітований
-    1957 р.; підтверджено scripts/readings/rights_classifier.py). Вивіреного
-    повнотекстового правового джерела для хостингу наразі не встановлено, тому
-    опрацьовуються короткі уривки в межах аналізу, а повний текст не розміщується.
-    URL не вигадується.
-  task: Аналіз театральної системи «перетворення» та концепції «актора-філософа».
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://elib.nlu.org.ua/view.html?id=5601
+    note: Зовнішнє посилання на бібліотечну електронну копію; текст не відтворюється в курсі.
+  learner_task: Аналіз театральної системи «перетворення» та концепції «актора-філософа».
 references:
 - title: Лесь Курбас
   note: Основна біографія, театральна діяльність, репресії
@@ -148,7 +150,7 @@ sequence: 111
 slug: les-kurbas
 subtitle: The Man Who Reinvented Ukrainian Theatre
 title: 'Лесь Курбас: Реформатор театру'
-version: '4.3'
+version: '4.4'
 vocabulary_hints:
 - definition: мистецький напрям, що характеризується розривом з традиціями та пошуком нових форм і засобів вираження
   pos: ч.

@@ -83,23 +83,32 @@ persona:
   role: Мистецтвознавець, що пояснює радикальні ідеї Архипенка скептичній публіці, яка звикла до класичного мистецтва
   voice: Avant-Garde-Apologist
 phase: BIO
+readings_contract_version: 2
 readings:
-- caveats: Академічна енциклопедична стаття.
-  hosting: external
-  language: uk
-  role: Контекст
+- title: Архипенко Олександр Порфирович
   source_name: Енциклопедія Сучасної України
-  source_type: Енциклопедія
-  task: Прочитати біографічну довідку про скульптора та звернути увагу на період його життя в Україні.
-  title: Архипенко Олександр Порфирович
-  url: https://esu.com.ua/article-44797
-- hosting: reading-needed
+  source_url: https://esu.com.ua/article-44797
   language: uk
-  role: Першоджерело
-  source_type: Спогади / Есе
-  task: Знайти фрагмент спогадів Архипенка або статтю про його "негативний простір" українською мовою.
-  title: Спогади або есе про творчий метод Архипенка
-  url: null
+  type: encyclopedia
+  role: context
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://esu.com.ua/article-44797
+    note: Зовнішнє посилання; текст не відтворюється в курсі.
+  learner_task: Прочитати біографічну довідку про скульптора та звернути увагу на період його життя в Україні.
+- title: Олександр Архипенко
+  source_name: Музейний портал Міністерства культури та стратегічних комунікацій України
+  source_url: https://museum.mincult.gov.ua/authors/oleksandr-arhipenko
+  language: uk
+  type: museum-profile
+  role: source-context
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://museum.mincult.gov.ua/authors/oleksandr-arhipenko
+    note: Зовнішнє посилання на державний музейний портал; текст і зображення не відтворюються в курсі.
+  learner_task: Проаналізувати новаторські прийоми Архипенка, зокрема скульптомалярство, архипентуру та роботу з простором.
 references:
 - title: Oleksandr Arkhypenko
   note: Compiled from Archipenko Foundation, MoMA, and Ukrainian academic sources
@@ -124,7 +133,7 @@ sequence: 112
 slug: oleksandr-arkhypenko
 subtitle: 'Alexander Archipenko: Sculptor of the Avant-Garde'
 title: 'Олександр Архипенко: Скульптор авангарду'
-version: '4.3'
+version: '4.4'
 vocabulary_hints:
 - definition: вид образотворчого мистецтва, твори якого мають тривимірну, об'ємну форму і виконуються із твердих або пластичних матеріалів
   pos: ж.
