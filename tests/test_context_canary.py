@@ -110,9 +110,19 @@ def test_mint_inline_and_file_produce_identical_probe(tmp_path: Path):
 
 def test_mint_missing_file_is_clean_usage_error(tmp_path: Path):
     rc = context_canary.main(["mint", "--facts", str(tmp_path / "nope.json"), "--out", str(tmp_path / "p.json")])
-    assert rc == 1  # not an uncaught traceback
+    assert rc == 1  # FileNotFoundError -> clean rc 1, not an uncaught traceback
+
+
+def test_mint_directory_as_facts_is_clean_usage_error(tmp_path: Path):
+    # A path that is a directory raises IsADirectoryError inside read_text; the
+    # widened (OSError, UnicodeDecodeError) catch must turn it into a clean rc 1,
+    # not a traceback (every file-branch read failure is covered, not just missing).
+    a_dir = tmp_path / "facts_dir"
+    a_dir.mkdir()
+    rc = context_canary.main(["mint", "--facts", str(a_dir), "--out", str(tmp_path / "p.json")])
+    assert rc == 1
 
 
 def test_mint_malformed_inline_json_is_clean_usage_error(tmp_path: Path):
     rc = context_canary.main(["mint", "--facts", "[{bad json", "--out", str(tmp_path / "p.json")])
-    assert rc == 1  # JSONDecodeError caught, returns usage error
+    assert rc == 1  # inline branch JSONDecodeError caught, returns usage error

@@ -59,10 +59,11 @@ def _load_facts_spec(spec: str) -> object:
 
     `--facts` accepts both forms: the documented `--facts facts.json` path AND an
     inline `[{...}]` payload (the arg help advertises "JSON list of {id,q,a}").
-    A JSON list starts with '[' (an object with '{'); a filesystem path never
-    does — so the leading bracket unambiguously selects inline vs file. This keeps
-    the CLI help honest and avoids the opaque 'File name too long' OSError a caller
-    hit when passing inline JSON to the file-only reader.
+    A JSON list starts with '[' (an object with '{'); a filesystem path effectively
+    never does — a bare name starting with a bracket would need quoting and is an
+    edge case — so the leading bracket selects inline vs file for all practical
+    inputs. This keeps the CLI help honest and avoids the opaque 'File name too
+    long' OSError a caller hit when passing inline JSON to the file-only reader.
     """
     if spec.lstrip()[:1] in ("[", "{"):
         return json.loads(spec)
@@ -72,8 +73,9 @@ def _load_facts_spec(spec: str) -> object:
 def cmd_mint(args: argparse.Namespace) -> int:
     try:
         facts = _load_facts_spec(args.facts)
-    except FileNotFoundError:
-        print(f"error: --facts file not found: {args.facts}", file=sys.stderr)
+    except (OSError, UnicodeDecodeError) as exc:
+        # File branch: missing / directory / permission / non-UTF-8 all land here.
+        print(f"error: --facts cannot be read as a file: {args.facts} ({type(exc).__name__})", file=sys.stderr)
         return 1
     except json.JSONDecodeError as exc:
         print(f"error: --facts is not valid JSON: {exc}", file=sys.stderr)
