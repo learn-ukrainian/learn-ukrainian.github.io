@@ -880,12 +880,11 @@ def test_strict_adoption_gate_runs_as_bare_script():
     and crashes on a circular partial import. This proves the gate is not a
     dead CLI and stays runnable exactly as invoked in practice."""
     import subprocess
-    import sys as _sys
-
     repo_root = Path(__file__).resolve().parents[1]
     script = repo_root / "scripts" / "audit" / "check_research_registry.py"
+    python = repo_root / ".venv" / "bin" / "python"
     proc = subprocess.run(
-        [_sys.executable, str(script), "--strict-adoption", "--json"],
+        [str(python), str(script), "--strict-adoption", "--json"],
         cwd=repo_root, capture_output=True, text=True, timeout=30,
     )
     assert "Traceback (most recent call last)" not in proc.stderr, proc.stderr
