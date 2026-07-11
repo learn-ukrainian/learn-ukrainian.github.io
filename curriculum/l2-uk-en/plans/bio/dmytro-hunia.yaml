@@ -79,21 +79,30 @@ persona:
   role: Історик-джерелознавець, що читає оборону над Старцем як поєднання військового вміння, постачання й переговорів, а не як двобій героя й боягуза
   voice: Source-Critical Historian
 phase: BIO
+readings_contract_version: 2
 readings:
-- title: 'Гуня Дмитро Тимошевич'
-  source: 'Енциклопедія історії України'
-  url: 'https://www.history.org.ua/?termin=Gunya_D'
+- title: 'ГУНЯ ДМИТРО ТИМОШЕВИЧ'
+  source_name: 'Енциклопедія історії України'
+  source_url: 'https://www.history.org.ua/?termin=Gunya_D'
   type: reference
   language: uk
   hosting: link-only
-  note: 'Енциклопедична довідка про участь Гуні у повстаннях та обороні Січі.'
-- title: 'Старець, битва над затокою 1638'
-  source: 'Енциклопедія історії України'
-  url: 'https://www.history.org.ua/?termin=Starets_1638'
+  rights:
+    basis: external-link
+    evidence_url: 'https://www.history.org.ua/?termin=Gunya_D'
+    note: 'Зовнішнє посилання; текст не відтворюється в курсі.'
+  learner_task: 'Виписати ключові етапи участі Гуні у повстаннях та обороні Січі.'
+- title: 'СТАРЕЦЬ, БИТВА НАД ЗАТОКОЮ 1638'
+  source_name: 'Енциклопедія історії України'
+  source_url: 'https://www.history.org.ua/?termin=Starets_1638'
   type: reference
   language: uk
   hosting: link-only
-  note: 'Детальний опис фінальної битви та відходу Гуні.'
+  rights:
+    basis: external-link
+    evidence_url: 'https://www.history.org.ua/?termin=Starets_1638'
+    note: 'Зовнішнє посилання; текст не відтворюється в курсі.'
+  learner_task: 'Пояснити перебіг фінальної битви й причини відходу Гуні.'
 references:
 - note: 'Стаття ЕІУ (В. Щербак): невідомі роки життя, рештки з-під Кумейок, оборона Січі, Старець, Дон'
   path: https://www.history.org.ua/?termin=Gunya_D
@@ -120,7 +129,7 @@ sequence: 31
 slug: dmytro-hunia
 subtitle: 'Dmytro Hunia: The Defense at the Starets'
 title: 'Дмитро Гуня: Оборона над Старцем'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: виборний очільник війська; джерела називають Гуню «старшим над військом»
   pos: ч.

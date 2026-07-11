@@ -79,21 +79,30 @@ persona:
   role: Історик, що відділяє документального Тараса Федоровича від романтичного імені пам'яті «Трясило».
   voice: Anti-Hagiographer
 phase: BIO
+readings_contract_version: 2
 readings:
-- title: "Федорович Тарас"
+- title: "ФЕДОРОВИЧ ТАРАС"
   source_name: "Енциклопедія історії України"
   source_url: "https://www.history.org.ua/?termin=Fedorovych_Taras"
   language: uk
   type: reference
-  hosting: reading-needed
-  rationale: "Енциклопедичний текст для читання, що висвітлює біографію нереєстрового гетьмана та його роль у повстанні 1630 року, адаптований для студентів."
-- title: "Федоровича повстання 1630"
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: "https://www.history.org.ua/?termin=Fedorovych_Taras"
+    note: "Зовнішнє посилання; текст не відтворюється в курсі."
+  learner_task: "Виписати ключові етапи діяльності Федоровича та його роль у повстанні 1630 року."
+- title: "ФЕДОРОВИЧА ПОВСТАННЯ 1630"
   source_name: "Енциклопедія історії України"
   source_url: "https://www.history.org.ua/?termin=Fedorovycha_povstannia"
   language: uk
   type: reference
   hosting: link-only
-  rationale: "Детальний опис причин та ходу повстання для поглибленого читання й розуміння реєстрового тиску."
+  rights:
+    basis: external-link
+    evidence_url: "https://www.history.org.ua/?termin=Fedorovycha_povstannia"
+    note: "Зовнішнє посилання; текст не відтворюється в курсі."
+  learner_task: "Пояснити причини й перебіг повстання та наслідки реєстрового тиску."
 references:
 - author: Д. Я. Вортман
   note: 'Базові факти: невідомі дати, спірне походження, пізнє прізвисько «Трясило», вибори нереєстровими козаками, кримський похід 1629, відкрита фаза повстання 1630, усунення в травні, кар''єра 1631–1636, застереження про Тараса Чорного.'
@@ -133,7 +142,7 @@ sequence: 27
 slug: taras-fedorovych-triasylo
 subtitle: 'Taras Fedorovych: The Rebel Whom Memory Renamed Triasylo'
 title: 'Тарас Федорович: повстанець, якого пам''ять перейменувала на Трясила'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: масовий збройний виступ проти наявної влади
   pos: с.

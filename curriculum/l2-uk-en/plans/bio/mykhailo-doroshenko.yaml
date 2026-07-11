@@ -79,21 +79,30 @@ persona:
   role: Історик, що показує подвійне лезо реєстру й козацько-кримську дипломатію без сортування «герой чи колаборант».
   voice: Critical-Historian
 phase: BIO
+readings_contract_version: 2
 readings:
-- title: "Дорошенко Михайло"
+- title: "ДОРОШЕНКО МИХАЙЛО"
   source_name: "Енциклопедія історії України"
   source_url: "https://www.history.org.ua/?termin=Doroshenko_M"
   language: uk
   type: reference
-  hosting: reading-needed
-  rationale: "Адаптація енциклопедичної статті про Михайла Дорошенка для читання, зосереджена на подвійному лезі реєстру та його участі в кримських походах."
-- title: "Куруківська угода 1625"
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: "https://www.history.org.ua/?termin=Doroshenko_M"
+    note: "Зовнішнє посилання; текст не відтворюється в курсі."
+  learner_task: "Визначити, як реєстр і кримські походи впливали на діяльність Михайла Дорошенка."
+- title: "КУРУКІВСЬКА УГОДА 1625"
   source_name: "Енциклопедія історії України"
   source_url: "https://www.history.org.ua/?termin=KurukiVska_Ugoda_1625"
   language: uk
   type: reference
   hosting: link-only
-  rationale: "Оригінальний історичний огляд умов договору для поглибленого читання й аналізу обмежень козацьких вольностей."
+  rights:
+    basis: external-link
+    evidence_url: "https://www.history.org.ua/?termin=KurukiVska_Ugoda_1625"
+    note: "Зовнішнє посилання; текст не відтворюється в курсі."
+  learner_task: "Проаналізувати умови Куруківської угоди й виписати обмеження козацьких вольностей."
 references:
 - author: В. О. Щербак
   note: 'Базові факти: невідоме народження, смерть 1628, реєстрове гетьманство 1625–1628, засновник роду Дорошенків, контекст Сагайдачного й Хотина, Жмайло/Куруків, перемога під Білою Церквою, кримський похід і смерть на Альмі.'
@@ -127,7 +136,7 @@ sequence: 26
 slug: mykhailo-doroshenko
 subtitle: 'Mykhailo Doroshenko: The Register as Both Recognition and Control'
 title: 'Михайло Дорошенко: реєстр як визнання і як контроль'
-version: '4.1'
+version: '4.2'
 vocabulary_hints:
 - definition: козаки, внесені державою до офіційного списку на службу й платню
   pos: мн.
