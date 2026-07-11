@@ -346,7 +346,7 @@ def _window_dates(now: datetime, window_days: int) -> list[str]:
     return [(start_date + timedelta(days=i)).isoformat() for i in range(days + 1)]
 
 
-def _parse_ts(value: Any, now: datetime) -> datetime | None:
+def _parse_ts(value: Any) -> datetime | None:
     if not isinstance(value, str):
         return None
     try:
@@ -373,7 +373,7 @@ class _Accumulator:
 # claims a P3 event type but violates its field contract is MALFORMED, not
 # silently dropped — it must be counted so undercounting a real data-quality
 # problem never looks identical to "just noise from another event type".
-MAX_TASK_ID_LEN = 128  # mirrors scripts.research.consumption.MAX_TASK_ID_LEN
+# Task-id length/shape is validated via consumption._looks_like_task_id below.
 MAX_RESEARCH_ID_LEN = 128
 
 
@@ -426,7 +426,7 @@ def _ingest_line(line: str, now: datetime, start: datetime, acc: _Accumulator) -
     if not _valid_event_contract(evt, event_type):
         acc.malformed_lines += 1
         return
-    ts = _parse_ts(evt.get("ts"), now)
+    ts = _parse_ts(evt.get("ts"))
     if ts is None:
         acc.malformed_lines += 1  # required timestamp missing/unparsable
         return
@@ -454,31 +454,79 @@ def _ingest_line(line: str, now: datetime, start: datetime, acc: _Accumulator) -
 MAX_LINE_CHARS = 1 * 1024 * 1024  # 1 MiB per JSONL line
 
 
-def _iter_bounded_lines(path: Path, max_line_chars: int = MAX_LINE_CHARS):
-    """Yield ``(text, oversized)`` per physical line of ``path``, text mode.
+class _ByteBudget:
+    """Mutable byte counter shared across every file and every physical read in
+    one telemetry scan (ADR-011 P4 review, item 2). ``MAX_SCAN_BYTES`` must bound
+    TOTAL physical bytes read — including bytes discarded while draining an
+    oversized line — not just the bytes of lines that made it into an event.
+    Without this, a pathological multi-GB no-newline file stays memory-bounded
+    (``str.readline(size)``) but can still be read start-to-finish while
+    ``bytes_scanned`` stays near zero, defeating the whole-scan cap."""
 
-    A line at or beyond ``max_line_chars`` (with or without a trailing newline)
-    is reported oversized with ``text=None`` — its content is never returned or
-    buffered beyond the cap — and the reader drains forward in further
-    ``max_line_chars``-bounded reads until it resynchronizes on the next
+    def __init__(self, limit: int) -> None:
+        self.limit = limit
+        self.consumed = 0
+
+    def take(self, n: int) -> bool:
+        """Charge ``n`` freshly-read bytes against the budget. Returns False
+        (charging nothing) if this read would exceed the remaining budget — the
+        caller must stop reading immediately, without consuming any further
+        bytes from the file."""
+        if self.consumed + n > self.limit:
+            return False
+        self.consumed += n
+        return True
+
+
+def _iter_bounded_lines(path: Path, budget: _ByteBudget, max_line_chars: int = MAX_LINE_CHARS):
+    """Yield ``(text, oversized, capped)`` per physical line of ``path``, text mode.
+
+    A physical line whose CONTENT (excluding its own trailing newline) exceeds
+    ``max_line_chars`` is reported oversized with ``text=None`` — its content is
+    never returned or buffered beyond the cap — and the reader drains forward in
+    further ``max_line_chars``-bounded reads until it resynchronizes on the next
     newline (or EOF), so a single giant record cannot desynchronize every
-    subsequent line in the file. Raises ``OSError``/``UnicodeDecodeError`` to
-    the caller exactly as a plain ``open().read()`` would (unreadable files stay
-    the caller's concern, unchanged from before this helper existed).
+    subsequent line in the file. The oversized check compares CONTENT length,
+    not ``readline()``'s raw return length: a line whose content is exactly
+    ``max_line_chars`` chars long, plus its own trailing newline, fits in one
+    ``readline`` call and must never be treated as needing a drain (ADR-011 P4
+    review, item 3) — ``readline`` never returns more than ``max_line_chars + 1``
+    chars, so that exact case is the only way to hit that length AND end in
+    ``"\\n"``.
+
+    Every physical read — including the discarded drain reads for an oversized
+    line — is charged against ``budget`` before being kept (item 2). Once the
+    shared, scan-wide byte cap is exhausted, the generator yields one final
+    ``(None, <oversized-so-far>, True)`` marker and stops: a pathological
+    multi-GB no-newline file can never be drained past the remaining budget,
+    keeping both memory AND total bytes read bounded.
+
+    Raises ``OSError``/``UnicodeDecodeError`` to the caller exactly as a plain
+    ``open().read()`` would (unreadable files stay the caller's concern,
+    unchanged from before this helper existed).
     """
     with path.open("r", encoding="utf-8") as handle:
         while True:
             chunk = handle.readline(max_line_chars + 1)
             if chunk == "":
                 return  # EOF
-            if len(chunk) > max_line_chars:
-                while True:
-                    more = handle.readline(max_line_chars + 1)
-                    if more == "" or more.endswith("\n"):
-                        break
-                yield None, True
-            else:
-                yield (chunk[:-1] if chunk.endswith("\n") else chunk), False
+            if not budget.take(len(chunk.encode("utf-8"))):
+                yield None, False, True
+                return
+            oversized = len(chunk) == max_line_chars + 1 and not chunk.endswith("\n")
+            if not oversized:
+                yield (chunk[:-1] if chunk.endswith("\n") else chunk), False, False
+                continue
+            while True:
+                more = handle.readline(max_line_chars + 1)
+                if more == "":
+                    break
+                if not budget.take(len(more.encode("utf-8"))):
+                    yield None, True, True
+                    return
+                if more.endswith("\n"):
+                    break
+            yield None, True, False
 
 
 def _scan_telemetry(
@@ -487,13 +535,13 @@ def _scan_telemetry(
     events_dir = root / "batch_state" / "telemetry" / "events"
     start = now - timedelta(days=window_days)
     acc = _Accumulator()
+    budget = _ByteBudget(MAX_SCAN_BYTES)
 
     files_in_window = 0
     files_scanned = 0
     files_skipped = 0
     unreadable_files = 0
     oversized_lines = 0
-    bytes_scanned = 0
     partial = False
     capped = False
     cap_reason: str | None = None
@@ -511,20 +559,21 @@ def _scan_telemetry(
             files_skipped += 1
             continue
         try:
-            for text, oversized in _iter_bounded_lines(path, MAX_LINE_CHARS):
+            for text, oversized, hit_cap in _iter_bounded_lines(path, budget, MAX_LINE_CHARS):
+                if hit_cap:
+                    if oversized:
+                        acc.malformed_lines += 1
+                        oversized_lines += 1
+                    partial = True
+                    capped = True
+                    cap_reason = cap_reason or "byte_cap"
+                    break
                 if oversized:
                     acc.malformed_lines += 1
                     oversized_lines += 1
                     partial = True
                     cap_reason = cap_reason or "oversized_line"
                     continue
-                line_bytes = len(text.encode("utf-8"))
-                if bytes_scanned + line_bytes > MAX_SCAN_BYTES:
-                    partial = True
-                    capped = True
-                    cap_reason = cap_reason or "byte_cap"
-                    break
-                bytes_scanned += line_bytes
                 stripped = text.strip()
                 if stripped:
                     _ingest_line(stripped, now, start, acc)
@@ -550,7 +599,7 @@ def _scan_telemetry(
         files_skipped=files_skipped,
         unreadable_files=unreadable_files,
         oversized_lines=oversized_lines,
-        bytes_scanned=bytes_scanned,
+        bytes_scanned=budget.consumed,
         partial=partial,
         cap_reason=cap_reason,
     )
@@ -574,8 +623,18 @@ def _blank_record_agg() -> dict[str, int]:
         "surfaced_pairs": 0,
         "consumed_pairs": 0,
         "surfaced_never_consumed": 0,
+        "surfaced_never_consumed_observed": 0,
         "pending": 0,
     }
+
+
+def _blank_unknown_agg() -> dict[str, int]:
+    """``_blank_record_agg`` plus the unknown-bucket-only ``distinct_research_ids``
+    field. Every construction site (finalize + the degraded-fallback payload)
+    must use this so the response schema never drops the field on either path."""
+    agg = _blank_record_agg()
+    agg["distinct_research_ids"] = 0
+    return agg
 
 
 def _finalize_consumption(
@@ -599,8 +658,7 @@ def _finalize_consumption(
     # Per-research aggregates. Known ids get their own bucket; every unknown id is
     # folded into a single aggregate — its string is never echoed (privacy).
     per_record: dict[str, dict[str, int]] = {rid: _blank_record_agg() for rid in known_ids}
-    unknown = _blank_record_agg()
-    unknown["distinct_research_ids"] = 0
+    unknown = _blank_unknown_agg()
     unknown_ids: set[str] = set()
 
     def _bucket(rid: str) -> dict[str, int]:
@@ -624,6 +682,7 @@ def _finalize_consumption(
         if verdict == "never":
             surfaced_never += 1
             bucket["surfaced_never_consumed"] += 1
+            bucket["surfaced_never_consumed_observed"] += 1
         elif verdict == "pending":
             pending += 1
             bucket["pending"] += 1
@@ -637,6 +696,18 @@ def _finalize_consumption(
         rid: agg for rid, agg in per_record.items()
         if any(agg[k] for k in agg)
     }
+
+    # ``surfaced_never_consumed`` is the SAME definitive-negative claim at the
+    # per-record/unknown-bucket level as it is in the top-level aggregate below —
+    # a hidden consuming event for exactly this record could be sitting in the
+    # unreadable file, the byte-capped tail, or a discarded oversized line, so
+    # asserting a per-record "never" under partial coverage would be just as
+    # dishonest as asserting it in aggregate. Null it in every bucket; the
+    # observed lower bound stays a number either way (ADR-011 P4 review).
+    if partial:
+        for agg in per_record.values():
+            agg["surfaced_never_consumed"] = None
+        unknown["surfaced_never_consumed"] = None
 
     status = "partial" if partial else ("empty" if not all_pairs and not files_scanned else "ok")
     return {
@@ -721,7 +792,7 @@ def build_monitor(
             "surfaced_events": 0, "consumed_events": 0, "surfaced_pairs": 0, "consumed_pairs": 0,
             "distinct_pairs": 0, "surfaced_never_consumed": None,
             "surfaced_never_consumed_observed": 0, "pending": 0,
-            "per_record": {}, "unknown_research_ids": _blank_record_agg(),
+            "per_record": {}, "unknown_research_ids": _blank_unknown_agg(),
         }
 
     return {

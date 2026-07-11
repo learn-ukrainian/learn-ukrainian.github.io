@@ -970,7 +970,18 @@ def main(argv: list[str] | None = None, *, project_root: Path = PROJECT_ROOT) ->
             raw_text=raw_text,
         )
 
-    result = validate_registry(data, project_root=project_root, raw_text=raw_text)
+    # The declared Atlas intake source-family registry is a static, offline,
+    # cache-free table (unlike issue/membership resolution) — ordinary --check
+    # can safely inject it without violating offline-ness or fail-closed intent
+    # (Gemini review, PR #4998: validate_registry's own corpus_resolver=None
+    # default still fails closed for any caller that omits it).
+    atlas_intake_registry = _load_atlas_intake_registry()
+    result = validate_registry(
+        data,
+        project_root=project_root,
+        raw_text=raw_text,
+        corpus_resolver=atlas_intake_registry.is_registered_source_family,
+    )
 
     if args.reconcile:
         if result.errors:
@@ -1007,7 +1018,10 @@ def main(argv: list[str] | None = None, *, project_root: Path = PROJECT_ROOT) ->
         # every record we meant to fix no longer drifts in the candidate.
         candidate_data = yaml.safe_load(new_text)
         candidate_result = validate_registry(
-            candidate_data, project_root=project_root, raw_text=new_text
+            candidate_data,
+            project_root=project_root,
+            raw_text=new_text,
+            corpus_resolver=atlas_intake_registry.is_registered_source_family,
         )
         if candidate_result.errors:
             print(

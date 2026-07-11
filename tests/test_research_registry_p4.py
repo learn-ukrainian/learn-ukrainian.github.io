@@ -331,6 +331,26 @@ def test_default_check_is_unchanged_and_needs_no_cache(strict_root, monkeypatch)
     assert crr.main(["--check", "--quiet"], project_root=root) == 0
 
 
+def test_default_check_uses_real_corpus_resolver_no_cache_needed(tmp_path):
+    """Gemini review (PR #4998, ACCEPTED): the Atlas intake source-family
+    registry is deterministic, cache-free, and offline, so ordinary --check can
+    safely inject it, unlike the issue resolver (which needs a live cache and
+    stays uninjected here). ``validate_registry(..., corpus_resolver=None)``
+    itself is unchanged and still fails closed for any caller that omits it
+    (see ``test_issue_and_corpus_consumers_fail_closed_without_resolver`` in
+    ``test_research_registry.py``) -- only the CLI's default wiring changes."""
+    root = tmp_path
+    ok = _make_record(root, "ok", state="adopted", consumer={"kind": "corpus", "ref": "textbook"})
+    _write_registry(root, [ok])
+    assert crr.main(["--check", "--quiet"], project_root=root) == 0
+
+    dangling = _make_record(
+        root, "dangling", state="adopted", consumer={"kind": "corpus", "ref": "not-a-real-family"}
+    )
+    _write_registry(root, [dangling])
+    assert crr.main(["--check", "--quiet"], project_root=root) == 2
+
+
 # --------------------------------------------------------------------------- #
 # 2. Observability — lifecycle + adoption (raw records + P1 helpers)
 # --------------------------------------------------------------------------- #
@@ -503,6 +523,29 @@ def test_missing_registry_degrades_safely(obs_env):
     assert m["lifecycle"]["status"] == "missing"
     assert m["consumption"]["status"] in {"empty", "ok"}
     assert m["adoption"]["rate"] is None
+
+
+def test_degraded_telemetry_fallback_preserves_unknown_ids_schema(obs_env, monkeypatch):
+    """When the telemetry scan itself raises, ``build_monitor`` degrades to a
+    safe fallback payload -- but that fallback must expose the SAME response
+    schema as the normal path, in particular
+    ``consumption.unknown_research_ids.distinct_research_ids`` (zero on
+    fallback), not a payload missing the key entirely (ADR-011 P4 review,
+    item 4)."""
+    root = obs_env
+    _write_registry(root, [_make_record(root, "r1")])
+
+    def _boom(*_a, **_k):
+        raise RuntimeError("telemetry scan exploded")
+
+    monkeypatch.setattr(obs, "_scan_telemetry", _boom)
+    m = _monitor(root)
+    consumption_view = m["consumption"]
+    assert consumption_view["status"] == "error"
+    assert consumption_view["unknown_research_ids"]["distinct_research_ids"] == 0
+    # Same keys as a healthy _blank_record_agg()-derived bucket -- the fallback
+    # must not silently drop fields a real scan would always include.
+    assert set(consumption_view["unknown_research_ids"]) == set(obs._blank_unknown_agg())
 
 
 def test_broken_provenance_counts_invalid_never_effective_adoption(obs_env):
@@ -723,6 +766,126 @@ def test_oversized_line_is_malformed_and_does_not_desync_next_line(obs_env):
     assert c["partial"] is True
     assert c["cap_reason"] == "oversized_line"
     assert c["surfaced_pairs"] == 1  # the good line after the huge one still parsed
+
+
+def test_line_at_exact_max_line_chars_boundary_is_not_oversized(obs_env):
+    """A physical line whose CONTENT is exactly ``MAX_LINE_CHARS`` chars, plus its
+    own trailing newline, must fit in one read and never be treated as
+    requiring a drain (ADR-011 P4 review, item 3). Also proves the reader never
+    consumes a second physical line to "drain" a boundary line that already
+    ended in ``\\n`` — the following valid event still parses as its own pair."""
+    root = obs_env
+    _write_registry(root, [_make_record(root, "r1")])
+    events_dir = root / "batch_state" / "telemetry" / "events"
+    events_dir.mkdir(parents=True, exist_ok=True)
+    path = events_dir / f"{NOW:%Y-%m-%d}.jsonl"
+
+    base = json.dumps({
+        "event_type": consumption.SURFACED_EVENT, "task_id": "t1", "research_id": "r1",
+        "surface": "dispatch", "ts": NOW.isoformat(), "padding": "",
+    })
+    pad_len = obs.MAX_LINE_CHARS - len(base)
+    assert pad_len > 0
+    boundary_line = json.dumps({
+        "event_type": consumption.SURFACED_EVENT, "task_id": "t1", "research_id": "r1",
+        "surface": "dispatch", "ts": NOW.isoformat(), "padding": "x" * pad_len,
+    })
+    assert len(boundary_line) == obs.MAX_LINE_CHARS  # exact boundary, by construction
+
+    good_line = json.dumps({
+        "event_type": consumption.SURFACED_EVENT, "task_id": "t2", "research_id": "r1",
+        "surface": "dispatch", "ts": (NOW - timedelta(hours=1)).isoformat(),
+    })
+    path.write_text(boundary_line + "\n" + good_line + "\n", "utf-8")
+
+    c = _consumption(root)
+    assert c["oversized_lines"] == 0
+    assert c["partial"] is False
+    assert c["cap_reason"] is None
+    # Both lines parsed as DISTINCT (task, research) pairs — proves the reader
+    # never swallowed good_line while "draining" the boundary line.
+    assert c["surfaced_pairs"] == 2
+
+
+def test_oversized_line_counts_toward_byte_cap_and_stops_the_scan(obs_env, monkeypatch):
+    """Bytes discarded while draining an oversized line must still be charged
+    against ``MAX_SCAN_BYTES`` -- otherwise a multi-GB no-newline file can be
+    read start-to-finish while ``bytes_scanned`` stays near zero (ADR-011 P4
+    review, item 2). A small enough cap must trip mid-drain and stop the scan
+    without reading past the remaining budget."""
+    root = obs_env
+    _write_registry(root, [_make_record(root, "r1")])
+    events_dir = root / "batch_state" / "telemetry" / "events"
+    events_dir.mkdir(parents=True, exist_ok=True)
+    path = events_dir / f"{NOW:%Y-%m-%d}.jsonl"
+    huge_line = json.dumps({
+        "event_type": consumption.SURFACED_EVENT, "task_id": "t1", "research_id": "r1",
+        "surface": "dispatch", "ts": NOW.isoformat(), "padding": "x" * 3_000_000,
+    })
+    good_line = json.dumps({
+        "event_type": consumption.SURFACED_EVENT, "task_id": "t2", "research_id": "r1",
+        "surface": "dispatch", "ts": (NOW - timedelta(hours=1)).isoformat(),
+    })
+    path.write_text(huge_line + "\n" + good_line + "\n", "utf-8")
+
+    # Cap sits well below the huge line's real size (~3MB) but above one
+    # max_line_chars-sized drain read, so the drain trips the cap mid-line.
+    monkeypatch.setattr(obs, "MAX_SCAN_BYTES", 2 * 1024 * 1024)
+    c = _consumption(root)
+    assert c["partial"] is True
+    assert c["cap_reason"] == "byte_cap"
+    assert c["bytes_scanned"] <= obs.MAX_SCAN_BYTES
+    assert c["surfaced_pairs"] == 0  # neither line was ingested -- cap hit mid-drain
+
+
+def test_partial_from_unreadable_file_nulls_per_record_negative_too(obs_env):
+    """A hidden consumption event could be sitting inside an unreadable file --
+    the per-record ``surfaced_never_consumed`` must be nulled under partial
+    coverage, not just the top-level aggregate (ADR-011 P4 review, item 1)."""
+    root = obs_env
+    _write_registry(root, [_make_record(root, "r1")])
+    _surface(root, NOW - timedelta(hours=3), "task-a", "r1")  # old enough to be "never" at face value
+    events_dir = root / "batch_state" / "telemetry" / "events"
+    events_dir.mkdir(parents=True, exist_ok=True)
+    # A second, unreadable day poisons the scan with partial coverage -- the
+    # real consuming event for r1 could be hiding inside it.
+    (events_dir / f"{(NOW - timedelta(days=1)):%Y-%m-%d}.jsonl").write_bytes(b"\xff\xfe not utf-8\n")
+
+    c = _consumption(root)
+    assert c["partial"] is True
+    assert c["surfaced_never_consumed"] is None
+    assert c["per_record"]["r1"]["surfaced_never_consumed"] is None
+    assert c["per_record"]["r1"]["surfaced_never_consumed_observed"] == 1
+
+
+def test_partial_from_oversized_line_nulls_per_record_negative_too(obs_env):
+    """Same guarantee when partial coverage comes from a discarded oversized
+    line rather than an unreadable file: the true consuming event could be the
+    very line that got dropped (ADR-011 P4 review, item 1)."""
+    root = obs_env
+    _write_registry(root, [_make_record(root, "r1")])
+    events_dir = root / "batch_state" / "telemetry" / "events"
+    events_dir.mkdir(parents=True, exist_ok=True)
+    path = events_dir / f"{NOW:%Y-%m-%d}.jsonl"
+    surfaced_line = json.dumps({
+        "event_type": consumption.SURFACED_EVENT, "task_id": "task-a", "research_id": "r1",
+        "surface": "dispatch", "ts": (NOW - timedelta(hours=3)).isoformat(),
+    })
+    # This oversized line, if it had been readable, would have consumed the
+    # surfaced pair above -- but it is discarded, so "never" would be a lie.
+    huge_consumed_line = json.dumps({
+        "event_type": consumption.CONSUMED_EVENT, "task_id": "task-a", "research_id": "r1",
+        "surface": "record", "status": 200, "ts": (NOW - timedelta(hours=2)).isoformat(),
+        "padding": "x" * 1_200_000,
+    })
+    path.write_text(surfaced_line + "\n" + huge_consumed_line + "\n", "utf-8")
+
+    c = _consumption(root)
+    assert c["partial"] is True
+    assert c["cap_reason"] == "oversized_line"
+    assert c["surfaced_never_consumed"] is None
+    assert c["per_record"]["r1"]["surfaced_never_consumed"] is None
+    assert c["per_record"]["r1"]["surfaced_never_consumed_observed"] == 1
 
 
 def test_invalid_status_and_surface_are_malformed_not_counted(obs_env):
