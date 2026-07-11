@@ -1483,6 +1483,50 @@ id, an invalid/drifted/`private-local` record, or an over-budget body.
   by replaying the record's public `content_hash` as `If-None-Match` without ever
   having fetched the body.
 
+### `GET /api/knowledge/monitor?window_days=30` (ADR-011 P4)
+
+Registry observability — makes silent rot visible. **Ungated by the discovery kill
+switch**: governance must survive a serving disable, so this endpoint answers even
+when `research_registry.enabled` is false (it reports `discovery_enabled` so the
+caller knows the serving state). Deterministic (identical registry + telemetry +
+membership cache + wall-clock → identical metrics); **no ETag / conditional
+caching**. `window_days` is `1..365` (default 30); out-of-range → `422`.
+
+Built from the **raw registry and P1 per-record helpers** — never
+`load_runtime_safe()`, which returns nothing on any semantic error and would hide
+the very records rot makes invalid. Sections:
+
+- `lifecycle` — `status`, `eligible_total` (non-superseded), raw state `counts`
+  (proposed/adopted/deferred/superseded/invalid/total), and id lists `stale`
+  (hash-drift), `orphaned` (structurally un-owned), `ownership_unverified` (plausible
+  owner not confirmable against a fresh issue-stream cache — never falsely orphaned),
+  `deferred`, `superseded`. `ownership_cache` ∈ `fresh`/`missing`.
+- `adoption` — `adopted`, `effective_adopted` (adopted + current hash + resolvable
+  consumer), `eligible_total`, and `rate` (`adopted ÷ eligible_total`, **null** on a
+  zero denominator).
+- `dead_consumers` — `dead` (a deterministic typed resolver proves the consumer
+  dangles) vs `unverified` (`issue`/`corpus` consumers, which have no offline
+  resolver) — issue/corpus is never falsely reported dead.
+- `consumption` — from the P3 telemetry JSONL (`batch_state/telemetry/events/
+  YYYY-MM-DD.jsonl`; no new store), bounded file/byte scan, fail-soft. Counts raw
+  events and **distinct `(task_id, research_id)` pairs** (deduped across 200/304),
+  `surfaced_never_consumed` (first surface in window, no consumption at/after it, past
+  a 1-hour grace — newer pairs are `pending`), and a per-record aggregate. Unknown
+  research ids get aggregate counts only (their strings are never echoed).
+  `malformed_lines`/`unreadable_files`/`bytes_scanned`/`partial` report scan health.
+
+**Privacy allowlist:** only registry ids and counts — never task ids, run/session/
+source, role, track, owned paths, titles, summaries, source urls, prompts, or digest
+bodies. Broken registry/cache/event lines degrade a section, never `500`.
+
+**Strict adoption gate (CLI, separate from serving):**
+`.venv/bin/python scripts/audit/check_research_registry.py --strict-adoption
+[--max-age 3600]` re-validates ownership + issue consumers against a **fresh,
+offline** `issue_stream_audit.json` membership cache (produced by a separate live
+auditor run — the gate never touches the network). Missing/stale/unreadable cache
+**fails closed** (exit 2). The default `--check` is unchanged: offline, non-network,
+and never reads the membership cache.
+
 ### Cold start / bootstrap
 
 - `GET /api/orient?role=<role>` — pointer-only `research` section from the role's

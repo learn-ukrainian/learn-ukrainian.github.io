@@ -26,6 +26,7 @@ import re
 import subprocess
 import sys
 import time
+from collections.abc import Callable
 from pathlib import Path
 
 import yaml
@@ -34,6 +35,16 @@ ROOT = Path(__file__).resolve().parents[2]
 REGISTRY_PATH = ROOT / "scripts" / "config" / "issue_streams.yaml"
 CACHE_PATH = ROOT / "batch_state" / "issue_stream_audit.json"
 ISSUE_REF_RE = re.compile(r"#(\d{2,6})\b")
+
+# ADR-011 P4 — private keys added to the cache report for the strict adoption
+# gate/observability. They carry an exact effective issue→epic membership index
+# and the bounded open-issue set; both are stripped from the public
+# ``/api/issues/streams`` response (see ``issues_router.strip_private_index``).
+PRIVATE_CACHE_KEYS = ("effective_membership", "open_issue_numbers")
+
+# A resolver proving issue N is a live child of stream epic E, offline, from a
+# fresh cache. Signature mirrors P1's ``check_research_registry.MembershipResolver``.
+MembershipResolver = Callable[[int, int], bool]
 
 
 def load_registry(path: Path = REGISTRY_PATH) -> dict[str, list[int]]:
@@ -155,7 +166,47 @@ def classify(
         "closed_or_missing_epics": missing_epics,
         # The invariant is EXACTLY ONE stream — multi-homed violates it (codex F1).
         "ok": not orphans and not missing_epics and not multi_homed,
+        # ADR-011 P4 private index (stripped from the public API): the exact
+        # effective issue→epic membership, native winning over body refs, plus the
+        # bounded open-issue set. Carries enough state to reject closed (absent
+        # key), wrong (epic not in ``epics``), and multi-home (``unique_stream``
+        # false) ownership without any live network call.
+        "effective_membership": _effective_membership(
+            open_numbers, epic_numbers, stream_of_epic, membership
+        ),
+        "open_issue_numbers": sorted(open_numbers),
     }
+
+
+def _effective_membership(
+    open_numbers: set[int],
+    epic_numbers: set[int],
+    stream_of_epic: dict[int, str],
+    membership: dict[int, tuple[set[int], set[int]]],
+) -> dict[str, dict]:
+    """Exact effective issue→epic index. Native links win over body refs; epics
+    and non-open issues are excluded. One entry per owned open issue."""
+    native_epics: dict[int, set[int]] = {}
+    body_epics: dict[int, set[int]] = {}
+    for epic, (native, refs) in membership.items():
+        for n in native:
+            native_epics.setdefault(n, set()).add(epic)
+        for n in refs:
+            body_epics.setdefault(n, set()).add(epic)
+    index: dict[str, dict] = {}
+    for n in sorted(set(native_epics) | set(body_epics)):
+        if n in epic_numbers or n not in open_numbers:
+            continue
+        via = "native" if native_epics.get(n) else "body"
+        epics = sorted(native_epics.get(n) or body_epics.get(n))
+        streams = sorted({stream_of_epic[e] for e in epics})
+        index[str(n)] = {
+            "epics": epics,
+            "streams": streams,
+            "via": via,
+            "unique_stream": len(streams) == 1,
+        }
+    return index
 
 
 def run_audit() -> dict:
@@ -180,6 +231,63 @@ def read_cache(max_age_s: int) -> dict | None:
     if time.time() - report.get("generated_at", 0) > max_age_s:
         return None
     return report
+
+
+# --------------------------------------------------------------------------- #
+# ADR-011 P4 — strict adoption gate inputs (fresh cache only; never network)
+# --------------------------------------------------------------------------- #
+def read_membership_index(max_age_s: int, *, cache_path: Path | None = None) -> dict | None:
+    """Return the effective issue→epic membership index from a FRESH cache.
+
+    Fails **closed** to ``None`` when the cache is missing, stale (older than
+    ``max_age_s``), unreadable, malformed, or was written by a pre-P4 auditor that
+    lacks the index. This never reaches GitHub: the strict adoption gate consumes
+    a cache produced by a separate live auditor run, so discovery/gate paths stay
+    offline and non-mutating.
+    """
+    path = cache_path if cache_path is not None else CACHE_PATH
+    try:
+        report = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
+    if not isinstance(report, dict):
+        return None
+    if time.time() - report.get("generated_at", 0) > max_age_s:
+        return None
+    index = report.get("effective_membership")
+    if not isinstance(index, dict):
+        return None
+    return report
+
+
+def make_membership_resolver(report: dict) -> MembershipResolver:
+    """Build a ``(issue, epic) → bool`` resolver over a fresh cache report.
+
+    Returns ``True`` only when the issue is a live owned member (present in the
+    index), belongs to exactly one stream (``unique_stream``), and the requested
+    ``epic`` is one of its effective epics. Rejects closed/orphan (absent),
+    wrong-epic, and multi-home ownership — every failure mode fails closed.
+    """
+    index = report.get("effective_membership") or {}
+
+    def _resolve(issue: int, epic: int) -> bool:
+        entry = index.get(str(issue))
+        if not isinstance(entry, dict) or not entry.get("unique_stream"):
+            return False
+        return int(epic) in (entry.get("epics") or [])
+
+    return _resolve
+
+
+def make_issue_resolver(report: dict) -> Callable[[str], bool]:
+    """Build a consumer ``issue`` resolver: True iff the ref names an open issue in
+    the fresh cache's bounded open-issue set. Non-digit refs fail closed."""
+    open_set = {int(n) for n in (report.get("open_issue_numbers") or [])}
+
+    def _resolve(ref: str) -> bool:
+        return ref.isdigit() and int(ref) in open_set
+
+    return _resolve
 
 
 def _node_id(number: int) -> str:
