@@ -53,23 +53,12 @@ Basarab was an organiser, diplomat, and clandestine operative, not an author; he
 - `1923–1924` — on the liquidation of the UNR missions, returned to Lviv; member of the Head Administration of the **Союз українок** Lviv branch; **liaison («зв'язкова») of Colonel Yevhen Konovalets** within the **УВО (Українська військова організація)**. [T3: uk.wikipedia]
 - *Memorial/literary afterlife:* M. Bazhansky, *Як загинула Ольга Басарабова* (Prague, 1941); O. Luhovy's drama *Ольга Басарабова* (Canada, 1936); a heroine in Roman Ivanychuk's novel *Країна Ірредента*. [T3: uk.wikipedia]
 
-## 4. Primary-source quotes (≥2 required — honest thinness documented)
+## 4. Quotation provenance
 
-> As a clandestine UVO operative and intelligence agent, Basarab deliberately left **almost no quotable written corpus**. Per the anti-fabrication rule, nothing is invented here; the one well-attested utterance is given with its contested provenance, and the second is flagged as low-confidence. The reputable record (Рудницька) stresses that much of her inner record is irretrievable.
-
-**Quote 1 — the "dying inscription" (iconic, but martyrological — flagged):**
-
-> «Вмираю, замучена, помстіть! О. Басараб.»
-
-Traditionally reported as scratched on the wall of her cell. **This is the martyr tradition, not a forensically established fact:** the reputable Локальна історія account of her death does **not** mention any wall inscription, and the line often appended to it — «За кров, за сльози, за руїну верни нам, Боже, Україну!» — is in fact a verse by **Богдан Лепкий**, frequently and wrongly merged into "her" last words. The phrase is pedagogically valuable precisely as a case study in how martyrologies form. [Martyr tradition; attested via T5: uk.wikiquote / popular memory; **provenance contested — flagged as tradition, not document**]
-
-**Quote 2 — fragment of a wartime letter to her husband Дмитро (LOW-confidence provenance):**
-
-> «Була я на желізниці. Отже хочу з тобою поділитись, що не на дурно ходила. Приїхало багато робітників з Німеччини…»
-
-Reproduced in a popular compilation as a line from her correspondence — reporting, in a domestic register, the kind of railway/troop observation that prefigured her later intelligence work. **Caveat:** the reputable Локальна історія piece **paraphrases** rather than quotes her letters, so this verbatim form must be re-confirmed against a scholarly edition of the correspondence before any learner-facing use. [Letter to Дмитро Басараб; attested only via T5 compilation (uain.press); **low-confidence — re-verify before use**]
-
-**Honest gap (§4 + §10):** this is the one figure in the batch where the ≥2-quote bar is met only marginally and with heavy caveats. Rather than fabricate a "tidier" quote, the thinness is reported: Basarab's significance lies in deeds (diplomacy, the women's чота, the UVO liaison work) and in the documented manner of her death, not in a literary corpus.
+No quotation is retained. The alleged dying inscription is a contested
+martyr tradition without a directly accessed document. The wartime-letter
+fragment lacks a scholarly edition and page. Both were removed rather than
+presented with caveats that a learner could mistake for verification.
 
 ## 5. Language register
 
@@ -116,14 +105,13 @@ Reproduced in a popular compilation as a line from her correspondence — report
 - **Aliases to track (`aliases:` YAML field):** Olha Basarab; Olha Levytska-Basarab; Ольга Левицька; Басараб-Левицька.
 - **Forbidden Russian-imperial / Russified forms (flag in body text — listed here only):** «Ольга Михайловна Басараб» (Russified patronymic form). Note: as a Galician figure under Austria/Poland, Russified forms are anachronistic as well as inappropriate.
 
-## 9. Image candidates
+## 9. Image candidate — individually verified
 
-- **Best PD/CC portrait:** early-20th-century photographs of Basarab exist (she predates 1924); most are **PD-by-age** — verify each **file page**. There is also a noted **painted portrait** (the «у житті і на полотні» tradition). [Wikimedia Commons category: `Olha Basarab`]
-- **Backup candidates:**
-  - The memorial plaque on the Lviv house (вул. Вишенського, 34) where she was arrested; the Burshtyn and Іванків monuments — verify rights.
-  - The Saskatchewan (Canada) bust unveiled 1936 — verify rights.
-- **Context image (use with care):** a PD photograph of the «Бригідки» prison or the 1924 funeral procession at the Янівський cemetery would illustrate §2 powerfully and soberly.
-- **If no rights-clear portrait clears review:** a PD pre-1924 photograph or the memorial-plaque image are the safest options.
+- https://commons.wikimedia.org/wiki/File:Basarab_Olga.jpg
+- Identity/date: portrait of Olha Basarab, before 1924.
+- Author/source: unknown; source field points to the Ukrainian Youth Association.
+- Rights: public domain / Public Domain Mark 1.0 on the individual file page.
+  The disposition applies only to this file.
 
 ## 10. Sources used
 
@@ -142,7 +130,14 @@ Reproduced in a popular compilation as a line from her correspondence — report
 - Локальна історія. «Ольга Басараб: життя поміж утрат». localhistory.org.ua — the honest scholarly-journalistic account; source for Мілена Рудницька's framing and the three death scenarios (§2, §6); notably does **not** report a wall inscription.
 - uain.press — popular compilation carrying the letter fragment (§4 quote 2, low-confidence).
 
-**Primary-source documents accessed (in transcription only):** the contested dying inscription and the letter fragment, both via secondary transcription with provenance flagged; no archival case file or scholarly letter-edition was opened this pass (honest gap, §4).
+**Directly verified 2026-07-11:**
+- EIU: https://www.history.org.ua/?termin=Basarab_O (HTTP 200; exact identity;
+  dates 01.09.1889–12.02.1924).
+- ESU: https://esu.com.ua/article-40676 (HTTP 200; exact identity; conflicting
+  dates 24.07.1889–13.02.1924). The disagreement remains explicit.
+- UINP: https://uinp.gov.ua/informaciyni-materialy/statti/100-rokiv-uvo.
+- Lviv Polytechnic record and direct article: https://ena.lpnu.ua/items/0e5708a2-bcdb-48a5-bad9-5d91464957e8 (pp. 129–134).
+- No archival case file or scholarly letter edition was opened; no quotation is approved.
 
 ---
 

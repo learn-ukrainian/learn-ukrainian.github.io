@@ -52,27 +52,14 @@ A founder of **Cubism in sculpture**; he introduced **polychromy, concavity and 
 - `1933` — **Ukrainian Pavilion / "House of Archipenko"** at Chicago's "A Century of Progress" (44 works). [T3: uk.wikipedia]
 - `1948` — **«Заратустра»**; `1957` — **«Балерина»** (later works). [T3: uk.wikipedia]
 
-## 4. Primary-source quotes (≥2 required)
+## 4. Quotation provenance
 
-Archipenko wrote his theory primarily in **English** (US period; e.g. *Archipenko: Fifty Creative Years, 1908–1958*); he is **not in the project's literary corpus** (`ukrlib`), so `verify_quote` does not apply. Quotes are sourced documentarily.
-
-**Quote 1 — his definition of negative space (his own English theory; the core of his innovation):**
-
-> "Ignoring this tradition, I experimented, using the reverse idea, and concluded that sculpture may begin where space is encircled by the material."
-
-This is the **void-as-form** principle that made «Жінка, що розчісує волосся» revolutionary — sculpture beginning where space is "encircled," not filled. [T5: Archipenko, *Fifty Creative Years* / sculpture-magazine; his own English text]
-
-**Quote 2 — on his Ukrainian roots as the source of his art (recorded/attributed):**
-
-> «Українська земля, український хліб, український дух свободи та індивідуальності лягли в основу моєї креативності.»
-
-Spoken roughly half a century after he last saw Kyiv; the decolonial counterweight to the "Russian sculptor" label. **Flag:** widely reproduced in Ukrainian outlets; exact original (English vs Ukrainian) not pinned this pass — treat as attributed. [T5: localhistory.org.ua / Tyzhden — attributed]
-
-**Quote 3 — his documented practice (behavioural primary evidence):**
-
-> in every US form, in the nationality field, Archipenko **"писав: українець"** ("wrote: Ukrainian").
-
-Not a sentence but a documented, repeated act of self-identification — strong primary-behaviour evidence for §1/§6. [T5: obozrevatel, reporting the documented practice]
+No verbatim quotation is retained. The popular negative-space sentence is
+mediated through a magazine rather than a directly opened page of
+*Archipenko: Fifty Creative Years*. The Ukrainian-roots sentence and the claim
+about nationality forms also lack a pinned original document. They were
+removed instead of being upgraded from attribution to fact. The dossier uses
+source-backed paraphrase from ESU and the Ministry of Culture museum portal.
 
 ## 5. Language register
 
@@ -115,14 +102,14 @@ Not a sentence but a documented, repeated act of self-identification — strong 
 - **Aliases to track (`aliases:` YAML field):** Alexander Archipenko (international); Oleksander Arkhypenko (diaspora spelling); Aleksandr Archipenko (variant).
 - **Forbidden Russian-imperial / Russified forms (flag in body text — listed here only):** Александр Порфирьевич Архипенко; the bare **"Russian Cubist sculptor"** label without the Ukrainian context.
 
-## 9. Image candidates
+## 9. Image candidate — individually verified
 
-- **Best image:** Wikimedia Commons category **"Alexander Archipenko"** and the **Archipenko Foundation** (archipenko.org) hold portraits and work photographs; many sculptures (pre-1929) are PD by age, but **check each file page** (some works/photos remain in copyright — the artist died 1964, so author-life+70 runs to 2034 for many works). Prefer clearly-PD early works and period photographs.
-- **Backup candidates:**
-  - **MoMA** collection images of «Boxing» (1914), «Woman Combing Her Hair» (1915), «Figure in Movement» (1913) — **artist page `moma.org/artists/209`** (verify reuse terms).
-  - НБУ 2-hryvnia commemorative coin (2017) — issuer-rights check.
-- **Context image:** the **«Повернення Архипенка»** memorial sign in Kyiv (вул. Євгена Чикаленка, 42) — repatriation-of-memory context.
-- **If no rights-clear portrait clears review:** use a PD reproduction of a pre-1929 sculpture photograph.
+- https://commons.wikimedia.org/wiki/File:Alexander_Archipenko.jpg
+- Identity/date: Archipenko working on a Taras Shevchenko bust, 28 March 1935.
+- Author/source: Los Angeles Times; UCLA Digital Library record
+  https://digital.library.ucla.edu/catalog/ark:/21198/zz002h934v.
+- License: CC BY 4.0; attribution required. This approval does not cover the
+  sculpture as a separate work or any other Archipenko image.
 
 ## 10. Sources used
 
@@ -147,11 +134,14 @@ Not a sentence but a documented, repeated act of self-identification — strong 
 - OBOZ.UA — reporting the documented "writes Ukrainian in nationality field" practice.
 - visual-arts-cork.com, "Alexander Archipenko: Russian Cubist Sculptor" — cited *as evidence of the misattribution to flag* (§6), not as authority.
 
-**Primary-source documents accessed (in transcription):**
-- Archipenko's own English theoretical statement on negative space (§4, Quote 1).
-- MoMA catalogue data confirming work titles/dates and artist id 209.
-
-**Honest gaps:** Archipenko's **own books** (*Fifty Creative Years*) were accessed via secondary quotation, not the full text this pass. The **Ukrainian-roots quote** (Quote 2) is widely circulated but its exact original wording/source is unconfirmed — flagged attributed, not asserted verbatim-verified.
+**Directly verified 2026-07-11:**
+- ESU: https://esu.com.ua/article-44797 (HTTP 200; exact identity, career,
+  techniques, works, exhibitions, and Ukrainian cultural links).
+- Ministry of Culture museum portal:
+  https://museum.mincult.gov.ua/authors/oleksandr-arhipenko (HTTP 200; exact
+  subject and institutional collection context).
+- Plan MoMA reference `/artists/229` is the wrong identity (Eugène Atget) and
+  is not evidence. No Archipenko quotation is approved without a direct book/page.
 
 ---
 

@@ -53,23 +53,14 @@ A small but exquisite poetic corpus and a foundational body of literary scholars
 - `translations` — from **French** (Baudelaire, Verlaine, Béranger), **Russian** (Pushkin, Bryusov, Baratynsky), **Latin**. [T3: uk.wikipedia]
 - `posthumous` — **«Поезії»** (Мюнхен, 1957); **«Літературно-критичні статті»** (Київ: Дніпро, 1991). [T3: uk.wikipedia]
 
-## 4. Primary-source quotes (≥2 required)
+## 4. Quotation provenance
 
-> **Attestation note.** Fylypovych's poems are **not** indexed in our literary corpus, so `verify_quote(author="Филипович", "Дивись, дивись, безмежні перелоги")` returned `matched:false, conf 0.0` — corpus coverage, not absence of the texts (the warned author-scoped behaviour). Quote 1 below is his **literary-criticism prose, verbatim-attested in our MCP corpus** (the strongest attestation); Quote 2 is his **signature programmatic couplet**, cited from heritage sources and flagged as such.
-
-**Quote 1 — his scholarly credo (CORPUS-ATTESTED, verbatim):**
-
-> «На студіюванні Шевченка найпомітніше виявилось нове, свіже спрямування нашого літературознавства: від кустарництва критичних нарисів з публіцистичною домішкою — до наукових студій, опертих на фактичному матеріалі, старанно зібраному й перевіреному…»
-
-Pedagogically central: it states the **Neoclassicist scholarly programme** — rigorous, fact-based study replacing impressionistic publicism — which is exactly what the regime found "ворожий." This is the voice the NKVD silenced. [Attested verbatim in `mcp__sources__search_literary` — wave7-heroes-ukr-kultura, chunk `a5f3ae7f_c0195`]
-
-**Quote 2 — his poetic self-definition (signature couplet; heritage-sourced):**
-
-> «Я — робітник в майстерні власних слів, / Та всі слова я віддаю усім.»
-
-Pedagogically: the perfect **neoclassicist** self-image — the poet as a disciplined **craftsman** («робітник в майстерні»), not a romantic prophet — whose labour is nonetheless a gift to all. Excellent B2–C1 material on the poet-as-artisan motif. Flagged as his widely-cited signature line (full poem text could not be fetched from a stable host this pass — ukrlib SSL failure — so quoted from corroborating heritage sources, not invented). [T5: surma.com.ua — «Павло Филипович, київський неокласик»; corroborated by ukrlib author page]
-
-**Bonus attested-by-our-corpus line:** in his 1925 study of the Ukrainian reader he wrote that for the provincial gentry of the 1840s «**„Кобзар" був розвагою — поруч з „пресмешными анекдотами про малоросіян"**» — a sharp, source-based demolition of the romantic myth of Shevchenko's instant universal fame. [Attested in corpus — chunk `a5f3ae7f_c0147`]
+No quotation is retained in the readiness surface. A direct primary-text
+candidate exists in the National Library scan: *Нема словам лічби*, viewer
+leaf 5/58, https://elib.nlu.org.ua/files/Disk2//000000007971/jpg/0005.jpg.
+The prior signature couplet belongs to a different collection and lacked a
+stable direct locator; the scholarly-credo quotation had only an internal
+corpus chunk. They were removed rather than treated as learner-auditable.
 
 ## 5. Language register
 
@@ -114,14 +105,12 @@ Pedagogically: the perfect **neoclassicist** self-image — the poet as a discip
 - **Aliases to track (`aliases:` YAML field):** П. Зорев / Павел Зорев (his abandoned Russian-language pen-name, 1910–1916).
 - **Forbidden Russian-imperial / Russified forms (flag in body text — listed here only):** Павел Петрович Филиппович; Pavlo Filippovich (Russian transliteration with doubled -пп-).
 
-## 9. Image candidates
+## 9. Image candidate — individually verified
 
-- **Best PD candidate:** a **pre-1937 photographic portrait** of Fylypovych — he died in 1937 and surviving portraits predate that, so they are **public domain by age** in Ukraine and the US. The **ЦДАМЛМ** (Central State Archive-Museum of Literature and Art of Ukraine) holds his materials and published a profile (`csamm.archives.gov.ua`, 2019) — the rights-appropriate institutional source for a PD scan. [T2: ЦДАМЛМ]
-- **Backup candidates:**
-  - The group photograph of the **Київські неокласики** (Зеров, Рильський, Филипович, Драй-Хмара) — a strong context image if a rights-clear scan exists.
-  - A scan of the cover/title page of **«Земля і вітер»** (1922) or **«Простір»** (1925) — PD by age.
-  - A **Сандармох** memorial photograph (the execution site) — sober §2 context.
-- **If no rights-clear portrait clears review:** use the «Земля і вітер» title-page scan or the Sandarmokh memorial.
+- https://commons.wikimedia.org/wiki/File:Pavlo_Fylypovych.jpg
+- Identity/date: photograph of Pavlo Fylypovych, 1928.
+- Author/source: О. Кореневич; *Письменники Радянської України* (1928).
+- Rights: public domain / Public Domain Mark 1.0 on the individual file page.
 
 ## 10. Sources used
 
@@ -145,7 +134,12 @@ Pedagogically: the perfect **neoclassicist** self-image — the poet as a discip
 - `mcp__sources__search_literary` — verbatim Fylypovych literary-criticism prose (chunks `a5f3ae7f_c0195`, `a5f3ae7f_c0147`): the §4 corpus-attested quotes.
 - NKVD investigation/execution records of the Solovki transport, summarised in **«Остання адреса: Розстріли соловецьких в'язнів з України у 1937–1938 роках»** (К.: Сфера, 2003).
 
-**Honest gaps:** the plan's `esu.com.ua/article-1393` is a **ghost source** (different person) and was excluded. The ЕІУ/ЕУ/Шевченківська енциклопедія entries were surfaced via uk.wiki's Література apparatus and cited from those references rather than each re-paginated this pass. His **poems** are not in our literary corpus (verify_quote false); the §4 poetry couplet is heritage-sourced, not corpus-attested, and is flagged accordingly, while the prose quotes ARE corpus-attested.
+**Directly verified 2026-07-11:**
+- EIU: https://history.org.ua/?termin=Fylypovych_P (HTTP 200; exact identity).
+- UINP: https://uinp.gov.ua/istorychnyy-kalendar/veresen/2/1891-narodyvsya-pavlo-fylypovych-poet-perekladach.
+- National Library record and scan: https://elib.nlu.org.ua/object.html?id=7971
+  (Простір, Kyiv: Слово, 1925, 56 pages).
+- The ghost ESU `article-1393` remains excluded. No verbatim quotation is approved.
 
 ---
 

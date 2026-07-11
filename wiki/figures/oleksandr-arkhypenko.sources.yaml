@@ -1,43 +1,24 @@
 # Source registry for wiki/figures/oleksandr-arkhypenko.md
-# Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: ukrainian_wiki/oleksandr-arkhypenko_Біографія-Олександр-Архипенко-Скульптор-авангарду-Короткий-зміст
-  type: ukrainian_wiki
-  title: 'Біографія: Олександр Архипенко: Скульптор авангарду'
-  section_path: 'Біографія: Олександр Архипенко: Скульптор авангарду > Короткий зміст'
+  file: https://esu.com.ua/article-44797
+  type: external
+  title: Архипенко Олександр Порфирович
+  url: https://esu.com.ua/article-44797
+  domain: esu.com.ua
+  notes: Енциклопедія Сучасної України; identity and article text verified 2026-07-11.
 - id: S2
-  file: ukrainian_wiki/oleksandr-arkhypenko_Біографія-Олександр-Архипенко-Скульптор-авангарду-Деколонізаційна-перспектива
-  type: ukrainian_wiki
-  title: 'Біографія: Олександр Архипенко: Скульптор авангарду'
-  section_path: 'Біографія: Олександр Архипенко: Скульптор авангарду > Деколонізаційна
-    перспектива'
+  file: https://museum.mincult.gov.ua/authors/oleksandr-arhipenko
+  type: external
+  title: Олександр Архипенко
+  url: https://museum.mincult.gov.ua/authors/oleksandr-arhipenko
+  domain: museum.mincult.gov.ua
+  notes: Ministry of Culture museum portal author page; verified 2026-07-11.
 - id: S3
-  file: ukrainian_wiki/oleksandr-arkhypenko_Біографія-Олександр-Архипенко-Скульптор-авангарду-Основний-зміст-Ранні-роки-та-формування-бунтарського-духу
-  type: ukrainian_wiki
-  title: 'Біографія: Олександр Архипенко: Скульптор авангарду'
-  section_path: 'Біографія: Олександр Архипенко: Скульптор авангарду > Основний зміст
-    > Ранні роки та формування бунтарського духу'
-- id: S4
-  file: ukrainian_wiki/oleksandr-arkhypenko_Біографія-Олександр-Архипенко-Скульптор-авангарду-Основний-зміст-Український-контекст-і-реалістична-спадщина
-  type: ukrainian_wiki
-  title: 'Біографія: Олександр Архипенко: Скульптор авангарду'
-  section_path: 'Біографія: Олександр Архипенко: Скульптор авангарду > Основний зміст
-    > Український контекст і реалістична спадщина'
-- id: S5
-  file: ukrainian_wiki/oleksandr-arkhypenko_Біографія-Олександр-Архипенко-Скульптор-авангарду-Основний-зміст-Філософія-порожнечі-та-інноваційні-техніки-скульптмалярство
-  type: ukrainian_wiki
-  title: 'Біографія: Олександр Архипенко: Скульптор авангарду'
-  section_path: 'Біографія: Олександр Архипенко: Скульптор авангарду > Основний зміст
-    > Філософія порожнечі та інноваційні техніки: скульптмалярство'
-- id: S6
-  file: ukrainian_wiki/kazimir-malevich_Біографія-Казимир-Малевич-Революція-в-мистецтві-Основний-зміст-Народження-супрематизму-від-фігуративності-до-чистої-абстракції
-  type: ukrainian_wiki
-  title: 'Біографія: Казимир Малевич: Революція в мистецтві'
-  section_path: 'Біографія: Казимир Малевич: Революція в мистецтві > Основний зміст
-    > Народження супрематизму: від фігуративності до чистої абстракції'
-- id: S7
-  file: wave10-shevchenkivsky-slovnyk_c0111
-  type: literary
-  title: Шевченківський словник
-  author: Колектив
+  file: https://commons.wikimedia.org/wiki/File:Alexander_Archipenko.jpg
+  type: external
+  title: 'File:Alexander Archipenko.jpg'
+  author: Los Angeles Times
+  url: https://commons.wikimedia.org/wiki/File:Alexander_Archipenko.jpg
+  domain: commons.wikimedia.org
+  notes: Individual UCLA/Los Angeles Times file page; CC BY 4.0; verified 2026-07-11.

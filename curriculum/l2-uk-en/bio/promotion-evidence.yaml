@@ -276,6 +276,216 @@ entries:
       reason: >-
         Prior source, discovery, quotation, factual-framing, and image-rights
         blockers were repaired and independently reviewed; the hold is resolved.
+  valentyna-radzymovska:
+    dossier_grounding:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-11
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4948850387
+    reading_rights:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-11
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4948850387
+      disposition: link-only-approved
+    wiki_grounding:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-11
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4948850387
+    wiki_quote_verification:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-11
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4948850387
+    image_rights:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-11
+      evidence_url: https://commons.wikimedia.org/wiki/File:Радзімовська_Валентина_2.png
+      disposition: approved
+    cohort_promotion:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-11
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4948850387
+    hold:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-11
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4948850387
+      active: false
+      reason: >-
+        Promotion-closure source, rights, quotation, discovery, and review
+        blockers resolved.
+  oleksandr-arkhypenko:
+    dossier_grounding:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-11
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4948850387
+    reading_rights:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-11
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4948850387
+      disposition: link-only-approved
+    wiki_grounding:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-11
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4948850387
+    wiki_quote_verification:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-11
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4948850387
+    image_rights:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-11
+      evidence_url: https://commons.wikimedia.org/wiki/File:Alexander_Archipenko.jpg
+      disposition: approved
+    cohort_promotion:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-11
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4948850387
+    hold:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-11
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4948850387
+      active: false
+      reason: >-
+        Promotion-closure source, rights, quotation, discovery, and review
+        blockers resolved.
+  olha-basarab:
+    dossier_grounding:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-11
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4948850387
+    reading_rights:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-11
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4948850387
+      disposition: link-only-approved
+    wiki_grounding:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-11
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4948850387
+    wiki_quote_verification:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-11
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4948850387
+    image_rights:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-11
+      evidence_url: https://commons.wikimedia.org/wiki/File:Basarab_Olga.jpg
+      disposition: approved
+    cohort_promotion:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-11
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4948850387
+    hold:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-11
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4948850387
+      active: false
+      reason: >-
+        Promotion-closure source, rights, quotation, discovery, and review
+        blockers resolved.
+  pavlo-fylypovych:
+    dossier_grounding:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-11
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4948850387
+    reading_rights:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-11
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4948850387
+      disposition: link-only-approved
+    wiki_grounding:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-11
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4948850387
+    wiki_quote_verification:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-11
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4948850387
+    image_rights:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-11
+      evidence_url: https://commons.wikimedia.org/wiki/File:Pavlo_Fylypovych.jpg
+      disposition: approved
+    cohort_promotion:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-11
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4948850387
+    hold:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-11
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4948850387
+      active: false
+      reason: >-
+        Promotion-closure source, rights, quotation, discovery, and review
+        blockers resolved.
+  yevhen-konovalets:
+    dossier_grounding:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-11
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4948850387
+    reading_rights:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-11
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4948850387
+      disposition: link-only-approved
+    wiki_grounding:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-11
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4948850387
+    wiki_quote_verification:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-11
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4948850387
+    image_rights:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-11
+      evidence_url: https://commons.wikimedia.org/wiki/File:Євген_Коновалець.jpg
+      disposition: approved
+    cohort_promotion:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-11
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4948850387
+    hold:
+      status: pass
+      reviewer_family: gemini
+      date: 2026-07-11
+      evidence_url: https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/4431#issuecomment-4948850387
+      active: false
+      reason: >-
+        Promotion-closure source, rights, quotation, discovery, and review
+        blockers resolved.
   andrii-malyshko:
     corpus_hammer:
       status: pass

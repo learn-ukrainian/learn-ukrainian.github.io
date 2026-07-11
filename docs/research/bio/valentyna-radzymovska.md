@@ -41,25 +41,16 @@ This is the load-bearing correction. Specificity:
 - emigration period — *Фізіологія людини та свійських тварин* (2-vol. textbook, Munich); supervised master's/doctoral dissertations there. [T3: uk.wikipedia]
 - ~70 works total across physiology, biochemistry, pathophysiology, tuberculosis, neuropsychiatry, paediatrics. Member of НТШ and УВАН. [T3: uk.wikipedia]
 
-## 4. Primary-source quotes (≥2 required)
+## 4. Quotation provenance
 
-> **Register caveat.** Her early lab papers appeared in Russian-language (*Врачебное дело*) and German/English journals — the scientific lingua franca of the time; her Ukrainian-language works (the 1923 children's monograph, the Munich textbook) mark her national-scientific commitment. The two quotes below are her own Ukrainian-language work titles.
-
-### Quote 1 — the 1923 monograph title (her own work)
-
-> «Діти часів революції. Фізичний розвиток дітей України»
-
-*Source:* monograph, 1923 [T3: uk.wikipedia]. *Why it matters pedagogically:* a Ukrainian scientist studying *Ukrainian* children by name in 1923 — the kind of nationally-framed science the СВУ case existed to punish.
-
-### Quote 2 — the émigré textbook title (her own work)
-
-> «Фізіологія людини та свійських тварин» (Мюнхен, 2 томи)
-
-*Source:* textbook published in Munich exile [T3: uk.wikipedia]. *Why it matters pedagogically:* science in Ukrainian, continued in exile — the through-line that the execution-myth erases.
-
-### Supporting primary-source detail (from her dissertation text)
-
-uk.wikipedia paraphrases her dissertation: she ran **«понад 50 серій дослідів, загалом понад 1200 чашок з культивованими клітинами кролика»**, and — lacking enough Petri (Habrychevsky) dishes — **made them herself from the bottoms of ordinary bottles, hand-grinding the edges**. A vivid, quotable image of improvised Ukrainian lab science under scarcity. [T3: uk.wikipedia, quoting her dissertation]
+No unpinned verbatim quotation is retained for learner-facing use. The title
+page of the 1923 monograph directly verifies the document title *Діти часів
+революції. Фізичний розвиток дітей України* at
+https://commons.wikimedia.org/wiki/File:Children_of_revolution_time_1923.png
+(locator: title page; author Валентина Радзимовська; public domain). The
+Munich-textbook title and the dissertation experiment-count paraphrase remain
+useful research leads, but neither has a directly opened edition and page in
+this packet; they must not be presented as quotations.
 
 ## 5. Language register
 
@@ -103,11 +94,13 @@ uk.wikipedia paraphrases her dissertation: she ran **«понад 50 серій 
   - «Валентина Васильевна Радзимовская» — Russian form.
   - any "executed / shot / died in a camp" descriptor for Valentyna — **fabricated**; that fate belongs to her brother Vasyl Yanovsky.
 
-## 9. Image candidates
+## 9. Image candidate — individually verified
 
-- **Best PD/CC portrait:** archival portrait on uk.wikipedia / Wikimedia Commons (death 1953 → likely PD-Ukraine / PD-old; **verify tag**).
-- **Backup candidates:** the УВАН biography by Іван Розгін (1968, Winnipeg) on diasporiana.org.ua; Lviv National Medical University biographical page (Ганіткевич).
-- **Era-appropriate context image:** a page from the СВУ trial press, or the 2024 «вул. Валентини Радзимовської» street sign (Kyiv).
+- https://commons.wikimedia.org/wiki/File:Радзімовська_Валентина_2.png
+- Identity: portrait of Валентина Радзимовська.
+- Author/source: Perohanych; uploader-created derivative, individual file page.
+- License: CC BY-SA 4.0. Reuse requires attribution, license link, share-alike,
+  and an indication of changes. No other image inherits this disposition.
 
 ## 10. Sources used
 
@@ -124,8 +117,11 @@ uk.wikipedia paraphrases her dissertation: she ran **«понад 50 серій 
 **Tier 3 (encyclopedic):**
 - Українська Вікіпедія. "Радзимовська Валентина Василівна." https://uk.wikipedia.org/wiki/Радзимовська_Валентина_Василівна. Accessed 2026-06-02 (via `query_wikipedia`, full extract). Comprehensive, densely cited; every load-bearing fact cross-checked against ЕІУ (T1).
 
-**Primary-source documents accessed:**
-- Her 1929–30 архівно-слідча справа (СВУ) is referenced via ЕІУ / scholarship, not independently inspected — flagged as such. Her dissertation text is quoted via the uk.wikipedia article (§4).
+**Directly verified 2026-07-11:**
+- EIU identity page: https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&S21STR=Radzymovska_Valentyna (HTTP 200; exact identity, arrest, release, emigration, and death).
+- Diasporiana record and 52-page scan: https://diasporiana.org.ua/ukrainica/6476-rozgin-i-valentina-radzimovska/ and https://diasporiana.org.ua/wp-content/uploads/books/6476/file.pdf.
+- The archival investigation file was not inspected. The prior dissertation
+  paraphrase was removed rather than promoted without a direct locator.
 
 ---
 

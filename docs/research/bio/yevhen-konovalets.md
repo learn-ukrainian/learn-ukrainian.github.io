@@ -53,23 +53,14 @@ Konovalets was an organiser and military-political leader, not an author; his "w
 - `1920s–1938` — built OUN cells and information services across Europe and the diaspora (France, Belgium, Canada, the USA, Manchuria), founded officer-training and a military staff, and pressed the Ukrainian question internationally (League of Nations). [T3: uk.wikipedia — §"Еміграція"]
 - `1928` — memoir **«Причинки до історії української революції»** (Prague), his account of the Sich Riflemen and the Revolution. [T3: uk.wikipedia — §"Джерела та література"]
 
-## 4. Primary-source quotes (≥2 required)
+## 4. Quotation provenance
 
-> Konovalets is **not a literary author**, so the project's `verify_quote` literary-corpus check does not apply. The aphorisms below are **widely attributed** to him (Ukrainian Wikiquote and commemorative literature) but the Wikiquote page gives **no pinned primary source**; they are therefore flagged "attributed; primary source not pinned this pass" rather than presented as autograph-verified. His one extended own-voice text is the 1928 memoir (§3), not opened this pass (honest gap).
-
-**Quote 1 — the integral-nationalist credo (attributed):**
-
-> «У вогні перетоплюється залізо у сталь, у боротьбі перетворюється народ у націю.»
-
-This is the most-cited Konovalets aphorism. Pedagogically it is a *primary specimen of integral-nationalist thought* — the nation as forged through struggle — and should be taught **as evidence of his worldview** (§6), not as a neutral motto. [Attributed: uk.wikiquote; primary source not pinned this pass]
-
-**Quote 2 — the соборницька (all-Ukrainian) strategic vision (attributed):**
-
-> «Шлях до Львова лежить через Київ.»
-
-Encapsulates his conviction that Galician liberation was inseparable from an all-Ukrainian state centred on Kyiv — the соборність idea against the four-way partition of Ukraine. [Attributed: uk.wikiquote; primary source not pinned this pass]
-
-**Honest gap (§4 + §10):** The memoir «Причинки до історії української революції» (1928) and his correspondence were not opened in this pass; both §4 quotes are attributed-without-pinned-source and labelled accordingly. The documented **antisemitic** statement attributed to him (Carynnyk 2011) is engaged in §6, not laundered into §4 as a hero-motto.
+The two Wikiquote aphorisms were removed because neither had a primary
+document/page. A direct primary-text candidate is available in *Причинки до
+історії української революції*: the 1928 preface, viewer item 5/52,
+https://old.libr.dp.ua/collection/470/0005.jpg. The readiness wiki uses no
+verbatim quotation; future use must transcribe from that image and preserve the
+locator rather than copy a mediated version.
 
 ## 5. Language register
 
@@ -126,14 +117,12 @@ Encapsulates his conviction that Galician liberation was inseparable from an all
 - **Aliases to track (`aliases:` YAML field):** Yevhen Konovalets; Evhen Konovalets (variant).
 - **Forbidden Russian-imperial / Russified forms (flag in body text — listed here only):** Евгений Михайлович Коновалец; "Konovalets" rendered through Russian as "Konovalec/Konovalez."
 
-## 9. Image candidates
+## 9. Image candidate — individually verified
 
-- **Best PD/CC portrait:** Wikimedia Commons category **"Yevhen Konovalets"** holds interwar photographs (he died 1938; many studio portraits are PD by age) — verify on the individual **file page**. [Commons category: `Yevhen Konovalets`]
-- **Backup candidates:**
-  - The 1920 group photo of the disbanded Sich Riflemen leadership (Коновалець, Мельник, Сушко et al.) — strong §3 context image; verify license.
-  - НБУ commemorative coin / Укрпошта stamp marking his anniversary — verify rights.
-  - The front page of the diaspora newspaper «Свобода» reporting his assassination (1938) — strong §2 context image if rights-clear.
-- **Context image:** the Crooswijk-cemetery grave in Rotterdam — verify rights.
+- https://commons.wikimedia.org/wiki/File:Євген_Коновалець.jpg
+- Identity/date: portrait of Yevhen Konovalets, 1918.
+- Author/source: unknown; source recorded on the individual file page.
+- Rights: public domain / Public Domain Mark 1.0. No category-level inference.
 
 ## 10. Sources used
 
@@ -158,7 +147,13 @@ Encapsulates his conviction that Galician liberation was inseparable from an all
 **Primary-source documents accessed (in transcription only):**
 - The «Ставка»-operation chain and the in-absentia death sentence, accessed in transcription via uk.wikipedia (originating in SZRU/NKVD declassified material).
 
-**Honest gaps:** (1) The IEU page did not load (baseline citation only). (2) §4 quotes are attributed via Wikiquote without a pinned primary source; his memoir «Причинки…» (1928) was not opened. (3) The Carynnyk antisemitism quote is quoted via secondary scholarship in English translation; the Ukrainian original was not retrieved.
+**Directly verified 2026-07-11:**
+- EIU: https://history.org.ua/?termin=Konovalets_E (HTTP 200; exact identity and detailed chronology).
+- ESU: https://esu.com.ua/article-4876 (HTTP 200; exact identity).
+- UINP: https://unr.uinp.gov.ua/figures/konovalets-evgen.
+- Primary memoir record/PDF: https://resource.history.org.ua/book/en/0007554
+  (Prague, 1928, 39 pages).
+- The Wikiquote aphorisms remain rejected; no primary locator was established.
 
 ---
 

@@ -1,45 +1,26 @@
 # Source registry for wiki/figures/valentyna-radzymovska.md
-# Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: 10-klas-istorija-ukrajiny-gisem-2018_s0147
-  type: textbook
-  title: § 26. Масові репресії. Сталінська Конституція
-  page: 147
-  grade: 10
+  file: https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&S21STR=Radzymovska_Valentyna
+  type: external
+  title: Радзимовська Валентина Василівна
+  author: О. В. Малюта
+  url: https://resource.history.org.ua/cgi-bin/eiu/history.exe?C21COM=S&S21STR=Radzymovska_Valentyna
+  domain: resource.history.org.ua
+  notes: Енциклопедія історії України; identity and article text verified 2026-07-11.
 - id: S2
-  file: ukrainian_wiki/valentyna-radzymovska_Біографія-Валентина-Радзимовська-Життя-наука-та-терор-в-епоху-тоталітаризму-Основний-зміст-Відсутність-прямих-біографічних-відомостей-та-важливість-історичного-контексту
-  type: ukrainian_wiki
-  title: 'Біографія: Валентина Радзимовська: Життя, наука та терор в епоху тоталітаризму'
-  section_path: 'Біографія: Валентина Радзимовська: Життя, наука та терор в епоху
-    тоталітаризму > Основний зміст > Відсутність прямих біографічних відомостей та
-    важливість історичного контексту'
+  file: https://diasporiana.org.ua/ukrainica/6476-rozgin-i-valentina-radzimovska/
+  type: external
+  title: Розгін І. Валентина Радзимовська
+  author: Іван Розгін
+  url: https://diasporiana.org.ua/ukrainica/6476-rozgin-i-valentina-radzimovska/
+  domain: diasporiana.org.ua
+  notes: Direct catalog page for the scanned biographical monograph; verified 2026-07-11.
 - id: S3
-  file: ukrainian_wiki/valentyna-radzymovska_Біографія-Валентина-Радзимовська-Життя-наука-та-терор-в-епоху-тоталітаризму-Короткий-зміст
-  type: ukrainian_wiki
-  title: 'Біографія: Валентина Радзимовська: Життя, наука та терор в епоху тоталітаризму'
-  section_path: 'Біографія: Валентина Радзимовська: Життя, наука та терор в епоху
-    тоталітаризму > Короткий зміст'
-- id: S4
-  file: ukrainian_wiki/valentyna-radzymovska_Біографія-Валентина-Радзимовська-Життя-наука-та-терор-в-епоху-тоталітаризму-Основний-зміст-Економічний-колоніалізм-та-репресивно-каральна-система
-  type: ukrainian_wiki
-  title: 'Біографія: Валентина Радзимовська: Життя, наука та терор в епоху тоталітаризму'
-  section_path: 'Біографія: Валентина Радзимовська: Життя, наука та терор в епоху
-    тоталітаризму > Основний зміст > Економічний колоніалізм та репресивно-каральна
-    система'
-- id: S5
-  file: ukrainian_wiki/kateryna-yushchenko_Біографія-Катерина-Ющенко-Мати-мови-програмування-Основний-зміст-Терор-і-знищення-наукової-еліти-репресивні-механізми
-  type: ukrainian_wiki
-  title: 'Біографія: Катерина Ющенко: Мати мови програмування'
-  section_path: 'Біографія: Катерина Ющенко: Мати мови програмування > Основний зміст
-    > Терор і знищення наукової еліти: репресивні механізми'
-- id: S6
-  file: wikipedia/Великий терор
-  type: wikipedia
-  title: Великий терор
-  url: https://uk.wikipedia.org/wiki/%D0%92%D0%B5%D0%BB%D0%B8%D0%BA%D0%B8%D0%B9%20%D1%82%D0%B5%D1%80%D0%BE%D1%80
-- id: S7
-  file: wikipedia/Визнання Голодомору геноцидом
-  type: wikipedia
-  title: Визнання Голодомору геноцидом
-  url: https://uk.wikipedia.org/wiki/%D0%92%D0%B8%D0%B7%D0%BD%D0%B0%D0%BD%D0%BD%D1%8F%20%D0%93%D0%BE%D0%BB%D0%BE%D0%B4%D0%BE%D0%BC%D0%BE%D1%80%D1%83%20%D0%B3%D0%B5%D0%BD%D0%BE%D1%86%D0%B8%D0%B4%D0%BE%D0%BC
+  file: https://commons.wikimedia.org/wiki/File:Радзімовська_Валентина_2.png
+  type: external
+  title: 'File:Радзімовська Валентина 2.png'
+  author: Perohanych
+  url: https://commons.wikimedia.org/wiki/File:Радзімовська_Валентина_2.png
+  domain: commons.wikimedia.org
+  notes: Individual file page; CC BY-SA 4.0; source and author verified 2026-07-11.

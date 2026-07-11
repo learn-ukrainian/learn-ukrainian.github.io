@@ -1,46 +1,41 @@
 # Source registry for wiki/figures/yevhen-konovalets.md
-# Referenced inline as [S1], [S2], ...
 sources:
 - id: S1
-  file: ukrainian_wiki/yevhen-konovalets_Біографія-Євген-Коновалець-Полковник-і-організатор-Короткий-зміст
-  type: ukrainian_wiki
-  title: 'Біографія: Євген Коновалець: Полковник і організатор'
-  section_path: 'Біографія: Євген Коновалець: Полковник і організатор > Короткий зміст'
-- id: S2
-  file: ukrainian_wiki/yevhen-konovalets_Біографія-Євген-Коновалець-Полковник-і-організатор-Деколонізаційна-перспектива
-  type: ukrainian_wiki
-  title: 'Біографія: Євген Коновалець: Полковник і організатор'
-  section_path: 'Біографія: Євген Коновалець: Полковник і організатор > Деколонізаційна
-    перспектива'
-- id: S3
-  file: ukrainian_wiki/yevhen-konovalets_Біографія-Євген-Коновалець-Полковник-і-організатор-Основний-зміст-Від-Української-військової-організації-до-створення-ОУН
-  type: ukrainian_wiki
-  title: 'Біографія: Євген Коновалець: Полковник і організатор'
-  section_path: 'Біографія: Євген Коновалець: Полковник і організатор > Основний зміст
-    > Від Української військової організації до створення ОУН'
-- id: S4
-  file: https://www.youtube.com/watch?v=fsccUcwpddo
+  file: https://history.org.ua/?termin=Konovalets_E
   type: external
-  title: 'Євген Коновалець: історія засновника ОУН'
-  url: https://www.youtube.com/watch?v=fsccUcwpddo
+  title: Коновалець Євген
+  author: О. С. Кучерук
+  url: https://history.org.ua/?termin=Konovalets_E
+  domain: history.org.ua
+  notes: Енциклопедія історії України; identity and article text verified 2026-07-11.
+- id: S2
+  file: https://esu.com.ua/article-4876
+  type: external
+  title: Коновалець Євген Михайлович
+  author: О. С. Кучерук
+  url: https://esu.com.ua/article-4876
+  domain: esu.com.ua
+  notes: Енциклопедія Сучасної України; identity and article text verified 2026-07-11.
+- id: S3
+  file: https://unr.uinp.gov.ua/figures/konovalets-evgen
+  type: external
+  title: Коновалець Євген
+  url: https://unr.uinp.gov.ua/figures/konovalets-evgen
+  domain: unr.uinp.gov.ua
+  notes: Ukrainian Institute of National Memory UNR biography; verified 2026-07-11.
+- id: S4
+  file: https://resource.history.org.ua/book/en/0007554
+  type: external
+  title: Причинки до історії української революції
+  author: Євген Коновалець
+  url: https://resource.history.org.ua/book/en/0007554
+  domain: resource.history.org.ua
+  notes: Direct Institute of History record with full 1928 PDF, 39 pages; verified 2026-07-11.
 - id: S5
-  file: wave7-ukrxx-derzhavnist_c0117
-  type: literary
-  title: Українська державність у XX столітті
-  author: Колектив
-- id: S6
-  file: wikipedia/Січові Стрільці
-  type: wikipedia
-  title: Січові Стрільці
-  url: https://uk.wikipedia.org/wiki/%D0%A1%D1%96%D1%87%D0%BE%D0%B2%D1%96%20%D0%A1%D1%82%D1%80%D1%96%D0%BB%D1%8C%D1%86%D1%96
-- id: S7
-  file: ukrainian_wiki/yevhen-konovalets_Біографія-Євген-Коновалець-Полковник-і-організатор-Мовні-зразки
-  type: ukrainian_wiki
-  title: 'Біографія: Євген Коновалець: Полковник і організатор'
-  section_path: 'Біографія: Євген Коновалець: Полковник і організатор > Мовні зразки'
-- id: S8
-  file: 10-klas-istorija-ukrajiny-gisem-2018_s0155
-  type: textbook
-  title: § 28. Українські землі у складі Другої Речі Посполитої
-  page: 161
-  grade: 10
+  file: https://commons.wikimedia.org/wiki/File:Євген_Коновалець.jpg
+  type: external
+  title: 'File:Євген Коновалець.jpg'
+  author: Unknown
+  url: https://commons.wikimedia.org/wiki/File:Євген_Коновалець.jpg
+  domain: commons.wikimedia.org
+  notes: Individual 1918 portrait file page; Public Domain Mark 1.0; verified 2026-07-11.
