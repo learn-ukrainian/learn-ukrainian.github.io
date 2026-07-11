@@ -69,6 +69,7 @@ from .governance_router import router as governance_router
 from .hermes_cron_router import router as hermes_cron_router
 from .images_router import router as images_router
 from .issues_router import router as issues_router
+from .knowledge_router import router as knowledge_router
 from .preload import preload_all
 from .rag_router import router as rag_router
 from .resilience import get_resilience_snapshot, resilience_middleware
@@ -156,6 +157,7 @@ app.include_router(hermes_cron_router, prefix="/api/hermes-cron", tags=["hermes-
 app.include_router(build_events_router, prefix="/api/build/events")
 app.include_router(images_router, prefix="/api/images")
 app.include_router(issues_router, prefix="/api/issues", tags=["issues"])
+app.include_router(knowledge_router, prefix="/api/knowledge", tags=["knowledge"])
 app.include_router(rag_router, prefix="/api/rag")
 # GH #1529 P3 — reviewer-ghost telemetry nested under /api/state so clients
 # can discover it alongside the other state-query endpoints.

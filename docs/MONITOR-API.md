@@ -1575,6 +1575,93 @@ orient bundle blindly.
 
 ---
 
+## Bounded Research Discovery — `/api/knowledge/*` (ADR-011 P2, #4982)
+
+Task-scoped, pointer-only, hash-addressed access to the Project Research
+Registry (`docs/references/research-registry.yaml` + the compact digests
+under `docs/references/research-digests/`). Reuses the P1 validator
+primitives (`scripts/audit/check_research_registry.py`) for the schema,
+canonical digest projection/hash, drift, and path safety — it does not
+re-implement any of them. **P2 exposes the surface; it does not inject any
+research into cold start, orient, bootstrap, or dispatch (that is P3).**
+
+### Kill switch (default OFF, instant rollback)
+
+The whole surface is gated by `research_registry.enabled`, resolved
+**dynamically per request**, most-specific layer wins:
+
+1. env `LEARN_UK_RESEARCH_REGISTRY_ENABLED` — strict `true/false`, `1/0`,
+   `yes/no`, `on/off` (case-insensitive);
+2. live gitignored file `<LIVE_REPO_ROOT>/.runtime/api/research-registry.json`
+   with shape `{"research_registry":{"enabled":false}}`;
+3. compiled default `false`.
+
+An invalid higher-precedence value (bad env spelling, malformed/unreadable
+live file) logs a warning and resolves to `false` — it never falls through
+to a lower, possibly-enabled layer. Flipping the live file is an immediate,
+in-place enable/disable — no revert PR, no redeploy. Loading is **fail-open**:
+while disabled the registry is never parsed; enabled with a missing/malformed/
+invalid registry yields an empty surface and a logged warning, never a 500. A
+drifted or provenance-broken record is excluded individually; healthy records
+keep routing.
+
+### `GET /api/knowledge/manifest?role=&task_family=&track=&owned_path=`
+
+Filtered, task-scoped **pointers** for the given context (no digest bodies).
+Query context: single `role`, `task_family`, `track`, and repeated
+`owned_path`. Matching is a strict **AND** across every dimension the record
+declares — a dimension omitted from the record is a wildcard; a dimension the
+record requires but the request lacks fails the match (so a `core`-track
+record scoped to `difficulty-gate` will **not** surface for a `core`-track
+`module-build` task). `owned_path` intersects the record's globs by
+deterministic case-sensitive glob. **No task context → zero records** (never
+"show all"). Repeated/duplicate/reordered query values are normalized so
+semantically identical contexts produce byte-identical output and ETag.
+
+- Disabled → HTTP 200 `{"enabled":false,"records":[]}` (loader never invoked).
+- Enabled → `{"enabled":true,"records":[…]}`, each record an allowlisted
+  pointer `{"id","state","content_hash","routing"}` — never summary, digest
+  path/body, source URL, ownership, timestamps, the global hash, or telemetry.
+- Bounded: **top 5 records** (sorted by record id) and **≤ 1536 serialized
+  UTF-8 bytes**. If the byte cap drops records, every dropped id is logged —
+  never a silent truncation.
+- Strong **ETag** over the exact response bytes for this context (not the
+  global hash, not `generated_at`). This is what keeps an unrelated warm
+  client at zero research tokens even while the global manifest hash churns:
+  after any record edit flips the global hash, a context whose filtered set is
+  unchanged still gets a bodyless `304` on `If-None-Match`, while a context
+  routing to the edited record gets `200` and a new ETag. Honors strong/weak/
+  `*`/comma-list `If-None-Match` (shared `_matches_etag` semantics).
+- Request caps: ≤ 64 `owned_path` values, each ≤ 512 chars; `role`/
+  `task_family`/`track` ≤ 128 chars. Excess → `422`.
+
+### `GET /api/knowledge/record/{record_id}`
+
+The one validated compact digest **body** as `text/markdown; charset=utf-8`,
+capped at **4096 serialized UTF-8 bytes**. The P1 `content_hash` is the ETag
+for the exact normalized body (an honest ETag: if the returned bytes ever
+differed from the hashed projection, the ETag is computed over the response
+bytes instead). Unchanged `If-None-Match` → bodyless `304`; a
+changed/reconciled digest → `200` with a new ETag.
+
+Lookup resolves only through validated registry ids — never a direct path
+join. A generic **404** covers a disabled feature, an unknown/malformed/
+traversal id, an invalid/drifted/`private-local` record, an unsafe digest
+path, or an over-budget body (Starlette answers encoded traversal with `403`
+before the route). No status or message leaks which of these applied.
+
+### Budgets (normative = serialized UTF-8 bytes; tokens = `ceil(bytes/2)`)
+
+| Surface | Budget |
+|---|---|
+| Total `/api/state/manifest` | < 2048 bytes |
+| `research` manifest component | ≤ 512 bytes |
+| `/api/knowledge/manifest` filtered projection | ≤ 5 records and ≤ 1536 bytes |
+| One `/api/knowledge/record/{id}` body | ≤ 4096 bytes |
+| Automatic selected-body fetch (P3 consumer) | ≤ 8192 bytes total |
+
+Any runtime budget drop logs the affected record ids, never digest bodies.
+
 ## Cold-Start Consolidation — `/api/state/manifest`, `/api/rules`, `/api/session/current`, `/api/comms/inbox` (#1309)
 
 Per the Agent Quick Start above, these four endpoints are the
@@ -1603,6 +1690,16 @@ hashes against its local cache and only refetches what changed.
   already carries per-section `meta` with its own `generated_at` +
   `cache` + `source` fields, and `/api/comms/inbox` is always
   point-in-time.
+- `research` — **optional, ADR-011 P2.** Present only when the research
+  registry kill switch is on *and* the registry is exposable; a compact
+  `{"hash": "<64-hex>", "url": "/api/knowledge/manifest"}` (≤ 512 bytes,
+  no summary/note/timestamp). `hash` is a single global hash over the
+  routing-relevant projection of the whole registry (states, content
+  hashes, per-record validity, and routing metadata — never digest
+  bodies or YAML formatting). Any record edit flips it for all clients.
+  With the switch off or on a missing/malformed registry the key is
+  **absent**, so pre-P2 clients are byte-for-byte unaffected. See
+  *Bounded Research Discovery* below.
 - When `LEARN_UKRAINIAN_TELEMETRY_FOOTER=1`, this JSON response also
   includes top-level `_telemetry` derived from transcript JSONL. It
   never appends text to the manifest body.

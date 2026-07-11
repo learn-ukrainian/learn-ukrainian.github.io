@@ -45,6 +45,8 @@ PRELOAD_MODULES = [
     "agent_runtime.adapters.gemini",
     "research_quality",
     "research.research_markdown_utils",
+    "scripts.research.registry",
+    "scripts.audit.check_research_registry",
 ]
 
 # Heavy or optional dependencies (try/except ImportError, record skipped)
