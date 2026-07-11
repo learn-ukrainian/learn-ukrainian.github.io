@@ -8,6 +8,7 @@
 #   ./services.sh stop sources       # Stop specific service
 #   ./services.sh restart            # Restart all
 #   ./services.sh restart api        # Restart specific service
+#   ./services.sh start api --live   # Emergency mutable-checkout API mode
 #   ./services.sh status             # Show what's running
 #   ./services.sh build astro        # Run Astro production build (no dev server)
 #   ./services.sh clean astro        # Remove Astro build/cache outputs
@@ -364,6 +365,31 @@ _is_running() {
     return 1
 }
 
+_api_launch_context() {
+    API_LAUNCH_CWD="$PROJECT_ROOT"
+    API_PYTHONPATH="$PROJECT_ROOT"
+
+    if [[ "$API_LIVE_MODE" -eq 1 ]]; then
+        local warning="WARNING: API live mode enabled; serving mutable checkout code"
+        echo "  $warning" >&2
+        printf '%s\n' "$warning" >> "${SVC_LOG[api]}"
+        return 0
+    fi
+
+    local head_sha origin_main_sha release_dir prune_summary release_line
+    head_sha="$(git -C "$PROJECT_ROOT" rev-parse --verify HEAD)"
+    origin_main_sha="$(git -C "$PROJECT_ROOT" rev-parse --verify origin/main 2>/dev/null || echo unavailable)"
+    echo "  API release source: HEAD $head_sha; origin/main $origin_main_sha"
+    release_dir="$(cd "$PROJECT_ROOT" && "$VENV/python" -m scripts.api.release_snapshot build --repo-root "$PROJECT_ROOT" --sha "$head_sha")"
+    prune_summary="$(cd "$PROJECT_ROOT" && "$VENV/python" -m scripts.api.release_snapshot prune --repo-root "$PROJECT_ROOT" --keep 3)"
+    API_LAUNCH_CWD="$release_dir"
+    API_PYTHONPATH="$release_dir"
+    release_line="release: $head_sha data-root: $PROJECT_ROOT"
+    echo "  $release_line"
+    printf '%s\n' "$release_line" >> "${SVC_LOG[api]}"
+    echo "  API release prune: $prune_summary"
+}
+
 _start_service() {
     local name="$1"
     local state
@@ -445,7 +471,12 @@ _start_service() {
     fi
 
     echo "  Starting $name — ${SVC_DESC[$name]}..."
-    cd "$PROJECT_ROOT"
+    if [[ "$name" == "api" ]]; then
+        _api_launch_context
+        cd "$API_LAUNCH_CWD"
+    else
+        cd "$PROJECT_ROOT"
+    fi
 
     local pid=""
     if [[ "$name" == "astro" ]] && command -v tmux >/dev/null 2>&1; then
@@ -463,7 +494,20 @@ _start_service() {
         done
     else
         # shellcheck disable=SC2086
-        nohup ${SVC_CMD[$name]} </dev/null >> "${SVC_LOG[$name]}" 2>&1 &
+        if [[ "$name" == "api" ]]; then
+            (
+                unset GIT_INDEX_FILE GIT_PREFIX GIT_COMMON_DIR GIT_OBJECT_DIRECTORY
+                unset GIT_ALTERNATE_OBJECT_DIRECTORIES GIT_NAMESPACE GIT_CEILING_DIRECTORIES
+                unset GIT_DISCOVERY_ACROSS_FILESYSTEM
+                export LEARN_UK_REPO_ROOT="$PROJECT_ROOT"
+                export GIT_DIR="$PROJECT_ROOT/.git"
+                export GIT_WORK_TREE="$PROJECT_ROOT"
+                export PYTHONPATH="$API_PYTHONPATH${PYTHONPATH:+:$PYTHONPATH}"
+                exec nohup ${SVC_CMD[$name]}
+            ) </dev/null >> "${SVC_LOG[$name]}" 2>&1 &
+        else
+            nohup ${SVC_CMD[$name]} </dev/null >> "${SVC_LOG[$name]}" 2>&1 &
+        fi
         pid=$!
     fi
 
@@ -680,12 +724,15 @@ _status() {
 action="${1:-help}"
 shift || true
 
-# Extract --force if present
+# Extract API mode and --force flags if present.
 FORCE=0
+API_LIVE_MODE=0
 remaining_args=()
 for arg in "$@"; do
     if [[ "$arg" == "--force" ]]; then
         FORCE=1
+    elif [[ "$arg" == "--live" ]]; then
+        API_LIVE_MODE=1
     else
         remaining_args+=("$arg")
     fi
@@ -820,6 +867,7 @@ case "$action" in
         echo "Examples:"
         echo "  $0 start                  # Start all"
         echo "  $0 start sources api      # Start specific"
+        echo "  $0 start api --live       # Emergency API fallback (mutable checkout)"
         echo "  $0 stop sources           # Stop one"
         echo "  $0 restart                # Restart all"
         echo "  $0 build astro            # Build Astro"

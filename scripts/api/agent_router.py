@@ -12,7 +12,7 @@ try:
 except ImportError:
     from ..path_safety import safe_join  # scripts.api package import (production)
 
-from .config import PROJECT_ROOT
+from .config import LIVE_REPO_ROOT, PROJECT_ROOT
 
 logger = logging.getLogger(__name__)
 
@@ -146,7 +146,7 @@ def get_runtime():
 
 @router.get("/worktree")
 def get_worktree():
-    proc = subprocess.run(["git", "status", "--porcelain"], cwd=PROJECT_ROOT, capture_output=True, text=True)
+    proc = subprocess.run(["git", "status", "--porcelain"], cwd=LIVE_REPO_ROOT, capture_output=True, text=True)
 
     source_code = []
     artifacts = []

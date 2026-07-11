@@ -170,7 +170,8 @@ def test_worktrees_parses_porcelain_output(monkeypatch, tmp_path):
         "branch refs/heads/feature-branch\n"
     )
 
-    monkeypatch.setattr(worktrees_router, "PROJECT_ROOT", primary)
+    # Release-mode split (#4931): the router targets the live checkout.
+    monkeypatch.setattr(worktrees_router, "LIVE_REPO_ROOT", primary)
 
     calls: list[list[str]] = []
 

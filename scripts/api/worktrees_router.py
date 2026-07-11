@@ -25,7 +25,9 @@ from typing import Any
 
 from fastapi import APIRouter
 
-from .config import PROJECT_ROOT
+from scripts.common.git_context import sanitized_git_env
+
+from .config import LIVE_REPO_ROOT
 
 router = APIRouter(tags=["worktrees"])
 
@@ -34,6 +36,9 @@ router = APIRouter(tags=["worktrees"])
 # bounded; the aggregate endpoint budget is ~4 × timeout_s per
 # worktree.
 _GIT_TIMEOUT_S = 2.0
+def _worktree_git_env() -> dict[str, str]:
+    """Prevent the release service's live-root Git redirect leaking to another worktree."""
+    return sanitized_git_env()
 
 
 def _run(cmd: list[str], cwd: Path, timeout_s: float = _GIT_TIMEOUT_S) -> tuple[int, str, str]:
@@ -48,6 +53,7 @@ def _run(cmd: list[str], cwd: Path, timeout_s: float = _GIT_TIMEOUT_S) -> tuple[
             text=True,
             timeout=timeout_s,
             check=False,
+            env=_worktree_git_env(),
         )
         return proc.returncode, proc.stdout, proc.stderr
     except subprocess.TimeoutExpired as exc:
@@ -171,7 +177,7 @@ async def list_worktrees():
     def _compute() -> dict:
         code, stdout, stderr = _run(
             ["git", "worktree", "list", "--porcelain"],
-            cwd=PROJECT_ROOT,
+            cwd=LIVE_REPO_ROOT,
         )
         if code != 0:
             return {
@@ -182,12 +188,12 @@ async def list_worktrees():
 
         parsed = _parse_worktree_list(stdout)
         try:
-            project_root_str = str(PROJECT_ROOT.resolve())
+            project_root_str = str(LIVE_REPO_ROOT.resolve())
         except OSError:
             # Permission or symlink-loop edge case on the primary
             # worktree. Fall back to the non-resolved path so the
             # whole response doesn't die for one bad mount.
-            project_root_str = str(PROJECT_ROOT)
+            project_root_str = str(LIVE_REPO_ROOT)
 
         enriched: list[dict[str, Any]] = []
         for record in parsed:

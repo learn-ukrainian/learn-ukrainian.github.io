@@ -50,6 +50,7 @@ from .config import (
     CURRICULUM_ROOT,
     DASHBOARDS_DIR,
     LEVELS,
+    LIVE_REPO_ROOT,
     MESSAGE_DB,
     PROJECT_ROOT,
 )
@@ -272,7 +273,7 @@ def _isoformat_z(value: datetime) -> str:
 def _run_command(args: list[str], *, timeout: float = 2.0) -> subprocess.CompletedProcess[str]:
     return subprocess.run(
         args,
-        cwd=PROJECT_ROOT,
+        cwd=LIVE_REPO_ROOT if args and args[0] == "git" else PROJECT_ROOT,
         capture_output=True,
         text=True,
         timeout=timeout,
@@ -308,11 +309,11 @@ def _collect_git_orient_data() -> dict:
         except ValueError:
             ahead_value = 0
     try:
-        primary_status = worktree_containment.primary_checkout_dirty_status(PROJECT_ROOT)
+        primary_status = worktree_containment.primary_checkout_dirty_status(LIVE_REPO_ROOT)
     except Exception as exc:
         branch = branch_proc.stdout.strip()
         primary_status = {
-            "main_root": str(PROJECT_ROOT),
+            "main_root": str(LIVE_REPO_ROOT),
             "branch": branch,
             "protected_branch": branch in worktree_containment.PROTECTED_BRANCHES,
             "dirty": False,
@@ -320,7 +321,7 @@ def _collect_git_orient_data() -> dict:
             "tracked_dirty_count": 0,
             "untracked_dirty_count": 0,
             "entries": [],
-            "checked_cwd": str(PROJECT_ROOT),
+            "checked_cwd": str(LIVE_REPO_ROOT),
             "checked_command": "git status --porcelain=v1 -z --untracked-files=all",
             "error": str(exc),
         }
@@ -897,12 +898,12 @@ async def dispatcher_running():
 @app.post("/api/batch/dispatcher/scan")
 async def run_dispatcher_scan():
     cmd = [
-        str(PROJECT_ROOT / ".venv" / "bin" / "python"),
-        str(PROJECT_ROOT / "scripts" / "batch_dispatcher.py"),
+        str(LIVE_REPO_ROOT / ".venv" / "bin" / "python"),
+        str(LIVE_REPO_ROOT / "scripts" / "batch_dispatcher.py"),
         "scan",
     ]
     # Use asyncio.to_thread to avoid blocking the event loop
-    result = await asyncio.to_thread(subprocess.run, cmd, cwd=PROJECT_ROOT)
+    result = await asyncio.to_thread(subprocess.run, cmd, cwd=LIVE_REPO_ROOT)
     if result.returncode != 0:
         raise HTTPException(status_code=500, detail="Dispatcher scan failed")
     return {"status": "ok"}

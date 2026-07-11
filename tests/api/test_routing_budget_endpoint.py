@@ -61,6 +61,10 @@ def _record(agent: str, cost_usd: float, mtime: datetime) -> CostRecord:
 def _configure(monkeypatch, tmp_path: Path, records: list[CostRecord]) -> None:
     monkeypatch.setattr(state_router, "BUDGET_CONFIG_PATH", _write_budget_config(tmp_path))
     monkeypatch.setattr(state_router, "load_cost_records", lambda: records)
+    # These tests assert deterministic ledger calculations. The main API
+    # lifespan refreshes CodexBar in a background thread, so isolate that live
+    # provider state here; overlay-specific tests replace this stub explicitly.
+    monkeypatch.setattr(state_router, "get_provider_usage_data", lambda _provider: None)
     monkeypatch.setattr(
         state_router.delegate_api,
         "list_delegate_tasks",

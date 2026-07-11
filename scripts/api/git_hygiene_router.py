@@ -30,7 +30,9 @@ from typing import Any
 from fastapi import APIRouter
 from pydantic import BaseModel
 
-from .config import PROJECT_ROOT
+from scripts.common.git_context import sanitized_git_env
+
+from .config import LIVE_REPO_ROOT, PROJECT_ROOT
 
 router = APIRouter(tags=["git"])
 
@@ -48,7 +50,6 @@ BUCKET_NAMES = (
 )
 
 _GIT_TIMEOUT_S = 2.0
-_GIT_ENV_KEYS = ("GIT_DIR", "GIT_WORK_TREE", "GIT_INDEX_FILE", "GIT_PREFIX", "GIT_COMMON_DIR")
 
 
 class StaleBranch(BaseModel):
@@ -118,9 +119,7 @@ def _run_git(
     timeout_s: float = _GIT_TIMEOUT_S,
 ) -> tuple[int, str, str]:
     try:
-        env = os.environ.copy()
-        for key in _GIT_ENV_KEYS:
-            env.pop(key, None)
+        env = sanitized_git_env()
         proc = subprocess.run(
             _git_invocation(args, cwd),
             cwd=cwd,
@@ -730,10 +729,10 @@ def compute_git_hygiene(project_root: Path | None = None) -> dict[str, Any]:
 @router.get("/hygiene")
 async def git_hygiene():
     """Classify current working-tree drift into actionable buckets."""
-    return await asyncio.to_thread(compute_git_hygiene)
+    return await asyncio.to_thread(compute_git_hygiene, LIVE_REPO_ROOT)
 
 
 @router.get("/cleanup", response_model=CleanupReport, response_model_exclude_none=True)
 async def git_cleanup() -> CleanupReport:
     """Classify stale branches and removable worktrees without changing git state."""
-    return await asyncio.to_thread(compute_git_cleanup)
+    return await asyncio.to_thread(compute_git_cleanup, LIVE_REPO_ROOT)

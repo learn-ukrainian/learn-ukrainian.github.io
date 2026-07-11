@@ -17,9 +17,9 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 try:
-    from path_safety import safe_join
+    from path_safety import safe_join, trusted_join
 except ImportError:
-    from ..path_safety import safe_join
+    from ..path_safety import safe_join, trusted_join
 
 # `safe_join` retained as a module-level export for callers that import
 # it from this module (legacy re-export). Tests don't directly call it
@@ -931,7 +931,9 @@ def find_research_path(track_dir: Path, slug: str) -> Path | None:
         f"{slug}-knowledge-packet.md",
     ]:
         try:
-            rp = safe_join(research_dir, candidate)
+            # trusted_join: candidate names are fixed patterns over a repo slug,
+            # ~6 probes per module in the orient/pipeline hot loop (#4931 perf).
+            rp = trusted_join(research_dir, candidate)
             if rp.exists():
                 return rp
         except ValueError:

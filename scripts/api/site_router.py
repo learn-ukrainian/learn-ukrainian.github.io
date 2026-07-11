@@ -31,7 +31,7 @@ from typing import Any
 
 from fastapi import APIRouter, Query
 
-from .config import PROJECT_ROOT
+from .config import LIVE_REPO_ROOT, PROJECT_ROOT
 
 router = APIRouter(tags=["site"])
 
@@ -105,7 +105,7 @@ def _run(cmd: list[str], timeout_s: float = 3.0) -> subprocess.CompletedProcess[
     try:
         return subprocess.run(
             cmd,
-            cwd=PROJECT_ROOT,
+            cwd=LIVE_REPO_ROOT if cmd and cmd[0] == "git" else PROJECT_ROOT,
             capture_output=True,
             text=True,
             timeout=timeout_s,

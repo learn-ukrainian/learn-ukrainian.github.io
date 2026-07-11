@@ -5,7 +5,6 @@ from __future__ import annotations
 
 import argparse
 import json
-import os
 import re
 import subprocess
 import sys
@@ -14,6 +13,8 @@ from pathlib import Path
 from typing import Any
 
 import yaml
+
+from scripts.common.git_context import sanitized_git_env
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 DECISIONS_DIR = Path("docs/decisions")
@@ -190,13 +191,10 @@ def load_decision_records(project_root: Path = PROJECT_ROOT) -> list[DecisionRec
 
 
 def _run_git(project_root: Path, args: list[str]) -> str:
-    env = os.environ.copy()
-    for key in ("GIT_DIR", "GIT_WORK_TREE", "GIT_INDEX_FILE", "GIT_PREFIX"):
-        env.pop(key, None)
     result = subprocess.run(
         ["git", "-C", str(project_root), *args],
         capture_output=True,
-        env=env,
+        env=sanitized_git_env(),
         text=True,
         timeout=120,
     )
