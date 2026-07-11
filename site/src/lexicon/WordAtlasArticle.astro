@@ -140,6 +140,11 @@ interface LexiconSections {
     source: string;
     source_urls?: string[];
   };
+  paronyms?: {
+    items: Array<{ word: string; distinction?: string; exam_provenance?: string[] }>;
+    source: string;
+    source_urls?: string[];
+  };
   idioms?: {
     items: Array<{ text?: string; phrase: string; definition: string; source: string; source_url?: string }>;
     source: string;
@@ -436,6 +441,7 @@ function buildStyleNotes() {
 function buildArticleOverview() {
   const synonymCount = (sections?.synonyms?.items.length ?? 0) + (sections?.antonyms?.items.length ?? 0);
   const homonymCount = sections?.homonyms?.items.length ?? 0;
+  const paronymCount = sections?.paronyms?.items.length ?? 0;
   const idiomCount = sections?.idioms?.items.length ?? 0;
   const externalCount = externalGroups.reduce((total, group) => total + group.materials.length, 0);
   const definitionCount = definitionCards.length + (enrichment?.meaning ? 1 : 0) + (phraseHasGloss ? 1 : 0);
@@ -471,6 +477,11 @@ function buildArticleOverview() {
       label: "Омонім",
       ready: homonymCount > 0,
       detail: homonymCount > 0 ? `${homonymCount} позицій` : "очікує джерело",
+    },
+    {
+      label: "Паронім",
+      ready: paronymCount > 0,
+      detail: paronymCount > 0 ? `${paronymCount} позицій` : "очікує джерело",
     },
     {
       label: "Фразеологія",
@@ -549,6 +560,7 @@ function buildSourceList() {
   if (sections?.synonyms?.source) sources.add(sections.synonyms.source);
   if (sections?.antonyms?.source) sources.add(sections.antonyms.source);
   if (sections?.homonyms?.source) sources.add(sections.homonyms.source);
+  if (sections?.paronyms?.source) sources.add(sections.paronyms.source);
   if (sections?.idioms?.source) sources.add(sections.idioms.source);
   if (enrichment?.literary_attestation?.source) sources.add(enrichment.literary_attestation.source);
   if (enrichment?.translation?.source) sources.add(enrichment.translation.source);
@@ -951,6 +963,34 @@ function groupExternalMaterials(items: NonNullable<Enrichment["external_material
             {sections?.homonyms?.source_urls?.length ? (
               <>
                 {" "}Джерела омонімів: {sections.homonyms.source_urls.map((url, index) => (
+                  <>
+                    {index > 0 && " · "}
+                    <a href={url} target="_blank" rel="noopener noreferrer">{sourceHost(url)}</a>
+                  </>
+                ))}
+              </>
+            ) : null}
+          </div>
+        </section>
+      )}
+
+      {(sections?.paronyms?.items.length ?? 0) > 0 && (
+        <section class="atlas-section">
+          <h2>Пароніми</h2>
+          <div class="chip-row">
+            {sections.paronyms.items.map((item) => (
+              <span class="chip">
+                <strong>Не плутати з {item.word}</strong>
+                {item.distinction ? ` — ${item.distinction}` : ""}
+                {item.exam_provenance?.length ? ` (${item.exam_provenance.join("; ")})` : ""}
+              </span>
+            ))}
+          </div>
+          <div class="data-caveat">
+            Пароніми — близькі за формою слова з різними значеннями; розрізняйте їх за контекстом.
+            {sections?.paronyms?.source_urls?.length ? (
+              <>
+                {" "}Джерела паронімів: {sections.paronyms.source_urls.map((url, index) => (
                   <>
                     {index > 0 && " · "}
                     <a href={url} target="_blank" rel="noopener noreferrer">{sourceHost(url)}</a>

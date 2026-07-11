@@ -98,6 +98,27 @@ function makeHomonymFixture(withHomonyms: boolean): LexiconEntry {
   };
 }
 
+function makeParonymFixture(withParonyms: boolean): LexiconEntry {
+  return {
+    ...makeExpressionLikeFixture('lemma', 'ефективний'),
+    sections: withParonyms
+      ? {
+          paronyms: {
+            items: [
+              {
+                word: 'ефектний',
+                distinction: 'який справляє сильне враження, яскравий',
+                exam_provenance: ['ЗНО 2021, завдання №35'],
+              },
+            ],
+            source: 'ЗНО 2021, завдання №35 + paronyms_cache: cached paronym distinction',
+            source_urls: ['https://example.invalid/zno-2021.pdf'],
+          },
+        }
+      : undefined,
+  };
+}
+
 /** Minimal in-memory atlas.db shaped like the entry-model schema for gate tests. */
 function makeFixtureDb(): InstanceType<typeof Database> {
   const db = new Database(':memory:');
@@ -245,6 +266,27 @@ describe('entry_type-branched article rendering (#4385)', () => {
     expect(html).toContain('Омонім');
     expect(html).not.toContain('<h2>Омоніми</h2>');
     expect(html).not.toContain('Джерела омонімів:');
+  });
+
+  test('renders a paronym distinction, exam provenance, and source', async () => {
+    const html = await renderFixture(makeParonymFixture(true));
+
+    expect(html).toContain('Паронім');
+    expect(html).toContain('<h2>Пароніми</h2>');
+    expect(html).toContain('Не плутати з ефектний');
+    expect(html).toContain('який справляє сильне враження, яскравий');
+    expect(html).toContain('ЗНО 2021, завдання №35');
+    expect(html).toContain('Джерела паронімів:');
+    expect(html).toContain('href="https://example.invalid/zno-2021.pdf"');
+    expect(html).toContain('paronyms_cache: cached paronym distinction');
+  });
+
+  test('keeps the paronym section absent when the entry has no paronym data', async () => {
+    const html = await renderFixture(makeParonymFixture(false));
+
+    expect(html).toContain('Паронім');
+    expect(html).not.toContain('<h2>Пароніми</h2>');
+    expect(html).not.toContain('Джерела паронімів:');
   });
 
   test('lemma baseline remains byte-identical before and after entry-type branching', async () => {

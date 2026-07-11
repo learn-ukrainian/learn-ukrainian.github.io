@@ -3172,6 +3172,7 @@ def _definition_cards(
 _SYNONYM_ADDITION_CAP = 8
 _ANTONYM_ADDITION_CAP = 8
 _HOMONYM_ADDITION_CAP = 8
+_PARONYM_ADDITION_CAP = 8
 _COATTESTATION_SUM_OR_GRINCHENKO = frozenset({"СУМ-11", "СУМ-20", "Грінченко"})
 _CONTENT_STEM_STOPWORDS = frozenset(
     {
@@ -3671,6 +3672,137 @@ def _homonym_relations_by_headword(
     return by_headword
 
 
+def _paronym_pair_members(value: object) -> list[tuple[str, str]]:
+    """Parse semicolon-delimited ``word/word`` pairs from a curated ZNO field."""
+    pairs: list[tuple[str, str]] = []
+    for raw_pair in str(value or "").split(";"):
+        members = [_canonical_synonym_term(member) for member in raw_pair.split("/")]
+        if len(members) != 2 or not all(members) or members[0] == members[1]:
+            continue
+        pairs.append((members[0], members[1]))
+    return pairs
+
+
+def _paronym_cache_distinction(definition: object, target: str) -> str:
+    """Return the cache sentence that distinguishes the confusable target."""
+    text = re.sub(r"\s+", " ", clean_html_entities(str(definition or ""))).strip()
+    if not text:
+        return ""
+    target_re = re.compile(rf"^\s*{re.escape(target)}\s*[—–-]\s*(.+)", flags=re.IGNORECASE)
+    for sentence in re.split(r"(?<=[.!?])\s+", text):
+        match = target_re.match(sentence)
+        if match:
+            return _truncate_text(match.group(1).strip(), 240)
+    return _truncate_text(text, 300)
+
+
+def _paronym_relations(
+    conn: sqlite3.Connection,
+    lemma: str,
+) -> list[dict[str, Any]]:
+    """Emit VESUM-gated paronym pairs from ZNO and the existing open cache.
+
+    ZNO pairs are ordered first because they are exam-validated. The cache can
+    then supplement a pair with a compact semantic distinction; neither source
+    invents a distinction where its raw record does not provide one.
+    """
+    source_term = _canonical_synonym_term(lemma)
+    if not source_term or not _vesum_valid_synonym(source_term):
+        return []
+    relations: list[dict[str, Any]] = []
+
+    try:
+        zno_columns = {
+            str(row[1]) for row in conn.execute("PRAGMA table_info(zno_tasks)").fetchall()
+        }
+        document_columns = {
+            str(row[1]) for row in conn.execute("PRAGMA table_info(zno_documents)").fetchall()
+        }
+        if {"year", "task_no", "task_subtype", "paronym_pair"} <= zno_columns:
+            if {"document_id"} <= zno_columns and "url" in document_columns:
+                rows = conn.execute(
+                    """
+                    SELECT t.year, t.task_no, t.paronym_pair, d.url
+                    FROM zno_tasks AS t
+                    LEFT JOIN zno_documents AS d ON d.id = t.document_id
+                    WHERE t.task_subtype = 'paronym' OR trim(t.paronym_pair) != ''
+                    """
+                ).fetchall()
+            else:
+                rows = conn.execute(
+                    """
+                    SELECT year, task_no, paronym_pair, ''
+                    FROM zno_tasks
+                    WHERE task_subtype = 'paronym' OR trim(paronym_pair) != ''
+                    """
+                ).fetchall()
+            for year, task_no, pair_text, source_url in rows:
+                for first, second in _paronym_pair_members(pair_text):
+                    if source_term not in {first, second}:
+                        continue
+                    other = second if source_term == first else first
+                    if not _vesum_valid_synonym(other):
+                        continue
+                    relation: dict[str, Any] = {
+                        "word": other,
+                        "source": "ЗНО",
+                        "pattern": "exam-tested paronym pair",
+                        "vein": 1,
+                        "exam_provenance": f"ЗНО {year}, завдання №{task_no}",
+                        "gate": {"vesum": "both valid"},
+                    }
+                    if str(source_url or "").strip():
+                        relation["source_url"] = str(source_url)
+                    relations.append(relation)
+    except sqlite3.Error:
+        pass
+
+    try:
+        cache_columns = {
+            str(row[1]) for row in conn.execute("PRAGMA table_info(paronyms_cache)").fetchall()
+        }
+        if {"word_a", "word_b", "definition"} <= cache_columns:
+            for first_raw, second_raw, definition in conn.execute(
+                "SELECT word_a, word_b, definition FROM paronyms_cache"
+            ).fetchall():
+                first = _canonical_synonym_term(first_raw)
+                second = _canonical_synonym_term(second_raw)
+                if not first or not second or source_term not in {first, second}:
+                    continue
+                other = second if source_term == first else first
+                if not _vesum_valid_synonym(other):
+                    continue
+                relation = {
+                    "word": other,
+                    "distinction": _paronym_cache_distinction(definition, other),
+                    "source": "paronyms_cache",
+                    "pattern": "cached paronym distinction",
+                    "vein": 2,
+                    "gate": {"vesum": "both valid"},
+                }
+                relations.append(relation)
+    except sqlite3.Error:
+        pass
+    return relations
+
+
+def _paronym_relations_by_headword(
+    conn: sqlite3.Connection,
+    manifest: dict[str, Any],
+) -> dict[str, list[dict[str, Any]]]:
+    """Precompute VESUM-gated ZNO/cache paronym pairs for manifest headwords."""
+    by_headword: dict[str, list[dict[str, Any]]] = {}
+    for entry in manifest.get("entries", []):
+        lemma = str(entry.get("lemma") or "")
+        source_key = _canonical_synonym_term(lemma)
+        if not source_key:
+            continue
+        relations = _paronym_relations(conn, lemma)
+        if relations:
+            by_headword[source_key] = relations
+    return by_headword
+
+
 def _ukrajinet_synsets(conn: sqlite3.Connection, lemma: str) -> list[dict[str, Any]]:
     """Read matching Ukrajinet synsets without creating the optional SQL index."""
     term = _canonical_synonym_term(lemma)
@@ -4013,6 +4145,90 @@ def _merge_homonym_relations(
             items.append({"word": word, "homonym_no": number, "gloss": gloss, "pos": pos})
             additions += 1
         label = f"{relation['source']}: numbered homonym headwords"
+        if label not in source_labels:
+            source_labels.append(label)
+        if relation.get("source_url") and relation["source_url"] not in source_urls:
+            source_urls.append(str(relation["source_url"]))
+
+    if not items:
+        return None
+    if source_labels:
+        original = str(merged.get("source") or "").strip()
+        merged["source"] = " + ".join(part for part in (original, *source_labels) if part)
+    elif not merged.get("source"):
+        merged["source"] = ""
+    merged["items"] = items
+    if source_urls:
+        merged["source_urls"] = list(dict.fromkeys(source_urls))
+    else:
+        merged.pop("source_urls", None)
+    return merged
+
+
+def _paronym_relation_source_label(relation: dict[str, Any]) -> str:
+    """Record paronym provenance without conflating it with a distinction."""
+    exam_provenance = str(relation.get("exam_provenance") or "").strip()
+    if exam_provenance:
+        return exam_provenance
+    return f"{relation['source']}: {relation['pattern']}"
+
+
+def _merge_paronym_relations(
+    existing: dict[str, Any] | None,
+    relations: list[dict[str, Any]],
+) -> dict[str, Any] | None:
+    """Merge ordered paronym pairs into the distinction-bearing rendered schema."""
+    merged = dict(existing or {})
+    items: list[dict[str, Any]] = []
+    item_indexes: dict[str, int] = {}
+    for raw_item in merged.get("items", []):
+        if not isinstance(raw_item, dict):
+            continue
+        word = _canonical_synonym_term(raw_item.get("word"))
+        if not word or word in item_indexes:
+            continue
+        item: dict[str, Any] = {"word": word}
+        distinction = str(raw_item.get("distinction") or "").strip()
+        if distinction:
+            item["distinction"] = distinction
+        provenance = raw_item.get("exam_provenance", [])
+        if isinstance(provenance, str):
+            provenance = [provenance]
+        if isinstance(provenance, list):
+            values = [str(value).strip() for value in provenance if str(value).strip()]
+            if values:
+                item["exam_provenance"] = list(dict.fromkeys(values))
+        item_indexes[word] = len(items)
+        items.append(item)
+
+    source_urls = [str(url) for url in merged.get("source_urls", []) if str(url).strip()]
+    source_labels: list[str] = []
+    additions = 0
+    for relation in sorted(
+        relations,
+        key=lambda item: (int(item.get("vein") or 99), str(item.get("word") or "")),
+    ):
+        word = _canonical_synonym_term(relation.get("word"))
+        if not word:
+            continue
+        index = item_indexes.get(word)
+        if index is None:
+            if additions >= _PARONYM_ADDITION_CAP:
+                continue
+            index = len(items)
+            item_indexes[word] = index
+            items.append({"word": word})
+            additions += 1
+        item = items[index]
+        distinction = str(relation.get("distinction") or "").strip()
+        if distinction and not item.get("distinction"):
+            item["distinction"] = distinction
+        exam_provenance = str(relation.get("exam_provenance") or "").strip()
+        if exam_provenance:
+            values = item.setdefault("exam_provenance", [])
+            if exam_provenance not in values:
+                values.append(exam_provenance)
+        label = _paronym_relation_source_label(relation)
         if label not in source_labels:
             source_labels.append(label)
         if relation.get("source_url") and relation["source_url"] not in source_urls:
@@ -5218,6 +5434,7 @@ def enrich_entry(
     pointer_synonym_relations: list[dict[str, Any]] | None = None,
     pointer_antonym_relations: list[dict[str, Any]] | None = None,
     pointer_homonym_relations: list[dict[str, Any]] | None = None,
+    pointer_paronym_relations: list[dict[str, Any]] | None = None,
 ) -> bool:
     """Enrich a single manifest entry in place (dictionary-grounded).
     Returns True if any enrichment was attached. Extracted from enrich() so the
@@ -5326,6 +5543,14 @@ def enrich_entry(
     homonyms = _merge_homonym_relations(None, homonym_relations)
     if homonyms:
         sections["homonyms"] = homonyms
+    paronym_relations = (
+        pointer_paronym_relations
+        if pointer_paronym_relations is not None
+        else _paronym_relations(conn, lemma)
+    )
+    paronyms = _merge_paronym_relations(None, paronym_relations)
+    if paronyms:
+        sections["paronyms"] = paronyms
     idioms = _idioms(conn, lemma, slovnyk_cache)
     if idioms:
         sections["idioms"] = idioms
@@ -5442,6 +5667,7 @@ def enrich() -> tuple[int, int]:
             has_sum11_flags=has_sum11_flags,
         )
         pointer_homonym_relations = _homonym_relations_by_headword(conn, manifest)
+        pointer_paronym_relations = _paronym_relations_by_headword(conn, manifest)
         for entry in manifest["entries"]:
             entry_key = _canonical_synonym_term(str(entry.get("lemma") or ""))
             if enrich_entry(
@@ -5452,6 +5678,7 @@ def enrich() -> tuple[int, int]:
                 pointer_synonym_relations=pointer_synonym_relations.get(entry_key or "", []),
                 pointer_antonym_relations=pointer_antonym_relations.get(entry_key or "", []),
                 pointer_homonym_relations=pointer_homonym_relations.get(entry_key or "", []),
+                pointer_paronym_relations=pointer_paronym_relations.get(entry_key or "", []),
             ):
                 enriched += 1
     finally:
