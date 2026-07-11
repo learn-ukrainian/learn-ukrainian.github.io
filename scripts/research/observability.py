@@ -29,6 +29,7 @@ Only ``generated_at``/``generated_ts`` carry wall-clock, by design.
 
 from __future__ import annotations
 
+import codecs
 import json
 import logging
 import re
@@ -448,85 +449,115 @@ def _ingest_line(line: str, now: datetime, start: datetime, acc: _Accumulator) -
 
 
 # A single JSONL "line" is bounded so a pathological multi-GB no-newline record
-# is never buffered in full (ADR-011 P4 review, item 9). ``str.readline(size)``
-# reads AT MOST ``size`` characters even with no newline in sight — that bound,
-# not the OS read-buffer size, is what protects memory here.
+# is never buffered in full (ADR-011 P4 review, item 9). The binary scanner counts
+# decoded characters incrementally and discards an oversized line while draining it.
 MAX_LINE_CHARS = 1 * 1024 * 1024  # 1 MiB per JSONL line
+SCAN_READ_CHUNK_BYTES = 64 * 1024
 
 
 class _ByteBudget:
-    """Mutable byte counter shared across every file and every physical read in
-    one telemetry scan (ADR-011 P4 review, item 2). ``MAX_SCAN_BYTES`` must bound
-    TOTAL physical bytes read — including bytes discarded while draining an
-    oversized line — not just the bytes of lines that made it into an event.
-    Without this, a pathological multi-GB no-newline file stays memory-bounded
-    (``str.readline(size)``) but can still be read start-to-finish while
-    ``bytes_scanned`` stays near zero, defeating the whole-scan cap."""
+    """Shared bound and counter for telemetry-reader bytes in one scan.
+
+    ``MAX_SCAN_BYTES`` bounds every byte returned by the telemetry file reader,
+    including discarded oversized-line drain bytes. A caller must limit each
+    ``read`` request to ``remaining`` before calling the underlying reader, then
+    charge the exact returned length with ``take``.
+    """
 
     def __init__(self, limit: int) -> None:
         self.limit = limit
         self.consumed = 0
 
-    def take(self, n: int) -> bool:
-        """Charge ``n`` freshly-read bytes against the budget. Returns False
-        (charging nothing) if this read would exceed the remaining budget — the
-        caller must stop reading immediately, without consuming any further
-        bytes from the file."""
-        if self.consumed + n > self.limit:
-            return False
+    @property
+    def remaining(self) -> int:
+        return self.limit - self.consumed
+
+    def take(self, n: int) -> None:
+        """Charge an already bounded, freshly returned reader chunk exactly."""
+        if n < 0 or n > self.remaining:
+            raise ValueError("telemetry reader returned bytes beyond its budget")
         self.consumed += n
-        return True
 
 
 def _iter_bounded_lines(path: Path, budget: _ByteBudget, max_line_chars: int = MAX_LINE_CHARS):
-    """Yield ``(text, oversized, capped)`` per physical line of ``path``, text mode.
+    """Yield ``(text, oversized, capped)`` for physical UTF-8 lines in ``path``.
 
-    A physical line whose CONTENT (excluding its own trailing newline) exceeds
-    ``max_line_chars`` is reported oversized with ``text=None`` — its content is
-    never returned or buffered beyond the cap — and the reader drains forward in
-    further ``max_line_chars``-bounded reads until it resynchronizes on the next
-    newline (or EOF), so a single giant record cannot desynchronize every
-    subsequent line in the file. The oversized check compares CONTENT length,
-    not ``readline()``'s raw return length: a line whose content is exactly
-    ``max_line_chars`` chars long, plus its own trailing newline, fits in one
-    ``readline`` call and must never be treated as needing a drain (ADR-011 P4
-    review, item 3) — ``readline`` never returns more than ``max_line_chars + 1``
-    chars, so that exact case is the only way to hit that length AND end in
-    ``"\\n"``.
-
-    Every physical read — including the discarded drain reads for an oversized
-    line — is charged against ``budget`` before being kept (item 2). Once the
-    shared, scan-wide byte cap is exhausted, the generator yields one final
-    ``(None, <oversized-so-far>, True)`` marker and stops: a pathological
-    multi-GB no-newline file can never be drained past the remaining budget,
-    keeping both memory AND total bytes read bounded.
-
-    Raises ``OSError``/``UnicodeDecodeError`` to the caller exactly as a plain
-    ``open().read()`` would (unreadable files stay the caller's concern,
-    unchanged from before this helper existed).
+    Before every underlying binary ``read`` the request is capped at the shared
+    budget's remaining bytes. Therefore reader-returned bytes never exceed the
+    cap, while ``bytes_scanned`` is the exact sum of those returned chunks. UTF-8
+    decoding is incremental and strict; ordinary completed lines fail exactly as
+    a strict text reader would. A line that exceeds ``max_line_chars`` is dropped
+    and drained without retaining further text, then scanning resynchronizes at
+    its next newline. A line of exactly ``max_line_chars`` content characters plus
+    newline is accepted and leaves the following line intact.
     """
-    with path.open("r", encoding="utf-8") as handle:
-        while True:
-            chunk = handle.readline(max_line_chars + 1)
-            if chunk == "":
-                return  # EOF
-            if not budget.take(len(chunk.encode("utf-8"))):
-                yield None, False, True
+    decoder = codecs.getincrementaldecoder("utf-8")("strict")
+    line_parts: list[str] = []
+    line_chars = 0
+    oversized = False
+    skip_lf_after_cr = False
+
+    def append_content(content: str) -> None:
+        nonlocal line_chars, oversized
+        if oversized:
+            return
+        if line_chars + len(content) > max_line_chars:
+            oversized = True
+            line_parts.clear()
+            return
+        line_parts.append(content)
+        line_chars += len(content)
+
+    def finish_line() -> tuple[str | None, bool, bool]:
+        nonlocal line_chars, oversized
+        if oversized:
+            result: tuple[str | None, bool, bool] = (None, True, False)
+        else:
+            result = ("".join(line_parts), False, False)
+        line_parts.clear()
+        line_chars = 0
+        oversized = False
+        return result
+
+    def consume_text(decoded: str):
+        nonlocal skip_lf_after_cr
+        while decoded:
+            if skip_lf_after_cr:
+                skip_lf_after_cr = False
+                if decoded.startswith("\n"):
+                    decoded = decoded[1:]
+                    continue
+            newline_at = min(
+                (index for index in (decoded.find("\n"), decoded.find("\r")) if index >= 0),
+                default=-1,
+            )
+            if newline_at < 0:
+                append_content(decoded)
                 return
-            oversized = len(chunk) == max_line_chars + 1 and not chunk.endswith("\n")
-            if not oversized:
-                yield (chunk[:-1] if chunk.endswith("\n") else chunk), False, False
-                continue
-            while True:
-                more = handle.readline(max_line_chars + 1)
-                if more == "":
-                    break
-                if not budget.take(len(more.encode("utf-8"))):
-                    yield None, True, True
-                    return
-                if more.endswith("\n"):
-                    break
-            yield None, True, False
+            append_content(decoded[:newline_at])
+            marker = decoded[newline_at]
+            yield finish_line()
+            skip_lf_after_cr = marker == "\r"
+            decoded = decoded[newline_at + 1 :]
+
+    with path.open("rb") as handle:
+        while True:
+            if budget.remaining == 0:
+                yield None, oversized, True
+                return
+            # The request is bounded BEFORE the read. ``take`` can therefore
+            # only charge exactly what was returned; it can never reject a read
+            # that already happened.
+            chunk = handle.read(min(SCAN_READ_CHUNK_BYTES, budget.remaining))
+            if chunk == b"":
+                for result in consume_text(decoder.decode(b"", final=True)):
+                    yield result
+                if line_parts or oversized:
+                    yield finish_line()
+                return
+            budget.take(len(chunk))
+            for result in consume_text(decoder.decode(chunk, final=False)):
+                yield result
 
 
 def _scan_telemetry(

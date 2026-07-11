@@ -838,6 +838,56 @@ def test_oversized_line_counts_toward_byte_cap_and_stops_the_scan(obs_env, monke
     assert c["surfaced_pairs"] == 0  # neither line was ingested -- cap hit mid-drain
 
 
+def test_byte_cap_limits_actual_reader_returns_and_reports_them(obs_env, monkeypatch):
+    """The cap must constrain bytes returned by the telemetry reader itself,
+    not merely the post-read accounting. The cap is deliberately smaller than
+    the reader's normal chunk and the first JSONL event."""
+    root = obs_env
+    _write_registry(root, [_make_record(root, "r1")])
+    events_dir = root / "batch_state" / "telemetry" / "events"
+    events_dir.mkdir(parents=True, exist_ok=True)
+    path = events_dir / f"{NOW:%Y-%m-%d}.jsonl"
+    _surface(root, NOW - timedelta(hours=3), "task-a", "r1")
+
+    returned_sizes: list[int] = []
+    requested_sizes: list[int] = []
+    original_open = Path.open
+
+    class TrackingBinaryReader:
+        def __init__(self, wrapped):
+            self._wrapped = wrapped
+
+        def read(self, size: int = -1) -> bytes:
+            requested_sizes.append(size)
+            data = self._wrapped.read(size)
+            returned_sizes.append(len(data))
+            return data
+
+        def __enter__(self):
+            return self
+
+        def __exit__(self, exc_type, exc_value, traceback):
+            self._wrapped.close()
+
+        def __getattr__(self, name: str):
+            return getattr(self._wrapped, name)
+
+    def tracking_open(self, *args, **kwargs):
+        handle = original_open(self, *args, **kwargs)
+        if self == path and args == ("rb",):
+            return TrackingBinaryReader(handle)
+        return handle
+
+    monkeypatch.setattr(Path, "open", tracking_open)
+    monkeypatch.setattr(obs, "MAX_SCAN_BYTES", 5)
+    c = _consumption(root)
+
+    assert sum(returned_sizes) <= obs.MAX_SCAN_BYTES
+    assert c["bytes_scanned"] == sum(returned_sizes) == obs.MAX_SCAN_BYTES
+    assert requested_sizes == [obs.MAX_SCAN_BYTES]  # no read after budget exhaustion
+    assert c["partial"] is True and c["cap_reason"] == "byte_cap"
+
+
 def test_partial_from_unreadable_file_nulls_per_record_negative_too(obs_env):
     """A hidden consumption event could be sitting inside an unreadable file --
     the per-record ``surfaced_never_consumed`` must be nulled under partial
