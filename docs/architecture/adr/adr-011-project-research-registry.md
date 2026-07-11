@@ -29,9 +29,9 @@ The UNLP 2025/2026 research was documented thoroughly (`docs/references/unlp-202
 Add a **source-controlled Project Research Registry**: a tracked YAML file of one-record-per-actionable-finding plus tracked human-readable digests, surfaced to agents through a **pointer-only, hash-addressed, task-scoped** discovery path that reuses the existing manifest/ETag architecture. Six load-bearing commitments:
 
 1. **Tracked registry + tracked digests, never raw payloads in cold start.** Registry at `docs/references/research-registry.yaml`; each record points to a committed digest (the existing UNLP findings/notes docs, or a per-record digest file). Cold start receives a hash and, at most, a few compact *pointers* — never a full research document.
-2. **Hash-only manifest pointer.** `/api/state/manifest` gains one compact `{hash, url}` research component (≤ 512 bytes, unconditional). The hash covers the routing-relevant projection of the registry, not the digest bodies.
-3. **Filtered, changed pointers — default silence.** A proposed `/api/knowledge/manifest` returns IDs, states, hashes, and routing metadata (no digest bodies). Orientation/bootstrap surface **at most the top relevant *changed* pointers** for the current task; an unrelated task receives none.
-4. **Task-scoped lookup at dispatch/build time.** Relevance is resolved from **task family, track, role, and owned paths** — not from generic agent identity. Compact record bodies are fetched on demand, capped.
+2. **Hash-only manifest pointer (global registry hash).** `/api/state/manifest` gains one compact `{hash, url}` research component (≤ 512 bytes, unconditional). This hash is a **single global** hash over the routing-relevant projection of the whole registry (not the digest bodies); any record change flips it for **all** clients.
+3. **Filtered, changed pointers — default silence, context-specific ETag.** A proposed `/api/knowledge/manifest` returns IDs, states, hashes, and routing metadata (no digest bodies), and carries its **own role/task-context-specific ETag** over just the projection that client would see. Orientation/bootstrap surface **at most the top relevant *changed* pointers** for the current task; an unrelated task receives none.
+4. **Two distinct routers: cold-start pointers vs dispatch relevance.** Cold start knows only the agent's **role** (no task family, track, or owned paths yet), so it uses a narrow, opt-in `cold_start_roles` allow-list to announce **at most five pointers per role** — never a record body. Dispatch/build resolves relevance with the **full AND router** over task family, track, role, and owned paths. Compact record bodies are fetched on demand, capped, and **never** fetched automatically at cold start.
 5. **Lifecycle + adoption gate.** Records move `proposed → adopted → deferred → superseded` with gate-enforced invariants (below). "Research is not adoption": a finding is `adopted` only when it resolves to a real consumer (code, prompt, rubric, decision, test, corpus intake, or owned issue).
 6. **Strict separation from `sources.db`.** Project-knowledge lookup is a small deterministic index/router over the registry + tracked digests. These documents are **never** added to `sources.db` or its embeddings; a regression test proves no retrieval leakage.
 
@@ -40,11 +40,15 @@ Add a **source-controlled Project Research Registry**: a tracked YAML file of on
 | State | Meaning | Gate-enforced invariant |
 |---|---|---|
 | `proposed` | Actionable finding, not yet operational | If actionable, MUST reference exactly one issue owned by exactly one stream epic |
-| `adopted` | Wired into a real consumer | MUST carry a **resolvable** operational consumer (path/prompt/rubric/decision/test/issue that exists) |
+| `adopted` | Wired into a real consumer | MUST carry a **typed, resolvable** consumer `{kind, ref}` (kind ∈ path/prompt/rubric/decision/test/issue/corpus) that resolves deterministically in-tree |
 | `deferred` | Deliberately not acted on now | MUST carry a `reason` |
 | `superseded` | Replaced by a newer record | MUST carry a valid `replacement` record id that exists |
 
-Cross-cutting invariant — **hash/digest drift invalidates the entry until reconciled**: if a record's `content_hash` no longer matches its digest, the validator marks the record invalid and the knowledge router excludes it from routing until a human/agent reconciles the hash. CI blocks on drift.
+Cross-cutting invariant — **hash/digest drift invalidates the entry until reconciled**: if a record's `content_hash` no longer matches its digest projection, the validator marks **that record** invalid and the knowledge router excludes **only that record** from routing until reconciled. CI blocks on the affected record and prints an actionable reconciliation command; unrelated records keep routing.
+
+**Stable, deterministic hash projection.** `content_hash` is never computed over an entire living digest file (which churns on any unrelated edit). It covers exactly one of: (a) a **dedicated compact per-record digest** (`docs/references/research-digests/<id>.md`), or (b) an **explicit machine-delimited record section** inside a shared digest (bounded by stable `<!-- record:<id> -->` … `<!-- /record:<id> -->` fences). The projection is normalized before hashing — **canonical normalization**: strip the delimiter fences, normalize line endings to `\n`, strip trailing whitespace per line, collapse a trailing blank-line run to none, UTF-8 encode, then `sha256`. The validator applies the identical normalization so the hash is reproducible across machines.
+
+**Reconciliation workflow.** Updating an expected hash is an **intentional, opt-in** action, never an automatic side effect. `scripts/audit/check_research_registry.py` runs in two modes: `--check` (CI/default) **only reports** drift and never mutates the registry; `--reconcile` recomputes and writes `content_hash` for the drifted records after the human/agent has reviewed the digest change. When `--check` finds drift it names the record and emits the exact command, e.g. `check_research_registry.py --reconcile --id <record-id>`, so reconciliation is a single deliberate step.
 
 ### Proposed schema (shape, not frozen)
 
@@ -54,42 +58,65 @@ Per record in `docs/references/research-registry.yaml`:
 - id: unlp-2026-cefr-assessment        # stable slug, never reused
   title: Automated CEFR-Level Assessment for Ukrainian Texts (Kanishcheva & Kopotev)
   summary: Deterministic linguistic features (tree depth, lexical diversity) beat XLM-R/GPT for UK CEFR.
-  content_hash: sha256:…               # over the pointed-to digest projection
+  content_hash: sha256:…               # over the record's compact digest projection (below), NOT a whole living file
   state: proposed                      # proposed | adopted | deferred | superseded
   provenance:
-    digest: docs/references/unlp-reading-notes.md#2026.unlp-1.18   # TRACKED pointer
-    source_url: https://aclanthology.org/2026.unlp-1.18/           # public, may be null
-  routing:
+    digest: docs/references/research-digests/unlp-2026-cefr-assessment.md   # dedicated compact per-record digest
+    digest_anchor: null                # OR a machine-delimited section within a shared digest; exactly one of digest/digest_anchor
+    source_url: https://aclanthology.org/2026.unlp-1.18/                    # public, may be null
+  routing:                             # dispatch/build AND router — every present dimension must match
     roles: [quality, pedagogy]
     task_families: [difficulty-gate, module-text-audit]
     tracks: [core, a1, a2, b1, b2]
     owned_paths: ["scripts/audit/**"]
+  cold_start_roles: [quality]          # opt-in, ≤5 total across the registry per role; empty/absent → no cold-start pointer
   ownership:
     issue: 4952
-    stream: 4274                       # owning stream epic (see correction note in PR)
-  consumer: null                       # required when state == adopted
+    stream: 4274                       # core-quality epic #4952 was attached to during #4969 creation (was orphaned when discovered)
+  consumer: null                       # required when state == adopted; typed ref: {kind, ref} (see below)
   reason: null                         # required when state == deferred
   replacement: null                    # required when state == superseded
   access_class: tracked-digest         # tracked-digest (default) | public-url | private-local
 ```
 
-**Routing inputs (dispatch/build → relevance).** The router matches a task's `{role, task_family, track, owned_paths}` against each record's `routing.*`. `owned_paths` uses glob patterns matched against the dispatch worktree's changed/owned paths. A record matches if any dimension intersects; default is no match → no pointer. This is intentionally a boolean/keyword router, **not** a semantic/vector matcher (see Alternatives).
+**Typed consumer (required when `state == adopted`).** `consumer` is not free text — it is a typed, deterministically resolvable reference:
+
+```yaml
+  consumer:
+    kind: test                         # path | prompt | rubric | decision | test | issue | corpus
+    ref: scripts/audit/tests/test_difficulty_gate.py::test_cefr_features
+```
+
+The validator resolves each `kind` deterministically: `path`/`prompt`/`rubric`/`test` → the file (and optional `::anchor`/symbol) exists in-tree; `decision` → a live id in `docs/decisions/decisions.yaml`; `issue` → a numeric id resolvable via the issue tooling; `corpus` → a declared intake entry. Resolution failure marks the record invalid — an `adopted` record with a dangling consumer never validates.
+
+**Routing algebra (dispatch/build → relevance).** The router matches a task's `{role, task_family, track, owned_paths}` against each record's `routing.*` as a **conjunction (AND) across every routing dimension the record specifies**. For each dimension *present* on the record, the task's value MUST intersect it; a dimension *omitted* from the record is a wildcard (matches any task). Critically, a task that lacks a value for a dimension the record requires does **not** match. So a `core`-track record whose `task_families: [difficulty-gate]` is set will **not** surface for a `core`-track `tts` task — track alone is insufficient. `owned_paths` uses glob patterns matched against the dispatch worktree's changed/owned paths. Default is no match → no pointer. This is intentionally a boolean/keyword router, **not** a semantic/vector matcher (see Alternatives).
+
+**Cold-start algebra (role only).** Cold start has no task family/track/owned paths, so it cannot run the AND router. It uses `cold_start_roles` only: a record announces a pointer at cold start solely to roles it explicitly lists, capped at **five pointers total per role** across the whole registry (deterministic tie-break by record id). A record with empty/absent `cold_start_roles` is invisible at cold start — the client still receives the registry hash/URL (change-awareness) but no pointer and no body.
 
 `access_class` values: `tracked-digest` (default — digest is committed, worktree-safe), `public-url` (digest may be re-fetched from a public source into an allowlisted cache), `private-local` (raw source is gitignored/local-only; **never** auto-provisioned into worktrees).
 
+**Digest content policy (copyright guard).** Tracked digests contain summaries, paraphrases, and **bounded quotations with provenance** — never copied papers, figures, or large verbatim passages. P1 validation enforces this where deterministically possible: per-record quoted-span length caps, a required `source_url`/citation on any quoted span, and a digest-size ceiling; violations fail CI. This keeps the tracked corpus fair-use and worktree-safe.
+
 ### Cold-start budgets, caching, invalidation, failure behavior
 
-**Hard budgets** (design contracts from #4969 — CI measures serialized bytes + estimated tokens on deterministic fixtures every change; these are *contracts*, not current-state measurements):
+**Hard budgets** (design contracts from #4969 — CI measures serialized bytes on deterministic fixtures every change; these are *contracts*, not current-state measurements). **Serialized UTF-8 byte budgets are the normative gate.** Token counts are a **deterministic estimate only**, pinned to a documented conservative formula so CI never depends on a live tokenizer: `est_tokens = ceil(utf8_bytes / 2)`. Two bytes/token deliberately over-counts for both English and Ukrainian (Cyrillic is 2 UTF-8 bytes/char, so this bounds even worst-case Ukrainian payloads); it is a ceiling for budgeting, not a measured tokenizer output.
 
-| Surface | Budget |
+| Surface | Budget (normative = bytes) |
 |---|---|
-| Unconditional `/api/state/manifest` addition | **≤ 512 bytes** |
+| Total `/api/state/manifest` response | **< 2 KB** (unchanged existing target; the research component fits *within* it) |
+| Unconditional `/api/state/manifest` research component | **≤ 512 bytes** |
 | Filtered changed-pointer payload | **top 5 records and ≤ 1.5 KB** |
-| One compact record body | **≤ 4 KB / ≈ 1,200 tokens** |
+| One compact record body | **≤ 4 KB** (est. ≈ 2,048 tokens via `ceil(bytes/2)`) |
 | Automatic per-cold-start record-body fetch | **≤ 8 KB total**; further reads require explicit task demand |
 | Warm unchanged state | verified **304**, **zero** research-body tokens injected |
 
-**ETag/304 + invalidation.** The knowledge endpoint reuses the existing `_matches_etag()` pattern (`rules_router.py:42`): the manifest publishes the research hash; a client sending `If-None-Match: "<hash>"` gets `304` with an empty body. Changing one registry record changes only that record's `content_hash` and the registry projection hash, invalidating **only** the relevant knowledge cache path — an unrelated warm client still gets `304`.
+**Two-tier ETag/304 + invalidation.** The knowledge endpoint reuses the existing `_matches_etag()` pattern (`rules_router.py:42`) at three independent tiers:
+
+- **Global manifest hash** (`/api/state/manifest`): a single registry-wide hash. Editing *any* record flips it, so every client sees the manifest research component change — this tier only signals "something in the registry moved," not what.
+- **Filtered projection ETag** (`/api/knowledge/manifest`): scoped to the requesting role/task context. Because it hashes only the projection that client would see, a client whose relevant set is unchanged can send `If-None-Match: "<projection-etag>"` **after the global hash has already changed** and still receive `304` with an empty body. This is the mechanism that keeps unrelated clients at zero research tokens even during churn.
+- **Per-record hash/ETag** (`/api/knowledge/record/{id}`): each record body keeps its own `content_hash`; a warm client re-requesting an unchanged body gets `304`.
+
+Changing one registry record flips the global manifest hash and that record's per-record hash, and flips the filtered-projection ETag **only for contexts that record routes to** — an unrelated warm client still gets `304` on its filtered projection despite the global hash moving.
 
 **Failure / degradation (fail-open, never block boot):**
 
@@ -97,6 +124,8 @@ Per record in `docs/references/research-registry.yaml`:
 - Knowledge endpoint slow/erroring → same isolation as orient collectors (`_cached_orient_section` TTL + hard timeout + fallback, `main.py:599`): degrade to zero research pointers.
 - Budget exceeded at runtime → truncate to top-N and **log the drop explicitly** (name what was dropped — no silent truncation); CI already fails the byte/token fixture, so this is a belt-and-suspenders runtime guard.
 - Invalidated (hash-drift) record → excluded from routing until reconciled; surfaced in the staleness view (P4).
+
+**Runtime kill switch (rollout safety).** A single default-safe configuration flag — `research_registry.enabled` (config, env-overridable) — gates the entire feature. **Default during rollout: `false`** (manifest omits the research component; `/api/knowledge/*` returns an empty/disabled projection; the router surfaces zero pointers), reproducing exact current behavior. Flipping it `true` enables the feature without a code change; flipping it back `false` is an instant, in-place disable — **no revert PR and no redeploy required**. This makes rollback a config toggle, not a deploy, and lets the pilot run behind the flag while unrelated agents are wholly unaffected.
 
 ### Privacy / worktree policy
 
@@ -108,7 +137,7 @@ Per record in `docs/references/research-registry.yaml`:
 
 - **Global prompt injection of research into every agent** → rejected: violates "pointers before payloads" and "relevance before broadcast"; blows cold-start budgets; injects irrelevant context into unrelated (UI/CI) tasks. This is the exact bloat the epic exists to prevent.
 - **Ingest `docs/references/` into `sources.db`** → rejected: `sources.db` is the learner-content/source corpus and is *recreated* on rebuild (`build_sources_db.py`; ADR-006). Mixing internal project research into it pollutes curriculum retrieval and couples two unrelated lifecycles. A regression test will prove no leakage.
-- **GitHub issues only (no registry)** → rejected: issues track *work*, not *findings*, and have no hash/budget/lifecycle contract, no digest provenance, and no deterministic routing. #4952's orphan state (unlabeled; parented under a quality epic, not routed as a research consumer) is the concrete failure of issues-as-registry.
+- **GitHub issues only (no registry)** → rejected: issues track *work*, not *findings*, and have no hash/budget/lifecycle contract, no digest provenance, and no deterministic routing. #4952 is the concrete failure of issues-as-registry: it was **orphaned when discovered** (no parent), and was only **attached to core-quality epic #4274 during #4969 creation** — parented under a quality epic, still not routed as a research consumer.
 - **Full research text in cold start** → rejected: unbounded token cost; defeats the manifest's "collapse steady state to one tiny call" purpose (`state_router.py:1824`).
 - **Knowledge graph / vector store / semantic memory platform** → rejected (also a #4969 non-goal): premature abstraction for a corpus of tens of findings; non-deterministic routing conflicts with the project's deterministic-over-hallucination doctrine; ADR-005/006 already chose deterministic retrieval over vector stores for adjacent problems. A boolean keyword/path router is sufficient and auditable.
 - **Reuse `session_hints` for research** → rejected: `session_hints` scans transient session-state files (`main.py:567`), which are ephemeral handoffs, not durable, hash-addressed, provenance-bearing findings.
@@ -135,14 +164,14 @@ Per record in `docs/references/research-registry.yaml`:
 
 Each slice is its own PR behind the cross-family review gate. Surfaces are *proposed*, not frozen.
 
-- **P1 — Registry + validation.** Add `docs/references/research-registry.yaml`; schema under `schemas/research_registry.schema.json`; loader/validator `scripts/audit/check_research_registry.py` (lifecycle invariants, provenance/`content_hash` checks, stream-ownership check). Seed the UNLP records. *Tests*: schema-valid fixtures, each invariant's negative case, hash-drift detection. *Migration*: none (new file + derived optional index rebuilt from YAML; never in `sources.db`). *Rollback*: revert PR.
-- **P2 — Bounded discovery API.** Add the `{hash, url}` research component to `state_router.py` `manifest()`; add `/api/knowledge/manifest` (IDs/states/hashes/routing, no bodies) + `/api/knowledge/record/{id}` (compact body, capped); wire ETag/304 via `_matches_etag`. *Tests*: byte/token budget fixtures for all five budgets; warm-cache `304` end-to-end; per-record hash invalidation. *Rollback*: revert; manifest key absence is tolerated by clients.
-- **P3 — Task-scoped routing.** Deterministic router matching `{role, task_family, track, owned_paths}`; surface top changed pointers via `orient`/bootstrap and dispatch context; record which research IDs each task consumed. *Tests*: routing TP/TN across all four dimensions.
-- **P4 — Adoption gate.** Enforce `adopted`→resolvable-consumer and actionable-`proposed`→one-stream-owned-issue; expose stale/orphaned/deferred/superseded via a monitor endpoint. *Tests*: gate rejects unresolvable consumer, orphaned proposed, missing reason/replacement.
+- **P1 — Registry + validation.** Add `docs/references/research-registry.yaml`; schema under `schemas/research_registry.schema.json`; loader/validator `scripts/audit/check_research_registry.py` with `--check` (report-only, CI/default — **never mutates**) and `--reconcile [--id …]` (intentionally rewrites drifted `content_hash`). Validate lifecycle invariants, provenance, canonical-normalized per-record `content_hash`, typed-consumer resolution, stream-ownership, and the **digest copyright guard** (bounded quoted-span length, required provenance on quotes, digest-size ceiling). Seed the UNLP records + compact per-record digests. *Tests*: schema-valid fixtures, each invariant's negative case, hash-drift detection, `--check` non-mutation, copyright-guard rejection of an over-long verbatim span. *Migration*: none (new file + derived optional index rebuilt from YAML; never in `sources.db`). *Rollback*: revert PR.
+- **P2 — Bounded discovery API.** Add the global-hash `{hash, url}` research component to `state_router.py` `manifest()` (total manifest still < 2 KB); add `/api/knowledge/manifest` (IDs/states/hashes/routing, no bodies, context-specific ETag) + `/api/knowledge/record/{id}` (compact body, capped, per-record ETag); wire all three tiers via `_matches_etag`. Gate the whole surface behind `research_registry.enabled` (default `false`). *Tests*: byte budget fixtures for every budget incl. total-manifest < 2 KB; two-tier `304` (global hash flips, filtered projection still `304`) end-to-end; per-record hash invalidation; kill-switch off = current behavior. *Rollback*: config toggle or revert; manifest key absence is tolerated by clients.
+- **P3 — Task-scoped routing.** Deterministic **AND** router matching `{role, task_family, track, owned_paths}` (present dimensions conjunctive, omitted = wildcard); separate role-only `cold_start_roles` announcer (≤5/role) for orient/bootstrap; dispatch context surfaces top changed pointers; record which research IDs each task consumed. *Tests*: routing TP/TN across all four dimensions incl. same-track/wrong-family negative; cold-start announces only `cold_start_roles` and never a body.
+- **P4 — Adoption gate + observability.** Enforce `adopted`→typed-resolvable-consumer and actionable-`proposed`→one-stream-owned-issue; expose stale/orphaned/deferred/superseded plus adoption rate, consumption counts, and dead-consumer counts via a monitor endpoint. *Tests*: gate rejects unresolvable typed consumer, orphaned proposed, missing reason/replacement; observability surfaces a dead consumer.
 - **P5 — Raw-source access (only if the pilot proves need).** Opt-in per-record allowlist or public-download cache keyed on `access_class`; still no blanket `docs/references/private/` symlink. *Tests*: `private-local` never provisioned; `public-url` cache is allowlisted.
 - **P6 — UNLP pilot + rollout decision.** Run discovery FP/FN fixtures; measure payload size + warm-cache behavior + recall/precision; publish the measured report; approve wider ingestion or revise.
 
-**Observability**: CI byte/token measurement job on fixtures; per-task consumed-research-ID log; monitor endpoint listing stale/orphaned/deferred/superseded findings.
+**Observability**: CI byte/token measurement job on fixtures; per-task consumed-research-ID log; monitor endpoint listing stale/orphaned/deferred/superseded findings. Beyond raw lifecycle-state counts, the endpoint exposes **adoption/consumption metrics**: adoption rate (`adopted` ÷ actionable records), per-record consumption counts (how many dispatches actually consumed each pointer, from the consumed-ID log), and **dead-consumer counts** — `adopted` records whose typed consumer no longer resolves, and pointers surfaced but never consumed over a window. These turn silent registry rot into a visible, actionable signal rather than a count of states.
 
 ## Pilot fixtures (UNLP 2025/2026 — positive and negative discovery)
 
@@ -153,8 +182,9 @@ Seed from the two existing UNLP docs and exercise every routing class:
 | Core-quality difficulty task (`quality`·`difficulty-gate`·`core`·`scripts/audit/**`) | **Positive**: `unlp-2026-cefr-assessment` + issue #4952 surface |
 | TTS task (`tts`·`tts`·`—`·`scripts/tts/**`) | **Positive**: `unlp-2025-stress-tts` surfaces (issue #4696) |
 | Reviewer-prompt task (`reviewer`·`reviewer-prompt`·`—`·`agents_extensions/**`) | **Positive**: `unlp-2026-gec-minimal-edit` surfaces |
+| Same-track, wrong-family task (`pedagogy`·`module-build`·`core`·`curriculum/**`) | **Negative (AND proof)**: `unlp-2026-cefr-assessment` does **not** surface — track intersects (`core`) but `task_families` does not (`module-build` ∉ `difficulty-gate`), so the conjunction fails |
 | Unrelated UI/CI task (`frontend`/`infra`·`ui`/`ci`·`—`·`site/**`) | **Negative**: no UNLP body, no irrelevant pointer |
-| Edit one UNLP record | Invalidates **only** that record's knowledge hash/cache path; unrelated warm clients still `304` |
+| Edit one UNLP record | Flips the **global** `/api/state/manifest` hash for all clients, but a warm client outside the edited record's routed contexts still gets `304` on its **filtered projection** ETag; only routed contexts see the change |
 
 The pilot must produce a measured report: payload size, warm-cache behavior, relevant-record recall, irrelevant-record precision, adoption status — at least three correctly routed findings, one irrelevant-task exclusion, and one real operational adoption (#4952).
 
@@ -164,14 +194,17 @@ The pilot must produce a measured report: payload size, warm-cache behavior, rel
 
 **Measurable acceptance criteria** (mirrors #4969; all enforced by deterministic tests in P1–P6):
 
-- No complete research document enters cold start; all five context budgets pass CI.
-- Warm-cache `304` and per-record hash invalidation pass end-to-end.
-- Routing tests cover TP + TN across role, task family, track, and owned path.
+- No complete research document enters cold start; the total `/api/state/manifest` response stays < 2 KB and every component byte budget passes CI (bytes normative; tokens via the pinned `ceil(bytes/2)` estimate).
+- Two-tier `304` passes end-to-end: after a record edit flips the global manifest hash, an unrelated client still receives `304` on its filtered-projection ETag; per-record body hash invalidation is exercised.
+- Routing tests cover TP + TN across role, task family, track, and owned path — including the **same-track/wrong-family negative** proving the AND conjunction (not OR) fails closed.
 - A regression test proves project research never leaks into `sources.db` retrieval.
-- `adopted` records resolve to real consumers; actionable `proposed` records have exactly one stream-owned issue.
+- `adopted` records resolve to a **typed** `{kind, ref}` consumer; actionable `proposed` records have exactly one stream-owned issue.
+- Digest copyright policy holds: no large verbatim passages; quoted spans are bounded and carry provenance (enforced where deterministic).
+- Hash projection is stable (per-record digest/section, canonically normalized); `--check` never mutates and drift blocks only the affected record with a `--reconcile` command.
+- The runtime kill switch defaults safe (`research_registry.enabled=false`) and toggles the feature on/off with no revert or redeploy.
 - Raw private sources are inaccessible by default and never blanket-provisioned.
 - The UNLP pilot shows ≥ 3 correctly routed findings, 1 irrelevant-task exclusion, 1 real adoption.
-- Final docs state measured cold-start byte/token cost and discovery precision/recall.
+- Final docs state measured cold-start byte cost (and estimated tokens) and discovery precision/recall; observability reports adoption rate and dead-consumer counts.
 
 ## Verification
 
