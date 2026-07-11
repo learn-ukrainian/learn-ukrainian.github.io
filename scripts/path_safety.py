@@ -93,11 +93,55 @@ def safe_join(base: Path, *parts: str | Path) -> Path:
     logical_target = Path(os.path.join(str(logical_base), *clean_parts))
     resolved_target = logical_target.resolve()
 
-    # A release has a deliberately small set of live-data symlinks.  A target
-    # may be under the resolved base or one of those declared destinations;
-    # every other resolved symlink escape remains forbidden.
-    allowed_roots = (resolved_base, *_declared_live_data_roots(logical_base))
-    if not any(_is_within(root, resolved_target) for root in allowed_roots):
+    # Fast path: plain containment under the resolved base needs no release
+    # machinery. Only on a miss may the target be under one of the release's
+    # deliberately small set of declared live-data symlinks (computed lazily —
+    # the ancestor walk stats the filesystem); every other resolved symlink
+    # escape remains forbidden. Semantics identical to checking all roots.
+    if not _is_within(resolved_base, resolved_target) and not any(
+        _is_within(root, resolved_target) for root in _declared_live_data_roots(logical_base)
+    ):
         raise ValueError("Path escapes the configured root")
 
     return logical_target
+
+
+def trusted_join(base: Path, *parts: str | Path) -> Path:
+    """Lexically join TRUSTED repo-internal components under ``base``.
+
+    ⚠️ NEVER pass request-derived or user-supplied values here — use
+    ``safe_join``, which additionally resolves symlinks and enforces the
+    release live-data containment contract. ``trusted_join`` exists for hot
+    internal scanners (orient/pipeline module iteration joins config-derived
+    slugs onto repo roots thousands of times per request); it validates
+    components lexically (no ``..``, no absolute parts, no separators, no NUL)
+    and enforces commonpath containment, but performs NO filesystem
+    resolution, so a planted child symlink is not detected. That trade is
+    sound only when both the base and every component come from repo-internal
+    configuration or directory listings.
+    """
+    if not parts:
+        return Path(os.path.abspath(str(base)))
+
+    abs_base = os.path.abspath(str(base))
+    clean_parts: list[str] = []
+    for part in map(str, parts):
+        if not part:
+            raise ValueError("Invalid path component")
+        if "\x00" in part:
+            raise ValueError("Null byte in user path")
+        candidate = Path(part)
+        if candidate.is_absolute():
+            raise ValueError("Absolute path input is not allowed")
+        for component in candidate.parts:
+            _validate_component(component)
+            clean_parts.append(component)
+
+    target = os.path.abspath(os.path.join(abs_base, *clean_parts))
+    try:
+        common = os.path.commonpath([abs_base, target])
+    except ValueError:
+        raise ValueError("Path escapes the configured root (cross-drive)") from None
+    if common != abs_base:
+        raise ValueError("Path escapes the configured root")
+    return Path(target)

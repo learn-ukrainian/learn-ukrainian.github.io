@@ -11,9 +11,9 @@ from pathlib import Path
 import yaml
 
 try:
-    from path_safety import safe_join  # scripts/ on sys.path (test sys.path-hack)
+    from path_safety import safe_join, trusted_join  # scripts/ on sys.path (test sys.path-hack)
 except ImportError:
-    from ..path_safety import safe_join  # scripts.api package import (production)
+    from ..path_safety import safe_join, trusted_join  # scripts.api package import (production)
 
 from .config import CURRICULUM_ROOT, LEVELS, PROJECT_ROOT, SEMINAR_TRACK_IDS
 from .state_helpers import (
@@ -133,7 +133,8 @@ def _count_summary_for_track(track_dir, track_id, plan_slugs):
 
     audit_dir = track_dir / "audit"
     for _num, slug in plan_slugs:
-        orch_dir = safe_join(track_dir / "orchestration", slug)
+        # trusted_join: slug from repo plan config, per-module scan hot loop (#4931 perf).
+        orch_dir = trusted_join(track_dir / "orchestration", slug)
         state = load_module_state(track_id, slug, orch_dir)
 
         research_path = find_research_path(track_dir, slug)
@@ -192,7 +193,8 @@ def compute_pipeline_track(track_id: str, level_cfg: dict) -> dict:
     modules = []
 
     for num, slug in plan_slugs:
-        orch_dir = safe_join(track_dir / "orchestration", slug)
+        # trusted_join: slug from repo plan config, per-module scan hot loop (#4931 perf).
+        orch_dir = trusted_join(track_dir / "orchestration", slug)
         version = detect_pipeline_version(orch_dir)
         state = load_module_state(track_id, slug, orch_dir)
 

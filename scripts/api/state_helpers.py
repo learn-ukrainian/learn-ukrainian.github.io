@@ -24,9 +24,9 @@ from pathlib import Path
 import yaml
 
 try:
-    from path_safety import safe_join  # scripts/ on sys.path (test sys.path-hack)
+    from path_safety import safe_join, trusted_join  # scripts/ on sys.path (test sys.path-hack)
 except ImportError:
-    from ..path_safety import safe_join  # scripts.api package import (production)
+    from ..path_safety import safe_join, trusted_join  # scripts.api package import (production)
 
 from .config import CURRICULUM_ROOT, LEVELS, MESSAGE_DB, SEMINAR_TRACK_IDS
 
@@ -253,7 +253,8 @@ def load_module_state(track: str, slug: str, orch_dir: Path) -> dict:
     """
     # V6 state: read directly (pipeline.state only knows v5)
     try:
-        state_file = safe_join(orch_dir, "state.json")
+        # trusted_join: literal component in the per-module scan hot loop (#4931 perf).
+        state_file = trusted_join(orch_dir, "state.json")
     except ValueError:
         return {"track": track, "slug": slug, "mode": "v5", "phases": {}}
     if state_file.exists():
@@ -277,7 +278,8 @@ def detect_pipeline_version(orch_dir: Path) -> str:
     Priority: state.json mode=v6/v5 > state-v3.json > legacy state.json > 'unbuilt'.
     """
     try:
-        state_file = safe_join(orch_dir, "state.json")
+        # trusted_join: literal component in the per-module scan hot loop (#4931 perf).
+        state_file = trusted_join(orch_dir, "state.json")
         state_v3_file = safe_join(orch_dir, "state-v3.json")
     except ValueError:
         return "unbuilt"
@@ -324,7 +326,8 @@ def read_v3_state(orch_dir: Path) -> dict:
 def read_v2_state(orch_dir: Path) -> dict:
     """Read state.json (v2 pipeline), return {} if missing or invalid."""
     try:
-        state_file = safe_join(orch_dir, "state.json")
+        # trusted_join: literal component in the per-module scan hot loop (#4931 perf).
+        state_file = trusted_join(orch_dir, "state.json")
     except ValueError:
         return {}
     if not state_file.exists():
@@ -411,7 +414,8 @@ def is_content_done(state: dict) -> bool:
 def find_content_file(track_dir: Path, slug: str) -> Path | None:
     """Find the module content .md file."""
     try:
-        direct_path = safe_join(track_dir, f"{slug}.md")
+        # trusted_join: slug from repo plan config, per-module hot loop (#4931 perf).
+        direct_path = trusted_join(track_dir, f"{slug}.md")
     except ValueError:
         return None
 
@@ -446,7 +450,8 @@ def get_audit_status(track_dir: Path, slug: str) -> dict:
     the audit result is stale.
     """
     try:
-        status_file = safe_join(track_dir, "status", f"{slug}.json")
+        # trusted_join: slug from repo plan config, per-module hot loop (#4931 perf).
+        status_file = trusted_join(track_dir, "status", f"{slug}.json")
     except ValueError:
         return {"status": "not_run", "word_count": 0, "word_target": 0, "blocking_issues": []}
     if not status_file.exists():

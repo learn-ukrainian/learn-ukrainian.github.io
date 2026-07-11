@@ -430,3 +430,30 @@ def test_real_release_serves_live_data_routers_with_logical_paths(tmp_path: Path
     finally:
         for path in reversed(created_live_roots):
             shutil.rmtree(path)
+
+
+def test_trusted_join_validates_components_lexically(tmp_path: Path) -> None:
+    """trusted_join keeps the lexical guards: no .., no absolute, no separators."""
+    from scripts.path_safety import trusted_join
+
+    base = tmp_path / "root"
+    base.mkdir()
+    assert trusted_join(base, "a", "b.json") == Path(os.path.abspath(base / "a" / "b.json"))
+    for bad in ("..", "a/../..", "/abs", "a\x00b", ""):
+        with pytest.raises(ValueError):
+            trusted_join(base, bad)
+
+
+def test_trusted_join_does_not_resolve_child_symlinks(tmp_path: Path) -> None:
+    """Documented trade: trusted_join is lexical-only — a child symlink pointing
+    outside base is NOT detected (that is why it must never see request-derived
+    parts; safe_join covers that boundary and has its own escape tests)."""
+    from scripts.path_safety import trusted_join
+
+    base = tmp_path / "root"
+    outside = tmp_path / "outside"
+    base.mkdir()
+    outside.mkdir()
+    (base / "link").symlink_to(outside)
+    joined = trusted_join(base, "link", "x.txt")
+    assert joined == Path(os.path.abspath(base / "link" / "x.txt"))  # lexical, unresolved
