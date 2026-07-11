@@ -101,24 +101,33 @@ sequence: 120
 slug: mykola-kulish
 subtitle: 'Mykola Kulish: The Genius of Ukrainian Theatre'
 title: 'Микола Куліш: Геній українського театру'
-version: '4.2'
+version: '4.3'
+readings_contract_version: 2
 readings:
 - title: Куліш Микола Гурович
   language: uk
-  source: Енциклопедія історії України
-  url: https://history.org.ua/?termin=Kulish_M_G
+  source_name: Енциклопедія історії України
+  source_url: https://history.org.ua/?termin=Kulish_M_G
   type: encyclopedia
   role: primary-bio
   hosting: link-only
-  task: Дослідити життєвий та творчий шлях Миколи Куліша, причини його конфлікту з радянською владою.
-- title: Мина Мазайло (уривки)
+  rights:
+    basis: external-link
+    evidence_url: https://history.org.ua/?termin=Kulish_M_G
+    note: Зовнішнє посилання; текст не відтворюється в курсі.
+  learner_task: Дослідити життєвий та творчий шлях Миколи Куліша, причини його конфлікту з радянською владою.
+- title: Мина Мазайло
   language: uk
-  source: П'єса
-  url: null
+  source_name: Хрестоматія з української літератури — Інститут педагогіки НАПН України
+  source_url: https://undip.org.ua/wp-content/uploads/2021/07/khrestomatyya_2020.pdf
   type: primary
   role: source-context
-  hosting: reading-needed
-  task: Прочитати ключові сатиричні діалоги з п'єси "Мина Мазайло" про мовне питання та русифікацію.
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://undip.org.ua/wp-content/uploads/2021/07/khrestomatyya_2020.pdf
+    note: Зовнішнє посилання на офіційну хрестоматію НАПН; текст не відтворюється в курсі.
+  learner_task: Прочитати ключові сатиричні діалоги з п'єси «Мина Мазайло» про мовне питання та русифікацію.
 vocabulary_hints:
 - definition: автор драматичних творів, п'єс
   pos: ч.

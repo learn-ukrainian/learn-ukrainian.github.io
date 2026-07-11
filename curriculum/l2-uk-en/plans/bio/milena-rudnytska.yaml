@@ -101,24 +101,33 @@ sequence: 119
 slug: milena-rudnytska
 subtitle: The Parliamentarian Who Waged War for Women and Ukraine
 title: 'Мілена Рудницька: Голос українського фемінізму'
-version: '4.1'
+version: '4.2'
+readings_contract_version: 2
 readings:
 - title: Рудницька Мілена Іванівна
   language: uk
-  source: Енциклопедія історії України
-  url: https://history.org.ua/?termin=Rudnytska_M
+  source_name: Енциклопедія історії України
+  source_url: https://history.org.ua/?termin=Rudnytska_M
   type: encyclopedia
   role: primary-bio
   hosting: link-only
-  task: Ознайомитися з біографією Мілени Рудницької, фокусуючись на її політичній та громадській діяльності.
-- title: Статті, листи, документи (фрагменти)
+  rights:
+    basis: external-link
+    evidence_url: https://history.org.ua/?termin=Rudnytska_M
+    note: Зовнішнє посилання; текст не відтворюється в курсі.
+  learner_task: Ознайомитися з біографією Мілени Рудницької, фокусуючись на її політичній та громадській діяльності.
+- title: Діалог у листах — з епістолярію Івана Лисяка-Рудницького й Мілени Рудницької
   language: uk
-  source: Збірник праць
-  url: null
+  source_name: Український історичний журнал НАН України
+  source_url: https://nasu-periodicals.org.ua/index.php/uhj/article/view/20706
   type: primary
   role: source-context
-  hosting: reading-needed
-  task: Прочитати фрагменти промов чи статей Рудницької щодо жіночого руху або Голодомору.
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://nasu-periodicals.org.ua/index.php/uhj/article/view/20706
+    note: Зовнішнє посилання на журнальну публікацію листів; текст не відтворюється в курсі.
+  learner_task: Прочитати опубліковані листи та проаналізувати інтелектуальний і еміграційний контекст Рудницької.
 vocabulary_hints:
 - definition: суспільний рух, що ставить за мету досягнення рівних прав для жінок
   pos: ч.

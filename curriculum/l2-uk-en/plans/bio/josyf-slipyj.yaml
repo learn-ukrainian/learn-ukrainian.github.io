@@ -97,25 +97,33 @@ sequence: 118
 slug: josyf-slipyj
 subtitle: 'Patriarch Josyf Slipyj: Unbreakable Confessor of Faith'
 title: 'Патріарх Йосиф Сліпий: Незламний сповідник віри'
-version: '4.1'
+version: '4.2'
+readings_contract_version: 2
 readings:
 - title: Сліпий Йосиф
   language: uk
-  source: Енциклопедія історії України
-  url: https://history.org.ua/?termin=Slipyj_J
+  source_name: Енциклопедія історії України
+  source_url: https://history.org.ua/?termin=Slipyj_J
   type: encyclopedia
   role: primary-bio
   hosting: link-only
-  task: Дослідити біографічну довідку про Йосифа Сліпого, звернувши увагу на ключові етапи його життя та боротьбу за УГКЦ.
-- title: Патріарх Йосиф Сліпий. Заповіт
+  rights:
+    basis: external-link
+    evidence_url: https://history.org.ua/?termin=Slipyj_J
+    note: Зовнішнє посилання; текст не відтворюється в курсі.
+  learner_task: Дослідити біографічну довідку про Йосифа Сліпого, звернувши увагу на ключові етапи його життя та боротьбу за УГКЦ.
+- title: Заповіт Патріарха Йосифа Сліпого
   language: uk
-  source: Першоджерело
-  url: null
+  source_name: Київська Архиєпархія УГКЦ
+  source_url: https://ugcc.church/blog/zapovit-patriarha-josyfa-slipoho/
   type: primary
   role: source-context
-  hosting: reading-needed
-  task: Проаналізувати "Заповіт" Йосифа Сліпого, виокремити його духовні та національні ідеї.
-  caveats: Потрібен адаптований або оригінальний текст "Заповіту" для аналізу.
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://ugcc.church/blog/zapovit-patriarha-josyfa-slipoho/
+    note: Зовнішнє посилання на офіційний церковний текст; текст не відтворюється в курсі.
+  learner_task: Проаналізувати «Заповіт» Йосифа Сліпого, виокремити його духовні та національні ідеї.
 vocabulary_hints:
 - definition: глава помісної православної або східно-католицької церкви
   pos: ч.

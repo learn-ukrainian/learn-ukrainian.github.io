@@ -80,23 +80,32 @@ persona:
   role: Модератор семінару, що ставить складні питання про ціну боротьби, еволюцію методів та моральні дилеми лідера визвольного руху.
   voice: Critical-Historian
 phase: BIO.4
+readings_contract_version: 2
 readings:
-- caveats: Академічна енциклопедична стаття.
-  hosting: external
-  language: uk
-  role: Контекст
+- title: Коновалець Євген Михайлович
   source_name: Енциклопедія історії України
-  source_type: Енциклопедія
-  task: Ознайомитися з життєписом Євгена Коновальця та його роллю у створенні УВО і ОУН.
-  title: Коновалець Євген Михайлович
-  url: https://history.org.ua/?termin=Konovalets_E
-- hosting: reading-needed
+  source_url: https://history.org.ua/?termin=Konovalets_E
   language: uk
-  role: Першоджерело
-  source_type: Стаття / Документ
-  task: Знайти фрагмент статті Коновальця або меморандуму ОУН, що розкриває його політичні погляди.
-  title: Фрагмент статті Є. Коновальця
-  url: null
+  type: encyclopedia
+  role: context
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://history.org.ua/?termin=Konovalets_E
+    note: Зовнішнє посилання; текст не відтворюється в курсі.
+  learner_task: Ознайомитися з життєписом Євгена Коновальця та його роллю у створенні УВО і ОУН.
+- title: 1891 — народився Євген Коновалець, полковник Армії УНР, голова ОУН
+  source_name: Український інститут національної пам'яті
+  source_url: https://uinp.gov.ua/istorychnyy-kalendar/cherven/14/1891-narodyvsya-yevgen-konovalec-polkovnyk-armiyi-unr
+  language: uk
+  type: institutional-profile
+  role: source-context
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://uinp.gov.ua/istorychnyy-kalendar/cherven/14/1891-narodyvsya-yevgen-konovalec-polkovnyk-armiyi-unr
+    note: Зовнішнє посилання на офіційний матеріал УІНП; текст не відтворюється в курсі.
+  learner_task: Проаналізувати державницькі погляди Коновальця та зіставити їх із його організаційною діяльністю.
 references:
 - title: Yevhen Konovalets
   note: Compiled from Wikipedia UA, Encyclopedia of Ukraine. Covers early life, military career, OUN leadership, assassination.
@@ -116,7 +125,7 @@ sequence: 117
 slug: yevhen-konovalets
 subtitle: 'Yevhen Konovalets: From Military Commander to Architect of the Underground'
 title: 'Євген Коновалець: Полковник і організатор'
-version: '4.2'
+version: '4.3'
 vocabulary_hints:
 - definition: вище офіцерське звання у збройних силах, зокрема в Армії УНР
   pos: ч.

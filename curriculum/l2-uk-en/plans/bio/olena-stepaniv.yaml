@@ -102,24 +102,33 @@ sequence: 121
 slug: olena-stepaniv
 subtitle: The First Female Officer in the Ukrainian Army
 title: 'Олена Степанів: Перша жінка-офіцер'
-version: '4.2'
+version: '4.3'
+readings_contract_version: 2
 readings:
 - title: Степанів-Дашкевич Олена Іванівна
   language: uk
-  source: Енциклопедія історії України
-  url: https://history.org.ua/?termin=Stepaniv_D
+  source_name: Енциклопедія історії України
+  source_url: https://history.org.ua/?termin=Stepaniv_D
   type: encyclopedia
   role: primary-bio
   hosting: link-only
-  task: Прочитати про військову та наукову кар'єру Олени Степанів.
-- title: Нариси з часів Світової Війни (фрагменти)
+  rights:
+    basis: external-link
+    evidence_url: https://history.org.ua/?termin=Stepaniv_D
+    note: Зовнішнє посилання; текст не відтворюється в курсі.
+  learner_task: Прочитати про військову та наукову кар'єру Олени Степанів.
+- title: Колекція пам'яток до пам'ятних дат Української революції 1917–1921 років
   language: uk
-  source: Мемуари
-  url: null
-  type: primary
+  source_name: Український інститут національної пам'яті
+  source_url: https://uinp.gov.ua/elektronni-vydannya/kolekciya-pamyatok-do-pamyatnyh-dat-ukrayinskoyi-revolyuciyi-1917-1921-rokiv/zavantazhyty-pdf/kolekciya-pamyatok-do-pamyatnyh-dat-ukrayinskoyi-revolyuciyi-1917-1921-rokiv-144-dpi
+  type: institutional-profile
   role: source-context
-  hosting: reading-needed
-  task: Проаналізувати фрагменти спогадів Олени Степанів про бойові дії та побут УСС.
+  hosting: link-only
+  rights:
+    basis: external-link
+    evidence_url: https://uinp.gov.ua/elektronni-vydannya/kolekciya-pamyatok-do-pamyatnyh-dat-ukrayinskoyi-revolyuciyi-1917-1921-rokiv/zavantazhyty-pdf/kolekciya-pamyatok-do-pamyatnyh-dat-ukrayinskoyi-revolyuciyi-1917-1921-rokiv-144-dpi
+    note: Зовнішнє посилання на офіційне електронне видання УІНП; текст не відтворюється в курсі.
+  learner_task: Проаналізувати профіль Олени Степанів у контексті Української революції та зіставити його з енциклопедичною біографією.
 vocabulary_hints:
 - definition: найнижче офіцерське звання в Українських Січових Стрільцях, еквівалент прапорщика
   pos: ж.
