@@ -14,7 +14,13 @@ from typing import Any
 
 import yaml
 
-from scripts.common.git_context import sanitized_git_env
+# Dual-flavor import: audit modules are importable as ``audit.*`` with only
+# ``scripts/`` on sys.path — keep both flavors resolvable (cf. #4931 fallout
+# in guardrails.worktree_containment).
+try:
+    from scripts.common.git_context import sanitized_git_env
+except ImportError:  # scripts/ on sys.path (stripped flavor)
+    from common.git_context import sanitized_git_env  # type: ignore[no-redef]
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
 DECISIONS_DIR = Path("docs/decisions")
