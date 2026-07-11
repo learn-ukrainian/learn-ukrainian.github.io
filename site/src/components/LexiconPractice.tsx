@@ -1254,7 +1254,10 @@ function LexiconPracticeIsland({
     const level = options.level ?? learnerLevel;
     const force = options.force ?? false;
     const current = force ? null : deck;
-    if (current && (!includeCloze || clozeLoaded)) return current;
+    if (current && (!includeCloze || clozeLoaded)) {
+      setError(null);
+      return current;
+    }
     const requestId = ++deckRequestId.current;
     setLoading(true);
     setError(null);
@@ -1400,6 +1403,7 @@ function LexiconPracticeIsland({
       if (deckRequestId.current !== requestId) return nextDeck!;
       setDeck(nextDeck!);
       setClozeLoaded(nextClozeLoaded);
+      setError(null);
       return nextDeck!;
     } catch {
       if (deckRequestId.current === requestId) {
@@ -1447,9 +1451,14 @@ function LexiconPracticeIsland({
       // The cumulative index is small. Load only the resolved level's core deck next,
       // retaining the progressive lower-level loading strategy for practice content.
       const matchedLevel = normalizeCefrLevel(matchedIndexItem.cefr, learnerLevel);
-      const loadedDeck = initialMatch
+      let loadedDeck = initialMatch
         ? initialDeck
         : await ensureDeck(shouldLoadCloze('mixed'), { level: matchedLevel, force: true });
+      if (!loadedDeck && !initialMatch) {
+        // A failed shared shard promise is evicted by getShardJson. Retry the focused
+        // deck once so a transient init failure cannot outlive the successful exercise.
+        loadedDeck = await ensureDeck(shouldLoadCloze('mixed'), { level: matchedLevel, force: true });
+      }
       if (!loadedDeck) return;
 
       const resolvedItem = resolvePracticeIndexItem(loadedDeck.index, target);
@@ -1461,6 +1470,7 @@ function LexiconPracticeIsland({
         return;
       }
 
+      setError(null);
       setFocusedLemmaId(resolvedItem.lemmaId);
       setMode('mixed');
       setSessionBudget(10);
@@ -2184,7 +2194,7 @@ function LexiconPracticeIsland({
       )}
 
       {loading && <p className="lexicon-practice-muted">Завантажуємо…</p>}
-      {error && (
+      {error && !selection && (
         <div className="lexicon-practice-fallback" data-testid="practice-fetch-error">
           <p className="lexicon-practice-warning">
             <BilingualPracticeMessage uk={error} en={PRACTICE_LOAD_ERROR_EN} />

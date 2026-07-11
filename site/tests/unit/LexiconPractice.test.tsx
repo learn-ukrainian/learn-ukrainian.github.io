@@ -931,8 +931,69 @@ describe('LexiconPractice', () => {
         await screen.findByRole('button', { name: /кафе.*натисніть, щоб перевернути/ }),
       ).toBeInTheDocument();
       expect(screen.queryByRole('button', { name: /книга.*натисніть, щоб перевернути/ })).not.toBeInTheDocument();
+      expect(screen.queryByTestId('practice-fetch-error')).not.toBeInTheDocument();
     } finally {
       window.location = new URL(originalSearch ? `http://localhost${originalSearch}` : 'http://localhost/') as any;
+    }
+  });
+
+  test('focused deep link clears a transient deck-load error after its retry renders the exercise', async () => {
+    const originalSearch = window.location.search;
+    delete (window as any).location;
+    window.location = new URL('http://localhost/words-of-the-day/practice/?lemmaId=%D0%BA%D0%B0%D1%84%D0%B5') as any;
+
+    try {
+      const cafe = lexeme('kafe', 'кафе', 'cafe', {
+        nominative: 'кафе',
+        accusative: 'кафе',
+        locative: 'кафе',
+      });
+      let failFirstLexemeRequest = true;
+      const fetchMock = vi.fn(async (input: RequestInfo | URL) => {
+        const url = String(input);
+        const match = url.match(
+          /practice-(index|lexemes|cloze|stress|classify|paradigm|synonym|heritage)\.([ABC][12])\.json/,
+        );
+        if (!match || match[2] !== 'A1') return notFoundResponse();
+        const kind = match[1];
+        if (kind === 'index') {
+          return okJson({
+            deckVersion: 'v-A1',
+            level: 'A1',
+            items: [{
+              lemmaId: cafe.lemmaId,
+              lemma: cafe.lemma,
+              cefr: 'A1',
+              modes: ['flashcards'],
+              hasCloze: false,
+              clozeIds: [],
+              newOrder: 0,
+            }],
+          });
+        }
+        if (kind === 'lexemes') {
+          if (failFirstLexemeRequest) {
+            failFirstLexemeRequest = false;
+            throw new Error('transient lexeme failure');
+          }
+          return okJson({ deckVersion: 'v-A1', level: 'A1', lexemes: [cafe] });
+        }
+        return okJson({ [kind]: [] });
+      });
+      vi.spyOn(globalThis, 'fetch').mockImplementation(fetchMock);
+
+      render(<LexiconPractice autoStart={false} />);
+
+      expect(
+        await screen.findByRole('button', { name: /кафе.*натисніть, щоб перевернути/ }),
+      ).toBeInTheDocument();
+      expect(screen.queryByTestId('practice-fetch-error')).not.toBeInTheDocument();
+      expect(
+        fetchMock.mock.calls.filter(([url]) => String(url).includes('practice-lexemes.A1.json')),
+      ).toHaveLength(2);
+    } finally {
+      window.location = new URL(originalSearch ? `http://localhost${originalSearch}` : 'http://localhost/') as any;
+      vi.restoreAllMocks();
     }
   });
 
