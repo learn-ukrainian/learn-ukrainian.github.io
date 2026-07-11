@@ -1,0 +1,140 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/research_registry.schema.json",
+  "title": "Project Research Registry",
+  "description": "ADR-011 P1 structural contract for docs/references/research-registry.yaml. This schema validates shape, enums, and patterns only. Lifecycle invariants, canonical content-hash reconciliation, provenance path safety, typed-consumer resolution, stream-ownership, digest copyright policy, and cold-start caps are enforced in scripts/audit/check_research_registry.py, which JSON Schema cannot express.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "records"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "records": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/record"}
+    }
+  },
+  "$defs": {
+    "slug": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+    },
+    "nonEmptyString": {
+      "type": "string",
+      "minLength": 1
+    },
+    "contentHash": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "positiveInt": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "stringArray": {
+      "type": "array",
+      "uniqueItems": true,
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/nonEmptyString"}
+    },
+    "record": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "title",
+        "summary",
+        "content_hash",
+        "state",
+        "provenance",
+        "routing",
+        "access_class"
+      ],
+      "properties": {
+        "id": {"$ref": "#/$defs/slug"},
+        "title": {"$ref": "#/$defs/nonEmptyString"},
+        "summary": {"$ref": "#/$defs/nonEmptyString"},
+        "content_hash": {"$ref": "#/$defs/contentHash"},
+        "state": {"enum": ["proposed", "adopted", "deferred", "superseded"]},
+        "provenance": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["digest"],
+          "properties": {
+            "digest": {"$ref": "#/$defs/nonEmptyString"},
+            "digest_anchor": {
+              "anyOf": [{"$ref": "#/$defs/slug"}, {"type": "null"}]
+            },
+            "source_url": {
+              "anyOf": [
+                {"type": "string", "pattern": "^https?://"},
+                {"type": "null"}
+              ]
+            }
+          }
+        },
+        "routing": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "roles": {"$ref": "#/$defs/stringArray"},
+            "task_families": {"$ref": "#/$defs/stringArray"},
+            "tracks": {"$ref": "#/$defs/stringArray"},
+            "owned_paths": {"$ref": "#/$defs/stringArray"}
+          }
+        },
+        "cold_start_roles": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {"$ref": "#/$defs/nonEmptyString"}
+        },
+        "ownership": {
+          "anyOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["issue", "stream"],
+              "properties": {
+                "issue": {"$ref": "#/$defs/positiveInt"},
+                "stream": {"$ref": "#/$defs/positiveInt"}
+              }
+            },
+            {"type": "null"}
+          ]
+        },
+        "consumer": {
+          "anyOf": [
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["kind", "ref"],
+              "properties": {
+                "kind": {
+                  "enum": [
+                    "path",
+                    "prompt",
+                    "rubric",
+                    "decision",
+                    "test",
+                    "issue",
+                    "corpus"
+                  ]
+                },
+                "ref": {"$ref": "#/$defs/nonEmptyString"}
+              }
+            },
+            {"type": "null"}
+          ]
+        },
+        "reason": {
+          "anyOf": [{"$ref": "#/$defs/nonEmptyString"}, {"type": "null"}]
+        },
+        "replacement": {
+          "anyOf": [{"$ref": "#/$defs/slug"}, {"type": "null"}]
+        },
+        "access_class": {
+          "enum": ["tracked-digest", "public-url", "private-local"]
+        }
+      }
+    }
+  }
+}

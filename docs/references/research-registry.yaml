@@ -1,0 +1,99 @@
+# Project Research Registry — ADR-011 (P1: data + validation only).
+#
+# One record per actionable research finding. Each record points to a tracked,
+# compact digest under docs/references/research-digests/; content_hash is the
+# canonical SHA-256 over that digest projection (see the validator for the exact
+# normalization). NEVER edit content_hash by hand — after changing a digest run:
+#
+#   .venv/bin/python scripts/audit/check_research_registry.py --reconcile --id <record-id>
+#
+# Validate (read-only, CI/default):
+#   .venv/bin/python scripts/audit/check_research_registry.py --check
+#
+# Schema: schemas/research_registry.schema.json (structural). Semantic invariants
+# (lifecycle, provenance, typed-consumer resolution, ownership, copyright policy,
+# cold-start caps) live in scripts/audit/check_research_registry.py.
+schema_version: 1
+records:
+  - id: unlp-2026-cefr-assessment
+    title: Automated CEFR-Level Assessment for Ukrainian Texts (Kanishcheva & Kopotev)
+    summary: >-
+      Interpretable deterministic linguistic features match transformer/LLM
+      baselines for Ukrainian CEFR difficulty; adopted as the advisory,
+      uncalibrated Phase 1 text-difficulty analyzer (#4952).
+    content_hash: "sha256:8ff491d9d2f5802c4a0517254d254203bdb44d620f6ae771ae422a6ce2bc83ef"
+    state: adopted
+    provenance:
+      digest: docs/references/research-digests/unlp-2026-cefr-assessment.md
+      digest_anchor: null
+      source_url: https://aclanthology.org/2026.unlp-1.18/
+    routing:
+      roles: [quality, pedagogy]
+      task_families: [difficulty-gate, module-text-audit]
+      tracks: [core, a1, a2, b1, b2]
+      owned_paths: ["scripts/audit/**"]
+    cold_start_roles: [quality]
+    ownership:
+      issue: 4952
+      stream: 4274
+    consumer:
+      kind: path
+      ref: scripts/audit/text_difficulty.py
+    reason: null
+    replacement: null
+    access_class: tracked-digest
+
+  - id: unlp-2025-stress-tts
+    title: >-
+      Context-Aware Lexical Stress Prediction and Phonemization for Ukrainian TTS
+      Systems (Senyk et al.)
+    summary: >-
+      Dictionary+POS beats neural on heteronym stress; released rule-based
+      phonemizer. Deferred behind the user-gated #4696 audio decision and
+      pending upstream license verification.
+    content_hash: "sha256:fed7fa77de4fd2a63fac6bc2721115cfa9758d3482689d9fbe30df7ecb0a0ff1"
+    state: deferred
+    provenance:
+      digest: docs/references/research-digests/unlp-2025-stress-tts.md
+      digest_anchor: null
+      source_url: https://aclanthology.org/2025.unlp-1.11/
+    routing:
+      roles: [tts]
+      task_families: [tts]
+      owned_paths: ["scripts/tts/**"]
+    cold_start_roles: [tts]
+    ownership:
+      issue: 4696
+      stream: 4700
+    consumer: null
+    reason: >-
+      Integration is blocked by the user-gated #4696 engine-versus-recorded-audio
+      decision; the upstream repository license must be verified before any reuse.
+    replacement: null
+    access_class: tracked-digest
+
+  - id: unlp-2026-gec-minimal-edit
+    title: How Far Can Prompting Go for Minimal-Edit Ukrainian GEC? (Karpo & Chernodub)
+    summary: >-
+      Ukrainian minimal-edit prompting with a 16-category taxonomy and five
+      over-correction patterns/cautions; deferred until a stream-owned implementation
+      issue and a validated reviewer-prompt consumer exist.
+    content_hash: "sha256:fdf5a0b55492127e2c96873d380b67c0f8a2595f6465835785fa3eade2b883d6"
+    state: deferred
+    provenance:
+      digest: docs/references/research-digests/unlp-2026-gec-minimal-edit.md
+      digest_anchor: null
+      source_url: https://aclanthology.org/2026.unlp-1.13/
+    routing:
+      roles: [reviewer]
+      task_families: [reviewer-prompt]
+      owned_paths: ["agents_extensions/**"]
+    cold_start_roles: [reviewer]
+    ownership: null
+    consumer: null
+    reason: >-
+      Documented but not adopted: no dedicated stream-owned implementation issue
+      and no validated prompt/code consumer exist. Create a child under
+      eval-harness #4913 before adoption; #4913 is the stream epic, not a child.
+    replacement: null
+    access_class: tracked-digest
