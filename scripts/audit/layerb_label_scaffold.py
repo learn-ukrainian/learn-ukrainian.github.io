@@ -245,11 +245,32 @@ def _source_artifact_path(corpus_dir: Path, artifact_name: str) -> str:
     return artifact_name
 
 
-def _fixture_sha256(fixture_id: str) -> str:
+def _fixture_source(
+    fixture_id: str,
+    *,
+    corpus_dir: Path,
+    artifact_name: str,
+    corpus: Mapping[str, Mapping[str, Any]],
+    selection_mode: str | None,
+) -> dict[str, str]:
+    """Pin a canonical fixture or an explicitly embedded corpus fixture."""
     fixture_path = Path(__file__).resolve().parents[2] / "tests" / "fixtures" / "qg_bakeoff" / f"{fixture_id}.json"
-    if not fixture_path.is_file():
+    if fixture_path.is_file():
+        return {"path": str(fixture_path), "sha256": sha256_file(fixture_path)}
+    if selection_mode != "select-all-from-source-artifacts":
         raise LabelJoinError(f"fixture file required for scaffold source hashes is absent: {fixture_path}")
-    return sha256_file(fixture_path)
+    artifact = corpus.get(artifact_name)
+    fixture = artifact.get("fixture") if isinstance(artifact, Mapping) else None
+    if not isinstance(fixture, Mapping) or fixture.get("slug") != fixture_id:
+        raise LabelJoinError(
+            f"embedded fixture source does not match {fixture_id!r} in corpus artifact {artifact_name!r}"
+        )
+    artifact_path = corpus_dir / artifact_name
+    return {
+        "path": str(artifact_path),
+        "sha256": sha256_file(artifact_path),
+        "provenance": "embedded-corpus-artifact",
+    }
 
 
 def _case_from_row(
@@ -440,12 +461,17 @@ def build_scaffold(
     ordered_pairs = sorted(zip(cases, packets, strict=True), key=lambda pair: str(pair[0]["case_id"]))
     cases = [case for case, _packet in ordered_pairs]
     packets = [packet for _case, packet in ordered_pairs]
+    selection_mode = (keyed_document.get("keying") or {}).get("mode")
     source_artifacts = [
         {
             "artifact_sha256": sha256_file(corpus_dir / artifact_name),
-            "fixture_set_sha256": _fixture_sha256(
-                str(next(case for case in cases if case["case_id"].startswith(artifact_name + "#"))["fixture_id"])
-            ),
+            "fixture_set_sha256": _fixture_source(
+                str(next(case for case in cases if case["case_id"].startswith(artifact_name + "#"))["fixture_id"]),
+                corpus_dir=corpus_dir,
+                artifact_name=artifact_name,
+                corpus=corpus,
+                selection_mode=selection_mode if isinstance(selection_mode, str) else None,
+            )["sha256"],
         }
         for artifact_name in sorted(used_artifacts)
     ]
@@ -505,6 +531,26 @@ def write_scaffold(
         resume=resume,
     )
     used_artifacts = sorted({str(case["case_id"]).split("#fact_checks[", maxsplit=1)[0] for case in scaffold["cases"]})
+    corpus = load_corpus(corpus_dir)
+    selection_mode = (keyed_document.get("keying") or {}).get("mode")
+    fixture_sets: dict[str, dict[str, str]] = {}
+    for fixture_id in sorted({str(case["fixture_id"]) for case in scaffold["cases"]}):
+        artifact_names = sorted(
+            {
+                str(case["case_id"]).split("#fact_checks[", maxsplit=1)[0]
+                for case in scaffold["cases"]
+                if case["fixture_id"] == fixture_id
+            }
+        )
+        if not artifact_names:
+            raise LabelJoinError(f"scaffold has no source artifact for fixture {fixture_id!r}")
+        fixture_sets[fixture_id] = _fixture_source(
+            fixture_id,
+            corpus_dir=corpus_dir,
+            artifact_name=artifact_names[0],
+            corpus=corpus,
+            selection_mode=selection_mode if isinstance(selection_mode, str) else None,
+        )
     manifest = {
         "manifest_version": "qg-layer-b-scaffold-manifest.v2",
         "inputs": {
@@ -513,15 +559,7 @@ def write_scaffold(
             "corpus_artifacts": {
                 artifact_name: sha256_file(corpus_dir / artifact_name) for artifact_name in used_artifacts
             },
-            "fixture_sets": {
-                fixture_id: {
-                    "path": str(
-                        Path(__file__).resolve().parents[2] / "tests" / "fixtures" / "qg_bakeoff" / f"{fixture_id}.json"
-                    ),
-                    "sha256": _fixture_sha256(fixture_id),
-                }
-                for fixture_id in sorted({str(case["fixture_id"]) for case in scaffold["cases"]})
-            },
+            "fixture_sets": fixture_sets,
         },
         "join_report": report["join_report"],
         "counts": {key: value for key, value in report.items() if key != "join_report"},

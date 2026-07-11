@@ -5,7 +5,6 @@ from __future__ import annotations
 import copy
 import json
 import subprocess
-import sys
 from collections.abc import Mapping
 from hashlib import sha256
 from pathlib import Path
@@ -16,7 +15,7 @@ from jsonschema import Draft202012Validator
 
 from scripts.audit.layerb_derivation import derive_keyed_records
 from scripts.audit.layerb_keys import _build_event_index, _stable_grounding_key
-from scripts.audit.layerb_label_common import LabelJoinError, sha256_text
+from scripts.audit.layerb_label_common import LabelJoinError, atomic_write_json, sha256_file, sha256_text
 from scripts.audit.layerb_label_merge import merge_annotator_sidecars
 from scripts.audit.layerb_label_scaffold import (
     JUDGMENT_CASE_FIELDS,
@@ -30,13 +29,17 @@ from scripts.audit.layerb_label_union import (
     attach_keys,
     derive_union,
     rederive_keyed_derivation,
+    select_all_corpus,
 )
+from scripts.audit.layerb_shadow import ShadowRunner
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
+VENV_PYTHON = REPO_ROOT / ".venv" / "bin" / "python"
 SCHEMA = json.loads((REPO_ROOT / "schemas" / "qg-layer-b-labels.v2.schema.json").read_text(encoding="utf-8"))
 VALIDATOR = Draft202012Validator(SCHEMA)
 RAW_OUTPUT = "source evidence used for deterministic label checks"
 EXCERPT = "source evidence"
+ADVERSARIAL_CORPUS_DIR = REPO_ROOT / "tests" / "fixtures" / "curriculum_qg" / "layer_b_adversarial"
 
 
 def _sha(value: str) -> str:
@@ -229,6 +232,22 @@ def _frozen_category_union(keyed_derivation: Mapping[str, Any]) -> dict[str, Any
         ]
         rows.append(frozen_row)
     return {"kind": "qg-layer-b-label-union-input", "rows": rows, "total_rows": len(rows)}
+
+
+def _assert_scaffold_judgments_are_null(cases: list[Mapping[str, Any]]) -> None:
+    for case in cases:
+        assert all(case[field] is None for field in JUDGMENT_CASE_FIELDS)
+        for candidates in case["candidates_by_event_output_id"].values():
+            for candidate in candidates:
+                assert candidate["expected_source_relation"] is None
+                assert candidate["expected_support_spans"] is None
+
+
+def _tree_sha256(directory: Path) -> dict[str, str]:
+    return {
+        str(path.relative_to(directory)): sha256_file(path)
+        for path in sorted(path for path in directory.rglob("*") if path.is_file())
+    }
 
 
 def _raw_rederive_inputs(tmp_path: Path) -> tuple[Path, Path, dict[str, Any]]:
@@ -431,6 +450,73 @@ def test_keyed_union_is_byte_identical_and_matches_frozen_category_fixture(tmp_p
     assert first_report["frozen_control_sample_reproduction_guaranteed"] is False
 
 
+def test_select_all_uses_every_source_key_and_projects_no_judgment_fields(tmp_path: Path) -> None:
+    corpus_dir, _fixtures_dir, _frozen = _raw_rederive_inputs(tmp_path)
+    source_records = derive_keyed_records(corpus_dir, fixtures_dir=None)
+
+    first, first_report = select_all_corpus(corpus_dir)
+    second, second_report = select_all_corpus(corpus_dir)
+
+    assert first == second
+    assert first_report == second_report
+    assert first["total_rows"] == first_report["matched_rows"] == len(source_records) == 2
+    assert first_report["mode"] == "select-all-from-source-artifacts"
+    assert first_report["flag_categories_used"] is False
+    assert first_report["control_sampling_used"] is False
+    assert first_report["fixture_truth_lookup_used"] is False
+    assert {row["grounding_key"] for row in first["rows"]} == {row["grounding_key"] for row in source_records}
+    assert all(set(row) == set(first_report["projected_row_fields"]) for row in first["rows"])
+    assert all(row["union_categories"] == [] for row in first["rows"])
+    assert all("gold_is_true" not in row for row in first["rows"])
+
+
+def test_adversarial_corpus_select_all_scaffolds_all_cases_without_proposed_labels(tmp_path: Path) -> None:
+    shadow_dir = tmp_path / "shadow"
+    shadow_report = ShadowRunner(artifacts_dir=ADVERSARIAL_CORPUS_DIR, audit_dir=shadow_dir).run()
+    shadow_path = shadow_dir / "phase1-shadow.json"
+    keyed_document, selection_report = select_all_corpus(ADVERSARIAL_CORPUS_DIR)
+    keyed_path = tmp_path / "keyed-select-all.json"
+    atomic_write_json(keyed_path, keyed_document)
+
+    first_dir = tmp_path / "scaffold-first"
+    second_dir = tmp_path / "scaffold-second"
+    first, first_manifest = write_scaffold(
+        keyed_path,
+        shadow_path,
+        corpus_dir=ADVERSARIAL_CORPUS_DIR,
+        output_dir=first_dir,
+    )
+    second, second_manifest = write_scaffold(
+        keyed_path,
+        shadow_path,
+        corpus_dir=ADVERSARIAL_CORPUS_DIR,
+        output_dir=second_dir,
+    )
+
+    assert shadow_report["summary"]["groundings_processed"] == 23
+    assert selection_report["matched_rows"] == keyed_document["total_rows"] == 23
+    assert len(first["cases"]) == len(second["cases"]) == 23
+    assert first_manifest["counts"]["keyed_rows"] == first_manifest["counts"]["cases"] == 23
+    assert first_manifest["counts"]["segment_verified_candidates"] > 0
+    assert first_manifest["counts"]["judgment_fields_prefilled"] == 0
+    _assert_scaffold_judgments_are_null(first["cases"])
+    _assert_scaffold_judgments_are_null(second["cases"])
+    packet_cases = [
+        json.loads(line)["case"]
+        for packet_path in sorted((first_dir / "packets").glob("shard-*.jsonl"))
+        for line in packet_path.read_text(encoding="utf-8").splitlines()
+    ]
+    assert len(packet_cases) == 23
+    _assert_scaffold_judgments_are_null(packet_cases)
+    assert _tree_sha256(first_dir) == _tree_sha256(second_dir)
+    assert first_manifest["scaffold_sha256"] == second_manifest["scaffold_sha256"]
+    fixture_source = first_manifest["inputs"]["fixture_sets"]["layer-b-adversarial-fixture"]
+    assert fixture_source["path"] == str(ADVERSARIAL_CORPUS_DIR / "adversarial-layer-b-fixture.json")
+    assert fixture_source["provenance"] == "embedded-corpus-artifact"
+    assert fixture_source["sha256"] == first_manifest["inputs"]["corpus_artifacts"]["adversarial-layer-b-fixture.json"]
+    assert all("PROPOSED" not in path.read_text(encoding="utf-8") for path in first_dir.rglob("*") if path.is_file())
+
+
 def test_rederive_no_drift_positive_and_synthetic_drift_hard_fail(tmp_path: Path) -> None:
     corpus_dir, fixtures_dir, frozen = _raw_rederive_inputs(tmp_path)
     regenerated = derive_keyed_records(corpus_dir, fixtures_dir=fixtures_dir)
@@ -467,7 +553,6 @@ def test_rederive_cli_is_byte_identical_for_two_source_walks(tmp_path: Path) -> 
     first_path = tmp_path / "keyed-first.json"
     second_path = tmp_path / "keyed-second.json"
     command = [
-        sys.executable,
         "scripts/audit/layerb_label_union.py",
         "rederive",
         "--derivation",
@@ -481,7 +566,7 @@ def test_rederive_cli_is_byte_identical_for_two_source_walks(tmp_path: Path) -> 
     ]
     for output in (first_path, second_path):
         completed = subprocess.run(
-            [*command, "--output", str(output)],
+            [str(VENV_PYTHON), *command, "--output", str(output)],
             cwd=REPO_ROOT,
             check=False,
             capture_output=True,
@@ -599,7 +684,7 @@ def test_label_tool_imports_do_not_load_runtime_reviewer_dispatch(module: str) -
         "raise SystemExit('scripts.audit.llm_reviewer_dispatch' in sys.modules)"
     )
     completed = subprocess.run(
-        [sys.executable, "-c", command],
+        [str(VENV_PYTHON), "-c", command],
         cwd=REPO_ROOT,
         check=False,
         capture_output=True,
