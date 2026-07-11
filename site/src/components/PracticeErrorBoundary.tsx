@@ -27,10 +27,12 @@ export default class PracticeErrorBoundary extends Component<
       return (
         <div className="lexicon-practice-fallback" role="alert" data-testid="practice-error-fallback">
           <p className="lexicon-practice-warning">
-            Не вдалося завантажити практику. Спробуйте оновити сторінку.
+            <span lang="uk">Не вдалося завантажити практику. Спробуйте оновити сторінку.</span>{' '}
+            <span lang="en">/ We couldn’t load practice. Try reloading the page.</span>
           </p>
           <button type="button" className="btn btn-accent" onClick={() => window.location.reload()}>
-            Спробувати ще раз
+            <span lang="uk">Спробувати ще раз</span>{' '}
+            <span className="btn-sub" lang="en">Try again</span>
           </button>
         </div>
       );

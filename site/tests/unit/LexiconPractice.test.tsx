@@ -3,6 +3,7 @@ import { State } from 'ts-fsrs';
 import { act, render, screen, waitFor, within, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import LexiconPractice from '@site/src/components/LexiconPractice';
+import PracticeErrorBoundary from '@site/src/components/PracticeErrorBoundary';
 import {
   SRS_STORAGE_KEY,
   cardKey,
@@ -18,6 +19,10 @@ import {
 import { LEARNER_LEVEL_STORAGE_KEY, type CefrLevel } from '@site/src/lib/lexicon/levels';
 
 const NOW = new Date('2026-06-23T12:00:00.000Z');
+
+function ThrowPracticeError(): never {
+  throw new Error('practice render failed');
+}
 
 function okJson(body: unknown): Response {
   return { ok: true, json: async () => body } as unknown as Response;
@@ -463,6 +468,21 @@ beforeEach(() => {
 });
 
 describe('LexiconPractice', () => {
+  test('practice render fallback is bilingual', () => {
+    vi.spyOn(console, 'error').mockImplementation(() => undefined);
+
+    render(
+      <PracticeErrorBoundary>
+        <ThrowPracticeError />
+      </PracticeErrorBoundary>,
+    );
+
+    const fallback = screen.getByTestId('practice-error-fallback');
+    expect(fallback).toHaveTextContent('Не вдалося завантажити практику. Спробуйте оновити сторінку.');
+    expect(fallback).toHaveTextContent('We couldn’t load practice. Try reloading the page.');
+    expect(screen.getByRole('button', { name: /Спробувати ще раз\s*Try again/ })).toBeInTheDocument();
+  });
+
   test('eager-loads only the index (not lexemes/cloze) before a mode starts', async () => {
     const { fn, requested } = mockShardFetch({ A1: 2 });
     vi.spyOn(globalThis, 'fetch').mockImplementation(fn);
@@ -831,10 +851,10 @@ describe('LexiconPractice', () => {
     expect(link).toHaveAttribute('href', '/lexicon/dim/');
   });
 
-  test('focus deep-link: deck filtered to the lemma, no double session start', async () => {
+  test('focus deep-link: a bare Atlas lemma resolves to its item with no double session start', async () => {
     const originalSearch = window.location.search;
     delete (window as any).location;
-    window.location = new URL('http://localhost/lexicon/practice/?lemmaId=dim') as any;
+    window.location = new URL('http://localhost/lexicon/practice/?lemmaId=%D0%B4%D1%96%D0%BC') as any;
 
     try {
       const setItemSpy = vi.spyOn(localStorage, 'setItem');
@@ -869,6 +889,210 @@ describe('LexiconPractice', () => {
       expect(startedSnapshot.budget).toBe(10);
     } finally {
       window.location = new URL('http://localhost/') as any;
+      vi.restoreAllMocks();
+    }
+  });
+
+  test('bare in-pool Atlas lemma opens that lemma’s practice', async () => {
+    const originalSearch = window.location.search;
+    delete (window as any).location;
+    window.location = new URL('http://localhost/words-of-the-day/practice/?lemmaId=%D0%BA%D0%B0%D1%84%D0%B5') as any;
+
+    try {
+      const cafe = lexeme('kafe', 'кафе', 'cafe', {
+        nominative: 'кафе',
+        accusative: 'кафе',
+        locative: 'кафе',
+      });
+      const book = lexeme('knyha', 'книга', 'book', {
+        nominative: 'книга',
+        accusative: 'книгу',
+        locative: 'книзі',
+      });
+      const deck: PracticeDeckData = {
+        deckVersion: 'test-atlas-lemma',
+        level: 'A1',
+        lexemes: [cafe, book],
+        index: [cafe, book].map((entry, newOrder) => ({
+          lemmaId: entry.lemmaId,
+          lemma: entry.lemma,
+          cefr: 'A1',
+          modes: ['flashcards'],
+          hasCloze: false,
+          clozeIds: [],
+          newOrder,
+        })),
+        cloze: [],
+      };
+
+      render(<LexiconPractice initialDeck={deck} autoStart={false} />);
+
+      expect(
+        await screen.findByRole('button', { name: /кафе.*натисніть, щоб перевернути/ }),
+      ).toBeInTheDocument();
+      expect(screen.queryByRole('button', { name: /книга.*натисніть, щоб перевернути/ })).not.toBeInTheDocument();
+      expect(screen.queryByTestId('practice-fetch-error')).not.toBeInTheDocument();
+    } finally {
+      window.location = new URL(originalSearch ? `http://localhost${originalSearch}` : 'http://localhost/') as any;
+    }
+  });
+
+  test('focused deep link clears a transient deck-load error after its retry renders the exercise', async () => {
+    const originalSearch = window.location.search;
+    delete (window as any).location;
+    window.location = new URL('http://localhost/words-of-the-day/practice/?lemmaId=%D0%BA%D0%B0%D1%84%D0%B5') as any;
+
+    try {
+      const cafe = lexeme('kafe', 'кафе', 'cafe', {
+        nominative: 'кафе',
+        accusative: 'кафе',
+        locative: 'кафе',
+      });
+      let failFirstLexemeRequest = true;
+      const fetchMock = vi.fn(async (input: RequestInfo | URL) => {
+        const url = String(input);
+        const match = url.match(
+          /practice-(index|lexemes|cloze|stress|classify|paradigm|synonym|heritage)\.([ABC][12])\.json/,
+        );
+        if (!match || match[2] !== 'A1') return notFoundResponse();
+        const kind = match[1];
+        if (kind === 'index') {
+          return okJson({
+            deckVersion: 'v-A1',
+            level: 'A1',
+            items: [{
+              lemmaId: cafe.lemmaId,
+              lemma: cafe.lemma,
+              cefr: 'A1',
+              modes: ['flashcards'],
+              hasCloze: false,
+              clozeIds: [],
+              newOrder: 0,
+            }],
+          });
+        }
+        if (kind === 'lexemes') {
+          if (failFirstLexemeRequest) {
+            failFirstLexemeRequest = false;
+            throw new Error('transient lexeme failure');
+          }
+          return okJson({ deckVersion: 'v-A1', level: 'A1', lexemes: [cafe] });
+        }
+        return okJson({ [kind]: [] });
+      });
+      vi.spyOn(globalThis, 'fetch').mockImplementation(fetchMock);
+
+      render(<LexiconPractice autoStart={false} />);
+
+      expect(
+        await screen.findByRole('button', { name: /кафе.*натисніть, щоб перевернути/ }),
+      ).toBeInTheDocument();
+      expect(screen.queryByTestId('practice-fetch-error')).not.toBeInTheDocument();
+      expect(
+        fetchMock.mock.calls.filter(([url]) => String(url).includes('practice-lexemes.A1.json')),
+      ).toHaveLength(2);
+    } finally {
+      window.location = new URL(originalSearch ? `http://localhost${originalSearch}` : 'http://localhost/') as any;
+      vi.restoreAllMocks();
+    }
+  });
+
+  test('bare Atlas lemma outside the initial deck resolves from cumulative shards', async () => {
+    const originalSearch = window.location.search;
+    delete (window as any).location;
+    window.location = new URL('http://localhost/words-of-the-day/practice/?lemmaId=%D0%BA%D0%B0%D1%84%D0%B5') as any;
+    localStorage.setItem(LEARNER_LEVEL_STORAGE_KEY, 'B1');
+
+    try {
+      const cafe = lexeme('kafe', 'кафе', 'cafe', {
+        nominative: 'кафе',
+        accusative: 'кафе',
+        locative: 'кафе',
+      });
+      const requested: string[] = [];
+      const fn = vi.fn(async (input: RequestInfo | URL) => {
+        const url = String(input);
+        requested.push(url);
+        const match = url.match(
+          /practice-(index|lexemes|cloze|stress|classify|paradigm|synonym|heritage)\.([ABC][12])\.json/,
+        );
+        if (!match) return notFoundResponse();
+        const kind = match[1];
+        const level = match[2] as CefrLevel;
+        if (kind === 'index') {
+          return okJson({
+            deckVersion: `v-${level}`,
+            level,
+            items: level === 'A1'
+              ? [{ lemmaId: cafe.lemmaId, lemma: cafe.lemma, cefr: 'A1', modes: ['flashcards'], hasCloze: false, clozeIds: [], newOrder: 0 }]
+              : [],
+          });
+        }
+        if (kind === 'lexemes') {
+          return okJson({ deckVersion: `v-${level}`, level, lexemes: level === 'A1' ? [cafe] : [] });
+        }
+        return okJson({ [kind]: [] });
+      });
+      vi.spyOn(globalThis, 'fetch').mockImplementation(fn);
+
+      render(<LexiconPractice initialDeck={sampleDeck()} autoStart={false} />);
+
+      expect(
+        await screen.findByRole('button', { name: /кафе.*натисніть, щоб перевернути/ }),
+      ).toBeInTheDocument();
+      expect(screen.queryByTestId('practice-lemma-missing')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('practice-fetch-error')).not.toBeInTheDocument();
+      expect(requested.filter((url) => url.includes('practice-index.A1.json'))).toHaveLength(1);
+      expect(requested.filter((url) => url.includes('practice-lexemes.A1.json'))).toHaveLength(1);
+    } finally {
+      window.location = new URL(originalSearch ? `http://localhost${originalSearch}` : 'http://localhost/') as any;
+      vi.restoreAllMocks();
+    }
+  });
+
+  test('out-of-pool Atlas lemma keeps the hub usable without retrying its lookup', async () => {
+    const originalSearch = window.location.search;
+    delete (window as any).location;
+    window.location = new URL('http://localhost/words-of-the-day/practice/?lemmaId=%D0%BF%D0%BE%D0%B7%D0%B0%D0%BF%D1%83%D0%BB%D0%BE%D0%BC') as any;
+
+    try {
+      const user = userEvent.setup();
+      const { fn, requested } = mockShardFetch({ A1: 2 });
+      vi.spyOn(globalThis, 'fetch').mockImplementation(fn);
+
+      render(<LexiconPractice />);
+
+      const notice = await screen.findByTestId('practice-lemma-missing');
+      expect(notice).toHaveTextContent('Це слово ще не в тренажері.');
+      expect(notice).toHaveTextContent('This word is not in the practice pool yet.');
+      expect(screen.queryByTestId('practice-fetch-error')).not.toBeInTheDocument();
+      await user.click(screen.getByTestId('practice-start-session'));
+      expect(await screen.findByTestId('practice-session-progress')).toHaveTextContent('0/6');
+      expect(screen.queryByTestId('practice-fetch-error')).not.toBeInTheDocument();
+      expect(requested.filter((url) => url.includes('practice-index.A1.json'))).toHaveLength(1);
+      expect(requested.filter((url) => url.includes('practice-lexemes.A1.json'))).toHaveLength(1);
+    } finally {
+      window.location = new URL(originalSearch ? `http://localhost${originalSearch}` : 'http://localhost/') as any;
+      vi.restoreAllMocks();
+    }
+  });
+
+  test('a real deep-link fetch failure renders bilingual practice fallback', async () => {
+    const originalSearch = window.location.search;
+    delete (window as any).location;
+    window.location = new URL('http://localhost/words-of-the-day/practice/?lemmaId=%D0%BA%D0%B0%D1%84%D0%B5') as any;
+
+    try {
+      vi.spyOn(globalThis, 'fetch').mockRejectedValue(new Error('network offline'));
+
+      render(<LexiconPractice />);
+
+      const fallback = await screen.findByTestId('practice-fetch-error');
+      expect(fallback).toHaveTextContent('Не вдалося завантажити практику.');
+      expect(fallback).toHaveTextContent('We couldn’t load practice.');
+      expect(screen.getByRole('button', { name: /Спробувати ще раз\s*Try again/ })).toBeInTheDocument();
+    } finally {
+      window.location = new URL(originalSearch ? `http://localhost${originalSearch}` : 'http://localhost/') as any;
       vi.restoreAllMocks();
     }
   });

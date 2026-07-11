@@ -7,8 +7,14 @@ import LexiconPractice from '../components/LexiconPractice';
 </div>
 
 <div id="lexicon-practice-fallback" class="lexicon-practice-fallback" hidden>
-  <p>Не вдалося завантажити практику.</p>
-  <button type="button" onclick="location.reload()">Спробувати ще раз</button>
+  <p>
+    <span lang="uk">Не вдалося завантажити практику.</span>
+    <span lang="en">/ We couldn’t load practice.</span>
+  </p>
+  <button type="button" onclick="location.reload()">
+    <span lang="uk">Спробувати ще раз</span>
+    <span class="btn-sub" lang="en">Try again</span>
+  </button>
 </div>
 
 <script is:inline>

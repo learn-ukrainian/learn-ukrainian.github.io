@@ -108,6 +108,13 @@ const STREAK_KEY = 'lu-lexicon-practice-streak';
 const MASTERED_THRESHOLD = 21;
 type SessionPhase = 'idle' | 'active' | 'summary';
 
+const PRACTICE_LOAD_ERROR_UK = 'Не вдалося завантажити практику.';
+const PRACTICE_LOAD_ERROR_EN = 'We couldn’t load practice.';
+const PRACTICE_RETRY_UK = 'Спробувати ще раз';
+const PRACTICE_RETRY_EN = 'Try again';
+const PRACTICE_POOL_MISS_UK = 'Це слово ще не в тренажері.';
+const PRACTICE_POOL_MISS_EN = 'This word is not in the practice pool yet.';
+
 const SESSION_LABELS_A1: Record<string, string> = {
   startSession: 'Start session',
   continueSession: 'Continue session',
@@ -802,6 +809,30 @@ function mergeDecks(decks: PracticeDeckData[], level: CefrLevel): PracticeDeckDa
   return extendWithLowerDecks(base, rest);
 }
 
+/** Resolve either a practice item id or the bare lemma that Atlas links provide. */
+function resolvePracticeIndexItem(
+  index: PracticeIndexItem[],
+  target: string,
+): PracticeIndexItem | null {
+  const normalizedTarget = czNorm(target);
+  if (!normalizedTarget) return null;
+
+  return (
+    [...index]
+      .reverse()
+      .find((item) => item.lemmaId === target || czNorm(item.lemma) === normalizedTarget) ?? null
+  );
+}
+
+function BilingualPracticeMessage({ uk, en }: { uk: string; en: string }) {
+  return (
+    <>
+      <span lang="uk">{uk}</span>{' '}
+      <span lang="en">/ {en}</span>
+    </>
+  );
+}
+
 /** Deduped fetch for a practice shard JSON by URL. Concurrent or repeated callers share the promise. */
 async function getShardJson<T>(url: string, cache: Map<string, Promise<unknown>>): Promise<T> {
   let p = cache.get(url) as Promise<T> | undefined;
@@ -862,6 +893,7 @@ function LexiconPracticeIsland({
     readLearnerLevel(normalizeCefrLevel(deckLevel)),
   );
   const [focusedLemmaId, setFocusedLemmaId] = useState<string | null>(null);
+  const [focusLookupMiss, setFocusLookupMiss] = useState(false);
   // §6b weak-area focus: when set, the session poolFilter is narrowed to this weakness.
   const [focusWeakness, setFocusWeakness] = useState<WeakArea | null>(null);
   const [reviewLog, setReviewLog] = useState<ReviewLogEntry[]>([]);
@@ -951,15 +983,11 @@ function LexiconPracticeIsland({
       const params = new URLSearchParams(window.location.search);
       const target = params.get('lemmaId');
       if (target) {
-        // Clear snapshot and resume state
+        // Keep #4744's single reactive auto-start path: initialize the resolved focus,
+        // then let the focusedLemmaId effect below create the session exactly once.
         writePracticeSessionSnapshot(null);
         setResumeSnapshot(null);
-
-        setFocusedLemmaId(target);
-        setMode('mixed');
-        setSessionBudget(10);
-        setSessionPhase('active');
-        void ensureDeck(shouldLoadCloze('mixed'));
+        void initializeFocusedPractice(target);
       } else {
         const snapshot = readPracticeSessionSnapshot();
         setResumeSnapshot(isPracticeSessionResumable(snapshot) ? snapshot : null);
@@ -1226,7 +1254,10 @@ function LexiconPracticeIsland({
     const level = options.level ?? learnerLevel;
     const force = options.force ?? false;
     const current = force ? null : deck;
-    if (current && (!includeCloze || clozeLoaded)) return current;
+    if (current && (!includeCloze || clozeLoaded)) {
+      setError(null);
+      return current;
+    }
     const requestId = ++deckRequestId.current;
     setLoading(true);
     setError(null);
@@ -1372,14 +1403,85 @@ function LexiconPracticeIsland({
       if (deckRequestId.current !== requestId) return nextDeck!;
       setDeck(nextDeck!);
       setClozeLoaded(nextClozeLoaded);
+      setError(null);
       return nextDeck!;
     } catch {
       if (deckRequestId.current === requestId) {
-        setError('Не вдалося завантажити колоду для практики.');
+        setError(PRACTICE_LOAD_ERROR_UK);
       }
       return null;
     } finally {
       if (deckRequestId.current === requestId) setLoading(false);
+    }
+  }
+
+  async function initializeFocusedPractice(target: string) {
+    setLoading(true);
+    setError(null);
+    setFocusLookupMiss(false);
+
+    try {
+      const initialDeck = deck;
+      const initialMatch = initialDeck
+        ? resolvePracticeIndexItem(initialDeck.index, target)
+        : null;
+      let matchedIndexItem = initialMatch;
+      if (!matchedIndexItem) {
+        const indexShards = await Promise.all(
+          levelsUpTo(learnerLevel).map((level) =>
+            getShardJson<PracticeIndexShard>(
+              `${shardBaseUrl}/practice-index.${level}.json`,
+              shardJsonCacheRef.current,
+            ),
+          ),
+        );
+        matchedIndexItem = resolvePracticeIndexItem(
+          indexShards.flatMap((shard) => shard.items ?? []),
+          target,
+        );
+      }
+
+      if (!matchedIndexItem) {
+        setFocusedLemmaId(null);
+        setFocusLookupMiss(true);
+        setSessionPhase('idle');
+        return;
+      }
+
+      // The cumulative index is small. Load only the resolved level's core deck next,
+      // retaining the progressive lower-level loading strategy for practice content.
+      const matchedLevel = normalizeCefrLevel(matchedIndexItem.cefr, learnerLevel);
+      let loadedDeck = initialMatch
+        ? initialDeck
+        : await ensureDeck(shouldLoadCloze('mixed'), { level: matchedLevel, force: true });
+      if (!loadedDeck && !initialMatch) {
+        // A failed shared shard promise is evicted by getShardJson. Retry the focused
+        // deck once so a transient init failure cannot outlive the successful exercise.
+        loadedDeck = await ensureDeck(shouldLoadCloze('mixed'), { level: matchedLevel, force: true });
+      }
+      if (!loadedDeck) return;
+
+      const resolvedItem = resolvePracticeIndexItem(loadedDeck.index, target);
+      if (!resolvedItem) {
+        // An index/lexeme deploy mismatch is a real data-load fault, not a word that
+        // simply is not in the learner's available practice pool.
+        setError(PRACTICE_LOAD_ERROR_UK);
+        setSessionPhase('idle');
+        return;
+      }
+
+      setError(null);
+      setFocusedLemmaId(resolvedItem.lemmaId);
+      setMode('mixed');
+      setSessionBudget(10);
+      setSessionPhase('active');
+    } catch {
+      // Only request failures reach the load fallback. A completed lookup miss remains
+      // a usable hub with a concise bilingual notice.
+      setError(PRACTICE_LOAD_ERROR_UK);
+      setSessionPhase('idle');
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -1455,6 +1557,7 @@ function LexiconPracticeIsland({
     setMode(nextMode);
     setSessionBudget(budget);
     setError(null);
+    setFocusLookupMiss(false);
     let loadedDeck = await ensureDeck(shouldLoadCloze(nextMode));
     if (!loadedDeck) return;
     if (focusedLemmaId) {
@@ -1564,6 +1667,7 @@ function LexiconPracticeIsland({
 
   function clearFocus() {
     setFocusedLemmaId(null);
+    setFocusLookupMiss(false);
     setFocusWeakness(null);
     setDeck(null);
     setDueIndex(null);
@@ -1854,6 +1958,12 @@ function LexiconPracticeIsland({
 
       {storageWarning && <p className="lexicon-practice-warning">{storageWarning}</p>}
 
+      {focusLookupMiss && (
+        <p className="lexicon-practice-warning" role="status" data-testid="practice-lemma-missing">
+          <BilingualPracticeMessage uk={PRACTICE_POOL_MISS_UK} en={PRACTICE_POOL_MISS_EN} />
+        </p>
+      )}
+
       {sessionPhase === 'idle' && (
         <div className="lexicon-practice-home">
           {focusedLemmaId && (
@@ -2084,11 +2194,14 @@ function LexiconPracticeIsland({
       )}
 
       {loading && <p className="lexicon-practice-muted">Завантажуємо…</p>}
-      {error && (
+      {error && !selection && (
         <div className="lexicon-practice-fallback" data-testid="practice-fetch-error">
-          <p className="lexicon-practice-warning">{error}</p>
+          <p className="lexicon-practice-warning">
+            <BilingualPracticeMessage uk={error} en={PRACTICE_LOAD_ERROR_EN} />
+          </p>
           <button type="button" className="btn btn-accent" onClick={() => window.location.reload()}>
-            Спробувати ще раз
+            <span lang="uk">{PRACTICE_RETRY_UK}</span>{' '}
+            <span className="btn-sub" lang="en">{PRACTICE_RETRY_EN}</span>
           </button>
         </div>
       )}
