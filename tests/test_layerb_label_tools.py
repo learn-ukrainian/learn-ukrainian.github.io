@@ -13,6 +13,7 @@ from typing import Any
 import pytest
 from jsonschema import Draft202012Validator
 
+from scripts.audit.layerb_apply_adjudication import ADJUDICATOR, _digest_map, apply_ruling
 from scripts.audit.layerb_derivation import derive_keyed_records
 from scripts.audit.layerb_keys import _build_event_index, _stable_grounding_key
 from scripts.audit.layerb_label_common import LabelJoinError, atomic_write_json, sha256_file, sha256_text
@@ -773,3 +774,79 @@ def test_merge_treats_list_order_as_material(tmp_path: Path) -> None:
         diff["field"].endswith("expected_support_spans")
         for diff in report["cases"][0]["material_differences"]
     )
+
+
+def test_custom_layer_a_reason_uses_enum_and_preserves_a_narrow_support_spans() -> None:
+    """A reason-only CUSTOM ruling cannot silently widen decisive support spans."""
+    event_output_id = "a" * 64
+
+    def case(reason: str, span: dict[str, int | str]) -> dict[str, object]:
+        return {
+            "case_id": "reason-case",
+            "expected_layer_a_reason": reason,
+            "candidates_by_event_output_id": {
+                event_output_id: [
+                    {
+                        "candidate_id": "candidate-1",
+                        "expected_support_spans": [span],
+                    }
+                ]
+            },
+        }
+
+    a_span = {"start": 10, "end": 18, "role": "SUPPORTS"}
+    b_span = {"start": 0, "end": 20, "role": "SUPPORTS"}
+    draft = case("PRESENT_MULTI", a_span)
+    decision = {
+        "case_id": "reason-case",
+        "ruling": "CUSTOM:layer_a_reason=ANCHORED_CONTIGUOUS",
+        "rationale": "Frozen single-output anchor ruling.",
+        "adjudicator": ADJUDICATOR,
+    }
+    digest_cases = _digest_map(
+        {
+            "cases": [
+                {
+                    "case_id": "reason-case",
+                    "material_differences": [
+                        {"field": "expected_layer_a_reason"},
+                        {
+                            "field": (
+                                f"candidates_by_event_output_id.{event_output_id}[0].expected_support_spans"
+                            )
+                        },
+                    ],
+                }
+            ],
+            "cosmetic_only_case_ids": ["cosmetic-case"],
+        }
+    )
+    assert digest_cases["cosmetic-case"] == {"case_id": "cosmetic-case", "fields": {}}
+    assert digest_cases["reason-case"]["fields"] == {
+        "expected_layer_a_reason": {},
+        "expected_support_spans": {},
+    }
+    digest = digest_cases["reason-case"]
+
+    result = apply_ruling(
+        draft,
+        case("PRESENT_MULTI", a_span),
+        case("ANCHORED_CONTIGUOUS", b_span),
+        decision,
+        digest,
+    )
+
+    assert result["expected_layer_a_reason"] == "ANCHORED_CONTIGUOUS"
+    candidates = result["candidates_by_event_output_id"]
+    assert isinstance(candidates, dict)
+    assert candidates[event_output_id][0]["expected_support_spans"] == [a_span]
+
+    invalid_decision = {**decision, "ruling": "CUSTOM:layer_a_reason=NOT_A_SCHEMA_REASON"}
+    with pytest.raises(LabelJoinError, match="registered enum"):
+        apply_ruling(
+            draft,
+            case("PRESENT_MULTI", a_span),
+            case("ANCHORED_CONTIGUOUS", b_span),
+            invalid_decision,
+            digest,
+        )

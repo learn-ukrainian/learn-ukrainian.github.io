@@ -25,23 +25,42 @@ if __package__ in {None, ""}:
 
 from scripts.audit.layerb_keys import _build_event_index
 from scripts.audit.layerb_label_common import LabelJoinError, atomic_write_json, read_json, sha256_file
-from scripts.audit.layerb_label_scaffold import _artifact_events, validate_annotator_record
+from scripts.audit.layerb_label_scaffold import (
+    AGGREGATE_RELATIONS,
+    FACT_CHECK_DECISIONS,
+    LAYER_A_DECISIONS,
+    LAYER_A_REASONS,
+    _artifact_events,
+    validate_annotator_record,
+)
 
 ADJUDICATOR = "claude-infra (Fable, session d2d784aa)"
 ADJUDICATOR_R2 = "claude-infra (Fable, session 053cb131)"
 ANNOTATORS = ["annotator-a-claude-opus", "annotator-b-codex-terra"]
-CASE_JUDGMENT_FIELDS = {"expected_aggregate_relation", "expected_fact_check_decision"}
+CASE_JUDGMENT_FIELDS = {
+    "expected_aggregate_relation",
+    "expected_fact_check_decision",
+    "expected_layer_a_decision",
+    "expected_layer_a_reason",
+}
 CANDIDATE_JUDGMENT_FIELDS = {"expected_source_relation", "expected_support_spans"}
 CUSTOM_CASE_FIELD_NAMES = {
     "aggregate_relation": "expected_aggregate_relation",
     "fact_check_decision": "expected_fact_check_decision",
+    "layer_a_decision": "expected_layer_a_decision",
+    "layer_a_reason": "expected_layer_a_reason",
+}
+CUSTOM_CASE_ENUMS = {
+    "expected_aggregate_relation": AGGREGATE_RELATIONS,
+    "expected_fact_check_decision": FACT_CHECK_DECISIONS,
+    "expected_layer_a_decision": LAYER_A_DECISIONS,
+    "expected_layer_a_reason": LAYER_A_REASONS,
 }
 CUSTOM_CANDIDATE_FIELD_NAMES = {
     "candidate.expected_source_relation": "expected_source_relation",
     "candidate.expected_support_spans": "expected_support_spans",
 }
 UNRESOLVED_BLOCKER_PREFIX = "UNRESOLVED case pending re-adjudication: "
-STANDING_BLOCKER = "2 UNRESOLVED cases pending re-adjudication"
 
 
 def _case_map(document: Mapping[str, Any], label: str) -> dict[str, dict[str, Any]]:
@@ -120,7 +139,13 @@ def _overlay_round_two_decisions(
 
 
 def _digest_map(digest: Any) -> dict[str, dict[str, Any]]:
-    """Index the frozen field-level disagreement digest."""
+    """Index a frozen digest list or the ``cases`` array of a merge report."""
+    cosmetic_only_case_ids: list[Any] = []
+    if isinstance(digest, Mapping):
+        cosmetic_only_case_ids = digest.get("cosmetic_only_case_ids", [])
+        if not isinstance(cosmetic_only_case_ids, list):
+            raise LabelJoinError("adjudication report cosmetic_only_case_ids must be a list")
+        digest = digest.get("cases")
     if not isinstance(digest, list):
         raise LabelJoinError("adjudication digest must be a list")
     result: dict[str, dict[str, Any]] = {}
@@ -129,6 +154,19 @@ def _digest_map(digest: Any) -> dict[str, dict[str, Any]]:
             raise LabelJoinError("adjudication digest must contain objects")
         case_id = entry.get("case_id")
         fields = entry.get("fields")
+        if fields is None:
+            material_differences = entry.get("material_differences")
+            if not isinstance(material_differences, list):
+                raise LabelJoinError("adjudication digest entry is malformed")
+            fields = {}
+            for difference in material_differences:
+                if not isinstance(difference, Mapping) or not isinstance(difference.get("field"), str):
+                    raise LabelJoinError("adjudication digest material difference is malformed")
+                path = difference["field"]
+                field = path if path in CASE_JUDGMENT_FIELDS | CANDIDATE_JUDGMENT_FIELDS else path.rsplit(".", 1)[-1]
+                if field not in CASE_JUDGMENT_FIELDS | CANDIDATE_JUDGMENT_FIELDS:
+                    raise LabelJoinError(f"adjudication digest has unsupported material field: {path}")
+                fields[field] = {}
         if not isinstance(case_id, str) or not case_id or not isinstance(fields, Mapping):
             raise LabelJoinError("adjudication digest entry is malformed")
         unexpected = sorted(set(fields) - CASE_JUDGMENT_FIELDS - CANDIDATE_JUDGMENT_FIELDS)
@@ -136,7 +174,18 @@ def _digest_map(digest: Any) -> dict[str, dict[str, Any]]:
             raise LabelJoinError(f"adjudication digest {case_id} has unsupported fields: {', '.join(unexpected)}")
         if case_id in result:
             raise LabelJoinError(f"adjudication digest repeats case_id={case_id}")
-        result[case_id] = dict(entry)
+        normalized_entry = dict(entry)
+        normalized_entry["fields"] = dict(fields)
+        result[case_id] = normalized_entry
+    for case_id in cosmetic_only_case_ids:
+        if not isinstance(case_id, str) or not case_id:
+            raise LabelJoinError("adjudication report has an invalid cosmetic-only case_id")
+        existing = result.get(case_id)
+        if existing is not None:
+            if existing["fields"]:
+                raise LabelJoinError(f"cosmetic-only case {case_id} has material differences")
+            continue
+        result[case_id] = {"case_id": case_id, "fields": {}}
     return result
 
 
@@ -220,6 +269,8 @@ def _parse_custom_ruling(ruling: str) -> tuple[dict[str, str], dict[str, str]]:
         if not separator or not value:
             raise LabelJoinError(f"malformed CUSTOM ruling: {ruling!r}")
         if case_field is not None and case_field not in case_result:
+            if value not in CUSTOM_CASE_ENUMS[case_field]:
+                raise LabelJoinError(f"CUSTOM {key} must be a registered enum: {value!r}")
             case_result[case_field] = value
         elif candidate_field is not None and candidate_field not in candidate_result:
             if candidate_field == "expected_support_spans" and value != "EMPTY":
@@ -266,7 +317,7 @@ def _custom_residual_source(decision: Mapping[str, Any]) -> str:
     return "A"
 
 
-def _adjudication(status: str, note: str, adjudicator: str) -> dict[str, Any]:
+def _adjudication(status: str, note: str, adjudicator: str | None) -> dict[str, Any]:
     return {"status": status, "adjudicator": adjudicator, "note": note}
 
 
@@ -302,6 +353,10 @@ def apply_ruling(
     elif ruling == "UNRESOLVED":
         _copy_differing_fields(result, annotator_a_case, fields, "annotator-a")
         result["adjudication"] = _adjudication("UNRESOLVED", rationale, adjudicator)
+    elif ruling == "AGREED":
+        if fields:
+            raise LabelJoinError(f"AGREED ruling {draft_case.get('case_id')!r} has material differences")
+        result["adjudication"] = _adjudication("AGREED", rationale, None)
     elif ruling.startswith("CUSTOM:"):
         case_assignments, candidate_assignments = _parse_custom_ruling(ruling)
         if candidate_assignments:
@@ -381,12 +436,13 @@ def apply_adjudications(
     *,
     event_outputs: Mapping[str, str],
     decisions_r2: Any | None = None,
+    adjudicator: str = ADJUDICATOR,
 ) -> tuple[dict[str, Any], dict[str, Any]]:
     """Return a schema-ready final sidecar and deterministic accounting summary."""
     draft_cases = _case_map(draft, "merge draft")
     a_cases = _case_map(annotator_a, "annotator-a record")
     b_cases = _case_map(annotator_b, "annotator-b record")
-    decision_cases = _decision_map(decisions)
+    decision_cases = _decision_map(decisions, adjudicator=adjudicator)
     if decisions_r2 is not None:
         decision_cases = _overlay_round_two_decisions(decision_cases, decisions_r2)
     digest_cases = _digest_map(digest)
@@ -423,26 +479,26 @@ def apply_adjudications(
         final_cases.append(final_case)
 
     statuses = Counter(str(case["adjudication"]["status"]) for case in final_cases)
-    expected_statuses = (
-        Counter({"AGREED": 417, "ADJUDICATED": 118})
-        if decisions_r2 is not None
-        else Counter({"AGREED": 417, "ADJUDICATED": 116, "UNRESOLVED": 2})
-    )
-    expected_unresolved_count = 0 if decisions_r2 is not None else 2
-    if agreed != 417 or statuses != expected_statuses:
+    expected_statuses = Counter({"AGREED": agreed})
+    for decision in decision_cases.values():
+        ruling = str(decision["ruling"])
+        if ruling == "UNRESOLVED":
+            expected_status = "UNRESOLVED"
+        elif ruling == "AGREED":
+            expected_status = "AGREED"
+        else:
+            expected_status = "ADJUDICATED"
+        expected_statuses[expected_status] += 1
+    if statuses != expected_statuses:
         raise LabelJoinError(f"unexpected adjudication status counts: {dict(sorted(statuses.items()))}")
-    if len(unresolved_case_ids) != expected_unresolved_count:
-        raise LabelJoinError(
-            f"expected {expected_unresolved_count} UNRESOLVED cases, found {len(unresolved_case_ids)}"
-        )
 
     final = copy.deepcopy(dict(draft))
-    final["qualification_eligible"] = decisions_r2 is not None
+    final["qualification_eligible"] = not unresolved_case_ids
     final["qualification_blockers"] = (
         []
-        if decisions_r2 is not None
+        if not unresolved_case_ids
         else [
-            STANDING_BLOCKER,
+            f"{len(unresolved_case_ids)} UNRESOLVED cases pending re-adjudication",
             *[UNRESOLVED_BLOCKER_PREFIX + case_id for case_id in sorted(unresolved_case_ids)],
         ]
     )
@@ -466,6 +522,8 @@ def write_final_sidecar(
     digest_path: Path,
     event_corpus_dir: Path,
     output_path: Path,
+    adjudicator: str = ADJUDICATOR,
+    dataset_id: str | None = None,
 ) -> dict[str, Any]:
     """Apply frozen records and atomically write the idempotent final sidecar."""
     event_outputs = build_event_outputs(event_corpus_dir)
@@ -477,7 +535,10 @@ def write_final_sidecar(
         read_json(digest_path),
         event_outputs=event_outputs,
         decisions_r2=read_json(decisions_r2_path) if decisions_r2_path is not None else None,
+        adjudicator=adjudicator,
     )
+    if dataset_id is not None:
+        final["dataset_id"] = dataset_id
     atomic_write_json(output_path, final)
     return {**summary, "output": str(output_path), "sha256": sha256_file(output_path)}
 
@@ -492,6 +553,8 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--digest", type=Path, required=True)
     parser.add_argument("--event-corpus-dir", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--adjudicator", default=ADJUDICATOR)
+    parser.add_argument("--dataset-id")
     return parser.parse_args(argv)
 
 
@@ -506,6 +569,8 @@ def main(argv: Sequence[str] | None = None) -> int:
         digest_path=args.digest,
         event_corpus_dir=args.event_corpus_dir,
         output_path=args.output,
+        adjudicator=args.adjudicator,
+        dataset_id=args.dataset_id,
     )
     print(json.dumps(summary, ensure_ascii=False, sort_keys=True))
     return 0
