@@ -31,6 +31,7 @@ The threshold for writing an ADR: **would a new engineer need to know this to un
 | [ADR-008](adr-008-uk-native-track-destination.md) | UK-Native Track Destination & Naming | Deferred — Krisztian decision 2026-07-07: revisit when the l2-uk-direct |
 | [ADR-009](adr-009-dispatch-timeout-unification-and-liveness.md) | Dispatch `hard_timeout` is a leak guard, not a productivity heuristic | Accepted |
 | [ADR-010](adr-010-mcp-verification-phase3.md) | MCP verification layer — Phase 3 architectural redesign | Deferred — Krisztian decision 2026-07-07: Phase 2 tools (verify_quote, |
+| [ADR-011](adr-011-project-research-registry.md) | Project Research Registry — bounded cold-start discovery and task-scoped adoption | Proposed |
 <!-- ADR-INDEX-END -->
 
 ## Template
