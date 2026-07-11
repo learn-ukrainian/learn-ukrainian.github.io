@@ -37,6 +37,15 @@ def _reset_orient_cache():
 
 
 def _patch_orient_sources(monkeypatch) -> None:
+    # Scrub git-hook redirection vars from the PROCESS env too: the collector's
+    # child git processes inherit os.environ, and under a `git commit` hook
+    # (pre-commit affected-file pytest) GIT_DIR/GIT_INDEX_FILE point at the
+    # committing checkout — `git branch --show-current` then reads a detached
+    # worktree HEAD (empty) instead of the test repo. _clean_git_env() only
+    # covers the test's OWN subprocesses.
+    for key in list(os.environ):
+        if key.startswith("GIT_") or key.startswith("PRE_COMMIT"):
+            monkeypatch.delenv(key, raising=False)
     monkeypatch.setattr(api_main, "_collect_git_orient_data", lambda: {"branch": "main", "head": "abc123"})
     monkeypatch.setattr(api_main, "_collect_issues_orient_data", lambda: {"issues": [{"number": 1186}]})
 
@@ -134,6 +143,9 @@ def test_orient_git_exposes_primary_checkout_dirty_signal(monkeypatch, tmp_path)
     (repo / "tracked.txt").write_text("dirty\n", encoding="utf-8")
     _patch_orient_sources(monkeypatch)
     monkeypatch.setattr(api_main, "PROJECT_ROOT", repo)
+    # Release-mode split (#4931): git probes target the live checkout, so the
+    # collector reads LIVE_REPO_ROOT — patch it where used alongside PROJECT_ROOT.
+    monkeypatch.setattr(api_main, "LIVE_REPO_ROOT", repo)
     monkeypatch.setattr(api_main, "_collect_git_orient_data", original_git_collector)
 
     response = client.get("/api/orient?fresh=true")
@@ -151,6 +163,8 @@ def test_orient_git_survives_primary_checkout_probe_failure(monkeypatch, tmp_pat
     repo = _init_orient_git_repo(tmp_path)
     _patch_orient_sources(monkeypatch)
     monkeypatch.setattr(api_main, "PROJECT_ROOT", repo)
+    # Release-mode split (#4931): see the dirty-signal test above.
+    monkeypatch.setattr(api_main, "LIVE_REPO_ROOT", repo)
     monkeypatch.setattr(api_main, "_collect_git_orient_data", original_git_collector)
 
     from scripts.guardrails import worktree_containment
@@ -525,7 +539,10 @@ def test_orient_sections_subset_runs_only_selected_collectors(monkeypatch):
 
     assert response.status_code == 200
     data = response.json()
-    assert set(data) == {"generated_at", "git", "runtime", "meta"}
+    # _telemetry is appended only when a session transcript is resolvable
+    # (dev machines with ~/.claude transcripts; absent on CI) — exclude it so
+    # the section-selection assertion stays hermetic across environments.
+    assert set(data) - {"_telemetry"} == {"generated_at", "git", "runtime", "meta"}
     assert calls == {"git": 1, "runtime": 1, "wiki": 0}
 
 
