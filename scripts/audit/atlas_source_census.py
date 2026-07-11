@@ -47,7 +47,7 @@ from scripts.lexicon.lemma_normalization import strip_acute_stress
 
 WORKFLOW_ID = "atlas_source_census.v1"
 DEFAULT_MANIFEST = PROJECT_ROOT / "site" / "src" / "data" / "lexicon-manifest.json"
-DEFAULT_TEXTBOOK_TXT_ROOT = PROJECT_ROOT / "docs" / "references" / "textbooks-txt"
+DEFAULT_TEXTBOOK_TXT_ROOT = PROJECT_ROOT / "docs" / "references" / "private" / "textbooks-txt"
 DEFAULT_TEXTBOOK_PDF_ROOT = PROJECT_ROOT / "data" / "textbooks"
 DEFAULT_TEXTBOOK_JSONL_ROOT = PROJECT_ROOT / "data" / "textbook_chunks"
 DEFAULT_SOURCES_DB = PROJECT_ROOT / "data" / "sources.db"
