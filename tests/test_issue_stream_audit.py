@@ -7,6 +7,8 @@ import textwrap
 import pytest
 
 from scripts.orchestration.issue_stream_audit import (
+    _MAX_SUBISSUE_PAGES,
+    _paginate_subissues,
     classify,
     load_registry,
     make_issue_resolver,
@@ -167,19 +169,28 @@ def test_effective_membership_multi_home_rejected(registry):
     assert resolve(8, 100) is False and resolve(8, 200) is False  # multi-home fails closed
 
 
-def test_effective_membership_excludes_epics_and_closed(registry):
-    # 150 is not open (closed epic); 99 is native but not in the open set.
+def test_effective_membership_excludes_only_epics_not_closed_children(registry):
+    """Epics themselves are exempt from the index, but a native/body-linked
+    child stays indexed even when it is CLOSED or absent from the open-issue
+    set entirely — record ownership proof is historical, not a liveness claim
+    (PR #4998 corrective pass, item 1/2). 99 here is native to epic 100 but
+    not present in the open-issues list passed to ``classify`` (i.e. closed)."""
     report = classify(
         _issues(100, 200, 5),
         registry,
         {100: ({5, 99}, set()), 150: (set(), set()), 200: (set(), set())},
     )
     index = report["effective_membership"]
-    assert "99" not in index  # not open → not effectively owned
     assert "100" not in index and "150" not in index  # epics exempt
     assert index["5"]["epics"] == [100]
-    # A wrong/closed issue never resolves.
-    assert make_membership_resolver(report)(99, 100) is False
+    # 99 is closed (not in the open-issues list) but still uniquely owned —
+    # ownership proof must accept it.
+    assert index["99"] == {
+        "epics": [100], "streams": ["product"], "via": "native", "unique_stream": True
+    }
+    assert make_membership_resolver(report)(99, 100) is True
+    # But 99 is NOT open, so it must never resolve as a live issue consumer.
+    assert make_issue_resolver(report)("99") is False
 
 
 def test_issue_resolver_only_open_issues(registry):
@@ -329,3 +340,72 @@ def test_read_membership_index_rejects_malformed_open_numbers(tmp_path):
     report["open_issue_numbers"] = [42, "100", -1, True]
     cache.write_text(json.dumps(report), encoding="utf-8")
     assert read_membership_index(3600, cache_path=cache) is None
+
+
+# --------------------------------------------------------------------------- #
+# ADR-011 P4 corrective pass (PR #4998, item 7) — subIssues GraphQL pagination.
+# No network/gh subprocess: ``_paginate_subissues`` takes an injected page
+# fetcher, exactly as production wires it to ``_fetch_subissues_page``.
+# --------------------------------------------------------------------------- #
+def _page(nodes, has_next, end_cursor=None, body=""):
+    return {
+        "body": body,
+        "subIssues": {
+            "nodes": [{"number": n} for n in nodes],
+            "pageInfo": {"hasNextPage": has_next, "endCursor": end_cursor},
+        },
+    }
+
+
+def test_paginate_subissues_single_page_no_truncation():
+    def fetch_page(epic, cursor):
+        assert cursor is None
+        return _page([1, 2, 3], has_next=False, body="see #9")
+
+    native, body = _paginate_subissues(100, fetch_page)
+    assert native == {1, 2, 3}
+    assert body == "see #9"
+
+
+def test_paginate_subissues_walks_multiple_pages_past_100():
+    # Two pages of 100 + a final partial page — proves an epic with >100
+    # children is not silently truncated at the first page.
+    pages = [
+        _page(range(0, 100), has_next=True, end_cursor="c1", body="epic body"),
+        _page(range(100, 200), has_next=True, end_cursor="c2"),
+        _page(range(200, 205), has_next=False),
+    ]
+    calls: list[str | None] = []
+
+    def fetch_page(epic, cursor):
+        calls.append(cursor)
+        return pages[len(calls) - 1]
+
+    native, body = _paginate_subissues(100, fetch_page)
+    assert native == set(range(0, 205))
+    assert body == "epic body"  # only the first page's body is kept
+    assert calls == [None, "c1", "c2"]
+
+
+def test_paginate_subissues_stops_without_end_cursor():
+    """``hasNextPage: true`` with no ``endCursor`` must stop, not loop forever
+    or crash trying to use a null cursor."""
+    def fetch_page(epic, cursor):
+        return _page([1], has_next=True, end_cursor=None)
+
+    native, _body = _paginate_subissues(100, fetch_page)
+    assert native == {1}  # only the one page fetched
+
+
+def test_paginate_subissues_bounded_against_runaway_pagination():
+    """A server that always claims ``hasNextPage: true`` with a fresh cursor
+    must not loop forever — the hard page ceiling is the backstop."""
+    calls = {"n": 0}
+
+    def fetch_page(epic, cursor):
+        calls["n"] += 1
+        return _page([calls["n"]], has_next=True, end_cursor=f"c{calls['n']}")
+
+    native, _body = _paginate_subissues(100, fetch_page)
+    assert calls["n"] == _MAX_SUBISSUE_PAGES
+    assert len(native) == _MAX_SUBISSUE_PAGES

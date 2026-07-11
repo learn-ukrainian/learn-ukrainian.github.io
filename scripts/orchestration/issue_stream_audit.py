@@ -92,21 +92,86 @@ def _repo_owner_name() -> tuple[str, str]:
     return _REPO_CACHE["owner"], _REPO_CACHE["name"]
 
 
-def fetch_epic_membership(epic: int) -> tuple[set[int], set[int]]:
-    """Return (native_sub_issue_numbers, body_reference_numbers) for one epic."""
+# GraphQL subIssues pagination (item 7, PR #4998 corrective pass): an "exact"
+# authority cache must not silently truncate an epic's children at one page.
+# Two separate query documents (rather than one query with a nullable $cursor)
+# because ``gh api graphql`` always sends ``-f`` variables as strings, and an
+# empty-string cursor is not the same as an omitted/null ``after`` argument to
+# GitHub's API.
+_SUBISSUES_FIRST_PAGE_QUERY = (
+    "query=query($owner:String!,$name:String!,$number:Int!){"
+    "repository(owner:$owner,name:$name){issue(number:$number){body "
+    "subIssues(first:100){nodes{number} pageInfo{hasNextPage endCursor}}}}}"
+)
+_SUBISSUES_NEXT_PAGE_QUERY = (
+    "query=query($owner:String!,$name:String!,$number:Int!,$cursor:String!){"
+    "repository(owner:$owner,name:$name){issue(number:$number){"
+    "subIssues(first:100, after:$cursor){nodes{number} pageInfo{hasNextPage endCursor}}}}}"
+)
+# Bounded failure ceiling: 50 pages * 100/page = 5,000 children max. Stops a
+# buggy/adversarial API that always reports ``hasNextPage: true`` from looping
+# forever, while remaining far above any real epic's child count.
+_MAX_SUBISSUE_PAGES = 50
+
+
+def _fetch_subissues_page(epic: int, cursor: str | None) -> dict:
+    """One GraphQL page of ``issue.subIssues`` (+ ``body`` on the first page)."""
     owner, name = _repo_owner_name()
-    data = _gh_json([
-        "api", "graphql",
-        "-F", "number=" + str(epic),
-        "-f", f"owner={owner}", "-f", f"name={name}",
-        "-f",
-        "query=query($owner:String!,$name:String!,$number:Int!){"
-        "repository(owner:$owner,name:$name){issue(number:$number){body "
-        "subIssues(first:100){nodes{number}}}}}",
-    ])
-    issue = (data.get("data") or {}).get("repository", {}).get("issue") or {}
-    native = {n["number"] for n in (issue.get("subIssues") or {}).get("nodes") or []}
-    body = issue.get("body") or ""
+    if cursor is None:
+        args = [
+            "-F", "number=" + str(epic),
+            "-f", f"owner={owner}", "-f", f"name={name}",
+            "-f", _SUBISSUES_FIRST_PAGE_QUERY,
+        ]
+    else:
+        args = [
+            "-F", "number=" + str(epic),
+            "-f", f"owner={owner}", "-f", f"name={name}",
+            "-f", f"cursor={cursor}",
+            "-f", _SUBISSUES_NEXT_PAGE_QUERY,
+        ]
+    data = _gh_json(["api", "graphql", *args])
+    return (data.get("data") or {}).get("repository", {}).get("issue") or {}
+
+
+def _paginate_subissues(
+    epic: int, fetch_page: Callable[[int, str | None], dict]
+) -> tuple[set[int], str]:
+    """Drive cursor pagination over ``fetch_page`` and return (native, body).
+
+    ``fetch_page`` is injected so this is testable without any network or
+    ``gh`` subprocess — see ``tests/test_issue_stream_audit.py``. Bounded by
+    ``_MAX_SUBISSUE_PAGES``: a page with no ``endCursor`` (or ``hasNextPage``
+    false) stops the loop, and the hard page ceiling is a belt-and-suspenders
+    guard against a runaway/adversarial response.
+    """
+    native: set[int] = set()
+    body = ""
+    cursor: str | None = None
+    for page in range(_MAX_SUBISSUE_PAGES):
+        issue = fetch_page(epic, cursor)
+        if page == 0:
+            body = issue.get("body") or ""
+        sub_issues = issue.get("subIssues") or {}
+        native.update(
+            n["number"] for n in (sub_issues.get("nodes") or [])
+            if isinstance(n, dict) and isinstance(n.get("number"), int)
+        )
+        page_info = sub_issues.get("pageInfo") or {}
+        next_cursor = page_info.get("endCursor")
+        if not page_info.get("hasNextPage") or not next_cursor:
+            break
+        cursor = next_cursor
+    return native, body
+
+
+def fetch_epic_membership(epic: int) -> tuple[set[int], set[int]]:
+    """Return (native_sub_issue_numbers, body_reference_numbers) for one epic.
+
+    Native sub-issues are paginated (see ``_paginate_subissues``) so an epic
+    with more than 100 children is not silently truncated to its first page.
+    """
+    native, body = _paginate_subissues(epic, _fetch_subissues_page)
     refs = {int(m) for m in ISSUE_REF_RE.findall(body)}
     return native, refs
 
@@ -180,20 +245,29 @@ def classify(
         # false — more than one effective epic, even within one stream) ownership
         # without any live network call.
         "effective_membership": _effective_membership(
-            open_numbers, epic_numbers, stream_of_epic, membership
+            epic_numbers, stream_of_epic, membership
         ),
         "open_issue_numbers": sorted(open_numbers),
     }
 
 
 def _effective_membership(
-    open_numbers: set[int],
     epic_numbers: set[int],
     stream_of_epic: dict[int, str],
     membership: dict[int, tuple[set[int], set[int]]],
 ) -> dict[str, dict]:
-    """Exact effective issue→epic index. Native links win over body refs; epics
-    and non-open issues are excluded. One entry per owned open issue.
+    """Exact effective issue→epic index over EVERY native/body-linked child a
+    stream epic returns, regardless of open/closed state. Native links win over
+    body refs; only the epics themselves are excluded. One entry per owned
+    issue — open or closed.
+
+    Record OWNERSHIP proof (ADR-011 P4) can be historical: a closed
+    implementation issue is still uniquely owned by the epic that tracked it,
+    and ``make_membership_resolver`` must keep proving that after the issue
+    closes. Open-state gating belongs only to issue-CONSUMER health, which is
+    validated separately against ``open_issue_numbers`` in
+    ``make_issue_resolver`` — closed ownership is valid, a closed ``consumer.
+    kind: issue`` is dead (codex/gemini review, PR #4998 corrective pass).
 
     ``unique_stream`` means EXACT membership: exactly one effective epic — not
     merely one distinct stream *name*. Two epics that happen to live in the same
@@ -210,7 +284,7 @@ def _effective_membership(
             body_epics.setdefault(n, set()).add(epic)
     index: dict[str, dict] = {}
     for n in sorted(set(native_epics) | set(body_epics)):
-        if n in epic_numbers or n not in open_numbers:
+        if n in epic_numbers:
             continue
         via = "native" if native_epics.get(n) else "body"
         epics = sorted(native_epics.get(n) or body_epics.get(n))
@@ -356,12 +430,14 @@ def read_membership_index(max_age_s: int, *, cache_path: Path | None = None) -> 
 def make_membership_resolver(report: dict) -> MembershipResolver:
     """Build a ``(issue, epic) → bool`` resolver over a fresh cache report.
 
-    Returns ``True`` only when the issue is a live owned member (present in the
-    index), belongs to exactly one EFFECTIVE EPIC (``unique_stream`` — exact
-    membership, not merely one stream name), and the requested ``epic`` is one of
-    its effective epics. Rejects closed/orphan (absent), wrong-epic, and
-    ambiguous (more than one effective epic, even within a single stream)
-    ownership — every failure mode fails closed.
+    Returns ``True`` only when the issue is an owned member (present in the
+    index — open OR closed, since record ownership is historical proof, not a
+    liveness claim), belongs to exactly one EFFECTIVE EPIC (``unique_stream`` —
+    exact membership, not merely one stream name), and the requested ``epic`` is
+    one of its effective epics. Rejects absent/orphan, wrong-epic, and ambiguous
+    (more than one effective epic, even within a single stream) ownership —
+    every failure mode fails closed. Issue *consumer* liveness (which DOES
+    require the issue to be open) is a separate proof — see ``make_issue_resolver``.
     """
     index = report.get("effective_membership") or {}
 

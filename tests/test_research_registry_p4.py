@@ -184,6 +184,48 @@ def test_strict_gate_passes_with_verified_ownership(strict_root):
     assert _run_strict(root) == 0
 
 
+def test_strict_gate_accepts_closed_uniquely_owned_record_ownership(strict_root):
+    """Regression for the unlp-2026-cefr-assessment gate bug (PR #4998
+    corrective pass, item 1-3): record OWNERSHIP proof can be historical. An
+    issue that is uniquely owned by the claimed epic but is CLOSED (absent
+    from ``open_issue_numbers``) must still pass ownership — closing the
+    implementation issue does not retroactively un-own the record."""
+    root, cache = strict_root
+    rec = _make_record(root, "r1", state="proposed", ownership={"issue": 9001, "stream": REAL_EPIC})
+    _write_registry(root, [rec])
+    # 9001 is uniquely owned but NOT in open_issue_numbers — i.e. closed.
+    _write_cache(cache, {"9001": {"epics": [REAL_EPIC], "streams": ["core-quality"],
+                                  "via": "native", "unique_stream": True}},
+                 open_numbers=[], is_file=True)
+    assert _run_strict(root) == 0
+
+
+def test_strict_gate_rejects_same_closed_issue_as_issue_consumer(strict_root):
+    """The SAME closed-but-uniquely-owned issue that passes record ownership
+    (previous test) must still fail as an issue-CONSUMER: consumer liveness
+    additionally requires the ref to be open, not just uniquely owned
+    (PR #4998 corrective pass, item 3)."""
+    root, cache = strict_root
+    rec = _make_record(root, "r1", state="adopted", consumer={"kind": "issue", "ref": "9001"})
+    _write_registry(root, [rec])
+    _write_cache(cache, {"9001": {"epics": [REAL_EPIC], "streams": ["core-quality"],
+                                  "via": "native", "unique_stream": True}},
+                 open_numbers=[], is_file=True)
+    assert _run_strict(root) == 2
+
+
+def test_strict_gate_rejects_same_stream_two_epic_ownership(strict_root):
+    """Native membership in TWO epics of the SAME stream is still ambiguous —
+    ``unique_stream`` requires exactly one EFFECTIVE epic, not merely one
+    stream name (codex/gemini review, PR #4998)."""
+    root, cache = strict_root
+    rec = _make_record(root, "r1", state="proposed", ownership={"issue": 9001, "stream": REAL_EPIC})
+    _write_registry(root, [rec])
+    _write_cache(cache, {"9001": {"epics": [REAL_EPIC, 4969], "streams": ["core-quality"],
+                                  "via": "native", "unique_stream": False}}, is_file=True)
+    assert _run_strict(root) == 2
+
+
 def test_strict_gate_rejects_wrong_epic(strict_root):
     root, cache = strict_root
     rec = _make_record(root, "r1", state="proposed", ownership={"issue": 9001, "stream": REAL_EPIC})
