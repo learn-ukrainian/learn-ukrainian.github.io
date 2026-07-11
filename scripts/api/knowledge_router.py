@@ -18,6 +18,7 @@ from __future__ import annotations
 
 from fastapi import APIRouter, HTTPException, Query, Request, Response
 
+from scripts.research import consumption
 from scripts.research import registry as reg
 
 from .rules_router import _matches_etag
@@ -71,13 +72,24 @@ def knowledge_manifest(
 
 
 @router.get("/record/{record_id}")
-def knowledge_record(request: Request, record_id: str):
+def knowledge_record(
+    request: Request,
+    record_id: str,
+    task: str | None = Query(default=None),
+):
     """One validated compact digest body as ``text/markdown`` with an honest ETag.
 
     Returns a generic 404 for a disabled feature, an unknown/malformed/traversal
     id, an invalid/drifted/``private-local`` record, an unsafe digest path, or an
     over-budget body — never a leaking status. ``content_hash`` is the ETag for the
     exact normalized body; ``If-None-Match`` gives a bodyless 304.
+
+    ADR-011 P3 consumption telemetry: an optional ``task`` id attributes an actual
+    on-demand fetch (a served 200 or a cache-backed 304) to a validated, still-active
+    delegate task. Attribution is best-effort and **response-invariant** — a missing,
+    malformed, unknown, or finished task changes nothing an unattributed caller sees
+    and never reveals whether a task exists; it just emits no consumption event. A
+    404 (no record served) is never a consumption.
     """
     if not reg.is_enabled():
         raise HTTPException(status_code=404, detail=_NOT_FOUND)
@@ -90,5 +102,7 @@ def knowledge_record(request: Request, record_id: str):
     body, etag_hex = result
     etag = f'"{etag_hex}"'
     if _matches_etag(request.headers.get("If-None-Match"), etag_hex):
+        consumption.record_consumption(task, record_id, status=304)
         return Response(status_code=304, headers={"ETag": etag})
+    consumption.record_consumption(task, record_id, status=200)
     return Response(content=body, media_type=_MARKDOWN_MEDIA, headers={"ETag": etag})

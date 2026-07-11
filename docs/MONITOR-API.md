@@ -1440,6 +1440,67 @@ Modules with recent dispatch activity and unfinished publish state.
 }
 ```
 
+## Research registry — `/api/knowledge` (ADR-011)
+
+Bounded, task-scoped discovery of the Project Research Registry
+(`docs/references/research-registry.yaml`). Gated behind the default-off
+`research_registry` kill switch; while disabled every surface below reproduces
+exact pre-registry behavior. **Pointers are automatic; record bodies are strictly
+on demand** — no cold-start, orient, bootstrap, dispatch, or pipeline path ever
+fetches a digest body automatically.
+
+### `GET /api/knowledge/manifest`
+
+Filtered, pointer-only projection for a task context. Pure **AND** matcher over
+`role`, `task_family`, `track`, and repeatable `owned_path` (every dimension a
+record specifies must match; a task missing a required dimension does not match).
+Disabled → `{"enabled":false,"records":[]}`. Carries its own strong context-scoped
+`ETag`; `If-None-Match` gives a bodyless `304`. Top-5 / ≤1.5 KB; no digest bodies.
+
+### `GET /api/knowledge/record/{id}`
+
+One validated compact digest body as `text/markdown` with an honest per-record
+`ETag` (its `content_hash`). Generic `404` for disabled/unknown/malformed/traversal
+id, an invalid/drifted/`private-local` record, or an over-budget body.
+
+- `task=<task-id>` — **optional** consumption attribution. A served `200` or a
+  cache-backed `304` fetched under a validated, still-active delegate task emits
+  one privacy-safe consumption telemetry event. Attribution is **response-invariant**:
+  a missing/malformed/unknown/finished task changes nothing an unattributed caller
+  sees and never reveals whether a task exists — it simply emits no event. A `404`
+  is never a consumption.
+
+### Cold start / bootstrap
+
+- `GET /api/orient?role=<role>` — pointer-only `research` section from the role's
+  opt-in `cold_start_roles` announcements (never the AND matcher, never a body).
+- Monitor client SDK: `MonitorClient.bootstrap()` is unchanged (`rules` + `session`
+  only); `bootstrap(role=...)` adds a `research` component. `MonitorClient.research(
+  role=…, task_family=…, track=…, owned_paths=…, consumer=…)` fetches the filtered
+  projection, cached under the stable consumer plus a canonical context **fingerprint**
+  (never raw paths/role text) using the projection ETag: cold → first projection
+  surfaces; warm-unchanged → `304`, zero changed pointers, even after an unrelated
+  global registry edit.
+
+### Dispatch injection
+
+`delegate.py dispatch` accepts explicit, namespaced context flags — never inferred
+from the prompt, agent, provider, or branch: `--research-role`,
+`--research-task-family`, `--research-track`, and repeatable `--research-owned-path`.
+When set (and the registry is enabled) the dispatch prompt gains a bounded,
+pointer-only block plus an on-demand fetch instruction, and the task state persists
+**only** the pointer ids, filtered ETag, dropped ids, and context fingerprint (never
+raw owned paths, digest/source/prompt text, role, or task family).
+
+### Consumption telemetry (privacy contract)
+
+Two distinct central-emitter events (`scripts/telemetry/emit.py`; no new store):
+`research_pointer_surfaced` (a pointer was shown) and `research_record_consumed`
+(a body was actually fetched under a validated active task). Surfaced ≠ consumed.
+Payload allowlist is exactly `{task_id, research_id, surface, status}` on top of the
+emitter envelope — never a digest body, title, summary, source URL, prompt, role,
+task family, track, owned paths, or context fingerprint.
+
 ## Orientation — `/api/orient`
 
 ### `GET /api/orient`
@@ -1455,6 +1516,12 @@ Query params:
   `session_hints`. Unknown keys return `400`. Omitted = full payload
   (back-compat). Skipped sections are not collected and are omitted
   from both the top-level payload and `meta`.
+- `role=<role>` — **opt-in** ADR-011 P3 cold-start research (see
+  *Research registry* below). Absent → the response is byte-identical to
+  the pre-P3 orient (no `research` key). Present + registry enabled → a
+  pointer-only `research` section (≤5 records / ≤1.5 KB; bodies fetched
+  on demand, never here). Computed fresh per request and never stored in
+  the shared `orient_*` cache, so two roles cannot contaminate each other.
 - `session=<uuid>` or header `X-Session-Id` — per-session context
   telemetry when `LEARN_UKRAINIAN_TELEMETRY_FOOTER=1` (query wins).
 

@@ -23,8 +23,10 @@ Monitor API is always local (localhost:8765), so urllib is plenty.
 
 from __future__ import annotations
 
+import hashlib
 import json
 import urllib.error
+import urllib.parse
 import urllib.request
 from dataclasses import dataclass
 from typing import Any
@@ -33,6 +35,43 @@ from . import _monitor_cache as cache
 
 DEFAULT_BASE_URL = "http://localhost:8765"
 DEFAULT_TIMEOUT_S = 3.0
+
+_KNOWLEDGE_MANIFEST_PATH = "/api/knowledge/manifest"
+
+
+def _canonical_context(
+    role: str | None,
+    task_family: str | None,
+    track: str | None,
+    owned_paths: list[str] | None,
+) -> dict[str, Any]:
+    """Normalize a task context deterministically (mirrors ``registry.normalize_context``).
+
+    Blank/whitespace scalars collapse to ``None``; owned paths are stripped,
+    de-duplicated, and sorted. Kept dependency-light (no registry import) so the
+    cold-start client stays pure-stdlib.
+    """
+
+    def _norm(value: str | None) -> str | None:
+        if value is None:
+            return None
+        stripped = value.strip()
+        return stripped or None
+
+    paths = sorted({p.strip() for p in (owned_paths or []) if p and p.strip()})
+    return {
+        "role": _norm(role),
+        "task_family": _norm(task_family),
+        "track": _norm(track),
+        "owned_paths": paths,
+    }
+
+
+def _context_fingerprint(context: dict[str, Any]) -> str:
+    """Opaque digest of a canonical context — the cache-key component that keeps
+    raw owned paths / role text out of the on-disk cache filename."""
+    blob = json.dumps(context, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+    return hashlib.sha256(blob.encode("utf-8")).hexdigest()[:16]
 
 
 @dataclass
@@ -186,20 +225,109 @@ class MonitorClient:
         cache.put(key, body, body_hash=etag, url=url)
         return ComponentResult(key=key, body=body, hash=etag, source="network")
 
+    # -- ADR-011 P3 filtered research projection --------------------
+
+    def research(
+        self,
+        *,
+        role: str | None = None,
+        task_family: str | None = None,
+        track: str | None = None,
+        owned_paths: list[str] | None = None,
+        consumer: str = "orchestrator",
+    ) -> ComponentResult:
+        """Fetch the task-scoped, pointer-only filtered research projection.
+
+        POINTERS ONLY — this never fetches record bodies; the projection carries
+        IDs/states/hashes/routing, and bodies are pulled on demand elsewhere.
+
+        Caching uses the projection's own strong ETag (there is no per-context hash
+        in the manifest), keyed on the stable ``consumer`` plus a canonical context
+        **fingerprint** — never the raw owned paths or role text. Consequences that
+        satisfy the P3 cache contract:
+
+        * cold (nothing cached for this key) → a plain GET returns the first
+          relevant projection (``source="network"``);
+        * warm + unchanged → ``If-None-Match`` yields a bodyless ``304`` and the
+          cached body is reused (``source="not-modified"``), zero changed pointers —
+          even after an unrelated global registry edit, because the server's
+          filtered ETag only moves for contexts the edited record routes to.
+
+        Fails soft to an empty component (``source="error:*"``) rather than raising,
+        so a cold-start caller never crashes on a degraded/disabled endpoint.
+        """
+        context = _canonical_context(role, task_family, track, owned_paths)
+        fingerprint = _context_fingerprint(context)
+        key = f"research__{consumer}__{fingerprint}"
+
+        params: list[tuple[str, str]] = []
+        if context["role"]:
+            params.append(("role", context["role"]))
+        if context["task_family"]:
+            params.append(("task_family", context["task_family"]))
+        if context["track"]:
+            params.append(("track", context["track"]))
+        params.extend(("owned_path", p) for p in context["owned_paths"])
+        url = _KNOWLEDGE_MANIFEST_PATH
+        if params:
+            url = f"{url}?{urllib.parse.urlencode(params)}"
+
+        cached = cache.peek(key)
+        headers: dict[str, str] = {}
+        if cached is not None and cached.hash:
+            headers["If-None-Match"] = f'"{cached.hash}"'
+
+        status, body, resp_headers = self._get(url, headers=headers)
+        if status == 304 and cached is not None:
+            return ComponentResult(
+                key=key, body=cached.body, hash=cached.hash, source="not-modified"
+            )
+        if status == 304:
+            # 304 with no local body (cache evicted between peek and now):
+            # re-fetch unconditionally so we never return an empty projection.
+            status, body, resp_headers = self._get(url)
+
+        if status >= 400 or not body:
+            return ComponentResult(key=key, body="", hash="", source=f"error:{status}")
+
+        etag = (resp_headers.get("etag") or "").strip('"')
+        cache.put(key, body, body_hash=etag, url=url)
+        return ComponentResult(key=key, body=body, hash=etag, source="network")
+
     # -- convenience bootstrap -------------------------------------
 
-    def bootstrap(self) -> dict[str, ComponentResult]:
+    def bootstrap(
+        self,
+        *,
+        role: str | None = None,
+        task_family: str | None = None,
+        track: str | None = None,
+        owned_paths: list[str] | None = None,
+        consumer: str = "orchestrator",
+    ) -> dict[str, ComponentResult]:
         """One-shot: manifest + every cached component.
 
-        Returns a dict with keys ``rules`` and ``session``, each a
-        ``ComponentResult``. Use this at the start of a session:
+        With no arguments this returns **exactly** ``{"rules", "session"}`` — the
+        pre-P3 shape, byte-for-byte. Passing any research context (``role`` or a
+        finer dimension) opts in an extra ``"research"`` key carrying the filtered,
+        pointer-only projection for that context. Absent a role, no research call is
+        made at all.
 
             client = MonitorClient()
-            boot = client.bootstrap()
-            rules_md = boot["rules"].body
+            boot = client.bootstrap()                     # rules + session only
+            boot = client.bootstrap(role="quality")       # + research pointers
         """
         man = self.manifest()
-        return {
+        result = {
             "rules": self.rules(manifest=man),
             "session": self.session(manifest=man),
         }
+        if role or task_family or track or owned_paths:
+            result["research"] = self.research(
+                role=role,
+                task_family=task_family,
+                track=track,
+                owned_paths=owned_paths,
+                consumer=consumer,
+            )
+        return result

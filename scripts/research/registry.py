@@ -404,19 +404,16 @@ def pointer(record: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def select_pointers(runtime: RegistryRuntime, ctx: Context) -> tuple[list[dict[str, Any]], list[str]]:
-    """Return (pointers, dropped_ids). No context → zero records (never "show all").
+def _apply_caps(matched: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], list[str]]:
+    """The single deterministic cap renderer shared by every pointer selector.
 
-    Deterministically sorted by record id, capped at ``MAX_FILTERED_RECORDS`` and
-    ``MAX_FILTERED_BYTES`` measured on the exact serialized response. Every dropped
-    id is logged — never a silent truncation.
+    Takes an already-sorted list of matched records; returns (pointers, dropped_ids)
+    honouring ``MAX_FILTERED_RECORDS`` (top-N) then ``MAX_FILTERED_BYTES`` (measured
+    on the exact serialized response). Both the dispatch AND matcher and the
+    role-only cold-start announcer route through here so the two surfaces cannot
+    drift apart on cap semantics. Logging the drop is the caller's job so the log
+    line names which surface truncated.
     """
-    if ctx.is_empty():
-        return [], []
-    matched = sorted(
-        (rec for rec in runtime.valid_records if matches(rec.get("routing") or {}, ctx)),
-        key=lambda rec: rec["id"],
-    )
     dropped: list[str] = []
     if len(matched) > MAX_FILTERED_RECORDS:
         dropped.extend(rec["id"] for rec in matched[MAX_FILTERED_RECORDS:])
@@ -425,12 +422,77 @@ def select_pointers(runtime: RegistryRuntime, ctx: Context) -> tuple[list[dict[s
     while pointers and len(canonical_json_bytes(_manifest_payload(pointers))) > MAX_FILTERED_BYTES:
         dropped.append(pointers[-1]["id"])
         pointers = pointers[:-1]
+    return pointers, dropped
+
+
+def select_pointers(runtime: RegistryRuntime, ctx: Context) -> tuple[list[dict[str, Any]], list[str]]:
+    """Return (pointers, dropped_ids). No context → zero records (never "show all").
+
+    Deterministically sorted by record id, capped via the shared
+    :func:`_apply_caps` renderer. Every dropped id is logged — never a silent
+    truncation.
+    """
+    if ctx.is_empty():
+        return [], []
+    matched = sorted(
+        (rec for rec in runtime.valid_records if matches(rec.get("routing") or {}, ctx)),
+        key=lambda rec: rec["id"],
+    )
+    pointers, dropped = _apply_caps(matched)
     if dropped:
         logger.warning(
             "research registry: knowledge manifest dropped record id(s) over budget: %s",
             ", ".join(dropped),
         )
     return pointers, dropped
+
+
+def select_cold_start_pointers(
+    runtime: RegistryRuntime, role: str | None
+) -> tuple[list[dict[str, Any]], list[str]]:
+    """Return (pointers, dropped_ids) for the role-only cold-start announcer.
+
+    ADR-011 §"Cold-start algebra (role only)": cold start has no task family,
+    track, or owned paths, so it MUST NOT run the full AND matcher (which would
+    fail closed on the missing dimensions anyway). It uses **only** the opt-in
+    top-level ``cold_start_roles`` allow-list: a record announces a pointer to a
+    role solely when it lists that role. A missing/blank role, or a role no record
+    opts into, yields zero pointers. Bodies are never announced — pointers only.
+    Shares the exact deterministic cap renderer with :func:`select_pointers`.
+    """
+    role = (role or "").strip()
+    if not role:
+        return [], []
+    matched = sorted(
+        (rec for rec in runtime.valid_records if role in (rec.get("cold_start_roles") or [])),
+        key=lambda rec: rec["id"],
+    )
+    pointers, dropped = _apply_caps(matched)
+    if dropped:
+        logger.warning(
+            "research registry: cold-start pointers dropped record id(s) over budget for role %r: %s",
+            role,
+            ", ".join(dropped),
+        )
+    return pointers, dropped
+
+
+def context_fingerprint(ctx: Context) -> str:
+    """A stable, opaque digest of a normalized context for cache keys / persistence.
+
+    Hashes the canonical ``{role, task_family, track, owned_paths}`` projection so
+    two byte-identical contexts share a fingerprint and two different ones do not.
+    Because only the digest is ever persisted or used as a cache-key component, the
+    raw owned paths never leave the caller — ADR-011 P3 forbids persisting or
+    keying on raw paths, role, or task text.
+    """
+    payload = {
+        "role": ctx.role,
+        "task_family": ctx.task_family,
+        "track": ctx.track,
+        "owned_paths": list(ctx.owned_paths),
+    }
+    return sha256(canonical_json_bytes(payload)).hexdigest()
 
 
 def _manifest_payload(pointers: list[dict[str, Any]]) -> dict[str, Any]:
