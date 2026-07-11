@@ -12,9 +12,15 @@ Runtime contract (ADR-011 §"Runtime kill switch", §"Failure / degradation"):
 
 * **Disabled by default.** While disabled the registry is never loaded or parsed.
 * **Fail-open.** Enabled + a missing/malformed/invalid registry yields *no*
-  research surface and a logged warning — never a boot or API 500.
-* **Per-record isolation.** A drifted or provenance-broken record is excluded
-  individually; healthy records keep routing.
+  research surface and a logged warning — never a boot or API 500. An unexpected
+  exception anywhere in the load path degrades the same way, via
+  :func:`load_runtime_safe`.
+* **Per-record isolation is drift-only.** ADR-011 grants isolation to a single
+  invariant: a ``content_hash`` that no longer matches its digest. That record is
+  excluded while healthy records keep routing. Any other semantic defect P1
+  reports (broken provenance, a lifecycle/consumer/ownership violation, a
+  duplicate id, a supersession cycle, an over-cap cold-start role) hides the
+  *whole* registry — it is not safe to isolate per record.
 * **No side effects at request time.** No GitHub, subprocess, network,
   ``sources.db``, or embeddings access — only local file reads.
 
@@ -233,51 +239,66 @@ class RegistryRuntime:
         return sha256(canonical_json_bytes(items)).hexdigest()
 
 
-def _record_is_valid(record: dict[str, Any], root: Path) -> bool:
-    """Runtime validity: provenance resolves safely and the digest has not drifted.
-
-    These are the two invariants that can go stale *after* a record passes CI (a
-    digest edited without ``--reconcile`` → drift; a digest path broken → bad
-    provenance). Lifecycle/ownership/consumer invariants are CI-gated and do not
-    affect the safety of the routed projection, so they are not re-litigated here.
-    """
-    try:
-        if crr.validate_provenance(record, root):
-            return False
-        if record["content_hash"] != crr.expected_content_hash(record, root):
-            return False
-    except Exception as exc:  # pragma: no cover - defensive; P1 raises ProvenanceError
-        logger.warning("research registry: record %r failed runtime validity (%s)", record.get("id"), exc)
-        return False
-    return True
-
-
 def load_runtime(*, root: Path | None = None) -> RegistryRuntime | None:
-    """Load + schema-validate the registry, computing per-record validity.
+    """Load the registry and validate it via P1's ``validate_registry`` — the single
+    semantic authority for schema, lifecycle, supersession, consumer, ownership, and
+    digest-policy invariants (this module never duplicates that logic).
 
     Returns ``None`` (fail-open: omit the whole research surface) when the file is
-    missing, unreadable, not a mapping, or structurally schema-invalid. Individual
-    invalid records are kept in ``pairs`` with ``valid=False`` so the global hash
-    stays sensitive to their validity while they are excluded from routing.
+    missing/unreadable/malformed, or when P1 reports any *non-drift* error — a
+    structural schema violation, broken provenance, a lifecycle/consumer/ownership
+    violation, a duplicate id, a supersession cycle, or an over-cap cold-start role.
+    ADR-011 grants per-record isolation only to ``content_hash`` drift: when P1
+    reports drift and nothing else, the runtime is still built and only the drifted
+    ids are marked ``valid=False`` so healthy records keep routing.
     """
     root = root if root is not None else _live_repo_root()
     path = _registry_path(root)
     try:
-        _raw, data = crr.load_registry(path)
-    except (OSError, ValueError, yaml.YAMLError) as exc:
+        raw, data = crr.load_registry(path)
+    except (OSError, ValueError, yaml.YAMLError, RecursionError) as exc:
         logger.warning("research registry: cannot load %s (%s); no research surface", path, exc)
         return None
     try:
-        schema = crr.load_schema()
-    except (OSError, ValueError) as exc:  # pragma: no cover - schema ships with code
-        logger.warning("research registry: cannot load schema (%s); no research surface", exc)
+        result = crr.validate_registry(data, project_root=root, raw_text=raw)
+    except (OSError, ValueError, yaml.YAMLError, RecursionError, KeyError, TypeError) as exc:
+        logger.warning(
+            "research registry: %s failed validation (%s); no research surface",
+            path,
+            type(exc).__name__,
+        )
         return None
-    if crr.validate_schema(data, schema):
-        logger.warning("research registry: %s fails structural schema; no research surface", path)
+    if result.errors:
+        logger.warning(
+            "research registry: %s fails semantic validation (%d error(s)); no research surface",
+            path,
+            len(result.errors),
+        )
         return None
     records = data.get("records") or []
-    pairs = tuple((rec, _record_is_valid(rec, root)) for rec in records)
+    drifted = set(result.drift)
+    pairs = tuple((rec, rec["id"] not in drifted) for rec in records)
     return RegistryRuntime(root=root, pairs=pairs)
+
+
+def load_runtime_safe(*, root: Path | None = None) -> RegistryRuntime | None:
+    """Fail-open boundary around :func:`load_runtime` for every HTTP-facing caller.
+
+    ``load_runtime`` already turns known-bad input (missing file, malformed YAML,
+    semantic errors) into ``None``, but a pathological/injected failure (e.g. a
+    parser resource error we didn't anticipate, or a defect in a future P1 change)
+    must still never surface as an API 500. Catches any unexpected ``Exception``
+    and logs only the exception type — never registry or digest contents. Callers
+    must check :func:`is_enabled` first; this function does not gate on the flag.
+    """
+    try:
+        return load_runtime(root=root)
+    except Exception as exc:
+        logger.warning(
+            "research registry: unexpected %s loading runtime; no research surface",
+            type(exc).__name__,
+        )
+        return None
 
 
 def research_manifest_component(*, root: Path | None = None) -> dict[str, str] | None:
@@ -289,7 +310,7 @@ def research_manifest_component(*, root: Path | None = None) -> dict[str, str] |
     """
     if not is_enabled(root=root):
         return None
-    runtime = load_runtime(root=root)
+    runtime = load_runtime_safe(root=root)
     if runtime is None:
         return None
     return {"hash": runtime.global_hash(), "url": KNOWLEDGE_MANIFEST_URL}
@@ -478,18 +499,20 @@ def record_body(runtime: RegistryRuntime, record_id: str) -> tuple[str, str] | N
             MAX_RECORD_BYTES,
         )
         return None
-    # ``content_hash`` is an honest ETag only if it addresses the exact bytes we
-    # return; otherwise compute the ETag over the response bytes so we never serve
-    # a stale-body ETag.
-    expected = crr.compute_content_hash(body)
+    # The digest is re-read from disk on every call, but ``record`` (and its
+    # ``content_hash``) is a snapshot captured at load_runtime() time. If the
+    # digest changed on disk in between (a TOCTOU window), the freshly-read body
+    # no longer matches that snapshot hash — refuse rather than inventing a new
+    # ETag and serving unreconciled bytes. A fresh load_runtime() call would
+    # exclude this record entirely; this call must not do less.
     stored = record["content_hash"]
-    # ``content_hash`` addresses the exact bytes for a valid (non-drifted) record;
-    # the fallback is belt-and-suspenders so we never serve a stale-body ETag.
-    if expected == stored:  # noqa: SIM108 - keep the defensive branch explicit
-        etag_hex = stored.split(":", 1)[1]
-    else:
-        etag_hex = sha256(body_bytes).hexdigest()
-    return body, etag_hex
+    if crr.compute_content_hash(body) != stored:
+        logger.warning(
+            "research registry: record %r content changed since load_runtime(); refusing to serve",
+            record_id,
+        )
+        return None
+    return body, stored.split(":", 1)[1]
 
 
 # --------------------------------------------------------------------------- #

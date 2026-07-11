@@ -95,6 +95,16 @@ def reg_root(tmp_path, monkeypatch):
     return tmp_path
 
 
+def _stub_path_consumer(root: Path, rel: str = "scripts/audit/text_difficulty.py") -> None:
+    """Write a stub file so an ``{"kind": "path", "ref": rel}`` consumer resolves
+    under the synthetic ``root`` -- P1's ``validate_consumer`` requires the ref to
+    exist on disk under ``project_root``, which for these tests is ``reg_root``,
+    not the real repository."""
+    stub = root / rel
+    stub.parent.mkdir(parents=True, exist_ok=True)
+    stub.write_text("# stub consumer target for tests\n", "utf-8")
+
+
 # --------------------------------------------------------------------------- #
 # 1. Kill switch: precedence + strict parsing
 # --------------------------------------------------------------------------- #
@@ -262,6 +272,7 @@ def test_global_hash_sensitive_to_routed_fields(reg_root, mutate):
     r1b = json.loads(json.dumps(r1))  # deep copy
     mutate(r1b)
     if r1b["state"] == "adopted":  # keep it schema/lifecycle sane for the loader
+        _stub_path_consumer(reg_root)
         r1b["consumer"] = {"kind": "path", "ref": "scripts/audit/text_difficulty.py"}
     _write_registry(reg_root, [r1b])
     assert reg.load_runtime(root=reg_root).global_hash() != h1
@@ -355,6 +366,7 @@ def test_context_normalization_shares_etag(reg_root):
 # 7. Pointer field allowlist (no body/summary/source path)
 # --------------------------------------------------------------------------- #
 def test_pointer_allowlist(reg_root):
+    _stub_path_consumer(reg_root)
     r1 = _make_record(reg_root, "aaa", routing={"roles": ["quality"]}, state="adopted")
     r1["consumer"] = {"kind": "path", "ref": "scripts/audit/text_difficulty.py"}
     _write_registry(reg_root, [r1])
@@ -494,15 +506,22 @@ def test_est_tokens(n, expected):
 
 
 def test_record_body_size_boundary(reg_root):
-    # Single line of N 'x' + newline normalizes to exactly N bytes.
-    ok = _make_record(reg_root, "aaa", digest_body="x" * reg.MAX_RECORD_BYTES + "\n")
+    # A single unterminated line of exactly N 'x' has an identical raw and
+    # normalized length (no trailing whitespace/newline for normalization to
+    # strip) -- exactly N bytes, at P1's own digest-policy ceiling too.
+    ok = _make_record(reg_root, "aaa", digest_body="x" * reg.MAX_RECORD_BYTES)
     _write_registry(reg_root, [ok])
     body = reg.record_body(reg.load_runtime(root=reg_root), "aaa")
     assert body is not None and len(body[0].encode("utf-8")) == reg.MAX_RECORD_BYTES
 
-    over = _make_record(reg_root, "aaa", digest_body="x" * (reg.MAX_RECORD_BYTES + 1) + "\n")
+    # One byte over trips P1's digest-policy ceiling (raw projection size) at
+    # load_runtime() time -- a non-drift semantic error hides the whole registry
+    # (ADR-011: only hash drift gets per-record isolation), so record_body is
+    # never reached; assert the same generic 404 refusal at the API surface.
+    over = _make_record(reg_root, "aaa", digest_body="x" * (reg.MAX_RECORD_BYTES + 1))
     _write_registry(reg_root, [over])
-    assert reg.record_body(reg.load_runtime(root=reg_root), "aaa") is None
+    assert reg.load_runtime(root=reg_root) is None
+    assert client.get("/api/knowledge/record/aaa").status_code == 404
     assert client.get("/api/knowledge/record/aaa").status_code == 404
 
 
@@ -591,3 +610,182 @@ def test_no_network_or_subprocess_imports():
                 imported.add(node.module.split(".")[0])
         leaked = imported & forbidden
         assert not leaked, f"{rel} imports forbidden modules: {leaked}"
+
+
+# --------------------------------------------------------------------------- #
+# 16. Fix 1 (PR #4988 review): TOCTOU — a runtime snapshot must never serve
+# post-load digest drift under an invented fallback ETag.
+# --------------------------------------------------------------------------- #
+def test_record_body_refuses_post_load_drift(reg_root, caplog):
+    r1 = _make_record(reg_root, "aaa")
+    _write_registry(reg_root, [r1])
+    runtime = reg.load_runtime(root=reg_root)
+    assert runtime.valid_by_id("aaa") is not None  # sanity: healthy at load time
+
+    # Mutate the digest on disk WITHOUT reconciling content_hash or rewriting the
+    # registry -- the already-loaded `runtime` still carries the old, now-stale
+    # content_hash for "aaa".
+    (reg_root / r1["provenance"]["digest"]).write_text(
+        _digest_body("aaa", extra="\nCHANGED-AFTER-LOAD\n"), "utf-8"
+    )
+
+    with caplog.at_level("WARNING"):
+        result = reg.record_body(runtime, "aaa")
+    assert result is None
+    assert "aaa" in caplog.text  # record id logged...
+    assert "CHANGED-AFTER-LOAD" not in caplog.text  # ...never the changed content
+
+    # A fresh load correctly excludes the now-drifted record too.
+    assert reg.load_runtime(root=reg_root).valid_by_id("aaa") is None
+
+    # The API surface (which always loads fresh per request) never leaks the
+    # changed bytes either -- generic 404.
+    resp = client.get("/api/knowledge/record/aaa")
+    assert resp.status_code == 404
+    assert b"CHANGED-AFTER-LOAD" not in resp.content
+
+
+def test_select_bodies_inherits_toctou_refusal(reg_root):
+    r1 = _make_record(reg_root, "aaa")
+    _write_registry(reg_root, [r1])
+    runtime = reg.load_runtime(root=reg_root)
+    (reg_root / r1["provenance"]["digest"]).write_text(
+        _digest_body("aaa", extra="\nCHANGED-AFTER-LOAD\n"), "utf-8"
+    )
+    selected, dropped = reg.select_bodies(runtime, ["aaa"])
+    assert selected == []
+    assert dropped == ["aaa"]
+
+
+# --------------------------------------------------------------------------- #
+# 17. Fix 2 (PR #4988 review): fail-open containment — a pathological parser
+# failure or an unexpected loader exception must never surface as an API 500.
+# --------------------------------------------------------------------------- #
+def test_enabled_deeply_nested_yaml_recursion_fails_open_not_500(reg_root):
+    refs = reg_root / "docs" / "references"
+    refs.mkdir(parents=True, exist_ok=True)
+    depth = 20000
+    (refs / "research-registry.yaml").write_text("[" * depth + "]" * depth, "utf-8")
+
+    assert reg.load_runtime(root=reg_root) is None
+
+    km = client.get("/api/knowledge/manifest")
+    assert km.status_code == 200
+    assert km.json() == {"enabled": True, "records": []}
+
+    assert client.get("/api/knowledge/record/anything").status_code == 404
+
+    sm = client.get("/api/state/manifest")
+    assert sm.status_code == 200
+    assert "research" not in sm.json()
+
+
+def test_enabled_injected_loader_exception_fails_open_not_500(reg_root, monkeypatch):
+    def _boom(**_kwargs):
+        raise RuntimeError("injected failure")
+
+    monkeypatch.setattr(reg, "load_runtime", _boom)
+
+    km = client.get("/api/knowledge/manifest")
+    assert km.status_code == 200
+    assert km.json() == {"enabled": True, "records": []}
+
+    assert client.get("/api/knowledge/record/anything").status_code == 404
+
+    sm = client.get("/api/state/manifest")
+    assert sm.status_code == 200
+    assert "research" not in sm.json()
+
+    assert reg.load_runtime_safe(root=reg_root) is None
+
+
+def test_rules_session_orient_unaffected_by_research_registry_failure(reg_root, monkeypatch):
+    """A broken research registry must not degrade unrelated cold-start surfaces."""
+    monkeypatch.setattr(reg, "load_runtime", lambda **_kwargs: (_ for _ in ()).throw(RuntimeError("boom")))
+    assert client.get("/api/rules").status_code == 200
+    assert client.get("/api/session/current").status_code == 200
+    assert client.get("/api/orient").status_code == 200
+
+
+# --------------------------------------------------------------------------- #
+# 18. Fix 3 (PR #4988 review): P1's validate_registry is the semantic
+# authority. Non-drift semantic errors hide the whole registry; only hash
+# drift gets ADR-011's per-record isolation.
+# --------------------------------------------------------------------------- #
+def test_adopted_null_consumer_hides_whole_registry(reg_root):
+    """Schema-valid but P1-semantically invalid (adopted + no consumer) must not
+    silently route -- the whole registry fails closed, not just that record."""
+    healthy = _make_record(reg_root, "aaa", routing={"roles": ["quality"]})
+    bad = _make_record(reg_root, "bbb", state="adopted")
+    bad["consumer"] = None
+    bad["reason"] = None
+    _write_registry(reg_root, [healthy, bad])
+
+    assert reg.load_runtime(root=reg_root) is None
+    assert reg.research_manifest_component() is None
+    resp = client.get("/api/knowledge/manifest?role=quality")
+    assert resp.status_code == 200
+    assert resp.json() == {"enabled": True, "records": []}
+    assert client.get("/api/knowledge/record/aaa").status_code == 404
+
+
+def test_duplicate_record_id_hides_whole_registry(reg_root):
+    r1 = _make_record(reg_root, "aaa", routing={"roles": ["quality"]})
+    r2 = _make_record(reg_root, "aaa", routing={"roles": ["quality"]})  # duplicate id
+    _write_registry(reg_root, [r1, r2])
+
+    assert reg.load_runtime(root=reg_root) is None
+    assert reg.research_manifest_component() is None
+    resp = client.get("/api/knowledge/manifest?role=quality")
+    assert resp.json() == {"enabled": True, "records": []}
+    assert client.get("/api/knowledge/record/aaa").status_code == 404
+
+
+def test_single_drift_still_isolates_and_serves_healthy_record(reg_root):
+    """Sanity companion to test_record_drift_excluded_but_healthy_served: proves
+    Fix 3's reuse of validate_registry() preserves the ONE case ADR-011 grants
+    per-record isolation for -- pure content_hash drift, nothing else wrong."""
+    healthy = _make_record(reg_root, "aaa", routing={"roles": ["quality"]})
+    drifted = _make_record(reg_root, "bbb", routing={"roles": ["quality"]})
+    _write_registry(reg_root, [healthy, drifted])
+    (reg_root / drifted["provenance"]["digest"]).write_text(_digest_body("bbb", extra="\ndrift\n"), "utf-8")
+
+    runtime = reg.load_runtime(root=reg_root)
+    assert runtime is not None  # drift alone never hides the whole registry
+    assert [r["id"] for r in runtime.valid_records] == ["aaa"]
+    assert client.get("/api/knowledge/record/aaa").status_code == 200
+    assert client.get("/api/knowledge/record/bbb").status_code == 404
+
+
+# --------------------------------------------------------------------------- #
+# 19. Additional hardening: end-to-end state-manifest hash + unrelated-context
+# ETag stability across a routing-relevant, reconciled record edit.
+# --------------------------------------------------------------------------- #
+def test_state_manifest_hash_tracks_runtime_and_unrelated_projection_stable(reg_root):
+    matched = _make_record(reg_root, "aaa", routing={"roles": ["quality"]})
+    other = _make_record(reg_root, "zzz", routing={"roles": ["tts"]})
+    _write_registry(reg_root, [matched, other])
+
+    sm0 = client.get("/api/state/manifest")
+    assert sm0.status_code == 200
+    body0 = sm0.json()
+    assert body0["research"]["hash"] == reg.load_runtime(root=reg_root).global_hash()
+
+    other_resp0 = client.get("/api/knowledge/manifest?role=tts")
+    etag_other0 = other_resp0.headers["etag"]
+
+    # Routing-relevant, reconciled edit to "aaa" -> global hash (and therefore
+    # /api/state/manifest.research.hash) changes.
+    matched_edit = _make_record(reg_root, "aaa", routing={"roles": ["quality"], "tracks": ["core"]})
+    _write_registry(reg_root, [matched_edit, other])
+
+    sm1 = client.get("/api/state/manifest")
+    body1 = sm1.json()
+    assert body1["research"]["hash"] != body0["research"]["hash"]
+    assert body1["research"]["hash"] == reg.load_runtime(root=reg_root).global_hash()
+
+    # The unrelated ("tts") filtered projection is byte-identical -> the old
+    # If-None-Match still yields a bodyless 304 with the same ETag.
+    other_resp1 = client.get("/api/knowledge/manifest?role=tts", headers={"If-None-Match": etag_other0})
+    assert other_resp1.status_code == 304
+    assert other_resp1.headers["etag"] == etag_other0

@@ -58,7 +58,7 @@ def knowledge_manifest(
     if any(len(path) > reg.MAX_OWNED_PATH_LEN for path in owned_path):
         raise HTTPException(status_code=422, detail="owned_path value too long")
 
-    runtime = reg.load_runtime()
+    runtime = reg.load_runtime_safe()
     if runtime is None:
         result = reg.empty_manifest_response()
     else:
@@ -81,7 +81,7 @@ def knowledge_record(request: Request, record_id: str):
     """
     if not reg.is_enabled():
         raise HTTPException(status_code=404, detail=_NOT_FOUND)
-    runtime = reg.load_runtime()
+    runtime = reg.load_runtime_safe()
     if runtime is None:
         raise HTTPException(status_code=404, detail=_NOT_FOUND)
     result = reg.record_body(runtime, record_id)
